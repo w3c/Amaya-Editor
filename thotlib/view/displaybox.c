@@ -1089,7 +1089,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	}
 
       /* allocate a buffer to store converted characters */
-      buffer = TtaGetMemory (pBox->BxNChars);
+      buffer = TtaGetMemory (pBox->BxNChars + 1);
       while (charleft > 0)
 	{
 	  /* handle each char in the buffer */
