@@ -1375,7 +1375,7 @@ TextTRANSLATE Grec
 	'\324' -> '&trade;';
 	'\325' -> '&PI;';
 	'\326' -> '&radic;';
-	'\327' -> '&CenterDot;';
+	'\327' -> '&InvisibleTimes;';
 	'\330' -> '&Not;';
 	'\331' -> '&And;';
 	'\332' -> '&Or;';

@@ -1554,6 +1554,11 @@ ThotBool     readOnly;
 	   h = 300;
 	   w = 550;
 	 }
+       else if (docType == docMath)
+	 {
+	   h = 300;
+	   w = 550;
+	 }
        /* change the position slightly to avoid hiding completely the main
 	  view of other documents */
        x = x + (doc - 1) * 10;
