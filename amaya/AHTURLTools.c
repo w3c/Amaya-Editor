@@ -32,7 +32,6 @@ typedef struct _HTURI
 } HTURI;
 
 #ifdef _WINDOWS
-#define TMPDIR "TMP"
 #ifndef PATH_MAX
 #define PATH_MAX MAX_PATH
 #endif
@@ -40,7 +39,6 @@ typedef struct _HTURI
 #define uint64_t unsigned __int64
 #define getpid _getpid
 #else /* _WINDOWS */
-#define TMPDIR "TMPDIR"
 #if HAVE_STDINT_H
 #include <stdint.h>
 #endif /* HAVE_STDINT_H */
@@ -2555,29 +2553,23 @@ char *GetTempName (const char *dir, const char *prefix)
 
 #else
   char *tmpdir;
-  char *tmp;
+  char *tmp = NULL;
   char *name = NULL;
 
   /* save the value of TMPDIR */
-  tmp = getenv (TMPDIR);
-
-  if (tmp)
-    {
-      tmpdir = TtaStrdup (tmp);
-    }
-  else
-    tmpdir = NULL;
-
-  /* remove TMPDIR from the environment */
+  tmpdir = getenv ("TMPDIR");
   if (tmpdir)
     {
-      tmp = TtaGetMemory (strlen (tmpdir) + 2);
-      sprintf (tmp, "%s=", TMPDIR);
+      /* remove TMPDIR from the environment */
+      tmp = TtaGetMemory (strlen (tmpdir) + 20);
+      sprintf (tmp, "TMPDIR=");
 #ifdef _WINGUI
       _putenv (tmp);
 #else
       putenv (tmp);
 #endif /* _WINGUI */
+      /* prepare the string to restore the value of TMPDIR */
+      strrcat (tmp, tmpdir);
     }
 
   /* create the tempname */
@@ -2586,7 +2578,7 @@ char *GetTempName (const char *dir, const char *prefix)
   {
     char *altprefix;
     name = tmpnam (NULL);	/* get a possibly unique string */
-    altprefix = TtaGetMemory(strlen (prefix) + strlen(name) + 1);
+    altprefix = TtaGetMemory (strlen (prefix) + strlen(name) + 1);
     sprintf (altprefix, "%s%s", prefix, name + strlen(_P_tmpdir));
     name = _tempnam (dir, altprefix); /* get a name that isn't yet in use */
     TtaFreeMemory (altprefix);
@@ -2595,16 +2587,15 @@ char *GetTempName (const char *dir, const char *prefix)
   name = tempnam (dir, prefix);
 #endif /* _WINGUI */
 
-  /* restore the value of TMPDIR */
   if (tmpdir)
     {
+      /* restore the value of TMPDIR */
 #ifdef _WINGUI
       _putenv (tmpdir);
 #else
       putenv (tmpdir);
 #endif /* _WINGUI */
-      /* Shouldn't be free (see man for putenv ()) */
-      /* TtaFreeMemory (tmpdir); */
+      TtaFreeMemory (tmpdir);
     }
   return (name);
 #endif

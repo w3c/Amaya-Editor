@@ -653,26 +653,17 @@ void InitPrintParameters (Document document)
 	     {
 	       ptr = NULL;
 	       ptr = TtaGetEnvString ("APP_TMPDIR");
-	       if (ptr == NULL || *ptr == EOS || !TtaCheckDirectory (ptr))
+	       if (ptr && TtaCheckDirectory (ptr))
 		 {
-		   ptr = NULL;
-		   ptr = TtaGetEnvString ("TMPDIR");
-		 }
-	       if (ptr != NULL && TtaCheckDirectory (ptr))
-		 {
-		   strcpy(PSdir,ptr);
+		   strcpy (PSdir,ptr);
 		   lg = strlen(PSdir);
 		   if (PSdir[lg - 1] == DIR_SEP)
 		     PSdir[--lg] = EOS;
 		 }
 	       else
 		 {
-#ifdef _WINDOWS
-		   strcpy (PSdir, "C:\\TEMP");
-#else  /* _WINDOWS */
-		   strcpy (PSdir,"/tmp");
-#endif  /* _WINDOWS */
-		   lg = strlen (PSdir);
+		   lg = 0;
+		   PSdir[0] = EOS;
 		 }
 	       sprintf (&PSdir[lg], "/%s.ps", pDoc->DocDName);
 	     }
@@ -698,8 +689,8 @@ void TtaGetPrintNames (char **printDocName, char **printDirName)
    PrintDirName[0] = EOS;
 
    /* get the tmp directory from the registry */
-   dirString = TtaGetEnvString("TMPDIR");
-   if (dirString != NULL) 
+   dirString = TtaGetEnvString ("APP_TMPDIR");
+   if (dirString) 
      { 
        if (!TtaCheckDirectory (dirString))
 	 TtaMakeDirectory (dirString);
@@ -710,8 +701,8 @@ void TtaGetPrintNames (char **printDocName, char **printDirName)
      }
    else
      {
-       strcpy (PrintDirName, TtaGetEnvString ("TMPDIR"));
-       lg = strlen (PrintDirName);
+       PrintDirName[0] = EOS;;
+       lg = 0;
      }
 
    sprintf (PrintDocName, "Thot%ld", (long) pid + numOfJobs);

@@ -126,7 +126,7 @@ void TtaShowElementMenu (Document doc, View view)
 	  if (strcmp (pSS->SsName, "TextFile"))
 	    nbItem = BuildElementSelector (pDoc, pSS, menuBuf);
 	}
-      /* generate the form with two buttons Apply and Done */
+      /* generate the form with two buttons Isert and Done */
 #ifdef _WINGUI
       CreateXMLDlgWindow (TtaGetViewFrame (doc, 1), nbItem, menuBuf,
 			  TtaGetMessage (LIB, TMSG_EL_TYPE),

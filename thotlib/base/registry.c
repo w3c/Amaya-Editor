@@ -55,11 +55,9 @@
 #define WIN_DEF_USERNAME       "default"
 #define THOT_INI_FILENAME      "win-thot.rc"
 #define WIN_USERS_HOME_DIR     "users"
-#define DEF_TMPDIR             "c:\\temp"
 static char         EnVar[MAX_PATH];	/* thread unsafe! */
 #else /* _WINDOWS */
 #define THOT_INI_FILENAME      "unix-thot.rc"
-#define DEF_TMPDIR             "/tmp"
 #endif /*  _WINDOWS */
 
 #define THOT_RC_FILENAME      "thot.rc"
@@ -427,12 +425,6 @@ static void PrintEnv (FILE *output)
       fprintf (output, "[%s]\n", cour->appli);
       /* add all the entries under the same appli name */
       if (cour->level == REGISTRY_USER 
-#ifdef _WINDOWS
-		  && strcasecmp (cour->name, "TMP")
-		  && strcasecmp (cour->name, "TEMP")
-		  && strcasecmp (cour->name, "TEMPDIR")
-#endif /* _WINDOWS */
-		  && strcasecmp (cour->name, "TMPDIR")
 		  && strcasecmp (cour->name, "APP_TMPDIR")
 		  && strcasecmp (cour->name, "APP_HOME"))
 	fprintf (output, "%s=%s\n", cour->name, cour->orig);
@@ -440,14 +432,7 @@ static void PrintEnv (FILE *output)
       while (next != NULL && !strcasecmp (next->appli, cour->appli))
 	{
 	  if (next->level == REGISTRY_USER
-	      && strcasecmp (cour->name, "TMPDIR")
-#ifdef _WINDOWS
-		  && strcasecmp (cour->name, "TMP")
-		  && strcasecmp (cour->name, "TEMP")
-		  && strcasecmp (cour->name, "TEMPDIR")
-#else
 	      && strcasecmp (next->name, "APP_TMPDIR")
-#endif /* _WINDOWS */
 	      && strcasecmp (next->name, "APP_HOME"))
 	    fprintf (output, "%s=%s\n", next->name, next->orig);
 	  next = next->next;
@@ -1155,41 +1140,20 @@ static void InitEnviron ()
    TtaSetDefEnvString ("BgSelectColor", "#008BB2", FALSE);
    TtaSetDefEnvString ("MenuFgColor", "Black", FALSE);
    TtaSetDefEnvString ("MenuBgColor", "Grey", FALSE);
-
-   /*
-   ** set up the defaul TMPDIR 
-   */
-
-   /* get the tmpdir from the registry or use the default name if it
-      doesn't exist */
-   pT = TtaGetEnvString ("TMPDIR");
+   pT = TtaGetEnvString ("APP_TMPDIR");
+   /* APP_TMPDIR not defined for compilers */
+   if (!pT)
 #ifdef _WINDOWS
-   /* on WIN32, the default directory may be defined on several environment variables */
-   if (!pT)
-	   pT = TtaGetEnvString ("TMP");
-   if (!pT)
-	   pT = TtaGetEnvString ("TEMP");
-   if (!pT)
-	   pT = TtaGetEnvString ("TEMPDIR");
+     pT = "c:\temp";
+#else /* _WINDOWS */
+     pT = "/tmp";
 #endif /* _WINDOWS */
-   if (!pT)
-     pT = DEF_TMPDIR;
-   /* set up a default TMPDIR in the registry in case it wasn't defined before */
-   TtaSetDefEnvString ("TMPDIR", pT, FALSE);
-
    /* create the TMPDIR dir if it doesn't exist */
    if (!TtaMakeDirectory (pT))
      {
-       /* try to use the default tmpdir */
-       pT = DEF_TMPDIR;
-       if (!TtaMakeDirectory (pT))
-	 {
-	   fprintf (stderr, "Couldn't create directory %s\n", pT);
-	   ThotExit (1);
-	 }	 
-       /* update the registry entry */
-       TtaSetEnvString ("TMPDIR", pT, TRUE);
-     }
+       fprintf (stderr, "Couldn't create directory %s\n", pT);
+       ThotExit (1);
+     }	 
 }
 
 /*----------------------------------------------------------------------
@@ -1232,10 +1196,11 @@ void TtaInitializeAppRegistry (char *appArgv0)
   if (AppRegistryInitialized != 0)
     return;
   AppRegistryInitialized++;
+
   /* Sanity check on the argument given. An error here should be
    * detected by programmers, since it's a application coding error.
    */
-  if ((appArgv0 == NULL) || (*appArgv0 == EOS))
+  if (appArgv0 == NULL || *appArgv0 == EOS)
     {
 #ifdef _WINGUI
       MessageBox (NULL, "TtaInitializeAppRegistry called with invalid argv[0] value", "Amaya", MB_OK);
@@ -1252,7 +1217,6 @@ void TtaInitializeAppRegistry (char *appArgv0)
    * First case, the argv[0] indicate that it's an absolute path name.
    * i.e. start with / on unixes or \ or ?:\ on Windows.
    */
-
 #ifdef _WINDOWS
   if (appArgv0[0] == DIR_SEP || (appArgv0[1] == ':' && appArgv0[2] == DIR_SEP))
      strncpy (&execname[0], appArgv0, sizeof (execname) / sizeof (char));
@@ -1295,9 +1259,9 @@ void TtaInitializeAppRegistry (char *appArgv0)
       execname_len = sizeof (execname) / sizeof (char);
 #ifdef _WINDOWS
       MakeCompleteName (appArgv0, "EXE", path, execname, &execname_len);
-#else
+#else /* _WINDOWS */
       MakeCompleteName (appArgv0, "", path, execname, &execname_len);
-#endif
+#endif /* _WINDOWS */
       if (execname[0] == EOS)
 	{
 	  fprintf (stderr, "TtaInitializeAppRegistry internal error\n");
@@ -1305,38 +1269,16 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	  ThotExit (1);
 	}
     }
-   
+
   /*
    * Now that we have a complete path up to the binary, extract the
    * application name.
    */
-  appName = execname;
-  while (*appName) /* go to the ending NUL */
-    appName++;
-  do
-    appName--;
-  while (appName > execname && *appName != DIR_SEP);
-  
-  if (*appName == DIR_SEP)
-    /* dir_end used for relative links ... */
-    dir_end = appName++;
-   
-#ifdef _WINDOWS
-  /* remove the .exe extension. */
-  ptr = strchr (appName, '.');
-  if (ptr && !strcasecmp (ptr, ".exe"))
-    *ptr = EOS;
-  ptr = appName;
-  while (*ptr)
-    {
-      *ptr = tolower (*ptr);
-      ptr++;
-    }
-#endif /* _WINDOWS */
-
+  /* IV june 2004: force the appName to use the amaya temporary directory
+     with thot compilers */
+  appName = "amaya";
   AppRegistryEntryAppli = TtaStrdup (appName);
   AppNameW = TtaStrdup (appName);
-
 #ifdef HAVE_LSTAT
    /*
     * on Unixes, the binary path started may be a softlink
@@ -1492,7 +1434,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    ** Unix: $HOME/.appname,
    ** Win95: $THOTDIR/users/login-name/
    ** WinNT: c:\WINNT\profiles\login-name
-   ** Win2000/XP: $HOMEDRIVE\$HOMEPATH
+   ** Win2000/XP: $HOMEDRIVE\Documents and Settings\username\appname
    **              or
    **             Documents and settings\All Users\login-name
    **              or
@@ -1503,7 +1445,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    /* IV 18/08/2003 Check the variable AMAYA_USER_HOME first */
    ptr = getenv ("AMAYA_USER_HOME");
    if (ptr && TtaDirExists (ptr))
-       strncpy (app_home, ptr, MAX_PATH);
+     strncpy (app_home, ptr, MAX_PATH);
 
    if (app_home[0] == EOS)
      {
@@ -1523,54 +1465,33 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	 /* under win95, there may be no user name */
 	 ptr = WIN_DEF_USERNAME;
 
+       /* Define the app_home directory */
        if (IS_NT)
 	 /* winnt: apphome is windowsdir\profiles\username\appname */
 	 {
-   typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETPROFILESDIRECTORY) (
-      LPTSTR lpProfileDir,
-      LPDWORD lpcchSize
-   );
+	   typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETPROFILESDIRECTORY) (
+		          LPTSTR lpProfileDir,
+			  LPDWORD lpcchSize
+			  );
+	   HMODULE                  g_hUserEnvLib          = NULL;
+	   LPFNGETPROFILESDIRECTORY GetProfilesDirectory   = NULL;
 
-   typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETUSERPROFILEDIR) (
-      HANDLE hToken,
-      LPTSTR lpProfileDir,
-      LPDWORD lpcchSize
-   );
+	   windir[0] = EOS;
+	   g_hUserEnvLib = LoadLibrary ("userenv.dll");
+	   if (g_hUserEnvLib)
+	     {
+	       GetProfilesDirectory =
+		 (LPFNGETPROFILESDIRECTORY) GetProcAddress (g_hUserEnvLib,
+                                                 "GetProfilesDirectoryA");
+	       dwSize = MAX_PATH;
+	       GetProfilesDirectory (windir, &dwSize);
+	     }
+	   if (windir[0] == EOS)
+	     GetWindowsDirectory (windir, dwSize);
 
-   HMODULE                 g_hUserEnvLib           = NULL;
-   /*HANDLE                  hToken;*/
-   LPFNGETPROFILESDIRECTORY GetProfilesDirectory   = NULL;
-   LPFNGETUSERPROFILEDIR   GetUserProfileDirectory = NULL;
-
-     g_hUserEnvLib = LoadLibrary("userenv.dll");
-      if ( !g_hUserEnvLib ) {
-         printf("LoadLibrary(userenv.dll) failed.  Error %d\n",
-              GetLastError() );
-      }
-     GetProfilesDirectory =
-            (LPFNGETPROFILESDIRECTORY) GetProcAddress( g_hUserEnvLib,
-            "GetProfilesDirectoryA" );
-		dwSize = MAX_PATH;
-		windir[0] = EOS;
-	   	GetProfilesDirectory (windir, &dwSize);
-     /*GetUserProfileDirectory =
-            (LPFNGETUSERPROFILEDIR) GetProcAddress( g_hUserEnvLib,
-            "GetUserProfileDirectoryA" );*/
-
-     /*LogonUser(
-            AppNameW,                        // user name
-            ".",                        // domain or server
-            "",  // password
-            LOGON32_LOGON_NETWORK,          // type of logon operation
-            LOGON32_PROVIDER_DEFAULT,       // logon provider
-            &hToken);*/
-	   /*GetUserProfileDirectory (hToken, app_home, &dwSize);*/
-
-	   /* check if a previous app_home directory existed. If yes, use it. If
-	      it didn't exist, then we try to create it using the new conventions. */
-		if (windir[0] == EOS)
-	      GetWindowsDirectory (windir, dwSize);
-	   /* the Windows NT convention */
+	   /* Check if a previous app_home directory existed.
+	      If yes use it, else we try to create it using new conventions. */
+	   /* Windows NT convention */
 	   sprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, AppNameW);
 	   if (!TtaDirExists (app_home))
 	     app_home[0] = EOS;
@@ -1582,35 +1503,36 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	       ptr3 = getenv ("HOMEPATH");
 	       if (ptr2 && *ptr2 && ptr3)
 		 {
-		     sprintf (app_home, "%s%s\\%s", ptr2, ptr3, AppNameW);
-	     if (!TtaDirExists (app_home))
+		   sprintf (app_home, "%s%s\\%s", ptr2, ptr3, AppNameW);
+		   if (!TtaDirExists (app_home))
 		     app_home[0] = EOS;
 		 }
 	     }
 	   if (app_home[0] == EOS)
 	     {
 	       /* another possible Windows 2000/XP convention */
-           sprintf (app_home, "%s\\Documents and Settings\\%s\\%s", windir, ptr, AppNameW);
+	       sprintf (app_home, "%s\\Documents and Settings\\%s\\%s",
+			windir, ptr, AppNameW);
 	       if (!TtaDirExists (app_home))
 		 app_home[0] = EOS;
 	     }
 
-	   /* At this point app_home has a value if the directory existed. Otherwise,
-	      we'll try to create a new one */
+	   /* At this point app_home has a value if the directory existed.
+	      Otherwise, we'll try to create a new one */
 	   if (app_home[0] == EOS)
 	     {
 	       /* try to use one of the system home dirs */
 	       /* the Windows 2000/XP convention */
 	       if (ptr2 && *ptr2 && ptr3)
 	         sprintf (app_home, "%s%s", ptr2, ptr3);
-		   else
-             sprintf (app_home, "%s\\Documents and Settings\\%s", windir, ptr);
+	       else
+		 sprintf (app_home, "%s\\Documents and Settings\\%s",
+			  windir, ptr);
 
-	       if (! TtaDirExists (app_home))
-		 {
-		   /* the Windows NT convention */
-		   sprintf (app_home, "%s\\profiles\\%s", windir, ptr);
-		 }
+	       if (!TtaDirExists (app_home))
+		 /* the Windows NT convention */
+		 sprintf (app_home, "%s\\profiles\\%s", windir, ptr);
+
 	       /* add the end suffix */
 	       sprintf (windir, "\\%s", AppNameW);
 	       strcat (app_home, windir);
@@ -1619,6 +1541,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
        else
 	 /* win95: apphome is  thotdir\users\username */
 	 sprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);
+
 #else /* _WINGUI */
 #ifdef _UNIX
        ptr = getenv ("HOME");
@@ -1627,9 +1550,11 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #if defined(_WX) /* SG TODO : a valider */
 	   wxString homedir = wxGetHomeDir();
 #ifdef _WINDOWS
-	   sprintf (app_home, "%s%c%s", homedir.mb_str(*wxConvCurrent) , DIR_SEP, AppNameW);
+	   sprintf (app_home, "%s%c%s", homedir.mb_str (*wxConvCurrent),
+		    DIR_SEP, AppNameW);
 #else  /* _WINDOWS */
-	   sprintf (app_home, "%s%c.%s", homedir.mb_str(*wxConvCurrent) , DIR_SEP, AppNameW);
+	   sprintf (app_home, "%s%c.%s", homedir.mb_str (*wxConvCurrent),
+		    DIR_SEP, AppNameW);
 #endif /* _WINDOWS */
 #endif /* _WX */
 #endif /* _UNIX */
@@ -1648,7 +1573,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
      app_home[0] = EOS;
 
     /* read the user's preferences (if they exist) */
-   if (app_home != NULL && *app_home != EOS)
+   if (app_home && *app_home != EOS)
      {
        sprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
        if (TtaFileExist (&filename[0]))
@@ -1672,21 +1597,12 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #ifdef DEBUG_REGISTRY
    PrintEnv (stderr);
 #endif
+  /* set the default APP_TMPDIR == APP_HOME */
+   AddRegisterEntry (AppRegistryEntryAppli, "APP_TMPDIR", app_home,
+		     REGISTRY_SYSTEM, TRUE);
    /* initialize the standard environment (i.e global variables) with 
 	  values stored in the registry. */
    InitEnviron ();
-  /* set the default APP_TMPDIR */
-#ifdef _WINDOWS
-   /* the tmpdir is DEF_TMPDIR\app-name */
-   ptr = TtaGetEnvString ("TMPDIR");
-   sprintf (filename, "%s%c%s", ptr, DIR_SEP, AppNameW);
-   AddRegisterEntry (AppRegistryEntryAppli, "APP_TMPDIR", filename,
-		     REGISTRY_SYSTEM, TRUE);
-#else
-   /* under Unix, APP_TMPDIR == APP_HOME */
-   AddRegisterEntry (AppRegistryEntryAppli, "APP_TMPDIR", app_home,
-		     REGISTRY_SYSTEM, TRUE);
-#endif /* _WINDOWS */
    /* reset the status flag to say we don't need to save the registry right now */
    AppRegistryModified = 0;
 }
@@ -1695,7 +1611,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
   TtaFreeAppRegistry : frees the memory associated with the
   registry
   ----------------------------------------------------------------------*/
-void                TtaFreeAppRegistry (void)
+void TtaFreeAppRegistry (void)
 {
   RegistryEntry cour, next;
 

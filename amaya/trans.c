@@ -750,7 +750,7 @@ static ThotBool ExportSubTree (Element subTree, Document doc)
 
 
   len = BUFFER_LEN - szHTML;
-  strcpy ((char *)tmpfilename, (char *)TtaGetEnvString ("TMPDIR"));
+  strcpy ((char *)tmpfilename, (char *)TtaGetEnvString ("APP_TMPDIR"));
   strcat ((char *)tmpfilename, (char *)DIR_STR);
   strcat ((char *)tmpfilename, (char *)"amayatrans.tmp");
   
