@@ -212,6 +212,8 @@ boolean            *isPageBreakChanged;
 	    if (!pParentAb->AbOnPageBreak)
 	      OutOfPage (pParentAb, height, isPageBreakChanged);
 	  }
+	else if (pParentAb->AbBox->BxType == BoRow)
+	  OutOfPage (pParentAb, height, isPageBreakChanged);
 	else if (!pParentAb->AbAfterPageBreak)
 	  {
 	    if (pAb->AbAcceptPageBreak &&
@@ -290,6 +292,7 @@ boolean            *isPageBreakChanged;
   PtrBox              pFirstBox;
   int                 org;
   boolean             toContinue;
+  boolean             isCell;
 
   /* A priori la limite de page n'est pas deplacee */
   /* et il faut examiner les paves fils */
@@ -299,8 +302,9 @@ boolean            *isPageBreakChanged;
     {
       /* verifie les limites de la boite du pave */
       pBox = pAb->AbBox;
-      if (table != NULL && ThotLocalActions[T_firstcolumn] &&
-	  TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
+      isCell = (table != NULL && TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema));
+
+      if (isCell && ThotLocalActions[T_firstcolumn])
 	{
 	  /* page break can be inserted only in the first column */
 	  (*ThotLocalActions[T_firstcolumn]) (pAb, table, &toContinue);

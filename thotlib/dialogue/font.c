@@ -46,12 +46,14 @@ static boolean      UseLucidaFamily;
 static boolean      UseBitStreamFamily;
 
 
-#include "memory_f.h"
-#include "font_f.h"
-#include "units_f.h"
-#include "windowdisplay_f.h"
 #include "buildlines_f.h"
 #include "registry_f.h"
+#include "language_f.h"
+#include "font_f.h"
+#include "memory_f.h"
+#include "registry_f.h"
+#include "units_f.h"
+#include "windowdisplay_f.h"
 
 #ifdef _WINDOWS
 typedef struct FontCharacteristics {
@@ -753,8 +755,14 @@ char                r_nameX[100];
 	   strcat (r_nameX, "-iso8859-1");
 	else if ((char) TOLOWER (alphabet) == 'e')
 	   strcat (r_nameX, "-iso8859-2");
-	else
+	else if ((char) TOLOWER (alphabet) == 'g')
 	   strcat (r_nameX, "-*-fontspecific");		/*adobe */
+	else
+	  {
+	   strcat (r_nameX, "-iso8859-1");
+	   /* replace '1' by current alphabet */
+	   r_nameX[strlen (r_nameX) -1] = alphabet;
+	  }
      }
 
    sprintf (r_name, "%c%c%c%d",
@@ -994,10 +1002,8 @@ void                InitDialogueFonts (char *name)
 #else  /* __STDC__ */
 void                InitDialogueFonts (name)
 char               *name;
-
 #endif /* __STDC__ */
 {
-   int                 i;
 #  ifndef _WINDOWS
    int                 ndir, ncurrent;
    char                FONT_PATH[128];
@@ -1006,10 +1012,14 @@ char               *name;
    char              **dirlist = NULL;
    char              **currentlist = NULL;
    char               *value;
+   char                alphabet;
    int                 f3;
+   int                 i;
 
    /* is there a predefined font family ? */
    MenuSize = 12;
+   alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
+   
    value = TtaGetEnvString ("FontFamily");
    MaxNumberOfSizes = 10;
    if (value == NULL)
@@ -1101,26 +1111,26 @@ char               *name;
       TtFonts[i] = NULL;
 
    /* load first five predefined fonts */
-   FontDialogue = ThotLoadFont ('L', 't', 0, MenuSize, UnPoint, 0);
+   FontDialogue = ThotLoadFont (alphabet, 't', 0, MenuSize, UnPoint, 0);
    if (FontDialogue == NULL)
      {
-	FontDialogue = ThotLoadFont ('L', 'l', 0, MenuSize, UnPoint, 0);
+	FontDialogue = ThotLoadFont (alphabet, 'l', 0, MenuSize, UnPoint, 0);
 	if (FontDialogue == NULL)
 	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
      }
 
-   IFontDialogue = ThotLoadFont ('L', 't', 2, MenuSize, UnPoint, 0);
+   IFontDialogue = ThotLoadFont (alphabet, 't', 2, MenuSize, UnPoint, 0);
    if (IFontDialogue == NULL)
      {
-	IFontDialogue = ThotLoadFont ('L', 'l', 2, MenuSize, UnPoint, 0);
+	IFontDialogue = ThotLoadFont (alphabet, 'l', 2, MenuSize, UnPoint, 0);
 	if (IFontDialogue == NULL)
 	   IFontDialogue = FontDialogue;
      }
 
-   LargeFontDialogue = ThotLoadFont ('L', 't', 1, f3, UnPoint, 0);
+   LargeFontDialogue = ThotLoadFont (alphabet, 't', 1, f3, UnPoint, 0);
    if (LargeFontDialogue == NULL)
      {
-	LargeFontDialogue = ThotLoadFont ('L', 't', 1, f3, UnPoint, 0);
+	LargeFontDialogue = ThotLoadFont (alphabet, 't', 1, f3, UnPoint, 0);
 	if (LargeFontDialogue == NULL)
 	   LargeFontDialogue = IFontDialogue;
      }

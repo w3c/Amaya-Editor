@@ -214,6 +214,17 @@ PtrAttribute        currAttr;
 	  {
 	    TtaSetSelector (NumSelectLanguage, -1, NULL);
 	    MenuAlphaLangValue = -1;
+	    /* cherche la valeur heritee de l'attribut Langue */
+	    strcpy (Lab, TtaGetMessage (LIB, TMSG_INHERITED_LANG));
+	    pHeritAttr = GetTypedAttrAncestor (firstSel, 1, NULL, &pElAttr);
+	    if (pHeritAttr != NULL)
+	      if (pHeritAttr->AeAttrText != NULL)
+		{
+		  /* the attribute value is a RFC-1766 code. Convert it into */
+		  /* a language name */
+		  language = TtaGetLanguageIdFromName (pHeritAttr->AeAttrText->BuContent);
+		  strcat (Lab, TtaGetLanguageName(language));
+	 }
 	  }
 	else
 	   /* initialise le selecteur sur l'entree correspondante a la valeur
@@ -221,28 +232,14 @@ PtrAttribute        currAttr;
 	  {
 	    TtaSetSelector (NumSelectLanguage, defItem, languageValue);
 	    MenuAlphaLangValue = TtaGetLanguageIdFromAlphabet(TtaGetAlphabet (defItem));
+	    Lab[0] = EOS;
 	  }
      }
 
-   /* cherche la valeur heritee de l'attribut Langue */
-   strcpy (Lab, TtaGetMessage (LIB, TMSG_INHERITED_LANG));
-   pHeritAttr = GetTypedAttrAncestor (firstSel, 1, NULL, &pElAttr);
-   if (pHeritAttr != NULL)
-      if (pHeritAttr->AeAttrText != NULL)
-	 {
-	 /* the attribute value is a RFC-1766 code. Convert it into */
-	 /* a language name */
-	 language = TtaGetLanguageIdFromName (pHeritAttr->AeAttrText->BuContent);
-	 strcat (Lab, TtaGetLanguageName(language));
-	 if (MenuAlphaLangValue == -1)
-	   MenuAlphaLangValue = TtaGetLanguageIdFromAlphabet(TtaGetAlphabet (language));
-	 }
-
+   if (MenuAlphaLangValue == -1)
+     MenuAlphaLangValue = TtaGetLanguageIdFromAlphabet(TtaGetAlphabet (language));
 #  ifndef _WINDOWS 
    TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, Lab);
-   
-   /* label alphabet */
-   /* TtaNewLabel (NumLabelAlphaLanguage, NumFormLanguage, TtaGetMessage (LIB, TMSG_CHAR_ENCODING));*/
 
    /* construction du menu alphabet */
    ptr = &bufMenu[0];
@@ -1545,6 +1542,10 @@ char               *txt;
 	      MenuAlphaLangValue = (int)i;
 	    }
 	}
+#  ifndef _WINDOWS 
+   TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, "");
+#  endif /* _WINDOWS */
+
       CallbackValAttrMenu (NumMenuAttr, 1, NULL);
       break;
     case NumMenuAlphaLanguage:

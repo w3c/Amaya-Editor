@@ -615,8 +615,12 @@ static void MoveAttrLang (oldAttr, el, doc)
 	   sibling = next;
 	   }
 	/* associate a LANG attribute to the parent element */
-	newAttr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (parent, newAttr, doc);
+	newAttr = TtaGetAttribute (parent, attrType);
+	if (newAttr == NULL)
+	  {
+	    newAttr = TtaNewAttribute (attrType);
+	    TtaAttachAttribute (parent, newAttr, doc);
+	  }
 	TtaSetAttributeText (newAttr, oldValue, parent, doc);
 	*el = parent;
 	/* do it again for the parent element */
