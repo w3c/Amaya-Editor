@@ -2328,8 +2328,7 @@ ThotBool            history;
 	      else
 		docType = docAnnot;
 	      method = CE_RELATIVE;
-	      /* ???? newdoc = doc */
-	      newdoc = InitDocView (doc, documentname, docAnnot, 0);
+	      newdoc = doc;
 	      /* we are not currently able to use the XML parser for annotations */
 	      isXML = FALSE;
 	    }
