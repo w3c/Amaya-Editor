@@ -111,6 +111,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaCanvas.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaFloatingPanel.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaFrame.cpp
 # End Source File
 # Begin Source File
@@ -131,11 +135,19 @@ SOURCE=..\..\thotlib\dialogue\AmayaPanel.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\AmayaQuickSplitButton.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\AmayaScrollBar.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\thotlib\dialogue\AmayaSimpleWindow.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\AmayaSubPanel.cpp
 # End Source File
 # Begin Source File
 
@@ -152,6 +164,10 @@ SOURCE=..\..\thotlib\dialogue\AmayaURLBar.cpp
 # Begin Source File
 
 SOURCE=..\..\thotlib\dialogue\AmayaWindow.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\AmayaXHTMLPanel.cpp
 # End Source File
 # Begin Source File
 
