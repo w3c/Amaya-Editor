@@ -2243,6 +2243,7 @@ void                ResetHighlightedElement ()
 void SynchronizeSourceView (NotifyElement *event)
 {
    Element             firstSel, el, child, otherEl;
+   ElementType         elType;
    int                 firstChar, lastChar, line, i, view;
    AttributeType       attrType;
    Attribute	       attr;
@@ -2303,6 +2304,7 @@ void SynchronizeSourceView (NotifyElement *event)
 	 /* look for an element with the same line number in the other doc */
 	 /* line numbers are increasing in document order */
 	 el = TtaGetMainRoot (otherDoc);
+	 elType = TtaGetElementType (el);
 	 do
 	    {
 	    if (TtaGetElementLineNumber (el) >= line)
@@ -2325,96 +2327,98 @@ void SynchronizeSourceView (NotifyElement *event)
 	       }
 	    }
 	 while (!otherEl && el);
-
+	 
 	 if (otherEl && otherEl != HighlightElement)
-	    /* element found */
-	    {
-	    /* If an element is currently highlighted, remove its Highlight
-	       attribute */
-	    ResetHighlightedElement ();
-	    /* Put a Highlight attribute on the element found */
-	    if (otherDocIsStruct)
+	   /* element found */
+	   {
+	     /* If an element is currently highlighted, remove its Highlight
+		attribute */
+	     ResetHighlightedElement ();
+	     /* Put a Highlight attribute on the element found */
+	     if (otherDocIsStruct)
 	       {
-	       if (DocumentTypes[otherDoc] == docHTML)
-		 {
-		   attrType.AttrSSchema = TtaGetSSchema ("HTML",
-							 otherDoc);
-		   attrType.AttrTypeNum = HTML_ATTR_Highlight;
-		   val = HTML_ATTR_Highlight_VAL_Yes_;
-		 }
-	       else if (DocumentTypes[otherDoc] == docMath)
-		 {
-		   attrType.AttrSSchema = TtaGetSSchema ("MathML",
-							 otherDoc);
-		   attrType.AttrTypeNum = MathML_ATTR_Highlight;
-		   val = MathML_ATTR_Highlight_VAL_Yes_;
-		 }
-	       else if (DocumentTypes[otherDoc] == docSVG)
-		 {
-		   attrType.AttrSSchema = TtaGetSSchema ("SVG",
-							 otherDoc);
-		   attrType.AttrTypeNum = SVG_ATTR_Highlight;
-		   val = SVG_ATTR_Highlight_VAL_Yes_;
-		 }
-	       else if (DocumentTypes[otherDoc] == docXml)
-		 {
-		   attrType.AttrSSchema = TtaGetSSchema ("XML",
-							 otherDoc);
-		   attrType.AttrTypeNum = XML_ATTR_Highlight;
-		   val = XML_ATTR_Highlight_VAL_Yes_;
-		 }
+		 if (DocumentTypes[otherDoc] == docHTML)
+		   {
+		     attrType.AttrSSchema = TtaGetSSchema ("HTML",
+							   otherDoc);
+		     attrType.AttrTypeNum = HTML_ATTR_Highlight;
+		     val = HTML_ATTR_Highlight_VAL_Yes_;
+		   }
+		 else if (DocumentTypes[otherDoc] == docMath)
+		   {
+		     attrType.AttrSSchema = TtaGetSSchema ("MathML",
+							   otherDoc);
+		     attrType.AttrTypeNum = MathML_ATTR_Highlight;
+		     val = MathML_ATTR_Highlight_VAL_Yes_;
+		   }
+		 else if (DocumentTypes[otherDoc] == docSVG)
+		   {
+		     attrType.AttrSSchema = TtaGetSSchema ("SVG",
+							   otherDoc);
+		     attrType.AttrTypeNum = SVG_ATTR_Highlight;
+		     val = SVG_ATTR_Highlight_VAL_Yes_;
+		   }
+		 else if (DocumentTypes[otherDoc] == docXml)
+		   {
+		     /* We take the schema of the main root */
+		     /* attrType.AttrSSchema = TtaGetSSchema ("XML",
+			otherDoc); */
+		     attrType.AttrSSchema = elType.ElSSchema;
+		     attrType.AttrTypeNum = XML_ATTR_Highlight;
+		     val = XML_ATTR_Highlight_VAL_Yes_;
+		   }
 #ifdef _SVGLIB
-	       else if (DocumentTypes[otherDoc] == docLibrary)
-		 {
-		   attrType.AttrSSchema = TtaGetSSchema ("HTML",
-							 otherDoc);
-		   attrType.AttrTypeNum = HTML_ATTR_Highlight;
-		   val = HTML_ATTR_Highlight_VAL_Yes_;
-		 }
+		 else if (DocumentTypes[otherDoc] == docLibrary)
+		   {
+		     attrType.AttrSSchema = TtaGetSSchema ("HTML",
+							   otherDoc);
+		     attrType.AttrTypeNum = HTML_ATTR_Highlight;
+		     val = HTML_ATTR_Highlight_VAL_Yes_;
+		   }
 #endif /* _SVGLIB */
-	       else
-		 {
-		   attrType.AttrSSchema = NULL;
-		   attrType.AttrTypeNum = 0;
-		   val = 0;
-		 }
+		 else
+		   {
+		     attrType.AttrSSchema = NULL;
+		     attrType.AttrTypeNum = 0;
+		     val = 0;
+		   }
 	       }
-	    else
+	     else
 	       {
-	       attrType.AttrSSchema = TtaGetSSchema ("TextFile",
-						     otherDoc);
-	       attrType.AttrTypeNum = TextFile_ATTR_Highlight;
-	       val = TextFile_ATTR_Highlight_VAL_Yes_;
+		 attrType.AttrSSchema = TtaGetSSchema ("TextFile",
+						       otherDoc);
+		 attrType.AttrTypeNum = TextFile_ATTR_Highlight;
+		 val = TextFile_ATTR_Highlight_VAL_Yes_;
 	       }
-	    if (attrType.AttrSSchema)
-	      {
-		attr = TtaNewAttribute (attrType);
-		TtaAttachAttribute (otherEl, attr, otherDoc);
-		TtaSetAttributeValue (attr, val, otherEl, otherDoc);
-		/* record the highlighted element */
-		HighlightDocument = otherDoc;
-		HighlightElement = otherEl;
-		HighLightAttribute = attr;
-		/* Scroll all views where the element appears to show it */
-		for (view = 1; view < 6; view++)
-		  if (TtaIsViewOpen (otherDoc, view))
-		    {
-		      TtaGiveBoxAbsPosition (otherEl, otherDoc, view, UnPixel,
-					     &x, &y);
-		      TtaGiveWindowSize (otherDoc, view, UnPixel, &width,
-					 &height);
-		      if (y < 0 || y > height - 15)
+	     if (attrType.AttrSSchema)
+	       {
+		 attr = TtaNewAttribute (attrType);
+		 TtaAttachAttribute (otherEl, attr, otherDoc);
+		 TtaSetAttributeValue (attr, val, otherEl, otherDoc);
+		 /* record the highlighted element */
+		 HighlightDocument = otherDoc;
+		 HighlightElement = otherEl;
+		 HighLightAttribute = attr;
+		 /* Scroll all views where the element appears to show it */
+		 for (view = 1; view < 6; view++)
+		   if (TtaIsViewOpen (otherDoc, view))
+		     {
+		       TtaGiveBoxAbsPosition (otherEl, otherDoc, view, UnPixel,
+					      &x, &y);
+		       TtaGiveWindowSize (otherDoc, view, UnPixel, &width,
+					  &height);
+		       if (y < 0 || y > height - 15)
 			 TtaShowElement (otherDoc, view, otherEl, 25);
-		    }
-	      }
-	    }
+		     }
+	       }
+	   }
 	 done = TRUE;
 	 }
       }
    if (!done)
-      /* If an element is currently highlighted, remove its Highlight
-	 attribute */
-      ResetHighlightedElement ();
+     /* If an element is currently highlighted, remove its Highlight
+	attribute */
+     ResetHighlightedElement ();
 }
 
 
