@@ -534,7 +534,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	      else
 		{
 		  /* add it in the middle */
-		  TtaSplitText (first, c1 - 1, source_doc);
+		  TtaSplitText (first, c1, source_doc);
 		  TtaNextSibling (&first);
 		  TtaInsertSibling (anchor, first, TRUE, source_doc);
 		}
