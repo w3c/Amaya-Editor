@@ -73,6 +73,7 @@ static int          ChangeTypeMethod[MAX_ITEMS_CHANGE_TYPE];
 static Func         TransformIntoFunction = NULL;
 /* copy & cut callback procedure */
 static Proc         CopyAndCutFunction = NULL;
+static Proc3        CopyCellFunction = NULL;
 
 #define M_EQUIV 1
 #define M_RESDYN 2
@@ -722,7 +723,7 @@ static void RegSSchemaDescent (PtrElement pEl)
    liste des elements a copier.                    
    pParent est le pere de l'element original	
   ----------------------------------------------------------------------*/
-static void SaveElement (PtrElement pEl, PtrElement pParent)
+static void SaveElement (PtrElement pEl, PtrElement pParent, int doc)
 {
   PtrPasteElem        pPasteEl, pNewPasteEl;
   PtrElement          pAncest;
@@ -731,17 +732,6 @@ static void SaveElement (PtrElement pEl, PtrElement pParent)
   pNewPasteEl = (PtrPasteElem) TtaGetMemory (sizeof (PasteElemDescr));
   if (pNewPasteEl != NULL)
     {
-      if (FirstSavedElement == NULL || TableRowsSaved)
-	{
-	  if (TypeHasException (ExcIsRow, pEl->ElTypeNumber,
-				pEl->ElStructSchema))
-	    {
-	      if (FirstSavedElement == NULL)
-		TableRowsSaved = TRUE;
-	    }
-	  else
-	    TableRowsSaved = FALSE;
-	}
       if (FirstSavedElement == NULL)
 	/* that's the first element saved */
 	{
@@ -766,6 +756,26 @@ static void SaveElement (PtrElement pEl, PtrElement pParent)
 	  pEl->ElPrevious = pPasteEl->PeElement;
 	  pPasteEl->PeElement->ElNext = pEl;
 	}
+      if (FirstSavedElement == NULL || TableRowsSaved)
+	{
+	  if (TypeHasException (ExcIsRow, pEl->ElTypeNumber,
+				pEl->ElStructSchema))
+	    {
+	      if (FirstSavedElement == NULL)
+		TableRowsSaved = TRUE;
+	    }
+	  else
+	    TableRowsSaved = FALSE;
+	}
+
+      /* notify the application that a cell of a whole row or a whole
+	 column is saved */
+      if (CopyCellFunction &&
+	  TypeHasException (ExcIsCell, pEl->ElTypeNumber,
+			    pEl->ElStructSchema) &&
+	  (TableRowsSaved || WholeColumnSaved))
+	(*(Proc3)CopyCellFunction) ((void*)pEl, (void*)doc, (void*)TableRowsSaved);
+
       pNewPasteEl->PeNext = NULL;
       pEl->ElNext = NULL;
       pNewPasteEl->PeElement = pEl;
@@ -812,7 +822,7 @@ void CopyCommand ()
   PtrPasteElem        pSave;
   PtrDocument         pSelDoc;
   PtrAttribute        pAttrLang, pAttrHerit;
-  int                 firstChar, lastChar;
+  int                 firstChar, lastChar, doc;
 
   pCopy = NULL;
   /* y-a-t'il une selection courante ? */
@@ -843,8 +853,9 @@ void CopyCommand ()
 	  DocOfSavedElements = pSelDoc;
 	  /* tell the application what document the saved elements
 	     come from */
+	  doc = IdentDocument (DocOfSavedElements);
 	  if (CopyAndCutFunction)
-	    (*(Proc1)CopyAndCutFunction) ((void*)IdentDocument (DocOfSavedElements));
+	    (*(Proc1)CopyAndCutFunction) ((void *) doc);
 	  /* first selected element */
 	  pEl = firstSel;
 	  enclosingCell = NULL;
@@ -896,7 +907,7 @@ void CopyCommand ()
 		      /* remove the last part */
 		      DeleteElement (&pE, pSelDoc);
 		    }
-		  SaveElement (pCopy, pEl->ElParent);
+		  SaveElement (pCopy, pEl->ElParent, doc);
 		  /* met l'attribut langue sur la copie s'il n'y
 		     est pas deja */
 		  if (GetTypedAttrForElem (pCopy, 1, NULL) == NULL)
@@ -1251,7 +1262,7 @@ void CutCommand (ThotBool save)
 	      /* lock tables formatting */
 	      if (ThotLocalActions[T_islock])
 		{
-		  (*(Proc1)ThotLocalActions[T_islock]) ((void*)&lock);
+		  (*(Proc1)ThotLocalActions[T_islock]) ((void *) &lock);
 		  if (!lock)
 		    {
 		      if (dispMode == DisplayImmediately)
@@ -1577,7 +1588,7 @@ void CutCommand (ThotBool save)
 				      /* tell the application what document
 					 the saved elements come from */
 				      if (CopyAndCutFunction)
-					(*(Proc1)CopyAndCutFunction) ((void*)IdentDocument (DocOfSavedElements));
+					(*(Proc1)CopyAndCutFunction) ((void *) doc);
 				    }
 				  /* il ne faudra pas changer les
 				     labels des elements exportables
@@ -1586,7 +1597,7 @@ void CutCommand (ThotBool save)
 				  ChangeLabel = FALSE;
 				  /* met l'element courant dans la
 				     chaine des elements sauvegarde's */
-				  SaveElement (pE, pParentEl);
+				  SaveElement (pE, pParentEl, doc);
 				}
 			      if (pS == NULL)
 				pSave = pE;
@@ -1878,17 +1889,28 @@ void CutCommand (ThotBool save)
 
 /*----------------------------------------------------------------------
   TtaSetCopyAndCutFunction registers the function to be called when
-  a Copy or Cut operation is executed.
+  a Copy or Cut operation is executed:
+  void procedure (Docucment doc)
   ----------------------------------------------------------------------*/
-void      TtaSetCopyAndCutFunction (Proc procedure)
+void TtaSetCopyAndCutFunction (Proc procedure)
 {
   CopyAndCutFunction = procedure;
 }
 
 /*----------------------------------------------------------------------
+  TtaSetCopyCellFunction registers the function to be called when
+  a cell of a row or a column is copied:
+  void procedure (Element el, Docucment doc, ThotBool inRow)
+  ----------------------------------------------------------------------*/
+void TtaSetCopyCellFunction (Proc3 procedure)
+{
+  CopyCellFunction = procedure;
+}
+
+/*----------------------------------------------------------------------
    EmptyElement    retourne vrai si l'element pEl est vide.        
   ----------------------------------------------------------------------*/
-ThotBool            EmptyElement (PtrElement pEl)
+ThotBool EmptyElement (PtrElement pEl)
 {
    ThotBool            empty;
    PtrElement          pChild;

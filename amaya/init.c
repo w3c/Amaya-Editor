@@ -171,11 +171,7 @@ static ThotIcon       iconTableNo;
 static ThotIcon       iconBrowser;
 static ThotIcon       iconEditor;
 static ThotIcon       iconHome;
-#ifdef AMAYA_PLUGIN
-static ThotIcon       iconPlugin;
-#endif /* AMAYA_PLUGIN */
 #endif /* #ifdef _NOGUI */
-
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX)
 static ThotIcon       stopR;
@@ -269,7 +265,6 @@ extern char      LostPicturePath [512];
 
 #include "wininclude.h"
 #endif /* _WINGUI */
-
 #include "AHTURLTools_f.h"
 #include "css_f.h"
 #include "EDITORactions_f.h"
@@ -285,6 +280,7 @@ extern char      LostPicturePath [512];
 #include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
+#include "HTMLtable_f.h"
 #include "html2thot_f.h"
 #include "Mathedit_f.h"
 #include "MENUconf_f.h"
@@ -297,11 +293,6 @@ extern char      LostPicturePath [512];
 #include "UIcss_f.h"
 #include "string.h"
 #include "Xml2thot_f.h"
-
-#ifdef _WINGUI
-  #include "wininclude.h"
-#endif /* _WINGUI */
-
 #ifdef DAV
 #define WEBDAV_EXPORT extern
 #include "davlib.h"
@@ -311,10 +302,6 @@ extern char      LostPicturePath [512];
 #endif /* DAV */
 
 extern void InitMathML ();
-
-#ifdef AMAYA_PLUGIN
-extern void CreateFormPlugin (Document, View);
-#endif /* AMAYA_PLUGIN */
 
 /* the structure used for storing the context of the 
    GetAmayaDoc_callback function */
@@ -6972,6 +6959,7 @@ void InitAmaya (NotifyEvent * event)
    TtaSetAccessKeyFunction ((Proc) AccessKeyHandler);
    TtaSetEntityFunction ((Proc) MapEntityByCode);
    TtaSetCopyAndCutFunction ((Proc) RegisterURLSavedElements);
+   TtaSetCopyCellFunction ((Proc3) CopyCell);
    /* Initialize the Amaya user and tmp directories */
    s = TtaGetEnvString ("APP_TMPDIR");
    if (!CheckMakeDirectory (s, TRUE))

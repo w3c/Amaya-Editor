@@ -2014,6 +2014,65 @@ void ColumnPasted (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
+  CopyCell:
+  a cell of a row or of a column will be copied
+  ----------------------------------------------------------------------*/
+void CopyCell (Element cell, Document doc, ThotBool inRow)
+{
+  ElementType         elType;
+  Attribute           attr;
+  AttributeType       attrType, attrTypeR;
+  ThotBool            inMath;
+  
+  elType = TtaGetElementType (cell);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrTypeR.AttrSSchema = elType.ElSSchema;
+  inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
+  if (inRow)
+    {
+      if (inMath)
+	{
+	  attrType.AttrTypeNum = MathML_ATTR_rowspan_;
+	  attrTypeR.AttrTypeNum = MathML_ATTR_MRowExt;
+	}
+      else
+	{
+	  attrType.AttrTypeNum = HTML_ATTR_rowspan_;
+	  attrTypeR.AttrTypeNum = HTML_ATTR_RowExt;
+	}
+      /* remove the rowspan attribute of the copy */
+      attr = TtaGetAttribute (cell, attrType);
+      if (attr)
+	TtaRemoveAttribute (cell, attr, doc);
+      /* remove the refext attribute of the copy */
+      attr = TtaGetAttribute (cell, attrTypeR);
+      if (attr)
+	TtaRemoveAttribute (cell, attr, doc);
+    }
+  else
+    {
+      if (inMath)
+	{
+	  attrType.AttrTypeNum = MathML_ATTR_columnspan;
+	  attrTypeR.AttrTypeNum = MathML_ATTR_MColExt;
+	}
+      else
+	{
+	  attrType.AttrTypeNum = HTML_ATTR_colspan_;
+	  attrTypeR.AttrTypeNum = HTML_ATTR_ColExt;
+	}
+      /* remove the colspan attribute of the copy */
+      attr = TtaGetAttribute (cell, attrType);
+      if (attr)
+	TtaRemoveAttribute (cell, attr, doc);
+      /* remove the refext attribute of the copy */
+      attr = TtaGetAttribute (cell, attrTypeR);
+      if (attr)
+	TtaRemoveAttribute (cell, attr, doc);
+    }
+}
+
+/*----------------------------------------------------------------------
   TableCreated                                            
   ----------------------------------------------------------------------*/
 void TableCreated (NotifyElement * event)

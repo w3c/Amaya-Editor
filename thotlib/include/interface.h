@@ -29,9 +29,18 @@ extern int          TtaUseOwnXLookupString;
 
 #ifndef __CEXTRACT__
 /*----------------------------------------------------------------------
-  TtaSetCopyAndCutFunction registers the copy & cut function
+  TtaSetCopyAndCutFunction registers the function to be called when
+  a Copy or Cut operation is executed:
+  void procedure (Docucment doc)
   ----------------------------------------------------------------------*/
 extern void TtaSetCopyAndCutFunction (void (*procedure) ());
+
+/*----------------------------------------------------------------------
+  TtaSetCopyCellFunction registers the function to be called when
+  a cell of a row or a column is copied:
+  void procedure (Element el, Docucment doc, ThotBool inRow)
+  ----------------------------------------------------------------------*/
+extern void TtaSetCopyCellFunction (void (*procedure) (void *,void *,void *));
 
 /*----------------------------------------------------------------------
   TtaSetAccessKeyFunction registers the access key function.

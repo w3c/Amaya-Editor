@@ -26,6 +26,7 @@ extern void ProcessFirstLast ( PtrElement pPrev,
                                PtrDocument pDoc );
 extern void CutCommand ( ThotBool save );
 extern void TtaSetCopyAndCutFunction ( Proc procedure );
+extern void TtaSetCopyCellFunction ( Proc3 procedure );
 extern ThotBool EmptyElement ( PtrElement pEl );
 extern void CreateNewElement ( int typeNum,
                                PtrSSchema pSS,
@@ -59,6 +60,7 @@ extern void ProcessFirstLast ( PtrElement pPrev,
                                  PtrDocument pDoc );
 extern void CutCommand ( ThotBool save );
 extern void TtaSetCopyAndCutFunction ( Proc procedure );
+extern void TtaSetCopyCellFunction ( Proc3 procedure );
 extern ThotBool EmptyElement ( PtrElement pEl );
 extern void CreateNewElement ( int typeNum,
                                  PtrSSchema pSS,
