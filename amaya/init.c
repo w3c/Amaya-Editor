@@ -1208,16 +1208,16 @@ boolean		    history;
   if (content_type == NULL || content_type[0] == EOS)
     /* no content type */
     {
-      if (tempfile[0] != EOS)
-	/* It's a document loaded from the Web */
-	/* Let's suppose it's HTML */
-	HTMLfile = TRUE;
-      else if (IsHTMLName (pathname))
+      if (IsHTMLName (pathname))
 	/* local document */
 	/* try to guess the document type after its file name extension */
 	HTMLfile = TRUE;
       else if (!IsImageName (pathname))
 	PlainText = TRUE;
+      else if (tempfile[0] != EOS)
+	/* It's a document loaded from the Web */
+	/* Let's suppose it's HTML */
+	HTMLfile = TRUE;
       }
    else
      /* the server returned a content type */
@@ -1713,6 +1713,8 @@ NotifyDialog       *event;
    return FALSE;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               GetHTMLDocument_callback (int newdoc, int status, 
 					     char *urlName,
@@ -1884,7 +1886,6 @@ void               *ctx_cbf;
    char               *target;
    char               *pathname;
    char               *documentname;
-   char                content_type [NAME_LENGTH];
    int                 toparse;
    int                 slash;
    int                 mode;
@@ -1900,7 +1901,6 @@ void               *ctx_cbf;
        return (0);
      }
  
-   content_type[0] = '\0';
    ok = TRUE;
    tempdocument = TtaGetMemory (MAX_LENGTH);
    target = TtaGetMemory (MAX_LENGTH);
@@ -2058,7 +2058,7 @@ void               *ctx_cbf;
 					      (void *) GetHTMLDocument_callback,
 					      (void *) ctx,
 					      YES,
-					      (char *) content_type);
+					      NULL);
 		   else
 		     {
 		       if (!strcmp (documentname, "noname.html"))
@@ -2077,7 +2077,7 @@ void               *ctx_cbf;
 						   (void *) GetHTMLDocument_callback, 
 						   (void *) ctx,
 						   YES,
-						   (char *) content_type);
+						   NULL);
 			   
 			 }
 		       else 
@@ -2091,7 +2091,7 @@ void               *ctx_cbf;
 						 (void *) GetHTMLDocument_callback, 
 						 (void *) ctx,
 						 YES,
-						 (char *) content_type);
+						 NULL);
 		     }
 		 }
 	       else {
@@ -2695,55 +2695,55 @@ NotifyEvent        *event;
    /* initialize icons */
 #  ifndef _WINDOWS
    stopR = TtaCreatePixmapLogo (stopR_xpm);
-   TtaRegisterPixmap("stopR", stopR);
    stopN = TtaCreatePixmapLogo (stopN_xpm);
-   TtaRegisterPixmap("stopN", stopN);
    iconSave = TtaCreatePixmapLogo (save_xpm);
-   TtaRegisterPixmap("Save", iconSave);
    iconFind = TtaCreatePixmapLogo (find_xpm);
-   TtaRegisterPixmap("Find", iconFind);
    iconReload = TtaCreatePixmapLogo (Reload_xpm);
-   TtaRegisterPixmap("Reload", iconReload);
    iconI = TtaCreatePixmapLogo (I_xpm);
-   TtaRegisterPixmap("Italic", iconI);
    iconB = TtaCreatePixmapLogo (B_xpm);
-   TtaRegisterPixmap("Bold", iconB);
    iconT = TtaCreatePixmapLogo (T_xpm);
-   TtaRegisterPixmap("TeleType", iconT);
    iconBack = TtaCreatePixmapLogo (Back_xpm);
-   TtaRegisterPixmap("Back", iconBack);
    iconBackNo = TtaCreatePixmapLogo (BackNo_xpm);
-   TtaRegisterPixmap("BackNo", iconBackNo);
    iconForward = TtaCreatePixmapLogo (Forward_xpm);
-   TtaRegisterPixmap("Forward", iconForward);
    iconForwardNo = TtaCreatePixmapLogo (ForwardNo_xpm);
-   TtaRegisterPixmap("ForwardNo", iconForwardNo);
    iconH1 = TtaCreatePixmapLogo (H1_xpm);
-   TtaRegisterPixmap("H1", iconH1);
    iconH2 = TtaCreatePixmapLogo (H2_xpm);
-   TtaRegisterPixmap("H2", iconH2);
    iconH3 = TtaCreatePixmapLogo (H3_xpm);
-   TtaRegisterPixmap("H3", iconH3);
    iconPrint = TtaCreatePixmapLogo (Print_xpm);
-   TtaRegisterPixmap("Print", iconPrint);
    iconCSS = TtaCreatePixmapLogo (css_xpm);
-   TtaRegisterPixmap("CSS", iconCSS);
    iconBullet = TtaCreatePixmapLogo (Bullet_xpm);
-   TtaRegisterPixmap("Bullet", iconBullet);
    iconNum = TtaCreatePixmapLogo (Num_xpm);
-   TtaRegisterPixmap("Numbered", iconNum);
    iconImage = TtaCreatePixmapLogo (Image_xpm);
    iconDL = TtaCreatePixmapLogo (DL_xpm);
-   TtaRegisterPixmap("Definition", iconDL);
    iconLink = TtaCreatePixmapLogo (Link_xpm);
-   TtaRegisterPixmap("Link", iconLink);
    iconTable = TtaCreatePixmapLogo (Table_xpm);
-   TtaRegisterPixmap("Table", iconTable);
 #  ifdef AMAYA_PLUGIN
    iconPlugin = TtaCreatePixmapLogo (Plugin_xpm);
    TtaRegisterPixmap("Plugin", iconPlugin);
 #  endif /* AMAYA_PLUGIN */
 #  ifdef AMAYA_JAVA
+   TtaRegisterPixmap("stopR", stopR);
+   TtaRegisterPixmap("stopN", stopN);
+   TtaRegisterPixmap("Save", iconSave);
+   TtaRegisterPixmap("Find", iconFind);
+   TtaRegisterPixmap("Reload", iconReload);
+   TtaRegisterPixmap("Italic", iconI);
+   TtaRegisterPixmap("Bold", iconB);
+   TtaRegisterPixmap("TeleType", iconT);
+   TtaRegisterPixmap("Back", iconBack);
+   TtaRegisterPixmap("BackNo", iconBackNo);
+   TtaRegisterPixmap("Forward", iconForward);
+   TtaRegisterPixmap("ForwardNo", iconForwardNo);
+   TtaRegisterPixmap("H1", iconH1);
+   TtaRegisterPixmap("H2", iconH2);
+   TtaRegisterPixmap("H3", iconH3);
+   TtaRegisterPixmap("Print", iconPrint);
+   TtaRegisterPixmap("CSS", iconCSS);
+   TtaRegisterPixmap("Bullet", iconBullet);
+   TtaRegisterPixmap("Numbered", iconNum);
+   TtaRegisterPixmap("Definition", iconDL);
+   TtaRegisterPixmap("Link", iconLink);
+   TtaRegisterPixmap("Table", iconTable);
    iconJava = TtaCreatePixmapLogo (Java_xpm);
    TtaRegisterPixmap("Java", iconJava);
 #  endif /* AMAYA_JAVA */

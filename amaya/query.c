@@ -698,6 +698,7 @@ int                 status;
 #endif
 {
    AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
+   char               *content_type;
    boolean             error_flag;
 
    if (!me)
@@ -778,24 +779,28 @@ int                 status;
    else if (me->reqStatus != HT_ABORT)
      me->reqStatus = HT_END;
 
-   /* copy the content_type */
-  
-   {
-    char *content_type = request->anchor->content_type->name;
- 
-   if (content_type && content_type [0] && me->content_type)  
+   /* copy the content_type */  
+   content_type = request->anchor->content_type->name; 
+   if (content_type && content_type [0] != EOS)  
      {
         /* libwww gives www/unknown when it gets an error. As this is 
            an HTML test, we force the type to text/html */
 	if (!strcmp (content_type, "www/unknown"))
           {
-           strcpy (me->content_type, "text/html");
+	    if (me->content_type == NULL)
+	      me->content_type = TtaStrdup ("text/html");
+	    else
+	      strcpy (me->content_type, "text/html");
           }
         else 
-          { 
-	   strncpy (me->content_type, content_type, 
-	            NAME_LENGTH -1);
-           me->content_type [NAME_LENGTH-1] = '\0';
+          {
+	    if (me->content_type == NULL)
+	      me->content_type = TtaStrdup (content_type);
+	    else
+	      {
+		strncpy (me->content_type, content_type, NAME_LENGTH -1);
+		me->content_type [NAME_LENGTH-1] = '\0';
+	      }
            
            /* Content-Type can be specified by a server's admin. To be on
               the safe side, we normalize its case */
@@ -805,18 +810,15 @@ int                 status;
         fprintf (stderr, "content type is: %s\n", me->content_type);
 #endif /* DEBUG_LIBWWW */
      }
-   }
  
   /* don't remove or Xt will hang up during the PUT */
    if (AmayaAlive  && ((me->method == METHOD_POST) ||
 			 (me->method == METHOD_PUT)))
      {
        PrintTerminateStatus (me, status);
-
      } 
 
   ProcessTerminateRequest (me);
-
   return HT_OK;
 }
 
@@ -1610,26 +1612,10 @@ char 	     *content_type;
     */
 
    if ((mode & AMAYA_ASYNC) || (mode & AMAYA_IASYNC)) {
-     /*     
-      char* tmp;
-      tmp = TtaGetMemory (strlen (outputfile) + 1);
-      strcpy (tmp, outputfile);
-      me->outputfile = tmp;
-	  */
       me->outputfile = TtaGetMemory (strlen (outputfile) + 1);
       strcpy (me->outputfile, outputfile);
-      /*
-      tmp = TtaGetMemory (MAX_LENGTH + 1);
-      strncpy (tmp, urlName, MAX_LENGTH);
-      tmp[MAX_LENGTH] = EOS;
-      me->urlName = tmp;
-	  */
       me->urlName = TtaGetMemory (strlen (urlName) + 1);
       strcpy (me->urlName, urlName);
-	  /*
-      me->content_type = TtaGetMemory (MAX_LENGTH + 1);
-      me->content_type[MAX_LENGTH] = EOS;
-	  */
 #  ifdef _WINDOWS
       HTRequest_setPreemptive (me->request, NO);
    } else {

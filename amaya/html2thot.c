@@ -2908,9 +2908,8 @@ Element             el;
 			    TtaSetTextContent (leaf, text, currentLanguage,
 					       theDocument);
 			  }
+			TtaFreeMemory (text);
 		     }
-		   /*
-		   TtaFreeMemory (text);*/
 		   }
 	       break;
 

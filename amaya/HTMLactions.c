@@ -601,6 +601,14 @@ Document       doc;
 	  QueryClose ();
 #endif
 #endif
+	  TtaFreeMemory (LastURLName);
+	  TtaFreeMemory (DocumentName);
+	  TtaFreeMemory (SavePath);
+	  TtaFreeMemory (SaveName);
+	  TtaFreeMemory (ObjectName);
+	  TtaFreeMemory (SaveImgsURL);
+	  TtaFreeMemory (SavingFile);
+	  TtaFreeMemory (AttrHREFvalue);
 	  TtaQuit ();
 	}
     }

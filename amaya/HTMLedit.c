@@ -32,6 +32,7 @@ static int          OldHeight;
 #include "EDITORactions_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
+#include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
 #include "HTMLstyle_f.h"
 #include "tree.h"

@@ -889,7 +889,6 @@ char                  *newURL;
    char                imgname[MAX_LENGTH];
    char                url[MAX_LENGTH];
    char               *buf, *ptr;
-   char                path_sep [2];
    char                url_str [2];
    int                 buflen, max, index;
 

@@ -212,6 +212,26 @@ int                 msgNumber;
    return (origineid);
 }
 
+
+/*----------------------------------------------------------------------
+  FreeAllMessages
+  ----------------------------------------------------------------------*/
+void              FreeAllMessages ()
+{
+   int                 i;
+   PtrTabMsg           currenttable;
+
+   while (FirstTableMsg != NULL)
+     {
+       currenttable = FirstTableMsg;
+       FirstTableMsg = FirstTableMsg->TabNext;
+       for (i = 0; i < currenttable->TabLength; i++)
+	 TtaFreeMemory (currenttable->TabMessages[i]);
+       TtaFreeMemory (FirstTableMsg);
+     }
+}
+
+
 /*----------------------------------------------------------------------
    TtaGetMessage retourne le message correspondant a` l'origine et 
    l'indice 0 a` N donne'.                                 

@@ -264,13 +264,14 @@ void                TtaQuit ()
 {
    TtaSaveAppRegistry ();
 
-#  ifdef _WINDOWS
 #  ifndef NODISPLAY
+#  ifdef _WINDOWS
    if (!TtIsTrueColor)
 	  if (!DeleteObject (TtCmap))
          WinErrorBox (WIN_Main_Wd);
-#  endif /* NODISPLAY */
 #  endif /* _WINDOWS */
+   FreeAllMessages ();
+#  endif /* NODISPLAY */
    FreeAll ();
    exit (0);
 }
