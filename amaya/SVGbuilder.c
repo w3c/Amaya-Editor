@@ -1067,10 +1067,13 @@ void SVGElementComplete (ParserData *context, Element el, int *error)
 	 elType.ElTypeNum == SVG_EL_animateTransform)
        register_animated_element (el);
 
+ /*     if (elType.ElTypeNum == SVG_EL_linearGradient) */
+/*        	 TtaSetLinearGradient (el); */
+
      switch (elType.ElTypeNum)
-       {
-       /* case SVG_EL_linearGradient: */
-/* 	 TtaSetLinearGradient (el); */
+       {	 
+/*        case SVG_EL_stop: */
+/* 	 TtaSetStopGradient (el); */
 /* 	 break; */
 	 
        case SVG_EL_foreignObject:
@@ -2949,6 +2952,27 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
       }
 }
 
+int ParseintAttribute (Attribute attr)
+{
+  int                  length;
+  char                *text, *ptr;
+  PresentationValue    pval;
+
+  length = TtaGetTextAttributeLength (attr) + 2;
+  text = TtaGetMemory (length);
+  if (text != NULL)
+    {
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* parse the attribute value (a number followed by a unit) */
+      ptr = text;
+      ptr = TtaSkipBlanks (ptr);
+      ptr = ParseCSSUnit (ptr, &pval);
+      TtaFreeMemory (text);
+      return pval.typed_data.value;
+    }
+  return 0;
+}
+
 
 /*----------------------------------------------------------------------
    SVGAttributeComplete
@@ -2962,9 +2986,11 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
    Element		leaf;
    int			attrKind;
    ThotBool		closed;
-
+   unsigned short       red, green, blue;
+   char                 *color;
+   int                  offset;
+   
    TtaGiveAttributeType (attr, &attrType, &attrKind);
-
    switch (attrType.AttrTypeNum)
      {
      case SVG_ATTR_opacity_:
@@ -2972,7 +2998,6 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
      case SVG_ATTR_fill_opacity:
          ParseCSSequivAttribute (attrType.AttrTypeNum, attr, el, doc, FALSE);
 	 break;
-
      case SVG_ATTR_height_:
      case SVG_ATTR_width_:
      case SVG_ATTR_r:
@@ -3002,14 +3027,39 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
      case SVG_ATTR_y:
      case SVG_ATTR_cx:
      case SVG_ATTR_cy:
-     case SVG_ATTR_x1:
-     case SVG_ATTR_y1:
-     case SVG_ATTR_x2:
-     case SVG_ATTR_y2:
      case SVG_ATTR_dx:
      case SVG_ATTR_dy:
 	ParseCoordAttribute (attr, el, doc);
 	break;
+     case SVG_ATTR_x1:
+        elType = TtaGetElementType (el);
+	if (elType.ElTypeNum == SVG_EL_linearGradient)
+	  TtaSetLinearx1Gradient (ParseintAttribute (attr), el);
+	else
+	  ParseCoordAttribute (attr, el, doc);
+	break;
+     case SVG_ATTR_y1:
+       elType = TtaGetElementType (el);
+       if (elType.ElTypeNum == SVG_EL_linearGradient)
+	 TtaSetLineary1Gradient (ParseintAttribute (attr), el);
+       else
+	 ParseCoordAttribute (attr, el, doc);
+       break;
+     case SVG_ATTR_x2:
+       elType = TtaGetElementType (el);
+       if (elType.ElTypeNum == SVG_EL_linearGradient)
+	 TtaSetLinearx2Gradient (ParseintAttribute (attr), el);
+       else
+	 ParseCoordAttribute (attr, el, doc);
+       break;
+     case SVG_ATTR_y2:
+       elType = TtaGetElementType (el);
+       if (elType.ElTypeNum == SVG_EL_linearGradient)
+	 TtaSetLineary2Gradient (ParseintAttribute (attr), el);
+       else
+	 ParseCoordAttribute (attr, el, doc);
+       break;
+	
      case SVG_ATTR_rx:
      case SVG_ATTR_ry:
         elType = TtaGetElementType (el);
@@ -3042,15 +3092,19 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 		intAttr = TtaNewAttribute (attrType1);
 		TtaAttachAttribute (el, intAttr, doc);
 		TtaSetAttributeValue (intAttr, SVG_ATTR_RealLang_VAL_Yes_,
-				      el, doc);
+	 			      el, doc);
 	      }
 	  }
         break;
-     case SVG_ATTR_stop_color:
-
-       break;
      case SVG_ATTR_offset:
-
+       offset = ParseintAttribute (attr);
+       TtaSetStopOffsetColorGradient (offset, el);
+       break;
+     case SVG_ATTR_stop_color:
+       color = get_char_attribute_from_el (el, attrType.AttrTypeNum);
+       TtaGiveRGB (color, &red, &green, &blue);
+       TtaFreeMemory (color);
+       TtaSetStopColorGradient (red, green, blue, el);
        break;
      default:
 	break;

@@ -2130,7 +2130,6 @@ static void Inc_time_start(Document basedoc, Element edited_anim, double inc_tim
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (edited_anim, attr, basedoc);
       TtaRegisterAttributeCreate (attr, edited_anim, basedoc);
-
     }
 
   sprintf (buffer, "%.1fs", (float)(existing_value+inc_time));
@@ -2168,8 +2167,8 @@ static void Write_time_info(Document basedoc, Element edited_anim, double start,
     TtaRegisterAttributeReplace (attr, edited_anim, basedoc);
 
   sprintf (buffer, "%.1fs", (float) start);
-  TtaSetAttributeText (attr, buffer, edited_anim, basedoc);
 
+  TtaSetAttributeText (attr, buffer, edited_anim, basedoc);
 	
   /* create or overwrite dur attribute */
   attrType.AttrTypeNum = SVG_ATTR_dur;

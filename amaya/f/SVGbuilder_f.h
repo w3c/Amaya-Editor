@@ -93,6 +93,7 @@ extern void ParseTransformAttribute ( Attribute attr,
 extern void ParsePathDataAttribute ( Attribute attr,
                                      Element el,
                                      Document doc );
+extern int ParseintAttribute ( Attribute attr );
 extern void SVGAttributeComplete ( Attribute attr,
                                    Element el,
                                    Document doc );
@@ -186,6 +187,7 @@ extern void ParseTransformAttribute (/* Attribute attr,
 extern void ParsePathDataAttribute (/* Attribute attr,
                                        Element el,
                                        Document doc */);
+extern int ParseintAttribute (/* Attribute attr */);
 extern void SVGAttributeComplete (/* Attribute attr,
                                      Element el,
                                      Document doc */);

@@ -2240,7 +2240,7 @@ void SynchronizeSourceView (NotifyElement *event)
    Document	       doc, otherDoc;
    int		       val, x, y, width, height;
    ThotBool	       otherDocIsStruct, done;
-
+   
    if (!event)
        return;
    doc = event->document;

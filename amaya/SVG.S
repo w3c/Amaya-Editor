@@ -344,31 +344,24 @@ STRUCT
    linearGradient
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
-	      x1; y1; x1; y2;	      
+	      x1; y1; x2; y2;	      
 	      gradientTransform = text;
 	      gradientUnits = text;
               xlink_href;)
 	= AGGREGATE
 	      desc; title; metadata;
-	 LIST OF 
-	        (CASE OF
-	           path; rect; circle; ellipse; line_; polyline; polygon;
-	           END);
-		GRAPHICS;
+	LIST OF (Anim);
+	      GRAPHICS;
 	  END;
 
    stop
          (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
-	      offset=text;
-	      style=text; 
-	      stop_color=text;)
+	      offset = text;
+	      style = text;
+	      stop_color = text;)
 	 = AGGREGATE
 	      desc; title; metadata;
-	 LIST OF 
-	        (CASE OF
-		   linearGradient;
-	           END);
 	  END;
 	
 

@@ -35,10 +35,28 @@
 #include "SVGedit_f.h"
 #include "anim_f.h"
 
-#ifdef _SVGANIM
 
-static int *get_int_attribute_from_el (Element el, int Attribut_Type)
+int get_int_attribute_from_el (Element el, int Attribut_Type)
 {
+#ifdef _SVGANIM
+  AttributeType attrType;
+  Attribute attr = NULL;
+  ElementType elType = TtaGetElementType (el);
+  int result;
+  
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Attribut_Type;  
+  attr = TtaGetAttribute (el, attrType);
+  result = TtaGetAttributeValue (attr);
+  
+  return result;
+
+#endif /* _SVGANIM */
+}
+
+int *get_intptr_attribute_from_el (Element el, int Attribut_Type)
+{
+#ifdef _SVGANIM
   AttributeType attrType;
   Attribute attr = NULL;
   ElementType elType = TtaGetElementType (el);
@@ -48,13 +66,16 @@ static int *get_int_attribute_from_el (Element el, int Attribut_Type)
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = Attribut_Type;  
   attr = TtaGetAttribute (el, attrType);
-  *result = TtaGetAttributeValue(attr);
+  *result = TtaGetAttributeValue (attr);
   
   return result;
+
+#endif /* _SVGANIM */
 }
 
-static char *get_char_attribute_from_el (Element el, int Attribut_Type)
+char *get_char_attribute_from_el (Element el, int Attribut_Type)
 {
+#ifdef _SVGANIM
   int length;
   char *text = NULL, *ptr;
   AttributeType attrType;
@@ -78,8 +99,11 @@ static char *get_char_attribute_from_el (Element el, int Attribut_Type)
       /*TtaFreeMemory (text);*/
     }
   return text;
+#endif /* _SVGANIM */
 }
 
+
+#ifdef _SVGANIM
 
 #ifdef _GLANIM
 
@@ -151,7 +175,7 @@ void register_animated_element (Element animated)
       break;      
 
     case SVG_EL_animateTransform :
-      TtaAddAnimAttrName ((void *) get_int_attribute_from_el (animated, SVG_ATTR_type_), 
+      TtaAddAnimAttrName ((void *) get_intptr_attribute_from_el (animated, SVG_ATTR_type_), 
 			  anim_info);
       TtaAddAnimFrom ((void *) get_char_attribute_from_el (animated, SVG_ATTR_from), 
 		      anim_info);
