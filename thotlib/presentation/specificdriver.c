@@ -136,6 +136,7 @@ Document            doc;
    PtrPRule        rule = (PtrPRule) pRule;
 
    PresentationValueToPRule (val, rule->PrType, pRule, 0);
+   return(0);
 }
 
 /* itoe_convert : the dual function, interternal to external              */
