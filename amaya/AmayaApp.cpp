@@ -2,11 +2,15 @@
 
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"          // XRC XML resouces
+#include "wx/memory.h"
 
 #define THOT_EXPORT extern
 #include "amaya.h"
 
+
 #include "AmayaApp.h"
+
+
 //#include "AmayaFrame.h"
 
 //#include "appdialogue.h"
@@ -73,15 +77,15 @@ bool AmayaApp::OnInit()
                             wxPoint(5,260), wxSize(630,100),
                             wxTE_MULTILINE | wxTE_READONLY );
  */
-   
+
   // for debug : the output is stderr
-  delete wxLog::SetActiveTarget( new wxLogStderr( ) );
+  delete wxLog::SetActiveTarget( new wxLogStderr );
   
   // just convert arguments format (unicode to iso-8859-1) before passing it to amaya_main
   InitAmayaArgs();
 
-  // just call amaya main from EDITORAPP.c
-  amaya_main( amaya_argc, amaya_argv );
+  /* initialize the Registry */
+  TtaInitializeAppRegistry (amaya_argv[0]);
 
   // Initialize all the XRC handlers. Always required (unless you feel like
   // going through and initializing a handler of each control type you will
@@ -102,6 +106,9 @@ bool AmayaApp::OnInit()
   // Now it's possible to load all the dialogs
   wxXmlResource::Get()->Load( amaya_directory+_T("/resources/xrc/InitConfirmDlgWX.xrc") );
   // TODO: rajouter ici toutes les autres ressources a charger
+  
+  // just call amaya main from EDITORAPP.c
+  amaya_main( amaya_argc, amaya_argv );
 
   return true;
 }
@@ -117,6 +124,10 @@ int AmayaApp::OnExit()
 {
   // free arguments
   ClearAmayaArgs();
+
+  // free internal amaya ressources
+  TtaQuit();
+
   return 0;
 }
   
