@@ -321,7 +321,8 @@ View                view;
       strcpy (pDocPrint->DocSSchema->SsDefaultPSchema, newPres);
 
    /* la repagination se fait dans le print */
-   SavePath (pDocPrint, dirName, docName);
+   strncpy (dirName, pDocPrint->DocDirectory, MAX_PATH);
+   strncpy (docName, pDocPrint->DocDName, MAX_NAME_LENGTH);
 
    strcpy (pDocPrint->DocDirectory, "/tmp");
    strcpy (pDocPrint->DocDName, "ThotXXXXXX");
@@ -366,7 +367,8 @@ View                view;
 		     1,
 		     viewsToPrint);
      }
-   RestorePath (pDocPrint, dirName, docName);
+   strncpy (pDocPrint->DocDirectory, dirName, MAX_PATH);
+   strncpy (pDocPrint->DocDName, docName, MAX_NAME_LENGTH);
 }
 
 

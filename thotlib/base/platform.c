@@ -460,7 +460,6 @@ static void         ErrorHandler ()
    signal (SIGIOT, SIG_DFL);	/* ? abort */
 #endif
 #endif /* NEW_WILLOWS */
-   /*BackupAll ();*/
    QuitQuitHandler ();
 }
 
@@ -494,7 +493,6 @@ static void         QuitHandler ()
    signal (SIGQUIT, SIG_DFL);	/* si jamais on fait encore SIGQUIT */
    signal (SIGTERM, QuitQuitHandler);	/* si jamais on fait encore SIGTERM */
 #endif /* NEW_WILLOWS */
-   /*BackupAll ();*/
    QuitQuitHandler ();
 #ifndef NEW_WILLOWS
    signal (SIGINT, QuitHandler);	/* rearmer */

@@ -21,16 +21,8 @@ static boolean      SaveBeforeClosing;
 #include "views_f.h"
 #include "appdialogue_f.h"
 
-#ifdef __STDC__
-extern void         FermerDocument (PtrDocument);
-
-#else  /* __STDC__ */
-extern void         FermerDocument ();
-
-#endif /* __STDC__ */
-
 /* ---------------------------------------------------------------------- */
-/* |    CallbackCloseDocMenu   traite les retours du formulaire "Fermer"       | */
+/* |    CallbackCloseDocMenu   traite les retours du formulaire "Fermer"| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                CallbackCloseDocMenu (int ref, int typedata, char *data)
@@ -61,7 +53,7 @@ char               *data;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    AskToConfirm demande a` l'utilisateur s'il veut sauver puis    | */
+/* |    AskToConfirm demande a` l'utilisateur s'il veut sauver puis     | */
 /* |            fermer le document dont le contexte est pointe' par     | */
 /* |            pDoc.                                                   | */
 /* |            Retourne un booleen indiquant si la fermeture du        | */
@@ -114,7 +106,7 @@ boolean            *save;
 
 
 /* ---------------------------------------------------------------------- */
-/* | CloseADocument ferme un document.                                 | */
+/* | CloseADocument ferme un document.                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             CloseADocument (Document document, Document docform, View viewform)
@@ -155,11 +147,11 @@ View                view;
 			  ok = WriteDocument (pDoc, 4);
 		       if (ok)
 			  /* tout va bien, on ferme ce document */
-			  FermerDocument (pDoc);
+			  CloseDocument (pDoc);
 		    }
 	       }
 	     else
-		FermerDocument (pDoc);
+		CloseDocument (pDoc);
 	  }
      }
    return (ok);
@@ -167,7 +159,7 @@ View                view;
 
 
 /* ---------------------------------------------------------------------- */
-/* | TtcCloseDocument initialise la fermeture de document.                      | */
+/* | TtcCloseDocument initialise la fermeture de document.              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                TtcCloseDocument (Document document, View view)
