@@ -2929,7 +2929,6 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	nextEl = el;
      }
 
-  i = 0;
   totLen = 0;
   elType = TtaGetElementType (theElem);
   elType2 = TtaGetElementType (theText);
@@ -2946,24 +2945,23 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
        /* selection */
        if (selEl == textEl)
 	 {
-	   newSelChar = totLen + firstSelChar;
+	   newSelChar = firstSelChar;
 	   newSelEl = textEl;
 	   TtaUnselect (doc);
 	 }
        /* get the content and analyze it */
        if (len > 0)
           {
-          len = TXTBUFLEN - totLen;
-          TtaGiveBufferContent (textEl, &text[i], len, &lang);
-	  len = ustrlen (&text[i]);
+          len = TXTBUFLEN;
+          TtaGiveBufferContent (textEl, text, len, &lang);
+	  len = ustrlen (text);
           script = TtaGetScript (lang);
 	  for (j = 0; j < len; j++)
 	     {
-	     language[i+j] = lang;
-	     mathType[i+j] = (char)GetCharType (text[i+j], script);
+	     language[j] = lang;
+	     mathType[j] = (char)GetCharType (text[j], script);
 	     }
-	  i+= len;
-	  totLen += len;
+	  totLen = len;
 	  }
        }
   /* try to identify numbers like: 0.123  1,000,000  2.1e10 */
@@ -3229,7 +3227,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	if (newSelEl != NULL)
 	  {
 	  newSelEl = textEl;
-	  if (newSelChar < j)
+	  if (newSelChar <= j)
 	    {
 	     if (newSelChar < start)
 		newSelChar = 1;
