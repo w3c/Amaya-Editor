@@ -2549,7 +2549,7 @@ int                 keyboard;
   boolean             toDelete;
   boolean             toSplit;
   boolean             saveinsert;
-  boolean             notification;
+  boolean             notification = FALSE;
 
   toDelete = (c == (char) (127));
   /* Selon la valeur du parametre keyboard on essaie d'inserer */
