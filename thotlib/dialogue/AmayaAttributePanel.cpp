@@ -478,7 +478,7 @@ void AmayaAttributePanel::OnAutoRefresh( wxCommandEvent& event )
     {
       m_pAttrList->Enable();
       m_pVPanelParent->Enable();
-      ForceAttributeUpdate();
+      DoUpdate();
     }
   else
     {
