@@ -58,6 +58,7 @@ AnOutputFile;
 /* Variables for date generation */
 static ThotBool          StartDollar = FALSE;
 static ThotBool          StartDate = FALSE;
+static ThotBool          IgnoreDate = FALSE;
 static unsigned char     DateString[10];
 static int               DateIndex = 0;
 
@@ -521,49 +522,64 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
   char     tm[DATESTRLEN];
   int      index;
 
+  if (StartDate)
+    {
+      if (c == '-' || c == '>'|| c == SPACE)
+	/* keep this character */
+	return FALSE;
+      else
+	{
+	  /* generate the current date */
+	  GetTime (tm, pDoc);
+	  for (index = 0; tm[index] != EOS; index++)
+	    ExportChar ((wchar_t) tm[index], fnum, outBuf, pDoc,
+			FALSE, FALSE, FALSE);
+	  StartDate = FALSE;
+	  IgnoreDate = TRUE;
+	}
+    }
+
   if (c == '$')
     {
       /* start/stop the analyse of the date */
-      StartDollar = !StartDollar;
-      if (StartDate)
-	StartDate = FALSE;
+      if (!StartDollar || DateIndex == 4)
+	StartDollar = !StartDollar;
+      else
+	StartDollar = TRUE;
+      if (IgnoreDate)
+	  /* close the previous date parsing */
+	  IgnoreDate = FALSE;
       DateIndex = 0;
     }
   else if (StartDollar)
     {
-      if (c == ':')
+      if (IgnoreDate)
+	{
+	  if (c == '<')
+	    {
+	      /* implicit closing of the date parsing */
+	      IgnoreDate = FALSE;
+	      StartDollar = FALSE;
+	    }
+	  else
+	    /* it's a character of the previous date */
+	    return TRUE;
+	}
+      else if (c == ':')
 	{
 	  if (!StartDate && DateIndex > 0 &&
 	      !strncasecmp ((char *)DateString, "Date", DateIndex))
-	    {
-	      /* following characters will be skipped until the $ or EOL or EOS */
-	      StartDate = TRUE;
-	      ExportChar ((wchar_t) c, fnum, outBuf, pDoc,
-			  FALSE, FALSE, FALSE);
-	      ExportChar ((wchar_t) SPACE, fnum, outBuf, pDoc,
-			  FALSE, FALSE, FALSE);
-	      /* generate the current date */
-	      GetTime (tm, pDoc);
-	      for (index = 0; tm[index] != EOS; index++)
-		ExportChar ((wchar_t) tm[index], fnum, outBuf, pDoc,
-			    FALSE, FALSE, FALSE);
-	      DateIndex = 0;
-	    }
-	  else if (!StartDate)
-	    ExportChar ((wchar_t) c, fnum, outBuf, pDoc,
-			FALSE, FALSE, FALSE);
-	  return TRUE;
+	    /* following characters will be skipped until the $ or EOL or EOS */
+	    StartDate = TRUE;
 	}
-      else if (c == EOS || c == EOL || DateIndex == 10)
+      else if (c == EOS || c == EOL || DateIndex > 4)
 	{
 	  /* stop the analyse of the date */
 	  StartDollar = FALSE;
 	  StartDate = FALSE;
+	  IgnoreDate = FALSE;
 	}
-      else if (StartDate && StartDollar)
-	/* it's a character of the previous date */
-	return TRUE;
-      else
+      else if (c != SPACE)
 	DateString[DateIndex++] = c;
     }
   return FALSE;

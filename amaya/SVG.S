@@ -2459,7 +2459,7 @@ STRUCT
 
    DOCTYPE = LIST OF (DOCTYPE_line = TEXT);	
 	
-   XMLcomment = LIST OF (XMLcomment_line = TEXT);
+   XMLcomment = LIST OF (XMLcomment_line = TEXT) - (XMLcomment);
 
    XMLPI = LIST OF (XMLPI_line = TEXT);
 

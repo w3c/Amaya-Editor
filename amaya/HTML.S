@@ -72,7 +72,7 @@ STRUCT
 
   XHTML_Unknown_namespace = TEXT;
 
-  Comment\240 = LIST OF (Comment_line = TEXT);
+  Comment\240 = LIST OF (Comment_line = TEXT) - (Comment\240);
 
   XMLPI (ATTR is_css = Text) = LIST OF (PI_line = TEXT);
 	

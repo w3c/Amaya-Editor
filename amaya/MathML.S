@@ -48,7 +48,7 @@ STRUCT
 
    CDATA = LIST OF (CDATA_line = TEXT);
 
-   XMLcomment = LIST OF (XMLcomment_line = TEXT);
+   XMLcomment = LIST OF (XMLcomment_line = TEXT) - (XMLcomment);
 
    XMLPI = LIST OF (XMLPI_line = TEXT) ; 
 

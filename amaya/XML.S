@@ -28,7 +28,7 @@ STRUCT
 		XML_Embed = NATURE;
 	      END;
            
-   xmlcomment = LIST OF (xmlcomment_line = TEXT);
+   xmlcomment = LIST OF (xmlcomment_line = TEXT) - (xmlcomment);
 
    xmlpi = LIST OF (xmlpi_line = TEXT);
 	
