@@ -2,7 +2,7 @@
  *** Copyright (c) 1996 INRIA, All rights reserved
  ***/
 
-/* Amaya includes */
+/* Amaya includes  */
 
 #include "amaya.h"
 #include "dialog.h"
@@ -68,8 +68,6 @@ AmayaContext       *Amaya;	/* Amaya's global context */
 
 static HTList      *converters = NULL;	/* List of global converters */
 static HTList      *encodings = NULL;
-
-static boolean AmayaCloseFlag; /* tells if Amaya is still active */
 
 /*** private functions ***/
 
@@ -246,14 +244,6 @@ AHTReqContext      *me;
 
 	if (me->error_stream != (char *) NULL)
 	   HT_FREE (me->error_stream);
-
-	if (AmayaCloseFlag == TRUE && (me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
-	  {
-	    if(me->urlName)
-	      TtaFreeMemory (me->urlName);
-	    if(me->outputfile)
-	      TtaFreeMemory (me->outputfile);
-	  }
 
 	TtaFreeMemory ((void *) me);
 
@@ -1199,7 +1189,7 @@ void                QueryInit ()
    SetSignal ();
 #endif
 
-   AmayaCloseFlag = FALSE;
+
 }
 
 
@@ -1211,9 +1201,6 @@ void                QueryClose ()
    /* Later, the following call should use all the active docids. For the mome
       nt, it stops everything */
    /* StopRequest (); */
-
-   AmayaCloseFlag = TRUE;
-
    Thread_deleteAll ();
 
 #ifndef HACK_WWW
@@ -1223,7 +1210,6 @@ void                QueryClose ()
    HTNoProxy_deleteAll ();
    HTGateway_deleteAll ();
    AHTProfile_delete ();
-
 }
 
 
@@ -1973,9 +1959,6 @@ static int          LoopForStop (AHTReqContext * me)
 	     XtAppNextEvent (app_cont, &ev);
 	     TtaHandleOneEvent (&ev);
 	  }
-
-	if (AmayaCloseFlag == TRUE)
-	  exit(0);
 
 #endif /* WWW_XWINDOWS */
      }				/* while */
