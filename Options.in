@@ -10,6 +10,7 @@ SHELL	= /bin/sh
 
 CC	= @CC@
 CFLAGS	= @CFLAGS@
+CPP     = @CPP@
 LD	= @CC@
 LDFLAGS	= @LDFLAGS@
 CP	= @CP@

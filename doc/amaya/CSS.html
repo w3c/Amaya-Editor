@@ -1,16 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
 <style>
-BODY { background : #FFFFFF }
+BODY { background-color : #FFFFFF }
 ADDRESS { text-align : center }
 H1 { color : #00647F }
 H3 { color : #0050B2 }
-LI P { text-indent : 0pt; text-align: justify }
-DD P { text-indent : 0pt; line-height : 16pt; text-align: justify }
-UL P { text-indent : 0pt; line-height : 16pt; text-align: justify }
-BLOCKQUOTE P { text-align: justify; line-height : 16pt; text-indent : 0pt }
-P { text-indent : 15pt; text-align: justify }
+P { text-align: justify; line-height : 16pt; text-indent : 15pt }
 </style>
 <title>
 CSS support in Amaya</title>
@@ -19,38 +15,34 @@ CSS support in Amaya</title>
 <body style="background : #FFFFFF">
 <p>
 <a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"
-width="72"></a><a href="../"><img border="0" src="../Icons/amaya.gif" alt="Amaya"></a>
-<a href="Manual.html"><img border="0" src="../Icons/doc48x.gif"
-alt="Doc"></a></p>
+width="72"></a><a href="../"><img border="0" src="../Icons/amaya.gif"
+alt="Amaya"></a> <a href="Manual.html"><img border="0"
+src="../Icons/doc48x.gif" alt="Doc"></a></p>
 
 <h1 style="text-align : center">Cascading Style Sheet support in Amaya</h1>
-
-<h3 style="align : center">1<sup>st</sup> July 1996</h3>
 <p>
 This document describes the current state of the <a
 href="../../Style">Cascading Style Sheet</a> support in Amaya. The
-implementation is based on the latest (18 Apr 96) <a
-href="../../TR/WD-css1.html">CSS1 proposal</a> by H&aring;kon W. Lie and Bert
-Bos from the <a href="../..">W3 Consortium</a>. We focussed on providing as
-many features as possible and offering an easy to use and learn interface.
-Considering the second point we choosed a "learn by example" approach suitable
-for users not experienced with style sheets.</p>
+implementation is based on the <a href="/TR/PR-CSS1">CSS1 proposal</a> . We
+focussed on providing as many features as possible and offering an easy to use
+and learn interface. Considering the second point we choosed a "learn by
+example" approach suitable for users not experienced with style sheets.</p>
 <p>
 This document contains the following sections:</p>
 <ol>
 <li>
-Section "<a href="#L392">Presentation</a>" gives a short overview of the CSS. 
+Section "<a href="#L392">Presentation</a>" gives a short overview of the CSS.
 <li>
 Section  "<a href="#L393">Interface</a>" details the CSS specific areas of the
-Amaya interface. 
+Amaya interface.
 <li>
 Section "<a href="#L394">Current State</a>" presents the CSS functionnalities
-that are currently implemented. 
+that are currently implemented.
 <li>
 Section "<a href="#L395">What's lacking</a>" explains the main points to be
-improved or added. 
+improved or added.
 <li>
-Section "<a href="#L397">What's next</a>" is for future plans. 
+Section "<a href="#L397">What's next</a>" is for future plans.
 </ol>
 
 <h3><a name="L392">Presentation</a></h3>
@@ -99,17 +91,17 @@ type</strong> and <strong>Character element</strong>).</p>
 <ul>
 <li>
 Three entries call dialog boxes that associate presentation with the currently
-selected elements: 
+selected elements:
 <ul>
 <li>
 <strong>Character Style</strong> allows one to select font attributes (size,
-style, family and underline) 
+style, family and underline)
 <li>
 <strong>Colors</strong> allows one to choose the  foreground and background
-colors from a palette. 
+colors from a palette.
 <li>
 <strong>Format</strong> allows one to set  alignment, indentation,
-justification and linespacing. 
+justification and linespacing.
 <li>
 <strong>Background Image</strong> allows one to insert a background image and
 to select the repeat mode.
@@ -118,7 +110,7 @@ to select the repeat mode.
 All modifications made with these dialog boxes can be viewed immediately in
 the WYSIWYG view and the Structure view.</p>
 <li>
-Two entries are related to classes: 
+Two entries are related to classes:
 <ul>
 <li>
 <strong>Create Rule</strong> uses the style of the selected element to define
@@ -126,14 +118,14 @@ a new class with the same. A list of the existing classes is proposed, the
 type of the current element being the default. This is the first step toward
 defining CSS rules. Presentation is moved from the selected element to the
 document header, defining a new CSS rule. All elements of the new class take
-the new style. 
+the new style.
 <li>
 <strong>Apply class</strong> uses one of the existing classes and applies it
 to the selected elements. These elements are then displayed with the style
-associated with class chosen. 
+associated with class chosen.
 </ul>
 <li>
-The <strong>Style sheet</strong> item gives access to the CSS dialog box: 
+The <strong>Style sheet</strong> item gives access to the CSS dialog box:
 <p>
 <img src="../Icons/css.gif"></p>
 <p>
@@ -141,59 +133,58 @@ The <strong>Style sheet</strong> item gives access to the CSS dialog box:
 <ul>
 <li>
 The two CSS selectors allow to select CSS files from which rules can be
-manipulated. In each, the currently selected file is highlighted. 
+manipulated. In each, the currently selected file is highlighted.
 <li>
 The two rule selectors show the rules extracted from the selected CSS files.
 Only one rule can be selected for both selector, which is the current rule.
 All rules are grouped by their selector and only the list of selectors is
-shown here. 
+shown here.
 <li>
 The text area at the bottom shows the CSS syntax of the current rule (the one
 selected from the above selectors), allowing the user to see the CSS syntax.
-This is an editable field allowing the user to modify the current rule. 
+This is an editable field allowing the user to modify the current rule.
 <li>
-Between the two Rule Selectors there is a column of 5 buttons. 
+Between the two Rule Selectors there is a column of 5 buttons.
 <ul>
 <li>
 pushing the <img border="0" src="../Icons/lcopy.gif">
  button merges the current rule (as shown in the text area) to the second
-file. Changes are immediately reflected in the WYSIWYG View. 
+file. Changes are immediately reflected in the WYSIWYG View.
 <li>
 pushing the <img border="0" src="../Icons/lmerge.gif">
  button copies the current rule to the second file.The difference with the
 previous button is that all rules using the same selector initially present in
-the file are first removed. 
+the file are first removed.
 <li>
 pushing the <img border="0" src="../Icons/destroy.gif">
- button deletes the current rule. 
+ button deletes the current rule.
 <li>
 the buttons <img border="0" src="../Icons/rcopy.gif">
  and <img src="../Icons/rmerge.gif">
  have the same effect as the first two buttons but they act on the first file.
-
 </ul>
 <li>
-The five buttons at the bottom are used for operations at the CSS file level. 
+The five buttons at the bottom are used for operations at the CSS file level.
 <ul>
 <li>
 <strong>Save</strong> initiates the operation of saving all modified CSS
-files. 
+files.
 <li>
-<strong>Save as</strong> saves one of the CSS to a local file. 
+<strong>Save as</strong> saves one of the CSS to a local file.
 <li>
 <strong>Reload</strong> is a coarse grained Undo. It reloads all the modified
-CSS files referenced by the document. 
+CSS files referenced by the document.
 <li>
 <strong>New</strong> adds an external CSS file to the list of the external
 style sheet referenced by the document. It is also possible to browse the
 content of a file without attaching it to the document. Amaya keeps an history
 of the CSS files encountered. This history is saved from session to  session,
 and allows to grab quickly one of the CSS lastly referenced, to browse its
-rules or to attach it to the current document. 
+rules or to attach it to the current document.
 <li>
-<strong>Remove</strong> supresses a reference to an external CSS file. 
+<strong>Remove</strong> supresses a reference to an external CSS file.
 <li>
-<strong>Cancel</strong> closes the CSS dialog box. 
+<strong>Cancel</strong> closes the CSS dialog box.
 </ul>
 </ul>
 <p>
@@ -206,58 +197,53 @@ them from the history.</p>
 Here, we focus on what is currently supported from the CSS1 proposal:</p>
 <ul>
 <li>
-Parsing: 
+Parsing:
 <ul>
 <li>
-all the basic: 
+all the basic:
 <ul>
 <li>
-grouping selectors in one rule 
+grouping selectors in one rule
 <li>
-grouping properties in one rule 
+grouping properties in one rule
 <li>
-comments (in external CSS files only) 
+comments (in external CSS files only)
 </ul>
 <li>
-classes and pseudoclasses 
+classes and pseudoclasses
 <li>
-context sensitive selector 
+context sensitive selector
 <li>
-standard units 
+standard units
 </ul>
 <li>
-Cascading order should be fine. 
+Cascading order should be fine.
 <li>
 CSS properties: Everything should be parsed correctly, but the back-end may
-lack support for some attributes 
+lack support for some attributes
 <ul>
 <li>
 Font: all should be supported to some extend, except the generic "font" used
-to group properties. 
+to group properties.
 <li>
 Color: a list of approximately 500 predefined color names is here. Parsing of
 #RGB is available too. But the set of colors available is limited. The
-notation rgb(r,g,b) is not yet supported. 
+notation rgb(r,g,b) is not yet supported.
 <li>
-Text: text-align, text-decoration and text-indent. 
+Text: text-align, text-decoration and text-indent.
 <li>
 Fonts: Times, Helvetica and Courrier are available, with various character
-style and a set of prefefined size (from 6 to 60 points). 
+style and a set of prefefined size (from 6 to 60 points).
 <li>
 Box Properties: not supported in this version. However, a bit of support is
-provided for margin-xxxx properties but not well tested. 
+provided for margin-xxxx properties but not well tested.
 <li>
-Magnification is here, perfect for "Users Preference" style. 
+Magnification is here, perfect for "Users Preference" style.
 </ul>
 </ul>
 <p>
-There is support for users preferences which can be provided at a site level
-in <code>Thot/$PLATFORM/amaya.css</code>, or specified by the user in
-<tt>$(HOME)/.amaya.css</tt> . Here is an example of an <code><a
-href="amaya.css">amaya.css</a></code> file.</p>
-<p>
-The CSS history is stored in <code>$(HOME)/.amaya/history.css</code> and
-contains the 50 last CSS files loaded by Amaya.</p>
+There is support for users preferences which can be provided in 
+<tt>$(HOME)/.amaya.css</tt> .</p>
 
 <h3><a name="L395">What's lacking</a></h3>
 <p>
@@ -266,25 +252,25 @@ support are:</p>
 <ul>
 <li>
 The <strong>Print</strong> command does not currently render presentation
-defined in style sheets. This problem will be fixed in the next release. 
+defined in style sheets. This problem will be fixed in the next release.
 <li>
 The CSS1 formatting model for border, margins and padding is not yet
-implemented. 
+implemented.
 <li>
 A few differences with the CSS1 specification may appear in the cascading
-order. 
+order.
 <li>
 Pseudo elements are difficult to handle, since these are not elements and
 cannot be added at parsing time, first lines for example are computed lately,
-and hence could not be easily added as attributes on the structure. 
+and hence could not be easily added as attributes on the structure.
 <li>
-The current implementation is a bit restrictive on colors and fonts: 
+The current implementation is a bit restrictive on colors and fonts:
 <ul>
 <li>
 Amaya should support the full RGB color spectrum instead of using a set of
-pre-allocated colors. 
+pre-allocated colors.
 <li>
-more fonts, small-caps, cursive, fantasy ... are needed. 
+more fonts, small-caps, cursive, fantasy ... are needed.
 </ul>
 <p>
 The CSS rules produced by Amaya are re-generated from the internal
@@ -306,21 +292,11 @@ multiples external CSS, one can easily understand that debugging CSS in
 real-use might be difficult. One nice feature would be to show graphically all
 the rules applying to an element or a zone, where they came from, and which
 rules they superceded.</p>
-
-<h3><a name="L397">What's Next</a></h3>
-<p>
-Here is a short list of future actions for CSS in Amaya:</p>
-<ul>
-<li>
-Full CSS1 compliance. 
-<li>
-Improving the interface. 
-</ul>
 <p>
 </p>
 <hr>
 <address>
-<a name="L511" href="mailto:veillard@w3.org">D. Veillard</a><br>
+<a name="L511" href="mailto:vatton@w3.org">Ir&egrave;ne Vatton</a><br>
 <a href="../../Help/Webmaster">Webmaster</a><br>
 $Date$ </address>
 </body>
