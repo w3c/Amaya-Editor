@@ -2982,6 +2982,14 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc, ThotBool inNew
 		   profile == L_Strict || profile == L_Basic)
 		 TtaSetMenuOff (doc, 1, XMLTypes);
 	     }
+	   if (DocumentTypes[doc] == docSVG)
+	     {
+	       TtaSetItemOff (doc, 1, Views, TShowMapAreas);
+	       TtaSetItemOn (doc, 1, Views, BShowAlternate);
+	       TtaSetItemOff (doc, 1, Views, BShowToC);
+	       TtaSetItemOff (doc, 1, Special, TSectionNumber);
+	       TtaSetItemOff (doc, 1, Special, BMakeBook);
+	     }
 	   else
 	     {
 	       TtaSetItemOff (doc, 1, Views, TShowMapAreas);

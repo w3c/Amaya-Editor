@@ -295,6 +295,15 @@ RULES
 		PaddingLeft: 0.4;
 		Font: Helvetica;
 		END;
+ 	IN Alternate_view BEGIN
+	        HorizPos: Left = Enclosing . Left + 1;
+		Width: Enclosing . Width - 1;
+	   	PaddingTop: 0.8;
+	   	PaddingBottom: 3;
+		Foreground: Enclosing =;
+	        Background: Enclosing =;
+	        FillPattern: nopattern;
+		END;
         IN Links_view BEGIN
 	        Visibility: 10;
 		Height: Enclosed . Height;
@@ -345,10 +354,9 @@ RULES
 	        FillPattern: nopattern;
 		END;
 	IN Alternate_view BEGIN
-		Width: Enclosing . Width;
-        	Height	: Enclosed . Height;
-	   	MarginTop: 0;
-	   	MarginBottom: 0;
+	        HorizPos: Left = Enclosing . Left + 1;
+		Width: Enclosing . Width - 1;
+        	Height : Enclosed . Height;
 		Foreground: Enclosing =;
 	        Background: Enclosing =;
 	        FillPattern: nopattern;
@@ -378,8 +386,10 @@ RULES
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
-	IN Alternate_view
-		Visibility: 0;
+	IN Alternate_view BEGIN
+	        HorizPos: Left = Enclosing . Left + 0.8;
+		Width: Enclosing . Width - 0.8;
+ 		END;
 	END;
 
    defs:
@@ -1831,6 +1841,7 @@ RULES
                    END;
 		END;
 	IN Alternate_view BEGIN
+		Visibility: Enclosing =;
 	        Width: Enclosed . Width;
         	VertPos: HRef = Previous . HRef;
 		END;
