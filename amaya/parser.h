@@ -31,6 +31,7 @@ typedef struct _ElemMapping
 				   'X'= an element from another DTD */
   int	     ThotType;          /* type of the Thot element or attribute */
   int        Level;             /* XHTML level basic, strict, transitional */
+  ThotBool   Inline;            /* TRUE for character level elements */
 }
 ElemMapping;
 

@@ -257,6 +257,51 @@ Document          doc;
 }
 
 
+
+/*----------------------------------------------------------------------
+   GetXMLElementName
+   Generic function which searchs in the mapping table if a given
+   Thot type is an inline character or not
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool          IsXMLElementInline (Element el)
+#else
+ThotBool          IsXMLElementInline (el)
+Element           el;
+#endif
+{
+  ElementType         elType;
+  int                 i;
+  ThotBool            ret = FALSE;
+  STRING              name;
+  ElemMapping        *ptr;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum > 0)
+    {
+      i = 0;
+      /* Select the table which matches with the element schema */
+      name = TtaGetSSchemaName (elType.ElSSchema);
+      if (ustrcmp (TEXT("MathML"), name) == 0)
+	ptr = MathMLElemMappingTable;
+      else if (ustrcmp (TEXT("GraphML"), name) == 0)
+	ptr = GraphMLElemMappingTable;
+      else
+	ptr = XHTMLElemMappingTable;
+      
+      if (ptr)
+	{
+	  while (ptr[i].XMLname[0] != WC_EOS &&
+		 ptr[i].ThotType != elType.ElTypeNum)
+	    i++;
+	  if (ptr[i].ThotType == elType.ElTypeNum)
+	    ret = ptr[i].Inline;
+	}
+    }
+  return ret;
+}
+
+
 /*----------------------------------------------------------------------
    MapXMLAttribute
    Generic function which searchs in the Attribute Mapping Table (table)

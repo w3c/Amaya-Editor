@@ -523,7 +523,8 @@ Element           parent;
 	/* the element to be inserted is a character string */
 	/* Search the ancestor that is not a character level element */
 	ancestor = parent;
-	while (ancestor != NULL && IsCharacterLevelElement (ancestor))
+	while (ancestor != NULL &&
+	       IsXMLElementInline (ancestor))
 	       ancestor = TtaGetParent (ancestor);
 
 	if (ancestor != NULL)
@@ -554,7 +555,7 @@ Element           parent;
 		    TtaPreviousSibling (&prev);
 		    while (prev != NULL)
 		      {
-			if (!IsCharacterLevelElement (prev))
+			if (!IsXMLElementInline (prev))
 			  prev = NULL;
 			else
 			  {
@@ -569,7 +570,7 @@ Element           parent;
 	  }
      }
    else
-     if (!IsCharacterLevelElement (*el))
+     if (!IsXMLElementInline (*el))
        /* it is not a character level element */
        /* don't insert it as a child of a Pseudo_paragraph, but as a sibling */
        {
@@ -584,7 +585,7 @@ Element           parent;
    if (!ret)
      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
          (elType.ElTypeNum != HTML_EL_Inserted_Text &&
-	  IsCharacterLevelElement (*el)))
+	  IsXMLElementInline (*el)))
        {
          /* it is a character level element */
 	 parentType = TtaGetElementType (parent);
@@ -1469,7 +1470,7 @@ STRING      data;
 	   if (parent == NULL)
 	     parent = XMLcontext.lastElement;
 	   elType = TtaGetElementType (parent);
-	   if (IsCharacterLevelElement (XMLcontext.lastElement) &&
+	   if (IsXMLElementInline (XMLcontext.lastElement) &&
 	       elType.ElTypeNum != HTML_EL_Option_Menu &&
 	       elType.ElTypeNum != HTML_EL_OptGroup)
 	     {
@@ -1493,7 +1494,7 @@ STRING      data;
 	     {
 	       ancestor = parent;
 	       while (removeLeadingSpaces &&
-		      IsCharacterLevelElement (ancestor))
+		      IsXMLElementInline (ancestor))
 		 {
 		   prev = ancestor;
 		   TtaPreviousSibling (&prev);

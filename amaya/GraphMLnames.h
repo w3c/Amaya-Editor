@@ -5,26 +5,26 @@
 static ElemMapping    GraphMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
-   {TEXT("XMLcomment"), SPACE, GraphML_EL_XMLcomment, L_Other},
-   {TEXT("XMLcomment_line"), SPACE, GraphML_EL_XMLcomment_line, L_Other},
-   {TEXT("circle"), SPACE, GraphML_EL_circle, L_Other},
-   {TEXT("closedspline"), SPACE, GraphML_EL_ClosedSpline, L_Other},
-   {TEXT("desc"), SPACE, GraphML_EL_desc, L_Other},
-   {TEXT("ellipse"), SPACE, GraphML_EL_ellipse, L_Other},
-   {TEXT("foreignObject"), SPACE, GraphML_EL_foreignObject, L_Other},
-   {TEXT("g"), SPACE, GraphML_EL_g, L_Other},
-   {TEXT("image"), SPACE, GraphML_EL_image, L_Other},
-   {TEXT("line"), SPACE, GraphML_EL_line_, L_Other},
-   {TEXT("metadata"), SPACE, GraphML_EL_metadata, L_Other},
-   {TEXT("polygon"), SPACE, GraphML_EL_polygon, L_Other},
-   {TEXT("polyline"), SPACE, GraphML_EL_polyline, L_Other},
-   {TEXT("rect"), SPACE, GraphML_EL_rect, L_Other},
-   {TEXT("spline"), SPACE, GraphML_EL_Spline, L_Other},
-   {TEXT("svg"), SPACE, GraphML_EL_GraphML, L_Other},
-   {TEXT("text"), SPACE, GraphML_EL_text_, L_Other},
-   {TEXT("title"), SPACE, GraphML_EL_title, L_Other},
-   {TEXT("tspan"), SPACE, GraphML_EL_tspan, L_Other},
-   {TEXT(""), SPACE, 0, L_Other}	/* Last entry. Mandatory */
+   {TEXT("XMLcomment"), SPACE, GraphML_EL_XMLcomment, L_Other, FALSE},
+   {TEXT("XMLcomment_line"), SPACE, GraphML_EL_XMLcomment_line, L_Other, FALSE},
+   {TEXT("circle"), SPACE, GraphML_EL_circle, L_Other, FALSE},
+   {TEXT("closedspline"), SPACE, GraphML_EL_ClosedSpline, L_Other, FALSE},
+   {TEXT("desc"), SPACE, GraphML_EL_desc, L_Other, FALSE},
+   {TEXT("ellipse"), SPACE, GraphML_EL_ellipse, L_Other, FALSE},
+   {TEXT("foreignObject"), SPACE, GraphML_EL_foreignObject, L_Other, FALSE},
+   {TEXT("g"), SPACE, GraphML_EL_g, L_Other, FALSE},
+   {TEXT("image"), SPACE, GraphML_EL_image, L_Other, FALSE},
+   {TEXT("line"), SPACE, GraphML_EL_line_, L_Other, FALSE},
+   {TEXT("metadata"), SPACE, GraphML_EL_metadata, L_Other, FALSE},
+   {TEXT("polygon"), SPACE, GraphML_EL_polygon, L_Other, FALSE},
+   {TEXT("polyline"), SPACE, GraphML_EL_polyline, L_Other, FALSE},
+   {TEXT("rect"), SPACE, GraphML_EL_rect, L_Other, FALSE},
+   {TEXT("spline"), SPACE, GraphML_EL_Spline, L_Other, FALSE},
+   {TEXT("svg"), SPACE, GraphML_EL_GraphML, L_Other, FALSE},
+   {TEXT("text"), SPACE, GraphML_EL_text_, L_Other, FALSE},
+   {TEXT("title"), SPACE, GraphML_EL_title, L_Other, FALSE},
+   {TEXT("tspan"), SPACE, GraphML_EL_tspan, L_Other, FALSE},
+   {TEXT(""), SPACE, 0, L_Other, FALSE} 	/* Last entry. Mandatory */
 };
 
 static AttributeMapping GraphMLAttributeMappingTable[] =
