@@ -12,7 +12,7 @@
 # default parameters
 AMAYAVERSION="8.6"
 DEST=$HOME
-PLATFORMS="LINUX-ELF GTK GL"
+PLATFORMS="GTK GL WX"
 
 # Check argument number on the command line
 ARGS=2
@@ -64,6 +64,7 @@ echo "Platform ------->" $MACH
    ${AMAYADIR}/amaya/*.png \
    ${AMAYADIR}/amaya/*.trans* \
    ${AMAYADIR}/resources/xrc/*.xrc \
+   ${AMAYADIR}/resources/icons/*.gif \
    ${AMAYADIR}/annotlib/*.STR \
    ${AMAYADIR}/annotlib/*P.PRS \
    ${AMAYADIR}/annotlib/*T.TRA \
