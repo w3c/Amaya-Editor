@@ -25,7 +25,7 @@
 #include "EDITORactions_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
-
+#include "html2thot_f.h"
 
 /*----------------------------------------------------------------------
    AddLoadedImage adds a new image into image descriptor table.	
@@ -461,29 +461,63 @@ void UpdateImageMap (Element image, Document document, int oldWidth, int oldHeig
 /*----------------------------------------------------------------------
   DisplayImage
   ----------------------------------------------------------------------*/
-void                DisplayImage (Document doc, Element el, char *imageName)
+void                DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 {
   ElementType         elType;
   int                 modified, i;
+  ThotBool            is_svg;
+  ThotBool            xmlDec, withDoctype, isXML;
+  DocumentType        thotType;
+  int                 parsingLevel;
+  CHARSET             charset;
+  char                charsetname[MAX_LENGTH];
 
   modified = TtaIsDocumentModified (doc);
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
     {
-      for (i = strlen (imageName); i > 0 && imageName[i] != '.'; i--);
-      if (imageName[i] == '.' && !strcmp (&imageName[i+1], "svg"))
+      /* display the content of a picture element */
+      TtaSetPictureContent (el, imageName, SPACE, doc, mime_type);
+
+      /** for the moment, the above function won't identify SVG images. So, we do the
+	  job here. This block should at some time be integrated with the above one */
+      /* detect if we have an SVG image */
+      if (TtaGetPictureType (el) == unknown_type)
 	{
+	  is_svg = FALSE;
+	  if (mime_type)
+	    {
+	      if (!strcmp (mime_type, "image/svg"))
+		is_svg = TRUE;
+	    }
+	  else
+	    {
+	      /* try the file's extension */
+	      for (i = strlen (imageName); i > 0 && imageName[i] != '.'; i--);
+	      if (imageName[i] == '.' && !strcmp (&imageName[i+1], "svg"))
+		is_svg = TRUE;
+	      else /* try sniffing */
+		{
+		  CheckDocHeader (imageName, &xmlDec, &withDoctype, &isXML,
+				  &parsingLevel, &charset, charsetname, &thotType);
+		  if (isXML && thotType == docSVG)
+		    is_svg = TRUE;
+		}
+	    }
+	}
+      else
+	is_svg = FALSE;
+
+      if (is_svg)
+	{
+	  TtaSetPictureType (el, "image/svg");
 	  /* it's an SVG image */
 	  /* parse the SVG file and include the parse tree at the
-             position of the image element */
+	     position of the image element */
 	  /****** to do *****/;
-	} 
-      else
-	{
-	  /* display the content of a picture element */
-	  TtaSetTextContent (el, imageName, SPACE, doc);
-	  UpdateImageMap (el, doc, -1, -1);
 	}
+      else /* svg images don't use Image Maps */
+	UpdateImageMap (el, doc, -1, -1);
     }
   else
     {
@@ -588,18 +622,22 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	*/
 	desc->status = IMAGE_LOADED;
 	/* display for each elements in the list */
+	/* get the mime type if the image was downloaded from the net */
+	ptr = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE); 
 	ctxEl = desc->elImage;
 	desc->elImage = NULL;
 	while (ctxEl != NULL)
 	  {
 	    elType = TtaGetElementType (ctxEl->currentElement);
+
 	    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-	      DisplayImage (doc, ctxEl->currentElement, tempfile);
+	      DisplayImage (doc, ctxEl->currentElement, tempfile, ptr);
 	    else if (ctxEl->callback != NULL)
 	      ctxEl->callback(doc, ctxEl->currentElement, tempfile, ctxEl->extra);
 	    /* get image type */
 	    if (desc->imageType == unknown_type)
 	      desc->imageType = TtaGetPictureType (ctxEl->currentElement);
+
 	    ctxPrev = ctxEl;
 	    ctxEl = ctxEl->nextElement;
 	    TtaFreeMemory ( ctxPrev);
@@ -799,7 +837,7 @@ void                FetchImage (Document doc, Element el, char *URL, int flags, 
 		      callback(doc, el, &pathname[0], extra);
 		  }
 		else
-		  DisplayImage (doc, el, pathname);
+		  DisplayImage (doc, el, pathname, NULL);
 		}
 	      else
 		if (TtaFileExist (desc->localName))
@@ -808,7 +846,7 @@ void                FetchImage (Document doc, Element el, char *URL, int flags, 
 		    if (callback)
 		      callback (doc, el, desc->localName, extra);
 		    else
-		      DisplayImage (doc, el, desc->localName);
+		      DisplayImage (doc, el, desc->localName, NULL);
 		    /* get image type */
 		    desc->imageType = TtaGetPictureType (el);
 		  }

@@ -882,7 +882,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
 
 	  /* set contents of the picture element */
 	  TtaSetTextContent (pict, desc->localName, SPACE, doc);
-	  DisplayImage (doc, pict, desc->localName);
+	  DisplayImage (doc, pict, desc->localName, NULL);
 	}
       else
 	{

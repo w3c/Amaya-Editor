@@ -12,7 +12,8 @@
 #include "tree.h"
 typedef enum _PicType
   {
-    xbm_type, eps_type, xpm_type, gif_type, jpeg_type, png_type, unknown_type
+    xbm_type, eps_type, xpm_type, gif_type, png_type, jpeg_type, svg_type, 
+    unknown_type
   }
 PicType;
 
@@ -37,6 +38,23 @@ typedef int     *PathSegment;
 
   ----------------------------------------------------------------------*/
 extern void         TtaSetTextContent (Element element, CHAR_T* content, Language language, Document document);
+
+/*----------------------------------------------------------------------
+   TtaSetTextContent
+
+   Changes the content of a Text basic element. The full content (if any) is
+   deleted and replaced by the new one.
+   This function can also be used for changing the content (the file name)
+   of a Picture basic element.
+
+   Parameters:
+   element: the Text element to be modified.
+   content: new content for that element.
+   language: language of that Text element.
+   document: the document containing that element.
+   mime_type: MIME type of the picture, if known. NULL, otherwise
+  ----------------------------------------------------------------------*/
+extern void         TtaSetPictureContent (Element element, char *content, Language language, Document document, char *mime_type);
 
 /*----------------------------------------------------------------------
    TtaAppendTextContent
@@ -346,8 +364,21 @@ extern void         TtaCopyPage (Element destination, Element source);
 
    Return value:
    PicType: type of the element.
+
   ----------------------------------------------------------------------*/
 extern PicType      TtaGetPictureType (Element element);
+
+/*----------------------------------------------------------------------
+   TtaSetPictureType
+
+   Sets the type of a Picture element.
+
+   Parameter:
+   mime_type: mime type of an image.
+
+  ----------------------------------------------------------------------*/
+extern void        TtaSetPictureType (Element element, char *mime_type);
+
 
 /*----------------------------------------------------------------------
    TtaGetVolume

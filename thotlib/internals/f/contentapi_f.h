@@ -10,6 +10,11 @@ extern void TtaSetTextContent ( Element element,
                                 CHAR_T* content,
                                 Language language,
                                 Document document );
+extern void TtaSetPictureContent ( Element element,
+                                   char *content,
+                                   Language language,
+                                   Document document,
+                                   char *mime_type );
 extern void InsertText ( PtrElement pEl,
                          int position,
                          STRING content,
@@ -95,6 +100,8 @@ extern void TtaCopyPage ( Element destination,
                           Element source );
 extern int TtaGetVolume ( Element element );
 extern PicType TtaGetPictureType ( Element element );
+extern void TtaSetPictureType ( Element element,
+                                char *mime_type );
 extern void TtaGiveSubString ( Element element,
                                STRING buffer,
                                int position,
@@ -115,6 +122,11 @@ extern void TtaSetTextContent (/* Element element,
                                   CHAR_T* content,
                                   Language language,
                                   Document document */);
+extern void TtaSetPictureContent (/* Element element,
+                                     char *content,
+                                     Language language,
+                                     Document document,
+                                     char *mime_type */);
 extern void InsertText (/* PtrElement pEl,
                            int position,
                            STRING content,
@@ -200,6 +212,8 @@ extern void TtaCopyPage (/* Element destination,
                             Element source */);
 extern int TtaGetVolume (/* Element element */);
 extern PicType TtaGetPictureType (/* Element element */);
+extern void TtaSetPictureType (/* Element element,
+                                  char *mime_type */);
 extern void TtaGiveSubString (/* Element element,
                                  STRING buffer,
                                  int position,

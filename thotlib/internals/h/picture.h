@@ -20,10 +20,11 @@
 #define EPS_FORMAT        	1     /* Postscript  */
 #define XPM_FORMAT      	2     /* Xpm XReadFileToPixmap format */
 #define GIF_FORMAT        	3     /* gif */
-#define PNG_FORMAT          4     /* Png */
-#define JPEG_FORMAT         5     /* Jpeg */
-#define PLUGIN_FORMAT       6     /* Plugin files format */
-#define MAX_PICT_FORMATS   30
+#define PNG_FORMAT              4     /* Png */
+#define JPEG_FORMAT             5     /* Jpeg */
+#define SVG_FORMAT              6     /* SVG Images */
+#define PLUGIN_FORMAT           7     /* Plugin files format */
+#define MAX_PICT_FORMATS        30
 
 /* A few constants */
 

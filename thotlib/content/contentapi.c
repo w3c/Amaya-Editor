@@ -223,6 +223,181 @@ void TtaSetTextContent (Element element, CHAR_T* content, Language language,
 }
 
 /*----------------------------------------------------------------------
+   TtaSetPictureContent
+
+   N.B. For the moment, this function is identical to TtaSetTextContent,
+   except that we also give a MIME type. It should evolve with time.
+
+   Changes the content of a Text basic element. The full content (if any) is
+   deleted and replaced by the new one.
+   This function can also be used for changing the content (the file name)
+   of a Picture basic element.
+   Parameters:
+   element: the Text element to be modified.
+   content: new content for that element.
+   language: language of that Text element.
+   document: the document containing that element.
+   mime_type: MIME tpye of the picture
+  ----------------------------------------------------------------------*/
+void TtaSetPictureContent (Element element, char *content, Language language,
+			   Document document, char *mime_type)
+{
+  PtrTextBuffer       pBuf, pPreviousBuff, pNextBuff;
+   CHAR_T*             ptr;
+   int                 length, l, delta = 0;
+   PtrElement          pEl;
+
+#ifndef NODISPLAY
+   PtrDocument         selDoc;
+   PtrElement          firstSelection, lastSelection;
+   int                 firstChar, lastChar;
+   ThotBool            selOk, changeSelection;
+
+#endif
+
+   UserErrorCode = 0;
+   if (element == NULL)
+	TtaError (ERR_invalid_parameter);
+   else if (!((PtrElement) element)->ElTerminal)
+	TtaError (ERR_invalid_element_type);
+   else if (((PtrElement) element)->ElLeafType != LtText &&
+	    ((PtrElement) element)->ElLeafType != LtPicture)
+	TtaError (ERR_invalid_element_type);
+   else
+     {
+	/* verifies the parameter document */
+	if (document < 1 || document > MAX_DOCUMENTS)
+	     TtaError (ERR_invalid_document_parameter);
+	else if (LoadedDocument[document - 1] == NULL)
+	     TtaError (ERR_invalid_document_parameter);
+	else
+	   /* parameter document is correct */
+	  {
+	     if (content)
+	       length = ustrlen (content);
+	     else
+	       length = 0;
+#ifndef NODISPLAY
+	     /* modifies the selection if the element is within it */
+	     selOk = GetCurrentSelection (&selDoc, &firstSelection,
+					  &lastSelection, &firstChar,
+					  &lastChar);
+	     changeSelection = FALSE;
+	     if (selOk && content != NULL)
+		if (selDoc == LoadedDocument[document - 1])
+		  {
+		  if ((PtrElement) element == firstSelection)
+		     /* The selection starts in the element */
+		     {
+		     TtaSelectElement (document, NULL);
+		     changeSelection = TRUE;
+		     if (firstChar > length + 1)
+		        /* Selection begins beyond the new length */
+			firstChar = length+1;
+		     }
+		  if ((PtrElement) element == lastSelection)
+		     /* The selection ends in the element */
+		     {
+		     if (!changeSelection)
+			TtaSelectElement (document, NULL);
+		     changeSelection = TRUE;
+		     if (lastChar > length + 1)
+		        /* Selection ends beyond the new length */
+			lastChar = length + 1;
+		     }
+		  }
+#endif
+	     if (((PtrElement) element)->ElLeafType == LtText)
+		((PtrElement) element)->ElLanguage = language;
+	     if (content != NULL)
+	       {
+	       ptr = content;
+	       delta = length - ((PtrElement) element)->ElTextLength;
+	       ((PtrElement) element)->ElTextLength = length;
+	       ((PtrElement) element)->ElVolume = length;
+	       pPreviousBuff = NULL;
+	       pBuf = ((PtrElement) element)->ElText;
+
+	       do
+	         {
+		  if (pBuf == NULL)
+		     GetTextBuffer (&pBuf);
+		  if (length >= THOT_MAX_CHAR)
+		     l = THOT_MAX_CHAR - 1;
+		  else
+		     l = length;
+		  if (l > 0)
+		    {
+		       ustrncpy (pBuf->BuContent, ptr, l);
+		       ptr += l;
+		       length -= l;
+		    }
+		  pBuf->BuLength = l;
+		  pBuf->BuContent[l] = EOS;
+		  pBuf->BuPrevious = pPreviousBuff;
+		  if (pPreviousBuff == NULL)
+		     ((PtrElement) element)->ElText = pBuf;
+		  else
+		     pPreviousBuff->BuNext = pBuf;
+		  pPreviousBuff = pBuf;
+		  pBuf = pBuf->BuNext;
+		  pPreviousBuff->BuNext = NULL;
+	         }
+	       while (length > 0);
+
+	       while (pBuf != NULL)
+		  /* Release the remaining buffers */
+	         {
+		  pNextBuff = pBuf->BuNext;
+#ifdef NODISPLAY
+		  FreeTextBuffer (pBuf);
+#else
+		  DeleteBuffer (pBuf, ActiveFrame);
+#endif
+		  pBuf = pNextBuff;
+	         }
+	       /* Updates the volumes of the ancestors */
+	       pEl = ((PtrElement) element)->ElParent;
+	       while (pEl != NULL)
+	         {
+		  pEl->ElVolume += delta;
+		  pEl = pEl->ElParent;
+	         }
+	       if (((PtrElement) element)->ElLeafType == LtPicture)
+	         {
+		  /* Releases the  pixmap */
+		  if (((PtrElement) element)->ElPictInfo != NULL)
+		     FreePictInfo ((PictInfo *) (((PtrElement) element)->ElPictInfo));
+	         }
+	       }
+#ifndef NODISPLAY
+	     /* @@ Probably create the pictinfo el here and add the mime type. 
+		Redisplayleaf is doing so further down */
+	     RedisplayLeaf ((PtrElement) element, document, delta);
+	     /* Sets up a new selection if the element is within it */
+	     if (changeSelection)
+	       {
+		  if (firstChar == 0)
+		     TtaSelectElement (document, (Element) firstSelection);
+		  else
+		     {
+		     if (lastSelection == firstSelection)
+		        TtaSelectString (document, (Element) firstSelection,
+				         firstChar, lastChar);
+		     else
+		        TtaSelectString (document, (Element) firstSelection,
+				         firstChar, 0);
+		     }
+		  if (lastSelection != firstSelection)
+		     TtaExtendSelection (document, (Element) lastSelection,
+					 lastChar);
+	       }
+#endif
+	  }
+     }
+}
+
+/*----------------------------------------------------------------------
    InsertText   inserts the string "content" in the element 
    pEl (which must be of type text), at the position
    "position". If "document" is null, we have not to consider
@@ -1504,26 +1679,21 @@ int TtaGetVolume (Element element)
 
 
 /*----------------------------------------------------------------------
-   TtaGetPictureType
+   GetImageDesc
 
-   Returns the type of Picture element.
-   Parameter:
-   element: the element of interest. This element must be a Picture or have
-   a bacground image.
-   Return value:
-   PicType: type of the element.
+   Returns a pointer to the  PictInfo structure that's associated with
+   element. Returns NULL if element doesn't have such structure.
   ----------------------------------------------------------------------*/
-PicType TtaGetPictureType (Element element)
+static PictInfo * GetImageDesc (Element element)
 {
    PtrAbstractBox   pAb;
-   PicType          pictType;
    PictInfo        *imageDesc;
-   int              typeImage;
    int              view;
    ThotBool         found;
 
    UserErrorCode = 0;
-   pictType = unknown_type;
+   imageDesc = NULL;
+
    if (element == NULL)
      TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) element)->ElTerminal)
@@ -1548,29 +1718,82 @@ PicType TtaGetPictureType (Element element)
        if (!found)
 	 TtaError (ERR_invalid_element_type);
        else
-	 {
-	   imageDesc = (PictInfo *) pAb->AbPictBackground;
-	   if (imageDesc != NULL)
-	     typeImage = imageDesc->PicType;
-	   else
-	     typeImage = UNKNOWN_FORMAT;
-	 }
+	 imageDesc = (PictInfo *) pAb->AbPictBackground;
      }
    else if (((PtrElement) element)->ElTerminal &&
 	    ((PtrElement) element)->ElLeafType != LtPicture)
      TtaError (ERR_invalid_element_type);
    else
-     {
        imageDesc = (PictInfo *) (((PtrElement) element)->ElPictInfo);
-       if (imageDesc != NULL)
-	 {
-	   typeImage = imageDesc->PicType;
-	   if (typeImage != UNKNOWN_FORMAT)
-	     pictType = (PicType) typeImage;
-	 }
+
+   return imageDesc;
+}
+
+/*----------------------------------------------------------------------
+   TtaGetPictureType
+
+   Returns the type of Picture element.
+   Parameter:
+   element: the element of interest. This element must be a Picture or have
+   a background image.
+   Return value:
+   PicType: type of the element.
+  ----------------------------------------------------------------------*/
+PicType TtaGetPictureType (Element element)
+{
+   PicType          pictType;
+   PictInfo        *imageDesc;
+   int              typeImage;
+
+   pictType = unknown_type;
+   imageDesc = GetImageDesc (element);
+   if (imageDesc != NULL)
+     {
+       typeImage = imageDesc->PicType;
+       if (typeImage != UNKNOWN_FORMAT)
+	 pictType = (PicType) typeImage;
      }
+
    return pictType;
 }
+
+/*----------------------------------------------------------------------
+   TtaSetPictureType
+   Sets the type of a Picture element.
+   Parameter:
+   mime_type: mime type of an image.
+  ----------------------------------------------------------------------*/
+void TtaSetPictureType (Element element, char *mime_type)
+{
+   PicType          typeImage;
+   PictInfo        *imageDesc;
+
+   if (!element || !mime_type || *mime_type == EOS)
+     return;
+
+   imageDesc = GetImageDesc (element);
+   if (imageDesc != NULL)
+     {
+       if (!strcmp (mime_type, "image/x-bitmap"))
+	   typeImage = xbm_type;
+       else if (!strcmp (mime_type, "application/postscript"))
+	 typeImage = eps_type;
+       else if (!strcmp (mime_type, "image/x-xpixmap"))
+	 typeImage = eps_type;
+       else if (!strcmp (mime_type, "image/gif"))
+	 typeImage = gif_type;
+       else if (!strcmp (mime_type, "image/jpeg"))
+	 typeImage = jpeg_type;
+       else if (!strcmp (mime_type, "image/png"))
+	 typeImage = png_type;
+       else if (!strcmp (mime_type, "image/svg"))
+	 typeImage = svg_type;
+       else 
+	 typeImage = UNKNOWN_FORMAT;
+       imageDesc->PicType = typeImage;
+     }
+}
+
 
 /*----------------------------------------------------------------------
    TtaGiveSubString
