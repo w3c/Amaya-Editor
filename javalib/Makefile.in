@@ -126,13 +126,13 @@ thotlib_itf:
 	               -J @top_srcdir@/classes/thotlib/API$$classe.java \
 		       @top_srcdir@/thotlib/include/$$include 2>> JavaTypes.err ; \
 	   echo "Compiling new Java class API$$classe" ; \
-	   (cd @top_srcdir@/classes ; $$DIR/$(JAVAC) thotlib/API$$classe.java) ; \
+	   (cd ../classes ; $$DIR/$(JAVAC) thotlib/API$$classe.java) ; \
 	   echo "Producing header for class API$$classe" ; \
 	   $$DIR/$(KAFFEH) thotlib.API$$classe ; \
 	  done ; \
 	  for classe in $(CLASSES) ; do \
            echo "Compiling Java class $$classe" ; \
-	   (cd @top_srcdir@/classes ; $$DIR/$(JAVAC) thotlib/$$classe.java) ; \
+	   (cd ../classes ; $$DIR/$(JAVAC) thotlib/$$classe.java) ; \
            echo "Producing header for class $$classe" ; \
 	   $$DIR/$(KAFFEH) thotlib.$$classe ; \
 	  done ; \
@@ -152,13 +152,13 @@ amaya_itf:
 	               -J @top_srcdir@/classes/amaya/API$$classe.java \
 		       @top_srcdir@/amaya/$$include 2>> JavaTypes.err ; \
 	   echo "Compiling new Java class API$$classe" ; \
-	   (cd @top_srcdir@/classes ; $$DIR/$(JAVAC) amaya/API$$classe.java) ; \
+	   (cd ../classes ; $$DIR/$(JAVAC) amaya/API$$classe.java) ; \
 	   echo "Producing header for class API$$classe" ; \
 	   $$DIR/$(KAFFEH) amaya.API$$classe ; \
 	  done ; \
 	  for classe in $(AMAYA_CLASSES) ; do \
            echo "Compiling Java class $$classe" ; \
-	   (cd @top_srcdir@/classes ; $$DIR/$(JAVAC) amaya/$$classe.java) ; \
+	   (cd ../classes ; $$DIR/$(JAVAC) amaya/$$classe.java) ; \
            echo "Producing header for class $$classe" ; \
 	   $$DIR/$(KAFFEH) amaya.$$classe ; \
 	  done ; \
@@ -175,13 +175,13 @@ amaya_itf_up:
 			-J @top_srcdir@/classes/amaya/API$$classe.java \
 			$$DIR/../amaya/$$include 2>> JavaTypes.err ; \
 	    echo "Compiling new Java class API$$classe" ; \
-	    (cd @top_srcdir@/classes ; $$DIR/$(JAVAC) amaya/API$$classe.java) ; \
+	    (cd ../classes ; $$DIR/$(JAVAC) amaya/API$$classe.java) ; \
 	    echo "Producing header for class API$$classe" ; \
 	    $$DIR/$(KAFFEH) amaya.API$$classe ; \
 	  done ; \
 	  for classe in $(AMAYA_CLASSES) ; do \
 	    echo "Compiling Java class $$classe" ; \
-	    (cd @top_srcdir@/classes ; $$DIR/$(JAVAC) amaya/$$classe.java) ; \
+	    (cd ../classes ; $$DIR/$(JAVAC) amaya/$$classe.java) ; \
 	    echo "Producing header for class $$classe" ; \
 	    $$DIR/$(KAFFEH) amaya.$$classe ; \
 	  done ; \
