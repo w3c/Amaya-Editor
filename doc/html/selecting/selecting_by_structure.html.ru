@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <title>&#xc2;&#xfb;&#xe1;&#xee;&#xf0; &#xef;&#xee;
+  &#xf1;&#xf2;&#xf0;&#xf3;&#xea;&#xf2;&#xf3;&#xf0;&#xe5;</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="ru" lang="ru">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p align="right"><a href="selecting_images.html.ru"
+        accesskey="p"><img alt="previous" src="../../images/left.gif" /></a>
+        <a href="../Selecting.html.ru" accesskey="t"><img alt="top"
+        src="../../images/up.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Выбор по структуре</h1>
+
+<p>Структурный вид особенно удобен для быстрого выбора больших элементов или
+группы элементов в пределах документа.</p>
+
+<p class="ProcedureCaption">Для выбора элемента:</p>
+<ul>
+  <li>Существует три пути для выбора больших элементов, таких как сложная
+    таблица или длинный список одним щелчком: Щёлкните по голубой метке
+    которая представляет этот элемент, щёлкните по любому имени его
+    атрибутов, или щёлкните по вертикальной голубой линии которая связана с
+    этим элементом.</li>
+</ul>
+
+<p class="ProcedureCaption">Для выбора символа текста или строки текста в
+пределах структуры:</p>
+<ul>
+  <li>Для выбора только этого символа, щёлкните по символу текста в окне
+    Показать структуру из меню Вид. Для выбора строки текста, щёлкните и
+    перетащите через весь текст строки.</li>
+</ul>
+
+<p class="ProcedureCaption">Для выбора величины атрибута:</p>
+<ul>
+  <li>В окне <strong>Показать структуру</strong> из меню
+    <strong>Вид</strong>, величины атрибута могут редактироваться с помощью
+    клавиатуры и они будут выделяться жирным шрифтом. Чтобы выбрать величину,
+    щёлкните и перетащите через неё. Вы не можете расширить тип выбранного
+    текста за пределы величины атрибута.</li>
+</ul>
+
+<p class="ProcedureCaption">Для выбора элемента структуры с использованием
+клавиатуры:</p>
+<ul>
+  <li>Нажмите кнопку <kbd>Esc</kbd> key под Unix или кнопку
+    <code><kbd>F2</kbd></code> под Windows для выбора корневого элемента в
+    структуре документа. Нажмите кнопку несколько раз, чтобы выбрать
+    контейнеры (и всё что они содержат) в структуре по отношению к корню.
+    <p></p>
+  </li>
+  <li>Нажмите кнопку <kbd>Ctrl</kbd> и <code>-</code> (кнопка минус) для
+    выбора дочернего элемента.
+    <p></p>
+  </li>
+  <li>Нажмите кнопку <kbd>Ctrl</kbd> и <code>k</code> для выбора следующего
+    элемента на том же уровне, или на уровне родительского элемента, если нет
+    следующего или предыдущего потомка из текущего уровня.
+    <p></p>
+  </li>
+  <li>Нажмите кнопку <kbd>Ctrl</kbd> и <code>j</code> для выбора предыдущего
+    элемента на том же уровне, или на уровне родительского элемента, если нет
+    предыдущего потомка из текущего уровня.</li>
+</ul>
+</div>
+</body>
+</html>

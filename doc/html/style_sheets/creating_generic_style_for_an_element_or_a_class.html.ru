@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <title>&#xd1;&#xee;&#xe7;&#xe4;&#xe0;&#xed;&#xe8;&#xe5;
+  &#xee;&#xe1;&#xf9;&#xe5;&#xe3;&#xee; &#xf1;&#xf2;&#xe8;&#xeb;&#xff;
+  &#xe4;&#xeb;&#xff; &#xfd;&#xeb;&#xe5;&#xec;&#xe5;&#xed;&#xf2;&#xe0;
+  &#xe8;&#xeb;&#xe8; &#xea;&#xeb;&#xe0;&#xf1;&#xf1;&#xe0;</title>
+  <style type="text/css">
+ </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="ru" lang="ru">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p align="right"><a
+        href="creating_and_updating_a_style_attribute.html.ru"
+        accesskey="p"><img alt="Предыдущий" src="../../images/left.gif"
+        /></a> <a href="../StyleSheets.html.ru" accesskey="t"><img
+        alt="Вверх" src="../../images/up.gif" /></a> <a
+        href="creating_html_style_elements.html.ru" accesskey="n"><img
+        alt="Следующий" src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Создание общего стиля для элемента или класса</h1>
+
+<p>Когда атрибут стиля связан с элементом, вы можете использовать этот
+элемент как модель для создания или изменения правила стиля, используя
+команду <strong>Создать правило</strong>.</p>
+
+<h2>Использование команды Создать правило</h2>
+
+<p class="ProcedureCaption">Для создания общего стиля для элемента или
+класса:</p>
+<ol>
+  <li>Выберите элемент который вы хотите использовать в качестве шаблона. По
+    умолчанию, выбрана символьная строка, для выбора вложенного элемента
+    нажмите кнопку <code>Esc</code> в Unix или <code>F2</code> в Windows.
+    <p class="StepNote"><strong>Примечание:</strong> Вы должны выбрать только
+    один элемент и этот элемент должен иметь атрибут стиля.</p>
+  </li>
+  <li>Выберите пункт <strong>Создать правило</strong> из меню
+    <strong>Стиль</strong>. Amaya откроет диалоговое окно, выводящее список
+    предлагаемых вариантов CSS. Этот список содержит все классы которые
+    определены для текущего документа (включая эти определения в связанной
+    таблице стилей), также как и тип элемента, с которым этот стиль
+  связан.</li>
+  <li>Выберите предлагаемый вариант из этого списка или введите новый класс и
+    щёлкните по кнопке <strong>Подтвердить</strong>. Стиль выбранного
+    элемента будет связан с выбранным вариантом, и атрибут стиля будет удален
+    из выбранного элемента. Его содержание переместится в элемент
+    <code>style</code>, в <code>HEAD</code> документа, и все элементы будут
+    сравниваться с выбранным вариантом и выводиться в новом стиле.</li>
+</ol>
+
+<h2>Связывание классов с элементами</h2>
+
+<p>Когда вы создаёте новые классы с помощью команды <strong>Создать
+правило</strong>, вы можете связывать эти классы с некоторыми другими
+элементами документа.</p>
+<ol>
+  <li>Выберите пункт <strong>Применить класс</strong> из меню
+    <strong>Стиль</strong>.
+    <p></p>
+  </li>
+  <li>Диалоговое окно выведет все существующие классы. Выберите один из этих
+    классов.
+    <p>Amaya выводит выбранные элементы со стилем, связанным с этим
+    классом.</p>
+  </li>
+</ol>
+
+<p>Связав класс с элементом, вы можете использовать меню
+<strong>Атрибуты</strong>. Это меню позволит вам удалить атрибут класса из
+элемента или изменить его (атрибут класса обрабатывается подобно любому
+другому атрибуту).</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+  <title>&#xc2;&#xfb;&#xf5;&#xee;&#xe4; &#xe8;&#xe7;
+  &#xff;&#xea;&#xee;&#xf0;&#xe5;&#xe9;,
+  &#xf1;&#xf2;&#xe8;&#xeb;&#xe8;&#xe7;&#xee;&#xe2;&#xe0;&#xed;&#xed;&#xfb;&#xf5;
+  &#xf1;&#xe8;&#xec;&#xe2;&#xee;&#xeb;&#xfc;&#xed;&#xfb;&#xf5;
+  &#xf1;&#xf2;&#xf0;&#xee;&#xea; &#xe8;
+  &#xef;&#xf0;&#xee;&#xf7;&#xe5;&#xe5;</title>
+  <style type="text/css">
+  </style>
+  <meta name="generator" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="ru" lang="ru">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p align="right"><a href="the_enter_key.html.ru" accesskey="p"><img
+        alt="Предыдущий" src="../../images/left.gif" /></a> <a
+        href="../Creating.html.ru" accesskey="t"><img alt="Вверх"
+        src="../../images/up.gif" /></a> <a
+        href="creating_nested_structures.html.ru" accesskey="n"><img
+        alt="Следующий" src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Выход из якорей, стилизованных символьных строк и прочее</h1>
+
+<p>Когда параграф или другой блок текста стилизованы: завершаются якорем, или
+символьная строка выделена полужирным шрифтом или курсивом, или используется
+какое либо другое форматирование—перемещение точки ввода в конец и ввод
+нового текста приводит к попаданию символов в якорь или стилизованную
+строку.</p>
+
+<p>Для выхода из якорного или стилизованного элемента и ввода простого
+текста:</p>
+<ol>
+  <li>Переместите курсор в конец якоря или стилизованного элемента, нажмите
+    кнопку <b>Enter</b> и продолжайте вводить текст после элемента.</li>
+  <li>Этот метод может использоваться для ввода простого текста в начало
+    блока, начинающего с якорного или стилизованного символа. Переместите
+    курсор в начало якорного или стилизованного элемента, нажмите кнопку
+    <b>Enter</b> и продолжайте вводить текст перед элементом.</li>
+</ol>
+
+<p>Чтобы выйти из &lt;pre&gt; или таблицы:</p>
+<ul>
+  <li>Когда курсор находится в конце <code>&lt;pre&gt;</code>
+    форматированного, нажатие кнопки <b>Enter</b> создаст новую линию
+    <code>&lt;pre&gt;</code>. Для создания другого элемента, скажем
+    параграфа, после <code>&lt;pre&gt;</code>, вы можете использовать меню
+    <strong>XHTML</strong> и там выбрать тип элемента который вы хотите
+    создать.</li>
+  <li>Другой путь достижения этого результата: выбрать весь
+    <code>&lt;pre&gt;</code> элемент с помощью кнопки <b>Esc</b> (Linux) или
+    кнопки <b>F2</b> (Windows) и нажать кнопку <b>Enter</b>. Это создаст
+    новый параграф после <code>&lt;pre&gt;</code> элемента.</li>
+</ul>
+
+<p>Также, это работает и с таблицами: выберите всю таблицу и нажмите кнопку
+<b>Enter</b> после таблицы, будет создан новый параграф. Вы можете выйти из
+таблицы нажимая кнопку Enter до тех пор, пока не выйдите из таблицы.</p>
+
+<p></p>
+</div>
+</body>
+</html>
