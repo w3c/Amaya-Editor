@@ -1681,7 +1681,7 @@ static void UpdateRowspanForRow (Element row, Document doc, ThotBool inMath,
   cell = NULL;
   while (colhead)
     {
-      /* is there a cell in a row above that spans to the current row? */
+      /* is there a cell in a row above that spans over or to the current row?*/
       prev = SpannedCellForRow (prevRow, colhead, doc, inMath, addRow,
 				&colspan);
       if (addRow && !prev)
@@ -1690,14 +1690,20 @@ static void UpdateRowspanForRow (Element row, Document doc, ThotBool inMath,
 	   that position */
 	cell = AddEmptyCellInRow (row, colhead, cell, FALSE, doc, inMath,
 				  FALSE, FALSE);
-      else if (!addRow && prev)
-	/* we are deleting a row and a cell from a row above is covering
-	   the current cell position. Create an empty cell to allow this
-	   row to be pasted correctly later */
+      else if (!addRow)
+	/* we are deleting a row */
 	{
-	  for (i = 1; i <= colspan; i++)
-	      cell = AddEmptyCellInRow (row, colhead, cell, FALSE, doc, inMath,
-					FALSE, TRUE);
+	  if (prev)
+	    /* a cell from a row above is covering the current cell position.
+	       Create an empty cell to allow this row to be pasted correctly
+	       later */
+	    {
+	      for (i = 1; i <= colspan; i++)
+		cell = AddEmptyCellInRow (row, colhead, cell, FALSE, doc,
+					  inMath, FALSE, TRUE);
+	    }
+	  else
+	    cell = GetCellFromColumnHead (row, colhead, inMath);
 	}
       while (colspan >= 1 && colhead)
 	{
@@ -1725,6 +1731,8 @@ ThotBool DeleteRow (NotifyElement *event)
   doc = event->document;
   elType = TtaGetElementType (row);
   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
+  /* decrease the value of the rowspan attribute of cells from rows above
+     that span over or up to the deleted row */
   UpdateRowspanForRow (row, doc, inMath, FALSE);
   /* create empty cells in the following rows, where cells of the deleted
      row span over several rows */
