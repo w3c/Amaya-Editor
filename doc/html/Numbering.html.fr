@@ -3,12 +3,12 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Numéroter une section</title>
+  <title>Numérotation des sections et Table des matières</title>
   <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <table border="0" summary="toc">
   <tbody>
@@ -27,30 +27,35 @@
 </table>
 
 <div id="Section">
-<h2><a name="L1064">Numéroter une section</a></h2>
+<h2><a name="L1064">Numéroter les sections</a></h2>
 
-<p>Les en-têtes de section (éléments <code>Hn</code>) peuvent être
-automatiquement numérotées pour refléter la structure du document. L'élément
-<code>H1</code> est supposé être le titre du document et il n'est pas
-numéroté, mais, quand la fonction est enclenchée, toutes les autres en-têtes
-(<code>H2</code> à <code>H6</code>) reçoivent un numéro calculé en fonction
-de leur type et de leur position dans la structure du document. Ces numéros
-sont affichés en bleu et ne peuvent pas être édités directement, mais ils
-sont automatiquement mis à jour chaque fois qu'une en-tête est créée ou
-effacée. Ils n'apparaissent pas seulement dans la vue principale, mais aussi
-dans la Vue table des matières.</p>
+<p>Les en-têtes de section (éléments <code>H2 </code>à<code> H6</code>)
+peuvent être automatiquement numérotées pour refléter la structure du
+document. L'élément <code>H1</code> est supposé être le titre du document et
+il n'est pas numéroté. Toutes les autres en-têtes (<code>H2</code> à
+<code>H6</code>) reçoivent un numéro calculé en fonction de leur type et de
+leur position dans la structure du document. Ces numéros sont introduits dans
+le document et les numéros produits précédemment sont retirés chaque fois que
+la commande <strong>XHTML&gt;Numéroter les sections</strong> est appelée.</p>
 
-<p>Quand le document est <a href="Printing.html.fr#L1062">imprimé</a>, les
-numéros de section apparaissent dans le document imprimé seulement si la
-fonction "numéroter"est enclenchée à ce moment là.</p>
+<h2>Engendrer la table des matières</h2>
 
-<p>Quand le document est sauvé, les numéros de section ne sont pas sauvés
-dans <a href="Publishing.html.fr#L1104">le format HTML</a>, mais ils sont
-engendrés dans la <a href="Publishing.html.fr#L1105">le format texte.</a></p>
+<p>La commande <strong>XHTML&gt;Engendrer la table des matières</strong>
+collecte tous les élément <code>H2</code> à <code>H6</code> qui suivent pour
+engendrer une table des matières à la position courante.</p>
 
-<p>La commande <strong>Numéroter les sections</strong>du menu
-<strong>Éditer</strong> est une bascule qui vous permet d'activer ou de
-désactiver la fonction "numéroter".</p>
+<p>Cette commande ajoute :</p>
+<ul>
+  <li>Un attribut <code>id</code> à chaque élément <code>H2</code> à
+    <code>H6</code> qui n'a pas cet attribut.</li>
+  <li>Une division avec une valeur d'attribut <code>class</code> "toc" et une
+    cascade de listes non numérotées à la position courante.</li>
+  <li>Un item de liste pour chaque élément H2 à H6 incluant une ancre pour
+    pointer l'élément correspondant.
+    <p>Le contenu de l'ancre est la copie du contenu de l'élément Hi. Si
+    l'élément Hi est numéroté, ce numéro est aussi copié.</p>
+  </li>
+</ul>
 </div>
 
 <p><a href="Printing.html.fr"><img alt="previous" src="../images/left.gif"
