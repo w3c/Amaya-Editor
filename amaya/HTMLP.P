@@ -529,6 +529,7 @@ BOXES
 		END;	
 	END;
 
+{ LC 22/08/01
  VALUE_EntityName: BEGIN
         Content: (EntityName);
         Visibility: 0;
@@ -547,6 +548,7 @@ BOXES
 		   HorizPos: Left = Previous . Right;
                 END;
         END;
+}
 
  ATTR_Checkbox: BEGIN
 	Content: Text ' type=checkbox';
@@ -6415,12 +6417,14 @@ ATTRIBUTES
 	   CreateBefore(VALUE_Invalid_attribute);
 	END;
 
+{ LC 22/08/01
   EntityName:
 	BEGIN
 	CreateBefore(VALUE_EntityName);
 	IN Structure_view
 		Visibility: 1;
 	END;
+}
 
   xml_space:
 	CreateBefore(AttrNameAndValue);
