@@ -2416,7 +2416,7 @@ static Document  LoadDocument (Document doc, char *pathname,
 	      ActiveTransfer (newdoc);
 	    }
 #ifdef ANNOTATIONS
-	  else if (method == CE_ANNOT && docType == docHTML)
+	  else if (method & CE_ANNOT && docType == docHTML)
 	    {
 	      docType = docAnnot;
 	      method = CE_RELATIVE;
