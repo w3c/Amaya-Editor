@@ -369,9 +369,11 @@ STRUCT
 	  (ATTR rowalign_mtr; IntRowAlign;
 		columnalign;
 		groupalign)
-	  = LIST OF (MTD) + (RowLabel);
+	  = LIST OF (MTD) + (RowLabel, LabelCell);
 
-   RowLabel = BEGIN Construct; END;            { a label within a mlabeledtr }
+   RowLabel = BEGIN Construct; END;     { a label within a mlabeledtr }
+   LabelCell = LIST OF (Construct);	{ a MTD element used as a label in
+                                          a mlabeledtr element }
 
    MTD
 	  (ATTR rowalign_mtr; IntRowAlign;

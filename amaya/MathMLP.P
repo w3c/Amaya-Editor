@@ -2916,9 +2916,18 @@ RULES
 		END;
         HorizRef: Enclosed not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view BEGIN
+		if Root
+			BEGIN
+			Width: Enclosing . Width - 0.5 cm;
+			HorizPos: Left = Enclosing . Left + 0.5 cm;
+			MarginLeft: 0;
+			END;
+		if not Root
+			BEGIN
+			Width: Enclosing . Width - STRUCT_INDENT;
+			HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+			END;
 		Size: Enclosing =;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Visibility: 10;
 		END;
 	IN Alternate_view
@@ -3585,13 +3594,24 @@ RULES
 		END;		
 	END;
 
-  RowLabel:
+   RowLabel:
 	BEGIN
 	HorizPos: Right = Root . Right - 0.5 cm;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
 		HorizPos: Left = Enclosing . Left;
+		END;		
+	END;
+
+   LabelCell:
+	BEGIN
+	CreateBefore(MTD_S);
+	CreateWith(VerticalLine);
+	IN Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;		
 	END;
 

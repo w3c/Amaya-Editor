@@ -374,6 +374,18 @@ RULES
 	create 'mlabeledtr>\12' after;
 	end;
 
+   LabelCell:
+	begin
+	create SOT;
+	create 'mtd';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'mtd>\12' after;
+	end;
+
    MTD:
 	begin
 	create SOT;

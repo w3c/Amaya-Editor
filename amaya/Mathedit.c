@@ -5012,7 +5012,7 @@ ThotBool        delete;
   CHAR_T*          ptr;
   int              length, val;
   ElementType      elType;
-  Element          cell, row, label;
+  Element          cell, row;
   ThotBool         fullTable;
 
   elType = TtaGetElementType (el);
@@ -5057,13 +5057,6 @@ ThotBool        delete;
     /* skip comments and other non cell elements */
     if (elType.ElTypeNum == MathML_EL_MTD)
       {
-      /* it's a cell, but skip it if it's wrapped in a RowLabel element
-	 (in that case that's the label in a mlabeledtr element) */
-      elType.ElTypeNum = MathML_EL_RowLabel;
-      label = TtaGetTypedAncestor (cell, elType);
-      if (label)
-	cell = label;
-      else
         if (delete)
 	  DeleteIntColAlign (cell, doc);
         else

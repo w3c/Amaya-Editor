@@ -1575,7 +1575,13 @@ void CheckMTable (elMTABLE, doc, placeholder)
 	      /* skip the first element after the comments: it's a label */
 	      if (cell)
 		{
+		  /* if it's a MTD change its type into LabelCell */
+		  if (elType.ElTypeNum == MathML_EL_MTD &&
+		      elType.ElSSchema == MathMLSSchema)
+		     ChangeElementType (cell, MathML_EL_LabelCell);
 		  /* wrap this element in a RowLabel element */
+		  /* This will allow the P schema to specify the horizontal
+		     position of the label */
 		  elType.ElSSchema = MathMLSSchema;
 		  elType.ElTypeNum = MathML_EL_RowLabel;
 		  label = TtaNewElement (doc, elType);
