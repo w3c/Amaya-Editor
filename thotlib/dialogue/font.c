@@ -1080,8 +1080,8 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	{
 	  /* No table overflow: load the new font */
 #ifdef _GL
-#ifdef _PCLDEBUG
-	  g_print ("\n XLFD selection : %s", textX);
+#ifdef _PCLDEBUGFONT
+  g_print ("\n XLFD selection : %s", textX);
 #endif /*_PCLDEBUG*/
 	  ptfont = GL_LoadFont (script, family, highlight, size, textX);
 #else /*_GL*/
@@ -1845,9 +1845,10 @@ static void FreeAFont (int i)
 	  /* move this entry to the freed position */
 	  TtFonts[i] = TtFonts[j];
 	  TtFontMask[i] = TtFontMask[j];
-#ifndef _WINDOWS
+
+#if !defined(_WINDOWS) && !defined(_GL)
 	  TtPatchedFont[i] = TtPatchedFont[j];
-#endif /* _WINDOWS */
+#endif /* _WINDOWS && _GL*/
 	  strncpy (&TtFontName[i * MAX_FONTNAME],
 		   &TtFontName[j * MAX_FONTNAME], MAX_FONTNAME);
 	  TtFonts[j] = NULL;
