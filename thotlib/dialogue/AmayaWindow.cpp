@@ -3,6 +3,7 @@
 #include "wx/wx.h"
 #include "wx/tglbtn.h"
 #include "wx/string.h"
+#include "wx/spinctrl.h"
 
 
 #include "thot_gui.h"
@@ -560,9 +561,9 @@ void AmayaWindow::OnChar(wxKeyEvent& event)
 {
   wxLogDebug( _T("AmayaWindow::OnChar key=")+wxString(event.GetUnicodeKey()) );
 
-  if (!CheckUnicodeKey(event))
-    if(!CheckSpecialKey(event))
-      if (!CheckShortcutKey(event))
+  if(!CheckSpecialKey(event))
+    if (!CheckShortcutKey(event))
+      if (!CheckUnicodeKey(event))
         event.Skip();
 }
 
@@ -575,13 +576,14 @@ void AmayaWindow::OnChar(wxKeyEvent& event)
  */
 bool AmayaWindow::CheckUnicodeKey( wxKeyEvent& event )
 {
-  if (event.GetUnicodeKey() != 0)
+  if ((event.GetUnicodeKey()!=0) && !event.ControlDown() && !event.AltDown())
     {
       wxWindow *       p_win_focus         = wxWindow::FindFocus();
       wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
       wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
-      // do not proceed any characteres if the focused widget is a textctrl or a combobox
-      if (!p_text_ctrl && !p_combo_box)
+	  wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
+      // do not proceed any characteres if the focused widget is a textctrl or a combobox or a spinctrl
+      if (!p_text_ctrl && !p_combo_box && !p_spinctrl)
 	{
 	  wxButton *       p_button            = wxDynamicCast(p_win_focus, wxButton);
 	  wxCheckListBox * p_check_listbox     = wxDynamicCast(p_win_focus, wxCheckListBox);
@@ -619,18 +621,8 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
 {
   int thot_keysym = event.GetKeyCode();  
 
-  wxWindow *       p_win_focus         = wxWindow::FindFocus();
-  wxPanel *        p_panel             = wxDynamicCast(p_win_focus, wxPanel);
-  wxGLCanvas *     p_gl_canvas         = wxDynamicCast(p_win_focus, wxGLCanvas);
-  wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
-  wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
-  if ( !p_panel && !p_gl_canvas && thot_keysym != WXK_F2 )
-    {
-      event.Skip();
-      return false;
-    }
-
-  if ( thot_keysym == WXK_F2     ||
+  bool proceed_key = (
+       thot_keysym == WXK_F2     ||
        thot_keysym == WXK_INSERT ||
        thot_keysym == WXK_DELETE ||
        thot_keysym == WXK_HOME   ||
@@ -644,8 +636,33 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
        thot_keysym == WXK_ESCAPE ||
        thot_keysym == WXK_BACK   ||
        thot_keysym == WXK_RETURN ||
-       thot_keysym == WXK_TAB
-       )
+       thot_keysym == WXK_TAB );
+
+  wxWindow *       p_win_focus         = wxWindow::FindFocus();
+  wxPanel *        p_panel             = wxDynamicCast(p_win_focus, wxPanel);
+  wxGLCanvas *     p_gl_canvas         = wxDynamicCast(p_win_focus, wxGLCanvas);
+  wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
+  wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+
+
+#ifdef _WINDOWS
+  /* on windows, when the notebook is focused, the RIGHT and LEFT key are forwarded to wxWidgets,
+     we must ignore it */
+  wxNotebook *     p_notebook          = wxDynamicCast(p_win_focus, wxNotebook);
+  if ( p_notebook && proceed_key )
+  {
+    event.Skip();
+    return true;
+  }
+#endif /* _WINDOWS */
+
+  if ( !p_panel && !p_gl_canvas && thot_keysym != WXK_F2 )
+    {
+      event.Skip();
+      return false;
+    }
+
+  if ( proceed_key )
     {
       int thotMask = 0;
       if (event.ControlDown())
@@ -673,7 +690,13 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 {
   if ( event.ControlDown() || event.AltDown() )
     {      
-      int thot_keysym = event.GetKeyCode();  
+      wxChar thot_keysym = event.GetUnicodeKey();  
+
+#ifdef _WINDOWS
+	  /* on windows, shortcuts values are not managed like on gtk, the keysym rang is 0-26*/
+      thot_keysym += (int)('A'-1);
+#endif /* _WINDOWS */
+
       int thotMask = 0;
       if (event.ControlDown())
 	thotMask |= THOT_MOD_CTRL;
@@ -689,17 +712,16 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 	{
 	  // shift key was not pressed
 	  // force the lowercase
-	  wxString s((wxChar)thot_keysym);
+	  wxString s(thot_keysym);
 	  if (s.IsAscii())
 	    {
 	      wxLogDebug( _T("AmayaTextGraber::OnKeyDown : thot_keysym=%x s=")+s, thot_keysym );
 	      s.MakeLower();
-	      wxChar c = s.GetChar(0);
-	      thot_keysym = (int)c;
+	      thot_keysym = s.GetChar(0);
 	    }
 	}
       // Call the generic function for key events management
-      ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+      ThotInput (GetActiveFrame()->GetFrameId(), (int)thot_keysym, 0, thotMask, (int)thot_keysym);
        return true;
     }
   else
