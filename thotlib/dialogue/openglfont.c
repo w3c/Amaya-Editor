@@ -875,7 +875,7 @@ void StopTextureScale ()
 {   
   if (GL_NotInFeedbackMode () && !GL_TransText ())
     {
-      glDeleteTextures (1, (GLuint*)&(FontBind);
+      glDeleteTextures (1, (GLuint*)&(FontBind));
       glDisable (GL_TEXTURE_2D);
     }
 }
