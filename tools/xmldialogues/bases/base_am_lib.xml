@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Tue May 28 14:10:58 CEST 2002" version="18">
+<base last_update="Fri Jul  5 09:34:20 CEST 2002" version="21">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1243,16 +1243,25 @@
 	<message xml:lang="en">More ...</message>
 	<message xml:lang="fr">Autre</message>
 	<message xml:lang="de">Weiter ...</message>
+	<message xml:lang="it">Più ...</message>
+	<message xml:lang="es">Más ...</message>
+	<message xml:lang="pt">Mais ...</message>
 </label>
 <label define="TMSG_CPGETBUTTON">
 	<message xml:lang="en">Get</message>
 	<message xml:lang="fr">Récupérer</message>
 	<message xml:lang="de">Holen</message>
+	<message xml:lang="it">Ottenga</message>
+	<message xml:lang="es">Obtener</message>
+	<message xml:lang="pt">Comece</message>
 </label>
 <label define="TMSG_CPCOLORBUTTON">
 	<message xml:lang="en">Color</message>
 	<message xml:lang="fr">Couleur</message>
 	<message xml:lang="de">Farbe</message>
+	<message xml:lang="it">Colore</message>
+	<message xml:lang="es">Color</message>
+	<message xml:lang="pt">Cor</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
