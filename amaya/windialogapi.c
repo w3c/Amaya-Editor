@@ -3156,7 +3156,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
 
       /* MIME type */
       SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE, "MIME TYPE");
-      if (DocumentMeta[doc]->content_type != NULL)
+      if (DocumentMeta[doc] && DocumentMeta[doc]->content_type != NULL)
 	content  = DocumentMeta[doc]->content_type;
       else
 	content = "Unknown";
@@ -3164,7 +3164,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
 
       /* charset */
       SetDlgItemText (hwnDlg, IDC_DICHARSET, "CHARSET");
-      if (DocumentMeta[doc]->charset != NULL)
+      if (DocumentMeta[doc] && DocumentMeta[doc]->charset != NULL)
 	content = DocumentMeta[doc]->charset;
       else
 	content = "Unknown";
@@ -3172,7 +3172,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
 
       /* content length */
       SetDlgItemText (hwnDlg, IDC_DICONTENTLEN, "CONTENT LENGTH");
-      if (DocumentMeta[doc]->content_length != NULL)
+      if (DocumentMeta[doc] && DocumentMeta[doc]->content_length != NULL)
 	content = DocumentMeta[doc]->content_length;
       else
 	content = "Unknown";

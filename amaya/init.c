@@ -312,6 +312,9 @@ DocumentMetaDataElement *DocumentMetaDataAlloc (void)
   ----------------------------------------------------------------------*/
 void DocumentMetaClear (DocumentMetaDataElement *me)
 {
+  if (!me)
+    return;
+
   if (me->form_data)
     {
       TtaFreeMemory (me->form_data);
@@ -394,7 +397,7 @@ void DocumentInfo (Document document, View view)
 		BaseDialog + DocInfoForm, content);
 
    /* Mime Type */
-   if (DocumentMeta[document]->content_type != NULL)
+   if (DocumentMeta[document] && DocumentMeta[document]->content_type != NULL)
      content = DocumentMeta[document]->content_type;
    else
      content = "Unknown";
@@ -402,7 +405,7 @@ void DocumentInfo (Document document, View view)
 		BaseDialog + DocInfoForm, content);
 
    /* Charset */
-   if (DocumentMeta[document]->charset != NULL)
+   if (DocumentMeta[document] && DocumentMeta[document]->charset != NULL)
      content = DocumentMeta[document]->charset;
    else
      content = "Unknown";
@@ -410,7 +413,7 @@ void DocumentInfo (Document document, View view)
 		BaseDialog + DocInfoForm, content);
 
    /* Content Length */
-   if (DocumentMeta[document]->content_length != NULL)
+   if (DocumentMeta[document] && DocumentMeta[document]->content_length != NULL)
      content = DocumentMeta[document]->content_length;
    else
      content = "Unknown";
