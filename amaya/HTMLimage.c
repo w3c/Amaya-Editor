@@ -546,7 +546,8 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 	  is_mml = FALSE;
 	  if (mime_type)
 	    {
-	      if (!strncmp (mime_type, "image/svg", 9))
+	      if (!strncmp (mime_type, "image/svg", 9) 
+		  || !strcmp (mime_type, "application/svg+xml"))
 		is_svg = TRUE;
 	      if (!strncmp (mime_type, "text/mathml", 11))
 		is_mml = TRUE;
@@ -573,7 +574,7 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 
       if (is_svg)
 	{
-	  TtaSetPictureType (el, "image/svg");
+	  TtaSetPictureType (el, "application/svg+xml");
 	  /* parse the SVG file and include the parsed tree at the
 	     position of the image element */
 	  ParseXmlSubTree (NULL, imageName, el, FALSE, doc, 

@@ -1704,18 +1704,37 @@ void InitMimeType (Document document, View view, char *url, char *status)
     }
   else if (DocumentTypes[document] == docSVG)
     {
-      mimetypes_list = "image/svg+xml\0"
+      mimetypes_list = 	"application/svg+xml\0"
+	"image/svg+xml\0"
+	"application/xml\0"
 	"text/xml\0";
-      nbmimetypes = 2;
+      nbmimetypes = 4;
     }
-  else 
+  else if (DocumentTypes[document] == docMath)
+    {
+      mimetypes_list = "application/mathml+xml\0"
+	"application/xml\0"
+	"text/xml\0";
+      nbmimetypes = 3;
+    }
+  else if (DocumentTypes[document] == docHTML && DocumentMeta[document] &&
+	   DocumentMeta[document]->xmlformat)
+    {
+      mimetypes_list = "application/xhtml+xml\0"
+	"text/html\0"
+	"application/xml\0"
+	"text/xml\0";
+      nbmimetypes = 4;
+    }
+  else
     {
       mimetypes_list = "text/html\0"
+	"application/xhtml+xml\0"
+	"application/xml\0"
 	"text/xml\0"
-	"application/mathml+xml\0"
 	"text/plain\0"
 	"text/css\0";
-      nbmimetypes = 5;
+      nbmimetypes = 6;
     }
 
 #ifndef _WINDOWS
@@ -2919,14 +2938,19 @@ static Document LoadDocument (Document doc, char *pathname,
       if (docType == docMath)
 	strcpy (local_content_type , "application/mathml+xml");
       else if (docType == docSVG)
-	strcpy (local_content_type , "image/svg+xml");
+	strcpy (local_content_type , "application/svg+xml");
       else if (docType == docXml)
 	strcpy (local_content_type , "text/xml");
       else if (docType == docText || docType == docCSS ||
 	       docType == docSource || docType == docLog )
 	strcpy (local_content_type , "text/plain");
       else if (docType == docHTML)
-	strcpy (local_content_type , "text/html");
+	{
+	  if (isXML)
+	    strcpy (local_content_type , "applicatiion/xhtml+xml");
+	  else
+	    strcpy (local_content_type , "text/html");
+	}
     }
    else
      /* The server returned a content type */

@@ -217,7 +217,8 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
 		   !strcmp (name1, "image/gif") ||
 		   !strcmp (name1, "image/jpeg") ||
 		   !strcmp (name1, "image/png") ||
-		   !strcmp (name1, "image/svg"))
+		   !strcmp (name1, "image/svg") ||
+		   !strcmp (name1, "application/svg+xml"))
 		 isImage = TRUE;
 	       TtaFreeMemory (name1);
 	     }

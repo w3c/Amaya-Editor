@@ -758,13 +758,18 @@ void SaveDocumentAs (Document doc, View view)
    else
      {
        if (DocumentTypes[doc] == docHTML)
-	 strcpy (UserMimeType, "text/html");
+	 {
+	   if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+	     strcpy (UserMimeType, "application/xhtml+xml");
+	   else
+	     strcpy (UserMimeType, "text/html");
+	 }
        else if (DocumentTypes[doc] == docText)
 	 strcpy (UserMimeType, "text/plain");
        else if (DocumentTypes[doc] == docSVG)
-	 strcpy (UserMimeType, "text/xml+svg");
+	 strcpy (UserMimeType, "application/svg+xml");
        else if (DocumentTypes[doc] == docMath)
-	 strcpy (UserMimeType, "text/xml+mathml");
+	 strcpy (UserMimeType, "application/mathml+xml");
        else if (DocumentTypes[doc] == docXml)
 	 strcpy (UserMimeType, "text/xml");
        else

@@ -37,7 +37,7 @@
 #define DEFAULT_PERSIST_TIMEOUT 60L
 #define DEFAULT_NET_EVENT_TIMEOUT 60000
 /* defines the priority for image content negotiation */
-#define IMAGE_ACCEPT_NEGOTIATION "*/*;q=0.1,image/*,image/gif,image/jpeg,image/png,image/svg+xml"
+#define IMAGE_ACCEPT_NEGOTIATION "*/*;q=0.1,image/*,image/gif,image/jpeg,image/png,image/svg+xml,application/svg+xml"
 
 /* Amaya includes  */
 #define THOT_EXPORT extern
@@ -1484,7 +1484,7 @@ static void           AHTAcceptTypesInit (HTList *c)
    HTBind_add("htm", "text/html",  NULL, "8bit", NULL, 1.0);
    HTBind_add("tgz", "application/gnutar",  NULL, "binary", NULL, 1.0);
    HTBind_add("mml", "application/mathml+xml",  NULL, "8bit", NULL, 1.0);
-   HTBind_add("svg", "image/svg+xml",  NULL, "8bit", NULL, 1.0);
+   HTBind_add("svg", "application/svg+xml",  NULL, "8bit", NULL, 1.0);
    HTBind_add("xsl", "text/xml",  NULL, "8bit", NULL, 1.0);
    /* Don't do any case distinction */
    HTBind_caseSensitive (FALSE);

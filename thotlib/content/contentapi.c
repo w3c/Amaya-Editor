@@ -1793,7 +1793,7 @@ void TtaSetPictureType (Element element, char *mime_type)
 	 typeImage = jpeg_type;
        else if (!strcmp (mime_type, "image/png"))
 	 typeImage = png_type;
-       else if (!strcmp (mime_type, "image/svg"))
+       else if (!strcmp (mime_type, "image/svg") || !strcmp (mime_type, "application/svg+xml"))
 	 typeImage = svg_type;
        else 
 	 typeImage = UNKNOWN_FORMAT;
