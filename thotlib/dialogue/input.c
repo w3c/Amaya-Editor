@@ -115,6 +115,7 @@ static KEY         *Automata_current = NULL;
 
 #ifdef _WINDOWS
 static BOOL specialKey;
+static BOOL escChar = FALSE;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -480,12 +481,16 @@ LPARAM lParam;
       keyboard_mask |= THOT_MOD_SHIFT;
 
    status = GetKeyState (VK_CONTROL);
-   if (HIBYTE (status)) 
+   if (HIBYTE (status)) {
       keyboard_mask |= THOT_MOD_CTRL;
+      escChar = TRUE;
+   } 
 
    status = GetKeyState (VK_MENU);
-   if (HIBYTE (status))
+   if (HIBYTE (status)) {
       keyboard_mask |= THOT_MOD_ALT;
+      escChar = TRUE;
+   }
 
    if ((wParam == VK_CANCEL) ||
        (wParam == VK_BACK)   ||
@@ -626,6 +631,10 @@ int                 key;
      specialKey = FALSE;
    else if (key >= 1 && key <= 26 && nb == 1)
      specialKey = TRUE;
+   else if (escChar) {
+        specialKey = TRUE;
+        escChar = FALSE;
+   }
 #  endif /* _WINDOWS */
 
    value = string[0];

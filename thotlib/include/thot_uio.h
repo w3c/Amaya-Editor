@@ -1,3 +1,6 @@
+#ifndef THOT_UIO_H
+#define THOT_UIO_H
+
 #ifdef _I18N_ /*****************************/
 
 #ifdef _WINDOWS
@@ -24,7 +27,6 @@
 #define ufprintf fprintf
 #define usprintf sprintf
 #define usscanf  sscanf
-#define ufgets   fgets 
 #define ufopen   fopen
 #define ugetenv getenv
 #define urename rename
@@ -48,3 +50,7 @@
 #endif /* _WINDOWS*/
 
 #endif /* !_I18N_ ****************************/
+
+extern STRING ufgets (STRING , int , FILE*);
+
+#endif /* THOT_UIO_H */

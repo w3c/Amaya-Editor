@@ -22,32 +22,6 @@
 #define THOT_SYS_H
 
 
-#if defined(_I18N_) || defined (__JIS__)
-#     define ___TEXT___(str) L##str
-
-#     define __CR__  L'\r'
-#     define EOS     L'\0'
-#     define EOL     L'\n'
-#     define TAB     L'\t'
-#     define SPACE   L' '
-#     define BSPACE  L'\b'
-#else /* !defined(_I18N_) && !defined (__JIS__) */
-#     define ___TEXT___(str) str
-
-#     define __CR__  '\r'
-#     define EOS     '\0'
-#     define EOL     '\n'
-#     define TAB     '\t'
-#     define SPACE    ' '
-#     define BSPACE   '\b'
-#endif /* defined(_I18N_) || defined (__JIS__) */
-
-#ifndef TEXT
-#define TEXT(str) ___TEXT___(str)
-#endif  /* TEXT */
-
-#define _EMPTYSTR_ TEXT("")
-#include "unicodeconsts.h"
 
 #include <setjmp.h>
 #include <signal.h>
@@ -183,5 +157,24 @@ typedef unsigned char   ThotBool;
 
 #endif /* _WINDOWS */
 /********************************************************WINDOWS**/
+#if defined(_I18N_) || defined (__JIS__)
+#   define ___TEXT___(str) L##str
+#else /* !defined(_I18N_) && !defined (__JIS__) */
+#     define ___TEXT___(str) str
+#endif /* defined(_I18N_) || defined (__JIS__) */
+
+#ifndef TEXT
+#define TEXT(str) ___TEXT___(str)
+#endif  /* TEXT */
+
+#define _EMPTYSTR_ TEXT("")
+#define __CR__  TEXT('\r')
+#define EOS     TEXT('\0')
+#define EOL     TEXT('\n')
+#define TAB     TEXT('\t')
+#define SPACE   TEXT(' ')
+#define BSPACE  TEXT('\b')
+
+#include "unicodeconsts.h"
 
 #endif /* THOT_SYS_H */

@@ -14,7 +14,7 @@
 #ifndef __CONST_STR_H__
 #define __CONST_STR_H__
 
-#define MAX_NAME_LENGTH 100	/* maximum name length */	
+#define MAX_NAME_LENGTH 32	/* maximum name length */	
 #define MAX_PARAM_SSCHEMA 10	/* maximum number of parameter definitions in
 				   a structure schema */
 #define MAX_INT_ATTR_VAL 32000	/* maximum value of a numerical attribute */

@@ -148,7 +148,7 @@ STRING schemaName;
 
       }
     else
-      XmlError(doc,"No default schema given");
+      XmlError(doc, TEXT("No default schema given"));
 }
 /*----------------------------------------------------------------------
   XmlGetPrefixSchema: seach the prefix associated schema
