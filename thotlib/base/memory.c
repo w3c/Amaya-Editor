@@ -2043,13 +2043,12 @@ void FreeLine (PtrLine pLine)
 #else
    /* Insere le contexte de ligne en tete de la chaine des libres */
    pLine->LiNext = PtFree_Line;
-   PtFree_Line = pLine;
-   PtFree_Line->LiPrevious = NULL;
    pLine->LiFirstBox = NULL;
    pLine->LiFirstPiece = NULL;
    pLine->LiLastBox = NULL;
    pLine->LiLastPiece = NULL;
-   pLine->LiNext = NULL;
+   PtFree_Line = pLine;
+   PtFree_Line->LiPrevious = NULL;
    NbFree_Line++;
 #endif
    NbUsed_Line--;
