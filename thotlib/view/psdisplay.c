@@ -349,6 +349,8 @@ int                 fg;
    hOldFont = WinLoadFont (TtPrinterDC, font);
    TextOut (TtPrinterDC, x, y, (USTRING) str, 1);   
    SelectObject (TtPrinterDC, hOldFont);
+   DeleteObject (currentActiveFont);
+   currentActiveFont = (HFONT)0;
 }
 
 /*----------------------------------------------------------------------

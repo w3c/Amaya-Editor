@@ -188,7 +188,8 @@ ptrfont font;
       LastUsedFont->family    = font->family; 
 
       if (currentActiveFont != (HFONT)0) {
-         DeleteObject (SelectObject (hdc, currentActiveFont));
+         if (!DeleteObject (SelectObject (hdc, GetStockObject (SYSTEM_FONT))))
+            WinErrorBox (NULL);
          currentActiveFont = (HFONT)0;
 	  }
    } else if ((LastUsedFont->highlight != font->highlight) ||
@@ -196,7 +197,8 @@ ptrfont font;
               (LastUsedFont->alphabet  != font->alphabet)  ||
               (LastUsedFont->family    != font->family)) {
           if (currentActiveFont != (HFONT)0) {
-             DeleteObject (SelectObject (hdc, currentActiveFont));
+             if (!DeleteObject (SelectObject (hdc, GetStockObject (SYSTEM_FONT))))
+                WinErrorBox (NULL);
              currentActiveFont = (HFONT)0;
 
              LastUsedFont->highlight = font->highlight; 
@@ -208,6 +210,8 @@ ptrfont font;
 
    if (currentActiveFont == (HFONT)0) {
       currentActiveFont = WIN_LoadFont (font->alphabet, font->family, font->highlight, font->size, 0);
+      if (currentActiveFont == (HFONT)0)
+         WinErrorBox (NULL);
    }
    return (SelectObject (hdc, currentActiveFont));
 }

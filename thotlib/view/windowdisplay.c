@@ -303,6 +303,8 @@ int                 fg;
       ClipError (frame);
    TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) str, 1);   
    SelectObject (TtDisplay, hOldFont);
+   DeleteObject (currentActiveFont);
+   currentActiveFont = (HFONT)0;
    WIN_ReleaseDeviceContext ();
 
    FinishDrawing (0, RO, active);
@@ -506,6 +508,8 @@ int                 shadow;
 	  } 
       FinishDrawing (0, RO, active);
       SelectObject (TtDisplay, hOldFont);
+      DeleteObject (currentActiveFont);
+      currentActiveFont = (HFONT)0;
       /* WIN_ReleaseDeviceContext (); */
       return (width);
      } else
@@ -1517,7 +1521,7 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
-   Pixmap              pat;
+   Pixmap              pat = (Pixmap) 0;
    HBRUSH              hBrush;
    HBRUSH              hOldBrush;
    LOGBRUSH            logBrush;
@@ -1546,10 +1550,10 @@ int                 pattern;
    if (pat != 0) {
       if (pattern != 2) {
          hBrush = CreatePatternBrush (pat);
-         SelectObject (TtDisplay, hBrush);
+         hOldBrush = SelectObject (TtDisplay, hBrush);
 	  } else {
              hBrush = CreateSolidBrush (ColorPixel (bg));
-             SelectObject (TtDisplay, hBrush);
+             hOldBrush = SelectObject (TtDisplay, hBrush);
 	  }
    } else {
          SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
@@ -1600,6 +1604,9 @@ int                 pattern;
       hBrush = (HBRUSH)0;
    }
    WIN_ReleaseDeviceContext ();
+   if (pat != (Pixmap)0)
+      if (!DeleteObject ((HGDIOBJ)pat))
+         WinErrorBox (NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -2337,8 +2344,8 @@ int                 pattern;
    HBRUSH   hBrush;
    HBRUSH   hOldBrush;
    LOGBRUSH logBrush;
-   int    result;
-   Pixmap              pat;
+   int      result;
+   Pixmap   pat = (Pixmap)0;
 
    width -= thick + 1;
    height -= thick + 1;
@@ -2428,6 +2435,9 @@ int                 pattern;
       hBrush = (HBRUSH)0;
    }
    WIN_ReleaseDeviceContext ();
+   if (pat != (Pixmap)0)
+      if (!DeleteObject ((HGDIOBJ) pat))
+         WinErrorBox (NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -2817,6 +2827,8 @@ ThotGC              GClocal;
       WinErrorBox (NULL); */
    TextOut(TtDisplay, x, y, string, ustrlen(string));
    SelectObject (TtDisplay, hOldFont);
+   DeleteObject (currentActiveFont);
+   currentActiveFont = (HFONT)0;
    WIN_ReleaseDeviceContext();
 }
 
