@@ -608,6 +608,7 @@ void ANNOT_Create (doc, view)
   int         c1, cl, i;
   Document    doc_annot;
   AnnotMeta  *annot;
+  XPointerContextPtr ctx;
 
   if (!ANNOT_CanAnnotate (doc))
     return;
@@ -641,7 +642,16 @@ void ANNOT_Create (doc, view)
 
   ANNOT_InitDocumentStructure (doc, doc_annot, annot);
 
+  /* remove the existing selection */
+  TtaUnselect (doc);
+  /* @@ JK: do I need to do this? */
+  UpdateContextSensitiveMenus (doc);
+  /* add the annotation icon */
   LINK_AddLinkToSource (doc, annot);
+  /* reselect the annotated text starting from the xpointer */
+  ctx = XPointer_parse (doc, annot->xptr);
+  XPointer_select (ctx);
+  XPointer_free (ctx);
 }
 
 /*-----------------------------------------------------------------------
