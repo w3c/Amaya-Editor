@@ -534,13 +534,20 @@ DBG(fprintf(stderr, "Image %s modified\n", pImage->localName);)
 		      DocNetworkStatus[document] |= AMAYA_NET_ERROR;
 #endif /* AMAYA_JAVA */
 		       ResetStop (document);
+#ifdef AMAYA_JAVA
+		       sprintf (msg, "%s %s \n%s",
+		                TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+				pImage->originalName, 
+				TtaGetMessage (AMAYA, AM_SAVE_DISK));
+#else /* AMAYA_JAVA */
 		       sprintf (msg, "%s %s \n%s\n%s",
 		                TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
 				pImage->originalName, 
 				AmayaLastHTTPErrorMsg,
 				TtaGetMessage (AMAYA, AM_SAVE_DISK));
+#endif /* AMAYA_JAVA */
 		       InitConfirm (document, view, msg);
-		       /* JK: to erase the last status message */
+		       /* erase the last status message */
 		       TtaSetStatus (document, view, "", NULL);
 
 		       if (UserAnswer)
@@ -567,11 +574,18 @@ DBG(fprintf(stderr, "Saving HTML document %s\n", tempname);)
        DocNetworkStatus[document] |= AMAYA_NET_ERROR;
 #endif /* AMAYA_JAVA */
         ResetStop (document);
+#ifdef AMAYA_JAVA
+	sprintf (msg, "%s %s \n%s",
+		 TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		 DocumentURLs[document],
+		 TtaGetMessage (AMAYA, AM_SAVE_DISK));
+#else /* AMAYA_JAVA */
 	sprintf (msg, "%s %s \n%s\n%s",
 		 TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
 		 DocumentURLs[document],
 		 AmayaLastHTTPErrorMsg,
 		 TtaGetMessage (AMAYA, AM_SAVE_DISK));
+#endif /* AMAYA_JAVA */
 	InitConfirm (document, view, msg);
 	/* JK: to erase the last status message */
 	TtaSetStatus (document, view, "", NULL);

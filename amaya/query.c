@@ -24,18 +24,10 @@
 #define CATCH_SIG
 #endif
 
-/*----------------------------------------------------------------------*/
-/* Experimental */
-
-#define AMAYA_LAST_HTTP_ERROR_MSG_SIZE 4096
-char AmayaLastHTTPErrorMsg [AMAYA_LAST_HTTP_ERROR_MSG_SIZE];
-
-/*----------------------------------------------------------------------*/
 
 /* local structures coming from libwww and which are
    not found in any .h file
  */
-
 struct _HTStream
   {
      const HTStreamClass *isa;
