@@ -1522,7 +1522,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
   char                clearL, clearR;
   int                 bottomL = 0, bottomR = 0, left, y;
   int                 orgX, orgY, width;
-  ThotBool            variable;
+  ThotBool            variable, newFloat;
 
   if (pLine == NULL)
     return;
@@ -1540,8 +1540,10 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
   /* clear values */
   clearL = 'N';
   clearR = 'N';
+  newFloat = FALSE;
   if (pAb)
     {
+      newFloat = pAb->AbFloat != 'N';
       if (pAb->AbClear == 'L' || pAb->AbClear == 'B')
 	clearL = 'L';
       if (pAb->AbClear == 'R' || pAb->AbClear == 'B')
@@ -1653,10 +1655,14 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	   (floatL && clearL == 'L') || (floatR && clearR == 'R')))
 	{
 	  /* update line information */
-	  if (bottomL < bottomR && pLine->LiYOrg < bottomR)
-	    pLine->LiYOrg = bottomR;
-	  else if (pLine->LiYOrg < bottomL && pLine->LiYOrg < bottomL)
+	  if ((newFloat || clearL == 'L') && pLine->LiYOrg < bottomL)
 	    pLine->LiYOrg = bottomL;
+	  else if (bottomR < bottomL && pLine->LiXMax < width)
+	    pLine->LiYOrg = bottomL;
+	  if ((newFloat || clearR == 'R') && pLine->LiYOrg < bottomR)
+	    pLine->LiYOrg = bottomR;
+	  else if (bottomL < bottomR && pLine->LiXMax < width)
+	    pLine->LiYOrg = bottomR;
 	  if (pBlock->BxType == BoFloatBlock)
 	    {
 	      /* it's not an inline block,
