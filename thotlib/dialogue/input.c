@@ -546,19 +546,43 @@ void WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
    handling function.
   ----------------------------------------------------------------------*/
 #ifdef _GTK
-void CharTranslation (GdkEventKey * event, gpointer * data)
+gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 {
    int                 status;
    int                 PicMask;
    int                 frame;
    unsigned int        state, save;
-   unsigned char             string[2];
+   unsigned char       string[2];
    ThotComposeStatus   ComS;
    KeySym              KS;
+   GtkWidget *drawing_area;
 
-   frame = (int) data;
+   printf("GDK_KEY_PRESS\n");
+
+  frame = (int) data;
    if (frame > MAX_FRAME)
       frame = 0;
+   drawing_area = FrameTable[frame].WdFrame;
+
+   if(gtk_object_get_data (GTK_OBJECT(drawing_area), "Active"))
+     {
+       printf("ok on traite\n");
+     }
+   else
+     {
+       printf("on ne traite pas\n");
+       return FALSE;
+     }
+   
+#if 0
+   /* here the tab key dont change the focus */
+   if (event->keyval == GDK_Tab)
+     {
+       printf("TABBBBBBBBBbb\n");
+       gtk_widget_grab_focus (drawing_area);
+       gtk_widget_grab_focus (drawing_area);
+     }
+#endif
 
    status = 0;
    /* control, alt and mouse status bits of the state are ignored */
@@ -587,7 +611,9 @@ void CharTranslation (GdkEventKey * event, gpointer * data)
    if (state & GDK_MOD1_MASK || state & GDK_MOD4_MASK)
       PicMask |= THOT_MOD_ALT;
    ThotInput (frame, &string[0], event->length, PicMask, KS);
+   return FALSE;
 }
+
 #else /* _GTK */
 void CharTranslation (ThotKeyEvent *event)
 {
@@ -599,6 +625,7 @@ void CharTranslation (ThotKeyEvent *event)
    int                 frame;
    unsigned int        state;
 
+ 
    frame = GetWindowFrame (event->window);
    if (frame > MAX_FRAME)
       frame = 0;

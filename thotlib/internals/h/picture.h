@@ -54,7 +54,7 @@ typedef struct
   Pixmap         PicPixmap;
   Pixmap         PicAlpha;
 #ifdef _GTK
-  GdkImlibImage *PicImageGDK;
+  /*  GdkImlibImage *PicImageGDK;*/
 #endif /* _GTK */
 #ifdef _WINDOWS
   int            PicMask;        /* Mask color */

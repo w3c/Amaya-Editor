@@ -168,7 +168,8 @@ typedef XColor    ThotColorStruct;
 #ifdef _GTK
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
-#include <gdk_imlib.h>
+#include <gdk/gdkkeysyms.h> /* for keycode */
+#include <gdk_imlib.h>      /* for load image (jpg, gif, tiff...) */
 typedef GtkWidget     *ThotWidget;
 typedef Window         ThotWindow;
 typedef ThotWidget     ThotButton;

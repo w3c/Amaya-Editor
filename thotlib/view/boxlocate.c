@@ -2108,7 +2108,7 @@ ThotBool          APPgraphicModify (PtrElement pEl, int value, int frame, ThotBo
   If the smaller box enclosing the point xm, ym of the window cannot
   be moved, the function checks the encolsing box, etc.
   ----------------------------------------------------------------------*/
-void              ApplyDirectTranslate (int frame, int xm, int ym)
+void ApplyDirectTranslate (int frame, int xm, int ym)
 {
   PtrBox              pBox;
   PtrAbstractBox      pAb;

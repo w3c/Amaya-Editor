@@ -2603,7 +2603,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	      {
 #ifndef _WINDOWS
 #ifdef _GTK 
-                gtk_widget_show_all (parent);
+                gtk_widget_show (parent);
                 gtk_signal_connect (GTK_OBJECT (parent), "activate",
                                     GTK_SIGNAL_FUNC (CallMenu), catalogue);
 #else /* _GTK */

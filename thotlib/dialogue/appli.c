@@ -250,23 +250,41 @@ void FrameToView (int frame, int *doc, int *view)
 /*----------------------------------------------------------------------
    Evenement sur une frame document.                             
   ----------------------------------------------------------------------*/
-#ifndef _GTK
 void FrameKilled (int *w, int frame, int *info)
-#else /* _GTK */
-gboolean FrameKilledGTK (GtkWidget *widget,
-			 GdkEvent *event,
-			 gpointer frame)
-#endif /* !_GTK */
+
 {
    /* Enleve la procedure de Callback */
    /* Detruit la fenetre si elle existe encore */
    if ((int)frame > 0 && FrRef[(int)frame] != 0)
       ViewClosed ((int)frame);
-#ifdef _GTK
-   return FALSE;
-#endif /* _GTK */
 }
 
+
+/*----------------------------------------------------------------------
+  Called when a clique is done on the up right corner cross
+  Kill the current document                             
+  ----------------------------------------------------------------------*/
+#ifdef _GTK
+gboolean KillFrameGTK (GtkWidget *widget,
+		       GdkEvent *event,
+		       gpointer frame)
+{
+  PtrDocument         pDoc;
+  int                 view;
+
+  if ((int)frame <= MAX_FRAME)
+    {
+      GetDocAndView ((int)frame, &pDoc, &view);
+      CloseView (pDoc, view);
+    }
+  for ((int)frame = 0; (int)frame <= MAX_FRAME; (int)frame++)
+    if (FrRef[(int)frame] != 0)
+      /* there is still an active frame */
+		      return;
+  TtaQuit();
+  return FALSE;
+}
+#endif
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
@@ -1905,6 +1923,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   int                 comm, dx, dy, sel, h;
 
 #ifdef _GTK
+  printf("FrameCallbackGTK\n");
   frame = (int )data;
   gtk_widget_grab_focus (widget);
 #endif /* _GTK */
@@ -1980,9 +1999,12 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	{
 	case Button1:
 #else /* _GTK */
-      switch (event->button)
-	{
-	case 1:
+	  /* Set the drawing area active for the keyboard */	  
+	  gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)TRUE);
+
+	  switch (event->button)
+	    {
+	    case 1:
 #endif /* !_GTK */
 	  /* ==========LEFT BUTTON========== */	  
 #ifndef _GTK
@@ -2085,7 +2107,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
 	    {
 	      printf("boutton + GDK_CONTROL\n");
-	      /* moving a box */
+	      /* moving a box */     
 	      ApplyDirectTranslate (frame, event->x, event->y);
 	      T1 = T2 = T3 = 0;
 	    }
@@ -2317,6 +2339,12 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  FrameToView (frame, &document, &view);
 	  TtcCopyToClipboard (document, view);
 	  break;
+	case GDK_KEY_PRESS:
+	  printf("GDK_KEY_PRESS\n");
+	  break;
+	case GDK_ENTER_NOTIFY:
+	case GDK_LEAVE_NOTIFY:
+	  break;
 #endif
 #ifndef _GTK
     case KeyPress:
@@ -2355,6 +2383,34 @@ gboolean DragCallbackGTK (GtkWidget *widget,
     return FALSE;
   }
 #endif /* _GTK */
+
+#ifdef _GTK
+gboolean DrawingAreaFocusInCallbackGTK (GtkWidget *widget,
+					GdkEventFocus *event,
+					gpointer user_data)
+  {
+    int frame = (int)user_data;
+    /*    GtkWidget *drawing_area = FrameTable[frame].WdFrame;*/
+    printf("focus in\n");
+    /* Set the drawing area active for the keyboard */
+    gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)TRUE);
+    /*    gtk_widget_grab_focus (GTK_WIDGET(drawing_area));*/
+    return FALSE;
+  }
+gboolean DrawingAreaFocusOutCallbackGTK (GtkWidget *widget,
+					GdkEventFocus *event,
+					gpointer user_data)
+  {
+    int frame = (int)user_data;
+    printf("focus out\n");
+    /*    GtkWidget *drawing_area = FrameTable[frame].WdFrame;*/
+    /* Set the drawing area inactive for the keyboard */	  
+    gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)FALSE);
+    /*    gtk_widget_grab_focus (GTK_WIDGET(drawing_area));*/
+    return FALSE;
+  }
+
+#endif
 
 
 /*----------------------------------------------------------------------
@@ -2732,8 +2788,8 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 
 	gdk_gc_set_clip_rectangle (TtLineGC, &rect);	
 	gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
-/*
-	gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);*/
+
+	gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
 #else /* _GTK */
 	rect.x = 0;
 	rect.y = 0;
@@ -2767,7 +2823,7 @@ void RemoveClipping (int frame)
  rect.height = MAX_SIZE;
 
  gdk_gc_set_clip_rectangle (TtLineGC, &rect);
- /*  gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);*/
+ gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
  gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
 #else /* _GTK */
    XRectangle          rect;

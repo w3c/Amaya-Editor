@@ -3,7 +3,7 @@
  *   Manual editing not recommended.
  */
 
-extern void XCharTranslation ( GdkEventKey * event, gpointer * data);
+extern gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey *event, gpointer data);
 extern void FrameToView ( int frame,
                           int *doc,
                           int *view );
@@ -102,6 +102,14 @@ extern gboolean DragCallbackGTK (GtkWidget *widget,
 				 gint y,
 				 guint time,
 				 gpointer user_data);
-gboolean FrameKilledGTK (GtkWidget *widget,
-			 GdkEvent *event,
-			 gpointer frame);
+gboolean KillFrameGTK (GtkWidget *widget,
+		       GdkEvent *event,
+		       gpointer frame);
+
+gboolean DrawingAreaFocusInCallbackGTK (GtkWidget *widget,
+					GdkEventFocus *event,
+					gpointer user_data);
+
+gboolean DrawingAreaFocusOutCallbackGTK (GtkWidget *widget,
+					GdkEventFocus *event,
+					 gpointer user_data);
