@@ -4036,13 +4036,11 @@ static void         EndOfDoctypeDecl (char c)
 	   elType = TtaGetElementType (docEl);
 	   /* Create a DOCTYPE element */
 	   elType.ElTypeNum = HTML_EL_DOCTYPE;
-	   prev = TtaSearchTypedElement (elType, SearchInTree, docEl);
 	   doctype = TtaNewElement (HTMLcontext.doc, elType);
 	   TtaSetElementLineNumber (doctype, NumberOfLinesRead);
-	   if (prev == NULL)
-	     TtaInsertFirstChild (&doctype, docEl, HTMLcontext.doc);
-	   else
-	      TtaInsertSibling (doctype, prev, FALSE, HTMLcontext.doc);
+	   TtaInsertFirstChild (&doctype, docEl, HTMLcontext.doc);
+	   /* Make the DOCTYPE element read-only */
+	   TtaSetAccessRight (doctype, ReadOnly, HTMLcontext.doc);
 	   HTMLcontext.lastElement = doctype;
 	   HTMLcontext.lastElementClosed = TRUE;
 	   /* Create a DOCTYPE_line element as first child */

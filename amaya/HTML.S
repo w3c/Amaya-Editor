@@ -883,7 +883,8 @@ EXCEPT
 	Definitions:	Hidden;
 	Comment_line:	Hidden;
 	PI_line:	Hidden;
-	DOCTYPE_line:	Hidden;
+	DOCTYPE:	NoCut;
+	DOCTYPE_line:	Hidden, NoCut;
         CDATA_line:     Hidden;
 	GRAPHICS:	NoMove, NoResize;
 	TEXT:		NoMove, NoResize;

@@ -46,7 +46,8 @@ EXCEPT
    PseudoClass:	        Invisible, CssPseudoClass;
    XMLcomment_line:     Hidden;
    XMLPI_line:          Hidden;
-   DOCTYPE_line:        Hidden;
+   DOCTYPE_line:        Hidden, NoCut;
+   DOCTYPE:             NoCut;
    CDATA_line:          Hidden;
 
 END

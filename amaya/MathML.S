@@ -432,7 +432,8 @@ EXCEPT
    MathML:		NoMove, NoResize;
    XMLcomment_line:	Hidden;
    XMLPI_line:  	Hidden;
-   DOCTYPE_line:  	Hidden;
+   DOCTYPE:		NoCut;
+   DOCTYPE_line:  	Hidden, NoCut;
    CDATA_line:          Hidden;
    Unknown_namespace:   NoCreate;
    Construct:		Hidden;

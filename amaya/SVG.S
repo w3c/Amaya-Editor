@@ -475,7 +475,8 @@ EXCEPT
    Charset:	        Invisible;
    XMLcomment_line:     Hidden;
    XMLPI_line:          Hidden;
-   DOCTYPE_line:        Hidden;
+   DOCTYPE:             NoCut;
+   DOCTYPE_line:        Hidden, NoCut;
    CDATA_line:          Hidden;
 
 END

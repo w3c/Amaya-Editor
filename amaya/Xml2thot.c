@@ -3082,6 +3082,8 @@ static void       CreateDoctypeElement ()
       doctypeEl = TtaNewElement (XMLcontext.doc, elType);
       XmlSetElemLineNumber (doctypeEl);
       InsertXmlElement (&doctypeEl);
+      /* Make the doctype element read-only */
+      TtaSetAccessRight (doctypeEl, ReadOnly, XMLcontext.doc);
       /* Create a DOCTYPE_line element as first child */
       elType.ElSSchema = NULL;
       elType.ElTypeNum = 0;

@@ -183,6 +183,8 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 	      TtaSetStructureChecking (0, doc);
 	      doctype = TtaNewElement (doc, elType);
 	      TtaInsertFirstChild (&doctype, docEl, doc);
+	      /* Make the DOCTYPE element read-only */
+	      TtaSetAccessRight (doctype, ReadOnly, doc);
 	      /* create the first DOCTYPE_line element */
 	      elType.ElTypeNum = HTML_EL_DOCTYPE_line;
 	      doctypeLine = TtaNewElement (doc, elType);
