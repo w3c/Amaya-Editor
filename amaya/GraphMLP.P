@@ -1262,6 +1262,7 @@ RULES
 		Font: TAG_Font;
 		Foreground: Enclosing =;
 	        Background: Enclosing =;
+	        FillPattern: nopattern;
 		END;
 	IN Alternate_view BEGIN
 		Width: Enclosing . Width;
@@ -1270,6 +1271,7 @@ RULES
 	   	MarginBottom: 0;
 		Foreground: Enclosing =;
 	        Background: Enclosing =;
+	        FillPattern: nopattern;
 		END;		
 	END;
 
