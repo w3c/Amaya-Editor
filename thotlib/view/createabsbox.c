@@ -1896,9 +1896,13 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   if (pAttr->AeAttrType != AtTextAttr)
     *valueNum = 0;
   else
+    {
+    attrValue = &pAttr->AeAttrText->BuContent[0];
     if (!AttrHasException (ExcCssClass, pAttr->AeAttrNum,pAttr->AeAttrSSchema))
       /* the content of the attribute is considered as a single value */
+      {
       *valueNum = 0;
+      }
     else
       /* the content of this text attribute is considered as a sequence of
 	 space separated values */
@@ -1910,7 +1914,6 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 	  *valueNum = 0;
 	else
 	  {
-	    attrValue = &pAttr->AeAttrText->BuContent[0];
 	    /* skip the values already processed */
 	    for (i = 1; i < *valueNum; i++)
 	      {
@@ -1938,6 +1941,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 	      (*valueNum)++;
 	  }
       }
+    }
     
   for (i = pSchP->PsNAttrPRule[pAttr->AeAttrNum - 1]; i-- > 0;
        pAPRule = pAPRule->ApNextAttrPres)
