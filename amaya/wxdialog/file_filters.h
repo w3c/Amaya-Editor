@@ -3,7 +3,7 @@
 #ifndef __FILE_FILTERS_H__
 #define __FILE_FILTERS_H__
 
-#define APPFILENAMEFILTER _T("HTML files (*.html)|*.html|XML files (*.xml)|*.xml|MathML Files (*.mml)|*.mml|SVG files (*.svg)|*.svg|CSS files (*.css)|*.css|All files (*)|*")
+#define APPFILENAMEFILTER _T("HTML files (*.html)|*.html|HTML files (*.htm)|*.htm|XML files (*.xml)|*.xml|MathML Files (*.mml)|*.mml|SVG files (*.svg)|*.svg|CSS files (*.css)|*.css|PNG files (*.png)|*.png|JPEG files (*.jpg)|*.jpg|All files (*)|*")
 #define APPCSSNAMEFILTER _T("CSS files (*.css)|*.css|All files (*)|*")
 #define APPSVGNAMEFILTER _T("SVG files (*.svg)|*.svg|All files (*)|*")
 #define APPMATHNAMEFILTER _T("MathML files (*.mml)|*.mml|All files (*)|*")
