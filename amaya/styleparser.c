@@ -3011,6 +3011,7 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
   if (callblock == NULL)
     return;
 
+  css = NULL;
   el = callblock->el;
   tsch = callblock->tsch;
   context = &callblock->context.specific;
