@@ -493,7 +493,7 @@ int         line;
 
    if (!ErrFile)
      {
-       usprintf (ErrFileName, TEXT("%s%c%d%cHTML.ERR"),
+       usprintf (ErrFileName, TEXT("%s%c%d%cPARSING.ERR"),
 		 TempFileDirectory, DIR_SEP, XMLcontext.doc, DIR_SEP);
        if ((ErrFile = ufopen (ErrFileName, TEXT("w"))) == NULL)
          return;

@@ -5807,7 +5807,7 @@ View     view;
   CHAR_T    localname[MAX_LENGTH];
   int       newdoc;
 
-  usprintf (localname, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory, DIR_SEP,
+  usprintf (localname, TEXT("%s%c%d%cPARSING.ERR"), TempFileDirectory, DIR_SEP,
 	    doc, DIR_SEP);
   newdoc = GetHTMLDocument (localname, NULL, doc, 0, CE_LOG, FALSE, NULL, NULL);
   /* store the relation with the original document */

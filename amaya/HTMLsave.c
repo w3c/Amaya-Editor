@@ -1053,7 +1053,7 @@ CHAR_T           *documentname;
   HTMLErrorsFound = FALSE;
   XMLErrorsFound = FALSE;
   /* remove the log file */
-  usprintf (htmlErrFile, TEXT("%s%c%d%cHTML.ERR"),
+  usprintf (htmlErrFile, TEXT("%s%c%d%cPARSING.ERR"),
 	    TempFileDirectory, DIR_SEP, doc, DIR_SEP);
   if (TtaFileExist (htmlErrFile))
     TtaFileUnlink (htmlErrFile);
