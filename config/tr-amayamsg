@@ -140,3 +140,4 @@
 139 **Print URL
 140 **Please authenticate for realm \'%s\' at server \'%s\'
 141 **Editor/Browser
+142 **Request timeout - server did not respond
