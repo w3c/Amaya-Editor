@@ -3052,11 +3052,16 @@ int              length;
 
 {
    unsigned char *buffer;
-   int            i, j;
+   unsigned char *srcbuf;
    wchar_t        wcharRead;
    char           charRead;
    int            nbBytesRead = 0;
-   unsigned char  *srcbuf;
+   int            i, j;
+   Language       lang;
+   int            code;
+   CHAR_T         fallback[5];
+   ElementType    elType;
+   Element        elLeaf;
 
 #ifdef EXPAT_PARSER_DEBUG
    printf ("\n Hndl_CharacterData - length = %d - ", length);
@@ -3076,17 +3081,53 @@ int              length;
        i += nbBytesRead;
        if (wcharRead < 0x100)
 	 {
-	   /* It's an ISO Latin character */
+	   /* It's an 8bits character */
 	   charRead = (char) wcharRead;
 	   buffer[j++] = charRead;
 	 }
        else
 	 {
+	   /* It's not an 8bits character */
 	   if (buffer[0] != WC_EOS)
 	     {
+	       /* Put the current content of the buffer into the document */
 	       buffer[j] = WC_EOS;
 	       PutInXmlElement (buffer);
 	       buffer[0] = WC_EOS;
+	     }
+	   /* Try to find a fallback character */
+	   code = (int) wcharRead;
+	   GetFallbackCharacter (code, fallback, &lang);
+	   if (fallback[0] == '?')
+	     {
+	       /* The character is not found in the fallback table */
+	       /* create a symbol leaf */
+	       elType = TtaGetElementType (XMLcontext.lastElement);
+	       elType.ElTypeNum = 3;
+	       elLeaf = TtaNewElement (XMLcontext.doc, elType);
+	       XmlSetElemLineNumber (elLeaf);
+	       InsertXmlElement (&elLeaf);
+	       XMLcontext.lastElement = elLeaf;
+	       XMLcontext.lastElementClosed = TRUE;
+	       /* Put the symbol '?' character into the new symbol leaf */
+	       TtaSetGraphicsShape (elLeaf, fallback[0], XMLcontext.doc);
+	       /* Changes the wide char code associated with that symbol */
+	       TtaSetSymbolCode (elLeaf, wcharRead, XMLcontext.doc);
+	     }
+	   else
+	     {
+	       /* The character is not found in the fallback table */
+	       /* create a new text leaf */
+	       elType = TtaGetElementType (XMLcontext.lastElement);
+	       elType.ElTypeNum = 1;
+	       elLeaf = TtaNewElement (XMLcontext.doc, elType);
+	       XmlSetElemLineNumber (elLeaf);
+	       InsertXmlElement (&elLeaf);
+	       XMLcontext.lastElement = elLeaf;
+	       XMLcontext.lastElementClosed = TRUE;
+	       /* Put the fallback character into the new text leaf */
+	       TtaSetTextContent (elLeaf, fallback, lang, XMLcontext.doc);
+	       XMLcontext.mergeText = FALSE;
 	     }
 	 }
      }
