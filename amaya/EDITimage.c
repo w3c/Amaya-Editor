@@ -843,7 +843,7 @@ void ChangeBackgroundImage (document, view)
       ustrcat (s, ImageName);
    }
    BgDocument = document;
-   CreateBackgroundImageDlgWindow (TtaGetViewFrame (document, view), BaseImage + FormBackground, ImageURL, ImageLabel, ImageDir, ImageSel, RepeatImage, s);
+   CreateBackgroundImageDlgWindow (TtaGetViewFrame (document, view), s);
 #  endif /* _WINDOWS */
 }
 
