@@ -29,11 +29,15 @@ RULES
 	Create Namespaces;
 #else
 	if HtmlDTD = Frameset
+	   BEGIN
 	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"\12';
 	   Create '   "http://www.w3.org/TR/REC-html40/frameset.dtd">\12';
+	   END;
         if not HtmlDTD = Frameset
+	   BEGIN
 	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"\12';
 	   Create '   "http://www.w3.org/TR/REC-html40/loose.dtd">\12';
+	   END;
 	Create '<html';
 #endif
 	Create Attributes;
