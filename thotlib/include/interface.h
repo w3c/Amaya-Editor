@@ -149,16 +149,16 @@ extern void         TtaSetMenuOn (Document document, View view, int menuID);
 extern void         TtaSetToggleItem (Document document, View view, int menuID, int itemID, boolean on);
 
 /*----------------------------------------------------------------------
-   TtaSetActionOff desactive l'item actionName de la vue du document  
+   TtaSetItemOff desactive l'item actionName de la vue du document  
    ou de la fenetre principale (document = 0, view = 0).   
   ----------------------------------------------------------------------*/
-extern void         TtaSetActionOff (Document document, View view, int menuID, int itemID);
+extern void         TtaSetItemOff (Document document, View view, int menuID, int itemID);
 
 /*----------------------------------------------------------------------
-   TtaSetActionOn active l'item actionName de la vue du document      
+   TtaSetItemOn active l'item actionName de la vue du document      
    ou de la fenetre principale (document = 0, view = 0).   
   ----------------------------------------------------------------------*/
-extern void         TtaSetActionOn (Document document, View view, int menuID, int itemID);
+extern void         TtaSetItemOn (Document document, View view, int menuID, int itemID);
 
 /*----------------------------------------------------------------------
    TtaSetCallback
@@ -337,8 +337,8 @@ extern void         TtaSetTextZone ( /*Document document, View view, int index, 
 extern void         TtaSetMenuOff ( /*Document document, View view, int menuID */ );
 extern void         TtaSetMenuOn ( /*Document document, View view, int menuID */ );
 extern void         TtaSetToggleItem ( /*Document document, View view, int menuID, int itemID, boolean on */ );
-extern void         TtaSetActionOff ( /*Document document, View view, int menuID, int itemID */ );
-extern void         TtaSetActionOn ( /*Document document, View view, int menuID, int itemID */ );
+extern void         TtaSetItemOff ( /*Document document, View view, int menuID, int itemID */ );
+extern void         TtaSetItemOn ( /*Document document, View view, int menuID, int itemID */ );
 extern int          TtaSetCallback ( /*void (*callbakProcedure) (), int set */ );
 extern void         TtaSetStatus ( /*Document document, View view, CONST char *text, CONST char *name */ );
 

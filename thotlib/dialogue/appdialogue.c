@@ -3107,7 +3107,7 @@ int                 menuID;
 	       }
 	  }
      }
-}				/*TtaSetMenuOn */
+}
 
 
 /*----------------------------------------------------------------------
@@ -3117,12 +3117,12 @@ int                 menuID;
 #ifdef __STDC__
 void                TtaSetToggleItem (Document document, View view, int menuID, int itemID, boolean on)
 #else  /* __STDC__ */
-void                TtaSetToggleItem (document, view, menuID, itemID)
+void                TtaSetToggleItem (document, view, menuID, itemID, on)
 Document            document;
 View                view;
 int                 menuID;
 int                 itemID;
-
+boolean             on;
 #endif /* __STDC__ */
 {
    int                 frame;
@@ -3158,13 +3158,13 @@ int                 itemID;
 
 
 /*----------------------------------------------------------------------
-   TtaSetActionOff desactive l'item actionName de la vue du document  
+   TtaSetItemOff desactive l'item actionName de la vue du document  
    ou de la fenetre principale (document = 0, view = 0).   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetActionOff (Document document, View view, int menuID, int itemID)
+void                TtaSetItemOff (Document document, View view, int menuID, int itemID)
 #else  /* __STDC__ */
-void                TtaSetActionOff (document, view, menuID, itemID)
+void                TtaSetItemOff (document, view, menuID, itemID)
 Document            document;
 View                view;
 int                 menuID;
@@ -3210,17 +3210,17 @@ int                 itemID;
 		TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 	     }
 	}
-}				/*TtaSetActionOff */
+}
 
 
 /*----------------------------------------------------------------------
-   TtaSetActionOn active l'item actionName de la vue du document      
+   TtaSetItemOn active l'item actionName de la vue du document      
    ou de la fenetre principale (document = 0, view = 0).   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetActionOn (Document document, View view, int menuID, int itemID)
+void                TtaSetItemOn (Document document, View view, int menuID, int itemID)
 #else  /* __STDC__ */
-void                TtaSetActionOn (document, view, menuID, itemID)
+void                TtaSetItemOn (document, view, menuID, itemID)
 Document            document;
 View                view;
 int                 menuID;
@@ -3258,7 +3258,7 @@ int                 itemID;
 	      ref += submenu * MAX_MENU * MAX_ITEM;
 	   TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
 	}
-}				/*TtaSetActionOn */
+}
 
 
 /*----------------------------------------------------------------------

@@ -474,6 +474,7 @@ Document       doc;
 	  }
 	TtaFreeMemory (DocumentURLs[doc]);
 	DocumentURLs[doc] = NULL;
+	HelpDocuments[doc] = FALSE;
 	CleanDocumentCSS (doc);
 	RemoveDocumentImages (doc);
      }
@@ -551,21 +552,21 @@ Document            doc
 	SelectionInPRE = NewSelInElem;
 	if (NewSelInElem)
 	  {
-	     TtaSetActionOff (doc, 1, Types, BImage);
-	     TtaSetActionOff (doc, 1, Style, TBig);
-	     TtaSetActionOff (doc, 1, Style, TSmall);
-	     TtaSetActionOff (doc, 1, Style, BSub);
-	     TtaSetActionOff (doc, 1, Style, BSup);
-	     TtaSetActionOff (doc, 1, Style, BFont);
+	     TtaSetItemOff (doc, 1, Types, BImage);
+	     TtaSetItemOff (doc, 1, Style, TBig);
+	     TtaSetItemOff (doc, 1, Style, TSmall);
+	     TtaSetItemOff (doc, 1, Style, BSub);
+	     TtaSetItemOff (doc, 1, Style, BSup);
+	     TtaSetItemOff (doc, 1, Style, BFont);
 	  }
 	else
 	  {
-	     TtaSetActionOn (doc, 1, Types, BImage);
-	     TtaSetActionOn (doc, 1, Style, TBig);
-	     TtaSetActionOn (doc, 1, Style, TSmall);
-	     TtaSetActionOn (doc, 1, Style, BSub);
-	     TtaSetActionOn (doc, 1, Style, BSup);
-	     TtaSetActionOn (doc, 1, Style, BFont);
+	     TtaSetItemOn (doc, 1, Types, BImage);
+	     TtaSetItemOn (doc, 1, Style, TBig);
+	     TtaSetItemOn (doc, 1, Style, TSmall);
+	     TtaSetItemOn (doc, 1, Style, BSub);
+	     TtaSetItemOn (doc, 1, Style, BSup);
+	     TtaSetItemOn (doc, 1, Style, BFont);
 	  }
      }
    /* 
@@ -583,9 +584,9 @@ Document            doc
      {
 	SelectionInComment = NewSelInElem;
 	if (NewSelInElem)
-	   TtaSetActionOff (doc, 2, StructTypes, BComment);
+	   TtaSetItemOff (doc, 2, StructTypes, BComment);
 	else
-	   TtaSetActionOn (doc, 2, StructTypes, BComment);
+	   TtaSetItemOn (doc, 2, StructTypes, BComment);
      }
    /* update toggle buttons in menus "Information Type" and */
    /* "Character Element" */

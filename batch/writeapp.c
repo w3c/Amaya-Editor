@@ -675,18 +675,20 @@ char               *fname;
 	/* Traite la commande USES */
 	if (SchemasUsed != NULL)
 	  {
-	     SchUsed = SchemasUsed;
-	     while (SchUsed != NULL)
-	       {
-		  if (!strcmp (SchUsed->AppNameValue, "StructSelect"))
-		     structSelectResource = TRUE;
-		  fprintf (AppFile, "  %sLoadResources ();\n",
-			   SchUsed->AppNameValue);
-		  SchUsed = SchUsed->AppNextName;
-	       }
+	    SchUsed = SchemasUsed;
+	    while (SchUsed != NULL)
+	      {
+		if (!strcmp (SchUsed->AppNameValue, "StructSelect")
+		    || !strcmp (SchUsed->AppNameValue, "NoStructSelect"))
+		  /* an explicit choice between struct and no struct */
+		  structSelectResource = TRUE;
+		fprintf (AppFile, "  %sLoadResources ();\n", SchUsed->AppNameValue);
+		SchUsed = SchUsed->AppNextName;
+	      }
 	  }
 	if (!structSelectResource)
-	   fprintf (AppFile, "  NoStructSelectLoadResources ();\n");
+	  /* an implicit choice */
+	  fprintf (AppFile, "  NoStructSelectLoadResources ();\n");
 	fprintf (AppFile, "}\n\n");
 
 	/* compte les elements de la liste ActionsUsed */

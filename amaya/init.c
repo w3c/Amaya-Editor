@@ -1676,6 +1676,12 @@ boolean		    history;
 		   TtaSetMenuOff (newdoc, 1, Special);
 		   TtaSetMenuOff (newdoc, 1, Attributes_);
 		   TtaSetMenuOff (newdoc, 1, Help_);
+		   TtaSetItemOff (newdoc, 1, File, BNew);
+
+		   TtaSetItemOff (newdoc, 1, File, BOpenDoc);
+		   TtaSetItemOff (newdoc, 1, File, BOpenInNewWindow);
+		   TtaSetItemOff (newdoc, 1, File, BReload);
+		   TtaSetItemOff (newdoc, 1, File, BSave);
 		 }
 	     }
 	   else

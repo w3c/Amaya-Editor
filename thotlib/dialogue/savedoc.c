@@ -158,7 +158,7 @@ char               *txt;
    int                 val;
    char                URL_DIR_SEP;
 
-   if (txt && strchr (txt, '/'))
+   if (typedata == STRING_DATA && txt && strchr (txt, '/'))
 	  URL_DIR_SEP = '/';
    else 
 	   URL_DIR_SEP = DIR_SEP;

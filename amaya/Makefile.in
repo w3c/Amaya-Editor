@@ -149,6 +149,8 @@ AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ -I@srcdir@/f 
 AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
             $(AMAYA_OPTION_LIBS) ../libpng.a ../libz.a ../libjpeg.a
 
+HTML2THOT_LIBS= ../thotlib/libThotKernel.a
+
 amaya_schemas : compHTML compHTMLP compHTMLT amaya_math_schema
 
 amaya_src : $(AMAYA_SRC) 
@@ -158,15 +160,6 @@ amaya_src : $(AMAYA_SRC)
 #
 .c.o :
 	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c $< -o $@
-
-HTML2THOT_OBJ = \
-	html2thot_standalone.o
-
-# html2thot is the standalone HTML parser
-../bin/html2thot : $(HTML2THOT_OBJ) $(AMAYA_OPTION_OBJ)  $(AMAYA_LIBS)
-	@(if test ! -d ../bin ; then $(MKDIR) ../bin ; fi)
-	$(CC) $(LDFLAGS) -DSTANDALONE -o ../bin/html2thot $(HTML2THOT_OBJ) $(AMAYA_OPTION_OBJ) $(LIBS)
-	@$(ECHO) "====>" html2thot is done
 
 #########################################################################
 #									#
@@ -273,6 +266,16 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 	@(if test ! -d ../bin ; then $(MKDIR) ../bin ; fi)
 	$(CC) $(LDFLAGS) -o ../bin/amaya $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) $(LIBS)
 	@$(ECHO) "====>" amaya is done
+
+# html2thot is the standalone HTML parser
+html2thotsta.o : @srcdir@/html2thot.c
+	$(CC) $(CFLAGS) -DSTANDALONE $(AMAYA_INCLUDES) $(INCLUDES) -c @srcdir@/html2thot.c -o html2thotsta.o
+
+html2piv: ../bin/html2piv
+../bin/html2piv : @srcdir@/html2thot.c
+	@(if test ! -d ../bin ; then $(MKDIR) ../bin ; fi)
+	$(CC) $(LDFLAGS) -DSTANDALONE $(AMAYA_INCLUDES) $(INCLUDES) -o ../bin/html2piv  @srcdir@/html2thot.c $(HTML2THOT_LIBS)
+	@$(ECHO) "====>" html2piv is done
 
 install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL) \
 	   $(AMAYA_LIBWWW_INSTALL)
