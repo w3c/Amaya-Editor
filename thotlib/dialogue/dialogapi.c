@@ -2656,15 +2656,22 @@ void TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING 
 
 }
 
-
-#ifdef _WINDOWS
 /*----------------------------------------------------------------------
    TtaSetPulldownOff suspend le pulldown                           
   ----------------------------------------------------------------------*/
-void WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
+#ifdef _WINDOWS
+void                WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
+#else  /* !_WINDOWS */
+void                TtaSetPulldownOff (int ref, ThotWidget parent)
+#endif /* _WINDOWS */
 {
+#ifndef _GTK
    struct Cat_Context *catalogue;
+#ifndef _WINDOWS
+   Arg                 args[MAX_ARGS];
+#else  /* _WINDOWS */
    int                 frame;
+#endif /* _WINDOWS */
 
    if (ref == 0)
       TtaError (ERR_invalid_reference);
@@ -2675,20 +2682,39 @@ void WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
 	catalogue = CatEntry (ref);
 	if (catalogue == NULL)
 	   TtaError (ERR_invalid_reference);
+#ifndef _WINDOWS
+	else if (catalogue->Cat_Widget != 0)
+	  {
+             XtSetArg (args[0], XmNsubMenuId, NULL);
+             XtSetValues (parent, args, 1);
+             XtManageChild (parent);
+	  }
+#else  /* _WINDOWS */
         frame = GetMainFrameNumber (owner);
         EnableMenuItem ((HMENU)WinMenus[frame], (UINT)parent, MF_GRAYED);
 	DrawMenuBar (FrMainRef[frame]); 
+#endif /* _WINDOWS */
      }
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
    TtaSetPulldownOn reactive le pulldown                           
   ----------------------------------------------------------------------*/
-void WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
+#ifdef _WINDOWS
+void                WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
+#else  /* !_WINDOWS */
+void                TtaSetPulldownOn (int ref, ThotWidget parent)
+#endif /* _WINDOWS */
 {
+#ifndef _GTK
    struct Cat_Context *catalogue;
    ThotWidget          menu;
+#ifndef _WINDOWS
+   Arg                 args[MAX_ARGS];
+#else  /* _WINDOWS */
    int                 frame;
+#endif /* _WINDOWS */
 
    if (ref == 0)
       TtaError (ERR_invalid_reference);
@@ -2702,13 +2728,20 @@ void WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
 	else if (catalogue->Cat_Widget != 0)
 	  {
 	     menu = catalogue->Cat_Widget;
+#ifndef _WINDOWS
+             XtSetArg (args[0], XmNsubMenuId, menu);
+             XtSetValues (parent, args, 1);
+             XtManageChild (parent);
+#else  /* _WINDOWS */
 	     frame = GetMainFrameNumber (owner);
              EnableMenuItem ((HMENU)WinMenus[frame], (UINT)parent, MF_ENABLED);
 			 DrawMenuBar (FrMainRef[frame]); 
+#endif /* _WINDOWS */
 	  }
      }
+#endif /* _GTK */
 }
-#endif /* _WINDOWS */
+
 
 /*----------------------------------------------------------------------
    TtaNewPopup cre'e un pop-up menu :                                 
@@ -4359,14 +4392,14 @@ void TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number,
    toutes les entre'es). The parameter on indique que le bouton       
    correspondant doit e^tre allume' (on positif) ou e'teint (on nul). 
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
-void WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
-#else /* _WINDOWS */
-void TtaSetToggleMenu (int ref, int val, ThotBool on)
+#ifdef _WINDOWS 
+void          WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
+#else  /* !_WINDOWS */
+void          TtaSetToggleMenu (int ref, int val, ThotBool on)
 #endif /* _WINDOWS */
 {
 #ifndef _GTK
-#ifdef _WINDOWS
+#ifdef _WINDOWS 
   struct Cat_Context *catalogue;
   HMENU              hMenu;
   struct E_List      *adbloc;
@@ -4409,7 +4442,7 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 	    }
 	}
    }
-#else /* WINDOWS */
+#else  /* !_WINDOWS  */
    ThotWidget          w;
    Arg                 args[MAX_ARGS];
    register int        i, n;
@@ -4517,6 +4550,7 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 #endif /* _WINDOWS */
 #endif /* _GTK */
 }
+
 
 /*----------------------------------------------------------------------
    TtaChangeMenuEntry modifie l'intitule' texte de l`entre'e entry    
