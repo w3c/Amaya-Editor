@@ -13,6 +13,7 @@ extern void List_delAll ( List **me );
 extern void List_delObject ( List **list,
                              char *object );
 extern int List_count ( List *list );
+extern int AnnotList_localCount ( List *annot_list );
 extern void AnnotFilter_add ( List **me,
                               CHAR_T *object );
 extern List *AnnotFilter_search ( List *list,
@@ -63,11 +64,6 @@ extern void GetServerName ( CHAR_T *url,
 extern CHAR_T *ANNOT_GetHTMLTitle ( Document doc );
 extern void ANNOT_SetType ( Document doc,
                             CHAR_T *type );
-extern ThotBool IsAnnotationDocument ( Document document );
-extern ThotBool IsAnnotationLink ( Document document,
-                                   Element element );
-extern ThotBool IsInTable ( STRING docName );
-extern Document AnnotationTargetDocument ( Document annotDoc );
 
 #else /* __STDC__ */
 
@@ -78,6 +74,7 @@ extern void List_delAll (/* List **me */);
 extern void List_delObject (/* List **list,
                                char *object */);
 extern int List_count (/* List *list */);
+extern int AnnotList_localCount (/* List *annot_list */);
 extern void AnnotFilter_add (/* List **me,
                                 CHAR_T *object */);
 extern List *AnnotFilter_search (/* List *list,
@@ -128,11 +125,6 @@ extern void GetServerName (/* CHAR_T *url,
 extern CHAR_T *ANNOT_GetHTMLTitle (/* Document doc */);
 extern void ANNOT_SetType (/* Document doc,
                               CHAR_T *type */);
-extern ThotBool IsAnnotationDocument (/* Document document */);
-extern ThotBool IsAnnotationLink (/* Document document,
-                                     Element element */);
-extern ThotBool IsInTable (/* STRING docName */);
-extern Document AnnotationTargetDocument (/* Document annotDoc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

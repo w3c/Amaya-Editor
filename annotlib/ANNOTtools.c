@@ -123,6 +123,26 @@ int List_count (List *list)
 }
 
 /* ------------------------------------------------------------
+   AnnotList_localCount
+   Returns the number of local annotations in an annotation  list
+   ------------------------------------------------------------*/
+int AnnotList_localCount (List *annot_list)
+{
+  List *item = annot_list;
+  int count = 0;
+  AnnotMeta *annot;
+  
+  while (item)
+    {
+      annot = (AnnotMeta *) item->object;
+      if (!IsW3Path (annot->body_url))
+	count++;
+      item = item->next;
+    }
+  return (count);
+}
+
+/* ------------------------------------------------------------
    AnnotFilter_add
    Adds a new element to the beginning of a linked
    list if it doesn't exist in the list.
@@ -1190,110 +1210,4 @@ CHAR_T *type;
 	}
     }
   TtaFreeMemory (url);
-}
-
-/***************************************************
- I've not yet used/cleaning the following legacy functions 
-***************************************************/
-
-/*-----------------------------------------------------------------------
-   Procedure IsAnnotationDocument (document)
-  -----------------------------------------------------------------------
-   Retourne vrai si le document est un document d'annotations
-  -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool IsAnnotationDocument (Document document)
-#else /* __STDC__*/
-ThotBool IsAnnotationDocument (document)
-     Document document;
-#endif /* __STDC__*/
-{
-  ElementType elType;
-  Element     root, dateAnnot;
-
-  root = TtaGetMainRoot (document);
-  elType = TtaGetElementType (root);
-#if 0
-  /* I could search for metadata here */
-  elType.ElTypeNum = HTML_EL_AuteurAnnot;
-#endif
-  dateAnnot = TtaSearchTypedElement (elType, SearchInTree, root);
-
-  return (dateAnnot != NULL);
-}
-
-/*-----------------------------------------------------------------------
-   Procedure IsAnnotationLink (document, element)
-  -----------------------------------------------------------------------
-   Retourne vrai si l'element du document est un lien d'annotation
-  -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool IsAnnotationLink (Document document, Element element)
-#else /* __STDC__*/
-ThotBool IsAnnotationLink (document, element)
-     Document document;
-     Element  element;
-#endif /* __STDC__*/
-{
-  STRING text;
-
-  /* @@ is it ok to assume that the sschema will be HTML always? */
-  text = SearchAttributeInEl (document, element, 
-				     HTML_ATTR_IsAnnotation, TEXT("HTML"));
-  return (!strcmp (text, "Annotation"));
-}
-
-/*-----------------------------------------------------------------------
-   Procedure IsInTable (docName)
-  -----------------------------------------------------------------------
-   Retourne vrai si le document d'annotation docName est dana la table
-   de references des annotations, ce qui veut dire qu'il est en cours
-   d'edition
-  -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool IsInTable (STRING docName)
-#else /* __STDC__*/
-ThotBool IsInTable (docName)
-     STRING docName;
-#endif /* __STDC__*/
-{
-  return 0;
-#if 0
-  int i = 0;
-
-  while ((i < 10) && (strcmp (docName, tabRefAnnot[i].docName)))
-    i++;
-  return (i != 10);
-#endif
-}
-
-/*-----------------------------------------------------------------------
-   Procedure AnnotationTargetDocument (annotDoc)
-  -----------------------------------------------------------------------
-   Retourne le document annote par annotDoc ou NULL si celui-ci n'est
-   pas ouvert ou n'existe pas
-  -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-Document AnnotationTargetDocument (Document annotDoc)
-#else /* __STDC__*/
-Document AnnotationTargetDocument (annotDoc)
-     Document annotDoc;
-#endif /* __STDC__*/
-{
-  Element  ptr_annotDoc, text;
-  Language lang;
-  int      lg = 200;
-  STRING   docName = TtaGetMemory (200);
-
-#if 0
-  ptr_annotDoc = SearchElementInDoc (annotDoc, HTML_EL_PtrDocAnnot);
-#endif
-  text = TtaGetFirstChild (ptr_annotDoc);
-  TtaGiveTextContent (text, docName, &lg, &lang);
-
-  return TtaGetDocumentFromName (docName);
 }

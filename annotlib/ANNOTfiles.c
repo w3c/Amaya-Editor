@@ -653,33 +653,6 @@ void ANNOT_PrepareAnnotView (document)
   TtaRaiseView (document, view);
 }
 
-/***************************************************
- I've not yet used/cleaned the following legacy functions 
-***************************************************/
-
-/*-----------------------------------------------------------------------
-   Procedure ANNOT_CheckEmptyDoc (docAnnot)
-  -----------------------------------------------------------------------
-  -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void  ANNOT_CheckEmptyDoc (Document docAnnot)
-#else /* __STDC__*/
-void  ANNOT_CheckEmptyDoc (docAnnot)
-     Document docAnnot;
-#endif /* __STDC__*/
-{
-  Element content, element;
-
-  element = SearchElementInDoc (docAnnot, HTML_EL_Element);
-  content = TtaGetFirstChild (element);
-#if 0
-  if (content != NULL)
-    HE_SaveDocument (docAnnot, TtaGetViewFromName (docAnnot, "Formatted_view"));
-#endif
-}
-
-
 /*----------------------------------------------------------------------
   ANNOT_LocalSave
   Saves the annotation document doc_annot to the local filesystem
@@ -726,5 +699,12 @@ CHAR_T             *html_filename;
 
   return TtaExportDocument (doc_annot, html_filename, TEXT("AnnotT"));
 }
+
+
+
+
+
+
+
 
 

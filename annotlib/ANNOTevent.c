@@ -1051,7 +1051,7 @@ void *context;
 			   annot_url, FALSE);
 
        /* update the annotation index or delete it if it's empty */
-       if (AnnotMetaData[source_doc].annotations)
+       if (AnnotList_localCount (AnnotMetaData[source_doc].annotations) > 0)
 	 LINK_SaveLink (source_doc);
        else
 	 LINK_DeleteLink (source_doc);
@@ -1240,7 +1240,7 @@ void ANNOT_Delete (document, view)
 	    break;
 	  list_ptr = list_ptr->next;
 	}
-      annot_server = "http://tuvalu:2030/cgi-script";
+
       if (annot_server)
 	{
 	  /* compute the form_data */
