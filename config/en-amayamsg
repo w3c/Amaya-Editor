@@ -30,7 +30,7 @@
 28 Insert the URI or browse
 29 Title
 30 Change Title...
-31 Document modified - Would you save it?
+31 Document modified - Do you want to save it?
 32 Redirection fetching of %s
 33 Too many redirections detected
 34 Cannot create local file %s
@@ -47,7 +47,7 @@
 45 Authorization failure for %s
 46 %s loaded but no data is available
 47 Transfer interrupted!
-48 %s is not available at the moment. Please retry at some other time
+48 %s is not available at the moment. Please retry later
 49 %s loaded
 50 Saving %s
 51 Cannot save in: %s
