@@ -49,6 +49,7 @@
 #endif /* _WINGUI */
 #ifdef _WX
   #include "wxdialogapi_f.h"
+  #include "appdialogue_wx.h"
 #endif /* _WX */
 
 #if defined(_GTK) || defined(_WX) 
@@ -7524,6 +7525,18 @@ void CloseDocument (Document doc, View view)
   ----------------------------------------------------------------------*/
 void AmayaClose (Document document, View view)
 {
+#ifdef _WX
+  int window_id = 1;
+  int window_number = TtaGetWindowNumber();
+  while ( window_id <= window_number )
+    {
+      /* close each window one by one */
+      TtaCloseWindow(window_id);
+      window_id++;
+    }
+#endif /* _WX */
+
+#ifndef _WX
    int          i;
    ThotBool     documentClosed;
 
@@ -7550,6 +7563,7 @@ void AmayaClose (Document document, View view)
    SVGLIB_FreeDocumentResource ();
 #endif /* _SVG */
    TtaQuit ();
+#endif /* _WX */
 }
 
 

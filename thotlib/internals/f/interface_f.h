@@ -6,8 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TtaFetchOneEvent ( ThotEvent *ev );
-extern void TtaFetchOrWaitEvent ( ThotEvent *ev );
 extern ThotBool TtaFetchOneAvailableEvent ( ThotEvent *ev );
 extern void TtaHandleOneEvent ( ThotEvent *ev );
 extern void TtaHandlePendingEvents ( void );
@@ -24,8 +22,6 @@ extern void TtaGiveSelectPosition ( Document document,
 
 #else /* __STDC__ */
 
-extern void TtaFetchOneEvent ( ThotEvent *ev );
-extern void TtaFetchOrWaitEvent ( ThotEvent *ev );
 extern ThotBool TtaFetchOneAvailableEvent ( ThotEvent *ev );
 extern void TtaHandleOneEvent ( ThotEvent *ev );
 extern void TtaHandlePendingEvents ( void );

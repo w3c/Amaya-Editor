@@ -34,6 +34,8 @@ extern void TtaGetDocumentPageId ( Document doc_id,
                                    int * page_id,
                                    int * page_position );
 extern int TtaGetFrameDocumentId ( int frame_id );
+extern void TtaCloseWindow ( int window_id );
+extern int TtaGetWindowNumber ( void );
 extern int TtaMakePanel ( const char * panel_title );
 extern int TtaAttachPanel ( int window_id );
 extern ThotBool TtaDetachPanel ( int panel_id,
@@ -87,6 +89,8 @@ extern void TtaGetDocumentPageId ( Document doc_id,
                                      int * page_id,
                                      int * page_position );
 extern int TtaGetFrameDocumentId ( int frame_id );
+extern void TtaCloseWindow ( int window_id );
+extern int TtaGetWindowNumber ( void );
 extern int TtaMakePanel ( const char * panel_title );
 extern int TtaAttachPanel ( int window_id );
 extern ThotBool TtaDetachPanel ( int panel_id,

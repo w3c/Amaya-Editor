@@ -594,6 +594,49 @@ int TtaGetFrameDocumentId( int frame_id )
 }
 
 /*----------------------------------------------------------------------
+  TtaGetWindowFromId returns a window from its id
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+#ifdef _WX
+AmayaWindow * TtaGetWindowFromId( int window_id )
+{
+  return WindowTable[window_id].WdWindow;
+}
+#endif /* #ifdef _WX */
+
+/*----------------------------------------------------------------------
+  TtaCloseWindow generate a close event and forward it to the aimed window
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaCloseWindow( int window_id )
+{
+#ifdef _WX
+  AmayaWindow * p_window = TtaGetWindowFromId(window_id);
+  if (p_window)
+    p_window->Close();
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaGetWindowFromId returns total number of open windows
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+int TtaGetWindowNumber( )
+{
+#ifdef _WX
+  int window_id = 1;
+  while ( window_id < MAX_WINDOW && TtaGetWindowFromId( window_id ) )
+    {
+      window_id++;
+    }
+  return TtaGetWindowFromId(window_id) ? MAX_WINDOW : window_id - 1;
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
   TtaMakePanel create a panel (container)
   notice : a panel needs to be attached to a window
   returns:
