@@ -1,0 +1,155 @@
+0 Datei
+1 Datei
+2 Datei
+3 Datei
+4 Datei
+5 Bearbeiten
+6 Struktur
+7 Einfügen
+8 Verknüpfungen
+9 Ansicht
+10 Format
+11 Extras
+12 Attribute
+13 Hilfe
+14 Neu
+15 Öffne Dokument
+16 Öffne Dokument (neues Fenster)
+17 Neu laden
+18 Speichern
+19 Speichern unter
+20 Drucken
+21 Schließen
+22 Beenden
+23 Schließe Fenster
+24 Ausschneiden
+25 Kopieren
+26 Einfügen
+27 Löschen
+28 Suchen/Ersetzen
+29 Rechtschreibung
+30 Dokument mit Suchindex (ISINDEX)
+31 Basisadresse (BASE)
+32 Meta-Information (META)
+33 Verknüpfung (LINK)
+34 Kommentar (<>)
+35 Absatz (P)
+36 Grafik (IMG)
+37 Zeilenumbruch (BR)
+38 Überschrift (H)
+39 H1 (groß)
+40 H2
+41 H3
+42 H4
+43 H5
+44 H6 (klein)
+45 Liste
+46 mit Punkten (LI)
+47 numeriert (OL)
+48 evt. mehrspaltig (MENU)
+49 Termliste (DIR)
+50 Definitionsliste (DL)
+51 Term (LI)
+52 Definition (DT)
+53 Waagerechte Linie (HR)
+54 Eingerücktes Zitat (BLOCKQUOTE)
+55 Vorformatierter Text (PRE)
+56 Autorenadresse (ADDRESS)
+57 Tabelle 
+58 Tabelle (TABLE)
+59 Überschrift (CAPTION)
+60 Kopfzeile (THEAD)
+61 Tabellenblock (TBODY)
+62 Fußzeile (TFOOT)
+63 Zeile (TR)
+64 Zelle (TD)
+65 Kopfzelle (TH)
+66 Formular
+67 Formular (FORM)
+68 Checkbutton, mehrere von... (CHECKBOX)
+69 Radiobutton, einer von... (RADIO)
+70 Option (OPTION)
+71 Eingabezeile (TEXT)
+72 Texteingabe (TEXTAREA)
+73 OK/Abbrechen (SUBMIT/RESET)
+74 Aktiver Grafikbereich (AREA MAP)
+75 Rechteck
+76 Kreis
+77 Polygon
+78 Gruppierung (DIV)
+79 Objekt (OBJECT)
+80 Java-Applet
+81 Applet (APPLET)
+82 Parameter (PARAM)
+83 Formel
+84 Formel im Text (MATH)
+85 Formel abgesetzt (MATH)
+86 Wurzel
+87 Quadratwurzel
+88 Quotient
+89 Term mit Index und Exponent
+90 Term mit Index
+91 Term mit Exponent
+92 Term mit Unter- und Überschrift
+93 Term mit Unterschrift
+94 Term mit Überschrift
+95 Term in Klammern
+96 Term mit Indices links/rechts oben/unten
+97 Markierung als Verknüfung definieren
+98 Markierung als Verknüpfungsziel definieren
+99 Verknüpfungsziel ändern
+100 Verknüpfungsziel löschen
+101 Symbolleiste
+102 Dokumentadresse und -titel 
+103 Aktive Grafikbereiche markieren
+104 Strukturfenster
+105 Textbrowserfenster
+106 Verknüpfungsfenster
+107 Inhaltsverzeichnisfenster
+108 Zeichen
+109 Farben
+110 Ausrichtung
+111 Hintergrundbild
+112 Format in Stylesheet übernehmen
+113 Klasse anwenden
+114 Stylesheets bearbeiten
+115 logische Formate
+116 Betont (EM)
+117 Hervorgehoben (STRONG)
+118 Zitat (CITE)
+119 Definition (DFN)
+120 Programmtext (CODE)
+121 Variablenwert (VAR)
+122 Beispiel (SAMP)
+123 Tastatureingabe (KBD)
+124 direkte Zeichenformate
+125 kursiv (I)
+126 fett (B)
+127 Schreibmaschinenschrift (TT)
+128 unterstrichen (U)
+129 durchgestrichen (STRIKE)
+130 größer (BIG)
+131 kleiner (SMALL)
+132 tiefgestellt (SUB)
+133 hochgestellt (SUP)
+134 Schriftgröße
+135 Umformatieren
+136 Abschnittsnummern
+137 Buch zusammenfügen
+138 Info
+139 Verknüpfungen folgen/Dokumente öffnen
+140 Auswählen
+141 Suchen
+142 Ansichten
+143 Einfügen von Elementen
+144 Verknüpfungen bearbeiten
+145 Umformatieren
+146 Tabellen
+147 Formeln
+148 Aktive Grafikbereiche
+149 Formate/Stylesheets
+150 Attribute
+151 Speichern/Publizieren
+152 Drucken
+153 Buch zusammenfügen
+154 Konfiguration

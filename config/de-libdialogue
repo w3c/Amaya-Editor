@@ -1,0 +1,279 @@
+0 X11 Fehler: %s\n
+1 Ansicht nicht gefunden.
+2 Fehler beim Einlesen des Wörterbuchs: %s\n 
+3 Fehlende Datei: %s\n
+4 Kann nicht schreiben unter: %s
+5 Kann das Schema nicht finden: %s
+6 OK
+7 Keine Alphabetdatei
+8 Kann das Dokument nicht laden: %s
+9 Pivot Formatfehler: %s
+10 Neues Ansichtsfenster kann das bisherige nicht ersetzen
+11 Inkompatible Schemen. Compiliere %s neu
+12 Fehlerhafte Fensternummer
+13 Gravierender Fehler: Thot-Schriften nicht gefunden
+14 Dokument enthält Spalten. Bitte neu umbrechen
+15 Arbeitsspeicher erschöpft
+16 Gravierender Fehler: kein Zugriff zum X-Server
+17 Ansichtsfenster muß vor möglicher Änderung erzeugt werden
+18 Bitte zuerst auswählen
+19 Kein Platz mehr für die Schrift: %s
+20 Struktur des Dokuments %s ist fehlerhaft
+21 Das Dokument %s kann weder geändert noch gespeichert werden
+22 Regeltabelle voll.
+23 Strukturschema %s wurde verändert
+24 Fehlerhafte Datei: %s.STR
+25 Fehlerhafte Datei: %s.PRS
+26 Verzeichnis nicht gefunden: %s
+27 Kann nicht drucken
+28 Kann diese Ansicht nicht ändern
+29 Kann nicht als PostScript speichern
+30 Kann die Datei nicht importieren
+31 Ansichtsfenster ist leer
+32 Unmöglich, lese nur ein Element
+33 Kann keine gepaarten Komponenten kopieren
+34 Erzeuge Wörterbuch für das Dokument: %s
+35 Grafikformat
+36 Grafikpräsentation
+37 Grafikdatei
+38 Dokument %s wurde gedruckt
+39 von Seite ...
+40 ... bis Seite
+41 Zahl der Kopien
+42 Größe (%)
+43 1 Seite/Blatt
+44 2 Seiten/Blatt
+45 4 Seiten/Blatt
+46 Seiten pro Blatt
+47 Seitenzahlen
+48 Ansichtsfenster zum drucken
+49 Drucke die %s - Ansicht
+50 Dies ist eine Kopie
+51 Fehler beim Laden von "%s" 
+52 Umgebungsvariable %s nicht definiert
+53 Ein Element kann sich nicht auf sich selbst beziehen
+54 Attribut erforderlich, nicht gelöscht
+55 Wert hier nicht zulässig
+56 %s : erforderliche Komponente
+57 Bitte nur eine einzige Komponente auswählen
+58 Das Element %s kann kann an dieser Stelle nicht eingefügt werden
+59 Rahmen kann hier nicht geändert werden
+60 %s
+61 Es wurde kein Ansichtsfenster zum Drucken ausgewählt
+62 Bitte die Ansicht wählen zu %s
+63 lade Dokument...
+64 Bitte ein Element auswählen
+65 Datei thot.keyboard nicht gefunden
+66 X-Window Zwischenablage unverändert
+67 Kann verschiedenartige Komponenten nicht kopieren. Bitte gruppieren.
+68 Nicht erlaubt, lade nur Dokumente
+69 Ein Dokument kann nicht in sich selbst eingebunden werden
+70 Ändere den Rahmen %s
+71 Verschiebe den Rahmen %s
+72 Dokument gespeichert: %s
+73 Speichere ...
+74 Leere Verknüpfung.
+75 Kopiere keine Seitenumbrüche!
+76 Es ist ein %s - Element ausgewählt. Bitte ein %s - Element wählen!
+77 Ändere Verzeichnisliste
+78 Drucke
+79 Exportiere Dokument %s ...
+80 Lade Wörterbuch %s
+81 Schreibe PostScript - Datei ...
+82 Importiere Datei ...
+83 In welcher Form soll das Dokument geladen werden?
+84 Ein Polygon erfordert mindestens zwei Punkte
+85 Bitte einen Wert eingeben für %s
+86 Altes Pivot - Format. Bitte das Dokument speichern.
+87 Erzeuge den Rahmen %s
+88 Nicht genügend Arbeitsspeicher
+89 Bitte ein Element auswählen %s
+90 Dieses Element kann nicht in Gliederungsansicht dargestellt werden
+91 Bitte das Bezugselement bestimmen
+92 Zu viele Dokumente geöffnet
+93 Leeres Dokument, nicht gespeichert.
+94 Einfügen hier nicht möglich
+95 Nichts zu löschen
+96 Notwendiges Attribut.
+97 Alle Ansichten sind bereits erzeugt.
+98 Leeres Dokument.
+99 Dokument nicht ändern!
+100 Zu viele Ansichten.
+101 Nichts zum Einfügen vorhanden.
+102 Kann kein neues Fenster öffnen. Bitte zunächst ein Fenster schließen.
+103 *** Thot: Nicht behebbarer Fehler ***
+104 Geänderte Dokumente werden evtl. in .SAV-Dateien gespeichert.
+105 wie momentan
+106 Skaliert
+107 Mehrfach
+108 X - Faktor
+109 Y - Faktor
+110 Datei abgeschnitten
+111 bounding box in .ps - Datei %s fehlt
+112 Kann die Worttrennungsregeldatei nicht öffnen: %s
+113 Lese Worttrennungsregeldatei: %s
+114 Wort zu lang zum Trennen: %s. OK?
+115 Pixmap : Fehler in Farben
+116 Pixmap : Fehler beim Laden
+117 Pixmap : Ungültige Datei
+118 Pixmap : nicht genügend Arbeitsspeicher
+119 Pixmap : Farbe nicht darstellbar
+120 Kann Datei nicht einfügen: %s
+121 Kann Datei nicht erzeugen: %s
+122 Kein Übersetzungsschma bekannt für %s
+123 Fehlerhafte .TRA - Datei: %s
+124 Zu viele Ausgabedateien
+125 Keine Fenstergröße bekannt für die %s - Ansicht
+126 %s entspricht nicht %s (%s)
+127 %s ist kein gültiges Kind von %s (%s)
+128 Bitte das Attribut %s für das Element %s bestimmen!
+129 %s, Seite %d
+130 %s : unbekannter Typ.
+131 Sprache
+132 Attribut
+133 Suche Bezugsziel
+134 Standarddarstellung
+135 Anwenden
+136 Zeichen
+137 Unterstreichen
+138 Grafik
+139 Format
+140 Standardwert
+141 Ausrichten
+142 Einrücken
+143 Drucken
+144 manueller Papiereinzug
+145 Optionen
+146 A4
+147 US
+148 Papierformat
+149 Abbrechen
+150 Verzeichnisse
+151 Dokumentenname
+152 Das Dokument %s existiert bereits. Überschreiben ?
+153 Maustaste 1 setzt die Textfarbe
+154 Maustaste 2 setzt die Hintergrundfarbe
+155 Schriftart
+156 Roman
+157 Fett
+158 Kursiv
+159 Geneigt
+160 Kursiv Fett
+161 Geneigt Fett
+162 Normal
+163 Unterstrichen
+164 Durchgestrichen
+165 Schriftgröße (pt)
+166 Einrückung (pt)
+167 Zeilenabstand (pt)
+168 Zeilenabstand
+169 Ausrichtung
+170 Ja
+171 Nein
+172 Dokument speichern
+173 Nicht Speichern
+174 Auszeichnung
+175 Farben
+176 Löschen
+177 Ausgabe
+178 PostScript-Datei
+179 Drucker
+180 Suche nach
+182 Groß-/Kleinschreibung ignorieren
+183 Ersetzen durch
+184 Ersetzen
+185 Nicht ersetzen
+186 Einzeln ersetzen
+187 Alle ersetzen
+188 Suche im Dokument
+189 Oberhalb der Markierung
+190 Innerhalb der Markierung
+191 Unterhalb der Markierung
+192 Im gesamten Dokument
+193 Nicht ersetzen
+194 Standardfarbe
+195 vorher?
+196 Schließe ein Dokument
+197 unbenannt
+198 Neues Dokument
+199 Dokumententyp
+200 Umbenennen
+201 Formelsatz
+202 Grafik
+203 Lateinisches Alphabet
+204 Griechiches Alphabet
+205 Ansicht
+206 Dateien
+207 Lade Dokument
+208 Dokumententyp
+209 Ansichten
+210 Ändere Filter
+211 Wert nicht geändert
+212 Erhöhe
+213 Verringere
+214 Sichtbarkeit
+215 Schiftgrößenunterschied
+216 Vergrößern
+217 Speichern unter
+218 Speichern
+219 Thot
+220 Format
+221 Kopiere
+222 Text
+223 Zeichnung
+224 Symbol
+225 Grafik
+226 Art des Elements
+227 nach
+228 vor
+229 um
+230 Einfügen
+231 Einfügen
+232 erzeugen
+233 Einfügen
+234 Seitenumbruch
+235 (schreibgeschützt)
+236 Umgebung
+237 Typ ändern
+238 Sprache des Elements
+239 Sprachvoreinstellung:
+240 Bitte das Dokument nicht ändern!
+241 Nicht gefunden
+242 Suche in
+243 Suche nach leeren Elementen
+244 Suche nach leeren Verknüpfungen
+245 Suche nach Verknüpfungen zu diesem Dokument
+246 Verknüpfung
+247 Verknüpfungsziel im Dokument
+248 Suche
+249 Schreibgeschütztes Dokument
+250 Nichts zu ersetzen
+251 Öffne
+252 Standard Zeichensatz
+253 Standard Grafik
+254 Standard Format
+255 Standard Geometry
+256 pt
+257 Linienart
+258 Linienstärke
+259 Füllmuster
+260 Teilen
+261 Objekttyp
+262 Gehe zu Seite Nr.:
+263 egal
+264 Attribut suchen
+265 Suche nach Typ
+266 Dokumententyp
+267 Wert des Attributs:
+268 Unbekanntes Attribut
+269 Erzeuge Verknüpfungsziel
+270 Zeige Verknüpfungsziel
+271 Einfügungsmodus
+272 Abbrechen
+273 Fehler in der PostScript-Erkennung
+274 Auftrag vom Druckspooler "%s" zurückgewisen
+275 Kann "%s" nicht erzeugen
+276 Seitenformat
+277 Kann des erzeugte Element nicht verweisen
+278 Zeichensatz
+279 Keine Sprache
