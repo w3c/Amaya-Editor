@@ -834,6 +834,10 @@ static ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t 
 #else /* _GTK */
 /*----------------------------------------------------------------------
   Callback for radio buttons
+  This callback is activated when a radio button is toogled :
+  last radio button toogled is manualy untoogled because of a GTK bug
+  NOTICE: this call back could be activated into the "style" menu when selecting
+  font size, style ...
   ----------------------------------------------------------------------*/
 static ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
 {
@@ -896,6 +900,49 @@ static ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
 	  i = 0;
 	}
       
+      /*** Sauve la valeur de la derniere selection ***/
+      catalogue->Cat_Data = entry;
+      /* retourne la valeur si le menu est reactif */
+      if (catalogue->Cat_React)
+	(*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
+    }
+  return TRUE;  
+}
+#endif /* _GTK */
+
+#ifdef _GTK
+/*----------------------------------------------------------------------
+  Callback for Icon Button
+  This callback is activated when an icon button is clicked
+  NOTICE : it is used into mathml palette and SVG palette (the buttons displayed)
+  ----------------------------------------------------------------------*/
+static ThotBool CallIconButtonGTK (ThotWidget w, struct Cat_Context *catalogue)
+{
+  register int        i;
+  register int        index;
+  register int        entry;
+  struct E_List      *adbloc;
+
+  /* Enregistre la selection d'un toggle button */
+  if (catalogue->Cat_Widget)
+    {
+      adbloc = catalogue->Cat_Entries;
+      entry = -1;
+      index = 0;
+      i = 2;  /* shift of 2 positions for the title widget */
+      while (entry == -1 && adbloc)
+	{
+	  while (i < C_NUMBER && adbloc->E_ThotWidget[i])
+	    {
+	      if (adbloc->E_ThotWidget[i] == w)
+		entry = index;
+	      i++;
+	      index++;
+	    }
+	  /* Passe au bloc suivant */
+	  adbloc = adbloc->E_Next;
+	  i = 0;
+	}
       /*** Sauve la valeur de la derniere selection ***/
       catalogue->Cat_Data = entry;
       /* retourne la valeur si le menu est reactif */
@@ -4126,7 +4173,7 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 0);
 	     /* Connecte the clicked acton to the button */
 	     ConnectSignalGTK (GTK_OBJECT(w), "clicked",
-			       GTK_SIGNAL_FUNC(CallRadioGTK), (gpointer)catalogue);
+			       GTK_SIGNAL_FUNC(/*CallRadioGTK*/CallIconButtonGTK), (gpointer)catalogue);
 #endif /* _GTK */
 	     adbloc->E_ThotWidget[ent] = w;
 	     i++;
