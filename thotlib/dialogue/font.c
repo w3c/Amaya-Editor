@@ -225,7 +225,7 @@ static HFONT WIN_LoadFont (char script, int family, int highlight, int size)
        break;
      }
 
-   nHeight = -MulDiv(size, DOT_PER_INCH, 72);
+   nHeight = -MulDiv(size, DOT_PER_INCH, 80);
    hFont = CreateFont (nHeight, nWidth, 0, 0, fnWeight,
                        fdwItalic, fdwUnderline, fdwStrikeOut,
                        charset, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
