@@ -454,6 +454,13 @@ PtrTextBuffer    Bbuffer;
 	  
 	  switch (event.message)
 	    {
+	    case WM_ENTER:
+            case WM_SYSKEYDOWN:
+	    case WM_KEYDOWN:
+	      /* stop the creation of the polyline */
+	      ret = 1;
+	      break;
+
 	    case WM_LBUTTONDOWN:
 	    case WM_MBUTTONDOWN:
 	    case WM_RBUTTONDOWN:
@@ -601,6 +608,11 @@ PtrTextBuffer    Bbuffer;
 
 	  switch (event.type)
 	    {
+	    case KeyPress:
+	      /* stop the creation of the polyline */
+	      ret = 1;
+	      break;
+
 	    case ButtonPress:
 	      /* it's a press button event */
 	      input = TRUE;
@@ -1249,29 +1261,29 @@ int                *yi;
   pBuffer->BuPoints[0].YCoord = PixelToPoint (height) * 1000;
 
   /* store current points in the buffer */
-  x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - xorg;
-  y =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - yorg;
+  x = pBox->BxXOrg - xorg;
+  y =  pBox->BxYOrg - yorg;
   switch (point)
     {
     case 1:
-      x1 = x + pBox->BxW;
-      y1 = y + pBox->BxH;
+      x1 = x + pBox->BxWidth;
+      y1 = y + pBox->BxHeight;
       break;
     case 3:
       x1 = x;
-      x += pBox->BxW;
-      y1 = y + pBox->BxH;
+      x += pBox->BxWidth;
+      y1 = y + pBox->BxHeight;
       break;
     case 5:
       x1 = x;
-      x += pBox->BxW;
+      x += pBox->BxWidth;
       y1 = y;
-      y += pBox->BxH;
+      y += pBox->BxHeight;
       break;
     case 7:
-      x1 = x + pBox->BxW;
+      x1 = x + pBox->BxWidth;
       y1 = y;
-      y += pBox->BxH;
+      y += pBox->BxHeight;
       break;
     default: break;
     }

@@ -498,7 +498,6 @@ ThotBool    horiz;
   AttributeType	        attrType;
   Attribute             attr;
   CHAR_T		buffer[32];
-  int                   minX, minY, maxX, maxY;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -602,9 +601,7 @@ ThotBool    horiz;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
-  if (elType.ElTypeNum == GraphML_EL_line_)
-    /*UpdatePointsAttribute (el, doc, &minX, &minY, &maxX, &maxY)*/;
-  else if (elType.ElTypeNum == GraphML_EL_circle)
+  if (elType.ElTypeNum == GraphML_EL_circle)
     {
       /* transform into a radius */
       dim /= 2;
@@ -1001,7 +998,7 @@ int                 construct;
    DisplayMode      dispMode;
    char		    shape;
    STRING           name;
-   int		    c1, c2, i, j, w, h, minX, minY, maxX, maxY;
+   int		    c1, c2, i, j, w, h;
    int	            oldStructureChecking;
    ThotBool	    found;
 
@@ -1237,9 +1234,12 @@ static void         CreateGroup ()
    Document	doc;
    Element	el, prevSel, prevChild, group;
    ElementType	elType;
-   Attribute	attr;
    AttributeType	attrType;
-   int		c1, i, posX, posY, minX, minY;
+   int		c1, i, minX, minY;
+   /******
+   Attribute	attr;
+   int          posX, poxY;
+   *********/
    DisplayMode	dispMode;
    ThotBool	position;
 

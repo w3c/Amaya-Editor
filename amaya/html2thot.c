@@ -36,6 +36,7 @@
 #include "templates_f.h"
 #include "XMLparser_f.h"
 #include "UIcss_f.h"
+#include "XHTMLbuilder_f.h"
 #ifdef EXPAT_PARSER
 #include "Xml2thot_f.h"
 #endif /* EXPAT_PARSER */
@@ -1396,13 +1397,15 @@ Element            *el;
 	else
 	   parent = TtaGetParent (HTMLcontext.lastElement);
 	if (!CheckSurrounding (el, parent))
-	  if (parent != NULL)
-	    TtaInsertSibling (*el, HTMLcontext.lastElement, FALSE, HTMLcontext.doc);
-	  else
-	    {
-	       TtaDeleteTree (*el, HTMLcontext.doc);
-	       *el = NULL;
-	    }
+	  {
+	    if (parent != NULL)
+	      TtaInsertSibling (*el, HTMLcontext.lastElement, FALSE, HTMLcontext.doc);
+	    else
+	      {
+		TtaDeleteTree (*el, HTMLcontext.doc);
+		*el = NULL;
+	      }
+	  }
 	ret = TRUE;
      }
    else
@@ -1996,12 +1999,12 @@ Element             el;
 	}
       break;
 
-	case HTML_EL_META:
-         ParseCharset (el, HTMLcontext.doc);
+    case HTML_EL_META:
+      ParseCharset (el, HTMLcontext.doc);
 #ifdef _I18N_
-	 ParsingCharset = TtaGetDocumentCharset (HTMLcontext.doc);
+      ParsingCharset = TtaGetDocumentCharset (HTMLcontext.doc);
 #endif /* _I18N_ */
-         break;
+      break;
 
     case HTML_EL_STYLE_:	/* it's a STYLE element */
     case HTML_EL_Preformatted:	/* it's a PRE */
@@ -2185,13 +2188,15 @@ Element el;
 			 }
 		       while (lastChar[0] == SPACE && length > 0);
 		       if (nbspaces > 0)
-			 if (length == 0)
-			   /* empty TEXT element */
-			   TtaDeleteTree (lastLeaf, HTMLcontext.doc);
-			 else
-			   /* remove the ending spaces */
-			   TtaDeleteTextContent (lastLeaf, length + 1,
-						 nbspaces, HTMLcontext.doc);
+			 {
+			   if (length == 0)
+			     /* empty TEXT element */
+			     TtaDeleteTree (lastLeaf, HTMLcontext.doc);
+			   else
+			     /* remove the ending spaces */
+			     TtaDeleteTextContent (lastLeaf, length + 1,
+						   nbspaces, HTMLcontext.doc);
+			 }
 		     }
 		 }
 	     }
@@ -2270,6 +2275,7 @@ ThotBool            onStartTag;
 	      stack, but not at a higher level as the list (or
 	      equivalent) element */
 	   if (!ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("li")))
+	     {
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
 	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("ol"))  ||
                !ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("ul"))  ||
@@ -2278,27 +2284,34 @@ ThotBool            onStartTag;
 		 stop = TRUE;
 	       else
 		 i--;
+	     }
 	   else if (!ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("option")))
+	     {
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
 	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("select")))
 		 stop = TRUE;
 	       else
 		 i--;
+	     }
 	   else if (!ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("dd")) ||
                 !ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("dt")))
+	     {
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
 	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("dl")))
 		 stop = TRUE;
 	       else
 		 i--;
+	     }
 	   else if (!ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("tr")) ||
                 !ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("td")) ||
                 !ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("th")))
+	     {
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("table")))
-		 stop = TRUE;
-	       else
-		 i--;
+		 if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("table")))
+		   stop = TRUE;
+		 else
+		   i--;
+	     }
 	 }
 
        if (i >= 0 && entry == GINumberStack[i])
@@ -2750,65 +2763,69 @@ int                 entry;
    else
      {
        ok = TRUE;
-       /* only TH and TD elements are allowed as children of a TR element */
-       if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("tr")))
-	 if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("th")) &&
-	     ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("td")))
-	   ok = FALSE;
-       if (ok)
-	 /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
-	 /* allowed as children of a TABLE element */
-	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("table")))
-	   if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("caption"))  &&
-	       ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("thead"))    &&
-	       ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tfoot"))    &&
-	       ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tbody"))    &&
-	       ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("colgroup")) &&
-	       ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("col"))      &&
-	       ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tr")))
-	     if (!ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("td")) ||
-             !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("th")))
-	       /* Table cell within a table, without a tr. Assume tr */
-	       {
-		/* save the last last identifier read from the input file */
-		saveLastElemEntry = lastElemEntry;
-		/* simulate a <TR> tag */
-	        ProcessStartGI (TEXT("tr"));
-		/* restore the last tag that has actually been read */
-		lastElemEntry = saveLastElemEntry;
-	       }
-	     else
-	       ok = FALSE;
-       if (ok)
+       if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("tr")) &&
+	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("th")) &&
+	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("td")))
+	 /* only TH and TD elements are allowed as children of a TR element */
+	 ok = FALSE;
+       if (ok &&
+	   !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("table")) &&
+	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("caption"))  &&
+	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("thead"))    &&
+	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tfoot"))    &&
+	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tbody"))    &&
+	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("colgroup")) &&
+	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("col"))      &&
+	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tr")))
+	 {
+	   /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
+	   /* allowed as children of a TABLE element */
+	   if (!ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("td")) ||
+	       !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("th")))
+	     /* Table cell within a table, without a tr. Assume tr */
+	     {
+	       /* save the last last identifier read from the input file */
+	       saveLastElemEntry = lastElemEntry;
+	       /* simulate a <TR> tag */
+	       ProcessStartGI (TEXT("tr"));
+	       /* restore the last tag that has actually been read */
+	       lastElemEntry = saveLastElemEntry;
+	     }
+	   else
+	     ok = FALSE;
+	 }
+       if (ok &&
+	   (!ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("caption")) ||
+	    !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("thead")) ||
+	    !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tfoot")) ||
+	    !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tbody")) ||
+	    !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("colgroup"))) &&
+	   ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("table")))
 	 /* CAPTION, THEAD, TFOOT, TBODY, COLGROUP are allowed only as
 	    children of a TABLE element */
-	 if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("caption"))  == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("thead"))    == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tfoot"))    == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tbody"))    == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("colgroup")) == 0)
-	   if (ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("table")) != 0)
-	      ok = FALSE;
-       if (ok)
+	 ok = FALSE;
+       if (ok &&
+	   (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("thead")) ||
+	    !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("tfoot")) ||
+	    !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("tbody"))) &&
+	   ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tr")))
 	 /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
-	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("thead")) ||
-	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("tfoot")) ||
-	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("tbody")))
-	   if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tr")))
-	     if (!ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("td")) ||
-             !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("th")))
-	       /* Table cell within a thead, tfoot or tbody without a tr. */
-	       /* Assume tr */
-	       {
-		/* save the last last identifier read from the input file */
-		saveLastElemEntry = lastElemEntry;
-		/* simulate a <tr> tag */
-	        ProcessStartGI (TEXT("tr"));
-		/* restore the last tag that has actually been read */
-		lastElemEntry = saveLastElemEntry;
-	       }
-	     else
-	       ok = FALSE;
+	 {
+	   if (!ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("td")) ||
+	       !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("th")))
+	     /* Table cell within a thead, tfoot or tbody without a tr. */
+	     /* Assume tr */
+	     {
+	       /* save the last last identifier read from the input file */
+	       saveLastElemEntry = lastElemEntry;
+	       /* simulate a <tr> tag */
+	       ProcessStartGI (TEXT("tr"));
+	       /* restore the last tag that has actually been read */
+	       lastElemEntry = saveLastElemEntry;
+	     }
+	   else
+	     ok = FALSE;
+	 }
        if (ok)
 	 /* refuse BODY within BODY */
 	 if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("body")) == 0)
@@ -3050,14 +3067,13 @@ static void         EndOfStartGI (c)
 CHAR_T              c;
 #endif
 {
-   CHAR_T        theGI[MaxMsgLength];
-   CHAR_T        schemaName[MaxMsgLength];
-   int		 i;
+  CHAR_T        theGI[MaxMsgLength];
+  int		 i;
 
-   if (HTMLcontext.parsingTextArea)
-      /* We are parsing the contents of a TEXTAREA element. If a start
-	 tag appears, consider it as plain text */
-      {
+  if (HTMLcontext.parsingTextArea)
+    /* We are parsing the contents of a TEXTAREA element. If a start
+       tag appears, consider it as plain text */
+    {
       /* next state is state 0, not the state computed by the automaton */
       NormalTransition = FALSE;
       currentState = 0; 
@@ -3069,9 +3085,9 @@ CHAR_T              c;
       inputBuffer[LgBuffer] = WC_EOS;
       /* copy the input buffer in the document */
       TextToDocument ();
-      }
+    }
    else
-      {
+     {
       /* if the last character in the GI is a '/', ignore it.  This is to
          accept the XML syntax for empty elements, for instance <br/> */
       if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == TEXT('/'))
@@ -3146,7 +3162,7 @@ CHAR_T              c;
 	}
       else
         ProcessStartGI (theGI);
-      }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -4349,9 +4365,10 @@ char                c;
 
 #endif
 {
-   int		i;
+  int		i;
 
-   if (LgEntityName < MaxEntityLength - 1)
+  if (LgEntityName < MaxEntityLength - 1)
+    {
       /* the entity buffer is not full */
       if (c >= '0' && c <= '9')
 	 /* the character is a decimal digit */
@@ -4377,6 +4394,7 @@ char                c;
 	 NormalTransition = FALSE;
 	 currentState = 0;
 	 }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -4415,9 +4433,10 @@ char                c;
 
 #endif
 {
-   int		i;
+  int		i;
 
-   if (LgEntityName < MaxEntityLength - 1)
+  if (LgEntityName < MaxEntityLength - 1)
+    {
       /* the entity buffer is not full */
       if ((c >= '0' && c <= '9') ||
 	  (c >= 'a' && c <= 'f') ||
@@ -4447,6 +4466,7 @@ char                c;
 	 NormalTransition = FALSE;
 	 currentState = 0;
 	 }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -4455,8 +4475,8 @@ char                c;
   ----------------------------------------------------------------------*/
 static void         EndOfDocument ()
 {
-   if (LgBuffer > 0)
-      TextToDocument ();
+  if (LgBuffer > 0)
+    TextToDocument ();
 }
 
 /*----------------------------------------------------------------------
@@ -4467,7 +4487,6 @@ static void         PutLess (CHAR_T c)
 #else
 static void         PutLess (c)
 CHAR_T                c;
-
 #endif
 {
    PutInBuffer ('<');
@@ -4568,10 +4587,11 @@ UCHAR_T             c;
 
 #endif
 {
-   ElementType         elType;
-   Element             elCommentLine, prevElCommentLine;
-
-   if (c != WC_EOS)
+  ElementType         elType;
+  Element             elCommentLine, prevElCommentLine;
+  
+  if (c != WC_EOS)
+    {
       if (!HTMLcontext.parsingCSS && ((int) c == WC_EOL || (int) c == WC_CR))
 	 /* new line in a comment */
 	{
@@ -4606,6 +4626,7 @@ UCHAR_T             c;
 	     }
 	   inputBuffer[LgBuffer++] = c;
 	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -5245,53 +5266,58 @@ char*              HTMLbuf;
 		/* LF = end of input line */
 	       {
 		if (currentState != 12)
-		   /* don't change characters in comments */
-		   if (currentState != 0)
+		  {
+		    /* don't change characters in comments */
+		    if (currentState != 0)
 		      /* not within a text element */
 		      {
-		      if (currentState == 6 || currentState == 9)
-			/* within an attribute value between quotes */
-			if (lastAttrEntry != NULL &&
-			    !ustrcmp (lastAttrEntry->XMLattribute, TEXT("src")))
-			   /* value of an SRC attribute */
-			   /* consider new line as an empty char*/
-			   charRead = WC_EOS;
-		      if (charRead != WC_EOS)
-		         /* Replace new line by a space, except if an entity is
-			    being read */
-			 if (currentState == 30 &&
-			     Within (HTML_EL_Preformatted, DocumentSSchema) &&
-	                     !Within (HTML_EL_Option_Menu, DocumentSSchema))
-			   charRead = WC_EOL; /* new line character */
-			 else
-		           charRead = WC_SPACE;
+			if (currentState == 6 || currentState == 9)
+			  /* within an attribute value between quotes */
+			  if (lastAttrEntry != NULL &&
+			      !ustrcmp (lastAttrEntry->XMLattribute, TEXT("src")))
+			    /* value of an SRC attribute */
+			    /* consider new line as an empty char*/
+			    charRead = WC_EOS;
+			if (charRead != WC_EOS)
+			  {
+			    /* Replace new line by a space, except if an entity is
+			       being read */
+			    if (currentState == 30 &&
+				Within (HTML_EL_Preformatted, DocumentSSchema) &&
+				!Within (HTML_EL_Option_Menu, DocumentSSchema))
+			      charRead = WC_EOL; /* new line character */
+			    else
+			      charRead = WC_SPACE;
+			  }
 		      }
-		   else
-		      /* new line in a text element */
-		      if ((Within (HTML_EL_Preformatted, DocumentSSchema) &&
+		    else if ((Within (HTML_EL_Preformatted, DocumentSSchema) &&
 			      !Within (HTML_EL_Option_Menu, DocumentSSchema)) ||
-			   Within (HTML_EL_Text_Area, DocumentSSchema) ||
-			   Within (HTML_EL_SCRIPT, DocumentSSchema) ||
-			   Within (HTML_EL_STYLE_, DocumentSSchema))
+			     Within (HTML_EL_Text_Area, DocumentSSchema) ||
+			     Within (HTML_EL_SCRIPT, DocumentSSchema) ||
+			     Within (HTML_EL_STYLE_, DocumentSSchema))
+		      /* new line in a text element */
+		      {
 			/* within preformatted text */
 			if (AfterTagPRE)
-			   /* ignore NL after a <PRE> tag */
-			   charRead = WC_EOS;
+			  /* ignore NL after a <PRE> tag */
+			  charRead = WC_EOS;
 			else
-			   /* generate a new line character */
-			   charRead = WC_EOL;
-		      else
-			/* new line in ordinary text */
-		        {
-			  /* suppress all spaces preceding the end of line */
-			  while (LgBuffer > 0 &&
-				 inputBuffer[LgBuffer - 1] == WC_SPACE)
-			     LgBuffer--;
-			  /* new line is equivalent to space */
-			  charRead = WC_SPACE;
-			  if (LgBuffer > 0)
-			     TextToDocument ();
-		        }
+			  /* generate a new line character */
+			  charRead = WC_EOL;
+		      }
+		    else
+		      /* new line in ordinary text */
+		      {
+			/* suppress all spaces preceding the end of line */
+			while (LgBuffer > 0 &&
+			       inputBuffer[LgBuffer - 1] == WC_SPACE)
+			  LgBuffer--;
+			/* new line is equivalent to space */
+			charRead = WC_SPACE;
+			if (LgBuffer > 0)
+			  TextToDocument ();
+		      }
+		  }
 		/* beginning of a new input line */
 		EmptyLine = TRUE;
 	       }

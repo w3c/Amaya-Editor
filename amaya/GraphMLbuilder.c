@@ -375,7 +375,7 @@ ThotBoool       delete;
 {
 #define buflen 50
    CHAR_T               css_command[buflen+20];
-   int                  length, attrKind;
+   int                  length;
    STRING               text;
 
    length = TtaGetTextAttributeLength (attr) + 2;
@@ -644,7 +644,7 @@ Document	doc;
 
 #endif
 {
-   int                  length, val, attrKind, ruleType;
+   int                  length, attrKind, ruleType;
    STRING               text, ptr;
    AttributeType        attrType;
    PresentationValue    pval;
@@ -716,7 +716,7 @@ ThotBool   delete;
    AttributeType	attrType;
    ElementType          elType;
    Element              child;
-   int			length, val, attrKind, ruleType;
+   int			length, attrKind, ruleType;
    STRING		text, ptr;
    PresentationValue    pval;
    PresentationContext  ctxt;
@@ -790,16 +790,18 @@ ThotBool   delete;
 	 {
 	 if (ruleType != PRXRadius && ruleType != PRYRadius)
 	   /* it's not attribute ry or ry for a rectangle */
-	   if (pval.typed_data.value == 0)
-	     /* a value of 0 disables rendering of this element */
-	     ruleType = PRVisibility;
-	   else
-	     {
-	       /* if there was a value of 0 previously, enable rendering */
-	       ctxt->destroy = TRUE;
-	       TtaSetStylePresentation (PRVisibility, el, NULL, ctxt, pval);
-	       ctxt->destroy = FALSE;
-	     }
+	   {
+	     if (pval.typed_data.value == 0)
+	       /* a value of 0 disables rendering of this element */
+	       ruleType = PRVisibility;
+	     else
+	       {
+		 /* if there was a value of 0 previously, enable rendering */
+		 ctxt->destroy = TRUE;
+		 TtaSetStylePresentation (PRVisibility, el, NULL, ctxt, pval);
+		 ctxt->destroy = FALSE;
+	       }
+	   }
 	 if ((elType.ElTypeNum == GraphML_EL_ellipse ||
 	      elType.ElTypeNum == GraphML_EL_circle) &&
 	     (attrType.AttrTypeNum == GraphML_ATTR_r ||

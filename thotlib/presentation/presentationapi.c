@@ -652,10 +652,10 @@ ThotBool            display;
        else
 	 ok = FALSE;
        
-       dx = width - pAb->AbBox->BxWidth;
        if (ok)
 	 {
 	   /* a dimension rule */
+	   dx = width - pAb->AbBox->BxWidth;
 	   unit = pRStd->PrDimRule.DrUnit;
 	   if (!pRStd->PrDimRule.DrAbsolute)
 	     /* the width is a percent of an other box width */
@@ -670,6 +670,7 @@ ThotBool            display;
        else
 	 {
 	   /* a position rule */
+	   dx = width;
 	   unit = pRStd->PrDimRule.DrPosRule.PoDistUnit;
 	   if (pAb->AbEnclosing == NULL)
 	     /* the width is a percent of the window width */
@@ -772,7 +773,7 @@ ThotBool            display;
 				    ViewFrameTable[frame - 1].FrMagnification);
 	       value = 0;
 	     }
-	   else
+	   else if (ok)
 	     dx += value;
 
 	   /* set the absolute value into the rule */
@@ -870,10 +871,10 @@ ThotBool            display;
        else
 	 ok = FALSE;
        
-       dy = height - pAb->AbBox->BxHeight;
        if (ok)
 	 {
 	   /* a dimension rule */
+	   dy = height - pAb->AbBox->BxHeight;
 	   unit = pRStd->PrDimRule.DrUnit;
 	   if (!pRStd->PrDimRule.DrAbsolute)
 	     /* the height is a percent of an other box height */
@@ -888,6 +889,7 @@ ThotBool            display;
        else
 	 {
 	   /* a position rule */
+	   dy = height;
 	   unit = pRStd->PrDimRule.DrPosRule.PoDistUnit;
 	   if (pAb->AbEnclosing == NULL)
 	     /* the height is a percent of the window width */
@@ -991,7 +993,7 @@ ThotBool            display;
 				    ViewFrameTable[frame - 1].FrMagnification);
 	       value = 0;
 	     }
-	   else
+	   else if (ok)
 	     dy += value;
 
 	   /* set the absolute value into the rule */

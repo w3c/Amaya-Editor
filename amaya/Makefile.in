@@ -39,9 +39,6 @@ prefix = @prefix@
 exec_prefix = @exec_prefix@
 libdir = @libdir@
 bindir = @bindir@
-math_schema: $(amaya_math_schema)
-graph_schema: $(amaya_graph_schema)
-annot_schema: $(amaya_annot_schema)
 comp_plugin: $(amaya_comp_plugin)
 comp_annot: $(amaya_comp_annot)
 
@@ -153,8 +150,8 @@ AMAYA_OPTION_EXTRA_LIBS= $(AMAYA_PLUGIN_EXTRA_LIBS) \
          $(AMAYA_GRAPH_EXTRA_LIBS) $(AMAYA_ANNOT_EXTRA_LIBRS)
 
 AMAYA_OPTION_SCHEMAS= $(AMAYA_PLUGIN_SCHEMAS) \
-         $(AMAYA_LIBWWW_SCHEMAS) $(AMAYA_MATH_SCHEMAS) $(AMAYA_GRAPH_SCHEMAS) \
-         $(AMAYA_ANNOT_SCHEMAS) 
+         $(AMAYA_LIBWWW_SCHEMAS) $(MATH_SCHEMAS) $(GRAPH_SCHEMAS) \
+         $(ANNOT_SCHEMAS) 
 
 AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ \
 		-I@srcdir@/f -I@srcdir@/xpm \
@@ -166,7 +163,7 @@ AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
 
 HTML2THOT_LIBS= -L../thotlib/ -lThotKernel -L.. -lz
 
-amaya_schemas : compHTML compHTMLP compHTMLT compTextFile  compTextFileP compTextFileT compXLink compXLinkP compXLinkT compHTMLA compTextFileA compXLinkA compEDITORA graph_schema math_schema annot_schema
+amaya_schemas : compHTML compHTMLP compHTMLT compTextFile  compTextFileP compTextFileT compXLink compXLinkP compXLinkT compHTMLA compTextFileA compXLinkA $(graph_schema) $(math_schema) $(annot_schema) compEDITORA
 
 amaya_src :  HTML.h $(AMAYA_SRC)
 
@@ -189,7 +186,7 @@ CSS_OBJ = \
 	styleparser.o
 
 # Specific schema dependencies
-fetchXMLname.o : $(AMAYA_MATH_SCHEMAS) $(AMAYA_GRAPH_SCHEMAS)
+fetchXMLname.o : $(MATH_SCHEMAS) $(GRAPH_SCHEMAS)
 
 libCSS : libCSS.a
 
@@ -231,7 +228,7 @@ AMAYA_OBJ = \
 	XPointerparse.o 	
 
 # Specific schema dependencies
-HTMLtable.o : $(AMAYA_MATH_SCHEMAS)
+HTMLtable.o : $(MATH_SCHEMAS)
 
 #
 # HTML structure schema compilation.

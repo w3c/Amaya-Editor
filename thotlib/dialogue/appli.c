@@ -1349,9 +1349,21 @@ LPARAM      lParam;
   HWND                hwndToolTip;
   RECT                rect;
   RECT                rWindow;
+  LPNMHDR             pnmh;
   int                 frame = GetMainFrameNumber (hwnd);
   int                 view;
   int                 frameNDX;
+  int                 idCtrl;
+  int                 cx;
+  int                 cy;
+  int                 cyStatus;
+  int                 cxVSB;
+  int                 cyHSB;
+  int                 cyTB;
+  int                 x, y;
+  int                 index = 0;
+  int                 cyTxtZone;
+  DWORD               dwStyle;
   ThotBool            assoc;
 
   if (frame != -1)
@@ -1363,18 +1375,14 @@ LPARAM      lParam;
   case WM_CREATE:
     /* Create toolbar  */
     ThotTBBitmap.hInst = hInstance;
-    ThotTBBitmap.nID   = IDR_TOOLBAR;
-    
+    ThotTBBitmap.nID   = IDR_TOOLBAR;    
     ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
 			    0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0);
-    
     SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
-    
     if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON, (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
       WinErrorBox (NULL, TEXT("WndProc: WM_CREATE"));
     
     hwndToolTip = ToolBar_GetToolTips (ToolBar);
-    
     if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
       InitToolTip (ToolBar);	
     
@@ -1420,126 +1428,119 @@ LPARAM      lParam;
 
   case WM_SYSKEYDOWN:
   case WM_KEYDOWN:
-       if (frame != -1)
-          SetFocus (FrRef [frame]);
+    if (frame != -1)
+      SetFocus (FrRef [frame]);
     SendMessage (FrRef [frame], mMsg, wParam, lParam);
     return 0L;
 
   case WM_DROPFILES:
-       if (frame != -1)
-          SetFocus (FrRef [frame]);
+    if (frame != -1)
+      SetFocus (FrRef [frame]);
     SendMessage (FrRef [frame], mMsg, wParam, lParam);
     return 0L;
 	
   case WM_IME_CHAR:
   case WM_SYSCHAR:
   case WM_CHAR:
-       if (frame != -1)
-          SetFocus (FrRef [frame]);
+    if (frame != -1)
+      SetFocus (FrRef [frame]);
     SendMessage (FrRef [frame], mMsg, wParam, lParam);
     return 0L;
 
-  case WM_NOTIFY: {
-    LPNMHDR pnmh = (LPNMHDR) lParam;
-    int idCtrl = (int) wParam;
+  case WM_NOTIFY:
+    pnmh = (LPNMHDR) lParam;
+    idCtrl = (int) wParam;
     
     /*Toolbar notifications */
     if ((pnmh->code >= TBN_LAST) && (pnmh->code <= TBN_FIRST))
       return ToolBarNotify (frame, hwnd, wParam, lParam);
     
     /* Fetch tooltip text */
-    if (pnmh->code == TTN_NEEDTEXT) {
-      LPTOOLTIPTEXT lpttt = (LPTOOLTIPTEXT) lParam;
-      CopyToolTipText (frame, lpttt);
-    }
+    if (pnmh->code == TTN_NEEDTEXT)
+      {
+        LPTOOLTIPTEXT lpttt = (LPTOOLTIPTEXT) lParam;
+        CopyToolTipText (frame, lpttt);
+      }
     return 0L;
-  }
 
   case WM_COMMAND:
-    if (LOWORD (wParam) >= TBBUTTONS_BASE) {
-      buttonCommand = TRUE;
-      APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
-    } else {
-      buttonCommand = FALSE;
-      WIN_ThotCallBack (hwnd, wParam, lParam);
-    }
+    if (LOWORD (wParam) >= TBBUTTONS_BASE)
+      {
+        buttonCommand = TRUE;
+        APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
+      }
+    else
+      {
+	buttonCommand = FALSE;
+	WIN_ThotCallBack (hwnd, wParam, lParam);
+      }
     return 0L;
 
   case WM_CLOSE:
-       if (frame <= MAX_FRAME) {
-          GetDocAndView (frame, &pDoc, &view, &assoc);
-		  if (pDoc && view)
-           CloseView (pDoc, view, assoc);
-           FrMainRef[frame] = 0;
-	   }
+    if (frame <= MAX_FRAME)
+      {
+	GetDocAndView (frame, &pDoc, &view, &assoc);
+	if (pDoc && view)
+	  CloseView (pDoc, view, assoc);
+	FrMainRef[frame] = 0;
+      }
     return 0L;
 
   case WM_DESTROY:
-       FrMainRef[frame] = 0;
-       if (frame <= MAX_FRAME) {
-          for (frameNDX = 0; frameNDX <= MAX_FRAME; frameNDX++)
-              if (FrMainRef[frameNDX] != 0) 
-                 /* there is still an active frame */
-                 return 0L;
-          TtaQuit();
-	   }
+    FrMainRef[frame] = 0;
+    if (frame <= MAX_FRAME)
+      {
+	for (frameNDX = 0; frameNDX <= MAX_FRAME; frameNDX++)
+	  if (FrMainRef[frameNDX] != 0) 
+	    /* there is still an active frame */
+	    return 0L;
+	TtaQuit();
+      }
     PostQuitMessage (0);
     return 0L;
         
   case WM_SIZE:
-	{
-    int    cx = LOWORD (lParam);
-    int    cy = HIWORD (lParam);
-    int    cyStatus;
-    int    cxVSB;
-    int    cyHSB;
-    int    cyTB;
-    int    x, y;
-    int    index = 0;
-    int    cyTxtZone;
-    DWORD  dwStyle;
-
+    cx = LOWORD (lParam);
+    cy = HIWORD (lParam);
     /* Adjust toolbar size. */
     if (IsWindowVisible (WinToolBar[frame]))
-	{
-      dwStyle = GetWindowLong (WinToolBar[frame], GWL_STYLE);
-      
-      if (dwStyle & CCS_NORESIZE)
-	    MoveWindow (WinToolBar[frame], 0, 0, cx, cyToolBar, FALSE);
-      else
-	    ToolBar_AutoSize (WinToolBar[frame]);
+      {
+	dwStyle = GetWindowLong (WinToolBar[frame], GWL_STYLE);
+	if (dwStyle & CCS_NORESIZE)
+	  MoveWindow (WinToolBar[frame], 0, 0, cx, cyToolBar, FALSE);
+	else
+	  ToolBar_AutoSize (WinToolBar[frame]);
 
-      InvalidateRect (WinToolBar[frame], NULL, TRUE);
-      GetWindowRect (WinToolBar[frame], &rWindow);
-      ScreenToClient (hwnd, (LPPOINT) &rWindow.left);
-      ScreenToClient (hwnd, (LPPOINT) &rWindow.right);
-      cyTB = rWindow.bottom - rWindow.top;
-    }
-	else 
+	InvalidateRect (WinToolBar[frame], NULL, TRUE);
+	GetWindowRect (WinToolBar[frame], &rWindow);
+	ScreenToClient (hwnd, (LPPOINT) &rWindow.left);
+	ScreenToClient (hwnd, (LPPOINT) &rWindow.right);
+	cyTB = rWindow.bottom - rWindow.top;
+      }
+    else 
       cyTB = 0;
     
     cyTxtZone = cyTB;
-
     /* Adjust text zones */
     for (index = 0; index < MAX_TEXTZONE; index++)
-	{
-      if (FrameTable[frame].Text_Zone[index] &&
-		  IsWindowVisible (FrameTable[frame].Text_Zone[index]))
+      {
+	if (FrameTable[frame].Text_Zone[index] &&
+	    IsWindowVisible (FrameTable[frame].Text_Zone[index]))
 	  {
 	    MoveWindow (FrameTable[frame].Label[index], 15, cyTxtZone + 5, 70, 20, TRUE);
 	    MoveWindow (FrameTable[frame].Text_Zone[index], 85, cyTxtZone + 5, cx - 100, 20, TRUE);
 	    cyTxtZone += 25;
+	  }
       }
-    }
 
     /* Adjust status bar size. */
     if (IsWindowVisible (FrameTable[frame].WdStatus))
-	{
-      GetWindowRect (FrameTable[frame].WdStatus, &rWindow);
-      cyStatus = rWindow.bottom - rWindow.top;
-      MoveWindow (FrameTable[frame].WdStatus, 0, cy - cyStatus, cx, cyStatus, TRUE);
-    }
-	else
+      {
+	GetWindowRect (FrameTable[frame].WdStatus, &rWindow);
+	cyStatus = rWindow.bottom - rWindow.top;
+	MoveWindow (FrameTable[frame].WdStatus, 0, cy - cyStatus, cx, cyStatus, TRUE);
+      }
+    else
       cyStatus = 0;
 
     /* Adjust Vertical scroll bar */
@@ -1566,12 +1567,10 @@ LPARAM      lParam;
     SetScrollRange (FrameTable[frame].WdScrollV, SB_CTL, 0, cy, TRUE);
     SetScrollRange (FrameTable[frame].WdScrollH, SB_CTL, 0, cx, TRUE);
     return 0L;
-	}
 
   default: 
     return (DefWindowProc (hwnd, mMsg, wParam, lParam));
   }
-  /*return (DefWindowProc (hwnd, mMsg, wParam, lParam));*/
 }
 
 /* -------------------------------------------------------------------
@@ -1740,7 +1739,7 @@ LPARAM lParam;
             case WM_SYSCHAR:
             case WM_CHAR:
                  /* TtaAbortShowDialogue (); */
-				 key = (int) wParam;
+		 key = (int) wParam;
                  if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (CHAR_T*)&key))
                     /* WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam); */
                     WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam);

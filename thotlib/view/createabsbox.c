@@ -3820,22 +3820,20 @@ PtrPSchema         *pSchPPage;
 
 
 /*----------------------------------------------------------------------
-   ApplPresRules   applique les regles de presentation au pave cree  
-   
+  ApplPresRules applies all presentation rules to the new abstract box.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ApplPresRules (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
-			    int viewSch, PtrSSchema pSchS, PtrPSchema pSchP,
+				   int viewSch, PtrSSchema pSchS, PtrPSchema pSchP,
 				   PtrPRule * pRSpec, PtrPRule * pRDef,
-		  PtrAbstractBox * pAbbReturn, ThotBool forward, int *lqueue,
+				   PtrAbstractBox * pAbbReturn, ThotBool forward, int *lqueue,
 				   PtrPRule queuePR[MAX_QUEUE_LEN],
 				   PtrAbstractBox queuePP[MAX_QUEUE_LEN],
 				   PtrPSchema queuePS[MAX_QUEUE_LEN],
-	      PtrAttribute queuePA[MAX_QUEUE_LEN], PtrAbstractBox pNewAbbox)
-
+				   PtrAttribute queuePA[MAX_QUEUE_LEN], PtrAbstractBox pNewAbbox)
 #else  /* __STDC__ */
 static void         ApplPresRules (pEl, pDoc, viewNb, viewSch, pSchS, pSchP, pRSpec,
-		       pRDef, pAbbReturn, forward, lqueue, queuePR, queuePP,
+				   pRDef, pAbbReturn, forward, lqueue, queuePR, queuePP,
 				   queuePS, queuePA, pNewAbbox)
 PtrElement          pEl;
 PtrDocument         pDoc;
@@ -3853,150 +3851,148 @@ PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
 PtrPSchema          queuePS[MAX_QUEUE_LEN];
 PtrAttribute        queuePA[MAX_QUEUE_LEN];
 PtrAbstractBox      pNewAbbox;
-
 #endif /* __STDC__ */
-
 {
-   int                 view, l;
-   PtrPRule            pRule, pRuleView, pR;
-   PtrAttribute        pAttr;
-   PtrElement          pElAttr;
-   InheritAttrTable   *inheritTable;
-   ThotBool            stop;
-   PtrHandlePSchema    pHd;
-   PtrPSchema          pSchPadd;
+  PtrPRule            pRule, pRuleView, pR;
+  PtrAttribute        pAttr;
+  PtrElement          pElAttr;
+  InheritAttrTable   *inheritTable;
+  ThotBool            stop;
+  PtrHandlePSchema    pHd;
+  PtrPSchema          pSchPadd;
+  int                 view, l;
 
-   pRuleView = NULL;
-   do
-     {
-	pRule = GetRule (pRSpec, pRDef, pEl, NULL, pSchS);
-	/* pointeur sur la regle a appliquer pour la vue 1 */
-	if (pRule != NULL)
-	   /* si c'est une regle de creation, on l'applique */
-	   if (!ApplCrRule (pRule, pSchS, pSchP, NULL, pAbbReturn, viewNb,
-			    pDoc, pEl, forward, lqueue, queuePR, queuePP,
-			    queuePS, queuePA, pNewAbbox))
-	      /* ce n'est pas une regle de creation */
-	      /* cherche et applique la regle de meme type pour la vue */
-	      for (view = 1; view <= MAX_VIEW; view++)
+  pRuleView = NULL;
+  do
+    {
+      pRule = GetRule (pRSpec, pRDef, pEl, NULL, pSchS);
+      /* pointeur sur la regle a appliquer pour la vue 1 */
+      if (pRule != NULL)
+	/* si c'est une regle de creation, on l'applique */
+	if (!ApplCrRule (pRule, pSchS, pSchP, NULL, pAbbReturn, viewNb,
+			 pDoc, pEl, forward, lqueue, queuePR, queuePP,
+			 queuePS, queuePA, pNewAbbox))
+	  /* ce n'est pas une regle de creation */
+	  /* cherche et applique la regle de meme type pour la vue */
+	  for (view = 1; view <= MAX_VIEW; view++)
+	    {
+	      if (view == 1)
+		pRuleView = NULL;
+	      else
+		pRuleView = GetRuleView (pRSpec, pRDef, pRule->PrType, view, pEl,
+					 NULL, pSchS);
+	      if (view == viewSch && pNewAbbox != NULL &&
+		  DoesViewExist (pEl, pDoc, viewNb))
 		{
-		   if (view == 1)
-		      pRuleView = NULL;
-		   else
-		      pRuleView = GetRuleView (pRSpec, pRDef, pRule->PrType, view, pEl,
-					       NULL, pSchS);
-		   if (view == viewSch && pNewAbbox != NULL &&
-		       DoesViewExist (pEl, pDoc, viewNb))
-		     {
-			if (pRuleView == NULL)
-			   pRuleView = pRule;
-			if (!ApplyRule (pRuleView, pSchP, pNewAbbox, pDoc, NULL))
-			   WaitingRule (pRuleView, pNewAbbox, pSchP, NULL,
-					queuePA, queuePS, queuePP,
-					queuePR, lqueue);
-		     }
+		  if (pRuleView == NULL)
+		    pRuleView = pRule;
+		  if (!ApplyRule (pRuleView, pSchP, pNewAbbox, pDoc, NULL))
+		    WaitingRule (pRuleView, pNewAbbox, pSchP, NULL,
+				 queuePA, queuePS, queuePP,
+				 queuePR, lqueue);
 		}
-     }
-   while (pRule != NULL);
+	    }
+    }
+  while (pRule != NULL);
 
-   /* Applique les regles de presentation pour ce type d'element contenues */
-   /* dans les schemas de presentation additionnels du document */
-   /* On n'applique les schemas additionnels que pour la vue principale d'un */
-   /* document */
-   if (pNewAbbox != NULL && viewSch == 1)
-     {
-	pHd = pEl->ElStructSchema->SsFirstPSchemaExtens;
-	while (pHd != NULL)
-	  {
-	     pSchPadd = pHd->HdPSchema;
-	     if (pSchPadd != NULL)
-	       {
-		  /* applique toutes les regles de presentation associees au type de
-		     l'element */
-		  pRule = pSchPadd->PsElemPRule[pEl->ElTypeNumber - 1];
-		  while (pRule != NULL)
-		    {
-		       if (pRule->PrCond == NULL ||
-			   CondPresentation (pRule->PrCond, pEl, NULL, NULL,
-					     1, pEl->ElStructSchema))
-
-			  /* les conditions d'application de la regle sont satisfaites, */
-
-			  if (!ApplyRule (pRule, pSchPadd, pNewAbbox, pDoc, NULL))
-			     WaitingRule (pRuleView, pNewAbbox, pSchP, NULL, queuePA, queuePS,
-					  queuePP, queuePR, lqueue);
-		       pRule = pRule->PrNextPRule;
-		    }
-	       }
-	     pHd = pHd->HdNextPSchema;
-	  }
-     }
-
-   /* Applique les regles de presentation heritees des attributs  */
-   /* poses sur les elements englobants s'il y a heritage, */
-   /* alors la table a deja ete calcule precedemment */
-   inheritTable = pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1];
-   if (pNewAbbox != NULL)
-      if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
-	 /* il y a heritage possible */
-	 for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
-	    if ((*inheritTable)[l - 1])	   /* pEl herite de l'attribut l */
-	       /* cherche si l'attribut l existe au dessus */
-	       if ((pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema, &pElAttr)) != NULL)
-		  ApplyAttrPresRules (pAttr->AeAttrSSchema,
-				      pAttr->AeAttrSSchema->SsPSchema,
-				      pAttr, pElAttr, pAbbReturn, viewNb, pDoc,
-				      pEl, forward, lqueue, queuePR,
-				      queuePP, queuePS, queuePA,
-				      pNewAbbox, TRUE);
-   /* Applique les regles de presentation des attributs de l'element. */
-   pAttr = pEl->ElFirstAttr;	/* 1er attribut de l'element */
-   if (pNewAbbox != NULL)
-      while (pAttr != NULL)	/* boucle sur les attributs de l'element */
+  /* Applique les regles de presentation pour ce type d'element contenues */
+  /* dans les schemas de presentation additionnels du document */
+  /* On n'applique les schemas additionnels que pour la vue principale d'un */
+  /* document */
+  if (pNewAbbox != NULL && viewSch == 1)
+    {
+      pHd = pEl->ElStructSchema->SsFirstPSchemaExtens;
+      while (pHd != NULL)
 	{
-	   ApplyAttrPresRules (pAttr->AeAttrSSchema,
-			       pAttr->AeAttrSSchema->SsPSchema,
-			       pAttr, pEl, pAbbReturn, viewNb, pDoc, pEl,
-			       forward, lqueue, queuePR,
-			       queuePP, queuePS, queuePA, pNewAbbox, FALSE);
-	   pAttr = pAttr->AeNext;
+	  pSchPadd = pHd->HdPSchema;
+	  if (pSchPadd != NULL)
+	    {
+	      /* applique toutes les regles de presentation associees au type de
+		 l'element */
+	      pRule = pSchPadd->PsElemPRule[pEl->ElTypeNumber - 1];
+	      while (pRule != NULL)
+		{
+		  if (pRule->PrCond == NULL ||
+		      CondPresentation (pRule->PrCond, pEl, NULL, NULL,
+					1, pEl->ElStructSchema))
+		    
+		    /* les conditions d'application de la regle sont satisfaites, */
+		    
+		    if (!ApplyRule (pRule, pSchPadd, pNewAbbox, pDoc, NULL))
+		      WaitingRule (pRuleView, pNewAbbox, pSchP, NULL, queuePA, queuePS,
+				   queuePP, queuePR, lqueue);
+		  pRule = pRule->PrNextPRule;
+		}
+	    }
+	  pHd = pHd->HdNextPSchema;
 	}
+    }
 
-   /* Applique les regles de presentation specifiques associees a cet */
-   /* element */
-   pR = pEl->ElFirstPRule;
-   while (pR != NULL)
-      /* applique une regle si elle concerne la vue */
-      /* et si ce n'est pas une hauteur de page */
-     {
-	if (!(pEl->ElTypeNumber == PageBreak + 1 && pR->PrType == PtHeight))
-	   if ((pR->PrViewNum == viewSch
-		|| pR->PrType == PtPictInfo)
-	       && pNewAbbox != NULL
-	       && DoesViewExist (pEl, pDoc, viewNb))
-	     {
-		if (pR->PrSpecifAttr == 0)
-		   /* cette regle ne depend pas d'un attribut */
-		   pAttr = NULL;
-		else
-		   /* cherche l'attribut dont depend la regle */
-		  {
-		     pAttr = pEl->ElFirstAttr;
-		     stop = FALSE;
-		     while (pAttr != NULL && !stop)
-			if (pAttr->AeAttrNum == pR->PrSpecifAttr
-			    && pAttr->AeAttrSSchema->SsCode ==
-			    pR->PrSpecifAttrSSchema->SsCode)
-			   stop = TRUE;
-			else
-			   pAttr = pAttr->AeNext;
-		  }
-		if (!ApplyRule (pR, pSchP, pNewAbbox, pDoc, pAttr))
-		   WaitingRule (pR, pNewAbbox, pSchP, pAttr, queuePA,
-				queuePS, queuePP, queuePR, lqueue);
-	     }
-	pR = pR->PrNextPRule;
-     }
+  /* Applique les regles de presentation heritees des attributs  */
+  /* poses sur les elements englobants s'il y a heritage, */
+  /* alors la table a deja ete calcule precedemment */
+  inheritTable = pEl->ElStructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1];
+  if (pNewAbbox != NULL)
+    if (pEl->ElStructSchema->SsPSchema->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+      /* il y a heritage possible */
+      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
+	if ((*inheritTable)[l - 1])	   /* pEl herite de l'attribut l */
+	  /* cherche si l'attribut l existe au dessus */
+	  if ((pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema, &pElAttr)) != NULL)
+	    ApplyAttrPresRules (pAttr->AeAttrSSchema,
+				pAttr->AeAttrSSchema->SsPSchema,
+				pAttr, pElAttr, pAbbReturn, viewNb, pDoc,
+				pEl, forward, lqueue, queuePR,
+				queuePP, queuePS, queuePA,
+				pNewAbbox, TRUE);
+  /* Applique les regles de presentation des attributs de l'element. */
+  pAttr = pEl->ElFirstAttr;	/* 1er attribut de l'element */
+  if (pNewAbbox != NULL)
+    while (pAttr != NULL)	/* boucle sur les attributs de l'element */
+      {
+	ApplyAttrPresRules (pAttr->AeAttrSSchema,
+			    pAttr->AeAttrSSchema->SsPSchema,
+			    pAttr, pEl, pAbbReturn, viewNb, pDoc, pEl,
+			    forward, lqueue, queuePR,
+			    queuePP, queuePS, queuePA, pNewAbbox, FALSE);
+	pAttr = pAttr->AeNext;
+      }
+  
+  /* Applique les regles de presentation specifiques associees a cet */
+  /* element */
+  pR = pEl->ElFirstPRule;
+  while (pR != NULL)
+    /* applique une regle si elle concerne la vue */
+    /* et si ce n'est pas une hauteur de page */
+    {
+      if (!(pEl->ElTypeNumber == PageBreak + 1 && pR->PrType == PtHeight))
+	if ((pR->PrViewNum == viewSch
+	     || pR->PrType == PtPictInfo)
+	    && pNewAbbox != NULL
+	    && DoesViewExist (pEl, pDoc, viewNb))
+	  {
+	    if (pR->PrSpecifAttr == 0)
+	      /* cette regle ne depend pas d'un attribut */
+	      pAttr = NULL;
+	    else
+	      /* cherche l'attribut dont depend la regle */
+	      {
+		pAttr = pEl->ElFirstAttr;
+		stop = FALSE;
+		while (pAttr != NULL && !stop)
+		  if (pAttr->AeAttrNum == pR->PrSpecifAttr
+		      && pAttr->AeAttrSSchema->SsCode ==
+		      pR->PrSpecifAttrSSchema->SsCode)
+		    stop = TRUE;
+		  else
+		    pAttr = pAttr->AeNext;
+	      }
+	    if (!ApplyRule (pR, pSchP, pNewAbbox, pDoc, pAttr))
+	      WaitingRule (pR, pNewAbbox, pSchP, pAttr, queuePA,
+			   queuePS, queuePP, queuePR, lqueue);
+	  }
+      pR = pR->PrNextPRule;
+    }
 }
 
 

@@ -16,7 +16,7 @@ AMAYA_ANNOT_LIBS= ../annotlib/libAnnot.a
 
 AMAYA_ANNOT_EXTRA_LIBS=
 
-AMAYA_ANNOT_SCHEMAS= amaya_annot_schemas
+ANNOT_SCHEMAS= annot_schemas
 
 AMAYA_ANNOT_INSTALL=
 

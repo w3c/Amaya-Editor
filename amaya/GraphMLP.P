@@ -1126,6 +1126,7 @@ RULES
 		END;
 	IN Graph_Alternate_view BEGIN
 		Height: Enclosed . Height;
+		Width: Enclosing . Width;
 		END;
 	END;
 
@@ -1549,7 +1550,7 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore (ATTR_y2);
 	CreateBefore (VALUE_y2);
-   	Height:  Top = Enclosing . Top;
+   	Height:  Bottom = Enclosing . Top;
    	IN Graph_Structure_view
 		Height: Enclosed . Height;
 	IN Graph_Alternate_view

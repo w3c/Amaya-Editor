@@ -1433,7 +1433,7 @@ int                 ymax;
       /* Empty */
       if (pAb->AbLeafType == LtSymbol)
 	DisplayEmptyBox (box, frame, '2', selected);
-      else
+      else if (pAb->AbLeafType != LtPolyLine && pAb->AbLeafType != LtGraphics)
 	{
 	   if (selected)
 	     DisplayStringSelection (frame, 0, box->BxWidth, box);
