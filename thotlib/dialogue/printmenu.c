@@ -248,7 +248,9 @@ static void         ConnectPrint ()
 	   strcpy (pPrinter, "");
 	else
 	   strcpy (pPrinter, ptr);
-        sprintf (PSdir, "/tmp/out%d.ps", numOfJobs) ;
+        /*if (!PSdir)
+           sprintf (PSdir, "/tmp/out%d.ps", numOfJobs) ;*/
+        sprintf (PSdir, "%s/%s.ps", pDocPrint->DocDirectory, pDocPrint->DocDName) ;
 	/*PSdir[0] = '\0';*/
 	PaperPrint = TRUE;
 	ManualFeed = FALSE;
