@@ -1,7 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-/* I. Vatton    Septembre 1994 */
-
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -128,9 +124,9 @@ int                 number;
 #endif /* __STDC__ */
 {
    int                 i;
-   char                nomf1[100];
-   char                nomf2[100];
-   char                texte[100];
+   char                namef1[100];
+   char                namef2[100];
+   char                text[100];
    char               *servername;
 
 #ifndef NEW_WILLOWS
@@ -180,9 +176,9 @@ int                 number;
 
    Dico_Init ();
    ThotInitDisplay (name, 0, 0);
-   NomFonte ('L', 'H', 0, MenuSize, UnPoint, texte, nomf1);
-   NomFonte ('L', 'H', 1, MenuSize, UnPoint, texte, nomf2);
-   TtaChangeDialogueFonts (nomf1, nomf2);
+   NomFonte ('L', 'H', 0, MenuSize, UnPoint, text, namef1);
+   NomFonte ('L', 'H', 1, MenuSize, UnPoint, text, namef2);
+   TtaChangeDialogueFonts (namef1, namef2);
 
    /* reserve les menus de Thot */
    TtaGetReferencesBase (MAX_MenuThot);
@@ -722,9 +718,9 @@ int                 frame;
    int                 lg, sref;
    int                 item;
    int                 action;
-   char                chaine[700];
+   char                string[700];
    char                equiv[100];
-   boolean             avec;
+   boolean             withEquiv;
    Item_Ctl           *ptritem;
    char               *ptr;
 
@@ -732,7 +728,7 @@ int                 frame;
    item = 0;
    i = 0;
    j = 0;
-   avec = FALSE;
+   withEquiv = FALSE;
    equiv[0] = '\0';
    ptritem = ptrmenu->ItemsList;
    while (item < ptrmenu->ItemsNb)
@@ -742,16 +738,16 @@ int                 frame;
 	lg = strlen (ptr) + 1;
 	if (ptritem[item].ItemType == 'S' && i + 2 < 700)
 	  {
-	     strcpy (&chaine[i], "S");
+	     strcpy (&string[i], "S");
 	     i += 2;
 	  }
 	else if (i + lg < 699)
 	  {
 	     if (ptritem[item].ItemType == 'D')
-		chaine[i] = 'B';
+		string[i] = 'B';
 	     else
-		chaine[i] = ptritem[item].ItemType;
-	     strcpy (&chaine[i + 1], ptr);
+		string[i] = ptritem[item].ItemType;
+	     strcpy (&string[i + 1], ptr);
 	     i += lg + 1;
 	  }
 	else
@@ -765,7 +761,7 @@ int                 frame;
 	     /* Active l'action correspondante pour cette fenetre */
 	     if (MenuActionList[action].ActionEquiv != NULL)
 	       {
-		  avec = TRUE;
+		  withEquiv = TRUE;
 		  lg = strlen (MenuActionList[action].ActionEquiv);
 		  if (lg + j < 100)
 		    {
@@ -780,10 +776,10 @@ int                 frame;
      }
    sref = ((entry + 1) * MAX_MENU * MAX_FRAME) + ref;
    /* Creation du Pulldown avec ou sans equiv */
-   if (avec)
-      TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, chaine, equiv, FALSE);
+   if (withEquiv)
+      TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, string, equiv, FALSE);
    else
-      TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, chaine, NULL, FALSE);
+      TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, string, NULL, FALSE);
 }
 
 
@@ -806,9 +802,9 @@ int                 frame;
    int                 lg;
    int                 item;
    int                 action;
-   char                chaine[700];
+   char                string[700];
    char                equiv[100];
-   boolean             avec;
+   boolean             withEquiv;
    Item_Ctl           *ptritem;
    char               *ptr;
 
@@ -816,7 +812,7 @@ int                 frame;
    item = 0;
    i = 0;
    j = 0;
-   avec = FALSE;
+   withEquiv = FALSE;
    equiv[0] = '\0';
    ptritem = ptrmenu->ItemsList;
    while (item < ptrmenu->ItemsNb)
@@ -827,16 +823,16 @@ int                 frame;
 	lg = strlen (ptr) + 1;
 	if (ptritem[item].ItemType == 'S' && i + 2 < 700)
 	  {
-	     strcpy (&chaine[i], "S");
+	     strcpy (&string[i], "S");
 	     i += 2;
 	  }
 	else if (i + lg < 699)
 	  {
 	     if (ptritem[item].ItemType == 'D')
-		chaine[i] = 'B';
+		string[i] = 'B';
 	     else
-		chaine[i] = ptritem[item].ItemType;
-	     strcpy (&chaine[i + 1], ptr);
+		string[i] = ptritem[item].ItemType;
+	     strcpy (&string[i + 1], ptr);
 	     i += lg + 1;
 	  }
 	else
@@ -851,7 +847,7 @@ int                 frame;
 		  /* Active l'action correspondante pour cette fenetre */
 		  if (MenuActionList[action].ActionEquiv != NULL)
 		    {
-		       avec = TRUE;
+		       withEquiv  = TRUE;
 		       lg = strlen (MenuActionList[action].ActionEquiv);
 		       if (lg + j < 100)
 			 {
@@ -868,10 +864,10 @@ int                 frame;
 
 
    /* Creation du Pulldown avec ou sans equiv */
-   if (avec)
-      TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb, chaine, equiv);
+   if (withEquiv)
+      TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb, string, equiv);
    else
-      TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb, chaine, NULL);
+      TtaNewPulldown (ref, button, NULL, ptrmenu->ItemsNb, string, NULL);
 
    /* traite les sous-menus de l'item de menu */
    item = 0;
@@ -905,7 +901,7 @@ int                 frame;
 void                TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 #else  /* __STDC__ */
 void                TteOpenMainWindow (name, logo, icon)
-char               *name;
+char                *name;
 Pixmap              logo;
 Pixmap              icon;
 
@@ -914,7 +910,7 @@ Pixmap              icon;
    int                 i, n;
    int                 ref;
    int                 lg;
-   char                chaine[700];
+   char                string[700];
    Menu_Ctl           *ptrmenu;
    char               *ptr;
 
@@ -954,7 +950,7 @@ Pixmap              icon;
 	     lg = strlen (ptr) + 1;
 	     if (i + lg < 700)
 	       {
-		  strcpy (&chaine[i], ptr);
+		  strcpy (&string[i], ptr);
 		  i += lg;
 		  ptrmenu = ptrmenu->NextMenu;
 	       }
@@ -972,7 +968,7 @@ Pixmap              icon;
 	else
 	  {
 	     WithMessages = TRUE;
-	     TtaInitDialogueWindow (name, NULL, logo, icon, n, chaine);
+	     TtaInitDialogueWindow (name, NULL, logo, icon, n, string);
 	  }
 
 	/* icone des fenetres de documents */
@@ -1745,10 +1741,10 @@ int                 doc;
 #endif /* NEW_WILLOWS */
    int                 i, n;
    int                 ref;
-   char                chaine[700];
+   char                string[700];
    SchemaMenu_Ctl     *SCHmenu;
    Menu_Ctl           *ptrmenu;
-   boolean             trouve;
+   boolean             found;
 
 #define MIN_HAUT 100
 #define MIN_LARG 200
@@ -1757,28 +1753,28 @@ int                 doc;
    if (schema != NULL)
      {
 	/* Allocation d'une entree dans la table des fenetres */
-	trouve = FALSE;
+	found = FALSE;
 	frame = 1;
-	while (frame <= MAX_FRAME && !trouve)
+	while (frame <= MAX_FRAME && !found)
 	  {
 	     /* Recherche une frame ouverte vide */
-	     trouve = (FrameTable[frame].FrDoc == 0 && FrameTable[frame].WdFrame != 0);
-	     if (!trouve)
+	     found = (FrameTable[frame].FrDoc == 0 && FrameTable[frame].WdFrame != 0);
+	     if (!found)
 		frame++;
 	  }
-	if (!trouve)
+	if (!found)
 	  {
 	     frame = 1;
-	     while (frame <= MAX_FRAME && !trouve)
+	     while (frame <= MAX_FRAME && !found)
 	       {
 		  /* Recherche une frame libre */
-		  trouve = (FrameTable[frame].WdFrame == 0);
-		  if (!trouve)
+		  found = (FrameTable[frame].WdFrame == 0);
+		  if (!found)
 		     frame++;
 	       }
 	  }
 
-	if (!trouve)
+	if (!found)
 	   frame = 0;
 	else if (FrameTable[frame].WdFrame == 0)
 	  {
@@ -1850,8 +1846,8 @@ int                 doc;
 #ifndef NEW_WILLOWS
 	     XtSetArg (args[n], XmNdefaultFontList, DefaultFont);
 	     n++;
-	     sprintf (chaine, "+%d+%d", X, Y);
-	     XtSetArg (args[n], XmNgeometry, (String) chaine);
+	     sprintf (string, "+%d+%d", X, Y);
+	     XtSetArg (args[n], XmNgeometry, (String) string);
 	     n++;
 	     XtSetArg (args[n], XmNwidth, dx + 4);
 	     n++;
@@ -2487,22 +2483,22 @@ int                *action;
    Item_Ctl           *ptr;
    int                 i, j, max;
    int                 m, sm;
-   boolean             trouve;
+   boolean             found;
 
    m = FindMenu (frame, menuID, &ptrmenu);
-   trouve = (m != -1);
-   if (trouve)
+   found = (m != -1);
+   if (found)
      {
 	/* Recherche l'item dans le menu ou un sous-menu */
 	i = 0;
 	sm = 0;
 	ptr = ptrmenu->ItemsList;
-	trouve = FALSE;
+	found = FALSE;
 	max = ptrmenu->ItemsNb;
 	ptrsmenu = NULL;
-	while (ptrmenu != NULL && !trouve)
+	while (ptrmenu != NULL && !found)
 	  {
-	     while (i < max && !trouve)
+	     while (i < max && !found)
 	       {
 		  j = ptr[i].ItemAction;
 		  if (j == -1)
@@ -2519,11 +2515,11 @@ int                *action;
 		  else if (ptr[i].ItemID != itemID)
 		     i++;	/* ce n'est pas l'action */
 		  else
-		     trouve = TRUE;
+		     found = TRUE;
 	       }
 
 	     /* faut-il sortir du sous-menu ? */
-	     if (!trouve && ptrsmenu != NULL)
+	     if (!found && ptrsmenu != NULL)
 	       {
 		  /* reprend la recherche dans le menu */
 		  i = sm;
@@ -2539,7 +2535,7 @@ int                *action;
      }
 
    /* est-ce que l'on a trouve ? */
-   if (trouve)
+   if (found)
      {
 	*menu = m;
 	*submenu = sm;
@@ -2778,7 +2774,7 @@ int                 itemID;
    int                 item;
    int                 action;
    char                fontname[100];
-   char                texte[20];
+   char                text[20];
 
    /* Si les parametres sont invalides */
    if (document == 0 && view == 0)
@@ -2806,7 +2802,7 @@ int                 itemID;
 	      TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	   else
 	     {
-		NomFonte ('L', 'T', 2, 11, UnPoint, texte, fontname);
+		NomFonte ('L', 'T', 2, 11, UnPoint, text, fontname);
 		TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 	     }
 	}
@@ -2940,7 +2936,7 @@ char               *data;
    Menu_Ctl           *ptrmenu;
    int                 action, i, j;
    Document            document;
-   View                vue;
+   View                view;
    PtrCallbackCTX      ctxCallback;
 
    /* Termine l'insertion courante s'il y en a une */
@@ -3144,11 +3140,11 @@ char               *data;
 	if (frame == 0)
 	  {
 	     document = 0;
-	     vue = 0;
+	     view = 0;
 	  }
 	else
 	  {
-	     VueDeFenetre (frame, &document, &vue);
+	     VueDeFenetre (frame, &document, &view);
 	     if (document == 0)
 		return;
 	     menuThot = FindMenu (frame, FrameTable[frame].MenuAttr, &ptrmenu) - 1;
@@ -3189,8 +3185,9 @@ char               *data;
 	     if (action > 0)
 		/* l'action existe et le menu est actif */
 		if (MenuActionList[action].ActionActive[frame])
-		   (*MenuActionList[action].Call_Action) (document, vue);
+		   (*MenuActionList[action].Call_Action) (document, view);
 	  }
      }
 }				/*ThotCallback */
 /* End Of Module Thot */
+
