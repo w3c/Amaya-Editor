@@ -140,7 +140,6 @@ void WinErrorBox (HWND hWnd, char *source)
 {
 #ifndef _AMAYA_RELEASE_
   DWORD              WinLastError;
-  int                msg;
   char               str[200];
 
   WinLastError = GetLastError ();
