@@ -3250,6 +3250,9 @@ static Document LoadDocument (Document doc, char *pathname,
 
       if (docType == docHTML ||
 	  docType == docSVG ||
+#ifdef ANNOTATIONS
+	  docType == docAnnot ||
+#endif /* ANNOTATIONS */
 #ifdef XML_GENERIC
 	  docType == docXml ||
 #endif /* XML_GENERIC */    
