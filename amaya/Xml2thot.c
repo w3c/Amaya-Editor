@@ -3104,9 +3104,8 @@ static void       EndOfAttributeValue (unsigned char *attrValue,
 
 /*----------------------------------------------------------------------
    CreateXmlEntity
-   End of a XML entity. 
-   Search that entity in the corresponding entity table and 
-   put the corresponding character in the corresponding element.
+   Search the entity in the right entity table and 
+   put the corresponding character in the current element.
   ----------------------------------------------------------------------*/
 static void     CreateXmlEntity (char *data, int length)
 {
@@ -3120,10 +3119,10 @@ static void     CreateXmlEntity (char *data, int length)
 
 /*--------------------  Doctype  (start)  ---------------------*/
 /*----------------------------------------------------------------------
-   ParseDoctypeElement
+   ParseDoctypeContent
    Parse the content of a DOCTYPE declaration
   -------------------------------------- -------------------------------*/
-static void ParseDoctypeElement (char *data, int length)
+static void ParseDoctypeContent (char *data, int length)
 {
   ElementType     elType;
   Element  	  doctypeLine, doctypeLeaf, doctypeLineNew, lastChild;
@@ -3143,8 +3142,8 @@ static void ParseDoctypeElement (char *data, int length)
   j = 0;
   while (i < length)
     {
-      /* Look for line breaks in the content and create as many */
-      /* DOCTYPE_line elements as needed */
+      /* Look for line breaks in the content and create */
+      /* as many DOCTYPE_line elements as needed */
       if (data[i] != EOL && data[i] != __CR__)
 	{
 	  buffer[j] = data[i];
@@ -3203,8 +3202,8 @@ static void ParseDoctypeElement (char *data, int length)
 	TtaInsertFirstChild (&doctypeLeaf, doctypeLine, XMLcontext.doc);
       else
 	TtaInsertSibling (doctypeLeaf, lastChild, FALSE, XMLcontext.doc);
-      /* We use the Latin_Script language to avoid the spell_chekcer */
-      /* to check this element */
+      /* We use the Latin_Script language to avoid */
+      /* the spell_checker to check this element */
       TtaSetTextContent (doctypeLeaf, buffer, Latin_Script, XMLcontext.doc);
     }
 
@@ -3215,11 +3214,11 @@ static void ParseDoctypeElement (char *data, int length)
    CreateDoctypeElement
    Create a Doctype element into the Thot tree.
   ----------------------------------------------------------------------*/
-static void       CreateDoctypeElement ()
+static void       CreateDoctypeElement (char *name, char *sysid, char *pubid)
 {
-  ElementType     elType;
-  Element  	  doctypeEl, doctypeLineEl;
-  char           *mappedName;
+  ElementType     elType, lineType;
+  Element  	  doctype, doctypeLine, doctypeLeaf, doctypeLineNew, lastChild;
+  char           *mappedName, *buffer;
   char            cont;
   ThotBool        level = TRUE;
 
@@ -3229,18 +3228,109 @@ static void       CreateDoctypeElement ()
   GetXmlElType (NULL, "doctype", &elType, &mappedName, &cont, &level);
   if (elType.ElTypeNum > 0)
     {
-      doctypeEl = TtaNewElement (XMLcontext.doc, elType);
-      XmlSetElemLineNumber (doctypeEl);
-      InsertXmlElement (&doctypeEl);
+      doctype = TtaNewElement (XMLcontext.doc, elType);
+      XmlSetElemLineNumber (doctype);
+      InsertXmlElement (&doctype);
       /* Make the DOCTYPE element read-only */
-      TtaSetAccessRight (doctypeEl, ReadOnly, XMLcontext.doc);
+      TtaSetAccessRight (doctype, ReadOnly, XMLcontext.doc);
       /* Create a DOCTYPE_line element as first child */
-      elType.ElSSchema = NULL;
-      elType.ElTypeNum = 0;
-      GetXmlElType (NULL, "doctype_line", &elType, &mappedName, &cont, &level);
-      doctypeLineEl = TtaNewElement (XMLcontext.doc, elType);
-      XmlSetElemLineNumber (doctypeLineEl);
-      TtaInsertFirstChild (&doctypeLineEl, doctypeEl, XMLcontext.doc);
+      lineType.ElSSchema = NULL;
+      lineType.ElTypeNum = 0;
+      GetXmlElType (NULL, "doctype_line", &lineType, &mappedName, &cont, &level);
+      doctypeLine = TtaNewElement (XMLcontext.doc, lineType);
+      XmlSetElemLineNumber (doctypeLine);
+      TtaInsertFirstChild (&doctypeLine, doctype, XMLcontext.doc);
+      /* Create the DOCTYPE leaf */
+      elType.ElSSchema = lineType.ElSSchema;
+      elType.ElTypeNum = 1;
+      doctypeLeaf = TtaNewElement (XMLcontext.doc, elType);
+      if (doctypeLeaf != NULL)
+	{
+	      XmlSetElemLineNumber (doctypeLeaf);
+	      TtaInsertFirstChild (&doctypeLeaf, doctypeLine, XMLcontext.doc);
+	      /* We use the Latin_Script language to avoid */
+	      /* the spell_chekcer to check this element */
+	      TtaSetTextContent (doctypeLeaf, "<!DOCTYPE ",
+				 Latin_Script, XMLcontext.doc);
+	}
+     
+      if (name != NULL)
+	{
+	  elType.ElSSchema = lineType.ElSSchema;
+	  elType.ElTypeNum = 1;
+	  doctypeLeaf = TtaNewElement (XMLcontext.doc, elType);
+	  if (doctypeLeaf != NULL)
+	    {
+	      XmlSetElemLineNumber (doctypeLeaf);
+	      lastChild = TtaGetLastChild (doctypeLine);
+	      if (lastChild == NULL)
+		TtaInsertFirstChild (&doctypeLeaf, doctypeLine, XMLcontext.doc);
+	      else
+		TtaInsertSibling (doctypeLeaf, lastChild,
+				  FALSE, XMLcontext.doc);
+	      TtaSetTextContent (doctypeLeaf, name, Latin_Script, XMLcontext.doc);
+	    }
+	}
+      /* Is there any external DTD ? */
+      if (pubid != NULL)
+	{
+	  elType.ElSSchema = lineType.ElSSchema;
+	  elType.ElTypeNum = 1;
+	  doctypeLeaf = TtaNewElement (XMLcontext.doc, elType);
+	  if (doctypeLeaf != NULL)
+	    {
+	      buffer = TtaGetMemory (strlen (pubid) + 11);
+	      strcpy (buffer, " PUBLIC \"");
+	      strcat (buffer, pubid);
+	      strcat (buffer, "\"");
+	      XmlSetElemLineNumber (doctypeLeaf);
+	      lastChild = TtaGetLastChild (doctypeLine);
+	      if (lastChild == NULL)
+		TtaInsertFirstChild (&doctypeLeaf, doctypeLine, XMLcontext.doc);
+	      else
+		TtaInsertSibling (doctypeLeaf, lastChild,
+				  FALSE, XMLcontext.doc);
+	      TtaSetTextContent (doctypeLeaf, buffer, Latin_Script, XMLcontext.doc);
+	      TtaFreeMemory (buffer);
+	    }
+	}
+      if (sysid != NULL)
+	{
+	  /* Create a new DOCTYPE_line element */
+	  if (pubid)
+	    {
+	      doctypeLineNew = TtaNewElement (XMLcontext.doc, lineType);
+	      if (doctypeLineNew != NULL)
+		{
+		  XmlSetElemLineNumber (doctypeLineNew);
+		  TtaInsertSibling (doctypeLineNew, doctypeLine,
+				    FALSE, XMLcontext.doc);
+		  doctypeLine = doctypeLineNew;
+		}
+	    }
+	  elType.ElSSchema = lineType.ElSSchema;
+	  elType.ElTypeNum = 1;
+	  doctypeLeaf = TtaNewElement (XMLcontext.doc, elType);
+	  if (doctypeLeaf != NULL)
+	    {
+	      XmlSetElemLineNumber (doctypeLeaf);
+	      lastChild = TtaGetLastChild (doctypeLine);
+	      if (lastChild == NULL)
+		TtaInsertFirstChild (&doctypeLeaf, doctypeLine, XMLcontext.doc);
+	      else
+		TtaInsertSibling (doctypeLeaf, lastChild,
+				  FALSE, XMLcontext.doc);
+	      buffer = TtaGetMemory (strlen (sysid) + 11);
+	      if (pubid)
+		strcpy (buffer, "       \"");
+	      else
+		strcpy (buffer, " SYSTEM \"");
+	      strcat (buffer, sysid);
+	      strcat (buffer, "\"");
+	      TtaSetTextContent (doctypeLeaf, buffer, Latin_Script, XMLcontext.doc);
+	      TtaFreeMemory (buffer);
+	    }
+	}
     }
 }
 /*--------------------  Doctype  (end)  ------------------------------*/
@@ -3819,9 +3909,9 @@ static void Hndl_Comment (void *userData, const XML_Char *data)
   if (WithinDoctype)
     {
       buffer = (unsigned char *) data;
-      ParseDoctypeElement ("<!--", 4);
-      ParseDoctypeElement (buffer, strlen (buffer));
-      ParseDoctypeElement ("-->", 3);
+      ParseDoctypeContent ("<!--", 4);
+      ParseDoctypeContent (buffer, strlen (buffer));
+      ParseDoctypeContent ("-->", 3);
       return;
     }
   if (!IgnoreCommentAndPi)
@@ -3846,17 +3936,19 @@ static void Hndl_DefaultExpand (void *userData,
        printf ("%c", data[i]);
    printf ("'\n");
 #endif /* EXPAT_PARSER_DEBUG */
-   /* The content of the current element has not to be parsed */
-   ptr = (unsigned char *) data;
-   /* Are we parsing the content of the DOCTYPE declaration ? */
+#ifndef NEW_EXPAT
    if (WithinDoctype)
-     ParseDoctypeElement (ptr, length);
+     {
+       ptr = (unsigned char *) data;
+       ParseDoctypeContent (ptr, length);
+     }
    else
      {
        /* Specific treatment for the entities */
        if (length > 1 && data[0] == '&')
 	 CreateXmlEntity ((char*) data, length);
      }
+#endif /* !NEW_EXPAT */
 }
 
 /*----------------------------------------------------------------------
@@ -3869,11 +3961,25 @@ static void Hndl_DoctypeStart (void *userData,
 			       const XML_Char *doctypeName,
                                const XML_Char *sysid,
                                const XML_Char *pubid,
-                               int            has_internal_subset)
-#else
+                               int   has_internal_subset)
+{
+#ifdef EXPAT_PARSER_DEBUG
+  printf ("Hndl_DoctypeStart\n");
+  printf ("  name       : %s\n", doctypeName);
+  printf ("  sysid      : %s\n", sysid);
+  printf ("  pubid      : %s\n", pubid);
+  printf ("  int.subset : %d\n", has_internal_subset);
+#endif /* EXPAT_PARSER_DEBUG */
+   /* The content of this doctype has not to be parsed */
+   if (!VirtualDoctype)
+     {
+       CreateDoctypeElement ((char*) doctypeName, (char*) sysid, (char*) pubid);
+       WithinDoctype = TRUE;
+     }
+}
+#else /* NEW_EXPAT */
 static void Hndl_DoctypeStart (void *userData,
 			       const XML_Char *doctypeName)
-#endif /* NEW_EXPAT */
 {
 #ifdef EXPAT_PARSER_DEBUG
    printf ("Hndl_DoctypeStart %s\n", doctypeName);
@@ -3881,11 +3987,11 @@ static void Hndl_DoctypeStart (void *userData,
    /* The content of this doctype has not to be parsed */
    if (!VirtualDoctype)
      {
-       CreateDoctypeElement ();
+       CreateDoctypeElement (NULL, NULL, NULL);
        WithinDoctype = TRUE;
-       ParseDoctypeElement ("<!DOCTYPE ", 10);
      }
 }
+#endif /* NEW_EXPAT */
 
 /*----------------------------------------------------------------------
    Hndl_DoctypeEnd
@@ -3903,7 +4009,7 @@ static void Hndl_DoctypeEnd (void *userData)
      VirtualDoctype = FALSE;
    else
      {
-       ParseDoctypeElement (">", 1);
+       ParseDoctypeContent (">", 1);
        XMLcontext.lastElementClosed = TRUE;
        WithinDoctype = FALSE;
      }
@@ -4136,18 +4242,60 @@ static void     Hndl_PI (void *userData,
   /* This PI has not to be parsed */
   if (WithinDoctype)
     {
-      ParseDoctypeElement ("<?", 2);
+      ParseDoctypeContent ("<?", 2);
       buffer = (unsigned char *) target;
-      ParseDoctypeElement (buffer, strlen (buffer));
-      ParseDoctypeElement (" ", 1);
+      ParseDoctypeContent (buffer, strlen (buffer));
+      ParseDoctypeContent (" ", 1);
       buffer = (unsigned char *) pidata;
-      ParseDoctypeElement (buffer, strlen (buffer));
-      ParseDoctypeElement ("?>", 2);
+      ParseDoctypeContent (buffer, strlen (buffer));
+      ParseDoctypeContent ("?>", 2);
       return;
     }
   if (!IgnoreCommentAndPi)
     CreateXmlPi ((char*) target, (char*) pidata);
 }
+
+#ifdef NEW_EXPAT
+/*----------------------------------------------------------------------
+  Hndl_SkippedEntityHandler
+  This is called in two situations:
+  1) An entity reference is encountered for which no declaration
+     has been read *and* this is not an error.
+  2) An internal entity reference is read, but not expanded, because
+     XML_SetDefaultHandler has been called.
+  Note: skipped parameter entities in declarations and skipped general
+  entities in attribute values cannot be reported, because
+  the event would be out of sync with the reporting of the
+  declarations or attribute values
+  ----------------------------------------------------------------------*/
+static void Hndl_SkippedEntityHandler(void *userData,
+				      const XML_Char *entityName,
+				      int   is_parameter_entity)
+{
+  int     length;
+  char   *buffer;
+#ifdef EXPAT_PARSER_DEBUG
+  printf ("Hndl_SkippedEntityHandler\n");
+  printf ("  entity name : %s\n", entityName);
+  printf ("  parameter   : %d\n", is_parameter_entity);
+#endif /* EXPAT_PARSER_DEBUG */
+  length = strlen (entityName);
+  if (WithinDoctype)
+    ParseDoctypeContent ((unsigned char *) entityName, length);
+  else
+    {
+      buffer = TtaGetMemory (length + 3);
+      if (buffer != NULL)
+	{
+	  strcpy (buffer, "&");
+	  strcat (buffer, (char*) entityName);
+	  strcat (buffer, ";");
+	  CreateXmlEntity (buffer, length+2);
+	  TtaFreeMemory (buffer);
+	}
+    }
+}
+#endif /* NEW_EXPAT */
 
 /*----------------------------------------------------------------------
    Hndl_UnknownEncoding
@@ -4188,6 +4336,31 @@ static void Hndl_UnparsedEntity (void *userData,
   printf ("  notationName : %s\n", notationName);
 #endif /* EXPAT_PARSER_DEBUG */
 }
+
+#ifdef NEW_EXPAT
+/*----------------------------------------------------------------------
+  Hndl_XML_XmlDeclHandler
+  The XML declaration handler is called for *both* XML declarations
+  and text declarations. The way to distinguish is that the version
+  parameter will be NULL for text declarations. The encoding
+  parameter may be NULL for XML declarations. The standalone
+  parameter will be -1, 0, or 1 indicating respectively that there
+  was no standalone parameter in the declaration, that it was given
+  as no, or that it was given as yes.
+  ----------------------------------------------------------------------*/
+static void Hndl_XmlDeclHandler (void  *userData,
+				 const XML_Char *version,
+				 const XML_Char *encoding,
+				 int   standalone)
+{
+#ifdef EXPAT_PARSER_DEBUG
+  printf ("Hndl_XmlDeclHandler\n");
+  printf ("  version    : %s\n", version);
+  printf ("  encoding   : %s\n", encoding);
+  printf ("  standalone : %d\n", standalone);
+#endif /* EXPAT_PARSER_DEBUG */
+}
+#endif /* NEW_EXPAT */
 
 /*---------------- End of Handler definition ----------------*/
 
@@ -4379,11 +4552,11 @@ static void  InitializeExpatParser (CHARSET charset)
 			       Hndl_NameSpaceStart,
 			       Hndl_NameSpaceEnd);
   
-  /* Set a handler for notation declarations */
+  /* Set an handler for notation declarations */
   XML_SetNotationDeclHandler (Parser,
 			      Hndl_Notation);
   
-  /* Set a handler for no 'standalone' document */
+  /* Set an handler for no 'standalone' document */
   XML_SetNotStandaloneHandler (Parser,
 			       Hndl_NotStandalone);
 
@@ -4391,17 +4564,27 @@ static void  InitializeExpatParser (CHARSET charset)
   XML_SetParamEntityParsing (Parser,
 			     paramEntityParsing);
   
-  /* Set a handler for processing instructions */
+  /* Set an handler for processing instructions */
   XML_SetProcessingInstructionHandler (Parser,
 				       Hndl_PI);
   
-  /* Set a handler to deal with encodings other than the built in */
+  /* Set an handler to deal with encodings other than the built in */
   XML_SetUnknownEncodingHandler (Parser,
 				 Hndl_UnknownEncoding, 0);
   
-  /* Set a handler that receives declarations of unparsed entities */
+  /* Set an handler that receives declarations of unparsed entities */
   XML_SetUnparsedEntityDeclHandler (Parser,
 				    Hndl_UnparsedEntity);
+  
+#ifdef NEW_EXPAT
+  /* Set an handler that is called for XML declarations */
+  XML_SetXmlDeclHandler (Parser,
+			 Hndl_XmlDeclHandler);
+  
+  /* Set a skipped entity handler */
+  XML_SetSkippedEntityHandler (Parser,
+			       Hndl_SkippedEntityHandler);
+#endif /* NEW_EXPAT */ 
 }
 
 /*----------------------------------------------------------------------
