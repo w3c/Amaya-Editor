@@ -1194,7 +1194,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 indmax;
   int                 nbcar, x, y, y1;
   int                 lgspace, whitespace;
-  int                 fg, bg;
+  int                 fg, bg, fgbox, bgbox;
   int                 shadow;
   int                 width, org, xpos;
   int                 left, right;
@@ -1249,14 +1249,16 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   if (!strcmp(pAb->AbElement->ElStructSchema->SsName, "SVG") &&
       FrameTable[frame].FrView == 1)
     {
-      bg = pAb->AbForeground;
-      fg = pAb->AbBackground;
+      bgbox = pAb->AbForeground;
+      fgbox = pAb->AbBackground;
     }
   else
     {
-      fg = pAb->AbForeground;
-      bg = pAb->AbBackground;
+      fgbox = pAb->AbForeground;
+      bgbox = pAb->AbBackground;
     }
+  bg = bgbox;
+  fg = fgbox;
   pFrame = &ViewFrameTable[frame - 1];
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
@@ -1532,7 +1534,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  if (withinSel)
 		    fg = FgSelColor;
 		  else
-		    fg = pAb->AbForeground;
+		    fg = fgbox;
 		  nbcar = 0;
 		  prevfont = nextfont;
 		  xpos = x;

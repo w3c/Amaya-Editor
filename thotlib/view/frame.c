@@ -251,6 +251,10 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
 
   if (pBox == NULL || pFrom == NULL || pFrom->AbBox == NULL)
     return;
+  else if (pFrom->AbElement == NULL ||
+	   TypeHasException (ExcNoShowBox, pFrom->AbElement->ElTypeNumber,
+			     pFrom->AbElement->ElStructSchema))
+    return;
   from = pFrom->AbBox;
   pAb = pBox->BxAbstractBox;
   if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
@@ -1116,9 +1120,42 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin,
     pBox->BxBoundinBoxComputed = FALSE;
 }
 
+/*----------------------------------------------------------------------
+  NoBoxModif : True if box or box's son not modified
+  ----------------------------------------------------------------------*/
+ThotBool NoBoxModif (PtrAbstractBox pinitAb)
+{
+  PtrAbstractBox      pAb;
+
+  if (pinitAb->AbBox->VisibleModification || pinitAb->AbSelected)
+    return FALSE;
+  pAb = pinitAb->AbFirstEnclosed;
+  while (pAb)
+    {
+      if (pAb->AbBox->VisibleModification || pAb->AbSelected)
+	return FALSE;
+      if (pAb->AbFirstEnclosed)
+	/* get the first child */
+	pAb = pAb->AbFirstEnclosed;
+      else if (pAb->AbNext)	    
+	{
+	  /* get the next sibling */
+	  pAb = pAb->AbNext;
+	}
+      else
+	{
+	  /* go up in the tree */
+	  while (pAb->AbEnclosing && pAb->AbEnclosing->AbNext == NULL)
+	    pAb = pAb->AbEnclosing;
+	  pAb = pAb->AbEnclosing;
+	  if (pAb)
+	    pAb = pAb->AbNext;
+	}
+    }
+  return TRUE;
+}
 #endif /*_GL*/
 
-#ifndef _GL
 /*----------------------------------------------------------------------
   DisplayAllBoxes crosses the Abstract tree from top to bottom
   and left to rigth to display all visible boxes.
@@ -1142,12 +1179,26 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
   int                 bt, bb;
   int                 l, h;
   ThotBool            userSpec = FALSE, selected;
+#ifdef _GL
+  int                 x_min, x_max, y_min, y_max;
+  int                 xOrg, yOrg, 
+                      clipXOfFirstCoordSys, clipYOfFirstCoordSys;
+  ThotBool            updatingStatus, formatted;
+  ThotBool            not_g_opacity_displayed, not_in_feedback;
 
+  updatingStatus = FrameUpdating;
+  FrameUpdating = TRUE;  
+#endif /* _GL */
   pFrame = &ViewFrameTable[frame - 1];
   pAb = pFrame->FrAbstractBox;
   GetSizesFrame (frame, &l, &h);
+#ifdef _GL
+  winTop = 0;
+  winBottom = h;
+#else /* _GL */
   winTop = pFrame->FrYOrg;
   winBottom = winTop + h;
+#endif /* _GL */
   pBox = pAb->AbBox;
   *tVol = *bVol = 0;
   if (pBox == NULL)
@@ -1157,6 +1208,20 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
   nextplane = plane - 1;
   topBox = NULL;
   pAb = pFrame->FrAbstractBox;
+#ifdef _GL
+  formatted = (FrameTable[frame].FrView == 1 &&
+		    pAb->AbPSchema &&
+		    pAb->AbPSchema->PsStructName &&
+		    strcmp (pAb->AbPSchema->PsStructName, "TextFile"));
+  x_min = xmin - pFrame->FrXOrg;
+  x_max = xmax - pFrame->FrXOrg;
+  y_min = ymin - pFrame->FrYOrg;
+  y_max = ymax - pFrame->FrYOrg;
+  xOrg = 0;
+  yOrg = 0;
+  clipXOfFirstCoordSys = clipYOfFirstCoordSys = 0;
+  not_in_feedback =  GL_NotInFeedbackMode ();
+#endif /* _GL */
   selected = pAb->AbSelected;
   if (pBox->BxDisplay || selected)
     DrawFilledBox (pBox, pAb, frame, xmin, xmax, ymin, ymax, selected,
@@ -1167,15 +1232,116 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
       plane = nextplane;
       /* Draw all the boxes not yet displayed */
       pAb = pFrame->FrAbstractBox;
+#ifdef _GL
+      not_g_opacity_displayed = TRUE;
+#endif /* _GL */
       while (pAb)
 	{
-	  if (pAb->AbDepth == plane && pAb != pFrame->FrAbstractBox &&
-	      pAb->AbBox)
+	  if (pAb->AbDepth == plane && pAb != pFrame->FrAbstractBox && pAb->AbBox)
 	    {
-	      if (!selected && pAb->AbSelected)
-		  selected = pAb->AbSelected;
 	      /* box in the current plane */
 	      pBox = pAb->AbBox;
+	      if (!selected && pAb->AbSelected)
+		selected = pAb->AbSelected;
+#ifdef _GL
+	      if (pAb->AbElement && not_g_opacity_displayed)
+		{ 
+		  if (formatted)
+		    {
+		      /* If the coord sys origin is translated, 
+			 it must be before any other transformation */
+		      if (pAb->AbElement->ElSystemOrigin)
+			DisplayBoxTransformation (pAb->AbElement->ElTransform, 
+						  pFrame->FrXOrg, pFrame->FrYOrg);
+		      /* Normal transformation*/
+		      if (pAb->AbElement->ElTransform)
+			DisplayTransformation (frame,
+					       pAb->AbElement->ElTransform, 
+					       pBox->BxWidth, pBox->BxHeight);
+		      if (pAb->AbElement->ElSystemOrigin)
+			{
+			  /*Need to Get REAL computed COORD ORIG
+			    instead of Computing Bounding Boxes forever...
+			    As it's am "optimisation it'll come later :
+			    if computed, no more compute, use synbounding, 
+			    else compute if near screen"*/
+
+			  /* if (pBox->BxTransformationComputed) */
+			  /*   { */
+			  /*   GetBoxTransformed (pAb->AbElement->ElTransform,  */
+			  /* 			  &(pBox->BxClipX),  */
+			  /* 			  &(pBox->BxClipY)); */
+			  /*   pBox->BxClipX -= pFrame->FrXOrg; */
+			  /*   pBox->BxClipY -= pFrame->FrYOrg; */
+			  /*   } */
+			  /*  if (pBox->BxClipY + pBox->BxClipH >= y_min  && */
+			  /* 	  pBox->BxClipY <= y_max &&  */
+			  /* 	  pBox->BxClipX + pBox->BxClipW >= x_min && */
+			  /* 	  pBox->BxClipX <= x_max) */
+			  {
+			    if (pFrame->FrXOrg || pFrame->FrYOrg)
+			      {
+				pFrame->OldFrXOrg = pFrame->FrXOrg;
+				pFrame->OldFrYOrg = pFrame->FrYOrg;
+				xOrg = pFrame->FrXOrg;
+				yOrg = pFrame->FrYOrg;
+				pFrame->FrXOrg = 0;
+				pFrame->FrYOrg = 0;
+				ComputeBoundingBoxes (frame, 
+						      x_min, x_max,
+						      y_min, y_max, pAb);
+				clipXOfFirstCoordSys = pBox->BxClipX;
+				clipYOfFirstCoordSys = pBox->BxClipY;
+			      }
+			    else
+			      ComputeBoundingBoxes (frame, 
+						    x_min, x_max,
+						    y_min, y_max, pAb);
+			  }
+			  /* New Coordinate system means clipping around */
+			  /* GL_PushClip (pBox->BxClipX, pBox->BxClipY,  */
+			  /* 		  pBox->BxClipW, pBox->BxClipH);   */
+			}
+		      if (pAb->AbOpacity != 1000 &&  not_in_feedback)
+			{
+			  if (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
+						pAb->AbElement->ElStructSchema) )
+			    {
+			      if (pAb->AbOpacity == 0 ||
+				  (NoBoxModif (pAb) &&
+				   pAb->AbBox->Post_computed_Pic != NULL))
+				{
+				  not_g_opacity_displayed = FALSE;
+				  continue;
+				}
+			      else
+				{
+				  if (pAb->AbBox->Post_computed_Pic)
+				    {
+				      FreeGlTextureNoCache (pAb->AbBox->Post_computed_Pic);
+				      TtaFreeMemory (pAb->AbBox->Post_computed_Pic);
+				      pAb->AbBox->Post_computed_Pic = NULL; 
+				    }
+				  OpaqueGroupTexturize (pAb, frame, x_min, x_max,
+							y_min, y_max, TRUE);
+				  ClearOpaqueGroup (pAb, frame, x_min, x_max,
+						    y_min, y_max);
+				}
+			    }
+			  else if (pAb->AbFirstEnclosed)
+			    {
+			      pAb->AbFirstEnclosed->AbFillOpacity = pAb->AbOpacity;
+			      pAb->AbFirstEnclosed->AbStrokeOpacity = pAb->AbOpacity;
+			    }
+			  else 
+			    {
+			      pAb->AbFillOpacity = pAb->AbOpacity;      
+			      pAb->AbStrokeOpacity = pAb->AbOpacity; 
+			    }
+			}
+		    }
+#endif /* _GL */
+
 	      if (pAb->AbLeafType == LtCompound)
 		{
 		  if (pAb->AbVisibility >= pFrame->FrVisibility &&
@@ -1213,18 +1379,31 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		    {
 		      /* the box itself doesn't give right positions */
 		      box = pBox->BxNexChild;
+#ifdef _GL
+		      bt = box->BxClipY;
+#else /* _GL */
 		      bt = box->BxYOrg;
+#endif /* _GL */
 		      /* don't take into account the last empty box */
 		      while (box->BxNexChild &&
 			     (box->BxNexChild->BxNChars > 0 ||
 			      box->BxNexChild->BxNexChild))
 			box = box->BxNexChild;
+#ifdef _GL
+		      bb = box->BxClipY + box->BxClipH;
+#else /* _GL */
 		      bb = box->BxYOrg + box->BxHeight;
+#endif /* _GL */
 		    }
 		  else
 		    {
+#ifdef _GL
+			  bt = pBox->BxClipY;
+			  bb = pBox->BxClipY + pBox->BxClipH;
+#else /* _GL */
 		      bt = pBox->BxYOrg;
 		      bb = pBox->BxYOrg + pBox->BxHeight;
+#endif /* _GL */
 		    }
 		  if (bb < winTop)
 		    /* the box is not visible */
@@ -1241,9 +1420,14 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 			box = pBox;
 		      if (topBox == NULL)
 			topBox = box;
+#ifdef _GL
+		      else if (bt >= winTop && topBox->BxClipY < winTop)
+#else /* _GL */
 		      else if (bt >= winTop && topBox->BxYOrg < winTop)
+#endif /* _GL */
 			/* the top of the box should be visible */
 			topBox = box;
+
 		      userSpec = FALSE;
 		      if (pBox->BxNew)
 			{
@@ -1270,29 +1454,47 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 			}
 		      if (!userSpec)
 			{
-			  if (pBox->BxType == BoSplit || 
-			      pBox->BxType == BoMulScript)
+			  if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 			    while (pBox->BxNexChild)
 			      {
 				pBox = pBox->BxNexChild;
+#ifdef _GL
+				    if (pBox->BxClipY + pBox->BxClipH >= y_min  &&
+					pBox->BxClipY <= y_max && 
+					pBox->BxClipX + pBox->BxClipW  + pBox->BxEndOfBloc>= x_min &&
+					pBox->BxClipX <= x_max)
+#else /* _GL */
 				if (pBox->BxYOrg + pBox->BxHeight >= ymin  &&
 				    pBox->BxYOrg <= ymax && 
 				    pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= xmin &&
 				    pBox->BxXOrg <= xmax)
+#endif /* _GL */
 				  DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
 			      }
+#ifdef _GL
+			      else if (bb >= y_min  &&
+				       bt <= y_max && 
+				       pBox->BxClipX + pBox->BxClipW >= x_min &&
+				       pBox->BxClipX <= x_max)
+#else /* _GL */
 			  else if (bb >= ymin  &&
 				   bt <= ymax && 
 				   pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= xmin &&
 				   pBox->BxXOrg <= xmax)
+#endif /* _GL */
 			    DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
 			  else if (pBox->BxType == BoPicture)
 			    {
 			      imageDesc = (PictInfo *)pBox->BxPictInfo;
-			      if (bb < winTop ||
-				  bt > winBottom ||
+#ifdef _GL
+				  if (bb < winTop || bt > winBottom ||
+				      pBox->BxClipX + pBox->BxClipW  + pBox->BxEndOfBloc< x_min ||
+				      pBox->BxClipX > x_max)
+#else /* _GL */
+			      if (bb < winTop || bt > winBottom ||
 				  pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc < pFrame->FrXOrg ||
 				  pBox->BxXOrg > pFrame->FrXOrg + l)
+#endif /* _GL */
 				UnmapImage (imageDesc);
 			      else if (imageDesc->PicType >= PLUGIN_FORMAT)
 				/* redisplay plugins */
@@ -1302,6 +1504,9 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		    }
 		}  	      
 	    }
+#ifdef _GL
+            }
+#endif /* _GL */
 	  else if (pAb->AbDepth < plane)
 	    {
 	      /* keep the lowest value for plane depth */
@@ -1312,422 +1517,28 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	    }
 
 	  /* get next abstract box */
+#ifdef _GL
+	  if (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed && 
+	      not_g_opacity_displayed)
+#else /* _GL */
 	  if (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed)
+#endif /* _GL */
 	    /* get the first child */
 	    pAb = pAb->AbFirstEnclosed;
 	  else if (pAb->AbNext)
-	    /* get the next sibling */
 	    {
-	      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
-	      if (pAb->AbSelected)
-		selected = FALSE;
-	      pAb = pAb->AbNext;
-	    }
-	  else
-	    {
-	      /* go up in the tree */
-	      while (pAb->AbEnclosing && 
-		     pAb->AbEnclosing->AbNext == NULL)
+#ifdef _GL
+	      if (formatted)
 		{
-		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
-		  if (pAb->AbSelected)
-		    selected = FALSE;
-		  pAb = pAb->AbEnclosing;
-		}
-	      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
-	      if (pAb->AbSelected)
-		selected = FALSE;
-	      pAb = pAb->AbEnclosing;
-	      if (pAb)
-		{
-		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
-		  if (pAb->AbSelected)
-		    selected = FALSE;
-		  pAb = pAb->AbNext;
-		}
-	    }
-	}
-    }
-  return topBox;
-}
-#else /* _GL */
-/*----------------------------------------------------------------------
-  NoBoxModif : True if box or box's son not modified
-  ----------------------------------------------------------------------*/
-ThotBool NoBoxModif (PtrAbstractBox pinitAb)
-{
-  PtrAbstractBox      pAb;
-
-  if (pinitAb->AbBox->VisibleModification || pinitAb->AbSelected)
-    return FALSE;
-  pAb = pinitAb->AbFirstEnclosed;
-  while (pAb)
-    {
-      if (pAb->AbBox->VisibleModification || pAb->AbSelected)
-	return FALSE;
-      if (pAb->AbFirstEnclosed)
-	/* get the first child */
-	pAb = pAb->AbFirstEnclosed;
-      else if (pAb->AbNext)	    
-	{
-	  /* get the next sibling */
-	  pAb = pAb->AbNext;
-	}
-      else
-	{
-	  /* go up in the tree */
-	  while (pAb->AbEnclosing && 
-		 pAb->AbEnclosing->AbNext == NULL)
-	    {
-	      pAb = pAb->AbEnclosing;
-	    }
-	  pAb = pAb->AbEnclosing;
-	  if (pAb)
-	    {
-	      pAb = pAb->AbNext;
-	    }
-	}
-    }
-  return TRUE;
-}
-
-/*----------------------------------------------------------------------
-  DisplayAllBoxes crosses the Abstract tree from top to bottom
-  and left to rigth to display all visible boxes.
-  Parameters xmin, xmax, ymin, ymax give the clipped area.
-  The parameter create returns the box that must be interactively
-  created by the user.
-  tVol and bVol return the volume of not displayed boxes on thetop and
-  on the bottom of the window.
-  ----------------------------------------------------------------------*/
-PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
-			PtrBox *create, int *tVol, int *bVol)
-{
-  PtrAbstractBox      pAb, specAb;
-  PtrBox              pBox, box;
-  PtrBox              topBox;
-  ViewFrame          *pFrame;
-  PictInfo           *imageDesc;
-  int                 plane;
-  int                 nextplane;
-  int                 winTop, winBottom;
-  int                 bt, bb;
-  int                 l, h;
-  ThotBool            userSpec = FALSE;
-  ThotBool            FrameUpdatingStatus, FormattedFrame;
-  int                 x_real_min, x_real_max,
-                      y_real_min, y_real_max;
-  int                 OldXOrg, OldYOrg, 
-                      ClipXOfFirstCoordSys, ClipYOfFirstCoordSys;
-  ThotBool            NotGroupOpacityDisplayed, not_in_feedback;
-  ThotBool            selected;
-
-  FrameUpdatingStatus = FrameUpdating;
-  FrameUpdating = TRUE;  
-  pFrame = &ViewFrameTable[frame - 1];
-  pAb = pFrame->FrAbstractBox;
-  GetSizesFrame (frame, &l, &h);
-  winTop = 0;
-  winBottom = h;
-  pBox = pAb->AbBox;
-  *tVol = *bVol = 0;
-  if (pBox == NULL)
-    return NULL;
-  /* Display planes in reverse order from biggest to lowest */
-  plane = 65536;
-  nextplane = plane - 1;
-  topBox = NULL;
-  pAb = pFrame->FrAbstractBox;
-  if (FrameTable[frame].FrView == 1 &&
-		pAb->AbPSchema &&
-		pAb->AbPSchema->PsStructName &&
-		(strcmp (pAb->AbPSchema->PsStructName, "TextFile") != 0))
-    FormattedFrame = TRUE;
-  else
-    FormattedFrame = FALSE;
-  x_real_min = xmin - pFrame->FrXOrg;
-  x_real_max = xmax - pFrame->FrXOrg;
-  y_real_min = ymin - pFrame->FrYOrg;
-  y_real_max = ymax - pFrame->FrYOrg;
-  OldXOrg = 0;
-  OldYOrg = 0;
-  ClipXOfFirstCoordSys = ClipYOfFirstCoordSys = 0;
-  not_in_feedback =  GL_NotInFeedbackMode ();
-  selected = pAb->AbSelected;
-  if (pBox->BxDisplay || selected)
-    DrawFilledBox (pBox, pAb, frame, xmin, xmax, ymin, ymax, selected,
-		   TRUE, TRUE, TRUE);
-  while (plane != nextplane)
-    /* there is a new plane to display */
-    {
-      plane = nextplane;
-      /* Draw all the boxes not yet displayed */
-      pAb = pFrame->FrAbstractBox;
-      NotGroupOpacityDisplayed = TRUE;
-      while (pAb)
-	{
-	  if (pAb->AbDepth == plane && pAb != pFrame->FrAbstractBox && pAb->AbBox)
-	    {
-	      /* box in the current plane */
-	      pBox = pAb->AbBox;
-	      if (!selected && pAb->AbSelected)
-		selected = pAb->AbSelected;
-	      if (pAb->AbElement && NotGroupOpacityDisplayed)
-		{ 
-		  if (FormattedFrame)
-		    {
-		      /* If the coord sys origin is translated, 
-			 it must be before any other transformation */
-		      if (pAb->AbElement->ElSystemOrigin)
-			DisplayBoxTransformation (pAb->AbElement->ElTransform, 
-						  pFrame->FrXOrg, pFrame->FrYOrg);
-		      /* Normal transformation*/
-		      if (pAb->AbElement->ElTransform)
-			DisplayTransformation (frame,
-					       pAb->AbElement->ElTransform, 
-					       pBox->BxWidth, pBox->BxHeight);
-		      if (pAb->AbElement->ElSystemOrigin)
-			{
-			  /*Need to Get REAL computed COORD ORIG
-			    instead of Computing Bounding Boxes forever...
-			    As it's am "optimisation it'll come later :
-			    if computed, no more compute, use synbounding, 
-			    else compute if near screen"*/
-
-			  /* if (pBox->BxTransformationComputed) */
-			  /*   { */
-			  /*   GetBoxTransformed (pAb->AbElement->ElTransform,  */
-			  /* 			  &(pBox->BxClipX),  */
-			  /* 			  &(pBox->BxClipY)); */
-			  /*   pBox->BxClipX -= pFrame->FrXOrg; */
-			  /*   pBox->BxClipY -= pFrame->FrYOrg; */
-			  /*   } */
-			  /*  if (pBox->BxClipY + pBox->BxClipH >= y_real_min  && */
-			  /* 	  pBox->BxClipY <= y_real_max &&  */
-			  /* 	  pBox->BxClipX + pBox->BxClipW >= x_real_min && */
-			  /* 	  pBox->BxClipX <= x_real_max) */
-			  {
-			    if (pFrame->FrXOrg || pFrame->FrYOrg)
-			      {
-				pFrame->OldFrXOrg = pFrame->FrXOrg;
-				pFrame->OldFrYOrg = pFrame->FrYOrg;
-				OldXOrg = pFrame->FrXOrg;
-				OldYOrg = pFrame->FrYOrg;
-				pFrame->FrXOrg = 0;
-				pFrame->FrYOrg = 0;
-				ComputeBoundingBoxes (frame, 
-						      x_real_min, x_real_max,
-						      y_real_min, y_real_max, pAb);
-				ClipXOfFirstCoordSys = pBox->BxClipX;
-				ClipYOfFirstCoordSys = pBox->BxClipY;
-			      }
-			    else
-			      ComputeBoundingBoxes (frame, 
-						    x_real_min, x_real_max,
-						    y_real_min, y_real_max, pAb);
-			  }
-			  /* New Coordinate system means Clipping around */
-			  /* GL_PushClip (pBox->BxClipX, pBox->BxClipY,  */
-			  /* 		  pBox->BxClipW, pBox->BxClipH);   */
-			}
-		      if (pAb->AbOpacity != 1000 &&  not_in_feedback)
-			{
-			  if (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
-						pAb->AbElement->ElStructSchema) )
-			    {
-			      if (pAb->AbOpacity == 0 ||
-				  (NoBoxModif (pAb) &&
-				   pAb->AbBox->Post_computed_Pic != NULL))
-				{
-				  NotGroupOpacityDisplayed = FALSE;
-				  continue;
-				}
-			      else
-				{
-				  if (pAb->AbBox->Post_computed_Pic)
-				    {
-				      FreeGlTextureNoCache (pAb->AbBox->Post_computed_Pic);
-				      TtaFreeMemory (pAb->AbBox->Post_computed_Pic);
-				      pAb->AbBox->Post_computed_Pic = NULL; 
-				    }
-				  OpaqueGroupTexturize (pAb, frame, x_real_min, x_real_max,
-							y_real_min, y_real_max, TRUE);
-				  ClearOpaqueGroup (pAb, frame, x_real_min, x_real_max,
-						    y_real_min, y_real_max);
-				}
-			    }
-			  else if (pAb->AbFirstEnclosed)
-			    {
-			      pAb->AbFirstEnclosed->AbFillOpacity = pAb->AbOpacity;
-			      pAb->AbFirstEnclosed->AbStrokeOpacity = pAb->AbOpacity;
-			    }
-			  else 
-			    {
-			      pAb->AbFillOpacity = pAb->AbOpacity;      
-			      pAb->AbStrokeOpacity = pAb->AbOpacity; 
-			    }
-			}
-		    }
-		  if (pAb->AbLeafType == LtCompound)
-		    {
-		      if (pAb->AbVisibility >= pFrame->FrVisibility &&
-			  (pBox->BxDisplay || pAb->AbSelected))
-			DrawFilledBox (pBox, pAb, frame, xmin, xmax, ymin, ymax,
-				       selected, TRUE, TRUE, TRUE);
-		      if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
-			{
-			  /* this is a new box */
-			  pBox->BxNew = 0;
-			  specAb = pAb;
-			  while (!userSpec && specAb)
-			    {
-			      if (specAb->AbWidth.DimIsPosition ||
-				  specAb->AbHeight.DimIsPosition)
-				specAb = NULL;
-			      else if (specAb->AbHorizPos.PosUserSpecified ||
-				       specAb->AbVertPos.PosUserSpecified ||
-				       specAb->AbWidth.DimUserSpecified ||
-				       specAb->AbHeight.DimUserSpecified)
-				{
-				  /* one paramater is given by the user */
-				  AddBoxToCreate (create, specAb->AbBox, frame);
-				  userSpec = TRUE;
-				}
-			      else
-				specAb = specAb->AbEnclosing;
-			    }
-			}
-		    }
-		  else
-		    {
-		      /* look for the box displayed at the top of the window */
-		      if (pBox->BxType == BoSplit || 
-			  pBox->BxType == BoMulScript)
-			{
-			  /* the box itself doesn't give right positions */
-			  box = pBox->BxNexChild;
-			  bt = box->BxClipY;
-
-			  /* don't take into account the last empty box */
-			  while (box->BxNexChild &&
-				 (box->BxNexChild->BxNChars > 0 ||
-				  box->BxNexChild->BxNexChild))
-			    box = box->BxNexChild;
-			  bb = box->BxClipY + box->BxClipH;
-
-			}
-		      else
-			{
-			  bt = pBox->BxClipY;
-			  bb = pBox->BxClipY + pBox->BxClipH;
-			}
-		      if (bb < winTop)
-			/* the box is not visible */
-			*tVol = *tVol + pBox->BxAbstractBox->AbVolume;
-		      else if (bt > winBottom)
-			/* the box is not visible */
-			*bVol = *bVol + pBox->BxAbstractBox->AbVolume;
-		      else
-			{
-			  if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
-			    /* the box itself doen't give right positions */
-			    box = pBox->BxNexChild;
-			  else
-			    box = pBox;
-			  if (topBox == NULL)
-			    topBox = box;
-			  else if (bt >= winTop && 
-				   topBox->BxClipY < winTop)
-			    /* the top of the box should be visible */
-			    topBox = box;
-			  userSpec = FALSE;
-			  if (pBox->BxNew)
-			    {
-			      /* this is a new box */
-			      pBox->BxNew = 0;
-			      specAb = pAb;
-			      while (!userSpec && specAb)
-				{
-				  if (specAb->AbWidth.DimIsPosition ||
-				      specAb->AbHeight.DimIsPosition)
-				    specAb = NULL;
-				  else if (specAb->AbHorizPos.PosUserSpecified ||
-					   specAb->AbVertPos.PosUserSpecified ||
-					   specAb->AbWidth.DimUserSpecified ||
-					   specAb->AbHeight.DimUserSpecified)
-				    {
-				      /* one paramater is given by the user */
-				      AddBoxToCreate (create, specAb->AbBox, frame);
-				      userSpec = TRUE;
-				    }
-				  else
-				    specAb = specAb->AbEnclosing;
-				}
-			    }
-			  if (!userSpec)
-			    {
-			      if (pBox->BxType == BoSplit || 
-				  pBox->BxType == BoMulScript)
-				while (pBox->BxNexChild)
-				  {
-				    pBox = pBox->BxNexChild;
-				    if (pBox->BxClipY + pBox->BxClipH >= y_real_min  &&
-					pBox->BxClipY <= y_real_max && 
-					pBox->BxClipX + pBox->BxClipW  + pBox->BxEndOfBloc>= x_real_min &&
-					pBox->BxClipX <= x_real_max)
-				      {
-					DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
-				      }				    
-				  }
-			      else if (bb >= y_real_min  &&
-				       bt <= y_real_max && 
-				       pBox->BxClipX + pBox->BxClipW >= x_real_min &&
-				       pBox->BxClipX <= x_real_max)
-				{
-				  DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
-				}
-			      else if (pBox->BxType == BoPicture)
-				{
-				  imageDesc = (PictInfo *)pBox->BxPictInfo;
-				  if (bb < winTop ||
-				      bt > winBottom ||
-				      pBox->BxClipX + pBox->BxClipW  + pBox->BxEndOfBloc< x_real_min ||
-				      pBox->BxClipX > x_real_max)
-				    UnmapImage (imageDesc);
-				  else if (imageDesc->PicType >= PLUGIN_FORMAT)
-				    /* redisplay plugins */
-				    {
-				      DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
-				    }
-				}
-			    }
-			}
-		    }	      
-		}
-	    }	  
-	  else if (pAb->AbDepth < plane)
-	    {
-	      /* keep the lowest value for plane depth */
-	      if (plane == nextplane)
-		nextplane = pAb->AbDepth;
-	      else if (pAb->AbDepth > nextplane)
-		nextplane = pAb->AbDepth;
-	    }
-
-	  /* get next abstract box */
-	  if (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed && 
-	      NotGroupOpacityDisplayed)
-	    /* get the first child */
-	    pAb = pAb->AbFirstEnclosed;
-	  else if (pAb->AbNext)	    
-	    {	 
-	      if (FormattedFrame)
-		{
-		  OpacityAndTransformNext (pAb, plane, frame, x_real_min, x_real_max, y_real_min, y_real_max, not_in_feedback);
-		  OriginSystemExit (pAb, pFrame, plane, &OldXOrg, &OldYOrg, 
-				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
+		  OpacityAndTransformNext (pAb, plane, frame, x_min, x_max,
+	                                   y_min, y_max, not_in_feedback);
+		  OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
+				    clipXOfFirstCoordSys, clipYOfFirstCoordSys);
 		} 
-	      NotGroupOpacityDisplayed = TRUE;
+	      not_g_opacity_displayed = TRUE;
+#else /* _GL */
+	      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
+#endif /* _GL */
 	      /* get the next sibling */
 	      if (pAb->AbSelected)
 		selected = FALSE;
@@ -1738,47 +1549,60 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	      /* go up in the tree */
 	      while (pAb->AbEnclosing && pAb->AbEnclosing->AbNext == NULL)
 		{
-		  if (FormattedFrame)
+#ifdef _GL
+		  if (formatted)
 		    {
-		      OpacityAndTransformNext (pAb, plane, frame, x_real_min, x_real_max, y_real_min, y_real_max, not_in_feedback);		  	
-		      OriginSystemExit (pAb, pFrame, plane, &OldXOrg, &OldYOrg, 
-					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
+		      OpacityAndTransformNext (pAb, plane, frame, x_min, x_max, y_min, y_max, not_in_feedback);		  	
+		      OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
+					clipXOfFirstCoordSys, clipYOfFirstCoordSys);
 		    }
-		  NotGroupOpacityDisplayed = TRUE;
+		  not_g_opacity_displayed = TRUE;
+#else /* _GL */
+		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
+#endif /* _GL */
 		  if (pAb->AbSelected)
 		    selected = FALSE;
 		  pAb = pAb->AbEnclosing;
 		}
-	      if (FormattedFrame)
+#ifdef _GL
+	      if (formatted)
 		{	
-		  OpacityAndTransformNext (pAb, plane, frame, x_real_min, x_real_max, y_real_min, y_real_max, not_in_feedback);
-		  OriginSystemExit (pAb, pFrame, plane, &OldXOrg, &OldYOrg, 
-				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
+		  OpacityAndTransformNext (pAb, plane, frame, x_min, x_max, y_min, y_max, not_in_feedback);
+		  OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
+				    clipXOfFirstCoordSys, clipYOfFirstCoordSys);
 		}
-	      NotGroupOpacityDisplayed = TRUE;
+	      not_g_opacity_displayed = TRUE;
+#else /* _GL */
+	      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
+#endif /* _GL */
 	      if (pAb->AbSelected)
 		selected = FALSE;
 	      pAb = pAb->AbEnclosing;
 	      if (pAb)
 		{
-		  if (FormattedFrame)
+#ifdef _GL
+		  if (formatted)
 		    {
-		      OpacityAndTransformNext (pAb, plane, frame, x_real_min, x_real_max, y_real_min, y_real_max, not_in_feedback);
-		      OriginSystemExit (pAb, pFrame, plane, &OldXOrg, &OldYOrg, 
-					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
+		      OpacityAndTransformNext (pAb, plane, frame, x_min, x_max, y_min, y_max, not_in_feedback);
+		      OriginSystemExit (pAb, pFrame, plane, &xOrg, &yOrg, 
+					clipXOfFirstCoordSys, clipYOfFirstCoordSys);
 		    }
-		  NotGroupOpacityDisplayed = TRUE;
+		  not_g_opacity_displayed = TRUE;
+#else /* _GL */
+		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
+#endif /* _GL */
 		  if (pAb->AbSelected)
 		    selected = FALSE;
 		  pAb = pAb->AbNext;
 		}
 	    }
 	}
-    } 
-  FrameUpdating = FrameUpdatingStatus;  
+    }
+#ifdef _GL
+  FrameUpdating = updatingStatus;  
+#endif /* _GL */
   return topBox;
 }
-#endif  /* _GL */
 
 /*----------------------------------------------------------------------
   ComputeABoundingBox : Compute a unique bounding box, 
@@ -1794,8 +1618,7 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
   int                 nextplane;
   int                 l, h;
   ThotBool            FrameUpdatingStatus, FormattedFrame;
-  int                 OldXOrg, OldYOrg, 
-    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys;
+  int                 OldXOrg, OldYOrg, ClipXOfFirstCoordSys, ClipYOfFirstCoordSys;
    
   FrameUpdatingStatus = FrameUpdating;
   FrameUpdating = TRUE;  

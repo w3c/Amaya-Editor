@@ -305,7 +305,7 @@ static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
 			  /* reads all highlights */
 			  style = 0;
 			  while (indline != 0 && indline < MAX_TXT_LEN)
-			    {			 
+			    {
 			      indline = getFontFace (indline, line, word);  
 			      if (word[0] == EOS)
 				break;

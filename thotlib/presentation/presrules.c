@@ -3166,12 +3166,14 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	      break;
 	    case FnBackgroundPicture:
 	      appl = TRUE;
+	      /*printf ("-----------background-picture---------\n");*/
 	      if (pAb->AbLeafType == LtCompound &&
 		  pPRule->PrViewNum == viewSch)
 		{
 		  if (pPRule->PrPresBox[0] <= 0)
 		    /* it's a CSS rule "background-picture: none" */
 		    {
+		      /*printf ("background-picture: none\n");*/
 		      if (pAb->AbPictBackground)
 			/* remove the background image */
 			{
@@ -3205,6 +3207,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 			       MakeCompleteName (pConst->PdString, "",
 						 directoryName, fname, &i);
 			      }
+			  /*printf ("background-picture: %s\n", fname);*/
 			  NewPictInfo (pAb, fname, UNKNOWN_FORMAT);
 			}
 		    }

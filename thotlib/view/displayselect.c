@@ -546,11 +546,20 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox,
     }
   if (pBox->BxAbstractBox != NULL)
     {
-      /* For holophrasted documents there is no enclosing */
-      if (pBox->BxAbstractBox->AbEnclosing == NULL)
-	pParentBox = pBox;
-      else
+      topY = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+	     pBox->BxTPadding - pFrame->FrYOrg;
+      h = pBox->BxH;
+
+      /* limit to the scrolling zone */
+      width = FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth
+	      - pFrame->FrXOrg;
+      /* and clipped by the enclosing box */
+      pAb = pBox->BxAbstractBox->AbEnclosing;
+      if (pAb && pAb->AbElement &&
+	  !TypeHasException (ExcNoShowBox, pAb->AbElement->ElTypeNumber,
+			     pAb->AbElement->ElStructSchema))
 	{
+	/* holophrasted elements have no enclosing */
 	  pParentBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
 	  while (pParentBox->BxType == BoGhost ||
 		 pParentBox->BxType == BoFloatGhost)
@@ -561,20 +570,14 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox,
 	      else
 		pParentBox = pAb->AbEnclosing->AbBox;
 	    }
+	  height = pParentBox->BxYOrg + pParentBox->BxHeight - pFrame->FrYOrg;
+	  /* don't take into account margins and borders */
+	  if (topY > height)
+	    h = 0;
+	  else if (topY + h > height)
+	    h = height - topY;
 	}
-      /* clipped by the enclosing box */
-      height = pParentBox->BxYOrg + pParentBox->BxHeight - pFrame->FrYOrg;
-      /* and the scrolling zone */
-      width = FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth
-	      - pFrame->FrXOrg;
-      /* don't take into account margins and borders */
-      topY = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder +
-	     pBox->BxTPadding - pFrame->FrYOrg;
-      h = pBox->BxH;
-      if (topY > height)
-	h = 0;
-      else if (topY + h > height)
-	h = height - topY;
+
       /* don't take into account margins and borders */
       l = l + pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       leftX = leftX + l - pFrame->FrXOrg;
@@ -592,6 +595,6 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox,
 	col = BgSelColor;
       else
 	col = BgSelColor;
-      DrawRectangle (frame, 0, 0, leftX, topY, width, h, 0, col, 2);
+      DrawRectangle (frame, 0, 0, leftX, topY + t, width, h, 0, col, 2);
     }
 }
