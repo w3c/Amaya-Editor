@@ -2224,6 +2224,25 @@ Document	doc;
 
 #endif
 {
+   AttributeType     attrType;
+   int		     attrKind;
+#define buflen 50
+   STRING            value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
+   int               length;
+ 
+   TtaGiveAttributeType (attr, &attrType, &attrKind);
+   if (attrType.AttrTypeNum == MathML_ATTR_color)
+      {
+      value[0] = EOS;
+      length = TtaGetTextAttributeLength (attr);
+      if (length >= buflen)
+         length = buflen - 1;
+      if (length > 0)
+	 {
+         TtaGiveTextAttributeValue (attr, value, &length);
+         HTMLSetForegroundColor (doc, el, value);
+	 }
+      }
 }
 
 /*----------------------------------------------------------------------

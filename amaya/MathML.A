@@ -64,7 +64,14 @@ ATTRIBUTES
         AttrModify.Post -> UpdateAttrID;
         AttrDelete.Post -> UpdateAttrID;
         END;
- 
+
+   color:
+        BEGIN
+        AttrCreate.Post -> MathAttrColorCreated;
+        AttrModify.Post -> MathAttrColorCreated;
+        AttrDelete.Pre ->  MathAttrColorDelete;
+        END;
+
    open:
 	BEGIN
 	AttrCreate.Post -> AttrOpenCloseChanged;

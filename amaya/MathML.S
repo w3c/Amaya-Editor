@@ -147,7 +147,7 @@ STRUCT
 		columnspan = TEXT;
 		edge = left\240, right\240;
 		actiontype = TEXT;
-	        selection = TEXT;
+	        selection = INTEGER;
 *****}		IntFontstyle)				{ for internal use }
 	  = LIST OF (Construct);
 
@@ -281,7 +281,7 @@ STRUCT
       { pactions }
       MACTION
 	  (ATTR actiontype = TEXT;
-	        selection = TEXT)
+	        selection = INTEGER)
 	  = LIST OF (Construct);
 
       { sep: provision for content tags }

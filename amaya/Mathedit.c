@@ -2277,7 +2277,45 @@ void FenceModified(event)
   TtaSetAttributeText (attr, text, mfencedEl, event->document);
 }
 
+/*----------------------------------------------------------------------
+ MathAttrColorCreated
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MathAttrColorCreated (NotifyAttribute *event)
+#else /* __STDC__*/
+void MathAttrColorCreated(event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+#define buflen 50
+  STRING           value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
+  int              length;
+
+  value[0] = EOS;
+  length = TtaGetTextAttributeLength (event->attribute);
+  if (length >= buflen)
+     length = buflen - 1;
+  if (length > 0)
+     TtaGiveTextAttributeValue (event->attribute, value, &length);  
+  HTMLSetForegroundColor (event->document, event->element, value);
+}
  
+ 
+/*----------------------------------------------------------------------
+ MathAttrColorDelete
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool MathAttrColorDelete (NotifyAttribute *event)
+#else /* __STDC__*/
+ThotBool MathAttrColorDelete(event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  HTMLResetForegroundColor (event->document, event->element);
+  return FALSE; /* let Thot perform normal operation */
+}
+ 
+
 /*----------------------------------------------------------------------
  AttrOpenCloseChanged
  Attribute open or close in a MFENCED element has been modified or deleted
