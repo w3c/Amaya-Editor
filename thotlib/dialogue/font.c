@@ -1113,7 +1113,8 @@ ThotBool            increase;
 	  /* initialize a new cache entry */
 	  TtFonts[i] = ptfont;
 #if !defined(_WINDOWS) && !defined(_GTK)
-	  if (alphabet == 'G' && size == 8 && (size < 16 || size == 24))
+	  size = LogicalPointsSizes[index];
+	  if (alphabet == 'G' && (size == 8 || size == 10 || size == 12 || size == 14 || size == 24))
 	    TtPatchedFont[i] = size;
 #endif /* !_WINDOWS && !_GTK */
 	  TtFontFrames[i] = 0;
