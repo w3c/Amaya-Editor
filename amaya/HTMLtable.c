@@ -1363,7 +1363,10 @@ NotifyElement      *event;
      }
    else
      /* a new cell in an existing row */
+     {
      NewCell (cell, doc, TRUE);
+     HandleColAndRowAlignAttributes (row, doc);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1403,6 +1406,7 @@ NotifyElement      *event;
 	 }
        /* a single cell has been pasted */
        NewCell (cell, doc, TRUE);
+       HandleColAndRowAlignAttributes (row, doc);
        CurrentPastedRow = NULL;
      }
 }
@@ -1490,8 +1494,6 @@ NotifyElement      *event;
 {
   Element             rowgroup, table;
   ElementType         elType;
-  Attribute           attr;
-  AttributeType       attrType;
   Document            doc;
   ThotBool            inMath;
 
@@ -1511,16 +1513,7 @@ NotifyElement      *event;
    table = TtaGetTypedAncestor (rowgroup, elType);
    CheckAllRows (table, doc, FALSE, FALSE);
    CheckTableAfterCellUpdate = TRUE;
-   /* if it's a row in a math table and if the table has a rowalign attribute,
-      distribute the values of that attribute to all rows in the table */
-   if (inMath)
-     {
-     attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = MathML_ATTR_rowalign;
-     attr = TtaGetAttribute (table, attrType);
-     if (attr)
-       HandleRowalignAttribute (attr, table, doc, FALSE);
-     }
+   HandleColAndRowAlignAttributes (rowgroup, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -1631,6 +1624,8 @@ NotifyElement      *event;
       child = TtaGetFirstChild (cell);
       TtaSelectElement (doc, child);
     }
+  if (CurrentRow)
+    HandleColAndRowAlignAttributes (CurrentRow, doc);
   CurrentColumn = NULL;
   CurrentRow = NULL;
 }
@@ -1723,8 +1718,6 @@ NotifyElement      *event;
 {
   Element             row, table;
   ElementType         elType;
-  Attribute           attr;
-  AttributeType       attrType;
   Document            doc;
   ThotBool            inMath;
 
@@ -1755,16 +1748,7 @@ NotifyElement      *event;
       /* avoid processing the cells of the created row */
       CurrentRow = row;
     }
-  /* if it's a row in a math table and if the table has a rowalign attribute,
-     distribute the values of that attribute to all rows in the table */
-  if (inMath)
-    {
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = MathML_ATTR_rowalign;
-      attr = TtaGetAttribute (table, attrType);
-      if (attr)
-	HandleRowalignAttribute (attr, table, doc, FALSE);
-    }
+  HandleColAndRowAlignAttributes (row, doc);
   CurrentCell = TtaGetLastChild (row);
 }
 
@@ -1780,8 +1764,6 @@ NotifyElement      *event;
 {
   Element             row, table;
   ElementType         elType;
-  Attribute           attr;
-  AttributeType       attrType;
   Document            doc;
   ThotBool            inMath;
 
@@ -1810,16 +1792,7 @@ NotifyElement      *event;
       CheckAllRows (table, doc, FALSE, FALSE);
       CheckTableAfterCellUpdate = FALSE;
     }
-  /* if it's a row in a math table and if the table has a rowalign attribute,
-     distribute the values of that attribute to all rows in the table */
-  if (inMath)
-    {
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = MathML_ATTR_rowalign;
-      attr = TtaGetAttribute (table, attrType);
-      if (attr)
-	HandleRowalignAttribute (attr, table, doc, FALSE);
-    }
+  HandleColAndRowAlignAttributes (row, doc);
   /* avoid processing the cells of the created row */
   CurrentPastedRow = row;
   CurrentCell = TtaGetLastChild (row);

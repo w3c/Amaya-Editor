@@ -4958,15 +4958,19 @@ Document doc;
 
 /*----------------------------------------------------------------------
  RowWithoutColalignAttr
- if element row has a columnalign attribute, get the next sibling row
+ if skip: if element row has a columnalign attribute, get the next sibling row
  element without a columnalign attribute and return its first cell
+ if not skip: always return the first cell in the row, and the columnalign
+ attribute of that row if there is one.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void RowWithoutColalignAttr (Element* row, Element* cell)
+static void RowWithoutColalignAttr (Element* row, Element* cell, Attribute* attr, ThotBool skip)
 #else /* __STDC__*/
-static void RowWithoutColalignAttr (row, cell)
+static void RowWithoutColalignAttr (row, cell, attr, skip)
 Element* row;
 Element* cell;
+Attribute* attr;
+ThotBool skip;
 #endif /* __STDC__*/
 {
   ElementType      elType;
@@ -4976,6 +4980,7 @@ Element* cell;
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = MathML_ATTR_columnalign;
   *cell = NULL;
+  *attr = NULL;
   while (*row != NULL && *cell == NULL)
     {
       elType = TtaGetElementType (*row);
@@ -4986,8 +4991,12 @@ Element* cell;
       else
 	{
 	  /* skip that row if it has a columnalign attribute */
-	  if (TtaGetAttribute (*row, attrType))
+	  *attr = TtaGetAttribute (*row, attrType);
+	  if (skip && *attr != NULL)
+	    {
 	    TtaNextSibling (row);
+	    *attr = NULL;
+	    }
 	  else
 	    /* it's a row without a columnalign attribute */
 	    *cell = TtaGetFirstChild (*row);
@@ -5000,24 +5009,28 @@ Element* cell;
    An attribute columnalign has been created, updated (if !delete) or deleted
    (if delete) for element el in document doc. Update the IntColAlign
    attributes of all concerned cells accordingly.
+   If allRows is TRUE, process also rows that have their own columnalign
+   attribute, according to that attribute, otherwise skip those rows.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void      HandleColalignAttribute (Attribute attr, Element el, Document doc,
-				   ThotBool delete)
+				   ThotBool delete, ThotBool allRows)
 #else
-void      HandleColalignAttribute (attr, el, doc, delete)
+void      HandleColalignAttribute (attr, el, doc, delete, allRows)
 Attribute	attr;
 Element		el;
 Document	doc;
 ThotBool        delete;
+ThotBool        allRows;
 
 #endif
 {
-  STRING           value;
+  STRING           value, localValue;
   CHAR_T*          ptr;
   int              length, val;
   ElementType      elType;
   Element          cell, row;
+  Attribute        localAttr;
   ThotBool         fullTable;
 
   elType = TtaGetElementType (el);
@@ -5030,6 +5043,7 @@ ThotBool        delete;
 
   fullTable = (elType.ElTypeNum == MathML_EL_MTABLE);
   value = NULL;
+  localValue = NULL;
   if (!delete)
     {
       length = TtaGetTextAttributeLength (attr);
@@ -5054,7 +5068,20 @@ ThotBool        delete;
     {
     elType.ElTypeNum = MathML_EL_TableRow;
     row = TtaGetTypedAncestor (cell, elType);
-    RowWithoutColalignAttr (&row, &cell);
+    RowWithoutColalignAttr (&row, &cell, &localAttr, !allRows);
+    if (localAttr)
+      {
+	length = TtaGetTextAttributeLength (localAttr);
+	if (length > 0)
+	  {
+	    if (localValue)
+	      TtaFreeMemory (localValue);
+	    localValue = TtaAllocString (length+1);
+	    localValue[0] = WC_EOS;
+	    TtaGiveTextAttributeValue (localAttr, localValue, &length);
+	    ptr = localValue;
+	  }
+      }
     }
   while (cell)
     {
@@ -5098,14 +5125,29 @@ ThotBool        delete;
       TtaNextSibling (&row);
       if (row)
 	{
-	  RowWithoutColalignAttr (&row, &cell);
 	  /* parse value of columnalign attribute again from the beginning */
 	  ptr = value;
+	  RowWithoutColalignAttr (&row, &cell, &localAttr, !allRows);
+	  if (localAttr)
+	    {
+	      length = TtaGetTextAttributeLength (localAttr);
+	      if (length > 0)
+		{
+		  if (localValue)
+		    TtaFreeMemory (localValue);
+		  localValue = TtaAllocString (length+1);
+		  localValue[0] = WC_EOS;
+		  TtaGiveTextAttributeValue (localAttr, localValue, &length);
+		  ptr = localValue;
+		}
+	    }
 	}
       }
     }
   if (value)
     TtaFreeMemory (value);
+  if (localValue)
+    TtaFreeMemory (localValue);
 }
 
 /*----------------------------------------------------------------------
@@ -5122,7 +5164,7 @@ void AttrColAlignCreated (event)
 #endif /* __STDC__*/
 {
   HandleColalignAttribute (event->attribute, event->element, event->document,
-			   FALSE);
+			   FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -5143,7 +5185,7 @@ void AttrColAlignDeleted (event)
   Element        asc;
   Attribute      attr;
 
-  HandleColalignAttribute (NULL, event->element, event->document, TRUE);
+  HandleColalignAttribute (NULL, event->element, event->document, TRUE, FALSE);
   /* if the enclosing mtable has a columnalign attribute applies it */
   elType = TtaGetElementType (event->element);
   if (elType.ElTypeNum == MathML_EL_MTR ||
@@ -5155,7 +5197,7 @@ void AttrColAlignDeleted (event)
 	{
 	  attr = TtaGetAttribute (asc, event->attributeType);
 	  if (attr)
-	    HandleColalignAttribute (attr, asc, event->document, FALSE);
+	    HandleColalignAttribute (attr, asc, event->document, FALSE, FALSE);
 	}
     }
 }
@@ -5207,7 +5249,7 @@ void AttrColAlignMtdDeleted (event)
       attrType.AttrTypeNum = MathML_ATTR_columnalign;
       attr = TtaGetAttribute (asc, attrType);
       if (attr)
-	HandleColalignAttribute (attr, asc, event->document, FALSE);
+	HandleColalignAttribute (attr, asc, event->document, FALSE, FALSE);
       else
 	/* no columnalign on the enclosing row. Look at the enclosing table */
 	{
@@ -5217,8 +5259,57 @@ void AttrColAlignMtdDeleted (event)
 	    {
 	      attr = TtaGetAttribute (asc, attrType);
 	      if (attr)
-		HandleColalignAttribute (attr, asc, event->document, FALSE);
+		HandleColalignAttribute (attr, asc, event->document, FALSE,
+					 FALSE);
 	    }
 	}
     }
+}
+
+/*----------------------------------------------------------------------
+   HandleColAndRowAlignAttributes
+   if element row is a MathML mtd element, check the rowalign and columnalign
+   attributes on the enclosing table element and on the row itself.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                HandleColAndRowAlignAttributes (Element row, Document doc)
+#else
+void                HandleColAndRowAlignAttributes (row, doc)
+Element  row;
+Document doc;
+#endif
+{
+   Element          table;
+   ElementType      elType;
+   AttributeType    attrType;
+   Attribute        attr;
+
+   elType = TtaGetElementType (row);
+   if ((elType.ElTypeNum == MathML_EL_MTR ||
+	elType.ElTypeNum == MathML_EL_MLABELEDTR) &&
+       !strcmp (TtaGetSSchemaName(elType.ElSSchema), "MathML"))
+     /* it's a row in a MathML table */
+     {
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = MathML_ATTR_columnalign;
+       attr = TtaGetAttribute (row, attrType);
+       if (attr)
+	 /* the row element has a columnalign attribute.
+	    applies that attribute again to that row */
+	 HandleColalignAttribute (attr, row, doc, FALSE, TRUE);
+       elType.ElTypeNum = MathML_EL_MTABLE;
+       table = TtaGetTypedAncestor (row, elType);
+       attrType.AttrTypeNum = MathML_ATTR_columnalign;
+       attr = TtaGetAttribute (table, attrType);
+       if (attr)
+	 /* the enclosing mtable element has a columnalign attribute.
+	    applies that attribute again to the whole table */
+	 HandleColalignAttribute (attr, table, doc, FALSE, TRUE);
+       attrType.AttrTypeNum = MathML_ATTR_rowalign;
+       attr = TtaGetAttribute (table, attrType);
+       if (attr)
+	 /* the enclosing mtable element has a rowalign attribute.
+	    applies that attribute again to the whole table */
+	 HandleRowalignAttribute (attr, table, doc, FALSE);
+     }
 }

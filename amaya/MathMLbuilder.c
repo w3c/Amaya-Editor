@@ -2297,7 +2297,7 @@ int             *error;
           attrType.AttrTypeNum = MathML_ATTR_columnalign;
 	  attr = TtaGetAttribute (el, attrType);
 	  if (attr)
-	     HandleColalignAttribute (attr, el, doc, FALSE);
+	     HandleColalignAttribute (attr, el, doc, FALSE, FALSE);
 	  break;
        case MathML_EL_MTR:
 	  /* if the row has a columnalign attribute, process it */
@@ -2305,7 +2305,7 @@ int             *error;
           attrType.AttrTypeNum = MathML_ATTR_columnalign;
 	  attr = TtaGetAttribute (el, attrType);
 	  if (attr)
-	     HandleColalignAttribute (attr, el, doc, FALSE);
+	     HandleColalignAttribute (attr, el, doc, FALSE, TRUE);
 	  break;
        case MathML_EL_MLABELEDTR:
 	  /* if the row has a columnalign attribute, process it */
@@ -2313,7 +2313,7 @@ int             *error;
           attrType.AttrTypeNum = MathML_ATTR_columnalign;
 	  attr = TtaGetAttribute (el, attrType);
 	  if (attr)
-	     HandleColalignAttribute (attr, el, doc, FALSE);
+	     HandleColalignAttribute (attr, el, doc, FALSE, TRUE);
 	  break;
        case MathML_EL_MTD:
 	  /* Create placeholders within the table cell */
