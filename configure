@@ -14500,10 +14500,15 @@ echo "${ECHO_T}no - found version $REDLAND_VERSION and minimal version is $redla
 echo "${ECHO_T}yes - found version $REDLAND_VERSION" >&6
 	 echo "$as_me:$LINENO: checking checking for redland headers" >&5
 echo $ECHO_N "checking checking for redland headers... $ECHO_C" >&6
-         REDLAND_HEADERS=`$REDLAND_CONFIG --cflags`
-	 REDLAND_HEADERS="$REDLAND_HEADERS/redland.h"
-         REDLAND_HEADERS="/usr/local/include/redland.h"
-	 if test -e $REDLAND_HEADERS ; then
+	          	 REDLAND_HEADERS=""
+	 if test -e "/usr/include/redland.h" ; then
+	   REDLAND_HEADERS="/usr/include";
+	 else
+           if test -e "/usr/local/include/redland.h" ; then
+	     REDLAND_HEADERS="/usr/local/include";
+           fi
+         fi
+	 if test $REDLAND_HEADERS != ""; then
            echo "$as_me:$LINENO: result: yes - have development version" >&5
 echo "${ECHO_T}yes - have development version" >&6
            redland_compile_source=no

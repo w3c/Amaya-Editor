@@ -324,7 +324,6 @@ redland_config: @MAKEREDLAND@ force
           fi)
 	 @(localdir=`pwd` ; redlanddir="$$localdir/../../$(REDLAND)" ; \
 	  cd $(REDLAND) ; unset LANG; \
-	  $(ECHO) "I'm at $$localdir" ; \
 	  if test ! -f Makefile -o ! -f  redland-src-config ; then \
 			CPPFLAGS="-I$$localdir/../../$(LIBWWW)/modules/expat/lib" \
 			LDFLAGS="-L$$localdir/libwww/modules/expat -L$$localdir/libwww/modules/expat/.libs" \

@@ -993,10 +993,17 @@ if test "$build_amaya" = "yes" ; then
        else
          AC_MSG_RESULT(yes - found version $REDLAND_VERSION)
 	 AC_MSG_CHECKING(checking for redland headers)
-         REDLAND_HEADERS=`$REDLAND_CONFIG --cflags`
-	 REDLAND_HEADERS="$REDLAND_HEADERS/redland.h"
-         REDLAND_HEADERS="/usr/local/include/redland.h"
-	 if test -e $REDLAND_HEADERS ; then
+	 dnl  We should use awk here and remove the -I from the following line
+         dnl REDLAND_HEADERS=`$REDLAND_CONFIG --cflags`
+	 REDLAND_HEADERS=""
+	 if test -e "/usr/include/redland.h" ; then
+	   REDLAND_HEADERS="/usr/include";
+	 else 
+           if test -e "/usr/local/include/redland.h" ; then
+	     REDLAND_HEADERS="/usr/local/include";
+           fi
+         fi	    
+	 if test $REDLAND_HEADERS != ""; then
            AC_MSG_RESULT(yes - have development version)
            redland_compile_source=no
 	 else
