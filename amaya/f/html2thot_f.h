@@ -42,7 +42,7 @@ extern CHAR_T GetNextInputChar ( FILE *infile,
                                  int *index,
                                  ThotBool *endOfFile );
 extern ThotBool IsXHTMLDocType ( STRING fileName );
-extern ThotBool ContentIsXML ( CharUnit* fileName );
+extern ThotBool ContentIsXML ( CHAR_T* fileName );
 extern void CheckAbstractTree ( CHAR_T* pathURL );
 extern void ParseIncludedHTML ( Element elem,
                                 STRING closingTag );
@@ -95,7 +95,7 @@ extern CHAR_T GetNextInputChar (/* FILE *infile,
                                    int *index,
                                    ThotBool *endOfFile */);
 extern ThotBool IsXHTMLDocType (/* STRING fileName */);
-extern ThotBool ContentIsXML (/* CharUnit* fileName */);
+extern ThotBool ContentIsXML (/* CHAR_T* fileName */);
 extern void CheckAbstractTree (/* CHAR_T* pathURL */);
 extern void ParseIncludedHTML (/* Element elem,
                                   STRING closingTag */);

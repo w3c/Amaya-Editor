@@ -352,6 +352,7 @@
 #define EN_PROFILEMENU                  519
 #define DE_PROFILEMENU                  520
 #define MATH_ENTITY_DLG                 534
+#define IDD_DIALOG2                     535
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -786,7 +787,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        535
+#define _APS_NEXT_RESOURCE_VALUE        536
 #define _APS_NEXT_COMMAND_VALUE         40052
 #define _APS_NEXT_CONTROL_VALUE         1472
 #define _APS_NEXT_SYMED_VALUE           101

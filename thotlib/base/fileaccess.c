@@ -58,8 +58,8 @@ char*               bval;
 
 #endif /* __STDC__ */
 {
-   char v;
-   if (fread (&v, sizeof (char), 1, file) == 0) {
+   unsigned char v;
+   if (fread (&v, sizeof (unsigned char), 1, file) == 0) {
       *bval = (char) 0;
       return (FALSE);
    } 
@@ -80,16 +80,17 @@ CHAR_T*             bval;
 #endif /* __STDC__ */
 {
 #  ifdef _I18N_
-   char     mbcstr[MAX_BYTES] = "\0";
-   int      nbBytes;
-   char     car;
+   char          mbcstr[MAX_BYTES] = "\0";
+   int           nbBytes;
+   unsigned char car;
+
    if (TtaReadByte (file, &car) == 0) {
       *bval = (CHAR_T) 0;
       return (FALSE);
    } 
    mbcstr[0] = car;
    nbBytes = 1;
-   if (car >= 0x80) {
+   if (isleadbyte (car)) {
       if (TtaReadByte (file, &car) == 0) {
          *bval = (CHAR_T)0;
          return FALSE;
@@ -97,6 +98,15 @@ CHAR_T*             bval;
       mbcstr [1] = car;
       nbBytes = 2;
    }
+   mbtowc (bval, mbcstr, nbBytes);
+   /* if (car >= 0x80) {
+      if (TtaReadByte (file, &car) == 0) {
+         *bval = (CHAR_T)0;
+         return FALSE;
+      }
+      mbcstr [1] = car;
+      nbBytes = 2;
+   }*/
    mbtowc (bval, mbcstr, nbBytes);
    return (TRUE);
 #  else  /* !_I18N_ */
@@ -253,53 +263,18 @@ int                *sval;
      }
 }
 
-
 /*----------------------------------------------------------------------
-   TtaReadName reads a string value.                               
+   TtaReadName reads a Wide Character string value.                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaReadName (BinFile file, char* name)
+ThotBool            TtaReadName (BinFile file, CHAR_T* name)
 #else  /* __STDC__ */
 ThotBool            TtaReadName (file, name)
-BinFile             file;
-char*               name;
-
-#endif /* __STDC__ */
-{
-   int                 i;
-
-   for (i = 0; i < MAX_NAME_LENGTH; i++)
-     {
-        if (!TtaReadByte (file, &name[i]))
-           {
-              name[i] = EOS;
-              return FALSE;
-           }
-        if (name[i] == EOS)
-           break;
-     }
-   if (i >= MAX_NAME_LENGTH)
-      {
-         name[0] = EOS;
-         return FALSE;
-      }
-
-   return TRUE;
-}
-
-/*----------------------------------------------------------------------
-   TtaReadWCName reads a Wide Character string value.                               
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaReadWCName (BinFile file, CHAR_T* name)
-#else  /* __STDC__ */
-ThotBool            TtaReadWCName (file, name)
 BinFile             file;
 CHAR_T*             name;
 
 #endif /* __STDC__ */
 {
-#  ifdef _I18N_
    int                 i;
 
    for (i = 0; i < MAX_NAME_LENGTH; i++)
@@ -318,9 +293,6 @@ CHAR_T*             name;
          return FALSE;
       }
    return TRUE;
-#  else  /* !_I18N_ */
-   return TtaReadName (file, name);
-#  endif /* !_I18N_ */
 }
 
 
@@ -365,7 +337,7 @@ CONST CHAR_T*       filename;
 #if 0 /* ********  OLD CODE  ******** */
    if (filename && filename [0] != WC_EOS)
 #     ifdef _WINDOWS
-      return cus_fopen (filename, CUSTEXT("rb"));
+      return cus_fopen (filename, TEXT("rb"));
 #     else
       return fopen (filename, "r");
 #     endif
@@ -593,7 +565,7 @@ DocumentIdentifier *Ident;
       if (!TtaReadByte (file, &((*Ident)[j++])))
          (*Ident)[j - 1] = EOS;
 #     endif /* !(defined(_I18N_) && defined(_WINDOWS)) */
-   while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == CUS_EOS)) ;
+   while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == WC_EOS)) ;
 }
 
 /*----------------------------------------------------------------------
@@ -873,7 +845,7 @@ CHAR_T*             extension;
 	     ok = (extension[i] == fileName[j]) && ok;
 	     j--;
 	  }
-	ok = ok && (fileName[j] == CUSTEXT('.'));
+	ok = ok && (fileName[j] == TEXT('.'));
      }
    else
       ok = FALSE;
@@ -1007,7 +979,7 @@ CHAR_T*             docName;
 #endif /* __STDC__ */
 {
    ustrncpy (docName, Ident, MAX_NAME_LENGTH);
-   docName[MAX_NAME_LENGTH - 1] = CUS_EOS;
+   docName[MAX_NAME_LENGTH - 1] = WC_EOS;
 }
 
 

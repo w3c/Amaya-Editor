@@ -46,8 +46,8 @@ int                 n;
 
 #endif /* __STDC__ */
 {
-   TtaWriteByte (outfile, (CHAR_T) (n / 256));
-   TtaWriteByte (outfile, (CHAR_T) (n % 256));
+   TtaWriteByte (outfile, (char) (n / 256));
+   TtaWriteByte (outfile, (char) (n % 256));
 }
 
 /*----------------------------------------------------------------------
@@ -87,8 +87,8 @@ Name                n;
 
    i = 0;
    do
-      TtaWriteByte (outfile, n[i++]);
-   while (n[i - 1] != '\0');
+      TtaWriteWideChar (outfile, n[i++]);
+   while (n[i - 1] != TEXT('\0'));
 }
 
 
@@ -1054,19 +1054,19 @@ PtrSSchema          pSS;
 	pStrnTr = &pTSch->TsCharTransl[i];
 	j = 0;
 	do
-	   TtaWriteByte (outfile, pStrnTr->StSource[j++]);
-	while (pStrnTr->StSource[j - 1] != '\0');
+	   TtaWriteWideChar (outfile, pStrnTr->StSource[j++]);
+	while (pStrnTr->StSource[j - 1] != TEXT('\0'));
 	j = 0;
 	do
-	   TtaWriteByte (outfile, pStrnTr->StTarget[j++]);
-	while (pStrnTr->StTarget[j - 1] != '\0');
+	   TtaWriteWideChar (outfile, pStrnTr->StTarget[j++]);
+	while (pStrnTr->StTarget[j - 1] != TEXT('\0'));
      }
    for (i = 0; i < pTSch->TsNConstants; i++)
      {
 	j = pTSch->TsConstBegin[i] - 1;
 	do
-	   TtaWriteByte (outfile, pTSch->TsConstant[j++]);
-	while (pTSch->TsConstant[j - 1] != '\0');
+	   TtaWriteWideChar (outfile, pTSch->TsConstant[j++]);
+	while (pTSch->TsConstant[j - 1] != TEXT('\0'));
      }
    for (i = 0; i < pSS->SsNRules; i++)
       WriteBlocks (pTSch->TsElemTRule[i], pSS);

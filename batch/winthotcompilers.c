@@ -39,7 +39,7 @@
 
 #define CTRL_O   15
 
-#define NEW_LINE '\n'
+#define NEW_LINE TEXT('\n')
 #define CR         13
 
 #define ERROR_CMD          0
@@ -61,20 +61,20 @@ HWND  hWND = (HWND) 0;
 HWND  StatusBar;
 HWND  hWndToolBar;
 
-int   Y = 10;
-char* cmdLine;
-char* SrcPath;
-char* DestPath;
-char* WorkPath;
-char* ThotPath;
-char* currentFile;
-char* currentDestFile;
-char* BinFiles [100];
-char* TbStrings [2] = {"Open (Ctrl+O)", "Build (F7)"};
+int        Y = 10;
+CHAR_T*    cmdLine;
+CHAR_T*    SrcPath;
+CHAR_T*    DestPath;
+CHAR_T*    WorkPath;
+CHAR_T*    ThotPath;
+CHAR_T*    currentFile;
+CHAR_T*    currentDestFile;
+CHAR_T*    BinFiles [100];
+CHAR_T*    TbStrings [2] = {TEXT("Open (Ctrl+O)"), TEXT("Build (F7)")};
 
-DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
+DWORD      dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 
-TBBUTTON tbButtons[] = {
+TBBUTTON   tbButtons[] = {
 	{0, OPEN,    TBSTATE_ENABLED, TBSTYLE_BUTTON, 0L, 0},
 	{1, COMPILE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0L, 0},
 };
@@ -88,9 +88,9 @@ LRESULT CALLBACK CompilersWndProc ();
 #endif /* __STDC__ */
 
 static OPENFILENAME OpenFileName;
-static STRING       szFilter = "Amaya Makefiles (*.mkf)\0*.mkf\0All files (*.*)\0*.*\0";
+static STRING       szFilter = TEXT("Amaya Makefiles (*.mkf)\0*.mkf\0All files (*.*)\0*.*\0");
 static CHAR_T       szFileName[256];
-static char         fileToOpen [256];
+static CHAR_T       fileToOpen [256];
 static int          iVscrollPos = 0, iVscrollMax, iVscrollInc; 
 static HINSTANCE    g_hInstance;
 
@@ -102,34 +102,34 @@ LPTOOLTIPTEXT lpttt;
 #endif /* __STDC__ */
 {
    int        iButton = lpttt->hdr.idFrom;
-   char*      pString;
-   char*      pDest = lpttt->lpszText;
+   CHAR_T*    pString;
+   CHAR_T*    pDest = lpttt->lpszText;
 
    pString = TbStrings[iButton - OPEN];
    ustrcpy (pDest, pString);
 }
 
 #ifdef __STDC__
-void MakeMessage (HWND hwnd, char* errorMsg, int msgType)
+void MakeMessage (HWND hwnd, CHAR_T* errorMsg, int msgType)
 #else  /* !__STDC__ */
 void MakeMessage (hwnd, errorMsg, msgType)
-HWND  hwnd;
-char* errorMsg;
-int   msgType;
+HWND    hwnd;
+CHAR_T* errorMsg;
+int     msgType;
 #endif /* __STDC__ */
 {
    if (hwnd) {
-      LPSTR pText = (LPSTR) malloc (strlen (errorMsg) + 3);
+      LPTSTR pText = (LPTSTR) malloc (ustrlen (errorMsg) + 3);
       if ( pText ) {
          /* Set caret to end of current text */
          int ndx = GetWindowTextLength (hwnd);
          SetFocus (hwnd);   
          SendMessage (hwnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
          /* Append text */
-         sprintf( pText, "%s\r\n", errorMsg );
-         SendMessage (hwnd, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) pText));
+         usprintf( pText, TEXT("%s\r\n"), errorMsg );
+         SendMessage (hwnd, EM_REPLACESEL, 0, (LPARAM) ((LPTSTR) pText));
 
-         free( pText );			
+         free (pText);			
 	  } 
    } 
 }
@@ -137,26 +137,26 @@ int   msgType;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int Copy_File (HWND hwnd, const char* src, const char* dest)
+int Copy_File (HWND hwnd, const CHAR_T* src, const CHAR_T* dest)
 #else  /* __STDC__ */
 int Copy_File (hwnd, src, dest)
-HWND        hwnd;
-const char* src; 
-const char* dest;
+HWND          hwnd;
+const CHAR_T* src; 
+const CHAR_T* dest;
 #endif /* __STDC__ */
 {
-    FILE* srcFile;
-    FILE* destFile;
-    char  errorMsg [800];
+    FILE*  srcFile;
+    FILE*  destFile;
+    CHAR_T errorMsg [800];
 	int   c;
 
-    if ((srcFile = fopen (src, "r")) == NULL) {
-       sprintf (errorMsg, "Error: Can't open file: %s", src);
+    if ((srcFile = ufopen (src, TEXT("r"))) == NULL) {
+       usprintf (errorMsg, TEXT("Error: Can't open file: %s"), src);
        MakeMessage (hwnd, errorMsg, FATAL_EXIT_CODE);
        return FATAL_EXIT_CODE;
 	}
-    if ((destFile = fopen (dest, "w")) == NULL) {
-       sprintf (errorMsg, "Error: Can't open file: %s", dest);
+    if ((destFile = ufopen (dest, TEXT("w"))) == NULL) {
+       usprintf (errorMsg, TEXT("Error: Can't open file: %s"), dest);
        MakeMessage (hwnd, errorMsg, FATAL_EXIT_CODE);
        return FATAL_EXIT_CODE;
 	}
@@ -171,25 +171,32 @@ const char* dest;
 }
 
 #ifdef __STDC__
-int Move_File (HWND hwnd, const char* src, const char* dest)
+int Move_File (HWND hwnd, const CHAR_T* src, const CHAR_T* dest)
 #else  /* __STDC__ */
 int Move_File (hwnd, src, dest)
-HWND        hwnd;
-const char* src; 
-const char* dest;
+HWND          hwnd;
+const CHAR_T* src; 
+const CHAR_T* dest;
 #endif /* __STDC__ */
 {
 	int ret;
+#   ifdef _I18N_
+    char srcfname[MAX_LENGTH];
 
     ret = Copy_File (hwnd, src, dest);
+    wcstombs (srcfname, src, MAX_LENGTH);
+     _unlink (srcfname);
+#   else  /* !_I18N_ */
+    ret = Copy_File (hwnd, src, dest);
      _unlink (src);
+#   endif /* !_I18N_ */
 	 return (ret);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* commandLine)
+int makeArgcArgv (HINSTANCE hInst, CHAR_T*** pArgv, CHAR_T* commandLine)
 #else  /* __STDC__ */
 int makeArgcArgv (hInst, pArgv, commandLine)
 HINSTANCE hInst; 
@@ -197,11 +204,11 @@ char***   pArgv;
 char*     commandLine;
 #endif /* __STDC__ */
 {
-    int          argc;
-    static char* argv[20];
-    static char  argv0[256];
-    char*        ptr     = commandLine;
-    char         lookFor = 0;
+    int            argc;
+    static CHAR_T* argv[20];
+    static CHAR_T  argv0[256];
+    CHAR_T*        ptr     = commandLine;
+    CHAR_T         lookFor = 0;
 
     enum {
          nowAt_start, 
@@ -228,13 +235,13 @@ char*     commandLine;
 	   ptr++;
 	   continue;
         }
-        if (*ptr == ' ' || *ptr == '\t') {
+        if (*ptr == TEXT(' ') || *ptr == TEXT('\t')) {
            *ptr = 0;
 	   ptr++;
 	   nowAt = nowAt_start;
 	   continue;
         }
-        if ((*ptr == '\'' || *ptr == '\"' || *ptr == '`') && nowAt == nowAt_start) {
+        if ((*ptr == TEXT('\'') || *ptr == TEXT('\"') || *ptr == TEXT('`')) && nowAt == nowAt_start) {
            lookFor = *ptr;
 	   nowAt = nowAt_start;
 	   ptr++;
@@ -249,51 +256,51 @@ char*     commandLine;
 }
 
 #ifdef __STDC__
-int Makefile (HWND hwnd, char* fileName)
+int Makefile (HWND hwnd, CHAR_T* fileName)
 #else  /* !__STDC__ */
 int Makefile (hwnd, fileName)
 HWND  hwnd;
 char* fileName;
 #endif /* __STDC__ */
 {
-    FILE* f; 
-    HANDLE hLib;
+    FILE*   f; 
+    HANDLE  hLib;
     FARPROC ptrMainProc;
-    char  msg [1024];
-    char  seps[]   = " \t=$()\n\r";
-	char  string [1024];
-    char* args [100];
-	char* token;
-    char* pChar;
-    char* ptr;
-    char* SrcFileName = NULL;
-    char* WorkFileName = NULL;
-    char* currentFileName;
-	int   command;
-    int   index, i;
-    int   indexBinFiles = 0;
-    int   len;
-    int   line = 1;
-    int   result = COMP_SUCCESS;
+    CHAR_T  msg [1024];
+    CHAR_T  seps[]   = TEXT(" \t=$()\n\r");
+	CHAR_T  string [1024];
+    CHAR_T* args [100];
+	CHAR_T* token;
+    CHAR_T* pChar;
+    CHAR_T* ptr;
+    CHAR_T* SrcFileName = NULL;
+    CHAR_T* WorkFileName = NULL;
+    CHAR_T* currentFileName;
+	int     command;
+    int     index, i;
+    int     indexBinFiles = 0;
+    int     len;
+    int     line = 1;
+    int     result = COMP_SUCCESS;
 
     if (hwnd) {
-       if ((f = fopen (fileName, "r")) == NULL) {
-          sprintf (msg, "Cannot open file %s", fileToOpen);
-          MessageBox (hwnd, msg, "Make error", MB_OK | MB_ICONWARNING);
+       if ((f = ufopen (fileName, TEXT("r"))) == NULL) {
+          usprintf (msg, TEXT("Cannot open file %s"), fileToOpen);
+          MessageBox (hwnd, msg, TEXT("Make error"), MB_OK | MB_ICONWARNING);
 	   } else {
               while (!feof (f)) {
                     if (currentFile) {
                        free (currentFile);
-                       currentFile = (char*) 0;
+                       currentFile = (CHAR_T*) 0;
 					} 
                     if (currentDestFile) {
                        free (currentDestFile);
-                       currentDestFile = (char*) 0;
+                       currentDestFile = (CHAR_T*) 0;
 					} 
 
                     /* Establish string and get the first token: */
                     string [0] = 0;
-                    fgets (string, 1024, f);
+                    ufgets (string, 1024, f);
 					/*
                     len = strlen (string);
                     if (string[len - 2] == 13)
@@ -302,26 +309,26 @@ char* fileName;
                          string[len - 1] = 0;
 						 */
                     pChar = &string [0];
-                    while (*pChar == SPACE || *pChar == TAB || *pChar == CR)
+                    while (*pChar == WC_SPACE || *pChar == WC_TAB || *pChar == CR)
                           pChar++;
-                    if (*pChar != NEW_LINE && *pChar != EOS && *pChar != CR) {
-                       token = strtok (string, seps);
+                    if (*pChar != NEW_LINE && *pChar != WC_EOS && *pChar != CR) {
+                       token = ustrtok (string, seps);
                        if (token != NULL) {
-                          if (!strcmp (token, "APP"))
+                          if (!ustrcmp (token, TEXT("APP")))
                              command = APP;
-                          else if (!strcmp (token, "PRS"))
+                          else if (!ustrcmp (token, TEXT("PRS")))
                                command = PRS;
-                          else if (!strcmp (token, "STR"))
+                          else if (!ustrcmp (token, TEXT("STR")))
                                command = STR;
-                          else if (!strcmp (token, "TRA"))
+                          else if (!ustrcmp (token, TEXT("TRA")))
                                command = TRA;
-                          else if (!strcmp (token, "SRC_DIR"))
+                          else if (!ustrcmp (token, TEXT("SRC_DIR")))
                                command = SRC_DIR;
-                          else if (!strcmp (token, "DEST_DIR"))
+                          else if (!ustrcmp (token, TEXT("DEST_DIR")))
                                command = DEST_DIR;
                           else {
                                command = ERROR_CMD;
-                               sprintf (msg, "%s (Line %3d): unknown command %s", fileToOpen, line, token);
+                               usprintf (msg, TEXT("%s (Line %3d): unknown command %s"), fileToOpen, line, token);
                                MakeMessage (hwnd, msg, FATAL_EXIT_CODE);				   
 						  } 
 					   }
@@ -330,22 +337,22 @@ char* fileName;
 
                        /* @@@@@ if (command != ERROR_CMD) { @@@@@ */
                           index = 0;
-                          args [index] = (char*) malloc (strlen (cmdLine) + 1);
-                          strcpy (args [index++], cmdLine);
-                          while ((token = strtok (NULL, seps)) != NULL) {
+                          args [index] = TtaAllocString (ustrlen (cmdLine) + 1);
+                          ustrcpy (args [index++], cmdLine);
+                          while ((token = ustrtok (NULL, seps)) != NULL) {
                                 /* While there are tokens in "string" */
-                                ptr = strrchr(token, '.');
-                                if (ptr || (token [0] != '-')) {
+                                ptr = ustrrchr (token, TEXT('.'));
+                                if (ptr || (token [0] != TEXT('-'))) {
                                    if (!currentFile) {
-                                      currentFile = (char*) malloc (strlen (token) + 1);
-                                      strcpy (currentFile, token);
+                                      currentFile = TtaAllocString (ustrlen (token) + 1);
+                                      ustrcpy (currentFile, token);
 								   } else {
-                                          currentDestFile = (char*) malloc (strlen (token) + 1);
-                                          strcpy (currentDestFile, token);
+                                          currentDestFile = TtaAllocString (ustrlen (token) + 1);
+                                          ustrcpy (currentDestFile, token);
 								   }
 								} 
-                                args [index] = (char*) malloc (strlen (token) + 1);
-                                strcpy (args [index++], token);
+                                args [index] = TtaAllocString (ustrlen (token) + 1);
+                                ustrcpy (args [index++], token);
                                 /* Get next token: */
                                 /* token = strtok (NULL, seps); */
 						  }
@@ -361,47 +368,47 @@ char* fileName;
                                  case SRC_DIR: 
                                       if (SrcPath) {
                                          free (SrcPath);
-                                         SrcPath = (char*) 0;
+                                         SrcPath = (CHAR_T*) 0;
 									  } 
-                                      if (!strcmp (args [1], "THOTDIR")) {
+                                      if (!ustrcmp (args [1], TEXT("THOTDIR"))) {
                                          if (index > 2) {
-                                            SrcPath = (char*) malloc (strlen (ThotPath) + strlen (args [2]) + 1);
-                                            strcpy (SrcPath, ThotPath);
-                                            strcat (SrcPath, args [2]);
+                                            SrcPath = TtaAllocString (ustrlen (ThotPath) + ustrlen (args [2]) + 1);
+                                            ustrcpy (SrcPath, ThotPath);
+                                            ustrcat (SrcPath, args [2]);
 										 } else {
-                                                SrcPath = (char*) malloc (strlen (ThotPath) + 1);
-                                                strcpy (SrcPath, ThotPath);
+                                                SrcPath = TtaAllocString (ustrlen (ThotPath) + 1);
+                                                ustrcpy (SrcPath, ThotPath);
 										 }
 									  }
                                       for (i = 0; i < index; i++) {
                                           free (args [i]);
-                                          args [i] = (char*) 0;
+                                          args [i] = (CHAR_T*) 0;
 									  }
                                       break;
 
                                  case DEST_DIR: 
                                       if (DestPath) {
                                          free (DestPath);
-                                         DestPath = (char*) 0;
+                                         DestPath = (CHAR_T*) 0;
 									  } 
-                                      if (!strcmp (args [1], "THOTDIR")) {
+                                      if (!ustrcmp (args [1], TEXT("THOTDIR"))) {
                                          if (index > 2) {
-                                            DestPath = (char*) malloc (strlen (ThotPath) + strlen (args [2]) + 1);
-                                            strcpy (DestPath, ThotPath);
-                                            strcat (DestPath, args [2]);
+                                            DestPath = TtaAllocString (ustrlen (ThotPath) + ustrlen (args [2]) + 1);
+                                            ustrcpy (DestPath, ThotPath);
+                                            ustrcat (DestPath, args [2]);
 										 } else {
-                                                DestPath = (char*) malloc (strlen (ThotPath) + 1);
-                                                strcpy (DestPath, ThotPath);
+                                                DestPath = TtaAllocString (ustrlen (ThotPath) + 1);
+                                                ustrcpy (DestPath, ThotPath);
 										 }
 									  }
                                       for (i = 0; i < index; i++) {
                                           free (args [i]);
-                                          args [i] = (char*) 0;
+                                          args [i] = (CHAR_T*) 0;
 									  }
                                       break;
 
                                  case APP: 
-                                      hLib = LoadLibrary ("app");
+                                      hLib = LoadLibrary (TEXT("app"));
                                       if (!hLib)
                                          return FATAL_EXIT_CODE;
                                       ptrMainProc = GetProcAddress (hLib, "APPmain");
@@ -410,40 +417,40 @@ char* fileName;
                                          return FATAL_EXIT_CODE;
 									  }
 
-                                      ptr = strrchr(currentFile, '.');
+                                      ptr = ustrrchr (currentFile, TEXT('.'));
                                       if (ptr) {
-                                         len = strlen (SrcPath);
-                                         if (len > 0 && SrcPath [len - 1] == '\\') {
-                                            SrcFileName = (char*) malloc (len + strlen (currentFile) + 1);
-                                            sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
+                                         len = ustrlen (SrcPath);
+                                         if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                            SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
+                                            usprintf (SrcFileName, TEXT("%s%s"), SrcPath, currentFile);
 										 } else {
-                                                SrcFileName = (char*) malloc (len + strlen (currentFile) + 2);
-                                                sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
+                                                SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
+                                                usprintf (SrcFileName, TEXT("%s\\%s"), SrcPath, currentFile);
 										 }
-                                         len = strlen (WorkPath);
-                                         if (len > 0 && WorkPath [len - 1] == '\\') {
-                                            WorkFileName = (char*) malloc (len + strlen (currentFile) + 1);
-                                            sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
+                                         len = ustrlen (WorkPath);
+                                         if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                            WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
+                                            usprintf (WorkFileName, TEXT("%s%s"), WorkPath, currentFile);
 										 } else {
-                                                WorkFileName = (char*) malloc (len + strlen (currentFile) + 2);
-                                                sprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
+                                                WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
+                                                usprintf (WorkFileName, TEXT("%s\\%s"), WorkPath, currentFile);
 										 } 
 									  } else {
-                                             len = strlen (SrcPath);
+                                             len = ustrlen (SrcPath);
                                              if (len > 0 && SrcPath [len - 1] == '\\') {
-                                                SrcFileName = (char*) malloc (len + strlen (currentFile) + 3);
-                                                sprintf (SrcFileName, "%s%s.A", SrcPath, currentFile);
+                                                SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
+                                                usprintf (SrcFileName, TEXT("%s%s.A"), SrcPath, currentFile);
 											 } else {
-                                                    SrcFileName = (char*) malloc (len + strlen (currentFile) + 3);
-                                                    sprintf (SrcFileName, "%s\\%s.A", SrcPath, currentFile);
+                                                    SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
+                                                    usprintf (SrcFileName, TEXT("%s\\%s.A"), SrcPath, currentFile);
 											 }
-                                             len = strlen (WorkPath);
-                                             if (len > 0 && WorkPath [len - 1] == '\\') {
-                                                WorkFileName = (char*) malloc (len + strlen (currentFile) + 3);
-                                                sprintf (WorkFileName, "%s%s.A", WorkPath, currentFile);
+                                             len = ustrlen (WorkPath);
+                                             if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                                WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
+                                                usprintf (WorkFileName, TEXT("%s%s.A"), WorkPath, currentFile);
 											 } else {
-                                                    WorkFileName = (char*) malloc (len + strlen (currentFile) + 4);
-                                                    sprintf (WorkFileName, "%s\\%s.A", WorkPath, currentFile);
+                                                    WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
+                                                    usprintf (WorkFileName, TEXT("%s\\%s.A"), WorkPath, currentFile);
 											 }  
 									  } 
 
@@ -452,20 +459,26 @@ char* fileName;
                                          FreeLibrary (hLib);
                                          for (i = 0; i < index; i++) {
                                              free (args [i]);
-                                             args [i] = (char*) 0;
+                                             args [i] = (CHAR_T*) 0;
 										 }
                                          if (currentFile) {
                                             free (currentFile);
-                                            currentFile = (char*) 0;
+                                            currentFile = (CHAR_T*) 0;
 										 }
                                          if (SrcFileName) {
                                             free (SrcFileName);
-                                            SrcFileName = (char*) 0;
+                                            SrcFileName = (CHAR_T*) 0;
 										 }
                                          if (WorkFileName) {
+#                                           ifdef _I18N_
+                                            char wfname[MAX_LENGTH];
+                                            wcstombs (wfname, WorkFileName, MAX_LENGTH);
+                                            _unlink (wfname);
+#                                           else /* !_I18N_ */
                                             _unlink (WorkFileName);
+#                                           endif /* !_I18N_ */
                                             free (WorkFileName);
-                                            WorkFileName = (char*) 0;
+                                            WorkFileName = (CHAR_T*) 0;
 										 }
 									  }
                                       if (result == FATAL_EXIT_CODE)
@@ -473,7 +486,7 @@ char* fileName;
                                       break;
 
                                  case PRS: 
-                                      hLib = LoadLibrary ("prs");
+                                      hLib = LoadLibrary (TEXT("prs"));
                                       if (!hLib)
                                          return FATAL_EXIT_CODE;
                                       ptrMainProc = GetProcAddress (hLib, "PRSmain");
@@ -482,60 +495,60 @@ char* fileName;
                                          return FATAL_EXIT_CODE;
 									  }
 
-                                      ptr = strrchr(currentFile, '.');
+                                      ptr = ustrrchr (currentFile, TEXT('.'));
                                       if (ptr) {
-                                         len = strlen (SrcPath);
-                                         if (len > 0 && SrcPath [len - 1] == '\\') {
-                                            SrcFileName = (char*) malloc (len + strlen (currentFile) + 1);
-                                            sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
+                                         len = ustrlen (SrcPath);
+                                         if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                            SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
+                                            usprintf (SrcFileName, TEXT("%s%s"), SrcPath, currentFile);
 										 } else {
-                                                SrcFileName = (char*) malloc (len + strlen (currentFile) + 2);
-                                                sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
+                                                SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
+                                                usprintf (SrcFileName, TEXT("%s\\%s"), SrcPath, currentFile);
 										 }
-                                         len = strlen (WorkPath);
-                                         if (len > 0 && WorkPath [len - 1] == '\\') {
-                                            WorkFileName = (char*) malloc (len + strlen (currentFile) + 1);
-                                            sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
+                                         len = ustrlen (WorkPath);
+                                         if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                            WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
+                                            usprintf (WorkFileName, TEXT("%s%s"), WorkPath, currentFile);
 										 } else {
-                                                WorkFileName = (char*) malloc (len + strlen (currentFile) + 2);
-                                                sprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
+                                                WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
+                                                usprintf (WorkFileName, TEXT("%s\\%s"), WorkPath, currentFile);
 										 } 
 									  } else {
-                                             len = strlen (SrcPath);
-                                             if (len > 0 && SrcPath [len - 1] == '\\') {
-                                                SrcFileName = (char*) malloc (len + strlen (currentFile) + 3);
-                                                sprintf (SrcFileName, "%s%s.P", SrcPath, currentFile);
+                                             len = ustrlen (SrcPath);
+                                             if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                                SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
+                                                usprintf (SrcFileName, TEXT("%s%s.P"), SrcPath, currentFile);
 											 } else {
-                                                    SrcFileName = (char*) malloc (len + strlen (currentFile) + 4);
-                                                    sprintf (SrcFileName, "%s\\%s.P", SrcPath, currentFile);
+                                                    SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
+                                                    usprintf (SrcFileName, TEXT("%s\\%s.P"), SrcPath, currentFile);
 											 }
-                                             len = strlen (WorkPath);
-                                             if (len > 0 && WorkPath [len - 1] == '\\') {
-                                                WorkFileName = (char*) malloc (len + strlen (currentFile) + 3);
-                                                sprintf (WorkFileName, "%s%s.P", WorkPath, currentFile);
+                                             len = ustrlen (WorkPath);
+                                             if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                                WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
+                                                usprintf (WorkFileName, TEXT("%s%s.P"), WorkPath, currentFile);
 											 } else {
-                                                    WorkFileName = (char*) malloc (len + strlen (currentFile) + 4);
-                                                    sprintf (WorkFileName, "%s\\%s.P", WorkPath, currentFile);
+                                                    WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
+                                                    usprintf (WorkFileName, TEXT("%s\\%s.P"), WorkPath, currentFile);
 											 }  
 									  } 
 
                                       if (currentDestFile) {
-                                         ptr = strrchr (currentDestFile, '.');
+                                         ptr = ustrrchr (currentDestFile, TEXT('.'));
                                          if (ptr) {
-                                            BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 1);
-                                            strcpy (BinFiles [indexBinFiles], currentDestFile);
+                                            BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentDestFile) + 1);
+                                            ustrcpy (BinFiles [indexBinFiles], currentDestFile);
 										 } else {
-                                                BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 5);
-                                                sprintf (BinFiles [indexBinFiles], "%s.PRS", currentDestFile);
+                                                BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentDestFile) + 5);
+                                                usprintf (BinFiles [indexBinFiles], TEXT("%s.PRS"), currentDestFile);
 										 }
 									  } else {
-                                             currentFileName = (char*) malloc (strlen (currentFile) + 1);
-                                             strcpy (currentFileName, currentFile);
-                                             ptr = strrchr (currentFileName, '.');
+                                             currentFileName = TtaAllocString (ustrlen (currentFile) + 1);
+                                             ustrcpy (currentFileName, currentFile);
+                                             ptr = ustrrchr (currentFileName, TEXT('.'));
                                              if (ptr)
                                                 ptr [0] = 0;
-                                             BinFiles [indexBinFiles] = (char*) malloc (strlen (currentFile) + 5);
-                                             sprintf (BinFiles [indexBinFiles], "%s.PRS", currentFile);
+                                             BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentFile) + 5);
+                                             usprintf (BinFiles [indexBinFiles], TEXT("%s.PRS"), currentFile);
 									  }
 
                                       if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
@@ -543,46 +556,52 @@ char* fileName;
                                          FreeLibrary (hLib);
                                          for (i = 0; i < index; i++) {
                                              free (args [i]);
-                                             args [i] = (char*) 0;
+                                             args [i] = (CHAR_T*) 0;
 										 }
                                          if (currentFile) {
                                             free (currentFile);
-                                            currentFile = (char*) 0;
+                                            currentFile = (CHAR_T*) 0;
 										 }
                                          if (SrcFileName) {
                                             free (SrcFileName);
-                                            SrcFileName = (char*) 0;
+                                            SrcFileName = (CHAR_T*) 0;
 										 }
                                          if (WorkFileName) {
+#                                           ifdef _I18N_
+                                            char wfname[MAX_LENGTH];
+                                            wcstombs (wfname, WorkFileName, MAX_LENGTH);
+                                            _unlink (wfname);
+#                                           else /* !_I18N_ */
                                             _unlink (WorkFileName);
+#                                           endif /* !_I18N_ */
                                             free (WorkFileName);
-                                            WorkFileName = (char*) 0;
+                                            WorkFileName = (CHAR_T*) 0;
 										 }
 									  }
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
-                                      len = strlen (WorkPath);
-                                      if (len > 0 && WorkPath [len - 1] == '\\') {
-                                         SrcFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 1);
-                                         sprintf (SrcFileName, "%s%s", WorkPath, BinFiles [indexBinFiles]);
+                                      len = ustrlen (WorkPath);
+                                      if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                         SrcFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 1);
+                                         usprintf (SrcFileName, TEXT("%s%s"), WorkPath, BinFiles [indexBinFiles]);
 									  } else {
-                                             SrcFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 2);
-                                             sprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [indexBinFiles]);
+                                             SrcFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 2);
+                                             usprintf (SrcFileName, TEXT("%s\\%s"), WorkPath, BinFiles [indexBinFiles]);
 									  }  
-                                      len = strlen (SrcPath);
-                                      if (len > 0 && SrcPath [len - 1] == '\\') {
-                                          WorkFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 1);
-                                          sprintf (WorkFileName, "%s%s", SrcPath, BinFiles [indexBinFiles]);
+                                      len = ustrlen (SrcPath);
+                                      if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                          WorkFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 1);
+                                          usprintf (WorkFileName, TEXT("%s%s"), SrcPath, BinFiles [indexBinFiles]);
 									  } else { 
-                                             WorkFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 2);
-                                             sprintf (WorkFileName, "%s\\%s", SrcPath, BinFiles [indexBinFiles]);
+                                             WorkFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 2);
+                                             usprintf (WorkFileName, TEXT("%s\\%s"), SrcPath, BinFiles [indexBinFiles]);
 									  } 
                                       Copy_File (hwnd, SrcFileName, WorkFileName);
                                       indexBinFiles++;
                                       break;
 
                                  case STR: 
-                                      hLib = LoadLibrary ("str");
+                                      hLib = LoadLibrary (TEXT("str"));
                                       if (!hLib)
                                          return FATAL_EXIT_CODE;
                                       ptrMainProc = GetProcAddress (hLib, "STRmain");
@@ -591,60 +610,60 @@ char* fileName;
                                          return FATAL_EXIT_CODE;
 									  }
 
-                                      ptr = strrchr(currentFile, '.');
+                                      ptr = ustrrchr(currentFile, TEXT('.'));
                                       if (ptr) {
-                                         len = strlen (SrcPath);
-                                         if (len > 0 && SrcPath [len - 1] == '\\') {
-                                            SrcFileName = (char*) malloc (len + strlen (currentFile) + 1);
-                                            sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
+                                         len = ustrlen (SrcPath);
+                                         if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                            SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
+                                            usprintf (SrcFileName, TEXT("%s%s"), SrcPath, currentFile);
 										 } else {
-                                                SrcFileName = (char*) malloc (len + strlen (currentFile) + 2);
-                                                sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
+                                                SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
+                                                usprintf (SrcFileName, TEXT("%s\\%s"), SrcPath, currentFile);
 										 }
-                                         len = strlen (WorkPath);
-                                         if (len > 0 && WorkPath [len - 1] == '\\') {
-                                            WorkFileName = (char*) malloc (len + strlen (currentFile) + 1);
-                                            sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
+                                         len = ustrlen (WorkPath);
+                                         if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                            WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
+                                            usprintf (WorkFileName, TEXT("%s%s"), WorkPath, currentFile);
 										 } else {
-                                                WorkFileName = (char*) malloc (len + strlen (currentFile) + 2);
-                                                sprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
+                                                WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
+                                                usprintf (WorkFileName, TEXT("%s\\%s"), WorkPath, currentFile);
 										 } 
 									  } else {
-                                             len = strlen (SrcPath);
-                                             if (len > 0 && SrcPath [len - 1] == '\\') {
-                                                SrcFileName = (char*) malloc (len + strlen (currentFile) + 3);
-                                                sprintf (SrcFileName, "%s%s.S", SrcPath, currentFile);
+                                             len = ustrlen (SrcPath);
+                                             if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                                SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
+                                                usprintf (SrcFileName, TEXT("%s%s.S"), SrcPath, currentFile);
 											 } else {
-                                                    SrcFileName = (char*) malloc (len + strlen (currentFile) + 4);
-                                                    sprintf (SrcFileName, "%s\\%s.S", SrcPath, currentFile);
+                                                    SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
+                                                    usprintf (SrcFileName, TEXT("%s\\%s.S"), SrcPath, currentFile);
 											 }
-                                             len = strlen (WorkPath);
-                                             if (len > 0 && WorkPath [len - 1] == '\\') {
-                                                WorkFileName = (char*) malloc (len + strlen (currentFile) + 3);
-                                                sprintf (WorkFileName, "%s%s.S", WorkPath, currentFile);
+                                             len = ustrlen (WorkPath);
+                                             if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                                WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
+                                                usprintf (WorkFileName, TEXT("%s%s.S"), WorkPath, currentFile);
 											 } else {
-                                                    WorkFileName = (char*) malloc (len + strlen (currentFile) + 4);
-                                                    sprintf (WorkFileName, "%s\\%s.S", WorkPath, currentFile);
+                                                    WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
+                                                    usprintf (WorkFileName, TEXT("%s\\%s.S"), WorkPath, currentFile);
 											 }  
 									  } 
 
                                       if (currentDestFile) {
-                                         ptr = strrchr (currentDestFile, '.');
+                                         ptr = ustrrchr (currentDestFile, TEXT('.'));
                                          if (ptr) {
-                                            BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 1);
-                                            strcpy (BinFiles [indexBinFiles], currentDestFile);
+                                            BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentDestFile) + 1);
+                                            ustrcpy (BinFiles [indexBinFiles], currentDestFile);
 										 } else {
-                                                BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 5);
-                                                sprintf (BinFiles [indexBinFiles], "%s.STR", currentDestFile);
+                                                BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentDestFile) + 5);
+                                                usprintf (BinFiles [indexBinFiles], TEXT("%s.STR"), currentDestFile);
 										 }
 									  } else {
-                                             currentFileName = (char*) malloc (strlen (currentFile) + 1);
-                                             strcpy (currentFileName, currentFile);
-                                             ptr = strrchr (currentFileName, '.');
+                                             currentFileName = TtaAllocString (ustrlen (currentFile) + 1);
+                                             ustrcpy (currentFileName, currentFile);
+                                             ptr = ustrrchr (currentFileName, TEXT('.'));
                                              if (ptr)
                                                 ptr [0] = 0;
-                                             BinFiles [indexBinFiles] = (char*) malloc (strlen (currentFile) + 5);
-                                             sprintf (BinFiles [indexBinFiles], "%s.STR", currentFile);
+                                             BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentFile) + 5);
+                                             usprintf (BinFiles [indexBinFiles], TEXT("%s.STR"), currentFile);
 									  }
 
                                       if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
@@ -664,35 +683,41 @@ char* fileName;
                                             SrcFileName = NULL;
 										 }
                                          if (WorkFileName) {
-											 _unlink (WorkFileName);
+#                                           ifdef _I18N_
+                                            char wfname[MAX_LENGTH];
+                                            wcstombs (wfname, WorkFileName, MAX_LENGTH);
+                                            _unlink (wfname);
+#                                           else /* !_I18N_ */
+                                            _unlink (WorkFileName);
+#                                           endif /* !_I18N_ */
                                             free (WorkFileName);
                                             WorkFileName = NULL;
 										 }
 									  }
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
-                                      len = strlen (WorkPath);
-                                      if (len > 0 && WorkPath [len - 1] == '\\') {
-                                         SrcFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 1);
-                                         sprintf (SrcFileName, "%s%s", WorkPath, BinFiles [indexBinFiles]);
+                                      len = ustrlen (WorkPath);
+                                      if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                         SrcFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 1);
+                                         usprintf (SrcFileName, TEXT("%s%s"), WorkPath, BinFiles [indexBinFiles]);
 									  } else {
-                                             SrcFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 2);
-                                             sprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [indexBinFiles]);
+                                             SrcFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 2);
+                                             usprintf (SrcFileName, TEXT("%s\\%s"), WorkPath, BinFiles [indexBinFiles]);
 									  }  
-                                      len = strlen (SrcPath);
-                                      if (len > 0 && SrcPath [len - 1] == '\\') {
-                                          WorkFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 1);
-                                          sprintf (WorkFileName, "%s%s", SrcPath, BinFiles [indexBinFiles]);
+                                      len = ustrlen (SrcPath);
+                                      if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                          WorkFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 1);
+                                          usprintf (WorkFileName, TEXT("%s%s"), SrcPath, BinFiles [indexBinFiles]);
 									  } else { 
-                                             WorkFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 2);
-                                             sprintf (WorkFileName, "%s\\%s", SrcPath, BinFiles [indexBinFiles]);
+                                             WorkFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 2);
+                                             usprintf (WorkFileName, TEXT("%s\\%s"), SrcPath, BinFiles [indexBinFiles]);
 									  } 
                                       Copy_File (hwnd, SrcFileName, WorkFileName);
                                       indexBinFiles++;
                                       break;
 
                                  case TRA: 
-                                      hLib = LoadLibrary ("tra");
+                                      hLib = LoadLibrary (TEXT("tra"));
                                       if (!hLib)
                                          return FATAL_EXIT_CODE;
 
@@ -702,22 +727,22 @@ char* fileName;
                                          return FATAL_EXIT_CODE;
 									  }
 
-                                      len = strlen (SrcPath);
-                                      if (len > 0 && SrcPath [len - 1] == '\\') {
-                                         SrcFileName = (char*) malloc (len + 12);
-                                         sprintf (SrcFileName, "%sgreek.sgml", SrcPath);
+                                      len = ustrlen (SrcPath);
+                                      if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                         SrcFileName = TtaAllocString (len + 12);
+                                         usprintf (SrcFileName, TEXT("%sgreek.sgml"), SrcPath);
 									  } else {
-                                             SrcFileName = (char*) malloc (len + 13);
-                                             sprintf (SrcFileName, "%s\\greek.sgml", SrcPath);
+                                             SrcFileName = TtaAllocString (len + 13);
+                                             usprintf (SrcFileName, TEXT("%s\\greek.sgml"), SrcPath);
 									  }
 
-                                      len = strlen (WorkPath);
-                                      if (len > 0 && WorkPath [len - 1] == '\\') {
-                                         WorkFileName = (char*) malloc (len + 12);
-                                         sprintf (WorkFileName, "%sgreek.sgml", WorkPath);
+                                      len = ustrlen (WorkPath);
+                                      if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                         WorkFileName = TtaAllocString (len + 12);
+                                         usprintf (WorkFileName, TEXT("%sgreek.sgml"), WorkPath);
 									  } else {
-                                             WorkFileName = (char*) malloc (len + 13);
-                                             sprintf (WorkFileName, "%s\\greek.sgml", WorkPath);
+                                             WorkFileName = TtaAllocString (len + 13);
+                                             usprintf (WorkFileName, TEXT("%s\\greek.sgml"), WorkPath);
 									  }
                 
                                       if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
@@ -729,22 +754,22 @@ char* fileName;
 										      free (WorkFileName);
 										      WorkFileName = NULL;
 										 }
-                                         len = strlen (SrcPath);
-                                         if (len > 0 && SrcPath [len - 1] == '\\') {
-                                            SrcFileName = (char*) malloc (len + 14);
-                                            sprintf (SrcFileName, "%sText_SGML.inc", SrcPath);
+                                         len = ustrlen (SrcPath);
+                                         if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                            SrcFileName = TtaAllocString (len + 14);
+                                            usprintf (SrcFileName, TEXT("%sText_SGML.inc"), SrcPath);
 										 } else {
-                                                SrcFileName = (char*) malloc (len + 15);
-                                                sprintf (SrcFileName, "%s\\Text_SGML.inc", SrcPath);
+                                                SrcFileName = TtaAllocString (len + 15);
+                                                usprintf (SrcFileName, TEXT("%s\\Text_SGML.inc"), SrcPath);
 										 }
 
-                                         len = strlen (WorkPath);
-                                         if (len > 0 && WorkPath [len - 1] == '\\') {
-                                            WorkFileName = (char*) malloc (len + 14);
-                                            sprintf (WorkFileName, "%sText_SGML.inc", WorkPath);
+                                         len = ustrlen (WorkPath);
+                                         if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                            WorkFileName = TtaAllocString (len + 14);
+                                            usprintf (WorkFileName, TEXT("%sText_SGML.inc"), WorkPath);
 										 } else {
-                                                WorkFileName = (char*) malloc (len + 15);
-                                                sprintf (WorkFileName, "%s\\Text_SGML.inc", WorkPath);
+                                                WorkFileName = TtaAllocString (len + 15);
+                                                usprintf (WorkFileName, TEXT("%s\\Text_SGML.inc"), WorkPath);
 										 }
 
                                          if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
@@ -756,60 +781,60 @@ char* fileName;
 										        free (WorkFileName);
 										        WorkFileName = NULL;
 											}
-                                            ptr = strrchr(currentFile, '.');
+                                            ptr = ustrrchr (currentFile, TEXT('.'));
                                             if (ptr) {
-                                               len = strlen (SrcPath);
-                                               if (len > 0 && SrcPath [len - 1] == '\\') {
-                                                  SrcFileName = (char*) malloc (len + strlen (currentFile) + 1);
-                                                  sprintf (SrcFileName, "%s%s", SrcPath, currentFile);
+                                               len = ustrlen (SrcPath);
+                                               if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                                  SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
+                                                  usprintf (SrcFileName, TEXT("%s%s"), SrcPath, currentFile);
 											   } else {
-                                                      SrcFileName = (char*) malloc (len + strlen (currentFile) + 2);
-                                                      sprintf (SrcFileName, "%s\\%s", SrcPath, currentFile);
+                                                      SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
+                                                      usprintf (SrcFileName, TEXT("%s\\%s"), SrcPath, currentFile);
 											   } 
-                                               len = strlen (WorkPath);
-                                               if (len > 0 && WorkPath [len - 1] == '\\') {
-                                                  WorkFileName = (char*) malloc (len + strlen (currentFile) + 1);
-                                                  sprintf (WorkFileName, "%s%s", WorkPath, currentFile);
+                                               len = ustrlen (WorkPath);
+                                               if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                                  WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 1);
+                                                  usprintf (WorkFileName, TEXT("%s%s"), WorkPath, currentFile);
 											   } else {
-                                                      WorkFileName = (char*) malloc (len + strlen (currentFile) + 2);
-                                                      sprintf (WorkFileName, "%s\\%s", WorkPath, currentFile);
+                                                      WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 2);
+                                                      usprintf (WorkFileName, TEXT("%s\\%s"), WorkPath, currentFile);
 											   } 
 											} else {
-												   len = strlen (SrcPath);
-                                                   if (len > 0 && SrcPath [len - 1] == '\\') {
-                                                      SrcFileName = (char*) malloc (len + strlen (currentFile) + 3);
-                                                      sprintf (SrcFileName, "%s%s.T", SrcPath, currentFile);
+												   len = ustrlen (SrcPath);
+                                                   if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                                      SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
+                                                      usprintf (SrcFileName, TEXT("%s%s.T"), SrcPath, currentFile);
 												   } else {
-                                                          SrcFileName = (char*) malloc (len + strlen (currentFile) + 4);
-                                                          sprintf (SrcFileName, "%s\\%s.T", SrcPath, currentFile);
+                                                          SrcFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
+                                                          usprintf (SrcFileName, TEXT("%s\\%s.T"), SrcPath, currentFile);
 												   }
-                                                   len = strlen (WorkPath);
-                                                   if (len > 0 && WorkPath [len - 1] == '\\') {
-                                                      WorkFileName = (char*) malloc (len + strlen (currentFile) + 3);
-                                                      sprintf (WorkFileName, "%s%s.T", WorkPath, currentFile);
+                                                   len = ustrlen (WorkPath);
+                                                   if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                                      WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 3);
+                                                      usprintf (WorkFileName, TEXT("%s%s.T"), WorkPath, currentFile);
 												   } else {
-                                                          WorkFileName = (char*) malloc (len + strlen (currentFile) + 4);
-                                                          sprintf (WorkFileName, "%s\\%s.T", WorkPath, currentFile);
+                                                          WorkFileName = TtaAllocString (len + ustrlen (currentFile) + 4);
+                                                          usprintf (WorkFileName, TEXT("%s\\%s.T"), WorkPath, currentFile);
 												   }  
 											} 
 
                                             if (currentDestFile) {
-                                               ptr = strrchr (currentDestFile, '.');
+                                               ptr = ustrrchr (currentDestFile, TEXT('.'));
                                                if (ptr) {
-                                                  BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 1);
-                                                  strcpy (BinFiles [indexBinFiles], currentDestFile);
+                                                  BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentDestFile) + 1);
+                                                  ustrcpy (BinFiles [indexBinFiles], currentDestFile);
 											   } else {
-                                                      BinFiles [indexBinFiles] = (char*) malloc (strlen (currentDestFile) + 5);
-                                                      sprintf (BinFiles [indexBinFiles], "%s.TRA", currentDestFile);
+                                                      BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentDestFile) + 5);
+                                                      usprintf (BinFiles [indexBinFiles], TEXT("%s.TRA"), currentDestFile);
 											   }
 											} else {
-                                                   currentFileName = (char*) malloc (strlen (currentFile) + 1);
-                                                   strcpy (currentFileName, currentFile);
-                                                   ptr = strrchr (currentFileName, '.');
+                                                   currentFileName = TtaAllocString (ustrlen (currentFile) + 1);
+                                                   ustrcpy (currentFileName, currentFile);
+                                                   ptr = ustrrchr (currentFileName, TEXT('.'));
                                                    if (ptr)
                                                       ptr [0] = 0;
-                                                   BinFiles [indexBinFiles] = (char*) malloc (strlen (currentFile) + 5);
-                                                   sprintf (BinFiles [indexBinFiles], "%s.TRA", currentFile);
+                                                   BinFiles [indexBinFiles] = TtaAllocString (ustrlen (currentFile) + 5);
+                                                   usprintf (BinFiles [indexBinFiles], TEXT("%s.TRA"), currentFile);
 											}
  
                                             if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
@@ -823,8 +848,15 @@ char* fileName;
                                                   free (currentFile);
                                                   currentFile = NULL;
 											   }
-                                               if (WorkFileName)
-												  _unlink (WorkFileName);
+                                               if (WorkFileName) {
+#                                                 ifdef _I18N_
+                                                  char wfname[MAX_LENGTH];
+                                                  wcstombs (wfname, WorkFileName, MAX_LENGTH);
+                                                  _unlink (wfname);
+#                                                 else /* !_I18N_ */
+                                                  _unlink (WorkFileName);
+#                                                 endif /* !_I18N_ */
+											   }
 											}
 										 }
 									  }
@@ -839,21 +871,21 @@ char* fileName;
 
                                       if (result == FATAL_EXIT_CODE)
                                          return result;
-                                      len = strlen (WorkPath);
-                                      if (len > 0 && WorkPath [len - 1] == '\\') {
-                                         SrcFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 1);
-                                         sprintf (SrcFileName, "%s%s", WorkPath, BinFiles [indexBinFiles]);
+                                      len = ustrlen (WorkPath);
+                                      if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                                         SrcFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 1);
+                                         usprintf (SrcFileName, TEXT("%s%s"), WorkPath, BinFiles [indexBinFiles]);
 									  } else {
-                                             SrcFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 2);
-                                             sprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [indexBinFiles]);
+                                             SrcFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 2);
+                                             usprintf (SrcFileName, TEXT("%s\\%s"), WorkPath, BinFiles [indexBinFiles]);
 									  }  
-                                      len = strlen (SrcPath);
-                                      if (len > 0 && SrcPath [len - 1] == '\\') {
-                                          WorkFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 1);
-                                          sprintf (WorkFileName, "%s%s", SrcPath, BinFiles [indexBinFiles]);
+                                      len = ustrlen (SrcPath);
+                                      if (len > 0 && SrcPath [len - 1] == TEXT('\\')) {
+                                          WorkFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 1);
+                                          usprintf (WorkFileName, TEXT("%s%s"), SrcPath, BinFiles [indexBinFiles]);
 									  } else { 
-                                             WorkFileName = (char*) malloc (len + strlen (BinFiles [indexBinFiles]) + 2);
-                                             sprintf (WorkFileName, "%s\\%s", SrcPath, BinFiles [indexBinFiles]);
+                                             WorkFileName = TtaAllocString (len + ustrlen (BinFiles [indexBinFiles]) + 2);
+                                             usprintf (WorkFileName, TEXT("%s\\%s"), SrcPath, BinFiles [indexBinFiles]);
 									  } 
                                       Copy_File (hwnd, SrcFileName, WorkFileName);
                                       indexBinFiles++;
@@ -876,22 +908,28 @@ char* fileName;
 				 SrcFileName = NULL;
 			  }
 			  for (i = 0; i < indexBinFiles; i++) {
-                  len = strlen (WorkPath);
-                  if (len > 0 && WorkPath [len - 1] == '\\') {
-                      SrcFileName = (char*) malloc (len + strlen (BinFiles[i]) + 1);
-                      sprintf (SrcFileName, "%s%s", WorkPath, BinFiles [i]);
+                  char sfname[MAX_LENGTH];
+                  len = ustrlen (WorkPath);
+                  if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
+                      SrcFileName = TtaAllocString (len + ustrlen (BinFiles[i]) + 1);
+                      usprintf (SrcFileName, TEXT("%s%s"), WorkPath, BinFiles [i]);
 				  } else {
-                         SrcFileName = (char*) malloc (len + strlen (BinFiles [i]) + 2);
-                         sprintf (SrcFileName, "%s\\%s", WorkPath, BinFiles [i]);
+                         SrcFileName = TtaAllocString (len + ustrlen (BinFiles [i]) + 2);
+                         usprintf (SrcFileName, TEXT("%s\\%s"), WorkPath, BinFiles [i]);
 				  }
+#                 ifdef _I18N_
+                  wcstombs (sfname, SrcFileName, MAX_LENGTH);
+                  _unlink (sfname);
+#                 else  /* !_I18N_ */
                   _unlink (SrcFileName);
+#                 endif /* !_I18N_ */
                   free (SrcFileName);
                   SrcFileName = NULL;
 			  }
               fclose (f);
 	   }  
     }
-    MakeMessage (hwnd, "\r\n\r\nBuild process success ...", COMP_SUCCESS);
+    MakeMessage (hwnd, TEXT("\r\n\r\nBuild process success ..."), COMP_SUCCESS);
     /* MakeMessage (hwnd, "\r\n\r\nNow you can Build Amaya ...", COMP_SUCCESS); */
     SendMessage (StatusBar, SB_SETTEXT, (WPARAM) 0, (LPARAM) "Finished");
     SendMessage (StatusBar, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
@@ -908,24 +946,28 @@ PSTR      szCmdLine;
 int       iCmdShow;
 #endif /* __STDC__ */
 {
-     static char szAppName[] = "ThotCompilers";
-     HWND        hwnd;
-     MSG         msg;
-     WNDCLASSEX  wndClass;
-     BOOL        ok;
-     int         argc;
-     char**      argv;
-     char*       dir_end;
-     char*       BinPath;
+     static CHAR_T  szAppName[] = TEXT("ThotCompilers");
+     CHAR_T         CMDLine[MAX_LENGTH];
+     HWND           hwnd;
+     MSG            msg;
+     WNDCLASSEX     wndClass;
+     BOOL           ok;
+     int            argc;
+     CHAR_T**       argv;
+     CHAR_T*        dir_end;
+     CHAR_T*        BinPath;
 
 	 g_hInstance = hInstance;
 
      InitCommonControls ();
 
-     argc = makeArgcArgv (hInstance, &argv, szCmdLine);
-	 cmdLine = (char*) malloc (strlen (argv[0]) + 1);
-	 strcpy (cmdLine, argv [0]);
-     TtaInitializeAppRegistry (cmdLine);
+     iso2wc_strcpy (CMDLine, szCmdLine);
+     argc = makeArgcArgv (hInstance, &argv, CMDLine);
+
+	 cmdLine = TtaAllocString (ustrlen (argv[0]) + 1);
+	 ustrcpy (cmdLine, argv [0]);
+
+     TtaInitializeAppRegistry (argv [0]);
 
      BinPath = TtaGetEnvString ("PWD");
      dir_end = BinPath;
@@ -947,8 +989,10 @@ int       iCmdShow;
         /* save the binary directory in BinariesDirectory */
 	 }
 
-     WorkPath = (char*) malloc (strlen (BinPath) + 7);
-     sprintf (WorkPath, "%s\\amaya", BinPath);
+     WorkPath = TtaAllocString (ustrlen (BinPath) + 7);
+     ustrcpy (WorkPath, BinPath);
+     ustrcat (WorkPath, TEXT("\\amaya"));
+     /*** sprintf (WorkPath, "%s\\amaya", BinPath); ***/
 
      ThotPath = TtaGetEnvString ("THOTDIR");
 
@@ -968,7 +1012,7 @@ int       iCmdShow;
      if (!RegisterClassEx (&wndClass))
         return FALSE;
 
-     hwnd = CreateWindowEx (0, szAppName, "Thot compilers",
+     hwnd = CreateWindowEx (0, szAppName, TEXT("Thot compilers"),
                             DS_MODALFRAME | WS_POPUP |
                             WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                             0, 0,
@@ -1011,11 +1055,11 @@ LPARAM lParam;
             case WM_CREATE:
                  menuBar = CreateMenu ();
                  popupMenu = CreateMenu ();
-                 AppendMenu (popupMenu, MF_STRING, OPEN, "&Open\tCtrl+O");
-                 AppendMenu (popupMenu, MF_STRING, COMPILE, "&Build\tF7");
+                 AppendMenu (popupMenu, MF_STRING, OPEN, TEXT("&Open\tCtrl+O"));
+                 AppendMenu (popupMenu, MF_STRING, COMPILE, TEXT("&Build\tF7"));
                  AppendMenu (popupMenu, MF_SEPARATOR, 0, NULL);
-                 AppendMenu (popupMenu, MF_STRING, QUIT, "&Quit\tAlt+F4");
-                 AppendMenu (menuBar, MF_POPUP, (UINT)popupMenu, "&File");
+                 AppendMenu (popupMenu, MF_STRING, QUIT, TEXT("&Quit\tAlt+F4"));
+                 AppendMenu (menuBar, MF_POPUP, (UINT)popupMenu, TEXT("&File"));
 				 SetMenu (hwnd, menuBar);
                  EnableMenuItem (popupMenu, COMPILE, MFS_GRAYED);
 
@@ -1024,15 +1068,15 @@ LPARAM lParam;
                                                 2, 32, 32, 32, 32, sizeof(TBBUTTON)); 
 
                  if (hWndToolBar == NULL ) {
-                    MessageBox (NULL, "Toolbar Bar not created!", NULL, MB_OK );
+                    MessageBox (NULL, TEXT("Toolbar Bar not created!"), NULL, MB_OK );
                     break;
 				 } 
 
                  SendMessage (hWndToolBar, TB_ENABLEBUTTON, (WPARAM) COMPILE, (LPARAM) MAKELONG (FALSE, 0));
 
                  GetClientRect( hwnd, &r );
-				 hEdit = CreateWindow( "EDIT", 
-					                   "", 
+				 hEdit = CreateWindow( TEXT("EDIT"), 
+					                   TEXT(""), 
 									   WS_CHILD|WS_BORDER|WS_HSCROLL|WS_VSCROLL|WS_VISIBLE|
 									   ES_AUTOHSCROLL|ES_AUTOVSCROLL|ES_MULTILINE|ES_READONLY,
 									   0,0,
@@ -1042,7 +1086,7 @@ LPARAM lParam;
 									   g_hInstance,
 									   NULL );
 
-                 StatusBar = CreateWindowEx (0L, STATUSCLASSNAME, "", WS_CHILD | WS_BORDER | WS_VISIBLE, 
+                 StatusBar = CreateWindowEx (0L, STATUSCLASSNAME, TEXT(""), WS_CHILD | WS_BORDER | WS_VISIBLE, 
                                              -100, -100, 10, 10,  hwnd, (HMENU)100, g_hInstance, NULL);
                  ShowWindow (StatusBar, SW_SHOWNORMAL);
                  UpdateWindow (StatusBar);
@@ -1053,14 +1097,14 @@ LPARAM lParam;
                     /* Fill in the TOOLINFO structure. */
                     lpToolInfo.cbSize = sizeof(lpToolInfo);
                     lpToolInfo.uFlags = TTF_IDISHWND | TTF_CENTERTIP;
-                    lpToolInfo.lpszText = (LPSTR)COMP_TOOLBAR;
+                    lpToolInfo.lpszText = (LPTSTR)COMP_TOOLBAR;
                     lpToolInfo.hwnd = hwnd;
                     lpToolInfo.uId = (UINT)hWndToolBar;
                     lpToolInfo.hinst = g_hInstance;
                     /* Set up tooltips for the combo box. */
                     SendMessage(hWndTT, TTM_ADDTOOL, 0, (LPARAM)(LPTOOLINFO)&lpToolInfo);
 				 } else
-                        MessageBox(NULL, "Could not get tooltip window handle.",NULL, MB_OK);
+                        MessageBox (NULL, TEXT("Could not get tooltip window handle."),NULL, MB_OK);
                  return 0;
 
             case WM_SIZE:
@@ -1093,13 +1137,13 @@ LPARAM lParam;
             case WM_KEYDOWN:
                  if ((wParam == VK_F7) && fileToOpen && (fileToOpen[0] != 0)) {
                     SetCursor(LoadCursor(NULL, IDC_WAIT));
-                    SetWindowText( hEdit, "" );
+                    SetWindowText (hEdit, TEXT(""));
                     result = Makefile (hEdit, fileToOpen);
                     SetCursor(LoadCursor(NULL, IDC_ARROW));
                     if (result == FATAL_EXIT_CODE)
-                       MakeMessage (hEdit, "\r\n\r\nBuild process aborted because of errors", FATAL_EXIT_CODE);
+                       MakeMessage (hEdit, TEXT("\r\n\r\nBuild process aborted because of errors"), FATAL_EXIT_CODE);
                     else 
-                         MakeMessage (hEdit, "\r\n\r\nYou can build Amaya", FATAL_EXIT_CODE);
+                         MakeMessage (hEdit, TEXT("\r\n\r\nYou can build Amaya"), FATAL_EXIT_CODE);
 				 }
 		         break;
 
@@ -1120,7 +1164,7 @@ LPARAM lParam;
                              return TRUE;
 
                         case TBN_CUSTHELP: /* Need to display custom help. */
-                             MessageBox(hwnd, "This help is custom.",NULL, MB_OK);
+                             MessageBox (hwnd, TEXT("This help is custom."), NULL, MB_OK);
                              break;
 
                         case TBN_TOOLBARCHANGE: /* Done dragging a bitmap to the toolbar. */
@@ -1138,11 +1182,11 @@ LPARAM lParam;
                              OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
                              OpenFileName.hwndOwner         = hwnd; 
                              OpenFileName.hInstance         = (HINSTANCE) GetWindowLong (hwnd, GWL_HINSTANCE); 
-                             OpenFileName.lpstrFilter       = (LPSTR) szFilter; 
+                             OpenFileName.lpstrFilter       = (LPTSTR) szFilter; 
                              OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
                              OpenFileName.nMaxCustFilter    = 0L; 
                              OpenFileName.nFilterIndex      = 1L; 
-                             OpenFileName.lpstrFile         = (LPSTR) szFileName; 
+                             OpenFileName.lpstrFile         = (LPTSTR) szFileName; 
                              OpenFileName.nMaxFile          = 256; 
                              OpenFileName.lpstrInitialDir   = NULL; 
                              OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
@@ -1153,7 +1197,7 @@ LPARAM lParam;
                              OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
   
                              if (GetOpenFileName (&OpenFileName)) {
-                                strcpy (fileToOpen, OpenFileName.lpstrFile);
+                                ustrcpy (fileToOpen, OpenFileName.lpstrFile);
                                 EnableMenuItem (popupMenu, COMPILE, MFS_ENABLED);
                                 SendMessage (hWndToolBar, TB_ENABLEBUTTON, (WPARAM) COMPILE, (LPARAM) MAKELONG (TRUE, 0));
 							 }
@@ -1166,11 +1210,11 @@ LPARAM lParam;
                              OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
                              OpenFileName.hwndOwner         = hwnd; 
                              OpenFileName.hInstance         = (HINSTANCE) GetWindowLong (hwnd, GWL_HINSTANCE); 
-                             OpenFileName.lpstrFilter       = (LPSTR) szFilter; 
+                             OpenFileName.lpstrFilter       = (LPTSTR) szFilter; 
                              OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
                              OpenFileName.nMaxCustFilter    = 0L; 
                              OpenFileName.nFilterIndex      = 1L; 
-                             OpenFileName.lpstrFile         = (LPSTR) szFileName; 
+                             OpenFileName.lpstrFile         = (LPTSTR) szFileName; 
                              OpenFileName.nMaxFile          = 256; 
                              OpenFileName.lpstrInitialDir   = NULL; 
                              OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
@@ -1181,7 +1225,7 @@ LPARAM lParam;
                              OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
   
                              if (GetOpenFileName (&OpenFileName)) {
-                                strcpy (fileToOpen, OpenFileName.lpstrFile);
+                                ustrcpy (fileToOpen, OpenFileName.lpstrFile);
                                 EnableMenuItem (popupMenu, COMPILE, MFS_ENABLED);
                                 SendMessage (hWndToolBar, TB_ENABLEBUTTON, (WPARAM) COMPILE, (LPARAM) MAKELONG (TRUE, 0));
 							 }
@@ -1189,13 +1233,13 @@ LPARAM lParam;
 
                         case COMPILE: 
 							 SetCursor(LoadCursor(NULL, IDC_WAIT));
-							 SetWindowText( hEdit, "" );
+							 SetWindowText (hEdit, TEXT(""));
                              result = Makefile (hEdit, fileToOpen);
  							 SetCursor(LoadCursor(NULL, IDC_ARROW));
                              if (result == FATAL_EXIT_CODE)
-                                MakeMessage (hEdit, "Build process aborted because of errors", FATAL_EXIT_CODE);
+                                MakeMessage (hEdit, TEXT("Build process aborted because of errors"), FATAL_EXIT_CODE);
                              else 
-                                 MakeMessage (hEdit, "\r\n\r\nYou can build Amaya", COMP_SUCCESS);
+                                 MakeMessage (hEdit, TEXT("\r\n\r\nYou can build Amaya"), COMP_SUCCESS);
                              break;
 
                         case QUIT: SendMessage (hwnd, WM_CLOSE, 0, 0);

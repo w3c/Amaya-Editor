@@ -96,8 +96,7 @@ extern ThotBool TtaReadSignedShort ( BinFile file,
 extern ThotBool TtaReadInteger ( BinFile file,
                                 int *sval );
 extern ThotBool TtaReadName ( BinFile file,
-                             char* name );
-extern ThotBool TtaReadWCName (BinFile file, CHAR_T* name);
+                             CHAR_T* name );
 extern BinFile TtaReadOpen (CONST CHAR_T* filename);
 extern void TtaReadClose ( BinFile file );
 extern void TtaWriteClose ( BinFile file );
@@ -146,8 +145,7 @@ extern ThotBool TtaReadSignedShort (/* BinFile file,
 extern ThotBool TtaReadInteger (/* BinFile file,
                                   int *sval */);
 extern ThotBool TtaReadName (/* BinFile file,
-                               char *name */);
-extern ThotBool TtaReadWCName (/* BinFile file, CHAR_T* name */);
+                               CHAR_T *name */);
 extern BinFile TtaReadOpen (/* CONST CHAR_T* filename */);
 extern void TtaReadClose (/* BinFile file */);
 extern void TtaWriteClose (/* BinFile file */);

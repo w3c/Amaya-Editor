@@ -178,7 +178,8 @@ unsigned char* txt;
        mbcstr[1] = *start++;
        nbBytesToRead = 2;
     }
-    mbtowc (&res, mbcstr, nbBytesToRead);
+    mbtowc (car, mbcstr, nbBytesToRead);
+    /* mbtowc (&res, mbcstr, nbBytesToRead); */
     return nbBytesToRead;
 }
 #endif /* _I18N_ */
@@ -793,16 +794,16 @@ CHAR_T*             aSchemaPath;
    /* traite successivement tous les directories du path des schemas */
    ustrncpy (DirBuffer, aSchemaPath, MAX_PATH);
    stop = FALSE;
-   while (DirBuffer[i] != CUS_EOS && i < MAX_PATH && !stop)
+   while (DirBuffer[i] != WC_EOS && i < MAX_PATH && !stop)
      {
-	while (DirBuffer[i] != CUS_PATH_SEP && DirBuffer[i] != CUS_EOS && i < MAX_PATH)
+	while (DirBuffer[i] != WC_PATH_SEP && DirBuffer[i] != WC_EOS && i < MAX_PATH)
 	   i++;
-	if (DirBuffer[i] == CUS_EOS)
+	if (DirBuffer[i] == WC_EOS)
 	   /* dernier directory du path. Il faut s'arreter apres ce directory */
 	   stop = TRUE;
-	if (DirBuffer[i] == CUS_PATH_SEP)
-	   DirBuffer[i] = CUS_EOS;
-	if (DirBuffer[i] == CUS_EOS)
+	if (DirBuffer[i] == WC_PATH_SEP)
+	   DirBuffer[i] = WC_EOS;
+	if (DirBuffer[i] == WC_EOS)
 	   /* un directory de schema a ete isole' */
 	  {
 	     Dir = &DirBuffer[beginning];
@@ -2053,7 +2054,7 @@ int                *height;
     {
       pDoc = LoadedDocument[document - 1];
       ptr = TtaGetEnvString (varName);
-      if (!ptr || ptr[0] == CUS_EOS)
+      if (!ptr || ptr[0] == WC_EOS)
 	found = FALSE;
       else
 	found = TRUE;

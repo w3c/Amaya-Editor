@@ -20,11 +20,11 @@
   ustrcasecmp: compare two strings without regard to case.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int ustrcasecmp (const STRING str1, const STRING str2)
+int ustrcasecmp (const CHAR_T* str1, const CHAR_T* str2)
 #else  /* __STDC__ */
 int ustrcasecmp (str1, str2)
-const STRING str1;
-const STRING str2;
+const CHAR_T* str1;
+const CHAR_T* str2;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
@@ -94,11 +94,11 @@ const CHAR_T* str2;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-int ustrcoll (const STRING str1, const STRING str2)
+int ustrcoll (const CHAR_T* str1, const CHAR_T* str2)
 #else  /* __STDC__ */
 int ustrcoll (str1, str2)
-const STRING str1;
-const STRING str2;
+const CHAR_T* str1;
+const CHAR_T* str2;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
@@ -134,10 +134,10 @@ const CHAR_T* src;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING iso2wc_strcpy (STRING dest, const char* src)
+CHAR_T* iso2wc_strcpy (CHAR_T* dest, const char* src)
 #else  /* __STDC__ */
-STRING iso2wc_strcpy (dest, src)
-STRING      dest;
+CHAR_T* iso2wc_strcpy (dest, src)
+CHAR_T*      dest;
 const char* src;
 #endif /* __STDC__ */
 {
@@ -153,14 +153,14 @@ const char* src;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrdup (const STRING str)
+CHAR_T* ustrdup (const CHAR_T* str)
 #else  /* __STDC__ */
-STRING ustrdup (str)
-const STRING str;
+CHAR_T* ustrdup (str)
+const CHAR_T* str;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
-    return (STRING) _wcsdup (str);
+    return (CHAR_T*) _wcsdup (str);
 #   else  /* !_WINDOWS */
 #   endif /* _WINDOWS */
 }
@@ -170,13 +170,13 @@ const STRING str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING iso2wc_strdup (const char* str)
+CHAR_T* iso2wc_strdup (const char* str)
 #else  /* __STDC__ */
-STRING iso2wc_strdup (str)
+CHAR_T* iso2wc_strdup (str)
 const char* str;
 #endif /* __STDC__ */
 {
-    STRING  res;
+    CHAR_T*  res;
     CHAR_T* tmp = (CHAR_T*) malloc ((strlen (str) + 1) * sizeof (CHAR_T));
     iso2wc_strcpy (tmp, str);
 #   ifdef _WINDOWS
@@ -184,7 +184,7 @@ const char* str;
 #   else  /* !_WINDOWS */
 #   endif /* _WINDOWS */
     free (tmp);
-    return (STRING) res;
+    return (CHAR_T*) res;
 }
 
 /*-------------------------------------------------------------
@@ -192,7 +192,7 @@ const char* str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-char* wc2iso_strdup (const STRING str)
+char* wc2iso_strdup (const CHAR_T* str)
 #else  /* __STDC__ */
 char* wc2iso_strdup (str)
 const char* str;
@@ -214,10 +214,10 @@ const char* str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-size_t ustrlen (const STRING str)
+size_t ustrlen (const CHAR_T* str)
 #else  /* __STDC__ */
 size_t ustrlen (str)
-const STRING str;
+const CHAR_T* str;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
@@ -232,11 +232,11 @@ const STRING str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-int ustrncasecmp (const STRING str1, const STRING str2, unsigned int count)
+int ustrncasecmp (const CHAR_T* str1, const CHAR_T* str2, unsigned int count)
 #else  /* __STDC__ */
 int ustrncasecmp (str1, str2, count)
-const STRING str1;
-const STRING str2;
+const CHAR_T* str1;
+const CHAR_T* str2;
 unsigned int  count;
 #endif /* __STDC__ */
 {
@@ -251,16 +251,16 @@ unsigned int  count;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrncat (STRING dest, const STRING src, unsigned int count)
+CHAR_T* ustrncat (CHAR_T* dest, const CHAR_T* src, unsigned int count)
 #else  /* __STDC__ */
-STRING ustrncat (dest, src, count)
-STRING       dest;
-const STRING src;
+CHAR_T* ustrncat (dest, src, count)
+CHAR_T*       dest;
+const CHAR_T* src;
 unsigned int  count;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS 
-    return (STRING) wcsncat (dest, src, (size_t)count);
+    return (CHAR_T*) wcsncat (dest, src, (size_t)count);
 #   else  /* !_WINDOWS */
 #   endif /* !_WINDOWS */
 }
@@ -289,16 +289,16 @@ unsigned int  count;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrncpy (STRING dest, const STRING src, unsigned int count)
+CHAR_T* ustrncpy (CHAR_T* dest, const CHAR_T* src, unsigned int count)
 #else  /* __STDC__ */
-STRING ustrncpy (dest, src, count)
-STRING       dest;
-const STRING src;
+CHAR_T* ustrncpy (dest, src, count)
+CHAR_T*       dest;
+const CHAR_T* src;
 unsigned int  count;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS 
-    return (STRING) wcsncpy ((wchar_t*)dest, (wchar_t*)src, (size_t)count);
+    return (CHAR_T*) wcsncpy ((wchar_t*)dest, (wchar_t*)src, (size_t)count);
 #   else  /* !_WINDOWS */
 #   endif /* !_WINDOWS */
 }
@@ -309,10 +309,10 @@ unsigned int  count;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING iso2wc_strncpy (STRING dest, const char* src, unsigned int count)
+CHAR_T* iso2wc_strncpy (CHAR_T* dest, const char* src, unsigned int count)
 #else  /* __STDC__ */
-STRING iso2wc_strncpy (dest, src, count)
-STRING      dest;
+CHAR_T* iso2wc_strncpy (dest, src, count)
+CHAR_T*      dest;
 const char* src;
 unsigned int  count;
 #endif /* __STDC__ */
@@ -334,15 +334,15 @@ unsigned int  count;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrrchr (const STRING str, CHAR_T c)
+CHAR_T* ustrrchr (const CHAR_T* str, CHAR_T c)
 #else  /* __STDC__ */
-STRING ustrrchr (str, c)
-const STRING str;
+CHAR_T* ustrrchr (str, c)
+const CHAR_T* str;
 CHAR_T         c;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
-    return (STRING) (wcsrchr ((wchar_t*)str, (int)c));
+    return (CHAR_T*) (wcsrchr ((wchar_t*)str, (int)c));
 #   else  /* !_WINDOWS */
 #   endif /* !_WINDOWS */
 }
@@ -352,15 +352,15 @@ CHAR_T         c;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrtok (STRING str, const STRING delemiter)
+CHAR_T* ustrtok (CHAR_T* str, const CHAR_T* delemiter)
 #else  /* __STDC__ */
-STRING ustrtok (str, delemiter)
-STRING       str;
-const STRING delemiter;
+CHAR_T* ustrtok (str, delemiter)
+CHAR_T*       str;
+const CHAR_T* delemiter;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS 
-    return (STRING) wcstok ((wchar_t*)str, (wchar_t*)delemiter);
+    return (CHAR_T*) wcstok ((wchar_t*)str, (wchar_t*)delemiter);
 #   else  /* !_WINDOWS */
 #   endif /* !_WINDOWS */
 }
@@ -370,15 +370,15 @@ const STRING delemiter;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrstr (const STRING str, const STRING strCharSet)
+CHAR_T* ustrstr (const CHAR_T* str, const CHAR_T* strCharSet)
 #else  /* __STDC__ */
-STRING ustrstr (str, strCharSet)
-const STRING str;
-const STRING strCharSet;
+CHAR_T* ustrstr (str, strCharSet)
+const CHAR_T* str;
+const CHAR_T* strCharSet;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
-    return (STRING) wcsstr ((wchar_t*)str, (wchar_t*)strCharSet);
+    return (CHAR_T*) wcsstr ((wchar_t*)str, (wchar_t*)strCharSet);
 #   else  /* !_WINDOWS */
 #   endif /* !_WINDOWS */
 }
@@ -390,11 +390,11 @@ const STRING strCharSet;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-int ustrcasecmp (const STRING str1, const STRING str2)
+int ustrcasecmp (const CHAR_T* str1, const CHAR_T* str2)
 #else  /* __STDC__ */
 int ustrcasecmp (str1, str2)
-const STRING str1;
-const STRING str2;
+const CHAR_T* str1;
+const CHAR_T* str2;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
@@ -457,11 +457,11 @@ const CHAR_T* str2;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-int ustrcoll (const STRING str1, const STRING str2)
+int ustrcoll (const CHAR_T* str1, const CHAR_T* str2)
 #else  /* __STDC__ */
 int ustrcoll (str1, str2)
-const STRING str1;
-const STRING str2;
+const CHAR_T* str1;
+const CHAR_T* str2;
 #endif /* __STDC__ */
 {
     return strcoll ((char*)str1, (char*)str2);
@@ -491,14 +491,14 @@ const CHAR_T* src;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING iso2wc_strcpy (STRING dest, const char* src)
+CHAR_T* iso2wc_strcpy (CHAR_T* dest, const char* src)
 #else  /* __STDC__ */
-STRING iso2wc_strcpy (dest, src)
-STRING      dest;
+CHAR_T* iso2wc_strcpy (dest, src)
+CHAR_T*      dest;
 const char* src;
 #endif /* __STDC__ */
 {
-    return (STRING) strcpy ((char*)dest, (char*)src);
+    return (CHAR_T*) strcpy ((char*)dest, (char*)src);
 }
  
 /*-------------------------------------------------------------
@@ -506,16 +506,16 @@ const char* src;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrdup (const STRING str)
+CHAR_T* ustrdup (const CHAR_T* str)
 #else  /* __STDC__ */
-STRING ustrdup (str)
-const STRING str;
+CHAR_T* ustrdup (str)
+const CHAR_T* str;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
-    return (STRING) _strdup ((char*)str);
+    return (CHAR_T*) _strdup ((char*)str);
 #   else  /* !_WINDOWS */
-    return (STRING) strdup ((char*)str);
+    return (CHAR_T*) strdup ((char*)str);
 #   endif /* _WINDOWS */
 }
 
@@ -524,16 +524,16 @@ const STRING str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING iso2wc_strdup (const char* str)
+CHAR_T* iso2wc_strdup (const char* str)
 #else  /* __STDC__ */
-STRING iso2wc_strdup (str)
+CHAR_T* iso2wc_strdup (str)
 const char* str;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
-    return (STRING) _strdup (str);
+    return (CHAR_T*) _strdup (str);
 #   else  /* !_WINDOWS */
-    return (STRING) strdup (str);
+    return (CHAR_T*) strdup (str);
 #   endif /* _WINDOWS */
 }
 
@@ -542,7 +542,7 @@ const char* str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-char* wc2iso_strdup (const STRING str)
+char* wc2iso_strdup (const CHAR_T* str)
 #else  /* __STDC__ */
 char* wc2iso_strdup (str)
 const char* str;
@@ -560,10 +560,10 @@ const char* str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-size_t ustrlen (const STRING str)
+size_t ustrlen (const CHAR_T* str)
 #else  /* __STDC__ */
 size_t ustrlen (str)
-const STRING str;
+const CHAR_T* str;
 #endif /* __STDC__ */
 {
     return (size_t) strlen ((char*)str);
@@ -575,11 +575,11 @@ const STRING str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-int ustrncasecmp (const STRING str1, const STRING str2, unsigned int count)
+int ustrncasecmp (const CHAR_T* str1, const CHAR_T* str2, unsigned int count)
 #else  /* __STDC__ */
 int ustrncasecmp (str1, str2, count)
-const STRING str1;
-const STRING str2;
+const CHAR_T* str1;
+const CHAR_T* str2;
 unsigned int  count;
 #endif /* __STDC__ */
 {
@@ -595,15 +595,15 @@ unsigned int  count;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrncat (STRING dest, const STRING src, unsigned int count)
+CHAR_T* ustrncat (CHAR_T* dest, const CHAR_T* src, unsigned int count)
 #else  /* __STDC__ */
-STRING ustrncat (dest, src, count)
-STRING       dest;
-const STRING src;
+CHAR_T* ustrncat (dest, src, count)
+CHAR_T*       dest;
+const CHAR_T* src;
 unsigned int  count;
 #endif /* __STDC__ */
 {
-    return (STRING) strncat ((char*)dest, (char*)src, (size_t)count);
+    return (CHAR_T*) strncat ((char*)dest, (char*)src, (size_t)count);
 }
 
 /*-------------------------------------------------------------
@@ -627,15 +627,15 @@ unsigned int  count;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrncpy (STRING dest, const STRING src, unsigned int count)
+CHAR_T* ustrncpy (CHAR_T* dest, const CHAR_T* src, unsigned int count)
 #else  /* __STDC__ */
-STRING ustrncpy (dest, src, count)
-STRING       dest;
-const STRING src;
+CHAR_T* ustrncpy (dest, src, count)
+CHAR_T*       dest;
+const CHAR_T* src;
 unsigned int  count;
 #endif /* __STDC__ */
 {
-    return (STRING) strncpy ((char*)dest, (char*)src, (size_t)count);
+    return (CHAR_T*) strncpy ((char*)dest, (char*)src, (size_t)count);
 }
 
 /*-------------------------------------------------------------
@@ -643,15 +643,15 @@ unsigned int  count;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING iso2wc_strncpy (STRING dest, const char* src, unsigned int count)
+CHAR_T* iso2wc_strncpy (CHAR_T* dest, const char* src, unsigned int count)
 #else  /* __STDC__ */
-STRING iso2wc_strncpy (dest, src, count)
-STRING       dest;
+CHAR_T* iso2wc_strncpy (dest, src, count)
+CHAR_T*       dest;
 const char*  src;
 unsigned int  count;
 #endif /* __STDC__ */
 {
-    return (STRING) strncpy ((char*)dest, (char*)src, (size_t)count);
+    return (CHAR_T*) strncpy ((char*)dest, (char*)src, (size_t)count);
 }
 
 /*-------------------------------------------------------------
@@ -659,14 +659,14 @@ unsigned int  count;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrrchr (const STRING str, CHAR_T c)
+CHAR_T* ustrrchr (const CHAR_T* str, CHAR_T c)
 #else  /* __STDC__ */
-STRING ustrrchr (str, c)
-const STRING str;
+CHAR_T* ustrrchr (str, c)
+const CHAR_T* str;
 CHAR_T         c;
 #endif /* __STDC__ */
 {
-    return (STRING) strrchr ((char*)str, (int)c);
+    return (CHAR_T*) strrchr ((char*)str, (int)c);
 }
 
 /*-------------------------------------------------------------
@@ -674,14 +674,14 @@ CHAR_T         c;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrtok (STRING str, const STRING delemiter)
+CHAR_T* ustrtok (CHAR_T* str, const CHAR_T* delemiter)
 #else  /* __STDC__ */
-STRING ustrtok (str, delemiter)
-STRING       str;
-const STRING delemiter;
+CHAR_T* ustrtok (str, delemiter)
+CHAR_T*       str;
+const CHAR_T* delemiter;
 #endif /* __STDC__ */
 {
-    return (STRING) strtok ((char*)str, (char*)delemiter);
+    return (CHAR_T*) strtok ((char*)str, (char*)delemiter);
 }
 
 /*-------------------------------------------------------------
@@ -689,14 +689,14 @@ const STRING delemiter;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrstr (const STRING str, const STRING strCharSet)
+CHAR_T* ustrstr (const CHAR_T* str, const CHAR_T* strCharSet)
 #else  /* __STDC__ */
-STRING ustrstr (str, strCharSet)
-const STRING str;
-const STRING strCharSet;
+CHAR_T* ustrstr (str, strCharSet)
+const CHAR_T* str;
+const CHAR_T* strCharSet;
 #endif /* __STDC__ */
 {
-    return (STRING) strstr ((char*)str, (char*)strCharSet);
+    return (CHAR_T*) strstr ((char*)str, (char*)strCharSet);
 }
 
 #endif /* _I18N_ */
@@ -1183,7 +1183,7 @@ const char*   str2;
     CHAR_T* wc_str2 = (CHAR_T*) malloc ((strlen (str2) + 1) * sizeof (CHAR_T));
 
     iso2wc_strcpy (wc_str2, str2);
-    diff = ustrcasecmp ((STRING)str1, (STRING)wc_str2);
+    diff = ustrcasecmp ((CHAR_T*)str1, (CHAR_T*)wc_str2);
 
     free (wc_str2);
     return diff;
@@ -1210,11 +1210,11 @@ const char*   str2;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-char* wc2iso_strcpy (char* dest, const STRING src)
+char* wc2iso_strcpy (char* dest, const CHAR_T* src)
 #else  /* __STDC__ */
 char* wc2iso_strcpy (dest, src)
 char*         dest;
-const STRING  src;
+const CHAR_T*  src;
 #endif /* __STDC__ */
 {
     int i, len = ustrlen (src);
@@ -1231,11 +1231,11 @@ const STRING  src;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-char* wc2iso_strncpy (char* dest, const STRING src, int count)
+char* wc2iso_strncpy (char* dest, const CHAR_T* src, int count)
 #else  /* __STDC__ */
 char* wc2iso_strncpy (dest, src, count)
 char*         dest;
-const STRING  src;
+const CHAR_T*  src;
 int           count;
 #endif /* __STDC__ */
 {
@@ -1262,10 +1262,10 @@ CharUnit* wc2cus_strcpy (CharUnit* dest, const CHAR_T* src)
 #else  /* __STDC__ */
 CharUnit* wc2cus_strcpy (dest, src)
 CharUnit*     dest;
-const STRING  src;
+const CHAR_T*  src;
 #endif /* __STDC__ */
 {
-    int i, len = ustrlen ((STRING)src);
+    int i, len = ustrlen ((CHAR_T*)src);
 
     for (i = 0; i < len; i++)
         dest[i] = (CharUnit)src[i];

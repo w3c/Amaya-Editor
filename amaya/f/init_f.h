@@ -235,8 +235,13 @@ extern Document GetHTMLDocument (/* const CHAR_T* documentPath,
                                     void *ctx_cbf */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
+<<<<<<< init_f.h
+                                 CHAR_T* data */);
+extern ThotBool CheckMakeDirectory (/* CharUnit* name,
+=======
                                  CHAR_T* data */);
 extern ThotBool CheckMakeDirectory (/* CHAR_T* name,
+>>>>>>> 1.57
                                        ThotBool recursive */);
 extern void FreeAmayaStructures (/* void */);
 extern void InitAmaya (/* NotifyEvent * event */);

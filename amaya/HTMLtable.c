@@ -186,7 +186,7 @@ ThotBool            inMath;
 	elType.ElTypeNum = MathML_EL_MTD;
       else
 	elType.ElTypeNum = HTML_EL_Data_cell;
-      lastcell = TtaNewTree (doc, elType, _EMPTYSTR_);
+      lastcell = TtaNewTree (doc, elType, "");
       if (lastcell != NULL)
 	{
 	  TtaInsertSibling (lastcell, sibling, before, doc);
@@ -223,7 +223,7 @@ ThotBool            inMath;
    if (lastcolhead == NULL)
       return NULL;
    elType = TtaGetElementType (lastcolhead);
-   colhead = TtaNewTree (doc, elType, _EMPTYSTR_);
+   colhead = TtaNewTree (doc, elType, "");
    if (colhead != NULL)
      {
 	TtaInsertSibling (colhead, lastcolhead, before, doc);
@@ -529,7 +529,7 @@ Document            doc;
 		{
 		  /* replace the Table_cell by a Data_cell */
 		  elType.ElTypeNum = HTML_EL_Data_cell;
-		  new = TtaNewTree (doc, elType, _EMPTYSTR_);
+		  new = TtaNewTree (doc, elType, "");
 		  TtaInsertFirstChild (&new, cell, doc);
 		  cell = new;
 		}
@@ -770,7 +770,7 @@ Document            doc;
       /* create a Table_head element with a first Column_head */
       elType = TtaGetElementType (table);
       elType.ElTypeNum = HTML_EL_Table_head;
-      columnHeads = TtaNewTree (doc, elType, _EMPTYSTR_);
+      columnHeads = TtaNewTree (doc, elType, "");
       if (columnHeads != NULL)
 	{
 	  firstcolhead = TtaGetFirstChild (columnHeads);
@@ -861,7 +861,7 @@ Document            doc;
 
 	  /* create a Table_foot element at the end */
 	  elType.ElTypeNum = HTML_EL_Table_foot;
-	  foot = TtaNewTree (doc, elType, _EMPTYSTR_);
+	  foot = TtaNewTree (doc, elType, "");
 	  if (foot != NULL)
 	    if (tfoot != NULL)
 	      {
@@ -925,7 +925,7 @@ ThotBool            genrateColumn;
     /* change the cell into a Data_cell */
     {
       elType.ElTypeNum = HTML_EL_Data_cell;
-      newcell = TtaNewTree (doc, elType, _EMPTYSTR_);
+      newcell = TtaNewTree (doc, elType, "");
       TtaInsertFirstChild (&newcell, cell, doc);
       cell = newcell;
     }

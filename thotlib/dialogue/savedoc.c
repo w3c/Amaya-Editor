@@ -112,7 +112,7 @@ void                BuildSaveDocMenu ()
    ustrcpy (outputFileName, SaveDirectoryName);
    ustrcat (outputFileName, WC_DIR_STR);
    ustrcat (outputFileName, SaveFileName);
-   if (TraductionSchemaName[0] == CUS_EOS)
+   if (TraductionSchemaName[0] == WC_EOS)
       /* sauver en format Thot */
      {
        if (ThotLocalActions[T_setwritedirectory] != NULL && ThotLocalActions[T_writedocument] != NULL)
@@ -223,7 +223,7 @@ STRING              txt;
 			 ustrcpy (ptTranslatedName, SaveDirectoryName);
 			 ustrcat (ptTranslatedName, DIR_STR);
 			 ustrcat (ptTranslatedName, BufDir);
-			 if (TraductionSchemaName[0] == CUS_EOS)
+			 if (TraductionSchemaName[0] == WC_EOS)
 			   ustrcat (ptTranslatedName, DefaultFileSuffix);
 			 /* reinitialise la zone du nom de document */
 #            ifndef _WINDOWS
@@ -258,9 +258,9 @@ STRING              txt;
 	       /* zone de saisie du directory ou le document doit etre cree */
 	       ustrcpy (SaveDirectoryName, txt);
 	       ustrcpy (ptTranslatedName, SaveDirectoryName);
-	       ustrcat (ptTranslatedName, DIR_STR);
+	       ustrcat (ptTranslatedName, WC_DIR_STR);
 	       ustrcat (ptTranslatedName, SaveFileName);
-	       if (TraductionSchemaName[0] == CUS_EOS)
+	       if (TraductionSchemaName[0] == WC_EOS)
 		  ustrcat (ptTranslatedName, DefaultFileSuffix);
 	       /* reinitialise la zone du nom de document */
 	       TtaSetTextForm (NumZoneDocNameTooSave, ptTranslatedName);
@@ -273,14 +273,14 @@ STRING              txt;
 	       if (val == 0)
 		 {
 		    /* premiere entree du menu format: format Thot */
-		    TraductionSchemaName[0] = CUS_EOS;
+		    TraductionSchemaName[0] = WC_EOS;
 		    ustrcat (ptTranslatedName, DefaultFileSuffix);
 		    TtaRedrawMenuEntry (NumMenuCopyOrRename, 0, NULL, -1, 1);
 		    TtaRedrawMenuEntry (NumMenuCopyOrRename, 1, NULL, -1, 1);
 		 }
 	       else if (val == PivotEntryNum)
 		 {
-		   StringCopy (TraductionSchemaName, CUSTEXT("_ThotOther_"));
+		   StringCopy (TraductionSchemaName, TEXT("_ThotOther_"));
 		   UnsetEntryMenu (NumMenuCopyOrRename, 0);
 		   UnsetEntryMenu (NumMenuCopyOrRename, 1);
 		 }
@@ -328,7 +328,7 @@ STRING              txt;
 			    }
 			  else if (!ustrcmp (SaveDirectoryName, DocumentToSave->DocDirectory)
 				   && !ustrcmp (SaveFileName, DocumentToSave->DocDName)
-				   && TraductionSchemaName[0] == CUS_EOS)
+				   && TraductionSchemaName[0] == WC_EOS)
 			    {	/* traite la confirmation */
 			       if (ThotLocalActions[T_confirmcreate] != NULL)
 				  (*ThotLocalActions[T_confirmcreate]) (NumFormConfirm, 1, (STRING) 1);
@@ -336,9 +336,9 @@ STRING              txt;
 			  else
 			    {
 			       ustrcpy (ptTranslatedName, SaveDirectoryName);
-			       ustrcat (ptTranslatedName, DIR_STR);
+			       ustrcat (ptTranslatedName, WC_DIR_STR);
 			       ustrcat (ptTranslatedName, SaveFileName);
-			       if (TraductionSchemaName[0] == CUS_EOS)
+			       if (TraductionSchemaName[0] == WC_EOS)
 				 ustrcat (ptTranslatedName, DefaultFileSuffix);
 			       if (TtaFileExist (ptTranslatedName))
 				 {
@@ -468,7 +468,7 @@ PtrDocument         pDoc;
 /*        ActiveEntree(NumMenuCopyOrRename, 1); */
 /*        TtaSetMenuForm(NumMenuCopyOrRename, 0); */
 	      /* premiere entree du menu format: format Thot */
-	      TraductionSchemaName[0] = CUS_EOS;
+	      TraductionSchemaName[0] = WC_EOS;
 	      SaveDocWithCopy = TRUE;
 	      SaveDocWithMove = FALSE;
 	      /* Formulaire Confirmation creation */

@@ -684,7 +684,7 @@ CHAR_T*             languageName;
           if (again)
              {
                  iso2cus_strcpy (code, TtaGetLanguageCodeFromName (languageName));
-                 if (code[0] != CUS_EOS)
+                 if (code[0] != WC_EOS)
                     {
                        i = 0;
                        while (again && i < FreeEntry)

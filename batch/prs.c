@@ -287,7 +287,7 @@ indLine             wl;
    else
      {
 	ustrncpy (n, &inputLine[wi - 1], MAX_NAME_LENGTH);
-	n[wl] = '\0';
+	n[wl] = TEXT('\0');
      }
 }
 
@@ -4787,8 +4787,7 @@ indLine             wi;
 	       /* AlphabetName */
 	       /* c'est l'alphabet d'une constante, on ne garde que le premier */
 	       /* caractere */
-	       pPSchema->PsConstant[pPSchema->PsNConstants - 1].PdAlphabet =
-		  inputLine[wi - 1];
+	       pPSchema->PsConstant[pPSchema->PsNConstants - 1].PdAlphabet = (char) inputLine[wi - 1];
 	       break;
 	    case RULE_VarName /* VarName */ :
 	       if (VariableDef)
@@ -5068,7 +5067,7 @@ indLine             wi;
 		  ColorName (wi, wl);
 	       else
 		  /* font name */
-		  CurRule->PrChrValue = inputLine[wi - 1];
+		  CurRule->PrChrValue = (char) inputLine[wi - 1];
 	       break;
 	    case RULE_AttrVal:
 	       /* AttrVal */
@@ -6709,13 +6708,13 @@ char              **argv;
    int                 i;
    int                 param;
 #  ifdef _WINDOWS
-   STRING              cmd [100];
+   char*               cmd [100];
    int                 ndx, pIndex = 0;
    CHAR_T                msg [800];
    HANDLE              cppLib;
    FARPROC             ptrMainProc;
 #  else  /* !_WINDOWS */
-   CHAR_T                cmd [800];
+   char                cmd [800];
 #  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS 
@@ -6746,20 +6745,20 @@ char              **argv;
    if (!error) {
       /* prepare the cpp command */
 #     ifdef _WINDOWS
-      cmd [pIndex] = TtaAllocString (4);
-      ustrcpy (cmd [pIndex++], TEXT("cpp"));
+      cmd [pIndex] = TtaGetMemory (4);
+      strcpy (cmd [pIndex++], "cpp");
 #     else  /* !_WINDOWS */
-      ustrcpy (cmd, CPP " ");
+      strcpy (cmd, CPP " ");
 #     endif /* _WINDOWS */
       param = 1;
       while (param < argc && argv[param][0] == '-') {
             /* keep cpp params */
 #           ifdef _WINDOWS
-            cmd [pIndex] = TtaAllocString (ustrlen (argv[param]) + 1);
-            ustrcpy (cmd [pIndex++], argv[param]);
+            cmd [pIndex] = TtaGetMemory (ustrlen (argv[param]) + 1);
+            wc2iso_strcpy (cmd [pIndex++], argv[param]);
 #           else  /* !_WINDOWS */
-            ustrcat (cmd, argv[param]);
-            ustrcat (cmd, " ");
+            strcat (cmd, argv[param]);
+            strcat (cmd, " ");
 #           endif /* _WINDOWS */
             param++;
 	  } 
@@ -6807,29 +6806,32 @@ char              **argv;
            TtaFileUnlink (fname);
            pwd = TtaGetEnvString ("PWD");
 #          ifndef _WINDOWS
-           i = ustrlen (cmd);
+           i = strlen (cmd);
 #          endif /* _WINDOWS */
            if (pwd != NULL) {
 #             ifdef _WINDOWS
-              cmd [pIndex] = TtaAllocString (3 + ustrlen (pwd));
-              usprintf (cmd [pIndex++], TEXT("-I%s"), pwd);
-              cmd [pIndex] = TtaAllocString (3);
-              ustrcpy (cmd [pIndex++], TEXT("-C"));
-              cmd [pIndex] = TtaAllocString (ustrlen (srceFileName) + 1);
-              ustrcpy (cmd [pIndex++], srceFileName);
-              cmd [pIndex] = TtaAllocString (ustrlen (fname) + 1);
-              ustrcpy (cmd [pIndex++], fname);
+              CHAR_T* CMD;
+              CMD = TtaAllocString (3 + ustrlen (pwd));
+              usprintf (CMD, TEXT("-I%s"), pwd);
+              cmd [pIndex] = TtaGetMemory (3 + ustrlen (pwd));
+              wc2iso_strcpy (cmd [pIndex++], CMD);
+              cmd [pIndex] = TtaGetMemory (3);
+              strcpy (cmd [pIndex++], "-C");
+              cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
+              wc2iso_strcpy (cmd [pIndex++], srceFileName);
+              cmd [pIndex] = TtaGetMemory (ustrlen (fname) + 1);
+              wc2iso_strcpy (cmd [pIndex++], fname);
 #             else  /* !_WINDOWS */
               sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
 #             endif /* _WINDOWS */
            } else {
 #                 ifdef _WINDOWS
-                  cmd [pIndex] = TtaAllocString (3);
-                  ustrcpy (cmd [pIndex++], TEXT("-C"));
-                  cmd [pIndex] = TtaAllocString (ustrlen (srceFileName) + 1);
-                  ustrcpy (cmd [pIndex++], srceFileName);
-                  cmd [pIndex] = TtaAllocString (ustrlen (fname) + 1);
-                  ustrcpy (cmd [pIndex++], fname);
+                  cmd [pIndex] = TtaGetMemory (3);
+                  strcpy (cmd [pIndex++], "-C");
+                  cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
+                  wc2iso_strcpy (cmd [pIndex++], srceFileName);
+                  cmd [pIndex] = TtaGetMemory (ustrlen (fname) + 1);
+                  wc2iso_strcpy (cmd [pIndex++], fname);
 #                 else  /* !_WINDOWS */
                   sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
 #                 endif /* _WINDOWS */
@@ -6841,7 +6843,7 @@ char              **argv;
            FreeLibrary (cppLib);
            for (ndx = 0; ndx < pIndex; ndx++) {
                free (cmd [ndx]);
-               cmd [ndx] = (STRING) 0;
+               cmd [ndx] = (char*) 0;
 		   }
 #          else  /* _WINDOWS */
            i = system (cmd);
@@ -6871,14 +6873,15 @@ char              **argv;
                  LineNum++;	/* incremente le compteur de lignes lues */
                  i = 0;
                  do {
-                    fileOK = TtaReadByte (infile, &inputLine[i]);
+                    /* fileOK = TtaReadByte (infile, &inputLine[i]); */
+                    fileOK = TtaReadWideChar (infile, &inputLine[i]);
                    i++;
-				 } while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
+				 } while (i < LINE_LENGTH && inputLine[i - 1] != TEXT('\n') && fileOK);
                  /* marque la fin reelle de la ligne */
-                 inputLine[i - 1] = '\0';
+                 inputLine[i - 1] = TEXT('\0');
                  if (i >= LINE_LENGTH) /* ligne trop longue */
                     CompilerMessage (1, PRS, FATAL, MAX_LINE_SIZE_OVERFLOW, inputLine, LineNum);
-                 else if (inputLine[0] == '#') {
+                 else if (inputLine[0] == TEXT('#')) {
                       /* cette ligne contient une directive du preprocesseur cpp */
                       usscanf (inputLine, TEXT("# %d %s"), &LineNum, buffer);
                       LineNum--;

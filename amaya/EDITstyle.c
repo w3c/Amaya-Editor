@@ -1381,12 +1381,12 @@ View                view;
    StyleCallbackDialogue : procedure for style dialogue events        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                StyleCallbackDialogue (int ref, int typedata, STRING data)
+void                StyleCallbackDialogue (int ref, int typedata, CHAR_T* data)
 #else  /* __STDC__ */
 void                StyleCallbackDialogue (ref, typedata, data)
 int                 ref;
 int                 typedata;
-STRING              data;
+CHAR_T*             data;
 
 #endif /* __STDC__ */
 {

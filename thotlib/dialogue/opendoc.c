@@ -306,7 +306,7 @@ STRING              data;
 		  /* pas de fichier .langue, on prend le nom tel quel */
 		 {
 		    ustrncpy (SchStrImport, data, MAX_NAME_LENGTH - 1);
-		    SchStrImport[MAX_NAME_LENGTH - 1] = CUS_EOS;
+		    SchStrImport[MAX_NAME_LENGTH - 1] = WC_EOS;
 		 }
 	       break;
 	    case NumFormImportClass:
@@ -427,7 +427,7 @@ STRING              data;
 			    data[i - 4] = EOS;
 		      }
 		    ustrncpy (DefaultDocumentName, data, MAX_NAME_LENGTH);
-		    DefaultDocumentName[MAX_NAME_LENGTH - 1] = CUS_EOS;
+		    DefaultDocumentName[MAX_NAME_LENGTH - 1] = WC_EOS;
 		    ustrcat (docName, DefaultDocumentName);
 		 }
 	       TtaSetTextForm (NumZoneDocNameToOpen, docName);
@@ -554,7 +554,7 @@ View                view;
        ustrcpy (docName, DirectoryName);
        length = ustrlen (docName);
        docName[length] = URL_DIR_SEP;
-       docName[length + 1] = CUS_EOS;
+       docName[length + 1] = WC_EOS;
        ustrcpy (DefaultDocumentName, docName);
      }
    /* liste des fichiers existants */

@@ -512,12 +512,12 @@ ThotBool            extension;
       if ((*pSS)->SsExtension)
          /* pour eviter que ReadPresentationSchema recharge le schema de structure */
          (*pSS)->SsRootElem = 1;
-      if (PSchName != NULL && PSchName[0] != CUS_EOS) {
+      if (PSchName != NULL && PSchName[0] != WC_EOS) {
          /* l'appelant specifie le schema de presentation a prendre, on essaie de le charger */
 	     ustrncpy (schName, PSchName, MAX_NAME_LENGTH);
 	     (*pSS)->SsPSchema = LoadPresentationSchema (schName, *pSS);
 	  }
-      if (PSchName == NULL || PSchName[0] == CUS_EOS || (*pSS)->SsPSchema == NULL) {
+      if (PSchName == NULL || PSchName[0] == WC_EOS || (*pSS)->SsPSchema == NULL) {
          /* pas de presentation specifiee par l'appelant, ou schema specifie' inaccessible */
 	     /* on consulte le fichier de configuration */
 		  if (!ConfigDefaultPSchema ((*pSS)->SsName, schName)) {

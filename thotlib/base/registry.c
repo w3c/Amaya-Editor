@@ -202,8 +202,8 @@ ThotBool            TtaIsCUSBlank (ptr)
 CharUnit*           ptr;
 #endif
 {
-  if (*ptr == CUS_SPACE || *ptr == CUS_BSPACE || *ptr == CUS_EOL ||
-      *ptr == CUS_TAB || *ptr == CUS_CR)
+  if (*ptr == WC_SPACE || *ptr == WC_BSPACE || *ptr == WC_EOL ||
+      *ptr == WC_TAB || *ptr == WC_CR)
     return (TRUE);
   else
     return (FALSE);
@@ -257,7 +257,7 @@ int                 o_len;
     {
       if CHECK_OVERFLOW
 	break;
-      if (*cour != CUSTEXT('$'))
+      if (*cour != TEXT('$'))
 	{
 	  *res++ = *cour++;
 	  continue;
@@ -266,9 +266,9 @@ int                 o_len;
       cour++;
       if CHECK_OVERFLOW
 	break;
-      if (*cour != CUSTEXT('('))
+      if (*cour != TEXT('('))
 	{
-	  *res++ = CUSTEXT('$');
+	  *res++ = TEXT('$');
 	  if CHECK_OVERFLOW
 	    break;
 	  *res++ = *cour++;
@@ -321,7 +321,7 @@ int                 o_len;
     }
   if CHECK_OVERFLOW
     fprintf (stderr, "DoVariableSubstitution : Overflow on \"%s\"\n", input);
-  *res = CUS_EOS;
+  *res = WC_EOS;
 }
 
 
@@ -491,7 +491,7 @@ int           overwrite;
 	* If the value is empty, we add it only if it's not present
 	* in the thot library section.
 	*/
-       if (!overwrite && (value == NULL || *value == CUS_EOS))
+       if (!overwrite && (value == NULL || *value == WC_EOS))
 	 {
 	   cour = AppRegistryEntry;
 	   while (cour != NULL)
@@ -634,7 +634,7 @@ int *value;
   strptr = TtaGetEnvString (name);
 
   /* the name entry doesn't exist */
-  if (!strptr || *strptr == CUS_EOS)
+  if (!strptr || *strptr == WC_EOS)
    {
      *value = 0;
      return FALSE;
@@ -711,7 +711,7 @@ char*   name;
 #     ifdef _I18N_
       {
          int len;
-         value = getcwd (name, MAX_TXT_LEN);
+         value = getcwd (&CurrentDir[0], sizeof(CurrentDir));
          len = strlen (value) + 1;
          mbstowcs (EnvString, value, len);
          return EnvString;
@@ -779,25 +779,27 @@ char*   name;
     */
 
    value = getenv (name);
-#  ifdef _I18N_
-   mbstowcs (EnvString, value, MAX_TXT_LEN);
-#  endif /* _I18N_ */
 
    if (value == NULL)
       TtaSetEnvString (name, TEXT(""), FALSE); 
-   else
+   else {
 #      ifdef _I18N_
+       mbstowcs (EnvString, value, MAX_TXT_LEN);
        TtaSetEnvString (name, EnvString, FALSE);
 #      else  /* !_I18N_ */
        TtaSetEnvString (name, value, FALSE);
 #      endif /* !_I18N_ */
+   }
   
 #  ifdef DEBUG_REGISTRY
    fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, value);
 #  endif
 
 #  ifdef _I18N_
-   return EnvString;
+   if (value != NULL)
+      return EnvString;
+
+   return NULL;
 #  else  /* !_I18N_ */
    return (value);
 #  endif /* !_I18N_ */
@@ -1486,7 +1488,7 @@ CHAR_T*             appArgv0;
   /* Sanity check on the argument given. An error here should be
    * detected by programmers, since it's a application coding error.
    */
-  if ((appArgv0 == NULL) || (*appArgv0 == CUS_EOS))
+  if ((appArgv0 == NULL) || (*appArgv0 == WC_EOS))
     {
 #     ifdef _WINDOWS
       MessageBox (NULL, TEXT("TtaInitializeAppRegistry called with invalid argv[0] value"), TEXT("Amaya"), MB_OK);
@@ -1607,13 +1609,13 @@ CHAR_T*             appArgv0;
 	    * Two cases : can be an absolute link to the binary
 	    * or a relative link.
 	    */
-	   if (filename[0] == CUS_DIR_SEP)
+	   if (filename[0] == WC_DIR_SEP)
 	     {
 	       StringCopy (execname, filename);
 	       dir_end = execname;
 	       while (*dir_end)
 		 dir_end++; /* go to the ending NUL */
-	       while (dir_end > execname && *dir_end != CUS_DIR_SEP)
+	       while (dir_end > execname && *dir_end != WC_DIR_SEP)
 		 dir_end--;
 	     }
 	   else
@@ -1636,15 +1638,15 @@ CHAR_T*             appArgv0;
    do
      {
        dir_end--;
-       ok = (dir_end <= execname || *dir_end == CUS_DIR_SEP);
+       ok = (dir_end <= execname || *dir_end == WC_DIR_SEP);
      }
    while (!ok);
 
-   if (*dir_end == CUS_DIR_SEP)
+   if (*dir_end == WC_DIR_SEP)
      {
        /* the name has been found */
        found = TRUE;
-       *dir_end = CUS_EOS;
+       *dir_end = WC_EOS;
        /* save the binary directory in BinariesDirectory */
        ustrncpy (BinariesDirectory, execname, sizeof (BinariesDirectory) / sizeof (CHAR_T));
        /* remove the binary directory */
@@ -1656,7 +1658,7 @@ CHAR_T*             appArgv0;
 	   do
 	     {
                dir_end--;
-               ok = (dir_end <= execname || *dir_end == CUS_DIR_SEP);
+               ok = (dir_end <= execname || *dir_end == WC_DIR_SEP);
 	     } while (!ok);
 
 	   if (*dir_end == WC_DIR_SEP)
@@ -1680,7 +1682,7 @@ CHAR_T*             appArgv0;
 	 } 
        if (ok)
 	 {
-	   *dir_end = CUS_EOS;
+	   *dir_end = WC_EOS;
 	   if (IsThotDir (execname))
 	     AddRegisterEntry (TEXT("System"), "THOTDIR", execname, REGISTRY_INSTALL, TRUE);
 	 }
@@ -1721,7 +1723,7 @@ CHAR_T*             appArgv0;
        fprintf (stderr, "reading system %s from %s\n", THOT_INI_FILENAME, filename);
 #endif
        ImportRegistryFile (filename, REGISTRY_SYSTEM);
-       *dir_end = CUS_EOS;
+       *dir_end = WC_EOS;
        dir_end -= 3;
      }
    else
@@ -1754,8 +1756,8 @@ CHAR_T*             appArgv0;
      /* win95: apphome is  thotdir\users\username */
      usprintf (app_home, TEXT("%s\\%s\\%s"), execname, WIN_USERS_HOME_DIR, ptr);   
 #else /* !_WINDOWS */
-   ptr = cus_getenv (CUSTEXT("HOME"));
-   cus_sprintf (app_home, "%s%c.%s", ptr, CUS_DIR_SEP, AppNameW); 
+   ptr = cus_getenv (TEXT("HOME"));
+   cus_sprintf (app_home, "%s%c.%s", ptr, WC_DIR_SEP, AppNameW); 
 #endif _WINDOWS
    /* store the value of APP_HOME in the registry */
    AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home, REGISTRY_SYSTEM, TRUE);
@@ -1771,7 +1773,7 @@ CHAR_T*             appArgv0;
 		     REGISTRY_SYSTEM, TRUE);
 #endif /* _WINDOWS */
    /* read the user's preferences (if they exist) */
-   if (app_home != NULL && *app_home != CUS_EOS)
+   if (app_home != NULL && *app_home != WC_EOS)
      {
        usprintf (filename, TEXT("%s%c%s"), app_home, WC_DIR_SEP, THOT_RC_FILENAME);
        if (TtaFileExist (&filename[0]))
@@ -1872,12 +1874,12 @@ CHAR_T*             fullName;
 	       i = 0;
 	       j = 0;
 	       imagepath = SchemaPath;
-	       while (ret == 0 && imagepath[i] != CUS_EOS)
+	       while (ret == 0 && imagepath[i] != WC_EOS)
 		 {
-		    while (imagepath[i] != CUS_EOS && imagepath[i] != CUS_PATH_SEP && i < 200)
+		    while (imagepath[i] != WC_EOS && imagepath[i] != WC_PATH_SEP && i < 200)
 		       tmpbuf[j++] = imagepath[i++];
 
-		    tmpbuf[j] = CUS_EOS;
+		    tmpbuf[j] = WC_EOS;
 		    i++;
 		    j = 0;
 		    usprintf (fullName, TEXT("%s%s%s"), tmpbuf, WC_DIR_STR, fileName);
@@ -1890,10 +1892,10 @@ CHAR_T*             fullName;
 	       imagepath = SchemaPath;
 	       while (ret == 0 && imagepath[i] != WC_EOS)
 		 {
-		    while (imagepath[i] != CUS_EOS && imagepath[i] != CUS_PATH_SEP && i < 200)
+		    while (imagepath[i] != WC_EOS && imagepath[i] != WC_PATH_SEP && i < 200)
 		       tmpbuf[j++] = imagepath[i++];
 
-		    tmpbuf[j] = CUS_EOS;
+		    tmpbuf[j] = WC_EOS;
 		    i++;
 		    j = 0;
 		    usprintf (fullName, TEXT("%s%s%s"), tmpbuf, WC_DIR_STR, fileName);

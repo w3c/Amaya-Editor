@@ -197,13 +197,13 @@ ElementType         elementType;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-Element             TtaNewTree (Document document, ElementType elementType, STRING label)
+Element             TtaNewTree (Document document, ElementType elementType, char* label)
 
 #else  /* __STDC__ */
 Element             TtaNewTree (document, elementType, label)
 Document            document;
 ElementType         elementType;
-STRING              label;
+char*               label;
 
 #endif /* __STDC__ */
 
@@ -2067,7 +2067,7 @@ ElementType         elementType;
 {
 
    UserErrorCode = 0;
-   nameBuffer[0] = EOS;
+   nameBuffer[0] = WC_EOS;
    if (elementType.ElSSchema == NULL)
 	TtaError (ERR_invalid_parameter);
    else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
@@ -2099,7 +2099,7 @@ ElementType         elementType;
 {
 
    UserErrorCode = 0;
-   nameBuffer[0] = EOS;
+   nameBuffer[0] = WC_EOS;
    if (elementType.ElSSchema == NULL)
 	TtaError (ERR_invalid_parameter);
    else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
@@ -2253,11 +2253,19 @@ Element             element;
 {
 
    UserErrorCode = 0;
-   nameBuffer[0] = EOS;
+   nameBuffer[0] = WC_EOS;
    if (element == NULL)
 	TtaError (ERR_invalid_parameter);
-   else
+   else 
+#   ifdef _I18N_
+   {
+    CHAR_T wcsTmpStr [MAX_NAME_LENGTH];
+    mbstowcs (wcsTmpStr, ((PtrElement) element)->ElLabel, MAX_NAME_LENGTH);
+	ustrncpy (nameBuffer, wcsTmpStr, MAX_NAME_LENGTH);
+   }
+#   else  /* !_I18N_ */
 	ustrncpy (nameBuffer, ((PtrElement) element)->ElLabel, MAX_NAME_LENGTH);
+#   endif /* !_I18N_ */
    return nameBuffer;
 }
 
@@ -3263,9 +3271,18 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 {
    PtrElement          pE, pFound;
+#  ifdef _I18N_
+   char                mbsLabel[MAX_LENGTH];
+#  else  /* !_I18N_ */
+   char*               mbsLabel = label;
+#  endif /* !_I18N_ */
+   
+#  ifdef _I18N_
+   wcstombs (mbsLabel, label, MAX_LENGTH);
+#  endif /* _I18N_ */
 
    pFound = NULL;
-   if (ustrcmp (label, pEl->ElLabel) == 0)
+   if (strcmp (mbsLabel, pEl->ElLabel) == 0)
       pFound = pEl;
    else if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
      {

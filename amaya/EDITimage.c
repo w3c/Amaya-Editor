@@ -254,7 +254,7 @@ STRING              data;
 			   if (TtaIsAncestor (last, el))
 			     last = el;
 			 } 
-			 if (LastURLImage[0] == CUS_EOS)
+			 if (LastURLImage[0] == WC_EOS)
 			   HTMLResetBackgroundImage (document, el);
 			 else if (IsHTTPPath (DocumentURLs[document]) && !IsHTTPPath (LastURLImage))
 			   HTMLSetBackgroundImage (document, el, i, tempname);
@@ -325,7 +325,7 @@ STRING              data;
               ImageName[0] = WC_EOS;
               break;
          case ImageSel:
-              if (DirectoryImage[0] == CUS_EOS) {
+              if (DirectoryImage[0] == WC_EOS) {
                  /* set path on current directory */
                  ugetcwd (DirectoryImage, MAX_LENGTH);
 			  } 
@@ -553,7 +553,7 @@ char*               shape;
 	if (shape[0] == 'R' || shape[0] == 'a')
 	   TtaAskFirstCreation ();
 
-	el = TtaNewTree (doc, elType, _EMPTYSTR_);
+	el = TtaNewTree (doc, elType, "");
 	if (!newElem)
 	   newElem = el;
 	child = TtaGetLastChild (map);

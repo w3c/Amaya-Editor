@@ -67,8 +67,8 @@ int                 n;
 #endif /* __STDC__ */
 
 {
-   TtaWriteByte (outfile, (CHAR_T) (n / 256));
-   TtaWriteByte (outfile, (CHAR_T) (n % 256));
+   TtaWriteByte (outfile, (char) (n / 256));
+   TtaWriteByte (outfile, (char) (n % 256));
 }
 
 
@@ -109,8 +109,8 @@ Name                name;
 
    i = 0;
    do
-      TtaWriteByte (outfile, name[i++]);
-   while (name[i - 1] != '\0');
+      TtaWriteWideChar (outfile, name[i++]);
+   while (name[i - 1] != TEXT('\0'));
 }
 
 
@@ -402,7 +402,7 @@ int                 code;
    /* ecrit le texte des constantes */
    i = 0;
    do
-      TtaWriteByte (outfile, pSS->SsConstBuffer[i++]);
+      TtaWriteWideChar (outfile, pSS->SsConstBuffer[i++]);
    while (pSS->SsConstBuffer[i - 1] != '\0' || pSS->SsConstBuffer[i] != '\0');
 
    /* SsFirstDynNature */

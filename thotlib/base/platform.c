@@ -226,7 +226,7 @@ CHAR_T*             ext;
       avoid having the shell interpret them, for example, when the
       dir name contains ( chars. As a first attempt, we enclose the
       arguments between quotes */
-   cus_sprintf (space, CUSTEXT("/bin/ls -d \"%s\"/%s%s\ 2>/dev/null"), dir ? dir : CUSTEXT(""), name ? name : CUSTEXT(""), ext ? ext : CUSTEXT(""));
+   cus_sprintf (space, TEXT("/bin/ls -d \"%s\"/%s%s\ 2>/dev/null"), dir ? dir : TEXT(""), name ? name : TEXT(""), ext ? ext : TEXT(""));
    me->ls_stream = NULL;
    if ((me->ls_stream = popen (space, "r")) == NULL)
       return -1;

@@ -759,7 +759,7 @@ STRING              presentationName;
    else
      {
 	/* Gets the corresponding structure schema name */
-	TtaReadWCName (file, gotStructName);
+	TtaReadName (file, gotStructName);
 	if (ustrcmp (structureName, gotStructName) == 0)
 	   result = 1;
 	TtaReadClose (file);

@@ -3154,7 +3154,8 @@ ThotBool            recordLineNb;
 	       else
 		  /* le fichier a inclure est ouvert */
 		 {
-		    while (TtaReadByte (includedFile, &c))
+		    /* while (TtaReadByte (includedFile, &c)) */
+		    while (TtaReadWideChar (includedFile, &c))
 		       /* on ecrit dans le fichier principal courant */
 		       PutChar (c, 1, NULL, pDoc, *lineBreak);
 		    TtaReadClose (includedFile);

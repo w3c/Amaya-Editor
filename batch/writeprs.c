@@ -82,8 +82,8 @@ Name                n;
 
    i = 0;
    do
-      TtaWriteByte (outfile, n[i++]);
-   while (n[i - 1] != '\0');
+      TtaWriteWideChar (outfile, n[i++]);
+   while (n[i - 1] != TEXT('\0'));
 }
 
 
@@ -1333,7 +1333,7 @@ PtrSSchema          pSS;
 	TtaWriteByte (outfile, pConst->PdAlphabet);
 	j = 0;
 	do
-	   TtaWriteByte (outfile, pConst->PdString[j++]);
+	   TtaWriteWideChar (outfile, pConst->PdString[j++]);
 	while (pConst->PdString[j - 1] != '\0');
      }
 

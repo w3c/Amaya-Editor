@@ -3130,7 +3130,7 @@ void (*withThisPSchema) ();
       if (!TtaReadWideChar (file, &SSName[i++]))
          PivotError (file);
    while (!error && SSName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH) ;
-   if (SSName[i - 1] != CUS_EOS)
+   if (SSName[i - 1] != WC_EOS)
      {
         PivotError (file);
         DisplayPivotMessage (TEXT("Z"));

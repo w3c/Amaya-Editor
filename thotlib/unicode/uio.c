@@ -33,21 +33,23 @@ FILE*  stream;
 
     while (nbWChar < n && !done) {
           nbBytes = 1; 
-          if ((byte = fgetc (stream)) == 0 || byte == EOF) {
+          if ((byte = fgetc (stream)) == 0 || byte == EOF || byte == EOL) {
              string [nbWChar] = WC_EOS;
              done = TRUE;
           }
-          mbcstr[0] = byte;
-          if (byte >= 0x80) {
-             if ((byte = fgetc (stream)) == 0 || byte == EOF) {
-                string [nbWChar] = WC_EOS;
-                done = TRUE;
-             }
-             mbcstr [1] = byte;
-             nbBytes = 2;
-          }
-          mbtowc (&wChar, mbcstr, nbBytes);
-          string[nbWChar++] = wChar;
+          if (!done) {
+             mbcstr[0] = byte;
+             if (byte >= 0x80) {
+                if ((byte = fgetc (stream)) == 0 || byte == EOF) {
+                   string [nbWChar] = WC_EOS;
+                   done = TRUE;
+				}
+                mbcstr [1] = byte;
+                nbBytes = 2;
+			 }
+             mbtowc (&wChar, mbcstr, nbBytes);
+             string[nbWChar++] = wChar;
+		  }
 	}
     if (nbWChar == 0)
        return (CHAR_T*) 0;

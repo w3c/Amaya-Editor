@@ -90,6 +90,24 @@ size_t      n;
 #endif /* _WINDOWS */
 #endif /* 000 */
 
+#ifdef __STDC__
+static ThotBool ValidCharacter (CHAR_T c) 
+#else  /* !__STDC__ */
+static ThotBool ValidCharacter (c) 
+CHAR_T c; 
+#endif /* __STDC__ */
+{
+       if (
+		   (c >= TEXT('A') && c <= TEXT('Z')) ||
+           (c >= TEXT('a') && c <= TEXT('z')) ||
+           (c >= TEXT('0') && c <= TEXT('9')) ||
+           ((int) TtaGetISOLatinCodeFromUnicode (c) >= 192 && (int) TtaGetISOLatinCodeFromUnicode (c) <= 255) ||
+           c == TtaGetUnicodeValueFromISOLatinCode ('\240') ||
+           c == TEXT('_'))
+          return TRUE;
+       return FALSE;
+}
+
 /*----------------------------------------------------------------------
    InitParser initialise les donnees de l'analyseur syntaxique.     
   ----------------------------------------------------------------------*/
@@ -241,11 +259,9 @@ int                *rank;
 
    *rank = 0;
    if (NIdentifiers >= MAX_IDENTIFIERS)
-      CompilerMessage (index, COMPIL, FATAL, NO_SPACE_LEFT_IN_INDENT_TABLE,
-		     inputLine, LineNum);
+      CompilerMessage (index, COMPIL, FATAL, NO_SPACE_LEFT_IN_INDENT_TABLE, inputLine, LineNum);
    else if (len > IDENTIFIER_LENGTH)
-      CompilerMessage (index, COMPIL, FATAL, INVALID_WORD_SIZE,
-		     inputLine, LineNum);
+      CompilerMessage (index, COMPIL, FATAL, INVALID_WORD_SIZE, inputLine, LineNum);
    else
      {
 	Identifier[NIdentifiers].SrcIdentLen = len;
@@ -304,26 +320,25 @@ void                OctalToChar ()
    int                 i, shift, k, n;
 
    i = 0;
-   while (inputLine[i] != '\0')
+   while (inputLine[i] != TEXT('\0'))
      {
-	if (inputLine[i] == '\\')
+	if (inputLine[i] == TEXT('\\'))
 	  {
 	     shift = 0;
-	     if (inputLine[i + 1] == '\\')
+	     if (inputLine[i + 1] == TEXT('\\'))
 		shift = 1;
-	     else if (inputLine[i + 1] >= '0' && inputLine[i + 1] <= '7')
+	     else if (inputLine[i + 1] >= TEXT('0') && inputLine[i + 1] <= TEXT('7'))
 	       {
 		  /* \ suivi d'un chiffre octal */
 		  k = i + 1;
 		  n = 0;
-		  while (inputLine[k] >= '0' && inputLine[k] <= '7' && k < i + 4)
+		  while (inputLine[k] >= TEXT('0') && inputLine[k] <= TEXT('7') && k < i + 4)
 		     n = n * 8 + ((int) inputLine[k++]) - ((int) '0');
 		  if (n < 1 || n > 255)
-		     CompilerMessage (i, COMPIL, FATAL, INVALID_CHAR,
-				    inputLine, LineNum);
+		     CompilerMessage (i, COMPIL, FATAL, INVALID_CHAR, inputLine, LineNum);
 		  else
 		    {
-		       inputLine[i] = (UCHAR_T) n;
+		       inputLine[i] = TtaGetUnicodeValueFromISOLatinCode ((unsigned char) n);
 		       shift = k - i - 1;
 		    }
 	       }
@@ -336,11 +351,11 @@ void                OctalToChar ()
 		       inputLine[k] = inputLine[k + shift];
 		       k++;
 		    }
-		  while (inputLine[k - 1] != '\0');
+		  while (inputLine[k - 1] != TEXT('\0'));
 	       }
 	  }
-	else if (inputLine[i] < ' ')
-	   inputLine[i] = ' ';
+	else if (inputLine[i] < TEXT(' '))
+	   inputLine[i] = TEXT(' ');
 	i++;
      }
 }
@@ -377,157 +392,131 @@ SyntacticType      *wn;
    *wn = SynError;
    stop = False;
    j = start - 1;
-   do
-     {
-	/* saute les caracteres vides et commentaires */
-	/* les commentaires sont delimites par des accolades exclusivement */
-	if (Comment)
-	   /* cherche la fin du commentaire ou de la ligne */
-	  {
-	     while (inputLine[j] != '}' && inputLine[j] != '\0')
-		j++;
-	     if (inputLine[j] == '}')
-	       {
-		  Comment = False;
-		  j++;
-	       }
+   do {
+      /* saute les caracteres vides et commentaires */
+      /* les commentaires sont delimites par des accolades exclusivement */
+      if (Comment) {
+         /* cherche la fin du commentaire ou de la ligne */
+         while (inputLine[j] != TEXT('}') && inputLine[j] != TEXT('\0'))
+               j++;
+         if (inputLine[j] == TEXT('}')) {
+            Comment = False;
+            j++;
+		 }
 	  }
-	if (inputLine[j] != ' ')
-	   if (inputLine[j] == '\0')
-	      stop = True;
-	   else if (inputLine[j] == '{')
-	      /* debut de commentaire */
-	     {
-		Comment = True;
-		while (inputLine[j] != '}' && inputLine[j] != '\0')
-		   j++;
-		if (inputLine[j] == '\0')
-		   stop = True;
-		else
-		   Comment = False;
-	     }
-	   else
-	     {
-		stop = True;
-		*wi = j + 1;
-	     }
-	j++;
-     }
-   while (!stop);
+      if (inputLine[j] != TEXT(' '))
+         if (inputLine[j] == TEXT('\0'))
+            stop = True;
+         else if (inputLine[j] == TEXT('{')) {
+              /* debut de commentaire */
+              Comment = True;
+              while (inputLine[j] != TEXT('}') && inputLine[j] != TEXT('\0'))
+                    j++;
+              if (inputLine[j] == TEXT('\0'))
+                 stop = True;
+              else
+                  Comment = False;
+		 } else {
+                stop = True;
+                *wi = j + 1;
+		 }
+         j++;
+   } while (!stop);
 
    /* analyse les caracteres significatifs */
-   if (*wi > 0 && !error)
-     {
-	stop = False;
-	j = *wi - 1;
-	*wl = 1;
-	/* SyntacticType du mot trouve, d'apres son premier caractere */
-	if (inputLine[j] >= '0' && inputLine[j] <= '9')
-	   *wn = SynInteger;
-	else if ((inputLine[j] >= 'A' && inputLine[j] <= 'Z')
-		 || inputLine[j] == (UCHAR_T) '\240'	/*nobreakspace */
-		 || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
-
-		 || (((int) inputLine[j]) >= 192 &&
-		     ((int) inputLine[j]) <= 255))
-	   *wn = SynIdentifier;
-	else if (inputLine[j] == '\'')
-	   *wn = SynString;
-	else
-	   *wn = SynShortKeyword;
-	j++;
-	if (*wn == SynInteger || *wn == SynIdentifier)
-	   /* verifie que le mot est bien forme et cherche la fin */
-	   do
-	     {
-		if (inputLine[j] == '\0'
-		    || inputLine[j] == ' '
-		    || (inputLine[j] >= '!' && inputLine[j] <= '/')
-		    || (inputLine[j] >= ':' && inputLine[j] <= '@')
-		    || (inputLine[j] >= '[' && inputLine[j] <= '^')
-		    || (inputLine[j] >= '{' && inputLine[j] <= '~')
-		    || inputLine[j] == (CHAR_T) (127)
-		    || inputLine[j] == '`')
-		   /* on a trouve un separateur */
-		   stop = True;	/* verifie l'homogeneite */
-		else
-		  {
-		     switch (*wn)
-			   {
-			      case SynInteger:
-				 if (inputLine[j] < '0' || inputLine[j] > '9')
-				   {
-				      CompilerMessage (j + 1, COMPIL, FATAL, BAD_NUMBER,
-						     inputLine, LineNum);
-				      *wn = SynError;
-				      stop = True;
-				   }
-				 break;
-			      case SynIdentifier:
-				 if (!((inputLine[j] >= 'A' && inputLine[j] <= 'Z')
-				       || (inputLine[j] == (UCHAR_T) '\240' /*nobreakspace */ )
-
-				       || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
-				       || (inputLine[j] >= '0' && inputLine[j] <= '9')
-				       || (((int) inputLine[j]) >= 192 &&
-					   ((int) inputLine[j]) <= 255)
-				 /* lettre accentuee */
-				       || inputLine[j] == '_'))
-				   {
-				      CompilerMessage (j + 1, COMPIL, FATAL, BAD_WORD,
-						     inputLine, LineNum);
-				      *wn = SynError;
-				      stop = True;
-				   }
-				 break;
-			      default:
-				 break;
-			   }
-		     (*wl)++;
-		  }
-		j++;
-	     }
-	   while (!stop);
-	else if (*wn == SynString)
-	   /* chaine de caracteres */
-	  {
-	     /* saute le quote initial */
-	     (*wi)++;
-	     *wl = 0;
-	     do
-		if (inputLine[j] == '\0')
-		  {
-		     CompilerMessage (*wi,
-				 COMPIL, FATAL, MULTIPLE_LINE_STRINGS_ERROR,
-				    inputLine, LineNum);
-		     *wn = SynError;
-		     stop = True;
-		  }
-		else
-		  {
-		     if (inputLine[j] == '\'')
-			if (inputLine[j + 1] == '\'')
-			   /* represente un seul quote */
-			  {
-			     k = j;
-			     do
-				/* ecrase le quote double */
-			       {
-				  k++;
-				  inputLine[k] = inputLine[k + 1];
-			       }
-			     while (inputLine[k] != '\0');
-			     j++;
-			  }
-			else
-			   stop = True;		/* quote final */
-		     else
-			j++;
-		     (*wl)++;
-		  }
-	     while (!stop);
-	  }
-     }
+   if (*wi > 0 && !error) {
+      stop = False;
+      j = *wi - 1;
+      *wl = 1;
+      /* SyntacticType du mot trouve, d'apres son premier caractere */
+      if (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9')) 
+         *wn = SynInteger;
+      else if ((inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z'))     ||
+                inputLine[j] == TtaGetUnicodeValueFromISOLatinCode ('\240') || /*nobreakspace */
+                (inputLine[j] >= TEXT('a') && inputLine[j] <= TEXT('z'))    ||
+                (((int) TtaGetISOLatinCodeFromUnicode (inputLine[j])) >= 192 &&
+                 ((int) TtaGetISOLatinCodeFromUnicode (inputLine[j])) <= 255))
+           *wn = SynIdentifier;
+      else if (inputLine[j] == TEXT('\''))
+           *wn = SynString;
+      else
+          *wn = SynShortKeyword;
+      j++;
+      if (*wn == SynInteger || *wn == SynIdentifier)
+         /* verifie que le mot est bien forme et cherche la fin */
+         do {
+            if (inputLine[j] == TEXT('\0') || 
+                inputLine[j] == TEXT(' ')  || 
+                (inputLine[j] >= TEXT('!') && inputLine[j] <= TEXT('/')) ||
+                (inputLine[j] >= TEXT(':') && inputLine[j] <= TEXT('@')) ||
+                (inputLine[j] >= TEXT('[') && inputLine[j] <= TEXT('^')) || 
+                (inputLine[j] >= TEXT('{') && inputLine[j] <= TEXT('~')) || 
+                inputLine[j] == TtaGetUnicodeValueFromISOLatinCode (127) || 
+                inputLine[j] == TEXT('`'))
+               /* on a trouve un separateur */
+               stop = True;	/* verifie l'homogeneite */
+            else {
+                 switch (*wn) {
+                        case SynInteger:
+                             if (inputLine[j] < TEXT('0') || inputLine[j] > TEXT('9')) {
+                                CompilerMessage (j + 1, COMPIL, FATAL, BAD_NUMBER, inputLine, LineNum);
+                                *wn = SynError;
+                                stop = True;
+							 }
+                             break;
+                        case SynIdentifier:
+                             if (!ValidCharacter (inputLine[j])) {
+#                            if 0
+                             if (!((inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z'))    || 
+                                 (inputLine[j] == TtaGetUnicodeValueFromISOLatinCode ('\240')) || /*nobreakspace */
+                                 (inputLine[j] >= TEXT('a') && inputLine[j] <= TEXT('z'))      || 
+                                 (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9'))      || 
+                                 (((int) TtaGetISOLatinCodeFromUnicode(inputLine[j])) >= 192 && 
+                                  ((int) TtaGetISOLatinCodeFromUnicode (inputLine[j])) <= 255) || /* lettre accentuee */
+                                 inputLine[j] == TEXT('_'))) {
+#                            endif /* @@@@@@@@@@@@@ */
+                                CompilerMessage (j + 1, COMPIL, FATAL, BAD_WORD, inputLine, LineNum);
+                                *wn = SynError;
+                                stop = True;
+							 }
+                             break;
+                        default:
+                             break;
+				 }
+                 (*wl)++;
+			}
+            j++;
+		 } while (!stop);
+		 else if (*wn == SynString) {
+              /* chaine de caracteres */
+              /* saute le quote initial */
+             (*wi)++;
+             *wl = 0;
+             do 
+               if (inputLine[j] == TEXT('\0')) {
+                  CompilerMessage (*wi, COMPIL, FATAL, MULTIPLE_LINE_STRINGS_ERROR, inputLine, LineNum);
+                 *wn = SynError;
+                 stop = True;
+			   } else {
+                      if (inputLine[j] == TEXT('\''))
+                         if (inputLine[j + 1] == TEXT('\'')) {
+                            /* represente un seul quote */
+                            k = j;
+                            do {
+                               /* ecrase le quote double */
+                               k++;
+                               inputLine[k] = inputLine[k + 1];
+							} while (inputLine[k] != TEXT('\0'));
+                            j++;
+						 } else
+                               stop = True; /* quote final */
+                      else
+                           j++;
+                      (*wl)++;
+			   } 
+             while (!stop);
+		 }
+   }
 }
 
 
@@ -664,8 +653,7 @@ SyntRuleNum        *pr;
 
    *pr = 0;
    if (level < 0)
-      CompilerMessage (wi, COMPIL, FATAL, END_HAS_BEEN_DETECTED,
-		     inputLine, LineNum);
+      CompilerMessage (wi, COMPIL, FATAL, END_HAS_BEEN_DETECTED, inputLine, LineNum);
    else
      {
 	ok = False;
@@ -756,8 +744,7 @@ SyntRuleNum        *pr;
 		     if (*c < 1000)
 			/* symbole non terminal */
 			if (level >= STACKSIZE)
-			   CompilerMessage (wi, COMPIL, FATAL, NO_SPACE_LEFT_IN_STACK,
-					  inputLine, LineNum);
+			   CompilerMessage (wi, COMPIL, FATAL, NO_SPACE_LEFT_IN_STACK, inputLine, LineNum);
 			else
 			   /* empile la regle definissant ce symbole */
 			  {
@@ -966,11 +953,11 @@ STRING              fileName;
    indLine             j, wind, wlen;
    SyntacticType       wnat;
    int                 l;
-   ThotBool             readingKeywordTable;
+   ThotBool            readingKeywordTable;
    int                 ruleptr;
    int                 currule;
-   CHAR_T                pgrname[200];
-   CHAR_T                pnomcourt[200];
+   CHAR_T              pgrname[200];
+   CHAR_T              pnomcourt[200];
    SrcKeywordDesc     *pkw1;
    BinFile             grmFile;
    ThotBool             fileOK;
@@ -978,8 +965,7 @@ STRING              fileName;
    ustrcpy (pnomcourt, fileName);
    /* cherche dans le directory compil si le fichier grammaire existe */
    if (SearchFile (pnomcourt, 3, pgrname) == 0)
-      CompilerMessage (0, COMPIL, FATAL, GRM_FILE_NOT_FOUND,
-		     inputLine, LineNum);
+      CompilerMessage (0, COMPIL, FATAL, GRM_FILE_NOT_FOUND, inputLine, LineNum);
    else
      {
 	/* ouvre le fichier grammaire */
@@ -997,16 +983,17 @@ STRING              fileName;
 	     j = 0;
 	     do
 	       {
-		  fileOK = TtaReadByte (grmFile, &inputLine[j]);
+		  /* fileOK = TtaReadByte (grmFile, &inputLine[j]); */
+		  fileOK = TtaReadWideChar (grmFile, &inputLine[j]);
 		  j++;
 	       }
 #        ifdef _WINDOWS
-	     while (j < LINE_LENGTH && inputLine [j-1] != 13 && inputLine[j - 1] != '\n' && fileOK);
+	     while (j < LINE_LENGTH && inputLine [j-1] != TtaGetUnicodeValueFromISOLatinCode (13) && inputLine[j - 1] != TEXT('\n') && fileOK);
 #        else
-	     while (j < LINE_LENGTH && inputLine[j - 1] != '\n' && fileOK);
+	     while (j < LINE_LENGTH && inputLine[j - 1] != TEXT('\n') && fileOK);
 #        endif
 	     /* marque la fin reelle de la ligne */
-	     inputLine[j - 1] = '\0';
+	     inputLine[j - 1] = TEXT('\0');
 	     /* traite la ligne */
 	     j = 1;
 	     do
@@ -1023,8 +1010,7 @@ STRING              fileName;
 			 {
 			    if (NKeywords >= MAX_KEYWORDS)
 			       /* table saturee */
-			       CompilerMessage (wind, COMPIL, FATAL, NO_SPACE_LEFT_IN_KEYWORD_TABLE,
-					      inputLine, LineNum);
+			       CompilerMessage (wind, COMPIL, FATAL, NO_SPACE_LEFT_IN_KEYWORD_TABLE, inputLine, LineNum);
 			    else
 			       NKeywords++;
 			    /* entree suivante de la table */
@@ -1033,8 +1019,7 @@ STRING              fileName;
 			    if (wlen > KEWWORD_LENGTH)
 			      {
 				 wlen = KEWWORD_LENGTH;
-				 CompilerMessage (wind, COMPIL, FATAL, INVALID_KEYWORD_SIZE,
-						inputLine, LineNum);
+				 CompilerMessage (wind, COMPIL, FATAL, INVALID_KEYWORD_SIZE, inputLine, LineNum);
 			      }
 			    pkw1->SrcKeywordLen = wlen;
 			    for (l = 0; l < wlen; l++)

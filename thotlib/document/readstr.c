@@ -206,14 +206,14 @@ TtAttribute        *pAttr;
    AttribType          attrType;
    int                 j;
 
-   TtaReadWCName (file, pAttr->AttrName);
+   TtaReadName (file, pAttr->AttrName);
    ustrcpy (pAttr->AttrOrigName, pAttr->AttrName);
    TtaReadBool (file, &pAttr->AttrGlobal);
    TtaReadShort (file, &pAttr->AttrFirstExcept);
    TtaReadShort (file, &pAttr->AttrLastExcept);
    if (ReadAttribType (file, &attrType))
      {
-	pAttr->AttrType = attrType;
+	pAttr->AttrType = attrType; 
 	switch (pAttr->AttrType)
 	      {
 		 case AtNumAttr:
@@ -221,19 +221,19 @@ TtAttribute        *pAttr;
 		    break;
 		 case AtReferenceAttr:
 		    TtaReadShort (file, &pAttr->AttrTypeRef);
-		    TtaReadWCName (file, pAttr->AttrTypeRefNature);
+		    TtaReadName (file, pAttr->AttrTypeRefNature);
 		    break;
 		 case AtEnumAttr:
 		    TtaReadShort (file, &pAttr->AttrNEnumValues);
 		    for (j = 0; j < pAttr->AttrNEnumValues; j++)
 		      {
-			TtaReadWCName (file, pAttr->AttrEnumValue[j]);
+			TtaReadName (file, pAttr->AttrEnumValue[j]);
 			ustrcpy (pAttr->AttrEnumOrigValue[j], pAttr->AttrEnumValue[j]);
 		      }
 		    break;
 	      }
      }
-   else
+   else 
       return FALSE;
    return TRUE;
 }
@@ -257,7 +257,7 @@ SRule              *pSRule;
    RConstruct          constr;
    int                 j;
 
-   TtaReadWCName (file, pSRule->SrName);
+   TtaReadName (file, pSRule->SrName);
    ustrcpy (pSRule->SrOrigName, pSRule->SrName);
    TtaReadShort (file, &pSRule->SrNDefAttrs);
    for (j = 0; j < pSRule->SrNDefAttrs; j++)
@@ -283,7 +283,7 @@ SRule              *pSRule;
    if (pSRule->SrExportedElem)
      {
 	TtaReadShort (file, &pSRule->SrExportContent);
-	TtaReadWCName (file, pSRule->SrNatExpContent);
+	TtaReadName (file, pSRule->SrNatExpContent);
      }
 
    TtaReadShort (file, &pSRule->SrFirstExcept);
@@ -313,7 +313,7 @@ SRule              *pSRule;
 	       break;
 	    case CsReference:
 	       TtaReadShort (file, &pSRule->SrReferredType);
-	       TtaReadWCName (file, pSRule->SrRefTypeNat);
+	       TtaReadName (file, pSRule->SrRefTypeNat);
 
 	       break;
 	    case CsIdentity:
@@ -364,6 +364,24 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
+#  ifdef _I18N_
+   CHAR_T c;
+   int    i;
+
+   i = 0;
+   do {
+      do {
+         TtaReadWideChar (file, &c);
+         pSS->SsConstBuffer[i++] = c;
+	  } while (c != WC_EOS && i < MAX_LEN_ALL_CONST);
+      TtaReadWideChar (file, &c);
+      pSS->SsConstBuffer[i++] = c;
+   } while (c != WC_EOS && i < MAX_LEN_ALL_CONST);
+   if (i >= MAX_LEN_ALL_CONST)
+      return FALSE;
+   else
+       return TRUE;
+#  else  /* !_I18N_ */
    char c;
    int                 i;
 
@@ -384,6 +402,7 @@ PtrSSchema          pSS;
       return FALSE;
    else
       return TRUE;
+#  endif /* !_I18N_ */
 }
 
 
@@ -435,9 +454,9 @@ PtrSSchema          pSS;
      {
 	pSS->SsActionList = NULL;
 	/* lit la partie fixe du schema de structure */
-	TtaReadWCName (file, pSS->SsName);
+	TtaReadName (file, pSS->SsName);
 	TtaReadShort (file, &pSS->SsCode);
-	TtaReadWCName (file, pSS->SsDefaultPSchema);
+	TtaReadName (file, pSS->SsDefaultPSchema);
 	pSS->SsPSchema = NULL;
 	TtaReadBool (file, &pSS->SsExtension);
 	pSS->SsNExtensRules = 0;

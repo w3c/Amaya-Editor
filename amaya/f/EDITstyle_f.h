@@ -28,7 +28,7 @@ extern void ApplyClass ( Document doc,
                          View view );
 extern void StyleCallbackDialogue ( int ref,
                                     int typedata,
-                                    STRING data );
+                                    CHAR_T* data );
 
 #else /* __STDC__ */
 
@@ -54,7 +54,7 @@ extern void ApplyClass (/* Document doc,
                            View view */);
 extern void StyleCallbackDialogue (/* int ref,
                                       int typedata,
-                                      STRING data */);
+                                      CHAR_T* data */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

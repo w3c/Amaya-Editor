@@ -217,9 +217,9 @@ ThotBool            Extension;
 #endif /* __STDC__ */
 
 {
-   CUSName          schName;
+   Name             schName;
 
-   StringNCopy (schName, SSchName, MAX_NAME_LENGTH);
+   ustrncpy (schName, SSchName, MAX_NAME_LENGTH);
    /* cree le schema de structure et charge le fichier dedans */
    if (pLoadedSS == NULL)
      {

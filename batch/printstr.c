@@ -44,7 +44,7 @@ TtAttribute        *pAt1;
 
 #ifdef __STDC__
 extern CHAR_T*      TtaGetEnvString (char*);
-extern void         TtaInitializeAppRegistry (char*);
+extern void         TtaInitializeAppRegistry (CHAR_T*);
 extern void         TtaSaveAppRegistry (void);
 
 #else

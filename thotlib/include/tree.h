@@ -102,7 +102,7 @@ extern Element      TtaNewElement (Document document, ElementType elementType);
    the root element of the created tree.
 
    ---------------------------------------------------------------------- */
-extern Element      TtaNewTree (Document document, ElementType elementType, STRING label);
+extern Element      TtaNewTree (Document document, ElementType elementType, char* label);
 
 /* ----------------------------------------------------------------------
    TtaCopyTree

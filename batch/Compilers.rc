@@ -74,18 +74,6 @@ END
 //
 
 COMP_TOOLBAR            BITMAP  DISCARDABLE     "comp_toolbar.bmp"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// String Table
-//
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    COMP_OPEN               "Open file"
-    COMP_COMPILE            "Build"
-END
-
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 

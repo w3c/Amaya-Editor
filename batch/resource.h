@@ -4,9 +4,8 @@
 //
 #define COMP_ICON                       101
 #define COMP_TOOLBAR                    104
-
-#define COMP_OPEN						2001
-#define COMP_COMPILE					2002
+#define COMP_OPEN                       2001
+#define COMP_COMPILE                    2002
 
 // Next default values for new objects
 // 

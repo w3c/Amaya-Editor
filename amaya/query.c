@@ -1356,7 +1356,7 @@ HTList             *c;
   
   lang_list = TtaGetEnvString ("ACCEPT_LANGUAGES");
   s[2] = EOS;
-  if (lang_list && *lang_list != CUS_EOS)
+  if (lang_list && *lang_list != WC_EOS)
     {
       /* add the default language first  */
       HTLanguage_add (c, "*", -1.0);
@@ -1408,9 +1408,9 @@ HTList             *c;
 			}
             if (lg >= 2) {
                if (still)
-                  cus2iso_strncpy  (s, &ptr[1], 2);
+                  wc2iso_strncpy  (s, &ptr[1], 2);
                else
-                   cus2iso_strncpy (s, lang_list, 2);
+                   wc2iso_strncpy (s, lang_list, 2);
                count--;
                HTLanguage_add (c, s, quality);
                quality += 0.1;
@@ -1508,7 +1508,7 @@ static void         AHTProtocolInit (void)
 
    /* initialize pipelining */
   strptr = TtaGetEnvString ("ENABLE_PIPELINING");
-  if (strptr && *strptr && StringCaseCompare (strptr, CUSTEXT("yes")))
+  if (strptr && *strptr && ustrcasecmp (strptr, TEXT("yes")))
     HTTP_setConnectionMode (HTTP_11_NO_PIPELINING);
 }
 
@@ -1682,15 +1682,15 @@ CHAR_T*   dirname;
   CHAR_T*       ptr;
 
   /* create a t_dir name to start searching for files */
-  if ((StringLength (dirname) + 10) > MAX_LENGTH)
+  if ((ustrlen (dirname) + 10) > MAX_LENGTH)
     /* ERROR: directory name is too big */
     return;
 
-  StringCopy (t_dir, dirname);
+  ustrcpy (t_dir, dirname);
   /* save the end of the dirname. We'll use it to make
      a complete pathname when erasing files */
-  ptr = &t_dir[StringLength (t_dir)];
-  StringConcat (t_dir, CUSTEXT("*"));
+  ptr = &t_dir[ustrlen (t_dir)];
+  ustrcat (t_dir, TEXT("*"));
 
   hFindFile = FindFirstFile (t_dir, &ffd);
     
@@ -1809,14 +1809,14 @@ int i;
 
   /* activate cache? */
   strptr = TtaGetEnvString ("ENABLE_CACHE");
-  if (strptr && *strptr && StringCaseCompare (strptr, CUSTEXT("yes")))
+  if (strptr && *strptr && ustrcasecmp (strptr, TEXT("yes")))
     cache_enabled = NO;
   else
     cache_enabled = YES;
 
   /* cache protected documents? */
   strptr = TtaGetEnvString ("CACHE_PROTECTED_DOCS");
-  if (strptr && *strptr && !StringCaseCompare (strptr, CUSTEXT("yes")))
+  if (strptr && *strptr && !ustrcasecmp (strptr, TEXT("yes")))
     HTCacheMode_setProtected (YES);
   else
     HTCacheMode_setProtected (NO);
@@ -1825,33 +1825,33 @@ int i;
   strptr = TtaGetEnvString ("CACHE_DIR");
   if (strptr && *strptr) 
     {
-      real_dir = TtaAllocCUString (StringLength (strptr) + StringLength (CACHE_DIR_NAME) + 20);
-      StringCopy (real_dir, strptr);
-	  if (*(real_dir + StringLength (real_dir) - 1) != CUS_DIR_SEP)
-	    StringConcat (real_dir, CUS_DIR_STR);
+      real_dir = TtaAllocString (ustrlen (strptr) + ustrlen (CACHE_DIR_NAME) + 20);
+      ustrcpy (real_dir, strptr);
+	  if (*(real_dir + ustrlen (real_dir) - 1) != WC_DIR_SEP)
+	    ustrcat (real_dir, WC_DIR_STR);
     }
   else
     {
-      real_dir = TtaAllocCUString (StringLength (TempFileDirectory) + StringLength (CACHE_DIR_NAME) + 20);
+      real_dir = TtaAllocString (ustrlen (TempFileDirectory) + ustrlen (CACHE_DIR_NAME) + 20);
       usprintf (real_dir, TEXT("%s%s"), TempFileDirectory, CACHE_DIR_NAME);
     }
 
   /* compatiblity with previous versions of Amaya: does real_dir
      include CACHE_DIR_NAME? If not, add it */
-  strptr = StringSubstring (real_dir, CACHE_DIR_NAME);
+  strptr = ustrstr (real_dir, CACHE_DIR_NAME);
   if (!strptr)
-    StringConcat (real_dir, CACHE_DIR_NAME);
+    ustrcat (real_dir, CACHE_DIR_NAME);
   else
     {
-      i = StringLength (CACHE_DIR_NAME);
-	  if (strptr[i] != CUS_EOS)
-          StringConcat (real_dir, CACHE_DIR_NAME);
+      i = ustrlen (CACHE_DIR_NAME);
+	  if (strptr[i] != WC_EOS)
+          ustrcat (real_dir, CACHE_DIR_NAME);
     }
 
   /* convert the local cache dir into a file URL, as expected by
      libwww */
  
-  cus2iso_strcpy (www_realDir, real_dir);
+  wc2iso_strcpy (www_realDir, real_dir);
 
   cache_dir = HTLocalToWWW (www_realDir, "file:");
 
@@ -1869,9 +1869,9 @@ int i;
   if (cache_enabled) 
     {
       /* how to remove the lock? force remove it? */
-      cache_lockfile = TtaAllocCUString (StringLength (real_dir) + 20);
-      StringCopy (cache_lockfile, real_dir);
-      StringConcat (cache_lockfile, CUSTEXT(".lock"));
+      cache_lockfile = TtaAllocString (ustrlen (real_dir) + 20);
+      ustrcpy (cache_lockfile, real_dir);
+      ustrcat (cache_lockfile, TEXT(".lock"));
       cache_locked = FALSE;
       if (TtaFileExist (cache_lockfile) && !(cache_locked = test_cachelock (cache_lockfile)))
 	{
@@ -1881,10 +1881,10 @@ int i;
 	  /* remove the lock and clean the cache (the clean cache 
 	     will remove all, making the following call unnecessary */
 	  /* little trick to win some memory */
-	  strptr = StrRChr (cache_lockfile, CUSTEXT('.'));
-	  *strptr = CUS_EOS;
+	  strptr = ustrrchr (cache_lockfile, TEXT('.'));
+	  *strptr = WC_EOS;
 	  RecCleanCache (cache_lockfile);
-	  *strptr = CUSTEXT('.');
+	  *strptr = TEXT('.');
 	}
 
       if (!cache_locked) 
@@ -1970,11 +1970,11 @@ static void ProxyInit ()
   strptr = TtaGetEnvString ("HTTP_PROXY");
   if (strptr && *strptr)
     {
-      tmp = (char*) TtaGetMemory (StringLength (strptr) + 1);
-      cus2iso_strcpy (tmp, strptr);
+      tmp = (char*) TtaGetMemory (ustrlen (strptr) + 1);
+      wc2iso_strcpy (tmp, strptr);
 
       /* does the proxy env string has an "http://" prefix? */
-      if (!StringNCaseCompare (strptr, CUSTEXT("http://"), 7)) 
+      if (!ustrncasecmp (strptr, TEXT("http://"), 7)) 
         HTProxy_add ("http", tmp);
       else 
 	{
@@ -1991,8 +1991,8 @@ static void ProxyInit ()
   strptr = TtaGetEnvString ("PROXYDOMAIN");
   if (strptr && *strptr) 
     {
-      strptrA = (char*) TtaGetMemory (StringLength (strptr) + 1);
-      cus2iso_strcpy (strptrA, strptr);
+      strptrA = (char*) TtaGetMemory (ustrlen (strptr) + 1);
+      wc2iso_strcpy (strptrA, strptr);
       /* as HTNextField changes the ptr we pass as an argument, we'll
 	 work with another variable, so that we can free the strptrA
 	 block later on */
@@ -2041,8 +2041,8 @@ static void SafePut_init ()
   if (strptr && *strptr)
     {
       /* Get copy we can mutilate */
-      strptrA = (char*) TtaGetMemory (StringLength (strptr) + 1);
-      cus2iso_strcpy (strptrA, strptr);
+      strptrA = (char*) TtaGetMemory (ustrlen (strptr) + 1);
+      wc2iso_strcpy (strptrA, strptr);
       ptr2 = strptrA;
       /* convert to lowercase */
       ptr = strptrA;
@@ -2115,7 +2115,7 @@ static ThotBool SafePut_query (char *url)
   creates the Amaya client profile for libwww.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AHTProfile_newAmaya (char* AppName, char* AppVersion)
+static void         AHTProfile_newAmaya (CHAR_T* AppName, CHAR_T* AppVersion)
 #else  /* __STDC__ */
 static void         AHTProfile_newAmaya (AppName, AppVersion)
 char* AppName;
@@ -2123,10 +2123,28 @@ char* AppVersion;
 #endif /* __STDC__ */
 {
    CHAR_T* strptr;
+#  ifdef _I18N_
+   unsigned char mbAppName[MAX_LENGTH], mbAppVersion[MAX_LENGTH];
+#  else  /* !_I18N_ */
+   char* mbAppName    = AppName;
+   char* mbAppVersion = AppVersion;
+#  endif /* !_I18N_ */
 
    /* If the Library is not already initialized then do it */
-   if (!HTLib_isInitialized ())
-      HTLibInit (AppName, AppVersion);
+   if (!HTLib_isInitialized ()) {
+#     ifdef _I18N_
+      /* Here we suppose that libwww works with multibyte character string (MBCS).
+         AppName and AppVersion are wide character strings (WCS). The following 
+		 code transform each of AppName and AppVersion (WCSs) int mbAppName and
+         mbAppName (MBCSs).
+         If the libwww will support WCSs, than you have to remove the code related 
+         to _I18N_ (rounded by #ifdef _I18N_ #endif) and pass to HTLibInit
+         AppName instead of mbAppName and AppVersion instead of mbAppVersion */
+      wcstombs (mbAppName, AppName, MAX_LENGTH);
+      wcstombs (mbAppVersion, AppVersion, MAX_LENGTH);
+#     endif /* _I18N_ */
+      HTLibInit (mbAppName, mbAppVersion);
+   } 
 
    if (!converters)
       converters = HTList_new ();
@@ -2166,7 +2184,7 @@ char* AppVersion;
    HTAA_newModule ("basic", HTBasic_generate, HTBasic_parse, NULL, HTBasic_delete);
    /* activate MDA by defaul */
    strptr = TtaGetEnvString ("ENABLE_MDA");
-   if (!strptr || (strptr && *strptr && StringCaseCompare (strptr, CUSTEXT("no"))))
+   if (!strptr || (strptr && *strptr && ustrcasecmp (strptr, TEXT("no"))))
      HTAA_newModule ("digest", HTDigest_generate, HTDigest_parse, HTDigest_updateInfo, HTDigest_delete);
 
    /* Get any proxy settings */
@@ -2574,11 +2592,11 @@ char *value;
   ---------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static ThotBool QGetFileSize (char *fileName, unsigned long *file_size)
+static ThotBool QGetFileSize (CHAR_T* fileName, unsigned long *file_size)
 #else
 static ThotBool QGetFileSize (fileName, file_size)
-char *fileName;
-unsigned long *file_size;
+CHAR_T*        fileName;
+unsigned long* file_size;
 #endif /* __STDC__ */
 {
   int fd;
@@ -2589,7 +2607,7 @@ unsigned long *file_size;
 
   /* verify the file's size */
 #ifndef _WINDOWS
-  if ((fd = open (fileName, O_RDONLY)) == -1)
+  if ((fd = uopen (fileName, O_RDONLY)) == -1)
 #else 
     if ((fd = uopen (fileName, _O_RDONLY | _O_BINARY)) == -1)
 #endif /* _WINDOWS */
@@ -2861,13 +2879,13 @@ STRING        content_type;
 	 me->outputfile = TtaGetMemory (l + 2);
        else
 	 me->outputfile = TtaGetMemory (MAX_LENGTH + 2);
-       strcpy (me->outputfile, outputfile);
+       ustrcpy (me->outputfile, outputfile);
        l = ustrlen (urlName);
        if (l > MAX_LENGTH)
 	 me->urlName = TtaGetMemory (l + 2);
        else
 	 me->urlName = TtaGetMemory (MAX_LENGTH + 2);
-       strcpy (me->urlName, urlName);
+       ustrcpy (me->urlName, urlName);
 #ifdef _WINDOWS
      /* force windows ASYNC requests to always be non preemptive */
      HTRequest_setPreemptive (me->request, NO);
@@ -3153,12 +3171,11 @@ void               *context_tcbf;
        ptr1 = TtaGetEnvString ("DEFAULTNAME");
        if (ptr1 && *ptr1) 
 	 {
-	   ptr2 = StringSubstring (urlName, ptr1);
+	   ptr2 = ustrstr (urlName, ptr1);
 	   if (ptr2) 
 	     {
 	       me->default_put_name = TtaStrdup (urlName);
-	       me->default_put_name[strlen (me->default_put_name)
-				   - strlen (ptr1)] = EOS;
+	       me->default_put_name[strlen (me->default_put_name) - strlen (ptr1)] = EOS;
 	       HTRequest_setDefaultPutName (me->request, me->default_put_name);
 	     }
 	 }
@@ -3210,11 +3227,9 @@ void               *context_tcbf;
    /* .. and we give the same type to the source anchor */
    /* we go thru setOutputFormat, rather than change the parent's
       anchor, as that's the place that libwww expects it to be */
-   HTAnchor_setFormat (HTAnchor_parent (me->source),
-		       HTAtom_for (tmp));
+   HTAnchor_setFormat (HTAnchor_parent (me->source), HTAtom_for (tmp));
 
-   HTRequest_setOutputFormat (me->request,
-			      HTAtom_for (tmp));
+   HTRequest_setOutputFormat (me->request, HTAtom_for (tmp));
 
 #if 0 /* JK: code ready, but we're not going to use it yet */
    /*

@@ -12,7 +12,7 @@ extern Element TtaNewElement ( Document document,
                                ElementType elementType );
 extern Element TtaNewTree ( Document document,
                             ElementType elementType,
-                            STRING label );
+                            char* label );
 extern Element TtaCopyTree ( Element sourceElement,
                              Document sourceDocument,
                              Document destinationDocument,
@@ -129,7 +129,7 @@ extern Element TtaNewElement (/* Document document,
                                  ElementType elementType */);
 extern Element TtaNewTree (/* Document document,
                               ElementType elementType,
-                              STRING label */);
+                              char* label */);
 extern Element TtaCopyTree (/* Element sourceElement,
                                Document sourceDocument,
                                Document destinationDocument,

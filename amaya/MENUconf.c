@@ -214,7 +214,7 @@ void InitAmayaDefEnv ()
   else
     HomePage[0]  = WC_EOS;
   TtaSetDefEnvString ("HOME_PAGE", HomePage, FALSE);
-  HomePage[0] = CUS_EOS;
+  HomePage[0] = WC_EOS;
   TtaSetDefEnvString ("ENABLE_MULTIKEY", TEXT("no"), FALSE);
   TtaSetDefEnvString ("ENABLE_BG_IMAGES", TEXT("yes"), FALSE);
   TtaSetDefEnvString ("VERIFY_PUBLISH", TEXT("no"), FALSE);
@@ -2716,15 +2716,15 @@ static void SetEnvCurrentGeometry ()
   /* only do the processing if the document exists */
   if (DocumentURLs[GeometryDoc])
     {
-      SetEnvGeom ("Formatted_view");
-      SetEnvGeom ("Structure_view");
-      SetEnvGeom ("Math_Structure_view");
+      SetEnvGeom (TEXT("Formatted_view"));
+      SetEnvGeom (TEXT("Structure_view"));
+      SetEnvGeom (TEXT("Math_Structure_view"));
 #ifdef GRAPHML
-      SetEnvGeom ("Graph_Structure_view");
+      SetEnvGeom (TEXT("Graph_Structure_view"));
 #endif /* GRAPHML */
-      SetEnvGeom ("Alternate_view");
-      SetEnvGeom ("Links_view");
-      SetEnvGeom ("Table_of_contents");
+      SetEnvGeom (TEXT("Alternate_view"));
+      SetEnvGeom (TEXT("Links_view"));
+      SetEnvGeom (TEXT("Table_of_contents"));
     } /* if GeometryDoc exists */
 }
 
@@ -3247,7 +3247,7 @@ static void BuildProfileList (void)
   while (i < nbprofiles && MenuText[i] != '\0')
     {
       /* keep in mind the current selected entry */
-      if (ptr && !cus2iso_strcmp (ptr, MenuText[i]))
+      if (ptr && !wc2iso_strcmp (ptr, MenuText[i]))
          CurrentProfile = i;
       SendMessage (wndProfilesList, LB_INSERTSTRING, i, (LPARAM) MenuText[i]);
       i++;

@@ -40,7 +40,7 @@ STRING              text;
 #  ifdef _WINDOWS
 	if ( COMPWnd )
 	{		
-		LPSTR pText = (LPSTR)malloc( strlen(text) + 3 );
+		LPTSTR pText = (LPTSTR) malloc (ustrlen(text) + 3);
 		if ( pText )
 		{
 			/* Set caret to end of current text */
@@ -48,7 +48,7 @@ STRING              text;
 			SetFocus (COMPWnd);   
 			SendMessage (COMPWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
 			/* Append text */
-			sprintf( pText, "%s\r\n", text );
+			usprintf (pText, TEXT("%s\r\n"), text);
 			SendMessage (COMPWnd, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) pText));
 
 			free( pText );
@@ -74,26 +74,20 @@ int                 msgType;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
-	if ( COMPWnd )
-	{
-		LPSTR pText = (LPSTR)malloc( strlen(text) + 3 );
-		if ( pText )
-		{
-			/* Set caret to end of current text */
-			int ndx = GetWindowTextLength (COMPWnd);
-			SetFocus (COMPWnd);   
-			SendMessage (COMPWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-			/* Append text */
-			sprintf( pText, "%s\r\n", text );
-			SendMessage (COMPWnd, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) pText));
-
-			free( pText );
-		}
+	if ( COMPWnd ) {
+       CHAR_T pText[MAX_TXT_LEN];
+       /* Set caret to end of current text */
+       int ndx = GetWindowTextLength (COMPWnd);
+       SetFocus (COMPWnd);   
+       SendMessage (COMPWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
+       /* Append text */
+       usprintf (pText, TEXT("%s\r\n"), text);
+       SendMessage (COMPWnd, EM_REPLACESEL, 0, (LPARAM) ((LPTSTR) pText));
 	}
 	
-#  else  /* _WINDOWS */
-   fprintf (stderr, text);
-#  endif /* _WINDOWS */
+#   else  /* _WINDOWS */
+    fprintf (stderr, text);
+#   endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

@@ -706,7 +706,7 @@ CHAR_T*             presentationName;
            pDoc = LoadedDocument[document - 1];
 #ifdef NODISPLAY
            if (pDoc->DocSSchema != NULL)
-               strncpy (pDoc->DocSSchema->SsDefaultPSchema, presentationName, MAX_NAME_LENGTH - 1);
+               ustrncpy (pDoc->DocSSchema->SsDefaultPSchema, presentationName, MAX_NAME_LENGTH - 1);
 #else
            /* verifies that there is no opened views */
            ok = TRUE;

@@ -313,77 +313,77 @@ static AttributeMapping MathMLAttributeMappingTable[] =
 
 static AttrValueMapping MathMLAttrValueMappingTable[] =
 {
- {MathML_ATTR_accent, "true", MathML_ATTR_accent_VAL_true},
- {MathML_ATTR_accent, "false", MathML_ATTR_accent_VAL_false},
+ {MathML_ATTR_accent, TEXT("true"), MathML_ATTR_accent_VAL_true},
+ {MathML_ATTR_accent, TEXT("false"), MathML_ATTR_accent_VAL_false},
 
- {MathML_ATTR_accentunder, "true", MathML_ATTR_accentunder_VAL_true},
- {MathML_ATTR_accentunder, "false", MathML_ATTR_accentunder_VAL_false},
+ {MathML_ATTR_accentunder, TEXT("true"), MathML_ATTR_accentunder_VAL_true},
+ {MathML_ATTR_accentunder, TEXT("false"), MathML_ATTR_accentunder_VAL_false},
 
- {MathML_ATTR_beveled, "true", MathML_ATTR_beveled_VAL_true},
- {MathML_ATTR_beveled, "false", MathML_ATTR_beveled_VAL_false},
+ {MathML_ATTR_beveled, TEXT("true"), MathML_ATTR_beveled_VAL_true},
+ {MathML_ATTR_beveled, TEXT("false"), MathML_ATTR_beveled_VAL_false},
 
- {MathML_ATTR_denomalign, "center", MathML_ATTR_denomalign_VAL_center_},
- {MathML_ATTR_denomalign, "left", MathML_ATTR_denomalign_VAL_left_},
- {MathML_ATTR_denomalign, "right", MathML_ATTR_denomalign_VAL_right_},
+ {MathML_ATTR_denomalign, TEXT("center"), MathML_ATTR_denomalign_VAL_center_},
+ {MathML_ATTR_denomalign, TEXT("left"), MathML_ATTR_denomalign_VAL_left_},
+ {MathML_ATTR_denomalign, TEXT("right"), MathML_ATTR_denomalign_VAL_right_},
 
- {MathML_ATTR_displaystyle, "true", MathML_ATTR_displaystyle_VAL_true},
- {MathML_ATTR_displaystyle, "false", MathML_ATTR_displaystyle_VAL_false},
+ {MathML_ATTR_displaystyle, TEXT("true"), MathML_ATTR_displaystyle_VAL_true},
+ {MathML_ATTR_displaystyle, TEXT("false"), MathML_ATTR_displaystyle_VAL_false},
 
- {MathML_ATTR_edge, "left", MathML_ATTR_edge_VAL_left_},
- {MathML_ATTR_edge, "right", MathML_ATTR_edge_VAL_right_},
+ {MathML_ATTR_edge, TEXT("left"), MathML_ATTR_edge_VAL_left_},
+ {MathML_ATTR_edge, TEXT("right"), MathML_ATTR_edge_VAL_right_},
 
- {MathML_ATTR_fence, "true", MathML_ATTR_fence_VAL_true},
- {MathML_ATTR_fence, "false", MathML_ATTR_fence_VAL_false},
+ {MathML_ATTR_fence, TEXT("true"), MathML_ATTR_fence_VAL_true},
+ {MathML_ATTR_fence, TEXT("false"), MathML_ATTR_fence_VAL_false},
 
- {MathML_ATTR_fontstyle, "italic", MathML_ATTR_fontstyle_VAL_italic},
- {MathML_ATTR_fontstyle, "normal", MathML_ATTR_fontstyle_VAL_normal_},
+ {MathML_ATTR_fontstyle, TEXT("italic"), MathML_ATTR_fontstyle_VAL_italic},
+ {MathML_ATTR_fontstyle, TEXT("normal"), MathML_ATTR_fontstyle_VAL_normal_},
 
- {MathML_ATTR_fontweight, "normal", MathML_ATTR_fontweight_VAL_normal_},
- {MathML_ATTR_fontweight, "bold", MathML_ATTR_fontweight_VAL_bold_},
+ {MathML_ATTR_fontweight, TEXT("normal"), MathML_ATTR_fontweight_VAL_normal_},
+ {MathML_ATTR_fontweight, TEXT("bold"), MathML_ATTR_fontweight_VAL_bold_},
 
- {MathML_ATTR_form, "prefix", MathML_ATTR_form_VAL_prefix},
- {MathML_ATTR_form, "infix", MathML_ATTR_form_VAL_infix},
- {MathML_ATTR_form, "postfix", MathML_ATTR_form_VAL_postfix},
+ {MathML_ATTR_form, TEXT("prefix"), MathML_ATTR_form_VAL_prefix},
+ {MathML_ATTR_form, TEXT("infix"), MathML_ATTR_form_VAL_infix},
+ {MathML_ATTR_form, TEXT("postfix"), MathML_ATTR_form_VAL_postfix},
 
- {MathML_ATTR_frame, "none", MathML_ATTR_frame_VAL_none_},
- {MathML_ATTR_frame, "solid", MathML_ATTR_frame_VAL_solid_},
- {MathML_ATTR_frame, "dashed", MathML_ATTR_frame_VAL_dashed_},
+ {MathML_ATTR_frame, TEXT("none"), MathML_ATTR_frame_VAL_none_},
+ {MathML_ATTR_frame, TEXT("solid"), MathML_ATTR_frame_VAL_solid_},
+ {MathML_ATTR_frame, TEXT("dashed"), MathML_ATTR_frame_VAL_dashed_},
 
- {MathML_ATTR_largeop, "true", MathML_ATTR_largeop_VAL_true},
- {MathML_ATTR_largeop, "false", MathML_ATTR_largeop_VAL_false},
+ {MathML_ATTR_largeop, TEXT("true"), MathML_ATTR_largeop_VAL_true},
+ {MathML_ATTR_largeop, TEXT("false"), MathML_ATTR_largeop_VAL_false},
 
- {MathML_ATTR_link, "document", MathML_ATTR_link_VAL_document},
- {MathML_ATTR_link, "extended", MathML_ATTR_link_VAL_extended},
- {MathML_ATTR_link, "group", MathML_ATTR_link_VAL_group},
- {MathML_ATTR_link, "locator", MathML_ATTR_link_VAL_locator},
- {MathML_ATTR_link, "simple", MathML_ATTR_link_VAL_simple},
+ {MathML_ATTR_link, TEXT("document"), MathML_ATTR_link_VAL_document},
+ {MathML_ATTR_link, TEXT("extended"), MathML_ATTR_link_VAL_extended},
+ {MathML_ATTR_link, TEXT("group"), MathML_ATTR_link_VAL_group},
+ {MathML_ATTR_link, TEXT("locator"), MathML_ATTR_link_VAL_locator},
+ {MathML_ATTR_link, TEXT("simple"), MathML_ATTR_link_VAL_simple},
 
- {MathML_ATTR_movablelimits, "true", MathML_ATTR_movablelimits_VAL_true},
- {MathML_ATTR_movablelimits, "false", MathML_ATTR_movablelimits_VAL_false},
+ {MathML_ATTR_movablelimits, TEXT("true"), MathML_ATTR_movablelimits_VAL_true},
+ {MathML_ATTR_movablelimits, TEXT("false"), MathML_ATTR_movablelimits_VAL_false},
 
- {MathML_ATTR_notation, "longdiv", MathML_ATTR_notation_VAL_longdiv},
- {MathML_ATTR_notation, "actuarial", MathML_ATTR_notation_VAL_actuarial},
- {MathML_ATTR_notation, "radical", MathML_ATTR_notation_VAL_radical},
+ {MathML_ATTR_notation, TEXT("longdiv"), MathML_ATTR_notation_VAL_longdiv},
+ {MathML_ATTR_notation, TEXT("actuarial"), MathML_ATTR_notation_VAL_actuarial},
+ {MathML_ATTR_notation, TEXT("radical"), MathML_ATTR_notation_VAL_radical},
 
- {MathML_ATTR_numalign, "center", MathML_ATTR_numalign_VAL_center_},
- {MathML_ATTR_numalign, "left", MathML_ATTR_numalign_VAL_left_},
- {MathML_ATTR_numalign, "right", MathML_ATTR_numalign_VAL_right_},
+ {MathML_ATTR_numalign, TEXT("center"), MathML_ATTR_numalign_VAL_center_},
+ {MathML_ATTR_numalign, TEXT("left"), MathML_ATTR_numalign_VAL_left_},
+ {MathML_ATTR_numalign, TEXT("right"), MathML_ATTR_numalign_VAL_right_},
 
- {MathML_ATTR_separator, "true", MathML_ATTR_separator_VAL_true},
- {MathML_ATTR_separator, "false", MathML_ATTR_separator_VAL_false},
+ {MathML_ATTR_separator, TEXT("true"), MathML_ATTR_separator_VAL_true},
+ {MathML_ATTR_separator, TEXT("false"), MathML_ATTR_separator_VAL_false},
 
- {MathML_ATTR_side, "left", MathML_ATTR_side_VAL_left_},
- {MathML_ATTR_side, "leftoverlap", MathML_ATTR_side_VAL_leftoverlap},
- {MathML_ATTR_side, "right", MathML_ATTR_side_VAL_right_},
- {MathML_ATTR_side, "rightoverlap", MathML_ATTR_side_VAL_rightoverlap},
+ {MathML_ATTR_side, TEXT("left"), MathML_ATTR_side_VAL_left_},
+ {MathML_ATTR_side, TEXT("leftoverlap"), MathML_ATTR_side_VAL_leftoverlap},
+ {MathML_ATTR_side, TEXT("right"), MathML_ATTR_side_VAL_right_},
+ {MathML_ATTR_side, TEXT("rightoverlap"), MathML_ATTR_side_VAL_rightoverlap},
 
- {MathML_ATTR_stretchy, "true", MathML_ATTR_stretchy_VAL_true},
- {MathML_ATTR_stretchy, "false", MathML_ATTR_stretchy_VAL_false},
+ {MathML_ATTR_stretchy, TEXT("true"), MathML_ATTR_stretchy_VAL_true},
+ {MathML_ATTR_stretchy, TEXT("false"), MathML_ATTR_stretchy_VAL_false},
 
- {MathML_ATTR_symmetric, "true", MathML_ATTR_symmetric_VAL_true},
- {MathML_ATTR_symmetric, "false", MathML_ATTR_symmetric_VAL_false},
+ {MathML_ATTR_symmetric, TEXT("true"), MathML_ATTR_symmetric_VAL_true},
+ {MathML_ATTR_symmetric, TEXT("false"), MathML_ATTR_symmetric_VAL_false},
 
- {0, "", 0}			/* Last entry. Mandatory */
+ {0, TEXT(""), 0}			/* Last entry. Mandatory */
 };
 
 #define MaxMsgLength 200
@@ -921,10 +921,10 @@ void SetSingleIntHorizStretchAttr (el, doc, selEl)
   ElementType	elType;
   Attribute	attr;
   AttributeType	attrType;
-  int		len;
-  Language	lang;
+  int		    len;
+  Language	    lang;
   CHAR_T		alphabet;
-  UCHAR_T	        text[2], c;
+  unsigned char text[2], c;
 
   if (el == NULL)
      return;
@@ -1033,10 +1033,10 @@ void SetIntVertStretchAttr (el, doc, base, selEl)
   ElementType	elType;
   Attribute	attr;
   AttributeType	attrType;
-  int		len;
-  Language	lang;
+  int		    len;
+  Language	    lang;
   CHAR_T		alphabet;
-  UCHAR_T	        text[2], c;
+  unsigned char text[2], c;
 
   if (el == NULL)
      return;
@@ -1234,11 +1234,11 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
 	      TtaInsertSibling (group, base, FALSE, doc);
 	      elTypePair.ElTypeNum = MathML_EL_PostscriptPair;
 	      /* create a first and a last PostscriptPair as placeholders */
-	      pair = TtaNewTree (doc, elTypePair, _EMPTYSTR_);
+	      pair = TtaNewTree (doc, elTypePair, "");
 	      TtaInsertFirstChild (&pair, group, doc);
 	      SetIntPlaceholderAttr (pair, doc);
 	      prevPair = pair;
-	      pair = TtaNewTree (doc, elTypePair, _EMPTYSTR_);
+	      pair = TtaNewTree (doc, elTypePair, "");
 	      TtaInsertSibling (pair, prevPair, FALSE, doc);
 	      SetIntPlaceholderAttr (pair, doc);
 	      prevScript = NULL;
@@ -1292,7 +1292,7 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
 	      if (elTypeGroup.ElTypeNum != MathML_EL_PostscriptPairs)
 		{
 		  elTypeGroup.ElTypeNum = MathML_EL_PostscriptPairs;
-		  group = TtaNewTree (doc, elTypeGroup, _EMPTYSTR_);
+		  group = TtaNewTree (doc, elTypeGroup, "");
 		  TtaInsertSibling (group, elem, TRUE, doc);
 		  SetIntPlaceholderAttr (group, doc);
 		}
@@ -1303,11 +1303,11 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
 	      elTypePair.ElTypeNum = MathML_EL_PrescriptPair;
 	      group = elem;
 	      /* create a first and a last PostscriptPair as placeholders */
-	      pair = TtaNewTree (doc, elTypePair, _EMPTYSTR_);
+	      pair = TtaNewTree (doc, elTypePair, "");
 	      TtaInsertFirstChild (&pair, group, doc);
 	      SetIntPlaceholderAttr (pair, doc);
 	      prevPair = pair;
-	      pair = TtaNewTree (doc, elTypePair, _EMPTYSTR_);
+	      pair = TtaNewTree (doc, elTypePair, "");
 	      TtaInsertSibling (pair, prevPair, FALSE, doc);
 	      SetIntPlaceholderAttr (pair, doc);
 	      prevScript = NULL;
@@ -1321,7 +1321,7 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
   if (elTypeGroup.ElTypeNum != MathML_EL_PrescriptPairs && base != NULL)
     {
       elTypeGroup.ElTypeNum = MathML_EL_PrescriptPairs;
-      elem = TtaNewTree (doc, elTypeGroup, _EMPTYSTR_);
+      elem = TtaNewTree (doc, elTypeGroup, "");
       if (group == NULL)
 	group = base;
       TtaInsertSibling (elem, group, TRUE, doc);
@@ -1396,7 +1396,7 @@ void CheckMTable (elMTABLE, doc)
   MTableHead = TtaNewElement (doc, elType);
   TtaInsertFirstChild (&MTableHead, elMTABLE, doc);
   elType.ElTypeNum = MathML_EL_MColumn_head;
-  firstColHead = TtaNewTree (doc, elType, _EMPTYSTR_);
+  firstColHead = TtaNewTree (doc, elType, "");
   TtaInsertFirstChild (&firstColHead, MTableHead, doc);
 
   /* create a MTable_body */
@@ -1748,13 +1748,13 @@ Document		doc;
 #endif
 {
    ElementType	 elType;
-   Element	 content;
+   Element	     content;
    AttributeType attrType;
    Attribute	 attr, attrStretchy;
-   int		 len, val;
-   Language	 lang;
-   CHAR_T	 alphabet;
-   UCHAR_T	 text[2], c;
+   int           len, val;
+   Language	     lang;
+   CHAR_T		 alphabet;
+   unsigned char text[2], c;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == MathML_EL_MO)
@@ -1926,8 +1926,8 @@ Document	doc;
 		 firstChild;
    AttributeType attrType;
    Attribute     attr;
-   int		 length;
-   CHAR_T		 text[32], c;
+   int           length;
+   char          text[32], c;
 
    child = TtaGetFirstChild (el);
    if (child != NULL)

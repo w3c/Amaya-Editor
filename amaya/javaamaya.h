@@ -106,7 +106,7 @@ extern ThotBool NormalizeFile (/* CHAR_T* src,
                                  CHAR_T* target */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
-                                 char *data */);
+                                 CHAR_T *data */);
 extern void InitAmaya (/* NotifyEvent * event */);
 extern void SectionNumbering (/* Document document,
                                  View view */);

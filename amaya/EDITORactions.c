@@ -181,7 +181,7 @@ ThotBool            isHTML;
       body = TtaSearchTypedElement (elType, SearchInTree, root);
       if (!body)
 	{
-	  body = TtaNewTree (doc, elType, _EMPTYSTR_);
+	  body = TtaNewTree (doc, elType, "");
 	  TtaInsertSibling (body, head, FALSE, doc);
 	}
 
@@ -203,7 +203,7 @@ ThotBool            isHTML;
       if (el == NULL)
 	{
 	  elType.ElTypeNum = TextFile_EL_Document_URL;
-	  el = TtaNewTree (doc, elType, _EMPTYSTR_);
+	  el = TtaNewTree (doc, elType, "");
 	  TtaInsertFirstChild (&el, root, doc);
 	}
       el = TtaGetFirstChild (el);     
@@ -212,7 +212,7 @@ ThotBool            isHTML;
       body = TtaGetLastChild (root);
       /* create a new line */
       elType.ElTypeNum = TextFile_EL_Line_;
-      el = TtaNewTree (doc, elType, _EMPTYSTR_);
+      el = TtaNewTree (doc, elType, "");
       /* first line */
       TtaInsertFirstChild (&el, body, doc);
 
@@ -423,7 +423,7 @@ int              elementT;
 	   if (TtaSearchTypedElement (elType, SearchInTree, head))
 	     return (NULL);
 	 }
-       new = TtaNewTree (document, elType, _EMPTYSTR_);
+       new = TtaNewTree (document, elType, "");
        TtaInsertSibling (new, el, before, document);
        /* register this element in the editing history */
        TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
@@ -1034,7 +1034,7 @@ View                view;
 		 } 
 	       while (NumberCols > 1)
 		 {
-		   new = TtaNewTree (document, elType, _EMPTYSTR_);
+		   new = TtaNewTree (document, elType, "");
 		   TtaInsertSibling (new, cell, FALSE, document);
 		   NumberCols--;
 		 }
@@ -1045,7 +1045,7 @@ View                view;
 	       row = TtaSearchTypedElement (elType, SearchInTree, el);
 	       while (NumberRows > 1)
 		 {
-		   new = TtaNewTree (document, elType, _EMPTYSTR_);
+		   new = TtaNewTree (document, elType, "");
 		   TtaInsertSibling (new, row, FALSE, document);
 		   NumberRows--;
 		 }
@@ -1129,7 +1129,7 @@ View                view;
 	       child = el;
 	       /* create the Colgroup element */
 	       elType.ElTypeNum = HTML_EL_COLGROUP;
-	       el = TtaNewTree (document, elType, _EMPTYSTR_);
+	       el = TtaNewTree (document, elType, "");
 	       TtaInsertSibling (el, child, FALSE, document);
 	       /* update the selection */
 	       child = TtaGetFirstChild (el);
@@ -1168,7 +1168,7 @@ View                view;
 		   TtaGiveFirstSelectedElement (document, &el, &i, &j);
 		   /* create a COL element within */
 		   elType.ElTypeNum = HTML_EL_COL;
-		   child = TtaNewTree (document, elType, _EMPTYSTR_);
+		   child = TtaNewTree (document, elType, "");
 		   TtaInsertFirstChild (&child, el, document);
 		   /* update the selection */
 		   TtaSelectElement (document, child);
@@ -1206,7 +1206,7 @@ View                view;
 	       /* insert within the curent element */
 	       /* create the Colgroup element */
 	       elType.ElTypeNum = HTML_EL_COL;
-	       child = TtaNewTree (document, elType, _EMPTYSTR_);
+	       child = TtaNewTree (document, elType, "");
 	       TtaInsertFirstChild (&child, el, document);
 	       /* update the selection */
 	       TtaSelectElement (document, child);
@@ -1217,7 +1217,7 @@ View                view;
 	       child = el;
 	       /* create the COL element */
 	       elType.ElTypeNum = HTML_EL_COL;
-	       el = TtaNewTree (document, elType, _EMPTYSTR_);
+	       el = TtaNewTree (document, elType, "");
 	       TtaInsertSibling (el, child, FALSE, document);
 	       /* update the selection */
 	       TtaSelectElement (document, el);
@@ -1623,7 +1623,7 @@ int                 elInput;
 	   TtaGiveFirstSelectedElement (doc, &parent, &firstchar, &lastchar);
 	   /* create the input element */
 	   elType.ElTypeNum = elInput;
-	   input = TtaNewTree (doc, elType, _EMPTYSTR_);
+	   input = TtaNewTree (doc, elType, "");
 	   TtaInsertFirstChild (&input, parent, doc);	   
 	   /* Insert a text element before */
 	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
@@ -1787,7 +1787,7 @@ View                view;
        /* create the option */
        elType = TtaGetElementType (el);
        elType.ElTypeNum = HTML_EL_Option;
-       new = TtaNewTree (doc, elType, _EMPTYSTR_);
+       new = TtaNewTree (doc, elType, "");
        TtaInsertFirstChild (&new, el, doc);
        OnlyOneOptionSelected (new, doc, FALSE);
        /* Select the text element within the option */

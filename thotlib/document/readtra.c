@@ -677,21 +677,21 @@ PtrTRule           *pNextTRule;
 		       case TWrite:
 			  pTRule->TrObject = ReadCreatedObject (file);
 			  TtaReadShort (file, &pTRule->TrObjectNum);
-			  TtaReadWCName (file, pTRule->TrObjectNature);
+			  TtaReadName (file, pTRule->TrObjectNature);
 			  TtaReadBool (file, &pTRule->TrReferredObj);
 			  TtaReadShort (file, &pTRule->TrFileNameVar);
 			  break;
 		       case TGet:
 		       case TCopy:
 			  TtaReadShort (file, &pTRule->TrElemType);
-			  TtaReadWCName (file, pTRule->TrElemNature);
+			  TtaReadName (file, pTRule->TrElemNature);
 			  pTRule->TrRelPosition = ReadTRelatPosition (file);
 			  break;
 		       case TUse:
-			  TtaReadWCName (file, pTRule->TrNature);
-			  TtaReadWCName (file, pTRule->TrTranslSchemaName);
+			  TtaReadName (file, pTRule->TrNature);
+			  TtaReadName (file, pTRule->TrTranslSchemaName);
 			  break;
-		       case TRemove:
+		       case TRemove: 
 		       case TNoTranslation:
 		       case TNoLineBreak:
 
@@ -791,7 +791,7 @@ PtrTRuleBlock      *pNextBlock;
 		  TtaReadBool (file, &pCond->TcNegativeCond);
 		  TtaReadBool (file, &pCond->TcTarget);
 		  TtaReadShort (file, &pCond->TcAscendType);
-		  TtaReadWCName (file, pCond->TcAscendNature);
+		  TtaReadName (file, pCond->TcAscendNature);
 		  TtaReadSignedShort (file, &pCond->TcAscendRelLevel);
 		  switch (pCond->TcCondition)
 			{
@@ -801,7 +801,7 @@ PtrTRuleBlock      *pNextBlock;
 			   case TcondWithin:
 			   case TcondFirstWithin:
 			      TtaReadShort (file, &pCond->TcElemType);
-			      TtaReadWCName (file, pCond->TcElemNature);
+			      TtaReadName (file, pCond->TcElemNature);
 			      TtaReadBool (file, &pCond->TcImmediatelyWithin);
 			      pCond->TcAscendRel = ReadRelatNAscend (file);
 			      TtaReadShort (file, &pCond->TcAscendLevel);
@@ -816,7 +816,7 @@ PtrTRuleBlock      *pNextBlock;
 					     TtaReadSignedShort (file, &pCond->TcUpperBound);
 					     break;
 					  case AtTextAttr:
-					     TtaReadWCName (file, pCond->TcTextValue);
+					     TtaReadName (file, pCond->TcTextValue);
 					     break;
 					  case AtReferenceAttr:
 
@@ -933,7 +933,7 @@ PtrTSchema         *pTSch;
 			 }
 		    break;
 		 case AtTextAttr:
-		    TtaReadWCName (file, pAttrT->AtrTextValue);
+		    TtaReadName (file, pAttrT->AtrTextValue);
 		    ReadBlocks (file, &pAttrT->AtrTxtTRuleBlock, pNextTRule,
 				pSS, pNextBlock);
 		    break;
@@ -1135,11 +1135,11 @@ PtrSSchema          pSS;
 	  memset (pNextBlock, 0, sizeof (TRuleBlock));
 
 	/* lit la partie fixe du schema de traduction */
-	TtaReadWCName (file, pTSch->TsStructName);
+	TtaReadName (file, pTSch->TsStructName);
 	TtaReadShort (file, &pTSch->TsStructCode);
 	TtaReadShort (file, &pTSch->TsLineLength);
-	TtaReadWCName (file, pTSch->TsEOL);
-	TtaReadWCName (file, pTSch->TsTranslEOL);
+	TtaReadName (file, pTSch->TsEOL);
+	TtaReadName (file, pTSch->TsTranslEOL);
 	TtaReadShort (file, &pTSch->TsNConstants);
 	TtaReadShort (file, &pTSch->TsNCounters);
 	TtaReadShort (file, &pTSch->TsNVariables);

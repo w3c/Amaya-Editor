@@ -17,7 +17,7 @@
 #include "fetchHTMLname_f.h"
 
 /* an entity name */
-typedef char entName[10];
+typedef CHAR_T entName[10];
 
 /* an entity representing an ISO-Latin-1 character */
 typedef struct _EntityDictEntry
@@ -31,13 +31,13 @@ EntityDictEntry;
 static EntityDictEntry XMLpredifinedEntities[] =
 {
    /* This table MUST be in alphabetical order */
-   {"amp", 38},
-   {"apos", 39},
-   {"gt", 62},
-   {"lt", 60},
-   {"quot", 34},
+   {TEXT("amp"), 38},
+   {TEXT("apos"), 39},
+   {TEXT("gt"), 62},
+   {TEXT("lt"), 60},
+   {TEXT("quot"), 34},
 
-   {"zzzz", 0}			/* this last entry is required */
+   {TEXT("zzzz"), 0}			/* this last entry is required */
 };
 
 typedef int         state;	/* a state of the parser automaton */

@@ -575,7 +575,7 @@ int                 construct;
            TtaCreateElement (newType, doc);
 	   }
 #ifdef GRAPHML
-	if (strcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
+	if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
 	   /* selection is in a GraphML element */
 	   {
            newType.ElTypeNum = GraphML_EL_Math;
@@ -788,7 +788,7 @@ int                 construct;
               else
                  {
 		 /* create a Math element */
-                 el = TtaNewTree (doc, elType, _EMPTYSTR_);
+                 el = TtaNewTree (doc, elType, "");
                  if (insertSibling)
                     /* insert the new Math element as a sibling element */
                     TtaInsertSibling (el, sibling, before, doc);
@@ -918,7 +918,7 @@ int                 construct;
       if (emptySel)
 	{
 	  TtaUnselect (doc);
-          el = TtaNewTree (doc, newType, _EMPTYSTR_);
+          el = TtaNewTree (doc, newType, "");
 	  /* do not check the Thot abstract tree against the structure */
 	  /* schema while changing the structure */
 	  oldStructureChecking = TtaGetStructureChecking (doc);
@@ -1012,7 +1012,7 @@ int                 construct;
 		  child = TtaSearchTypedElement (elType, SearchInTree, el);
 		  while (NumberCols > 1)
 		    {
-		      new = TtaNewTree (doc, elType, _EMPTYSTR_);
+		      new = TtaNewTree (doc, elType, "");
 		      TtaInsertSibling (new, child, FALSE, doc);
 		      NumberCols--;
 		    }
@@ -1023,7 +1023,7 @@ int                 construct;
 		  row = TtaSearchTypedElement (elType, SearchInTree, el);
 		  while (NumberRows > 1)
 		    {
-		      new = TtaNewTree (doc, elType, _EMPTYSTR_);
+		      new = TtaNewTree (doc, elType, "");
 		      TtaInsertSibling (new, row, FALSE, doc);
 		      NumberRows--;
 		    }
@@ -3645,7 +3645,7 @@ void AttrOpenCloseChanged (event)
 {
   Element	fence, content;
   int		length;
-  UCHAR_T         text[8];
+  char      text[8];
 
   if (event->attributeType.AttrTypeNum == MathML_ATTR_open)
      fence = TtaGetFirstChild (event->element);

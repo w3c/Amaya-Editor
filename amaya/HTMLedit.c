@@ -235,7 +235,7 @@ ThotBool		    withUndo;
 #ifdef GRAPHML
   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
      {
-     MapGraphMLAttribute ("link", &attrType, "", doc);
+     MapGraphMLAttribute (TEXT("link"), &attrType, TEXT(""), doc);
      MapGraphMLAttributeValue (TEXT("simple"), attrType, &val);
      }
 #endif
@@ -1244,7 +1244,7 @@ void ElementDeleted(event)
      if (empty)
 	{
 	elType.ElTypeNum = HTML_EL_Paragraph;
-	child = TtaNewTree (event->document, elType, _EMPTYSTR_);
+	child = TtaNewTree (event->document, elType, "");
 	TtaInsertFirstChild (&child, event->element, event->document);
 	TtaRegisterElementCreate (child, event->document);
 	do

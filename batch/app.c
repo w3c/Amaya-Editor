@@ -86,122 +86,78 @@ PtrAppMenu          DocWindowMenus = NULL;
 /* Pointer to the list of menus displayed in specific document frames */
 PtrAppDocType       DocTypeMenus = NULL;
 
-static ThotBool      FirstInPair = False;/* keyword "First" found             */
-static ThotBool      SecondInPair = False;/* keyword "Second" found           */
+static ThotBool     FirstInPair = False;/* keyword "First" found             */
+static ThotBool     SecondInPair = False;/* keyword "Second" found           */
 static int          typeNum;
 static int          attrNum;
 static int          curEvent;		/* the current event                 */
-static STRING       eventAction;	/* the action linked with the event  */
-static ThotBool      PreEvent;
-static ThotBool      DefaultSection;	/* within the section DEFAULT        */
-static ThotBool      ElementsSection;	/* within the section ELEMENTS       */
-static ThotBool      AttributesSection;	/* within the section ATTRIBUTES     */
-static ThotBool      FunctionsSection;	/* within the section FUNCTIONS      */
+#ifdef _I18N_
+static char         EvtAction[MAX_TXT_LEN] ; /* the action linked with the event  */
+#endif /* !_I18N_ */
+static char*        eventAction;	/* the action linked with the event  */
+static ThotBool     PreEvent;
+static ThotBool     DefaultSection;	/* within the section DEFAULT        */
+static ThotBool     ElementsSection;	/* within the section ELEMENTS       */
+static ThotBool     AttributesSection;	/* within the section ATTRIBUTES     */
+static ThotBool     FunctionsSection;	/* within the section FUNCTIONS      */
 static PtrAppMenu  *MenuList;
 static int          ViewNumber;
-static CHAR_T         MenuName[100];
-static CHAR_T         SubmenuName[100];
-static CHAR_T         ItemName[100];
-static CHAR_T         ItemType;		/* 'B' = Button,    'T' = Toggle,    */
+static CHAR_T       MenuName[100];
+static CHAR_T       SubmenuName[100];
+static CHAR_T       ItemName[100];
+static char         ItemType;		/* 'B' = Button,    'T' = Toggle,    */
 
 				     	/* 'S' = Separator, 'D' = Dynamic.   */
-static CHAR_T         ActionName[100];
+static CHAR_T       ActionName[100];
 
 /* the list RegisteredAppEvents have to be conform to the type enum APPevent
    defined into appaction.h */
-STRING              RegisteredAppEvents[] =
+CHAR_T*            RegisteredAppEvents[] =
 {
-#  if defined(_I18N_) || defined(__JIS__)
-   L"AttrMenu",
-   L"AttrCreate",
-   L"AttrModify",
-   L"AttrRead",
-   L"AttrSave",
-   L"AttrExport",
-   L"AttrDelete",
-   L"ElemMenu",
-   L"ElemNew",
-   L"ElemRead",
-   L"ElemSave",
-   L"ElemExport",
-   L"ElemDelete",
-   L"ElemSelect",
-   L"ElemExtendSelect",
-   L"ElemClick",
-   L"ElemActivate",
-   L"ElemSetReference",
-   L"ElemInclude",
-   L"ElemFetchInclude",
-   L"ElemCopy",
-   L"ElemPaste",
-   L"ElemChange",
-   L"ElemMove",
-   L"ElemTextModify",
-   L"ElemGraphModify",
-   L"ElemMouseOver",
-   L"ElemMouseOut",
-   L"PRuleCreate",
-   L"PRuleModify",
-   L"PRuleDelete",
-   L"DocOpen",
-   L"DocTmpOpen",
-   L"DocCreate",
-   L"DocClose",
-   L"DocSave",
-   L"DocExport",
-   L"DocNatPresent",
-   L"ViewOpen",
-   L"ViewClose",
-   L"ViewResize",
-   L"ViewScroll",
-   L"Init",
-   L"Exit"
-#  else /* defined(_I18N_) || defined(__JIS__) */
-   "AttrMenu",
-   "AttrCreate",
-   "AttrModify",
-   "AttrRead",
-   "AttrSave",
-   "AttrExport",
-   "AttrDelete",
-   "ElemMenu",
-   "ElemNew",
-   "ElemRead",
-   "ElemSave",
-   "ElemExport",
-   "ElemDelete",
-   "ElemSelect",
-   "ElemExtendSelect",
-   "ElemClick",
-   "ElemActivate",
-   "ElemSetReference",
-   "ElemInclude",
-   "ElemFetchInclude",
-   "ElemCopy",
-   "ElemPaste",
-   "ElemChange",
-   "ElemMove",
-   "ElemTextModify",
-   "ElemGraphModify",
-   "ElemMouseOver",
-   "ElemMouseOut",
-   "PRuleCreate",
-   "PRuleModify",
-   "PRuleDelete",
-   "DocOpen",
-   "DocTmpOpen",
-   "DocCreate",
-   "DocClose",
-   "DocSave",
-   "DocExport",
-   "DocNatPresent",
-   "ViewOpen",
-   "ViewClose",
-   "ViewResize",
-   "ViewScroll",
-   "Init",
-   "Exit"
-#  endif /* defined(_I18N_) || defined(__JIS__) */
+   TEXT("AttrMenu"),
+   TEXT("AttrCreate"),
+   TEXT("AttrModify"),
+   TEXT("AttrRead"),
+   TEXT("AttrSave"),
+   TEXT("AttrExport"),
+   TEXT("AttrDelete"),
+   TEXT("ElemMenu"),
+   TEXT("ElemNew"),
+   TEXT("ElemRead"),
+   TEXT("ElemSave"),
+   TEXT("ElemExport"),
+   TEXT("ElemDelete"),
+   TEXT("ElemSelect"),
+   TEXT("ElemExtendSelect"),
+   TEXT("ElemClick"),
+   TEXT("ElemActivate"),
+   TEXT("ElemSetReference"),
+   TEXT("ElemInclude"),
+   TEXT("ElemFetchInclude"),
+   TEXT("ElemCopy"),
+   TEXT("ElemPaste"),
+   TEXT("ElemChange"),
+   TEXT("ElemMove"),
+   TEXT("ElemTextModify"),
+   TEXT("ElemGraphModify"),
+   TEXT("ElemMouseOver"),
+   TEXT("ElemMouseOut"),
+   TEXT("PRuleCreate"),
+   TEXT("PRuleModify"),
+   TEXT("PRuleDelete"),
+   TEXT("DocOpen"),
+   TEXT("DocTmpOpen"),
+   TEXT("DocCreate"),
+   TEXT("DocClose"),
+   TEXT("DocSave"),
+   TEXT("DocExport"),
+   TEXT("DocNatPresent"),
+   TEXT("ViewOpen"),
+   TEXT("ViewClose"),
+   TEXT("ViewResize"),
+   TEXT("ViewScroll"),
+   TEXT("Init"),
+   TEXT("Exit")
 };
 
 #ifdef _WINDOWS
@@ -263,7 +219,7 @@ PtrAppMenu          firstMenu;
 	     if (menu->AppMenuName == NULL)
 		curMenu->AppNameValue = NULL;
 	     else
-		curMenu->AppNameValue = TtaStrdup (menu->AppMenuName);
+		curMenu->AppNameValue = TtaWCSdup (menu->AppMenuName);
 	     curMenu->AppNextName = NULL;
 	     if (prevMenu == NULL)
 		MenusUsed = curMenu;
@@ -277,7 +233,7 @@ PtrAppMenu          firstMenu;
 	while (item != NULL)
 	  {
 	     /* skip menu separators */
-	     if (item->AppItemType != 'S')
+	     if (item->AppItemType != TEXT('S'))
 	       {
 		  /* look at if the item name is already in the list ItemsUsed */
 		  curItem = ItemsUsed;
@@ -300,7 +256,7 @@ PtrAppMenu          firstMenu;
 		     /* le nom de l'item n'est pas in the list, on l'y met */
 		    {
 		       curItem = (PtrAppName) TtaGetMemory (sizeof (AppName));
-		       curItem->AppNameValue = TtaStrdup (item->AppItemName);
+		       curItem->AppNameValue = TtaWCSdup (item->AppItemName);
 		       curItem->AppNextName = NULL;
 		       if (prevItem == NULL)
 			  ItemsUsed = curItem;
@@ -332,7 +288,7 @@ PtrAppMenu          firstMenu;
 		     /* l'action de l'item n'est pas in the list, on l'y met */
 		    {
 		       curAction = (PtrAppName) TtaGetMemory (sizeof (AppName));
-		       curAction->AppNameValue = TtaStrdup (item->AppItemActionName);
+		       curAction->AppNameValue = TtaWCSdup (item->AppItemActionName);
 		       curAction->AppFunction = False;
 		       curAction->AppStandardName = item->AppStandardAction;
 		       curAction->AppNextName = NULL;
@@ -396,11 +352,11 @@ static void         MakeMenusAndActionList ()
    event in the list (rank).                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool      RegisteredEvent (STRING eventName, int *rank)
+static ThotBool      RegisteredEvent (CHAR_T* eventName, int *rank)
 #else  /* __STDC__ */
 static ThotBool      RegisteredEvent (eventName, rank)
-STRING              eventName;
-int                *rank;
+CHAR_T*              eventName;
+int                 *rank;
 
 #endif /* __STDC__ */
 {
@@ -472,7 +428,7 @@ static void         NewMenuComplete ()
       /* creation d'un nouveau menu */
      {
 	NewMenu = (PtrAppMenu) TtaGetMemory (sizeof (AppMenu));
-	NewMenu->AppMenuName = TtaStrdup (MenuName);
+	NewMenu->AppMenuName = TtaWCSdup (MenuName);
 	NewMenu->AppMenuView = ViewNumber;	/* la vue concenee */
 	NewMenu->AppMenuItems = NULL;
 	NewMenu->AppNextMenu = NULL;
@@ -492,7 +448,7 @@ static void         NewMenuComplete ()
 
    SubMenu = NULL;
    Item = NULL;
-   if (SubmenuName[0] != '\0')
+   if (SubmenuName[0] != TEXT('\0'))
       /* il y a un sous-menu. On cherche son entree dans le menu */
      {
 	found = False;
@@ -508,10 +464,10 @@ static void         NewMenuComplete ()
 	  {
 	     /* cree un nouvel item  */
 	     NewItem = (PtrAppMenuItem) TtaGetMemory (sizeof (AppMenuItem));
-	     NewItem->AppItemName = TtaStrdup (SubmenuName);
+	     NewItem->AppItemName = TtaWCSdup (SubmenuName);
 	     NewItem->AppItemActionName = NULL;
 	     NewItem->AppSubMenu = NULL;
-	     NewItem->AppItemType = ' ';
+	     NewItem->AppItemType = TEXT(' ');
 	     NewItem->AppStandardAction = False;
 	     NewItem->AppNextItem = NULL;
 	     /* chaine le nouvel item en fin de liste d'items du menu */
@@ -554,10 +510,10 @@ static void         NewMenuComplete ()
 	  {
 	     /* cree un nouvel item  */
 	     NewItem = (PtrAppMenuItem) TtaGetMemory (sizeof (AppMenuItem));
-	     if (ItemName[0] == '\0')
+	     if (ItemName[0] == TEXT('\0'))
 		NewItem->AppItemName = NULL;
 	     else
-		NewItem->AppItemName = TtaStrdup (ItemName);
+		NewItem->AppItemName = TtaWCSdup (ItemName);
 	     NewItem->AppItemActionName = NULL;
 	     NewItem->AppSubMenu = NULL;
 	     NewItem->AppItemType = ItemType;
@@ -588,9 +544,9 @@ static void         NewMenuComplete ()
 	       }
 	     /* on met l'action, sauf si c'est un separateur ou un */
 	     /* sous-menu dynamique */
-	     if (ActionName[0] != '\0')
+	     if (ActionName[0] != TEXT('\0'))
 	       {
-		  NewItem->AppItemActionName = TtaStrdup (ActionName);
+		  NewItem->AppItemActionName = TtaWCSdup (ActionName);
 		  /* Il faut tester s'il s'agit d'une action standard */
 		  NewItem->AppStandardAction = (ustrncmp (ActionName, TEXT("Ttc"), 3) == 0);
 	       }
@@ -605,11 +561,11 @@ static void         NewMenuComplete ()
 static void         InitMenu ()
 {
    ViewNumber = 0;
-   MenuName[0] = '\0';
-   SubmenuName[0] = '\0';
-   ItemName[0] = '\0';
+   MenuName[0] = TEXT('\0');
+   SubmenuName[0] = TEXT('\0');
+   ItemName[0] = TEXT('\0');
    ItemType = ' ';
-   ActionName[0] = '\0';
+   ActionName[0] = TEXT('\0');
 }
 
 
@@ -796,8 +752,8 @@ indLine             wi;
 
 	    case KWD_Separator:
 	       ItemType = 'S';
-	       ItemName[0] = '\0';
-	       ActionName[0] = '\0';
+	       ItemName[0] = TEXT('\0');
+	       ActionName[0] = TEXT('\0');
 	       break;
 
 	    case KWD_Button:
@@ -810,7 +766,7 @@ indLine             wi;
 
 	    case KWD_Dynamic:
 	       ItemType = 'D';
-	       ActionName[0] = '\0';
+	       ActionName[0] = TEXT('\0');
 	       break;
 
 	    default:
@@ -936,7 +892,7 @@ indLine             wi;
 		    /* acquiert un descripteur de schema A utilise' */
 		    newSchUsed = (PtrAppName) TtaGetMemory (sizeof (AppName));
 		    /* met le nom du schema A utilise' dans le descripteur */
-		    newSchUsed->AppNameValue = TtaStrdup (name);
+		    newSchUsed->AppNameValue = TtaWCSdup (name);
 		    newSchUsed->AppStandardName = False;
 		    /* chaine ce nouveau descripteur en fin de liste */
 		    newSchUsed->AppNextName = NULL;
@@ -959,7 +915,7 @@ indLine             wi;
 		    /* alloue un descripteur de type de document */
 		    newDocType = (PtrAppDocType) TtaGetMemory (sizeof (AppDocType));
 		    /* initialise ce descripteur */
-		    newDocType->AppDocTypeName = TtaStrdup (name);
+		    newDocType->AppDocTypeName = TtaWCSdup (name);
 		    newDocType->AppDocTypeMenus = NULL;
 		    newDocType->AppNextDocType = NULL;
 		    if (DocTypeMenus == NULL)
@@ -1024,7 +980,12 @@ indLine             wi;
 	       else if (pr == RULE_EvtAction)
 		 {
 		    /* action associee a un evenement */
+#           ifdef _I18N_
+            wcstombs (EvtAction, name, MAX_TXT_LEN);
+            eventAction = TtaStrdup (EvtAction);
+#           else  /* !_I18N_ */
 		    eventAction = TtaStrdup (name);
+#           endif /* !_I18N_ */
 		    TteAddAction (eventAction, 0);
 		 }
 	       else
@@ -1050,7 +1011,7 @@ indLine             wi;
 		     /* l'action de l'item n'est pas in the list, on l'y met */
 		    {
 		       curAction = (PtrAppName) TtaGetMemory (sizeof (AppName));
-		       curAction->AppNameValue = TtaStrdup (name);
+		       curAction->AppNameValue = TtaWCSdup (name);
 		       curAction->AppStandardName = False;
 		       curAction->AppFunction = FunctionsSection;
 		       curAction->AppNextName = NULL;
@@ -1096,10 +1057,10 @@ indLine             wi;
 	    case RULE_MenuIdent:
 	       /* un nom de menu */
 	       ustrcpy (MenuName, name);
-	       SubmenuName[0] = '\0';
-	       ItemName[0] = '\0';
+	       SubmenuName[0] = TEXT('\0');
+	       ItemName[0] = TEXT('\0');
 	       ItemType = ' ';
-	       ActionName[0] = '\0';
+	       ActionName[0] = TEXT('\0');
 	       break;
 
 	    case RULE_SubmenuIdent:
@@ -1209,7 +1170,7 @@ UCHAR_T       ch;
 {
    int                 code;
 
-   if (ch < ' ' || ch > '~')
+   if (ch < TEXT(' ') || ch > TEXT('~'))
       /* non ASCII character. Replace it by an ASCII character or its octal code */
      {
 	code = (int) ch;
@@ -1488,7 +1449,7 @@ STRING              fname;
    FILE               *Hfile;
 
    usprintf (HFileName, TEXT("%s.h"), fname);
-   Hfile = ufopen (HFileName, CUSTEXT("w"));
+   Hfile = ufopen (HFileName, TEXT("w"));
    if (Hfile != NULL)
      {
         fprintf (Hfile, "/* File generated by app - do not edit! */\n");
@@ -1632,13 +1593,13 @@ STRING              fname;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-int                 APPmain (HWND hwnd, HWND statusBar, int argc, STRING *argv, int* Y)
+int                 APPmain (HWND hwnd, HWND statusBar, int argc, CHAR_T** argv, int* Y)
 #else  /* __STDC__ */
 int                 APPmain (hwnd, statusBar, argc, argv, Y)
 HWND                hwnd;
 HWND                statusBar;
 int                 argc;
-STRING*              argv;
+CHAR_T**            argv;
 int*                Y;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
@@ -1667,13 +1628,13 @@ char              **argv;
    int                 nb;
    int                 param;
 #  ifdef _WINDOWS
-   STRING              cmd [100];
+   char*               cmd [100];
    int                 ndx, pIndex = 0;
    CHAR_T              msg [800];
    HANDLE              cppLib;
    FARPROC             ptrMainProc;
 #  else  /* !_WINDOWS */
-   CHAR_T                cmd[800];
+   char                cmd[800];
 #  endif /* _WINDOWS */
 
 #  ifdef _WINDOWS
@@ -1704,20 +1665,20 @@ char              **argv;
    if (!error) {
       /* prepare the cpp command */
 #     ifdef _WINDOWS
-      cmd [pIndex] = TtaAllocString (4);
-      ustrcpy (cmd [pIndex++], TEXT("cpp"));
+      cmd [pIndex] = TtaGetMemory (4);
+      strcpy (cmd [pIndex++], "cpp");
 #     else  /* !_WINDOWS */
-      ustrcpy (cmd, CPP " ");
+      strcpy (cmd, CPP " ");
 #     endif /* _WINDOWS */
       param = 1;
       while (param < argc && argv[param][0] == '-') {
             /* keep cpp params */
 #           ifdef _WINDOWS
-            cmd [pIndex] = TtaAllocString (ustrlen (argv[param]) + 1);
-            ustrcpy (cmd [pIndex++], argv[param]);
+            cmd [pIndex] = TtaGetMemory (ustrlen (argv[param]) + 1);
+            wc2iso_strcpy (cmd [pIndex++], argv[param]);
 #           else  /* !_WINDOWS */
-            ustrcat (cmd, argv[param]);
-            ustrcat (cmd, " ");
+            strcat (cmd, argv[param]);
+            strcat (cmd, " ");
 #           endif /* _WINDOWS */
             param++;
 	  }
@@ -1767,29 +1728,32 @@ char              **argv;
                   TtaFileUnlink (fileName);
                   pwd = TtaGetEnvString ("PWD");
 #                 ifndef _WINDOWS
-                  i = ustrlen (cmd);
+                  i = strlen (cmd);
 #                 endif /* _WINDOWS */
                   if (pwd != NULL) {
 #                    ifdef _WINDOWS
-                     cmd [pIndex] = TtaAllocString (3 + ustrlen (pwd));
-                     usprintf (cmd [pIndex++], TEXT("-I%s"), pwd);
-                     cmd [pIndex] = TtaAllocString (3);
-                     ustrcpy (cmd [pIndex++], TEXT("-C"));
-                     cmd [pIndex] = TtaAllocString (ustrlen (srceFileName) + 1);
-                     ustrcpy (cmd [pIndex++], srceFileName);
-                     cmd [pIndex] = TtaAllocString (ustrlen (fileName) + 1);
-                     ustrcpy (cmd [pIndex++], fileName);
+                     CHAR_T* CMD;
+                     CMD = TtaAllocString (3 + ustrlen (pwd));
+                     usprintf (CMD, TEXT("-I%s"), pwd);
+                     cmd [pIndex] = TtaGetMemory (3 + ustrlen (pwd));
+                     wc2iso_strcpy (cmd [pIndex++], CMD);
+                     cmd [pIndex] = TtaGetMemory (3);
+                     strcpy (cmd [pIndex++], "-C");
+                     cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
+                     wc2iso_strcpy (cmd [pIndex++], srceFileName);
+                     cmd [pIndex] = TtaGetMemory (ustrlen (fileName) + 1);
+                     wc2iso_strcpy (cmd [pIndex++], fileName);
 #                    else  /* !_WINDOWS */
                      sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fileName);
 #                    endif /* _WINDOWS */
                   } else {
 #                        ifdef _WINDOWS
-                         cmd [pIndex] = TtaAllocString (3);
-                         ustrcpy (cmd [pIndex++], TEXT("-C"));
-                         cmd [pIndex] = TtaAllocString (ustrlen (srceFileName) + 1);
-                         ustrcpy (cmd [pIndex++], srceFileName);
-                         cmd [pIndex] = TtaAllocString (ustrlen (fileName) + 1);
-                         ustrcpy (cmd [pIndex++], fileName);
+                         cmd [pIndex] = TtaGetMemory (3);
+                         strcpy (cmd [pIndex++], "-C");
+                         cmd [pIndex] = TtaGetMemory (ustrlen (srceFileName) + 1);
+                         wc2iso_strcpy (cmd [pIndex++], srceFileName);
+                         cmd [pIndex] = TtaGetMemory (ustrlen (fileName) + 1);
+                         wc2iso_strcpy (cmd [pIndex++], fileName);
 #                        else  /* !_WINDOWS */
                          sprintf (&cmd[i], "-C %s > %s", srceFileName, fileName);
 #                        endif /* _WINDOWS */
@@ -1801,7 +1765,7 @@ char              **argv;
                   FreeLibrary (cppLib);
                   for (ndx = 0; ndx < pIndex; ndx++) {
                       free (cmd [ndx]);
-                      cmd [ndx] = (STRING) 0;
+                      cmd [ndx] = (char*) 0;
 				  }
 #                 else  /* !_WINDOWS */
                   i = system (cmd);
@@ -1834,15 +1798,16 @@ char              **argv;
                              /* lit une ligne */
                              i = 0;
                              do
-                                fileOK = TtaReadByte (filedesc, &inputLine[i++]);
-                             while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
+                                /* fileOK = TtaReadByte (filedesc, &inputLine[i++]); */
+                                fileOK = TtaReadWideChar (filedesc, &inputLine[i++]);
+                             while (i < LINE_LENGTH && inputLine[i - 1] != TEXT('\n') && fileOK);
                              /* marque la fin reelle de la ligne */
-                             inputLine[i - 1] = '\0';
+                             inputLine[i - 1] = TEXT('\0');
                              /* incremente le compteur de lignes lues */
                              LineNum++;
                              if (i >= LINE_LENGTH) /* ligne trop longue */
                                 CompilerMessage (1, APP, FATAL, MAX_LINE_SIZE_EXCEEDED, inputLine, LineNum);
-                             else if (inputLine[0] == '#') {
+                             else if (inputLine[0] == TEXT('#')) {
                                   /* cette ligne contient une directive du preprocesseur cpp */
                                   usscanf (inputLine, TEXT("# %d %s"), &LineNum, buffer);
                                   LineNum--;

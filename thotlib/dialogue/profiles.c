@@ -112,11 +112,11 @@ char*         string;
   
   do
     {
-      while (Astring[c+nbsp] == CUS_SPACE || Astring[c+nbsp] == CUS_TAB || Astring[c+nbsp] == CUS_CR)
+      while (Astring[c+nbsp] == WC_SPACE || Astring[c+nbsp] == WC_TAB || Astring[c+nbsp] == WC_CR)
 	nbsp++;
       Astring[c] = Astring[c+nbsp];
     } 
-  while (Astring[c++] != CUS_EOS);
+  while (Astring[c++] != WC_EOS);
 
   SkipNewLineSymbol (Astring);
 }
@@ -549,7 +549,7 @@ void Prof_InitTable ()
 	  if (ptr && *ptr)
 	    wc2iso_strcpy (UserProfile, ptr);	
 	  else
-	    UserProfile[0] = CUS_EOS;
+	    UserProfile[0] = WC_EOS;
 
 	  /* Fill a profile and module tables */
 	  while (fgets (ProfileBuff, sizeof (ProfileBuff), profFile))

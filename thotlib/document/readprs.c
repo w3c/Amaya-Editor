@@ -1204,8 +1204,8 @@ PtrPRule           *pNextPRule;
 			      TtaReadSignedShort (file, &pCond->CoTypeAncestor);
 			      if (pCond->CoTypeAncestor == 0)
 				{
-				   TtaReadWCName (file, pCond->CoAncestorName);
-				   TtaReadWCName (file, pCond->CoSSchemaName);
+				   TtaReadName (file, pCond->CoAncestorName);
+				   TtaReadName (file, pCond->CoSSchemaName);
 				}
 			      else
 				{
@@ -1218,7 +1218,7 @@ PtrPRule           *pNextPRule;
 			      TtaReadSignedShort (file, &pCond->CoTypeElAttr);
 			      break;
 			   default:
-			      break;
+			      break; 
 			}
 		  typeCond = ReadPresCondition (file);
 	       }
@@ -1249,7 +1249,7 @@ PtrPRule           *pNextPRule;
 				 error = !TtaReadShort (file, &pPR->PrNPresBoxes);
 				 if (!error)
 				    if (pPR->PrNPresBoxes == 0)
-				       TtaReadWCName (file, pPR->PrPresBoxName);
+				       TtaReadName (file, pPR->PrPresBoxName);
 				    else
 				      {
 					 for (i = 0; i < pPR->PrNPresBoxes; i++)
@@ -1422,12 +1422,12 @@ PtrSSchema          pSS;
 	ustrncpy (pPSch->PsPresentName, fileName, MAX_NAME_LENGTH - 1);
 	/* lit la partie fixe du schema de presentation */
 	/* lit le nom du schema de structure correspondant */
-	TtaReadWCName (file, pPSch->PsStructName);
+	TtaReadName (file, pPSch->PsStructName);
 	TtaReadShort (file, &pPSch->PsStructCode);
 	error = !TtaReadShort (file, &pPSch->PsNViews);
 	if (!error)
 	   for (i = 0; i < pPSch->PsNViews; i++)
-	      TtaReadWCName (file, pPSch->PsView[i]);
+	      TtaReadName (file, pPSch->PsView[i]);
 	if (!error)
 	   for (i = 0; i < pPSch->PsNViews; i++)
 	      TtaReadBool (file, &pPSch->PsPaginatedView[i]);
@@ -1496,7 +1496,7 @@ PtrSSchema          pSS;
 		     if (!error)
 			for (j = 0; j < pCntr->CnNTransmAttrs; j++)
 			  {
-			     TtaReadWCName (file, pCntr->CnTransmAttr[j]);
+			     TtaReadName (file, pCntr->CnTransmAttr[j]);
 			     TtaReadShort (file, &pCntr->CnTransmSSchemaAttr[j]);
 			  }
 		     error = !TtaReadShort (file, &pCntr->CnNCreators);
@@ -1574,7 +1574,7 @@ PtrSSchema          pSS;
 		for (i = 0; i < pPSch->PsNPresentBoxes; i++)
 		  {
 		     pBox = &pPSch->PsPresentBox[i];
-		     TtaReadWCName (file, pBox->PbName);
+		     TtaReadName (file, pBox->PbName);
 		     pBox->PbFirstPRule = ReadPRulePtr (file, &pNextPRule);
 		     TtaReadBool (file, &pBox->PbAcceptPageBreak);
 		     TtaReadBool (file, &pBox->PbAcceptLineBreak);
@@ -1660,7 +1660,7 @@ PtrSSchema          pSS;
 						pAttrP->ApRefFirstPRule = ReadPRulePtr (file, &pNextPRule);
 						break;
 					     case AtTextAttr:
-						TtaReadWCName (file, pAttrP->ApString);
+						TtaReadName (file, pAttrP->ApString);
 						pAttrP->ApTextFirstPRule = ReadPRulePtr (file, &pNextPRule);
 						break;
 					     case AtEnumAttr:
@@ -1776,7 +1776,7 @@ PtrSSchema          pSS;
 		for (i = 0; i < pPSch->PsNTransmElems; i++)
 		  {
 		     TtaReadShort (file, &pPSch->PsTransmElem[i].TeTargetDoc);
-		     TtaReadWCName (file, pPSch->PsTransmElem[i].TeTargetAttr);
+		     TtaReadName (file, pPSch->PsTransmElem[i].TeTargetAttr);
 		  }
 	     FreePresentRule (pNextPRule);
 	  }

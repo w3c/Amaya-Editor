@@ -419,10 +419,10 @@ CHAR_T*             fileName;
    int                 i;
    ThotBool            ok;
 
-   if (fileName[0] != CUS_EOS && SSchemaName[0] != CUS_EOS)
+   if (fileName[0] != WC_EOS && SSchemaName[0] != WC_EOS)
       /* les parametres d'entree sont valides */
      {
-	if (directory[0] == EOS)
+	if (directory[0] == WC_EOS)
 	   /* pas de directory precise'. On prend le path des documents */
 	   ustrncpy (directory, DocumentPath, MAX_PATH);
 	/* construit le nom complet du fichier a importer */

@@ -186,7 +186,7 @@ CHAR_T*             documentName;
   UserErrorCode = 0;
   document = 0;
   pDoc = NULL;
-  if (documentName[0] == CUS_EOS)
+  if (documentName[0] == WC_EOS)
     /* No name provided by the user */
     TtaError (ERR_document_name);
   else
@@ -242,7 +242,7 @@ CHAR_T*             documentName;
 		  CheckLanguageAttr (pDoc, pDoc->DocRootElement);
 		  /* The document is named */
 		  ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
-		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = CUS_EOS;
+		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = WC_EOS;
 		  /* one get an identifier to the document */
 		  GetDocIdent (&pDoc->DocIdent, documentName); 
 		  /* keep the actual schema path in the document context */
@@ -251,10 +251,10 @@ CHAR_T*             documentName;
 		  ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
 		  /* if path, keep only the first directory */
 		  i = 1;
-		  while (pDoc->DocDirectory[i - 1] != CUS_EOS &&
-                 pDoc->DocDirectory[i - 1] != CUS_PATH_SEP && i < MAX_PATH)
+		  while (pDoc->DocDirectory[i - 1] != WC_EOS &&
+                 pDoc->DocDirectory[i - 1] != WC_PATH_SEP && i < MAX_PATH)
                 i++;
-          pDoc->DocDirectory[i - 1] = CUS_EOS;
+          pDoc->DocDirectory[i - 1] = WC_EOS;
 		  /* Read-Write document */
 		  pDoc->DocReadOnly = FALSE;
 		  document = IdentDocument (pDoc);
@@ -334,7 +334,7 @@ STRING              fileName;
 		   i++;
 		   j++;
 		 }
-	       DefaultDocumentName[i] = CUS_EOS;
+	       DefaultDocumentName[i] = WC_EOS;
 	       ustrncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
 	       (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	       ustrncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
@@ -408,7 +408,7 @@ PathBuffer          directory;
    int                 i;
 
    if (*pDoc != NULL)
-      if (SSchemaName == NULL || SSchemaName[0] == CUS_EOS)
+      if (SSchemaName == NULL || SSchemaName[0] == WC_EOS)
 	 /* L'utilisateur n'a pas fourni de nom de schema */
 	 UnloadDocument (pDoc);
       else
@@ -446,7 +446,7 @@ PathBuffer          directory;
 		/* pas de preference pour un schema de */
 		/* presentation particulier */
 		LoadSchemas (docType, PSchemaName, &((*pDoc)->DocSSchema), NULL, FALSE);
-		if (docName[0] != CUS_EOS)
+		if (docName[0] != WC_EOS)
 		   ustrncpy (docNameBuffer, docName, MAX_NAME_LENGTH);
 		else
 		  {

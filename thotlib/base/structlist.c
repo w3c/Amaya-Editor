@@ -38,6 +38,7 @@ static int          NbNodes;
 static int          NbLeaves;
 static PtrSSchema   pSchemaStr;
 static PtrPSchema   pSc1;
+char                mbsTmpStr[MAX_TXT_LEN];
 
 #include "absboxes_f.h"
 #include "fileaccess_f.h"
@@ -2211,8 +2212,15 @@ int                 r;
 FILE               *fileDescriptor;
 #endif /* __STDC__ */
 {
-   if (r > 0)
+	if (r > 0) {
+#     ifdef _I18N_
+      char mbStr [MAX_TXT_LEN];
+      wcstombs (mbStr, pSchemaStr->SsRule[r - 1].SrName, MAX_TXT_LEN);
+      fprintf (fileDescriptor, mbStr);
+#     else  /* !_I18N_ */
       fprintf (fileDescriptor, pSchemaStr->SsRule[r - 1].SrName);
+#     endif /* !_I18N_ */
+	} 
 }
 
 
@@ -2227,8 +2235,15 @@ int                 a;
 FILE               *fileDescriptor;
 #endif /* __STDC__ */
 {
-   if (a != 0)
+	if (a != 0) {
+#     ifdef _I18N_
+      char mbStr [MAX_TXT_LEN];
+      wcstombs (mbStr, pSchemaStr->SsAttribute[abs (a) - 1].AttrName, MAX_TXT_LEN);
+      fprintf (fileDescriptor, mbStr);
+#     else  /* !_I18N_ */
       fprintf (fileDescriptor, pSchemaStr->SsAttribute[abs (a) - 1].AttrName);
+#     endif /* !_I18N_ */
+	} 
 }
 
 
@@ -2244,8 +2259,15 @@ int                 b;
 FILE               *fileDescriptor;
 #endif /* __STDC__ */
 {
-   if (b > 0)
+	if (b > 0) {
+#     ifdef _I18N_
+      char mbStr [MAX_TXT_LEN];
+      wcstombs (mbStr, pSc1->PsPresentBox[b - 1].PbName, MAX_TXT_LEN);
+      fprintf (fileDescriptor, mbStr);
+#     else  /* !_I18N_ */
       fprintf (fileDescriptor, pSc1->PsPresentBox[b - 1].PbName);
+#     endif /* !_I18N_ */
+	} 
 }
 
 
@@ -2806,10 +2828,19 @@ FILE               *fileDescriptor;
 		 }
 	       if (pCond->CoTypeAncestor == 0)
 		 {
+#           ifdef _I18N_
+            wcstombs (mbsTmpStr, pCond->CoAncestorName, MAX_TXT_LEN);
+		    fprintf (fileDescriptor, mbsTmpStr);
+		    fprintf (fileDescriptor, "(");
+            wcstombs (mbsTmpStr, pCond->CoSSchemaName, MAX_TXT_LEN);
+		    fprintf (fileDescriptor, mbsTmpStr);
+		    fprintf (fileDescriptor, ")");
+#           else  /* !_I18N_ */
 		    fprintf (fileDescriptor, pCond->CoAncestorName);
 		    fprintf (fileDescriptor, "(");
 		    fprintf (fileDescriptor, pCond->CoSSchemaName);
 		    fprintf (fileDescriptor, ")");
+#           endif /* !_I18N_ */
 		 }
 	       else
 		  wrnomregle (pCond->CoTypeAncestor, fileDescriptor);
@@ -2953,7 +2984,12 @@ FILE               *fileDescriptor;
 	fprintf (fileDescriptor, "(");
 	if (pR->PrNPresBoxes == 0)
 	  {
+#        ifdef _I18N_
+         wcstombs (mbsTmpStr, pR->PrPresBoxName, MAX_TXT_LEN);
+	     fprintf (fileDescriptor, mbsTmpStr);
+#        else  /* !_I18N_ */
 	     fprintf (fileDescriptor, pR->PrPresBoxName);
+#        endif /* !_I18N_ */
 	     if (pR->PrExternal || !pR->PrElement)
 		fprintf (fileDescriptor, "(****)");
 	  }
@@ -3048,7 +3084,12 @@ FILE               *fileDescriptor;
 	if (RP->PrViewNum > 1)
 	  {
 	     fprintf (fileDescriptor, "IN ");
+#        ifdef _I18N_
+         wcstombs (mbsTmpStr,  pSc1->PsView[RP->PrViewNum - 1], MAX_TXT_LEN);
+	     fprintf (fileDescriptor, mbsTmpStr);
+#        else  /* !_I18N_ */
 	     fprintf (fileDescriptor, pSc1->PsView[RP->PrViewNum - 1]);
+#        endif /* !_I18N_ */
 	     fprintf (fileDescriptor, " ");
 	  }
 	if (RP->PrCond != NULL)
