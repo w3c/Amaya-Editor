@@ -108,7 +108,8 @@ static Element GetFirstCellOfRow (Element row, ThotBool inMath)
 	  if (elType.ElSSchema == rowType.ElSSchema &&
 	      ((inMath && elType.ElTypeNum == MathML_EL_MTD) ||
 	       (!inMath && (elType.ElTypeNum == HTML_EL_Data_cell ||
-			    elType.ElTypeNum == HTML_EL_Heading_cell))))
+			    elType.ElTypeNum == HTML_EL_Heading_cell ||
+			    elType.ElTypeNum == HTML_EL_Table_cell))))
 	    firstCell = el;
 	  else
 	    TtaNextSibling (&el);
