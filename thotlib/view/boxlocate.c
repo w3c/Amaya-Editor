@@ -1443,17 +1443,10 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
   int                 width, height;
 
   box = pAb->AbBox;
-#ifndef _GL
   x -= box->BxXOrg;
   y -= box->BxYOrg;
   width = box->BxWidth;
   height = box->BxHeight;
-#else /* _GL */
-  x -= box->BxClipX;
-  y -= box->BxClipY;
-  width = box->BxClipW;
-  height = box->BxClipH;
-#endif /* _GL */
   max = 0;
 
   /* Is there a characteristic point of the drawing? */
@@ -1615,17 +1608,10 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   int                 width, height;
   /* relative coords of the box (easy work) */
   pBox = pAb->AbBox;
-#ifndef _GL
   x -= pBox->BxXOrg;
   y -= pBox->BxYOrg;
   width = pBox->BxWidth;
   height = pBox->BxHeight;
-#else /* _GL */
-  x -= pBox->BxClipX;
-  y -= pBox->BxClipY;
-  width = pBox->BxClipW;
-  height = pBox->BxClipH;
-#endif /* _GL */
   *selpoint = 0;
   /* Keep in mind the selected caracteristic point       */
   /*            1-------------2-------------3            */
@@ -1882,13 +1868,9 @@ PtrAbstractBox      GetClickedAbsBox (int frame, int xRef, int yRef)
   pFrame = &ViewFrameTable[frame - 1];
   pBox = NULL;
   if (pFrame->FrAbstractBox != NULL)
-#ifndef _GL
     GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, xRef + pFrame->FrXOrg,
 		   yRef + pFrame->FrYOrg, Y_RATIO, &pointselect);
-#else/*  _GL */
-    GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, xRef,
-		   yRef, Y_RATIO, &pointselect);
-#endif /*  _GL */
+
   if (pBox == NULL)
     return (NULL);
   else
@@ -1919,24 +1901,22 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
       pBox = pAb->AbBox;
 
 
+#ifdef _GL
+      /* Transform windows coordinate x, y to the transformed system 
+	 of the current box */
+      GetBoxTransformedCoord (pAb, frame, &lowerX, &higherX, &x, &y);
+#endif /* _GL */
+
       /* Is there a piece of split box? */
       if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	{
 	  for (pBox = pBox->BxNexChild; pBox != NULL; pBox = pBox->BxNexChild)
 	    {
-#ifndef _GL
 	      if (pBox->BxNChars > 0 &&
 		  pBox->BxXOrg <= lowerX &&
 		  pBox->BxXOrg + pBox->BxWidth >= higherX &&
 		  pBox->BxYOrg <= y &&
 		  pBox->BxYOrg + pBox->BxHeight >= y)
-#else /*  _GL */
-		if (pBox->BxNChars > 0 &&
-		    pBox->BxClipX <= lowerX &&
-		    pBox->BxClipX + pBox->BxClipW >= higherX &&
-		    pBox->BxClipY <= y &&
-		    pBox->BxClipY + pBox->BxClipH >= y)
-#endif  /* _GL */
 		return (pBox);
 
 	    }
@@ -1950,29 +1930,18 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	/* it's also a dummy box */
 	return (NULL);
 
-#ifdef _GL
-      /* Transform windows coordinate x, y to the transformed system 
-	 of the current box */
-      GetBoxTransformedCoord (pAb, frame, &lowerX, &higherX, &x, &y);
-#endif /* _GL */
-
       if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
+	{
 	/* a radical */
 	return (IsOnShape (pAb, lowerX, y, pointselect));
+	}
       else if (pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPath ||
 	       /* If the box is not a polyline or a path, it must include
 		  the point */
-#ifndef _GL
 	       (pBox->BxXOrg <= lowerX &&
 		pBox->BxXOrg + pBox->BxWidth >= higherX &&
 		pBox->BxYOrg <= y &&
 		pBox->BxYOrg + pBox->BxHeight >= y))
-#else /*  _GL */ 
-	(pBox->BxClipX <= lowerX &&
-	 pBox->BxClipX + pBox->BxClipW >= higherX &&
-	 pBox->BxClipY <= y &&
-	 pBox->BxClipY + pBox->BxClipH >= y))
-#endif  /* _GL */
 	{
 	  pParent = pAb->AbElement->ElParent;
 	  if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
