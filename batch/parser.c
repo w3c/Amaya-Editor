@@ -91,7 +91,7 @@ size_t      n;
 #endif /* 000 */
 
 /*----------------------------------------------------------------------
-   InitParser initialise les donnees de l'analyseur syntaxique.    
+   InitParser initialise les donnees de l'analyseur syntaxique.     
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
