@@ -600,27 +600,28 @@ Document            doc;
   /* process the first selected element */
   elType = TtaGetElementType (firstSelectedEl);
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-     /* it's a text element */
-     if (firstSelectedChar <= 1)
+    {
+      /* it's a text element */
+      if (firstSelectedChar <= 1)
 	/* selection starts at the beginning of the element */
 	/* this text element is then entirely selected */
 	{
-	parent = TtaGetParent (firstSelectedEl);
-	elType = TtaGetElementType (parent);
-	if (elType.ElTypeNum == HTML_EL_Span &&
-	    !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
-	   /* parent is a SPAN element */
-	   if (firstSelectedEl == TtaGetFirstChild (parent) &&
-	       firstSelectedEl == TtaGetLastChild (parent))
+	  parent = TtaGetParent (firstSelectedEl);
+	  elType = TtaGetElementType (parent);
+	  if (elType.ElTypeNum == HTML_EL_Span &&
+	      !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+	    /* parent is a SPAN element */
+	    if (firstSelectedEl == TtaGetFirstChild (parent) &&
+		firstSelectedEl == TtaGetLastChild (parent))
 	      /* this text element is the only child of the SPAN */
 	      /* Process the SPAN instead of the text element */
 	      {
-	      firstSelectedEl = parent;
-	      if (lastSelectedEl == firstSelectedEl)
-	         lastSelectedEl = parent;
+		firstSelectedEl = parent;
+		if (lastSelectedEl == firstSelectedEl)
+		  lastSelectedEl = parent;
 	      }
 	}
-     else
+      else
 	/* that element is only partly selected. Split it */
 	{
 	el = firstSelectedEl;
@@ -633,6 +634,7 @@ Document            doc;
 	   lastSelectedEl = firstSelectedEl;
 	   }
 	}
+    }
 
   TtaOpenUndoSequence (doc, firstSelectedEl, lastSelectedEl, 0, 0);
   /* process all selected elements */
@@ -664,50 +666,52 @@ Document            doc;
 	 {
 	  elType = TtaGetElementType (curEl);
 	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	     /* that's a text element */
-	     if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+	    {
+	      /* that's a text element */
+	      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
 		/* not a HTML element, move to the parent element */
 		curEl = TtaGetParent (curEl);
-	     else
+	      else
 	        /* we are in a HTML element. Create an enclosing SPAN element*/
 	        {
-	        MakeASpan (curEl, &span, doc);
-	        if (span)
-		   /* a SPAN element was created */
-		   {
-		   if (curEl == firstSelectedEl)
-		      {
-		      firstSelectedEl = span;
-		      if (firstSelectedEl == lastSelectedEl)
-		         lastSelectedEl = span;
-		      }
-		   else if (curEl == lastSelectedEl)
-		      lastSelectedEl = span;
-		   curEl = span;
-		   }
+		  MakeASpan (curEl, &span, doc);
+		  if (span)
+		    /* a SPAN element was created */
+		    {
+		      if (curEl == firstSelectedEl)
+			{
+			  firstSelectedEl = span;
+			  if (firstSelectedEl == lastSelectedEl)
+			    lastSelectedEl = span;
+			}
+		      else if (curEl == lastSelectedEl)
+			lastSelectedEl = span;
+		      curEl = span;
+		    }
 	        }
+	    }
 	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
-	     {
-	     attrType.AttrSSchema = elType.ElSSchema;
-	     attrType.AttrTypeNum = MathML_ATTR_class;
-	     }
+	    {
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = MathML_ATTR_class;
+	    }
 	  else
 #ifdef GRAPHML
-	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
-	     {
-	     attrType.AttrSSchema = elType.ElSSchema;
-	     attrType.AttrTypeNum = GraphML_ATTR_class;
-	     }
-	  else
+	    if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+	      {
+		attrType.AttrSSchema = elType.ElSSchema;
+		attrType.AttrTypeNum = GraphML_ATTR_class;
+	      }
+	    else
 #endif
-	     {
-	     attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-	     attrType.AttrTypeNum = HTML_ATTR_Class;
-	     }
+	      {
+		attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+		attrType.AttrTypeNum = HTML_ATTR_Class;
+	      }
 	  /* set the Class attribute of the element */
 	  attr = TtaGetAttribute (curEl, attrType);
 	  if (!attr)
-	     {
+	    {
 	      attr = TtaNewAttribute (attrType);
 	      TtaAttachAttribute (curEl, attr, doc);
 	      TtaSetAttributeText (attr, a_class, curEl, doc);
@@ -750,7 +754,6 @@ void                *param;
   CHAR_T*             css_rules = param;
   CHAR_T              string[150];
   CHAR_T*             ptr;
-  ThotBool            svg;
 
   string[0] = WC_EOS;
   if (settings->type == PRBackgroundPicture)
@@ -1049,45 +1052,47 @@ Document            doc;
 	  }
       }
     if (elType.ElTypeNum != HTML_EL_TEXT_UNIT)
-      if (elType.ElTypeNum != HTML_EL_Comment_)
-	 /* the last child of the STYLE element is neither a text leaf nor
-	    a comment. Don't do anything */
-	 child = NULL;
-      else
-	 /* the last child of the STYLE element is a comment */
-	 /* insert the new style rule within the Comment_line */
-	 {
-	 line = TtaGetLastChild (child);
-	 if (line)
-	   /* there is already a Comment_line */
-	   {
-           child = TtaGetLastChild (line);
-	   len = TtaGetTextLength (child) + 1;
-	   text = TtaAllocString (len);
-	   TtaGiveTextContent (child, text, &len, &lang);
-	   empty = TRUE;
-	   insertNewLine = TRUE;
-	   for (i = len - 1; i >= 0 && empty; i--)
-	     {
-	       empty = text[i] <= SPACE;
-               if ((int) text[i] == EOL || (int) text[i] == __CR__)
-	         insertNewLine = FALSE;
-	     }
-	   TtaFreeMemory (text);
-	   }
-	 else
-	   /* create a Comment_line within the Comment */
-	   {
-	   elType.ElTypeNum = HTML_EL_Comment_line;
-           line = TtaNewTree (doc, elType, "");
-           TtaInsertFirstChild (&line, child, doc);
-	   child = TtaGetLastChild (line);
-	   insertNewLine = FALSE;
-	   /* remember the element to register in the undo queue */
-           found = FALSE;
-	   el = line;
-	   }
-         }
+      {
+	if (elType.ElTypeNum != HTML_EL_Comment_)
+	  /* the last child of the STYLE element is neither a text leaf nor
+	     a comment. Don't do anything */
+	  child = NULL;
+	else
+	  /* the last child of the STYLE element is a comment */
+	  /* insert the new style rule within the Comment_line */
+	  {
+	    line = TtaGetLastChild (child);
+	    if (line)
+	      /* there is already a Comment_line */
+	      {
+		child = TtaGetLastChild (line);
+		len = TtaGetTextLength (child) + 1;
+		text = TtaAllocString (len);
+		TtaGiveTextContent (child, text, &len, &lang);
+		empty = TRUE;
+		insertNewLine = TRUE;
+		for (i = len - 1; i >= 0 && empty; i--)
+		  {
+		    empty = text[i] <= SPACE;
+		    if ((int) text[i] == EOL || (int) text[i] == __CR__)
+		      insertNewLine = FALSE;
+		  }
+		TtaFreeMemory (text);
+	      }
+	    else
+	      /* create a Comment_line within the Comment */
+	      {
+		elType.ElTypeNum = HTML_EL_Comment_line;
+		line = TtaNewTree (doc, elType, "");
+		TtaInsertFirstChild (&line, child, doc);
+		child = TtaGetLastChild (line);
+		insertNewLine = FALSE;
+		/* remember the element to register in the undo queue */
+		found = FALSE;
+		el = line;
+	      }
+	  }
+      }
     }
 
   if (child)

@@ -1285,28 +1285,25 @@ ThotBool           *abExist;
       if (pEl == FirstSelectedElement)
 	/* it's the firqt elemenebt in the current selection */
 	if (pEl->ElTerminal)
-	  if (pEl->ElLeafType == LtText)
-	    /* that first element is a text leaf */
-	    {
-	      if (FirstSelectedChar > 1 && pEl->ElTextLength > 0)
-		/* the text leaf is partly selected */
-		partialSel = TRUE;
-	    }
-	  else if (pEl->ElLeafType == LtPolyLine)
-	    if (SelectedPointInPolyline > 0)
-	      partialSel = TRUE;
+	  if (pEl->ElLeafType == LtText &&
+	      FirstSelectedChar > 1 && pEl->ElTextLength > 0)
+	    /* the text leaf is partly selected */
+	    partialSel = TRUE;
+	  else if ((pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtGraphics) &&
+		   SelectedPointInPolyline > 0)
+	    partialSel = TRUE;
       if (partialSel)
 	/* skip presentation abtract boxes created before the main box */
 	{
 	  while (pAb->AbPresentationBox && pAb->AbNext != NULL)
 	    pAb = pAb->AbNext;
-	  if (pAb != NULL)
-	    if (pAb->AbElement != pEl)
-	      pAb = NULL;
+	  if (pAb != NULL && pAb->AbElement != pEl)
+	    pAb = NULL;
 	}
       /* the element has at least one abstract box in the view */
       *abExist = pAb != NULL;
     }
+
   /* handles all abstract box of the element in the view */
   while (pAb != NULL)
     {
@@ -1314,35 +1311,31 @@ ThotBool           *abExist;
       selected =  pAb->AbSelected;
       pAb->AbSelected = TRUE;
        
-      if (!selected)
-	if (!pAb->AbPresentationBox && pEl->ElAssocNum != 0)
-	  /* it's an assiciated element. Reset its enclosing abst. boxes */
-	  EnclosingAssocAbsBox (pEl);
+      if (!selected &&
+	  !pAb->AbPresentationBox && pEl->ElAssocNum != 0)
+	/* it's an assiciated element. Reset its enclosing abst. boxes */
+	EnclosingAssocAbsBox (pEl);
 
       /* search the next selected element */
       partialSel = FALSE;
       if (pEl == LastSelectedElement)
 	/* that's the last element in the current selection */
 	if (pEl->ElTerminal)
-	  if (pEl->ElLeafType == LtText)
-	    /* that's a text leaf */
-	    {
-	      if (LastSelectedChar < pEl->ElTextLength
-		  && pEl->ElTextLength > 0 && LastSelectedChar > 0)
-		/* that text leaf is partly selected */
-		partialSel = TRUE;
-	    }
-	  else if (pEl->ElLeafType == LtPolyLine)
-	    if (SelectedPointInPolyline > 0)
-	      partialSel = TRUE;
+	  if (pEl->ElLeafType == LtText &&
+	      LastSelectedChar < pEl->ElTextLength &&
+	      pEl->ElTextLength > 0 && LastSelectedChar > 0)
+	    /* that text leaf is partly selected */
+	    partialSel = TRUE;
+	  else if ((pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtGraphics) &&
+		   SelectedPointInPolyline > 0)
+	    partialSel = TRUE;
       if (partialSel && !pAb->AbPresentationBox)
 	pNextAb = NULL;
       else
 	pNextAb = pAb->AbNext;
-      if (pNextAb != NULL)
-	if (pNextAb->AbElement != pEl)
-	  /* the next abstract box does not belong to the element */
-	  pNextAb = NULL;
+      if (pNextAb != NULL && pNextAb->AbElement != pEl)
+	/* the next abstract box does not belong to the element */
+	pNextAb = NULL;
       last = pNextAb == NULL;
       /* indicate that this abstract box is selected to the display module */
       if (first || last)
@@ -1351,7 +1344,7 @@ ThotBool           *abExist;
 	    {
 	      if (pEl->ElLeafType == LtText)
 		firstChar = FirstSelectedChar;
-	      else if (pEl->ElLeafType == LtPolyLine)
+	      else if (pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtGraphics)
 		firstChar = SelectedPointInPolyline;
 	      else if (pEl->ElLeafType == LtPicture)
 		firstChar = SelectedPictureEdge;
@@ -1360,11 +1353,12 @@ ThotBool           *abExist;
 	    }
 	  else
 	    firstChar = 0;
+
 	  if (pAb->AbElement == LastSelectedElement)
 	    {
 	      if (pEl->ElLeafType == LtText)
 		lastChar = LastSelectedChar;
-	      else if (pEl->ElLeafType == LtPolyLine)
+	      else if (pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtGraphics)
 		lastChar = SelectedPointInPolyline;
 	      else if (pEl->ElLeafType == LtPicture)
 		lastChar = SelectedPictureEdge;
@@ -1373,6 +1367,7 @@ ThotBool           *abExist;
 	    }
 	  else
 	    lastChar = 0;
+
 	  unique = FirstSelectedElement == LastSelectedElement;
 	  InsertViewSelMarks (frame, pAb, firstChar, lastChar, first, last, unique);
 
@@ -1842,8 +1837,9 @@ ThotBool            string;
 		   TtaClearViewSelections ();
 		   SetActiveView (0);
 		}
+
 	   LastSelectedElement = FirstSelectedElement;
-	   if (pEl->ElLeafType == LtPolyLine)
+	   if (pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtGraphics)
 	     {
 		SelectedPointInPolyline = firstChar;
 		FirstSelectedChar = 0;
@@ -2681,6 +2677,7 @@ ThotBool            drag;
    Document            doc;
    int                 view, numassoc;
    ThotBool            assoc, error, fixed, begin, stop, doubleClickRef;
+   ThotBool            graphSel;
 
    numassoc = 0;
    pEl1 = NULL;
@@ -2718,11 +2715,11 @@ ThotBool            drag;
 
    error = FALSE;
    doubleClickRef = FALSE;
+   graphSel = (pAb->AbElement->ElLeafType == LtPolyLine ||
+	       (pAb->AbElement->ElLeafType == LtGraphics && pAb->AbElement->ElGraph == 'g'));
    /* process double clicks and extensions for polyline vertices */
-   if (pAb != NULL &&
-       pAb->AbElement->ElTerminal &&
-       pAb->AbElement->ElLeafType == LtPolyLine)
-     /* it's a polyline */
+   if (pAb != NULL && pAb->AbElement->ElTerminal && graphSel)
+     /* it's a polyline or a line */
      {
        if (extension)
 	 /* it's a selection extension */
@@ -2941,23 +2938,28 @@ ThotBool            drag;
 	if (pDoc != SelectedDocument)
 	   /* in another document */
 	   TtaClearViewSelections ();
-	else if (!doubleClickRef)
-	   /* selection in the same document as before */
-	   if (doubleClick)
-	      /* user has double-clicked */
-	      if (SelectedView == view)
-		 /* in same view */
-		 if (FirstSelectedElement == LastSelectedElement)
-		   /* only one element was selected */
-		    if (pAb->AbElement == FirstSelectedElement)
-		      /* the new selected element is the same as before */
-		      {
-			 pEl1 = FirstSelectedElement;
-			 if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct ==
-			     CsReference || pEl1->ElSource != NULL)
-			    /* this element is a reference or an inclusion */
-			    doubleClickRef = TRUE;
-		      }
+	else if (!doubleClickRef &&
+		 doubleClick &&
+		 SelectedView == view &&
+		 FirstSelectedElement == LastSelectedElement &&
+		 pAb->AbElement == FirstSelectedElement)
+	  /* user has double-clicked on the same element */
+	  {
+	    pEl1 = FirstSelectedElement;
+	    if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct ==
+		CsReference || pEl1->ElSource != NULL)
+	      /* this element is a reference or an inclusion */
+	      doubleClickRef = TRUE;
+	  }
+	else if (!doubleClick &&
+		 SelectedView == view &&
+		 FirstSelectedElement == LastSelectedElement &&
+		 pAb->AbElement == FirstSelectedElement &&
+		 ((graphSel && rank == SelectedPointInPolyline) ||
+		  (!graphSel && rank == FirstSelectedChar)))
+	  /* the selection doesn't change */
+	  return;
+
 	if (doubleClick)
 	  {
 	     FindReferredEl ();
@@ -3016,8 +3018,10 @@ ThotBool            drag;
 		  InitSelectedCharInAttr = rank;
 	       }
 	     else if (rank > 0 && pEl->ElTerminal &&
-		  (pEl->ElLeafType == LtText || pEl->ElLeafType == LtPolyLine
-		   || pEl->ElLeafType == LtPicture))
+		  (pEl->ElLeafType == LtText ||
+		   pEl->ElLeafType == LtPolyLine ||
+		   pEl->ElLeafType == LtGraphics ||
+		   pEl->ElLeafType == LtPicture))
 		SelectPositionWithEvent (pDoc, pEl, rank);
 	     else
 		SelectElementWithEvent (pDoc, pEl, TRUE, FALSE);

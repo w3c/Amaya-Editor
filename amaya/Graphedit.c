@@ -524,6 +524,13 @@ ThotBool    horiz;
       else
 	attrType.AttrTypeNum = GraphML_ATTR_y;
     }
+  else if (elType.ElTypeNum == GraphML_EL_line_)
+    {
+      if (horiz)
+	attrType.AttrTypeNum = GraphML_ATTR_x1;
+      else
+	attrType.AttrTypeNum = GraphML_ATTR_y1;
+    }
   else
     /* no attribute available */
     return;
@@ -627,6 +634,17 @@ ThotBool    horiz;
       else
 	attrType.AttrTypeNum = GraphML_ATTR_height_;
     }
+  else if (elType.ElTypeNum == GraphML_EL_line_)
+    {
+      if (horiz)
+	attrType.AttrTypeNum = GraphML_ATTR_x2;
+      else
+	attrType.AttrTypeNum = GraphML_ATTR_y2;
+    }
+  else
+    /* no attribute available */
+    return;
+
   usprintf (buffer, TEXT("%dpx"), dim);
   attr = TtaGetAttribute (el, attrType);
   if (attr == NULL)
@@ -840,34 +858,32 @@ NotifyPresentation *event;
 	    UpdatePositionAttribute (el, doc, x, width, TRUE);
 	}
       }
-    else if (presType == PRHeight)
+    else if (presType == PRHeight &&
+	     (elType.ElTypeNum == GraphML_EL_Spline ||
+	      elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+	      elType.ElTypeNum == GraphML_EL_rect ||
+	      elType.ElTypeNum == GraphML_EL_ellipse ||
+	      elType.ElTypeNum == GraphML_EL_polyline ||
+	      elType.ElTypeNum == GraphML_EL_polygon ||
+	      elType.ElTypeNum == GraphML_EL_line_))
       {
-	if (elType.ElTypeNum == GraphML_EL_Spline ||
-	    elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	    elType.ElTypeNum == GraphML_EL_rect ||
-	    elType.ElTypeNum == GraphML_EL_ellipse ||
-	    elType.ElTypeNum == GraphML_EL_polyline ||
-	    elType.ElTypeNum == GraphML_EL_polygon)
-	  {
-	    /* the new value is the old one plus the delta */
-	    height = TtaGetPRuleValue (presRule);
-	    UpdateWidthHeightAttribute (el, doc, height, FALSE);
-	  }
+	/* the new value is the old one plus the delta */
+	height = TtaGetPRuleValue (presRule);
+	UpdateWidthHeightAttribute (el, doc, height, FALSE);
       }
-    else if (presType == PRWidth)
+    else if (presType == PRWidth &&
+	     (elType.ElTypeNum == GraphML_EL_Spline ||
+	      elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+	      elType.ElTypeNum == GraphML_EL_rect ||
+	      elType.ElTypeNum == GraphML_EL_circle ||
+	      elType.ElTypeNum == GraphML_EL_ellipse ||
+	      elType.ElTypeNum == GraphML_EL_polyline ||
+	      elType.ElTypeNum == GraphML_EL_polygon ||
+	      elType.ElTypeNum == GraphML_EL_line_))
       {
-      if (elType.ElTypeNum == GraphML_EL_Spline ||
-          elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	  elType.ElTypeNum == GraphML_EL_rect ||
-          elType.ElTypeNum == GraphML_EL_circle ||
-          elType.ElTypeNum == GraphML_EL_ellipse ||
-          elType.ElTypeNum == GraphML_EL_polyline ||
-          elType.ElTypeNum == GraphML_EL_polygon)
-        {
-	  /* the new value is the old one plus the delta */
-	  width = TtaGetPRuleValue (presRule);
-          UpdateWidthHeightAttribute (el, doc, width, TRUE);
-        }
+	/* the new value is the old one plus the delta */
+	width = TtaGetPRuleValue (presRule);
+	UpdateWidthHeightAttribute (el, doc, width, TRUE);
       }
     }
   return ret; /* let Thot perform normal operation */

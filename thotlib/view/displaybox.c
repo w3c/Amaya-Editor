@@ -580,7 +580,10 @@ ThotBool            selected;
 
 	/* show the selection on the whole image */
 	if (selected)
-	  DisplayPointSelection (frame, pBox, 0);
+	  if (pFrame->FrSelectOnePosition)
+	    DisplayPointSelection (frame, pBox, pFrame->FrSelectionBegin.VsIndBox);
+	  else
+	    DisplayPointSelection (frame, pBox, 0);
      }
 }
 
@@ -798,7 +801,7 @@ ThotBool            selected;
       if (selected)
 	if (pFrame->FrSelectOnePosition)
 	  DisplayPointSelection (frame, pBox, pFrame->FrSelectionBegin.VsIndBox);
-	else
+	else if (pBox->BxNChars > 1)
 	  DisplayPointSelection (frame, pBox, 0);
     }
 }

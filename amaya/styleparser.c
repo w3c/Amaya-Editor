@@ -329,12 +329,7 @@ CHAR_T            *cssRule;
 PresentationValue *pval;
 #endif
 {
-  int                 val = 0;
-  int                 minus = 0;
-  int                 valid = 0;
-  int                 f = 0;
   unsigned int        uni;
-  ThotBool            real = FALSE;
 
   pval->typed_data.unit = STYLE_UNIT_REL;
   cssRule = ParseNumber (cssRule, pval);
@@ -3801,13 +3796,14 @@ Element              el;
 	usprintf (buffer, TEXT("color: #%02X%02X%02X"), red, green, blue);
       break;
     case PRLineWeight:
-      if (ustrcmp(TtaGetSSchemaName (TtaGetElementType(el).ElSSchema),
-		  TEXT("GraphML")) == 0)
-	if (real)
-	  usprintf (buffer, TEXT("stroke-width: %g"), fval);
-	else
-	  usprintf (buffer, TEXT("stroke-width: %d"),
-		    settings->value.typed_data.value);
+      if (!ustrcmp(TtaGetSSchemaName (TtaGetElementType(el).ElSSchema), TEXT("GraphML")))
+	{
+	  if (real)
+	    usprintf (buffer, TEXT("stroke-width: %g"), fval);
+	  else
+	    usprintf (buffer, TEXT("stroke-width: %d"),
+		      settings->value.typed_data.value);
+	}
       add_unit = 1;
       break;
 
@@ -4157,11 +4153,13 @@ CSSInfoPtr      css;
 	}
 
       if (classes[i] || pseudoclasses[i] || ids[i] || attrs[i])
-	if (maxAttr > 0)
-	  /* Thot is not able to manage this kind of selector -> abort */
-	  return (selector);
-	else
-	  maxAttr++;
+	{
+	  if (maxAttr > 0)
+	    /* Thot is not able to manage this kind of selector -> abort */
+	    return (selector);
+	  else
+	    maxAttr++;
+	}
 
       /* store attributes information */
       if (classes[i])

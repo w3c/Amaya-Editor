@@ -138,6 +138,50 @@ int                 pointselect;
 	      j++;
 	    }
 	}
+      else if (pointselect != 0)
+	/* Keep in mind the selected caracteristic point       */
+	/*            1-------------2-------------3            */
+	/*            |                           |            */
+	/*            |                           |            */
+	/*            8                           4            */
+	/*            |                           |            */
+	/*            |                           |            */
+	/*            7-------------6-------------5            */
+	switch (pointselect)
+	  {
+	  case 1:
+	    DrawRectangle (frame, 0, 0, leftX, topY, thick, thick,
+			   0, 0, 0, InsertColor, 2);
+	    break;
+	  case 2:
+	    DrawRectangle (frame, 0, 0, minX, topY, thick, thick,
+			   0, 0, 0, InsertColor, 2);
+	    break;
+	  case 3:
+	    DrawRectangle (frame, 0, 0, rightX, topY, thick, thick,
+			   0, 0, 0, InsertColor, 2);
+	    break;
+	  case 4:
+	    DrawRectangle (frame, 0, 0, rightX, middleY, thick, thick,
+			   0, 0, 0, InsertColor, 2);
+	    break;
+	  case 5:
+	    DrawRectangle (frame, 0, 0, rightX, bottomY, thick, thick,
+			   0, 0, 0, InsertColor, 2);
+	    break;
+	  case 6:
+	    DrawRectangle (frame, 0, 0, minX, bottomY, thick, thick,
+			   0, 0, 0, InsertColor, 2);
+	    break;
+	  case 7:
+	    DrawRectangle (frame, 0, 0, leftX, bottomY, thick, thick,
+			   0, 0, 0, InsertColor, 2);
+	    break;
+	  case 8:
+	    DrawRectangle (frame, 0, 0, leftX, middleY, thick, thick,
+			   0, 0, 0, InsertColor, 2);
+	    break;
+	  }
       else if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
 	/* C'est une boite graphique */
 	/* On marque en noir les points caracteristiques de la boite */

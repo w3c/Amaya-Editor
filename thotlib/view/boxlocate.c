@@ -654,14 +654,16 @@ int                 y;
 /*----------------------------------------------------------------------
   IsOnShape checks if the point x, y is on the drawing of pAb.
   If yes, returns the box address, NULL in other cases.
+  Return the control point for lines.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y)
+static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 #else  /* __STDC__ */
-static PtrBox       IsOnShape (pAb, x, y)
+static PtrBox       IsOnShape (pAb, x, y, selpoint)
 PtrAbstractBox      pAb;
 int                 x;
 int                 y;
+int                *selpoint;
 #endif /* __STDC__ */
 {
   PtrBox              pBox;
@@ -672,7 +674,7 @@ int                 y;
   pBox = pAb->AbBox;
   x -= pBox->BxXOrg;
   y -= pBox->BxYOrg;
-
+  *selpoint = 0;
   /* Keep in mind the selected caracteristic point       */
   /*            1-------------2-------------3            */
   /*            |                           |            */
@@ -827,25 +829,33 @@ int                 y;
 	  IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
 	return (pBox);
       break;
-	  case 'g':
-	    /* Coords of the line are given by the enclosing box */
-	    pAb = pAb->AbEnclosing;
-	    if ((pAb->AbHorizPos.PosEdge == Left && pAb->AbVertPos.PosEdge == Top) ||
-		(pAb->AbHorizPos.PosEdge == Right && pAb->AbVertPos.PosEdge == Bottom))
-	      {
-		/* draw a \ */
-		if (controlPoint == 1 || controlPoint == 5 ||
-		    IsOnPolyline (x, y, 0, 0, pBox->BxWidth, pBox->BxHeight))
-		  return (pBox);
-	      }
-	    else
-	      {
-		/* draw a / */
-		if (controlPoint == 3 || controlPoint == 7 ||
-		    IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
-		  return (pBox);
-	      }
-	    break;
+    case 'g':
+      /* Coords of the line are given by the enclosing box */
+      pAb = pAb->AbEnclosing;
+      if ((pAb->AbHorizPos.PosEdge == Left && pAb->AbVertPos.PosEdge == Top) ||
+	  (pAb->AbHorizPos.PosEdge == Right && pAb->AbVertPos.PosEdge == Bottom))
+	{
+	  /* draw a \ */
+	  if (controlPoint == 1 || controlPoint == 5)
+	    {
+	      *selpoint = controlPoint;
+	      return (pBox);
+	    }
+	  else  if (IsOnPolyline (x, y, 0, 0, pBox->BxWidth, pBox->BxHeight))
+	    return (pBox);
+	}
+      else
+	{
+	  /* draw a / */
+	  if (controlPoint == 3 || controlPoint == 7)
+	    {
+	      *selpoint = controlPoint;
+	      return (pBox);
+	    }
+	  else  if (IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
+	    return (pBox);
+	}
+      break;
     default:
       break;
     }
@@ -941,7 +951,7 @@ int                *pointselect;
 	/* If it's a graphic */
 	if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
 	  {
-	    pBox = IsOnShape (pAb, lowerX, y);
+	    pBox = IsOnShape (pAb, lowerX, y, pointselect);
 	    if (pBox != NULL)
 	      return (pBox);
 	    /* the point doesn't belong box segments */
@@ -1609,58 +1619,55 @@ int                *max;
    modifie'.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
-
+ThotBool          APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
 #else  /* __STDC__ */
-ThotBool            APPgraphicModify (pEl, value, frame, pre)
-PtrElement          pEl;
-int                 value;
-int                 frame;
-ThotBool            pre;
-
+ThotBool          APPgraphicModify (pEl, value, frame, pre)
+PtrElement        pEl;
+int               value;
+int               frame;
+ThotBool          pre;
 #endif /* __STDC__ */
-
 {
-   PtrElement          pAsc;
-   ThotBool            result;
-   NotifyOnValue       notifyEl;
-   PtrDocument         pDoc;
-   int                 vue;
-   ThotBool            assoc;
-   ThotBool            ok = FALSE;
+  PtrElement          pAsc;
+  ThotBool            result;
+  NotifyOnValue       notifyEl;
+  PtrDocument         pDoc;
+  int                 vue;
+  ThotBool            assoc;
+  ThotBool            ok = FALSE;
 
-   GetDocAndView (frame, &pDoc, &vue, &assoc);
-   result = FALSE;
-   pAsc = pEl;
-   while (pAsc != NULL)
-     {
-	notifyEl.event = TteElemGraphModify;
-	notifyEl.document = (Document) IdentDocument (pDoc);
-	notifyEl.element = (Element) pAsc;
-	notifyEl.target = (Element) pEl;
-	notifyEl.value = value;
-	ok = CallEventType ((NotifyEvent *) & notifyEl, pre);
-	result = result || ok;
-	pAsc = pAsc->ElParent;
-     }
-   /* if it's before the actual change is made and if the application accepts
-      the change, register the operation in the Undo queue (only if it's
-      not a creation). */
-   if (pre && !ok)
-     {
-	if (((pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtSymbol) &&
-	     pEl->ElGraph != '\0') ||
-	    (pEl->ElLeafType == LtPolyLine && pEl->ElPolyLineType != '\0'))
-	   {
-	   if (ThotLocalActions[T_openhistory] != NULL)
-	     (*ThotLocalActions[T_openhistory]) (pDoc, pEl, pEl, 0, 0);
-	   if (ThotLocalActions[T_addhistory] != NULL)
-	     (*ThotLocalActions[T_addhistory]) (pEl, pDoc, TRUE, TRUE);
-	   if (ThotLocalActions[T_closehistory] != NULL)
-	     (*ThotLocalActions[T_closehistory]) (pDoc);
-	   }
-     }
-   return result;
+  GetDocAndView (frame, &pDoc, &vue, &assoc);
+  result = FALSE;
+  pAsc = pEl;
+  while (pAsc != NULL)
+    {
+      notifyEl.event = TteElemGraphModify;
+      notifyEl.document = (Document) IdentDocument (pDoc);
+      notifyEl.element = (Element) pAsc;
+      notifyEl.target = (Element) pEl;
+      notifyEl.value = value;
+      ok = CallEventType ((NotifyEvent *) & notifyEl, pre);
+      result = result || ok;
+      pAsc = pAsc->ElParent;
+    }
+  /* if it's before the actual change is made and if the application accepts
+     the change, register the operation in the Undo queue (only if it's
+     not a creation). */
+  if (pre && !ok)
+    {
+      if (((pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtSymbol) &&
+	   pEl->ElGraph != '\0') ||
+	  (pEl->ElLeafType == LtPolyLine && pEl->ElPolyLineType != '\0'))
+	{
+	  if (ThotLocalActions[T_openhistory] != NULL)
+	    (*ThotLocalActions[T_openhistory]) (pDoc, pEl, pEl, 0, 0);
+	  if (ThotLocalActions[T_addhistory] != NULL)
+	    (*ThotLocalActions[T_addhistory]) (pEl, pDoc, TRUE, TRUE);
+	  if (ThotLocalActions[T_closehistory] != NULL)
+	    (*ThotLocalActions[T_closehistory]) (pDoc);
+	}
+    }
+  return result;
 }
 
 /*----------------------------------------------------------------------
@@ -1669,194 +1676,205 @@ ThotBool            pre;
   be moved, the function checks the encolsing box, etc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ApplyDirectTranslate (int frame, int xm, int ym)
+void              ApplyDirectTranslate (int frame, int xm, int ym)
 #else  /* __STDC__ */
-void                ApplyDirectTranslate (frame, xm, ym)
-int                 frame;
-int                 xm;
-int                 ym;
-
+void              ApplyDirectTranslate (frame, xm, ym)
+int               frame;
+int               xm;
+int               ym;
 #endif /* __STDC__ */
 {
-   PtrBox              pBox;
-   PtrAbstractBox      pAb, draw;
-   int                 x, width;
-   int                 y, height;
-   int                 xr, xmin;
-   int                 yr, xmax;
-   int                 ymin;
-   int                 ymax;
-   ViewFrame          *pFrame;
-   int                 pointselect;
-   PtrElement	       pEl;
-   ThotBool            still, okH, okV;
+  PtrBox              pBox;
+  PtrAbstractBox      pAb;
+  PtrElement	       pEl;
+  ViewFrame          *pFrame;
+  int                 x, width;
+  int                 y, height;
+  int                 xr, xmin;
+  int                 yr, xmax;
+  int                 ymin;
+  int                 ymax;
+  int                 pointselect;
+  ThotBool            still, okH, okV;
 
-   pFrame = &ViewFrameTable[frame - 1];
-   /* pas de point selectionne */
-   pointselect = 0;
-   if (pFrame->FrAbstractBox != NULL)
-     {
-	/* On note les coordonnees par rapport a l'image concrete */
-	xr = xm + pFrame->FrXOrg;
-	yr = ym + pFrame->FrYOrg;
+  pFrame = &ViewFrameTable[frame - 1];
+  /* pas de point selectionne */
+  pointselect = 0;
+  if (pFrame->FrAbstractBox != NULL)
+    {
+      /* On note les coordonnees par rapport a l'image concrete */
+      xr = xm + pFrame->FrXOrg;
+      yr = ym + pFrame->FrYOrg;
 
-	/* On recherche la boite englobant le point designe */
+      /* On recherche la boite englobant le point designe */
+      if (ThotLocalActions[T_selecbox] != NULL)
+	(*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox,
+					 frame, xr, yr, &pointselect);
+      if (pBox == NULL)
+	pAb = NULL;
+      else
+	pAb = pBox->BxAbstractBox;
+      
+      if (pointselect != 0)
+	still = FALSE;
+      else
+	/* ctrl click */
+	still = TRUE;
+      
+      /* On boucle tant que l'on ne trouve pas une boite deplacable */
+      while (still)
+	{
+	  if (pAb == NULL)
+	    pBox = NULL;
+	  else
+	    pBox = pAb->AbBox;
+	  if (pBox == NULL)
+	    still = FALSE;	/* Il n'y a pas de boite */
+	  /* On regarde si le deplacement est autorise */
+	  else
+	    {
+	      okH = CanBeTranslated (pAb, frame, TRUE, &xmin, &xmax);
+	      okV = CanBeTranslated (pAb, frame, FALSE, &ymin, &ymax);
+	      if (okH || okV)
+		still = FALSE;
+	    }
+	  
+	  /* Si on n'a pas trouve, il faut remonter */
+	  if (still)
+	    {
+	      /* On passe a la boite englobante */
+	      if (pAb != NULL)
+		pAb = pAb->AbEnclosing;
+	      else
+		{
+		  pBox = NULL;
+		  still = FALSE;
+		}
+	    }
+	}
 
-	if (ThotLocalActions[T_selecbox] != NULL)
-	   (*ThotLocalActions[T_selecbox]) (&pBox, pFrame->FrAbstractBox,
-					    frame, xr, yr, &pointselect);
-	if (pBox == NULL)
-	   pAb = NULL;
-	else
-	   pAb = pBox->BxAbstractBox;
-
-	if (pointselect != 0)
-	   still = FALSE;
-	else
-	   /* ctrl click */
-	   still = TRUE;
-
-	/* On boucle tant que l'on ne trouve pas une boite deplacable */
-	while (still)
-	  {
-	     if (pAb == NULL)
-		pBox = NULL;
-	     else
-		pBox = pAb->AbBox;
-	     if (pBox == NULL)
-		still = FALSE;	/* Il n'y a pas de boite */
-	     /* On regarde si le deplacement est autorise */
-	     else
-	       {
-		  okH = CanBeTranslated (pAb, frame, TRUE, &xmin, &xmax);
-		  okV = CanBeTranslated (pAb, frame, FALSE, &ymin, &ymax);
-		  if (okH || okV)
-		     still = FALSE;
-	       }
-
-	     /* Si on n'a pas trouve, il faut remonter */
-	     if (still)
-		/* On passe a la boite englobante */
-		if (pAb != NULL)
-		   pAb = pAb->AbEnclosing;
-		else
-		  {
-		     pBox = NULL;
-		     still = FALSE;
-		  }
-	  }
-
-	/* Est-ce que l'on a trouve une boite ? */
-	if (pBox != NULL)
-	  {
-	     x = pBox->BxXOrg - pFrame->FrXOrg;
-	     y = pBox->BxYOrg - pFrame->FrYOrg;
-	     width = pBox->BxWidth;
-	     height = pBox->BxHeight;
-
-	     if (pointselect != 0 && pBox->BxType != BoPicture)
-	       {
-		  pEl = pBox->BxAbstractBox->AbElement;
-		  if (!APPgraphicModify (pEl, pointselect, frame, TRUE))
+      /* Est-ce que l'on a trouve une boite ? */
+      if (pBox != NULL)
+	{
+	  x = pBox->BxXOrg - pFrame->FrXOrg;
+	  y = pBox->BxYOrg - pFrame->FrYOrg;
+	  width = pBox->BxWidth;
+	  height = pBox->BxHeight;
+	  
+	  if (pointselect != 0 && pBox->BxType != BoPicture)
+	    {
+	      pEl = pBox->BxAbstractBox->AbElement;
+	      if (!APPgraphicModify (pEl, pointselect, frame, TRUE))
+		{
+		  if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'g')
 		    {
-		       /* Deplacement d'un point de la polyline */
-		       x = pBox->BxXOrg - pFrame->FrXOrg;
-		       y = pBox->BxYOrg - pFrame->FrYOrg;
-		       TtaDisplayMessage (INFO,
-					  TtaGetMessage (LIB, TMSG_MOVING_BOX),
-					  AbsBoxType (pBox->BxAbstractBox,
-					  FALSE));
-		       /* Note si le trace est ouvert ou ferme */
-		       still = (pAb->AbPolyLineShape == 'p' ||
-				pAb->AbPolyLineShape == 's');
-		       /* if (ThotLocalActions[T_switchsel])
-		       (*ThotLocalActions[T_switchsel]) (frame, FALSE);*/
-		       draw = GetParentDraw (pBox);
-		       PolyLineModification (frame, &x, &y, pBox, draw,
-					   pBox->BxNChars, pointselect, still);
-		       /* on force le reaffichage de la boite */
-		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
-				pBox->BxYOrg - EXTRA_GRAPH,
-				pBox->BxXOrg + width + EXTRA_GRAPH,
-				pBox->BxYOrg + height + EXTRA_GRAPH);
-#ifdef IV
-		       x += pFrame->FrXOrg;
-		       y += pFrame->FrYOrg;
-		       if (x != pBox->BxXOrg || y != pBox->BxYOrg)
-			 NewPosition (pAb, x, y, frame, TRUE);
-		       width = PointToPixel (pBox->BxBuffer->BuPoints[0].XCoord / 1000);
-		       height = PointToPixel (pBox->BxBuffer->BuPoints[0].YCoord / 1000);
-		       if (width != pBox->BxWidth || height != pBox->BxHeight)
-			 NewDimension (pAb, width, height, frame, TRUE);
-#endif
-		       RedrawFrameBottom (frame, 0, NULL);
-		       NewContent (pAb);
-		       APPgraphicModify (pEl, pointselect, frame, FALSE);
-		       /* if (ThotLocalActions[T_switchsel])
-			  (*ThotLocalActions[T_switchsel]) (frame, TRUE);*/
+		      LineModification (frame, pBox, pointselect, &x, &y);
+		      /* get back current changes */
+		      if (!pAb->AbWidth.DimIsPosition)
+			/* this rule is applied to the parent */
+			pAb = pAb->AbEnclosing;
+		      if (pAb)
+			{
+			  if (pointselect == 1 || pointselect == 7)
+			    {
+			      if (pBox->BxHorizInverted)
+				NewDimension (pAb, x, y, frame, TRUE);
+			      else
+				NewPosition (pAb, x, y, frame, TRUE);
+			    }
+			  else
+			    {
+			      if (pBox->BxHorizInverted)
+				NewPosition (pAb, x, y, frame, TRUE);
+			      else
+				NewDimension (pAb, x, y, frame, TRUE);
+			    }
+			  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
+			       pBox->BxYOrg - EXTRA_GRAPH,
+			       pBox->BxXOrg + width + EXTRA_GRAPH,
+			       pBox->BxYOrg + height + EXTRA_GRAPH);
+			  RedrawFrameBottom (frame, 0, NULL);
+			}
 		    }
-	       }
-	     else
-	       {
-
-		  /* On note les coordonnees du point de reference */
-		  switch (pBox->BxHorizEdge)
-			{
-			   case Left:
-			      xr = x;
-			      break;
-			   case Right:
-			      xr = x + width;
-			      break;
-			   case VertMiddle:
-			      xr = x + width / 2;
-			      break;
-			   case VertRef:
-			      xr = x + pBox->BxVertRef;
-			      break;
-			   default:
-			      xr = x;
-			      break;
-			}
-
-		  switch (pBox->BxVertEdge)
-			{
-			   case Top:
-			      yr = y;
-			      break;
-			   case Bottom:
-			      yr = y + height;
-			      break;
-			   case HorizMiddle:
-			      yr = y + height / 2;
-			      break;
-			   case HorizRef:
-			      yr = y + pBox->BxHorizRef;
-			      break;
-			   default:
-			      yr = y;
-			      break;
-			}
-
-		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MOVING_BOX), AbsBoxType (pBox->BxAbstractBox, FALSE));
-		  /* On retablit les positions par rapport a la fenetre */
-		  xmin -= pFrame->FrXOrg;
-		  xmax -= pFrame->FrXOrg;
-		  ymin -= pFrame->FrYOrg;
-		  ymax -= pFrame->FrYOrg;
-		  /* On initialise la boite fantome */
-		  UserGeometryMove (frame, &x, &y, width, height, xr, yr, xmin, xmax, ymin, ymax, xm, ym);
-
-		  /* On transmet la modification a l'editeur */
-		  x = x + pFrame->FrXOrg;
-		  y = y + pFrame->FrYOrg;
-		  NewPosition (pBox->BxAbstractBox, x, y, frame, TRUE);
-	       }
-	  }
-	else
-	   /* On n'a pas trouve de boite modifiable */
-	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_MODIFYING_BOX_IMP);
-     }
+		  else
+		    {
+		      /* Deplacement d'un point de la polyline */
+		      x = pBox->BxXOrg - pFrame->FrXOrg;
+		      y = pBox->BxYOrg - pFrame->FrYOrg;
+		      /* Note si le trace est ouvert ou ferme */
+		      still = (pAb->AbPolyLineShape == 'p' ||
+			       pAb->AbPolyLineShape == 's');
+		      /* if (ThotLocalActions[T_switchsel])
+			 (*ThotLocalActnions[T_switchsel]) (frame, FALSE);*/
+		      PolyLineModification (frame, &x, &y, pBox,
+					    pBox->BxNChars, pointselect, still);
+		      /* redisplay the box */
+		      DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
+			       pBox->BxYOrg - EXTRA_GRAPH,
+			       pBox->BxXOrg + width + EXTRA_GRAPH,
+			       pBox->BxYOrg + height + EXTRA_GRAPH);
+		      RedrawFrameBottom (frame, 0, NULL);
+		      NewContent (pAb);
+		    }
+		  APPgraphicModify (pEl, pointselect, frame, FALSE);
+		}
+	    }
+	  else
+	    {
+	      /* get the reference point */
+	      switch (pBox->BxHorizEdge)
+		{
+		case Left:
+		  xr = x;
+		  break;
+		case Right:
+		  xr = x + width;
+		  break;
+		case VertMiddle:
+		  xr = x + width / 2;
+		  break;
+		case VertRef:
+		  xr = x + pBox->BxVertRef;
+		  break;
+		default:
+		  xr = x;
+		  break;
+		}
+	      
+	      switch (pBox->BxVertEdge)
+		{
+		case Top:
+		  yr = y;
+		  break;
+		case Bottom:
+		  yr = y + height;
+		  break;
+		case HorizMiddle:
+		  yr = y + height / 2;
+		  break;
+		case HorizRef:
+		  yr = y + pBox->BxHorizRef;
+		  break;
+		default:
+		  yr = y;
+		  break;
+		}
+	      
+	      /* set positions related to the window */
+	      xmin -= pFrame->FrXOrg;
+	      xmax -= pFrame->FrXOrg;
+	      ymin -= pFrame->FrYOrg;
+	      ymax -= pFrame->FrYOrg;
+	      /* execute the interaction */
+	      UserGeometryMove (frame, &x, &y, width, height, xr, yr, xmin, xmax, ymin, ymax, xm, ym);
+	      
+	      /* get back changes */
+	      x = x + pFrame->FrXOrg;
+	      y = y + pFrame->FrYOrg;
+	      NewPosition (pAb, x, y, frame, TRUE);
+	    }
+	}
+    }
 }
 
 
@@ -1864,15 +1882,14 @@ int                 ym;
    CanBeResized teste si un pave est modifiable en Dimension.       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     CanBeResized (PtrAbstractBox pAb, int frame, ThotBool horizRef, int *min, int *max)
+static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame, ThotBool horizRef, int *min, int *max)
 #else  /* __STDC__ */
-static ThotBool     CanBeResized (pAb, frame, horizRef, min, max)
-PtrAbstractBox      pAb;
-int                 frame;
-ThotBool            horizRef;
-int                *min;
-int                *max;
-
+static ThotBool   CanBeResized (pAb, frame, horizRef, min, max)
+PtrAbstractBox    pAb;
+int               frame;
+ThotBool          horizRef;
+int              *min;
+int              *max;
 #endif /* __STDC__ */
 {
    PtrBox              pBox;
@@ -2045,14 +2062,16 @@ int                 ym;
 
 	     /* Si on n'a pas trouve, il faut remonter */
 	     if (still)
-		/* On passe a la boite englobante */
-		if (pAb != NULL)
+	       {
+		 /* On passe a la boite englobante */
+		 if (pAb != NULL)
 		   pAb = pAb->AbEnclosing;
-		else
-		  {
+		 else
+		   {
 		     pBox = NULL;
 		     still = FALSE;
-		  }
+		   }
+	       }
 	  }
 
 	/* Est-ce que l'on a trouve une boite ? */

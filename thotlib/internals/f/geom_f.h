@@ -6,25 +6,15 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void SetBoundingBox ( int xMin,
-                             int xMax,
-                             int *xOrg,
-                             int yMin,
-                             int yMax,
-                             int *yOrg,
-                             PtrBox pBox,
-                             int nbPoints );
 extern int PolyLineCreation ( int frame,
                               int *xOrg,
                               int *yOrg,
                               PtrBox pBox,
-                              PtrAbstractBox draw,
                               int maxPoints );
 extern void PolyLineModification ( int frame,
                                    int *xOrg,
                                    int *yOrg,
                                    PtrBox pBox,
-                                   PtrAbstractBox draw,
                                    int nbpoints,
                                    int point,
                                    ThotBool close );
@@ -32,10 +22,20 @@ extern int PolyLineExtension ( int frame,
                                int *xOrg,
                                int *yOrg,
                                PtrBox pBox,
-                               PtrAbstractBox draw,
                                int nbpoints,
                                int point,
                                ThotBool close );
+extern int LineCreation ( int frame,
+                          int *x1,
+                          int *y1,
+                          int *x2,
+                          int *y2,
+                          PtrBox pBox );
+extern void LineModification ( int frame,
+                               PtrBox pBox,
+                               int point,
+                               int *xi,
+                               int *yi );
 extern void UserGeometryCreate ( int frame,
                                  int *x,
                                  int *y,
@@ -84,25 +84,15 @@ extern void UserGeometryResize ( int frame,
 
 #else /* __STDC__ */
 
-extern void SetBoundingBox (/* int xMin,
-                               int xMax,
-                               int *xOrg,
-                               int yMin,
-                               int yMax,
-                               int *yOrg,
-                               PtrBox pBox,
-                               int nbPoints */);
 extern int PolyLineCreation (/* int frame,
                                 int *xOrg,
                                 int *yOrg,
                                 PtrBox pBox,
-                                PtrAbstractBox draw,
                                 int maxPoints */);
 extern void PolyLineModification (/* int frame,
                                      int *xOrg,
                                      int *yOrg,
                                      PtrBox pBox,
-                                     PtrAbstractBox draw,
                                      int nbpoints,
                                      int point,
                                      ThotBool close */);
@@ -110,10 +100,20 @@ extern int PolyLineExtension (/* int frame,
                                  int *xOrg,
                                  int *yOrg,
                                  PtrBox pBox,
-                                 PtrAbstractBox draw,
                                  int nbpoints,
                                  int point,
                                  ThotBool close */);
+extern int LineCreation (/* int frame,
+                            int *x1,
+                            int *y1,
+                            int *x2,
+                            int *y2,
+                            PtrBox pBox */);
+extern void LineModification (/* int frame,
+                                 PtrBox pBox,
+                                 int point,
+                                 int *xi,
+                                 int *yi */);
 extern void UserGeometryCreate (/* int frame,
                                    int *x,
                                    int *y,

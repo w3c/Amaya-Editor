@@ -608,6 +608,7 @@ ThotBool            alone;
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel;
   int                 ind, charIndex, w;
+  ThotBool            graphSel;
 
   /* Verifie s'il faut reformater le dernier paragraphe edite */
   if (ThotLocalActions[T_updateparagraph] != NULL)
@@ -621,7 +622,8 @@ ThotBool            alone;
 	  /* eteint la selection */
 	  pBox = pAb->AbBox;
 	  adline = SearchLine (pBox);
-	  
+	  graphSel = (pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtGraphics);
+
 	  /* verifie la coherence des indices de caracteres */
 	  if (pAb->AbLeafType == LtText)
 	    /* C'est une feuille de texte */
@@ -636,7 +638,7 @@ ThotBool            alone;
 		  lastChar = pAb->AbVolume;
 		}
 	    }
-	  else if (pAb->AbLeafType != LtPolyLine && pAb->AbLeafType != LtPicture)
+	  else if (!graphSel && pAb->AbLeafType != LtPicture)
 	    firstChar = 0;
 	  
 	  /* memorise si la selection relle porte sur un seul pave ou non */
@@ -646,7 +648,8 @@ ThotBool            alone;
 	  
 	  /* La selection porte sur le pave complet ou un point de controle */
 	  /* de pave polyline */
-	  if (firstChar == 0 || pAb->AbVolume == 0 || pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPicture)
+	  if (firstChar == 0 || pAb->AbVolume == 0 ||
+	      graphSel || pAb->AbLeafType == LtPicture)
 	    {
 	      /* Est-ce une boite de texte ? */
 	      if (pAb->AbLeafType == LtText)
@@ -665,7 +668,7 @@ ThotBool            alone;
 		{
 		  pViewSel = &pFrame->FrSelectionBegin;
 		  pViewSel->VsBox = pBox;
-		  if (endSelection && pAb->AbLeafType != LtPolyLine && pAb->AbLeafType != LtPicture)
+		  if (endSelection && !graphSel && pAb->AbLeafType != LtPicture)
 		    /* tout selectionne */
 		    pViewSel->VsIndBox = 0;
 		  else
@@ -823,15 +826,14 @@ ThotBool            alone;
 			      pBox = pBox->BxNexChild;
 			    }
 			}
-		      else if (pFrame->FrSelectionBegin.VsIndBox == 0 ||
-			  pAb->AbLeafType == LtPolyLine)
+		      else if (pFrame->FrSelectionBegin.VsIndBox == 0 || graphSel)
 			{
 			  /* the whole box is selected */
 			  w =  pBox->BxWidth;
 			  if (w == 0)
 			    w = 2;
 			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + w, pBox->BxYOrg + pBox->BxHeight);
-			  if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
+			  if (graphSel)
 			    /* need to redraw more than one box */
 			    RedrawFrameBottom (frame, 0, NULL);
 			  else
@@ -841,7 +843,7 @@ ThotBool            alone;
 			{
 			  /* a substring or a point of the box is selected */
 			  DefClip (frame, pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
-			  if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
+			  if (graphSel)
 			    /* need to redraw more than one box */
 			    RedrawFrameBottom (frame, 0, NULL);
 			  else
@@ -864,7 +866,7 @@ ThotBool            alone;
 		      else
 			/* a substring or a point of the box is selected */
 			DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
-		      if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
+		      if (graphSel)
 			/* need to redraw more than one box */
 			RedrawFrameBottom (frame, 0, NULL);
 		      else
@@ -897,7 +899,7 @@ ThotBool            alone;
 		      else
 			/* a substring or a point of the box is selected */
 			DefClip (frame, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-		      if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
+		      if (graphSel)
 			/* need to redraw more than one box */
 			RedrawFrameBottom (frame, 0, NULL);
 		      else

@@ -114,30 +114,32 @@ Document            doc;
     }
 
   if (entry < 0)
-    if (*schema != NULL && isHTML)
-      *schema = NULL;
-    else
-      /* not found. Look at the XML mapping tables */
-      {
-	elType.ElTypeNum = 0;
-	elType.ElSSchema = *schema;
-
-	if (!ptr || !ustrcmp (ptr, TEXT("MathML")))
-	  MapXMLElementType (MATH_TYPE, gi, &elType, &ptr, &c, doc);
-	if (elType.ElTypeNum == 0 && (!ptr || !ustrcmp (ptr, TEXT("GraphML"))))
-	  MapXMLElementType (GRAPH_TYPE, gi, &elType, &ptr, &c, doc);
-	if (elType.ElTypeNum == 0)
-	  {
-            entry = -1;
-	    elType.ElSSchema = NULL;
-	    *schema = NULL;
-	  }
-	else
-	  {
-            entry = elType.ElTypeNum;
-            *schema = elType.ElSSchema;
-	  }
-      }
+    {
+      if (*schema != NULL && isHTML)
+	*schema = NULL;
+      else
+	/* not found. Look at the XML mapping tables */
+	{
+	  elType.ElTypeNum = 0;
+	  elType.ElSSchema = *schema;
+	  
+	  if (!ptr || !ustrcmp (ptr, TEXT("MathML")))
+	    MapXMLElementType (MATH_TYPE, gi, &elType, &ptr, &c, doc);
+	  if (elType.ElTypeNum == 0 && (!ptr || !ustrcmp (ptr, TEXT("GraphML"))))
+	    MapXMLElementType (GRAPH_TYPE, gi, &elType, &ptr, &c, doc);
+	  if (elType.ElTypeNum == 0)
+	    {
+	      entry = -1;
+	      elType.ElSSchema = NULL;
+	      *schema = NULL;
+	    }
+	  else
+	    {
+	      entry = elType.ElTypeNum;
+	      *schema = elType.ElSSchema;
+	    }
+	}
+    }
   return entry;
 }
 

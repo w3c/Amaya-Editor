@@ -101,39 +101,39 @@ int                 x;
 int                 y;
 int                 w;
 int                 h;
-
 #endif /* __STDC__ */
-
 {
-   PtrDocument         pDoc;
-   int                 nView;
-   View                view;
+  PtrDocument         pDoc;
+  int                 nView;
+  View                view;
 
-   UserErrorCode = 0;
-   view = 0;
-   /* Checks the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
-      /* parameter document is ok */
-     {
-	pDoc = LoadedDocument[document - 1];
-	if (pDoc->DocSSchema != NULL)
-	   if (pDoc->DocSSchema->SsPSchema == NULL)
-	      TtaError (ERR_no_presentation_schema);
-	   else
-	     {
-		/* Add a pagebreak probably missed at the end of the document */
+  UserErrorCode = 0;
+  view = 0;
+  /* Checks the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is ok */
+    {
+      pDoc = LoadedDocument[document - 1];
+      if (pDoc->DocSSchema != NULL)
+	{
+	  if (pDoc->DocSSchema->SsPSchema == NULL)
+	    TtaError (ERR_no_presentation_schema);
+	  else
+	    {
+	      /* Add a pagebreak probably missed at the end of the document */
 		if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
-		   AddLastPageBreak (pDoc->DocRootElement, 1, pDoc, FALSE);
+		  AddLastPageBreak (pDoc->DocRootElement, 1, pDoc, FALSE);
 		nView = CreateAbstractImage (pDoc, 1, 0, pDoc->DocSSchema, 1, TRUE, NULL);
 		OpenCreatedView (pDoc, nView, FALSE, x, y, w, h);
 		view = nView;
-	     }
+	    }
      }
-   return view;
+    }
+  return view;
 }
 
 
@@ -607,33 +607,35 @@ Element             element;
 int                 position;
 #endif /* __STDC__ */
 {
+  PtrElement          pEl;
   int                 frame;
   int                 aView;
-  PtrElement          pEl;
 
   UserErrorCode = 0;
   frame = GetWindowNumber (document, view);
   if (frame != 0)
-    if (element == NULL)
-      TtaError (ERR_invalid_parameter);
-    else
-      {
-	if (view < 100)
-	  aView = view;
-	else
-	  aView = 1;
-	pEl = (PtrElement) element;
-	/* If the first abstract box of the element is incomplete, it is suppressed */
-	if (pEl->ElAbstractBox[aView - 1] != NULL)
-	  if (pEl->ElAbstractBox[aView - 1]->AbLeafType == LtCompound)
-	    if (pEl->ElAbstractBox[aView - 1]->AbTruncatedHead)
-	      /* Destroying the abstract box of the element in this view */
-	      DestroyAbsBoxesView (pEl, LoadedDocument[document - 1], FALSE, aView);
-	/* and CheckAbsBox will rebuild it at the beginning of the element */
-	CheckAbsBox (pEl, aView, LoadedDocument[document - 1], FALSE, FALSE);
-	if (pEl->ElAbstractBox[aView - 1] != NULL)
-	  ShowBox (frame, pEl->ElAbstractBox[aView - 1]->AbBox, 0, position);
-      }
+    {
+      if (element == NULL)
+	TtaError (ERR_invalid_parameter);
+      else
+	{
+	  if (view < 100)
+	    aView = view;
+	  else
+	    aView = 1;
+	  pEl = (PtrElement) element;
+	  /* If the first abstract box of the element is incomplete, it is suppressed */
+	  if (pEl->ElAbstractBox[aView - 1] != NULL &&
+	      pEl->ElAbstractBox[aView - 1]->AbLeafType == LtCompound &&
+	      pEl->ElAbstractBox[aView - 1]->AbTruncatedHead)
+	    /* Destroying the abstract box of the element in this view */
+	    DestroyAbsBoxesView (pEl, LoadedDocument[document - 1], FALSE, aView);
+	  /* and CheckAbsBox will rebuild it at the beginning of the element */
+	  CheckAbsBox (pEl, aView, LoadedDocument[document - 1], FALSE, FALSE);
+	  if (pEl->ElAbstractBox[aView - 1] != NULL)
+	    ShowBox (frame, pEl->ElAbstractBox[aView - 1]->AbBox, 0, position);
+	}
+    }
 }
 
 
@@ -1174,26 +1176,28 @@ int                 delta;
 	       pAbbox1->AbShape = element->ElGraph;
 	       pAbbox1->AbGraphAlphabet = TEXT('G');
 	       if (element->ElLeafType == LtGraphics)
-		 if (element->ElGraph == 'a' &&
-		     pAbbox1->AbHeight.DimAbRef == NULL)
-		   {
-		     /* force the circle height to be equal to its width */
-		     pAbbox1->AbHeight.DimAbRef = pAbbox1;
-		     pAbbox1->AbHeight.DimSameDimension = FALSE;
-		     pAbbox1->AbHeight.DimValue = 0;
-		     pAbbox1->AbHeight.DimUserSpecified = FALSE;
-		     if (pAbbox1->AbWidth.DimUnit == UnPoint)
-		       pAbbox1->AbHeight.DimUnit = UnPoint;
-		     else
-		       pAbbox1->AbHeight.DimUnit = UnPixel;
-		     pAbbox1->AbHeightChange = TRUE;
-		   }
-		 else if (element->ElGraph == 'C')
-		   /* a rectangle with rounded corners */
-		   {
-		     pAbbox1->AbRx = 0;
-		     pAbbox1->AbRy = 0;
-		   }
+		 {
+		   if (element->ElGraph == 'a' &&
+		       pAbbox1->AbHeight.DimAbRef == NULL)
+		     {
+		       /* force the circle height to be equal to its width */
+		       pAbbox1->AbHeight.DimAbRef = pAbbox1;
+		       pAbbox1->AbHeight.DimSameDimension = FALSE;
+		       pAbbox1->AbHeight.DimValue = 0;
+		       pAbbox1->AbHeight.DimUserSpecified = FALSE;
+		       if (pAbbox1->AbWidth.DimUnit == UnPoint)
+			 pAbbox1->AbHeight.DimUnit = UnPoint;
+		       else
+			 pAbbox1->AbHeight.DimUnit = UnPixel;
+		       pAbbox1->AbHeightChange = TRUE;
+		     }
+		   else if (element->ElGraph == 'C')
+		     /* a rectangle with rounded corners */
+		     {
+		       pAbbox1->AbRx = 0;
+		       pAbbox1->AbRy = 0;
+		     }
+		 }
 	       break;
 	     default:
 	       break;
@@ -1469,25 +1473,27 @@ Document            document;
    /* sauf si c'est la racine car son pave n'avait pas ete detruit */
    /* il faut donc executer la suite de la procedure */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
-      if (pEl->ElParent == NULL)
-	{
+     {
+       if (pEl->ElParent == NULL)
+	 {
 	   DestroyAbsBoxes (pEl, pDoc, TRUE);
 	   RemoveElement (pEl);
 	   if (pEl != pDoc->DocRootElement)
 	     {
-		for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-		   if (pDoc->DocAssocRoot[assoc] == pEl)
-		      break;	/* C'est une racine associee */
-		if (assoc == MAX_ASSOC_DOC)
-		   /* Ce n'est pas une racine ! */
-		   return;
+	       for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+		 if (pDoc->DocAssocRoot[assoc] == pEl)
+		   break;	/* C'est une racine associee */
+	       if (assoc == MAX_ASSOC_DOC)
+		 /* Ce n'est pas une racine ! */
+		 return;
 	     }
-	}
-      else
-	{
+	 }
+       else
+	 {
 	   RemoveElement (pEl);
 	   return;
-	}
+	 }
+     }
    if (ThotLocalActions[T_createhairline] != NULL)
      (*ThotLocalActions[T_checksel]) (pEl, document);
    /* cherche l'element qui precede l'element a detruire : pPrevious */
@@ -1624,98 +1630,4 @@ PtrElement          pEl;
    /* les copies-inclusions de l'element */
    RedisplayCopies (pEl, LoadedDocument[document - 1], (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
-
-
-/*----------------------------------------------------------------------
-  TtaClipPolyline update the Polyline box to fit the polyline bounding
-  box. Need to be within a draw
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaClipPolyline (Element element, Document doc, View view)
-#else  /* __STDC__ */
-void                TtaClipPolyline (element, doc, view)
-Element             element;
-Document            doc;
-View                view;
-#endif /* __STDC__ */
-{
-  PtrDocument         pDoc;
-  PtrAbstractBox      pAb;
-  PtrBox              pBox;
-  PtrTextBuffer       Bbuffer;
-  int                 xMin, yMin, xMax, yMax;
-  int                 x, y, width, height;
-  int                 nbpoints, i, j;
-  int                 frame;
-
-  if (element == NULL)
-    TtaError (ERR_invalid_parameter);
-  else if (!((PtrElement) element)->ElTerminal)
-    TtaError (ERR_invalid_element_type);
-  else if (((PtrElement) element)->ElLeafType != LtPolyLine)
-    TtaError (ERR_invalid_element_type);
-  else if (doc < 1 || doc > MAX_DOCUMENTS)
-    TtaError (ERR_invalid_document_parameter);
-  else
-    {
-      pDoc = LoadedDocument[doc - 1];
-      if (pDoc == NULL)
-	TtaError (ERR_invalid_document_parameter);
-      else
-	{
-	  /* parameter document is correct */
-	  frame = GetWindowNumber (doc, view);
-	  pAb = pDoc->DocViewRootAb[view - 1];
-	  if (pAb != NULL && pAb->AbBox != NULL)
-	    {
-	      pBox = pAb->AbBox;
-	      /* it's a polyline: check the box limits */
-	      Bbuffer = pBox->BxBuffer;
-	      xMin = PixelToPoint (pBox->BxWidth) * 1000;
-	      xMax = 0;
-	      yMin = PixelToPoint (pBox->BxHeight) * 1000;
-	      yMax = 0;
-	      nbpoints = pBox->BxNChars;
-	      if (nbpoints == 0)
-		return;
-	      j = 0;
-	      for (i = 1; i < nbpoints; i++)
-		{
-		  if (j >= Bbuffer->BuLength)
-		    {
-		      if (Bbuffer->BuNext != NULL)
-			{
-			  /* Next buffer */
-			  Bbuffer = Bbuffer->BuNext;
-			  j = 0;
-			}
-		    }
-		  x = Bbuffer->BuPoints[j].XCoord;
-		  y = Bbuffer->BuPoints[j].YCoord;
-		  /* register the min and the max */
-		  if (x < xMin)
-		    xMin = x;
-		  if (x > xMax)
-		    xMax = x;
-		  if (y < yMin)
-		    yMin = y;
-		  if (y > yMax)
-		    yMax = y;
-		  j++;
-		}
-	      x = pBox->BxXOrg;
-	      y = pBox->BxYOrg;
-	      /* pack the box and return the new origins */
-	      SetBoundingBox (xMin, xMax, &x, yMin, yMax, &y, pBox, nbpoints);
-	      if (x != pBox->BxXOrg || y != pBox->BxYOrg)
-		NewPosition (pAb, x, y, frame, TRUE);
-	      width = PointToPixel (pBox->BxBuffer->BuPoints[0].XCoord / 1000);
-	      height = PointToPixel (pBox->BxBuffer->BuPoints[0].YCoord / 1000);
-	      if (width != pBox->BxWidth || height != pBox->BxHeight)
-		NewDimension (pAb, width, height, frame, TRUE);
-	    }
-	}
-    }
-}
-
 /* End of module */

@@ -39,7 +39,6 @@ static int          GridSize = 1;
 
 #ifdef _WINDOWS
 #include "wininclude.h"
-/* BOOL WIN_UserGeometry = FALSE ; */
 
 extern int X_Pos;
 extern int Y_Pos;
@@ -56,22 +55,20 @@ POINT ptBeg;
 POINT ptEnd;
 #endif /* __STDC__ */
 {
-     HDC hdc ;
-	 POINT ptTab [2];
+  HDC hdc;
+  POINT ptTab [2];
 
-	 ptTab[0].x = ptBeg.x;
-	 ptTab[0].y = ptBeg.y;
-	 ptTab[1].x = ptEnd.x;
-	 ptTab[1].y = ptEnd.y;
+  ptTab[0].x = ptBeg.x;
+  ptTab[0].y = ptBeg.y;
+  ptTab[1].x = ptEnd.x;
+  ptTab[1].y = ptEnd.y;
 
-     hdc = GetDC (hwnd) ;
-
-     SetROP2 (hdc, R2_NOT) ;
-     SelectObject (hdc, GetStockObject (NULL_BRUSH)) ;
-     /* SelectObject (hdc, GetStockObject (BLACK_PEN)) ; */
-     Polyline (hdc, ptTab, 2) ;
-
-     DeleteDC (hdc) ;
+  hdc = GetDC (hwnd);
+  SetROP2 (hdc, R2_NOT);
+  SelectObject (hdc, GetStockObject (NULL_BRUSH));
+  /* SelectObject (hdc, GetStockObject (BLACK_PEN)); */
+  Polyline (hdc, ptTab, 2);
+  DeleteDC (hdc);
 }
 
 /*----------------------------------------------------------------------
@@ -86,16 +83,14 @@ POINT pt;
 int   nb;
 #endif /* __STDC__ */
 {
-     HDC hdc ;
+  HDC hdc;
 
-     hdc = GetDC (hwnd) ;
-
-     SetROP2 (hdc, R2_NOT) ;
-     SelectObject (hdc, GetStockObject (NULL_BRUSH)) ;
-     /* SelectObject (hdc, GetStockObject (BLACK_PEN)) ; */
-     Polyline (hdc, pt, nb) ;
-
-     DeleteDC (hdc) ;
+  hdc = GetDC (hwnd);
+  SetROP2 (hdc, R2_NOT);
+  SelectObject (hdc, GetStockObject (NULL_BRUSH));
+  /* SelectObject (hdc, GetStockObject (BLACK_PEN)); */
+  Polyline (hdc, pt, nb);  
+  DeleteDC (hdc);
 }
 #endif /* _WINDOWS */
 
@@ -126,11 +121,14 @@ ThotBool       withborder;
     VideoInvert (frame, width, 1, x, y);
   if (height > 1)
     {
-      VideoInvert (frame, 1, height - 1, x, y + 1);	/* left border */
-      VideoInvert (frame, 1, height - 1, x + width - 1, y + 1);	/* right border */
+      /* left border */
+      VideoInvert (frame, 1, height - 1, x, y + 1);
+      /* right border */
+      VideoInvert (frame, 1, height - 1, x + width - 1, y + 1);
     }
   if (width > 1)
-    VideoInvert (frame, width - 1, 1, x + 1, y + height - 1);		/* bottom */
+    /* bottom */
+    VideoInvert (frame, width - 1, 1, x + 1, y + height - 1);
   /* reference point */
   VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, xr, yr);
 #ifdef IV
@@ -172,520 +170,351 @@ int           *y2;
 int           *x3;
 int           *y3;
 #endif /* __STDC__ */
-
 {
+  ThotWindow          w;
   ThotPoint          *points;
   int                 i, j;
   PtrTextBuffer       adbuff;
 
+  w = FrRef[frame];
   *x1 = *y1 = *x2 = *y2 = *x3 = *y3 = -1;
   /* allocate a table of points */
   points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * nb);
   adbuff = buffer;
   j = 1;
-  for (i = 0; i < nb - 1; i++) {
-      if (j >= adbuff->BuLength) {
-         if (adbuff->BuNext != NULL) {
-            /* change the buffer */
-            adbuff = adbuff->BuNext;
-            j = 0;
-		 }
-	  }
+  for (i = 0; i < nb - 1; i++)
+    {
+      if (j >= adbuff->BuLength &&
+	  adbuff->BuNext != NULL)
+	{
+	  /* change the buffer */
+	  adbuff = adbuff->BuNext;
+	  j = 0;
+	}
       points[i].x = x + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
       points[i].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
       /* write down predecessor and sucessor of point */
-      if (i + 1 == point) {
-         /* selected point */
-         *x2 = points[i].x;
-         *y2 = points[i].y;
-	  } else {
-             if (points[i].x < *xMin)
-                *xMin = points[i].x;
-             if (points[i].x > *xMax)
-                *xMax = points[i].x;
-             if (points[i].y < *yMin)
-                *yMin = points[i].y;
-             if (points[i].y > *yMax)
-                *yMax = points[i].y;
-             if (i + 1 == point - 1) {
-                /* predecessor */
-                *x1 = points[i].x;
-                *y1 = points[i].y;
-			 } else if (i == point) {
-                    /* succesor */
-                    *x3 = points[i].x;
-                    *y3 = points[i].y;
-			 }
-	  }
+      if (i + 1 == point)
+	{
+	  /* selected point */
+	  *x2 = points[i].x;
+	  *y2 = points[i].y;
+	}
+      else
+	{
+	  if (points[i].x < *xMin)
+	    *xMin = points[i].x;
+	  if (points[i].x > *xMax)
+	    *xMax = points[i].x;
+	  if (points[i].y < *yMin)
+	    *yMin = points[i].y;
+	  if (points[i].y > *yMax)
+	    *yMax = points[i].y;
+	  if (i + 1 == point - 1)
+	    {
+	      /* predecessor */
+	      *x1 = points[i].x;
+	      *y1 = points[i].y;
+	    }
+	  else if (i == point)
+	    {
+	      /* succesor */
+	      *x3 = points[i].x;
+	      *y3 = points[i].y;
+	    }
+	}
       j++;
-  }
+    }
 
   /* Draw the border */
-  if (close && nb > 3) {
-     /* This is a closed polyline with more than 2 points */
-     points[nb - 1].x = points[0].x;
-     points[nb - 1].y = points[0].y;
-     if (point == 1) {
-        *x1 = points[nb - 2].x;
-        *y1 = points[nb - 2].y;
-	 }
-     if (point == nb - 1) {
-        *x3 = points[0].x;
-        *y3 = points[0].y;
-	 }
-#    ifdef _WINDOWS
-     DrawOutpolygon (FrRef [frame], points, nb);
-#    else  /* !_WINDOWS */
-     XDrawLines (TtDisplay, FrRef[frame], TtInvertGC, points, nb, CoordModeOrigin);
-#    endif /* _WINDOWS */
-  } else 
-#        ifdef _WINDOWS 
-         DrawOutpolygon (FrRef [frame], points, nb - 1);
-#        else  /* _WINDOWS */
-         XDrawLines (TtDisplay, FrRef[frame], TtInvertGC, points, nb - 1, CoordModeOrigin);
-#        endif /* _WINDOWS */
+  if (close && nb > 3)
+    {
+      /* This is a closed polyline with more than 2 points */
+      points[nb - 1].x = points[0].x;
+      points[nb - 1].y = points[0].y;
+     if (point == 1)
+       {
+	 *x1 = points[nb - 2].x;
+	 *y1 = points[nb - 2].y;
+       }
+     if (point == nb - 1)
+       {
+	 *x3 = points[0].x;
+	 *y3 = points[0].y;
+       }
+#ifdef _WINDOWS
+     DrawOutpolygon (w, points, nb);
+#else  /* !_WINDOWS */
+     XDrawLines (TtDisplay, w, TtInvertGC, points, nb, CoordModeOrigin);
+#endif /* _WINDOWS */
+    }
+  else 
+#ifdef _WINDOWS 
+    DrawOutpolygon (w, points, nb - 1);
+#else  /* _WINDOWS */
+    XDrawLines (TtDisplay, w, TtInvertGC, points, nb - 1, CoordModeOrigin);
+#endif /* _WINDOWS */
   /* free the table of points */
   free ((STRING) points);
 }
 
 
 /*----------------------------------------------------------------------
-  TranslatePoints updates Polyline buffers.
-  pBbuff points to the first box buffer.
-  ppbuff points to the first abstract box buffer.
+  AddPoints adds a set of new points in a Polyline
+   - x, y and lastx, lasty points to the current point
+   - the first inserted point will be linked to x1, y1 when x1!= -1
+   - the last inserted point will be linked to x3, y3 when x3!= -1
+   - point gives the index of the first inserted point
+   - maxPoints gives the constraint when the number of points is fixed
+     (0 if there is no constraint).
+   - width and height give the limits of the box
+   - Pbuffer and Bbuffer point to the current Abstract Box buffer and
+     Box buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         TranslatePoints (int dx, int dy, PtrTextBuffer pBbuff, PtrTextBuffer pPbuff, int nbPoints)
+static void      AddPoints (int frame, int x, int y, int x1, int y1, int x3, int y3,
+			    int lastx, int lasty, int point, int *nbpoints, int maxPoints,
+			    int width, int height, PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
 #else  /* __STDC__ */
-static void         TranslatePoints (dx, dy, pBbuff, pPbuff, nbPoints)
-int                 dx;
-int                 dy;
-PtrTextBuffer       pBbuff;
-PtrTextBuffer       pPbuff;
-int                 nbPoints;
-#endif /* __STDC__ */
-{
-  int i, j;
-
-  /* translate points */
-  j = 1;
-
-  for (i = 1; i < nbPoints; i++)
-    {
-      if (j >= pBbuff->BuLength)
-	{
-	  if (pBbuff->BuNext != NULL)
-	    {
-	      /* Next buffer */
-	      pBbuff = pBbuff->BuNext;
-	      pPbuff = pPbuff->BuNext;
-	      j = 0;
-	    }
-	}
-      if (dx != 0)
-	{
-	  pBbuff->BuPoints[j].XCoord = pBbuff->BuPoints[j].XCoord + dx;
-	  pPbuff->BuPoints[j].XCoord = pBbuff->BuPoints[j].XCoord;
-	}
-      if (dy != 0)
-	{
-	  pBbuff->BuPoints[j].YCoord = pBbuff->BuPoints[j].YCoord + dy;
-	  pPbuff->BuPoints[j].YCoord = pBbuff->BuPoints[j].YCoord;
-	}
-      j++;
-    }
-}
-
-/*----------------------------------------------------------------------
-  SetBoundingBox updates Polyline buffer and origins to fit exactely the
-  box given by xMin,yMin xMax,yMax.
-  xMin, yMin, xMax and yMax are expressed in Millipoints.
-  xOrg and yOrg are expressed in pixels.
-  If xMin differs from *xOrg, *xOrg and points are horizontally translated.
-  If yMin differs from *yOrg, *yOrg and points are vertically translated.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SetBoundingBox (int xMin, int xMax, int *xOrg, int yMin, int yMax, int *yOrg, PtrBox pBox, int nbPoints)
-#else  /* __STDC__ */
-void                SetBoundingBox (xMin, xMax, xOrg, yMin, yMax, yOrg, pBox, nbPoints)
-int                 xMin;
-int                 xMax;
-int                *xOrg;
-int                 yMin;
-int                 yMax;
-int                *yOrg;
-PtrBox              pBox;
-int                 nbPoints;
-#endif /* __STDC__ */
-{
-  PtrTextBuffer     Pbuffer;
-  PtrTextBuffer     Bbuffer;
-  C_points         *controls;
-  int               dx, dy;
-  int               oldx, oldy;
-  int               width, height;
-  int               i;
-
-  Bbuffer = pBox->BxBuffer;
-  Pbuffer = pBox->BxAbstractBox->AbPolyLineBuffer;
-  /* convert into Millipoints */
-  oldx = PixelToPoint (*xOrg) * 1000;
-  oldy = PixelToPoint (*yOrg) * 1000;
-  width = xMax - xMin;
-  height = yMax - yMin;
-
-  /* update horizontal origin of the box */
-  if (xMin != oldx)
-    {
-      dx = xMin - oldx;
-      *xOrg = PointToPixel (xMin / 1000);
-    }
-  else
-    dx = 0;
-  
-  /* update vertical origin of the box */
-  if (yMin != oldy)
-    {
-      dy = yMin - oldy;
-      *yOrg = PointToPixel (yMin / 1000);
-    }
-  else
-    dy = 0;
-
-  while (dx != 0 || dy != 0)
-    {
-      /* now move each point */
-      TranslatePoints (dx, dy, Bbuffer, Pbuffer, nbPoints);
-
-      /* For curves we need to compute control points */
-      if (pBox->BxAbstractBox->AbPolyLineShape == 'B' ||
-	  pBox->BxAbstractBox->AbPolyLineShape == 'A' ||
-	  pBox->BxAbstractBox->AbPolyLineShape == 'F' ||
-	  pBox->BxAbstractBox->AbPolyLineShape == 'D' ||
-	  pBox->BxAbstractBox->AbPolyLineShape == 's')
-	{
-	  if (pBox->BxPictInfo != NULL)
-	    free ((STRING) pBox->BxPictInfo);
-	  controls = ComputeControlPoints (Bbuffer, pBox->BxNChars);
-	  pBox->BxPictInfo = (int *) controls;
-	  /* save previous xMin and yMin */
-	  oldx = xMin;
-	  oldy = yMin;
-	  for (i = 0; i <  pBox->BxNChars; i++)
-	    {
-	      if (xMin > controls[i].lx)
-		xMin = (int) controls[i].lx;
-	      if (width < controls[i].lx)
-		width = (int) controls[i].lx;
-	      if (xMin > controls[i].rx)
-		xMin = (int) controls[i].rx;
-	      if (width < controls[i].rx)
-		width = (int) controls[i].rx;
-	      if (yMin > controls[i].ly)
-		yMin = (int) controls[i].ly;
-	      if (height < controls[i].ly)
-		height = (int) controls[i].ly;
-	      if (yMin > controls[i].ry)
-		yMin = (int) controls[i].ry;
-	      if (height < controls[i].ry)
-		height = (int) controls[i].ry;
-	    }
-	  /* do we need to retranslate the box */
-	  /* update horizontal origin of the box */
-	  if (xMin != oldx)
-	    {
-	      dx = xMin - oldx;
-	      *xOrg = PointToPixel (xMin / 1000);
-	    }
-	  else
-	    dx = 0;
-	  
-	  /* update vertical origin of the box */
-	  if (yMin != oldy)
-	    {
-	      dy = yMin - oldy;
-	      *yOrg = PointToPixel (yMin / 1000);
-	    }
-	  else
-	    dy = 0;
-	}
-      else
-	{
-	  dx = 0;
-	  dy = 0;
-	}
-    }
-
-  /* now update box width and height */
-  if (width != Bbuffer->BuPoints[0].XCoord)
-    {
-      Bbuffer->BuPoints[0].XCoord = (int) width;
-      Pbuffer->BuPoints[0].XCoord = (int) width;
-    }
-  if (height != Bbuffer->BuPoints[0].YCoord)
-    {
-      Bbuffer->BuPoints[0].YCoord = (int) height;
-      Pbuffer->BuPoints[0].YCoord = (int) height;
-    }
-}
-
-
-/*----------------------------------------------------------------------
-  PolyLineCreation interract with the user to read the point forming
-  a polyline in a given frame.
-  *xOrg and *yOrg values gives the position of the box pBox in the frame.
-  These values can be changed if there is limits depend of an other box
-  (draw != NULL).
-  Bbuffer points to the first buffer of the concrete box.
-  Pbuffer points to the first buffer of the abstract box, i.e.
-  the list of control points modified. The first point in the
-  list gives the maximum width and height of the polyline.
-  If the parameter maxPoints is greater than 1 if the number of
-  points to be selected must be equal to this value.
-  This fonction update both  list of control points and
-  returns the number of point in the polyline.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox, PtrAbstractBox draw, int maxPoints)
-#else  /* __STDC__ */
-int                 PolyLineCreation (frame, xOrg, yOrg, pBox, draw, maxPoints)
-int                 frame;
-int                *xOrg;
-int                *yOrg;
-PtrBox              pBox;
-PtrAbstractBox      draw;
-int                 maxPoints;
+static void      AddPoints (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, nbpoints, maxPoints, width, height, Pbuffer, Bbuffer)
+int              frame;
+int              x;
+int              y;
+int              x1;
+int              y1;
+int              x3;
+int              y3;
+int              lastx;
+int              lasty;
+int              point;
+int             *nbpoints;
+int              maxPoints;
+int              width;
+int              height;
+PtrTextBuffer    Pbuffer;
+PtrTextBuffer    Bbuffer;
 #endif /* __STDC__ */
 {
   ThotWindow          w;
   ThotEvent           event;
-  PtrTextBuffer       Pbuffer;
-  PtrTextBuffer       Bbuffer;
   float               ratioX, ratioY;
-  int                 width, height;
   int                 ret;
-  int                 x, y;
-  int                 newx, newy, lastx, lasty;
+  int                 newx, newy;
   int                 xMin, yMin, xMax, yMax;
-  int                 x1, y1, nbpoints;
-# ifdef _WINDOWS
-  RECT  rect;
-  POINT cursorPos;
-  BOOL  input = FALSE;
-# else  /* _WINDOWS */
-  int        e, f;
-  int        dx, dy;
-  ThotWindow wdum;
-# endif /* _WINDOWS */
+  ThotBool            input;
+  ThotBool            wrap;
+#ifdef _WINDOWS
+  RECT                rect;
+  POINT               cursorPos;
+  POINT               ptBeg;
+  POINT               ptEnd;
+  POINT               ptCur;
+#else /* _WINDOWS */
+  ThotWindow          wdum;
+  int                 dx, dy;
+  int                 e, f;
+#endif /* _WINDOWS */
 
-  if (pBox == NULL || pBox->BxAbstractBox == NULL)
-    return (0);
-  Bbuffer = pBox->BxBuffer;
-  Pbuffer = pBox->BxAbstractBox->AbPolyLineBuffer;
-
-  /* Initialize the bounding box */
-  draw = NULL;
-  if (draw != NULL && draw->AbBox != NULL) {
-     /* constraint is done by the draw element */
-     x = draw->AbBox->BxXOrg;
-     *xOrg = x;
-     width = draw->AbBox->BxWidth;
-     /* trasformation factor between the box and the abstract box */
-     ratioX = 1.;
-     y = draw->AbBox->BxYOrg;
-     *yOrg = y;
-     /* trasformation factor between the box and the abstract box */
-     ratioY = 1.;
-     height = draw->AbBox->BxHeight;
-     /* min and max will give the polyline bounding box */
-     xMin = PixelToPoint (x + width) * 1000;
-     xMax = 0;
-     yMin = PixelToPoint (y + height) * 1000;
-     yMax = 0;
-  } else { 
-         /* constraint is done by the polyline element */
-         x = *xOrg;
-         width = Bbuffer->BuPoints[0].XCoord;
-         /* trasformation factor between the box and the abstract box */
-         ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
-         width = PointToPixel (width / 1000);
-         y = *yOrg;
-         height = Bbuffer->BuPoints[0].YCoord;
-         /* trasformation factor between the box and the abstract box */   
-         ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
-         height = PointToPixel (height / 1000);
-         /* we don't need to compute the polyline bounding box */
-         xMin = yMin = xMax = yMax = 0;
-  }
-  x1 = -1;
-  y1 = -1;
-  nbpoints = 1;
   /* need the window to change the cursor */
   w = FrRef[frame];
-# ifdef _WINDOWS
+  /* trasformation factor between the box and the abstract box */
+  ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) Bbuffer->BuPoints[0].XCoord;
+  /* trasformation factor between the box and the abstract box */
+  ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) Bbuffer->BuPoints[0].YCoord;
+
+#ifdef _WINDOWS
   GetWindowRect (w, &rect);
   /* The grid stepping begins at the origin */
-  lastx = x + rect.left; 
-  lasty = y + rect.top + FrameTable[frame].FrTopMargin;
+  lastx += rect.left;
+  lasty += rect.top;
+  ptBeg.x = x1 - rect.left;
+  ptBeg.y = y1 - rect.top;
+  ptEnd.x = x3 - rect.left;
+  ptEnd.y = y3 - rect.top;
   if (!SetCursorPos (lastx, lasty))
-    WinErrorBox (FrRef[frame], TEXT("PolyLineCreation (1)"));
-# else /* !_WINDOWS */
+    WinErrorBox (w, TEXT("AddPoints (1)"));
+  SetCursor (LoadCursor (NULL, IDC_CROSS));
+#else /* !_WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   XMapRaised (TtDisplay, w);
   XFlush (TtDisplay);
   ThotGrab (w, HVCurs, e, 0);
-  /* The grid stepping begins at the origin */
-  lastx = x; 
-  lasty = y + FrameTable[frame].FrTopMargin;
   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
   XFlush (TtDisplay);
-# endif /* _WINDOWS */
-
+#endif /* _WINDOWS */
 
   /* shows up limit borders */
   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
-
   /* loop waiting for the user input */
   ret = 0;
-  while (ret == 0) {
-#     ifdef _WINDOWS
-      SetCursor (LoadCursor (NULL, IDC_CROSS));
-      /* ShowCursor (TRUE); */
+  /* take into account release button events that follow a press button event */
+  input = FALSE;
+  wrap = FALSE;
+  while (ret == 0)
+    {
+#ifdef _WINDOWS
       GetMessage (&event, NULL, 0, 0);
-      if (event.message == WM_MOUSEMOVE) {
-         GetCursorPos (&cursorPos);
-         /* current pointer position */
-         /* coordinate checking */
-         newx = DO_ALIGN (cursorPos.x - x);
-         newx += x;
-         newy = DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - y);
-         newy += y;
-         if ((newx - rect.left) < x || (newx - rect.left) > x + width || (newy - rect.top) < y || (newy - rect.top) > y + height) {
-            /* CHKR_LIMIT to size of the box */
-            /* new X valid position */
-            if (newx - rect.left < x)
-               newx = x + rect.left;
-            else if (newx - rect.left > x + width)
-                 newx = x + width + rect.left;
-            else
-                 newx += rect.left;
+      if (event.message == WM_MOUSEMOVE)
+	{
+	  GetCursorPos (&cursorPos);
+	  /* current pointer position */
+	  /* coordinate checking */
+	  newx = DO_ALIGN (cursorPos.x - x);
+	  newx += x;
+	  newy = DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - y);
+	  newy += y;
+	  if ((newx - rect.left) < x || (newx - rect.left) > x + width || (newy - rect.top) < y || (newy - rect.top) > y + height)
+	    {
+	      /* CHKR_LIMIT to size of the box */
+	      /* new X valid position */
+	      if (newx - rect.left < x)
+		newx = x + rect.left;
+	      else if (newx - rect.left > x + width)
+		newx = x + width + rect.left;
+	      else
+		newx += rect.left;
+	      
+	      /* new Y valid position */
+	      if (newy - rect.top < y)
+		newy = y + FrameTable[frame].FrTopMargin + rect.top;
+	      else if (newy - rect.top > y + height)
+		newy = y + height + FrameTable[frame].FrTopMargin + rect.top;
+	      else
+		newy += FrameTable[frame].FrTopMargin + rect.top;
 	  
-            /* new Y valid position */
-            if (newy - rect.top < y)
-               newy = y + FrameTable[frame].FrTopMargin + rect.top;
-            else if (newy - rect.top > y + height)
-                 newy = y + height + FrameTable[frame].FrTopMargin + rect.top;
-            else
-                 newy += FrameTable[frame].FrTopMargin + rect.top;
+	      if (!SetCursorPos (newx, newy))
+		WinErrorBox (w, TEXT("AddPoints (2)"));
+	    }
+	  else 
+	    newy += FrameTable[frame].FrTopMargin;
 	  
-            if (!SetCursorPos (newx, newy))
-               WinErrorBox (FrRef [frame], TEXT("PolyLineCreation (2)"));
-		 } else 
-              newy += FrameTable[frame].FrTopMargin;
-		 
 
          /* refresh the display of teh two adjacent segments */
-         if (x1 != -1 && (newx != lastx || newy != lasty)) {
-            POINT ptBeg;
-            POINT ptEnd;
-	  
-            ptBeg.x = x1 - rect.left;
-            ptBeg.y = y1 - rect.top;
-            ptEnd.x = lastx - rect.left;
-            ptEnd.y = lasty - rect.top;
-	  
-            DrawOutline(FrRef [frame], ptBeg, ptEnd);
-	  
-            ptBeg.x = x1 - rect.left;
-            ptBeg.y = y1 - rect.top;
-            ptEnd.x = newx - rect.left;
-            ptEnd.y = newy - rect.top;
-	  
-            DrawOutline(FrRef [frame], ptBeg, ptEnd);
-		 }
+	  if (newx != lastx || newy != lasty)
+	    {
+	      if (x1 != -1)
+		{
+		  /* remove previous line */
+		  ptCur.x = lastx - rect.left;
+		  ptCur.y = lasty - rect.top;
+		  DrawOutline (w, ptBeg, ptCur);
+		  /* add a new line */
+		  ptCur.x = newx - rect.left;
+		  ptCur.y = newy - rect.top;
+		  DrawOutline (w, ptBeg, ptCur);
+		}
+	      if (x3 != -1)
+		{
+		  /* remove previous line */
+		  ptCur.x = lastx - rect.left;
+		  ptCur.y = lasty - rect.top;
+		  DrawOutline (w, ptCur, ptEnd);
+		  /* add a new line */
+		  ptCur.x = newx - rect.left;
+		  ptCur.y = newy - rect.top;
+		  DrawOutline (w, ptCur, ptEnd);
+		}	     
+	   }
          lastx = newx;
          lasty = newy;
-	  } else {
-           /* coordinate checking */
-           newx = x + DO_ALIGN ((int) cursorPos.x - x);
-           newy = y + DO_ALIGN ((int) cursorPos.y - FrameTable[frame].FrTopMargin - y);
-           /* CHKR_LIMIT to size of the box */
-           /* new X valid position */
-           if (newx - rect.left < x)
-              lastx = x + rect.left;
-           else if (newx - rect.left > x + width)
-                lastx = x + width + rect.left;
-           else
-                lastx = newx;
+	}
+      else
+	{
+	  /* coordinate checking */
+	  newx = x + DO_ALIGN ((int) cursorPos.x - x);
+	  newy = y + DO_ALIGN ((int) cursorPos.y - FrameTable[frame].FrTopMargin - y);
+	  /* CHKR_LIMIT to size of the box */
+	  /* new X valid position */
+	  if (newx - rect.left < x)
+	    {
+	      lastx = x + rect.left;
+	      wrap = TRUE;
+	    }
+	  else if (newx - rect.left > x + width)
+	    {
+	      lastx = x + width + rect.left;
+	      wrap = TRUE;
+	    }
+	  else
+	    lastx = newx;
 	
-           /* new Y valid position */
-           if (newy - rect.top< y)
-              lasty = y + FrameTable[frame].FrTopMargin + rect.top;
-           else if (newy - rect.top> y + height)
-                lasty = y + height + FrameTable[frame].FrTopMargin + rect.top;
-           else
-                lasty = newy + FrameTable[frame].FrTopMargin;
-	
-           switch (event.message) {
-                  case WM_LBUTTONDOWN:
-                  case WM_MBUTTONDOWN:
-                  case WM_RBUTTONDOWN:
-                       input = TRUE;
-                       if (newx - rect.left < x || newx - rect.left > x + width || newy - rect.top < y || newy - rect.top > y + height)
-	                      if (!SetCursorPos (lastx, lasty))
-	                         WinErrorBox (FrRef [frame], TEXT("PolyLineCreation (3)"));
-	                   break;
+	  /* new Y valid position */
+	  if (newy - rect.top< y)
+	    {
+	      lasty = y + FrameTable[frame].FrTopMargin + rect.top;
+	      wrap = TRUE;
+	    }
+	  else if (newy - rect.top> y + height)
+	    {
+	      lasty = y + height + FrameTable[frame].FrTopMargin + rect.top;
+	      wrap = TRUE;
+	    }
+	  else
+	    lasty = newy + FrameTable[frame].FrTopMargin;
 	  
-	              case WM_LBUTTONUP:
-	              case WM_MBUTTONUP:
-                  case WM_RBUTTONUP:
-					   if (event.message == WM_RBUTTONUP && maxPoints == 0)
-                          ret = 1;
+	  switch (event.message)
+	    {
+	    case WM_LBUTTONDOWN:
+	    case WM_MBUTTONDOWN:
+	    case WM_RBUTTONDOWN:
+	      /* it's a press button event */
+	      input = TRUE;
+	      if (wrap)
+		{
+		  /* align the cursor position */
+		  if (!SetCursorPos (lastx, lasty))
+		    WinErrorBox (w, TEXT("AddPoints (3)"));
+		  wrap = FALSE;		  
+		}
+	      break;
+	      
+	    case WM_LBUTTONUP:
+	    case WM_MBUTTONUP:
+	    case WM_RBUTTONUP:
+	      if (input)
+		{
+		  input = FALSE;
+		  /* left button keep the last segment built */
+		  /* keep the new segment first point coordinates */
+		  x1 = lastx;
+		  y1 = lasty;
 
-					   if (input) {
-                          input = FALSE;
-	                      /* left button keep the last segment built */
-	                      /* keep the new segment first point coordinates */
-	                      x1 = lastx;
-	                      y1 = lasty;
-                          /* nbpoints++; */
-	  
-                          /* update the box buffer */
-                          newx = PixelToPoint (lastx - x - rect.left) * 1000;
-                          newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y - rect.top) * 1000;
-                          /* register the min and the max */
-                          if (newx < xMin)
-                             xMin = newx;
-                          if (newx > xMax)
-                             xMax = newx;
-                          if (newy < yMin)
-                             yMin = newy;
-                          if (newy > yMax)
-                             yMax = newy;
-                          AddPointInPolyline (Bbuffer, nbpoints, newx, newy);
-                          /* update the abstract box buffer */
-                          newx = (int) ((float) newx * ratioX);
-                          newy = (int) ((float) newy * ratioY);
-                          AddPointInPolyline (Pbuffer, nbpoints, newx, newy);
-                          nbpoints++;
-                          if (nbpoints > maxPoints && maxPoints != 0)
-                             /* we have the right number of points */
-                             ret = 1;
-                          else if (maxPoints == 0 && event.message == WM_MBUTTONUP)
-                               /* any other button : end of user input */
-                               ret = 1;
-					   }
-                       break;
-	  
-                  /*case WM_RBUTTONUP:
-                       if (maxPoints == 0)
-                          ret = 1;
-                       break;*/
-	  
-                  default: break;
-		   }
-	  }
-#     else /* !_WINDOWS */
+		  /* update the box buffer */
+		  newx = PixelToPoint (lastx - x - rect.left) * 1000;
+		  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y - rect.top) * 1000;
+		  /* register the min and the max */
+		  if (newx < xMin)
+		    xMin = newx;
+		  if (newx > xMax)
+		    xMax = newx;
+		  if (newy < yMin)
+		    yMin = newy;
+		  if (newy > yMax)
+		    yMax = newy;
+		  AddPointInPolyline (Bbuffer, *nbpoints, newx, newy);
+		  /* update the abstract box buffer */
+		  newx = (int) ((float) newx * ratioX);
+		  newy = (int) ((float) newy * ratioY);
+		  AddPointInPolyline (Pbuffer, *nbpoints, newx, newy);
+		  (*nbpoints)++;
+		  if (*nbpoints > maxPoints && maxPoints != 0)
+		    /* we have the right number of points */
+		    ret = 1;
+		  else if (maxPoints == 0 && event.message != WM_LBUTTONUP)
+		    /* any other button : end of user input */
+		    ret = 1;
+		}
+	      break;
+	      else
+		{
+		  newsx = lastx;
+		  newy = lasty;
+		}
+
+	    default: break;
+	    }
+	}
+#else /* !_WINDOWS */
       if (XPending (TtDisplay) == 0)
 	{
 	  /* current pointer position */
@@ -716,54 +545,84 @@ int                 maxPoints;
 	  else
 	    newy += FrameTable[frame].FrTopMargin;
 
-	  /* refresh the display of teh two adjacent segments */
-	  if (x1 != -1 && (newx != lastx || newy != lasty))
+	  /* Draw the new segments resulting of the new point */
+	  if (newx != lastx || newy != lasty)
 	    {
-	      XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, lastx, lasty);
-	      XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, newx, newy);
+	      if (x1 != -1)
+		{
+		  XDrawLine (TtDisplay, w, TtInvertGC, x1, y1, lastx, lasty);
+		  XDrawLine (TtDisplay, w, TtInvertGC, x1, y1, newx, newy);
+		}
+	      if (x3 != -1)
+		{
+		  XDrawLine (TtDisplay, w, TtInvertGC, lastx, lasty, x3, y3);
+		  XDrawLine (TtDisplay, w, TtInvertGC, newx, newy, x3, y3);
+		}
 	      XFlush (TtDisplay);
-            }
-	  lastx = newx;
-	  lasty = newy;
+	      lastx = newx;
+	      lasty = newy;
+	    }
 	}
       else
 	{
 	  XNextEvent (TtDisplay, &event);
-	  /* coordinate checking */
+	  
+	  /* check the coordinates */
 	  newx = x + DO_ALIGN ((int) event.xmotion.x - x);
 	  newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
 	  /* CHKR_LIMIT to size of the box */
 	  /* new X valid position */
 	  if (newx < x)
-	    lastx = x;
+	    {
+	      lastx = x;
+	      wrap = TRUE;
+	    }
 	  else if (newx > x + width)
-	    lastx = x + width;
+	    {
+	      lastx = x + width;
+	      wrap = TRUE;
+	    }
 	  else
 	    lastx = newx;
 
 	  /* new Y valid position */
 	  if (newy < y)
-	    lasty = y + FrameTable[frame].FrTopMargin;
+	    {
+	      lasty = y + FrameTable[frame].FrTopMargin;
+	      wrap = TRUE;
+	    }
 	  else if (newy > y + height)
-	    lasty = y + height + FrameTable[frame].FrTopMargin;
+	    {
+	      lasty = y + height + FrameTable[frame].FrTopMargin;
+	      wrap = TRUE;
+	    }
 	  else
 	    lasty = newy + FrameTable[frame].FrTopMargin;
 
 	  switch (event.type)
 	    {
 	    case ButtonPress:
-	      if (newx < x || newx > x + width || newy < y || newy > y + height)
-		XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
+	      /* it's a press button event */
+	      input = TRUE;
+	      if (wrap)
+		{
+		  /* align the cursor position */
+		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
+		  wrap = FALSE;		  
+		}
 	      break;
 
 	    case ButtonRelease:
-	      if (event.xbutton.button != Button3 || nbpoints > 0)
+	      if (input)
 		{
 		  /* left button keep the last segment built */
 		  /* keep the new segment first point coordinates */
 		  x1 = lastx;
 		  y1 = lasty;
-		  nbpoints++;
+		  (*nbpoints)++;
+		  point++;
+		  /* points are registerd */
+		  input = TRUE;
 
 		  /* update the box buffer */
 		  newx = PixelToPoint (lastx - x) * 1000;
@@ -777,19 +636,23 @@ int                 maxPoints;
 		    yMin = newy;
 		  if (newy > yMax)
 		    yMax = newy;
-		  AddPointInPolyline (Bbuffer, nbpoints, newx, newy);
+		  AddPointInPolyline (Bbuffer, point, newx, newy);
 		  /* update the abstract box buffer */
 		  newx = (int) ((float) newx * ratioX);
 		  newy = (int) ((float) newy * ratioY);
-		  AddPointInPolyline (Pbuffer, nbpoints, newx, newy);
+		  AddPointInPolyline (Pbuffer, point, newx, newy);
 
-		  if (nbpoints > maxPoints && maxPoints != 0)
+		  if (*nbpoints > maxPoints && maxPoints != 0)
 		    /* we have the right number of points */
 		    ret = 1;
-		  else if (maxPoints == 0 &&
-			   event.xbutton.button != Button1)
+		  else if (maxPoints == 0 && event.xbutton.button != Button1)
 		    /* any other button : end of user input */
 		    ret = 1;
+		}
+	      else
+		{
+		  newx = lastx;
+		  newy = lasty;
 		}
 	      break;
 
@@ -803,270 +666,202 @@ int                 maxPoints;
 	    default: break;
 	    }
 	}
-#     endif /* _WINDOWS */
+#endif /* _WINDOWS */
     }
   /* erase box frame */
-# ifdef _WINDOWS
-  SetCursor (LoadCursor (NULL, IDC_ARROW));
-  /* ShowCursor (TRUE); */
-#  endif /* *_WINDOWS */
-  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
 
-  /* get back to previous state of the library */
-# ifndef _WINDOWS
+  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
+#ifdef _WINDOWS
+  SetCursor (LoadCursor (NULL, IDC_ARROW));
+#else /* *_WINDOWS */
   ThotUngrab ();
   XFlush (TtDisplay);
-# endif /* _WINDOWS */
-
-  /* need at least 3 points for a valid polyline */
-  if (nbpoints < 3)
-    {
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_TWO_POINTS_IN_POLYLINE_NEEDED);
-      return (1);
-    }
-  else if (draw)
-    {
-      x = PixelToPoint (x) * 1000;
-      y = PixelToPoint (y) * 1000;
-      SetBoundingBox (xMin+x, xMax+x, xOrg, yMin+y, yMax+y, yOrg, pBox, nbpoints);
-    }
-    return (nbpoints);
+#endif /* _WINDOWS */
 }
 
+
 /*----------------------------------------------------------------------
-  PolyLineModification interract with the user to move a point part
-  a polyline in a given frame.
-  *xOrg and *yOrg values gives the position of the box pBox in the frame.
-  These values can be changed if there is limits depend of an other box
-  (draw != NULL).
-  Bbuffer points to the first buffer of the box, i.e. the list of control
-  points as shown. The first point in the lists gives the maximum
-  width and height of the polyline.
-  Pbuffer points to the first buffer of the abtract box.
-  nbpoints gives the number of points in the polyline.
-  point expricitely indicate the point to be moved.
-  This fonction update both  list of control points.
+  MoveApoint moves a point in a Polyline
+   - x, y and lastx, lasty points to the current point
+   - the first inserted point will be linked to x1, y1 when x1!= -1
+   - the last inserted point will be linked to x3, y3 when x3!= -1
+   - point gives the index of the first inserted point
+   - width and height give the limits of the box
+   - Pbuffer and Bbuffer point to the current Abstract Box buffer and
+     Box buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox, PtrAbstractBox draw, int nbpoints, int point, ThotBool close)
+static void      MoveApoint (int frame, int x, int y, int x1, int y1, int x3, int y3,
+			    int lastx, int lasty, int point,
+			    int width, int height, PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
 #else  /* __STDC__ */
-void                PolyLineModification (frame, xOrg, yOrg, pBox, draw, nbpoints, point, close)
-int                 frame;
-int                *xOrg;
-int                *yOrg;
-PtrBox              pBox;
-PtrAbstractBox      draw;
-int                 nbpoints;
-int                 point;
-ThotBool            close;
+static void      MoveApoint (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, width, height, Pbuffer, Bbuffer)
+int              frame;
+int              x;
+int              y;
+int              x1;
+int              y1;
+int              x3;
+int              y3;
+int              lastx;
+int              lasty;
+int              point;
+int              width;
+int              height;
+PtrTextBuffer    Pbuffer;
+PtrTextBuffer    Bbuffer;
 #endif /* __STDC__ */
 {
   ThotWindow          w;
   ThotEvent           event;
-  PtrTextBuffer       Pbuffer;
-  PtrTextBuffer       Bbuffer;
   float               ratioX, ratioY;
-  int                 width, height;
   int                 ret;
-  int                 newx, newy, lastx, lasty;
+  int                 newx, newy;
   int                 xMin, yMin, xMax, yMax;
-  int                 x1, y1, x3, y3;
-  int                 x, y, dx, dy;
+  ThotBool            input;
   ThotBool            wrap;
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   RECT                rect;
   POINT               cursorPos;
-  POINT               ptBegin, ptEnd;
-# else  /* !_WINDOWS */
-  int                 e, f;
-# endif /* _WINDOWS */
-
-  if (pBox == NULL || pBox->BxAbstractBox == NULL)
-     return;
-
-  Bbuffer = pBox->BxBuffer;
-  Pbuffer = pBox->BxAbstractBox->AbPolyLineBuffer;
-
-  /* Initialize the bounding box */
-  draw = NULL;
-  if (draw != NULL && draw->AbBox != NULL) {
-     /* constraint is done by the draw element */
-     x = draw->AbBox->BxXOrg;
-     *xOrg = x;
-     width = draw->AbBox->BxWidth;
-     /* trasformation factor between the box and the abstract box */
-     ratioX = 1.;
-     y = draw->AbBox->BxYOrg;
-     *yOrg = y;
-     /* trasformation factor between the box and the abstract box */
-     ratioY = 1.;
-     height = draw->AbBox->BxHeight;
-     /* min and max will give the polyline bounding box */
-     xMin = PixelToPoint (x + width) * 1000;
-     xMax = 0;
-     yMin = PixelToPoint (y + height) * 1000;
-     yMax = 0;
-     dx = PixelToPoint ((x - *xOrg)) * 1000;
-     dy = PixelToPoint ((y - *yOrg)) * 1000;
-     TranslatePoints (dx, dy, Bbuffer, Pbuffer, nbpoints);
-  } else {
-         /* constraint is done by the polyline element */
-         x = *xOrg;
-         width = Bbuffer->BuPoints[0].XCoord;
-         /* trasformation factor between the box and the abstract box */
-         ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
-         width = PointToPixel (width / 1000);
-         y = *yOrg;
-         height = Bbuffer->BuPoints[0].YCoord;
-         /* trasformation factor between the box and the abstract box */
-         ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
-         height = PointToPixel (height / 1000);
-         /* we don't need to compute the polyline bounding box */
-         xMin = yMin = xMax = yMax = 0;
-  }
+  POINT               ptBeg;
+  POINT               ptEnd;
+  POINT               ptCur;
+#else /* _WINDOWS */
+  int                 e,f;
+#endif /* _WINDOWS */
 
   /* need the window to change the cursor */
   w = FrRef[frame];
-# ifdef _WINDOWS
-  if (!GetWindowRect (w, &rect))
-     WinErrorBox (w, TEXT("PolyLineModification (1)"));
+  /* trasformation factor between the box and the abstract box */
+  ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) Bbuffer->BuPoints[0].XCoord;
+  /* trasformation factor between the box and the abstract box */
+  ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) Bbuffer->BuPoints[0].YCoord;
 
-  wrap = FALSE;
-
-  /* shows up limit borders */
-  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
-  RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close, &x1, &y1, &lastx, &lasty, &x3, &y3, &xMin, &yMin, &xMax, &yMax);
+#ifdef _WINDOWS
+  GetWindowRect (w, &rect);
+  /* The grid stepping begins at the origin */
   lastx += rect.left;
   lasty += rect.top;
-
-  /* Loop waiting for user interraction */
-  ret = 0;
-  while (ret == 0) {
-      SetCursor (LoadCursor (NULL, IDC_CROSS));
-      /* ShowCursor (TRUE); */
-      GetCursorPos (&cursorPos);
-      
-      /* check the coordinates */
-      newx = x + DO_ALIGN (cursorPos.x - x);
-      newy = y + DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - y);
-      /* are limited to the box size */
-      /* Update the X position */
-      if (newx - rect.left < x) {
-         newx = x + rect.left;
-         wrap = TRUE;
-	  } else if (newx - rect.left > x + width) {
-             newx = x + width + rect.left;
-             wrap = TRUE;
-	  }
-      
-      /* Update the Y position */
-      if (newy - rect.top < y) {
-         newy = y + FrameTable[frame].FrTopMargin + rect.top;
-         wrap = TRUE;
-	  } else if (newy - rect.top > y + height) {
-             newy = y + height + FrameTable[frame].FrTopMargin + rect.top;
-             wrap = TRUE;
-	  } else
-             newy += FrameTable[frame].FrTopMargin;
-
-      GetMessage (&event, NULL, 0, 0);
-      switch (event.message) {
-             case WM_LBUTTONUP:
-                  lastx = newx - rect.left;
-                  lasty = newy - rect.top;
-                  /* update the box buffer */
-                  newx = PixelToPoint (lastx - x) * 1000;
-                  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
-                  /* register the min and the max */
-                  if (newx < xMin)
-                     xMin = newx;
-                  if (newx > xMax)
-                     xMax = newx;
-                  if (newy < yMin)
-                     yMin = newy;
-                  if (newy > yMax)
-                     yMax = newy;
-                  ModifyPointInPolyline (Bbuffer, point, newx, newy);
-                  /* update the abstract box buffer */
-                  newx = (int) ((float) newx * ratioX);
-                  newy = (int) ((float) newy * ratioY);
-                  ModifyPointInPolyline (Pbuffer, point, newx, newy);
-                  ret = 1;
-                  break;
-	  
-             case WM_MOUSEMOVE:
-                  /* shows the new adjacent segment position */
-                  if (newx != lastx || newy != lasty) {
-                     if (x1 != -1) {
-                        ptBegin.x = x1;
-						ptBegin.y = y1;
-						ptEnd.x   = lastx - rect.left;
-						ptEnd.y   = lasty - rect.top;
-                        DrawOutline (w, ptBegin, ptEnd);
-						ptEnd.x = newx - rect.left;
-						ptEnd.y = newy - rect.top;
-                        DrawOutline (w, ptBegin, ptEnd);
-					 }
-                     if (x3 != -1) {
-                        ptBegin.x = lastx - rect.left;
-						ptBegin.y = lasty - rect.top;
-						ptEnd.x   = x3;
-						ptEnd.y   = y3;
-                        DrawOutline (w, ptBegin, ptEnd);
-						ptBegin.x = newx - rect.left;
-						ptBegin.y = newy - rect.top;
-                        DrawOutline (w, ptBegin, ptEnd);
-					 }
-				  }
-                  lastx = newx;
-                  lasty = newy;
-                  if (wrap)
-                     wrap = FALSE;
-                  break;
-             /*	  
-             case Expose:
-                  f = GetWindowFrame (event.xexpose.window);
-                  if (f <= MAX_FRAME + 1)
-                     FrameToRedisplay (event.xexpose.window, f, (XExposeEvent *) & event);
-                  XtDispatchEvent (&event);
-                  break; */
-	  
-             default: break;
-	  }
-  }
-  
-  /* erase the box border */
-  SetCursor (LoadCursor (NULL, IDC_ARROW));
-  /* ShowCursor (TRUE); */
-  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
-
-  /* returns to previous state of the Thot library */
-  if (draw) {
-     x = PixelToPoint (x) * 1000;
-     y = PixelToPoint (y) * 1000;
-     SetBoundingBox (xMin+x, xMax+x, xOrg, yMin+y, yMax+y, yOrg, pBox, nbpoints);
-  }
-# else  /* !_WINDOWS */
+  ptBeg.x = x1 - rect.left;
+  ptBeg.y = y1 - rect.top;
+  ptEnd.x = x3 - rect.left;
+  ptEnd.y = y3 - rect.top;
+  if (!SetCursorPos (lastx, lasty))
+    WinErrorBox (w, TEXT("MoveAPoint (1)"));
+  SetCursor (LoadCursor (NULL, IDC_CROSS));
+#else /* !_WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   XMapRaised (TtDisplay, w);
   XFlush (TtDisplay);
   ThotGrab (w, HVCurs, e, 0);
-  wrap = FALSE;
+  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
+  XFlush (TtDisplay);
+#endif /* _WINDOWS */
 
   /* shows up limit borders */
   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
-  RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
-		  &x1, &y1, &lastx, &lasty, &x3, &y3, &xMin, &yMin, &xMax, &yMax);
-  /* the grid step begins at the origin of the box */
-  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
-  XFlush (TtDisplay);
-
-  /* Loop waiting for user interraction */
+  /* loop waiting for the user input */
   ret = 0;
+  /* take into account release button events that follow a press button event */
+  input = FALSE;
+  wrap = FALSE;
   while (ret == 0)
     {
+#ifdef _WINDOWS
+      /* current pointer position */
+      GetCursorPos (&cursorPos);
+      /* coordinate checking */
+      newx = DO_ALIGN (cursorPos.x - x);
+      newx += x;
+      newy = DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - y);
+      newy += y;
+      if ((newx - rect.left) < x || (newx - rect.left) > x + width || (newy - rect.top) < y || (newy - rect.top) > y + height)
+	{
+	  /* CHKR_LIMIT to size of the box */
+	  /* new X valid position */
+	  if (newx - rect.left < x)
+	    newx = x + rect.left;
+	  else if (newx - rect.left > x + width)
+	    newx = x + width + rect.left;
+	  else
+	    newx += rect.left;
+	      
+	  /* new Y valid position */
+	  if (newy - rect.top < y)
+	    newy = y + FrameTable[frame].FrTopMargin + rect.top;
+	  else if (newy - rect.top > y + height)
+	    newy = y + height + FrameTable[frame].FrTopMargin + rect.top;
+	  else
+	    newy += FrameTable[frame].FrTopMargin + rect.top;
+	  
+	  if (!SetCursorPos (newx, newy))
+	    WinErrorBox (w, TEXT("MoveAPoint (2)"));
+	}
+      else 
+	newy += FrameTable[frame].FrTopMargin;
+	  
+      GetMessage (&event, NULL, 0, 0);
+      switch (event.message)
+	{
+	case WM_LBUTTONUP:
+	  lastx = newx - rect.left;
+	  lasty = newy - rect.top;
+	  /* update the box buffer */
+	  newx = PixelToPoint (lastx - x) * 1000;
+	  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
+	  /* register the min and the max */
+	  if (newx < xMin)
+	    xMin = newx;
+	  if (newx > xMax)
+	    xMax = newx;
+	  if (newy < yMin)
+	    yMin = newy;
+	  if (newy > yMax)
+	    yMax = newy;
+	  ModifyPointInPolyline (Bbuffer, point, newx, newy);
+	  /* update the abstract box buffer */
+	  newx = (int) ((float) newx * ratioX);
+	  newy = (int) ((float) newy * ratioY);
+	  ModifyPointInPolyline (Pbuffer, point, newx, newy);
+	  ret = 1;
+	  break;
+
+	case WM_MOUSEMOVE:
+	  /* refresh the display of teh two adjacent segments */
+	  if (newx != lastx || newy != lasty)
+	    {
+	      if (x1 != -1)
+		{
+		  /* remove previous line */
+		  ptCur.x = lastx - rect.left;
+		  ptCur.y = lasty - rect.top;
+		  DrawOutline (w, ptBeg, ptCur);
+		  /* add a new line */
+		  ptCur.x = newx - rect.left;
+		  ptCur.y = newy - rect.top;
+		  DrawOutline (w, ptBeg, ptCur);
+		}
+	      if (x3 != -1)
+		{
+		  /* remove previous line */
+		  ptCur.x = lastx - rect.left;
+		  ptCur.y = lasty - rect.top;
+		  DrawOutline (w, ptCur, ptEnd);
+		  /* add a new line */
+		  ptCur.x = newx - rect.left;
+		  ptCur.y = newy - rect.top;
+		  DrawOutline (w, ptCur, ptEnd);
+		}	     
+	   }
+	  lastx = newx;
+	  lasty = newy;
+	  break;
+
+	default: break;
+	}
+#else /* !_WINDOWS */
       XNextEvent (TtDisplay, &event);
-      
+	  
       /* check the coordinates */
       newx = x + DO_ALIGN ((int) event.xmotion.x - x);
       newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
@@ -1128,13 +923,13 @@ ThotBool            close;
 	    {
 	      if (x1 != -1)
 		{
-		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, lastx, lasty);
-		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, newx, newy);
+		  XDrawLine (TtDisplay, w, TtInvertGC, x1, y1, lastx, lasty);
+		  XDrawLine (TtDisplay, w, TtInvertGC, x1, y1, newx, newy);
 		}
 	      if (x3 != -1)
 		{
-		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, lastx, lasty, x3, y3);
-		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, newx, newy, x3, y3);
+		  XDrawLine (TtDisplay, w, TtInvertGC, lastx, lasty, x3, y3);
+		  XDrawLine (TtDisplay, w, TtInvertGC, newx, newy, x3, y3);
 		}
 	      XFlush (TtDisplay);
 	    }
@@ -1153,82 +948,51 @@ ThotBool            close;
 	    FrameToRedisplay (event.xexpose.window, f, (XExposeEvent *) & event);
 	  XtDispatchEvent (&event);
 	  break;
-	  
-	default:
-	  break;
 	}
+#endif /* _WINDOWS */
     }
-  
-  /* erase the box border */
-  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
 
-  /* returns to previous state of the Thot library */
+  /* erase box frame */
+  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
+#ifdef _WINDOWS
+  SetCursor (LoadCursor (NULL, IDC_ARROW));
+#else /* *_WINDOWS */
   ThotUngrab ();
   XFlush (TtDisplay);
-  if (draw)
-    {
-      x = PixelToPoint (x) * 1000;
-      y = PixelToPoint (y) * 1000;
-      SetBoundingBox (xMin+x, xMax+x, xOrg, yMin+y, yMax+y, yOrg, pBox, nbpoints);
-    }
-  else if (pBox->BxPictInfo != NULL)
-    {
-      free ((STRING) pBox->BxPictInfo);
-      pBox->BxPictInfo = NULL;
-    }
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
+
 /*----------------------------------------------------------------------
-  PolyLineExtension interract with the user to add points to
-  an existing polyline in a given frame.
-  *xOrg and *yOrg values gives the position of the box pBox in the frame.
-  These values can be changed if there is limits depend of an other box
-  (draw != NULL).
-  Bbuffer points to the first buffer of the box, i.e. the list of control
-  points as shown. The first point in the lists gives the maximum
-  width and height of the polyline.
-  Pbuffer points to the first buffer of the abtract box.
-  nbpoints gives the number of points in the polyline.
-  point expricitely indicate the point to be moved.
-  close indicate whether the polyline is closed.
-  This fonction update both  list of control points and
-  returns the new number of points in the polyline.
+  PolyLineCreation interracts with the user to read points forming
+  a polyline in a given frame.
+  *xOrg and *yOrg values give the position of the box pBox in the frame.
+  Bbuffer points to the first buffer of the concrete box.
+  Pbuffer points to the first buffer of the abstract box, i.e.
+  the list of control points modified. The first point in the
+  list gives the maximum width and height of the polyline.
+  If the parameter maxPoints is greater than 1 if the number of
+  points to be selected must be equal to this value.
+  This fonction updates both list of control points and
+  returns the number of point in the polyline.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox, PtrAbstractBox draw, int nbpoints, int point, ThotBool close)
+int                 PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox, int maxPoints)
 #else  /* __STDC__ */
-int                 PolyLineExtension (frame, xOrg, yOrg, pBox, draw, nbpoints, point, close)
+int                 PolyLineCreation (frame, xOrg, yOrg, pBox, maxPoints)
 int                 frame;
 int                *xOrg;
 int                *yOrg;
 PtrBox              pBox;
-PtrAbstractBox      draw;
-int                 nbpoints;
-int                 point;
-ThotBool            close;
+int                 maxPoints;
 #endif /* __STDC__ */
-
 {
-  ThotWindow          w;
   PtrTextBuffer       Pbuffer;
   PtrTextBuffer       Bbuffer;
-  float               ratioX, ratioY;
   int                 width, height;
-  int                 dx, dy;
-  int                 xMin, yMin, xMax, yMax;
   int                 x, y;
-# ifndef _WINDOWS
-  ThotWindow          wdum;
-  ThotEvent           event;
-  int                 e;
-  int                 ret, f;
-  int                 newx, newy;
   int                 lastx, lasty;
-  int                 x1, y1, x3, y3;
-  ThotBool            wrap;
-  ThotBool            start = TRUE;
-# endif /* _WINDOWS */
+  int                 nbpoints;
 
   if (pBox == NULL || pBox->BxAbstractBox == NULL)
     return (0);
@@ -1236,229 +1000,297 @@ ThotBool            close;
   Pbuffer = pBox->BxAbstractBox->AbPolyLineBuffer;
 
   /* Initialize the bounding box */
-  draw = NULL;
-  if (draw != NULL && draw->AbBox != NULL) {
-     /* constraint is done by the draw element */
-     x = draw->AbBox->BxXOrg;
-     *xOrg = x;
-     width = draw->AbBox->BxWidth;
-     /* trasformation factor between the box and the abstract box */
-     ratioX = 1.;
-     y = draw->AbBox->BxYOrg;
-     *yOrg = y;
-     /* trasformation factor between the box and the abstract box */
-     ratioY = 1.;
-     height = draw->AbBox->BxHeight;
-     /* min and max will give the polyline bounding box */
-     xMin = PixelToPoint (x + width) * 1000;
-     xMax = 0;
-     yMin = PixelToPoint (y + height) * 1000;
-     yMax = 0;
-     dx = PixelToPoint (x - *xOrg) * 1000;
-     dy = PixelToPoint (y - *yOrg) * 1000;
-     TranslatePoints (dx, dy, Bbuffer, Pbuffer, nbpoints);
-  } else {
-         /* constraint is done by the polyline element */
-         x = *xOrg;
-         width = Bbuffer->BuPoints[0].XCoord;
-         /* trasformation factor between the box and the abstract box */
-         ratioX = (float) Pbuffer->BuPoints[0].XCoord / (float) width;
-         width = PointToPixel (width / 1000);
-         y = *yOrg;
-         height = Bbuffer->BuPoints[0].YCoord;
-         /* trasformation factor between the box and the abstract box */
-         ratioY = (float) Pbuffer->BuPoints[0].YCoord / (float) height;
-         height = PointToPixel (height / 1000);
-         /* we don't need to compute the polyline bounding box */
-         xMin = yMin = xMax = yMax = 0;
-  }
+  /* constraint is done by the polyline element */
+  x = *xOrg;
+  width = Bbuffer->BuPoints[0].XCoord;
+  width = PointToPixel (width / 1000);
+  y = *yOrg;
+  height = Bbuffer->BuPoints[0].YCoord;
+  height = PointToPixel (height / 1000);
 
-  /* need the window to change the cursor */
-  w = FrRef[frame];
-
-# ifdef _WINDOWS
-# else  /* !_WINDOWS */
-  e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
-  XMapRaised (TtDisplay, w);
-  XFlush (TtDisplay);
-  ThotGrab (w, HVCurs, e, 0);
-  wrap = FALSE;
-
-  /* draw the box border */
-  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
-  RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
-		  &x1, &y1, &lastx, &lasty, &x3, &y3, &xMin, &yMin, &xMax, &yMax);
-  /* the grid step begins at the origin */
-  XFlush (TtDisplay);
-  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
-  x1 = lastx;
-  y1 = lasty;
-
-  /* Loop waiting for user input */
-  ret = 0;
-  while (ret == 0)
-    {
-      if (XPending (TtDisplay) == 0)
-	{
-	  /* current cursor location */
-	  XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
-	  /* check the coordinates */
-	  newx = DO_ALIGN (newx - x);
-	  newx += x;
-	  newy = DO_ALIGN (newy - FrameTable[frame].FrTopMargin - y);
-	  newy += y;
-	  if (newx < x || newx > x + width || newy < y || newy > y + height)
-	    {
-	      /* CHKR_LIMIT them to the box area */
-	      /* new X valid position */
-	      if (newx < x)
-		newx = x;
-	      else if (newx > x + width)
-		newx = x + width;
-	      
-	      /* new Y valid position */
-	      if (newy < y)
-		newy = y + FrameTable[frame].FrTopMargin;
-	      else if (newy > y + height)
-		newy = y + height + FrameTable[frame].FrTopMargin;
-	      else
-		newy += FrameTable[frame].FrTopMargin;
-	      XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, newx, newy);
-	    }
-	  else
-	    newy += FrameTable[frame].FrTopMargin;
-	  
-	  /* Draw the new segments resulting of the new point */
-	  if (newx != lastx || newy != lasty)
-	    {
-	      if (x1 != -1)
-		{
-		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, lastx, lasty);
-		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, newx, newy);
-		}
-	      if (x3 != -1)
-		{
-		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, lastx, lasty, x3, y3);
-		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, newx, newy, x3, y3);
-		}
-	      
-	      XFlush (TtDisplay);
-	      lastx = newx;
-	      lasty = newy;
-	    }
-	}
-      else
-	{
-	  XNextEvent (TtDisplay, &event);
-	  
-	  /* check the coordinates */
-	  newx = x + DO_ALIGN ((int) event.xmotion.x - x);
-	  newy = y + DO_ALIGN ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
-	  /* CHKR_LIMIT them to the box area */
-	  if (newx < x)
-	    {
-	      newx = x;
-	      wrap = TRUE;
-	    }
-	  else if (newx > x + width)
-	    {
-	      newx = x + width;
-	      wrap = TRUE;
-	    }
-
-	  if (newy < y)
-	    {
-	      newy = y + FrameTable[frame].FrTopMargin;
-	      wrap = TRUE;
-	    }
-	  else if (newy > y + height)
-	    {
-	      newy = y + height + FrameTable[frame].FrTopMargin;
-	      wrap = TRUE;
-	    }
-	  else
-	    newy += FrameTable[frame].FrTopMargin;
-
-	  switch (event.type)
-	    {
-	    case ButtonPress:
-	      lastx = newx;
-	      lasty = newy;
-	      start = FALSE;
-	      if (wrap)
-		{
-		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
-		  wrap = FALSE;
-		}
-	      break;
-	      
-	    case ButtonRelease:
-	      if (event.xbutton.button != Button3 || !start)
-		{
-		  /* left button : keep the new point */
-		  /* write down the new segment start point */
-		  lastx = newx;
-		  lasty = newy;
-		  x1 = lastx;
-		  y1 = lasty;
-		  nbpoints++;
-		  point++;
-		  start = FALSE;
-		  /* update the box buffer */
-		  newx = PixelToPoint (lastx - x) * 1000;
-		  newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
-		  /* register the min and the max */
-		  if (newx < xMin)
-		    xMin = newx;
-		  if (newx > xMax)
-		    xMax = newx;
-		  if (newy < yMin)
-		    yMin = newy;
-		  if (newy > yMax)
-		    yMax = newy;
-		  AddPointInPolyline (Bbuffer, point, newx, newy);
-		  /* update the abstact box buffer */
-		  newx = (int) ((float) newx * ratioX);
-		  newy = (int) ((float) newy * ratioY);
-		  AddPointInPolyline (Pbuffer, point, newx, newy);
-		  
-		  if (event.xbutton.button != Button1)
-		    /* any other button : end of interraction */
-		    ret = 1;
-		}
-	      break;
-
-	    case Expose:
-	      f = GetWindowFrame (event.xexpose.window);
-	      if (f <= MAX_FRAME + 1)
-		FrameToRedisplay (event.xexpose.window, f, (XExposeEvent *) & event);
-	      XtDispatchEvent (&event);
-	      break;
-	      
-	    default:
-	      break;
-	    }
-	}
-    }
-
-  /* erase the box border */
-  BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
-
-  /* go back to previous state of Thot library */
-  ThotUngrab ();
-  XFlush (TtDisplay);
-# endif /* _WINDOWS */
-  /* a valid polyline need at least 3 points */
-  if (nbpoints < 3)
-    return (1);
-  else if (draw)
-    {
-      x = PixelToPoint (x) * 1000;
-      y = PixelToPoint (y) * 1000;
-      SetBoundingBox (xMin+x, xMax+x, xOrg, yMin+y, yMax+y, yOrg, pBox, nbpoints);
-    }
+  nbpoints = 1;
+  lastx = x; 
+  lasty = y + FrameTable[frame].FrTopMargin;
+  AddPoints (frame, x, y, -1, -1, -1, -1, lastx, lasty, 1, &nbpoints, maxPoints, width, height,
+	     Pbuffer, Bbuffer);
   return (nbpoints);
 }
+
+/*----------------------------------------------------------------------
+  PolyLineModification interracts with the user to move a point of
+  a polyline in a given frame.
+  *xOrg and *yOrg values give the position of the box pBox in the frame.
+  Bbuffer points to the first buffer of the box, i.e. the list of control
+  points as shown. The first point in the lists gives the maximum
+  width and height of the polyline.
+  Pbuffer points to the first buffer of the abtract box.
+  nbpoints gives the number of points in the polyline.
+  point expricitely indicate the point to be moved.
+  This fonction updates both  list of control points.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox, int nbpoints, int point, ThotBool close)
+#else  /* __STDC__ */
+void                PolyLineModification (frame, xOrg, yOrg, pBox, nbpoints, point, close)
+int                 frame;
+int                *xOrg;
+int                *yOrg;
+PtrBox              pBox;
+int                 nbpoints;
+int                 point;
+ThotBool            close;
+#endif /* __STDC__ */
+{
+  PtrTextBuffer       Pbuffer;
+  PtrTextBuffer       Bbuffer;
+  int                 width, height;
+  int                 lastx, lasty;
+  int                 xMin, yMin, xMax, yMax;
+  int                 x1, y1, x3, y3;
+  int                 x, y;
+
+  if (pBox == NULL || pBox->BxAbstractBox == NULL)
+     return;
+
+  Bbuffer = pBox->BxBuffer;
+  Pbuffer = pBox->BxAbstractBox->AbPolyLineBuffer;
+
+  /* constraint is done by the polyline element */
+  x = *xOrg;
+  width = Bbuffer->BuPoints[0].XCoord;
+  width = PointToPixel (width / 1000);
+  y = *yOrg;
+  height = Bbuffer->BuPoints[0].YCoord;
+  height = PointToPixel (height / 1000);
+
+  /* get the current point */
+  xMin = yMin = xMax = yMax = 0;
+  RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
+		  &x1, &y1, &lastx, &lasty, &x3, &y3, &xMin, &yMin, &xMax, &yMax);
+  MoveApoint (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, width, height, Pbuffer, Bbuffer);
+  if (pBox->BxPictInfo != NULL)
+    {
+      /* we have to recompute the current spline */
+      free ((STRING) pBox->BxPictInfo);
+      pBox->BxPictInfo = NULL;
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  PolyLineExtension interract with the user to add points to
+  an existing polyline in a given frame.
+  *xOrg and *yOrg values give the position of the box pBox in the frame.
+  Bbuffer points to the first buffer of the box, i.e. the list of control
+  points as shown. The first point in the lists gives the maximum
+  width and height of the polyline.
+  Pbuffer points to the first buffer of the abtract box.
+  nbpoints gives the number of points in the polyline.
+  point expricitely indicate the point to be moved.
+  close indicate whether the polyline is closed.
+  This fonction updates both  list of control points and
+  returns the new number of points in the polyline.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int              PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox, int nbpoints, int point, ThotBool close)
+#else  /* __STDC__ */
+int              PolyLineExtension (frame, xOrg, yOrg, pBox, nbpoints, point, close)
+int              frame;
+int             *xOrg;
+int             *yOrg;
+PtrBox           pBox;
+int              nbpoints;
+int              point;
+ThotBool         close;
+#endif /* __STDC__ */
+{
+  PtrTextBuffer       Pbuffer;
+  PtrTextBuffer       Bbuffer;
+  int                 width, height;
+  int                 xMin, yMin, xMax, yMax;
+  int                 x, y;
+  int                 lastx, lasty;
+  int                 x1, y1, x3, y3;
+
+  if (pBox == NULL || pBox->BxAbstractBox == NULL)
+    return (0);
+  Bbuffer = pBox->BxBuffer;
+  Pbuffer = pBox->BxAbstractBox->AbPolyLineBuffer;
+
+  /* Initialize the bounding box */
+  /* constraint is done by the polyline element */
+  x = *xOrg;
+  width = Bbuffer->BuPoints[0].XCoord;
+  width = PointToPixel (width / 1000);
+  y = *yOrg;
+  height = Bbuffer->BuPoints[0].YCoord;
+  height = PointToPixel (height / 1000);
+
+  xMin = yMin = xMax = yMax = 0;
+  RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
+		  &x1, &y1, &lastx, &lasty, &x3, &y3, &xMin, &yMin, &xMax, &yMax);
+  x1 = lastx;
+  y1 = lasty;
+  AddPoints (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, &nbpoints, 0, width, height,
+	     Pbuffer, Bbuffer);
+  return (nbpoints);
+}
+
+
+/*----------------------------------------------------------------------
+  LineCreation interracts with the user to read points forming
+  a line in a given frame.
+  *x1 and *y1 values give the initial position of the box pBox in the frame.
+  This fonction returns position of extremities: x1, y1 and x2, y2.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2, int *y2)
+#else  /* __STDC__ */
+int                 LineCreation (frame, pBox, x1, y1, x2, y2)
+int                 frame;
+PtrBox              pBox;
+int                *x1;
+int                *y1;
+int                *x2;
+int                *y2;
+#endif /* __STDC__ */
+{
+  PtrTextBuffer       pBuffer;
+  PtrAbstractBox      draw;
+  int                 width, height;
+  int                 x, y;
+  int                 lastx, lasty;
+  int                 nbpoints;
+
+  if (pBox == NULL || pBox->BxAbstractBox == NULL || pBox->BxAbstractBox->AbEnclosing == NULL)
+    return (0);
+
+  /* Allocate a polyline buffer to simulate a polyline */ 
+  GetTextBuffer (&pBuffer);
+  /* get draw limits */
+  draw = GetParentDraw (pBox);
+  if (draw)
+    {
+      width = draw->AbBox->BxW;
+      height = draw->AbBox->BxH;
+    }
+  else
+    {
+      width = pBox->BxAbstractBox->AbEnclosing->AbBox->BxW;
+      height = pBox->BxAbstractBox->AbEnclosing->AbBox->BxH;
+    }
+  pBuffer->BuPoints[0].XCoord = PixelToPoint (width) * 1000;
+  pBuffer->BuPoints[0].YCoord = PixelToPoint (height) * 1000;
+  x = *x1;
+  y = *y1;
+
+  nbpoints = 1;
+  lastx = x; 
+  lasty = y + FrameTable[frame].FrTopMargin;
+  AddPoints (frame, x, y, -1, -1, -1, -1, lastx, lasty, 1, &nbpoints, 2, width, height,
+	     pBuffer, pBuffer);
+  *x1 = PointToPixel (pBuffer->BuPoints[1].XCoord / 1000);
+  *y1 = PointToPixel (pBuffer->BuPoints[1].YCoord / 1000);
+  *x2 = PointToPixel (pBuffer->BuPoints[2].XCoord / 1000);
+  *y2 = PointToPixel (pBuffer->BuPoints[2].YCoord / 1000);
+  /* Free the buffer */
+  FreeTextBuffer (pBuffer);
+  return (nbpoints);
+}
+
+/*----------------------------------------------------------------------
+  LineModification interracts with the user to move a point of
+  a line in a given frame.
+  The parameter point locates the modified extremity.
+  This fonction returns the new position of the extremity: xi, yi.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
+#else  /* __STDC__ */
+void                LineModification (frame, pBox, point, xi, yi)
+int                 frame;
+PtrBox              pBox;
+int                 point;
+int                *xi;
+int                *yi;
+#endif /* __STDC__ */
+{
+  PtrTextBuffer       pBuffer;
+  PtrAbstractBox      draw;
+  int                 width, height;
+  int                 xMin, yMin, xMax, yMax;
+  int                 x1, y1, x3, y3;
+  int                 x, y, xorg, yorg;
+  int                 lastx, lasty;
+
+  *xi = *yi = 0;
+  if (pBox == NULL || pBox->BxAbstractBox == NULL || pBox->BxAbstractBox->AbEnclosing == NULL)
+    return;
+
+  /* Allocate a polyline buffer to simulate a polyline */ 
+  GetTextBuffer (&pBuffer);
+  /* get draw limits */
+  draw = GetParentDraw (pBox);
+  if (draw)
+    {
+      xorg = draw->AbBox->BxXOrg;
+      yorg =  draw->AbBox->BxYOrg;
+      width = draw->AbBox->BxW;
+      height = draw->AbBox->BxH;
+    }
+  else
+    {
+      xorg = pBox->BxAbstractBox->AbEnclosing->AbBox->BxXOrg;
+      yorg =  pBox->BxAbstractBox->AbEnclosing->AbBox->BxYOrg;
+      width = pBox->BxAbstractBox->AbEnclosing->AbBox->BxW;
+      height = pBox->BxAbstractBox->AbEnclosing->AbBox->BxH;
+    }
+  pBuffer->BuPoints[0].XCoord = PixelToPoint (width) * 1000;
+  pBuffer->BuPoints[0].YCoord = PixelToPoint (height) * 1000;
+
+  /* store current points in the buffer */
+  x = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - xorg;
+  y =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - yorg;
+  switch (point)
+    {
+    case 1:
+      x1 = x + pBox->BxW;
+      y1 = y + pBox->BxH;
+      break;
+    case 3:
+      x1 = x;
+      x += pBox->BxW;
+      y1 = y + pBox->BxH;
+      break;
+    case 5:
+      x1 = x;
+      x += pBox->BxW;
+      y1 = y;
+      y += pBox->BxH;
+      break;
+    case 7:
+      x1 = x + pBox->BxW;
+      y1 = y;
+      y += pBox->BxH;
+      break;
+    default: break;
+    }
+  pBuffer->BuPoints[1].XCoord = PixelToPoint (x) * 1000;
+  pBuffer->BuPoints[1].YCoord = PixelToPoint (y) * 1000;
+  pBuffer->BuPoints[2].XCoord = PixelToPoint (x1) * 1000;
+  pBuffer->BuPoints[2].YCoord = PixelToPoint (y1) * 1000;
+
+  /* get the current point */
+  xMin = yMin = xMax = yMax = 0;
+  RedrawPolyLine (frame, xorg, yorg, pBuffer, 3, 1, FALSE,
+		  &x1, &y1, &lastx, &lasty, &x3, &y3, &xMin, &yMin, &xMax, &yMax);
+  MoveApoint (frame, xorg, yorg, x1, y1, x3, y3, lastx, lasty, 1, width, height, pBuffer, pBuffer);
+  *xi = PointToPixel (pBuffer->BuPoints[1].XCoord / 1000);
+  *yi = PointToPixel (pBuffer->BuPoints[1].YCoord / 1000);
+  /* Free the buffer */
+  FreeTextBuffer (pBuffer);
+}
+
 
 /*----------------------------------------------------------------------
   UserGeometryCreate draw a box at a specific (x,y) location in
@@ -1498,18 +1330,18 @@ int                 percentH;
 {
   int                 xm, ym;
   int                 ret, dx, dy;
-  int                 nx, ny;
+  int                 newx, newy;
   ThotEvent           event;
   ThotWindow          w;
   int                 RightOrLeft, BottomOrTop;
   int                 warpx, warpy;
-# ifdef _WINDOWS
-  RECT            rect;
-  POINT cursorPos;    
-# else  /* _WINDOWS */
-  int        e, f;
-  ThotWindow wdum;
-# endif /* _WINDOWS */
+#ifdef _WINDOWS
+  RECT                rect;
+  POINT               cursorPos;    
+#else  /* _WINDOWS */
+  ThotWindow          wdum;
+  int                 e, f;
+#endif /* _WINDOWS */
 
   /* use relative coordinates */
   xr -= *x;
@@ -1547,7 +1379,7 @@ int                 percentH;
   /* if (!SetCursorPos (*x + wp.rcNormalPosition.left, *y + wp.rcNormalPosition.top)) */
   if (!SetCursorPos (*x + rect.left, *y + rect.top))
     /* if (!SetCursorPos (*x, *y)) */
-    WinErrorBox (FrRef [frame], TEXT("UserGeometryCreate (2)"));
+    WinErrorBox (w, TEXT("UserGeometryCreate (2)"));
 #else  /* !_WINDOWS */
   XMapRaised (TtDisplay, w);
   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x, *y + FrameTable[frame].FrTopMargin);
@@ -1565,73 +1397,81 @@ int                 percentH;
       SetCursor (LoadCursor (NULL, IDC_CROSS));
       /* ShowCursor (TRUE); */
       GetMessage (&event, NULL, 0, 0);
-      if (event.message == WM_MOUSEMOVE) {
-         GetCursorPos (&cursorPos);
-         /* check the coordinates are withing limits */
-         nx = DO_ALIGN (cursorPos.x - xmin);
-         nx += xmin;
-         ny = DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - ymin);
-         ny += ymin;
-         if ((nx - rect.left) < xmin || (nx - rect.left) > xmax || (ny - rect.top) < ymin || (ny - rect.top) > ymax)
+      if (event.message == WM_MOUSEMOVE)
+	{
+	  GetCursorPos (&cursorPos);
+	  /* check the coordinates are withing limits */
+	  newx = DO_ALIGN (cursorPos.x - xmin);
+	  newx += xmin;
+	  newy = DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - ymin);
+	  newy += ymin;
+	  if ((newx - rect.left) < xmin || (newx - rect.left) > xmax || (newy - rect.top) < ymin || (newy - rect.top) > ymax)
             SetCursorPos (*x + rect.left, *y + rect.top);
-         else if ((nx != *x && PosX) || (ny != *y && PosY)) {
-              BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-         if (PosX)
-            *x = nx - rect.left;
-         if (PosY)
-            *y = ny - rect.top;
-
-         BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-         /* the postion is fixed */
-         if (!PosX || !PosY)
-            SetCursorPos (*x + rect.left, *y + rect.top);
-		 }
-	  } else {
-             switch (event.message) {
-                    case WM_LBUTTONDOWN:
-                    case WM_MBUTTONDOWN:
-                    case WM_RBUTTONDOWN:	  
-                         GetCursorPos (&cursorPos);
-                         if (PosX)
-                            xm = xmin + DO_ALIGN ((int) cursorPos.x - xmin);
-                         else
-                              xm = *x;
-                         if (PosY)
-                            ym = ymin + DO_ALIGN ((int) cursorPos.y - FrameTable[frame].FrTopMargin - ymin);
-                         else
-                             ym = *y;
-			      
-                         /* check the coordinates */
-                         if ((xm - rect.left) < xmin || (xm - rect.left) > xmax || !PosX || (ym - rect.top) < ymin || (ym - rect.top) > ymax || !PosY) {
-                            SetCursorPos (xm + rect.left, ym + rect.top);
-                            if (!PosX && !PosY)
-                               ret = 1;
-						 } else
-                                ret = 1;
-	                     break; 
-
-                    default: break;
-			 } 
-      } 
+	  else if ((newx != *x && PosX) || (newy != *y && PosY))
+	    {
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	      if (PosX)
+		*x = newx - rect.left;
+	      if (PosY)
+		*y = newy - rect.top;
+	      
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	      /* the postion is fixed */
+	      if (!PosX || !PosY)
+		SetCursorPos (*x + rect.left, *y + rect.top);
+	    }
+	}
+      else
+	{
+	  switch (event.message)
+	    {
+	    case WM_LBUTTONDOWN:
+	    case WM_MBUTTONDOWN:
+	    case WM_RBUTTONDOWN:	  
+	      GetCursorPos (&cursorPos);
+	      if (PosX)
+		xm = xmin + DO_ALIGN ((int) cursorPos.x - xmin);
+	      else
+		xm = *x;
+	      if (PosY)
+		ym = ymin + DO_ALIGN ((int) cursorPos.y - FrameTable[frame].FrTopMargin - ymin);
+	      else
+		ym = *y;
+	      
+	      /* check the coordinates */
+	      if ((xm - rect.left) < xmin || (xm - rect.left) > xmax || !PosX ||
+		  (ym - rect.top) < ymin || (ym - rect.top) > ymax || !PosY)
+		{
+		  SetCursorPos (xm + rect.left, ym + rect.top);
+		  if (!PosX && !PosY)
+		    ret = 1;
+		}
+	      else
+		ret = 1;
+	      break; 
+	      
+	    default: break;
+	    } 
+	} 
 #else  /* !_WINDOWS */
       if (XPending (TtDisplay) == 0)
 	{
 	  /* get the cursor location */
-	  XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &nx, &ny, &e);
+	  XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
 	  /* check the coordinates are withing limits */
-	  nx = DO_ALIGN (nx - xmin);
-	  nx += xmin;
-	  ny = DO_ALIGN (ny - FrameTable[frame].FrTopMargin - ymin);
-	  ny += ymin;
-	  if (nx < xmin || nx > xmax || ny < ymin || ny > ymax)
+	  newx = DO_ALIGN (newx - xmin);
+	  newx += xmin;
+	  newy = DO_ALIGN (newy - FrameTable[frame].FrTopMargin - ymin);
+	  newy += ymin;
+	  if (newx < xmin || newx > xmax || newy < ymin || newy > ymax)
 	    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x, *y + FrameTable[frame].FrTopMargin);
-	  else if ((nx != *x && PosX) || (ny != *y && PosY))
+	  else if ((newx != *x && PosX) || (newy != *y && PosY))
 	    {
 	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
 	      if (PosX)
-		*x = nx;
+		*x = newx;
 	      if (PosY)
-		*y = ny;
+		*y = newy;
 
 	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
 	      XFlush (TtDisplay);
@@ -1683,12 +1523,13 @@ int                 percentH;
 
   /* switch off the old box geometry */
   BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-#ifndef _WINDOWS 
-  *x = xm;
-  *y = ym; 
-#else  /* _WINDOWS */
+#ifdef _WINDOWS 
   *x = xm - rect.left;
   *y = ym - rect.top;
+  SetCursor (LoadCursor (NULL, IDC_CROSS));
+#else  /* _WINDOWS */
+  *x = xm;
+  *y = ym; 
 #endif /* _WINDOWS */
   xr = 2;
   yr = 2;
@@ -1700,401 +1541,437 @@ int                 percentH;
 
   /* New loop waiting for the second point definition */
   ret = 0;
-  while (ret == 0) {
+  while (ret == 0)
+    {
 #ifdef _WINDOWS
-    SetCursor (LoadCursor (NULL, IDC_CROSS));
-    /* ShowCursor (TRUE); */
-    GetMessage (&event, NULL, 0, 0);
-    switch (event.message) {
-           case WM_LBUTTONUP:
-           case WM_MBUTTONUP:
-           case WM_RBUTTONUP:
-                GetCursorPos (&cursorPos);
-                SetCursor (LoadCursor (NULL, IDC_ARROW));
-                /* ShowCursor (TRUE); */
-                ret = 1;
-                break;
-           case WM_MOUSEMOVE:
-                warpx = -1;
-                warpy = -1;
-      
-                if (DimX) {
-                   dx = (int) event.pt.x - xm;
-                   nx = xmin + DO_ALIGN (*x + *width + dx - xmin);
-                   dx = nx - *x - *width;
-				} else
-                       dx = 0;
-      
-                if (DimY) {
-                   dy = (int) event.pt.y - ym;
-                   ny = ymin + DO_ALIGN (*y + *height + dy - ymin);
-                   dy = ny - *y - *height;
-				} else
-                       dy = 0;
-      
-                xm += dx;
-                ym += dy;
-                /* Echange the defaults values by the actual one */
-                /* if the width and height are non zero */
-                if ((dx != 0 || !DimX) && (dy != 0 || !DimY) && RightOrLeft == 2) {
-                   RightOrLeft = 1;
-                   BottomOrTop = 1;
-                   BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-                   if (DimX) {
-                      *width = 0;
-                      if (percentH != 0)
-                         *height = 0;
-				   }
-
-                   if (DimY) {
-                      *height = 0;
-                      if (percentW != 0)
-                         *width = 0;
-				   } 
-                   BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-				} 
-      
-                /* left or right position to modify */
-                if (dx != 0)
-                   if (RightOrLeft > 0) { /* right */
-                      /* should we swap left and right values */
-                      if (dx < 0 && -dx > *width) {
-                         RightOrLeft = 0;
-                         nx = *x + *width + dx; /* new origin, check that we are still within limits */
-                         if (nx < xmin) {
-                            nx = xmin;
-                            warpx = xmin;
-						 } 
-                         dx = *x - nx; /* new width */
-					  } else {
-                             nx = *x; /* new origin */
-                             dx += *width; /* new width, check that we are still within limits */
-                             if (nx + dx > xmax) {
-                                dx = xmin + DO_ALIGN (xmax - xmin) - nx;
-                                warpx = xmax;
-							 } 
-					  } 
-				   } else {
-                          /* left, treatment is similar to right */
-                          if (dx > *width) {
-                             RightOrLeft = 1;
-                             nx = *x + *width;
-                             dx -= *width;
-                             if (nx + dx > xmax) {
-                                dx = xmin + DO_ALIGN (xmax - xmin) - nx;
-                                warpx = xmax;
-							 }
-						  } else {
-                                 nx = *x + dx;
-                                 if (nx < xmin) {
-                                    nx = xmin;
-                                    warpx = xmin;
-								 } 
-                                 dx = *x + *width - nx;
-						  } 
-				   }  
-                else {
-                     nx = *x;
-                     dx = *width;
-				} 
-
-                /* Top or bottom CHKR_LIMIT to modify */
-                if (dy != 0)
-                   if (BottomOrTop > 0) { /* bottom */
-                      /* should we swap bottom and top ? */
-                      if (dy < 0 && -dy > *height) {
-                         BottomOrTop = 0;
-                         ny = *y + *height + dy; /* new origin, check for limits */
-                         if (ny < ymin) {
-                            ny = ymin;
-                            warpy = ymin;
-						 } 
-                         dy = *y - ny; /* new height */
-					  } else {
-                             ny = *y; /*new origin */
-                             dy += *height; /*new height, check for limits */
-                             if (ny + dy > ymax) {
-                                dy = ymin + DO_ALIGN (ymax - ymin) - ny;
-                                warpy = ymax;
-							 } 
-					  } 
-				   } else {
-                          /* Top treatemnt similar to bottom */
-                          if (dy > *height) {
-                             BottomOrTop = 1;
-                             ny = *y + *height;
-                             dy -= *height;
-                             if (ny + dy > ymax) {
-                                dy = ymin + DO_ALIGN (ymax - ymin) - ny;
-                                warpy = ymax;
-							 } 
-						  } else {
-                                 ny = *y + dy;
-                                 if (ny < ymin) {
-                                    ny = ymin;
-                                    warpy = ymin;
-								 }
-                                 dy = *y + *height - ny;
-						  } 
-				   } 
-                else {
-                     ny = *y;
-                     dy = *height;
-				}   
-
-                /* should we redraw the box because geometry has changed */
-                if (nx != *x || ny != *y || dx != *width || dy != *height) {
-                   /* switch off the old box */
-                   BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-                   /* is there any dependence between height and width */
-                   if (percentW != 0)
-                      dx = dy * percentW / 100;
-                   else if (percentH != 0)
-                        dy = dx * percentH / 100;
-                   /* switch on the new box */
-                   BoxGeometry (frame, nx, ny, dx, dy, nx + xr, ny + yr, FALSE);
-                   *x = nx;
-                   *y = ny;
-                   *width = dx;
-                   *height = dy;
-				}    
-      
-                /* should we move the cursor */
-                if (warpx >= 0 || warpy >= 0) {
-                   if (warpx >= 0)
-                      xm = warpx;
-                   if (warpy >= 0)
-                      ym = warpy + FrameTable[frame].FrTopMargin;
-                   if (!SetCursorPos (xm, ym))
-                      WinErrorBox (FrRef [frame], TEXT("UserGeometryCreate (3)"));
-				} 
-                break;
-      
-           default: break;
-    }
-#else  /* !_WINDOWS */
-    XNextEvent (TtDisplay, &event);
-    /* On analyse le type de l'evenement */
-    switch (event.type)
-      {
-      case ButtonRelease:
-	ret = 1;
-      case MotionNotify:
-	warpx = -1;
-	warpy = -1;
-
-	/* check this is the correct window */
-	if (event.xmotion.window == w)
-	  {
-	    /* new cursor location */
-	    if (DimX)
-	      {
-		dx = (int) event.xmotion.x - xm;
-		nx = xmin + DO_ALIGN (*x + *width + dx - xmin);
-		dx = nx - *x - *width;
-	      }
-	    else
-	      dx = 0;
-
-	    if (DimY)
-	      {
-		dy = (int) event.xmotion.y - ym;
-		ny = ymin + DO_ALIGN (*y + *height + dy - ymin);
-		dy = ny - *y - *height;
-	      }
-	    else
-	      dy = 0;
-
-	    xm += dx;
-	    ym += dy;
-	    /* Echange the defaults values by the actual one */
-	    /* if the width and height are non zero */
-	    if ((dx != 0 || !DimX) && (dy != 0 || !DimY) && RightOrLeft == 2)
-	      {
-		RightOrLeft = 1;
-		BottomOrTop = 1;
-		BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-		if (DimX)
-		  {
-		    *width = 0;
-		    if (percentH != 0)
-		      *height = 0;
-		  }
-		if (DimY)
-		  {
-		    *height = 0;
-		    if (percentW != 0)
-		      *width = 0;
-		  }
-		BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-	      }
-	  }
-	else
-	  {
+      /* ShowCursor (TRUE); */
+      GetMessage (&event, NULL, 0, 0);
+      switch (event.message)
+	{
+	case WM_LBUTTONUP:
+	case WM_MBUTTONUP:
+	case WM_RBUTTONUP:
+	  GetCursorPos (&cursorPos);
+	  /* ShowCursor (TRUE); */
+	  ret = 1;
+	  break;
+	case WM_MOUSEMOVE:
+	  warpx = -1;
+	  warpy = -1;
+	  
+	  if (DimX)
+	    {
+	      dx = (int) event.pt.x - xm;
+	      newx = xmin + DO_ALIGN (*x + *width + dx - xmin);
+	      dx = newx - *x - *width;
+	    }
+	  else
 	    dx = 0;
+	  
+	  if (DimY)
+	    {
+	      dy = (int) event.pt.y - ym;
+	      newy = ymin + DO_ALIGN (*y + *height + dy - ymin);
+	      dy = newy - *y - *height;
+	    }
+	  else
 	    dy = 0;
-	  }
-	 
-	/* left or right position to modify */
-	if (dx != 0)
-	  if (RightOrLeft > 0)
-	    { /* right */
+	  
+	  xm += dx;
+	  ym += dy;
+	  /* Echange the defaults values by the actual one */
+	  /* if the width and height are non zero */
+	  if ((dx != 0 || !DimX) && (dy != 0 || !DimY) && RightOrLeft == 2)
+	    {
+	      RightOrLeft = 1;
+	      BottomOrTop = 1;
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	      if (DimX)
+		{
+		  *width = 0;
+		  if (percentH != 0)
+		    *height = 0;
+		}
+
+	      if (DimY)
+		{
+		  *height = 0;
+		  if (percentW != 0)
+		    *width = 0;
+		} 
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	    } 
+      
+	  /* left or right position to modify */
+	  if (dx != 0)
+	    if (RightOrLeft > 0) { /* right */
 	      /* should we swap left and right values */
 	      if (dx < 0 && -dx > *width)
 		{
 		  RightOrLeft = 0;
-		  /* new origin, check that we are still within limits */
-		  nx = *x + *width + dx;
-		  if (nx < xmin)
+		  newx = *x + *width + dx; /* new origin, check that we are still within limits */
+		  if (newx < xmin)
 		    {
-		      nx = xmin;
+		      newx = xmin;
 		      warpx = xmin;
-		    }
-		  dx = *x - nx; /* new width */
+		    } 
+		  dx = *x - newx; /* new width */
 		}
 	      else
 		{
-		  nx = *x; /* new origin */
-		  /* new width, check that we are still within limits */
-		  dx += *width;
-		  if (nx + dx > xmax)
+		  newx = *x; /* new origin */
+		  dx += *width; /* new width, check that we are still within limits */
+		  if (newx + dx > xmax)
 		    {
-		      dx = xmin + DO_ALIGN (xmax - xmin) - nx;
+		      dx = xmin + DO_ALIGN (xmax - xmin) - newx;
 		      warpx = xmax;
-		    }
-		}
+		    } 
+		} 
 	    }
+	    else
+	      {
+		/* left, treatment is similar to right */
+		if (dx > *width)
+		  {
+		    RightOrLeft = 1;
+		    newx = *x + *width;
+		    dx -= *width;
+		    if (newx + dx > xmax)
+		      {
+			dx = xmin + DO_ALIGN (xmax - xmin) - newx;
+			warpx = xmax;
+		      }
+		  }
+		else
+		  {
+		    newx = *x + dx;
+		    if (newx < xmin)
+		      {
+			newx = xmin;
+			warpx = xmin;
+		      } 
+		    dx = *x + *width - newx;
+		  } 
+	      }  
 	  else
 	    {
-	      /* left, treatment is similar to right */
-	      if (dx > *width)
+	      newx = *x;
+	      dx = *width;
+	    } 
+
+	  /* Top or bottom CHKR_LIMIT to modify */
+	  if (dy != 0)
+	    if (BottomOrTop > 0)
+	      { /* bottom */
+		/* should we swap bottom and top ? */
+		if (dy < 0 && -dy > *height)
+		  {
+		    BottomOrTop = 0;
+		    newy = *y + *height + dy; /* new origin, check for limits */
+		    if (newy < ymin)
+		      {
+			newy = ymin;
+			warpy = ymin;
+		      } 
+		    dy = *y - newy; /* new height */
+		  }
+		else
+		  {
+		    newy = *y; /*new origin */
+		    dy += *height; /*new height, check for limits */
+		    if (newy + dy > ymax)
+		      {
+			dy = ymin + DO_ALIGN (ymax - ymin) - newy;
+			warpy = ymax;
+		      } 
+		  } 
+	      }
+	    else
+	      {
+		/* Top treatemnt similar to bottom */
+		if (dy > *height)
+		  {
+		    BottomOrTop = 1;
+		    newy = *y + *height;
+		    dy -= *height;
+		    if (newy + dy > ymax)
+		      {
+			dy = ymin + DO_ALIGN (ymax - ymin) - newy;
+			warpy = ymax;
+		      } 
+		  }
+		else
+		  {
+		    newy = *y + dy;
+		    if (newy < ymin)
+		      {
+			newy = ymin;
+			warpy = ymin;
+		      }
+		    dy = *y + *height - newy;
+		  } 
+	      } 
+	  else
+	    {
+	      newy = *y;
+	      dy = *height;
+	    }   
+
+	  /* should we redraw the box because geometry has changed */
+	  if (newx != *x || newy != *y || dx != *width || dy != *height)
+	    {
+	      /* switch off the old box */
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	      /* is there anewy dependence between height and width */
+	      if (percentW != 0)
+		dx = dy * percentW / 100;
+	      else if (percentH != 0)
+		dy = dx * percentH / 100;
+	      /* switch on the new box */
+	      BoxGeometry (frame, newx, newy, dx, dy, newx + xr, newy + yr, FALSE);
+	      *x = newx;
+	      *y = newy;
+	      *width = dx;
+	      *height = dy;
+	    }    
+      
+	  /* should we move the cursor */
+	  if (warpx >= 0 || warpy >= 0)
+	    {
+	      if (warpx >= 0)
+		xm = warpx;
+	      if (warpy >= 0)
+		ym = warpy + FrameTable[frame].FrTopMargin;
+	      if (!SetCursorPos (xm, ym))
+		WinErrorBox (w, TEXT("UserGeometryCreate (3)"));
+	    } 
+	  break;
+      
+	default: break;
+	}
+#else  /* !_WINDOWS */
+      XNextEvent (TtDisplay, &event);
+      /* On analyse le type de l'evenement */
+      switch (event.type)
+	{
+	case ButtonRelease:
+	  ret = 1;
+	case MotionNotify:
+	  warpx = -1;
+	  warpy = -1;
+
+	  /* check this is the correct window */
+	  if (event.xmotion.window == w)
+	    {
+	      /* new cursor location */
+	      if (DimX)
+		{
+		  dx = (int) event.xmotion.x - xm;
+		  newx = xmin + DO_ALIGN (*x + *width + dx - xmin);
+		  dx = newx - *x - *width;
+		}
+	      else
+		dx = 0;
+	      
+	      if (DimY)
+		{
+		  dy = (int) event.xmotion.y - ym;
+		  newy = ymin + DO_ALIGN (*y + *height + dy - ymin);
+		  dy = newy - *y - *height;
+		}
+	      else
+		dy = 0;
+	      
+	      xm += dx;
+	      ym += dy;
+	      /* Echange the defaults values by the actual one */
+	      /* if the width and height are non zero */
+	      if ((dx != 0 || !DimX) && (dy != 0 || !DimY) && RightOrLeft == 2)
 		{
 		  RightOrLeft = 1;
-		  nx = *x + *width;
-		  dx -= *width;
-		  if (nx + dx > xmax)
+		  BottomOrTop = 1;
+		  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+		  if (DimX)
 		    {
-		      dx = xmin + DO_ALIGN (xmax - xmin) - nx;
-		      warpx = xmax;
+		      *width = 0;
+		      if (percentH != 0)
+			*height = 0;
 		    }
-		}
-	      else
-		{
-		  nx = *x + dx;
-		  if (nx < xmin)
+		  if (DimY)
 		    {
-		      nx = xmin;
-		      warpx = xmin;
+		      *height = 0;
+		      if (percentW != 0)
+			*width = 0;
 		    }
-		  dx = *x + *width - nx;
-		}
-	    } 
-	else
-	  {
-	    nx = *x;
-	    dx = *width;
-	  }
-
-	/* Top or bottom CHKR_LIMIT to modify */
-	if (dy != 0)
-	  if (BottomOrTop > 0)
-	    { /* bottom */
-	      /* should we swap bottom and top ? */
-	      if (dy < 0 && -dy > *height)
-		{
-		  BottomOrTop = 0;
-		  ny = *y + *height + dy; /* new origin, check for limits */
-		  if (ny < ymin)
-		    {
-		      ny = ymin;
-		      warpy = ymin;
-		    }
-		  dy = *y - ny; /* new height */
-		}
-	      else
-		{
-		  ny = *y; /*new origin */
-		  dy += *height; /*new height, check for limits */
-		  if (ny + dy > ymax)
-		    {
-		      dy = ymin + DO_ALIGN (ymax - ymin) - ny;
-		      warpy = ymax;
-		    }
+		  BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
 		}
 	    }
 	  else
 	    {
-	      /* Top treatemnt similar to bottom */
-	      if (dy > *height)
-		{
-		  BottomOrTop = 1;
-		  ny = *y + *height;
-		  dy -= *height;
-		  if (ny + dy > ymax)
-		    {
-		      dy = ymin + DO_ALIGN (ymax - ymin) - ny;
-		      warpy = ymax;
-		    }
-		}
-	      else
-		{
-		  ny = *y + dy;
-		  if (ny < ymin)
-		    {
-		      ny = ymin;
-		      warpy = ymin;
-		    }
-		  dy = *y + *height - ny;
-		}
+	      dx = 0;
+	      dy = 0;
 	    }
-	else
-	  {
-	    ny = *y;
-	    dy = *height;
-	  }  
+	 
+	  /* left or right position to modify */
+	  if (dx != 0)
+	    if (RightOrLeft > 0)
+	      { /* right */
+		/* should we swap left and right values */
+		if (dx < 0 && -dx > *width)
+		  {
+		    RightOrLeft = 0;
+		    /* new origin, check that we are still within limits */
+		    newx = *x + *width + dx;
+		    if (newx < xmin)
+		      {
+			newx = xmin;
+			warpx = xmin;
+		      }
+		    dx = *x - newx; /* new width */
+		  }
+		else
+		  {
+		    newx = *x; /* new origin */
+		    /* new width, check that we are still within limits */
+		    dx += *width;
+		    if (newx + dx > xmax)
+		      {
+			dx = xmin + DO_ALIGN (xmax - xmin) - newx;
+			warpx = xmax;
+		      }
+		  }
+	      }
+	    else
+	      {
+		/* left, treatment is similar to right */
+		if (dx > *width)
+		  {
+		    RightOrLeft = 1;
+		    newx = *x + *width;
+		    dx -= *width;
+		    if (newx + dx > xmax)
+		      {
+			dx = xmin + DO_ALIGN (xmax - xmin) - newx;
+			warpx = xmax;
+		      }
+		  }
+		else
+		  {
+		    newx = *x + dx;
+		    if (newx < xmin)
+		      {
+			newx = xmin;
+			warpx = xmin;
+		      }
+		    dx = *x + *width - newx;
+		  }
+	      } 
+	  else
+	    {
+	      newx = *x;
+	      dx = *width;
+	    }
 
-	/* should we redraw the box because geometry has changed */
-	if (nx != *x || ny != *y || dx != *width || dy != *height)
-	  {
-	    /* switch off the old box */
-	    BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-	    /* is there any dependence between height and width */
-	    if (percentW != 0)
-	      dx = dy * percentW / 100;
-	    else if (percentH != 0)
-	      dy = dx * percentH / 100;
-	    /* switch on the new box */
-	    BoxGeometry (frame, nx, ny, dx, dy, nx + xr, ny + yr, FALSE);
-	    XFlush (TtDisplay);
-	    *x = nx;
-	    *y = ny;
-	    *width = dx;
-	    *height = dy;
-	  }   
+	  /* Top or bottom CHKR_LIMIT to modify */
+	  if (dy != 0)
+	    if (BottomOrTop > 0)
+	      { /* bottom */
+		/* should we swap bottom and top ? */
+		if (dy < 0 && -dy > *height)
+		  {
+		    BottomOrTop = 0;
+		    newy = *y + *height + dy; /* new origin, check for limits */
+		    if (newy < ymin)
+		      {
+			newy = ymin;
+			warpy = ymin;
+		      }
+		    dy = *y - newy; /* new height */
+		  }
+		else
+		  {
+		    newy = *y; /*new origin */
+		    dy += *height; /*new height, check for limits */
+		    if (newy + dy > ymax)
+		      {
+			dy = ymin + DO_ALIGN (ymax - ymin) - newy;
+			warpy = ymax;
+		      }
+		  }
+	      }
+	    else
+	      {
+		/* Top treatemnt similar to bottom */
+		if (dy > *height)
+		  {
+		    BottomOrTop = 1;
+		    newy = *y + *height;
+		    dy -= *height;
+		    if (newy + dy > ymax)
+		      {
+			dy = ymin + DO_ALIGN (ymax - ymin) - newy;
+			warpy = ymax;
+		      }
+		  }
+		else
+		  {
+		    newy = *y + dy;
+		    if (newy < ymin)
+		      {
+			newy = ymin;
+			warpy = ymin;
+		      }
+		    dy = *y + *height - newy;
+		  }
+	      }
+	  else
+	    {
+	      newy = *y;
+	      dy = *height;
+	    }
 
-	/* should we move the cursor */
-	if (warpx >= 0 || warpy >= 0)
-	  {
-	    if (warpx >= 0)
-	      xm = warpx;
-	    if (warpy >= 0)
-	      ym = warpy + FrameTable[frame].FrTopMargin;
-	    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, xm, ym);
-	  }
-	break;
-      default: break;
-      }
+	  /* should we redraw the box because geometry has changed */
+	  if (newx != *x || newy != *y || dx != *width || dy != *height)
+	    {
+	      /* switch off the old box */
+	      BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
+	      /* is there any dependence between height and width */
+	      if (percentW != 0)
+		dx = dy * percentW / 100;
+	      else if (percentH != 0)
+		dy = dx * percentH / 100;
+	      /* switch on the new box */
+	      BoxGeometry (frame, newx, newy, dx, dy, newx + xr, newy + yr, FALSE);
+	      XFlush (TtDisplay);
+	      *x = newx;
+	      *y = newy;
+	      *width = dx;
+	      *height = dy;
+	    }
+
+	  /* should we move the cursor */
+	  if (warpx >= 0 || warpy >= 0)
+	    {
+	      if (warpx >= 0)
+		xm = warpx;
+	      if (warpy >= 0)
+		ym = warpy + FrameTable[frame].FrTopMargin;
+	      XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, xm, ym);
+	    }
+	  break;
+	default: break;
+	}
 #endif /* !_WINDOWS */
-  }
+    }
 
   /* Erase the box drawing */
   BoxGeometry (frame, *x, *y, *width, *height, *x + xr, *y + yr, FALSE);
-#ifndef _WINDOWS 
+#ifdef _WINDOWS 
+  SetCursor (LoadCursor (NULL, IDC_ARROW));
+#else  /* _WINDOWS */
   /* restore state of the Thot Library */
   ThotUngrab ();
   XFlush (TtDisplay);
-#else  /* _WINDOWS */
-  w = FrRef[frame];
 #endif /* _WINDOWS */
 }
 
@@ -2125,16 +2002,16 @@ int                 xm;
 int                 ym;
 #endif /* __STDC__ */
 {
-   int                 ret, dx, dy, nx, ny;
-   ThotEvent              event;
+   int                 ret, dx, dy, newx, newy;
+   ThotEvent           event;
    ThotWindow          w;
    int                 warpx, warpy;
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    RECT                rect;
    POINT               cursorPos;
-#  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
    int                 e;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    /* reset the cursor coordinate in the frame */
    ym += FrameTable[frame].FrTopMargin;
@@ -2152,229 +2029,252 @@ int                 ym;
 
    /* Pick the correct cursor */
    w = FrRef[frame];
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
   if (!GetWindowRect (w, &rect))
      WinErrorBox (w, TEXT("UserGeometryMove (1)"));
 
   ret = 0;
-  while (ret == 0) {
-        GetMessage (&event, NULL, 0, 0);
+  while (ret == 0)
+    {
+      GetMessage (&event, NULL, 0, 0);
 
-        switch (event.message) {
-               case WM_LBUTTONUP:
-                    ret = 1;
-                    break;
+      switch (event.message)
+	{
+	case WM_LBUTTONUP:
+	  ret = 1;
+	  break;
 
-               case WM_MOUSEMOVE:
-                    SetCursor (LoadCursor (NULL, IDC_CROSS));
-                    /* ShowCursor (TRUE); */
-                    GetCursorPos (&cursorPos);
-                    ScreenToClient (w, &cursorPos);
-                    /* compute the new box origin */
-                    nx = *x + cursorPos.x - xm;
-                    dx = xmin + DO_ALIGN (nx - xmin) - *x;
-                    ny = *y + cursorPos.y - ym;
-                    dy = ymin + DO_ALIGN (ny - ymin) - *y;
-                    nx = dx + *x;
-                    ny = dy + *y;
-                    /* Checks for limits */
-                    warpx = -1;
-                    warpy = -1;
-                    if (xmin == xmax) {
-                       nx = xmin; /*left side */
-                       warpx = xm;
-					} else if (nx < xmin) {
-                           nx = xmin; /*left side */
-                           warpx = xm;
-					} else if (nx + width > xmax) {
-                           if (xmin + width > xmax) {
-                              nx = xmin; /*overflow on left side */
-                              warpx = xm;
-						   } else {
-                                  nx = xmin + DO_ALIGN (xmax - width - xmin); /*cote droit */
-                                  warpx = xm + nx - *x;
-						   }
-					} else
-                           xm += dx; /* New cursor location */
+	case WM_MOUSEMOVE:
+	  SetCursor (LoadCursor (NULL, IDC_CROSS));
+	  /* ShowCursor (TRUE); */
+	  GetCursorPos (&cursorPos);
+	  ScreenToClient (w, &cursorPos);
+	  /* compute the new box origin */
+	  newx = *x + cursorPos.x - xm;
+	  dx = xmin + DO_ALIGN (newx - xmin) - *x;
+	  newy = *y + cursorPos.y - ym;
+	  dy = ymin + DO_ALIGN (newy - ymin) - *y;
+	  newx = dx + *x;
+	  newy = dy + *y;
+	  /* Checks for limits */
+	  warpx = -1;
+	  warpy = -1;
+	  if (xmin == xmax)
+	    {
+	      newx = xmin; /*left side */
+	      warpx = xm;
+	    }
+	  else if (newx < xmin)
+	    {
+	      newx = xmin; /*left side */
+	      warpx = xm;
+	    }
+	  else if (newx + width > xmax)
+	    {
+	      if (xmin + width > xmax)
+		{
+		  newx = xmin; /*overflow on left side */
+		  warpx = xm;
+		}
+	      else
+		{
+		  newx = xmin + DO_ALIGN (xmax - width - xmin); /*cote droit */
+		  warpx = xm + newx - *x;
+		}
+	    }
+	  else
+	    xm += dx; /* New cursor location */
 
-                    dx = nx - *x;
-                    if (ymin == ymax) {
-                       ny = ymin; /*upper border */
-                       warpy = ym;
-					} else if (ny < ymin) {
-                           ny = ymin; /*upper border */
-                           warpy = ym;
-					} else if (ny + height > ymax) {
-                           if (ymin + height > ymax) {
-                              ny = ymin; /*overflow on upper border */
-                              warpy = ym;
-						   } else {
-                                  ny = ymin + DO_ALIGN (ymax - height - ymin); /*cote inferieur */
-                                  warpy = ym + ny - *y;
-						   }
-					} else
-                           ym += dy; /* New cursor location */
-                    dy = ny - *y;
+	  dx = newx - *x;
+	  if (ymin == ymax)
+	    {
+	      newy = ymin; /*upper border */
+	      warpy = ym;
+	    }
+	  else if (newy < ymin)
+	    {
+	      newy = ymin; /*upper border */
+	      warpy = ym;
+	    }
+	  else if (newy + height > ymax)
+	    {
+	      if (ymin + height > ymax)
+		{
+		  newy = ymin; /*overflow on upper border */
+		  warpy = ym;
+		}
+	      else
+		{
+		  newy = ymin + DO_ALIGN (ymax - height - ymin); /*cote inferieur */
+		  warpy = ym + newy - *y;
+		}
+	    }
+	  else
+	    ym += dy; /* New cursor location */
+	  dy = newy - *y;
 
-                    /* Should we move the box */
-                    if ((dx != 0) || (dy != 0)) {
-                       BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE); /*Ancienne */
-                       xr += dx;
-                       yr += dy;
-                       BoxGeometry (frame, nx, ny, width, height, xr, yr, FALSE); /*Nouvelle */
-                       *x = nx;
-                       *y = ny;
-					}
+	  /* Should we move the box */
+	  if ((dx != 0) || (dy != 0))
+	    {
+	      BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE); /*Ancienne */
+	      xr += dx;
+	      yr += dy;
+	      BoxGeometry (frame, newx, newy, width, height, xr, yr, FALSE); /*Nouvelle */
+	      *x = newx;
+	      *y = newy;
+	    }
 
-                    /* Should we move the cursor */
-                    if (warpx >= 0 || warpy >= 0) {
-                       if (warpx >= 0)
-                          xm = warpx;
-                       if (warpy >= 0)
-                          ym = warpy;
-					}
-		            break;
-                default: break;
-		 }
-   }
-   /* Erase the box drawing */
-   BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);
-#  else  /* !_WINDOWS */
-   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
-   if ((xmin >= *x) && (xmax <= *x + width))
-      ThotGrab (w, VCurs, e, 0);
-   else
-     {
-	if ((ymin >= *y) && (ymax <= *y + height))
-	   ThotGrab (w, HCurs, e, 0);
-	else
-	   ThotGrab (w, HVCurs, e, 0);
-     }
+	  /* Should we move the cursor */
+	  if (warpx >= 0 || warpy >= 0)
+	    {
+	      if (warpx >= 0)
+		xm = warpx;
+	      if (warpy >= 0)
+		ym = warpy;
+	    }
+	  break;
+	default: break;
+	}
+    }
+  /* Erase the box drawing */
+  BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);
+#else  /* !_WINDOWS */
+  e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
+  if ((xmin >= *x) && (xmax <= *x + width))
+    ThotGrab (w, VCurs, e, 0);
+  else
+    {
+      if ((ymin >= *y) && (ymax <= *y + height))
+	ThotGrab (w, HCurs, e, 0);
+      else
+	ThotGrab (w, HVCurs, e, 0);
+    }
 
-   /* Shows the initial box size */
-   BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);
+  /* Shows the initial box size */
+  BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);
 
-   /* Loop on user interraction */
-   ret = 0;
-   while (ret == 0)
-     {
-	XNextEvent (TtDisplay, &event);
-	switch (event.type)
-	      {
-		 case ButtonRelease:
-		    ret = 1;
-		 case MotionNotify:
+  /* Loop on user interraction */
+  ret = 0;
+  while (ret == 0)
+    {
+      XNextEvent (TtDisplay, &event);
+      switch (event.type)
+	{
+	case ButtonRelease:
+	  ret = 1;
+	case MotionNotify:
+	  
+	  /* Check for window ID */
+	  if (event.xmotion.window == w)
+	    {
+	      /* compute the new box origin */
+	      newx = *x + (int) event.xmotion.x - xm;
+	      dx = xmin + DO_ALIGN (newx - xmin) - *x;
+	      newy = *y + (int) event.xmotion.y - ym;
+	      dy = ymin + DO_ALIGN (newy - ymin) - *y;
+	    }
+	  else
+	    {
+	      dx = dy = 0;
+	    }
+	  
+	  newx = dx + *x;
+	  newy = dy + *y;
+	  
+	  /* Checks for limits */
+	  warpx = -1;
+	  warpy = -1;
+	  if (xmin == xmax)
+	    {
+	      newx = xmin;	/*left side */
+	      warpx = xm;
+	    }
+	  else if (newx < xmin)
+	    {
+	      newx = xmin;	/*left side */
+	      warpx = xm;
+	    }
+	  else if (newx + width > xmax)
+	    {
+	      if (xmin + width > xmax)
+		{
+		  newx = xmin;	/*overflow on left side */
+		  warpx = xm;
+		}
+	      else
+		{
+		  newx = xmin + DO_ALIGN (xmax - width - xmin); /*cote droit */
+		  warpx = xm + newx - *x;
+		}
+	    }
+	  else
+	    xm += dx;	/* New cursor location */
+	  
+	  dx = newx - *x;
+	  if (ymin == ymax)
+	    {
+	      newy = ymin;	/*upper border */
+	      warpy = ym;
+	    }
+	  else if (newy < ymin)
+	    {
+	      newy = ymin;	/*upper border */
+	      warpy = ym;
+	    }
+	  else if (newy + height > ymax)
+	    {
+	      if (ymin + height > ymax)
+		{
+		  newy = ymin;	/*overflow on upper border */
+		  warpy = ym;
+		}
+	      else
+		{
+		  newy = ymin + DO_ALIGN (ymax - height - ymin);	/*cote inferieur */
+		  warpy = ym + newy - *y;
+		}
+	    }
+	  else
+	    ym += dy;	/* New cursor location */
+	  dy = newy - *y;
+	  
+	  /* Should we move the box */
+	  if ((dx != 0) || (dy != 0))
+	    {
+	      BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);	/*Ancienne */
+	      xr += dx;
+	      yr += dy;
+	      BoxGeometry (frame, newx, newy, width, height, xr, yr, FALSE);	/*Nouvelle */
+	      XFlush (TtDisplay);
+	      *x = newx;
+	      *y = newy;
+	      
+	    }
+	  
+	  /* Should we move the cursor */
+	  if (warpx >= 0 || warpy >= 0)
+	    {
+	      if (warpx >= 0)
+		xm = warpx;
+	      if (warpy >= 0)
+		ym = warpy;
+	      XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, xm, ym);
+	    }
+	  break;
+	default:
+	  break;
+	}
+    }
 
-		    /* Check for window ID */
-		    if (event.xmotion.window == w)
-		      {
-			 /* compute the new box origin */
-			 nx = *x + (int) event.xmotion.x - xm;
-			 dx = xmin + DO_ALIGN (nx - xmin) - *x;
-			 ny = *y + (int) event.xmotion.y - ym;
-			 dy = ymin + DO_ALIGN (ny - ymin) - *y;
-		      }
-		    else
-		      {
-			 dx = dy = 0;
-		      }
+  /* Erase the box drawing */
+  BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);
 
-		    nx = dx + *x;
-		    ny = dy + *y;
-
-		    /* Checks for limits */
-		    warpx = -1;
-		    warpy = -1;
-		    if (xmin == xmax)
-		      {
-			 nx = xmin;	/*left side */
-			 warpx = xm;
-		      }
-		    else if (nx < xmin)
-		      {
-			 nx = xmin;	/*left side */
-			 warpx = xm;
-		      }
-		    else if (nx + width > xmax)
-		      {
-			 if (xmin + width > xmax)
-			   {
-			      nx = xmin;	/*overflow on left side */
-			      warpx = xm;
-			   }
-			 else
-			   {
-			      nx = xmin + DO_ALIGN (xmax - width - xmin);		/*cote droit */
-			      warpx = xm + nx - *x;
-			   }
-		      }
-		    else
-		       xm += dx;	/* New cursor location */
-
-		    dx = nx - *x;
-		    if (ymin == ymax)
-		      {
-			 ny = ymin;	/*upper border */
-			 warpy = ym;
-		      }
-		    else if (ny < ymin)
-		      {
-			 ny = ymin;	/*upper border */
-			 warpy = ym;
-		      }
-		    else if (ny + height > ymax)
-		      {
-			 if (ymin + height > ymax)
-			   {
-			      ny = ymin;	/*overflow on upper border */
-			      warpy = ym;
-			   }
-			 else
-			   {
-			      ny = ymin + DO_ALIGN (ymax - height - ymin);	/*cote inferieur */
-			      warpy = ym + ny - *y;
-			   }
-		      }
-		    else
-		       ym += dy;	/* New cursor location */
-		    dy = ny - *y;
-
-		    /* Should we move the box */
-		    if ((dx != 0) || (dy != 0))
-		      {
-			 BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);	/*Ancienne */
-			 xr += dx;
-			 yr += dy;
-			 BoxGeometry (frame, nx, ny, width, height, xr, yr, FALSE);	/*Nouvelle */
-			 XFlush (TtDisplay);
-			 *x = nx;
-			 *y = ny;
-
-		      }
-
-		    /* Should we move the cursor */
-		    if (warpx >= 0 || warpy >= 0)
-		      {
-			 if (warpx >= 0)
-			    xm = warpx;
-			 if (warpy >= 0)
-			    ym = warpy;
-			 XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, xm, ym);
-		      }
-		    break;
-		 default:
-		    break;
-	      }
-     }
-
-   /* Erase the box drawing */
-   BoxGeometry (frame, *x, *y, width, height, xr, yr, FALSE);
-
-   /* restore the Thot Library state */
-   ThotUngrab ();
-   XFlush (TtDisplay);
-#  endif /* _WINDOWS */
+  /* restore the Thot Library state */
+  ThotUngrab ();
+  XFlush (TtDisplay);
+#endif /* _WINDOWS */
 }
+
 
 /*----------------------------------------------------------------------
   UserGeometryResize draw a box at a specific (x,y) location in
@@ -2415,18 +2315,17 @@ int                 percentH;
 #define C_LEFT 0
 #define C_VCENTER 1
 #define C_RIGHT 2
-
   int                 ret, dx, dy, dl, dh;
   int                 ref_h, ref_v, HorizontalDirection, VerticalDirection;
   ThotEvent           event;
   ThotWindow          w;
   int                 warpx, warpy;
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   RECT                rect;
   POINT               cursorPos;
-# else  /* _WINDOWS */
+#else  /* _WINDOWS */
   int e;
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
   /* Use the reference point to move the box */
   if (xr == x)
@@ -2485,161 +2384,184 @@ int                 percentH;
 
   /* select the correct cursor */
   w = FrRef[frame];
-
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   if (!GetWindowRect (w, &rect))
      WinErrorBox (w, TEXT("UserGeometryResize (1)"));
 
   ret = 0;
-  while (ret == 0) {
-        GetMessage (&event, NULL, 0, 0);
+  while (ret == 0)
+    {
+      GetMessage (&event, NULL, 0, 0);
 
-        switch (event.message) {
-               case WM_MBUTTONUP:
-               case WM_RBUTTONUP:
-                    ret = 1;
-                    break;
+      switch (event.message)
+	{
+	case WM_MBUTTONUP:
+	case WM_RBUTTONUP:
+	  ret = 1;
+	  break;
+	  
+	case WM_MOUSEMOVE:
+	  SetCursor (LoadCursor (NULL, IDC_CROSS));
+	  /* ShowCursor (TRUE); */
+	  GetCursorPos (&cursorPos);
+	  ScreenToClient (w, &cursorPos);
+	  dl = cursorPos.x - xm;
+	  dh = cursorPos.y - ym;
+	  /* Check that size can be modified, and stay >= 0    */
+	  /* depending on base point and cursor position,      */
+	  /* increase or decreas width or height accordingly   */
+	  warpx = -1;
+	  warpy = -1;
+	  if (dl != 0)
+	    if (xmin == xmax) /* X moves frozen */
+	      dl = 0;
+	    else if (ref_v == C_VCENTER && *width + (2 * dl * HorizontalDirection) < 0)
+	      {
+		dl = -DO_ALIGN (*width / 2) * HorizontalDirection;
+		warpx = xm + (dl * HorizontalDirection);
+	      }
+	    else if (*width + (dl * HorizontalDirection) < 0)
+	      {
+		dl = -DO_ALIGN (*width) * HorizontalDirection;
+		warpx = xm + (dl * HorizontalDirection);
+	      }
 
-               case WM_MOUSEMOVE:
-                    SetCursor (LoadCursor (NULL, IDC_CROSS));
-                    /* ShowCursor (TRUE); */
-                    GetCursorPos (&cursorPos);
-                    ScreenToClient (w, &cursorPos);
-                    dl = cursorPos.x - xm;
-                    dh = cursorPos.y - ym;
-                    /* Check that size can be modified, and stay >= 0    */
-                    /* depending on base point and cursor position,      */
-                    /* increase or decreas width or height accordingly   */
-                    warpx = -1;
-                    warpy = -1;
-                    if (dl != 0)
-                       if (xmin == xmax) /* X moves frozen */
-                          dl = 0;
-                      else if (ref_v == C_VCENTER && *width + (2 * dl * HorizontalDirection) < 0) {
-                           dl = -DO_ALIGN (*width / 2) * HorizontalDirection;
-                           warpx = xm + (dl * HorizontalDirection);
-					  } else if (*width + (dl * HorizontalDirection) < 0) {
-                             dl = -DO_ALIGN (*width) * HorizontalDirection;
-                             warpx = xm + (dl * HorizontalDirection);
-					  }
+	  if (dh != 0)
+	    if (ymin == ymax) /* Y moves frozen */
+	      dh = 0;
+	    else if (ref_h == C_HCENTER && *height + (2 * dh * VerticalDirection) < 0)
+	      {
+		dh = -(*height * VerticalDirection * GridSize) / (2 * GridSize);
+		warpy = ym + (dh * VerticalDirection);
+	      }
+	    else if (*height + dh < 0)
+	      {
+		dh = -(*height * VerticalDirection * GridSize) / GridSize;
+		warpy = ym + (dh * VerticalDirection);
+	      }
 
-                    if (dh != 0)
-                       if (ymin == ymax) /* Y moves frozen */
-                          dh = 0;
-                       else if (ref_h == C_HCENTER && *height + (2 * dh * VerticalDirection) < 0) {
-                            dh = -(*height * VerticalDirection * GridSize) / (2 * GridSize);
-                            warpy = ym + (dh * VerticalDirection);
-					   } else if (*height + dh < 0) {
-                              dh = -(*height * VerticalDirection * GridSize) / GridSize;
-                              warpy = ym + (dh * VerticalDirection);
-					   }
-
-                         /* Compute the horizontal move of the origin */
-                    if (dl != 0) {
-                       dl = dl * HorizontalDirection; /* Take care for direction */
-                       if (ref_v == C_VCENTER) {
-                          dx = xmin + DO_ALIGN (x - (dl / 2) - xmin) - x;
-                          /* Check the move is within limits */
-                          if (x + dx < xmin)
-                             dx = xmin - x; /*left side */
-                          if (x + *width - dx > xmax)
-                             dx = x + *width - xmin - DO_ALIGN (xmax - xmin); /*right side */
+	  /* Compute the horizontal move of the origin */
+	  if (dl != 0)
+	    {
+	      dl = dl * HorizontalDirection; /* Take care for direction */
+	      if (ref_v == C_VCENTER)
+		{
+		  dx = xmin + DO_ALIGN (x - (dl / 2) - xmin) - x;
+		  /* Check the move is within limits */
+		  if (x + dx < xmin)
+		    dx = xmin - x; /*left side */
+		  if (x + *width - dx > xmax)
+		    dx = x + *width - xmin - DO_ALIGN (xmax - xmin); /*right side */
 		  
-                          /* modify width for real */
-                          dl = -(dx * 2);
-                          if (dx != 0)
-                              warpx = xm - (dx * HorizontalDirection);
-					   } else if (ref_v == C_RIGHT) {
-                              dx = xmin + DO_ALIGN (x - dl - xmin) - x;
-                              /* Check the move is within limits */
-                              if (x + dx < xmin)
-                                 dx = xmin - x; /*left side */
+		  /* modify width for real */
+		  dl = -(dx * 2);
+		  if (dx != 0)
+		    warpx = xm - (dx * HorizontalDirection);
+		}
+	      else if (ref_v == C_RIGHT)
+		{
+		  dx = xmin + DO_ALIGN (x - dl - xmin) - x;
+		  /* Check the move is within limits */
+		  if (x + dx < xmin)
+		    dx = xmin - x; /*left side */
 
-                              /* modify width for real */
-                              dl = -dx;
-                              if (dx != 0)
-                                 warpx = xm + dx;
-					   } else {
-                              dx = 0;
-                              dl = xmin + DO_ALIGN (x + *width + dl - xmin) - x - *width;
-                              if (x + *width + dl > xmax)
-                                 dl = xmin + DO_ALIGN (xmax - xmin) - x - *width; /*right side */
-                              if (dl != 0)
-                                 warpx = xm + dl;
-					   }
-					} else
-                         dx = 0;
+		  /* modify width for real */
+		  dl = -dx;
+		  if (dx != 0)
+		    warpx = xm + dx;
+		}
+	      else
+		{
+		  dx = 0;
+		  dl = xmin + DO_ALIGN (x + *width + dl - xmin) - x - *width;
+		  if (x + *width + dl > xmax)
+		    dl = xmin + DO_ALIGN (xmax - xmin) - x - *width; /*right side */
+		  if (dl != 0)
+		    warpx = xm + dl;
+		}
+	    }
+	  else
+	    dx = 0;
+	  
+	  /* Compute vertical move */
+	  if (dh != 0)
+	    {
+	      dh = dh * VerticalDirection;	/* Take care for direction */
+	      if (ref_h == C_HCENTER)
+		{
+		  dy = ymin + DO_ALIGN (y - (dh / 2) - ymin) - y;
+		  /* Check the move is within limits */
+		  if (y + dy < ymin)
+		    dy = ymin - y; /*upper border */
+		  if (y + *height - dy > ymax)
+		    dy = y + *height - ymin - DO_ALIGN (ymax - ymin);	/*bottom */
+		  /* change the height for real */
+		  dh = -(dy * 2);
+		  if (dy != 0)
+		    warpy = ym - (dy * VerticalDirection);
+		}
+	      else if (ref_h == C_BOTTOM)
+		{
+		  dy = ymin + DO_ALIGN (y - dh - ymin) - y;
+		  /* Check the move is within limits */
+		  if (y + dy < ymin)
+		    dy = ymin - y; /*upper border */
+		  /* change the height for real */
+		  dh = -dy;
+		  if (dy != 0)
+		    warpy = ym + dy;
+		}
+	      else
+		{
+		  dy = 0;
+		  dh = ymin + DO_ALIGN (y + *height + dh - ymin) - y - *height;
+		  if (y + *height + dh > ymax)
+		    dh = ymin + DO_ALIGN (ymax - ymin) - y - *height; /*bottom */
+		  if (dh != 0)
+		    warpy = ym + dh;
+		}
+	    }
+	  else
+	    dy = 0;
+	  /* Should we move the box */
+	  if ((dl != 0) || (dh != 0))
+	    {
+	      /* switch off the old box */
+	      BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
+	      /* is there any dependence between height and width */
+	      *width += dl;
+	      *height += dh;
+	      if (percentW != 0)
+		*width = *height * percentW / 100;
+	      else if (percentH != 0)
+		*height = *width * percentH / 100;
+	      x += dx;
+	      y += dy;
+	      /* switch on the new one */
+	      BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
+	    }
 
-                    /* Compute vertical move */
-                    if (dh != 0) {
-                       dh = dh * VerticalDirection;	/* Take care for direction */
-                       if (ref_h == C_HCENTER) {
-                          dy = ymin + DO_ALIGN (y - (dh / 2) - ymin) - y;
-                          /* Check the move is within limits */
-                          if (y + dy < ymin)
-                             dy = ymin - y; /*upper border */
-                          if (y + *height - dy > ymax)
-                             dy = y + *height - ymin - DO_ALIGN (ymax - ymin);	/*bottom */
-                          /* change the height for real */
-                          dh = -(dy * 2);
-                          if (dy != 0)
-                             warpy = ym - (dy * VerticalDirection);
-					   } else if (ref_h == C_BOTTOM) {
-                              dy = ymin + DO_ALIGN (y - dh - ymin) - y;
-                              /* Check the move is within limits */
-                              if (y + dy < ymin)
-                                 dy = ymin - y; /*upper border */
-                              /* change the height for real */
-                              dh = -dy;
-                              if (dy != 0)
-                                 warpy = ym + dy;
-					   } else {
-                              dy = 0;
-                              dh = ymin + DO_ALIGN (y + *height + dh - ymin) - y - *height;
-                              if (y + *height + dh > ymax)
-                                 dh = ymin + DO_ALIGN (ymax - ymin) - y - *height; /*bottom */
-                              if (dh != 0)
-                                 warpy = ym + dh;
-					   }
-					} else
-                         dy = 0;
-                    /* Should we move the box */
-                    if ((dl != 0) || (dh != 0)) {
-                       /* switch off the old box */
-                       BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
-                       /* is there any dependence between height and width */
-                       *width += dl;
-                       *height += dh;
-                       if (percentW != 0)
-                          *width = *height * percentW / 100;
-                       else if (percentH != 0)
-                            *height = *width * percentH / 100;
-                       x += dx;
-                       y += dy;
-                       /* switch on the new one */
-                       BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
-					}
+	  /* Should we move the cursor */
+	  if (warpx >= 0 || warpy >= 0)
+	    {
+	      if (warpx >= 0)
+		xm = warpx;
+	      if (warpy >= 0)
+		ym = warpy;
 
-                    /* Should we move the cursor */
-                    if (warpx >= 0 || warpy >= 0) {
-                       if (warpx >= 0)
-                          xm = warpx;
-                       if (warpy >= 0)
-                          ym = warpy;
-
-                       /* if (!SetCursorPos (xm, ym))
-                          WinErrorBox (FrRef [frame]); */
-					}
-                    break;
-            default:  break;
+	      /* if (!SetCursorPos (xm, ym))
+		 WinErrorBox (w); */
+	    }
+	  break;
+	default:  break;
         } 
-  }
+    }
 
   /* Erase the box drawing */
   SetCursor (LoadCursor (NULL, IDC_ARROW));
   /* ShowCursor (TRUE); */
   BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
-# else  /* _WINDOWS */
+#else  /* _WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   if (xmin == xmax)
     ThotGrab (w, VCurs, e, 0);
@@ -2681,6 +2603,7 @@ int                 percentH;
 	  warpx = -1;
 	  warpy = -1;
 	  if (dl != 0)
+	    {
 	    if (xmin == xmax)
 	      /* X moves frozen */
 	      dl = 0;
@@ -2695,8 +2618,10 @@ int                 percentH;
 		dl = -DO_ALIGN (*width) * HorizontalDirection;
 		warpx = xm + (dl * HorizontalDirection);
 	      }
+	    }
 
 	  if (dh != 0)
+	    {
 	    if (ymin == ymax)
 	      /* Y moves frozen */
 	      dh = 0;
@@ -2711,6 +2636,7 @@ int                 percentH;
 		dh = -(*height * VerticalDirection * GridSize) / GridSize;
 		warpy = ym + (dh * VerticalDirection);
 	      }
+	    }
 
 	  /* Compute the horizontal move of the origin */
 	  if (dl != 0)

@@ -81,9 +81,6 @@ extern void UndisplayElement ( PtrElement pEl,
                                Document document );
 extern void RedispNewGeometry ( Document document,
                                 PtrElement pEl );
-extern void TtaClipPolyline ( Element element,
-                              Document doc,
-                              View view );
 
 #else /* __STDC__ */
 
@@ -162,9 +159,6 @@ extern void UndisplayElement (/* PtrElement pEl,
                                  Document document */);
 extern void RedispNewGeometry (/* Document document,
                                   PtrElement pEl */);
-extern void TtaClipPolyline (/* Element element,
-                                Document doc,
-                                View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
