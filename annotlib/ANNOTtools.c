@@ -963,8 +963,17 @@ void AnnotList_print (List *annot_list)
    ------------------------------------------------------------*/
 static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
 {
-  fprintf (fp, 
-	   "<r:type resource=\"%s\" />\n", ANNOTATION_CLASSNAME);
+
+#ifdef ANNOT_ON_ANNOT
+  if (annot->inReplyTo)
+    {
+      fprintf (fp, 
+	       "<r:type resource=\"%s\" />\n", "http://www.w3.org/2001/03/thread#Reply");
+    }
+  else
+#endif /* ANNOT_ON_ANNOT */
+    fprintf (fp, 
+	     "<r:type resource=\"%s\" />\n", ANNOTATION_CLASSNAME);
   
   if (annot->type && annot->type != ANNOTATION_CLASS)
     fprintf (fp, 
