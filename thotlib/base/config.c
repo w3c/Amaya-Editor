@@ -805,7 +805,12 @@ boolean             lang;
       strcpy (suffix, "conf");
 
    /* Search in HOME directory */
+#  ifdef _WINDOWS
+   ptr = NULL;
+#  else  /* _WINDOWS */
    ptr = TtaGetEnvString ("HOME");
+#  endif /* _WINDOWS */
+
    if (ptr != NULL)
      strcpy (DirBuffer, ptr);
    MakeCompleteName (name, suffix, DirBuffer, filename, &i);

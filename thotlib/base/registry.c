@@ -873,7 +873,7 @@ char               *appArgv0;
 
   /* No this should NOT be a call to TtaGetEnvString */
 # ifdef _WINDOWS
-  home_dir = getenv ("HOME");
+  home_dir = NULL;
 # else /* _WINDOWS */
   home_dir = getenv ("HOME");
 # endif /* _WINDOWS */

@@ -685,7 +685,12 @@ int                *length;
    /* check for tilde indicating the HOME directory */
    if (directory[0] == '~')
      {
+#   ifdef _WINDOWS
+    home_dir = NULL;
+#   else  /* !_WINDOWS */
 	home_dir = TtaGetEnvString ("HOME");
+#   endif /* _WINDOWS */
+
 	if (home_dir != NULL)
 	  {
 	    /* tilde will not be copied */
