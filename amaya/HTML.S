@@ -166,7 +166,7 @@ STRUCT
         SVG;			                                { SVG }
 	map; MAP;						{ MAP }
 	XLink;							{ Annotations }
-	External_Object						
+	External_Object						{ IMG type=svg}
 	    (ATTR SRC; ALT; longdesc;
 		{ src  alt  longdesc }
 		  Height_; Width__;
@@ -183,7 +183,9 @@ STRUCT
 		{ border }
 		  hspace; vspace) =
 		{ hspace  vspace }
+		 BEGIN
 		 External_Object_Content;
+		 END;
 	Embed_						{ EMBED }
 	    (ATTR SRC;
 		  Alignment;
