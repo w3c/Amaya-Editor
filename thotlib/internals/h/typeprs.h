@@ -486,7 +486,7 @@ typedef struct _PresRule
 	}  s0;
 	struct	/* PRuleType = PtFont, PtStyle, PtWeight, PtUnderline,
 	        	       PtThickness, PtDirection, PtUnicodeBidi,
-                               PtLineStyle, PtDisplay,
+                               PtLineStyle, PtDisplay, PtFloat, PtClear,
 	                       PtBorderTopStyle, PtBorderRightStyle,
                                PtBorderBottomStyle, PtBorderLeftStyle */
 	{
