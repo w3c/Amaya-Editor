@@ -1241,7 +1241,7 @@ boolean             before;
 #endif /* __STDC__ */
 {
    PtrElement          pSibling, pNext, pPrev, pE, pElem, pParent, pS,
-                       pSel, pSuccessor;
+                       pSel, pSuccessor, pLeaf;
    PtrDocument         pDoc;
    NotifyElement       notifyEl;
    NotifyOnValue       notifyVal;
@@ -1328,11 +1328,17 @@ boolean             before;
 	   return;
 	if (pSibling == NULL)
 	   if (before)
-	      pSibling = AscentChildOfParagraph (PreviousLeaf (pElem));
+	     {
+		pLeaf = PreviousLeaf (pElem);
+	        pSibling = AscentChildOfParagraph (pLeaf);
+	     }
 	   else
 	     {
 		pSibling = pElem;
-		pElem = AscentChildOfParagraph (NextLeaf (pSibling));
+		pLeaf = NextLeaf (pSibling);
+		pElem = AscentChildOfParagraph (pLeaf);
+		if (ElemIsAnAncestor(pElem, pSibling))
+		   pElem = pLeaf;
 	     }
 	else
 	  {
