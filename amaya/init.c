@@ -3556,7 +3556,7 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
      docType = docCSS;
    else
      docType = docHTML;
-    
+     
    /* we skip the file: prefix if it is present and do other local
     file urls conversions */
    if (!IsW3Path (pathname))
