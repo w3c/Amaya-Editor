@@ -502,7 +502,7 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
 	   /* Il faut reevaluer le contenu de la fenetre */
 	   RebuildConcreteImage (frame);	   
 	   /* recompute the scroll bars */
-	   /*UpdateScrollbars (frame);*/
+	   UpdateScrollbars (frame);
 	   notifyDoc.event = TteViewResize;
 	   notifyDoc.document = doc;
 	   notifyDoc.view = view;
@@ -591,7 +591,6 @@ gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event,
  
   frame = (int) data;
   FreeAllPicCacheFromFrame (frame);
-
   return TRUE ;
 }
 
@@ -660,34 +659,29 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 			  gpointer data)
 {
   int                 frame;
-  Dimension           width, height, x ,y;
+  Dimension           width, height;
 
   frame = (int )data;
-  width = event->width;
-  height = event->height;
-  x = event->x;
-  y = event->y;
+  width = widget->allocation.width;
+  height = widget->allocation.height;
   if ((width <= 0) || 
-      (height <= 0) || 
-      !(frame > 0 && frame <= MAX_FRAME))
+      (height <= 0))
     return TRUE;
   if (FrameTable[frame].FrWidth == width && 
       FrameTable[frame].FrHeight == height)
      return TRUE;
-  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-    return TRUE; 
   if (widget)
     if (GL_prepare (frame))
       {
-	FrameTable[frame].FrWidth = width;
-	FrameTable[frame].FrHeight = height;
-	GLResize (width, height, 0, 0);
-	DefRegion (frame, 
-		   0, 0,
-		   width, height);
-	FrameRedraw (frame, width, height);	
-	while (gtk_events_pending ()) 
-	  gtk_main_iteration ();	
+	/*FrameTable[frame].FrWidth = width;
+	  FrameTable[frame].FrHeight = height;*/
+	GLResize (width, 
+		  height, 
+		  0, 0);	
+	FrameRedraw (frame, width, height);
+	glFlush();
+	glFinish ();
+	GL_Swap (frame);
       }
   return TRUE;
 }
@@ -3287,14 +3281,29 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 	if (raz > 0)
 	  Clear (frame, clipwidth, clipheight, clipx, clipy);
 #else /* _GL */
+	glEnable (GL_SCISSOR_TEST);
 	glScissor (clipx,
 		    FrameTable[frame].FrHeight
 		    + FrameTable[frame].FrTopMargin
 		    - (clipy + clipheight),
 		    clipwidth,
 		    clipheight);
+	
+	/*
+	  g_print ("\n%i x, %i y, %i W, %i H, %i FW, %i FH\t", 
+		 clipx,
+		    FrameTable[frame].FrHeight
+		    + FrameTable[frame].FrTopMargin
+		    - (clipy + clipheight),
+		    clipwidth,
+		    clipheight,
+		 FrameTable[frame].FrWidth,
+		 FrameTable[frame].FrHeight);
+	*/
 	if (raz > 0)
-	   Clear (frame, clipwidth, clipheight, clipx, clipy);
+	  /*ClearAll (frame);*/
+	  Clear (frame, clipwidth, clipheight, 
+		 clipx, clipy);
 #endif /*_GL*/
      }
 }
@@ -3338,11 +3347,19 @@ void RemoveClipping (int frame)
    clipRgn = (HRGN) 0;
 #endif /* _WINDOWS */
 #else /* _GL */
-   glScissor (0, 0, 
-	      FrameTable[frame].FrWidth, 
-	      FrameTable[frame].FrHeight); 
+   glDisable (GL_SCISSOR_TEST);
 #endif /*_GL*/
 }
+
+#ifdef _GTK
+void gtk_window_resize (GtkWidget *widget, gint width, gint height)
+{
+  GtkWindow *window = GTK_WINDOW(widget);
+  
+  gtk_window_set_default_size(window, width, height);
+  gdk_window_resize(GTK_WIDGET(window)->window, width, height);
+}
+#endif /*_GTK*/
 
 /*----------------------------------------------------------------------
    UpdateScrollbars met a jour les bandes de defilement de la fenetre    
@@ -3359,6 +3376,8 @@ void UpdateScrollbars (int frame)
   int                 n;
 #else /* _GTK */
   GtkAdjustment      *tmpw;
+  GtkWidget          *main_window;
+  int                new_width, new_height;  
 #endif /* _GTK */
 #else /* _WINDOWS */
   SCROLLINFO          scrollInfo;
@@ -3395,36 +3414,70 @@ void UpdateScrollbars (int frame)
       XtSetValues (vscroll, args, n);
     }
 #else /*_GTK*/
-  if ((width+15) >= l && x == 0 && width > 60)
-    gtk_widget_hide (GTK_WIDGET (hscroll));
-  else if (width + x <= l)
-    {
-      tmpw = gtk_range_get_adjustment (GTK_RANGE (hscroll));
-      tmpw->lower = (gfloat) 0;
-      tmpw->upper = (gfloat) l;
-      tmpw->page_size = (gfloat) width;
-      tmpw->page_increment = (gfloat) width-13;
-      tmpw->step_increment = (gfloat) 8;
-      tmpw->value = (gfloat) x;
-      gtk_adjustment_changed (tmpw);
-      gtk_widget_show (GTK_WIDGET (hscroll));
-    }
+  main_window = gtk_object_get_data (GTK_OBJECT (FrameTable[frame].WdFrame),
+    "Main_Wd");
 
-  if (height >= h && y == 0)
-    gtk_widget_hide (GTK_WIDGET (vscroll));
-  else if (height + y <= h)
+  new_width = main_window->allocation.width;
+  new_height =  main_window->allocation.height;
+  if ((width + vscroll->allocation.width) >= l && 
+      x == 0 && 
+      width > 60)
     {
-      tmpw = gtk_range_get_adjustment (GTK_RANGE (vscroll));
-      tmpw->lower = (gfloat) 0;
-      tmpw->upper = (gfloat) h;
-      tmpw->page_size = (gfloat) height;
-      tmpw->page_increment = (gfloat) height;
-      tmpw->step_increment = (gfloat) 6;
-      tmpw->value = (gfloat) y;
-      gtk_adjustment_changed (tmpw);
-      gtk_widget_show (GTK_WIDGET (vscroll));
-    }
-
+      if (GTK_WIDGET_VISIBLE(GTK_WIDGET (hscroll)))
+	{	  
+	  gtk_widget_hide (GTK_WIDGET (hscroll));
+	  new_height -= hscroll->allocation.height;
+	  gtk_window_resize(main_window, new_width, new_height);  
+	}
+    }  
+  else 
+    if (width + x <= l)
+      {
+	tmpw = gtk_range_get_adjustment (GTK_RANGE (hscroll));
+	tmpw->lower = (gfloat) 0;
+	tmpw->upper = (gfloat) l;
+	tmpw->page_size = (gfloat) width;
+	tmpw->page_increment = (gfloat) width-13;
+	tmpw->step_increment = (gfloat) 8;
+	tmpw->value = (gfloat) x;
+	gtk_adjustment_changed (tmpw);
+	if (GTK_WIDGET_VISIBLE(GTK_WIDGET (hscroll)) == FALSE)
+	  {
+	    gtk_widget_show (GTK_WIDGET (hscroll));
+	    new_height += hscroll->allocation.height;
+	    gtk_window_resize(main_window, new_width, new_height);
+	  }  
+      }
+  
+  if ((height + hscroll->allocation.height) >= h && 
+      y == 0)
+    {
+      if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)) == FALSE)
+	{
+	  gtk_widget_hide (GTK_WIDGET (vscroll));
+	  new_width += hscroll->allocation.width;
+	  gtk_window_resize(main_window, new_width, new_height);
+	}
+    }  
+    else 
+      if (height + y <= h)
+	{
+	  tmpw = gtk_range_get_adjustment (GTK_RANGE (vscroll));
+	  tmpw->lower = (gfloat) 0;
+	  tmpw->upper = (gfloat) h;
+	  tmpw->page_size = (gfloat) height;
+	  tmpw->page_increment = (gfloat) height;
+	  tmpw->step_increment = (gfloat) 6;
+	  tmpw->value = (gfloat) y;
+	  gtk_adjustment_changed (tmpw);
+	  if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)) == FALSE)
+	    {
+	      gtk_widget_show (GTK_WIDGET (vscroll));
+	      new_width += hscroll->allocation.width;
+	      gtk_window_resize(main_window, new_width, new_height);
+	    }
+	}
+  
 #endif /*_GTK*/  
 #else  /* _WINDOWS */
   l = FrameTable[frame].FrWidth;

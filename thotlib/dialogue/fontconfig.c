@@ -12,7 +12,6 @@
  *
  */
 
-#ifdef _FONTCONFIG
 
 #include "thot_sys.h"
 #include "libmsg.h"
@@ -514,5 +513,3 @@ void FreeFontConfig ()
       script++;
     }
 }
-
-#endif /* _FONTCONFIG */

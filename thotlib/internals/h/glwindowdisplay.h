@@ -96,7 +96,7 @@ void GL_DrawAll (ThotWidget widget, int frame);
 
 
 ThotBool GL_prepare (int frame);
-void GL_realize ();
+void GL_realize (int frame);
 
 ThotBool SavePng (const char *filename, 
 		 unsigned char *m_pData,

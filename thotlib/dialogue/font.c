@@ -73,18 +73,14 @@ static SpecFont   FirstFontSel = NULL;
 #include "windowdisplay_f.h"
 #include "platform_f.h"
 
-#ifdef _STIX
 #include "stix.h"
-#endif /*_STIX*/
 
 #ifdef _GTK
 #include <gdk/gdkx.h>
 #endif /*_GTK*/
 
 
-#ifdef _FONTCONFIG
 #include "fontconfig.h"
-#endif /*_FONTCONFIG*/
 
 
 
@@ -284,7 +280,6 @@ static void Win_Get_Highlight (int highlight, int *fdwItalic,
        break;
 	}
 }
-#ifdef _FONTCONFIG
 /*----------------------------------------------------------------------
   GetWinFontConfig Get font description from configuration file (config/fonts.win)
   ----------------------------------------------------------------------*/
@@ -389,7 +384,6 @@ static HFONT GetWinFontConfig (char script, int family, int highlight, int size)
     }
   return NULL;
 }
-#endif /*_FONTCONFIG*/
 /*----------------------------------------------------------------------
   WIN_LoadFont loads a Windows TrueType with a defined set of characteristics.
   ----------------------------------------------------------------------*/
@@ -407,12 +401,10 @@ static HFONT WIN_LoadFont (char script, int family, int highlight, int size)
  
    nHeight = 0;
    nHeight = -MulDiv(size, DOT_PER_INCH, 80);
-#ifdef _FONTCONFIG
   hFont = GetWinFontConfig (script, family, highlight, nHeight);
  
    if (hFont)
 	 return (hFont);
-#endif /*_FONTCONFIG*/
 
    nWidth = 0;
    fnWeight = FW_NORMAL;
@@ -1330,7 +1322,6 @@ PtrFont ReadFont (char script, int family, int highlight, int size,
   return NULL;
 #endif /* _WINDOWS */
 }
-#ifdef _FONTCONFIG
 /*----------------------------------------------------------------------
   GetFontIdentifierFromConfig computes the name of a Thot font.
   ----------------------------------------------------------------------*/
@@ -1384,7 +1375,6 @@ static int GetFontIdentifierFromConfig (char script, int family, int highlight,
 			family, highlight, size);
   return 1;
 }
-#endif /* _FONTCONFIG */
 /*----------------------------------------------------------------------
   LoadNearestFont load the nearest possible font given a set of attributes
   like script, family, the size and for a given frame.
@@ -1408,7 +1398,6 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 #endif /* _WINDOWS */
   PtrFont             ptfont;
 
-#ifdef _FONTCONFIG
 #ifndef _WINDOWS
   if (GetFontIdentifierFromConfig (script, family, highlight, 
 				   size, UnRelative, text, textX) == 0)
@@ -1416,11 +1405,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		    size, UnRelative, text, textX);   
 #else /*_WINDOWS*/
   FontIdentifier (script, family, highlight, size, UnRelative, text, textX);
-#endif /*_WINDOWS*/
-#else /*_FONTCONFIG*/
-  FontIdentifier (script, family, highlight, size, UnRelative, text, textX);
-#endif /*_FONTCONFIG*/
-  /* initialize the PostScript font name */
+#endif /*_WINDOWS*/  /* initialize the PostScript font name */
   strcpy (PsName, text);   
   /* Font cache lookup */
   i = 0;
@@ -1618,13 +1603,10 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		/* now we'll work 
 		   with the font Symbol */
 		GreekFontScript = 'G';
-#ifdef _STIX
  	      else 
 		{
 		  ptfont = LoadStixFont ('E', 10);
 		}
-	      
-#endif /*_STIX*/
 	    }
 	  /* last case the default font */
 	  if (ptfont == NULL)
@@ -2443,10 +2425,8 @@ void ThotFreeAllFonts (void)
 #ifdef _GL
   FTLibraryFree ();
 #endif /*_GL*/
-#ifdef _FONTCONFIG
   /*Free the font config structure
     build upon the config file*/
   FreeFontConfig ();
-#endif /*_FONTCONFIG*/
 }
 

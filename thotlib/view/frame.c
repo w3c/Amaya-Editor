@@ -757,7 +757,7 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
 	      FrameUpdating = FALSE;
 	    }
 #ifdef _GL
-	  GL_realize ();
+	  GL_realize (frame);
 	}
 #endif /* _GL */ 
     }
@@ -947,7 +947,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 		  FrameUpdating = FALSE;
 		}
 #ifdef _GL 
-	      GL_realize ();
+	      GL_realize (frame);
 	    }
 #endif /* _GL */
 	  /* Interactive creation of boxes */

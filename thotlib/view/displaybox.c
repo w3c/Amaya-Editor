@@ -167,9 +167,6 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
     {
       font = NULL;
-
-#ifdef _STIX
-
 #ifdef _WINDOWS
 	if (WinFontExist ("esstix6_.ttf"))
 #endif /*_WINDOWS*/
@@ -187,12 +184,6 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	}
       else
 	StixExist = TRUE;
-#else /*_STIX*/
-
-      GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
-      StixExist = FALSE;
-
-#endif /*_STIX*/
 
       if (font != NULL)
 	{

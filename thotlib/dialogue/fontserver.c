@@ -27,11 +27,8 @@
 #include "application.h"
 
 
-#ifdef _FONTCONFIG
 #include "fontconfig.h"
-#endif /*_FONTCONFIG*/
 
-#ifdef _FONTCONFIG
 int GetFontFilenameFromConfig (char script, int family, int highlight, 
 		     int size, int UseLucidaFamily, int UseAdobeFamily,
 		     char *filename)
@@ -56,7 +53,6 @@ int GetFontFilenameFromConfig (char script, int family, int highlight,
   return 1;
 }
 
-#endif /*_FONTCONFIG*/
 
 /* XFT_FAMILY XFT_FOUNDRY XFT_STYLE XFT_ENCODING "iso8859-1" 
    XFT_SLANT  XFT_WEIGHT XFT_SIZE  XFT_DPI */
@@ -72,7 +68,6 @@ int GetFontFilename (char script, int family, int highlight, int size,
   char	        *s;
   int           ok = 0;
 
-#ifdef _FONTCONFIG
   if (GetFontFilenameFromConfig (script,
 				 family,
 				 highlight, 
@@ -81,7 +76,6 @@ int GetFontFilename (char script, int family, int highlight, int size,
 				 UseAdobeFamily,
 				 filename))
     return 1;
-#endif /*_FONTCONFIG*/
   
   pat = XftPatternCreate ();
 
@@ -405,7 +399,6 @@ int GetFontFilename (char script, int family, int highlight, int size,
   return ok;
 #else /* _GTK */
   
-#ifdef _FONTCONFIG
   if (GetFontFilenameFromConfig (script,
 				 family,
 				 highlight, 
@@ -414,7 +407,6 @@ int GetFontFilename (char script, int family, int highlight, int size,
 				 UseAdobeFamily,
 				 filename))
     return 1;
-#endif /*_FONTCONFIG*/
   
   GetWindowsDirectory (filename , 1024);  
   strcat (filename, "\\fonts\\"); 

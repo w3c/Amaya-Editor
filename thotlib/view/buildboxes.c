@@ -73,9 +73,7 @@ static int             BiwIndex = 0;
 #define M_PI_2 1.57079632679489661923
 #endif /* _WINDOWS */
 
-#ifdef _STIX
 #include "stix.h"
-#endif /*_STIX*/
 
 /*----------------------------------------------------------------------
   SearchNextAbsBox returns the first child or the next sibling or the
@@ -554,7 +552,6 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
   SpecFont            font;
   PtrBox              box;
   int                 hfont;
-#ifdef _STIX
   PtrFont             Ptrfont = NULL;
 
   GetMathFontFromChar (pAb->AbShape,
@@ -568,8 +565,6 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
       
 	return;      
     }
-#endif /*_STIX*/
-  
   box = pAb->AbBox;
   font = box->BxFont;
   hfont = BoxFontHeight (font);

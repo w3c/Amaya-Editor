@@ -31,9 +31,7 @@
 #include "frame_f.h"
 #include "memory_f.h"
 #include "windowdisplay_f.h"
-#ifdef _STIX
 #include "stix.h"
-#endif /*_STIX*/
 /*----------------------------------------------------------------------
   IsXYPosComplete returns TRUE indicators when the box position is
   relative to the root box instead of the parent box.
@@ -2647,7 +2645,6 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	{
 	  i = 0;
 	  font = pBox->BxFont;
-#ifdef _STIX
 	  i = GetMathFontWidth (pBox->BxFont,
 				pCurrentAb->AbShape,
 				pBox->BxFont->FontSize,
@@ -2677,30 +2674,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		break;
 	    default:
 	      break;
-	    }	    
-#else /*_STIX*/
-	  switch (pCurrentAb->AbShape)
-	    {
-	    case 'd':	/* double integral */
-	      i = BoxCharacterWidth (231, font) + BoxCharacterWidth (231, font) / 2;
-	    case 'i':	/* integral */
-	    case 'c':	/* circle integral */
-	      i = BoxCharacterWidth (231, font);
-	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
-	      break;
-	    case '(':
-	    case ')':
-	    case '{':
-	    case '}':
-	    case '[':
-	    case ']':
-	      i = BoxCharacterWidth (230, font);
-	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
-	      break;
-	    default:
-	      break;
-	    }
-#endif /*_STIX*/
+	    }	 
 	}
     }
 }

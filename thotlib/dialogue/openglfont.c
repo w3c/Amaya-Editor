@@ -1207,7 +1207,6 @@ int UnicodeFontRender (void *gl_font,
 		 (GLfloat)Width, (GLfloat)Height);
   
   
-  
    glDeleteTextures (1, &(FontBind));
    
    

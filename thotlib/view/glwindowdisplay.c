@@ -167,13 +167,45 @@ static int GL_Background[50];
   ClearAll clear the frame .
   ----------------------------------------------------------------------*/
 void ClearAll (int frame)
-{
-  if (GL_prepare (frame))
+{  
+
+  unsigned short red, green, blue;
+  int color;
+  
+  if (GL_prepare (frame)) 
     {
-      glClear (GL_COLOR_BUFFER_BIT);
-      GL_Swap (frame);
+      color = GL_Background[frame];
+      TtaGiveThotRGB (color, &red, &green, &blue);
+      glClearColor (red/255, green/255, blue/255, 0.0);
+      glClear (GL_COLOR_BUFFER_BIT); 
     }
 }
+#ifdef _GTK
+/*
+ * Make the window background the same as the OpenGL one.  This
+ * is used to avoid flickers when the widget size changes.
+ * This is fixed in GTK+-2.0 but doesn't hurt.
+ */
+void update_bg_colorGTK (int frame, int color)
+{
+  GtkWidget *gl_widget;
+  GdkColormap *cmap;
+  GdkColor col;
+  unsigned short red, green, blue;
+
+  gl_widget = FrameTable[frame].WdFrame;  
+
+  cmap = gtk_widget_get_colormap (gl_widget);
+  TtaGiveThotRGB (color, &red, &green, &blue);
+  col.red = (guint16) red*257;
+  col.green = (guint16) green*257;
+  col.blue = (guint16) blue*257;
+  
+  gdk_colormap_alloc_color (cmap, &col, FALSE, TRUE);
+  gdk_window_set_background (gl_widget->window, &col);
+}
+
+#endif /*_GTK*/
 
 /*----------------------------------------------------------------------
    SetMainWindowBackgroundColor :                          
@@ -181,16 +213,13 @@ void ClearAll (int frame)
 void SetMainWindowBackgroundColor (int frame, int color)
 {
   unsigned short red, green, blue;
-  
-  if (GL_Background[frame] == color)
-    return;
-  else
-    {
-      TtaGiveThotRGB (color, &red, &green, &blue);
-      glClearColor (red, green, blue, 255);
-      GL_Background[frame] = color;
-    }  
-   return;
+
+#ifdef _GTK
+  update_bg_colorGTK (frame, color);
+#endif /*_GTK*/
+  GL_Background[frame] = color;
+  TtaGiveThotRGB (color, &red, &green, &blue);
+  glClearColor (red/255, green/255, blue/255, 0.0);
 }
 
 /*----------------------------------------------------------------------
@@ -200,19 +229,8 @@ void Clear (int frame,
 	    int width, int height,
 	    int x, int y)
 {
-  int w,h;
-  
   if (GL_prepare (frame))
     {
-      /*(
-      if (x == 0 && y == 0)
-	{
-	  GetSizesFrame (frame, &w, &h);
-	  if (width == w && height == h)
-	    ClearAll (frame);
-	  return;	  
-	  } 
-      */     
       FrameTable[frame].DblBuffNeedSwap = TRUE; 
       y = y + FrameTable[frame].FrTopMargin;
       GL_SetForeground (GL_Background[frame]); 
@@ -1176,6 +1194,10 @@ int CharacterWidth (int c, PtrFont font)
 void GL_Swap (int frame)
 {
   if (frame < MAX_FRAME)
+    {
+      glFinish ();
+      glFlush ();
+      
 #ifdef _WINDOWS
     if (GL_Windows[frame])
       SwapBuffers (GL_Windows[frame]);
@@ -1183,6 +1205,8 @@ void GL_Swap (int frame)
   if (FrameTable[frame].WdFrame)
     gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
 #endif /*_WINDOWS*/
+    }
+  
 }
 
 /*----------------------------------------------------------------------
@@ -1194,7 +1218,7 @@ ThotBool GL_prepare (int frame)
   if (frame < MAX_FRAME)
     {
       FrameTable[frame].DblBuffNeedSwap = TRUE;
-
+GL_Drawing = TRUE;
     if (FrRef[frame])
 #ifdef _WINDOWS
       if (GL_Windows[frame])
@@ -1207,14 +1231,18 @@ ThotBool GL_prepare (int frame)
 	return TRUE;
 #endif /*_WINDOWS*/
     }
+  GL_Drawing = FALSE;
   return FALSE;
 }
 
 /*----------------------------------------------------------------------
    GL_realize : can we cancel if no modifs ?
   ----------------------------------------------------------------------*/
-void GL_realize ()
+void GL_realize (int frame)
 {
+  GL_Drawing = FALSE;
+  FrameTable[frame].DblBuffNeedSwap = FALSE;
+  GL_Swap (frame);
   return;
 }
 /*----------------------------------------------------------------------
@@ -1241,7 +1269,8 @@ void GL_DrawAll (ThotWidget widget, int frame)
   
   /* if (GL_ANIM)
      RefreshAnimation (frame); */
-
+  return;
+  
   if (!GL_Drawing && !FrameUpdating )
     {
       for (frame = 1 ; frame < MAX_FRAME; frame++)
@@ -1265,7 +1294,7 @@ void GL_DrawAll (ThotWidget widget, int frame)
 #endif /*_PCLDEBUG*/ 
 			  GL_Drawing = TRUE;  	   
 			  
-			  RedrawFrameBottom (frame, 0, NULL);
+			  /*RedrawFrameBottom (frame, 0, NULL);*/
 			  glFinish ();
 			  /*
 			    saveBuffer (FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
@@ -1338,7 +1367,7 @@ void SetGlPipelineState ()
   g_print ("\nGLU Version : %s", 
 	   (char *)gluGetString (GLU_VERSION));
 #endif /*_PCLDEBUG*/
-      glClearColor (1, 0, 0, 0);
+  /*glClearColor (1, 0, 0, 0);*/
       /* no fog*/
       glDisable (GL_FOG);
       /* No lights */
@@ -1354,7 +1383,7 @@ void SetGlPipelineState ()
       glDisable (GL_STENCIL_TEST);
       /* At the beginning, 
 	 there was no clipping*/
-      glEnable (GL_SCISSOR_TEST);
+      glDisable (GL_SCISSOR_TEST);
 
       /* Modulated Transparency*/
       glDisable (GL_ALPHA_TEST); 	 
@@ -1375,8 +1404,8 @@ void SetGlPipelineState ()
       glEnable (GL_POINT_SMOOTH); 
       glHint (GL_POINT_SMOOTH_HINT, 
 	      GL_NICEST);
-      glHint (GL_LINE_SMOOTH_HINT, 
-	      GL_NICEST); 
+      /*glHint (GL_LINE_SMOOTH_HINT, 
+	GL_NICEST); */
       /* For transparency and beautiful antialiasing*/
       glEnable (GL_BLEND); 
       glBlendFunc (GL_SRC_ALPHA, 
@@ -1392,8 +1421,6 @@ void SetGlPipelineState ()
       /*glShadeModel (GL_SMOOTH);*/
       /* no gradients for now => */
       glShadeModel (GL_FLAT);
-
-
 
       /* Not recommended for hardware cards... 
 	 Global Antialiasing is done elsewhere...*/
@@ -1573,14 +1600,10 @@ void GL_window_copy_area (int frame,
  upon resize
 ------------------------------------*/
 void GLResize (int width, int height, int x, int y)
-{	
+{
 #ifdef _GTK
-  /*
-    gdk_gl_wait_gdk();
-    gdk_gl_wait_gl();
-  */
+  gdk_gl_wait_gdk();
 #endif /*_GTK*/
-
   glViewport (0, 0, width, height);
   glMatrixMode (GL_PROJECTION);      
   glLoadIdentity (); 
@@ -1590,12 +1613,9 @@ void GLResize (int width, int height, int x, int y)
      and the left bottom is negative !!)
 	*/
   glOrtho (0, width, height, 0, -1, 1); 
-
   /* Needed for 3d only...*/
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity (); 
-  glScissor (0, 0, 
-	     width, height); 
 
 }
 /*-----------------------------------
