@@ -1083,7 +1083,9 @@ static void         AHTAlertInit ()
    HTAlert_add (AHTPromptPassword, HT_A_SECRET);
    HTAlert_add (AHTPromptUsernameAndPassword, HT_A_USER_PW);
 #ifdef AMAYA_WWW_CACHE
-   HTAlert_add (AHTConfirm, HT_MSG_CACHE_LOCK);
+   /***
+     HTAlert_add (AHTConfirm, HT_MSG_CACHE_LOCK);
+     ***/
 #endif /* AMAYA_WWW_CACHE */
 }
 
