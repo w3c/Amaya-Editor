@@ -107,6 +107,8 @@ static int          fd_cachelock; /* open handle to the .lock cache file */
 
 static  ThotBool    FTPURL_flag; /* if set to true, we can browse FTP URLs */
 
+static  FILE        *trace_fp = NULL;   /* file pointer to the trace logs */
+
 #include "answer_f.h"
 #include "query_f.h"
 #include "AHTURLTools_f.h"
@@ -1366,12 +1368,15 @@ int                 status;
    return HT_OK;
 }
 
-#ifdef DEBUG_LIBWWW
+/*----------------------------------------------------------------------
+  LineTrace
+  Makes a file copy of libwww's traces
+  ----------------------------------------------------------------------*/
 static  int LineTrace (const char * fmt, va_list pArgs)
 {
-    return (vfprintf(stderr, fmt, pArgs));
+  vfprintf (trace_fp, fmt, pArgs);
+  return (fflush (trace_fp));
 }
-#endif DEBUG_LIBWWW
 
 /*----------------------------------------------------------------------
   AHTAcceptTypesInit
@@ -2454,6 +2459,19 @@ void                QueryInit ()
 	   WWW_TraceFlag = 0;
 	   break;
 	 }
+       if (WWW_TraceFlag)
+	 {
+	   /* Trace activation (for debugging) */
+	   CHAR_T *s, *tmp;
+	   s = TtaGetEnvString ("APP_TMPDIR");
+	   tmp = TtaGetMemory (ustrlen (s) + sizeof (TEXT("/libwww.log")) + 1);
+	   ustrcpy (tmp, s);
+	   ustrcat (tmp, TEXT("/libwww.log"));
+	   trace_fp = ufopen (tmp, TEXT("ab"));
+	   TtaFreeMemory (tmp);
+	   if (trace_fp)
+	     HTTrace_setCallback(LineTrace);
+	 }
      }
    else
      WWW_TraceFlag = 0;
@@ -2463,7 +2481,7 @@ void                QueryInit ()
   /* forwards error messages to our own function */
    WWW_TraceFlag = THD_TRACE;
    HTTrace_setCallback(LineTrace);
-   /* Trace activation (for debugging) */
+
    /***
     WWW_TraceFlag = SHOW_CORE_TRACE | SHOW_THREAD_TRACE | SHOW_PROTOCOL_TRACE;
     ***/
@@ -2615,6 +2633,11 @@ void QueryClose ()
   SafePut_delete ();
   HTGateway_deleteAll ();
   AHTProfile_delete ();
+
+  /* close the trace file (if it exists) */
+  if (trace_fp)
+    fclose (trace_fp);
+
 }
 
 /*----------------------------------------------------------------------
