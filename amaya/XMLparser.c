@@ -1323,6 +1323,7 @@ CHAR_T                c;
    /* the input buffer is now empty */
    bufferLength = 0;
    commentText = NULL;
+   XMLElementComplete (currentElement, currentDocument);
    currentElementClosed = TRUE;
 }
 

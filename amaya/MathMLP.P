@@ -1874,6 +1874,8 @@ BOXES
         IN Math_Structure_view BEGIN
                 Visibility: Enclosing =;
                 Foreground: TAG_Color;
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
                 END;
         END;
  
@@ -1907,9 +1909,11 @@ RULES
 	BEGIN
         IF First CreateFirst(Comment_Start);
         IF Last CreateLast(Comment_End);
-	HorizPos: Left = Enclosing . Left;
-        VertPos: Top = Previous . Bottom + 0.2;
-        Width: Enclosed . Width;
+        IN Math_Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left;
+        	VertPos: Top = Previous . Bottom + 0.2;
+        	Width: Enclosed . Width;
+                END;
         END;
  
    MROW:

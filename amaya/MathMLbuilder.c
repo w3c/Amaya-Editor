@@ -1070,7 +1070,8 @@ Element el;
       elType.ElTypeNum == MathML_EL_MUNDER ||
       elType.ElTypeNum == MathML_EL_MOVER ||
       elType.ElTypeNum == MathML_EL_MUNDEROVER ||
-      elType.ElTypeNum == MathML_EL_MMULTISCRIPTS)
+      elType.ElTypeNum == MathML_EL_MMULTISCRIPTS ||
+      elType.ElTypeNum == MathML_EL_MTABLE)
      ret = TRUE;
   else
      if (elType.ElTypeNum == MathML_EL_MO)
@@ -1199,14 +1200,15 @@ static void	CreatePlaceholders (el, doc)
 }
 
 /*----------------------------------------------------------------------
-  NextNotSep
+  NextNotSepOrComment
   Return the next sibling of element el that is not a SEP element
-  Return el itself if it's not a SEP
+  nor an XMLcomment element.
+  Return el itself if it's not a SEP or a comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void	NextNotSep (Element* el, Element* prev)
+static void	NextNotSepOrComment (Element* el, Element* prev)
 #else
-static void	NextNotSep (el, prev)
+static void	NextNotSepOrComment (el, prev)
    Element	*el;
 #endif
 {
@@ -1215,7 +1217,8 @@ static void	NextNotSep (el, prev)
    if (*el == NULL)
       return;
    elType = TtaGetElementType (*el);
-   while (*el != NULL && elType.ElTypeNum == MathML_EL_SEP)
+   while (*el != NULL && (elType.ElTypeNum == MathML_EL_SEP ||
+			  elType.ElTypeNum == MathML_EL_XMLcomment))
       {
       *prev = *el;
       TtaNextSibling (el);
@@ -1246,7 +1249,7 @@ static void	CheckMathSubExpressions (el, type1, type2, type3, doc)
   elType.ElSSchema = GetMathMLSSchema (doc);
   child = TtaGetFirstChild (el);
   prev = NULL;
-  NextNotSep (&child, &prev);
+  NextNotSepOrComment (&child, &prev);
   if (child != NULL && type1 != 0)
     {
       elType.ElTypeNum = type1;
@@ -1267,7 +1270,7 @@ static void	CheckMathSubExpressions (el, type1, type2, type3, doc)
 	{
 	  prev = child;
 	  TtaNextSibling (&child);
-	  NextNotSep (&child, &prev);
+	  NextNotSepOrComment (&child, &prev);
 	  if (child != NULL)
 	    {
 	      elType.ElTypeNum = type2;
@@ -1285,7 +1288,7 @@ static void	CheckMathSubExpressions (el, type1, type2, type3, doc)
 		{
 		  prev = child;
 		  TtaNextSibling (&child);
-		  NextNotSep (&child, &prev);
+		  NextNotSepOrComment (&child, &prev);
 		  if (child != NULL)
 		    {
 		      elType.ElTypeNum = type3;
@@ -2401,7 +2404,8 @@ Document	doc;
 	attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (child, attr, doc);
-	TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_, child, doc);
+	TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_,
+			      child, doc);
 	}
      }
    else
