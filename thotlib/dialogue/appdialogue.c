@@ -73,7 +73,8 @@
 
 #ifdef _GTK
 #include "gtk-functions.h"
-static GdkAtom Selection_Type = GDK_SELECTION_TYPE_STRING;
+static GdkAtom Utf8_Type = GDK_SELECTION_TYPE_STRING; /* info=1 */
+static GdkAtom String_Type = GDK_SELECTION_TYPE_STRING; /* info=1 */
 #ifdef _GL
 /* Some GL in it */
 #include <gtkgl/gtkglarea.h>
@@ -2957,9 +2958,10 @@ void get_targets (GtkWidget *widget, gpointer data)
 
   if (FrameTable[ActiveFrame].WdFrame)
     {
+      /* request by default a UTF-8 string */
       gtk_selection_convert (GTK_WIDGET (FrameTable[ActiveFrame].WdFrame), 
 			     GDK_SELECTION_PRIMARY, 
-			     Selection_Type,  
+			     Utf8_Type,  
 			     GDK_CURRENT_TIME);
     }
 }
@@ -2984,8 +2986,6 @@ void gtk_claim_selection()
 void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
 			 gpointer data)
 {
-  static GdkAtom target_atom = GDK_NONE;
-
   if (sel_data->length > 0)
     {
       /* if ClipboardLength is not zero, the last Xbuffer comes from Thot */
@@ -3001,20 +3001,16 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
 	  strncpy ((char *)Xbuffer, (char *)sel_data->data, sel_data->length);
 	  Xbuffer[sel_data->length] = EOS;
 	}
-      if (sel_data->type != Selection_Type)
+      if (sel_data->type != Utf8_Type)
 	PasteXClipboard (Xbuffer, strlen((char *)Xbuffer), TtaGetDefaultCharset ());
       else
 	PasteXClipboard (Xbuffer, strlen((char *)Xbuffer), UTF_8);
     }
-  else if (sel_data->target == Selection_Type)
-    {
-      if (target_atom == GDK_NONE)
-	target_atom = gdk_atom_intern ("STRING", FALSE);
-      gtk_selection_convert (widget, 
-			     GDK_SELECTION_PRIMARY, 
-			     target_atom,  
-			     GDK_CURRENT_TIME);
-    }
+  else if (sel_data->target == Utf8_Type)
+    gtk_selection_convert (widget, 
+			   GDK_SELECTION_PRIMARY, 
+			   String_Type,  
+			   GDK_CURRENT_TIME);
 } 
 
 
@@ -3044,12 +3040,21 @@ void selection_handle (GtkWidget        *widget,
 {
   /* When we return a single string, it should not be null terminated.
      That will be done for us */
-  if (Xbuffer != NULL)
-    gtk_selection_data_set (selection_data,
-			    Selection_Type /*GDK_SELECTION_TYPE_STRING*/,
-			    8, 
-			    Xbuffer, 
-			    strlen ((char *)Xbuffer));
+  if (Xbuffer)
+    {
+      if (info == 2)
+	gtk_selection_data_set (selection_data,
+				String_Type,
+				8, 
+				Xbuffer, 
+				strlen ((char *)Xbuffer));
+      else
+	gtk_selection_data_set (selection_data,
+				Utf8_Type,
+				8, 
+				Xbuffer, 
+				strlen ((char *)Xbuffer));
+    }
 }
 
 #endif /* _GTK */
@@ -3633,10 +3638,15 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			       GTK_SIGNAL_FUNC (selection_clear),  
 			       NULL);    
 	   /* register as a selection handler */
-	   Selection_Type = gdk_atom_intern ("UTF8_STRING", FALSE);
+	   String_Type = gdk_atom_intern ("STRING", FALSE);
 	   gtk_selection_add_target (GTK_WIDGET (drawing_area),
 				     GDK_SELECTION_PRIMARY,
-				     Selection_Type /*GDK_SELECTION_TYPE_STRING*/,
+				     String_Type,
+				     2);
+	   Utf8_Type = gdk_atom_intern ("UTF8_STRING", FALSE);
+	   gtk_selection_add_target (GTK_WIDGET (drawing_area),
+				     GDK_SELECTION_PRIMARY,
+				     Utf8_Type,
 				     1);
 	   /* Callback called by other app to get the amaya selection*/
 	   gtk_signal_connect (GTK_OBJECT(drawing_area), 
