@@ -63,14 +63,12 @@ int TtaDirExists (CONST char *dirpath)
 }
 
 /*----------------------------------------------------------------------
-   TtaFileExist teste l'existence d'un fichier.                       
-   Rend 1 si le fichier a e't'e trouve' et 0 sinon.        
-   Si filename est un repertoire, on retourne 0.           
+   ThotFileExist checks if the file exists.
+   Return 1 is TRUE else 0.
   ----------------------------------------------------------------------*/
-int TtaFileExist (CONST char *filename)
+int ThotFileExist (CONST char *name)
 {
   int         status = 0;
-  char       *name;
 #ifdef _WINGUI
   DWORD       attribs;
 #else /* _WINGUI */
@@ -78,7 +76,6 @@ int TtaFileExist (CONST char *filename)
   struct stat statinfo;
 #endif /* _WINGUI */
 
-  name = GetRealFileName (filename);
 #ifdef _WINGUI
   attribs = GetFileAttributes ((LPCTSTR)name);
   if (attribs == 0xFFFFFFFF)
@@ -104,6 +101,21 @@ int TtaFileExist (CONST char *filename)
       close (filedes);
     }
 #endif /* _WINGUI */
+  return status;
+}
+
+/*----------------------------------------------------------------------
+   TtaFileExist teste l'existence d'un fichier.                       
+   Rend 1 si le fichier a e't'e trouve' et 0 sinon.        
+   Si filename est un repertoire, on retourne 0.           
+  ----------------------------------------------------------------------*/
+int TtaFileExist (CONST char *filename)
+{
+  char       *name;
+  int         status = 0;
+
+  name = GetRealFileName (filename);
+  status = ThotFileExist (name);
   TtaFreeMemory (name);
   return status;
 }

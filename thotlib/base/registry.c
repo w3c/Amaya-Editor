@@ -863,7 +863,7 @@ char *TtaGetDefEnvString (char *name)
          The heuristic is to find a subdir named "config" and containing 
          the registry file.                                              
   ----------------------------------------------------------------------*/
-static int          IsThotDir (CONST char *path)
+static int IsThotDir (CONST char *path)
 {
   char           filename[MAX_PATH];
 
@@ -1230,7 +1230,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    * second case, the argv[0] indicate a relative path name.
    * The exec name is obtained by appending the current directory.
    */
-  else if (TtaFileExist (appArgv0))
+  else if (ThotFileExist (appArgv0))
     {
       getcwd (&execname[0], sizeof (execname) / sizeof (char));
       strcat (execname, DIR_STR);
@@ -1418,7 +1418,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    /* load the system settings, stored in THOTDIR/config/thot.ini */
    sprintf (filename, "%s%c%s%c%s", execname, DIR_SEP, THOT_CONFIG_FILENAME,
 	    DIR_SEP, THOT_INI_FILENAME);
-   if (TtaFileExist (filename))
+   if (ThotFileExist (filename))
      {
 #ifdef DEBUG_REGISTRY
        fprintf (stderr, "reading system %s from %s\n", THOT_INI_FILENAME, filename);
@@ -1596,7 +1596,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    if (app_home && *app_home != EOS)
      {
        sprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
-       if (TtaFileExist (&filename[0]))
+       if (ThotFileExist (&filename[0]))
 	 {
 #ifdef DEBUG_REGISTRY
 	   fprintf (stderr, "reading user's %s from %s\n",

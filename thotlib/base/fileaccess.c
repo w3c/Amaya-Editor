@@ -403,7 +403,6 @@ char *GetRealFileName (CONST char *name)
 
   systemCharset = TtaGetLocaleCharset ();
   defaultCharset = TtaGetDefaultCharset ();
-  printf ("%s \n", name);
   if (systemCharset == defaultCharset)
     realname = TtaStrdup ((char *)name);
   else if (systemCharset == UTF_8)
