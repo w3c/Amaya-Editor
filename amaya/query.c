@@ -36,6 +36,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include "HTEvtLst.h"
+#include "HTAABrow.h"
 
 #if defined(__svr4__) || defined (_AIX)
 #define CATCH_SIG
@@ -1744,6 +1745,9 @@ char               *AppVersion;
 
    /* Set up the default set of Authentication schemes */
    HTAAInit ();
+   HTAA_newModule ("digest", HTDigest_generate, HTDigest_parse, 
+		   HTDigest_delete);
+
 
    /* Get any proxy settings */
    ProxyInit ();

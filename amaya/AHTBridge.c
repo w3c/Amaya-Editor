@@ -135,7 +135,7 @@ XtInputId          *id;
    
    /* Invokes the callback associated to the requests */
    
-   CanDoStop_set (FALSE);
+   /**   CanDoStop_set (FALSE); **/
    if ((status = HTEventList_dispatch (socket, type, now)) != HT_OK)
      {
 #ifdef DEBUG_LIBWWW
@@ -143,7 +143,7 @@ XtInputId          *id;
 #endif
      }
 
-   CanDoStop_set (TRUE);
+   /***   CanDoStop_set (TRUE); **/
 
    return (0);
 }

@@ -46,15 +46,17 @@ struct _HTError
   displays in the status bar the current state of a request   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
- BOOL         AHTProgress (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault,
-				 void *input, HTAlertPar * reply)
+ BOOL         AHTProgress (HTRequest *request, HTAlertOpcode op, 
+			   int msgnum, const char *dfault,
+			   void *input, HTAlertPar *reply)
 #else  /* __STDC__ */
  BOOL         AHTProgress (request, op, msgnum, dfault, input, reply)
 HTRequest          *request;
 HTAlertOpcode       op;
 int                 msgnum;
 const char         *dfault;
-void               *input, HTAlertPar * reply;
+void               *input;
+HTAlertPar         *reply;
 
 #endif
 {
@@ -63,6 +65,8 @@ void               *input, HTAlertPar * reply;
    char                buf[11];
    long                cl, bytes_rw;
    int                 pro;
+   int                *raw_rw;
+   HTParentAnchor     *anchor;
 
    if (request && HTRequest_internal (request))
       return NO;
@@ -73,79 +77,98 @@ void               *input, HTAlertPar * reply;
    switch (op)
 	 {
 	    case HT_PROG_TIMEOUT:
+	      TtaSetStatus (me->docid, 1, "Request timeout - server did not respond.", NULL);
 	      break;
 	    case HT_PROG_DNS:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOOKING_HOST), (char *) input);
 	       break;
 	    case HT_PROG_CONNECT:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CONTACTING_HOST), (char *) input);
+	       break;
 	    case HT_PROG_ACCEPT:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_WAITING_FOR_CONNECTION), NULL);
 	       break;
+	    case HT_PROG_DONE:
+	       /* a message is displayed elsewhere */
+	      break;
 	    case HT_PROG_READ:
 	       if ((me->method != METHOD_PUT) && (me->method != METHOD_POST))
 		 {
 		   cl = HTAnchor_length (HTRequest_anchor (request));
-		   
 		   if (cl > 0)
 		     {
-		       bytes_rw = HTNet_bytesRead (request->net);
+		       bytes_rw = HTRequest_bodyRead (request);
 		       pro = (int) ((bytes_rw * 100l) / cl);
 		       
 		       if (pro > 100)		/* libwww reports > 100! */
 			 pro = 100;
-		       /*
-		       ** prepare the string that will be displayed on
-		       ** the status bar
-		       */
-		       
 		       HTNumToStr ((unsigned long) cl, buf, 10);
 		       sprintf (tempbuf, "%s (%d%% of %s)\n", me->status_urlName, (int) pro, buf);
-		       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), tempbuf);
 		     }
+		   else 
+		     {
+		       bytes_rw = HTRequest_bytesRead(request);
+		       raw_rw = input ? (int *) input : NULL;
+		       if (bytes_rw > 0)
+			 {
+			   HTNumToStr(bytes_rw, buf, 10);
+			   sprintf (tempbuf, "Read %s bytes", buf);
+			 } 
+		       else if (raw_rw && *raw_rw>0) 
+			 {
+			   HTNumToStr(*raw_rw, buf, 10);
+			   sprintf (tempbuf, "Read %s bytes", buf);
+			 } 
+		       else 
+			 buf[0] = EOS;
+		     }
+		   /* update the message on the status bar */
+		   if (buf[0]) 
+		     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), tempbuf);
 		   else
 		     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), me->status_urlName);
 		 }
 	       break;
 
 	    case HT_PROG_WRITE:
-	       if ((me->method == METHOD_PUT) || (me->method == METHOD_POST))
-		 {
-		   /*experimental code to display the write progress */
-		   /*it still does not work (libwww bug) */
-#if 0
-		    HTParentAnchor     *anchor = HTRequest_anchor (request);
-		    cl = HTAnchor_length (anchor);
-
-		    if (cl > 0)
-		      {
-			 bytes_rw = HTRequest_bytesWritten (request);
-			 pro = (int) ((bytes_rw * 100l) / cl);
-
-			 HTNumToStr ((unsigned long) cl, buf, 10);
-			 sprintf (tempbuf, "%s: Writing (%d%% of %s)\n", me->urlName, pro, buf);
-			 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), tempbuf);
-		      }
-		    else
-#endif
-		       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), me->status_urlName);
-		 }
+	      if ((me->method == METHOD_PUT) || (me->method == METHOD_POST))
+		{
+		  anchor = HTRequest_anchor (HTRequest_source (request));
+		  cl = HTAnchor_length (anchor);
+		  if (cl > 0)
+		    {
+		      bytes_rw = HTRequest_bodyWritten (request);
+			pro = (int) ((bytes_rw * 100l) / cl);
+			HTNumToStr ((unsigned long) cl, buf, 10);
+			sprintf (tempbuf, "%s: Writing (%d%% of %s)\n", me->urlName, pro, buf);
+			TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), tempbuf);
+		    }
+		  else 
+		    {
+		      bytes_rw = HTRequest_bytesWritten(request);
+		      raw_rw = input ? (int *) input : NULL;
+		      if (bytes_rw > 0)
+			{
+			  HTNumToStr(bytes_rw, buf, 10);
+			  sprintf (tempbuf, "Writing %s bytes ", buf);
+			} 
+		      else if (raw_rw && *raw_rw >0) 
+			{
+			  HTNumToStr(*raw_rw, buf, 10);
+			  sprintf (tempbuf, "Writing %s bytes ", buf);
+			} 
+		      else 
+			buf[0] = EOS;
+		    }
+		  /* update the message on the status bar */
+		  if (buf[0]) 
+		    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), tempbuf);
+		  else
+		    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), me->status_urlName);
+		}
 	       break;
-
-	    case HT_PROG_DONE:
-	       /* a message is displayed elsewhere */
-	       break;
-#if 0
-	       /* @@@ changed **/
-	    case HT_PROG_WAIT:
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_WAITING_FOR_SOCKET), NULL);
-	       break;
-	       /* @@@ changed **/
-	    case HT_PROG_GC:
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CACHE_GC), NULL);
-	       break;
-#endif
-	    default:
+		 
+	     default:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_STATUS), NULL);
 	       break;
 	 }
