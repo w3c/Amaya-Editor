@@ -5664,8 +5664,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      if (FileExistTarget (tempname))
 		{
 		  if (DontReplaceOldDoc)
+#ifndef  _WX
 		    GetAmayaDoc (tempfile, NULL, 0, 0, (ClickEvent)Loading_method,
 				 FALSE, NULL, NULL);
+#else /* _WX */
+		    GetAmayaDoc (tempfile, NULL, CurrentDocument, CurrentDocument, (ClickEvent)Loading_method,
+				 FALSE, NULL, NULL);
+#endif /* _WX */
 		  else
 		    GetAmayaDoc (tempfile, NULL, CurrentDocument,
 				 CurrentDocument, (ClickEvent)Loading_method,
@@ -5709,8 +5714,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		}
 	      /* update the list of URLs */
 	      if (DontReplaceOldDoc)
+#ifndef _WX
 		GetAmayaDoc (DocumentName, NULL, 0, 0, (ClickEvent)Loading_method,
 			     FALSE, NULL, NULL);
+#else /* _WX */
+		GetAmayaDoc (DocumentName, NULL, CurrentDocument, CurrentDocument, (ClickEvent)Loading_method,
+			     FALSE, NULL, NULL);
+#endif /* _WX */
 	      else
 		GetAmayaDoc (DocumentName, NULL, CurrentDocument,
 			     CurrentDocument, (ClickEvent)Loading_method, TRUE,
