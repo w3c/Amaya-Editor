@@ -2911,7 +2911,6 @@ static void      XmlStyleSheetPi (char *PiData)
    char         *buffer, *tmpbuffer;
    char         *css_href = NULL;
    char          delimitor;
-   char          msgBuffer[MaxMsgLength];
    CSSmedia      css_media;
    CSSInfoPtr    css_info;
    ThotBool      ok;
@@ -2952,6 +2951,7 @@ static void      XmlStyleSheetPi (char *PiData)
    /*
    if (!ok)
      {
+       char  msgBuffer[MaxMsgLength];
        sprintf (msgBuffer,
 		 "xml-stylesheet : attribute \"type\" not defined or not supported");
        XmlParseError (errorParsing, msgBuffer, 0);
@@ -3040,7 +3040,6 @@ static void CreateXmlPi (char *piTarget, char *piData)
    char          *mappedName;
    char          *piValue = NULL;
    char           cont;
-   char           msgBuffer[MaxMsgLength];
    unsigned char *buffer;
    unsigned char *ptr;
    int            length, l;
@@ -3132,6 +3131,7 @@ static void CreateXmlPi (char *piTarget, char *piData)
    /*
    else
      {
+       char msgBuffer[MaxMsgLength];
        sprintf (msgBuffer,
 		"Processing Instruction not supported : %s", piTarget);
        XmlParseError (errorParsing, msgBuffer, 0);
