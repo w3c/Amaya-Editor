@@ -1206,17 +1206,14 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
   int                 i, att;
 
   /* Search presentation rule */
-  cur = PresRuleSearch (tsch, ctxt, pres, extra, &chain);
-  if (cur != NULL)
-    return (cur);
-  else if (pres != PRFunction ||
-	   extra != FnShowBox ||
-	   !TypeHasException (ExcNoShowBox, ctxt->type, (PtrSSchema) ctxt->schema))
+  pRule = PresRuleSearch (tsch, ctxt, pres, extra, &chain);
+  if (pRule == NULL &&
+      (pres != PRFunction || extra != FnShowBox ||
+       !TypeHasException (ExcNoShowBox, ctxt->type, (PtrSSchema) ctxt->schema)))
     {
       /* not found, allocate it, fill it and insert it */
       GetPresentRule (&pRule);
-
-      if (pRule != NULL)
+      if (pRule)
 	{
 	  pRule->PrType = pres;
 	  if (pres == PRFunction)
@@ -1224,13 +1221,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 	  pRule->PrCond = NULL;
 	  pRule->PrViewNum = 1;
 	  pRule->PrSpecifAttr = 0;
-	  pRule->PrImportant = ctxt->important;
-	  /* store the rule priority */
-	  pRule->PrSpecificity = ctxt->cssSpecificity;
 	  pRule->PrSpecifAttrSSchema = NULL;
-	  /* localisation of the CSS rule */
-	  pRule->PrCSSLine = ctxt->cssLine;
-	  pRule->PrCSSURL = ctxt->cssURL;
       
 	  /* In case of an attribute rule, add the Attr condition */
 	  att = 0;
@@ -1255,12 +1246,22 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 
 	  /* Add the order / conditions .... */
 	  /* chain in the rule */
-	  if (chain != NULL)
+	  if (chain)
 	    {
 	      pRule->PrNextPRule = *chain;
 	      *chain = pRule;
 	    }
 	}
+    }
+
+  if (pRule)
+    {
+      pRule->PrImportant = ctxt->important;
+      /* store the rule priority */
+      pRule->PrSpecificity = ctxt->cssSpecificity;
+      /* localisation of the CSS rule */
+      pRule->PrCSSLine = ctxt->cssLine;
+      pRule->PrCSSURL = ctxt->cssURL;
     }
   return (pRule);
 }
