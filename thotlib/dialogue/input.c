@@ -771,8 +771,13 @@ int                 key;
       /* Search a first level entry? */
       if (modtype == THOT_MOD_S_CTRL)
 	ptr = Automata_CTRL;
-      else if (modtype == THOT_MOD_CTRL)
+      else if (modtype == THOT_MOD_CTRL) {
 	ptr = Automata_ctrl;
+#          ifdef _WINDOWS
+           if (key == 0x0A)
+              key = 0x0D;
+#          endif /* _WINDOWS */
+	  }
       else if (modtype == THOT_MOD_S_ALT)
 	ptr = Automata_ALT;
       else if (modtype == THOT_MOD_ALT)

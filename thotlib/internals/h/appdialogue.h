@@ -27,7 +27,7 @@ typedef struct _Action_Ctl
   UserProc 	User_Action;	/* Address of the User procedure (Java)	*/
   void 		*User_Arg;	/* Arguments of the User procedure	*/
   Proc 		Call_Action;	/* Address C procedure            	*/
-  STRING    ActionEquiv;	/* Displayed text for shortcuts		*/
+  char*     ActionEquiv;	/* Displayed text for shortcuts		*/
   ThotBool	ActionActive[MAX_FRAME];
 }Action_Ctl;
 
@@ -244,14 +244,6 @@ typedef struct _SchemaMenu_Ctl
 #define CMD_ScrollRight		27
 #define MAX_INTERNAL_CMD	28
 
-#define CST_EquivDel TEXT("Delete")
-#define CST_EquivBS TEXT("BackSpace")
-#define CST_EquivPrior TEXT("Prior")
-#define CST_EquivNext TEXT("Next")
-#define CST_EquivHome TEXT("Home")
-#define CST_EquivEnd TEXT("End")
 #define CST_EquivLineUp TEXT("C Up")
-#define CST_EquivLineDown TEXT("C Down")
 #define CST_EquivScrollLeft TEXT("C Left")
-#define CST_EquivScrollRight TEXT("C Right")
 #endif

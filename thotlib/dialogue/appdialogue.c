@@ -86,7 +86,7 @@ extern void TteLoadApplications ( void );
 extern ThotBool     WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
 extern int          appArgc;
-extern STRING*       appArgv;
+extern char**       appArgv;
 extern int          iString;
 typedef void        (*Thot_ActionProc) ();
 typedef struct _CallbackCTX *PtrCallbackCTX;
@@ -255,11 +255,7 @@ int                 number;
      {
 	i = 1;
 	while (i < appArgc - 1)
-#      ifdef _WINDOWS
-	   if (ustrcmp (appArgv[i], TEXT("-display")) != 0)
-#      else  /* !_WINDOWS */
-	   if (ustrcmp (appArgv[i], "-display") != 0)
-#      endif /* _WINDOWS */
+	   if (strcmp (appArgv[i], "-display") != 0)
 	      i++;
 	   else
 	     {
@@ -331,12 +327,12 @@ int                 number;
    MenuActionList[CMD_DeletePrevChar].ActionName = "TtcDeletePreviousChar";
    MenuActionList[CMD_DeletePrevChar].Call_Action = (Proc) NULL;
    MenuActionList[CMD_DeletePrevChar].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_DeletePrevChar].ActionEquiv = CST_EquivBS;
+   MenuActionList[CMD_DeletePrevChar].ActionEquiv = "BackSpace";
 
    MenuActionList[CMD_DeleteSelection].ActionName = "TtcDeleteSelection";
    MenuActionList[CMD_DeleteSelection].Call_Action = (Proc) NULL;
    MenuActionList[CMD_DeleteSelection].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_DeleteSelection].ActionEquiv = CST_EquivDel;
+   MenuActionList[CMD_DeleteSelection].ActionEquiv = "Delete";
 
    MenuActionList[CMD_PreviousChar].ActionName = "TtcPreviousChar";
    MenuActionList[CMD_PreviousChar].Call_Action = (Proc) TtcPreviousChar;
@@ -381,42 +377,42 @@ int                 number;
    MenuActionList[CMD_PageUp].ActionName = "TtcPageUp";
    MenuActionList[CMD_PageUp].Call_Action = (Proc) TtcPageUp;
    MenuActionList[CMD_PageUp].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_PageUp].ActionEquiv = CST_EquivPrior;
+   MenuActionList[CMD_PageUp].ActionEquiv = "Prior";
 
    MenuActionList[CMD_PageDown].ActionName = "TtcPageDown";
    MenuActionList[CMD_PageDown].Call_Action = (Proc) TtcPageDown;
    MenuActionList[CMD_PageDown].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_PageDown].ActionEquiv = CST_EquivNext;
+   MenuActionList[CMD_PageDown].ActionEquiv = "Next";
 
    MenuActionList[CMD_PageTop].ActionName = "TtcPageTop";
    MenuActionList[CMD_PageTop].Call_Action = (Proc) TtcPageTop;
    MenuActionList[CMD_PageTop].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_PageTop].ActionEquiv = CST_EquivHome;
+   MenuActionList[CMD_PageTop].ActionEquiv = "Home";
 
    MenuActionList[CMD_PageEnd].ActionName = "TtcPageEnd";
    MenuActionList[CMD_PageEnd].Call_Action = (Proc) TtcPageEnd;
    MenuActionList[CMD_PageEnd].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_PageEnd].ActionEquiv = CST_EquivEnd;
+   MenuActionList[CMD_PageEnd].ActionEquiv = "End";
 
    MenuActionList[CMD_LineUp].ActionName = "TtcLineUp";
    MenuActionList[CMD_LineUp].Call_Action = (Proc) TtcLineUp;
    MenuActionList[CMD_LineUp].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_LineUp].ActionEquiv = CST_EquivScrollLeft;
+   MenuActionList[CMD_LineUp].ActionEquiv = "C Left";
 
    MenuActionList[CMD_LineDown].ActionName = "TtcLineDown";
    MenuActionList[CMD_LineDown].Call_Action = (Proc) TtcLineDown;
    MenuActionList[CMD_LineDown].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_LineDown].ActionEquiv = CST_EquivLineDown;
+   MenuActionList[CMD_LineDown].ActionEquiv = "C Down";
 
    MenuActionList[CMD_ScrollRight].ActionName = "TtcScrollRight";
    MenuActionList[CMD_ScrollRight].Call_Action = (Proc) TtcScrollRight;
    MenuActionList[CMD_ScrollRight].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_ScrollRight].ActionEquiv = CST_EquivScrollRight;
+   MenuActionList[CMD_ScrollRight].ActionEquiv = "C Right";
 
    MenuActionList[CMD_ScrollLeft].ActionName = "TtcScrollLeft";
    MenuActionList[CMD_ScrollLeft].Call_Action = (Proc) TtcScrollLeft;
    MenuActionList[CMD_ScrollLeft].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_ScrollLeft].ActionEquiv = CST_EquivScrollLeft;
+   MenuActionList[CMD_ScrollLeft].ActionEquiv = "C Left";
 
    MenuActionList[CMD_CreateElement].ActionName = "TtcCreateElement";
    MenuActionList[CMD_CreateElement].Call_Action = (Proc) NULL;
@@ -1088,9 +1084,9 @@ int                 frame;
    int                 lg, sref;
    int                 item;
    int                 action;
-   CHAR_T                string[700];
+   CHAR_T              string[700];
 #define MaxEquivLen 200
-   CHAR_T                equiv[MaxEquivLen];
+   CHAR_T              equiv[MaxEquivLen];
    ThotBool            withEquiv;
    Item_Ctl           *ptritem;
    STRING              ptr;
@@ -1140,7 +1136,7 @@ int                 frame;
 	   if (MenuActionList[action].ActionEquiv != NULL)
 	     {
 	       withEquiv = TRUE;
-	       lg = ustrlen (MenuActionList[action].ActionEquiv);
+	       lg = strlen (MenuActionList[action].ActionEquiv);
 	       if (lg + j < MaxEquivLen)
 		 {
 		   ustrcpy (&equiv[j], MenuActionList[action].ActionEquiv);
