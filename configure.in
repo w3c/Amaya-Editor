@@ -270,7 +270,12 @@ if test "$with_gtk" = "yes" ; then
 
 GTK_INCLUDES="`gtk-config --cflags`"
 AC_SUBST(GTK_INCLUDES)
-GTK_LIBRARIES="`gtk-config --libs` -lgdk_imlib"
+GTK_LIBRARIES="`gtk-config --libs`"
+dnl GL doesn't need the imlib
+if test "${with_gl}" != "yes" ; then
+ GTK_LIBRARIES="${GTK_LIBRARIES} -lgdk_imlib"
+fi
+
 AC_SUBST(GTK_LIBRARIES)
 GTK_OPTIONS="-D_GTK -D_SVGANIM -D_SVGLIB"
   no_motif=yes
@@ -1130,7 +1135,7 @@ if test "$build_amaya" = "yes" ; then
 	echo Amaya configured with Annotations support
     fi
     if test "$with_raptor" = "yes" ; then
-	echo Amaya configured to use the raptor RDF parser
+	echo Amaya configured with the Raptor RDF parser
     fi
     if test "$with_generic_xml" = "yes" ; then
 	echo Amaya configured with generic XML suppport
@@ -1146,17 +1151,9 @@ if test "$build_amaya" = "yes" ; then
     fi
 fi
 
-if test "$no_motif" = yes ; then
+if test "$with_gtk" = yes ; then
     echo "Amaya configured with GTK"
-    echo "Amaya configured without static graphic libraries (libjpeg, libpng)"
-else
-  if test "$no_motif" = yes ; then
-    echo "Amaya configured without static graphic libraries (libjpeg, libpng)"
-  else
-    if test "$no_graphic" = "no"; then
-      echo "Amaya configured with static graphic libraries (libjpeg, libpng)"
-    fi
-  fi
+else 
   if test "$no_motif" = yes ; then
     echo "Motif seems not installed on this machine"
     echo "Amaya need Motif 1.2 or 2.0"

@@ -18,7 +18,7 @@ ac_help="$ac_help
 ac_help="$ac_help
   --without-gtk              use Motif instead of GTK"
 ac_help="$ac_help
-  --without-graphic-libs    use static libjpeg, libpng."
+  --with-graphic-libs    use static libjpeg, libpng."
 ac_help="$ac_help
   --without-i18n          disable internationalization support "
 ac_help="$ac_help
@@ -960,7 +960,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS="$ac_save_CFLAGS"
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-O2"
+    CFLAGS="-g"
   else
     CFLAGS="-g"
   fi
@@ -6240,7 +6240,11 @@ if test "$with_gtk" = "yes" ; then
 
 GTK_INCLUDES="`gtk-config --cflags`"
 
-GTK_LIBRARIES="`gtk-config --libs` -lgdk_imlib"
+GTK_LIBRARIES="`gtk-config --libs`"
+if test "${with_gl}" != "yes" ; then
+ GTK_LIBRARIES="${GTK_LIBRARIES} -lgdk_imlib"
+fi
+
 
 GTK_OPTIONS="-D_GTK -D_SVGANIM -D_SVGLIB"
   no_motif=yes
@@ -6257,7 +6261,7 @@ motif_includes=NONE
 motif_libraries=NONE
 
 echo $ac_n "checking for Motif""... $ac_c" 1>&6
-echo "configure:6261: checking for Motif" >&5
+echo "configure:6265: checking for Motif" >&5
 if test "x$motif_includes" != xNONE && test "x$motif_libraries" != xNONE; then
     no_motif=
 else
@@ -6438,9 +6442,9 @@ fi
 
 if test "$no_graphic" = yes; then
     echo $ac_n "checking for libjpeg version = 6b""... $ac_c" 1>&6
-echo "configure:6442: checking for libjpeg version = 6b" >&5
+echo "configure:6446: checking for libjpeg version = 6b" >&5
     cat > conftest.$ac_ext <<EOF
-#line 6444 "configure"
+#line 6448 "configure"
 #include "confdefs.h"
 #include <jpeglib.h>
          x JPEG_LIB_VERSION x
@@ -6461,9 +6465,9 @@ fi
 rm -f conftest*
 
     echo $ac_n "checking for libpng version = 1.0.x or 1.2.x""... $ac_c" 1>&6
-echo "configure:6465: checking for libpng version = 1.0.x or 1.2.x" >&5
+echo "configure:6469: checking for libpng version = 1.0.x or 1.2.x" >&5
     cat > conftest.$ac_ext <<EOF
-#line 6467 "configure"
+#line 6471 "configure"
 #include "confdefs.h"
 #include <png.h>
 	x PNG_LIBPNG_VER_STRING x
@@ -6556,7 +6560,7 @@ fi
 
 if test "$with_gl" = "yes" ; then
   	echo $ac_n "checking OpenGL""... $ac_c" 1>&6
-echo "configure:6560: checking OpenGL" >&5
+echo "configure:6564: checking OpenGL" >&5
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
@@ -6573,7 +6577,7 @@ echo "configure:6560: checking OpenGL" >&5
     	    fi
 	done	
   	echo $ac_n "checking GLU""... $ac_c" 1>&6
-echo "configure:6577: checking GLU" >&5	
+echo "configure:6581: checking GLU" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6595,7 +6599,7 @@ echo "configure:6577: checking GLU" >&5
     	    fi
 	done	
   	echo $ac_n "checking GTKGLAREA""... $ac_c" 1>&6
-echo "configure:6599: checking GTKGLAREA" >&5	
+echo "configure:6603: checking GTKGLAREA" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6618,7 +6622,7 @@ echo "configure:6599: checking GTKGLAREA" >&5
     	    fi
 	done	
   	echo $ac_n "checking freetype""... $ac_c" 1>&6
-echo "configure:6622: checking freetype" >&5	
+echo "configure:6626: checking freetype" >&5	
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
@@ -6632,7 +6636,7 @@ echo "configure:6622: checking freetype" >&5
     	    fi
 	done	
         echo $ac_n "checking Xft""... $ac_c" 1>&6
-echo "configure:6636: checking Xft" >&5	
+echo "configure:6640: checking Xft" >&5	
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
@@ -6655,7 +6659,7 @@ echo "configure:6636: checking Xft" >&5
     	    fi
 	done	
 	echo $ac_n "checking gcc3""... $ac_c" 1>&6
-echo "configure:6659: checking gcc3" >&5	
+echo "configure:6663: checking gcc3" >&5	
 	for ac_dir in               		\
 		/usr/lib 			\
 		/usr/X11R6/lib 		\
@@ -7525,7 +7529,7 @@ if test "$build_amaya" = "yes" ; then
 	echo Amaya configured with Annotations support
     fi
     if test "$with_raptor" = "yes" ; then
-	echo Amaya configured to use the raptor RDF parser
+	echo Amaya configured with the Raptor RDF parser
     fi
     if test "$with_generic_xml" = "yes" ; then
 	echo Amaya configured with generic XML suppport
@@ -7541,17 +7545,9 @@ if test "$build_amaya" = "yes" ; then
     fi
 fi
 
-if test "$no_motif" = yes ; then
+if test "$with_gtk" = yes ; then
     echo "Amaya configured with GTK"
-    echo "Amaya configured without static graphic libraries (libjpeg, libpng)"
-else
-  if test "$no_motif" = yes ; then
-    echo "Amaya configured without static graphic libraries (libjpeg, libpng)"
-  else
-    if test "$no_graphic" = "no"; then
-      echo "Amaya configured with static graphic libraries (libjpeg, libpng)"
-    fi
-  fi
+else 
   if test "$no_motif" = yes ; then
     echo "Motif seems not installed on this machine"
     echo "Amaya need Motif 1.2 or 2.0"
