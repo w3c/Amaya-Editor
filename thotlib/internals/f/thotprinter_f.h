@@ -4,11 +4,8 @@
 
 #define DLLEXPORT __declspec(dllexport)
 
-#ifdef __STDC__
-DLLEXPORT void PrintDoc (HWND, int, STRING*, HDC, BOOL, int, STRING, STRING, HINSTANCE, BOOL);
-#else  /* !__STDC__ */
-DLLEXPORT void PrintDoc ();
-#endif /* __STDC__ */
-
+DLLEXPORT void PrintDoc (HWND hWnd, int argc, char **argv, HDC PrinterDC,
+			 ThotBool isTrueColors, int depth, char *tmpDocName,
+			 char *tmpDir, HINSTANCE hInst, ThotBool buttonCmd);
 #endif /* _THOTPRINTER_F_H */
 #endif /* _WINDOWS */
