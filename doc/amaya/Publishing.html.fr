@@ -10,17 +10,17 @@
 
 <body xml:lang="fr" lang="fr">
 
-<table border="0" width="100%" summary="toc">
+<table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
-        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="SpellChecking.html.fr" accesskey="p"><img
-        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top" border="0"
+      <td><p><a href="SpellChecking.html.fr" accesskey="p"><img
+        alt="previous" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top" 
         src="../Icons/up.gif" /></a> <a href="Printing.html.fr"
-        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+        accesskey="n"><img alt="next" src="../Icons/right.gif"
         /></a></p>
       </td>
     </tr>
@@ -54,8 +54,8 @@ des images.</p>
 <p>La commande sauver peut être invoquée soit en choisissant
 <strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (control-s
 pour Windows, control-x, control-s pour Unix) ou bien en cliquant sur le
-bouton <img alt="floppy" src="../Icons/floppy.gif" align="middle" border="0"
-/> . Cette commande sauve le document courant à l'adresse où il a été amené.
+bouton <img alt="floppy" src="../Icons/floppy.gif" />.
+ Cette commande sauve le document courant à l'adresse où il a été amené.
 Les images nouvellement ajoutées sont sauvées dans le même répertoire et
 aucune confirmation n'est demandée, excepté si le nom du document est inconnu.
 Les serveurs permettent aux utilisateurs d'importer un document quand seul le
@@ -189,10 +189,10 @@ document sous forme de texte, dans un fichier local. La liste de tous les URIs
 utilisés dans le document est listées dans ce fichier.</p>
 </div>
 
-<p align="right"><a href="SpellChecking.html.fr"><img alt="previous"
-border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
-alt="top" border="0" src="../Icons/up.gif" /></a> <a
-href="Printing.html.fr"><img alt="next" border="0" src="../Icons/right.gif"
+<p><a href="SpellChecking.html.fr"><img alt="previous"
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
+alt="top" src="../Icons/up.gif" /></a> <a
+href="Printing.html.fr"><img alt="next" src="../Icons/right.gif"
 /></a></p>
 <hr />
 </body>

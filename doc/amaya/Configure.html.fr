@@ -10,17 +10,17 @@
 
 <body xml:lang="fr" lang="fr">
 
-<table border="0" width="100%" summary="toc">
+<table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
-        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Annotations.html.fr" accesskey="p"><img
-        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top" border="0"
+      <td><p><a href="Annotations.html.fr" accesskey="p"><img
+        alt="previous" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top" 
         src="../Icons/up.gif" /></a> <a href="ShortCuts.html.fr"
-        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+        accesskey="n"><img alt="next" src="../Icons/right.gif"
         /></a></p>
       </td>
     </tr>
@@ -55,7 +55,7 @@ de configuration de l'utilisateur que nous appellerons le répertoire
 <strong>AmayaHome</strong>. La table suivante montre où ce répertoire est
 stocké dans les différentes architectures :</p>
 
-<table border="1" summary="directory structure" align="center">
+<table border="1" summary="directory structure">
   <thead>
     <tr>
       <td><strong>architecture</strong></td>
@@ -121,7 +121,7 @@ dans un répertoire que nous appelons le répertoire <strong>AmayaTemp</strong>.
 La table suivante montre où ce répertoire est stocké dans les différents
 architectures :</p>
 
-<table border="1" summary="directory structure" align="center">
+<table border="1" summary="directory structure">
   <thead>
     <tr>
       <td><strong>architecture</strong></td>
@@ -166,16 +166,16 @@ trois boutons d'action en commun :</p>
 summary="action button chart">
   <tbody>
     <tr>
-      <th bgcolor="C0C0C0">Appliquer</th>
+      <th>Appliquer</th>
       <td>Ce bouton valide et stocke les options affichées dans le menu.</td>
     </tr>
     <tr>
-      <th bgcolor="C0C0C0">Défauts</th>
+      <th>Défauts</th>
       <td>Ce bouton rétablit, mais ne sauve pas, les valeurs par défaut.
         Utilisez le bouton Appliquer pour valider les options.</td>
     </tr>
     <tr>
-      <th bgcolor="C0C0C0">Terminer</th>
+      <th>Terminer</th>
       <td>Ce bouton ferme le menu.</td>
     </tr>
   </tbody>
@@ -511,10 +511,10 @@ href="http://www.w3.org/Amaya/User/Templates.html">utilisez des modèles de
 page avec Amaya</a>.</p>
 </div>
 
-<p align="right"><a href="Annotations.html.fr"><img alt="previous" border="0"
+<p><a href="Annotations.html.fr"><img alt="previous" 
 src="../Icons/left.gif" /></a><a href="Manual.html.fr"><img alt="top"
-border="0" src="../Icons/up.gif" /></a> <a href="ShortCuts.html.fr"><img
-alt="next" border="0" src="../Icons/right.gif" /></a></p>
+src="../Icons/up.gif" /></a> <a href="ShortCuts.html.fr"><img
+alt="next" src="../Icons/right.gif" /></a></p>
 <hr />
 <address>
   <a href="mailto:vatton@w3.org">Irène Vatton</a><br />

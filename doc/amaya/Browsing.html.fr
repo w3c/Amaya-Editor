@@ -10,15 +10,15 @@
 
 <body xml:lang="en" lang="en">
 
-<table border="0" width="100%">
+<table border="0">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
-        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Manual.html.fr" accesskey="t"><img alt=""
-        border="0" src="../Icons/up.gif" /></a> <a href="Selecting.html.fr"
-        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+      <td><p><a href="Manual.html.fr" accesskey="t"><img alt=""
+        src="../Icons/up.gif" /></a> <a href="Selecting.html.fr"
+        accesskey="n"><img alt="next" src="../Icons/right.gif"
         /></a></p>
       </td>
     </tr>
@@ -190,9 +190,9 @@ chargées :</p>
       <strong>Control-b</strong> et <strong>Shift-Control-F</strong> sur
       Windows.</dd>
   <dt>Barre des boutons</dt>
-    <dd>Deux boutons : <img alt="Back " border="0" src="../Icons/Back.gif"
-      align="middle" /> et <img alt="Forward " border="0"
-      src="../Icons/Forward.gif" align="middle" /> vous permettent de
+    <dd>Deux boutons : <img alt="Back " src="../Icons/Back.gif"/> 
+	et <img alt="Forward "
+      src="../Icons/Forward.gif" /> vous permettent de
       retourner à la page précédente ou d'aller à la page suivante.</dd>
 </dl>
 
@@ -230,6 +230,6 @@ des raccourcis clavier à la Emacs.</p>
 </ul>
 </div>
 
-<p align="right"><a href="Manual.html.fr"><img alt="" /></a></p>
+<p><a href="Manual.html.fr"><img alt="" /></a></p>
 </body>
 </html>

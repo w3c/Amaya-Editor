@@ -10,17 +10,17 @@
 
 <body xml:lang="en" lang="en">
 
-<table border="0" width="100%" summary="toc">
+<table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
-        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
+      <td><p><img  alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Changing.html.fr" accesskey="p"><img
-        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top" border="0"
+      <td><p><a href="Changing.html.fr" accesskey="p"><img
+        alt="previous" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top"
         src="../Icons/up.gif" /></a> <a href="Math.html.fr" accesskey="n"><img
-        alt="next" border="0" src="../Icons/right.gif" /></a></p>
+        alt="next" src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -38,7 +38,7 @@ mêmes que pour les autres structures HTML, avec quelques suppléments.</p>
 
 <p>Quand on active le bouton table <img src="../Icons/table.gif"
 alt="Table button" /> ou quand on sélectionne l'entrée
-<strong>Table</strong>depuis le menu <strong>Éléments</strong>, Amaya
+<strong>Table</strong> depuis le menu <strong>Éléments</strong>, Amaya
 visualise une boîte de dialogue qui vous permet de spécifier le nombre initial
 de lignes et de colonnes pour la nouvelle table, ainsi que sa bordure. Si vous
 avez fait ça par erreur, cliquez simplement sur le bouton
@@ -138,7 +138,7 @@ paragraphe après la table. Ce nouveau paragraphe peut être modifié si besoin
 est.</p>
 
 <p><em>Notez que le modèle de table implémenté
-dans</em><strong><em>Amaya</em></strong><em>est le modèle d'</em><a
+dans</em> <strong><em>Amaya</em></strong> <em>est le modèle d'</em><a
 href="../../TR/REC-html40"><em>HTML 4.0</em></a><em>. Celui ci inclus des
 carastéristiques comme les corps multiples
 (</em><code><em>tbody</em></code><em>), des entêtes de table
@@ -146,10 +146,10 @@ carastéristiques comme les corps multiples
 (</em><code><em>tfoot</em></code><em>).</em></p>
 </div>
 
-<p align="right"><a href="Changing.html.fr"><img alt="previous" border="0"
+<p><a href="Changing.html.fr"><img alt="previous" 
 src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-border="0" src="../Icons/up.gif" /></a> <a href="Math.html.fr"><img alt="next"
-border="0" src="../Icons/right.gif" /></a></p>
+src="../Icons/up.gif" /></a> <a href="Math.html.fr"><img alt="next"
+src="../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>

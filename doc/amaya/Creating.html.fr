@@ -10,17 +10,17 @@
 
 <body xml:lang="fr" lang="fr">
 
-<table border="0" width="100%" summary="toc">
+<table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
-        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Views.html.fr" accesskey="p"><img
-        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top" border="0"
+      <td><p><a href="Views.html.fr" accesskey="p"><img
+        alt="previous" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top" 
         src="../Icons/up.gif" /></a> <a href="Links.html.fr"
-        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+        accesskey="n"><img alt="next" src="../Icons/right.gif"
         /></a></p>
       </td>
     </tr>
@@ -148,14 +148,14 @@ permet de créer très rapidement des structures complexes emboitées.</p>
 
 <p>Pour créer cette structure, créez d'abord une liste numérotée avec un
 premier item (par exemple en cliquant sur le bouton <img alt="Numbered List "
-border="0" src="../Icons/NumList.gif" align="middle" /> ) et tapez sur la
+src="../Icons/NumList.gif" /> ) et tapez sur la
 première ligne. A la fin de cette première ligne, pressez la touche "Enter" :
 cela crée un nouveau paragraphe dans la liste. A la fin de ce paragraphe,
 pressez la touche "Enter" : cela crée encore un nouveau paragraphe. Par
 contre, en pressant encore la même touche, vous remplacez ce paragraphe dans
 un item vide 2. A la fin de la première ligne de l'article 2, créez une
 nouvelle liste avec son premier item (cliquez par exemple sur le bouton <img
-border="0" alt="Numbered List " src="../Icons/NumList.gif" align="middle" />
+alt="Numbered List " src="../Icons/NumList.gif" />
 ). La nouvelle liste sera automatiquement emboitée. L'item b. est créé en
 appuyant deux fois sur la touche "Enter" à la fin de l'item a. Quand le point
 d'insertion est à la fin de l'item b., créez l'item 3 en appuyant quatre fois
@@ -294,10 +294,10 @@ le saisir afin de visualiser le résultat lors d'un prochain chargement avec
 Amaya.</p>
 </div>
 
-<p align="right"><a href="Views.html.fr"><img alt="previous" border="0"
+<p><a href="Views.html.fr"><img alt="previous" 
 src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-border="0" src="../Icons/up.gif" /></a> <a href="Links.html.fr"><img
-alt="next" border="0" src="../Icons/right.gif" /></a></p>
+src="../Icons/up.gif" /></a> <a href="Links.html.fr"><img
+alt="next" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>

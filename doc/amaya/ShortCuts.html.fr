@@ -10,16 +10,16 @@
 
 <body>
 
-<table border="0" width="100%" summary="toc">
+<table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
-        border="0" alt="Amaya" src="../Icons/amaya.gif" /></td>
-      <td><p align="right"><a href="Configure.html.fr" accesskey="p"><img
-        alt="previous" border="0" src="../Icons/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top" border="0"
+      <td><img alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        alt="Amaya" src="../Icons/amaya.gif" /></td>
+      <td><p><a href="Configure.html.fr" accesskey="p"><img
+        alt="previous" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr" accesskey="t"><img alt="top" 
         src="../Icons/up.gif" /></a> <a href="Access.html.fr"
-        accesskey="n"><img alt="next" border="0" src="../Icons/right.gif"
+        accesskey="n"><img alt="next" src="../Icons/right.gif"
         /></a></p>
       </td>
     </tr>
@@ -190,10 +190,10 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
 <p></p>
 </div>
 
-<p align="right"><a href="Configure.html.fr"><img alt="previous" border="0"
+<p><a href="Configure.html.fr"><img alt="previous"
 src="../Icons/left.gif" /></a><a href="Manual.html.fr"><img alt="top"
-border="0" src="../Icons/up.gif" /></a> <a href="Access.html.fr"><img
-alt="next" border="0" src="../Icons/right.gif" /></a></p>
+src="../Icons/up.gif" /></a> <a href="Access.html.fr"><img
+alt="next" src="../Icons/right.gif" /></a></p>
 <hr />
 <address>
   <a href="mailto:vatton@w3.org">Irène Vatton</a><br />
