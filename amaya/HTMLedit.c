@@ -1350,6 +1350,103 @@ void ElementDeleted(event)
         }
 }
 
+
+/*----------------------------------------------------------------------
+   ChangeURI
+   Element el has been pasted in document doc. It comes from document
+   originDocument and it has an href attribute (from the HTML or XLink
+   namespace) that has to be updated. Update it according to the new
+   context.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ChangeURI (Element el, Attribute attr, Document originDocument,
+		Document doc)
+#else  /* __STDC__ */
+void    ChangeURI (el, attr, originDocument, doc)
+Element el;
+Attribute attr;
+Document originDocument;
+Document doc;
+#endif /* __STDC__ */
+
+{
+  int      length, i, iName;
+  STRING   value, base, documentURI, tempURI, path;
+
+  /* get a buffer for the URI */
+  length = TtaGetTextAttributeLength (attr) + 1;
+  value = TtaAllocString (length);
+  if (value)
+    {
+    tempURI = TtaAllocString (MAX_LENGTH);
+    if (tempURI)
+      {
+      /* get the URI itself */
+      TtaGiveTextAttributeValue (attr, value, &length);
+      if (value[0] == '#')
+	{
+	  /* the target is in the original document */
+	  /* convert the internal link into an external link */
+	  ustrcpy (tempURI, DocumentURLs[originDocument]);
+	  iName = 0;
+	}
+      else
+	{
+	  /* the target element is in another document */
+          documentURI = TtaAllocString (MAX_LENGTH);
+	  if (documentURI)
+	    {
+	    ustrcpy (documentURI, value);
+	    /* looks for a '#' in the value */
+	    i = length;
+	    while (value[i] != '#' && i > 0)
+	      i--;
+	    if (i == 0)
+	      {
+		/* there is no '#' in the URI */
+		value[0] = EOS;
+		iName = 0;
+	      }
+	    else
+	      {
+		/* there is a '#' character in the URI */
+		/* separate document name and element name */
+		documentURI[i] = EOS;
+		iName = i;
+	      }
+	    /* get the complete URI of the referred document */
+	    /* Add the base if necessary */
+	    path = TtaAllocString (MAX_LENGTH);
+	    if (path)
+	      {
+	      NormalizeURL (documentURI, originDocument, tempURI, path, NULL);
+	      TtaFreeMemory (path);
+	      }
+	    TtaFreeMemory (documentURI);
+	    }
+	}
+      if (value[iName] == '#')
+	{
+	  if (!ustrcmp (tempURI, DocumentURLs[doc]))
+	    /* convert external link into internal link */
+	    ustrcpy (tempURI, &value[iName]);
+	  else
+	    ustrcat (tempURI, &value[iName]);
+	}
+      /* set the relative value or URI in attribute HREF */
+      base = GetBaseURL (doc);
+      if (base)
+	{
+        value = MakeRelativeURL (tempURI, base);
+        TtaFreeMemory (base);
+        }
+      TtaSetAttributeText (attr, value, el, doc);
+      TtaFreeMemory (tempURI);
+      }
+    TtaFreeMemory (value);
+    }
+}
+
 /*----------------------------------------------------------------------
    ElementPasted
    This function is called for each element pasted by the user, and for
@@ -1377,12 +1474,8 @@ NotifyElement      *event;
   Attribute           attr;
   SSchema             HTMLschema;
   CSSInfoPtr          css;
-  STRING              value, base;
-  STRING              documentURL;
-  STRING              tempURL;
-  STRING              path;
-  int                 length, i, iName;
-  int                 oldStructureChecking;
+  STRING              value;
+  int                 length, oldStructureChecking;
 
   el = event->element;
   doc = event->document;
@@ -1451,26 +1544,23 @@ NotifyElement      *event;
 		  if (length > 0)
 		    {
 		      value = TtaAllocString (MAX_LENGTH);
-			if (value != NULL)
-			  {
-			    /* get the SRC itself */
-			    TtaGiveTextAttributeValue (attr, value, &length);
-			    /* update value and SRCattribute */
-			    ComputeSRCattribute (el, doc, originDocument,
-						 attr, value);
-			  }
-			TtaFreeMemory (value);
-		      }
-		  }
-	      }
-	  }
-     }
-
+		      if (value != NULL)
+			{
+			  /* get the SRC itself */
+			  TtaGiveTextAttributeValue (attr, value, &length);
+			  /* update value and SRCattribute */
+			  ComputeSRCattribute (el, doc, originDocument,
+					       attr, value);
+			}
+		      TtaFreeMemory (value);
+		    }
+		}
+	    }
+	}
+    }
+  
   if (anchor != NULL)
     {
-      tempURL = TtaAllocString (MAX_LENGTH);
-      documentURL = TtaAllocString (MAX_LENGTH);
-      path = TtaAllocString (MAX_LENGTH);
       TtaSetDisplayMode (doc, DeferredDisplay);
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (0, doc);
@@ -1511,71 +1601,9 @@ NotifyElement      *event;
 	      attrType.AttrTypeNum = HTML_ATTR_HREF_;
 	      attr = TtaGetAttribute (anchor, attrType);
 	      if (attr != NULL)
-		{
-		  /* get a buffer for the URL */
-		  length = TtaGetTextAttributeLength (attr) + 1;
-		  value = TtaAllocString (length);
-		  if (value != NULL)
-		    {
-		      /* get the URL itself */
-		      TtaGiveTextAttributeValue (attr, value, &length);
-		      if (value[0] == '#')
-			{
-			  /* the target element is local in the document */
-			  /* origin convert internal link into external
-			     link */
-			  ustrcpy (tempURL, DocumentURLs[originDocument]);
-			  iName = 0;
-			}
-		      else
-			{
-			  /* the target element is in another document */
-			  ustrcpy (documentURL, value);
-			  /* looks for a '#' in the value */
-			  i = length;
-			  while (value[i] != '#' && i > 0)
-			    i--;
-			  if (i == 0)
-			    {
-			      /* there is no '#' in the URL */
-			      value[0] = EOS;
-			      iName = 0;
-			    }
-			  else
-			    {
-			      /* there is a '#' character in the URL */
-			      /* separate document name and element name */
-			      documentURL[i] = EOS;
-			      iName = i;
-			    }
-			  /* get the complete URI of the referred
-			     document */
-			  /* Add the base if necessary */
-			  NormalizeURL (documentURL, originDocument,
-					tempURL, path, NULL);
-			}
-		      if (value[iName] == '#')
-			{
-			  if (!ustrcmp (tempURL, DocumentURLs[doc]))
-				/* convert external link into internal link */
-			    ustrcpy (tempURL, &value[iName]);
-			  else
-			    ustrcat (tempURL, &value[iName]);
-			}
-		      TtaFreeMemory (value);
-		      /* set the relative value or URL in attribute HREF */
-		      base = GetBaseURL (doc);
-		      value = MakeRelativeURL (tempURL, base);
-		      TtaSetAttributeText (attr, value, anchor, doc);
-		      TtaFreeMemory (base);
-		      TtaFreeMemory (value);
-		    }
-		}
+                 ChangeURI (anchor, attr, originDocument, doc);
 	    }
 	}
-      TtaFreeMemory (path);
-      TtaFreeMemory (documentURL);
-      TtaFreeMemory (tempURL);
       TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
       TtaSetDisplayMode (doc, DisplayImmediately);
     }

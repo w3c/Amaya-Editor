@@ -17,6 +17,8 @@
 #include "amaya.h"
 #include "XLink.h"
 
+#include "HTMLedit_f.h"
+
 /*----------------------------------------------------------------------
    SetXLinkTypeSimple attach an attribute xlink:type="simple" to element el
   ----------------------------------------------------------------------*/
@@ -58,7 +60,7 @@ ThotBool     withUndo;
 
 /*----------------------------------------------------------------------
  XLinkPasted
- An element has been pasted.
+ An element from any namespace has been pasted.
  If it has some XLink attributes, update the link.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -68,7 +70,27 @@ void XLinkPasted(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
-  /****
-  @@@@@@ Refer to function ElementPasted from HTMLedit.c *****
-  ****/
+  Document       originDocument;
+  AttributeType  attrType;
+  Attribute      attr;
+  SSchema        XLinkSchema;
+
+  /* does the pasted element come from another document? */
+  originDocument = (Document) event->position;
+  if (originDocument > 0 && originDocument != event->document)
+    /* this element has changed document. Check its links */
+    {
+    XLinkSchema = TtaGetSSchema (TEXT("XLink"), event->document);
+    if (XLinkSchema)
+      {
+      /* is there an href attribute from the XLink namespace? */
+      attrType.AttrSSchema = XLinkSchema;
+      attrType.AttrTypeNum = XLink_ATTR_href_;
+      attr = TtaGetAttribute (event->element, attrType);
+      if (attr)
+	/* the pasted element has an href attribute. Update the value
+	   of that attribute */
+        ChangeURI (event->element, attr, originDocument, event->document);
+      }
+    }
 }

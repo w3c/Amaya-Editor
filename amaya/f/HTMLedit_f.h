@@ -35,6 +35,10 @@ extern void MakeUniqueName ( Element el,
                              Document doc );
 extern void ElementCreated ( NotifyElement * event );
 extern void ElementDeleted ( NotifyElement *event );
+extern void ChangeURI ( Element el,
+			Attribute attr,
+			Document originDocument,
+			Document doc );
 extern void ElementPasted ( NotifyElement * event );
 extern void CheckNewLines ( NotifyOnTarget *event );
 extern void CreateTarget ( Document doc,
@@ -138,6 +142,10 @@ extern void MakeUniqueName (/* Element el,
                                Document doc */);
 extern void ElementCreated (/* NotifyElement * event */);
 extern void ElementDeleted (/* NotifyElement *event */);
+extern void ChangeURI (/* Element el,
+			  Attribute attr,
+			  Document originDocument,
+			  Document doc */);
 extern void ElementPasted (/* NotifyElement * event */);
 extern void CheckNewLines (/* NotifyOnTarget *event */);
 extern void CreateTarget (/* Document doc,
