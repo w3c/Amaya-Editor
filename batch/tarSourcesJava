@@ -1,0 +1,89 @@
+#!/bin/sh
+#
+# This script builds the Source tar files for Amaya
+#
+#       amaya-src-$AMAYAVERSION.tar.gz
+#
+# And the associated Librairies for supported versions.
+#
+#       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
+#
+AMAYAVERSION=1.1a
+THOTDIR=/tahiti/diffusion/opera
+DEST=/tahiti/thottape
+
+TAR="tar cvbfh 200"
+COMPRESS="gzip -9"
+
+cd $THOTDIR
+
+$TAR - \
+classes/amaya.zip \
+classes/biss.zip \
+classes/classes.zip \
+classes/jigsaw.zip \
+classes/sources.zip \
+classes/thotlib.zip \
+classes/lib/ \
+classes/Makefile \
+config/en-javamsg \
+config/fr-javamsg \
+config/java.properties \
+javalib/JavaDialog.c \
+javalib/JavaTypes.c \
+javalib/JavaTypes.def \
+javalib/JavaTypes.h \
+javalib/JavaVMaccesses.h \
+javalib/JavaWWWInterf.c \
+javalib/JavaX11Interf.c \
+javalib/JavaX11Interf.h \
+javalib/Makefile.in \
+javalib/Makefile.java \
+javalib/Makefile.javanosrc \
+javalib/Makefile.javasrc \
+javalib/biss_awt_APIstubs.c \
+javalib/biss_awt_APIstubs.h \
+javalib/debug_stubs.c \
+javalib/debug_stubs.h \
+javalib/events.c \
+javalib/events.h \
+javalib/javamsg.h \
+javalib/kaffeine.c \
+javalib/kaffeine.h \
+javalib/w3c_thotlib_APIExtra_stubs.c \
+javalib/w3c_thotlib_APIExtra_stubs.h \
+javalib/f/JavaDialog_f.h \
+javalib/f/JavaTypes_f.h \
+javalib/f/JavaWWWInterf_f.h \
+javalib/f/JavaX11Interf_f.h \
+javalib/f/biss_awt_APIstubs_f.h \
+javalib/f/debug_stubs_f.h \
+javalib/f/events_f.h \
+javalib/f/kaffeine_f.h \
+javalib/f/w3c_thotlib_APIExtra_stubs_f.h \
+kaffe-0.9.1/configure \
+kaffe-0.9.1/ChangeLog \
+kaffe-0.9.1/Makefile.in \
+kaffe-0.9.1/NOTES/FAQ.* \
+kaffe-0.9.1/README \
+kaffe-0.9.1/config/Makefile.in \
+kaffe-0.9.1/config/config* \
+kaffe-0.9.1/config.guess \
+kaffe-0.9.1/config.sub \
+kaffe-0.9.1/configure \
+kaffe-0.9.1/configure.in \
+kaffe-0.9.1/include \
+kaffe-0.9.1/install-sh \
+kaffe-0.9.1/kaffe/Makefile.in \
+kaffe-0.9.1/kaffe/kaffe/Makefile.in \
+kaffe-0.9.1/kaffe/kaffe/*.c \
+kaffe-0.9.1/kaffe/scripts \
+kaffe-0.9.1/license.terms \
+kaffe-0.9.1/packages \
+kaffe-0.9.1/test \
+tools/dns_daemon/Makefile \
+tools/dns_daemon/dns_daemon.c \
+tools/javastub/Makefile.in \
+tools/javastub/javastub.c \
+tools/dns_daemon/Makefile.in \
+tools/javastub/Makefile.in \
