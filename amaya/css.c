@@ -2526,7 +2526,7 @@ CSSInfoPtr          css;
 	sprintf (filename, "%s/%d/%s", TempFileDirectory, doc, file);
 	if (DumpCSSToFile (currentDocument, css, filename))
 	   return (-1);
-	res = PutObjectWWW (doc, filename, css->url, AMAYA_SYNC, (int) unknown_type,
+	res = PutObjectWWW (doc, filename, css->url, AMAYA_SYNC, unknown_type,
 			    (TTcbf *) NULL, (void *) NULL);
 	if (res != HT_OK)
 	  {

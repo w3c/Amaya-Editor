@@ -21,6 +21,13 @@
 #include "init_f.h"
 #include "AHTURLTools_f.h"
 
+/* Private  functions */
+#ifdef __STDC__
+static void         ConvertToLowerCase (char *string);
+#else
+static void         ConvertToLowerCase (/*char *string*/);
+#endif
+
 /*----------------------------------------------------------------------
   ExplodeURL 
   ----------------------------------------------------------------------*/
@@ -172,8 +179,7 @@ char               *path;
        (strcmp (nsuffix, "htm")) &&
        (strcmp (nsuffix, "shtml")))
      return (FALSE);
-   else if ((!strcmp (nsuffix, "gz")) ||
-	    (!strcmp (nsuffix, "z")))
+   else if (!strcmp (nsuffix, "gz"))
      {
        /* take in account compressed files */
        ExtractSuffix (temppath, suffix);       
@@ -267,11 +273,11 @@ char               *path;
    if ((strcmp (nsuffix, "gif")) && (strcmp (nsuffix, "xbm")) &&
        (strcmp (nsuffix, "xpm")) && (strcmp (nsuffix, "jpg")) &&
        (strcmp (nsuffix, "pdf")) && (strcmp (nsuffix, "png")) &&
-       (strcmp (nsuffix, "tgz")) && (strcmp (nsuffix, "xpg")) &&
-       (strcmp (nsuffix, "xpd")) && (strcmp (nsuffix, "ps")) &&
-       (strcmp (nsuffix, "au")))
+       (strcmp (nsuffix, "tgz")) && (strcmp (nsuffix, "tar")) &&
+       (strcmp (nsuffix, "xpg")) && (strcmp (nsuffix, "xpd")) &&
+       (strcmp (nsuffix, "ps"))  && (strcmp (nsuffix, "au")))
       return (TRUE);
-   else if ((!strcmp (nsuffix, "gz")) || (!strcmp (nsuffix, "z")))
+   else if (!strcmp (nsuffix, "gz"))
      {
        /* take in account compressed files */
        ExtractSuffix (temppath, suffix);       
@@ -368,9 +374,10 @@ boolean             IsValidProtocol (url)
 char               *url;
 #endif /* __STDC__ */
 {
-   if (!strncmp (url, "http:", 5)
-      /***|| !strncmp (path, "ftp:", 4)
-      || !strncmp (path, "news:", 5)***/ )
+   if (!strncmp (url, "http:", 5))
+       /* experimental */
+     /***|| !strncmp (path, "ftp:", 4)
+       || !strncmp (path, "news:", 5)***/ 
       return (TRUE);
    else
       return (FALSE);
@@ -448,7 +455,6 @@ char               *docName;
 	 {
 	   /* it has this form, we complete it by adding a "/"  */
 	   strcat (newName, "/");
-	   length++;
 	 }
        if (ptr)
 	 HT_FREE (ptr);
@@ -459,7 +465,7 @@ char               *docName;
    else
      {
        /* take into account the BASE element. */
-       length = MAX_LENGTH;
+       length = MAX_LENGTH -1;
        /* get the root element    */
        el = TtaGetMainRoot (doc);
 	   
@@ -526,7 +532,7 @@ char               *docName;
 	   else
 	     basename[0] = EOS;
 	 }
-
+     
        /*
        ** Fourth Step: 
        ** If there's no base element, and if we're following
@@ -562,7 +568,7 @@ char               *docName;
 	   else
 	       basename[0] = EOS;
 	 }
-  
+     
        /*
        ** Fifth Step, calculate the absolute URL, using the base
        */
@@ -685,6 +691,93 @@ char                base_url;
 
    return (result);
 }
+/*----------------------------------------------------------------------
+  HasKnownFileSuffix
+  returns TRUE if path points to a file ending with a suffix.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             HasKnownFileSuffix (char *path)
+#else  /* __STDC__ */
+boolean             HasKnownFileSuffix (path)
+char               *path;
+#endif /* __STDC__ */
+{
+   char                *root;
+   char                temppath[MAX_LENGTH];
+   char                suffix[MAX_LENGTH];
+
+   if (!path || path[0] == EOS)
+     return (FALSE);
+
+   root = HTParse(path, (char *) NULL, PARSE_PATH | PARSE_PUNCTUATION);
+
+   if (root) 
+     {
+       strcpy (temppath, root);
+       HT_FREE (root);
+       /* Get the suffix */
+       ExtractSuffix (temppath, suffix); 
+
+       if( suffix[0] == EOS)
+	 /* no suffix */
+	 return (FALSE);
+
+       /* Normalize the suffix */
+       ConvertToLowerCase (suffix);
+
+       if ((!strcmp (suffix, "gz")) ||
+	   (!strcmp (suffix, "z")))
+	 /* skip the compressed suffix */
+	 {
+	 ExtractSuffix (temppath, suffix);
+	 if(suffix[0] == EOS)
+	   /* no suffix */
+	   return (FALSE);
+         /* Normalize the suffix */
+         ConvertToLowerCase (suffix);
+	 }
+
+       if ((strcmp (suffix, "gif")) && (strcmp (suffix, "xbm")) &&
+	   (strcmp (suffix, "xpm")) && (strcmp (suffix, "jpg")) &&
+	   (strcmp (suffix, "pdf")) && (strcmp (suffix, "png")) &&
+	   (strcmp (suffix, "tgz")) && (strcmp (suffix, "xpg")) &&
+	   (strcmp (suffix, "xpd")) && (strcmp (suffix, "ps")) &&
+	   (strcmp (suffix, "au"))  && (strcmp (suffix, "html")) &&
+	   (strcmp (suffix, "htm")) && (strcmp (suffix, "shtml")) &&
+	   (strcmp (suffix, "txt")) && (strcmp (suffix, "css")) &&
+	   (strcmp (suffix, "eps")))
+	 return (FALSE);
+       else
+	 return (TRUE);
+     }
+   else
+     return (FALSE);
+}
+
+
+/*----------------------------------------------------------------------
+  ConvertToLowerCase
+  Converts a string to lowercase.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         ConvertToLowerCase (char *string)
+#else  /* __STDC__ */
+static void         ConvertToLowerCase (string)
+char                *string;
+
+#endif /* __STDC__ */
+{
+ int i;
+
+ if (!string)
+   return;
+
+ for (i = 0; string[i] != EOS; i++)
+   string[i] = TOLOWER (string[i]);
+}
+
+
+
 
 
 

@@ -22,6 +22,13 @@
 #define CATCH_SIG
 #endif
 
+#define XBM_FORMAT 0
+#define EPS_FORMAT 1
+#define XPM_FORMAT 2
+#define GIF_FORMAT 3
+#define JPEG_FORMAT 4
+#define PNG_FORMAT 5
+
 /*----------------------------------------------------------------------*/
 
 /* local structures coming from libwww and which are
@@ -76,6 +83,7 @@ struct _HTHost
 /*** private variables ***/
 
 static HTList      *converters = NULL;	/* List of global converters */
+static HTList      *acceptTypes = NULL; /* List of types for the Accept header */
 static HTList      *encodings = NULL;
 static int          object_counter = 0;	/* loaded objects counter */
 static  boolean    AmayaIsAlive;
@@ -119,6 +127,66 @@ HTList             *documents;
 }
 
 /*----------------------------------------------------------------------
+  AHTGuessAtom_for
+  Converts an Amaya type descriptor into the equivalent MIME type.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static  HTAtom *AHTGuessAtom_for (char *urlName, PicType contentType)
+#else
+static  HTAtom *AHTGuessAtom_for (urlName, contentType)
+char *urlName;
+PicType contentType;
+#endif
+{
+ HTAtom           *atom;
+ char             *filename;
+ HTEncoding        enc;
+ HTEncoding        cte;
+ HTLanguage        lang;
+ double            quality;
+
+ switch (contentType)
+   {
+    case xbm_type:
+      atom = HTAtom_for("image/xbm");
+      break;
+    case eps_type:
+      atom = HTAtom_for("application/postscriptm");
+      break;
+   case xpm_type:
+      atom = HTAtom_for("image/xpm");
+     break;
+    case gif_type:
+      atom = HTAtom_for("image/gif");
+      break;
+    case jpeg_type:
+      atom = HTAtom_for("image/jpeg");
+      break;
+    case png_type:
+      atom = HTAtom_for("image/png");
+      break;
+   case unknown_type:
+   default:
+     /* 
+     ** Amaya could not detect the type, so 
+     ** we try to use the filename's suffix to do so.
+     */
+     filename = HTParse (urlName, "", PARSE_PATH | PARSE_PUNCTUATION);
+     HTBind_getFormat (filename, &atom, &enc, &cte, &lang, &quality);
+     HT_FREE (filename);
+     if (atom ==  WWW_UNKNOWN)
+	 /*
+	 ** we could not identify the suffix, so we assign it
+	 ** a default type
+	 */
+	 atom = HTAtom_for ("text/html");
+     break;
+   }
+
+ return atom;
+}
+
+/*----------------------------------------------------------------------
   AHTReqContext_new
   create a new Amaya Context Object and update the global Amaya
   request status.
@@ -150,12 +218,9 @@ int                 docid;
    me->except_xtinput_id = (XtInputId) NULL;
 #endif
    me->docid = docid;
-   HTRequest_setConversion (me->request, converters, YES);
    HTRequest_setMethod (me->request, METHOD_GET);
    HTRequest_setOutputFormat (me->request, WWW_SOURCE);
    HTRequest_setContext (me->request, me);
-
-   /* an interface to Eric's new routines */
    me->read_ops = 0;
    me->write_ops = 0;
    me->except_ops = 0;
@@ -591,7 +656,7 @@ int                 status;
 
    /* don't remove or Xt will hang up during the put */
 
-   if (AmayaIsAlive && me->method == METHOD_PUT || me->method == METHOD_POST)
+   if (AmayaIsAlive && (me->method == METHOD_PUT || me->method == METHOD_POST))
      {
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE),
 		       me->urlName);
@@ -603,7 +668,7 @@ int                 status;
 /*----------------------------------------------------------------------
   AHTLoadTerminate_handler
   this is an application "AFTER" Callback. It uses all the functionaly
-  that the app part of the Library gives for handling AFTER a request.              
+  that the app part of the Library gives for handling AFTER a request. 
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -688,7 +753,37 @@ int                 status;
    return HT_OK;
 }
 
+/*----------------------------------------------------------------------
+  AHTAcceptTypesInit
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void           AHTAcceptTypesInit (HTList *c)
+#else  /* __STDC__ */
+static void           AHTAcceptTypesInit (c)
+HTList             *c;
+#endif /* __STDC__ */
+{
+  if (c == (HTList *) NULL) 
+      return;
 
+      /* define here all the mime types that Amaya can accept */
+
+      HTConversion_add (c, "image/png",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
+      HTConversion_add (c, "image/jpeg", "www/present", HTThroughLine, 1.0, 0.0, 0.0);
+      HTConversion_add (c, "image/gif",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
+      HTConversion_add (c, "image/xbm",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
+      HTConversion_add (c, "image/xpm",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
+      HTConversion_add (c, "application/postscript",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
+
+   /* Define here the equivalences between MIME types and file extensions for
+    the types that Amaya can display */
+
+   /* Register the default set of file suffix bindings */
+   HTFileInit ();
+
+   /* Don't do any case distinction */
+   HTBind_caseSensitive (FALSE);
+}
 
 /*----------------------------------------------------------------------
   AHTConverterInit
@@ -756,6 +851,7 @@ HTList             *c;
 		     0.3, 0.0, 0.0);
 
 }
+
 
 /*----------------------------------------------------------------------
   AHTProtocolInit
@@ -867,6 +963,8 @@ char               *AppVersion;
 
    if (!converters)
       converters = HTList_new ();
+   if (!acceptTypes)
+      acceptTypes = HTList_new ();
    if (!encodings)
       encodings = HTList_new ();
 
@@ -892,6 +990,7 @@ char               *AppVersion;
 
    /* Register the default set of converters */
    AHTConverterInit (converters);
+   AHTAcceptTypesInit (acceptTypes);
    HTFormat_setConversion (converters);
 
    /* Register the default set of transfer encoders and decoders */
@@ -901,11 +1000,8 @@ char               *AppVersion;
    /* Register the default set of MIME header parsers */
    HTMIMEInit ();		/* must be called again for language selector */
 
-   /* Register the default set of file suffix bindings */
-   HTFileInit ();
-
    /* Register the default set of Icons for directory listings */
-   /*HTIconInit(NULL); *//*is this useful ? */
+   /*HTIconInit(NULL); *//* experimental */
 
    /* Register the default set of messages and dialog functions */
    AHTAlertInit ();
@@ -924,9 +1020,16 @@ static void         AHTProfile_delete ()
 {
  
   /* free the Amaya global context */
-  HTList_delete (Amaya->docid_status);
-  HTList_delete (Amaya->reqlist);
-  TtaFreeMemory (Amaya);
+   if (!converters)
+      HTConversion_deleteAll (converters);
+   if (!acceptTypes)
+      HTConversion_deleteAll (acceptTypes);
+   if (!encodings)
+      HTCoding_deleteAll (encodings);
+
+   HTList_delete (Amaya->docid_status);
+   HTList_delete (Amaya->reqlist);
+   TtaFreeMemory (Amaya);
   
   if (HTLib_isInitialized ())
     {
@@ -980,14 +1083,6 @@ void                QueryInit ()
      WWW_TraceFlag = SHOW_CORE_TRACE | SHOW_AUTH_TRACE | SHOW_ANCHOR_TRACE |
      SHOW_PROTOCOL_TRACE| SHOW_APP_TRACE | SHOW_UTIL_TRACE;
      ***/
-
-   HTBind_caseSensitive (FALSE);
-   HTBind_addType ("html", "text/html", 0.9);
-   HTBind_addType ("htm", "text/html", 0.9);
-   HTBind_addType ("gif", "image/gif", 0.9);
-   HTBind_addType ("png", "image/png", 0.9);
-   HTBind_addType ("jpg", "image/jpeg", 0.9);
-   HTBind_addType ("txt", "text/plain", 0.9);
 
    /* Setting up other user interfaces */
    /* needs a little bit more work */
@@ -1043,6 +1138,10 @@ static int          LoopForStop (AHTReqContext * me)
      {
 
 #ifdef WWW_XWINDOWS
+	if (!AmayaIsAlive)
+	  /* Amaya was killed by one of the callback handlers */
+	  exit (0);
+
 	status = XtAppPending (app_cont);
 	if (status & XtIMXEvent)
 	  {
@@ -1059,11 +1158,6 @@ static int          LoopForStop (AHTReqContext * me)
 	     XtAppNextEvent (app_cont, &ev);
 	     TtaHandleOneEvent (&ev);
 	  }
-
-	if (!AmayaIsAlive)
-	  /* Amaya was killed during one of the callback handlers */
-	  exit (0);
-
 #endif /* WWW_XWINDOWS */
      }
 
@@ -1105,7 +1199,7 @@ void                QueryClose ()
    HTAlertCall_deleteAll (HTAlert_global () );
    HTAlert_setGlobal ((HTList *) NULL);
    HTEvent_setRegisterCallback ((HTEvent_registerCallback *) NULL);
-   HTEvent_setUnregisterCallback ((HTEvent_registerCallback *) NULL);
+   HTEvent_setUnregisterCallback ((HTEvent_unregisterCallback *) NULL);
 
    Thread_deleteAll ();
  
@@ -1340,6 +1434,8 @@ boolean             error_html;
      {
 	me->method = METHOD_GET;
 	me->dest = (HTParentAnchor *) NULL;	/*useful only for PUT and POST methods */
+	if (!HasKnownFileSuffix (ref))
+	  HTRequest_setConversion(me->request, acceptTypes, TRUE);
      }
 
    /* Common initialization */
@@ -1409,7 +1505,6 @@ generated
    if (status == HT_ERROR || me->reqStatus == HT_END
        || me->reqStatus == HT_ERR)
      {
-
 	/* in case of error, free all allocated memory and exit */
 
 	if (me->output)
@@ -1422,17 +1517,23 @@ generated
 	    if(me->urlName)
 	      TtaFreeMemory (me->urlName);
 	  }
-	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-		      me->urlName);
 
-	status = (me->reqStatus == HT_END) ? HT_OK : HT_ERROR;
+	if (me->reqStatus == HT_ERR)
+	  {
+	    status = HT_ERROR;
+	    /* show an error message on the status bar */
+	    FilesLoading[me->docid] = 2;
+	    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			  me->urlName);
+	  }
+	else
+	  status = HT_OK;
 
 	AHTReqContext_delete (me);
-
      }
+
    else
      {
-
 	/* part of the stop button handler */
 
 	if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
@@ -1523,7 +1624,7 @@ generated
    HT_OK
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 PutObjectWWW (int docid, char *fileName, char *urlName, int mode, int contentType,
+int                 PutObjectWWW (int docid, char *fileName, char *urlName, int mode, PicType contentType,
 				  TTcbf * terminate_cbf, void *context_tcbf)
 #else
 int                 PutObjectWWW (docid, urlName, fileName, mode, contentType,
@@ -1532,7 +1633,7 @@ int                 docid;
 char               *urlName;
 char               *fileName;
 int                 mode;
-int                 contentType;
+PicType             contentType;
 TTcbf              *terminate_cbf;
 void               *context_tcbf;
 
@@ -1597,7 +1698,7 @@ void               *context_tcbf;
 
    close (fd);
 
-   status = UploadMemWWW (docid, METHOD_PUT, urlName, mem_ptr,
+   status = UploadMemWWW (docid, METHOD_PUT, urlName, contentType, mem_ptr,
 			  block_size, mode, terminate_cbf,
 			  context_tcbf, (char *) NULL);
 
@@ -1616,15 +1717,16 @@ void               *context_tcbf;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 UploadMemWWW (int docid, HTMethod method,
-		     char *urlName, char *mem_ptr, unsigned long block_size,
+		     char *urlName, PicType contentType, char *mem_ptr, unsigned long block_size,
 			int mode, TTcbf * terminate_cbf, void *context_tcbf,
 				  char *outputfile)
 #else
-int                 UploadMemWWW (docid, method, urlName, mem_ptr, block_size, mode,
+int                 UploadMemWWW (docid, method, urlName, contentType, mem_ptr, block_size, mode,
 				  terminate_cbf, context_tcbf, outputfile)
 int                 docid;
 HTMethod            method;
 char               *urlName;
+PicType             contentType;
 char               *mem_ptr;
 usigned long        block_size;
 int                 mode;
@@ -1688,10 +1790,8 @@ char               *outputfile;
 
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (urlName);
 
-   /* First steps towards a full content-negotiation */
-   /*
-     HTAnchor_setFormat ((HTParentAnchor *) me->anchor, HTAtom_for ("text/html"));
-    */
+   /* Set the Content-Type of the file we are uplaoding */
+   HTAnchor_setFormat ((HTParentAnchor *) me->anchor, AHTGuessAtom_for (me->urlName, contentType));
 
    HTAnchor_setLength ((HTParentAnchor *) me->anchor, me->block_size);
    HTRequest_setEntityAnchor (me->request, me->anchor);

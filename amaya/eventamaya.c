@@ -384,7 +384,7 @@ boolean             error_html;
    /*
     * do we support this protocol?
     */
-   if (IsValidProtocol (urlName) == NO)
+   if (IsValidGetProtocol (urlName) == NO)
      {
 	outputfile[0] = EOS;	/* file could not be opened */
 	TtaSetStatus (doc, 1,
@@ -552,16 +552,16 @@ boolean             error_html;
    HT_OK
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 PutObjectWWW (int doc, char *fileName, char *urlName, int mode, int contentType,
+int                 PutObjectWWW (int doc, char *fileName, char *urlName, int mode, PicType contentType,
 				  TTcbf * terminate_cbf, void *context_tcbf)
 #else
-int                 PutObjectWWW (doc, urlName, fileName, mode, int contentType,
+int                 PutObjectWWW (doc, urlName, fileName, mode, contentType,
 				  ,terminate_cbf, context_tcbf)
 int                 doc;
 char               *urlName;
 char               *fileName;
 int                 mode;
-int                 contentType;
+PicType             contentType;
 TTcbf              *terminate_cbf;
 void               *context_tcbf;
 
@@ -588,7 +588,7 @@ void               *context_tcbf;
    /*
     * do we support this protocol?
     */
-   if (IsValidProtocol (urlName) == NO)
+   if (IsValidPutProtocol (urlName) == NO)
      {
 	/* return error */
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_PUT_UNSUPPORTED_PROTOCOL),

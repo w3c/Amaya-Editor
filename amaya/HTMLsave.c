@@ -321,7 +321,7 @@ boolean             confirm;
    int                 index = 0, len, nb = 0;
    LoadedImageDesc    *pImage;
    int                 res;
-   int                 imageType;
+   PicType             imageType;
 
    if (!IsW3Path (DocumentURLs[document]))
       return (-1);
@@ -402,7 +402,7 @@ boolean             confirm;
 	  {
 	     if (pImage->status == IMAGE_MODIFIED)
 	       {
-		  imageType = (int) TtaGetPictureType ((Element) pImage->elImage);
+		  imageType = TtaGetPictureType ((Element) pImage->elImage);
 		  res = PutObjectWWW (document, pImage->localName,
 				      pImage->originalName, AMAYA_SYNC, imageType,
 				      (TTcbf *) NULL, (void *) NULL);
