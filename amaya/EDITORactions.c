@@ -50,8 +50,11 @@ View                view;
    strcat (tempfile, DIR_STR);
    val = strlen (tempfile);
    i = 0;
-   strcat (tempfile, "New");
-
+#ifdef _WINDOWS
+   strcat (tempfile, "New.htm");
+#else /* _WINDOWS */
+   strcat (tempfile, "New.html");
+#endif /* _WINDOWS */
    /* check if a previous new file is open in Amaya */
    exist = TRUE;
    while (exist)
@@ -70,7 +73,11 @@ View                view;
 	  {
 	     /* the file exists -> generate a new name */
 	     i++;
-	     sprintf (suffix, "New%d", i);
+#ifdef _WINDOWS
+	     sprintf (suffix, "New%d.htm", i);
+#else /* _WINDOWS */
+	     sprintf (suffix, "New%d.html", i);
+#endif /* _WINDOWS */
 	     strcpy (&tempfile[val], suffix);
 	  }
      }
@@ -1945,13 +1952,16 @@ View                view;
    int                 firstSelectedChar, i;
 
    TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
-   /* Search the anchor element */
-   el = SearchAnchor (doc, el, TRUE);
-   /* Select a new destination */
-   if (el == NULL)
-      CreateLink (doc, view);
-   else
-      SelectDestination (doc, el);
+   if (el != NULL)
+     {
+       /* Search the anchor element */
+       el = SearchAnchor (doc, el, TRUE);
+       /* Select a new destination */
+       if (el == NULL)
+	 CreateLink (doc, view);
+       else
+	 SelectDestination (doc, el);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1980,10 +1990,10 @@ View                view;
    /* get the first selected element */
    TtaGiveFirstSelectedElement (doc, &firstSelectedElement,
 				&firstSelectedChar, &lastSelectedChar);
-   TtaGiveLastSelectedElement (doc, &lastSelectedElement, &i, &lastSelectedChar);
-   TtaUnselect (doc);
    if (firstSelectedElement != NULL)
      {
+       TtaGiveLastSelectedElement (doc, &lastSelectedElement, &i, &lastSelectedChar);
+       TtaUnselect (doc);
 	elType = TtaGetElementType (firstSelectedElement);
 	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
 	  return;
@@ -2021,20 +2031,21 @@ View                view;
 	     TtaDeleteTree (anchor, doc);
 	     TtaSetDocumentModified (doc);
 	  }
-     }
-   /* ask Thot to display changes made in the document */
-   TtaSetDisplayMode (doc, dispMode);
-   /* set the selection */
-   if (firstSelectedChar > 1)
-     {
-	if (firstSelectedElement == lastSelectedElement)
-	   i = lastSelectedChar;
+
+	/* ask Thot to display changes made in the document */
+	TtaSetDisplayMode (doc, dispMode);
+	/* set the selection */
+	if (firstSelectedChar > 1)
+	  {
+	    if (firstSelectedElement == lastSelectedElement)
+	      i = lastSelectedChar;
+	    else
+	      i = TtaGetTextLength (firstSelectedElement);
+	    TtaSelectString (doc, firstSelectedElement, firstSelectedChar, i);
+	  }
 	else
-	   i = TtaGetTextLength (firstSelectedElement);
-	TtaSelectString (doc, firstSelectedElement, firstSelectedChar, i);
+	  TtaSelectElement (doc, firstSelectedElement);
+	if (firstSelectedElement != lastSelectedElement)
+	  TtaExtendSelection (doc, lastSelectedElement, lastSelectedChar);
      }
-   else
-      TtaSelectElement (doc, firstSelectedElement);
-   if (firstSelectedElement != lastSelectedElement)
-      TtaExtendSelection (doc, lastSelectedElement, lastSelectedChar);
 }

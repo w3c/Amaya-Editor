@@ -159,7 +159,7 @@ PtrAttribute        currAttr;
    strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
 #  ifndef _WINDOWS
    TtaNewSheet (NumFormLanguage, TtaGetViewFrame (doc, view),
-     TtaGetMessage (LIB, TMSG_LANGUAGE), 2, bufMenu, FALSE, 2, 'L', D_DONE);
+     TtaGetMessage (LIB, TMSG_LANGUAGE), 2, bufMenu, FALSE, 2, 'L', D_CANCEL);
 #  endif /* !_WINDOWS */
    /* construit le selecteur des Langues */
    ptr = &bufMenu[0];
@@ -737,7 +737,7 @@ int                 view;
 	  }
 #     ifndef _WINDOWS 
 	  TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view), 
-	    	      TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
+	    	      TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_CANCEL);
 #     else  /* _WINDOWS */
 	  isForm = TRUE ;
 	  WIN_InitFormDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
@@ -751,7 +751,7 @@ int                 view;
 	    }
 #       ifndef _WINDOWS
 	    TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), 
-	                 TtaGetMessage (LIB, TMSG_ATTR), 2, bufMenu, FALSE, 2, 'L', D_DONE);
+	                 TtaGetMessage (LIB, TMSG_ATTR), 2, bufMenu, FALSE, 2, 'L', D_CANCEL);
 #       else  /* _WINDOWS */
 		isForm = FALSE ;
 #       endif /* _WINDOWS */

@@ -1750,7 +1750,7 @@ boolean		    history;
 					     NULL, NULL, NULL, NULL, YES, content_type);
 		   else
 		     {
-		       if (!strcmp (documentname, "noname.html"))
+ 		       if (!strcmp (documentname, "noname.html"))
 			 {
 			   slash = strlen (pathname);
 			   if (slash && pathname[slash - 1] != '/')
@@ -1880,8 +1880,12 @@ static void	SetFileSuffix ()
   if (SavingDocument != 0 && SaveName[0] != EOS)
     {
       if (SaveAsHTML)
+#ifdef _WINDOWS
+	strcpy (suffix, "htm");
+#else /* _WINDOWS */
 	strcpy (suffix, "html");
-      else if (SaveAsText)
+#endif /* _WINDOWS */
+       else if (SaveAsText)
 	strcpy (suffix, "txt");
       else
 	 return;

@@ -1243,12 +1243,16 @@ caddr_t             call_d;
       i++;
    if (i < MAX_BUTTON)
      {
+#ifdef _WINDOWS
 	doSwitchButton = FALSE;
+#endif /* _WINDOWS */
 	CloseInsertion ();
 	FrameToView (frame, &document, &view);
 	(*FrameTable[frame].Call_Button[i]) (document, view);
      }
-	doSwitchButton = TRUE;
+#ifdef _WINDOWS
+   doSwitchButton = TRUE;
+#endif /* _WINDOWS */
 }
 
 #ifndef _WINDOWS
@@ -2165,39 +2169,32 @@ int                 large;
 int                 haut;
 int                *volume;
 int                 doc;
-
 #endif /* __STDC__ */
 {
-   int                 frame;
-#  ifndef _WINDOWS
-   Arg                 args[MAX_ARGS], argument[5];
-   XmString            title_string;
-   Dimension           dx, dy;
-   int                 start, end, total;
-   char                string[700];
-   struct Cat_Context *catalogue;
-   ThotWidget          Wframe;
-   ThotWidget          shell;
-#  endif /* _WINDOWS */
-
-   ThotWidget          Main_Wd = (ThotWidget) 0;
-
 #  ifdef _WINDOWS
    HMENU               menu_bar, w;
 #  else  /* _WINDOWS */
    ThotWidget          menu_bar;
    ThotWidget          w, row1, row2, rowv;
    ThotWidget          TheFrame;
+   ThotWidget          Wframe;
+   ThotWidget          shell;
+   Arg                 args[MAX_ARGS], argument[5];
+   XmString            title_string;
+   Dimension           dx, dy;
+   char                string[700];
 #  endif /* _WINDOWS */
+   ThotWidget          Main_Wd = (ThotWidget) 0;
    ThotWidget          hscrl;
    ThotWidget          vscrl;
-   int                 i, n;
-   int                 ref;
    SchemaMenu_Ctl     *SCHmenu;
    Menu_Ctl           *ptrmenu;
-   boolean             found;
-   int		       visiVal, zoomVal;
    char		      *visiStr, *zoomStr;
+   int                 i, n;
+   int                 ref;
+   int		       visiVal, zoomVal;
+   int                 frame;
+   boolean             found;
 
 #define MIN_HAUT 100
 #define MIN_LARG 200
