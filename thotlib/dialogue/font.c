@@ -900,14 +900,14 @@ void FontIdentifier (char script, int family, int highlight, int size,
     }
   else if (script == 'E')
     {
-      /*
+      
       if (size <= 12)
 	size = 18;
       else if (size <= 26)
 	size = 26;
       else 
 	size = 36;
-      */ 
+      
       switch (family)
 	{
 	case 6 :
@@ -920,7 +920,7 @@ void FontIdentifier (char script, int family, int highlight, int size,
 	  sprintf (r_nameX, "-*-esstixten-*-*-*-*-%d-*-*-*-*-*-*-*", size);
 	  break;
 	default:
-	  sprintf (r_nameX, "-*-symbol-medium-r-*-*-%d-*-*-*-*-*-*-fontspecific", size);
+	  /*sprintf (r_nameX, "-*-symbol-medium-r-*-*-%d-*-*-*-*-*-*-fontspecific", size);*/
    	  break;
 	}
     }

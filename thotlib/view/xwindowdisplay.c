@@ -41,6 +41,10 @@
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
 
+#ifdef _GTK
+#include <gdk/gdkx.h>
+#include <gtk/gtkprivate.h>
+#endif /*_GTK*/
 
 /*----------------------------------------------------------------------
   FontOrig update and (x, y) location before DrawString
@@ -189,6 +193,58 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
 #endif /* _GTK */
 }
 
+#ifdef XFTGTK
+/*----------------------------------------------------------------------
+  DrawAAText : Using a Antialiased library if present, 
+  named GDKXFT.so, it draws antialiased text.
+  ----------------------------------------------------------------------*/
+int DrawAAText (int frame,
+	       PtrFont font,  
+	       const gchar *text,
+	       gint  text_length,
+	       int x,int y)
+ {
+   GdkWindowPrivate *drawable_private;
+   GdkFontPrivate   *font_private;
+   GdkGCPrivate      *gc_private;
+   XFontStruct       *xfont;
+
+  drawable_private = (GdkWindowPrivate*) FrRef[frame];
+  if (drawable_private->destroyed)
+    return;
+
+  gc_private = (GdkGCPrivate*) TtLineGC;
+  font_private = (GdkFontPrivate*) font;
+
+  if (font->type == GDK_FONT_FONT)
+  {
+    xfont = (XFontStruct *) font_private->xfont;
+
+    // gdk does this... we don't need it..
+    //    XSetFont(drawable_private->xdisplay, gc_private->xgc, xfont->fid);
+
+    if ((xfont->min_byte1 == 0) && (xfont->max_byte1 == 0))
+    {
+      XDrawString (drawable_private->xdisplay, drawable_private->xwindow,
+                   gc_private->xgc, x, y, text, text_length);
+    }
+    else
+    {
+      XDrawString16 (drawable_private->xdisplay, drawable_private->xwindow,
+                     gc_private->xgc, x, y, (XChar2b *) text, text_length / 2);
+    }
+  }
+  else if (font->type == GDK_FONT_FONTSET)
+  {
+    XFontSet fontset = (XFontSet) font_private->xfont;
+    XmbDrawString (drawable_private->xdisplay, drawable_private->xwindow,
+                   fontset, gc_private->xgc, x, y, text, text_length);
+  }
+  else
+    g_error("undefined font type\n");
+  /*gdk_draw_text(drawable, font, gc, x, y, text, text_length);*/
+ }
+#endif /*_GTK*/
 /*----------------------------------------------------------------------
   DrawString draw a char string of lg chars beginning in buff.
   Drawing starts at (x, y) in frame and using font.
@@ -243,7 +299,11 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	{ 
 	  LoadColor (fg);
 #ifdef _GTK
+#ifdef XFTGTK
+	  DrawAAText(frame, font, buff, lg, x, y);
+#else
 	  gdk_draw_string (w, font,TtLineGC, x, y, buff);
+#endif
 	  if (hyphen)
 	    /* draw the hyphen */
 	    gdk_draw_string (w, font,TtLineGC, x + width, y, "\255");
@@ -315,7 +375,11 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 	{ 
 	  LoadColor (fg);
 #ifdef _GTK
-	  gdk_draw_text_wc (w, font,TtLineGC, x, y, (GdkWChar *)buff, lg * 2);
+#ifdef XFTGTK
+	  DrawAAText(frame, font, buff, lg*2, x, y);
+#else
+	gdk_draw_text_wc (w, font,TtLineGC, x, y, (GdkWChar *)buff, lg * 2);
+#endif
 	  if (hyphen)
 	    /* draw the hyphen */
 	    gdk_draw_string (w, font,TtLineGC, x + width, y, "\255");
@@ -513,14 +577,15 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
      /* Need more than one glyph */
      yf = y + CharacterAscent (243, font);
      DrawChar ('\363', frame, x, yf, font, fg);
-     yend = y + h - CharacterHeight (245, font) + CharacterAscent (245, font) - 1;
+     yend = y + h - CharacterHeight (245, font) 
+       + CharacterAscent (245, font) - 1;
      DrawChar ('\365', frame, x, yend, font, fg);
      asc = CharacterAscent (244, font);
      hd = CharacterHeight (244, font);
      delta = yend - yf - asc;
      yf += asc;
      wd = (CharacterWidth (243, font) - CharacterWidth (244, font)) / 2;
-     if (delta > 0)
+     if (delta > 0 && hd > 0)
        {
 	 while (yf < yend)
 	   {
@@ -968,7 +1033,7 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  hd = CharacterHeight (231, font);
 	  delta = yend - yf- hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -984,13 +1049,14 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  xm = x + ((l - CharacterWidth (246, font)) / 2);
 	  yf = y + CharacterAscent (246, font);
 	  DrawChar ('\366', frame, xm, yf, font, fg);
-	  yend = y + h - CharacterHeight (248, font) + CharacterAscent (248, font) - 1;
+	  yend = y + h - CharacterHeight (248, font) 
+	    + CharacterAscent (248, font) - 1;
 	  DrawChar ('\370', frame, xm, yend, font, fg);
 	  asc = CharacterAscent (247, font);
 	  hd = CharacterHeight (247, font);
 	  delta = yend - yf - hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -1049,7 +1115,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	  hd = CharacterHeight (239, font);
 	  delta = ym - yf - hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -1061,7 +1127,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	  yf = ym + CharacterHeight ('\355', font);
 	  delta = yend - yf - hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -1087,7 +1153,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	  hd = CharacterHeight (239, font);
 	  delta = ym - yf - hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -1099,7 +1165,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	  yf = ym + CharacterHeight ('\375', font);
 	  delta = yend - yf - hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{

@@ -64,8 +64,8 @@ void *LoadStixFont (int family, int size);
 
 void GetMathFontFromChar (char typesymb, void **font, int height)
 {
-  int ChoosenFont = 0;
   static ThotBool IsStixOk = TRUE;
+  int ChoosenFont = 0;
 
   if (IsStixOk)
     {
@@ -81,13 +81,6 @@ void GetMathFontFromChar (char typesymb, void **font, int height)
 	case 'd':
 	  ChoosenFont = BIGSYMBOLS;
 	break;
-	/*sigma pi*/
-	case 'S':
-	  ChoosenFont = BIGSYMBOLS;
-	  break;
-	case 'P':
-	  ChoosenFont = GREEK;
-	  break;
 	  /*intersection union*/
 	case 'I':
 	  ChoosenFont = BIGSYMBOLS;
@@ -101,16 +94,6 @@ void GetMathFontFromChar (char typesymb, void **font, int height)
 	  break;
 	case 'u':
 	  ChoosenFont = BIGSYMBOLS;
-	  break;
-	  /*lines*/
-	case 'h':
-	case 'v':
-	  /*arrow*/
-	case 'R':
-	case '^':
-	case 'L':
-	case 'V':
-	  ChoosenFont = GREEK;
 	  break;
 	case '(':
 	  ChoosenFont = BIGENCLOSING;
@@ -130,29 +113,16 @@ void GetMathFontFromChar (char typesymb, void **font, int height)
 	case ']':
 	  ChoosenFont = BIGENCLOSING;
 	  break;
-      case '<':
-	ChoosenFont = BIGENCLOSING;
-	break;
+	case '<':
+	  ChoosenFont = BIGENCLOSING;
+	  break;
 	case '>':
 	  ChoosenFont = BIGENCLOSING;
 	  break;
-	/*lines*/
-      case '|':
-      case 'D':
-	ChoosenFont = GREEK;
-	break;
-      case '?':
-	/*case UNDISPLAYED_UNICODE:
-	  break;*/
-      default:
-	ChoosenFont = 0;
+	default:
+	  return;
 	break;
       }
-      if (ChoosenFont == 0)
-	{
-	  *font = NULL;
-	  return;
-	}
     switch (ChoosenFont)
       {
       case GREEK:
@@ -235,16 +205,14 @@ void GetMathFontFromChar (char typesymb, void **font, int height)
 	    *font = MathBigEncloHigh;
 	  }
 	break;
-      default:
-	break;
+      default: 
+	return;
       }
     if (*font == NULL)
       IsStixOk = FALSE;
     else
       IsStixOk = TRUE;
     }
-  else
-    *font = NULL;
 }
 
 void FreeMathFonts()
@@ -265,14 +233,44 @@ void DrawStixChar (PtrFont font, CHAR_T symb,
    y = y + ((h - CharacterHeight ((char)symb, font)) / 2) 
      + CharacterAscent ((char) symb, font);
 
-   DrawChar (symb, frame, x, y, font, fg);
+   DrawChar ((char) symb, frame, x, y, font, fg);
 #else /*_GL*/
 
    GL_DrawStixChar (font, symb, x, y, fg, h-5, l, h, frame);
 #endif /*_GL*/
 
 }
+/*----------------------------------------------------------------------
+  DrawStixSigma
+  ----------------------------------------------------------------------*/
+void DrawStixSigma (int frame, int x, int y, 
+		    int l, int h, 
+		    PtrFont font, int fg)
+{
+   if (fg < 0)
+     return;
 
+   /* Integrals using esstix6 charmap
+     52 - => 3x text 3 line eq
+     33 - => 2x text 2 line eq
+     69 - => 1x+2 text or 18 for oneline eq */
+
+   if (h < LOW_CHAR)
+     /* display a single glyph */
+     {
+	   DrawStixChar (font, 83, x, y, l, h, fg, frame);
+     }
+   else if (h < MID_CHAR)
+	/* display a single glyph */
+     {
+	   DrawStixChar (font, 45, x, y, l, h, fg, frame);
+     }
+   else
+    /* display a single glyph */
+     {
+	   DrawStixChar (font, 62, x, y, l, h, fg, frame);
+     }
+}
 /*----------------------------------------------------------------------
   DrawStixIntegral draws an integral. depending on type :
   - simple if type = 0
@@ -298,7 +296,7 @@ void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
      {
 	   DrawStixChar (font, 33, x, y, l, h, fg, frame);
      }
-   else if (h > MID_CHAR)
+   else 
     /* display a single glyph */
      {
 	 DrawStixChar (font, 52, x, y, l, h, fg, frame);

@@ -714,7 +714,7 @@ static void BitmapAppend (unsigned char *data,
   register unsigned int i = 0;
  
   if (data && append_data)
-    while (height--)
+    while (height)
       {      
 	while (i < width)
 	  {
@@ -725,6 +725,7 @@ static void BitmapAppend (unsigned char *data,
 	i = 0;
 	data += Width;
 	append_data += width;
+	height--;
       }
 }
 
@@ -733,8 +734,9 @@ static void BitmapAppend (unsigned char *data,
 /*-------------------------------------
  UnicodeFontRenderCharSize :
 --------------------------------------*/
-int UnicodeFontRenderCharSize (void *gl_font, wchar_t c, float x, float y, int size,
-		       int TotalHeight)
+int UnicodeFontRenderCharSize (void *gl_font, wchar_t c, 
+			       float x, float y, int size,
+			       int TotalHeight)
 {
   GL_font* font;
   GL_glyph *glyph;
@@ -744,12 +746,9 @@ int UnicodeFontRenderCharSize (void *gl_font, wchar_t c, float x, float y, int s
   font = (GL_font *) gl_font;
   i = FT_Get_Char_Index (*(font->face), c); 
   if (i != 0)
-	{
-#ifdef _WINDOWS
-      FT_Set_Char_Size (*(font->face), 0, size * 64, 96, 96);
-#else 
-      FT_Set_Char_Size (*(font->face), 0, size * 64, 0, 0);
-#endif /*_WINDOWS*/
+    {
+      if (size > 0)
+	FontFaceSize (font, size, 0);
 
   glyph = MakeBitmapGlyph (font, i);
   /* If y > height or x < 0 
@@ -824,11 +823,8 @@ void StixFontRenderCharSize (PtrFont font, CHAR_T symb,
   symbols[1] = '\0';
 
   glfont = (GL_font*) font;
-#ifdef _WINDOWS
-  FT_Set_Char_Size (*(glfont->face), 0, size * 64, 96, 96);
-#else 
-  FT_Set_Char_Size (*(glfont->face), 0, size * 64, 0, 0);
-#endif /*_WINDOWS*/
+  if (size > 0)
+    FontFaceSize (glfont, size, 0);
 
   
   x  = x + ((l - gl_font_char_width (font, symb)) / 2);
@@ -856,6 +852,7 @@ void StixFontRenderCharSize (PtrFont font, CHAR_T symb,
          ("FULL" in italic for example), 
          bitmap size is bigger than string size...
 ---------------------------------------------------------*/
+#ifndef NEWKERN
 int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int size,
 		       int TotalHeight)
 {
@@ -969,11 +966,12 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
     }
   if (bitmaps[0])
     x = x  + (float) (bitmaps[0]->pos.x < 0 ? bitmaps[0]->pos.x : 0); 
+
   y -= (float) miny;
 
   /* If y > height or x < 0 
      Opengl doesn't draw bitmap 
-     with his clipping mechanism
+     due to his clipping mechanism
      so we must translate them*/
   if ((int)y > TotalHeight)
     {
@@ -1015,5 +1013,170 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 
   return (((int) Xpos) + (bitmaps[0]->pos.x < 0 ? bitmaps[0]->pos.x : 0));  
 }
+
+#else /*NEWKERN*/
+
+int UnicodeFontRender (void *gl_font, wchar_t *text, 
+		       float x, float y, 
+		       int size,
+		       int TotalHeight)
+{
+  FLOAT_VECTOR       bitmap_pos[MAX_LENGTH];   
+  FT_Vector          delta;   
+  FT_Face            face;
+  FT_Bool            use_kerning;
+  FT_UInt            previous, glyph_index;
+
+  GL_glyph           *bitmaps[MAX_LENGTH];
+  GL_font            *font;
+  GL_glyph	     *glyph;
+
+  unsigned char     *data;
+  float		    maxy, miny;
+  int               left, right, Width, Height;
+  int               pen_x, n;
+
+
+  font = (GL_font *) gl_font;
+  face = *(font->face);
+  use_kerning = font->kerning;
+  previous = 0;
+  miny = 10000;
+  maxy = 0;
+  pen_x = 0;
+
+  for ( n = 0; n < size; n++ )
+      {
+        /* convert character code to glyph index*/
+        glyph_index = FT_Get_Char_Index ( face, text[n] );
+
+        /* retrieve kerning distance and move pen position*/
+        if ( use_kerning && previous && glyph_index )
+        {
+          FT_Get_Kerning( face, 
+			  previous, glyph_index,
+                          /*ft_kerning_default,*/
+			  /*ft_kerning_unfitted,*/
+			  ft_kerning_unscaled,
+			  &delta);
+
+          pen_x += delta.x >> 6;
+        }
+
+	/* Load glyph image into the cache */
+	if (!font->glyphList[glyph_index])
+	    font->glyphList[glyph_index] = MakeBitmapGlyph (font, glyph_index);
+	glyph = font->glyphList[glyph_index];
+	if (glyph)
+	  {
+	    /* Position of the glyph in the texture*/
+	    bitmap_pos[n].x = pen_x + glyph->pos.x;
+	    bitmap_pos[n].y = (float) ( - glyph->pos.y );
+	    bitmaps[n] = glyph;
+
+	    /* Compute The height of the Texture*/
+	    if (miny > bitmap_pos[n].y)
+	      miny = bitmap_pos[n].y;
+	    if ((glyph->dimension.y - glyph->pos.y) > maxy)
+	      maxy =  (float) (glyph->dimension.y - glyph->pos.y);
+	    
+	    /* increment pen position*/
+	    pen_x += glyph->advance;
+	  }
+	else
+	  {
+	    bitmap_pos[n].x = pen_x;
+	    bitmap_pos[n].y = 0;
+	    bitmaps[n] = 0;
+	  }
+	/* record current glyph index*/
+        previous = glyph_index;
+      }
+  
+  for ( n = 0; n < size; n++ )
+    {
+      glRasterPos2f (bitmap_pos[n].x, 
+		     bitmap_pos[n].y - miny);
+      glDrawPixels (bitmaps[n]->dimension.x,
+		    bitmaps[n]->dimension.y,
+		    GL_ALPHA,
+		    GL_UNSIGNED_BYTE,
+		    (const GLubyte *) data);
+    }
+ return bitmap_pos[n-1].x
+
+  Height = (int) (maxy - miny) * 2;
+  Width = (int) (bitmap_pos[n -1].x * 2);
+
+  if (Height <= 0 || Width <= 0 || miny == 10000)
+    return 0;
+
+  data = (unsigned char *) TtaGetMemory (sizeof (unsigned char)
+					  *Height*Width); 
+
+  memset (data, 25, sizeof (unsigned char)*Height*Width);
+
+   /* Load glyph image into the texture */
+   for ( n = 0; n < size; n++ )
+      {
+
+        left = (int) ((bitmap_pos[n].y - miny)*Width 
+		    + bitmap_pos[n].x + left);
+
+	if (bitmaps[n])
+	  BitmapAppend (data + left,
+			bitmaps[n]->data,
+			bitmaps[n]->dimension.x,
+			bitmaps[n]->dimension.y,
+			Width);
+      }
+
+   y -= (float) miny;
+
+  /* If y > height or x < 0 
+     OpenGL doesn't draw bitmap 
+     due to his clipping mechanism
+     so we must translate them*/
+  if ((int)y > TotalHeight)
+    {
+      left = (int) y - TotalHeight;
+      y = (float) TotalHeight;
+    }
+  else 
+    left = 0;
+  
+  if ((int)x < 0)
+    {
+      right = -(int) x;
+      x = (float) 0;
+    }
+  else 
+    right = 0;
+  
+  /* Position inside the canvas*/
+  glRasterPos2f (x, y);
+  /*Translation for outside clipping strings*/
+  glBitmap (0, 0,
+	    0, 0,
+	    (float) -right, 
+	    (float) -left,
+	    NULL);
+  glDrawPixels (Width,
+		Height,
+		GL_ALPHA,
+		GL_UNSIGNED_BYTE,
+		(const GLubyte *) data);
+  /*We restore originale translation state*/
+  glBitmap (0, 0,
+	    0, 0,
+	    (float) right, 
+	    (float) left,
+	    NULL);
+  if (data)
+    free (data);
+
+  return (bitmaps[n-1]->pos.x);  
+}
+#endif /*NEWKERN*/
 
 #endif /* _GL */

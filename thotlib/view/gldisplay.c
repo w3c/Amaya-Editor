@@ -371,31 +371,6 @@ void DrawSigma (int frame, int x, int y, int l, int h, PtrFont font, int fg)
    if (fg < 0)
      return;
 
-
-/* Integrals using esstix6 charmap
-     52 - => 3x text 3 line eq
-     33 - => 2x text 2 line eq
-     69 - => 1x+2 text or 18 for oneline eq */
-
-   if (h < 37)
-     /* display a single glyph */
-     {
-	   GL_DrawStixChar (font, 83, x, y, fg, 18, l, h, FrameTable[frame].FrHeight);
-     }
-   else if (h < 60)
-	/* display a single glyph */
-     {
-	   GL_DrawStixChar (font, 45, x, y, fg, 24, l, h, FrameTable[frame].FrHeight);
-     }
-   else
-    /* display a single glyph */
-     {
-	   GL_DrawStixChar (font, 62, x, y, fg, 36, l, h, FrameTable[frame].FrHeight);
-     }
-
-	return ;
-
-
    fh = FontHeight (font);
    if (0 && h < fh * 2 && l <= CharacterWidth (229, font))
      {
@@ -663,14 +638,15 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
      /* Need more than one glyph */
      yf = y + CharacterAscent (243, font);
      DrawChar ('\363', frame, x, yf, font, fg);
-     yend = y + h - CharacterHeight (245, font) + CharacterAscent (245, font) - 1;
+     yend = y + h - CharacterHeight (245, font) 
+       + CharacterAscent (245, font) - 1;
      DrawChar ('\365', frame, x, yend, font, fg);
      asc = CharacterAscent (244, font);
      hd = CharacterHeight (244, font);
      delta = yend - yf - asc;
      yf += asc;
      wd = (CharacterWidth (243, font) - CharacterWidth (244, font)) / 2;
-     if (delta > 0)
+     if (delta > 0 && hd > 0)
        {
 	 while (yf < yend)
 	   {
@@ -847,10 +823,10 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  yend = y + h - CharacterHeight (232, font) + CharacterAscent (232, font) - 1;
 	  DrawChar ('\350', frame, xm, yend, font, fg);
 	  asc = CharacterAscent (231, font);
-	  hd = asc; /*CharacterHeight (231, font);*/
+	  hd = CharacterHeight (231, font);
 	  delta = yend - yf - hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -865,13 +841,14 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  xm = x + ((l - CharacterWidth (246, font)) / 2);
 	  yf = y + CharacterAscent (246, font);
 	  DrawChar ('\366', frame, xm, yf, font, fg);
-	  yend = y + h - CharacterHeight (248, font) + CharacterAscent (248, font) - 1;
+	  yend = y + h - CharacterHeight (248, font) 
+	    + CharacterAscent (248, font) - 1;
 	  DrawChar ('\370', frame, xm, yend, font, fg);
 	  asc = CharacterAscent (247, font);
-	  hd = asc; /*CharacterHeight (247, font);*/
+	  hd = CharacterHeight (247, font);
 	  delta = yend - yf - hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{

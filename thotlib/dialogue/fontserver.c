@@ -21,7 +21,6 @@
 /* Font Server */
 #include <gdk/gdkx.h>
 #include "X11/Xft/Xft.h"
-//#include "X11/Xft/XftFreetype.h"
 #else /* _GTK */
 #include <windows.h>
 #endif  /* _GTK */
@@ -47,13 +46,13 @@ int GetFontFilename (char script, int family, int highlight, int size,
   if (!pat)
     return ok;  
   /*Directs Xft to use client-side fonts*/
-  /* XftPatternAddBool (pat, XFT_RENDER, True); */
+  /*XftPatternAddBool (pat, XFT_RENDER, True); */
 
   /*Directs Xft to use server-side fonts*/
-  /* XftPatternAddBool (pat, XFT_CORE, True); */
+  /*XftPatternAddBool (pat, XFT_CORE, True); */
 
   /*Selects whether glyphs are anti-aliased*/
-  XftPatternAddBool (pat, XFT_ANTIALIAS, True);  
+  /*XftPatternAddBool (pat, XFT_ANTIALIAS, True);*/
 
   if (script != 'G' && script != 'L' 
       && script != 'Z' && script != 'E')
@@ -83,12 +82,10 @@ int GetFontFilename (char script, int family, int highlight, int size,
     {
 
       XftPatternAddString (pat, XFT_FOUNDRY, "adobe"); 
-      XftPatternAddString (pat, XFT_FOUNDRY, "microsoft"); 
-      XftPatternAddString (pat, XFT_FAMILY, "Standard Symbols L");  
             
       XftPatternAddString (pat, XFT_FAMILY, "symbol");
-      XftPatternAddString (pat, XFT_FAMILY, "Symbol");       
-      XftPatternAddString (pat, XFT_ENCODING, "fontspecific"); 
+       
+      XftPatternAddString (pat, XFT_ENCODING, "adobe-fontspecific"); 
     }
   else if (script == 'E')
     {
@@ -104,13 +101,6 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	  XftPatternAddString (pat, XFT_FAMILY, "esstixten"); 
 	  break;
 	default:
-	  XftPatternAddString (pat, XFT_FOUNDRY, "adobe"); 
-	  XftPatternAddString (pat, XFT_FOUNDRY, "microsoft"); 
-	  XftPatternAddString (pat, XFT_FAMILY, "Standard Symbols L");  
-	  
-	  XftPatternAddString (pat, XFT_FAMILY, "symbol");
-	  XftPatternAddString (pat, XFT_FAMILY, "Symbol");       
-	  XftPatternAddString (pat, XFT_ENCODING, "fontspecific"); 
    	  break;
 	}
     }
@@ -290,8 +280,10 @@ int GetFontFilename (char script, int family, int highlight, int size,
 	  break;
 	}
     }
+
   if (script != 'E')
     XftPatternAddDouble (pat, XFT_SIZE, ((double) size) / 10.0);
+
   /* Returns a pattern more precise that let us load fonts*/
   match = XftFontMatch (GDK_DISPLAY(), 0, pat, &result); 
   if (match) 
@@ -299,18 +291,14 @@ int GetFontFilename (char script, int family, int highlight, int size,
      if (XftPatternGetString (match, XFT_FILE, 0, &s) == XftResultMatch)
        {
 	 strcpy (filename, s);  
+	 ok = 1;
 	 if (script == 'E')
 	   if (strstr (filename, "esstix") == NULL)
-	     {
-	       XftPatternDestroy (match);
-	       XftPatternDestroy (pat); 
-	       return 0;
-	     }	   
+	       ok = 0;
 #ifdef _PCLDEBUGFONT
-	 g_print ("\t %s \t[script : %c (%i) family : %i]", 
-		  filename, script, script, family);
+	 g_print ("\n %s \t[script : %c (%i) family : %i] \t=> %i", 
+		  filename, script, script, family, ok);
 #endif /*_PCLDEBUG*/
-	 ok = 1;
        }
      XftPatternDestroy (match);
     }

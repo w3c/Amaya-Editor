@@ -338,11 +338,12 @@ static void GL_SetupPixelFormat (HDC hDC)
     };
     int pixelFormat;
 	
-	//int goodpixel;
+    /*int goodpixel;
 
-	//goodpixel = ChoosePixelFormatEx (hDC);
-	//DescribePixelFormat(hDC, goodpixel, sizeof(pfd), &pfd);
-pixelFormat = ChoosePixelFormat (hDC, &pfd);
+     goodpixel = ChoosePixelFormatEx (hDC);
+      DescribePixelFormat(hDC, goodpixel, sizeof(pfd), &pfd);*/
+
+    pixelFormat = ChoosePixelFormat (hDC, &pfd);
     if (pixelFormat == 0) 
 	{
         MessageBox(WindowFromDC(hDC), "ChoosePixelFormat failed.", "Error",
@@ -905,20 +906,23 @@ void GL_Point (int fg, float width, float x, float y)
 ------------------------*/
 static void ResetPixelTransferBias ()
 {
-  static GLuint Precompiled = 0;
-  
-  if (!Precompiled)
+  /*
+    static GLuint Precompiled = 0;
+
+    if (!Precompiled)
     {
       Precompiled = glGenLists (1);
       glNewList (Precompiled,  GL_COMPILE);
-      
+  */    
       glPixelTransferf (GL_RED_BIAS, 0.0); 
       glPixelTransferf (GL_GREEN_BIAS, 0.0); 
       glPixelTransferf (GL_BLUE_BIAS, 0.0); 
-      
-      glEndList ();
+
+   /*
+        glEndList ();
     }
-  glCallList (Precompiled); 
+    glCallList (Precompiled); 
+*/
 }
 #define BIT8DIVIDE(A) ((float)A /256)
 /*----------------------
@@ -995,12 +999,13 @@ void GL_DrawStixChar (void *GL_font, CHAR_T const c,
 /*----------------------------------------------------------------------
   GL_DrawUnicodeChar : draw a character in a texture or a bitmap 
   ----------------------------------------------------------------------*/
-void GL_DrawUnicodeChar (CHAR_T const c, float x, float y, void *GL_font, int fg)
+void GL_DrawUnicodeChar (CHAR_T const c, float x, float y, 
+			 void *GL_font, int fg)
 {
   if (fg < 0 || GL_font == NULL)
     return;
   SetPixelTransferBias (fg);
-  UnicodeFontRenderCharSize (GL_font, c, x, y, 36,
+  UnicodeFontRenderCharSize (GL_font, c, x, y, -1,
 	  FrameTable[ActiveFrame].FrHeight);
   ResetPixelTransferBias();
 }
@@ -1008,7 +1013,8 @@ void GL_DrawUnicodeChar (CHAR_T const c, float x, float y, void *GL_font, int fg
   GL_DrawUnicodeChar : draw a character in a texture or a bitmap 
   with a specific size
   ----------------------------------------------------------------------*/
-void GL_DrawUnicodeCharSized (CHAR_T const c, float x, float y, void *GL_font, int fg, int size)
+void GL_DrawUnicodeCharSized (CHAR_T const c, float x, float y, 
+			      void *GL_font, int fg, int size)
 {
   if (fg < 0 || GL_font == NULL)
     return;
@@ -1079,7 +1085,8 @@ int GL_UnicodeDrawString (int fg,
 			     FrameTable[ActiveFrame].FrHeight);
    if (hyphen)
 	    /* draw the hyphen */
-		UnicodeFontRenderCharSize (GL_font, '\255', x + width, y, -1, FrameTable[ActiveFrame].FrHeight);
+     UnicodeFontRenderCharSize (GL_font, '\255', x + width, y, 
+				-1, FrameTable[ActiveFrame].FrHeight);
   ResetPixelTransferBias();
   return width;
 }
