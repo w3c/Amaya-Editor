@@ -3834,7 +3834,7 @@ char *GetCSSBackgroundURL (char *cssRule)
   url = NULL;
   b = strstr (cssRule, "url");
   if (b)
-    b = ParseCSSUrl (url, &url);
+    b = ParseCSSUrl (b, &url);
   return (url);
 }
 
