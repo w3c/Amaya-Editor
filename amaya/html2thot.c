@@ -5265,26 +5265,36 @@ static void CheckHeadElements (Element el, Element *elHead,
 	      elType.ElTypeNum = HTML_EL_HEAD;
 	      *elHead = TtaNewElement (doc, elType);
 	      TtaInsertFirstChild (elHead, rootEl, doc);
-	      /* create also the title */
-	      elType.ElTypeNum = HTML_EL_TITLE;
-	      lastChild = TtaNewTree (doc, elType, "");
-	      TtaInsertFirstChild (&lastChild, *elHead, doc);
 	    }
 	  else
 	    {
 	      elType.ElTypeNum = HTML_EL_TITLE;
-	      lastChild = TtaSearchTypedElement (elType, SearchForward, *elHead);
+	      lastChild = TtaSearchTypedElement (elType, SearchInTree, *elHead);
+	      if (!lastChild)
+		lastChild = TtaGetFirstChild (*elHead);
 	    }
+	  /* move the element as the last child of the HEAD element */
+	  TtaRemoveTree (el, doc);
 	  if (lastChild)
-	    {
-	      /* move the element as the last child of the HEAD element */
-	      TtaRemoveTree (el, doc);
-	      TtaInsertSibling (el, lastChild, FALSE, doc);
-	      lastChild = el;
-	    }
+	    TtaInsertSibling (el, lastChild, FALSE, doc);
+	  else
+	    TtaInsertFirstChild (&el, *elHead, doc);
+	  lastChild = el;
 	}
       /* get next child of the root */
       el = nextEl;
+    }
+  /* is there a TITLE element in the HEAD ? */
+  if (*elHead != NULL)
+    {
+      elType = TtaGetElementType (*elHead);
+      elType.ElTypeNum = HTML_EL_TITLE;
+      if (!TtaSearchTypedElement (elType, SearchInTree, *elHead))
+	{
+	  /* create the title */
+	  lastChild = TtaNewTree (doc, elType, "");
+	  TtaInsertFirstChild (&lastChild, *elHead, doc);
+	}
     }
 }
 
@@ -5793,8 +5803,9 @@ void            CheckAbstractTree (char* pathURL, Document doc)
 		/* don't move Comments, PI and Invalid_elements if the previous
 		   element has not been moved */
 		previous = el;
-	     else if (elType.ElTypeNum != HTML_EL_HEAD &&
-		      elType.ElTypeNum != HTML_EL_FRAMESET)
+	     else if (elType.ElTypeNum == HTML_EL_HEAD)
+	        previous = el;
+	     else if (elType.ElTypeNum != HTML_EL_FRAMESET)
 		/* this element should be a child of BODY */
 	       {
 		  /* create the BODY element if it does not exist */
