@@ -847,7 +847,7 @@ static void  XmlCheckInsert (Element *el, Element parent,
 	     {
 	       /* Element ancestor cannot contain math directly. Create a */
 	       /* Pseudo_paragraph element as the parent of the math element */
-	       newElType.ElSSchema = currentParserCtxt->XMLSSchema;
+	       newElType.ElSSchema = XhtmlParserCtxt->XMLSSchema;
 	       newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	       newEl = TtaNewElement (doc, newElType);
 	       XmlSetElemLineNumber (newEl);
@@ -932,7 +932,7 @@ static void  XhtmlCheckInsert (Element *el, Element  parent,
 	     {
 	       /* Element ancestor cannot contain text directly. Create a */
 	       /* Pseudo_paragraph element as the parent of the text element */
-	       newElType.ElSSchema = currentParserCtxt->XMLSSchema;
+	       newElType.ElSSchema = XhtmlParserCtxt->XMLSSchema;
 	       newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	       newEl = TtaNewElement (doc, newElType);
 	       XmlSetElemLineNumber (newEl);
