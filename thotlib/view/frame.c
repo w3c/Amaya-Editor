@@ -820,7 +820,7 @@ int                 scroll;
 	       }
 	  }
 
-	/* Interractive creation of boxes missing */
+	/* Interactive creation of boxes missing */
 	if (ToCreate != NULL)
 	  {
 	     DirectCreation (ToCreate, frame);

@@ -4189,7 +4189,6 @@ PtrAbstractBox      pAb;
 
    if (pPRuleDimV != NULL || pPRuleDimH != NULL)
      {
-	pDoc->DocModified = TRUE;	/* le document est modifie' */
 	for (viewDoc = 1; viewDoc <= MAX_VIEW_DOC; viewDoc++)
 	   if (pEl->ElAbstractBox[viewDoc - 1] != NULL)
 	      /* l'element traite' a un pave dans cette vue */
