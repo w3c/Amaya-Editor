@@ -122,6 +122,7 @@ extern DocumentType ANNOT_bodyType ( Document annot_doc );
 extern void ANNOT_bodyType_set ( Document annot_doc,
                                  DocumentType bodyType );
 extern void Annot_SetXMLBody ( Document doc );
+extern char * Annot_DocumentURL ( Document doc );
 
 #else /* __STDC__ */
 
@@ -241,6 +242,7 @@ extern DocumentType ANNOT_bodyType (/* Document annot_doc */);
 extern void ANNOT_bodyType_set (/* Document annot_doc,
                                    DocumentType bodyType */);
 extern void Annot_SetXMLBody (/* Document doc */);
+extern char * Annot_DocumentURL (/* Document doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

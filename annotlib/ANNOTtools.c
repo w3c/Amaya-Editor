@@ -2795,3 +2795,27 @@ void Annot_SetXMLBody (Document doc)
       TtaSetStructureChecking ((ThotBool) oldStructureChecking, doc);
     }
 }
+
+/*-----------------------------------------------------------------------
+  Annot_DocumentURL
+  Returns a string that has a copy of the document URL. If the document
+  has any parameters, they are concatenated to it.
+  The caller has to free the returned pointer.
+  -----------------------------------------------------------------------*/
+char * Annot_DocumentURL (Document doc)
+{
+ 
+  char *ptr;
+
+  if (DocumentMeta[doc] && DocumentMeta[doc]->form_data)
+    {
+      int len;
+      len = strlen (DocumentURLs[doc] + strlen (DocumentMeta[doc]->form_data) + 2);
+      ptr = TtaGetMemory (len);
+      sprintf (ptr, "%s?%s", DocumentURLs[doc], DocumentMeta[doc]->form_data);
+    }
+  else
+    ptr = TtaStrdup (DocumentURLs[doc]);
+
+  return ptr;
+}
