@@ -241,8 +241,8 @@ int                 msgNumber;
    CHAR_T*             string;
    CHAR_T              fileName[MAX_TXT_LEN];
    unsigned char       pBuff[MAX_TXT_LEN];
-   unsigned char*      ptrBuff;
 #  ifdef _I18N_ 
+   unsigned char*      ptrBuff;
    unsigned char       txt[MAX_TXT_LEN];
    CHARSET             encoding;
 #  endif /* _I18N_ */
