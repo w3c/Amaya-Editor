@@ -217,8 +217,18 @@ if test "$with_gtk" = "yes" -o "$enable_gtk" = "yes" ; then
   fi
 fi
 
+# check if mac version is used
+AC_ARG_WITH(mac, [  --with-mac              generate mac version ])
+if test "$with_mac" = "" ; then
+ if test "$enable_mac" = "yes" ; then
+    with_mac="yes"
+  else
+    with_mac="no"
+  fi
+fi
+
 # check for mesa library (OpenGL)
-AC_ARG_WITH(MESA,              [  --with-mesa               enable OpenGL canvas with internal MesaLib (only used with wxWidgets GUI) ])
+AC_ARG_WITH(MESA,              [  --with-mesa             enable OpenGL canvas with internal MesaLib (only used with wxWidgets GUI) ])
 if test "$with_mesa" = "" ; then
  if test "$enable_mesa" = "yes" ; then
     with_mesa="yes"
@@ -261,7 +271,7 @@ if test "$with_nogui" = "yes" -o "$enable_nogui" = "yes" ; then
 fi
 
 # check if wxWidgets debug is enable
-AC_ARG_WITH(wxdebug,              [  --with-wxdebug               compiles wxWidgets with debuging options ])
+AC_ARG_WITH(wxdebug,              [  --with-wxdebug          compiles wxWidgets with debuging options ])
 if test "$with_wxdebug" = "yes" ; then
   with_wxdebug="yes"
 else
@@ -270,7 +280,7 @@ fi
 
 # it is possible to specify wxWidgets library path,
 # usefull for developpers who want to compile amaya with different wxWidgets version
-AC_ARG_WITH(wxsrcdir, [  --with-wxsrcdir=...               compiles Amaya with a specific wxWidgets sources path ])
+AC_ARG_WITH(wxsrcdir, [  --with-wxsrcdir=...     compiles Amaya with a specific wxWidgets sources path ])
 if test "$with_wxsrcdir" = "" ; then
   with_wxsrcdir="../../wxWidgets"
 fi
@@ -447,10 +457,9 @@ if test "$with_wx" = "yes" ; then
   fi
   if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
     # MACOSX
-    AC_MSG_ERROR(TODO: configurer wxWidgets pour MACOSX)
+    # AC_MSG_ERROR(TODO: configurer wxWidgets pour MACOSX)
     # --with-mac              use Mac OS X
-    # --with-cocoa            use Cocoa
-    # WXCONFIGURE_OPTION="--with-opengl --with-gtk --enable-gtk2 --enable-unicode"
+    WXCONFIGURE_OPTION="--with-opengl --disable-shared --enable-unicode"
   fi
   if test $with_wxdebug = yes ; then
     WXCONFIGURE_OPTION="$WXCONFIGURE_OPTION --enable-debug"
@@ -521,7 +530,7 @@ dnl  ***************************************************************
 
 # if configure has option --with-graphiclibs then dont check for system graphic libs
 # force amaya static graphic libs to be used
-AC_ARG_WITH(graphiclibs, [  --with-graphiclibs     use static libjpeg, libpng.])
+AC_ARG_WITH(graphiclibs, [  --with-graphiclibs      use static libjpeg, libpng.])
 if test "$with_graphiclibs" = "yes" -o "$enable_graphiclibs" = "yes" ; then
   no_graphic="no"
 else
@@ -808,6 +817,27 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
   fi
 
   AC_MSG_CHECKING([Xft-library])
+ 
+if test "$with_mac" = "yes" ; then
+  for ac_dir in               		\
+		/usr/lib 			\
+		/usr/X11R6/lib	 		\
+		/opt/local/lib	 		\
+		; \
+  do  if test -r "$ac_dir/libXft.2.dylib" ; then
+    xft_lib="yes"
+    XFT_LIBRARIES="-L$ac_dir -lXft"
+    AC_MSG_RESULT([yes])
+    break	
+  fi
+  done	
+  if test "$xft_lib" = "" ; then
+    AC_MSG_WARN(Xft.2 library (libXft.2.dylib) not found !!)
+    AC_MSG_WARN(Disabling opengl build !)
+      with_gl="no"
+      exit 1;
+  fi
+else
   for ac_dir in               		\
 		/usr/lib 			\
 		/usr/X11R6/lib	 		\
@@ -826,6 +856,8 @@ if test "$with_gl" = "yes" -o "$with_mesa" = "yes" ; then
       with_gl="no"
       exit 1;
   fi
+fi
+
   AC_SUBST(XFT_INCLUDES)
   AC_SUBST(XFT_LIBRARIES)
   # END CHECKING XFT #
