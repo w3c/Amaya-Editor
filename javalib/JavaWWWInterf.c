@@ -11,6 +11,8 @@
 #define AMAYA_ASYNC     4
 #define AMAYA_FORM_POST 16
 #define AMAYA_FORM_GET  32
+#define AMAYA_NOCACHE	64
+#define AMAYA_NOREDIR	128
 
 extern char TempFileDirectory[];
 
@@ -147,11 +149,15 @@ void *arg;
    or can come from POSTING/GETTING a form. In the latter
    case, the function receives a query string to send to the server.
 
-   4  file retrieval modes are proposed:
+   Various file retrieval modes are proposed:
    AMAYA_SYNC : blocking mode
    AMAYA_ISYNC : incremental, blocking mode
    AMAYA_ASYNC : non-blocking mode
    AMAYA_IASYNC : incremental, non-blocking mode
+
+   In addition
+   AMAYA_NOCACHE : no cache
+   AMAYA_NOREDIR : no redirection
 
    In the incremental mode, each time a package arrives, it will be
    stored in the temporary file. In addition, if an
@@ -218,6 +224,16 @@ boolean             error_html;
 {
     struct Hamaya_HTTPRequest* request;
     int result;
+    int flag = 0;
+
+    if (mode & AMAYA_NOCACHE) {
+        mode -= AMAYA_NOCACHE;
+	flag += AMAYA_NOCACHE;
+    }
+    if (mode & AMAYA_NOREDIR) {
+        mode -= AMAYA_NOREDIR;
+	flag += AMAYA_NOREDIR;
+    }
 
     /*
      * Allocate and fill in a new HTTP Request instance.
@@ -232,13 +248,15 @@ boolean             error_html;
     JavaThotlibRelease();
     switch (mode) {
         case AMAYA_SYNC:
-	    do_execute_java_method(0, (void *) request, "Get", "()I", 0, 0);
+	    do_execute_java_method(0, (void *) request, "Get", "(I)I",
+	                           0, 0, flag);
 	    break;
         case AMAYA_ASYNC:
 	    unhand(request)->callback = (jlong) GetObjectWWWCallback;
 	    unhand(request)->callback_f = (jlong) terminate;
 	    unhand(request)->callback_arg = (jlong) tcontext;
-	    do_execute_java_method(0, (void *) request, "AsyncGet", "()I", 0, 0);
+	    do_execute_java_method(0, (void *) request, "AsyncGet", "(I)I",
+	                           0, 0, flag);
 	    break;
 	default:
 	    fprintf(stderr,"GetObjectWWW : unsupported mode %d\n", mode);
