@@ -72,7 +72,7 @@ char *AbsBoxType (PtrAbstractBox pAb, ThotBool origName)
 	{
 	  strcat (BoxTypeName, ".");
 	  strcat (BoxTypeName,
-		  pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
+		  pAb->AbPSchema->PsPresentBox->PresBox[pAb->AbTypeNum - 1]->PbName);
 	}
     }
   return (BoxTypeName);

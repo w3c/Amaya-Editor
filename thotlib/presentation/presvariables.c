@@ -873,7 +873,7 @@ ThotBool PresAbsBoxUserEditable (PtrAbstractBox pAb)
 	 /* c'est un pave de presentation */
 	{
 	   /* cherche la boite de presentation correspondant au pave' */
-	   pBo = &pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1];
+	   pBo = pAb->AbPSchema->PsPresentBox->PresBox[pAb->AbTypeNum - 1];
 	   if (pBo->PbContent == ContVariable)
 	      /* une boite dont le contenu est une variable de presentation */
 	     {

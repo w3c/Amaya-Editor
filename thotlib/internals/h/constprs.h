@@ -34,8 +34,6 @@
 #define MAX_PRES_ATTR_CASE 8	/* max. number of different cases for
 				   application of a numerical attribute
 				   presentation rules */
-#define MAX_PRES_BOX 1024	/* max. number of presentation boxes for a
-				   presentation schema */
 #define MAX_TRANSM_ATTR 5	/* max. number of attributes to which can be
 				   transmitted a counter or an element value */
 #define MAX_TRANSM_ELEM 25	/* max. number of elements that can pass on

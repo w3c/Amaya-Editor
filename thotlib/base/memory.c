@@ -1043,9 +1043,15 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
 
   pSP->PsNext = NULL;
   pSP->PsFirstDefaultPRule = NULL;
-  for (i = 0; i < MAX_PRES_BOX; i++)
+  if (pSP->PsPresentBox)
     {
-      pSP->PsPresentBox[i].PbFirstPRule = NULL;
+      for (i = 0; i < pSP->PsNPresentBoxes; i++)
+	{
+	  free (pSP->PsPresentBox->PresBox[i]);
+	  pSP->PsPresentBox->PresBox[i] = NULL;
+	}
+      free (pSP->PsPresentBox);
+      pSP->PsPresentBox = NULL;
     }
   if (pSP->PsAttrPRule)
     {

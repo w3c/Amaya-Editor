@@ -1086,7 +1086,7 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
    PresConstant       *pConst;
    PresVariable       *pVar;
    PresVarItem        *pVarItem;
-   PresentationBox    *pBox;
+   PtrPresentationBox  pBox;
    AttributePres      *pAttPres;
    NumAttrCase        *pCase;
    int                 i, j, k;
@@ -1239,7 +1239,7 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
    /* ecrit les boites de presentation */
    for (i = 0; i < pPSch->PsNPresentBoxes; i++)
      {
-	pBox = &pPSch->PsPresentBox[i];
+	pBox = pPSch->PsPresentBox->PresBox[i];
 	WriteName (pBox->PbName);
 	WriteRulePtr (pBox->PbFirstPRule);
 	WriteBoolean (pBox->PbPageFooter);
@@ -1312,7 +1312,7 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
 
    /* ecrit les regles des boites */
    for (i = 0; i < pPSch->PsNPresentBoxes; i++)
-      WritePRules (pPSch->PsPresentBox[i].PbFirstPRule);
+      WritePRules (pPSch->PsPresentBox->PresBox[i]->PbFirstPRule);
 
    /* ecrit les regles des attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)

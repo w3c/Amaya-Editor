@@ -244,10 +244,10 @@ static PtrPRule     BoxRuleSearch (PtrPSchema tsch, GenericContext ctxt)
   /* search for the BOXE in the Presentation Schema */
   for (i = 1; i <= tsch->PsNPresentBoxes; i++)
     {
-      if (!strcmp (ctxt->attrText[0], tsch->PsPresentBox[i - 1].PbName))
+      if (!strcmp (ctxt->attrText[0], tsch->PsPresentBox->PresBox[i - 1]->PbName))
 	{
 	  ctxt->box = i;
-	  return (tsch->PsPresentBox[i - 1].PbFirstPRule);
+	  return (tsch->PsPresentBox->PresBox[i - 1]->PbFirstPRule);
 	}
     }
 
@@ -442,8 +442,8 @@ static void  RemoveElementPRule (PtrElement el, PRuleType type, unsigned int ext
   ----------------------------------------------------------------------*/
 static PtrPRule    *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
 {
-  PresentationBox    *box;
-  int                 i;
+  PtrPresentationBox  box;
+  int                 i, size;
   Name                boxname;
 
   BuildBoxName (ctxt, &boxname);
@@ -451,25 +451,46 @@ static PtrPRule    *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
   /* search for the BOX in the Presentation Schema */
   for (i = 1; i <= tsch->PsNPresentBoxes; i++)
     {
-      if (!strcmp (boxname, tsch->PsPresentBox[i - 1].PbName))
+      if (!strcmp (boxname, tsch->PsPresentBox->PresBox[i - 1]->PbName))
 	{
 	  ctxt->box = i;
-	  return (&tsch->PsPresentBox[i - 1].PbFirstPRule);
+	  return (&tsch->PsPresentBox->PresBox[i - 1]->PbFirstPRule);
 	}
     }
 
-  if (tsch->PsNPresentBoxes >= MAX_PRES_BOX)
+  if (tsch->PsNPresentBoxes >= tsch->PsPresentBoxTableSize)
+    /* the presentation box table is full. Extend it */
     {
-      fprintf (stderr, "BoxRuleInsert: PsNPresentBoxes >= MAX_PRES_BOX (%d)\n",
-	       MAX_PRES_BOX);
+      /* add 10 new entries */
+      size = tsch->PsNPresentBoxes + 10;
+      i = size * sizeof (PtrPresentationBox);
+      if (!tsch->PsPresentBox)
+	tsch->PsPresentBox = (PresBoxTable*) malloc (i);
+      else
+	tsch->PsPresentBox = (PresBoxTable*) realloc (tsch->PsPresentBox, i);
+      if (!tsch->PsPresentBox)
+	{
+	  ctxt->box = 0;
+	  return (NULL);
+	}
+      else
+	{
+	  tsch->PsPresentBoxTableSize = size;
+	  for (i = tsch->PsNPresentBoxes; i < size; i++)
+	    tsch->PsPresentBox->PresBox[i] = NULL;
+	}
+    }
+  /* allocate and initialize the new presentation box */
+  box = (PtrPresentationBox) malloc (sizeof (PresentationBox));
+  if (box == NULL)
+    {
       ctxt->box = 0;
       return (NULL);
     }
-  
-  /* allocate and initialize the new BOX */
+  tsch->PsPresentBox->PresBox[tsch->PsNPresentBoxes] = box;
+  memset (box, 0, sizeof (PresentationBox));
   tsch->PsNPresentBoxes++;
   ctxt->box = tsch->PsNPresentBoxes;
-  box = &tsch->PsPresentBox[tsch->PsNPresentBoxes - 1];
   strncpy (box->PbName, boxname, sizeof (box->PbName));
   box->PbFirstPRule = NULL;
   box->PbPageFooter = FALSE;
@@ -480,8 +501,7 @@ static PtrPRule    *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
   box->PbPageCounter = 0;
   box->PbContent = FreeContent;
   box->PbContVariable = 0;
-
-  return (&tsch->PsPresentBox[tsch->PsNPresentBoxes - 1].PbFirstPRule);
+  return (&tsch->PsPresentBox->PresBox[tsch->PsNPresentBoxes - 1]->PbFirstPRule);
 }
 
 /*----------------------------------------------------------------------

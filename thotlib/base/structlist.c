@@ -1066,15 +1066,11 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	pRe1 = pAb->AbElement->
 	   ElStructSchema->SsRule->SrElem[pAb->AbElement->ElTypeNumber - 1];
 	fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
-	fprintf (fileDescriptor, " ");
 	if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
-	  {
-	     fprintf (fileDescriptor, "%d", pAb->AbElement->ElPageType);
-	     fprintf (fileDescriptor, " ");
-	  }
+	  fprintf (fileDescriptor, " %d", pAb->AbElement->ElPageType);
 	if (pAb->AbPresentationBox)
 	   fprintf (fileDescriptor, ".%s", pAb->AbPSchema->
-		    PsPresentBox[pAb->AbTypeNum - 1].PbName);
+		    PsPresentBox->PresBox[pAb->AbTypeNum - 1]->PbName);
 	fprintf (fileDescriptor, " TypeNum:%d", pAb->AbTypeNum);
 	fprintf (fileDescriptor, " El:%s", pAb->AbElement->ElLabel);
 	fprintf (fileDescriptor, " Vol:%d", pAb->AbVolume);
@@ -2165,7 +2161,7 @@ static void wrnomattr (int a, FILE *fileDescriptor)
 static void wrnomboite (int b, FILE *fileDescriptor)
 {
   if (b > 0)
-    fprintf (fileDescriptor, pSc1->PsPresentBox[b - 1].PbName);
+    fprintf (fileDescriptor, pSc1->PsPresentBox->PresBox[b - 1]->PbName);
 }
 
 

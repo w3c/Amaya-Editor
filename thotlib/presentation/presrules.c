@@ -2012,7 +2012,7 @@ static void ApplyPos (AbPosition *PPos, PosRule *positionRule, PtrPRule pPRule,
 			      b = GetPageBoxType (pAbbParent->AbFirstEnclosed->AbElement, pDoc,
 					      pAbbParent->AbFirstEnclosed->AbElement->ElViewPSchema,
 					      &pSchPPage);
-			      PageHeaderHeight = pSchPPage->PsPresentBox[b - 1].PbHeaderHeight;
+			      PageHeaderHeight = pSchPPage->PsPresentBox->PresBox[b - 1]->PbHeaderHeight;
 			      /* PbHeaderHeight toujours en points typo */
 			      if (PPos->PosDistance - PageHeaderHeight >= 0)
 				PPos->PosDistance = PPos->PosDistance - PageHeaderHeight;
@@ -2473,9 +2473,9 @@ static ThotBool FindAbsBox (int Ntype, PtrPSchema pSchP, Name presBoxName,
    if ((*pAb)->AbPresentationBox && (*pAb)->AbLeafType == LtText)
      {
        if (Ntype != 0)
-	 result = !strcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName, pSchP->PsPresentBox[Ntype - 1].PbName);
+	 result = !strcmp ((*pAb)->AbPSchema->PsPresentBox->PresBox[(*pAb)->AbTypeNum - 1]->PbName, pSchP->PsPresentBox->PresBox[Ntype - 1]->PbName);
        else
-	 result = !strcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName, presBoxName);
+	 result = !strcmp ((*pAb)->AbPSchema->PsPresentBox->PresBox[(*pAb)->AbTypeNum - 1]->PbName, presBoxName);
      }
    if (!result)
      {
@@ -2557,7 +2557,7 @@ static ThotBool SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema *pSchP,
 		  /* en copie */
 		}
 	      else
-		result = !strcmp (pSP->PsPresentBox[pPRule->PrPresBox[0] - 1].PbName, presBoxName);
+		result = !strcmp (pSP->PsPresentBox->PresBox[pPRule->PrPresBox[0] - 1]->PbName, presBoxName);
 	    }
 	   if (result && (pSP != *pSchP))
 	      /* retourne le schema de presentation et le */
@@ -2734,7 +2734,7 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
   PtrDocument         pDocRef;
   PtrElement          pEl1;
   PtrAbstractBox      pAbb1;
-  PresentationBox    *pBo1;
+  PtrPresentationBox  pPBox;
   PtrCopyDescr        pDC;
   PtrPRule            pPRule1;
   PtrAttribute        pAttr;
@@ -2835,25 +2835,25 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
 		      if (found)
 			/* on a trouve' l'element pE qui cree la boite a copier */
 			{
-			  pBo1 = &pSchP->PsPresentBox[boxType - 1];
-			  if (pBo1->PbContent == ContVariable)
+			  pPBox = pSchP->PsPresentBox->PresBox[boxType - 1];
+			  if (pPBox->PbContent == ContVariable)
 			    /* on fait comme si le pave appartenait a l'element */
 			    /* a copier */
 			    {
 			      pElSv = pAb->AbElement;
 			      pAb->AbElement = pE;
-			      found = NewVariable (pBo1->PbContVariable, pSchS,
+			      found = NewVariable (pPBox->PbContVariable, pSchS,
 						   pSchP, pAb, NULL, pDoc);
 			      /* on retablit le pointeur correct */
 			      pAb->AbElement = pElSv;
 			    }
-			  if (pBo1->PbContent == FreeContent)
+			  if (pPBox->PbContent == FreeContent)
 			    /* le contenu de la boite de presentation a copier */
 			    /* est lui-meme defini par une regle FnCopy */
 			    {
 			      /* on cherche cette regle FnCopy parmi les regles de */
 			      /* presentation de la boite de presentation a copier */
-			      pPRule1 = GetRuleCopy (pBo1->PbFirstPRule);
+			      pPRule1 = GetRuleCopy (pPBox->PbFirstPRule);
 			      if (pPRule1 != NULL)
 				/* on a trouve' la regle FnCopy. On l'applique en */
 				/* faisant comme si le pave appartenait a l'element */

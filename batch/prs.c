@@ -504,17 +504,16 @@ static void         SetLevel (Level lev, indLine wi)
   ----------------------------------------------------------------------*/
 static void         CheckBoxEnd ()
 {
-   if (PresBoxDef)
-      /* fin des regles de presentation d'une boite */
-     {
-	if (pPSchema->PsPresentBox[CurPresBox - 1].PbFirstPRule == NextRule)
-	   /* aucune regle (seulement 'Content') */
-	   pPSchema->PsPresentBox[CurPresBox - 1].PbFirstPRule = NULL;
-     }
-   if (CurRule != NULL)
-      CurRule->PrNextPRule = NULL;
+  if (PresBoxDef)
+    /* fin des regles de presentation d'une boite */
+    {
+      if (pPSchema->PsPresentBox->PresBox[CurPresBox - 1]->PbFirstPRule == NextRule)
+	/* aucune regle (seulement 'Content') */
+	pPSchema->PsPresentBox->PresBox[CurPresBox - 1]->PbFirstPRule = NULL;
+    }
+  if (CurRule != NULL)
+    CurRule->PrNextPRule = NULL;
 }
-
 
 /*----------------------------------------------------------------------
    EndOfRulesForType   fin des regles de presentation associees	
@@ -1151,8 +1150,9 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 	   /* dans la regle Content d'une boite de presentation */
 	   {
 	     NewVar (wi);	/* cree une nouvelle variable */
-	     pPSchema->PsPresentBox[CurPresBox - 1].PbContent = ContVariable;
-	     pPSchema->PsPresentBox[CurPresBox - 1].PbContVariable =
+	     pPSchema->PsPresentBox->PresBox[CurPresBox - 1]->PbContent =
+	                                              ContVariable;
+	     pPSchema->PsPresentBox->PresBox[CurPresBox - 1]->PbContVariable =
 	                                              pPSchema->PsNVariables;
 	     NewVariableDef = True;
 	   }
@@ -1370,8 +1370,9 @@ static void         CreateConstant (BasicType constType, indLine wi)
 	  if (PresBoxDef)
 	    /* definition dans une regle Content d'une boite de presentation */
 	    {
-	     pPSchema->PsPresentBox[CurPresBox - 1].PbContent = ContConst;
-	     pPSchema->PsPresentBox[CurPresBox - 1].PbContConstant =
+	     pPSchema->PsPresentBox->PresBox[CurPresBox - 1]->PbContent =
+	                                                ContConst;
+	     pPSchema->PsPresentBox->PresBox[CurPresBox - 1]->PbContConstant =
 							pPSchema->PsNConstants;
 	    }
 	  else if (RuleDef && CurRule->PrPresMode == PresFunction
@@ -1992,7 +1993,7 @@ static void         CheckForwardRef (indLine wi)
    ThotBool             stop;
 
    for (box = 0; box < pPSchema->PsNPresentBoxes; box++)
-      if (pPSchema->PsPresentBox[box].PbName[0] == ' ')
+      if (pPSchema->PsPresentBox->PresBox[box]->PbName[0] == ' ')
 	{
 	   i = 0;
 	   stop = False;
@@ -3643,31 +3644,55 @@ static void ProcessTypeName (SyntacticCode prevRule, Name typeName,
    InclusionRefName = False;
 }
 
-
 /*----------------------------------------------------------------------
    NewBoxName      traite un nouveau nom de boite de presentation  
   ----------------------------------------------------------------------*/
 static void         NewBoxName (indLine wl, indLine wi, int identnum)
 {
-   PresentationBox    *pPresBox;
+  int                   size, i;
+  PtrPresentationBox    pPresBox;
 
-   pPresBox = &pPSchema->PsPresentBox[pPSchema->PsNPresentBoxes];
-   pPSchema->PsNPresentBoxes++;
-   Identifier[identnum].SrcIdentDefRule = pPSchema->PsNPresentBoxes;
-   if (Forward)
-     {
-	pPresBox->PbName[0] = ' ';
-	Forward = False;
-     }
-   else
-     {
-	CopyName (pPresBox->PbName, wi, wl);
-	pPresBox->PbFirstPRule = NextRule;
-	FirstRule = NextRule;
-	CurPresBox = pPSchema->PsNPresentBoxes;
-     }
-   /* a priori la boite a un contenu libre */
-   pPresBox->PbContent = FreeContent;
+  if (pPSchema->PsNPresentBoxes >= pPSchema->PsPresentBoxTableSize)
+    /* the presentation box table is full. Extend it */
+    {
+      /* add 10 new entries */
+      size = pPSchema->PsNPresentBoxes + 10;
+      i = size * sizeof (PtrPresentationBox);
+      if (!pPSchema->PsPresentBox)
+	pPSchema->PsPresentBox = (PresBoxTable*) malloc (i);
+      else
+	pPSchema->PsPresentBox = (PresBoxTable*) realloc (pPSchema->PsPresentBox, i);
+      if (!pPSchema->PsPresentBox)
+	CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+      else
+	{
+	  pPSchema->PsPresentBoxTableSize = size;
+	  for (i = pPSchema->PsNPresentBoxes; i < size; i++)
+	    pPSchema->PsPresentBox->PresBox[i] = NULL;
+	}
+    }
+  /* create a new presentation box descriptor */
+  pPresBox = (PtrPresentationBox) malloc (sizeof (PresentationBox));
+  if (pPresBox == NULL)
+    CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+  else
+    pPSchema->PsPresentBox->PresBox[pPSchema->PsNPresentBoxes++] = pPresBox;
+  memset (pPresBox, 0, sizeof (PresentationBox));
+  Identifier[identnum].SrcIdentDefRule = pPSchema->PsNPresentBoxes;
+  if (Forward)
+    {
+      pPresBox->PbName[0] = ' ';
+      Forward = False;
+    }
+  else
+    {
+      CopyName (pPresBox->PbName, wi, wl);
+      pPresBox->PbFirstPRule = NextRule;
+      FirstRule = NextRule;
+      CurPresBox = pPSchema->PsNPresentBoxes;
+    }
+  /* a priori la boite a un contenu libre */
+  pPresBox->PbContent = FreeContent;
 }
 
 /*----------------------------------------------------------------------
@@ -3795,7 +3820,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
    ThotBool             ok, new;
    Counter            *pCntr;
    PresVariable       *pPresVar;
-   PresentationBox    *pPresBox;
+   PtrPresentationBox  pPresBox;
    PresVarItem        *pVarElem;
    PtrPRule            pPRule;
    PtrCondition        pCond;
@@ -4404,7 +4429,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	     /* dans une regle 'Content : Nom_Constante;' d'une boite de
 		presentation */
 	     {
-	     pPresBox = &pPSchema->PsPresentBox[CurPresBox - 1];
+	     pPresBox = pPSchema->PsPresentBox->PresBox[CurPresBox - 1];
 	     pPresBox->PbContent = ContConst;
 	     pPresBox->PbContConstant = Identifier[identnum].SrcIdentDefRule;
 	     }
@@ -4467,7 +4492,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	  {
 	  if (PresBoxDef)
 	     {
-	     pPresBox = &pPSchema->PsPresentBox[CurPresBox - 1];
+	     pPresBox = pPSchema->PsPresentBox->PresBox[CurPresBox - 1];
 	     pPresBox->PbContent = ContVariable;
 	     pPresBox->PbContVariable = Identifier[identnum].SrcIdentDefRule;
 	     /* cherche tous les compteurs reference's par cette variable */
@@ -4504,26 +4529,23 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
      case RULE_BoxName:
        /* BoxName */
        if (PresBoxDef && !InRule)
-	  /* definition de boite */
+	  /* definition d'une boite de presentation */
 	  {
-	  if (pPSchema->PsNPresentBoxes >= MAX_PRES_BOX)
-	     CompilerMessage (wi, PRS, FATAL, MAX_BOXES_OVERFLOW, inputLine,
-			      LineNum);
-	  else if (GetTypeNumber (wl, wi, n) != 0)
+	  if (GetTypeNumber (wl, wi, n) != 0)
 	     /* ce nom de boite de presentation est deja un nom de type */
 	     /* d'element, erreur */
 	     CompilerMessage (wi, PRS, FATAL, CANT_USE_TYPE_NAME_FOR_A_BOX,
 			      inputLine, LineNum);
 	  else if (Identifier[identnum].SrcIdentDefRule == 0)
 	     NewBoxName (wl, wi, identnum);
-	  else if (pPSchema->PsPresentBox[Identifier[identnum].SrcIdentDefRule - 1].PbName[0] != ' ')
+	  else if (pPSchema->PsPresentBox->PresBox[Identifier[identnum].SrcIdentDefRule - 1]->PbName[0] != ' ')
 	     /* nom deja rencontre' dans une declaration de vue, de */
 	     /* compteur ou dans une instruction Forward */
 	     CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine,
 			      LineNum);
 	  else
 	     {
-	     pPresBox = &pPSchema->PsPresentBox[Identifier[identnum].SrcIdentDefRule - 1];
+	     pPresBox = pPSchema->PsPresentBox->PresBox[Identifier[identnum].SrcIdentDefRule - 1];
 	     CopyName (pPresBox->PbName, wi, wl);
 	     pPresBox->PbFirstPRule = NextRule;
 	     FirstRule = NextRule;
@@ -5247,7 +5269,7 @@ void                SortAllPRules ()
 
    /* ordonne les regles des boites de presentation */
    for (j = 0; j < pPSchema->PsNPresentBoxes; j++)
-     SortPresRules (&pPSchema->PsPresentBox[j].PbFirstPRule);
+     SortPresRules (&pPSchema->PsPresentBox->PresBox[j]->PbFirstPRule);
 
    /* ordonne les regles des valeurs d'attribut */
    for (j = 0; j < pSSchema->SsNAttributes; j++)
@@ -5387,18 +5409,19 @@ static void         CheckPageBoxes ()
    PtrPRule            pR, pHeadR, pPRule, pRule;
    int                 b, hfB, el, view, footHeight, headHeight, h, i,
                        counter;
-   ThotBool             stop, stop1, exist;
-   PresentationBox    *pPresBox;
+   ThotBool            stop, stop1, exist;
+   PtrPresentationBox  pPresBox;
    PresVariable       *pPresVar;
    PtrCondition        pCond;
-   int                 viewOfBox[MAX_PRES_BOX];
+   NumberTable        *viewOfBox;
    PtrPRule            pRLarg;
 
+   viewOfBox = (NumberTable*) malloc (pPSchema->PsNPresentBoxes * sizeof (int));
    /* a priori les boites de presentation ne sont pas des boites pages */
    for (b = 0; b < pPSchema->PsNPresentBoxes; b++)
      {
-	viewOfBox[b] = 0;
-	pPresBox = &pPSchema->PsPresentBox[b];
+	viewOfBox->Num[b] = 0;
+	pPresBox = pPSchema->PsPresentBox->PresBox[b];
 	pPresBox->PbPageBox = False;
 	pPresBox->PbPageFooter = False;
 	pPresBox->PbPageHeader = False;
@@ -5432,14 +5455,14 @@ static void         CheckPageBoxes ()
 		       /* b: numero de la boite page */
 		       /* note la vue concernee par cette boite page, si */
 		       /* elle n'est pas deja notee */
-		       if (viewOfBox[b - 1] == 0)
-			  viewOfBox[b - 1] = pR->PrViewNum;
-		       pPSchema->PsPresentBox[b - 1].PbPageBox = True;
-		       pPSchema->PsPresentBox[b - 1].PbPageCounter = 0;
+		       if (viewOfBox->Num[b - 1] == 0)
+			  viewOfBox->Num[b - 1] = pR->PrViewNum;
+		       pPSchema->PsPresentBox->PresBox[b - 1]->PbPageBox =True;
+		       pPSchema->PsPresentBox->PresBox[b - 1]->PbPageCounter = 0;
 		       /* verifie que la boite page a une largeur et une hauteur */
 		       /* absolues */
 		       /* cherche la regle de hauteur d'abord */
-		       pRule = pPSchema->PsPresentBox[b - 1].PbFirstPRule;
+		       pRule = pPSchema->PsPresentBox->PresBox[b - 1]->PbFirstPRule;
 		       stop1 = False;
 		       exist = False;
 		       do
@@ -5459,14 +5482,14 @@ static void         CheckPageBoxes ()
 		       while (!stop1);
 		       if (!exist)
 			  /* il n'y a pas de regle de hauteur, erreur */
-			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox->PresBox[b - 1]->PbName);
 		       else if (!pRule->PrDimRule.DrAbsolute
 				|| pRule->PrDimRule.DrUnit == UnRelative
 				|| pRule->PrDimRule.DrPosition)
 			  /* ce n'est pas une hauteur absolue fixe, erreur */
-			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HEIGHT_RULE), pPSchema->PsPresentBox->PresBox[b - 1]->PbName);
 		       /* cherche la regle de largeur */
-		       pRule = pPSchema->PsPresentBox[b - 1].PbFirstPRule;
+		       pRule = pPSchema->PsPresentBox->PresBox[b - 1]->PbFirstPRule;
 		       stop1 = False;
 		       exist = False;
 		       do
@@ -5486,12 +5509,12 @@ static void         CheckPageBoxes ()
 		       while (!stop1);
 		       if (!exist)
 			  /* il n'y a pas de regle de largeur, erreur */
-			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_WIDTH_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_WIDTH_RULE), pPSchema->PsPresentBox->PresBox[b - 1]->PbName);
 		       else if (!pRule->PrDimRule.DrAbsolute
 				|| pRule->PrDimRule.DrUnit == UnRelative
 				|| pRule->PrDimRule.DrPosition)
 			  /* ce n'est pas une largeur absolue fixe, erreur */
-			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_WIDTH_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_WIDTH_RULE), pPSchema->PsPresentBox->PresBox[b - 1]->PbName);
 		       /* cherche la regle de largeur de la boite qui porte la */
 		       /* regle Page, ou cree une regle s'il n'y a pas de regle de */
 		       /* largeur */
@@ -5503,7 +5526,7 @@ static void         CheckPageBoxes ()
 		       pRLarg->PrDimRule = pRule->PrDimRule;
 		       /* cherche la regle de position verticale */
 		       /* de la boite page */
-		       pRule = pPSchema->PsPresentBox[b - 1].PbFirstPRule;
+		       pRule = pPSchema->PsPresentBox->PresBox[b - 1]->PbFirstPRule;
 		       stop1 = False;
 		       exist = False;
 		       do
@@ -5523,7 +5546,7 @@ static void         CheckPageBoxes ()
 		       while (!stop1);
 		       if (!exist)
 			  /* il n'y a pas de regle de position verticale, erreur */
-			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_VERTPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_VERTPOS_RULE), pPSchema->PsPresentBox->PresBox[b - 1]->PbName);
 		       else
 			 {
 			    if (pRule->PrPosRule.PoPosDef != Top
@@ -5535,10 +5558,10 @@ static void         CheckPageBoxes ()
 				|| (pRule->PrPosRule.PoDistUnit == UnRelative && pRule->PrPosRule.PoDistance != 0))
 			       /* et distance absolue */
 			       /* ce n'est pas un positionnement correct, erreur */
-			       TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_VERTPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			       TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_VERTPOS_RULE), pPSchema->PsPresentBox->PresBox[b - 1]->PbName);
 			 }
 		       /* cherche la regle de position horizontale */
-		       pRule = pPSchema->PsPresentBox[b - 1].PbFirstPRule;
+		       pRule = pPSchema->PsPresentBox->PresBox[b - 1]->PbFirstPRule;
 		       stop1 = False;
 		       exist = False;
 		       do
@@ -5558,7 +5581,7 @@ static void         CheckPageBoxes ()
 		       while (!stop1);
 		       if (!exist)
 			  /* il n'y a pas de regle de position horiz., erreur */
-			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HORIZPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HORIZPOS_RULE), pPSchema->PsPresentBox->PresBox[b - 1]->PbName);
 		       else
 			 {
 			    if (pRule->PrPosRule.PoPosDef != Left
@@ -5570,7 +5593,7 @@ static void         CheckPageBoxes ()
 				|| (pRule->PrPosRule.PoDistUnit == UnRelative && pRule->PrPosRule.PoDistance != 0))
 			       /* et distance absolue */
 			       /* ce n'est pas un positionnement correct, erreur */
-			       TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HORIZPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
+			       TtaDisplayMessage (FATAL, TtaGetMessage (PRS, BAD_HORIZPOS_RULE), pPSchema->PsPresentBox->PresBox[b - 1]->PbName);
 			 }
 		    }
 		  pR = pR->PrNextPRule;
@@ -5585,13 +5608,13 @@ static void         CheckPageBoxes ()
   /* hauteur minimum des bas de page. */
   for (b = 0; b < pPSchema->PsNPresentBoxes; b++)
     /* examine chaque boite */
-    if (pPSchema->PsPresentBox[b].PbPageBox)
+    if (pPSchema->PsPresentBox->PresBox[b]->PbPageBox)
       /* c'est une boite page */
       {
       footHeight = 0;
       headHeight = 0;
       /* cherche les regles de creation de la boite page */
-      pR = pPSchema->PsPresentBox[b].PbFirstPRule;
+      pR = pPSchema->PsPresentBox->PresBox[b]->PbFirstPRule;
       /* 1ere regle de presentation */
       /* parcourt les premieres regles de la boite page */
       stop = False;
@@ -5616,7 +5639,7 @@ static void         CheckPageBoxes ()
 	      /* ce n'est pas une regle de creation autorisee, erreur */
 	      TtaDisplayMessage (FATAL,
 				 TtaGetMessage (PRS, FORBIDDEN_CREA_RULE),
-				 pPSchema->PsPresentBox[b].PbName);
+				 pPSchema->PsPresentBox->PresBox[b]->PbName);
 	    else
 	      /* la regle pR est une regle CreateAfter ou */
 	      /* a CreateBefore */
@@ -5625,10 +5648,10 @@ static void         CheckPageBoxes ()
 	      /* numero de la boite de haut ou de bas de page */
 	      /* la boite de haut ou de bas de page appartient */
 	      /* la meme vue que la boite page qui la cree */
-	      viewOfBox[hfB] = viewOfBox[b];
+	      viewOfBox->Num[hfB] = viewOfBox->Num[b];
 	      /* cherche la regle de positionnement vertical de */
 	      /* la boite creee par la boite page */
-	      pPRule = pPSchema->PsPresentBox[hfB].PbFirstPRule;
+	      pPRule = pPSchema->PsPresentBox->PresBox[hfB]->PbFirstPRule;
 	      stop1 = False;
 	      exist = False;
 	      do
@@ -5650,7 +5673,7 @@ static void         CheckPageBoxes ()
 		/* pas de regle de positionnement vertical, erreur */
 		TtaDisplayMessage (FATAL,
 			  TtaGetMessage (PRS, MISSING_VERTIC_POS_IN_THE_PAGE),
-                          pPSchema->PsPresentBox[hfB].PbName);
+                          pPSchema->PsPresentBox->PresBox[hfB]->PbName);
 	      else
 		{
 		if (!(pPRule->PrPosRule.PoPosDef == Top ||
@@ -5661,20 +5684,20 @@ static void         CheckPageBoxes ()
 		    pPRule->PrPosRule.PoRefIdent != PageBreak + 1)
 		  TtaDisplayMessage (FATAL,
 			       TtaGetMessage (PRS, INVALID_VERTIC_POS_IN_PAGE),
-			       pPSchema->PsPresentBox[hfB].PbName);
+			       pPSchema->PsPresentBox->PresBox[hfB]->PbName);
 		if (pPRule->PrPosRule.PoDistance != 0)
 		  if (pPRule->PrPosRule.PoDistUnit == UnRelative)
 		    TtaDisplayMessage (FATAL,
                              TtaGetMessage (PRS, VERTIC_DIST_ISNT_CONSTANT),
-                             pPSchema->PsPresentBox[hfB].PbName);
+                             pPSchema->PsPresentBox->PresBox[hfB]->PbName);
 		if (pPRule->PrPosRule.PoRelation == RlPrevious)
 		  /* la boite creee est positionnee par rapport */
 		  /* au haut de la page */
 		  {
-		  pPSchema->PsPresentBox[hfB].PbPageHeader = True;
+		  pPSchema->PsPresentBox->PresBox[hfB]->PbPageHeader = True;
 		  /* cherche la regle de hauteur de la boite de */
 		  /* haut de page */
-		  pHeadR = pPSchema->PsPresentBox[hfB].PbFirstPRule;
+		  pHeadR = pPSchema->PsPresentBox->PresBox[hfB]->PbFirstPRule;
 		  stop1 = False;
 		  exist = False;
 		  do
@@ -5699,7 +5722,7 @@ static void         CheckPageBoxes ()
 		      /* c'est une hauteur elastique, erreur */
 		      TtaDisplayMessage (FATAL,
 					 TtaGetMessage (PRS, BAD_HEIGHT_RULE),
-					 pPSchema->PsPresentBox[hfB].PbName);
+					 pPSchema->PsPresentBox->PresBox[hfB]->PbName);
 		    else if (!pHeadR->PrDimRule.DrAbsolute)
 		      /* c'est une hauteur relative, on n'accepte */
 		      /* que la hauteur du contenu */
@@ -5707,7 +5730,7 @@ static void         CheckPageBoxes ()
 		      if (pHeadR->PrDimRule.DrRelation != RlEnclosed)
 			TtaDisplayMessage (FATAL,
 					  TtaGetMessage (PRS, BAD_HEIGHT_RULE),
-					  pPSchema->PsPresentBox[hfB].PbName);
+					  pPSchema->PsPresentBox->PresBox[hfB]->PbName);
 		      }
 		    else
 		      /* regle de hauteur absolue */
@@ -5715,7 +5738,7 @@ static void         CheckPageBoxes ()
 			/* la hauteur n'est pas en unites fixes */
 			TtaDisplayMessage (FATAL,
 					  TtaGetMessage (PRS, BAD_HEIGHT_RULE),
-					   pPSchema->PsPresentBox[hfB].PbName);
+					   pPSchema->PsPresentBox->PresBox[hfB]->PbName);
 		      else
 			/* calcule la distance entre le bas de la */
 			/* boite de haut de page et le haut de la page */
@@ -5755,10 +5778,10 @@ static void         CheckPageBoxes ()
 		  /* la boite creee est positionnee par rapport */
 		  /* au bas de la page, c'est une boite de bas de page */
 		  {
-		  pPSchema->PsPresentBox[hfB].PbPageFooter = True;
+		  pPSchema->PsPresentBox->PresBox[hfB]->PbPageFooter = True;
 		  /* cherche la regle de hauteur de la boite de */
 		  /* bas de page */
-		  pHeadR = pPSchema->PsPresentBox[hfB].PbFirstPRule;
+		  pHeadR = pPSchema->PsPresentBox->PresBox[hfB]->PbFirstPRule;
 		  stop1 = False;
 		  exist = False;
 		  do
@@ -5780,13 +5803,13 @@ static void         CheckPageBoxes ()
 		    /* il n'y a pas de regle de hauteur, erreur */
 		    TtaDisplayMessage (FATAL,
 				       TtaGetMessage (PRS, BAD_HEIGHT_RULE),
-				       pPSchema->PsPresentBox[hfB].PbName);
+				       pPSchema->PsPresentBox->PresBox[hfB]->PbName);
 		  else
 		    if (pHeadR->PrDimRule.DrPosition)
 		      /* c'est une hauteur elastique, erreur */
 		      TtaDisplayMessage (FATAL,
 					 TtaGetMessage (PRS, BAD_HEIGHT_RULE),
-					 pPSchema->PsPresentBox[hfB].PbName);
+					 pPSchema->PsPresentBox->PresBox[hfB]->PbName);
 		    else if (!pHeadR->PrDimRule.DrAbsolute)
 		      /* c'est une hauteur relative, on n'accepte */
 		      /* que la hauteur du contenu */
@@ -5794,7 +5817,7 @@ static void         CheckPageBoxes ()
 		      if (pHeadR->PrDimRule.DrRelation != RlEnclosed)
 			TtaDisplayMessage (FATAL,
 					  TtaGetMessage (PRS, BAD_HEIGHT_RULE),
-					  pPSchema->PsPresentBox[hfB].PbName);
+					  pPSchema->PsPresentBox->PresBox[hfB]->PbName);
 		      }
 		    else
 		      /* regle de hauteur absolue */
@@ -5802,7 +5825,7 @@ static void         CheckPageBoxes ()
 			/* la hauteur n'est pas en unites fixes */
 			TtaDisplayMessage (FATAL,
 					  TtaGetMessage (PRS, BAD_HEIGHT_RULE),
-					  pPSchema->PsPresentBox[hfB].PbName);
+					  pPSchema->PsPresentBox->PresBox[hfB]->PbName);
 		      else
 			/* calcule la distance entre le haut de la */
 			/* boite de bas de page et le bas de la page */
@@ -5842,7 +5865,7 @@ static void         CheckPageBoxes ()
 		  /* rapport a la page, erreur */
 		  TtaDisplayMessage (FATAL,
 			      TtaGetMessage (PRS, INVALID_VERTIC_POS_IN_PAGE),
-                              pPSchema->PsPresentBox[hfB].PbName);
+                              pPSchema->PsPresentBox->PresBox[hfB]->PbName);
 		/* examine les conditions de creation de la boite de */
 		/* haut ou de bas de page, a la recherche d'un */
 		/* compteur de page qui determine la creation de la */
@@ -5859,30 +5882,29 @@ static void         CheckPageBoxes ()
 		    if (PageCounter (counter))
 		      {
 		      /* c'est un compteur de pages */
-		      if (pPSchema->PsPresentBox[b].PbPageCounter > 0)
+		      if (pPSchema->PsPresentBox->PresBox[b]->PbPageCounter > 0)
 			/* il y a deja un compteur de page */
 			{
-			if (pPSchema->PsPresentBox[b].PbPageCounter != counter)
+			if (pPSchema->PsPresentBox->PresBox[b]->PbPageCounter != counter)
 			  /* ce n'est pas le meme compteur */
 			  TtaDisplayMessage (FATAL,
 			     TtaGetMessage (PRS, USES_DIFFERENT_PAGE_COUNTERS),
-			     pPSchema->PsPresentBox[b].PbName);
+			     pPSchema->PsPresentBox->PresBox[b]->PbName);
 			}
 		      else
 			/* on a trouve' le compteur de pages associe' */
 			/* a ce type de page */
-			pPSchema->PsPresentBox[b].PbPageCounter = counter;
+			pPSchema->PsPresentBox->PresBox[b]->PbPageCounter = counter;
 		      }
 		    }
 		  pCond = pCond->CoNextCondition;
 		  }
 		/* la boite de haut ou de bas de page contient-elle */
 		/* le numero de page ? */
-		if (pPSchema->PsPresentBox[hfB].PbContent == ContVariable)
+		if (pPSchema->PsPresentBox->PresBox[hfB]->PbContent == ContVariable)
 		  /* la boite contient une variable */
 		  {
-		  pPresVar = &pPSchema->PsVariable[pPSchema->PsPresentBox[hfB].
-                                                           PbContVariable - 1];
+		  pPresVar = &pPSchema->PsVariable[pPSchema->PsPresentBox->PresBox[hfB]->PbContVariable - 1];
 		  for (i = 0; i < pPresVar->PvNItems; i++)
 		    if (pPresVar->PvItem[i].ViType == VarCounter)
 		      /* la variable contient une valeur de */
@@ -5892,21 +5914,21 @@ static void         CheckPageBoxes ()
 		      if (PageCounter (counter))
 			/* c'est un compteur de pages */
 			{
-			if (pPSchema->PsPresentBox[b].PbPageCounter > 0)
+			if (pPSchema->PsPresentBox->PresBox[b]->PbPageCounter > 0)
 			  /* il y a deja un compteur de page */
 			  {
-			  if (pPSchema->PsPresentBox[b].PbPageCounter !=
+			  if (pPSchema->PsPresentBox->PresBox[b]->PbPageCounter !=
 			      counter)
 			    /* ce n'est pas le meme compteur */
 			    TtaDisplayMessage (FATAL,
                                TtaGetMessage (PRS, TWO_DIFFERENT_PAGE_NUMBERS),
-                               pPSchema->PsPresentBox[hfB].PbName);
+                               pPSchema->PsPresentBox->PresBox[hfB]->PbName);
 			  }
 			else
 			  /* on trouve' le compteur de pages */
-			  pPSchema->PsPresentBox[b].PbPageCounter = counter;
+			  pPSchema->PsPresentBox->PresBox[b]->PbPageCounter = counter;
 			pPSchema->PsCounter[counter - 1].CnPageFooter =
-			              pPSchema->PsPresentBox[hfB].PbPageFooter;
+			              pPSchema->PsPresentBox->PresBox[hfB]->PbPageFooter;
 			}
 		      }
 		  }
@@ -5921,8 +5943,8 @@ static void         CheckPageBoxes ()
 
       /* on a traite' toutes les boites de haut et de bas de page de */
       /* cette boite page */
-      pPSchema->PsPresentBox[b].PbFooterHeight = footHeight;
-      pPSchema->PsPresentBox[b].PbHeaderHeight = headHeight;
+      pPSchema->PsPresentBox->PresBox[b]->PbFooterHeight = footHeight;
+      pPSchema->PsPresentBox->PresBox[b]->PbHeaderHeight = headHeight;
       /* prevoir d'ajouter le positionnement de RPDimMin du corps */
       /* de page */
       }
@@ -5932,7 +5954,7 @@ static void         CheckPageBoxes ()
   for (b = 0; b < pPSchema->PsNPresentBoxes; b++)
     {
     /* examine chaque boite */
-    pPresBox = &pPSchema->PsPresentBox[b];
+    pPresBox = pPSchema->PsPresentBox->PresBox[b];
     /* cherche les regles de creation de la boite */
     pR = pPresBox->PbFirstPRule;
     /* 1ere regle de presentation */
@@ -5952,7 +5974,7 @@ static void         CheckPageBoxes ()
 	  /* ce n'est pas une regle de creation autorisee */
 	  if (!pPresBox->PbPageBox)
 	    TtaDisplayMessage (FATAL, TtaGetMessage (PRS, FORBIDDEN_CREA_RULE),
-			       pPSchema->PsPresentBox[b].PbName);
+			       pPSchema->PsPresentBox->PresBox[b]->PbName);
 	pR = pR->PrNextPRule;
 	/* passe a la regle suivante */
 	}
@@ -6029,6 +6051,7 @@ static void         CheckPageBoxes ()
       pR->PrPresMode = PresImmediate;
       pR->PrBoolValue = True;
     }
+  free (viewOfBox);
 }
 
 /*----------------------------------------------------------------------
@@ -6037,7 +6060,7 @@ static void         CheckPageBoxes ()
    regles de creation ou de mise en page. Marque utilisee la       
    boite de presentation utilisee dans ces regles                  
   ----------------------------------------------------------------------*/
-static void CheckUsedBoxes (PtrPRule pRule, ThotBool usedBox[MAX_PRES_BOX])
+static void CheckUsedBoxes (PtrPRule pRule, BoolTable *usedBox)
 {
    int                 i;
    ThotBool            stop;
@@ -6063,12 +6086,12 @@ static void CheckUsedBoxes (PtrPRule pRule, ThotBool usedBox[MAX_PRES_BOX])
 		     || pRule->PrPresFunction == FnCreateAfter))
 		/* c'est une regle de creation ou une regle Page */
 		/* marque la boite utilisee */
-		usedBox[pRule->PrPresBox[0] - 1] = True;
+		usedBox->Bln[pRule->PrPresBox[0] - 1] = True;
 	     else if (pRule->PrType == PtFunction
 		      && (pRule->PrPresFunction == FnColumn || pRule->PrPresFunction == FnSubColumn))
 		/* c'est une regle de colonnage */
 		for (i = 0; i < pRule->PrNPresBoxes; i++)
-		   usedBox[pRule->PrPresBox[i] - 1] = True;
+		   usedBox->Bln[pRule->PrPresBox[i] - 1] = True;
 	     pRule = pRule->PrNextPRule;
 	     /* passe a la regle suivante */
 	  }
@@ -6084,17 +6107,19 @@ static void CheckUsedBoxes (PtrPRule pRule, ThotBool usedBox[MAX_PRES_BOX])
 static void         CheckAllBoxesUsed ()
 {
    int                 b, el, att, k, l;
-   ThotBool             usedBox[MAX_PRES_BOX];
+   BoolTable          *usedBox;
    AttributePres      *pPRuleA;
 
+   usedBox = (BoolTable*) malloc (pPSchema->PsNPresentBoxes * sizeof (ThotBool));
    /* marque d'abord qu'aucune boite de presentation n'est utilisee */
    for (b = 0; b < pPSchema->PsNPresentBoxes; b++)
-      usedBox[b] = False;
+      usedBox->Bln[b] = False;
 
    /* recherche toutes les regles de creation associees aux boites de */
    /* presentation et marque les boites utilisees par ces regles. */
    for (b = 0; b < pPSchema->PsNPresentBoxes; b++)
-      CheckUsedBoxes (pPSchema->PsPresentBox[b].PbFirstPRule, usedBox);
+      CheckUsedBoxes (pPSchema->PsPresentBox->PresBox[b]->PbFirstPRule,
+		      usedBox);
 
    /* recherche toutes les regles de creation et les regles PAGE associees aux */
    /* types d'elements et marque les boites utilisees par ces regles. */
@@ -6136,10 +6161,10 @@ static void         CheckAllBoxesUsed ()
 
    /* sort un message pour chaque boite inutilisee */
    for (b = 0; b < pPSchema->PsNPresentBoxes; b++)
-      if (!usedBox[b])
-	 TtaDisplayMessage (INFO, TtaGetMessage (PRS, UNUSED_BOX), pPSchema->PsPresentBox[b].PbName);
+      if (!usedBox->Bln[b])
+	 TtaDisplayMessage (INFO, TtaGetMessage (PRS, UNUSED_BOX), pPSchema->PsPresentBox->PresBox[b]->PbName);
+   free (usedBox);
 }
-
 
 /*----------------------------------------------------------------------
    main                                                            

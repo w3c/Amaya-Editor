@@ -38,7 +38,7 @@ CntrItem           *pCp1;
 PresConstant       *pPr1;
 PresVariable       *pPres1;
 PresVarItem        *pVa1;
-PresentationBox    *pBo1;
+PtrPresentationBox  pBo1;
 TtAttribute        *pAt1;
 AttributePres      *pRP1;
 NumAttrCase        *pCa1;
@@ -224,7 +224,7 @@ static void         wrnomattr (int a)
 static void         wrnomboite (int b)
 {
    if (b > 0)
-      wrnom (pSchemaPrs->PsPresentBox[b - 1].PbName);
+      wrnom (pSchemaPrs->PsPresentBox->PresBox[b - 1]->PbName);
 }
 
 /*----------------------------------------------------------------------
@@ -1572,7 +1572,7 @@ int                 main (int argc, char **argv)
 	     printf ("\n");
 	     for (i = 1; i <= pSc1->PsNPresentBoxes; i++)
 	       {
-		  pBo1 = &pSc1->PsPresentBox[i - 1];
+		  pBo1 = pSc1->PsPresentBox->PresBox[i - 1];
 		  wrnom (pBo1->PbName);
 		  printf (":	{%3d }\n", i);
 		  if (pBo1->PbFirstPRule != NULL)

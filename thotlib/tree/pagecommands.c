@@ -83,7 +83,7 @@ PtrPRule GetPRulePage (PRuleType TypeR, int b, PtrPSchema pSchP)
    ThotBool            stop, exist;
    PtrPRule            pR;
 
-   pR = pSchP->PsPresentBox[b - 1].PbFirstPRule;
+   pR = pSchP->PsPresentBox->PresBox[b - 1]->PbFirstPRule;
    stop = FALSE;
    exist = FALSE;
    do
@@ -136,7 +136,7 @@ void PageHeaderFooter (PtrElement pElPage, PtrDocument pDoc, int view,
 	  {
 	     *b = pR->PrPresBox[0];	/* parametre retour */
 	     /* Hauteur minimum du bas de page */
-	     PageFooterHeight = PixelValue (pSP->PsPresentBox[(*b) - 1].PbFooterHeight, UnPoint, NULL, 0);
+	     PageFooterHeight = PixelValue (pSP->PsPresentBox->PresBox[(*b) - 1]->PbFooterHeight, UnPoint, NULL, 0);
 	     /* cherche la regle de hauteur de la boite page */
 	     pR = GetPRulePage (PtHeight, *b, pSP);
 	     if (pR != NULL)

@@ -151,31 +151,31 @@ typedef enum
 /* a presentation box */
 typedef struct _PresentationBox
 {
-  Name      PbName;		  /* box name */	
-  PtrPRule	PbFirstPRule;	  /* first presentation rule defining the box*/
-  ThotBool	PbPageFooter;	  /* it is a page footer box */
-  ThotBool	PbPageHeader;	  /* it is a page header box */
-  ThotBool	PbPageBox;	  /* it is a page box */
-  int	 	PbFooterHeight;	  /* if it is a page box, size of the footer
-				     in picas */
-  int		PbHeaderHeight;	  /* if it is a page box, size of the header
-				     in picas */
-  int		PbPageCounter;	  /* number of the page counter, only if
-				     PbPageBox is true */
-  ContentType	PbContent;	  /* compulsory box content */
+  Name         PbName;		 /* box name */	
+  PtrPRule     PbFirstPRule;	 /* first presentation rule defining the box*/
+  ThotBool     PbPageFooter;	 /* it is a page footer box */
+  ThotBool     PbPageHeader;	 /* it is a page header box */
+  ThotBool     PbPageBox;	 /* it is a page box */
+  int	       PbFooterHeight;	 /* if it is a page box, size of the footer
+				    in picas */
+  int	       PbHeaderHeight;	 /* if it is a page box, size of the header
+				    in picas */
+  int	       PbPageCounter;	 /* number of the page counter, only if
+				    PbPageBox is true */
+  ContentType  PbContent;	 /* compulsory box content */
   union
   {
-    struct			  /* PbContent = ContVariable */
+    struct			 /* PbContent = ContVariable */
     {
-      int	_PbContVariable_; /* number of the variable */
+      int      _PbContVariable_; /* number of the variable */
     }   s0;
-    struct			  /* PbContent = ContConst */
+    struct			 /* PbContent = ContConst */
     {
-      int	_PbContConstant_; /* number of the constant */
+      int      _PbContConstant_; /* number of the constant */
     } s1;
-    struct			  /* PbContent = FreeContent */
+    struct			 /* PbContent = FreeContent */
     {
-      int	_PbContFree_;     /* to make the compiler happy */
+      int      _PbContFree_;     /* to make the compiler happy */
     } s2;
   } u;
 } PresentationBox;
@@ -183,6 +183,13 @@ typedef struct _PresentationBox
 #define PbContVariable u.s0._PbContVariable_
 #define PbContConstant u.s1._PbContConstant_
 #define PbContFree u.s2._PbContFree_
+
+typedef struct _PresentationBox *PtrPresentationBox;
+
+typedef struct _PresBoxTable
+{
+  PtrPresentationBox  PresBox[1];
+} PresBoxTable;
 
 /* Alignment of the lines in an abstract box */
 typedef enum
@@ -259,33 +266,33 @@ typedef enum
 typedef struct _PresVarItem
 {
   VariableType     ViType;
-  CounterStyle  ViStyle;	/* digit style for VarCounter, VarAttrValue and
-				   VarPageNumber */
+  CounterStyle  ViStyle;           /* digit style for VarCounter, VarAttrValue
+				      and VarPageNumber */
   union
   {
     struct
     {
-      int	     _ViConstant_;	/* number of the constant */ 
+      int	   _ViConstant_;   /* number of the constant */ 
     } s0;
     struct
     {
-      int	     _ViCounter_;   	/* number of the counter */
-      CounterValue _ViCounterVal_; 	/* indicates if we are interested in
-					   the maximum, minimum or current
-					   value of the counter */
+      int	   _ViCounter_;    /* number of the counter */
+      CounterValue _ViCounterVal_; /* indicates if we are interested in the
+				      maximum, minimum or current value of
+				      the counter */
     } s1;
     struct
     {
-      int  _ViAttr_;  	/* the attribute number */
+      int          _ViAttr_;  	   /* the attribute number */
     } s2;
     struct
     {
-      int            _ViDate_;      /* for the compiler */
+      int          _ViDate_;       /* for the compiler */
     } s3;
-    struct			    /* ViType = VarPageNumber */
+    struct			   /* ViType = VarPageNumber */
     {
-      int	     _ViView_;	/* number of the view in which pages are
-				   counted */
+      int	   _ViView_;	   /* number of the view in which pages are
+				      counted */
     } s4;
   } u;
 } PresVarItem;
@@ -318,46 +325,43 @@ typedef struct _Condition *PtrCondition;
 /* A presentation rule application condition */
 typedef struct _Condition
 {
-  PtrCondition    CoNextCondition;	/* Next condition in the list
-					   IF cond AND cond AND cond ... */
-  PresCondition   CoCondition;	        /* type of the condition */	
-  ThotBool        CoNotNegative;	/* the condition is not negative */
-  ThotBool	  CoTarget;		/* the condition affects the target
-					   (for references only) */
+  PtrCondition    CoNextCondition; /* Next condition in the list
+				      IF cond AND cond AND cond ... */
+  PresCondition   CoCondition;	   /* type of the condition */	
+  ThotBool        CoNotNegative;   /* the condition is not negative */
+  ThotBool	  CoTarget;	   /* the condition affects the target
+				      (for references only) */
   union
   {
-    struct				/* CoCondition = PcInterval, PcEven,
-					   PcOdd, PcOne */
+    struct			   /* CoCondition = PcInterval, PcEven, PcOdd,
+				      PcOne */
     {
-      int	  _CoCounter_; 	  /* number of the counter on which the
-				     condition applies */
-      int	  _CoMinCounter_; /* minimum value of the counter so that
+      int	   _CoCounter_;    /* number of the counter on which the
+				      condition applies */
+      int	   _CoMinCounter_; /* minimum value of the counter so that
 				     the presentation rule may be applied */
-      int	  _CoMaxCounter_; /* maximum value of the counter so that
-				     the presentation rule may be applied */
-      CounterValue _CoValCounter_; 	/* indicates if the minimum, maximum
-					   or current value of the counter is
-					   used */
+      int	   _CoMaxCounter_; /* maximum value of the counter so that
+				      the presentation rule may be applied */
+      CounterValue _CoValCounter_; /* indicates if the minimum, maximum or
+				      current value of the counter is used */
     } s0;
-    struct				/* CoCondition = PcWithin */
+    struct			   /* CoCondition = PcWithin */
     {
-      int       _CoRelation_;		/* RelLevel */
-      int       _CoTypeAncestor_;	/* type of the ancestor */	
-      ThotBool  _CoImmediate_;	/* Immediately */
+      int       _CoRelation_;	   /* RelLevel */
+      int       _CoTypeAncestor_;  /* type of the ancestor */	
+      ThotBool  _CoImmediate_;	   /* Immediately */
       ArithRel  _CoAncestorRel_;
-      Name      _CoAncestorName_;	/* Ancestor type name, if defined
-					   in another schema */
-      Name      _CoSSchemaName_;	/* name of the schema where the
-					   ancestor is defined if
-					   CoTypeAncestor = 0 */
+      Name      _CoAncestorName_;  /* Ancestor type name, if defined in
+				      another schema */
+      Name      _CoSSchemaName_;   /* name of the schema where the ancestor is
+				      defined if CoTypeAncestor == 0 */
     } s1;
-    struct				/* CoCondition = PcElemType or
-					   PcAttribute */
+    struct			   /* CoCondition = PcElemType or PcAttribute*/
     {
-      int	  _CoTypeElAttr_;	/* PcElemType: type of the element
-					   to which the attribute is attached.
-					   PcAttribute: attribute carried by
-					   the element */
+      int	_CoTypeElAttr_;	   /* PcElemType: type of the element to which
+				      the attribute is attached.
+				      PcAttribute: attribute carried by the
+				      element */
     } s2;
   } u;
 } Condition;
@@ -422,20 +426,20 @@ typedef struct _PresRule
       FunctionType _PrPresFunction_;
       ThotBool     _PrPresBoxRepeat_;	/* presentation box repeated over all
 					   the abstract boxes of the element */
-      ThotBool	   _PrExternal_; /* if PrElement is true, PrExternal indicates
-				    that the type of which the name is in
-				    PrPresBoxName is external */
-      ThotBool     _PrElement_;	 /* PrPresBox[1] or PrPresBoxName is an
-				    element type number, not a presentation
-				    box number */
-      int	   _PrNPresBoxes_;	/* number of presentation boxes (of use
-					   for the column rule only) */
+      ThotBool	   _PrExternal_;  /* if PrElement is true, PrExternal indicates
+				     that the type of which the name is in
+				     PrPresBoxName is external */
+      ThotBool     _PrElement_;	  /* PrPresBox[1] or PrPresBoxName is an
+				     element type number, not a presentation
+				     box number */
+      int	   _PrNPresBoxes_;/* number of presentation boxes (of use for
+				     the column rule only) */
       int          _PrPresBox_[MAX_COLUMN_PAGE]; /* number of the
 					            presentation boxes */
-      Name        _PrPresBoxName_;	/* Name of the first (or only) presentation
-					   box to which the function applies */
+      Name        _PrPresBoxName_;/* Name of the first (or only) presentation
+				     box to which the function applies */
     } s1;
-    struct			 /* PrPresMode = PresImmediate */
+    struct			  /* PrPresMode = PresImmediate */
     {
       union
       {
@@ -749,14 +753,15 @@ typedef struct _PresentSchema
   int		PsNConstants;		/* number of presentation constants */
   int		PsNVariables;		/* number of presentation variables */
   int		PsNPresentBoxes;	/* number of presentation and layout
-					   boxes */
-  PtrPRule  PsFirstDefaultPRule;	/* beginning of the default rules
+					   boxes that are actually defined */
+  int           PsPresentBoxTableSize;  /* size of table PsPresentBox */
+  PtrPRule      PsFirstDefaultPRule;	/* beginning of the default rules
 					   string */
   Counter       PsCounter[MAX_PRES_COUNTER];  /* counters */
   PresConstant  PsConstant[MAX_PRES_CONST];   /* presentation constants */
   PresVariable  PsVariable[MAX_PRES_VARIABLE];/* presentation variables*/
-  PresentationBox PsPresentBox[MAX_PRES_BOX]; /* descriptions of the
-					   presentation and layout boxes */
+  PresBoxTable  *PsPresentBox;          /* descriptions of the presentation
+					   and layout boxes */
         /* For columns layout, box number 0 contains the Column group box,
 	   box number 1 contains the left-hand column, etc. */
   AttrPresTable *PsAttrPRule;           /* pointers on the presentation

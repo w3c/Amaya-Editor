@@ -134,7 +134,7 @@ int GetPageCounter (PtrElement pEl, PtrDocument pDoc, int viewNb,
    /* cherche d'abord la boite page */
    bp = GetPageBoxType (pEl, pDoc, viewNb, pSchPPage);
    if (bp > 0)
-      cptpage = (*pSchPPage)->PsPresentBox[bp - 1].PbPageCounter;
+      cptpage = (*pSchPPage)->PsPresentBox->PresBox[bp - 1]->PbPageCounter;
    else
       cptpage = 0;
    return cptpage;
@@ -182,7 +182,7 @@ void ApplPage (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
    /* applique a ce pave les regles de presentation de la boite */
    /* page */
    pEl->ElAbstractBox[viewNb - 1] = pAbbChild;
-   pRSpec = pSchPPage->PsPresentBox[TypeP - 1].PbFirstPRule;
+   pRSpec = pSchPPage->PsPresentBox->PresBox[TypeP - 1]->PbFirstPRule;
    /* premiere regle de presentation par defaut */
    pRDef = pSchPPage->PsFirstDefaultPRule;
    do

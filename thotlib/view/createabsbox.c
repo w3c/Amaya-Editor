@@ -1228,7 +1228,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
   PtrPRule            queuePR[MAX_QUEUE_LEN];
   PtrPSchema          pSP;
   PtrAttribute        pSelAttr;
-  PresentationBox    *pBox;
+  PtrPresentationBox  pBox;
   FunctionType        funct;
   TypeUnit            unit;
   PictInfo           *image;
@@ -1290,7 +1290,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
   /* si c'est une boite de haut de page et qu'il s'agit de la derniere */
   /* marque de page du document, on ne cree pas la boite */
   if (ok)
-    if (pSchP->PsPresentBox[pRCre->PrPresBox[0] - 1].PbPageHeader)
+    if (pSchP->PsPresentBox->PresBox[pRCre->PrPresBox[0] - 1]->PbPageHeader)
       /* c'est une boite de haut de page */
       {
 	pE = pEl;
@@ -1353,7 +1353,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
        /* on cree le pave (ou non, selon sa visibilite) */
        /* pRS : premiere regle de presentation */
        /* specifique de la boite a creer */
-       pRS = pSchP->PsPresentBox[pRCre->PrPresBox[0] - 1].PbFirstPRule;
+       pRS = pSchP->PsPresentBox->PresBox[pRCre->PrPresBox[0] - 1]->PbFirstPRule;
        /* pRD : premiere regle de presentation par defaut du schema de */
        /* presentation */
        pRD = pSchP->PsFirstDefaultPRule;
@@ -1764,7 +1764,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 
 	       pAbbCreated->AbPresentationBox = TRUE;
 	       /* met le contenu dans le pave cree */
-	       pBox = &pSchP->PsPresentBox[pRCre->PrPresBox[0] - 1];
+	       pBox = pSchP->PsPresentBox->PresBox[pRCre->PrPresBox[0] - 1];
 	       switch (pBox->PbContent)
 		 {
 		 case FreeContent:

@@ -1444,31 +1444,36 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	      }
 	  /* lit les boites de presentation et de mise en page */
 	  if (!error)
-	    for (i = 0; i < pPSch->PsNPresentBoxes; i++)
-	      {
-		pBox = &pPSch->PsPresentBox[i];
-		TtaReadName (file, pBox->PbName);
-		pBox->PbFirstPRule = ReadPRulePtr (file, &pNextPRule);
-		TtaReadBool (file, &pBox->PbPageFooter);
-		TtaReadBool (file, &pBox->PbPageHeader);
-		TtaReadBool (file, &pBox->PbPageBox);
-		TtaReadShort (file, &pBox->PbFooterHeight);
-		TtaReadShort (file, &pBox->PbHeaderHeight);
-		TtaReadShort (file, &pBox->PbPageCounter);
-		pBox->PbContent = ReadContentType (file);
-		if (!error)
-		  switch (pBox->PbContent)
-		    {
-		    case ContVariable:
-		      TtaReadShort (file, &pBox->PbContVariable);
-		      break;
-		    case ContConst:
-		      TtaReadShort (file, &pBox->PbContConstant);
-		      break;
-		    default:
-		      break;
-		    }
-	      }
+	    {
+	      pPSch->PsPresentBox = (PresBoxTable*) malloc (pPSch->PsNPresentBoxes * sizeof (PtrPresentationBox));
+	      pPSch->PsPresentBoxTableSize = pPSch->PsNPresentBoxes;
+	    }
+	  for (i = 0; i < pPSch->PsNPresentBoxes && !error; i++)
+	    {
+	      pBox = (PtrPresentationBox) malloc (sizeof (PresentationBox));
+	      pPSch->PsPresentBox->PresBox[i] = pBox;
+	      TtaReadName (file, pBox->PbName);
+	      pBox->PbFirstPRule = ReadPRulePtr (file, &pNextPRule);
+	      TtaReadBool (file, &pBox->PbPageFooter);
+	      TtaReadBool (file, &pBox->PbPageHeader);
+	      TtaReadBool (file, &pBox->PbPageBox);
+	      TtaReadShort (file, &pBox->PbFooterHeight);
+	      TtaReadShort (file, &pBox->PbHeaderHeight);
+	      TtaReadShort (file, &pBox->PbPageCounter);
+	      pBox->PbContent = ReadContentType (file);
+	      if (!error)
+		switch (pBox->PbContent)
+		  {
+		  case ContVariable:
+		    TtaReadShort (file, &pBox->PbContVariable);
+		    break;
+		  case ContConst:
+		    TtaReadShort (file, &pBox->PbContConstant);
+		    break;
+		  default:
+		    break;
+		  }
+	    }
 	  /* lit les presentations des attributs */
 	  if (!error)
 	    {
@@ -1566,7 +1571,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	  /* les regles des boites */
 	  if (!error)
 	    for (i = 0; i < pPSch->PsNPresentBoxes; i++)
-	      ReadPRules (file, &pPSch->PsPresentBox[i].PbFirstPRule,
+	      ReadPRules (file, &pPSch->PsPresentBox->PresBox[i]->PbFirstPRule,
 			  &pNextPRule);
 
 	  /* lit les regles des attributs */

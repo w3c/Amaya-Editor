@@ -342,7 +342,7 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
       FreePRuleList (&pPSchema->PsFirstDefaultPRule);
       /* libere les regles de presentation des boites de presentation */
       for (i = 0; i < pPSchema->PsNPresentBoxes; i++)
-	FreePRuleList (&pPSchema->PsPresentBox[i].PbFirstPRule);
+	FreePRuleList (&pPSchema->PsPresentBox->PresBox[i]->PbFirstPRule);
       /* libere les regles de presentation des attributs */
       for (i = 0; i < pSS->SsNAttributes; i++)
 	{

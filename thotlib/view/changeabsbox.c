@@ -184,11 +184,11 @@ static void SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl,
 /*----------------------------------------------------------------------
    GlobalSearchRulepEl returns the presentation rule of type (typeRule or
   typeFunc) that applies to the element pEl in the view.
-  If the parameter presNum is NULL, the applies to the element itself,
-  else the rule applie to that presentation box.
+  If the parameter presNum is NULL, the rule applies to the element itself,
+  else the rule applies to that presentation box.
   In the second case, pSchP gives the presentation schema where the
   presentation box is defined (NULL = main presntation schema).
-  When pEl refers a page, if isElPage is TRUE, the rule applies to the
+  When pEl refers to a page, if isElPage is TRUE, the rule applies to the
   page break element, else the rule applies to the the enclosing block
   (page bottom + page break + page top).
   The parameter attr says if attributes are taken or not into account.
@@ -221,7 +221,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema *pSPR
   if (pEl != NULL && PresentationSchema (pEl->ElStructSchema, pDoc) != NULL)
     {
       /* cherche d'abord parmi les regles de presentation specifique */
-      /* associees a l'element, sauf s'il s'agit d'un pave de presentation */
+      /* associees a l'element, sauf s'il s'agit d'une boite de presentation */
       if (presNum == 0)
 	{
 	  pRule = pEl->ElFirstPRule;
@@ -493,9 +493,14 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema *pSPR
 		     de la nature englobante et view (numero de vue dans le
 		     schema devrait etre mis a jour... */
 	    }
-	  /* on traite d'abord les schemas de presentation additionnels les */
-	  /* plus prioritaires */
-	  pHd = FirstPSchemaExtension (pSchS, pDoc);
+	  if (presNum > 0)
+	    /* pour une boite de presentation, on ne cherche que dans le
+	       schema ou elle est definie */
+	    pHd = NULL;
+	  else
+	    /* on traite d'abord les schemas de presentation additionnels */
+	    /* les plus prioritaires */
+	    pHd = FirstPSchemaExtension (pSchS, pDoc);
 	  if (pHd == NULL)
 	    pSP = pSchP;
 	  else
@@ -510,8 +515,8 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema *pSPR
 	      /* premiere regle de presentation de ce type d'element */
 	      if (pSP != NULL)
 		{
-		  if (presNum > 0)
-		    pRule = pSP->PsPresentBox[presNum - 1].PbFirstPRule;
+		  if (presNum > 0 && pSP->PsPresentBox)
+		    pRule = pSP->PsPresentBox->PresBox[presNum - 1]->PbFirstPRule;
 		  else
 		    pRule = pSP->PsElemPRule->ElemPres[index - 1];
 		}
@@ -2148,7 +2153,7 @@ void RedispRef (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
 				{
 				   pAbbox1 = pAb;
 				   if (pRe1->PrNPresBoxes == 0)
-				      found = (strcmp (pRe1->PrPresBoxName, pAbbox1->AbPSchema->PsPresentBox[pAbbox1->AbTypeNum - 1].PbName) == 0);
+				      found = (strcmp (pRe1->PrPresBoxName, pAbbox1->AbPSchema->PsPresentBox->PresBox[pAbbox1->AbTypeNum - 1]->PbName) == 0);
 				   else
 				      found = pRe1->PrPresBox[0] == pAbbox1->AbTypeNum;
 				}
@@ -2455,7 +2460,7 @@ static void ComputeContent (int boxType, int nv, PtrDocument pDoc,
 	  pAbbox1->AbPSchema == pSchP)
 	/* fait reafficher le pave de presentation si le contenu a */
 	/* change' */
-	if (NewVariable (pSchP->PsPresentBox[boxType - 1].PbContVariable,
+	if (NewVariable (pSchP->PsPresentBox->PresBox[boxType - 1]->PbContVariable,
 			 pSS, pSchP, pAb, NULL, pDoc))
 	  /* et si le pave a deja ete traite' par le mediateur */
 	  if (!pAb->AbNew)
@@ -2612,7 +2617,7 @@ static void ComputeCreation (int boxType, ThotBool presBox, int counter,
    viewSch = pDoc->DocView[nv - 1].DvPSchemaView;
    page = FALSE;
    if (presBox)
-      if (pSchP->PsPresentBox[boxType - 1].PbPageBox)
+      if (pSchP->PsPresentBox->PresBox[boxType - 1]->PbPageBox)
 	 /* c'est une boite page */
 	 page = TRUE;
    while (pAb != NULL)
@@ -2624,7 +2629,7 @@ static void ComputeCreation (int boxType, ThotBool presBox, int counter,
 		 && pAbbox1->AbPSchema == pSchP)
 		boxok = TRUE;
 	     else if (presBox)
-		if (pSchP->PsPresentBox[boxType - 1].PbPageBox)
+		if (pSchP->PsPresentBox->PresBox[boxType - 1]->PbPageBox)
 		   if (pAbbox1->AbElement->ElTerminal
 		       && pAbbox1->AbElement->ElLeafType == LtPageColBreak
 		       && pAbbox1->AbLeafType == LtCompound)

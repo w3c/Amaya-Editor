@@ -297,7 +297,7 @@ static void RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum,
       if (pAbsBox->AbTypeNum == boxNum && pAbsBox->AbPSchema == pPSchema)
 	/* c'est bien un pave du type cherche' */
 	/* recalcule la valeur de la variable de presentation */
-	if (NewVariable (pPSchema->PsPresentBox[boxNum - 1].PbContVariable,
+	if (NewVariable (pPSchema->PsPresentBox->PresBox[boxNum - 1]->PbContVariable,
 			 pAttr->AeAttrSSchema, pPSchema, pAbsBox, pAttr, pDoc))
 	  {
 	    /* la variable de presentation a change' de valeur */
@@ -358,8 +358,8 @@ void RedisplayAttribute (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
 	      /* cette variable comme contenu */
 	     {
 		for (presBox = 0; presBox < pPSchema->PsNPresentBoxes; presBox++)
-		   if (pPSchema->PsPresentBox[presBox].PbContent == ContVariable
-		       && pPSchema->PsPresentBox[presBox].PbContVariable == varNum + 1)
+		   if (pPSchema->PsPresentBox->PresBox[presBox]->PbContent == ContVariable
+		       && pPSchema->PsPresentBox->PresBox[presBox]->PbContVariable == varNum + 1)
 		      /* cette boite a la variable comme contenu */
 		      /* cherche dans toutes les vues du document les paves */
 		      /* de l'element auquel correspond l'attribut qui sont */
