@@ -1797,7 +1797,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 #ifdef _WINDOWS
 		      encoding = WINDOWS_1253;
 #else /* _WINDOWS */
-		  encoding = ISO_8859_7;
+		      encoding = ISO_8859_7;
 #endif /* _WINDOWS */
 		    }
 		  else
@@ -1954,7 +1954,6 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		   c == 0x2666 ||  /* black diamond suit */
 		   c == 0x192)     /* latin small letter f with hook */
 	    {
-	      /* Symbols */
 #ifdef _GL
 	      /* use STIX fonts here */
 	      code = 'E';
@@ -1962,7 +1961,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	      if (pfont == NULL )
 		{
 		  code = '7';
-		  pfont = &(fontset->Font_16);
+		  pfont = &(fontset->Font_7);
 #ifdef _WINDOWS
 		  encoding = WINDOWS_1253;
 #else /* _WINDOWS */
@@ -1970,6 +1969,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 #endif /* _WINDOWS */
 		}
 #else /* _GL */
+	      /* Symbols */
 	      code = 'G';
 	      pfont = &(fontset->Font_16);
 	      encoding = ISO_SYMBOL;
@@ -2035,6 +2035,21 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 	      encoding = UNICODE_1_1;
 #endif /* _WINDOWS */
 	    }
+#ifdef _GL
+	  if ((c >= 0x2190 && c <= 0x22F1) ||
+	      (c >= 0x25A0 && c <= 0x25F7))
+	    {
+		   /* use STIX fonts here */
+	      code = 'E';
+	      car = GetStixFontAndIndex (c, fontset, &pfont);
+	      if (pfont == NULL)
+		{
+		  code = 'Z'; /* Unicode */
+		  pfont = &(fontset->Font_17);
+		  encoding = UNICODE_1_1;
+		}
+	    }
+#endif /* GL */
 	  else
 	    {
 	      code = 'Z'; /* Unicode */
