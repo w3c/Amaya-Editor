@@ -600,6 +600,7 @@ char               *docName;
    if (tempOrgName[0] == EOS)
      {
        newName[0] = EOS;
+       TtaFreeMemory (basename);
        return;
      }
    else if (IsW3Path (tempOrgName))
@@ -626,7 +627,6 @@ char               *docName;
        /* Calculate the absolute URL, using the base or document URL */
 
        ptr = AmayaParseUrl (tempOrgName, basename, AMAYA_PARSE_ALL);
-       TtaFreeMemory (basename);
        if (ptr)
 	 {
 	   SimplifyUrl (&ptr);
@@ -636,6 +636,8 @@ char               *docName;
        else
 	   newName[0] = EOS;
      }
+
+   TtaFreeMemory (basename);
 
    /*
     * Prepare the docname that will refer to this ressource in the
