@@ -23,6 +23,7 @@
 #include "pschema.h"
 #include "application.h"
 #include "style.h"
+#include "HTMLstyleColor.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -33,6 +34,154 @@
 #include "exceptions_f.h"
 #include "memory_f.h"
 #include "style_f.h"
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned int TtaHexaVal (CHAR_T c)
+#else
+unsigned int TtaHexaVal (c)
+CHAR_T       c;
+#endif
+{
+   if (c >= TEXT('0') && c <= TEXT('9'))
+      return (c - TEXT('0'));
+   if (c >= TEXT('a') && c <= TEXT('f'))
+      return (c - TEXT('a') + 10);
+   if (c >= TEXT('A') && c <= TEXT('F'))
+      return (c - TEXT('A') + 10);
+   return (0);
+}
+
+/*----------------------------------------------------------------------
+  TtaGiveRGB
+  Returns the RGB of the color and the pointer to the following text in
+  value if the parsing was finished.
+ ----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T            *TtaGiveRGB (CHAR_T *value, unsigned short *red, unsigned short *green, unsigned short *blue)
+#else  /* __STDC__ */
+  CHAR_T          *TtaGiveRGB (value, red, green, blue)
+CHAR_T            *value;
+unsigned short    *red;
+unsigned short    *green;
+unsigned short    *blue;
+#endif /* __STDC__ */
+{
+  CHAR_T              colname[100];
+  CHAR_T             *ptr;
+  int                 i, len;
+  int                 r, g, b;
+  ThotBool            failed;
+
+  ptr = value;
+  failed = TRUE;
+  *red = -1;
+  *green = 0;
+  *blue = 0;
+  if (*ptr == TEXT('#') ||
+      (isxdigit (ptr[0]) && isxdigit (ptr[1]) && isxdigit (ptr[2])))
+    {
+      if (*ptr == TEXT('#'))
+	ptr++;
+      /* we expect an hexa encoding like F00 or FF0000 */
+      if (isxdigit (ptr[0]) && isxdigit (ptr[1]) && isxdigit (ptr[2]))
+	{
+	  if (!isxdigit (ptr[3]))
+	    {
+	      /* encoded as on 3 digits #F0F  */
+	      *red = TtaHexaVal (ptr[0]) * 16 + TtaHexaVal (ptr[0]);
+	      *green = TtaHexaVal (ptr[1]) * 16 + TtaHexaVal (ptr[1]);
+	      *blue = TtaHexaVal (ptr[2]) * 16 + TtaHexaVal (ptr[2]);
+	      ptr = &ptr[3];
+	      failed = FALSE;
+	    }
+	  else if (isxdigit (ptr[4]) && isxdigit (ptr[5]))
+	    {
+	      /* encoded as on 3 digits #FF00FF */
+	      *red = TtaHexaVal (ptr[0]) * 16 + TtaHexaVal (ptr[1]);
+	      *green = TtaHexaVal (ptr[2]) * 16 + TtaHexaVal (ptr[3]);
+	      *blue = TtaHexaVal (ptr[4]) * 16 + TtaHexaVal (ptr[5]);
+	      ptr = &ptr[6];
+	      failed = FALSE;
+	    }
+	}
+    }
+  else if (!ustrncasecmp (ptr, TEXT("rgb"), 3))
+    {
+      ptr = &ptr[3];
+      ptr = TtaSkipWCBlanks (ptr);
+      if (*ptr == TEXT('('))
+	{
+	  ptr++;
+	  ptr = TtaSkipWCBlanks (ptr);
+	  failed = FALSE;
+	  if (*ptr == TEXT('%'))
+	    {
+	      /* encoded as rgb(%red,%green,&blue) */
+	      usscanf (ptr, TEXT("%%%d"), &r);
+	      while (*ptr != WC_EOS && *ptr != TEXT(','))
+		ptr++;
+	      ptr++;
+	      usscanf (ptr, TEXT("%%%d"), &g);
+	      while (*ptr != WC_EOS && *ptr != TEXT(','))
+		ptr++;
+	      ptr++;
+	      usscanf (ptr, TEXT("%%%d"), &b);
+	      *red = (unsigned short)(r * 255 / 100);
+	      *green = (unsigned short)(g * 255 / 100);
+	      *blue = (unsigned short)(b * 255 / 100);
+	    }
+	  else
+	    {
+	      /* encoded as rgb(red,green,blue) */
+	      usscanf (ptr, TEXT("%d"), &r);
+	      while (*ptr != WC_EOS && *ptr != TEXT(','))
+		ptr++;
+	      ptr++;
+	      usscanf (ptr, TEXT("%d"), &g);
+	      while (*ptr != WC_EOS && *ptr != TEXT(','))
+		ptr++;
+	      ptr++;
+	      usscanf (ptr, TEXT("%d"), &b);
+	      *red = (unsigned short)r;
+	      *green = (unsigned short)g;
+	      *blue = (unsigned short)b;
+	    }
+	  /* search the rgb end */
+	  while (*ptr != WC_EOS && *ptr != TEXT(')'))
+	    ptr++;
+	  ptr++;
+	}
+    }
+  else if (TtaIsAlpha (*ptr))
+    {
+      /* we expect a color name like "red", store it in colname */
+      len = (sizeof (colname) / sizeof (CHAR_T)) - 1;
+      for (i = 0; i < len && TtaIsAlnum (*ptr); i++)
+	{
+	  colname[i] = *ptr;
+	  ptr++;
+	}
+      colname[i] = WC_EOS;
+      
+      /* Lookup the color name in our own color name database */
+      for (i = 0; i < NBCOLORNAME && failed; i++)
+	if (!ustrcasecmp (ColornameTable[i].name, colname))
+	  {
+	    *red = ColornameTable[i].red;
+	    *green = ColornameTable[i].green;
+	    *blue = ColornameTable[i].blue;
+	    failed = FALSE;
+	  }
+      if (failed)
+	failed = ThotGiveRGB (colname, red, green, blue);
+    }
+  if (failed)
+    return (value);
+  else
+    return (ptr);
+}
 
 /*----------------------------------------------------------------------
   BuildBoxName : generate an unique name encoding for the given context.

@@ -2723,7 +2723,7 @@ STRING              pathname;
    TtaNewSheet (ColorBase + ColorMenu, 
 		TtaGetViewFrame (document, view),
 		TtaGetMessage (AMAYA, AM_COLOR_MENU),
-		2, s, TRUE, 1, 'L', D_DONE);
+		2, s, TRUE, 2, 'L', D_DONE);
    /* first line */
    TtaNewTextForm (ColorBase + mFgColor,
 		   ColorBase + ColorMenu,

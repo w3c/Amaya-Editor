@@ -23,6 +23,7 @@
 #include "picture.h"
 #include "appdialogue.h"
 
+
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "frame_tv.h"
@@ -143,54 +144,62 @@ Display            *dpy;
 #endif /* _WINDOWS */
 
 
+
 /*----------------------------------------------------------------------
- *   TtaGiveRGB returns the RGB of the color.
+  ThotGiveRGB
+  Returns the RGB of the color and the pointer to the following text in
+  value if the parsing was finished.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGiveRGB (CHAR_T* colname, unsigned short *red, unsigned short *green, unsigned short *blue)
+ThotBool           ThotGiveRGB (CHAR_T *colname, unsigned short *red, unsigned short *green, unsigned short *blue)
 #else  /* __STDC__ */
-void                TtaGiveRGB (colname, red, green, blue)
-CHAR_T*             colname;
-unsigned short*     red;
-unsigned short*     green;
-unsigned short*     blue;
-
+ThotBool           ThotGiveRGB (colname, red, green, blue)
+CHAR_T            *colname;
+unsigned short    *red;
+unsigned short    *green;
+unsigned short    *blue;
 #endif /* __STDC__ */
 {
-   int                 i;
 #ifndef _WINDOWS 
    ThotColorStruct     color;
+#endif /* _WINDOWS */
+  ThotBool             failed = TRUE;
+  int                  i;
 
-   /* Lookup the color name in the X color name database */
-#ifdef _GTK
-    if (gdk_color_parse (colname, &color))
-#else /* _GTK */
-   if (XParseColor (TtDisplay, TtCmap, colname, &color))
-#endif /* _GTK */
-     {
-	/* normalize RGB color values to 8 bits values */
-	color.red >>= 8;
-	color.green >>= 8;
-	color.blue >>= 8;
-	*red = color.red;
-	*green = color.green;
-	*blue = color.blue;
-     }
-   else
-     {
-#endif /* _WINDOWS */
-       /* Lookup the color name in the application color name database */
-       ThotBool found = FALSE;
-       for (i = 0; i < NColors && !found; i++)
-           if (!ustrcasecmp (ColorName (i), colname)) {
-              found = TRUE;
-              *red   = RGB_Table[i].red;
-              *green = RGB_Table[i].green;
-              *blue  = RGB_Table[i].blue;
-           }
 #ifndef _WINDOWS
-     }
+  if (failed)
+    {
+      /* Lookup the color name in the X color name database */
+#ifdef _GTK
+      if (gdk_color_parse (colname, &color))
+#else /* _GTK */
+	if (XParseColor (TtDisplay, TtCmap, colname, &color))
+#endif /* _GTK */
+	  {
+	    failed = FALSE;
+	    /* normalize RGB color values to 8 bits values */
+	    color.red >>= 8;
+	    color.green >>= 8;
+	    color.blue >>= 8;
+	    *red = color.red;
+	    *green = color.green;
+	    *blue = color.blue;
+	  }
+    }
 #endif /* _WINDOWS */
+  if (failed)
+    {
+      /* Lookup the color name in the application color name database */
+      for (i = 0; i < NColors && failed; i++)
+	if (!ustrcasecmp (ColorName (i), colname))
+	  {
+	    failed = FALSE;
+	    *red   = RGB_Table[i].red;
+	    *green = RGB_Table[i].green;
+	    *blue  = RGB_Table[i].blue;
+	  }
+    }
+  return (failed);
 }
 
 

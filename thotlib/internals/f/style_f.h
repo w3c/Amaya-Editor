@@ -6,6 +6,11 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern unsigned int TtaHexaVal ( CHAR_T c );
+extern CHAR_T *TtaGiveRGB ( CHAR_T *value,
+                            unsigned short *red,
+                            unsigned short *green,
+                            unsigned short *blue );
 extern int TtaSetStylePresentation ( unsigned int type,
                                      Element el,
                                      PSchema tsch,
@@ -28,6 +33,11 @@ extern void TtaApplyAllSpecificSettings ( Element el,
 
 #else /* __STDC__ */
 
+extern unsigned int TtaHexaVal (/* CHAR_T c */);
+extern CHAR_T *TtaGiveRGB (/* CHAR_T *value,
+                              unsigned short *red,
+                              unsigned short *green,
+                              unsigned short *blue */);
 extern int TtaSetStylePresentation (/* unsigned int type,
                                        Element el,
                                        PSchema tsch,

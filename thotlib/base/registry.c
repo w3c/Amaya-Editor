@@ -1393,8 +1393,11 @@ static void         InitEnviron ()
    TtaSetDefEnvString ("TOOLTIPDELAY", TEXT("500"), FALSE);
    TtaSetDefEnvString ("FontMenuSize", TEXT("12"), FALSE);
    TtaSetDefEnvString ("ForegroundColor", TEXT("Black"), FALSE);
-
    TtaSetDefEnvString ("BackgroundColor", TEXT("LightGrey1"), FALSE);
+   TtaSetDefEnvString ("InserPointColor", TEXT("Red"), FALSE);
+   TtaSetDefEnvString ("DocSelectColor", TEXT("LightGold3"), FALSE);
+   TtaSetDefEnvString ("MenuFgColor", TEXT("Black"), FALSE);
+   TtaSetDefEnvString ("MenuBgColor", TEXT("Grey"), FALSE);
 
    /*
    ** set up the defaul TMPDIR 

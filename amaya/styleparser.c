@@ -70,8 +70,6 @@ typedef struct CSSProperty
   }
 CSSProperty;
 
-#include "HTMLstyleColor.h"
-
 struct unit_def
 {
    CHAR_T*             sign;
@@ -92,24 +90,6 @@ static struct unit_def CSSUnitNames[] =
 };
 
 #define NB_UNITS (sizeof(CSSUnitNames) / sizeof(struct unit_def))
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static unsigned int hexa_val (CHAR_T c)
-#else
-static unsigned int hexa_val (c)
-CHAR_T              c;
-#endif
-{
-   if (c >= TEXT('0') && c <= TEXT('9'))
-      return (c - TEXT('0'));
-   if (c >= TEXT('a') && c <= TEXT('f'))
-      return (c - TEXT('a') + 10);
-   if (c >= TEXT('A') && c <= TEXT('F'))
-      return (c - TEXT('A') + 10);
-   return (0);
-}
 
 /*----------------------------------------------------------------------
    SkipWord:                                                  
@@ -465,138 +445,20 @@ CHAR_T*              cssRule;
 PresentationValue    *val;
 #endif
 {
-  CHAR_T              colname[100];
   CHAR_T*             ptr;
   unsigned short      redval = (unsigned short) -1;
   unsigned short      greenval = 0;	/* composant of each RGB       */
   unsigned short      blueval = 0;	/* default to red if unknown ! */
-  unsigned int        i, len;
-  int                 r, g, b;
   int                 best = 0;	/* best color in list found */
-  ThotBool            failed;
 
   cssRule = SkipWCBlanksAndComments (cssRule);
   val->typed_data.unit = STYLE_UNIT_INVALID;
   val->typed_data.real = FALSE;
   val->typed_data.value = 0;
-  failed = TRUE;
-  /*
-   * first parse the attribute string
-   * NOTE : this can't lookup for color name in
-   *        cause  we try first to lokup color name from digits
-   *        [0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]
-   */
-  if ((*cssRule == TEXT('#')) ||
-      (isxdigit (cssRule[0]) && isxdigit (cssRule[1]) && isxdigit (cssRule[2])))
+  ptr = TtaGiveRGB (cssRule, &redval, &greenval, &blueval);
+  if (ptr == cssRule)
     {
-      if (*cssRule == TEXT('#'))
-	cssRule++;
-      failed = FALSE;
-      /* we expect an hexa encoding like F00 or FF0000 */
-      if ((!isxdigit (cssRule[0])) || (!isxdigit (cssRule[1])) || (!isxdigit (cssRule[2])))
-	{
-	  fprintf (stderr, "Invalid color encoding %s\n", cssRule - 1);
-	  failed = TRUE;
-	}
-      else if (!isxdigit (cssRule[3]))
-	{
-	  /* encoded as on 3 digits #F0F  */
-	  redval = hexa_val (cssRule[0]) * 16 + hexa_val (cssRule[0]);
-	  greenval = hexa_val (cssRule[1]) * 16 + hexa_val (cssRule[1]);
-	  blueval = hexa_val (cssRule[2]) * 16 + hexa_val (cssRule[2]);
-	  cssRule = &cssRule[3];
-	}
-      else if ((!isxdigit (cssRule[4])) || (!isxdigit (cssRule[5])))
-	fprintf (stderr, "Invalid color encoding %s\n", cssRule - 1);
-      else
-	{
-	  /* encoded as on 3 digits #FF00FF */
-	  redval = hexa_val (cssRule[0]) * 16 + hexa_val (cssRule[1]);
-	  greenval = hexa_val (cssRule[2]) * 16 + hexa_val (cssRule[3]);
-	  blueval = hexa_val (cssRule[4]) * 16 + hexa_val (cssRule[5]);
-	  cssRule = &cssRule[6];
-	}
-    }
-  else if (!ustrncasecmp (cssRule, TEXT("rgb"), 3))
-    {
-      cssRule = &cssRule[3];
-      cssRule = SkipWCBlanksAndComments (cssRule);
-      if (*cssRule == TEXT('('))
-	{
-	  cssRule++;
-	  cssRule = SkipWCBlanksAndComments (cssRule);
-	  failed = FALSE;
-	  if (*cssRule == TEXT('%'))
-	    {
-	      /* encoded as rgb(%red,%green,&blue) */
-	      usscanf (cssRule, TEXT("%%%d"), &r);
-	      while (*cssRule != WC_EOS && *cssRule != TEXT(','))
-		cssRule++;
-	      cssRule++;
-	      usscanf (cssRule, TEXT("%%%d"), &g);
-	      while (*cssRule != WC_EOS && *cssRule != TEXT(','))
-		cssRule++;
-	      cssRule++;
-	      usscanf (cssRule, TEXT("%%%d"), &b);
-	      redval = (unsigned short)(r * 255 / 100);
-	      greenval = (unsigned short)(g * 255 / 100);
-	      blueval = (unsigned short)(b * 255 / 100);
-	    }
-	  else
-	    {
-	      /* encoded as rgb(red,green,blue) */
-	      usscanf (cssRule, TEXT("%d"), &r);
-	      while (*cssRule != WC_EOS && *cssRule != TEXT(','))
-		cssRule++;
-	      cssRule++;
-	      usscanf (cssRule, TEXT("%d"), &g);
-	      while (*cssRule != WC_EOS && *cssRule != TEXT(','))
-		cssRule++;
-	      cssRule++;
-	      usscanf (cssRule, TEXT("%d"), &b);
-	      redval = (unsigned short)r;
-	      greenval = (unsigned short)g;
-	      blueval = (unsigned short)b;
-	    }
-	  /* search the rgb end */
-	  while (*cssRule != WC_EOS && *cssRule != TEXT(')'))
-	    cssRule++;
-	  cssRule++;
-	}
-      else
-	cssRule = SkipProperty (cssRule);
-    }
-  else if (TtaIsAlpha (*cssRule))
-    {
-      /* we expect a color name like "red", store it in colname */
-      ptr = cssRule;
-      len = (sizeof (colname) / sizeof (CHAR_T)) - 1;
-      for (i = 0; i < len && ptr[i] != WC_EOS; i++)
-	{
-	  if (!TtaIsAlnum (ptr[i]) && ptr[i] != WC_EOS)
-	    {
-	      ptr += i;
-	      break;
-	    }
-	  colname[i] = ptr[i];
-	}
-      colname[i] = WC_EOS;
-      
-      /* Lookup the color name in our own color name database */
-      for (i = 0; i < NBCOLORNAME; i++)
-	if (!ustrcasecmp (ColornameTable[i].name, colname))
-	  {
-	    redval = ColornameTable[i].red;
-	    greenval = ColornameTable[i].green;
-	    blueval = ColornameTable[i].blue;
-	    failed = FALSE;
-	    cssRule = ptr;
-	    i = NBCOLORNAME;
-	  }
-    }
-  
-  if (failed)
-    {
+      cssRule = SkipProperty (cssRule);
       val->typed_data.value = 0;
       val->typed_data.unit = STYLE_UNIT_INVALID;
     }
@@ -605,6 +467,7 @@ PresentationValue    *val;
       best = TtaGetThotColor (redval, greenval, blueval);
       val->typed_data.value = best;
       val->typed_data.unit = STYLE_UNIT_REL;
+      cssRule = ptr;
     }
   val->typed_data.real = FALSE;
  return (cssRule);

@@ -642,6 +642,21 @@ int          color;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
+ThotBool           ThotGiveRGB (CHAR_T *colname, unsigned short *red, unsigned short *green, unsigned short *blue)
+#else  /* __STDC__ */
+ThotBool           ThotGiveRGB (colname, red, green, blue)
+CHAR_T            *colname;
+unsigned short    *red;
+unsigned short    *green;
+unsigned short    *blue;
+#endif /* __STDC__ */
+{
+  return FALSE;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void                Clear (int frame, int larg, int haut, int x, int y)
 #else  /* __STDC__ */
 void                Clear (frame, larg, haut, x, y)
