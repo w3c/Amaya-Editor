@@ -189,7 +189,6 @@ void ANNOT_Init ()
   else
     annotServers = NULL;
   tmp = TtaGetEnvString ("ANNOT_POST_SERVER");
-  tmp = TtaGetEnvString ("ANNOT_POST_SERVER");
   if (tmp)
     annotPostServer = TtaWCSdup (tmp);
   else
@@ -501,8 +500,9 @@ void *context;
 		 returned_annot->annot_url = NULL;
 	       }
 	       if (returned_annot->body_url) {
-		 TtaFreeMemory(annot->body_url); /* @@ unlink the file? */
+		 TtaFreeMemory(annot->body_url); /* @@ unlink the file */
 		 annot->body_url = returned_annot->body_url;
+		 /* @@ Update the anchor in the source doc */
 		 returned_annot->body_url = NULL;
 	       }
 	       if (listP->next)

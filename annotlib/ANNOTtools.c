@@ -318,8 +318,6 @@ Document doc;
   char tmp_str[80];
   char *ptr;
   
-  char *proto;
-
   AnnotMeta *annot;
   long content_length;
 
@@ -329,15 +327,11 @@ Document doc;
   if (!annot)
     return;
 
-  /* @@ add a file: prefix if it's missing ... I could have
-     called normalize URL! */
-  if (!IsW3Path (annot->source_url) &&
-      !IsFilePath (annot->source_url))
-    proto = "file://";
+  if (IsFilePath(DocumentURLs[doc]))
+    content_length = GetFileSize (DocumentURLs[doc]+7);	/* skip "file://" */
   else
-    proto = "";
+    content_length = GetFileSize (DocumentURLs[doc]);
 
-  content_length = GetFileSize (DocumentURLs[doc]);
   fp = fopen ("/tmp/rdf.tmp", "w");
   /* write the prologue */
   /* write the prologue */
@@ -361,8 +355,7 @@ Document doc;
 		   annot->type);
 
 	  fprintf (fp, 
-		   "<a:annotates r:resource=\"%s%s\" />\n",
-		   proto, 
+		   "<a:annotates r:resource=\"%s\" />\n",
 		   annot->source_url);
 
 	  fprintf (fp,
@@ -390,7 +383,7 @@ Document doc;
 	   "<r:Description>\n"
 	   "<http:ContentType>%s</http:ContentType>\n"
 	   "<http:ContentLength>%ld</http:ContentLength>\n"
-	   "<http:Body r:parseType=\"literal\">\n",
+	   "<http:Body r:parseType=\"Literal\">\n",
 	   "text/html",
 	   content_length);
 

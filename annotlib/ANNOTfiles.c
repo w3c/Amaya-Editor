@@ -65,9 +65,9 @@ Document ANNOT_NewDocument (doc)
   docname = TtaGetDocumentName (doc);
   tmpname = GetTempName (annot_dir, "annot");
   urlname = TtaGetMemory (strlen (tmpname) + 20);
-  sprintf (urlname, "file:%s.html", tmpname);
+  sprintf (urlname, "file://%s.html", tmpname);
   TtaFreeMemory (tmpname);
-  fname = urlname + 5;
+  fname = urlname + 7;
 
   /* "annot is the title of the window */
   annotDoc = InitDocView (0, "annot", docAnnot, 0, FALSE);

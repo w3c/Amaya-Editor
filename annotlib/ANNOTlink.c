@@ -320,7 +320,14 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
   annot =  AnnotMeta_new ();
   List_add (&AnnotMetaDataList[source_doc], (void *) annot);
 
-  annot->source_url = TtaStrdup (DocumentURLs[source_doc]);
+  if (IsW3Path (DocumentURLs[source_doc])
+      || IsFilePath(DocumentURLs[source_doc]))
+    annot->source_url = TtaStrdup (DocumentURLs[source_doc]);
+  else
+    {
+      annot->source_url = TtaAllocString (strlen (DocumentURLs[source_doc])+7);
+      sprintf (annot->source_url, "file://%s", DocumentURLs[source_doc]);
+    }
 
   ustrcpy (annot->labf, labf);
   annot->c1 = c1;
@@ -405,12 +412,7 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
 	  LINK_AddLinkToSource (doc, annot);
 	  List_add (&AnnotMetaDataList[doc], (void*) annot);
 	}
-      /* @@@ */
-#if 0
-      List_delObject (&list_ptr);
-#else
-      list_ptr = list_ptr->next;
-#endif
+      List_delFirst (&list_ptr);
     }
 }
 
