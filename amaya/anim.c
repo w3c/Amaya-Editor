@@ -1584,17 +1584,19 @@ static void Inc_time_start(Document basedoc, Element edited_anim, double inc_tim
 			
 	attr = TtaGetAttribute (edited_anim, attrType);
 
-	if (attr)
+	if (attr) {
 		existing_value = TimelineParseTimeAttribute (attr);
+		TtaRegisterAttributeReplace (attr, edited_anim, basedoc);
+	}
 	else {
 		attr = TtaNewAttribute (attrType);
 		TtaAttachAttribute (edited_anim, attr, basedoc);
+		TtaRegisterAttributeCreate (attr, edited_anim, basedoc);
+
 	}
 
 	sprintf (buffer, "%.1fs", (float)(existing_value+inc_time));
 	TtaSetAttributeText (attr, buffer, edited_anim, basedoc);
-
-	TtaSetDocumentModified (basedoc);
 
 }
 #endif /* _SVGANIM */
@@ -1621,7 +1623,9 @@ static void Write_time_info(Document basedoc, Element edited_anim, double start,
 	if (!attr) {
 		attr = TtaNewAttribute (attrType);
 		TtaAttachAttribute (edited_anim, attr, basedoc);
-	}
+		TtaRegisterAttributeCreate (attr, edited_anim, basedoc);
+	} else 
+		TtaRegisterAttributeReplace (attr, edited_anim, basedoc);
 
 	sprintf (buffer, "%.1fs", (float) start);
 	TtaSetAttributeText (attr, buffer, edited_anim, basedoc);
@@ -1634,12 +1638,12 @@ static void Write_time_info(Document basedoc, Element edited_anim, double start,
 	if (!attr) {
 		attr = TtaNewAttribute (attrType);
 		TtaAttachAttribute (edited_anim, attr, basedoc);
-	}
+		TtaRegisterAttributeCreate (attr, edited_anim, basedoc);
+	} else
+		TtaRegisterAttributeReplace (attr, edited_anim, basedoc);
 
 	sprintf (buffer, "%.1fs", (float) duration);
 	TtaSetAttributeText (attr, buffer, edited_anim, basedoc);
-
-	TtaSetDocumentModified (basedoc);
 
 }
 #endif /* _SVGANIM */
@@ -2595,11 +2599,11 @@ void TimelineTextPostModify (NotifyOnTarget *event)
 	Document basedoc;
 	Attribute attr;
 	AttributeType attrType;
-	Element parent, tg;
+	Element parent, tg, el;
 	ElementType elType;
 	PresentationValue pval;
 	char *value, *s, buffer[512];
-	int length;
+	int length, firstchar, lastchar;
 	double d;
 	pmapping_animated pmapping;
 
@@ -2624,7 +2628,7 @@ void TimelineTextPostModify (NotifyOnTarget *event)
 		Set_slider_position (basedoc, event->document, d);
 	}
 	else if (elType.ElTypeNum == Timeline_EL_text_id) {
-		/* modify id in the basedoc ?*/
+		/* edit id in basedoc */
 		tg = TtaGetParent (parent);
 		pmapping = Get_mapping_from_title_group (basedoc, tg);
 		
@@ -2637,16 +2641,22 @@ void TimelineTextPostModify (NotifyOnTarget *event)
 			TtaAttachAttribute (pmapping->animated_elem, attr, basedoc);
 		}
 
+		TtaGiveFirstSelectedElement (basedoc, &el, &firstchar, &lastchar);
+		TtaOpenUndoSequence (basedoc, el, el, firstchar, lastchar);
+		TtaRegisterAttributeReplace (attr, pmapping->animated_elem, basedoc);
 		length = TtaGetTextLength (event->element);
         value = TtaGetMemory (length + 2);
         TtaGiveTextContent (event->element, value, &length, &lang);
-		TtaSetAttributeText (attr, value, pmapping->animated_elem, basedoc);
+		
+		TtaSetAttributeText (attr, value, pmapping->animated_elem, basedoc);  
+			
 		TtaFreeMemory (value);
 	    /* Check attribute ID in order to make sure that its value */
 	    /* is unique in the document */
 		MakeUniqueName (pmapping->animated_elem, basedoc);
 		Get_id_of (pmapping->animated_elem, buffer);
 		TtaSetTextContent (event->element, buffer, SPACE, dt[basedoc].timelinedoc);
+		TtaCloseUndoSequence (basedoc);
 		TtaSetDocumentModified (basedoc);
 	}
 
@@ -2840,9 +2850,9 @@ void Timeline_exp_period_modified (NotifyPresentation *event)
 {
 #ifdef _SVGANIM
 	Document basedoc = Get_basedoc_of (event->document);
-	Element edited_anim, exp_group;
+	Element edited_anim, exp_group, el;
 	double start, duration;
-	int nw, x;
+	int nw, x, firstchar, lastchar;
 
 	/* visual retroaction*/
 	x = Apply_hpos_mini (basedoc, event->element, cte_left_bar);
@@ -2855,9 +2865,16 @@ void Timeline_exp_period_modified (NotifyPresentation *event)
 	
 	exp_group = TtaGetParent (event->element);
 
+	TtaGiveFirstSelectedElement (basedoc, &el, &firstchar, &lastchar);
+	TtaOpenUndoSequence (basedoc, el, el, firstchar, lastchar);
+	
 	/* basedoc modification */
 	edited_anim = Get_animation_tag_from_period (basedoc, exp_group, event->element);
 	Write_time_info (basedoc, edited_anim, start, duration);
+
+	TtaCloseUndoSequence (basedoc);
+	TtaSetDocumentModified (basedoc);
+
 
 	TtaSetDocumentUnmodified (event->document);
 
@@ -2897,9 +2914,9 @@ void Timeline_col_period_modified (NotifyPresentation *event)
 #ifdef _SVGANIM
 
 	Document basedoc = Get_basedoc_of (event->document);
-	Element col_group, animated_elem, edited_anim;
+	Element col_group, animated_elem, edited_anim, el;
 	double start, duration;
-	int nw, x;
+	int nw, x, firstchar, lastchar;
 	double inc_time;
 
 	/* visual retroaction*/
@@ -2918,11 +2935,18 @@ void Timeline_col_period_modified (NotifyPresentation *event)
 
 	inc_time = (x - tmp_previous_x) / time_sep;
 
+
+	TtaGiveFirstSelectedElement (basedoc, &el, &firstchar, &lastchar);
+	TtaOpenUndoSequence (basedoc, el, el, firstchar, lastchar);
+	
 	edited_anim = Search_first_anim_in_tree (basedoc, animated_elem);
 	while ((edited_anim) && (TtaGetParent (edited_anim) == animated_elem)) {
 		Inc_time_start (basedoc, edited_anim, inc_time);
 		edited_anim = Search_next_anim_in_tree (basedoc, edited_anim);
 	}
+
+	TtaCloseUndoSequence (basedoc);
+	TtaSetDocumentModified (basedoc);
 
 	TtaSetDocumentUnmodified (event->document);
 
