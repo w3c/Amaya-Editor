@@ -4013,8 +4013,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		case LtPicture:
 		  imageDesc = (PictInfo *) pBox->BxPictInfo;
 		  pBox->BxH = 0;
-		  /* force the reevaluation of the baseline */
-		  pAb->AbHorizRefChange = TRUE;
 		  if (!pAb->AbWidth.DimIsPosition &&
 		      pAb->AbWidth.DimValue == -1 &&
 		      pAb->AbWidth.DimAbRef == NULL)
@@ -4042,6 +4040,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 
 	      /* Change the height of the contents */
 	      result = height != savedH;
+	      /* force the reevaluation of the baseline */
+	      ClearAxisRelation (pBox, FALSE);
+	      /* new horizontal */
+	      ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
 	      ChangeDefaultHeight (pBox, NULL, height, frame);
 	      if (pAb->AbLeafType == LtPicture && width != savedW)
 		{
