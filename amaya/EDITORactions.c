@@ -182,6 +182,24 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
+void                CreateBreak (Document document, View view)
+#else  /* __STDC__ */
+void                CreateBreak (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+
+   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   elType.ElTypeNum = HTML_EL_BR;
+   TtaCreateElement (elType, document);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void                CreateIsIndex (Document document, View view)
 #else  /* __STDC__ */
 void                CreateIsIndex (document, view)

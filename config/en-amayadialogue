@@ -35,83 +35,84 @@
 34 Comment
 35 Paragraph
 36 Image
-37 Heading
-38 H1
-39 H2
-40 H3
-41 H4
-42 H5
-43 H6
-44 List
-45 Bulleted list
-46 Numbered list
-47 Menu
-48 Directory
-49 Definition list
-50 Term
-51 Definition
-52 Rule
-53 BlockQuote
-54 Preformatted
-55 Address
-56 Table
+37 Break
+38 Heading
+39 H1
+40 H2
+41 H3
+42 H4
+43 H5
+44 H6
+45 List
+46 Bulleted list
+47 Numbered list
+48 Menu
+49 Directory
+50 Definition list
+51 Term
+52 Definition
+53 Horizontal Rule
+54 BlockQuote
+55 Preformatted
+56 Address
 57 Table
-58 Caption
-59 THead
-60 TBody
-61 TFoot
-62 Row
-63 DataCell
-64 HeadingCell
-65 Form
+58 Table
+59 Caption
+60 THead
+61 TBody
+62 TFoot
+63 Row
+64 DataCell
+65 HeadingCell
 66 Form
-67 Toggle
-68 Radio
-69 Option
-70 TextInput
-71 TextArea
-72 CommandLine
-73 AreaMap
-74 Rectangle
-75 Circle
-76 Polygon
-77 Division
-78 Applet
+67 Form
+68 Toggle
+69 Radio
+70 Option
+71 TextInput
+72 TextArea
+73 CommandLine
+74 AreaMap
+75 Rectangle
+76 Circle
+77 Polygon
+78 Division
 79 Applet
-80 Parameter
-81 Transform
-82 Create Link
-83 Create Target
-84 Change Link
-85 Delete Anchor
-86 Show Buttonbar
-87 Show Informations
-88 Show Structure
-89 Show Alternate
-90 Show Map Areas
-91 Character Style
-92 Colors
-93 Format
-94 Create Class
-95 Apply Class
-96 Style sheets
-97 Information Type
-98 Emphasis
-99 Strong
-100 Cite
-101 Definition
-102 Code
-103 Variable
-104 Sample
-105 Keyboard
-106 Character Element
-107 Italic
-108 Bold
-109 Teletype
-110 StrikeOut
-111 Big
-112 Small
-113 Sub
-114 Sup
-115 Font
-116 Amaya Version 0.95a Beta
+80 Applet
+81 Parameter
+82 Transform
+83 Create Link
+84 Create Target
+85 Change Link
+86 Delete Anchor
+87 Show Buttonbar
+88 Show Informations
+89 Show Structure
+90 Show Alternate
+91 Show Map Areas
+92 Character Style
+93 Colors
+94 Format
+95 Create Class
+96 Apply Class
+97 Style sheets
+98 Information Type
+99 Emphasis
+100 Strong
+101 Cite
+102 Definition
+103 Code
+104 Variable
+105 Sample
+106 Keyboard
+107 Character Element
+108 Italic
+109 Bold
+110 Teletype
+111 StrikeOut
+112 Big
+113 Small
+114 Sub
+115 Sup
+116 Font
+117 Amaya Version 0.95a Beta

@@ -2994,10 +2994,19 @@ struct E_List     **adbloc;
 	XtSetArg (args[n], XmNadjustLast, FALSE);
 	n++;
 	if (catalogue->Cat_in_lines)
+	  {
 	   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
+	   n++;
+	   XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
+	   n++;
+	  }
 	else
+	  {
 	   XtSetArg (args[n], XmNorientation, XmVERTICAL);
-	n++;
+	   n++;
+	   XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM);
+	   n++;
+	  }
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
 	XtSetArg (args[n], XmNborderColor, Button_Color);

@@ -42,6 +42,7 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
+#include "applicationapi_f.h"
 #include "inites_f.h"
 #include "LiteClue_f.h"
 
@@ -1526,6 +1527,8 @@ void                (*procedure) ();
 		       n++;
 		       XtSetArg (args[n], XmNtopWidget, *brother);
 		       n++;
+		       XtSetArg (args[n], XmNbottomWidget, *brother);
+		       n++;
 		    }
 		  XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
 		  n++;
@@ -1574,6 +1577,8 @@ void                (*procedure) ();
 		  XtSetArg (args[n], XmNeditable, editable);
 		  n++;
 		  XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
+		  n++;
+		  XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM);
 		  n++;
 		  XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
 		  n++;
@@ -1909,7 +1914,7 @@ int                 doc;
 	       }
 #endif /* _WINDOWS */
 
-/*** Creation la fenetre document ***/
+	     /*** Creation la fenetre document ***/
 	     n = 0;
 #ifndef _WINDOWS
 	     XtSetArg (args[n], XmNdefaultFontList, DefaultFont);
@@ -1959,21 +1964,23 @@ int                 doc;
 		     /* c'est un document d'un type particulier */
 		     ptrmenu = SCHmenu->SchemaMenu;
 		  else
-		     SCHmenu = SCHmenu->NextSchema;	/* schema suivant */
+		     /* schema suivant */
+		     SCHmenu = SCHmenu->NextSchema;
 	       }
 	     if (ptrmenu == NULL)
 		/* c'est un document standard */
 		ptrmenu = DocumentMenuList;
 
-/**** Construction des menus ****/
+	     /**** Construction des menus ****/
 	     FrameTable[frame].FrMenus = ptrmenu;
-	     ref = frame + MAX_LocalMenu;	/* reference du menu construit */
+	     /* reference du menu construit */
+	     ref = frame + MAX_LocalMenu;
 	     i = 0;
 	     /* Initialise les menus dynamiques */
 	     FrameTable[frame].MenuAttr = -1;
 	     FrameTable[frame].MenuSelect = -1;
 	     menu_bar = 0;
-/*** Parametres de creation des boutons menus ***/
+	     /*** Parametres de creation des boutons menus ***/
 	     n = 0;
 #ifndef _WINDOWS
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
@@ -2066,7 +2073,7 @@ int                 doc;
 		  i++;
 	       }
 
-/*** La barre de scroll horizontale ***/
+	     /*** La barre de scroll horizontale ***/
 	     n = 0;
 #ifndef _WINDOWS
 	     XtSetArg (args[n], XmNbackground, Scroll_Color);
@@ -2086,7 +2093,7 @@ int                 doc;
 	     XtAddCallback (hscrl, XmNtoTopCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 	     XtAddCallback (hscrl, XmNtoBottomCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 
-/*** La barre de scroll verticale ***/
+	     /*** La barre de scroll verticale ***/
 	     n = 0;
 	     XtSetArg (args[n], XmNbackground, Scroll_Color);
 	     n++;
@@ -2106,7 +2113,7 @@ int                 doc;
 	     XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 #endif /* _WINDOWS */
 
-/*** Creation de la zone boutons  ***/
+	     /*** Creation de la zone boutons  ***/
 #ifdef _WINDOWS
 #if 0
 	     WinToolBar[frame] = CreateWindow (
@@ -2159,6 +2166,8 @@ int                 doc;
 	     n++;
 	     XtSetArg (args[n], XmNorientation, XmVERTICAL);
 	     n++;
+	     XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
+	     n++;
 	     rowv = XmCreateRowColumn (Main_Wd, "", args, n);
 
 	     XtManageChild (rowv);
@@ -2176,6 +2185,8 @@ int                 doc;
 	     n++;
 	     XtSetArg (args[n], XmNspacing, 0);
 	     n++;
+	     XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
+	     n++;
 	     row1 = XmCreateRowColumn (rowv, "", args, n);
 
 	     for (i = 1; i < MAX_BUTTON; i++)
@@ -2191,6 +2202,8 @@ int                 doc;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
 	     XtSetArg (args[n], XmNwidth, dx);
+	     n++;
+	     XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
 	     n++;
 	     row1 = XmCreateForm (rowv, "", args, n);
 
@@ -2215,7 +2228,7 @@ int                 doc;
 		  XtManageChild (w);
 	       }
 
-/*** Creation des zones texte  ***/
+	     /*** Creation des zones texte  ***/
 	     n = 0;
 	     XtSetArg (args[n], XmNmarginWidth, 0);
 	     n++;
@@ -2250,7 +2263,7 @@ int                 doc;
 		FrameTable[frame].Text_Zone[i] = 0;
 	     FrameTable[frame].Text_Zone[0] = rowv;
 
-/*** Creation de la zone d'affichage du contenu du document ***/
+	     /*** Creation de la zone d'affichage du contenu du document ***/
 	     n = 0;
 	     XtSetArg (args[n], XmNmarginWidth, 0);
 	     n++;

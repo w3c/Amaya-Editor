@@ -14,6 +14,7 @@ CONST
    C_Empty = ' ';
    C_Foot = ' ';
    C_Head = ' ';
+   C_BR   = '\212';
 
 STRUCT
   HTML = BEGIN
@@ -117,6 +118,7 @@ STRUCT
 #endif
 	SCRIPT;
 	MAP;
+	BR (ATTR Clear = Left_, Right_, All_)= CONSTANT C_BR;
 	END;
 
   BaseFont (ATTR BaseFontSize = Integer) = CONSTANT C_Empty;
@@ -323,6 +325,7 @@ EXCEPT
 	TITLE:		NoCut;
 	Document_URL:	Hidden, NoSpellCheck;
 	C_Empty:	Hidden, NoSelect;
+	C_BR:		NoSelect;
 	Scripts:	Hidden, NoSelect;
 	Metas:		Hidden, NoSelect;
 	Links:		Hidden, NoSelect;

@@ -2773,6 +2773,7 @@ char              **argv;
 				   an indentifier */
    boolean             fileOK;
    int                 libtable; /* index of table libdialogue */
+   int                 param;
 
    TtaInitializeAppRegistry (argv[0]);
    libtable = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
@@ -2784,15 +2785,27 @@ char              **argv;
    InitSyntax ("STRUCT.GRM");
    if (!error)
      {
-	/* check program arguments */
-	if (argc != 2)
+        /* prepare the cpp command */
+	strcpy (cmd, "cpp ");
+        param = 1;
+	while (param < argc && argv[param][0] == '-')
+	  {
+	    /* keep cpp params */
+	    strcat (cmd, argv[param]);
+	    strcat (cmd, " ");
+	    param++;
+	  }
+	/* keep the name of the schema to be compile */
+	if (param >= argc)
 	  {
 	     TtaDisplaySimpleMessage (FATAL, STR, STR_NO_SUCH_FILE);
 	     exit (1);
 	  }
 
 	/* get the name of the file to be compiled */
-	strncpy (srceFileName, argv[1], MAX_NAME_LENGTH - 5);
+	strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+	srceFileName[MAX_NAME_LENGTH - 1] = '\0';
+	param++;
 	strcpy (fname, srceFileName);
 	/* check if the name contains a suffix */
 	ptr = strrchr(fname, '.');
@@ -2823,10 +2836,11 @@ char              **argv;
 	    /* provide the real source file */
 	    TtaFileUnlink (fname);
 	    pwd = TtaGetEnvString ("PWD");
+	    i = strlen (cmd);
 	    if (pwd != NULL)
-	      sprintf (cmd, "cpp -I%s -C %s > %s", pwd, srceFileName, fname);
+	      sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
 	    else
-	      sprintf (cmd, "cpp -C %s > %s", srceFileName, fname);
+	      sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
 	    i = system (cmd);
 	    if (i == -1)
 	      {

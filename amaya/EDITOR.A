@@ -41,6 +41,7 @@ MENUS
 	
 	Types button:BParagraph -> CreateParagraph;
 	Types button:BImage -> CreateImage;
+	Types button:BBreak -> CreateBreak;
 
 	Types.Heading button:BH1 -> CreateHeading1;
 	Types.Heading button:BH2 -> CreateHeading2;

@@ -150,6 +150,12 @@ RULES
 	Create '>\12';
 	END;
 
+ BR:	BEGIN
+	Create '<BR';
+	Create Attributes;
+	Create '>';
+	Remove;
+	END;
  Italic_text:
 	BEGIN
 	Create '<I';
@@ -280,7 +286,6 @@ RULES
 
  Parameter: BEGIN
 	Create '<PARAM';
-	Remove;
 	Create Attributes;
 	Remove;
 	Create '>\12';
@@ -765,6 +770,13 @@ ATTRIBUTES
 	Create color;
 	Create QuoteF;
 	END;
+
+ Clear = All_:
+	Create ' clear=all';
+ Clear = Left_:
+	Create ' clear=left';
+ Clear = Right_:
+	Create ' clear=right';
 
  Align = left_:
 	Create ' align=left';

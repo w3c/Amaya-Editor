@@ -198,7 +198,7 @@ static GIMapping    GIMappingTable[] =
    {"BIG", SPACE, 'E', HTML_EL_Big_text, NULL},
    {"BLOCKQUOTE", SPACE, 'E', HTML_EL_Block_Quote, NULL},
    {"BODY", SPACE, 'E', HTML_EL_BODY, NULL},
-   {"BR", 'E', 'C', 138, NULL},
+   {"BR", 'E', 'E', HTML_EL_BR, NULL},
    {"C", SPACE, 'E', HTML_EL_TEXT_UNIT, NULL},
    {"CAPTION", SPACE, 'E', HTML_EL_CAPTION, NULL},
    {"CENTER", SPACE, 'E', HTML_EL_Center, NULL},
@@ -378,6 +378,7 @@ static AttributeMapping AttributeMappingTable[] =
 	/* the first entry *must* be unknown_attr */
    {"unknown_attr", "", 'A', HTML_ATTR_Invalid_attribute},
    {"ACTION", "", 'A', HTML_ATTR_Script_URL},
+   {"CLEAR", "BR", 'A', HTML_ATTR_Clear},
    {"ALIGN", "APPLET", 'A', HTML_ATTR_Alignment},
    {"ALIGN", "CAPTION", 'A', HTML_ATTR_Position},
    {"ALIGN", "DIV", 'A', HTML_ATTR_Align},
@@ -2899,6 +2900,7 @@ char               *GIname;
 			    if (Within (HTML_EL_Preformatted))
 			       /* new line within a PRE. Create a Thot element Pre_Line */
 			      {
+				/* create pre-line */
 				 elType.ElSSchema = structSchema;
 				 elType.ElTypeNum = HTML_EL_Pre_Line;
 				 el = TtaNewElement (theDocument, elType);
@@ -2920,6 +2922,7 @@ char               *GIname;
 				   }
 				 lastElement = el;
 				 lastElementClosed = FALSE;
+				 /**********************/
 				 done = TRUE;
 			      }
 			    LastTagIsBR = TRUE;
