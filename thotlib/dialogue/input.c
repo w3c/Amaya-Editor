@@ -428,7 +428,7 @@ static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
 		oldptr->K_Other = ptr;
 	  }
      }
-   else
+   else if (!exists)
      {
 	/* on cree une entree de premier niveau */
 	ptr->K_EntryCode = key1;
