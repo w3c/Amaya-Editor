@@ -19,6 +19,7 @@
  * registry mechanism.
  *
  * Author: D. Veillard (INRIA)
+ * Extensions: J. KAHAN (INRIA/W3C)
  *
  */
 
@@ -43,7 +44,7 @@
 #ifdef _WINDOWS
 #include <direct.h>
 #define THOT_RC_FILENAME	"thot.rc"
-#define THOT_INI_FILENAME        "thot.rc"
+#define THOT_INI_FILENAME       "thot.rc"
 STRING WIN_Home;
 
 #else /* !_WINDOWS */
@@ -752,8 +753,8 @@ int                 overwrite;
 }
 
 /*----------------------------------------------------------------------
- TtaSetDefString : set the defaul value associated to an environment string,
-                   for the current application.
+ TtaSetDefEnvString : set the defaul value associated to an environment
+                      string, for the current application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetDefEnvString (STRING name, STRING value, 
@@ -1187,14 +1188,12 @@ static void         InitEnviron ()
    HighlightBoxErrors = FALSE;
    InsertionLevels = 4;
 #ifndef _WINDOWS
+   TtaSetDefEnvString ("DOUBLECLICKDELAY", "500", TRUE);
    pT = (STRING)TtaGetEnvString ("DOUBLECLICKDELAY");
    if (pT != NULL)
      DoubleClickDelay = atoi(pT);
-   else
-     {
-       TtaSetDefEnvString ("DOUBLECLICKDELAY", "500", TRUE);
+   else 
        DoubleClickDelay = 500;
-     }
 #endif /* _WINDOWS */
 
    /* The base of the Thot directory */
