@@ -2114,10 +2114,10 @@ void                (*procedure) ();
 	       {
 		  row = FrameTable[frame].Text_Zone[0];
 #ifndef _WINDOWS
-		  XtManageChild(row);
 #ifndef _GTK
 		  XtUnmanageChild (XtParent (XtParent (row)));
-
+	          XtManageChild (row);
+ 
 		  /* Insere la nouvelle zone de texte */
 		  n = 0;
 		  XtSetArg (args[n], XmNchildren, &brother);
@@ -2220,9 +2220,8 @@ void                (*procedure) ();
 		       XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) APP_TextCallback, (XtPointer) frame);
 		       FrameTable[frame].Call_Text[i] = (Proc) procedure;
 		    }
-		  XtManageChild (row);
-		  XtManageChild (XtParent (XtParent (row)));
 		  XtManageChild (XtParent (XtParent (XtParent (row))));
+		  XtManageChild (XtParent (XtParent (row)));
 #endif /* _GTK */
 #else  /* _WINDOWS */
 		          currentFrame = frame;
