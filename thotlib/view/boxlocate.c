@@ -29,6 +29,7 @@
 #include "units_tv.h"
 #include "platform_tv.h"
 #include "appdialogue_tv.h"
+#include "select_tv.h"
 
 #include "absboxes_f.h"
 #include "applicationapi_f.h"
@@ -108,142 +109,153 @@ void LocateSelectionInView (int frame, int x, int y, int button)
       y += pFrame->FrYOrg;
       pAb = pFrame->FrAbstractBox;
       charsNumber = 0;
-      extend = (button == 0 || button == 1);
-      /* get the selected box */
-      if (ThotLocalActions[T_selecbox] != NULL)
-	(*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y, &charsNumber);
-      /* When it's an extended selection, avoid to extend to the
-	 enclosing box */
-      if (extend)
-	{
-	  if (pBox != pFrame->FrSelectionBegin.VsBox &&
-	      IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
-	    pBox = GetClickedLeafBox (frame, x, y);
-	}
-      if (pBox != NULL)
-	{
-	  pAb = pBox->BxAbstractBox;
-	  if (pAb->AbLeafType == LtText &&
-	      (!pAb->AbPresentationBox || pAb->AbCanBeModified))
-	    {
-	      pos = x - pBox->BxXOrg - pBox->BxLMargin - pBox->BxLBorder
-		    - pBox->BxLPadding;
-	      LocateClickedChar (pBox, extend, &pBuffer, &pos, &index,
-				 &charsNumber, &spacesNumber);
-	      charsNumber = pBox->BxIndChar + charsNumber + 1;
-	    }
-	}
+      if (button == 6 && SelectedPointInPolyline != 0 &&
+	  FirstSelectedElement &&
+	  FirstSelectedElement == LastSelectedElement &&
+	  FirstSelectedElement->ElTerminal &&
+	  FirstSelectedElement->ElLeafType == LtPolyLine &&
+	  ThotLocalActions[T_editfunc] != NULL)
+	/* adding new points in a pollyline */
+	(*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
       else
-	pAb = NULL;
-
-      CloseInsertion ();
-      FrameToView (frame, &doc, &view);
-      if (pAb)
 	{
-	  /* Initialization of the selection */
-	  switch (button)
+	  extend = (button == 0 || button == 1);
+	  /* get the selected box */
+	  if (ThotLocalActions[T_selecbox] != NULL)
+	    (*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y, &charsNumber);
+	  /* When it's an extended selection, avoid to extend to the
+	 enclosing box */
+	  if (extend)
 	    {
-	    case 0:
-	      /* Extension of selection */
-	      ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, FALSE);
-	      break;
-	    case 1:
-	      /* Extension of selection */
-	      ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, TRUE);
-	    break;
-	    case 2:
-	      ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
-	    break;
-	    case 3:
-	      if (!ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE,
-				    TRUE, FALSE) &&
-		  pAb->AbLeafType == LtText &&
+	      if (pBox != pFrame->FrSelectionBegin.VsBox &&
+		  IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
+		pBox = GetClickedLeafBox (frame, x, y);
+	    }
+	  if (pBox != NULL)
+	    {
+	      pAb = pBox->BxAbstractBox;
+	      if (pAb->AbLeafType == LtText &&
 		  (!pAb->AbPresentationBox || pAb->AbCanBeModified))
-		SelectCurrentWord (frame, pBox, charsNumber, index, pBuffer,
-				   TRUE);
-	      break;
-	    case 4:
-	      /* check if the curseur is within the box */
-	      xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-		pBox->BxLPadding;
-	      yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-		pBox->BxTPadding;
-	      if (x >= xOrg && x <= xOrg + pBox->BxW &&
-		  y >= yOrg && y <= yOrg + pBox->BxH)
 		{
-		  /* send event TteElemActivate.Pre to the application */
-		  el = pAb->AbElement;
-		  notifyEl.event = TteElemClick;
-		  notifyEl.document = doc;
-		  notifyEl.element = (Element) el;
-		  notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
-		  notifyEl.elementType.ElSSchema = (SSchema)(el->ElStructSchema);
-		  notifyEl.position = 0;
-		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		    /* the application asks Thot to do nothing */
-		    return;
-		  /* send event TteElemActivate.Post to the application */
-		  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		  pos = x - pBox->BxXOrg - pBox->BxLMargin - pBox->BxLBorder
+		    - pBox->BxLPadding;
+		  LocateClickedChar (pBox, extend, &pBuffer, &pos, &index,
+				     &charsNumber, &spacesNumber);
+		  charsNumber = pBox->BxIndChar + charsNumber + 1;
 		}
-	      break;
-	    case 5:
-	      /* check if the curseur is within the box */
-	      xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-		pBox->BxLPadding;
-	      yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-		pBox->BxTPadding;
-	      if (x >= xOrg && x <= xOrg + pBox->BxW &&
-		  y >= yOrg && y <= yOrg + pBox->BxH)
+	    }
+	  else
+	    pAb = NULL;
+
+	  CloseInsertion ();
+	  FrameToView (frame, &doc, &view);
+	  if (pAb)
+	    {
+	      /* Initialization of the selection */
+	      switch (button)
 		{
-		  /* send event TteElemActivate.Pre to the application */
-		  el = pAb->AbElement;
-		  notifyEl.event = TteElemMClick;
-		  notifyEl.document = doc;
-		  notifyEl.element = (Element) el;
-		  notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
-		  notifyEl.elementType.ElSSchema = (SSchema)(el->ElStructSchema);
-		  notifyEl.position = 0;
-		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		    /* the application asks Thot to do nothing */
-		    return;
+		case 0:
+		  /* Extension of selection */
+		  ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, FALSE);
+		  break;
+		case 1:
+		  /* Extension of selection */
+		  ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, TRUE);
+		  break;
+		case 2:
+		  ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
+		  break;
+		case 3:
+		  if (!ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE,
+					TRUE, FALSE) &&
+		      pAb->AbLeafType == LtText &&
+		      (!pAb->AbPresentationBox || pAb->AbCanBeModified))
+		    SelectCurrentWord (frame, pBox, charsNumber, index, pBuffer,
+				       TRUE);
+		  break;
+		case 4:
+		  /* check if the curseur is within the box */
+		  xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+		    pBox->BxLPadding;
+		  yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+		    pBox->BxTPadding;
+		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		      y >= yOrg && y <= yOrg + pBox->BxH)
+		    {
+		      /* send event TteElemActivate.Pre to the application */
+		      el = pAb->AbElement;
+		      notifyEl.event = TteElemClick;
+		      notifyEl.document = doc;
+		      notifyEl.element = (Element) el;
+		      notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
+		      notifyEl.elementType.ElSSchema = (SSchema)(el->ElStructSchema);
+		      notifyEl.position = 0;
+		      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+			/* the application asks Thot to do nothing */
+			return;
+		      /* send event TteElemActivate.Post to the application */
+		      CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		    }
+		  break;
+		case 5:
+		  /* check if the curseur is within the box */
+		  xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+		    pBox->BxLPadding;
+		  yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+		    pBox->BxTPadding;
+		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		      y >= yOrg && y <= yOrg + pBox->BxH)
+		    {
+		      /* send event TteElemActivate.Pre to the application */
+		      el = pAb->AbElement;
+		      notifyEl.event = TteElemMClick;
+		      notifyEl.document = doc;
+		      notifyEl.element = (Element) el;
+		      notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
+		      notifyEl.elementType.ElSSchema = (SSchema)(el->ElStructSchema);
+		      notifyEl.position = 0;
+		      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+			/* the application asks Thot to do nothing */
+			return;
+		    }
+		  if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
+		    (*MenuActionList[CMD_PasteFromClipboard].Call_Action) (doc, view);
+		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		      y >= yOrg && y <= yOrg + pBox->BxH)
+		    /* send event TteElemActivate.Post to the application */
+		    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		  break;
+		case 6:
+		  /* check if the curseur is within the box */
+		  xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
+		    pBox->BxLPadding;
+		  yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
+		    pBox->BxTPadding;
+		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		      y >= yOrg && y <= yOrg + pBox->BxH)
+		    {
+		      /* send event TteElemActivate.Pre to the application */
+		      el = pAb->AbElement;
+		      notifyEl.event = TteElemRClick;
+		      notifyEl.document = doc;
+		      notifyEl.element = (Element) el;
+		      notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
+		      notifyEl.elementType.ElSSchema = (SSchema)(el->ElStructSchema);
+		      notifyEl.position = 0;
+		      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+			/* the application asks Thot to do nothing */
+			return;
+		    }
+		  TtaSetDialoguePosition ();
+		  if (ThotLocalActions[T_insertpaste] != NULL)
+		    (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
+		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		      y >= yOrg && y <= yOrg + pBox->BxH)
+		    /* send event TteElemActivate.Post to the application */
+		    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		  break;
+		default: break;
 		}
-	      if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
-		(*MenuActionList[CMD_PasteFromClipboard].Call_Action) (doc, view);
-	      if (x >= xOrg && x <= xOrg + pBox->BxW &&
-		  y >= yOrg && y <= yOrg + pBox->BxH)
-		/* send event TteElemActivate.Post to the application */
-		CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-	      break;
-	    case 6:
-	      /* check if the curseur is within the box */
-	      xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
-		pBox->BxLPadding;
-	      yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
-		pBox->BxTPadding;
-	      if (x >= xOrg && x <= xOrg + pBox->BxW &&
-		  y >= yOrg && y <= yOrg + pBox->BxH)
-		{
-		  /* send event TteElemActivate.Pre to the application */
-		  el = pAb->AbElement;
-		  notifyEl.event = TteElemRClick;
-		  notifyEl.document = doc;
-		  notifyEl.element = (Element) el;
-		  notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
-		  notifyEl.elementType.ElSSchema = (SSchema)(el->ElStructSchema);
-		  notifyEl.position = 0;
-		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		    /* the application asks Thot to do nothing */
-		    return;
-		}
-	      TtaSetDialoguePosition ();
-	      if (ThotLocalActions[T_insertpaste] != NULL)
-		(*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
-	      if (x >= xOrg && x <= xOrg + pBox->BxW &&
-		  y >= yOrg && y <= yOrg + pBox->BxH)
-		/* send event TteElemActivate.Post to the application */
-		CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-	      break;
-	    default: break;
 	    }
 	}
     }

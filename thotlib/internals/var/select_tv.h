@@ -41,6 +41,9 @@ THOT_EXPORT int          FixedChar;
 
 /* The current selection is simply a caret */
 THOT_EXPORT ThotBool     SelPosition;
+/* If the current selection is a PolyLine, rank of the selected
+   vertex, or 0 if the whole PolyLine is selected */
+THOT_EXPORT int          SelectedPointInPolyline;
 
 /* Views belonging to the same document are synchronized */
 THOT_EXPORT ThotBool     SynchronizeViews;
