@@ -19,6 +19,18 @@
 #include "amaya.h"
 #include "css.h"
 
+typedef struct _BackgroundImageCallbackBlock
+{
+  PresentationTarget target;
+  union
+  {
+    PresentationContextBlock  blk;
+    SpecificContextBlock      specific;
+    GenericContextBlock       generic;
+  } context;
+}
+BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
+
 #include "AHTURLTools_f.h"
 #include "HTMLpresentation_f.h"
 #include "HTMLstyle_f.h"
@@ -35,20 +47,20 @@
  * for a font attribute.
  */
 #ifdef __STDC__
-typedef char       *(*HTMLStyleValueParser)
-                    (PresentationTarget target,
-		     PresentationContext context, STRING cssRule, CSSInfoPtr css);
+typedef char    *(*HTMLStyleValueParser) (PresentationTarget target,
+					  PresentationContext context,
+					  STRING cssRule,
+					  CSSInfoPtr css,
+					  boolean isHTML);
 #else
-typedef char       *(*HTMLStyleValueParser) ();
+typedef char    *(*HTMLStyleValueParser) ();
 #endif
 
 
-/*
- * Description of the set of CSS Style Attributes supported.
- */
+/* Description of the set of CSS Style Attributes supported */
 typedef struct HTMLStyleAttribute
   {
-     STRING              name;
+     STRING               name;
      HTMLStyleValueParser parsing_function;
   }
 HTMLStyleAttribute;
@@ -56,38 +68,12 @@ HTMLStyleAttribute;
 #define MAX_DEEP 10
 #include "HTMLstyleColor.h"
 
-#if 0
-#ifdef _WINDOWS
-#ifdef __STD__
-int strncasecmp (const STRING s1, const STRING s2, size_t n)
-#else  /* __STDC__ */
-strncasecmp (s1, s2, n)
-const STRING s1;
-const STRING s2;
-size_t      n;
-#endif /* __STDC__ */
-{
-   if (n == 0)
-      return 0;
-
-   while (n-- != 0 && toupper (*s1) == toupper (*s2)) {
-         if (n == 0 || *s1 == EOS || *s2 == EOS)
-            break;
-   s1++;
-   s2++;
-   }
-   return (toupper (*s1) - toupper (*s2));
-}
-#endif /* _WINDOWS */
-#endif /* 0 */
-
 
 /************************************************************************
  *									*  
  * 			 UNITS CONVERSION FUNCTIONS			*
  *									*  
  ************************************************************************/
-
 #ifdef __STDC__
 static unsigned int hexa_val (CHAR c)
 #else
@@ -95,11 +81,11 @@ static unsigned int hexa_val (c)
 CHAR                c;
 #endif
 {
-   if ((c >= '0') && (c <= '9'))
+   if (c >= '0' && c <= '9')
       return (c - '0');
-   if ((c >= 'a') && (c <= 'f'))
+   if (c >= 'a' && c <= 'f')
       return (c - 'a' + 10);
-   if ((c >= 'A') && (c <= 'F'))
+   if (c >= 'A' && c <= 'F')
       return (c - 'A' + 10);
    return (0);
 }
@@ -113,6 +99,7 @@ struct unit_def
    STRING              sign;
    int                 unit;
 };
+
 static struct unit_def CSSUnitNames[] =
 {
    {"pt", DRIVERP_UNIT_PT},
@@ -217,12 +204,13 @@ PresentationValue  *pval;
 {
   int                 val = 0;
   int                 minus = 0;
-  int                 real = 0;
   int                 valid = 0;
   int                 f = 0;
   int                 uni;
+  boolean             real = FALSE;
 
   pval->typed_data.unit = DRIVERP_UNIT_REL;
+  pval->typed_data.real = FALSE;
   cssRule = TtaSkipBlanks (cssRule);
   if (*cssRule == '-')
     {
@@ -247,7 +235,7 @@ PresentationValue  *pval;
 
   if (*cssRule == '.')
     {
-      real = 1;
+      real = TRUE;
       f = val;
       val = 0;
       cssRule++;
@@ -278,58 +266,59 @@ PresentationValue  *pval;
       cssRule = SkipWord (cssRule);
       pval->typed_data.unit = DRIVERP_UNIT_INVALID;
       pval->typed_data.value = 0;
-      return (cssRule);
-    }
-
-  cssRule = TtaSkipBlanks (cssRule);
-  for (uni = 0; uni < NB_UNITS; uni++)
-    {
-      /*
-#ifdef WWW_WINDOWS
-      if (!_strnicmp (CSSUnitNames[uni].sign, cssRule,
-		      strlen (CSSUnitNames[uni].sign)))
-#else   WWW_WINDOWS 
-*/
-      if (!ustrncasecmp (CSSUnitNames[uni].sign, cssRule,
-			ustrlen (CSSUnitNames[uni].sign)))
-	/* #endif  !WWW_WINDOWS */
-	{
-	  pval->typed_data.unit = CSSUnitNames[uni].unit;
-	  if (real)
-	    {
-	      DRIVERP_UNIT_SET_FLOAT (pval->typed_data.unit);
-	      if (minus)
-		pval->typed_data.value = -(f * 1000 + val);
-	      else
-		pval->typed_data.value = f * 1000 + val;
-	    }
-	  else
-	    {
-	      if (minus)
-		pval->typed_data.value = -val;
-	      else
-		pval->typed_data.value = val;
-	    }
-	  return (cssRule + ustrlen (CSSUnitNames[uni].sign));
-	}
-    }
-
-  /* not in the list of predefined units */
-  pval->typed_data.unit = DRIVERP_UNIT_REL;
-  if (real)
-    {
-      DRIVERP_UNIT_SET_FLOAT (pval->typed_data.unit);
-      if (minus)
-	pval->typed_data.value = -(f * 1000 + val);
-      else
-	pval->typed_data.value = f * 1000 + val;
     }
   else
     {
-      if (minus)
-	pval->typed_data.value = -val;
+      cssRule = TtaSkipBlanks (cssRule);
+      for (uni = 0; uni < NB_UNITS; uni++)
+	{
+	  /*
+	    #ifdef WWW_WINDOWS
+	    if (!_strnicmp (CSSUnitNames[uni].sign, cssRule,
+	    strlen (CSSUnitNames[uni].sign)))
+	    #else   WWW_WINDOWS 
+	    */
+	  if (!ustrncasecmp (CSSUnitNames[uni].sign, cssRule,
+			     ustrlen (CSSUnitNames[uni].sign)))
+	    /* #endif  !WWW_WINDOWS */
+	    {
+	      pval->typed_data.unit = CSSUnitNames[uni].unit;
+	      pval->typed_data.real = real;
+	      if (real)
+		{
+		  if (minus)
+		    pval->typed_data.value = -(f * 1000 + val);
+		  else
+		    pval->typed_data.value = f * 1000 + val;
+		}
+	      else
+		{
+		  if (minus)
+		    pval->typed_data.value = -val;
+		  else
+		    pval->typed_data.value = val;
+		}
+	      return (cssRule + ustrlen (CSSUnitNames[uni].sign));
+	    }
+	}
+
+      /* not in the list of predefined units */
+      pval->typed_data.unit = DRIVERP_UNIT_REL;
+      pval->typed_data.real = real;
+      if (real)
+	{
+	  if (minus)
+	    pval->typed_data.value = -(f * 1000 + val);
+	  else
+	    pval->typed_data.value = f * 1000 + val;
+	}
       else
-	pval->typed_data.value = val;
+	{
+	  if (minus)
+	    pval->typed_data.value = -val;
+	  else
+	    pval->typed_data.value = val;
+	}
     }
   return (cssRule);
 }
@@ -425,21 +414,20 @@ STRING               param;
 int                  len
 #endif
 {
+  float               fval = 0;
   unsigned short      red, green, blue;
   int                 add_unit = 0;
-  int                 real = 0;
-  float               fval = 0;
   int                 unit, i;
+  boolean             real = FALSE;
 
   buffer[0] = EOS;
   if (len < 40)
     return;
 
   unit = settings->value.typed_data.unit;
-  if (DRIVERP_UNIT_IS_FLOAT (unit))
+  if (settings->value.typed_data.real)
     {
-      DRIVERP_UNIT_UNSET_FLOAT (unit);
-      real = 1;
+      real = TRUE;
       fval = (float) settings->value.typed_data.value;
       fval /= 1000;
     }
@@ -801,26 +789,20 @@ int                *len;
  *									*  
  ************************************************************************/
 
-
-/************************************************************************
- *									*  
- *	PARSING FUNCTIONS FOR EACH CSS ATTRIBUTE SUPPORTED		*
- *									*  
- ************************************************************************/
-
 /*----------------------------------------------------------------------
    ParseCSSBorderTopWidth : parse a CSS BorderTopWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderTopWidth (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBorderTopWidth (target, context, cssRule, css)
+static STRING       ParseCSSBorderTopWidth (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -832,13 +814,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderRightWidth (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBorderRightWidth (target, context, cssRule, css)
+static STRING       ParseCSSBorderRightWidth (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -850,13 +833,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderBottomWidth (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBorderBottomWidth (target, context, cssRule, css)
+static STRING       ParseCSSBorderBottomWidth (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -868,13 +852,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderLeftWidth (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBorderLeftWidth (target, context, cssRule, css)
+static STRING       ParseCSSBorderLeftWidth (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -886,13 +871,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderWidth (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBorderWidth (target, context, cssRule, css)
+static STRING       ParseCSSBorderWidth (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -904,13 +890,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderTop (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBorderTop (target, context, cssRule, css)
+static STRING       ParseCSSBorderTop (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -922,13 +909,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderRight (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBorderRight (target, context, cssRule, css)
+static STRING       ParseCSSBorderRight (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -940,13 +928,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderBottom (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBorderBottom (target, context, cssRule, css)
+static STRING       ParseCSSBorderBottom (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -958,13 +947,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderLeft (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBorderLeft (target, context, cssRule, css)
+static STRING       ParseCSSBorderLeft (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -976,13 +966,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderColor (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBorderColor (target, context, cssRule, css)
+static STRING       ParseCSSBorderColor (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -994,13 +985,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorderStyle (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBorderStyle (target, context, cssRule, css)
+static STRING       ParseCSSBorderStyle (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -1012,13 +1004,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBorder (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBorder (target, context, cssRule, css)
+static STRING       ParseCSSBorder (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -1029,13 +1022,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSClear (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSClear (target, context, cssRule, css)
+static STRING       ParseCSSClear (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -1046,21 +1040,23 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSDisplay (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSDisplay (target, context, cssRule, css)
+static STRING       ParseCSSDisplay (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
    PresentationValue   pval;
 
+   pval.typed_data.unit = DRIVERP_UNIT_REL;
+   pval.typed_data.real = FALSE;
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "block", 5))
      {
-	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = DRIVERP_NOTINLINE;
 	if (context->drv->SetInLine)
 	   context->drv->SetInLine (target, context, pval);
@@ -1068,7 +1064,6 @@ CSSInfoPtr          css;
      }
    else if (!ustrncasecmp (cssRule, "inline", 6))
      {
-	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = DRIVERP_INLINE;
 	if (context->drv->SetInLine)
 	   context->drv->SetInLine (target, context, pval);
@@ -1076,21 +1071,15 @@ CSSInfoPtr          css;
      }
    else if (!ustrncasecmp (cssRule, "none", 4))
      {
-	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = DRIVERP_HIDE;
 	if (context->drv->SetShow)
 	   context->drv->SetShow (target, context, pval);
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "list-item", 9))
-     {
-	cssRule = SkipProperty (cssRule);
-     }
+     cssRule = SkipProperty (cssRule);
    else
-     {
-	fprintf (stderr, "invalid display value %s\n", cssRule);
-	return (cssRule);
-     }
+     fprintf (stderr, "invalid display value %s\n", cssRule);
    return (cssRule);
 }
 
@@ -1099,13 +1088,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFloat (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSFloat (target, context, cssRule, css)
+static STRING       ParseCSSFloat (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -1117,13 +1107,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSLetterSpacing (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSLetterSpacing (target, context, cssRule, css)
+static STRING       ParseCSSLetterSpacing (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -1135,13 +1126,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSListStyleType (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSListStyleType (target, context, cssRule, css)
+static STRING       ParseCSSListStyleType (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -1153,13 +1145,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSListStyleImage (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSListStyleImage (target, context, cssRule, css)
+static STRING       ParseCSSListStyleImage (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -1171,13 +1164,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSListStylePosition (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSListStylePosition (target, context, cssRule, css)
+static STRING       ParseCSSListStylePosition (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -1189,13 +1183,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSListStyle (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSListStyle (target, context, cssRule, css)
+static STRING       ParseCSSListStyle (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -1207,22 +1202,25 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSTextAlign (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSTextAlign (target, context, cssRule, css)
+static STRING       ParseCSSTextAlign (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
    PresentationValue   align;
    PresentationValue   justify;
 
    align.typed_data.value = 0;
-   align.typed_data.unit = 1;
+   align.typed_data.unit = DRIVERP_UNIT_REL;
+   align.typed_data.real = FALSE;
    justify.typed_data.value = 0;
-   justify.typed_data.unit = 1;
+   justify.typed_data.unit = DRIVERP_UNIT_REL;
+   justify.typed_data.real = FALSE;
 
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "left", 4))
@@ -1275,13 +1273,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSTextIndent (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSTextIndent (target, context, cssRule, css)
+static STRING       ParseCSSTextIndent (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
    PresentationValue   pval;
@@ -1302,13 +1301,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSTextTransform (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSTextTransform (target, context, cssRule, css)
+static STRING       ParseCSSTextTransform (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -1320,13 +1320,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSVerticalAlign (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSVerticalAlign (target, context, cssRule, css)
+static STRING       ParseCSSVerticalAlign (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -1338,13 +1339,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSWhiteSpace (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSWhiteSpace (target, context, cssRule, css)
+static STRING       ParseCSSWhiteSpace (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
    cssRule = TtaSkipBlanks (cssRule);
@@ -1363,13 +1365,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSWordSpacing (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSWordSpacing (target, context, cssRule, css)
+static STRING       ParseCSSWordSpacing (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -1383,18 +1386,20 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFontSize (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSFontSize (target, context, cssRule, css)
+static STRING       ParseCSSFontSize (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
    PresentationValue   pval;
    boolean	       real;
 
+   pval.typed_data.real = FALSE;
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "larger", 6))
      {
@@ -1461,25 +1466,18 @@ CSSInfoPtr          css;
 	 pval.typed_data.value += 1;
        else 
 	 {
-	 real = FALSE;
-	 if (DRIVERP_UNIT_IS_FLOAT (pval.typed_data.unit))
-	    {
-	    real = TRUE;
-	    DRIVERP_UNIT_UNSET_FLOAT (pval.typed_data.unit);
-	    }
-         if (pval.typed_data.unit == DRIVERP_UNIT_EM)
-	    {
-	    if (real)
-	       {
-	       pval.typed_data.value /= 10;
-	       real = FALSE;
-	       }
-	    else
-	       pval.typed_data.value *= 100;
-	    pval.typed_data.unit = DRIVERP_UNIT_PERCENT;
-	    }
-	 if (real)
-	    DRIVERP_UNIT_SET_FLOAT (pval.typed_data.unit);
+	   real = pval.typed_data.real;
+	   if (pval.typed_data.unit == DRIVERP_UNIT_EM)
+	     {
+	       if (real)
+		 {
+		   pval.typed_data.value /= 10;
+		   real = FALSE;
+		 }
+	       else
+		 pval.typed_data.value *= 100;
+	       pval.typed_data.unit = DRIVERP_UNIT_PERCENT;
+	     }
 	 }
      }
 
@@ -1496,20 +1494,22 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFontFamily (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSFontFamily (target, context, cssRule, css)
+static STRING       ParseCSSFontFamily (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   PresentationValue   font;
   CHAR		      quoteChar;
 
   font.typed_data.value = 0;
-  font.typed_data.unit = 1;
+  font.typed_data.unit = DRIVERP_UNIT_REL;
+  font.typed_data.real = FALSE;
   cssRule = TtaSkipBlanks (cssRule);
   if (*cssRule == '"' || *cssRule == '\'')
      {
@@ -1543,7 +1543,7 @@ CSSInfoPtr          css;
       if (*cssRule == ',')
 	{
 	cssRule++;
-        return (ParseCSSFontFamily (target, context, cssRule, css));
+        return (ParseCSSFontFamily (target, context, cssRule, css, isHTML));
 	}
     }
 
@@ -1565,19 +1565,21 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFontWeight (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSFontWeight (target, context, cssRule, css)
+static STRING       ParseCSSFontWeight (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
    PresentationValue   weight, previous_style;
 
    weight.typed_data.value = 0;
-   weight.typed_data.unit = 1;
+   weight.typed_data.unit = DRIVERP_UNIT_REL;
+   weight.typed_data.real = FALSE;
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "100", 3) && !isalpha (cssRule[3]))
      {
@@ -1682,19 +1684,21 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFontVariant (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSFontVariant (target, context, cssRule, css)
+static STRING       ParseCSSFontVariant (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
    PresentationValue   style;
 
    style.typed_data.value = 0;
-   style.typed_data.unit = 1;
+   style.typed_data.unit = DRIVERP_UNIT_REL;
+   style.typed_data.real = FALSE;
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "small-caps", 10))
      {
@@ -1725,22 +1729,25 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFontStyle (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSFontStyle (target, context, cssRule, css)
+static STRING       ParseCSSFontStyle (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
    PresentationValue   style;
    PresentationValue   size;
 
    style.typed_data.value = 0;
-   style.typed_data.unit = 1;
+   style.typed_data.unit = DRIVERP_UNIT_REL;
+   style.typed_data.real = FALSE;
    size.typed_data.value = 0;
-   size.typed_data.unit = 1;
+   size.typed_data.unit = DRIVERP_UNIT_REL;
+   size.typed_data.real = FALSE;
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "italic", 6))
      {
@@ -1818,13 +1825,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFont (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSFont (target, context, cssRule, css)
+static STRING       ParseCSSFont (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   STRING            ptr;
@@ -1845,19 +1853,19 @@ CSSInfoPtr          css;
   else
       {
 	ptr = cssRule;
-	cssRule = ParseCSSFontStyle (target, context, cssRule, css);
+	cssRule = ParseCSSFontStyle (target, context, cssRule, css, isHTML);
 	if (ptr == cssRule)
-	  cssRule = ParseCSSFontVariant (target, context, cssRule, css);
+	  cssRule = ParseCSSFontVariant (target, context, cssRule, css, isHTML);
 	if (ptr == cssRule)
-	  cssRule = ParseCSSFontWeight (target, context, cssRule, css);
-	cssRule = ParseCSSFontSize (target, context, cssRule, css);
+	  cssRule = ParseCSSFontWeight (target, context, cssRule, css, isHTML);
+	cssRule = ParseCSSFontSize (target, context, cssRule, css, isHTML);
 	if (*cssRule == '/')
 	  {
 	    cssRule++;
 	    TtaSkipBlanks (cssRule);
 	    cssRule = SkipWord (cssRule);
 	  }
-	cssRule = ParseCSSFontFamily (target, context, cssRule, css);
+	cssRule = ParseCSSFontFamily (target, context, cssRule, css, isHTML);
 	cssRule = TtaSkipBlanks (cssRule);
 	while (*cssRule != ';' && *cssRule != EOS)
 	  {
@@ -1875,13 +1883,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSLineSpacing (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSLineSpacing (target, context, cssRule, css)
+static STRING       ParseCSSLineSpacing (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
    PresentationValue   lead;
@@ -1908,19 +1917,21 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSTextDecoration (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSTextDecoration (target, context, cssRule, css)
+static STRING       ParseCSSTextDecoration (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
    PresentationValue   decor;
 
    decor.typed_data.value = 0;
-   decor.typed_data.unit = 1;
+   decor.typed_data.unit = DRIVERP_UNIT_REL;
+   decor.typed_data.real = FALSE;
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "underline", ustrlen ("underline")))
      {
@@ -2009,6 +2020,7 @@ PresentationValue  *val;
 
   cssRule = TtaSkipBlanks (cssRule);
   val->typed_data.unit = DRIVERP_UNIT_INVALID;
+  val->typed_data.real = FALSE;
   val->typed_data.value = 0;
   failed = TRUE;
   /*
@@ -2131,16 +2143,14 @@ PresentationValue  *val;
     }
   
   if (failed)
-    {
-      val->typed_data.unit = DRIVERP_UNIT_REL;
-      val->typed_data.value = 0;
-    }
+    val->typed_data.value = 0;
   else
     {
       best = TtaGetThotColor (redval, greenval, blueval);
       val->typed_data.value = best;
-      val->typed_data.unit = DRIVERP_UNIT_REL;
     }
+  val->typed_data.unit = DRIVERP_UNIT_REL;
+  val->typed_data.real = FALSE;
  return (cssRule);
 }
 
@@ -2149,13 +2159,14 @@ PresentationValue  *val;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSHeight (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSHeight (target, context, cssRule, css)
+static STRING       ParseCSSHeight (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
    cssRule = TtaSkipBlanks (cssRule);
@@ -2177,13 +2188,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSWidth (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSWidth (target, context, cssRule, css)
+static STRING       ParseCSSWidth (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
    cssRule = TtaSkipBlanks (cssRule);
@@ -2204,13 +2216,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSMarginTop (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSMarginTop (target, context, cssRule, css)
+static STRING       ParseCSSMarginTop (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   /* return (SkipProperty (cssRule));*/
@@ -2230,13 +2243,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSMarginBottom (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSMarginBottom (target, context, cssRule, css)
+static STRING       ParseCSSMarginBottom (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -2258,13 +2272,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSMarginLeft (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSMarginLeft (target, context, cssRule, css)
+static STRING       ParseCSSMarginLeft (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   /*return (SkipProperty (cssRule));*/
@@ -2289,13 +2304,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSMarginRight (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSMarginRight (target, context, cssRule, css)
+static STRING       ParseCSSMarginRight (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -2306,13 +2322,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSMargin (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSMargin (target, context, cssRule, css)
+static STRING       ParseCSSMargin (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -2324,13 +2341,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSPaddingTop (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSPaddingTop (target, context, cssRule, css)
+static STRING       ParseCSSPaddingTop (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -2342,13 +2360,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSPaddingRight (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSPaddingRight (target, context, cssRule, css)
+static STRING       ParseCSSPaddingRight (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -2361,13 +2380,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSPaddingBottom (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSPaddingBottom (target, context, cssRule, css)
+static STRING       ParseCSSPaddingBottom (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -2379,13 +2399,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSPaddingLeft (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSPaddingLeft (target, context, cssRule, css)
+static STRING       ParseCSSPaddingLeft (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -2396,13 +2417,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSPadding (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSPadding (target, context, cssRule, css)
+static STRING       ParseCSSPadding (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   return (SkipProperty (cssRule));
@@ -2413,13 +2435,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSForeground (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSForeground (target, context, cssRule, css)
+static STRING       ParseCSSForeground (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
    PresentationValue   best;
@@ -2443,62 +2466,80 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBackgroundColor (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBackgroundColor (target, context, cssRule, css)
+static STRING       ParseCSSBackgroundColor (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
-   PresentationValue     best;
+  PresentationTarget    savedtarget;
+  PresentationValue     best;
+  int                   savedtype = 0;
+  boolean               moved;
 
-   best.typed_data.unit = DRIVERP_UNIT_INVALID;
-   if (!ustrncasecmp (cssRule, "transparent", ustrlen("transparent")))
-     {
-       best.typed_data.value = DRIVERP_PATTERN_NONE;
-       best.typed_data.unit = DRIVERP_UNIT_REL;
-       if (context->drv->SetFillPattern)
-	 context->drv->SetFillPattern (target, context, best);
-     }
-   else
-     {
-       cssRule = ParseCSSColor (cssRule, &best);
-       if (best.typed_data.unit != DRIVERP_UNIT_INVALID)
-	 {
-	   /* install the new presentation. */
-	   if (context->drv->SetBackgroundColor)
-	     context->drv->SetBackgroundColor (target, context, best);
-	   /* thot specificity : need to set fill pattern for background color */
-	   best.typed_data.value = DRIVERP_PATTERN_BACKGROUND;
-	   best.typed_data.unit = DRIVERP_UNIT_REL;
-	   if (context->drv->SetFillPattern)
-	     context->drv->SetFillPattern (target, context, best);
-	   best.typed_data.value = 1;
-	   best.typed_data.unit = DRIVERP_UNIT_REL;
-	   if (context->drv->SetShowBox)
-	     context->drv->SetShowBox (target, context, best);
-	 }
-     }
-   cssRule = SkipWord (cssRule);
-   return (cssRule);
+  /* move the BODY rule to the HTML element */
+  moved = (context->type == HTML_EL_BODY && isHTML);
+  if (moved)
+    {
+      if (css)
+	{
+	  savedtype = context->type;
+	  context->type = HTML_EL_HTML;
+	}
+      else
+	{
+	  savedtarget = target;
+	  target = (PresentationTarget) TtaGetMainRoot (context->doc);
+	}
+    }
+
+  best.typed_data.unit = DRIVERP_UNIT_INVALID;
+  best.typed_data.real = FALSE;
+  if (!ustrncasecmp (cssRule, "transparent", ustrlen("transparent")))
+    {
+      best.typed_data.value = DRIVERP_PATTERN_NONE;
+      best.typed_data.unit = DRIVERP_UNIT_REL;
+      if (context->drv->SetFillPattern)
+	context->drv->SetFillPattern (target, context, best);
+    }
+  else
+    {
+      cssRule = ParseCSSColor (cssRule, &best);
+      if (best.typed_data.unit != DRIVERP_UNIT_INVALID)
+	{
+	  /* install the new presentation. */
+	  if (context->drv->SetBackgroundColor)
+	    context->drv->SetBackgroundColor (target, context, best);
+	  /* thot specificity : need to set fill pattern for background color */
+	  best.typed_data.value = DRIVERP_PATTERN_BACKGROUND;
+	  best.typed_data.unit = DRIVERP_UNIT_REL;
+	  if (context->drv->SetFillPattern)
+	    context->drv->SetFillPattern (target, context, best);
+	  best.typed_data.value = 1;
+	  best.typed_data.unit = DRIVERP_UNIT_REL;
+	  if (context->drv->SetShowBox)
+	    context->drv->SetShowBox (target, context, best);
+	}
+    }
+  cssRule = SkipWord (cssRule);
+
+  /* restore the refered element */
+  if (moved)
+    if (css)
+      context->type = savedtype;
+    else
+      target = savedtarget;
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
    ParseCSSBackgroundImageCallback : Callback called asynchronously by
    FetchImage when a background image has been fetched.
   ----------------------------------------------------------------------*/
-
-typedef struct _BackgroundImageCallbackBlock {
-    PresentationTarget target;
-    union {
-	PresentationContextBlock blk;
-	SpecificContextBlock specific;
-	GenericContextBlock generic;
-    } context;
-} BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
-
 #ifdef __STDC__
 void ParseCSSBackgroundImageCallback (Document doc, Element el, STRING file,
                                       void *extra)
@@ -2538,6 +2579,7 @@ void *extra;
          {
 	   repeat.typed_data.value = DRIVERP_REPEAT;
 	   repeat.typed_data.unit = DRIVERP_UNIT_REL;
+	   repeat.typed_data.real = FALSE;
 	   context->drv->SetPictureMode (target, context, repeat);
 	 }
      }
@@ -2549,6 +2591,7 @@ void *extra;
      {
        value.typed_data.value = 1;
        value.typed_data.unit = DRIVERP_UNIT_REL;
+       value.typed_data.real = FALSE;
        context->drv->SetShowBox (target, context, value);
      }
 
@@ -2734,20 +2777,22 @@ STRING              styleString;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBackgroundImage (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBackgroundImage (target, context, cssRule, css)
+static STRING       ParseCSSBackgroundImage (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
-  Element              el = NULL;
-  ElementType          elType;
+  Element               el = NULL;
+  ElementType           elType;
   GenericContext        gblock;
   SpecificContextBlock *sblock;
   BackgroundImageCallbackPtr callblock;
+  PresentationTarget    savedtarget;
   PresentationValue     image, value;
   STRING                url;
   STRING                no_bg_image;
@@ -2755,6 +2800,24 @@ CSSInfoPtr          css;
   STRING                base;
   CHAR                  tempname[MAX_LENGTH];
   CHAR                  imgname[MAX_LENGTH];
+  int                   savedtype = 0;
+  boolean               moved;
+
+  /* move the BODY rule to the HTML element */
+  moved = (context->type == HTML_EL_BODY && isHTML);
+  if (moved)
+    {
+    if (css)
+      {
+	savedtype = context->type;
+	context->type = HTML_EL_HTML;
+      }
+    else
+      {
+	savedtarget = target;
+	target = (PresentationTarget) TtaGetMainRoot (context->doc);
+      }
+    }
 
   url = NULL;
   cssRule = TtaSkipBlanks (cssRule);
@@ -2803,6 +2866,7 @@ CSSInfoPtr          css;
 		  {
 		    value.typed_data.value = 1;
 		    value.typed_data.unit = DRIVERP_UNIT_REL;
+		    value.typed_data.real = FALSE;
 		    context->drv->SetShowBox (target, context, value);
 		  }
 	    }
@@ -2860,6 +2924,13 @@ CSSInfoPtr          css;
 	    TtaFreeMemory (url);
 	}
     }
+
+  /* restore the refered element */
+  if (moved)
+    if (css)
+      context->type = savedtype;
+    else
+      target = savedtarget;
   return (cssRule);
 }
 
@@ -2869,19 +2940,40 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBackgroundRepeat (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBackgroundRepeat (target, context, cssRule, css)
+static STRING       ParseCSSBackgroundRepeat (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
+  PresentationTarget  savedtarget;
   PresentationValue   repeat;
+  int                 savedtype = 0;
+  boolean             moved;
+
+  /* move the BODY rule to the HTML element */
+  moved = (context->type == HTML_EL_BODY && isHTML);
+  if (moved)
+    {
+      if (css)
+	{
+	  savedtype = context->type;
+	  context->type = HTML_EL_HTML;
+	}
+      else
+      {
+	savedtarget = target;
+	target = (PresentationTarget) TtaGetMainRoot (context->doc);
+      }
+    }
 
   repeat.typed_data.value = 0;
-  repeat.typed_data.unit = 1;
+  repeat.typed_data.unit = DRIVERP_UNIT_REL;
+  repeat.typed_data.real = FALSE;
   cssRule = TtaSkipBlanks (cssRule);
   if (!ustrncasecmp (cssRule, "no-repeat", 9))
     {
@@ -2901,6 +2993,13 @@ CSSInfoPtr          css;
    if (context->drv->SetPictureMode)
        context->drv->SetPictureMode (target, context, repeat);
    cssRule = SkipWord (cssRule);
+
+  /* restore the refered element */
+  if (moved)
+    if (css)
+      context->type = savedtype;
+    else
+      target = savedtarget;
    return (cssRule);
 }
 
@@ -2910,20 +3009,48 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBackgroundAttachment (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBackgroundAttachment (target, context, cssRule, css)
+static STRING       ParseCSSBackgroundAttachment (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
+  PresentationTarget    savedtarget;
+  int                   savedtype = 0;
+  boolean               moved;
+
+  /* move the BODY rule to the HTML element */
+  moved = (context->type == HTML_EL_BODY && isHTML);
+  if (moved)
+    {
+      if (css)
+	{
+	  savedtype = context->type;
+	  context->type = HTML_EL_HTML;
+	}
+      else
+	{
+	  savedtarget = target;
+	  target = (PresentationTarget) TtaGetMainRoot (context->doc);
+	}
+    }
+
    cssRule = TtaSkipBlanks (cssRule);
    if (!ustrncasecmp (cssRule, "scroll", 6))
      cssRule = SkipWord (cssRule);
    else if (!ustrncasecmp (cssRule, "fixed", 5))
      cssRule = SkipWord (cssRule);
+
+  /* restore the refered element */
+  if (moved)
+    if (css)
+      context->type = savedtype;
+    else
+      target = savedtarget;
    return (cssRule);
 }
 
@@ -2933,17 +3060,37 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBackgroundPosition (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBackgroundPosition (target, context, cssRule, css)
+static STRING       ParseCSSBackgroundPosition (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
-  PresentationValue   repeat;
-  boolean           ok;
+  PresentationTarget    savedtarget;
+  PresentationValue     repeat;
+  int                   savedtype = 0;
+  boolean               moved;
+  boolean               ok;
+
+  /* move the BODY rule to the HTML element */
+  moved = (context->type == HTML_EL_BODY && isHTML);
+  if (moved)
+    {
+      if (css)
+	{
+	  savedtype = context->type;
+	  context->type = HTML_EL_HTML;
+	}
+      else
+      {
+	savedtarget = target;
+	target = (PresentationTarget) TtaGetMainRoot (context->doc);
+      }
+    }
 
    cssRule = TtaSkipBlanks (cssRule);
    ok = TRUE;
@@ -2966,10 +3113,17 @@ CSSInfoPtr          css;
      {
        /* force realsize for the background image */
        repeat.typed_data.value = DRIVERP_REALSIZE;
-       repeat.typed_data.unit = 1;
+       repeat.typed_data.unit = DRIVERP_UNIT_REL;
+       repeat.typed_data.real = FALSE;
        context->drv->SetPictureMode (target, context, repeat);
      }
 
+  /* restore the refered element */
+  if (moved)
+    if (css)
+      context->type = savedtype;
+    else
+      target = savedtarget;
    return (cssRule);
 }
 
@@ -2978,13 +3132,14 @@ CSSInfoPtr          css;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSBackground (PresentationTarget target,
-				 PresentationContext context, STRING cssRule, CSSInfoPtr css)
+				 PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static STRING       ParseCSSBackground (target, context, cssRule, css)
+static STRING       ParseCSSBackground (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   STRING            ptr;
@@ -2994,17 +3149,17 @@ CSSInfoPtr          css;
     {
       /* perhaps a Backgroud Image */
       if (!ustrncasecmp (cssRule, "url", 3))
-	cssRule = ParseCSSBackgroundImage (target, context, cssRule, css);
+	cssRule = ParseCSSBackgroundImage (target, context, cssRule, css, isHTML);
       /* perhaps a Background Attachment */
       else if (!ustrncasecmp (cssRule, "scroll", 6) ||
 	       !ustrncasecmp (cssRule, "fixed", 5))
-	cssRule = ParseCSSBackgroundAttachment (target, context, cssRule, css);
+	cssRule = ParseCSSBackgroundAttachment (target, context, cssRule, css, isHTML);
       /* perhaps a Background Repeat */
       else if (!ustrncasecmp (cssRule, "no-repeat", 9) ||
 	       !ustrncasecmp (cssRule, "repeat-y", 8) ||
 	       !ustrncasecmp (cssRule, "repeat-x", 8) ||
 	       !ustrncasecmp (cssRule, "repeat", 6))
-	cssRule = ParseCSSBackgroundRepeat (target, context, cssRule, css);
+	cssRule = ParseCSSBackgroundRepeat (target, context, cssRule, css, isHTML);
       /* perhaps a Background Position */
       else if (!ustrncasecmp (cssRule, "left", 4) ||
 	       !ustrncasecmp (cssRule, "right", 5) ||
@@ -3012,13 +3167,13 @@ CSSInfoPtr          css;
 	       !ustrncasecmp (cssRule, "top", 3) ||
 	       !ustrncasecmp (cssRule, "bottom", 6) ||
 	       isdigit (*cssRule))
-	cssRule = ParseCSSBackgroundPosition (target, context, cssRule, css);
+	cssRule = ParseCSSBackgroundPosition (target, context, cssRule, css, isHTML);
       /* perhaps a Background Color */
       else
 	{
 	  /* check if the rule has been found */
 	  ptr = cssRule;
-	  cssRule = ParseCSSBackgroundColor (target, context, cssRule, css);
+	  cssRule = ParseCSSBackgroundColor (target, context, cssRule, css, isHTML);
 	  if (ptr== cssRule)
 	    /* rule not found */
 	    cssRule = SkipProperty (cssRule);
@@ -3112,13 +3267,14 @@ static HTMLStyleAttribute HTMLStyleAttributes[] =
    but tolerate incorrect or incomplete input                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ParseCSSRule (PresentationTarget target, PresentationContext context, STRING cssRule, CSSInfoPtr css)
+static void         ParseCSSRule (PresentationTarget target, PresentationContext context, STRING cssRule, CSSInfoPtr css, boolean isHTML)
 #else
-static void         ParseCSSRule (target, context, cssRule, css)
+static void         ParseCSSRule (target, context, cssRule, css, isHTML)
 PresentationTarget  target;
 PresentationContext context;
 STRING              cssRule;
 CSSInfoPtr          css;
+boolean             isHTML;
 #endif
 {
   PresentationValue   unused;
@@ -3155,7 +3311,7 @@ CSSInfoPtr          css;
 	    }
 	  /* try to parse the attribute associated to this attribute */
 	  if (HTMLStyleAttributes[i].parsing_function != NULL)
-	    p = HTMLStyleAttributes[i].parsing_function (target, context, cssRule, css);
+	    p = HTMLStyleAttributes[i].parsing_function (target, context, cssRule, css, isHTML);
 	  
 	  /* Update the rendering */
 	  if (context->drv->UpdatePresentation != NULL)
@@ -3181,9 +3337,9 @@ CSSInfoPtr          css;
    specific presentation driver to reflect the new presentation  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLSpecificStyle (Element elem, STRING cssRule, Document doc, boolean destroy)
+void                ParseHTMLSpecificStyle (Element el, STRING cssRule, Document doc, boolean destroy)
 #else
-void                ParseHTMLSpecificStyle (elem, cssRule, doc, destroy)
+void                ParseHTMLSpecificStyle (el, cssRule, doc, destroy)
 Element             elem;
 STRING              cssRule;
 Document            doc;
@@ -3192,37 +3348,21 @@ boolean             destroy;
 {
    PresentationTarget  target;
    SpecificContext     context;
-   /*PresentationValue   unused;*/
    ElementType         elType;
-   Element             el;
+   boolean             isHTML;
 
-   /* 
-    * A rule applying to BODY is really meant to address HTML.
-    */
-   elType = TtaGetElementType(elem);
-  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
-      (elType.ElTypeNum == HTML_EL_BODY || elType.ElTypeNum == HTML_EL_HEAD))
-      {
-	elType.ElTypeNum = HTML_EL_HTML;
-	
-	el = TtaGetMainRoot (doc);
-	/*el = TtaSearchTypedElement (elType, SearchInTree, el);*/
-	if (el != NULL)
-	  elem = el;
-      }
-	   
-   /*
-    * create the context of the Specific presentation driver.
-    */
+   /*  A rule applying to BODY is really meant to address HTML */
+   elType = TtaGetElementType(el);
+   isHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
+   /* create the context of the Specific presentation driver */
    context = GetSpecificContext(doc);
    if (context == NULL)
      return;
-   target = (PresentationTarget) elem;
+   target = (PresentationTarget) el;
+   context->type = elType.ElTypeNum;
    context->destroy = destroy;
-
    /* Call the parser */
-   ParseCSSRule (target, (PresentationContext) context, cssRule, NULL);
-
+   ParseCSSRule (target, (PresentationContext) context, cssRule, NULL, isHTML);
    /* free the context */
    FreeSpecificContext(context);
 }
@@ -3259,6 +3399,7 @@ CSSInfoPtr      css;
   STRING              cur;
   STRING              ancestors[MAX_ANCESTORS];
   int                 i, j;
+  boolean             isHTML;
 
   sel[0] = EOS;
   class[0] = EOS;
@@ -3273,9 +3414,7 @@ CSSInfoPtr      css;
       ctxt->ancestors_nb[i] = 0;
     }
 
-  /*
-   * first format the first selector item, uniformizing blanks.
-   */
+  /* first format the first selector item, uniformizing blanks */
   selector = TtaSkipBlanks (selector);
   while (1)
     {
@@ -3415,8 +3554,6 @@ CSSInfoPtr      css;
     {
       GIType (attrelemname, &elType, doc);
       ctxt->attrelem = elType.ElTypeNum;
-      if (ctxt->attrelem == HTML_EL_BODY && ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
-	ctxt->attrelem = HTML_EL_HTML;
     }
   
   GIType (elem, &elType, doc);
@@ -3424,12 +3561,9 @@ CSSInfoPtr      css;
   ctxt->schema = elType.ElSSchema;
   if (elType.ElSSchema == NULL)
     ctxt->schema = TtaGetDocumentSSchema (doc);
-
+  isHTML = (ustrcmp(TtaGetSSchemaName (ctxt->schema), "HTML") == 0);
   target = (PresentationTarget) GetPExtension (doc, ctxt->schema, css);
   structName = TtaGetSSchemaName (ctxt->schema);
-  if (!ustrcmp(structName, "HTML") && ctxt->type == HTML_EL_BODY)
-    ctxt->type = HTML_EL_HTML;
-
   if (ctxt->type == 0 && ctxt->attr == 0 &&
       ctxt->attrval == 0 && ctxt->classattr == 0)
     {
@@ -3446,8 +3580,6 @@ CSSInfoPtr      css;
       if (ancestors[i] == NULL)
 	break;
       GIType (ancestors[i], &elType, doc);
-      if (elType.ElTypeNum == HTML_EL_BODY && !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-	elType.ElTypeNum = HTML_EL_HTML;
       if (elType.ElTypeNum == 0)
 	continue;
       for (j = 0; j < MAX_ANCESTORS; j++)
@@ -3467,7 +3599,7 @@ CSSInfoPtr      css;
     }
 
   if (cssRule)
-      ParseCSSRule (target, (PresentationContext) ctxt, cssRule, css);
+    ParseCSSRule (target, (PresentationContext) ctxt, cssRule, css, isHTML);
   return (selector);
 }
 

@@ -34,28 +34,26 @@
 #include "typemedia.h"
 #include "pschema.h"
 #include "application.h"
+#include "specificdriver.h"
 
 #define THOT_EXPORT extern
 #include "edit_tv.h"
 
-#include "specificdriver.h"
-
-#include "presentationapi_f.h"
+#include "changeabsbox_f.h"
 #include "changepresent_f.h"
 #include "memory_f.h"
+#include "presentationapi_f.h"
 #include "presentdriver_f.h"
 
-/*
- * GetSpecificContext : user level function needed to allocate and
- *        initialize a SpecificContext.
- */
-
+/*----------------------------------------------------------------------
+  GetSpecificContext : user level function needed to allocate and
+  initialize a SpecificContext.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 SpecificContext     GetSpecificContext (Document doc)
 #else  /* __STDC__ */
 SpecificContext     GetSpecificContext (doc)
 Document            doc;
-
 #endif /* __STDC__ */
 {
    SpecificContext     ctxt;
@@ -70,17 +68,15 @@ Document            doc;
    return (ctxt);
 }
 
-/*
- * FreeSpecificContext : user level function needed to deallocate
- *        a SpecificContext.
- */
-
+/*----------------------------------------------------------------------
+  FreeSpecificContext : user level function needed to deallocate
+  a SpecificContext.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FreeSpecificContext (SpecificContext ctxt)
 #else  /* __STDC__ */
 void                FreeSpecificContext (ctxt)
 SpecificContext     ctxt;
-
 #endif /* __STDC__ */
 {
    if (ctxt == NULL)
@@ -90,45 +86,36 @@ SpecificContext     ctxt;
    TtaFreeMemory ( ctxt);
 }
 
-/*
- * GetDocumentMainPSchema : returns the main PSchema of a document
- */
-
+/*----------------------------------------------------------------------
+  GetDocumentMainPSchema : returns the main PSchema of a document
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PSchema      GetDocumentMainPSchema (Document doc)
 #else  /* __STDC__ */
 static PSchema      GetDocumentMainPSchema (doc)
 Document            doc;
-
 #endif /* __STDC__ */
 {
     return((PSchema)LoadedDocument[doc - 1]->DocSSchema->SsPSchema);
 }
 
 /*----------------------------------------------------------------------
-   *									*
-   *	Function used to remove all specific presentation for a given	*
-   *	element.							*
-   *									*
+  Function used to remove all specific presentation for a given 
+  element.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-int                 SpecificCleanPresentation (PresentationTarget t, PresentationContext c,
-					       PresentationValue v)
+int                 SpecificCleanPresentation (PresentationTarget t, PresentationContext c, PresentationValue v)
 #else
 int                 SpecificCleanPresentation (t, c, v)
 PresentationTarget  t;
 PresentationContext c;
 PresentationValue   v;
-
 #endif
 {
    PRule               rule;
    Element             elem = (Element) t;
 
-   /*
-    * remove all the presentation specific rules applied to the element.
-    */
+   /* remove all the presentation specific rules applied to the element */
    do
      {
 	rule = NULL;
@@ -146,8 +133,7 @@ PresentationValue   v;
    *									*
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 SpecificUpdatePresentation (PresentationTarget t, PresentationContext c,
-					       PresentationValue v)
+int                 SpecificUpdatePresentation (PresentationTarget t, PresentationContext c, PresentationValue v)
 #else
 int                 SpecificUpdatePresentation (t, c, v)
 PresentationTarget  t;
@@ -269,7 +255,6 @@ int                 extra;
    Function used to to remove a specific presentation rule
    for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void  RemoveElementPRule (SpecificTarget el, PRuleType type, int extra)
 #else
@@ -340,7 +325,6 @@ int                 extra;
    Function used to to search all specific presentation rules
    for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static PtrPRule SearchElementPRule (SpecificTarget el, int type, int extra)
 #else
@@ -384,14 +368,11 @@ int                 extra;
 }
 
 /*----------------------------------------------------------------------
-   *									*
-   *	Function used to translate various parameters between external  *
-   *	and internal representation of presentation attributes.		*
-   *      These function also handle setting or fetching these values     *
-   *      from the internal memory representation of presentation rules.  *
-   *									*
+  Function used to translate various parameters between external
+  and internal representation of presentation attributes.
+  These function also handle setting or fetching these values
+  from the internal memory representation of presentation rules.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static int          etoi_convert (SpecificTarget el, int type,
    PresentationValue val, PRule pRule, Document doc,int specific)
@@ -433,20 +414,17 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   *									*
-   *	Macro's used to generate presentations routines			*
-   *      These heavily rely on the token-pasting mechanism provided by   *
-   *      the C preprocessor. The string a##b is replaced by the string   *
-   *      "ab", but this is done after the macro is expanded.             *
-   *      This mecanism allows to avoid a lot of typing, errors and keep  *
-   *      the code compact at the price of a loss of readability.         *
-   *      On old fashionned preprocessor (pre-Ansi) the token pasting was *
-   *      a side effect of the preprocessor implementation on empty       *
-   *      comments. In this case we use a+slash+star+star+slash+b to      *
-   *      produce the same string "ab".					*
-   *									*
+  Macro's used to generate presentations routines
+  These heavily rely on the token-pasting mechanism provided by
+  the C preprocessor. The string a##b is replaced by the string
+  "ab", but this is done after the macro is expanded.
+  This mecanism allows to avoid a lot of typing, errors and keep
+  the code compact at the price of a loss of readability.
+  On old fashionned preprocessor (pre-Ansi) the token pasting was
+  a side effect of the preprocessor implementation on empty
+  comments. In this case we use a+slash+star+star+slash+b to
+  produce the same string "ab".
   ----------------------------------------------------------------------*/
-
 #if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
 
 #define SPECIFIC_FUNCS(type,name)					\
@@ -594,7 +572,6 @@ int SpecificGet/**/name(PresentationTarget t, PresentationContext c,	\
    *	generation of most common presentations routines		*
    *									*
   ----------------------------------------------------------------------*/
-
 SPECIFIC_FUNCS (Foreground, ForegroundColor)
 SPECIFIC_FUNCS (Background, BackgroundColor)
 SPECIFIC_FUNCS (Size, FontSize)
@@ -620,7 +597,6 @@ SPECIFIC_FUNCS2 (Function, FnPictureMode, PictureMode)
    *	a few presentations routines still need to be hand-coded	*
    *									*
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 SpecificSetBgImage (PresentationTarget t, PresentationContext c,
 				   PresentationValue v)
@@ -638,23 +614,26 @@ PresentationValue   v;
    int                 cst;
    PSchema             tsch = GetDocumentMainPSchema (ctxt->doc);
 
-   if (ctxt->destroy) {
+   if (ctxt->destroy)
+     {
        RemoveElementPRule (el, PtFunction, FnBackgroundPicture);
        return(0);
-   }
+     }
    cst = PresConstInsert (tsch, v.pointer);
    rule = InsertElementPRule (el, PtFunction, FnBackgroundPicture);
    if (rule == NULL)
       return (-1);
    v.typed_data.unit = DRIVERP_UNIT_REL;
+   v.typed_data.real = FALSE;
    v.typed_data.value = cst;
    etoi_convert (el, PRFunction, v, (PRule)rule , ctxt->doc, FnBackgroundPicture);
    return (0);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 SpecificGetBgImage (PresentationTarget t, PresentationContext c,
-				   PresentationValue * v)
+int                 SpecificGetBgImage (PresentationTarget t, PresentationContext c, PresentationValue * v)
 #else
 int                 SpecificGetBgImage (t, c, v)
 PresentationTarget  t;
@@ -687,7 +666,6 @@ PresentationValue  *v;
    *	the strategy block for the specific presentation driver         *
    *									*
   ----------------------------------------------------------------------*/
-
 PresentationStrategy SpecificStrategy =
 {
    (PresentationSetFunction) SpecificCleanPresentation,
@@ -766,11 +744,11 @@ PresentationStrategy SpecificStrategy =
    (PresentationSetFunction) SpecificSetPictureMode,
 };
 
-/*
- * ApplyAllSpecificContext : browse the PRules list the corresponding
- *      SpecificContext structure, and call the given handler for each one.
- */
 
+/*----------------------------------------------------------------------
+  ApplyAllSpecificContext : browse the PRules list the corresponding
+  SpecificContext structure, and call the given handler for each one.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyAllSpecificContext (Document doc, SpecificTarget target,
 			    SpecificContextApplyHandler handler, void *param)
@@ -780,7 +758,6 @@ Document            doc;
 SpecificTarget       target;
 SpecificSettingsApplyHandler handler;
 void               *param;
-
 #endif /* __STDC__ */
 {
      SpecificContextBlock ctxt;
@@ -797,12 +774,11 @@ void               *param;
      handler (target, &ctxt, param);
 }
 
-/*
+/*----------------------------------------------------------------------
  * ApplyAllSpecificSettings : browse all the PRules structures,
  *      associated to the corresponding SpecificContext 
  *      structure, and call the given handler for each one.
- */
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyAllSpecificSettings (SpecificTarget target,
 		   SpecificContext ctxt, SpecificSettingsApplyHandler handler,

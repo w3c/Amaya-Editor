@@ -51,13 +51,13 @@
 #include "application.h"
 #include "document.h"
 #include "pschema.h"
+#include "genericdriver.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "edit_tv.h"
 
 #include "changepresent_f.h"
-#include "genericdriver.h"
 #include "memory_f.h"
 #include "presentdriver_f.h"
 
@@ -1677,11 +1677,11 @@ void               *param;
 	/*
 	 * need to do some tweaking in the case of BackgroudPicture
 	 */
-	if (setting.type == DRIVERP_BGIMAGE) {
-            int cst = setting.value.typed_data.value;
-
+	if (setting.type == DRIVERP_BGIMAGE)
+	  {
+            int cst = setting.value.typed_data.value;	    
             setting.value.pointer = &pSchemaP->PsConstant[cst-1].PdString[0];
-	}
+	  }
 
 	handler (target, ctxt, &setting, param);
 	rule = rule->PrNextPRule;
@@ -1877,6 +1877,10 @@ GENERIC_FUNCS (Underline, TextUnderlining)
 GENERIC_FUNCS (FillPattern, FillPattern)
 GENERIC_FUNCS (Font, FontFamily)
 GENERIC_FUNCS (LineSpacing, LineSpacing)
+GENERIC_FUNCS (Height, Height)
+GENERIC_FUNCS (Width, Width)
+GENERIC_FUNCS (VertPos, VPos)
+GENERIC_FUNCS (HorizPos, HPos)
 GENERIC_FUNCS2 (Function, FnLine, InLine)
 GENERIC_FUNCS2 (Function, FnShowBox, ShowBox)
 GENERIC_FUNCS2 (Function, FnPictureMode, PictureMode)
@@ -1997,138 +2001,6 @@ PresentationValue  *v;
    val = PRuleToPresentationValue ((PRule) rule);
    cst = val.typed_data.unit;
    v->pointer = &pSchemaPrs->PsConstant[cst-1].PdString[0];
-   return (0);
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int      GenericSetWidth (PresentationTarget t, PresentationContext c,
-			  PresentationValue v)
-#else
-int      GenericSetWidth (t, c, v)
-PresentationTarget  t;
-PresentationContext c;
-PresentationValue   v;
-#endif
-{
-   return (0);
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int      GenericSetVPos (PresentationTarget t, PresentationContext c,
-			 PresentationValue v)
-#else
-int      GenericSetVPos (t, c, v)
-PresentationTarget  t;
-PresentationContext c;
-PresentationValue   v;
-#endif
-{
-   GenericTarget       tsch = (GenericTarget) t;
-   GenericContext      cont = (GenericContext) c;
-   GenericValue        val = /* (GenericValue) - EGP */ v;
-   PtrPRule            rule;
-
-   if (cont->destroy) {
-       PresRuleRemove (tsch, cont, PtVertPos, 0);
-       return(0);
-   }
-   rule = PresRuleInsert (tsch, cont, PtVertPos, 0);
-   if (rule == NULL)
-      return (-1);
-   etoi_convert (rule, val, cont, 0);
-   return (0);
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int      GenericGetVPos (PresentationTarget t, PresentationContext c,
-			 PresentationValue v)
-#else
-int      GenericGetVPos (t, c, v)
-PresentationTarget  t;
-PresentationContext c;
-PresentationValue   v;
-#endif
-{
-   return (0);
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int      GenericGetHPos (PresentationTarget t, PresentationContext c,
-			 PresentationValue v)
-#else
-int      GenericGetHPos (t, c, v)
-PresentationTarget  t;
-PresentationContext c;
-PresentationValue   v;
-#endif
-{
-   return (0);
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int      GenericSetHPos (PresentationTarget t, PresentationContext c,
-			 PresentationValue v)
-#else
-int      GenericSetHPos (t, c, v)
-PresentationTarget  t;
-PresentationContext c;
-PresentationValue   v;
-#endif
-{
-   GenericTarget       tsch = (GenericTarget) t;
-   GenericContext      cont = (GenericContext) c;
-   GenericValue        val = /* (GenericValue) - EGP */ v;
-   PtrPRule            rule;
-
-   if (cont->destroy) {
-       PresRuleRemove (tsch, cont, PtHorizPos, 0);
-       return(0);
-   }
-   rule = PresRuleInsert (tsch, cont, PtHorizPos, 0);
-   if (rule == NULL)
-      return (-1);
-   etoi_convert (rule, val, cont, 0);
-    return (0);
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int      GenericGetHeight (PresentationTarget t, PresentationContext c,
-			   PresentationValue v)
-#else
-int      GenericGetHeight (t, c, v)
-PresentationTarget  t;
-PresentationContext c;
-PresentationValue   v;
-#endif
-{
-   return (0);
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int      GenericSetHeight (PresentationTarget t, PresentationContext c,
-			   PresentationValue v)
-#else
-int      GenericSetHeight (t, c, v)
-PresentationTarget  t;
-PresentationContext c;
-PresentationValue   v;
-#endif
-{
    return (0);
 }
 

@@ -25,10 +25,7 @@
 #include "presentation.h"
 #include "presentdriver.h"
 
-/*
- * A specific presentation target is an Element in the graph.
- */
-
+/* A specific presentation target is an Element in the graph */
 typedef Element     SpecificTarget;
 
 /*
@@ -36,22 +33,20 @@ typedef Element     SpecificTarget;
  * its document, the schemas information is just used as a cache.
  * Fields described in presentdriver.h
  */
-
 typedef struct struct_SpecificContext
   {
      PresentationStrategy *drv;
-     Document            doc;
-     SSchema             schema;
-     int                 destroy;/* destructive mode ? */
-     unsigned long       magic1;
-     unsigned long       magic2;
+     Document              doc;
+     SSchema               schema;
+     int                   type;       /* type of element */
+     int                   destroy;    /* destructive mode ? */
+
+     unsigned long         magic1;
+     unsigned long         magic2;
   }
 SpecificContextBlock, *SpecificContext;
 
-/*
- * A specific presentation value is made of a value and an unit.
- */
-
+/* A specific presentation value is made of a value and an unit */
 typedef PresentationValue SpecificValue;
 
 #define SPECIFIC_FONT_STYLE_BOLD		StyleBold
@@ -61,16 +56,10 @@ typedef PresentationValue SpecificValue;
 #define SPECIFIC_FONT_STYLE_OBLIQUE		StyleOblique
 #define SPECIFIC_FONT_STYLE_BOLD_OBLIQUE	StyleBoldOblique
 
-/*
- * The strategy block for this driver.
- */
-
+/* The strategy block for this driver */
 extern PresentationStrategy SpecificStrategy;
 
-/*
- * browse functions callbacks.
- */
-
+/* browse functions callbacks */
 typedef void        (*SpecificContextApplyHandler)
                     (SpecificTarget target, SpecificContext cond, void *param);
 
@@ -78,10 +67,7 @@ typedef void        (*SpecificSettingsApplyHandler)
                     (SpecificTarget target, SpecificContext cond,
 		     PresentationSetting setting, void *param);
 
-/*
- * functions definitions.
- */
-
+/* functions definitions */
 #ifdef __STDC__
 SpecificContext     GetSpecificContext (Document doc);
 void                FreeSpecificContext (SpecificContext ctxt);

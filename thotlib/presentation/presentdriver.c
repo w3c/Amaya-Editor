@@ -43,31 +43,24 @@ int                 specific;
 boolean             absolute;
 #endif
 {
+  TypeUnit            int_unit;
+  PtrPRule            rule = (PtrPRule) pRule;
   int                 value;
   int                 unit;
-  TypeUnit            int_unit;
-  int                 real;
-  PtrPRule            rule = (PtrPRule) pRule;
+  boolean             real;
 
   value = val.typed_data.value;
   unit = val.typed_data.unit;
+  real = val.typed_data.real;
   /* The drivers affect only the main "WYSIWYG" view */
   rule->PrViewNum = 1;
   /*
    * normalize the unit to fit the Thot internal ones.
    * The driver interface accept floats with up to 3 digits
    * after the dot, e.g. 1.115 , coded as :
-   *      unit = unit | DRIVERP_UNIT_FLOAT
+   *      real = TRUE
    *      val = 1115
    */
-  if (DRIVERP_UNIT_IS_FLOAT (unit))
-    {
-      DRIVERP_UNIT_UNSET_FLOAT (unit);
-      real = TRUE;
-    }
-  else
-    real = FALSE;
-
   switch (unit)
     {
     case DRIVERP_UNIT_REL:
@@ -335,10 +328,11 @@ PRule               pRule;
 #endif
 {
   PresentationValue   val;
-  int                 value = 0;
-  int                 unit = -1;
   TypeUnit            int_unit = -1;
   PtrPRule            rule = (PtrPRule) pRule;
+  int                 value = 0;
+  int                 unit = -1;
+  boolean             real = FALSE;
 
   /* read the value */
   switch (rule->PrType)
@@ -535,7 +529,7 @@ PRule               pRule;
 
       if (value % 10)
 	{
-	  DRIVERP_UNIT_SET_FLOAT (unit);
+	  real = TRUE;
 	  value *= 100;
 	}
       else
@@ -545,7 +539,7 @@ PRule               pRule;
       unit = DRIVERP_UNIT_XHEIGHT;
       if (value % 10)
 	{
-	  DRIVERP_UNIT_SET_FLOAT (unit);
+	  real = TRUE;
 	  value *= 100;
 	}
       else
@@ -567,6 +561,7 @@ PRule               pRule;
 
   val.typed_data.value = value;
   val.typed_data.unit = unit;
+  val.typed_data.real = real;
   return (val);
 }
 

@@ -34,7 +34,7 @@
  * PresentationTarget : Target of a presentation modification.
  */
 
-typedef void       *PresentationTarget;		/* could be an union of typed pointers */
+typedef void  *PresentationTarget;  /* could be an union of typed pointers */
 
 /*
  * PresentationContext : conditions influencing a presentation modification.
@@ -53,9 +53,10 @@ typedef struct struct_PresentationContext
       *    associated presentation or remove it.
       */
      PtrPresentationStrategy drv;
-     Document            doc;	/* document number */
-     SSchema             schema;	/* associated structure */
-     int                 destroy;/* destructive mode ? */
+     Document                doc;	/* document number */
+     SSchema                 schema;	/* associated structure */
+     int                     type;      /* type of element */
+     int                     destroy;   /* destructive mode ? */
 
      /*
       * The end of the block is to be filled with other kind
@@ -63,13 +64,10 @@ typedef struct struct_PresentationContext
       * influencing rendering.
       */
   }
-                   *PresentationContext, PresentationContextBlock;
+PresentationContextBlock, *PresentationContext;
 
 
-/*
- * PresentationValue : kind of value for a presentation attribute.
- */
-
+/* PresentationValue : kind of value for a presentation attribute */
 #define DP_FLOAT(f) ((int) ((float) (f)) * 1000)
 
 #define DRIVERP_UNIT_INVALID	0	/* invalid unit : for parsing   */
@@ -84,26 +82,26 @@ typedef struct struct_PresentationContext
 #define DRIVERP_UNIT_PERCENT	9	/* a relative size in percent   */
 #define DRIVERP_UNIT_XHEIGHT	10	/* defined / size of x char     */
 #define DRIVERP_UNIT_BOX	11	/* this is a box number         */
-#define DRIVERP_UNIT_FLOAT      (1 << 6)	/* Value is encoded via DP_FLOAT */
 
-#define DRIVERP_UNIT_IS_FLOAT(u) (((u) & DRIVERP_UNIT_FLOAT) != 0)
-#define DRIVERP_UNIT_SET_FLOAT(u) u = ((u) | DRIVERP_UNIT_FLOAT)
-#define DRIVERP_UNIT_UNSET_FLOAT(u) u = ((u) & (~((int) DRIVERP_UNIT_FLOAT)))
+typedef union _PresentationValue
+ {
+   int                 data;          /* some data without unit */
+   struct
+   {
+     int               value;         /* the value */
+     int               unit;          /* the unit */
+     boolean           real;          /* the value is float like 115.5 */
+     boolean           absolute;      /* the value is absolute */
+   } typed_data;
+   void               *pointer;       /* A pointer */
+}
+PresentationValue;
 
-typedef union _PresentationValue {
-    int data;				/* some data without unit */
-    struct {
-        int                 value:24;	/* the value coded on 24 bits */
-        int                 unit:8;	/* the unit  coded on 8 bits */
-    } typed_data;
-    void *pointer;			/* A pointer */
-} PresentationValue;
 
 /*
  * PresentationSettings : structure returned by GetNextPresentationSettings
  *      indicating a presentation currently defined in a given context.
  */
-
 typedef enum
   {
      DRIVERP_NONE,

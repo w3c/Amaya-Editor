@@ -33,7 +33,6 @@
  * A generic presentation target is the PSchema where the presentation
  * rules are to be build or modified !
  */
-
 typedef PSchema     GenericTarget;
 
 /*
@@ -45,36 +44,31 @@ typedef PSchema     GenericTarget;
 
 typedef struct struct_GenericContext
   {
-     PresentationStrategy *drv;	/* pointer to the driver strategy block */
-     Document            doc;	/* document number */
-     SSchema             schema;	/* associated structure */
-     int                 destroy;/* destructive mode ? */
-
+     PresentationStrategy *drv;	     /* pointer to the driver strategy block */
+     Document              doc;	     /* document number */
+     SSchema               schema;   /* associated structure */
+     int                   type;     /* type of element */
+     int                   destroy;  /* destructive mode ? */
      /*
       * below is the context description.
       */
-     int                 box;	/* specific presentation box if any */
-     int                 type;	/* type of element */
-     int                 attr;	/* or attribute */
-     int                 attrval;	/* and the corresponding value */
-     char               *class;	/* class or box name */
-     int                 classattr;	/* class attribute */
-     int                 attrelem;	/* elem porting the attribute */
-     int                 ancestors[MAX_ANCESTORS];	/* ancestors type */
-     int                 ancestors_nb[MAX_ANCESTORS];	/* number for each */
-
+     int                   box;	     /* specific presentation box if any */
+     int                   attr;     /* or attribute */
+     int                   attrval;  /* and the corresponding value */
+     char                 *class;    /* class or box name */
+     int                   classattr;/* class attribute */
+     int                   attrelem; /* elem porting the attribute */
+     int                   ancestors[MAX_ANCESTORS];	/* ancestors type */
+     int                   ancestors_nb[MAX_ANCESTORS];	/* number for each */
      /*
       * do not touch these !
       */
-     unsigned long       magic1;
-     unsigned long       magic2;
+     unsigned long         magic1;
+     unsigned long         magic2;
   }
 GenericContextBlock, *GenericContext;
 
-/*
- * A generic presentation value is made of a value and an unit.
- */
-
+/* A generic presentation value is made of a value and an unit */
 typedef PresentationValue GenericValue;
 
 #define GENERIC_FONT_STYLE_BOLD		StyleBold
@@ -84,16 +78,10 @@ typedef PresentationValue GenericValue;
 #define GENERIC_FONT_STYLE_OBLIQUE	StyleOblique
 #define GENERIC_FONT_STYLE_BOLD_OBLIQUE	StyleBoldOblique
 
-/*
- * The strategy block for this driver.
- */
-
+/* The strategy block for this driver */
 extern PresentationStrategy GenericStrategy;
 
-/*
- * browse functions callbacks.
- */
-
+/* browse functions callbacks */
 typedef void        (*GenericContextApplyHandler)
                     (GenericTarget target, GenericContext cond, void *param);
 
