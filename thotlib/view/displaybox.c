@@ -1856,8 +1856,17 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 				 bl, hyphen, blockbegin, fg, shadow);
 #endif /*_GL*/
 	      if (pBox->BxUnderline != 0)
-		DisplayUnderline (frame, x, y, nextfont,
-				  pBox->BxUnderline, width, fg);
+		{
+#ifdef _GL
+		  SetTextureScale (IsBoxDeformed(pBox));
+#endif /* _GL */
+		  DisplayUnderline (frame, x, y, nextfont,
+				    pBox->BxUnderline, width, fg);
+
+#ifdef _GL
+		  StopTextureScale ();
+#endif /* _GL */
+		}
 	      nbcar = 0;
 	    }
 	} 
