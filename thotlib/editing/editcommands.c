@@ -1936,7 +1936,7 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
    Traite les commandes TextInserting Cut Paste Copy Oops          
    ainsi que l'insertion des Graphiques Images et Symboles         
   ----------------------------------------------------------------------*/
-static void ContentEditing (int editType)
+void ContentEditing (int editType)
 {
   PtrBox              pBox;
   PtrBox              pSelBox;
@@ -1967,13 +1967,10 @@ static void ContentEditing (int editType)
 
   if (editType == TEXT_PASTE && ClipboardThot.BuLength == 0 && !NewInsert)
     {
+      /* close the current text insertion */
+      CloseTextInsertion ();
       /* paste a structured element */
-      if (ThotLocalActions[T_cmdpaste])
-	{
-	  /* close the current text insertion */
-	  CloseTextInsertion ();
-	  (*ThotLocalActions[T_cmdpaste]) ();
-	}
+      PasteCommand ();
     }
   /* Traitement des Commandes INSERT, CUT, PASTE, COPY, OOPS */
   else
@@ -2159,14 +2156,11 @@ static void ContentEditing (int editType)
 	  if (pBox == NULL)
 	    {
 	      /* take in account another box */
-	      if (ThotLocalActions[T_deletenextchar] != NULL &&
-		  (editType == TEXT_CUT || editType == TEXT_DEL ||
-		   editType == TEXT_SUP))
+	      if (editType == TEXT_CUT || editType == TEXT_DEL ||
+		  editType == TEXT_SUP)
 		{
-		  (*(Proc3)ThotLocalActions[T_deletenextchar]) (
-			(void *)frame,
-			(void *)pAb->AbElement,
-			(void *)FALSE);
+		  DeleteNextChar (frame, pAb->AbElement, FALSE);
+		  pFrame->FrReady = TRUE;
 		  return;
 		}
 	      else
@@ -2257,7 +2251,7 @@ static void ContentEditing (int editType)
 	    {
 	      /* close the current text insertion */
 	      CloseTextInsertion ();
-	      CutCommand (FALSE);	/* Couper sans sauver */
+	      CutCommand (FALSE, editType == TEXT_SUP);	/* Cut without saving */
 	    }
 	  else if (editType == TEXT_CUT || editType == TEXT_COPY)
 	    {
@@ -2268,7 +2262,7 @@ static void ContentEditing (int editType)
 		{
 		  /* close the current text insertion */
 		  CloseTextInsertion ();
-		  CutCommand (TRUE);
+		  CutCommand (TRUE, FALSE);
 		}
 	      else if (editType == TEXT_COPY && !NewInsert)
 		CopyCommand ();
@@ -2331,9 +2325,9 @@ static void ContentEditing (int editType)
 		}
 	      else
 		{
-		  /* Destruction de toute la polyline */
-		  CutCommand (FALSE);
-		  pAb = NULL;	/* le traitement est termine */
+		  /* Delete the whol polyline */
+		  CutCommand (FALSE, FALSE);
+		  pAb = NULL;	/* edit is done */
 		}
 	    }
 	  else
@@ -2420,15 +2414,9 @@ static void ContentEditing (int editType)
 				   pAb, frame, &ClipboardThot);
 		  if (ClipboardThot.BuLength == 0)
 		    {
-		      if (ThotLocalActions[T_deletenextchar] != NULL)
-			(*(Proc3)ThotLocalActions[T_deletenextchar]) (
-				(void *)frame,
-				(void *)pAb->AbElement,
-				(void *)FALSE);
-		      else
-			/* Pas de reaffichage */
-			DefClip (frame, 0, 0, 0, 0);
-		      /* Inutile de mettre a jour la selection */
+		      DeleteNextChar (frame, pAb->AbElement, FALSE);
+		      /* don't need to update the selection */
+		      pFrame->FrReady = TRUE;
 		      pAb = NULL;
 		    }
 		  else
@@ -2441,22 +2429,13 @@ static void ContentEditing (int editType)
 		    pViewSel->VsIndBox + pViewSel->VsBox->BxFirstChar > pAb->AbVolume)
 		  {
 		    /* current selection is at the element end */
-		    if (pAb->AbPresentationBox && pAb->AbCanBeModified )
+		    if (pAb->AbPresentationBox && pAb->AbCanBeModified)
 		      /* do nothing */
 		      DefClip (frame, 0, 0, 0, 0);		      
-		    else if (ThotLocalActions[T_deletenextchar] != NULL)
-		      {
-			/* close the current text insertion */
-			CloseTextInsertion ();
-			(*(Proc3)ThotLocalActions[T_deletenextchar]) (
-				 (void *)frame,
-				 (void *)pAb->AbElement,
-				 (void *)FALSE);
-		      }
-		    else
-		      /* do nothing */
-		      DefClip (frame, 0, 0, 0, 0);
-		    /* Il n'est pas necessaire de mettre a jour la selection */
+		    /* close the current text insertion */
+		    CloseTextInsertion ();
+		    DeleteNextChar (frame, pAb->AbElement, FALSE);
+		    /* don't need to update the selection */
 		    pFrame->FrReady = TRUE;
 		    pAb = NULL;
 		  }
@@ -2686,11 +2665,8 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 	    {
 	      pAb = pViewSel->VsBox->BxAbstractBox;
 	      CloseTextInsertion ();
-	      if (ThotLocalActions[T_deletenextchar] != NULL)
-		(*(Proc3)ThotLocalActions[T_deletenextchar]) (
-			(void *)frame,
-			(void *)pAb->AbElement,
-			(void *)TRUE);
+	      DeleteNextChar (frame, pAb->AbElement, TRUE);
+	      pFrame->FrReady = TRUE;
 	    }
 	}
       else
@@ -2777,11 +2753,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			    {
 			      /* no removable character here */
 			      CloseTextInsertion ();
-			      if (ThotLocalActions[T_deletenextchar] != NULL)
-				(*(Proc3)ThotLocalActions[T_deletenextchar]) (
-					(void *)frame,
-					(void *)pAb->AbElement,
-					(void *)TRUE);
+			      DeleteNextChar (frame, pAb->AbElement, TRUE);
 			      pFrame->FrReady = TRUE;
 			      return;
 			    }
@@ -2906,7 +2878,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				      /* remove the current element */
 				      FirstSelectedChar = 1;
 				      NewContent (pAb);
-				      CutCommand (FALSE);
+				      CutCommand (FALSE, FALSE);
 				      /* move the selection at the end of the
 					 previous element */
 				      TtcPreviousChar (FrameTable[frame].FrDoc, 1);
@@ -3603,14 +3575,12 @@ static void PasteXClipboardW (wchar_t* src, int nchars)
 void TtcInsertChar (Document doc, View view, CHAR_T c)
 {
   ViewSelection      *pViewSel;
-  PtrAbstractBox      pAb;
-  PtrAbstractBox      draw;
   DisplayMode         dispMode;
   PtrDocument         pDoc;
   PtrElement          firstEl, lastEl;
   int                 firstChar, lastChar;
   int                 frame;
-  ThotBool            lock, replace;
+  ThotBool            lock;
 
   if (doc != 0)
     {
@@ -3675,56 +3645,14 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 
           /* in principle, the entered character should replace the current
 	     selection, but... */
-          replace = TRUE;
-          if (firstEl == lastEl &&
-	      TypeHasException (ExcIsBreak, firstEl->ElTypeNumber,
-				firstEl->ElStructSchema))
-	    /* a <br/> element is selected. Don't replace it. Just add the
-	       entered character in front of it */
-	    replace = FALSE;
-	  else  if (!StructSelectionMode &&
-		    !ViewFrameTable[frame - 1].FrSelectOnePosition &&
-		    !pViewSel->VsBox->BxAbstractBox->AbReadOnly)
-	    {
-	      CloseTextInsertion ();
-	      if (pViewSel->VsBox)
-		/* Delete the current selection */
-		{
-		  pAb = pViewSel->VsBox->BxAbstractBox;
-		  draw = GetParentDraw (pViewSel->VsBox);
-		  if (pAb->AbLeafType == LtText || pAb->AbLeafType == LtSymbol)
-		    ContentEditing (TEXT_SUP);
-		  else if (draw)
-		    {
-		      /* move the selection and reapply the command */
-		      pViewSel->VsBox = draw->AbBox;
-		      pViewSel->VsBuffer = NULL;
-		      pViewSel->VsIndBuf = 0;
-		      pViewSel->VsIndBox = 0;
-		      pViewSel->VsXPos = 0;
-		      pViewSel->VsNSpaces = 0;
-		      pViewSel->VsLine = NULL;
-		      pViewSel = &ViewFrameTable[frame - 1].FrSelectionEnd;
-		      pViewSel->VsBox = draw->AbBox;
-		      pViewSel->VsBuffer = NULL;
-		      pViewSel->VsIndBuf = 0;
-		      pViewSel->VsIndBox = 0;
-		      pViewSel->VsXPos = draw->AbBox->BxWidth;
-		      pViewSel->VsNSpaces = 0;
-		      pViewSel->VsLine = NULL;
-		      TtcInsertChar (doc, view, c);
-		      /* restore the display mode */
-		      if (dispMode == DisplayImmediately)
-			TtaSetDisplayMode (doc, DisplayImmediately);
-		      return;
-		    }
-		  else if (pAb->AbLeafType == LtPicture ||
-			   pAb->AbLeafType == LtGraphics)
-		    ContentEditing (TEXT_SUP);
-		  else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
-		    TtcPreviousChar (doc, view);
-		}
-	    }
+	  if (!StructSelectionMode &&
+	      !ViewFrameTable[frame - 1].FrSelectOnePosition &&
+	      (firstEl != lastEl ||
+	       !TypeHasException (ExcIsBreak, firstEl->ElTypeNumber,
+				  firstEl->ElStructSchema)))
+	    /* delete the current selection */
+	    ContentEditing (TEXT_SUP);
+
 	  InsertChar (frame, c, -1);
 	  if (!lock)
 	    /* unlock table formatting */
@@ -4138,9 +4066,6 @@ void TtcCopySelection (Document doc, View view)
 void TtcPaste (Document doc, View view)
 {
   DisplayMode         dispMode;
-  PtrAbstractBox      pAb;
-  PtrAbstractBox      draw;
-  ViewSelection      *pViewSel;
 #ifdef _WINGUI
   HANDLE              hMem;
   char               *lpData;
@@ -4170,7 +4095,6 @@ void TtcPaste (Document doc, View view)
 	/* close insertion without notification */
 	CloseTextInsertionWithControl (FALSE);
 
-      pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
       /* start the undo sequence */
       GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
       if (pDoc)
@@ -4195,24 +4119,15 @@ void TtcPaste (Document doc, View view)
 		(*ThotLocalActions[T_lock]) ();
 	    }
 	  
-	  if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
-	    {
-	      /* Delete the current selection */
-	      if (pViewSel->VsBox != NULL)
-		{
-		  pAb = pViewSel->VsBox->BxAbstractBox;
-		  draw = GetParentDraw (pViewSel->VsBox);
-		  if (pAb->AbLeafType == LtText || pAb->AbLeafType == LtSymbol)
-		    ContentEditing (TEXT_SUP);
-
-		  else if (!draw && (pAb->AbLeafType == LtPicture ||
-				     pAb->AbLeafType == LtGraphics))
-		    ContentEditing (TEXT_SUP);
-		  else if (!draw &&
-			   (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0))
-		    TtcPreviousChar (doc, view);
-		}
-	    }
+          /* in principle, the paste should replace the current
+	     selection, but... */
+	  if (!StructSelectionMode &&
+	      !ViewFrameTable[frame - 1].FrSelectOnePosition &&
+	      (firstEl != lastEl ||
+	       !TypeHasException (ExcIsBreak, firstEl->ElTypeNumber,
+				  firstEl->ElStructSchema)))
+	      /* delete the current selection */
+	    ContentEditing (TEXT_SUP);
 #ifdef _WINGUI
 	  OpenClipboard (FrRef [frame]);
 	  /* check if the clipboard comes from Amaya */
@@ -4244,10 +4159,14 @@ void TtcPaste (Document doc, View view)
 	    ContentEditing (TEXT_PASTE);
 	  CloseClipboard ();
 #endif /* _WINGUI */
-
-#if defined(_MOTIF) || defined(_GTK)    
-	  ContentEditing (TEXT_PASTE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#ifdef _GTK
+	  if (FirstSelectedElement == NULL && FirstSavedElement)
+	    {
+	      /* TODO: paste only the text */
+	    }
+	  else
+	    ContentEditing (TEXT_PASTE);
+#endif /* _GTK */
     
 	  if (!lock)
 	    /* unlock table formatting */
@@ -4266,18 +4185,11 @@ void TtcPaste (Document doc, View view)
 /*---------------------------------------------------------------------
    EditingLoadResources connecte les fonctions d'edition              
   ----------------------------------------------------------------------*/
-void                EditingLoadResources ()
+void EditingLoadResources ()
 {
-   if (ThotLocalActions[T_editfunc] == NULL)
+   if (ThotLocalActions[T_clearhistory] == NULL)
      {
 	/* Connecte les actions d'edition */
-	TteConnectAction (T_updateparagraph, (Proc) CloseParagraphInsertion);
-	TteConnectAction (T_stopinsert, (Proc) CloseTextInsertion);
-	TteConnectAction (T_editfunc, (Proc) ContentEditing);
-	TteConnectAction (T_insertchar, (Proc) InsertChar);
-	TteConnectAction (T_AIupdate, (Proc) AbstractImageUpdated);
-	TteConnectAction (T_redisplay, (Proc) RedisplayDocViews);
-	TteConnectAction (T_freesavedel, (Proc) FreeSavedElements);
 	TteConnectAction (T_clearhistory, (Proc) ClearHistory);
 	TteConnectAction (T_openhistory, (Proc) OpenHistorySequence);
 	TteConnectAction (T_addhistory, (Proc) AddEditOpInHistory);

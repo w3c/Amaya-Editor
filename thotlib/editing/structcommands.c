@@ -117,6 +117,7 @@ static Proc5        NextCellInColumnFunction = NULL;
 #include "textcommands_f.h"
 #include "thotmsg_f.h"
 #include "tree_f.h"
+#include "unstructchange_f.h"
 #include "undo_f.h"
 #include "undoapi_f.h"
 #include "views_f.h"
@@ -1201,12 +1202,12 @@ void ProcessFirstLast (PtrElement pPrev, PtrElement pNext, PtrDocument pDoc)
 #define MAX_ANCESTOR 10
 
 /*----------------------------------------------------------------------
-   CutCommand  traite la commande CUT				
-   Supprime du document la partie selectionnee.               
-   Si save est vrai, on sauvegarde la partie selectionnee pour     
-   pouvoir la coller ensuite (voir PasteCommand).                  
+  CutCommand  cuts the current selection.
+  The parameter save is TRUE when the cut contents is saved for future
+  paste.
+  The parameter replace is TRUE when the cut contents will be replaced.
   ----------------------------------------------------------------------*/
-void CutCommand (ThotBool save)
+void CutCommand (ThotBool save, ThotBool replace)
 {
   PtrElement          firstSel, lastSel, pEl, pE, pPrev, pNext, pParent,
                       pS, pSS, pParentEl, pFree, pF, pF1, pPrevPage, pSave,
@@ -1228,6 +1229,7 @@ void CutCommand (ThotBool save)
   last = 0;
   lock = TRUE;
   cellCleared = NULL;
+  pParentEl = NULL;
   /* y-a-t'il une selection courante ? */
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
 			    &lastChar))
@@ -1277,12 +1279,8 @@ void CutCommand (ThotBool save)
 	      ExcCutPage (&firstSel, &lastSel, pSelDoc, &save, &cutPage);
 	      /* "remonte" la selection au niveau des freres si c'est
 		 possible */
-	      if (ThotLocalActions[T_selectsiblings] != NULL)
-		(*(Proc4)ThotLocalActions[T_selectsiblings]) (
-			(void*)&firstSel,
-			(void*)&lastSel,
-			(void*)&firstChar,
-			(void*)&lastChar);
+	      if (!replace)
+		SelectSiblings (&firstSel, &lastSel, &firstChar, &lastChar);
 
 	      /* Si tout le contenu d'un element est selectionne', on
 		 detruit l'element englobant la selection, sauf s'il
@@ -1319,7 +1317,7 @@ void CutCommand (ThotBool save)
 		      while (cutAll && pEl != NULL);
 		    }
 
-		  if (cutAll &&
+		  if (cutAll && !replace &&
 		      CanCutElement (firstSel->ElParent, pSelDoc, NULL) &&
 		      !TypeHasException (ExcIsCell, firstSel->ElParent->ElTypeNumber,
 					 firstSel->ElParent->ElStructSchema))
@@ -1355,7 +1353,7 @@ void CutCommand (ThotBool save)
 		}
 
 	      /* don't remove the root element or a isolated cell
-		 or a mandatory element, but remove its content */
+		 or a mandatory element, but remove its contents */
 	      stop = FALSE;
 	      do
 		if (firstSel == lastSel && 
@@ -1428,11 +1426,9 @@ void CutCommand (ThotBool save)
 
 		  /* On a selectionne' seulement une marque de page ? */
 		  pageSelected = cutPage;
-		  if (firstSel == lastSel)
-		    /* un seul element est selectionne' */
-		    if (firstSel->ElTerminal)
-		      if (firstSel->ElLeafType == LtPageColBreak)
-			pageSelected = TRUE;
+		  if (firstSel == lastSel && firstSel->ElTerminal &&
+		      firstSel->ElLeafType == LtPageColBreak)
+		    pageSelected = TRUE;
 		  /* record the sibling of the ancestors */
 		  if (firstSel == NULL)
 		    pParent = NULL;
@@ -1442,32 +1438,37 @@ void CutCommand (ThotBool save)
 		  pAncestorNext[0] = pNext;
 		  pPrev = firstSel;
 		  pNext = lastSel;
-		  for (i = 0; i < MAX_ANCESTOR; i++)
+		  if (replace)
+		     pAncestor[0] = NULL;
+		  else
 		    {
-		      pAncestor[i] = pParent;
-		      if (pParent != NULL)
-			pParent = pParent->ElParent;
-		      if (i > 0)
+		      for (i = 0; i < MAX_ANCESTOR; i++)
 			{
-			  if (pPrev == NULL)
-			    pAncestorPrev[i] = NULL;
-			  else
+			  pAncestor[i] = pParent;
+			  if (pParent)
+			    pParent = pParent->ElParent;
+			  if (i > 0)
 			    {
-			      pPrev = pPrev->ElParent;
 			      if (pPrev == NULL)
 				pAncestorPrev[i] = NULL;
 			      else
-				pAncestorPrev[i] = pPrev->ElPrevious;
-			    }
-			  if (pNext == NULL)
-			    pAncestorNext[i] = NULL;
-			  else
-			    {
-			      pNext = pNext->ElParent;
+				{
+				  pPrev = pPrev->ElParent;
+				  if (pPrev == NULL)
+				    pAncestorPrev[i] = NULL;
+				  else
+				    pAncestorPrev[i] = pPrev->ElPrevious;
+				}
 			      if (pNext == NULL)
 				pAncestorNext[i] = NULL;
 			      else
-				pAncestorNext[i] = pNext->ElNext;
+				{
+				  pNext = pNext->ElParent;
+				  if (pNext == NULL)
+				    pAncestorNext[i] = NULL;
+				  else
+				    pAncestorNext[i] = pNext->ElNext;
+				}
 			    }
 			}
 		    }
@@ -1716,13 +1717,10 @@ void CutCommand (ThotBool save)
 			      }
 			    pS = pE;
 			    pLastSave = pE;
+			    /* keep the link to parent */
 			    pE->ElParent = pParentEl;
-				/* conserve le chainage avec le pere pour
-				   SearchPresSchema appele' par
-				   UpdateNumbers et pour RedisplayCopies */
 			    }
-			  if ((last == TTE_STANDARD_DELETE_LAST_ITEM)
-			      && !cutPage)
+			  if (last == TTE_STANDARD_DELETE_LAST_ITEM && !cutPage)
 			    pEl = NULL;
 		        }
 		    }
@@ -1751,8 +1749,10 @@ void CutCommand (ThotBool save)
 		      /* send the ElemDelete.Post event */
 		      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 		    }
-		  CloseHistorySequence (pSelDoc);
-		  
+
+		  if (!replace)
+		    CloseHistorySequence (pSelDoc);
+		 
 		  /* les elements a couper ont ete coupe's */
 		  /* verifie que les elements suivant et precedent */
 		  /* n'ont pas ete detruits par les actions */
@@ -1763,41 +1763,48 @@ void CutCommand (ThotBool save)
 		  for (i = 0; i < MAX_ANCESTOR && pParent == NULL; i++)
 		    {
 		      if (pAncestor[i] == NULL)
-			i = MAX_ANCESTOR;
-		      else if (pAncestor[i]->ElStructSchema != NULL &&
-			       DocumentOfElement (pAncestor[i]) ==pSelDoc)
+			{
+			  i = MAX_ANCESTOR;
+			  pParent = pParentEl;
+			}
+		      else if (pAncestor[i]->ElStructSchema &&
+			       DocumentOfElement (pAncestor[i]) == pSelDoc)
 			pParent = pAncestor[i];
 		    }
 		  
 		  pNext = NULL;
 		  for (i = 0; i < MAX_ANCESTOR && pNext == NULL; i++)
 		    {
-		      if (pAncestorNext[i] != NULL)
+		      if (pAncestor[i] == NULL)
+			i = MAX_ANCESTOR;
+		      else if (pAncestorNext[i])
 			{
-			  if (pAncestorNext[i]->ElStructSchema != NULL &&
+			  if (pAncestorNext[i]->ElStructSchema &&
 			      DocumentOfElement (pAncestorNext[i]) == pSelDoc)
 			    pNext = pAncestorNext[i];
-			  else if (pAncestorPrev[i] != NULL)
-			    if (pAncestorPrev[i]->ElStructSchema != NULL &&
-				DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
-			      if (pAncestorPrev[i]->ElNext != NULL)
-				pNext = pAncestorPrev[i]->ElNext;
+			  else if (pAncestorPrev[i] &&
+				   pAncestorPrev[i]->ElStructSchema &&
+				   DocumentOfElement (pAncestorPrev[i]) == pSelDoc &&
+				   pAncestorPrev[i]->ElNext)
+			    pNext = pAncestorPrev[i]->ElNext;
 			}
 		    }
 		  
 		  pPrev = NULL;
 		  for (i = 0; i < MAX_ANCESTOR && pPrev == NULL; i++)
 		    {
-		      if (pAncestorPrev[i] != NULL)
+		      if (pAncestor[i] == NULL)
+			i = MAX_ANCESTOR;
+		      else if (pAncestorPrev[i])
 			{
-			  if (pAncestorPrev[i]->ElStructSchema != NULL &&
+			  if (pAncestorPrev[i]->ElStructSchema &&
 			      DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
 			    pPrev = pAncestorPrev[i];
-			  else if (pAncestorNext[i] != NULL)
-			    if (pAncestorNext[i]->ElStructSchema != NULL &&
-				DocumentOfElement (pAncestorNext[i]) == pSelDoc)
-			      if (pAncestorNext[i]->ElPrevious != NULL)
-				pPrev = pAncestorNext[i]->ElPrevious;
+			  else if (pAncestorNext[i] &&
+				   pAncestorNext[i]->ElStructSchema &&
+				   DocumentOfElement (pAncestorNext[i]) == pSelDoc &&
+				   pAncestorNext[i]->ElPrevious)
+			    pPrev = pAncestorNext[i]->ElPrevious;
 			}
 		    }
 		  
@@ -2873,15 +2880,10 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		 c'est equivalent */
 	      if (firstSel->ElParent != lastSel->ElParent)
 	        {
-		/* essaie de ramener la selection a une suite de freres */
-		firstChar = 0;
-		lastChar = 0;
-		if (ThotLocalActions[T_selectsiblings] != NULL)
-		   (*(Proc4)ThotLocalActions[T_selectsiblings]) (
-			(void*)&firstSel,
-			(void*)&lastSel,
-			(void*)&firstChar,
-			(void*)&lastChar);
+		  /* essaie de ramener la selection a une suite de freres */
+		  firstChar = 0;
+		  lastChar = 0;
+		  SelectSiblings (&firstSel, &lastSel, &firstChar, &lastChar);
 	        }
 	      if (firstSel->ElParent != lastSel->ElParent)
 		ok = FALSE;
