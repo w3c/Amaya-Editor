@@ -1241,6 +1241,7 @@ ThotDrawable GifCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
   ThotColorStruct     colrs[256];
 #ifdef _GL
   unsigned char      *ptr, *cols;
+  unsigned short      red, green, blue;
   int                 x, y;
 #else /* _GL */
 #ifdef _WINGUI
@@ -1301,6 +1302,14 @@ ThotDrawable GifCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 
 #ifdef _GL
   cols = (unsigned char *)TtaGetMemory (w * h * 4);
+  if (GifTransparent != -1 && Printing)
+    {
+      /* replace the transparent color by the background color */
+      TtaGiveThotRGB (bgColor, &red, &green, &blue);
+      colrs[GifTransparent].red   = red << 8;
+      colrs[GifTransparent].green = green << 8;
+      colrs[GifTransparent].blue  = blue << 8;
+    }
   ptr = cols;
   y = h;
   while (y--)
@@ -1311,7 +1320,9 @@ ThotDrawable GifCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 	  i = *buffer2++;
 	  if (GifTransparent == i)
 	    {
-	      ptr += 3;
+	      *ptr++ = colrs[i].red;
+	      *ptr++ = colrs[i].green;
+	      *ptr++ = colrs[i].blue;	
 	      *ptr++ = 0;
 	    }
 	  else
