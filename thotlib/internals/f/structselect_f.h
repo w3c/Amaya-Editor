@@ -22,7 +22,8 @@ extern void CancelSelection ( void );
 extern void ResetSelection ( PtrDocument pDoc );
 extern PtrElement GetColHeadOfCell ( PtrElement pCell );
 extern PtrElement GetCellInRow ( PtrElement pRow,
-                                 PtrElement pColHead );
+                                 PtrElement pColHead,
+                                 ThotBool orPrevious );
 extern PtrElement NextRowInTable ( PtrElement pRow,
                                    PtrElement pTable );
 extern PtrElement NextColumnInTable ( PtrElement pCol,
@@ -123,7 +124,8 @@ extern void CancelSelection ( void );
 extern void ResetSelection ( PtrDocument pDoc );
 extern PtrElement GetColHeadOfCell ( PtrElement pCell );
 extern PtrElement GetCellInRow ( PtrElement pRow,
-                                   PtrElement pColHead );
+                                   PtrElement pColHead,
+                                   ThotBool orPrevious );
 extern PtrElement NextRowInTable ( PtrElement pRow,
                                      PtrElement pTable );
 extern PtrElement NextColumnInTable ( PtrElement pCol,

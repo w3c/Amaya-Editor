@@ -755,7 +755,7 @@ void PasteCommand ()
 	      if (WholeColumnSaved)
 		{
 		  /* look for the cell in that row and that column */
-		  pEl = GetCellInRow (pRow, pColHead);
+		  pEl = GetCellInRow (pRow, pColHead, TRUE);
 		  if (pEl == NULL && pRow)
 		    {
 		      /* no cell in that row */
@@ -766,7 +766,7 @@ void PasteCommand ()
 			  before = TRUE;
 			  pNextCol = NextColumnInTable (pNextCol, pTable);
 			  if (pNextCol)
-			    pEl = GetCellInRow (pRow, pNextCol);
+			    pEl = GetCellInRow (pRow, pNextCol, FALSE);
 			}
 		    }
 		  pNextRow = NextRowInTable (pRow, pTable);

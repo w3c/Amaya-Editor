@@ -459,9 +459,11 @@ PtrElement GetColHeadOfCell (PtrElement pCell)
 
 /*----------------------------------------------------------------------
   GetCellInRow
-  Return the cell in row pRow that is related to column head pColHead.
+  Return the cell in row pRow that is related to column head pColHead or
+  a previous column if orPrevious is TRUE.
   ----------------------------------------------------------------------*/
-PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead)
+PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead,
+			 ThotBool orPrevious)
 {
   PtrElement   pCell;
   ThotBool     found;
@@ -475,7 +477,7 @@ PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead)
   while (pCell && !found)
     {
       if (pColHead == GetColHeadOfCell (pCell) ||
-	  pCell->ElNext == NULL)
+	  (orPrevious && pCell->ElNext == NULL))
 	found = TRUE;
       else
         pCell = pCell->ElNext;
@@ -669,7 +671,7 @@ static PtrElement PreviousLeafInSelection (PtrElement pEl)
 					     pRow->ElStructSchema);
 		  if (pRow)
 		    {
-		      pCell = GetCellInRow (pRow, SelectedColumn);
+		      pCell = GetCellInRow (pRow, SelectedColumn, FALSE);
 		      if (pCell)
 			/* there is a cell for that column in the row */
 			/* take that cell */
@@ -801,7 +803,7 @@ PtrElement NextInSelection (PtrElement pEl, PtrElement pLastEl)
 						 pRow->ElStructSchema);
 		      if (pRow)
 			{
-			  pCell = GetCellInRow (pRow, SelectedColumn);
+			  pCell = GetCellInRow (pRow, SelectedColumn, FALSE);
 			  if (pCell)
 			    /* there is a cell for that column in the row */
 			    {
@@ -3422,7 +3424,7 @@ static void SelColumn (PtrElement column)
   /* get the relevant cell in the first row */
   do
     {
-      pCell = GetCellInRow (pRow, column);
+      pCell = GetCellInRow (pRow, column, FALSE);
       if (!pCell)
 	pRow = NextRowInTable (pRow, pTable);
     }
@@ -3439,7 +3441,7 @@ static void SelColumn (PtrElement column)
   /* get the relevant cell in the last row */
   do
     {
-      pCell = GetCellInRow (pRow, column);
+      pCell = GetCellInRow (pRow, column, FALSE);
       if (!pCell)
 	pRow = PreviousRowInTable (pRow, pTable);
     }
