@@ -76,7 +76,7 @@
 75 Interdit dans une boite de presentation\n
 76 Trop de regles Transmit pour ce compteur\n
 77 Ce n\'est pas un document inclus\n
-78 Fichier incorrect, usage : prs [-Dnom=val] fichier[.P]\n
+78 Fichier incorrect, usage : prs [-Dnom=val] fichier[.P] [fichier_sortie (sans .PRS)]\n
 79 Interdit dans une reference\n
 80 Seulement dans les boites de presentation, les references et les paires\n
 81 Deja une regle Copy ou Content\n

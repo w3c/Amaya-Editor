@@ -15,7 +15,7 @@ THOTSCH = ${THOTDIR}/amaya:${THOTDIR}/schemas
 COMPSCH = ${THOTDIR}/amaya
 COMPSTR = str
 COMPPRS = prs
-COMPTRA = ${THOTDIR}/batch/compiltra
+COMPTRA = tra
 
 #
 # Rules

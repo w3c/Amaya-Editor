@@ -46,10 +46,10 @@
 45 Not enough memory\n
 46 Only for pages\n
 47 Cannot load the structure schema\n
-48 Cannot find traduction schema : %s\n
-49 Bad schema. Recompile\n
+48 Invalid file, usage: tra [-Dname=val] file[.T] [outputfile (without .TRA)]\n
+49 Invalid file suffix: %s\n
 50 Rules table full\n
-51 No such file.\n
+51 Invalid counter\n
 52 Already defined.\n
 53 Missing keyword First or Second\n
 54 Not a pair\n
@@ -57,8 +57,4 @@
 56 Cannot write %s\n
 57 Unknown color\n
 58 Only for elements\n
-59 File not found\n
-60 This elements are not created\n
-61 Traduction schema to use with %s:
-62 file name without \".SCH\":
-63 Invalid counter\n
+59 cpp not found\n

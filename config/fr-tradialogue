@@ -46,10 +46,10 @@
 45 Memoire insuffisante\n
 46 Seulement pour les pages\n
 47 Impossible de charger le schema de structure\n
-48 Schema de traduction inaccessible : %s\n
-49 Schema incorrect. Recompilez\n
+48 Fichier inacessible, usage : tra [-Dnom=val] fichier[.T] [fichier_sortie (sans .TRA)]\n
+49 Suffixe de fichier invalide : %s\n
 50 Table des regles saturee\n
-51 Fichier inconnu.\n
+51 Compteur invalide\n
 52 Deja defini.\n
 53 Il manque First ou Second\n
 54 Ce n\'est pas une paire\n
@@ -57,8 +57,4 @@
 56 %s : ecriture impossible\n
 57 Couleur inconnue\n
 58 Seulement pour les elements\n
-59 Fichier inacessible\n
-60 Ces elements ne sont pas engendres\n
-61 Schema de traduction a utiliser pour %s:\n
-62 Nom du schema a compiler (sans .SCH) :
-63 Compteur invalide\n
+59 cpp non trouv\351\n

@@ -3033,23 +3033,19 @@ SyntRuleNum         pr;
 /*----------------------------------------------------------------------
    main                                                            
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 main (int argc, char **argv)
-
 #else  /* __STDC__ */
 int                 main (argc, argv)
 int                 argc;
 char              **argv;
-
 #endif /* __STDC__ */
-
 {
    FILE               *infile;
-   Name                srceFileName;	/* nom du fichier a compiler */
-   int                 len, i;
    boolean             fileOK;
-   char                buffer[200];
+   char                fname[200], buffer[200], cmd[800];
+   char               *pwd, *ptr;
+   Name                srceFileName;	/* nom du fichier a compiler */
    indLine             wi;	/* position du debut du mot courant dans la ligne */
    indLine             wl;	/* longueur du mot courant */
    SyntacticType       wn;	/* SyntacticType du mot courant */
@@ -3057,8 +3053,9 @@ char              **argv;
    SyntRuleNum         pr;	/* numero de la regle precedente */
    SyntacticCode       c;	/* code grammatical du mot trouve */
    int                 nb;	/* indice dans Identifier du mot trouve, si c'est un
-
 				   identificateur */
+   int                 i;
+   int                 param;
 
    TtaInitializeAppRegistry (argv[0]);
    i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
@@ -3071,97 +3068,154 @@ char              **argv;
    InitSyntax ("TRANS.GRM");
    if (!error)
      {
-	if (argc != 2)
-	   TtaDisplaySimpleMessage (FATAL, TRA, MISSING_FILE);
+        /* prepare the cpp command */
+	strcpy (cmd, "cpp ");
+        param = 1;
+	while (param < argc && argv[param][0] == '-')
+	  {
+	    /* keep cpp params */
+	    strcat (cmd, argv[param]);
+	    strcat (cmd, " ");
+	    param++;
+	  }
+
+	/* recupere d'abord le nom du schema a compiler */
+	if (param >= argc)
+	  {
+	     TtaDisplaySimpleMessage (FATAL, TRA, MISSING_FILE);
+	     exit (1);
+	  }
+	strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+	srceFileName[MAX_NAME_LENGTH - 1] = '\0';
+	param++;
+	strcpy (fname, srceFileName);
+	/* check if the name contains a suffix */
+	ptr = strrchr(fname, '.');
+	nb = strlen (srceFileName);
+	if (!ptr)
+	  /* there is no suffix */
+	  strcat (srceFileName, ".T");
+	else if (strcmp(ptr, ".T"))
+	  {
+	    /* it's not the valid suffix */
+	    TtaDisplayMessage (FATAL, TtaGetMessage (TRA, INVALID_FILE), srceFileName);
+	    exit (1);
+	  }
 	else
 	  {
-	     strncpy (srceFileName, argv[1], MAX_NAME_LENGTH - 1);
-	     len = strlen (srceFileName);
-	     /* ajoute le suffixe .SCH */
-	     strcat (srceFileName, ".SCH");
+	    /* it's the valid suffix, cut the srcFileName here */
+	    ptr[0] = '\0';
+	    nb -= 2; /* length without the suffix */
+	  }
+	/* add the suffix .SCH in srceFileName */
+	strcat (fname, ".SCH");
+	
+	/* does the file to compile exist */
+	if (TtaFileExist (srceFileName) == 0)
+	  TtaDisplaySimpleMessage (FATAL, TRA, MISSING_FILE);
+	else
+	  {
+	    /* provide the real source file */
+	    TtaFileUnlink (fname);
+	    pwd = TtaGetEnvString ("PWD");
+	    i = strlen (cmd);
+	    if (pwd != NULL)
+	      sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
+	    else
+	      sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
+	    i = system (cmd);
+	    if (i == -1)
+	      {
+		/* cpp is not available, copy directely the file */
+		TtaDisplaySimpleMessage (INFO, TRA, CPP_NOT_FOUND);
+		TtaFileCopy (srceFileName, fname);
+	      }
 
-	     if (TtaFileExist (srceFileName) == 0)
-		TtaDisplaySimpleMessage (FATAL, TRA, MISSING_FILE);
-	     else
-		/* le fichier d'entree existe, on l'ouvre */
-	       {
-		  infile = TtaReadOpen (srceFileName);
-		  /* supprime le suffixe ".SCH" */
-		  srceFileName[len] = '\0';
-		  /* acquiert la memoire pour le schema de traduction */
-		  if ((pTSchema = (PtrTSchema) malloc (sizeof (TranslSchema))) == NULL)
-		     TtaDisplaySimpleMessage (FATAL, TRA, OUT_OF_MEMORY);
-		  NIdentifiers = 0;	/* table des identificateurs vide */
-		  LineNum = 0;
-		  Initialize ();	/* prepare la generation */
+	    infile = TtaReadOpen (fname);
+	    if (param == argc)
+	      /* the output name is equal to the input name */
+	      /*suppress the suffix ".SCH" */
+	      srceFileName[nb] = '\0';
+	    else
+	      /* read the output name */
+	      strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+	     /* le fichier a compiler est ouvert */
 
-		  /* lit tout le fichier et fait l'analyse */
-		  fileOK = True;
-		  while (fileOK && !error)
-		     /* lit une ligne */
-		    {
-		       i = 0;
-		       do
-			 {
-			    fileOK = TtaReadByte (infile, &inputLine[i]);
-			    i++;
-			 }
-		       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
-		       /* marque la fin reelle de la ligne */
-		       inputLine[i - 1] = '\0';
-		       /* incremente le compteur de lignes */
-		       LineNum++;
-		       if (i >= LINE_LENGTH)
-			  CompilerError (1, TRA, FATAL, MAX_LINE_SIZE_OVERFLOW,
-					 inputLine, LineNum);
-		       else if (inputLine[0] == '#')
-			  /* cette ligne contient une directive du preprocesseur cpp */
-			 {
-			    sscanf (inputLine, "# %d %s", &LineNum, buffer);
-			    LineNum--;
-			 }
-		       else
-			  /* traduit les caracteres de la ligne */
-			 {
-			    OctalToChar ();
-			    /* analyse la ligne */
-			    wi = 1;
-			    wl = 0;
-			    /* analyse tous les mots de la ligne courante */
-			    do
-			      {
-				 i = wi + wl;
-				 GetNextToken (i, &wi, &wl, &wn);
-				 /* mot suivant */
-				 if (wi > 0)
-				    /* on a trouve un mot */
-				   {
-				      AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
-				      /* on analyse le mot */
-				      if (!error)
-					 ProcessToken (wi, wl, c, r, nb, pr);
-				      /* on le traite */
-				   }
-			      }
-			    while (wi != 0 && !error);
-			 }	/* il n'y a plus de mots dans la ligne */
-		    }
-		  TtaReadClose (infile);
-		  if (!error)
-		     ParserEnd ();	/* fin d'analyse */
-		  if (!error)
-		    {
-		       /* ecrit le schema compile' dans le fichier de sortie */
-		       /* le directory des schemas est le directory courant */
-		       strcat (srceFileName, ".TRA");
-		       fileOK = WriteTranslationSchema (srceFileName, pTSchema, pSSchema);
-		       if (!fileOK)
-			  TtaDisplayMessage (FATAL, TtaGetMessage (TRA, CANT_WRITE), srceFileName);
-		    }
-		  free (pTSchema);
-		  free (pSSchema);
-		  free (pExtSSchema);
-	       }
+	    /* acquiert la memoire pour le schema de traduction */
+	    if ((pTSchema = (PtrTSchema) malloc (sizeof (TranslSchema))) == NULL)
+	      TtaDisplaySimpleMessage (FATAL, TRA, OUT_OF_MEMORY);
+	    NIdentifiers = 0;	/* table des identificateurs vide */
+	    LineNum = 0;
+	    Initialize ();	/* prepare la generation */
+	    
+	    /* lit tout le fichier et fait l'analyse */
+	    fileOK = True;
+	    while (fileOK && !error)
+	      /* lit une ligne */
+	      {
+		i = 0;
+		do
+		  {
+		    fileOK = TtaReadByte (infile, &inputLine[i]);
+		    i++;
+		  }
+		while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
+		/* marque la fin reelle de la ligne */
+		inputLine[i - 1] = '\0';
+		/* incremente le compteur de lignes */
+		LineNum++;
+		if (i >= LINE_LENGTH)
+		  CompilerError (1, TRA, FATAL, MAX_LINE_SIZE_OVERFLOW,
+				 inputLine, LineNum);
+		else if (inputLine[0] == '#')
+		  /* cette ligne contient une directive du preprocesseur cpp */
+		  {
+		    sscanf (inputLine, "# %d %s", &LineNum, buffer);
+		    LineNum--;
+		  }
+		else
+		  /* traduit les caracteres de la ligne */
+		  {
+		    OctalToChar ();
+		    /* analyse la ligne */
+		    wi = 1;
+		    wl = 0;
+		    /* analyse tous les mots de la ligne courante */
+		    do
+		      {
+			i = wi + wl;
+			GetNextToken (i, &wi, &wl, &wn);
+			/* mot suivant */
+			if (wi > 0)
+			  /* on a trouve un mot */
+			  {
+			    AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
+			    /* on analyse le mot */
+			    if (!error)
+			      ProcessToken (wi, wl, c, r, nb, pr);
+			    /* on le traite */
+			  }
+		      }
+		    while (wi != 0 && !error);
+		  }	/* il n'y a plus de mots dans la ligne */
+	      }
+	    TtaReadClose (infile);
+	    if (!error)
+	      ParserEnd ();	/* fin d'analyse */
+	    if (!error)
+	      {
+		/* remove temporary file */
+		TtaFileUnlink (fname);
+		/* ecrit le schema compile' dans le fichier de sortie */
+		/* le directory des schemas est le directory courant */
+		strcat (srceFileName, ".TRA");
+		fileOK = WriteTranslationSchema (srceFileName, pTSchema, pSSchema);
+		if (!fileOK)
+		  TtaDisplayMessage (FATAL, TtaGetMessage (TRA, CANT_WRITE), srceFileName);
+	      }
+	    free (pTSchema);
+	    free (pSSchema);
+	    free (pExtSSchema);
 	  }
      }
    TtaSaveAppRegistry ();
