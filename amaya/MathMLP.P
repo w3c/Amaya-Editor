@@ -381,9 +381,9 @@ RULES
 	BEGIN
 	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
+		Width: Enclosing . Width;
 		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left;
 		END;
   	END;
 
@@ -650,7 +650,7 @@ RULES
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	END;
 
@@ -674,7 +674,7 @@ RULES
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width;
-		Height: Enclosed . Height;
+		Height: 1;
 		END;
 	END;
 
@@ -743,7 +743,7 @@ RULES
 	HorizPos: Nil;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
-		Height: Enclosed . Height;
+		Height: 1;
 		HorizPos: Left = Previous . Right + 0.5;
 		VertPos: HRef = Previous . HRef;
 		END;

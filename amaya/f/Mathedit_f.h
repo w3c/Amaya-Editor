@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern boolean ElementContainsText (Element el);
 extern void AddMathButton (Document doc,
 			   View view);
 extern void InitMathML ();
@@ -16,6 +17,7 @@ extern void SetAddspaceAttr ( Element el,
 
 #else /* __STDC__ */
 
+extern boolean ElementContainsText (/* Element el */);
 extern void AddMathButton (/* Document doc,
 			   View view */);
 extern void InitMathML ();

@@ -1,5 +1,11 @@
 APPLICATION MathML;
 
+DEFAULT
+   BEGIN
+	ElemPaste.Post -> MathElementPasted;
+	ElemDelete.Post -> MathElementDeleted;
+   END;
+
 ELEMENTS
 
    MTEXT:

@@ -99,6 +99,143 @@ int                 index;
   return (el);
 }
 
+
+/*----------------------------------------------------------------------
+  ElementContainsText
+  returns TRUE if element el contains some text.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean      ElementContainsText (Element el)
+#else
+boolean      ElementContainsText (el)
+Element el;
+
+#endif
+{
+  ElementType	elType;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == MathML_EL_Construction ||
+      elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+      elType.ElTypeNum == MathML_EL_MI  ||
+      elType.ElTypeNum == MathML_EL_MO ||
+      elType.ElTypeNum == MathML_EL_MN ||
+      elType.ElTypeNum == MathML_EL_MS ||
+      elType.ElTypeNum == MathML_EL_MTEXT)
+     return TRUE;
+  else
+     return FALSE;
+}
+
+/*----------------------------------------------------------------------
+   InsertPlaceHolder
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void          InsertPlaceHolder (Element el, boolean before, Document doc)
+#else
+static void          InsertPlaceHolder (el, before, doc)
+Element el;
+boolean before;
+Document doc;
+
+#endif
+{
+ElementType	elType;
+Element		sibling;
+boolean		createConstruction;
+
+     elType = TtaGetElementType (el);
+     if (elType.ElTypeNum == MathML_EL_MROW ||
+	 elType.ElTypeNum == MathML_EL_MROOT ||
+	 elType.ElTypeNum == MathML_EL_MSQRT ||
+	 elType.ElTypeNum == MathML_EL_MFRAC ||
+	 elType.ElTypeNum == MathML_EL_MSUBSUP ||
+	 elType.ElTypeNum == MathML_EL_MSUB ||
+	 elType.ElTypeNum == MathML_EL_MSUP ||
+	 elType.ElTypeNum == MathML_EL_MUNDER ||
+	 elType.ElTypeNum == MathML_EL_MUNDEROVER)
+        /* this element accepts a Construction as its neighbour */
+	{
+	sibling = el;
+	if (before)
+	   TtaPreviousSibling (&sibling);
+	else
+	TtaNextSibling (&sibling);
+	createConstruction = TRUE;
+	if (sibling != NULL)
+	if (ElementContainsText (sibling))
+	   createConstruction = FALSE;
+	if (createConstruction)
+	   {
+	   elType.ElTypeNum = MathML_EL_Construction;
+	   sibling = TtaNewElement (doc, elType);
+	   TtaInsertSibling (sibling, el, before, doc);
+	   }
+	}
+}
+
+/*----------------------------------------------------------------------
+  CreateParentMROW
+  If element el id not a child of a MROW and if it has at least one
+  sibling that is not a Construction, create an enclosing MROW.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void	   CreateParentMROW (Element el, Document doc)
+#else
+static void        CreateParentMROW (el, doc)
+Element	el;
+Document doc;
+
+#endif
+{
+  Element            sibling, row, parent, firstChild, next, previous;
+  ElementType        elType;
+  int                nChildren;
+
+  /* check whether the parent is a row */
+  parent = TtaGetParent (el);
+  if (parent == NULL)
+     return;
+  elType = TtaGetElementType (parent);
+  if (elType.ElTypeNum != MathML_EL_MROW &&
+      elType.ElTypeNum != MathML_EL_Block)
+	 {
+	 sibling = TtaGetFirstChild (parent);
+	 nChildren = 0;
+	 firstChild = sibling;
+	 while (sibling != NULL)
+	    {
+	    elType = TtaGetElementType (sibling);
+	    if (elType.ElTypeNum != MathML_EL_Component &&
+		elType.ElTypeNum != MathML_EL_Construction)
+	       nChildren++;
+	    TtaNextSibling (&sibling);
+	    }
+	 if (nChildren > 1)
+	    {
+	      /* generates a new row element to include these elements */
+	      elType.ElTypeNum = MathML_EL_MROW;
+	      row = TtaNewElement (doc, elType);
+	      TtaInsertSibling (row, firstChild, TRUE, doc);
+	      sibling = firstChild;
+	      previous = NULL;
+	      while (sibling != NULL)
+		{
+		next = sibling;
+		TtaNextSibling (&next);
+	        TtaRemoveTree (sibling, doc);
+	        /* move the old element into the new MROW */
+		if (previous == NULL)
+	           TtaInsertFirstChild (&sibling, row, doc);
+		else
+		   TtaInsertSibling (sibling, previous, FALSE, doc);
+		previous = sibling;
+		sibling = next;
+		}
+	    }
+	 }
+}
+
 /*----------------------------------------------------------------------
    CallbackMaths: manage Maths dialogue events.
   ----------------------------------------------------------------------*/
@@ -117,7 +254,7 @@ char               *data;
   ElementType        newType, elType;
   SSchema            docSchema, mathSchema;
   int                val, c1, i, len;
-  boolean	     before, addConstruction;
+  boolean	     before;
 
   val = (int) data;
   switch (ref - MathsDialogue)
@@ -135,14 +272,14 @@ char               *data;
 	return;
       /* the new element will be inserted before the selected element */
       before = TRUE;
-      addConstruction = FALSE;
       TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i);
       /* Check whether the selected element is a text element */
       elType = TtaGetElementType (sibling);
 
+      TtaSetDisplayMode (doc, DeferredDisplay);
       /* Check whether the selected element is a MathML element */
       docSchema = TtaGetDocumentSSchema (doc);
-      if (!TtaSameSSchemas (docSchema, elType.ElSSchema))
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
 	{
 	  /* the selection concerns a MathML element */
 	  mathSchema = elType.ElSSchema;
@@ -150,12 +287,9 @@ char               *data;
 	    {
 	      len = TtaGetTextLength (sibling);
 	      if (c1 > len)
-		{
-		  /* the caret is at the end of that character string */
-		  /* create the new element after the character string */
-		  before = FALSE;
-		  addConstruction = TRUE;
-		}
+		/* the caret is at the end of that character string */
+		/* create the new element after the character string */
+		before = FALSE;
 	      else
 		sibling = SplitTextInMathML (doc, sibling, c1);
 	    }
@@ -171,12 +305,9 @@ char               *data;
 		{
 		  len = TtaGetTextLength (sibling);
 		  if (c1 > len)
-		    {
 		      /* the caret is at the end of that character string */
 		      /* create the new element after the character string */
 		      before = FALSE;
-		      addConstruction = TRUE;
-		    }
 		  else
 		    {
 		      /* split the text to insert the XML element */
@@ -198,7 +329,6 @@ char               *data;
 			{
 			  /* move to the end of the previous MathML element */
 			  before = FALSE;
-			  addConstruction = TRUE;
 			  sibling = TtaGetLastChild (el);		      
 			}
 		    }
@@ -215,7 +345,6 @@ char               *data;
 			{
 			  /* move at the end of the previous MathML element */
 			  before = TRUE;
-			  addConstruction = FALSE;
 			  sibling = TtaGetFirstChild (el);		      
 			}
 		    }
@@ -280,25 +409,24 @@ char               *data;
 	  break;
 	case 10:
 	  newType.ElTypeNum = MathML_EL_MN;
-	  addConstruction = FALSE;
 	  break;
 	case 11:
 	  newType.ElTypeNum = MathML_EL_MO;
-	  addConstruction = FALSE;
 	  break;
 	case 12:
 	  newType.ElTypeNum = MathML_EL_MI;
-	  addConstruction = FALSE;
 	  break;
 	case 13:
 	  newType.ElTypeNum = MathML_EL_MTEXT;
-	  addConstruction = FALSE;
 	  break;
 	default:
 	  return;
 	}
       el = TtaNewTree (doc, newType, "");
 
+      /* do not check the Thot abstract tree against the structure */
+      /* schema while changing the structure */
+      TtaSetStructureChecking (0, doc);
       if (elType.ElTypeNum == MathML_EL_MROW || elType.ElTypeNum == MathML_EL_MathML)
 	{
 	/* the selected element is a MROW or the MathML element */
@@ -310,25 +438,22 @@ char               *data;
 	  if (sibling == NULL)
 	    {
 	      /* replace the empty MROW by the new element*/
-	      /* do not check the Thot abstract tree against the structure */
-	      /* schema while changing the structure */
-	      TtaSetStructureChecking (0, doc);
 	      TtaInsertSibling (el, row, TRUE, doc);
 	      TtaRemoveTree (row, doc);
-	      /* check the Thot abstract tree against the structure schema. */
-	      TtaSetStructureChecking (1, doc);
 	    }
 	  else
 	    {
 	      /* check whether the element is a construction */
 	      elType = TtaGetElementType (sibling);
-	      if ((elType.ElTypeNum == MathML_EL_Component || elType.ElTypeNum == MathML_EL_Construction) && !addConstruction)
+	      if (elType.ElTypeNum == MathML_EL_Component ||
+		  elType.ElTypeNum == MathML_EL_Construction)
 		TtaInsertFirstChild (&el, sibling, doc);
 	      else
 		TtaInsertSibling (el, sibling, before, doc);
 	    }
 	}
-      else if ((elType.ElTypeNum == MathML_EL_Component || elType.ElTypeNum == MathML_EL_Construction) && !addConstruction)
+      else if (elType.ElTypeNum == MathML_EL_Component ||
+	       elType.ElTypeNum == MathML_EL_Construction)
 	{
 	  /* replace the construction choice */
 	  TtaInsertFirstChild (&el, sibling, doc);
@@ -339,34 +464,19 @@ char               *data;
 	  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 	    /* go up to the MN, MI, MO or M_TEXT element */
 	    sibling = TtaGetParent (sibling);
-	  /* check whether the parent is a row */
-	  row = TtaGetParent (sibling);
-	  elType = TtaGetElementType (row);
-	  if (elType.ElTypeNum != MathML_EL_MROW)
-	    {
-	      /* generates a new row element to include both elements */
-	      elType.ElTypeNum = MathML_EL_MROW;
-	      row = TtaNewElement (doc, elType);
-	      /* do not check the Thot abstract tree against the structure */
-	      /* schema while changing the structure */
-	      TtaSetStructureChecking (0, doc);
-	      TtaInsertSibling (row, sibling, TRUE, doc);
-	      TtaRemoveTree (sibling, doc);
-	      /* move the old element into the new MROW */
-	      TtaInsertFirstChild (&sibling, row, doc);
-	      /* check the Thot abstract tree against the structure schema. */
-	      TtaSetStructureChecking (1, doc);
-	    }
-	    /* insert the new element */
-	    TtaInsertSibling (el, sibling, before, doc);
+	  /* insert the new element */
+	  TtaInsertSibling (el, sibling, before, doc);
 	}
 
-      if (addConstruction)
-	{
-	  newType.ElTypeNum = MathML_EL_Construction;
-	  sibling = TtaNewTree (doc, newType, "");
-	  TtaInsertSibling (sibling, el, FALSE, doc);
-	}
+      CreateParentMROW (el, doc);
+
+      InsertPlaceHolder (el, TRUE, doc);
+      InsertPlaceHolder (el, FALSE, doc);
+
+      TtaSetDisplayMode (doc, DisplayImmediately);
+      /* check the Thot abstract tree against the structure schema. */
+      TtaSetStructureChecking (1, doc);
+
       /* selected the first child of the new element */
       while (el != NULL)
 	{
@@ -374,7 +484,6 @@ char               *data;
 	  el = TtaGetFirstChild (sibling);
 	}
       TtaSelectElement (doc, sibling);
-      elType = TtaGetElementType (sibling);
       break;
     default:
       break;
@@ -627,7 +736,7 @@ static void MathSetAttributes (el, doc)
   if (elType.ElTypeNum == MathML_EL_MI)
      /* is it really an identifier? */
      {
-     /* try to separate function names, identifier and plain text */
+     /* try to separate function names, identifiers and plain text */
      /* TO DO ******/
      }
   if (elType.ElTypeNum == MathML_EL_MO)
@@ -649,16 +758,17 @@ void ParseMathString (event)
 #endif /* __STDC__*/
 {
 
-  Element	el, textEl, prevEl, curEl, sibling, row, firstEl, nextEl;
+  Element	el, textEl, prevEl, curEl, firstEl, selEl, newSelEl;
   Document	doc;
   ElementType	elType;
-  int		len, i, charType, curElType, curLen;
+  int		len, i, charType, curElType, curLen, firstSelChar, lastSelChar,
+		newSelChar;
   char		newChar[3];
 #define TXTBUFLEN 200
   unsigned char	text[TXTBUFLEN];
   Language	lang;
   char		alphabet;
-  boolean	single, spaceBefore;
+  boolean	spaceBefore, before;
 
   el = event->element;	/* the element whose content has been changed */
   doc = event->document;
@@ -668,19 +778,13 @@ void ParseMathString (event)
      len = TtaGetTextLength (textEl);
      if (len > 0)
 	{
-	/* Is this element the only child of its parent? */
-	single = FALSE;
-	sibling = el;
-	TtaPreviousSibling (&sibling);
-	if (sibling == NULL)
-	   /* no previous sibling */
-	   {
-	   sibling = el;
-	   TtaNextSibling (&sibling);
-	   if (sibling == NULL)
-	      /* the element to be replaced has no sibling */
-	      single = TRUE;
-	   }
+	/* get the current selection */
+	TtaGiveFirstSelectedElement (doc, &selEl, &firstSelChar, &lastSelChar);
+	if (selEl != textEl && selEl != el)
+	   selEl = NULL;
+	else
+	   if (firstSelChar < 1)
+	      firstSelChar = 1;
 	/* get the content */
 	len = TXTBUFLEN;
 	TtaGiveTextContent (textEl, text, &len, &lang);
@@ -693,6 +797,7 @@ void ParseMathString (event)
 	firstEl = NULL;
 	spaceBefore = FALSE;
 	curLen = 0;
+	newSelEl = NULL;
 	TtaSetDisplayMode (doc, DeferredDisplay);
 	TtaSetStructureChecking (0, doc);
 	/* parse the content */
@@ -711,9 +816,14 @@ void ParseMathString (event)
 	      elType.ElTypeNum = charType;
 	      curElType = charType;
 	      curEl = TtaNewElement (doc, elType);
-	      TtaInsertSibling (curEl, prevEl, FALSE, doc);
 	      if (firstEl == NULL)
+		 {
+		 before = TRUE;
 		 firstEl = curEl;
+		 }
+	      else
+		 before = FALSE;
+	      TtaInsertSibling (curEl, prevEl, before, doc);
 	      elType.ElTypeNum = MathML_EL_TEXT_UNIT;
 	      textEl = TtaNewElement (doc, elType);
 	      TtaInsertFirstChild (&textEl, curEl, doc);
@@ -721,6 +831,14 @@ void ParseMathString (event)
 	      spaceBefore = FALSE;
 	      prevEl = curEl;
 	      }
+
+	    if (selEl != NULL && newSelEl == NULL)
+	      if (i >= firstSelChar - 1)
+		{
+		newSelEl = textEl;
+		newSelChar = curLen + 1;
+		}
+
 	    if (spaceBefore && curLen > 0)
 	      {
 	      newChar[0] = ' '; newChar[1] = text[i]; newChar[2] = '\0';
@@ -740,43 +858,61 @@ void ParseMathString (event)
 	   attribute that fits with its content */
 	if (curEl != NULL)
 	  MathSetAttributes (curEl, doc);
-	/* create a MROW element that encompasses the new elements
-	   if necessary */
-	if (single && (curEl != firstEl))
-	  /* the element to be replaced had no sibling */
-	  /* and several elements have been created */
-	  {
-	  elType = TtaGetElementType (TtaGetParent (el));
-	  if (elType.ElTypeNum != MathML_EL_MROW)
-	     /* the parent element is not a MROW */
-	     {
-	     /* create a MROW element */
-	     elType.ElTypeNum = MathML_EL_MROW;
-	     row = TtaNewElement (doc, elType);
-	     TtaInsertSibling (row, el, FALSE, doc);
-	     /* move the created elements as children of this MROW element */
-	     curEl = firstEl;
-	     prevEl = NULL;
-	     while (curEl != NULL)
-		{
-		nextEl = curEl;
-		TtaNextSibling (&nextEl);
-		TtaRemoveTree (curEl, doc);
-		if (prevEl == NULL)
-	           TtaInsertFirstChild (&curEl, row, doc);
-		else
-		   TtaInsertSibling (curEl, prevEl, FALSE, doc);
-		prevEl = curEl;
-		curEl = nextEl;
-		}
-	     }
-	  }
+	if (selEl != NULL && newSelEl == NULL)
+	   {
+	   newSelEl = textEl;
+	   newSelChar = curLen + 1;
+	   }
+
 	/* remove the element that has been processed */
 	TtaDeleteTree (el, doc);
+
+	/* create a MROW element that encompasses the new elements
+	   if necessary */
+	CreateParentMROW (firstEl, doc);
+
 	TtaSetStructureChecking (1, doc);
 	TtaSetDisplayMode (doc, DisplayImmediately);
+
+	/* set a new selection */
+	if (newSelEl != NULL)
+	   TtaSelectString (doc, newSelEl, newSelChar, newSelChar);
 	}
      }
+}
+
+/*----------------------------------------------------------------------
+ MathElementPasted
+ An element has been pasted in a MathML structure.
+ Create place holders before and after if necessary.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MathElementPasted (NotifyElement *event)
+#else /* __STDC__*/
+void MathElementPasted(event)
+     NotifyElement *event;
+#endif /* __STDC__*/
+{
+   TtaSetStructureChecking (0, event->document);
+   InsertPlaceHolder (event->element, TRUE, event->document);
+   InsertPlaceHolder (event->element, FALSE, event->document);
+   TtaSetStructureChecking (1, event->document);
+}
+
+
+/*----------------------------------------------------------------------
+ MathElementDeleted
+ An element has been deleted in a MathML structure.
+ Remove the enclosing MROW element if it has only one child.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MathElementDeleted (NotifyElement *event)
+#else /* __STDC__*/
+void MathElementDeleted(event)
+     NotifyElement *event;
+#endif /* __STDC__*/
+{
+  /**** code to be written ****/
 }
 
 #endif /* MATHML */

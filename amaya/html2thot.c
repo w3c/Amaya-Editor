@@ -2607,6 +2607,83 @@ Element el;
 #ifdef MATHML
 
 /*----------------------------------------------------------------------
+  CreatePlaceHolders
+  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void	CreatePlaceHolders (Element el, Document doc)
+#else
+static void	CreatePlaceHolders (el, doc)
+   Element	el;
+   Document	doc;
+#endif
+{
+   Element	sibling, prev, constr;
+   ElementType	elType;
+   boolean	prevOK;
+
+   elType = TtaGetElementType (el);
+   if (elType.ElTypeNum == MathML_EL_MROW)
+      {
+      sibling = el;
+      TtaPreviousSibling (&sibling);
+      if (sibling != NULL)
+	 {
+	 elType = TtaGetElementType (sibling);
+	 if (elType.ElTypeNum == MathML_EL_MF)
+	    /* a MROW after a MF, don't do anything */
+	    return;
+	 }
+      else
+	 {
+	 sibling = el;
+	 TtaNextSibling (&sibling);
+         if (sibling != NULL)
+	    {
+	    elType = TtaGetElementType (sibling);
+	    if (elType.ElTypeNum == MathML_EL_MF)
+	       /* a MROW before a MF, don't do anything */
+	       return;
+	    }
+	 else
+	    /* a MROW without any sibling */
+            return;
+	 }
+      }
+   prev = NULL;
+   prevOK = FALSE;
+   sibling = el;
+   while (sibling != NULL)
+      {
+      if (ElementContainsText (sibling))
+	 prevOK = TRUE;
+      else
+	 {
+	 if (!prevOK)
+	    {
+            elType.ElTypeNum = MathML_EL_Construction;
+	    constr = TtaNewElement (doc, elType);
+	    TtaInsertSibling (constr, sibling, TRUE, doc);
+	    }
+	 prevOK = FALSE;
+	 }
+      prev = sibling;
+      TtaNextSibling (&sibling);
+      }
+   if (prev != NULL && !prevOK)
+      {
+	elType = TtaGetElementType (prev);
+	/* don't insert a place holder after the last MF in a MROW */
+	if (elType.ElTypeNum != MathML_EL_MF)
+	   {
+           elType.ElTypeNum = MathML_EL_Construction;
+	   constr = TtaNewElement (doc, elType);
+	   TtaInsertSibling (constr, prev, FALSE, doc);
+	   } 
+      }
+}
+
+/*----------------------------------------------------------------------
   CheckMathSubExpressions
   Children of elements el should be of type type1, type2, and type3.
   Create an element of that type.
@@ -2628,14 +2705,19 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
    elType.ElSSchema = MathSSchema;
    if (child != NULL && type1 != 0)
       {
-      TtaRemoveTree (child, theDocument);
-      elType.ElTypeNum = type1;
-      new = TtaNewElement (theDocument, elType);
-      TtaInsertFirstChild (&new, el, theDocument);
-      TtaInsertFirstChild (&child, new, theDocument);
+      elType = TtaGetElementType (child);
+      if (elType.ElTypeNum != type1)
+         {
+         TtaRemoveTree (child, theDocument);
+         elType.ElTypeNum = type1;
+         new = TtaNewElement (theDocument, elType);
+         TtaInsertFirstChild (&new, el, theDocument);
+         TtaInsertFirstChild (&child, new, theDocument);
+         CreatePlaceHolders (child, theDocument);
+	 child = new;
+	 }
       if (type2 != 0)
 	{
-	child = new;
 	prev = child;
 	TtaNextSibling (&child);
 	if (child != NULL)
@@ -2645,6 +2727,7 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
 	  new = TtaNewElement (theDocument, elType);
 	  TtaInsertSibling (new, prev, FALSE, theDocument);
 	  TtaInsertFirstChild (&child, new, theDocument);
+	  CreatePlaceHolders (child, theDocument);
 	  if (type3 != 0)
 	     {
 	     child = new;
@@ -2657,6 +2740,7 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
 	        new = TtaNewElement (theDocument, elType);
 	        TtaInsertSibling (new, prev, FALSE, theDocument);
 	        TtaInsertFirstChild (&child, new, theDocument);
+	        CreatePlaceHolders (child, theDocument);
 		}
 	     }
 	  }
@@ -2677,6 +2761,7 @@ Element                 el;
 #endif
 {
    ElementType	elType;
+   Element	child;
 
    elType = TtaGetElementType (el);
    
@@ -2729,6 +2814,28 @@ Element                 el;
 	/* end of a MOVER. Create UnderOverBase, and Overscript */
 	CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
 				 MathML_EL_Overscript, 0);
+	break;
+     case MathML_EL_MROW:
+	/* end of MROW.   Create place holders within the MROW */
+        child = TtaGetFirstChild (el);
+        if (child != NULL)
+	  {
+	  elType = TtaGetElementType (child);
+	  /* if the MROW contains a MF as its first child, it's a Block */
+	  if (elType.ElTypeNum != MathML_EL_MF)
+	     CreatePlaceHolders (child, theDocument);
+	  else
+	     {
+	     ChangeElementType (el, MathML_EL_Block);
+	     TtaNextSibling (&child);
+	     if (child != NULL)
+	        {
+	        elType = TtaGetElementType (child);
+		if (elType.ElTypeNum != MathML_EL_MF)
+		   CheckMathSubExpressions (el, MathML_EL_MF, MathML_EL_Block_exp, 0);
+		}
+	     }
+	  }
 	break;
      default:
 	break;
