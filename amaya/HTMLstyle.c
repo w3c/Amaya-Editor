@@ -1159,7 +1159,9 @@ void               *param;
 /*----------------------------------------------------------------------
    GetHTML3StyleString : return a string corresponding to the CSS    
    description of the presentation attribute applied to a       
-   element                                                      
+   element.
+   For stupid reasons, if the target element is HTML or BODY,
+   one returns the concatenation of both element style strings.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                GetHTML3StyleString (Element elem, Document doc, char *buf, int *len)
@@ -1172,6 +1174,9 @@ int                *len;
 #endif
 {
    SpecificContext      ctxt;
+   ElementType          elType;
+   char                *elemname;
+   int                  size = *len;
 
    if ((buf == NULL) || (len == NULL) || (*len <= 0))
       return;
@@ -1186,7 +1191,34 @@ int                *len;
    FreeSpecificContext(ctxt);
 
    *len = strlen (buf);
-   buf[strlen (buf)] = 0;
+
+   /*
+    * BODY / HTML elements specific handling.
+    */
+   elType = TtaGetElementType(elem);
+
+   if (elType.ElTypeNum == HTML_EL_HTML) {
+       elType.ElTypeNum = HTML_EL_BODY;
+       elem = TtaSearchTypedElement(elType, SearchForward, elem);
+       if (!elem) return;
+       if (*len > 0)
+           strcat(buf,";");
+       *len = strlen (buf);
+       ctxt = GetSpecificContext(doc);
+       ApplyAllSpecificSettings (elem, ctxt, SpecificSettingsToCSS, &buf[*len]);
+       FreeSpecificContext(ctxt);
+       *len = strlen (buf);
+   } else if (elType.ElTypeNum == HTML_EL_BODY) {
+       elem = TtaGetParent(elem);
+       if (!elem) return;
+       if (*len > 0)
+           strcat(buf,";");
+       *len = strlen (buf);
+       ctxt = GetSpecificContext(doc);
+       ApplyAllSpecificSettings (elem, ctxt, SpecificSettingsToCSS, &buf[*len]);
+       FreeSpecificContext(ctxt);
+       *len = strlen (buf);
+   }
 }
 
 /************************************************************************
@@ -3355,11 +3387,15 @@ void *extra;
    image.pointer = file;
    if (context->drv->SetBgImage)
      context->drv->SetBgImage (target, context, image);
+
+   /*
+    * If there is no default repeat mode, enforce a V-Repeat
+    */
    if (context->drv->GetPictureMode)
      {
-       if (context->drv->GetPictureMode (target, context, &repeat))
-	 {
-	   if (context->drv->SetPictureMode && repeat.typed_data.value == 0)
+       if (! context->drv->GetPictureMode (target, context, &repeat))
+         {
+	   if (context->drv->SetPictureMode)
 	     {
 	       repeat.typed_data.value = DRIVERP_VREPEAT;
 	       context->drv->SetPictureMode (target, context, repeat);
