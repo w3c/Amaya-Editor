@@ -141,7 +141,17 @@ int                 origDoc;
    notifyEl.element = (Element) pEl;
    notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
    notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-   notifyEl.position = origDoc;
+   if (origDoc < 0)
+      /* called by Undo */
+      {
+      notifyEl.position = 0;
+      notifyEl.info = 1;
+      }
+   else
+      {
+      notifyEl.position = origDoc;
+      notifyEl.info = 0;
+      }
    if (appEvent == TteElemNew)
       if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
 	 /* root element in a different structure schema */

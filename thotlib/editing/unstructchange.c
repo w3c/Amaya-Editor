@@ -1615,7 +1615,8 @@ ThotBool            before;
    pElem = NULL;
    pDoc = DocumentOfElement (pEl);
 
-   /* look for the first ancestor with a sibling: pParent */
+   /* look for the first ancestor with a previous (if before) or next sibling:
+      pParent */
    pParent = pEl;
    do
      {
@@ -1634,22 +1635,22 @@ ThotBool            before;
    if (pParent == NULL || pSibling == NULL)
      return;
 
-   doc = IdentDocument (pDoc);
    /* determine the current selection */
-       firstChar = 0;  lastChar= 0;
-       if (pEl->ElTerminal)
-	  if (pEl->ElLeafType == LtText)
-	    {
-	    if (before)
-	      firstChar = 1;
-	    else
-	      firstChar = pEl->ElVolume + 1;
-	    lastChar = firstChar -1;
-	    }
+   firstChar = 0;  lastChar= 0;
+   if (pEl->ElTerminal)
+     if (pEl->ElLeafType == LtText)
+       {
+	 if (before)
+	   firstChar = 1;
+	 else
+	   firstChar = pEl->ElVolume + 1;
+	 lastChar = firstChar -1;
+       }
 
+   doc = IdentDocument (pDoc);
    if (before && pSibling->ElVolume == 0 && pParent->ElVolume > 0)
      /* BackSpace at the beginning of a non empty element (pParent) whose
-        previous sibling is empty (pSibling).  Delete the empty sibling */
+        previous sibling (pSibling) is empty.  Delete the empty sibling */
      {
        OpenHistorySequence (pDoc, pEl, pEl, firstChar, lastChar);
        /* record the element to be deleted in the history */
@@ -1659,10 +1660,29 @@ ThotBool            before;
        return;
      }
 
+   /* if elements pSibling and pParent have a common ancestor with
+      exception ParagraphBreak, don't merge them. Just delete the
+      next or previous character */
+   pE = CommonAncestor (pSibling, pElem);
+   while (pE)
+     {
+       if (TypeHasException (ExcParagraphBreak, pE->ElTypeNumber,
+			     pE->ElStructSchema))
+	  {
+          pSibling = NULL;
+	  pE = NULL;
+	  }
+       else
+	  pE = pE->ElParent;
+     }
+
    if (pSibling != NULL && pParent != pEl && pElem != NULL)
      if (pSibling->ElTerminal)
+       /* don't merge a structured element with a text string */
        pSibling = NULL;
      else
+       /* check whether the SSchema allows elements to be merged, i.e.
+	  can children of element pSibling become siblings of element pElem? */
        {
 	 pSibling = pSibling->ElFirstChild;
 	 if (pSibling != NULL)
@@ -1678,11 +1698,13 @@ ThotBool            before;
 	       }
 	     if (!AllowedSibling (pSibling, pDoc, pElem->ElTypeNumber,
 				  pElem->ElStructSchema, FALSE, FALSE, FALSE))
-	       pSibling = NULL;
+	        /* not allowed */
+	        pSibling = NULL;
 	   }
        }
 
    if (pSibling == NULL || pParent == pEl)
+     /* don't merge elements. Just delete the previous or next character */
      {
        stop = FALSE;
        pElem = pEl;
@@ -1786,9 +1808,10 @@ ThotBool            before;
      }
 
    if (pElem != NULL && pSibling != NULL &&
-       AllowedSibling (pSibling, pDoc, pElem->ElTypeNumber, pElem->ElStructSchema, FALSE, FALSE, FALSE))
+       AllowedSibling (pSibling, pDoc, pElem->ElTypeNumber,
+		       pElem->ElStructSchema, FALSE, FALSE, FALSE))
      {
-       /* annule d'abord la selection */
+       /* switch selection off */
        TtaClearViewSelections ();
        pE = pElem;
        nbEl = 0;
@@ -1807,7 +1830,8 @@ ThotBool            before;
 	   pE = pE->ElNext;
 	 }
        pParent = pElem->ElParent;
-       isRow = TypeHasException (ExcIsRow, pParent->ElTypeNumber, pParent->ElStructSchema);
+       isRow = TypeHasException (ExcIsRow, pParent->ElTypeNumber,
+				 pParent->ElStructSchema);
 
        /* start history sequence */
        OpenHistorySequence (pDoc, pEl, pEl, firstChar, lastChar);
@@ -1820,9 +1844,9 @@ ThotBool            before;
 	     pNext = list[j];
 	   else
 	     pNext = NULL;
-	   /* envoie l'evenement ElemDelete.Pre a l'application pour */
-	   /* les elements preexistants */
-	   if (isRow || !SendEventSubTree (TteElemDelete, pDoc, pElem, TTE_STANDARD_DELETE_LAST_ITEM))
+	   /* Send event ElemDelete.Pre to application for existing elements */
+	   if (isRow || !SendEventSubTree (TteElemDelete, pDoc, pElem,
+					   TTE_STANDARD_DELETE_LAST_ITEM))
 	     {
 	       /* detruit les paves de l'element qui va etre deplace' */
 	       DestroyAbsBoxes (pElem, pDoc, TRUE);

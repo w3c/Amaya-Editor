@@ -2188,6 +2188,7 @@ void MathElementPasted(event)
    ElementType	elType, elTypeParent;
    int          oldStructureChecking;
 
+
    elType = TtaGetElementType (event->element);
    oldStructureChecking = TtaGetStructureChecking (event->document);
    TtaSetStructureChecking (0, event->document);
@@ -2207,7 +2208,9 @@ void MathElementPasted(event)
      if (elTypeParent.ElTypeNum == MathML_EL_MI ||
          elTypeParent.ElTypeNum == MathML_EL_MO ||
 	 elTypeParent.ElTypeNum == MathML_EL_MN)
-	ParseMathString (event->element, parent, event->document);
+       /* if it's a call from Undo command, don't do anything */
+       if (event->info != 1)
+	 ParseMathString (event->element, parent, event->document);
      }
    else
      {
@@ -2362,8 +2365,7 @@ void MathElementDeleted(event)
    int          oldStructureChecking;
 
    if (event->info == 1)
-      /* call from Undo. This element is not really deleted.  It will be
-         replaced by another element. Don't do anything */
+      /* call from Undo command. Don't do anything */
       return;
    parent = event->element; /* parent of the deleted element */
    parentType = TtaGetElementType (parent);
