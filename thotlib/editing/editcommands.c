@@ -427,8 +427,8 @@ static ThotBool CloseTextInsertionWithControl ()
 		 pSelBox->BxAbstractBox->AbCreatorAttr != NULL)
 	       {
 		 /* update the selection within the attribute */
-		 FirstSelectedCharInAttr = pSelBox->BxIndChar + pViewSelEnd->VsIndBox;
-		 LastSelectedCharInAttr = pSelBox->BxIndChar + pViewSel->VsIndBox;
+		 FirstSelectedCharInAttr = pSelBox->BxIndChar + pViewSelEnd->VsIndBox + 1;
+		 LastSelectedCharInAttr = pSelBox->BxIndChar + pViewSel->VsIndBox + 1;
 		 SelPosition = (FirstSelectedCharInAttr < LastSelectedCharInAttr);
 	       }
 	     NewContent (pSelBox->BxAbstractBox);

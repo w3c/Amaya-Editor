@@ -953,6 +953,8 @@ void NewContent (PtrAbstractBox pAb)
 	  CloseHistorySequence (pDoc);
 	  pAttr = AttributeValue (pEl, pNewAttr);
 	  DeleteAttribute (NULL, pNewAttr);
+	  /* apply these changes */
+	  AbstractImageUpdated (pDoc);
 	  if (selInAttr)
 	    {
 	      /* update the selection */
