@@ -208,7 +208,7 @@ static ThotBool IsNextDocLoaded (const Document baseDoc, const char *url,
    /* check if the user is already browsing the document in another window */
    if (CE_event == CE_FORM_GET || CE_event == CE_FORM_POST)
      {
-       loaded = IsDocumentLoaded (pathname, form_data);
+       loaded = IsDocumentLoaded (pathname, (char *) form_data);
        /* we don't concatenate the new parameters as we give preference
 	  to the form data */
      }
