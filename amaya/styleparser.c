@@ -222,11 +222,13 @@ static char *SkipProperty (char *ptr)
   deb = ptr;
   while (*ptr != EOS && *ptr != ';' && *ptr != '}')
     ptr++;
-  /* print the skipped proerty */
+  /* print the skipped property */
   c = *ptr;
   *ptr = EOS;
+#ifdef CSS_WARNING
   if (*deb != EOS)
-  CSSParseError ("CSS property ignored:", deb);
+    CSSParseError ("CSS property ignored:", deb);
+#endif /* CSS_WARNING */
   *ptr = c;
   return (ptr);
 }
@@ -242,11 +244,13 @@ static char *SkipValue (char *ptr)
   deb = ptr;
   while (*ptr != EOS && *ptr != ';' && *ptr != '}')
     ptr++;
-  /* print the skipped proerty */
+  /* print the skipped property */
   c = *ptr;
   *ptr = EOS;
+#ifdef CSS_WARNING
   if (*deb != EOS && *deb != ',')
-  CSSParseError ("CSS value ignored:", deb);
+    CSSParseError ("CSS value ignored:", deb);
+#endif /* CSS_WARNING */
   *ptr = c;
   return (ptr);
 }
