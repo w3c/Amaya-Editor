@@ -731,6 +731,8 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 
   /* get the extra width of the table */
   mbp =  pBox->BxMinWidth - min - minOfWidth - minOfPercent;
+  if (mbp < 0)
+    mbp = 0;
   min = min + mbp;
   max = max + mbp;
   if (sumPercent > 0)

@@ -354,7 +354,7 @@ void InitLanguage ()
    i = 5;
    strcpy (LangTable[i].LangName, "Finnish");
    strcpy (LangTable[i].LangCode, "fi");
-   LangTable[i].LangScript = '4';
+   LangTable[i].LangScript = 'L';
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
    strcpy (LangTable[i].LangPattern, "finish.ptn");
@@ -446,6 +446,13 @@ void InitLanguage ()
    strcpy (LangTable[i].LangName, "Turkish");
    strcpy (LangTable[i].LangCode, "tr");
    LangTable[i].LangScript = '9';
+   LangTable[i].LangPrincipal[0] = EOS;
+   LangTable[i].LangSecondary[0] = EOS;
+
+   i = 18;
+   strcpy (LangTable[i].LangName, "Hungarian");
+   strcpy (LangTable[i].LangCode, "hu");
+   LangTable[i].LangScript = '2';
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 }

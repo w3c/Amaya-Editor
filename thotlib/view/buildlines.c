@@ -1917,7 +1917,15 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	  else
 	    {
 	      found = FALSE;
-	      wordWidth = pNextBox->BxWidth;
+	      if (pNextBox->BxType == BoBlock ||
+		  pNextBox->BxType == BoFloatBlock ||
+		  pNextBox->BxType == BoTable)
+		wordWidth = pNextBox->BxMinWidth;
+	      else if (!pNextBox->BxAbstractBox->AbWidth.DimIsPosition &&
+		       pNextBox->BxAbstractBox->AbHorizEnclosing &&
+		       (pNextBox->BxAbstractBox->AbWidth.DimAbRef == NULL ||
+			!IsParentBox (pNextBox->BxAbstractBox->AbWidth.DimAbRef->AbBox, pNextBox)))
+		wordWidth = pNextBox->BxWidth;
 	    }
 	   
 	  if (found && width + xi <= pLine->LiXMax)
