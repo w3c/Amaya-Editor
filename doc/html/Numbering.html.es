@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Numeración de secciones e Índice de materias</title>
+  <title>Numerar encabezados y generar Índice de materias</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -28,7 +27,7 @@
 </table>
 
 <div id="page_body">
-<h1>Numeración de secciones</h1>
+<h1>Numerar encabezados</h1>
 
 <p>Los encabezados de sección (elementos <code>H2</code> a <code>H6</code>)
 pueden numerarse automáticamente para reflejar la estructura del documento.
@@ -36,9 +35,9 @@ Se supone que el elemento H1 es el título del documento y no se numera. El
 resto de encabezados recibe un número calculado de acuerdo con su tipo y su
 posición en la estructra del documento. Los números se insertan en el
 documento, y los valores generados con anterioridad se eliminan cada vez que
-se ejecuta el comando <strong>XHTML &gt; Numeración de sección</strong>.</p>
+se ejecuta el comando <strong>XHTML &gt; Numerar encabezados</strong>.</p>
 
-<h1>Índice de materias</h1>
+<h1>Generar índice de materias</h1>
 
 <p>El comando <strong>XHTML &gt; Generar índice de materias</strong> toma en
 cuenta todos los elementos <code>H2</code> a <code>H6</code> posteriores en

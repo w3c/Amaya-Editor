@@ -22,9 +22,9 @@
         src="../../images/amaya.gif" /></td>
       <td><p align="right"><a href="resizing_graphics.html.es"
         accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
-        <a href="../SVG.html.es" accesskey="t"><img alt="superior" 
-        src="../../images/up.gif" /></a><a href="Animation.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        <a href="../SVG.html.es" accesskey="t"> <img alt="superior" 
+        src="../../images/up.gif" /></a> <a href="Animation.html.es"
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>

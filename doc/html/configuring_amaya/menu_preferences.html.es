@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Menú Preferencias</title>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR"
+  content="amaya 8.7-pre, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -214,11 +214,17 @@ casilla de verificación situada a la izquierda de cada opción. Una casilla
 marcada indica que la opción está activada.</p>
 
 <p><strong>Cargar imágenes.</strong> Controla si las imágenes deben cargarse.
-Esta opción se utiliza al cargar nuevos documentos.</p>
+Esta opción se aplica inmediatamente.</p>
+
+<p><strong>Cargar objetos.</strong> Controla si los objetos deben cargarse.
+Esta opción se aplica inmediatamente.</p>
 
 <p><strong>Mostrar imágenes de fondo.</strong> Controla la presentación de
 las imágenes de fondo. Esta opción se tiene en cuenta al cargar un
 documento.</p>
+
+<p><strong>Cargar CSS.</strong> Controla si las hojas de estilo CSS deben
+cargarse y aplicarse. Esta opción se aplica inmediatamente.</p>
 
 <p><strong>Doble clic activa enlaces.</strong> Desde la primera versión de
 Amaya, para activar un enlace hay que hacer doble clic en él. Eso te permite
@@ -228,12 +234,25 @@ comportamiento desactivando esta opción.</p>
 <p><strong>Activar FTP.</strong> Permite a Amaya abrir URLs de FTP. Este
 soporte es experimental y todavía tiene errores. Por ejemplo, en los URLs de
 FTP que necesitan autentificar al usuario, la información de autentificación
-no se memoriza siempre. Además, si pulsas el botón</p>
+no se memoriza siempre. Además, si pulsas el botón <strong>Detener</strong>
+durante una descarga FTP, Amaya puede bloquearse. Debido a estos problemas,
+esta opción se añadió para que otros desarrolladores pudieran ayudar a
+resolver los problemas. Por omisión, esta opción está desactivada.</p>
 
-<p><strong>Detener</strong> durante una descarga FTP Amaya puede bloquearse.
-Debido a estos problemas, esta opción se añadió para que otros
-desarrolladores pudieran ayudar a resolver los problemas. Por omisión, esta
-opción está desactivada.</p>
+<p><strong>Tipo de pantalla actual.</strong> Define el tipo de pantalla
+actual. Esta opción tiene efecto cunado una hoja de estilo CSS especifica un
+medio determinado. Esta opción se aplica inmediatamente.</p>
+
+<p><strong>Negociación de idioma.</strong> Si un documento existe en
+distintos idiomas y tu servidor está configurado para establecer una
+negociación de idioma, puedes utilizar esta caja de diálogo para escribir tus
+preferencias de idiomas (el primer idioma tiene la máxima prioridad).
+Consulta esta <a
+href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">nota de
+prensa</a>, disponible en francés, inglés y japonés. Escribiendo los códigos
+ISO de estos idiomas (<strong>fr</strong>, <strong>en</strong>, o
+<strong>ja</strong>), puedes consultar de forma transparente cualquiera de
+estas versiones.</p>
 
 <h2>Publicación</h2>
 
@@ -361,7 +380,7 @@ espacios con los que quieres utilizar el proxy. Utiliza los botones radio
 para especificar si el proxy debe o no debe utilizarse con esta lista de
 dominios.Por ejemplo:</p>
 <pre style="margin-left:.5in"><code>harpo.marx.edu zeppo.marx.edu chico.marx.edu</code></pre>
-<pre style="margin-left:.5in"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; ^--------------^----&gt; entradas separadas por espacios</code></pre>
+<pre style="margin-left:.5in"><code>              ^--------------^----&gt; entradas separadas por espacios</code></pre>
 
 <h2>Color</h2>
 
@@ -411,20 +430,6 @@ omisión.</p>
 <p>Los valores que se guardan son los de la ventana de la vista desde la que
 has abierto la caja de diálogo. Estos cambios se aplican al abrir nuevas
 ventanas de documentos.</p>
-
-<h2>Negociación de idioma</h2>
-
-<p>Si un documento existe en distintos idiomas y tu servidor está configurado
-para establecer una negociación de idioma, puedes utilizar esta caja de
-diálogo para escribir tus preferencias de idiomas (el primer idioma tiene la
-máxima prioridad).</p>
-
-<p>Consulta esta <a
-href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">nota de
-prensa</a>, disponible en francés, inglés y japonés. Escribiendo los códigos
-ISO de estos idiomas (<strong>fr</strong>, <strong>en</strong>, o
-<strong>ja</strong>), puedes consultar de forma transparente cualquiera de
-estas versiones.</p>
 </div>
 </body>
 </html>

@@ -20,7 +20,7 @@
         alt="anterior" src="../images/left.gif" /></a> <a
         href="Manual.html.es" accesskey="t"><img alt="superior"
         src="../images/up.gif" /></a> <a href="Xml.html.es"
-        accesskey="n"><img src="../images/right.gif" /></a></p>
+        accesskey="n"><img src="../images/right.gif" alt="siguiente" /></a></p>
       </td>
     </tr>
   </tbody>
