@@ -128,7 +128,6 @@ public:
   void OnMouse( wxMouseEvent& event );
   void OnSize( wxSizeEvent& event );
   void OnClose(wxCloseEvent& event);
-  void OnMenuItem( wxCommandEvent& event );
   void OnIdle( wxIdleEvent& event );
 
 protected:

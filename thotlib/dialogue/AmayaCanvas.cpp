@@ -78,7 +78,6 @@ AmayaCanvas::AmayaCanvas( AmayaFrame *  p_parent_window )
   p_panel->SetSize( p_button->GetSize() );
 #endif /* FORUMLARY_WIDGET_DEMO */
 
-  m_Selecting = FALSE;
   SetAutoLayout(TRUE);
   Layout();
 }
@@ -371,6 +370,10 @@ void AmayaCanvas::OnMouse( wxMouseEvent& event )
  */
 void AmayaCanvas::OnChar( wxKeyEvent& event )
 {
+  wxLogDebug( _T("AmayaCanvas::OnChar : frame=%d char=%x"),
+      m_pAmayaFrame->GetFrameId(),
+      event.GetKeyCode() );
+
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentPageActive())
   {

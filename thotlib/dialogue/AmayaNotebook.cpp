@@ -3,6 +3,8 @@
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaWindow.h"
+#include "AmayaFrame.h"
+#include "AmayaCanvas.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaNotebook, wxNotebook)
 
@@ -162,10 +164,103 @@ int AmayaNotebook::GetPageId( const AmayaPage * p_page )
     return -1;
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNotebook
+ *      Method:  OnChar
+ * Description:  this callback is called when a key is pressed.
+ *               this event is then forwarded to current active AmayaCanvas.
+ *               the reason why this event is not directly catch into AmayaCanvas is that
+ *               on old GTK version (debian woody), the AmayaNotebook always keep the focus !
+ *               So events are not throw to the canvas because it doesn't have focus.
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNotebook::OnChar( wxKeyEvent& event )
+{
+  // get the selected page into the current notebook
+  AmayaPage * p_page = m_pAmayaWindow->GetActivePage();
+  if ( !p_page )
+    {
+      event.Skip();
+      return;
+    }
+  
+  // get the current active frame into the selected page
+  AmayaFrame * p_frame = p_page->GetActiveFrame();
+  if ( !p_frame )
+    {
+      event.Skip();
+      return;
+    }
+
+  // get the frame's canvas
+  AmayaCanvas * p_canvas = p_frame->GetCanvas();
+  if ( !p_canvas )
+    {
+      event.Skip();
+      return;
+    }
+  
+  wxLogDebug( _T("AmayaNotebook::OnChar : frame=%d char=%x (skip)"),
+	      p_frame->GetFrameId(),
+	      event.GetKeyCode() );
+  
+  // forward the key event to current active canvas
+  p_canvas->OnChar( event );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNotebook
+ *      Method:  OnKeydown
+ * Description:  this callback is called when a key is pressed.
+ *               this event is then forwarded to current active AmayaCanvas.
+ *               the reason why this event is not directly catch into AmayaCanvas is that
+ *               on old GTK version (debian woody), the AmayaNotebook always keep the focus !
+ *               So events are not throw to the canvas because it doesn't have focus.
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNotebook::OnKeyDown( wxKeyEvent& event )
+{
+  // get the selected page into the current notebook
+  AmayaPage * p_page = m_pAmayaWindow->GetActivePage();
+  if ( !p_page )
+    {
+      event.Skip();
+      return;
+    }
+  
+  // get the current active frame into the selected page
+  AmayaFrame * p_frame = p_page->GetActiveFrame();
+  if ( !p_frame )
+    {
+      event.Skip();
+      return;
+    }
+
+  // get the frame's canvas
+  AmayaCanvas * p_canvas = p_frame->GetCanvas();
+  if ( !p_canvas )
+    {
+      event.Skip();
+      return;
+    }
+  
+  wxLogDebug( _T("AmayaNotebook::OnKeyDown : frame=%d key=%x (skip)"),
+	      p_frame->GetFrameId(),
+	      event.GetKeyCode() );
+  
+  // forward the key event to current active canvas
+  p_canvas->OnKeyDown( event );
+}
 
 BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
   EVT_CLOSE(	                 AmayaNotebook::OnClose )
   EVT_NOTEBOOK_PAGE_CHANGED( -1, AmayaNotebook::OnPageChanged )
+
+  EVT_KEY_DOWN(		AmayaNotebook::OnKeyDown) // Process a wxEVT_KEY_DOWN event (any key has been pressed). 
+  EVT_CHAR(		AmayaNotebook::OnChar) // Process a wxEVT_CHAR event. 
+
 END_EVENT_TABLE()
   
 #endif /* #ifdef _WX */

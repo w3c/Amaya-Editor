@@ -90,8 +90,6 @@ protected:
   
   AmayaFrame *  m_pAmayaFrame;  // amaya frame reference (parent)
 
-  ThotBool m_Selecting; 
-
   bool m_Init;
   void Init();
   void Render();

@@ -361,13 +361,6 @@ void AmayaFrame::OnScroll( wxScrollEvent& event )
 
   if (m_pScrollBarH && event.GetOrientation() == wxHORIZONTAL)
    {
-     /*
-     if (m_HOldPosition < event.GetPosition())
-       m_HOldPosition = event.GetPosition()+13;
-     else if (m_HOldPosition > event.GetPosition())
-       m_HOldPosition = event.GetPosition()-13;
-     */
-
      FrameHScrolledCallback(
 	m_FrameId,
 	event.GetPosition(),
@@ -375,12 +368,6 @@ void AmayaFrame::OnScroll( wxScrollEvent& event )
    }
   else if (m_pScrollBarV && event.GetOrientation() == wxVERTICAL)
    {
-     /*
-     if (m_VOldPosition < event.GetPosition())
-       m_VOldPosition = event.GetPosition()+13;
-     else if (m_VOldPosition > event.GetPosition())
-       m_VOldPosition = event.GetPosition()-13;
-     */
      FrameVScrolledCallback(
 	m_FrameId,
 	event.GetPosition() );
@@ -388,7 +375,6 @@ void AmayaFrame::OnScroll( wxScrollEvent& event )
   
   event.Skip();
 }
-
 
 void AmayaFrame::OnScrollLineUp( wxScrollEvent& event )
 {
@@ -409,7 +395,6 @@ void AmayaFrame::OnScrollLineDown( wxScrollEvent& event )
 
   event.Skip();
 }
-
 
 /*
  *--------------------------------------------------------------------------------------
@@ -604,7 +589,6 @@ AmayaWindow * AmayaFrame::GetWindowParent()
     return NULL;
 }
 
-
 void AmayaFrame::OnClose(wxCloseEvent& event)
 {
   wxLogDebug( _T("AmayaFrame::OnClose: frame=%d"), m_FrameId );
@@ -619,8 +603,6 @@ void AmayaFrame::OnClose(wxCloseEvent& event)
   int                 view;
   GetDocAndView (m_FrameId, &pDoc, &view);
   CloseView (pDoc, view);
-  
-  //  DestroyChildren();
 }
 
 /*
@@ -687,13 +669,6 @@ wxMenuBar * AmayaFrame::GetMenuBar()
     m_pMenuBar =  new wxMenuBar( /*wxMB_DOCKABLE*/ );
 
   return m_pMenuBar;
-}
-
-void AmayaFrame::OnMenuItem( wxCommandEvent& event )
-{
-  wxMenu * p_menu = (wxMenu *)event.GetEventObject();
-  long     id     = event.GetId();
-  wxLogDebug( _T("AmayaFrame::OnMenuItem : p_menu = 0x%x\tmenuid = %d"), p_menu, id );
 }
 
 void AmayaFrame::SetActive( bool active )
@@ -794,7 +769,7 @@ void AmayaFrame::DestroyFrame()
   // Create a new drawing area
   ReplaceDrawingArea( CreateDrawingArea() );
 
-  // do not delete realy the frame becaus there is a strang bug
+  // do not delete realy the frame because there is a strange bug
   //  Destroy();
 
   // Reactivate the menu bar (nothing is done if the window is goind to die)
@@ -824,7 +799,6 @@ BEGIN_EVENT_TABLE(AmayaFrame, wxPanel)
   //  EVT_SCROLL_ENDSCROLL(     AmayaFrame::OnScrollLineDown )
   EVT_SCROLL( 		AmayaFrame::OnScroll ) // all scroll events
   EVT_CLOSE( 		AmayaFrame::OnClose )
-  EVT_MENU( -1,         AmayaFrame::OnMenuItem )
 
   EVT_SIZE( 		AmayaFrame::OnSize )
 
