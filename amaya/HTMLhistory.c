@@ -249,8 +249,10 @@ View                view;
    int                 prev, i;
    char               *url = NULL;
    char               *form_data = NULL;
-   int                method;
+   int                 method;
    boolean	       last, hist;
+   boolean             same_form_data;
+
    GotoHistory_context *ctx;
 
    if (DocHistoryIndex[doc] < 0)
@@ -271,10 +273,25 @@ View                view;
    if (DocHistory[doc][prev].HistUrl == NULL)
       return;
 
+   /* get the previous document information*/
+   url = DocHistory[doc][prev].HistUrl;
+   form_data = DocHistory[doc][prev].form_data;
+   method = DocHistory[doc][prev].method;
+
+   /* is it the same form_data? */
+   if (!form_data && ! DocumentMeta[doc]->form_data)
+     same_form_data = TRUE;
+   else if (form_data && DocumentMeta[doc]->form_data 
+	    && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
+     same_form_data = TRUE;
+   else
+     same_form_data = FALSE;
+
    /* if the document has been edited, ask the user to confirm, except
       if it's simply a jump in the same document */
    if (DocumentURLs[doc] != NULL)
-     if (strcmp(DocumentURLs[doc], DocHistory[doc][prev].HistUrl))
+     if (strcmp(DocumentURLs[doc], url)
+	 || !same_form_data)
        if (!CanReplaceCurrentDocument (doc, view))
          return;
 
@@ -307,18 +324,15 @@ View                view;
       SetArrowButton (doc, TRUE, FALSE);
 
    /* load the previous document */
-   url = DocHistory[doc][prev].HistUrl;
-   form_data = DocHistory[doc][prev].form_data;
-   method = DocHistory[doc][prev].method;
 
    /* save the context */
    ctx = TtaGetMemory (sizeof (GotoHistory_context));
    ctx->prevnext = prev;
    ctx->last = last;
    ctx->doc = doc;
-      
-   /* is it the current document ? */
-   if (!strcmp (url, DocumentURLs[doc]))
+
+    /* is it the current document ? */     
+   if (!strcmp (url, DocumentURLs[doc]) && same_form_data)
      {
        /* it's just a move in the same document */
        if (hist)
@@ -390,6 +404,7 @@ View                view;
    char         *url = NULL;
    char         *form_data = NULL;
    int           method;
+   boolean       same_form_data;
 
    int		next, i;
    GotoHistory_context  *ctx;
@@ -411,10 +426,20 @@ View                view;
    if (DocHistory[doc][next].HistUrl == NULL)
       return;
 
+   /* is the form_data the same? */
+   if (!form_data && ! DocumentMeta[doc]->form_data)
+     same_form_data = TRUE;
+   else if (form_data && DocumentMeta[doc]->form_data 
+	    && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
+     same_form_data = TRUE;
+   else
+     same_form_data = FALSE;
+
    /* if the document has been edited, ask the user to confirm, except
       if it's simply a jump in the same document */
    if (DocumentURLs[doc] != NULL)
-     if (strcmp(DocumentURLs[doc], DocHistory[doc][next].HistUrl))
+     if (strcmp(DocumentURLs[doc], DocHistory[doc][next].HistUrl)
+	 || !same_form_data)
        if (!CanReplaceCurrentDocument (doc, view))
          return;
 
@@ -450,7 +475,7 @@ View                view;
    ctx->doc = doc;
 
    /* is it the current document ? */
-   if (!strcmp (url, DocumentURLs[doc]))
+   if (!strcmp (url, DocumentURLs[doc]) && same_form_data)
      /* it's just a move in the same document */
      GotoNextHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
    else 
@@ -478,6 +503,9 @@ ClickEvent          method;
       return;
    if (*url == '\0')
       return;
+   /* avoid storing POST forms */
+   if (method == CE_FORM_POST)
+     return;
 
    /* initialize the history if it has not been done yet */
    if (DocHistoryIndex[doc] < 0 || DocHistoryIndex[doc] >= DOC_HISTORY_SIZE)
