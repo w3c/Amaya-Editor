@@ -38,7 +38,7 @@ type et leur position dans la structure du document. Ces numéros sont affichés
 en bleu et ne peuvent pas être édités directement, mais ils sont
 automatiquement mis à jour toutes les fois qu'une en-tête est créée ou
 effacée. Ils n'apparaissent pas seulement dans la vue principale, mais aussi
-dans la Vue table des matières. </p>
+dans la Vue table des matières.</p>
 
 <p>Quand le document est  <a href="Printing.html#L1062">imprimé</a>, les
 numéros de section apparaissent dans le document imprimé seulement si la
@@ -48,9 +48,9 @@ fonction "numéroter"est enclenchée à ce moment là.</p>
 <a href="Publishing.html#L1104">le format HTML</a>, mais ils sont engendrés
 dans la  <a href="Publishing.html#L1105">le format texte.</a></p>
 
-<p>La commande  <strong>Numéroter les sections </strong> du menu
+<p>La commande <strong>Numéroter les sections </strong>du menu
 <strong>Spécial</strong> est une bascule qui vous permet d'activer ou de
-désactiver  la fonction "numérotater".</p>
+désactiver  la fonction "numéroter".</p>
 </div>
 
 <p align="right"><a href="Printing.html"><img alt="previous" border="0"
