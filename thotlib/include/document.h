@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 #ifndef _DOCUMENT_H_
 #define _DOCUMENT_H_
 
