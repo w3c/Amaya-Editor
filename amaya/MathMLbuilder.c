@@ -1397,178 +1397,207 @@ void SetIntAddSpaceAttr (Element el, Document doc)
   ElementType	elType;
   AttributeType	attrType;
   Attribute	attr, formAttr;
+  SSchema       MathMLSSchema;
   int		len, val, form;
   CHAR_T        text[2];
   Language	lang;
   char		script;
+  ThotBool      comment;
 
+  MathMLSSchema = TtaGetElementType(el).ElSSchema;
   /* get the content of the mo element */
   textEl = TtaGetFirstChild (el);
-  if (textEl != NULL)
-     /* the mo element is not empty */
-     {
-     /* does the mo element have an IntAddSpace attribute? */
-     elType = TtaGetElementType (el);
-     attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = MathML_ATTR_IntAddSpace;
-     attr = TtaGetAttribute (el, attrType);
-     if (attr == NULL)
+
+  /* skip comments if any */
+  if (textEl)
+    do
+      {
+	elType = TtaGetElementType (textEl);
+	if (TtaSameSSchemas (elType.ElSSchema, MathMLSSchema) &&
+	    elType.ElTypeNum == MathML_EL_XMLcomment)
+	  /* it's a comment, skip it */
+	  TtaNextSibling (&textEl);
+      }
+    while (textEl && elType.ElTypeNum == MathML_EL_XMLcomment);
+
+  if (textEl && elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+    /* the mo element is not empty */
+    {
+      /* does the mo element have an IntAddSpace attribute? */
+      attrType.AttrSSchema = MathMLSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_IntAddSpace;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr == NULL)
         /* no IntAddSpace Attr, create one */
 	{
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (el, attr, doc);
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
 	}
-     /* space on both sides by default */
-     val = MathML_ATTR_IntAddSpace_VAL_both;
-     /* does the mo element have a form attribute? */
-     attrType.AttrTypeNum = MathML_ATTR_form;
-     formAttr = TtaGetAttribute (el, attrType);
-     if (formAttr)
-       /* there is a form attribute */
-       {
-       form = TtaGetAttributeValue (formAttr);
-       switch (form)
-	 {
-	 case MathML_ATTR_form_VAL_prefix:
-	   val = MathML_ATTR_IntAddSpace_VAL_nospace;
-	   break;
-	 case MathML_ATTR_form_VAL_infix:
-	   val = MathML_ATTR_IntAddSpace_VAL_both;
-	   break;
-	 case MathML_ATTR_form_VAL_postfix:
-	   val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
-	   break;
-	 default:
-	   val = MathML_ATTR_IntAddSpace_VAL_both;
-	   break;
-	 } 
-       }
-     else
-       /* no form attribute. Analyze the content */
-       {
-       len = TtaGetElementVolume (textEl);
-       if (len == 1)
-	  {
-	    TtaGiveBufferContent (textEl, text, len+1, &lang);
-	    script = TtaGetScript (lang);
-	    /* the mo element contains a single character */
-#ifndef _I18N_
-	    if (script == 'L')
-	      /* ISO-Latin 1 character */
-	      {
-#endif
-		if (text[0] == '-'
-#ifdef _I18N_
-		    || text[0] == 0x2212   /* minus */
-#endif
-		    )
-		  /* prefix or infix operator? */
-		  {
-		    previous = el;
-		    TtaPreviousSibling (&previous);
-		    if (previous == NULL)
-		      /* no previous sibling => prefix operator */
-		      val = MathML_ATTR_IntAddSpace_VAL_nospace;
-		    else
-		      {
-			elType = TtaGetElementType (previous);
-			if (elType.ElTypeNum == MathML_EL_MO)
-			   /* after an operator => prefix operator */
-		           val = MathML_ATTR_IntAddSpace_VAL_nospace;
-			else
-			   /* infix operator */
-		           val = MathML_ATTR_IntAddSpace_VAL_both;
-		      }
-		  }
-		else if (text[0] == '&' ||
-			 text[0] == '*' ||
-			 text[0] == '+' ||
-			 text[0] == '/' ||
-			 text[0] == '<' ||
-			 text[0] == '=' ||
-			 text[0] == '>' ||
-			 text[0] == '^' ||
-			 (int)text[0] == 177 || /* plus or minus */
-			 (int)text[0] == 215 || /* times */
-			 (int)text[0] == 247)   /* divide */
-		  /* infix operator */
-		  val = MathML_ATTR_IntAddSpace_VAL_both;
-		else if (text[0] == ',' ||
-			 text[0] == '!' ||
-			 text[0] == '&' ||
-			 text[0] == ':' ||
-			 text[0] == ';')
-		  /* separator */
-		  val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
-		else if (text[0] == '(' ||
-			 text[0] == ')' ||
-			 text[0] == '[' ||
-			 text[0] == ']' ||
-			 text[0] == '{' ||
-			 text[0] == '}' ||
-			 text[0] == '.' ||
-			 text[0] == '@' ||
-			 (int)text[0] == 129 ||  /* thin space */
-			 (int)text[0] == 130 ||  /* en space */
-			 (int)text[0] == 160)    /* em space */
-		  val = MathML_ATTR_IntAddSpace_VAL_nospace;
-#ifndef _I18N_
-	      }
-	    else if (script == 'G')
-	      {
-		/* Symbol character set */
-		if ((int)text[0] == 163 || /* less or equal */
-		    (int)text[0] == 177 || /* plus or minus */
-		    (int)text[0] == 179 || /* greater or equal */
-		    (int)text[0] == 180 || /* times */
-		    (int)text[0] == 184 || /* divide */
-		    (int)text[0] == 185 || /* not equal */
-		    (int)text[0] == 186 || /* identical */
-		    (int)text[0] == 187 || /* equivalent */
-		    (int)text[0] == 196 || /* circle times */
-		    (int)text[0] == 197 || /* circle plus */
-		    ((int)text[0] >= 199 && (int)text[0] <= 209) || /*  */
-		    (int)text[0] == 217 || /* and */
-		    (int)text[0] == 218)   /* or */
-#else
-	    else if ((int)text[0] == 0x2264 || /* less or equal */
-		     (int)text[0] == 0x00B1 || /* plus or minus */
-		     (int)text[0] == 0x2265 || /* greater or equal */
-		     (int)text[0] == 0x00D7 || /* times */
-		     (int)text[0] == 0x00F7 || /* divide */
-		     (int)text[0] == 0x2260 || /* not equal */
-		     (int)text[0] == 0x2261 || /* identical */
-		     (int)text[0] == 0x2248 || /* equivalent */
-		     (int)text[0] == 0x2297 || /* circle times */
-		     (int)text[0] == 0x2295 || /* circle plus */
-		     (int)text[0] == 0x2229 || /* Intersection */
-		     (int)text[0] == 0x222A || /* Union */
-		     (int)text[0] == 0x2283 || /* Superset of */
-		     (int)text[0] == 0x2287 || /* Superset of or equal to */
-		     (int)text[0] == 0x2284 || /* Not a subset of */
-		     (int)text[0] == 0x2282 || /* Subset of */
-		     (int)text[0] == 0x2286 || /* Subset of or equal to */
-		     (int)text[0] == 0x2208 || /* Element of */
-		     (int)text[0] == 0x2209 || /* Not an element of */
-		     (int)text[0] == 0x2220 || /* Angle */
-		     (int)text[0] == 0x2207 || /* Nabla */
-		     (int)text[0] == 0x2227 || /* and */
-		     (int)text[0] == 0x2228 || /* or */
-		     (int)text[0] == 0x2190 || /* left arrow */
-		     (int)text[0] == 0x2192 || /* right arrow */
-		     (int)text[0] == 0x2194)   /* left right arrow */
-#endif
-	      /* infix operator */
+      /* space on both sides by default */
+      val = MathML_ATTR_IntAddSpace_VAL_both;
+      /* does the mo element have a form attribute? */
+      attrType.AttrTypeNum = MathML_ATTR_form;
+      formAttr = TtaGetAttribute (el, attrType);
+      if (formAttr)
+	/* there is a form attribute */
+	{
+	  form = TtaGetAttributeValue (formAttr);
+	  switch (form)
+	    {
+	    case MathML_ATTR_form_VAL_prefix:
+	      val = MathML_ATTR_IntAddSpace_VAL_nospace;
+	      break;
+	    case MathML_ATTR_form_VAL_infix:
 	      val = MathML_ATTR_IntAddSpace_VAL_both;
-		else
-		  val = MathML_ATTR_IntAddSpace_VAL_nospace;
+	      break;
+	    case MathML_ATTR_form_VAL_postfix:
+	      val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
+	      break;
+	    default:
+	      val = MathML_ATTR_IntAddSpace_VAL_both;
+	      break;
+	    } 
+	}
+      else
+	/* no form attribute. Analyze the content */
+	{
+	  len = TtaGetElementVolume (textEl);
+	  if (len == 1)
+	    {
+	      TtaGiveBufferContent (textEl, text, len+1, &lang);
+	      script = TtaGetScript (lang);
+	      /* the mo element contains a single character */
 #ifndef _I18N_
-	      }
+	      if (script == 'L')
+		/* ISO-Latin 1 character */
+		{
 #endif
-	  }
-       }
-     TtaSetAttributeValue (attr, val, el, doc);
-     }
+		  if (text[0] == '-'
+#ifdef _I18N_
+		      || text[0] == 0x2212   /* minus */
+#endif
+		      )
+		    /* prefix or infix operator? */
+		    {
+		      /* skip preceding comments if any */
+		      previous = el;
+		      do
+			{
+			  comment = FALSE;
+			  TtaPreviousSibling (&previous);
+			  if (previous)
+			    {
+			      elType = TtaGetElementType (previous);
+			      comment = (TtaSameSSchemas (elType.ElSSchema, MathMLSSchema) &&
+					 elType.ElTypeNum == MathML_EL_XMLcomment);
+			    }
+			}
+		      while (previous && comment);
+		      
+		      if (previous == NULL)
+			/* no previous sibling => prefix operator */
+			val = MathML_ATTR_IntAddSpace_VAL_nospace;
+		      else
+			{
+			  elType = TtaGetElementType (previous);
+			  if (elType.ElTypeNum == MathML_EL_MO)
+			    /* after an operator => prefix operator */
+			    val = MathML_ATTR_IntAddSpace_VAL_nospace;
+			  else
+			    /* infix operator */
+			    val = MathML_ATTR_IntAddSpace_VAL_both;
+			}
+		    }
+		  else if (text[0] == '&' ||
+			   text[0] == '*' ||
+			   text[0] == '+' ||
+			   text[0] == '/' ||
+			   text[0] == '<' ||
+			   text[0] == '=' ||
+			   text[0] == '>' ||
+			   text[0] == '^' ||
+			   (int)text[0] == 177 || /* plus or minus */
+			   (int)text[0] == 215 || /* times */
+			   (int)text[0] == 247)   /* divide */
+		    /* infix operator */
+		    val = MathML_ATTR_IntAddSpace_VAL_both;
+		  else if (text[0] == ',' ||
+			   text[0] == '!' ||
+			   text[0] == '&' ||
+			   text[0] == ':' ||
+			   text[0] == ';')
+		    /* separator */
+		    val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
+		  else if (text[0] == '(' ||
+			   text[0] == ')' ||
+			   text[0] == '[' ||
+			   text[0] == ']' ||
+			   text[0] == '{' ||
+			   text[0] == '}' ||
+			   text[0] == '.' ||
+			   text[0] == '@' ||
+			   (int)text[0] == 129 ||  /* thin space */
+			   (int)text[0] == 130 ||  /* en space */
+			   (int)text[0] == 160)    /* em space */
+		    val = MathML_ATTR_IntAddSpace_VAL_nospace;
+#ifndef _I18N_
+		}
+	      else if (script == 'G')
+		{
+		  /* Symbol character set */
+		  if ((int)text[0] == 163 || /* less or equal */
+		      (int)text[0] == 177 || /* plus or minus */
+		      (int)text[0] == 179 || /* greater or equal */
+		      (int)text[0] == 180 || /* times */
+		      (int)text[0] == 184 || /* divide */
+		      (int)text[0] == 185 || /* not equal */
+		      (int)text[0] == 186 || /* identical */
+		      (int)text[0] == 187 || /* equivalent */
+		      (int)text[0] == 196 || /* circle times */
+		      (int)text[0] == 197 || /* circle plus */
+		      ((int)text[0] >= 199 && (int)text[0] <= 209) || /*  */
+		      (int)text[0] == 217 || /* and */
+		      (int)text[0] == 218)   /* or */
+#else
+		    else
+		      if ((int)text[0] == 0x2264 || /* less or equal */
+			  (int)text[0] == 0x00B1 || /* plus or minus */
+			  (int)text[0] == 0x2265 || /* greater or equal */
+			  (int)text[0] == 0x00D7 || /* times */
+			  (int)text[0] == 0x00F7 || /* divide */
+			  (int)text[0] == 0x2260 || /* not equal */
+			  (int)text[0] == 0x2261 || /* identical */
+			  (int)text[0] == 0x2248 || /* equivalent */
+			  (int)text[0] == 0x2297 || /* circle times */
+			  (int)text[0] == 0x2295 || /* circle plus */
+			  (int)text[0] == 0x2229 || /* Intersection */
+			  (int)text[0] == 0x222A || /* Union */
+			  (int)text[0] == 0x2283 || /* Superset of */
+			  (int)text[0] == 0x2287 || /* Superset of or equal to */
+			  (int)text[0] == 0x2284 || /* Not a subset of */
+			  (int)text[0] == 0x2282 || /* Subset of */
+			  (int)text[0] == 0x2286 || /* Subset of or equal to */
+			  (int)text[0] == 0x2208 || /* Element of */
+			  (int)text[0] == 0x2209 || /* Not an element of */
+			  (int)text[0] == 0x2220 || /* Angle */
+			  (int)text[0] == 0x2207 || /* Nabla */
+			  (int)text[0] == 0x2227 || /* and */
+			  (int)text[0] == 0x2228 || /* or */
+			  (int)text[0] == 0x2190 || /* left arrow */
+			  (int)text[0] == 0x2192 || /* right arrow */
+			  (int)text[0] == 0x2194)   /* left right arrow */
+#endif
+			/* infix operator */
+			val = MathML_ATTR_IntAddSpace_VAL_both;
+		      else
+			val = MathML_ATTR_IntAddSpace_VAL_nospace;
+#ifndef _I18N_
+		}
+#endif
+	    }
+	}
+      TtaSetAttributeValue (attr, val, el, doc);
+    }
 }
 
 /*----------------------------------------------------------------------
