@@ -416,9 +416,9 @@ Document            document;
    PrintAs prints the document using predefined parameters.
    ----------------------------------------------------------------------*/  
 #ifdef __STDC__
-void                PrintAs (Document doc, View view)
+static void         PrintDocument (Document doc, View view)
 #else  /* __STDC__ */
-void                PrintAs (doc, view)
+static void         PrintDocument (doc, view)
 Document            doc;
 #endif /* __STDC__ */
 {
@@ -488,6 +488,22 @@ Document            doc;
      TtaSetDocumentUnmodified (doc);
 }
 
+/*----------------------------------------------------------------------
+   PrintAs prints the document using predefined parameters.
+   ----------------------------------------------------------------------*/  
+#ifdef __STDC__
+void                PrintAs (Document doc, View view)
+#else  /* __STDC__ */
+void                PrintAs (doc, view)
+Document            doc;
+#endif /* __STDC__ */
+{
+#ifdef _WINDOWS 
+  SetupAndPrint (doc, view);
+#else /* _WINDOWS */
+  PrintDocument (doc, view);
+#endif /* _WINDOWS */
+}
 
 /*----------------------------------------------------------------------
    CallbackImage manage returns of Picture form.                   

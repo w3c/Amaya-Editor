@@ -6289,50 +6289,56 @@ Document doc;
 
 #endif
 {
-   Element          child, next, copy, prev, elem;
+   Element      child, next, copy, prev, elem;
+   ElementType	elType;
 
    if (IsEmptyElement (el))
       return;
+   elType = TtaGetElementType (el);
+   if (elType.ElTypeNum == HTML_EL_Table_head ||
+       elType.ElTypeNum == HTML_EL_Horizontal_Rule)
+     /* cannot insert any element into a Table_head or Horizontal_Rule */
+     return;
    child = TtaGetFirstChild (el);
    if (child == NULL)
      {
-     copy = TtaCopyTree (charEl, doc, doc, el);
-     TtaInsertFirstChild (&copy, el, doc);
+       copy = TtaCopyTree (charEl, doc, doc, el);
+       TtaInsertFirstChild (&copy, el, doc);
      }
    else
      {
-     prev = NULL;
-     do
-       {
-	next = child;
-	TtaNextSibling (&next);
-	elem = child;
-	if (!IsCharacterLevelElement (elem))
-	   /* create copies of element parent for all descendants of elem */
-	   {
-	   EncloseCharLevelElem (elem, charEl, doc);
-	   prev = NULL;
-	   }
-	else
-	   /* enclose elem in a copy of charEl */
-	   {
-	   if (prev != NULL)
-		{
-		TtaRemoveTree (elem, doc);
-		TtaInsertSibling (elem, prev, FALSE, doc);
-		}
+       prev = NULL;
+       do
+	 {
+	   next = child;
+	   TtaNextSibling (&next);
+	   elem = child;
+	   if (!IsCharacterLevelElement (elem))
+	     /* create copies of element parent for all descendants of elem */
+	     {
+	       EncloseCharLevelElem (elem, charEl, doc);
+	       prev = NULL;
+	     }
 	   else
-	        {
-	        copy = TtaCopyTree (charEl, doc, doc, el);
-	        TtaInsertSibling (copy, elem, TRUE, doc);
-	        TtaRemoveTree (elem, doc);
-	        TtaInsertFirstChild (&elem, copy, doc);
-		}
-	   prev = elem;
-	   }
-	child = next;
-       }
-     while (child != NULL);
+	     /* enclose elem in a copy of charEl */
+	     {
+	       if (prev != NULL)
+		 {
+		   TtaRemoveTree (elem, doc);
+		   TtaInsertSibling (elem, prev, FALSE, doc);
+		 }
+	       else
+		 {
+		   copy = TtaCopyTree (charEl, doc, doc, el);
+		   TtaInsertSibling (copy, elem, TRUE, doc);
+		   TtaRemoveTree (elem, doc);
+		   TtaInsertFirstChild (&elem, copy, doc);
+		 }
+	       prev = elem;
+	     }
+	   child = next;
+	 }
+       while (child != NULL);
      }
 }
 

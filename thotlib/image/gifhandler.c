@@ -1239,7 +1239,10 @@ int               **thotColors;
 	 {
 	   
 	   if (tcolors == NULL)
-	     tcolors = (int*) TtaGetMemory (num_colors * sizeof (int));
+	     {
+	       tcolors = (int*) TtaGetMemory (num_colors * sizeof (int));
+	       memset (tcolors, 0, num_colors * sizeof (int));
+	     }
 	   tcolors[i] = TtaGetThotColor (tmpcolr.red /256,
 					 tmpcolr.green / 256,
 					 tmpcolr.blue / 256);

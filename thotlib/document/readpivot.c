@@ -110,6 +110,7 @@ int                 typeimage;
       if (image == NULL)
 	{
 	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+	  memset (image, 0, sizeof (PictInfo));
 	  pEl->ElPictInfo = (int *) image;
 	}
       image->PicFileName = NULL;
@@ -125,6 +126,7 @@ int                 typeimage;
       image->PicHArea = h;
       image->PicWidth = 0;
       image->PicHeight = 0;
+      image->PicColors = NULL;
       image->mapped = FALSE;
       image->created = FALSE;
     }
