@@ -18,6 +18,7 @@ STRUCT
 	  END;
 
   Description = AGGREGATE
+	        ATitle = Text;
 		Author = CONSTANT C_Empty;
 		CreatorEmail = CONSTANT C_Empty;
 		CreatorGivenName = CONSTANT C_Empty;
@@ -54,6 +55,7 @@ EXCEPT
 
         { metadata }
 	Description:	NoCut;
+	ATitle:         NoCut;
         Author:	        NoCut;
         CreatorEmail:   NoCut;
         CreatorFamilyName: NoCut;

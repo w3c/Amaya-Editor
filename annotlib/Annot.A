@@ -10,5 +10,9 @@ ELEMENTS
      ElemActivate.Pre -> Annot_Types;
    END;
 
+   ATitle: BEGIN
+     ElemTextModify.Post -> Annot_UpdateTitle;
+   END;
+
 END 
 

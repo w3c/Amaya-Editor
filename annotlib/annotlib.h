@@ -85,6 +85,7 @@ typedef struct _AnnotMeta {
 			 doesn't resolve anymore */
   ThotBool show;      /* this annotation is visible in the formatted view */
 
+  char *title;     /* title of the annotation */
   char *annot_url; /* url of the annotation node */
   char *source_url; /* document that was annotated */
   /* the internal Amaya Xpath */

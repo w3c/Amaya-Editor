@@ -40,6 +40,7 @@
  */
 static const char * DC_CREATOR = "creator";
 static const char * DC_DATE    = "date";
+static const char * DC_TITLE   = "title";
 
 static const char * ANNOT_ANNOTATES  = "annotates";
 static const char * ANNOT_BODY       = "body";
@@ -265,6 +266,8 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
           annot->cdate = TtaStrdup ((char *) object);
       else if (contains (predicate, DC_NS, DC_DATE))
           annot->mdate = TtaStrdup ((char *) object);
+      else if (contains (predicate, DC_NS, DC_TITLE))
+          annot->title = TtaStrdup ((char *) object);
       else if (contains (predicate, RDFMS_NS, RDFMS_TYPE)) 
         {
           if (contains (object, ANNOT_NS, ANNOT_ANNOTATION) && annot->type)
