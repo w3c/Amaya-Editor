@@ -1118,12 +1118,11 @@ Pixmap              icon;
 /*----------------------------------------------------------------------
    ButtonAction                                                    
   ----------------------------------------------------------------------*/
-#ifndef _WINDOWS
 #ifdef __STDC__
-static void         APP_ButtonCallback (ThotWidget w, int frame, caddr_t call_d)
+void APP_ButtonCallback (ThotWidget w, int frame, caddr_t call_d)
 
 #else  /* __STDC__ */
-static void         APP_ButtonCallback (w, frame, call_d)
+void APP_ButtonCallback (w, frame, call_d)
 ThotWidget          w;
 int                 frame;
 caddr_t             call_d;
@@ -1145,6 +1144,7 @@ caddr_t             call_d;
      }
 }
 
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    InitClue
 
@@ -1210,6 +1210,18 @@ ThotWidget          toplevel;
    info: text to display when the cursor stays on the button.
    Returns index
   ----------------------------------------------------------------------*/
+#ifdef _WINDOWS
+#ifdef __STDC__
+int TtaAddButton (Document document, View view, int picture, void (*procedure) (), char *info)
+#else  /* __STDC__ */
+int TtaAddButton (document, view, picture, procedure, info)
+Document document;
+View     view;
+int      picture;
+void     (*procedure) ();
+char*    info;
+#endif /* __STDC__ */
+#else  /* !_WINDOWS */
 #ifdef __STDC__
 int                 TtaAddButton (Document document, View view, Pixmap picture, void (*procedure) (), char *info)
 #else  /* __STDC__ */
@@ -1220,6 +1232,7 @@ Pixmap              picture;
 void                (*procedure) ();
 char               *info;
 #endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
    int                 frame, i, n, index;
 
@@ -1300,18 +1313,33 @@ char               *info;
 		  /* force la mise a jour de la fenetre */
 		  XtManageChild (row);
 #                 else  /* _WINDOWS */
-                  w = (TBBUTTON*) malloc (sizeof (TBBUTTON)) ;
-                  w->iBitmap   = STD_CUT + i ;
-                  w->idCommand = i ; /* A REFAIRE CAR IL FAUT PASSER UN MESSAGE CORRESPONDANT AU CALLBACK */
-                  w->fsState   = TBSTATE_ENABLED ;
-                  w->fsStyle   = TBSTYLE_BUTTON ;
-                  w->dwData    = 0 ;
-                  w->iString   = 0 ;
-		  FrameTable[frame].Button[i] = w;
-		  FrameTable[frame].Call_Button[i] = (Proc) procedure;
-                  ToolBar_ButtonStructSize (WinToolBar[frame]);
-                  ToolBar_AddBitmap (WinToolBar[frame], 1, tbStdLarge);
-                  ToolBar_InsertButton (WinToolBar[frame], i, w);
+                  if (procedure) {
+                     w = (TBBUTTON*) malloc (sizeof (TBBUTTON)) ;
+                     w->iBitmap   = picture ;
+                     w->idCommand = TBBUTTONS_BASE + i ; 
+                     w->fsState   = TBSTATE_ENABLED ;
+                     w->fsStyle   = TBSTYLE_BUTTON ;
+                     w->dwData    = 0 ;
+                     w->iString   = 0 ;
+                     FrameTable[frame].Button[i] = w;
+                     FrameTable[frame].Call_Button[i] = (Proc) procedure;
+                     ToolBar_ButtonStructSize (WinToolBar[frame]);
+                     ToolBar_AddBitmap (WinToolBar[frame], 1, tbStdLarge);
+                     ToolBar_InsertButton (WinToolBar[frame], i, w);
+                  } else {
+                        w = (TBBUTTON*) malloc (sizeof (TBBUTTON)) ;
+                        w->iBitmap   = 0 ;
+                        w->idCommand = 0 ; 
+                        w->fsState   = TBSTATE_ENABLED ;
+                        w->fsStyle   = TBSTYLE_SEP ;
+                        w->dwData    = 0 ;
+                        w->iString   = 0 ;
+                        FrameTable[frame].Button[i] = w;
+                        FrameTable[frame].Call_Button[i] = (Proc) procedure;
+                        ToolBar_ButtonStructSize (WinToolBar[frame]);
+                        ToolBar_AddBitmap (WinToolBar[frame], 1, tbStdLarge);
+                        ToolBar_InsertButton (WinToolBar[frame], i, w);
+                  }
 #                 endif /* _WINDOWS */
                   if (info != NULL) {
                       /*

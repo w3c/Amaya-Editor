@@ -78,8 +78,8 @@ static boolean   paletteRealized = FALSE;
 
 int    cyToolBar ;
 HWND   hwndTB ;
-DWORD  dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | CCS_NODIVIDER /*| TBSTYLE_TOOLTIPS */ ;
-DWORD  dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP ;
+DWORD  dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | CCS_NODIVIDER | TBSTYLE_TOOLTIPS;
+DWORD  dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 #endif /* _WINDOWS */
 
 #include "absboxes_f.h"
@@ -1014,7 +1014,10 @@ LPARAM      lParam;
                  return 0;
 		 
             case WM_COMMAND:
-	         WIN_ThotCallBack (hwnd, wParam, lParam);
+				 if (LOWORD (wParam) >= TBBUTTONS_BASE)
+					APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
+				 else 
+	                 WIN_ThotCallBack (hwnd, wParam, lParam);
 	         return (0);
 
             case WM_DESTROY:
@@ -1543,20 +1546,20 @@ View                view;
      {
 	for (frame = 1; frame <= MAX_FRAME; frame++)
 	  {
-#ifndef _WINDOWS
+#        ifndef _WINDOWS
 	     drawable = TtaGetThotWindow (frame);
 	     if (drawable != 0)
 		XDefineCursor (TtDisplay, drawable, WaitCurs);
-#endif /* _WINDOWS */
+#        endif /* _WINDOWS */
 	  }
      }
    else
      {
 	frame = GetWindowNumber (document, view);
-#ifndef _WINDOWS
+#   ifndef _WINDOWS
 	if (frame != 0)
 	   XDefineCursor (TtDisplay, TtaGetThotWindow (frame), WaitCurs);
-#endif /* _WINDOWS */
+#   endif /* _WINDOWS */
      }
 }
 
@@ -1629,11 +1632,11 @@ int                *pave;
    /* Changement du curseur */
    for (i = 1; i <= MAX_FRAME; i++)
      {
-#ifndef _WINDOWS
+#   ifndef _WINDOWS
 	drawable = TtaGetThotWindow (i);
 	if (drawable != 0)
 	   XDefineCursor (TtDisplay, drawable, WindowCurs);
-#endif /* !_WINDOWS */
+#   endif /* !_WINDOWS */
      }
 
    /* Boucle d'attente de designation */
@@ -1655,11 +1658,11 @@ int                *pave;
    /* Restauration du curseur */
    for (i = 1; i <= MAX_FRAME; i++)
      {
-#ifndef _WINDOWS
+#   ifndef _WINDOWS
 	drawable = TtaGetThotWindow (i);
 	if (drawable != 0)
 	   XUndefineCursor (TtDisplay, drawable);
-#endif /* _WINDOWS */
+#   endif /* _WINDOWS */
      }
 
    *frame = ClickFrame;

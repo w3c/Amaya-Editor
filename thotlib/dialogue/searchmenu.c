@@ -964,7 +964,6 @@ View                view;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
    boolean             ok;
    PtrDocument         pDocSel;
    PtrElement          pFirstSel;
@@ -988,8 +987,10 @@ View                view;
      }
 
    /* fait disparaitre les autres formulaires de recherche qui sont affiches */
+#  ifndef _WINDOWS
    TtaDestroyDialogue (NumFormSearchEmptyElement);
    TtaDestroyDialogue (NumFormSearchEmptyReference);
+#  endif /* _WINDOWS */
    StartSearch = TRUE;
 
    /* compose le titre du formulaire "Recherche dans le document..." */
@@ -999,6 +1000,7 @@ View                view;
    strcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    i = strlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
    strcpy (string + i, TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
+#  ifndef _WINDOWS
    TtaNewSheet (NumFormSearchText, TtaGetViewFrame (document, view), 
 		bufTitle, 2, string, FALSE, 6, 'L', D_DONE);
 
@@ -1046,6 +1048,7 @@ View                view;
       TtaNewLabel (NumMenuReplaceMode, NumFormSearchText, " ");
 
    /* sous-menu Ou` rechercher */
+#  endif /* _WINDOWS */
    InitMenuWhereToSearch (NumFormSearchText);
 
    WithReplace = FALSE;
@@ -1053,8 +1056,10 @@ View                view;
    AutoReplace = FALSE;
    strcpy (pPrecedentString, "");
 
+#  ifndef _WINDOWS */
    /* efface le label "References dans le document X" */
    TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
+#  endif /* _WINDOWS */
    SearchLoadResources ();
    /* complete la feuille de dialogue avec les menus de recherche de types */
    /* d'element et d'attributs si la ressource de recherche avec structure */
@@ -1063,6 +1068,7 @@ View                view;
       (*ThotLocalActions[T_strsearchconstmenu]) (pDoc);
 
    /* active le formulaire */
+#  ifndef _WINDOWS 
    TtaShowDialogue (NumFormSearchText, TRUE);
    if (!ok)
      {
@@ -1072,6 +1078,13 @@ View                view;
    searchDomain->SDocument = pDoc;
    TextOK = FALSE;
 #  else  /* _WINDOWS */
+   if (!ok)
+     {
+	InitSearchDomain (3, searchDomain);
+	/* TtaSetMenuForm (NumMenuOrSearchText, 3); */
+     }
+   searchDomain->SDocument = pDoc;
+   TextOK = FALSE;
    CreateSearchDlgWindow (TtaGetViewFrame (document, view));
 #  endif /* _WINDOWS */ 
 }
