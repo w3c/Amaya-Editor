@@ -122,7 +122,11 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
     {
+#ifndef _GL
       GetFontAndIndexFromSpec (32, pBox->BxFont, &font);
+#else
+	GetMathFontFromChar (pBox->BxAbstractBox->AbShape, &font);
+#endif
       if (font != NULL)
 	{
 	  /* Position in the frame */
