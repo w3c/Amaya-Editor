@@ -895,16 +895,16 @@ static gboolean CallPopGTK (GtkWidget *widget, gpointer data)
 #ifdef _GTK
 static gboolean scr_popup_key_press (GtkWidget * widget, GdkEventKey * event, gpointer data)
 {
-  if (event->keyval == GDK_Escape || event->keyval == GDK_Return)
+  if (event->keyval == GDK_Escape) 
+    {
+      formKillGTK (widget, NULL, data);
+      return TRUE;
+    }
+  else if (event->keyval == GDK_Return
+	   || event->keyval == GDK_space)
     return (CallPopGTK (widget, data));
   else
     return FALSE;
-#if 0
-  if (event->keyval == GDK_Escape)
-    return (formKillGTK (widget, event, (struct Cat_Context *) data));
-  else if (event->keyval == GDK_Return)
-    return (CallPopGTK (widget, data));
-#endif
 }
 #endif /* _GTK */
 
@@ -1121,10 +1121,15 @@ static void INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t
 #ifndef _GTK
 static void formKill (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 #else /* _GTK */
-static void formKillGTK (GtkWidget *widget, GdkEvent *event,
-			 struct Cat_Context *catalogue)
+static void formKillGTK (GtkWidget *widget, GdkEvent *event, gpointer data)
 #endif /* _GTK */
 {
+#ifdef _GTK
+  struct Cat_Context *catalogue;
+
+  catalogue = (struct Cat_Context *) data;
+#endif /* _GTK */
+
    /* Le widget est detruit */
   if (catalogue->Cat_Type == CAT_FORM ||
       catalogue->Cat_Type == CAT_SHEET ||

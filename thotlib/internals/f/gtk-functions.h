@@ -139,3 +139,4 @@ void ButtonBgToggledGTK (GtkWidget *w, GdkEventButton *event, gpointer data);
 gboolean ColorsPressGTK (GtkWidget *widget, gpointer data);
 gboolean CreateExtendedColorSelectionGTK (GtkWidget *widget, gpointer data);
 gboolean CloseExtendedColorSelectionGTK (GtkWidget *widget, gpointer data);
+static void formKillGTK (GtkWidget *widget, GdkEvent *event, gpointer data);
