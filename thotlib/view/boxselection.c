@@ -270,8 +270,8 @@ int                 frame;
 			    pBox1->BxType == BoDotted)
 			  {
 			    /* select the begin of the split text */
-			    pBox = pAb2->AbBox->BxNexChild;
-			    while (pBox != pBox2)
+			    pBox =  pAb2->AbBox->BxNexChild;
+  			    while (pBox && pBox != pBox2)
 			      {
 				DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
 				RedrawFrameBottom (frame, 0, pAb2);
