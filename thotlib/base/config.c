@@ -798,7 +798,9 @@ boolean             lang;
       strcpy (suffix, "conf");
 
    /* Search in HOME directory */
-   strcpy (DirBuffer, TtaGetEnvString ("HOME"));
+   ptr = TtaGetEnvString ("HOME");
+   if (ptr != NULL)
+     strcpy (DirBuffer, ptr);
    MakeCompleteName (name, suffix, DirBuffer, filename, &i);
    if (!TtaFileExist (filename))
      {
