@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Añadir filas a una tabla</title>
-  <meta name="generator" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -34,26 +34,26 @@
 <ol>
   <li>Para crear una nueva fila antes de una fila ya existente, sitúa el
     cursor al principio de la primera celda de la fila y elige la opción
-    <strong>Insertar fila antes</strong> del submenú <strong>Tabla</strong>
-    (<code>Ctrl+t Ctrl+p</code>)</li>
+    <strong>Insertar fila delante</strong> del submenú <strong>Tabla</strong>
+    (<kbd>Ctrl t Ctrl i</kbd>)</li>
   <li>Para crear una nueva fila después de una fila ya existente, sitúa el
     cursor al final de la última celda de la fila y elige la opción
-    <strong>Insertar fila después</strong> del submenú <strong>Tabla</strong>
-    (<code>Ctrl+t Ctrl+n</code>)</li>
+    <strong>Insertar fila detrás</strong> del submenú <strong>Tabla</strong>
+    (<kbd>Ctrl t Ctrl n</kbd>)</li>
 </ol>
 
 <p>También se pueden añadir fácilmente filas a una tabla mediante la tecla
-<strong>Intro</strong>. Tras seleccionar una fila completa (pulsando la tecla
-<code>F2</code> en Windows y <code>Escape</code> en Linux), al pulsar la
-tecla <strong>Intro</strong> se creará una nueva fila después de la fila
+<kbd>Intro</kbd>. Tras seleccionar una fila completa (pulsando la tecla
+<kbd>F2</kbd> en Windows y <kbd>Escape</kbd> en Linux), al pulsar la
+tecla <kbd>Intro</kbd> se creará una nueva fila después de la fila
 seleccionada.</p>
 
 <p class="ProcedureCaption">Para seleccionar una fila:</p>
 <ol>
   <li>Elige la opción <strong>Seleccionar fila</strong> del submenú
-    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+r</code>).</li>
+    <strong>Tabla</strong> (<kbd>Ctrl t Ctrl r</kbd>).</li>
   <li>También puedes situar el cursor en una celda y pulsar la tecla
-    <code>F2</code> en Windows (o la tecla <code>Escape</code> en Linux),
+    <kbd>F2</kbd> en Windows (o la tecla <kbd>Escape</kbd> en Linux),
     hasta extender la selección a la fila completa.</li>
 </ol>
 
@@ -64,12 +64,12 @@ cortarla) y pegarla antes o después de otra fila.</p>
 <ol>
   <li>Para pegar una fila antes de una fila ya existente, sitúa el cursor al
     principio de la fila y pega la fila copiada o cortada mediante la opción
-    <strong>Pegar antes</strong> del submenú <strong>Tabla</strong>
-    (<code>Ctrl+t Ctrl+p</code>).</li>
+    <strong>Pegar delante</strong> del submenú <strong>Tabla</strong>
+    (<kbd>Ctrl t Ctrl p</kbd>).</li>
   <li>Para pegar una fila después de una fila ya existente, sitúa el cursor
     al final de la fila y pega la fila copiada o cortada mediante la opción
-    <strong>Pegar después</strong> del submenú <strong>Tabla</strong>
-    (<code>Ctrl+t Ctrl+v</code>).</li>
+    <strong>Pegar detrás</strong> del submenú <strong>Tabla</strong>
+    (<kbd>Ctrl t Ctrl v</kbd>).</li>
 </ol>
 </div>
 </body>

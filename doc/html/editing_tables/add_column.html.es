@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Añadir columnas a una tabla</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -34,16 +34,16 @@
 <ol>
   <li>Para crear una nueva columna a la izquierda de una celda, elige la
     opción <strong>Insertar columna antes</strong> del submenú
-    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+b</code>).</li>
+    <strong>Tabla</strong> (<kbd>Ctrl t Ctrl b</kbd>).</li>
   <li>Para crear una nueva columna a la derecha de una celda, elige la opción
     <strong>Insertar columna después</strong> del submenú
-    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+a</code>).</li>
+    <strong>Tabla</strong> (<kbd>Ctrl t Ctrl a</kbd>).</li>
 </ol>
 
 <p>También se pueden añadir fácilmente columnas a una tabla mediante la tecla
-<strong>Intro</strong>. Tras seleccionar una celda completa (pulsando la
-tecla <code>F2</code> en Windows y <code>Escape</code> en Linux), al pulsar
-la tecla <strong>Intro</strong> se creará una nueva celda y su columna
+<kbd>Intro</kbd>. Tras seleccionar una celda completa (pulsando la
+tecla <kbd>F2</kbd> en Windows y <kbd>Escape</kbd> en Linux), al pulsar
+la tecla <kbd>Intro</kbd> se creará una nueva celda y su columna
 correspondiente a la derecha de la celda seleccionada.</p>
 </div>
 </body>

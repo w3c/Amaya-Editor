@@ -77,7 +77,7 @@ formas.</p>
     ratón el nombre completo o URI del documento actual.</li>
   <li>Pulsa la tecla <strong>Suprimir</strong> y a continuación escribe el
     camino completo o el URI del archivo que quieres abrir y pulsa
-    <strong>Intro</strong>.</li>
+    <kbd>Intro</kbd>.</li>
 </ol>
 </div>
 </body>

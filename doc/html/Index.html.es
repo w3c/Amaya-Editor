@@ -3,15 +3,16 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 8.0, see http://www.w3.org/Amaya/" />
-  <title>Index</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
+  <title>Índice</title>
   <link rel="stylesheet" href="index.css" />
 </head>
 
 <body xml:lang="es" lang="es">
 <a name="HTMLIndexerTop" id="HTMLIndexerTop"></a>
 
-<h1>Index</h1>
+<h1>Índice</h1>
 
 <div class="letters">
 <a href="#A">A</a> <a href="#B">B</a> <a href="#C">C</a> <a href="#D">D</a>
@@ -592,8 +593,6 @@ HTML</div>
 <a name="I" id="I">I</a> - <a name="J" id="J">J</a> - <a name="K"
 id="K">K</a></div>
 
-<p></p>
-
 <div class="level1">
 idioma</div>
 
@@ -644,8 +643,6 @@ imprimir</div>
 
 <div class="level1">
 <a href="Browsing.html.es">ISO-latin-1, documentos</a></div>
-
-<p></p>
 
 <div class="level1">
 <a href="Browsing.html.es">juegos de caracteres</a></div>

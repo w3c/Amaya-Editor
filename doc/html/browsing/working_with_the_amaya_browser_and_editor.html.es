@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <title>Trabajar con el Navegador y Editor Amaya</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -93,7 +93,8 @@ caracteres utilizado. Cuando el analizador XML analiza el documento y
 encuentra un caracter que no es UTF-8, el documento se considera
 gramaticalmente incorrecto. El análisis se detiene y Amaya muestra un mensaje
 de error que propone abrir el documento como documento HTML o bien mostrar
-los errores encontrados en el análisis.</p>
+los errores encontrados en el análisis. Si eliges mostrar los errores
+encontrados, Amaya muestra los errores detectados.</p>
 </div>
 </body>
 </html>

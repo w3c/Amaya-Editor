@@ -38,9 +38,9 @@ convertirlo en elemento destino.</p>
 <p class="ProcedureCaption">Para crear un elemento destino:</p>
 <ol>
   <li>Selecciona una cadena de caracteres en el elemento o pulsa
-    <strong>Escape</strong> (Unix) o <strong>F2</strong> (Windows) para
+    <kbd>Escape</kbd> (Unix) o <kbd>F2</kbd> (Windows) para
     seleccionar el elemento completo.
-    <p></p>
+    
   </li>
   <li>Elige el comando de menú <strong>Enlaces &gt; Crear
     destino</strong><strong>.</strong> El elemento seleccionado tiene ahora
@@ -49,7 +49,7 @@ convertirlo en elemento destino.</p>
     Formateada, si <strong>Mostrar destinos</strong> está activada, el
     elemento destino estará precedido por un icono. En la vista Enlaces, los
     iconos que identifican los destinos se muestran siempre.
-    <p></p>
+    
     <p class="ProcedureNote"><strong>Nota:</strong> También puedes crear
     directamente el atributo <code>ID</code> seleccionado el elemento y
     utilizando el menú <strong>Atributos</strong>. Cuando escribe el valor

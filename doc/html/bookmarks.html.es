@@ -154,7 +154,7 @@ ventana que muestra tus marcadores y temas:</p>
 alt="Ventana Propiedades de tema" border="2" /></p>
 </div>
 
-<p></p>
+
 
 <p>En esta ventana de marcadores, los temas están precedidos con el icono
 <img alt="collapsed topic" src="../images/closed.png" /> o <img

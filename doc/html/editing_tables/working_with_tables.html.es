@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Trabajar con tablas</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -37,28 +37,28 @@ que a otras estructuras HTML y algunos comandos más.</p>
 <ol>
   <li>Para extender una celda a la celda situada a su derecha, elige la
     opción <strong>Unir con celda derecha</strong> del submenú
-    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+e</code>).</li>
+    <strong>Tabla</strong> (<kbd>Ctrl t Ctrl e</kbd>).</li>
   <li>Para extender una celda a la celda situada abajo, elige la opción
     <strong>Unir con celda inferior</strong> del submenú
-    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+j</code>).</li>
+    <strong>Tabla</strong> (<kbd>Ctrl t Ctrl j</kbd>).</li>
   <li>Para reducir la extensión horizontal de una celda una posición, elige
     la opción <strong>Reducir extensión horizontal</strong> del submenú
-    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+s</code>).</li>
+    <strong>Tabla</strong> (<kbd>Ctrl t Ctrl s</kbd>).</li>
   <li>Para reducir la extensión vertical de una celda una posición, elige la
     opción <strong>Reducir extensión certical</strong> del submenú
-    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+m</code>).</li>
+    <strong>Tabla</strong> (<kbd>Ctrl t Ctrl m</kbd>).</li>
 </ol>
 
 <p>La extensión de una celda también puede modificarse editando los <a
 href="../../../Amaya_CVS_040110_en/html/Attributes.html">atributos</a>
-colspan y rowspan.</p>
+<code>colspan</code> y <code>rowspan</code>.</p>
 
 <p class="ProcedureCaption">Para añadir elemtnos después de una tabla:</p>
 
 <p>Si una tabla está situada al final de un documento, para poder "salir" de
 la tabla y añadir otros elementos a continuación, es necesario seleccionar la
-tabla completa (mediante la tecla <code>F2</code> en Windows y
-<code>Escape</code> en Unix) y pulsar la tecla <strong>Intro</strong>. Amaya
+tabla completa (mediante la tecla <kbd>F2</kbd> en Windows y
+<kbd>Escape</kbd> en Unix) y pulsar la tecla <kbd>Intro</kbd>. Amaya
 creará un nuevo párrafo después de la tabla. El párrafo creado puede ser
 sustituido por otro elemento.</p>
 

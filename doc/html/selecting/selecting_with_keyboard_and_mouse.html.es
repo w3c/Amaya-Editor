@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <title>Seleccionar con el Teclado y el Ratón</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -64,7 +64,7 @@ haciendo clic en la palabra estructura y a continuación pulsando
   <li>Para seleccionar un elemento de lista completo, haz clic en su viñeta o
     número.</li>
   <li>Para extender una selección, haz clic con el botón izquierdo del ratón
-    mientras mantienes pulsada la tecla <code>Shift</code>.</li>
+    mientras mantienes pulsada la tecla <kbd>Shift</kbd>.</li>
   <li>Para seleccionar un elemento de estructura, haz clic en el interior del
     elemento y a continuación el nivel de la estructura que quieras
     utilizando el teclado como se describe a acontinuación.</li>
@@ -74,65 +74,64 @@ haciendo clic en la palabra estructura y a continuación pulsando
 <ul>
   <li>Para seleccionar elementos de estructura utilizando el teclado
     <ul>
-      <li>Pulsa la tecla <code>Escape</code> en Unix/Mac o la tecla
-        <code>F2</code> en Windows para seleccionar el elemento padre en la
+      <li>Pulsa la tecla <kbd>Escape</kbd> en Unix/Mac o la tecla
+        <kbd>F2</kbd> en Windows para seleccionar el elemento padre en la
         estructura del documento. Pulsa la tecla varias veces para ir
         seleccionando los elementos de nivel superior (y todo su contenido)
         hasta llegar a la raíz.</li>
-      <li>Pulsa <code>Control -</code> (tecla menos) para seleccionar un
+      <li>Pulsa <kbd>Control -</kbd> (tecla menos) para seleccionar un
         elemento hijo.</li>
-      <li>Pulsa <code>Control k</code> para seleccionar el siguiente elemento
+      <li>Pulsa <kbd>Control k</kbd> para seleccionar el siguiente elemento
         del mismo nivel, o del nivel del elemento padre si no hay después o
         antes un elemento hijo del nivel actual.</li>
-      <li>Pulsa <code>Control j</code> para seleccionar el elemento anterior
+      <li>Pulsa <kbd>Control j</kbd> para seleccionar el elemento anterior
         del mismo nivel, o del nivel del elemento padre si no hay antes un
         elemento hijo del nivel actual.</li>
     </ul>
   </li>
   <li>Para mover el punto de inserción en las cuatro direcciones, utiliza las
-    cuatro flechas de desplazamiento (<code>Izquierda</code>,
-    <code>Derecha</code>, <code>Arriba</code> y <code>Abajo</code>). Si no
-    hay ninguna selección visible en la ventana, Amaya crea una nueva
-    selección en la esquina superior izquierda de la ventana.<br />
+    cuatro flechas de desplazamiento (<kbd>Izquierda</kbd>,
+    <kbd>Derecha</kbd>, <kbd>Arriba</kbd> y <kbd>Abajo</kbd>). Si no hay
+    ninguna selección visible en la ventana, Amaya crea una nueva selección
+    en la esquina superior izquierda de la ventana.<br />
   </li>
   <li>Para extender la selección actual en una de las cuatro direcciones,
-    mantén pulsada la tecla <code>Shift</code> mientras pulsas una de las
-    flechas de desplazamiento (<code>Shift-Izquierda</code>,
-    <code>Shift-Derecha</code>, <code>Shift-Arriba</code>, and
-    <code>Shift-Abajo</code>).<br />
+    mantén pulsada la tecla <kbd>Shift</kbd> mientras pulsas una de las
+    flechas de desplazamiento (<kbd>Shift Izquierda</kbd>, <kbd>Shift
+    Derecha</kbd>, <kbd>Shift Arriba</kbd>, and <kbd>Shift Abajo</kbd>).<br />
   </li>
   <li>Para mover el punto de inserción al principio de la línea, pulsa la
-    tecla <code>Inicio</code>.<br />
+    tecla <kbd>Inicio</kbd>.<br />
   </li>
   <li>Para mover el punto de inserción al final de la línea, pulsa la tecla
-    <code>Fin</code>.<br />
+    <kbd>Fin</kbd>.<br />
   </li>
   <li>Para extender la selección actual a la palabra en la que se encuentra
-    el punto de inserción, pulsa <code>Alt-Intro</code>. Si la selección está
-    dentro de un enlace, <code>Alt-Intro</code> activará el enlace en vez de
+    el punto de inserción, pulsa <kbd>Alt Intro</kbd>. Si la selección está
+    dentro de un enlace, <kbd>Alt Intro</kbd> activará el enlace en vez de
     seleccionar la palabra actual.</li>
   <li>Para mover el punto de inserción al principio de la palabra anterior,
-    pulsa <code>Control-Izquierda</code>.<br />
+    pulsa <kbd>Control Izquierda</kbd>.<br />
   </li>
   <li>Para mover el punto de inserción al principio de la palabra siguiente,
-    pulsa <code>Control-Derecha</code>.<br />
+    pulsa <kbd>Control Derecha</kbd>.<br />
   </li>
   <li>Para extender la selección actual al principio de la palabra anterior,
-    pulsa <code>Shift-Control-Izquierda</code>.<br />
+    pulsa <kbd>Shift Control Izquierda</kbd>.<br />
   </li>
   <li>Para extender la selección actual al principio de la palabra siguiente,
-    pulsa <code>Shift-Control-Derecha</code>.<br />
+    pulsa <kbd>Shift Control Derecha</kbd>.<br />
   </li>
-  <li>Para mover el documento una línea hacia arriba, pulsa
-    <code>Control-Arriba</code>.<br />
+  <li>Para mover el documento una línea hacia arriba, pulsa <kbd>Control
+    Arriba</kbd>.<br />
   </li>
-  <li>Para mover el documento una línea hacia abajo, pulsa
-    <code>Control-Abajo</code>.</li>
+  <li>Para mover el documento una línea hacia abajo, pulsa <kbd>Control
+    Abajo</kbd>.</li>
   <li>Para mover el punto de inserción al principio del documento, pulsa
-    <code>Control-Inicio</code>.<br />
+    <kbd>Control Inicio</kbd>.<br />
   </li>
   <li>Para mover el punto de inserción al final del documento, pulsa
-    <code>Control-Fin</code>.<br />
+    <kbd>Control Fin</kbd>.<br />
   </li>
 </ul>
 

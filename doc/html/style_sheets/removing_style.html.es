@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <title>Eliminar estilos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -35,9 +35,8 @@ cualquier estilo a una cadena de caracteres.</p>
 <p class="ProcedureCaption">Para eliminar el estilo de una cadena de
 caracteres</p>
 <ol>
-  <li>Selecciona la cadena de caracteres de la que quieres eliminar el estilo.
-    <p></p>
-  </li>
+  <li>Selecciona la cadena de caracteres de la que quieres eliminar el
+  estilo.</li>
   <li>En el submenú <strong>XHTML &gt; Tipo de información</strong>, elige el
     estilo que quieres eliminar. Por ejemplo, si deseas eliminar el estilo
     <strong>énfasis</strong> de una cadena de caracteres, elige
@@ -65,97 +64,109 @@ caracteres</p>
       </td>
     </tr>
     <tr>
-      <td width="147" valign="top"><p class="TableText">énfasis (em)</p>
+      <td width="147" valign="top"><p class="TableText">énfasis
+        (<code>em</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Ctrl+i Ctrl+e</code></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl e</kbd></p>
       </td>
       <td valign="top"><img src="../../images/Em.gif" alt="Botón em" /></td>
     </tr>
     <tr>
-      <td width="147" valign="top"><p class="TableText">Strong</p>
+      <td width="147" valign="top"><p class="TableText">Enérgico
+        (<code>strong</code>)</p>
       </td>
-      <td><p><code>Ctrl+i Ctrl+s</code></p>
+      <td><p><kbd>Ctrl i Ctrl s</kbd></p>
       </td>
       <td valign="top"><img src="../../images/Strong.gif" alt="Botón strong"
         /></td>
     </tr>
     <tr>
-      <td width="147" valign="top"><p class="TableText">Cita (cite)</p>
+      <td width="147" valign="top"><p class="TableText">Cita
+        (<code>cite</code>)</p>
       </td>
-      <td><p><code>Ctrl+i Ctrl+w</code></p>
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td width="147" valign="top"><p class="TableText">Definición (dfn)</p>
-      </td>
-      <td><p><code>Ctrl+i Ctrl+x</code></p>
+      <td><p><kbd>Ctrl i Ctrl w</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
-      <td width="147" valign="top"><p class="TableText">Código (code)</p>
+      <td width="147" valign="top"><p class="TableText">Definición
+        (<code>dfn</code>)</p>
       </td>
-      <td><p><code>Ctrl+i Ctrl+t</code></p>
+      <td><p><kbd>Ctrl i Ctrl x</kbd></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Código
+        (<code>code</code>)</p>
+      </td>
+      <td><p><kbd>Ctrl i Ctrl t</kbd></p>
       </td>
       <td valign="top"><img src="../../images/code.gif" alt="Botón code"
       /></td>
     </tr>
     <tr>
-      <td width="147" valign="top"><p class="TableText">Variable (var)</p>
+      <td width="147" valign="top"><p class="TableText">Variable
+        (<code>var</code>)</p>
       </td>
-      <td><p><code>Ctrl+i Ctrl+v</code></p>
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td width="147" valign="top"><p class="TableText">Muestra (samp)</p>
-      </td>
-      <td><p><code>Ctrl+i Ctrl+m</code></p>
+      <td><p><kbd>Ctrl i Ctrl v</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
-      <td width="147" valign="top"><p class="TableText">Teclado (kbd)</p>
+      <td width="147" valign="top"><p class="TableText">Muestra
+        (<code>samp</code>)</p>
       </td>
-      <td><p><code>Ctrl+i Ctrl+k</code></p>
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td width="147" valign="top"><p class="TableText">Abreviatura (abbr)</p>
-      </td>
-      <td><p><code>Ctrl+i Ctrl+u</code></p>
+      <td><p><kbd>Ctrl i Ctrl m</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
-      <td width="147" valign="top"><p class="TableText">Acrónimo (acronym)</p>
+      <td width="147" valign="top"><p class="TableText">Teclado
+        (<code>kbd</code>)</p>
       </td>
-      <td><p><code>Ctrl+i Ctrl+y</code></p>
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td width="147" valign="top"><p class="TableText">Añadido (ins)</p>
-      </td>
-      <td><p><code>Ctrl+i Ctrl+i</code></p>
+      <td><p><kbd>Ctrl i Ctrl k</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
-      <td width="147" valign="top"><p class="TableText">Eliminado (del)</p>
+      <td width="147" valign="top"><p class="TableText">Abreviatura
+        (<code>abbr</code>)</p>
       </td>
-      <td><p><code>Ctrl+i Ctrl+d</code></p>
+      <td><p><kbd>Ctrl i Ctrl u</kbd></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Acrónimo
+        (<code>acronym</code>)</p>
+      </td>
+      <td><p><kbd>Ctrl i Ctrl y</kbd></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Añadido
+        (<code>ins</code>)</p>
+      </td>
+      <td><p><kbd>Ctrl i Ctrl i</kbd></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td width="147" valign="top"><p class="TableText">Eliminado
+        (<code>del</code>)</p>
+      </td>
+      <td><p><kbd>Ctrl i Ctrl d</kbd></p>
       </td>
       <td></td>
     </tr>
   </tbody>
 </table>
 
-<p><strong>Nota:</strong> Los atributos de los estilos aplicados una cadena
-de caracteres se eliminan seleccionando la cadena y volviendo a aplicar el
-estilo.</p>
+<p class="Note"><strong>Nota:</strong> Los atributos de los estilos aplicados
+una cadena de caracteres se eliminan seleccionando la cadena y volviendo a
+aplicar el estilo.</p>
 </div>
 </body>
 </html>

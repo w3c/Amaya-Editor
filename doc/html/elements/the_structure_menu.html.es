@@ -32,7 +32,7 @@
 
 <p>Los menús <strong>XHTML</strong> y <strong>XML</strong> te permiten
 únicamente crear elementos que formen parte del <code>body</code> del
-documento. Para crear elementos en el <code>HEAD</code> del documento,
+documento. Para crear elementos en el <code>head</code> del documento,
 utiliza el menú <strong>Estructura</strong> de la vista Estructura. Este menú
 funciona como en los menús <strong>XHTML</strong> y <strong>XML</strong>:
 sitúa el cursor en la posición deseada y elige el tipo de elemento en el menú

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <title>Seleccionar por Estructura</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -59,24 +59,23 @@ texto dentro de una estructura:</p>
 <p class="ProcedureCaption">Para seleccionar elementos de estructura
 utilizando el teclado:</p>
 <ul>
-  <li>En Unix pulsa la tecla <code>Escape</code> y en Windows pulsa la tecla
-    <code>F2</code> para seleccionar el elemento padre en la estructura del
+  <li>En Unix pulsa la tecla <kbd>Escape</kbd> y en Windows pulsa la tecla
+    <kbd>F2</kbd> para seleccionar el elemento padre en la estructura del
     documento. Pulsa la tecla varias veces para ir seleccionando los
     elementos de nivel superior (y todo su contenido) hasta llegar a la raíz.
-    <p></p>
+    
   </li>
-  <li>Pulsa <code>Ctrl -</code> (tecla menos) para seleccionar un elemento
-    hijo.
-    <p></p>
+  <li>Pulsa <kbd>Ctrl -</kbd> (tecla menos) para seleccionar un elemento hijo.
+    
   </li>
-  <li>Pulsa <code>Ctrl k</code> para seleccionar el siguiente elemento del
+  <li>Pulsa <kbd>Ctrl k</kbd> para seleccionar el siguiente elemento del
     mismo nivel, o del nivel del elemento padre si no hay después o antes un
     elemento hijo del nivel actual.
-    <p></p>
+    
   </li>
-  <li>Pulsa <code>Ctrl j</code> para seleccionar el elemento anterior del
-    mismo nivel, o del nivel del elemento padre si no hay antes un elemento
-    hijo del nivel actual.</li>
+  <li>Pulsa <kbd>Ctrl j</kbd> para seleccionar el elemento anterior del mismo
+    nivel, o del nivel del elemento padre si no hay antes un elemento hijo
+    del nivel actual.</li>
 </ul>
 </div>
 </body>

@@ -39,7 +39,7 @@ alt="Icono destino" />. Estos iconos no forman parte del documento y se
 pueden mostrar u ocultar de dos maneras:</p>
 <ul>
   <li>Eligiendo el comando de menú <strong>Ver &gt; Destinos</strong>
-    <p></p>
+    
   </li>
   <li>Utilizando atajos de teclado (por omisión, <kbd>Ctrl v Ctrl t</kbd> en
     Unix, <kbd>Ctrl u Ctrl t</kbd> en Windows).</li>
@@ -59,7 +59,7 @@ consulta:</p>
     con estilo, etc</a></li>
 </ul>
 
-<p></p>
+
 </div>
 </body>
 </html>

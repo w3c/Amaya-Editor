@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Eliminar columnas de una tabla</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -34,11 +34,11 @@
 <p class="ProcedureCaption">Para seleccionar una columna de una tabla:</p>
 <ol>
   <li>Elige la opción <strong>Seleccionar columna</strong> del submenú
-    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+c</code>).</li>
+    <strong>Tabla</strong> (<kbd>Ctrl t Ctrl c</kbd>).</li>
   <li>También puedes seleccionar varias celdas de una misma columna (por
     ejemplo, desde la celda 1.2 hasta la celda 3.2). Amaya cambia
     automáticamente al modo de selección de columna. Al pulsar la tecla
-    <code>F2</code> en Windows (o la tecla <code>Escape</code> en Linux), se
+    <kbd>F2</kbd> en Windows (o la tecla <kbd>Escape</kbd> en Linux), se
     extiende la selección a las casillas intermedias, incluyendo los extremos
     (celdas 1.2, 2.2 y 3.2).
 
@@ -74,11 +74,11 @@ eliminar previamente su contenido.</p>
   <li>Para pegar una columna antes de una columna ya existente, sitúa el
     cursor al principio de una celda de la columna y pega la columna copiada
     o cortada mediante la opción <strong>Pegar antes</strong> del submenú
-    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+p</code>).</li>
+    <strong>Tabla</strong> (<kbd>Ctrl t Ctrl p</kbd>).</li>
   <li>Para pegar una columna después de una columna ya existente, sitúa el
     cursor al final de una celda de la columna y pega la columna copiada o
     cortada mediante la opción <strong>Pegar después</strong> del submenú
-    <strong>Tabla</strong> (<code>Ctrl+t Ctrl+v</code>).</li>
+    <strong>Tabla</strong> (<kbd>Ctrl t Ctrl v</kbd>).</li>
 </ol>
 </div>
 </body>

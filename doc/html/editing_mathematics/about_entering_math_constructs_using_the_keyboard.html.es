@@ -184,7 +184,7 @@ punto de inserción al principio del denominador.</p>
   </tbody>
 </table>
 
-<p></p>
+
 </div>
 </body>
 </html>

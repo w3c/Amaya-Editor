@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <title>Mover anotaciones</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -61,18 +61,13 @@ a su sitio.</p>
 <p>Para mover múltiples anotaciones:</p>
 <ol>
   <li>Selecciona (o simplemente sitúa el cursor) el lugar al que quieres
-    mover las anotaciones.
-    <p></p>
-  </li>
+    mover las anotaciones.</li>
   <li>Elige la opción de menú <strong>Anotaciones &gt; Guardar selección como
-    XPointer</strong> para almacenar un Xpointer que represente la selección.
-    <p></p>
-  </li>
+    XPointer</strong> para almacenar un Xpointer que represente la
+  selección.</li>
   <li>En la ventana <strong>Anotaciones</strong>, elige la opción de menú
     <strong>Anotaciones &gt; Mover a XPointer guardado</strong> para mover la
-    anotación a su nueva ubicación.
-    <p></p>
-  </li>
+    anotación a su nueva ubicación.</li>
   <li>Guarda la anotación para que el cambio sea efectivo.</li>
 </ol>
 

@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Estructura de un documento HTML</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -40,8 +40,8 @@ bloque.</p>
 href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-DIV">div</a></code>
 que agrupa varios elementos en una misma división. Para definirlo, selecciona
 la sección (incluyendo su encabezado) que quieres que forme parte del grupo y
-a continuación elige el comando de menú <strong>XHTML &gt; div</strong> (o
-pulsa el atajo de teclado <code>Ctrl h Ctrl v</code>).</p>
+a continuación elige el comando de menú <strong>XHTML &gt; División
+(div)</strong> (o pulsa el atajo de teclado <kbd>Ctrl h Ctrl v</kbd>).</p>
 
 <p>En HTML existe una estructura especial, el enlace, que hace que la Web sea
 una red. En el <a href="../Manual.html.es">manual de usuario</a> encontrarás

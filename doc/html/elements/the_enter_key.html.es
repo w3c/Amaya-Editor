@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <title>The Intro Key</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -31,7 +31,7 @@
 <h1>La tecla Intro</h1>
 
 <p>Cuando escribes un nuevo elemento o una nueva parte de un elemento, puedes
-crear elemento uno detrás de otro pulsando la tecla <strong>Intro</strong>.
+crear elemento uno detrás de otro pulsando la tecla <kbd>Intro</kbd>.
 El elemento actual se cierra y se abre uno nuevo inmediatamente después.</p>
 
 <p>Normalmente el nuevo elemento que se crea es un simple párrafo, sea cual
@@ -41,17 +41,17 @@ el botón correspondiente.</p>
 
 <p>Cuando un elemento formateado como <code>&lt;pre&gt;</code> está al final
 de un documento y el cursor está al final de dicho elemento, al pulsar
-<strong>Intro</strong> se crea una nueva línea dentro del
+<kbd>Intro</kbd> se crea una nueva línea dentro del
 <code>&lt;pre&gt;</code>. Para crear otro elemento, por ejemplo un párrafo, a
 continuación del <code>&lt;pre&gt;</code>, selecciona todo el elemento
-<code>&lt;pre&gt;</code> pulsando <kbd>Esc</kbd> (en Unix) o <kbd>F2</kbd>
-(En Windows) y a continuación <b>Intro</b>.</p>
+<code>&lt;pre&gt;</code> pulsando <kbd>Escape</kbd> (en Unix) o <kbd>F2</kbd>
+(En Windows) y a continuación <kbd>Intro</kbd>.</p>
 
 <p>Igualmente, puedes crear un nuevo párrafo después de una tabla
-seleccionando toda la tabla y pulsando <strong>Intro</strong>.</p>
+seleccionando toda la tabla y pulsando <kbd>Intro</kbd>.</p>
 
 <p>Cuando seleccionas un elemento completo como <code>&lt;h2&gt;</code> o
-<code>&lt;li&gt;</code>, al pulsar la tecla <strong>Intro</strong> se crea un
+<code>&lt;li&gt;</code>, al pulsar la tecla <kbd>Intro</kbd> se crea un
 nuevo <code>&lt;h2&gt;</code> o <code>&lt;li&gt;</code> a continuación.</p>
 
 <h2>Ver también:</h2>

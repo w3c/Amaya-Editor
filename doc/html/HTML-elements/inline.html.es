@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Marcado en línea</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -54,8 +54,8 @@ modificar el formato de los elementos en línea.</p>
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-Q"><code>q</code></a>.
 Este elemento se encuentra en el comando de menú <strong>XHTML &gt; Elemento
 carácter &gt; Remarcado (Quotation q)</strong> y también puedes utilizar el
-atajo de teclado Ctrl i Ctrl q. Puedes hacer referencia a la fuente dando el
-URI en el atributo <code>cite</code>.</p>
+atajo de teclado <kbd>Ctrl i Ctrl q</kbd>. Puedes hacer referencia a la
+fuente dando el URI en el atributo <code>cite</code>.</p>
 
 <p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
 modificar el formato de las citas en línea. La recomendación HTML establece
@@ -116,9 +116,9 @@ modificar el formato de acrónimos y abreviaturas.</p>
 <p>Los elementos <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-del"
 name="DEL"><code>del</code></a> e <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins"><code>INS</code></a>se
-encuentran en el submenú <strong>XHTML&gt; Tipo de información</strong> para
-marcar el texto <del>que será eliminado</del> o que<ins>ya ha sido
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins"><code>INS</code></a>
+se encuentran en el submenú <strong>XHTML&gt; Tipo de información</strong>
+para marcar el texto <del>que será eliminado</del> o que <ins>ya ha sido
 añadido.</ins></p>
 
 <p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para

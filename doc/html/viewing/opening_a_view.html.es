@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Abrir una Vista</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -41,7 +41,6 @@ disponibles desde la vista de navegador normal (vista Formateada).</p>
 <p class="ProcedureCaption">Para abrir una vista:</p>
 <ul>
   <li>Elige el comando correspondiente del menú <strong>Ver &gt; ...</strong>:
-    <p></p>
 
     <table border="1" cellspacing="0" cellpadding="0"
     style="margin-left:.5in">
@@ -55,38 +54,38 @@ disponibles desde la vista de navegador normal (vista Formateada).</p>
         <tr>
           <td><p class="TableText">Estructura</p>
           </td>
-          <td><p class="TableText"><code>Ctrl+v Ctrl+s</code></p>
+          <td><p class="TableText"><kbd>Ctrl v Ctrl s</kbd></p>
           </td>
         </tr>
         <tr>
           <td><p class="TableText">Alternativo</p>
           </td>
-          <td><p class="TableText"><code>Ctrl+v Ctrl+i</code></p>
+          <td><p class="TableText"><kbd>Ctrl v Ctrl i</kbd></p>
           </td>
         </tr>
         <tr>
           <td><p class="TableText">Enlaces</p>
           </td>
-          <td><p class="TableText"><code>Ctrl+v Ctrl+l</code></p>
+          <td><p class="TableText"><kbd>Ctrl v Ctrl l</kbd></p>
           </td>
         </tr>
         <tr>
           <td><p class="TableText">Tabla de contenidos</p>
           </td>
-          <td><p class="TableText"><code>Ctrl+v Ctrl+c</code></p>
+          <td><p class="TableText"><kbd>Ctrl v Ctrl c</kbd></p>
           </td>
         </tr>
         <tr>
           <td><p class="TableText">Fuente</p>
           </td>
-          <td><p class="TableText"><code>Ctrl+v Ctrl+h</code></p>
+          <td><p class="TableText"><kbd>Ctrl v Ctrl h</kbd></p>
           </td>
         </tr>
       </tbody>
     </table>
-    <p>&nbsp;<strong>Nota</strong>: En Windows debes utilizar
-    <code>Ctrl+u</code> en vez de <code>Ctrl+v</code>, ya que
-    <code>Ctrl+v</code> corresponde a la orden <strong>Pegar</strong>.</p>
+    <p class="Note">&nbsp;<strong>Nota</strong>: En Windows debes utilizar
+    <kbd>Ctrl u</kbd> en vez de <kbd>Ctrl v</kbd>, ya que <kbd>Ctrl v</kbd>
+    corresponde a la orden <strong>Pegar</strong>.</p>
     <p class="Note"><strong>Nota:</strong> También puedes emplear el comando
     de menú <strong>Ver &gt; ...</strong> para mostrar en primer plano la
     ventana correspondiente si esta ventana ya estaba abierta, pero

@@ -3,8 +3,9 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Combinaciones de teclas en las versiones Motif y GTK</title>
-  <meta name="GENERATOR" content="amaya 8.0, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -35,9 +36,9 @@ el carácter pulsando la tecla especial <code>Compose</code> seguida de dos
 teclas más. En la tabla inferior se describen varios caracteres ISO_latin. En
 Amaya puedes intercambiar la primera y segunda tecla.</p>
 
-<p>Si tu teclado no dispone de la tecla <code>Compose</code>, puedes
-asociarla a una tecla como <code>Alt-Gr</code> mediante el comando
-<code>xmodmap</code> siguiente:</p>
+<p>Si tu teclado no dispone de la tecla <kbd>Compose</kbd>, puedes asociarla
+a una tecla como <kbd>AltGr</kbd> mediante el comando <code>xmodmap</code>
+siguiente:</p>
 
 <p><code>keycode 113 = Multi_key</code></p>
 

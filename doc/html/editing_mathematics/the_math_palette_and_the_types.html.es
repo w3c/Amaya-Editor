@@ -1,8 +1,8 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <title>La paleta Matemáticas y el menú XML &gt; Matemáticas</title>
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/">
+  <title>La paleta Matemáticas y el menú XML</title>
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -26,16 +26,16 @@
 </table>
 
 <div id="page_body">
-<h1>La paleta Matemáticas y el menú <strong>XML &gt; MathML</strong></h1>
+<h1>La paleta Matemáticas y el menú XML</h1>
 
 <p>Para crear una expresión matemática en un documento, sitía el cursor en la
 posición en la que quieres insertar una expresión y haz clic en el botón
-<strong>MathML</strong>, o elige el menú <strong>XML &gt; MathML</strong>.</p>
+<strong>MathML</strong>, o elige el menú <strong>XML</strong>.</p>
 
 <h2>Acceder a los comandos</h2>
 
 <p>Las expresiones matemáticas pueden insertarse en un documento mediante el
-menú <strong>XML &gt;</strong> o eligiendo una expresión de la paleta
+menú <strong>XML</strong> o eligiendo una expresión de la paleta
 <strong>MathML</strong>.</p>
 
 <p>Haz clic en el botón <strong>MathML</strong> <img alt="Botón"
@@ -43,18 +43,18 @@ src="../../images/Math.gif">de la barra de botones para abrir la paleta
 <strong>MathML</strong>. Cierra la paleta haciendo clic en el botón
 <strong>Aceptar</strong>.</p>
 
-<p>También puedes mostrar el menú <strong>MathML</strong> haciendo clic en el
-menú <strong>XML &gt;</strong> .</p>
+<p>También puedes mostrar los menús <strong>MathML</strong> haciendo clic en
+el menú <strong>XML</strong>..</p>
 
 <h2>Menú Matemáticas y comandos de la paleta</h2>
 
-<p>En la paleta o en el menú <strong>MathML</strong>, el primer item,
+<p>En la paleta o en el menú <strong>XML</strong>, el primer item,
 <strong>Fórmula nueva</strong>, te permite crear una nueva fórmula cuando el
 cursor se encuentra en un elemento HTML o SVG, pero no en un elemento
 MathML.</p>
 
-<p>El menú <strong>MathML</strong> contiene también elementos no disponibles
-en la paleta. Estos elementos son: Texto simple (<code>mtext</code>),
+<p>El menú <strong>XML</strong> contiene también elementos no disponibles en
+la paleta. Estos elementos son: Texto simple (<code>mtext</code>),
 Identificador (<code>mi</code>), Número (<code>mn</code>), Operador
 (<code>mo</code>). Estos comandos también pueden cambiar el tipo de un
 elemento o de una secuencia de elementos.</p>
@@ -218,7 +218,7 @@ que acepte la expresión. Las expresiones disponibles son:</p>
     </math></li>
 </ul>
 
-<p>El último elemento de la paleta <strong>MathML</strong> ( <math
+<p>El último elemento de la paleta <strong>MathML</strong> (<math
 xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>&alpha;&beta;&gamma;</mi>
 </math>) abre otra paleta de la que puedes extraer símbolos matemáticos y

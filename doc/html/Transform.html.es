@@ -3,8 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR"
-  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <title>Utilizar el archivo HTML.trans</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -175,8 +175,11 @@ Paris, Mayo 1996, por Cécile Roisin y Stéphane Bonhomme.</p>
   <li>El primer ejemplo une varias listas no ordenadas (ul) consecutivas en
     una única lista.
     <pre>Merge Lists: (ul{li+})+;
+
     { 
+
     li &gt; ul:li; 
+
     }</pre>
     <p>El patrón coincide con una secuencia de listas no ordenadas (ul), que
     contengan items (li).</p>
@@ -188,29 +191,41 @@ Paris, Mayo 1996, por Cécile Roisin y Stéphane Bonhomme.</p>
   </li>
   <li>El segundo ejemplo transforma una lista de definición en una tabla.
     <pre>Table: dl{(dt|dd)+}; 
+
    { 
+
    dt &gt; &lt;table border=1&gt;.tbody:tr.td; 
+
    dd &gt; &lt;table border=1&gt;.tbody.tr:td; 
+
    }</pre>
-    <p>El patrón coincide con cualquier elemento lista definición (dl).</p>
+    <p>El patrón coincide con cualquier elemento lista definición
+    (<code>dl</code>).</p>
     <p>Las reglas explican cómo se crea la tabla al recorrer la estructura de
     las listas de definición seleccionadas.</p>
     <ul>
-      <li>Cada dt implica la creación de una nueva fila (TR) en el cuerpo de
-        la tabla.</li>
-      <li>Cada dd implica la creación de una nueva celda (TD) en la última
-        fila de la tabla.</li>
+      <li>Cada <code>dt</code> implica la creación de una nueva fila
+        (<code>tr</code>) en el cuerpo de la tabla.</li>
+      <li>Cada <code>dd</code> implica la creación de una nueva celda
+        (<code>td</code>) en la última fila de la tabla.</li>
     </ul>
   </li>
   <li>El tercer ejemplo elimina una tabla, manteniendo su contenido sin
     cambios, pero fuera de la tabla.
     <pre>Remove Table:
+
 table{?caption,?(body:*{(tr{(td{(?cell_content:*)+}|
+
                              th{(?cell_content:*)+}
+
                            )})+})+};
+
      { 
+
      caption&gt;h3; 
+
      cell_content&gt;:*;
+
      }</pre>
     <p>El patrón coincide con cualquier tabla e identifica el contenido de
     cada celda de la tabla (cell_content).</p>
@@ -224,7 +239,7 @@ table{?caption,?(body:*{(tr{(td{(?cell_content:*)+}|
 <hr />
 <address>
   <a href="mailto:Stephane.Bonhomme@inrialpes.fr">Stéphane Bonhomme</a> <br />
-  $Fecha: 2002/09/10 07:07:21 $
+  $Fecha 2002/09/10 07:07:21 $
 </address>
 </body>
 </html>

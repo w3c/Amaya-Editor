@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Menú Preferencias</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -79,7 +79,7 @@ elige el menú <strong>Preferencias &gt; Generales</strong>.</p>
 <p><img alt="Caja de diálogo Preferencias generales"
 src="../../images/general_preferences-es.png" /></p>
 
-<h3>Carpetas específicas</h3>
+<h3>Directorios específicos</h3>
 
 <p>La caja de diálogo <strong>Preferencias generales</strong> muestra el
 directorio de usuario, el directorio temporal y la página web por omisión.
@@ -122,6 +122,14 @@ pegado desde un aplicación externa. Cuando está activada, Amaya mantiene la
 separación en líneas de la aplicación original. Si está desactivada, los
 caracteres de <code>salto de línea</code> se sustituyen por espacios.</p>
 
+<p><strong>Generar copias de seguridad.</strong> Si esta opción está marcada,
+Amaya genera una copia de seguridad de cada documento editado, tras un número
+determinado de cambios. Esta opción se aplica nada más marcar la casilla.</p>
+
+<p><strong>Guardar geometría al salir.</strong> Controla si, al salir de
+Amaya, la posición y el tamaño de la ventana se guardan y aplican en la
+siguiente sesión.</p>
+
 <p><strong>Mostrar barra de botones.</strong> Controla si se muestra la barra
 de botones en las vistas principales del documento.</p>
 
@@ -134,8 +142,8 @@ enlaces en las vistas principales del documento.</p>
 <p><strong>Numeración de secciones.</strong> Controla si se numeran los
 encabezados en las vistas principales del documento.</p>
 
-<p><strong>Atajos de teclado.</strong> Especifica la tecla (<code>Alt</code>
-o <code>Control</code>) utilizada en las <a
+<p><strong>Atajos de teclado.</strong> Especifica la tecla (<kbd>Alt</kbd> o
+<kbd>Control</kbd>) utilizada en las <a
 href="..\Browsing.html.es#Access">teclas de acceso</a>, o especifica que se
 ignoren las teclas de acceso definidas en el documento</p>
 
@@ -174,8 +182,10 @@ francés (<code>fr</code>), alemán (<code>de</code>), italiano
 (<code>it</code>), castellano (<code>es</code>), portugués (<code>pt</code>),
 finés (<code>fi</code>) y turco (<code>tr</code>). Al inicar Amaya, se cargan
 los archivos de diálogo correspondiente al idioma de diálogo especificado:
-en-, fr-, de-, it-, es-, pt-, fi- o tr-. Estos archivos de diálogos se
-encuentran en la carpeta <strong>Amaya/config</strong>.</p>
+<code>en-</code>, <code>fr-</code>, <code>de-</code>, <code>it-</code>,
+<code>es-</code>, <code>pt-</code>, <code>fi-</code> o <code>tr-</code>.
+Estos archivos de diálogos se encuentran en la carpeta
+<strong>Amaya/config</strong>.</p>
 
 <p>En Thot, un documento está especificado por un esquema. En Amaya, los
 mensajes de diálogo que se muestran al analizar un documento o al guardarlos
@@ -195,8 +205,9 @@ el sufijo <em>code</em> es la abreviatura del idioma (por ejemplo,
 <p>Es posible adaptar Amaya a nuevos idiomas ISO-Latin-1 escribiendo los
 archivos de diálogo correspondientes. Estos archivos de diálogo deben
 ubicarse en la misma carpeta (por ejemplo, Amaya/config) y deben utilizar el
-código ISO 639 correspondiente como prefijo (it- para italiano, de- para
-alemám, etc.). También debes crear el archivo HTML.code específico.</p>
+código ISO 639 correspondiente como prefijo (<code>it-</code> para italiano,
+<code>de-</code> para alemán, etc.). También debes crear el archivo HTML.code
+específico.</p>
 
 <h2>Navegación</h2>
 
@@ -244,6 +255,9 @@ dominios específicos. Estas opciones se explican a continuación.</p>
 
 <p><img alt="Caja de diálogo Preferencias de publicación"
 src="../../images/publishing_preferences-es.png" /></p>
+
+<p><strong>Juego de caracteres para nuevos documentos.</strong> Establece el
+juego de caracteres a utilizar al crear un documento nuevo.</p>
 
 <p><strong>En documentos XHTML usar tipo MIME application/xhtml+xml.</strong>
 Esta opción, si está activada, asocia el nuevo tipo MIME oficial XHTML a
@@ -378,9 +392,7 @@ para mostrar la selección actual.</p>
 src="../../images/color_preferences-es.png" /></p>
 <ul>
   <li><strong>Color del cursor</strong> es el color de fondo de la selección
-    cuando ésta se limita al punto de inserción.
-    <p></p>
-  </li>
+    cuando ésta se limita al punto de inserción.</li>
   <li><strong>Color de selección</strong> es el color de fondo de la
     selección.</li>
 </ul>
@@ -395,12 +407,8 @@ hexadecimal o RGBt:</p>
 <ul>
   <li>Los nombres válidos de colores son: Aqua, Black, Blue, Fuchsia, Gray,
     Green, Lime, Maroon, Navy, Olive, Purple, Red, Silver, Teal, Yellow y
-    White.
-    <p></p>
-  </li>
-  <li>El formato válido de un código hexadecimal es #FF00F, por ejemplo.
-    <p></p>
-  </li>
+    White.</li>
+  <li>El formato válido de un código hexadecimal es #FF00F, por ejemplo.</li>
   <li>El formato válido de un código RGB es rgb(255, 0, 255), por
   ejemplo.</li>
 </ul>
