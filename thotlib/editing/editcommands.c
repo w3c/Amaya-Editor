@@ -376,10 +376,10 @@ static ThotBool CloseTextInsertionWithControl ()
 	  if (j == 0)
 	    {
 	      if (pSelBox->BxBuffer->BuLength != 0 &&
-		  pSelBox->BxFirstChar > pSelBox->BxBuffer->BuLength &&
+		  pSelBox->BxIndChar > pSelBox->BxBuffer->BuLength &&
 		  pSelBox->BxNChars > 0)
 		/* the insertion at the end of a buffer was removed */
-		pSelBox->BxFirstChar = 1;
+		pSelBox->BxIndChar = 0;
 	      /* update the split box */
 	      if (pBox->BxBuffer != pSelBox->BxBuffer &&
 		  pBox->BxNexChild == pSelBox)
@@ -843,7 +843,7 @@ static void StartTextInsertion (PtrAbstractBox pAb, int frame, PtrBox pSelBox,
 		  /* update the selected box */
 		  pSelBox->BxAbstractBox->AbText = pNewBuffer;
 		  pSelBox->BxIndChar = 0;
-		  pSelBox->BxFirstChar = 1;
+		  /*pSelBox->BxFirstChar = 1;*/
 		  pSelBox->BxBuffer = pNewBuffer;
 	       }
 	     else
