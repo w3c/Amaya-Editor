@@ -314,6 +314,8 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
   HTParentAnchor *anchor;
   ThotBool        use_anchor;
   HTError        *pres;
+  HTList         *cur = request->error_stack;
+  int             index;
 
   me =  (AHTReqContext *) HTRequest_context (request);
 
@@ -422,12 +424,23 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
     }
 
   /* copy the status */
-  pres = (HTError *) HTList_nextObject (request->error_stack);
-  if (pres)
-    me->http_headers.status = HTError_index (pres);
-  else
-    me->http_headers.status = 0;
-
+  me->http_headers.status = 0;
+  while ((pres = (HTError *) HTList_nextObject (cur)))
+    {
+      index = HTError_index (pres);
+      switch (index)
+	{
+	case HTERR_NO_REMOTE_HOST:
+	case HTERR_SYSTEM:
+	case HTERR_INTERNAL:
+	case HTERR_TIME_OUT:
+	case HTERR_CSO_SERVER:
+	case HTERR_INTERRUPTED:
+	  if (pres->par)
+	    me->http_headers.status = index;
+	  break;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

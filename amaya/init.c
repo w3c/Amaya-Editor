@@ -4561,7 +4561,11 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 		 case HTERR_SYSTEM:
 		 case HTERR_INTERNAL:
 		 case HTERR_TIME_OUT:
-		   sprintf (tempdocument, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), "");
+		 case HTERR_CSO_SERVER:
+		   sprintf (tempdocument, "Cannot contact server");
+		   break;
+		 case HTERR_INTERRUPTED:
+		   sprintf (tempdocument, "Request interrupted");
 		   break;
 		 default:
 		   sprintf (tempdocument, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), "");
