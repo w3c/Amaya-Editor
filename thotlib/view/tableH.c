@@ -600,7 +600,7 @@ static void CheckRowHeights (PtrAbstractBox table, int frame)
   ----------------------------------------------------------------------*/
 static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 {
-  PtrAbstractBox      pCell;
+  PtrAbstractBox      pCell, pParent;
   PtrAbstractBox     *colBox;
   PtrBox              pBox, box = NULL;
   PtrTabRelations     pTabRel;
@@ -652,12 +652,15 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   /* get the inside table width */
   constraint = GiveAttrWidth (table, ViewFrameTable[frame - 1].FrMagnification,
 			      &width, &percent);
-  if (!constraint)
+  pParent = table->AbEnclosing;
+  if (pParent->AbBox->BxType == BoGhost && (!constraint || percent != 0))
+    width = table->AbBox->BxW;
+  else if (!constraint)
     /* limit given by available space */
-    width = table->AbEnclosing->AbBox->BxW - mbp;
+    width = pParent->AbBox->BxW - mbp;
   else if (percent != 0)
     /* limit given by precent of available space */
-    width = (table->AbEnclosing->AbBox->BxW * percent / 100) - mbp;
+    width = (pParent->AbBox->BxW * percent / 100) - mbp;
 
   if (constraint && width == 0)
     {

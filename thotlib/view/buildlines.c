@@ -1983,6 +1983,10 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	      /* skip over this floating box */
 	      lastbox = pNextBox;
 	      pNextBox = GetNextBox (lastbox->BxAbstractBox);
+	      if (pNextBox &&
+		  (pNextBox->BxType == BoSplit ||
+		   pNextBox->BxType == BoMulScript))
+		pNextBox = pNextBox->BxNexChild;
 	      if (lastbox == pLine->LiFirstBox)
 		pLine->LiFirstBox = pNextBox;
 	      if ((lastbox->BxAbstractBox->AbFloat == 'L' &&

@@ -1775,7 +1775,7 @@ static void AddFloatingBox (PtrAbstractBox pAb, ThotBool left)
 		{
 		  /* skip this element if it only includes the floated box */
 		  uniqueChild = (pAb->AbPrevious == NULL &&
-				 pAb->AbPrevious == NULL);
+				 pAb->AbNext == NULL);
 		  while (uniqueChild && pParent->AbEnclosing &&
 			 pParent->AbEnclosing->AbBox &&
 			 pParent->AbEnclosing->AbBox->BxType != BoCell &&
