@@ -1956,8 +1956,9 @@ ThotBool     readOnly;
    /* do we have to redraw buttons and menus? */
    reinitialized = FALSE;
    if ((docType == docHTML || docType == docImage || docType == docSVG ) &&
-       (DocumentTypes[doc] != docHTML || DocumentTypes[doc] != docImage ||
-	DocumentTypes[doc] != docSVG))
+       DocumentTypes[doc] != docHTML &&
+       DocumentTypes[doc] != docImage &&
+       DocumentTypes[doc] != docSVG)
      /* we need to update menus and buttons */
      reinitialized = TRUE;
    else if ((docType == docCSS || docType == docText) &&
