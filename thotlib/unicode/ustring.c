@@ -396,7 +396,7 @@ char *TtaGetCharsetName (CHARSET charset)
 {
   int index = 0;
 
-  if (UNDEFINED_CHARSET || UNSUPPORTED_CHARSET)
+  if (charset == UNDEFINED_CHARSET)
     return NULL;
   while (CharsetCodeTable[index].Charset != UNSUPPORTED_CHARSET)
     {
