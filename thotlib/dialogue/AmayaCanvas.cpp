@@ -153,11 +153,7 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
     return;
   }
   
-  wxLogDebug(_T("AmayaCanvas::OnSize: frame=%d w=%d h=%d"),
-        m_pAmayaFrame->GetFrameId(),
-	event.GetSize().GetWidth(),
-	event.GetSize().GetHeight() );
- 
+
   // get the current frame id
   int frame = m_pAmayaFrame->GetFrameId();
 
@@ -166,18 +162,15 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
   new_width = event.GetSize().GetWidth();
   new_height = event.GetSize().GetHeight();
 
+  wxLogDebug( _T("AmayaCanvas::OnSize: frame=%d w=%d h=%d"),
+	      m_pAmayaFrame->GetFrameId(),
+	      new_width, new_height );
+ 
   // call the generic callback
   FrameResizedCallback(
     	frame,
     	new_width,
 	new_height );
-
-  // resize the frame sizer to take into account scrollbar show/hide
-  //  m_pAmayaFrame->Layout();
-  //  Layout();
-
-  //  forward the event to parents
-  //event.Skip();
 }
 
 /*
@@ -198,9 +191,6 @@ void AmayaCanvas::OnPaint( wxPaintEvent& event )
     event.Skip();
     return;
   }
-
-  wxLogDebug( _T("AmayaCanvas::OnPaint : frame=%d"),
-     m_pAmayaFrame->GetFrameId() );
 
   /*
    * Note that In a paint event handler, the application must
@@ -227,6 +217,7 @@ void AmayaCanvas::OnPaint( wxPaintEvent& event )
     
     // call the generic callback to really display the frame
     FrameExposeCallback ( frame, x, y, w, h );
+    wxLogDebug( _T("AmayaCanvas::OnPaint : frame=%d [x=%d, y=%d, w=%d, h=%d]"), m_pAmayaFrame->GetFrameId(), x, y, w, h );
     
     upd ++ ;
   }
