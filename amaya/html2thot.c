@@ -45,7 +45,7 @@
 #include "annotlib.h"
 #endif /* ANNOTATIONS */
 
-extern XhtmlEntity        *XhtmlEntityTable; /* table defined in XHTMLbuilder.c */
+extern XhtmlEntity        XhtmlEntityTable[]; /* table defined in XHTMLbuilder.c */
 typedef struct _UnicodeFallbackEntry
   {
      int	unicodeVal;	/* the Unicode code */
