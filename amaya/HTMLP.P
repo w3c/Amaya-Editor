@@ -63,9 +63,10 @@ PRINT
 #define VSpaceBeforeH5 0.5
 #define VSpaceBeforeH6 0.5
 #define VSpaceInToC 0.2
-#define LIST_INDENT 1.3
-#define LIST_NUMBER_WIDTH 0.2
-#define LIST_SHIFT 1
+#define LIST_INDENT 2.5 em
+#define LIST_NUMBER_SHIFT 0.2
+#define BULLET_SHIFT 0.5 em
+#define BULLET_SIZE 0.3
 #define DEFINITION_INDENT 2.3
 
 COUNTERS
@@ -1169,86 +1170,80 @@ BOXES
 
  UL_DISC_LEFT: BEGIN
 	Content: Graphics 'c';
-	Height: 0.4;
-	Width: 0.4;
+	Height: BULLET_SIZE;
+	Width: BULLET_SIZE;
 	Size: Creator =;
 	LineWeight: 1 px;
 	Foreground: Creator =;
 	FillPattern: foregroundcolor;
 	VertPos: Bottom = Creator . HRef;
-	HorizPos: Left = Enclosing . Left;
-	MarginLeft: Creator =;
+	HorizPos: Right = Creator . Left - BULLET_SHIFT;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
  UL_DISC_RIGHT: BEGIN
 	Content: Graphics 'c';
-	Height: 0.4;
-	Width: 0.4;
+	Height: BULLET_SIZE;
+	Width: BULLET_SIZE;
 	Size: Creator =;
 	LineWeight: 1 px;
 	Foreground: Creator =;
 	FillPattern: foregroundcolor;
 	VertPos: Bottom = Creator . HRef;
-	HorizPos: Right = Enclosing . Right;
-	MarginRight: Creator =;
+	HorizPos: Left = Creator . Right + BULLET_SHIFT;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
  UL_SQUARE_LEFT: BEGIN
 	Content: Graphics 'R';
-	Height: 0.4;
-	Width: 0.4;
+	Height: BULLET_SIZE;
+	Width: BULLET_SIZE;
 	Size: Creator =;
 	LineWeight: 1 px;
 	Foreground: Creator =;
 	VertPos: Bottom = Creator . HRef;
-	HorizPos: Left = Enclosing . Left;
-	MarginLeft: Creator =;
+	HorizPos: Right = Creator . Left - BULLET_SHIFT;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
  UL_SQUARE_RIGHT: BEGIN
 	Content: Graphics 'R';
-	Height: 0.4;
-	Width: 0.4;
+	Height: BULLET_SIZE;
+	Width: BULLET_SIZE;
 	Size: Creator =;
 	LineWeight: 1 px;
 	Foreground: Creator =;
 	VertPos: Bottom = Creator . HRef;
-	HorizPos: Right = Enclosing . Right;
-	MarginRight: Creator =;
+	HorizPos: Left = Creator . Right + BULLET_SHIFT;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
  UL_CIRCLE_LEFT: BEGIN
 	Content: Graphics 'c';
-	Height: 0.4;
-	Width: 0.4;
+	Height: BULLET_SIZE;
+	Width: BULLET_SIZE;
 	Size: Creator =;
 	LineWeight: 1 px;
 	Foreground: Creator =;
 	VertPos: Bottom = Creator . HRef;
-	HorizPos: Left = Enclosing . Left;
-	MarginLeft: Creator =;
+	HorizPos: Right = Creator . Left - BULLET_SHIFT;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	END;
  UL_CIRCLE_RIGHT: BEGIN
 	Content: Graphics 'c';
-	Height: 0.4;
-	Width: 0.4;
+	Height: BULLET_SIZE;
+	Width: BULLET_SIZE;
 	Size: Creator =;
 	LineWeight: 1 px;
 	Foreground: Creator =;
 	VertPos: Bottom = Creator . HRef;
-	HorizPos: Right = Enclosing . Right;
-	MarginRight: Creator =;
+	HorizPos: Left = Creator . Right + BULLET_SHIFT;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -1258,7 +1253,7 @@ BOXES
 	BEGIN
 	Content: (Value(ItemCounter, Arabic) Text '. ');
 	VertPos: HRef = Creator . HRef;
-	HorizPos: Right = Next . VRef - LIST_NUMBER_WIDTH;
+	HorizPos: Right = Creator . Left - LIST_NUMBER_SHIFT;
 	Visibility: Creator =;
 	Foreground: Creator =;
 	Size: Creator =;
@@ -1271,7 +1266,7 @@ BOXES
 	BEGIN
 	Content: (Value(ItemCounter, Arabic) Text '. ');
 	VertPos: HRef = Creator . HRef;
-	HorizPos: Left = Next . VRef + LIST_NUMBER_WIDTH;
+	HorizPos: Left = Creator . Right + LIST_NUMBER_SHIFT;
 	Visibility: Creator =;
 	Foreground: Creator =;
 	Size: Creator =;
@@ -1284,7 +1279,7 @@ BOXES
 	BEGIN
 	Content: (Value(ItemCounter, lowercase) Text '. ');
 	VertPos: HRef = Creator . HRef;
-	HorizPos: Right = Next . VRef - LIST_NUMBER_WIDTH;
+	HorizPos: Right = Creator . Left - LIST_NUMBER_SHIFT;
 	Visibility: Creator =;
 	Foreground: Creator =;
 	Size: Creator =;
@@ -1297,7 +1292,7 @@ BOXES
 	BEGIN
 	Content: (Value(ItemCounter, lowercase) Text '. ');
 	VertPos: HRef = Creator . HRef;
-	HorizPos: Left = Next . VRef + LIST_NUMBER_WIDTH;
+	HorizPos: Left = Creator . Right + LIST_NUMBER_SHIFT;
 	Visibility: Creator =;
 	Foreground: Creator =;
 	Size: Creator =;
@@ -1310,7 +1305,7 @@ BOXES
 	BEGIN
 	Content: (Value(ItemCounter, Uppercase) Text '. ');
 	VertPos: HRef = Creator . HRef;
-	HorizPos: Right = Next . VRef - LIST_NUMBER_WIDTH;
+	HorizPos: Right = Creator . Left - LIST_NUMBER_SHIFT;
 	Visibility: Creator =;
 	Foreground: Creator =;
 	Size: Creator =;
@@ -1323,7 +1318,7 @@ BOXES
 	BEGIN
 	Content: (Value(ItemCounter, Uppercase) Text '. ');
 	VertPos: HRef = Creator . HRef;
-	HorizPos: Left = Next . VRef + LIST_NUMBER_WIDTH;
+	HorizPos: Left = Creator . Right + LIST_NUMBER_SHIFT;
 	Visibility: Creator =;
 	Foreground: Creator =;
 	Size: Creator =;
@@ -1336,7 +1331,7 @@ BOXES
 	BEGIN
 	Content: (Value(ItemCounter, lRoman) Text '. ');
 	VertPos: HRef = Creator . HRef;
-	HorizPos: Right = Next . VRef - LIST_NUMBER_WIDTH;
+	HorizPos: Right = Creator . Left - LIST_NUMBER_SHIFT;
 	Visibility: Creator =;
 	Foreground: Creator =;
 	Size: Creator =;
@@ -1349,7 +1344,7 @@ BOXES
 	BEGIN
 	Content: (Value(ItemCounter, lRoman) Text '. ');
 	VertPos: HRef = Creator . HRef;
-	HorizPos: Left = Next . VRef + LIST_NUMBER_WIDTH;
+	HorizPos: Left = Creator . Right + LIST_NUMBER_SHIFT;
 	Visibility: Creator =;
 	Foreground: Creator =;
 	Size: Creator =;
@@ -1362,7 +1357,7 @@ BOXES
 	BEGIN
 	Content: (Value(ItemCounter, URoman) Text '. ');
 	VertPos: HRef = Creator . HRef;
-	HorizPos: Right = Next . VRef - LIST_NUMBER_WIDTH;
+	HorizPos: Right = Creator . Left - LIST_NUMBER_SHIFT;
 	Visibility: Creator =;
 	Foreground: Creator =;
 	Size: Creator =;
@@ -1375,7 +1370,7 @@ BOXES
 	BEGIN
 	Content: (Value(ItemCounter, URoman) Text '. ');
 	VertPos: HRef = Creator . HRef;
-	HorizPos: Left = Next . VRef + LIST_NUMBER_WIDTH;
+	HorizPos: Left = Creator . Right + LIST_NUMBER_SHIFT;
 	Visibility: Creator =;
 	Foreground: Creator =;
 	Size: Creator =;
@@ -3047,7 +3042,7 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: Enclosing . Width;
-	{PaddingLeft: 0.5 em;}
+	PaddingLeft: LIST_INDENT;
 	VertPos: Top = Previous not MAP . Bottom;
 	if not within Definition and not within List_Item
 	        MarginTop: 0.5;
@@ -3069,7 +3064,7 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: Enclosing . Width;
-	{PaddingLeft: 0.5 em;}
+	PaddingLeft: LIST_INDENT;
 	VertPos: Top = Previous not MAP . Bottom;
 	if not within Definition and not within List_Item
 	        MarginTop: 0.5;
@@ -3153,9 +3148,9 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	VertRef: * . Left;
-	MarginLeft: LIST_INDENT;
-	HorizPos: Left = Enclosing . Left + LIST_SHIFT;
-	Width: Enclosing . Width - LIST_SHIFT;
+	MarginLeft: 0;
+	HorizPos: Left = Enclosing . Left;
+	Width: Enclosing . Width;
 	VertPos: Top = Previous AnyElem . Bottom;
 	IN Structure_view
 		BEGIN
@@ -7516,7 +7511,7 @@ ATTRIBUTES
   dir (Unnumbered_List*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
-	{PaddingLeft: 0.5 em;}
+	PaddingLeft: LIST_INDENT;
 	PaddingRight: 0;
 	IN Structure_view BEGIN
 		PaddingLeft: 0;
@@ -7529,7 +7524,7 @@ ATTRIBUTES
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	PaddingLeft: 0;
-	{PaddingRight: 0.5 em;}
+	PaddingRight: LIST_INDENT;
 	IN Structure_view BEGIN
 		PaddingRight: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7540,7 +7535,7 @@ ATTRIBUTES
   dir (Numbered_List*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
-	{PaddingLeft: 0.5 em;}
+	PaddingLeft: LIST_INDENT;
 	PaddingRight: 0;
 	IN Structure_view BEGIN
 		PaddingLeft: 0;
@@ -7553,7 +7548,7 @@ ATTRIBUTES
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	PaddingLeft: 0;
-	PaddingRight: 1 em;
+	PaddingRight: LIST_INDENT;
 	IN Structure_view BEGIN
 		PaddingRight: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -7563,8 +7558,8 @@ ATTRIBUTES
 	END;
   dir (List_Item*) = ltr_:
 	BEGIN
-	MarginLeft: LIST_INDENT;
-	HorizPos: Left = Enclosing . Left + LIST_SHIFT;
+	MarginLeft: 0;
+	HorizPos: Left = Enclosing . Left;
 	if IntItemStyle = disc
 	   CreateBefore(UL_DISC_LEFT);
 	if IntItemStyle = square
@@ -7587,14 +7582,14 @@ ATTRIBUTES
 		END;
 	IN Alternate_view BEGIN
 		MarginLeft: 0;
-		HorizPos: Left = Enclosing . Left + LIST_INDENT;
+		HorizPos: Left = Enclosing . Left;
 		END;
 	END;
   dir (List_Item*) = rtl_:
 	BEGIN
-	MarginRight: LIST_INDENT;
+	MarginRight: 0;
 	VertRef: * . Right;
-	HorizPos: Right = Enclosing . Right - LIST_SHIFT;
+	HorizPos: Right = Enclosing . Right;
 	if IntItemStyle = disc
 	   CreateBefore(UL_DISC_RIGHT);
 	if IntItemStyle = square
@@ -7612,13 +7607,12 @@ ATTRIBUTES
 	if IntItemStyle = UpperRoman
 	   CreateBefore(OL_NUM_UROMAN_RIGHT);
 	IN Structure_view BEGIN
-
 		MarginRight: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view BEGIN
 		MarginRight: 0;
-		HorizPos: Right = Enclosing . Right - LIST_INDENT;
+		HorizPos: Right = Enclosing . Right;
 		END;
 	END;
 
