@@ -1312,13 +1312,15 @@ WPARAM      wParam;
 LPARAM      lParam; 
 #endif /* __STDC__ */
 {
-  HWND   hwndTextEdit;
-  HWND   hwndToolTip;
-  RECT   rect;
-  int    doc, view;
-  STRING  viewName;
-  RECT   rWindow;
-  int  frame = GetMainFrameNumber (hwnd);
+  PtrDocument         pDoc;
+  HWND                hwndTextEdit;
+  HWND                hwndToolTip;
+  RECT                rect;
+  STRING              viewName;
+  RECT                rWindow;
+  int                 frame = GetMainFrameNumber (hwnd);
+  int                 doc, view;
+  ThotBool            assoc;
 
   if (frame != -1)
     currentFrame = frame;
@@ -1433,18 +1435,22 @@ LPARAM      lParam;
   case WM_CLOSE:
   case WM_DESTROY:
     if (!viewClosed) {
-      FrameToView (frame, &doc, &view);
-      viewName = TtaGetViewName (doc, view);
-      if (!ustrcmp (viewName, TEXT("Formatted_view")))
-	TtcCloseDocument (doc, view);
-      else
-	TtcCloseView (doc, view);
+      if (frame <= MAX_FRAME)
+	{
+	  GetDocAndView (frame, &pDoc, &vue, &assoc);
+	  CloseView (pDoc, vue, assoc);
+	}
+      for (frame = 0; frame <= MAX_FRAME; frame++)
+	if (FrRef[frame] != 0)
+	  {
+	  /* there is still an active frame */
+	    viewClosed = FALSE;
+	    PostQuitMessage (0);
+	    return 0;
+	  }
+      TtaQuit();
     }
-    
-    viewClosed = FALSE;
-    PostQuitMessage (0);
-    return 0;
-    
+        
   case WM_SIZE: {
     int    cx = LOWORD (lParam);
     int    cy = HIWORD (lParam);

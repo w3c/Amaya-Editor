@@ -1231,12 +1231,12 @@ ThotEvent             *ev;
 #endif /* __STDC__ */
 {
 #ifndef _GTK
-  int                 frame;
   PtrDocument         pDoc;
-  int                 vue, i;
-  ThotBool            assoc;
   ThotWindow          w;
   STRING              s;
+  int                 frame;
+  int                 view, i;
+  ThotBool            assoc;
 
   /* Keep client messages */
   if (ev->type == ClientMessage)
@@ -1262,10 +1262,14 @@ ThotEvent             *ev;
 		    }
 		  if (frame <= MAX_FRAME)
 		    {
-		      GetDocAndView (frame, &pDoc, &vue, &assoc);
-		      CloseView (pDoc, vue, assoc);
+		      GetDocAndView (frame, &pDoc, &view, &assoc);
+		      CloseView (pDoc, view, assoc);
 		    }
-		  return;
+		  for (frame = 0; frame <= MAX_FRAME; frame++)
+		    if (FrRef[frame] != 0)
+		      /* there is still an active frame */
+		      return;
+		  TtaQuit();
 		}
 	    }
 	}
