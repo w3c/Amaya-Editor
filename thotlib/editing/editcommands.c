@@ -3362,11 +3362,6 @@ void                EditingLoadResources ()
 	MenuActionList[CMD_DeleteSelection].Call_Action = (Proc) TtcDeleteSelection;
 	MenuActionList[CMD_DeleteSelection].User_Action = (UserProc) NULL;
 
-	if (ThotLocalActions[T_enter] != NULL)
-	   MenuActionList[CMD_CreateElement].Call_Action = ThotLocalActions[T_enter];
-	else
-	   MenuActionList[CMD_CreateElement].Call_Action = (Proc) TtcCreateElement;
-	MenuActionList[CMD_CreateElement].User_Action = (UserProc) NULL;
 	MenuActionList[CMD_PasteFromClipboard].Call_Action = (Proc) TtcPasteFromClipboard;
 	MenuActionList[CMD_PasteFromClipboard].User_Action = (UserProc) NULL;
 	LastInsertParagraph = NULL;

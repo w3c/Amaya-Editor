@@ -1115,7 +1115,7 @@ extern int          TtaIsAncestor ( /* Element element, Element ancestor */ );
 extern int          TtaIsBefore ( /* Element element1, Element element2 */ );
 extern int          TtaIsFirstPairedElement ( /* Element element */ );
 extern boolean      TtaCanInsertSibling ( /* ElementType elementType, Element sibling, boolean before, Document document */ );
-exteen boolean      TtaCanInsertFirstChild (ElementType elementType, Element parent, Document document);
+extern boolean      TtaCanInsertFirstChild (ElementType elementType, Element parent, Document document);
 extern Document     TtaGetDocument ( /* Element element */ );
 extern void         TtaNextCopiedElement ( /* Element *element */ );
 extern Document     TtaGetCopiedDocument ( /* void */ );

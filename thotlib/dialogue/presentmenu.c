@@ -334,20 +334,21 @@ int                 applyDomain;
 	   {
 	   /* set selection to the highest level elements having the same
 	      content */
-	   SelectSiblings (&pFirstSel, &pLastSel, &firstChar, &lastChar);
-	   if (firstChar == 0 && lastChar == 0)
-	      if (pFirstSel->ElPrevious == NULL && pLastSel->ElNext == NULL)
-		if (pFirstSel->ElParent == pLastSel->ElParent)
+	     if (ThotLocalActions[T_selectsiblings] != NULL)
+	       (*ThotLocalActions[T_selectsiblings]) (&pFirstSel, &pLastSel, &firstChar, &lastChar);
+	     if (firstChar == 0 && lastChar == 0)
+	       if (pFirstSel->ElPrevious == NULL && pLastSel->ElNext == NULL)
+		 if (pFirstSel->ElParent == pLastSel->ElParent)
 		   {
 		   pFirstSel = pFirstSel->ElParent;
 		   while (pFirstSel->ElPrevious == NULL &&
 			  pFirstSel->ElNext == NULL &&
 			  pFirstSel->ElParent != NULL)
-		      pFirstSel = pFirstSel->ElParent;
+		     pFirstSel = pFirstSel->ElParent;
 		   pLastSel = pFirstSel;
 		   }
 	   }
-
+	
 	/* evalue les difference entre le pave traite' et les demandes
 	   de l'utilisateur */
 	if (pFirstSel->ElAssocNum > 0)

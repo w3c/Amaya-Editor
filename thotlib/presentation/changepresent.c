@@ -27,6 +27,7 @@
 #include "typemedia.h"
 #include "constmenu.h"
 #include "appaction.h"
+#include "appdialogue.h"
 #include "presentation.h"
 #include "message.h"
 #include "picture.h"
@@ -36,7 +37,7 @@
 #include "page_tv.h"
 #include "select_tv.h"
 #include "edit_tv.h"
-
+#include "appdialogue_tv.h"
 
 #include "abspictures_f.h"
 #include "appli_f.h"
@@ -1930,17 +1931,18 @@ boolean             Background;
 	   {
 	   /* set selection to the highest level elements having the same
 	      content */
-	   SelectSiblings (&pElFirstSel, &pElLastSel, &firstChar, &lastChar);
-	   if (firstChar == 0 && lastChar == 0)
-	      if (pElFirstSel->ElPrevious == NULL && pElLastSel->ElNext == NULL)
-	        if (pElFirstSel->ElParent == pElLastSel->ElParent)
+	     if (ThotLocalActions[T_selectsiblings] != NULL)
+	       (*ThotLocalActions[T_selectsiblings]) (&pElFirstSel, &pElLastSel, &firstChar, &lastChar);
+	     if (firstChar == 0 && lastChar == 0)
+	       if (pElFirstSel->ElPrevious == NULL && pElLastSel->ElNext == NULL)
+		 if (pElFirstSel->ElParent == pElLastSel->ElParent)
 	           {
-	           pElFirstSel = pElFirstSel->ElParent;
-	           while (pElFirstSel->ElPrevious == NULL &&
-	                  pElFirstSel->ElNext == NULL &&
-	                  pElFirstSel->ElParent != NULL)
-	              pElFirstSel = pElFirstSel->ElParent;
-	           pElLastSel = pElFirstSel;
+		     pElFirstSel = pElFirstSel->ElParent;
+		     while (pElFirstSel->ElPrevious == NULL &&
+			    pElFirstSel->ElNext == NULL &&
+			    pElFirstSel->ElParent != NULL)
+		       pElFirstSel = pElFirstSel->ElParent;
+		     pElLastSel = pElFirstSel;
 	           }
 	   }
 
