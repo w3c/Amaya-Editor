@@ -1166,7 +1166,7 @@ CHAR_T*              info;
 #ifdef __STDC__
 void                InitConfirm3L (Document document, View view, CHAR_T *label1, CHAR_T *label2, CHAR_T *label3)
 #else
-void                InitConfirm3L (document, view, label)
+void                InitConfirm3L (document, view, label1, label2, label3)
 Document            document;
 View                view;
 CHAR_T*              label1;
@@ -1191,7 +1191,7 @@ CHAR_T*              label3;
    /* wait for an answer */
    TtaWaitShowDialogue ();
 #  else  /* _WINDOWS */
-   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), BaseDialog + ConfirmForm, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label);
+   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), BaseDialog + ConfirmForm, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label1);
 #  endif /* _WINDOWS */
 }
 
