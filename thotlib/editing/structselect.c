@@ -3403,8 +3403,9 @@ void BuildSelectionMessage ()
 	      if (nbasc > 0)
 		strcat (msgBuf, " \\ ");
 	      /* put the name of the element */
-	      strcat (msgBuf,
-		      pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
+	      if (pEl->ElStructSchema)
+	        strcat (msgBuf,
+		        pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
 	      /* display parent elements of the table */
 	      pTable = NULL;
 	    }
