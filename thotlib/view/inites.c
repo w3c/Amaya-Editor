@@ -40,6 +40,11 @@
   #include "wininclude.h"
 #endif /* _WINGUI*/
 
+#ifdef _WX
+  #include "wx/colour.h"
+  #include "wx/memory.h"
+#endif /* _WX */
+
 static ThotColorStruct def_colrs[256];
 static int             allocation_index[256];
 static int             have_colors = 0;
@@ -164,11 +169,17 @@ static void InstallColor (int i)
    
 #if defined(_WX)
    if (Pix_Color[i])
-     delete Pix_Color[i];
-   Pix_Color[i] = new wxColour(
-       RGB_Table[i].red,
-       RGB_Table[i].green,
-       RGB_Table[i].blue );
+     {
+       Pix_Color[i]->Set( RGB_Table[i].red,
+			  RGB_Table[i].green,
+			  RGB_Table[i].blue );
+     }
+   else
+     {
+       Pix_Color[i] = new wxColour( RGB_Table[i].red,
+				    RGB_Table[i].green,
+				    RGB_Table[i].blue );
+     }
 #endif /* #if defined(_WX) */
    
 #if defined(_MOTIF) || defined(_GTK)
@@ -234,8 +245,9 @@ static void ApproximateColors (void)
 	   else
 	   {
 	      if (Pix_Color[line * 8 + b])
-		delete Pix_Color[line * 8 + b];
-	      Pix_Color[line * 8 + b] = col;
+		*Pix_Color[line * 8 + b] = *col;
+	      else
+		Pix_Color[line * 8 + b] = new wxColour(*col);
 	   }	
 
 	col = Pix_Color[line * 8 + 4];
@@ -245,10 +257,11 @@ static void ApproximateColors (void)
 	   else
 	   {
 	      if (Pix_Color[line * 8 + b])
-		delete Pix_Color[line * 8 + b];
-	      Pix_Color[line * 8 + b] = col;
+		*Pix_Color[line * 8 + b] = *col;
+	      else
+		Pix_Color[line * 8 + b] = new wxColour(*col);
 	   }
-#endif /* #ifndef _WX */	
+#endif /* #ifndef _WX */
      }
 }
 
@@ -292,16 +305,16 @@ void         FreeDocColors ()
 
 #if defined(_WX)
   int        i;
-
+  
   /* free standard colors */
   for (i = 0; i < NColors; i++)
-    if (Pix_Color[i])
-      delete Pix_Color[i];
-
+    if (Pix_Color && Pix_Color[i])
+	delete ((wxColour *)Pix_Color[i]);
+  
   /* free extended colors */
   for (i = 0; i < NbExtColors; i++)
-    if (ExtColor[i])
-      delete ExtColor[i];
+    if (ExtColor && ExtColor[i])
+      delete ((wxColour *)ExtColor[i]);
 #endif /* #if defined(_WX) */
 
 #endif /* _WIN_PRINT */
@@ -429,8 +442,8 @@ void InitDocColors (char *name)
 #endif /* _MOTIF */
 
 #ifdef _WX
-  Pix_Color[0] = new wxColor(_T("WHITE"));
-  Pix_Color[1] = new wxColor(_T("BLACK"));;
+  Pix_Color[0] = new wxColour(_T("WHITE"));
+  Pix_Color[1] = new wxColour(_T("BLACK"));;
 #endif /* _WX */
 
 #ifndef _WX  
@@ -441,9 +454,7 @@ void InitDocColors (char *name)
   /* clean up everything with white */
   for (i = 2; i < NColors; i++)
   {
-    if (Pix_Color[i])
-      delete Pix_Color[i];
-    Pix_Color[i] = new wxColor( *Pix_Color[0] );  
+    Pix_Color[i] = new wxColour( *Pix_Color[0] );  
   }
 #endif /* #ifndef _WX */
   
@@ -468,8 +479,9 @@ void InitDocColors (char *name)
 #else /* #ifndef _WX */
               {         
                 if (Pix_Color[i])
-                  delete Pix_Color[i];
-                Pix_Color[i] = new wxColor( *Pix_Color[j * 8 + 4] );  
+		    *Pix_Color[i] = *Pix_Color[j * 8 + 4];
+		else
+		  Pix_Color[i] = new wxColour( *Pix_Color[j * 8 + 4] );  
               }
 #endif /* #ifndef _WX */
   
@@ -690,11 +702,17 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
 
 #if defined(_WX)
 	   if (ExtColor[prev])
-	     delete ExtColor[prev];
-	   ExtColor[prev] = new wxColour(
-	        	red,
-	       		green,
-       			blue );
+	     {
+	       ExtColor[prev]->Set( red,
+				    green,
+				    blue );
+	     }
+	   else
+	     {
+	       ExtColor[prev] = new wxColour( red,
+					      green,
+					      blue );
+	     }
 #endif /* #if defined(_WX) */
 
 #if defined(_MOTIF) || defined(_GTK)

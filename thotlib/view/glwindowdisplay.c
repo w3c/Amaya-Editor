@@ -75,6 +75,11 @@
   #include <sys/timeb.h>
 #endif /* #if defined(_GTK) || defined(_WX)*/
 
+#ifdef _WX
+  #include "AmayaFrame.h"
+  #include "AmayaCanvas.h"
+#endif /* _WX */
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 
@@ -211,7 +216,14 @@ ThotBool GL_Err()
   ----------------------------------------------------------------------*/
 void ClearAll (int frame)
 {  
-    glClear (GL_COLOR_BUFFER_BIT); 
+#ifdef _GL_COLOR_DEBUG
+  {
+    float tmp[4];
+    glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
+    printf( "glClearColor=(%f,%f,%f,%f)\n",tmp[0],tmp[1],tmp[2],tmp[3] );
+  }
+#endif /* _GL_COLOR_DEBUG */
+  glClear( GL_COLOR_BUFFER_BIT );
 }
 
 #ifdef _GTK
@@ -1378,15 +1390,15 @@ void SetGlPipelineState ()
       SetBadCard (!badbuffer);
     }
 #ifdef _PCLDEBUG
-  g_print ("\n%s", (Software_Mode)?
+  printf ("\n%s", (Software_Mode)?
 	   "Soft":"Hard");
   /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
-  g_print ("\nVENDOR : %s\nVERSION : %s\nRENDERER : %s", 
+  printf ("\nVENDOR : %s\nVERSION : %s\nRENDERER : %s", 
 	   (char *)glGetString(GL_VENDOR), 
 	   (char *)glGetString(GL_VERSION), 
 	   (char *)glGetString(GL_RENDERER));
   /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */
-  g_print ("\nGLU Version : %s", 
+  printf ("\nGLU Version : %s", 
 	   (char *)gluGetString (GLU_VERSION));
 
 
@@ -1400,12 +1412,12 @@ void SetGlPipelineState ()
     glGetIntegerv (GL_ACCUM_BLUE_BITS, &acblue); 
     glGetIntegerv (GL_ACCUM_ALPHA_BITS, &acalpha);
 
-    g_print ("\n Aux buffers count %i \nAcumm rgba : %i %i %i %i", 
+    printf ("\n Aux buffers count %i \nAcumm rgba : %i %i %i %i", 
 	     auxnumBuffers, acred, acgreen, acblue, acalpha);
   }
 #endif /*_PCLDEBUG*/
 
-  /*glClearColor (1, 0, 0, 0);*/
+  /*  glClearColor (1, 0, 0, 0); */
   /* no fog*/
   glDisable (GL_FOG);
   /*No Dithering*/
@@ -1639,9 +1651,16 @@ void GLResize (int width, int height, int x, int y)
   /* Needed for 3d only...*/
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity (); 
+#ifdef _GL_COLOR_DEBUG
+  {
+    float tmp[4];
+    glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
+    printf( "glClearColor=(%f,%f,%f,%f)\n",tmp[0],tmp[1],tmp[2],tmp[3] );
+  }
+#endif /* _GL_COLOR_DEBUG */  
   glDisable (GL_SCISSOR_TEST);
   glClear (GL_COLOR_BUFFER_BIT);
-  glEnable (GL_SCISSOR_TEST);  
+  glEnable (GL_SCISSOR_TEST);
 }
 
 /*----------------------------------------------------------------------

@@ -137,10 +137,19 @@ void SetMainWindowBackgroundColor (int frame, int color)
 #ifdef _GTK
   update_bg_colorGTK (frame, color);
 #endif /*_GTK*/
+
   GL_Background[frame] = color;
   TtaGiveThotRGB (color, &red, &green, &blue);
   /* the 0.0 for alpha is needed for group opacity */
-  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
+  glClearColor ((float)red/255., (float)green/255., (float)blue/255., 0.0);
+
+#ifdef _GL_COLOR_DEBUG
+  {
+    float tmp[4];
+    glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
+    printf( "glClearColor=(%f,%f,%f,%f)\n",tmp[0],tmp[1],tmp[2],tmp[3] );
+  }
+#endif /* _GL_COLOR_DEBUG */
 }
 
 /*----------------------------------------------------------------------
@@ -150,14 +159,15 @@ void ResetMainWindowBackgroundColor (int frame)
 {
   unsigned short red, green, blue;
   int color = GL_Background[frame];
-  
+
 #ifdef _GTK
   update_bg_colorGTK (frame, color);
 #endif /*_GTK*/
+
   GL_Background[frame] = color;
   TtaGiveThotRGB (color, &red, &green, &blue);
   /* the 0.0 for alpha is needed for group opacity */
-  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
+  glClearColor ((float)red/255., (float)green/255., (float)blue/255., 0.0);
 } 
 
 /*----------------------------------------------------------------------
@@ -171,7 +181,14 @@ void Clear (int frame, int width, int height, int x, int y)
     {
       bottom = FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin;
       GL_SetClipping (x, bottom - (y + height), width, height);
-      glClear (GL_COLOR_BUFFER_BIT); 
+#ifdef _GL_COLOR_DEBUG
+      {
+	float tmp[4];
+	glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
+	printf( "glClearColor=(%f,%f,%f,%f)\n",tmp[0],tmp[1],tmp[2],tmp[3] );
+      }
+#endif /* _GL_COLOR_DEBUG */
+      glClear( GL_COLOR_BUFFER_BIT );
       /*GL_UnsetClippingRestore (TRUE);*/
     }
 }
@@ -663,7 +680,7 @@ ThotBool GL_prepare (int frame)
 #endif /* #ifdef _GTK */
 
 #ifdef _WX
-    wxLogDebug(_T("GL_prepare: frame=%d"), frame);
+      /*   wxLogDebug(_T("GL_prepare: frame=%d"), frame);*/
     if (FrameTable[frame].WdFrame)
     {
       FrameTable[frame].WdFrame->SetCurrent();
