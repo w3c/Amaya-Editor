@@ -2865,8 +2865,14 @@ static ThotBool ShowTextLine (Element el, Document doc)
 		   /* not found: do we have to open a CSS file */
 		   css = SearchCSS (0, s, NULL, &pInfo);
 		   if (css)
-		     otherDoc = GetAmayaDoc (s, NULL, 0, 0, CE_CSS,
-					     FALSE, NULL, NULL);
+		     {
+#ifdef _WX
+		       /* do not open the css into the same window as log errors */
+		       InNewWindow = TRUE;
+#endif /* _WX */
+		       otherDoc = GetAmayaDoc (s, NULL, 0, 0, CE_CSS,
+					       FALSE, NULL, NULL);
+		     }
 		 }
 	     }
 	 }
