@@ -1568,56 +1568,66 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	  dx = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
 	  dy = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding + pBox->BxBMargin + pBox->BxBBorder + pBox->BxBPadding;
 	  if (pParentAb == NULL)
-	    /* It's the root box */
-	    if (horizRef)
-	      {
-		if (pDimAb->DimValue == 0)
-		  /* inherited from the contents */
-		  pBox->BxContentWidth = TRUE;
-		else
-		  {
-		    /* inherited from the window */
-		    GetSizesFrame (frame, &val, &i);
-		    if (pDimAb->DimValue < 0)
-		      val += pDimAb->DimValue;
-		    else if (pDimAb->DimUnit == UnPercent)
-		      val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
-		    else
-		      val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-		    if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent)
-		      /* the rule gives the outside value */
-		      val = val - dx;
-		    ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
-		  }
-	      }
-	    else
-	      {
-		if (pDimAb->DimValue == 0)
-		  /* inherited from the contents */
-		  pBox->BxContentHeight = TRUE;
-		else
-		  {
-		    /* inherited from the window */
-		    GetSizesFrame (frame, &i, &val);
-		    if (pDimAb->DimValue < 0)
-		      val += pDimAb->DimValue;
-		    else if (pDimAb->DimUnit == UnPercent)
-		      val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) val, 0);
-		    else
-		      /* explicit value */
-		      val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-		    if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent)
-		      /* the rule gives the outside value */
-		      val = val - dy;
-		    ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, 0, 0, frame);
-		  }
-	      }
+	    {
+	      /* It's the root box */
+	      if (horizRef)
+		{
+		  if (pDimAb->DimValue == 0)
+		    /* inherited from the contents */
+		    pBox->BxContentWidth = TRUE;
+		  else
+		    {
+		      /* inherited from the window */
+		      GetSizesFrame (frame, &val, &i);
+		      if (pDimAb->DimValue < 0)
+			val += pDimAb->DimValue;
+		      else if (pDimAb->DimUnit == UnPercent)
+			val = PixelValue (pDimAb->DimValue, UnPercent,
+					  (PtrAbstractBox) val, 0);
+		      else
+			val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
+					  ViewFrameTable[frame - 1].FrMagnification);
+		      if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent)
+			/* the rule gives the outside value */
+			val = val - dx;
+		      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
+		    }
+		}
+	      else
+		{
+		  if (pDimAb->DimValue == 0)
+		    /* inherited from the contents */
+		    pBox->BxContentHeight = TRUE;
+		  else
+		    {
+		      /* inherited from the window */
+		      GetSizesFrame (frame, &i, &val);
+		      if (pDimAb->DimValue < 0)
+			val += pDimAb->DimValue;
+		      else if (pDimAb->DimUnit == UnPercent)
+			val = PixelValue (pDimAb->DimValue, UnPercent,
+					  (PtrAbstractBox) val, 0);
+		      else
+			/* explicit value */
+			val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
+					  ViewFrameTable[frame - 1].FrMagnification);
+		      if (pDimAb->DimValue < 0 || pDimAb->DimUnit == UnPercent)
+			/* the rule gives the outside value */
+			val = val - dy;
+		      ResizeHeight (pBox, pBox, NULL, val - pBox->BxH, 0, 0, frame);
+		    }
+		}
+	    }
 	  else
 	    {
 	      /* it's not the root box */
 	      inLine = pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost;
 	      if (horizRef)
 		{
+		  if (!inLine && pAb->AbWidth.DimUnit == UnAuto)
+		    {
+		      pAb->AbWidth.DimAbRef = pParentAb;
+		    }
 		  if (inLine && pAb->AbLeafType == LtText)
 		    /* inherited from the contents */
 		    pBox->BxContentWidth = TRUE;
@@ -1757,6 +1767,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		}
 	      else
 		{
+		  if (pAb->AbHeight.DimUnit == UnAuto)
+		    {
+		      ;
+		    }
 		  pDimAb = &pAb->AbHeight;
 		  pEl = pAb->AbElement;
 		  if (inLine && pAb->AbLeafType == LtText)
