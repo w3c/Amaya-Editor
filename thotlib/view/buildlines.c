@@ -247,10 +247,9 @@ ThotBool            orgYComplete;
   /* Update the position, the baseline and the width of each included box */
   width = pLine->LiXOrg;
   if (orgXComplete)
-    width += pParentBox->BxXOrg + pParentBox->BxLMargin + pParentBox->BxLBorder + pParentBox->BxLPadding;
+    width += pParentBox->BxXOrg;
   if (orgYComplete)
-    baseline += pParentBox->BxYOrg + pParentBox->BxTMargin + pParentBox->BxTBorder + pParentBox->BxTPadding;
-
+    baseline += pParentBox->BxYOrg;
   nSpaces = pLine->LiNPixels;
   if (pLine->LiFirstPiece != NULL)
     pBoxInLine = pLine->LiFirstPiece;
