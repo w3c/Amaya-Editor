@@ -1397,6 +1397,7 @@ static void   XhtmlCheckContext (STRING elName,
 	       !ustrcmp (nameElementStack[stackLevel - 1], TEXT("tbody")))
 	     {
 	       if (ustrcmp (elName, TEXT("tr")))
+		 {
 	         if (!ustrcmp (elName, TEXT("td")) ||
 		     !ustrcmp (elName, TEXT("th")))
 		   /* Table cell within a thead, tfoot or tbody without a tr. */
@@ -1407,6 +1408,7 @@ static void   XhtmlCheckContext (STRING elName,
 		   }
 		 else
 		   *isAllowed = FALSE;
+		 }
 	     }
 	 }
 

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -70,13 +70,7 @@ static ThotBool GetIncludedDocuments ();
 /*----------------------------------------------------------------------
   RegisterSubDoc adds a new entry in SubDoc table.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         RegisterSubDoc (Element el, STRING url)
-#else
-static void         RegisterSubDoc (el, url)
-Element             el;
-STRING              url;
-#endif
 {
   struct _SubDoc  *entry, *last;
 
@@ -105,12 +99,7 @@ STRING              url;
   within the SubDoc table.
   Return the DIV element that correspond to the sub-document or NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Element      SearchSubDoc (STRING url)
-#else
-static Element      SearchSubDoc (url)
-STRING              url;
-#endif
 {
   Element          el;
   struct _SubDoc  *entry;
@@ -161,12 +150,7 @@ static void         FreeSubDocTable ()
   InternalLink is a Thot reference attribute that links a source and a
   target anchor and that allows P schemas to display and print cross-references
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             SetInternalLinks (Document document)
-#else
-void             SetInternalLinks (document)
-Document                document;
-#endif
 {
   Element	        el, div, link, target, sibling;
   ElementType		elType, linkType;
@@ -361,12 +345,7 @@ Document                document;
   CheckPrintingDocument reinitialize printing parameters as soon as
   the printing document changes.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CheckPrintingDocument (Document document)
-#else
-static void         CheckPrintingDocument (document)
-Document            document;
-#endif
 {
    CHAR_T         docName[MAX_LENGTH];
    CHAR_T*        ptr; 
@@ -410,12 +389,7 @@ Document            document;
 /*----------------------------------------------------------------------
    PrintDocument prints the document using predefined parameters.
    ----------------------------------------------------------------------*/  
-#ifdef __STDC__
 static void         PrintDocument (Document doc, View view)
-#else  /* __STDC__ */
-static void         PrintDocument (doc, view)
-Document            doc;
-#endif /* __STDC__ */
 {
   AttributeType      attrType;
   Attribute          attr;
@@ -536,12 +510,7 @@ Document            doc;
 /*----------------------------------------------------------------------
    PrintAs prints the document using predefined parameters.
    ----------------------------------------------------------------------*/  
-#ifdef __STDC__
 void                PrintAs (Document doc, View view)
-#else  /* __STDC__ */
-void                PrintAs (doc, view)
-Document            doc;
-#endif /* __STDC__ */
 {
 #ifdef _WINDOWS
   DocPrint = doc;
@@ -554,14 +523,7 @@ Document            doc;
 /*----------------------------------------------------------------------
    CallbackImage manage returns of Picture form.                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackPrint (int ref, int typedata, STRING data)
-#else  /* __STDC__ */
-void                CallbackPrint (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-#endif /* __STDC__ */
 {
   int                 val;
 
@@ -674,32 +636,30 @@ STRING              data;
 	  if (PaperPrint == PP_PRINTER)
 	    {
 	      PaperPrint = PP_PS;
-#         ifndef _WINDOWS
+#ifndef _WINDOWS
 	      TtaSetTextForm (BasePrint + PPrinterName, PSdir);
-#         endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	    }
 	  break;
 	}
       break;
     case PPrinterName:
       if (data[0] != '\0')
+	{
 	if (PaperPrint == PP_PRINTER)
 	    /* text capture zone for the printer name */
 	    ustrncpy (PPrinter, data, MAX_PATH);
 	else
 	  /* text capture zone for the name of the PostScript file */
 	  ustrncpy (PSdir, data, MAX_PATH);
+	}
       break;
     }
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InitPrint (void)
-#else  /* __STDC__ */
-void                InitPrint ()
-#endif /* __STDC__ */
 {
   CHAR_T* ptr;
 
@@ -725,13 +685,7 @@ void                InitPrint ()
 /*----------------------------------------------------------------------
   SetupAndPrint sets printing parameters and starts the printing process
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetupAndPrint (Document doc, View view)
-#else
-void                SetupAndPrint (doc, view)
-Document            doc;
-View                view;
-#endif
 {
 #ifndef _WINDOWS
    CHAR_T           bufMenu[MAX_LENGTH];
@@ -856,13 +810,7 @@ View                view;
   SectionNumbering
   Execute the "Section Numbering" command
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SectionNumbering (Document doc, View view)
-#else
-void                SectionNumbering (doc, view)
-Document            doc;
-View                view;
-#endif
 {
    ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
 }
@@ -876,13 +824,7 @@ View                view;
   Transform the HREF and SRC attribute to make them independent from their
   former base.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         UpdateURLsInSubtree (NotifyElement *event, Element el)
-#else
-static void         UpdateURLsInSubtree (event, el)
-NotifyElement      *event;
-Element             el;
-#endif
 {
   Element             nextEl, child;
   ElementType         elType;
@@ -929,17 +871,9 @@ Element             el;
   document.
   Return the root element that delimits the new inserted part (a div).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static Element MoveDocumentBody (Element el, Document destDoc, Document sourceDoc, STRING target, STRING url, ThotBool deleteTree)
-#else
-static Element MoveDocumentBody (el, destDoc, sourceDoc, target, url, deleteTree)
-Element        el;
-Document       destDoc;
-Document       sourceDoc;
-STRING         target;
-STRING         url;
-ThotBool       deleteTree;
-#endif
+static Element MoveDocumentBody (Element el, Document destDoc,
+				 Document sourceDoc, STRING target,
+				 STRING url, ThotBool deleteTree)
 {
   Element	   root, ancestor, elem, firstInserted, div;
   Element          lastInserted, srce, copy, old, parent, sibling;
@@ -1065,13 +999,7 @@ ThotBool       deleteTree;
 /*----------------------------------------------------------------------
   CloseMakeBook
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void CloseMakeBook (Document document)
-#else
-static void CloseMakeBook (document)
-Document    document;
-#endif /* __STDC__ */
-
 {
   ResetStop (document);
   /* update internal links */
@@ -1089,23 +1017,11 @@ Document    document;
 /*----------------------------------------------------------------------
   GetIncludedDocuments_callback finishes the GetIncludedDocuments procedure
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void   GetIncludedDocuments_callback (int newdoc, int status, 
 				      STRING urlName,
 				      STRING outputfile, 
 				      AHTHeaders *http_headers,
 				      void * context)
-#else  /* __STDC__ */
-void   GetIncludedDocuments_callback (newdoc, status, urlName,
-				      outputfile, http_headers,
-				      context)
-int    newdoc;
-int    status;
-STRING urlName;
-STRING outputfile;
-AHTHeaders *http_headers;
-void  *context;
-#endif /* __STDC__ */
 {
   Element		link, div;
   IncludeCtxt          *ctx, *prev;
@@ -1167,15 +1083,8 @@ void  *context;
   that link by the contents of the target document.
   Return TRUE if one inclusion is launched.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool  GetIncludedDocuments (Element el, Element link, Document document, IncludeCtxt *prev)
-#else
-static ThotBool  GetIncludedDocuments (el, link, document, prev)
-Element	     el;
-Element	     link;
-Document     document;
-IncludeCtxt *prev;
-#endif
+static ThotBool  GetIncludedDocuments (Element el, Element link,
+				       Document document, IncludeCtxt *prev)
 {
   ElementType           elType;
   Attribute		attr;
@@ -1272,13 +1181,7 @@ IncludeCtxt *prev;
   Replace all links in a document which have an attribute REL="chapter"
   or REL="subdocument" by the corresponding target document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                MakeBook (Document document, View view)
-#else
-void                MakeBook (document, view)
-Document            document;
-View                view;
-#endif
 {
   Element	    root, body;
   ElementType	    elType;

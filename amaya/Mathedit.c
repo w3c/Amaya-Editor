@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -4782,6 +4782,7 @@ ThotBool        delete;
     /* skip comments and other non row elements */
     if (elType.ElTypeNum == MathML_EL_MTR ||
 	elType.ElTypeNum == MathML_EL_MLABELEDTR)
+      {
       if (delete)
 	DeleteIntRowAlign (row, doc);
       else
@@ -4813,6 +4814,7 @@ ThotBool        delete;
 	  if (val > 0)
 	    SetIntRowAlign (row, val, doc);
 	}
+      }
     TtaNextSibling (&row);
     }
   if (value)

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -320,12 +320,14 @@ STRING              printdir;
       while (css != NULL)
 	{
 	  if (css->enabled[doc])
+	    {
 	    if ( css->category == CSS_DOCUMENT_STYLE)
 	      /* there is an internal style in the document */
 	      length += ustrlen (printdir) + 5;
 	    else
 	      /* that external or user style sheet concerns the document */
 	      length += ustrlen (css->localName) + 1;
+	    }
 	  css = css->NextCSS;
 	}
       if (length)
