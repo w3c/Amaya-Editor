@@ -37,16 +37,6 @@
 
 int                 LineNum;	/* compteur de lignes dans le fichier source */
 
-#ifdef __STDC__
-extern void         TtaInitializeAppRegistry (char *);
-extern void         TtaSaveAppRegistry (void);
-
-#else
-extern void         TtaInitializeAppRegistry ();
-extern void         TtaSaveAppRegistry ();
-
-#endif /* __STDC__ */
-
 static PtrPSchema   pPSchema;	/* Schema de presentation genere */
 static PtrSSchema   pSSchema;	/* Schema de structure */
 static int          CurView;	/* numero de la vue courante */
@@ -154,19 +144,17 @@ static boolean      AttrInitCounter;	/* on a rencontre' "Init" dans une definiti
 #include "prs_f.h"
 #include "readstr_f.h"
 #include "fileaccess_f.h"
+#include "registry_f.h"
 #include "writeprs_f.h"
 
 /*----------------------------------------------------------------------
    Initialize							
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         Initialize ()
-
 #else  /* __STDC__ */
 static void         Initialize ()
-#endif				/* __STDC__ */
-
+#endif	/* __STDC__ */
 {
    int                 i;
 
@@ -6124,17 +6112,13 @@ static void         CheckAllBoxesUsed ()
 /*----------------------------------------------------------------------
    main                                                            
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                main (int argc, char **argv)
-
 #else  /* __STDC__ */
 void                main (argc, argv)
 int                 argc;
 char              **argv;
-
 #endif /* __STDC__ */
-
 {
    FILE               *infile;
    boolean             fileOK;
@@ -6142,7 +6126,6 @@ char              **argv;
    char                buffer[200];
    Name                srceFileName;	/* nom du fichier a compiler */
    indLine             wi;	/* position du debut du mot courant dans la
-
 				   ligne en cours */
    indLine             wl;	/* longueur du mot courant */
    SyntacticType       wn;	/* SyntacticType grammaticale du mot courant */
@@ -6150,7 +6133,6 @@ char              **argv;
    SyntRuleNum         pr;	/* numero de la regle de grammaire precedente */
    SyntacticCode       c;	/* code grammatical du mot trouve */
    int                 nb;	/* indice dans Identifier du mot trouve', si
-
 				   identificateur */
    int                 i;
 
@@ -6158,7 +6140,6 @@ char              **argv;
    i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
    COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
    PRS = TtaGetMessageTable ("prsdialogue", PRS_MSG_MAX);
-
    error = False;
    /* initialise l'analyseur syntaxique */
    InitParser ();

@@ -2603,20 +2603,20 @@ static void         ListNotCreated ()
    SRule              *pRule2;
 
    /* clear all creation indicators */
-   /* (on utilise SrRecursDone comme indicateur de creation) */
+   /* (use SrRecursDone as creation incator) */
    for (r = 0; r < pSSchema->SsNRules; r++)
       pSSchema->SsRule[r].SrRecursDone = False;
-   /* on creera la racine */
+   /* we will create the root */
    if (pSSchema->SsRootElem > 0)
       pSSchema->SsRule[pSSchema->SsRootElem - 1].SrRecursDone = True;
-   /* parcourt toute la table des regles */
+   /* go through the table of rules */
    for (r = 0; r < pSSchema->SsNRules; r++)
      {
 	pRule = &pSSchema->SsRule[r];
 	if (pRule->SrParamElem)
-	   /* les parametres seront crees */
+	   /* parameters will be create */
 	   pRule->SrRecursDone = True;
-	/* les elements inclus (au sens SGML) seront crees */
+	/* included elements (SGML) will be created */
 	if (pRule->SrNInclusions > 0)
 	   for (i = 0; i < pRule->SrNInclusions; i++)
 	      pSSchema->SsRule[pRule->SrInclusion[i] - 1].SrRecursDone = True;
@@ -2625,41 +2625,40 @@ static void         ListNotCreated ()
 	switch (pRule->SrConstruct)
 	      {
 		 case CsNatureSchema:
-		    /* les elements introduisant une nouvelle structure */
-		    /* seront crees */
+		    /* elements providing new structure will be created */
 		    pRule->SrRecursDone = True;
 		    break;
 		 case CsBasicElement:
-		    /* tous les elements de base seront crees */
+		    /* all basic elements will be created */
 		    pRule->SrRecursDone = True;
 		    break;
 		 case CsPairedElement:
-		    /* toutes les marques par paires seront crees */
+		    /* all marks (by pair) will be created */
 		    pRule->SrRecursDone = True;
 		    break;
 		 case CsReference:
-		    /* les references seront crees */
+		    /* references will be created */
 		    pRule->SrRecursDone = True;
 		    break;
 		 case CsIdentity:
-		    /* l'identite ne provoque pas de creation */
+		    /* no creation for identity */
 		    break;
 		 case CsList:
-		    /* les elements de liste seront crees */
+		    /* list elements will be created */
 		    pSSchema->SsRule[pRule->SrListItem - 1].SrRecursDone = True;
-		    /* les listes d'elements associes seront crees */
+		    /* associated list elements will be created */
 		    if (pSSchema->SsRule[pRule->SrListItem - 1].SrAssocElem)
 		       pRule->SrRecursDone = True;
 		    break;
 		 case CsChoice:
-		    /* les elements de choix seront crees */
+		    /* choice elements will be created */
 		    if (pRule->SrNChoices > 0)
 		      {
 			 for (i = 0; i < pRule->SrNChoices; i++)
 			   {
 			      pSSchema->SsRule[pRule->SrChoice[i] - 1].SrRecursDone = True;
-			      /* si le choix est une unite exportee, ce sont */
-			      /* ses options qui seront des unites exportees */
+			      /* if the choice is a exported unit, */
+			      /* its options will become exported units */
 			      if (pRule->SrUnitElem)
 				 pSSchema->SsRule[pRule->SrChoice[i] - 1].SrUnitElem = True;
 			   }
@@ -2668,28 +2667,28 @@ static void         ListNotCreated ()
 		    break;
 		 case CsUnorderedAggregate:
 		 case CsAggregate:
-		    /* les composants d'agregats seront crees */
+		    /* agreggate components will be created */
 		    for (i = 0; i < pRule->SrNComponents; i++)
 		       pSSchema->SsRule[pRule->SrComponent[i] - 1].SrRecursDone = True;
 		    break;
 		 case CsConstant:
-		    /* les constantes seront crees */
+		    /* constants will be created */
 		    pRule->SrRecursDone = True;
 		    break;
 		 default:
 		    break;
 	      }
      }
-   /* ecrit le resultat */
+
+   /* write the result */
    for (r = 0; r < pSSchema->SsNRules; r++)
      {
 	pRule = &pSSchema->SsRule[r];
 	if (pRule->SrConstruct == CsChoice)
-	   /* tous les choix qui ne sont pas la regle racine, qui ne portent pas
-	      d'exceptions SGML et qui n'appartiennent pas a un agregat sont crees
-	      temporairement, jusqu'a ce qu'ils soient remplaces par une de leurs
-	      valeurs possibles. Si le choix est un simple alias, l'element ne
-	      sera jamais cree. */
+	   /* all choices different which are not the root, without
+	      SGML exceptions and not within an agregate are temporary
+	      created, until they are removed by the effective choice value.
+	      If the choice is an alias, don't create the element. */
 	  {
 	     temp = True;
 	     if (r + 1 == pSSchema->SsRootElem)
@@ -2704,20 +2703,20 @@ static void         ListNotCreated ()
 			 if (pSSchema->SsRule[rr].SrComponent[i] == r + 1)
 			    temp = False;
 	     if (temp)
-		/* est-ce un alias ? On cherche dans la table des alias */
+		/* is it an alias ? Search in the aliases table */
 		for (i = 0; i < NAlias; i++)
 		   if (Alias[i] == r + 1)
-		      /* l'element est dans la table. Il ne sera pas cree */
+		      /* element found, don't create */
 		      temp = False;
 	     if (temp)
 		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_IS_A_TEMPORARY_ELEM), (char *) pRule->SrName);
 	  }
 	else if (!pRule->SrRecursDone)
-	   /* les unites peuvent ne pas etre utilisees dans le schema */
+	   /* units cannot used in the schema */
 	   if (!pRule->SrUnitElem)
 	     {
 		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_WON_T_BE_CREATED), (char *) pRule->SrName);
-		/* cherche s'il y a des REFERENCES sur ce type d'element */
+		/* search if there are REFERENCES to this element type */
 		for (rr = 0; rr < pSSchema->SsNRules; rr++)
 		  {
 		     pRule2 = &pSSchema->SsRule[rr];
@@ -2857,27 +2856,27 @@ char              **argv;
 			  /* translate line characters */
 			 {
 			    OctalToChar ();
-			    /* analyse the line */
+			    /* analyze the line */
 			    wi = 1;
 			    wl = 0;
-			    /* analyse tous les mots de la ligne courante */
+			    /* analyze all words in the current line */
 			    do
 			      {
 				 i = wi + wl;
-				 /* mot suivant */
+				 /* next word */
 				 GetNextToken (i, &wi, &wl, &wn);
 				 if (wi > 0)
-				    /* on a trouve un mot */
+				    /* word found */
 				   {
-				      /* we parse le mot */
+				      /* parse the word */
 				      AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
 				      if (!error)
-					 /* on le traite */
+					 /* process the word */
 					 ProcessToken (wi, wl, c, r, nb, pr);
 				   }
 			      }
 			    while (wi != 0 && !error);
-			    /* il n'y a plus de mots a traiter dans la ligne */
+			    /* no more word in the line */
 			 }
 		    }
 		  if (!error)
@@ -2888,21 +2887,19 @@ char              **argv;
 		     if (!pSSchema->SsExport)
 			ChangeRules ();
 		  if (!error)
+		     /* list external type names */
 		     ExternalTypes ();
-		  /* traite les noms de types declares comme extern */
 		  if (!error)
 		    {
-		       /* cherche les regles recursives */
+		       /* list recursive rules */
 		       ChkRecurs ();
-		       /* liste les elements consideres comme
-		          elements associes */
+		       /* list associated elements */
 		       ListAssocElem ();
-		       /* liste les elements qui ne seront pas
-		          crees par l'editeur */
+		       /* list elements which will not be created by the editor */
 		       ListNotCreated ();
 
-		       /* ecrit le schema compile' dans le fichier de sortie */
-		       SchemaPath[0] = '\0';	/* utilise le directory courant */
+		       /* write the compiled schema into the output file */
+		       SchemaPath[0] = '\0';	/* use current directory */
 		       if (!error)
 			 {
 			    /* remove temporary file */
