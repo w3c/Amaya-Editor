@@ -366,7 +366,7 @@ CSSInfoPtr          css;
 
       if (oldcss == NULL)
 	/* allocate a new Presentation structure */
-	oldcss = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
+	css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
 
       if (css != NULL)
 	/* apply CSS rules in current Presentation structure (import) */
