@@ -1005,6 +1005,9 @@ View                view;
       StopRequest (document);
       FilesLoading[document] = 0;
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
+      TtaSetStatus (document, 1, 
+		    TtaGetMessage (AMAYA, AM_LOAD_ABORT), 
+		    NULL);
     }
 #endif /* !AMAYA_ILU */
 #endif /* !AMAYA_JAVA */

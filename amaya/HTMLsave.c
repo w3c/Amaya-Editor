@@ -1046,30 +1046,33 @@ ThotBool            use_preconditions;
       DocNetworkStatus[document] |= AMAYA_NET_ERROR;
 #endif /* AMAYA_JAVA || AMAYA_ILU */
       ResetStop (document);
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+      sprintf (msg, "%s %s \n%s",
+	       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+	       url,
+	       TtaGetMessage (AMAYA, AM_SAVE_DISK));
+#else /* AMAYA_JAVA || AMAYA_ILU */
+      usprintf (msg, TEXT("%s %s \n%s\n%s"),
+		TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		url,
+		AmayaLastHTTPErrorMsg,
+		TtaGetMessage (AMAYA, AM_SAVE_DISK));
+#endif /* AMAYA_JAVA || AMAYA_ILU */
       if (confirm)
 	{
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-	  sprintf (msg, "%s %s \n%s",
-		   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		   url,
-		   TtaGetMessage (AMAYA, AM_SAVE_DISK));
-#else /* AMAYA_JAVA || AMAYA_ILU */
-	  usprintf (msg, TEXT("%s %s \n%s\n%s"),
-		   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		   url,
-		   AmayaLastHTTPErrorMsg,
-		   TtaGetMessage (AMAYA, AM_SAVE_DISK));
-#endif /* AMAYA_JAVA || AMAYA_ILU */
 	  InitConfirm (document, view, msg);
-	  /* erase the last status message */
-	  TtaSetStatus (document, view, _EMPTYSTR_, NULL);	       
 	  if (UserAnswer)
 	    res = -1;
 	  else
 	    res = 0;
 	}
       else
-	res = -1;
+	{
+	  InitInfo (TEXT("Save"), msg);
+	  res = -1;
+	}
+      /* erase the last status message */
+      TtaSetStatus (document, view, _EMPTYSTR_, NULL);	       
     }
   else
     {
@@ -1202,28 +1205,31 @@ ThotBool         use_preconditions;
 	  DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
 #endif /* AMAYA_JAVA || AMAYA_ILU */
 	  ResetStop (doc);
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+	  sprintf (msg, "%s %s",
+		   TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		   url);
+#else /* AMAYA_JAVA || AMAYA_ILU */
+	  usprintf (msg, TEXT("%s %s --> %s"),
+		    TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		    url,
+		    AmayaLastHTTPErrorMsg);
+#endif /* AMAYA_JAVA || AMAYA_ILU */
 	  if (confirm)
 	    {
-#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-	      sprintf (msg, "%s %s",
-		       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		       url);
-#else /* AMAYA_JAVA || AMAYA_ILU */
-	      usprintf (msg, TEXT("%s %s \n%s"),
-		       TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-		       url,
-		       AmayaLastHTTPErrorMsg);
-#endif /* AMAYA_JAVA || AMAYA_ILU */
 	      InitConfirm (doc, view, msg);
-	      /* JK: to erase the last status message */
-	      TtaSetStatus (doc, view, _EMPTYSTR_, NULL);	       
 	      if (UserAnswer)
 		res = -1;
 	      else
 		res = -1;
 	    }
 	  else
-	    res = -1;
+	    {
+	      InitInfo (TEXT("Save"), msg);
+	      res = -1;
+	    }
+	  /* JK: to erase the last status message */
+	  TtaSetStatus (doc, view, _EMPTYSTR_, NULL);	       
 	}
       else if (with_images)
 	pImage = ImageURLs;
@@ -1485,7 +1491,12 @@ View                view;
 	      }
 	}
 
-      ustrcpy (localFile, GetLocalPath (doc, DocumentURLs[doc]));
+      ptr = GetLocalPath (doc, DocumentURLs[doc]);
+      /*  no need to protect against a null ptr, as GetLocalPath
+          will always return something at this point */
+      ustrcpy (localFile, ptr);
+      TtaFreeMemory (ptr);
+      
       /* it's a complete name: save it */
       if (ok)
 	if (TextFormat)

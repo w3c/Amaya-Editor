@@ -267,6 +267,11 @@ HTAlertPar         *reply;
 
 #endif
 {
+  /* JK: removed temporarily this prompt as it should be rewritten for
+     use by the FTP module to save a file */
+#if 1
+  return NO;
+#else
    AHTReqContext      *me = HTRequest_context (request);
    char               *result = NULL;
 
@@ -300,9 +305,10 @@ HTAlertPar         *reply;
      }
 #  else /* _WINDOWS */
    /* it could be a problem to use this form */
-   /*CreateAuthenticationDlgWindow (TtaGetViewFrame (me->docid, 1));*/
+   CreateAuthenticationDlgWindow (TtaGetViewFrame (me->docid, 1));
 #  endif /* _WINDOWS */
    return NO;
+#endif
 }
 
 /*----------------------------------------------------------------------
@@ -558,10 +564,12 @@ int status;
 
 {
 
-  HTError             *error;
+  HTError             *error = (HTError *) NULL;
+  HTError             *next_error;
   HTErrorElement      errorElement;
   HTList              *cur;
   CHAR_T              msg_status[10];
+  STRING              server_status = (STRING) NULL;
 
   if (status == 200)
     TtaSetStatus (me->docid, 1,  
@@ -622,14 +630,35 @@ int status;
 		    TEXT("Conflict with the current state of the resource"), NULL);
       usprintf(AmayaLastHTTPErrorMsg, TEXT("409: Conflict with the current state of the resource"));
     }
-  else if (status == -1)
+  else if (status <0)
     {
       /*
       ** Here we deal with errors for which libwww does not
       ** return a correct status code 
       */
+
+      /* get a pointer to the server's status message */
       cur = HTRequest_error (me->request);
       error = (HTError *) HTList_nextObject (cur);
+      /* copy the reference to the server status message if it
+         exists and if it has an appropriate length */
+      if (error)
+        {
+          /* if there's no error reason (for example a timeout),
+             we try to see if the next element has one and then
+             we use it */
+          if (error->par == NULL && cur)
+            {
+              next_error = (HTError *) HTList_nextObject (cur);
+              if (next_error && next_error->par)
+                error = next_error;
+            }
+          errorElement = error->element;
+          if (error->par && error->length < MAX_LENGTH/2
+              && ((char *) error->par)[0] != EOS)
+            server_status = ISO2WideChar ((char *) error->par);
+        }
+
       if (error == (HTError *) NULL)
 	/* there's no error context */
 	{
@@ -642,17 +671,36 @@ int status;
 		   msg_status);
 	  return;
 	}
-	   
-      /* there's an error context */
-      errorElement = error->element;
-      
-      if (errorElement == HTERR_NOT_IMPLEMENTED)
+
+      if (errorElement == HTERR_INTERRUPTED)
+	{
+	  TtaSetStatus (me->docid, 1,
+			TEXT("Transfer interrupted by user"), (STRING) NULL);
+	  usprintf (AmayaLastHTTPErrorMsg, "%s",
+		    TEXT("Transfer interrupted by user"));
+	}
+      else if (errorElement == HTERR_PRECON_FAILED) 
+	{
+	  TtaSetStatus (me->docid, 1,
+			TEXT("Document has changed (412)"), (STRING) NULL);
+	  usprintf (AmayaLastHTTPErrorMsg, "%s",
+		    TEXT("Document has changed (412)"));
+	  status = -412;
+	}
+      else if (errorElement == HTERR_TIME_OUT || errorElement == HTERR_TIMEOUT)
+	{
+	  TtaSetStatus (me->docid, 1,
+			TEXT("Connection Timeout"), (STRING) NULL);
+	  usprintf (AmayaLastHTTPErrorMsg,
+		    TEXT("Connection Timeout"));
+	}
+      else if (errorElement == HTERR_NOT_IMPLEMENTED)
 	{
 	  TtaSetStatus (me->docid, 1,
 			TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR), 
 			(STRING) NULL);
 	  usprintf (AmayaLastHTTPErrorMsg, 
-		   TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR));
+		    TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR));
 	  status = -501;
 	}
       else if (errorElement == HTERR_INTERNAL)
@@ -664,8 +712,8 @@ int status;
 			    TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
 			    ISO2WideChar (error->par));
 	      usprintf (AmayaLastHTTPErrorMsg, 
-		       TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
-		       ISO2WideChar (error->par));
+			TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
+			ISO2WideChar (error->par));
 	    }
 	  else
 	    {
@@ -673,7 +721,7 @@ int status;
 			    TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE), 
 			    (STRING) NULL);
 	      usprintf (AmayaLastHTTPErrorMsg, 
-		       TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE));
+			TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE));
 	    }
 	  status = -500; 
 	}

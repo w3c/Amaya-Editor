@@ -49,6 +49,7 @@
 /* Amaya includes  */
 #define THOT_EXPORT extern
 #include "amaya.h"
+#include "init_f.h"
 #include <sys/types.h>
 #include <fcntl.h>
 #include "HTEvtLst.h"
@@ -104,6 +105,8 @@ static  ThotBool    AmayaAlive_flag; /* set to 1 if the application is active;
 					0 if we have killed */
 static  ThotBool    CanDoStop_flag; /* set to 1 if we can do a stop, 0
 				       if we're inside a critical section */
+static  ThotBool    UserAborted_flag; /* set to 1 if we're processing a user
+					 induced stop request operation */
 #ifdef  AMAYA_WWW_CACHE
 static int          fd_cachelock; /* open handle to the .lock cache file */
 #endif /* AMAYA_WWW_CACHE */
@@ -1045,7 +1048,7 @@ int                 status;
   HTParentAnchor     *anchor;
 
   if (!me)
-    return HT_ERROR;		/* not an Amaya request */
+     return HT_ERROR;		/* not an Amaya request */
 
   if (me->reqStatus == HT_END)
     /* we have already processed this request! */
@@ -1094,7 +1097,7 @@ int                 status;
    
    if (me->output && me->output != stdout)
      {
-       /* we are writing to a file */
+       /* we are writing to a local file */
        if (me->reqStatus != HT_ABORT)
 	 {			/* if the request was not aborted and */
 	   if (error_flag &&
@@ -1133,11 +1136,20 @@ int                 status;
        me->output = NULL;
      }
 
+   /* a very special handling so that we can put a message box
+      to tell the user WHAT he has just done... */
+   if (UserAborted_flag && me->method == METHOD_PUT)
+     {
+       HTRequest_addError (request, ERR_FATAL, NO, HTERR_INTERRUPTED,
+			   "Operation aborted by user", 0, NULL);
+     }
+
    if (error_flag)
      me->reqStatus = HT_ERR;
-   else if (me->reqStatus != HT_ABORT)
-     me->reqStatus = HT_END;
- 
+   else 
+     if (me->reqStatus != HT_ABORT)
+       me->reqStatus = HT_END;
+   
    /* copy the content_type */
    if (!me->content_type)
      {
@@ -1968,14 +1980,7 @@ int i;
     TtaFreeMemory (real_dir);
   /* warn the user if the cache isn't active */
   if (cache_enabled && !HTCacheMode_enabled ())
-    {
-#ifdef _WINDOWS   
-      MessageBox (NULL, TtaGetMessage (AMAYA, AM_CANT_CREATE_CACHE), TEXT("Cache"), MB_OK);
-#else /* !_WINDOWS */
-      TtaDisplayMessage (CONFIRM, TtaGetMessage (AMAYA, AM_CANT_CREATE_CACHE),
-			 NULL);
-#endif /* _WINDOWS */
-    }
+      InitInfo (TEXT("Cache"), TtaGetMessage (AMAYA, AM_CANT_CREATE_CACHE));
 #endif /* AMAYA_WWW_CACHE */
 }
 
@@ -2287,6 +2292,7 @@ void                QueryInit ()
    AmayaContextInit ();
    AHTProfile_newAmaya (HTAppName, HTAppVersion);
    CanDoStop_set (TRUE);
+   UserAborted_flag = FALSE;
 
 #ifdef _WINDOWS
    HTEventInit ();
@@ -2733,7 +2739,8 @@ STRING        content_type;
       /*error */
       outputfile[0] = EOS;
       TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_BAD_URL), urlName);
-      
+      if (ref)
+	TtaFreeMemory (ref); 
       if (error_html)
 	/* so we can show the error message */
 	DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
@@ -3239,6 +3246,9 @@ int                 docid;
 #endif /* DEBUG_LIBWWW */
        /* enter the critical section */
        lock_stop = TRUE; 
+       /* set a module global variable so that we can do special
+	  processing easier */
+       UserAborted_flag = TRUE;
        /* expire all outstanding timers */
        HTTimer_expireAll ();
        /* HTNet_killAll (); */
@@ -3291,6 +3301,8 @@ int                 docid;
 	 }
        /* Delete remaining channels */
        HTChannel_safeDeleteAll ();
+       /* reset the stop status */
+       UserAborted_flag = FALSE;
        /* exit the critical section */
        lock_stop = FALSE; 
 #ifdef DEBUG_LIBWWW
