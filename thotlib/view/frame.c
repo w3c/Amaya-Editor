@@ -274,8 +274,13 @@ static void   DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin, int xmax, 
 	height = ymax - yd + 1;
       imageDesc = (PictInfo *) pAb->AbPictBackground;
       if (pAb->AbSelected)
-	/* draw the box background */
-	DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, SelColor, 2);
+	{
+	  /* draw the box selection */
+	  if (pAb->AbVolume == 0 && pBox->BxWidth <= 2)
+	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, InsertColor, 2);
+	  else
+	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, SelColor, 2);
+	}
       else
 	{
 	  if (pBox->BxFill)
