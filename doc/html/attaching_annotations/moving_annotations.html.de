@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Anmerkungen verschieben</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -37,11 +36,11 @@ summary="Inhaltsverzeichnis">
 verschieben. Damit kann man beispielsweise <a
 href="annotation_issues.html.de">Waisenkinder und fehlgeleitete
 Anmerkungen</a><a
-href="../saving_and_publishing_documents/annotation_issues.html.de">
-</a>behandeln. Man kann eine Anmerkung entweder an eine markierte Stelle im
-Dokument oder an die Stelle, die in einem <span class="Link">XPointer</span>
-gespeichert ist, verschieben. Es ist aber nur möglich Anmerkungen innerhalb
-des Dokumentes zu verschieben, in dem sie auch erzeugt wurden.</p>
+href="../saving_and_publishing_documents/annotation_issues.html.de"></a>behandeln.
+Man kann eine Anmerkung entweder an eine markierte Stelle im Dokument oder an
+die Stelle, die in einem <span class="Link">XPointer</span> gespeichert ist,
+verschieben. Es ist aber nur möglich Anmerkungen innerhalb des Dokumentes zu
+verschieben, in dem sie auch erzeugt wurden.</p>
 
 <h3>Eine Anmerkung an eine andere Stelle im Dokument verschieben</h3>
 

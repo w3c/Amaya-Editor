@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Einstellungen für Anmerkungen konfigurieren</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -20,8 +19,8 @@ summary="Inhaltsverzeichnis">
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><a accesskey="p" href="./annotation_menu.html.de"><img alt="previous"
-        src="../../images/left.gif" /></a> <a accesskey="t"
+      <td><a accesskey="p" href="./annotation_menu.html.de"><img
+        alt="previous" src="../../images/left.gif" /></a> <a accesskey="t"
         href="../Annotations.html.de"><img alt="erste Seite"
         src="../../images/up.gif" /></a> <a accesskey="n"
         href="./creating_an_annotation.html.de"><img alt="nächste Seite"
@@ -61,7 +60,7 @@ aber die gleiche Funktionalität besitzt.</p>
       getrennte Liste angezeigt. Unter Windows kann man einen neuen Server
       hinzufügen, indem man in die Liste klickt, die Eingabetaste betätigt
       und den Namen eingibt. Fehlwertmäßig wird diese Liste auf
-      <code>localhost</code> gesetzt. 
+      <code>localhost</code> gesetzt.
       <p class="ProcedureNote"><strong>Tip</strong>:<br />
       um einen Server vorübergehend zu deaktivieren, kann vor dessen URI ein
       Minuszeichen (-) eingeben. Dieser wird dann von Amaya ignoriert.</p>
@@ -71,7 +70,7 @@ aber die gleiche Funktionalität besitzt.</p>
     <dd>Amaya kann, jedesmal, wenn ein Dokument gebrowst wird, Anmerkungen
       automatisch laden (indem ein Server abgefragt wird). Sind diese
       Optionen nicht markiert, kann man über <strong>Laden</strong> im Menü
-      <strong>Anmerkungen</strong> dies manuell erledigen. 
+      <strong>Anmerkungen</strong> dies manuell erledigen.
       <p class="Note"><strong>Anmerkung:</strong> Aktiviert man
       <strong>Entfernte Anmerkungen automatisch laden</strong>, so kann dies,
       bedingt durch das Auflösen der DNS-Namen zu einer Verzögerung führen.

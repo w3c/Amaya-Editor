@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Über Anmerkungen lesen</title>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="generator"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -33,7 +32,7 @@
 <h1>Über Anmerkungen lesen</h1>
 
 <p>Amaya kennzeichnet Anmerkungen mit dem Icon <img alt="Anmerkungs-Icon"
-src="../../images/annot.gif" />, welches in den Text eingefügt wird. Klickt
+src="../../images/annot.png" />, welches in den Text eingefügt wird. Klickt
 man auf das Icon, dann wird die Stelle markiert, zu der es eine Anmerkung
 gibt. Führt man einen Doppelklick darauf aus, so wird ein neues Fenster
 geöffnet, in dem der Anmerkungstext und dessen Metadaten angezeigt werden.</p>

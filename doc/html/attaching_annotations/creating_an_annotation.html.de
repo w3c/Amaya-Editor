@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Eine Anmerkung erzeugen</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -19,7 +19,8 @@ summary="Inhaltsverzeichnis">
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><a accesskey="p" href="./configuring_annotation_settings.html.de"><img
+      <td><a accesskey="p"
+        href="./configuring_annotation_settings.html.de"><img
         alt="vorherige Seite" src="../../images/left.gif" /></a> <a
         accesskey="t" href="../Annotations.html.de"><img alt="erste Seite"
         src="../../images/up.gif" /></a> <a accesskey="n"
@@ -53,8 +54,8 @@ Dokument beziehen.</p>
 
 <p>Daraufhin wird der folgende Fenster geöffnet:</p>
 
-<p><img alt="Das Fenster Anmerkungen" src="../../images/annotationwindow-de.png"
-/></p>
+<p><img alt="Das Fenster Anmerkungen"
+src="../../images/annotationwindow-de.png" /></p>
 
 <p>Hier werden zunächst nur die Metadaten der Anmerkung angezeigt.</p>
 
@@ -92,7 +93,7 @@ falls der Benutzer dort Schreibrechte hat und der Sever dafür konfiguriert
 ist.</p>
 
 <p>Eine lokal gespeicherte Anmerkung wird mit
-<strong>Veröffentlichen</strong>  im Menü <strong>Anmerkungen</strong> an den
+<strong>Veröffentlichen</strong> im Menü <strong>Anmerkungen</strong> an den
 Server gesendet, der unter <span
 class="Link"><strong>Konfigurieren</strong></span> im Menü
 <strong>Anmerkungen</strong> festgelegt wurde. Ist die Operation erfolgreich,

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Über Anmerkungen veröffentlichen</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR"
+  content="amaya 8.0-pre, see http://www.w3.org/Amaya/" />
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -20,7 +19,8 @@ summary="Inhaltsverzeichnis">
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><a accesskey="p" href="./about_storing_local_annotations.html.de"><img
+      <td><a accesskey="p"
+        href="./about_storing_local_annotations.html.de"><img
         alt="vorherige Seite" src="../../images/left.gif" /></a> <a
         accesskey="t" href="../Annotations.html.de"><img alt="erste Seite"
         src="../../images/up.gif" /></a> <a accesskey="n"
@@ -34,10 +34,10 @@ summary="Inhaltsverzeichnis">
 <h1>Über Anmerkungen veröffentlichen</h1>
 
 <p>Amaya kann Anmerkungen im <span style="color: blue"><a
-href="./about_storing_local_annotations.html.de">lokalen Dateisystem</a></span>
-(auch als "lokale Anmerkung" bezeichnet) oder entfernt auf einen Server, der
-über das Internet erreicht werden kann (auch als "entfernte Anmerkung"
-bezeichnet), speichern.</p>
+href="./about_storing_local_annotations.html.de">lokalen
+Dateisystem</a></span> (auch als "lokale Anmerkung" bezeichnet) oder entfernt
+auf einen Server, der über das Internet erreicht werden kann (auch als
+"entfernte Anmerkung" bezeichnet), speichern.</p>
 
 <p>Man kann Anmerkungen auf einem Server speichern, sodass diese von jedem,
 der die richtigen Zugriffsrechte besitzt, heruntergeladen werden können,
