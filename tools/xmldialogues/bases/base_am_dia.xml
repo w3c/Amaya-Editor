@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Fri Jan 24 10:39:47 CET 2003" version="50">
+<base last_update="Fri Jan 24 12:48:50 CET 2003" version="51">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1721,12 +1721,14 @@
 	<message xml:lang="fr">Montrer la librairie SVG</message>
 	<message xml:lang="it">Mostri librería SVG</message>
 	<message xml:lang="es">Mostrar librería SVG</message>
+	<message xml:lang="de">SVG-Bibliothek anzeigen...</message>
 </label>
 <label define="BAddNewModel">
 	<message xml:lang="en">Add selection in SVG Library</message>
 	<message xml:lang="fr">Ajouter la sélection dans une librairie</message>
 	<message xml:lang="it">Aggiunga la selezione nella librería SVG</message>
 	<message xml:lang="es">Añadir la selección a la librería SVG</message>
+	<message xml:lang="de">Markierung in SVG-Bibliothek einf|gen</message>
 </label>
 <label define="BXMLElement">
 	<message xml:lang="en">XML elements...</message>
