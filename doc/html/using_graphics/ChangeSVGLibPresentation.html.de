@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type"
+  content="application/xhtml+xml; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <title>Manage SVG library</title>
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /><img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p align="right"><a href="AddSVGLib.html.de" accesskey="p"><img
+        alt="previous" src="../../images/left.gif" /></a> <a
+        href="SVGLibrary.html.de" accesskey="t"><img alt="top"
+        src="../../images/up.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>How to change SVG library presentation</h1>
+
+<p>You can use CSS (Cascading Style Sheet) to modify SVG library
+presentation. SVG library is a XHTML document, so you can modify all the
+presentation rules of a document : table, police, image size etc... (see the
+CSS specification).</p>
+
+<p>Here is an example of library without style.</p>
+
+<p><img alt="Library without style" src="../../images/NoLibraryDocStyle.gif"
+/></p>
+
+<p>And then you can see another example which use CSS rules.</p>
+
+<p><img alt="default style presentation"
+src="../../images/LibraryDocDefaultStyle.gif" /></p>
+
+<p>To modify SVG library presentation, you have to look at source view and
+modify the header file:</p>
+
+<p>.g_image concerned presentation of image column.</p>
+
+<p>.g_title concerned presentation of title column.</p>
+
+<p>.g_comment concerned presentation of comment column.</p>
+</div>
+
+<p></p>
+</body>
+</html>
