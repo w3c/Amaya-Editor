@@ -1053,12 +1053,13 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 {
   HBITMAP             newimage;
   unsigned char      *bit_data, *bitp;
-  unsigned char       r, g, b;
+  unsigned char       r, g, b, alpha;
   unsigned int        col;
   int                 temp, w, h, ind;
   int                 linepad;
   int                 bytesperline;
   int                 rshift, gshift, bshift;
+  unsigned short      rmask, gmask, bmask;
 
   switch (depth)
     {
@@ -1097,9 +1098,18 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
       bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
       bitp   = bit_data;
       ind = 0; /* pixel index */
+	  if (depth == 15)
+	  {
+      rshift = 0;
+      gshift = 5;
+      bshift = 10;
+	  }
+	  else
+	  {
       rshift = 0;
       gshift = 5;
       bshift = 11;
+	  }
       for (w = (width * height); w > 0; w--)
 	{
 	  if (ncolors == 0)
@@ -1114,30 +1124,21 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 		  b = data[ind++];
 		}
 	      if (withAlpha)
-		/* skip the alpha channel */
-		ind++;
-	      /*if (IS_WIN95)
-	      temp = (((r * 255) & 63488) |
-		      (((g * 255) >> gshift) & 2016) |
-		      (((b * 255) >> bshift) & 31));
-	      else*/
-	      temp = (((r << 8) & 63488) |
-		      (((g << 8) >> gshift) & 2016) |
-		      (((b << 8) >> bshift) & 31));
+		    /* skip the alpha channel */
+		   alpha = data[ind++];
 	    }
 	  else
 	    {
 	      /* use one byte per pixel */
 	      col = data[ind++];
-	      /*if (IS_WIN95)
-		temp = (((colrs[col].red * 255) & 63488) |
-			(((colrs[col].green * 255) >> gshift) & 2016) |
-			((((colrs[col].blue * 255) >> bshift) & 31)));
-	      else*/
-		temp = (((colrs[col].red << 8) & 63488) |
-			(((colrs[col].green << 8) >> gshift) & 2016) |
-			((((colrs[col].blue << 8) >> bshift) & 31)));
+		  r = colrs[col].red;
+		  g = colrs[col].green;
+		  b = colrs[col].blue;
 	    }
+	  rmask = (r << 8) & 0xf800;
+	  gmask = ((g << 8) >> gshift) & 0x7e0;
+	  bmask = ((b << 8) >> bshift) & 0x1f;
+	  temp = (rmask | gmask | bmask);
 	  *bitp++ = temp & 0xff;
 	  *bitp++ = (temp >> 8) & 0xff;
 	}
