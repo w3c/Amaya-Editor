@@ -60,6 +60,8 @@
 #include "docs_f.h"
 #include "print_tv.h"
 
+#define EOS '\0'
+
 static char         Orientation[MAX_NAME_LENGTH];
 static Func         pFuncExportPrintDoc = NULL;
 static int          defPaperPrint = TRUE;
@@ -107,13 +109,51 @@ char               *viewsToPrint;
 {
 #ifndef _WINDOWS
    char                cmd[800];
+   char                views[200];
    char*               server = "";
-   int                 res;
+   int                 i,j,res;
 
    if (servername) { 
       server = (char*) TtaGetMemory (strlen (servername) + 10) ;
       sprintf (server, "-display %s", servername);
    }
+
+   /* insert the flag -v before each view name */
+   i=0;
+   j=0;
+   /* skip leading spaces */ 
+   while(viewsToPrint[i]==' ')
+     i++;
+   /* insert the first flag */
+   if(viewsToPrint[i]!=EOS)
+     {
+       views[j++]='-';
+       views[j++]='v';
+       views[j++]=' ';
+     }
+   /* process from the first view name */
+   while(viewsToPrint[i]!=EOS)
+     {
+        /* copy the character */
+        views[j++]=viewsToPrint[i];
+        /* is it a space? */
+        if(viewsToPrint[i]==' ')
+          {
+            /* skip multiple spaces */
+            while(viewsToPrint[i+1]==' ')
+              i++;
+            /* if it is not the end, insert the flag */
+            if(viewsToPrint[i+1]!=EOS)
+              {
+                views[j++]='-';
+                views[j++]='v';
+                views[j++]=' ';
+              }
+          }
+        /* process next char */
+        i++;
+      }      
+   views[j]=EOS;
 
    if(userOrientation == 0)
       strcpy (Orientation, "Portrait");
@@ -121,14 +161,16 @@ char               *viewsToPrint;
       strcpy (Orientation, "Landscape");
 
    if (printer[0] != '\0')
-      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps \"%s\" -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PRINTER -v %s &",
+      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps \"%s\" -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PRINTER %s &",
 	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, printer, PageSize, nCopies, hShift,
-	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
+	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], views);
    else
-      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps \"%s\" -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PRINTER -v %s &",
+      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps \"%s\" -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PRINTER %s &",
 	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, "lp", PageSize, nCopies, hShift,
-	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
+	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], views);
 
+   if (servername)  
+     TtaFreeMemory(server);
    res = system (cmd);
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
@@ -167,28 +209,68 @@ char               *viewsToPrint;
 #endif /* __STDC__ */
 {
    char                cmd[800];
+   char                views[200];
    char*               server = "";
-   int                 res;
+   int                 i,j,res;
    
    if (servername) { 
       server = (char*) TtaGetMemory (strlen (servername) + 10) ;
       sprintf (server, "-display %s", servername);
    }
    
+   /* insert the flag -v before each view name */
+   i=0;
+   j=0;
+   /* skip leading spaces */ 
+   while(viewsToPrint[i]==' ')
+     i++;
+   /* insert the first flag */
+   if(viewsToPrint[i]!=EOS)
+     {
+       views[j++]='-';
+       views[j++]='v';
+       views[j++]=' ';
+     }
+   /* process from the first view name */
+   while(viewsToPrint[i]!=EOS)
+     {
+        /* copy the character */
+        views[j++]=viewsToPrint[i];
+        /* is it a space? */
+        if(viewsToPrint[i]==' ')
+          {
+            /* skip multiple spaces */
+            while(viewsToPrint[i+1]==' ')
+              i++;
+            /* if it is not the end, insert the flag */
+            if(viewsToPrint[i+1]!=EOS)
+              {
+                views[j++]='-';
+                views[j++]='v';
+                views[j++]=' ';
+              }
+          }
+        /* process next char */
+        i++;
+      }      
+   views[j]=EOS;
+
    if(userOrientation == 0)
       strcpy (Orientation, "Portrait");
    else
       strcpy (Orientation, "Landscape");
 
    if (psName[0] != '\0')
-      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps %s -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PSFILE -v %s &\n",
+      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps %s -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PSFILE %s &\n",
 	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, psName, PageSize, nCopies, hShift,
-	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
+	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], views);
    else
-      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps %s -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PSFILE -v %s &\n",
+      sprintf (cmd, "%s/print %s -pivot %s -dir %s -R%d -F%d -L%d -rn %s -ps %s -P%s -#%d -H%d -V%d %s -%%%d -npps %d -f%d -M%d -bw %d -w%ld PSFILE %s &\n",
 	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, "out.ps", PageSize, nCopies, hShift,
-	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
+	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], views);
 
+   if (servername) 
+     TtaFreeMemory(server);
    res = system (cmd);
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
@@ -289,7 +371,6 @@ char               *viewNames;
    PathBuffer          dirName,tmpDirName;
    Name                docName,tmpDocName;
    boolean	       docReadOnly;
-   /*PathBuffer          viewsToPrint;*/
    boolean             ok;
    Name                savePres, newPres;
    int                 orientation;
