@@ -635,7 +635,7 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
        thot_keysym == WXK_INSERT ||
        thot_keysym == WXK_DELETE ||
        thot_keysym == WXK_HOME   ||
-       /*       thot_keysym == WXK_PRIOR  ||*/
+       thot_keysym == WXK_PRIOR  ||
        thot_keysym == WXK_NEXT   ||
        thot_keysym == WXK_END    ||
        thot_keysym == WXK_LEFT   ||
