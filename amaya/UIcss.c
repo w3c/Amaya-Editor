@@ -878,7 +878,7 @@ static void InitCSSDialog (Document doc, char *s)
   PInfoPtr            pInfo;
   ElementType	      elType;
   char               *name;
-  char                buf[400];
+  char               *buf = NULL;
   char               *ptr, *localname;
   int                 i, select;
   int                 len, nb, sty;
@@ -889,11 +889,10 @@ static void InitCSSDialog (Document doc, char *s)
   /* clean up the list of links */
   TtaFreeMemory (CSSlink);
   CSSlink = NULL;
-  buf[0] = 0;
   index = 0;
   nb = 0; /* number of entries */
   sty = 0; /* number of style elements */
-  size = 400;
+  size = 1;
 #ifndef _WINDOWS
   /* create the form */
   TtaNewSheet (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1), s, 1,
@@ -923,8 +922,15 @@ static void InitCSSDialog (Document doc, char *s)
 	    {
 	      nb++;
 	      if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
-		/* count the number of style element */ 
-		sty++;
+		{
+		  size += strlen (localname) + 11;
+		  /* count the number of style element */ 
+		  sty++;
+		}
+	      else if (css->url == NULL)
+		 size += strlen (css->localName) + 12;
+	      else
+		 size += strlen (css->url) + 12;
 	    }
 	  pInfo = pInfo->PiNext;
 	}
@@ -936,6 +942,7 @@ static void InitCSSDialog (Document doc, char *s)
       i = 0;
       /* create the link list */
       CSSlink = (Element *) TtaGetMemory (sty * sizeof (Element));
+      buf = TtaGetMemory (size);
       sty = 0;
       /* initialize menu entries */
       css = CSSList;
@@ -1032,6 +1039,7 @@ static void InitCSSDialog (Document doc, char *s)
 #  ifdef _WINDOWS
   CreateCSSDlgWindow (TtaGetViewFrame (doc, 1), nb, buf, s,
 		      TtaGetMessage (AMAYA, AM_NO_CSS));
+  TtaFreeMemory (buf);
 #  else  /* !_WINDOWS */
   if (nb > 0)
     {
@@ -1046,6 +1054,7 @@ static void InitCSSDialog (Document doc, char *s)
   else
     TtaNewLabel (BaseCSS + CSSSelect, BaseCSS + CSSForm,
 		 TtaGetMessage (AMAYA, AM_NO_CSS));
+  TtaFreeMemory (buf);
   TtaShowDialogue (BaseCSS + CSSForm, TRUE);
   if (nb > 0)
     TtaSetSelector (BaseCSS + CSSSelect, select, NULL);
