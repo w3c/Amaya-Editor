@@ -3,11 +3,10 @@
 
 
 /* 
-   debug.c : Module de trace et mise au point
+   Module de trace et mise au point
    V. Quint - Avril 1985        
-   Major changes 
-   PMA : 4/4/91       remise en forme
  */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

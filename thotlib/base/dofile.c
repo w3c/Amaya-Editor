@@ -2,11 +2,7 @@
 /* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
 
 /* 
-   dofile.c : traitement des noms de fichiers. 
-   Recherche un fichier avec un path de repertoires.
-   Avril 1989   
-   Major changes 
-   PMA : 4/4/91       remise en forme
+   Construction des noms de fichiers. 
  */
 
 #include "thot_sys.h"

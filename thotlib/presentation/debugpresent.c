@@ -2,15 +2,9 @@
 /* -- Copyright (c) 1990 - 1994 Inria/Imag  All rights reserved. -- */
 
 /*
-   printprs.c :
    Ce programme effectue le chargement d'un schema de presentation et
    du schema de structure associe' et liste le contenu du schema de
    presentation.        
-   V. Quint     Avril 1985
-
-   Major changes:
-   V. Quint     Avril 1985
-   PMA 7/06/91  remise en forme
  */
 
 #include "thot_sys.h"
@@ -1903,4 +1897,4 @@ char               *output_file;
    return (0);
 #endif
 }
-/* End Of Module Printprs */
+

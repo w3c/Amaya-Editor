@@ -1,13 +1,6 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   cherche.c : gestion de la commande de recherche.
-   Projet THOT
-   Module traitant la commande de recherche
-   V. Quint     Septembre 1984  
-   Major Changes:
-   V. Quint     Septembre 1984
+   Recherche dans le contenu des documents
  */
 
 #include "thot_sys.h"
@@ -30,6 +23,7 @@
 #include "searchmenu_f.h"
 #include "structcreation_f.h"
 #include "createabsbox_f.h"
+#include "changeabsbox_f.h"
 #include "scroll_f.h"
 #include "views_f.h"
 #include "callback_f.h"
@@ -46,47 +40,36 @@
 #include "fileaccess_f.h"
 #include "structschema_f.h"
 
-
 /* ---------------------------------------------------------------------- */
-/* |    RemplaceTexte remplace dans l'element texte pEl la chaine       | */
-/* |            commencant au caractere icar et de longueur LgChaineCh  | */
-/* |            par la chaine de remplacement.                          | */
-/* |     Attention : a l'exception des recherches des references, les   | */
-/* |    recherches se limitent a l'arbre (arbre principal ou arbre      | */
-/* |    d'elements associes d'un meme type) auquel appartient la        | */
-/* |    selection courante. On ne cherche pas dans toute la foret       | */
-/* |    d'un document.                                                  | */
-/* |    On pourrait combiner certains criteres de recherche,            | */
-/* |    par exemple chercher telle chaine dans tel type d'element et/ou | */
-/* |    avec tel attribut.                                              | */
+/* |    RemplaceTexte	remplace dans l'element texte pEl la chaine	| */
+/* |    commencant au caractere firstChar et de longueur stringLen par  | */
+/* |    la chaine replaceStr de longueur replaceLen.                    | */
+/* |	Selectionne la chaine remplace'e si select est True.		| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                RemplaceTexte (PtrDocument docsel, PtrElement pEl, int icar, int LgChaineCh, char pChaineRemplace[MAX_CHAR], int LgChaineRempl, boolean Affiche)
+void                RemplaceTexte (PtrDocument pDoc, PtrElement pEl, int firstChar, int stringLen, char replaceStr[MAX_CHAR], int replaceLen, boolean select)
 
 #else  /* __STDC__ */
-void                RemplaceTexte (docsel, pEl, icar, LgChaineCh, pChaineRemplace, LgChaineRempl, Affiche)
-PtrDocument         docsel;
+void                RemplaceTexte (pDoc, pEl, firstChar, stringLen, replaceStr, replaceLen, select)
+PtrDocument         pDoc;
 PtrElement          pEl;
-int                 icar;
-int                 LgChaineCh;
-char                pChaineRemplace[MAX_CHAR];
-int                 LgChaineRempl;
-boolean             Affiche;
+int                 firstChar;
+int                 stringLen;
+char                replaceStr[MAX_CHAR];
+int                 replaceLen;
+boolean             select;
 
 #endif /* __STDC__ */
 
 {
-   int                 ibuf1, ibuf2, lg, diff, dvol, vue, i;
-   PtrTextBuffer      pBT1, pBT2, pBTn;
-   PtrAbstractBox             pAb;
-   PtrTextBuffer      pBu1;
-   PtrDocument         pDo1;
+   int                 ibuf1, ibuf2, len, diff, dvol, view, i;
+   PtrTextBuffer       pBuf1, pBuf2, pBufn;
+   PtrAbstractBox      pAb;
    PtrElement          pAsc;
-   PtrAbstractBox             pPa1;
    NotifyOnTarget      notifyEl;
    boolean             DontReplace;
-   boolean             UnPave;
+   boolean             visible;
 
    if (pEl->ElTypeNumber != CharString + 1)
       return;
@@ -96,114 +79,110 @@ boolean             Affiche;
    while (pAsc != NULL)
      {
 	notifyEl.event = TteElemTextModify;
-	notifyEl.document = (Document) IdentDocument (docsel);
+	notifyEl.document = (Document) IdentDocument (pDoc);
 	notifyEl.element = (Element) pAsc;
 	notifyEl.target = (Element) pEl;
-	notifyEl.targetdocument = (Document) IdentDocument (docsel);
+	notifyEl.targetdocument = (Document) IdentDocument (pDoc);
 	DontReplace = DontReplace || ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE);
 	pAsc = pAsc->ElParent;
      }
    if (DontReplace)
       return;
-   /* cherche le buffer du premier caractere a remplacer: pBT1 */
-   pBT1 = pEl->ElText;
-   lg = 0;
+   /* cherche le buffer du premier caractere a remplacer: pBuf1 */
+   pBuf1 = pEl->ElText;
+   len = 0;
    /* longueur cumulee des buffers de texte precedant le */
    /* buffer contenant le 1er caractere */
-   while (lg + pBT1->BuLength < icar)
+   while (len + pBuf1->BuLength < firstChar)
      {
-	lg += pBT1->BuLength;
-	pBT1 = pBT1->BuNext;
+	len += pBuf1->BuLength;
+	pBuf1 = pBuf1->BuNext;
      }
-   ibuf1 = icar - lg;
-   /* index dans le buffer de texte pointe par pBT1 */
+   ibuf1 = firstChar - len;
+   /* index dans le buffer de texte pointe par pBuf1 */
    /* du 1er caractere a remplacer */
-   /* cherche le buffer du dernier caractere a remplacer: pBT2 */
-   pBT2 = pBT1;
-   while (lg + pBT2->BuLength < icar + LgChaineCh - 1)
+   /* cherche le buffer du dernier caractere a remplacer: pBuf2 */
+   pBuf2 = pBuf1;
+   while (len + pBuf2->BuLength < firstChar + stringLen - 1)
      {
-	lg += pBT2->BuLength;
-	pBT2 = pBT2->BuNext;
+	len += pBuf2->BuLength;
+	pBuf2 = pBuf2->BuNext;
      }
-   ibuf2 = icar + LgChaineCh - 1 - lg;
+   ibuf2 = firstChar + stringLen - 1 - len;
    /* index dans le buffer de texte */
-   /* pointe' par pBT2 du dernier caractere a remplacer */
-   if (LgChaineRempl > LgChaineCh)
+   /* pointe' par pBuf2 du dernier caractere a remplacer */
+   if (replaceLen > stringLen)
       /* la chaine de remplacement est plus longue que la chaine */
       /* a remplacer */
      {
-	diff = LgChaineRempl - LgChaineCh;
-	if (pBT2->BuLength + diff > MAX_CHAR - 1)
+	diff = replaceLen - stringLen;
+	if (pBuf2->BuLength + diff > MAX_CHAR - 1)
 	   /* il n'y a pas assez de place */
 	   /* ajoute un buffer apres le dernier buffer de la chaine */
 	   /* a remplacer */
 	  {
-	     pBTn = pBT2->BuNext;
-	     GetBufTexte (&pBT2->BuNext);
-	     pBT2->BuNext->BuPrevious = pBT2;
-	     pBT2->BuNext->BuNext = pBTn;
-	     if (pBTn != NULL)
-		pBTn->BuPrevious = pBT2->BuNext;
-	     pBTn = pBT2->BuNext;
+	     pBufn = pBuf2->BuNext;
+	     GetBufTexte (&pBuf2->BuNext);
+	     pBuf2->BuNext->BuPrevious = pBuf2;
+	     pBuf2->BuNext->BuNext = pBufn;
+	     if (pBufn != NULL)
+		pBufn->BuPrevious = pBuf2->BuNext;
+	     pBufn = pBuf2->BuNext;
 	     /* recopie la fin du buffer dans le nouveau */
-	     for (i = 0; i <= pBT2->BuLength + diff - MAX_CHAR; i++)
-		pBTn->BuContent[i] = pBT2->BuContent[MAX_CHAR - 1 - diff + i];
-	     pBTn->BuLength = pBT2->BuLength + diff - MAX_CHAR + 1;
-	     pBTn->BuContent[pBTn->BuLength] = '\0';
-	     pBT2->BuLength -= pBTn->BuLength;
-	     pBT2->BuContent[pBT2->BuLength] = '\0';
+	     for (i = 0; i <= pBuf2->BuLength + diff - MAX_CHAR; i++)
+		pBufn->BuContent[i] = pBuf2->BuContent[MAX_CHAR - 1 - diff + i];
+	     pBufn->BuLength = pBuf2->BuLength + diff - MAX_CHAR + 1;
+	     pBufn->BuContent[pBufn->BuLength] = '\0';
+	     pBuf2->BuLength -= pBufn->BuLength;
+	     pBuf2->BuContent[pBuf2->BuLength] = '\0';
 	  }
 	/* decale a droite les caracteres qui suivent la chaine */
-	/* a remplacer dans le buffer pBT2 */
-	pBu1 = pBT2;
-	for (i = pBu1->BuLength; i >= ibuf2; i--)
-	   pBu1->BuContent[i + diff] = pBu1->BuContent[i];
-	pBu1->BuLength += diff;
+	/* a remplacer dans le buffer pBuf2 */
+	for (i = pBuf2->BuLength; i >= ibuf2; i--)
+	   pBuf2->BuContent[i + diff] = pBuf2->BuContent[i];
+	pBuf2->BuLength += diff;
 	diff = 0;
      }
-   else if (LgChaineRempl < LgChaineCh)
+   else if (replaceLen < stringLen)
       /* la chaine de remplacement est plus courte que la chaine */
       /* a remplacer */
      {
-	diff = LgChaineCh - LgChaineRempl;
+	diff = stringLen - replaceLen;
 	if (diff > ibuf2)
 	   diff = ibuf2;
 	/* decale a gauche les caracteres qui suivent la chaine */
 	/* a remplacer */
-	pBu1 = pBT2;
-	for (i = ibuf2 + 1 - diff; i <= pBu1->BuLength + 1 - diff; i++)
-	   pBu1->BuContent[i - 1] = pBu1->BuContent[i + diff - 1];
-	pBu1->BuLength -= diff;
-	diff = LgChaineCh - LgChaineRempl - diff;
+	for (i = ibuf2 - diff; i < pBuf2->BuLength + 1 - diff; i++)
+	   pBuf2->BuContent[i] = pBuf2->BuContent[i + diff];
+	pBuf2->BuLength -= diff;
+	diff = stringLen - replaceLen - diff;
      }
    else
       /* les deux chaines ont meme longueur */
       diff = 0;
    /* copie la chaine de remplacement */
-   lg = 0;
-   pBTn = pBT1;
+   len = 0;
+   pBufn = pBuf1;
    i = ibuf1;
-   while (lg < LgChaineRempl)
+   while (len < replaceLen)
      {
-	lg++;
-	pBTn->BuContent[i - 1] = pChaineRemplace[lg - 1];
 	i++;
-	if (i > pBTn->BuLength)
+	pBufn->BuContent[i] = replaceStr[len++];
+	if (i > pBufn->BuLength)
 	  {
-	     pBu1 = pBTn;
-	     pBu1->BuContent[i - 1] = '\0';
-	     pBu1->BuLength = i - 1;
-	     pBTn = pBu1->BuNext;
+	     pBufn->BuContent[i - 1] = '\0';
+	     pBufn->BuLength = i - 1;
+	     pBufn = pBufn->BuNext;
 	     i = 1;
 	  }
      }
    if (diff > 0)
      {
-	pBTn->BuContent[i - 1] = '\0';
-	pBTn->BuLength = i - 1;
+	pBufn->BuContent[i - 1] = '\0';
+	pBufn->BuLength = i - 1;
      }
    /* met a jour le volume de l'element */
-   dvol = LgChaineRempl - LgChaineCh;
+   dvol = replaceLen - stringLen;
    pEl->ElTextLength = pEl->ElTextLength + dvol;
    pEl->ElVolume = pEl->ElTextLength;
    /* met a jour le volume de tous les elements ascendants */
@@ -214,67 +193,63 @@ boolean             Affiche;
 	pAsc = pAsc->ElParent;
      }
    /* change le volume des paves de l'element modifie' */
-   UnPave = FALSE;
-   for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
+   visible = FALSE;
+   for (view = 0; view < MAX_VIEW_DOC; view++)
      {
-	pAb = pEl->ElAbstractBox[vue - 1];
+	pAb = pEl->ElAbstractBox[view];
 	if (pAb != NULL)
 	  {
-	     UnPave = TRUE;
+	     visible = TRUE;
 	     pAb->AbChange = TRUE;
-	     pDo1 = docsel;
 	     if (!VueAssoc (pEl))
-		pDo1->DocViewModifiedAb[vue - 1] = Englobant (pAb, pDo1->DocViewModifiedAb[vue - 1]);
+		pDoc->DocViewModifiedAb[view] = Englobant (pAb, pDoc->DocViewModifiedAb[view]);
 	     else
-	       {
-		  pDo1->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-		     Englobant (pAb, pDo1->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
-	       }
+		pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
+		Englobant (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 	     dvol = pAb->AbVolume - pEl->ElTextLength;
 	     do
 	       {
-		  pPa1 = pAb;
 		  /* met a jour le volume du premier pave */
-		  pPa1->AbVolume -= dvol;
-		  pAb = pPa1->AbEnclosing;
+		  pAb->AbVolume -= dvol;
+		  pAb = pAb->AbEnclosing;
 	       }
 	     while (!(pAb == NULL));
 	  }
      }
-   /* reaffiche toutes les vues */
+   /* reaffiche toutes les views */
    RazSelect ();
-   if (UnPave)
+   if (visible)
      {
-	MajImAbs (docsel);
-	ReaffDoc (docsel);
+	MajImAbs (pDoc);
+	ReaffDoc (pDoc);
      }
 
    /* si l'element TEXTE modifie' appartient soit a un element copie' */
    /* dans des paves par une regle Copy, soit a un element inclus */
    /* dans d'autres, il faut reafficher ses copies */
-   ReaffPaveCopie (pEl, docsel, TRUE);
+   ReaffPaveCopie (pEl, pDoc, TRUE);
 
    /* selectionne la chaine remplacee */
-   if (Affiche)
+   if (select)
      {
-	if (LgChaineRempl < 2)
-	   i = icar;
+	if (replaceLen < 2)
+	   i = firstChar;
 	else
-	   i = icar + LgChaineRempl - 1;
-	SelectStringWithAPP (docsel, pEl, icar, i);
+	   i = firstChar + replaceLen - 1;
+	SelectStringWithAPP (pDoc, pEl, firstChar, i);
      }
    /* le document a ete modifie' */
-   docsel->DocModified = TRUE;
-   docsel->DocNTypedChars += LgChaineRempl;
+   pDoc->DocModified = TRUE;
+   pDoc->DocNTypedChars += replaceLen;
    /* envoie l'evenement ElemTextModify.Post a qui le demande */
    pAsc = pEl;
    while (pAsc != NULL)
      {
 	notifyEl.event = TteElemTextModify;
-	notifyEl.document = (Document) IdentDocument (docsel);
+	notifyEl.document = (Document) IdentDocument (pDoc);
 	notifyEl.element = (Element) pAsc;
 	notifyEl.target = (Element) pEl;
-	notifyEl.targetdocument = (Document) IdentDocument (docsel);
+	notifyEl.targetdocument = (Document) IdentDocument (pDoc);
 	ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
 	pAsc = pAsc->ElParent;
      }
@@ -282,23 +257,23 @@ boolean             Affiche;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    caregal compare les caracteres c1 et c2, en confondant les      | */
-/* |            majuscules et minuscules si MajEgalMin est vrai.        | */
+/* |    EquivalentChar compare les caracteres c1 et c2, en confondant   | */
+/* |        les majuscules et minuscules si caseEquiv est vrai.        | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      caregal (char c1, char c2, boolean MajEgalMin)
+static boolean      EquivalentChar (char c1, char c2, boolean caseEquiv)
 
 #else  /* __STDC__ */
-static boolean      caregal (c1, c2, MajEgalMin)
+static boolean      EquivalentChar (c1, c2, caseEquiv)
 char                c1;
 char                c2;
-boolean             MajEgalMin;
+boolean             caseEquiv;
 
 #endif /* __STDC__ */
 
 {
-   if (MajEgalMin)
+   if (caseEquiv)
      {
 	if ((c1 >= 'A' && c1 <= 'Z') || (c1 >= '\300' && c1 <= '\336'))
 	   c1 = (char) ((int) (c1) + 32);
@@ -310,99 +285,93 @@ boolean             MajEgalMin;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    TextEqual rend vrai si la chaine cherchee est a` la position    | */
-/* |            indiquee par (bloc,inx).                                | */
+/* |    SameString rend vrai si la chaine cherchee est a` la position   | */
+/* |            indiquee par (pBuf,ind).                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      TextEqual (PtrTextBuffer bloc, int inx, boolean MajEgalMin, char pChaineCherchee[MAX_CHAR], int LgChaineCh)
+static boolean      SameString (PtrTextBuffer pBuf, int ind, boolean caseEquiv, char strng[MAX_CHAR], int strngLen)
 
 #else  /* __STDC__ */
-static boolean      TextEqual (bloc, inx, MajEgalMin, pChaineCherchee, LgChaineCh)
-PtrTextBuffer      bloc;
-int                 inx;
-boolean             MajEgalMin;
-char                pChaineCherchee[MAX_CHAR];
-int                 LgChaineCh;
+static boolean      SameString (pBuf, ind, caseEquiv, strng, strngLen)
+PtrTextBuffer       pBuf;
+int                 ind;
+boolean             caseEquiv;
+char                strng[MAX_CHAR];
+int                 strngLen;
 
 #endif /* __STDC__ */
 {
-   boolean             ret;
-   int                 inx2;
-   boolean             egal;
+   boolean             equal, stop;
+   int                 ind2;
 
-   ret = FALSE;
-   inx2 = 1;
-   while (TRUE)
-      /* assure que l'on va pouvoir prendre le caractere dans le bloc */
+   equal = FALSE;
+   stop = FALSE;
+   ind2 = 1;
+   while (!stop)
      {
-	while (bloc != NULL)
-	   if (bloc->BuLength <= inx)
-	     {
-		inx -= bloc->BuLength;
-		bloc = bloc->BuNext;
-	     }
-	   else
-	      goto Label_2;
-	/* est-ce fini ? */
-      Label_2:
-	if (bloc == NULL || inx2 > LgChaineCh)
+	while (pBuf != NULL && pBuf->BuLength <= ind)
 	  {
-	     ret = inx2 > LgChaineCh;
-	     goto Label_1;
-	  }			/* fini */
-	/* on compare les caracteres */
-	if (!caregal (bloc->BuContent[inx], pChaineCherchee[inx2 - 1], MajEgalMin))
-	   goto Label_1;	/* pas trouve */
-	/* on avance */
-	inx++;
-	inx2++;
+	     ind -= pBuf->BuLength;
+	     pBuf = pBuf->BuNext;
+	  }
+	if (pBuf == NULL || ind2 > strngLen)
+	  {
+	     equal = ind2 > strngLen;
+	     stop = True;
+	  }
+	else
+	  if (!EquivalentChar (pBuf->BuContent[ind], strng[ind2 - 1], caseEquiv))
+	     stop = True;
+	  else
+	     {
+	     ind++;
+	     ind2++;
+	     }
      }
- Label_1:
-   egal = ret;
-   return egal;
+   return equal;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    TextOk teste qu'on est bien positionne sur une chaine de texte  | */
+/* |    TextOk teste qu'on est bien positionne' sur une chaine de texte | */
 /* |            egale a` la chaine cherchee.                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             TextOk (PtrElement premsel, int premcar, PtrElement dersel, int dercar, boolean MajEgalMin, char pChaineCherchee[MAX_CHAR], int LgChaineCh)
+boolean             TextOk (PtrElement firstEl, int firstChar, PtrElement lastEl, int lastChar, boolean caseEquiv, char strng[MAX_CHAR], int strngLen)
 #else  /* __STDC__ */
-boolean             TextOk (premsel, premcar, dersel, dercar, MajEgalMin, pChaineCherchee, LgChaineCh)
-PtrElement          premsel;
-int                 premcar;
-PtrElement          dersel;
-int                 dercar;
-boolean             MajEgalMin;
-char                pChaineCherchee[MAX_CHAR];
-int                 LgChaineCh;
+boolean             TextOk (firstEl, firstChar, lastEl, lastChar, caseEquiv, strng, strngLen)
+PtrElement          firstEl;
+int                 firstChar;
+PtrElement          lastEl;
+int                 lastChar;
+boolean             caseEquiv;
+char                strng[MAX_CHAR];
+int                 strngLen;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer      bloc;
+   PtrTextBuffer      pBuf;
    boolean             ok;
 
    ok = FALSE;
-   if (premsel == dersel && premsel != NULL)
-      if (premsel->ElTerminal && premsel->ElLeafType == LtText)
+   if (firstEl == lastEl && firstEl != NULL)
+      if (firstEl->ElTerminal && firstEl->ElLeafType == LtText)
 	{
-	   bloc = premsel->ElText;
-	   premcar--;
-	   while (bloc != NULL && premcar > bloc->BuLength)
+	   pBuf = firstEl->ElText;
+	   firstChar--;
+	   while (pBuf != NULL && firstChar > pBuf->BuLength)
 	     {
-		premcar -= bloc->BuLength;
-		bloc = bloc->BuNext;
+		firstChar -= pBuf->BuLength;
+		pBuf = pBuf->BuNext;
 	     }
-	   ok = TextEqual (bloc, premcar, MajEgalMin, pChaineCherchee, LgChaineCh);
+	   ok = SameString (pBuf, firstChar, caseEquiv, strng, strngLen);
 	}
    return ok;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ChAvChaine recherche une chaine en avant.                       | */
+/* |    FwdSearchString recherche une chaine en avant.                  | */
 /* |    Attention: On ne trouve pas la chaine cherchee si elle est      | */
 /* |    coupee par une marque de page ou par un changement de feuille   | */
 /* |    texte du a des regles de presentation specifiques ou des        | */
@@ -410,16 +379,16 @@ int                 LgChaineCh;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ChAvChaine (PtrTextBuffer pB, int ic, boolean * trouve, int *icar, boolean MajEgalMin, char pChaineCherchee[MAX_CHAR])
+static void         FwdSearchString (PtrTextBuffer pBuf, int ind, boolean * found, int *firstChar, boolean caseEquiv, char strng[MAX_CHAR])
 
 #else  /* __STDC__ */
-static void         ChAvChaine (pB, ic, trouve, icar, MajEgalMin, pChaineCherchee)
-PtrTextBuffer      pB;
-int                 ic;
-boolean            *trouve;
-int                *icar;
-boolean             MajEgalMin;
-char                pChaineCherchee[MAX_CHAR];
+static void         FwdSearchString (pBuf, ind, found, firstChar, caseEquiv, strng)
+PtrTextBuffer       pBuf;
+int                 ind;
+boolean            *found;
+int                *firstChar;
+boolean             caseEquiv;
+char                strng[MAX_CHAR];
 
 #endif /* __STDC__ */
 
@@ -427,73 +396,73 @@ char                pChaineCherchee[MAX_CHAR];
    int                 ir;
    int                 ix;
    int                 icx;
-   PtrTextBuffer      pBx;
+   PtrTextBuffer       pBufx;
    boolean             stop;
 
    stop = FALSE;
    ix = 0;
    ir = 1;
    icx = 0;
-   pBx = NULL;
+   pBufx = NULL;
    /* index dans ChaineCherchee du caractere a comparer */
    do
      {
-	if (pB->BuContent[ic - 1] == '\0')
+	if (pBuf->BuContent[ind - 1] == '\0')
 	  {
-	     pB = pB->BuNext;
-	     if (pB != NULL)
+	     pBuf = pBuf->BuNext;
+	     if (pBuf != NULL)
 		/* saute les buffers vides */
 	       {
-		  ic = 0;
+		  ind = 0;
 		  do
-		     if (pB->BuLength > 0)
-			ic = 1;
+		     if (pBuf->BuLength > 0)
+			ind = 1;
 		  /* buffer non vide */
 		     else
 			/* buffer vide */
 		       {
-			  pB = pB->BuNext;
+			  pBuf = pBuf->BuNext;
 			  /* buffer suivant */
-			  stop = pB == NULL;
+			  stop = pBuf == NULL;
 			  /* fin si dernier buffer */
 		       }
-		  while (!(stop || ic == 1));
+		  while (!(stop || ind == 1));
 	       }
 	     else
 		stop = TRUE;
 	  }
 	if (!stop)
-	   if (caregal (pB->BuContent[ic - 1], pChaineCherchee[ir - 1], MajEgalMin))
+	   if (EquivalentChar (pBuf->BuContent[ind - 1], strng[ir - 1], caseEquiv))
 	     {
 		if (ir == 1)
 		  {
-		     ix = ic;
-		     pBx = pB;
-		     icx = *icar;
+		     ix = ind;
+		     pBufx = pBuf;
+		     icx = *firstChar;
 		  }
-		if (pChaineCherchee[ir] == '\0')
+		if (strng[ir] == '\0')
 		  {
-		     *trouve = TRUE;
+		     *found = TRUE;
 		     stop = TRUE;
 		  }
 		else
 		  {
-		     ic++;
+		     ind++;
 		     ir++;
 		  }
 	     }
 	   else if (ix != 0)
 	     {
-		ic = ix + 1;
-		pB = pBx;
-		*icar = icx + 1;
+		ind = ix + 1;
+		pBuf = pBufx;
+		*firstChar = icx + 1;
 		ix = 0;
 		ir = 1;
 	     }
 	   else
 	     {
-		ic++;
-		(*icar)++;
+		ind++;
+		(*firstChar)++;
 	     }
      }
    while (!(stop));
@@ -501,21 +470,21 @@ char                pChaineCherchee[MAX_CHAR];
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ChArChaine recherche une chaine en arriere.                     | */
+/* |    BackSearchString recherche une chaine en arriere.               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ChArChaine (PtrTextBuffer pB, int ic, boolean * trouve, int *icar, boolean MajEgalMin, char pChaineCherchee[MAX_CHAR], int LgChaineCh)
+static void         BackSearchString (PtrTextBuffer pBuf, int ind, boolean * found, int *firstChar, boolean caseEquiv, char strng[MAX_CHAR], int strngLen)
 
 #else  /* __STDC__ */
-static void         ChArChaine (pB, ic, trouve, icar, MajEgalMin, pChaineCherchee, LgChaineCh)
-PtrTextBuffer      pB;
-int                 ic;
-boolean            *trouve;
-int                *icar;
-boolean             MajEgalMin;
-char                pChaineCherchee[MAX_CHAR];
-int                 LgChaineCh;
+static void         BackSearchString (pBuf, ind, found, firstChar, caseEquiv, strng, strngLen)
+PtrTextBuffer      pBuf;
+int                 ind;
+boolean            *found;
+int                *firstChar;
+boolean             caseEquiv;
+char                strng[MAX_CHAR];
+int                 strngLen;
 
 #endif /* __STDC__ */
 
@@ -523,57 +492,57 @@ int                 LgChaineCh;
    int                 ir;
    int                 ix;
    int                 icx;
-   PtrTextBuffer      pBx;
+   PtrTextBuffer       pBufx;
    boolean             stop;
 
    stop = FALSE;
    ix = 0;
-   ir = LgChaineCh;
+   ir = strngLen;
    icx = 0;
-   pBx = NULL;
+   pBufx = NULL;
    /* index dans ChaineCherchee du caractere a comparer */
    do
      {
-	if (ic < 1)
+	if (ind < 1)
 	  {
-	     pB = pB->BuPrevious;
-	     if (pB != NULL)
-		ic = pB->BuLength;
+	     pBuf = pBuf->BuPrevious;
+	     if (pBuf != NULL)
+		ind = pBuf->BuLength;
 	     else
 		stop = TRUE;
 	  }
-	if (!stop && ic > 0)
-	   if (caregal (pB->BuContent[ic - 1], pChaineCherchee[ir - 1], MajEgalMin))
+	if (!stop && ind > 0)
+	   if (EquivalentChar (pBuf->BuContent[ind - 1], strng[ir - 1], caseEquiv))
 	     {
-		if (ir == LgChaineCh)
+		if (ir == strngLen)
 		  {
-		     ix = ic;
-		     pBx = pB;
-		     icx = *icar;
+		     ix = ind;
+		     pBufx = pBuf;
+		     icx = *firstChar;
 		  }
 		if (ir == 1)
 		  {
-		     *trouve = TRUE;
+		     *found = TRUE;
 		     stop = TRUE;
 		  }
 		else
 		  {
-		     ic--;
+		     ind--;
 		     ir--;
 		  }
 	     }
 	   else if (ix != 0)
 	     {
-		ic = ix - 1;
-		pB = pBx;
-		*icar = icx - 1;
+		ind = ix - 1;
+		pBuf = pBufx;
+		*firstChar = icx - 1;
 		ix = 0;
-		ir = LgChaineCh;
+		ir = strngLen;
 	     }
 	   else
 	     {
-		ic--;
-		(*icar)--;
+		ind--;
+		(*firstChar)--;
 	     }
      }
    while (!(stop));
@@ -581,73 +550,72 @@ int                 LgChaineCh;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ChTexte recherche dans le document pDoc la chaine de caracteres | */
-/* |    decrite par les variables pChaineCherchee et LgChaineCh.        | */
-/* |    A l'appel, les variables pElDebut, NumCarDebut, pElFin,         | */
-/* |    NumCarFin indiquent la region ou on cherche.                    | */
+/* |    ChTexte recherche dans le document pDoc la chaine de		| */
+/* |    caracteres decrite par les variables strng et strngLen.		| */
+/* |    A l'appel, les variables firstEl, firstChar, lastEl,            | */
+/* |    lastChar indiquent la region ou on cherche.                     | */
 /* |    Au retour, elles indiquent la chaine trouvee si la fonction     | */
 /* |    retourne Vrai. (La fonction retourne faux en cas d'echec).      | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             ChTexte (PtrDocument pDoc, PtrElement * pElDebut, int *NumCarDebut, PtrElement * pElFin, int *NumCarFin, boolean EnAvant, boolean MajEgalMin, char pChaineCherchee[MAX_CHAR], int LgChaineCh)
+boolean             ChTexte (PtrDocument pDoc, PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, boolean forward, boolean caseEquiv, char strng[MAX_CHAR], int strngLen)
 
 #else  /* __STDC__ */
-boolean             ChTexte (pDoc, pElDebut, NumCarDebut, pElFin, NumCarFin, EnAvant, MajEgalMin, pChaineCherchee, LgChaineCh)
+boolean             ChTexte (pDoc, firstEl, firstChar, lastEl, lastChar, forward, caseEquiv, strng, strngLen)
 PtrDocument         pDoc;
-PtrElement         *pElDebut;
-int                *NumCarDebut;
-PtrElement         *pElFin;
-int                *NumCarFin;
-boolean             EnAvant;
-boolean             MajEgalMin;
-char                pChaineCherchee[MAX_CHAR];
-int                 LgChaineCh;
+PtrElement         *firstEl;
+int                *firstChar;
+PtrElement         *lastEl;
+int                *lastChar;
+boolean             forward;
+boolean             caseEquiv;
+char                strng[MAX_CHAR];
+int                 strngLen;
 
 #endif /* __STDC__ */
 
 {
 
    PtrElement          pEl;
-   int                 car;
+   int                 i;
    int                 ibuf;
-   int                 icar;
-   boolean             trouve;
-   PtrTextBuffer      pBT;
+   int                 ichar;
+   boolean             found;
+   PtrTextBuffer       pBuf;
    boolean             result;
-   PtrElement          pAscendant;
+   PtrElement          pAncest;
 
    result = FALSE;
-   if (*pElDebut != NULL)
+   if (*firstEl != NULL)
      {
 	/* on n'a pas encore trouve' la chaine cherchee */
-	trouve = FALSE;
-	pEl = *pElDebut;
+	found = FALSE;
+	pEl = *firstEl;
 	/* on cherche d'abord la chaine */
-	if (EnAvant)
+	if (forward)
 	   /* Recherche en avant */
 	  {
-	     /* dercar designe le caractere qui suit le dernier caractere */
+	     /* lastChar designe le caractere qui suit le dernier caractere */
 	     /* selectionne' */
 	     if (pEl->ElTerminal && pEl->ElLeafType == LtText)
-		if (*NumCarDebut >= 1 && *NumCarDebut <= pEl->ElTextLength)
+		if (*firstChar >= 1 && *firstChar <= pEl->ElTextLength)
 		   /* commencer la recherche dans l'element courant */
 		   /*  cherche le buffer du dernier caractere selectionne' */
 		  {
-		     pBT = pEl->ElText;
-		     car = 0;
-		     while (car + pBT->BuLength < *NumCarDebut)
+		     pBuf = pEl->ElText;
+		     i = 0;
+		     while (i + pBuf->BuLength < *firstChar)
 		       {
-			  car += pBT->BuLength;
-			  pBT = pBT->BuNext;
+			  i += pBuf->BuLength;
+			  pBuf = pBuf->BuNext;
 		       }
-		     ibuf = *NumCarDebut - car;
-		     /* index dans le buffer de texte */
-		     /* pointe' par pBT du 1er caractere a tester */
-		     icar = *NumCarDebut;
-		     ChAvChaine (pBT, ibuf, &trouve, &icar, MajEgalMin, pChaineCherchee);
+		     /* index dans le buffer de texte pBuf du 1er caractere a tester */
+		     ibuf = *firstChar - i;
+		     ichar = *firstChar;
+		     FwdSearchString (pBuf, ibuf, &found, &ichar, caseEquiv, strng);
 		  }
-	     while (!trouve && pEl != NULL)
+	     while (!found && pEl != NULL)
 	       {
 		  pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
 		  if (pEl != NULL)
@@ -655,18 +623,18 @@ int                 LgChaineCh;
 		    {
 		       /* on verifie que cet element ne fait pas partie d'une */
 		       /* inclusion */
-		       pAscendant = pEl;
-		       while (pAscendant->ElParent != NULL &&
-			      pAscendant->ElSource == NULL)
-			  pAscendant = pAscendant->ElParent;
-		       if (pAscendant->ElSource == NULL)
+		       pAncest = pEl;
+		       while (pAncest->ElParent != NULL &&
+			      pAncest->ElSource == NULL)
+			  pAncest = pAncest->ElParent;
+		       if (pAncest->ElSource == NULL)
 			  /* on n'est pas dans une inclusion */
 			  if (!ElementIsHidden (pEl))
 			     /* l'element n'est pas dans une partie cachee */
 			    {
-			       icar = 1;
-			       ChAvChaine (pEl->ElText, 1, &trouve, &icar, MajEgalMin,
-					   pChaineCherchee);
+			       ichar = 1;
+			       FwdSearchString (pEl->ElText, 1, &found, &ichar, caseEquiv,
+					   strng);
 			    }
 		    }
 	       }
@@ -675,25 +643,25 @@ int                 LgChaineCh;
 	   /* Recherche en arriere */
 	  {
 	     if (pEl->ElTerminal && pEl->ElLeafType == LtText)
-		if (*NumCarDebut >= 2)
+		if (*firstChar >= 2)
 		   /* commencer la recherche dans l'element courant */
 		   /* cherche le buffer du premier caractere selectionne' */
 		  {
-		     pBT = pEl->ElText;
-		     car = 0;
-		     while (car + pBT->BuLength < *NumCarDebut - 1)
+		     pBuf = pEl->ElText;
+		     i = 0;
+		     while (i + pBuf->BuLength < *firstChar - 1)
 		       {
-			  car += pBT->BuLength;
-			  pBT = pBT->BuNext;
+			  i += pBuf->BuLength;
+			  pBuf = pBuf->BuNext;
 		       }
-		     ibuf = *NumCarDebut - car - 1;
+		     ibuf = *firstChar - i - 1;
 		     /* index dans le buffer de texte */
-		     /* pointe par pBT du 1er caractere a tester */
-		     icar = *NumCarDebut - 1;
-		     ChArChaine (pBT, ibuf, &trouve, &icar, MajEgalMin,
-				 pChaineCherchee, LgChaineCh);
+		     /* pointe par pBuf du 1er caractere a tester */
+		     ichar = *firstChar - 1;
+		     BackSearchString (pBuf, ibuf, &found, &ichar, caseEquiv,
+				 strng, strngLen);
 		  }
-	     while (!trouve && pEl != NULL)
+	     while (!found && pEl != NULL)
 	       {
 		  pEl = BackSearchTypedElem (pEl, CharString + 1, NULL);
 		  if (pEl != NULL)
@@ -701,67 +669,67 @@ int                 LgChaineCh;
 		    {
 		       /* on verifie que cet element ne fait pas partie d'une */
 		       /* inclusion */
-		       pAscendant = pEl;
-		       while (pAscendant->ElParent != NULL &&
-			      pAscendant->ElSource == NULL)
-			  pAscendant = pAscendant->ElParent;
-		       if (pAscendant->ElSource == NULL)
+		       pAncest = pEl;
+		       while (pAncest->ElParent != NULL &&
+			      pAncest->ElSource == NULL)
+			  pAncest = pAncest->ElParent;
+		       if (pAncest->ElSource == NULL)
 			  /* on n'est pas dans une inclusion */
 			  if (!ElementIsHidden (pEl))
 			     /* l'element n'est pas dans une partie cachee */
 			    {
-			       pBT = pEl->ElText;
-			       while (pBT->BuNext != NULL)
-				  pBT = pBT->BuNext;
-			       icar = pEl->ElTextLength;
-			       ChArChaine (pBT, pBT->BuLength, &trouve, &icar, MajEgalMin,
-					   pChaineCherchee, LgChaineCh);
+			       pBuf = pEl->ElText;
+			       while (pBuf->BuNext != NULL)
+				  pBuf = pBuf->BuNext;
+			       ichar = pEl->ElTextLength;
+			       BackSearchString (pBuf, pBuf->BuLength, &found, &ichar, caseEquiv,
+					   strng, strngLen);
 			    }
 		    }
 	       }
-	     if (trouve)
-		icar = icar - LgChaineCh + 1;
+	     if (found)
+		ichar = ichar - strngLen + 1;
 	  }
-	if (trouve)
+	if (found)
 	   /* on a trouve' la chaine cherchee */
-	   /* l'element trouve' est pointe' par pEl et icar est le rang */
+	   /* l'element trouve' est pointe' par pEl et ichar est le rang */
 	   /* dans cet element du 1er caractere de la chaine trouvee */
-	   if (*pElFin != NULL)
+	   if (*lastEl != NULL)
 	      /* il faut s'arreter avant l'extremite' du document */
-	      if (pEl == *pElFin)
+	      if (pEl == *lastEl)
 		 /* la chaine trouvee est dans l'element ou il faut s'arreter */
 		{
-		   if (EnAvant)
+		   if (forward)
 		     {
-			if (icar + LgChaineCh - 1 > *NumCarFin)
+			if (ichar + strngLen - 1 > *lastChar)
 			   /* la chaine trouvee se termine au-dela du caractere ou il */
 			   /* faut s'arreter, on fait comme si on n'avait pas trouve' */
-			   trouve = FALSE;
+			   found = FALSE;
 		     }
 		   else
 		     {
-			if (*NumCarFin > 0)
-			   if (icar < *NumCarFin)
-			      trouve = FALSE;
+			if (*lastChar > 0)
+			   if (ichar < *lastChar)
+			      found = FALSE;
 		     }
 		}
-	      else if (EnAvant)
+	      else if (forward)
 		{
-		   if (ElemIsBefore (*pElFin, pEl))
+		   if (ElemIsBefore (*lastEl, pEl))
 		      /* l'element trouve' est apres l'element de fin, on fait */
 		      /* comme si on n'avait pas trouve' */
-		      trouve = FALSE;
+		      found = FALSE;
 		}
-	      else if (ElemIsBefore (pEl, *pElFin))
-		 trouve = FALSE;
-	if (trouve)
+	      else if (ElemIsBefore (pEl, *lastEl))
+		 found = FALSE;
+	if (found)
 	  {
-	     *pElDebut = pEl;
-	     *pElFin = pEl;
-	     *NumCarDebut = icar;
-	     /* *NumCarFin est le rang du caractere qui suit le dernier */
+	     *firstEl = pEl;
+	     *lastEl = pEl;
+	     *firstChar = ichar;
+	     /* *lastChar est le rang du caractere qui suit le dernier */
 	     /* caractere de la chaine trouvee dans le buffer */
-	     *NumCarFin = icar + LgChaineCh;
+	     *lastChar = ichar + strngLen;
 	     result = TRUE;
 	  }
      }
@@ -769,23 +737,23 @@ int                 LgChaineCh;
 }
 
 
-#define LgTable 10
+#define MAX_NAT_TABLE 10
 /* ---------------------------------------------------------------------- */
-/* |    MetSchemaDansTable      met le schema de structure pSchStr dans | */
-/* |    la table TablePtrNature et retourne dans LgTableNat le nombre   | */
+/* |    AddNatureToTable      met le schema de structure pSS dans la	| */
+/* |    table natureTable et retourne dans LgTableNat le nombre		| */
 /* |    d'entrees de la table.                                          | */
-/* |    Si SansDouble est vrai, on ne met chaque schema qu'une fois.    | */
+/* |    Si onlyOne est vrai, on ne met chaque schema qu'une fois.	| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         MetSchemaDansTable (PtrSSchema pSchStr, PtrSSchema TablePtrNature[LgTable], int *LgTableNat, boolean SansDouble)
+static void         AddNatureToTable (PtrSSchema pSS, PtrSSchema natureTable[MAX_NAT_TABLE], int *natureTableLen, boolean onlyOne)
 
 #else  /* __STDC__ */
-static void         MetSchemaDansTable (pSchStr, TablePtrNature, LgTableNat, SansDouble)
-PtrSSchema        pSchStr;
-PtrSSchema        TablePtrNature[LgTable];
-int                *LgTableNat;
-boolean             SansDouble;
+static void         AddNatureToTable (pSS, natureTable, natureTableLen, onlyOne)
+PtrSSchema        pSS;
+PtrSSchema        natureTable[MAX_NAT_TABLE];
+int                *natureTableLen;
+boolean             onlyOne;
 
 #endif /* __STDC__ */
 
@@ -794,300 +762,193 @@ boolean             SansDouble;
    boolean             present;
 
    present = FALSE;
-   if (SansDouble)
+   if (onlyOne)
      {
 	/* verifie que ce schema n'est pas deja dans la table */
 	n = 0;
-	while (n < *LgTableNat && !present)
-	  {
-	     n++;
-	     if (TablePtrNature[n - 1]->SsCode == pSchStr->SsCode)
+	while (n < *natureTableLen && !present)
+	     if (natureTable[n++]->SsCode == pSS->SsCode)
 		present = TRUE;
-	  }
      }
    if (!present)
       /* le schema n'est pas dans la table */
      {
 	/* met le schema dans la table si elle n'est pas pleine */
-	if (*LgTableNat < LgTable)
-	  {
-	     (*LgTableNat)++;
-	     TablePtrNature[*LgTableNat - 1] = pSchStr;
-	  }
+	if (*natureTableLen < MAX_NAT_TABLE)
+	     natureTable[(*natureTableLen)++] = pSS;
 	/* cherche les natures utilisees par ce schema */
-	ChNatures (pSchStr, TablePtrNature, LgTableNat, SansDouble);
+	ChNatures (pSS, natureTable, natureTableLen, onlyOne);
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
 /* |    ChNatures cherche toutes les natures explicitement              | */
-/* |            mentionnees dans le schema de structure pSchStr et      | */
+/* |            mentionnees dans le schema de structure pSS et		| */
 /* |            effectivement utilises, ainsi que les schemas de nature | */
 /* |            charge's dynamiquement et les extensions de ces schemas.| */
-/* |            Met ces schemas dans la table TablePtrNature et         | */
-/* |            retourne dans LgTableNat le nombre d'entrees de la      | */
+/* |            Met ces schemas dans la table natureTable et retourne	| */
+/* |            retourne dans natureTableLen le nombre d'entrees de la  | */
 /* |            table.                                                  | */
-/* |            Si SansDouble est vrai, on ne met chaque schema         | */
-/* |            qu'une fois.                                            | */
+/* |            Si onlyOne est vrai, on ne met chaque schema qu'une fois| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ChNatures (PtrSSchema pSchStr, PtrSSchema TablePtrNature[LgTable], int *LgTableNat, boolean SansDouble)
+void                ChNatures (PtrSSchema pSS, PtrSSchema natureTable[MAX_NAT_TABLE], int *natureTableLen, boolean onlyOne)
 
 #else  /* __STDC__ */
-void                ChNatures (pSchStr, TablePtrNature, LgTableNat, SansDouble)
-PtrSSchema        pSchStr;
-PtrSSchema        TablePtrNature[LgTable];
-int                *LgTableNat;
-boolean             SansDouble;
+void                ChNatures (pSS, natureTable, natureTableLen, onlyOne)
+PtrSSchema        pSS;
+PtrSSchema        natureTable[MAX_NAT_TABLE];
+int                *natureTableLen;
+boolean             onlyOne;
 
 #endif /* __STDC__ */
 
 {
    int                 j;
-   PtrSSchema        pSc1;
-   SRule              *pRe1;
+   SRule              *pRule;
 
-   pSc1 = pSchStr;
    /* cherche les regles de nature dans la table des regles */
-   for (j = 1; j <= pSc1->SsNRules; j++)
+   for (j = 0; j < pSS->SsNRules; j++)
      {
-	pRe1 = &pSc1->SsRule[j - 1];
-	if (pRe1->SrConstruct == CsNatureSchema)
+	pRule = &pSS->SsRule[j];
+	if (pRule->SrConstruct == CsNatureSchema)
 	   /* c'est une regle de nature */
-	   if (pRe1->SrSSchemaNat != NULL)
-	      if (pRe1->SrSSchemaNat->SsNObjects > 0)
+	   if (pRule->SrSSchemaNat != NULL)
+	      if (pRule->SrSSchemaNat->SsNObjects > 0)
 		 /* la nature est effectivement utilisee */
-		 MetSchemaDansTable (pRe1->SrSSchemaNat, TablePtrNature, LgTableNat, SansDouble);
+		 AddNatureToTable (pRule->SrSSchemaNat, natureTable, natureTableLen, onlyOne);
      }
    /* met les extensions du schema dans la table */
-   while (pSc1->SsNextExtens != NULL)
+   while (pSS->SsNextExtens != NULL)
      {
-	pSc1 = pSc1->SsNextExtens;
-	MetSchemaDansTable (pSc1, TablePtrNature, LgTableNat, SansDouble);
+	pSS = pSS->SsNextExtens;
+	AddNatureToTable (pSS, natureTable, natureTableLen, onlyOne);
      }
 }
 
-#ifdef IV
-/* ---------------------------------------------------------------------- */
-/* |    PaveSuiv retourne le pave suivant d'un pave Pav.                | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static PtrAbstractBox      PaveSuiv (PtrAbstractBox Pav)
-#else  /* __STDC__ */
-static PtrAbstractBox      PaveSuiv (Pav)
-PtrAbstractBox             Pav;
-
-#endif /* __STDC__ */
-{
-   if (Pav != NULL)
-      if (Pav->AbFirstEnclosed != NULL)
-	 while (Pav->AbFirstEnclosed != NULL)
-	    Pav = Pav->AbFirstEnclosed;
-      else
-	{
-	   while (Pav->AbNext == NULL && Pav->AbEnclosing != NULL)
-	      Pav = Pav->AbEnclosing;
-	   Pav = Pav->AbNext;
-	}
-   return Pav;
-}
 
 /* ---------------------------------------------------------------------- */
-/* |    FirstVisible recherche le premier pave visible d'une vue.       | */
-/* |    Si assoc est vrai, vue est en fait le numero d'element associe' | */
-/* |            des elements qui s'affichent dans la vue traitee.       | */
-/* |    Si assoc est faux, vue est le numero de vue (pour le document)  | */
-/* |            de la vue traitee.                                      | */
+/* |    CherchePage recherche a partir de l'element pEl un element	| */
+/* |	BreakPage concernant la vue view. Si relative est faux, pageNum	| */
+/* |	represent le numero de la page cherchee, sinon, c'est le nombre	| */
+/* |	de pages a sauter (ce nombre peut etre negatif, pour un saut	| */
+/* |	en arriere).							| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static PtrElement   FirstVisible (PtrDocument pdoc, int vue, boolean assoc)
-
+PtrElement          CherchePage (PtrElement pEl, int view, int pageNum, boolean relative)
 #else  /* __STDC__ */
-static PtrElement   FirstVisible (pdoc, vue, assoc)
-PtrDocument         pdoc;
-int                 vue;
-boolean             assoc;
-
-#endif /* __STDC__ */
-
-{
-   PtrAbstractBox             pav;
-   int                 dy;
-   PtrElement          first;
-
-   /* cherche le pave racine de la vue */
-   if (assoc)
-      pav = pdoc->DocAssocRoot[vue - 1]->ElAbstractBox[0];
-   else
-      pav = pdoc->DocViewRootAb[vue - 1];
-   if (pav == NULL)
-      first = NULL;
-   else
-     {
-	while (pav->AbFirstEnclosed != NULL)
-	   pav = pav->AbFirstEnclosed;
-	do
-	  {
-	     if (assoc)
-		dy = PavPosFen (pav, pdoc->DocAssocFrame[vue - 1], 0);
-	     else
-		dy = PavPosFen (pav, pdoc->DocViewFrame[vue - 1], 0);
-	     if (dy <= 0)
-		pav = PaveSuiv (pav);
-	  }
-	while (!(dy > 0 || pav == NULL));
-	if (pav != NULL)
-	   first = pav->AbElement;
-	else
-	   first = NULL;
-     }
-   return first;
-}
-#endif
-
-/* ---------------------------------------------------------------------- */
-/* |    ElemSuiv retourne l'element suivant d'un element pEl.           | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-PtrElement          ElemSuiv (PtrElement pEl)
-#else  /* __STDC__ */
-PtrElement          ElemSuiv (pEl)
+PtrElement          CherchePage (pEl, view, pageNum, relative)
 PtrElement          pEl;
+int                 view;
+int                 pageNum;
+boolean             relative;
 
 #endif /* __STDC__ */
 {
-   if (pEl != NULL)
+   PtrElement          pElP;
+   PtrElement          result;
+
+   pElP = pEl;
+   result = pEl;
+   if (pageNum > 0)
      {
-	while (pEl->ElNext == NULL && pEl->ElParent != NULL)
-	   pEl = pEl->ElParent;
-	pEl = pEl->ElNext;
-     }
-   return pEl;
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    CherchePage recherche une page.                                 | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-PtrElement          CherchePage (PtrElement from, int vue, int depl, boolean relatif)
-#else  /* __STDC__ */
-PtrElement          CherchePage (from, vue, depl, relatif)
-PtrElement          from;
-int                 vue;
-int                 depl;
-boolean             relatif;
-
-#endif /* __STDC__ */
-{
-   PtrElement          pp;
-   PtrElement          res;
-
-   pp = from;
-   res = from;
-   if (depl > 0)
-     {
-	if (relatif)
-	   /* c'est un deplacement relatif, si on est sur une page, on */
+	if (relative)
+	   /* c'est un deplacement relatif. Si on est sur une page, on */
 	   /* l'ignore et on commence la recherche a partir du suivant */
-	   if (from->ElTypeNumber == PageBreak + 1)
-	      from = ElemSuiv (from);
-	pp = from;
-	while (depl > 0 && pp != NULL)
+	   if (pEl->ElTypeNumber == PageBreak + 1)
+	      pEl = NextElement (pEl);
+	pElP = pEl;
+	while (pageNum > 0 && pElP != NULL)
 	  {
-	     pp = FwdSearchTypedElem (from, PageBreak + 1, NULL);
-	     if (pp != NULL)
+	     pElP = FwdSearchTypedElem (pEl, PageBreak + 1, NULL);
+	     if (pElP != NULL)
 	       {
-		  if (pp->ElViewPSchema == vue)
-		     if (relatif)
+		  if (pElP->ElViewPSchema == view)
+		     if (relative)
 		       {
-			  res = pp;
-			  depl--;
+			  result = pElP;
+			  pageNum--;
 		       }
 		     else
-			/* on cherche la page de numero depl */
-		     if (pp->ElPageNumber == depl)
-			/* c'est la page cherchee */
-		       {
-			  res = pp;	/* resultat */
-			  depl = 0;	/* fin de la recherche */
-		       }
-		  from = pp;
+			/* on cherche la page de numero pageNum */
+		        if (pElP->ElPageNumber == pageNum)
+			   /* c'est la page cherchee */
+		          {
+			     result = pElP;
+			     pageNum = 0;
+		          }
+		  pEl = pElP;
 	       }
 	  }
      }
    else
-      while (depl < 0 && pp != NULL)
+      while (pageNum < 0 && pElP != NULL)
 	{
-	   pp = BackSearchTypedElem (from, PageBreak + 1, NULL);
-	   if (pp != NULL)
+	   pElP = BackSearchTypedElem (pEl, PageBreak + 1, NULL);
+	   if (pElP != NULL)
 	     {
-		if (pp->ElViewPSchema == vue)
+		if (pElP->ElViewPSchema == view)
 		  {
-		     res = pp;
-		     depl++;
+		     result = pElP;
+		     pageNum++;
 		  }
-		from = pp;
+		pEl = pElP;
 	     }
 	}
-   return res;
+   return result;
 }
 
 
 /* ---------------------------------------------------------------------- */
 /* |    PageHautFenetre positionne le document pDoc dans sa frame       | */
-/* |            de facon que le filet du saut de page PP soit en haut   | */
-/* |            de la fenetre.                                          | */
-/* |            VueDoc indique la vue concernee (vue du document).      | */
+/* |            de facon que le filet du saut de page pPage soit en	| */
+/* |            haut de la fenetre.                                     | */
+/* |            view indique la vue concernee (vue du document).      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                PageHautFenetre (PtrElement PP, int VueDoc, PtrDocument pDoc)
+void                PageHautFenetre (PtrElement pPage, int view, PtrDocument pDoc)
 #else  /* __STDC__ */
-void                PageHautFenetre (PP, VueDoc, pDoc)
-PtrElement          PP;
-int                 VueDoc;
+void                PageHautFenetre (pPage, view, pDoc)
+PtrElement          pPage;
+int                 view;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             gpav;
-   PtrAbstractBox             pav;
+   PtrAbstractBox             pAbGraph;
+   PtrAbstractBox             pAb;
    int                 frame;
 
    /* le code qui suit etait precedemment dans MoveToPage */
-   if (PP != NULL)
+   if (pPage != NULL)
      {
-	VerifPave (PP, VueDoc, pDoc, TRUE, FALSE);
-	if (PP->ElAbstractBox[VueDoc - 1] == NULL)
-	   /* message 'Panique! * (VerifPave)' */
-	   printf ("Panique VerifPave\n");
-	else
+	VerifPave (pPage, view, pDoc, TRUE, FALSE);
+	if (pPage->ElAbstractBox[view - 1] != NULL)
 	  {
-	     pav = PP->ElAbstractBox[VueDoc - 1]->AbFirstEnclosed;
-	     gpav = NULL;
-	     while (pav != NULL)
+	     pAb = pPage->ElAbstractBox[view - 1]->AbFirstEnclosed;
+	     pAbGraph = NULL;
+	     while (pAb != NULL)
 		/* recherche du filet */
-		if (pav->AbLeafType == LtGraphics
-		    && pav->AbShape == 'h'
-		    && pav->AbHorizPos.PosAbRef == NULL)
+		if (pAb->AbLeafType == LtGraphics
+		    && pAb->AbShape == 'h'
+		    && pAb->AbHorizPos.PosAbRef == NULL)
 		  {
-		     gpav = pav;
-		     pav = NULL;
+		     pAbGraph = pAb;
+		     pAb = NULL;
 		  }
 		else
-		   pav = pav->AbNext;
-	     if (gpav != NULL)
+		   pAb = pAb->AbNext;
+	     if (pAbGraph != NULL)
 	       {
 		  /* cherche la fenetre correspondant a la vue */
-		  if (PP->ElAssocNum == 0)
-		     frame = pDoc->DocViewFrame[VueDoc - 1];
+		  if (pPage->ElAssocNum == 0)
+		     frame = pDoc->DocViewFrame[view - 1];
 		  else
-		     frame = pDoc->DocAssocFrame[PP->ElAssocNum - 1];
-		  MontrerBoite (frame, gpav->AbBox, 0, 0);
+		     frame = pDoc->DocAssocFrame[pPage->ElAssocNum - 1];
+		  MontrerBoite (frame, pAbGraph->AbBox, 0, 0);
 	       }
 	  }
      }
 }
-/* End Of Module cherche */

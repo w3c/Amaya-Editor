@@ -2,16 +2,8 @@
 /* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
 
 /*
-   pivlec.c : transformation de la representation pivot d'un document
-   dans sa representation interne.
-   Projet THOT  
-   Ce module transforme la representation pivot
-   d'un document dans sa representation interne.
-   V. Quint     Septembre 1984
-   Major Changes:
-   V. Quint     Septembre 1984 creation
-   PMA 3/06/91  remise en forme
-   IV : Septembre 92 adaptation Tool Kit
+   Ce module charge un document depuis un fichier contenant une representation
+   pivot et construit les arbres abstraits correspondants.
  */
 
 #include "thot_gui.h"
