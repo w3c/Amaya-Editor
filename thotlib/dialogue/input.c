@@ -199,7 +199,9 @@ static char *KeyName (unsigned int key)
     case THOT_KEY_BackSpace:
       return "Backspace";
     case THOT_KEY_Tab:
+#ifndef _WINDOWS
     case THOT_KEY_TAB:
+#endif /* _WINDOWS */
       return "Tab";
     case THOT_KEY_Escape:
       return "Escape";
