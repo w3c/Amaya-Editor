@@ -407,6 +407,11 @@ static void PrintEnv (FILE *output)
       fprintf (output, "[%s]\n", cour->appli);
       /* add all the entries under the same appli name */
       if (cour->level == REGISTRY_USER 
+#ifdef _WINDOWS
+		  && strcasecmp (cour->name, "TMP")
+		  && strcasecmp (cour->name, "TEMP")
+		  && strcasecmp (cour->name, "TEMPDIR")
+#endif /* _WINDOWS */
 		  && strcasecmp (cour->name, "TMPDIR")
 		  && strcasecmp (cour->name, "APP_TMPDIR")
 		  && strcasecmp (cour->name, "APP_HOME"))
@@ -416,7 +421,11 @@ static void PrintEnv (FILE *output)
 	{
 	  if (next->level == REGISTRY_USER
 	      && strcasecmp (cour->name, "TMPDIR")
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+		  && strcasecmp (cour->name, "TMP")
+		  && strcasecmp (cour->name, "TEMP")
+		  && strcasecmp (cour->name, "TEMPDIR")
+#else
 	      && strcasecmp (next->name, "APP_TMPDIR")
 #endif /* _WINDOWS */
 	      && strcasecmp (next->name, "APP_HOME"))
@@ -1125,8 +1134,6 @@ static void         InitEnviron ()
    ** set up the defaul TMPDIR 
    */
 
-   /* set up a default TMPDIR */
-   TtaSetDefEnvString ("TMPDIR", DEF_TMPDIR, TRUE);
    /* get the tmpdir from the registry or use the default name if it
       doesn't exist */
    pT = TtaGetEnvString ("TMPDIR");
@@ -1141,6 +1148,9 @@ static void         InitEnviron ()
 #endif /* _WINDOWS */
    if (!pT)
      pT = DEF_TMPDIR;
+   /* set up a default TMPDIR in the registry in case it wasn't defined before */
+   TtaSetDefEnvString ("TMPDIR", pT, FALSE);
+
    /* create the TMPDIR dir if it doesn't exist */
    if (!TtaMakeDirectory (pT))
      {
@@ -1498,18 +1508,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
    else
      app_home[0] = EOS;
 
-   /* set the default APP_TMPDIR */
-#ifdef _WINDOWS
-   /* the tmpdir is DEF_TMPDIR\app-name */
-   sprintf (filename, "%s%c%s", DEF_TMPDIR, DIR_SEP, AppNameW);
-   AddRegisterEntry (AppRegistryEntryAppli, "APP_TMPDIR", filename,
-		     REGISTRY_SYSTEM, TRUE);
-#else
-   /* under Unix, APP_TMPDIR == APP_HOME */
-   AddRegisterEntry (AppRegistryEntryAppli, "APP_TMPDIR", app_home,
-		     REGISTRY_SYSTEM, TRUE);
-#endif /* _WINDOWS */
-   /* read the user's preferences (if they exist) */
+    /* read the user's preferences (if they exist) */
    if (app_home != NULL && *app_home != EOS)
      {
        sprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
@@ -1534,7 +1533,22 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #ifdef DEBUG_REGISTRY
    PrintEnv (stderr);
 #endif
+   /* initialize the standard environment (i.e global variables) with 
+	  values stored in the registry. */
    InitEnviron ();
+  /* set the default APP_TMPDIR */
+#ifdef _WINDOWS
+   /* the tmpdir is DEF_TMPDIR\app-name */
+   ptr = TtaGetEnvString ("TMPDIR");
+   sprintf (filename, "%s%c%s", ptr, DIR_SEP, AppNameW);
+   AddRegisterEntry (AppRegistryEntryAppli, "APP_TMPDIR", filename,
+		     REGISTRY_SYSTEM, TRUE);
+#else
+   /* under Unix, APP_TMPDIR == APP_HOME */
+   AddRegisterEntry (AppRegistryEntryAppli, "APP_TMPDIR", app_home,
+		     REGISTRY_SYSTEM, TRUE);
+#endif /* _WINDOWS */
+   /* reset the status flag to say we don't need to save the registry right now */
    AppRegistryModified = 0;
 }
 
