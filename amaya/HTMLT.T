@@ -21,7 +21,7 @@ RULES
 	if HtmlDTD = Frameset
 	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"\12   "http://www.w3.org/TR/REC-html40/frameset.dtd">\12';
         if not HtmlDTD = Frameset
-	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\12';
+	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"\12   "http://www.w3.org/TR/REC-html40/loose.dtd">\12';
 	Create '<html';
 #endif
 	Create Attributes;
@@ -44,7 +44,7 @@ RULES
  TITLE:	BEGIN
 	Create '<title';
 	Create Attributes;
-	Create '>\12';
+	Create '>';
 	Create '</title>\12' After;
 	END;
 
