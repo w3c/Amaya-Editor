@@ -94,7 +94,7 @@ static CharsetCode CharsetCodeTable[] =
     {"shift_jis",        SHIFT_JIS},
     {"shift-jis",        SHIFT_JIS},
     {"x-sjis",           SHIFT_JIS},
-    {"", UNDEFINED_CHARSET}
+    {"", UNSUPPORTED_CHARSET}
 };
 
 /*----------------------------------------------------------------------
@@ -364,13 +364,13 @@ CHARSET TtaGetCharset (char *charsetname)
 
   if (charsetname == NULL || charsetname[0] == EOS)
     return UNDEFINED_CHARSET;
-  while (CharsetCodeTable[index].Charset != UNDEFINED_CHARSET)
+  while (CharsetCodeTable[index].Charset != UNSUPPORTED_CHARSET)
     {
       if (!strcasecmp (CharsetCodeTable[index].ISOCode, charsetname))
 	return CharsetCodeTable[index].Charset;
       index++;
     }
-  return UNDEFINED_CHARSET;
+  return UNSUPPORTED_CHARSET;
 }
 
 
@@ -396,9 +396,9 @@ char *TtaGetCharsetName (CHARSET charset)
 {
   int index = 0;
 
-  if (UNDEFINED_CHARSET)
+  if (UNDEFINED_CHARSET || UNSUPPORTED_CHARSET)
     return NULL;
-  while (CharsetCodeTable[index].Charset != UNDEFINED_CHARSET)
+  while (CharsetCodeTable[index].Charset != UNSUPPORTED_CHARSET)
     {
       if (CharsetCodeTable[index].Charset == charset)
 	return (CharsetCodeTable[index].ISOCode);

@@ -1972,7 +1972,7 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
 				 CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   font;
-  char              quoteChar;
+  char                quoteChar, *p;
 
   font.typed_data.value = 0;
   font.typed_data.unit = UNIT_REL;
@@ -2043,10 +2043,18 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
   else
     /* unknown font name.  Skip it */
     {
+      p = cssRule;
       if (quoteChar != EOS)
          cssRule = SkipQuotedString (cssRule, quoteChar);
       else
          cssRule = SkipWord (cssRule);
+      while (p == cssRule &&
+	     *cssRule != ','  && *cssRule != ';' && *cssRule != EOS)
+	{
+	  cssRule++;
+	  p = cssRule;
+	  cssRule = SkipWord (cssRule);
+	}
       cssRule = SkipBlanksAndComments (cssRule);
       if (*cssRule == ',')
 	{

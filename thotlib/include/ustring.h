@@ -50,7 +50,8 @@ typedef enum {
    JIS_X_0208,
    JIS_X_0212,
    GB_2312,
-   KSC_5601
+   KSC_5601,
+   UNSUPPORTED_CHARSET
 } CHARSET;
 
 #include <wchar.h>

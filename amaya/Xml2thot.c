@@ -500,8 +500,8 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
   switch (type)
     {
     case errorEncoding: 
-      fprintf (ErrFile, "  %s\n", msg);
-      XMLNotWellFormed = TRUE;
+      fprintf (ErrFile, "@  line 1, char 0:  %s\n", msg);
+      XMLCharacterNotSupported = TRUE;
       break;
     case errorNotWellFormed:
       if (line == 0)
@@ -4391,9 +4391,6 @@ static void     FreeExpatParser ()
 static void InitializeExpatParser (CHARSET charset)
 {  
   int        paramEntityParsing;
-#ifdef IV
-  char       msgBuffer[MaxMsgLength];
-#endif
 
   /* Enable parsing of parameter entities */
   paramEntityParsing = XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE;
@@ -4405,12 +4402,6 @@ static void InitializeExpatParser (CHARSET charset)
     {
       /* Default encoding for XML documents */
       Parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
-#ifdef IV
-      /* Display a warning message */
-      sprintf (msgBuffer,
-	       "Warning: no encoding specified, assuming UTF-8");
-      XmlParseError (undefinedEncoding, (unsigned char *)msgBuffer, 0);
-#endif
       TtaSetDocumentCharset (XMLcontext.doc, UTF_8, TRUE);
     }
   else if (charset == UTF_8 || charset == UTF_16)
@@ -4439,10 +4430,9 @@ static void InitializeExpatParser (CHARSET charset)
   else
     {
       XMLUnknownEncoding = TRUE;
+      Parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
       XmlParseError (errorEncoding,
 		     (unsigned char *)TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), -1);
-      Parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
-      /*return;*/
     }
 
   /* Define the user data pointer that gets passed to handlers */
@@ -5361,7 +5351,7 @@ ThotBool ParseIncludedXml (FILE     *infile,
    XmlParse
    Parses the XML file infile and builds the equivalent Thot abstract tree.
   ---------------------------------------------------------------------------*/
-static void   XmlParse (FILE     *infile, CHARSET charset,
+static void   XmlParse (FILE *infile, CHARSET charset,
 			ThotBool *xmlDec, ThotBool *xmlDoctype)
 {
 #define	 COPY_BUFFER_SIZE	1024
