@@ -26,8 +26,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-
 !IF  "$(CFG)" == "annotlib - Win32 Release"
 
 OUTDIR=.\Release
@@ -58,7 +56,6 @@ CLEAN :
 	-@erase "$(INTDIR)\ANNOTfiles.obj"
 	-@erase "$(INTDIR)\ANNOTlink.obj"
 	-@erase "$(INTDIR)\ANNOTmenu.obj"
-	-@erase "$(INTDIR)\ANNOTnotif.obj"
 	-@erase "$(INTDIR)\ANNOTschemas.obj"
 	-@erase "$(INTDIR)\ANNOTtools.obj"
 	-@erase "$(INTDIR)\vc50.idb"
@@ -68,6 +65,7 @@ CLEAN :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
 RSC=rc.exe
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\thotlib\internals\h" /I\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
@@ -76,6 +74,37 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\thotlib\internals\h" /I\
  /Fp"$(INTDIR)\annotlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\annotlib.bsc" 
 BSC32_SBRS= \
@@ -89,7 +118,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\ANNOTfiles.obj" \
 	"$(INTDIR)\ANNOTlink.obj" \
 	"$(INTDIR)\ANNOTmenu.obj" \
-	"$(INTDIR)\ANNOTnotif.obj" \
 	"$(INTDIR)\ANNOTschemas.obj" \
 	"$(INTDIR)\ANNOTtools.obj" \
 	"..\libThotEditor.lib" \
@@ -126,7 +154,6 @@ CLEAN :
 	-@erase "$(INTDIR)\ANNOTfiles.obj"
 	-@erase "$(INTDIR)\ANNOTlink.obj"
 	-@erase "$(INTDIR)\ANNOTmenu.obj"
-	-@erase "$(INTDIR)\ANNOTnotif.obj"
 	-@erase "$(INTDIR)\ANNOTschemas.obj"
 	-@erase "$(INTDIR)\ANNOTtools.obj"
 	-@erase "$(INTDIR)\vc50.idb"
@@ -136,6 +163,7 @@ CLEAN :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
 RSC=rc.exe
+CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\annotlib" /I "..\..\annotlib\f"\
  /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\var" /I\
@@ -148,31 +176,6 @@ CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\annotlib" /I "..\..\annotlib\f"\
  /FD /GZ /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
-BSC32=bscmake.exe
-BSC32_FLAGS=/nologo /o"$(OUTDIR)\annotlib.bsc" 
-BSC32_SBRS= \
-	
-LIB32=link.exe -lib
-LIB32_FLAGS=/nologo /out:"..\annotlib.lib" 
-LIB32_OBJS= \
-	"$(INTDIR)\AHTrdf2annot.obj" \
-	"$(INTDIR)\AnnotAPP.obj" \
-	"$(INTDIR)\ANNOTevent.obj" \
-	"$(INTDIR)\ANNOTfiles.obj" \
-	"$(INTDIR)\ANNOTlink.obj" \
-	"$(INTDIR)\ANNOTmenu.obj" \
-	"$(INTDIR)\ANNOTnotif.obj" \
-	"$(INTDIR)\ANNOTschemas.obj" \
-	"$(INTDIR)\ANNOTtools.obj" \
-	"..\libThotEditor.lib" \
-	"..\libwww.lib"
-
-"..\annotlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
-    $(LIB32) @<<
-  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
-<<
-
-!ENDIF 
 
 .c{$(CPP_OBJS)}.obj::
    $(CPP) @<<
@@ -203,6 +206,31 @@ LIB32_OBJS= \
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
+
+BSC32=bscmake.exe
+BSC32_FLAGS=/nologo /o"$(OUTDIR)\annotlib.bsc" 
+BSC32_SBRS= \
+	
+LIB32=link.exe -lib
+LIB32_FLAGS=/nologo /out:"..\annotlib.lib" 
+LIB32_OBJS= \
+	"$(INTDIR)\AHTrdf2annot.obj" \
+	"$(INTDIR)\AnnotAPP.obj" \
+	"$(INTDIR)\ANNOTevent.obj" \
+	"$(INTDIR)\ANNOTfiles.obj" \
+	"$(INTDIR)\ANNOTlink.obj" \
+	"$(INTDIR)\ANNOTmenu.obj" \
+	"$(INTDIR)\ANNOTschemas.obj" \
+	"$(INTDIR)\ANNOTtools.obj" \
+	"..\libThotEditor.lib" \
+	"..\libwww.lib"
+
+"..\annotlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+    $(LIB32) @<<
+  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
+<<
+
+!ENDIF 
 
 
 !IF "$(CFG)" == "annotlib - Win32 Release" || "$(CFG)" ==\
@@ -279,6 +307,7 @@ DEP_CPP_AHTRD=\
 	"..\amaya\xlink.h"\
 	
 NODEP_CPP_AHTRD=\
+	"..\..\annotlib\AHTrdf2annot_f.h"\
 	"..\..\annotlib\amaya.h"\
 	"..\..\annotlib\ANNOTevent_f.h"\
 	"..\..\annotlib\ANNOTfiles_f.h"\
@@ -294,7 +323,6 @@ NODEP_CPP_AHTRD=\
 	"..\..\annotlib\HTRDF.h"\
 	"..\..\annotlib\init_f.h"\
 	"..\..\annotlib\query_f.h"\
-	"..\..\annotlib\rdf2annot_f.h"\
 	"..\..\annotlib\wininclude.h"\
 	"..\..\annotlib\xmlparse.h"\
 	
@@ -442,13 +470,13 @@ DEP_CPP_AHTRD=\
 	"..\..\amaya\parser.h"\
 	"..\..\amaya\xmlparse.h"\
 	"..\..\annotlib\annotlib.h"\
+	"..\..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\..\annotlib\f\annotevent_f.h"\
 	"..\..\annotlib\f\annotfiles_f.h"\
 	"..\..\annotlib\f\annotlink_f.h"\
 	"..\..\annotlib\f\annotmenu_f.h"\
 	"..\..\annotlib\f\annotschemas_f.h"\
 	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\annotlib\f\rdf2annot_f.h"\
 	"..\..\thotlib\include\appaction.h"\
 	"..\..\thotlib\include\application.h"\
 	"..\..\thotlib\include\appstruct.h"\
@@ -559,6 +587,7 @@ DEP_CPP_ANNOTE=\
 	"..\amaya\xlink.h"\
 	
 NODEP_CPP_ANNOTE=\
+	"..\..\annotlib\AHTrdf2annot_f.h"\
 	"..\..\annotlib\AHTURLTools_f.h"\
 	"..\..\annotlib\amaya.h"\
 	"..\..\annotlib\ANNOTevent_f.h"\
@@ -574,7 +603,6 @@ NODEP_CPP_ANNOTE=\
 	"..\..\annotlib\HTMLtable_f.h"\
 	"..\..\annotlib\init_f.h"\
 	"..\..\annotlib\query_f.h"\
-	"..\..\annotlib\rdf2annot_f.h"\
 	"..\..\annotlib\wininclude.h"\
 	"..\..\annotlib\XPointer.h"\
 	"..\..\annotlib\XPointer_f.h"\
@@ -725,13 +753,13 @@ DEP_CPP_ANNOTE=\
 	"..\..\amaya\parser.h"\
 	"..\..\amaya\xpointer.h"\
 	"..\..\annotlib\annotlib.h"\
+	"..\..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\..\annotlib\f\annotevent_f.h"\
 	"..\..\annotlib\f\annotfiles_f.h"\
 	"..\..\annotlib\f\annotlink_f.h"\
 	"..\..\annotlib\f\annotmenu_f.h"\
 	"..\..\annotlib\f\annotschemas_f.h"\
 	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\annotlib\f\rdf2annot_f.h"\
 	"..\..\thotlib\include\appaction.h"\
 	"..\..\thotlib\include\application.h"\
 	"..\..\thotlib\include\appstruct.h"\
@@ -790,6 +818,7 @@ DEP_CPP_ANNOTF=\
 	"..\amaya\xlink.h"\
 	
 NODEP_CPP_ANNOTF=\
+	"..\..\annotlib\AHTrdf2annot_f.h"\
 	"..\..\annotlib\AHTURLTools_f.h"\
 	"..\..\annotlib\amaya.h"\
 	"..\..\annotlib\ANNOTevent_f.h"\
@@ -805,7 +834,6 @@ NODEP_CPP_ANNOTF=\
 	"..\..\annotlib\HTMLtable_f.h"\
 	"..\..\annotlib\init_f.h"\
 	"..\..\annotlib\query_f.h"\
-	"..\..\annotlib\rdf2annot_f.h"\
 	"..\..\annotlib\wininclude.h"\
 	
 
@@ -950,13 +978,13 @@ DEP_CPP_ANNOTF=\
 	"..\..\amaya\libwww.h"\
 	"..\..\amaya\parser.h"\
 	"..\..\annotlib\annotlib.h"\
+	"..\..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\..\annotlib\f\annotevent_f.h"\
 	"..\..\annotlib\f\annotfiles_f.h"\
 	"..\..\annotlib\f\annotlink_f.h"\
 	"..\..\annotlib\f\annotmenu_f.h"\
 	"..\..\annotlib\f\annotschemas_f.h"\
 	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\annotlib\f\rdf2annot_f.h"\
 	"..\..\thotlib\include\appaction.h"\
 	"..\..\thotlib\include\application.h"\
 	"..\..\thotlib\include\appstruct.h"\
@@ -1015,6 +1043,7 @@ DEP_CPP_ANNOTL=\
 	"..\amaya\xlink.h"\
 	
 NODEP_CPP_ANNOTL=\
+	"..\..\annotlib\AHTrdf2annot_f.h"\
 	"..\..\annotlib\AHTURLTools_f.h"\
 	"..\..\annotlib\amaya.h"\
 	"..\..\annotlib\ANNOTevent_f.h"\
@@ -1031,7 +1060,6 @@ NODEP_CPP_ANNOTL=\
 	"..\..\annotlib\HTMLtable_f.h"\
 	"..\..\annotlib\init_f.h"\
 	"..\..\annotlib\query_f.h"\
-	"..\..\annotlib\rdf2annot_f.h"\
 	"..\..\annotlib\wininclude.h"\
 	"..\..\annotlib\XLinkedit_f.h"\
 	"..\..\annotlib\XPointer.h"\
@@ -1185,13 +1213,13 @@ DEP_CPP_ANNOTL=\
 	"..\..\amaya\parser.h"\
 	"..\..\amaya\xpointer.h"\
 	"..\..\annotlib\annotlib.h"\
+	"..\..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\..\annotlib\f\annotevent_f.h"\
 	"..\..\annotlib\f\annotfiles_f.h"\
 	"..\..\annotlib\f\annotlink_f.h"\
 	"..\..\annotlib\f\annotmenu_f.h"\
 	"..\..\annotlib\f\annotschemas_f.h"\
 	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\annotlib\f\rdf2annot_f.h"\
 	"..\..\thotlib\include\appaction.h"\
 	"..\..\thotlib\include\application.h"\
 	"..\..\thotlib\include\appstruct.h"\
@@ -1251,6 +1279,7 @@ DEP_CPP_ANNOTM=\
 	"..\amaya\xlink.h"\
 	
 NODEP_CPP_ANNOTM=\
+	"..\..\annotlib\AHTrdf2annot_f.h"\
 	"..\..\annotlib\amaya.h"\
 	"..\..\annotlib\ANNOTevent_f.h"\
 	"..\..\annotlib\ANNOTfiles_f.h"\
@@ -1267,7 +1296,6 @@ NODEP_CPP_ANNOTM=\
 	"..\..\annotlib\HTMLtable_f.h"\
 	"..\..\annotlib\init_f.h"\
 	"..\..\annotlib\query_f.h"\
-	"..\..\annotlib\rdf2annot_f.h"\
 	"..\..\annotlib\resource.h"\
 	"..\..\annotlib\wininclude.h"\
 	
@@ -1413,13 +1441,13 @@ DEP_CPP_ANNOTM=\
 	"..\..\amaya\parser.h"\
 	"..\..\annotlib\annotlib.h"\
 	"..\..\annotlib\annotmenu.h"\
+	"..\..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\..\annotlib\f\annotevent_f.h"\
 	"..\..\annotlib\f\annotfiles_f.h"\
 	"..\..\annotlib\f\annotlink_f.h"\
 	"..\..\annotlib\f\annotmenu_f.h"\
 	"..\..\annotlib\f\annotschemas_f.h"\
 	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\annotlib\f\rdf2annot_f.h"\
 	"..\..\thotlib\include\appaction.h"\
 	"..\..\thotlib\include\application.h"\
 	"..\..\thotlib\include\appstruct.h"\
@@ -1473,31 +1501,6 @@ DEP_CPP_ANNOTM=\
 
 !ENDIF 
 
-SOURCE=..\..\annotlib\ANNOTnotif.c
-
-!IF  "$(CFG)" == "annotlib - Win32 Release"
-
-DEP_CPP_ANNOTN=\
-	"..\amaya\annot.h"\
-	
-NODEP_CPP_ANNOTN=\
-	"..\..\annotlib\alliance_assistant.h"\
-	"..\..\annotlib\editorComs.h"\
-	
-
-"$(INTDIR)\ANNOTnotif.obj" : $(SOURCE) $(DEP_CPP_ANNOTN) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "annotlib - Win32 Debug"
-
-
-"$(INTDIR)\ANNOTnotif.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
 SOURCE=..\..\annotlib\ANNOTschemas.c
 
 !IF  "$(CFG)" == "annotlib - Win32 Release"
@@ -1511,6 +1514,7 @@ DEP_CPP_ANNOTS=\
 	"..\amaya\xlink.h"\
 	
 NODEP_CPP_ANNOTS=\
+	"..\..\annotlib\AHTrdf2annot_f.h"\
 	"..\..\annotlib\AHTURLTools_f.h"\
 	"..\..\annotlib\amaya.h"\
 	"..\..\annotlib\ANNOTevent_f.h"\
@@ -1527,7 +1531,6 @@ NODEP_CPP_ANNOTS=\
 	"..\..\annotlib\HTRDF.h"\
 	"..\..\annotlib\init_f.h"\
 	"..\..\annotlib\query_f.h"\
-	"..\..\annotlib\rdf2annot_f.h"\
 	"..\..\annotlib\wininclude.h"\
 	"..\..\annotlib\xmlparse.h"\
 	
@@ -1676,13 +1679,13 @@ DEP_CPP_ANNOTS=\
 	"..\..\amaya\parser.h"\
 	"..\..\amaya\xmlparse.h"\
 	"..\..\annotlib\annotlib.h"\
+	"..\..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\..\annotlib\f\annotevent_f.h"\
 	"..\..\annotlib\f\annotfiles_f.h"\
 	"..\..\annotlib\f\annotlink_f.h"\
 	"..\..\annotlib\f\annotmenu_f.h"\
 	"..\..\annotlib\f\annotschemas_f.h"\
 	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\annotlib\f\rdf2annot_f.h"\
 	"..\..\thotlib\include\appaction.h"\
 	"..\..\thotlib\include\application.h"\
 	"..\..\thotlib\include\appstruct.h"\
@@ -1741,6 +1744,7 @@ DEP_CPP_ANNOTT=\
 	"..\amaya\xlink.h"\
 	
 NODEP_CPP_ANNOTT=\
+	"..\..\annotlib\AHTrdf2annot_f.h"\
 	"..\..\annotlib\AHTURLTools_f.h"\
 	"..\..\annotlib\amaya.h"\
 	"..\..\annotlib\ANNOTevent_f.h"\
@@ -1757,7 +1761,6 @@ NODEP_CPP_ANNOTT=\
 	"..\..\annotlib\HTMLtable_f.h"\
 	"..\..\annotlib\init_f.h"\
 	"..\..\annotlib\query_f.h"\
-	"..\..\annotlib\rdf2annot_f.h"\
 	"..\..\annotlib\wininclude.h"\
 	
 
@@ -1903,13 +1906,13 @@ DEP_CPP_ANNOTT=\
 	"..\..\amaya\libwww.h"\
 	"..\..\amaya\parser.h"\
 	"..\..\annotlib\annotlib.h"\
+	"..\..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\..\annotlib\f\annotevent_f.h"\
 	"..\..\annotlib\f\annotfiles_f.h"\
 	"..\..\annotlib\f\annotlink_f.h"\
 	"..\..\annotlib\f\annotmenu_f.h"\
 	"..\..\annotlib\f\annotschemas_f.h"\
 	"..\..\annotlib\f\annottools_f.h"\
-	"..\..\annotlib\f\rdf2annot_f.h"\
 	"..\..\thotlib\include\appaction.h"\
 	"..\..\thotlib\include\application.h"\
 	"..\..\thotlib\include\appstruct.h"\
