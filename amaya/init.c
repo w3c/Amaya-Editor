@@ -586,8 +586,6 @@ View                view;
 
 #endif
 {
- Document tempdoc;
-
   if (document == 0)
     return;
   else if (document == DocBook)
@@ -1423,6 +1421,8 @@ View                view;
 			       (void *) documentname, YES, (char *) content_type);
 #endif /* AMAYA_JAVA */
      }
+   else
+     Reload_callback (newdoc, 0, pathname, tempfile, content_type, (void *)documentname);
    TtaFreeMemory (tempfile);
    TtaFreeMemory (pathname);
    
