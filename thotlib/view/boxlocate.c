@@ -1040,7 +1040,8 @@ int                 yDelta;
 				     pBox->BxAbstractBox->AbElement->ElTypeNumber,
 				     pBox->BxAbstractBox->AbElement->ElStructSchema))
 	    pBox = pSourceBox;
-	  if (pBox == pSourceBox || pBox->BxAbstractBox->AbBox == pSourceBox)
+	  if (pBox == pSourceBox || pBox->BxAbstractBox->AbBox == pSourceBox ||
+	      IsParentBox (pSourceBox, pBox))
 	    {
 	      /* compute the height to be moved */
 	      pLine = SearchLine (pBox);
@@ -1067,6 +1068,7 @@ int                 yDelta;
 		  found = FALSE;
 		}
 	    }
+#ifdef IV
 	  else if (IsParentBox (pSourceBox, pBox))
 	    {
 	      if (xDelta > 0)
@@ -1098,6 +1100,7 @@ int                 yDelta;
 		    }
 		}
 	    }
+#endif
 	  else if (pBox->BxAbstractBox->AbLeafType != LtText && pBox->BxNChars != 0)
 	    {
 	      /* the box doesn't match, skip over */
