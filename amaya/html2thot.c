@@ -5261,7 +5261,7 @@ static void CheckHeadElements (Element el, Element *elHead,
 	    {
 #ifdef ANNOTATIONS
 	      if (DocumentTypes[doc] == docAnnot)
-		rootElement = ANNOT_GetHTMLRoot (doc, TRUE); 
+		rootEl = ANNOT_GetHTMLRoot (doc, TRUE); 
 	      else
 #endif /* ANNOTATIONS */
 		rootEl = TtaGetRootElement (doc);
