@@ -6519,16 +6519,17 @@ if test "$with_java" = "yes" ; then
 	
 	javanosrc_frag=$srcdir/javalib/Makefile.javanosrc
     fi
-else if test "$with_ilu" = "yes" ; then
-    
-    java_frag=/dev/null
-    
-    www_frag=/dev/null
 else
-    
     java_frag=/dev/null
-        www_frag=$srcdir/amaya/Makefile.libwww
-fi
+    javasrc_frag=/dev/null
+    javanosrc_frag=/dev/null
+    if test "$with_ilu" = "yes" ; then
+       
+       www_frag=/dev/null
+    else
+    
+       www_frag=$srcdir/amaya/Makefile.libwww
+    fi
 fi
 
 if test "$with_math" = "yes" ; then

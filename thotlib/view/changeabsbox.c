@@ -5946,8 +5946,12 @@ PtrAttribute        pAttrComp;
 		type different sauf s'il s'agit d'une regle conditionnelle */
 	     pR = firstOfType;
              while (pR != NULL &&
-		    pR->PrType == firstOfType->PrType && pR->PrCond == firstOfType->PrCond &&
-		    (pR->PrType != PtFunction || pR->PrPresFunction == TFonct))
+		    pR->PrType == firstOfType->PrType &&
+		    pR->PrCond == firstOfType->PrCond &&
+		    (pR->PrType != PtFunction ||
+		     (pR->PrPresFunction == TFonct &&
+		      (pR->PrPresFunction != FnCreateBefore ||
+		       pR->PrPresBox[0] == firstOfType->PrPresBox[0]))))
 	       {
 		 pR = pR->PrNextPRule;
 	       }

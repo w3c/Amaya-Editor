@@ -939,7 +939,6 @@ PtrAttribute        pAttr;
      }
 }
 
-
 /*----------------------------------------------------------------------
    Ajoute un attribut pNewAttr a l'element pEl avant l'attribut pAttrNext
   ----------------------------------------------------------------------*/
