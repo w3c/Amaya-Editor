@@ -62,7 +62,7 @@ static char*       Patterns_PS[] =
 extern ptrfont      PoscriptFont;
 extern int          ColorPs;
 extern int          LastPageNumber, LastPageWidth, LastPageHeight;
-static STRING       Scale = NULL;
+static char        *Scale = NULL;
 int                 X, Y;
 static int          SameBox = 0; /* 1 if the text is in the same box */
 static int          NbWhiteSp;
@@ -268,12 +268,12 @@ static void FillWithPattern (FILE * fout, int fg, int bg, int pattern)
    parameter fg indicate the drawing color
    Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
-int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
+int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
 		ptrfont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg, int shadow)
 {
   FILE               *fout;
-  STRING              ptcar;
+  char               *ptcar;
   int                 j, encoding, width;
   int                 noJustifiedWhiteSp;
 
@@ -304,18 +304,31 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
 	}
     }
 
+  ptcar = TtaGetMemory (lg + 1);
   if (shadow)
     {
       /* replace each character by a star */
       j = 0;
-      ptcar = TtaGetMemory ((size_t) (lg + 1));
       while (j < lg)
 	ptcar[j++] = '*';
       ptcar[lg] = EOS;
       bl = 0;
     }
   else
-    ptcar = &buff[i - 1];
+    {
+#ifdef _I18N_
+      j = 0;
+      while (j < lg)
+	{
+	  ptcar[j] = TtaGetCharFromWC (buff[i - 1], ISO_8859_1);
+	  j++;
+	  i++;
+	}
+#else /* _I18N_ */
+      strncpy (ptcar, &buff[i - 1], lg);
+#endif /* I18N_ */
+      ptcar[lg] = EOS;
+    }
 
   /* Add the justified white space */
   if (bl > 0)
@@ -376,8 +389,7 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
 	width += CharacterWidth (ptcar[j++], font);
       return (width);
     } 
-  if (shadow)
-    TtaFreeMemory (ptcar);
+  TtaFreeMemory (ptcar);
   return (0);
 }
 

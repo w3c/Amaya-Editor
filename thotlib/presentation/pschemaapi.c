@@ -117,32 +117,30 @@ PSchema             TtaNewPSchema (SSchema nature)
    return ((PSchema) pSchPres);
 }
 
-
 /*----------------------------------------------------------------------
-   TtaUnlinkPSchema
+  TtaUnlinkPSchema
 
-   Unlinks a presentation schema from a document or a nature in a 
-   document.
-
-   Parameters:
-   schema: the presentation schema to be unlinked.
-   document: the document to which that presentation schema is related.
-   nature: the structure schema of a nature of the document, NULL if schema
-           is relative to the main structure schema of the document.
+  Unlinks a presentation schema from a document or a nature in a 
+  document.
+  Parameters:
+  schema: the presentation schema to be unlinked.
+  document: the document to which that presentation schema is related.
+  nature: the structure schema of a nature of the document, NULL if schema
+  is relative to the main structure schema of the document.
   ----------------------------------------------------------------------*/
-void                TtaUnlinkPSchema (PSchema schema, Document document,
+void TtaUnlinkPSchema (PSchema schema, Document document,
 				      SSchema nature)
 {
-   PtrSSchema	       pSchS;
+  PtrSSchema	       pSchS;
 
-   if (!LoadedDocument[document - 1])
-     return;
-   if (nature == NULL)
-     pSchS = LoadedDocument[document - 1]->DocSSchema;
-   else
-     pSchS = (PtrSSchema) nature;
-   UnlinkPSchemaExtension (LoadedDocument[document - 1], pSchS,
-			   (PtrPSchema) schema);
+  if (!LoadedDocument[document - 1])
+    return;
+  if (nature == NULL)
+    pSchS = LoadedDocument[document - 1]->DocSSchema;
+  else
+    pSchS = (PtrSSchema) nature;
+  UnlinkPSchemaExtension (LoadedDocument[document - 1], pSchS,
+			  (PtrPSchema) schema);
 }
 
 /*----------------------------------------------------------------------
@@ -159,26 +157,26 @@ void                TtaUnlinkPSchema (PSchema schema, Document document,
   ----------------------------------------------------------------------*/
 void TtaRemovePSchema (PSchema schema, Document document, SSchema nature)
 {
-   PtrPSchema          pSchP;
-   PtrSSchema	       pSchS;
+  PtrPSchema          pSchP;
+  PtrSSchema	       pSchS;
 
-   if (!LoadedDocument[document - 1])
-     return;
-   if (nature == NULL)
-     pSchS = LoadedDocument[document - 1]->DocSSchema;
-   else
-     pSchS = (PtrSSchema) nature;
-   UnlinkPSchemaExtension (LoadedDocument[document - 1], pSchS,
-			   (PtrPSchema) schema);
-   /* in any case free the Pschema */
-   pSchP = (PtrPSchema) schema;
-   if (pSchP->PsStructCode > 0)
-     {
-       pSchP->PsStructCode--;	/* number of documents using this schema */
-       if (pSchP->PsStructCode == 0)
-	 /* this presentation schema is no longer used */
-	 FreePresentationSchema (pSchP, pSchS, LoadedDocument[document - 1]);
-     }
+  if (!LoadedDocument[document - 1])
+    return;
+  if (nature == NULL)
+    pSchS = LoadedDocument[document - 1]->DocSSchema;
+  else
+    pSchS = (PtrSSchema) nature;
+  /* UnlinkPSchemaExtension (LoadedDocument[document - 1], pSchS,
+     (PtrPSchema) schema);*/
+  /* in any case free the Pschema */
+  pSchP = (PtrPSchema) schema;
+  if (pSchP->PsStructCode > 0)
+    {
+      pSchP->PsStructCode--;	/* number of documents using this schema */
+      if (pSchP->PsStructCode == 0)
+	/* this presentation schema is no longer used */
+	FreePresentationSchema (pSchP, pSchS, LoadedDocument[document - 1]);
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -430,10 +430,8 @@ static void UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled,
 		pIS = pInfo->PiSchemas;
 		if (pIS->PiPSchema)
 		  {
-		    TtaUnlinkPSchema (pIS->PiPSchema, pInfo->PiDoc, pIS->PiSSchema);
 		    TtaCleanStylePresentation (NULL, pIS->PiPSchema, pInfo->PiDoc);
-		    /* remove presentation schemas */
-		    TtaRemovePSchema (pIS->PiPSchema, pInfo->PiDoc, pIS->PiSSchema);
+		    TtaUnlinkPSchema (pIS->PiPSchema, pInfo->PiDoc, pIS->PiSSchema);
 		    pInfo->PiSchemas = pIS->PiSNext;
 		    TtaFreeMemory (pIS);
 		  }

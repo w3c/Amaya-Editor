@@ -305,14 +305,13 @@ static void         FreePRuleList (PtrPRule * firstPRule)
 }
 
 /*----------------------------------------------------------------------
-   ReleasePresentationSchema						
-   Libere le schema de presentation pointe par pPSchema,		
-   ainsi que toutes les regles de presentation qu'il pointe.	
-   pSS pointe le schema de structure auquel le schema de           
-   presentation a liberer est associe.
+  ReleasePresentationSchema						
+  The presentation schema pPSchema is released.
+  Free all the content when the boolean force is TRUE (Extension schema)
+  or when the count of usages is null.
   ----------------------------------------------------------------------*/
 static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS, 
-				       PtrDocument pDoc)
+				       PtrDocument pDoc, ThotBool force)
 {
   APresentation      *pPres;
   AttributePres      *pAttrPres;
@@ -322,17 +321,22 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
   /* look for this schema in the PSchemas table */
   for (i = 0; i < MAX_PSCHEMAS && LoadedPSchema[i].pPresSchema != pPSchema;
        i++);
-  if (i >= MAX_PSCHEMAS)
-    /* This schema is not in the table. Probably a P Schema extension */
-    return;
-  /* this schema is in the table */
-  pPres = &LoadedPSchema[i];
-  pPres->UsageCount--;
-  if (pPres->UsageCount == 0)
-    /* c'etait la derniere utilisation, on le supprime de la table */
+  if (i < MAX_PSCHEMAS)
     {
-      pPres->pPresSchema = NULL;
-      pPres->PresSchemaName[0] = EOS;
+      /* this schema is in the table */
+      pPres = &LoadedPSchema[i];
+      pPres->UsageCount--;
+      if (pPres->UsageCount == 0)
+	/* c'etait la derniere utilisation, on le supprime de la table */
+	{
+	  pPres->pPresSchema = NULL;
+	  pPres->PresSchemaName[0] = EOS;
+	  force = TRUE;
+	}
+    }
+
+  if (force)
+    {
       /* libere les regles de presentation par defaut */
       FreePRuleList (&pPSchema->PsFirstDefaultPRule);
       /* libere les regles de presentation des boites de presentation */
@@ -367,7 +371,7 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
 	      pAttrPres = pAttrPres->ApNextAttrPres;
 	    }
 	}
-
+  
       /* libere les regles de presentation des types */
       for (i = 0; i < pSS->SsNRules; i++)
 	FreePRuleList (&pPSchema->PsElemPRule[i]);
@@ -456,7 +460,7 @@ ThotBool LoadPresentationSchema (Name schemaName, PtrSSchema pSS,
 	 if (pPfS->PfPSchema)
 	   /* release the previous presentation schema */
 	   {
-	     ReleasePresentationSchema (pPfS->PfPSchema, pSS, pDoc);
+	     ReleasePresentationSchema (pPfS->PfPSchema, pSS, pDoc, FALSE);
 	     pPfS->PfPSchema = NULL;
 	   }
 	 pPfS->PfPSchema = pPSchema;
@@ -476,35 +480,34 @@ void FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
 			     PtrDocument pDoc)
 {
   PtrDocSchemasDescr   pPfS, pPrevPfS;
-  PtrHandlePSchema     pHSP, pNextHSP;
+  PtrHandlePSchema     pHd, pNextHSP;
 
-  ReleasePresentationSchema (pPSchema, pSS, pDoc);
+  ReleasePresentationSchema (pPSchema, pSS, pDoc, FALSE);
   pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
-  if (pPfS)
-    /* check if it's the main presentation schema or an extension */
-    if (pPfS->PfPSchema == pPSchema)
-      /* it's the main presentation schema. Unlink it */
-      {
-	pPfS->PfPSchema = NULL;
-	pHSP = pPfS->PfFirstPSchemaExtens;
-	while (pHSP)
-	  {
-	    pNextHSP = pHSP->HdNextPSchema;
-	    ReleasePresentationSchema (pHSP->HdPSchema, pSS, pDoc);
-	    FreeHandleSchPres (pHSP);
-	    pHSP = pNextHSP;
-	  }
-	pPfS->PfFirstPSchemaExtens = NULL;
-	/* unlink the block */
-	if (pPfS->PfSSchema == NULL)
-	  {
-	    if (pPrevPfS)
-	      pPrevPfS = pPfS->PfNext;
-	    else
-	      pDoc->DocFirstSchDescr = pPfS->PfNext;
-	    FreeDocSchemasDescr (pPfS);
-	  }
-      }
+  if (pPfS && pPfS->PfPSchema == pPSchema)
+    /* it's the main presentation schema. Unlink it */
+    {
+      pPfS->PfPSchema = NULL;
+      pHd = pPfS->PfFirstPSchemaExtens;
+      while (pHd)
+	{
+	  pNextHSP = pHd->HdNextPSchema;
+	  /* release the extension schema */
+	  ReleasePresentationSchema (pHd->HdPSchema, pSS, pDoc, TRUE);
+	  FreeHandleSchPres (pHd);
+	  pHd = pNextHSP;
+	}
+      pPfS->PfFirstPSchemaExtens = NULL;
+      /* unlink the block */
+      if (pPfS->PfSSchema == NULL)
+	{
+	  if (pPrevPfS)
+	    pPrevPfS = pPfS->PfNext;
+	  else
+	    pDoc->DocFirstSchDescr = pPfS->PfNext;
+	  FreeDocSchemasDescr (pPfS);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -526,28 +529,34 @@ PtrHandlePSchema FirstPSchemaExtension (PtrSSchema pSS, PtrDocument pDoc)
 /*----------------------------------------------------------------------
   UnlinkPSchemaExtension
   ----------------------------------------------------------------------*/
-void UnlinkPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS, PtrPSchema pPS)
+void UnlinkPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS,
+			     PtrPSchema pPS)
 {
   PtrDocSchemasDescr  pPfS, pPrevPfS;
   PtrHandlePSchema    pHd;
 
-  if (!pDoc || !pSS || !pPS)
-    return;
-  pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
-  if (!pPfS)
-    return;
-  pHd = pPfS->PfFirstPSchemaExtens;
-  while (pHd && pHd->HdPSchema != pPS)
-    pHd = pHd->HdNextPSchema;
-  if (pHd)
+  if (pDoc && pSS && pPS)
     {
-      if (pHd->HdPrevPSchema == NULL)
-	pPfS->PfFirstPSchemaExtens = pHd->HdNextPSchema;
-      else
-	pHd->HdPrevPSchema->HdNextPSchema = pHd->HdNextPSchema;
-      if (pHd->HdNextPSchema != NULL)
-	pHd->HdNextPSchema->HdPrevPSchema = pHd->HdPrevPSchema;
-      FreeHandleSchPres (pHd);
+      pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
+      if (pPfS)
+	{
+	  pHd = pPfS->PfFirstPSchemaExtens;
+	  while (pHd && pHd->HdPSchema != pPS)
+	    pHd = pHd->HdNextPSchema;
+	  if (pHd)
+	    {
+	      /* release the extension schema */
+	      ReleasePresentationSchema (pHd->HdPSchema, pSS, pDoc, TRUE);
+	      /* release the block */
+	      if (pHd->HdPrevPSchema == NULL)
+		pPfS->PfFirstPSchemaExtens = pHd->HdNextPSchema;
+	      else
+		pHd->HdPrevPSchema->HdNextPSchema = pHd->HdNextPSchema;
+	      if (pHd->HdNextPSchema)
+		pHd->HdNextPSchema->HdPrevPSchema = pHd->HdPrevPSchema;
+	      FreeHandleSchPres (pHd);
+	    }
+	}
     }
 }
 
@@ -631,7 +640,7 @@ PtrPSchema PresentationSchema (PtrSSchema pSS, PtrDocument pDoc)
    table of loaded schemas, and return a pointer to it.
    Return NULL if schema can't be loaded.
   ----------------------------------------------------------------------*/
-PtrSSchema          LoadStructureSchema (Name schemaName, PtrDocument pDoc)
+PtrSSchema LoadStructureSchema (Name schemaName, PtrDocument pDoc)
 {
    PtrSSchema           pSSchema;
    PtrDocSchemasDescr   pPfS, pPrevPfS;

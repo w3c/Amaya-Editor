@@ -1679,7 +1679,7 @@ static ThotBool        TransformNode (strMatchChildren * sm)
   ApplyTransformation:
   applies the transformation based on sm matching descriptors
   ----------------------------------------------------------------------*/
-static ThotBool     ApplyTransformation (strMatch * sm, Document doc)
+static ThotBool ApplyTransformation (strMatch * sm, Document doc)
 {
    strGenStack          *ND;
    strMatchChildren   *DMatch;
@@ -1712,6 +1712,7 @@ static ThotBool     ApplyTransformation (strMatch * sm, Document doc)
 	  {
 	     res = res && PutEndTag (generationStack[topGenerStack]);
 	     TtaFreeMemory (generationStack[topGenerStack]->Tag);
+	     generationStack[topGenerStack]->Tag = NULL;
 	     TtaFreeMemory ( generationStack[topGenerStack]);
 	     topGenerStack--;
 	  }
@@ -1744,6 +1745,7 @@ static ThotBool     ApplyTransformation (strMatch * sm, Document doc)
 	  }
 	TtaSetErrorMessages (1);
      }
+   TtaFreeMemory (ND->Tag);
    TtaFreeMemory (ND);
    return res;
 }

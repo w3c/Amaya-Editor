@@ -2615,5 +2615,8 @@ int main (int argc, char **argv)
    gtk_exit (0);
 #endif /* _GTK */	
    exit (0);
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 }
+
+
+

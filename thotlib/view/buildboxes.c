@@ -1916,6 +1916,8 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	    ViewFrameTable[frame - 1].FrSelectionEnd.VsBox = NULL;
 
 	  /* Liberation de la boite */
+	  if (pBox->BxType == BoTable && ThotLocalActions[T_cleartable])
+	    (*ThotLocalActions[T_cleartable]) (pAb);
 	  pAb->AbBox = FreeBox (pAb->AbBox);
 	  pAb->AbBox = NULL;
 	}

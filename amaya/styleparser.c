@@ -3731,7 +3731,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   isHTML = (strcmp (TtaGetSSchemaName (ctxt->schema), "HTML") == 0);
   tsch = GetPExtension (doc, ctxt->schema, css);
   structName = TtaGetSSchemaName (ctxt->schema);
-  if (cssRule)
+  if (tsch && cssRule)
     ParseCSSRule (NULL, tsch, (PresentationContext) ctxt, cssRule, css, isHTML);
   return (selector);
 }

@@ -1452,6 +1452,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   /*CleanPictInfo (imageDesc);*/
   if (status != Supported_Format)
     {
+      pres = RealSize;
 #ifdef _WINDOWS
 #ifdef _WIN_PRINT
 	  if (TtDisplay == NULL)
@@ -1462,7 +1463,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  }
 #else /* _WIN_PRINT */
 	  imageDesc->PicType = 3;
-	  pres = RealSize;
 	  imageDesc->PicPresent = pres;
 	  drw = (*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) 
 	    (LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame,
