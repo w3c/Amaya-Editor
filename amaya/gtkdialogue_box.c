@@ -27,7 +27,8 @@ static GdkColor white = {1,0xffff,0xffff, 0xffff};
 static GtkWidget *palette_label2;
 static Color_previous *color_previous;
 /* of the "greek alphabet" dialog box */
-static int *greek_index_value = NULL; /* The index value (in "Items_Grec") of the chosen letter */
+/* The index value (in "Items_Grec") of the chosen letter */
+static int *greek_index_value = NULL;
 static int *greek_index[160];
 /* of the "Preferences" dialog box */
 static GtkWidget *general_entry1;
@@ -79,8 +80,8 @@ static GtkWidget *table_entry3;
 
 /****************************************************************/
 /*----------------------------------------------------------------
-Functions of the "Set up and print" dialog box 
-----------------------------------------------------------------*/
+  Functions of the "Set up and print" dialog box 
+  ----------------------------------------------------------------*/
 static  void Initialisation_print ()
 {
   
@@ -96,8 +97,9 @@ static  void Initialisation_print ()
 
 /*----------------------- Callback functions -----------------------------**/
 /*--------------------------------------------------------------------------
- Callback function called by the "Printer" radio_button of the "Set up and print" dialog box
-------------------------------------------------------------------------- */
+  Callback function called by the "Printer" radio_button of the "Set up and
+  print" dialog box
+  ------------------------------------------------------------------------- */
 static void printer_func (GtkWidget *widget, gpointer data )
 {
   /* Save the selection of a radio button */
@@ -112,9 +114,11 @@ static void printer_func (GtkWidget *widget, gpointer data )
 
     }
 }
+
 /*--------------------------------------------------------------------------
- Callback function called by the "PostScript file" radio_button of the "Set up and print" dialog box
-------------------------------------------------------------------------- */
+  Callback function called by the "PostScript file" radio_button of the
+  "Set up and print" dialog box
+  ------------------------------------------------------------------------- */
 static void ps_func (GtkWidget *widget, gpointer data)
 {
   /* Save the selection of the radio button */
@@ -125,10 +129,12 @@ static void ps_func (GtkWidget *widget, gpointer data)
       gtk_entry_set_text (GTK_ENTRY (entry_print1), "noname.ps");
 
     }
-}    
+}
+
 /*--------------------------------------------------------------------------
- Callback function called by the "US" radio_button of the "Set up and print" dialog box
-------------------------------------------------------------------------- */
+  Callback function called by the "US" radio_button of the "Set up and
+  print" dialog box
+  ------------------------------------------------------------------------- */
 static void us_func (GtkWidget *widget, gpointer data)
 {
   /* Save the selection of the radio button */
@@ -136,10 +142,12 @@ static void us_func (GtkWidget *widget, gpointer data)
     {
       print_form->A4_not_US = FALSE;
     }
-} 
+}
+
 /*--------------------------------------------------------------------------
- Callback function called by the "PostScript file" radio_button of the "Set up and print" dialog box
-------------------------------------------------------------------------- */
+  Callback function called by the "PostScript file" radio_button of the
+  "Set up and print" dialog box
+  ------------------------------------------------------------------------- */
 static void a4_func (GtkWidget *widget, gpointer data)
 {
   /* Save the selection of the radio button */
@@ -147,18 +155,22 @@ static void a4_func (GtkWidget *widget, gpointer data)
     {
       print_form->A4_not_US = TRUE;
     }
-}       
+}
+
 /*--------------------------------------------------------------------------
- Callback function called by the "Output" text _entry of the "Set up and print" dialog box
+  Callback function called by the "Output" text _entry of the "Set up and
+  print" dialog box
 ------------------------------------------------------------------------- */
 static void  entry_func (GtkWidget *widget, gpointer data) 
 {
    print_form->output = gtk_entry_get_text (GTK_ENTRY (entry_print1));
    printf ("%s\n" , print_form->output); 
 }
+
 /*--------------------------------------------------------------------------
- Callback function called by the "Manual feed" checkbutton of the "Set up and print" dialog box
-------------------------------------------------------------------------- */
+  Callback function called by the "Manual feed" checkbutton of the "Set up
+  and print" dialog box
+  ------------------------------------------------------------------------- */
 static void mf_func (GtkWidget *widget, gpointer data) 
 {
   if (GTK_TOGGLE_BUTTON (widget)->active) 
@@ -166,9 +178,11 @@ static void mf_func (GtkWidget *widget, gpointer data)
   else
     print_form->Manual_feed = FALSE;
 }
+
 /*--------------------------------------------------------------------------
- Callback function called by the "Table of contents" checkbutton of the "Set up and print" dialog box
-------------------------------------------------------------------------- */
+  Callback function called by the "Table of contents" checkbutton of the
+  "Set up and print" dialog box
+  ------------------------------------------------------------------------- */
 static void tc_func (GtkWidget *widget, gpointer data) 
 {
    if (GTK_TOGGLE_BUTTON (widget)->active) 
@@ -176,9 +190,11 @@ static void tc_func (GtkWidget *widget, gpointer data)
   else
     print_form->Table_of_contents = FALSE;
 }
+
 /*--------------------------------------------------------------------------
- Callback function called by the "Table of links" checkbutton of the "Set up and print" dialog box
-------------------------------------------------------------------------- */
+ Callback function called by the "Table of links" checkbutton of the "Set
+ up and print" dialog box
+ ------------------------------------------------------------------------- */
 static void tl_func (GtkWidget *widget, gpointer data) 
 {
   if (GTK_TOGGLE_BUTTON (widget)->active) 
@@ -186,9 +202,11 @@ static void tl_func (GtkWidget *widget, gpointer data)
   else
     print_form->Table_of_links = FALSE;
 }
+
 /*--------------------------------------------------------------------------
- Callback function called by the "Print URL" checkbutton of the "Set up and print" dialog box
-------------------------------------------------------------------------- */
+ Callback function called by the "Print URL" checkbutton of the "Set up
+ and print" dialog box
+ ------------------------------------------------------------------------- */
 static void pu_func (GtkWidget *widget, gpointer data) 
 {
  if (GTK_TOGGLE_BUTTON (widget)->active) 
@@ -196,9 +214,11 @@ static void pu_func (GtkWidget *widget, gpointer data)
   else
     print_form->Print_URL = FALSE;
 }
+
 /*--------------------------------------------------------------------------
- Callback function called by the "Print" button of the "Set up and print" dialog box
-------------------------------------------------------------------------- */
+  Callback function called by the "Print" button of the "Set up and print"
+  dialog box
+  ------------------------------------------------------------------------- */
 static void print_func (GtkWidget *widget, gpointer data) 
 {
   printf ("%s\t",  print_form->output );
@@ -209,20 +229,21 @@ static void print_func (GtkWidget *widget, gpointer data)
   printf ("Table_of_links = %d\t",print_form->Table_of_links);
   printf ("Print_URL = %d\n", print_form->Print_URL);
 }
+
 /*--------------------------------------------------------------------------
- Callback function called by the "Cancel" button of the "Set up and print" dialog box
-------------------------------------------------------------------------- */
- void cancel_func (GtkWidget *widget, gpointer data)
+  Callback function called by the "Cancel" button of the "Set up and print"
+  dialog box
+  ------------------------------------------------------------------------- */
+void cancel_func (GtkWidget *widget, gpointer data)
 {
   gtk_widget_destroy (GTK_WIDGET (data));
 
 }
 
 /*---------------------------------------------------------------------------
- Function that creates the "setup and print" dialog 
----------------------------------------------------------------------------*/
-GtkWidget*
-create_dialog_print ()
+  Function that creates the "setup and print" dialog 
+  ---------------------------------------------------------------------------*/
+GtkWidget *create_dialog_print ()
 {
   GtkWidget *dialog_print1;
   GtkWidget *dialog_vbox_print1;
@@ -428,9 +449,11 @@ create_dialog_print ()
 /* End of "Set up and print functions */
 /*******************************************************************************/
 /*----------------------------------------------------------------
-Function that creates a "New HTML document" or a "New CSS style sheet " dialog box. 
-Callback function attached to widget of this dialog box are in new_file_selection.c
-----------------------------------------------------------------*/
+  Function that creates a "New HTML document" or a "New CSS style
+  sheet " dialog box. 
+  Callback function attached to widget of this dialog box are
+  in new_file_selection.c
+  ----------------------------------------------------------------*/
 GtkWidget *create_dialog_new (gchar *title)
 {
   GtkWidget *dialog_new;
@@ -455,10 +478,12 @@ GtkWidget *create_dialog_new (gchar *title)
  gtk_widget_show (file_selection_frame);
  return (dialog_new);
 }
+
 /*----------------------------------------------------------------
-Function that creates a "Save as" dialog box. 
-Callback function attached to widget of this dialog box are in new_file_selection.c
-----------------------------------------------------------------*/
+ Function that creates a "Save as" dialog box. 
+ Callback function attached to widget of this dialog box are in
+ new_file_selection.c
+ ----------------------------------------------------------------*/
 GtkWidget *create_dialog_save (gchar * title)
 {
   GtkWidget *dialog_save;
@@ -482,10 +507,10 @@ GtkWidget *create_dialog_save (gchar * title)
  gtk_widget_show (file_selection_frame);
  return (dialog_save);
 }
-/****************************************************************/
+
 /*----------------------------------------------------------------
-Functions of the "Style" dialog box 
-----------------------------------------------------------------*/
+ Functions of the "Style" dialog box 
+ ----------------------------------------------------------------*/
 /* This is an internally used function to set notebook tab widgets. */
 void set_notebook_tab (GtkWidget *notebook, gint page_num, GtkWidget *widget)
 {
@@ -522,95 +547,103 @@ static void Initialisation_style ()/* il faudra faire un free */
   format_style->indent_pt = atoi (temp);
 
   
-}  
-/* Callback function of the "font family" combo box  of the "character" frame */
-void
-combo_font_func                          (GtkWidget       *widget,
-                                        gpointer         user_data)
+}
+
+/*----------------------------------------------------------------
+ Callback function of the "font family" combo box  of the
+ "character" frame 
+ ----------------------------------------------------------------*/
+void combo_font_func (GtkWidget *widget, gpointer         user_data)
 {
 char_style->font_family = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (combo_font)->entry));
 printf ("%s\n",char_style->font_family);
 }
-/* Callback function of the "character style" combo box  of the "character" frame */
-void
-combo_char_func                          (GtkWidget       *widget,
+
+/*----------------------------------------------------------------
+ Callback function of the "character style" combo box  of the
+ "character" frame 
+ ----------------------------------------------------------------*/
+void combo_char_func (GtkWidget       *widget,
                                         gpointer         user_data)
 {
   char_style->character = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (combo_char)->entry));
   printf ("%s\n",char_style->character);
 }
-/* Callback function of the "underline" combo box  of the "character" frame */
-void
-combo_underline_func                          (GtkWidget       *widget,
+
+/*----------------------------------------------------------------
+ Callback function of the "underline" combo box  of the
+ "character" frame 
+ ----------------------------------------------------------------*/
+void combo_underline_func (GtkWidget       *widget,
                                         gpointer         user_data)
 {
  char_style->underline = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (combo_underline)->entry));
  printf ("%s\n",char_style->underline);
 }
-/* Callback function of the "body size" combo box of the "character" frame*/
-void
-combo_body_size_func                          (GtkWidget       *widget,
-                                        gpointer         user_data)
+
+/*----------------------------------------------------------------
+ Callback function of the "body size" combo box of the
+ "character" frame
+ ----------------------------------------------------------------*/
+void combo_body_size_func (GtkWidget *widget, gpointer user_data)
 {
   STRING temp;
   temp = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (combo_body_size)->entry));
   char_style->body_size = atoi(temp);
   printf ("%d\n",char_style->body_size);
 }
-/* Callback function of the "apply" button of the "character" frame */
-void
-ch_apply_func                          (GtkButton       *button,
-                                        gpointer         user_data)
+
+/*----------------------------------------------------------------
+ Callback function of the "apply" button of the "character" frame 
+ ----------------------------------------------------------------*/
+void ch_apply_func (GtkButton *button, gpointer user_data)
 {
   printf("apply\n");
 }
-/* Callback function of the "done" button of the "character" frame */
 
-void
-ch_done_func                           (GtkButton       *button,
-                                        gpointer         user_data)
+/*----------------------------------------------------------------
+ Callback function of the "done" button of the "character" frame 
+ ----------------------------------------------------------------*/
+void ch_done_func (GtkButton *button, gpointer user_data)
 {
   printf("done\n");
 }
-/* Callback function called by a colored  button */
-void button_press_func (GtkButton       *button,
-			GdkEventButton *event,
-			gpointer         data)
+
+/*----------------------------------------------------------------
+ Callback function called by a colored  button 
+ ----------------------------------------------------------------*/
+void button_press_func (GtkButton *button, GdkEventButton *event,
+			gpointer data)
 {
   Color_form *color_inter = (Color_form *)data;
   gchar *str1;
   gchar *str2;
   gchar *str3;
 
- 
-
   gtk_label_get (GTK_LABEL (color_inter->label), &str1);
- 
-  
-  /* if the left button is pressed then the index of the foreground color is modified */
-  if (event->button== 1){
-    if (color_previous->label_f !=NULL) {
+  /* if the left button is pressed then the index of the foreground
+     color is modified */
+  if (event->button== 1)
+    {
+    if (color_previous->label_f !=NULL)
+      {
       gtk_label_get (GTK_LABEL (color_previous->label_f), &str2);
-      if (strcmp(str2,"F/B")==0){ 
+      if (strcmp(str2,"F/B")==0)
 	gtk_label_set_text (GTK_LABEL (color_previous->label_f), "B");
-
-     }
-     else {
+      else
 	gtk_label_set_text (GTK_LABEL (color_previous->label_f), "");
       }
-    }
-    if ((strcmp(str1,"F")==0)||(strcmp(str1,"")==0)){ 
-	gtk_label_set_text (GTK_LABEL (color_inter->label), "F");
-    }
-    else if ((strcmp(str1,"B")==0)||(strcmp(str1,"F/B")==0)){ 
+    if ((strcmp(str1,"F")==0)||(strcmp(str1,"")==0)) 
+      gtk_label_set_text (GTK_LABEL (color_inter->label), "F");
+    else if ((strcmp(str1,"B")==0)||(strcmp(str1,"F/B")==0)) 
       gtk_label_set_text (GTK_LABEL (color_inter->label), "F/B");
-    }
     
     color_previous->indice_f = color_inter->indice;
     color_previous->label_f = color_inter->label;
   }
 
-  /* if the middle or right button is pressed then the index of the foreground color is modified */
+  /* if the middle or right button is pressed then the index
+     of the foreground color is modified */
   if ((event->button== 2)||(event->button ==3))
     {	
       if (color_previous->label_b !=NULL) {
@@ -635,108 +668,128 @@ void button_press_func (GtkButton       *button,
       }
 
 }
-/* Callback function of the "apply" button of the "character" frame */
-void
-pal_apply_func                          (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function of the "apply" button of the "character" frame 
+ ----------------------------------------------------------------*/
+void pal_apply_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("apply\n");
 }
-/* Callback function of the "done" button of the "character" frame */
 
-void
-pal_done_func                           (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function of the "done" button of the "character" frame 
+ ----------------------------------------------------------------*/
+void pal_done_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("done\n");
 }
 
-/* Callback function of the left align radiobutton of the "format" frame */
-void
-left_align_func                          (GtkWidget       *widget,
+/*----------------------------------------------------------------
+ Callback function of the left align radiobutton of the "format" frame 
+ ----------------------------------------------------------------*/
+void left_align_func (GtkWidget       *widget,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->align = 1;
 }
-/* Callback function of the right align radiobutton of the "format" frame */
-void
-right_align_func                          (GtkWidget       *widget,
+
+/*----------------------------------------------------------------
+ Callback function of the right align radiobutton of the "format" frame 
+ ----------------------------------------------------------------*/
+void right_align_func (GtkWidget       *widget,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->align = 2;
 }
-/* Callback function of the center align radiobutton of the "format" frame */
-void
-center_align_func                          (GtkWidget       *widget,
+
+/*----------------------------------------------------------------
+ Callback function of the center align radiobutton of the "format" frame 
+ ----------------------------------------------------------------*/
+void center_align_func (GtkWidget       *widget,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->align = 3;
 
 }
-/* Callback function of the "default" align radiobutton of the "format" frame */
-void
-default_align_func                          (GtkWidget       *widget,
+
+/*----------------------------------------------------------------
+ Callback function of the "default" align radiobutton of the "format" frame 
+ ----------------------------------------------------------------*/
+void default_align_func (GtkWidget       *widget,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->align = 4;
 }
-/* Callback of the "Yes" radiobutton  of the "format" frame */
-void
-yes_jus_func                           (GtkButton       *widget,
+
+/*----------------------------------------------------------------
+ Callback of the "Yes" radiobutton  of the "format" frame 
+ ----------------------------------------------------------------*/
+void yes_jus_func (GtkButton       *widget,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->justification = 1;
 }
 
-/* Callback of the "No" radiobutton of the "format" frame */
-void
-no_jus_func                            (GtkButton       *widget,
+/*----------------------------------------------------------------
+ Callback of the "No" radiobutton of the "format" frame 
+ ----------------------------------------------------------------*/
+void no_jus_func (GtkButton       *widget,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->justification = 2;
 }
 
-/* Callback of the "Default" radiobutton of the "format" frame */
-void
-default_jus_func                      (GtkButton       *widget,
+/*----------------------------------------------------------------
+ Callback of the "Default" radiobutton of the "format" frame 
+ ----------------------------------------------------------------*/
+void default_jus_func (GtkButton       *widget,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->justification = 3;
 }
-/* Callback of the "indent1" radiobutton of the "format" frame */
-void
-indent1_func                      (GtkButton       *widget,
+
+/*----------------------------------------------------------------
+ Callback of the "indent1" radiobutton of the "format" frame 
+ ----------------------------------------------------------------*/
+void indent1_func (GtkButton       *widget,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->indent = 1;
 }
-/* Callback of the "indent2" radiobutton of the "format" frame */
-void
-indent2_func                      (GtkButton       *widget,
+
+/*----------------------------------------------------------------
+ Callback of the "indent2" radiobutton of the "format" frame 
+ ----------------------------------------------------------------*/
+void indent2_func (GtkButton       *widget,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->indent = 2;
 }
-/* Callback of the "Default" radiobutton of the "format" frame */
-void
-default_indent_func                      (GtkButton       *widget,
+
+/*----------------------------------------------------------------
+ Callback of the "Default" radiobutton of the "format" frame 
+ ----------------------------------------------------------------*/
+void default_indent_func (GtkButton       *widget,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->indent = 3;
 }
-/* Callback of the "Indent (pt)" entry  of the "format" frame */
-void
-indent_pt_func                         (GtkEditable     *editable,
+/*----------------------------------------------------------------
+ Callback of the "Indent (pt)" entry  of the "format" frame 
+ ----------------------------------------------------------------*/
+void indent_pt_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   STRING temp; 
@@ -744,41 +797,51 @@ indent_pt_func                         (GtkEditable     *editable,
   temp = gtk_entry_get_text (GTK_ENTRY (entry_format1));
   format_style->indent_pt = atoi (temp);
 }
-/* Callback of the "small" radiobutton of the "format" frame */
-void
-small_line_spcg_func                      (GtkButton       *widget,
+
+/*----------------------------------------------------------------
+ Callback of the "small" radiobutton of the "format" frame 
+ ----------------------------------------------------------------*/
+void small_line_spcg_func (GtkButton       *widget,
                                         gpointer         user_data)
 {
  if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->line_spcg = 1;
 }
-/* Callback of the "medium" radiobutton of the "format" frame */
-void
-medium_line_spcg_func                      (GtkButton       *widget,
+
+/*----------------------------------------------------------------
+ Callback of the "medium" radiobutton of the "format" frame 
+ ----------------------------------------------------------------*/
+void medium_line_spcg_func (GtkButton       *widget,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->line_spcg = 2;
 }
-/* Callback of the "large" radiobutton of the "format" frame */
-void
-large_line_spcg_func                      (GtkButton       *widget,
+
+/*----------------------------------------------------------------
+ Callback of the "large" radiobutton of the "format" frame 
+ ----------------------------------------------------------------*/
+void large_line_spcg_func (GtkButton       *widget,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->line_spcg = 3;
 }
-/* Callback of the "Default" radiobutton of the "format" frame */
-void
-default_line_spcg_func                      (GtkButton       *widget,
+
+/*----------------------------------------------------------------
+ Callback of the "Default" radiobutton of the "format" frame 
+ ----------------------------------------------------------------*/
+void default_line_spcg_func (GtkButton *widget,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (widget)->active)
     format_style->line_spcg = 4;
 }
-/* Callback of the "line spacing (pt)" entry  of the "format" frame */
-void
-line_spcg_pt_func                      (GtkEditable     *editable,
+
+/*----------------------------------------------------------------
+ Callback of the "line spacing (pt)" entry  of the "format" frame 
+ ----------------------------------------------------------------*/
+void line_spcg_pt_func (GtkEditable *editable,
                                         gpointer         user_data)
 {
   STRING temp;
@@ -787,9 +850,10 @@ line_spcg_pt_func                      (GtkEditable     *editable,
   format_style->line_spcg_pt = atoi(temp);
 }
 
-/* Callback of the "Apply" button of the "format" frame */
-void
-fo_apply_func                          (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback of the "Apply" button of the "format" frame 
+ ----------------------------------------------------------------*/
+void fo_apply_func (GtkButton *button,
                                         gpointer         user_data)
 {
   printf("apply\n");
@@ -801,16 +865,19 @@ fo_apply_func                          (GtkButton       *button,
   printf("%d\n",format_style->indent_pt);
 
 }
-/* Callback of the "Done" button of the "format" frame */
 
-void
-fo_done_func                           (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback of the "Done" button of the "format" frame 
+ ----------------------------------------------------------------*/
+void fo_done_func (GtkButton *button,
                                         gpointer         user_data)
 {
   printf ("done\n");
 }
 
 
+/*----------------------------------------------------------------
+ ----------------------------------------------------------------*/
 GtkWidget *create_dialog_style()
 {
   GtkWidget *dialog1;     /* Container widgets */
@@ -1582,34 +1649,36 @@ GtkWidget *create_dialog_style()
   Initialisation_style ();
   return (dialog1);
 }
-/****************************************************************/
+
 /*----------------------------------------------------------------
-Functions of the "Apply Class" dialog box 
-----------------------------------------------------------------*/
-/* Callback function called by the "Select a class" text widget */
-void
-class_text_func                        (GtkEditable     *editable,
+ Callback function called by the "Select a class" text widget 
+ ----------------------------------------------------------------*/
+void class_text_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the "Confirm" button widget */
-void
-class_confirm_func                     (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "Confirm" button widget 
+ ----------------------------------------------------------------*/
+void class_confirm_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the "Done" button widget */
-void
-class_done_func                        (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "Done" button widget 
+ ----------------------------------------------------------------*/
+void class_done_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
-/* Function that creates an "Apply class" dialog box */
+/*----------------------------------------------------------------
+ Function that creates an "Apply class" dialog box 
+ ----------------------------------------------------------------*/
 GtkWidget*
 create_dialog_apply_class ()
 {
@@ -1686,53 +1755,55 @@ create_dialog_apply_class ()
   return dialog1;
 }
 
-/****************************************************************/
 /*----------------------------------------------------------------
-Functions of the "Language attributes" dialog box 
-----------------------------------------------------------------*/
-/* Callback function called by the entry widget*/
-void
-attr_lang_entry_func                    (GtkEditable     *editable,
+ Callback function called by the entry widget
+ ----------------------------------------------------------------*/
+void attr_lang_entry_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the text widget*/
-void
-attr_lang_text_func                    (GtkEditable     *editable,
+/*----------------------------------------------------------------
+ Callback function called by the text widget
+ ----------------------------------------------------------------*/
+void attr_lang_text_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the "Apply" button */
-void
-attr_lang_apply_func                   (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "Apply" button 
+ ----------------------------------------------------------------*/
+void attr_lang_apply_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the "Remove attribute" button */
-void
-attr_lang_remove_func                  (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "Remove attribute" button 
+ ----------------------------------------------------------------*/
+void attr_lang_remove_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the "Done" button */
-void
-attr_lang_done_func                    (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "Done" button 
+ ----------------------------------------------------------------*/
+void attr_lang_done_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
 
-/* Create an "Attribute" dialog box*/
-GtkWidget*
-create_dialog_attr_lang ()
+/*----------------------------------------------------------------
+ Create an "Attribute" dialog box
+ ----------------------------------------------------------------*/
+GtkWidget *create_dialog_attr_lang ()
 {
   GtkWidget *dialog1;
   GtkWidget *dialog_vbox1;
@@ -1771,7 +1842,7 @@ create_dialog_attr_lang ()
   attr_lang_label2 = gtk_label_new ("Inherited language : English");
   gtk_widget_show (attr_lang_label2);
   gtk_table_attach (GTK_TABLE (attr_lang_table1), attr_lang_label2, 0, 1, 3, 4,
-                    (GtkAttachOptions) GTK_EXPAND | GTK_FILL, (GtkAttachOptions) GTK_EXPAND | GTK_FILL, 0, 5);
+(GtkAttachOptions) GTK_EXPAND | GTK_FILL, (GtkAttachOptions) GTK_EXPAND | GTK_FILL, 0, 5);
   gtk_label_set_justify (GTK_LABEL (attr_lang_label2), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (attr_lang_label2), 0.1, 0.5);
 
@@ -1864,29 +1935,28 @@ create_dialog_attr_lang ()
 
   return dialog1;
 }
-/****************************************************************/
+
 /*----------------------------------------------------------------
-Functions of the "Close" dialog box 
-----------------------------------------------------------------*/
-/*--------------------------------------------------------------------------
- Callback function called by the "Save document" button
-------------------------------------------------------------------------- */
+  Callback function called by the "Save document" button
+ ----------------------------------------------------------------*/
 static  void sd_func (GtkWidget *widget, gpointer data) 
 {
  
 }
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Close don't save" button
-------------------------------------------------------------------------- */
+------------------------------------------------------------------------- 
+ ----------------------------------------------------------------*/
 static  void cds_func (GtkWidget *widget, gpointer data) 
 {
  printf("Close, don't save \n");
 }
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Cancel" button
-------------------------------------------------------------------------- */
+------------------------------------------------------------------------- 
+ ----------------------------------------------------------------*/
 static  void cancel_close_func (GtkWidget *widget, gpointer data) 
 {
  gtk_widget_destroy (GTK_WIDGET (data));
@@ -1956,19 +2026,20 @@ create_dialog_close ()
   return dialog_close1;
 }
 /****************************************************************/
-/*----------------------------------------------------------------
+/*------------------------------------------------------
 Functions of the "Confirm" dialog box 
 ----------------------------------------------------------------*/
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Confirm" button
-------------------------------------------------------------------------- */
+------------------------------------------------------------------------- 
+ ----------------------------------------------------------------*/
 static  void confirm_func (GtkWidget *widget, gpointer data) 
 {
  printf("confirmer\n");
 }
 
 
-/*----------------------------------------------------------------------------
+/*------------------------------------------------------------------
  Function that creates the "Confirm" dialog 
 ----------------------------------------------------------------------------*/
 GtkWidget*
@@ -2020,34 +2091,38 @@ create_dialog_confirm ()
 /*----------------------------------------------------------------
 Functions of the "Create rule" dialog box 
 ----------------------------------------------------------------*/
-/* Callback function called by the text widget */
-void
-create_rule_text_func                        (GtkEditable     *editable,
+/*----------------------------------------------------------------
+ Callback function called by the text widget 
+ ----------------------------------------------------------------*/
+void create_rule_text_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
 
 }
 
 
-/* Callback function called by the entry widget */
-void
-create_rule_entry_func                       (GtkEditable     *editable,
+/*----------------------------------------------------------------
+ Callback function called by the entry widget 
+ ----------------------------------------------------------------*/
+void create_rule_entry_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the "Confirm" button */
-void
-create_rule_confirm_func                     (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "Confirm" button 
+ ----------------------------------------------------------------*/
+void create_rule_confirm_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the "Done" button */
-void
-create_rule_done_func                        (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "Done" button 
+ ----------------------------------------------------------------*/
+void create_rule_done_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
@@ -2132,16 +2207,19 @@ create_dialog_create_rule ()
 /*----------------------------------------------------------------
 Functions of the "Math" dialog box 
 ----------------------------------------------------------------*/
-/* Callback function called by a button of the "greek alphabet" dialog_box */
+/*----------------------------------------------------------------
+ Callback function called by a button of the "greek alphabet" dialog_box 
+ ----------------------------------------------------------------*/
 static void math_button_press_func (GtkWidget *widget,
 			gpointer         data)
 {
   greek_index_value = (int *)data;
   printf ("%d\n", *greek_index_value);
 }
-/* Function that creates a "greek alphabet" dialogbox */
-static GtkWidget *
-Create_greek_dialog ()
+/*----------------------------------------------------------------
+ Function that creates a "greek alphabet" dialogbox 
+ ----------------------------------------------------------------*/
+static GtkWidget *Create_greek_dialog ()
 {
 #ifdef _0
   GtkWidget *greek_dialog;
@@ -2211,7 +2289,9 @@ return NULL;
 }
 
   
-/* Function that creates a pixmap widget */
+/*----------------------------------------------------------------
+ Function that creates a pixmap widget 
+ ----------------------------------------------------------------*/
      GtkWidget *xpm_label_box (GtkWidget *parent, gchar *xpm_filename)
      {
        
@@ -2230,113 +2310,127 @@ return NULL;
 	 return (pixmapwid);
      }
 
-/* Callback function called by the "math" button */
-static void
-math_func                              (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "math" button 
+ ----------------------------------------------------------------*/
+static void math_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the "root" button */
-static void
-root_func                              (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "root" button 
+ ----------------------------------------------------------------*/
+static void root_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the "sqrt" button */
-static void
-sqrt_func                              (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "sqrt" button 
+ ----------------------------------------------------------------*/
+static void sqrt_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the "frac" button */
-static void
-frac_func                              (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "frac" button 
+ ----------------------------------------------------------------*/
+static void frac_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the "subsup" button */
-static void
-subsup_func                            (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "subsup" button 
+ ----------------------------------------------------------------*/
+static void subsup_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
-/* Callback function called by the "sub" button */
+/*----------------------------------------------------------------
+ Callback function called by the "sub" button 
+ ----------------------------------------------------------------*/
 
-static void
-sub_func                               (GtkButton       *button,
+static void sub_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
-/* Callback function called by the "sup" button */
+/*----------------------------------------------------------------
+ Callback function called by the "sup" button 
+ ----------------------------------------------------------------*/
 
- static void
-sup_func                               (GtkButton       *button,
+ static void sup_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
-/* Callback function called by the "overunder" button */
+/*----------------------------------------------------------------
+ Callback function called by the "overunder" button 
+ ----------------------------------------------------------------*/
 
-static void
-overunder_func                         (GtkButton       *button,
-                                        gpointer         user_data)
-{
-
-}
-
-/* Callback function called by the "under" button */
-static void
-under_func                             (GtkButton       *button,
-                                        gpointer         user_data)
-{
-
-}
-/* Callback function called by the "over" button */
-
-static void
-over_func                              (GtkButton       *button,
+static void overunder_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the "fence" button */
-static void
-fence_func                             (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "under" button 
+ ----------------------------------------------------------------*/
+static void under_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
-/* Callback function called by the "mscript" button */
+/*----------------------------------------------------------------
+ Callback function called by the "over" button 
+ ----------------------------------------------------------------*/
 
-static void
-mscript_func                           (GtkButton       *button,
-                                        gpointer         user_data)
-{
-
-}
-
-/* Callback function called by the "matrix" button */
-static void
-matrix_func                            (GtkButton       *button,
+static void over_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
 }
 
-/* Callback function called by the "greek" button */
-static void
-greek_func                             (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "fence" button 
+ ----------------------------------------------------------------*/
+static void fence_func (GtkButton       *button,
+                                        gpointer         user_data)
+{
+
+}
+/*----------------------------------------------------------------
+ Callback function called by the "mscript" button 
+ ----------------------------------------------------------------*/
+
+static void mscript_func (GtkButton       *button,
+                                        gpointer         user_data)
+{
+
+}
+
+/*----------------------------------------------------------------
+ Callback function called by the "matrix" button 
+ ----------------------------------------------------------------*/
+static void matrix_func (GtkButton       *button,
+                                        gpointer         user_data)
+{
+
+}
+
+/*----------------------------------------------------------------
+ Callback function called by the "greek" button 
+ ----------------------------------------------------------------*/
+static void greek_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   GtkWidget *greek_dialog;
@@ -2344,9 +2438,10 @@ greek_func                             (GtkButton       *button,
   gtk_widget_show (greek_dialog);
 }
 
-/* Callback function called by the "done" button */
-static void
-done_math_func                         (GtkButton       *button,
+/*----------------------------------------------------------------
+ Callback function called by the "done" button 
+ ----------------------------------------------------------------*/
+static void done_math_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   gtk_widget_destroy (GTK_WIDGET (user_data));
@@ -2586,9 +2681,9 @@ create_dialog_math ()
 }
 /****************************************************************/
 /*----------------------------------------------------------------
-Functions of the "Preferences" dialog box 
-----------------------------------------------------------------*/
-static void Initialisation_preferences ()/* il faudra faire un free */
+  Functions of the "Preferences" dialog box 
+  ----------------------------------------------------------------*/
+static void Initialisation_preferences ()/* il faudra faire un free 
 {
   general = (General *)TtaGetMemory (sizeof (General)); 
   general->home_page = "www.w3c.org";
@@ -2598,12 +2693,12 @@ static void Initialisation_preferences ()/* il faudra faire un free */
   general->dbl_click_delay = 10;
   general->zoom = 10;
   general->menu_font_size =10;
-  general->dlg_lang = TEXT ("en");
+  general->dlg_lang = "en";
 
   publish = (Publish *)TtaGetMemory (sizeof (Publish));
   publish->use_etags = TRUE;
   publish->verify_puts = FALSE;
-  publish->default_url = TEXT ("www.w3c.org");
+  publish->default_url = "www.w3c.org";
 
   cache = (Cache *)TtaGetMemory(sizeof (Cache));
   cache->directory = "/HOME";
@@ -2619,31 +2714,29 @@ static void Initialisation_preferences ()/* il faudra faire un free */
   proxy->no_proxy_domains = "h";
 
   color = (Color *)TtaGetMemory (sizeof (Color));
-  color->doc_forgrd = TEXT ("a");
-  color->doc_backgrd = TEXT ("b");
-  color->menu_forgrd = TEXT ("c");
-  color->menu_backgrd = TEXT ("d");
+  color->doc_forgrd = "a";
+  color->doc_backgrd = "b";
+  color->menu_forgrd = "c";
+  color->menu_backgrd = "d";
 
   list_language = (STRING *)TtaGetMemory(sizeof (STRING));
   *list_language = "en, fr";
  }
 
 /************************************************************************/
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "home page" text _entry of the general preferences frame
-------------------------------------------------------------------------- */
-void
-home_page_func                         (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void home_page_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   general->home_page = gtk_entry_get_text (GTK_ENTRY (general_entry1)); 
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "double click delay" text _entry of the general preferences frame
-------------------------------------------------------------------------- */
+ ----------------------------------------------------------------*/
 
-void
-dbl_click_delay_func                   (GtkEditable     *editable,
+void dbl_click_delay_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   gchar *temp;
@@ -2652,11 +2745,10 @@ dbl_click_delay_func                   (GtkEditable     *editable,
   general->dbl_click_delay = atoi(temp);
 }
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "zoom " text _entry of the general preferences frame
-------------------------------------------------------------------------- */
-void
-zoom_func                              (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void zoom_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   gchar *temp;
@@ -2665,21 +2757,19 @@ zoom_func                              (GtkEditable     *editable,
   general->zoom = atoi(temp);
 }
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "dialogue language" text _entry of the general preferences frame
-------------------------------------------------------------------------- */
-void
-dialogue_language_func                 (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void dialogue_language_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   general->dlg_lang = gtk_entry_get_text (GTK_ENTRY (general_entry4)); 
 }
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "menu font size" text _entry of the general preferences frame
-------------------------------------------------------------------------- */
-void
-menu_font_size_func                    (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void menu_font_size_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
 gchar *temp;
@@ -2687,11 +2777,10 @@ gchar *temp;
   temp = gtk_entry_get_text (GTK_ENTRY (general_entry5)); 
   general->menu_font_size = atoi(temp);
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "enable multi key" checkbutton of the general preferences frame
-------------------------------------------------------------------------- */
-void
-enable_multi_key_func                  (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void enable_multi_key_func (GtkButton       *button,
                                         gpointer         user_data)
 {
  if (GTK_TOGGLE_BUTTON (button)->active) 
@@ -2700,11 +2789,10 @@ enable_multi_key_func                  (GtkButton       *button,
   general->multi_key = FALSE;
 }
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Show background images" checkbutton of the general preferences frame
-------------------------------------------------------------------------- */
-void
-show_bckgd_images_func                 (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void show_bckgd_images_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (button)->active) 
@@ -2713,11 +2801,10 @@ show_bckgd_images_func                 (GtkButton       *button,
     general->show_bckgd_image = FALSE;
   
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Double click activates link" checkbutton of the general preferences frame
-------------------------------------------------------------------------- */
-void
-dbl_click_activates_link_func          (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void dbl_click_activates_link_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (button)->active) 
@@ -2726,22 +2813,18 @@ dbl_click_activates_link_func          (GtkButton       *button,
     general->dbl_click_activate = FALSE;
 }
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Apply " button of the general preferences frame
-------------------------------------------------------------------------- */
-void
-hp_apply_func                          (GtkButton       *button,
-                                        gpointer         user_data)
+ ----------------------------------------------------------------*/
+void hp_apply_func (GtkButton *button, gpointer user_data)
 {
   printf("apply general preferences\n");
 }
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Defaults " button of the general preferences frame
-------------------------------------------------------------------------- */
-void
-hp_defaults_func                       (GtkButton       *button,
-                                        gpointer         user_data)
+ ----------------------------------------------------------------*/
+void hp_defaults_func (GtkButton *button, gpointer user_data)
 {
   gtk_entry_set_text (GTK_ENTRY (general_entry1), "www.yahoo.fr");
   gtk_entry_set_text (GTK_ENTRY (general_entry2), "500");
@@ -2755,19 +2838,17 @@ hp_defaults_func                       (GtkButton       *button,
   general->show_bckgd_image = TRUE;
   general->multi_key = FALSE;
   general->home_page =
-  general->dlg_lang = TEXT ("en_US");
+  general->dlg_lang = "en_US";
   general->zoom = 10;
   general->menu_font_size =10;
   general->dbl_click_delay = 500;
 }
 
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "done " button of the general preferences frame
-------------------------------------------------------------------------- */
-void
-hp_done_func                           (GtkButton       *button,
-                                        gpointer         user_data)
+ ----------------------------------------------------------------*/
+void hp_done_func (GtkButton *button, gpointer user_data)
 {
 printf ("dbl_click_activate : %d\n",general->dbl_click_activate);
 printf ("show_bckgd_image :%d \n",general->show_bckgd_image);
@@ -2780,23 +2861,20 @@ printf ("dbl_click_delay  :%d \n",general->dbl_click_delay  );
 
 }
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "use ETAGS and preconditions" checkbutton of the publish preferences frame
-------------------------------------------------------------------------- */
-void
-etags_func                             (GtkButton       *button,
-                                        gpointer         user_data)
+ ----------------------------------------------------------------*/
+void etags_func (GtkButton *button, gpointer user_data)
 {
  if (GTK_TOGGLE_BUTTON (button)->active) 
     publish->use_etags = TRUE;
   else
     publish->use_etags = FALSE;
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "use ETAGS and preconditions" checkbutton of the publish preferences frame
-------------------------------------------------------------------------- */
-void
-put_with_get_func                      (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void put_with_get_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (button)->active) 
@@ -2804,20 +2882,18 @@ put_with_get_func                      (GtkButton       *button,
   else
     publish->verify_puts = FALSE;
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "default name for url s finishing in /" entry of the publish preferences frame
-------------------------------------------------------------------------- */
-void
-default_url_name_func                  (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void default_url_name_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   publish->default_url =  gtk_entry_get_text (GTK_ENTRY (publish_entry1));
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "apply" button  of the publish preferences frame
-------------------------------------------------------------------------- */
-void
-pu_apply_func                          (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void pu_apply_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 
@@ -2825,29 +2901,26 @@ pu_apply_func                          (GtkButton       *button,
   printf("verify_puts :%d\n", publish->verify_puts);
   printf("default url :%s\n", publish->default_url);
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "defaults" button  of the publish preferences frame
-------------------------------------------------------------------------- */
-void
-pu_defaults_func                       (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void pu_defaults_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("defaults\n");
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "done" button  of the publish preferences frame
-------------------------------------------------------------------------- */
-void
-pu_done_func                           (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void pu_done_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("done\n");
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "enable cache" checkbutton  of the cache  preferences frame
-------------------------------------------------------------------------- */
-void
-enable_cache_func                      (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void enable_cache_func (GtkButton       *button,
                                         gpointer         user_data)
 {
  if (GTK_TOGGLE_BUTTON (button)->active) 
@@ -2855,11 +2928,10 @@ enable_cache_func                      (GtkButton       *button,
   else
     cache->enable = FALSE;
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "cache protected documents" checkbutton  of the cache  preferences frame
-------------------------------------------------------------------------- */
-void
-Cache_protected_doc_func               (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void Cache_protected_doc_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (button)->active) 
@@ -2867,11 +2939,10 @@ Cache_protected_doc_func               (GtkButton       *button,
   else
     cache->protected_document  = FALSE;
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "disconnected mode" checkbutton  of the cache  preferences frame
-------------------------------------------------------------------------- */
-void
-disconnected_mod_func                  (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void disconnected_mod_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (button)->active) 
@@ -2879,11 +2950,10 @@ disconnected_mod_func                  (GtkButton       *button,
   else
     cache->disconnected = FALSE;
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "ignore expires : header" checkbutton  of the cache  preferences frame
-------------------------------------------------------------------------- */
-void
-ignore_expires_func                    (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void ignore_expires_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   if (GTK_TOGGLE_BUTTON (button)->active) 
@@ -2891,43 +2961,39 @@ ignore_expires_func                    (GtkButton       *button,
   else
     cache->ignore_expires = FALSE;
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "cache directory" entry  of the cache  preferences frame
-------------------------------------------------------------------------- */
-void
-cache_direcory_func                    (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void cache_direcory_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
  cache->directory =  gtk_entry_get_text (GTK_ENTRY (cache_entry1));
 
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "cache size" entry  of the cache  preferences frame
-------------------------------------------------------------------------- */
-void
-cache_size_func                        (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void cache_size_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   gchar* temp;
   temp =  gtk_entry_get_text (GTK_ENTRY (cache_entry2));
   cache->size = atoi(temp);
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "cache entry size limit" entry  of the cache  preferences frame
-------------------------------------------------------------------------- */
-void
-cache_entry_func                       (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void cache_entry_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
  gchar * temp;
   temp =  gtk_entry_get_text (GTK_ENTRY (cache_entry3));
   cache->limit_entry =  atoi(temp); 
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "apply" button  of the cache  preferences frame
-------------------------------------------------------------------------- */
-void
-cp_apply_func                          (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void cp_apply_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("cache directory :%s\n", cache->directory);
@@ -2940,122 +3006,113 @@ cp_apply_func                          (GtkButton       *button,
   printf("cache->limit_entry:%d\n", cache->limit_entry);
 
 }
-/*--------------------------------------------------------------------------
+
+/*----------------------------------------------------------------
  Callback function called by the "defaults" button  of the cache  preferences frame
-------------------------------------------------------------------------- */
-void
-cp_defaults_func                       (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void cp_defaults_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("defaults\n");
 }
-/*--------------------------------------------------------------------------
+
+/*----------------------------------------------------------------
  Callback function called by the "flush cache" button  of the cache  preferences frame
-------------------------------------------------------------------------- */
-void
-cp_flush_func                          (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void cp_flush_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("flush\n");
 }
-/*--------------------------------------------------------------------------
+
+/*----------------------------------------------------------------
  Callback function called by the "done" button  of the cache  preferences frame
-------------------------------------------------------------------------- */
-void
-cp_done_func                           (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void cp_done_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("done\n");
 }
-/*--------------------------------------------------------------------------
+
+/*----------------------------------------------------------------
  Callback function called by the "http proxy" entry  of the proxy  preferences frame
-------------------------------------------------------------------------- */
-void
-no_proxy_func                          (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void no_proxy_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   proxy->no_proxy_domains = gtk_entry_get_text (GTK_ENTRY (proxy_entry2));
- 
 }
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "no proxy on these domains" entry  of the proxy  preferences frame
-------------------------------------------------------------------------- */
-void
-http_proxy_func                        (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void http_proxy_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   proxy->http_proxy = gtk_entry_get_text (GTK_ENTRY (proxy_entry1));
 }
-/*--------------------------------------------------------------------------
+
+/*----------------------------------------------------------------
  Callback function called by the "apply" button  of the proxy  preferences frame
-------------------------------------------------------------------------- */
-void
-pr_apply_func                          (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void pr_apply_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf ("http proxy :%s \n", proxy->http_proxy );
   printf ("no proxy domains :%s \n",proxy->no_proxy_domains );
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "defaults" button  of the proxy  preferences frame
-------------------------------------------------------------------------- */
-void
-pr_defaults_func                       (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void pr_defaults_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("defaults\n");
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "done" button  of the proxy  preferences frame
-------------------------------------------------------------------------- */
-void
-pr_done_func                           (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void pr_done_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("done\n");
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "document foreground color" entry  of the color  preferences frame
-------------------------------------------------------------------------- */
-void
-doc_forgrd_clr_func                    (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void doc_forgrd_clr_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   color->doc_forgrd =  gtk_entry_get_text (GTK_ENTRY (color_entry1));
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "document background color" entry  of the color  preferences frame
-------------------------------------------------------------------------- */
-void
-doc_backgrd_clr_func                   (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void doc_backgrd_clr_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   color->doc_backgrd = gtk_entry_get_text (GTK_ENTRY (color_entry2));
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "menu foreground color" entry  of the color  preferences frame
-------------------------------------------------------------------------- */
-void
-menu_forgrd_clr_func                   (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void menu_forgrd_clr_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   color->menu_forgrd = gtk_entry_get_text (GTK_ENTRY (color_entry3));
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "menu background color" entry  of the color  preferences frame
-------------------------------------------------------------------------- */
-void
-menu_backgrd_clr_func                  (GtkEditable     *editable,
+ ----------------------------------------------------------------*/
+void menu_backgrd_clr_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   color->menu_backgrd = gtk_entry_get_text (GTK_ENTRY (color_entry4));
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "apply" button  of the color  preferences frame
-------------------------------------------------------------------------- */
-void
-co_apply_func                          (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void co_apply_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf ("color->doc_forgrd = %s\n", color->doc_forgrd);
@@ -3063,95 +3120,89 @@ co_apply_func                          (GtkButton       *button,
   printf ("  color->menu_forgrd =%s\n",color->menu_forgrd);
   printf (" color->menu_backgrd = %s\n",color->menu_backgrd);
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "defaults" button  of the color  preferences frame
-------------------------------------------------------------------------- */
-void
-co_defaults_func                       (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void co_defaults_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("defaults\n");
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "done" button  of the color  preferences frame
-------------------------------------------------------------------------- */
-void
-co_done_func                           (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void co_done_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("done\n");
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "save current geometry" button  of the geometry  preferences frame
-------------------------------------------------------------------------- */
-void
-save_current_geo_func                  (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void save_current_geo_func (GtkButton       *button,
                                         gpointer         user_data)
 {
  printf("save current geometry\n");
 }
-/*--------------------------------------------------------------------------
+
+/*----------------------------------------------------------------
  Callback function called by the "restore default geometry" button  of the geometry  preferences frame
-------------------------------------------------------------------------- */
-void
-restore_default_geo_func               (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void restore_default_geo_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 printf("restore default geometry\n");
 }
-/*--------------------------------------------------------------------------
+
+/*----------------------------------------------------------------
  Callback function called by the "done" button  of the geometry  preferences frame
-------------------------------------------------------------------------- */
-void
-ge_done_func                           (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void ge_done_func (GtkButton       *button,
                                         gpointer         user_data)
 {
 printf("done\n");
 }
-/*--------------------------------------------------------------------------
+
+/*----------------------------------------------------------------
  Callback function called by the "list of preferred languages" entry  of the language  preferences frame
-------------------------------------------------------------------------- */
-void
-list_language_func                          (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void list_language_func (GtkButton       *button,
                                         gpointer         user_data)
 {
  // gchar *temp;
  // temp = gtk_entry_get_text (GTK_ENTRY (language_entry1));
- // list_language = TEXT (temp);
+ // list_language = temp;
    *list_language = gtk_entry_get_text (GTK_ENTRY (language_entry1));
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "apply" button  of the language  preferences frame
-------------------------------------------------------------------------- */
-void
-la_apply_func                          (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void la_apply_func (GtkButton       *button,
                                         gpointer         user_data)
 {
    printf ("list language = %s\n", *list_language);
   printf("apply\n");
 }
-/*--------------------------------------------------------------------------
+
+/*----------------------------------------------------------------
  Callback function called by the "defaults" button  of the language  preferences frame
-------------------------------------------------------------------------- */
-void
-la_defaults_func                       (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void la_defaults_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("defaults\n");
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "done" button  of the language  preferences frame
-------------------------------------------------------------------------- */
-void
-la_done_func                           (GtkButton       *button,
+ ----------------------------------------------------------------*/
+void la_done_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("done\n");
 }
 
 /*************************************************************************/
-GtkWidget*
-create_dialog_preferences ()
+GtkWidget *create_dialog_preferences ()
 {
   /* container widgets */
   GtkWidget *dialog1; 
@@ -4203,23 +4254,23 @@ static void Initialisation_search ()/* il faudra faire un free */
   search_form->search_for = " ";
   search_form->replace_by = " ";
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Search for" text _entry 
-------------------------------------------------------------------------- */
+ -----------------------------------------------------------------*/
 static void  sf_func (GtkWidget *widget, gpointer data) 
 {
    search_form->search_for = gtk_entry_get_text (GTK_ENTRY (entry_search1)); 
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Replace by" text _entry 
-------------------------------------------------------------------------- */
+ -----------------------------------------------------------------*/
 static void  rb_func (GtkWidget *widget, gpointer data) 
 {
    search_form->replace_by = gtk_entry_get_text (GTK_ENTRY (entry_search2)); 
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Uppercase = lowercase" checkbutton
-------------------------------------------------------------------------- */
+ -----------------------------------------------------------------*/
 static void ul_func (GtkWidget *widget, gpointer data) 
 {
   if (GTK_TOGGLE_BUTTON (widget)->active) 
@@ -4227,9 +4278,9 @@ static void ul_func (GtkWidget *widget, gpointer data)
   else
     search_form->uppercase = FALSE;
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by a "No Replace" radio_button
-------------------------------------------------------------------------- */
+ -----------------------------------------------------------------*/
 static void nr_func (GtkWidget *widget, gpointer data)
 {
 
@@ -4239,9 +4290,9 @@ static void nr_func (GtkWidget *widget, gpointer data)
       search_form->replace = 1;
     }
 } 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Replace on request" radio_button
-------------------------------------------------------------------------- */
+ -----------------------------------------------------------------*/
 static void ron_func (GtkWidget *widget, gpointer data)
 {
 
@@ -4251,9 +4302,9 @@ static void ron_func (GtkWidget *widget, gpointer data)
       search_form->replace = 2;
     }
 } 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Automatic_replace" radio_button
-------------------------------------------------------------------------- */
+ -----------------------------------------------------------------*/
 static void ar_func (GtkWidget *widget, gpointer data)
 {
 
@@ -4263,9 +4314,9 @@ static void ar_func (GtkWidget *widget, gpointer data)
       search_form->replace = 3;
     }
 } 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Before selection" radio_button
-------------------------------------------------------------------------- */
+ -----------------------------------------------------------------*/
 static void bs_func (GtkWidget *widget, gpointer data)
 {
 
@@ -4275,9 +4326,9 @@ static void bs_func (GtkWidget *widget, gpointer data)
       search_form->selection = 1;
     }
 } 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Within selection" radio_button
-------------------------------------------------------------------------- */
+ -----------------------------------------------------------------*/
 static void ws_func (GtkWidget *widget, gpointer data)
 {
 
@@ -4287,9 +4338,9 @@ static void ws_func (GtkWidget *widget, gpointer data)
       search_form->selection = 2;
     }
 } 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "After selection" radio_button
-------------------------------------------------------------------------- */
+ -----------------------------------------------------------------*/
 static void as_func (GtkWidget *widget, gpointer data)
 {
 
@@ -4299,9 +4350,9 @@ static void as_func (GtkWidget *widget, gpointer data)
       search_form->selection = 3;
     }
 } 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "in the whole document" radio_button
-------------------------------------------------------------------------- */
+ -----------------------------------------------------------------*/
 static void itwd_func (GtkWidget *widget, gpointer data)
 {
 
@@ -4312,9 +4363,9 @@ static void itwd_func (GtkWidget *widget, gpointer data)
     }
 } 
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Confirm" button
-------------------------------------------------------------------------- */
+ -----------------------------------------------------------------*/
 static void Confirm_func (GtkWidget *widget, gpointer data) 
 {
   printf("replace :%d\n",search_form->replace);
@@ -4323,16 +4374,16 @@ static void Confirm_func (GtkWidget *widget, gpointer data)
   printf(" Replace by : %s\n", search_form->replace_by);
   printf ("U=P : %d",search_form->uppercase);
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Do not replace" button
-------------------------------------------------------------------------- */
+ -----------------------------------------------------------------*/
 static void do_not_replace_func (GtkWidget *widget, gpointer data)
 {
   printf("do not replace\n");
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Done" button
-------------------------------------------------------------------------- */
+ -----------------------------------------------------------------*/
 static void done_func (GtkWidget *widget, gpointer data)
 {
   printf("done\n");
@@ -4553,10 +4604,10 @@ create_dialog_search ()
 		      GTK_SIGNAL_FUNC (done_func), NULL);
   return dialog_search1;
 }
-/****************************************************************/
+
 /*----------------------------------------------------------------
-Functions of the "Spell checking" dialog box 
-----------------------------------------------------------------*/
+  Functions of the "Spell checking" dialog box 
+  ----------------------------------------------------------------*/
 static void Initialisation_spell ()/* il faudra faire un free */
 {
   spell_form = (Spell_form *)TtaGetMemory(sizeof (Spell_form));
@@ -4569,21 +4620,19 @@ static void Initialisation_spell ()/* il faudra faire un free */
   spell_form->replaced_word = " ";
   spell_form->ignored_word = " ";
   spell_form->proposed_word = " ";
-  
-/*spell_form->
-spell_form->*/
-    }
+  /*spell_form->spell_form->*/
+}
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Spell checking" text _entry 
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 static void  sp_func (GtkWidget *widget, gpointer data) 
 {
    spell_form->replaced_word = gtk_entry_get_text (GTK_ENTRY (entry_spell1)); 
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Number of proposals" text _entry 
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 static void  nop_func (GtkWidget *widget, gpointer data) 
 {
   gchar *temp;
@@ -4592,16 +4641,16 @@ static void  nop_func (GtkWidget *widget, gpointer data)
   spell_form->nb_proposals = atoi(temp);
 }
 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Ignore" text _entry 
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 static void  i_func (GtkWidget *widget, gpointer data) 
 {
    spell_form->ignored_word = gtk_entry_get_text (GTK_ENTRY (entry_spell3)); 
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Before selection" radio_button
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 static void spell_bs_func (GtkWidget *widget, gpointer data)
 {
 
@@ -4611,9 +4660,9 @@ static void spell_bs_func (GtkWidget *widget, gpointer data)
       spell_form->checking = 1;
     }
 } 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Within selection" radio_button
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 static void spell_ws_func (GtkWidget *widget, gpointer data)
 {
 
@@ -4623,9 +4672,9 @@ static void spell_ws_func (GtkWidget *widget, gpointer data)
       spell_form->checking = 2;
     }
 } 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "After selection" radio_button
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 static void spell_as_func (GtkWidget *widget, gpointer data)
 {
 
@@ -4635,9 +4684,9 @@ static void spell_as_func (GtkWidget *widget, gpointer data)
       spell_form->checking = 3;
     }
 } 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "in the whole document" radio_button
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 static void spell_itwd_func (GtkWidget *widget, gpointer data)
 {
 
@@ -4647,9 +4696,9 @@ static void spell_itwd_func (GtkWidget *widget, gpointer data)
       spell_form->checking = 4;
     }
 } 
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Words that are all caps" checkbutton
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 static void wtaac_func (GtkWidget *widget, gpointer data) 
 {
   if (GTK_TOGGLE_BUTTON (widget)->active) 
@@ -4657,9 +4706,9 @@ static void wtaac_func (GtkWidget *widget, gpointer data)
   else
     spell_form->caps = FALSE;
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "words with digits" checkbutton
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 static void wwd_func (GtkWidget *widget, gpointer data) 
 {
   if (GTK_TOGGLE_BUTTON (widget)->active) 
@@ -4667,9 +4716,9 @@ static void wwd_func (GtkWidget *widget, gpointer data)
   else
     spell_form->digits = FALSE;
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "roman numerals" checkbutton
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 static void rn_func (GtkWidget *widget, gpointer data) 
 {
   if (GTK_TOGGLE_BUTTON (widget)->active) 
@@ -4677,9 +4726,9 @@ static void rn_func (GtkWidget *widget, gpointer data)
   else
     spell_form->numerals = FALSE;
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "words containing" checkbutton
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 static void wc_func (GtkWidget *widget, gpointer data) 
 {
   if (GTK_TOGGLE_BUTTON (widget)->active) 
@@ -4687,39 +4736,38 @@ static void wc_func (GtkWidget *widget, gpointer data)
   else
     spell_form->containing = FALSE;
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Search" button
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 static void s_func (GtkButton *button, gpointer  user_data)
 {
   gtk_label_set (GTK_LABEL (label_spell1), "Language : English");
   gtk_clist_set_column_title (GTK_CLIST (clist_spell1), 0, "Amaya");
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Skip (+dic)" button
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 void spell_sd_func (GtkButton *button, gpointer  user_data)
 {
   printf("skip\n");
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Replace and next" button
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 void ran_func (GtkButton *button, gpointer  user_data)
 {
   printf("Replace and next\n");
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Replace (+dic)" button
-------------------------------------------------------------------------- */
+  ----------------------------------------------------------------*/
 void rd_func (GtkButton *button, gpointer  user_data)
 {
   printf("Replace +dic\n");
 }
-/*--------------------------------------------------------------------------
+/*----------------------------------------------------------------
  Callback function called by the "Done" button
-------------------------------------------------------------------------- */
-void spell_done_func (GtkButton *button, gpointer  user_data)
+  ----------------------------------------------------------------*/
 {
  printf ("checking : %d\n", spell_form->checking);
  printf ("caps : %d\n", spell_form->caps);
@@ -4732,10 +4780,9 @@ void spell_done_func (GtkButton *button, gpointer  user_data)
   
 }
 
- 
-
-GtkWidget*
-create_dialog_spell ()
+/*----------------------------------------------------------------
+  ----------------------------------------------------------------*/
+GtkWidget *create_dialog_spell ()
 {
   GtkWidget *dialog_spell1;
   GtkWidget *dialog_vbox_spell1;
@@ -4999,10 +5046,10 @@ create_dialog_spell ()
 
   return dialog_spell1;
 }
-/****************************************************************/
+
 /*----------------------------------------------------------------
-Functions of the "Table" dialog box 
-----------------------------------------------------------------*/
+  Functions of the "Table" dialog box 
+  ----------------------------------------------------------------*/
 static void Initialisation_table ()/* il faudra faire un free */
 {
   table = (Table_form *)TtaGetMemory (sizeof (Table_form));
@@ -5011,10 +5058,10 @@ static void Initialisation_table ()/* il faudra faire un free */
   table->border_size = 1;
 }
 
-
-/* Callback function called by the "Border" entry widget */
-void
-border_size_func                       (GtkEditable     *editable,
+/*----------------------------------------------------------------
+  Callback function called by the "Border" entry widget
+  ----------------------------------------------------------------*/
+void border_size_func (GtkEditable     *editable,
                                         gpointer         user_data)
 { 
   gchar *temp;
@@ -5022,9 +5069,10 @@ border_size_func                       (GtkEditable     *editable,
   table->border_size = atoi(temp);
 }
 
-/* Callback function called by the "Number of Columns" entry widget */
-void
-nb_columns_func                        (GtkEditable     *editable,
+/*----------------------------------------------------------------
+  Callback function called by the "Number of Columns" entry widget
+  ----------------------------------------------------------------*/
+void nb_columns_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   gchar *temp;
@@ -5032,35 +5080,40 @@ nb_columns_func                        (GtkEditable     *editable,
   table->nb_columns = atoi(temp);
 }
 
-/* Callback function called by the "Number of Rows" entry widget */
-void
-nb_rows_func                           (GtkEditable     *editable,
+/*----------------------------------------------------------------
+  Callback function called by the "Number of Rows" entry widget
+  ----------------------------------------------------------------*/
+void nb_rows_func (GtkEditable     *editable,
                                         gpointer         user_data)
 {
   gchar *temp;
   temp = gtk_entry_get_text (GTK_ENTRY (table_entry2));
   table->nb_rows = atoi(temp);
 }
-/* Callback function called by the "Confirm" button widget */
-void
-table_confirm_func                     (GtkButton       *button,
+
+/*----------------------------------------------------------------
+  Callback function called by the "Confirm" button widget
+  ----------------------------------------------------------------*/
+void table_confirm_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   printf("columns :%d  \n", table->nb_columns );
  printf("rows : %d  \n",table->nb_rows  );
  printf("border :%d  \n",table->border_size  );
 }
-/* Callback function called by the "Cancel" button  widget */
-void
-table_cancel_func                      (GtkButton       *button,
+
+/*----------------------------------------------------------------
+  Callback function called by the "Cancel" button  widget
+  ----------------------------------------------------------------*/
+void table_cancel_func (GtkButton       *button,
                                         gpointer         user_data)
 {
   gtk_widget_destroy (GTK_WIDGET (user_data));
 }
 
-
-GtkWidget*
-create_dialog_table ()
+/*----------------------------------------------------------------
+  ----------------------------------------------------------------*/
+GtkWidget *create_dialog_table ()
 {
   GtkWidget *dialog1;
   GtkWidget *dialog_vbox1;
@@ -5187,17 +5240,19 @@ create_dialog_table ()
 
   return dialog1;
 }
-/*-----------------------------------------------------------------------------
------------------------------------------------------------------------------*/
-void GeneralPreferences (Document doc, View view)
+
+/*----------------------------------------------------------------
+  ----------------------------------------------------------------*/
+lPreferences (Document doc, View view)
 {
   GtkWidget *general_dialog;
 
   general_dialog = create_dialog_preferences ();
   gtk_widget_show (general_dialog);
 }
-/*-----------------------------------------------------------------------------
------------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------
+  ----------------------------------------------------------------*/
 void ChangeDocumentStyle (Document doc, View view)
 {
   GtkWidget *style_dialog;

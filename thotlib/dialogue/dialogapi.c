@@ -195,7 +195,7 @@ typedef struct WIN_Form
   int  cx [10];      /* Button width       */
 } WIN_Form;
 
-static int      bIndex   = 0;
+static int      bIndex = 0;
 static int      bAbsBase = 60;
 static WIN_Form formulary;
 static BYTE     fVirt;
@@ -296,20 +296,20 @@ ThotBool RegisterWin95 (CONST WNDCLASS* lpwc)
 {
    WNDCLASSEX wcex;
 
-   wcex.style         = lpwc->style;
-   wcex.lpfnWndProc   = lpwc->lpfnWndProc;
-   wcex.cbClsExtra    = lpwc->cbClsExtra;
-   wcex.cbWndExtra    = lpwc->cbWndExtra;
-   wcex.hInstance     = lpwc->hInstance;
-   wcex.hIcon         = lpwc->hIcon;
-   wcex.hCursor       = lpwc->hCursor;
+   wcex.style = lpwc->style;
+   wcex.lpfnWndProc = lpwc->lpfnWndProc;
+   wcex.cbClsExtra = lpwc->cbClsExtra;
+   wcex.cbWndExtra = lpwc->cbWndExtra;
+   wcex.hInstance = lpwc->hInstance;
+   wcex.hIcon = lpwc->hIcon;
+   wcex.hCursor = lpwc->hCursor;
    wcex.hbrBackground = lpwc->hbrBackground;
-   wcex.lpszMenuName  = lpwc->lpszMenuName;
+   wcex.lpszMenuName = lpwc->lpszMenuName;
    wcex.lpszClassName = lpwc->lpszClassName;
 
    /* Added elements for Windows 95. */
    wcex.cbSize = sizeof(WNDCLASSEX);
-   wcex.hIconSm  = LoadIcon (hInstance, IDI_APPLICATION);
+   wcex.hIconSm = LoadIcon (hInstance, IDI_APPLICATION);
    return RegisterClassEx( &wcex );
 }
 
@@ -479,9 +479,9 @@ int makeArgcArgv (HINSTANCE hInst, CHAR_T*** pArgv, char* cmdLine)
     } nowAt;
 
     strcpy (commandLine, cmdLine);
-    ptr    = commandLine;
+    ptr = commandLine;
     *pArgv = argv;
-    argc   = 0;
+    argc = 0;
     GetModuleFileName (hInst, (LPTSTR)argv0, sizeof (argv0));
     argv[argc++] = argv0;
     for (nowAt = nowAt_start;;) {
@@ -529,7 +529,7 @@ BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int 
    CHAR_T**   argv;
 
    currentFrame = -1;
-   hInstance  = hInst;
+   hInstance = hInst;
    nAmayaShow = nShow;
 
    argc = makeArgcArgv (hInst, &argv, lpCommand);
@@ -542,33 +542,28 @@ BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int 
   ----------------------------------------------------------------------*/
 void WIN_ListOpenDirectory (HWND parent, STRING fileName)
 {
+  char *szFilter;
+  char szFileName[256];
 
- 	STRING szFilter;
-	CHAR_T szFileName[256];
-
-    szFilter = APPFILENAMEFILTER;
-
-    OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
-    OpenFileName.hwndOwner         = parent; 
-    OpenFileName.hInstance         = hInstance; 
-    OpenFileName.lpstrFilter       = szFilter; 
-    OpenFileName.lpstrCustomFilter = NULL; 
-    OpenFileName.nMaxCustFilter    = 0L; 
-    OpenFileName.nFilterIndex      = 1L; 
-    OpenFileName.lpstrFile         = szFileName; 
-    OpenFileName.nMaxFile          = 256; 
-    OpenFileName.lpstrInitialDir   = NULL; 
-    OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
-    OpenFileName.nFileOffset       = 0; 
-    OpenFileName.nFileExtension    = 0; 
-    OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
-    OpenFileName.lCustData         = 0; 
-    OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
- 
-    if (GetOpenFileName (&OpenFileName)) {
-	   ustrcpy (fileName, OpenFileName.lpstrFile);
-	}
-
+  szFilter = APPFILENAMEFILTER;
+  OpenFileName.lStructSize = sizeof (OPENFILENAME); 
+  OpenFileName.hwndOwner = parent; 
+  OpenFileName.hInstance = hInstance; 
+  OpenFileName.lpstrFilter = szFilter; 
+  OpenFileName.lpstrCustomFilter = NULL; 
+  OpenFileName.nMaxCustFilter = 0L; 
+  OpenFileName.nFilterIndex = 1L; 
+  OpenFileName.lpstrFile = szFileName; 
+  OpenFileName.nMaxFile = 256; 
+  OpenFileName.lpstrInitialDir = NULL; 
+  OpenFileName.lpstrTitle = "Open a File"; 
+  OpenFileName.nFileOffset = 0; 
+  OpenFileName.nFileExtension = 0; 
+  OpenFileName.lpstrDefExt = "*.html"; 
+  OpenFileName.lCustData = 0; 
+  OpenFileName.Flags = OFN_SHOWHELP | OFN_HIDEREADONLY; 
+  if (GetOpenFileName (&OpenFileName))
+    ustrcpy (fileName, OpenFileName.lpstrFile);
 }
 
 /*----------------------------------------------------------------------
@@ -576,28 +571,27 @@ void WIN_ListOpenDirectory (HWND parent, STRING fileName)
   ----------------------------------------------------------------------*/
 void    WIN_ListSaveDirectory (int parentRef, STRING title, STRING fileName)
 {
+  struct Cat_Context *parentCatalogue;
+  char               *szFilter;
+  char                szFileName[256];
+  char                szFileTitle[256];
 
-    struct Cat_Context* parentCatalogue = CatEntry (parentRef);
- 	STRING               szFilter;
-	CHAR_T               szFileName[256];
-	CHAR_T               szFileTitle[256];
+  parentCatalogue = CatEntry (parentRef);
+  szFilter = APPFILENAMEFILTER;
+  szFileName[0] = EOS;
+  OpenFileName.lStructSize = sizeof (OPENFILENAME); 
+  OpenFileName.hwndOwner = parentCatalogue->Cat_Widget; 
+  OpenFileName.lpstrFilter = szFilter;
+  OpenFileName.lpstrFile = szFileName; 
+  OpenFileName.nMaxFile = sizeof (szFileName); 
+  OpenFileName.lpstrFileTitle = szFileTitle; 
+  OpenFileName.lpstrTitle = title; 
+  OpenFileName.nMaxFileTitle = sizeof (szFileTitle); 
+  OpenFileName.lpstrInitialDir = NULL; 
+  OpenFileName.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY;
 
-    szFilter = APPFILENAMEFILTER;
-	szFileName[0] = EOS;
-
-    OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
-    OpenFileName.hwndOwner         = parentCatalogue->Cat_Widget; 
-    OpenFileName.lpstrFilter       = szFilter;
-    OpenFileName.lpstrFile         = szFileName; 
-    OpenFileName.nMaxFile          = sizeof (szFileName); 
-    OpenFileName.lpstrFileTitle    = szFileTitle; 
-    OpenFileName.lpstrTitle        = title; 
-    OpenFileName.nMaxFileTitle     = sizeof (szFileTitle); 
-    OpenFileName.lpstrInitialDir   = NULL; 
-    OpenFileName.Flags             = OFN_SHOWHELP | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY;
-
-    if (GetSaveFileName (&OpenFileName))
-      ustrcpy (fileName, OpenFileName.lpstrFile);
+  if (GetSaveFileName (&OpenFileName))
+    ustrcpy (fileName, OpenFileName.lpstrFile);
 }
 #endif /* _WINDOWS */
 
@@ -1410,50 +1404,50 @@ void       TtaInitDialogue (char *server, ThotAppContext *app_context, Display *
 #ifdef _WINDOWS
    iconID = "IDI_APPICON";
 
-   RootShell.style         = 0;
-   RootShell.lpfnWndProc   = WndProc;
-   RootShell.cbClsExtra    = 0;
-   RootShell.cbWndExtra    = 0;
-   RootShell.hInstance     = hInstance;
-   RootShell.hIcon         = LoadIcon (hInstance, iconID);
-   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW);
+   RootShell.style = 0;
+   RootShell.lpfnWndProc = WndProc;
+   RootShell.cbClsExtra = 0;
+   RootShell.cbWndExtra = 0;
+   RootShell.hInstance = hInstance;
+   RootShell.hIcon = LoadIcon (hInstance, iconID);
+   RootShell.hCursor = LoadCursor (NULL, IDC_ARROW);
    RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
-   RootShell.lpszMenuName  = "AmayaMain";
+   RootShell.lpszMenuName = "AmayaMain";
    RootShell.lpszClassName = "Amaya";
-   RootShell.cbSize        = sizeof(WNDCLASSEX);
-   RootShell.hIconSm       = LoadIcon (hInstance, iconID);
+   RootShell.cbSize = sizeof(WNDCLASSEX);
+   RootShell.hIconSm = LoadIcon (hInstance, iconID);
 
    if (!RegisterClassEx (&RootShell))
       return (FALSE);
 
-   RootShell.style         = CS_DBLCLKS;
-   RootShell.lpfnWndProc   = ClientWndProc;
-   RootShell.cbClsExtra    = 0;
-   RootShell.cbWndExtra    = 0;
-   RootShell.hInstance     = hInstance;
-   RootShell.hIcon         = LoadIcon (hInstance, iconID);
-   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW);
+   RootShell.style = CS_DBLCLKS;
+   RootShell.lpfnWndProc = ClientWndProc;
+   RootShell.cbClsExtra = 0;
+   RootShell.cbWndExtra = 0;
+   RootShell.hInstance = hInstance;
+   RootShell.hIcon = LoadIcon (hInstance, iconID);
+   RootShell.hCursor = LoadCursor (NULL, IDC_ARROW);
    RootShell.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);
    RootShell.lpszClassName = "ClientWndProc";
-   RootShell.lpszMenuName  = NULL;
-   RootShell.cbSize        = sizeof(WNDCLASSEX);
-   RootShell.hIconSm       = LoadIcon (hInstance, iconID);
+   RootShell.lpszMenuName = NULL;
+   RootShell.cbSize = sizeof(WNDCLASSEX);
+   RootShell.hIconSm = LoadIcon (hInstance, iconID);
 
    if (!RegisterClassEx (&RootShell))
       return (FALSE);
 
-   RootShell.style         = 0;
-   RootShell.lpfnWndProc   = ThotDlgProc;
-   RootShell.cbClsExtra    = 0;
-   RootShell.cbWndExtra    = 0;
-   RootShell.hInstance     = hInstance;
-   RootShell.hIcon         = LoadIcon (hInstance, iconID);
-   RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW);
+   RootShell.style = 0;
+   RootShell.lpfnWndProc = ThotDlgProc;
+   RootShell.cbClsExtra = 0;
+   RootShell.cbWndExtra = 0;
+   RootShell.hInstance = hInstance;
+   RootShell.hIcon = LoadIcon (hInstance, iconID);
+   RootShell.hCursor = LoadCursor (NULL, IDC_ARROW);
    RootShell.lpszClassName = "WNDIALOGBOX";
-   RootShell.lpszMenuName  = NULL;
+   RootShell.lpszMenuName = NULL;
    RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
-   RootShell.cbSize        = sizeof(WNDCLASSEX);
-   RootShell.hIconSm       = LoadIcon (hInstance, iconID);
+   RootShell.cbSize = sizeof(WNDCLASSEX);
+   RootShell.hIconSm = LoadIcon (hInstance, iconID);
    
    if (!RegisterClassEx (&RootShell))
       return (FALSE);
@@ -3832,7 +3826,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title,
 		      /* WIN_AddFrameCatalogue (FrMainRef[currentFrame], catalogue); */
 #else  /* _WINDOWS */
 #ifdef _GTK
-		      w  = gtk_menu_item_new_with_label (&text[index + 1]);
+		      w = gtk_menu_item_new_with_label (&text[index + 1]);
 		      gtk_widget_show (w);
 		      gtk_menu_append (GTK_MENU (menu),w);
 		      gtk_signal_connect(GTK_OBJECT (w), "activate",
@@ -3887,7 +3881,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title,
 		      /*_________________________________ Appel d'un sous-menu __*/
 #ifndef _WINDOWS
 #ifdef _GTK
-		      w  = gtk_menu_item_new_with_label (&text[index + 1]);
+		      w = gtk_menu_item_new_with_label (&text[index + 1]);
 		      adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
 		      w = XmCreateCascadeButton (menu, &text[index + 1], args, n);
@@ -4325,7 +4319,7 @@ void          TtaSetToggleMenu (int ref, int val, ThotBool on)
   int                ent = 2;
 
   catalogue = CatEntry (ref);
-  adbloc    = catalogue->Cat_Entries;
+  adbloc = catalogue->Cat_Entries;
   if (catalogue == NULL)
     TtaError (ERR_invalid_reference);
   else if (catalogue->Cat_Widget == 0)

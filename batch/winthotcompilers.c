@@ -1206,10 +1206,10 @@ LPARAM lParam;
                              OpenFileName.lpstrFile         = (LPTSTR) szFileName; 
                              OpenFileName.nMaxFile          = 256; 
                              OpenFileName.lpstrInitialDir   = NULL; 
-                             OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
+                             OpenFileName.lpstrTitle        = "Open a File"; 
                              OpenFileName.nFileOffset       = 0; 
                              OpenFileName.nFileExtension    = 0; 
-                             OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
+                             OpenFileName.lpstrDefExt       = "*.html"; 
                              OpenFileName.lCustData         = 0; 
                              OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
   
@@ -1234,10 +1234,10 @@ LPARAM lParam;
                              OpenFileName.lpstrFile         = (LPTSTR) szFileName; 
                              OpenFileName.nMaxFile          = 256; 
                              OpenFileName.lpstrInitialDir   = NULL; 
-                             OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
+                             OpenFileName.lpstrTitle        = "Open a File"; 
                              OpenFileName.nFileOffset       = 0; 
                              OpenFileName.nFileExtension    = 0; 
-                             OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
+                             OpenFileName.lpstrDefExt       = "*.html"; 
                              OpenFileName.lCustData         = 0; 
                              OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
   

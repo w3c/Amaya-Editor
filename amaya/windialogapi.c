@@ -310,12 +310,13 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       break;
 
     case WM_COMMAND:
-      if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
+      if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE)
+	{
 	itemIndex = SendMessage (wndCSSList, LB_GETCURSEL, 0, 0);
 	itemIndex = SendMessage (wndCSSList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
 	SetDlgItemText (hwnDlg, IDC_CSSEDIT, szBuffer);
 	/* ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);*/
-      }
+	}
 
       switch (LOWORD (wParam))
 	{
@@ -462,10 +463,10 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  OpenFileName.lpstrFile         = (LPTSTR) szFileName;
 	  OpenFileName.nMaxFile          = 256;
 	  OpenFileName.lpstrInitialDir   = NULL;
-	  OpenFileName.lpstrTitle        = TEXT ("Select");
+	  OpenFileName.lpstrTitle        = "Select";
 	  OpenFileName.nFileOffset       = 0;
 	  OpenFileName.nFileExtension    = 0;
-	  OpenFileName.lpstrDefExt       = TEXT ("html");
+	  OpenFileName.lpstrDefExt       = "html";
 	  OpenFileName.lCustData         = 0;
 	  OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
 	  
@@ -767,8 +768,8 @@ LRESULT CALLBACK TableDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 /*-----------------------------------------------------------------------
   AttrItemsDlgProc
  ------------------------------------------------------------------------*/
-LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-				   LPARAM lParam)
+LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
+				   WPARAM wParam, LPARAM lParam)
 {
   int        ndx = 0;
   int        i   = 0;
@@ -789,8 +790,8 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
   switch (msg)
     {
     case WM_INITDIALOG:
-	  /* store the window ID to be able to destroy it from elsewhere */
-	  AttrForm = hwnDlg;
+      /* store the window ID to be able to destroy it from elsewhere */
+      AttrForm = hwnDlg;
       GetClientRect (hwnDlg, &rect);
       hDC = GetDC (hwnDlg);
       SelectObject (hDC, GetStockObject (SYSTEM_FIXED_FONT));
@@ -800,14 +801,17 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       ReleaseDC (hwnDlg, hDC);
       
       SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_ATTR));
-      SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
-      SetWindowText (GetDlgItem (hwnDlg, ID_DELETE), TtaGetMessage (LIB, TMSG_DEL_ATTR));
-      SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+      SetWindowText (GetDlgItem (hwnDlg, ID_APPLY),
+		     TtaGetMessage (LIB, TMSG_APPLY));
+      SetWindowText (GetDlgItem (hwnDlg, ID_DELETE),
+		     TtaGetMessage (LIB, TMSG_DEL_ATTR));
+      SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
+		     TtaGetMessage (LIB, TMSG_DONE));
       
       radio1 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
-		  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-		  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
-		  (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+			     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+			     cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+			     (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
       i++;
       radio2 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
@@ -819,26 +823,26 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       if (attDlgNbItems > 2)
 	{
 	  radio3 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
-		  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-		  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
-		  (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+				 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+				 (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 	  ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 	  i++;
 	  if (attDlgNbItems > 3)
 	    {	  
 	      radio4 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
-			  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-			  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
-			  (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+				     cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+				     (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 	      ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 	      i++;
 	      if (attDlgNbItems > 4)
 		{
 		  radio5 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx],
-			  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-			  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
-			  (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-	      ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
+					 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+					 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+					 (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+		  ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 		  i++;
           if (attDlgNbItems > 5)
 		  {
@@ -916,7 +920,8 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       break;
       
     case WM_COMMAND:
-      switch (LOWORD (wParam)) {
+      switch (LOWORD (wParam))
+      {
       case OPT1:
 	iLocation = 0;
 	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
@@ -982,7 +987,7 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
  SaveAsDlgProc
  ------------------------------------------------------------------------*/
 LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-								LPARAM lParam)
+				LPARAM lParam)
 {
   CHAR_T      txt [500];
 
@@ -1181,10 +1186,10 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	OpenFileName.lpstrFile         = (LPTSTR) szFileName;
 	OpenFileName.nMaxFile          = 256;
 	OpenFileName.lpstrInitialDir   = NULL;
-	OpenFileName.lpstrTitle        = TEXT ("Select");
+	OpenFileName.lpstrTitle        = "Select";
 	OpenFileName.nFileOffset       = 0;
 	OpenFileName.nFileExtension    = 0;
-	OpenFileName.lpstrDefExt       = TEXT ("html");
+	OpenFileName.lpstrDefExt       = "html";
 	OpenFileName.lCustData         = 0;
 	OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
 	
@@ -2092,7 +2097,7 @@ LRESULT CALLBACK InitConfirm3LDlgProc (ThotWindow hwnDlg, UINT msg,
  ChangeFormatDlgProc
  ------------------------------------------------------------------------*/
 LRESULT CALLBACK ChangeFormatDlgProc (ThotWindow hwnDlg, UINT msg,
-									  WPARAM wParam, LPARAM lParam)
+				      WPARAM wParam, LPARAM lParam)
 {
   ThotBool ok;	  
   int  val;
@@ -2121,8 +2126,10 @@ LRESULT CALLBACK ChangeFormatDlgProc (ThotWindow hwnDlg, UINT msg,
 	   SetWindowText (GetDlgItem (hwnDlg, IDC_SPACINGDEFAULT),
 			  TtaGetMessage (LIB, TMSG_UNCHANGED));
 
-	   SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
-	   SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+	   SetWindowText (GetDlgItem (hwnDlg, ID_APPLY),
+			  TtaGetMessage (LIB, TMSG_APPLY));
+	   SetWindowText (GetDlgItem (hwnDlg, ID_DONE),
+			  TtaGetMessage (LIB, TMSG_DONE));
     if (Align_num  == 0)
       CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_LEFT);
     else if (Align_num  == 1)
@@ -2991,10 +2998,10 @@ LRESULT CALLBACK BackgroundImageDlgProc (ThotWindow hwnDlg, UINT msg,
 	    OpenFileName.lpstrFile         = (LPTSTR) szFileName;
 	    OpenFileName.nMaxFile          = 256;
 	    OpenFileName.lpstrInitialDir   = NULL;
-	    OpenFileName.lpstrTitle        = TEXT ("Open a File");
+	    OpenFileName.lpstrTitle        = "Open a File";
 	    OpenFileName.nFileOffset       = 0;
 	    OpenFileName.nFileExtension    = 0;
-	    OpenFileName.lpstrDefExt       = TEXT ("*.gif");
+	    OpenFileName.lpstrDefExt       = "*.gif";
 	    OpenFileName.lCustData         = 0;
 	    OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
 	    
@@ -3139,14 +3146,14 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
 	  doc = TmpDoc;
       DocInfo[doc] = hwnDlg;
       /* init the dialog's text */
-      SetWindowText (hwnDlg, TEXT ("Document Information"));
+      SetWindowText (hwnDlg, "Document Information");
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), 
 		     TtaGetMessage (LIB, TMSG_DONE));
 
       /* set up the other fields */
 
       /* document URL */
-      SetDlgItemText (hwnDlg, IDC_DIURL, TEXT ("LOCATION"));
+      SetDlgItemText (hwnDlg, IDC_DIURL, "LOCATION");
       if (DocumentURLs[doc] != NULL)
 	content = DocumentURLs[doc];
       else
@@ -3154,7 +3161,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       SetDlgItemText (hwnDlg, IDC_DIURL_VAL, content);
 
       /* MIME type */
-      SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE, TEXT ("MIME TYPE"));
+      SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE, "MIME TYPE");
       if (DocumentMeta[doc]->content_type != NULL)
 	content  = DocumentMeta[doc]->content_type;
       else
@@ -3162,7 +3169,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, content);
 
       /* charset */
-      SetDlgItemText (hwnDlg, IDC_DICHARSET, TEXT ("CHARSET"));
+      SetDlgItemText (hwnDlg, IDC_DICHARSET, "CHARSET");
       if (DocumentMeta[doc]->charset != NULL)
 	content = DocumentMeta[doc]->charset;
       else
@@ -3170,7 +3177,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, content);
 
       /* content length */
-      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN, TEXT ("CONTENT LENGTH"));
+      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN, "CONTENT LENGTH");
       if (DocumentMeta[doc]->content_length != NULL)
 	content = DocumentMeta[doc]->content_length;
       else
@@ -3223,7 +3230,8 @@ void CreateCSSDlgWindow (ThotWindow parent, int nb_item, STRING buffer,
     /* no entry */
     MessageBox (parent, msg_text, wndTitle, MB_OK | MB_ICONWARNING);
   else 
-    DialogBox (hInstance, MAKEINTRESOURCE (CSSDIALOG), parent, (DLGPROC) CSSDlgProc);
+    DialogBox (hInstance, MAKEINTRESOURCE (CSSDIALOG), parent,
+	       (DLGPROC) CSSDlgProc);
 }
 
 
@@ -3236,14 +3244,15 @@ void       CreateTitleDlgWindow (ThotWindow parent, STRING title)
   ReleaseFocus = FALSE;
   isHref = FALSE;
   text[0] = 0;
-  DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent, (DLGPROC) TextDlgProc);
+  DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent,
+	     (DLGPROC) TextDlgProc);
 }
 
 /*-----------------------------------------------------------------------
  CreateHRefDlgWindow
  ------------------------------------------------------------------------*/
-void   CreateHRefDlgWindow (ThotWindow parent, STRING HRefValue, int doc_select,
-							int dir_select, int doc_type)
+void CreateHRefDlgWindow (ThotWindow parent, STRING HRefValue,
+			  int doc_select, int dir_select, int doc_type)
 {  	
   docSelect = doc_select;
   dirSelect = dir_select;
@@ -3256,18 +3265,21 @@ void   CreateHRefDlgWindow (ThotWindow parent, STRING HRefValue, int doc_select,
   else 
     szFilter = APPALLFILESFILTER;
 
-  DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent, (DLGPROC) HRefDlgProc);
+  DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent,
+	     (DLGPROC) HRefDlgProc);
 }
 
 /*-----------------------------------------------------------------------
  CreateHelpDlgWindow
  ------------------------------------------------------------------------*/
-void CreateHelpDlgWindow (ThotWindow parent, STRING localname, STRING msg1, STRING msg2)
+void CreateHelpDlgWindow (ThotWindow parent, char *localname, char *msg1,
+			  char *msg2)
 {  
   ustrcpy (currentPathName, localname);
   ustrcpy (message, msg1);
   ustrcpy (message2, msg2);
-  DialogBox (hInstance, MAKEINTRESOURCE (HELPDIALOG), parent, (DLGPROC) HelpDlgProc);
+  DialogBox (hInstance, MAKEINTRESOURCE (HELPDIALOG), parent,
+	     (DLGPROC) HelpDlgProc);
 }
 
 /*-----------------------------------------------------------------------
