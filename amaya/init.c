@@ -888,6 +888,7 @@ static void  UpdateEditorMenus (Document doc)
 {
   View       view;
 
+  TtaUpdateMenus (doc, 1, ReadOnlyDocument[doc]);
   TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
   TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
 
