@@ -23,9 +23,11 @@
 #ifdef GRAPHML
 #include "GraphML.h"
 #endif
- 
+
+#include "AHTURLTools_f.h"
 #include "css_f.h"
 #include "html2thot_f.h"
+#include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
 #include "UIcss_f.h"
 #include "styleparser_f.h"
@@ -617,7 +619,7 @@ void                *param;
   if (settings->type == PRBackgroundPicture)
     {
       /* transform absolute URL into relative URL */
-      imgInfo = SearchLoadedImage(settings->value.pointer, 0);
+      imgInfo = SearchLoadedImage (settings->value.pointer, 0);
       if (imgInfo != NULL)
 	ptr = MakeRelativeURL (imgInfo->originalName, DocumentURLs[doc]);
       else

@@ -45,7 +45,7 @@ extern STRING TtaAllocString ();
 
 #if defined(_I18N_) || defined(__JIS__) 
 #   define HTAppName     L"amaya"
-#   define HTAppVersion  L"V2.1"
+#   define HTAppVersion  L"V2.1a"
 #   define URL_STR       L"/"
 #   define URL_SEP       L'/'
 #else /* !_I18N_  */

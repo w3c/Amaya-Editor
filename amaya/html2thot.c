@@ -3026,16 +3026,6 @@ static void         TextToDocument ()
 		   }
 		}
 	  }
-	elType = TtaGetElementType (parent);
-	if (elType.ElTypeNum == HTML_EL_STYLE_ &&
-	    elType.ElSSchema == DocumentSSchema && ParsingCSS)
-	  {
-#ifndef STANDALONE
-	     ApplyCSSRules (parent, inputBuffer, theDocument, FALSE);
-#endif
-	     InitBuffer ();
-	     return;
-	  }
 	if (ignoreLeadingSpaces)
 	   if (!Within (HTML_EL_Preformatted, DocumentSSchema) &&
 	       !Within (HTML_EL_STYLE_, DocumentSSchema) &&

@@ -3191,7 +3191,7 @@ int                  len
       break;
     case PRBackgroundPicture:
       if (settings->value.pointer != NULL)
-	usprintf (buffer, TEXT("background-image: url(%s)"), (settings->value.pointer));
+	usprintf (buffer, TEXT("background-image: url(%s)"), (STRING)(settings->value.pointer));
       else
 	usprintf (buffer, TEXT("background-image: none"));
       break;
@@ -4001,9 +4001,8 @@ ThotBool            withUndo;
 {
   CHAR_T              c;
   STRING              cssRule, base, cur;
-  STRING              schemaName;
   DisplayMode         dispMode;
-  int                 lg, index;
+  int                 index;
   int                 CSSindex;
   int                 CSScomment;
   int                 import;
