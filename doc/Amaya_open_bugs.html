@@ -377,10 +377,16 @@
       <td>2002-09-25</td>
     </tr>
     <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>The SaveAs with image copies doesn't work in the following cases.
+        Scenario: Open the http://www.w3.org/ page (or any other page with
+        images). This is doc 1.. Create a new XHTML document and give it a
+        local name. This is doc 2. Select any image from doc 1 and copy it to
+        doc 2.  Do the SaveAs with image copies on doc 2 (leave the same
+        name). The images are not copied. The file descriptor of the image
+        still points to doc 1, rather than doc 2.</td>
+      <td>2002-10-09</td>
+      <td>Jose</td>
+      <td>Irène</td>
       <td></td>
     </tr>
   </tbody>
