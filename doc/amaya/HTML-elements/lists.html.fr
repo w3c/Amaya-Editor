@@ -19,15 +19,15 @@
       <td><p align="right"><a href="headings.html.fr"><img alt="previous"
         border="0" src="../../Icons/left.gif" /></a> <a
         href="../Manual.html.fr#There"><img alt="top" border="0"
-        src="../../Icons/up.gif" /></a> <a href="address.html.fr"><img alt="next"
-        border="0" src="../../Icons/right.gif" /></a></p>
+        src="../../Icons/up.gif" /></a> <a href="address.html.fr"><img
+        alt="next" border="0" src="../../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div>
-<h1>Éléments d'une  liste</h1>
+<h1>Éléments d'une liste</h1>
 
 <p>Il y a trois types de liste dans HTML. Les deux types simples sont: liste
 ordonnée et liste non ordonnée. Il y a aussi une liste de définitions. Les

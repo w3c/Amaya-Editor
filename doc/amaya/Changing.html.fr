@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Changing the structure</title>
+  <title>Changer la structure</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
@@ -16,10 +16,11 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Links.html.fr"><img alt="previous" border="0"
-        src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-        border="0" src="../Icons/up.gif" /></a> <a href="Tables.html.fr"><img
-        alt="next" border="0" src="../Icons/right.gif" /></a></p>
+      <td><p align="right"><a href="Links.html.fr"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
+        /></a> <a href="Tables.html.fr"><img alt="next" border="0"
+        src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -31,19 +32,19 @@
 <h3><a name="L653">Changer le type de l'élément</a></h3>
 
 <p>Pour changer le type d'un élément existant, sélectionnez-le et choisissez
-le nouveau type soit dans le menu  <strong>Eléments </strong> soit en cliquant
-sur un bouton.  Vous pouvez ainsi  par exemple changer une liste numérotée en
+le nouveau type soit dans le menu <strong>Eléments </strong> soit en cliquant
+sur un bouton. Vous pouvez ainsi par exemple changer une liste numérotée en
 une liste d'articles, ou un paragraphe en une en-tête ou une liste. Pour
 supprimer un type sélectionné dans le menu <strong>Style </strong> (<a
 href="HTML-elements/inline.html.fr"> types en ligne </a> - cela peut être une
 phrase dans un paragraphe ou une liste), utilisez l'option appropriée comme
 bascule dans les sous-menus du menu <strong>Style.</strong> Beaucoup d'autres
-types peuvent être supprimés,  comme une transformation de l'élément lorsqu'il
+types peuvent être supprimés, comme une transformation de l'élément lorsqu'il
 a été sélectionné ( voir plus loin).</p>
 
 <p>Pour sélectionner un élément entier, placez le point d'insertion n'importe
-où à l'intérieur et appuyez sur  <a href="Selecting.html.fr#Selecting1">la touche
-Esc (F2 sur Windows).</a></p>
+où à l'intérieur et appuyez sur <a href="Selecting.html.fr#Selecting1">la
+touche Esc (F2 sur Windows).</a></p>
 
 <p>Il est également possible d'effectuer des <a href="#L631">transformations
 de structure </a>plus complexes.</p>
@@ -68,13 +69,13 @@ toutes les transformations qui peuvent être appliquées à la sélection
 courante. Il suffit de choisir la transformation que vous désirez.</p>
 
 <p>Les transformations disponibles sont définies dans le fichier
-<code>Amaya/amaya/HTML.trans</code>.  Référez-vous au document  <a
-href="Transform.html.fr">Utilisation du fichier  HTML.trans</a> pour une
+<code>Amaya/amaya/HTML.trans</code>. Référez-vous au document <a
+href="Transform.html.fr">Utilisation du fichier HTML.trans</a> pour une
 description du langage dans lequel les règles de transformation sont
 écrites.</p>
 
 <p>Des transformations supplémentaires peuvent être spécifiées dans le fichier
-HTML.trans. Certaines  sont  fournies en tant qu'exemples. Ainsi, il est
+HTML.trans. Certaines sont fournies en tant qu'exemples. Ainsi, il est
 possible de transformer des listes emboîtées en table et inversement.</p>
 
 <h3><a name="Inserting">Insérer une division</a></h3>
@@ -86,20 +87,20 @@ tables (...) à l'intérieur d'une division. Pour cela, il faut sélectionner les
 <h3><a name="Back">Les touches Back Space et Delete fusionnées</a></h3>
 
 <p>Des éléments consécutifs peuvent être fusionnées, même s'ils ne sont pas au
-même niveau dans la structure du document.  La fusion  s'effectue à l'aide des
-touches  Back Space et  Delete. Quand le point d'insertion est à la fin d'un
+même niveau dans la structure du document. La fusion s'effectue à l'aide des
+touches Back Space et Delete. Quand le point d'insertion est à la fin d'un
 élément, utilisez la touche Delete. Quand il est au début, utilisez la touche
 Back Space. Dans les deux cas, ces touches n'effacent aucun caractère. Elles
-fusionnent  des éléments séparés par une limite de structure.</p>
+fusionnent des éléments séparés par une limite de structure.</p>
 
 <p>Quand le point d'insertion est à l'intérieur d'un élément, ces deux touches
 effacent comme d'habitude le caractère suivant ou le caractère précédent.</p>
 </div>
 
 <p align="right"><a href="Links.html.fr"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Tables.html.fr"><img alt="next" border="0"
-src="../Icons/right.gif" /></a></p>
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
+border="0" src="../Icons/up.gif" /></a> <a href="Tables.html.fr"><img
+alt="next" border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>

@@ -21,8 +21,8 @@
       <td><p align="right"><a href="MakeBook.html.fr"><img alt="previous"
         border="0" src="../Icons/left.gif" /></a><a href="Manual.html.fr"><img
         alt="top" border="0" src="../Icons/up.gif" /></a><a
-        href="Access.html.fr"><img alt="next" border="0" src="../Icons/right.gif"
-        /></a></p>
+        href="Access.html.fr"><img alt="next" border="0"
+        src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -434,7 +434,7 @@ utilisées à la place.</p>
 <p>Sur Windows, vous pouvez également sélectionner des couleurs par le biais
 de la palette de couleur.</p>
 
-<p><strong>Note:</strong> le changement des couleurs sera effectif  quand vous
+<p><strong>Note:</strong> le changement des couleurs sera effectif quand vous
 ouvrirez une nouvelle fenêtre de document ou quand vous téléchargerez un
 document.</p>
 
@@ -522,7 +522,7 @@ la commande correspondante invoquée.</p>
               'Enter' / 'Up' / 'Down' / 'Left' / 'Right' /
               'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;
  IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;
- Char = KeyValue / OctalValue ;  OctalValue = '\' NUMBER ; </pre>
+ Char = KeyValue / OctalValue ; OctalValue = '\' NUMBER ; </pre>
 
 <p>Par exemple, regardez les fichiers standards <code>amaya.keyboard</code>
 (pour stations Unix) et <code>amaya.kb</code> (pour stations Windows), qui
@@ -648,9 +648,9 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
 </div>
 
 <p align="right"><a href="MakeBook.html.fr"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a><a href="Manual.html.fr"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Access.html.fr"><img alt="next" border="0"
-src="../Icons/right.gif" /></a></p>
+src="../Icons/left.gif" /></a><a href="Manual.html.fr"><img alt="top"
+border="0" src="../Icons/up.gif" /></a> <a href="Access.html.fr"><img
+alt="next" border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 <address>
   <a href="mailto:vatton@w3.org">Irène Vatton</a><br />

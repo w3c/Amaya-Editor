@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Using Amaya</title>
+  <title>Manuel d'utilisation d'Amaya</title>
   <style type="text/css">
 BODY { background-color : #FFFFFF }
 .name { background-color: #FFF6C1}</style>
@@ -19,7 +19,7 @@ alt="Doc" /></a></p>
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 <hr />
 
-<p><strong>Version:</strong>  3.2 - Juillet 2000</p>
+<p><strong>Version:</strong> 3.2 - Juillet 2000</p>
 <dl>
   <dt><strong>Auteurs:</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
@@ -27,17 +27,17 @@ alt="Doc" /></a></p>
     <dd>Charles McCathieNevile, John Russell</dd>
 </dl>
 
-<p>Ce manuel présente l'utilisation  interface d'Amaya pour les stations Unix.
+<p>Ce manuel présente l'utilisation interface d'Amaya pour les stations Unix.
 L'utilisation interface de Windows peut être légèrement différente dans
-certains cas. Ce  manuel d'utilisation n'est pas complet. Son but est
+certains cas. Ce manuel d'utilisation n'est pas complet. Son but est
 simplement d'aider les utilisateurs à découvrir les principales
 caractéristiques du software. Ce document est organisé comme un livre. Vous
 pouvez utiliser la commande "<a href="MakeBook.html.fr#L1065">Construire un
 livre</a>" pour construire et imprimer la totalité du manuel.</p>
 
-<p>Beaucoup de commandes  <strong>Amaya</strong> sont les mêmes que celles
-fournies par  les éditeurs et les processeurs communs. Elles ne sont pas
-présentées ici.  Seuls les aspects spécifiques d' <strong>Amaya</strong> sont
+<p>Beaucoup de commandes <strong>Amaya</strong> sont les mêmes que celles
+fournies par les éditeurs et les processeurs communs. Elles ne sont pas
+présentées ici. Seuls les aspects spécifiques d' <strong>Amaya</strong> sont
 décrits.</p>
 <hr />
 
@@ -62,7 +62,7 @@ décrits.</p>
           <li><a href="Selecting.html.fr#Selecting1">Sélectionner par
             Structure</a></li>
           <li><a href="Selecting.html.fr#Selecting2">Sélectionner des
-          images</a></li>
+            images</a></li>
         </ul>
       </li>
       <li><a href="Searching.html.fr#Searching">Chercher et remplacer un
@@ -82,7 +82,8 @@ décrits.</p>
             standard</a></li>
           <li><a href="Keyboard.html.fr#Optional">Support multi-touches
             optionnel</a></li>
-          <li><a href="Creating.html.fr#Types">Boutons et menu Eléments</a></li>
+          <li><a href="Creating.html.fr#Types">Boutons et menu
+          Eléments</a></li>
           <li><a href="Creating.html.fr#Structure">menu Structure</a></li>
           <li><a href="Creating.html.fr#L906">La touche Entrée (ou
             retour-charriot)</a></li>
@@ -101,27 +102,30 @@ décrits.</p>
           <li><a href="Links.html.fr#Changing">Changer un lien</a></li>
         </ul>
       </li>
-      <li><a href="Changing.html.fr#Changing">Editer la structure du document</a>
+      <li><a href="Changing.html.fr#Changing">Editer la structure du
+        document</a>
         <ul>
           <li><a href="Changing.html.fr#L653">Changer le type de
           l'élément</a></li>
           <li><a href="Changing.html.fr#L631">Changer la structure du
             document</a></li>
           <li><a href="Changing.html.fr#L141">La commande Transformer</a></li>
-          <li><a href="Changing.html.fr#Inserting">Insérer une Division</a></li>
-          <li><a href="Changing.html.fr#Back">Les touches  Back Space et
+          <li><a href="Changing.html.fr#Inserting">Insérer une
+          Division</a></li>
+          <li><a href="Changing.html.fr#Back">Les touches Back Space et
             Delete</a></li>
         </ul>
       </li>
       <li><a
         href="/local_home/diffusion/Amaya/doc/amaya/Tables.html#Editing">Editer
-        des  tables</a>
+        des tables</a>
         <ul>
-          <li><a href="Tables.html.fr#Creating">Créer une nouvelle table</a></li>
+          <li><a href="Tables.html.fr#Creating">Créer une nouvelle
+          table</a></li>
           <li><a href="Tables.html.fr#Adding">Ajouter une nouvelle
           colonne</a></li>
           <li><a href="Tables.html.fr#Adding1">Ajouter un nouvelle ligne, un
-            nouveau  tbody</a></li>
+            nouveau tbody</a></li>
           <li><a href="Tables.html.fr#Removing">Supprimer une colonne</a></li>
           <li><a href="Tables.html.fr#Adding2">Ajouter quelquechose aprés une
             table</a></li>
@@ -142,15 +146,15 @@ décrits.</p>
         actives</a>
         <ul>
           <li><a href="ImageMaps.html.fr#Adding">Ajouter une image</a></li>
-          <li><a href="ImageMaps.html.fr#Using">Texte alternatif et Descriptions
-            longues</a>
+          <li><a href="ImageMaps.html.fr#Using">Texte alternatif et
+            Descriptions longues</a>
             <p><a href="ImageMaps.html.fr#Using">Utiliser des zones
             actives</a></p>
           </li>
           <li><a href="ImageMaps.html.fr#Creating">Créer des zones
           actives</a></li>
           <li><a href="ImageMaps.html.fr#L11711">Déplacer des zones
-          actives</a></li>
+            actives</a></li>
           <li><a href="ImageMaps.html.fr#L1171">Redimensioner des zones
             actives</a></li>
         </ul>
@@ -161,9 +165,9 @@ décrits.</p>
             attribut Style</a></li>
           <li><a href="StyleSheets.html.fr#Creating,">Créer un style générique
             pour un élément ou une classe</a></li>
-          <li><a href="StyleSheets.html.fr#Managing">Gérer des feuilles de style
-            externes CSS</a></li>
-          <li><a href="StyleSheets.html.fr#L1371">Mettre du style en utilisant 
+          <li><a href="StyleSheets.html.fr#Managing">Gérer des feuilles de
+            style externes CSS</a></li>
+          <li><a href="StyleSheets.html.fr#L1371">Mettre du style en utilisant
             des éléments HTML</a></li>
         </ul>
       </li>
@@ -171,38 +175,42 @@ décrits.</p>
         <ul>
           <li><a href="Attributes.html.fr#L1073">Editer des attributs avec le
             menu Attributs</a></li>
-          <li><a href="Attributes.html.fr#Copying">Copier des attributs</a></li>
-          <li><a href="Attributes.html.fr#Editing">Editer des attributs dans la
-            Vue structure</a></li>
+          <li><a href="Attributes.html.fr#Copying">Copier des
+          attributs</a></li>
+          <li><a href="Attributes.html.fr#Editing">Editer des attributs dans
+            la Vue structure</a></li>
         </ul>
       </li>
-      <li><a href="SpellChecking.html.fr#Spell">Vérifier l'orthographe</a></li>
-      <li><a href="Publishing.html.fr#Saving">Sauver et publier des documents</a>
+      <li><a href="SpellChecking.html.fr#Spell">Vérifier
+      l'orthographe</a></li>
+      <li><a href="Publishing.html.fr#Saving">Sauver et publier des
+        documents</a>
         <ul>
           <li><a href="Publishing.html.fr#L1104">Sauver des documents en
-          HTML</a></li>
+            HTML</a></li>
           <li><a href="Publishing.html.fr#L1105">Sauver un texte</a></li>
         </ul>
       </li>
       <li><a href="Printing.html.fr#Printing">Imprimer des documents</a></li>
       <li><a href="Numbering.html.fr#Section">Numéroter des sections</a></li>
       <li><a href="MakeBook.html.fr#Assembling">Assembler des documents
-      longs</a></li>
+        longs</a></li>
     </ul>
   </li>
   <li><a href="Configure.html.fr#Configuring">Configurer Amaya</a>
     <ul>
       <li><a href="Configure.html.fr#Conventions">Conventions</a>
         <ul>
-          <li><a href="Configure.html.fr#L979">Le répertoire 
-          d'Amaya/Config</a></li>
-          <li><a href="Configure.html.fr#AmayaHome">Le répertoire 
+          <li><a href="Configure.html.fr#L979">Le répertoire
+            d'Amaya/Config</a></li>
+          <li><a href="Configure.html.fr#AmayaHome">Le répertoire
             d'Amaya/Home</a></li>
           <li><a href="Configure.html.fr#AmayaTemp">Le répertoire d'
             Amaya/Temp</a></li>
         </ul>
       </li>
-      <li><a href="Configure.html.fr#preferences">Les  Menus Préférences</a></li>
+      <li><a href="Configure.html.fr#preferences">Les Menus
+      Préférences</a></li>
       <li><a href="Configure.html.fr#shortcuts">Raccourcis-clavier</a></li>
     </ul>
   </li>
@@ -211,17 +219,17 @@ décrits.</p>
 
 <h2><a name="L920" id="L920">Démarrer Amaya</a></h2>
 
-<p>Pour démarrer  <strong>Amaya</strong> sur  une station  Unix:</p>
+<p>Pour démarrer <strong>Amaya</strong> sur une station Unix:</p>
 <pre>    amaya [-display host] [document]</pre>
 
-<p>Le paramètre [-display host] est optionnel. Il détermine  l'écran hôte
-lointain  quand Amaya doit afficher des pages Web. Si ce paramètre est omis,
+<p>Le paramètre [-display host] est optionnel. Il détermine l'écran hôte
+lointain quand Amaya doit afficher des pages Web. Si ce paramètre est omis,
 Amaya affiche dans l'écran hôte local.</p>
 
 <p>Le paramètre <code>[document]</code> est optionnel. C'est le nom de fichier
 ou le URI du premier document qu' <strong>Amaya</strong> devrait afficher
 quand il démarre. Si aucun paramètre n'est donné, un document par défaut est
-présenté. Le document par défaut pourrait être votre  <em>home page</em> (voir
+présenté. Le document par défaut pourrait être votre <em>home page</em> (voir
 <a href="Configure.html.fr#L138">comment configurer votre Home Page</a>) ou la
 page de bienvenue d'Amaya.</p>
 
@@ -230,33 +238,36 @@ page de bienvenue d'Amaya.</p>
 <p><strong>Amaya</strong> ne vous permet pas seulement de naviguer des
 documents sur le Web, il vous permet aussi de les éditer et de les <a
 href="Publishing.html.fr#Saving">sauver</a> soit localement soit dans des
-serveurs Web lointains. </p>
+serveurs Web lointains.</p>
 
-<p>Nous tentons de faire Amaya aussi robuste que  possible. Une session
-d'Amaya peut néanmoins faillir. Si cela arrive,  Amaya tente de sauver
-couremment les documents modifiés dans les fichiers d'aide.  Quand
-l'utilisateur redémarre une nouvelle session d'Amaya, la recharge des fichiers
- d'aide est automatiquement proposée.</p>
+<p>Nous tentons de faire Amaya aussi robuste que possible. Une session d'Amaya
+peut néanmoins faillir. Si cela arrive, Amaya tente de sauver couremment les
+documents modifiés dans les fichiers d'aide. Quand l'utilisateur redémarre une
+nouvelle session d'Amaya, la recharge des fichiers d'aide est automatiquement
+proposée.</p>
 
-<p>Chaque section suivante décrit brièvement  comment utiliser une fonction
+<p>Chaque section suivante décrit brièvement comment utiliser une fonction
 spécifique d'Amaya:</p>
 <ul>
   <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer avec
-  Amaya</a></li>
-  <li><a rel="Chapter" href="Selecting.html.fr#Selecting">Sélectionner</a></li>
-  <li><a rel="Chapter" href="Searching.html.fr#Searching">Chercher et remplacer
-    un texte</a></li>
+    Amaya</a></li>
+  <li><a rel="Chapter"
+  href="Selecting.html.fr#Selecting">Sélectionner</a></li>
+  <li><a rel="Chapter" href="Searching.html.fr#Searching">Chercher et
+    remplacer un texte</a></li>
   <li><a rel="Chapter" href="Views.html.fr#Views">Afficher des vues</a></li>
   <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer de nouveaux
     éléments</a></li>
-  <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et changer des liens
-    et des ancres</a></li>
+  <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et changer des
+    liens et des ancres</a></li>
   <li><a rel="Chapter" href="Changing.html.fr#Changing">Editer la structure du
     document</a></li>
-  <li><a rel="Chapter" href="Tables.html.fr#Editing">Editer des tables</a></li>
-  <li><a href="Math.html.fr#Math" rel="Chapter">Editer des mathématiques</a></li>
-  <li><a rel="Chapter" href="ImageMaps.html.fr#Client-sid">Créer et utiliser des
-    zones actives</a></li>
+  <li><a rel="Chapter" href="Tables.html.fr#Editing">Editer des
+  tables</a></li>
+  <li><a href="Math.html.fr#Math" rel="Chapter">Editer des
+  mathématiques</a></li>
+  <li><a rel="Chapter" href="ImageMaps.html.fr#Client-sid">Créer et utiliser
+    des zones actives</a></li>
   <li><a rel="Chapter" href="StyleSheets.html.fr#Style">Feuilles de
   style</a></li>
   <li><a rel="Chapter" href="Attributes.html.fr#Attributes">Editer des
@@ -268,19 +279,19 @@ spécifique d'Amaya:</p>
   <li><a rel="Chapter" href="Printing.html.fr#Printing">Imprimer des
     documents</a></li>
   <li><a rel="Chapter" href="Numbering.html.fr#Section">Numéroter une
-  section</a></li>
-  <li><a rel="Chapter" href="MakeBook.html.fr#Assembling">Assembler des documents
-    longs</a></li>
+    section</a></li>
+  <li><a rel="Chapter" href="MakeBook.html.fr#Assembling">Assembler des
+    documents longs</a></li>
 </ul>
 
 <p>Il est également possible de changer les options par défaut (reportez-vous
-à la section qui explique comment  <a href="Configure.html.fr#Configuring"
+à la section qui explique comment <a href="Configure.html.fr#Configuring"
 rel="Chapter">Configurer Amaya</a>).</p>
 
-<p>La page sur  <a href="Access.html.fr#Access" rel="Chapter">Accessibilité dans
-Amaya</a> décrit l'accessibilité d'Amaya, et explique comment l'utiliser pour
-produire des pages pouvant être utilisées aussi bien par les gens qui ont des
-incapacités que par ceux qui n'en ont pas. </p>
+<p>La page sur <a href="Access.html.fr#Access" rel="Chapter">Accessibilité
+dans Amaya</a> décrit l'accessibilité d'Amaya, et explique comment l'utiliser
+pour produire des pages pouvant être utilisées aussi bien par les gens qui ont
+des incapacités que par ceux qui n'en ont pas.</p>
 <hr />
 
 <p><a name="There" id="There">Il y a également une brève introduction qui
@@ -289,19 +300,20 @@ décrit quelques uns des différents types qui peuvent être utilisés dans Amaya
 utiliser.</a></p>
 <ul>
   <li><a href="HTML-elements/infoTypes.html.fr#Informatio" rel="Chapter">Types
-    information  dans  HTML</a></li>
-  <li><a href="HTML-elements/structure.html.fr#HTML" rel="Chapter">Structure du
-    document HTML</a></li>
+    information dans HTML</a></li>
+  <li><a href="HTML-elements/structure.html.fr#HTML" rel="Chapter">Structure
+    du document HTML</a></li>
   <li><a href="HTML-elements/headings.html.fr#Heading"
-  rel="Chapter">En-têtes</a></li>
+    rel="Chapter">En-têtes</a></li>
   <li><a href="HTML-elements/lists.html.fr#List" rel="Chapter">Listes</a></li>
   <li><a href="HTML-elements/address.html.fr#About" rel="Chapter">A propos de
     l'auteur</a></li>
-  <li><a href="HTML-elements/inline.html.fr#Inline3" rel="Chapter">Définitions en
-    ligne, citations, sample code, insertions et effacements, abréviations,
+  <li><a href="HTML-elements/inline.html.fr#Inline3" rel="Chapter">Définitions
+    en ligne, citations, sample code, insertions et effacements, abréviations,
     etc</a></li>
-  <li><a href="HTML-elements/40styling.html.fr#Character" rel="Chapter">Eléments
-    Style ( ce qu'il ne faut pas faire et ce qui doit être fait...)</a></li>
+  <li><a href="HTML-elements/40styling.html.fr#Character"
+    rel="Chapter">Eléments Style ( ce qu'il ne faut pas faire et ce qui doit
+    être fait...)</a></li>
 </ul>
 <hr />
 <address>

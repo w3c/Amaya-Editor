@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Creating elements</title>
+  <title>Créer des éléments</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
@@ -26,7 +26,7 @@
 </table>
 
 <div>
-<h1>Style d'éléments caractères dans  HTML</h1>
+<h1>Style d'éléments caractères dans HTML</h1>
 
 <h2>Ce qu'il ne faut pas faire et ce qui doit être fait...</h2>
 
@@ -39,29 +39,29 @@ sous menu Eléments caractères du menu <strong>Eléments</strong>:</p>
 <dl>
   <dt><code>B</code> et <code>I</code></dt>
     <dd>Ceux-ci devraient être remplacés par le <a
-      href="inline.html.fr#Emphasis">STRONG and  EM elements</a>, où ils sont
+      href="inline.html.fr#Emphasis">STRONG and EM elements</a>, où ils sont
       utilisés pour fournir des mises en évidences à un mot ou à une phrase.
-      Il y a des  <a href="infoTypes.html.fr">éléments spéciaux</a> pour noter
+      Il y a des <a href="infoTypes.html.fr">éléments spéciaux</a> pour noter
       des en-têtes, des termes à définir, ainsi que certains usages spéciaux,
       comme par exemple une citation, un fragment de computer code, etc. Si
       les éléments sont simplement utilisés pour obtenir une police de
-      caractère plus lourde, les  <a href="../StyleSheets.html.fr">Feuilles de
+      caractère plus lourde, les <a href="../StyleSheets.html.fr">Feuilles de
       style</a> devraient être utilisées à la place.</dd>
   <dt><code>BIG </code>et <code>SMALL</code></dt>
-    <dd>En général, ces résultats devraient être obtenus avec les  <a
+    <dd>En général, ces résultats devraient être obtenus avec les <a
       href="../StyleSheets.html.fr">Feuilles de style</a>. Quand ils sont
       utilisés pour dénoter des types spécifiques d'information, comme la
-      source d'une citation, un sample computer input ou  output, etc, les  <a
+      source d'une citation, un sample computer input ou output, etc, les <a
       href="inline.html.fr">éléments HTML appropriés</a> devraient être
-    utilisés.</dd>
-  <dt><code>SUB</code> et  <code>SUP</code></dt>
-    <dd><a href="../StyleSheets.html.fr">Les Feuilles de style</a> doivent  être
-      utilisées pour obtenir  la  présentation de ces éléments. Dans des cas
-      comme les expressions mathématiques, un balisage de langage spécifique
-      comme le  <a href="../Math.html.fr">MathML</a> doit être utilisé dès que
-      possible.</dd>
+      utilisés.</dd>
+  <dt><code>SUB</code> et <code>SUP</code></dt>
+    <dd><a href="../StyleSheets.html.fr">Les Feuilles de style</a> doivent
+      être utilisées pour obtenir la présentation de ces éléments. Dans des
+      cas comme les expressions mathématiques, un balisage de langage
+      spécifique comme le <a href="../Math.html.fr">MathML</a> doit être
+      utilisé dès que possible.</dd>
   <dt><code>TT</code> et <code>PRE</code></dt>
-    <dd>Les auteurs doivent utiliser  les <a
+    <dd>Les auteurs doivent utiliser les <a
       href="../StyleSheets.html.fr">Feuilles de style</a> pour obtenir ces
       résultats.</dd>
 </dl>

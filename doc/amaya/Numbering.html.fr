@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Section Numbering</title>
+  <title>Numéroter une section</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
@@ -17,9 +17,9 @@
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="Printing.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
-        alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="MakeBook.html.fr"><img alt="next" border="0"
+        border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
+        /></a> <a href="MakeBook.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -27,7 +27,7 @@
 </table>
 
 <div id="Section">
-<h2><a name="L1064">Numéroter une  section</a></h2>
+<h2><a name="L1064">Numéroter une section</a></h2>
 
 <p>Les en-têtes de section (éléments <code>Hn</code>) peuvent être
 automatiquement numérotées pour refléter la structure du document. L'élément
@@ -40,23 +40,23 @@ automatiquement mis à jour toutes les fois qu'une en-tête est créée ou
 effacée. Ils n'apparaissent pas seulement dans la vue principale, mais aussi
 dans la Vue table des matières.</p>
 
-<p>Quand le document est  <a href="Printing.html.fr#L1062">imprimé</a>, les
+<p>Quand le document est <a href="Printing.html.fr#L1062">imprimé</a>, les
 numéros de section apparaissent dans le document imprimé seulement si la
 fonction "numéroter"est enclenchée à ce moment là.</p>
 
 <p>Quand le document est sauvé, les numéros de section ne sont pas sauvés dans
 <a href="Publishing.html.fr#L1104">le format HTML</a>, mais ils sont engendrés
-dans la  <a href="Publishing.html.fr#L1105">le format texte.</a></p>
+dans la <a href="Publishing.html.fr#L1105">le format texte.</a></p>
 
 <p>La commande <strong>Numéroter les sections </strong>du menu
 <strong>Spécial</strong> est une bascule qui vous permet d'activer ou de
-désactiver  la fonction "numéroter".</p>
+désactiver la fonction "numéroter".</p>
 </div>
 
 <p align="right"><a href="Printing.html.fr"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="MakeBook.html.fr"><img alt="next"
-border="0" src="../Icons/right.gif" /></a></p>
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
+border="0" src="../Icons/up.gif" /></a> <a href="MakeBook.html.fr"><img
+alt="next" border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>
 </html>

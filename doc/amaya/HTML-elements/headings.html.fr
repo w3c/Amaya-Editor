@@ -19,8 +19,8 @@
       <td><p align="right"><a href="structure.html.fr"><img alt="previous"
         border="0" src="../../Icons/left.gif" /></a> <a
         href="../Manual.html.fr#There"><img alt="top" border="0"
-        src="../../Icons/up.gif" /></a> <a href="lists.html.fr"><img alt="next"
-        border="0" src="../../Icons/right.gif" /></a></p>
+        src="../../Icons/up.gif" /></a> <a href="lists.html.fr"><img
+        alt="next" border="0" src="../../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -32,7 +32,7 @@
 <p>HTML fournit 6 niveaux d'entête: <a
 href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-H1"><code>H1,
 H2, H3, H4, H5, and H6</code></a>. Ils devraient être utilisés pour marquer
-les entêtes selon leur importance,  <code>H1</code> étant le plus important.
+les entêtes selon leur importance, <code>H1</code> étant le plus important.
 Les entêtes sont des éléments bloc, et peuvent êre uniquement créées comme les
 filles d'éléments qui ont un contenu de type bloc. Notez que pour les tables
 de données, il existe des éléments spéciaux pour marquer les entêtes.</p>
@@ -55,8 +55,8 @@ une autre présentation.</p>
 <p align="right"><a href="infoTypes.html.fr"><img alt="previous" border="0"
 src="../../Icons/left.gif" /></a> <a href="../Manual.html.fr#There"><img
 alt="top" border="0" src="../../Icons/up.gif" /></a> <a
-href="structure.html.fr"><img alt="next" border="0" src="../../Icons/right.gif"
-/></a></p>
+href="structure.html.fr"><img alt="next" border="0"
+src="../../Icons/right.gif" /></a></p>
 <hr />
 
 <p></p>
