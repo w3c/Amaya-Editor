@@ -9,6 +9,11 @@ LINELENGTH 78;
 
 COUNTERS
   ItemCounter : Rank of List_Item;
+  H2Counter;
+  H3Counter;
+  H4Counter;
+  H5Counter;
+  H6Counter;
   AnchorCounter;
 
 CONST
@@ -76,6 +81,11 @@ RULES
 
 
  BODY:	BEGIN
+	Set H2Counter 0;
+	Set H3Counter 0;
+	Set H4Counter 0;
+	Set H5Counter 0;
+	Set H6Counter 0;
 	Set AnchorCounter 0;
 	Indent +4;
 	Indent -4 After;
@@ -89,36 +99,77 @@ RULES
 	END;
 
  H1:	BEGIN
+	Set H2Counter 0;
+	Set H3Counter 0;
+	Set H4Counter 0;
+	Set H5Counter 0;
+	Set H6Counter 0;
 	Indent -4;
 	Indent +4 After;
 	Create '\12\12' After;
 	END;
 
  H2:	BEGIN
+	Add H2Counter 1;
+	Set H3Counter 0;
+	Set H4Counter 0;
+	Set H5Counter 0;
+	Set H6Counter 0;
 	Indent -2;
 	Indent +2 After;
+	if SectionNumbering
+	   Create (Value(H2Counter, Arabic) '  ');
 	Create '\12\12' After;
 	END;
 
  H3:	BEGIN
+	Add H3Counter 1;
+	Set H4Counter 0;
+	Set H5Counter 0;
+	Set H6Counter 0;
+	if SectionNumbering
+	   Create (Value(H2Counter, Arabic) '.'
+		   Value(H3Counter, Arabic) '  ');
 	Create '\12\12' After;
 	END;
 
  H4:	BEGIN
+	Add H4Counter 1;
+	Set H5Counter 0;
+	Set H6Counter 0;
 	Indent +2;
 	Indent -2 After;
+	if SectionNumbering
+	   Create (Value(H2Counter, Arabic) '.'
+		   Value(H3Counter, Arabic) '.'
+		   Value(H4Counter, Arabic) '  ');
 	Create '\12\12' After;
 	END;
 
  H5:	BEGIN
+	Add H5Counter 1;
+	Set H6Counter 0;
 	Indent +4;
 	Indent -4 After;
+	if SectionNumbering
+	   Create (Value(H2Counter, Arabic) '.'
+		   Value(H3Counter, Arabic) '.'
+		   Value(H4Counter, Arabic) '.'
+		   Value(H5Counter, Arabic) '  ');
 	Create '\12\12' After;
 	END;
 
  H6:	BEGIN
+	Add H6Counter 1;
 	Indent +6;
 	Indent -6 After;
+	if SectionNumbering
+	   Create (Value(H2Counter, Arabic) '.'
+		   Value(H3Counter, Arabic) '.'
+		   Value(H4Counter, Arabic) '.'
+		   Value(H5Counter, Arabic) '.'
+		   Value(H6Counter, Arabic) '  ');
+
 	Create '\12\12' After;
 	END;
 
