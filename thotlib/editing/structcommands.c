@@ -1283,14 +1283,14 @@ void CutCommand (ThotBool save)
 		  /* cherche le premier element apres la selection */
 		  pNext = NextNotPage (lastSel);
 		  nextChar = 0;
-		  pEl1 = firstSel;
-		  if (pEl1->ElTerminal
-		      && pEl1->ElLeafType == LtText
-		      && pEl1->ElTextLength > 0
-		      && pEl1->ElTextLength < firstChar)
+		  if (firstSel->ElTerminal &&
+		      firstSel->ElLeafType == LtText &&
+		      firstSel->ElTextLength > 0 &&
+		      firstSel->ElTextLength < firstChar &&
+		      firstSel != lastSel)
 		    /* debut de la selection apres l'element complet */
 		    {
-		      firstSel = NextElement (firstSel);
+		      firstSel = NextInSelection (firstSel, lastSel);
 		      firstChar = 0;
 		      pPrev = firstSel;
 		    }

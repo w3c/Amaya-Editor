@@ -764,14 +764,16 @@ void PasteCommand ()
 				 lastChar-1);
 	    /* envoie l'evenement ElemPaste.Post */
 	    for (i = 0; i < NCreatedElements; i++)
-	      if (CreatedElement[i])
-	        {
-		  AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
-		  NotifySubTree (TteElemPaste, pDoc, CreatedElement[i],
-				 IdentDocument (DocOfSavedElements));
-		  if (CreatedElement[i]->ElStructSchema == NULL)
-		    /* application has deleted that element */
-		    CreatedElement[i] = NULL;
+	      {
+		if (CreatedElement[i])
+		  {
+		    AddEditOpInHistory (CreatedElement[i], pDoc, FALSE, TRUE);
+		    NotifySubTree (TteElemPaste, pDoc, CreatedElement[i],
+				   IdentDocument (DocOfSavedElements));
+		    if (CreatedElement[i]->ElStructSchema == NULL)
+		      /* application has deleted that element */
+		      CreatedElement[i] = NULL;
+		  }
 	      }
 	    /* close the history sequence after applications have possibly
 	       registered more changes to the pasted elements */

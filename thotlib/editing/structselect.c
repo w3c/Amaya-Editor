@@ -483,6 +483,119 @@ static PtrElement GetCellInRow (PtrElement pRow, PtrElement pColHead)
 }
 
 /*----------------------------------------------------------------------
+   PreviousLeafInSelection
+   Returns the element that is before element pEl in the selection order.
+  ----------------------------------------------------------------------*/
+static PtrElement PreviousLeafInSelection (PtrElement pEl)
+{
+   PtrElement          pCell, pRow, pEl1;
+   int                 i;
+   ThotBool            found;
+
+   if (pEl != NULL)
+     {
+      if (SelContinue)
+	{
+	  pEl1 = pEl;
+	  /* search the previous sibling in the abstract tree, or the
+	     previous element at an upper level */
+	  found = FALSE;
+	  while (pEl && !found)
+	    if (pEl->ElPrevious)
+	      /* this element has a previous sibling */
+	      {
+		if (SelectedColumn &&
+		    TypeHasException (ExcIsCell, pEl->ElTypeNumber,
+				      pEl->ElStructSchema))
+		  /* We are in column selection mode and it's a cell */
+		  /* Don't take the sibling. stop */
+		  pEl = NULL;
+		else
+		  found = TRUE;
+	      }
+	    else
+	      /* no previous sibling */
+	      {
+		if (SelectedColumn &&
+		    TypeHasException (ExcIsCell, pEl->ElTypeNumber,
+				      pEl->ElStructSchema))
+		  /* We are in column selection mode and it's a cell */
+		  /* Don't take the sibling */
+		  pEl = NULL;
+		else
+		  {
+		    /* check the parent element */
+		    pEl = pEl->ElParent;
+		    if (pEl && SelectedColumn &&
+			TypeHasException (ExcIsCell, pEl->ElTypeNumber,
+					  pEl->ElStructSchema))
+		      /* We are in column selection mode and the parent */
+		      /* is a cell. Don't take it */
+		      pEl = NULL;
+		  }
+	      }
+	  if (found)
+	    /* pEl has a previous sibling. Take it */
+	    pEl = pEl->ElPrevious;
+	  if (SelectedColumn && !pEl)
+	    /* We are in column selection mode and we have not found yet */
+	    /* get the cell belonging to the column in the previous row */
+	    {
+	      /* first, get the row that contains pEl */
+	      pRow = pEl1->ElParent;
+	      while (pRow && !TypeHasException (ExcIsRow,
+						pRow->ElTypeNumber,
+						pRow->ElStructSchema))
+		pRow = pRow->ElParent;
+	      /* get the previous row that contains a cell in this
+		 column (a colspanned cell from a previous column may
+		 have "eaten" the cell in this column */
+	      while (pRow && !pEl)
+		{
+		  pRow = BackSearchTypedElem (pRow, pRow->ElTypeNumber,
+					     pRow->ElStructSchema);
+		  if (pRow)
+		    {
+		      pCell = GetCellInRow (pRow, SelectedColumn);
+		      if (pCell)
+			/* there is a cell for that column in the row */
+			/* take that cell */
+			pEl = pCell;
+		    }
+		}
+	    }
+	}
+      else
+	/* the current selection is not contiguous. Get the previous element
+	   in the SelectedElement table */
+	{
+	  /* first, search pEl in the table */
+	  i = 0;
+	  found = FALSE;
+	  while (i < NSelectedElements && !found)
+	    if (SelectedElement[i] == pEl)
+	      found = TRUE;
+	    else
+	      i++;
+	  if (!found)
+	    pEl = NULL;
+	  else
+	    /* pEl is in the table */
+	    if (i > 0)
+	      /* it's not the first element in the table, return the
+		 previous one*/
+	      pEl = SelectedElement[i-1];
+	    else
+	      /* it's the first element in the table, return NULL */
+	      pEl = NULL;
+	}
+     }
+   if (pEl)
+     pEl = LastLeaf (pEl);
+   return pEl;
+}
+
+/*----------------------------------------------------------------------
    NextInSelection
 
    Returns the element in current selection that follows element pEl.
@@ -557,7 +670,7 @@ PtrElement NextInSelection (PtrElement pEl, PtrElement pLastEl)
 		    pEl = pEl->ElFirstChild;
 		}
 	      if (SelectedColumn && !pEl)
-		/* We are in column selection mode and we have not fond yet */
+		/* We are in column selection mode and we have not found yet */
 		/* get the cell belonging to the column in the next row */
 		{
 		  /* first, get the row that contains pEl */
@@ -1873,7 +1986,8 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
 void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 			ThotBool drag, ThotBool checkSelection)
 {
-  PtrElement          oldFirstEl, oldLastEl, pElP, pAsc, pCell, pColHead;
+  PtrElement          oldFirstEl, oldLastEl, pElP, pAsc, pCell, pColHead,
+                      pNext;
   int                 oldFirstChar, oldLastChar;
   ThotBool            change, done, sel;
   ThotBool            updateFixed;
@@ -2055,7 +2169,7 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 		    {
 		      /* move the end of the selection to the end of the
 			 previous element */
-		      FixedElement = LastLeaf (PreviousLeaf (FixedElement));
+		      FixedElement = PreviousLeafInSelection (FixedElement);
 		      if (FixedElement && FixedElement->ElTerminal &&
 			  FixedElement->ElLeafType == LtText)
 			FixedChar =  FixedElement->ElVolume + 1;
@@ -2078,7 +2192,7 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 			{
 			  /* move the end of the selection to the end of the 
 			     previous element */
-			  pEl = LastLeaf (PreviousLeaf (pEl));
+			  pEl = PreviousLeafInSelection (pEl);
 			  if (pEl && pEl->ElTerminal &&
 			      pEl->ElLeafType == LtText)
 			    rank =  pEl->ElVolume + 1;
@@ -2109,25 +2223,32 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 	    {
 	      updateFixed = (FirstSelectedElement == FixedElement);
 	      pElP = FirstSelectedElement;
-	      FirstSelectedElement = FirstLeaf (NextElement (FirstSelectedElement));
-	      if (updateFixed)
-		FixedElement = FirstSelectedElement;
-	      if (FirstSelectedElement->ElTerminal &&
-		  FirstSelectedElement->ElLeafType == LtText)
+	      pNext = NextInSelection (FirstSelectedElement,
+				       LastSelectedElement);
+	      if (pNext)
 		{
-		  if (updateFixed && FirstSelectedChar == FixedChar) 
-		    FixedChar = 1;
-		  if (FirstSelectedElement == oldFirstEl && oldFirstChar == 1)
-		    /* probably the user wanted to move to the previous element */
-		    FirstSelectedElement = pElP;
+		  FirstSelectedElement = FirstLeaf (pNext);
+		  if (updateFixed)
+		    FixedElement = FirstSelectedElement;
+		  if (FirstSelectedElement->ElTerminal &&
+		      FirstSelectedElement->ElLeafType == LtText)
+		    {
+		      if (updateFixed && FirstSelectedChar == FixedChar) 
+			FixedChar = 1;
+		      if (FirstSelectedElement == oldFirstEl &&
+			  oldFirstChar == 1)
+			/* probably the user wanted to move to the previous
+			   element */
+			FirstSelectedElement = pElP;
+		      else
+			FirstSelectedChar = 1;
+		    }
 		  else
-		    FirstSelectedChar = 1;
-		}
-	      else
-		{
-		  if (updateFixed && FirstSelectedChar == FixedChar) 
-		    FixedChar = 0;
-		  FirstSelectedChar = 0;
+		    {
+		      if (updateFixed && FirstSelectedChar == FixedChar) 
+			FixedChar = 0;
+		      FirstSelectedChar = 0;
+		    }
 		}
 	    }
 	  if (StructSelectionMode && checkSelection)
