@@ -41,7 +41,7 @@ PrintDlgWX::PrintDlgWX( int ref,
   AmayaDialog( NULL, ref )
 {
   int  page_size;
-  m_PPrinter = TtaConvMessageToWX( TtaGetEnvString ("THOTPRINT") );
+  m_Printer = TtaConvMessageToWX( TtaGetEnvString ("THOTPRINT") );
   m_PS = ps_file;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PrintDlgWX"));
@@ -64,8 +64,8 @@ PrintDlgWX::PrintDlgWX( int ref,
   XRCCTRL(*this, "wxID_OUTPUT_BOX", wxRadioBox)->SetString(0, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_PRINTER) ));
   XRCCTRL(*this, "wxID_OUTPUT_BOX", wxRadioBox)->SetString(1, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_PS_FILE) ));
   XRCCTRL(*this, "wxID_OUTPUT_BOX", wxRadioBox)->SetSelection(0);
-  XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_PPrinter);
-  m_printer = 0;
+  m_print = 0;
+  XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_Printer);
 
   // orientation radio box  
   XRCCTRL(*this, "wxID_ORIENTATION_BOX", wxRadioBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_ORIENTATION) ));
@@ -172,15 +172,20 @@ void PrintDlgWX::OnOutputBox ( wxCommandEvent& event )
 		(char*) m_output);
   if (m_output == 0)
     {
-      if (m_printer == 1)
-	XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_PPrinter);
+      if (m_print == 1)
+	{
+	  m_print = 0;
+	  XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_Printer);
+	}
     }
   else
     {
-      if (m_printer == 0)
-	XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_PS);
+      if (m_print == 0)
+	{
+	  m_print = 1;
+	  XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_PS);
+	}
     }
-  m_printer = m_output;
 }
 
 /*---------------------------------------------------------------
@@ -237,8 +242,8 @@ void PrintDlgWX::OnTypePrinter ( wxCommandEvent& event )
   wxString printer_name = XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->GetValue( );
   wxLogDebug( _T("PrintDlgWX::OnTypePrinter -printer_name =")+printer_name );
 
-  if (m_printer == 0)
-    m_PPrinter = printer_name;
+  if (m_print == 0)
+    m_Printer = printer_name;
   else
     m_PS = printer_name;
   

@@ -230,7 +230,7 @@ ThotBool CreatePrintDlgWX ( int ref, ThotWindow parent,  char* ps_file)
 #ifdef _WX
   wxString wx_ps_file = TtaConvMessageToWX( ps_file );
 
-  wxLogDebug( _T("SearchDlgWX - ps_file=")+wx_ps_file );
+  wxLogDebug( _T("PrintDlgWX - ps_file=")+wx_ps_file );
 
   PrintDlgWX * p_dlg = new PrintDlgWX( ref,
 				       parent,

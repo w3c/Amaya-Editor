@@ -43,9 +43,9 @@ private:
   DECLARE_EVENT_TABLE()
     
 private:
-  wxString   m_PPrinter;
+  wxString   m_Printer;
   wxString   m_PS;
-  int        m_printer;
+  int        m_print;
 };
 
 #endif  //__PRINTDLGWX_H__
