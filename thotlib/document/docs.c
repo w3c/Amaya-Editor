@@ -173,12 +173,12 @@ PtrDocument         pDoc;
    been created.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            TtaInitDocument (CHAR_T* structureSchema, CHAR_T* documentName, Document document)
+Document    TtaInitDocument (CHAR_T* structureSchema, CHAR_T* documentName, Document document)
 #else  /* __STDC__ */
-Document            TtaInitDocument (structureSchema, documentName, document)
-CHAR_T*             structureSchema;
-CHAR_T*             documentName;
-Document            document;
+Document    TtaInitDocument (structureSchema, documentName, document)
+CHAR_T     *structureSchema;
+CHAR_T     *documentName;
+Document    document;
 #endif /* __STDC__ */
 { 
   PtrDocument         pDoc;
@@ -293,7 +293,7 @@ CHAR_T*             structureSchema;
 CHAR_T*             documentName;
 #endif /* __STDC__ */
 {
-  TtaInitDocument (structureSchema, documentName, 0);
+  return TtaInitDocument (structureSchema, documentName, 0);
 }
 
 
