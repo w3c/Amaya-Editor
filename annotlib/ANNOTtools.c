@@ -906,6 +906,12 @@ void Annot_free (AnnotMeta *annot)
     free (annot->body);
   if (annot->name)
     free (annot->name);
+#ifdef ANNOT_ON_ANNOT
+  if (annot->rootOfThread)
+    free (annot->rootOfThread);
+  if (annot->inReplyTo)
+    free (annot->inReplyTo);
+#endif
   free (annot);
 }
  

@@ -703,20 +703,24 @@ AnnotMeta *LINK_CreateMeta (Document source_doc, Document annot_doc, AnnotMode m
   -----------------------------------------------------------------------*/
 void LINK_DelMetaFromMemory (Document doc)
 {
+  /* @@ JK remove this?
   if (!AnnotMetaData[doc].annotations)
     return;
+  */
 
   AnnotList_free (AnnotMetaData[doc].annotations);
   AnnotMetaData[doc].annotations = NULL;
+  AnnotMetaData[doc].local_annot_loaded = FALSE;
   /* delete any previous filters */
   AnnotFilter_deleteAll (doc);
   /* we no longer need this part of the RDF model; it holds only
      for the annotations of this document */
   SCHEMA_FreeRDFModel (&AnnotMetaData[doc].rdf_model);
+
 #ifdef ANNOT_ON_ANNOT 
   /* @@ JK: maybe remove the references too */
   AnnotMetaData[doc].thread = NULL;
-
+  
   /* free the data associated with the thread */
   if (AnnotThread[doc].annotations)
     {
@@ -725,7 +729,11 @@ void LINK_DelMetaFromMemory (Document doc)
 	AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
 	annot->body_url, FALSE);
       */
+      AnnotList_free (AnnotThread[doc].annotations);
       AnnotThread[doc].annotations = NULL;
+    }
+  if (AnnotThread[doc].rootOfThread)
+    {
       TtaFreeMemory (AnnotThread[doc].rootOfThread);
       AnnotThread[doc].rootOfThread = NULL;
     }
@@ -831,7 +839,7 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 		  if (!AnnotMetaData[doc].thread)
 		    AnnotMetaData[doc].thread = thread;
 		  annot->thread = thread;
-		  ANNOT_AddThreadItem (doc_thread, annot);
+		  /* ANNOT_AddThreadItem (doc_thread, annot); */
 		}
 	      else
 		Annot_free (annot);
@@ -844,6 +852,13 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 	Annot_free (annot);
       List_delFirst (&list_ptr);
     }
+
+#ifdef ANNOT_ON_ANNOT
+  /* erase and redisplay the thread items */
+  ANNOT_DeleteThread (doc);
+  if (AnnotThread[doc].annotations)
+    ANNOT_BuildThread (doc);
+#endif /* ANNOT_ON_ANNOT */
 
   /* show the document */
   if (dispMode == DisplayImmediately)

@@ -228,6 +228,9 @@ void ANNOT_ReloadAnnotMeta (annotDoc)
   annot = GetMetaData (source_doc, annotDoc);
   if (!annot)
     return;
+  /* clear the list of annotations, threads, and filters related to
+     this annotation, as it is a reload */
+  ANNOT_FreeDocumentResource (annotDoc);
   /* initialize the meta data */
   ANNOT_InitDocumentStructure (source_doc, annotDoc, annot, ANNOT_initNone);
 }
@@ -668,6 +671,51 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
   return (thread_item);
 #else
   return 0;
+#endif /* ANNOT_ON_ANNOT */
+}
+
+/*-----------------------------------------------------------------------
+  ANNOT_DeleteThread
+  Experiment the S/P threads.
+
+  Deletes the thread of thread_doc, if it exists
+  -----------------------------------------------------------------------*/
+void ANNOT_DeleteThread (Document thread_doc)
+{
+  Element el;
+  ElementType elType;
+
+  /* we find the the Thread element and make it our root */
+  el = TtaGetRootElement (thread_doc);
+  elType = TtaGetElementType (el);
+  elType.ElTypeNum = Annot_EL_Thread;
+  el = TtaSearchTypedElement (elType, SearchInTree, el);
+
+  if (el)
+    TtaDeleteTree (el, thread_doc);
+}
+
+/*-----------------------------------------------------------------------
+  ANNOT_BuildThread
+  Experiment the S/P threads.
+
+  Builds a thread on thread_doc
+  -----------------------------------------------------------------------*/
+void ANNOT_BuildThread (Document thread_doc)
+{
+#ifdef ANNOT_ON_ANNOT
+  List *annot_ptr;
+  AnnotMeta *annot;
+
+  annot_ptr = AnnotThread[thread_doc].annotations;
+  /* erase previous thread */
+  
+  while (annot_ptr)
+    {
+      annot = (AnnotMeta *) annot_ptr->object;
+      ANNOT_AddThreadItem (thread_doc, annot);
+      annot_ptr = annot_ptr->next;
+    }
 #endif /* ANNOT_ON_ANNOT */
 }
 
