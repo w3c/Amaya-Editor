@@ -70,6 +70,7 @@ public:
   virtual ~AmayaCanvas( );
 
   bool IsParentPageActive();
+  bool IsInit();
 
   void OnSize( wxSizeEvent& event );
   void OnPaint( wxPaintEvent& event );
