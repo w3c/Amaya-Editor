@@ -2844,7 +2844,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
   int                 nspace = 0;
   int                 lost = 0;
   int                 diff, nchar = 0;
-  int                 t, b, l, r;
+  int                 t, b, l, r, c;
 
   pFrame = &ViewFrameTable[frame - 1];
   pViewSel = &pFrame->FrSelectionBegin;
@@ -2956,8 +2956,17 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
 			    {
 			      nchar += diff;
 			      /* add skipped spaces */
-			      width += diff * x;
-			      nspace += diff;
+			      if (ibox1->BxIndChar > 0)
+				c = ibox1->BxBuffer->BuContent[ibox1->BxIndChar - 1];
+			      else if (ibox1->BxBuffer->BuPrevious)
+				c = ibox1->BxBuffer->BuPrevious->BuContent[ibox1->BxBuffer->BuPrevious->BuLength - 1];
+			      else
+				c = 0;
+			      if (c == SPACE)
+				{
+				  width += diff * x;
+				  nspace += diff;
+				}
 			    }
 			  else if (ibox1->BxType == BoDotted)
 			    /* remove the hyphen width */
