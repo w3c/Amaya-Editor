@@ -5837,11 +5837,11 @@ char*              HTMLbuf;
 			     charRead = WC_EOS;
 		    }
 #ifndef _I18N_
-		  else if ((charRead < WC_SPACE || (int) charRead >= 254 ||
-			    ((int) charRead >= 127 && (int) charRead <= 159))
+		  else if (((int)charRead < 32 ||
+			    ((int) charRead >= 127 && (int) charRead <= 143))
 			   && (int) charRead != WC_TAB)
 		     /* it's not a printable character, ignore it */
-               charRead = WC_EOS;
+		    charRead = WC_EOS;
 #endif /* !_I18N_ */
 		  else
 		     /* it's a printable character. Keep it as it is and */
@@ -6039,11 +6039,10 @@ STRING	           pathURL;
 	  charRead = WC_EOS;
 	}
 #ifndef _I18N_
-      else if ((charRead < WC_SPACE || (int) charRead >= 254 ||
-		((int) charRead >= 127 && (int) charRead <= 159))
+      else if (((int)charRead < 32 ||
+	        ((int) charRead >= 127 && (int) charRead <= 143))
 	       && (int) charRead != WC_TAB)
-	/* it's not an end of line */
-	/* Ignore non printable characters except HT, LF, FF. */
+	/* Ignore non printable characters except HT */
 	/* it's not a printable character, ignore it */
 	charRead = WC_EOS;
 #endif /* !_I18N_ */

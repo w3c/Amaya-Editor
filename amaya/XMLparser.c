@@ -1781,11 +1781,13 @@ CHAR_T*   closingTag;
 		    if (EmptyLine)
 		      charRead = EOS;
 		}
-	      else if ((charRead < SPACE || (int) charRead >= 254 ||
-			((int) charRead >= 127 && (int) charRead <= 159))
+#ifndef _I18N_
+	      else if (((int) charRead < 32 ||
+			((int) charRead >= 127 && (int) charRead <= 143))
 		       && (int) charRead != 9)
 		/* it's not a printable character, ignore it */
 		charRead = EOS;
+#endif /* !_I18N_ */
 	      else
 		/* it's a printable character. Keep it as it is and */
 		/* stop ignoring spaces */

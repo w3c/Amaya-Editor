@@ -52,7 +52,7 @@ typedef struct _AnOutputFile
      int		 OfPreviousIndent;/* previous value of indentation */
      int                 OfLineNumber;  /* number of lines already written */
      ThotBool		 OfStartOfLine;	/* start a new line */
-     CHAR_T              OfBuffer[MAX_BUFFER_LEN];	/* output buffer */
+     UCHAR_T             OfBuffer[MAX_BUFFER_LEN];	/* output buffer */
      ThotBool		 OfCannotOpen;	/* open failure */
   }
 AnOutputFile;
@@ -167,11 +167,11 @@ ThotBool		    open;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         PutChar (CHAR_T c, int fileNum, STRING outBuffer, PtrDocument pDoc, ThotBool lineBreak, CHARSET encoding)
+static void         PutChar (UCHAR_T c, int fileNum, STRING outBuffer, PtrDocument pDoc, ThotBool lineBreak, CHARSET encoding)
 
 #else  /* __STDC__ */
 static void         PutChar (c, fileNum, outBuffer, pDoc, lineBreak, encoding)
-CHAR_T                c;
+UCHAR_T             c;
 int                 fileNum;
 STRING              outBuffer;
 PtrDocument         pDoc;
@@ -183,143 +183,169 @@ CHARSET             encoding;
    int                 i, j, indent;
    PtrTSchema          pTSch;
    FILE               *fileDesc;
-   CHAR_T              tmp[2];
-#  ifdef _I18N_
+   UCHAR_T             tmp[2];
+#ifdef _I18N_
    int                 nb_bytes2write, index;
    unsigned char       mbc [MAX_BYTES];
-#  endif /* !_I18N_ */
+#endif /* !_I18N_ */
 
-
-   if (outBuffer != NULL) {
-      /* la sortie doit se faire dans le buffer outBuffer. On ajoute le */
-      /* caractere a sortir en fin de ce buffer */
-      tmp[0] = c;
-      tmp[1] = WC_EOS;
-      ustrcat (outBuffer, tmp);
-   } else if (fileNum == 0)
-          /* la sortie doit se faire dans stdout. On sort le caractere */
-          uputchar (c);
-   else if (fileNum > 0) {
-        /* sortie dans un fichier */
-        /* on cherche le schema de traduction du document pour acceder aux */
-        /* parametres definissant la longueur de ligne et le caractere de */
-        /* fin de ligne */
-        pTSch = GetTranslationSchema (pDoc->DocSSchema);
-        fileDesc = OutputFile[fileNum].OfFileDesc;
-        if (pTSch != NULL && fileDesc != NULL) {
-           if (pTSch->TsLineLength == 0) {
-              /* pas de longueur max. des lignes de sortie, on ecrit */
-              /* directement le caractere dans le fichier de sortie */
-#             ifdef _I18N_ 
-              nb_bytes2write = TtaWC2MB (c, mbc, CharEncoding);
-              for (index = 0; index < nb_bytes2write; index++)
-                  putc (mbc[index], fileDesc);
-#             else  /* !_I18N_ */
-              putc (c, fileDesc);
-#             endif /* !_I18N_ */
-		   } else if (c == pTSch->TsEOL[0]) {
-                  /*  fin de ligne, on ecrit le contenu du buffer de sortie */
-                  for (i = 0; i < OutputFile[fileNum].OfBufferLen; i++) {
-#                     ifdef _I18N_
-                      nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[i], mbc, CharEncoding);
-                      for (index = 0; index < nb_bytes2write; index++)
-                          putc (mbc[index], fileDesc);
-#                     else  /* !_I18N_ */
-                      putc (OutputFile[fileNum].OfBuffer[i], fileDesc);
-#                     endif /* !_I18N_ */
-				  }
-                  ufprintf (fileDesc, pTSch->TsEOL);
-                  /* le buffer de sortie est vide maintenant */
-                  OutputFile[fileNum].OfBufferLen = 0;
-                  OutputFile[fileNum].OfLineNumber++;
-                  OutputFile[fileNum].OfStartOfLine = TRUE;
-		   } else {
-                  /* ce n'est pas un caractere de fin de ligne */
-			   if (OutputFile[fileNum].OfBufferLen >= MAX_BUFFER_LEN) {
-                  /* le buffer de sortie est plein, on ecrit son contenu */
-                  for (i = 0; i < OutputFile[fileNum].OfBufferLen; i++) {
-#                     ifdef _I18N_
-                      nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[i], mbc, CharEncoding);
-                      for (index = 0; index < nb_bytes2write; index++)
-                          putc (mbc[index], fileDesc);
-#                     else  /* !_I18N_ */
-                      putc (OutputFile[fileNum].OfBuffer[i], fileDesc);
-#                     endif /* !_I18N_ */
-				  }
-                  OutputFile[fileNum].OfBufferLen = 0;
-			   }
-               if (OutputFile[fileNum].OfStartOfLine) {
-                  if (OutputFile[fileNum].OfIndent >= MAX_BUFFER_LEN)
+   if (outBuffer != NULL)
+     {
+       /* la sortie doit se faire dans le buffer outBuffer. On ajoute le */
+       /* caractere a sortir en fin de ce buffer */
+       tmp[0] = c;
+       tmp[1] = WC_EOS;
+       ustrcat (outBuffer, tmp);
+     }
+   else if (fileNum == 0)
+     /* la sortie doit se faire dans stdout. On sort le caractere */
+     uputchar (c);
+   else if (fileNum > 0)
+     {
+       /* sortie dans un fichier */
+       /* on cherche le schema de traduction du document pour acceder aux */
+       /* parametres definissant la longueur de ligne et le caractere de */
+       /* fin de ligne */
+       pTSch = GetTranslationSchema (pDoc->DocSSchema);
+       fileDesc = OutputFile[fileNum].OfFileDesc;
+       if (pTSch != NULL && fileDesc != NULL)
+	 {
+	   if (pTSch->TsLineLength == 0)
+	     {
+	       /* pas de longueur max. des lignes de sortie, on ecrit */
+	       /* directement le caractere dans le fichier de sortie */
+#ifdef _I18N_ 
+	       nb_bytes2write = TtaWC2MB (c, mbc, CharEncoding);
+	       for (index = 0; index < nb_bytes2write; index++)
+		 putc (mbc[index], fileDesc);
+#else  /* !_I18N_ */
+	       putc (c, fileDesc);
+#endif /* !_I18N_ */
+	     }
+	   else if (c == pTSch->TsEOL[0])
+	     {
+	       /*  fin de ligne, on ecrit le contenu du buffer de sortie */
+	       for (i = 0; i < OutputFile[fileNum].OfBufferLen; i++)
+		 {
+#ifdef _I18N_
+		   nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[i],
+					      mbc, CharEncoding);
+		   for (index = 0; index < nb_bytes2write; index++)
+		     putc (mbc[index], fileDesc);
+#else  /* !_I18N_ */
+		   putc ((int)OutputFile[fileNum].OfBuffer[i], fileDesc);
+#endif /* !_I18N_ */
+		 }
+	       ufprintf (fileDesc, pTSch->TsEOL);
+	       /* le buffer de sortie est vide maintenant */
+	       OutputFile[fileNum].OfBufferLen = 0;
+	       OutputFile[fileNum].OfLineNumber++;
+	       OutputFile[fileNum].OfStartOfLine = TRUE;
+	     }
+	   else
+	     {
+	       /* ce n'est pas un caractere de fin de ligne */
+	       if (OutputFile[fileNum].OfBufferLen >= MAX_BUFFER_LEN)
+		 {
+		   /* le buffer de sortie est plein, on ecrit son contenu */
+		   for (i = 0; i < OutputFile[fileNum].OfBufferLen; i++)
+		     {
+#ifdef _I18N_
+		       nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[i], mbc, CharEncoding);
+		       for (index = 0; index < nb_bytes2write; index++)
+			 putc (mbc[index], fileDesc);
+#else  /* !_I18N_ */
+		       putc (OutputFile[fileNum].OfBuffer[i], fileDesc);
+#endif /* !_I18N_ */
+		     }
+		   OutputFile[fileNum].OfBufferLen = 0;
+		 }
+               if (OutputFile[fileNum].OfStartOfLine)
+		 {
+		   if (OutputFile[fileNum].OfIndent >= MAX_BUFFER_LEN)
                      indent = MAX_BUFFER_LEN - 1;
-                  else {
+		   else
+		     {
                        indent = OutputFile[fileNum].OfIndent;
                        if (indent < 0)
-                          indent = 0;
-				  }
-                  for (j = 0; j < indent; j++)
-                      OutputFile[fileNum].OfBuffer[j] = WC_SPACE;
-                  OutputFile[fileNum].OfBufferLen = indent;
-                  OutputFile[fileNum].OfStartOfLine = FALSE;
-			   }
+			 indent = 0;
+		     }
+		   for (j = 0; j < indent; j++)
+		     OutputFile[fileNum].OfBuffer[j] = WC_SPACE;
+		   OutputFile[fileNum].OfBufferLen = indent;
+		   OutputFile[fileNum].OfStartOfLine = FALSE;
+		 }
                /* on met le caractere dans le buffer */
                OutputFile[fileNum].OfBuffer[OutputFile[fileNum].OfBufferLen] = c;
                OutputFile[fileNum].OfBufferLen++;
                if (lineBreak)
-				   if (OutputFile[fileNum].OfBufferLen > pTSch->TsLineLength) {
-                     /* le contenu du buffer depasse la longueur de ligne maximum */
+		 if (OutputFile[fileNum].OfBufferLen > pTSch->TsLineLength)
+		   {
+                     /* le contenu du buffer depasse la longueur de ligne
+			maximum */
                      /* on cherche le dernier blanc */
                      i = OutputFile[fileNum].OfBufferLen - 1;
-                     while (OutputFile[fileNum].OfBuffer[i] != WC_SPACE && i > 0)
-                           i--;
-                     if (OutputFile[fileNum].OfBuffer[i] == WC_SPACE) {
-                        /* on a trouve' le dernier blanc */
-                        /* cherche s'il y a au moins un caractere non blanc
-                           avant */
-                        for (j = i; j > 0 && OutputFile[fileNum].OfBuffer[j] <= WC_SPACE; j--);
-						if (OutputFile[fileNum].OfBuffer[j] != WC_SPACE) {
-                           /* le blanc trouve' ne fait pas partie des
-                           blancs d'indentation */
-                           /* on ecrit tout ce qui precede ce blanc */
-                           for (j = 0; j < i; j++) {
-#                              ifdef _I18N_
-                               nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[j], mbc, CharEncoding);
-                               for (index = 0; index < nb_bytes2write; index++)
+                     while (OutputFile[fileNum].OfBuffer[i] != WC_SPACE &&
+			    i > 0)
+		       i--;
+                     if (OutputFile[fileNum].OfBuffer[i] == WC_SPACE)
+		       {
+			 /* on a trouve' le dernier blanc */
+			 /* cherche s'il y a au moins un caractere non blanc
+			    avant */
+			 for (j = i; j > 0 &&
+			     OutputFile[fileNum].OfBuffer[j] <= WC_SPACE; j--);
+			 if (OutputFile[fileNum].OfBuffer[j] != WC_SPACE)
+			   {
+			     /* le blanc trouve' ne fait pas partie des
+				blancs d'indentation */
+			     /* on ecrit tout ce qui precede ce blanc */
+			     for (j = 0; j < i; j++)
+			       {
+#ifdef _I18N_
+				 nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[j], mbc, CharEncoding);
+				 for (index = 0; index < nb_bytes2write;
+				      index++)
                                    putc (mbc[index], fileDesc);
-#                              else  /* !_I18N_ */
-                               putc (OutputFile[fileNum].OfBuffer[j], fileDesc); 
-#                              endif /* !_I18N_ */
-						   }
-                           /* on ecrit un saut de ligne */
-                           ufprintf (fileDesc, pTSch->TsTranslEOL);
-                           OutputFile[fileNum].OfLineNumber++;
-                           /* on traite l'indentation */
-                           if (OutputFile[fileNum].OfIndent > pTSch->TsLineLength - 10)
-                              indent = pTSch->TsLineLength - 10;
-                           else
+#else  /* !_I18N_ */
+				 putc (OutputFile[fileNum].OfBuffer[j],
+				       fileDesc); 
+#endif /* !_I18N_ */
+			       }
+			     /* on ecrit un saut de ligne */
+			     ufprintf (fileDesc, pTSch->TsTranslEOL);
+			     OutputFile[fileNum].OfLineNumber++;
+			     /* on traite l'indentation */
+			     if (OutputFile[fileNum].OfIndent >
+				 pTSch->TsLineLength - 10)
+			       indent = pTSch->TsLineLength - 10;
+			     else
                                indent = OutputFile[fileNum].OfIndent;
-
-                           if (indent < 0)
-                              indent = 0;
-
-                           for (j = 0; j < indent; j++)
+			     
+			     if (indent < 0)
+			       indent = 0;
+			     
+			     for (j = 0; j < indent; j++)
                                OutputFile[fileNum].OfBuffer[j] = WC_SPACE;
-                           i -= indent;
-                           i++;
-                          if (i < 0)
-                             i = 0;
-                          OutputFile[fileNum].OfStartOfLine = FALSE;
-			       
-                          /* on decale ce qui suit le blanc */
-                          OutputFile[fileNum].OfBufferLen -= i;
-                          if (i > 0 )
-                             for (j = indent; j < OutputFile[fileNum].OfBufferLen; j++)
-                                 OutputFile[fileNum].OfBuffer[j] = OutputFile[fileNum].OfBuffer[i + j];
-						}
-					 }
-				   }
-		}
-	  }
-   }
+			     i -= indent;
+			     i++;
+			     if (i < 0)
+			       i = 0;
+			     OutputFile[fileNum].OfStartOfLine = FALSE;
+			     
+			     /* on decale ce qui suit le blanc */
+			     OutputFile[fileNum].OfBufferLen -= i;
+			     if (i > 0 )
+			       for (j = indent;
+				    j < OutputFile[fileNum].OfBufferLen; j++)
+                                 OutputFile[fileNum].OfBuffer[j] =
+				          OutputFile[fileNum].OfBuffer[i + j];
+			   }
+		       }
+		   }
+	     }
+	 }
+     }
 }
 
 
@@ -399,7 +425,7 @@ ThotBool            lineBreak;
 #endif /* __STDC__ */
 
 {
-   CHAR_T                buffer[20];
+   UCHAR_T             buffer[20];
    int                 i;
 
    usprintf (buffer, TEXT("%d"), n);
@@ -430,7 +456,7 @@ AlphabetTransl** pTransAlph;
    PtrSSchema   pSS;
    PtrElement   pAncestor;
    int          i;
-   CHAR_T         alphabet;
+   CHAR_T       alphabet;
    ThotBool     transExist;
    
    pSS = NULL;
@@ -513,7 +539,7 @@ PtrDocument     pDoc;
 {
    PtrTextBuffer        pNextBufT, pPrevBufT;
    int                  i, j, k, b, ft, lt;
-   CHAR_T               c, cs;
+   UCHAR_T              c, cs;
    ThotBool             continu, equal, stop;
    int                  textTransBegin, textTransEnd;
    StringTransl         *pTrans;   
@@ -719,7 +745,7 @@ PtrDocument         pDoc;
 {
    PtrTSchema          pTSch;
    PtrTextBuffer       pBufT;
-   CHAR_T              c;
+   UCHAR_T             c;
    int                 i, j, b, ft, lt;
    AlphabetTransl     *pTransAlph;
    StringTransl       *pTrans;
@@ -881,16 +907,16 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static CHAR_T         PresRuleValue (PtrPRule pPRule)
+static UCHAR_T      PresRuleValue (PtrPRule pPRule)
 
 #else  /* __STDC__ */
-static CHAR_T         PresRuleValue (pPRule)
+static UCHAR_T      PresRuleValue (pPRule)
 PtrPRule            pPRule;
 
 #endif /* __STDC__ */
 
 {
-   CHAR_T                val;
+   UCHAR_T                val;
 
    val = WC_SPACE;
    switch (pPRule->PrType)
@@ -2066,7 +2092,7 @@ ThotBool            recordLineNb;
    PtrTRuleBlock       pBlock;
    TranslNumAttrCase  *pTCase;
    int                 i, nPRules = 0;
-   CHAR_T                val;
+   CHAR_T              val;
 
 #define MAX_PRULE_TABLE 50
    PtrPRule            PRuleTable[MAX_PRULE_TABLE];

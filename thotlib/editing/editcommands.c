@@ -3424,12 +3424,12 @@ int                 nbytes;
 	    clipboard->BuContent[j++] = SPACE;
 	  if (b == EOL)
 	    clipboard->BuContent[j++] = EOL;
-	  /* Sinon on filtre que les caracteres imprimables */
+	  /* Sinon on ne filtre que les caracteres imprimables */
 #     ifdef _I18N_
       else if (iswprint ((CHAR_T)b))
 #     else  /* !_I18N_ */
 	  else if ((b >= 32 && b < 127)
-		   || (b >= 177 && b < 254))
+		   || (b > 143 && b <= 255))
 #     endif /* !_I18N_ */
 	    clipboard->BuContent[j++] = Xbuffer[i];
 	}

@@ -2295,7 +2295,8 @@ BinFile               infile;
 
 	     /* Check the character read */
 	     /* Ignore end of line , non printable */
-	     if (charRead < SPACE || (int) charRead >= 254 || ((int) charRead >= 127 && (int) charRead <= 159))
+	     if ((int) charRead < 32 ||
+		 ((int) charRead >= 127 && (int) charRead <= 143))
 		charRead = EOS;
 	     if (charRead != EOS)
 	       {
