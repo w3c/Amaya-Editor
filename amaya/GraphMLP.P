@@ -904,6 +904,7 @@ BOXES
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
+
    VALUE_xlink_href: BEGIN
 	Content: (xlink_href);
 	Visibility: 0;
@@ -915,6 +916,31 @@ BOXES
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
+
+ ATTR_xml_space_default: BEGIN
+	Content: Text ' xml:space=default';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ ATTR_xml_space_preserve: BEGIN
+	Content: Text ' xml:space=preserve';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
 
 { presentation boxes }
 
@@ -1560,5 +1586,11 @@ ATTRIBUTES
 	CreateBefore (ATTR_xlink_href);
 	CreateBefore (VALUE_xlink_href);
 	END;
+
+  xml_space = xml_space_default:
+	CreateBefore (ATTR_xml_space_default);
+
+  xml_space = xml_space_preserve:
+	CreateBefore (ATTR_xml_space_preserve);
 
 END

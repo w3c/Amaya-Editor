@@ -121,6 +121,7 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {TEXT("superscriptshift"), TEXT(""), 'A', MathML_ATTR_superscriptshift, L_Other},
    {TEXT("symmetric"), TEXT(""), 'A', MathML_ATTR_symmetric, L_Other},
    {TEXT("width"), TEXT(""), 'A', MathML_ATTR_width_, L_Other},
+   {TEXT("xml:space"), TEXT(""), 'A', MathML_ATTR_xml_space, L_Other},
    {TEXT("xref"), TEXT(""), 'A', MathML_ATTR_xref, L_Other},
    {TEXT("zzghost"), TEXT(""), 'A', MathML_ATTR_Ghost_restruct, L_Other},
 

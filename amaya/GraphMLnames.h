@@ -57,6 +57,7 @@ static AttributeMapping GraphMLAttributeMappingTable[] =
    {TEXT("x1"), TEXT(""), 'A', GraphML_ATTR_x1, L_Other},
    {TEXT("x2"), TEXT(""), 'A', GraphML_ATTR_x2, L_Other},
    {TEXT("xlink:href"), TEXT("image"), 'A', GraphML_ATTR_xlink_href, L_Other},
+   {TEXT("xml:space"), TEXT(""), 'A', GraphML_ATTR_xml_space, L_Other},
    {TEXT("y"), TEXT(""), 'A', GraphML_ATTR_y, L_Other},
    {TEXT("y1"), TEXT(""), 'A', GraphML_ATTR_y1, L_Other},
    {TEXT("y2"), TEXT(""), 'A', GraphML_ATTR_y2, L_Other},

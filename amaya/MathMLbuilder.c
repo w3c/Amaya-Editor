@@ -353,6 +353,9 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_symmetric, TEXT("true"), MathML_ATTR_symmetric_VAL_true},
  {MathML_ATTR_symmetric, TEXT("false"), MathML_ATTR_symmetric_VAL_false},
 
+ {MathML_ATTR_xml_space, TEXT("default"), MathML_ATTR_xml_space_VAL_xml_space_default},
+ {MathML_ATTR_xml_space, TEXT("preserve"), MathML_ATTR_xml_space_VAL_xml_space_preserve},
+
  {0, TEXT(""), 0}			/* Last entry. Mandatory */
 };
 

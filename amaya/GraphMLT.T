@@ -559,4 +559,15 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
+   xml_space = xml_space_default:
+	BEGIN
+	create SAN;
+	create 'xml:space="default"';
+	END;
+   xml_space = xml_space_preserve:
+	BEGIN
+	create SAN;
+	create 'xml:space="preserve"';
+	END;
+
 END

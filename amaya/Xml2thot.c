@@ -141,10 +141,10 @@ static USTRING       nameElementStack[MAX_STACK_HEIGHT];
 static Element       elementStack[MAX_STACK_HEIGHT];
                         /* element language */
 static Language	     languageStack[MAX_STACK_HEIGHT];
+                        /* is space preserved for that element */
+static char	     spacePreservedStack[MAX_STACK_HEIGHT];
                         /* context of the element */
 static PtrParserCtxt parserCtxtStack[MAX_STACK_HEIGHT];
-                        /* if space preserved for thah element */
-static char          spacePreservedStack[MAX_STACK_HEIGHT];
                         /* first free element on the stack */
 static int           stackLevel = 0;
 
@@ -1097,7 +1097,7 @@ USTRING          mappedName;
    int                 i, error;
    Element             el, parent;
    ElementType         parentType;
-   ThotBool            ret, spacesDeleted, spacePreserved;
+   ThotBool            ret, spacesDeleted;
 
    ret = FALSE;
 #ifdef LC2
@@ -1184,7 +1184,6 @@ USTRING          mappedName;
 	     {
 	       XMLcontext.language = languageStack[stackLevel - 1];
 	       currentParserCtxt = parserCtxtStack[stackLevel - 1];
-	       spacePreserved = spacePreservedStack[stackLevel - 1];
 	       /* Is there a space attribute in the stack ? */
 	       XmlWhiteSpaceHandling ();
 	     }
@@ -1493,9 +1492,7 @@ CHAR_T   *name;
 	      }
 	}
     }
-
   XmlWhiteSpaceHandling ();
-  ImmediatelyAfterTag = TRUE;
 }
 
 /*----------------------  StartElement  (end)  -----------------------*/
@@ -1654,49 +1651,60 @@ STRING      data;
 	   ustrlen (data), data);
 #endif /* LC */
 
-   length = ustrlen (data);
-
-   /* Line-break and tabs treatment */
-   if ((length  == 1) &&
-       (data[0] == WC_EOL || data[0] == WC_CR) &&
-       ImmediatelyAfterTag)
+   i = 0;
+   /* Immediately after a start tag, treatment of the leading spaces */
+   /* If RemoveLeadingSpace = TRUE, we suppress all leading white-space */
+   /* characters, otherwise, we only suppress the first line break*/
+   if (ImmediatelyAfterTag)
      {
-       /* Remove a line break immediately following a start tag */ 
-       ImmediatelyAfterTag = FALSE;
-       return;
+       if (RemoveLeadingSpace)
+	 {
+	   while (data[i] != WC_EOS &&
+		  (data[i] == WC_EOL || data[i] == WC_CR ||
+		   data[i] == WC_TAB || data[i] == WC_SPACE))
+	     i++;
+	   if (data[i] == WC_EOS)
+	     ImmediatelyAfterTag = FALSE;
+	 }
+       else
+	 {
+	   if (data[0] == WC_EOL || data[0] == WC_CR)
+	     i = 1;
+	   ImmediatelyAfterTag = FALSE;
+	 }
      }
-   ImmediatelyAfterTag = FALSE;
+ 
+   if (data[i] == WC_EOS)
+     return;
 
+   length = ustrlen (&(data[i]));
    bufferws = TtaAllocString (length+1);
-   strcpy (bufferws, data);
-
+   strcpy (bufferws, &(data[i]));
+   
+   /* Convert line-break or tabs into space character */
+   i = 0;
    if (RemoveLineBreak)
      {
-       i = 0;
        while (bufferws[i] != WC_EOS)
 	 {
-	   if (bufferws[i] == WC_EOL ||
-	       bufferws[i] == WC_CR ||
+	   if (bufferws[i] == WC_EOL || bufferws[i] == WC_CR ||
 	       bufferws[i] == WC_TAB)
-	     bufferws[i] = WC_SPACE;
+	     bufferws[i]= WC_SPACE;
 	   i++;
 	 }
      }
-   i = 0;
 
-   /* Leading space treatment */
    if (XMLcontext.lastElement != NULL)
+     i = 0;
      {
+       /* Suppress the leading spaces in Inline elements */
        uselessSpace = IsLeadingSpaceUseless ();
        if (RemoveLeadingSpace && uselessSpace)
 	 /* suppress leading spaces */
-	 {
-	   i = 0;
-	   while (bufferws[i] <= WC_SPACE && bufferws[i] != WC_EOS)
+	   while (bufferws[i] != WC_EOS && bufferws[i] == WC_SPACE)
 	     i++;
-	 }
        
-       /* Contiguous spaces treatment */ 
+       /* Collapse contiguous spaces */ 
        if (bufferws[i] != WC_EOS)
 	 {
 	   length = ustrlen (bufferws);
@@ -1721,19 +1729,25 @@ STRING      data;
 	   elType = TtaGetElementType (XMLcontext.lastElement);
 	   if (elType.ElTypeNum == 1 && XMLcontext.mergeText)
 	     {
-	       /* Is the last character of text element a space */
-	       length = TtaGetTextLength (XMLcontext.lastElement) + 1;
-	       buffertext = TtaAllocString (length);
-	       TtaGiveTextContent (XMLcontext.lastElement,
-				   buffertext, &length, &lang);
-	       if ((buffertext[length-1] == WC_SPACE) &&
-		   (buffer[i1] == WC_SPACE))
-		 TtaAppendTextContent (XMLcontext.lastElement,
-				       &(buffer[i1+1]), XMLcontext.doc);
+	       if ((buffer[i1] == WC_SPACE) && RemoveContiguousSpace)
+		 {
+		   /* Is the last character of text element a space */
+		   length = TtaGetTextLength (XMLcontext.lastElement) + 1;
+		   buffertext = TtaAllocString (length);
+		   TtaGiveTextContent (XMLcontext.lastElement,
+				       buffertext, &length, &lang);
+		   /* Remove leading space if last content was finished by a space */
+		   if ((buffertext[length-1] == WC_SPACE))
+		     TtaAppendTextContent (XMLcontext.lastElement,
+					   &(buffer[i1+1]), XMLcontext.doc);
+		   else
+		     TtaAppendTextContent (XMLcontext.lastElement,
+					   &(buffer[i1]), XMLcontext.doc);
+		   TtaFreeMemory (buffertext);
+		 }
 	       else
 		 TtaAppendTextContent (XMLcontext.lastElement,
 				       &(buffer[i1]), XMLcontext.doc);
-	       TtaFreeMemory (buffertext);
 	     }
 	   else
 	     {
@@ -2503,19 +2517,16 @@ CHAR_T     *attrValue;
 #endif
 {
 
-   if (lastMappedAttr != NULL  || currentAttribute != NULL || XMLSpaceAttribute) 
+   if (lastMappedAttr != NULL  || currentAttribute != NULL) 
      {
        if (currentParserCtxt != NULL)
 	 {
 	   if (XMLSpaceAttribute)
 	     XmlWhiteSpaceInStack (attrValue);
+	   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+	     XhtmlEndOfAttrValue (attrValue);
 	   else
-	     {
-	       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
-		 XhtmlEndOfAttrValue (attrValue);
-	       else
-		 XmlEndOfAttrValue (attrValue);
-	     }
+	     XmlEndOfAttrValue (attrValue);
 	 }
      }
 
@@ -3135,6 +3146,9 @@ const XML_Char **attlist;
        /*----- Treatment called at the end of start tag -----*/
        EndOfXmlStartTag (bufName);
 
+       /*----- We are immediately after a start tag -----*/
+       ImmediatelyAfterTag = TRUE;
+
        TtaFreeMemory (bufName);
        TtaFreeMemory (buffer);
      }
@@ -3162,6 +3176,8 @@ const XML_Char  *name
 #ifdef LC
    printf ("\n Hndl_ElementEnd '%s'", name);
 #endif /* LC */
+
+   ImmediatelyAfterTag = FALSE;
 
    /* look for the context associated with that element */
    buffer = TtaGetMemory ((strlen (name) + 1));

@@ -1230,6 +1230,14 @@ ATTRIBUTES
 		BEGIN
 		END;
 
+ xml_space = xml_space_default:
+		BEGIN
+		END;
+
+ xml_space = xml_space_preserve:
+		BEGIN
+		END;
+
 TextTRANSLATE
 	BEGIN
 	'\240' -> ' '; { &nbsp; }

@@ -11,6 +11,7 @@ ATTR
    id = text;
    class = text;
    style_ = text;
+   xml_space = xml_space_default, xml_space_preserve;
 
    { global attributes for internal processing }
    Invalid_attribute = TEXT;

@@ -60,3 +60,7 @@ inline_: inline
 scale_: scale
 normal_: normal
 bold_: bold
+
+xml_space_default: default
+xml_space_preserve: preserve
+xml_space: xml:space

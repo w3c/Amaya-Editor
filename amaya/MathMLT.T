@@ -1239,6 +1239,17 @@ ATTRIBUTES
 	remove;	{ do no output the element content }
 	end;
 
+   xml_space = xml_space_default:
+	begin
+	create SAN;
+	create 'xml:space="default"';
+	end;
+   xml_space = xml_space_preserve:
+	BEGIN
+	create SAN;
+	create 'xml:space="preserve"';
+	end;
+
 #include "Text_SGML.inc"
 
 TextTRANSLATE Grec

@@ -15,6 +15,7 @@ ATTR
    id = TEXT;
    xref = TEXT;
    other = TEXT;
+   xml_space = xml_space_default, xml_space_preserve;
 
    { generic attributes for internal use }
    Invalid_attribute = TEXT;	{ to store an unknown attribute }

@@ -30,6 +30,7 @@ ATTR
    Highlight = Yes_;
    IntEntity = Yes_;	{ do not translate & into &amp; in output file }
    EntityName = Text;   { the content of the element is the name of an entity }
+   xml_space = xml_space_default, xml_space_preserve; { xml:space }
 
 CONST
 

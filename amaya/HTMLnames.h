@@ -337,6 +337,8 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {TEXT("width"), TEXT("td"), 'A', HTML_ATTR_Width__, L_Transitional},
    {TEXT("width"), TEXT("th"), 'A', HTML_ATTR_Width__, L_Transitional},
 
+   {TEXT("xml:space"), TEXT(""), 'A', HTML_ATTR_xml_space, L_Basic},
+
    {TEXT("zzghost"), TEXT(""), 'A', HTML_ATTR_Ghost_restruct, L_Basic},
    {TEXT(""), TEXT(""), EOS, 0, L_Other}		/* Last entry. Mandatory */
 };

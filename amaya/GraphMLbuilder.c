@@ -34,6 +34,8 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
    {GraphML_ATTR_linestyle_, TEXT("dashed"), GraphML_ATTR_linestyle__VAL_dashed_},
    {GraphML_ATTR_linestyle_, TEXT("dotted"), GraphML_ATTR_linestyle__VAL_dotted_},
    {GraphML_ATTR_linestyle_, TEXT("solid"), GraphML_ATTR_linestyle__VAL_solid_},
+   {GraphML_ATTR_xml_space, TEXT("default"), GraphML_ATTR_xml_space_VAL_xml_space_default},
+   {GraphML_ATTR_xml_space, TEXT("preserve"), GraphML_ATTR_xml_space_VAL_xml_space_preserve},
    {0, TEXT(""), 0}			/* Last entry. Mandatory */
 };
 

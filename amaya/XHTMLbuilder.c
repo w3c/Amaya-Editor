@@ -320,6 +320,7 @@ XhtmlEntity        XhtmlEntityTable[] =
 
 /* tables defined in fetchHTMLname.c */
 extern AttributeMapping XhtmlAttributeMappingTable[];
+
 /* Mapping table of HTML attribute values */
 AttrValueMapping XhtmlAttrValueMappingTable[] =
 {
@@ -456,6 +457,11 @@ AttrValueMapping XhtmlAttrValueMappingTable[] =
    {HTML_ATTR_disabled, TEXT("disabled"), HTML_ATTR_disabled_VAL_Yes_},
    {HTML_ATTR_readonly, TEXT("readonly"), HTML_ATTR_readonly_VAL_Yes_},
    {HTML_ATTR_no_resize, TEXT("noresize"), HTML_ATTR_no_resize_VAL_Yes_},
+
+   /* XML attribute xml:space */
+   {HTML_ATTR_xml_space, TEXT("default"), HTML_ATTR_xml_space_VAL_xml_space_default},
+   {HTML_ATTR_xml_space, TEXT("preserve"), HTML_ATTR_xml_space_VAL_xml_space_preserve},
+
    {0, TEXT(""), 0}			/* Last entry. Mandatory */
 };
 

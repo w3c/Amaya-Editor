@@ -2029,6 +2029,11 @@ ATTRIBUTES
 	Remove;	{ do no output the element content }
 	END;
 
+ xml_space = xml_space_default:
+	 Create ' xml:space="default"';
+ xml_space = xml_space_preserve:
+	 Create ' xml:space="preserve"';
+
 TextTRANSLATE
 	BEGIN
 { 	'\42' -> '&quot;'; }	{ quotation mark = APL quote, U+0022 ISOnum }

@@ -2252,6 +2252,30 @@ BOXES
 		   HorizPos: Left = Previous AnyBox . Right;
                 END;
         END;
+ 
+ ATTR_xml_space_default: BEGIN
+	Content: Text ' xml:space=default';
+	Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+
+ ATTR_xml_space_preserve: BEGIN
+	Content: Text ' xml:space=preserve';
+	Visibility: 0;
+        IN Math_Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
 
  VerticalLine: BEGIN
 	Content: Graphics 'W';
@@ -3938,6 +3962,12 @@ ATTRIBUTES
 		VertPos: Top = Previous VALUE_EntityName . Bottom;
 		END;
 	END;
+
+  xml_space = xml_space_default:
+	CreateBefore(ATTR_xml_space_default);
+
+  xml_space = xml_space_preserve:
+	CreateBefore(ATTR_xml_space_preserve);
 
   IntPlaceholder:
 	BEGIN

@@ -1619,6 +1619,30 @@ BOXES
                 END;
         END;
 
+ ATTR_XML_SPACE_DEFAULT: BEGIN
+	Content: Text ' xml:space=default';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ ATTR_XML_SPACE_PRESERVE: BEGIN
+	Content: Text ' xml:space=preserve';
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
  APPLET_S: BEGIN
 	Content: Text 'applet';
 	Visibility: 0;
@@ -10273,6 +10297,12 @@ ATTRIBUTES
 	IN Structure_view
 		Visibility: 1;
 	END;
+
+  xml_space = xml_space_default:
+	CreateBefore(ATTR_XML_SPACE_DEFAULT);
+
+  xml_space = xml_space_preserve:
+	CreateBefore(ATTR_XML_SPACE_PRESERVE);
 
 #ifndef PAGE
   Highlight:
