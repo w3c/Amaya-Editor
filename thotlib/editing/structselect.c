@@ -1191,7 +1191,7 @@ void ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
 {
   PtrElement          pEl, pNextEl;
   PtrAbstractBox      pAb, pNextAb, pSelAb[MAX_TRANSMIT];
-  int                 view, frame, firstChar, lastChar;
+  int                 view, frame = 0, firstChar, lastChar;
   int                 depth;
   ThotBool            selBegin, selEnd, active, unique, stop;
 

@@ -1846,6 +1846,7 @@ static ThotBool SaveObjectThroughNet (Document doc, View view,
       fprintf(stderr, "Saving completed\n");
 #endif
     }
+  TtaFreeMemory (tempname);
   TtaFreeMemory (msg);
   return (res == 0);
 }

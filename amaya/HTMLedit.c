@@ -338,8 +338,8 @@ ThotBool CheckMandatory (NotifyAttribute *event)
 
 /*----------------------------------------------------------------------
    SetREFattribute
-   Set the HREF or CITE attribue of the element to      
-   the concatenation of targetURL and targetName.
+   Set the HREF or CITE attribue of the element to the concatenation of
+   targetURL and targetName expressed in dialog charset.
   ----------------------------------------------------------------------*/
 void SetREFattribute (Element element, Document doc, char *targetURL,
 		      char *targetName)
@@ -348,7 +348,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
    AttributeType       attrType;
    Attribute           attr;
    Element             piEl;
-   char               *value, *base, *s;
+   char               *value, *base, *s, *utf8val;
    char                tempURL[MAX_LENGTH];
    char                buffer[MAX_LENGTH];
    int                 length, piNum;
@@ -479,7 +479,12 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 		   if (*value == EOS)
 		     strcat (buffer, "./");
 		   else
-		     strcat (buffer, value);
+		   {
+		     utf8val = (char *)TtaConvertByteToMbs ((unsigned char *)value,
+					       TtaGetDefaultCharset ());
+		     strcat (buffer, utf8val);
+	         TtaFreeMemory (utf8val);
+		   }
 		   strcat (buffer, "\"");
 		   TtaSetTextContent (element, (unsigned char *)buffer, Latin_Script, doc);
 		 }
@@ -505,7 +510,12 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	   if (*value == EOS)
 	     TtaSetAttributeText (attr, "./", element, doc);
 	   else
-	     TtaSetAttributeText (attr, value, element, doc);
+	   {
+		 utf8val = (char *)TtaConvertByteToMbs ((unsigned char *)value,
+					     TtaGetDefaultCharset ());
+	     TtaSetAttributeText (attr, utf8val, element, doc);
+	     TtaFreeMemory (utf8val);
+	   }
 	   TtaFreeMemory (value);
 	 }
 

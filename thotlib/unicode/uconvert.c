@@ -1300,6 +1300,10 @@ unsigned char *TtaConvertMbsToByte (unsigned char *src, CHARSET encoding)
   dest = NULL;
   if (src)
     {
+      if (encoding == UTF_8)
+	dest = (unsigned char *)TtaStrdup ((char *)src);
+      else
+	{
       /* generate the WC string */
       len = strlen ((char *)src);
       tmp = (wchar_t *)TtaGetMemory ((len + 1) * sizeof (wchar_t));
@@ -1315,6 +1319,7 @@ unsigned char *TtaConvertMbsToByte (unsigned char *src, CHARSET encoding)
       /* now generate the ISO string */
       dest = TtaConvertWCToByte (tmp, encoding);
       TtaFreeMemory (tmp);
+	  }
     }
   return dest;
 }

@@ -6,8 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char *ReallocUTF8String ( char *url,
-                                 Document doc );
 extern CSSmedia CheckMediaCSS ( char *buff );
 extern void AttrMediaChanged ( NotifyAttribute *event );
 extern PSchema GetPExtension ( Document doc,
@@ -52,8 +50,6 @@ extern void LoadStyleSheet ( char *url,
 
 #else /* __STDC__ */
 
-extern char *ReallocUTF8String ( char *url,
-                                   Document doc );
 extern CSSmedia CheckMediaCSS ( char *buff );
 extern void AttrMediaChanged ( NotifyAttribute *event );
 extern PSchema GetPExtension ( Document doc,

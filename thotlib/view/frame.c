@@ -2339,7 +2339,8 @@ void DisplayFrame (int frame)
   ViewFrame          *pFrame;
   int                 w, h;
 
-  if (documentDisplayMode[frame - 1] == DisplayImmediately)
+  if (frame > 0 &&
+	  documentDisplayMode[frame - 1] == DisplayImmediately)
     {     
       /* Check that the frame exists */
       pFrame = &ViewFrameTable[frame - 1];

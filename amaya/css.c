@@ -34,16 +34,6 @@
 
 
 /*----------------------------------------------------------------------
-  ReallocUTF8String
-  If such convertion is needed, the string url is reallocated with
-  the converted string.
-  ----------------------------------------------------------------------*/
-char *ReallocUTF8String (char *url, Document doc)
-{
-  return url;
-}
-
-/*----------------------------------------------------------------------
   CheckMediaCSS
   Return the media given by the string
   ----------------------------------------------------------------------*/
@@ -938,7 +928,8 @@ char *GetStyleContents (Element el)
 }
 
 /*----------------------------------------------------------------------
-  LoadStyleSheet loads the external Style Sheet found at the given url.
+  LoadStyleSheet loads the external Style Sheet found at the given url
+  (in dialog charset).
   The parameter link gives the element which links the CSS or NULL.
   The parameter css gives the CSS context which imports this CSS file.
   The parameter media gives the application limits of the CSS.
@@ -954,7 +945,7 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
   FILE               *res;
   char                tempfile[MAX_LENGTH];
   char                tempURL[MAX_LENGTH];
-  char               *tmpBuff;
+  char               *tmpBuff, *screentype;
   CSSCategory         category;
   int                 len;
   ThotBool            import, printing;
@@ -963,6 +954,12 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
   /* check if we have to load CSS */
   TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
   printing = TtaIsPrinting ();
+  if (!printing && media == CSS_PRINT)
+  {
+    screentype = TtaGetEnvString ("SCREEN_TYPE");
+	if (screentype && !strncasecmp (screentype, "print", 5))
+      printing = TRUE;
+  }
   if (!loadcss && !printing)
     return;
   import = (css != NULL);

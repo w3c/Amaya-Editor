@@ -5454,14 +5454,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
 {
   char              tempfile[MAX_LENGTH];
   char              tempname[MAX_LENGTH];
-  char              sep, *utf8value, *ptr;
+  char              sep, *ptr;
   int               val;
 #if defined(_WINGUI) || defined(_WX) 
   int               i;
 #endif /* defined(_WINGUI) || defined(_WX) */
   ThotBool          change, updated;
 
-  utf8value = NULL;
   if (typedata == STRING_DATA && data && strchr (data, '/'))
     sep = URL_SEP;
   else
@@ -6015,14 +6014,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	{
 	  /* Confirm button */
 	  if (AttrHREFvalue[0] != EOS)
-	    {
-	      utf8value = (char *)TtaConvertByteToMbs ((unsigned char *)AttrHREFvalue,
-						 TtaGetDefaultCharset ());
 	      /* create an attribute HREF for the Link_Anchor */
 	      SetREFattribute (AttrHREFelement, AttrHREFdocument,
-			       utf8value, NULL);
-	      TtaFreeMemory (utf8value);
-	    }
+			       AttrHREFvalue, NULL);
 	  TtaDestroyDialogue (BaseDialog + AttrHREFForm);
 	  TtaDestroyDialogue (BaseDialog + FileBrowserForm);
 	}

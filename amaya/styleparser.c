@@ -6049,7 +6049,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		      saveDocURL = DocURL;
 		      ptr = TtaStrdup (base);
 		      /* get the CSS URI in UTF-8 */
-		      ptr = ReallocUTF8String (ptr, docRef);
+		      /*ptr = ReallocUTF8String (ptr, docRef);*/
 		      LoadStyleSheet (base, docRef, (Element) css, css,
 				      pInfo->PiMedia,
 				      pInfo->PiCategory == CSS_USER_STYLE);

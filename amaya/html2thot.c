@@ -1689,7 +1689,7 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
   Attribute           attr;
   AttributeType       attrType;
   CSSmedia            media;
-  char               *buff;
+  char               *utf8path, *buff;
   int                 length;
 
   /* A LINK element is complete.
@@ -1720,16 +1720,17 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
 	  DocumentMeta[doc] && DocumentMeta[doc]->method != CE_MAKEBOOK)
 	{
 	  length = TtaGetTextAttributeLength (attr);
-	  buff = (char*)TtaGetMemory (length + 1);
-	  TtaGiveTextAttributeValue (attr, buff, &length);
-	  /* get the CSS URI in UTF-8 */
-	  buff = ReallocUTF8String (buff, doc);
+	  utf8path = (char*)TtaGetMemory (length + 1);
+	  TtaGiveTextAttributeValue (attr, utf8path, &length);
 	  /* load the stylesheet file found here ! */
+	  buff = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
+					     TtaGetDefaultCharset ());
 	  if (buff)
 	    {
 	      LoadStyleSheet (buff, doc, el, NULL, media, FALSE);
 	      TtaFreeMemory (buff);
 	    }
+	      TtaFreeMemory (utf8path);
 	}
     }
 }
