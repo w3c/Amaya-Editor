@@ -235,7 +235,17 @@ RULES
 	END;
 
   TEXT_UNIT :
-	 Width: Enclosed . Width;
+	BEGIN
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Width: Enclosed . Width;
+	END;
+
+ SYMBOL_UNIT:
+	BEGIN
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	END;
 
 ATTRIBUTES
 
