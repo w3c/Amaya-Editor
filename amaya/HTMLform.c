@@ -1311,6 +1311,7 @@ void SelectOneOption (Document doc, Element el)
 		   attrType.AttrTypeNum = HTML_ATTR_label;
 		   attr = TtaGetAttribute (el, attrType);
 		   length = MAX_LABEL_LENGTH;
+		   text[1] = EOS;
 		   if (attr)
 		     TtaGiveTextAttributeValue (attr, text + 1, &length);
 		   else if (elType.ElTypeNum == HTML_EL_Option)
@@ -1319,12 +1320,13 @@ void SelectOneOption (Document doc, Element el)
 		     {
 		       elText = TtaGetFirstChild (el);
 		       if (elText)
-			 TtaGiveTextContent (elText, (unsigned char *)(text + 1), &length, &lang);
+			 TtaGiveTextContent (elText, (unsigned char *)(text + 1),
+					     &length, &lang);
 		       else
-			 length = 0;
+			 length = 1;
 		     }
 		   else
-		     length = 0;
+		     length = 1;
 		   /* count the EOS character */
 		   text[length + 1] = EOS;
 		   /* add an item */
@@ -1346,10 +1348,14 @@ void SelectOneOption (Document doc, Element el)
 			 text[0] = 'B';
 		     }
 		   /* convert the UTF-8 string */
-		   tmp = (char *)TtaConvertMbsToByte ((unsigned char *)text, TtaGetDefaultCharset ());
-		   AddToBufferWithEOS (tmp);
-		   TtaFreeMemory (tmp);
-		   nbitems++;
+		   tmp = (char *)TtaConvertMbsToByte ((unsigned char *)text,
+						      TtaGetDefaultCharset ());
+		   if (tmp)
+		     {
+		       AddToBufferWithEOS (tmp);
+		       TtaFreeMemory (tmp);
+		       nbitems++;
+		     }
 		 }
 	       else
 		 TtaNextSibling (&el);
