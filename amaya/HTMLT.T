@@ -1,11 +1,8 @@
-		{ I. Vatton 	 Novembre 1994-1995-1996  }
+		{ Author: I. Vatton 	 1994-1995-1996  }
 
 TRANSLATION HTML;
 
-LINELENGTH 78;	  { Longueur maximale d une ligne }
-
-BUFFERS
-   NomImage(Picture);	{ Tampon pour le nom de l image }
+LINELENGTH 78;
 
 CONST
    QuoteF  = '"';
@@ -14,7 +11,7 @@ CONST
 RULES
 
  HTML : BEGIN
-	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Draft//EN">\12';
+	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">\12';
 	Create '<HTML>\12';
 	Create '</HTML>\12' After;
 	END;
@@ -581,7 +578,7 @@ RULES
  Table_head:
 	Remove;
 
-{ provision for Cougar
+{ provision for COUGAR DTD
  thead:
 	BEGIN
 	Create '<THEAD';
@@ -872,8 +869,6 @@ ATTRIBUTES
 	    END;
 	END;
 
-{ --- CSS : From Hakon Lie : new tag in HTML to use as a hook for
-		       style information : <SPAN CLASS=foo> .. </SPAN>  ---- }
  Style\240:
 	BEGIN
 	IF Within TEXT_UNIT and not Within HEAD 

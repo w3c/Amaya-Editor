@@ -107,34 +107,31 @@ View                view;
    ElementType         elType;
    int                 firstchar, lastchar;
 
-   /* force the english language */
+   /* enforce the English language for the whole document */
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
    attrType.AttrTypeNum = HTML_ATTR_Langue;
    root = TtaGetMainRoot (document);
    attr = TtaGetAttribute (root, attrType);
    if (attr == NULL)
      {
-	/* create the attribute */
+	/* create the Language attribute */
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (root, attr, document);
      }
-   /* take the previous selection */
+   /* get the current selection */
    TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-   TtaSetDisplayMode (document, DeferredDisplay);
    TtaSetAttributeText (attr, "English", root, document);
    if (el == NULL)
      {
 	/* no current selection in the document */
+	/* select the first character in the body */
 	elType = TtaGetElementType (root);
 	elType.ElTypeNum = HTML_EL_BODY;
 	el = TtaSearchTypedElement (elType, SearchInTree, root);
 	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 	el = TtaSearchTypedElement (elType, SearchInTree, el);
-	TtaSelectString (document, el, 1, 1);
+	TtaSelectString (document, el, 1, 0);
      }
-   else
-      TtaSelectString (document, el, firstchar, lastchar);
-   TtaSetDisplayMode (document, DisplayImmediately);
    TtcSpellCheck (document, view);
 }
 
@@ -154,34 +151,31 @@ View                view;
    ElementType         elType;
    int                 firstchar, lastchar;
 
-   /* force the french language */
+   /* enforce the French language for the whole document */
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
    attrType.AttrTypeNum = HTML_ATTR_Langue;
    root = TtaGetMainRoot (document);
    attr = TtaGetAttribute (root, attrType);
    if (attr == NULL)
      {
-	/* create the attribute */
+	/* create the Language attribute */
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (root, attr, document);
      }
-   /* take the previous selection */
+   /* get the current selection */
    TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
    TtaSetAttributeText (attr, "Fran\347ais", root, document);
-   TtaSetDisplayMode (document, DeferredDisplay);
    if (el == NULL)
      {
 	/* no current selection in the document */
+	/* select the first character in the body */
 	elType = TtaGetElementType (root);
 	elType.ElTypeNum = HTML_EL_BODY;
 	el = TtaSearchTypedElement (elType, SearchInTree, root);
 	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 	el = TtaSearchTypedElement (elType, SearchInTree, el);
-	TtaSelectString (document, el, 1, 1);
+	TtaSelectString (document, el, 1, 0);
      }
-   else
-      TtaSelectString (document, el, firstchar, lastchar);
-   TtaSetDisplayMode (document, DisplayImmediately);
    TtcSpellCheck (document, view);
 }
 
