@@ -216,7 +216,7 @@ RDFResourceP ANNOT_FindRDFResource( listP, name, create )
   if (!last_name || strcmp(last_name, name)) {
     /* search for resource in list */
     resource = _ListSearchResource (*listP, name);
-    if (!resource && create)
+    if ((!resource || !resource->name) && create)
       {
 	resource = TtaGetMemory (sizeof(RDFResource));
 
