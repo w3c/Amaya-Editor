@@ -53,6 +53,8 @@ extern void CheckDocHeader ( CHAR_T *fileName,
                              int *parsingLevel,
                              CHARSET *charset,
                              DocumentType *thotType );
+extern void CheckCharsetInMeta ( CHAR_T *fileName,
+                                 CHARSET *charset );
 extern void CheckAbstractTree ( CHAR_T* pathURL,
                                 Document doc );
 extern void ParseIncludedHTML ( Element elem,
@@ -117,6 +119,8 @@ extern void CheckDocHeader (/* CHAR_T *fileName,
                                int *parsingLevel,
                                CHARSET *charset,
                                DocumentType *thotType */);
+extern void CheckCharsetInMeta (/* CHAR_T *fileName,
+                                   CHARSET *charset */);
 extern void CheckAbstractTree (/* CHAR_T* pathURL,
                                   Document doc */);
 extern void ParseIncludedHTML (/* Element elem,

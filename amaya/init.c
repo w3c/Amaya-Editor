@@ -2159,7 +2159,7 @@ ThotBool            history;
   CSSInfoPtr          css;
   Document            newdoc = 0;
   DocumentType        docType;
-  CHARSET             charset, httpcharset;
+  CHARSET             charset, httpcharset, metacharset;
   CHAR_T*             charEncoding;
   CHAR_T*             tempdocument;
   CHAR_T*             tempdir;
@@ -2179,10 +2179,20 @@ ThotBool            history;
   content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
   /* check if there is an XML declaration with a charset declaration */
   if (tempfile[0] != WC_EOS)
-    CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &parsingLevel, &charset, &thotType);
+    CheckDocHeader (tempfile, &xmlDec, &withDoctype,
+		    &isXML, &parsingLevel, &charset, &thotType);
   else
-    CheckDocHeader (pathname, &xmlDec, &withDoctype, &isXML, &parsingLevel, &charset, &thotType);
+    CheckDocHeader (pathname, &xmlDec, &withDoctype,
+		    &isXML, &parsingLevel, &charset, &thotType);
 
+  if (charset == UNDEFINED_CHARSET && isXML && thotType == docHTML)
+    {
+      if (tempfile[0] != WC_EOS)
+	CheckCharsetInMeta (tempfile, &metacharset);
+      else
+	CheckCharsetInMeta (pathname, &metacharset);
+    }
+  
   if (content_type == NULL || content_type[0] == EOS)
     /* no content type */
     {
@@ -2514,13 +2524,16 @@ ThotBool            history;
       DocumentMeta[newdoc]->xmlformat = isXML;
       DocumentSource[newdoc] = 0;
 
+      /* Set character encoding */
       charEncoding = HTTP_headers (http_headers, AM_HTTP_CHARSET);
       httpcharset = TtaGetCharset (charEncoding);
       if (charset != UNDEFINED_CHARSET)
 	TtaSetDocumentCharset (newdoc, charset);
       else if (httpcharset != UNDEFINED_CHARSET)
 	TtaSetDocumentCharset (newdoc, httpcharset);
-
+      else if (metacharset != UNDEFINED_CHARSET)
+	TtaSetDocumentCharset (newdoc, metacharset);
+      
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */
 	{

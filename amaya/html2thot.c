@@ -5735,7 +5735,10 @@ DocumentType   *thotType;
 			  if (!ptr || (ptr && ptr > end))
 			  ptr = strstr (&FileBuffer[i], "xhtml");
 			  if (ptr && ptr < end)
-			    *isXML = TRUE;
+			    {
+			      *isXML = TRUE;
+			      *thotType = docHTML;
+			    }
 			  ptr = strstr (&FileBuffer[i], "Basic");
 			  if (!ptr || (ptr && ptr > end))
 			    ptr = strstr (&FileBuffer[i], "basic");
@@ -5789,7 +5792,10 @@ DocumentType   *thotType;
 		      if (!ptr || (ptr && ptr > end))
 			ptr = strstr (&FileBuffer[i], "xhtml");
 		      if (ptr && ptr < end)
-			*isXML = TRUE;
+			{
+			  *isXML = TRUE;
+			  *thotType = docHTML;
+			}
 		      ptr = strstr (&FileBuffer[i], "Strict");
 		      if (!ptr || (ptr && ptr > end))
 			ptr = strstr (&FileBuffer[i], "strict");
@@ -5842,6 +5848,79 @@ DocumentType   *thotType;
     }
 }
 
+/*----------------------------------------------------------------------
+  CheckCharsetInMeta parses the loaded file to detect if it includes
+  a charset value in a element META
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void     CheckCharsetInMeta (CHAR_T *fileName, CHARSET *charset)
+#else
+void     CheckCharsetInMeta (fileName, charset)
+CHAR_T     *fileName;
+CHARSET    *charset;
+#endif
+{
+  gzFile        stream;
+  char          file_name[MAX_LENGTH];
+  char         *ptr, *end, *meta, *body, *http;
+  char          charsetname[MAX_LENGTH];
+  int           res, i, j, k;
+  ThotBool      endOfSniffedFile;
+
+  wc2iso_strcpy (file_name, fileName);
+  stream = gzopen (file_name, "r");
+  if (stream != 0)
+    {
+      InputText = NULL;
+      LgBuffer = 0;
+      endOfSniffedFile = FALSE;
+      while (!endOfSniffedFile)
+	{
+	  res = gzread (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+	  if (res >= 5)
+	    FileBuffer[res] = EOS;
+	  i = 0;
+	  endOfSniffedFile = (res < INPUT_FILE_BUFFER_SIZE);
+	  
+	  /* looks for the <body> element */
+	  body = strstr (&FileBuffer[i], "<body");
+	  if (!body)
+	    body = strstr (&FileBuffer[i], "<BODY");
+	  if (body)
+	    {
+	      endOfSniffedFile = TRUE;
+	      /* looks for the first <meta> element */
+	      meta = strstr (&FileBuffer[i], "<meta");
+	      if (!meta)
+		meta = strstr (&FileBuffer[i], "<META");
+	      if (meta && meta < body)
+		{
+		  http = strstr (meta, "http-equiv");
+		  if (http && http < body)
+		    {
+		      /* check whether there is a charset */
+		      ptr = strstr (http, "charset");
+		      end = NULL;
+		      if (ptr)
+			ptr = strstr (ptr, "=");
+		      if (ptr)
+			end = strstr (&ptr[1], "\"");
+		      if (end && end != ptr && end < body)
+			{
+			  /* get the document charset */
+			  k = 0; j = 1;
+			  while (&ptr[j] != end)
+			    charsetname[k++] = ptr[j++];
+			  charsetname[k] = WC_EOS;
+			  *charset = TtaGetCharset (charsetname);
+			}
+		    }
+		}
+	    }
+	}
+      gzclose (stream);
+    }
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
