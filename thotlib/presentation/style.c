@@ -860,9 +860,9 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 	      ppRule = &(attrs->ApRefFirstPRule);
 	      break;
 	    case AtEnumAttr:
-	      val = (int) attrVal;
+	      val = (int) attrVal - 1;
 	      if (val)
-		ppRule = &(attrs->ApEnumFirstPRule[val - 1]);
+		ppRule = &(attrs->ApEnumFirstPRule[val]);
 	      else
 		ppRule = &(attrs->ApEnumFirstPRule[0]);
 	      break;
@@ -959,11 +959,11 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	  break;
 	case AtEnumAttr:
 	  /* get the attribute value */
-	  val = (int) attrVal;
-	  if (val)
+	  val = (int) attrVal - 1;
+	  if (val > 0)
 	    {
-	      new->ApEnumFirstPRule[val - 1] = NULL;
-	      return (&(new->ApEnumFirstPRule[val - 1]));
+	      new->ApEnumFirstPRule[val] = NULL;
+	      return (&(new->ApEnumFirstPRule[val]));
 	    }
 	  else
 	    {

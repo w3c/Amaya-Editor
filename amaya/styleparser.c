@@ -4970,7 +4970,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	  else
 	    xmlType = XML_TYPE;
 	  kind = TtaGetAttributeKind (attrType);
-	  if (kind == 0 && attrvals[i])
+	  if (kind != 1 && attrvals[i])
 	    {
 	      /* enumerated value */
 	      MapXMLAttributeValue (xmlType, attrvals[i], attrType, &kind);
