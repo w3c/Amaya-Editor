@@ -21,7 +21,6 @@ extern void       WIN_TtaSetToggleMenu (int, int, ThotBool, ThotWindow);
 extern void       WIN_ThotCallBack (ThotWindow, WPARAM, LPARAM);
 extern int        WIN_TtaHandleMultiKeyEvent (UINT msg, WPARAM wParam, LPARAM lParam, int *k);
 extern void       WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPARAM lParam, ThotBool isSpecial);
-extern void       WIN_InitDialogueFonts (HDC, char *);
 extern void       WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam);
 extern unsigned char GetSystemColorIndex (unsigned short red, unsigned short green, unsigned short blue);
 extern void       APP_ButtonCallback (ThotButton, int, caddr_t);

@@ -684,13 +684,14 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
     }
   else if (UseAdobeFamily)
     {
+      strcat (r_nameX, "-");
       switch (TOLOWER (family))
 	{
 	case 't':
 	  strcat (r_nameX, "new century schoolbook");
 	  break;
 	case 'h':
-	  strcat (r_nameX, "avantgarde");
+	  strcat (r_nameX, "helvetica");
 	  break;
 	case 'c':
 	  strcat (r_nameX, "courier");
@@ -733,37 +734,25 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
       break;
     case 'i':
     case 'o':
-      if (UseAdobeFamily)
-	strcat (r_nameX, "medium-i");
-      else if (TOLOWER (family) == 'h' || TOLOWER (family) == 'c')
+      if (TOLOWER (family) == 'h' || TOLOWER (family) == 'c')
 	strcat (r_nameX, "medium-o");
       else
 	strcat (r_nameX, "medium-i");
       break;
     case 'b':
-      if (UseAdobeFamily && TOLOWER (family) == 'h')
-	strcat (r_nameX, "demi");
-      else if (UseLucidaFamily && TOLOWER (family) == 't')
-	strcat (r_nameX, "demibold");
+      if (UseLucidaFamily && TOLOWER (family) == 't')
+	strcat (r_nameX, "demibold-r");
       else
-	strcat (r_nameX, "bold");
-      strcat (r_nameX, "-r");
+	strcat (r_nameX, "bold-r");
       break;
     case 'g':
     case 'q':
-      if (UseAdobeFamily && TOLOWER (family) == 'h')
-	strcat (r_nameX, "demi");
-      else if (UseLucidaFamily && TOLOWER (family) == 't')
-	strcat (r_nameX, "demibold");
-      else
-	strcat (r_nameX, "bold");
-      strcat (r_nameX, "-");
-      if (UseAdobeFamily)
-	strcat (r_nameX, "i");
+      if (UseLucidaFamily && TOLOWER (family) == 't')
+	strcat (r_nameX, "demibold-i");
       else if (TOLOWER (family) == 'h' || TOLOWER (family) == 'c')
-	strcat (r_nameX, "o");
+	strcat (r_nameX, "bold-o");
       else
-	strcat (r_nameX, "i");
+	strcat (r_nameX, "bold-i");
       break;
     }
 
@@ -852,12 +841,7 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 	index++;
     }
    
-  if (UseAdobeFamily && size == 11 && unit == UnPoint)
-    /* in the case of Bitstream, accept 11 points font size */
-    FontIdentifier (alphabet, family, highlight, size, TRUE, text, textX);
-  else
-    FontIdentifier (alphabet, family, highlight, index, FALSE, text, textX);
-   
+  FontIdentifier (alphabet, family, highlight, index, FALSE, text, textX);
   /* initialize the PostScript font name */
   strcpy (PsName, text);
    
@@ -1084,11 +1068,7 @@ void TtaSetFontZoom (int zoom)
 /*----------------------------------------------------------------------
   InitDialogueFonts initialize the standard fonts used by the Thot Toolkit.
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
-void WIN_InitDialogueFonts (HDC hDC, char* name)
-#else  /* !_WINDOWS */
-void InitDialogueFonts (char* name)
-#endif /* _WINDOWS */
+void InitDialogueFonts (char *name)
 {
 #ifndef _WINDOWS
   int              ndir, ncurrent;
@@ -1119,12 +1099,12 @@ void InitDialogueFonts (char* name)
       FontFamily = TtaGetMemory (strlen (value) + 1);
       strcpy (FontFamily, "-");
       strcat (FontFamily, value);
-      if (!strcmp (FontFamily, "b&h-lucida"))
+      if (!Printing && !strcmp (FontFamily, "-b&h-lucida"))
 	UseLucidaFamily = TRUE;
       else
 	{
 	  UseLucidaFamily = FALSE;
-	  if (!strcmp (FontFamily, "adobe"))
+	  if (!Printing && !strcmp (FontFamily, "-adobe"))
 	    UseAdobeFamily = TRUE;
 	  else
 	    UseAdobeFamily = FALSE;

@@ -404,13 +404,13 @@ void ThotInitDisplay (char* name, int dx, int dy)
      TtWDepth = GetDeviceCaps (TtDisplay, BITSPIXEL);
 
    InitDocColors (name);
-   InitColors (name);
-   
-   if (WIN_LastBitmap && !DeleteObject (WIN_LastBitmap))
-      WinErrorBox (WIN_Main_Wd, "Init");
+   InitColors (name);   
+   if (WIN_LastBitmap)
+     DeleteObject (WIN_LastBitmap);
    WIN_LastBitmap = 0;
    InitCurs ();
-   WIN_InitDialogueFonts (TtDisplay, name);
+   DOT_PER_INCH = GetDeviceCaps(TtDisplay, LOGPIXELSY);
+   InitDialogueFonts (name);
 
    /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);
