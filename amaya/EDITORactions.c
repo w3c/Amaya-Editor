@@ -563,76 +563,58 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   CreateOrChangeDoctype
   Create or change the doctype of a document
   --------------------------------------------------------------------------*/
-static void CreateOrChangeDoctype (Document doc, View view, int profile)
+static void CreateOrChangeDoctype (Document doc, View view, int new_doctype)
 {
   ElementType     elType;
-  Element         docEl, doctype;
-  char           *tempdocument = NULL;
+  Element         docEl, old_doctype;
+  char           *tempdocument = NULL, *temp2 = NULL; 
   char            documentname[MAX_LENGTH];
   char            tempdir[MAX_LENGTH];
-
-
-  /* Ask confirmation */
-  if (TtaIsDocumentModified (doc))
-    {
-      InitConfirm3L (doc, view,
-		     TtaGetMessage (AMAYA, AM_CHANGE_DOCTYPE1),
-		     TtaGetMessage (AMAYA, AM_CHANGE_DOCTYPE2),
-		     NULL, TRUE);
-      if (!UserAnswer)
-	return;
-    } 
   
-  /* Remove the doctype if it exists */
-  docEl = TtaGetMainRoot (doc);
-  elType = TtaGetElementType (docEl);
-  /* Search the doctype declaration according to the main schema */
-  if (profile == L_Basic || profile == L_Strict ||
-      profile == L_Xhtml11 || profile == L_Transitional)
-    elType.ElTypeNum = HTML_EL_DOCTYPE;
-  else if (profile == L_MathML) 
-    elType.ElTypeNum = MathML_EL_DOCTYPE;
-  else if (profile == L_SVG) 
-    elType.ElTypeNum = SVG_EL_DOCTYPE;
-  doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-  if (doctype != NULL)
-    TtaDeleteTree (doctype, doc);
-
-  /* XHTML doctype instead of a HTML one */
-  if (!(DocumentMeta[doc]->xmlformat) && XmlDoctype)
-    DocumentMeta[doc]->xmlformat = TRUE;
-
-  /* Add the new doctype */
-  CreateDoctype (doc, profile, FALSE, FALSE);
-  /* Store the document's profile */
-  TtaSetDocumentProfile (doc, profile);
-
-  /* The document has to be reparsed */
-  /* Save the current state of the document into the temporary file */
+  /* The document has to be parsed with the new doctype */
+  /* Save the current document into a second temporary file */
   tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
-  SetNamespacesAndDTD (doc);
+  temp2 = (char *) TtaGetMemory (strlen (tempdocument) + 3);
+  strcpy (temp2, tempdocument);
+  strcat (temp2, "_2");
+  UpdateDocumentCharset (doc);
   if (DocumentTypes[doc] == docHTML)
     {
       if (TtaGetDocumentProfile(doc) == L_Xhtml11)
-	TtaExportDocumentWithNewLineNumbers (doc, tempdocument, "HTMLT11");
+	TtaExportDocumentWithNewLineNumbers (doc, temp2, "HTMLT11");
       else if (DocumentMeta[doc]->xmlformat)
-	TtaExportDocumentWithNewLineNumbers (doc, tempdocument, "HTMLTX");
+	TtaExportDocumentWithNewLineNumbers (doc, temp2, "HTMLTX");
       else
-	TtaExportDocumentWithNewLineNumbers (doc, tempdocument, "HTMLT");
+	TtaExportDocumentWithNewLineNumbers (doc, temp2, "HTMLT");
     }
   else if (DocumentTypes[doc] == docSVG)
-    TtaExportDocumentWithNewLineNumbers (doc, tempdocument, "SVGT");
+    TtaExportDocumentWithNewLineNumbers (doc, temp2, "SVGT");
   else if (DocumentTypes[doc] == docMath)
-    TtaExportDocumentWithNewLineNumbers (doc, tempdocument, "MathMLT");
-  RedisplaySourceFile (doc);
+    TtaExportDocumentWithNewLineNumbers (doc, temp2, "MathMLT");
 
   tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
   TtaExtractName (tempdocument, tempdir, documentname);
-  RestartParser (doc, tempdocument, tempdir, documentname);
-  TtaSetDocumentModified (doc);
+  ParseWithNewDoctype (doc, temp2, tempdir, documentname, new_doctype);
 
-  /* Clear the current selection */
-  TtaClearViewSelections ();
+  /* Remove the previous doctype if it exists */
+  docEl = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (docEl);
+  /* Search the doctype declaration according to the main schema */
+  if (new_doctype == L_Basic || new_doctype == L_Strict ||
+      new_doctype == L_Xhtml11 || new_doctype == L_Transitional)
+    elType.ElTypeNum = HTML_EL_DOCTYPE;
+  else if (new_doctype == L_MathML) 
+    elType.ElTypeNum = MathML_EL_DOCTYPE;
+  else if (new_doctype == L_SVG) 
+    elType.ElTypeNum = SVG_EL_DOCTYPE;
+  old_doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+  if (old_doctype != NULL)
+    TtaDeleteTree (old_doctype, doc);
+
+  /* Add the new doctype */
+  CreateDoctype (doc, new_doctype, FALSE, FALSE);
+  /* Store the new doctype */
+  TtaSetDocumentProfile (doc, new_doctype);
 
   /* Update the Doctype menu */
   UpdateDoctypeMenu (doc, TRUE);
@@ -768,6 +750,7 @@ void CreateDoctypeXhtmlBasic (Document document, View view)
   XmlDoctype = TRUE;
   CreateOrChangeDoctype (document, view, L_Basic);
 }
+
 /*--------------------------------------------------------------------------
   CreateDoctypeHtmlTransitional
   Create or change the doctype for a HTML Transitional document
@@ -1006,7 +989,6 @@ static Element InsertWithinHead (Document document, View view, int elementT)
      }
 }
 
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void CreateBase (Document document, View view)
@@ -1017,7 +999,6 @@ void CreateBase (Document document, View view)
   if (el != NULL)
     TtaSelectElement (document, el);
 }
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1030,7 +1011,6 @@ void CreateMeta (Document document, View view)
     TtaSelectElement (document, el);
 
 }
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1048,7 +1028,6 @@ void CreateLinkInHead (Document document, View view)
       SelectDestination (document, el, FALSE, FALSE);
     }
 }
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1281,7 +1260,6 @@ void CreateHeading5 (Document document, View view)
    CreateHTMLelement (HTML_EL_H5, document);
 }
 
-
 /*----------------------------------------------------------------------
   CreateHeading6
   ----------------------------------------------------------------------*/
@@ -1289,7 +1267,6 @@ void CreateHeading6 (Document document, View view)
 {
    CreateHTMLelement (HTML_EL_H6, document);
 }
-
 
 /*----------------------------------------------------------------------
   CreateAreaMap

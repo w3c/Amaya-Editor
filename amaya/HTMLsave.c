@@ -786,6 +786,68 @@ void SaveDocumentAs (Document doc, View view)
   /* display the dialog box */
   InitSaveForm (doc, 1, tempname);
 }
+   
+
+/*----------------------------------------------------------------------
+   UpdateDocumentCharset
+   Create or update the charset of the document
+  ----------------------------------------------------------------------*/
+void UpdateDocumentCharset (Document doc)
+{
+   Element		docEl;
+   ElementType		elType;
+   Attribute		charsetAttr;
+   AttributeType	attrType;
+   CHARSET              charset;
+   char                *ptr;
+#define MAX_CHARSET_LEN 50
+   char                 Charset[MAX_CHARSET_LEN];
+   int                  oldStructureChecking;
+
+   /* Create or update the document charset */
+   Charset[0] = EOS;
+   charset = TtaGetDocumentCharset (doc);
+   if (charset != UNDEFINED_CHARSET ||
+       DocumentTypes[doc] == docMath ||
+       DocumentTypes[doc] == docSVG)
+     {
+       if (charset == UNDEFINED_CHARSET)
+	 strcat (Charset, "unknown");
+       else
+         {
+           ptr = TtaGetCharsetName (charset);
+           strcat (Charset, ptr);
+         }
+       /* set the Charset attribute of the root element*/
+       if (DocumentTypes[doc] == docHTML)
+	 attrType.AttrTypeNum = HTML_ATTR_Charset;
+       else if (DocumentTypes[doc] == docMath)
+	 attrType.AttrTypeNum = MathML_ATTR_Charset;
+       else if (DocumentTypes[doc] == docSVG)
+	 attrType.AttrTypeNum = SVG_ATTR_Charset;
+#ifdef ANNOTATIONS
+       else if (DocumentTypes[doc] == docAnnot)
+	 attrType.AttrTypeNum = Annot_ATTR_Charset;
+#endif /* ANNOTATIONS */
+       docEl = TtaGetMainRoot (doc);
+       elType = TtaGetElementType (docEl);
+       attrType.AttrSSchema = elType.ElSSchema;
+       charsetAttr = TtaGetAttribute (docEl, attrType); 
+       
+       if (charsetAttr)
+	 /* Modify the charset attribute */
+	 TtaSetAttributeText (charsetAttr, Charset, docEl, doc);	
+       else
+	 {
+	   oldStructureChecking = TtaGetStructureChecking (doc);
+	   TtaSetStructureChecking (0, doc);
+	   charsetAttr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (docEl, charsetAttr, doc);
+	   TtaSetAttributeText (charsetAttr, Charset, docEl, doc);	
+	   TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+	 }
+     }
+}
 
 /*----------------------------------------------------------------------
    SetNamespacesAndDTD
@@ -799,15 +861,13 @@ void SetNamespacesAndDTD (Document doc)
 {
    Element		root, el, head, meta, docEl, doctype, elFound;
    ElementType		elType;
+   Attribute		attr;
    AttributeType	attrType;
-   Attribute		attr, charsetAttr;
    SSchema              nature;
-   CHARSET              charset;
    char                *ptr, *s;
 #define MAX_CHARSET_LEN 50
    char                 Charset[MAX_CHARSET_LEN];
    char		        buffer[300];
-   int                  oldStructureChecking;
    ThotBool		useMathML, useSVG, useHTML, useXML, usePI;
    int                  length, profile;
    char                *attrText;
@@ -919,58 +979,16 @@ void SetNamespacesAndDTD (Document doc)
 	 }
      }
    
-   /* get the document charset */
-   Charset[0] = EOS;
-   charset = TtaGetDocumentCharset (doc);
-   if (charset != UNDEFINED_CHARSET ||
-       DocumentTypes[doc] == docMath ||
-       DocumentTypes[doc] == docSVG)
-     {
-       if (charset == UNDEFINED_CHARSET)
-	 strcat (Charset, "unknown");
-       else
-         {
-           ptr = TtaGetCharsetName (charset);
-           strcat (Charset, ptr);
-         }
-       /* set the Charset attribute of the root element*/
-       if (DocumentTypes[doc] == docHTML)
-	 attrType.AttrTypeNum = HTML_ATTR_Charset;
-       else if (DocumentTypes[doc] == docMath)
-	 attrType.AttrTypeNum = MathML_ATTR_Charset;
-       else if (DocumentTypes[doc] == docSVG)
-	 attrType.AttrTypeNum = SVG_ATTR_Charset;
-#ifdef ANNOTATIONS
-       else if (DocumentTypes[doc] == docAnnot)
-	 attrType.AttrTypeNum = Annot_ATTR_Charset;
-#endif /* ANNOTATIONS */
-       docEl = TtaGetMainRoot (doc);
-       elType = TtaGetElementType (docEl);
-       attrType.AttrSSchema = elType.ElSSchema;
-       charsetAttr = TtaGetAttribute (docEl, attrType); 
+   /* Create or update the document charset */
+   UpdateDocumentCharset (doc);
 
-       if (charsetAttr)
-	 /* Up to date the charset attribute */
-	 TtaSetAttributeText (charsetAttr, Charset, docEl, doc);	
-       else
-	 {
-	   oldStructureChecking = TtaGetStructureChecking (doc);
-	   TtaSetStructureChecking (0, doc);
-	   charsetAttr = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (docEl, charsetAttr, doc);
-	   TtaSetAttributeText (charsetAttr, Charset, docEl, doc);	
-	   TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
-	 }
-     }
-
+   /* Create or update a META element to specify Content-type and Charset */
    if (
 #ifdef ANNOTATIONS
        (DocumentTypes[doc] == docAnnot && ANNOT_bodyType (doc) == docHTML) ||
 #endif /* ANNOTATIONS */
        DocumentTypes[doc] == docHTML)
      {
-       /* Create (or update) a META element to specify Content-type 
-	  and Charset*/
        attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
        if (!attrType.AttrSSchema)
 	 return;
@@ -1050,6 +1068,110 @@ void SetNamespacesAndDTD (Document doc)
 	     }
 	 } 
      }
+}
+
+/*----------------------------------------------------------------------
+  ParseWithNewDoctype
+  Parse a temporary saved version of the document to detect
+  the parsing errors due to the new doctype
+  ----------------------------------------------------------------------*/
+void  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
+			   char *documentname, int new_doctype)
+{
+  SSchema       schema;
+  CHARSET       charset;
+  char          charsetname[MAX_LENGTH];
+  int           parsingLevel;
+  ThotBool      xmlDec, withDoctype, isXML, isKnown;
+  DocumentType  thotType;
+  Document      ext_doc = 0;
+  char         *s;
+  char          type[NAME_LENGTH];
+  char          err_doc [100];
+  char          err_extdoc [100];
+
+  /* disabled for the moment */
+  return;
+
+  /* Clean up previous Parsing errors file */
+  CleanUpParsingErrors ();
+
+  /* Remove the Parsing errors file */
+  RemoveParsingErrors (doc);
+
+  schema = TtaGetDocumentSSchema (doc);
+  s = TtaGetSSchemaName (schema);
+  strcpy ((char *)type, s);
+  ext_doc = TtaNewDocument (type, "tmp");
+  if (ext_doc == 0)
+    return;
+  else
+    {
+      DocumentMeta[ext_doc] = DocumentMetaDataAlloc ();
+      strcat (type, "P");
+      TtaSetPSchema (ext_doc, type);
+      if (DocumentURLs[ext_doc])
+	{
+	  TtaFreeMemory (DocumentURLs[ext_doc]);
+	  DocumentURLs[ext_doc] = NULL;
+	}
+      DocumentURLs[ext_doc] = TtaStrdup (DocumentURLs[doc]);
+      DocumentMeta[ext_doc]->form_data = TtaStrdup (DocumentMeta[doc]->form_data);
+      DocumentMeta[ext_doc]->initial_url = TtaStrdup (DocumentMeta[doc]->initial_url);
+      DocumentMeta[ext_doc]->method = DocumentMeta[doc]->method;
+      DocumentSource[ext_doc] = 0;
+      DocumentMeta[ext_doc]->charset = TtaStrdup (DocumentMeta[doc]->charset);
+      DocumentMeta[ext_doc]->xmlformat = DocumentMeta[doc]->xmlformat;
+      charset = TtaGetDocumentCharset (doc);
+      TtaSetDocumentCharset (ext_doc, charset, FALSE);
+    }
+  
+  /* Check if there is a doctype declaration */
+  charsetname[0] = EOS;
+  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &isKnown,
+		  &parsingLevel, &charset, charsetname, &thotType);
+  
+  /* Store the new document type */
+  TtaSetDocumentProfile (ext_doc, new_doctype);
+
+  /* Calls the right parser */
+  if (DocumentMeta[ext_doc]->xmlformat)       
+    StartXmlParser (ext_doc, localFile, documentname, tempdir,
+		    localFile, xmlDec, withDoctype, TRUE);
+  else
+    StartParser (ext_doc, localFile, documentname, tempdir, localFile, FALSE);
+  
+  /* Link the parsing errors file to the original document */
+
+  /* Check parsing errors */
+  if (ErrFile)
+    {
+      sprintf (err_doc, "%s%c%d%cPARSING.ERR",
+	       TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+      sprintf (err_extdoc, "%s%c%d%cPARSING.ERR",
+	       TempFileDirectory, DIR_SEP, ext_doc, DIR_SEP);
+      fclose (ErrFile);
+      /* Move the file */
+      TtaFileCopy (err_extdoc, err_doc);
+      /* Active the menu entry */
+      TtaSetItemOn (doc, 1, Views, BShowLogFile);
+      /* Ask kfor confirmation */
+      InitConfirm3L (doc, 1,
+		     TtaGetMessage (AMAYA, AM_CHANGE_DOCTYPE1),
+		     TtaGetMessage (AMAYA, AM_CHANGE_DOCTYPE2),
+		     NULL, TRUE);
+      if (!UserAnswer)
+	return;
+    }
+
+  /* Delete the external document */
+  if (ext_doc != 0)
+    {
+      FreeDocumentResource (ext_doc);
+      TtaCloseDocument (ext_doc);
+      TtaFreeMemory (DocumentURLs[ext_doc]);
+      DocumentURLs[ext_doc] = NULL;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1136,7 +1258,7 @@ void RestartParser (Document doc, char *localFile,
   /* Calls the corresponding parser */
   if (DocumentMeta[doc]->xmlformat)       
     StartXmlParser (doc, localFile, documentname, tempdir,
-		    localFile, xmlDec, withDoctype);
+		    localFile, xmlDec, withDoctype, FALSE);
   else
     StartParser (doc, localFile, documentname, tempdir, localFile, FALSE);
 
@@ -1164,8 +1286,8 @@ void RestartParser (Document doc, char *localFile,
 
 /*----------------------------------------------------------------------
    RedisplaySourceFile
-   If doc is a structured document and the source view is open, redisplay the
-   source.
+   If doc is a structured document and the source view is open, 
+   redisplay the source.
   ----------------------------------------------------------------------*/
 void RedisplaySourceFile (Document doc)
 {

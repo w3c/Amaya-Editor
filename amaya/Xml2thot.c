@@ -231,7 +231,7 @@ static void XhtmlCheckContext (char *elName, const ElementType * elType,
 static void XmlCheckContext (char *elName, const ElementType *elType,
 			     ThotBool *isAllowed);
 static void XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
-		      ThotBool *xmlDoctype, ThotBool skipDec);
+		      ThotBool *xmlDoctype);
 
 /*----------------------------------------------------------------------
    ChangeXmlParserContextByDTD
@@ -4903,7 +4903,7 @@ void ParseExternalDocument (char     *fileName,
 	      /* Expat initialization */
 	      InitializeExpatParser (charset);
 	      /* Expat parsing */
-	      XmlParse ((FILE *)infile, charset, &xmlDec, &docType, FALSE);
+	      XmlParse ((FILE *)infile, charset, &xmlDec, &docType);
 	      /* Free expat parser */ 
 	      FreeXmlParserContexts ();
 	      FreeExpatParser ();
@@ -5352,8 +5352,9 @@ ThotBool ParseIncludedXml (FILE     *infile,
    Parses the XML file infile and builds the equivalent Thot abstract tree.
    The parameter skipDec is TRUE when the declaration should be sipped.
   ---------------------------------------------------------------------------*/
-static void XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
-		      ThotBool *xmlDoctype, ThotBool skipDec)
+static void   XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
+			ThotBool *xmlDoctype)
+
 {
 #define	 COPY_BUFFER_SIZE	1024
    char        bufferRead[COPY_BUFFER_SIZE + 1];
@@ -5412,13 +5413,14 @@ static void XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
 	   if (i < res)
 	     {
 	       i++;
-	       if (!skipDec && !XML_Parse (Parser, &bufferRead[j], (i-j), FALSE))
+	       if (!XML_Parse (Parser, &bufferRead[j], (i-j), FALSE))
 		 XmlParseError (errorNotWellFormed,
 				(unsigned char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 	       res = res - (i-j);
 	     }
 	   /* It's now parsed */
 	   *xmlDec = FALSE;
+	   extraLineRead = -1 ;
 	 }
 
        if (!*xmlDoctype)
@@ -5436,10 +5438,10 @@ static void XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
 				(unsigned char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 	       /* It's now parsed */
 	       *xmlDoctype = TRUE;
-	       extraLineRead = XML_GetCurrentLineNumber (Parser) - tmpLineRead;
+	       extraLineRead = extraLineRead + XML_GetCurrentLineNumber (Parser) - tmpLineRead;
 	     }
 	 }
-
+       
        /* Standard EXPAT processing */
        if (!XMLNotWellFormed)
 	 {
@@ -5481,7 +5483,8 @@ static void XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
   ------------------------------------------------------------------------------*/
 void StartXmlParser (Document doc, char *fileName,
 		     char *documentName, char *documentDirectory,
-		     char *pathURL, ThotBool withDec, ThotBool withDoctype)
+		     char *pathURL, ThotBool withDec,
+		     ThotBool withDoctype,  ThotBool externalDoc)
 {
   Element         el, oldel;
   CHARSET         charset;  
@@ -5597,14 +5600,12 @@ void StartXmlParser (Document doc, char *fileName,
       /* Specific initialization for Expat */
       InitializeExpatParser (charset);
       /* Parse the input file and build the Thot tree */
-      if (charset == UNDEFINED_CHARSET)
-	/* could take the charset in the XML declaration */
-	XmlParse ((FILE*)stream, charset, &xmlDec, &xmlDoctype, FALSE);
-      else
-	/* the charset is now known, don't parse the XML declaration */
-	XmlParse ((FILE*)stream, charset, &xmlDec, &xmlDoctype, TRUE);
-      /* Load the style sheets for xml documents */
-      LoadXmlStyleSheet (doc);
+      XmlParse ((FILE*)stream, charset, &xmlDec, &xmlDoctype);
+
+      if (!externalDoc)
+	/* Load the style sheets for xml documents */
+	LoadXmlStyleSheet (doc);
+
       /* Completes all unclosed elements */
       if (currentParserCtxt != NULL)
 	{
@@ -5636,10 +5637,15 @@ void StartXmlParser (Document doc, char *fileName,
 	  TtaFreeMemory (docURL);
 	  docURL = NULL;
 	}
+      
+      /* Display the document */
+      if (!externalDoc)
+	{
+	  /* Load specific user style */
+	  LoadUserStyleSheet (doc);
+	  TtaSetDisplayMode (doc, DisplayImmediately);
+	}
 
-      /* Load specific user style */
-      LoadUserStyleSheet (doc);
-      TtaSetDisplayMode (doc, DisplayImmediately);
       /* Check the Thot abstract tree against the structure schema. */
       TtaSetStructureChecking (1, doc);
       DocumentSSchema = NULL;

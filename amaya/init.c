@@ -3195,7 +3195,7 @@ static void MoveImageFile (Document source_doc, Document dest_doc,
 }
 
 /*----------------------------------------------------------------------
-   ParseAsHTML
+   ReparseAs
    Load current document considering it's a HTML document and/or
    with a new charset (charset != UNDEFINED_CHARSET).
   ----------------------------------------------------------------------*/
@@ -3266,8 +3266,8 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
       charsetname[0] = EOS;
       CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &isKnown,
 		      &parsingLevel, &doc_charset, charsetname, &thotType);
-      StartXmlParser (doc, localFile, documentname, s, localFile,
-		      xmlDec, withDoctype);
+      StartXmlParser (doc, localFile, documentname, s,
+		      localFile, xmlDec, withDoctype, FALSE);
     }
   else
     {
@@ -3998,8 +3998,8 @@ static Document LoadDocument (Document doc, char *pathname,
 #endif /* BOOKMARKS */
       /* Calls the corresponding parser */
       if (DocumentMeta[newdoc]->xmlformat && !plainText)
-	StartXmlParser (newdoc, localdoc, documentname,
-			tempdir, pathname, xmlDec, withDoctype);
+	StartXmlParser (newdoc,	localdoc, documentname, tempdir,
+			pathname, xmlDec, withDoctype, FALSE);
       else
 	StartParser (newdoc, localdoc, documentname, tempdir,
 		     pathname, plainText);
