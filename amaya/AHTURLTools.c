@@ -1073,7 +1073,7 @@ char *GetLocalPath (Document doc, char  *url)
   int       len;
   ThotBool  noFile;
 
-  if (url != NULL)
+  if (url)
     {
       /* check whether the file name exists */
       len = strlen (url) - 1;
@@ -1092,20 +1092,34 @@ char *GetLocalPath (Document doc, char  *url)
 	/* directory did not exist */
 	TtaMakeDirectory (ptr);
 
-      /* don't include the query string within document name */
-      n = strrchr (documentname, '?');
-      if (n != NULL)
-         *n = EOS;
-      /* don't include ':' within document name */
-      n = strchr (documentname, ':');
-      if (n != NULL)
-         *n = EOS;
-      /* if after all this operations document name
-	 is empty, let's use noname.html instead */
-      if (documentname[0] == EOS)
-         strcat (ptr, "noname.html");
+      if (doc == 0)
+	{
+	  n = strrchr (documentname, '.');
+	  if (n)
+	    *n = EOS;
+	  if (documentname[0] == EOS)
+	    strcpy (documentname, "noname");
+	  n = GetTempName (ptr, documentname);
+	  TtaFreeMemory (ptr);
+	  ptr = n;
+	}
       else
-          strcat (ptr, documentname);
+	{
+	  /* don't include the query string within document name */
+	  n = strrchr (documentname, '?');
+	  if (n)
+	    *n = EOS;
+	  /* don't include ':' within document name */
+	  n = strchr (documentname, ':');
+	  if (n)
+	    *n = EOS;
+	  /* if after all this operations document name
+	     is empty, let's use noname.html instead */
+	  if (documentname[0] == EOS)
+	    strcat (ptr, "noname.html");
+	  else
+	    strcat (ptr, documentname);
+	}
       TtaFreeMemory (documentname);
       /* restore the url */
       if (noFile)
@@ -1454,7 +1468,7 @@ ThotBool IsSameHost (const char *url1, const char *url2)
   HasKnownFileSuffix
   returns TRUE if path points to a file ending with a suffix.
   ----------------------------------------------------------------------*/
-ThotBool             HasKnownFileSuffix (const char *path)
+ThotBool HasKnownFileSuffix (const char *path)
 {
    char       *root;
    char        temppath[MAX_LENGTH];

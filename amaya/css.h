@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,9 +15,10 @@
 typedef enum
 {
   CSS_Unknown,		/* for detecting uninitialized fields */
-  CSS_USER_STYLE,	/* the CSS associated to the browser */
-  CSS_DOCUMENT_STYLE,	/* a <style> element in the document */
-  CSS_EXTERNAL_STYLE,	/* an external CSS */
+  CSS_USER_STYLE,	/* the CSS associated to the browser  */
+  CSS_DOCUMENT_STYLE,	/* a <style> element in the document  */
+  CSS_EXTERNAL_STYLE,	/* an external CSS                    */
+  CSS_IMPORT            /* an imported CSS                    */
 } CSSCategory;
 
 typedef enum

@@ -1228,8 +1228,7 @@ ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
 	  memset ((void *) pImage, 0, sizeof (LoadedImageDesc));
 	  pImage->originalName = TtaGetMemory (strlen (url) + 1);
 	  strcpy (pImage->originalName, url);
-	  pImage->localName = TtaGetMemory (strlen (localname) + 1);
-	  strcpy (pImage->localName, localname);
+	  pImage->localName = TtaStrdup (localname);
 	  pImage->tempfile = TtaStrdup (pImage->localName);
 	  pImage->prevImage = previous;
 	  if (previous != NULL)
@@ -1251,7 +1250,7 @@ ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
 /*----------------------------------------------------------------------
    RemoveDocumentImages removes loaded images of the document.        
   ----------------------------------------------------------------------*/
-void                RemoveDocumentImages (Document doc)
+void RemoveDocumentImages (Document doc)
 {
    LoadedImageDesc    *pImage, *previous, *next;
    ElemImage          *ctxEl, *ctxPrev;

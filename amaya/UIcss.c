@@ -629,52 +629,51 @@ static void InitCSSDialog (Document doc, char *s)
   while (css)
     {
       if (css->documents[doc] &&
-	       /* it's impossible to remove the User style sheet */
-	       (CSScase < 4 || css->category == CSS_EXTERNAL_STYLE))
+	  /* only en external sheet can be removed */
+	  ((CSScase == 1 && css->category != CSS_DOCUMENT_STYLE) ||
+	  /* it's impossible to remove the User style sheet */
+	   (CSScase == 2 && css->enabled[doc] && css->category != CSS_IMPORT) ||
+	   (CSScase == 3 && !css->enabled[doc] && css->category != CSS_IMPORT) ||
+	   /* only en external sheet can be removed */
+	   CSScase == 4 && css->category == CSS_EXTERNAL_STYLE))
 	{
-	  if ((CSScase == 3 && !css->enabled[doc]) ||
-	      (CSScase == 2 && css->enabled[doc]) ||
-	      (CSScase == 1 && css->category != CSS_DOCUMENT_STYLE) ||
-	      CSScase == 4)
+	  /* filter enabled and disabled entries */
+	  /* build the CSS list:
+	     use the dialogue encoding for buf and UTF-8 for CSS path  */
+	  if (css->category == CSS_DOCUMENT_STYLE)
+	    ptr = TtaStrdup (TtaGetMessage (AMAYA, AM_LOCAL_CSS));
+	  else
 	    {
-	      /* filter enabled and disabled entries */
-	      /* build the CSS list:
-		 use the dialogue encoding for buf and UTF-8 for CSS path  */
-	      if (css->category == CSS_DOCUMENT_STYLE)
-		ptr = TtaStrdup (TtaGetMessage (AMAYA, AM_LOCAL_CSS));
+	      if (css->url == NULL)
+		ptr = TtaConvertMbsToByte (css->localName,
+					   TtaGetDefaultCharset ());
 	      else
-		{
-		  if (css->url == NULL)
-		    ptr = TtaConvertMbsToByte (css->localName,
-					      TtaGetDefaultCharset ());
-		  else
-		    ptr = TtaConvertMbsToByte (css->url,
-					      TtaGetDefaultCharset ());
-		}
-	      len = strlen (ptr);
-	      len++;
-	      if (size < len)
-		break;
-	      strcpy (&buf[index], ptr);
-	      TtaFreeMemory (ptr);
-	      index += len;
-	      nb++;
-	      size -= len;
-	      if (select == -1 &&
-		  (CSScase < 4 || css->category == CSS_EXTERNAL_STYLE))
-		{
-		  if (CSSpath)
-		    TtaFreeMemory (CSSpath);
-		  if (css->category == CSS_DOCUMENT_STYLE)
-		    CSSpath = TtaStrdup (TtaGetMessage (AMAYA, AM_LOCAL_CSS));
-		  else if (css->url)
-		    CSSpath = TtaStrdup (css->url);
-		  else
-		    CSSpath = TtaStrdup (css->localName);
-		  select = i;
-		}
-	      i++;
+		ptr = TtaConvertMbsToByte (css->url,
+					   TtaGetDefaultCharset ());
 	    }
+	  len = strlen (ptr);
+	  len++;
+	  if (size < len)
+	    break;
+	  strcpy (&buf[index], ptr);
+	  TtaFreeMemory (ptr);
+	  index += len;
+	  nb++;
+	  size -= len;
+	  if (select == -1 &&
+	      (CSScase < 4 || css->category == CSS_EXTERNAL_STYLE))
+	    {
+	      if (CSSpath)
+		TtaFreeMemory (CSSpath);
+	      if (css->category == CSS_DOCUMENT_STYLE)
+		CSSpath = TtaStrdup (TtaGetMessage (AMAYA, AM_LOCAL_CSS));
+	      else if (css->url)
+		CSSpath = TtaStrdup (css->url);
+	      else
+		CSSpath = TtaStrdup (css->localName);
+	      select = i;
+	    }
+	  i++;
 	}
       css = css->NextCSS;
     }

@@ -84,8 +84,7 @@ ThotBool AddLoadedImage (char *name, char *pathname,
 
    /* It is a new loaded image */
    pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
-   pImage->originalName = TtaGetMemory (strlen (pathname) + 1);
-   strcpy (pImage->originalName, pathname);
+   pImage->originalName = TtaStrdup (pathname);
    pImage->localName = TtaStrdup (localname);
    pImage->tempfile = NULL;
    pImage->prevImage = previous;
@@ -136,7 +135,7 @@ LoadedImageDesc *SearchLoadedImage (char *localpath, Document doc)
       while (pImage != NULL)
 	{
 	  if (strcmp (localpath, pImage->localName) == 0 && 
-	      ((doc == 0) || (pImage->document == doc)))
+	      (doc == 0 || pImage->document == doc))
 	    /* image found */
 	    return (pImage);
 	  else
@@ -517,7 +516,8 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 /*----------------------------------------------------------------------
   DisplayImage
   ----------------------------------------------------------------------*/
-void DisplayImage (Document doc, Element el, LoadedImageDesc  *desc,  char *localfile, char *mime_type)
+void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
+		   char *localfile, char *mime_type)
 {
   ElementType         elType;
   int                 modified, i;

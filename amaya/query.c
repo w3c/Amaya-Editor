@@ -1093,9 +1093,11 @@ static int precondition_handler (HTRequest *request, HTResponse *response,
   if (prompt)
     {
       if (me->method == METHOD_GET)
+	{
 	  /* @@@@ IV */
-	force_put = (*prompt) (request, HT_A_CONFIRM, status,
-			       NULL, NULL, NULL);
+	  (*prompt) (request, HT_A_CONFIRM, status, NULL, NULL, NULL);
+	  force_put = NO;
+	}
       else
 	force_put = (*prompt) (request, HT_A_CONFIRM, HT_MSG_RULES,
 			       NULL, NULL, NULL);

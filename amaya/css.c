@@ -153,7 +153,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
       /* link the new presentation schema */
       TtaAddPSchema (nSchema, prevS, FALSE, doc, sSchema);
     }
-  else
+  else if (css->category == CSS_EXTERNAL_STYLE)
     {
       /* check the order among its external style sheets */
       if (pInfo->PiLink != NULL)
@@ -652,20 +652,24 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
     {
       LoadRemoteStyleSheet (url, doc, el, css, tempURL, tempfile);
       oldcss = SearchCSS (0, tempURL, NULL);
-      if (oldcss == NULL || oldcss->category != CSS_EXTERNAL_STYLE)
+      if (oldcss == NULL)
 	{
-	  /* It could be a @import CSS */
-	  if (css == NULL)
-	    /* It's a new CSS file: allocate a new Presentation structure */
+	  /* It's a new CSS file: allocate a new Presentation structure */
+	  if (import)
 	    {
-	    if (user)
-	      css = AddCSS (0, doc, CSS_USER_STYLE, tempURL, tempfile, NULL);
-	    else
-	      css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile,
-			    NULL);
+	      /* a @import CSS */
+	      oldcss = AddCSS (0, doc, CSS_IMPORT, tempURL, tempfile, NULL);
+	      oldcss->media[doc] = media;
+	    }
+	  else
+	    {
+	      if (user)
+		css = AddCSS (0, doc, CSS_USER_STYLE, tempURL, tempfile, NULL);
+	      else
+		css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile, NULL);
+	      css->media[doc] = media;
 	    }
 	  oldcss = css;
-	  oldcss->media[doc] = media;
 	}
       else if (!oldcss->documents[doc])
 	{
@@ -685,7 +689,7 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
       if (tempfile[0] == EOS)
 	/* cannot do more */
 	return;
-      else if (media == CSS_OTHER ||
+      else if (media == CSS_OTHER || oldcss == NULL ||
 	       (!printing && media == CSS_PRINT) ||
 	       (printing && media == CSS_SCREEN) ||
 	       !oldcss->enabled[doc])
@@ -719,18 +723,16 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
 	      return;
 	    }
-
 #ifdef _WINDOWS
 	  if (fstat (_fileno (res), &buf))
-#else  /* !_WINDOWS */
-	    if (fstat (fileno (res), &buf))
+#else  /* _WINDOWS */
+	  if (fstat (fileno (res), &buf))
 #endif /* _WINDOWS */
-	      {
-		TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-		fclose (res);
-		return;
-	      }
-
+	    {
+	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+	      fclose (res);
+	      return;
+	    }
 	  tmpBuff = TtaGetMemory (buf.st_size + 1000);
 	  if (tmpBuff == NULL)
 	    {
