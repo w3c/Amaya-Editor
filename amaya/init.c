@@ -737,7 +737,7 @@ char               *pathname;
 	if (!opened)
 	  {
 	     /* Add a button */
-	     TtaAddButton (doc, 1, stopR, StopTransfer,
+	     TtaAddButton (doc, 1, stopN, StopTransfer,
 			   TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT));
 	     TtaAddButton (doc, 1, iconBack, GotoPreviousHTML,
 			   TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS));
