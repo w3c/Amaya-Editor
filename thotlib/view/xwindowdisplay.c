@@ -63,18 +63,7 @@ typedef enum {
   DEFINE, TESSELATED
 } mode_type;
 
-/*----------------------------------------------------------------------
- GL_SetForeground : set color before drawing a or many vertex
-  ----------------------------------------------------------------------*/
-void GL_SetForeground (int fg)
-{
-    unsigned short red, green, blue;
-
-    TtaGiveThotRGB (fg, &red, &green, &blue);
-    glColor4ub (red, green, blue, 255);
-}
-
-int BG_Frame=0;
+extern int BG_Frame;
 /*----------------------------------------------------------------------
   GL_SetBackground : Save background color ('cause also used in GL_Clear)
   ----------------------------------------------------------------------*/

@@ -79,8 +79,20 @@ glPushMatrix();
 glPopMatrix(); 
 }
 
+/*----------------------------------------------------------------------
+ GL_SetForeground : set color before drawing a or many vertex
+  ----------------------------------------------------------------------*/
+void GL_SetForeground (int fg)
+{
+    unsigned short red, green, blue;
+
+    TtaGiveThotRGB (fg, &red, &green, &blue);
+    glColor4ub (red, green, blue, 255);
+}
+
 static ThotBool GL_Buffering;
-extern int BG_Frame;
+int BG_Frame = 0;
+
 /*----------------------------------------------------------------------
    GL_DrawEmptyRectangle Outlined rectangle
   ----------------------------------------------------------------------*/
