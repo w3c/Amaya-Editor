@@ -562,7 +562,6 @@ void YEdgesExchange (PtrBox pBox, OpRelation op)
    PtrBox              pRefBox;
 
    pAb = pBox->BxAbstractBox;
-
    /* prend le repere symetrique dans le positionnement */
    oldPosEdge = pAb->AbVertPos.PosEdge;
    /* Nouveau repere de position */
@@ -880,7 +879,8 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 	  /* save the previous fixed edge */
 	  oldHorizEdge = pBox->BxHorizEdge;
 	  /* Look for the horizontal fixed edge and the horizontal free edge */
-	  if (op == OpWidth)
+	  if ((op == OpWidth/* && !pBox->BxHorizInverted) ||
+			       (op != OpWidth && pBox->BxHorizInverted*/))
 	    oldPosEdge = pAb->AbWidth.DimPosition.PosEdge;
 	  else
 	    {
@@ -920,7 +920,7 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 		translation = -pBox->BxWidth;
 	      else if (pBox->BxHorizEdge == Left)
 		translation = pBox->BxWidth;
-	      XMove (pBox, pSourceBox, translation, frame);
+              XMove (pBox, pSourceBox, translation, frame);
 	    }
 	  /* Resize the box */
 	  GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
@@ -936,7 +936,8 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 	  /* save the previous fixed edge */
 	  oldVertEdge = pBox->BxVertEdge;
 	  /* Look for the vertical fixed edge and the vertical free edge */
-	  if (op == OpHeight)
+	  if ((op == OpHeight/* && !pBox->BxVertInverted) ||
+				(op != OpHeight && pBox->BxVertInverted*/))
 	    oldPosEdge = pAb->AbHeight.DimPosition.PosEdge;
 	  else
 	    {
@@ -965,19 +966,18 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 		pBox->BxVertEdge = pAb->AbVertPos.PosEdge;
 	    }
 	  
-	  if (delta < 0 && -delta > pBox->BxH)
+	  if (delta < 0 && -delta > pBox->BxHeight)
 	    {
 	      /* Invert box edges */
 	      YEdgesExchange (pBox, op);
 	      
 	      /* Translate the box origin */
-	      delta = -delta - 2 * pBox->BxH;
+	      delta = -delta - 2 * pBox->BxHeight;
 	      if (pBox->BxVertEdge == Bottom)
-		translation = -pBox->BxH;
+		translation = -pBox->BxHeight;
 	      else if (pBox->BxVertEdge == Top)
-		translation = pBox->BxH;
-	      YMove (pBox, pSourceBox, translation, frame);
-	      
+		translation = pBox->BxHeight;
+              YMove (pBox, pSourceBox, translation, frame);
 	    }
 	  /* Resize the box */
 	  GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
@@ -2888,7 +2888,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 {
   PtrBox              box;
-  PtrAbstractBox      pAb, relAb;
+  PtrAbstractBox      pAb, relAb, pChild;
   PtrAbstractBox      pCurrentAb;
   PtrPosRelations     pPosRel;
   BoxRelation        *pRelation;
@@ -2943,6 +2943,20 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
        */
       if (absoluteMove)
 	{
+	  if (pBox->BxHorizFlex)
+	    {
+	      /* force the moving of this box and consider its children */ 
+	      pBox->BxXOrg += delta;
+	      absoluteMove = FALSE;
+	      pChild = pCurrentAb->AbFirstEnclosed;
+	      while (pChild)
+		{
+		  if (pChild->AbBox)
+		    XMoveAllEnclosed (pChild->AbBox, delta, frame);
+		  pChild = pChild->AbNext;
+		}
+	    }
+	    else
 	  XMoveAllEnclosed (pBox, delta, frame);
 	  /* we could clean up the history -> restore it */
 	  pBox->BxMoved = pFromBox;
@@ -3100,7 +3114,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 {
   PtrBox              box;
-  PtrAbstractBox      pAb, relAb;
+  PtrAbstractBox      pAb, relAb, pChild;
   PtrAbstractBox      pCurrentAb;
   PtrPosRelations     pPosRel;
   BoxRelation        *pRelation;
@@ -3156,7 +3170,21 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	printf ("YMove %c y=%d + %d\n", pBox->BxAbstractBox->AbRealShape, pBox->BxYOrg, delta);*/
       if (absoluteMove)
 	{
-	  YMoveAllEnclosed (pBox, delta, frame);
+	  if (pBox->BxVertFlex)
+	    {
+	      /* force the moving of this box and consider its children */ 
+	      pBox->BxYOrg += delta;
+	      absoluteMove = FALSE;
+	      pChild = pCurrentAb->AbFirstEnclosed;
+	      while (pChild)
+		{
+		  if (pChild->AbBox)
+		    YMoveAllEnclosed (pChild->AbBox, delta, frame);
+		  pChild = pChild->AbNext;
+		}
+	    }
+	  else
+	    YMoveAllEnclosed (pBox, delta, frame);
 	  /* we could clean up the history -> restore it */
 	  pBox->BxMoved = pFromBox;
 	  /* avoid cycles on the same boxes */
