@@ -1073,7 +1073,7 @@ Document            doc;
 	  {
 	     /* A descendance has been created */
 	     elFirst = TtaGetFirstChild (parent);
-	     while (elFirst != NULL && !TtaIsAncestor (newEl, elFirst))
+	     while (elFirst != NULL && !TtaIsAncestor (elLast, elFirst))
 	       {
 		  TtaNextSibling (&elFirst);
 	       }
