@@ -2,11 +2,11 @@
 #
 # This script builds the Source tar files for Amaya
 #
-#       amaya-src-$AMAYAVERSION.tar.gz
+#       amaya-src-$AMAYAVERSION.tgz
 #
 # And the associated Librairies for supported versions.
 #
-#       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
+#       amaya-libs-$MACH-$AMAYAVERSION.tgz
 #
 AMAYAVERSION=2.2
 THOTDIR=/tahiti/diffusion
@@ -407,4 +407,4 @@ libwww/config/makexprt.pl \
 libwww/config/mkinstalldirs \
 libwww/config/winConfigure.pl \
 libwww/config/missing \
- | $COMPRESS  > $DEST/amaya-src-$AMAYAVERSION.tar.gz
+ | $COMPRESS  > $DEST/amaya-src-$AMAYAVERSION.tgz
