@@ -640,6 +640,11 @@ int                 status;
    char               *ref;
    char               *tmp;
 
+   if (!me)
+     /* if the redirect doesn't come from Amaya, we call libwww's standard
+	redirect filter */
+     return (HTRedirectFilter (request, response, param, status));
+
    if (!new_anchor)
      {
 	if (PROT_TRACE)
@@ -670,7 +675,7 @@ int                 status;
 	     {
 	       if ((*prompt) (request, HT_A_CONFIRM, HT_MSG_REDIRECTION,
 			      NULL, NULL, NULL) != YES)
-		 return HT_ERROR;
+		 return HT_OK;
 	     }
 	 }
      }
@@ -895,7 +900,7 @@ int                 status;
   char               *content_type;
 
   if (!me)
-    return HT_OK;		/* not an Amaya request */
+    return HT_ERROR;		/* not an Amaya request */
 
   if (me->reqStatus == HT_END)
     /* we have already processed this request! */
@@ -1555,12 +1560,14 @@ static void Cacheinit ()
   else
     cache_enabled = YES;
 
+#if 0 /* temp inhibed to compile under INSURE */
   /* cache protected documents? */
   strptr = (char *) TtaGetEnvString ("CACHE_PROTECTED_DOCS");
   if (strptr && *strptr && !strcasecmp (strptr, "yes" ))
     HTCacheMode_setProtected (YES);
   else
     HTCacheMode_setProtected (NO);
+#endif
 
   /* get the cache dir (or use a default one) */
   strptr = (char *) TtaGetEnvString ("CACHE_DIR");
