@@ -1571,10 +1571,6 @@ void         CreateGraphicElement (int entry)
       TtaSetDisplayMode (doc, dispMode);
     }
   
-  if (selEl != NULL)
-    /* select the right element */
-    TtaSelectElement (doc, selEl);
-  
   if (shape == 'S' || shape == 'p' || shape == 'B' ||
       shape == 's' || shape == 'g')
     /* multipoints element. Let the user enter the points */
@@ -1584,8 +1580,11 @@ void         CreateGraphicElement (int entry)
 	  TtaGiveBoxSize (parent, doc, 1, UnPixel, &w, &h);
 	  TtaChangeLimitOfPolyline (child, UnPixel, w, h, doc);
 	}
+      /* select the leaf element and ask the user to enter the points */
+      TtaSelectElement (doc, child);
       TtcInsertGraph (doc, 1, shape);
-      if (shape != 'g' && TtaGetVolume (selEl) < 3)
+      /* the user has created the points */
+      if (shape != 'g' && TtaGetVolume (child) < 3)
 	{
 	  /* the polyline doesn't have enough points */
 	  TtaDeleteTree (newEl, doc);
@@ -1597,6 +1596,10 @@ void         CreateGraphicElement (int entry)
 	  return;
 	}
     }
+  if (selEl != NULL)
+    /* select the right element */
+    TtaSelectElement (doc, selEl);
+  
   /* adapt the size of the SVG root element if necessary */
   InCreation = FALSE;
   CheckGraphMLRoot (doc, newEl);
