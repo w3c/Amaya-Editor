@@ -851,7 +851,7 @@ Document            doc;
   TtaOpenUndoSequence (doc, ClassReference, ClassReference, 0, 0);
 
   /* create the class attribute */
-  if (stylestring[1] == '.')
+  if (stylestring[0] == '.')
     {
       a_class = &CurrentClass[0];
       if (*a_class == '.')
