@@ -1588,6 +1588,7 @@
 <label define="TMSG_NO_ELEMENT">
 	<message xml:lang="en">Select a generic XML structure</message>
 	<message xml:lang="fr">Séléctionner une structure XML générique</message>
+	<message xml:lang="es">Seleccione una estructura genérica</message>
 </label>
 <label define="TMSG_What">
 	<message xml:lang="en">Checking</message>
@@ -1942,6 +1943,7 @@
 <label define="TMSG_ARROW">
 	<message xml:lang="en">Arrows</message>
 	<message xml:lang="fr">Flèches</message>
+	<message xml:lang="es">Flechas</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
