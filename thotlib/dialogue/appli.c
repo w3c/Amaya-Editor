@@ -2284,13 +2284,13 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  break;	
 	case 4:
 	  /* wheel mice up */
-	  TtcPageUp(document, view); 
 	  FrameToView (frame, &document, &view); 
+	  TtcPageUp(document, view); 
 	  break;
 	case 5:
            /* wheel mice down */
-	   TtcPageDown(document, view); 
 	   FrameToView (frame, &document, &view); 
+	   TtcPageDown(document, view); 
 	   break;
 	default:
 	  break;
