@@ -191,30 +191,32 @@
 189 Negociación de idioma...
 190 Perfiles...
 191 Plantillas...
-192 Anotar
-193 Filtro local...
-194 Cargar anotaciones
-195 Personalizar consulta...
-196 Post anotacion
-197 Configurar...
-198 Sobre Amaya
-199 Sobre Amaya en W3C
-200 Hojear
-201 Seleccionar
-202 Buscar
-203 Vistas
-204 Creación de elementos
-205 Enlaces
-206 Restructuración
-207 Tablas
-208 Matemáticas
-209 Mapas de imagen
-210 Hojas de estilo
-211 Atributos
-212 Comprobar ortografía
-213 Publicar
-214 Imprimir
-215 Numerar
-216 Crear libros
-217 Configurar Amaya
-218 Accesibilidad en Amaya
+192 **Annotate Selection
+193 **Annotate document
+194 Post anotacion
+195 **Delete annotation
+196 Cargar anotaciones
+197 Personalizar consulta...
+198 Filtro local...
+199 Configurar...
+200 Sobre Amaya
+201 Sobre Amaya en W3C
+202 Hojear
+203 Seleccionar
+204 Buscar
+205 Vistas
+206 Creación de elementos
+207 Enlaces
+208 Restructuración
+209 Tablas
+210 Matemáticas
+211 Mapas de imagen
+212 Hojas de estilo
+213 Atributos
+214 Comprobar ortografía
+215 Publicar
+216 Imprimir
+217 Numerar
+218 Crear libros
+219 Configurar Amaya
+220 Accesibilidad en Amaya

@@ -230,13 +230,15 @@ MENUS
 
 	Attributes_;
 
-	view:1 Annotations_ button:BAnnotate -> AnnotateDocument;
-	view:1 Annotations_ button:BFilterAnnotations -> FilterAnnot;
+	view:1 Annotations_ button:BAnnotateSel -> AnnotateDocument;
+	view:1 Annotations_ button:BAnnotateDocument -> AnnotateDocument;
 	Annotations_ Separator;
+	view:1 Annotations_ button:BPostAnnot -> PostAnnotation;
+	view:1 Annotations_ button:BDeleteAnnot -> DeleteAnnotation;
 	view:1 Annotations_ button:BLoadAnnots -> LoadAnnotations;
 	view:1 Annotations_ button:BCustomQuery -> CustomQuery;
 	Annotations_ Separator;
-	view:1 Annotations_ button:BPostAnnot -> PostAnnotation;
+	view:1 Annotations_ button:BFilterAnnotations -> FilterAnnot;
 	Annotations_ Separator;
 	view:1 Annotations_ button:BConfigure -> ConfigAnnot;
 

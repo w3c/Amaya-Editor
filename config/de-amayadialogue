@@ -191,30 +191,32 @@
 189 Akzeptierte sprachen...
 190 Profiles...
 191 Seitenvorlagen...
-192 Anmerken
-193 Lokaler filter...
-194 Anmerkungen laden
-195 Abfrage anpassen...
-196 Anmerkung veröffentlichen
-197 Konfigurieren...
-198 Info
-199 Über Amaya beim W3C
-200 Verknüpfungen folgen/Dokumente öffnen
-201 Auswählen
-202 Suchen
-203 Ansichten
-204 Einfügen von Elementen
-205 Verknüpfungen bearbeiten
-206 Umformatieren
-207 Tabellen
-208 Formeln
-209 Aktive Grafikbereiche
-210 Formate/Stylesheets
-211 Attribute
-212 Rechtschreibung
-213 Speichern/Publizieren
-214 Drucken
-215 Abschnittsnummern
-216 Buch zusammenfügen
-217 Konfiguration
-218 Benutzerfreundlichkeit
+192 **Annotate Selection
+193 **Annotate document
+194 Anmerkung veröffentlichen
+195 **Delete annotation
+196 Anmerkungen laden
+197 Abfrage anpassen...
+198 Lokaler filter...
+199 Konfigurieren...
+200 Info
+201 Über Amaya beim W3C
+202 Verknüpfungen folgen/Dokumente öffnen
+203 Auswählen
+204 Suchen
+205 Ansichten
+206 Einfügen von Elementen
+207 Verknüpfungen bearbeiten
+208 Umformatieren
+209 Tabellen
+210 Formeln
+211 Aktive Grafikbereiche
+212 Formate/Stylesheets
+213 Attribute
+214 Rechtschreibung
+215 Speichern/Publizieren
+216 Drucken
+217 Abschnittsnummern
+218 Buch zusammenfügen
+219 Konfiguration
+220 Benutzerfreundlichkeit

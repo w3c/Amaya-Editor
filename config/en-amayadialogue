@@ -191,30 +191,32 @@
 189 Language Negotiation...
 190 Profiles...
 191 Templates...
-192 Annotate
-193 Local filter...
-194 Load annotations
-195 Customize query...
-196 Post annotation
-197 Configure...
-198 About Amaya
-199 About Amaya at W3C
-200 Browsing
-201 Selecting
-202 Searching
-203 Views
-204 Creating elements
-205 Links
-206 Restructuring
-207 Tables
-208 Math
-209 Image maps
-210 Style sheets
-211 Attributes
-212 Spell Checking
-213 Publishing
-214 Printing
-215 Numbering
-216 Making books
-217 Configuring Amaya
-218 Accessibility in Amaya
+192 Annotate Selection
+193 Annotate document
+194 Post annotation
+195 Delete annotation
+196 Load annotations
+197 Customize query...
+198 Local filter...
+199 Configure...
+200 About Amaya
+201 About Amaya at W3C
+202 Browsing
+203 Selecting
+204 Searching
+205 Views
+206 Creating elements
+207 Links
+208 Restructuring
+209 Tables
+210 Math
+211 Image maps
+212 Style sheets
+213 Attributes
+214 Spell Checking
+215 Publishing
+216 Printing
+217 Numbering
+218 Making books
+219 Configuring Amaya
+220 Accessibility in Amaya

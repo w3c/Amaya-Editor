@@ -2580,6 +2580,23 @@ View view;
 }
 
 /*----------------------------------------------------------------------
+  DeleteAnnotation
+  Frontend to the function that posts an annotation to the server
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void DeleteAnnotation (Document doc, View view)
+#else 
+void DeleteAnnotation (doc, view)
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#ifdef ANNOTATIONS
+  ANNOT_Delete (doc, view);
+#endif /* ANNOTATIONS */
+}
+
+/*----------------------------------------------------------------------
    FilterAnnot
    Show/Hide the annotations
   ----------------------------------------------------------------------*/

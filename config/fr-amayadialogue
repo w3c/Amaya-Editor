@@ -191,30 +191,32 @@
 189 Négociation de Langues...
 190 Profils...
 191 Modèles de page
-192 Ajouter annotation
-193 Filtrer local...
-194 Charger les annotations
-195 Customizer la requete...
-196 Enregister une annotation
-197 Configuration...
-198 À propos de Amaya
-199 À propos de Amaya au W3C
-200 Navigation
-201 Sélection
-202 Chercher
-203 Vues
-204 Création
-205 Liens
-206 Transformer
-207 Tables
-208 Math
-209 Zones actives
-210 Feuilles de style
-211 Attributs
-212 Corriger
-213 Publier
-214 Imprimer
-215 Numéroter
-216 Construire un livre
-217 Configurer Amaya
-218 Accessibilité d'Amaya
+192 **Annotate Selection
+193 **Annotate document
+194 Enregister une annotation
+195 **Delete annotation
+196 Charger les annotations
+197 Customizer la requete...
+198 Filtrer local...
+199 Configuration...
+200 À propos de Amaya
+201 À propos de Amaya au W3C
+202 Navigation
+203 Sélection
+204 Chercher
+205 Vues
+206 Création
+207 Liens
+208 Transformer
+209 Tables
+210 Math
+211 Zones actives
+212 Feuilles de style
+213 Attributs
+214 Corriger
+215 Publier
+216 Imprimer
+217 Numéroter
+218 Construire un livre
+219 Configurer Amaya
+220 Accessibilité d'Amaya

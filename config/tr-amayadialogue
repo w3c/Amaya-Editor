@@ -191,30 +191,32 @@
 189 **Language Negotiation...
 190 **Profiles...
 191 **Templates...
-192 Annotate
-193 **Local filter...
-194 **Load annotations
-195 **Customize query...
-196 **Post annotation
-197 **Configure...
-198 **About Amaya
-199 Amaya hakkýnda
-200 **Browsing
-201 Tarama
-202 Seçme
-203 Arama
-204 Görünümler
-205 Birim yaratma
-206 Baðlantýlar
-207 Yeniden yapýlandýrma
-208 Tablolar
-209 Matematik
-210 Görüntü haritalarý
-211 Tarz tanýmlarý
-212 Özellikler
-213 Yazým hatalarý aranýyor
-214 Sayfa yerleþtirme
-215 Bastýrma
-216 Numaralandýrmasý
-217 Kitap oluþturma
-218 Amaya yapýlandýrmasý
+192 **Annotate Selection
+193 **Annotate document
+194 **Post annotation
+195 **Delete annotation
+196 **Load annotations
+197 **Customize query...
+198 **Local filter...
+199 **Configure...
+200 **About Amaya
+201 Amaya hakkýnda
+202 **Browsing
+203 Tarama
+204 Seçme
+205 Arama
+206 Görünümler
+207 Birim yaratma
+208 Baðlantýlar
+209 Yeniden yapýlandýrma
+210 Tablolar
+211 Matematik
+212 Görüntü haritalarý
+213 Tarz tanýmlarý
+214 Özellikler
+215 Yazým hatalarý aranýyor
+216 Sayfa yerleþtirme
+217 Bastýrma
+218 Numaralandýrmasý
+219 Kitap oluþturma
+220 Amaya yapýlandýrmasý
