@@ -572,9 +572,9 @@ char                  *newURL;
    /* update the document url */
    TtaFreeMemory (DocumentURLs[SavingDocument]);
    DocumentURLs[SavingDocument] = (char *) TtaStrdup (newURL);
+   el = TtaGetMainRoot (SavingDocument);
    if (CopyImages)
      {
-       el = TtaGetMainRoot (SavingDocument);
        /* search the BASE element */
        elType.ElSSchema = TtaGetDocumentSSchema (SavingDocument);
        elType.ElTypeNum = HTML_EL_BASE;
@@ -637,6 +637,11 @@ char                  *newURL;
 	   elType = TtaGetElementType (el);
 	   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 	     {
+#ifdef COUGAR
+	       elType = TtaGetElementType (TtaGetParent(el));
+	       if (elType.ElTypeNum != HTML_EL_Object)
+		 {
+#endif
 	       buflen = TtaGetTextAttributeLength (attr);
 	       buf = (char *) TtaGetMemory (buflen + 2);
 	       if (buf == NULL)
@@ -722,6 +727,9 @@ char                  *newURL;
 
 		 }
 	       TtaFreeMemory (buf);
+#ifdef COUGAR
+		 }
+#endif
 	     }
 	   TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
 	 }

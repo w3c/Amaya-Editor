@@ -432,8 +432,28 @@ char               *docName;
    ** try to calculate one using the doc's base element 
    ** (if it exists),
    */
-
-   if (tempOrgName[0] == EOS || IsW3Path (tempOrgName) || doc == 0)
+   if (tempOrgName[0] == EOS)
+     {
+       newName[0] = EOS;
+       return;
+     }
+   else if (IsW3Path (tempOrgName))
+     {
+       /* the name is complete, go to the Sixth Step */
+       strcpy (newName, tempOrgName);
+       /* verify if the URL has the form "protocol://server:port" */
+       ptr = HTParse (newName, "", PARSE_ACCESS | PARSE_HOST |
+		      PARSE_PUNCTUATION);
+       if (ptr && !strcmp (ptr, newName))
+	 {
+	   /* it has this form, we complete it by adding a "/"  */
+	   strcat (newName, "/");
+	   length++;
+	 }
+       if (ptr)
+	 HT_FREE (ptr);
+     }
+   else if ( doc == 0)
      /* the name is complete, go to the Sixth Step */
      strcpy (newName, tempOrgName);
    else
