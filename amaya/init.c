@@ -1267,8 +1267,13 @@ void StopTransfer (Document document, View view)
 		    NULL);
     }
 }
-
-static int  CompleteUrl(char **url)
+/*----------------------------------------------------------------------
+  CompleteUrl
+   The Address text field in a document window or the open dialog
+   can accept URL in a short definition : w3.org
+   so that we prepend it http://
+  ----------------------------------------------------------------------*/
+static int  CompleteUrl (char **url)
 {
     char *s;
 

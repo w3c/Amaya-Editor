@@ -538,19 +538,13 @@ void WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
    ThotInput (frame, &string[0], len, keyboard_mask, wParam);
 }
 #else /* _WINDOWS */
-
+#ifdef _GTK
 /*----------------------------------------------------------------------
-   CharTranslation
-   X-Window front-end to the character translation and handling.
-   Decodes the X-Window event  and calls the generic character
+   CharTranslationGTK
+   GTK front-end to the character translation and handling.
+   Decodes the GTK key press event  and calls the generic character
    handling function.
   ----------------------------------------------------------------------*/
-#ifdef _GTK
-static gboolean HiddenTextHide(GtkWidget *w, gpointer data)
-{
-    gtk_widget_hide (GTK_WIDGET(data));   
-}
-
 gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 {
    int                 status;
@@ -586,7 +580,6 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 	    { 
 		 /* We're in the drawing so get the hidden textfield adress*/		 
 		 textzone = gtk_object_get_data (GTK_OBJECT (drawing_area), "Text_catcher");
-		 Multikey = TtaGetEnvString ("ENABLE_MULTIKEY");
 		 gtk_widget_grab_focus (GTK_WIDGET(textzone));
 	     }
      }
@@ -617,6 +610,11 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    ThotInput (frame, &string[0], event->length, PicMask, KS);
    return FALSE;
 }
+/*----------------------------------------------------------------------
+   KeyScrolledGTK
+   Capture click on the scrollbar in order to enable
+   Crtl + click event, that let user go on top or bottom of the doc
+  ----------------------------------------------------------------------*/
 gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 { 
   int y_middle;
@@ -654,6 +652,12 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
   return TRUE;
 }
 #else /* _GTK */
+/*----------------------------------------------------------------------
+   CharTranslation
+   X-Window front-end to the character translation and handling.
+   Decodes the X-Window event  and calls the generic character
+   handling function.
+  ----------------------------------------------------------------------*/
 void CharTranslation (ThotKeyEvent *event)
 {
    KeySym              KS;

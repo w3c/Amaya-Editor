@@ -2301,6 +2301,7 @@ void DrawingInput (int *w, int frame, int *infos)
 
 #ifdef _GTK
 /*-----------------------------------------------------------------------
+  ConnectSignalGTK
   Function used by GTK version to attach the callback function to the
   good event and to attache the signal connect ID to the widget in order
   to disconnect it further.
@@ -2311,7 +2312,12 @@ void ConnectSignalGTK (GtkObject *w, gchar *signal_name, GtkSignalFunc callback,
   id = gtk_signal_connect (GTK_OBJECT(w), signal_name, GTK_SIGNAL_FUNC(callback), data);
   gtk_object_set_data (GTK_OBJECT (w), signal_name, (gpointer)id);
 }
-
+/*-----------------------------------------------------------------------
+  RemoveSignalGTK 
+  Function used by GTK version to remove the callback function to the
+  good event and to remove the signal connect ID to the widget that permits
+  reconization of the signal
+-------------------------------------------------------------------------*/
 void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
 {
   guint id;
@@ -2323,8 +2329,11 @@ void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
   }
 }
 
-/* Signal handler called when the selections owner 
-(another application) returns the data */
+/*-----------------------------------------------------------------------
+  selection_received
+  Signal handler called when the selections owner 
+  (another application) returns the data 
+-------------------------------------------------------------------------*/
 void selection_received( GtkWidget *widget, GtkSelectionData *sel_data,  gpointer data )
 {   
     if (Xbuffer != NULL)
@@ -2339,7 +2348,10 @@ void selection_received( GtkWidget *widget, GtkSelectionData *sel_data,  gpointe
     return;
 } 
 
-/* Signal handler invoked when user focus on drawing area */
+/*-----------------------------------------------------------------------
+  get_targets
+  Signal handler invoked when user focus on drawing area 
+-------------------------------------------------------------------------*/
 void get_targets( GtkWidget *widget,  gpointer data )
 {
   static GdkAtom targets_atom = GDK_NONE;
@@ -2358,7 +2370,10 @@ void get_targets( GtkWidget *widget,  gpointer data )
   }
 }
 
-/* Called when another application claims the selection */
+/*-----------------------------------------------------------------------
+ selection_clear
+ Called when another application claims the selection 
+-------------------------------------------------------------------------*/
 gint selection_clear( GtkWidget         *widget,
     GdkEventSelection *event,
     gpointer data )
@@ -2369,7 +2384,10 @@ gint selection_clear( GtkWidget         *widget,
   return TRUE;
 }
  
-/* Supplies the Xbuffer as the selection. */
+/*-----------------------------------------------------------------------
+ selection_handle
+ Supplies the Xbuffer as the selection. 
+-------------------------------------------------------------------------*/
 void selection_handle( GtkWidget        *widget,
     GtkSelectionData *selection_data,
     guint             info,
@@ -2387,8 +2405,7 @@ void selection_handle( GtkWidget        *widget,
 	    strlen(Xbuffer));
 }
 
-#endif
-
+#endif /* _GTK */
 /*----------------------------------------------------------------------
    MakeFrame
    Cree une frame a` la position X,Y et aux dimensions width et       
