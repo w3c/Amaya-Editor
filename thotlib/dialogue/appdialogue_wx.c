@@ -362,6 +362,8 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
 	    wxApp::s_macAboutMenuItemId = item_id;
 	  else if (!strcmp (MenuActionList[item_action].ActionName, "ConfigAmaya"))
 	    wxApp::s_macPreferencesMenuItemId = item_id;
+	  else if (!strcmp (MenuActionList[item_action].ActionName, "AmayaClose"))
+	    wxApp::s_macExitMenuItemId = item_id;
 #endif /* _MACOS */
  	}
 
