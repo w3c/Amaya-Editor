@@ -1557,8 +1557,10 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 		    /* suppression de l'attribut */
 		    pAttrNew->AeAttrValue = 0;
 		  else
-		    /* la valeur choisie devient la valeur courante */
-		    pAttrNew->AeAttrValue = NumAttrValue;
+		    {
+		      /* la valeur choisie devient la valeur courante */
+		      pAttrNew->AeAttrValue = NumAttrValue;
+		    }
 		  /* applique les attributs a la partie selectionnee */
 		  AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
 				     firstSel, SelDoc, TRUE);
@@ -1603,7 +1605,7 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
   FrameToView (frame, &doc, &view);
   item = att;
   /* get the right entry in the attributes list */
-#if _WX
+#ifdef _WX
   /* on wxWidgets, attributs is not a menu but a dialog, this dialog do not have reference */
   /* here we must simulate the default behaviour */
   if (refmenu == -1)
@@ -1676,6 +1678,38 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 		     pAttr->AttrNEnumValues == 1)
 	      /* attribut enumere' a une seule valeur(attribut booleen) */
 	      {
+#ifdef _WX
+		/* is this attribute mandatory ? */
+		mandatory = FALSE;
+		/* get the structure rule defining the selected element */
+		pSRule = firstSel->ElStructSchema->SsRule->SrElem[firstSel->ElTypeNumber - 1];
+		/* look for the attribute in the list of allowed attributes
+		   for this element type */
+		for (i = 0; i < pSRule->SrNLocalAttrs; i++)
+		  if (pSRule->SrLocalAttr->Num[i] == AttrNumber[att])
+		    /* this is the attribute of interest */
+		    {
+		      mandatory = pSRule->SrRequiredAttr->Bln[i];
+		      /* stop */
+		      i = pSRule->SrNLocalAttrs;
+		    }
+
+		/* construit le formulaire de saisie de la valeur de */
+		/* l'attribut */
+		PtrReqAttr = NULL;
+		PtrDocOfReqAttr = NULL;
+		if (mandatory)
+		  /* the callback of required attribute should call
+		     the standard callback attribute */
+		  AttrFormExists = TRUE;
+		/* memorise l'attribut concerne' par le formulaire */
+		SchCurrentAttr = AttrStruct[att];
+		NumCurrentAttr = AttrNumber[att];
+		DocCurrentAttr = LoadedDocument[doc - 1];
+		/* register the current attribut */
+		CurrentAttr = att;
+		MenuValues (pAttr, mandatory, currAttr, SelDoc, view, FALSE);
+#else /* _WX */
 		if (currAttr == NULL)
 		  /* le premier element selectionne' n'a pas cet */
 		  /* attribut. On le lui met */
@@ -1686,6 +1720,7 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 		/* applique l'operation a la partie selectionnee */
 		AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
 				   firstSel, SelDoc, TRUE);
+#endif /* _WX */
 	      }
 	    else
 	      {

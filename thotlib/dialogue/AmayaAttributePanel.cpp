@@ -133,21 +133,25 @@ void AmayaAttributePanel::SendDataToPanel( AmayaParams& p )
       SetupListValue( (const char *)p.param2, (int)p.param3, (const int *)p.param4, (const char *)p.param5, (int)p.param6, (const int *)p.param7 );
       break;
     case wxATTR_ACTION_SETUPLANG:
+      m_CurrentAttType = wxATTR_TYPE_LANG;
       ShowAttributValue( wxATTR_TYPE_LANG );
       SetMandatoryState( p.param2 != NULL );
       SetupLangValue( (const char *)p.param3,(const char *)p.param4, (const char *)p.param5, (int)p.param6, (int)p.param7 );
       break;
     case wxATTR_ACTION_SETUPTEXT:
+      m_CurrentAttType = wxATTR_TYPE_TEXT;
       ShowAttributValue( wxATTR_TYPE_TEXT );
       SetMandatoryState( p.param2 != NULL );
       SetupTextValue( (const char *)p.param3 );
       break;
     case wxATTR_ACTION_SETUPENUM:
+      m_CurrentAttType = wxATTR_TYPE_ENUM;
       ShowAttributValue( wxATTR_TYPE_ENUM );
       SetMandatoryState( p.param2 != NULL );
       SetupEnumValue( (const char *)p.param3, (int)p.param4, (int)p.param5 );
       break;
     case wxATTR_ACTION_SETUPNUM:
+      m_CurrentAttType = wxATTR_TYPE_NUM;
       ShowAttributValue( wxATTR_TYPE_NUM );
       SetMandatoryState( p.param2 != NULL );
       SetupNumValue( (int)p.param3 );
@@ -181,6 +185,8 @@ void AmayaAttributePanel::SelectAttribute( int position )
   if (m_pAttrList->IsChecked(position))
     {
       // call the callback to show the right attribute value panel
+      // there is two case because of old "event" attributs menu (GTK version)
+      // TODO: simplify the code => remove this special case for event menu...
       int item_num = 0;
       if ( position >= m_NbAttr )
 	{
@@ -208,13 +214,12 @@ void AmayaAttributePanel::OnListCheckItem( wxCommandEvent& event )
 {
   if (!m_pAttrList->IsChecked(event.GetSelection()))
     {
-      /* before to check an item force the selection */
       SelectAttribute( event.GetSelection() );
 
       if (!m_CurrentAttMandatory)
 	{
 	  /* remove attribute */
-	  RemoveCurrentAttribut();
+	  RemoveCurrentAttribute();
 	}
       else
 	{
@@ -225,9 +230,10 @@ void AmayaAttributePanel::OnListCheckItem( wxCommandEvent& event )
     }
   else
   {
-	/* creation of a new attribut */
     /* force the item selection */
     SelectAttribute( event.GetSelection() );
+    /* creation of a new attribut with a default value */
+    CreateCurrentAttribute();
   }
   event.Skip();
 }
@@ -237,16 +243,60 @@ void AmayaAttributePanel::OnListCheckItem( wxCommandEvent& event )
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::RemoveCurrentAttribut()
+void AmayaAttributePanel::RemoveCurrentAttribute()
 {
   /* remove attribute */
-  if (m_CurrentAttType == wxATTR_TYPE_LANG)
-    CallbackLanguageMenu(NumFormLanguage, 2, NULL);
-  else
-    CallbackValAttrMenu (NumMenuAttr, 2, NULL);
+  switch (m_CurrentAttType)
+    {
+    case wxATTR_TYPE_TEXT:
+    case wxATTR_TYPE_ENUM:
+    case wxATTR_TYPE_NUM:
+      CallbackValAttrMenu (NumMenuAttr, 2, NULL);
+      break;
+    case wxATTR_TYPE_LANG:
+      CallbackLanguageMenu(NumFormLanguage, 2, NULL);
+      break;
+    }
   
   /* try to redirect focus to canvas */
   TtaRedirectFocus();  
+}
+
+/*----------------------------------------------------------------------
+  CreateCurrentAttribut
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void AmayaAttributePanel::CreateCurrentAttribute()
+{
+  switch (m_CurrentAttType)
+    {
+    case wxATTR_TYPE_TEXT:
+      {
+	/* default value is a empty buffer */
+	CallbackValAttrMenu (NumMenuAttrText, -1, "");
+	CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+      }
+      break;
+    case wxATTR_TYPE_ENUM:
+      {
+	CallbackValAttrMenu (NumMenuAttrEnum, 0, NULL);
+	CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+      }
+      break;
+    case wxATTR_TYPE_NUM:
+      {
+	CallbackValAttrMenu (NumMenuAttrNumber, 0, NULL);
+	CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+      }
+      break;
+    case wxATTR_TYPE_LANG:
+      {
+	CallbackLanguageMenu(NumSelectLanguage, -1, "");
+	CallbackLanguageMenu(NumFormLanguage, 1, NULL);
+      }
+      break;
+    }
 }
 
 
@@ -306,9 +356,6 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
   GetParent()->Layout();
   Layout();
   m_pPanelContentDetach->Layout();
-
-  // remember the current attribut type, used to know what callback must be called
-  m_CurrentAttType = type;
 }
 
 /*----------------------------------------------------------------------
@@ -458,6 +505,14 @@ void AmayaAttributePanel::SetupTextValue( const char * text )
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::SetupEnumValue( const char * enums, int nb_enum, int selected )
 {
+  /* test if the attribut type is boolean */
+  if (nb_enum <= 1)
+    {
+      /* do not show any dialog for boolean type */
+      ShowAttributValue( wxATTR_TYPE_NONE );
+      return;
+    }
+
   wxSizer * p_sizer = m_pPanel_Enum->GetSizer();
   /* remove the old enum field */
   if (m_pRBEnum)
@@ -503,7 +558,7 @@ void AmayaAttributePanel::SetupNumValue( int num )
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::OnDelAttr( wxCommandEvent& event )
 {
-  RemoveCurrentAttribut();    
+  RemoveCurrentAttribute();
 }
 
 /*----------------------------------------------------------------------

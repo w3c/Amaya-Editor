@@ -49,7 +49,8 @@ public:
   virtual void SendDataToPanel( AmayaParams& params );
   virtual void DoUpdate();
 
-  void RemoveCurrentAttribut();
+  void CreateCurrentAttribute();
+  void RemoveCurrentAttribute();
 
  public:
   typedef enum
