@@ -5379,7 +5379,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		      base = cssRule;
 		      while (*cssRule != EOS &&
 			     (*cssRule != '"' ||
-			      (*cssRule == '"' && cssRule[-1] == '\'')))
+			      (*cssRule == '"' && cssRule[-1] == '\\')))
 			cssRule++;
 		      /* isolate the file name */
 		      *cssRule = EOS;
