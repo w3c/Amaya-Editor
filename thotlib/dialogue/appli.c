@@ -1619,15 +1619,17 @@ LPARAM lParam;
          * store the location and return.
          */
 		
-        if (ClickIsDone == 1 && ((mMsg == WM_LBUTTONDOWN) || (mMsg == WM_RBUTTONDOWN))) {
-           ClickIsDone = 0;
-           currentWindow = hwnd;
-           ClickFrame = frame;
-           ClickX = LOWORD (lParam);
-           ClickY = HIWORD (lParam);
-           return (DefWindowProc (hwnd, mMsg, wParam, lParam));
-        }
-		
+        if (ClickIsDone == 1 &&
+	    (mMsg == WM_LBUTTONDOWN || mMsg == WM_RBUTTONDOWN ||
+	     mMsg == WM_SYSKEYDOWN || mMsg == WM_KEYDOWN))
+	  {
+	    ClickIsDone = 0;
+	    currentWindow = hwnd;
+	    ClickFrame = frame;
+	    ClickX = LOWORD (lParam);
+	    ClickY = HIWORD (lParam);
+	    return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+	  }
      } 
 
      /* if (frame != -1 && winCapture != hwnd && fBlocking) { */
@@ -1915,7 +1917,8 @@ void               *event;
    else if (ev == NULL)
       return;
    /*_______> Si une designation de pave est attendue*/
-   else if (ClickIsDone == 1 && ev->type == ButtonPress)
+   else if (ClickIsDone == 1 &&
+	    (ev->type == ButtonPress || ev->type == KeyPress))
      {
 	ClickIsDone = 0;
 	ClickFrame = frame;
@@ -2346,26 +2349,26 @@ PtrAbstractBox     *pave;
    TtaLockMainLoop();
    while (ClickIsDone == 1)
      {
-#        ifndef _WINDOWS 
+#ifndef _WINDOWS 
          TtaFetchOneEvent (&event);
          TtaHandleOneEvent (&event);
-#        else /* _WINDOWS */
+#else /* _WINDOWS */
          GetMessage (&event, NULL, 0, 0);
          curFrame = GetFrameNumber (event.hwnd);
          TtaHandleOneWindowEvent (&event);
          SetCursor (cursor);
-#        endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
      }
    TtaUnlockMainLoop();
 
    /* Restauration du curseur */
    for (i = 1; i <= MAX_FRAME; i++)
      {
-#      ifndef _WINDOWS
+#ifndef _WINDOWS
        drawable = TtaGetThotWindow (i);
        if (drawable != 0)
 	 XUndefineCursor (TtDisplay, drawable);
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
      }
 
    *frame = ClickFrame;

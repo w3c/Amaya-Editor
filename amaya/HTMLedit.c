@@ -458,6 +458,7 @@ View                view;
        TtaNewTextForm (BaseDialog + TitleText, BaseDialog + TitleForm, "", 50, 1, FALSE);
 	/* initialise the text field in the dialogue box */
 	TtaSetTextForm (BaseDialog + TitleText, Answer_text);
+	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + TitleForm, FALSE);
 #else /* _WINDOWS */
 	CreateTextDlgWindow (TtaGetViewFrame (doc, view), Answer_text, BaseDialog, TitleForm, TitleText, TtaGetMessage (1, BTitle), TtaGetMessage (AMAYA, AM_TITLE));
@@ -600,6 +601,7 @@ ThotBool		    withUndo;
 			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
 	/* initialise the text field in the dialogue box */
 	TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
+	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
 #else  /* _WINDOWS */
 	CreateTextDlgWindow (currentWindow, AttrHREFvalue, BaseDialog, AttrHREFForm, AttrHREFText, TtaGetMessage (AMAYA, AM_ATTRIBUTE), TtaGetMessage (AMAYA, AM_HREF_VALUE));
