@@ -5124,10 +5124,10 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	BorderTopWidth: Border px;
-	BorderLeftWidth: Border px;
-	BorderBottomWidth: Border px;
-	BorderRightWidth: Border px;
+	BorderTopWidth: Img_border px;
+	BorderLeftWidth: Img_border px;
+	BorderBottomWidth: Img_border px;
+	BorderRightWidth: Img_border px;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderBottomStyle: Solid;
