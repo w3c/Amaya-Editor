@@ -2231,7 +2231,11 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     break;
 	   case RULE_PresentName:
 	     /* PresentName */
-	     CopyWord (pSSchema->SsDefaultPSchema, wi, wl);
+	     if (pSSchema->SsDefaultPSchema)
+	       TtaFreeMemory (pSSchema->SsDefaultPSchema);
+	     pSSchema->SsDefaultPSchema = (char *)TtaGetMemory (wl + 1);
+	     strncpy (pSSchema->SsDefaultPSchema, (char *)&inputLine[wi - 1], wl);
+	     pSSchema->SsDefaultPSchema[wl] = '\0';
 	     break;
 	   case RULE_AttrName:
 	     /* AttrName */
