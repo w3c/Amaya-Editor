@@ -143,6 +143,7 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 	{IDC_MULTIKEY, AM_ENABLE_MULTIKEY},
 	{IDC_BGIMAGES, AM_SHOW_BG_IMAGES},
 	{IDC_DOUBLECLICK, AM_ENABLE_DOUBLECLICK},
+	/*	{IDC_ENABLEPARSERWARNING, AM_ENABLE_PARSER_WARNING}, */
 	{IDC_ENABLEFTP, AM_ENABLE_FTP},
 	{0, 0}
 };
@@ -157,6 +158,7 @@ static ThotBool DoubleClick;
 static CHAR_T   DialogueLang [MAX_LENGTH];
 static int      FontMenuSize;
 static CHAR_T   HomePage [MAX_LENGTH];
+static ThotBool EnableParserWarning;
 static ThotBool EnableFTP;
 
 /* Publish menu options */
@@ -399,6 +401,7 @@ void InitAmayaDefEnv ()
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   /* @@@ */
   TtaSetDefEnvString ("ENABLE_FTP", TEXT("no"), FALSE);
+  TtaSetDefEnvString ("ENABLE_PARSER_WARNING", TEXT("yes"), FALSE);
   
 #ifndef _WINDOWS
   TtaSetDefEnvString ("THOTPRINT", TEXT("lpr"), FALSE);
@@ -1693,6 +1696,7 @@ static void GetGeneralConf ()
   TtaGetEnvBoolean ("ENABLE_MULTIKEY", &Multikey);
   TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &BgImages);
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
+  TtaGetEnvBoolean ("ENABLE_PARSER_WARNING", &EnableParserWarning);
   TtaGetEnvBoolean ("ENABLE_FTP", &EnableFTP);
   GetEnvString ("HOME_PAGE", HomePage);
   GetEnvString ("LANG", DialogueLang);
@@ -1882,6 +1886,7 @@ static void SetGeneralConf ()
   /* @@@ */
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   /* @@@ */
+  TtaSetEnvBoolean ("ENABLE_PARSER_WARNING", EnableParserWarning, TRUE);
   TtaSetEnvBoolean ("ENABLE_FTP", EnableFTP, TRUE);
   AHTFTPURL_flag_set (EnableFTP);
   TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
@@ -1914,8 +1919,10 @@ static void GetDefaultGeneralConf ()
 		       GeneralBase + mToggleGeneral, 1);
   GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
 		       GeneralBase + mToggleGeneral, 2);
-  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
+  GetDefEnvToggle ("ENABLE_PARSER_WARNING", &EnableParserWarning,
 		       GeneralBase + mToggleGeneral, 3);
+  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
+		       GeneralBase + mToggleGeneral, 4);
   GetDefEnvString ("HOME_PAGE", HomePage);
   GetDefEnvString ("LANG", DialogueLang);
   TtaGetDefEnvInt ("FontMenuSize", &FontMenuSize);
@@ -1944,6 +1951,10 @@ HWND hwnDlg;
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_DOUBLECLICK, (DoubleClick) 
 		  ? BST_CHECKED : BST_UNCHECKED);
+  /*
+  CheckDlgButton (hwnDlg, IDC_ENABLEPARSERWARNING, (EnableParserWarning) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+  */
   CheckDlgButton (hwnDlg, IDC_ENABLEFTP, (EnableFTP) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
@@ -1967,7 +1978,8 @@ static void RefreshGeneralMenu ()
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, Multikey);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, BgImages);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, DoubleClick);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, EnableFTP);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, EnableParserWarning);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 4, EnableFTP);
   TtaSetTextForm (GeneralBase + mHomePage, HomePage);
   TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
   TtaSetNumberForm (GeneralBase + mFontMenuSize, FontMenuSize);
@@ -2044,6 +2056,11 @@ LPARAM lParam;
 	case IDC_DOUBLECLICK:
 	  DoubleClick = !DoubleClick;
 	  break;
+	  /*
+	case IDC_ENABLEPARSERWARNING:
+	  EnableParserWarning = !EnableParserWarning;
+	  break;
+	  */
 	case IDC_ENABLEFTP:
 	  EnableFTP = !EnableFTP;
 	  break;
@@ -2143,7 +2160,10 @@ STRING              data;
 	      DoubleClick = !DoubleClick;
 	      break;
 	    case 3:
-	      EnableFTP = !EnableFTP;
+	      EnableParserWarning = !EnableParserWarning;
+	      break;
+	    case 4:
+	      EnableFTP = !EnableParserWarning;
 	      break;
 	    }
 	  break;
@@ -2204,16 +2224,17 @@ STRING       pathname;
    TtaNewLabel (GeneralBase + mGeneralEmpty1, GeneralBase + GeneralMenu, " ");
    TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, " ");
    /* second line */
-   usprintf (s, "B%s%cB%s%cB%s%cB%s", 
+   usprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s", 
 	     TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
 	     TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
 	     TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS,
+	     TtaGetMessage (AMAYA, AM_ENABLE_PARSER_WARNING), EOS,
 	     TtaGetMessage (AMAYA, AM_ENABLE_FTP));
 
    TtaNewToggleMenu (GeneralBase + mToggleGeneral,
 		     GeneralBase + GeneralMenu,
 		     NULL,
-		     4,
+		     5,
 		     s,
 		     NULL,
 		     FALSE);
