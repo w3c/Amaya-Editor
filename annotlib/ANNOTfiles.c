@@ -155,7 +155,30 @@ void ANNOT_LoadAnnotation (doc, annotDoc)
      we copy it from the existing metadata */
   annot = GetMetaData (doc, docAnnot);
   if (annot)
-    ANNOT_InitDocumentStructure (doc, docAnnot, annot);
+    ANNOT_InitDocumentStructure (doc, docAnnot, annot, FALSE);
+}
+
+/*-----------------------------------------------------------------------
+  ANNOT_ReloadAnnotMeta
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ANNOT_ReloadAnnotMeta (Document annotDoc)
+#else /* __STDC__*/
+void ANNOT_ReloadAnnotMeta (annotDoc)
+     Document annotDoc;
+#endif /* __STDC__*/
+{
+  Document source_doc;
+  AnnotMeta *annot;
+
+  source_doc = DocumentMeta[annotDoc]->source_doc;
+  if (source_doc == 0)
+    return;
+  annot = GetMetaData (source_doc, annotDoc);
+  if (!annot)
+    return;
+  /* initialize the meta data */
+  ANNOT_InitDocumentStructure (source_doc, annotDoc, annot, FALSE);
 }
 
 /*-----------------------------------------------------------------------
@@ -396,13 +419,14 @@ CHAR_T *title;
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void  ANNOT_InitDocumentStructure (Document doc, Document docAnnot, AnnotMeta *annot)
+void  ANNOT_InitDocumentStructure (Document doc, Document docAnnot, AnnotMeta *annot, ThotBool initBody)
 #else /* __STDC__*/
-void  ANNOT_InitDocumentStructure (doc, docAnnot, annot)
+void  ANNOT_InitDocumentStructure (doc, docAnnot, annot, initBody)
      Document document;
      Document docAnnot;
      AnnotMeta *annot;
      CHAR_T    *title;
+     ThotBool  initBody;
 
 #endif /* __STDC__*/
 {
@@ -424,7 +448,9 @@ void  ANNOT_InitDocumentStructure (doc, docAnnot, annot)
   /* initialize the meta data */
   ANNOT_InitDocumentMeta (doc, docAnnot, annot, title);
   /* initialize the html body */
-  ANNOT_InitDocumentBody (docAnnot, title);
+  if (initBody)
+    ANNOT_InitDocumentBody (docAnnot, title);
+
   if (free_title)
     TtaFreeMemory (title);
 
