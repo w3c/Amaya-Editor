@@ -194,8 +194,12 @@ AnnotMeta *annot;
 
   /* add the annotation to the filter list */
   AnnotFilter_add (&(AnnotMetaData[source_doc].types), annot->type);
-  GetServerName (annot->annot_url, server);
-  AnnotFilter_add (&(AnnotMetaData[source_doc].servers), server);
+  if (annot->annot_url)
+    { /* @@ when creating a new annot, we don't yet know the URL;
+         perhaps we should use the POST server name here? */
+      GetServerName (annot->annot_url, server);
+      AnnotFilter_add (&(AnnotMetaData[source_doc].servers), server);
+    }
   tmp = TtaGetMemory (ustrlen (annot->author) + ustrlen (server) + 4);
   usprintf (tmp, "%s@%s", annot->author, server);
   AnnotFilter_add (&(AnnotMetaData[source_doc].authors), tmp);
