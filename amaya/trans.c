@@ -1280,7 +1280,7 @@ Document            doc;
 	     l = 10;
 	     TtaGiveTextAttributeValue (attrFound, label, &l);
 	     TtaRemoveAttribute (elCour, attrFound, doc);
-	     idf = uctoi (label);
+	     idf = uatoi (label);
 	     elOriginal = NULL;
 	     rank = FindListSubTree (idf, &elOriginal);
 	     delta = 0;
@@ -1330,7 +1330,7 @@ Document            doc;
 	  {
 	     l = 10;
 	     TtaGiveTextAttributeValue (attrFound, label, &l);
-	     idf = uctoi (label);
+	     idf = uatoi (label);
 	     if (idf != 0)
 	       {
 		 TtaRemoveAttribute (elCour, attrFound, doc);

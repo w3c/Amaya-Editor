@@ -512,6 +512,8 @@ LPARAM lParam;
    if (frame < 0)
       return;
 
+   escChar = FALSE;
+
    /* Is the Shift key pressed ?? */
    status = GetKeyState (VK_SHIFT);
    if (HIBYTE (status)) 

@@ -875,7 +875,8 @@ static void         ProcessStartGI ();
 static FILE*   ErrFile = (FILE*) 0;
 static CHAR_T    ErrFileName [80];
 
-extern CHARSET CharEncoding;
+extern CHARSET  CharEncoding;
+extern ThotBool charset_undefined;
 
 
 /*----------------------------------------------------------------------
@@ -1381,7 +1382,7 @@ CHAR_T*             msg;
 #  endif /* _I18N_ */
 
 #  ifdef _I18N_
-   TtaWCS2MBS (&msg, &ptrMbcsMas, UTF8 /* ISOLatin1 */);
+   TtaWCS2MBS (&msg, &ptrMbcsMas, UTF_8 /* ISO_8859_1 */);
    /* wcstombs (mbcsMsg, msg, MAX_TXT_LEN * 2); */
 #  endif /* _I18N_ */
 
@@ -3181,6 +3182,34 @@ CHAR_T                c;
   int                 length;
   STRING              text;
   ThotBool	      math;
+
+  if (charset_undefined == TRUE) {
+     int len = ustrlen (inputBuffer);
+     CHAR_T* inBuff = TtaAllocString (len + 1);
+     CHAR_T* ptrText = inBuff;
+     CHAR_T* ptrIBuff = inputBuffer;
+     CHAR_T* str;
+     CHAR_T  charsetname[MAX_LENGTH];
+     int     pos, index = 0;
+
+     while (*ptrText++ = utolower (*ptrIBuff++));
+     str = ustrstr (inBuff, TEXT("charset"));
+     
+     if (str) {
+        pos = str - inBuff + 8;
+
+        while (inputBuffer[pos] != WC_SPACE && inputBuffer[pos] != WC_TAB && inputBuffer [pos] != WC_EOS)
+              charsetname[index++] = inputBuffer[pos++];
+        charsetname[index] = WC_EOS;
+
+        CharEncoding = TtaGetCharset (charsetname);
+
+        if (CharEncoding == UNDEFINED_CHARSET)
+           CharEncoding = UTF_8;
+
+        charset_undefined = FALSE;
+	 }
+  }
 
   UnknownTag = FALSE;
   if ((lastElement != NULL) && (lastElemEntry != -1))
@@ -5209,6 +5238,33 @@ CHAR_T                c;
 
 #endif
 {
+  if (charset_undefined == TRUE) {
+     int len = ustrlen (inputBuffer);
+     CHAR_T* inBuff = TtaAllocString (len + 1);
+     CHAR_T* ptrText = inBuff;
+     CHAR_T* ptrIBuff = inputBuffer;
+     CHAR_T* str;
+     CHAR_T  charsetname[MAX_LENGTH];
+     int     pos, index = 0;
+
+     while (*ptrText++ = utolower (*ptrIBuff++));
+     str = ustrstr (inBuff, TEXT("charset"));
+     
+     if (str) {
+        pos = str - inBuff + 8;
+
+        while (inputBuffer[pos] != WC_SPACE && inputBuffer[pos] != WC_TAB && inputBuffer [pos] != WC_EOS)
+              charsetname[index++] = inputBuffer[pos++];
+        charsetname[index] = WC_EOS;
+
+        CharEncoding = TtaGetCharset (charsetname);
+
+        if (CharEncoding == UNDEFINED_CHARSET)
+           CharEncoding = UTF_8;
+
+        charset_undefined = FALSE;
+	 }
+  }
 }
 
 /* some type definitions for the automaton */
@@ -5592,7 +5648,7 @@ ThotBool*     endOfFile;
       charRead = PreviousBufChar;
       PreviousBufChar = WC_EOS;
     }
-  else
+  else 
     {
       charRead = GetNextChar (infile, InputText, index, endOfFile);
       NumberOfCharRead++;
@@ -5645,7 +5701,7 @@ char*              HTMLbuf;
 
 #endif
 {
-   UCHAR_T             charRead;
+   UCHAR_T             charRead; 
    ThotBool            match;
    PtrTransition       trans;
    ThotBool            endOfFile;
@@ -5759,16 +5815,13 @@ char*              HTMLbuf;
 			  if (EmptyLine)
 			     charRead = WC_EOS;
 		    }
-#         ifdef _I18N_
-          else if (!iswprint ((int) charRead))
-               /* Compatibility of iswprint: ANSI, WIN NT and WIN 9x */
-#         else  /* !_I18N_ */
+#ifndef _I18N_
 		  else if ((charRead < WC_SPACE || (int) charRead >= 254 ||
 			    ((int) charRead >= 127 && (int) charRead <= 159))
 			   && (int) charRead != WC_TAB)
 		     /* it's not a printable character, ignore it */
-#         endif /* !_I18N_ */
                charRead = WC_EOS;
+#endif /* !_I18N_ */
 		  else
 		     /* it's a printable character. Keep it as it is and */
 		     /* stop ignoring spaces */
@@ -5883,11 +5936,11 @@ char*              HTMLbuf;
    buffer textbuf. One parameter should be NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void        ReadTextFile (FILE *infile, STRING textbuf, Document doc, STRING pathURL)
+static void        ReadTextFile (FILE *infile, char* textbuf, Document doc, STRING pathURL)
 #else
 static void        ReadTextFile (infile, textbuf, doc, pathURL)
 FILE              *infile;
-STRING	           textbuf;
+char*	           textbuf;
 Document           doc;
 STRING	           pathURL;
 #endif
@@ -5964,17 +6017,15 @@ STRING	           pathURL;
 	  el = NULL;
 	  charRead = WC_EOS;
 	}
-#     ifdef _I18N_
-      else if (!iswprint ((int)charRead) && charRead != WC_TAB)
-#     else  /* !_I18N_ */
+#ifndef _I18N_
       else if ((charRead < WC_SPACE || (int) charRead >= 254 ||
 		((int) charRead >= 127 && (int) charRead <= 159))
 	       && (int) charRead != WC_TAB)
-#     endif /* !_I18N_ */
 	/* it's not an end of line */
 	/* Ignore non printable characters except HT, LF, FF. */
 	/* it's not a printable character, ignore it */
 	charRead = WC_EOS;
+#endif /* !_I18N_ */
       if (charRead != WC_EOS)
 	{
 	  /* a valid character has been read */
@@ -7206,22 +7257,34 @@ Document   doc;
 
 #endif
 {
-   ElementType	elType;
-   STRING	schemaName;
+   ElementType  elType;
+   CHAR_T*      schemaName;
+#  ifdef _I18N_
+   char         html_buff [4 * MAX_TXT_LEN];
+   char*        ptrHTMLbuf = html_buff;
+#  else  /* !_I18N_ */
+   char*        html_buff = HTMLbuf;
+#  endif /* !_I18N_ */
+
 
    docURL = NULL;
    elType = TtaGetElementType (lastelem);
    schemaName = TtaGetSSchemaName(elType.ElSSchema);
+#ifdef _I18N_
+   TtaWCS2MBS (&HTMLbuf, &ptrHTMLbuf, CharEncoding);
+#endif /* _I18N_ */
    if (ustrcmp (schemaName, TEXT("HTML")) == 0)
      /* parse an HTML subtree */
      {
        InitializeHTMLParser (lastelem, isclosed, doc);
-       HTMLparse (NULL, HTMLbuf);
+       HTMLparse (NULL, html_buff);
+       /* HTMLparse (NULL, HTMLbuf); */
      }
    else
      /* parse an XML subtree */
      {
-       InputText = HTMLbuf;
+       InputText = html_buff; 
+       /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
 #ifndef STANDALONE
        XMLparse (NULL, &CurrentBufChar, schemaName, doc, lastelem, isclosed,

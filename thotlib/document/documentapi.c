@@ -82,6 +82,36 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
+ * TtaGetDocumentCharset
+ *----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHARSET TtaGetDocumentCharset (PtrDocument pDoc)
+#else  /* __STDC__ */
+CHARSET TtaGetDocumentCharset (pDoc)
+PtrDocument pDoc;
+#endif /* __STDC__ */
+{
+    return pDoc->Charset;
+}
+
+
+/*----------------------------------------------------------------------
+ * TtaSetDocumentCharset
+ *----------------------------------------------------------------------*/
+#ifdef __STDC__
+void TtaSetDocumentCharset (PtrDocument pDoc, CHARSET charSet)
+#else  /* __STDC__ */
+void TtaSetDocumentCharset (pDoc, charSet)
+PtrDocument pDoc;
+CHARSET     charSet;
+#endif /* __STDC__ */
+{
+    pDoc->Charset = charSet;
+}
+
+
+
+/*----------------------------------------------------------------------
    TtaOpenDocument
 
    Opens an existing document for subsequent operations.

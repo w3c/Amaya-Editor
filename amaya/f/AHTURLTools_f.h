@@ -15,8 +15,8 @@ extern void ExplodeURL ( char *url,
                          char **host,
                          char **dir,
                          char **file );
-extern void ExtractSuffix ( STRING aName,
-                            STRING aSuffix );
+extern void ExtractSuffix ( CHAR_T* aName,
+                            CHAR_T* aSuffix );
 extern ThotBool IsHTMLName ( const CHAR_T* path );
 extern ThotBool IsXMLName ( const STRING path );
 extern ThotBool IsCSSName ( const STRING path );
@@ -63,8 +63,8 @@ extern void ExplodeURL (/* char *url,
                            char **host,
                            char **dir,
                            char **file */);
-extern void ExtractSuffix (/* STRING aName,
-                              STRING aSuffix */);
+extern void ExtractSuffix (/* CHAR_T* aName,
+                              CHAR_T* aSuffix */);
 extern ThotBool IsHTMLName (/* const CHAR_T* path */);
 extern ThotBool IsXMLName (/* const STRING path */);
 extern ThotBool IsCSSName (/* const STRING path */);

@@ -661,6 +661,7 @@ typedef struct _DocumentDescr
 	/* queue of latest undone commands */
 	PtrEditOperation DocLastUndone;	/* latest editing operation undone */
 	int		DocNbUndone;	/* number of undone editing commands */
+    CHARSET  Charset;
 
 } DocumentDescr;
 

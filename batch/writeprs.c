@@ -83,7 +83,7 @@ Name                n;
 
    i = 0;
    do
-      TtaWriteWideChar (outfile, n[i++], ISOLatin1 /* UTF8 */);
+      TtaWriteWideChar (outfile, n[i++], ISO_8859_1 /* UTF_8 */);
    while (n[i - 1] != TEXT('\0'));
 }
 
@@ -1334,7 +1334,7 @@ PtrSSchema          pSS;
 	TtaWriteByte (outfile, pConst->PdAlphabet);
 	j = 0;
 	do
-	   TtaWriteWideChar (outfile, pConst->PdString[j++], ISOLatin1 /* UTF8 */);
+	   TtaWriteWideChar (outfile, pConst->PdString[j++], ISO_8859_1 /* UTF_8 */);
 	while (pConst->PdString[j - 1] != '\0');
      }
 

@@ -337,7 +337,7 @@ PtrTextBuffer       pBuf;
 	i = 1;
 	while (i <= pBuf->BuLength)
 	  {
-	     TtaWriteWideChar (pivFile, pBuf->BuContent[i - 1], ISOLatin1);
+	     TtaWriteWideChar (pivFile, pBuf->BuContent[i - 1], ISO_8859_1);
 	     i++;
 	  }
 	pBuf = pBuf->BuNext;
@@ -543,7 +543,7 @@ PtrDocument         pDoc;
 		      {
 			 i = 0;
 			 while (pBuf->BuContent[i] != EOS)
-			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++], ISOLatin1);
+			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++], ISO_8859_1);
 			 pBuf = pBuf->BuNext;
 		      }
 		    TtaWriteByte (pivFile, EOS);
@@ -898,7 +898,7 @@ ThotBool            subTree;
 			{
 			  i = 0;
 			  while (pBuf->BuContent[i] != EOS && i < pBuf->BuLength)
-			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++], ISOLatin1);
+			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++], ISO_8859_1);
 			  c = c + i;
 			  /* buffer suivant du meme element */
 			  pBuf = pBuf->BuNext;
@@ -1049,8 +1049,8 @@ Name                N;
 {
    int                 j;
 
-   for (j = 0; j < MAX_NAME_LENGTH - 1 && N[j] != EOS; j++)
-      TtaWriteWideChar (pivFile, N[j], ISOLatin1);
+   for (j = 0; j < MAX_NAME_LENGTH - 1 && N[j] != WC_EOS; j++)
+      TtaWriteWideChar (pivFile, N[j], ISO_8859_1);
    TtaWriteByte (pivFile, EOS);
 }
 

@@ -118,12 +118,12 @@ CHAR_T*             word;
 #  ifdef _I18N_
    /* get the first wide character */
    mbcsStart = &line[indline];
-   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
    indline += nbBytes; 
 
    while (wChar <= WC_SPACE && wChar != WC_EOS) {
          mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          indline += nbBytes; 
    }
 
@@ -135,7 +135,7 @@ CHAR_T*             word;
    while (wChar > WC_SPACE && wChar != TEXT(':') && wChar != WC_EOS) {
          word[indword++] = wChar;
          mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          indline += nbBytes; 
    }
 #  else  /* !_I18N_ */
@@ -183,12 +183,12 @@ CHAR_T*             word;
 #  ifdef _I18N_
    /* Skip blanks */
    mbcsStart = &line[indline];
-   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
    indline += nbBytes; 
 
    while (wChar <= WC_SPACE && wChar != WC_EOS) {
          mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          indline += nbBytes; 
    }
 
@@ -200,13 +200,13 @@ CHAR_T*             word;
 
    while (wChar > WC_SPACE && wChar != WC_EOS) {
          mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          indline += nbBytes; 
    }
    /* saute les espaces qui suivent le 1er mot */
    while (wChar <= WC_SPACE && wChar != WC_EOS) {
          mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          indline += nbBytes; 
    }
    if (wChar == TEXT('#'))
@@ -218,7 +218,7 @@ CHAR_T*             word;
    while (wChar > WC_SPACE && wChar != WC_EOS) {
          word[indword++] = wChar;
          mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          indline += nbBytes; 
    }
    /* marque la fin du mot trouve' */
@@ -272,12 +272,12 @@ unsigned char*      line;
 #  ifdef _I18N_
    /* saute les espaces de debut de ligne */
    mbcsStart = &line[ind];
-   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
    ind += nbBytes; 
 
    while (wChar <= WC_SPACE && wChar != WC_EOS) {
          mbcsStart = &line[ind];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          ind += nbBytes; 
    }
    if (wChar == TEXT('#'))
@@ -287,14 +287,14 @@ unsigned char*      line;
    /* saute le premier mot */
    while (wChar > WC_SPACE && wChar != TEXT('#') && wChar != TEXT(':') && wChar != WC_EOS) {
          mbcsStart = &line[ind];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          ind += nbBytes; 
    }
 
    /* saute les espaces qui suivent le 1er mot */
    while (wChar <= WC_SPACE && wChar != WC_EOS) {
          mbcsStart = &line[ind];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          ind += nbBytes; 
    }
 
@@ -352,23 +352,23 @@ CHAR_T*             text;
 #  ifdef _I18N_
 
    mbcsStart = &line[indline];
-   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+   nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
    indline += nbBytes; 
 
    while (wChar != TEXT(':') && wChar != WC_EOS) {
          mbcsStart = &line[indline];
-         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+         nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
          indline += nbBytes; 
    }
    
    if (wChar == TEXT(':')) {
       mbcsStart = &line[indline];
-      nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+      nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
       indline += nbBytes; 
 
       while (wChar <= WC_SPACE && wChar != WC_EOS) {
             mbcsStart = &line[indline];
-            nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+            nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
             indline += nbBytes; 
       }
       
@@ -380,7 +380,7 @@ CHAR_T*             text;
       while (wChar != TEXT('#') && wChar != WC_EOS) {
             text[indtext++] = wChar;
             mbcsStart = &line[indline];
-            nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISOLatin1);
+            nbBytes = TtaGetNextWideCharFromMultibyteString (&wChar, &mbcsStart, ISO_8859_1);
             indline += nbBytes; 
       }
       indtext--;

@@ -266,6 +266,8 @@ typedef struct _RELOAD_context {
 		   element (% of the window height) */
 } RELOAD_context;
 
+extern CHARSET  CharEncoding;
+extern ThotBool charset_undefined;
 
 /*----------------------------------------------------------------------
    IsDocumentLoaded returns the document identification if the        
@@ -2348,6 +2350,14 @@ ThotBool            history;
       DocumentMeta[newdoc]->xmlformat = XHTMLdoc;
       DocumentSource[newdoc] = 0;
 
+      charset = HTTP_headers (http_headers, AM_HTTP_CHARSET);
+      CharEncoding = TtaGetCharset (charset);
+
+      if (CharEncoding == UNDEFINED_CHARSET) {
+         CharEncoding = UTF_8;
+         charset_undefined = TRUE;
+	  }
+
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */
 	{
@@ -2382,7 +2392,7 @@ ThotBool            history;
       TtaFreeMemory (tempdir);
 
       /* If it's an HTML document, save the charset into the Charset attribute */
-      charset = HTTP_headers (http_headers, AM_HTTP_CHARSET);
+      /* charset = HTTP_headers (http_headers, AM_HTTP_CHARSET); */
       if (charset)
 	{
 	  /* copy the charset to the document's metadata info */

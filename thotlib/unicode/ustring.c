@@ -24,7 +24,159 @@ unsigned long offset[6] = {
          0x82082080UL
 };
 
-CHARSET CharEncoding = UTF8;
+typedef struct {
+        CHAR_T  ISOCode [50];
+        CHARSET Charset;
+} CharsetCode;
+
+static CharsetCode CharsetCodeTable[] =
+{
+    {TEXT("ANSI_X3.4-1968"),   US_ASCII},
+    {TEXT("iso-ir-6"),         US_ASCII},
+    {TEXT("ANSI_X3.4-1986"),   US_ASCII},
+    {TEXT("ISO_646.irv:1991"), US_ASCII},
+    {TEXT("ASCII"),            US_ASCII},
+    {TEXT("ISO646-US"),        US_ASCII},
+    {TEXT("US-ASCII"),         US_ASCII},
+    {TEXT("us"),               US_ASCII},
+    {TEXT("IBM367"),           US_ASCII},
+    {TEXT("cp367"),            US_ASCII},
+    {TEXT("csASCII"),          US_ASCII},
+
+	{TEXT("ISO_8859-1:1987"), ISO_8859_1},
+	{TEXT("iso-ir-100"),      ISO_8859_1},
+	{TEXT("ISO_8859-1"),      ISO_8859_1},
+	{TEXT("ISO-8859-1"),      ISO_8859_1},
+	{TEXT("latin1"),          ISO_8859_1},
+	{TEXT("l1"),              ISO_8859_1},
+	{TEXT("IBM819"),          ISO_8859_1},
+	{TEXT("CP819"),           ISO_8859_1},
+	{TEXT("csISOLatin1"),     ISO_8859_1},
+
+	{TEXT("ISO_8859-2:1987"), ISO_8859_2},
+	{TEXT("iso-ir-101"),      ISO_8859_2},
+	{TEXT("ISO_8859-2"),      ISO_8859_2},
+	{TEXT("ISO-8859-2"),      ISO_8859_2},
+	{TEXT("latin2"),          ISO_8859_2},
+	{TEXT("l2"),              ISO_8859_2},
+	{TEXT("csISOLatin2"),     ISO_8859_2},
+
+	{TEXT("ISO_8859-3:1988"), ISO_8859_3},
+	{TEXT("iso-ir-109"),      ISO_8859_3},
+	{TEXT("ISO_8859-3"),      ISO_8859_3},
+	{TEXT("ISO-8859-3"),      ISO_8859_3},
+	{TEXT("latin3"),          ISO_8859_3},
+	{TEXT("l3"),              ISO_8859_3},
+	{TEXT("csISOLatin3"),     ISO_8859_3},
+
+	{TEXT("ISO_8859-4:1988"), ISO_8859_4},
+	{TEXT("iso-ir-110"),      ISO_8859_4},
+	{TEXT("ISO_8859-4"),      ISO_8859_4},
+	{TEXT("ISO-8859-4"),      ISO_8859_4},
+	{TEXT("latin4"),          ISO_8859_4},
+	{TEXT("l4"),              ISO_8859_4},
+	{TEXT("csISOLatin4"),     ISO_8859_4},
+
+	{TEXT("ISO_8859-5:1988"),    ISO_8859_5},
+	{TEXT("iso-ir-144"),         ISO_8859_5},
+	{TEXT("ISO_8859-5"),         ISO_8859_5},
+	{TEXT("ISO-8859-5"),         ISO_8859_5},
+	{TEXT("cyrillic"),           ISO_8859_5},
+	{TEXT("csISOLatinCyrillic"), ISO_8859_5},
+
+	{TEXT("ISO_8859-6:1987"),  ISO_8859_6},
+	{TEXT("iso-ir-127"),       ISO_8859_6},
+	{TEXT("ISO_8859-6"),       ISO_8859_6},
+	{TEXT("ISO-8859-6"),       ISO_8859_6},
+	{TEXT("ECMA-114"),         ISO_8859_6},
+	{TEXT("ASMO-708"),         ISO_8859_6},
+	{TEXT("arabic"),           ISO_8859_6},
+	{TEXT("csISOLatinArabic"), ISO_8859_6},
+
+	{TEXT("ISO_8859-6-E"), ISO_8859_6_E},
+	{TEXT("csISO88596E"),  ISO_8859_6_E},
+
+	{TEXT("ISO_8859-6-I"), ISO_8859_6_I},
+	{TEXT("csISO88596I"),  ISO_8859_6_I},
+
+	{TEXT("ISO_8859-7:1987"), ISO_8859_7},
+	{TEXT("iso-ir-126"),      ISO_8859_7},
+	{TEXT("ISO_8859-7"),      ISO_8859_7},
+	{TEXT("ISO-8859-7"),      ISO_8859_7},
+	{TEXT("ELOT_928"),        ISO_8859_7},
+	{TEXT("ECMA-118"),        ISO_8859_7},
+	{TEXT("greek"),           ISO_8859_7},
+	{TEXT("greek8"),          ISO_8859_7},
+	{TEXT("csISOLatinGreek"), ISO_8859_7},
+
+	{TEXT("ISO_8859-8:1988"),  ISO_8859_8},
+	{TEXT("iso-ir-138"),       ISO_8859_8},
+	{TEXT("ISO_8859-8"),       ISO_8859_8},
+	{TEXT("ISO-8859-8"),       ISO_8859_8},
+	{TEXT("hebrew"),           ISO_8859_8},
+	{TEXT("csISOLatinHebrew"), ISO_8859_8},
+
+	{TEXT("ISO_8859-8-E"), ISO_8859_8_E},
+	{TEXT("csISO88598E"),  ISO_8859_8_E},
+
+	{TEXT("ISO_8859-8-I"), ISO_8859_8_I},
+	{TEXT("csISO88598I"),  ISO_8859_8_I},
+
+	{TEXT("ISO_8859-9:1989"), ISO_8859_9},
+	{TEXT("iso-ir-148"),      ISO_8859_9},
+	{TEXT("ISO_8859-9"),      ISO_8859_9},
+	{TEXT("ISO-8859-9"),      ISO_8859_9},
+	{TEXT("latin5"),          ISO_8859_9},
+	{TEXT("l5"),              ISO_8859_9},
+	{TEXT("csISOLatin5"),     ISO_8859_9},
+
+	{TEXT("latin6"),           ISO_8859_10},
+	{TEXT("iso-ir-157"),       ISO_8859_10},
+	{TEXT("l6"),               ISO_8859_10},
+	{TEXT("ISO_8859-10:1992"), ISO_8859_10},
+	{TEXT("csISOLatin6"),      ISO_8859_10},
+
+	{TEXT("ISO_8859-15"), ISO_8859_15},
+
+	{TEXT("ISO_8859-supp"), ISO_8859_supp},
+	{TEXT("iso-ir-154"),    ISO_8859_supp},
+	{TEXT("latin1-2-5"),    ISO_8859_supp},
+	{TEXT("csISO8859Supp"), ISO_8859_supp},
+
+
+	{TEXT("UNICODE-1-1"), UNICODE_1_1},
+	{TEXT("csUnicode11"), UNICODE_1_1},
+
+	{TEXT("UNICODE-1-1-UTF-7"), UNICODE_1_1_UTF_7},
+	{TEXT("csUnicode11UTF7"),   UNICODE_1_1_UTF_7},
+
+	{TEXT("UTF-7"), UTF_7},
+
+	{TEXT("UTF-8"), UTF_8},
+
+	{TEXT("windows-1250"), WINDOWS_1250},
+
+	{TEXT("windows-1251"), WINDOWS_1251},
+
+	{TEXT("windows-1252"), WINDOWS_1252},
+
+	{TEXT("windows-1253"), WINDOWS_1253},
+
+	{TEXT("windows-1254"), WINDOWS_1254},
+
+	{TEXT("windows-1255"), WINDOWS_1255},
+
+	{TEXT("windows-1256"), WINDOWS_1256},
+
+	{TEXT("windows-1257"), WINDOWS_1257},
+
+	{TEXT("windows-1258"), WINDOWS_1258},
+
+	{TEXT(""), -1}
+};
+
+CHARSET  CharEncoding = UTF_8;
+ThotBool charset_undefined = FALSE;
 
 /*-------------------------------------------------------------
   uputchar
@@ -560,11 +712,35 @@ const char*   str2;
 }
 
 
+/*----------------------------------------------------------------------
+  TtaGetCharset: 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHARSET TtaGetCharset (const CHAR_T* charsetname)
+#else  /* !__STDC__ */
+CHARSET TtaGetCharset (charsetname)
+const CHAR_T* charsetname;
+#endif /* !__STDC__ */
+{
+    int index = 0;
+
+    if (charsetname == NULL || charsetname[0] == 0)
+       return UNDEFINED_CHARSET;
+
+    while (CharsetCodeTable[index].ISOCode != NULL && CharsetCodeTable[index].ISOCode[0]) {
+          if (!ustrcasecmp (CharsetCodeTable[index].ISOCode, charsetname))
+             return CharsetCodeTable[index].Charset;
+          index++;
+	}
+
+    return UNDEFINED_CHARSET;
+}
+
+
 #ifdef _I18N_
 /*----------------------------------------------------------------------
   TtaGetNextWideCharFromMultibyteString: Looks for the next Wide character 
   value in a multibyte character string.
-  Author: Ramzi Guetari.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int TtaGetNextWideCharFromMultibyteString (CHAR_T* car, unsigned char** txt, CHARSET encoding)
@@ -580,30 +756,108 @@ CHARSET        encoding;
     CHAR_T         res;
 
     switch (encoding) {
-           case ISOLatin1: 
+           case ISO_8859_1: 
                 nbBytesToRead = 1;
                 *car = (CHAR_T) *start++;
                 break;
 
-           case ISOLatin2:
+           case ISO_8859_2:
                 nbBytesToRead = 1;
                 *car = TtaGetUnicodeValueFromISOLatin2Code (*start);
                 start++;
                 break;
 
-           case ISOLatin6:
+           case ISO_8859_3:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromISOLatin3Code (*start);
+                start++;
+                break;
+
+           case ISO_8859_4:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromISOLatin4Code (*start);
+                start++;
+                break;
+
+           case ISO_8859_5:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromISOLatin5Code (*start);
+                start++;
+                break;
+
+           case ISO_8859_6:
                 nbBytesToRead = 1;
                 *car = TtaGetUnicodeValueFromISOLatin6Code (*start);
                 start++;
                 break;
 
-           case WIN1256:
+           case ISO_8859_7:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromISOLatin7Code (*start);
+                start++;
+                break;
+
+           case ISO_8859_8:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromISOLatin8Code (*start);
+                start++;
+                break;
+
+           case ISO_8859_9:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromISOLatin9Code (*start);
+                start++;
+                break;
+
+           case WINDOWS_1250:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromWindows1250CP (*start);
+                start++;
+                break;
+
+           case WINDOWS_1251:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromWindows1251CP (*start);
+                start++;
+                break;
+
+           case WINDOWS_1252:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromWindows1252CP (*start);
+                start++;
+                break;
+
+           case WINDOWS_1253:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromWindows1253CP (*start);
+                start++;
+                break;
+
+           case WINDOWS_1254:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromWindows1254CP (*start);
+                start++;
+                break;
+
+           case WINDOWS_1255:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromWindows1255CP (*start);
+                start++;
+                break;
+
+           case WINDOWS_1256:
                 nbBytesToRead = 1;
                 *car = TtaGetUnicodeValueFromWindows1256CP (*start);
                 start++;
                 break;
 
-           case UTF8:
+           case WINDOWS_1257:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromWindows1257CP (*start);
+                start++;
+                break;
+
+           case UTF_8:
                 if (*start < 0xC0)
                    nbBytesToRead = 1;
                 else if (*start < 0xE0)

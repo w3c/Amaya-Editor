@@ -3403,7 +3403,7 @@ char              **argv;
 		do
 		  {
 		    /* fileOK = TtaReadByte (infile, &inputLine[i]); */
-		    fileOK = TtaReadWideChar (infile, &inputLine[i], ISOLatin1);
+		    fileOK = TtaReadWideChar (infile, &inputLine[i], ISO_8859_1);
 		    i++;
 		  }
 		while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);

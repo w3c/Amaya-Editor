@@ -34,14 +34,15 @@
 #include "winsys.h"
 #endif /* _WINDOWS */
 
-unsigned long Offset[6] = {
+extern unsigned long offset[6] ;
+/* = {
          0x00000000UL,
          0x00003080UL,
          0x000E2080UL,
          0x03C82080UL,
          0xFA082080UL,
          0x82082080UL
-};
+};*/
 
 extern CHARSET CharEncoding;
 
@@ -101,23 +102,75 @@ CHARSET             encoding;
     } 
 
     switch (encoding) {
-           case ISOLatin1: 
+           case ISO_8859_1: 
                 *bval = (CHAR_T)car;
                 break;
 
-           case ISOLatin2:
+           case ISO_8859_2:
                 *bval = TtaGetUnicodeValueFromISOLatin2Code (car);
                 break;
 
-           case ISOLatin6:
+           case ISO_8859_3:
+                *bval = TtaGetUnicodeValueFromISOLatin3Code (car);
+                break;
+
+           case ISO_8859_4:
+                *bval = TtaGetUnicodeValueFromISOLatin4Code (car);
+                break;
+
+           case ISO_8859_5:
+                *bval = TtaGetUnicodeValueFromISOLatin5Code (car);
+                break;
+
+           case ISO_8859_6:
                 *bval = TtaGetUnicodeValueFromISOLatin6Code (car);
                 break;
 
-           case WIN1256:
+           case ISO_8859_7:
+                *bval = TtaGetUnicodeValueFromISOLatin7Code (car);
+                break;
+
+           case ISO_8859_8:
+                *bval = TtaGetUnicodeValueFromISOLatin8Code (car);
+                break;
+
+           case ISO_8859_9:
+                *bval = TtaGetUnicodeValueFromISOLatin9Code (car);
+                break;
+
+           case WINDOWS_1250:
+                *bval = TtaGetUnicodeValueFromWindows1250CP (car);
+                break;
+
+           case WINDOWS_1251:
+                *bval = TtaGetUnicodeValueFromWindows1251CP (car);
+                break;
+
+           case WINDOWS_1252:
+                *bval = TtaGetUnicodeValueFromWindows1252CP (car);
+                break;
+
+           case WINDOWS_1253:
+                *bval = TtaGetUnicodeValueFromWindows1253CP (car);
+                break;
+
+           case WINDOWS_1254:
+                *bval = TtaGetUnicodeValueFromWindows1254CP (car);
+                break;
+
+           case WINDOWS_1255:
+                *bval = TtaGetUnicodeValueFromWindows1255CP (car);
+                break;
+
+           case WINDOWS_1256:
                 *bval = TtaGetUnicodeValueFromWindows1256CP (car);
                 break;
 
-           case UTF8:
+           case WINDOWS_1257:
+                *bval = TtaGetUnicodeValueFromWindows1257CP (car);
+                break;
+
+           case UTF_8:
                 if (car < 0xC0)
                    nbBytesToRead = 1;
                 else if (car < 0xE0)
@@ -157,7 +210,7 @@ CHARSET             encoding;
             
                        case 1: res += car;
 				}
-                res -= Offset[nbBytesToRead - 1];
+                res -= offset[nbBytesToRead - 1];
 
                 if (res <= 0xFFFF)
                    *bval = res;
@@ -336,7 +389,7 @@ CHAR_T*             name;
 
    for (i = 0; i < MAX_NAME_LENGTH; i++)
      {
-        if (!TtaReadWideChar (file, &name[i], ISOLatin1))
+        if (!TtaReadWideChar (file, &name[i], ISO_8859_1))
            {
               name[i] = WC_EOS;
               return FALSE;
@@ -616,7 +669,7 @@ DocumentIdentifier *Ident;
    
    do
 #     ifdef _I18N_
-      if (!TtaReadWideChar (file, &((*Ident)[j++]), ISOLatin1))
+      if (!TtaReadWideChar (file, &((*Ident)[j++]), ISO_8859_1))
          (*Ident)[j - 1] = WC_EOS;
 #     else /* !_I18N_ */
       if (!TtaReadByte (file, &((*Ident)[j++])))

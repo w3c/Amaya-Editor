@@ -2729,7 +2729,7 @@ char              **argv;
 	  else if (!ustrcmp (argv[argCounter], TEXT("-npps")))
 	    {
 	      argCounter++;
-	      NPagesPerSheet = uctoi (argv[argCounter++]);
+	      NPagesPerSheet = uatoi (argv[argCounter++]);
 	    }
 	  else if (!ustrcmp (argv[argCounter], TEXT("-bw")))
 	    {
@@ -2784,28 +2784,28 @@ char              **argv;
 	      option [index] = EOS;
 	      switch (argv[argCounter][1])
 		{
-		case TEXT('F'): FirstPrinted = uctoi (option);
+		case TEXT('F'): FirstPrinted = uatoi (option);
 		  argCounter++;
 		  break;
-		case TEXT('L'): LastPrinted = uctoi (option);
+		case TEXT('L'): LastPrinted = uatoi (option);
 		  argCounter++;
 		  break;
 		case TEXT('P'): ustrcpy (pageSize, option);
 		  argCounter++;
 		  break;
-		case TEXT('#'): NCopies = uctoi (option);
+		case TEXT('#'): NCopies = uatoi (option);
 		  argCounter++;
 		  break;
-		case TEXT('H'): HorizShift = uctoi (option);
+		case TEXT('H'): HorizShift = uatoi (option);
 		  argCounter++;
 		  break;
-		case TEXT('V'): VertShift = uctoi (option);
+		case TEXT('V'): VertShift = uatoi (option);
 		  argCounter++;
 		  break;
-		case TEXT('%'): Zoom = uctoi (option);
+		case TEXT('%'): Zoom = uatoi (option);
 		  argCounter++;
 		  break;
-		case TEXT('w'): thotWindow = (ThotWindow) uctoi (option);
+		case TEXT('w'): thotWindow = (ThotWindow) uatoi (option);
 		  argCounter++;
 		  break;
 		default:

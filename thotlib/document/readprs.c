@@ -1529,7 +1529,7 @@ PtrSSchema          pSS;
 		     j = 0;
 		     if (!error)
 			do
-			   if (!TtaReadWideChar (file, &pConst->PdString[j++], ISOLatin1))
+			   if (!TtaReadWideChar (file, &pConst->PdString[j++], ISO_8859_1))
 			      error = True;
 			while (pConst->PdString[j - 1] != EOS && !error) ;
 		  }

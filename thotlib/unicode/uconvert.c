@@ -8,6 +8,10 @@
 /* Unicode Routines
  * Author: R. Guetari (W3C/INRIA)
  */
+
+#include <stdlib.h>
+#include <ctype.h>
+
 #include "thot_sys.h"
 #include "uconvert.h"
 
@@ -46,7 +50,112 @@ unsigned short ISOLatin2Map [] = {
     0x010D, 0x00E9, 0x0119, 0x00EB, 0x011B, 0x00ED, 0x00EE, 0x010F,
     0x0111, 0x0144, 0x0148, 0x00F3, 0x00F4, 0x0151, 0x00F6, 0x00F7,
     0x0159, 0x016F, 0x00FA, 0x0171, 0x00FC, 0x00FD, 0x0163, 0x02D9
-};    
+};
+
+unsigned short ISOLatin3Map [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
+    0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
+    0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+    0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
+    0x0058, 0x0059, 0x005A, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+    0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+    0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
+    0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+    0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087,
+    0x0088, 0x0089, 0x008A, 0x008B, 0x008C, 0x008D, 0x008E, 0x008F,
+    0x0090, 0x0091, 0x0092, 0x0093, 0x0094, 0x0095, 0x0096, 0x0097,
+    0x0098, 0x0099, 0x009A, 0x009B, 0x009C, 0x009D, 0x009E, 0x009F,
+    0x00A0, 0x0126, 0x02D8, 0x00A3, 0x00A4, 0x00A5, 0x0124, 0x00A7,
+    0x00A8, 0x0130, 0x015E, 0x011E, 0x0134, 0x00AD, 0xFFFE, 0x017B,
+    0x00B0, 0x0127, 0x00B2, 0x00B3, 0x00B4, 0x00B5, 0x0125, 0x00B7,
+    0x00B8, 0x0131, 0x015F, 0x011F, 0x0135, 0x00BD, 0xFFFE, 0x017C,
+    0x00C0, 0x00C1, 0x00C2, 0xFFFE, 0x00C4, 0x010A, 0x0108, 0x00C7,
+    0x00C8, 0x00C9, 0x00CA, 0x00CB, 0x00CC, 0x00CD, 0x00CE, 0x00CF,
+    0xFFFE, 0x00D1, 0x00D2, 0x00D3, 0x00D4, 0x0120, 0x00D6, 0x00D7,
+    0x011C, 0x00D9, 0x00DA, 0x00DB, 0x00DC, 0x016C, 0x015C, 0x00DF,
+    0x00E0, 0x00E1, 0x00E2, 0xFFFE, 0x00E4, 0x010B, 0x0109, 0x00E7, 
+    0x00E8, 0x00E9, 0x00EA, 0x00EB, 0x00EC, 0x00ED, 0x00EE, 0x00EF,
+    0xFFFE, 0x00F1, 0x00F2, 0x00F3, 0x00F4, 0x0121, 0x00F6, 0x00F7,
+    0x011D, 0x00F9, 0x00FA, 0x00FB, 0x00FC, 0x016D, 0x015D, 0x02D9
+};
+
+unsigned short ISOLatin4Map [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
+    0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
+    0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+    0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
+    0x0058, 0x0059, 0x005A, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+    0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+    0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
+    0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+    0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087,
+    0x0088, 0x0089, 0x008A, 0x008B, 0x008C, 0x008D, 0x008E, 0x008F,
+    0x0090, 0x0091, 0x0092, 0x0093, 0x0094, 0x0095, 0x0096, 0x0097,
+    0x0098, 0x0099, 0x009A, 0x009B, 0x009C, 0x009D, 0x009E, 0x009F,
+    0x00A0, 0x0104, 0x0138, 0x0156, 0x00A4, 0x0128, 0x013B, 0x00A7,
+    0x00A8, 0x0160, 0x0112, 0x0122, 0x0166, 0x00AD, 0x017D, 0x00AF,
+    0x00B0, 0x0105, 0x02DB, 0x0157, 0x00B4, 0x0129, 0x013C, 0x02C7,
+    0x00B8, 0x0161, 0x0113, 0x0123, 0x0167, 0x014A, 0x017E, 0x014B,
+    0x0100, 0x00C1, 0x00C2, 0x00C3, 0x00C4, 0x00C5, 0x00C6, 0x012E,
+    0x010C, 0x00C9, 0x0118, 0x00CB, 0x0116, 0x00CD, 0x00CE, 0x012A,
+    0x0110, 0x0145, 0x014C, 0x0136, 0x00D4, 0x00D5, 0x00D6, 0x00D7, 
+    0x00D8, 0x0172, 0x00DA, 0x00DB, 0x00DC, 0x0168, 0x016A, 0x00DF,
+    0x0101, 0x00E1, 0x00E2, 0x00E3, 0x00E4, 0x00E5, 0x00E6, 0x012F,
+    0x010D, 0x00E9, 0x0119, 0x00EB, 0x0117, 0x00ED, 0x00EE, 0x012B,
+    0x0111, 0x0146, 0x014D, 0x0137, 0x00F4, 0x00F5, 0x00F6, 0x00F7,
+    0x00F8, 0x0173, 0x00FA, 0x00FB, 0x00FC, 0x0169, 0x016B, 0x02D9
+};
+
+unsigned short ISOLatin5Map [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
+    0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
+    0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+    0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
+    0x0058, 0x0059, 0x005A, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+    0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+    0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
+    0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+    0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087,
+    0x0088, 0x0089, 0x008A, 0x008B, 0x008C, 0x008D, 0x008E, 0x008F,
+    0x0090, 0x0091, 0x0092, 0x0093, 0x0094, 0x0095, 0x0096, 0x0097,
+    0x0098, 0x0099, 0x009A, 0x009B, 0x009C, 0x009D, 0x009E, 0x009F,
+    0x00A0, 0x0401, 0x0402, 0x0403, 0x0404, 0x0405, 0x0406, 0x0407,
+    0x0408, 0x0409, 0x040A, 0x040B, 0x040C, 0x00AD, 0x040E, 0x040F,
+    0x0410, 0x0411, 0x0412, 0x0413, 0x0414, 0x0415, 0x0416, 0x0417,
+    0x0418, 0x0419, 0x041A, 0x041B, 0x041C, 0x041D, 0x041E, 0x041F,
+    0x0420, 0x0421, 0x0422, 0x0423, 0x0424, 0x0425, 0x0426, 0x0427,
+    0x0428, 0x0429, 0x042A, 0x042B, 0x042C, 0x042D, 0x042E, 0x042F,
+    0x0430, 0x0431, 0x0432, 0x0433, 0x0434, 0x0435, 0x0436, 0x0437,
+    0x0438, 0x0439, 0x043A, 0x043B, 0x043C, 0x043D, 0x043E, 0x043F,
+    0x0440, 0x0441, 0x0442, 0x0443, 0x0444, 0x0445, 0x0446, 0x0447,
+    0x0448, 0x0449, 0x044A, 0x044B, 0x044C, 0x044D, 0x044E, 0x044F,
+    0x2116, 0x0451, 0x0452, 0x0453, 0x0454, 0x0455, 0x0456, 0x0457,
+    0x0458, 0x0459, 0x045A, 0x045B, 0x045C, 0x00A7, 0x045E, 0x045F
+};
 
 /* Arabic ISO Latin encoding */
 unsigned short ISOLatin6Map [] = {
@@ -84,6 +193,294 @@ unsigned short ISOLatin6Map [] = {
     0x00F8, 0x00F9, 0x00FA, 0x00FB, 0x00FC, 0x00FD, 0x00FE, 0x00FF
 };
 
+/* Greek */
+unsigned short ISOLatin7Map [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
+    0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
+    0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+    0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
+    0x0058, 0x0059, 0x005A, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+    0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+    0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
+    0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+    0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087, 
+    0x0088, 0x0089, 0x008A, 0x008B, 0x008C, 0x008D, 0x008E, 0x008F, 
+    0x0090, 0x0091, 0x0092, 0x0093, 0x0094, 0x0095, 0x0096, 0x0097, 
+    0x0098, 0x0099, 0x009A, 0x009B, 0x009C, 0x009D, 0x009E, 0x009F, 
+    0x00A0, 0x02BD, 0x02BC, 0x00A3, 0x00A4, 0x00A5, 0x00A6, 0x00A7, 
+    0x00A8, 0x00A9, 0x00AA, 0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x2015, 
+    0x00B0, 0x00B1, 0x00B2, 0x00B3, 0x0384, 0x0385, 0x0386, 0x00B7, 
+    0x0388, 0x0389, 0x038A, 0x00BB, 0x038C, 0x00BD, 0x038E, 0x038F, 
+    0x0390, 0x0391, 0x0392, 0x0393, 0x0394, 0x0395, 0x0396, 0x0397, 
+    0x0398, 0x0399, 0x039A, 0x039B, 0x039C, 0x039D, 0x039E, 0x039F, 
+    0x03A0, 0x03A1, 0x00D2, 0x03A3, 0x03A4, 0x03A5, 0x03A6, 0x03A7, 
+    0x03A8, 0x03A9, 0x03AA, 0x03AB, 0x03AC, 0x03AD, 0x03AE, 0x03AF, 
+    0x03B0, 0x03B1, 0x03B2, 0x03B3, 0x03B4, 0x03B5, 0x03B6, 0x03B7, 
+    0x03B8, 0x03B9, 0x03BA, 0x03BB, 0x03BC, 0x03BD, 0x03BE, 0x03BF, 
+    0x03C0, 0x03C1, 0x03C2, 0x03C3, 0x03C4, 0x03C5, 0x03C6, 0x03C7, 
+    0x03C8, 0x03C9, 0x03CA, 0x03CB, 0x03CC, 0x03CD, 0x03CE, 0x00FF
+};
+
+/* Hebrew */
+unsigned short ISOLatin8Map [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
+    0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
+    0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+    0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
+    0x0058, 0x0059, 0x005A, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+    0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+    0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
+    0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+    0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087, 
+    0x0088, 0x0089, 0x008A, 0x008B, 0x008C, 0x008D, 0x008E, 0x008F, 
+    0x0090, 0x0091, 0x0092, 0x0093, 0x0094, 0x0095, 0x0096, 0x0097, 
+    0x0098, 0x0099, 0x009A, 0x009B, 0x009C, 0x009D, 0x009E, 0x009F, 
+    0x00A0, 0x00A1, 0x00A2, 0x00A3, 0x00A4, 0x00A5, 0x00A6, 0x00A7,
+    0x00A8, 0x00A9, 0x00D7, 0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x203E,
+    0x00B0, 0x00B1, 0x00B2, 0x00B3, 0x00B4, 0x00B5, 0x00B6, 0x00B7,
+    0x00B8, 0x00B9, 0x00F7, 0x00BB, 0x00BC, 0x00BD, 0x00BE, 0x00BF,
+    0x00C0, 0x00C1, 0x00C2, 0x00C3, 0x00C4, 0x00C5, 0x00C6, 0x00C7, 
+    0x00C8, 0x00C9, 0x00CA, 0x00CB, 0x00CC, 0x00CD, 0x00CE, 0x00CF,
+    0x00D0, 0x00D1, 0x00D2, 0x00D3, 0x00D4, 0x00D5, 0x00D6, 0x00D7,
+    0x00D8, 0x00D9, 0x00DA, 0x00DB, 0x00DC, 0x00DD, 0x00DE, 0x2017, 
+    0x05D0, 0x05D1, 0x05D2, 0x05D3, 0x05D4, 0x05D5, 0x05D6, 0x05D7,
+    0x05D8, 0x05D9, 0x05DA, 0x05DB, 0x05DC, 0x05DD, 0x05DE, 0x05DF,
+    0x05E0, 0x05E1, 0x05E2, 0x05E3, 0x05E4, 0x05E5, 0x05E6, 0x05E7,
+    0x05E8, 0x05E9, 0x05EA, 0x00FB, 0x00FC, 0x00FD, 0x00FE, 0x00FF
+};
+
+/* Windows Latin 2 (Central Europe) Code Page */
+unsigned short WIN1250CP [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
+    0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
+    0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+    0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
+    0x0058, 0x0059, 0x005A, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+    0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+    0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
+    0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+    0xFFFE, 0xFFFE, 0x201A, 0xFFFE, 0x201E, 0x2026, 0x2020, 0x2021,
+    0xFFFE, 0x2030, 0x0160, 0x2039, 0x015A, 0x0164, 0x017D, 0x0179,
+    0xFFFE, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014,
+    0xFFFE, 0x2122, 0x0161, 0x203A, 0x015B, 0x0165, 0x017E, 0x017A,
+    0x00A0, 0x02C7, 0x02D8, 0x0141, 0x00A4, 0x00A5, 0x00A6, 0x00A7,
+    0x00A8, 0x00A9, 0x015E, 0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x017B,
+    0x00B0, 0x00B1, 0x02DB, 0x0142, 0x00B4, 0x00B5, 0x00B6, 0x00B7,
+    0x00B8, 0x0105, 0x015F, 0x00BB, 0x013D, 0x02DD, 0x013E, 0x017C,
+    0x0154, 0x00C1, 0x00C2, 0x0102, 0x00C4, 0x0139, 0x0106, 0x00C7,
+    0x010C, 0x00C9, 0x0118, 0x00CB, 0x011A, 0x00CD, 0x00CE, 0x010E,
+    0x0110, 0x0143, 0x0147, 0x00D3, 0x00D4, 0x0150, 0x00D6, 0x00D7,
+    0x0158, 0x016E, 0x00DA, 0x0170, 0x00DC, 0x00DD, 0x0162, 0x00DF,
+    0x0155, 0x00E1, 0x00E2, 0x0103, 0x00E4, 0x013A, 0x0107, 0x00E7,
+    0x010D, 0x00E9, 0x0119, 0x00EB, 0x011B, 0x00ED, 0x00EE, 0x010F,
+    0x0111, 0x0144, 0x0148, 0x00F3, 0x00F4, 0x0151, 0x00F6, 0x00F7,
+    0x0159, 0x016F, 0x00FA, 0x0171, 0x00FC, 0x00FD, 0x0163, 0x02D9
+};
+
+/* Windows Cyrillic (Slavic) Code Page */
+unsigned short WIN1251CP [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
+    0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
+    0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+    0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
+    0x0058, 0x0059, 0x005A, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+    0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+    0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
+    0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+    0x0402, 0x0403, 0x201A, 0x0453, 0x201E, 0x2026, 0x2020, 0x2021,
+    0x0088, 0x2030, 0x0409, 0x2039, 0x040A, 0x040C, 0x040B, 0x040F,
+    0x0452, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014,
+    0x0098, 0x2122, 0x0459, 0x203A, 0x045A, 0x045C, 0x045B, 0x045F,
+    0x00A0, 0x040E, 0x045E, 0x0408, 0x00A4, 0x0490, 0x00A6, 0x00A7,
+    0x0401, 0x00A9, 0x0404, 0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x0407,
+    0x00B0, 0x00B1, 0x0406, 0x0456, 0x0491, 0x00B5, 0x00B6, 0x00B7,
+    0x0451, 0x2116, 0x0454, 0x00BB, 0x0458, 0x0405, 0x0455, 0x0457,
+    0x0410, 0x0411, 0x0412, 0x0413, 0x0414, 0x0415, 0x0416, 0x0417,
+    0x0418, 0x0419, 0x041A, 0x041B, 0x041C, 0x041D, 0x041E, 0x041F,
+    0x0420, 0x0421, 0x0422, 0x0423, 0x0424, 0x0425, 0x0426, 0x0427,
+    0x0428, 0x0429, 0x042A, 0x042B, 0x042C, 0x042D, 0x042E, 0x042F,
+    0x0430, 0x0431, 0x0432, 0x0433, 0x0434, 0x0435, 0x0436, 0x0437,
+    0x0438, 0x0439, 0x043A, 0x043B, 0x043C, 0x043D, 0x043E, 0x043F,
+    0x0440, 0x0441, 0x0442, 0x0443, 0x0444, 0x0445, 0x0446, 0x0447,
+    0x0448, 0x0449, 0x044A, 0x044B, 0x044C, 0x044D, 0x044E, 0x044F	
+};
+
+/* Windows Latin 1 Code Page */
+unsigned short WIN1252CP [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
+    0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
+    0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+    0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
+    0x0058, 0x0059, 0x005A, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+    0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+    0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
+    0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+    0x0080, 0x0081, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021,
+    0x02C6, 0x2030, 0x0160, 0x2039, 0x0152, 0x008D, 0x008E, 0x008F,
+    0x0090, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014,
+    0x02DC, 0x2122, 0x0161, 0x203A, 0x0153, 0x009D, 0x009E, 0x0178, 
+    0x00A0, 0x00A1, 0x00A2, 0x00A3, 0x00A4, 0x00A5, 0x00A6, 0x00A7,
+    0x00A8, 0x00A9, 0x00AA, 0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x00AF,
+    0x00B0, 0x00B1, 0x00B2, 0x00B3, 0x00B4, 0x00B5, 0x00B6, 0x00B7,
+    0x00B8, 0x00B9, 0x00BA, 0x00BB, 0x00BC, 0x00BD, 0x00BE, 0x00BF,
+    0x00C0, 0x00C1, 0x00C2, 0x00C3, 0x00C4, 0x00C5, 0x00C6, 0x00C7,
+    0x00C8, 0x00C9, 0x00CA, 0x00CB, 0x00CC, 0x00CD, 0x00CE, 0x00CF,
+    0x00D0, 0x00D1, 0x00D2, 0x00D3, 0x00D4, 0x00D5, 0x00D6, 0x00D7,
+    0x00D8, 0x00D9, 0x00DA, 0x00DB, 0x00DC, 0x00DD, 0x00DE, 0x00DF,
+    0x00E0, 0x00E1, 0x00E2, 0x00E3, 0x00E4, 0x00E5, 0x00E6, 0x00E7,
+    0x00E8, 0x00E9, 0x00EA, 0x00EB, 0x00EC, 0x00ED, 0x00EE, 0x00EF,
+    0x00F0, 0x00F1, 0x00F2, 0x00F3, 0x00F4, 0x00F5, 0x00F6, 0x00F7,
+    0x00F8, 0x00F9, 0x00FA, 0x00FB, 0x00FC, 0x00FD, 0x00FE, 0x00FF
+};
+
+/* Windows Greek Code Page */
+unsigned short WIN1253CP [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
+    0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
+    0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+    0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
+    0x0058, 0x0059, 0x005A, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+    0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+    0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
+    0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+    0x0080, 0x0081, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021,
+    0x0088, 0x2030, 0x008A, 0x2039, 0x008C, 0x008D, 0x008E, 0x008F,
+    0x0090, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014,
+    0x0098, 0x2122, 0x009A, 0x203A, 0x009C, 0x009D, 0x009E, 0x009F,
+    0x00A0, 0x0385, 0x0386, 0x00A3, 0x00A4, 0x00A5, 0x00A6, 0x00A7,
+    0x00A8, 0x00A9, 0x00AA, 0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x2015,
+    0x00B0, 0x00B1, 0x00B2, 0x00B3, 0x0384, 0x00B5, 0x00B6, 0x00B7,
+    0x0388, 0x0389, 0x038A, 0x00BB, 0x038C, 0x00BD, 0x038E, 0x038F,
+    0x0390, 0x0391, 0x0392, 0x0393, 0x0394, 0x0395, 0x0396, 0x0397, 
+    0x0398, 0x0399, 0x039A, 0x039B, 0x039C, 0x039D, 0x039E, 0x039F,
+    0x03A0, 0x03A1, 0x00D2, 0x03A3, 0x03A4, 0x03A5, 0x03A6, 0x03A7,
+    0x03A8, 0x03A9, 0x03AA, 0x03AB, 0x03AC, 0x03AD, 0x03AE, 0x03AF,
+    0x03B0, 0x03B1, 0x03B2, 0x03B3, 0x03B4, 0x03B5, 0x03B6, 0x03B7,
+    0x03B8, 0x03B9, 0x03BA, 0x03BB, 0x03BC, 0x03BD, 0x03BE, 0x03BF,
+    0x03C0, 0x03C1, 0x03C2, 0x03C3, 0x03C4, 0x03C5, 0x03C6, 0x03C7, 
+    0x03C8, 0x03C9, 0x03CA, 0x03CB, 0x03CC, 0x03CD, 0x03CE, 0x00FF
+};
+
+/* Windows Latin 5 (Turkish) Code Page */
+unsigned short WIN1254CP [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
+    0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
+    0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+    0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
+    0x0058, 0x0059, 0x005A, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+    0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+    0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
+    0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+    0x0080, 0x0081, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021, 
+    0x02C6, 0x2030, 0x0160, 0x2039, 0x0152, 0x008D, 0x008E, 0x008F, 
+    0x0090, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014, 
+    0x02DC, 0x2122, 0x0161, 0x203A, 0x0153, 0x009D, 0x009E, 0x0178, 
+    0x00A0, 0x00A1, 0x00A2, 0x00A3, 0x00A4, 0x00A5, 0x00A6, 0x00A7, 
+    0x00A8, 0x00A9, 0x00AA, 0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x00AF,
+    0x00B0, 0x00B1, 0x00B2, 0x00B3, 0x00B4, 0x00B5, 0x00B6, 0x00B7,
+    0x00B8, 0x00B9, 0x00BA, 0x00BB, 0x00BC, 0x00BD, 0x00BE, 0x00BF,
+    0x00C0, 0x00C1, 0x00C2, 0x00C3, 0x00C4, 0x00C5, 0x00C6, 0x00C7, 
+    0x00C8, 0x00C9, 0x00CA, 0x00CB, 0x00CC, 0x00CD, 0x00CE, 0x00CF,
+    0x011E, 0x00D1, 0x00D2, 0x00D3, 0x00D4, 0x00D5, 0x00D6, 0x00D7,
+    0x00D8, 0x00D9, 0x00DA, 0x00DB, 0x00DC, 0x0130, 0x015E, 0x00DF,
+    0x00E0, 0x00E1, 0x00E2, 0x00E3, 0x00E4, 0x00E5, 0x00E6, 0x00E7,
+    0x00E8, 0x00E9, 0x00EA, 0x00EB, 0x00EC, 0x00ED, 0x00EE, 0x00EF,
+    0x011F, 0x00F1, 0x00F2, 0x00F3, 0x00F4, 0x00F5, 0x00F6, 0x00F7,
+    0x00F8, 0x00F9, 0x00FA, 0x00FB, 0x00FC, 0x0131, 0x015F, 0x00FF
+};
+
+/* Windows Hebrew Code Page */
+unsigned short WIN1255CP [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
+    0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
+    0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+    0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
+    0x0058, 0x0059, 0x005A, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+    0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+    0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
+    0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+    0x0080, 0x0081, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021, 
+    0x02C6, 0x2030, 0x008A, 0x2039, 0x008C, 0x008D, 0x008E, 0x008F,
+    0x0090, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014,
+    0x02DC, 0x2122, 0x009A, 0x203A, 0x009C, 0x009D, 0x009E, 0x009F, 
+    0x00A0, 0x00A1, 0x00A2, 0x00A3, 0x20AA, 0x00A5, 0x00A6, 0x00A7,
+    0x00A8, 0x00A9, 0x00AA, 0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x00AF,
+    0x00B0, 0x00B1, 0x00B2, 0x00B3, 0x00B4, 0x00B5, 0x00B6, 0x00B7, 
+    0x00B8, 0x00B9, 0x00BA, 0x00BB, 0x00BC, 0x00BD, 0x00BE, 0x00BF,
+    0x05B0, 0x05B1, 0x05B2, 0x05B3, 0x05B4, 0x05B5, 0x05B6, 0x05B7,
+    0x05B8, 0x05B9, 0x05BA, 0x05BB, 0x05BC, 0x05BD, 0x05BE, 0x05BF,
+    0x05C0, 0x05C1, 0x05C2, 0x05C3, 0x05F0, 0x05F1, 0x05F2, 0x00D7,
+    0x00D8, 0x00D9, 0x00DA, 0x00DB, 0x00DC, 0x00DD, 0x00DE, 0x00DF,
+    0x05D0, 0x05D1, 0x05D2, 0x05D3, 0x05D4, 0x05D5, 0x05D6, 0x05D7,
+    0x05D8, 0x05D9, 0x05DA, 0x05DB, 0x05DC, 0x05DD, 0x05DE, 0x05DF,
+    0x05E0, 0x05E1, 0x05E2, 0x05E3, 0x05E4, 0x05E5, 0x05E6, 0x05E7,
+    0x05E8, 0x05E9, 0x05EA, 0x00FB, 0x00FC, 0x200E, 0x200F, 0x00FF
+};
+	
 /* Windows Arabic Code Page */
 unsigned short WIN1256CP [] = {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
@@ -120,6 +517,41 @@ unsigned short WIN1256CP [] = {
     0x0651, 0x00F9, 0x0652, 0x00FB, 0x00FC, 0x200E, 0x200F, 0xFFFE
 };
 
+/* Windows Baltic RIM Code Page */
+unsigned short WIN1257CP [] = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007,
+    0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D, 0x000E, 0x000F,
+    0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017,
+    0x0018, 0x0019, 0x001A, 0x001B, 0x001C, 0x001D, 0x001E, 0x001F,
+    0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027,
+    0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+    0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037,
+    0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+    0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
+    0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+    0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
+    0x0058, 0x0059, 0x005A, 0x005B, 0x005C, 0x005D, 0x005E, 0x005F,
+    0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+    0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+    0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
+    0x0078, 0x0079, 0x007A, 0x007B, 0x007C, 0x007D, 0x007E, 0x007F,
+    0xFFFE, 0xFFFE, 0x201A, 0xFFFE, 0x201E, 0x2026, 0x2020, 0x2021,
+    0xFFFE, 0x2030, 0xFFFE, 0x2039, 0xFFFE, 0x00A8, 0x02C7, 0x00B8,
+    0xFFFE, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014,
+    0xFFFE, 0x2122, 0xFFFE, 0x203A, 0xFFFE, 0x00AF, 0x02DB, 0xFFFE, 
+    0x00A0, 0xFFFE, 0x00A2, 0x00A3, 0x00A4, 0xFFFE, 0x00A6, 0x00A7,
+    0x00D8, 0x00A9, 0x0156, 0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x00C6,
+    0x00B0, 0x00B1, 0x00B2, 0x00B3, 0x00B4, 0x00B5, 0x00B6, 0x00B7,
+    0x00F8, 0x00B9, 0x0157, 0x00BB, 0x00BC, 0x00BD, 0x00BE, 0x00E6,
+    0x0104, 0x012E, 0x0100, 0x0106, 0x00C4, 0x00C5, 0x0118, 0x0112,
+    0x010C, 0x00C9, 0x0179, 0x0116, 0x0122, 0x0136, 0x012A, 0x013B,
+    0x0160, 0x0143, 0x0145, 0x00D3, 0x014C, 0x00D5, 0x00D6, 0x00D7, 
+    0x0172, 0x0141, 0x015A, 0x016A, 0x00DC, 0x017B, 0x017D, 0x00DF,
+    0x0105, 0x012F, 0x0101, 0x0107, 0x00E4, 0x00E5, 0x0119, 0x0113,
+    0x010D, 0x00E9, 0x017A, 0x0117, 0x0123, 0x0137, 0x012B, 0x013C,
+    0x0161, 0x0144, 0x0146, 0x00F3, 0x014D, 0x00F5, 0x00F6, 0x00F7,
+    0x0173, 0x0142, 0x015B, 0x016B, 0x00FC, 0x017C, 0x017E, 0x02D9
+};
 
 #ifdef __STDC__
 extern STRING TtaAllocString (unsigned int);
@@ -132,81 +564,47 @@ extern void*  TtaGetMemory ();
 /*----------------------------------------------------------------------------*\
  * uctio                                                                      *
 \*----------------------------------------------------------------------------*/
-#ifdef _I18N_
 #ifdef __STDC__
-int uctoi (const STRING string )
+int uatoi (const STRING string )
 #else  /* !__STDC__ */
-int uctoi (string )
+int uatoi (string )
 const STRING string;
 #endif /* !__STDC__ */
 {
-#   ifdef _WINDOWS
-    return _wtoi (string);
-#   else  /* !_WINDOWS */
-#   endif /* !_WINDOWS */
+#ifdef _I18N_
+#     ifdef _WINDOWS
+      return _wtoi (string);
+#     else  /* !_WINDOWS */
+      char str[MAX_LENGTH];
+      wcstombs (str, string, MAX_LENGTH);
+      return atoi (str);
+#     endif /* !_WINDOWS */
+#else  /* !_I18N_ */
+      return atoi (string);
+#endif /* !_I18N_ */
 }
 
 /*----------------------------------------------------------------------------*\
- * uctol                                                                      *
+ * uatol                                                                      *
 \*----------------------------------------------------------------------------*/
 #ifdef __STDC__
-long uctol (const STRING string)
+long uatol (const STRING string)
 #else  /* !__STDC__ */
-long uctol (string)
+long uatol (string)
 const STRING string;
 #endif /* __STDC_+_ */
 {
-#   ifdef _WINDOWS
-    return _wtol (string);
-#   else  /* !_WINDOWS */
-#   endif /* !_WINDOWS */
-}
-
-/*----------------------------------------------------------------------------*\
- * utolower                                                                   *
-\*----------------------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T utolower (CHAR_T c)
-#else  /* !__STDC__ */
-CHAR_T utolower (c)
-CHAR_T c;
-#endif /* __STDC__ */
-{
-#    ifdef _WINDOWS
-     return (CHAR_T) towlower((wint_t ) c);
-#    else  /* !_WINDOWS */
-#    endif /* _WINDOWS */
-}
-
+#ifdef _I18N_
+#     ifdef _WINDOWS
+      return _wtol (string);
+#     else  /* !_WINDOWS */
+      char str[MAX_LENGTH];
+      wcstombs (str, string, MAX_LENGTH);
+      return atol (str);
+#     endif /* !_WINDOWS */
 #else  /* !_I18N_ */
-
-#include <stdlib.h>
-#include <ctype.h>
-
-/*----------------------------------------------------------------------------*\
- * uctoi                                                                      *
-\*----------------------------------------------------------------------------*/
-#ifdef __STDC__
-int uctoi (const STRING string )
-#else  /* !__STDC__ */
-int uctoi (string )
-const STRING string;
-#endif /* !__STDC__ */
-{
-    return atoi (string);
-}
-
-/*----------------------------------------------------------------------------*\
- * uctol                                                                      *
-\*----------------------------------------------------------------------------*/
-#ifdef __STDC__
-long uctol (const STRING string )
-#else  /* !__STDC__ */
-long uctol (string )
-const STRING string;
-#endif /* !__STDC__ */
-{
-    return atol (string);
+      return atol (string);
+#endif /* !_I18N_ */
 }
 
 /*----------------------------------------------------------------------------*\
@@ -219,10 +617,12 @@ CHAR_T utolower (c)
 CHAR_T c;
 #endif /* __STDC__ */
 {
+#    ifdef _I18N_
+     return (CHAR_T) towlower((wint_t ) c);
+#    else  /* !_I18N_ */
      return ((CHAR_T) tolower ((int)c));
+#    endif /* _I18N_ */
 }
-
-#endif /* _I18N_ */
 
 /*----------------------------------------------------------------------------*\
  * wctoi                                                                      *
@@ -337,6 +737,7 @@ const CHAR_T  wc;
 #   endif /* !_I18N_ */
 }
 
+
 /*----------------------------------------------------------------------------*\
  * TtaGetUnicodeValueFromISOLatin2Code: return the Unicode val corresponding to
  * the ISO Latin 2 code c.
@@ -354,6 +755,300 @@ const unsigned char wc;
    return c;
 #  endif /* !_I18N_ */
 }
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetISOLatin3CodeFromUnicode: return the ISO latin 3 code corresponding to
+ * the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetISOLatin3CodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetISOLatin3CodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {  
+           case 0x0126: return 0xA1; /* LATIN CAPITAL LETTER H WITH STROKE     */
+           case 0x02D8: return 0xA2; /* BREVE                                  */
+           case 0x0124: return 0xA6; /* LATIN CAPITAL LETTER H WITH CIRCUMFLEX */
+           case 0x0130: return 0xA9; /* LATIN CAPITAL LETTER I WITH DOT ABOVE  */
+           case 0x015E: return 0xAA; /* LATIN CAPITAL LETTER S WITH CEDILLA    */
+           case 0x011E: return 0xAB; /* LATIN CAPITAL LETTER G WITH BREVE      */
+           case 0x0134: return 0xAC; /* LATIN CAPITAL LETTER J WITH CIRCUMFLEX */
+           case 0x017B: return 0xAF; /* LATIN CAPITAL LETTER Z WITH DOT ABOVE  */
+           case 0x0127: return 0xB1; /* LATIN SMALL LETTER H WITH STROKE       */
+           case 0x0125: return 0xB6; /* LATIN SMALL LETTER H WITH CIRCUMFLEX   */
+           case 0x0131: return 0xB9; /* LATIN SMALL LETTER DOTLESS I           */
+           case 0x015F: return 0xBA; /* LATIN SMALL LETTER S WITH CEDILLA      */
+           case 0x011F: return 0xBB; /* LATIN SMALL LETTER G WITH BREVE        */
+           case 0x0135: return 0xBC; /* LATIN SMALL LETTER J WITH CIRCUMFLEX   */
+           case 0x017C: return 0xBF; /* LATIN SMALL LETTER Z WITH DOT ABOVE    */
+           case 0x010A: return 0xC5; /* LATIN CAPITAL LETTER C WITH DOT ABOVE  */
+           case 0x0108: return 0xC6; /* LATIN CAPITAL LETTER C WITH CIRCUMFLEX */
+           case 0x0120: return 0xD5; /* LATIN CAPITAL LETTER G WITH DOT ABOVE  */
+           case 0x011C: return 0xD8; /* LATIN CAPITAL LETTER G WITH CIRCUMFLEX */
+           case 0x016C: return 0xDD; /* LATIN CAPITAL LETTER U WITH BREVE      */
+           case 0x015C: return 0xDE; /* LATIN CAPITAL LETTER S WITH CIRCUMFLEX */
+           case 0x010B: return 0xE5; /* LATIN SMALL LETTER C WITH DOT ABOVE    */
+           case 0x0109: return 0xE6; /* LATIN SMALL LETTER C WITH CIRCUMFLEX   */
+           case 0x0121: return 0xF5; /* LATIN SMALL LETTER G WITH DOT ABOVE    */
+           case 0x011D: return 0xF8; /* LATIN SMALL LETTER G WITH CIRCUMFLEX   */
+           case 0x016D: return 0xFD; /* LATIN SMALL LETTER U WITH BREVE        */
+           case 0x015D: return 0xFE; /* LATIN SMALL LETTER S WITH CIRCUMFLEX   */
+           case 0x02D9: return 0xFF; /* DOT ABOVE                              */
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetUnicodeValueFromISOLatin3Code: return the Unicode val corresponding to
+ * the ISO Latin 3 code c.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromISOLatin3Code (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromISOLatin3Code (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   return ISOLatin3Map [c];
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetISOLatin4CodeFromUnicode: return the ISO latin 4 code corresponding to
+ * the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetISOLatin4CodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetISOLatin4CodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {
+           case 0x0104: return 0xA1; /* LATIN CAPITAL LETTER A WITH OGONEK    */
+           case 0x0138: return 0xA2; /* LATIN SMALL LETTER KRA                */
+           case 0x0156: return 0xA3; /* LATIN CAPITAL LETTER R WITH CEDILLA   */
+           case 0x0128: return 0xA5; /* LATIN CAPITAL LETTER I WITH TILDE     */
+           case 0x013B: return 0xA6; /* LATIN CAPITAL LETTER L WITH CEDILLA   */
+           case 0x0160: return 0xA9; /* LATIN CAPITAL LETTER S WITH CARON     */
+           case 0x0112: return 0xAA; /* LATIN CAPITAL LETTER E WITH MACRON    */
+           case 0x0122: return 0xAB; /* LATIN CAPITAL LETTER G WITH CEDILLA   */
+           case 0x0166: return 0xAC; /* LATIN CAPITAL LETTER T WITH STROKE    */
+           case 0x017D: return 0xAE; /* LATIN CAPITAL LETTER Z WITH CARON     */
+           case 0x0105: return 0xB1; /* LATIN SMALL LETTER A WITH OGONEK      */
+           case 0x02DB: return 0xB2; /* OGONEK                                */
+           case 0x0157: return 0xB3; /* LATIN SMALL LETTER R WITH CEDILLA     */
+           case 0x0129: return 0xB5; /* LATIN SMALL LETTER I WITH TILDE       */
+           case 0x013C: return 0xB6; /* LATIN SMALL LETTER L WITH CEDILLA     */
+           case 0x02C7: return 0xB7; /* CARON                                 */
+           case 0x0161: return 0xB9; /* LATIN SMALL LETTER S WITH CARON       */
+           case 0x0113: return 0xBA; /* LATIN SMALL LETTER E WITH MACRON      */
+           case 0x0123: return 0xBB; /* LATIN SMALL LETTER G WITH CEDILLA     */
+           case 0x0167: return 0xBC; /* LATIN SMALL LETTER T WITH STROKE      */
+           case 0x014A: return 0xBD; /* LATIN CAPITAL LETTER ENG              */
+           case 0x017E: return 0xBE; /* LATIN SMALL LETTER Z WITH CARON       */
+           case 0x014B: return 0xBF; /* LATIN SMALL LETTER ENG                */
+           case 0x0100: return 0xC0; /* LATIN CAPITAL LETTER A WITH MACRON    */
+           case 0x012E: return 0xC7; /* LATIN CAPITAL LETTER I WITH OGONEK    */
+           case 0x010C: return 0xC8; /* LATIN CAPITAL LETTER C WITH CARON     */
+           case 0x00C9: return 0xC9; /* LATIN CAPITAL LETTER E WITH ACUTE     */
+           case 0x0118: return 0xCA; /* LATIN CAPITAL LETTER E WITH OGONEK    */
+           case 0x0116: return 0xCC; /* LATIN CAPITAL LETTER E WITH DOT ABOVE */
+           case 0x012A: return 0xCF; /* LATIN CAPITAL LETTER I WITH MACRON    */
+           case 0x0110: return 0xD0; /* LATIN CAPITAL LETTER D WITH STROKE    */
+           case 0x0145: return 0xD1; /* LATIN CAPITAL LETTER N WITH CEDILLA   */
+           case 0x014C: return 0xD2; /* LATIN CAPITAL LETTER O WITH MACRON    */
+           case 0x0136: return 0xD3; /* LATIN CAPITAL LETTER K WITH CEDILLA   */
+           case 0x0172: return 0xD9; /* LATIN CAPITAL LETTER U WITH OGONEK    */
+           case 0x0168: return 0xDD; /* LATIN CAPITAL LETTER U WITH TILDE     */
+           case 0x016A: return 0xDE; /* LATIN CAPITAL LETTER U WITH MACRON    */
+           case 0x0101: return 0xE0; /* LATIN SMALL LETTER A WITH MACRON      */
+           case 0x012F: return 0xE7; /* LATIN SMALL LETTER I WITH OGONEK      */
+           case 0x010D: return 0xE8; /* LATIN SMALL LETTER C WITH CARON       */
+           case 0x0119: return 0xEA; /* LATIN SMALL LETTER E WITH OGONEK      */
+           case 0x0117: return 0xEC; /* LATIN SMALL LETTER E WITH DOT ABOVE   */
+           case 0x012B: return 0xEF; /* LATIN SMALL LETTER I WITH MACRON      */
+           case 0x0111: return 0xF0; /* LATIN SMALL LETTER D WITH STROKE      */
+           case 0x0146: return 0xF1; /* LATIN SMALL LETTER N WITH CEDILLA     */
+           case 0x014D: return 0xF2; /* LATIN SMALL LETTER O WITH MACRON      */
+           case 0x0137: return 0xF3; /* LATIN SMALL LETTER K WITH CEDILLA     */
+           case 0x0173: return 0xF9; /* LATIN SMALL LETTER U WITH OGONEK      */
+           case 0x0169: return 0xFD; /* LATIN SMALL LETTER U WITH TILDE       */
+           case 0x016B: return 0xFE; /* LATIN SMALL LETTER U WITH MACRON      */
+           case 0x02D9: return 0xFF; /* DOT ABOVE                             */
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetUnicodeValueFromISOLatin4Code: return the Unicode val corresponding to
+ * the ISO Latin 4 code c.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromISOLatin4Code (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromISOLatin4Code (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   return ISOLatin4Map [c];
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetISOLatin5CodeFromUnicode: return the ISO latin 5 code corresponding to
+ * the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetISOLatin5CodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetISOLatin5CodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {
+           case 0x0401: return 0xA1; /* CYRILLIC CAPITAL LETTER IO                       */
+           case 0x0402: return 0xA2; /* CYRILLIC CAPITAL LETTER DJE                      */
+           case 0x0403: return 0xA3; /* CYRILLIC CAPITAL LETTER GJE                      */
+           case 0x0404: return 0xA4; /* CYRILLIC CAPITAL LETTER UKRAINIAN IE             */
+           case 0x0405: return 0xA5; /* CYRILLIC CAPITAL LETTER DZE                      */
+           case 0x0406: return 0xA6; /* CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I */
+           case 0x0407: return 0xA7; /* CYRILLIC CAPITAL LETTER YI                       */
+           case 0x0408: return 0xA8; /* CYRILLIC CAPITAL LETTER JE                       */
+           case 0x0409: return 0xA9; /* CYRILLIC CAPITAL LETTER LJE                      */
+           case 0x040A: return 0xAA; /* CYRILLIC CAPITAL LETTER NJE                      */
+           case 0x040B: return 0xAB; /* CYRILLIC CAPITAL LETTER TSHE                     */
+           case 0x040C: return 0xAC; /* CYRILLIC CAPITAL LETTER KJE                      */
+           case 0x040E: return 0xAE; /* CYRILLIC CAPITAL LETTER SHORT U                  */
+           case 0x040F: return 0xAF; /* CYRILLIC CAPITAL LETTER DZHE                     */
+           case 0x0410: return 0xB0; /* CYRILLIC CAPITAL LETTER A                        */
+           case 0x0411: return 0xB1; /* CYRILLIC CAPITAL LETTER BE                       */
+           case 0x0412: return 0xB2; /* CYRILLIC CAPITAL LETTER VE                       */
+           case 0x0413: return 0xB3; /* CYRILLIC CAPITAL LETTER GHE                      */
+           case 0x0414: return 0xB4; /* CYRILLIC CAPITAL LETTER DE                       */
+           case 0x0415: return 0xB5; /* CYRILLIC CAPITAL LETTER IE                       */
+           case 0x0416: return 0xB6; /* CYRILLIC CAPITAL LETTER ZHE                      */
+           case 0x0417: return 0xB7; /* CYRILLIC CAPITAL LETTER ZE                       */
+           case 0x0418: return 0xB8; /* CYRILLIC CAPITAL LETTER I                        */
+           case 0x0419: return 0xB9; /* CYRILLIC CAPITAL LETTER SHORT I                  */
+           case 0x041A: return 0xBA; /* CYRILLIC CAPITAL LETTER KA                       */
+           case 0x041B: return 0xBB; /* CYRILLIC CAPITAL LETTER EL                       */
+           case 0x041C: return 0xBC; /* CYRILLIC CAPITAL LETTER EM                       */
+           case 0x041D: return 0xBD; /* CYRILLIC CAPITAL LETTER EN                       */
+           case 0x041E: return 0xBE; /* CYRILLIC CAPITAL LETTER O                        */
+           case 0x041F: return 0xBF; /* CYRILLIC CAPITAL LETTER PE                       */
+           case 0x0420: return 0xC0; /* CYRILLIC CAPITAL LETTER ER                       */
+           case 0x0421: return 0xC1; /* CYRILLIC CAPITAL LETTER ES                       */
+           case 0x0422: return 0xC2; /* CYRILLIC CAPITAL LETTER TE                       */
+           case 0x0423: return 0xC3; /* CYRILLIC CAPITAL LETTER U                        */
+           case 0x0424: return 0xC4; /* CYRILLIC CAPITAL LETTER EF                       */
+           case 0x0425: return 0xC5; /* CYRILLIC CAPITAL LETTER HA                       */
+           case 0x0426: return 0xC6; /* CYRILLIC CAPITAL LETTER TSE                      */
+           case 0x0427: return 0xC7; /* CYRILLIC CAPITAL LETTER CHE                      */
+           case 0x0428: return 0xC8; /* CYRILLIC CAPITAL LETTER SHA                      */
+           case 0x0429: return 0xC9; /* CYRILLIC CAPITAL LETTER SHCHA                    */
+           case 0x042A: return 0xCA; /* CYRILLIC CAPITAL LETTER HARD SIGN                */
+           case 0x042B: return 0xCB; /* CYRILLIC CAPITAL LETTER YERU                     */
+           case 0x042C: return 0xCC; /* CYRILLIC CAPITAL LETTER SOFT SIGN                */
+           case 0x042D: return 0xCD; /* CYRILLIC CAPITAL LETTER E                        */
+           case 0x042E: return 0xCE; /* CYRILLIC CAPITAL LETTER YU                       */
+           case 0x042F: return 0xCF; /* CYRILLIC CAPITAL LETTER YA                       */
+           case 0x0430: return 0xD0; /* CYRILLIC SMALL LETTER A                          */
+           case 0x0431: return 0xD1; /* CYRILLIC SMALL LETTER BE                         */
+           case 0x0432: return 0xD2; /* CYRILLIC SMALL LETTER VE                         */
+           case 0x0433: return 0xD3; /* CYRILLIC SMALL LETTER GHE                        */
+           case 0x0434: return 0xD4; /* CYRILLIC SMALL LETTER DE                         */
+           case 0x0435: return 0xD5; /* CYRILLIC SMALL LETTER IE                         */
+           case 0x0436: return 0xD6; /* CYRILLIC SMALL LETTER ZHE                        */
+           case 0x0437: return 0xD7; /* CYRILLIC SMALL LETTER ZE                         */
+           case 0x0438: return 0xD8; /* CYRILLIC SMALL LETTER I                          */
+           case 0x0439: return 0xD9; /* CYRILLIC SMALL LETTER SHORT I                    */
+           case 0x043A: return 0xDA; /* CYRILLIC SMALL LETTER KA                         */
+           case 0x043B: return 0xDB; /* CYRILLIC SMALL LETTER EL                         */
+           case 0x043C: return 0xDC; /* CYRILLIC SMALL LETTER EM                         */
+           case 0x043D: return 0xDD; /* CYRILLIC SMALL LETTER EN                         */
+           case 0x043E: return 0xDE; /* CYRILLIC SMALL LETTER O                          */
+           case 0x043F: return 0xDF; /* CYRILLIC SMALL LETTER PE                         */
+           case 0x0440: return 0xE0; /* CYRILLIC SMALL LETTER ER                         */
+           case 0x0441: return 0xE1; /* CYRILLIC SMALL LETTER ES                         */
+           case 0x0442: return 0xE2; /* CYRILLIC SMALL LETTER TE                         */
+           case 0x0443: return 0xE3; /* CYRILLIC SMALL LETTER U                          */
+           case 0x0444: return 0xE4; /* CYRILLIC SMALL LETTER EF                         */
+           case 0x0445: return 0xE5; /* CYRILLIC SMALL LETTER HA                         */
+           case 0x0446: return 0xE6; /* CYRILLIC SMALL LETTER TSE                        */
+           case 0x0447: return 0xE7; /* CYRILLIC SMALL LETTER CHE                        */
+           case 0x0448: return 0xE8; /* CYRILLIC SMALL LETTER SHA                        */
+           case 0x0449: return 0xE9; /* CYRILLIC SMALL LETTER SHCHA                      */
+           case 0x044A: return 0xEA; /* CYRILLIC SMALL LETTER HARD SIGN                  */
+           case 0x044B: return 0xEB; /* CYRILLIC SMALL LETTER YERU                       */
+           case 0x044C: return 0xEC; /* CYRILLIC SMALL LETTER SOFT SIGN                  */
+           case 0x044D: return 0xED; /* CYRILLIC SMALL LETTER E                          */
+           case 0x044E: return 0xEE; /* CYRILLIC SMALL LETTER YU                         */
+           case 0x044F: return 0xEF; /* CYRILLIC SMALL LETTER YA                         */
+           case 0x2116: return 0xF0; /* NUMERO SIGN                                      */
+           case 0x0451: return 0xF1; /* CYRILLIC SMALL LETTER IO                         */
+           case 0x0452: return 0xF2; /* CYRILLIC SMALL LETTER DJE                        */
+           case 0x0453: return 0xF3; /* CYRILLIC SMALL LETTER GJE                        */
+           case 0x0454: return 0xF4; /* CYRILLIC SMALL LETTER UKRAINIAN IE               */
+           case 0x0455: return 0xF5; /* CYRILLIC SMALL LETTER DZE                        */
+           case 0x0456: return 0xF6; /* CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I   */
+           case 0x0457: return 0xF7; /* CYRILLIC SMALL LETTER YI                         */
+           case 0x0458: return 0xF8; /* CYRILLIC SMALL LETTER JE                         */
+           case 0x0459: return 0xF9; /* CYRILLIC SMALL LETTER LJE                        */
+           case 0x045A: return 0xFA; /* CYRILLIC SMALL LETTER NJE                        */
+           case 0x045B: return 0xFB; /* CYRILLIC SMALL LETTER TSHE                       */
+           case 0x045C: return 0xFC; /* CYRILLIC SMALL LETTER KJE                        */
+           case 0x00A7: return 0xFD; /* SECTION SIGN                                     */
+           case 0x045E: return 0xFE; /* CYRILLIC SMALL LETTER SHORT U                    */
+           case 0x045F: return 0xFF; /* CYRILLIC SMALL LETTER DZHE                       */
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetUnicodeValueFromISOLatin5Code: return the Unicode val corresponding to
+ * the ISO Latin 5 code c.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromISOLatin5Code (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromISOLatin5Code (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   return ISOLatin5Map [c];
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
 
 /*----------------------------------------------------------------------------*\
  * TtaGetISOLatin6CodeFromUnicode: return the ISO latin 6 code corresponding to
@@ -433,6 +1128,7 @@ const CHAR_T  wc;
 #   endif /* !_I18N_ */
 }
 
+
 /*----------------------------------------------------------------------------*\
  * TtaGetUnicodeValueFromISOLatin6Code: return the Unicode val corresponding to
  * the ISO Latin 6 code c.
@@ -446,6 +1142,880 @@ const unsigned char wc;
 {
 #  ifdef _I18N_
    return ISOLatin6Map [c];
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetISOLatin7CodeFromUnicode: return the ISO latin 7 code corresponding to
+ * the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetISOLatin7CodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetISOLatin7CodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {
+           case 0x02BD: return 0xA1; /* MODIFIER LETTER REVERSED COMMA                      */
+           case 0x02BC: return 0xA2; /* MODIFIER LETTER APOSTROPHE                          */
+           case 0x2015: return 0xAF; /* HORIZONTAL BAR                                      */
+           case 0x0384: return 0xB4; /* GREEK TONOS                                         */
+           case 0x0385: return 0xB5; /* GREEK DIALYTIKA TONOS                               */
+           case 0x0386: return 0xB6; /* GREEK CAPITAL LETTER ALPHA WITH TONOS               */
+           case 0x0388: return 0xB8; /* GREEK CAPITAL LETTER EPSILON WITH TONOS             */
+           case 0x0389: return 0xB9; /* GREEK CAPITAL LETTER ETA WITH TONOS                 */
+           case 0x038A: return 0xBA; /* GREEK CAPITAL LETTER IOTA WITH TONOS                */
+           case 0x038C: return 0xBC; /* GREEK CAPITAL LETTER OMICRON WITH TONOS             */
+           case 0x038E: return 0xBE; /* GREEK CAPITAL LETTER UPSILON WITH TONOS             */
+           case 0x038F: return 0xBF; /* GREEK CAPITAL LETTER OMEGA WITH TONOS               */
+           case 0x0390: return 0xC0; /* GREEK SMALL LETTER IOTA WITH DIALYTIKA AND TONOS    */
+           case 0x0391: return 0xC1; /* GREEK CAPITAL LETTER ALPHA                          */
+           case 0x0392: return 0xC2; /* GREEK CAPITAL LETTER BETA                           */
+           case 0x0393: return 0xC3; /* GREEK CAPITAL LETTER GAMMA                          */
+           case 0x0394: return 0xC4; /* GREEK CAPITAL LETTER DELTA                          */
+           case 0x0395: return 0xC5; /* GREEK CAPITAL LETTER EPSILON                        */
+           case 0x0396: return 0xC6; /* GREEK CAPITAL LETTER ZETA                           */
+           case 0x0397: return 0xC7; /* GREEK CAPITAL LETTER ETA                            */
+           case 0x0398: return 0xC8; /* GREEK CAPITAL LETTER THETA                          */
+           case 0x0399: return 0xC9; /* GREEK CAPITAL LETTER IOTA                           */
+           case 0x039A: return 0xCA; /* GREEK CAPITAL LETTER KAPPA                          */
+           case 0x039B: return 0xCB; /* GREEK CAPITAL LETTER LAMDA                          */
+           case 0x039C: return 0xCC; /* GREEK CAPITAL LETTER MU                             */
+           case 0x039D: return 0xCD; /* GREEK CAPITAL LETTER NU                             */
+           case 0x039E: return 0xCE; /* GREEK CAPITAL LETTER XI                             */
+           case 0x039F: return 0xCF; /* GREEK CAPITAL LETTER OMICRON                        */
+           case 0x03A0: return 0xD0; /* GREEK CAPITAL LETTER PI                             */
+           case 0x03A1: return 0xD1; /* GREEK CAPITAL LETTER RHO                            */
+           case 0x03A3: return 0xD3; /* GREEK CAPITAL LETTER SIGMA                          */
+           case 0x03A4: return 0xD4; /* GREEK CAPITAL LETTER TAU                            */
+           case 0x03A5: return 0xD5; /* GREEK CAPITAL LETTER UPSILON                        */
+           case 0x03A6: return 0xD6; /* GREEK CAPITAL LETTER PHI                            */
+           case 0x03A7: return 0xD7; /* GREEK CAPITAL LETTER CHI                            */
+           case 0x03A8: return 0xD8; /* GREEK CAPITAL LETTER PSI                            */
+           case 0x03A9: return 0xD9; /* GREEK CAPITAL LETTER OMEGA                          */
+           case 0x03AA: return 0xDA; /* GREEK CAPITAL LETTER IOTA WITH DIALYTIKA            */
+           case 0x03AB: return 0xDB; /* GREEK CAPITAL LETTER UPSILON WITH DIALYTIKA         */
+           case 0x03AC: return 0xDC; /* GREEK SMALL LETTER ALPHA WITH TONOS                 */
+           case 0x03AD: return 0xDD; /* GREEK SMALL LETTER EPSILON WITH TONOS               */
+           case 0x03AE: return 0xDE; /* GREEK SMALL LETTER ETA WITH TONOS                   */
+           case 0x03AF: return 0xDF; /* GREEK SMALL LETTER IOTA WITH TONOS                  */
+           case 0x03B0: return 0xE0; /* GREEK SMALL LETTER UPSILON WITH DIALYTIKA AND TONOS */
+           case 0x03B1: return 0xE1; /* GREEK SMALL LETTER ALPHA                            */
+           case 0x03B2: return 0xE2; /* GREEK SMALL LETTER BETA                             */
+           case 0x03B3: return 0xE3; /* GREEK SMALL LETTER GAMMA                            */
+           case 0x03B4: return 0xE4; /* GREEK SMALL LETTER DELTA                            */
+           case 0x03B5: return 0xE5; /* GREEK SMALL LETTER EPSILON                          */
+           case 0x03B6: return 0xE6; /* GREEK SMALL LETTER ZETA                             */
+           case 0x03B7: return 0xE7; /* GREEK SMALL LETTER ETA                              */
+           case 0x03B8: return 0xE8; /* GREEK SMALL LETTER THETA                            */
+           case 0x03B9: return 0xE9; /* GREEK SMALL LETTER IOTA                             */
+           case 0x03BA: return 0xEA; /* GREEK SMALL LETTER KAPPA                            */
+           case 0x03BB: return 0xEB; /* GREEK SMALL LETTER LAMDA                            */
+           case 0x03BC: return 0xEC; /* GREEK SMALL LETTER MU                               */
+           case 0x03BD: return 0xED; /* GREEK SMALL LETTER NU                               */
+           case 0x03BE: return 0xEE; /* GREEK SMALL LETTER XI                               */
+           case 0x03BF: return 0xEF; /* GREEK SMALL LETTER OMICRON                          */
+           case 0x03C0: return 0xF0; /* GREEK SMALL LETTER PI                               */
+           case 0x03C1: return 0xF1; /* GREEK SMALL LETTER RHO                              */
+           case 0x03C2: return 0xF2; /* GREEK SMALL LETTER FINAL SIGMA                      */
+           case 0x03C3: return 0xF3; /* GREEK SMALL LETTER SIGMA                            */
+           case 0x03C4: return 0xF4; /* GREEK SMALL LETTER TAU                              */
+           case 0x03C5: return 0xF5; /* GREEK SMALL LETTER UPSILON                          */
+           case 0x03C6: return 0xF6; /* GREEK SMALL LETTER PHI                              */
+           case 0x03C7: return 0xF7; /* GREEK SMALL LETTER CHI                              */
+           case 0x03C8: return 0xF8; /* GREEK SMALL LETTER PSI                              */
+           case 0x03C9: return 0xF9; /* GREEK SMALL LETTER OMEGA                            */
+           case 0x03CA: return 0xFA; /* GREEK SMALL LETTER IOTA WITH DIALYTIKA              */
+           case 0x03CB: return 0xFB; /* GREEK SMALL LETTER UPSILON WITH DIALYTIKA           */
+           case 0x03CC: return 0xFC; /* GREEK SMALL LETTER OMICRON WITH TONOS               */
+           case 0x03CD: return 0xFD; /* GREEK SMALL LETTER UPSILON WITH TONOS               */
+           case 0x03CE: return 0xFE; /* GREEK SMALL LETTER OMEGA WITH TONOS                 */
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+	
+/*----------------------------------------------------------------------------*\
+ * TtaGetUnicodeValueFromISOLatin7Code: return the Unicode val corresponding to
+ * the ISO Latin 7 code c.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromISOLatin7Code (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromISOLatin7Code (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   return ISOLatin7Map [c];
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetISOLatin8CodeFromUnicode: return the ISO latin 8 code corresponding to
+ * the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetISOLatin8CodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetISOLatin8CodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {
+           case 0x00D7: return 0xAA; /* MULTIPLICATION SIGN       */
+           case 0x203E: return 0xAF; /* OVERLINE                  */
+           case 0x00F7: return 0xBA; /* DIVISION SIGN             */
+           case 0x2017: return 0xDF; /* DOUBLE LOW LINE           */
+           case 0x05D0: return 0xE0; /* HEBREW LETTER ALEF        */
+           case 0x05D1: return 0xE1; /* HEBREW LETTER BET         */
+           case 0x05D2: return 0xE2; /* HEBREW LETTER GIMEL       */
+           case 0x05D3: return 0xE3; /* HEBREW LETTER DALET       */
+           case 0x05D4: return 0xE4; /* HEBREW LETTER HE          */
+           case 0x05D5: return 0xE5; /* HEBREW LETTER VAV         */
+           case 0x05D6: return 0xE6; /* HEBREW LETTER ZAYIN       */
+           case 0x05D7: return 0xE7; /* HEBREW LETTER HET         */
+           case 0x05D8: return 0xE8; /* HEBREW LETTER TET         */
+           case 0x05D9: return 0xE9; /* HEBREW LETTER YOD         */
+           case 0x05DA: return 0xEA; /* HEBREW LETTER FINAL KAF   */
+           case 0x05DB: return 0xEB; /* HEBREW LETTER KAF         */
+           case 0x05DC: return 0xEC; /* HEBREW LETTER LAMED       */
+           case 0x05DD: return 0xED; /* HEBREW LETTER FINAL MEM   */
+           case 0x05DE: return 0xEE; /* HEBREW LETTER MEM         */
+           case 0x05DF: return 0xEF; /* HEBREW LETTER FINAL NUN   */
+           case 0x05E0: return 0xF0; /* HEBREW LETTER NUN         */
+           case 0x05E1: return 0xF1; /* HEBREW LETTER SAMEKH      */
+           case 0x05E2: return 0xF2; /* HEBREW LETTER AYIN        */
+           case 0x05E3: return 0xF3; /* HEBREW LETTER FINAL PE    */
+           case 0x05E4: return 0xF4; /* HEBREW LETTER PE          */
+           case 0x05E5: return 0xF5; /* HEBREW LETTER FINAL TSADI */
+           case 0x05E6: return 0xF6; /* HEBREW LETTER TSADI       */
+           case 0x05E7: return 0xF7; /* HEBREW LETTER QOF         */
+           case 0x05E8: return 0xF8; /* HEBREW LETTER RESH        */
+           case 0x05E9: return 0xF9; /* HEBREW LETTER SHIN        */
+           case 0x05EA: return 0xFA; /* HEBREW LETTER TAV         */
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+	
+	
+/*----------------------------------------------------------------------------*\
+ * TtaGetUnicodeValueFromISOLatin8Code: return the Unicode val corresponding to
+ * the ISO Latin 8 code c.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromISOLatin8Code (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromISOLatin8Code (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   return ISOLatin8Map [c];
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetISOLatin9CodeFromUnicode: return the ISO latin 9 code corresponding to
+ * the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetISOLatin9CodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetISOLatin9CodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {
+           case 0x011E: return 0xD0;
+           case 0x0130: return 0xDD;
+           case 0x015E: return 0xDE;
+           case 0x011F: return 0xF0;
+           case 0x0131: return 0xFD;
+           case 0x015F: return 0xFE;
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetUnicodeValueFromISOLatin9Code: return the Unicode val corresponding to
+ * the ISO Latin 9 code c.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromISOLatin9Code (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromISOLatin9Code (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+    switch (c) {
+           case 0xD0: return 0x011E;
+           case 0xDD: return 0x0130;
+           case 0xDE: return 0x015E;
+           case 0xF0: return 0x011F;
+           case 0xFD: return 0x0131;
+           case 0xFE: return 0x015F;
+           default:   return (CHAR_T) c;
+	}
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetWindows1250CPCodeFromUnicode: return the WIN32 1250 CP code corresponding 
+ * to the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetWindows1250CPCodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetWindows1250CPCodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {
+           case 0x201A: return 0x82; /* SINGLE LOW-9 QUOTATION MARK                */
+           case 0x201E: return 0x84; /* DOUBLE LOW-9 QUOTATION MARK                */
+           case 0x2026: return 0x85; /* HORIZONTAL ELLIPSIS                        */
+           case 0x2020: return 0x86; /* DAGGER                                     */
+           case 0x2021: return 0x87; /* DOUBLE DAGGER                              */ 
+           case 0x2030: return 0x89; /* PER MILLE SIGN                             */
+           case 0x0160: return 0x8A; /* LATIN CAPITAL LETTER S WITH CARON          */
+           case 0x2039: return 0x8B; /* SINGLE LEFT-POINTING ANGLE QUOTATION MARK  */
+           case 0x015A: return 0x8C; /* LATIN CAPITAL LETTER S WITH ACUTE          */
+           case 0x0164: return 0x8D; /* LATIN CAPITAL LETTER T WITH CARON          */
+           case 0x017D: return 0x8E; /* LATIN CAPITAL LETTER Z WITH CARON          */
+           case 0x0179: return 0x8F; /* LATIN CAPITAL LETTER Z WITH ACUTE          */
+           case 0x2018: return 0x91; /* LEFT SINGLE QUOTATION MARK                 */
+           case 0x2019: return 0x92; /* RIGHT SINGLE QUOTATION MARK                */
+           case 0x201C: return 0x93; /* LEFT DOUBLE QUOTATION MARK                 */
+           case 0x201D: return 0x94; /* RIGHT DOUBLE QUOTATION MARK                */
+           case 0x2022: return 0x95; /* BULLET                                     */
+           case 0x2013: return 0x96; /* EN DASH                                    */
+           case 0x2014: return 0x97; /* EM DASH                                    */
+           case 0x2122: return 0x99; /* TRADE MARK SIGN                            */
+           case 0x0161: return 0x9A; /* LATIN SMALL LETTER S WITH CARON            */
+           case 0x203A: return 0x9B; /* SINGLE RIGHT-POINTING ANGLE QUOTATION MARK */
+           case 0x015B: return 0x9C; /* LATIN SMALL LETTER S WITH ACUTE            */
+           case 0x0165: return 0x9D; /* LATIN SMALL LETTER T WITH CARON            */
+           case 0x017E: return 0x9E; /* LATIN SMALL LETTER Z WITH CARON            */
+           case 0x017A: return 0x9F; /* LATIN SMALL LETTER Z WITH ACUTE            */
+           case 0x02C7: return 0xA1; /* CARON                                      */
+           case 0x02D8: return 0xA2; /* BREVE                                      */
+           case 0x0141: return 0xA3; /* LATIN CAPITAL LETTER L WITH STROKE         */
+           case 0x0104: return 0xA5; /* LATIN CAPITAL LETTER A WITH OGONEK         */
+           case 0x015E: return 0xAA; /* LATIN CAPITAL LETTER S WITH CEDILLA        */
+           case 0x017B: return 0xAF; /* LATIN CAPITAL LETTER Z WITH DOT ABOVE      */
+           case 0x02DB: return 0xB2; /* OGONEK                                     */
+           case 0x0142: return 0xB3; /* LATIN SMALL LETTER L WITH STROKE           */
+           case 0x0105: return 0xB9; /* LATIN SMALL LETTER A WITH OGONEK           */
+           case 0x015F: return 0xBA; /* LATIN SMALL LETTER S WITH CEDILLA          */
+           case 0x013D: return 0xBC; /* LATIN CAPITAL LETTER L WITH CARON          */
+           case 0x02DD: return 0xBD; /* DOUBLE ACUTE ACCENT                        */
+           case 0x013E: return 0xBE; /* LATIN SMALL LETTER L WITH CARON            */
+           case 0x017C: return 0xBF; /* LATIN SMALL LETTER Z WITH DOT ABOVE        */
+           case 0x0154: return 0xC0; /* LATIN CAPITAL LETTER R WITH ACUTE          */
+           case 0x0102: return 0xC3; /* LATIN CAPITAL LETTER A WITH BREVE          */
+           case 0x0139: return 0xC5; /* LATIN CAPITAL LETTER L WITH ACUTE          */
+           case 0x0106: return 0xC6; /* LATIN CAPITAL LETTER C WITH ACUTE          */
+           case 0x010C: return 0xC8; /* LATIN CAPITAL LETTER C WITH CARON          */
+           case 0x0118: return 0xCA; /* LATIN CAPITAL LETTER E WITH OGONEK         */
+           case 0x011A: return 0xCC; /* LATIN CAPITAL LETTER E WITH CARON          */
+           case 0x010E: return 0xCF; /* LATIN CAPITAL LETTER D WITH CARON          */
+           case 0x0110: return 0xD0; /* LATIN CAPITAL LETTER D WITH STROKE         */
+           case 0x0143: return 0xD1; /* LATIN CAPITAL LETTER N WITH ACUTE          */
+           case 0x0147: return 0xD2; /* LATIN CAPITAL LETTER N WITH CARON          */
+           case 0x0150: return 0xD5; /* LATIN CAPITAL LETTER O WITH DOUBLE ACUTE   */
+           case 0x0158: return 0xD8; /* LATIN CAPITAL LETTER R WITH CARON          */
+           case 0x016E: return 0xD9; /* LATIN CAPITAL LETTER U WITH RING ABOVE     */
+           case 0x0170: return 0xDB; /* LATIN CAPITAL LETTER U WITH DOUBLE ACUTE   */
+           case 0x0162: return 0xDE; /* LATIN CAPITAL LETTER T WITH CEDILLA        */
+           case 0x00DF: return 0xDF; /* LATIN SMALL LETTER SHARP S                 */
+           case 0x0155: return 0xE0; /* LATIN SMALL LETTER R WITH ACUTE            */
+           case 0x0103: return 0xE3; /* LATIN SMALL LETTER A WITH BREVE            */
+           case 0x013A: return 0xE5; /* LATIN SMALL LETTER L WITH ACUTE            */
+           case 0x0107: return 0xE6; /* LATIN SMALL LETTER C WITH ACUTE            */
+           case 0x010D: return 0xE8; /* LATIN SMALL LETTER C WITH CARON            */
+           case 0x0119: return 0xEA; /* LATIN SMALL LETTER E WITH OGONEK           */
+           case 0x011B: return 0xEC; /* LATIN SMALL LETTER E WITH CARON            */
+           case 0x010F: return 0xEF; /* LATIN SMALL LETTER D WITH CARON            */
+           case 0x0111: return 0xF0; /* LATIN SMALL LETTER D WITH STROKE           */
+           case 0x0144: return 0xF1; /* LATIN SMALL LETTER N WITH ACUTE            */
+           case 0x0148: return 0xF2; /* LATIN SMALL LETTER N WITH CARON            */
+           case 0x0151: return 0xF5; /* LATIN SMALL LETTER O WITH DOUBLE ACUTE     */
+           case 0x0159: return 0xF8; /* LATIN SMALL LETTER R WITH CARON            */
+           case 0x016F: return 0xF9; /* LATIN SMALL LETTER U WITH RING ABOVE       */
+           case 0x0171: return 0xFB; /* LATIN SMALL LETTER U WITH DOUBLE ACUTE     */
+           case 0x0163: return 0xFE; /* LATIN SMALL LETTER T WITH CEDILLA          */
+           case 0x02D9: return 0xFF; /* DOT ABOVE                                  */
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetUnicodeValueFromWindows1250CP: return the Unicode val corresponding to
+ * the Windows Arabic Code Page (1250) value c.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromWindows1250CP (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromWindows1250CP (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   return WIN1250CP [c];
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetWindows1251CPCodeFromUnicode: return the WIN32 1251 CP code corresponding 
+ * to the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetWindows1251CPCodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetWindows1251CPCodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {
+           case 0x0402:	return 0x80; /* CYRILLIC CAPITAL LETTER DJE                      */
+           case 0x0403: return 0x81; /* CYRILLIC CAPITAL LETTER GJE                      */
+           case 0x201A: return 0x82; /* SINGLE LOW-9 QUOTATION MARK                      */
+           case 0x0453: return 0x83; /* CYRILLIC SMALL LETTER GJE                        */
+           case 0x201E: return 0x84; /* DOUBLE LOW-9 QUOTATION MARK                      */
+           case 0x2026: return 0x85; /* HORIZONTAL ELLIPSIS                              */
+           case 0x2020: return 0x86; /* DAGGER                                           */
+           case 0x2021: return 0x87; /* DOUBLE DAGGER                                    */
+           case 0x2030: return 0x89; /* PER MILLE SIGN                                   */
+           case 0x0409: return 0x8A; /* CYRILLIC CAPITAL LETTER LJE                      */
+           case 0x2039: return 0x8B; /* SINGLE LEFT-POINTING ANGLE QUOTATION MARK        */
+           case 0x040A: return 0x8C; /* CYRILLIC CAPITAL LETTER NJE                      */
+           case 0x040C: return 0x8D; /* CYRILLIC CAPITAL LETTER KJE                      */
+           case 0x040B: return 0x8E; /* CYRILLIC CAPITAL LETTER TSHE                     */
+           case 0x040F: return 0x8F; /* CYRILLIC CAPITAL LETTER DZHE                     */
+           case 0x0452: return 0x90; /* CYRILLIC SMALL LETTER DJE                        */
+           case 0x2018: return 0x91; /* LEFT SINGLE QUOTATION MARK                       */
+           case 0x2019: return 0x92; /* RIGHT SINGLE QUOTATION MARK                      */
+           case 0x201C: return 0x93; /* LEFT DOUBLE QUOTATION MARK                       */
+           case 0x201D: return 0x94; /* RIGHT DOUBLE QUOTATION MARK                      */
+           case 0x2022: return 0x95; /* BULLET                                           */
+           case 0x2013: return 0x96; /* EN DASH                                          */
+           case 0x2014: return 0x97; /* EM DASH                                          */
+           case 0x2122: return 0x99; /* TRADE MARK SIGN                                  */
+           case 0x0459: return 0x9A; /* CYRILLIC SMALL LETTER LJE                        */
+           case 0x203A: return 0x9B; /* SINGLE RIGHT-POINTING ANGLE QUOTATION MARK       */
+           case 0x045A: return 0x9C; /* CYRILLIC SMALL LETTER NJE                        */
+           case 0x045C: return 0x9D; /* CYRILLIC SMALL LETTER KJE                        */
+           case 0x045B: return 0x9E; /* CYRILLIC SMALL LETTER TSHE                       */
+           case 0x045F: return 0x9F; /* CYRILLIC SMALL LETTER DZHE                       */
+           case 0x040E: return 0xA1; /* CYRILLIC CAPITAL LETTER SHORT U                  */
+           case 0x045E: return 0xA2; /* CYRILLIC SMALL LETTER SHORT U                    */
+           case 0x0408: return 0xA3; /* CYRILLIC CAPITAL LETTER JE                       */
+           case 0x0490: return 0xA5; /* CYRILLIC CAPITAL LETTER GHE WITH UPTURN          */
+           case 0x0401: return 0xA8; /* CYRILLIC CAPITAL LETTER IO                       */
+           case 0x0404: return 0xAA; /* CYRILLIC CAPITAL LETTER UKRAINIAN IE             */
+           case 0x0407: return 0xAF; /* CYRILLIC CAPITAL LETTER YI                       */
+           case 0x0406: return 0xB2; /* CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I */
+           case 0x0456: return 0xB3; /* CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I   */
+           case 0x0491: return 0xB4; /* CYRILLIC SMALL LETTER GHE WITH UPTURN            */
+           case 0x0451: return 0xB8; /* CYRILLIC SMALL LETTER IO                         */
+           case 0x2116: return 0xB9; /* NUMERO SIGN                                      */
+           case 0x0454: return 0xBA; /* CYRILLIC SMALL LETTER UKRAINIAN IE               */
+           case 0x0458: return 0xBC; /* CYRILLIC SMALL LETTER JE                         */
+           case 0x0405: return 0xBD; /* CYRILLIC CAPITAL LETTER DZE                      */
+           case 0x0455: return 0xBE; /* CYRILLIC SMALL LETTER DZE                        */
+           case 0x0457: return 0xBF; /* CYRILLIC SMALL LETTER YI                         */
+           case 0x0410: return 0xC0; /* CYRILLIC CAPITAL LETTER A                        */
+           case 0x0411: return 0xC1; /* CYRILLIC CAPITAL LETTER BE                       */
+           case 0x0412: return 0xC2; /* CYRILLIC CAPITAL LETTER VE                       */
+           case 0x0413: return 0xC3; /* CYRILLIC CAPITAL LETTER GHE                      */
+           case 0x0414: return 0xC4; /* CYRILLIC CAPITAL LETTER DE                       */
+           case 0x0415: return 0xC5; /* CYRILLIC CAPITAL LETTER IE                       */
+           case 0x0416: return 0xC6; /* CYRILLIC CAPITAL LETTER ZHE                      */
+           case 0x0417: return 0xC7; /* CYRILLIC CAPITAL LETTER ZE                       */
+           case 0x0418: return 0xC8; /* CYRILLIC CAPITAL LETTER I                        */
+           case 0x0419: return 0xC9; /* CYRILLIC CAPITAL LETTER SHORT I                  */
+           case 0x041A: return 0xCA; /* CYRILLIC CAPITAL LETTER KA                       */
+           case 0x041B: return 0xCB; /* CYRILLIC CAPITAL LETTER EL                       */
+           case 0x041C: return 0xCC; /* CYRILLIC CAPITAL LETTER EM                       */
+           case 0x041D: return 0xCD; /* CYRILLIC CAPITAL LETTER EN                       */
+           case 0x041E: return 0xCE; /* CYRILLIC CAPITAL LETTER O                        */
+           case 0x041F: return 0xCF; /* CYRILLIC CAPITAL LETTER PE                       */
+           case 0x0420: return 0xD0; /* CYRILLIC CAPITAL LETTER ER                       */
+           case 0x0421: return 0xD1; /* CYRILLIC CAPITAL LETTER ES                       */
+           case 0x0422: return 0xD2; /* CYRILLIC CAPITAL LETTER TE                       */
+           case 0x0423: return 0xD3; /* CYRILLIC CAPITAL LETTER U                        */
+           case 0x0424: return 0xD4; /* CYRILLIC CAPITAL LETTER EF                       */
+           case 0x0425: return 0xD5; /* CYRILLIC CAPITAL LETTER HA                       */
+           case 0x0426: return 0xD6; /* CYRILLIC CAPITAL LETTER TSE                      */
+           case 0x0427: return 0xD7; /* CYRILLIC CAPITAL LETTER CHE                      */
+           case 0x0428: return 0xD8; /* CYRILLIC CAPITAL LETTER SHA                      */
+           case 0x0429: return 0xD9; /* CYRILLIC CAPITAL LETTER SHCHA                    */
+           case 0x042A: return 0xDA; /* CYRILLIC CAPITAL LETTER HARD SIGN                */
+           case 0x042B: return 0xDB; /* CYRILLIC CAPITAL LETTER YERU                     */
+           case 0x042C: return 0xDC; /* CYRILLIC CAPITAL LETTER SOFT SIGN                */
+           case 0x042D: return 0xDD; /* CYRILLIC CAPITAL LETTER E                        */
+           case 0x042E: return 0xDE; /* CYRILLIC CAPITAL LETTER YU                       */
+           case 0x042F: return 0xDF; /* CYRILLIC CAPITAL LETTER YA                       */
+           case 0x0430: return 0xE0; /* CYRILLIC SMALL LETTER A                          */
+           case 0x0431: return 0xE1; /* CYRILLIC SMALL LETTER BE                         */
+           case 0x0432: return 0xE2; /* CYRILLIC SMALL LETTER VE                         */
+           case 0x0433: return 0xE3; /* CYRILLIC SMALL LETTER GHE                        */
+           case 0x0434: return 0xE4; /* CYRILLIC SMALL LETTER DE                         */
+           case 0x0435: return 0xE5; /* CYRILLIC SMALL LETTER IE                         */
+           case 0x0436: return 0xE6; /* CYRILLIC SMALL LETTER ZHE                        */
+           case 0x0437: return 0xE7; /* CYRILLIC SMALL LETTER ZE                         */
+           case 0x0438: return 0xE8; /* CYRILLIC SMALL LETTER I                          */
+           case 0x0439: return 0xE9; /* CYRILLIC SMALL LETTER SHORT I                    */
+           case 0x043A: return 0xEA; /* CYRILLIC SMALL LETTER KA                         */
+           case 0x043B: return 0xEB; /* CYRILLIC SMALL LETTER EL                         */
+           case 0x043C: return 0xEC; /* CYRILLIC SMALL LETTER EM                         */
+           case 0x043D: return 0xED; /* CYRILLIC SMALL LETTER EN                         */
+           case 0x043E: return 0xEE; /* CYRILLIC SMALL LETTER O                          */
+           case 0x043F: return 0xEF; /* CYRILLIC SMALL LETTER PE                         */
+           case 0x0440: return 0xF0; /* CYRILLIC SMALL LETTER ER                         */
+           case 0x0441: return 0xF1; /* CYRILLIC SMALL LETTER ES                         */
+           case 0x0442: return 0xF2; /* CYRILLIC SMALL LETTER TE                         */
+           case 0x0443: return 0xF3; /* CYRILLIC SMALL LETTER U                          */
+           case 0x0444: return 0xF4; /* CYRILLIC SMALL LETTER EF                         */
+           case 0x0445: return 0xF5; /* CYRILLIC SMALL LETTER HA                         */
+           case 0x0446: return 0xF6; /* CYRILLIC SMALL LETTER TSE                        */
+           case 0x0447: return 0xF7; /* CYRILLIC SMALL LETTER CHE                        */
+           case 0x0448: return 0xF8; /* CYRILLIC SMALL LETTER SHA                        */
+           case 0x0449: return 0xF9; /* CYRILLIC SMALL LETTER SHCHA                      */
+           case 0x044A: return 0xFA; /* CYRILLIC SMALL LETTER HARD SIGN                  */
+           case 0x044B: return 0xFB; /* CYRILLIC SMALL LETTER YERU                       */
+           case 0x044C: return 0xFC; /* CYRILLIC SMALL LETTER SOFT SIGN                  */
+           case 0x044D: return 0xFD; /* CYRILLIC SMALL LETTER E                          */
+           case 0x044E: return 0xFE; /* CYRILLIC SMALL LETTER YU                         */
+           case 0x044F: return 0xFF; /* CYRILLIC SMALL LETTER YA                         */
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetUnicodeValueFromWindows1251CP: return the Unicode val corresponding to
+ * the Windows Arabic Code Page (1251) value c.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromWindows1251CP (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromWindows1251CP (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   return WIN1251CP [c];
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetWindows1252CPCodeFromUnicode: return the WIN32 1252 CP code corresponding 
+ * to the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetWindows1252CPCodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetWindows1252CPCodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {
+           case 0x201A: return 0x82; /* SINGLE LOW-9 QUOTATION MARK                */
+           case 0x0192: return 0x83; /* LATIN SMALL LETTER F WITH HOOK             */
+           case 0x201E: return 0x84; /* DOUBLE LOW-9 QUOTATION MARK                */
+           case 0x2026: return 0x85; /* HORIZONTAL ELLIPSIS                        */
+           case 0x2020: return 0x86; /* DAGGER                                     */
+           case 0x2021: return 0x87; /* DOUBLE DAGGER                              */
+           case 0x02C6: return 0x88; /* MODIFIER LETTER CIRCUMFLEX ACCENT          */
+           case 0x2030: return 0x89; /* PER MILLE SIGN                             */
+           case 0x0160: return 0x8A; /* LATIN CAPITAL LETTER S WITH CARON          */
+           case 0x2039: return 0x8B; /* SINGLE LEFT-POINTING ANGLE QUOTATION MARK  */
+           case 0x0152: return 0x8C; /* LATIN CAPITAL LIGATURE OE                  */
+           case 0x2018: return 0x91; /* LEFT SINGLE QUOTATION MARK                 */
+           case 0x2019: return 0x92; /* RIGHT SINGLE QUOTATION MARK                */
+           case 0x201C: return 0x93; /* LEFT DOUBLE QUOTATION MARK                 */
+           case 0x201D: return 0x94; /* RIGHT DOUBLE QUOTATION MARK                */
+           case 0x2022: return 0x95; /* BULLET                                     */
+           case 0x2013: return 0x96; /* EN DASH                                    */
+           case 0x2014: return 0x97; /* EM DASH                                    */
+           case 0x02DC: return 0x98; /* SMALL TILDE                                */
+           case 0x2122: return 0x99; /* TRADE MARK SIGN                            */
+           case 0x0161: return 0x9A; /* LATIN SMALL LETTER S WITH CARON            */
+           case 0x203A: return 0x9B; /* SINGLE RIGHT-POINTING ANGLE QUOTATION MARK */
+           case 0x0153: return 0x9C; /* LATIN SMALL LIGATURE OE                    */
+           case 0x0178: return 0x9F; /* LATIN CAPITAL LETTER Y WITH DIAERESIS      */
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetUnicodeValueFromWindows1252CP: return the Unicode val corresponding to
+ * the Windows Arabic Code Page (1252) value c.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromWindows1252CP (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromWindows1252CP (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   return WIN1252CP [c];
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetWindows1253CPCodeFromUnicode: return the WIN32 1253 CP code corresponding 
+ * to the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetWindows1253CPCodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetWindows1253CPCodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {
+           case 0x201A: return 0x82; /* SINGLE LOW-9 QUOTATION MARK                         */
+           case 0x0192: return 0x83; /* LATIN SMALL LETTER F WITH HOOK                      */
+           case 0x201E: return 0x84; /* DOUBLE LOW-9 QUOTATION MARK                         */
+           case 0x2026: return 0x85; /* HORIZONTAL ELLIPSIS                                 */
+           case 0x2020: return 0x86; /* DAGGER                                              */
+           case 0x2021: return 0x87; /* DOUBLE DAGGER                                       */
+           case 0x2030: return 0x89; /* PER MILLE SIGN                                      */
+           case 0x2039: return 0x8B; /* SINGLE LEFT-POINTING ANGLE QUOTATION MARK           */
+           case 0x2018: return 0x91; /* LEFT SINGLE QUOTATION MARK                          */
+           case 0x2019: return 0x92; /* RIGHT SINGLE QUOTATION MARK                         */
+           case 0x201C: return 0x93; /* LEFT DOUBLE QUOTATION MARK                          */
+           case 0x201D: return 0x94; /* RIGHT DOUBLE QUOTATION MARK                         */
+           case 0x2022: return 0x95; /* BULLET                                              */
+           case 0x2013: return 0x96; /* EN DASH                                             */
+           case 0x2014: return 0x97; /* EM DASH                                             */
+           case 0x2122: return 0x99; /* TRADE MARK SIGN                                     */
+           case 0x203A: return 0x9B; /* SINGLE RIGHT-POINTING ANGLE QUOTATION MARK          */
+           case 0x0385: return 0xA1; /* GREEK DIALYTIKA TONOS                               */
+           case 0x0386: return 0xA2; /* GREEK CAPITAL LETTER ALPHA WITH TONOS               */
+           case 0x2015: return 0xAF; /* HORIZONTAL BAR                                      */
+           case 0x0384: return 0xB4; /* GREEK TONOS                                         */
+           case 0x0388: return 0xB8; /* GREEK CAPITAL LETTER EPSILON WITH TONOS             */
+           case 0x0389: return 0xB9; /* GREEK CAPITAL LETTER ETA WITH TONOS                 */
+           case 0x038A: return 0xBA; /* GREEK CAPITAL LETTER IOTA WITH TONOS                */
+           case 0x038C: return 0xBC; /* GREEK CAPITAL LETTER OMICRON WITH TONOS             */
+           case 0x038E: return 0xBE; /* GREEK CAPITAL LETTER UPSILON WITH TONOS             */
+           case 0x038F: return 0xBF; /* GREEK CAPITAL LETTER OMEGA WITH TONOS               */
+           case 0x0390: return 0xC0; /* GREEK SMALL LETTER IOTA WITH DIALYTIKA AND TONOS    */
+           case 0x0391: return 0xC1; /* GREEK CAPITAL LETTER ALPHA                          */
+           case 0x0392: return 0xC2; /* GREEK CAPITAL LETTER BETA                           */
+           case 0x0393: return 0xC3; /* GREEK CAPITAL LETTER GAMMA                          */
+           case 0x0394: return 0xC4; /* GREEK CAPITAL LETTER DELTA                          */
+           case 0x0395: return 0xC5; /* GREEK CAPITAL LETTER EPSILON                        */
+           case 0x0396: return 0xC6; /* GREEK CAPITAL LETTER ZETA                           */
+           case 0x0397: return 0xC7; /* GREEK CAPITAL LETTER ETA                            */
+           case 0x0398: return 0xC8; /* GREEK CAPITAL LETTER THETA                          */
+           case 0x0399: return 0xC9; /* GREEK CAPITAL LETTER IOTA                           */
+           case 0x039A: return 0xCA; /* GREEK CAPITAL LETTER KAPPA                          */
+           case 0x039B: return 0xCB; /* GREEK CAPITAL LETTER LAMDA                          */
+           case 0x039C: return 0xCC; /* GREEK CAPITAL LETTER MU                             */
+           case 0x039D: return 0xCD; /* GREEK CAPITAL LETTER NU                             */
+           case 0x039E: return 0xCE; /* GREEK CAPITAL LETTER XI                             */
+           case 0x039F: return 0xCF; /* GREEK CAPITAL LETTER OMICRON                        */
+           case 0x03A0: return 0xD0; /* GREEK CAPITAL LETTER PI                             */
+           case 0x03A1: return 0xD1; /* GREEK CAPITAL LETTER RHO                            */
+           case 0x03A3: return 0xD3; /* GREEK CAPITAL LETTER SIGMA                          */
+           case 0x03A4: return 0xD4; /* GREEK CAPITAL LETTER TAU                            */
+           case 0x03A5: return 0xD5; /* GREEK CAPITAL LETTER UPSILON                        */
+           case 0x03A6: return 0xD6; /* GREEK CAPITAL LETTER PHI                            */
+           case 0x03A7: return 0xD7; /* GREEK CAPITAL LETTER CHI                            */
+           case 0x03A8: return 0xD8; /* GREEK CAPITAL LETTER PSI                            */
+           case 0x03A9: return 0xD9; /* GREEK CAPITAL LETTER OMEGA                          */
+           case 0x03AA: return 0xDA; /* GREEK CAPITAL LETTER IOTA WITH DIALYTIKA            */
+           case 0x03AB: return 0xDB; /* GREEK CAPITAL LETTER UPSILON WITH DIALYTIKA         */
+           case 0x03AC: return 0xDC; /* GREEK SMALL LETTER ALPHA WITH TONOS                 */
+           case 0x03AD: return 0xDD; /* GREEK SMALL LETTER EPSILON WITH TONOS               */
+           case 0x03AE: return 0xDE; /* GREEK SMALL LETTER ETA WITH TONOS                   */
+           case 0x03AF: return 0xDF; /* GREEK SMALL LETTER IOTA WITH TONOS                  */
+           case 0x03B0: return 0xE0; /* GREEK SMALL LETTER UPSILON WITH DIALYTIKA AND TONOS */
+           case 0x03B1: return 0xE1; /* GREEK SMALL LETTER ALPHA                            */
+           case 0x03B2: return 0xE2; /* GREEK SMALL LETTER BETA                             */
+           case 0x03B3: return 0xE3; /* GREEK SMALL LETTER GAMMA                            */
+           case 0x03B4: return 0xE4; /* GREEK SMALL LETTER DELTA                            */
+           case 0x03B5: return 0xE5; /* GREEK SMALL LETTER EPSILON                          */
+           case 0x03B6: return 0xE6; /* GREEK SMALL LETTER ZETA                             */
+           case 0x03B7: return 0xE7; /* GREEK SMALL LETTER ETA                              */
+           case 0x03B8: return 0xE8; /* GREEK SMALL LETTER THETA                            */
+           case 0x03B9: return 0xE9; /* GREEK SMALL LETTER IOTA                             */
+           case 0x03BA: return 0xEA; /* GREEK SMALL LETTER KAPPA                            */
+           case 0x03BB: return 0xEB; /* GREEK SMALL LETTER LAMDA                            */
+           case 0x03BC: return 0xEC; /* GREEK SMALL LETTER MU                               */
+           case 0x03BD: return 0xED; /* GREEK SMALL LETTER NU                               */
+           case 0x03BE: return 0xEE; /* GREEK SMALL LETTER XI                               */
+           case 0x03BF: return 0xEF; /* GREEK SMALL LETTER OMICRON                          */
+           case 0x03C0: return 0xF0; /* GREEK SMALL LETTER PI                               */
+           case 0x03C1: return 0xF1; /* GREEK SMALL LETTER RHO                              */
+           case 0x03C2: return 0xF2; /* GREEK SMALL LETTER FINAL SIGMA                      */
+           case 0x03C3: return 0xF3; /* GREEK SMALL LETTER SIGMA                            */
+           case 0x03C4: return 0xF4; /* GREEK SMALL LETTER TAU                              */
+           case 0x03C5: return 0xF5; /* GREEK SMALL LETTER UPSILON                          */
+           case 0x03C6: return 0xF6; /* GREEK SMALL LETTER PHI                              */
+           case 0x03C7: return 0xF7; /* GREEK SMALL LETTER CHI                              */
+           case 0x03C8: return 0xF8; /* GREEK SMALL LETTER PSI                              */
+           case 0x03C9: return 0xF9; /* GREEK SMALL LETTER OMEGA                            */
+           case 0x03CA: return 0xFA; /* GREEK SMALL LETTER IOTA WITH DIALYTIKA              */
+           case 0x03CB: return 0xFB; /* GREEK SMALL LETTER UPSILON WITH DIALYTIKA           */
+           case 0x03CC: return 0xFC; /* GREEK SMALL LETTER OMICRON WITH TONOS               */
+           case 0x03CD: return 0xFD; /* GREEK SMALL LETTER UPSILON WITH TONOS               */
+           case 0x03CE: return 0xFE; /* GREEK SMALL LETTER OMEGA WITH TONOS                 */
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetUnicodeValueFromWindows1253CP: return the Unicode val corresponding to
+ * the Windows Arabic Code Page (1253) value c.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromWindows1253CP (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromWindows1253CP (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   return WIN1253CP [c];
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetWindows1254CPCodeFromUnicode: return the WIN32 1254 CP code corresponding 
+ * to the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetWindows1254CPCodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetWindows1254CPCodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {
+           case 0x201A: return 0x82; /* SINGLE LOW-9 QUOTATION MARK                */
+           case 0x0192: return 0x83; /* LATIN SMALL LETTER F WITH HOOK             */
+           case 0x201E: return 0x84; /* DOUBLE LOW-9 QUOTATION MARK                */
+           case 0x2026: return 0x85; /* HORIZONTAL ELLIPSIS                        */
+           case 0x2020: return 0x86; /* DAGGER                                     */
+           case 0x2021: return 0x87; /* DOUBLE DAGGER                              */
+           case 0x02C6: return 0x88; /* MODIFIER LETTER CIRCUMFLEX ACCENT          */
+           case 0x2030: return 0x89; /* PER MILLE SIGN                             */
+           case 0x0160: return 0x8A; /* LATIN CAPITAL LETTER S WITH CARON          */
+           case 0x2039: return 0x8B; /* SINGLE LEFT-POINTING ANGLE QUOTATION MARK  */
+           case 0x0152: return 0x8C; /* LATIN CAPITAL LIGATURE OE                  */
+           case 0x2018: return 0x91; /* LEFT SINGLE QUOTATION MARK                 */
+           case 0x2019: return 0x92; /* RIGHT SINGLE QUOTATION MARK                */
+           case 0x201C: return 0x93; /* LEFT DOUBLE QUOTATION MARK                 */
+           case 0x201D: return 0x94; /* RIGHT DOUBLE QUOTATION MARK                */
+           case 0x2022: return 0x95; /* BULLET                                     */
+           case 0x2013: return 0x96; /* EN DASH                                    */
+           case 0x2014: return 0x97; /* EM DASH                                    */
+           case 0x02DC: return 0x98; /* SMALL TILDE                                */
+           case 0x2122: return 0x99; /* TRADE MARK SIGN                            */
+           case 0x0161: return 0x9A; /* LATIN SMALL LETTER S WITH CARON            */
+           case 0x203A: return 0x9B; /* SINGLE RIGHT-POINTING ANGLE QUOTATION MARK */
+           case 0x0153: return 0x9C; /* LATIN SMALL LIGATURE OE                    */
+           case 0x0178: return 0x9F; /* LATIN CAPITAL LETTER Y WITH DIAERESIS      */
+           case 0x011E: return 0xD0; /* LATIN CAPITAL LETTER G WITH BREVE          */
+           case 0x0130: return 0xDD; /* LATIN CAPITAL LETTER I WITH DOT ABOVE      */
+           case 0x015E: return 0xDE; /* LATIN CAPITAL LETTER S WITH CEDILLA        */
+           case 0x011F: return 0xF0; /* LATIN SMALL LETTER G WITH BREVE            */
+           case 0x0131: return 0xFD; /* LATIN SMALL LETTER DOTLESS I               */
+           case 0x015F: return 0xFE; /* LATIN SMALL LETTER S WITH CEDILLA          */
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetUnicodeValueFromWindows1254CP: return the Unicode val corresponding to
+ * the Windows Arabic Code Page (1254) value c.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromWindows1254CP (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromWindows1254CP (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   return WIN1254CP [c];
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetWindows1255CPCodeFromUnicode: return the WIN32 1255 CP code corresponding 
+ * to the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetWindows1255CPCodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetWindows1255CPCodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {
+           case 0x201A: return 0x82; /* LOW SINGLE COMMA QUOTATION MARK    */
+           case 0x0192: return 0x83; /* LATIN SMALL LETTER SCRIPT F        */
+           case 0x201E: return 0x84; /* LOW DOUBLE COMMA QUOTATION MARK    */
+           case 0x2026: return 0x85; /* HORIZONTAL ELLIPSIS                */
+           case 0x2020: return 0x86; /* DAGGER                             */
+           case 0x2021: return 0x87; /* DOUBLE DAGGER                      */
+           case 0x02C6: return 0x88; /* MODIFIER LETTER CIRCUMFLEX         */
+           case 0x2030: return 0x89; /* PER MILLE SIGN                     */
+           case 0x2039: return 0x8B; /* LEFT POINTING SINGLE GUILLEMET     */
+           case 0x2018: return 0x91; /* SINGLE TURNED COMMA QUOTATION MARK */
+           case 0x2019: return 0x92; /* SINGLE COMMA QUOTATION MARK        */
+           case 0x201C: return 0x93; /* DOUBLE TURNED COMMA QUOTATION MARK */
+           case 0x201D: return 0x94; /* DOUBLE COMMA QUOTATION MARK        */
+           case 0x2022: return 0x95; /* BULLET                             */
+           case 0x2013: return 0x96; /* EN DASH                            */
+           case 0x2014: return 0x97; /* EM DASH                            */
+           case 0x02DC: return 0x98; /* SPACING TILDE                      */
+           case 0x2122: return 0x99; /* TRADEMARK                          */
+           case 0x203A: return 0x9B; /* RIGHT POINTING SINGLE GUILLEMET    */
+           case 0x20AA: return 0xA4; /* NEW SHEQEL SIGN                    */
+           case 0x05B0: return 0xC0; /* HEBREW POINT SHEVA                 */
+           case 0x05B1: return 0xC1; /* HEBREW POINT HATAF SEGOL           */
+           case 0x05B2: return 0xC2; /* HEBREW POINT HATAF PATAH           */
+           case 0x05B3: return 0xC3; /* HEBREW POINT HATAF QAMATS          */
+           case 0x05B4: return 0xC4; /* HEBREW POINT HIRIQ                 */
+           case 0x05B5: return 0xC5; /* HEBREW POINT TSERE                 */
+           case 0x05B6: return 0xC6; /* HEBREW POINT SEGOL                 */
+           case 0x05B7: return 0xC7; /* HEBREW POINT PATAH                 */
+           case 0x05B8: return 0xC8; /* HEBREW POINT QAMATS                */
+           case 0x05B9: return 0xC9; /* HEBREW POINT HOLAM                 */
+           case 0x05BA: return 0xCA; /* HEBREW POINT                       */
+           case 0x05BB: return 0xCB; /* HEBREW POINT QUBUTS                */
+           case 0x05BC: return 0xCC; /* HEBREW POINT DAGESH                */
+           case 0x05BD: return 0xCD; /* HEBREW POINT METEG                 */
+           case 0x05BE: return 0xCE; /* HEBREW PUNCTUATION MAQAF           */
+           case 0x05BF: return 0xCF; /* HEBREW POINT RAFE                  */
+           case 0x05C0: return 0xD0; /* HEBREW POINT PASEQ                 */
+           case 0x05C1: return 0xD1; /* HEBREW POINT SHIN DOT              */
+           case 0x05C2: return 0xD2; /* HEBREW POINT SIN DOT               */
+           case 0x05C3: return 0xD3; /* HEBREW PUNCTUATION SOF PASUQ       */
+           case 0x05F0: return 0xD4; /* HEBREW LETTER DOUBLE VAV           */
+           case 0x05F1: return 0xD5; /* HEBREW LETTER VAV YOD              */
+           case 0x05F2: return 0xD6; /* HEBREW LETTER DOUBLE YOD           */
+           case 0x05D0: return 0xE0; /* HEBREW LETTER ALEF                 */
+           case 0x05D1: return 0xE1; /* HEBREW LETTER BET                  */
+           case 0x05D2: return 0xE2; /* HEBREW LETTER GIMEL                */
+           case 0x05D3: return 0xE3; /* HEBREW LETTER DALET                */
+           case 0x05D4: return 0xE4; /* HEBREW LETTER HE                   */
+           case 0x05D5: return 0xE5; /* HEBREW LETTER VAV                  */
+           case 0x05D6: return 0xE6; /* HEBREW LETTER ZAYIN                */
+           case 0x05D7: return 0xE7; /* HEBREW LETTER HET                  */
+           case 0x05D8: return 0xE8; /* HEBREW LETTER TET                  */
+           case 0x05D9: return 0xE9; /* HEBREW LETTER YOD                  */
+           case 0x05DA: return 0xEA; /* HEBREW LETTER FINAL KAF            */
+           case 0x05DB: return 0xEB; /* HEBREW LETTER KAF                  */
+           case 0x05DC: return 0xEC; /* HEBREW LETTER LAMED                */
+           case 0x05DD: return 0xED; /* HEBREW LETTER FINAL MEM            */
+           case 0x05DE: return 0xEE; /* HEBREW LETTER MEM                  */
+           case 0x05DF: return 0xEF; /* HEBREW LETTER FINAL NUN            */
+           case 0x05E0: return 0xF0; /* HEBREW LETTER NUN                  */
+           case 0x05E1: return 0xF1; /* HEBREW LETTER SAMEKH               */
+           case 0x05E2: return 0xF2; /* HEBREW LETTER AYIN                 */
+           case 0x05E3: return 0xF3; /* HEBREW LETTER FINAL PE             */
+           case 0x05E4: return 0xF4; /* HEBREW LETTER PE                   */
+           case 0x05E5: return 0xF5; /* HEBREW LETTER FINAL TSADI          */
+           case 0x05E6: return 0xF6; /* HEBREW LETTER TSADI                */
+           case 0x05E7: return 0xF7; /* HEBREW LETTER QOF                  */
+           case 0x05E8: return 0xF8; /* HEBREW LETTER RESH                 */
+           case 0x05E9: return 0xF9; /* HEBREW LETTER SHIN                 */
+           case 0x05EA: return 0xFA; /* HEBREW LETTER TAV                  */
+           case 0x200E: return 0xFD; /* LEFT-TO-RIGHT MARK                 */
+           case 0x200F: return 0xFE; /* RIGHT-TO-LEFT MARK                 */
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetUnicodeValueFromWindows1255CP: return the Unicode val corresponding to
+ * the Windows Arabic Code Page (1255) value c.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromWindows1255CP (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromWindows1255CP (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   return WIN1255CP [c];
 #  else  /* !_I18N_ */
    return c;
 #  endif /* !_I18N_ */
@@ -548,6 +2118,7 @@ const CHAR_T  wc;
 #   endif /* !_I18N_ */
 }
 
+
 /*----------------------------------------------------------------------------*\
  * TtaGetUnicodeValueFromWindows1256CP: return the Unicode val corresponding to
  * the Windows Arabic Code Page (1256) value c.
@@ -561,6 +2132,121 @@ const unsigned char wc;
 {
 #  ifdef _I18N_
    return WIN1256CP [c];
+#  else  /* !_I18N_ */
+   return c;
+#  endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetWindows1257CPCodeFromUnicode: return the WIN32 1257 CP code corresponding 
+ * to the Unicode value wc.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+unsigned char TtaGetWindows1257CPCodeFromUnicode (const CHAR_T wc)
+#else  /* !__STDC__ */
+unsigned char TtaGetWindows1257CPCodeFromUnicode (wc)
+const CHAR_T  wc;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    switch (wc) {
+           case 0x201A: return 0x82; /* LOW SINGLE COMMA QUOTATION MARK  */
+           case 0x201E: return 0x84; /* LOW DOUBLE COMMA QUOTATION MARK  */
+           case 0x2026: return 0x85; /* HORIZONTAL ELLIPSIS              */
+           case 0x2020: return 0x86; /* DAGGER                           */
+           case 0x2021: return 0x87; /* DOUBLE DAGGER                    */
+           case 0x2030: return 0x89; /* PER MILLE SIGN                   */
+           case 0x2039: return 0x8B; /* LEFT POINTING SINGLE GUILLEMENT  */
+           case 0x00A8: return 0x8D; /* DIAERESIS                        */
+           case 0x02C7: return 0x8E; /* HACEK                            */
+           case 0x00B8: return 0x8F; /* CEDILLA                          */
+           case 0x2018: return 0x91; /* LEFT SINGLE QUOTATION MARK       */
+           case 0x2019: return 0x92; /* RIGHT SINGLE QUOTATION MARK      */
+           case 0x201C: return 0x93; /* LEFT DOUBLE QUOTATION MARK       */
+           case 0x201D: return 0x94; /* RIGHT DOUBLE QUOTATION MARK      */
+           case 0x2022: return 0x95; /* BULLET                           */
+           case 0x2013: return 0x96; /* EN DASH                          */
+           case 0x2014: return 0x97; /* EM DASH                          */
+           case 0x2122: return 0x99; /* TRADE MARK SIGN                  */
+           case 0x203A: return 0x9B; /* RIGHT POINTING SINGLE GUILLEMENT */
+           case 0x00AF: return 0x9D; /* MACRON                           */
+           case 0x02DB: return 0x9E; /* OGONEK                           */  
+           case 0x00D8: return 0xA8; /* LATIN CAPITAL O STROKE           */
+           case 0x0156: return 0xAA; /* LATIN CAPITAL R CEDILLA          */
+           case 0x00C6: return 0xAF; /* LATIN CAPITAL AE LIGATURE        */
+           case 0x00F8: return 0xB8; /* LATIN SAMLL O STROKE             */
+           case 0x0157: return 0xBA; /* LATIN SMALL R CEDILLA            */
+           case 0x00E6: return 0xBF; /* LATIN SMALL AE LIGATURE          */
+           case 0x0104: return 0xC0; /* LATIN CAPITAL A OGONEK           */
+           case 0x012E: return 0xC1; /* LATIN CAPITAL I OGONEK           */
+           case 0x0100: return 0xC2; /* LATIN CAPITAL A MACRON           */
+           case 0x0106: return 0xC3; /* LATIN CAPITAL C ACUTE            */
+           case 0x0118: return 0xC6; /* LATIN CAPITAL E OGONEK           */
+           case 0x0112: return 0xC7; /* LATIN CAPITAL E MACRON           */
+           case 0x010C: return 0xC8; /* LATIN CAPITAL C HACEK            */
+           case 0x0179: return 0xCA; /* LATIN CAPITAL Z ACUTE            */
+           case 0x0116: return 0xCB; /* LATIN CAPITAL E DOT ABOVE        */
+           case 0x0122: return 0xCC; /* LATIN CAPITAL G CEDILLA          */
+           case 0x0136: return 0xCD; /* LATIN CAPITAL K CEDILLA          */
+           case 0x012A: return 0xCE; /* LATIN CAPITAL I MACRON           */
+           case 0x013B: return 0xCF; /* LATIN CAPITAL L CEDILLA          */
+           case 0x0160: return 0xD0; /* LATIN CAPITAL S HACEK            */
+           case 0x0143: return 0xD1; /* LATIN CAPITAL N ACUTE            */
+           case 0x0145: return 0xD2; /* LATIN CAPITAL N CEDILLA          */
+           case 0x014C: return 0xD4; /* LATIN CAPITAL O MACRON           */
+           case 0x0172: return 0xD8; /* LATIN CAPITAL U OGONEK           */
+           case 0x0141: return 0xD9; /* LATIN CAPITAL L STROKE           */
+           case 0x015A: return 0xDA; /* LATIN CAPITAL S ACUTE            */
+           case 0x016A: return 0xDB; /* LATIN CAPITAL U MACRON           */
+           case 0x017B: return 0xDD; /* LATIN CAPITAL Z DOT ABOVE        */
+           case 0x017D: return 0xDE; /* LATIN CAPITAL Z HACEK            */
+           case 0x0105: return 0xE0; /* LATIN SMALL A OGONEK             */
+           case 0x012F: return 0xE1; /* LATIN SMALL I OGONEK             */
+           case 0x0101: return 0xE2; /* LATIN SMALL A MACRON             */
+           case 0x0107: return 0xE3; /* LATIN SMALL C ACUTE              */
+           case 0x0119: return 0xE6; /* LATIN SMALL E OGONEK             */
+           case 0x0113: return 0xE7; /* LATIN SMALL E MACRON             */
+           case 0x010D: return 0xE8; /* LATIN SMALL C HACEK              */
+           case 0x017A: return 0xEA; /* LATIN SMALL Z ACUTE              */
+           case 0x0117: return 0xEB; /* LATIN SMALL E DOT ABOVE          */
+           case 0x0123: return 0xEC; /* LATIN SMALL G CEDILLA            */
+           case 0x0137: return 0xED; /* LATIN SMALL K CEDILLA            */
+           case 0x012B: return 0xEE; /* LATIN SMALL I MACRON             */
+           case 0x013C: return 0xEF; /* LATIN SMALL L CEDILLA            */
+           case 0x0161: return 0xF0; /* LATIN SMALL S HACEK              */
+           case 0x0144: return 0xF1; /* LATIN SMALL N ACUTE              */
+           case 0x0146: return 0xF2; /* LATIN SMALL N CEDILLA            */
+           case 0x014D: return 0xF4; /* LATIN SMALL O MACRON             */
+           case 0x0173: return 0xF8; /* LATIN SMALL U OGONEK             */
+           case 0x0142: return 0xF9; /* LATIN SMALL L STROKE             */
+           case 0x015B: return 0xFA; /* LATIN SMALL S ACUTE              */
+           case 0x016B: return 0xFB; /* LATIN SMALL U MACRON             */
+           case 0x00FC: return 0xFC; /* LATIN SMALL U DIAERESIS          */
+           case 0x017C: return 0xFD; /* LATIN SMALL Z DOT ABOVE          */
+           case 0x017E: return 0xFE; /* LATIN SMALL Z HACEK              */
+           case 0x02D9: return 0xFF; /* DOT ABOVE                        */
+           default:     return (unsigned char) wc;
+	}
+#   else  /* !_I18N_ */
+    return wc;
+#   endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------------*\
+ * TtaGetUnicodeValueFromWindows1257CP: return the Unicode val corresponding to
+ * the Windows Arabic Code Page (1257) value c.
+\*----------------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T              TtaGetUnicodeValueFromWindows1257CP (const unsigned char c)
+#else  /* !__STDC__ */
+CHAR_T              TtaGetUnicodeValueFromWindows1257CP (c)
+const unsigned char wc;
+#endif /* !__STDC__ */
+{
+#  ifdef _I18N_
+   return WIN1257CP [c];
 #  else  /* !_I18N_ */
    return c;
 #  endif /* !_I18N_ */
@@ -587,27 +2273,92 @@ CHARSET encoding;
     CHAR_T         WideChar = wchar;
 
     switch (encoding) {
-           case ISOLatin1:
+           case ISO_8859_1:
                 *mbchar++ = (unsigned char) wchar;
                 *mbchar   = 0;
                 break;
 
-           case ISOLatin2:
+           case ISO_8859_2:
                 *mbchar++ = TtaGetISOLatin2CodeFromUnicode (wchar);
                 *mbchar   = 0;
                 break;
 
-           case ISOLatin6:
+           case ISO_8859_3:
+                *mbchar++ = TtaGetISOLatin3CodeFromUnicode (wchar);
+                *mbchar   = 0;
+                break;
+
+           case ISO_8859_4:
+                *mbchar++ = TtaGetISOLatin4CodeFromUnicode (wchar);
+                *mbchar   = 0;
+                break;
+
+           case ISO_8859_5:
+                *mbchar++ = TtaGetISOLatin5CodeFromUnicode (wchar);
+                *mbchar   = 0;
+                break;
+
+           case ISO_8859_6:
                 *mbchar++ = TtaGetISOLatin6CodeFromUnicode (wchar);
                 *mbchar   = 0;
                 break;
 
-           case WIN1256:
+           case ISO_8859_7:
+                *mbchar++ = TtaGetISOLatin7CodeFromUnicode (wchar);
+                *mbchar   = 0;
+                break;
+
+           case ISO_8859_8:
+                *mbchar++ = TtaGetISOLatin8CodeFromUnicode (wchar);
+                *mbchar   = 0;
+                break;
+
+           case ISO_8859_9:
+                *mbchar++ = TtaGetISOLatin9CodeFromUnicode (wchar);
+                *mbchar   = 0;
+                break;
+
+           case WINDOWS_1250:
+                *mbchar++ = TtaGetWindows1250CPCodeFromUnicode (wchar);
+                *mbchar   = 0;
+                break;
+
+           case WINDOWS_1251:
+                *mbchar++ = TtaGetWindows1251CPCodeFromUnicode (wchar);
+                *mbchar   = 0;
+                break;
+
+           case WINDOWS_1252:
+                *mbchar++ = TtaGetWindows1252CPCodeFromUnicode (wchar);
+                *mbchar   = 0;
+                break;
+
+           case WINDOWS_1253:
+                *mbchar++ = TtaGetWindows1253CPCodeFromUnicode (wchar);
+                *mbchar   = 0;
+                break;
+
+           case WINDOWS_1254:
+                *mbchar++ = TtaGetWindows1254CPCodeFromUnicode (wchar);
+                *mbchar   = 0;
+                break;
+
+           case WINDOWS_1255:
+                *mbchar++ = TtaGetWindows1255CPCodeFromUnicode (wchar);
+                *mbchar   = 0;
+                break;
+
+           case WINDOWS_1256:
                 *mbchar++ = TtaGetWindows1256CPCodeFromUnicode (wchar);
                 *mbchar   = 0;
                 break;
 
-           case UTF8:
+           case WINDOWS_1257:
+                *mbchar++ = TtaGetWindows1257CPCodeFromUnicode (wchar);
+                *mbchar   = 0;
+                break;
+
+           case UTF_8:
                 if (WideChar < 0x80) {
                    nbBytes  = 1;
                    LeadByteMark = 0x00;
@@ -676,23 +2427,75 @@ CHARSET encoding;
     CHAR_T res;
 
     switch (encoding) {
-           case ISOLatin1:
+           case ISO_8859_1:
                 *wchar = (CHAR_T)(*mbchar);
                 break;
 
-           case ISOLatin2:
+           case ISO_8859_2:
                 *wchar = TtaGetUnicodeValueFromISOLatin2Code (*mbchar);
                 break;
 
-           case ISOLatin6:
+           case ISO_8859_3:
+                *wchar = TtaGetUnicodeValueFromISOLatin3Code (*mbchar);
+                break;
+
+           case ISO_8859_4:
+                *wchar = TtaGetUnicodeValueFromISOLatin4Code (*mbchar);
+                break;
+
+           case ISO_8859_5:
+                *wchar = TtaGetUnicodeValueFromISOLatin5Code (*mbchar);
+                break;
+
+           case ISO_8859_6:
                 *wchar = TtaGetUnicodeValueFromISOLatin6Code (*mbchar);
                 break;
 
-           case WIN1256:
+           case ISO_8859_7:
+                *wchar = TtaGetUnicodeValueFromISOLatin7Code (*mbchar);
+                break;
+
+           case ISO_8859_8:
+                *wchar = TtaGetUnicodeValueFromISOLatin8Code (*mbchar);
+                break;
+
+           case ISO_8859_9:
+                *wchar = TtaGetUnicodeValueFromISOLatin9Code (*mbchar);
+                break;
+
+           case WINDOWS_1250:
+                *wchar = TtaGetUnicodeValueFromWindows1250CP (*mbchar);
+                break;
+
+           case WINDOWS_1251:
+                *wchar = TtaGetUnicodeValueFromWindows1251CP (*mbchar);
+                break;
+
+           case WINDOWS_1252:
+                *wchar = TtaGetUnicodeValueFromWindows1252CP (*mbchar);
+                break;
+
+           case WINDOWS_1253:
+                *wchar = TtaGetUnicodeValueFromWindows1253CP (*mbchar);
+                break;
+
+           case WINDOWS_1254:
+                *wchar = TtaGetUnicodeValueFromWindows1254CP (*mbchar);
+                break;
+
+           case WINDOWS_1255:
+                *wchar = TtaGetUnicodeValueFromWindows1255CP (*mbchar);
+                break;
+
+           case WINDOWS_1256:
                 *wchar = TtaGetUnicodeValueFromWindows1256CP (*mbchar);
                 break;
 
-           case UTF8:
+           case WINDOWS_1257:
+                *wchar = TtaGetUnicodeValueFromWindows1257CP (*mbchar);
+                break;
+
+           case UTF_8:
                 if (*mbchar < 0xC0)
                    nbBytesToConvert = 1;
                 else if (*mbchar < 0xE0)
@@ -758,7 +2561,7 @@ CHARSET         encoding;
     int                     nbBytesConverted = 0;
 
     switch (encoding) {
-            case ISOLatin1: 
+            case ISO_8859_1: 
                  while (*ptrSrc) {
                        *ptrTarget = (CHAR_T)*ptrSrc;
                        nbBytesConverted++;
@@ -768,7 +2571,7 @@ CHARSET         encoding;
                  *ptrTarget = 0;
                  break;
 
-            case ISOLatin2: 
+            case ISO_8859_2: 
                  while (*ptrSrc) {
                        *ptrTarget = TtaGetUnicodeValueFromISOLatin2Code (*ptrSrc);
                        nbBytesConverted++;
@@ -778,7 +2581,37 @@ CHARSET         encoding;
                  *ptrTarget = 0;
                  break;   
 
-            case ISOLatin6: 
+            case ISO_8859_3: 
+                 while (*ptrSrc) {
+                       *ptrTarget = TtaGetUnicodeValueFromISOLatin3Code (*ptrSrc);
+                       nbBytesConverted++;
+                       ptrSrc++;
+                       ptrTarget++;
+				 }
+                 *ptrTarget = 0;
+                 break;   
+
+            case ISO_8859_4: 
+                 while (*ptrSrc) {
+                       *ptrTarget = TtaGetUnicodeValueFromISOLatin4Code (*ptrSrc);
+                       nbBytesConverted++;
+                       ptrSrc++;
+                       ptrTarget++;
+				 }
+                 *ptrTarget = 0;
+                 break;   
+
+            case ISO_8859_5: 
+                 while (*ptrSrc) {
+                       *ptrTarget = TtaGetUnicodeValueFromISOLatin5Code (*ptrSrc);
+                       nbBytesConverted++;
+                       ptrSrc++;
+                       ptrTarget++;
+				 }
+                 *ptrTarget = 0;
+                 break;   
+
+            case ISO_8859_6: 
                  while (*ptrSrc) {
                        *ptrTarget = TtaGetUnicodeValueFromISOLatin6Code (*ptrSrc);
                        nbBytesConverted++;
@@ -788,7 +2621,97 @@ CHARSET         encoding;
                  *ptrTarget = 0;
                  break;
 
-            case WIN1256: 
+            case ISO_8859_7: 
+                 while (*ptrSrc) {
+                       *ptrTarget = TtaGetUnicodeValueFromISOLatin7Code (*ptrSrc);
+                       nbBytesConverted++;
+                       ptrSrc++;
+                       ptrTarget++;
+				 }
+                 *ptrTarget = 0;
+                 break;
+
+            case ISO_8859_8: 
+                 while (*ptrSrc) {
+                       *ptrTarget = TtaGetUnicodeValueFromISOLatin8Code (*ptrSrc);
+                       nbBytesConverted++;
+                       ptrSrc++;
+                       ptrTarget++;
+				 }
+                 *ptrTarget = 0;
+                 break;
+
+            case ISO_8859_9: 
+                 while (*ptrSrc) {
+                       *ptrTarget = TtaGetUnicodeValueFromISOLatin9Code (*ptrSrc);
+                       nbBytesConverted++;
+                       ptrSrc++;
+                       ptrTarget++;
+				 }
+                 *ptrTarget = 0;
+                 break;   
+
+            case WINDOWS_1250: 
+                 while (*ptrSrc) {
+                       *ptrTarget = TtaGetUnicodeValueFromWindows1250CP (*ptrSrc);
+                       nbBytesConverted++;
+                       ptrSrc++;
+                       ptrTarget++;
+				 }
+                 *ptrTarget = 0;
+                 break;
+
+            case WINDOWS_1251: 
+                 while (*ptrSrc) {
+                       *ptrTarget = TtaGetUnicodeValueFromWindows1251CP (*ptrSrc);
+                       nbBytesConverted++;
+                       ptrSrc++;
+                       ptrTarget++;
+				 }
+                 *ptrTarget = 0;
+                 break;
+
+            case WINDOWS_1252: 
+                 while (*ptrSrc) {
+                       *ptrTarget = TtaGetUnicodeValueFromWindows1252CP (*ptrSrc);
+                       nbBytesConverted++;
+                       ptrSrc++;
+                       ptrTarget++;
+				 }
+                 *ptrTarget = 0;
+                 break;
+
+            case WINDOWS_1253: 
+                 while (*ptrSrc) {
+                       *ptrTarget = TtaGetUnicodeValueFromWindows1253CP (*ptrSrc);
+                       nbBytesConverted++;
+                       ptrSrc++;
+                       ptrTarget++;
+				 }
+                 *ptrTarget = 0;
+                 break;
+
+            case WINDOWS_1254: 
+                 while (*ptrSrc) {
+                       *ptrTarget = TtaGetUnicodeValueFromWindows1254CP (*ptrSrc);
+                       nbBytesConverted++;
+                       ptrSrc++;
+                       ptrTarget++;
+				 }
+                 *ptrTarget = 0;
+                 break;
+
+            case WINDOWS_1255: 
+                 while (*ptrSrc) {
+                       *ptrTarget = TtaGetUnicodeValueFromWindows1255CP (*ptrSrc);
+                       nbBytesConverted++;
+                       ptrSrc++;
+                       ptrTarget++;
+				 }
+                 *ptrTarget = 0;
+                 break;
+
+            case WINDOWS_1256: 
                  while (*ptrSrc) {
                        *ptrTarget = TtaGetUnicodeValueFromWindows1256CP (*ptrSrc);
                        nbBytesConverted++;
@@ -798,7 +2721,17 @@ CHARSET         encoding;
                  *ptrTarget = 0;
                  break;
 
-            case UTF8:
+            case WINDOWS_1257: 
+                 while (*ptrSrc) {
+                       *ptrTarget = TtaGetUnicodeValueFromWindows1257CP (*ptrSrc);
+                       nbBytesConverted++;
+                       ptrSrc++;
+                       ptrTarget++;
+				 }
+                 *ptrTarget = 0;
+                 break;
+
+            case UTF_8:
                  while (*ptrSrc) {
                        int    nbBytesToConvert ;
                        CHAR_T res;
@@ -873,7 +2806,7 @@ CHARSET         encoding;
     unsigned char           LeadByteMark;
 
     switch (encoding) {
-           case ISOLatin1: 
+           case ISO_8859_1: 
                 while (*ptrSrc) {
                       *ptrTarget = (char)*ptrSrc;
                       nbBytesConverted++;
@@ -883,7 +2816,7 @@ CHARSET         encoding;
                 *ptrTarget = 0;
                 break;
 
-           case ISOLatin2: 
+           case ISO_8859_2: 
                 while (*ptrSrc) {
                       *ptrTarget = TtaGetISOLatin2CodeFromUnicode (*ptrSrc);
                       nbBytesConverted++;
@@ -893,7 +2826,37 @@ CHARSET         encoding;
                 *ptrTarget = 0;
                 break;   
 
-           case ISOLatin6: 
+           case ISO_8859_3: 
+                while (*ptrSrc) {
+                      *ptrTarget = TtaGetISOLatin3CodeFromUnicode (*ptrSrc);
+                      nbBytesConverted++;
+                      ptrSrc++;
+                      ptrTarget++;
+				}
+                *ptrTarget = 0;
+                break;   
+
+           case ISO_8859_4: 
+                while (*ptrSrc) {
+                      *ptrTarget = TtaGetISOLatin4CodeFromUnicode (*ptrSrc);
+                      nbBytesConverted++;
+                      ptrSrc++;
+                      ptrTarget++;
+				}
+                *ptrTarget = 0;
+                break;   
+
+           case ISO_8859_5: 
+                while (*ptrSrc) {
+                      *ptrTarget = TtaGetISOLatin5CodeFromUnicode (*ptrSrc);
+                      nbBytesConverted++;
+                      ptrSrc++;
+                      ptrTarget++;
+				}
+                *ptrTarget = 0;
+                break;   
+
+           case ISO_8859_6: 
                 while (*ptrSrc) {
                       *ptrTarget = TtaGetISOLatin6CodeFromUnicode (*ptrSrc);
                       nbBytesConverted++;
@@ -903,7 +2866,97 @@ CHARSET         encoding;
                 *ptrTarget = 0;
                 break;
 
-           case WIN1256: 
+           case ISO_8859_7: 
+                while (*ptrSrc) {
+                      *ptrTarget = TtaGetISOLatin7CodeFromUnicode (*ptrSrc);
+                      nbBytesConverted++;
+                      ptrSrc++;
+                      ptrTarget++;
+				}
+                *ptrTarget = 0;
+                break;
+
+           case ISO_8859_8: 
+                while (*ptrSrc) {
+                      *ptrTarget = TtaGetISOLatin8CodeFromUnicode (*ptrSrc);
+                      nbBytesConverted++;
+                      ptrSrc++;
+                      ptrTarget++;
+				}
+                *ptrTarget = 0;
+                break;
+
+           case ISO_8859_9: 
+                while (*ptrSrc) {
+                      *ptrTarget = TtaGetISOLatin9CodeFromUnicode (*ptrSrc);
+                      nbBytesConverted++;
+                      ptrSrc++;
+                      ptrTarget++;
+				}
+                *ptrTarget = 0;
+                break;   
+
+           case WINDOWS_1250: 
+                while (*ptrSrc) {
+                      *ptrTarget = TtaGetWindows1250CPCodeFromUnicode (*ptrSrc);
+                      nbBytesConverted++;
+                      ptrSrc++;
+                      ptrTarget++;
+				}
+                *ptrTarget = 0;
+                break;
+
+           case WINDOWS_1251: 
+                while (*ptrSrc) {
+                      *ptrTarget = TtaGetWindows1251CPCodeFromUnicode (*ptrSrc);
+                      nbBytesConverted++;
+                      ptrSrc++;
+                      ptrTarget++;
+				}
+                *ptrTarget = 0;
+                break;
+
+           case WINDOWS_1252: 
+                while (*ptrSrc) {
+                      *ptrTarget = TtaGetWindows1252CPCodeFromUnicode (*ptrSrc);
+                      nbBytesConverted++;
+                      ptrSrc++;
+                      ptrTarget++;
+				}
+                *ptrTarget = 0;
+                break;
+
+           case WINDOWS_1253: 
+                while (*ptrSrc) {
+                      *ptrTarget = TtaGetWindows1253CPCodeFromUnicode (*ptrSrc);
+                      nbBytesConverted++;
+                      ptrSrc++;
+                      ptrTarget++;
+				}
+                *ptrTarget = 0;
+                break;
+
+           case WINDOWS_1254: 
+                while (*ptrSrc) {
+                      *ptrTarget = TtaGetWindows1254CPCodeFromUnicode (*ptrSrc);
+                      nbBytesConverted++;
+                      ptrSrc++;
+                      ptrTarget++;
+				}
+                *ptrTarget = 0;
+                break;
+
+           case WINDOWS_1255: 
+                while (*ptrSrc) {
+                      *ptrTarget = TtaGetWindows1255CPCodeFromUnicode (*ptrSrc);
+                      nbBytesConverted++;
+                      ptrSrc++;
+                      ptrTarget++;
+				}
+                *ptrTarget = 0;
+                break;
+
+           case WINDOWS_1256: 
                 while (*ptrSrc) {
                       *ptrTarget = TtaGetWindows1256CPCodeFromUnicode (*ptrSrc);
                       nbBytesConverted++;
@@ -913,7 +2966,17 @@ CHARSET         encoding;
                 *ptrTarget = 0;
                 break;
 
-           case UTF8:
+           case WINDOWS_1257: 
+                while (*ptrSrc) {
+                      *ptrTarget = TtaGetWindows1257CPCodeFromUnicode (*ptrSrc);
+                      nbBytesConverted++;
+                      ptrSrc++;
+                      ptrTarget++;
+				}
+                *ptrTarget = 0;
+                break;
+
+           case UTF_8:
                 while (*ptrSrc) {
                       int    nbBytesToConvert ;
                       CHAR_T WideChar = *ptrSrc++;

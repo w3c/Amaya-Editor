@@ -190,6 +190,9 @@ static UINT         nbItem;
 static CHAR_T*      string_par1;
 static CHAR_T*      string_par2;
 
+static ThotBool     ReleaseFocus;
+static char         text[1024];
+
 HWND                wordButton;
 HWND                hwnListWords;
 HWND                hwndCurrentWord;
@@ -412,6 +415,9 @@ int       attr_HREFText;
     attrHRefForm = attr_HREFForm;
     attrHRefTxt  = attr_HREFText;
 	ustrcpy (urlToOpen, attrHref);
+
+    ReleaseFocus = FALSE;
+    text[0] = 0;
 
 	switch (app_lang) {
            case FR_LANG:
@@ -1450,7 +1456,9 @@ LPARAM lParam;
 {
     switch (msg) {
            case WM_INITDIALOG:
-			    SetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen);
+                SetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen);
+
+                SetFocus (GetDlgItem (hwnDlg, IDC_URLEDIT));
 			    break;
 
            case WM_COMMAND:
@@ -1473,13 +1481,12 @@ LPARAM lParam;
 				       case WM_DESTROY:
 					        EndDialog (hwnDlg, ID_DONE);
 					        break;
-
 				}
 				break;
 
-           default: return (FALSE);
+           default: break;
     }
-	return TRUE;
+	return FALSE;
 }
 	
 /*-----------------------------------------------------------------------

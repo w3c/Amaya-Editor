@@ -439,7 +439,7 @@ AHTHeaders *me;
 AHTHeaderName param;
 #endif
 {
-  char *result;
+  CHAR_T *result;
 
   if (!me)
     return NULL;
@@ -2429,7 +2429,7 @@ void                QueryInit ()
    /* persistent connections timeout */
    strptr = TtaGetEnvString ("PERSIST_CX_TIMEOUT");
    if (strptr && *strptr) 
-     tmp_l = uctol (strptr); 
+     tmp_l = uatol (strptr); 
    else
      tmp_l = DEFAULT_PERSIST_TIMEOUT;
    HTHost_setPersistTimeout (tmp_l);
@@ -2857,7 +2857,7 @@ CHAR_T*       content_type;
    tempsubdir = (mode & AMAYA_LOAD_CSS) ? 0 : docid;
 
    /* create a tempfilename */
-   usprintf (outputfile, TEXT("%s%c%d%c%04dAM"), TempFileDirectory, DIR_SEP, tempsubdir, DIR_SEP, object_counter);
+   usprintf (outputfile, TEXT("%s%c%d%c%04dAM"), TempFileDirectory, WC_DIR_SEP, tempsubdir, WC_DIR_SEP, object_counter);
    /* update the object_counter (used for the tempfilename) */
    object_counter++;
    

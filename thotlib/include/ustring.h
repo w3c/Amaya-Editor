@@ -14,19 +14,37 @@
 #endif /* _WINDOWS */
 
 typedef enum {
-   ISOLatin1, 
-   ISOLatin2, 
-   ISOLatin3, 
-   ISOLatin4, 
-   ISOLatin5, 
-   ISOLatin6, 
-   ISOLatin7, 
-   ISOLatin8, 
-   ISOLatin9, 
-   UTF7, 
-   UTF8, 
-   UTF16,
-   WIN1256 /* Windows Arabic Code Page */
+   UNDEFINED_CHARSET,
+   US_ASCII,
+   ISO_8859_1,
+   ISO_8859_2, 
+   ISO_8859_3, 
+   ISO_8859_4, 
+   ISO_8859_5,
+   ISO_8859_6, 
+   ISO_8859_6_E,
+   ISO_8859_6_I,
+   ISO_8859_7, 
+   ISO_8859_8,
+   ISO_8859_8_E,
+   ISO_8859_8_I,
+   ISO_8859_9, 
+   ISO_8859_10,
+   ISO_8859_15,
+   ISO_8859_supp,
+   UNICODE_1_1,
+   UNICODE_1_1_UTF_7,
+   UTF_7,
+   UTF_8,
+   WINDOWS_1250,
+   WINDOWS_1251,
+   WINDOWS_1252,
+   WINDOWS_1253,
+   WINDOWS_1254,
+   WINDOWS_1255,
+   WINDOWS_1256,
+   WINDOWS_1257,
+   WINDOWS_1258
 } CHARSET;
 
 #ifdef _I18N_
@@ -72,6 +90,7 @@ extern int          iso2wc_strcasecmp                     (const char*, const CH
 extern int          wc2iso_strcmp                         (CHAR_T*, const char*);
 extern CHAR_T*      iso2wc_strcpy                         (CHAR_T* dest, const char* src);
 extern char*        wc2iso_strcpy                         (char*, const CHAR_T*);
+extern CHARSET      TtaGetCharset                         (const CHAR_T*);
 extern int          TtaGetNextWideCharFromMultibyteString (CHAR_T*, unsigned char**, CHARSET);
 
 #else  /* __STDC__ */
@@ -100,6 +119,7 @@ extern int          wc2iso_strcmp                         ();
 extern CHAR_T*      iso2wc_strcpy                         ();
 extern CHAR_T*      cus2wc_strcpy                         ();
 extern char*        wc2iso_strcpy                         ();
+extern CHARSET      TtaGetCharset                         ();
 extern int          TtaGetNextWideCharFromMultibyteString ();
 #endif /* __STDC__ */
 

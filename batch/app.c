@@ -1800,7 +1800,7 @@ char              **argv;
                              i = 0;
                              do
                                 /* fileOK = TtaReadByte (filedesc, &inputLine[i++]); */
-                                fileOK = TtaReadWideChar (filedesc, &inputLine[i++], ISOLatin1);
+                                fileOK = TtaReadWideChar (filedesc, &inputLine[i++], ISO_8859_1);
                              while (i < LINE_LENGTH && inputLine[i - 1] != TEXT('\n') && fileOK);
                              /* marque la fin reelle de la ligne */
                              inputLine[i - 1] = TEXT('\0');

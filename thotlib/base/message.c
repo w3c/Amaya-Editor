@@ -289,19 +289,45 @@ int                 msgNumber;
 #   ifdef _I18N_ 
     fscanf (file, "%[^=]=%[^#\r\n]", pBuff, txt);
     if (!strcasecmp (pBuff, "charset")) {
-       if (!strcasecmp (txt, "ISO Latin 1"))
-          encoding = ISOLatin1;
-       else if (!strcasecmp (txt, "ISO Latin 2"))
-            encoding = ISOLatin2;
-       else if (!strcasecmp (txt, "ISO Latin 6"))
-            encoding = ISOLatin6;
-       else if (!strcasecmp (txt, "Windows-1256"))
-            encoding = WIN1256;
-       else if (!strcasecmp (txt, "UTF8"))
-            encoding = UTF8;
+       if (!strcasecmp (txt, "iso-8859-1"))
+          encoding = ISO_8859_1;
+       else if (!strcasecmp (txt, "iso-8859-2"))
+            encoding = ISO_8859_2;
+       else if (!strcasecmp (txt, "iso-8859-3"))
+            encoding = ISO_8859_3;
+       else if (!strcasecmp (txt, "iso-8859-4"))
+            encoding = ISO_8859_4;
+       else if (!strcasecmp (txt, "iso-8859-5"))
+            encoding = ISO_8859_5;
+       else if (!strcasecmp (txt, "iso-8859-6"))
+            encoding = ISO_8859_6;
+       else if (!strcasecmp (txt, "iso-8859-7"))
+            encoding = ISO_8859_7;
+       else if (!strcasecmp (txt, "iso-8859-8"))
+            encoding = ISO_8859_8;
+       else if (!strcasecmp (txt, "iso-8859-9"))
+            encoding = ISO_8859_9;
+       else if (!strcasecmp (txt, "windows-1250"))
+            encoding = WINDOWS_1250;
+       else if (!strcasecmp (txt, "windows-1251"))
+            encoding = WINDOWS_1251;
+       else if (!strcasecmp (txt, "windows-1252"))
+            encoding = WINDOWS_1252;
+       else if (!strcasecmp (txt, "windows-1253"))
+            encoding = WINDOWS_1253;
+       else if (!strcasecmp (txt, "windows-1254"))
+            encoding = WINDOWS_1254;
+       else if (!strcasecmp (txt, "windows-1255"))
+            encoding = WINDOWS_1255;
+       else if (!strcasecmp (txt, "windows-1256"))
+            encoding = WINDOWS_1256;
+       else if (!strcasecmp (txt, "windows-1257"))
+            encoding = WINDOWS_1257;
+       else if (!strcasecmp (txt, "utf-8"))
+            encoding = UTF_8;
 	} else {
            rewind (file);
-           encoding = ISOLatin1;
+           encoding = ISO_8859_1;
 	}
 #   endif /* _I18N_ */
 

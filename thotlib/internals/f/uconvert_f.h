@@ -6,8 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int uctoi ( const STRING string );
-extern long uctol ( const STRING string );
+extern int uatoi ( const STRING string );
+extern long uatol ( const STRING string );
 extern CHAR_T utolower ( CHAR_T c );
 extern int wctoi ( const CHAR_T* string );
 extern unsigned char TtaGetISOLatin2CodeFromUnicode ( const CHAR_T wc );
@@ -25,8 +25,8 @@ extern int TtaMB2WC ( char* mbchar,
 
 #else /* __STDC__ */
 
-extern int uctoi (/* const STRING string */);
-extern long uctol (/* const STRING string */);
+extern int uatoi (/* const STRING string */);
+extern long uatol (/* const STRING string */);
 extern CHAR_T utolower (/* CHAR_T c */);
 extern int wctoi (/* const CHAR_T* string */);
 extern unsigned char TtaGetISOLatin2CodeFromUnicode (/* const CHAR_T wc */);

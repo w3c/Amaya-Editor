@@ -971,7 +971,7 @@ STRING              fileName;
 	     do
 	       {
 		  /* fileOK = TtaReadByte (grmFile, &inputLine[j]); */
-		  fileOK = TtaReadWideChar (grmFile, &inputLine[j], ISOLatin1);
+		  fileOK = TtaReadWideChar (grmFile, &inputLine[j], ISO_8859_1);
 		  j++;
 	       }
 #        ifdef _WINDOWS

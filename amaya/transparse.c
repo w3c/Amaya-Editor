@@ -1521,7 +1521,7 @@ UCHAR_T       c;
 	if (!isText)
 	  {
 	     ppAttr->IsInt = TRUE;
-	     ppAttr->IntVal = uctoi (inputBuffer);
+	     ppAttr->IntVal = uatoi (inputBuffer);
 	  }
 	else
 	  {

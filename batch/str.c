@@ -2846,7 +2846,6 @@ char              **argv;
    ThotBool            fileOK;
    int                 nb;	/* identifier index of found word if it is
 				   an indentifier */
-   int                 LIBDLG;
    int                 param;
    unsigned char       car;
 #  ifdef _WINDOWS 
