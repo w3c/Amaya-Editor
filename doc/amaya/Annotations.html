@@ -24,7 +24,6 @@
     </tr>
   </tbody>
 </table>
-
 <ul>
   <li><a href="#What">What is an Annotation</a></li>
   <li><a href="#Local">Local and Remote Annotations</a></li>
@@ -37,8 +36,10 @@
   <li><a href="#Issues1">Issues with Annotations and Modified
   Documents</a></li>
 </ul>
+
 <div id="Annotations">
 <h2>Annotations in Amaya</h2>
+
 <h3><a name="What">What is an Annotation?</a></h3>
 
 <p>Annotations are comments, notes, explanations, or other types of external
@@ -54,11 +55,12 @@ describing annotations.</p>
 <p>Annotations can be stored locally or in one or more <strong>annotation
 servers</strong>. When a document is browsed, Amaya queries each of these
 servers, requesting the annotations related to that document. Currently Amaya
-presents annotations with pencil annotation icons that are visually embedded
-in the document, as shown in the figure below. If the user single-clicks on an
-annotation icon, the text that was annotated is highlighted. If the user
-double-clicks on this icon, the annotation text and other metadata are
-presented in a separate window.</p>
+presents annotations with pencil annotation icons <img
+src="../Icons/annot.png" alt="Annotation pencil icon" /> that are visually
+embedded in the document, as shown in the figure below. If the user
+single-clicks on an annotation icon, the text that was annotated is
+highlighted. If the user double-clicks on this icon, the annotation text and
+other metadata are presented in a separate window.</p>
 
 <p style="text-align: center"><img src="../Icons/annotationicon.png"
 alt="annotation icon (= pencil)" /></p>
@@ -346,7 +348,8 @@ anymore if we destroyed the ID attribute "Issues". Amaya will warn you if it
 detects any orphan annotation while downloading a set of annotations from an
 annotation server. All orphan annotations are visible from the Links view and
 are associated with an icon that shows a question mark superimposed on the
-annotation pencil.</p>
+annotation pencil <img src="../Icons/annotorp.png"
+alt="Orphan annotation icon" />.</p>
 
 <p>We say that an annotation is <strong>misleading</strong> when it points to
 a wrong piece of information. Coming back to our example, we can create a
