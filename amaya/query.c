@@ -69,6 +69,8 @@ AmayaContext       *Amaya;	/* Amaya's global context */
 static HTList      *converters = NULL;	/* List of global converters */
 static HTList      *encodings = NULL;
 
+static boolean AmayaCloseFlag; /* tells if Amaya is still active */
+
 /*** private functions ***/
 
 /***
@@ -244,6 +246,14 @@ AHTReqContext      *me;
 
 	if (me->error_stream != (char *) NULL)
 	   HT_FREE (me->error_stream);
+
+	if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
+	  {
+	    if(me->urlName)
+	      TtaFreeMemory (me->urlName);
+	    if(me->outputfile)
+	      TtaFreeMemory (me->outputfile);
+	  }
 
 	TtaFreeMemory ((void *) me);
 
@@ -1189,7 +1199,7 @@ void                QueryInit ()
    SetSignal ();
 #endif
 
-
+   AmayaCloseFlag = FALSE;
 }
 
 
@@ -1210,6 +1220,8 @@ void                QueryClose ()
    HTNoProxy_deleteAll ();
    HTGateway_deleteAll ();
    AHTProfile_delete ();
+
+   AmayaCloseFlag = TRUE;
 }
 
 
@@ -1959,6 +1971,9 @@ static int          LoopForStop (AHTReqContext * me)
 	     XtAppNextEvent (app_cont, &ev);
 	     TtaHandleOneEvent (&ev);
 	  }
+
+	if (AmayaCloseFlag == TRUE)
+	  exit(0);
 
 #endif /* WWW_XWINDOWS */
      }				/* while */
