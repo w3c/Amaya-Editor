@@ -791,7 +791,7 @@ void GetDelayedRule (PtrPRule *pR, PtrPSchema *pSP, PtrAbstractBox *pAbb,
   ----------------------------------------------------------------------*/
 void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
 {
-   PtrPRule            pRule, checkedRule;
+   PtrPRule            pRule;
    PtrPSchema          pSPres;
    PtrAttribute        pAttr;
    PtrAbstractBox      pAb, pAbb;
@@ -807,62 +807,43 @@ void ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
 	   if (pAb->AbEnclosing != NULL)
 	      /* et ce pave a un pave englobant */
 	     {
-		if (pAb->AbEnclosing->AbPresentationBox &&
+	        if (pAb->AbEnclosing->AbPresentationBox &&
 		    pAb->AbEnclosing->AbElement == pEl)
 		   /* le pave englobant a ete cree' par la regle FnCreateEnclosing */
 		   /* les regles retardees sont sur le pave' englobant */
 		   pAb = pAb->AbEnclosing->AbEnclosing;
 		else
 		   pAb = pAb->AbEnclosing;
-		checkedRule = NULL;
 		do
 		  {
 		    /* la procedure ApplyRule modifie pAb, on le retablit */
 		    pAbb = pAb;
-		    if (pAb->AbDelayedPRule &&
-			pAb->AbDelayedPRule->DpPRule == checkedRule)
-		      pRule = NULL;
-		    else
-		      {
-			GetDelayedRule (&pRule, &pSPres, &pAbb, &pAttr);
-			if (pRule)
-			  {
-			    if (ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr))
-			      {
-				if (pAbb->AbElement != pEl && !pAbb->AbNew)
-				  switch (pRule->PrType)
-				    {
-				    case PtWidth:
-				      pAbb->AbWidthChange = TRUE;
-				      break;
-				    case PtHeight:
-				      pAbb->AbHeightChange = TRUE;
-				      break;
-				    case PtHorizPos:
-				      pAbb->AbHorizPosChange = TRUE;
-				      break;
-				    case PtVertPos:
-				      pAbb->AbVertPosChange = TRUE;
-				      break;
-				    case PtHorizRef:
-				      pAbb->AbHorizRefChange = TRUE;
-				      break;
-				    case PtVertRef:
-				      pAbb->AbVertRefChange = TRUE;
-				      break;
-				    default: break;
-				    }
-			      }
-			    else
-			      {
-				Delay (pRule, pSPres, pAbb, pAttr, pAbb);
-				if (checkedRule == NULL)
-				  /* first rule already checked and re-inserted
-				     in the delay list */
-				  checkedRule = pRule;
-			      }
-			  }
-		      }
+		    GetDelayedRule (&pRule, &pSPres, &pAbb, &pAttr);
+		    if (pRule)
+		      if (ApplyRule (pRule, pSPres, pAbb, pDoc, pAttr))
+			if (pAbb->AbElement != pEl && !pAbb->AbNew)
+			  switch (pRule->PrType)
+			    {
+			    case PtWidth:
+			      pAbb->AbWidthChange = TRUE;
+			      break;
+			    case PtHeight:
+			      pAbb->AbHeightChange = TRUE;
+			      break;
+			    case PtHorizPos:
+			      pAbb->AbHorizPosChange = TRUE;
+			      break;
+			    case PtVertPos:
+			      pAbb->AbVertPosChange = TRUE;
+			      break;
+			    case PtHorizRef:
+			      pAbb->AbHorizRefChange = TRUE;
+			      break;
+			    case PtVertRef:
+			      pAbb->AbVertRefChange = TRUE;
+			      break;
+			    default: break;
+			    }
 		  }
 		while (pRule);
 	     }

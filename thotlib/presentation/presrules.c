@@ -4014,6 +4014,9 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	      appl = TRUE;
 	    }
 	  break;
+	case PtListStyleImage:
+	  appl = TRUE;   /***** not implemented ****/
+	  break;
 	case PtFloat:
 	  pAb->AbFloat = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
 				   &appl);
