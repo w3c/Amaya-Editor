@@ -7,13 +7,13 @@
 #ifdef __STDC__
 
 extern void SortAllPRules ( void );
-extern void main ( int argc,
+extern int main ( int argc,
                    char **argv );
 
 #else /* __STDC__ */
 
 extern void SortAllPRules (/* void */);
-extern void main (/* int argc,
+extern int main (/* int argc,
                      char **argv */);
 
 #endif /* __STDC__ */

@@ -6,13 +6,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void main ( int argc,
-                   char **argv );
+extern int main ( int argc,
+                  char **argv );
 
 #else /* __STDC__ */
 
-extern void main (/* int argc,
-                     char **argv */);
+extern int main (/* int argc,
+                    char **argv */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
