@@ -1011,7 +1011,11 @@ void ANNOT_Post_callback (int doc, int status,
 		   /* update the anchor in the source doc */
 		   ReplaceLinkToAnnotation (source_doc, annot->name, 
 					    annot->body_url);
-		   
+
+		   /* update the annotation icon to the new type if it has changed */
+		   if (!annot->inReplyTo)
+		     LINK_UpdateAnnotIcon (source_doc, annot);
+ 
 #ifdef ANNOT_ON_ANNOT
 		   /* update the references to the local annotation reference in the local thread (and
 		    root of thread too) */

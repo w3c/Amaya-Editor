@@ -12,6 +12,8 @@ extern void LINK_UpdateAnnotationIndexFile ( char *old_source_url,
 extern void LINK_AddAnnotIcon ( Document source_doc,
                                 Element anchor,
                                 AnnotMeta *annot );
+extern void LINK_UpdateAnnotIcon ( Document source_doc,
+                                   AnnotMeta *annot );
 extern ThotBool LINK_AddLinkToSource ( Document source_doc,
                                        AnnotMeta *annot );
 extern void LINK_RemoveLinkFromSource ( Document source_doc,
@@ -41,6 +43,8 @@ extern void LINK_UpdateAnnotationIndexFile (/* char *old_source_url,
 extern void LINK_AddAnnotIcon (/* Document source_doc,
                                   Element anchor,
                                   AnnotMeta *annot */);
+extern void LINK_UpdateAnnotIcon (/* Document source_doc,
+                                     AnnotMeta *annot */);
 extern ThotBool LINK_AddLinkToSource (/* Document source_doc,
                                          AnnotMeta *annot */);
 extern void LINK_RemoveLinkFromSource (/* Document source_doc,

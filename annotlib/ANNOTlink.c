@@ -262,8 +262,10 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
 {
   Element el;
   char s[MAX_LENGTH];
+  char previous[MAX_LENGTH];
   char *iconName;
   RDFStatementP iconS = (RDFStatementP) NULL;
+  Language lang;
 
   el = TtaGetFirstChild (anchor);
   
@@ -283,8 +285,31 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
 	       TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
       iconName = s;
     }
+  
+  
+  /* only substitute the icon name if it has changed */
+  TtaGiveBufferContent (el, previous, sizeof (previous) - 1, &lang);
+  if (previous[0] != EOS && strcasecmp (iconName, previous))
+    TtaSetPictureContent (el, iconName, SPACE, source_doc, "image/gif");
+}
 
-  TtaSetPictureContent (el, iconName, SPACE, source_doc, "image/gif");
+/*-----------------------------------------------------------------------
+  LINK_UpdateAnnotIcon
+  When changing annotation types, updates the icon that corresponds to the
+  type.
+  -----------------------------------------------------------------------*/
+void LINK_UpdateAnnotIcon (Document source_doc, AnnotMeta *annot)
+{
+  Element anchor;
+
+  if (!annot || !annot->name || annot->is_orphan)
+    return;
+
+  anchor = SearchAnnotation (source_doc, annot->name);
+  if (!anchor)
+    return;
+
+  LINK_AddAnnotIcon (source_doc, anchor, annot);
 }
 
 /*-----------------------------------------------------------------------

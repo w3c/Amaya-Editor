@@ -1260,6 +1260,7 @@ ThotBool ANNOT_LocalSave (Document doc_annot, char *html_filename)
   Element el;
   ElementType elType;
   AnnotMeta *annot;
+  ThotBool result;
 
   annot = GetMetaData (DocumentMeta[doc_annot]->source_doc, doc_annot);
   if (!annot)
@@ -1290,6 +1291,13 @@ ThotBool ANNOT_LocalSave (Document doc_annot, char *html_filename)
 
   /* set up the charset and namespaces */
   SetNamespacesAndDTD (doc_annot);
-  return TtaExportDocumentWithNewLineNumbers (doc_annot, html_filename, 
-					      "AnnotT");
+  result =TtaExportDocumentWithNewLineNumbers (doc_annot, html_filename, 
+					       "AnnotT");
+
+  /* update the annotation icon to the new type */
+  if (result && !annot->inReplyTo)
+      LINK_UpdateAnnotIcon (DocumentMeta[doc_annot]->source_doc, annot);
+
+  return result;
 }
+
