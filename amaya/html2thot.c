@@ -6362,12 +6362,13 @@ Document            doc;
   block level elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EncloseCharLevelElem (Element el, Element charEl, Document doc)
+static void         EncloseCharLevelElem (Element el, Element charEl, Document doc, ThotBool *done)
 #else
-static void         EncloseCharLevelElem (el, charEl, doc)
+static void         EncloseCharLevelElem (el, charEl, doc, done)
 Element	el;
 Element charEl;
 Document doc;
+ThotBool *done;
 
 #endif
 {
@@ -6400,8 +6401,10 @@ Document doc;
 	   if (!IsCharacterLevelElement (elem))
 	     /* create copies of element parent for all descendants of elem */
 	     {
-	       EncloseCharLevelElem (elem, charEl, doc);
+	       EncloseCharLevelElem (elem, charEl, doc, done);
 	       prev = NULL;
+	       if (*done)
+		  next = NULL;
 	     }
 	   else
 	     /* enclose elem in a copy of charEl */
@@ -6417,6 +6420,13 @@ Document doc;
 		   TtaInsertSibling (copy, elem, TRUE, doc);
 		   TtaRemoveTree (elem, doc);
 		   TtaInsertFirstChild (&elem, copy, doc);
+		   elType = TtaGetElementType (charEl);
+		   if (elType.ElTypeNum == HTML_EL_Anchor)
+		     /* do it only once for an Anchor */
+		     {
+		     *done = TRUE;
+		     next = NULL;
+		     }
 		 }
 	       prev = elem;
 	     }
@@ -6522,6 +6532,7 @@ Document            doc;
 		       elem, prev, firstNotCharElem;
    PtrElemToBeChecked  elTBC, nextElTBC, TBC;
    ElementType	       elType, parentType;
+   ThotBool            done;
 
    /* check all block-level elements whose parent was a character-level
       element */
@@ -6579,7 +6590,10 @@ Document            doc;
 	       /* This is not a character level element */
 	       /* create copies of element parent for all decendants of child*/
 	       {
-	       EncloseCharLevelElem (elem, parent, doc);
+	       done = FALSE;
+	       EncloseCharLevelElem (elem, parent, doc, &done);
+	       if (done)
+		  next = NULL;
 	       prev = NULL;
 	       if (firstNotCharElem == NULL)
 		  firstNotCharElem = elem;
