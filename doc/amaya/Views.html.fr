@@ -43,7 +43,7 @@ document. Six vues sont disponibles:</p>
       des autres éditeurs qui eux fournissent seulement des séries de photos
       instantannées du document.</dd>
   <dt><a name="Structure">Vue structure</a></dt>
-    <dd>Cette vue montre la structure actuelle du document qui est entrain
+    <dd>Cette vue montre la structure actuelle du document qui est en train
       d'être rédigé. Chaque élément est représenté par son nom  d'étiquette,
       suivi de ses attributs, sur la même ligne. Les éléments qu'elle contient
       sont représentés dessous, le long d'une ligne verticale bleue qui montre
@@ -56,7 +56,7 @@ document. Six vues sont disponibles:</p>
       est visualisé par un navigateur en mode texte. Elle est utile pour
       vérifier l'accessibilité de vos documents.</dd>
   <dt>Vue liens</dt>
-    <dd>Cette vue montre tous les ancres d'un document (les ancres et leur
+    <dd>Cette vue montre toutes les ancres d'un document (les ancres et leur
       contenu). Vous pouvez vous focaliser dessus pour travailler sur liens
       hypertextes.</dd>
   <dt>Vue table des matières</dt>
@@ -97,7 +97,7 @@ automatiquement de telle sorte qu'on voit la même partie du document.</p>
 <p>Vous pouvez rédiger le document dans n'importe quelle vue. Pour une
 sensibilité optimum quand vous tapez, les caractères entrés sont visualisés
 uniquement dans la vue où vous avez cliqué. Dès que vous activez une commande
-ou cliques quelque part, ces caractères sont également visualisés dans les
+ou cliquez quelque part, ces caractères sont également visualisés dans les
 autres vues.</p>
 
 <p>La vue source se comporte différemment: vous devez demander la
@@ -106,7 +106,7 @@ synchronisation explicitement, en utilisant la commande
 avez effectué une série d'éditions dans la vue source, vous devez entrer la
 commande <strong>Synchroniser</strong>  depuis cette vue pour mettre à jour
 toutes les autres vues du document. Inversement, quand vous avez effectué des
-changements dans une autre vue, entrer la commande
+changements dans une autre vue, entrez la commande
 <strong>Synchroniser</strong> pour mettre à jour la vue source.</p>
 
 <p>Synchroniser un document depuis la source fera revalider le document par

@@ -39,18 +39,18 @@ sur Unix, control-f sur Windows)</p>
 <p>Cette procédure vous permet de rechercher ou de remplacer du texte selon
 différents critères:</p>
 <ul>
-  <li>La chaîne de caractères cherchée doit être écrite dans la zône d'entrée
+  <li>La chaîne de caractères cherchée doit être écrite dans la zone d'entrée
     <strong>Texte à chercher</strong>.</li>
   <li>Si le bouton <strong>MAJUSCULES=minuscules</strong> est sélectionné,
     l'écriture en majuscules ou en minuscules est indifférente; dans le cas
     contraire, la chaîne sera recherchée telle qu'elle a été écrite.</li>
   <li>Les chaînes peuvent être également remplacées en effectuant une
-    opération similaire. Le texte de remplacement est écrit dans la zône
+    opération similaire. Le texte de remplacement est écrit dans la zone
     d'entrée <strong>Texte de remplacement </strong>et le mode de remplacement
     est sélectionné depuis le menu <strong>Remplacement</strong>. Les modes de
     remplacements sont les suivants:
     <ul>
-      <li><strong>Sans remplacement</strong>: même si la zône d'entrée "Texte
+      <li><strong>Sans remplacement</strong>: même si la zone d'entrée "Texte
         de remplacement" contient une chaîne de caractères, rien ne sera
         remplacé. On se trouve dans la configuration d'une simple
       recherche.</li>
@@ -81,16 +81,16 @@ différents critères:</p>
         de la partie sélectionnée et redescend  jusqu'à la fin du
       document.</li>
       <li><strong>Dans tout le document</strong>: la recherche est effectuée
-        dand tout le document du début jusqu'à la fin, sans tenir compte des
+        dans tout le document du début jusqu'à la fin, sans tenir compte des
         parties éventuellement sélectionnées.</li>
     </ul>
   </li>
 </ul>
 
-<p>Pour lancer l'opération de recherche, cliquer sur le bouton
+<p>Pour lancer l'opération de recherche, cliquez sur le bouton
 <strong>Confirmer</strong> situé au bas de la boîte de dialogue. Si la chaîne
 recherchée est trouvée, elle est sélectionnée et le document est positionné de
-telle sorte que la chaîne soit visisble; vous pouvez alors aller au prochain
+telle sorte que la chaîne soit visible; vous pouvez alors aller au prochain
 résultat de la recherche en cliquant de nouveau sur le bouton
 <strong>Confirmer</strong>. Si la chaîne n'est pas trouvée, Le message "Pas
 trouvé"  apparaît au dessus du bouton Confirmer  .</p>
