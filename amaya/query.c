@@ -534,8 +534,6 @@ int                 status;
    if (!me)
       return HT_OK;		/* not an Amaya request */
 
-   AmayaLastHTTPErrorMsg [0] = EOS;
-
    if (!AmayaIsAlive)
      me->reqStatus = HT_ABORT;
 
@@ -693,6 +691,13 @@ int                 status;
 	   */
 	   cur = HTRequest_error (request);
 	   error = (HTError *) HTList_nextObject (cur);
+	   if (error == (HTError *) NULL)
+	     /* there's no error context */
+	     {
+	       sprintf (msg_status, "%d", status); 
+	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
+	       return (HT_OK);
+	     }
 	   errorElement = error->element;
 	   if (errorElement == HTERR_NOT_IMPLEMENTED)
 	     {
@@ -1698,6 +1703,8 @@ void               *context_tcbf;
    char               *mem_ptr;
    unsigned long       block_size;
 
+   AmayaLastHTTPErrorMsg [0] = EOS;
+   
    if (urlName == NULL || docid == 0 || fileName == NULL ||
        !TtaFileExist (fileName))
       /* no file to be uploaded */
