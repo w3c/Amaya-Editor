@@ -1123,6 +1123,10 @@ void BM_RefreshTopicTree ()
       if (BTopicTree)
 	TtaCloseDocument (BTopicTree);
       BTopicTree = BM_GetTopicTree ();
+      /* select the topics in the tree that correspond to those in the bookmark */
+      aBookmark->self_url = BM_bufferContent (aDynBookmark->self_url);
+      BM_topicsPreSelect (BTopicTree, aBookmark);
+      aBookmark->self_url = NULL;
       BM_InitTreeWidget (tree, BTopicTree, (void *) BookmarkMenuSelect_cbf);
     }
 
@@ -1133,6 +1137,12 @@ void BM_RefreshTopicTree ()
       if (TTopicTree)
 	TtaCloseDocument (TTopicTree);
       TTopicTree = BM_GetTopicTree ();
+      /* select the topics in the tree that correspond to those in the bookmark */
+      aTopic->self_url = BM_bufferContent (aDynTopic->self_url);
+      aTopic->parent_url = BM_bufferContent (aDynTopic->parent_url);
+      BM_topicsPreSelect (TTopicTree, aTopic);
+      aTopic->self_url = NULL;
+      aTopic->parent_url = NULL;
       BM_InitTreeWidget (tree, TTopicTree, (void *) TopicMenuSelect_cbf);
     }
 }
