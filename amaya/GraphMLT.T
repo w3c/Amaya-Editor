@@ -517,22 +517,6 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   linestyle_ = solid_:
-	BEGIN
-	create SAN;
-	create 'linestyle="solid"';
-	END;
-   linestyle_ = dashed_:
-	BEGIN
-	create SAN;
-	create 'linestyle="dashed"';
-	END;
-   linestyle_ = dotted_:
-	BEGIN
-	create SAN;
-	create 'linestyle="dotted"';
-	END;
-
    externalResourcesRequired = false:
 	BEGIN
 	create SAN;
@@ -550,27 +534,6 @@ ATTRIBUTES
 	create 'points="';
 	create points;
 	create DoubleQuote;
-	END;
-
-   arrowhead = none_:
-	BEGIN
-	create SAN;
-	create 'arrowhead="none"';
-	END;
-   arrowhead = start:
-	BEGIN
-	create SAN;
-	create 'arrowhead="start"';
-	END;
-   arrowhead = end_:
-	BEGIN
-	create SAN;
-	create 'arrowhead="end"';
-	END;
-   arrowhead = both:
-	BEGIN
-	create SAN;
-	create 'arrowhead="both"';
 	END;
 
    d:

@@ -127,12 +127,6 @@ ATTRIBUTES
 	AttrModify.Post -> AttrPathDataChanged;
 	AttrDelete.Pre ->  AttrPathDataDelete;
 	END;
-   arrowhead:
-	BEGIN
-	AttrModify.Post -> AttrArrowHeadModified;
-	AttrCreate.Post -> AttrArrowHeadModified;
-	AttrDelete.Post -> AttrArrowHeadModified;
-	END;
    x:
 	AttrModify.Post -> AttrCoordChanged;
    y:

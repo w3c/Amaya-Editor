@@ -37,8 +37,7 @@ STRUCT
         (ATTR fill = text;
 	      stroke = text;
 	      stroke_width = text;
-	      transform = text;
-              linestyle_ = solid_, dashed_, dotted_)   {*** not svg ***}
+	      transform = text)
         = LIST OF (GraphicsElement);
 
    defs
@@ -74,8 +73,7 @@ STRUCT
 	      ry = text;
 	      fill;
               stroke;
-	      stroke_width;
-              linestyle_)  {*** not svg ***}
+	      stroke_width)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -88,8 +86,7 @@ STRUCT
               r = text;
 	      fill;
               stroke;
-	      stroke_width;
-              linestyle_)  {*** not svg ***}
+	      stroke_width)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -103,8 +100,7 @@ STRUCT
 	      ry;
 	      fill;
               stroke;
-	      stroke_width;
-              linestyle_)  {*** not svg ***}
+	      stroke_width)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -118,9 +114,7 @@ STRUCT
 	      y2 = text;
 	      fill;
               stroke;
-	      stroke_width;
-              linestyle_;  {*** not svg ***}
-              arrowhead = none_, start, end_, both)  {*** not svg ***}
+	      stroke_width)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -133,9 +127,7 @@ STRUCT
               points = text;
 	      fill;
               stroke;
-	      stroke_width;
-              arrowhead;   {*** not svg ***}
-              linestyle_)  {*** not svg ***}
+	      stroke_width)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -148,8 +140,7 @@ STRUCT
               points;
 	      fill;
               stroke;
-	      stroke_width;
-              linestyle_)  {*** not svg ***}
+	      stroke_width)
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;

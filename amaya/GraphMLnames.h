@@ -41,7 +41,6 @@ static AttributeMapping GraphMLAttributeMappingTable[] =
    /* The rest of this table MUST be in alphabetical order */
    {"unknown_attr", "", 'A', GraphML_ATTR_Invalid_attribute, L_Other},
 
-   {"arrowhead", "", 'A', GraphML_ATTR_arrowhead, L_Other},
    {"class", "", 'A', GraphML_ATTR_class, L_Other},
    {"cx", "", 'A', GraphML_ATTR_cx, L_Other},
    {"cy", "", 'A', GraphML_ATTR_cy, L_Other},
@@ -52,7 +51,6 @@ static AttributeMapping GraphMLAttributeMappingTable[] =
    {"fill", "", 'A', GraphML_ATTR_fill, L_Other},
    {"height", "", 'A', GraphML_ATTR_height_, L_Other},
    {"id", "", 'A', GraphML_ATTR_id, L_Other},
-   {"linestyle", "", 'A', GraphML_ATTR_linestyle_, L_Other},
    {"media", "", 'A', GraphML_ATTR_media, L_Other},
    {"pathLength", "", 'A', GraphML_ATTR_pathLength, L_Other},
    {"points", "", 'A', GraphML_ATTR_points, L_Other},

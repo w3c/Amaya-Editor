@@ -849,35 +849,9 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-  linestyle_ = solid_:
-	BEGIN
-	CreateBefore (AttrNameAndValue);
-	LineStyle: Solid;
-	IN Structure_view
-		LineStyle: Enclosing =;
-	END;
-  linestyle_ = dashed_:
-	BEGIN
-	CreateBefore (AttrNameAndValue);
-	LineStyle: Dashed;
-	IN Structure_view
-		LineStyle: Enclosing =;
-	END;
-  linestyle_ = dotted_:
-	BEGIN
-	CreateBefore (AttrNameAndValue);
-	LineStyle: Dotted;
-	IN Structure_view
-		LineStyle: Enclosing =;
-	END;
-
   externalResourcesRequired:
 	CreateBefore (AttrNameAndValue);
 
-{*****
-  arrowhead:
-	CreateBefore (AttrNameAndValue);
-********}
   d:
 	BEGIN
 	CreateBefore (AttrName);

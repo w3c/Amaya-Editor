@@ -32,10 +32,6 @@ extern void ParseFillStrokeAttributes ( int attrType,
                                         Element el,
                                         Document doc,
                                         ThotBool delete );
-extern Element CreateGraphicLeaf ( Element el,
-                                   Document doc,
-                                   ThotBool *closed,
-                                   int arrowHead );
 extern void SetGraphicDepths ( Document doc,
                                Element el );
 extern void CopyUseContent ( Element el,
@@ -99,10 +95,6 @@ extern void ParseFillStrokeAttributes (/* int attrType,
                                           Element el,
                                           Document doc,
                                           ThotBool delete */);
-extern Element CreateGraphicLeaf (/* Element el,
-                                     Document doc,
-                                     ThotBool *closed,
-                                     int arrowHead */);
 extern void SetGraphicDepths (/* Document doc,
                                  Element el */);
 extern void CopyUseContent (/* Element el,

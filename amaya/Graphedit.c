@@ -758,21 +758,6 @@ ThotBool            AttrFillStrokeDelete (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
- AttrArrowHeadModified
- -----------------------------------------------------------------------*/
-void             AttrArrowHeadModified (NotifyAttribute *event)
-{
-  int		value;
-  ThotBool	closed;
-
-  if (!event->attribute)
-     value = GraphML_ATTR_arrowhead_VAL_none_;
-  else
-     value = TtaGetAttributeValue (event->attribute);
-  (void) CreateGraphicLeaf (event->element, event->document, &closed, value);
-}
-
-/*----------------------------------------------------------------------
  DeleteAttrPoints
  -----------------------------------------------------------------------*/
 ThotBool         DeleteAttrPoints (NotifyAttribute *event)

@@ -25,13 +25,6 @@
 
 static AttrValueMapping GraphMLAttrValueMappingTable[] =
 { 
-   {GraphML_ATTR_arrowhead, "both", GraphML_ATTR_arrowhead_VAL_both},
-   {GraphML_ATTR_arrowhead, "end", GraphML_ATTR_arrowhead_VAL_end_},
-   {GraphML_ATTR_arrowhead, "none", GraphML_ATTR_arrowhead_VAL_none_},
-   {GraphML_ATTR_arrowhead, "start", GraphML_ATTR_arrowhead_VAL_start},
-   {GraphML_ATTR_linestyle_, "dashed", GraphML_ATTR_linestyle__VAL_dashed_},
-   {GraphML_ATTR_linestyle_, "dotted", GraphML_ATTR_linestyle__VAL_dotted_},
-   {GraphML_ATTR_linestyle_, "solid", GraphML_ATTR_linestyle__VAL_solid_},
    {GraphML_ATTR_xml_space, "default", GraphML_ATTR_xml_space_VAL_xml_space_default},
    {GraphML_ATTR_xml_space, "preserve", GraphML_ATTR_xml_space_VAL_xml_space_preserve},
    {0, "", 0}			/* Last entry. Mandatory */
@@ -161,14 +154,11 @@ void   ParseFillStrokeAttributes (int attrType, Attribute attr, Element el, Docu
    does not exist yet.
    Return that GRAPHICS_UNIT element.
   ----------------------------------------------------------------------*/
-static Element CreateGraphicalLeaf (char shape, Element el, Document doc,
-				    ThotBool changeShape)
+static Element CreateGraphicalLeaf (char shape, Element el, Document doc)
 {
   ElementType	   elType;
   Element	   leaf, child;
-  AttributeType    attrType;
-  Attribute        attr;
-  char           oldShape;
+  char             oldShape;
 
   leaf = NULL;
   child = TtaGetLastChild (el);
@@ -180,14 +170,12 @@ static Element CreateGraphicalLeaf (char shape, Element el, Document doc,
 	{
 	  oldShape = TtaGetGraphicsShape (child);
 	  leaf = child;
-	  if (oldShape == EOS || (changeShape && oldShape != shape))
+	  if (oldShape == EOS || oldShape != shape)
 	    TtaSetGraphicsShape (child, shape, doc);
 	}
     }
 
   elType = TtaGetElementType (el);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = GraphML_ATTR_stroke_width;
   if (leaf == NULL)
     /* create the graphical element */
     {
@@ -199,16 +187,6 @@ static Element CreateGraphicalLeaf (char shape, Element el, Document doc,
 	TtaInsertSibling (leaf, child, FALSE, doc);
       TtaSetGraphicsShape (leaf, shape, doc);
     }
-  /* set the attribute stroke-width */
-  attr = TtaGetAttribute (el, attrType);
-  if (attr == NULL)
-    {
-      /* it's a new attribute */
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
-      TtaSetAttributeText (attr, "1", el, doc);
-    }
-  ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, el, doc, FALSE);
   return leaf;
 }
 
@@ -219,11 +197,10 @@ static Element CreateGraphicalLeaf (char shape, Element el, Document doc,
    Returns the created (or existing) element.
    When returning, closed indicates whether the shape is closed or not.
   ----------------------------------------------------------------------*/
-Element  CreateGraphicLeaf (Element el, Document doc, ThotBool *closed, int arrowHead)
+static Element  CreateGraphicLeaf (Element el, Document doc, ThotBool *closed)
 {
    ElementType elType;
    Element     leaf;
-   char        shape;
 
    leaf = NULL;
    *closed = FALSE;
@@ -231,71 +208,35 @@ Element  CreateGraphicLeaf (Element el, Document doc, ThotBool *closed, int arro
    switch (elType.ElTypeNum)
      {
      case GraphML_EL_rect:
-       leaf = CreateGraphicalLeaf ('C', el, doc, FALSE);
+       leaf = CreateGraphicalLeaf ('C', el, doc);
        *closed = TRUE;
        break;
 
      case GraphML_EL_circle:
-       leaf = CreateGraphicalLeaf ('a', el, doc, FALSE);
+       leaf = CreateGraphicalLeaf ('a', el, doc);
        *closed = TRUE;
        break;
 
      case GraphML_EL_ellipse:
-       leaf = CreateGraphicalLeaf ('c', el, doc, FALSE);
+       leaf = CreateGraphicalLeaf ('c', el, doc);
        *closed = TRUE;
        break;
 
      case GraphML_EL_line_:
-       switch (arrowHead)
-	 {
-	 case GraphML_ATTR_arrowhead_VAL_none_:
-	   shape = 'g';
-	   break;
-	 case GraphML_ATTR_arrowhead_VAL_start:
-	   shape = 'x';
-	   break;
-	 case GraphML_ATTR_arrowhead_VAL_end_:
-	   shape = 'y';
-	   break;
-	 case GraphML_ATTR_arrowhead_VAL_both:
-	   shape = 'z';
-	   break;
-	 default:
-	   shape = 'g';
-	   break;
-	 }
-       leaf = CreateGraphicalLeaf (shape, el, doc, arrowHead != 0);
+       leaf = CreateGraphicalLeaf ('g', el, doc);
        break;
 
      case GraphML_EL_polyline:
-       switch (arrowHead)
-	 {
-	 case GraphML_ATTR_arrowhead_VAL_none_:
-	   shape = 'S';
-	   break;
-	 case GraphML_ATTR_arrowhead_VAL_start:
-	   shape = 'N';
-	   break;
-	 case GraphML_ATTR_arrowhead_VAL_end_:
-	   shape = 'U';
-	   break;
-	 case GraphML_ATTR_arrowhead_VAL_both:
-	   shape = 'M';
-	   break;
-	 default:
-	   shape = 'S';
-	   break;
-	 }
-       leaf = CreateGraphicalLeaf (shape, el, doc, arrowHead != 0);
+       leaf = CreateGraphicalLeaf ('S', el, doc);
        break;
 
      case GraphML_EL_polygon:
-       leaf = CreateGraphicalLeaf ('p', el, doc, FALSE);
+       leaf = CreateGraphicalLeaf ('p', el, doc);
        *closed = TRUE;
        break;
 
      case GraphML_EL_path:
-       leaf = CreateGraphicalLeaf (EOS, el, doc, FALSE);
+       leaf = CreateGraphicalLeaf (EOS, el, doc);
        *closed = FALSE;
        break;
 
@@ -578,8 +519,8 @@ void GraphMLElementComplete (Element el, Document doc, int *error)
        default:
 	 /* if it's a graphic primitive, create a GRAPHIC_UNIT leaf as a child
 	    of the element, if it has not been done when creating attributes
-	    (points, arrowhead, rx, ry) */
-	 leaf = CreateGraphicLeaf (el, doc, &closedShape, 0);
+	    (points, rx, ry) */
+	 leaf = CreateGraphicLeaf (el, doc, &closedShape);
 	 /* if it's a closed shape, move the FillPattern rule to that leaf */
 	 if (closedShape && leaf)
 	   {
@@ -676,7 +617,7 @@ void CreatePoints (Attribute attr, Element el, Document doc)
    ThotBool		closed;
 
    /* create (or get) the Graphics leaf according to the element type */
-   leaf = CreateGraphicLeaf (el, doc, &closed, 0);
+   leaf = CreateGraphicLeaf (el, doc, &closed);
    if (leaf == NULL)
       return;
 
@@ -1187,7 +1128,7 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
    char         command, prevCommand;
 
    /* create (or get) the Graphics leaf */
-   leaf = CreateGraphicalLeaf (EOS, el, doc, FALSE);
+   leaf = CreateGraphicalLeaf (EOS, el, doc);
    if (leaf == NULL)
       return;
 
@@ -1508,7 +1449,7 @@ void      GraphMLAttributeComplete (Attribute attr, Element el, Document doc)
    AttributeType	attrType;
    ElementType          elType;
    Element		leaf;
-   int			attrKind, value;
+   int			attrKind;
    ThotBool		closed;
 
    TtaGiveAttributeType (attr, &attrType, &attrKind);
@@ -1531,10 +1472,6 @@ void      GraphMLAttributeComplete (Attribute attr, Element el, Document doc)
      case GraphML_ATTR_points:
 	CreatePoints (attr, el, doc);
 	break;
-     case GraphML_ATTR_arrowhead:
-	value = TtaGetAttributeValue (attr);
-	leaf = CreateGraphicLeaf (el, doc, &closed, value);
-	break;
      case GraphML_ATTR_x:
      case GraphML_ATTR_y:
      case GraphML_ATTR_cx:
@@ -1554,7 +1491,7 @@ void      GraphMLAttributeComplete (Attribute attr, Element el, Document doc)
 	  /* attribute rx or ry for a rect element.
 	     create the GRAPHICS_UNIT child to put the corresponding
              specific presentation rule on it */
-	   leaf = CreateGraphicLeaf (el, doc, &closed, 0);	   
+	   leaf = CreateGraphicLeaf (el, doc, &closed);	   
 	ParseWidthHeightAttribute (attr, el, doc, FALSE);
 	break;
      case GraphML_ATTR_d:
