@@ -14,7 +14,7 @@ CLASSPATH=.:../classes:../classes/classes.zip:../classes/biss.zip:../classes/jig
 
 APICLASSES=Application Document Tree Content Attribute Reference \
         Language Presentation View Selection Interface Registry \
-	Dialog
+	Dialog LibMsg
         
 CLASSES=Element SSchema Document ElementType Attribute \
         AttributeType PRule Extra

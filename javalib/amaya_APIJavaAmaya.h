@@ -39,6 +39,7 @@ extern void amaya_APIJavaAmaya_MakeBook(struct Hamaya_APIJavaAmaya*, jint, jint)
 extern void amaya_APIJavaAmaya_RealTimeHTML(struct Hamaya_APIJavaAmaya*, jint, jint);
 extern void amaya_APIJavaAmaya_HelpAmaya(struct Hamaya_APIJavaAmaya*, jint, jint);
 extern void amaya_APIJavaAmaya_AmayaClose(struct Hamaya_APIJavaAmaya*, jint, jint);
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetUserAgentName(struct Hamaya_APIJavaAmaya*);
 extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetDocumentURL(struct Hamaya_APIJavaAmaya*, jint);
 extern struct Hjava_lang_String* amaya_APIJavaAmaya_AmayaGetMessage(struct Hamaya_APIJavaAmaya*, jint);
 extern jint amaya_APIJavaAmaya_PopUpAuthDialog(struct Hamaya_APIJavaAmaya*, jint);

@@ -935,8 +935,13 @@ char                *ZoomPicture (cpic,cWIDE, cHIGH , eWIDE, eHIGH, bperpix)
   
     clptr = NULL;  cxarrp = NULL;  cy = 0; 
 
+  /* check for size */
+  if ((cWIDE < 0) || (cHIGH < 0) || (eWIDE < 0) || (eHIGH < 0) ||
+      (cWIDE > 2000) || (cHIGH > 2000) || (eWIDE > 2000) || (eHIGH > 2000))
+    return(NULL);
+
   /* generate a 'raw' epic, as we'll need it for ColorDither if EM_DITH */
-    
+
   if (eWIDE==cWIDE && eHIGH==cHIGH) {  
       /* 1:1 expansion.  points destinqtion pic at source pic */
     epic = cpic;

@@ -8,6 +8,22 @@
 
 
 /*----------------------------------------------------------------------
+   GetUserAgentName returns the User Agent ID string
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char *GetUserAgentName (void)
+#else
+char *GetUserAgentName ()
+
+#endif
+{
+    static char UserAgentName[50];
+    /* sprintf(UserAgentName,"%s/%s", HTAppName, HTAppVersion); */
+    sprintf(&UserAgentName[0],"%s/%s", "Amaya", HTAppVersion);
+    return(&UserAgentName[0]);
+}
+
+/*----------------------------------------------------------------------
    GetDocumentURL returns the URL of the document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

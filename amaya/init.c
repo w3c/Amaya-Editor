@@ -245,14 +245,18 @@ Document            doc;
 {
    if (FilesLoading[document] > 0)
      {
+#ifndef AMAYA_JAVA
 	if (FilesLoading[document] == 1)
 	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA,
 						 AM_DOCUMENT_LOADED), NULL);
+#endif
 
 	FilesLoading[document] = 0;
+#ifndef AMAYA_JAVA
 	if (TtaGetViewFrame (document, 1) != 0)
 	   /* this document is displayed */
 	   TtaChangeButton (document, 1, 1, stopN);
+#endif
      }
 }
 

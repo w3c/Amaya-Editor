@@ -452,6 +452,27 @@ amaya_APIJavaAmaya_AmayaClose(struct Hamaya_APIJavaAmaya* none, jint document, j
 }
 
 /*
+ * Java to C function GetUserAgentName stub.
+ */
+struct Hjava_lang_String*
+amaya_APIJavaAmaya_GetUserAgentName(struct Hamaya_APIJavaAmaya* none)
+{
+	char *res;
+
+
+	amaya_APIJavaAmaya_LOCK();
+
+	res = GetUserAgentName();
+
+	amaya_APIJavaAmaya_UNLOCK();
+
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
+}
+
+/*
  * Java to C function GetDocumentURL stub.
  */
 struct Hjava_lang_String*
@@ -625,6 +646,7 @@ void register_amaya_APIJavaAmaya_stubs(void)
 	addNativeMethod("amaya_APIJavaAmaya_RealTimeHTML", amaya_APIJavaAmaya_RealTimeHTML);
 	addNativeMethod("amaya_APIJavaAmaya_HelpAmaya", amaya_APIJavaAmaya_HelpAmaya);
 	addNativeMethod("amaya_APIJavaAmaya_AmayaClose", amaya_APIJavaAmaya_AmayaClose);
+	addNativeMethod("amaya_APIJavaAmaya_GetUserAgentName", amaya_APIJavaAmaya_GetUserAgentName);
 	addNativeMethod("amaya_APIJavaAmaya_GetDocumentURL", amaya_APIJavaAmaya_GetDocumentURL);
 	addNativeMethod("amaya_APIJavaAmaya_AmayaGetMessage", amaya_APIJavaAmaya_AmayaGetMessage);
 	addNativeMethod("amaya_APIJavaAmaya_PopUpAuthDialog", amaya_APIJavaAmaya_PopUpAuthDialog);

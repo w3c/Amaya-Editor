@@ -122,6 +122,7 @@ extern void AmayaClose (/* Document document,
 
 #ifdef __STDC__
 
+extern char *GetUserAgentName ( void );
 extern char *GetDocumentURL ( Document doc );
 extern char *AmayaGetMessage ( int msg );
 extern int PopUpAuthDialog ( int doc );
@@ -132,6 +133,7 @@ extern char *GetTempDirectory ( void );
 
 #else /* __STDC__ */
 
+extern char *GetUserAgentName (/* void */);
 extern char *GetDocumentURL (/* Document doc */);
 extern char *AmayaGetMessage (/* int msg */);
 extern int PopUpAuthDialog (/* int doc */);
