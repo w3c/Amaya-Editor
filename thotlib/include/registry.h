@@ -46,6 +46,12 @@ extern ThotBool    TtaIsBlank (STRING ptr);
 extern void         TtaInitializeAppRegistry (STRING);
 
 /*
+ * TtaFreeAppRegistry : frees the memory associated with the
+ *        registry
+ */
+extern void         TtaFreeAppRegistry (void);
+
+/*
  * TtaGetEnvInt : read the integer value associated to an 
  * environment string.
  * Returns TRUE if the env variables exists or FALSE if it isn't the case.
@@ -125,6 +131,7 @@ extern void         TtaSaveAppRegistry (void);
 extern STRING       TtaSkipBlanks (/* STRING ptr */);
 extern ThotBool     TtaIsBlank (/* STRING ptr */);
 extern void         TtaInitializeAppRegistry ( /* STRING appArgv0 */ );
+extern void         TtaFreeAppRegistry ( /* void */ );
 extern ThotBool     TtaGetEnvBoolean ( /* STRING name, ThotBool *value */ );
 extern ThotBool     TtaGetEnvInt ( /* STRING name, int *value */ );
 extern char*       TtaGetEnvString ( /* STRING name */ );

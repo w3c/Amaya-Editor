@@ -394,9 +394,6 @@ STRING              applicationName;
   ----------------------------------------------------------------------*/
 void                TtaQuit ()
 {
- /***JK: 25/Feb/1999 removed this systematic call. Applications now must
-   explicitly call TtaSaveAppRegistry to save the user options */
-
 #ifndef NODISPLAY
   FreeDocColors ();
   FreeAllMessages ();
@@ -406,6 +403,7 @@ void                TtaQuit ()
 #ifndef NODISPLAY
   FreeTranslations ();
 #endif /* NODISPLAY */
+  TtaFreeAppRegistry ();
   exit (0);
 }
 

@@ -1331,8 +1331,8 @@ STRING  appArgv0;
    STRING     dir_end = NULL;
    STRING     appName;
    CHAR_T      *ptr;
-   ThotBool   status;
 #  ifdef _WINDOWS
+   ThotBool   status;
    /* name in Windows NT 4 is 20 chars */
    TCHAR username[21];
    TCHAR windir[MAX_PATH+1];
@@ -1637,6 +1637,39 @@ STRING  appArgv0;
    AppRegistryModified = 0;
 }
 
+/*----------------------------------------------------------------------
+  TtaFreeAppRegistry : frees the memory associated with the
+  registry
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaFreeAppRegistry (void)
+#else  /* __STDC__ */
+void                TtaFreeAppRegistry ()
+#endif
+{
+  RegistryEntry cour, next;
+
+  if (AppRegistryInitialized == 0)
+    return;
+
+  cour = AppRegistryEntry;
+  
+  while (cour) {
+    if (cour->appli)
+      TtaFreeMemory (cour->appli);
+    if (cour->name)
+      TtaFreeMemory (cour->name);
+    if (cour->orig)
+      TtaFreeMemory (cour->orig); 
+    if (cour->value)
+      TtaFreeMemory (cour->value);
+    next = cour->next;
+    TtaFreeMemory (cour);
+    cour = next;
+  }
+
+  AppRegistryInitialized = 0;
+}
 
 /*----------------------------------------------------------------------
    SearchFile look for a file following the guideline given by dir
