@@ -1412,20 +1412,42 @@ CSSInfoPtr      css;
   else if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     {
       /* it's not an HTML element */
-      if (css->mschema == NULL)
+      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML"))
 	{
-	  /* create a new extension schema for MathML elements */
-	  css->mschema = TtaNewPSchema ();
-	  pSchema = TtaGetFirstPSchema (doc, elType.ElSSchema);
-	  prev = NULL;
-	  while (pSchema != NULL)
+	  /* extension schema for MathML elements */
+	  if (css->mschema == NULL)
 	    {
-	      prev = pSchema;
-	      TtaNextPSchema (&pSchema, doc, NULL);
+	      /* create a new extension schema for MathML elements */
+	      css->mschema = TtaNewPSchema ();
+	      pSchema = TtaGetFirstPSchema (doc, elType.ElSSchema);
+	      prev = NULL;
+	      while (pSchema != NULL)
+		{
+		  prev = pSchema;
+		  TtaNextPSchema (&pSchema, doc, NULL);
+		}
+	      TtaAddPSchema (css->mschema, prev, TRUE, doc, elType.ElSSchema);
 	    }
-	  TtaAddPSchema (css->mschema, prev, TRUE, doc, elType.ElSSchema);
+	  target = (PresentationTarget) css->mschema;
 	}
-      target = (PresentationTarget) css->mschema;
+      else
+	{
+	  /* extension schema for GraphML elements */
+	  if (css->gschema == NULL)
+	    {
+	      /* create a new extension schema for MathML elements */
+	      css->gschema = TtaNewPSchema ();
+	      pSchema = TtaGetFirstPSchema (doc, elType.ElSSchema);
+	      prev = NULL;
+	      while (pSchema != NULL)
+		{
+		  prev = pSchema;
+		  TtaNextPSchema (&pSchema, doc, NULL);
+		}
+	      TtaAddPSchema (css->gschema, prev, TRUE, doc, elType.ElSSchema);
+	    }
+	  target = (PresentationTarget) css->gschema;
+	}
     }
   else if (ctxt->type == HTML_EL_BODY)
      ctxt->type = HTML_EL_HTML;

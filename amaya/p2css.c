@@ -586,6 +586,7 @@ CSSInfoPtr          css;
   /* build the RPI list using the presentation driver browsing functions */
   ApplyAllGenericContext (doc, css->pschema, GenericContextToRPI, &lrpi);
   ApplyAllGenericContext (doc, css->mschema, GenericContextToRPI, &lrpi);
+  ApplyAllGenericContext (doc, css->gschema, GenericContextToRPI, &lrpi);
   /* transmit the result to the uper layer */
   return (lrpi);
 }

@@ -442,6 +442,7 @@ CSSInfoPtr          NewCSS ()
    css->url = NULL;
    css->pschema = NULL;
    css->mschema = NULL;
+   css->gschema = NULL;
    css->category = CSS_Unknown;
    css->css_rule = NULL;
    for (i = 0; i <= DocumentTableLength; i++)
@@ -643,8 +644,10 @@ char           *structName;
 	    case CSS_DOCUMENT_STYLE:
 	      if (!strcmp(structName, "HTML"))
 		return (css->pschema);
-	      else
+	      else if (!strcmp(structName, "MathML"))
 		return (css->mschema);
+	      else
+		return (css->gschema);
 	    }
 	}
       css = css->NextCSS;
@@ -1287,6 +1290,7 @@ Document            doc;
       css->category = CSS_USER_STYLE;
       css->pschema = TtaNewPSchema ();
       css->mschema = NULL;
+      css->gschema = NULL;
       css->documents[doc] = TRUE;
       pSchema = TtaGetFirstPSchema (doc, NULL);
       prev = NULL;

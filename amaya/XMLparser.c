@@ -565,13 +565,17 @@ char		   *content
    /* if not found, look at other contexts */
    if (elType->ElSSchema == NULL)
       {
-      ctxt = firstParserCtxt;
-      while (ctxt != NULL && elType->ElSSchema == NULL)
-	 {
-	 if (ctxt != currentParserCtxt)
-	    (*(ctxt->MapElementType)) (XMLname, elType, mappedName, content);
-	 ctxt = ctxt->NextParserCtxt;
-	 }
+	/* initialize all parser contexts if not done yet */
+	if (firstParserCtxt == NULL)
+	  InitParserContexts ();
+	
+	ctxt = firstParserCtxt;
+	while (ctxt != NULL && elType->ElSSchema == NULL)
+	  {
+	    if (ctxt != currentParserCtxt)
+	      (*(ctxt->MapElementType)) (XMLname, elType, mappedName, content);
+	    ctxt = ctxt->NextParserCtxt;
+	  }
       }
 }
 

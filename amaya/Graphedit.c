@@ -344,39 +344,44 @@ static void UpdatePositionAttribute (attr, el, doc)
    int			attrKind, posX, posY, minX, minY, maxX, maxY;
    boolean		changePoints;
 
-   changePoints = FALSE;
-   TtaGiveAttributeType (attr, &attrType, &attrKind);
-   attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr == NULL)
-      posX = 0;
+   elType = TtaGetElementType (el);
+   if (elType.ElTypeNum == GraphML_EL_Line_)
+     changePoints = TRUE;
    else
-      posX = TtaGetAttributeValue (attr);
-   sprintf (buffer, "%d", posX);
-   attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr == NULL)
-      posY = 0;
-   else
-      posY = TtaGetAttributeValue (attr);
-   sprintf (buffer1, "%d", posY);
-   strcat (buffer, ", ");
-   strcat (buffer, buffer1);
-   attrType.AttrTypeNum = GraphML_ATTR_position;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr == NULL)
-      /* element el has no position attribute */
-      {
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
-      elType = TtaGetElementType (el);
-      if (elType.ElTypeNum == GraphML_EL_Polyline ||
-	  elType.ElTypeNum == GraphML_EL_Polygon ||
-	  elType.ElTypeNum == GraphML_EL_Spline ||
-	  elType.ElTypeNum == GraphML_EL_ClosedSpline)
-	changePoints = TRUE;
-      }
-   TtaSetAttributeText (attr, buffer, el, doc);
+     {
+       changePoints = FALSE;
+       TtaGiveAttributeType (attr, &attrType, &attrKind);
+       attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
+       attr = TtaGetAttribute (el, attrType);
+       if (attr == NULL)
+	 posX = 0;
+       else
+	 posX = TtaGetAttributeValue (attr);
+       sprintf (buffer, "%d", posX);
+       attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
+       attr = TtaGetAttribute (el, attrType);
+       if (attr == NULL)
+	 posY = 0;
+       else
+	 posY = TtaGetAttributeValue (attr);
+       sprintf (buffer1, "%d", posY);
+       strcat (buffer, ", ");
+       strcat (buffer, buffer1);
+       attrType.AttrTypeNum = GraphML_ATTR_position;
+       attr = TtaGetAttribute (el, attrType);
+       if (attr == NULL)
+	 /* element el has no position attribute */
+	 {
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (el, attr, doc);
+	   if (elType.ElTypeNum == GraphML_EL_Polyline ||
+	       elType.ElTypeNum == GraphML_EL_Polygon ||
+	       elType.ElTypeNum == GraphML_EL_Spline ||
+	       elType.ElTypeNum == GraphML_EL_ClosedSpline)
+	     changePoints = TRUE;
+	 }
+       TtaSetAttributeText (attr, buffer, el, doc);
+     }
    if (changePoints)
       /* change the points attribute according to the new position */
       UpdatePointsAttribute (el, doc, &minX, &minY, &maxX, &maxY);
@@ -440,24 +445,28 @@ static void UpdateWidthHeightAttribute (attr, el, doc)
    Attribute		extAttr;
    char			buffer[10];
    int			attrKind, val;
+   int                  minX, minY, maxX, maxY;
 
    elType = TtaGetElementType (el);
    if (elType.ElTypeNum == GraphML_EL_Line_)
-     return;
-   TtaGiveAttributeType (attr, &attrType, &attrKind);
-   if (attrType.AttrTypeNum == GraphML_ATTR_IntWidth)
-       attrType.AttrTypeNum = GraphML_ATTR_width_;
-   else if (attrType.AttrTypeNum == GraphML_ATTR_IntHeight)
-       attrType.AttrTypeNum = GraphML_ATTR_height_;
-   extAttr = TtaGetAttribute (el, attrType);
-   if (extAttr == NULL)
-      {
-      extAttr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, extAttr, doc);
-      }
-   val = TtaGetAttributeValue (attr);
-   sprintf (buffer, "%d", val);
-   TtaSetAttributeText (extAttr, buffer, el, doc);
+     UpdatePointsAttribute (el, doc, &minX, &minY, &maxX, &maxY);
+   else
+     {
+       TtaGiveAttributeType (attr, &attrType, &attrKind);
+       if (attrType.AttrTypeNum == GraphML_ATTR_IntWidth)
+	 attrType.AttrTypeNum = GraphML_ATTR_width_;
+       else if (attrType.AttrTypeNum == GraphML_ATTR_IntHeight)
+	 attrType.AttrTypeNum = GraphML_ATTR_height_;
+       extAttr = TtaGetAttribute (el, attrType);
+       if (extAttr == NULL)
+	 {
+	   extAttr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (el, extAttr, doc);
+	 }
+       val = TtaGetAttributeValue (attr);
+       sprintf (buffer, "%d", val);
+       TtaSetAttributeText (extAttr, buffer, el, doc);
+     }
 }
 
 /*----------------------------------------------------------------------

@@ -69,6 +69,7 @@ typedef struct CSSInfo
      CSSState            state;
      PSchema             pschema; /* the document Presentation Schema */
      PSchema             mschema;  /* the Math Presentation Schema */
+     PSchema             gschema;  /* the Graph Presentation Schema */
      /* documents using this CSS */
      boolean                documents[DocumentTableLength + 1];
      /* The original CSS text. Needed for the Dismiss function */

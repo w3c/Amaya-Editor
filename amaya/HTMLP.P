@@ -6164,7 +6164,12 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_HEIGHT);
 	CreateBefore(VALUE_HEIGHT);
-	Height: Height_ px;
+#ifdef GRAPHML
+	if XMLGraphics
+		Height: Height_ px min;
+	if NOT XMLGraphics
+#endif
+		Height: Height_ px;
 	IN Structure_view BEGIN
 	   If PICTURE_UNIT
 	        Height: 1 px;
