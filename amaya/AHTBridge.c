@@ -208,11 +208,12 @@ int status;
   if ((me->mode & AMAYA_ASYNC)
       || (me->mode & AMAYA_IASYNC))
     {
+      Document doc = me->docid;
       me->reqStatus = HT_END;
       /*** @@@ do we need this? yes!! **/
       AHTLoadTerminate_handler (request, response, param, status);
-      AHTPrintPendingRequestStatus (me->docid, YES);
       AHTReqContext_delete (me);
+      AHTPrintPendingRequestStatus (doc, YES);
     }
 }
 
