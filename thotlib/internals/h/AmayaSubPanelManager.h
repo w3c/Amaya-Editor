@@ -46,6 +46,9 @@ class AmayaSubPanelManager
   void DoFloat( AmayaSubPanel * p_panel );
   void DoUnfloat( AmayaSubPanel * p_panel );
 
+  bool IsActive( int panel_type );
+  void ShouldBeUpdated( int panel_type, bool should_update = true );
+
  protected:
   bool CanChangeState( AmayaSubPanel * p_panel, unsigned int new_state );
   void DebugSubPanelList();

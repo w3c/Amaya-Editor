@@ -445,6 +445,18 @@ void AmayaSubPanel::SendDataToPanel( AmayaPanelParams& p )
   wxLogDebug( _T("AmayaSubPanel::SendDataToPanel") );
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanel
+ *      Method:  IsActive
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaSubPanel::IsActive()
+{
+  return (IsExpanded() || IsFloating());
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type

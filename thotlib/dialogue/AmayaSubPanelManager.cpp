@@ -224,8 +224,8 @@ void AmayaSubPanelManager::UnExpand( AmayaSubPanel * p_panel )
   if ( !CanChangeState(p_panel, p_panel->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_EXPANDED) )
     return;
 
-  p_panel->UnExpand();
   p_panel->ChangeState( p_panel->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_EXPANDED );
+  p_panel->UnExpand();
 }
 
 /*
@@ -243,8 +243,8 @@ void AmayaSubPanelManager::Expand( AmayaSubPanel * p_panel )
   if ( !CanChangeState(p_panel, p_panel->GetState()|AmayaSubPanel::wxAMAYA_SPANEL_EXPANDED) )
     return;
 
-  p_panel->Expand();
   p_panel->ChangeState( p_panel->GetState()|AmayaSubPanel::wxAMAYA_SPANEL_EXPANDED );
+  p_panel->Expand();
 }
 
 /*
@@ -310,8 +310,8 @@ void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
       AmayaSubPanel * current = node->GetData();
       if ( current->GetPanelType() == p_panel->GetPanelType() )
 	{
-	  current->DoUnfloat();
 	  current->ChangeState( current->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_FLOATING );
+	  current->DoUnfloat();
 	  if (current->IsExpanded())
 	    current->Expand();
 	  else
@@ -338,5 +338,42 @@ void AmayaSubPanelManager::SendDataToPanel( int panel_type, AmayaPanelParams& pa
     }
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanelManager
+ *      Method:  IsActive
+ * Description:  returns true if one or more panel of the given type is active (=visible)
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaSubPanelManager::IsActive( int panel_type )
+{
+  bool is_active = false;
+  // search into the panel list , one active panel
+  for ( SubPanelList::Node *node = m_RegistredPanel.GetFirst(); node && !is_active ; node = node->GetNext() )
+    {
+      AmayaSubPanel * current = node->GetData();
+      if ( current->GetPanelType() == panel_type )
+	is_active |= current->IsActive();
+    }
+  return is_active;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanelManager
+ *      Method:  ShouldBeUpdated
+ * Description:  call this function to switch on/off list update
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaSubPanelManager::ShouldBeUpdated( int panel_type, bool should_update )
+{
+  // warn each panel to update its content when it can
+  for ( SubPanelList::Node *node = m_RegistredPanel.GetFirst(); node; node = node->GetNext() )
+    {
+      AmayaSubPanel * current = node->GetData();
+      if ( current->GetPanelType() == panel_type )
+	current->ShouldBeUpdated( should_update );
+    }
+}
 
 #endif /* _WX */

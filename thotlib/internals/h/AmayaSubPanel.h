@@ -49,7 +49,8 @@ class AmayaSubPanel : public wxPanel
   bool        IsVisible();
 
   void ShouldBeUpdated( bool should_update = true );
-  
+  virtual bool IsActive();
+
   void SetTopAmayaWindow( AmayaNormalWindow * p_parent_window );
   
   //virtual void RefreshCheckButtonState( bool * p_checked_array );

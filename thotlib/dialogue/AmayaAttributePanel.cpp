@@ -570,6 +570,18 @@ void AmayaAttributePanel::DoUpdate()
   ForceAttributeUpdate();  
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaAttributePanel
+ *      Method:  IsActive
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaAttributePanel::IsActive()
+{
+  return (AmayaSubPanel::IsActive() && !IsFreezed());
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type

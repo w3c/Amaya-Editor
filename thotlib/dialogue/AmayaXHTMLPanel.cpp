@@ -203,6 +203,19 @@ void AmayaXHTMLPanel::DoUpdate()
   TtaRefreshPanelButton( doc, view, WXAMAYA_PANEL_XHTML );
 }
 
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaXHTMLPanel
+ *      Method:  IsActive
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaXHTMLPanel::IsActive()
+{
+  return AmayaSubPanel::IsActive();
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type

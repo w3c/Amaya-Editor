@@ -24,6 +24,7 @@ public:
 		       ,AmayaNormalWindow * p_parent_nwindow = NULL );
   virtual ~AmayaAttributePanel();
 
+  virtual bool IsActive();
   virtual int GetPanelType();
 
   void ForceAttributeUpdate();

@@ -24,6 +24,7 @@ public:
 		   ,AmayaNormalWindow * p_parent_nwindow = NULL );
   virtual ~AmayaXHTMLPanel();
 
+  virtual bool IsActive();
   virtual int GetPanelType();
   //void RefreshCheckButtonState( bool * p_checked_array );
   void RefreshToolTips();

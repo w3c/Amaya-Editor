@@ -125,24 +125,6 @@ extern UINT      subMenuID[MAX_FRAME];
 #include "uconvert_f.h"
 #include "dialogapi_f.h"
 
-#ifdef _WX
-/*
- * Return the Attribut dialog reference.
- */
-static AmayaAttributePanel * TtaGetAttributePanel()
-{
-  AmayaWindow * p_window = TtaGetWindowFromId(TtaGetActiveWindowId());
-  wxASSERT(p_window);
-  if (!p_window)
-    return NULL;
-  AmayaPanel * p_panel = p_window->GetAmayaPanel();
-  if (!p_panel)
-    return NULL;
-
-  return p_panel->GetAttributePanel();
-}
-#endif /* _WX */
-
 /*----------------------------------------------------------------------
   InitFormLangue
   initializes a form for capturing the values of the Language attribute.
@@ -1109,15 +1091,11 @@ void UpdateAttrMenu (PtrDocument pDoc)
 
 #ifdef _WX
   /* do nothing if the attribute dialog is not updatable (auto refresh checkbox activate) */
-  AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
-  if (!p_dlg)
-    return;
-  if(p_dlg->IsFreezed() || !p_dlg->IsVisible())
+  if (!AmayaSubPanelManager::GetInstance()->IsActive(WXAMAYA_PANEL_ATTRIBUTE))
     {
-      p_dlg->ShouldBeUpdated();
+      AmayaSubPanelManager::GetInstance()->ShouldBeUpdated(WXAMAYA_PANEL_ATTRIBUTE);
       return;
     }
-    
 #endif /* _WX */
 
   /* Compose le menu des attributs */
