@@ -27,7 +27,7 @@
 #define CACHE_DIR_NAME DIR_STR"libwww-cache"
 #define DEFAULT_CACHE_SIZE 10
 #define DEFAULT_MAX_CACHE_ENTRY_SIZE 3
-#define DEFAULT_MAX_SOCKET 64 
+#define DEFAULT_MAX_SOCKET 32
 #define DEFAULT_DNS_TIMEOUT 1800L
 #define DEFAULT_PERSIST_TIMEOUT 60L
 #define DEFAULT_NET_EVENT_TIMEOUT 60000
@@ -1470,6 +1470,8 @@ View view;
   char *strptr;
   char *cache_dir;
   int cache_size;
+  int cache_expire;
+  int cache_disconnect;
 
   if (!HTCacheMode_enabled ())
     /* don't do anything if we're not using a cache */
@@ -1477,6 +1479,9 @@ View view;
   /* temporarily close down the cache, purge it, then restart */
   cache_dir = TtaStrdup ( (char *) HTCacheMode_getRoot ());
   cache_size = HTCacheMode_maxSize ();
+  cache_expire = HTCacheMode_expires ();
+  cache_disconnect = HTCacheMode_disconnected ();
+
   /* remove the concurrent cache lock */
 #ifdef DEBUG_LIBWWW
   fprintf (stderr, "Clearing the cache lock\n");
@@ -1490,7 +1495,8 @@ View view;
 
   RecCleanCache (strptr);
 
-  HTCacheMode_setExpires (HT_EXPIRES_AUTO);
+  HTCacheMode_setExpires (cache_expire);
+  HTCacheMode_setDisconnected (cache_disconnect);
   HTCacheInit (cache_dir, cache_size);
   /* set a new concurrent cache lock */
   strcat (strptr, ".lock");
@@ -1658,6 +1664,7 @@ static void Cacheinit ()
   int cache_entry_size;
   boolean cache_enabled;
   boolean cache_locked;
+  boolean tmp_bool;
 
   /* activate cache? */
   strptr = (char *) TtaGetEnvString ("ENABLE_CACHE");
@@ -1725,9 +1732,18 @@ static void Cacheinit ()
 	{
 	  /* initialize the cache if there's no other amaya
 	     instance running */
-	  HTCacheInit (cache_dir, cache_size);
 	  HTCacheMode_setMaxCacheEntrySize (cache_entry_size);
-	  HTCacheMode_setExpires (HT_EXPIRES_AUTO);
+	  if (TtaGetEnvBoolean ("CACHE_EXPIRE_IGNORE", &tmp_bool) 
+	      && tmp_bool)
+	    HTCacheMode_setExpires (HT_EXPIRES_IGNORE);
+	  else
+	    HTCacheMode_setExpires (HT_EXPIRES_AUTO);
+	  TtaGetEnvBoolean ("CACHE_DISCONNECTED_MODE", &tmp_bool);
+	  if (tmp_bool)
+	    HTCacheMode_setDisconnected (HT_DISCONNECT_NORMAL);
+	  else
+	    HTCacheMode_setDisconnected (HT_DISCONNECT_NONE);
+	  HTCacheInit (cache_dir, cache_size);
 	  if (set_cachelock (cache_lockfile) == -1)
 	    /* couldn't open the .lock file, so, we close the cache to
 	       be in the safe side */
@@ -2333,6 +2349,7 @@ char 	     *content_type;
    char               *ref;
    int                 status, l;
    int                 tempsubdir;
+   boolean             bool_tmp;
 
    if (urlName == NULL || docid == 0 || outputfile == NULL) 
      {
@@ -2500,8 +2517,9 @@ char 	     *content_type;
 
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (ref);
    TtaFreeMemory (ref);
-
-   if (mode & AMAYA_NOCACHE) 
+   
+   TtaGetEnvBoolean ("CACHE_DISCONNECTED_MODE", &bool_tmp);
+   if (!bool_tmp && (mode & AMAYA_NOCACHE))
       HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
 
    /* prepare the query string and format for POST */
