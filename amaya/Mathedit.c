@@ -20,6 +20,11 @@
 #include "trans.h"
 
 #include "html2thot_f.h"
+#ifdef __STDC__
+extern boolean ElementNeedsPlaceholder (Element el);
+#else
+extern boolean ElementNeedsPlaceholder ();
+#endif
 
 #include "MathML.h"
 #ifndef _WINDOWS
