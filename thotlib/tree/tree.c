@@ -746,7 +746,7 @@ PtrElement BackSearchRefOrEmptyElem (PtrElement pEl, ThotBool Kind)
    changes the language for all the text leaves in the
    subtree of the element pointed by pEl.
   ----------------------------------------------------------------------*/
-void         ChangeLanguageLeaves (PtrElement pEl, Language lang)
+void ChangeLanguageLeaves (PtrElement pEl, Language lang)
 {
    PtrElement          pChild;
 
@@ -758,7 +758,7 @@ void         ChangeLanguageLeaves (PtrElement pEl, Language lang)
       /* element's subtree */
      {
 	pChild = pEl->ElFirstChild;
-	while (pChild != NULL)
+	while (pChild)
 	  {
 	     /* if the child has a Language attribute, don't change it */
 	     if (GetTypedAttrForElem (pChild, 1, NULL) == NULL)
@@ -766,14 +766,9 @@ void         ChangeLanguageLeaves (PtrElement pEl, Language lang)
 	     pChild = pChild->ElNext;
 	  }
      }
-   else
-      /* element is a leaf */
-     if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
-      /* this is text and the text is written in another language */
-      if (TtaGetAlphabet (pEl->ElLanguage) == TtaGetAlphabet (lang))
-	 /* this language uses the same alphabet  */
-	 /* changes the language of the element */
-	 pEl->ElLanguage = lang;
+   else if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
+     /* changes the language of the element */
+     pEl->ElLanguage = lang;
 }
 
 

@@ -508,7 +508,7 @@ void ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
       if (pAb->AbText == NULL)
 	GetConstantBuffer (pAb);
       CopyStringToBuffer (pConst->PdString, pAb->AbText, &l);
-      pAb->AbLanguage = TtaGetLanguageIdFromAlphabet (pConst->PdAlphabet);
+      pAb->AbLanguage = TtaGetDefaultLanguage ();
       pAb->AbVolume = pAb->AbText->BuLength;
       break;
     case Picture:

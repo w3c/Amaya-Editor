@@ -927,7 +927,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	    pPres1 = &pSchP->PsConstant[pVa1->ViConstant - 1];
 	    CopyStringToBuffer (pPres1->PdString, pAb->AbText, &l);
 	    pAb->AbVolume += l;
-	    pAb->AbLanguage = TtaGetLanguageIdFromAlphabet (pPres1->PdAlphabet);
+	    pAb->AbLanguage = TtaGetDefaultLanguage ();
 	    break;
 	    
 	  case VarAttrValue:

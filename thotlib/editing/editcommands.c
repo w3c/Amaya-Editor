@@ -307,9 +307,9 @@ static ThotBool CloseTextInsertionWithControl ()
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
    ViewSelection      *pViewSelEnd;
-#  ifndef _WINDOWS
+#if !defined(_WINDOWS) && !defined (_GTK)
    ThotEvent              event;
-#  endif /* !_WINDOWS */
+#endif /* _WINDOWS && _GTK */
    int                 nChars;
    int                 i, j;
    int                 ind;
@@ -936,13 +936,13 @@ static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keybo
     else
       language = plang;
   else if (keyboard == 2)
-    /* une langue latine saisie */
+    /* insert a standard character */
     if (TtaGetAlphabet (plang) == 'L')
       language = plang;
     else
-      language = TtaGetLanguageIdFromAlphabet ('L');
+      language = TtaGetDefaultLanguage ();
   else if (keyboard == 3)
-    /* langue grecque saisie */
+    /* insert a character form the greek palette */
     if (TtaGetAlphabet (plang) == 'G')
       language = plang;
     else

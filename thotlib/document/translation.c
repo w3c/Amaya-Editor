@@ -447,7 +447,7 @@ static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
   pTSch = NULL;
   pAncestor = pEl;
   *pTransAlph = NULL;
-  if (pEl->ElTerminal && pEl->ElLeafType == LtText)
+  if (pEl->ElTerminal && pEl->ElLeafType == LtText && pEl->ElLanguage < 4)
     alphabet = TtaGetAlphabet (pEl->ElLanguage);
   else
     alphabet = 'L';

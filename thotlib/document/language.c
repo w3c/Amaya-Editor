@@ -630,10 +630,10 @@ Language TtaGetDefaultLanguage ()
 /*----------------------------------------------------------------------
    TtaGetLanguageIdFromAlphabet
 
-   Not available for TYPO languages.
-   Returns the identifier of the first language that uses a given alphabet.
+   Returns the identifier of the first language that uses a given alphabet
+   `L' -> ISO_latin_1, `G' -> Symbol.
    Parameters:
-   languageAlphabet: the alphabet of interest (`L' = latin, `G' = greek).
+   languageAlphabet: the alphabet of interest.
    Return value:
    identifier of that language or 0 if the language is unknown.
   ----------------------------------------------------------------------*/
@@ -743,9 +743,7 @@ char *TtaGetLanguageCode (Language languageId)
    TtaGetNumberOfLanguages
 
    Not available for TYPO languages.
-
    Returns the current number of languages known by Thot.
-
    Return value:
    the current number of languages.
   ----------------------------------------------------------------------*/
@@ -759,9 +757,7 @@ int TtaGetNumberOfLanguages ()
    TtaGetFirstUserLanguage
 
    Not available for TYPO languages.
-
    Returns the first user language known by Thot.
-
    Return value:
    the first user language number.
   ----------------------------------------------------------------------*/

@@ -1228,13 +1228,12 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
   height = pAb->AbSize;
   unit = pAb->AbSizeUnit;
   height += ViewFrameTable[frame - 1].FrMagnification;
-  
   if (pAb->AbLeafType == LtText)
     {
-      if (pAb->AbLanguage == EOS)
-	alphabet = 'L';
-      else
+      if (pAb->AbLanguage < 4)
 	alphabet = TtaGetAlphabet (pAb->AbLanguage);
+      else
+	alphabet = 'L';
     }
   else if (pAb->AbLeafType == LtSymbol)
     alphabet = 'G';
