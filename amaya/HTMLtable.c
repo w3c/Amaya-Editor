@@ -584,8 +584,7 @@ ThotBool RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty,
 		    row = NULL;
 		}
 	    }
-	  if (TtaPrepareUndo (doc))
-	      TtaDeleteTree (colhead, doc);
+	  TtaDeleteTree (colhead, doc);
 	  if (span)
 	     CheckAllRows (table, doc, FALSE, FALSE);
 	}
