@@ -2828,10 +2828,10 @@ static PtrElement DescVisible (PtrElement pE, DocViewNumber viewNb,
 }
 
 /*----------------------------------------------------------------------
-   ApplyAttrPresRules applique a` l'element toutes les regles de   
-   presentation de l'attribut pAttr.                       
+   ApplyAttrPresRules applique a` l'element pEl toutes les regles de   
+   presentation de l'attribut pAttr
   ----------------------------------------------------------------------*/
-static void ApplyAttrPresRules (PtrSSchema pSS, PtrPSchema pSchPres,
+static void ApplyAttrPresRules (PtrSSchema pSS, PtrPSchema pSchP,
 				PtrAttribute pAttr, PtrElement pElAttr,
 				PtrAbstractBox * pAbbReturn,
 				DocViewNumber viewNb, PtrDocument pDoc,
@@ -2844,9 +2844,7 @@ static void ApplyAttrPresRules (PtrSSchema pSS, PtrPSchema pSchPres,
 {
   PtrPRule            pR, pRuleView1, pRuleToApply;
   int                 view, i, valNum;
-  PtrPSchema          pSchP;
   PtrSSchema	      pSSattr;
-  PtrHandlePSchema    pHd;
   ThotBool            apply;
 
   apply = TRUE;
@@ -2860,155 +2858,131 @@ static void ApplyAttrPresRules (PtrSSchema pSS, PtrPSchema pSchPres,
       /* on cherchera d'abord dans le schema de presentation principal de */
       /* l'attribut */
       pSSattr = pAttr->AeAttrSSchema;
-      pSchP = PresentationSchema (pSSattr, pDoc);
-      pHd = NULL;
-      /* on examine le schema de presentation principal, puis les schemas */
-      /* additionnels */
-      while (pSchP != NULL)
+      if (pDoc->DocView[viewNb - 1].DvPSchemaView == 1 &&
+	  pSchP->PsPresentName[0] == EOS)  /* extension de schema */
+	/* si c'est ID ou CLASS, on prend les extensions du schema de
+	   presentation associe' au schema de structure du document */
+	if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
+			      pAttr->AeAttrSSchema) ||
+	    AttrHasException (ExcCssId, pAttr->AeAttrNum,
+			      pAttr->AeAttrSSchema))
+	  pSSattr = pDoc->DocSSchema;
+
+      /* process all values of the attribute, in case of a text attribute
+	 with multiple values */
+      valNum = 1;
+      do
 	{
-	  /* process all values of the attribute, in case of a text attribute
-	     with multiple values */
-	  valNum = 1;
-	  do
-	    {
-	      pRuleView1 = NULL;
-	      /* 1ere regle de presentation pour cette valeur de l'attribut */
-	      pR = AttrPresRule (pAttr, pEl, inheritRule, NULL, pSchP,&valNum);
+	  pRuleView1 = NULL;
+	  /* 1ere regle de presentation pour cette valeur de l'attribut */
+	  pR = AttrPresRule (pAttr, pEl, inheritRule, NULL, pSchP, &valNum);
 
-	      /* boucle sur la liste de regles de presentation associees a */
-	      /* cette valeur de l'attribut */
-	      while (pR != NULL)
-		{
-		  /* verifie si c'est une regle de creation et si oui */
-		  /* applique la regle de creation */
-		  if (!pR->PrDuplicate)
-		    if (!ApplCrRule (pR, pSSattr, pSchP, pAttr, pAbbReturn,
-				   viewNb, pDoc, pEl, forward, lqueue, queuePR,
-				   queuePP, queuePS, queuePA, pNewAbbox))
+	  /* boucle sur la liste de regles de presentation associees a */
+	  /* cette valeur de l'attribut */
+	  while (pR != NULL)
+	    {
+	      /* verifie si c'est une regle de creation et si oui */
+	      /* applique la regle de creation */
+	      if (!pR->PrDuplicate)
+		if (!ApplCrRule (pR, pSSattr, pSchP, pAttr, pAbbReturn,
+				 viewNb, pDoc, pEl, forward, lqueue, queuePR,
+				 queuePP, queuePS, queuePA, pNewAbbox))
+		  {
+		    /* ce n'est pas une regle de creation, applique la */
+		    /* regle si elle concerne la vue */
+		    /* ou applique la regle pour la vue 1 si elle existe */
+		    pRuleToApply = NULL;
+
+		    if (pR->PrViewNum == 1)
 		      {
-		      /* ce n'est pas une regle de creation, applique la */
-		      /* regle si elle concerne la vue */
-		      /* ou applique la regle pour la vue 1 si elle existe */
-		      pRuleToApply = NULL;
-
-		      if (pR->PrViewNum == 1)
-			{
-			  /* la regle pour la vue 1 */
-			  if (pR->PrCond == NULL ||
-			      CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
-						1, pSS, pDoc))
-			    /* la condition d'application est satisfaite */
-			    {
-			      /* On la conserve au cas ou on ne trouve pas mieux */
-			      pRuleView1 = pR;
-			      if (view == 1)
-				/* on est dans la vue 1. Donc c'est la bone regle*/
-				pRuleToApply = pR;
-			      else
-				{
-				  /* on cherche s'il existe une regle de meme */
-				  /* type pour la vue view, dont les conditions */
-				  /* d'application soient satisfaites */
-				  while (pR->PrNextPRule &&
-					 pR->PrNextPRule->PrType == pRuleView1->PrType)
-				    {
-				      /* la boucle parcourt toutes les regles */
-				      /* de meme type */
-				      pR = pR->PrNextPRule;
-				      if (pR->PrViewNum == view)
-					if (pR->PrCond == NULL ||
-					    CondPresentation (pR->PrCond, pEl,
-							      pAttr, pElAttr, view, pSS, pDoc))
-					  pRuleToApply = pR;
-				    }
-				  if (pRuleToApply == NULL)
-				    /* il n'y a pas de regle specifique pour */
-				    /* la vue view. On prend la vue 1 */
-				    pRuleToApply = pRuleView1;
-				}
-			    }
-			}
-		      else
-			/* ce n'est pas une regle pour la vue 1. Cette regle ne */
-			/* s'applique que si le numero de vue correspond */
-			if (view == pR->PrViewNum)
-			  if (pR->PrCond == NULL ||
-			      CondPresentation (pR->PrCond, pEl, pAttr,
-						pElAttr, view, pSS, pDoc))
-			    pRuleToApply = pR;
-
-		      if (pRuleToApply && DoesViewExist (pEl, pDoc, viewNb))
-			{
-			  /* Desapplique la regle associee au type de l'element */
-			  if (pRuleToApply->PrType == PtVertPos)
-			    {
-			      pNewAbbox->AbVertPos.PosEdge = Top;
-			      pNewAbbox->AbVertPos.PosRefEdge = Top;
-			      pNewAbbox->AbVertPos.PosDistance = 0;
-			      pNewAbbox->AbVertPos.PosUnit = UnRelative;
-			      pNewAbbox->AbVertPos.PosAbRef = NULL;
-			      pNewAbbox->AbVertPos.PosUserSpecified = FALSE;
-			    }
-			  if (pRuleToApply->PrType == PtHorizPos)
-			    {
-			      pNewAbbox->AbHorizPos.PosEdge = Left;
-			      pNewAbbox->AbHorizPos.PosRefEdge = Left;
-			      pNewAbbox->AbHorizPos.PosDistance = 0;
-			      pNewAbbox->AbHorizPos.PosUnit = UnRelative;
-			      pNewAbbox->AbHorizPos.PosAbRef = NULL;
-			      pNewAbbox->AbHorizPos.PosUserSpecified = FALSE;
-			    }
-			  /* retire la regle associee au type de */
-			  /* l'element si elle est en attente */
-			  for (i = 1; i <= *lqueue; i++)
-			    if (queuePR[i - 1] != NULL)
-			      if (queuePR[i - 1]->PrType == pRuleToApply->PrType)
-				if (queuePP[i - 1] == pNewAbbox)
-				  queuePR[i - 1] = NULL;
-			  /* applique la regle */
-			  if (!ApplyRule (pRuleToApply, pSchP, pNewAbbox, pDoc,
-					  pAttr))
-			    
-			    /* la regle n'a pas pu etre appliquee, on l'appliquera
-			       quand les paves de la descendance auront ete crees*/
-			    WaitingRule (pRuleToApply, pNewAbbox, pSchP, pAttr,
-					 queuePA, queuePS, queuePP, queuePR, lqueue);
-			}
+			/* la regle pour la vue 1 */
+			if (pR->PrCond == NULL ||
+			    CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
+					      1, pSS, pDoc))
+			  /* la condition d'application est satisfaite */
+			  {
+			    /* On la conserve au cas ou on ne trouve pas
+			       mieux */
+			    pRuleView1 = pR;
+			    if (view == 1)
+			      /* on est dans la vue 1. Donc c'est la bone regle*/
+			      pRuleToApply = pR;
+			    else
+			      {
+				/* on cherche s'il existe une regle de meme */
+				/* type pour la vue view, dont les conditions*/
+				/* d'application soient satisfaites */
+				while (pR->PrNextPRule &&
+				       pR->PrNextPRule->PrType == pRuleView1->PrType)
+				  {
+				    /* la boucle parcourt toutes les regles */
+				    /* de meme type */
+				    pR = pR->PrNextPRule;
+				    if (pR->PrViewNum == view)
+				      if (pR->PrCond == NULL ||
+					  CondPresentation (pR->PrCond, pEl,
+							    pAttr, pElAttr,
+							    view, pSS, pDoc))
+					pRuleToApply = pR;
+				  }
+				if (pRuleToApply == NULL)
+				  /* il n'y a pas de regle specifique pour */
+				  /* la vue view. On prend la vue 1 */
+				  pRuleToApply = pRuleView1;
+			      }
+			  }
 		      }
-		  pR = pR->PrNextPRule;
-		}
+		    else
+		      /* ce n'est pas une regle pour la vue 1. Cette regle */
+		      /* ne s'applique que si le numero de vue correspond */
+		      if (view == pR->PrViewNum)
+			if (pR->PrCond == NULL ||
+			    CondPresentation (pR->PrCond, pEl, pAttr,
+					      pElAttr, view, pSS, pDoc))
+			  pRuleToApply = pR;
+
+		    if (pRuleToApply && DoesViewExist (pEl, pDoc, viewNb))
+		      {
+			/* Desapplique la regle associee au type de l'element*/
+			if (pRuleToApply->PrType == PtVertPos)
+			  {
+			    pNewAbbox->AbVertPos.PosEdge = Top;
+			    pNewAbbox->AbVertPos.PosRefEdge = Top;
+			    pNewAbbox->AbVertPos.PosDistance = 0;
+			    pNewAbbox->AbVertPos.PosUnit = UnRelative;
+			    pNewAbbox->AbVertPos.PosAbRef = NULL;
+			    pNewAbbox->AbVertPos.PosUserSpecified = FALSE;
+			  }
+			if (pRuleToApply->PrType == PtHorizPos)
+			  {
+			    pNewAbbox->AbHorizPos.PosEdge = Left;
+			    pNewAbbox->AbHorizPos.PosRefEdge = Left;
+			    pNewAbbox->AbHorizPos.PosDistance = 0;
+			    pNewAbbox->AbHorizPos.PosUnit = UnRelative;
+			    pNewAbbox->AbHorizPos.PosAbRef = NULL;
+			    pNewAbbox->AbHorizPos.PosUserSpecified = FALSE;
+			  }
+			/* retire la regle associee au type de */
+			/* l'element si elle est en attente */
+			for (i = 1; i <= *lqueue; i++)
+			  if (queuePR[i - 1] != NULL)
+			    if (queuePR[i - 1]->PrType == pRuleToApply->PrType)
+			      if (queuePP[i - 1] == pNewAbbox)
+				queuePR[i - 1] = NULL;
+			/* applique la regle */
+			if (!ApplyRule (pRuleToApply, pSchP, pNewAbbox, pDoc,
+					pAttr))
+
+			  /* la regle n'a pas pu etre appliquee, on l'appliquera
+			     quand les paves de la descendance auront ete crees*/
+			  WaitingRule (pRuleToApply, pNewAbbox, pSchP, pAttr,
+				       queuePA, queuePS, queuePP, queuePR, lqueue);
+		      }
+		  }
+	      pR = pR->PrNextPRule;
 	    }
-	  while (valNum > 0);
-	  
-	  if (pHd == NULL)
-	    {
-	      /* on n'a pas encore traite' les schemas de presentation
-		 additionnels. On prend le premier schema additionnel si on
-		 travaille pour la vue principale, sinon on ignore les
-		 schemas additionnels. */
-	      if (pDoc->DocView[viewNb - 1].DvPSchemaView == 1)
-		{
-		  /* si c'est ID ou CLASS, on prend les extensions du schema
-		     de presentation associe' au schema de structure du
-		     document */
-		  if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
-					pAttr->AeAttrSSchema) ||
-		      AttrHasException (ExcCssId, pAttr->AeAttrNum,
-					pAttr->AeAttrSSchema))
-		    pSSattr = pDoc->DocSSchema;
-		  pHd = FirstPSchemaExtension (pSSattr, pDoc);
-		}
-	    }
-	  else
-	    /* passe au schema additionnel suivant */
-	    pHd = pHd->HdNextPSchema;
-	  if (pHd == NULL)
-	    /* il n'y a pas (ou plus) de schemas additionnels a prendre en
-	       compte */
-	    pSchP = NULL;
-	  else
-	    pSchP = pHd->HdPSchema;
 	}
+      while (valNum > 0);
     }
 }
 
@@ -3382,9 +3356,11 @@ static void  ApplPresRules (PtrElement pEl, PtrDocument pDoc,
   InheritAttrTable   *inheritTable;
   ThotBool            stop;
   PtrHandlePSchema    pHd;
-  PtrPSchema          pSP, pSchPadd;
+  PtrPSchema          pSchPres, pSchPattr;
   int                 view, l;
 
+  /* applique toutes les regles definies dans le schema de presentation
+     principal pour ce type d'element */
   pRuleView = NULL;
   do
     {
@@ -3402,8 +3378,8 @@ static void  ApplPresRules (PtrElement pEl, PtrDocument pDoc,
 	      if (view == 1)
 		pRuleView = NULL;
 	      else
-		pRuleView = GetRuleView (pRSpec, pRDef, pRule->PrType, view, pEl,
-					 NULL, pSchS, pDoc);
+		pRuleView = GetRuleView (pRSpec, pRDef, pRule->PrType, view,
+					 pEl, NULL, pSchS, pDoc);
 	      if (view == viewSch && pNewAbbox != NULL &&
 		  DoesViewExist (pEl, pDoc, viewNb))
 		{
@@ -3418,71 +3394,88 @@ static void  ApplPresRules (PtrElement pEl, PtrDocument pDoc,
     }
   while (pRule != NULL);
 
-  /* Applique les regles de presentation pour ce type d'element contenues */
-  /* dans les schemas de presentation additionnels du document */
-  /* On n'applique les schemas additionnels que pour la vue principale d'un */
-  /* document */
-  if (pNewAbbox != NULL && viewSch == 1)
+  if (!pNewAbbox)
+    return;
+
+  /* utilise les schemas de presentation additionnels dans l'ordre croissant
+     de priorite' */
+  pHd = NULL;
+  pSchPres = PresentationSchema (pEl->ElStructSchema, pDoc);
+  while (pSchPres != NULL)
     {
-      pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc);
-      while (pHd != NULL)
-	{
-	  pSchPadd = pHd->HdPSchema;
-	  if (pSchPadd != NULL)
+      /* Applique les regles de presentation pour ce type d'element definies */
+      /* dans ce schema de presentation additionnel */
+      /* On n'applique les schemas additionnels que pour la vue principale
+	 d'un document */
+      if (viewSch == 1 && pHd != NULL)
+        {
+	  /* applique toutes les regles de presentation associees au type
+	     de l'element */
+	  pRule = pSchPres->PsElemPRule->ElemPres[pEl->ElTypeNumber - 1];
+	  while (pRule != NULL)
 	    {
-	      /* applique toutes les regles de presentation associees au type de
-		 l'element */
-	      pRule = pSchPadd->PsElemPRule->ElemPres[pEl->ElTypeNumber - 1];
-	      while (pRule != NULL)
-		{
-		  if (pRule->PrCond == NULL ||
-		      CondPresentation (pRule->PrCond, pEl, NULL, NULL,
-					1, pEl->ElStructSchema, pDoc))
-		    
-		    /* les conditions d'application de la regle sont satisfaites, */
-		    
-		    if (!ApplyRule (pRule, pSchPadd, pNewAbbox, pDoc, NULL))
-		      WaitingRule (pRuleView, pNewAbbox, pSchP, NULL, queuePA,
-				   queuePS,
-				   queuePP, queuePR, lqueue);
-		  pRule = pRule->PrNextPRule;
-		}
+	      if (pRule->PrCond == NULL ||
+		  CondPresentation (pRule->PrCond, pEl, NULL, NULL, 1,
+				    pEl->ElStructSchema, pDoc))
+		/* les conditions d'application de la regle sont satisfaites */
+		if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL))
+		  WaitingRule (pRule, pNewAbbox, pSchPres, NULL, queuePA,
+			       queuePS, queuePP, queuePR, lqueue);
+	      pRule = pRule->PrNextPRule;
 	    }
-	  pHd = pHd->HdNextPSchema;
+        }
+      if (viewSch == 1 || pHd == NULL)
+	{
+	  /* Applique les regles de presentation heritees des attributs  */
+	  /* poses sur les elements englobants. */
+	  /* S'il y a heritage, la table a deja ete calculee precedemment*/
+	  inheritTable = pSchPres->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+	  if (pSchPres->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
+	    /* il y a heritage possible */
+	    for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
+	      if ((*inheritTable)[l - 1])  /* pEl herite de l'attribut l */
+		/* cherche si l'attribut l existe au dessus */
+		if ((pAttr = GetTypedAttrAncestor (pEl, l,
+						   pEl->ElStructSchema,
+						   &pElAttr)) != NULL)
+		  ApplyAttrPresRules (pAttr->AeAttrSSchema, pSchPres,
+				      pAttr, pElAttr, pAbbReturn, viewNb,
+				      pDoc, pEl, forward, lqueue, queuePR,
+				      queuePP, queuePS, queuePA,
+				      pNewAbbox, TRUE);
+	      /* Applique les regles de present. des attributs de l'element */
+	      pAttr = pEl->ElFirstAttr;	/* 1er attribut de l'element */
+	      while (pAttr != NULL)
+		/* boucle sur les attributs de l'element */
+		{
+		  if (pHd == NULL)
+		   pSchPattr = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
+		  else
+		   pSchPattr = pSchPres;
+		  ApplyAttrPresRules (pAttr->AeAttrSSchema, pSchPattr,
+				      pAttr, pEl, pAbbReturn, viewNb, pDoc,
+				      pEl, forward, lqueue, queuePR,
+				      queuePP, queuePS, queuePA, pNewAbbox,
+				      FALSE);
+		  pAttr = pAttr->AeNext;
+		}
 	}
+      /* on passe au schemas de presentation suivant */
+      if (pHd)
+	/* on prend le schema de presentation additionnel de priorite' */
+	/* superieure */
+	pHd = pHd->HdNextPSchema;
+      else
+	/* on utilisait dans le schema de presentation principal */
+	/* on prend le premier schema de presentation additionnel */
+	pHd = FirstPSchemaExtension (pEl->ElStructSchema, pDoc);
+      if (pHd)
+	pSchPres = pHd->HdPSchema;
+      else
+	/* plus de schemas additionnels, on arrete */
+	pSchPres = NULL;
     }
 
-  /* Applique les regles de presentation heritees des attributs  */
-  /* poses sur les elements englobants s'il y a heritage, */
-  /* alors la table a deja ete calcule precedemment */
-  pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
-  inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
-  if (pNewAbbox != NULL)
-    if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
-      /* il y a heritage possible */
-      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
-	if ((*inheritTable)[l - 1])	   /* pEl herite de l'attribut l */
-	  /* cherche si l'attribut l existe au dessus */
-	  if ((pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema, &pElAttr)) != NULL)
-	    ApplyAttrPresRules (pAttr->AeAttrSSchema,
-				PresentationSchema (pAttr->AeAttrSSchema, pDoc),
-				pAttr, pElAttr, pAbbReturn, viewNb, pDoc,
-				pEl, forward, lqueue, queuePR,
-				queuePP, queuePS, queuePA,
-				pNewAbbox, TRUE);
-  /* Applique les regles de presentation des attributs de l'element. */
-  pAttr = pEl->ElFirstAttr;	/* 1er attribut de l'element */
-  if (pNewAbbox != NULL)
-    while (pAttr != NULL)	/* boucle sur les attributs de l'element */
-      {
-	ApplyAttrPresRules (pAttr->AeAttrSSchema,
-			    PresentationSchema (pAttr->AeAttrSSchema, pDoc),
-			    pAttr, pEl, pAbbReturn, viewNb, pDoc, pEl,
-			    forward, lqueue, queuePR,
-			    queuePP, queuePS, queuePA, pNewAbbox, FALSE);
-	pAttr = pAttr->AeNext;
-      }
-  
   /* Applique les regles de presentation specifiques associees a cet */
   /* element */
   pR = pEl->ElFirstPRule;
@@ -3493,7 +3486,6 @@ static void  ApplPresRules (PtrElement pEl, PtrDocument pDoc,
       if (!(pEl->ElTypeNumber == PageBreak + 1 && pR->PrType == PtHeight))
 	if ((pR->PrViewNum == viewSch
 	     || pR->PrType == PtPictInfo)
-	    && pNewAbbox != NULL
 	    && DoesViewExist (pEl, pDoc, viewNb))
 	  {
 	    if (pR->PrSpecifAttr == 0)
@@ -3873,11 +3865,12 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 		}
 	      }
 	    /*********/
-	    /* pRSpec: premiere regle de presentation specifique. */
+	    /* pRSpec: premiere regle de presentation associee au type de
+	       l'element */
 	    pRSpec = pSchP->PsElemPRule->ElemPres[index - 1];
 	    /* premiere regle de presentation par defaut */
 	    pRDef = pSchP->PsFirstDefaultPRule;
-	    /* initialise la file des regles qui n'ont pas pu etre appliquees */
+	    /* initialise la file des regles qui n'ont pas pu etre appliquees*/
 	    lqueue = 0;
 	    pqueue = 0;
 	    
@@ -3885,7 +3878,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 	    ComputeVisib (pEl, pDoc, viewNb, viewSch, &pRSpec, &pRDef, &vis,
 			  &ignoreDescent, complete, &typePres, &pSchPPage);
 	    
-	    /* si l'element est visible dans cette vue ou si c'est la racine, */
+	    /* si l'element est visible dans cette vue ou si c'est la racine,*/
 	    /* on cree son pave, si ce n'est deja fait */
 	    if (vis >= 1 || pEl->ElParent == NULL)
 	      {
@@ -4038,6 +4031,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 	  {
 	    if ((Creation || ApplyRules) && descent)
 	      {
+		/* on applique toutes les regles de presentation pertinentes */
 		ApplPresRules (pEl, pDoc, viewNb, viewSch, pSchS,
 			       pSchP, &pRSpec, &pRDef, &pAbbReturn, forward,
 			       &lqueue, queuePR, queuePP, queuePS, queuePA, pNewAbbox);
