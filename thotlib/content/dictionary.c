@@ -31,7 +31,6 @@
 #define MaxDictionaries 15	/* Maximum number of simultaneous dictionaries                */
 
 extern struct Langue_Ctl LangTable[MAX_LANGUAGES];
-extern struct Langue_Ctl TypoLangTable[MAX_LANGUAGES];
 extern int               FreeEntry;
 extern CHARSET           CharEncoding;
 
@@ -801,68 +800,6 @@ Language            languageId;
    return (LangTable[lang].LangDict[0] != NULL || LangTable[lang].LangDict[1] != NULL);
 }
 
-
-/*----------------------------------------------------------------------
-   TtaLoadTypoDictionaries
-
-   Loads the dictionary associated with a typolanguage, if it is not loaded yet
-   and registers that a dictionary associated with this language has been loaded.
-
-   Returns -1 if the mandatory dictionary cann't be loaded.
-   0 if no dictionary has been loaded
-   1 if the mandatory dictionary is loaded.
-
-   Parameters:
-   languageId: name of the concerned language.
-
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaLoadTypoDictionaries (Language languageId)
-#else  /* __STDC__ */
-ThotBool            TtaLoadTypoDictionaries (languageId)
-Language            languageId;
-#endif /* __STDC__ */
-{
-   int                 lang;
-   PtrDict             dictPtr;
-   int                 ret;
-
-   /* If the variable dictPath is not loaded -> do nothig */
-   if (dictPath == NULL)
-      return FALSE;
-
-   ret = 1;
-   lang = (int) languageId;
-   /* Verifies if the main dictionary is already loaded */
-   if (TypoLangTable[lang].LangDict[0] == NULL)
-     {
-	/* Loading the main dictionary */
-	if (TypoLangTable[lang].LangPrincipal[0] != EOS)
-	  {
-	     ret = LoadTreatedDict (&dictPtr, lang, NULL,
-		  TypoLangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
-	     if (ret > 0)
-		TypoLangTable[lang].LangDict[0] = (Dictionary) dictPtr;
-	  }
-     }
-
-   /* Verifies if the secondary dictionary is already laded */
-   if (TypoLangTable[lang].LangDict[1] == NULL)
-     {
-	/* Loading the secondary dictionary */
-	if (TypoLangTable[lang].LangSecondary[0] != EOS)
-	  {
-	     ret = LoadTreatedDict (&dictPtr, lang, NULL,
-		  TypoLangTable[lang].LangSecondary, dictPath, TRUE, FALSE);
-	     if (ret > 0)
-		TypoLangTable[lang].LangDict[1] = (Dictionary) dictPtr;
-	  }
-     }
-   return (TypoLangTable[lang].LangDict[0] != NULL
-	   || TypoLangTable[lang].LangDict[1] != NULL);
-}
-
-
 /*----------------------------------------------------------------------
    TtaUnLoadLanguageDictionaries
 
@@ -887,33 +824,6 @@ Language            languageId;
      {
 	ReleaseDictionary ((PtrDict *) & LangTable[i].LangDict[j]);
 	LangTable[i].LangDict[j] = NULL;
-     }
-}
-
-
-/*----------------------------------------------------------------------
-   TtaUnLoadTypoDictionaries
-
-   Unloads dictionaries associated with a given language.
-
-   Parameters:
-   languageId: identifier of the language.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaUnLoadTypoDictionaries (Language languageId)
-#else  /* __STDC__ */
-void                TtaUnLoadTypoDictionaries (languageId)
-Language            languageId;
-#endif /* __STDC__ */
-{
-   int                 i, j;
-
-   i = (int) languageId;
-   j = 0;
-   while (TypoLangTable[i].LangDict[j] != NULL && j < MAX_DICTS)
-     {
-	ReleaseDictionary ((PtrDict *) & TypoLangTable[i].LangDict[j]);
-	TypoLangTable[i].LangDict[j] = NULL;
      }
 }
 
@@ -951,38 +861,6 @@ Language            languageId;
 
 
 /*----------------------------------------------------------------------
-   TtaGetPrincipalTypoDictionary
-
-   Returns a pointer to the principal dictionary associated to a language.
-
-   Return value:
-   the pointer to that dictionary or NULL if there is no dictionary for
-   this language.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Dictionary          TtaGetPrincipalTypoDictionary (Language languageId)
-#else  /* __STDC__ */
-Dictionary          TtaGetPrincipalTypoDictionary (languageId)
-Language            languageId;
-#endif /* __STDC__ */
-{
-   int                 i;
-
-   i = (int) languageId;
-   /* Verification of the parameter */
-   if (i >= FreeEntry)
-     {
-	TtaError (ERR_language_not_found);
-	return NULL;
-     }
-
-   /* Loading dictionaries if exist */
-   TtaLoadTypoDictionaries (languageId);
-   return (TypoLangTable[i].LangDict[0]);
-}
-
-
-/*----------------------------------------------------------------------
    TtaGetSecondaryDictionary
 
    Returns a pointer to the secondary dictionary associated to a language.
@@ -1008,33 +886,4 @@ Language            languageId;
 	return NULL;
      }
    return (LangTable[i].LangDict[1]);
-}
-
-
-/*----------------------------------------------------------------------
-   TtaGetSecondaryTypoDictionary
-
-   Returns a pointer to the secondary dictionary associated to a language.
-
-   Return value:
-   the pointer to that dictionary or NULL if there is no dictionary for
-   this language.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Dictionary          TtaGetSecondaryTypoDictionary (Language languageId)
-#else  /* __STDC__ */
-Dictionary          TtaGetSecondaryTypoDictionary (languageId)
-Language            languageId;
-#endif /* __STDC__ */
-{
-   int                 i;
-
-   i = (int) languageId;
-   /* Verification of the parameter */
-   if (i >= FreeEntry)
-     {
-	TtaError (ERR_language_not_found);
-	return NULL;
-     }
-   return (TypoLangTable[i].LangDict[1]);
 }

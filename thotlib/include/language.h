@@ -222,28 +222,6 @@ extern Dictionary   TtaGetPrincipalDictionary (Language languageId);
   ----------------------------------------------------------------------*/
 extern Dictionary   TtaGetSecondaryDictionary (Language languageId);
 
-/*----------------------------------------------------------------------
-   TtaGetPrincipalTypoDictionary
-
-   Returns a pointer to the principal dictionary associated to a language.
-
-   Return value:
-   the pointer to that dictionary or NULL if there is no dictionary for
-   this language.
-  ----------------------------------------------------------------------*/
-extern Dictionary   TtaGetPrincipalTypoDictionary (Language languageId);
-
-/*----------------------------------------------------------------------
-   TtaGetSecondaryTypoDictionary
-
-   Returns a pointer to the secondary dictionary associated to a language.
-
-   Return value:
-   the pointer to that dictionary or NULL if there is no dictionary for
-   this language.
-  ----------------------------------------------------------------------*/
-extern Dictionary   TtaGetSecondaryTypoDictionary (Language languageId);
-
 #else  /* __STDC__ */
 
 extern Language     TtaNewLanguage ( /* CHAR_T* languageName, char languageAlphabet, char *principalDictionary, char *secondDictionary */ );
@@ -260,8 +238,6 @@ extern ThotBool     TtaLoadLanguageDictionaries ( /* Language languageId */ );
 extern void         TtaUnLoadLanguageDictionaries ( /* Language languageId */ );
 extern Dictionary   TtaGetPrincipalDictionary ( /* Language languageId */ );
 extern Dictionary   TtaGetSecondaryDictionary ( /* Language languageId */ );
-extern Dictionary   TtaGetPrincipalTypoDictionary ( /* Language languageId */ );
-extern Dictionary   TtaGetSecondaryTypoDictionary ( /* Language languageId */ );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
