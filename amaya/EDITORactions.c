@@ -2136,7 +2136,7 @@ STRING              shape;
    Element             el, map, parent, image, child, newElem;
    ElementType         elType;
    AttributeType       attrType;
-   Attribute           attr, attrRef, attrShape;
+   Attribute           attr, attrRef, attrShape, attrRefimg;
    STRING              url;
    int                 length, w, h;
    int                 firstchar, lastchar;
@@ -2160,6 +2160,7 @@ STRING              shape;
 
    TtaOpenUndoSequence (doc, el, el, 0, 0);
    newElem = NULL;
+   attrRefimg = NULL;
 
    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      /* an image is selected. Create an area for it */
@@ -2216,12 +2217,11 @@ STRING              shape;
 		 TtaRegisterAttributeReplace (attr, image, doc);
 	         TtaSetAttributeText (attr, url, image, doc);
 	       }
-
 	     /* create the Ref_IMG attribute */
 	     attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
-	     attr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (map, attr, doc);
-	     TtaSetAttributeReference (attr, map, doc, image, doc);
+	     attrRefimg = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (map, attrRefimg, doc);
+	     TtaSetAttributeReference (attrRefimg, map, doc, image, doc);
 	  }
 	TtaFreeMemory (url);
      }
@@ -2320,10 +2320,16 @@ STRING              shape;
 	/* Compute coords attribute */
 	SetAreaCoords (doc, el, 0);
 	/* FrameUpdating creation of Area and selection of destination */
-	SelectDestination (doc, el, FALSE);	/******* check last param *****/
+	SelectDestination (doc, el, FALSE);
      }
    if (newElem)
       TtaRegisterElementCreate (newElem, doc);
+   /* if a map has been created, register its Ref_IMG attribute to
+      avoid troubles when Undoing the command: function DeleteMap
+      would delete the USEMAP attribute from the IMG otherwise.
+      Undo already deletes this attribute! */
+   if (attrRefimg)
+      TtaRegisterAttributeCreate (attrRefimg, map, doc);
    TtaCloseUndoSequence (doc);
 }
 
