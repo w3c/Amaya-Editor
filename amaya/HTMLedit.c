@@ -2132,7 +2132,8 @@ void CheckNewLines (NotifyOnTarget *event)
     if ((strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
         (elType.ElTypeNum == HTML_EL_STYLE_ ||
          elType.ElTypeNum == HTML_EL_SCRIPT_ ||
-	 elType.ElTypeNum == HTML_EL_Preformatted))
+	 elType.ElTypeNum == HTML_EL_Preformatted ||
+	 elType.ElTypeNum == HTML_EL_Text_Area))
        pre = TRUE;
     else
        ancestor = TtaGetParent (ancestor);
