@@ -78,6 +78,10 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
    int                 xb, xe, yb, ye;
    int                 scrollx, scrolly;
 
+   /****if (xd == xf && xd == 0 && yd == yf && yd == 0)
+	printf ("RAZ DefClip\n");
+	else
+	printf ("DefClip xd=%d xf=%d -- yd=%d yf=%d\n", xd, xf, yd, yf);****/
    if ((xd == xf && xd == 0 && (yd != yf || yd != 0)) ||
        (yd == yf && yd == 0 && (xd != xf || xd != 0)))
      return;

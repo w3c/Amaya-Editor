@@ -2627,65 +2627,80 @@ void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
 }
 
 /*----------------------------------------------------------------------
-   Ratio_Calculate : if one picture dimension is null
-    make sure we keep the aspect ratio
+  Ratio_Calculate checks picture dimensions (width, height) with
+  constained values (w, h).
+  Apply the image ratio when only one dimension is constained.
   ----------------------------------------------------------------------*/
-static ThotBool Ratio_Calculate (PtrAbstractBox pAb,
-				 int *width, int *height, 
-				 int imgwidth, int imgheight)
-{  
-
-  ThotBool Constrained_Width, Constrained_Height;
-  int      initialw, initialh;
+ThotBool Ratio_Calculate (PtrAbstractBox pAb, PictInfo *imageDesc,
+			  int width, int height, int w, int h, int frame)
+{
+  PtrBox      box;
+  int         initialw, initialh;
+  ThotBool    constrained_Width, constrained_Height, change;
   
-  if (imgwidth && imgheight && 
-      pAb->AbBox->BxType == BoPicture)
-    {	
-      initialw = *width;      
-      Constrained_Width = TRUE;
-      if (!pAb->AbWidth.DimIsPosition)
-	if (pAb->AbWidth.DimValue == -1 &&
-	    pAb->AbWidth.DimAbRef == NULL)
-	  Constrained_Width = FALSE;
+  imageDesc->PicWidth = width;
+  imageDesc->PicHeight = height;
+  imageDesc->PicWArea = w;
+  imageDesc->PicHArea = h;
+  change = FALSE;
+  box = pAb->AbBox;
+  if (width && height && box && box->BxType == BoPicture)
+    {
+      constrained_Width = TRUE;
+      if (!pAb->AbWidth.DimIsPosition &&
+	  pAb->AbWidth.DimValue == -1 &&
+	  pAb->AbWidth.DimAbRef == NULL)
+	constrained_Width = FALSE;
 
-      initialh = *height;     
-      Constrained_Height = TRUE;
-      if (!pAb->AbHeight.DimIsPosition)
-	if (pAb->AbHeight.DimValue == -1 &&
-	    pAb->AbHeight.DimAbRef == NULL)
-	  Constrained_Height = FALSE;
+      constrained_Height = TRUE;
+      if (!pAb->AbHeight.DimIsPosition &&
+	  pAb->AbHeight.DimValue == -1 &&
+	  pAb->AbHeight.DimAbRef == NULL)
+	constrained_Height = FALSE;
     
-      if (Constrained_Width == FALSE && 
-	  Constrained_Height == TRUE)
+      if (!constrained_Width && constrained_Height)
 	{
-	  *width = (imgwidth * *height) / imgheight;
-	  if ((*width) != initialw)
-	    return TRUE;
-	  else
-	    return FALSE;	  
+	  w = (width * h) / height;
+	  if (w != imageDesc->PicWArea)
+	    {
+	      change = TRUE;
+	      imageDesc->PicWArea = w;
+	      ResizeWidth (box, box, NULL, w - box->BxW,
+			   0, 0, 0, frame);		  
+	    }
 	}
-      else 
-	if (Constrained_Width == TRUE && 
-	    Constrained_Height == FALSE)
-	  {			
-	    *height = (imgheight * *width) / imgwidth;
-	    if ((*height) != initialh)
-	      return TRUE;
-	    else
-	      return FALSE;
-	  }
+      else if (constrained_Width && !constrained_Height)
+	{
+	  h = (height * w) / width;
+	  if (h != imageDesc->PicHArea)
+	    {
+	      change = TRUE;
+	      imageDesc->PicHArea = h;
+	      ResizeHeight (box, box, NULL, h - box->BxH,
+			    0, 0, frame);
+	    }
+	}
+      if (change)
+	{
+#ifndef _GL
+	  DefClip (frame, box->BxXOrg, box->BxYOrg,
+		   box->BxXOrg + w, box->BxYOrg + h);
+#else /* _GL */
+	  DefRegion (frame, box->BxClipX, box->BxClipY,
+		     box->BxClipX + w, box->BxClipY + h);
+#endif /* _GL */
+	}
     }
-  return FALSE;
+  return change;
 }
+
 
 /*----------------------------------------------------------------------
   Do you have to extend the clipping ?
   ----------------------------------------------------------------------*/
 static void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, 
-			      int w, int h, 
-			      int top, int bottom, 
-			      int left, int right, 
-			      int frame)   
+			      int w, int h, int top, int bottom, 
+			      int left, int right, int frame)   
 {
 #ifndef _GL
    if (pAb->AbLeafType == LtCompound)
@@ -2825,19 +2840,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    xBox = w;
 	  if(box->BxH != 0)
 	    yBox = h;
-	  imageDesc->PicWArea = w;
-	  imageDesc->PicHArea = h;
 	  width = imageDesc->PicWidth;
 	  height = imageDesc->PicHeight;	      
-	  if (Ratio_Calculate (pAb, &w, &h, width, height))
-	    {
-	      if (imageDesc->PicWArea == 0)
-		ChangeWidth (box, box, NULL,
-			     w + left + right, 0, frame);		  
-	      if (imageDesc->PicHArea == 0)
-		ChangeHeight (box, box, NULL,
-			      h + top + bottom + top + bottom, frame);
-	    }
+	  Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
 	}
       if (w == 0 || h == 0)
 	{
@@ -3006,29 +3011,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 
 	    }
 	  /* intrinsic width and height */
-	  imageDesc->PicWidth  = width;
-	  imageDesc->PicHeight = height;
-	  imageDesc->PicWArea = w;
-	  imageDesc->PicHArea = h;
-	  if (Ratio_Calculate (pAb, &w, &h,
-			       width, height))
-	    {
-	      if (imageDesc->PicWArea == 0)
-		{
-		  imageDesc->PicWArea = w;
-		  ChangeWidth (box,
-			       box, NULL,
-			       w + left + right, 0, frame);
-		}		  
-	      if (imageDesc->PicHArea == 0)
-		{
-		  imageDesc->PicHArea = h;
-		  ChangeHeight (box,
-				box, NULL,
-				h + top + bottom + top + bottom, frame);
-		}
-	    }
-
+	  Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
 	}
     }
 
@@ -3178,12 +3161,10 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     GError             *error=NULL;
   #endif /* _GTK2 */
 #endif /* _GTK */
-
 #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) || defined(_NOGUI)
   ThotPixmap          drw = None;
 #endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) || defined(_NOGUI) */
-
-  PtrAbstractBox      pAb;
+  PtrAbstractBox      pAb, pBlock;
   Picture_Report      status;
 #ifndef _WX
   unsigned long       Bgcolor;
@@ -3297,26 +3278,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	}
       if (imageDesc->PicWidth && imageDesc->PicHeight)
 	{
-	  imageDesc->PicWArea = w;
-	  imageDesc->PicHArea = h;
 	  width = imageDesc->PicWidth;
 	  height = imageDesc->PicHeight;
-	  if (Ratio_Calculate (pAb, &w, &h, width, height))
-	    {
-	      if (imageDesc->PicWArea != w)
-		ChangeWidth (box, box, NULL,
-			     (w + left + right) - box->BxW, 0, frame);		  
-	      if (imageDesc->PicHArea != h)
-		ChangeHeight (box, box, NULL,
-			      (h + top + bottom + top + bottom) - box->BxH, frame);
-#ifndef _GL
-	      DefClip (frame, box->BxXOrg, box->BxYOrg,
-		       box->BxXOrg + w, box->BxYOrg + h);
-#else /* _GL */
-	      DefRegion (frame, box->BxClipX, box->BxClipY,
-			 box->BxClipX + w, box->BxClipY + h);
-#endif /* _GL    */
-	    }
+	  Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
 	}
       if (!Printing)
 	{
@@ -3478,31 +3442,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      width = (gint) wBox;
 	      height = (gint) hBox;
 #endif /* _GTK */
-        
 	      /* intrinsic width and height */
-	      imageDesc->PicWidth = width;
-	      imageDesc->PicHeight = height;
-	      imageDesc->PicWArea = w;
-	      imageDesc->PicHArea = h;
-	      if (Ratio_Calculate (pAb, &w, &h, width, height))
+	      if (Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame))
 		{
-		  if (imageDesc->PicWArea != w)
-		    ChangeWidth (box, box, NULL,
-				 w - box->BxW, 0, frame);
-		  if (imageDesc->PicHArea != h)
-		    ChangeHeight (box, box, NULL,
-				  h - box->BxH, frame);
-#ifndef _GL
-		  DefClip (frame, box->BxXOrg, box->BxYOrg,
-			   box->BxXOrg + box->BxWidth, box->BxYOrg + box->BxHeight);
-#else /* _GL */
-		  DefRegion (frame, box->BxClipX, box->BxClipY,
-			   box->BxClipX + box->BxWidth, box->BxClipY + box->BxHeight);
-#endif /* _GL    */
 		  /* Force Image rescaling by making box 
-		     size different of image info size*/
-		  w = w / 2;
-		  h = h / 2;
+		     size different of image info size
+		     w = w / 2;
+		     h = h / 2;*/
 		}
 	    }
 #if defined(_MOTIF) || defined(_WINGUI)
@@ -3741,27 +3687,26 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
     GetClientRect (FrRef[frame], &rect);
     widthb = rect.right;
     heightb = rect.bottom;
-	SurfDC = GetDC (FrRef[frame]);
-	pixel = TtaGetMemory (heightb*widthb*4);
-    memset (pixel, 255, sizeof (heightb*widthb*4));
-	for (y = heightb; y > 0; y--)
-		for (x = 0; x < widthb; x++)
-		{
-			RGBcolor = GetPixel(SurfDC, x - rect.left, y -rect.top);
-			pixel [i++] = GetRValue (RGBcolor);
-			pixel [i++] = GetGValue (RGBcolor);
-			pixel [i++] = GetBValue (RGBcolor);
-			i++; /*opacity*/
-		}
-	screenshot = pixel;
-  SavePng (pngurl,
-	   screenshot,
-	   (unsigned int) widthb,
-	   (unsigned int) heightb);
-  return screenshot;
-
+    SurfDC = GetDC (FrRef[frame]);
+    pixel = TtaGetMemory (heightb * widthb * 4);
+    memset (pixel, 255, sizeof (heightb * widthb * 4));
+    for (y = heightb; y > 0; y--)
+      for (x = 0; x < widthb; x++)
+	{
+	  RGBcolor = GetPixel(SurfDC, x - rect.left, y -rect.top);
+	  pixel [i++] = GetRValue (RGBcolor);
+	  pixel [i++] = GetGValue (RGBcolor);
+	  pixel [i++] = GetBValue (RGBcolor);
+	  i++; /*opacity*/
+	}
+    screenshot = pixel;
+    SavePng (pngurl,
+	     screenshot,
+	     (unsigned int) widthb,
+	     (unsigned int) heightb);
+    return screenshot;
+    
 #endif /* _WINGUI */
-
   return NULL;
 #endif /*_GL*/
 }

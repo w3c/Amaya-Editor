@@ -3898,6 +3898,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  GiveTextSize (pAb, pMainBox, &width, &height, &i);
 		  break;
 		case LtPicture:
+		  LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
 		  GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
 				   &width, &height);
 		  break;
@@ -3928,12 +3929,19 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		}
 	      
 	      /* Change the width of the contents */
-	      result = width != pBox->BxWidth;
+	      result = width != pBox->BxW;
 	      ChangeDefaultWidth (pBox, NULL, width, 0, frame);
+	      if (pAb->AbLeafType == LtPicture && height != pBox->BxH)
+		/* clear the ratio */
+		ChangeDefaultHeight (pBox, NULL, height, frame);
 	    }
 	  else
-	    /* the box width doesn't depend on the contents */
-	    result = TRUE;
+	    {
+	      /* the box width is constrained */
+	      if (pAb->AbLeafType == LtPicture)
+		LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
+	      result = TRUE;
+	    }
 
 	  /* check auto margins */
 	  CheckMBP (pAb, pCurrentBox, frame, TRUE);
@@ -3983,6 +3991,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  GiveTextSize (pAb, pMainBox, &width, &height, &i);
 		  break;
 		case LtPicture:
+		  LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
 		  GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
 		  break;
 		case LtSymbol:
@@ -4003,13 +4012,19 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		}
 
 	      /* Change the height of the contents */
-	      /* Change the width of the contents */
-	      result = height != pBox->BxHeight;
+	      result = height != pBox->BxH;
 	      ChangeDefaultHeight (pBox, NULL, height, frame);
+	      if (pAb->AbLeafType == LtPicture && width != pBox->BxW)
+		/* clear the ratio */
+		ChangeDefaultWidth (pBox, NULL, width, 0, frame);
 	    }
 	  else
-	    /* the box height doesn't depend on the contents */
-	    result = TRUE;
+	    {
+	      /* the box height is constrained */
+	      if (pAb->AbLeafType == LtPicture)
+		LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
+	      result = TRUE;
+	    }
 
 	  /* recheck auto and % margins */
 	  CheckMBP (pAb, pCurrentBox, frame, TRUE);

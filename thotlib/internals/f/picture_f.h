@@ -64,6 +64,13 @@ extern ThotBool TtaFileCopyUncompress ( CONST char *sourceFile,
 extern void *PutTextureOnImageDesc ( unsigned char *pattern,
                                      int width,
                                      int height );
+extern ThotBool Ratio_Calculate ( PtrAbstractBox pAb,
+                                  PictInfo *imageDesc,
+                                  int width,
+                                  int height,
+                                  int w,
+                                  int h,
+                                  int frame );
 extern void LoadPicture ( int frame,
                           PtrBox box,
                           PictInfo *imageDesc );
@@ -137,6 +144,13 @@ extern ThotBool TtaFileCopyUncompress ( CONST char *sourceFile,
 extern void *PutTextureOnImageDesc ( unsigned char *pattern,
                                        int width,
                                        int height );
+extern ThotBool Ratio_Calculate ( PtrAbstractBox pAb,
+                                    PictInfo *imageDesc,
+                                    int width,
+                                    int height,
+                                    int w,
+                                    int h,
+                                    int frame );
 extern void LoadPicture ( int frame,
                             PtrBox box,
                             PictInfo *imageDesc );

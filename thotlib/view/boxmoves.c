@@ -702,36 +702,36 @@ void ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	 */
 	return;
 
-      /* Regarde si la largeur reelle actuelle depend du contenu */
+      /* check if the current width depends on the contents */
       if (pBox->BxContentWidth)
 	{
-	  /* Il y a une regle de minimum mais ce n'est la largeur reelle */
+	  /* the current width equals the contents width */
 	  width = pBox->BxRuleWidth + delta;
 	  if (width > pBox->BxW)
 	    {
-	      /* Il faut echanger la largeur reelle avec l'autre largeur */
+	      /* apply the minimum rule */
 	      pBox->BxRuleWidth = pBox->BxW;
 	      pBox->BxContentWidth = !pBox->BxContentWidth;
 	      ResizeWidth (pBox, pSourceBox, pFromBox, width - pBox->BxW, 0, 0, spaceDelta, frame);
 	    }
 	  else
-	    /* Mise a jour de la largeur minimum */
+	    /* update the current minimum */
 	    pBox->BxRuleWidth = width;
 	}
       else if (minimumRule)
 	{
-	  /* La largeur reelle est egale au minimum */
+	  /* the current width equals the minimum */
 	  width = pBox->BxW + delta;
 	  if (width < pBox->BxRuleWidth)
 	    {
-	      /* Il faut echanger la largeur reelle avec l'autre largeur */
+	      /* apply the contents rule */
 	      width = pBox->BxRuleWidth;
 	      pBox->BxRuleWidth = pBox->BxW + delta;
 	      pBox->BxContentWidth = !pBox->BxContentWidth;
 	      ResizeWidth (pBox, pSourceBox, pFromBox, width - pBox->BxW, 0, 0, spaceDelta, frame);
 	    }
 	  else
-	    /* Mise a jour de la largeur minimum */
+	    /* update the current minimum */
 	    ResizeWidth (pBox, pSourceBox, pFromBox, delta, 0, 0, spaceDelta, frame);
 	}
       else
@@ -772,35 +772,36 @@ void ChangeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	 */
 	return;
 
-      /* Regarde si la hauteur reelle actuelle depend du contenu */
+      /* check if the current height depends on the contents */
       if (pBox->BxContentHeight)
 	{
-	  /* Il y a une regle de minimum mais ce n'est la hauteur reelle */
+	  /* the current height equals the contents height */
 	  height = pBox->BxRuleHeigth + delta;
 	  if (height > pBox->BxH)
 	    {
-	      /* Il faut echanger la hauteur reelle avec l'autre hauteur */
+	      /* apply the minimum rule */
 	      pBox->BxRuleHeigth = pBox->BxH;
 	      pBox->BxContentHeight = !pBox->BxContentHeight;
 	      ResizeHeight (pBox, pSourceBox, pFromBox, height - pBox->BxH, 0, 0, frame);
 	    }
 	  else
-	    /* Mise a jour de la hauteur minimum */
+	    /* update the minimum */
 	    pBox->BxRuleHeigth = height;
 	}
       else if (minimumRule)
 	{
-	  /* La hauteur courante est egale au minimum */
+	  /* the current height equals the minimum */
 	  height = pBox->BxH + delta;
 	  if (height < pBox->BxRuleHeigth)
 	    {
-	      /* Il faut echanger la hauteur reelle avec l'autre hauteur */
+	      /* apply the contents rule */
 	      height = pBox->BxRuleHeigth;
 	      pBox->BxRuleHeigth = pBox->BxH + delta;
 	      pBox->BxContentHeight = !pBox->BxContentHeight;
 	      ResizeHeight (pBox, pSourceBox, pFromBox, height - pBox->BxH, 0, 0, frame);
 	    }
 	  else
+	    /* update the current minimum */
 	    ResizeHeight (pBox, pSourceBox, pFromBox, delta, 0, 0, frame);
 	}
       else
@@ -2076,7 +2077,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		      i -= pBox->BxLMargin;
 		      k = 0;
 		    }
-		  else if (pCurrentAb->AbLeafType == LtGraphics)
+		  else if (pCurrentAb->AbLeafType == LtGraphics ||
+			   pCurrentAb->AbLeafType == LtPicture)
 		    k = EXTRA_GRAPH;
 		  else
 		    k = 0;
@@ -2691,7 +2693,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 				      pCurrentAb->AbHorizRef.PosAbRef == NULL)
 				    j = BoxFontBase (pBox->BxFont) + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pBox->BxHorizRef;
 				  else
-				    j = delta - pBox->BxHorizRef;
+				    j = delta;
 				  MoveHorizRef (pBox, NULL, j, frame);
 				  /* restore the history of moved boxes */
 				  pBox->BxMoved = pFromBox;
