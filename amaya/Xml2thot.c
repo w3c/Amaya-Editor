@@ -40,10 +40,8 @@
 #include "html2thot_f.h"
 #include "styleparser_f.h"
 
-#ifdef EXPAT
 #include "xmlparse.h"
-#define NS_SEP ':'
-#endif /* EXPAT */
+#define NS_SEP '|'
 
 /* maximum length of a Thot structure schema name */
 #define MAX_SS_NAME_LENGTH 32
@@ -67,10 +65,8 @@ static int          NoTextChild[] =
 
 /* ---------------------- static variables ---------------------- */
 
-#ifdef EXPAT
 /* Expat perser identifier */
 static XML_Parser  parser;
-#endif /* EXPAT */
 
 /* a parser context. It describes the specific actions to be executed
 when parsing an XML document fragment according to a given DTD */
@@ -118,17 +114,11 @@ static PtrParserCtxt    XLinkParserCtxt = NULL;
 #define XHTML_URI            TEXT("http://www.w3.org/1999/xhtml")
 #define MathML_URI           TEXT("http://www.w3.org/1998/Math/MathML")
 #define GraphML_URI          TEXT("Unknown URI")
-
-/* SSchema stack */
-#define MAX_NS   10
-typedef CHAR_T   NS_SchemaName[MAX_SS_NAME_LENGTH];
-
-static NS_SchemaName  NS_SchemaStack [MAX_NS]; 
-static int            NS_Level = 0;
+#define XLink_URI            TEXT("http://www.w3.org/1999/xlink")
 
 
 /* parser stack */
-	        /* maximum stack height */
+	          /* maximum stack height */
 #define MAX_STACK_HEIGHT   200
                   /* XML element name */
 static USTRING       nameElementStack[MAX_STACK_HEIGHT]; 
@@ -142,10 +132,6 @@ static int           stackLevel = 0;
 
 
 static gzFile      stream = 0;
-                /* number of lines read in the file */
-static int         NumberOfLinesRead = 0;
-                /* number of characters read in the current line */
-static int         NumberOfCharRead = 0;
                 /* <PRE> has just been read */
 static ThotBool    AfterTagPRE = FALSE;
                 /* reading the content of a STYLE element */
@@ -156,12 +142,6 @@ static ThotBool    ParsingTextArea = FALSE;
 static int         WithinTable = 0;
                 /* path or URL of the document */
 static CHAR_T*     docURL = NULL;
-
-
-
-/* line number in the source file of the beginning
-   of the text contained in the buffer */
-static int	   BufferLineNumber = 0;
 
 
 /* information about the Thot document under construction */
@@ -199,11 +179,11 @@ static ThotBool    MergeText = FALSE;
 
 
 /* information about the Thot document under construction */
-static Document     currentDocument = 0;         /* the Thot document */
-static Language     currentLanguage;             /* language used in the document */
-static ThotBool	    currentElementClosed = FALSE;
+static Document     currentDocument = 0;    /* the Thot document */
+static Language     currentLanguage;        /* language used in the document */
 static CHAR_T	    currentElementContent = ' ';
 static CHAR_T	    previousElementContent = ' ';
+static CHAR_T	    currentMappedName[16];
 static Attribute    currentAttribute = NULL;
 static ThotBool	    HTMLStyleAttribute = FALSE;
 static ThotBool	    XMLrootClosed = FALSE;
@@ -212,7 +192,6 @@ static int	    XMLrootLevel = 0;
 static ThotBool	    lastTagRead = FALSE;
 static ThotBool     XMLabort = FALSE;
 
-static CHAR_T	    currentMappedName[16];
 
 /* information about an entity being read */
                 /* maximum size entity */
@@ -222,18 +201,20 @@ static CHAR_T	    currentMappedName[16];
 #define MaxMsgLength 200
 
 #ifdef __STDC__
-static void         StartOfXmlStartTag (CHAR_T *GIname);
-static void         InsertElement (Element *el);
-static void         PutMathMLEntity (USTRING entityValue, Language lang,
-				     STRING entityName, Document doc);
-static void         XhtmlInsertElement (Element *el);
-static void         XmlInsertElement (Element *el);
+static void   StartOfXmlStartTag (CHAR_T *GIname);
+static void   InsertElement (Element *el);
+static void   PutMathMLEntity (USTRING entityValue, Language lang,
+			       STRING entityName, Document doc);
+static void   XhtmlInsertElement (Element *el);
+static void   XmlInsertElement (Element *el);
+static void   DisableExpatParser ();
 #else
-static void         StartOfXmlStartTag (GIname);
-static void         InsertElement (el);
-static void         PutMathMLEntity (entityValue, lang, entityName, doc);
-static void         XhtmlInsertElement (el);
-static void         XmlInsertElement (el);
+static void   StartOfXmlStartTag (GIname);
+static void   InsertElement (el);
+static void   PutMathMLEntity (entityValue, lang, entityName, doc);
+static void   XhtmlInsertElement (el);
+static void   XmlInsertElement (el);
+static void   DisableExpatParser ();
 #endif
 
 static FILE*    ErrFile = (FILE*) 0;
@@ -337,6 +318,7 @@ static void            InitXmlParserContexts ()
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
    ustrcpy (ctxt->SSchemaName, TEXT("XLink"));
    ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
+   ustrcpy (ctxt->UriName, XLink_URI);
    ctxt->XMLSSchema = NULL;
    ctxt->XMLtype = XLINK_TYPE;
    ctxt->MapAttribute = (Proc) MapXLinkAttribute;
@@ -370,37 +352,35 @@ STRING              DTDname;
     currentParserCtxt = currentParserCtxt->NextParserCtxt;
 
   /* initialize the corresponding entry */
-  if (currentParserCtxt != NULL)
-        currentParserCtxt->XMLSSchema = 
-          GetXMLSSchema (currentParserCtxt->XMLtype, currentDocument);
+  if (currentParserCtxt != NULL &&
+      currentParserCtxt->XMLSSchema == NULL) 
+    currentParserCtxt->XMLSSchema = 
+      GetXMLSSchema (currentParserCtxt->XMLtype, currentDocument);
 }
 
 
 /*----------------------------------------------------------------------
-   SearchXmlParserContextUri
-   Get the Thot schema name correponding to a given uri
+   ChangeXmlParserContextUri
+   Get the parser context correponding to a given uri
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SearchXmlParserContextUri (STRING uriName,
-					       STRING SSchemaName)
+static void         ChangeXmlParserContextUri (STRING uriName)
 #else
-static void         SearchXmlParserContextUri (uriName,
-					       SSchemaName)
+static void         ChangeXmlParserContextUri (uriName)
 STRING      uriName;
-STRING      SSchemaName;
 
 #endif
 {
-  SSchemaName[0] = WC_EOS;
-
   currentParserCtxt = firstParserCtxt;
   while (currentParserCtxt != NULL &&
 	 ustrcmp (uriName, currentParserCtxt->UriName))
     currentParserCtxt = currentParserCtxt->NextParserCtxt;
 
   /* Return the corresponding Thot schema */
-  if (currentParserCtxt != NULL)
-      ustrcpy (SSchemaName, currentParserCtxt->SSchemaName);
+  if (currentParserCtxt != NULL &&
+      currentParserCtxt->XMLSSchema == NULL) 
+    currentParserCtxt->XMLSSchema = 
+      GetXMLSSchema (currentParserCtxt->XMLtype, currentDocument);
 }
 
 
@@ -493,6 +473,57 @@ Element		el;
 
   lineNumber = XML_GetCurrentLineNumber (parser);
   TtaSetElementLineNumber (el, lineNumber);
+}
+
+/*----------------------------------------------------------------------
+   XmlParseError
+   print the error message msg on stderr.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void      XmlParseError (Document doc, CHAR_T* msg)
+#else
+static void      XmlParseError (doc, msg)
+Document    doc;
+CHAR_T*     msg;
+
+#endif
+{
+#ifdef _I18N_
+   unsigned char   mbcsMsg [MAX_TXT_LEN * 2];
+   unsigned char*  ptrMbcsMas = &mbcsMsg[0];
+
+   TtaWCS2MBS (&msg, &ptrMbcsMas, UTF_8 /* ISO_8859_1 */);
+#else  /* !_I18N_ */
+   unsigned char*  mbcsMsg = msg;
+#endif /* _I18N_ */
+
+   HTMLErrorsFound = TRUE;
+   if (!ErrFile)
+     {
+      usprintf (ErrFileName, TEXT("%s%c%d%cHTML.ERR"),
+		TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+      if ((ErrFile = ufopen (ErrFileName, TEXT("w"))) == NULL)
+         return;
+     }
+
+   if (doc == currentDocument)
+     {
+      /* the error message is related to the document being parsed */
+      if (docURL != NULL)
+	{
+	  fprintf (ErrFile, "*** Errors in %s\n", docURL);
+	  TtaFreeMemory (docURL);
+	  docURL = NULL;
+	}
+      /* print the line number and character number before the message */
+      fprintf (ErrFile, "   line %d, char %d: %s\n",
+	       XML_GetCurrentLineNumber (parser),
+	       XML_GetCurrentColumnNumber (parser),
+	       mbcsMsg);
+     }
+   else
+     /* print only the error message */
+     fprintf (ErrFile, "%s\n", mbcsMsg);
 }
 
 /*----------------------------------------------------------------------
@@ -709,7 +740,6 @@ Element           parent;
 		XmlSetElemLineNumber (newEl);
 		/* insert the new Pseudo_paragraph element */
 		InsertElement (&newEl);
-		printf ("\n*** Insert HTML_EL_Pseudo_paragraph \n");
 		if (newEl != NULL)
 		  {
 		    /* insert the Text element in the tree */
@@ -778,6 +808,12 @@ Element    *el;
 #endif
 {
    Element   parent;
+   ElementType elType;
+
+   elType = TtaGetElementType (*el);
+#ifdef LC
+   printf ("\nXhtmlInsertElement : elType.ElTypeNum %d \n", elType.ElTypeNum);
+#endif /* LC */
 
    if (InsertSibling ())
      {
@@ -965,6 +1001,10 @@ ThotBool         onStartTag;
    /* the closed HTML element corresponds to a Thot element. */
    stop = FALSE;
    /* type of the element to be closed */
+   
+#ifdef LC
+   printf ("\nCloseElement %s \n", mappedName);
+#endif /* LC */
 
    if (stackLevel > 0)
      {
@@ -1287,8 +1327,8 @@ CHAR_T*             GIname;
 
   if (stackLevel == MAX_STACK_HEIGHT)
     {
-      ParseHTMLError (currentDocument,
-		      TEXT("**FATAL** Too many XML levels"));
+      XmlParseError (currentDocument,
+		     TEXT("**FATAL** Too many XML levels"));
       XMLabort = TRUE;
     }
   else
@@ -1309,7 +1349,7 @@ CHAR_T*             GIname;
 	  if (ustrlen (GIname) > MaxMsgLength - 20)
 	    GIname[MaxMsgLength - 20] = WC_EOS;
 	  usprintf (msgBuffer, TEXT("Unknown XML element %s"), GIname);
-	  ParseHTMLError (currentDocument, msgBuffer);
+	  XmlParseError (currentDocument, msgBuffer);
 	  UnknownTag = TRUE;
 	  nameElementStack[stackLevel] = NULL;
 	  elementStack[stackLevel] = NULL;
@@ -1323,7 +1363,7 @@ CHAR_T*             GIname;
 	    {
 	      usprintf (msgBuffer,
 			TEXT("Tag <%s> is not allowed here"), GIname);
-	      ParseHTMLError (currentDocument, msgBuffer);
+	      XmlParseError (currentDocument, msgBuffer);
 	      UnknownTag = TRUE;
 	      nameElementStack[stackLevel] = NULL;
 	      elementStack[stackLevel] = NULL;
@@ -1402,73 +1442,71 @@ CHAR_T     *GIname;
 
 #endif
 {
-   CHAR_T       msgBuffer[MaxMsgLength];
-   STRING       mappedName;
-   ElementType  elType;
-   int          i, error;
-   ThotBool     ok;
+   CHAR_T         msgBuffer[MaxMsgLength];
+   STRING         mappedName;
+   ElementType    elType;
+   int            i, error;
+   PtrParserCtxt  elementParserCtxt;
 
 
    if (ParsingTextArea)
-     {
        if (ustrcasecmp (GIname, TEXT("textarea")) != 0)
-         /* We are parsing the contents of a textarea element. The end
-	    tag is not the one closing the current textarea, consider it
-	    as plain text */
-	 {
+         /* We are parsing the contents of a textarea element. The end tag is
+	    not the one closing the current textarea, consider it as plain text */
 	   return;
-         }
+   
+   /* search the XML tag in the mapping table */
+   /* For <math> tag, research is made with Xhtml Context */
+   elementParserCtxt = currentParserCtxt;
+   if (ustrcmp (GIname, TEXT("math")) == 0)
+     currentParserCtxt = xhtmlParserCtxt;	 
+   
+   elType.ElSSchema = NULL;
+   elType.ElTypeNum = 0;
+   GetXmlElType (GIname, &elType, &mappedName,
+		 &currentElementContent, currentDocument);
+   
+   /* restore Context */
+   currentParserCtxt = elementParserCtxt;
+   
+   if (elType.ElTypeNum <= 0)
+     /* not found in the corresponding DTD */
+     {
+       if (ustrlen (GIname) > MaxMsgLength - 20)
+	 GIname[MaxMsgLength - 20] = WC_EOS;
+       usprintf (msgBuffer,
+		 TEXT("Unknown XML element </%s>"), GIname);
+       XmlParseError (currentDocument, msgBuffer);
+     }
+   else
+     {
+       if (currentElementContent == 'E')
+	 /* this is an empty element */
+	 {
+	   CloseElement (mappedName, TRUE);
+	   (*(currentParserCtxt->ElementComplete)) (lastElement,
+						    currentDocument,
+						    &error);
+	 }
+       else
+	 if (!CloseElement (mappedName, FALSE))
+	   /* the end tag does not close any current element */
+	   {
+	     usprintf (msgBuffer,
+		       TEXT("Unexpected end tag </%s>"), GIname);
+	     XmlParseError (currentDocument, msgBuffer);
+	   }
      }
 
    /* is it the end of the current HTML fragment ? */
-   ok = FALSE;
-   if (XMLrootClosingTag != EOS)
+   if (XMLrootClosingTag && XMLrootClosingTag != EOS &&
+       ustrcasecmp (GIname, XMLrootClosingTag) == 0)
      {
-       if (ustrcasecmp (GIname, XMLrootClosingTag) == 0)
-	 {
-	   XMLrootClosed = TRUE;
-	   ok = TRUE;
-	 }
+       XMLrootClosed = TRUE;
+       DisableExpatParser ();
      }
+
    
-   if (!ok)
-     {
-       /* search the XML tag in the mapping table */
-       elType.ElSSchema = NULL;
-       elType.ElTypeNum = 0;
-       GetXmlElType (GIname, &elType, &mappedName,
-		     &currentElementContent, currentDocument);
-
-       if (elType.ElTypeNum <= 0)
-	   /* not found in the corresponding DTD */
-	 {
-	   if (ustrlen (GIname) > MaxMsgLength - 20)
-	       GIname[MaxMsgLength - 20] = WC_EOS;
-	   usprintf (msgBuffer,
-		     TEXT("Unknown XML element </%s>"), GIname);
-	   ParseHTMLError (currentDocument, msgBuffer);
-	 }
-       else
-	 {
-	   if (currentElementContent == 'E')
-	     /* this is an empty element */
-	     {
-	       CloseElement (mappedName, TRUE);
-	       (*(currentParserCtxt->ElementComplete)) (lastElement,
-							currentDocument,
-							&error);
-	     }
-	   else
-	     if (!CloseElement (mappedName, FALSE))
-	       /* the end tag does not close any current element */
-	       {
-		 usprintf (msgBuffer,
-			   TEXT("Unexpected end tag </%s>"), GIname);
-		 ParseHTMLError (currentDocument, msgBuffer);
-	       }
-	 }
-     }
-
    AfterTagPRE = FALSE;
 }
 /*---------------------  EndElement  (end)  --------------------------*/
@@ -1566,12 +1604,18 @@ STRING      data;
 	  }
 
 	if (ignoreLeadingSpaces)
+	  {
 	    if (!XmlWithin (HTML_EL_Preformatted, DocumentSSchema) &&
 		!XmlWithin (HTML_EL_STYLE_, DocumentSSchema) &&
 		!XmlWithin (HTML_EL_SCRIPT, DocumentSSchema))
 	        /* suppress leading spaces */
 	        while (data[i] <= WC_SPACE && data[i] != WC_EOS)
 		  i++;
+	  }
+	else
+	  {
+	    i = 0;
+	  }
 
 	if (data[i] != WC_EOS)
 	  {
@@ -1722,7 +1766,7 @@ CHAR_T         *attrName;
 	   usprintf (msgBuffer,
 		     TEXT("Unknown attribute \"%s\""),
 		     attrName);
-	   ParseHTMLError (currentDocument, msgBuffer);
+	   XmlParseError (currentDocument, msgBuffer);
 	   /* attach an Invalid_attribute to the current element */
 	   mapAttr = XhtmlMapAttribute (TEXT("unknown_attr"),
 					&attrType,
@@ -1841,7 +1885,7 @@ CHAR_T         *attrName;
        usprintf (msgBuffer,
 		 TEXT("Unknown attribute \"%s\""),
 		 attrName);
-       ParseHTMLError (currentDocument, msgBuffer);
+       XmlParseError (currentDocument, msgBuffer);
        UnknownAttr = TRUE;
      }
    else
@@ -1855,7 +1899,7 @@ CHAR_T         *attrName;
            usprintf (msgBuffer,
 		     TEXT("Duplicate XML attribute %s"),
 		     attrName);
-           ParseHTMLError (currentDocument, msgBuffer);	
+           XmlParseError (currentDocument, msgBuffer);	
 	 }
        else
 	 {
@@ -1880,17 +1924,49 @@ CHAR_T         *attrName;
 
 #endif
 {
+   CHAR_T         *buffer;
+   CHAR_T         *bufName;
+   CHAR_T         *ptr;
+   PtrParserCtxt   oldParserCtxt = NULL;
+
    currentAttribute = NULL;
    HTMLStyleAttribute = FALSE;
 
    if (nameElementStack[stackLevel-1] == NULL)
        return;
 
-   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
-   /* if (ustrcmp (NS_SchemaStack[NS_Level], TEXT("HTML")) == 0) */
-       XhtmlEndOfAttrName (attrName);
+   /* look for a NS_SEP in the tag name (namespaces) and ignore the
+      prefix if there is one */
+   
+   buffer = TtaGetMemory ((strlen (attrName) + 1));
+   ustrcpy (buffer, (CHAR_T*) attrName);
+   if (ptr = ustrrchr (buffer, NS_SEP))
+     {
+       *ptr = WC_EOS;
+       ptr++;
+       bufName = TtaGetMemory ((strlen (ptr) + 1));
+       ustrcpy (bufName, ptr);
+       
+       if (currentParserCtxt != NULL &&
+	   ustrcmp (buffer, currentParserCtxt->UriName))
+	 ChangeXmlParserContextUri (buffer);
+     }
    else
-       XmlEndOfAttrName (attrName);
+     {
+       bufName = TtaGetMemory (strlen (buffer));
+       ustrcpy (bufName, buffer);
+     }
+   
+   if (currentParserCtxt != NULL)
+     {
+       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+	 XhtmlEndOfAttrName (bufName);
+       else
+	 XmlEndOfAttrName (bufName);
+     }
+
+   TtaFreeMemory (buffer);
+   TtaFreeMemory (bufName);
 }
 
 /*----------------------------------------------------------------------
@@ -1962,7 +2038,7 @@ CHAR_T*             val;
       if (ustrlen (val) > MaxMsgLength - 40)
           val[MaxMsgLength - 40] = WC_EOS;
       usprintf (msgBuffer, TEXT("Unknown attribute value \"type = %s\""), val);
-      ParseHTMLError (currentDocument, msgBuffer);
+      XmlParseError (currentDocument, msgBuffer);
       usprintf (msgBuffer, TEXT("type=%s"), val);
       XhtmlMapAttribute (TEXT("unknown_attr"), &attrType,
 			 NULL, currentDocument);
@@ -2024,7 +2100,7 @@ CHAR_T     *attrValue;
 	     {
 	       usprintf (msgBuffer,
 			 TEXT("Unknown XML attribute value: %s"), attrValue);
-	       ParseHTMLError (currentDocument, msgBuffer);	
+	       XmlParseError (currentDocument, msgBuffer);	
 	     }
 	   else
 	       TtaSetAttributeValue (currentAttribute, val,
@@ -2138,7 +2214,7 @@ CHAR_T     *attrValue;
 		       usprintf (msgBuffer,
 				 TEXT("Unknown attribute value \"%s = %s\""),
 				 attrName, attrValue);
-		       ParseHTMLError (currentDocument, msgBuffer);
+		       XmlParseError (currentDocument, msgBuffer);
 
 		       /* remove the attribute and replace it by an */
 		       /* Invalid_attribute */
@@ -2176,7 +2252,7 @@ CHAR_T     *attrValue;
 			   usprintf (msgBuffer,
 				     TEXT("Invalid attribute value \"%s\""),
 				     attrValue);
-			   ParseHTMLError (currentDocument, msgBuffer);
+			   XmlParseError (currentDocument, msgBuffer);
 			 }
 		     }
 		   break;
@@ -2194,7 +2270,7 @@ CHAR_T     *attrValue;
 			       usprintf (msgBuffer,
 					 TEXT("Unknown language: %s"),
 					 attrValue);
-			       ParseHTMLError (currentDocument, msgBuffer);
+			       XmlParseError (currentDocument, msgBuffer);
 			     }
 			   else
 			     {
@@ -2352,11 +2428,13 @@ CHAR_T     *attrValue;
    if (nameElementStack[stackLevel-1] == NULL) 
        return;
 
-   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
-     /* if (ustrcmp (NS_SchemaStack[NS_Level], TEXT("HTML")) == 0) */
-       XhtmlEndOfAttrValue (attrValue);
-   else
-       XmlEndOfAttrValue (attrValue);
+   if (currentParserCtxt != NULL)
+     {
+       if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
+	 XhtmlEndOfAttrValue (attrValue);
+       else
+	 XmlEndOfAttrValue (attrValue);
+     }
 }
 
 /*--------------------  Attributes  (end)  ---------------------*/
@@ -2540,7 +2618,9 @@ Document  doc;
       PutInXmlElement (entityName);
   else
     {
+#ifdef LC
       printf (" \n code=%d", entityVal);
+#endif /* LC */
       if (entityVal < 255)
 	  PutInXmlElement ((STRING) entityVal);
       else
@@ -2573,16 +2653,20 @@ STRING       entityName;
    UCHAR_T        entityValue[MaxEntityLength];	
    Language	  lang;
 
+#ifdef LC
    printf ("\n CreateXmlEntity - Name : %s", entityName);
+#endif /* LC */
 
    buffer = TtaAllocString ((ustrlen (entityName)) - 1);
    ustrcpy (buffer, &entityName[1]);
    if (ptr = ustrrchr (buffer, TEXT(';')))
        ustrcpy (ptr, TEXT("\0"));
+#ifdef LC
    printf ("\n CreateXmlEntity - buffer:%s", buffer);
+#endif /* LC */
    
    
-   if (ustrcmp (NS_SchemaStack[NS_Level], TEXT("HTML")) == 0)
+   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
        XhtmlMapEntity (buffer,
 		       &entityVal,
 		       MaxEntityLength-1,
@@ -2603,7 +2687,7 @@ STRING       entityName;
        usprintf (msgBuffer,
 		 TEXT("Unknown XML entity \"&%s;\""),
 		 entityName);
-       ParseHTMLError (currentDocument, msgBuffer);
+       XmlParseError (currentDocument, msgBuffer);
      }
    else
      {
@@ -2611,7 +2695,7 @@ STRING       entityName;
 	 lang = TtaGetLanguageIdFromAlphabet(alphabet);
      }
    
-   if (ustrcmp (NS_SchemaStack[NS_Level], TEXT("HTML")) == 0)
+   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
        XhtmlEntityCreated (entityVal,
 			   lang,
 			   entityName,
@@ -2655,7 +2739,7 @@ CHAR_T     *commentValue;
        usprintf (msgBuffer,
 		 TEXT("Unknown XML element %s"),
 		 commentValue);
-       ParseHTMLError (currentDocument, msgBuffer);
+       XmlParseError (currentDocument, msgBuffer);
      }
    else
      {
@@ -2686,8 +2770,7 @@ CHAR_T     *commentValue;
 /*--------------------  Comments  (end)  ---------------------*/
 
 
-#ifdef EXPAT
-/* Handlers associated with Amaya */
+/*-----------  Handlers associated with Amaya  ---------------*/
 
 /*----------------------------------------------------------------------
    Hndl_CdataStart
@@ -2701,7 +2784,9 @@ void            *userData;
 #endif  /* __STDC__ */
 
 {
+#ifdef LC
   printf ("\n Hndl_CdataStart");
+#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
@@ -2716,7 +2801,9 @@ void            *userData;
 #endif  /* __STDC__ */
 
 {
+#ifdef LC
   printf ("\n Hndl_CdataEnd");
+#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
@@ -2739,11 +2826,13 @@ int              length;
 #endif  /* __STDC__ */
 
 {
-   STRING        buffer;
-   STRING        bufferwc;
-   int           i;
+   unsigned char *buffer;
+   CHAR_T        *bufferwc;
+   int            i;
 
+#ifdef LC
    printf ("\n Hndl_CharacterData - length = %d - ", length);
+#endif /* LC */
 
    buffer = TtaAllocString (length + 1);
    bufferwc = TtaAllocString (length + 1);
@@ -2751,7 +2840,9 @@ int              length;
    for (i=0; i<length; i++)
      {
        buffer[i] = data[i];
+#ifdef LC
        printf ("%c", data[i]);
+#endif /* LC */
      }
    buffer[length] = WC_EOS;
 
@@ -2779,7 +2870,10 @@ const XML_Char  *data;
 #endif  /* __STDC__ */
 
 {
+#ifdef LC
    printf ("\n Hndl_Comment %s", data);
+#endif /* LC */
+
    CreateXmlComment ((CHAR_T*) data);
 }
 
@@ -2807,11 +2901,14 @@ int              length;
 {
   int  i;
   
+#ifdef LC
   printf ("\n Hndl_Default - length = %d - ", length);
+
   for (i=0; i<length; i++)
     {
       printf ("%c", data[i]);
     }
+#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
@@ -2835,11 +2932,12 @@ int              length;
    int        i;
    STRING     buffer;
 
+#ifdef LC
    printf ("\n Hndl_DefaultExpand - length = %d - ", length);
+
    for (i=0; i<length; i++)
-     {
        printf ("%c", data[i]);
-     }
+#endif /* LC */
    
    /* Treatment of the entities */
    if (length > 1 && data[0] == '&')
@@ -2869,7 +2967,9 @@ const XML_Char  *doctypeName;
 #endif  /* __STDC__ */
 
 {
+#ifdef LC
    printf ("\n Hndl_DoctypeStart %s", doctypeName);
+#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
@@ -2886,7 +2986,9 @@ void            *userData;
 #endif  /* __STDC__ */
 
 {
+#ifdef LC
    printf ("\n Hndl_DoctypeEnd");
+#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
@@ -2908,15 +3010,17 @@ const XML_Char **attlist;
 #endif  /* __STDC__ */
 
 {
-   int           nbatts;
-   CHAR_T       *buffer;
-   CHAR_T       *bufAttr;
-   CHAR_T       *bufName;
-   CHAR_T       *ptr;
-   PtrParserCtxt	oldParserCtxt = NULL;
+   int             nbatts;
+   CHAR_T         *buffer;
+   CHAR_T         *bufAttr;
+   CHAR_T         *bufName;
+   CHAR_T         *ptr;
+   PtrParserCtxt   elementParserCtxt = NULL;
 
+#ifdef LC
    printf ("\n Hndl_ElementStart '%s'", name);
-   
+#endif /* LC */
+  
    /* Treatment for the GI */
    if (ParsingTextArea)
      {
@@ -2927,30 +3031,30 @@ const XML_Char **attlist;
      {
        /* XML syntax for empty elements <XX/> is automatically treated */
 
-       /* look for a NS_SEP in the tag name (namespaces) and ignore the
-	  prefix if there is one */
+       /* look for the context associated with that element */
        buffer = TtaGetMemory ((strlen (name) + 1));
        ustrcpy (buffer, (CHAR_T*) name);
-
        if (ptr = ustrrchr (buffer, NS_SEP))
 	 {
-	   ptr++;
-	   bufName = TtaGetMemory ((strlen (ptr) + 1));
-	   ustrcpy (bufName, ptr);
+	   *ptr = WC_EOS;
+	    ptr++;
+	    bufName = TtaGetMemory ((strlen (ptr) + 1));
+	    ustrcpy (bufName, ptr);
+	    
+            if (currentParserCtxt != NULL &&
+		ustrcmp (buffer, currentParserCtxt->UriName))
+	      ChangeXmlParserContextUri (buffer);
 	 }
        else
 	 {
 	   bufName = TtaGetMemory (strlen (buffer));
 	   ustrcpy (bufName, buffer);
 	 }
+       elementParserCtxt = currentParserCtxt;
 
+       /* The tag math  is treated with the XHTML context */
        if (ustrcmp (bufName, TEXT("math")) == 0)
-	 {
-	   oldParserCtxt = currentParserCtxt;
 	   currentParserCtxt = xhtmlParserCtxt;	 
-	 }
-       else
-	   oldParserCtxt = currentParserCtxt;
 	   
        /* Treatment called at the beginning of start tag */
        StartOfXmlStartTag (bufName);
@@ -2963,7 +3067,9 @@ const XML_Char **attlist;
 	   /* Create the corresponding Thot attribute */
 	   bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
 	   strcpy (bufAttr, *attlist);
+#ifdef LC
 	   printf ("\n  attr %s :", bufAttr);
+#endif /* LC */
 	   EndOfAttrName (bufAttr);
 	   TtaFreeMemory (bufAttr);
 	   
@@ -2973,17 +3079,21 @@ const XML_Char **attlist;
 	     {
 	       bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
 	       strcpy (bufAttr, *attlist);
+#ifdef LC
 	       printf (" value=%s ", bufAttr);
+#endif /* LC */
 	       EndOfAttrValue (bufAttr);
 	       TtaFreeMemory (bufAttr);
 	     }
 	   attlist++;
 	 }
+
+       /* Restore the contexte (it may have been changed
+	  by the treatment of the attributes */
+       currentParserCtxt = elementParserCtxt;
    
        /* Treatment called at the end of start tag */
        EndOfXmlStartTag (bufName);
-
-       currentParserCtxt = oldParserCtxt;
 
        TtaFreeMemory (bufName);
        TtaFreeMemory (buffer);
@@ -3008,20 +3118,24 @@ const XML_Char  *name
    CHAR_T       *bufName;
    CHAR_T       *buffer;
    CHAR_T       *ptr;
-   PtrParserCtxt	oldParserCtxt = NULL;
 
+#ifdef LC
    printf ("\n Hndl_ElementEnd '%s'\n", name);
+#endif /* LC */
 
-   /* look for a NS_SEP in the tag name (namespaces) and ignore the
-      prefix if there is one */
+   /* look for the context associated with that element */
    buffer = TtaGetMemory ((strlen (name) + 1));
    ustrcpy (buffer, (CHAR_T*) name);
-
    if (ptr = ustrrchr (buffer, NS_SEP))
      {
+       *ptr = WC_EOS;
        ptr++;
        bufName = TtaGetMemory ((strlen (ptr) + 1));
        ustrcpy (bufName, ptr);
+       
+       if (currentParserCtxt != NULL &&
+	   ustrcmp (buffer, currentParserCtxt->UriName))
+	 ChangeXmlParserContextUri (buffer);
      }
    else
      {
@@ -3029,16 +3143,7 @@ const XML_Char  *name
        ustrcpy (bufName, buffer);
      }
 
-   if (ustrcmp (bufName, TEXT("math")) == 0)
-     {
-       oldParserCtxt = currentParserCtxt;
-       currentParserCtxt = xhtmlParserCtxt;	 
-     }
-   else
-     oldParserCtxt = currentParserCtxt;
-
    EndOfXmlElement ((CHAR_T*) (bufName));
-   currentParserCtxt = oldParserCtxt;
 
    TtaFreeMemory (bufName);   
    TtaFreeMemory (buffer);   
@@ -3069,11 +3174,13 @@ const XML_Char  *publicId;
 #endif  /* __STDC__ */
 
 {
+#ifdef LC
   printf ("\n Hndl_ExternalEntityRef");
   printf ("\n   context  : %s", context);
   printf ("\n   base     : %s", base);
   printf ("\n   systemId : %s", systemId);
   printf ("\n   publicId : %s", publicId);
+#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
@@ -3094,18 +3201,10 @@ const XML_Char  *uri;
 #endif  /* __STDC__ */
 
 {
-  CHAR_T     NewSchemaName[MAX_SS_NAME_LENGTH];
-
+#ifdef LC
   printf ("\n Hndl_NameSpaceStart");
   printf ("\n   prefix : %s; uri : %s", prefix, uri);
-
-  SearchXmlParserContextUri ((CHAR_T*) uri, NewSchemaName);
-  if (NewSchemaName != WC_EOS)
-    {
-      ChangeXmlParserContext (NewSchemaName);
-      NS_Level++;
-      ustrcpy (NS_SchemaStack [NS_Level], NewSchemaName); 
-    }
+#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
@@ -3123,12 +3222,10 @@ const XML_Char  *prefix;
 #endif  /* __STDC__ */
 
 {
+#ifdef LC
   printf ("\n Hndl_NameSpaceEnd");
   printf ("\n   prefix : %s", prefix);
-
-  NS_Level--;
-  if (NS_Level >= 0)
-      ChangeXmlParserContext (NS_SchemaStack [NS_Level]);
+#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
@@ -3155,11 +3252,13 @@ const XML_Char  *publicId;
 #endif  /* __STDC__ */
 
 {
+#ifdef LC
   printf ("\n Hndl_Notation");
   printf ("\n   notationName : %s", notationName);
   printf ("\n   base         : %s", base);
   printf ("\n   systemId     : %s", systemId);
   printf ("\n   publicId     : %s", publicId);
+#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
@@ -3183,10 +3282,12 @@ const XML_Char  *pidata;
 #endif  /* __STDC__ */
 
 {
+#ifdef LC
   printf ("\n Hndl_PI");
   printf ("\n   target : %s", target);
   printf ("\n   pidata : %s", pidata);
   /* No treatment in Amaya for PI */
+#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
@@ -3206,7 +3307,9 @@ void            *userData;
 #endif  /* __STDC__ */
 
 {
+#ifdef LC
   printf ("\n Hndl_NotStandalone");
+#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
@@ -3227,8 +3330,10 @@ XML_Encoding    *info
 #endif  /* __STDC__ */
 
 {
+#ifdef LC
   printf ("\n Hndl_UnknownEncoding");
   printf ("\n   name : %s", name);
+#endif /* LC */
 }
 
 /*----------------------------------------------------------------------
@@ -3259,33 +3364,30 @@ const XML_Char  *notationName;
 #endif  /* __STDC__ */
 
 {
+#ifdef LC
   printf ("\n Hndl_UnparsedEntity");
   printf ("\n   entityName   : %s", entityName);
   printf ("\n   base         : %s", base);
   printf ("\n   systemId     : %s", systemId);
   printf ("\n   publicId     : %s", publicId);
   printf ("\n   notationName : %s", notationName);
+#endif /* LC */
 }
 
-/*------ End of Handler definition ------*/
-#endif /* EXPAT */
-
+/*---------------- End of Handler definition ----------------*/
 
 /*----------------------------------------------------------------------
-   HTMLparse
+   XmlParse
    Parse either the HTML file infile or the text  buffer HTMLbuf
    and build the equivalent Thot abstract tree.
    One parameter should be NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void        XmlParse (XML_Parser *parser,
-			     FILE *infile,
+static void        XmlParse (FILE *infile,
 			     char *HTMLbuf)
 #else
-static void        XmlParse (parser,
-			     infile,
+static void        XmlParse (infile,
 			     HTMLbuf)
-XML_Parser  *parser;
 FILE        *infile;
 char        *HTMLbuf;
 
@@ -3301,41 +3403,35 @@ char        *HTMLbuf;
 
 
    if (infile != NULL)
-     {
        endOfFile = FALSE;
+
+   /* read the XML file */
+   
+   while (!endOfFile && !XMLrootClosed)
+     {
+       res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);
+       
+       if (res < COPY_BUFFER_SIZE)
+	 endOfFile = TRUE;
+       
+       if (!XML_Parse (parser, bufferRead,
+		       res, endOfFile))
+	 {
+	   /*
+	   printf("\nError at line %d and column %d : %s\n",
+		  XML_GetCurrentLineNumber (parser),
+		  XML_GetCurrentColumnNumber (parser),
+		  XML_ErrorString (XML_GetErrorCode (parser)));
+	   */
+	   endOfFile = TRUE;
+	 }
      }
-
-   XMLrootClosed = FALSE;
-
-
-  /* read the XML file */
-
-  while (!endOfFile && !XMLrootClosed)
-    {
-      res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);
-
-      if (res < COPY_BUFFER_SIZE)
-	  endOfFile = TRUE;
-      
-      if (!XML_Parse (parser, bufferRead,
-		      res, endOfFile))
-	{
-	  printf("\nError at line %d and column %d : %s\n",
-		 XML_GetCurrentLineNumber (parser),
-		 XML_GetCurrentColumnNumber (parser),
-		 XML_ErrorString (XML_GetErrorCode (parser)));
-	  endOfFile = TRUE;
-	}
-    }
-  
-  XMLrootClosingTag = NULL;
-  XMLrootClosed = FALSE;
-
-  if (ErrFile)
-    {
-      fclose (ErrFile);
-      ErrFile = (FILE*) 0;
-    } 
+   
+   if (ErrFile)
+     {
+       fclose (ErrFile);
+       ErrFile = (FILE*) 0;
+     } 
 }
 
 /*----------------------------------------------------------------------
@@ -3361,8 +3457,6 @@ void                FreeXmlParserContexts ()
       }
 }
 
-
-#ifdef EXPAT
 /*----------------------------------------------------------------------
    FreeExpatParser
   ----------------------------------------------------------------------*/
@@ -3376,6 +3470,35 @@ static void         FreeExpatParser ()
   XML_ParserFree (parser);
 }
 
+/*----------------------------------------------------------------------
+   DisableExpatParser
+   Specific initialization for expat
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void      DisableExpatParser ()
+#else  /* __STDC__ */
+static void      DisableExpatParser ()
+#endif  /* __STDC__ */
+
+{    
+  int    paramEntityParsing;
+
+  paramEntityParsing = XML_PARAM_ENTITY_PARSING_NEVER;
+  XML_SetCdataSectionHandler (parser, NULL, NULL);
+  XML_SetCharacterDataHandler (parser, NULL);
+  XML_SetCommentHandler (parser, NULL);
+  XML_SetDefaultHandlerExpand (parser, NULL);
+  XML_SetDoctypeDeclHandler (parser, NULL, NULL);
+  XML_SetElementHandler (parser, NULL, NULL);
+  XML_SetExternalEntityRefHandler (parser, NULL);
+  XML_SetNamespaceDeclHandler (parser, NULL, NULL);
+  XML_SetNotationDeclHandler (parser, NULL);
+  XML_SetNotStandaloneHandler (parser, NULL);
+  XML_SetParamEntityParsing (parser, paramEntityParsing);
+  XML_SetProcessingInstructionHandler (parser, NULL);
+  XML_SetUnknownEncodingHandler (parser, NULL, 0);
+  XML_SetUnparsedEntityDeclHandler (parser, NULL);
+}
 
 /*----------------------------------------------------------------------
    InitializeExpatParser
@@ -3392,11 +3515,6 @@ static void         InitializeExpatParser ()
 
   /*  Enable parsing of parameter entities */
   paramEntityParsing = XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE;
-
-  /* Construct a new parser */
-  /*
-  parser = XML_ParserCreate (NULL);
-  */
 
   /* Construct a new parser with namespace processing */
   parser = XML_ParserCreateNS (NULL, NS_SEP);
@@ -3472,8 +3590,6 @@ static void         InitializeExpatParser ()
   XML_SetUnparsedEntityDeclHandler (parser,
 				    Hndl_UnparsedEntity);
 }
-#endif /* EXPAT */
-
 
 /*----------------------------------------------------------------------
    InitializeXmlParser
@@ -3543,16 +3659,10 @@ Document            doc;
 	lastElementClosed = FALSE;
      }
 
-   NumberOfCharRead = 0;
-   NumberOfLinesRead = 1;
-
    /* input file is supposed to be XML */
    elementStack[0] = rootElement;
 
-   /* Initialization NameSpaces Stack */
-   NS_Level = -1;
-
-   /* initialize input buffer */
+   /* initialize global variables */
    lastAttribute = NULL;
    lastAttrElement = NULL;
    lastMappedAttr = NULL;
@@ -3561,6 +3671,120 @@ Document            doc;
    MergeText = FALSE;
    AfterTagPRE = FALSE;
    ParsingCSS = FALSE;
+}
+
+/*----------------------------------------------------------------------
+   StartSubXmlParser
+   Parse the current file (or buffer) starting at the current position
+   and  build the corresponding Thot abstract tree.
+
+   DTDname: name of the DTD to be used
+   doc: document to which the abstract tree belongs
+   el: the previous sibling (if isclosed) or parent of the tree to be built
+   lang: current language
+   closingTag: name of the tag that should terminate the tree to be parsed.
+   buflen: length of the buffer used in HTML parser
+
+   Return TRUE if the parsing is complete.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool    StartSubXmlParser (FILE *infile,
+			       int *index,
+			       STRING DTDname,
+			       Document doc,
+			       Element el,
+			       ThotBool isclosed,
+			       Language lang,
+			       CHAR_T* closingTag,
+			       int *buflen)
+#else
+ThotBool    StartSubXmlParser (infile,
+			       index,
+			       DTDname,
+			       doc,
+			       el,
+			       isclosed,
+			       lang,
+			       closingTag,
+			       buflen)
+FILE      *infile;
+int       *index;
+STRING     DTDname;
+Document   doc;
+Element    el;
+ThotBool   isclosed;
+Language   lang;
+CHAR_T*    closingTag;
+int       *buflen;
+#endif
+{
+  int        error;
+  ThotBool   endOfFile = FALSE;
+#define	 COPY_BUFFER_SIZE	1024
+  char       bufferRead[COPY_BUFFER_SIZE];
+  int        res;
+
+  /* Initialize global variables */
+  currentDocument = doc;
+  currentLanguage = lang;
+  lastElement = el;
+  lastElementClosed = isclosed;
+  lastAttribute = NULL;
+  lastAttrElement = NULL;
+  lastMappedAttr = NULL;
+  UnknownAttr = FALSE;
+  ReadingAnAttrValue = FALSE;
+  CommentText = NULL;
+  UnknownTag = FALSE;
+  DocumentSSchema = TtaGetDocumentSSchema (doc);
+  rootElement = TtaGetMainRoot (doc);
+  stackLevel = 1;
+  lastAttribute = NULL;
+  MergeText = FALSE;
+  AfterTagPRE = FALSE;
+  ParsingCSS = FALSE;
+
+  XMLrootClosed = FALSE;
+  XMLrootClosingTag = closingTag;
+
+    /* initialize all parser contexts if not done yet */
+  if (firstParserCtxt == NULL)
+      InitXmlParserContexts ();
+  ChangeXmlParserContext (DTDname);
+
+  /* Specific initialization for expat */
+  InitializeExpatParser ();
+	
+  /* parse the input file and build the Thot document */
+  while (!endOfFile && !XMLrootClosed)
+    {
+      res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);
+
+      if (res < COPY_BUFFER_SIZE)
+	  endOfFile = TRUE;
+      
+      if (!XML_Parse (parser, bufferRead,
+		      res, endOfFile))
+	{
+	  printf("\nError at line %d and column %d : %s\n",
+		 XML_GetCurrentLineNumber (parser),
+		 XML_GetCurrentColumnNumber (parser),
+		 XML_ErrorString (XML_GetErrorCode (parser)));
+	  endOfFile = TRUE;
+	}
+    }
+
+  /* end of the XML root element */
+  if (!isclosed)
+     (*(currentParserCtxt->ElementComplete)) (el, currentDocument, &error);
+
+  if (ErrFile)
+    {
+      fclose (ErrFile);
+      ErrFile = (FILE*) 0;
+    } 
+
+  return (!XMLabort);
 }
 
 /*----------------------------------------------------------------------
@@ -3602,18 +3826,6 @@ ThotBool    plainText;
   ThotBool        isHTML;
   char            www_file_name[MAX_LENGTH];
 
-  PtrParserCtxt	  oldParserCtxt;
-  Document        oldDocument;
-  Language        oldLanguage;
-  Element         oldElement;
-  ThotBool        oldElementClosed;
-  Attribute	  oldAttribute;
-  ThotBool        oldXMLrootClosed;
-  STRING	  oldXMLrootClosingTag;
-  int	          oldXMLrootLevel;
-  ThotBool        oldlastTagRead;
-  int	          oldStackLevel;
-
   currentDocument = doc;
   lastElement = NULL;
   lastElementClosed = FALSE;
@@ -3624,9 +3836,11 @@ ThotBool    plainText;
   ReadingAnAttrValue = FALSE;
   CommentText = NULL;
   UnknownTag = FALSE;
-  MergeText = FALSE;
 
+  XMLrootClosed = FALSE;
+  XMLrootClosingTag = NULL;
 
+  /* Reading of the file */
   wc2iso_strcpy (www_file_name, htmlFileName);
   stream = gzopen (www_file_name, "r");
 
@@ -3731,7 +3945,7 @@ ThotBool    plainText;
 	InitializeExpatParser ();
 	
 	/* parse the input file and build the Thot document */
-	XmlParse (parser, stream, NULL);
+	XmlParse (stream, NULL);
 
 	/* completes all unclosed elements */
 	el = lastElement;

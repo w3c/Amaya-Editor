@@ -19,6 +19,15 @@ extern void PutMathMLEntity ( USTRING entityValue,
                               STRING entityName,
                               Document doc );
 extern void FreeXmlParserContexts ( void );
+extern ThotBool StartSubXmlParser ( FILE *infile,
+                                    int *index,
+                                    STRING DTDname,
+                                    Document doc,
+                                    Element el,
+                                    ThotBool isclosed,
+                                    Language lang,
+                                    CHAR_T* closingTag,
+                                    int *buflen );
 extern void StartXmlParser ( Document doc,
                              CHAR_T* htmlFileName,
                              CHAR_T* documentName,
@@ -41,6 +50,15 @@ extern void PutMathMLEntity (/* USTRING entityValue,
                                 STRING entityName,
                                 Document doc */);
 extern void FreeXmlParserContexts (/* void */);
+extern ThotBool StartSubXmlParser (/* FILE *infile,
+                                      int *index,
+                                      STRING DTDname,
+                                      Document doc,
+                                      Element el,
+                                      ThotBool isclosed,
+                                      Language lang,
+                                      CHAR_T* closingTag,
+                                      int *buflen */);
 extern void StartXmlParser (/* Document doc,
                                CHAR_T* htmlFileName,
                                CHAR_T* documentName,
