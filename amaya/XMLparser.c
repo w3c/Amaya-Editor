@@ -11,15 +11,7 @@
 */
 
 #define THOT_EXPORT extern
-#include "config.h"
-#include "thot_sys.h"
-#include "application.h"
-#include "attribute.h"
-#include "document.h"
-#include "tree.h"
-#include "language.h"
-#include "content.h"
-#include "view.h"
+#include "amaya.h"
 
 #ifdef MATHML
 #include "MathMLbuilder_f.h"
@@ -58,7 +50,6 @@ static EntityDictEntry XMLpredifinedEntities[] =
 };
 
 typedef int         state;	/* a state of the parser automaton */
-typedef void        (*Proc) (); /* a procedure */
 
 /* maximum length of a Thot structure schema name */
 #define MAX_SS_NAME_LENGTH 32

@@ -14,14 +14,7 @@
 
 
 #define THOT_EXPORT extern
-#include "config.h"
-#include "thot_sys.h"
-#include "application.h"
-#include "attribute.h"
-#include "document.h"
-#include "tree.h"
-#include "language.h"
-#include "content.h"
+#include "amaya.h"
 
 #include "Mathedit_f.h"
 #include "XMLparser_f.h"
