@@ -82,6 +82,8 @@ struct _HTError
 #define DEFAULT_DNS_TIMEOUT 1800L
 #define DEFAULT_PERSIST_TIMEOUT 60L
 #define DEFAULT_NET_EVENT_TIMEOUT 60000
+/* defines the priority for general content negotiation */
+#define GENERAL_ACCEPT_NEGOTIATION "*/*;q=0.1,"AM_SVG_MIME_TYPE","AM_MATHML_MIME_TYPE","AM_XHTML_MIME_TYPE
 /* defines the priority for image content negotiation */
 #define IMAGE_ACCEPT_NEGOTIATION "*/*;q=0.1,image/*,image/gif,image/jpeg,image/png,image/svg+xml,"AM_SVG_MIME_TYPE
 
@@ -2848,6 +2850,8 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
 	     /* use the custom sent content_type */
 	     AHTRequest_setCustomAcceptHeader (me->request, content_type);
 #endif /* ANNOTATIONS */
+	   else
+	     AHTRequest_setCustomAcceptHeader (me->request, GENERAL_ACCEPT_NEGOTIATION);
 	   /*
 	   HTRequest_setConversion(me->request, acceptTypes, TRUE);
 	   */
