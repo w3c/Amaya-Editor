@@ -1790,6 +1790,9 @@ out_proto(omode, f_ptr, mode, do_comments)
   /* stupidity? */
   if (f_ptr == NULL) return;
 
+  /* remove all prototypes with inlines */
+  if (strstr(f_ptr->ftype, "inline")) return;
+
   /* initial comment output */
   if (get_option(OPT_FIRSTCOMMENT) &&
       (start_comment[0] != '\0')) {
