@@ -3211,7 +3211,9 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	 }
        else if (DocumentTypes[doc] == docAnnot)
 	 {
+#ifndef _WX
 	   TtcSwitchCommands (doc, 1); /* no command open */
+#endif /* _WX */
 	   TtaSetItemOff (doc, 1, Views, BShowAlternate);
 	   TtaSetItemOff (doc, 1, Views, BShowToC);
 	   TtaSetItemOff (doc, 1, Views, BShowSource);
@@ -7844,7 +7846,9 @@ void ShowAddress (Document doc, View view)
 #endif /* #if defined(_GTK) || defined(_WX) */
   
   TtaSetToggleItem (doc, 1, Views, TShowTextZone, SAddress[doc]);
+#ifndef _WX
   TtcSwitchCommands (doc, view);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
