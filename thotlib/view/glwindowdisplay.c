@@ -252,6 +252,7 @@ static void GL_SetupPixelFormat (HDC hDC)
 void GL_Win32ContextInit (HWND hwndClient, int frame)
 {
   static ThotBool dialogfont_enabled = FALSE;
+  int frame_index;
   HGLRC hGLRC;
   HDC hDC;
   ThotBool found;
@@ -292,6 +293,11 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 	{
 	  InitDialogueFonts ("");
 	  dialogfont_enabled = TRUE;
+      for (frame_index = 0 ; frame_index <= MAX_FRAME; frame_index++)
+	  {  
+	    GL_Windows[frame_index] = 0;
+        GL_Context[frame_index] = 0;
+	  }
 	}
     }
   GL_Windows[frame] = hDC;
@@ -1481,17 +1487,25 @@ void GL_DrawAll (ThotWidget widget, int frame)
    { 
      if (!(frame > 0 && frame <= MAX_FRAME)) 
        frame = ActiveFrame;
-     if (wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
-       { 	  
-	 GL_Drawing = TRUE;  
-	 RedrawFrameBottom (frame, 0, NULL);
-	 glFinish ();	 
-	 SwapBuffers (GL_Windows[frame]);
-	 if (GL_Err())
-	   WinErrorBox (NULL, "Bad drawing\n");
-	 GL_Drawing = FALSE;
-       }        
-     GL_Modif = FALSE;
+	 if (!(frame > 0 && frame <= MAX_FRAME)) 
+        for (frame = 0; frame <= MAX_FRAME; frame++)
+	      if (GL_Windows[frame] != 0)
+			break;
+	 if (GL_Windows[frame] != 0)
+		if (wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
+		 { 	  
+		 GL_Drawing = TRUE; 
+		 RedrawFrameBottom (frame, 0, NULL);
+		 glFinish ();	 
+		 /*
+		  saveBuffer (FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
+		   */
+		 SwapBuffers (GL_Windows[frame]);
+		 if (GL_Err())
+		  WinErrorBox (NULL, "Bad drawing\n");
+		 GL_Drawing = FALSE;
+		   }        
+		GL_Modif = FALSE;
    }
 #endif /*_GTK*/ 
 }
@@ -1716,6 +1730,36 @@ void glMatroxBUG (int frame, int x, int y, int width, int height)
     }
 }
 
+
+/*-------------------------------
+ SaveBuffer :
+ Take a picture (tga) of the backbuffer.
+ mainly for debug purpose, 
+ (but Amaya could be used as a svg renderer)
+--------------------------------*/
+void saveBuffer (int width, int height)
+{
+  static int z = 0;
+  unsigned char *Data;
+
+  z++;
+  if (z != 20)
+   return;
+  width = 100;
+  height = 200;
+  Data = TtaGetMemory (sizeof (unsigned char) * width * height * 4);
+  glReadPixels (0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, Data);
+  SavePng ("screenshot.png", 
+	   Data,
+	   (unsigned int) width,
+	   (unsigned int) height);
+    /* savetga ("screenshot.tga", 
+	   Data,
+	   width,
+	   height);*/
+  free (Data);
+}
+
 #ifdef _PCLDEBUG
 
 /*****************************************************/
@@ -1789,30 +1833,22 @@ int make_carre()
    return 0;
 }
 
-/*-------------------------------
- SaveBuffer :
- Take a picture (tga) of the backbuffer.
- mainly for debug purpose, 
- (but Amaya could be used as a svg renderer)
---------------------------------*/
-int saveBuffer (int width, int height)
+
+
+
+int  savetga (const char *filename, 
+		 unsigned char *Data,
+		 unsigned int width,
+		 unsigned int height)
 {
-  static int z = 0;
   FILE *screenFile;
-  unsigned char *Data;
   int length;
 
   unsigned char cGarbage = 0, type,mode,aux, pixelDepth;
   short int iGarbage = 0;
   int i;
 
-  z++;
-  /*if (z != 500)
-    return;
-  */
   length = width * height * 4;
-  Data = TtaGetMemory (sizeof (unsigned char) * length);
-  glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, Data);
   screenFile = fopen("screenshot.tga", "w");
   pixelDepth = 32;
   /* compute image type: 2 for RGB(A), 3 for greyscale*/
@@ -1844,8 +1880,6 @@ int saveBuffer (int width, int height)
   fwrite(&cGarbage, sizeof(unsigned char), 1, screenFile);  
   fwrite(Data, sizeof(unsigned char), length, screenFile);
   fclose(screenFile);
-  free(Data);
-  return 0;
 }
 #endif /*_PCLDEBUG*/
 

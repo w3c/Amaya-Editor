@@ -823,3 +823,84 @@ ThotBool IsPngFormat(char *fn)
    if (ret) return (TRUE);
    return(FALSE);
 }
+
+/*----------------------------------------------------------------------
+  SavePng : Wth Alpha, compression in 32 bit
+----------------------------------------------------------------------*/
+ThotBool SavePng (const char *filename, 
+		 unsigned char *m_pData,
+		 unsigned int m_width,
+		 unsigned int m_height)
+{
+  png_structp                png = 0;
+  png_infop                  pngInfo = 0;
+  FILE                       *pngFile;
+  unsigned char              **rowPtrs;
+  register int      rowcount, linesize, imagesize;
+
+  if (!m_pData)
+    return FALSE; 
+  png = png_create_write_struct (PNG_LIBPNG_VER_STRING, 0, 0, 0);
+  if (!png)
+    return FALSE;
+  pngInfo = png_create_info_struct (png);
+  if (!pngInfo)
+    {
+      png_destroy_write_struct(&png, (png_infopp) NULL);
+      return FALSE;
+    }
+  pngFile = fopen (filename, "wb");
+  if (!(pngFile))
+    {
+      png_destroy_write_struct(&png, (png_infopp) NULL);
+      return FALSE;
+    }
+  if (setjmp(png->jmpbuf)) 
+    {
+        png_destroy_write_struct(&png, &pngInfo);
+        fclose(pngFile);
+        return FALSE;
+    }
+  png_init_io (png, pngFile);
+  /* set the zlib compression level */
+  png_set_compression_level(png, Z_BEST_COMPRESSION);
+  /* set other zlib parameters */
+  png_set_compression_mem_level(png, 8);
+  png_set_compression_strategy(png, Z_DEFAULT_STRATEGY);
+  png_set_compression_window_bits(png, 15);
+  png_set_compression_method(png, 8);
+
+  png_set_IHDR (png, pngInfo, 
+		(int) m_width, (int) m_height, 8, 
+		PNG_COLOR_TYPE_RGB_ALPHA, 
+		PNG_INTERLACE_NONE, 
+		PNG_COMPRESSION_TYPE_DEFAULT,
+		PNG_FILTER_TYPE_DEFAULT);
+  /* png_set_invert_alpha(png_ptr);*/
+  png_write_info (png, pngInfo);  
+  rowPtrs = malloc (sizeof(unsigned char *) * m_height);
+  if (!rowPtrs)
+    {
+      fclose (pngFile);
+      png_destroy_read_struct (&png, &pngInfo, 0);
+      return FALSE;
+    }
+  rowcount = ((int) m_height) - 1;
+  linesize = ((int) m_width) * 4;
+  imagesize = 0;
+  /* invert image order*/
+  while (rowcount >= 0)
+    {
+      rowPtrs[rowcount] = (unsigned char *) m_pData + imagesize;
+      imagesize += linesize;
+      rowcount--;
+    }  
+  png_write_image (png, rowPtrs);
+  png_write_end (png, pngInfo);
+  png_write_flush (png);  
+  free (rowPtrs);  
+  png_destroy_read_struct (&png, &pngInfo, 0);  
+  fclose (pngFile);
+  return TRUE;
+}
+

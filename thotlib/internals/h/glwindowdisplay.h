@@ -67,7 +67,13 @@ void GL_DrawAll (ThotWidget widget, int frame);
 
 
 ThotBool GL_prepare (ThotWidget *widget);
+ThotBool SavePng (const char *filename, 
+		 unsigned char *m_pData,
+		 unsigned int m_width,
+		  unsigned int m_height);
 void GL_realize ();
+
+void saveBuffer (int width, int height);
 
 #ifdef _GTK
 

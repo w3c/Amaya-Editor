@@ -1665,6 +1665,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 		 ydelta = - (HIWORD (wParam));
 		 VerticalScroll (frame, ydelta, 1);
 	  }
+	 ActiveFrame = frame;
     return 0L;
 #endif /*WM_MOUSEWHEEL*/
 
@@ -1686,23 +1687,33 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 
   case WM_SYSKEYDOWN:
   case WM_KEYDOWN:
-    if (frame != -1)
-      SetFocus (FrRef [frame]);
-    SendMessage (FrRef [frame], mMsg, wParam, lParam);
+	  if (frame != -1)
+	  {
+        SetFocus (FrRef [frame]);
+		ActiveFrame = frame;
+		SendMessage (FrRef [frame], mMsg, wParam, lParam);
+	  }
     return 0L;
 
   case WM_DROPFILES:
-    if (frame != -1)
-      SetFocus (FrRef [frame]);
+	  if (frame != -1)
+	{
+		  SetFocus (FrRef [frame]);
+			ActiveFrame = frame;
+	  
     SendMessage (FrRef [frame], mMsg, wParam, lParam);
+		}
     return 0L;
 	
   case WM_IME_CHAR:
   case WM_SYSCHAR:
   case WM_CHAR:
-    if (frame != -1)
+	  if (frame != -1)
+	  {
       SetFocus (FrRef [frame]);
-    SendMessage (FrRef [frame], mMsg, wParam, lParam);
+	  ActiveFrame = frame;
+	  SendMessage (FrRef [frame], mMsg, wParam, lParam);
+	  }
     return 0L;
 
   case WM_NOTIFY:
@@ -1833,6 +1844,9 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 
     SetScrollRange (FrameTable[frame].WdScrollV, SB_CTL, 0, cy, TRUE);
     SetScrollRange (FrameTable[frame].WdScrollH, SB_CTL, 0, cx, TRUE);
+
+	SetFocus (FrRef [frame]);
+	ActiveFrame = frame;
     return 0L;
 
   default: 
@@ -2018,11 +2032,12 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, FALSE);
       if (wParam != VK_MENU)
 	return 0;
+
       break;
     case WM_LBUTTONDOWN:
       /* Activate the client window */
       SetFocus (FrRef[frame]);
-      /* stop any current insertion of text */
+	  /* stop any current insertion of text */
       CloseInsertion ();
       ClickFrame = frame;
       oldXPos = ClickX = LOWORD (lParam);
