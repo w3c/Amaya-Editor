@@ -592,13 +592,6 @@ gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event,
   frame = (int) data;
   FreeAllPicCacheFromFrame (frame);
 
-{
-GtkGLArea *gl_area;
-
- gl_area = GTK_GL_AREA(widget);
- gdk_gl_context_unref(gl_area->glcontext);
-}
- 
   return TRUE ;
 }
 
