@@ -305,7 +305,7 @@ MathEntity        MathEntityTable[] =
    {"kappa", 107, 'G'},
    {"lambda", 108, 'G'},
    {"lang", 225, 'G'},
-   {"larr", 173, 'G'},
+   {"larr", 172, 'G'},
    {"lArr", 220, 'G'},
    {"le", 163, 'G'},
    {"lowbar", 95, 'G'},
@@ -360,7 +360,7 @@ MathEntity        MathEntityTable[] =
    {"trade", 212, 'G'},
    {"tradesf", 212, 'G'},
    {"tradessf", 228, 'G'},
-   {"uarr", 172, 'G'},
+   {"uarr", 173, 'G'},
    {"uArr", 221, 'G'},
    {"upsi", 117, 'G'},
    {"weierp", 195, 'G'},
@@ -3076,6 +3076,113 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
 
 
 /*----------------------------------------------------------------------
+   SetSingleHorizStretchAttr
+
+   Put a horizstretch attribute on element el if it contains only
+   a MO element that is a stretchable symbol.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetSingleHorizStretchAttr (Element el, Document doc, Element* selEl)
+#else /* __STDC__*/
+void SetSingleHorizStretchAttr (el, doc, selEl)
+  Element	el;
+  Document	doc;
+  Element*	selEl;
+#endif /* __STDC__*/
+{
+  Element	child, sibling, textEl, symbolEl;
+  ElementType	elType;
+  Attribute	attr;
+  AttributeType	attrType;
+  int		len;
+  Language	lang;
+  char		alphabet;
+  unsigned char	text[2], c;
+
+  if (el == NULL)
+     return;
+  child = TtaGetFirstChild (el);
+  if (child != NULL)
+     {
+     elType = TtaGetElementType (child);
+     if (elType.ElTypeNum == MathML_EL_MO)
+	/* the first child is a MO */
+        {
+        sibling = child;
+        TtaNextSibling (&sibling);
+	if (sibling == NULL)
+	   /* there is no other child */
+	   {
+	   textEl = TtaGetFirstChild (child);
+	   elType = TtaGetElementType (textEl);
+	   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	      {
+	      len = TtaGetTextLength (textEl);
+	      if (len == 1)
+		{
+		len = 2;
+		TtaGiveTextContent (textEl, text, &len, &lang);
+		alphabet = TtaGetAlphabet (lang);
+		if (len == 1)
+		   if (alphabet == 'G')
+		     /* a single Symbol character */
+		     if ((int)text[0] == 172 || (int)text[0] == 174)
+			/* horizontal arrow */
+			{
+			/* attach a horizstretch attribute */
+			attrType.AttrSSchema = elType.ElSSchema;
+			attrType.AttrTypeNum = MathML_ATTR_horizstretch;
+			attr = TtaNewAttribute (attrType);
+			TtaAttachAttribute (el, attr, doc);
+			TtaSetAttributeValue (attr, MathML_ATTR_horizstretch_VAL_yes_, el, doc);
+			/* replace the TEXT element by a Thot SYMBOL element */
+			elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+			symbolEl = TtaNewElement (doc, elType);
+			TtaInsertSibling (symbolEl, textEl, FALSE, doc);
+			if (selEl != NULL)
+			   if (*selEl == textEl)
+			      *selEl = symbolEl;
+			TtaDeleteTree (textEl, doc);
+			if ((int)text[0] == 172)
+			   c = '<';
+			if ((int)text[0] == 174)
+			   c = '>';
+			TtaSetGraphicsShape (symbolEl, c, doc);
+			}
+		}
+	      }
+	   }
+	}
+     }
+}
+
+/*----------------------------------------------------------------------
+   SetHorizStretchAttr
+
+   Put a horizstretch attribute on all children of element el which
+   contain only a MO element that is a stretchable symbol.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SetHorizStretchAttr (Element el, Document doc)
+#else /* __STDC__*/
+static void SetHorizStretchAttr (el, doc)
+  Element	el;
+  Document	doc;
+#endif /* __STDC__*/
+{
+  Element	child;
+
+  if (el == NULL)
+     return;
+  child = TtaGetFirstChild (el);
+  while (child != NULL)
+     {
+     SetSingleHorizStretchAttr (child, doc, NULL);
+     TtaNextSibling (&child);
+     }
+}
+
+/*----------------------------------------------------------------------
    SetPlaceholderAttr
 
    Put a placeholder attribute on all Construct elements in the
@@ -3466,16 +3573,19 @@ Element                 el;
 	   Overscript */
 	CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
 				 MathML_EL_Underscript, MathML_EL_Overscript);
+	SetHorizStretchAttr (el, theDocument);
 	break;
      case MathML_EL_MUNDER:
 	/* end of a MUNDER. Create UnderOverBase, and Underscript */
 	CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
 				 MathML_EL_Underscript, 0);
+	SetHorizStretchAttr (el, theDocument);
 	break;
      case MathML_EL_MOVER:
 	/* end of a MOVER. Create UnderOverBase, and Overscript */
 	CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
 				 MathML_EL_Overscript, 0);
+	SetHorizStretchAttr (el, theDocument);
 	break;
      case MathML_EL_MMULTISCRIPTS:
 	/* end of a MMULTISCRIPTS. Create all elements defined in the

@@ -1178,10 +1178,11 @@ static void ParseMathString (theText, theElem, doc)
 
 {
   Element	el, selEl, prevEl, nextEl, textEl, newEl, lastEl,
-		firstEl, newSelEl, prev, next, parent;
+		firstEl, newSelEl, prev, next, parent, UnderOverComp;
   ElementType	elType, elType2;
   SSchema	MathMLSchema;
-  int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j, start;
+  int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j,
+		start;
   char		alphabet, c;
   Language	lang;
 #define TXTBUFLEN 200
@@ -1411,6 +1412,33 @@ static void ParseMathString (theText, theElem, doc)
   /* Create a MROW element that encompasses the new elements if necessary */
   if (firstEl != NULL)
     CreateParentMROW (firstEl, doc);
+
+  /* the new contents may be an horizontally stretchable symbol */
+  if (firstEl != NULL)
+    {
+    elType = TtaGetElementType (firstEl);
+    elType.ElTypeNum = MathML_EL_UnderOverBase;
+    UnderOverComp = TtaGetTypedAncestor (firstEl, elType);
+    if (UnderOverComp != NULL)
+       /* the new content is in a UnderOverBase */
+       SetSingleHorizStretchAttr (UnderOverComp, doc, &newSelEl);
+    else
+       {
+       elType.ElTypeNum = MathML_EL_Underscript;
+       UnderOverComp = TtaGetTypedAncestor (firstEl, elType);
+       if (UnderOverComp != NULL)
+          /* the new content is in a Underscript */
+	  SetSingleHorizStretchAttr (UnderOverComp, doc, &newSelEl);
+       else
+          {
+          elType.ElTypeNum = MathML_EL_Overscript;
+          UnderOverComp = TtaGetTypedAncestor (firstEl, elType);
+          if (UnderOverComp != NULL)
+             /* the new content is in a Overscript */
+	     SetSingleHorizStretchAttr (UnderOverComp, doc, &newSelEl);
+          }
+       }
+    }
 
   TtaSetStructureChecking (1, doc);
   TtaSetDisplayMode (doc, DisplayImmediately);

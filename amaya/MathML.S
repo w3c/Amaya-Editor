@@ -44,12 +44,12 @@ STRUCT
 		  	Superscript;
 			END;
 		  MUNDER = BEGIN
-			UnderOverBase = Construct;
-			Underscript = Construct;
+			UnderOverBase (ATTR horizstretch = yes_) = Construct;
+			Underscript (ATTR horizstretch) = Construct;
 			END;
 		  MOVER = BEGIN
 			UnderOverBase;
-			Overscript = Construct;
+			Overscript (ATTR horizstretch) = Construct;
 			END;
 		  MUNDEROVER = BEGIN
 			UnderOverBase;

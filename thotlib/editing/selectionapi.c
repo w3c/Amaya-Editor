@@ -157,6 +157,8 @@ int                 lastCharacter;
    UserErrorCode = 0;
    if (textElement == NULL)
       TtaError (ERR_invalid_parameter);
+   else if (((PtrElement) textElement)->ElParent == NULL)
+      TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) textElement)->ElTerminal)
       TtaError (ERR_invalid_element_type);
    else if (((PtrElement) textElement)->ElLeafType != LtText)

@@ -1039,4 +1039,26 @@ ATTRIBUTES
 	Fillpattern: nopattern;
 	Width: Enclosed . Width;
 	END;
+
+  horizstretch:
+	BEGIN
+        Width: Enclosing . Width ;
+	HorizPos: Left = Enclosing . Left;
+	END;
+  horizstretch (MO):
+	BEGIN
+        Width: Enclosing . Width ;
+	HorizPos: Left = Enclosing . Left;
+	END;
+  horizstretch (SYMBOL_UNIT):
+	BEGIN
+	Height: Enclosed . Height;
+	Width: Enclosing . Width;
+	HorizPos: Left = Enclosing . Left;
+	IN Math_Structure_view BEGIN
+		HorizPos: Left = Previous . Right + 0.5;
+		Width: 2;
+		END;
+	END;
+
 END
