@@ -11,6 +11,8 @@ RULES
 
    Annot : BEGIN
      Use HTMLTX for HTML;
+     Use MathMLT for MathML;
+     Use GraphMLT for GraphML;
      Use XLinkT for XLink;
    END;
 

@@ -22,6 +22,9 @@ RULES
 
    GraphML:
 	BEGIN
+	Use HTMLTX for HTML;
+        Use MathMLT for MathML;
+        Use XLinkT for XLink;
 	Create '<svg xmlns="http://www.w3.org/2000/svg"';
 	Create Attributes;
 	Create '>\12';
@@ -295,12 +298,6 @@ RULES
 
    XMLcomment_line:
 	if not last create '\12' after;
-
-   HTML:
-	Use HTMLT;
-
-   MathML:
-	Use MathMLT;
 
    TEXT_UNIT:
         if immediately within text_
