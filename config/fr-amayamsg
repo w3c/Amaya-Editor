@@ -4,97 +4,97 @@
 3 Document %s sauv\351
 4 Attribut
 5 URL
-7 Texte
-8 Nom
-9 Mot de passe
-10 Utiliser comme classe
-11 Appliquer classe
-12 S\351lectionner une classe
-14 Recherche de %s
-16 Impossible de charger %s
-17 C'est fini!
-19 S\351lectionner la destination
-20 Destination invalide
-24 Adresse
-25 Titre
-26 Document modifi\351. Voulez-vous continuer ?
-27 Recherche de %s
-28 D\351epassement de la limite de redirectionnement
-29 Cr\351ation impossible du document %s
-30 En attente d'un socket
-31 Lecture %s
-32 Ecriture %s
-33 En attente d'une connexion
-34 Connexion vers %s
-35 Recherche de %s
-36 Status inconnu
-37 Une erreur Xt est survenue
-38 Dialogue d'authentification
-39 Manque d'autorisation pour acc\351der \340 %s
-40 %s charg\351 mais ne comporte pas de donn\351es
-41 Interruption du transfert!
-42 Indisponibilit\351 momentaire de %s. Ressayez plus tard
-43 %s  charg\351
-44 Sauvegarde de %s
-45 Impossible de sauvegarder %s
-46 french system error messages
-47 Une ancre ne peut pas contenir ces \351l\351ments
-48 Impossible de cr\351er une ancre dans une ancre
-49 Pas de support GET pour cette URL: %s
-50 Pas de support PUT pour cette URL: %s
-51 Cette version d'Amaya ne supporte pas cette option
-52 Fin d'\351criture de %s
-53 Imposible de normalizer %s
-54 Imposible de creer le r\351pertoire temporaire %s
-55 Aucune transformation possible
-56 La transformation a echou\351
-57 HTML.trans erreur de syntaxe ligne %s
-58 Ajouter
-59 Visualiser
-60 Browse
-61 CSS Externe
-62 Supprimer CSS
-63 Supprimer
-64 Sauvegarder
-65 Sauvegarder sous
-66 Recharger
-67 Nouveau
-68 CSS
-69 La sauvegarde entrainera \351craser les URLs suivantes :
-70 Erreur de sauvegarde de l'URL 
-71 Sauvegarder sur le disque ?
-72 BCopier Images
-73 Btransformer URLs
-74 Emplacement du document
-75 Emplacement des images
-76 Emplacement de l'objet
-77 Style du document
-78 Pr\351f\351rences de l'utilisateur
-79 Fichier 1 CSS                                         
-80 Liste de r\350gle pour fichier 1                         
-81 Fichier 2 CSS                                         
-82 Liste de règle pour fichier 2                           
-83 S\351lectionner une nouvelle feuille de style
-84 Supprimer une feuille de style
-85 <HTML><HEAD>ERREUR</HEAD><BODY><TITLE>ERREUR: L'URL recherchée pourrait ne pas être accessible</TITLE><H2>ERREUR: L'URL recherchée pourrait ne pas être accessible</H2><HR><P>Lors de la recherche de l'URL:<A HREF=\"%s\">%s</A></P><P>l'erreur suivante s'est produite :</P><UL><LI><STRONG>Connection echouée</STRONG></UL><P>Le système indique:</P><PRE><I>(%d) %s</I></PRE><P>Ce qui voudrait dire :</P><PRE>Le site ou le serveur distant pourrait être en panne ou n'existe pas.</PRE><PRE>Essayer plus tard.</PRE><P></P><HR>\n</BODY></HTML>
-86 Entrer le nom utilisateur:
-93 Il y a %d requêtes en cours
-95 Netoyage du cache persistant - cela peut prendre quelques secondes ...
-99 Interrompre le chargement
-100 Document pr\351c\351dent
-101 Document suivant
-102 Recharger
-103 Sauver
-104 Imprimer
-105 Chercher
-106 Italique
-107 Gras
-108 Fonte fixe
-109 Feuille de style
-110 Ajout d'une image
-111 Titre niveau 1
-112 Titre niveau 2
-113 Titre niveau 3
-114 Liste
-115 Liste num\351rot\351e
-116 Liste de d\351finitions
+6 Texte
+7 Nom
+8 Mot de passe
+9 Utiliser comme classe
+10 Appliquer classe
+11 S\351lectionner une classe
+12 Recherche de %s
+13 Impossible de charger %s
+14 C'est fini!
+15 S\351lectionner la destination
+16 Destination invalide
+17 Adresse
+18 Titre
+19 Document modifi\351. Voulez-vous continuer ?
+20 Recherche de %s
+21 D\351epassement de la limite de redirectionnement
+22 Cr\351ation impossible du document %s
+23 En attente d'un socket
+24 Lecture %s
+25 Ecriture %s
+26 En attente d'une connexion
+27 Connexion vers %s
+28 Recherche de %s
+29 Status inconnu
+30 Une erreur Xt est survenue
+31 Dialogue d'authentification
+32 Manque d'autorisation pour acc\351der \340 %s
+33 %s charg\351 mais ne comporte pas de donn\351es
+34 Interruption du transfert!
+35 Indisponibilit\351 momentaire de %s. Ressayez plus tard
+36 %s  charg\351
+37 Sauvegarde de %s
+38 Impossible de sauvegarder %s
+39 french system error messages
+40 Une ancre ne peut pas contenir ces \351l\351ments
+41 Impossible de cr\351er une ancre dans une ancre
+42 Pas de support GET pour cette URL: %s
+43 Pas de support PUT pour cette URL: %s
+44 Cette version d'Amaya ne supporte pas cette option
+45 Fin d'\351criture de %s
+46 Imposible de normalizer %s
+47 Imposible de creer le r\351pertoire temporaire %s
+48 Aucune transformation possible
+49 La transformation a echou\351
+50 HTML.trans erreur de syntaxe ligne %s
+51 Ajouter
+52 Visualiser
+53 Browse
+54 CSS Externe
+55 Supprimer CSS
+56 Supprimer
+57 Sauvegarder
+58 Sauvegarder sous
+59 Recharger
+60 Nouveau
+61 CSS
+62 La sauvegarde entrainera \351craser les URLs suivantes :
+63 Erreur de sauvegarde de l'URL 
+64 Sauvegarder sur le disque ?
+65 BCopier Images
+66 Btransformer URLs
+67 Emplacement du document
+68 Emplacement des images
+69 Emplacement de l'objet
+70 Style du document
+71 Pr\351f\351rences de l'utilisateur
+72 Fichier 1 CSS                                         
+73 Liste de r\350gle pour fichier 1                         
+74 Fichier 2 CSS                                         
+75 Liste de règle pour fichier 2                           
+76 S\351lectionner une nouvelle feuille de style
+77 Supprimer une feuille de style
+78 <HTML><HEAD>ERREUR</HEAD><BODY><TITLE>ERREUR: L'URL recherchée pourrait ne pas être accessible</TITLE><H2>ERREUR: L'URL recherchée pourrait ne pas être accessible</H2><HR><P>Lors de la recherche de l'URL:<A HREF=\"%s\">%s</A></P><P>l'erreur suivante s'est produite :</P><UL><LI><STRONG>Connection echouée</STRONG></UL><P>Le système indique:</P><PRE><I>(%d) %s</I></PRE><P>Ce qui voudrait dire :</P><PRE>Le site ou le serveur distant pourrait être en panne ou n'existe pas.</PRE><PRE>Essayer plus tard.</PRE><P></P><HR>\n</BODY></HTML>
+79 Entrer le nom utilisateur:
+80 Il y a %d requêtes en cours
+81 Netoyage du cache persistant - cela peut prendre quelques secondes ...
+82 Interrompre le chargement
+83 Document pr\351c\351dent
+84 Document suivant
+85 Recharger
+86 Sauver
+87 Imprimer
+88 Chercher
+89 Italique
+90 Gras
+91 Fonte fixe
+92 Feuille de style
+93 Ajout d'une image
+94 Titre niveau 1
+95 Titre niveau 2
+96 Titre niveau 3
+97 Liste
+98 Liste num\351rot\351e
+99 Liste de d\351finitions

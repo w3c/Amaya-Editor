@@ -4,97 +4,97 @@
 3 Document %s saved
 4 Attribute
 5 URL
-7 Text
-8 Name
-9 Password
-10 Use as class
-11 Apply class
-12 Select a class
-14 Fetching %s
-16 Cannot load %s
-17 Finished!
-19 Select the target
-20 Invalid target
-24 Address
-25 Title
-26 Document modified. All changes will be lost. Do you want to continue ?
-27 Redirection fetching of %s
-28 Too many redirections detected
-29 Cannot create local file %s
-30 Waiting for a free socket
-31 Reading %s
-32 Writing %s
-33 Waiting for connection
-34 Contacting %s
-35 Looking up %s
-36 Unknown Status
-37 Detected an Xt Error
-38 Authentication Dialogue
-39 Authorization failure for %s
-40 %s loaded but no data is available
-41 Transfer interrupted!
-42 %s is not available at the moment. Please retry at some other time
-43 %s loaded
-44 Saving %s
-45 Cannot save %s
-46 english system errors messages
-47 An anchor cannot contain these elements
-48 Cannot create an anchor within an anchor
-49 Sorry, no GET support yet for this kind of URL: %s
-50 Sorry, no PUT support yet for this kind of URL: %s
-51 This version of Amaya does not support this feature
-52 Finished writing %s
-53 Could not normalize %s
-54 Coult not create temporary file directory %s
-55 No transformation applicable to the selection
-56 The transformation failed 
-57 syntax error in file HTML.trans line %s
-58 Add
-59 Show
-60 Browse
-61 External CSS
-62 Delete CSS
-63 Delete
-64 Save
-65 Save as
-66 Reload
-67 New
-68 CSS
-69 Saving will overwrite the following URLs:
-70 Failed to save to URL
-71 Save to disk ?
-72 BCopy Images
-73 BTransform URLs
-74 Document location
-75 Images location
-76 Object location
-77 Document style
-78 User's Preferences
-79 CSS file 1                                            
-80 Rule list for file 1                                   
-81 CSS file 2                                            
-82 Rule list for file 2                                   
-83 Select an external Style Sheet
-84 Delete a Style Sheet
-85 <HTML><HEAD>ERROR</HEAD><BODY><TITLE>ERROR: The requested URL could not be retrieved</TITLE><H2>The requested URL could not be retrieved</H2><HR><P>While trying to retrieve the URL:<A HREF=\"%s\">%s</A></P><P>The following error was encountered:</P><UL><LI><STRONG>Connection Failed</STRONG></UL><P>The system returned:</P><PRE><I>(%d) %s</I></PRE><P>This means that:</P><PRE>The remote site or server may be down or non-existant.</PRE><PRE>Please try again soon.</PRE><P></P><HR>\n</BODY></HTML>
-86 Please enter username:
-93 %d outstanding requests
-95 Garbage collecting persistent cache - please wait...
-99 Interrupt transfer
-100 Previous document
-101 Next document
-102 Reload
-103 Save
-104 Print
-105 Search
-106 Emphasis
-107 Strong
-108 Fixed font
-109 Style sheet
-110 Insert image
-111 Heading level 1
-112 Heading level 2
-113 Heading level 3
-114 Bulleted list
-115 Numbered list
-116 Definition list
+6 Text
+7 Name
+8 Password
+9 Use as class
+10 Apply class
+11 Select a class
+12 Fetching %s
+13 Cannot load %s
+14 Finished!
+15 Select the target
+16 Invalid target
+17 Address
+18 Title
+19 Document modified. All changes will be lost. Do you want to continue ?
+20 Redirection fetching of %s
+21 Too many redirections detected
+22 Cannot create local file %s
+23 Waiting for a free socket
+24 Reading %s
+25 Writing %s
+26 Waiting for connection
+27 Contacting %s
+28 Looking up %s
+29 Unknown Status
+30 Detected an Xt Error
+31 Authentication Dialogue
+32 Authorization failure for %s
+33 %s loaded but no data is available
+34 Transfer interrupted!
+35 %s is not available at the moment. Please retry at some other time
+36 %s loaded
+37 Saving %s
+38 Cannot save %s
+39 english system errors messages
+40 An anchor cannot contain these elements
+41 Cannot create an anchor within an anchor
+42 Sorry, no GET support yet for this kind of URL: %s
+43 Sorry, no PUT support yet for this kind of URL: %s
+44 This version of Amaya does not support this feature
+45 Finished writing %s
+46 Could not normalize %s
+47 Coult not create temporary file directory %s
+48 No transformation applicable to the selection
+49 The transformation failed 
+50 syntax error in file HTML.trans line %s
+51 Add
+52 Show
+53 Browse
+54 External CSS
+55 Delete CSS
+56 Delete
+57 Save
+58 Save as
+59 Reload
+60 New
+61 CSS
+62 Saving will overwrite the following URLs:
+63 Failed to save to URL
+64 Save to disk ?
+65 BCopy Images
+66 BTransform URLs
+67 Document location
+68 Images location
+69 Object location
+70 Document style
+71 User's Preferences
+72 CSS file 1                                            
+73 Rule list for file 1                                   
+74 CSS file 2                                            
+75 Rule list for file 2                                   
+76 Select an external Style Sheet
+77 Delete a Style Sheet
+78 <HTML><HEAD>ERROR</HEAD><BODY><TITLE>ERROR: The requested URL could not be retrieved</TITLE><H2>The requested URL could not be retrieved</H2><HR><P>While trying to retrieve the URL:<A HREF=\"%s\">%s</A></P><P>The following error was encountered:</P><UL><LI><STRONG>Connection Failed</STRONG></UL><P>The system returned:</P><PRE><I>(%d) %s</I></PRE><P>This means that:</P><PRE>The remote site or server may be down or non-existant.</PRE><PRE>Please try again soon.</PRE><P></P><HR>\n</BODY></HTML>
+79 Please enter username:
+80 %d outstanding requests
+81 Garbage collecting persistent cache - please wait...
+82 Interrupt transfer
+83 Previous document
+84 Next document
+85 Reload
+86 Save
+87 Print
+88 Search
+89 Emphasis
+90 Strong
+91 Fixed font
+92 Style sheet
+93 Insert image
+94 Heading level 1
+95 Heading level 2
+96 Heading level 3
+97 Bulleted list
+98 Numbered list
+99 Definition list
