@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya V4.3.2" />
+  <meta name="GENERATOR" content="amaya V4.4" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -78,8 +78,13 @@ aisément le point d'insertion à l'intérieur des liens : vous devez soit
 utiliser une sélection étendue soit déplacer le point d'insertion à
 l'intérieur des liens à l'aide des flèches. Il est également possible
 d'utiliser le clavier pour activer les liens, ainsi que les formulaires de
-contrôles. La commande au clavier est <strong>Alt-Enter</strong> par
-défaut.</p>
+contrôles. La commande au clavier est <strong>Alt-Enter</strong> par défaut,
+mais la commande <em>DoAction</em> peut être associée à un autre <a
+href="ShortCuts.html.fr">raccourci clavier</a>. La commande
+<em>NextLinkOrFormElement</em>, associée par défaut à la touche
+<strong>Tab</strong>, vous permet de trouver le prochain (ou le premier s'il
+n'y a pas de sélection) lien ou élément de formulaire HTML dans le
+document.</p>
 
 <p>Le document récupéré par cette opération <em>remplace</em> le document
 courant dans la même fenêtre et conserve le mode (éditeur ou navigateur). Si
