@@ -1263,7 +1263,7 @@ PtrBox              GetClickedLeafBox (int frame, int xRef, int yRef)
 			    pSelBox = pBox;
 			 }
 		       /* If the box is over the previous selected box */
-		       else if (pSelBox->BxAbstractBox->AbDepth > pBox->BxAbstractBox->AbDepth)
+		       else if (pSelBox->BxAbstractBox->AbDepth >= pBox->BxAbstractBox->AbDepth)
 			 {
 			    max = d;
 			    pSelBox = pBox;
