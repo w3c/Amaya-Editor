@@ -3272,7 +3272,6 @@ void UpdateScrollbars (int frame)
    Arg                 args[MAX_ARGS];
    int                 n;
 #else /* _GTK */
-  GtkEntry           *textzone;
    GtkAdjustment      *tmpw;
 #endif /* _GTK */
 #else /* _WINDOWS */
