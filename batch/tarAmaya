@@ -7,8 +7,8 @@
 AMAYAVERSION=1.2a
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
-#PLATFORMS="solaris2 LINUX-ELF RS6000 osf1 SGI"
-PLATFORMS="RS6000  SGI"
+PLATFORMS="solaris2 LINUX-ELF RS6000 SGI"
+#PLATFORMS="LINUX-ELF"
 
 TAR="tar cvbfh 200"
 COMPRESS="gzip -9"
@@ -22,7 +22,6 @@ cd ..
 for MACH in $PLATFORMS
 do
    $TAR - \
-   Thot/README \
    Thot/COPYRIGHT \
    Thot/README.amaya \
    Thot/config/XKeysymDB \
@@ -60,7 +59,8 @@ do
    Thot/doc/amaya/New.html \
    Thot/doc/amaya/Views.html \
    Thot/doc/amaya/Autoconf.html \
-   Thot/doc/amaya/Saving.html \
+   Thot/doc/amaya/Publishing.html \
+   Thot/doc/amaya/Put.html \
    Thot/doc/amaya/ImageMaps.html \
    Thot/doc/amaya/Numbering.html \
    Thot/doc/amaya/Searching.html \

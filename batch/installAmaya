@@ -1,8 +1,8 @@
 #!/bin/sh
 cd ../..
-AMAYAVERSION=1.2
+AMAYAVERSION=1.2a
 THOTDIR=/tahiti/diffusion/opera
-PLATFORMS="solaris2 SGI RS6000 osf1 SUN4"
+PLATFORMS="solaris2 SGI RS6000 SUN4"
 cd $THOTDIR
 rm solaris2 LINUX-ELF
 ln -s solaris-www solaris2
@@ -52,17 +52,13 @@ mkdir $DIR
    cp -p Thot/doc/amaya/Tables.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/AmayaArchi.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Math.html $DIR/doc/amaya/
-   cp -p Thot/doc/amaya/Registry.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Transform.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Attributes.html $DIR/doc/amaya/
-   cp -p Thot/doc/amaya/New.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Views.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Autoconf.html $DIR/doc/amaya/
-   cp -p Thot/doc/amaya/Saving.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/ImageMaps.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Numbering.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Searching.html $DIR/doc/amaya/
-   cp -p Thot/doc/amaya/BinDist.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Selecting.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Browsing.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/CSS.html $DIR/doc/amaya/
@@ -94,7 +90,7 @@ do
 done
 
 DIR=/mnt/amaya/$AMAYAVERSION
-PLATFORMS="solaris2 SGI RS6000 osf1 LINUX-ELF SUN4"
+PLATFORMS="solaris2 SGI RS6000 LINUX-ELF SUN4"
 echo "Intallation version " $DIR
 mkdir $DIR
  mkdir $DIR/config
@@ -124,16 +120,6 @@ mkdir $DIR
    cp -p Thot/amaya/HTML.fr $DIR/amaya/
    cp -p Thot/amaya/HTML*.PRS $DIR/amaya/
    cp -p Thot/amaya/HTML*.TRA $DIR/amaya/
- mkdir $DIR/amaya
-   cp -p Thot/amaya/COPYRIGHT $DIR/amaya/
-   cp -p Thot/amaya/AmayaPage.html $DIR/amaya/
-   cp -p Thot/amaya/HTML.STR $DIR/amaya/
-   cp -p Thot/amaya/HTML.conf $DIR/amaya/
-   cp -p Thot/amaya/HTML.trans $DIR/amaya/
-   cp -p Thot/amaya/HTML.en $DIR/amaya/
-   cp -p Thot/amaya/HTML.fr $DIR/amaya/
-   cp -p Thot/amaya/HTML*.PRS $DIR/amaya/
-   cp -p Thot/amaya/HTML*.TRA $DIR/amaya/
    cp -p Thot/amaya/MathML.STR $DIR/amaya/
    cp -p Thot/amaya/MathMLP.PRS $DIR/amaya/
    cp -p Thot/amaya/MathMLT.TRA $DIR/amaya/
@@ -150,13 +136,11 @@ mkdir $DIR
    cp -p Thot/doc/amaya/Tables.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/AmayaArchi.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Math.html $DIR/doc/amaya/
-   cp -p Thot/doc/amaya/Registry.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Transform.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Attributes.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/New.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Views.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Autoconf.html $DIR/doc/amaya/
-   cp -p Thot/doc/amaya/Saving.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/ImageMaps.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Numbering.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Searching.html $DIR/doc/amaya/
