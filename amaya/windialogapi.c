@@ -325,7 +325,7 @@ int       num_form_print;
     numFormPrint       = num_form_print;
 	sprintf (currentFileToPrint, "%s", ps_dir);
 
-	DialogBox (hInstance, MAKEINTRESOURCE (PRINTDIALOG), parent, (DLGPROC) PrintDlgProc);
+	DialogBox (hInstance, MAKEINTRESOURCE (PRINTDIALOG), NULL, (DLGPROC) PrintDlgProc);
 	TtPrinterDC = NULL;
 }
 
@@ -996,10 +996,10 @@ LPARAM lParam;
                             break;
 
 				       case ID_PRINT:
+					        EndDialog (hwnDlg, ID_PRINT);
 						    ThotCallback (numMenuPaperFormat + baseDlg, INTEGER_DATA, (char*)0);
 							ThotCallback (numZonePrinterName + baseDlg, STRING_DATA, currentFileToPrint);
 							ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (char*)1);
-					        EndDialog (hwnDlg, ID_PRINT);
 							break;
 				       case IDCANCEL:
                             if (TtPrinterDC) {
