@@ -865,8 +865,58 @@ void SelectSiblings (PtrElement *firstEl, PtrElement *lastEl,
    PtrElement          pParent;
 
    if (!SelContinue)
+     /* discrete selection. don't do anything */
      return;
-   if ((*firstEl)->ElParent != (*lastEl)->ElParent)
+   if (SelectedColumn)
+     /* We are in column selection mode */
+     {
+       /* if the selection starts at the beginning of an element, select
+	  this element, but don't go higher than the cell element */
+       if ((*firstEl)->ElPrevious == NULL && *firstChar <= 1)
+	 {
+	   pParent = *firstEl;
+	   do
+	     {
+	       if (TypeHasException (ExcIsCell, pParent->ElTypeNumber,
+				     pParent->ElStructSchema))
+		 /* this is a cell. Stop */
+		 pParent = NULL;
+	       else
+		 {
+		   /* use this element as the beginning of the selection
+		      and check the upper level */
+		   *firstEl = pParent;
+		   *firstChar = 0;
+		   pParent = pParent->ElParent;
+		 }
+	     }
+	   while (pParent && !pParent->ElPrevious);
+	 }
+       /* if the selection ends at the end of an element, select
+	  this element, but don't go higher than the cell element */
+       if ((*lastEl)->ElNext == NULL && (*lastChar == 0 ||
+					 *lastChar > (*lastEl)->ElTextLength))
+	 {
+	   pParent = *lastEl;
+	   do
+	     {
+	       if (TypeHasException (ExcIsCell, pParent->ElTypeNumber,
+				     pParent->ElStructSchema))
+		 /* this is a cell. Stop */
+		 pParent = NULL;
+	       else
+		 {
+		   /* use this element as the end of the selection */
+		   *lastEl = pParent;
+		   *lastChar = 0;
+		   pParent = pParent->ElParent;
+		 }
+	     }
+	   while (pParent && !pParent->ElNext);
+	 }
+       return;
+     }
+   else if ((*firstEl)->ElParent != (*lastEl)->ElParent)
       /* essaie de ramener la selection a une suite de freres */
      {
 	if ((*firstEl)->ElPrevious == NULL && *firstChar <= 1)
