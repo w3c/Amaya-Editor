@@ -13,7 +13,6 @@
  *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "constmenu.h"
@@ -31,10 +30,9 @@
 #include "memory_f.h"
 #include "inites_f.h"
 #include "registry_f.h"
-#include "ustring_f.h"
 #ifdef _WINDOWS
 #include "wininclude.h"
-#endif /* _WINDOW S*/
+#endif /* _WINDOWS*/
 
 static ThotColorStruct def_colrs[256];
 static int             allocation_index[256];
@@ -46,7 +44,7 @@ static int             have_colors = 0;
    FindOutColor finds the closest color by allocating it, or picking
    an already allocated color.
   ----------------------------------------------------------------------*/
-static void FindOutColor (Display* dsp, Colormap colormap, ThotColorStruct* colr)
+static void FindOutColor (Display *dsp, Colormap colormap, ThotColorStruct *colr)
 {
    int                 i, match;
 #ifdef MORE_ACCURATE
@@ -252,11 +250,11 @@ void         FreeDocColors ()
    If ReduceColor environment setting is set, less color
    are allocated.
   ----------------------------------------------------------------------*/
-void                InitDocColors (CHAR_T* name)
+void InitDocColors (char *name)
 {
 #ifndef _WIN_PRINT
    int                 i, j, k;
-   CHAR_T*             value;
+   char               *value;
    ThotBool            reducecolor;
    ThotBool            colormap_full;
 #ifdef _GTK
@@ -272,7 +270,7 @@ void                InitDocColors (CHAR_T* name)
    value = TtaGetEnvString ("ReduceColor");
    if (value == NULL)
       reducecolor = FALSE;
-   else if (!ustrcasecmp (value, "yes"))
+   else if (!strcasecmp (value, "yes"))
       reducecolor = TRUE;
    else
       reducecolor = FALSE;
@@ -352,15 +350,19 @@ void                InitDocColors (CHAR_T* name)
 
 #endif /* _WIN_PRINT */
    NbExtColors = 0;
-   ExtRGB_Table = (RGBstruct *) TtaGetMemory (256 * sizeof (RGBstruct));
-   ExtColor = (ThotColor *) TtaGetMemory (256 * sizeof (ThotColor));
-   ExtCount_Table = (int *) TtaGetMemory (256 * sizeof (int));
+   if (TtWDepth <= 8)
+     Max_Extend_Colors = 256;
+   else
+     Max_Extend_Colors = 512;
+   ExtRGB_Table = (RGBstruct *) TtaGetMemory (Max_Extend_Colors * sizeof (RGBstruct));
+   ExtColor = (ThotColor *) TtaGetMemory (Max_Extend_Colors * sizeof (ThotColor));
+   ExtCount_Table = (int *) TtaGetMemory (Max_Extend_Colors * sizeof (int));
 }
 
 /*----------------------------------------------------------------------
    NumberOfColors  returns the number of colors in Thot color table.
   ----------------------------------------------------------------------*/
-int                 NumberOfColors ()
+int NumberOfColors ()
 {
    return NColors;
 }
@@ -369,7 +371,7 @@ int                 NumberOfColors ()
 /*----------------------------------------------------------------------
    ColorName       returns the name of a color in Thot color table.
   ----------------------------------------------------------------------*/
-char     *ColorName (int num)
+char *ColorName (int num)
 {
    if (num < NColors && num >= 0)
       return Color_Table[num];
@@ -467,30 +469,32 @@ int TtaGetThotColor (unsigned short red, unsigned short green, unsigned short bl
 
    if (best_dsquare != 0)
      {
-       prev = 256;
+       prev = Max_Extend_Colors;
        /* look in the extended table */
        for (i = 0; i < NbExtColors; i++)
-	 if (ExtCount_Table[i] > 0)
-	   {
-	     delred = ExtRGB_Table[i].red - red;
-	     delgreen = ExtRGB_Table[i].green - green;
-	     delblue = ExtRGB_Table[i].blue - blue;
-	     dsquare  = delred * delred + delgreen * delgreen + delblue * delblue;
-	     if (dsquare < best_dsquare)
-	       {
-		 best = i + NColors;
-		 best_dsquare = dsquare;
-	       }
-	   }
-	 else if (prev == 256)
-	   /* get the first empty entry */
-	   prev = i;
+	 {
+	   if (ExtCount_Table[i] > 0)
+	     {
+	       delred = ExtRGB_Table[i].red - red;
+	       delgreen = ExtRGB_Table[i].green - green;
+	       delblue = ExtRGB_Table[i].blue - blue;
+	       dsquare  = delred * delred + delgreen * delgreen + delblue * delblue;
+	       if (dsquare < best_dsquare)
+		 {
+		   best = i + NColors;
+		   best_dsquare = dsquare;
+		 }
+	     }
+	   else if (prev == Max_Extend_Colors)
+	     /* get the first empty entry */
+	     prev = i;
+	 }
 
-       if (prev == 256)
+       if (prev == Max_Extend_Colors)
 	 /* this is the first empty entry */
 	 prev = NbExtColors;
 	 
-       if (best_dsquare != 0 && prev < 256)
+       if (best_dsquare != 0 && prev < Max_Extend_Colors)
 	 {
 	   /* try to allocate the right color */
 #ifdef _WINDOWS
@@ -542,7 +546,8 @@ int TtaGetThotColor (unsigned short red, unsigned short green, unsigned short bl
    If the color doesn't exist the function returns the values
    for the default color.
   ----------------------------------------------------------------------*/
-void TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
+void TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green,
+		     unsigned short *blue)
 {
   if (num < NColors && num >= 0)
     {
@@ -569,7 +574,7 @@ void TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green, unsign
    ColorNumber     lookup in Thot color table for an entry given it's
    name. Returns the index or -1 if not found.
   ----------------------------------------------------------------------*/
-int                 ColorNumber (STRING name)
+int ColorNumber (char *name)
 {
    int                 i;
    ThotBool            found;
@@ -579,7 +584,7 @@ int                 ColorNumber (STRING name)
    if (Color_Table[i] == NULL)
       return -1;		/* the table is empty */
    do
-      if (ustrcasecmp (Color_Table[i], name) == 0)
+      if (strcasecmp (Color_Table[i], name) == 0)
 	 found = TRUE;
       else
 	 i++;
@@ -594,7 +599,7 @@ int                 ColorNumber (STRING name)
 /*----------------------------------------------------------------------
    NumberOfPatterns        returns the number of pattern available.
   ----------------------------------------------------------------------*/
-int                 NumberOfPatterns ()
+int NumberOfPatterns ()
 {
    return NbPatterns;
 }
@@ -603,7 +608,7 @@ int                 NumberOfPatterns ()
 /*----------------------------------------------------------------------
    PatternName     returns the name of a pattern available.
   ----------------------------------------------------------------------*/
-STRING              PatternName (int num)
+char *PatternName (int num)
 {
    if (num < NumberOfPatterns () && num >= 0)
       return Patterns[num];
@@ -616,7 +621,7 @@ STRING              PatternName (int num)
    PatternNumber   lookup fo a pattern given it's name. Returns the
    index or -1 if not found.
   ----------------------------------------------------------------------*/
-int                 PatternNumber (STRING name)
+int PatternNumber (char *name)
 {
    int                 i;
    int                 max;
@@ -626,7 +631,7 @@ int                 PatternNumber (STRING name)
    i = 0;
    max = NumberOfPatterns ();
    do
-      if (ustrcmp (Patterns[i], name) == 0)
+      if (strcmp (Patterns[i], name) == 0)
 	 found = TRUE;
       else
 	 i++;

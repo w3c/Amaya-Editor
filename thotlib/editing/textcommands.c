@@ -411,6 +411,12 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	     if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
 		 MathMoveBackwardCursorFunction != NULL)
 	       done = MathMoveBackwardCursorFunction ();
+	     else if (!strcmp (pEl->ElStructSchema->SsName, "GraphML") &&
+		      (!pEl->ElTerminal || pEl->ElLeafType != LtText))
+	       {
+		 TtcPreviousElement (doc, view);
+		 done = TRUE;
+	       }
 	     if (!done)
 	       {
 	       if (extendSel && RightExtended)
@@ -492,6 +498,12 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	     if (!strcmp(pEl->ElStructSchema->SsName, "MathML") &&
 		 MathMoveForwardCursorFunction != NULL)
 	       done = MathMoveForwardCursorFunction ();
+	     else if (!strcmp (pEl->ElStructSchema->SsName, "GraphML") &&
+		      (!pEl->ElTerminal || pEl->ElLeafType != LtText))
+	       {
+		 TtcNextElement (doc, view);
+		 done = TRUE;
+	       }
 	     if (!done)
 	       {
 	       if (!extendSel || !LeftExtended)
@@ -589,7 +601,10 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   break;
 	   
 	 case 7:	/* Next line (^N) */
-	   if (pBox != NULL)
+	   if (pEl && !strcmp (pEl->ElStructSchema->SsName, "GraphML") &&
+	       (!pEl->ElTerminal || pEl->ElLeafType != LtText))
+	     TtcNextElement (doc, view);
+	   else if (pBox != NULL)
 	     {
 	       pBox = pBoxEnd;
 	       x = pViewSelEnd->VsXPos + pBox->BxXOrg;
@@ -635,7 +650,10 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   break;
 	   
 	 case 8:	/* Previous line (^P) */
-	   if (pBox != NULL)
+	   if (pEl && !strcmp (pEl->ElStructSchema->SsName, "GraphML") &&
+	       (!pEl->ElTerminal || pEl->ElLeafType != LtText))
+	     TtcPreviousElement (doc, view);
+	   else if (pBox != NULL)
 	     {
 	       y = pBoxBegin->BxYOrg;
 	       x = ClickX + pFrame->FrXOrg;

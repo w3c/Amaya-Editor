@@ -6,33 +6,18 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern unsigned char *ReadPng ( FILE *infile,
-                                int *width,
-                                int *height,
-                                int *ncolors,
-                                int *cpp,
-                                ThotColorStruct colrs[256],
-                                int *bg );
 extern void InitPngColors ( void );
-extern unsigned char* ReadPngToData ( STRING datafile,
-                                      int *w,
-                                      int *h,
-                                      int *ncolors,
-                                      int *cpp,
-                                      ThotColorStruct colrs[256],
-                                      int *bg );
-extern Drawable PngCreate ( STRING fn,
+extern Drawable PngCreate ( char *fn,
                             PictInfo *imageDesc,
                             int *xif,
                             int *yif,
                             int *wif,
                             int *hif,
                             unsigned long BackGroundPixel,
-                            ThotBitmap *mask1,
                             int *width,
                             int *height,
                             int zoom );
-extern void PngPrint ( STRING fn,
+extern void PngPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
                        int yif,
@@ -44,37 +29,22 @@ extern void PngPrint ( STRING fn,
                        int PicHArea,
                        FILE *fd,
                        unsigned long BackGroundPixel );
-extern ThotBool IsPngFormat ( CHAR_T* fn );
+extern ThotBool IsPngFormat ( char *fn );
 
 #else /* __STDC__ */
 
-extern unsigned char *ReadPng (/* FILE *infile,
-                                  int *width,
-                                  int *height,
-                                  int *ncolors,
-                                  int *cpp,
-                                  ThotColorStruct colrs[256],
-                                  int *bg */);
 extern void InitPngColors (/* void */);
-extern unsigned char* ReadPngToData (/* STRING datafile,
-                                        int *w,
-                                        int *h,
-                                        int *ncolors,
-                                        int *cpp,
-                                        ThotColorStruct colrs[256],
-                                        int *bg */);
-extern Drawable PngCreate (/* STRING fn,
+extern Drawable PngCreate (/* char *fn,
                               PictInfo *imageDesc,
                               int *xif,
                               int *yif,
                               int *wif,
                               int *hif,
                               unsigned long BackGroundPixel,
-                              ThotBitmap *mask1,
                               int *width,
                               int *height,
                               int zoom */);
-extern void PngPrint (/* STRING fn,
+extern void PngPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,
                          int yif,
@@ -86,7 +56,7 @@ extern void PngPrint (/* STRING fn,
                          int PicHArea,
                          FILE *fd,
                          unsigned long BackGroundPixel */);
-extern ThotBool IsPngFormat (/* CHAR_T* fn */);
+extern ThotBool IsPngFormat (/* char *fn */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

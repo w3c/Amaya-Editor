@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void FreeDocColors ( void );
-extern void InitDocColors ( CHAR_T* name );
+extern void InitDocColors ( char *name );
 extern int NumberOfColors ( void );
 extern char *ColorName ( int num );
 extern ThotColor ColorPixel ( int num );
@@ -19,10 +19,10 @@ extern void TtaGiveThotRGB ( int num,
                              unsigned short *red,
                              unsigned short *green,
                              unsigned short *blue );
-extern int ColorNumber ( STRING name );
+extern int ColorNumber ( char *name );
 extern int NumberOfPatterns ( void );
-extern STRING PatternName ( int num );
-extern int PatternNumber ( STRING name );
+extern char *PatternName ( int num );
+extern int PatternNumber ( char *name );
 extern Pixmap CreatePattern ( int disp,
                               int fg,
                               int bg,
@@ -31,7 +31,7 @@ extern Pixmap CreatePattern ( int disp,
 #else /* __STDC__ */
 
 extern void FreeDocColors (/* void */);
-extern void InitDocColors (/* CHAR_T* name */);
+extern void InitDocColors (/* char *name */);
 extern int NumberOfColors (/* void */);
 extern char *ColorName (/* int num */);
 extern ThotColor ColorPixel (/* int num */);
@@ -43,10 +43,10 @@ extern void TtaGiveThotRGB (/* int num,
                                unsigned short *red,
                                unsigned short *green,
                                unsigned short *blue */);
-extern int ColorNumber (/* STRING name */);
+extern int ColorNumber (/* char *name */);
 extern int NumberOfPatterns (/* void */);
-extern STRING PatternName (/* int num */);
-extern int PatternNumber (/* STRING name */);
+extern char *PatternName (/* int num */);
+extern int PatternNumber (/* char *name */);
 extern Pixmap CreatePattern (/* int disp,
                                 int fg,
                                 int bg,

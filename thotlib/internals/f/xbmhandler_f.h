@@ -6,18 +6,17 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Drawable XbmCreate ( STRING fn,
+extern Drawable XbmCreate ( char *fn,
                             PictInfo *imageDesc,
-                            int* xif,
-                            int* yif,
-                            int* wif,
-                            int* hif,
+                            int *xif,
+                            int *yif,
+                            int *wif,
+                            int *hif,
                             unsigned long BackGroundPixel,
-                            ThotBitmap *mask1,
                             int *width,
                             int *height,
                             int zoom );
-extern void XbmPrint ( STRING fn,
+extern void XbmPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
                        int yif,
@@ -29,22 +28,21 @@ extern void XbmPrint ( STRING fn,
                        int PicHArea,
                        FILE *fd,
                        unsigned int BackGroundPixel );
-extern ThotBool IsXbmFormat ( CHAR_T* fn );
+extern ThotBool IsXbmFormat ( char *fn );
 
 #else /* __STDC__ */
 
-extern Drawable XbmCreate (/* STRING fn,
+extern Drawable XbmCreate (/* char *fn,
                               PictInfo *imageDesc,
-                              int* xif,
-                              int* yif,
-                              int* wif,
-                              int* hif,
+                              int *xif,
+                              int *yif,
+                              int *wif,
+                              int *hif,
                               unsigned long BackGroundPixel,
-                              ThotBitmap *mask1,
                               int *width,
                               int *height,
                               int zoom */);
-extern void XbmPrint (/* STRING fn,
+extern void XbmPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,
                          int yif,
@@ -56,7 +54,7 @@ extern void XbmPrint (/* STRING fn,
                          int PicHArea,
                          FILE *fd,
                          unsigned int BackGroundPixel */);
-extern ThotBool IsXbmFormat (/* CHAR_T* fn */);
+extern ThotBool IsXbmFormat (/* char *fn */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

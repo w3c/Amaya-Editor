@@ -6,61 +6,62 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern unsigned char* ReadGIF ( FILE* fd,
-                                int* w,
-                                int* h,
-                                int* ncolors,
-                                int* cpp,
-                                ThotColorStruct colrs[256] );
-extern int ReadColorMap ( FILE* fd,
+extern unsigned char *ReadGIF ( FILE *fd,
+                                int *w,
+                                int *h,
+                                int *ncolors,
+                                int *cpp,
+                                ThotColorStruct colrs[512] );
+extern int ReadColorMap ( FILE *fd,
                           int number,
                           unsigned char buffer[3][256 ] );
-extern int DoExtension ( FILE* fd,
+extern int DoExtension ( FILE *fd,
                          int label );
-extern int GetDataBlock ( FILE* fd,
+extern int GetDataBlock ( FILE *fd,
                           unsigned char *buf );
-extern int GetCode ( FILE* fd,
+extern int GetCode ( FILE *fd,
                      int code_size,
                      int flag );
-extern int LWZReadByte ( FILE * fd,
+extern int LWZReadByte ( FILE *fd,
                          int flag,
                          int input_code_size );
 extern int highbit16 ( unsigned long ul );
-extern Pixmap MakeMask ( Display* dsp,
-                         char* pixelindex,
+extern Pixmap MakeMask ( Display *dsp,
+                         unsigned char *pixels,
                          int w,
                          int h,
-                         int bg );
-extern XImage *MakeImage ( Display* dsp,
+                         unsigned int bg,
+                         int bperpix );
+extern XImage *MakeImage ( Display *dsp,
                            unsigned char *data,
                            int width,
                            int height,
                            int depth,
-                           ThotColorStruct * colrs );
+                           ThotColorStruct *colrs,
+                           int bperpix );
 extern Pixmap DataToPixmap ( unsigned char *image_data,
                              int width,
                              int height,
-                             int num_colors,
-                             ThotColorStruct colrs[256],
-                             int **thotColors );
-extern unsigned char *ReadGifToData ( CHAR_T* datafile,
+                             int ncolors,
+                             ThotColorStruct *colrs,
+                             int bperpix );
+extern unsigned char *ReadGifToData ( char *datafile,
                                       int *w,
                                       int *h,
                                       int *ncolors,
                                       int *cpp,
-                                      ThotColorStruct colrs[256] );
-extern Drawable GifCreate ( CHAR_T* fn,
+                                      ThotColorStruct *colrs );
+extern Drawable GifCreate ( char *fn,
                             PictInfo *imageDesc,
                             int *xif,
                             int *yif,
                             int *wif,
                             int *hif,
                             unsigned long BackGroundPixel,
-                            ThotBitmap * mask1,
                             int *width,
                             int *height,
                             int zoom );
-extern void GifPrint ( CHAR_T *fn,
+extern void GifPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
                        int yif,
@@ -72,65 +73,66 @@ extern void GifPrint ( CHAR_T *fn,
                        int PicHArea,
                        FILE *fd,
                        unsigned long BackGroundPixel );
-extern ThotBool IsGifFormat ( CHAR_T* datafile );
+extern ThotBool IsGifFormat ( char *datafile );
 
 #else /* __STDC__ */
 
-extern unsigned char* ReadGIF (/* FILE* fd,
-                                  int* w,
-                                  int* h,
-                                  int* ncolors,
-                                  int* cpp,
-                                  ThotColorStruct colrs[256] */);
-extern int ReadColorMap (/* FILE* fd,
+extern unsigned char *ReadGIF (/* FILE *fd,
+                                  int *w,
+                                  int *h,
+                                  int *ncolors,
+                                  int *cpp,
+                                  ThotColorStruct colrs[512] */);
+extern int ReadColorMap (/* FILE *fd,
                             int number,
                             unsigned char buffer[3][256 ] */);
-extern int DoExtension (/* FILE* fd,
+extern int DoExtension (/* FILE *fd,
                            int label */);
-extern int GetDataBlock (/* FILE* fd,
+extern int GetDataBlock (/* FILE *fd,
                             unsigned char *buf */);
-extern int GetCode (/* FILE* fd,
+extern int GetCode (/* FILE *fd,
                        int code_size,
                        int flag */);
-extern int LWZReadByte (/* FILE * fd,
+extern int LWZReadByte (/* FILE *fd,
                            int flag,
                            int input_code_size */);
 extern int highbit16 (/* unsigned long ul */);
-extern Pixmap MakeMask (/* Display* dsp,
-                           char* pixelindex,
+extern Pixmap MakeMask (/* Display *dsp,
+                           unsigned char *pixels,
                            int w,
                            int h,
-                           int bg */);
-extern XImage *MakeImage (/* Display* dsp,
+                           unsigned int bg,
+                           int bperpix */);
+extern XImage *MakeImage (/* Display *dsp,
                              unsigned char *data,
                              int width,
                              int height,
                              int depth,
-                             ThotColorStruct * colrs */);
+                             ThotColorStruct *colrs,
+                             int bperpix */);
 extern Pixmap DataToPixmap (/* unsigned char *image_data,
                                int width,
                                int height,
-                               int num_colors,
-                               ThotColorStruct colrs[256],
-                               int **thotColors */);
-extern unsigned char *ReadGifToData (/* CHAR_T* datafile,
+                               int ncolors,
+                               ThotColorStruct *colrs,
+                               int bperpix */);
+extern unsigned char *ReadGifToData (/* char *datafile,
                                         int *w,
                                         int *h,
                                         int *ncolors,
                                         int *cpp,
-                                        ThotColorStruct colrs[256] */);
-extern Drawable GifCreate (/* CHAR_T* fn,
+                                        ThotColorStruct *colrs */);
+extern Drawable GifCreate (/* char *fn,
                               PictInfo *imageDesc,
                               int *xif,
                               int *yif,
                               int *wif,
                               int *hif,
                               unsigned long BackGroundPixel,
-                              ThotBitmap * mask1,
                               int *width,
                               int *height,
                               int zoom */);
-extern void GifPrint (/* CHAR_T *fn,
+extern void GifPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,
                          int yif,
@@ -142,7 +144,7 @@ extern void GifPrint (/* CHAR_T *fn,
                          int PicHArea,
                          FILE *fd,
                          unsigned long BackGroundPixel */);
-extern ThotBool IsGifFormat (/* CHAR_T* datafile */);
+extern ThotBool IsGifFormat (/* char *datafile */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

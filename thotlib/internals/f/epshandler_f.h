@@ -6,18 +6,17 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Drawable EpsCreate ( STRING fn,
+extern Drawable EpsCreate ( char *fn,
                             PictInfo *imageDesc,
                             int *xif,
                             int *yif,
                             int *wif,
                             int *hif,
                             unsigned long BackGroundPixel,
-                            ThotBitmap *PicMask,
                             int *width,
                             int *height,
                             int zoom );
-extern void EpsPrint ( STRING fn,
+extern void EpsPrint ( char *fn,
                        PictureScaling pres,
                        int xif,
                        int yif,
@@ -27,24 +26,23 @@ extern void EpsPrint ( STRING fn,
                        int PicYArea,
                        int PicWArea,
                        int PicHArea,
-                       FILE * fd,
+                       FILE *fd,
                        unsigned long BackGroundPixel );
-extern ThotBool IsEpsFormat ( CHAR_T* fn );
+extern ThotBool IsEpsFormat ( char *fn );
 
 #else /* __STDC__ */
 
-extern Drawable EpsCreate (/* STRING fn,
+extern Drawable EpsCreate (/* char *fn,
                               PictInfo *imageDesc,
                               int *xif,
                               int *yif,
                               int *wif,
                               int *hif,
                               unsigned long BackGroundPixel,
-                              ThotBitmap *PicMask,
                               int *width,
                               int *height,
                               int zoom */);
-extern void EpsPrint (/* STRING fn,
+extern void EpsPrint (/* char *fn,
                          PictureScaling pres,
                          int xif,
                          int yif,
@@ -54,9 +52,9 @@ extern void EpsPrint (/* STRING fn,
                          int PicYArea,
                          int PicWArea,
                          int PicHArea,
-                         FILE * fd,
+                         FILE *fd,
                          unsigned long BackGroundPixel */);
-extern ThotBool IsEpsFormat (/* CHAR_T* fn */);
+extern ThotBool IsEpsFormat (/* char *fn */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

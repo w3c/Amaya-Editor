@@ -25,6 +25,9 @@
 /*#include "jinclude.h"*/
 #include "jpeglib.h"
 
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
 
 #define THOT_EXPORT extern
 #include "picture_tv.h"
@@ -34,204 +37,181 @@
 #include "units_f.h"
 #include "gifhandler_f.h"
 
-#ifdef _WINDOWS
-#include "wininclude.h"
-#endif /* _WINDOWS */
-
 struct my_error_mgr
-  {
-     struct jpeg_error_mgr pub;	           /* "public" fields */
-     jmp_buf               setjmp_buffer;  /* for return to caller */
-  };
-
+{
+  struct jpeg_error_mgr pub;	           /* "public" fields */
+  jmp_buf               setjmp_buffer;  /* for return to caller */
+};
 typedef struct my_error_mgr *my_error_ptr;
 
-#ifdef __STDC__
+struct jpeg_decompress_struct cinfo;
+struct my_error_mgr           jerr;
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static void my_error_exit (j_common_ptr cinfo)
-#else  /* !__STDC__ */
-static void my_error_exit (j_common_ptr cinfo)
-#endif /* __STDC__ */
 {
     my_error_ptr        myerr = (my_error_ptr) cinfo->err;
 
     longjmp (myerr->setjmp_buffer, 1);
 }
 
-struct jpeg_decompress_struct cinfo;
-struct my_error_mgr           jerr;
-
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-unsigned char      *ReadJPEG (FILE* infile, int* width, int* height, ThotColorStruct colrs[256])
+static unsigned char *ReadJPEG (FILE* infile, int* width, int* height,
+				ThotColorStruct colrs[256])
 {
-   unsigned char      *retBuffer = 0;/* Output image buffer */
-   unsigned char      *r;
-   JSAMPROW            buffer[1];    /* row pointer array for read_scanlines */
-   int                 row_stride;   /* physical row width in output buffer */
-   int                 i, ret;
+  unsigned char      *retBuffer = NULL;/* Output image buffer */
+  unsigned char      *r;
+  JSAMPROW            buffer[1];    /* row pointer array for read_scanlines */
+  int                 row_stride;   /* physical row width in output buffer */
+  int                 i, ret;
 
-   /* We set up the normal JPEG error routines, 
-      then override error_exit.     */
-   cinfo.err = jpeg_std_error (&jerr.pub);
-   jerr.pub.error_exit = my_error_exit;
+  /* We set up the normal JPEG error routines, 
+     then override error_exit.     */
+  cinfo.err = jpeg_std_error (&jerr.pub);
+  jerr.pub.error_exit = my_error_exit;
 
-   /* Establish the setjmp return context for my_error_exit to use. */
+  /* Establish the setjmp return context for my_error_exit to use. */
+  if (setjmp (jerr.setjmp_buffer))
+    {
+      /* If we get here, the JPEG code has signaled an error. */
+      jpeg_destroy_decompress (&cinfo);
+      fclose (infile);
+      if (retBuffer)
+	TtaFreeMemory (retBuffer);
+      return NULL;
+    }
 
-   if (setjmp (jerr.setjmp_buffer))
-     {
-	/* If we get here, the JPEG code has signaled an error. */
-	jpeg_destroy_decompress (&cinfo);
-	fclose (infile);
+  jpeg_create_decompress (&cinfo);
+  jpeg_stdio_src (&cinfo, infile);
+  ret = jpeg_read_header (&cinfo, TRUE);
+  /* We can ignore the return value from jpeg_read_header since
+   *   (a) suspension is not possible with the stdio data source, and
+   *   (b) we passed TRUE to reject a tables-only JPEG file as an error.
+   * See libjpeg.doc for more info.
+   */
+  cinfo.quantize_colors = TRUE;
+  /*cinfo.desired_number_of_colors = value defined by thot */
+  /* Waiting for a good policy *** to be discussed with Vincent  */
+  cinfo.desired_number_of_colors = 100;
+  cinfo.two_pass_quantize = TRUE;
+  jpeg_start_decompress (&cinfo);
+  i = cinfo.output_width * cinfo.output_height * cinfo.output_components;
+  if (!(retBuffer = (unsigned char*) TtaGetMemory (i)))
+    {
+      jpeg_destroy_decompress (&cinfo);
+      fprintf (stderr, "Couldn't create space for JPEG read\n");
+      return (NULL);
+    }
 
-	if (retBuffer)
-	   TtaFreeMemory (retBuffer);
-	return NULL;
-     }
+  r = retBuffer;
+  row_stride = cinfo.output_width * cinfo.output_components;
+  while (cinfo.output_scanline < cinfo.output_height)
+    {
+      buffer[0] = r;
+      (void) jpeg_read_scanlines (&cinfo, buffer, 1);
+      r += row_stride;
+    }
 
-   jpeg_create_decompress (&cinfo);
-
-   jpeg_stdio_src (&cinfo, infile);
-
-   ret = jpeg_read_header (&cinfo, TRUE);
-   /* We can ignore the return value from jpeg_read_header since
-      *   (a) suspension is not possible with the stdio data source, and
-      *   (b) we passed TRUE to reject a tables-only JPEG file as an error.
-      * See libjpeg.doc for more info.
-    */
-
-   cinfo.quantize_colors = TRUE;
-   /*cinfo.desired_number_of_colors = value defined by thot */
-   /* Waiting for a good policy *** to be discussed with Vincent  */
-
-   cinfo.desired_number_of_colors = 100;
-   cinfo.two_pass_quantize = TRUE;
-
-   jpeg_start_decompress (&cinfo);
-
-   if (!(retBuffer = (unsigned char*) TtaGetMemory (cinfo.output_width
-			  * cinfo.output_height * cinfo.output_components)))
-     {
-	jpeg_destroy_decompress (&cinfo);
-	fprintf (stderr, "Couldn't create space for JPEG read\n");
-	return (0);
-     }
-
-   r = retBuffer;
-
-   row_stride = cinfo.output_width * cinfo.output_components;
-   while (cinfo.output_scanline < cinfo.output_height)
-     {
-	buffer[0] = r;
-	(void) jpeg_read_scanlines (&cinfo, buffer, 1);
-	r += row_stride;
-     }
-
-   *width = cinfo.output_width;
-   *height = cinfo.output_height;
-
-   /* Initialize our colormap until a clear policy for the 32-bit screen */
-   if (ret != JPEG_HEADER_TABLES_ONLY)
-     {
-       if (cinfo.out_color_components == 3)
-	 {
-	   for (i = 0; i < cinfo.actual_number_of_colors; i++)
-	     {
+  *width = cinfo.output_width;
+  *height = cinfo.output_height;
+  /* Initialize our colormap until a clear policy for the 32-bit screen */
+  if (ret != JPEG_HEADER_TABLES_ONLY)
+    {
+      if (cinfo.out_color_components == 3)
+	{
+	  for (i = 0; i < cinfo.actual_number_of_colors; i++)
+	    {
 #ifndef _WINDOWS
-	       colrs[i].red = cinfo.colormap[0][i] << 8;
-	       colrs[i].green = cinfo.colormap[1][i] << 8;
-	       colrs[i].blue = cinfo.colormap[2][i] << 8;
-	       colrs[i].pixel = i;
+	      colrs[i].red = cinfo.colormap[0][i] << 8;
+	      colrs[i].green = cinfo.colormap[1][i] << 8;
+	      colrs[i].blue = cinfo.colormap[2][i] << 8;
+	      colrs[i].pixel = i;
 #ifndef _GTK
-	       colrs[i].flags = DoRed | DoGreen | DoBlue;
+	      colrs[i].flags = DoRed | DoGreen | DoBlue;
 #endif /* ! _GTK */
 #else /* _WINDOWS */
-	       colrs[i].red = cinfo.colormap[0][i];
-	       colrs[i].green = cinfo.colormap[1][i];
-	       colrs[i].blue = cinfo.colormap[2][i];
+	      colrs[i].red = cinfo.colormap[0][i];
+	      colrs[i].green = cinfo.colormap[1][i];
+	      colrs[i].blue = cinfo.colormap[2][i];
 #endif /* _WINDOWS */
-	     }
-	 }
-       else
-	 {
-	   for (i = 0; i < cinfo.actual_number_of_colors; i++)
-	     {
+	    }
+	}
+      else
+	{
+	  for (i = 0; i < cinfo.actual_number_of_colors; i++)
+	    {
 #ifndef _WINDOWS
-	       colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i] << 8;
-	       colrs[i].pixel = i;
+	      colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i] << 8;
+	      colrs[i].pixel = i;
 #ifndef _GTK
-	       colrs[i].flags = DoRed | DoGreen | DoBlue;
+	      colrs[i].flags = DoRed | DoGreen | DoBlue;
 #endif /* ! _GTK */
 #else /* _WINDOWS */
-	       colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i];
+	      colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i];
 #endif /* _WINDOWS */
-	     }
-	 }
-     }
+	    }
+	}
+    }
 
-
-   (void) jpeg_finish_decompress (&cinfo);
-   jpeg_destroy_decompress (&cinfo);
-
-   return retBuffer;
+  (void) jpeg_finish_decompress (&cinfo);
+  jpeg_destroy_decompress (&cinfo);
+  return retBuffer;
 }
 
 /*----------------------------------------------------------------------
    ReadJpegToData  Just open the file and pass it to the ReadJpeg     
   ----------------------------------------------------------------------*/
-unsigned char      *ReadJpegToData (CHAR_T* datafile, int* w, int* h, ThotColorStruct colrs[256])
+static unsigned char *ReadJpegToData (char *datafile, int * w, int* h,
+				      ThotColorStruct colrs[256])
 {
-   unsigned char      *bit_data;
-   FILE               *fp;
-
-
-   fp = ufopen (datafile, "rb");
-
-   if (fp != NULL)
-     {
-	bit_data = (unsigned char *) ReadJPEG (fp, w, h, colrs);
-	if (bit_data != NULL)
-	  {
-	     if (fp != stdin)
-		fclose (fp);
-	     return (bit_data);
-	  }
-	if (fp != stdin)
-	   fclose (fp);
-     }
-   return ((unsigned char *) NULL);
+  unsigned char      *bit_data;
+  FILE               *fp;
+  
+  fp = ufopen (datafile, "rb");
+  if (fp != NULL)
+    {
+      bit_data = (unsigned char *) ReadJPEG (fp, w, h, colrs);
+      if (bit_data != NULL)
+	{
+	  if (fp != stdin)
+	    fclose (fp);
+	  return (bit_data);
+	}
+      if (fp != stdin)
+	fclose (fp);
+    }
+  return ( NULL);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                JpegPrintErrorMsg (int ErrorNumber)
+void JpegPrintErrorMsg (int ErrorNumber)
 {
 }
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-Drawable            JpegCreate (CHAR_T *fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
+Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+		     int *wif, int *hif, unsigned long BackGroundPixel,
+		     int *width, int *height, int zoom)
 {
   int                 w, h;
-  Pixmap              pixmap = (Pixmap)0;
+  Pixmap              pixmap = (Pixmap)NULL;
   ThotColorStruct     colrs[256];
-  unsigned char*      buffer = (unsigned char*) 0;
-  unsigned char*      buffer2 = (unsigned char*) 0;
-
-#ifdef _WINDOWS
-  bgRed   = -1;
-  bgGreen = -1;
-  bgBlue  = -1;
-#endif /* _WINDOWS */
+  unsigned char      *pixels;
+  unsigned char      *buffer = NULL, *buffer2 = NULL;
 
   /* effective load of the Picture from Jpeg Library */
   buffer = ReadJpegToData (fn, &w, &h, colrs);
   /* return image dimensions */
   *width = w;
   *height = h;
-  if (!buffer)
+  if (buffer == NULL)
     {
 #ifdef _WINDOWS 
       WinErrorBox (NULL, "JpegCreate(1)");
@@ -269,16 +249,15 @@ Drawable            JpegCreate (CHAR_T *fn, PictInfo *imageDesc, int *xif, int *
   if (buffer == NULL)
     return ((Drawable) NULL);
 
-  pixmap = DataToPixmap (buffer, w, h, 100, colrs, &(imageDesc->PicColors));
-  if (imageDesc->PicColors != NULL)
-    imageDesc->PicNbColors = 100;
+  pixmap = DataToPixmap (buffer, w, h, 100, colrs, 1);
   TtaFreeMemory (buffer);  
-  if (pixmap == None) {
+  if (pixmap == None)
+    {
 #ifdef _WINDOWS
-     WinErrorBox (NULL, "JpegCreate(2)");
+      WinErrorBox (NULL, "JpegCreate(2)");
 #endif /* _WINDOWS */
-    return ((Drawable) NULL);
-  }
+      return ((Drawable) NULL);
+    }
   else
     {
       *wif = w;
@@ -293,114 +272,105 @@ Drawable            JpegCreate (CHAR_T *fn, PictInfo *imageDesc, int *xif, int *
 /*----------------------------------------------------------------------
    JpegPrint produces postscript from a jpeg picture file          
   ----------------------------------------------------------------------*/
-void                JpegPrint (CHAR_T *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned long BackGroundPixel)
+void JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
+		int hif, int PicXArea, int PicYArea, int PicWArea,
+		int PicHArea, FILE *fd, unsigned long BackGroundPixel)
 {
-   int                 delta;
-   int                 xtmp, ytmp;
-   unsigned char      *pt;
-   int                 x, y, w, h;
-   int                 wim;
-   unsigned int        NbCharPerLine;
+  int                 delta;
+  int                 xtmp, ytmp;
+  unsigned char      *pt;
+  int                 x, y, w, h;
+  int                 wim;
+  unsigned int        NbCharPerLine;
+  ThotColorStruct     colrs[256];
+  unsigned char      *buffer;
 
-   ThotColorStruct     colrs[256];
-   unsigned char      *buffer;
+  buffer = ReadJpegToData (fn, &w, &h, colrs);
+  if (!buffer)
+    /* feed the editor with the appropriate message */
+    return;
 
+  PicWArea = w;
+  PicHArea = h;
+  xtmp = 0;
+  ytmp = 0;
+  switch (pres)
+    {
+    case RealSize:
+    case FillFrame:
+    case XRepeat:
+    case YRepeat:
+      delta = (wif - PicWArea) / 2;
+      if (delta > 0)
+	{
+	  xif += delta;
+	  wif = PicWArea;
+	}
+      else
+	{
+	  xtmp = -delta;
+	  PicWArea = wif;
+	}
+      delta = (hif - PicHArea) / 2;
+      if (delta > 0)
+	{
+	  yif += delta;
+	  hif = PicHArea;
+	}
+      else
+	{
+	  ytmp = -delta;
+	  PicHArea = hif;
+	}
+      fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif),
+	       PixelToPoint (yif + hif));
+      fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea,
+	       PixelToPoint (wif), PixelToPoint (hif));
+      break;
+    case ReScale:
+      fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif),
+	       PixelToPoint (yif + hif));
+      fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea,
+	       PixelToPoint (wif), PixelToPoint (hif));
+      wif = PicWArea;
+      hif = PicHArea;
+      break;
+    default:
+      break;
+    }
 
-   buffer = ReadJpegToData (fn, &w, &h, colrs);
-
-
-   if (!buffer)
-     {
-	/* feed the editor with the appropriate message */
-	return;
-     }
-
-   PicWArea = w;
-   PicHArea = h;
-
-   xtmp = 0;
-   ytmp = 0;
-
-   switch (pres)
-     {
-     case RealSize:
-     case FillFrame:
-     case XRepeat:
-     case YRepeat:
-       delta = (wif - PicWArea) / 2;
-       if (delta > 0)
-	 {
-	   xif += delta;
-	   wif = PicWArea;
-	 }
-       else
-	 {
-	   xtmp = -delta;
-	   PicWArea = wif;
-	 }
-       delta = (hif - PicHArea) / 2;
-       if (delta > 0)
-	 {
-	   yif += delta;
-	   hif = PicHArea;
-	 }
-       else
-	 {
-	   
-	   ytmp = -delta;
-	   PicHArea = hif;
-	 }
-       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
-       fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
-       break;
-     case ReScale:
-       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
-       fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
-       wif = PicWArea;
-       hif = PicHArea;
-       break;
-     default:
-       break;
-     }
-
-   wim = w;
-   fprintf (fd, "\n");
-   NbCharPerLine = wim;
-
-   for (y = 0; y < hif; y++)
-     {
-	pt = (unsigned char *) (buffer + ((ytmp + y) * NbCharPerLine) + xtmp);
-
-	for (x = 0; x < wif; x++)
-	  {
-
-
-	     fprintf (fd, "%02x%02x%02x",
-		      (colrs[*pt].red) >> 8,
-		      (colrs[*pt].green) >> 8,
-		      (colrs[*pt].blue) >> 8);
-	     pt++;
-	  }
-	fprintf (fd, "\n");
-     }
-
-   fprintf (fd, "\n");
-   fprintf (fd, "grestore\n");
-   fprintf (fd, "\n");
-   free (buffer);
-
+  wim = w;
+  fprintf (fd, "\n");
+  NbCharPerLine = wim;
+  for (y = 0; y < hif; y++)
+    {
+      pt = (unsigned char *) (buffer + ((ytmp + y) * NbCharPerLine) + xtmp);
+      for (x = 0; x < wif; x++)
+	{
+	  fprintf (fd, "%02x%02x%02x",
+		   (colrs[*pt].red) >> 8,
+		   (colrs[*pt].green) >> 8,
+		   (colrs[*pt].blue) >> 8);
+	  pt++;
+	}
+      fprintf (fd, "\n");
+    }
+  fprintf (fd, "\n");
+  fprintf (fd, "grestore\n");
+  fprintf (fd, "\n");
+  free (buffer);
 }
 
 
 /*----------------------------------------------------------------------
    IsJpegFormat checks if the file header conforms the jpeg one    
   ----------------------------------------------------------------------*/
-ThotBool           IsJpegFormat (CHAR_T* fn)
+ThotBool IsJpegFormat (char *fn)
 { 
    /*JSAMPROW buffer[1]; *//* row pointer array for read_scanlines */
    FILE               *fd;
 
-   if ((fd = ufopen (fn, "rb")) == NULL)
+   if ((fd = fopen (fn, "rb")) == NULL)
      {
 	fprintf (stderr, "can't open %s\n", fn);
 	return FALSE;
@@ -412,7 +382,6 @@ ThotBool           IsJpegFormat (CHAR_T* fn)
    jerr.pub.error_exit = my_error_exit;
 
    /* Establish the setjmp return context for my_error_exit to use. */
-
    if (setjmp (jerr.setjmp_buffer))
      {
 	/* If we get here, the JPEG code has signaled an error. */
@@ -420,11 +389,8 @@ ThotBool           IsJpegFormat (CHAR_T* fn)
 	fclose (fd);
 	return FALSE;
      }
-
    jpeg_create_decompress (&cinfo);
-
    jpeg_stdio_src (&cinfo, fd);
-
    (void) jpeg_read_header (&cinfo, TRUE);
    jpeg_destroy_decompress (&cinfo);
    fclose (fd);

@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void FreePixmap ( Pixmap pixmap );
-extern Picture_Report PictureFileOk ( STRING fileName,
+extern Picture_Report PictureFileOk ( char *fileName,
                                       int *typeImage );
 extern void InitPictureHandlers ( ThotBool printing );
 extern void GetPictHandlersList ( int *count,
@@ -19,7 +19,7 @@ extern void DrawPicture ( PtrBox box,
                           int y,
                           int w,
                           int h );
-extern void UnmapImage ( PictInfo* imageDesc );
+extern void UnmapImage ( PictInfo *imageDesc );
 extern unsigned char *ZoomPicture ( unsigned char *cpic,
                                     int cWIDE,
                                     int cHIGH,
@@ -40,7 +40,7 @@ extern void LittleXBigEndian ( unsigned char *b,
 #else /* __STDC__ */
 
 extern void FreePixmap (/* Pixmap pixmap */);
-extern Picture_Report PictureFileOk (/* STRING fileName,
+extern Picture_Report PictureFileOk (/* char *fileName,
                                         int *typeImage */);
 extern void InitPictureHandlers (/* ThotBool printing */);
 extern void GetPictHandlersList (/* int *count,
@@ -52,7 +52,7 @@ extern void DrawPicture (/* PtrBox box,
                             int y,
                             int w,
                             int h */);
-extern void UnmapImage (/* PictInfo* imageDesc */);
+extern void UnmapImage (/* PictInfo *imageDesc */);
 extern unsigned char *ZoomPicture (/* unsigned char *cpic,
                                       int cWIDE,
                                       int cHIGH,

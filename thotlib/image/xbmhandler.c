@@ -1,22 +1,13 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
  * Author: I. Vatton, N. Layaida (INRIA)
- *         R. Guetari (W3C/INRIA) Unicode and Windows version
+ *         R. Guetari (W3C/INRIA) Windows version
  */
 
 #include "thot_sys.h"
@@ -37,34 +28,18 @@
    XbmCreate reads and produces the bitmap read from the file      
    fn. updates the wif, hif, xif , yif                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Drawable XbmCreate (STRING fn, PictInfo *imageDesc, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
-#else  /* __STDC__ */
-Drawable XbmCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
-STRING              fn;
-PictInfo           *imageDesc;
-int                *xif;
-int                *yif;
-int                *wif;
-int                *hif;
-unsigned long       BackGroundPixel;
-ThotBitmap         *mask1;
-int                *width;
-int                *height;
-int                 zoom;
-#endif /* __STDC__ */
+Drawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+		    int *wif, int *hif, unsigned long BackGroundPixel,
+		    int *width, int *height, int zoom)
 {
+#ifndef _WINDOWS
   Pixmap              pixmap;
-# ifndef _WINDOWS
+  Pixmap              bitmap;
   int                 status;
   int                 w, h;
-  Pixmap              bitmap;
   int                 xHot, yHot;
-  char               fileNameStr[MAX_PATH];
 
-  *mask1 = None;
-  wc2iso_strcpy (fileNameStr, fn);
-  status = XReadBitmapFile (TtDisplay, TtRootWindow, fileNameStr, &w, &h, &bitmap, &xHot, &yHot);
+  status = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &w, &h, &bitmap, &xHot, &yHot);
   if (status != BitmapSuccess)
     return ((Drawable) None);
   else
@@ -76,126 +51,39 @@ int                 zoom;
       *width = w;
       *height = h;
 #ifndef _GTK
-      pixmap = XCreatePixmap (TtDisplay, TtRootWindow, w, h, DefaultDepth (TtDisplay, DefaultScreen (TtDisplay)));
+      pixmap = XCreatePixmap (TtDisplay, TtRootWindow, w, h, TtWDepth);
       XCopyPlane (TtDisplay, bitmap, pixmap, GCpicture, 0, 0, w, h, 0, 0, 1);
       XFreePixmap (TtDisplay, bitmap);
 #endif /* _GTK */
       return (pixmap);
     }
-# else /* _WINDOWS */
-  pixmap = (HBITMAP) 0;
-# if 0
-  HANDLE           hBmFileName ;
-  BITMAPFILEHEADER bmFileHeader ;
-  BITMAPINFOHEADER bmInfoHeader ;
-  BITMAPINFO*      bmInfo ;
-  BITMAP           bmp;
-  DWORD            dwRead ;
-  HGLOBAL          hMem1;
-  HGLOBAL          hMem2;
-  BYTE*            lpvBits;
-
-  /* Retrieve a handle identifying the file. */ 
-  hBmFileName  = CreateFile (fn, GENERIC_READ, FILE_SHARE_READ, (LPSECURITY_ATTRIBUTES) NULL, 
-			     OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, (HANDLE) NULL); 
-  
-  /* Retrieve the BITMAPFILEHEADER structure. */ 
-  ReadFile (hBmFileName, &bmFileHeader, sizeof (BITMAPFILEHEADER), &dwRead, (LPOVERLAPPED) NULL); 
-  
-  /* Retrieve the BITMAPFILEHEADER structure. */ 
-  ReadFile (hBmFileName, &bmInfoHeader, sizeof (BITMAPINFOHEADER), &dwRead, (LPOVERLAPPED) NULL); 
-  
-  /* Allocate memory for the BITMAPINFO structure. */ 
-  hMem1  = GlobalAlloc (GHND, sizeof(BITMAPINFOHEADER) + ((1<<bmInfoHeader.biBitCount) * sizeof(RGBQUAD))); 
-  bmInfo = (BITMAPINFO*) GlobalLock (hMem1); 
-  
-  /* Load BITMAPINFOHEADER into the BITMAPINFO structure */ 
-  bmInfo->bmiHeader.biSize          = bmInfoHeader.biSize; 
-  bmInfo->bmiHeader.biWidth         = bmInfoHeader.biWidth; 
-  bmInfo->bmiHeader.biHeight        = bmInfoHeader.biHeight; 
-  bmInfo->bmiHeader.biPlanes        = bmInfoHeader.biPlanes; 
-  bmInfo->bmiHeader.biBitCount      = bmInfoHeader.biBitCount; 
-  bmInfo->bmiHeader.biCompression   = bmInfoHeader.biCompression; 
-  bmInfo->bmiHeader.biSizeImage     = bmInfoHeader.biSizeImage; 
-  bmInfo->bmiHeader.biXPelsPerMeter = bmInfoHeader.biXPelsPerMeter; 
-  bmInfo->bmiHeader.biYPelsPerMeter = bmInfoHeader.biYPelsPerMeter; 
-  bmInfo->bmiHeader.biClrUsed       = bmInfoHeader.biClrUsed; 
-  bmInfo->bmiHeader.biClrImportant  = bmInfoHeader.biClrImportant; 
- 
-  /* 
-   * Retrieve the color table. 
-   * 1 << bmInfoHeader.biBitCount == 2 ^ bmInfoHeader.biBitCount 
-   */ 
-  ReadFile (hBmFileName, bmInfo->bmiColors, ((1<<bmInfoHeader.biBitCount) * sizeof(RGBQUAD)), 
-	    &dwRead, (LPOVERLAPPED) NULL); 
-  
-  /* 
-   * Allocate memory for the required number of 
-   * bytes. 
-   */ 
-  hMem2   = GlobalAlloc (GHND, (bmFileHeader.bfSize - bmFileHeader.bfOffBits)); 
-  lpvBits = (BYTE*) GlobalLock (hMem2); 
-  
-  /* Retrieve the bitmap data. */ 
-  ReadFile (hBmFileName, lpvBits, (bmFileHeader.bfSize - bmFileHeader.bfOffBits), 
-	    &dwRead, (LPOVERLAPPED) NULL); 
-  
-  /* Unlock the global memory objects and close the .BMP file. */ 
-  GlobalUnlock (hMem1); 
-  GlobalUnlock (hMem2); 
-  CloseHandle (hBmFileName); 
-  
-  /* Create a bitmap from the data stored in the .BMP file. */ 
-  pixmap = CreateDIBitmap (TtDisplay, &bmInfoHeader, CBM_INIT, lpvBits, bmInfo, DIB_RGB_COLORS);
-  
-  GetObject(pixmap, sizeof(BITMAP), (LPSTR) &bmp);
-  *xif = 0;
-  *yif = 0; 
-  *wif = bmp.bmWidth;
-  *hif = bmp.bmHeight;
-# endif /* 0 */
-  return pixmap;
-# endif /* !_WINDOWS */
+#else /* _WINDOWS */
+  return NULL;
+#endif /* !_WINDOWS */
 }
 
 
 /*----------------------------------------------------------------------
    XbmPrint produces postscript frome an xbm file                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                XbmPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned int BackGroundPixel)
-#else  /* __STDC__ */
-void                XbmPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
-STRING              fn;
-PictureScaling      pres;
-int                 xif;
-int                 yif;
-int                 wif;
-int                 hif;
-int                 PicXArea;
-int                 PicYArea;
-int                 PicWArea;
-int                 PicHArea;
-FILE               *fd;
-unsigned int        BackGroundPixel;
-
-#endif /* __STDC__ */
+void XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
+	       int hif, int PicXArea, int PicYArea, int PicWArea,
+	       int PicHArea, FILE *fd, unsigned int BackGroundPixel)
 {
 #ifdef _WINDOWS
    return;
 #else  /* _WINDOWS */
+   XImage             *pict;
+   Pixmap              pix;
    int                 delta;
    int                 xtmp, ytmp;
    float               Scx, Scy;
-   XImage             *pict;
    register int        i, j, nbb;
    register char      *pt, *pt1;
    int                 wim, him;
-   Pixmap              pix;
-   char                fileNameStr[MAX_PATH];
 
-  wc2iso_strcpy (fileNameStr, fn);
-   i = XReadBitmapFile (TtDisplay, TtRootWindow, fileNameStr, &PicWArea, &PicHArea, &pix, &xtmp, &ytmp);
+   i = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &PicWArea, &PicHArea,
+			&pix, &xtmp, &ytmp);
    if (i != BitmapSuccess)
       return;
    xtmp = 0;
@@ -280,25 +168,17 @@ unsigned int        BackGroundPixel;
 /*----------------------------------------------------------------------
    IsXbmFormat check if the file header is of an xbm format        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool             IsXbmFormat (CHAR_T* fn)
-#else  /* __STDC__ */
-ThotBool            IsXbmFormat (fn)
-STRING              fn;
-
-#endif /* __STDC__ */
+ThotBool             IsXbmFormat (char *fn)
 {
 #ifdef _WINDOWS
    return (FALSE);
 #else  /* _WINDOWS */
+   Pixmap              bitmap = None;
    int                 status;
    int                 w, h;
-   Pixmap              bitmap = None;
    int                 xHot, yHot;
-   char                fileNameStr[MAX_PATH];
 
-   wc2iso_strcpy (fileNameStr, fn);
-   status = XReadBitmapFile (TtDisplay, TtRootWindow, fileNameStr, &w, &h, &bitmap, &xHot, &yHot);
+   status = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &w, &h, &bitmap, &xHot, &yHot);
    if (bitmap != None)
       XFreePixmap (TtDisplay, bitmap);
    return (status == BitmapSuccess);

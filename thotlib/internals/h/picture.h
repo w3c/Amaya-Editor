@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * Definition for picture management
  */
@@ -58,22 +49,18 @@ typedef struct
   int            PicHeight;
   PictureScaling PicPresent;
   int            PicType;
-  CHAR_T*        PicFileName; 
+  char          *PicFileName; 
   Pixmap         PicPixmap;
-  int            PicNbColors;
-  int           *PicColors;
   Pixmap         PicAlpha;
-# ifndef _WINDOWS
-  Pixmap         PicMask;
-# else  /* _WINDOWS */
-  int            bgRed;
-  int            bgGreen;
-  int            bgBlue;
-# endif /* _WINDOWS */
+#ifndef _WINDOWS
+  int            PicMask;        /* Mask color */
+#else /* _WINDOWS */
+  Pixmap         PicMask;        /* Mask bitmap */
+#endif /* _WINDOWS */
   ThotBool       mapped;         /* Used for ExtraHandlers */
   ThotBool       created;        /* Used for ExtraHandlers */
   ThotWidget     wid;            /* Used for ExtraHandlers */
-  void*          pluginInstance; /* Used for ExtraHandlers */
+  void          *pluginInstance; /* Used for ExtraHandlers */
 } PictInfo;
 
 typedef enum

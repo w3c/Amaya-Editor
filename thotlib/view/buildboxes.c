@@ -1470,7 +1470,9 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	      /* force filling */
 	      pAb->AbFillBox = TRUE;
 	      /* load the picture */
-	      LoadPicture (frame, pCurrentBox, (PictInfo *) pAb->AbPictBackground);
+	      picture = (PictInfo *) pAb->AbPictBackground;
+	      if (picture->PicPixmap == None)
+		LoadPicture (frame, pCurrentBox, picture);
 	    }
 
 	  /* Is it a filled box ? */
@@ -1888,7 +1890,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	  else if (pAb->AbLeafType == LtPicture)
 	    {
 	      UnmapImage((PictInfo *)pBox->BxPictInfo);
-	      FreePictInfo ((PictInfo *)pAb->AbPictInfo);
+	      /*FreePictInfo ((PictInfo *)pAb->AbPictInfo);*/
 	    }
 	  else if (pBox->BxType == BoSplit)
 	    {

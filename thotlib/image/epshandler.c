@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * epshandler.c -- Implementation of EPS pictures
  *
@@ -43,90 +34,62 @@
 
 #define ABS(x) (x<0?-x:x)
 #define MAX(x,y) (x>y?x:y)
-
 extern Pixmap       EpsfPictureLogo;
 
 
 /*----------------------------------------------------------------------
    Find EPS picture bounding box.      		             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         GetPictureBoundaries (CHAR_T* fn, int *xif, int *yif, int *wif, int *hif)
-#else  /* __STDC__ */
-static void         GetPictureBoundaries (fn, xif, yif, wif, hif)
-CHAR_T*             fn;
-int                *xif;
-int                *yif;
-int                *wif;
-int                *hif;
-
-#endif /* __STDC__ */
+static void GetPictureBoundaries (char *fn, int *xif, int *yif,
+				  int *wif, int *hif)
 {
 
 #define BUFSIZE 1023
-   FILE               *fin;
-   int                 c;
-   STRING              pt; 
-   CHAR_T              buff[BUFSIZE];
-   int                 X2, Y2;
+  FILE               *fin;
+  char               *pt; 
+  char                buff[BUFSIZE];
+  int                 c;
+  int                 X2, Y2;
 
-   *xif = 0;
-   *yif = 0;
-   *wif = 590;
-   *hif = 840;
-   fin = ufopen (fn, "r");
-   if (fin)
-     {
-	pt = buff;
-	for (c = getc (fin); c != EOF; c = getc (fin))
-	  {
-	     if (pt - buff < BUFSIZE - 2)
-		*pt++ = (CHAR_T) c;
-	     if (c == '\n')
-	       {
-		  *(--pt) = EOS;
-		  pt = buff;
-		  if ((buff[0] == '%')
-		      && (usscanf (buff, "%%%%BoundingBox: %d %d %d %d", xif, yif, &X2, &Y2) == 4))
-		    {
-		       *wif = ABS (X2 - *xif) + 1;
-		       *hif = ABS (Y2 - *yif) + 1;
-		    }
-	       }
-	  }
-	fclose (fin);
-     }
+  *xif = 0;
+  *yif = 0;
+  *wif = 590;
+  *hif = 840;
+  fin = fopen (fn, "r");
+  if (fin)
+    {
+      pt = buff;
+      for (c = getc (fin); c != EOF; c = getc (fin))
+	{
+	  if (pt - buff < BUFSIZE - 2)
+	    *pt++ = (CHAR_T) c;
+	  if (c == '\n')
+	    {
+	      *(--pt) = EOS;
+	      pt = buff;
+	      if (buff[0] == '%' &&
+		  sscanf (buff, "%%%%BoundingBox: %d %d %d %d", xif, yif, &X2, &Y2) == 4)
+		{
+		  *wif = ABS (X2 - *xif) + 1;
+		  *hif = ABS (Y2 - *yif) + 1;
+		}
+	    }
+	}
+      fclose (fin);
+    }
 }
 
 
 /*----------------------------------------------------------------------
    Read the bounding box of an eps file  no picture to produce here
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Drawable            EpsCreate (STRING fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *PicMask, int *width, int *height, int zoom)
-#else  /* __STDC__ */
-Drawable            EpsCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, PicMask, width, height, zoom)
-STRING              fn;
-PictInfo           *imageDesc;
-int                *xif;
-int                *yif;
-int                *wif;
-int                *hif;
-unsigned long       BackGroundPixel;
-ThotBitmap         *PicMask;
-int                *width;
-int                *height;
-int                 zoom;
-#endif /* __STDC__ */
+Drawable EpsCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+		    int *wif, int *hif, unsigned long BackGroundPixel,
+		    int *width, int *height, int zoom)
 {
 #ifdef _WINDOWS
    return (NULL);
 #else  /* _WINDOWS */
-
-#ifndef _WINDOWS
-   *PicMask = None;
-#endif
-
    GetPictureBoundaries (fn, xif, yif, wif, hif);
    *xif = PointToPixel (*xif);
    *yif = PointToPixel (*yif);
@@ -135,43 +98,26 @@ int                 zoom;
    *width = *wif;
    *height = *hif;
    return ((ThotBitmap) EpsfPictureLogo);
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 }			
 
 /*----------------------------------------------------------------------
    Print the eps picture with the right scale and positions    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                EpsPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE * fd, unsigned long BackGroundPixel)
-#else  /* __STDC__ */
-void                EpsPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
-STRING              fn;
-PictureScaling      pres;
-int                 xif;
-int                 yif;
-int                 wif;
-int                 hif;
-int                 PicXArea;
-int                 PicYArea;
-int                 PicWArea;
-int                 PicHArea;
-FILE               *fd;
-unsigned long       BackGroundPixel;
-
-#endif /* __STDC__ */
+void EpsPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
+	       int hif, int PicXArea, int PicYArea, int PicWArea,
+	       int PicHArea, FILE *fd, unsigned long BackGroundPixel)
 {
 #ifdef _WINDOWS
    return;
 #else  /* _WINDOWS */
    float               Scx, Scy;
-   int                 x, y;
    FILE               *fin;
+   int                 x, y;
    int                 c;
 
    /* Read the picture boundaries */
-
    GetPictureBoundaries (fn, &PicXArea, &PicYArea, &PicWArea, &PicHArea);
-
    xif = PixelToPoint (xif);
    yif = PixelToPoint (yif);
    wif = PixelToPoint (wif);
@@ -226,7 +172,7 @@ unsigned long       BackGroundPixel;
 	    default:
 	       break;
 	 }
-   fin = ufopen (fn, "r");
+   fin = fopen (fn, "r");
    if (fin)
      {
 	c = getc (fin);
@@ -240,27 +186,20 @@ unsigned long       BackGroundPixel;
    fprintf (fd, "\n");
    fprintf (fd, "%%%% end of file %s\n", fn);
    fprintf (fd, "ENDEPSFILE\n");
-
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 }			
 
 /*----------------------------------------------------------------------
    Chech if the picture header is of an eps file                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool             IsEpsFormat (CHAR_T* fn)
-#else  /* __STDC__ */
-ThotBool             IsEpsFormat (fn)
-char*               fn;
-
-#endif /* __STDC__ */
+ThotBool IsEpsFormat (char *fn)
 {
    FILE               *fin;
    int                 c;
    ThotBool            res;
 
    res = FALSE;
-   fin = ufopen (fn, "r");
+   fin = fopen (fn, "r");
    if (fin)
      {
 	/* search for %! signature of the eps and ps files */

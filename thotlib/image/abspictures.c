@@ -1,24 +1,15 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
  * Handle specific presentation of pictures
  * Authors: I. Vatton (INRIA)
  *          N. Layaida (INRIA) - New picture formats
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) - Windows version
  *
  */
 
@@ -44,18 +35,11 @@
    Si le pointeur sur le descripteur n'existe pas, la      
    procedure commence par creer le descripteur.            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
-#else  /* __STDC__ */
-void                NewPictInfo (pAb, filename, imagetype)
-PtrAbstractBox      pAb;
-PathBuffer          filename;
-int                 imagetype;
-#endif /* __STDC__ */
+void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
 {
   PtrTextBuffer       pBuffer;
-  PictInfo*           image = NULL;
-  CHAR_T*             ptr = NULL;
+  PictInfo           *imageDesc = NULL;
+  char               *ptr = NULL;
   PictureScaling      picPresent;
   int                 len;
 
@@ -64,17 +48,17 @@ int                 imagetype;
       pAb->AbElement->ElTerminal && pAb->AbElement->ElLeafType == LtPicture)
     {
       /* image element -> attach the element descriptor to the abtract box */
-      image = (PictInfo *) pAb->AbElement->ElPictInfo;
-      if (image == NULL)
-	  {
-	    /* Create the element descriptor */
-	    image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-	    image->PicColors = NULL;
-	    pAb->AbElement->ElPictInfo = (int *) image;
-	  }
+      imageDesc = (PictInfo *) pAb->AbElement->ElPictInfo;
+      if (imageDesc == NULL)
+	{
+	  /* Create the element descriptor */
+	  imageDesc = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+	  memset (imageDesc, 0, sizeof (PictInfo));
+	  pAb->AbElement->ElPictInfo = (int *) imageDesc;
+	}
       else
-	/* don't reset the presentation value */
-	picPresent = image->PicPresent;
+	  /* don't reset the presentation value */
+	  picPresent = imageDesc->PicPresent;
 
       pAb->AbPictInfo = pAb->AbElement->ElPictInfo;
       if (filename == NULL)
@@ -89,34 +73,34 @@ int                 imagetype;
    else if (pAb->AbPresentationBox)
      {
        /*  It's a presentation box -> Create the descriptor */
-      image = (PictInfo *) pAb->AbPictInfo;
-      if (image == NULL)
-	{
-	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-	  image->PicColors = NULL;
-	  pAb->AbPictInfo = (int *) image;
-	}
-      else
-	/* don't reset the presentation value */
-	picPresent = image->PicPresent;
-
+       imageDesc = (PictInfo *) pAb->AbPictInfo;
+       if (imageDesc == NULL)
+	 {
+	   imageDesc = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+	   memset (imageDesc, 0, sizeof (PictInfo));
+	   pAb->AbPictInfo = (int *) imageDesc;
+	 }
+       else
+	 /* don't reset the presentation value */
+	 picPresent = imageDesc->PicPresent;
+       
        ptr = filename;
      }
-   else if (pAb->AbLeafType == LtCompound)
-     {
-       /*  It's a background image -> Create the descriptor */
-      image = (PictInfo *) pAb->AbPictBackground;
-      if (image == NULL)
+  else if (pAb->AbLeafType == LtCompound)
+    {
+      /*  It's a background image -> Create the descriptor */
+      imageDesc = (PictInfo *) pAb->AbPictBackground;
+      if (imageDesc == NULL)
 	{
-	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-	  image->PicColors = NULL;
-	  pAb->AbPictBackground = (int *) image;
+	  imageDesc = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+	  memset (imageDesc, 0, sizeof (PictInfo));
+	  pAb->AbPictBackground = (int *) imageDesc;
 	}
       else
 	{
 	  /* don't reset the presentation value */
-	  picPresent = image->PicPresent;
-	  ptr = image->PicFileName;
+	  picPresent = imageDesc->PicPresent;
+	  ptr = imageDesc->PicFileName;
 	}
  
        /* create the text buffer */
@@ -130,35 +114,30 @@ int                 imagetype;
 	}
       else
 	{
-	  len = ustrlen (filename) + 1;
-	  if (ptr == NULL || len > (int) ustrlen (ptr) + 1)
+	  len = strlen (filename) + 1;
+	  if (ptr == NULL || len > strlen (ptr) + 1)
 	    {
 	      TtaFreeMemory (ptr);
-	      ptr = TtaAllocString (len);
+	      ptr = TtaGetMemory (len);
 	    }
-	   ustrcpy (ptr, filename);
+	  strcpy (ptr, filename);
 	}
-     }
+    }
 
-  if (image)
+  if (imageDesc && imageDesc->PicFileName != ptr)
     {
       /* Initialize image descriptor */
       /* use the buffer allocated by the picture content */
-      image->PicFileName = ptr;
-      image->PicPixmap = 0;
-#     ifndef _WINDOWS 
-      image->PicMask = 0;
-#     endif /* _WINDOWS */
-      image->PicType    = imagetype;
-      image->PicPresent = picPresent;
-      image->PicXArea   = 0;
-      image->PicYArea   = 0;
-      image->PicWArea   = 0;
-      image->PicHArea   = 0;
-      image->PicWidth   = 0;
-      image->PicHeight  = 0;
-      image->mapped     = FALSE;
-      image->created    = FALSE;
+#ifdef _WINDOWS
+      imageDesc->PicMask = -1;
+#else /* _WINDOWS */
+      FreePixmap (imageDesc->PicMask);
+      imageDesc->PicMask = None;
+#endif /* _WINDOWS */
+      FreePixmap (imageDesc->PicPixmap);
+      imageDesc->PicFileName = ptr;
+      imageDesc->PicType    = imagetype;
+      imageDesc->PicPresent = picPresent;
     }
 }
 
@@ -166,12 +145,7 @@ int                 imagetype;
 /*----------------------------------------------------------------------
   FreePictInfo  frees the picture information but not the structure itself
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FreePictInfo (PictInfo * imageDesc)
-#else  /* __STDC__ */
-void                FreePictInfo (imageDesc)
-PictInfo           *imageDesc;
-#endif /* __STDC__ */
+void FreePictInfo (PictInfo *imageDesc)
 {
   int        i;
 
@@ -179,10 +153,12 @@ PictInfo           *imageDesc;
      {
        if (imageDesc->PicPixmap != None)
 	 {
-#          ifndef _WINDOWS
+#ifdef _WINDOWS
+	   imageDesc->PicMask = -1;
+#else /* _WINDOWS */
 	   FreePixmap (imageDesc->PicMask);
 	   imageDesc->PicMask = None;
-#          endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	   FreePixmap (imageDesc->PicPixmap);
 	   imageDesc->PicPixmap = None;
 	   imageDesc->PicXArea = 0;
@@ -191,11 +167,6 @@ PictInfo           *imageDesc;
 	   imageDesc->PicHArea = 0;
 	   imageDesc->PicWidth = 0;
 	   imageDesc->PicHeight = 0;
-	   if (imageDesc->PicColors != NULL)
-	     for (i = 0; i < imageDesc->PicNbColors; i++)
-	       TtaFreeThotColor (imageDesc->PicColors[i]);
-	   TtaFreeMemory (imageDesc->PicColors);
-	   imageDesc->PicColors = NULL;
 	 }
 
        if ((imageDesc->PicType >= InlineHandlers) &&
@@ -209,13 +180,7 @@ PictInfo           *imageDesc;
 /*----------------------------------------------------------------------
    Copie d'un PictInfo                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CopyPictInfo (int *Imdcopie, int *Imdsource)
-#else  /* __STDC__ */
-void                CopyPictInfo (Imdcopie, Imdsource)
-int                *Imdcopie;
-int                *Imdsource;
-#endif /* __STDC__ */
 {
    PictInfo           *imagec;
    PictInfo           *images;
@@ -230,6 +195,5 @@ int                *Imdsource;
    imagec->PicHeight = images->PicHeight;
    imagec->PicPresent = images->PicPresent;
    imagec->PicType = images->PicType;
-   imagec->PicColors = NULL;
 }
 

@@ -17,7 +17,6 @@
  *
  */
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "constmenu.h"
 #include "constmedia.h"
@@ -300,16 +299,17 @@ extern unsigned char  basket_bits[32];
 /*----------------------------------------------------------------------
    InitDocColors initialize the Thot internal color table. (fake)
   ----------------------------------------------------------------------*/
-void                InitDocColors (CHAR_T* name)
+void InitDocColors (char *name)
 {
    NbExtColors = 0;
-   ExtRGB_Table = (RGBstruct *) TtaGetMemory (256 * sizeof (RGBstruct));
+   Max_Extend_Colors = 256;
+   ExtRGB_Table = (RGBstruct *) TtaGetMemory (Max_Extend_Colors * sizeof (RGBstruct));
 }
 
 /*----------------------------------------------------------------------
  *      FreeDocColors frees the Thot predefined X-Window colors.
  ----------------------------------------------------------------------*/
-void         FreeDocColors ()
+void FreeDocColors ()
 {
 }
 
@@ -360,7 +360,7 @@ int TtaGetThotColor (unsigned short red, unsigned short green, unsigned short bl
        return (i + NColors);
 
    /* else store the new RGB entry value */
-   if (NbExtColors < 256)
+   if (NbExtColors < Max_Extend_Colors)
      {
        i = NbExtColors;
        ExtRGB_Table[i].red = red;

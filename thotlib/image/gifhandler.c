@@ -1,23 +1,14 @@
 /* 
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
-
-/*
  *
  * Authors: I. Vatton, N. Layaida (INRIA)
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) - First Windows version
  */
  
 #include "thot_sys.h"
@@ -57,8 +48,8 @@
 #define INTERLACE		0x40
 #define LOCALCOLORMAP	0x80
 #define BitSet(byte, bit)	(((byte) & (bit)) == (bit))
-#define	ReadOK(file,buffer,len)	(fread(buffer, len, 1, file) > 0)
-#define LM_to_uint(a,b)		(((b)<<8)|(a))
+#define	ReadOK(file, buffer, len)	(fread(buffer, len, 1, file) > 0)
+#define LM_to_uint(a,b)		(((b) << 8) | (a))
 
 struct {
      unsigned int        Width;
@@ -70,20 +61,9 @@ struct {
      unsigned int        AspectRatio;
 } GifScreen;
 
-struct {
-     int                 transparent;
-     int                 delayTime;
-     int                 inputFlag;
-     int                 disposal;
-} Gif89 = {
-  -1, -1, -1, 0
-};
-
-int                 verbose;
-int                 showComment;
-unsigned char       nibMask[8] = {1, 2, 4, 8, 16, 32, 64, 128};
 int                 ZeroDataBlock = FALSE;
 
+static int          GifTransparent;
 static int          code_size, set_code_size;
 static int          max_code, max_code_size;
 static int          firstcode, oldcode;
@@ -106,16 +86,14 @@ static int          best_dsquare = INT_MAX;
   ---------------------------------------------------------------------- */
 int WIN_InitSystemColors (HDC hDC)
 {
-    if (peInitialized)
-       return 1;
+  if (peInitialized)
+    return 1;
+  if (!(GetDeviceCaps (hDC, RASTERCAPS) & RC_PALETTE))
+    return 1;
 
-    if (!(GetDeviceCaps (hDC, RASTERCAPS) & RC_PALETTE))
-       return 1;
-
-    nbSysColors = GetSystemPaletteEntries (hDC, 0, GetDeviceCaps (hDC, SIZEPALETTE), sysPalEntries);
-
-    peInitialized = TRUE;
-    return 0;
+  nbSysColors = GetSystemPaletteEntries (hDC, 0, GetDeviceCaps (hDC, SIZEPALETTE), sysPalEntries);
+  peInitialized = TRUE;
+  return 0;
 }
 
 /* ---------------------------------------------------------------------- 
@@ -123,35 +101,37 @@ int WIN_InitSystemColors (HDC hDC)
    ---------------------------------------------------------------------- */
 BYTE WIN_GetColorIndex (int r, int g, int b)
 {
-    int                 best;
-    int                 i;
-    unsigned int      delred, delgreen, delblue;
-    unsigned int        dsquare;
-    unsigned int        best_dsquare = (unsigned int) -1;
+  int                 best;
+  int                 i;
+  unsigned int      delred, delgreen, delblue;
+  unsigned int        dsquare;
+  unsigned int        best_dsquare = (unsigned int) -1;
 
-    for (i = 0; i < nbSysColors; i++) {
-        delred   = sysPalEntries[i].peRed;
-        delgreen = sysPalEntries[i].peGreen;
-		delblue  = sysPalEntries[i].peBlue;
-        delred   -= r;
-        delgreen -= g;
-        delblue  -= b;
-        dsquare  = delred * delred + delgreen * delgreen + delblue * delblue;
-        if (dsquare < best_dsquare) {
-           best = i;
-           best_dsquare = dsquare;
+  for (i = 0; i < nbSysColors; i++)
+    {
+      delred   = sysPalEntries[i].peRed;
+      delgreen = sysPalEntries[i].peGreen;
+      delblue  = sysPalEntries[i].peBlue;
+      delred   -= r;
+      delgreen -= g;
+      delblue  -= b;
+      dsquare  = delred * delred + delgreen * delgreen + delblue * delblue;
+      if (dsquare < best_dsquare)
+	{
+	  best = i;
+	  best_dsquare = dsquare;
         }
     }
-    return ((BYTE)best);
+  return ((BYTE)best);
 }
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   ReadGifImage
   ----------------------------------------------------------------------*/
-static unsigned char* ReadGifImage (FILE* fd, int len, int height,
-									unsigned char clmap[3][MAXCOLORMAPSIZE],
-									int interlace, int ignore)
+static unsigned char* ReadGifImage (FILE *fd, int len, int height,
+				    unsigned char clmap[3][MAXCOLORMAPSIZE],
+				    int interlace, int ignore)
 {
   unsigned char       c;
   int                 v;
@@ -238,39 +218,35 @@ static unsigned char* ReadGifImage (FILE* fd, int len, int height,
 /*----------------------------------------------------------------------
   ReadGIF
   ----------------------------------------------------------------------*/
-unsigned char *ReadGIF (FILE* fd, int* w, int* h, int* ncolors, int* cpp,
-			ThotColorStruct colrs[256])
+unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
+			ThotColorStruct colrs[512])
 {
-   unsigned char       buf[16];
-   unsigned char      *data;
-   unsigned char       c;
-   unsigned char       localColorMap[3][MAXCOLORMAPSIZE];
-   int                 useGlobalColormap;
-   int                 bitPixel;
-   int                 imageCount = 0;
-   char                version[4];
-   int                 imageNumber = 1;
-   int                 i;
+  unsigned char       buf[16];
+  unsigned char      *data;
+  unsigned char       c;
+  unsigned char       localColorMap[3][MAXCOLORMAPSIZE];
+  int                 useGlobalColormap;
+  int                 bitPixel;
+  int                 imageCount = 0;
+  char                version[4];
+  int                 imageNumber = 1;
+  int                 i;
 
-   *w = 0;
-   *h = 0;
-   verbose = FALSE;
-   showComment = FALSE;
-   data = NULL;
-   if (!ReadOK (fd, buf, 6)) 
-      return (NULL);
+  *w = 0;
+  *h = 0;
+  data = NULL;
+  if (!ReadOK (fd, buf, 6)) 
+    return (NULL);
 
-   if (strncmp ((char *) buf, "GIF", 3) != 0)
-      return (NULL);
-
+  if (strncmp ((char *) buf, "GIF", 3) != 0)
+    return (NULL);
    strncpy (version, (char *) buf + 3, 3);
    version[3] = EOS;
-
    if ((strcmp (version, "87a") != 0) && (strcmp (version, "89a") != 0))
-      return (NULL);
-
+     return (NULL);
+   
    if (!ReadOK (fd, buf, 7))
-      return (NULL);
+     return (NULL);
 
    GifScreen.Width  = LM_to_uint (buf[0], buf[1]);
    GifScreen.Height = LM_to_uint (buf[2], buf[3]);
@@ -279,325 +255,332 @@ unsigned char *ReadGIF (FILE* fd, int* w, int* h, int* ncolors, int* cpp,
    GifScreen.ColorResolution = (((buf[4] & 0x70) >> 3) + 1);
    GifScreen.Background = buf[5];
    GifScreen.AspectRatio = buf[6];
-
-   if (BitSet (buf[4], LOCALCOLORMAP)) { /* Global Colormap */
-      if (ReadColorMap (fd, GifScreen.BitPixel, GifScreen.ColorMap))
-         return (NULL);
-      for (i = 0; i < (int) GifScreen.BitPixel; i++) {
-#         ifndef _WINDOWS
-          colrs[i].red   = GifScreen.ColorMap[0][i] * scale;
-          colrs[i].green = GifScreen.ColorMap[1][i] * scale;
-          colrs[i].blue  = GifScreen.ColorMap[2][i] * scale;
-          colrs[i].pixel = i;
+   if (BitSet (buf[4], LOCALCOLORMAP))
+     { /* Global Colormap */
+       if (ReadColorMap (fd, GifScreen.BitPixel, GifScreen.ColorMap))
+	 return (NULL);
+       for (i = 0; i < (int) GifScreen.BitPixel; i++)
+	 {
+#ifndef _WINDOWS
+	   colrs[i].red   = GifScreen.ColorMap[0][i] * scale;
+	   colrs[i].green = GifScreen.ColorMap[1][i] * scale;
+	   colrs[i].blue  = GifScreen.ColorMap[2][i] * scale;
+	   colrs[i].pixel = i;
 #ifndef _GTK
-          colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* !_GTK */
-#         else  /* _WINDOWS */
-          colrs[i].red   = GifScreen.ColorMap[0][i];
-          colrs[i].green = GifScreen.ColorMap[1][i];
-          colrs[i].blue  = GifScreen.ColorMap[2][i];
-#         endif /* !_WINDOWS */
-	  }
+	   colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* _GTK */
+#else  /* _WINDOWS */
+	   colrs[i].red   = GifScreen.ColorMap[0][i];
+	   colrs[i].green = GifScreen.ColorMap[1][i];
+	   colrs[i].blue  = GifScreen.ColorMap[2][i];
+#endif /* _WINDOWS */
+	 }
 
-      for (i = GifScreen.BitPixel; i < MAXCOLORMAPSIZE; i++) {
-          colrs[i].red = 0;
-          colrs[i].green = 0;
-          colrs[i].blue = 0;
-#         ifndef _WINDOWS
-          colrs[i].pixel = i;
+       for (i = GifScreen.BitPixel; i < MAXCOLORMAPSIZE; i++)
+	 {
+	   colrs[i].red = 0;
+	   colrs[i].green = 0;
+	   colrs[i].blue = 0;
+#ifndef _WINDOWS
+	   colrs[i].pixel = i;
 #ifndef _GTK
-          colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* !_GTK */
-#         endif /* !_WINDOWS */
-	  }
+	   colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* _GTK */
+#endif /* _WINDOWS */
+	 }
+     }
 
-   }
-
-   for (;;) {
+   for (;;)
+     {
        if (!ReadOK (fd, &c, 1))
-          return (NULL);
+	 return (NULL);
 
-       if (c == ';') { /* GIF terminator */
-          if (imageCount < imageNumber)
+       if (c == ';')
+	 { /* GIF terminator */
+	   if (imageCount < imageNumber)
              return (NULL);
-          break;
-	   }
+	   break;
+	 }
 
-       if (c == '!') { /* Extension */
-          if (!ReadOK (fd, &c, 1))
+       if (c == '!')
+	 { /* Extension */
+	   if (!ReadOK (fd, &c, 1))
              return (NULL);
-          DoExtension (fd, c);
-          continue;
-	   }
+	   DoExtension (fd, c);
+	   continue;
+	 }
 
        if (c != ',')
-          continue;
-
+	 continue;
        ++imageCount;
-
        if (!ReadOK (fd, buf, 9))
-          return (NULL);
+	 return (NULL);
 
        useGlobalColormap = !BitSet (buf[8], LOCALCOLORMAP);
-
        bitPixel = 1 << ((buf[8] & 0x07) + 1);
-
        *w = LM_to_uint (buf[4], buf[5]);
        *h = LM_to_uint (buf[6], buf[7]);
-       if (!useGlobalColormap) {
-          if (ReadColorMap (fd, bitPixel, localColorMap))
+       if (!useGlobalColormap)
+	 {
+	   if (ReadColorMap (fd, bitPixel, localColorMap))
              return (NULL);
-          for (i = 0; i < bitPixel; i++) {
-#             ifndef _WINDOWS
-              colrs[i].red   = localColorMap[0][i] * scale;
-              colrs[i].green = localColorMap[1][i] * scale;
-              colrs[i].blue  = localColorMap[2][i] * scale;
-              colrs[i].pixel = i;
+	   for (i = 0; i < bitPixel; i++)
+	     {
+#ifndef _WINDOWS
+	       colrs[i].red   = localColorMap[0][i] * scale;
+	       colrs[i].green = localColorMap[1][i] * scale;
+	       colrs[i].blue  = localColorMap[2][i] * scale;
+	       colrs[i].pixel = i;
 #ifndef _GTK
-              colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* !_GTK */
-#             else  /* _WINDOWS */
-              colrs[i].red   = GifScreen.ColorMap[0][i];
-              colrs[i].green = GifScreen.ColorMap[1][i];
-              colrs[i].blue  = GifScreen.ColorMap[2][i];
-#             endif /* _WINDOWS */
-		  }
-          for (i = bitPixel; i < MAXCOLORMAPSIZE; i++) {
-              colrs[i].red   = 0;
-              colrs[i].green = 0;
-              colrs[i].blue  = 0;
-#             ifndef _WINDOWS
-              colrs[i].pixel = i;
+	       colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* _GTK */
+#else  /* _WINDOWS */
+	       colrs[i].red   = GifScreen.ColorMap[0][i];
+	       colrs[i].green = GifScreen.ColorMap[1][i];
+	       colrs[i].blue  = GifScreen.ColorMap[2][i];
+#endif /* _WINDOWS */
+	     }
+
+	   for (i = bitPixel; i < MAXCOLORMAPSIZE; i++)
+	     {
+	       colrs[i].red   = 0;
+	       colrs[i].green = 0;
+	       colrs[i].blue  = 0;
+#ifndef _WINDOWS
+	       colrs[i].pixel = i;
 #ifndef _GTK
-              colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* !_GTK */
-#             endif /* _WINDOWS */
-		  }
-          data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
-                               LM_to_uint (buf[6], buf[7]), localColorMap,
-                               BitSet (buf[8], INTERLACE), imageCount != imageNumber);
-          return (data);	/* anticipating the exit to prevent gif video */
-	   } else {
-             data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
-                                  LM_to_uint (buf[6], buf[7]), GifScreen.ColorMap,
-                                  BitSet (buf[8], INTERLACE), imageCount != imageNumber);
-             return (data);	/* anticipating the exit to prevent gif video */
-	   }
-	
-   }
+	       colrs[i].flags = DoRed | DoGreen | DoBlue;
+#endif /* _GTK */
+#endif /* _WINDOWS */
+	     }
+	   data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
+				LM_to_uint (buf[6], buf[7]), localColorMap,
+				BitSet (buf[8], INTERLACE), imageCount != imageNumber);
+	   return (data);	/* anticipating the exit to prevent gif video */
+	 }
+       else
+	 {
+	   data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
+				LM_to_uint (buf[6], buf[7]), GifScreen.ColorMap,
+				BitSet (buf[8], INTERLACE), imageCount != imageNumber);
+	   return (data);	/* anticipating the exit to prevent gif video */
+	 }
+     }
    return (data);
 }
 
 /*----------------------------------------------------------------------
   ReadColorMap
   ----------------------------------------------------------------------*/
-int ReadColorMap (FILE* fd, int number, unsigned char buffer[3][MAXCOLORMAPSIZE])
+int ReadColorMap (FILE *fd, int number, unsigned char buffer[3][MAXCOLORMAPSIZE])
 {
-   int                 i;
-   unsigned char       rgb[3];
+  int                 i;
+  unsigned char       rgb[3];
 
-   for (i = 0; i < number; ++i) {
-       if (!ReadOK (fd, rgb, sizeof (rgb)))
-          return (TRUE);
-
-       buffer[CM_RED][i]   = rgb[0];
-       buffer[CM_GREEN][i] = rgb[1];
-       buffer[CM_BLUE][i]  = rgb[2];
-   }
-   return FALSE;
+  for (i = 0; i < number; ++i)
+    {
+      if (!ReadOK (fd, rgb, sizeof (rgb)))
+	return (TRUE);
+      buffer[CM_RED][i]   = rgb[0];
+      buffer[CM_GREEN][i] = rgb[1];
+      buffer[CM_BLUE][i]  = rgb[2];
+    }
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
   DoExtension
   ----------------------------------------------------------------------*/
-int DoExtension (FILE* fd, int label)
+int DoExtension (FILE *fd, int label)
 {
-   unsigned char                buf[256];
+  unsigned char     buf[256];
 
-   switch (label) {
-           case 0x01: /* Plain Text Extension */
-           case 0xff: /* Application Extension */
-                      break;
-
-           case 0xfe: /* Comment Extension */
-                while (GetDataBlock (fd, (unsigned char *) buf) != 0) ;
-                return FALSE;
-
-           case 0xf9: /* Graphic Control Extension */
-                      (void) GetDataBlock (fd, (unsigned char *) buf);
-                      Gif89.disposal = (buf[0] >> 2) & 0x7;
-                      Gif89.inputFlag = (buf[0] >> 1) & 0x1;
-                      Gif89.delayTime = LM_to_uint (buf[1], buf[2]);
-                      if ((buf[0] & 0x1) != 0)
-                         Gif89.transparent = (int) buf[3];
-
-                      while (GetDataBlock (fd, (unsigned char *) buf) != 0) ;
-                      return FALSE;
-
-           default: sprintf (buf, "UNKNOWN (0x%02x)", label);
-                    break;
-   }
-
-   while (GetDataBlock (fd, (unsigned char *) buf) != 0);
-   return FALSE;
+  switch (label)
+    {
+    case 0x01: /* Plain Text Extension */
+    case 0xff: /* Application Extension */
+      break;
+    case 0xfe: /* Comment Extension */
+      while (GetDataBlock (fd, (unsigned char *) buf) != 0) ;
+      return FALSE;
+    case 0xf9: /* Graphic Control Extension */
+      (void) GetDataBlock (fd, (unsigned char *) buf);
+      if ((buf[0] & 0x1) != 0)
+	GifTransparent = (int) buf[3];
+      while (GetDataBlock (fd, (unsigned char *) buf) != 0) ;
+      return FALSE;
+    default:
+      sprintf (buf, "UNKNOWN (0x%02x)", label);
+      break;
+    }
+  
+  while (GetDataBlock (fd, (unsigned char *) buf) != 0);
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
   GetDataBlock
   ----------------------------------------------------------------------*/
-int GetDataBlock (FILE* fd, unsigned char *buf)
+int GetDataBlock (FILE *fd, unsigned char *buf)
 {
-   unsigned char       count;
+  unsigned char       count;
 
-   if (!ReadOK (fd, &count, 1)) {
-      fprintf (stderr, "gifhandler: error in getting DataBlock size\n");
-      return -1;
-   }
+  if (!ReadOK (fd, &count, 1))
+    return -1;
 
-   ZeroDataBlock = (count == 0);
-   if ((count != 0) && (!ReadOK (fd, buf, count)))
-      return -1;
-   else
-      return count;
+  ZeroDataBlock = (count == 0);
+  if ((count != 0) && (!ReadOK (fd, buf, count)))
+    return -1;
+  else
+    return count;
 }
 
 /*----------------------------------------------------------------------
   GetCode
   ----------------------------------------------------------------------*/
-int GetCode (FILE* fd, int code_size, int flag)
+int GetCode (FILE *fd, int code_size, int flag)
 {
-   static unsigned char buf[280];
-   static int           curbit, lastbit, done, last_byte;
-   int                  i, j, ret;
-   unsigned char        count;
+  static unsigned char buf[280];
+  static int           curbit, lastbit, done, last_byte;
+  int                  i, j, ret;
+  unsigned char        count;
 
-   if (flag) {
+  if (flag)
+    {
       curbit = 0;
       lastbit = 0;
       done = FALSE;
       last_byte = 2;
       return 0;
-   }
+    }
 
-   if ((curbit + code_size) >= lastbit) {
+  if ((curbit + code_size) >= lastbit)
+    {
       if (done)
-	 return -1;
+	return -1;
       buf[0] = buf[last_byte - 2];
       buf[1] = buf[last_byte - 1];
-      
       if ((count = GetDataBlock (fd, &buf[2])) == 0)
-	 done = TRUE;
-
+	done = TRUE;
       last_byte = 2 + count;
       curbit = (curbit - lastbit) + 16;
       lastbit = (2 + count) * 8;
    }
 
-   ret = 0;
-   for (i = curbit, j = 0; j < code_size; ++i, ++j)
-       ret |= ((buf[i >> 3] & (1 << (i % 8))) != 0) << j;
-
-   curbit += code_size;
-
-   return ret;
+  ret = 0;
+  for (i = curbit, j = 0; j < code_size; ++i, ++j)
+    ret |= ((buf[i >> 3] & (1 << (i % 8))) != 0) << j;
+  curbit += code_size;
+  return ret;
 }
 
 /*----------------------------------------------------------------------
   LWZReadByte
   ----------------------------------------------------------------------*/
-int LWZReadByte (FILE * fd, int flag, int input_code_size)
+int LWZReadByte (FILE *fd, int flag, int input_code_size)
 {
-   static int          fresh = FALSE;
-   int                 code, incode;
-   register int        i;
+  static int          fresh = FALSE;
+  int                 code, incode;
+  register int        i;
 
-   if (flag) {
+  if (flag)
+    {
       set_code_size = input_code_size;
       code_size = set_code_size + 1;
       clear_code = 1 << set_code_size;
       end_code = clear_code + 1;
       max_code_size = 2 * clear_code;
       max_code = clear_code + 2;
-
       GetCode (fd, 0, TRUE);
-      
       fresh = TRUE;
 
-      for (i = 0; i < clear_code; ++i) {
+      for (i = 0; i < clear_code; ++i)
+	{
 	  table[0][i] = 0;
 	  table[1][i] = i;
-      }
+	}
       for (; i < (1 << MAX_LWZ_BITS); ++i)
-	  table[0][i] = table[1][0] = 0;
-
+	table[0][i] = table[1][0] = 0;
       sp = stack;
-      
       return 0;
    }
-   else if (fresh) {
-	fresh = FALSE;
-	do {
-	   firstcode = oldcode = GetCode (fd, code_size, FALSE);
-	} while (firstcode == clear_code);
-	return firstcode;
+  else if (fresh)
+    {
+      fresh = FALSE;
+      do
+	{
+	  firstcode = oldcode = GetCode (fd, code_size, FALSE);
+	}
+      while (firstcode == clear_code);
+      return firstcode;
    }
 
    if (sp > stack)
-      return *--sp;
+     return *--sp;
 
-   while ((code = GetCode (fd, code_size, FALSE)) >= 0) {
-	 if (code == clear_code) {
-	    for (i = 0; i < clear_code; ++i) {
-		table[0][i] = 0;
-		table[1][i] = i;
-	    }
-	    for (; i < (1 << MAX_LWZ_BITS); ++i)
-		table[0][i] = table[1][i] = 0;
-	     code_size = set_code_size + 1;
-	     max_code_size = 2 * clear_code;
-	     max_code = clear_code + 2;
-	     sp = stack;
-	     firstcode = oldcode = GetCode (fd, code_size, FALSE);
-	     return firstcode;
-	 } else if (code == end_code) {
-	        int                 count;
-		unsigned char       buf[260];
+   while ((code = GetCode (fd, code_size, FALSE)) >= 0)
+     {
+       if (code == clear_code)
+       {
+	 for (i = 0; i < clear_code; ++i)
+	   {
+	     table[0][i] = 0;
+	     table[1][i] = i;
+	   }
+	 for (; i < (1 << MAX_LWZ_BITS); ++i)
+	   table[0][i] = table[1][i] = 0;
+	 code_size = set_code_size + 1;
+	 max_code_size = 2 * clear_code;
+	 max_code = clear_code + 2;
+	 sp = stack;
+	 firstcode = oldcode = GetCode (fd, code_size, FALSE);
+	 return firstcode;
+       }
+       else if (code == end_code)
+	 {
+	   int                 count;
+	   unsigned char       buf[260];
 
-		if (ZeroDataBlock)
-		   return -2;
-		while ((count = GetDataBlock (fd, buf)) > 0)
-		      ;
-		return -2;
+	   if (ZeroDataBlock)
+	     return -2;
+	   while ((count = GetDataBlock (fd, buf)) > 0)
+	     ;
+	   return -2;
 	 }
 
-	incode = code;
-	if (code >= max_code) {
+       incode = code;
+       if (code >= max_code)
+	 {
 	   *sp++ = firstcode;
 	   code = oldcode;
-	}
+	 }
 
-	while (code >= clear_code) {
-	      if ((sp - stack) >= ((1 << (MAX_LWZ_BITS)) * 2))
-		 return -2;	/* stop a code dump */
-	      *sp++ = table[1][code];
-	      if (code == table[0][code])
-		 return (code);
-	      code = table[0][code];
-	}
-	*sp++ = firstcode = table[1][code];
-	if ((code = max_code) < (1 << MAX_LWZ_BITS)) {
+       while (code >= clear_code)
+	 {
+	   if ((sp - stack) >= ((1 << (MAX_LWZ_BITS)) * 2))
+	     return -2;	/* stop a code dump */
+	   *sp++ = table[1][code];
+	   if (code == table[0][code])
+	     return (code);
+	   code = table[0][code];
+	 }
+       *sp++ = firstcode = table[1][code];
+       if ((code = max_code) < (1 << MAX_LWZ_BITS))
+	 {
 	   table[0][code] = oldcode;
 	   table[1][code] = firstcode;
 	   ++max_code;
-	   if ((max_code >= max_code_size) && (max_code_size < (1 << MAX_LWZ_BITS))) {
-	      max_code_size *= 2;
-	      ++code_size;
-	   }
-	}
-	oldcode = incode;
-	if (sp > stack)
-	   return *--sp;
-   }
+	   if ((max_code >= max_code_size) &&
+	       (max_code_size < (1 << MAX_LWZ_BITS)))
+	     {
+	       max_code_size *= 2;
+	       ++code_size;
+	     }
+	 }
+       oldcode = incode;
+       if (sp > stack)
+	 return *--sp;
+     }
    return code;
 }
 
@@ -678,18 +661,21 @@ static int          nbbits (unsigned long ul)
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
   Make a shape  of depth 1 for display from image data.
+  The parameter bperpix gives the number of bytes per pixel.
   ----------------------------------------------------------------------*/
-Pixmap MakeMask (Display* dsp, char* pixelindex, int w, int h, int bg)
+Pixmap MakeMask (Display *dsp, unsigned char *pixels, int w, int h,
+		 unsigned int bg, int bperpix)
 {
-  Pixmap              PicMask;
-  unsigned char      *iptr;
-  char                value;
-  char               *data;
-  int                 bpl, y;
-  unsigned char      *data_ptr, *max_data;
-  int                 diff, count, width, height;
   XImage             *newmask;
   ThotGC              tmp_gc;
+  Pixmap              PicMask;
+  unsigned short     *spixels;
+  unsigned char      *data_ptr, *max_data;
+  unsigned int        col;
+  char                value;
+  char               *data;
+  int                 diff, count, width, height;
+  int                 bpl, y, index, ind;
 
   width  = w;
   height = h;
@@ -698,7 +684,8 @@ Pixmap MakeMask (Display* dsp, char* pixelindex, int w, int h, int bg)
   bpl = newmask->bytes_per_line;
   newmask->data = (char *) TtaGetMemory (bpl * height);
   data = newmask->data;
-  iptr = pixelindex; 
+  ind = 0; /* pixel index */
+  spixels = (unsigned short *)pixels;
   diff = width & 7;
   width >>= 3;
   if (newmask->bitmap_bit_order == MSBFirst)
@@ -706,25 +693,68 @@ Pixmap MakeMask (Display* dsp, char* pixelindex, int w, int h, int bg)
       {
 	data_ptr = data;
 	max_data = data_ptr + width;
-	while (data_ptr < max_data)
+	if (bperpix == 2)
 	  {
-	    value = 0;
-	    value = (value << 1) | (*(iptr++) != bg);
-	    value = (value << 1) | (*(iptr++) != bg);
-	    value = (value << 1) | (*(iptr++) != bg);
-	    value = (value << 1) | (*(iptr++) != bg);
-	    value = (value << 1) | (*(iptr++) != bg);
-	    value = (value << 1) | (*(iptr++) != bg);
-	    value = (value << 1) | (*(iptr++) != bg);
-	    value = (value << 1) | (*(iptr++) != bg);
-	    *(data_ptr++) = value;
+	    /* use two bytes per pixel */
+	    while (data_ptr < max_data)
+	      {
+		value = 0;
+		col = spixels[ind++];
+		value = (value << 1 | col != bg);
+		col = spixels[ind++];
+		value = (value << 1 | col != bg);
+		col = spixels[ind++];
+		value = (value << 1 | col != bg);
+		col = spixels[ind++];
+		value = (value << 1 | col != bg);
+		col = spixels[ind++];
+		value = (value << 1 | col != bg);
+		col = spixels[ind++];
+		value = (value << 1 | col != bg);
+		col = spixels[ind++];
+		value = (value << 1 | col != bg);
+		col = spixels[ind++];
+		value = (value << 1 | col != bg);
+		*(data_ptr++) = value;
+	      }
+	  }
+	else
+	  {
+	    /* use one byte per pixel */
+	    while (data_ptr < max_data)
+	      {
+		value = 0;
+		col = pixels[ind++];
+		value = (value << 1 | col != bg);
+		col = pixels[ind++];
+		value = (value << 1 | col != bg);
+		col = pixels[ind++];
+		value = (value << 1 | col != bg);
+		col = pixels[ind++];
+		value = (value << 1 | col != bg);
+		col = pixels[ind++];
+		value = (value << 1 | col != bg);
+		col = pixels[ind++];
+		value = (value << 1 | col != bg);
+		col = pixels[ind++];
+		value = (value << 1 | col != bg);
+		col = pixels[ind++];
+		value = (value << 1 | col != bg);
+		*(data_ptr++) = value;
+	      }
 	  }
 	if (diff)
 	  {
 	    value = 0;
 	    for (count = 0; count < diff; count++)
-	      if (*(iptr++) != bg)
-		value |= (0x80 >> count);
+	      {
+		if (bperpix == 2)
+		  col = spixels[ind++];
+		else
+		  col = pixels[ind++];
+		  if (col != bg)
+		    value |= (0x80 >> count);
+	      }
 	    *(data_ptr++) = value;
 	  }
 	data += bpl;
@@ -735,27 +765,72 @@ Pixmap MakeMask (Display* dsp, char* pixelindex, int w, int h, int bg)
 	{
 	  data_ptr = data;
 	  max_data = data_ptr + width;
-	  while (data_ptr < max_data)
+	  if (bperpix == 2)
 	    {
-	      value = 0;
-	      iptr += 8;
-	      value = (value << 1) | (*(--iptr) != bg);
-	      value = (value << 1) | (*(--iptr) != bg);
-	      value = (value << 1) | (*(--iptr) != bg);
-	      value = (value << 1) | (*(--iptr) != bg);
-	      value = (value << 1) | (*(--iptr) != bg);
-	      value = (value << 1) | (*(--iptr) != bg);
-	      value = (value << 1) | (*(--iptr) != bg);
-	      value = (value << 1) | (*(--iptr) != bg);
-	      iptr += 8;
-	      *(data_ptr++) = value;
+	      /* use two bytes per pixel */
+	      while (data_ptr < max_data)
+		{
+		  value = 0;
+		  ind += 8;
+		  col = spixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = spixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = spixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = spixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = spixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = spixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = spixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = spixels[--ind];
+		  value = (value << 1 | col != bg);
+		  ind += 8;
+		  *(data_ptr++) = value;
+		}
+	    }
+	  else
+	    {
+	      /* use one byte per pixel */
+	      while (data_ptr < max_data)
+		{
+		  value = 0;
+		  ind += 8;
+		  col = pixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = pixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = pixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = pixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = pixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = pixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = pixels[--ind];
+		  value = (value << 1 | col != bg);
+		  col = pixels[--ind];
+		  value = (value << 1 | col != bg);
+		  ind += 8;
+		  *(data_ptr++) = value;
+		}
 	    }
 	  if (diff)
 	    {
 	      value = 0;
 	      for (count = 0; count < diff; count++)
-		if (*(iptr++) != bg)
-		  value |= (1 << count);	      
+	      {
+		if (bperpix == 2)
+		  col = spixels[ind++];
+		else
+		  col = pixels[ind++];
+		  if (col != bg)
+		    value |= (1 << count);
+	      }
 	      *(data_ptr++) = value;
 	    }
 	  data += bpl;
@@ -786,19 +861,22 @@ Pixmap MakeMask (Display* dsp, char* pixelindex, int w, int h, int bg)
 
 /*----------------------------------------------------------------------
   Make an image of appropriate depth for display from image data.
+  The parameter bperpix gives the number of bytes per pixel.
   ----------------------------------------------------------------------*/
-XImage *MakeImage (Display* dsp, unsigned char *data, int width, int height,
-				   int depth, ThotColorStruct *colrs)
+XImage *MakeImage (Display *dsp, unsigned char *data, int width, int height,
+		   int depth, ThotColorStruct *colrs, int bperpix)
 {
+  XImage             *newimage = NULL;
+  unsigned char      *bit_data, *bitp;
+  unsigned short     *sdata;
+  unsigned long       c;
+  unsigned int        col;
   int                 linepad, shiftnum;
   int                 shiftstart, shiftstop, shiftinc;
   int                 bytesperline;
-  int                 temp;
+  int                 temp, ind;
   int                 w, h;
-  XImage             *newimage = NULL;
-  unsigned char      *bit_data, *bitp, *datap;
   int                 bmap_order;
-  unsigned long       c;
   int                 rshift, gshift, bshift;
   int                 useMSB;
 
@@ -832,14 +910,14 @@ XImage *MakeImage (Display* dsp, unsigned char *data, int width, int height,
       linepad = 8 - (width % 8);
       bit_data = (unsigned char *) TtaGetMemory (((width + linepad) * height) + 1);
       bitp = bit_data;
-      datap = data;
+      ind = 0; /* pixel index */
       *bitp = 0;
       shiftnum = shiftstart;
       for (h = 0; h < height; h++)
 	{
 	  for (w = 0; w < width; w++)
 	    {
-	      temp = *datap++ << shiftnum;
+	      temp = data[ind++] << shiftnum;
 	      *bitp = *bitp | temp;
 	      shiftnum = shiftnum + shiftinc;
 	      if (shiftnum == shiftstop)
@@ -871,15 +949,22 @@ XImage *MakeImage (Display* dsp, unsigned char *data, int width, int height,
     case 16:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
       bitp = bit_data;
-      datap = data;
+      sdata = (unsigned short *) data;
+      ind = 0; /* pixel index */
       rshift = 0;
       gshift = nbbits (theVisual->red_mask);
       bshift = gshift + nbbits (theVisual->green_mask);
       for (w = (width * height); w > 0; w--)
 	{
-	  temp = ((colrs[(int) *datap].red & theVisual->red_mask) | 
-		  ((colrs[(int) *datap].green >> gshift) & theVisual->green_mask) |
-		  (((colrs[(int) *datap].blue >> bshift) & theVisual->blue_mask)));
+	  if (bperpix == 2)
+	    /* use two bytes per pixel */
+	    col = sdata[ind++];
+	  else
+	    /* use one byte per pixel */
+	    col = data[ind++];
+	  temp = ((colrs[col].red & theVisual->red_mask) | 
+		  ((colrs[col].green >> gshift) & theVisual->green_mask) |
+		  (((colrs[col].blue >> bshift) & theVisual->blue_mask)));
 	  
 	  if (BitmapBitOrder (dsp) == MSBFirst)
 	    {
@@ -891,7 +976,6 @@ XImage *MakeImage (Display* dsp, unsigned char *data, int width, int height,
 	      *bitp++ = temp & 0xff;
 	      *bitp++ = (temp >> 8) & 0xff;
 	    }
-	  datap++;
 	}
       
       newimage = XCreateImage (dsp,
@@ -914,17 +998,20 @@ XImage *MakeImage (Display* dsp, unsigned char *data, int width, int height,
       bmap_order = BitmapBitOrder (dsp);
 
       bitp = bit_data;
-      datap = data;
+      sdata = (unsigned short *) data;
+      ind = 0; /* pixel index */
       useMSB = (newimage->bits_per_pixel > 24);
       for (w = (width * height); w > 0; w--)
 	{
-	  c =
-	    (((colrs[(int) *datap].red >> 8) & 0xff) << rshift) |
-	    (((colrs[(int) *datap].green >> 8) & 0xff) << gshift) |
-	    (((colrs[(int) *datap].blue >> 8) & 0xff) << bshift);
-	  
-	  datap++;
-	  
+	  if (bperpix == 2)
+	    /* use two bytes per pixel */
+	    col = sdata[ind++];
+	  else
+	    /* use one byte per pixel */
+	    col = data[ind++];
+	  c = (((colrs[col].red >> 8) & 0xff) << rshift) |
+	    (((colrs[col].green >> 8) & 0xff) << gshift) |
+	    (((colrs[col].blue >> 8) & 0xff) << bshift);
 	  if (bmap_order == MSBFirst)
 	    {
 	      if (useMSB)
@@ -951,14 +1038,17 @@ XImage *MakeImage (Display* dsp, unsigned char *data, int width, int height,
 }
 #else /* _WINDOWS */
 /*----------------------------------------------------------------------
+  Make an image of appropriate depth for display from image data.
+  The parameter bperpix gives the number of bytes per pixel.
   ----------------------------------------------------------------------*/
 HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
-		       int depth, ThotColorStruct * colrs)
+		       int depth, ThotColorStruct *colrs)
 {
   HBITMAP             newimage;
-  unsigned char      *bit_data, *bitp, *datap;
-  int                 temp;
-  int                 w, h;
+  unsigned char      *bit_data, *bitp;
+  unsigned short*sdata;
+  unsigned int        col;
+  int                 temp, w, h, ind;
   int                 shiftstart, shiftstop, shiftinc;
   int                 linepad, shiftnum;
   int                 bytesperline;
@@ -975,14 +1065,14 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
       linepad = 8 - (width % 8);
       bit_data = (unsigned char *) TtaGetMemory (((width + linepad) * height) + 1);
       bitp = bit_data;
-      datap = data;
+      ind = 0; /* pixel index */
       *bitp = 0;
       shiftnum = shiftstart;
       for (h = 0; h < height; h++)
 	{
 	  for (w = 0; w < width; w++)
 	    {
-	      temp = *datap++ << shiftnum;
+	      temp = data[ind++] << shiftnum;
 	      *bitp = *bitp | temp;
 	      shiftnum = shiftnum + shiftinc;
 	      if (shiftnum == shiftstop)
@@ -1009,37 +1099,49 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
     case 16:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
       bitp   = bit_data;
-      datap  = data;
+      sdata  = data;
+      ind = 0; /* pixel index */
       rshift = 0;
       gshift = 5;
       bshift = 11;
       for (w = (width * height); w > 0; w--)
 	{
-	  if (IS_WIN95)
-	    temp = (((colrs[(int) *datap].red * 255) & 63488) |
-		    (((colrs[(int) *datap].green * 255) >> gshift) & 2016) |
-		    ((((colrs[(int) *datap].blue * 255) >> bshift) & 31)));
+	  if (bperpix == 2)
+	    /* use two bytes per pixel */
+	    col = sdata[ind++];
 	  else
-	    temp = (((colrs[(int) *datap].red << 8) & 63488) |
-		    (((colrs[(int) *datap].green << 8) >> gshift) & 2016) |
-		    ((((colrs[(int) *datap].blue << 8) >> bshift) & 31)));
+	    /* use one byte per pixel */
+	    col = data[ind++];
+	  if (IS_WIN95)
+	    temp = (((colrs[col].red * 255) & 63488) |
+		    (((colrs[col].green * 255) >> gshift) & 2016) |
+		    ((((colrs[col].blue * 255) >> bshift) & 31)));
+	  else
+	    temp = (((colrs[col].red << 8) & 63488) |
+		    (((colrs[col].green << 8) >> gshift) & 2016) |
+		    ((((colrs[col].blue << 8) >> bshift) & 31)));
 	  *bitp++ = temp & 0xff;
-	  *bitp++ = (temp >> 8) & 0xff;	  
-	  datap++;
+	  *bitp++ = (temp >> 8) & 0xff;
 	}
       break;
     case 24:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
       bitp   = bit_data;
-      datap  = data;
+      sdata  = data;
+      ind = 0; /* pixel index */
       for (h = height; h > 0; h--)
 	{
 	  for (w = width; w > 0; w--)
 	    {
-	      *bitp++ = colrs[(int) *datap].blue;
-	      *bitp++ = colrs[(int) *datap].green;
-	      *bitp++ = colrs[(int) *datap].red;
-	      datap++;
+	      if (bperpix == 2)
+		/* use two bytes per pixel */
+		col = sdata[ind++];
+	      else
+		/* use one byte per pixel */
+		col = data[ind++];
+	      *bitp++ = colrs[col].blue;
+	      *bitp++ = colrs[col].green;
+	      *bitp++ = colrs[col].red;
 	    }
 	  if (width % 2 != 0) 
 	    *bitp++=0;
@@ -1049,16 +1151,22 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
     case 32:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
       bitp   = bit_data;
-      datap  = data;
+      sdata  = data;
+      ind = 0; /* pixel index */
       for (h = height; h > 0; h--)
 	{
 	  for (w = width; w > 0; w--)
 	    {
-	      *bitp++ = colrs[(int) *datap].blue;
-	      *bitp++ = colrs[(int) *datap].green;
-	      *bitp++ = colrs[(int) *datap].red;
+	      if (bperpix == 2)
+		/* use two bytes per pixel */
+		col = sdata[ind++];
+	      else
+		/* use one byte per pixel */
+		col = data[ind++];
+	      *bitp++ = colrs[col].blue;
+	      *bitp++ = colrs[col].green;
+	      *bitp++ = colrs[col].red;
 	      *bitp++ = 0;
-	      datap++;
 	    }
 	}
       break;
@@ -1067,187 +1175,50 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
   newimage = CreateCompatibleBitmap (hDC, width, height);
   SetBitmapBits (newimage, width * height * (depth/8), bit_data);
   TtaFreeMemory (bit_data);
-  return newimage;
+  return (newimage);
 }
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   Allocate and return the thotColors table.
+  The parameter bperpix gives the number of bytes per pixel.
   ----------------------------------------------------------------------*/
 Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
-		     int ncolors, ThotColorStruct colrs[256], int **thotColors)
+		     int ncolors, ThotColorStruct *colrs, int bperpix)
 {
 #ifndef _WINDOWS
-  Pixmap              Img;
-  XImage             *tmpimage;
-  ThotColorStruct     tmpcolr;
-  unsigned char      *tmpdata;
+  Pixmap              img;
+  XImage             *image;
   unsigned char      *ptr;
   unsigned char      *ptr2;
   int                 i, size;
   int                 delta, not_right_col, not_last_row;
   int                 cx, cy;
-  int                *cmap = NULL, *tcolors;
 
   /* find the visual class. */
-  if (ncolors > 0)
-    {
-      tcolors = *thotColors;
-      cmap = (int*) TtaGetMemory (ncolors * sizeof (int));
-      for (i = 0; i < ncolors; i++)
-	{
-	  tmpcolr.red   = colrs[i].red;
-	  tmpcolr.green = colrs[i].green;
-	  tmpcolr.blue  = colrs[i].blue;
-	  tmpcolr.pixel = 0;
-#ifndef _GTK
-	  tmpcolr.flags = DoRed | DoGreen | DoBlue;
-#endif /* !_GTK */
-	  if (TtIsTrueColor)
-	    cmap[i] = i;
-	  else if (TtWDepth == 1)
-	    {
-	      cmap[i] = ((tmpcolr.red >> 5) * 11 +
-			 (tmpcolr.green >> 5) * 16 +
-			 (tmpcolr.blue >> 5) * 5) / (65504 / 64);
-	    }
-	  else
-	    {
-	      if (tcolors == NULL)
-		{
-		  tcolors = (int*) TtaGetMemory (ncolors * sizeof (int));
-		  memset (tcolors, 0, ncolors * sizeof (int));
-		}
-	      tcolors[i] = TtaGetThotColor (tmpcolr.red /256,
-					    tmpcolr.green / 256,
-					    tmpcolr.blue / 256);
-	      tmpcolr.pixel = ColorPixel (tcolors[i]);
-	      cmap[i] = tmpcolr.pixel;
-	    }
-	}
-      *thotColors = tcolors;
-
-      /*
-       * Special case:  For 2 color non-black&white images, instead
-       * of 2 dither patterns, we will always drop them to be
-       * black on white.
-       */
-      if (TtWDepth == 1 && ncolors == 2)
-	{
-	  if (cmap[0] < cmap[1])
-	    {
-	      cmap[0] = 0;
-	      cmap[1] = 64;
-	    }
-	  else
-	    {
-	      cmap[0] = 64;
-	      cmap[1] = 0;
-	    }
-	}
-    }
-
   size = width * height;
   if (size == 0)
-    tmpdata = NULL;
-  else
-    tmpdata = (unsigned char *) TtaGetMemory (size);
-  if (tmpdata == NULL)
-    {
-      /* no image to display */
-      tmpimage = None;
-      Img = (Pixmap) None;
-    }
-  else
-    {
-      ptr = image_data;
-      ptr2 = tmpdata;
-      /* use the color table */
-      while (ptr2 < tmpdata + size - 1)
-	{
-	  if (*ptr > ncolors)
-	    *ptr2 = (unsigned char) cmap[ncolors];
-	  else
-	    *ptr2 = cmap[(int) *ptr];
-	  ptr2++;
-	  ptr++;
-	}
-      if (TtWDepth == 1)
-	{
-	  ptr2 = tmpdata;
-	  for (cy = 0; cy < height; cy++)
-	    {
-	      for (cx = 0; cx < width; cx++)
-		{
-		  /* Assume high numbers are really negative. */
-		  if (*ptr2 > 128)
-		    *ptr2 = 0;
-		  else if (*ptr2 > 64)
-		    *ptr2 = 64;
-		  
-		  /* Traditional Floyd-Steinberg */
-		  if (*ptr2 < 32)
-		    {
-		      delta = *ptr2;
-		      *ptr2 = Black_Color;
-		    }
-		  else
-		    {
-		      delta = *ptr2 - 64;
-		      *ptr2 = White_Color;
-		    }
-		  if ((not_right_col = (cx < (width - 1))))
-		    *(ptr2 + 1) += delta * 7 >> 4;
-		  
-		  if ((not_last_row = (cy < (height - 1))))
-		    (*(ptr2 + width)) += delta * 5 >> 4;
-		  
-		  if (not_right_col && not_last_row)
-		    (*(ptr2 + width + 1)) += delta >> 4;
-		  
-		  if (cx && not_last_row)
-		    (*(ptr2 + width - 1)) += delta * 3 >> 4;
-		  ptr2++;
-		}
-	    }
-	}
-      tmpimage = MakeImage (TtDisplay, tmpdata, width, height, TtWDepth, colrs);
-      TtaFreeMemory (tmpdata);
-      Img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
-    }
-
-  if ((tmpimage == None) || (Img == (Pixmap) None))
-    {
+    return ((Pixmap)NULL);
+  image = MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs, bperpix);
+  img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
 #ifndef _GTK 
-      if (tmpimage != None)
-	XDestroyImage (tmpimage);
-      if (Img != (Pixmap) None)
-	XFreePixmap (TtDisplay, Img);
+  XPutImage (TtDisplay, img, GCimage, image, 0, 0, 0, 0, width, height);
+  XDestroyImage (image);
 #endif /* _GTK */
-      Img = None;
-    }
-  else
-    {
-#ifndef _GTK 
-      XPutImage (TtDisplay, Img, GCimage, tmpimage, 0, 0, 0, 0, width, height);
-      XDestroyImage (tmpimage);
-#endif /* _GTK */
-    }
-  TtaFreeMemory ( cmap);
-  return (Img);
-
+  return (img);
 #else /* _WINDOWS */
+
   static int        cbBits, cbPlanes; 
-  BYTE               mapIndex;
-  int               padding, i, j, ret = 0;
-  int               cmap [MAXNUMBER];
-  BYTE*             bmBits;
+  BYTE              mapIndex;
+  BYTE             *bmBits;
   HDC               destMemDC;  
   HBITMAP           bmp = 0;
-  unsigned int      colorIndex;
+  int               padding, i, j, ret = 0;
+  int               cmap[MAXNUMBER];
+  unsigned int      col;
 
   if (TtIsTrueColor)
-    return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs);
+    return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs,bperpix);
   else
     {
       destMemDC = CreateCompatibleDC (TtDisplay);
@@ -1279,13 +1250,15 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
 	{
 	  for (i = 0; i < width; i++)
 	    {
-	      colorIndex = (unsigned int) image_data [i + j * width];
-	      if (cmap [colorIndex] != -1)
-		mapIndex = (BYTE) cmap[colorIndex];
+	      col = (unsigned int) image_data[i + j * width];
+	      if (cmap[col] != -1)
+		mapIndex = (BYTE) cmap[col];
 	      else
 		{
-		  mapIndex = WIN_GetColorIndex (colrs [colorIndex].red, colrs [colorIndex].green, colrs [colorIndex].blue);
-		  cmap[colorIndex] = (int) mapIndex ;  
+		  mapIndex = WIN_GetColorIndex (colrs[col].red,
+						colrs[col].green,
+						colrs[col].blue);
+		  cmap[col] = (int) mapIndex;  
 		}    
 	      bmBits[i + j * (padding + width)] = mapIndex;
 	    }
@@ -1306,16 +1279,16 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
    ReadGifToData decomresses the file and returns the picture data 
   ----------------------------------------------------------------------*/
 unsigned char *ReadGifToData (char *datafile, int *w, int *h, int *ncolors,
-			      int *cpp, ThotColorStruct colrs[256])
+			      int *cpp, ThotColorStruct *colrs)
 {
    unsigned char      *bit_data;
    FILE               *fp;
 
-#  ifndef _WINDOWS
-   fp = ufopen (datafile, "r");
-#  else  /* _WINDOWS */
-   fp = ufopen (datafile, "rb");
-#  endif /* _WINDOWS */
+#ifndef _WINDOWS
+   fp = fopen (datafile, "r");
+#else  /* _WINDOWS */
+   fp = fopen (datafile, "rb");
+#endif /* _WINDOWS */
 
    if (fp != NULL)
      {
@@ -1329,7 +1302,7 @@ unsigned char *ReadGifToData (char *datafile, int *w, int *h, int *ncolors,
 	if (fp != stdin)
 	   fclose (fp);
      }
-   return ((unsigned char *) NULL);
+   return (NULL);
 }
 
 
@@ -1337,27 +1310,17 @@ unsigned char *ReadGifToData (char *datafile, int *w, int *h, int *ncolors,
   ----------------------------------------------------------------------*/
 Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, unsigned long BackGroundPixel,
-		    ThotBitmap * mask1, int *width, int *height, int zoom)
+		    int *width, int *height, int zoom)
 {
   Pixmap              pixmap = (Pixmap) 0;
   ThotColorStruct     colrs[256];
-  unsigned char*      buffer = (unsigned char*)0;
-  unsigned char*      buffer2 = (unsigned char*)0;
+  unsigned char      *buffer = NULL;
+  unsigned char      *buffer2 = NULL;
   int                 w, h;
   int                 i;
   int                 ncolors, cpp;
 
-  Gif89.transparent = -1;
-  Gif89.delayTime = -1;
-  Gif89.inputFlag = -1;
-  Gif89.disposal = 0;
-
-#ifdef _WINDOWS
-  bgRed   = -1;
-  bgGreen = -1;
-  bgBlue  = -1;
-#endif /* _WINDOWS */
-
+  GifTransparent = -1;
   buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
   /* return image dimensions */
   *width = w;
@@ -1406,25 +1369,17 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   if (buffer == NULL)
     return ((Drawable) NULL);	
 
-  if (Gif89.transparent != -1)
+  if (GifTransparent >= 0)
     {
-      if (Gif89.transparent < 0)
-	i = 256 + Gif89.transparent;
-      else
-	i = Gif89.transparent;
-#ifndef _WINDOWS
-      *mask1 = MakeMask (TtDisplay, buffer, w, h, i);
+#ifdef _WINDOWS
+      /* register the transparent color index */
+      imageDesc->PicMask = GifTransparent;
 #else  /* _WINDOWS */
-      bgRed   = colrs[i].red;
-      bgGreen = colrs[i].green;
-      bgBlue  = colrs[i].blue;
+      /* register the transparent mask */
+      imageDesc->PicMask = MakeMask (TtDisplay, buffer, w, h, GifTransparent, 1);
 #endif /* _WINDOWS */
-    }
-  
-  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs,
-			 &(imageDesc->PicColors));
-  if (imageDesc->PicColors != NULL)
-    imageDesc->PicNbColors = ncolors;
+    }  
+  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, 1);
   TtaFreeMemory (buffer);
   if (pixmap == None)
     {
@@ -1451,37 +1406,27 @@ void GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 	       int hif, int PicXArea, int PicYArea, int PicWArea,
 	       int PicHArea, FILE *fd, unsigned long BackGroundPixel)
 {
-   int                 delta;
-   int                 xtmp, ytmp;
-   unsigned char      *pt;
-   int                 x, y, w, h;
-   int                 wim;
-   unsigned int        NbCharPerLine;
+#ifdef _WINDOWS
+  return;
+#else  /* _WINDOWS */
    ThotColorStruct     colrs[256];
    unsigned char      *buffer;
-   int                 ncolors, cpp, i;
+   unsigned char      *pt;
+   unsigned int        bperline;
+   int                 x, y, w, h;
+   int                 wim;
+   int                 ncolors, cpp;
+   int                 delta;
+   int                 xtmp, ytmp;
 
-   Gif89.transparent = -1;
-   Gif89.delayTime = -1;
-   Gif89.inputFlag = -1;
-   Gif89.disposal = 0;
-
+   GifTransparent = -1;
    buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
-   if (Gif89.transparent != -1)
+   if (GifTransparent >= 0)
      {
-	if (Gif89.transparent < 0)
-	   i = 256 + Gif89.transparent;
-	else
-	   i = Gif89.transparent;
-#       ifndef _WINDOWS
-	colrs[i].red   = 65535;
-	colrs[i].green = 65535;
-	colrs[i].blue  = 65535;
-#       else _WINDOWS
-	colrs[i].red   = 255;
-	colrs[i].green = 255;
-	colrs[i].blue  = 255;
-#       endif /* _WINDOWS */
+       /* invalid the transparent color */
+       colrs[GifTransparent].red   = 65535;
+       colrs[GifTransparent].green = 65535;
+       colrs[GifTransparent].blue  = 65535;
      }
 
    if (!buffer)
@@ -1538,27 +1483,17 @@ void GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 
    wim = w;
    fprintf (fd, "\n");
-   NbCharPerLine = wim;
-
+   bperline = wim;
    for (y = 0; y < hif; y++)
      {
-	pt = (unsigned char *) (buffer + ((ytmp + y) * NbCharPerLine) + xtmp);
-
+	pt = (unsigned char *) (buffer + ((ytmp + y) * bperline) + xtmp);
 	for (x = 0; x < wif; x++)
 	  {
-#       ifdef _WINDOWS
-		fprintf (fd, "%02x%02x%02x",
-		      (colrs[*pt].red),
-		      (colrs[*pt].green),
-		      (colrs[*pt].blue));
-#       else  /* !_WINDOWS */
-		fprintf (fd, "%02x%02x%02x",
-		      (colrs[*pt].red) >> 8,
-		      (colrs[*pt].green) >> 8,
-		      (colrs[*pt].blue) >> 8);
-#       endif /* !_WINDOWS */
-
-	     pt++;
+	    fprintf (fd, "%02x%02x%02x",
+		     (colrs[*pt].red) >> 8,
+		     (colrs[*pt].green) >> 8,
+		     (colrs[*pt].blue) >> 8);
+	    pt++;
 	  }
 	fprintf (fd, "\n");
      }
@@ -1567,39 +1502,31 @@ void GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
    fprintf (fd, "grestore\n");
    fprintf (fd, "\n");
    TtaFreeMemory (buffer);
-
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
    IsGifFormat  checks the header file if it's of a gif file       
   ----------------------------------------------------------------------*/
-ThotBool            IsGifFormat (CHAR_T* datafile)
+ThotBool IsGifFormat (char *datafile)
 {
    unsigned char       buf[16];
    FILE               *fp;
    char                version[4];
 
-
-   verbose = FALSE;
-   showComment = FALSE;
-
-
    fp = ufopen (datafile, "r");
-
    if (fp == NULL)
      {
 	if (fp != stdin)
 	   fclose (fp);
 	return FALSE;
      }
-
    if (!ReadOK (fp, buf, 6))
      {
 	if (fp != stdin)
 	   fclose (fp);
 	return FALSE;
      }
-
    if (strncmp ((char *) buf, "GIF", 3) != 0)
      {
 	if (fp != stdin)
@@ -1609,7 +1536,6 @@ ThotBool            IsGifFormat (CHAR_T* datafile)
 
    strncpy (version, (char *) buf + 3, 3);
    version[3] = EOS;
-
    if ((strcmp (version, "87a") != 0) && (strcmp (version, "89a") != 0))
      {
 	if (fp != stdin)

@@ -6,27 +6,18 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern unsigned char *ReadJPEG ( FILE* infile,
-                                 int* width,
-                                 int* height,
-                                 ThotColorStruct colrs[256] );
-extern unsigned char *ReadJpegToData ( CHAR_T* datafile,
-                                       int* w,
-                                       int* h,
-                                       ThotColorStruct colrs[256] );
 extern void JpegPrintErrorMsg ( int ErrorNumber );
-extern Drawable JpegCreate ( CHAR_T *fn,
+extern Drawable JpegCreate ( char *fn,
                              PictInfo *imageDesc,
                              int *xif,
                              int *yif,
                              int *wif,
                              int *hif,
                              unsigned long BackGroundPixel,
-                             ThotBitmap *mask1,
                              int *width,
                              int *height,
                              int zoom );
-extern void JpegPrint ( CHAR_T *fn,
+extern void JpegPrint ( char *fn,
                         PictureScaling pres,
                         int xif,
                         int yif,
@@ -38,31 +29,22 @@ extern void JpegPrint ( CHAR_T *fn,
                         int PicHArea,
                         FILE *fd,
                         unsigned long BackGroundPixel );
-extern ThotBool IsJpegFormat ( CHAR_T* fn );
+extern ThotBool IsJpegFormat ( char *fn );
 
 #else /* __STDC__ */
 
-extern unsigned char *ReadJPEG (/* FILE* infile,
-                                   int* width,
-                                   int* height,
-                                   ThotColorStruct colrs[256] */);
-extern unsigned char *ReadJpegToData (/* CHAR_T* datafile,
-                                         int* w,
-                                         int* h,
-                                         ThotColorStruct colrs[256] */);
 extern void JpegPrintErrorMsg (/* int ErrorNumber */);
-extern Drawable JpegCreate (/* CHAR_T *fn,
+extern Drawable JpegCreate (/* char *fn,
                                PictInfo *imageDesc,
                                int *xif,
                                int *yif,
                                int *wif,
                                int *hif,
                                unsigned long BackGroundPixel,
-                               ThotBitmap *mask1,
                                int *width,
                                int *height,
                                int zoom */);
-extern void JpegPrint (/* CHAR_T *fn,
+extern void JpegPrint (/* char *fn,
                           PictureScaling pres,
                           int xif,
                           int yif,
@@ -74,7 +56,7 @@ extern void JpegPrint (/* CHAR_T *fn,
                           int PicHArea,
                           FILE *fd,
                           unsigned long BackGroundPixel */);
-extern ThotBool IsJpegFormat (/* CHAR_T* fn */);
+extern ThotBool IsJpegFormat (/* char *fn */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

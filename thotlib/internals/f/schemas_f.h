@@ -10,7 +10,7 @@ extern void InitNatures ( void );
 extern PtrSSchema GetSSchemaForDoc ( char *name,
                                      PtrDocument pDoc );
 extern void RegisterSSchemaForSavedElements ( PtrSSchema pSSchema );
-extern void ReleaseSSchemasForSavedElements ();
+extern void ReleaseSSchemasForSavedElements ( void );
 extern ThotBool LoadPresentationSchema ( Name schemaName,
                                          PtrSSchema pSS,
                                          PtrDocument pDoc );
@@ -62,13 +62,14 @@ extern void BuildDocNatureTable ( PtrDocument pDoc );
 extern void SearchNatures ( PtrDocument pDoc,
                             PtrSSchema natureTable[10 ],
                             int *natureTableLen );
+
 #else /* __STDC__ */
 
 extern void InitNatures (/* void */);
 extern PtrSSchema GetSSchemaForDoc (/* char *name,
                                        PtrDocument pDoc */);
 extern void RegisterSSchemaForSavedElements (/* PtrSSchema pSSchema */);
-extern void ReleaseSSchemasForSavedElements ();
+extern void ReleaseSSchemasForSavedElements (/* void */);
 extern ThotBool LoadPresentationSchema (/* Name schemaName,
                                            PtrSSchema pSS,
                                            PtrDocument pDoc */);
@@ -120,5 +121,6 @@ extern void BuildDocNatureTable (/* PtrDocument pDoc */);
 extern void SearchNatures (/* PtrDocument pDoc,
                               PtrSSchema natureTable[10 ],
                               int *natureTableLen */);
+
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

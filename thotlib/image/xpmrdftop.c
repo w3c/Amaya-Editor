@@ -35,8 +35,7 @@
 #include "XpmI.h"
 
 int
-XpmReadFileToPixmap(display, d, filename, pixmap_return,
-		    shapemask_return, attributes)
+XpmReadFileToPixmap(display, d, filename, pixmap_return, shapemask_return, attributes)
     Display *display;
     Drawable d;
     char *filename;

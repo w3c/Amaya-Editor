@@ -109,7 +109,6 @@ static void SetImageRule (PtrElement pEl, int x, int y, int w, int h,
       image->PicHArea = h;
       image->PicWidth = 0;
       image->PicHeight = 0;
-      image->PicColors = NULL;
       image->mapped = FALSE;
       image->created = FALSE;
     }

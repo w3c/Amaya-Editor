@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -50,7 +50,7 @@ typedef struct _Frame_Ctl {
   ThotBool   EnabledButton[MAX_BUTTON]; /* Enabled buttons                   */
 #else  /* _WINDOWS */
   int        ButtonId[MAX_BUTTON];
-  STRING     TbStrings[MAX_BUTTON];     /* Tooltips text                     */
+  char      *TbStrings[MAX_BUTTON];     /* Tooltips text                     */
   ThotWidget Label[MAX_TEXTZONE];       /* Labels of text zones              */
 #endif /* _WINDOWS */
   ThotWidget Text_Zone[MAX_TEXTZONE];   /* List of text-zone Widgets         */

@@ -6,25 +6,13 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
  * Picture Handling
  * Authors: I. Vatton (INRIA)
  *          N. Layaida (INRIA) - New picture formats
- *          R. Guetari (W3C/INRIA) - Unicode, Windows version and Plug-ins
- *
- * Last modification: Jan 09 1997
+ *          R. Guetari (W3C/INRIA) - Windows version
  */
+
 #define PNG_SETJMP_SUPPORTED
-
-
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -122,10 +110,8 @@ static unsigned char MirrorBytes[0x100] = {
 };
 
 #ifdef _WINDOWS 
-
 /* Macro to determine to round off the given value to the closest byte */
 #define WIDTHBYTES(i)   ((i+31)/32*4)
-
 extern ThotBool peInitialized;
 
 
@@ -137,31 +123,34 @@ extern ThotBool peInitialized;
   ----------------------------------------------------------------------*/
 WORD DibNumColors (VOID FAR* pv)
 {
-    INT                 bits;
-    LPBITMAPINFOHEADER  lpbi;
-    LPBITMAPCOREHEADER  lpbc;
+  INT                 bits;
+  LPBITMAPINFOHEADER  lpbi;
+  LPBITMAPCOREHEADER  lpbc;
 
-    lpbi = ((LPBITMAPINFOHEADER)pv);
-    lpbc = ((LPBITMAPCOREHEADER)pv);
+  lpbi = ((LPBITMAPINFOHEADER)pv);
+  lpbc = ((LPBITMAPCOREHEADER)pv);
 
-    /*  With the BITMAPINFO format headers, the size of the palette
-     *  is in biClrUsed, whereas in the BITMAPCORE - style headers, it
-     *  is dependent on the bits per pixel ( = 2 raised to the power of
-     *  bits/pixel).
-     */
-    if (lpbi->biSize != sizeof (BITMAPCOREHEADER)) {
-       if (lpbi->biClrUsed != 0)
-          return (WORD)lpbi->biClrUsed;
-       bits = lpbi->biBitCount;
-	} else
-          bits = lpbc->bcBitCount;
+  /*  With the BITMAPINFO format headers, the size of the palette
+   *  is in biClrUsed, whereas in the BITMAPCORE - style headers, it
+   *  is dependent on the bits per pixel ( = 2 raised to the power of
+   *  bits/pixel).
+   */
+  if (lpbi->biSize != sizeof (BITMAPCOREHEADER))
+    {
+      if (lpbi->biClrUsed != 0)
+	return (WORD)lpbi->biClrUsed;
+      bits = lpbi->biBitCount;
+    }
+  else
+    bits = lpbc->bcBitCount;
 
-    switch (bits) {
-          case 1:  return   2;
-          case 4:  return  16;
-          case 8:  return 256;
-          default: return   0; /* A 24 bitcount DIB has no color table */
-	}
+  switch (bits)
+    {
+    case 1:  return   2;
+    case 4:  return  16;
+    case 8:  return 256;
+    default: return   0; /* A 24 bitcount DIB has no color table */
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -173,16 +162,15 @@ WORD DibNumColors (VOID FAR* pv)
  ----------------------------------------------------------------------*/
 WORD PaletteSize (VOID FAR * pv)
 {
-    LPBITMAPINFOHEADER lpbi;
-    WORD               NumColors;
+  LPBITMAPINFOHEADER lpbi;
+  WORD               NumColors;
 
-    lpbi      = (LPBITMAPINFOHEADER)pv;
-    NumColors = DibNumColors(lpbi);
-
-    if (lpbi->biSize == sizeof(BITMAPCOREHEADER))
-        return (WORD)(NumColors * sizeof(RGBTRIPLE));
-    else
-        return (WORD)(NumColors * sizeof(RGBQUAD));
+  lpbi      = (LPBITMAPINFOHEADER)pv;
+  NumColors = DibNumColors(lpbi);
+  if (lpbi->biSize == sizeof(BITMAPCOREHEADER))
+    return (WORD)(NumColors * sizeof(RGBTRIPLE));
+  else
+    return (WORD)(NumColors * sizeof(RGBQUAD));
 }
 /*----------------------------------------------------------------------
   DibInfo retrieves the DIB info associated with a CF_DIB format memory
@@ -191,18 +179,20 @@ WORD PaletteSize (VOID FAR * pv)
  ----------------------------------------------------------------------*/
 BOOL DibInfo (LPBITMAPINFOHEADER lpbi)
 {
-    if (lpbi){
-       /* fill in the default fields */
-       if (lpbi->biSize != sizeof (BITMAPCOREHEADER)) {
+  if (lpbi)
+    {
+      /* fill in the default fields */
+      if (lpbi->biSize != sizeof (BITMAPCOREHEADER))
+	{
           if (lpbi->biSizeImage == 0L)
-             lpbi->biSizeImage = WIDTHBYTES (lpbi->biWidth * lpbi->biBitCount) * lpbi->biHeight;
-
+	    lpbi->biSizeImage = WIDTHBYTES (lpbi->biWidth * lpbi->biBitCount) * lpbi->biHeight;
+	  
           if (lpbi->biClrUsed == 0L)
-             lpbi->biClrUsed = DibNumColors (lpbi);
-		}
-        return TRUE;
+	    lpbi->biClrUsed = DibNumColors (lpbi);
+	}
+      return TRUE;
     }
-    return FALSE;
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -216,10 +206,8 @@ LPBITMAPINFO CreateBitmapInfoStruct(HWND hwnd, HBITMAP hBmp)
   /* Retrieve the bitmap's color format, width, and height. */ 
   if (!GetObject (hBmp, sizeof(BITMAP), (LPSTR)&bmp))
     WinErrorBox (hwnd, "CreateBitmapInfoStruct (1)");
- 
   /* Convert the color format to a count of bits. */ 
   cClrBits = (WORD) (bmp.bmPlanes * bmp.bmBitsPixel);
- 
   if (cClrBits != 1)
     { 
       if (cClrBits <= 4) 
@@ -241,7 +229,6 @@ LPBITMAPINFO CreateBitmapInfoStruct(HWND hwnd, HBITMAP hBmp)
    */ 
   if (cClrBits != 24) 
     pbmi = (LPBITMAPINFO) LocalAlloc (LPTR, sizeof (BITMAPINFOHEADER) + sizeof (RGBQUAD) * (2^cClrBits));
-  
   else 
     /* There is no RGBQUAD array for the 24-bit-per-pixel format */ 
     pbmi = (LPBITMAPINFO) LocalAlloc(LPTR, sizeof(BITMAPINFOHEADER));
@@ -275,7 +262,8 @@ LPBITMAPINFO CreateBitmapInfoStruct(HWND hwnd, HBITMAP hBmp)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame, int w, int h, int red, int green, int blue)
+static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame,
+				int w, int h, int bg)
 {
    HDC      hMemDC;
    HDC      hOrDC;
@@ -291,9 +279,12 @@ static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame, int w, i
    HBITMAP  pBitmapAnd;
    HBITMAP  pBitmapInvAnd;
    HBITMAP  pBitmapDest;
-   COLORREF crColor = RGB (red, green, blue);
+   COLORREF crColor;
    COLORREF crOldBkColor;
+   int      red, green, blue;
 
+   TtaGiveThotRGB (bg, &red, &green, &blue);
+   crColor = RGB (red, green, blue);
    hMemDC = CreateCompatibleDC (TtDisplay);
    bitmap = SelectObject (hMemDC, pixmap);
    SetMapMode (hMemDC, GetMapMode (TtDisplay));
@@ -373,7 +364,7 @@ static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame, int w, i
   Match_Format returns TRUE if the considered header file matches   
   the image file description, FALSE in the the other cases        
   ----------------------------------------------------------------------*/
-static ThotBool Match_Format (int typeImage, STRING fileName)
+static ThotBool Match_Format (int typeImage, char *fileName)
 {
    if (PictureHandlerTable[typeImage].Match_Format != NULL)
       return (*(PictureHandlerTable[typeImage].Match_Format)) (fileName);
@@ -557,10 +548,9 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 #endif /* _GTK */
 #else /* _WINDOWS */
 	case RealSize:
-	  if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 &&
-	       imageDesc->bgBlue == -1) || imageDesc->PicType == -1)
+	  if (imageDesc->PicMask == -1 || imageDesc->PicType == -1)
 	    {
-	      /* bitmap is the */
+	      /* No transparence */
 	      hMemDC = CreateCompatibleDC (TtDisplay);
 	      bitmap = SelectObject (hMemDC, pixmap);
 	      SetMapMode (hMemDC, GetMapMode (TtDisplay));
@@ -584,15 +574,15 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      /*DPtoLP (hMemDC, &ptOrg, 1);*/
 	    
 	      BitBlt (TtDisplay, xFrame + ptOrg.x, yFrame + ptOrg.y,
-			  ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY);
+		      ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY);
 	      SelectObject (hMemDC, bitmap);
 	      if (hMemDC )
-			  DeleteDC (hMemDC);
+		DeleteDC (hMemDC);
 	    }
 	  else
 	    TransparentPicture (pixmap, xFrame, yFrame,
-		        imageDesc->PicWArea, imageDesc->PicHArea,
-				imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
+				imageDesc->PicWArea, imageDesc->PicHArea,
+				imageDesc->PicMask);
 #endif /* _WINDOWS */
 	  break;
 	  
@@ -751,8 +741,11 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 #ifndef IV
           BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
 #else /* IV */
-	  TransparentPicture (bitmapTiled, xFrame, yFrame, w, h,
-			      imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
+	  if (imageDesc->PicMask == -1 || imageDesc->PicType == -1)
+	    BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
+	  else
+	    TransparentPicture (bitmapTiled, xFrame, yFrame, w, h,
+				imageDesc->PicMask);
 #endif /* IV */
 	  SelectObject (hOrigDC, bitmap);
 	  SelectObject (hMemDC, pBitmapTiled);
@@ -779,22 +772,22 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
    GetPictureFormat returns the format of a file picture           
    the file  fileName or UNKNOWN_FORMAT if not recognized          
   ----------------------------------------------------------------------*/
-static int GetPictureFormat (STRING fileName)
+static int GetPictureFormat (char *fileName)
 {
-   int                 i;
-   int                 l = 0;
+  int             i;
+  int             l;
 
-   i = 0 ;
-   l = ustrlen (fileName);
-
-   while (i < HandlersCounter) {
-         if (i >= InlineHandlers)
-            currentExtraHandler = i - InlineHandlers;
-         if (Match_Format (i, fileName))
-            return i ;
-         ++i ;
-   }
-   return UNKNOWN_FORMAT;
+  i = 0 ;
+  l = strlen (fileName);
+  while (i < HandlersCounter)
+    {
+      if (i >= InlineHandlers)
+	currentExtraHandler = i - InlineHandlers;
+      if (Match_Format (i, fileName))
+	return i ;
+      ++i ;
+    }
+  return UNKNOWN_FORMAT;
 }
 
 
@@ -806,39 +799,35 @@ static int GetPictureFormat (STRING fileName)
    Supported_Format is of an known type                       
    and Corrupted_File in the other cases                      
   ----------------------------------------------------------------------*/
-Picture_Report PictureFileOk (STRING fileName, int *typeImage)
+Picture_Report PictureFileOk (char *fileName, int *typeImage)
 {
-   Picture_Report      status;
+  Picture_Report      status;
 
-   /* we consider only the supported image formats */
+  /* we consider only the supported image formats */
+  if (*typeImage >= MAX_PICT_FORMATS || *typeImage < 0)
+    *typeImage = UNKNOWN_FORMAT;
 
-   if (*typeImage >= MAX_PICT_FORMATS || *typeImage < 0)
-      *typeImage = UNKNOWN_FORMAT;
-
-   if (TtaFileExist (fileName))
-     {
-	if (*typeImage == UNKNOWN_FORMAT)
-	  {
-	     *typeImage = GetPictureFormat (fileName);
-	     if (*typeImage == UNKNOWN_FORMAT)
-		status = Corrupted_File;
-	     else
-		status = Supported_Format;
-	  }
-	else
-	  {
-	     if (Match_Format (*typeImage, fileName))
-		status = Supported_Format;
-	     else
-		status = Corrupted_File;
-	  }
-     }
-   else
-     {
-	status = Unsupported_Format;
-     }
-
-   return status;
+  if (TtaFileExist (fileName))
+    {
+      if (*typeImage == UNKNOWN_FORMAT)
+	{
+	  *typeImage = GetPictureFormat (fileName);
+	  if (*typeImage == UNKNOWN_FORMAT)
+	    status = Corrupted_File;
+	  else
+	    status = Supported_Format;
+	}
+      else
+	{
+	  if (Match_Format (*typeImage, fileName))
+	    status = Supported_Format;
+	  else
+	    status = Corrupted_File;
+	}
+    }
+  else
+    status = Unsupported_Format;
+  return status;
 }
 
 /*----------------------------------------------------------------------
@@ -999,15 +988,15 @@ void GetPictHandlersList (int *count, char* buffer)
    Si filename est un nom de fichier absolu, retourne dans simplename le nom
    simple du fichier.
   ----------------------------------------------------------------------*/
-static void SimpleName (STRING filename, STRING simplename)
+static void SimpleName (char *filename, char *simplename)
 {
-   register STRING     from, to;
-   CHAR_T                URL_DIR_SEP;
+   char      *from, *to;
+   char       URL_DIR_SEP;
 
-   if (filename && ustrchr (filename, '/'))
-	  URL_DIR_SEP = '/';
+   if (filename && strchr (filename, '/'))
+     URL_DIR_SEP = '/';
    else 
-	   URL_DIR_SEP = DIR_SEP;
+     URL_DIR_SEP = DIR_SEP;
  
    to = simplename;
    *to = EOS;
@@ -1046,10 +1035,10 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
    POINT               lPt[2];
    HBITMAP             hOldBitmap;
 #else  /* _WINDOWS */
-   CHAR_T              filename[255];
+   char                filename[255];
    int                 fileNameWidth;
    int                 fnposx, fnposy;
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 
    /* Create the temporary picture */
    scaleX = 0.0;
@@ -1191,7 +1180,7 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
    /* Display the filename in the bottom of the Picture Box */
    SimpleName (imageDesc->PicFileName, filename);
    fileNameWidth = XTextWidth ((XFontStruct *) FontDialogue, filename,
-	                           ustrlen (filename));
+	                           strlen (filename));
    if ((fileNameWidth + wlogo <= wFrame) &&
 	   (FontHeight (FontDialogue) + hlogo <= hFrame))
      {
@@ -1199,7 +1188,7 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
        fnposy = hFrame - 5 + yFrame;
        XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) FontDialogue)->fid);
        XDrawString (TtDisplay, drawable, TtLineGC, fnposx, fnposy,
-		            filename, ustrlen (filename));
+		            filename, strlen (filename));
      }
 #endif /* _WINDOWS */
 #endif /* _GTK */
@@ -1311,7 +1300,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
 #ifdef _WIN_PRINT
 	  /* load the device context into TtDisplay */
 	  WIN_GetDeviceContext (frame);
-      LoadPicture (frame, box, imageDesc);
+	  LoadPicture (frame, box, imageDesc);
 	  if (imageDesc->PicPixmap == None) 
 	    WinErrorBox (NULL, "DrawPicture (1)");
 	  else
@@ -1351,7 +1340,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
 /*----------------------------------------------------------------------
   UnmapImage unmaps plug-in widgets   
   ----------------------------------------------------------------------*/
-void UnmapImage (PictInfo* imageDesc)
+void UnmapImage (PictInfo *imageDesc)
 {
   int   typeImage;
 
@@ -1375,8 +1364,9 @@ void UnmapImage (PictInfo* imageDesc)
 unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
 			    int eWIDE, int eHIGH, int bperpix)
 {
-  int           cy, ex, ey,*cxarr, *cxarrp;
-  unsigned char *clptr,*elptr,*epptr, *epic;
+  int            cy, ex, ey;
+  int           *cxarr, *cxarrp;
+  unsigned char *clptr, *elptr, *epptr, *epic;
 
   clptr = NULL;
   cxarrp = NULL;
@@ -1388,7 +1378,7 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
 
   /* generate a 'raw' epic, as we'll need it for ColorDither if EM_DITH */
   if (eWIDE == cWIDE && eHIGH == cHIGH)
-    /* 1:1 expansion.  points destinqtion pic at source pic */
+    /* 1:1 expansion.  points destination pic at source pic */
     epic = cpic;
   else
     {
@@ -1397,14 +1387,14 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
       epic = (char *) TtaGetMemory((size_t) (eWIDE * eHIGH * bperpix));
       if (!epic)
 	printf(" unable to TtaGetMemory memory for zoomed image \n");
-      cxarr = (int *) TtaGetMemory(eWIDE * sizeof(int));
+      cxarr = (int *) TtaGetMemory (eWIDE * sizeof (int));
       if (!cxarr)
 	printf("unable to allocate cxarr for zoomed image \n");
-      for (ex=0; ex<eWIDE; ex++) 
+      for (ex = 0; ex < eWIDE; ex++) 
 	cxarr[ex] = bperpix * ((cWIDE * ex) / eWIDE);
       
       elptr = epptr = epic;
-      for (ey=0;  ey<eHIGH;  ey++, elptr+=(eWIDE*bperpix))
+      for (ey = 0;  ey < eHIGH;  ey++, elptr += (eWIDE * bperpix))
 	{
 	  cy = (cHIGH * ey) / eHIGH;
 	  epptr = elptr;
@@ -1412,16 +1402,16 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
 	  
 	  if (bperpix == 1)
 	    {
-	      for (ex=0, cxarrp = cxarr;  ex<eWIDE;  ex++, epptr++) 
+	      for (ex = 0, cxarrp = cxarr;  ex < eWIDE;  ex++, epptr++) 
 	      *epptr = clptr[*cxarrp++];
 	    }
 	  else
 	    {
 	      int j;  char *cp;
-	      for (ex=0, cxarrp = cxarr; ex<eWIDE; ex++,cxarrp++)
+	      for (ex = 0, cxarrp = cxarr; ex < eWIDE; ex++,cxarrp++)
 		{
 		  cp = clptr + *cxarrp;
-		  for (j=0; j<bperpix; j++) 
+		  for (j = 0; j < bperpix; j++) 
 		    *epptr++ = *cp++;
 		}
 	    }
@@ -1441,7 +1431,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #ifndef _GTK
   PathBuffer          fileName;
   PictureScaling      pres;
-  Drawable            picMask = None;
   Drawable            drw = None;
   PtrAbstractBox      pAb;
   Picture_Report      status;
@@ -1474,6 +1463,18 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   h = 0;
   Bgcolor = ColorPixel (pAb->AbBackground);
 
+  /* clean up the current image descriptor */
+  if (imageDesc->PicPixmap)
+    {
+      FreePixmap (imageDesc->PicPixmap);
+#ifdef _WINDOWS
+      imageDesc->PicMask = -1;
+#else /* _WINDOWS */
+      FreePixmap (imageDesc->PicMask);
+      imageDesc->PicMask = None;
+#endif /* _WINDOWS */
+    }
+
   if (status != Supported_Format)
     {
 #ifdef _WINDOWS
@@ -1490,7 +1491,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  imageDesc->PicPresent = pres;
 	  drw = (*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) 
 	    (LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame,
-	     &hFrame, Bgcolor, &picMask, &width, &height);
+	     &hFrame, Bgcolor, &width, &height);
 #endif /* _WIN_PRINT */
 #else  /* !_WINDOWS */
       drw = PictureLogo;
@@ -1499,7 +1500,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicType = -1;
       wFrame = w = 40;
       hFrame = h = 40;
-      picMask = None;
     }
   else
     {
@@ -1593,16 +1593,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 
 	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture))
 		(fileName, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame,
-		 Bgcolor, &picMask, &width, &height,
+		 Bgcolor, &width, &height,
 		 ViewFrameTable[frame - 1].FrMagnification);
 	      /* intrinsic width and height */
 	      imageDesc->PicWidth  = width;
 	      imageDesc->PicHeight = height;
-#ifdef _WINDOWS 
-	      imageDesc->bgRed   = bgRed;
-	      imageDesc->bgGreen = bgGreen;
-	      imageDesc->bgBlue  = bgBlue;
-#endif /* _WINDOWS */
 	    }
 	}
        
@@ -1612,7 +1607,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  imageDesc->PicType = -1;
 	  wFrame = w = 40;
 	  hFrame = h = 40;
-	  picMask = None;
 	}
       else if (w == 0 || h == 0)
 	{
@@ -1682,10 +1676,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  /* release the device context into TtDisplay */
 	  WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-#ifndef _WINDOWS
-  FreePixmap (imageDesc->PicMask);
-  imageDesc->PicMask = picMask;
-#endif /* _WINDOWS */
 #endif /* _GTK */
 }
 

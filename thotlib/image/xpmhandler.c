@@ -39,7 +39,7 @@
   ----------------------------------------------------------------------*/
 Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, unsigned long BackGroundPixel,
-		    Drawable *mask1, int *width, int *height, int zoom)
+		    int *width, int *height, int zoom)
 {
 #ifdef _WINDOWS
   *width = 0;
@@ -54,7 +54,6 @@ Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   Pixmap              pixmap;
   XpmAttributes       att;
   unsigned long       valuemask = 0;
-  char                fileNameStr[MAX_PATH];
 
   /* pixmap loading parameters passed to the library */
   att.valuemask = valuemask;
@@ -66,8 +65,8 @@ Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   att.numsymbols = 1;
   att.mask_pixel = BackGroundPixel;
 
-  wc2iso_strcpy (fileNameStr, fn);
-  status = XpmReadFileToPixmap (TtDisplay, TtRootWindow, fileNameStr, &pixmap, mask1, &att);
+  status = XpmReadFileToPixmap (TtDisplay, TtRootWindow, fn, &pixmap,
+				(Pixmap *) &(imageDesc->PicMask), &att);
   /* return image dimensions */
   *width = att.width;
   *height = att.height;
@@ -134,58 +133,55 @@ void XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
    xtmp = 0;
    ytmp = 0;
 
-
    switch (pres)
+     {
+     case RealSize:
+     case FillFrame:
+     case XRepeat:
+     case YRepeat:
+       delta = (wif - PicWArea) / 2;
+       if (delta > 0)
 	 {
-	    case RealSize:
-	    case FillFrame:
-	    case XRepeat:
-	    case YRepeat:
-	       delta = (wif - PicWArea) / 2;
-
-	       if (delta > 0)
-		 {
-		    xif += delta;
-		    wif = PicWArea;
-		 }
-	       else
-		 {
-		    xtmp = -delta;
-		    PicWArea = wif;
-		 }
-	       delta = (hif - PicHArea) / 2;
-	       if (delta > 0)
-		 {
-		    yif += delta;
-		    hif = PicHArea;
-		 }
-	       else
-		 {
-
-		    ytmp = -delta;
-		    PicHArea = hif;
-		 }
-	       break;
-	    case ReScale:
-	       if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
-		 {
-		    Scx = (float) wif / (float) PicWArea;
-		    yif += (int) ((hif - (PicHArea * Scx)) / 2);
-		    hif = (int) (PicHArea * Scx);
-		 }
-	       else
-		 {
-		    Scy = (float) hif / (float) PicHArea;
-		    xif += (int) ((wif - (PicWArea * Scy)) / 2);
-		    wif = (int) (PicWArea * Scy);
-		 }
-	       break;
-	    default:
-	       break;
+	   xif += delta;
+	   wif = PicWArea;
 	 }
+       else
+	 {
+	   xtmp = -delta;
+	   PicWArea = wif;
+	 }
+       delta = (hif - PicHArea) / 2;
+       if (delta > 0)
+	 {
+	   yif += delta;
+	   hif = PicHArea;
+	 }
+       else
+	 {
+	   
+	   ytmp = -delta;
+	   PicHArea = hif;
+	 }
+       break;
+     case ReScale:
+       if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
+	 {
+	   Scx = (float) wif / (float) PicWArea;
+	   yif += (int) ((hif - (PicHArea * Scx)) / 2);
+	   hif = (int) (PicHArea * Scx);
+	 }
+       else
+	 {
+	   Scy = (float) hif / (float) PicHArea;
+	   xif += (int) ((wif - (PicWArea * Scy)) / 2);
+	   wif = (int) (PicWArea * Scy);
+	 }
+       break;
+     default:
+       break;
+     }
 
    /* reads the colorspace palette to produce the ps */
-
    for (i = 0; i < (int) (image.ncolors); i++)
      {
 	if (strncmp (image.colorTable[i].c_color, "None", 4) == 0)
@@ -214,8 +210,10 @@ void XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
    wim = image.width;
    /* generation of the poscript , header Dumpimage2 + dimensions  */
    /* + picture location. Each pixel = RRGGBB in  hexa    */
-   fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
-   fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
+   fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif),
+	    PixelToPoint (yif + hif));
+   fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea,
+	    PixelToPoint (wif), PixelToPoint (hif));
    fprintf (fd, "\n");
 
    NbCharPerLine = wim;
@@ -250,7 +248,7 @@ void XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 /*----------------------------------------------------------------------
    IsXpmFormat check if the file header is of a pixmap                
   ----------------------------------------------------------------------*/
-ThotBool                IsXpmFormat (char *fn)
+ThotBool IsXpmFormat (char *fn)
 {
   FILE               *f;
   char                c;
