@@ -586,9 +586,9 @@ int*            bg;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Drawable PngCreate (char* fn, PictureScaling pres, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, Drawable* mask1)
+ThotBitmap PngCreate (char* fn, PictureScaling pres, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height)
 #else /* __STDC__ */
-Drawable PngCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
+ThotBitmap PngCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height)
 char*          fn;
 PictureScaling pres;
 int*           xif;
@@ -596,58 +596,67 @@ int*           yif;
 int*           wif;
 int*           hif;
 unsigned long  BackGroundPixel;
-Drawable*      mask1;
+ThotBitmap    *mask1;
+int                *width;
+int                *height;
 #endif /* __STDC__ */
 {
-    int             w, h;
-    Pixmap          pixmap;
-    ThotColorStruct colrs[256];
-    unsigned char   *buffer, *buffer2;
-    int             ncolors, cpp, bg = -1;
+  int             w, h;
+  Pixmap          pixmap;
+  ThotColorStruct colrs[256];
+  unsigned char   *buffer, *buffer2;
+  int             ncolors, cpp, bg = -1;
 
-#   ifdef _WINDOWS
-    bgRed   = -1;
-	bgGreen = -1;
-	bgBlue  = -1;
-#   endif /* _WINDOWS */
+# ifdef _WINDOWS
+  bgRed   = -1;
+  bgGreen = -1;
+  bgBlue  = -1;
+# endif /* _WINDOWS */
 
-    buffer = ReadPngToData (fn, &w, &h, &ncolors, &cpp, colrs, &bg);
-    if (*xif == 0 && *yif != 0)
-       *xif = w;
-    if (*xif != 0 && *yif == 0)
-       *yif = h;
-    if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif)) {
-       /* xif and yif contain width and height of the box */
-       buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-       TtaFreeMemory (buffer);
-       buffer = buffer2;
-       buffer2 = NULL;
-       w = *xif;
-       h = *yif;
-    }
-    
-    if (buffer == NULL)
-       return (Drawable) ThotBitmapNone;
-    if (bg >= 0) {
-#      ifndef _WINDOWS
-       *mask1 = MakeMask (TtDisplay, buffer, w, h, bg);
-#      else  /* _WINDOWS */
-       bgRed   = colrs[bg].red;
-	   bgGreen = colrs[bg].green;
-	   bgBlue  = colrs[bg].blue;
-#      endif /* _WINDOWS */
-    }
+  buffer = ReadPngToData (fn, &w, &h, &ncolors, &cpp, colrs, &bg);
+  /* return image dimensions */
+  *width = w;
+  *height = h;
+  if (buffer == NULL)
+     return (ThotBitmapNone);
 
-    pixmap = DataToPixmap (buffer, w, h, ncolors,  colrs);
+  if (*xif == 0 && *yif != 0)
+    *xif = w;
+  if (*xif != 0 && *yif == 0)
+    *yif = h;
+  if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif)) {
+    /* xif and yif contain width and height of the box */
+    buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
     TtaFreeMemory (buffer);
-    if (pixmap == None)
-       return (ThotBitmap) ThotBitmapNone; 
-    else { 
-	 *wif = w;
-	 *hif = h;      
-	 *xif = 0;
-	 *yif = 0;
-	 return (ThotBitmap) pixmap;
+    buffer = buffer2;
+    buffer2 = NULL;
+    w = *xif;
+    h = *yif;
+  }
+    
+  if (buffer == NULL)
+    return (ThotBitmapNone);
+  if (bg >= 0) {
+#   ifndef _WINDOWS
+    *mask1 = MakeMask (TtDisplay, buffer, w, h, bg);
+#   else  /* _WINDOWS */
+    bgRed   = colrs[bg].red;
+    bgGreen = colrs[bg].green;
+    bgBlue  = colrs[bg].blue;
+#   endif /* _WINDOWS */
+  }
+
+  pixmap = DataToPixmap (buffer, w, h, ncolors,  colrs);
+  TtaFreeMemory (buffer);
+  if (pixmap == None)
+    return (ThotBitmapNone); 
+  else
+    { 
+      *wif = w;
+      *hif = h;      
+      *xif = 0;
+      *yif = 0;
+      return (ThotBitmap) pixmap;
     }
 }
 

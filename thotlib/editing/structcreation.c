@@ -959,6 +959,8 @@ PtrAbstractBox      pAbEl;
 					   picture2->PicYArea = picture1->PicYArea;
 					   picture2->PicWArea = picture1->PicWArea;
 					   picture2->PicHArea = picture1->PicHArea;
+					   picture2->PicWidth = picture1->PicWidth;
+					   picture2->PicHeight = picture1->PicHeight;
 					}
 
 				   }

@@ -122,6 +122,8 @@ int                 typeimage;
       image->PicYArea = y;
       image->PicWArea = w;
       image->PicHArea = h;
+      image->PicWidth = 0;
+      image->PicHeight = 0;
       image->mapped = FALSE;
       image->created = FALSE;
     }
