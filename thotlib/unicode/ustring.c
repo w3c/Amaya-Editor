@@ -89,8 +89,81 @@ static CharsetCode CharsetCodeTable[] =
 
     {"koi8-r",           KOI8_R},
     {"iso-2022-jp",      ISO_2022_JP},
+    {"euc-jp",           EUC_JP},
+    {"shift_jis",        SHIFT_JIS},
+    {"shift-jis",        SHIFT_JIS},
+    {"x-sjis",           SHIFT_JIS},
     {"", UNDEFINED_CHARSET}
 };
+
+#if defined(_I18N_) && !defined(_WINDOWS)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+wchar_t towlower(wchar_t wc)
+{
+  if (wc < 128) return tolower(wc);
+  else return wc;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+wchar_t *wcstok(wchar_t *s, const wchar_t *delim, wchar_t **last)
+{
+  wchar_t      *spanp;
+  int           c, sc;
+  wchar_t      *tok;
+
+  if (s == NULL && (s = *last) == NULL)
+    return NULL;
+
+  /*
+   * Skip (span) leading delimiters (s += strspn(s, delim), sort of).
+   */
+ cont:
+  c = *s++;
+  for (spanp = (wchar_t *)delim; (sc = *spanp++) != 0; )
+    {
+      if (c == sc)
+	goto cont;
+    }
+  
+  if (c == 0)		/* no non-delimiter characters */
+    {
+      *last = NULL;
+      return NULL;
+    }
+  tok = s - 1;
+  
+  /*
+   * Scan token (scan for delimiters: s += strcspn(s, delim), sort of).
+   * Note that delim must have one NUL; we stop if we see that, too.
+   */
+  for (;;)
+    {
+      c = *s++;
+      spanp = (wchar_t *)delim;
+      do
+	{
+	  if ((sc = *spanp++) == c)
+	    {
+	      if (c == 0)
+		{
+		  s = NULL;
+		}
+	      else
+		{
+		  wchar_t *w = s - 1;
+		  *w = '\0';
+		}
+	      *last = s;
+	      return tok;
+	    }
+	}
+      while (sc != 0);
+    }
+  /* NOTREACHED */
+}
+#endif /* _I18N_ && !_WINDOWS */
 
 
 /*-------------------------------------------------------------
@@ -103,26 +176,21 @@ int ustrcasecmp (const CHAR_T *str1, const CHAR_T *str2)
   /* Compatibility of _wcsicmp: WIN NT WIN 9x */
   return (int) _wcsicmp ((wchar_t*)str1, (wchar_t*)str2);
 #else  /* _WINDOWS */
-  int len1 = ustrlen (str1);
-  int len2 = ustrlen (str2);
-  int i    = 0;
+  int     i = 0;
+  wchar_t ch1, ch2;
 
-  if (len1 != len2)
-    return (len1 - len2);
-  while (str1[i])
+  while (str1[i] != EOS && str2[i] != EOS)
     {
-      if (towlower (str1[i]) != towlower (str2[i]))
-	return (str1[i] - str2[i]);
+      ch1 = towlower(str1[i]);
+      ch2 = towlower(str2[i]);
+      if (ch1 != ch2)
+	return (ch1 - ch2);
       i++;
     }
-  return 0;
+  return (str1[i] - str2[i]);
 #endif /* _WINDOWS */
 #else  /* _I18N_ */
-#ifdef _WINDOWS
-  return (unsigned int) _stricmp ((char*)str1, (char*)str2);
-#else  /* _WINDOWS */
   return (unsigned int) strcasecmp ((char*)str1, (char*)str2);
-#endif /* _WINDOWS */
 #endif /* _I18N_ */
 }
 

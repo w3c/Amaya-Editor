@@ -172,7 +172,7 @@ AMAYA_LIBWWW_STANDARD_LIBS = \
 	libwwwzip \
         @LIBDAV@
 
-libwww_config : force
+libwww_config :
 	@(if [ ! -d $(THOTDIR)/../$(LIBWWW) ] ; then \
 	      $(ECHO) "Error libwww dir not found at $(THOTDIR)/../$(LIBWWW)" ; \
 	  fi)

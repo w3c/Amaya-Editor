@@ -484,6 +484,7 @@ void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
   if (el == NULL)
      return;
   child = TtaGetFirstChild (el);
+  textEl = NULL;
   if (child)
      {
      elType = TtaGetElementType (child);
@@ -697,7 +698,7 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
   operator = NULL;
   inbase = FALSE;
   MathMLSSchema = TtaGetElementType(el).ElSSchema;
-    
+  symbolEl = parent = NULL;
   if (base == 0)
     /* it's a MO */
     {

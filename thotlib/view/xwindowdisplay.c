@@ -203,13 +203,24 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
   parameter fg indicates the drawing color
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
+#ifdef _TH_
+int DrawString (wchar_t *buff, int lg, int frame, int x, int y,
+		PtrFont font, int boxWidth, int bl, int hyphen,
+		int startABlock, int fg, int shadow)
+#else /* _TH_ */
 int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 		PtrFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg, int shadow)
+#endif /* _TH_ */
 {
   ThotWindow          w;
   int                 width;
   register int        j;
+#ifdef _TH_
+  XChar2b            *buff2b;
+
+  buff2b = TtaGetMemory (lg * sizeof(XChar2b));
+#endif /* _TH_ */
 
   w = FrRef[frame];
   y += FrameTable[frame].FrTopMargin;
@@ -247,10 +258,18 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	{ 
 	  LoadColor (fg);
 #ifdef _GTK
-	 gdk_draw_string (w, font,TtLineGC, x, y, buff);
+	  gdk_draw_string (w, font,TtLineGC, x, y, buff);
 
 #else /* _GTK */
+#ifdef _TH_
+	  for (j = 0; j < lg; j++) {
+	    buff2b[j].byte1 = buff[j]>>8;
+	    buff2b[j].byte2 = buff[j];
+	  }
+	  XDrawString16 (TtDisplay, w, TtLineGC, x, y, buff2b, lg);
+#else /* _TH_ */
 	  XDrawString (TtDisplay, w, TtLineGC, x, y, buff, lg);
+#endif /* _TH_ */
 #endif /* _GTK */
 	  if (hyphen)
 	    /* draw the hyphen */
@@ -262,6 +281,9 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 #endif /* _GTK */
 	}
     }
+#ifdef _TH_
+  TtaFreeMemory (buff2b);
+#endif /* _TH */
   return (width);
 }
 

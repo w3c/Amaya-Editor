@@ -283,14 +283,48 @@ int GetCharsCapacity (int volpixel)
   return volpixel / 200;
 }
 
+#if !defined(_WINDOWS) && !defined(_GTK)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+XCharStruct *CharacterStructure(CHAR_T c, XFontStruct *xf)
+{
+  unsigned int c1, c2;
+
+  if (xf->per_char == NULL)
+    return NULL;
+  else if (xf->min_byte1 == 0 && xf->max_byte1 == 0)
+    {
+      if (c < xf->min_char_or_byte2 || c >= xf->max_char_or_byte2)
+	return NULL;
+      else
+	return &xf->per_char[c - xf->min_char_or_byte2];
+    }
+  else
+    {
+      c1 = (c>>8) & 0xff;
+      c2 = c & 0xff;
+      if (c1 < xf->min_byte1 || c1 >= xf->max_byte1 ||
+	  c2 < xf->min_char_or_byte2 || c2 >= xf->max_char_or_byte2)
+	return NULL;
+      else
+	return &xf->per_char[(c1 - xf->min_byte1) * (xf->max_char_or_byte2 - xf->min_char_or_byte2 + 1) + c2 - xf->min_char_or_byte2];
+    }
+}
+#endif /* _WINDOWS && _GTK */
+
 #ifndef _GL
 /*----------------------------------------------------------------------
   CharacterWidth returns the width of a char in a given font.
   ----------------------------------------------------------------------*/
+#ifdef _TH_
+int CharacterWidth (CHAR_T c, PtrFont font)
+#else /* _TH_ */
 int CharacterWidth (unsigned char c, PtrFont font)
+#endif /* _TH_ */
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
   XFontStruct        *xf = (XFontStruct *) font;
+  XCharStruct        *xc;
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
   int                 i = 0, l;
 
@@ -326,16 +360,18 @@ int CharacterWidth (unsigned char c, PtrFont font)
       else
 	l = gdk_char_width (font, c);
 #else /* _GTK */
-      if (c == THIN_SPACE)
-	l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 4;
-      else if (c == HALF_EM)
-	l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 2;
-      else if (xf->per_char == NULL)
-	return xf->max_bounds.width;
-      else if (c < xf->min_char_or_byte2)
-	return 0;
+      if (c == THIN_SPACE || c == HALF_EM)
+	xc = CharacterStructure(32, xf);
       else
-	l = xf->per_char[c - xf->min_char_or_byte2].width;
+	xc = CharacterStructure(c, xf);
+      if (xc == NULL)
+	l = xf->max_bounds.width;
+      else
+	l = xc->width;
+      if (c == THIN_SPACE)
+	l = (l + 3)/4;
+      else if (c == HALF_EM)
+	l = (l + 1)/2;
 #endif  /* _GTK */
       if (c == 244)
 	{
@@ -361,7 +397,8 @@ int CharacterWidth (unsigned char c, PtrFont font)
   ----------------------------------------------------------------------*/
 int SpecialCharBoxWidth (CHAR_T c)
 {
-  if (c == 0x200C /* zwnj*/ || c == 0x200D /* zwj */ ||      c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
+  if (c == 0x200C /* zwnj*/ || c == 0x200D /* zwj */ ||
+      c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
       c == 0x202A /* lre */ || c == 0x202B /* rle */ ||
       c == 0x202D /* lro */ || c == 0x202E /* rlo */ ||
       c == 0x202C /* pdf */ || c == 0x2061 /* ApplyFunction */ ||
@@ -378,7 +415,11 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 #ifndef _GL
 #ifdef _I18N_
   PtrFont         font;
+#ifdef _TH_
+  wchar_t         car;
+#else /* _TH_ */
   unsigned char   car;
+#endif /* _TH_ */
 
   if (SpecialCharBoxWidth (c))
     return 1;
@@ -405,59 +446,65 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 /*----------------------------------------------------------------------
   CharacterHeight returns the height of a char in a given font
   ----------------------------------------------------------------------*/
+#ifdef _TH_
+int CharacterHeight (CHAR_T c, PtrFont font)
+#else /* _TH_ */
 int CharacterHeight (unsigned char c, PtrFont font)
+#endif /* _TH_ */
 {
-#if defined (_GTK) && !defined (_GL)
   int              l;
-#endif /* _GTK && !_GL*/
+#if !defined (_WINDOWS) && !defined (_GTK)
+  XCharStruct     *xc;
+#endif /* _WINDOWS && _GTK */
 
   if (font == NULL)
     return (0);
-
 #ifdef _GL
   else
-    return gl_font_char_height (font, (CHAR_T *) &c);
+    l = gl_font_char_height (font, (CHAR_T *) &c);
 #else /*_GL*/
 #ifdef _WINDOWS
   else
-    return (font->FiHeights[c]);
+    l = font->FiHeights[c];
 #else  /* _WINDOWS */
 #ifdef _GTK
   else
     l = gdk_char_height (font, c);
-    return (l);
 #else /* _GTK */
-  else if (((XFontStruct *) font)->per_char == NULL)
+  xc = CharacterStructure (c, (XFontStruct *)font);
+  if (xc == NULL)
     return FontHeight (font);
   else
-    return ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].ascent
-      + ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].descent;
+    return xc->ascent + xc->descent;
 #endif /* _GTK */
 #endif /* _WINDOWS */
 #endif /*_GL*/
+  return l;
 }
 
 /*----------------------------------------------------------------------
   CharacterAscent returns the ascent of a char in a given font.
   ----------------------------------------------------------------------*/
+#ifdef _TH_
+int CharacterAscent (CHAR_T c, PtrFont font)
+#else /* _TH_ */
 int CharacterAscent (unsigned char c, PtrFont font)
+#endif /* _TH_ */
 {
-#ifdef _GL
-  int               ascent;
 #ifndef _WINDOWS
-  int				i;
+  int		    i;
 #endif /*_WINDOWS*/
-#else /*_GL*/
-#ifndef _WINDOWS
+#if !defined(_WINDOWS)  || defined(_GL)
+  int               ascent;
+#endif /* _WINDOWS || _GL */
+#if !defined(_WINDOWS) && !defined(_GL)
 #ifdef _GTK
-  int lbearing, rbearing, width, descent;
+  int               lbearing, rbearing, width, descent;
 #else /* _GTK */
   XFontStruct      *xf = (XFontStruct *) font;
+  XCharStruct      *xc;
 #endif /* _GTK */
-  int               i;
-  int               ascent;
-#endif /* _WINDOWS */
-#endif /*_GL*/
+#endif /* _WINDOW && _GL */
 
   if (font == NULL)
     return (0);
@@ -485,10 +532,18 @@ else
 #ifdef _GTK
       gdk_string_extents (font, &c, &lbearing, &rbearing, &width, &ascent, &descent);
 #else /* _GTK */
+#ifdef _TH_
+      xc = CharacterStructure(c, xf);
+      if (xc == NULL)
+	ascent = xf->max_bounds.ascent;
+      else
+	ascent = xc->ascent;
+#else /* _TH_ */
       /* a patch due to errors in standard symbol fonts */
       if (xf->per_char == NULL)
 	return (xf->max_bounds.ascent);
       ascent = xf->per_char[c - xf->min_char_or_byte2].ascent;
+#endif /* _TH_ */
 #endif /* _GTK */
     }
   if (c == 244)
@@ -580,7 +635,11 @@ int BoxFontHeight (SpecFont specfont)
 {
 #ifdef _I18N_
   PtrFont         font;
+#ifdef _TH_
+  wchar_t         car;
+#else /* _TH_ */
   unsigned char   car;
+#endif /* _TH_ */
 
   car = GetFontAndIndexFromSpec (120, specfont, &font);
   return FontHeight (font);
@@ -832,7 +891,11 @@ void FontIdentifier (char script, int family, int highlight, int size,
   else if (unit == UnPixel)
     size = PixelToPoint (size);
 
-  if (script != 'L' && script != 'G')
+  if (script != 'L' && script != 'G'
+#ifdef _TH_
+      && script != 'Z'
+#endif /* _TH */
+      )
     {
       if (script == 'F')
 	strcpy (encoding, "15");
@@ -867,6 +930,31 @@ void FontIdentifier (char script, int family, int highlight, int size,
       highlight = 0;
       sprintf (r_nameX, "-*-symbol-medium-r-*-*-%d-*-*-*-*-*-*-fontspecific", size);
     }
+#ifdef _TH_
+  else if (script == 'Z')
+    {
+      ffamily = "-ms-*";
+      if (highlight > MAX_HIGHLIGHT)
+	wght = "*";
+      else if (highlight == 0 || highlight == 2 || highlight == 3)
+	wght = "medium";
+      else
+	wght = "bold";
+      if (highlight == 0 || highlight == 1)
+	slant = "r";
+      else
+	slant = "o";
+      if (size < 0)
+	{
+	  sprintf (r_nameX, "%s-%s-%s-*-*-13-*-*-*-*-*-iso10646-1",
+		   ffamily, wght, slant);
+	  size = 12;
+	}
+      else
+	sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-*-*-*-*-iso10646-1",
+		 ffamily, wght, slant, size);
+    }
+#endif /* _TH_ */
   else
     {
       if (UseLucidaFamily)
@@ -1166,13 +1254,22 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   GetFontAndIndexFromSpec return the glyph index and the font
   used to display the wide character c;
   ----------------------------------------------------------------------*/
+#ifdef _TH_
+wchar_t GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
+				 PtrFont *font)
+#else /* _TH_ */
 unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 				       PtrFont *font)
+#endif /* _TH_ */
 {
 #ifdef _I18N_
   PtrFont            lfont, *pfont;
   CHARSET            encoding;
+#ifdef _TH_
+  wchar_t            car;
+#else /* _TH_ */
   unsigned char      car;
+#endif /* _TH_ */
   int                mask, frame;
 
   lfont = NULL;
@@ -1385,19 +1482,27 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    }
 	  else
 	    {
+#ifdef _TH_
+	      car = 'Z'; /* Unicode */
+	      pfont = &(fontset->FontUnicode);
+	      encoding = UNICODE_1_1;
+#else /* _TH_ */
 	      pfont = NULL;
 	      encoding = ISO_8859_1;
 	      car = '1';
+#endif /* _TH_ */
 	    }
 	  if (pfont)
 	  {
 	    if (*pfont == NULL)
 	      {
 		/* load that font */
+#if defined(WINDOWS) || !defined(_TH_)
 		for (frame = 1; frame <= MAX_FRAME; frame++)
 		  {
 		    mask = 1 << (frame - 1);
 		    if (fontset->FontMask | mask)
+#endif /* WINDOWS || !_TH_ */
 		      lfont = LoadNearestFont (car, fontset->FontFamily,
 					       fontset->FontHighlight,
 					       fontset->FontSize,
@@ -1412,7 +1517,9 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 						 fontset->FontSize,
 						 frame, TRUE, TRUE);
 		      }
+#if defined(WINDOWS) || !defined(_TH_)
 		  }
+#endif /* WINDOWS || !_TH_ */
 		if (lfont == NULL)
 		  /* font not found: avoid to retry later */
 		  lfont = (void *) -1;
@@ -1498,6 +1605,12 @@ static void RemoveFontInFontSets (PtrFont font, int mask)
 	fontset->FontIso_9 = NULL;
       else
 	used = (used || fontset->FontIso_9);
+#ifdef _TH_
+      if (fontset->FontUnicode == font)
+	fontset->FontUnicode = NULL;
+      else
+	used = (used || fontset->FontUnicode);
+#endif /* _TH_ */
 
       /* next set */
       nextset = fontset->NextFontSet;

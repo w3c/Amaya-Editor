@@ -547,6 +547,8 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
   histOpen = FALSE;
   doitH = FALSE;
   doitV = FALSE;
+  pRuleH = pRuleV = NULL;
+  attrV = attrH = isDimH = isDimV = FALSE;
   if (dispMode == DisplayImmediately)
     {
       TtaSetDisplayMode (doc, DeferredDisplay);

@@ -994,6 +994,8 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   clipboard = NULL;
   lg = 1;
   pFirstEl = NULL;
+  pLastEl = NULL;
+  firstChar = 0;
   if (DocSelectedAttr)
     {
       /* Selection is within an attribute */

@@ -4253,7 +4253,9 @@ static void  InitializeExpatParser (CHARSET charset)
 	   charset == WINDOWS_1250 || charset == WINDOWS_1251 ||
 	   charset == WINDOWS_1252 || charset == WINDOWS_1253 ||
 	   charset == WINDOWS_1254 || charset == WINDOWS_1255 ||
-	   charset == WINDOWS_1256 || charset == WINDOWS_1257)
+	   charset == WINDOWS_1256 || charset == WINDOWS_1257 ||
+	   charset == ISO_2022_JP  || charset == EUC_JP       ||
+	   charset == SHIFT_JIS)
     /* buffers will be converted to UTF-8 by Amaya */
     Parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
   else
@@ -5095,7 +5097,9 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
 	       charset == WINDOWS_1250 || charset == WINDOWS_1251 ||
 	       charset == WINDOWS_1252 || charset == WINDOWS_1253 ||
 	       charset == WINDOWS_1254 || charset == WINDOWS_1255 ||
-	       charset == WINDOWS_1256 || charset == WINDOWS_1257)
+	       charset == WINDOWS_1256 || charset == WINDOWS_1257 ||
+	       charset == ISO_2022_JP  || charset == EUC_JP       ||
+	       charset == SHIFT_JIS)
 	     {
 	       /* convert the original stream into UTF-8 */
 	       buffer = TtaConvertIsoToMbs (&bufferRead[i], charset);

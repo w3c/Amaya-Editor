@@ -950,8 +950,13 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   PtrFont             prevfont = NULL;
   PtrFont             nextfont = NULL;
   CHAR_T              bchar;
+#ifdef _TH_
+  wchar_t             car;
+  wchar_t            *buffer;
+#else /* _TH_ */
   unsigned char       car;
   unsigned char      *buffer;
+#endif /* _TH_ */
   int                 restbl;
   int                 newbl, lg;
   int                 charleft;
@@ -1184,7 +1189,11 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	}
 
       /* allocate a buffer to store converted characters */
+#ifdef _TH_
+      buffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
+#else /* _TH_ */
       buffer = TtaGetMemory (pBox->BxNChars + 1);
+#endif /* _TH_ */
       nbcar = 0;
       org = x;
       while (charleft > 0)

@@ -19,6 +19,12 @@
 #include "application.h"
 #include "uconvert.h"
 
+#include "JISX0201.h"
+#include "JISX0208.h"
+#include "JISX0212.h"
+#include "GB2312.h"
+#include "KSC5601.h"
+
 extern unsigned long offset[6];
 
 wchar_t ISO_SYMBOL_Map [] = {
@@ -55,7 +61,7 @@ wchar_t ISO_SYMBOL_Map [] = {
     0x0000, 0x232A, 0x222B, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
     0x0000, 0x2309, 0x0000, 0x230B, 0x0000, 0x0000, 0x0000, 0x0000,
 };
-#define ISO_SYMBOL_length sizeof(ISO_SYMBOL_Map) / sizeof(wchar_t);
+#define ISO_SYMBOL_length sizeof(ISO_SYMBOL_Map) / sizeof(wchar_t)
 
 wchar_t ISO_8859_2_Map [] = {
     0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087,
@@ -457,7 +463,11 @@ wchar_t KOI8 [] = {
   TtaGetCharFromWC returns the ISO or Windows character code
   of the Unicode value wc.
   ----------------------------------------------------------------------*/
+#ifdef _TH_
+wchar_t TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
+#else /* _TH_ */
 unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
+#endif /* _TH_ */
 {
   unsigned int  c, max, base;
   wchar_t      *table;
@@ -558,6 +568,11 @@ unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
 	  table = KOI8;
 	  max = KOI8_length;
 	  break;
+#ifdef _TH_
+	case UNICODE_1_1:
+	  return wc;
+	  break;
+#endif /* _TH_ */
 	default:
 	  return EOS;
 	  break;
@@ -577,6 +592,216 @@ unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding)
     }
 }
 
+/*-------------------------------------------------------------
+  TtaConvertJisToWC convert a jis 2 byte character to a unicode
+  wide character.
+  -------------------------------------------------------------*/
+wchar_t TtaConvertJisToWC (unsigned char b1, unsigned char b2, CHARSET charset)
+{
+  wchar_t wc;
+
+  wc = EOS;
+  switch (charset)
+    {
+    case JIS_X_0201_ROMAN:
+      if (b1 < sizeof(JIS_X_0201_ROMAN_Map)/sizeof(unsigned short))
+	wc = JIS_X_0201_ROMAN_Map[b1];
+      break;
+    case JIS_X_0201_KANA:
+      if (b1 < sizeof(JIS_X_0201_KANA_Map)/sizeof(unsigned short))
+	wc = JIS_X_0201_KANA_Map[b1];
+      break;
+    case JIS_X_0208:
+      if (32 < b1 && b1 < 127 && 32 < b2 && b2 < 127)
+	wc = JIS_X_0208_Map[b1 - 33][b2 - 33];
+      break;
+    case JIS_X_0212:
+      if (32 < b1 && b1 < 127 && 32 < b2 && b2 < 127)
+	wc = JIS_X_0212_Map[b1 - 33][b2 - 33];
+      break;
+    case GB_2312:
+      if (32 < b1 && b1 < 127 && 32 < b2 && b2 < 127)
+	wc = GB_2312_Map[b1 - 33][b2 - 33];
+      break;
+    case KSC_5601:
+      if (32 < b1 && b1 < 127 && 32 < b2 && b2 < 127)
+	wc = KSC_5601_Map[b1 - 33][b2 - 33];
+      break;
+    case ISO_8859_1:
+      wc = b1 | 0x80;
+      break;
+    case ISO_8859_7:
+      if (b1 < ISO_SYMBOL_length)
+	wc = ISO_SYMBOL_Map [b1];
+      break;
+    default:
+      wc = b1;
+      break;
+    }
+  return wc;
+}
+
+/*-------------------------------------------------------------
+  TtaConvertSJisToWC shift-jis 2 bytes to a unicode wide character.
+  -------------------------------------------------------------*/
+wchar_t TtaConvertSjisToWC (unsigned char b1, unsigned char b2)
+{
+  unsigned char c1, c2;
+
+  if (b1 >= 0xe0) b1 -= 0x40;
+  c1 = (b1 - 0x80) * 2 - ((b2 >= 0x9f)? 0x8 * 2 : 0x9 *2 - 1) + 0x30;
+  c2 = (b2 >= 0x9f) ? (b2 - 0x7e): b2 - ((b2>=0x7f)? 1: 0) - 0x1f;
+  return TtaConvertJisToWC (c1 & 0x7f, c2 & 0x7f, JIS_X_0208);
+}
+
+/*----------------------------------------------------------------------
+  TtaGetWCFromCharJis returns the Unicode value of the corresponding
+  JIS character code c.  It may return 0 for asking more characters.
+  ----------------------------------------------------------------------*/
+int TtaJisEscMatch(unsigned char *buf, unsigned char *match, int *more)
+{
+  while (*match)
+    {
+      if (*buf == EOS)
+	{
+	  *more = 1;
+	  return 0;
+	}
+      else if (*buf != *match)
+	return 0;
+      buf++;
+      match++;
+    }
+  return 1;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+wchar_t TtaGetWCFromJisChar (unsigned char c, CHARSET encoding)
+{
+  static CHARSET g0, g1, g2;
+  static int shift;
+  static unsigned char b[8];
+  static unsigned int n;
+  wchar_t wc;
+  int more;
+
+  if (c == EOS)
+    {
+      g0 = US_ASCII;
+      g1 = g2 = ISO_8859_1;
+      shift = 0;
+      n = 0;
+      return (wchar_t)0;
+    }
+
+  b[n++] = c;
+  b[n] = EOS;
+
+  wc = (wchar_t)EOS;
+  if (b[0] & 0x80)
+    {
+      if (n >= 2)
+	{
+	  if (encoding == EUC_JP)
+	    wc = TtaConvertJisToWC(b[0] & 0x7f, b[1] & 0x7f, JIS_X_0208);
+	  else if (encoding == SHIFT_JIS)
+	    wc = TtaConvertSjisToWC(b[0], b[1]);
+	  n = 0;
+	}
+    }
+  else if (b[0] == '\033') /* Escape */
+    {
+      more = 0;
+      if (TtaJisEscMatch(&b[1], "(B", &more))
+	{
+	  g0 = US_ASCII;
+	  n = 0;
+	}
+      else if (TtaJisEscMatch(&b[1], "(J", &more))
+	{
+	  g0 = JIS_X_0201_ROMAN;
+	  n = 0;
+	}
+      else if (TtaJisEscMatch(&b[1], "$@", &more))
+	{
+	  g0 = JIS_X_0208;
+	  n = 0;
+	}
+      else if (TtaJisEscMatch(&b[1], "$B", &more))
+	{
+	  g0 = JIS_X_0208;
+	  n = 0;
+	}
+      else if (TtaJisEscMatch(&b[1], "$A", &more))
+	{
+	  g0 = GB_2312;
+	  n = 0;
+	}
+      else if (TtaJisEscMatch(&b[1], "$(C", &more))
+	{
+	  g0 = KSC_5601;
+	  n = 0;
+	}
+      else if (TtaJisEscMatch(&b[1], "$(D", &more))
+	{
+	  g0 = JIS_X_0212;
+	  n = 0;
+	}
+      else if (TtaJisEscMatch(&b[1], ".A", &more))
+	{
+	  g2 = ISO_8859_1;
+	  n = 0;
+	}
+      else if (TtaJisEscMatch(&b[1], ".F", &more))
+	{
+	  g2 = ISO_8859_7;
+	  n = 0;
+	}
+      else if (TtaJisEscMatch(&b[1], "N", &more))
+	{
+	  if (n >= 3)
+	    {
+	      wc = TtaConvertJisToWC(b[2], EOS, g2);
+	      n = 0;
+	    }
+	}
+      else if (!more)
+	{
+	  n = 0;
+	}
+    }
+  else if (b[0] == '\017') /* Shift Out */
+    {
+      shift = 1;
+      n = 0;
+    }
+  else if (b[0] == '\016') /* Shift In */
+    {
+      shift = 0;
+      n = 0;
+    }
+  else if (shift == 1)
+    {
+      wc = TtaConvertJisToWC(b[0], EOS, g1);
+      n = 0;
+    }
+  else if (g0 == JIS_X_0208 || g0 == JIS_X_0212 ||
+	   g0 == GB_2312 || g0 == KSC_5601)
+    {
+      if (n >= 2)
+	{
+	  wc = TtaConvertJisToWC (b[0], b[1], g0);
+	  n = 0;
+	}
+    }
+  else
+    {
+      wc = TtaConvertJisToWC (b[0], EOS, g0);
+      n = 0;
+    }
+  return wc;
+}
 
 /*----------------------------------------------------------------------
   TtaGetWCFromChar returns the Unicode value of the corresponding
@@ -587,7 +812,9 @@ wchar_t TtaGetWCFromChar (unsigned char c, CHARSET encoding)
   unsigned int   val, max;
   wchar_t       *table;
 
-  if (c < 128 && encoding != ISO_SYMBOL)
+  if (encoding == ISO_2022_JP || encoding == EUC_JP || encoding == SHIFT_JIS)
+    return TtaGetWCFromJisChar (c, encoding);
+  else if (c < 128 && encoding != ISO_SYMBOL)
     return (wchar_t) c;
   else
     {
@@ -938,7 +1165,6 @@ unsigned char *TtaConvertWCToIso (wchar_t *src, CHARSET encoding)
   return dest;
 }
 
-
 /*-------------------------------------------------------------
   TtaConvertIsoToWC converts the src (8-bit) into a wide character
   string (16-bit).
@@ -948,12 +1174,28 @@ wchar_t *TtaConvertIsoToWC (unsigned char *src, CHARSET encoding)
 {
   wchar_t          *dest;
   int               i;
+#ifdef _TH_
+  unsigned char     c;
+  wchar_t           wc;
+#endif /* _TH_ */
 
   dest = NULL;
   if (src)
     {
       i = strlen (src) + 1;
       dest = TtaGetMemory (i * sizeof (wchar_t));
+#ifdef _TH_
+      i = 0;
+      while ((c = *src++) != EOS)
+	{
+	  wc = TtaGetWCFromChar (c, encoding);
+	  if (wc)
+	    {
+	      dest[i++] = wc;
+	    }
+	}
+      dest[i] = EOS;
+#else /* _TH_ */
       i = 0;
       while (src[i] != EOS)
 	{
@@ -961,9 +1203,17 @@ wchar_t *TtaConvertIsoToWC (unsigned char *src, CHARSET encoding)
 	  i++;
 	}
       dest[i] = EOS;
+#endif /* _TH_ */
     }
   return dest;
 }
+
+#ifdef _TH_
+void TtaConvertIsoToMbsInit (CHARSET encoding)
+{
+
+}
+#endif /* _TH_ */
 
 /*-------------------------------------------------------------
   TtaConvertIsoToMbs converts the src (8-bit) into a UTF-8

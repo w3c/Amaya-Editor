@@ -411,7 +411,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
   int                 winTop, winBottom;
   int                 bt, bb;
   int                 l, h;
-  ThotBool            userSpec;
+  ThotBool            userSpec = FALSE;
 
   pFrame = &ViewFrameTable[frame - 1];
   pAb = pFrame->FrAbstractBox;

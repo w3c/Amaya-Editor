@@ -41,7 +41,15 @@ typedef enum {
    WINDOWS_1258,
    ISO_SYMBOL,
    KOI8_R,
-   ISO_2022_JP
+   ISO_2022_JP,
+   EUC_JP,
+   SHIFT_JIS,
+   JIS_X_0201_ROMAN,
+   JIS_X_0201_KANA,
+   JIS_X_0208,
+   JIS_X_0212,
+   GB_2312,
+   KSC_5601
 } CHARSET;
 
 #ifdef _I18N_

@@ -41,6 +41,7 @@ typedef struct _FontSet {
   PtrFont       FontIso_13;
   PtrFont       FontIso_15;
   PtrFont       FontSymbol;
+  PtrFont       FontUnicode;
 } FontSet;
 #else /* _I18N_ */
 typedef PtrFont               SpecFont;

@@ -494,6 +494,27 @@ static unsigned char SecondByte[3] = {EOS, EOS, EOS}; /* second char of an UTF-8
 static void         ProcessStartGI (char* GIname);
 static void         EndOfAttrValue (char c);
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static char *StrCaseStr (char *str1, char *str2)
+{
+  char      c, *ptr;
+  int       len;
+
+  if (str1 == NULL || str2 == NULL)
+    return NULL;
+  c = *str1;
+  len = strlen (str2);
+  ptr = str1;
+  while (*ptr != EOS)
+    {
+      if (tolower(*ptr) == c && !strncasecmp (str2, ptr, len))
+	return ptr;
+      else
+	ptr++;
+    }
+  return NULL;
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -4425,236 +4446,236 @@ char GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
   ----------------------------------------------------------------------*/
 static void HTMLparse (FILE * infile, char* HTMLbuf)
 {
-   unsigned char         charRead; 
-   ThotBool        match;
-   PtrTransition   trans;
+  unsigned char         charRead; 
+  PtrTransition         trans;
+  ThotBool              match;
 
-   currentState = 0;
-   if (HTMLbuf != NULL || infile != NULL)
-      {
+  currentState = 0;
+  if (HTMLbuf != NULL || infile != NULL)
+    {
       InputText = HTMLbuf;
       EndOfHtmlFile = FALSE;
-      }
-   charRead = EOS;
-   HTMLrootClosed = FALSE;
+    }
+  charRead = EOS;
+  HTMLrootClosed = FALSE;
 
-   /* read the HTML file sequentially */
-   do
-     {
-	/* read one character from the source if the last character */
-	/* read has been processed */
-	if (charRead == EOS)
-	  charRead = GetNextInputChar (infile, &CurrentBufChar, &EndOfHtmlFile);
-	if (charRead != EOS)
-	  {
-	     /* Check the character read */
-	     /* Consider LF and FF as the end of an input line. */
-	     /* Replace end of line by space, except in preformatted text. */
-	     /* Replace HT by space, except in preformatted text. */
-	     /* Ignore spaces at the beginning and at the end of input lines */
-	     /* Ignore non printable characters except HT, LF, FF. */
-	     if ((int) charRead == EOL)
-		/* LF = end of input line */
-	       {
-		 /* don't replace end of line by space in a doctype declaration */
-		if (currentState != 12 && currentState != 15)
-		  {
-		    /* don't change characters in comments */
-		    if (currentState != 0)
-		      /* not within a text element */
-		      {
-			if (currentState == 6 || currentState == 9)
-			  /* within an attribute value between quotes */
-			  if (lastAttrEntry != NULL &&
-			      !strcmp (lastAttrEntry->XMLattribute, "src"))
-			    /* value of an SRC attribute */
-			    /* consider new line as an empty char*/
-			    charRead = EOS;
-			if (charRead != EOS)
-			  {
-			    /* Replace new line by a space, except if an entity is
-			       being read */
-			    if (currentState == 30 &&
-				Within (HTML_EL_Preformatted, DocumentSSchema) &&
-				!Within (HTML_EL_Option_Menu, DocumentSSchema))
-			      charRead = EOL; /* new line character */
-			    else
-			      charRead = SPACE;
-			  }
-		      }
-		    else if ((Within (HTML_EL_Preformatted, DocumentSSchema) &&
-			      !Within (HTML_EL_Option_Menu, DocumentSSchema)) ||
-			     Within (HTML_EL_Text_Area, DocumentSSchema) ||
-			     Within (HTML_EL_SCRIPT_, DocumentSSchema) ||
-			     Within (HTML_EL_STYLE_, DocumentSSchema))
-		      /* new line in a text element */
-		      {
-			/* within preformatted text */
-			if (AfterTagPRE)
-			  /* ignore NL after a <PRE> tag */
-			  charRead = EOS;
-			else
-			  /* generate a new line character */
-			  charRead = EOL;
-		      }
-		    else
-		      /* new line in ordinary text */
-		      {
-			/* suppress all spaces preceding the end of line */
-			while (LgBuffer > 0 &&
-			       inputBuffer[LgBuffer - 1] == SPACE)
-			  LgBuffer--;
-			/* new line is equivalent to space */
-			charRead = SPACE;
-			if (LgBuffer > 0)
-			  TextToDocument ();
-		      }
-		  }
-		/* beginning of a new input line */
-		EmptyLine = TRUE;
-	       }
-	     else
-		/* it's not an end of line */
-	       {
-		  if ((int) charRead == TAB)
-		     /* HT = Horizontal tabulation */
+  /* read the HTML file sequentially */
+  do
+    {
+      /* read one character from the source if the last character */
+      /* read has been processed */
+      if (charRead == EOS)
+	charRead = GetNextInputChar (infile, &CurrentBufChar, &EndOfHtmlFile);
+      if (charRead != EOS)
+	{
+	  /* Check the character read */
+	  /* Consider LF and FF as the end of an input line. */
+	  /* Replace end of line by space, except in preformatted text. */
+	  /* Replace HT by space, except in preformatted text. */
+	  /* Ignore spaces at the beginning and at the end of input lines */
+	  /* Ignore non printable characters except HT, LF, FF. */
+	  if ((int) charRead == EOL)
+	    /* LF = end of input line */
+	    {
+	      /* don't replace end of line by space in a doctype declaration */
+	      if (currentState != 12 && currentState != 15)
+		{
+		  /* don't change characters in comments */
+		  if (currentState != 0)
+		    /* not within a text element */
 		    {
-		       if (currentState != 0)
-			  /* not in a text element. Replace HT by space */
-			  charRead = SPACE;
-		       else
-			  /* in a text element. Replace HT by space except in */
-			  /* preformatted text */
-		          if (!Within (HTML_EL_Preformatted, DocumentSSchema) &&
-			      !Within (HTML_EL_STYLE_, DocumentSSchema) &&
-			      !Within (HTML_EL_SCRIPT_, DocumentSSchema))
-			     charRead = SPACE;
-		    }
-		  if (charRead == SPACE)
-		     /* space character */
-		    {
-		      if (currentState == 12 ||
-			  (currentState == 0 &&
-			   !Within (HTML_EL_Preformatted, DocumentSSchema) &&
-			   !Within (HTML_EL_STYLE_, DocumentSSchema) &&
-			   !Within (HTML_EL_SCRIPT_, DocumentSSchema)))
-			/* reading text in a comment or in an element
-			   that is not preformatted text */
-			/* ignore spaces at the beginning of an input line */
-			if (EmptyLine)
+		      if (currentState == 6 || currentState == 9)
+			/* within an attribute value between quotes */
+			if (lastAttrEntry != NULL &&
+			    !strcmp (lastAttrEntry->XMLattribute, "src"))
+			  /* value of an SRC attribute */
+			  /* consider new line as an empty char*/
 			  charRead = EOS;
+		      if (charRead != EOS)
+			{
+			  /* Replace new line by a space, except if an entity is
+			     being read */
+			  if (currentState == 30 &&
+			      Within (HTML_EL_Preformatted, DocumentSSchema) &&
+			      !Within (HTML_EL_Option_Menu, DocumentSSchema))
+			    charRead = EOL; /* new line character */
+			  else
+			    charRead = SPACE;
+			}
 		    }
-#ifndef _I18N_
-		  else if (((int)charRead < 32 ||
-			    ((int) charRead >= 127 && (int) charRead <= 143))
-			   && (int) charRead != TAB)
-		    /* it's not a printable character, ignore it */
-		    charRead = EOS;
-#endif /* !_I18N_ */
+		  else if ((Within (HTML_EL_Preformatted, DocumentSSchema) &&
+			    !Within (HTML_EL_Option_Menu, DocumentSSchema)) ||
+			   Within (HTML_EL_Text_Area, DocumentSSchema) ||
+			   Within (HTML_EL_SCRIPT_, DocumentSSchema) ||
+			   Within (HTML_EL_STYLE_, DocumentSSchema))
+		    /* new line in a text element */
+		    {
+		      /* within preformatted text */
+		      if (AfterTagPRE)
+			/* ignore NL after a <PRE> tag */
+			charRead = EOS;
+		      else
+			/* generate a new line character */
+			charRead = EOL;
+		    }
 		  else
-		     /* it's a printable character. Keep it as it is and */
-		     /* stop ignoring spaces */
+		    /* new line in ordinary text */
 		    {
-		       EmptyLine = FALSE;
-		       StartOfFile = FALSE;
+		      /* suppress all spaces preceding the end of line */
+		      while (LgBuffer > 0 &&
+			     inputBuffer[LgBuffer - 1] == SPACE)
+			LgBuffer--;
+		      /* new line is equivalent to space */
+		      charRead = SPACE;
+		      if (LgBuffer > 0)
+			TextToDocument ();
 		    }
-	       }
-	     AfterTagPRE = FALSE;
-
-	     if (charRead != EOS)
-		/* a valid character has been read */
-	       {
-		  /* first transition of the automaton for the current state */
-		  trans = automaton[currentState].firstTransition;
-		  /* search a transition triggered by the character read */
-		  while (trans != NULL && !HTMLrootClosed)
+		}
+	      /* beginning of a new input line */
+	      EmptyLine = TRUE;
+	    }
+	  else
+	    /* it's not an end of line */
+	    {
+	      if ((int) charRead == TAB)
+		/* HT = Horizontal tabulation */
+		{
+		  if (currentState != 0)
+		    /* not in a text element. Replace HT by space */
+		    charRead = SPACE;
+		  else
+		    /* in a text element. Replace HT by space except in */
+		    /* preformatted text */
+		    if (!Within (HTML_EL_Preformatted, DocumentSSchema) &&
+			!Within (HTML_EL_STYLE_, DocumentSSchema) &&
+			!Within (HTML_EL_SCRIPT_, DocumentSSchema))
+		      charRead = SPACE;
+		}
+	      if (charRead == SPACE)
+		/* space character */
+		{
+		  if (currentState == 12 ||
+		      (currentState == 0 &&
+		       !Within (HTML_EL_Preformatted, DocumentSSchema) &&
+		       !Within (HTML_EL_STYLE_, DocumentSSchema) &&
+		       !Within (HTML_EL_SCRIPT_, DocumentSSchema)))
+		    /* reading text in a comment or in an element
+		       that is not preformatted text */
+		    /* ignore spaces at the beginning of an input line */
+		    if (EmptyLine)
+		      charRead = EOS;
+		}
+#ifndef _I18N_
+	      else if (((int)charRead < 32 ||
+			((int) charRead >= 127 && (int) charRead <= 143))
+		       && (int) charRead != TAB)
+		/* it's not a printable character, ignore it */
+		charRead = EOS;
+#endif /* !_I18N_ */
+	      else
+		/* it's a printable character. Keep it as it is and */
+		/* stop ignoring spaces */
+		{
+		  EmptyLine = FALSE;
+		  StartOfFile = FALSE;
+		}
+	    }
+	  AfterTagPRE = FALSE;
+	  
+	  if (charRead != EOS)
+	    /* a valid character has been read */
+	    {
+	      /* first transition of the automaton for the current state */
+	      trans = automaton[currentState].firstTransition;
+	      /* search a transition triggered by the character read */
+	      while (trans != NULL && !HTMLrootClosed)
+		{
+		  match = FALSE;
+		  if (charRead == trans->trigger)
+		    /* the char is the trigger */
+		    match = TRUE;
+		  else if (trans->trigger == EOS)
+		    /* any char is a trigger */
+		    match = TRUE;
+		  else if (trans->trigger == SPACE)
+		    /* any space is a trigger */
+		    if ((int) charRead == TAB ||
+			(int) charRead == EOL ||
+			(int) charRead == 12)
+		      /* a delimiter has been read */
+		      match = TRUE;
+		  if (match)
+		    /* transition found. Activate the transition */
 		    {
-		       match = FALSE;
-		       if (charRead == trans->trigger)
-			  /* the char is the trigger */
-			  match = TRUE;
-		       else if (trans->trigger == EOS)
-			  /* any char is a trigger */
-			  match = TRUE;
-		       else if (trans->trigger == SPACE)
-			  /* any space is a trigger */
-			  if ((int) charRead == TAB ||
-			      (int) charRead == EOL ||
-			      (int) charRead == 12)
-			    /* a delimiter has been read */
-			    match = TRUE;
-		       if (match)
-			  /* transition found. Activate the transition */
-			 {
-			    NormalTransition = TRUE;
+		      NormalTransition = TRUE;
+		      
+		      /* Special case: '<' within a SCRIPT element */
+		      if (currentState == 1)
+			/* the previous character was '<' in a text */
+			if (trans->newState == 2)
+			  /* the current character is not '/', '!', '<'
+			     or space */
+			  if (Within (HTML_EL_SCRIPT_, DocumentSSchema))
+			    /* we are within a SCRIPT element */
+			    {
+			      /* put '<' and the character read in the
+				 text buffer */
+			      PutInBuffer ('<');
+			      PutInBuffer (charRead);
+			      charRead = EOS;
+			      /* and return to state 0: reading text */
+			      currentState = 0;
+			      NormalTransition = FALSE;
+			    }
 
-			    /* Special case: '<' within a SCRIPT element */
-			    if (currentState == 1)
-			       /* the previous character was '<' in a text */
-			       if (trans->newState == 2)
-				  /* the current character is not '/', '!', '<'
-				     or space */
-				  if (Within (HTML_EL_SCRIPT_, DocumentSSchema))
-				     /* we are within a SCRIPT element */
-				     {
-				     /* put '<' and the character read in the
-					text buffer */
-				     PutInBuffer ('<');
-				     PutInBuffer (charRead);
-				     charRead = EOS;
-				     /* and return to state 0: reading text */
-				     currentState = 0;
-				     NormalTransition = FALSE;
-				     }
-
-			    /* call the procedure associated with the transition */
-			    CharProcessed = FALSE;
-			    if (trans->action != NULL)
-			       (*(trans->action)) (charRead);
-			    if (NormalTransition || CharProcessed)
-			       /* the input character has been processed */
-			       charRead = EOS;
+		      /* call the procedure associated with the transition */
+		      CharProcessed = FALSE;
+		      if (trans->action != NULL)
+			(*(trans->action)) (charRead);
+		      if (NormalTransition || CharProcessed)
+			/* the input character has been processed */
+			charRead = EOS;
 			      
-			    if (NormalTransition)
-			      {
-				 /* the procedure associated with the transition has not */
-				 /* changed state explicitely */
-				 /* change current automaton state */
-				 if (trans->newState >= 0)
-				    currentState = trans->newState;
-				 else if (trans->newState == -1)
-				    /* return form subautomaton */
-				    currentState = returnState;
-				 else
-				    /* calling a subautomaton */
-				   {
-				      returnState = currentState;
-				      currentState = -trans->newState;
-				   }
-			      }
-			    /* done */
-			    trans = NULL;
-			 }
-		       else
-			  /* access next transition from the same state */
-			 {
-			    trans = trans->nextTransition;
-			    /* an exception: when reading the value of an HREF attribute,
-			       SGML entities (&xxx;) should not be interpreted */
-			    if (trans == NULL)
-			       charRead = EOS;
-			 }
+		      if (NormalTransition)
+			{
+			  /* the procedure associated with the transition has not */
+			  /* changed state explicitely */
+			  /* change current automaton state */
+			  if (trans->newState >= 0)
+			    currentState = trans->newState;
+			  else if (trans->newState == -1)
+			    /* return form subautomaton */
+			    currentState = returnState;
+			  else
+			    /* calling a subautomaton */
+			    {
+			      returnState = currentState;
+			      currentState = -trans->newState;
+			    }
+			}
+		      /* done */
+		      trans = NULL;
 		    }
-	       }
-	  }
-     }
-   while (!EndOfHtmlFile && !HTMLrootClosed);
-   /* end of HTML file */
+		  else
+		    /* access next transition from the same state */
+		    {
+		      trans = trans->nextTransition;
+		      /* an exception: when reading the value of an HREF attribute,
+			 SGML entities (&xxx;) should not be interpreted */
+		      if (trans == NULL)
+			charRead = EOS;
+		    }
+		}
+	    }
+	}
+    }
+  while (!EndOfHtmlFile && !HTMLrootClosed);
+  /* end of HTML file */
 
-   if (!HTMLrootClosed)
-      EndOfDocument ();
-   HTMLrootClosingTag = NULL;
-   HTMLrootClosed = FALSE;
+  if (!HTMLrootClosed)
+    EndOfDocument ();
+  HTMLrootClosingTag = NULL;
+  HTMLrootClosed = FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -5179,25 +5200,19 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
 	  endOfSniffedFile = (res < INPUT_FILE_BUFFER_SIZE);
 	  
 	  /* looks for the first <meta> element */
-	  meta = strstr (&FileBuffer[i], "<meta");
-	  if (!meta)
-	    meta = strstr (&FileBuffer[i], "<META");
+	  meta = StrCaseStr (&FileBuffer[i], "<meta");
 	  if (meta)
 	    {
 	      /* looks for the first "http-equiv" declaration */
-	      http = strstr (meta, "http-equiv");
-	      if (!http)
-		http = strstr (meta, "HTTP-EQUIV");
+	      http = StrCaseStr (meta, "http-equiv");
 	      if (http)
 		{
 		  /* looks for the "Content-Type" declaration */
-		  content = strstr (http, "content-type");
-		  if (!content)
-		    content = strstr (http, "Content-Type");
+		  content = StrCaseStr (http, "content-type");
 		  if (content)
 		    {
 		      /* check whether there is a charset */
-		      ptr = strstr (content, "charset");
+		      ptr = StrCaseStr (content, "charset");
 		      if (ptr)
 			{
 			  endOfSniffedFile = TRUE;
@@ -5233,9 +5248,7 @@ void CheckCharsetInMeta (char *fileName, CHARSET *charset, char *charsetname)
 	  /* looks for the <body> element */
 	  if (!endOfSniffedFile)
 	    {
-	      body = strstr (&FileBuffer[i], "<body");
-	      if (!body)
-		body = strstr (&FileBuffer[i], "<BODY");
+	      body = StrCaseStr (&FileBuffer[i], "<body");
 	      if (body)
 		endOfSniffedFile = TRUE;
 	    }
@@ -6627,7 +6640,9 @@ void StartParser (Document doc, char *fileName,
 		  charset != WINDOWS_1252 && charset != WINDOWS_1253 &&
 		  charset != WINDOWS_1254 && charset != WINDOWS_1255 &&
 		  charset != WINDOWS_1256 && charset != WINDOWS_1257 &&
-		  charset != US_ASCII)
+		  charset != US_ASCII     && charset != SHIFT_JIS    &&
+		  charset != ISO_2022_JP  && charset != EUC_JP       &&
+		  charset != SHIFT_JIS)
 		HTMLParseError (doc,
 				TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING));
 	    }

@@ -1122,6 +1122,7 @@ static void DuplicateAttrCondRule (PtrPRule pRule)
   ThotBool            found;
 
   pCond = pRule->PrCond;
+  PtrPtrPRule = NULL;
   if (pCond)
     {
     if (pCond->CoCondition == PcAttribute && !pCond->CoTarget &&

@@ -4861,6 +4861,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   openRule = 0;
   c = SPACE;
   index = 0;
+  base = NULL;
   /* number of new lines parsed */
   newlines = 0;
   /* avoid too many redisplay */

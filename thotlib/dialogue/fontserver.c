@@ -1,27 +1,39 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA, 2001-2002
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
+/*
+ * Module dedicated to XFT font server.
+ *
+ * Author: P. Cheyrou-Lagreze (INRIA)
+ */
+
 #ifdef _GL
 
 #ifdef _GTK
-
 /* Font Server */
 #include <string.h>
 #include <gdk/gdkx.h>
 #include "X11/Xft/Xft.h"
 #include "X11/Xft/XftFreetype.h"
-
 #else /* _GTK */
 #include <windows.h>
 #include <stdio.h>
 #endif  /* _GTK */
 
-#ifdef _GTK
 
 /* XFT_FAMILY XFT_FOUNDRY XFT_STYLE XFT_ENCODING "iso8859-1" 
    XFT_SLANT  XFT_WEIGHT XFT_SIZE  XFT_DPI */
-int GetFontFilename (char script, int family, 
-		   int highlight, int size, 
-		    int UseLucidaFamily, int UseAdobeFamily,
-		    char *filename)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+int GetFontFilename (char script, int family, int highlight, int size, 
+		     int UseLucidaFamily, int UseAdobeFamily,
+		     char *filename)
 {
+#ifdef _GTK
   XftPattern	*match, *pat;
   XftResult     result;  
   char	*s;
@@ -230,15 +242,7 @@ int GetFontFilename (char script, int family,
     }    
   XftPatternDestroy (pat); 
   return ok;
-}
-
 #else /* _GTK */
-
-int GetFontFilename (char script, int family, 
-		   int highlight, int size, 
-		    int UseLucidaFamily, int UseAdobeFamily,
-		    char *filename)
-{
 
   GetWindowsDirectory (filename , 1024);  
   strcat (filename, "\\fonts\\"); 
@@ -281,6 +285,6 @@ int GetFontFilename (char script, int family,
      }
   strcat (filename, ".ttf");
   return 1;
-}
 #endif /* _GTK */
+}
 #endif /* _GL */

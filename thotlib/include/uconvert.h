@@ -12,7 +12,11 @@
   TtaGetCharFromWC returns the ISO or Windows character code
   of the Unicode value wc.
   ----------------------------------------------------------------------*/
+#ifdef _TH_
+extern wchar_t TtaGetCharFromWC (wchar_t wc, CHARSET encoding);
+#else /* _TH */
 extern unsigned char TtaGetCharFromWC (wchar_t wc, CHARSET encoding);
+#endif /* _TH_ */
 
 /*----------------------------------------------------------------------
   TtaGetWCFromChar returns the Unicode value of the corresponding

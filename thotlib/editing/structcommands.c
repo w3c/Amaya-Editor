@@ -1213,13 +1213,13 @@ void CutCommand (ThotBool save)
 		  }
 /**************/
 		doc = IdentDocument (pSelDoc);
+		dispMode = TtaGetDisplayMode (doc);
 		/* lock tables formatting */
 		if (ThotLocalActions[T_islock])
 		  {
 		    (*ThotLocalActions[T_islock]) (&lock);
 		    if (!lock)
 		      {
-			dispMode = TtaGetDisplayMode (doc);
 			if (dispMode == DisplayImmediately)
 			  TtaSetDisplayMode (doc, DeferredDisplay);
 			/* table formatting is not locked, lock it now */
