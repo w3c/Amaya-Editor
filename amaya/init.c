@@ -4473,6 +4473,10 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
    else
      tempfile[0] = EOS;
    
+  /* now the new window is open */
+  if (InNewWindow && (method == CE_RELATIVE || method == CE_ABSOLUTE))
+    /* don't free the current loaded document */
+    method = CE_INIT;
    if (!local_link)
      {
        /* memorize the initial newdoc value in doc because LoadDocument */
@@ -4822,14 +4826,8 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 	 }
 #endif /* ANNOTATIONS */
        else if (doc == 0 || InNewWindow)
-	 {
-	     /* In case of initial document, open the view before loading */
-	     newdoc = InitDocAndView (0, documentname, docType, 0, FALSE, L_Other);
-	   /* now the new window is open */
-	   if (method == CE_RELATIVE || method == CE_ABSOLUTE)
-	     /* don't free the current loaded document */
-	     ctx->method = CE_INIT;
-	 }
+	 /* In case of initial document, open the view before loading */
+	 newdoc = InitDocAndView (0, documentname, docType, 0, FALSE, L_Other);
        else
 	 {
 	   newdoc = doc;
@@ -4885,8 +4883,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 		   /* just take a copy of the local temporary file */
 		   strcpy (tempfile, css->localName);
 		   GetAmayaDoc_callback (newdoc, 0, pathname,
-					     tempfile, NULL,
-					     (void *) ctx);
+					 tempfile, NULL, (void *) ctx);
 		   TtaHandlePendingEvents ();
 		 }
 	     }
