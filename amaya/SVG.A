@@ -98,11 +98,13 @@ ATTRIBUTES
 
    height_:
 	BEGIN
+	AttrCreate.Post -> AttrWidthHeightChanged;
 	AttrModify.Post -> AttrWidthHeightChanged;
 	AttrDelete.Pre ->  AttrWidthHeightDelete;
 	END;
    width_:
 	BEGIN
+	AttrCreate.Post -> AttrWidthHeightChanged;
 	AttrModify.Post -> AttrWidthHeightChanged;
 	AttrDelete.Pre ->  AttrWidthHeightDelete;
 	END;
