@@ -30,8 +30,8 @@
 <h2>Editer des tables</h2>
 
 <p>Il n'existe pas d'éditeur de tables indépendant dans
-<strong>Amaya</strong>. Une table est une simple structure décrite par le HTML
-DTD et elle est éditée comme telle. Les commandes pour les tables sont les
+<strong>Amaya</strong>. Une table est une simple structure décrite par le DTD
+HTML et elle est éditée comme telle. Les commandes pour les tables sont les
 mêmes que pour les autres structures HTML, avec quelques suppléments.</p>
 
 <h3><a name="Creating">Créer une nouvelle table</a></h3>
@@ -75,9 +75,9 @@ l'intermédiaire des flèches du clavier.</p>
 <h3><a name="Adding">Ajouter une nouvelle colonne</a></h3>
 
 <p>De nouvelles colonnes peuvent être créées efficacement avec la touche <a
-href="Creating.html#L906">Entrer</a>.  Déplacez le point d'insertion à la fin
+href="Creating.html#L906">Enter</a>.  Déplacez le point d'insertion à la fin
 ou au début de la cellule (par exemple à la fin de la cellule 1.1 dans la
-table ci dessous). En tapant deux fois sur la touche Entrer (la première
+table ci dessous). En tapant deux fois sur la touche Enter (la première
 pression de la touche crée un paragraphe dans la cellule courante) vous créez
 une nouvelle cellule et sa colonne correspondante, comme montré ci
 dessous:</p>
@@ -103,14 +103,14 @@ dessous:</p>
 <h3><a name="Adding1">Ajouter une nouvelle ligne, un nouveau
 <code>tbody</code></a></h3>
 
-<p>Pour créer une nouvelle ligne, taper sur Entrer trois fois quand le point
+<p>Pour créer une nouvelle ligne, taper sur Enter trois fois quand le point
 d'insertion est à la fin de la dernière cellule d'une ligne (dans  Cell 1.3,
 par exemple). Vous pouvez également sélectionner la ligne en <a
 href="Selecting.html#Selecting1">tapant sur la touche Esc (pour les stations
 Unix) ou sur la touche F2 (pour les stations Windows)</a> et en tapant sur
-Entrer seulement une fois.</p>
+Enter seulement une fois.</p>
 
-<p>Pour créer un nouveau <code>tbody</code>, taper sur Entrer quatre fois (ou
+<p>Pour créer un nouveau <code>tbody</code>, taper sur Enter quatre fois (ou
 trois fois si la cellule est vide) et une fois de plus pour créer un nouveau
 paragraphe après la table.</p>
 
@@ -132,9 +132,9 @@ quand vous sélectionnez un type d'élément (par exemple cliquant H1, H2, etc.
 ou  sélectionnant une entrée dans le menu Éléments) pendant qu'un composant de
 la table est sélectionné. Quand vous voulez créer un élément après la table,
 vous devez sélectionner la table entière (contrôler la sélection courante dans
-la ligne du bas de la fenêtre) et taper sur la touche Entrer. Amaya génèrera
-un paragraphe après la table. Ce nouveau paragraphe peut être modifié si
-besoin est.</p>
+la ligne du bas de la fenêtre) et taper sur la touche Enter. Amaya génèrera un
+paragraphe après la table. Ce nouveau paragraphe peut être modifié si besoin
+est.</p>
 
 <p><em>Notez que le modèle de table implémenté dans
 </em><strong><em>Amaya</em></strong><em> est le modèle d'</em><a

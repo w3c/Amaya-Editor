@@ -32,8 +32,8 @@
 
 <h3><a name="Adding">Ajouter une image</a></h3>
 
-<p>Pour insérer une image, choisissez <strong>Image</strong> depuis le menu
-<strong>Éléments</strong> ou cliquez sur le bouton <img alt="Image "
+<p>Pour insérer une image, choisissez l'entrée <strong>Image</strong> depuis
+le menu <strong>Éléments</strong> ou cliquez sur le bouton <img alt="Image "
 border="0" src="../Icons/Image.gif" align="middle" longdesc="longdesc.htm" />
 (ou encore utilisez le raccourci clavier control-t, control-i pour Unix). Ceci
 fait apparaître une boîte de dialogue qui vous permet de rentrer le nom du

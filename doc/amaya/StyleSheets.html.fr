@@ -36,8 +36,8 @@ documents de deux façons différentes:</p>
   <li>en utilisant les éléments et les attributs HTML.</li>
 </ul>
 
-<p>Les premières entrées du menu <strong>Style</strong> sont consacrées au CSS
-et les deux dernières entrées aux <a href="#L1371">éléments HTML</a>.</p>
+<p>Les premières entrées du menu <strong>Style</strong> sont consacrées aux
+CSS et les deux dernières entrées aux <a href="#L1371">éléments HTML</a>.</p>
 
 <h3><a name="Creating">Créer et mettre à jour un attribut de style</a></h3>
 
@@ -66,7 +66,7 @@ de dialogue qui permet l'association d'un attribut de <code>style</code> aux
 </ul>
 
 <p>Dans toutes ces boîtes de dialogue, les boutons <strong>Défaut</strong>
-permettent de supprimer l'information du style correspondant pour les éléments
+permettent de supprimer l'information de style correspondant pour les éléments
 sélectionnés.</p>
 
 <p>Toutes les modifications faites avec ces boîtes de dialogue peuvent être
@@ -83,8 +83,8 @@ pouvez redimensionner la boîte associée à l'élément situé sous le curseur.
 Quand vous lâchez le bouton de la souris, la taille de l'élément est changée
 et un attribut <code>style</code> est associé à l'élément.</p>
 
-<p>Quand l'élément redimensionné est une image, cette image est précipitée
-pour remplir sa nouvelle boîte.</p>
+<p>Quand l'élément redimensionné est une image, cette image est retaillée pour
+remplir sa nouvelle boîte.</p>
 
 <h3><a name="Creating,">Créer un style générique pour un élément ou une
 classe</a></h3>
@@ -96,14 +96,13 @@ cet élément doit avoir un attribut <code>style</code>) et choisissez
 <strong>Créer une règle</strong> depuis le menu <strong>Style</strong>. Une
 boîte de dialogue surgit et visualise une liste de sélecteurs CSS. Cette liste
 inclus toutes les classes qui sont définies pour le document courant, ainsi
-que les types d'éléments auxquels un certain style est associé. Choisissez un
-sélecteur dans cette liste ou entrez un nouveau nom de classe ou un nouveau
-nom de type et cliquer sur le bouton <strong>Confirmer</strong>. Le style de
-l'élément sélectionné est désormais associé au sélecteur choisi et l'attribut
-<code>style</code> est supprimé pour l'élément sélectionné. Son contenu est
-déplacé à l'élément <code>STYLE</code>, dans le document <code>HEAD</code>, et
-tous les éléments correspondant au sélecteur sont visualisés dans le nouveau
-style.</p>
+que les types d'élément auquel le style est associé. Choisissez un sélecteur
+dans cette liste ou entrez un nouveau nom de classe et cliquer sur le bouton
+<strong>Confirmer</strong>. Le style de l'élément sélectionné est désormais
+associé au sélecteur choisi et l'attribut <code>style</code> est supprimé pour
+l'élément sélectionné. Son contenu est déplacé à l'élément <code>STYLE</code>,
+dans le <code>HEAD</code> document, et tous les éléments correspondant au
+sélecteur sont visualisés dans le nouveau style.</p>
 
 <p>Quand vous avez créé de nouvelles classes avec la commande <strong>Créer
 une règle</strong>, vous pouvez associer  ces classes à certains éléments dans
@@ -114,8 +113,8 @@ sont désormais visualisés avec le style associé à la classe choisie.</p>
 
 <p>Pour associer une classe à un élément, vous pouvez également utiliser le <a
 href="Attributes.html#L1073">menu <strong>Attributs</strong></a>. Ce menu
-permet d'effacer un attribut de classe pour un élément ou de le changer:
-l'attribut de classe se manie comme un autre attribut.</p>
+permet aussi d'effacer un attribut de classe pour un élément ou de le changer:
+l'attribut de classe se manipule comme un autre attribut.</p>
 
 <h3><a name="Managing">Gérer des feuilles de style CSS externes</a></h3>
 
@@ -159,7 +158,7 @@ actuellement appliquée à un  document, une boîte de dialogue expliquera
 <h3><a name="L1371">Mettre du style en utilisant des éléments HTML</a></h3>
 
 <p>HTML fournit certains éléments de niveau de caractère qui permettent
-d'associer le style et les chaînes de caractères. Deux entrées depuis le menu
+d'associer du style aux chaînes de caractères. Deux entrées depuis le menu
 <strong>Style</strong> permettent de manier ces éléments HTML.</p>
 
 <h4>Créer des éléments de style HTML</h4>
@@ -178,15 +177,15 @@ styles sont également disponibles par l'intermédiaire des boutons:
 <p>La commande<strong> Éléments caractères</strong> du menu
 <strong>Style</strong> offre un autre menu changeant le style du texte. Les
 premières entrées de ce menu peuvent être remplacées par CSS et ne devraient
-pas être utilisées. Elles sont là uniquement pour l'amour de la perfection de
-l'implantation de HTML 3.2.</p>
+pas être utilisées. Elles sont là uniquement pour se conformer à
+l'implémentation de HTML 3.2.</p>
 
 <h4>Supprimer le style</h4>
 
 <p>Pour supprimer le style d'une chaîne de caractères, sélectionnez tout
 d'abord la chaîne et appliquez de nouveau la commande qui a été utilisée pour
 associer le style que vous voulez supprimer. Toutes les commandes des
-sous-menu<strong> Types</strong><strong> information </strong>et
+sous-menus<strong> Types</strong><strong> information </strong>et
 <cite></cite><strong> Éléments caractères</strong> s'annulent si elles sont
 appliquées de nouveau.</p>
 </div>

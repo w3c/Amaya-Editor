@@ -91,10 +91,10 @@ utilisées pour changer la présentation de ces éléments.</p>
 </div>
 
 <div>
-<h2><a name="Inline">Acronymes and abréviations</a></h2>
+<h2><a name="Inline">Acronymes et abréviations</a></h2>
 
-<p>Acronymes et abréviations devraient être marqués comme tel, utilisant les
-éléments <a
+<p>Les acronymes et les abréviations devraient être marqués comme tels,
+utilisant les éléments <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ABBR"><code>ABBR</code></a>
 et <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM"><code>ACRONYM</code></a>
@@ -105,7 +105,7 @@ peut également être utilisé pour spécifier l'expansion de l'acronyme.
 Sélectionnez le texte à marquer, par exemple <acronym
 title="World Wide Web Consortium">W3C</acronym>, sélectionnez le menu Style,
 le sous-menu types information, et l'option acronyme. Puis sélectionnez
-l'élément entier (<kbd>touche Escape</kbd> sur Unix, <kbd>touche F2 </kbd> sur
+l'élément entier (<kbd>touche Esc</kbd> sur Unix, <kbd>touche F2 </kbd> sur
 windows), ouvrez le menu Attributs, sélectionnez title, entrez <kbd>World Wide
 Web Consortium</kbd>, et appliquez le.</p>
 
@@ -114,7 +114,7 @@ utilisées pour changer la présentation des acronymes ou des abréviations.</p>
 </div>
 
 <div>
-<h2><a name="Inline2">Insertions and suppressions</a></h2>
+<h2><a name="Inline2">Insertions et suppressions</a></h2>
 
 <p>Les éléments <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-del"
@@ -154,8 +154,8 @@ approprié est créé, en tant que fils de l'élément courant.</p>
 désactiver une accentuation, sélectionnez l'élément et réappliquez
 l'accentuation appropriée. Par exemple, placez le curseur quelque part sur un
 élément <code>STRONG</code>, utilisez la touche <kbd>F2</kbd> (windows) ou la
-touche <kbd>Escape</kbd> (Unix) pour sélectionner l'élément, et ensuite
-utilisez le raccourci clavier, menu item, ou le bouton <img
+touche <kbd>Esc</kbd> (Unix) pour sélectionner l'élément, et ensuite utilisez
+le raccourci clavier, menu item, ou le bouton <img
 src="../../Icons/Strong.gif" alt="Strong" />  - l'élément <code>STRONG</code>
 sera désactivé.</p>
 

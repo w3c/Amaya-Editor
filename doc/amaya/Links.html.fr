@@ -31,9 +31,9 @@
 
 <h3><a name="L557">Créer une ancre cible</a></h3>
 
-<p>Une ancre cible est une partie du texte qui se réfère à un lien (une ancre
-source). Avant de créer un lien sur une telle partie du texte, vous devez tout
-d'abord la transformer en ancre cible.</p>
+<p>Une ancre cible est une partie du texte qui est référencée par un lien (une
+ancre source). Avant de créer un lien sur une telle partie du texte, vous
+devez tout d'abord la transformer en ancre cible.</p>
 
 <p>Pour ceci, il suffit de sélectionner une chaîne de caractère avec la souris
 et de choisir <strong>Créer cible</strong> dans le menu
@@ -62,13 +62,13 @@ document.</p>
 <h3><a name="target1">Créer un élément cible</a></h3>
 
 <p>En HTML 4.0, un élément peut être utilisé comme une cible de liens. Un
-élément cible est un élément tapé qui possède un attribut ID qui se réfère à
-un lien (une ancre source). Avant de créer un lien à un tel élément, vous
+élément cible est un élément tapé qui possède un attribut ID qui est référencé
+par un lien (une ancre source). Avant de créer un lien à un tel élément, vous
 devez tout d'abord le transformer en élément cible.</p>
 
 <p>Vous pouvez créer un élément cible de la même manière que vous créez une
 ancre cible. Vous avez juste à sélectionner une chaîne de caractère dans
-l'élément, d'utiliser la touche (F2 pour Windows) afin de sélectionner
+l'élément, d'utiliser la touche Esc (F2 pour Windows) afin de sélectionner
 l'élément lui même et de choisir <strong>Créer cible</strong> depuis le menu
 <strong>Liens</strong>. L'élément sélectionné a maintenant un attribut ID, qui
 l'identifie comme un élément cible. Amaya génère automatiquement cette valeur
@@ -91,12 +91,12 @@ document.</p>
 
 <p>Pour créér une ancre qui est un lien vers un autre document:</p>
 <ol>
-  <li><a href="Selecting.html#Selecting">Sélectionner</a> le contenu de
+  <li><a href="Selecting.html#Selecting">Sélectionnez</a> le contenu de
     l'ancre à créer</li>
-  <li>Cliquer sur le bouton  <img alt="Link " src="../Icons/Link.gif"
+  <li>Cliquez sur le bouton  <img alt="Link " src="../Icons/Link.gif"
     align="middle" /> , ou choisir <strong>Créer/changer lien</strong> du menu
     <strong>Liens</strong>, ou encore utiliser le raccourci clavier (par
-    défaut Ctrl Shift L).</li>
+    défaut Ctrl Shift L)</li>
   <li>A partir de là, s'offre à vous plusieurs solutions:
     <ul>
       <li>Si le document cible est visualisé par <strong>Amaya</strong>
@@ -108,7 +108,7 @@ document.</p>
         <ul>
           <li>Tapez sur n'importe quelle touche. Cela fera surgir une boîte de
             dialogue: entrez l'URI du document cible et taper sur la touche
-            <strong>Entrer ou Retourner</strong> pour confirmer.  Le lien est
+            <strong>Enter ou Return</strong> pour confirmer.  Le lien est
             créé.</li>
         </ul>
       </li>

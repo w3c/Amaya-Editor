@@ -29,13 +29,13 @@
 <div>
 <h1>Éléments d'entête</h1>
 
-<p>HTML fournit 6 niveaux d'entêtes: <a
+<p>HTML fournit 6 niveaux d'entête: <a
 href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-H1"><code>H1,
 H2, H3, H4, H5, and H6</code></a>. Ils devraient être utilisés pour marquer
 les entêtes selon leur importance,  <code>H1</code> étant le plus important.
 Les entêtes sont des éléments bloc, et peuvent êre uniquement créées comme les
 fils d'éléments qui ont un contenu de type bloc. Notez que pour les tables de
-données il y a des éléments spéciaux pour marquer les entêtes.</p>
+données, il existe des éléments spéciaux pour marquer les entêtes.</p>
 
 <p>Le premier des trois niveaux d'entête peut être créé depuis la barre
 d'outils en utilisant les icônes <img src="../../Icons/H1.gif" alt="H1 button"
