@@ -1034,20 +1034,16 @@ int                *removedAttributes;
    with the document.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaSetPSchema (Document document, char *presentationName)
-
 #else  /* __STDC__ */
 void                TtaSetPSchema (document, presentationName)
 Document            document;
 char               *presentationName;
-
 #endif /* __STDC__ */
 
 {
    PtrDocument         pDoc;
-
 #ifndef NODISPLAY
    int                 view;
    int                 Assoc;
@@ -1058,13 +1054,9 @@ char               *presentationName;
    UserErrorCode = 0;
    /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
 	TtaError (ERR_invalid_document_parameter);
-     }
    else if (LoadedDocument[document - 1] == NULL)
-     {
 	TtaError (ERR_invalid_document_parameter);
-     }
    else
       /* parameter document is correct */
      {
@@ -1084,9 +1076,7 @@ char               *presentationName;
 	      if (pDoc->DocAssocFrame[Assoc - 1] != 0)
 		 ok = FALSE;
 	if (!ok)
-	  {
 	     TtaError (ERR_there_are_open_views);
-	  }
 	else
 	   /* There is no opened views */
 	  {
@@ -1107,9 +1097,7 @@ char               *presentationName;
 							  pDoc->DocSSchema);
 	     if (pDoc->DocSSchema->SsPSchema == NULL)
 		/* Failure while loading schema */
-	       {
 		  TtaError (ERR_cannot_load_pschema);
-	       }
 	  }
 #endif
      }
@@ -1126,28 +1114,21 @@ char               *presentationName;
    directory: new document directory.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaSetDocumentDirectory (Document document, char *directory)
-
 #else  /* __STDC__ */
 void                TtaSetDocumentDirectory (document, directory)
 Document            document;
 char               *directory;
-
 #endif /* __STDC__ */
 
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
 	TtaError (ERR_invalid_document_parameter);
-     }
    else if (LoadedDocument[document - 1] == NULL)
-     {
 	TtaError (ERR_invalid_document_parameter);
-     }
    else
       /* parameter document is correct */
      {
@@ -1171,42 +1152,32 @@ char               *directory;
    The name must not exceed 31 characters.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaSetDocumentName (Document document, char *documentName)
-
 #else  /* __STDC__ */
 void                TtaSetDocumentName (document, documentName)
 Document            document;
 char               *documentName;
-
 #endif /* __STDC__ */
 
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
+   /* parameter document is correct */
+   else if (strlen (documentName) >= MAX_NAME_LENGTH)
+     TtaError (ERR_buffer_too_small);
    else
-      /* parameter document is correct */
      {
-	if (strlen (documentName) >= MAX_NAME_LENGTH)
-	   TtaError (ERR_buffer_too_small);
-	else
-	  {
 #ifndef NODISPLAY
-	     ChangeDocumentName (LoadedDocument[document - 1], documentName);
+       ChangeDocumentName (LoadedDocument[document - 1], documentName);
 #else
-	     strncpy (LoadedDocument[document - 1]->DocDName, documentName, MAX_NAME_LENGTH);
-	     strncpy (LoadedDocument[document - 1]->DocIdent, documentName, MAX_DOC_IDENT_LEN);
+       strncpy (LoadedDocument[document - 1]->DocDName, documentName, MAX_NAME_LENGTH);
+       strncpy (LoadedDocument[document - 1]->DocIdent, documentName, MAX_DOC_IDENT_LEN);
 #endif
-	  }
      }
 }
 
@@ -1221,28 +1192,21 @@ char               *documentName;
    accessMode: 0 = read only, 1 = read-write.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaSetDocumentAccessMode (Document document, int accessMode)
-
 #else  /* __STDC__ */
 void                TtaSetDocumentAccessMode (document, accessMode)
 Document            document;
 int                 accessMode;
-
 #endif /* __STDC__ */
 
 {
    UserErrorCode = 0;
    /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
 	TtaError (ERR_invalid_document_parameter);
-     }
    else if (LoadedDocument[document - 1] == NULL)
-     {
 	TtaError (ERR_invalid_document_parameter);
-     }
    else
       /* parameter document is correct */
      {
@@ -1712,40 +1676,30 @@ char               *name;
    schema is not loaded or not used by the document.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 SSchema             TtaGetSSchema (char *name, Document document)
-
 #else  /* __STDC__ */
 SSchema             TtaGetSSchema (name, document)
 char               *name;
 Document            document;
-
 #endif /* __STDC__ */
 
 {
-   SSchema             schema;
+   SSchema          schema;
 
    UserErrorCode = 0;
    schema = NULL;
    if (name == NULL || name[0] == '\0')
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-      /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
+   /* verifies the parameter document */
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
-      /* parameter document is correct */
-      /* One search from the main schema of the document o */
-      schema = ChSchStruct (LoadedDocument[document - 1]->DocSSchema, name);
+     /* parameter document is correct */
+     /* One search from the main schema of the document o */
+     schema = ChSchStruct (LoadedDocument[document - 1]->DocSSchema, name);
    return schema;
 }
 
@@ -1763,15 +1717,12 @@ Document            document;
    0 if both schemas are different, 1 if they are identical.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 TtaSameSSchemas (SSchema schema1, SSchema schema2)
-
 #else  /* __STDC__ */
 int                 TtaSameSSchemas (schema1, schema2)
 SSchema             schema1;
 SSchema             schema2;
-
 #endif /* __STDC__ */
 
 {
@@ -1780,11 +1731,8 @@ SSchema             schema2;
    UserErrorCode = 0;
    result = 0;
    if (schema1 == NULL || schema2 == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
-   else if (((PtrSSchema) schema1)->SsCode ==
-	    ((PtrSSchema) schema2)->SsCode)
+   else if (((PtrSSchema) schema1)->SsCode == ((PtrSSchema) schema2)->SsCode)
       result = 1;
    return result;
 }
@@ -1807,16 +1755,13 @@ SSchema             schema2;
    presentationName: Name of the document presentation schema.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaGiveSchemasOfDocument (char *documentName, char *structureName, char *presentationName)
-
 #else  /* __STDC__ */
 void                TtaGiveSchemasOfDocument (documentName, structureName, presentationName)
 char               *documentName;
 char               *structureName;
 char               *presentationName;
-
 #endif /* __STDC__ */
 
 {
@@ -1839,9 +1784,7 @@ char               *presentationName;
    file = TtaReadOpen (text);
    if (file == 0)
       /* document file inaccessible */
-     {
 	TtaError (ERR_cannot_open_pivot_file);
-     }
    else
       /* Read the begenning of the document file */
      {
@@ -1942,15 +1885,12 @@ char               *presentationName;
    NULL if there is no more schema extension.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaNextSchemaExtension (Document document, SSchema * extension)
-
 #else  /* __STDC__ */
 void                TtaNextSchemaExtension (document, extension)
 Document            document;
 SSchema            *extension;
-
 #endif /* __STDC__ */
 
 {
@@ -1960,26 +1900,17 @@ SSchema            *extension;
    /* verifies the parameter document */
    nextExtension = NULL;
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
+   /* parameter document is correct */
+   else if (*extension == NULL)
+     nextExtension = LoadedDocument[document - 1]->DocSSchema->SsNextExtens;
+   else if (!(((PtrSSchema) (*extension))->SsExtension))
+     /* It is not the extension schema */
+     TtaError (ERR_invalid_parameter);
    else
-      /* parameter document is correct */
-     {
-	if (*extension == NULL)
-	   nextExtension = LoadedDocument[document - 1]->DocSSchema->SsNextExtens;
-	else if (!(((PtrSSchema) (*extension))->SsExtension))
-	   /* It is not the extension schema */
-	  {
-	     TtaError (ERR_invalid_parameter);
-	  }
-	else
-	   nextExtension = ((PtrSSchema) (*extension))->SsNextExtens;
-     }
+     nextExtension = ((PtrSSchema) (*extension))->SsNextExtens;
    *extension = (SSchema) nextExtension;
 }
 
@@ -1999,15 +1930,12 @@ SSchema            *extension;
    NULL if there is no more nature for the document.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaNextNature (Document document, SSchema * nature)
-
 #else  /* __STDC__ */
 void                TtaNextNature (document, nature)
 Document            document;
 SSchema            *nature;
-
 #endif /* __STDC__ */
 
 {
@@ -2020,13 +1948,9 @@ SSchema            *nature;
    /* verifies the parameter document */
    nextNature = NULL;
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
 	TtaError (ERR_invalid_document_parameter);
-     }
    else if (LoadedDocument[document - 1] == NULL)
-     {
 	TtaError (ERR_invalid_document_parameter);
-     }
    else
       /* parameter document is correct */
      {

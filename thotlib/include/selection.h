@@ -46,6 +46,11 @@ extern boolean      TtaIsDocumentSelected (Document document);
 extern void         TtaSelectElement (Document document, Element selectedElement);
 
 /*----------------------------------------------------------------------
+   TtaGetSelectedDocument returns the current selected document
+  ----------------------------------------------------------------------*/
+extern Document   TtaGetSelectedDocument ();
+
+/*----------------------------------------------------------------------
    TtaSelectView posts the selected view in the document
   ----------------------------------------------------------------------*/
 extern void         TtaSelectView (Document document, View view);
@@ -192,6 +197,7 @@ extern void         TtaGiveLastSelectedElement (Document document, /*OUT*/ Eleme
 #else  /* __STDC__ */
 
 extern boolean      TtaIsDocumentSelected ( /*Document document */ );
+extern Document   TtaGetSelectedDocument ();
 extern void         TtaSelectElement ( /* Document document, Element selectedElement */ );
 extern void         TtaSelectView (/*Document document, View view*/);
 extern void         TtaSelectString ( /* Document document, Element textElement, int firstCharacter, int lastCharacter */ );

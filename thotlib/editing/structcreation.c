@@ -49,46 +49,39 @@
 #define THOT_EXPORT
 #include "creation_tv.h"
 
+#include "absboxes_f.h"
+#include "abspictures_f.h"
 #include "appli_f.h"
-#include "tree_f.h"
+#include "applicationapi_f.h"
 #include "attrpresent_f.h"
 #include "attributes_f.h"
-#include "editcommands_f.h"
+#include "boxselection_f.h"
+#include "buildboxes_f.h"
+#include "callback_f.h"
+#include "changeabsbox_f.h"
 #include "config_f.h"
-#include "structcreation_f.h"
+#include "content_f.h"
 #include "creationmenu_f.h"
 #include "createabsbox_f.h"
 #include "createpages_f.h"
-#include "views_f.h"
+#include "docs_f.h"
 #include "draw_f.h"
-#include "callback_f.h"
-#include "viewcommands_f.h"
+#include "editcommands_f.h"
 #include "exceptions_f.h"
-#include "absboxes_f.h"
-#include "abspictures_f.h"
-#include "buildboxes_f.h"
+#include "frame_f.h"
 #include "memory_f.h"
-#include "structmodif_f.h"
-#include "changeabsbox_f.h"
+#include "presvariables_f.h"
 #include "readpivot_f.h"
 #include "references_f.h"
 #include "schemas_f.h"
-#include "boxselection_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
 #include "structselect_f.h"
 #include "structschema_f.h"
-#include "content_f.h"
-#include "presvariables_f.h"
-#include "applicationapi_f.h"
-#include "frame_f.h"
-#include "docs_f.h"
+#include "tree_f.h"
+#include "viewcommands_f.h"
+#include "views_f.h"
 
-#ifdef __STDC__
-extern void         DisplayFrame (int);
-
-#else  /* __STDC__ */
-extern void         DisplayFrame ();
-
-#endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
    NotifySubTree   envoie l'evenement .Post de appEvent pour       

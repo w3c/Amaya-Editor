@@ -3309,8 +3309,7 @@ int                 entree;
    GetCurrentSelection (&pDoc, &pEl, &lastEl, &firstChar, &lastChar);
    if (pEl == NULL)
       return;
-   DoChangeType (pEl, pDoc, ChangeTypeTypeNum[entree],
-		 ChangeTypeSSchema[entree]);
+   DoChangeType (pEl, pDoc, ChangeTypeTypeNum[entree], ChangeTypeSSchema[entree]);
 }
 
 /*----------------------------------------------------------------------
@@ -3322,13 +3321,12 @@ int                 entree;
    ne peut pas changer de type).                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BuildChangeTypeMenu (char *menuBuffer, int *NItems,
-					 PtrElement pEl)
+static void  BuildChangeTypeMenu (char *menuBuffer, int *NItems, PtrElement pEl)
 #else
-static void         BuildChangeTypeMenu (menuBuffer, NItems, pEl)
-char               *menuBuffer;
-int                *NItems;
-PtrElement          pEl;
+static void  BuildChangeTypeMenu (menuBuffer, NItems, pEl)
+char        *menuBuffer;
+int         *NItems;
+PtrElement   pEl;
 
 #endif /* __STDC__ */
 {
@@ -3343,16 +3341,15 @@ PtrElement          pEl;
    menuInd = 0;
    for (i = 0; i < NChangeTypeItems; i++)
      {
-	GetExternalTypeName (ChangeTypeSSchema[i], ChangeTypeTypeNum[i],
-			     typeName);
-	len = strlen (typeName) + 2;
-	if (len + menuInd + 1 < MAX_TXT_LEN)
-	  {
-	     menuBuffer[menuInd] = 'B';
-	     strcpy (&(menuBuffer[menuInd + 1]), typeName);
-	     menuInd += len;
-	     (*NItems)++;
-	  }
+       GetExternalTypeName (ChangeTypeSSchema[i], ChangeTypeTypeNum[i], typeName);
+       len = strlen (typeName) + 2;
+       if (len + menuInd + 1 < MAX_TXT_LEN)
+	 {
+	   menuBuffer[menuInd] = 'B';
+	   strcpy (&(menuBuffer[menuInd + 1]), typeName);
+	   menuInd += len;
+	   (*NItems)++;
+	 }
      }
 }
 

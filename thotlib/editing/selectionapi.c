@@ -111,6 +111,23 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
+   TtaGetSelectedDocument returns the current selected document
+  ----------------------------------------------------------------------*/
+Document   TtaGetSelectedDocument ()
+{
+  PtrDocument       pDoc;
+  int               oldView;
+  boolean           assoc;
+
+   UserErrorCode = 0;
+   GetActiveView (&pDoc, &oldView, &assoc);
+   if (pDoc == NULL)
+     return (0);
+   else
+     return (IdentDocument (pDoc));
+}
+
+/*----------------------------------------------------------------------
    TtaSelectString
 
    Selects a substring within a Text basic element. This substring is

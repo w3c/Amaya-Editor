@@ -192,8 +192,7 @@ extern void         TtaNewSheet (int ref, ThotWidget parent, char *title, int nu
    Le parame`tre ref donne la reference et parent le ThotWidget pe're 
    Si parent est nul, le menu est attache a la fenetre MainWindow.          
    Le parame`tre title donne le titre du catalogue.            
-   Le parame`tre number indique le nombre de boutons ajoute's au      
-   bouton 'QUIT' mis par de'faut.                                     
+   Le parame`tre number indique le nombre de boutons.      
    Le parame`tre text contient la liste des intitule's des boutons    
    ajoute's au bouton 'QUIT'.                                         
    Chaque intitule' se termine par le caracte`re de fin de chai^ne \0.
