@@ -6338,7 +6338,8 @@ void            CheckAbstractTree (char* pathURL, Document doc)
    If last elem is NULL or doc=0, the parser doesn't initialize
    the stack
   ----------------------------------------------------------------------*/
-static void     InitializeHTMLParser (Element lastelem, ThotBool isclosed, Document doc)
+static void InitializeHTMLParser (Element lastelem, ThotBool isclosed,
+				  Document doc)
 {
    char         tag[20];
    Element      elem;
@@ -6489,6 +6490,7 @@ void StartParser (Document doc, char *fileName,
 		  char *documentName, char* documentDirectory,
 		  char *pathURL, ThotBool plainText)
 {
+  CHARSET         charset;
   Element         el, oldel, root;
   AttributeType   attrType;
   Attribute       attr;
@@ -6591,6 +6593,24 @@ void StartParser (Document doc, char *fileName,
 	}
       else
 	{
+	  /* Check if it's a valid encoding */
+	  if (DocumentMeta[doc]->charset)
+	    {
+	      charset = TtaGetCharset (DocumentMeta[doc]->charset);
+	      if (charset != UTF_8        && charset != ISO_8859_1   &&
+		  charset != ISO_8859_2   && charset != ISO_8859_3   &&
+		  charset != ISO_8859_4   && charset != ISO_8859_5   &&
+		  charset != ISO_8859_6   && charset != ISO_8859_7   &&
+		  charset != ISO_8859_8   && charset != ISO_8859_9   &&
+		  charset != ISO_8859_15  && charset != KOI8_R       &&
+		  charset != WINDOWS_1250 && charset != WINDOWS_1251 &&
+		  charset != WINDOWS_1252 && charset != WINDOWS_1253 &&
+		  charset != WINDOWS_1254 && charset != WINDOWS_1255 &&
+		  charset != WINDOWS_1256 && charset != WINDOWS_1257 &&
+		  charset != US_ASCII)
+		HTMLParseError (doc,
+				TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING));
+	    }
 	  if (!isHTML)
 	    {
 	      /* change the document type */

@@ -4129,17 +4129,13 @@ static void  InitializeExpatParser (CHARSET charset)
 	   charset == WINDOWS_1256 || charset == WINDOWS_1257)
     /* buffers will be converted to UTF-8 by Amaya */
     Parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
-  else if (charset == ISO_8859_6_E || charset == ISO_8859_6_I ||
-	   charset == ISO_8859_8_E || charset == ISO_8859_8_I ||
-	   charset == ISO_8859_10  || charset == ISO_8859_supp)
-    Parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
   else
     {
       XMLUnknownEncoding = TRUE;
       XmlParseError (errorEncoding,
 		     TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), -1);
-      Parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
-      return;
+      Parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
+      /*return;*/
     }
 
   /* Define the user data pointer that gets passed to handlers */

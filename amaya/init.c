@@ -2849,10 +2849,10 @@ void ParseAsHTML (Document document, View view)
 	   }
        }
 
-   /* parse with the HTML parser */
    DocumentMeta[document]->xmlformat = FALSE;
+   /* parse with the HTML parser */
    StartParser (document, tempdocument, documentname, tempdir,
-		   tempdocument, FALSE);
+		tempdocument, FALSE);
    /* then request to save as XHTML */
    DocumentMeta[document]->xmlformat = TRUE;
    /* fetch and display all images referred by the document */
