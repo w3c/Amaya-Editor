@@ -23,7 +23,7 @@ echo "Plarform ------->" $MACH
    Amaya/config/XKeysymDB \
    Amaya/config/amaya.kb \
    Amaya/config/amaya.keyboard \
-   Amaya/config/amaya.emacs |
+   Amaya/config/amaya.emacs \
    Amaya/config/amaya.profiles \
    Amaya/config/*thot.rc \
    Amaya/config/*-amayadialogue \
