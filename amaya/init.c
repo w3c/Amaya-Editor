@@ -2531,6 +2531,12 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
     /* change the document status */
     readOnly = TRUE;
 
+#ifdef _WX
+  /* if it is a source document, reload its corresponding document */
+  if (DocumentTypes[oldDoc] == docSource)
+    oldDoc = GetDocFromSource (oldDoc);
+#endif /* _WX */
+
   /* previous document */
   doc = oldDoc;
   if (replaceOldDoc && oldDoc>0)
