@@ -2020,28 +2020,22 @@ Element             element;
    common ancestor.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 Element             TtaGetCommonAncestor (Element element1, Element element2)
-
 #else  /* __STDC__ */
 Element             TtaGetCommonAncestor (element1, element2)
 Element             element1;
 Element             element2;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          ancestor;
 
    UserErrorCode = 0;
    ancestor = NULL;
    if (element1 == NULL || element2 == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else
-      ancestor = CommonAncestor ((PtrElement) element1, (PtrElement) element2);
+     ancestor = CommonAncestor ((PtrElement) element1, (PtrElement) element2);
    return ((Element) ancestor);
 }
 
@@ -2058,37 +2052,27 @@ Element             element2;
    the ancestor, or NULL if there is no ancestor of that type.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 Element             TtaGetTypedAncestor (Element element, ElementType ancestorType)
-
 #else  /* __STDC__ */
 Element             TtaGetTypedAncestor (element, ancestorType)
 Element             element;
 ElementType         ancestorType;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          ancestor;
 
    UserErrorCode = 0;
    ancestor = NULL;
    if (element == NULL || ancestorType.ElSSchema == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else if (ancestorType.ElTypeNum > ((PtrSSchema) (ancestorType.ElSSchema))->SsNRules
 	    || ancestorType.ElTypeNum < 1)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
+     TtaError (ERR_invalid_element_type);
    else
-     {
-	ancestor = GetTypedAncestor (((PtrElement) element)->ElParent,
-				     ancestorType.ElTypeNum,
-				     (PtrSSchema) (ancestorType.ElSSchema));
-     }
+     ancestor = GetTypedAncestor (((PtrElement) element)->ElParent,
+				  ancestorType.ElTypeNum,
+				  (PtrSSchema) (ancestorType.ElSSchema));
    return ((Element) ancestor);
 }
 
@@ -2104,16 +2088,12 @@ ElementType         ancestorType;
    type of the element.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 ElementType         TtaGetElementType (Element element)
-
 #else  /* __STDC__ */
 ElementType         TtaGetElementType (element)
 Element             element;
-
 #endif /* __STDC__ */
-
 {
    ElementType         elementType;
 
@@ -2121,9 +2101,7 @@ Element             element;
    elementType.ElSSchema = NULL;
    elementType.ElTypeNum = 0;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
      {
 	elementType.ElSSchema = (SSchema) ((PtrElement) element)->ElStructSchema;
@@ -2144,7 +2122,6 @@ Element             element;
    name of that type.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 char               *TtaGetElementTypeName (ElementType elementType)
 
@@ -2159,18 +2136,12 @@ ElementType         elementType;
    UserErrorCode = 0;
    nameBuffer[0] = '\0';
    if (elementType.ElSSchema == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
 	    elementType.ElTypeNum < 1)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else
-     {
 	strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrName, MAX_NAME_LENGTH);
-     }
    return nameBuffer;
 }
 
@@ -2212,9 +2183,7 @@ char               *name;
 	TtaError (ERR_invalid_parameter);
      }
    else
-     {
 	GetSRuleFromName (&((*elementType).ElTypeNum), (PtrSSchema *) (&((*elementType).ElSSchema)), name);
-     }
 }
 
 /* ----------------------------------------------------------------------
@@ -2230,17 +2199,13 @@ char               *name;
    0 if both types are different, 1 if they are identical.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 TtaSameTypes (ElementType type1, ElementType type2)
-
 #else  /* __STDC__ */
 int                 TtaSameTypes (type1, type2)
 ElementType         type1;
 ElementType         type2;
-
 #endif /* __STDC__ */
-
 {
    int                 result;
 
@@ -2286,28 +2251,20 @@ ElementType         type2;
    label of the element.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 char               *TtaGetElementLabel (Element element)
-
 #else  /* __STDC__ */
 char               *TtaGetElementLabel (element)
 Element             element;
-
 #endif /* __STDC__ */
-
 {
 
    UserErrorCode = 0;
    nameBuffer[0] = '\0';
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
-     {
 	strncpy (nameBuffer, ((PtrElement) element)->ElLabel, MAX_NAME_LENGTH);
-     }
    return nameBuffer;
 }
 
@@ -2324,28 +2281,20 @@ Element             element;
    element volume.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 TtaGetElementVolume (Element element)
-
 #else  /* __STDC__ */
 int                 TtaGetElementVolume (element)
 Element             element;
-
 #endif /* __STDC__ */
-
 {
    int                 vol = 0;
 
    UserErrorCode = 0;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
-     {
 	vol = ((PtrElement) element)->ElVolume;
-     }
    return vol;
 }
 
@@ -2361,14 +2310,11 @@ Element             element;
    1 = the type is a constant, 0 = the type is not a constant.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 TtaIsConstant (ElementType elementType)
-
 #else  /* __STDC__ */
 int                 TtaIsConstant (elementType)
 ElementType         elementType;
-
 #endif /* __STDC__ */
 
 {
@@ -2377,14 +2323,10 @@ ElementType         elementType;
    UserErrorCode = 0;
    result = 0;
    if (elementType.ElSSchema == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
 	    elementType.ElTypeNum < 1)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else
      {
 	if (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsConstant)
@@ -2406,30 +2348,22 @@ ElementType         elementType;
    1 if the type is a leaf, 0 if the type is not a leaf.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 TtaIsLeaf (ElementType elementType)
-
 #else  /* __STDC__ */
 int                 TtaIsLeaf (elementType)
 ElementType         elementType;
-
 #endif /* __STDC__ */
-
 {
    int                 result;
 
    UserErrorCode = 0;
    result = 0;
    if (elementType.ElSSchema == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
 	    elementType.ElTypeNum < 1)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else
      {
 	if ((((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsConstant) ||
@@ -2455,29 +2389,22 @@ ElementType         elementType;
    the construct that defines the structure of that element type.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 Construct           TtaGetConstructOfType (ElementType elementType)
 #else  /* __STDC__ */
 Construct           TtaGetConstructOfType (elementType)
 ElementType         elementType;
-
 #endif /* __STDC__ */
-
 {
    Construct           result;
 
    UserErrorCode = 0;
    result = ConstructError;
    if (elementType.ElSSchema == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
 	    elementType.ElTypeNum < 1)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else
       switch (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct)
 	    {
@@ -2550,14 +2477,10 @@ ElementType         elementType;
    UserErrorCode = 0;
    result = 0;
    if (elementType.ElSSchema == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
 	    elementType.ElTypeNum < 1)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else
      {
         pRule = &(((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1]);
@@ -2620,14 +2543,10 @@ int                *size;
 
    UserErrorCode = 0;
    if (elementType.ElSSchema == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
 	    elementType.ElTypeNum < 1)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else
      {
         pRule = &(((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1]);
@@ -2768,16 +2687,12 @@ ElementType         aggregateType;
    UserErrorCode = 0;
    rank = 0;
    if (componentType.ElSSchema == NULL || aggregateType.ElSSchema == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (componentType.ElTypeNum > ((PtrSSchema) (componentType.ElSSchema))->SsNRules ||
 	    componentType.ElTypeNum < 1 ||
 	    aggregateType.ElTypeNum > ((PtrSSchema) (aggregateType.ElSSchema))->SsNRules ||
 	    aggregateType.ElTypeNum < 1)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else if (componentType.ElSSchema == aggregateType.ElSSchema)
      {
         pRule = &(((PtrSSchema) (aggregateType.ElSSchema))->SsRule[aggregateType.ElTypeNum - 1]);
@@ -2819,29 +2734,19 @@ ElementType         elementType;
    UserErrorCode = 0;
    result = FALSE;
    if (elementType.ElSSchema == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
 	    elementType.ElTypeNum < 1)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else
      {
         pRule = &(((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1]);
         if (pRule->SrConstruct != CsAggregate && pRule->SrConstruct !=CsUnorderedAggregate)
-          {
                TtaError (ERR_invalid_element_type);
-          }
         else if(rank > pRule->SrNComponents)
-          {
                TtaError (ERR_invalid_parameter);
-          }
         else
-          {
           result = pRule->SrOptComponent[rank];
-          }
      }
    return result;
 }
@@ -2874,9 +2779,7 @@ Element             element;
    UserErrorCode = 0;
    result = ConstructError;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
       result = TtaGetConstructOfType (TtaGetElementType (element));
    return result;
@@ -2912,9 +2815,7 @@ Element             element;
    UserErrorCode = 0;
    right = ReadWrite;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
      {
 	switch (((PtrElement) element)->ElAccess)
@@ -2936,7 +2837,6 @@ Element             element;
    return right;
 }
 
-/* debut ajout */
 /* ----------------------------------------------------------------------
    TtaIsHolophrasted
 
@@ -2965,9 +2865,7 @@ Element             element;
    UserErrorCode = 0;
    result = 0;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
      {
 	if (((PtrElement) element)->ElHolophrast)
@@ -3006,9 +2904,7 @@ Element             element;
    UserErrorCode = 0;
    result = 0;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
      {
 	if (ElementIsReadOnly ((PtrElement) element))
@@ -3045,9 +2941,7 @@ Element             element;
    UserErrorCode = 0;
    result = 0;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
      {
 	if (ElementIsHidden ((PtrElement) element))
@@ -3086,9 +2980,7 @@ Element             element;
    UserErrorCode = 0;
    result = 0;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
      {
 	pAsc = (PtrElement) element;
@@ -3130,9 +3022,7 @@ Element             ancestor;
    UserErrorCode = 0;
    result = 0;
    if (element == NULL || ancestor == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
      {
 	if (ElemIsAnAncestor ((PtrElement) ancestor, (PtrElement) element))
@@ -3172,9 +3062,7 @@ Element             element2;
    UserErrorCode = 0;
    result = 0;
    if (element1 == NULL || element2 == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
      {
 	if (ElemIsBefore ((PtrElement) element1, (PtrElement) element2))
@@ -3212,9 +3100,7 @@ Element             element;
    UserErrorCode = 0;
    result = 0;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (((PtrElement) element)->ElStructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsPairedElement)
      {
 	TtaError (ERR_invalid_element_type);
@@ -3349,16 +3235,12 @@ Document            document;
    belong to any document.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 Document            TtaGetDocument (Element element)
-
 #else  /* __STDC__ */
 Document            TtaGetDocument (element)
 Element             element;
-
 #endif /* __STDC__ */
-
 {
 
    PtrDocument         pDoc;
@@ -3367,9 +3249,7 @@ Element             element;
    UserErrorCode = 0;
    ret = 0;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
      {
 	pDoc = DocumentOfElement ((PtrElement) element);
@@ -3396,16 +3276,12 @@ Element             element;
    element in the clipboard or if the clipboard is empty.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                TtaNextCopiedElement (Element * element)
-
 #else  /* __STDC__ */
 void                TtaNextCopiedElement (element)
 Element            *element;
-
 #endif /* __STDC__ */
-
 {
    PtrPasteElem        next;
 
@@ -3607,13 +3483,9 @@ Element             element;
    UserErrorCode = 0;
    elementFound = NULL;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (searchedLabel[0] == '\0')
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else
       elementFound = SearchLabel (searchedLabel, (PtrElement) element);
    return ((Element) elementFound);
@@ -3689,29 +3561,21 @@ Element             element;
    the paired element.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 Element             TtaSearchOtherPairedElement (Element element)
-
 #else  /* __STDC__ */
 Element             TtaSearchOtherPairedElement (element)
 Element             element;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pairedElement;
 
    UserErrorCode = 0;
    pairedElement = NULL;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (((PtrElement) element)->ElStructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsPairedElement)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else
       pairedElement = GetOtherPairedElement ((PtrElement) element);
    return ((Element) pairedElement);
@@ -3733,29 +3597,22 @@ Element             element;
    only page breaks.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 Element             TtaSearchNoPageBreak (Element element, boolean forward)
-
 #else  /* __STDC__ */
 Element             TtaSearchNoPageBreak (element, forward)
 Element             element;
 boolean             forward;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          noPage;
 
    UserErrorCode = 0;
    noPage = NULL;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else
      {
-
 	if (forward)
 	  {
 	     noPage = ((PtrElement) element)->ElNext;
@@ -3769,4 +3626,3 @@ boolean             forward;
      }
    return ((Element) noPage);
 }
-/* End of module */

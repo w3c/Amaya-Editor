@@ -226,31 +226,34 @@ Document	doc;
 
 #endif /* __STDC__ */
 {
-   Element		prev, next;
-   ElementType          elType;
-
-   elType = TtaGetElementType (el);
-   if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-      /* the element is a Pseudo_paragraph */
-      {
+  Element		prev, next;
+  ElementType          elType;
+  
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+    /* the element is a Pseudo_paragraph */
+    {
       prev = el;
       TtaPreviousSibling (&prev);
       if (prev != NULL)
         /* the Pseudo-paragraph is not the first element among its sibling */
         /* turn it into an ordinary paragraph */
         ChangeElementType (el, HTML_EL_Paragraph);
-      }
-   next = el;
-   TtaNextSibling (&next);
-   elType = TtaGetElementType (next);
-   if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-      /* the next element is a Pseudo-paragraph */
-      /* turn it into an ordinary paragraph */
-      {
-      TtaRemoveTree (next, doc);
-      ChangeElementType (next, HTML_EL_Paragraph);
-      TtaInsertSibling (next, el, FALSE, doc);
-      }
+    }
+  next = el;
+  TtaNextSibling (&next);
+  if (next)
+    {
+      elType = TtaGetElementType (next);
+      if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+	/* the next element is a Pseudo-paragraph */
+	/* turn it into an ordinary paragraph */
+	{
+	  TtaRemoveTree (next, doc);
+	  ChangeElementType (next, HTML_EL_Paragraph);
+	  TtaInsertSibling (next, el, FALSE, doc);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
