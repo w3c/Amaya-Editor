@@ -1326,7 +1326,7 @@ PtrDocument         pDoc;
     }
   for (assoc = 1; assoc <= MAX_ASSOC_DOC; assoc++)
     {
-      frame = pDoc->DocAssocFrame[view - 1];
+      frame = pDoc->DocAssocFrame[assoc - 1];
       if (frame > 0)
 	{
 	  CleanImageView (assoc, TRUE, pDoc, FALSE);

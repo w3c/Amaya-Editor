@@ -63,6 +63,7 @@ Thot/amaya/HTML.conf \
 Thot/amaya/HTMLP.P \
 Thot/amaya/HTMLT.T \
 Thot/amaya/HTMLTT.T \
+Thot/amaya/HTML.trans \
 Thot/amaya/HTMLactions.c \
 Thot/amaya/HTMLbook.c \
 Thot/amaya/HTMLedit.c \
@@ -81,6 +82,7 @@ Thot/amaya/MathML.A \
 Thot/amaya/MathML.S \
 Thot/amaya/MathMLP.P \
 Thot/amaya/MathMLT.T \
+Thot/amaya/MathML.trans \
 Thot/amaya/GraphMLbuilder.c \
 Thot/amaya/Graphedit.c \
 Thot/amaya/GraphML.A \
