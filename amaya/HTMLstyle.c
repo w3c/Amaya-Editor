@@ -961,18 +961,30 @@ CSSInfoPtr      css;
 	}
       else if (TtaIsBlank (selector))
 	{
-	  for (i = MAX_ANCESTORS - 1; i > 0; i--)
-	    ancestors[i] = ancestors[i - 1];
 	  selector = TtaSkipBlanks (selector);
-	  /* don't take class and pseudoclass into account for ancestors */
+	  /* Thot can not take class and pseudoclass into account for
+	     ancestors. Ignore this selector */
 	  class[0] = EOS;
 	  pseudoclass[0] = EOS;
 	  id[0] = EOS;
+	  if (attrelemname[0] != EOS)
+	     {
+	     ancestors[0] = NULL;
+	     while ((*selector != EOS) && (*selector != ','))
+		  selector++;
+	     break;
+	     }
 	}
 
       /* store elem in the list if the string is non-empty */
       if (*elem != EOS)
+	{
+	/* shifts the list to make room for the new elem */
+	for (i = MAX_ANCESTORS - 1; i > 0; i--)
+	  ancestors[i] = ancestors[i - 1];
+	/* store the new elem */
 	ancestors[0] = elem;
+	}
 
       /* why did we stop ? */
       if (*selector == EOS)
@@ -986,7 +998,7 @@ CSSInfoPtr      css;
 	}
     }
 
-   /* Now set up the context block */
+  /* Now set up the context block */
   ctxt->box = 0;
   elem = ancestors[0];
   if ((elem == NULL) || (*elem == EOS))

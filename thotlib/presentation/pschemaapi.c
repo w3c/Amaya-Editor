@@ -121,7 +121,8 @@ SSchema             nature;
    PtrPSchema          pSchP;
    PtrSSchema	       pSchS;
 
-   
+   if (!LoadedDocument[document - 1])
+     return;
    pHd = HandleOfPSchema (schema, document, nature);
    if (pHd != NULL)
      {
