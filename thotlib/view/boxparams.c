@@ -174,8 +174,6 @@ int                 Zoom;
 	   /* On restaure la position de la fenetre dans le document */
 	   pFrame->FrXOrg = x;
 	   pFrame->FrYOrg = y;
-	   DefClip (frame, -1, -1, -1, -1);
-	   DisplayFrame (frame);
 	   /* On restaure la selection courante dans la fenetre */
 	   if (unique)
 	     InsertViewSelMarks (frame, pv1, c1, cN, TRUE, TRUE, unique);
@@ -188,6 +186,8 @@ int                 Zoom;
 		 InsertViewSelMarks (frame, pvN, 0, cN, FALSE, TRUE, FALSE);
 	       /* On visualise la selection que l'on vient de poser */
 	     }
+	   DefClip (frame, -1, -1, -1, -1);
+	   DisplayFrame (frame);
 	 }
        ReadyToDisplay = TRUE;
      }
