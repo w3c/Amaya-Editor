@@ -16,7 +16,7 @@ ac_help="$ac_help
 ac_help="$ac_help
   --with-gl               enable Opengl canvas (experimental) "
 ac_help="$ac_help
-  --with-gtk              use GTK instead of Motif"
+  --without-gtk              use Motif instead of GTK"
 ac_help="$ac_help
   --without-graphic-libs    doesn't use provided libjpeg, libpng."
 ac_help="$ac_help
@@ -960,7 +960,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS="$ac_save_CFLAGS"
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-g"
+    CFLAGS="-O2"
   else
     CFLAGS="-g"
   fi
@@ -6159,12 +6159,14 @@ if test "${with_gtk+set}" = set; then
   :
 fi
 
-if test "$withval" = "yes" ; then
-  with_gtk="yes"
-else
+if test "$withval" = "no" ; then
   if test "$with_gl" = "yes" ; then
     with_gtk="yes"
+  else
+    with_gtk="no"
   fi
+else
+  with_gtk="yes"
 fi
 
 if test "$with_gtk" = "yes" ; then
@@ -6215,7 +6217,7 @@ motif_includes=NONE
 motif_libraries=NONE
 
 echo $ac_n "checking for Motif""... $ac_c" 1>&6
-echo "configure:6219: checking for Motif" >&5
+echo "configure:6221: checking for Motif" >&5
 if test "x$motif_includes" != xNONE && test "x$motif_libraries" != xNONE; then
     no_motif=
 else
@@ -6390,9 +6392,9 @@ fi
 
 if test "$no_graphic" = yes; then
     echo $ac_n "checking for libjpeg version = 6b""... $ac_c" 1>&6
-echo "configure:6394: checking for libjpeg version = 6b" >&5
+echo "configure:6396: checking for libjpeg version = 6b" >&5
     cat > conftest.$ac_ext <<EOF
-#line 6396 "configure"
+#line 6398 "configure"
 #include "confdefs.h"
 #include <jpeglib.h>
          x JPEG_LIB_VERSION x
@@ -6410,16 +6412,16 @@ else
 fi
 rm -f conftest*
 
-    echo $ac_n "checking for libpng version = 1.0.x""... $ac_c" 1>&6
-echo "configure:6415: checking for libpng version = 1.0.x" >&5
+    echo $ac_n "checking for libpng version = 1.0.x or 1.2.x""... $ac_c" 1>&6
+echo "configure:6417: checking for libpng version = 1.0.x or 1.2.x" >&5
     cat > conftest.$ac_ext <<EOF
-#line 6417 "configure"
+#line 6419 "configure"
 #include "confdefs.h"
 #include <png.h>
 	x PNG_LIBPNG_VER_STRING x
 EOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  egrep "x \"1.0\..*\" *x" >/dev/null 2>&1; then
+  egrep "x \"1.[02]\..*\" *x" >/dev/null 2>&1; then
   rm -rf conftest*
           echo "$ac_t""yes" 1>&6
         LIBPNG='-lpng'
@@ -6502,7 +6504,7 @@ fi
 
 if test "$with_gl" = "yes" ; then
   	echo $ac_n "checking OpenGL""... $ac_c" 1>&6
-echo "configure:6506: checking OpenGL" >&5
+echo "configure:6508: checking OpenGL" >&5
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
@@ -6518,7 +6520,7 @@ echo "configure:6506: checking OpenGL" >&5
     	    fi
 	done	
   	echo $ac_n "checking GLU""... $ac_c" 1>&6
-echo "configure:6522: checking GLU" >&5	
+echo "configure:6524: checking GLU" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6539,7 +6541,7 @@ echo "configure:6522: checking GLU" >&5
     	    fi
 	done	
   	echo $ac_n "checking GTKGLAREA""... $ac_c" 1>&6
-echo "configure:6543: checking GTKGLAREA" >&5	
+echo "configure:6545: checking GTKGLAREA" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6561,7 +6563,7 @@ echo "configure:6543: checking GTKGLAREA" >&5
     	    fi
 	done	
   	echo $ac_n "checking freetype""... $ac_c" 1>&6
-echo "configure:6565: checking freetype" >&5	
+echo "configure:6567: checking freetype" >&5	
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\

@@ -7383,7 +7383,6 @@ void AddURLInCombobox (char *url, ThotBool keep)
     }
   TtaFreeMemory (ptr);
   TtaFreeMemory (urlstring);
-  /*printf ("-------\n%s\n------\n", URL_list);*/
 }
 
 

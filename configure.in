@@ -227,13 +227,15 @@ if test "$with_gl" = "" ; then
 fi  
 
 GTK_OPTIONS=
-AC_ARG_WITH(gtk, [  --with-gtk              use GTK instead of Motif])
-if test "$withval" = "yes" ; then
-  with_gtk="yes"
-else
+AC_ARG_WITH(gtk, [  --without-gtk              use Motif instead of GTK])
+if test "$withval" = "no" ; then
   if test "$with_gl" = "yes" ; then
     with_gtk="yes"
+  else
+    with_gtk="no"
   fi
+else
+  with_gtk="yes"
 fi
 
 if test "$with_gtk" = "yes" ; then
@@ -476,8 +478,8 @@ dnl
         )
 dnl    
 dnl
-    AC_MSG_CHECKING([for libpng version = 1.0.x])
-    AC_EGREP_CPP([x \"1.0\..*\" *x],
+    AC_MSG_CHECKING([for libpng version = 1.0.x or 1.2.x])
+    AC_EGREP_CPP([x \"1.[02]\..*\" *x],
         [#include <png.h>
 	x PNG_LIBPNG_VER_STRING x],
 dnl

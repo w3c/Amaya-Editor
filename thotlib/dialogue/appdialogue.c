@@ -2133,7 +2133,7 @@ gboolean APP_TextEnterGTK (GtkWidget *w, int frame)
 gboolean EnterCallbackGTK (GtkWidget *widget, GdkEventCrossing *event,
 			   gpointer user_data)
 {
-  gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)TRUE);    
+  gtk_object_set_data (GTK_OBJECT (widget), "MouseIn", (gpointer) TRUE);
   return FALSE;
 }
 
@@ -2142,7 +2142,7 @@ gboolean EnterCallbackGTK (GtkWidget *widget, GdkEventCrossing *event,
 gboolean LeaveCallbackGTK (GtkWidget *widget, GdkEventCrossing *event,
 			   gpointer user_data)
 {
-  gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)FALSE);        
+  gtk_object_set_data (GTK_OBJECT (widget), "MouseIn", (gpointer) FALSE);
   return FALSE;
 }
 #endif /* _GTK */
@@ -2177,7 +2177,10 @@ GList *InitComboBoxList (char *buffer)
   return list_items;
 }
 #endif /* _GTK */
+
 #ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void InitWdComboBoxList (ThotWindow hwnCB, char *buffer)
 {
   int          cpt = 0;
@@ -2421,7 +2424,7 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	      gtk_list_set_selection_mode (GTK_LIST (ComboList), GTK_SELECTION_SINGLE);
 	      if (procedure)
 		{
-		  ConnectSignalGTK (GTK_OBJECT (w), "changed",
+		  gtk_signal_connect (GTK_OBJECT (w), "changed",
 				    GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
 				    (gpointer)frame);
 		  FrameTable[frame].Call_Text = (Proc) procedure;
