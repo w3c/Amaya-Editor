@@ -969,10 +969,10 @@ ThotBool TtaMergeText (Element element, Document document)
      {
        pEl = (PtrElement) element;
        pEl2 = pEl->ElNext;
-       if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsConstant &&
+       if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct != CsConstant &&
 	   pEl2 && pEl2->ElTerminal && pEl2->ElLeafType == LtText &&
 	   pEl2->ElLanguage == pEl->ElLanguage &&
-	   pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
+	   pEl2->ElStructSchema->SsRule->SrElem[pEl2->ElTypeNumber - 1]->SrConstruct != CsConstant)
 	 if (SameAttributes (pEl, pEl2) &&
 	     pEl->ElSource == NULL && pEl2->ElSource == NULL &&
 	     BothHaveNoSpecRules (pEl, pEl2))

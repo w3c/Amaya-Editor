@@ -202,20 +202,21 @@ void GetExternalTypeName (PtrSSchema pSS, int typeNum, Name typeName)
    if (!TypeHasException (ExcHidden, typeNum, pSS))
       /* ce type d'element ne porte pas l'exception Hidden, on retourne
          le nom de la regle qui le definit */
-      strncpy (typeName, pSS->SsRule[typeNum - 1].SrName, MAX_NAME_LENGTH);
+      strncpy (typeName, pSS->SsRule->SrElem[typeNum - 1]->SrName,
+	       MAX_NAME_LENGTH);
    else
       /* ce type d'element porte l'exception Hidden */
-   if (pSS->SsRule[typeNum - 1].SrConstruct == CsList)
+   if (pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsList)
       /* c'est une liste, on retourne le nom de ses elements */
-      strncpy (typeName, pSS->SsRule[pSS->SsRule[typeNum - 1].SrListItem - 1].SrName, MAX_NAME_LENGTH);
-   else if (pSS->SsRule[typeNum - 1].SrConstruct == CsAggregate ||
-	    pSS->SsRule[typeNum - 1].SrConstruct == CsUnorderedAggregate)
+      strncpy (typeName, pSS->SsRule->SrElem[pSS->SsRule->SrElem[typeNum - 1]->SrListItem - 1]->SrName, MAX_NAME_LENGTH);
+   else if (pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsAggregate ||
+	    pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsUnorderedAggregate)
       /* c'est un agregat, on retourne le nom de son 1er element */
-      strncpy (typeName, pSS->SsRule[pSS->SsRule[typeNum - 1].SrComponent[0] - 1].SrName, MAX_NAME_LENGTH);
+      strncpy (typeName, pSS->SsRule->SrElem[pSS->SsRule->SrElem[typeNum - 1]->SrComponent[0] - 1]->SrName, MAX_NAME_LENGTH);
    else
       /* ce n'est ni une liste ni un agregat, on ignore */
       /* l'exception Hidden */
-      strncpy (typeName, pSS->SsRule[typeNum - 1].SrName, MAX_NAME_LENGTH);
+      strncpy (typeName, pSS->SsRule->SrElem[typeNum - 1]->SrName, MAX_NAME_LENGTH);
 }
 
 
@@ -396,7 +397,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 		  !pEl->ElIsCopy &&
 		  !pEl->ElHolophrast &&
 		  pEl->ElAccess != AccessReadOnly &&
-		  pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsConstant)
+		  pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct != CsConstant)
 		/* element de la nature cherchee */
 		empty = TRUE;
 	      else
@@ -491,7 +492,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 				  }
 				if (stop &&
 				    (pChild->ElIsCopy || pChild->ElHolophrast ||
-				     pChild->ElStructSchema->SsRule[pChild->ElTypeNumber - 1].SrConstruct == CsConstant ||
+				     pChild->ElStructSchema->SsRule->SrElem[pChild->ElTypeNumber - 1]->SrConstruct == CsConstant ||
 				     ElementIsReadOnly (pChild)))
 				  {
 				    stop = FALSE;
@@ -664,7 +665,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 			CancelSelection ();
 			nNew = 1;
 			/* chaine l'element cree', suivant son constructeur */
-			if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
+			if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsChoice)
 			  {
 			    if (pLeaf == pE)
 			      ident = TRUE;
@@ -1069,7 +1070,8 @@ ThotBool LinkReference (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
   if (pSS == NULL || referredTypeNum == 0)
     typeName[0] = EOS;
   else
-    strncpy (typeName, pSS->SsRule[referredTypeNum - 1].SrName, MAX_NAME_LENGTH);
+    strncpy (typeName, pSS->SsRule->SrElem[referredTypeNum - 1]->SrName,
+	     MAX_NAME_LENGTH);
   new = FALSE;
   again = TRUE;
   if (!new && again)
@@ -1169,29 +1171,29 @@ static void AddChoiceMenuItem (Name item, int *menuInd, char *menuBuf)
   ----------------------------------------------------------------------*/
 static void UserElementName (PtrElement pEl, ThotBool begin, Name ret)
 {
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    PtrElement          pChild;
 
    if (!TypeHasException (ExcHidden, pEl->ElTypeNumber, pEl->ElStructSchema))
       /* ce type d'element ne porte pas l'exception Hidden */
      {
 	/* par defaut on retourne le type de l'element lui-meme */
-	strncpy (ret, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+	strncpy (ret, pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName, MAX_NAME_LENGTH);
 	/* la regle qui definit le type de l'element */
-	pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+	pSRule = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
 	if (pSRule->SrConstruct == CsChoice)
 	   if (pEl->ElFirstChild != NULL)
 	      /* c'est un choix avec un fils */
 	      if (pEl->ElSource == NULL)
 		 /* ce n'est pas une inclusion, on prend le nom du fils */
-		 strncpy (ret, pEl->ElFirstChild->ElStructSchema->SsRule[pEl->ElFirstChild->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+		 strncpy (ret, pEl->ElFirstChild->ElStructSchema->SsRule->SrElem[pEl->ElFirstChild->ElTypeNumber - 1]->SrName, MAX_NAME_LENGTH);
      }
    else
       /* ce type d'element porte l'exception Hidden */
    if (pEl->ElTerminal || pEl->ElFirstChild == NULL)
       /* l'element n'a pas de fils, on retourne quand meme */
       /* le type de l'element lui-meme */
-      strncpy (ret, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
+      strncpy (ret, pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName, MAX_NAME_LENGTH);
    else
      {
 	/* on retourne le type du premier ou dernier fils de */
@@ -1262,7 +1264,7 @@ int MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, char *menuBuf,
    PtrElement          pAncest, pPrevEl;
    int                 i, menuInd, nItems, typeNum;
    ThotBool            ok;
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    PtrSSchema          pAncSS;
    Name                typeName;
 
@@ -1270,7 +1272,7 @@ int MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, char *menuBuf,
    nItems = 0;
    ChoiceMenuDocument = pDoc;
    /* la regle definissant le type de l'element */
-   pSRule = &pSS->SsRule[rule - 1];
+   pSRule = pSS->SsRule->SrElem[rule - 1];
    /* Si ce n'est pas une regle de choix, on ne fait rien */
    if (pSRule->SrConstruct == CsChoice)
      {
@@ -1356,7 +1358,7 @@ int MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, char *menuBuf,
 			      {
 				 /* cherche les unites definies dans le schema */
 				 for (i = 1; i <= pAncSS->SsNRules; i++)
-				    if (pAncSS->SsRule[i - 1].SrUnitElem)
+				    if (pAncSS->SsRule->SrElem[i - 1]->SrUnitElem)
 				       if (nItems < MAX_MENU)
 					  if (!ExcludedType (pEl, i, pAncSS))
 					     /* met l'unite dans le menu */
@@ -1445,7 +1447,7 @@ void ChoiceMenuCallback (int item, char *natureName)
 					   ChoiceMenuDocument);
 	     ChosenTypeSSchema = ChoiceMenuSSchema[0];
 	     AddSchemaGuestViews (ChoiceMenuDocument,
-				  ChosenTypeSSchema->SsRule[ChosenTypeNum - 1].SrSSchemaNat);
+				  ChosenTypeSSchema->SsRule->SrElem[ChosenTypeNum - 1]->SrSSchemaNat);
 	  }
      }
    else
@@ -1474,7 +1476,7 @@ static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
    int                 nItems;
    ThotBool            ret, ok, stop;
    NotifyElement       notifyEl;
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    ThotBool            menu;
 
    ret = FALSE;
@@ -1494,7 +1496,7 @@ static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
 	   /* boucle pour l'enchainement des choix successifs */
 	  {
 	     menu = FALSE;
-	     pSRule = &ChosenTypeSSchema->SsRule[choiceTypeNum - 1];
+	     pSRule = ChosenTypeSSchema->SsRule->SrElem[choiceTypeNum - 1];
 	     /* si ce n'est pas une regle de choix, on ne fait rien */
 	     if (pSRule->SrConstruct == CsChoice)
 	       {
@@ -1566,7 +1568,7 @@ static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
 	     /* et qu'on n'a pas cree' de freres, on demande a nouveau a */
 	     /* l'utilisateur le type de cet element */
 	     if ((*pLeaf)->ElStructSchema->
-		 SsRule[(*pLeaf)->ElTypeNumber - 1].SrConstruct == CsChoice)
+		 SsRule->SrElem[(*pLeaf)->ElTypeNumber - 1]->SrConstruct == CsChoice)
 		/* c'est un choix */
 	       {
 		  if (*pEl == *pLeaf)
@@ -1627,7 +1629,7 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
    PtrPSchema          pPSchema;
    ThotBool            ok, page;
    int                 schView;
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    NotifyElement       notifyEl;
 
    pRet = NULL;
@@ -1676,9 +1678,9 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 		     /* est identique a un element d'une autre nature, c'est */
 		     /* cet element d'une autre nature qui est inclus. */
 		    {
-		       pSRule = &pSS->SsRule[typeNum - 1];
+		       pSRule = pSS->SsRule->SrElem[typeNum - 1];
 		       if (pSRule->SrConstruct == CsIdentity)
-			  if (pSS->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsNatureSchema)
+			  if (pSS->SsRule->SrElem[pSRule->SrIdentRule - 1]->SrConstruct == CsNatureSchema)
 			    {
 			       pElem = NewSubtree (pSRule->SrIdentRule, pSS, pDoc,
 						   FALSE, TRUE, TRUE, TRUE);
@@ -1695,7 +1697,7 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 		/* cherche le premier element feuille cree */
 		pLeaf = FirstLeaf (pNew);
 	     pRet = pNew;
-	     pSRule = &pSS->SsRule[typeNum - 1];
+	     pSRule = pSS->SsRule->SrElem[typeNum - 1];
 	     if (inclusion && pRet != NULL)
 		/* associe un bloc reference a l'element cree' */
 	       {
@@ -1741,7 +1743,7 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 		  /* designe' par la reference. */
 		  if (!inclusion)
 		    {
-		       switch (pLeaf->ElStructSchema->SsRule[pLeaf->ElTypeNumber - 1].SrConstruct)
+		       switch (pLeaf->ElStructSchema->SsRule->SrElem[pLeaf->ElTypeNumber - 1]->SrConstruct)
 			     {
 				case CsChoice:
 				   ok = CreeChoix (pDoc, &pLeaf, &pRet,
@@ -1860,13 +1862,13 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
   PtrElement          p, p1, pLeaf, pPrevEl, pNextEl, pSibling, pL;
   int                 i, j, minNum, nSiblings;
   ThotBool            found, cree;
-  SRule              *pSRule;
+  PtrSRule            pSRule;
   NotifyElement       notifyEl;
 
   pLeaf = NULL;
   p = NULL;
   cree = FALSE;
-  pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+  pSRule = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
   switch (pSRule->SrConstruct)
     {
     case CsChoice:
@@ -2263,10 +2265,10 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
 	      if (!ExcludedType (pEl, pSRule->SrIdentRule, pEl->ElStructSchema))
 		{
 		  cree =
-		    pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsBasicElement ||
-		    pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsConstant ||
-		    pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsReference ||
-		    pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1].SrConstruct == CsChoice;
+		    pEl->ElStructSchema->SsRule->SrElem[pSRule->SrIdentRule - 1]->SrConstruct == CsBasicElement ||
+		    pEl->ElStructSchema->SsRule->SrElem[pSRule->SrIdentRule - 1]->SrConstruct == CsConstant ||
+		    pEl->ElStructSchema->SsRule->SrElem[pSRule->SrIdentRule - 1]->SrConstruct == CsReference ||
+		    pEl->ElStructSchema->SsRule->SrElem[pSRule->SrIdentRule - 1]->SrConstruct == CsChoice;
 		  notifyEl.event = TteElemNew;
 		  notifyEl.document = (Document) IdentDocument (pDoc);
 		  notifyEl.element = (Element) pEl;
@@ -2335,14 +2337,14 @@ static ThotBool CanCreateWithinElement (PtrElement pEl, ThotBool inclusion)
    PtrElement          p;
    int                 i, j, minNum;
    ThotBool            result, found;
-   SRule              *pSRule;
+   PtrSRule            pSRule;
 
    result = FALSE;
    if (!pEl->ElIsCopy && !ElementIsReadOnly (pEl))
       /* on ne peut rien faire dans une copie protegee ou un sous-arbre en */
       /* lecture seule */
      {
-	pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+	pSRule = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
 	if (inclusion)
 	   /* dans le cas d'une inclusion, CreateWithinElement ne traite que les Choix */
 	  {
@@ -2917,7 +2919,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
    Name                menuTitle;
    char                menuBuf[MAX_TXT_LEN];
    ThotBool            isList, optional, ok;
-   SRule              *pSRule, *pParentSRule;
+   PtrSRule            pSRule, pParentSRule;
    PtrSSchema          pSS, pAncestSS, pSSExt;
    Name                typeName1, typeName2, N;
    ThotBool            separatorAfter, separatorBefore, protectedElem;
@@ -2988,7 +2990,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 	     {
 		/* regle de structure de l'ascendant courant */
 		pAncestSS = pEl->ElStructSchema;
-		pSRule = &pAncestSS->SsRule[pEl->ElTypeNumber - 1];
+		pSRule = pAncestSS->SsRule->SrElem[pEl->ElTypeNumber - 1];
 		pSSExt = NULL;
 		/* on n'a pas encore traite' les inclusions de schema */
 		/* parcourt la liste des inclusions definies dans la regle */
@@ -3007,7 +3009,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 				     ok = TRUE;
 				     /* on ne propose les elements de paire que pour une creation */
 				     /* et si la selection n'est pas vide */
-				     if (pAncestSS->SsRule[pSRule->SrInclusion[i] - 1].
+				     if (pAncestSS->SsRule->SrElem[pSRule->SrInclusion[i] - 1]->
 					 SrConstruct == CsPairedElement)
 				       {
 					if (!create)
@@ -3027,7 +3029,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 					  /* d'un noeud CsChoice ou CsIdentity' */
 					  if (pAncest->ElParent != NULL)
 					    {
-					       pParentSRule = &pAncest->ElParent->ElStructSchema->SsRule[pAncest->ElParent->ElTypeNumber - 1];
+					       pParentSRule = pAncest->ElParent->ElStructSchema->SsRule->SrElem[pAncest->ElParent->ElTypeNumber - 1];
 					       if (pParentSRule->SrConstruct == CsChoice)
 						  /* le pere est un choix, on inserera a son niveau */
 						  pAncest = pAncest->ElParent;
@@ -3044,7 +3046,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 					       AddSeparatorInMenu (&prevMenuInd, &nItems, &menuInd, menuBuf);
 					       separatorBefore = FALSE;
 					    }
-					  if (pAncestSS->SsRule[pSRule->SrInclusion[i] - 1].
+					  if (pAncestSS->SsRule->SrElem[pSRule->SrInclusion[i] - 1]->
 					      SrConstruct == CsPairedElement)
 					     /* une paire de marques autour de la selection */
 					    {
@@ -3105,7 +3107,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 		     /* type d'element */
 		     if (!ExcludedType (pEl->ElParent, typeNum, pSS))
 			/* si inclusion, on ne propose pas les references */
-			if (create || paste || pSS->SsRule[typeNum - 1].SrConstruct != CsReference)
+			if (create || paste || pSS->SsRule->SrElem[typeNum - 1]->SrConstruct != CsReference)
 			  {
 			    ok = TRUE;
 			    if (pEl == firstSel && pEl->ElTypeNumber == (CharString + 1) && firstChar > 1)
@@ -3118,7 +3120,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 			    if (ok &&
 				/* on ne propose les elements de paire que pour une */
 				/* creation et si la selection n'est pas vide */
-				pSS->SsRule[typeNum - 1].SrConstruct == CsPairedElement)
+				pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsPairedElement)
 			      {
 				if (!create)
 				  ok = FALSE;	/* c'est pour la commande Coller ou Inclure */
@@ -3139,7 +3141,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 				    AddSeparatorInMenu (&prevMenuInd, &nItems, &menuInd, menuBuf);
 				    separatorBefore = FALSE;
 				  }
-				if (pSS->SsRule[typeNum - 1].SrConstruct == CsPairedElement)
+				if (pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsPairedElement)
 				  /* une paire de marques autour de la selection */
 				  {
 				    strncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
@@ -3186,7 +3188,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 				/* si inclusion, on ne propose pas les ref. */
 				!ExcludedType (pEl->ElParent, typeNum, pSS) &&
 				(create || paste ||
-				 pSS->SsRule[typeNum - 1].SrConstruct != CsReference))
+				 pSS->SsRule->SrElem[typeNum - 1]->SrConstruct != CsReference))
 			      {
 				GetExternalTypeName (pSS, typeNum, typeName1);
 				UserElementName (pEl, TRUE, typeName2);
@@ -3266,7 +3268,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 	     {
 		/* regle de structuration de l'ascendant courant */
 		pAncestSS = pEl->ElStructSchema;
-		pSRule = &pAncestSS->SsRule[pEl->ElTypeNumber - 1];
+		pSRule = pAncestSS->SsRule->SrElem[pEl->ElTypeNumber - 1];
 		pSSExt = NULL;	/* on n'a pas encore traite' les extensions de schema */
 		/* parcourt la liste de ses extensions definies dans la regle */
 		do
@@ -3280,7 +3282,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 						       pAncestSS)
 				/* pas d'exception interdisant a l'utilisateur de creer ce */
 				/* type d'element, on ajoute une entree au menu */
-				    && pAncestSS->SsRule[pSRule->SrInclusion[i] - 1].
+				    && pAncestSS->SsRule->SrElem[pSRule->SrInclusion[i] - 1]->
 				    SrConstruct != CsPairedElement)
 				   /* pas d'insertion d'une paire APRES */
 				  {
@@ -3290,7 +3292,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 				     /* d'un noeud CsChoice ou CsIdentity' */
 				     if (pAncest->ElParent != NULL)
 				       {
-					  pParentSRule = &pAncest->ElParent->ElStructSchema->SsRule[pAncest->ElParent->ElTypeNumber - 1];
+					  pParentSRule = pAncest->ElParent->ElStructSchema->SsRule->SrElem[pAncest->ElParent->ElTypeNumber - 1];
 					  if (pParentSRule->SrConstruct == CsChoice)
 					     /* le pere est un choix, on inserera a son niveau */
 					     pAncest = pAncest->ElParent;
@@ -3370,8 +3372,8 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 			     /* l'element n'est pas protege' */
 			     /* si inclusion, on ne propose pas les references */
 			     /* on ne propose pas non plus l'insertion d'une paire APRES */
-			     if ((create || paste || pSS->SsRule[typeNum - 1].SrConstruct != CsReference)
-				 && pSS->SsRule[typeNum - 1].SrConstruct != CsPairedElement)
+			     if ((create || paste || pSS->SsRule->SrElem[typeNum - 1]->SrConstruct != CsReference)
+				 && pSS->SsRule->SrElem[typeNum - 1]->SrConstruct != CsPairedElement)
 			       {
 				  GetExternalTypeName (pSS, typeNum, typeName1);
 				  UserElementName (pEl, FALSE, typeName2);
@@ -3418,7 +3420,7 @@ void CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button,
 			      !ExcludedType (pEl->ElParent, typeNum, pSS) &&
 				/* si inclusion, on ne propose pas les ref. */
 			      (create || paste
-			       || pSS->SsRule[typeNum - 1].SrConstruct != CsReference))
+			       || pSS->SsRule->SrElem[typeNum - 1]->SrConstruct != CsReference))
 			    {
 			      GetExternalTypeName (pSS, typeNum, typeName1);
 			      UserElementName (pEl, FALSE, typeName2);
@@ -3501,7 +3503,7 @@ static void InsertSecondPairedElem (PtrElement pEl, PtrDocument pDoc,
 {
    PtrElement          pSecondEl, pSibling;
    PtrSSchema          pSS;
-   SRule              *pParentSRule;
+   PtrSRule            pParentSRule;
    int                 typeNum, nSiblings;
    NotifyElement       notifyEl;
    ThotBool            split;
@@ -3520,7 +3522,7 @@ static void InsertSecondPairedElem (PtrElement pEl, PtrDocument pDoc,
 	/* d'un element Choice ou Identity */
 	if (pElem->ElParent != NULL)
 	  {
-	     pParentSRule = &pElem->ElParent->ElStructSchema->SsRule[pElem->ElParent->ElTypeNumber - 1];
+	     pParentSRule = pElem->ElParent->ElStructSchema->SsRule->SrElem[pElem->ElParent->ElTypeNumber - 1];
 	     if (pParentSRule->SrConstruct == CsChoice)
 		/* le pere est un choix, on inserera a son niveau */
 		pElem = pElem->ElParent;
@@ -3811,7 +3813,7 @@ void CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
 		     /* on ne s'interesse aux marques que s'il s'agit d'une */
 		     /* creation (on ignore Coller et Inclure) */
 		     if (create)
-			if (newsel->ElStructSchema->SsRule[newsel->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+			if (newsel->ElStructSchema->SsRule->SrElem[newsel->ElTypeNumber - 1]->SrConstruct == CsPairedElement)
 			   /* on vient de creer un element d'une paire */
 			   InsertSecondPairedElem (newsel, pDoc, lastSel, lastChar);
 		     SetDocumentModified (pDoc, TRUE, 20);
@@ -3833,7 +3835,7 @@ void CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
 		       }
 		     /* selectionne la premiere feuille cree ou le premier element */
 		     /* colle', si ce n'est pas une constante */
-		     if (newsel->ElStructSchema->SsRule[newsel->ElTypeNumber - 1].SrConstruct
+		     if (newsel->ElStructSchema->SsRule->SrElem[newsel->ElTypeNumber - 1]->SrConstruct
 			 == CsConstant)
 		       {
 			  char1 = 0;

@@ -113,8 +113,8 @@ Element TtaNewElement (Document document, ElementType elementType)
 				LoadedDocument[document - 1], FALSE, TRUE,
 				TRUE, TRUE);
 	  if (element != NULL)
-	    if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
-	      if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
+	    if (element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrConstruct == CsPairedElement)
+	      if (!element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrFirstOfPair)
 		element->ElPairIdent = 0;
 	}
   return ((Element) element);
@@ -168,8 +168,8 @@ Element             TtaNewTree (Document document, ElementType elementType, char
 	element = NewSubtree (elementType.ElTypeNum, (PtrSSchema) (elementType.ElSSchema),
 			  LoadedDocument[document - 1], TRUE, TRUE, TRUE,
 			      (ThotBool)(*label == EOS));
-	if (element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrConstruct == CsPairedElement)
-	   if (!element->ElStructSchema->SsRule[element->ElTypeNumber - 1].SrFirstOfPair)
+	if (element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrConstruct == CsPairedElement)
+	   if (!element->ElStructSchema->SsRule->SrElem[element->ElTypeNumber - 1]->SrFirstOfPair)
 	      element->ElPairIdent = 0;
 	if (*label != EOS)
 	   strncpy (element->ElLabel, label, MAX_LABEL_LEN);
@@ -497,7 +497,7 @@ static Element    CreateDescent (Document document, Element element,
 	  lastNew = firstCreated;
 	  while (lastNew->ElNext != NULL)
 	    lastNew = lastNew->ElNext;
-	  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
+	  if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsChoice)
 	    {
 	      if (lastCreated == firstCreated)
 		ident = TRUE;
@@ -575,7 +575,7 @@ static Element    CreateDescent (Document document, Element element,
 #endif
 	      if (withContent)
 		if (!lastCreated->ElTerminal)
-		  if (lastCreated->ElStructSchema->SsRule[lastCreated->ElTypeNumber - 1].SrConstruct != CsChoice)
+		  if (lastCreated->ElStructSchema->SsRule->SrElem[lastCreated->ElTypeNumber - 1]->SrConstruct != CsChoice)
 		    {
 		      pSon = NewSubtree (lastCreated->ElTypeNumber, lastCreated->ElStructSchema, LoadedDocument[document - 1], TRUE, FALSE, TRUE, TRUE);
 		      if (pSon != NULL)
@@ -904,7 +904,7 @@ void TtaInsertSibling (Element newElement, Element sibling,
 	   /* Dealing with exceptions */
 	   CreateWithException (pEl, LoadedDocument[document - 1]);
 	   /* If element pair, chain it with its homologue */
-	   if (((PtrElement) newElement)->ElStructSchema->SsRule[((PtrElement) newElement)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+	   if (((PtrElement) newElement)->ElStructSchema->SsRule->SrElem[((PtrElement) newElement)->ElTypeNumber - 1]->SrConstruct == CsPairedElement)
 	     GetOtherPairedElement ((PtrElement) newElement);
 #ifndef NODISPLAY
 	   /* treats the required attributs of created elements */
@@ -974,7 +974,7 @@ void TtaInsertFirstChild (Element *newElement, Element parent,
       TtaError (ERR_element_does_not_match_DTD);
    else
      {
-	if (((PtrElement) parent)->ElStructSchema->SsRule[((PtrElement) parent)->ElTypeNumber - 1].SrConstruct == CsChoice)
+	if (((PtrElement) parent)->ElStructSchema->SsRule->SrElem[((PtrElement) parent)->ElTypeNumber - 1]->SrConstruct == CsChoice)
 	  {
 #ifndef NODISPLAY
 	     InsertOption ((PtrElement) parent, (PtrElement *) newElement,
@@ -1764,7 +1764,7 @@ char *TtaGetElementTypeName (ElementType elementType)
 	   elementType.ElTypeNum < 1)
     TtaError (ERR_invalid_element_type);
   else
-    strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrName, MAX_NAME_LENGTH);
+    strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrName, MAX_NAME_LENGTH);
   return nameBuffer;
 }
 
@@ -1788,7 +1788,7 @@ char *TtaGetElementTypeOriginalName (ElementType elementType)
 	   elementType.ElTypeNum < 1)
     TtaError (ERR_invalid_element_type);
   else
-    strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrOrigName, MAX_NAME_LENGTH);
+    strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrOrigName, MAX_NAME_LENGTH);
   return nameBuffer;
 }
 
@@ -1960,7 +1960,7 @@ int TtaIsConstant (ElementType elementType)
     TtaError (ERR_invalid_element_type);
   else
     {
-      if (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsConstant)
+      if (((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrConstruct == CsConstant)
 	result = 1;
     }
   return result;
@@ -1988,10 +1988,10 @@ int TtaIsLeaf (ElementType elementType)
     TtaError (ERR_invalid_element_type);
   else
     {
-      if ((((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsConstant) ||
-	  (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsReference) ||
-	  (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsPairedElement) ||
-	  (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsBasicElement))
+      if ((((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrConstruct == CsConstant) ||
+	  (((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrConstruct == CsReference) ||
+	  (((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrConstruct == CsPairedElement) ||
+	  (((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrConstruct == CsBasicElement))
 	result = 1;
     }
   return result;
@@ -2019,7 +2019,7 @@ Construct TtaGetConstructOfType (ElementType elementType)
 	   elementType.ElTypeNum < 1)
     TtaError (ERR_invalid_element_type);
   else
-    switch (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct)
+    switch (((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrConstruct)
       {
       case CsIdentity:
 	result = ConstructIdentity;
@@ -2080,7 +2080,7 @@ Construct TtaGetConstructOfType (ElementType elementType)
 int           TtaGetCardinalOfType (ElementType elementType)
 {
    int           result;
-   SRule        *pRule;
+   PtrSRule      pRule;
 
    UserErrorCode = 0;
    result = 0;
@@ -2091,7 +2091,7 @@ int           TtaGetCardinalOfType (ElementType elementType)
 	TtaError (ERR_invalid_element_type);
    else
      {
-        pRule = &(((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1]);
+        pRule = ((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1];
         switch (pRule->SrConstruct)
             {
 	       case CsIdentity:
@@ -2135,7 +2135,7 @@ int           TtaGetCardinalOfType (ElementType elementType)
 void           TtaGiveConstructorsOfType (ElementType **typesArray,
 					  int *size,ElementType elementType)
 { 
-   SRule        *pRule;
+   PtrSRule      pRule;
    int i;
 
    UserErrorCode = 0;
@@ -2146,7 +2146,7 @@ void           TtaGiveConstructorsOfType (ElementType **typesArray,
 	TtaError (ERR_invalid_element_type);
    else
      {
-        pRule = &(((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1]);
+        pRule = ((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1];
         switch (pRule->SrConstruct)
           {
 	   case CsNatureSchema:
@@ -2270,7 +2270,7 @@ int           TtaGetRankInAggregate (ElementType componentType,
 				     ElementType aggregateType)
 {
    int		rank, i;
-   SRule        *pRule;
+   PtrSRule     pRule;
 
    UserErrorCode = 0;
    rank = 0;
@@ -2283,7 +2283,7 @@ int           TtaGetRankInAggregate (ElementType componentType,
 	TtaError (ERR_invalid_element_type);
    else if (componentType.ElSSchema == aggregateType.ElSSchema)
      {
-        pRule = &(((PtrSSchema) (aggregateType.ElSSchema))->SsRule[aggregateType.ElTypeNum - 1]);
+        pRule = ((PtrSSchema) (aggregateType.ElSSchema))->SsRule->SrElem[aggregateType.ElTypeNum - 1];
         if (pRule->SrConstruct == CsAggregate ||
 	    pRule->SrConstruct == CsUnorderedAggregate)
            for (i = 0; i < pRule->SrNComponents && rank == 0; i++)
@@ -2306,8 +2306,8 @@ int           TtaGetRankInAggregate (ElementType componentType,
    ---------------------------------------------------------------------- */
 ThotBool          TtaIsOptionalInAggregate (int rank, ElementType elementType)
 {
-   ThotBool result;
-   SRule        *pRule;
+   ThotBool       result;
+   PtrSRule       pRule;
 
    UserErrorCode = 0;
    result = FALSE;
@@ -2318,7 +2318,7 @@ ThotBool          TtaIsOptionalInAggregate (int rank, ElementType elementType)
 	TtaError (ERR_invalid_element_type);
    else
      {
-        pRule = &(((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1]);
+        pRule = ((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1];
         if (pRule->SrConstruct != CsAggregate && pRule->SrConstruct !=CsUnorderedAggregate)
                TtaError (ERR_invalid_element_type);
         else if(rank > pRule->SrNComponents)
@@ -2587,11 +2587,11 @@ int                 TtaIsFirstPairedElement (Element element)
    result = 0;
    if (element == NULL)
 	TtaError (ERR_invalid_parameter);
-   else if (((PtrElement) element)->ElStructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsPairedElement)
+   else if (((PtrElement) element)->ElStructSchema->SsRule->SrElem[((PtrElement) element)->ElTypeNumber - 1]->SrConstruct != CsPairedElement)
      {
 	TtaError (ERR_invalid_element_type);
      }
-   else if (((PtrElement) element)->ElStructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrFirstOfPair)
+   else if (((PtrElement) element)->ElStructSchema->SsRule->SrElem[((PtrElement) element)->ElTypeNumber - 1]->SrFirstOfPair)
       result = 1;
    return result;
 }
@@ -2868,7 +2868,7 @@ Element             TtaSearchOtherPairedElement (Element element)
    pairedElement = NULL;
    if (element == NULL)
 	TtaError (ERR_invalid_parameter);
-   else if (((PtrElement) element)->ElStructSchema->SsRule[((PtrElement) element)->ElTypeNumber - 1].SrConstruct != CsPairedElement)
+   else if (((PtrElement) element)->ElStructSchema->SsRule->SrElem[((PtrElement) element)->ElTypeNumber - 1]->SrConstruct != CsPairedElement)
 	TtaError (ERR_invalid_element_type);
    else
       pairedElement = GetOtherPairedElement ((PtrElement) element);

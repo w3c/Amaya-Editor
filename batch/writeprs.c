@@ -1304,7 +1304,7 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
    /* ecrit la table des pointeurs de regle de chaque type du schema de */
    /* structure */
    for (i = 0; i < pSS->SsNRules; i++)
-      WriteRulePtr (pPSch->PsElemPRule[i]);
+      WriteRulePtr (pPSch->PsElemPRule->ElemPres[i]);
 
    /* ecrit toutes les regles de presentation */
    /* ecrit les regles standard */
@@ -1343,19 +1343,19 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
 
    /* ecrit les regles des elements */
    for (i = 0; i < pSS->SsNRules; i++)
-      WritePRules (pPSch->PsElemPRule[i]);
+      WritePRules (pPSch->PsElemPRule->ElemPres[i]);
 
    for (i = 0; i < pSS->SsNAttributes; i++)
       WriteShort (pPSch->PsNHeirElems->Num[i]);
 
    for (i = 0; i < pSS->SsNRules; i++)
-      WriteShort (pPSch->PsNInheritedAttrs[i]);
+      WriteShort (pPSch->PsNInheritedAttrs->Num[i]);
 
    for (i = 0; i < pSS->SsNAttributes; i++)
       WriteShort (pPSch->PsNComparAttrs->Num[i]);
 
    for (i = 0; i < pSS->SsNRules; i++)
-      WriteShort (pPSch->PsElemTransmit[i]);
+      WriteShort (pPSch->PsElemTransmit->Num[i]);
    WriteShort (pPSch->PsNTransmElems);
    for (i = 0; i < pPSch->PsNTransmElems; i++)
      {

@@ -1033,7 +1033,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
   PtrSSchema          pSS;
   PtrSSchema          pSchExt;
   PtrAttribute        pAttrNew;
-  SRule              *pRe1;
+  PtrSRule            pRe1;
   PtrTtAttribute      pAttr;
   char                tempBuffer[MAX_NAME_LENGTH + 1];
   int                 i, j, k;
@@ -1110,7 +1110,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
       pSS = firstSel->ElStructSchema;
       if (pSS != NULL)
 	{
-	  pRe1 = &pSS->SsRule[firstSel->ElTypeNumber - 1];
+	  pRe1 = pSS->SsRule->SrElem[firstSel->ElTypeNumber - 1];
 	  pSchExt = SelDoc->DocSSchema;
 	  do
 	    {

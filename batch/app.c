@@ -359,17 +359,31 @@ static ThotBool RegisteredEvent (char *eventName, int *rank)
 static PtrSSchema ConstructAbstractSchStruct ()
 {
    PtrSSchema          pSS;
+   int                 num, i;
 
    GetSchStruct (&pSS);
    pSS->SsCode = 0;
+   /* allocate the element table */
+   num = MAX_BASIC_TYPE - 1;         /* table size */
+   pSS->SsRule = (SrRuleTable*) malloc (num * sizeof (PtrSRule));
+   pSS->SsRuleTableSize = num;
+   for (i = 0; i < num; i++)
+     pSS->SsRule->SrElem[i] = NULL;
 
    /* initialise les types de base */
-   strcpy (pSS->SsRule[CharString].SrName, "TEXT_UNIT");
-   strcpy (pSS->SsRule[GraphicElem].SrName, "GRAPHICS_UNIT");
-   strcpy (pSS->SsRule[Symbol].SrName, "SYMBOL_UNIT");
-   strcpy (pSS->SsRule[Picture].SrName, "PICTURE_UNIT");
-   strcpy (pSS->SsRule[Refer].SrName, "REFERENCE_UNIT");
-   strcpy (pSS->SsRule[PageBreak].SrName, "PAGE_BREAK");
+   pSS->SsRule->SrElem[CharString] = (PtrSRule) malloc (sizeof (SRule));
+   strcpy (pSS->SsRule->SrElem[CharString]->SrName, "TEXT_UNIT");
+   pSS->SsRule->SrElem[GraphicElem] = (PtrSRule) malloc (sizeof (SRule));
+   strcpy (pSS->SsRule->SrElem[GraphicElem]->SrName, "GRAPHICS_UNIT");
+   pSS->SsRule->SrElem[Symbol] = (PtrSRule) malloc (sizeof (SRule));
+   strcpy (pSS->SsRule->SrElem[Symbol]->SrName, "SYMBOL_UNIT");
+   pSS->SsRule->SrElem[Picture] = (PtrSRule) malloc (sizeof (SRule));
+   strcpy (pSS->SsRule->SrElem[Picture]->SrName, "PICTURE_UNIT");
+   pSS->SsRule->SrElem[Refer] = (PtrSRule) malloc (sizeof (SRule));
+   strcpy (pSS->SsRule->SrElem[Refer]->SrName, "REFERENCE_UNIT");
+   pSS->SsRule->SrElem[PageBreak] = (PtrSRule) malloc (sizeof (SRule));
+   strcpy (pSS->SsRule->SrElem[PageBreak]->SrName, "PAGE_BREAK");
+
    pSS->SsNRules = MAX_BASIC_TYPE - 1;
    pSS->SsNAttributes = 0;
    return pSS;
@@ -774,15 +788,15 @@ static void ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl,
 	      /* TypeName est ici le nom de la structure generique */
 	      /* => on lit le schema de structure compile' */
 	      GetSchStruct (&pSSchema);
-		if (!ReadStructureSchema (name, pSSchema))
-		  CompilerMessage (wi, APP, FATAL, APP_STRUCT_SCHEM_NOT_FOUND,
-				   inputLine, LineNum);
-		else if (strcmp (name, pSSchema->SsName) != 0)
-		  CompilerMessage (wi, APP, FATAL, UNMATCHING_STRUCT_SCHEME,
-				   inputLine, LineNum);
-		else
-		  /* acquiert un schema */
-		  pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
+	      if (!ReadStructureSchema (name, pSSchema))
+		CompilerMessage (wi, APP, FATAL, APP_STRUCT_SCHEM_NOT_FOUND,
+				 inputLine, LineNum);
+	      else if (strcmp (name, pSSchema->SsName) != 0)
+		CompilerMessage (wi, APP, FATAL, UNMATCHING_STRUCT_SCHEME,
+				 inputLine, LineNum);
+	      else
+		/* acquiert un schema */
+		pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
 	    }
 	}
       else
@@ -791,12 +805,12 @@ static void ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl,
 	  if (pr == RULE_ElemActions)
 	    {
 	      i = 0;
-	      while (strcmp (name, pSSchema->SsRule[i].SrName) != 0 &&
+	      while (strcmp (name, pSSchema->SsRule->SrElem[i]->SrName) != 0 &&
 		     i < pSSchema->SsNRules)
 		i++;
 	      if (i < pSSchema->SsNRules)
 		{
-		  if (pSSchema->SsRule[i].SrConstruct == CsPairedElement)
+		  if (pSSchema->SsRule->SrElem[i]->SrConstruct == CsPairedElement)
 		    /* c'est un element CsPairedElement */
 		    if (!SecondInPair && !FirstInPair)
 		      /* le nom du type n'etait pas precede' de First ou Second */
@@ -820,7 +834,7 @@ static void ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl,
 		{
 		  if (!strcmp (fileName, "EDITOR"))
 		    {
-		      strcpy (pSSchema->SsRule[i].SrName, name);
+		      strcpy (pSSchema->SsRule->SrElem[i]->SrName, name);
 		      pSSchema->SsNRules++;
 		      typeNum = i + 1;
 		    }
@@ -1178,10 +1192,10 @@ static void WriteName (FILE * Hfile, Name n)
   ----------------------------------------------------------------------*/
 static void WriteRuleName (FILE * Hfile, int r)
 {
-   if (pSSchema->SsRule[r].SrName[0] == '\0')
+   if (pSSchema->SsRule->SrElem[r]->SrName[0] == '\0')
       fprintf (Hfile, "ID%d", r+1);
    else
-      WriteName (Hfile, pSSchema->SsRule[r].SrName);
+      WriteName (Hfile, pSSchema->SsRule->SrElem[r]->SrName);
 }
 
 /*----------------------------------------------------------------------
@@ -1264,12 +1278,12 @@ static void WriteBasicElements (FILE * Hfile)
 static void         WriteRule (FILE * Hfile, int r, SRule * pExtensRule)
 {
    int                 i;
-   SRule              *pRule;
+   PtrSRule            pRule;
 
    if (pExtensRule != NULL)
       pRule = pExtensRule;
    else
-      pRule = &pSSchema->SsRule[r];
+      pRule = pSSchema->SsRule->SrElem[r];
    if (pRule->SrConstruct != CsNatureSchema &&
        !(pRule->SrConstruct == CsPairedElement && !pRule->SrFirstOfPair))
      {
@@ -1301,7 +1315,7 @@ static void         WriteRule (FILE * Hfile, int r, SRule * pExtensRule)
   ----------------------------------------------------------------------*/
 static void         WriteDefineFile (char *fname)
 {
-   SRule              *pRule;
+   PtrSRule            pRule;
    Name                HFileName;
    FILE               *Hfile;
    int                 firstRule;
@@ -1346,10 +1360,10 @@ static void         WriteDefineFile (char *fname)
 
 	/* write constants */
 	rule = MAX_BASIC_TYPE;
-	if (pSSchema->SsRule[rule].SrConstruct == CsConstant)
+	if (pSSchema->SsRule->SrElem[rule]->SrConstruct == CsConstant)
 	  {
 	     fprintf (Hfile, "\n/* Constants */\n");
-	     while (pSSchema->SsRule[rule].SrConstruct == CsConstant)
+	     while (pSSchema->SsRule->SrElem[rule]->SrConstruct == CsConstant)
 		WriteRule (Hfile, rule++, NULL);
 	  }
 	firstRule = rule;
@@ -1358,7 +1372,7 @@ static void         WriteDefineFile (char *fname)
 	   fprintf (Hfile, "\n/* Elements */\n");
 	for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
 	  {
-	     pRule = &pSSchema->SsRule[rule];
+	     pRule = pSSchema->SsRule->SrElem[rule];
 	     /* skip Extern, Included elements and units*/
 	     if (!pRule->SrRefImportedDoc && !pRule->SrUnitElem)
 	       WriteRule (Hfile, rule, NULL);
@@ -1376,7 +1390,7 @@ static void         WriteDefineFile (char *fname)
 	/* write exported elements */
 	first = True;
 	for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
-	   if (pSSchema->SsRule[rule].SrUnitElem)
+	   if (pSSchema->SsRule->SrElem[rule]->SrUnitElem)
 	     {
 		if (first)
 		  {
@@ -1388,7 +1402,7 @@ static void         WriteDefineFile (char *fname)
 
 	first = True;
 	for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
-	   if (pSSchema->SsRule[rule].SrConstruct == CsNatureSchema)
+	   if (pSSchema->SsRule->SrElem[rule]->SrConstruct == CsNatureSchema)
 	     {
 		if (first)
 		  {

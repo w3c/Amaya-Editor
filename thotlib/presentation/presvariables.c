@@ -29,56 +29,67 @@
 #include "presvariables_f.h"
 
 /*----------------------------------------------------------------------
-   MakeAliasTypeCount cree un alias temporaire qui va servir a faire 
-   une recherche multiple sur les elements du compteur     
-   on cree l'alias  MAX_RULES_SSCHEMA  pour les elements reset   
-   du compteur.  On cree l'alias  MAX_RULES_SSCHEMA + 1 pour les 
-   elements add du compteur.                               
+   MakeAliasTypeCount
+   Create a temporary structure rule in schema pSchStr to allow
+   searching of multiple types used in a counter.
+   Create alias rule SsNRules+1 for reset elements
+   Create alias rule SsNRules+2 for add elements
   ----------------------------------------------------------------------*/
 static int MakeAliasTypeCount (Counter *pCounter, CounterOp op,
 			       PtrSSchema pSchStr)
 {
-   SRule              *NewAlias;
-   int                 i;
+  PtrSRule            NewAlias;
+  int                 i, rule;
 
-   if (op == CntrSet)
-      NewAlias = &pSchStr->SsRule[MAX_RULES_SSCHEMA];
-   else if (op == CntrAdd)
-      NewAlias = &pSchStr->SsRule[MAX_RULES_SSCHEMA + 1];
-   else				/* on s'est trompe c'est un CntrRank */
-      return pCounter->CnItem[0].CiElemType;
+  if (op == CntrSet)
+    rule = pSchStr->SsNRules + 1;
+  else if (op == CntrAdd)
+    rule = pSchStr->SsNRules + 2;
+  else				/* on s'est trompe c'est un CntrRank */
+    return pCounter->CnItem[0].CiElemType;
 
-   /* initialise l'alias temporaire */
-   strcpy (NewAlias->SrName, "Counter alias");
-   NewAlias->SrNDefAttrs = 0;
-   NewAlias->SrNLocalAttrs = 0;
-   NewAlias->SrLocalAttr = NULL;
-   NewAlias->SrRequiredAttr = NULL;
-   NewAlias->SrUnitElem = FALSE;
-   NewAlias->SrRecursive = FALSE;
-   NewAlias->SrExportedElem = FALSE;
-   NewAlias->SrFirstExcept = 0;
-   NewAlias->SrLastExcept = 0;
-   NewAlias->SrNInclusions = 0;
-   NewAlias->SrNExclusions = 0;
-   NewAlias->SrConstruct = CsChoice;
-   NewAlias->SrNChoices = 0;
+  NewAlias = (PtrSRule) malloc (sizeof (SRule));
+  pSchStr->SsRule->SrElem[rule -1] = NewAlias;
 
-   /* initialise le constructeur choix de l'alias */
-   for (i = 0; i < pCounter->CnNItems; i++)
-     {
-	if (pCounter->CnItem[i].CiCntrOp == op)
-	  {
-	     NewAlias->SrChoice[NewAlias->SrNChoices] =
-		pCounter->CnItem[i].CiElemType;
-	     NewAlias->SrNChoices += 1;
-	  }
-     }
+  /* initialise l'alias temporaire */
+  strcpy (NewAlias->SrName, "Counter_alias");
+  NewAlias->SrNDefAttrs = 0;
+  NewAlias->SrNLocalAttrs = 0;
+  NewAlias->SrLocalAttr = NULL;
+  NewAlias->SrRequiredAttr = NULL;
+  NewAlias->SrUnitElem = FALSE;
+  NewAlias->SrRecursive = FALSE;
+  NewAlias->SrExportedElem = FALSE;
+  NewAlias->SrFirstExcept = 0;
+  NewAlias->SrLastExcept = 0;
+  NewAlias->SrNInclusions = 0;
+  NewAlias->SrNExclusions = 0;
+  NewAlias->SrConstruct = CsChoice;
+  NewAlias->SrNChoices = 0;
+  /* initialise le constructeur choix de l'alias */
+  for (i = 0; i < pCounter->CnNItems; i++)
+    {
+      if (pCounter->CnItem[i].CiCntrOp == op)
+	{
+	  NewAlias->SrChoice[NewAlias->SrNChoices] =
+	    pCounter->CnItem[i].CiElemType;
+	  NewAlias->SrNChoices += 1;
+	}
+    }
+  return rule;
+}
 
-   if (op == CntrSet)
-      return MAX_RULES_SSCHEMA + 1;
-   else				/* op == CntrAdd */
-      return MAX_RULES_SSCHEMA + 2;
+/*----------------------------------------------------------------------
+   ReleaseAliasTypeCount
+   Destroys a provisional structure rule created for evaluating
+   a counter.
+   typeInt is the rule number and pSS is the structure schema where
+   it was created.
+  ----------------------------------------------------------------------*/
+static void ReleaseAliasTypeCount (int typeNum, PtrSSchema pSS)
+{
+  free (pSS->SsRule->SrElem[typeNum -1]);
+  pSS->SsRule->SrElem[typeNum -1] = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -339,8 +350,8 @@ int CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 			  /* l'element dont on veut le rang n'a pas de frere... */
 			  if (pEl->ElParent != NULL)
 			     /* ... mais il a un pere... */
-			     if (pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->
-				  ElTypeNumber - 1].SrConstruct == CsChoice)
+			     if (pEl->ElParent->ElStructSchema->SsRule->SrElem[pEl->ElParent->
+				  ElTypeNumber - 1]->SrConstruct == CsChoice)
 				/* ... et son pere est un choix */
 				/* on prendra le rang du pere */
 				pEl = pEl->ElParent;
@@ -439,6 +450,8 @@ int CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 		  }
 		while (pEl != NULL && !EquivalentType (pEl, TypeSet, pSS));
 	  }
+	ReleaseAliasTypeCount (TypeSet, pSS);
+	ReleaseAliasTypeCount (TypeIncr, pSS);
      }
    if (value < 0)
       value = 0;
@@ -613,7 +626,7 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 		     /* l'element dont on veut le rang n'a pas de frere... */
 		     if (pEl->ElParent != NULL)
 			/* ... mais il a un pere... */
-			if (pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct
+			if (pEl->ElParent->ElStructSchema->SsRule->SrElem[pEl->ElParent->ElTypeNumber - 1]->SrConstruct
 			    == CsChoice)
 			   /* ... et son pere est un choix */
 			   /* on prendra le rang du pere */
@@ -833,6 +846,8 @@ int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
 	     while (pEl != NULL);
 	  value += Nincr * incrVal;
 	  }
+	ReleaseAliasTypeCount (TypeSet, pSS);
+	ReleaseAliasTypeCount (TypeIncr, pSS);
      }
 
    if (value < 0)
@@ -1094,7 +1109,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	  case VarElemName:
 	    /* Name de l'element */
 	    pEl = pAb->AbElement;
-	    CopyStringToBuffer (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
+	    CopyStringToBuffer (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->
 			      SrName, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;

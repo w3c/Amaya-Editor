@@ -978,6 +978,19 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 	     TSchemaError (20);
 	     return NULL;
 	  }
+	/* allocate the element translation table */
+	size = pSS->SsNRules * sizeof (PtrTRuleBlock);
+	pTSch->TsElemTRule = (ElemTransTable*) TtaGetMemory (size);
+	if (pTSch->TsElemTRule)
+	  memset (pTSch->TsElemTRule, 0, size);
+
+	/* allocate the attribute inherit table */
+	size = pSS->SsNRules * sizeof (ThotBool);
+	pTSch->TsInheritAttr = (BlnTable*) TtaGetMemory (size);
+	if (pTSch->TsInheritAttr)
+	  memset (pTSch->TsInheritAttr, 0, size);
+
+	/* allocate the attribute translation table */
 	size = pSS->SsNAttributes * sizeof (PtrAttributeTransl);
 	pTSch->TsAttrTRule = (AttrTransTable*) TtaGetMemory (size);
 	if (pTSch->TsAttrTRule)
@@ -1056,14 +1069,15 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 	  {
 	     InitialNElems = pSS->SsFirstDynNature - 1;
 	     for (j = InitialNElems; j < pSS->SsNRules; j++)
-		pTSch->TsElemTRule[j] = NULL;
+		pTSch->TsElemTRule->TsElemTransl[j] = NULL;
 	  }
 	if (!error)
 	  for (i = 0; i < InitialNElems; i++)
-	    pTSch->TsElemTRule[i] = ReadPtrTRuleBlock (file, &pNextBlock);
+	    pTSch->TsElemTRule->TsElemTransl[i] =
+	                                ReadPtrTRuleBlock (file, &pNextBlock);
 	if (!error)
 	  for (i = 0; i < InitialNElems; i++)
-	    TtaReadBool (file, &pTSch->TsInheritAttr[i]);
+	    TtaReadBool (file, &pTSch->TsInheritAttr->Bln[i]);
 	if (!error)
 	  for (i = 0; i < pSS->SsNAttributes && !error; i++)
 	    {
@@ -1167,8 +1181,8 @@ PtrTSchema ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 	/* lit les blocs de regles des elements */
 	if (!error)
 	   for (i = 0; i < InitialNElems; i++)
-	      ReadBlocks (file, &pTSch->TsElemTRule[i], &pNextTRule, &pSS,
-			  &pNextBlock);
+	      ReadBlocks (file, &pTSch->TsElemTRule->TsElemTransl[i],
+			  &pNextTRule, &pSS, &pNextBlock);
 	/* lit les blocs de regles des attributs */
 	for (i = 0; i < pSS->SsNAttributes; i++)
 	   if (!error)
@@ -1211,7 +1225,7 @@ void FreeTranslationSchema (PtrTSchema pTSch, PtrSSchema pSS)
       InitialNElems = pSS->SsFirstDynNature - 1;
    /* libere les blocs de regles  des elements */
    for (i = 0; i < InitialNElems; i++)
-      FreeBlocks (pTSch->TsElemTRule[i]);
+      FreeBlocks (pTSch->TsElemTRule->TsElemTransl[i]);
    /* libere les blocs de regles des attributs */
    for (i = 0; i < pSS->SsNAttributes; i++)
      {
@@ -1222,6 +1236,16 @@ void FreeTranslationSchema (PtrTSchema pTSch, PtrSSchema pSS)
    /* libere les blocs de regles des presentations */
    for (i = 0; i < MAX_TRANSL_PRULE; i++)
       FreeTRulesPres (i + 1, &pTSch->TsPresTRule[i]);
+   if (pTSch->TsElemTRule)
+     {
+       TtaFreeMemory (pTSch->TsElemTRule);
+       pTSch->TsElemTRule = NULL;
+     }
+   if (pTSch->TsInheritAttr)
+     {
+       TtaFreeMemory (pTSch->TsInheritAttr);
+       pTSch->TsInheritAttr = NULL;
+     }
    if (pTSch->TsAttrTRule)
      {
        TtaFreeMemory (pTSch->TsAttrTRule);

@@ -59,7 +59,7 @@ int BuildSelectMenu (char BufMenu[MAX_TXT_LEN])
    strcpy (&BufMenu[i], "B^ ");
    pEl = SelMenuParentEl;
    if (pEl != NULL && pEl->ElStructSchema != NULL)
-      strcat (&BufMenu[i], pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+      strcat (&BufMenu[i], pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
    i += strlen (&BufMenu[i]) + 1;
 
    /* element selectionable precedent */
@@ -67,7 +67,7 @@ int BuildSelectMenu (char BufMenu[MAX_TXT_LEN])
    pEl = SelMenuPreviousEl;
    if (pEl != NULL && pEl->ElStructSchema != NULL)
      {
-	NomElem = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
+	NomElem = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName;
 	strcat (&BufMenu[i], NomElem);
      }
    i += strlen (&BufMenu[i]) + 1;
@@ -77,7 +77,7 @@ int BuildSelectMenu (char BufMenu[MAX_TXT_LEN])
    pEl = SelMenuNextEl;
    if (pEl != NULL && pEl->ElStructSchema != NULL)
      {
-	NomElem = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
+	NomElem = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName;
 	strcat (&BufMenu[i], NomElem);
      }
    i += strlen (&BufMenu[i]) + 1;
@@ -87,7 +87,7 @@ int BuildSelectMenu (char BufMenu[MAX_TXT_LEN])
    pEl = SelMenuChildEl;
    if (pEl != NULL && pEl->ElStructSchema != NULL)
      {
-	NomElem = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName;
+	NomElem = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName;
 	strcat (&BufMenu[i], NomElem);
      }
    i += strlen (&BufMenu[i]) + 1;

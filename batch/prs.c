@@ -195,11 +195,26 @@ static void         Initialize ()
 	   if (pPSchema->PsNAttrPRule)
 	     memset (pPSchema->PsNAttrPRule, 0, size);
 
+	   size = pSSchema->SsNRules * sizeof (PtrPRule);
+	   pPSchema->PsElemPRule =  (PtrPRuleTable*) malloc (size);
+	   if (pPSchema->PsElemPRule)
+	     memset (pPSchema->PsElemPRule, 0, size);
+
 	   size = pSSchema->SsNAttributes * sizeof (int);
 	   pPSchema->PsNHeirElems = (NumberTable*) malloc (size);
 	   if (pPSchema->PsNHeirElems)
 	     memset (pPSchema->PsNHeirElems, 0, size);
 
+           size = pSSchema->SsNRules * sizeof (int);
+	   pPSchema->PsNInheritedAttrs = (NumberTable*) malloc (size);
+	   if (pPSchema->PsNInheritedAttrs)
+	     memset (pPSchema->PsNInheritedAttrs, 0, size);
+/****
+	   size = pSSchema->SsNRules * sizeof (PtrInheritAttrTable);
+	   pPSchema->PsInheritedAttr = (InheritAttrTbTb*) malloc (size);
+	   if (pPSchema->PsInheritedAttr)
+	     memset (pPSchema->PsInheritedAttr, 0, size);
+***/
 	   size = pSSchema->SsNAttributes * sizeof (int);
 	   pPSchema->PsNComparAttrs = (NumberTable*) malloc (size);
 	   if (pPSchema->PsNComparAttrs)
@@ -209,6 +224,11 @@ static void         Initialize ()
 	   pPSchema->PsComparAttr = (CompAttrTbTb*) malloc (size);
 	   if (pPSchema->PsComparAttr)
 	     memset (pPSchema->PsComparAttr, 0, size);
+
+	   size = pSSchema->SsNRules * sizeof (int);
+	   pPSchema->PsElemTransmit = (NumberTable*) malloc (size);
+	   if (pPSchema->PsElemTransmit)
+	     memset (pPSchema->PsElemTransmit, 0, size);
 
 	   CurMinMax = CntCurVal;
 	   /* initialise les indicateurs du compilateur */
@@ -510,9 +530,9 @@ static void         EndOfRulesForType ()
 
    if (RuleDef && CurType > 0)
      {
-      if (pPSchema->PsElemPRule[CurType - 1] == NextRule)
+      if (pPSchema->PsElemPRule->ElemPres[CurType - 1] == NextRule)
 	 /* aucune regle de presentation pour ce type d'element */
-	 pPSchema->PsElemPRule[CurType - 1] = NULL;
+	 pPSchema->PsElemPRule->ElemPres[CurType - 1] = NULL;
      }
    else if (AttributeDef && CurAttrNum > 0)
      {
@@ -874,7 +894,7 @@ static void         GenerateRPresAttribut (indLine wi)
 	   = NewAttrPRule (CurAttrNum);
 	if (CurElemHeritAttr)
 	  {
-	     pPSchema->PsNInheritedAttrs[CurElemHeritAttr - 1] += 1;
+	     pPSchema->PsNInheritedAttrs->Num[CurElemHeritAttr - 1] += 1;
 	     pPSchema->PsNHeirElems->Num[CurAttrNum - 1] += 1;
 	  }
      }
@@ -896,7 +916,7 @@ static void         GenerateRPresAttribut (indLine wi)
 	     pPRuleA = pPRuleA->ApNextAttrPres;
 	     if (CurElemHeritAttr)
 	       {
-		  pPSchema->PsNInheritedAttrs[CurElemHeritAttr - 1] += 1;
+		  pPSchema->PsNInheritedAttrs->Num[CurElemHeritAttr - 1] += 1;
 		  pPSchema->PsNHeirElems->Num[CurAttrNum - 1] += 1;
 	       }
 	  }
@@ -2017,7 +2037,7 @@ static void         LayoutRule (FunctionType layoutFonct, indLine wi)
    else if (layoutFonct != FnLine &&
 	    layoutFonct != FnNoLine &&
 	    layoutFonct != FnShowBox &&
-	    pSSchema->SsRule[CurType - 1].SrConstruct == CsChoice)
+	    pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct == CsChoice)
       CompilerMessage (wi, PRS, FATAL, CANT_USE_RULE_FOR_A_CHOICE, inputLine,
 		       LineNum);
    else
@@ -2756,8 +2776,8 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	else
 	  /* on n'est pas dans une boite de presentation */
 	  if (!(RuleDef &&
-		(pSSchema->SsRule[CurType -1].SrConstruct == CsReference ||
-		 pSSchema->SsRule[CurType -1].SrConstruct == CsPairedElement)))
+		(pSSchema->SsRule->SrElem[CurType -1]->SrConstruct == CsReference ||
+		 pSSchema->SsRule->SrElem[CurType -1]->SrConstruct == CsPairedElement)))
 	    /* on n'est pas dans les regles d'un element reference */
 	    /* ni dans celles d'un element CsPairedElement */
 	    CompilerMessage (wi, PRS, FATAL,
@@ -2801,7 +2821,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
 			   inputLine, LineNum);
 	else if (RuleDef &&
-		 pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)
+		 pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct != CsReference)
 	  /* reserve' aux references */
 	  CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_REFS, inputLine,
 			   LineNum);
@@ -3263,7 +3283,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
       case KWD_Target:
 	/* Target */
 	if (RuleDef &&
-	    pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)
+	    pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct != CsReference)
 	  /* reserve' aux elements references */
 	  CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_REFS, inputLine,
 			   LineNum);
@@ -3455,21 +3475,21 @@ static int GetTypeNumber (indLine wl, indLine wi, Name typeName)
    CopyName (typeName, wi, wl);
    /* verifie si le type est declare' dans le schema de structure */
    i = 1;
-   while (strcmp (typeName, pSSchema->SsRule[i - 1].SrName)
+   while (strcmp (typeName, pSSchema->SsRule->SrElem[i - 1]->SrName)
 	  && i < pSSchema->SsNRules)
       i++;
-   if (strcmp (typeName, pSSchema->SsRule[i - 1].SrName))
+   if (strcmp (typeName, pSSchema->SsRule->SrElem[i - 1]->SrName))
       i = 0;
    else if (InclusionRefName)
       /* on cherche une reference a un document importe' */
      {
 	while (i <= pSSchema->SsNRules &&
-	       (pSSchema->SsRule[i - 1].SrConstruct != CsReference ||
-		!pSSchema->SsRule[i - 1].SrRefImportedDoc))
+	       (pSSchema->SsRule->SrElem[i - 1]->SrConstruct != CsReference ||
+		!pSSchema->SsRule->SrElem[i - 1]->SrRefImportedDoc))
 	   /* ce n'est pas ce que l'on cherche, on continue */
 	  {
 	     i++;
-	     while (strcmp (typeName, pSSchema->SsRule[i - 1].SrName) &&
+	     while (strcmp (typeName, pSSchema->SsRule->SrElem[i - 1]->SrName) &&
 		    i < pSSchema->SsNRules)
 		i++;
 	  }
@@ -3495,7 +3515,7 @@ static void ProcessTypeName (SyntacticCode prevRule, Name typeName,
    /* type inconnu */
    else
      {
-	if (pSSchema->SsRule[i - 1].SrConstruct == CsPairedElement)
+	if (pSSchema->SsRule->SrElem[i - 1]->SrConstruct == CsPairedElement)
 	   /* c'est un element CsPairedElement */
 	  {
 	     if (!SecondInPair && !FirstInPair)
@@ -3522,20 +3542,20 @@ static void ProcessTypeName (SyntacticCode prevRule, Name typeName,
 	     TransmittedElem = i;
 	     if (pPSchema->PsNTransmElems >= MAX_TRANSM_ELEM)
 		CompilerMessage (wi, PRS, FATAL, MAX_MANY_TRANSMIT_RULES_FOR_ELEMS_OVERFLOW, inputLine, LineNum);		/* table PsTransmElem saturee */
-	     else if (pPSchema->PsElemTransmit[i - 1] > 0)
+	     else if (pPSchema->PsElemTransmit->Num[i - 1] > 0)
 	       /* deja une regle transmit pout l'element */
 	       CompilerMessage (wi, PRS, FATAL, ELEM_HAS_A_TRANSMIT_RULE,
 				inputLine, LineNum);
 	     else
 	       {
 		  pPSchema->PsNTransmElems++;
-		  pPSchema->PsElemTransmit[i - 1] = pPSchema->PsNTransmElems;
+		  pPSchema->PsElemTransmit->Num[i - 1] = pPSchema->PsNTransmElems;
 	       }
 	  }
 	else if (prevRule == RULE_Transmit)
 	  {
 	     /* un nom de type a la fin d'une regle Transmit */
-	     if (!pSSchema->SsRule[i - 1].SrRefImportedDoc)
+	     if (!pSSchema->SsRule->SrElem[i - 1]->SrRefImportedDoc)
 		CompilerMessage (wi, PRS, FATAL, NOT_AN_INCLUDED_DOC,
 				 inputLine, LineNum);
 	     else if (TransmittedCounter > 0)
@@ -3561,12 +3581,12 @@ static void ProcessTypeName (SyntacticCode prevRule, Name typeName,
 	   /* debut des regles d'un type */
 	  {
 
-	     if (pPSchema->PsElemPRule[i - 1] != NULL)
+	     if (pPSchema->PsElemPRule->ElemPres[i - 1])
 		CompilerMessage (wi, PRS, FATAL, CANT_REDEFINE,
 			       inputLine, LineNum);	/* deja traite' */
 	     else
 	       {
-		  pPSchema->PsElemPRule[i - 1] = NextRule;
+		  pPSchema->PsElemPRule->ElemPres[i - 1] = NextRule;
 		  FirstRule = NextRule;
 		  CurType = i;
 	       }
@@ -3820,10 +3840,10 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	     /* le schema de structure externe a ete charge' */
 	     {
 	     i = 1;
-	     while (strcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0
+	     while (strcmp (CopyType, pExternalSS->SsRule->SrElem[i - 1]->SrName) != 0
 		    && i < pExternalSS->SsNRules)
 	        i++;
-	     if (strcmp (CopyType, pExternalSS->SsRule[i - 1].SrName) != 0)
+	     if (strcmp (CopyType, pExternalSS->SsRule->SrElem[i - 1]->SrName) != 0)
 	        /* type inconnu */
 	        if (PresBoxDef || InWithinCond)
 		   /* on est dans une boite de presentation, erreur */
@@ -3834,7 +3854,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 		   /* on suppose que c'est un nom de boite de presentation
 		      definie dans un autre schema de presentation (pour
 		      la presentation des references externes) */
-		   if ((RuleDef && pSSchema->SsRule[CurType - 1].SrRefTypeNat[0] == '\0') ||
+		   if ((RuleDef && pSSchema->SsRule->SrElem[CurType - 1]->SrRefTypeNat[0] == '\0') ||
 		       (AttributeDef && pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrTypeRefNature[0] == '\0'))
 		      /* la regle ne s'applique pas a` une reference externe */
 		      CompilerMessage (BeginCopyType, PRS, FATAL,
@@ -3886,13 +3906,13 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	  CopyName (n, wi, wl);
 	  /* verifie si le type existe dans le schema de structure */
 	  i = 1;
-	  while (strcmp (n, pSSchema->SsRule[i - 1].SrName) &&
+	  while (strcmp (n, pSSchema->SsRule->SrElem[i - 1]->SrName) &&
 		 i < pSSchema->SsNRules)
 	     i++;
 	  if (InWithinCond)
 	     /* un nom de type d'element dans une condition Within */
 	     {
-	     if (strcmp (n, pSSchema->SsRule[i - 1].SrName))
+	     if (strcmp (n, pSSchema->SsRule->SrElem[i - 1]->SrName))
 	        /* type inconnu */
 	        {
 		/* c'est peut-etre un type defini dans un autre schema */
@@ -3908,7 +3928,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	  else
 	     /* on est dans une condition, mais pas apres Within */
 	     {
-	     if (!strcmp (n, pSSchema->SsRule[i - 1].SrName))
+	     if (!strcmp (n, pSSchema->SsRule->SrElem[i - 1]->SrName))
 	        /* c'est bien un nom de type d'element */
 	        {
 		/* la regle est-elle bien pour un attribut ? */
@@ -3952,10 +3972,10 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	  CopyName (n, wi, wl);
 	  /* verifie si le type existe dans le schema de structure */
 	  i = 1;
-	  while (strcmp (n, pSSchema->SsRule[i - 1].SrName) &&
+	  while (strcmp (n, pSSchema->SsRule->SrElem[i - 1]->SrName) &&
 		 i < pSSchema->SsNRules)
 	     i++;
-	  if (strcmp (n, pSSchema->SsRule[i - 1].SrName))
+	  if (strcmp (n, pSSchema->SsRule->SrElem[i - 1]->SrName))
 	     /* type inconnu */
 	     CompilerMessage (wi, PRS, FATAL, UNKNOWN_TYPE, inputLine,LineNum);
 	  else
@@ -4584,7 +4604,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 		      CompilerMessage (wi, PRS, FATAL, MAX_COLUMNS_OVERFLOW,
 				       inputLine, LineNum);
 		   else if (CurRule->PrPresFunction == FnCopy &&
-			    pSSchema->SsRule[CurType - 1].SrConstruct ==
+			    pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct ==
 					    CsReference)
 		      /* on est dans une regle FnCopy pour une reference */
 		      if (CurRule->PrNPresBoxes != 0)
@@ -5262,7 +5282,7 @@ void                SortAllPRules ()
    
    /* ordonne les regles des elements structures */
    for (j = 0; j < pSSchema->SsNRules; j++)
-     SortPresRules (&pPSchema->PsElemPRule[j]);
+     SortPresRules (&pPSchema->PsElemPRule->ElemPres[j]);
 }
 
 /*----------------------------------------------------------------------
@@ -5392,7 +5412,7 @@ static void         CheckPageBoxes ()
       /* cherche dans les regles de */
       /* presentation de chaque type d'element */
      {
-	pR = pPSchema->PsElemPRule[el];
+	pR = pPSchema->PsElemPRule->ElemPres[el];
 	/* 1ere regle de pres. du type */
 	stop = False;
 	do
@@ -5476,7 +5496,7 @@ static void         CheckPageBoxes ()
 		       /* regle Page, ou cree une regle s'il n'y a pas de regle de */
 		       /* largeur */
 		       /* supprime pour les colonnes */
-		       pRLarg = SearchPRule (&pPSchema->PsElemPRule[el], PtWidth,
+		       pRLarg = SearchPRule (&pPSchema->PsElemPRule->ElemPres[el], PtWidth,
 					     pR->PrViewNum);
 		       /* modifie la regle de largeur: meme regle que la boite page */
 		       pRLarg->PrPresMode = PresImmediate;
@@ -5943,7 +5963,8 @@ static void         CheckPageBoxes ()
   for (view = 1; view <= pPSchema->PsNViews; view++)
     /* cherche la regle de positionnement vertical */
     {
-      pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtVertPos, view);
+      pR = SearchPRule (&pPSchema->PsElemPRule->ElemPres[PageBreak],
+			PtVertPos, view);
       /* modifie la regle: positionnement au-dessous de l'element */
       /* precedent */
       pR->PrPresMode = PresImmediate;
@@ -5957,7 +5978,8 @@ static void         CheckPageBoxes ()
       pR->PrPosRule.PoUserSpecified = False;
       pR->PrPosRule.PoRefIdent = 0;
       /* cherche la regle de positionnement horizontal */
-      pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtHorizPos, view);
+      pR = SearchPRule (&pPSchema->PsElemPRule->ElemPres[PageBreak],
+			PtHorizPos, view);
       /* modifie la regle: positionnement sur le bord gauche de la */
       /* boite racine */
       pR->PrPresMode = PresImmediate;
@@ -5971,7 +5993,8 @@ static void         CheckPageBoxes ()
       pR->PrPosRule.PoUserSpecified = False;
       pR->PrPosRule.PoRefIdent = 0;
       /* cherche la regle de largeur */
-      pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtWidth, view);
+      pR = SearchPRule (&pPSchema->PsElemPRule->ElemPres[PageBreak],
+			PtWidth, view);
       /* modifie la regle: largeur du contenu */
       pR->PrPresMode = PresImmediate;
       pR->PrDimRule.DrPosition = False;
@@ -5985,7 +6008,8 @@ static void         CheckPageBoxes ()
       pR->PrDimRule.DrUserSpecified = False;
       pR->PrDimRule.DrRefIdent = 0;
       /* cherche la regle de hauteur */
-      pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtHeight, view);
+      pR = SearchPRule (&pPSchema->PsElemPRule->ElemPres[PageBreak],
+			PtHeight, view);
       /* modifie la regle: hauteur du contenu */
       pR->PrPresMode = PresImmediate;
       pR->PrDimRule.DrPosition = False;
@@ -5999,8 +6023,8 @@ static void         CheckPageBoxes ()
       pR->PrDimRule.DrUserSpecified = False;
       pR->PrDimRule.DrRefIdent = 0;
       /* modifie la regle: HorizOverflow: True; */
-      pR = SearchPRule (&pPSchema->PsElemPRule[PageBreak], PtHorizOverflow,
-			view);
+      pR = SearchPRule (&pPSchema->PsElemPRule->ElemPres[PageBreak],
+			PtHorizOverflow, view);
       pR->PrType = PtHorizOverflow;
       pR->PrPresMode = PresImmediate;
       pR->PrBoolValue = True;
@@ -6077,7 +6101,7 @@ static void         CheckAllBoxesUsed ()
    for (el = 0; el < pSSchema->SsNRules; el++)
       /* cherche dans les regles de */
       /* presentation de chaque type d'element */
-      CheckUsedBoxes (pPSchema->PsElemPRule[el], usedBox);
+      CheckUsedBoxes (pPSchema->PsElemPRule->ElemPres[el], usedBox);
 
    /* recherche toutes les regles de creation associees aux attributs et */
    /* marque les boites utilisees par ces regles. */

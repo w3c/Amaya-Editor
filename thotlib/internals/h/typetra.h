@@ -114,17 +114,17 @@ typedef struct _TranslCondition
 					    affected by the condition */
 	Name		TcAscendNature;  /* name of the schema where this
 					    element type name is defined */
-	int		TcAscendRelLevel; /* relative level of the ascendent
-					     element affected by the condition.
-					     0  = the element itself
-					     -1 = the element itself or any
-						  ascendent */
+	int		TcAscendRelLevel;/* relative level of the ascendent
+					    element affected by the condition.
+					    0  = the element itself
+					    -1 = the element itself or any
+						 ascendent */
 	union
 	  {
 	  struct	/* TcCondition = TcondAlphabet */
 	    {
 	    char         _TcAlphabet_;   /* the alphabet on which the condition
-			 		   applies */ 
+			 		    applies */ 
 	    } s0;
 	  struct	 /* TcCondition = TcondWithin, TcondFirstWithin */
 	    {
@@ -133,21 +133,21 @@ typedef struct _TranslCondition
 					    is defined, 0 if same schema */
 	    ThotBool	 _TcImmediatelyWithin_;    /* Immediately within */
 	    RelatNAscend _TcAscendRel_;
-	    int		 _TcAscendLevel_; /* RelLevel */
+	    int		 _TcAscendLevel_;/* RelLevel */
 	    } s1;
 	  struct	/* TcCondition = TcondAttr || TcCondition = TcondPRule
 			   TcCondition = TcondElementType */
 	    {
-	    int		_TcAttr_;   /* attribute num, type num or type
-				       of the presentation rule */ 
+	    int		_TcAttr_;        /* attribute num, type num or type
+				            of the presentation rule */ 
 	    union
 	      {
 	      struct	/* AttribType = AtNumAttr */
 	        {
-	        int	_TcLowerBound_;	/* minimum value of the attribute such
-					   that the block's rules be applied */
-	        int	_TcUpperBound_;	/* maximum value of the attribute such
-					   that the block's rules be applied */
+	        int	_TcLowerBound_;	 /* minimum value of the attribute such
+					    that the block's rules be applied*/
+	        int	_TcUpperBound_;	 /* maximum value of the attribute such
+					    that the block's rules be applied*/
 	        } s0;
 	      struct	/* AttribType = AtTextAttr */
 	        {
@@ -456,6 +456,11 @@ typedef struct _AttrTransTable
        PtrAttributeTransl TsAttrTransl[1];
 } AttrTransTable;
 
+typedef struct _BlnTable
+{
+       ThotBool       Bln[1];
+} BlnTable;
+
 /* translation of a specific presentation */
 typedef struct _PRuleTransl
 {
@@ -509,6 +514,12 @@ typedef struct _AlphabetTransl
 			   rule in the same table */
 } AlphabetTransl;
 
+/* table of translation rules for each element type */
+typedef struct _ElemTransTable
+{
+  PtrTRuleBlock TsElemTransl[1];
+} ElemTransTable;
+
 /* pointer on a translation schema */
 typedef struct _TranslSchema *PtrTSchema;
 
@@ -534,12 +545,12 @@ typedef struct _TranslSchema
   TranslVariable TsVariable[MAX_TRANSL_VARIABLE];/* the variables */
   int 	         TsPictureBuffer;	        /* number of the image buffer*/
   TranslBuffer   TsBuffer[MAX_TRANSL_BUFFER];  	/* the buffers */
-  PtrTRuleBlock  TsElemTRule[MAX_RULES_SSCHEMA];/* pointers on the beginning of
+  ElemTransTable *TsElemTRule; /* pointers on the beginning of
 				  the string of translation rules associated
 				  with each element type, in the same order
-				  than in the table StructSchema.SsRule */ 
-  ThotBool       TsInheritAttr[MAX_RULES_SSCHEMA];/* indicates for each
-				  element type, in the same order than in the
+				  as in the table StructSchema.SsRule */
+  BlnTable       *TsInheritAttr;/* indicates for each
+				  element type, in the same order as in the
 				  table StructSchema.SsRule, if the element
 				  inherits from an attribute on an ancestor */
   AttrTransTable *TsAttrTRule; /* translation rules of the logical attributes,

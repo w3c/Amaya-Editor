@@ -36,7 +36,6 @@ static ThotBool     optionl = False;
 static int          CommentNum;
 static int          STR;	/* Identification des messages Str */
 PtrSSchema          pSc1;
-SRule              *pRe1;
 PtrTtAttribute      pAt1;
 
 #include "readstr_f.h"
@@ -176,14 +175,14 @@ static void         wrnom (Name n)
   ----------------------------------------------------------------------*/
 static void         wrnomregle (int r)
 {
-   if (pSchStr->SsRule[r - 1].SrName[0] == '\0')
+   if (pSchStr->SsRule->SrElem[r - 1]->SrName[0] == '\0')
       /* Name vide, on ecrit son numero */
      {
 	printf ("Ident");
 	writenb (r);
      }
    else
-      wrnom (pSchStr->SsRule[r - 1].SrName);
+      wrnom (pSchStr->SsRule->SrElem[r - 1]->SrName);
 }
 
 /*----------------------------------------------------------------------
@@ -226,8 +225,8 @@ static void         wrnomreglext (int r, Name N)
 {
    if (N[0] == '\0')
      {
-	if (pSchStr->SsRule[r - 1].SrConstruct == CsPairedElement)
-	   if (!pSchStr->SsRule[r - 1].SrFirstOfPair)
+	if (pSchStr->SsRule->SrElem[r - 1]->SrConstruct == CsPairedElement)
+	   if (!pSchStr->SsRule->SrElem[r - 1]->SrFirstOfPair)
 	      printf ("Second ");
 	wrnomregle (r);
      }
@@ -237,10 +236,10 @@ static void         wrnomreglext (int r, Name N)
 	   printf ("******");
 	else
 	  {
-	     if (pSchStrExt->SsRule[r - 1].SrConstruct == CsPairedElement)
-		if (!pSchStrExt->SsRule[r - 1].SrFirstOfPair)
+	     if (pSchStrExt->SsRule->SrElem[r - 1]->SrConstruct == CsPairedElement)
+		if (!pSchStrExt->SsRule->SrElem[r - 1]->SrFirstOfPair)
 		   printf ("Second ");
-	     wrnom (pSchStrExt->SsRule[r - 1].SrName);
+	     wrnom (pSchStrExt->SsRule->SrElem[r - 1]->SrName);
 	  }
 	printf ("(");
 	wrnom (N);
@@ -503,9 +502,9 @@ static void         wrattr (int a)
   ----------------------------------------------------------------------*/
 static void         wrext (int r)
 {
-   SRule              *pRe1;
+   PtrSRule         pRe1;
 
-   pRe1 = &pSchStr->SsRule[r - 1];
+   pRe1 = pSchStr->SsRule->SrElem[r - 1];
    if (pRe1->SrRefImportedDoc)
       if (pRe1->SrConstruct == CsReference)
 	 printf (" extern");
@@ -575,14 +574,14 @@ static void         wrrule (int r, SRule * pRegleExtens)
 {
    int                 i;
    PtrSSchema          pSc1;
-   SRule              *pRe1;
+   PtrSRule            pRe1;
    PtrTtAttribute      pAt1;
 
    pSc1 = pSchStr;
    if (pRegleExtens != NULL)
       pRe1 = pRegleExtens;
    else
-      pRe1 = &pSc1->SsRule[r - 1];
+      pRe1 = pSc1->SsRule->SrElem[r - 1];
    if (pRe1->SrConstruct != CsNatureSchema &&
        !(pRe1->SrConstruct == CsPairedElement && !pRe1->SrFirstOfPair))
      {
@@ -859,6 +858,7 @@ void                printName (char *buffer)
   ----------------------------------------------------------------------*/
 int                 main (int argc, char **argv)
 {
+   PtrSRule            pRe1;
    char               *exec, c;
    int                 inputfile = False;
    int                 k, l;
@@ -966,14 +966,14 @@ int                 main (int argc, char **argv)
 
 	/* ecrit les constantes */
 	r = MAX_BASIC_TYPE + 1;
-	if (pSc1->SsRule[r - 1].SrConstruct == CsConstant)
+	if (pSc1->SsRule->SrElem[r - 1]->SrConstruct == CsConstant)
 	  {
 	   if (!optionh)
 	     {
 		printf ("CONST\n");
-		while (pSc1->SsRule[r - 1].SrConstruct == CsConstant)
+		while (pSc1->SsRule->SrElem[r - 1]->SrConstruct == CsConstant)
 		  {
-		     pRe1 = &pSc1->SsRule[r - 1];
+		     pRe1 = pSc1->SsRule->SrElem[r - 1];
 		     printf (" ");
 		     OpenComment ();
 		     writenb (r);
@@ -994,7 +994,7 @@ int                 main (int argc, char **argv)
 	   else
 	     {
 		printf ("\n/* Constants */\n");
-		while (pSc1->SsRule[r - 1].SrConstruct == CsConstant)
+		while (pSc1->SsRule->SrElem[r - 1]->SrConstruct == CsConstant)
 		  {
 		     wrrule (r, NULL);
 		     r++;
@@ -1012,7 +1012,7 @@ int                 main (int argc, char **argv)
 	  }
 	for (r = FirstRule; r <= pSc1->SsNRules; r++)
 	  {
-	     pRe1 = &pSc1->SsRule[r - 1];
+	     pRe1 = pSc1->SsRule->SrElem[r - 1];
 	     /* saute les elements Extern et Included et les unites */
 	     if (!pRe1->SrRefImportedDoc && !pRe1->SrUnitElem)
 	       wrrule (r, NULL);
@@ -1033,7 +1033,7 @@ int                 main (int argc, char **argv)
 	/* ecrit les unites exportees */
 	First = True;
 	for (r = FirstRule; r <= pSc1->SsNRules; r++)
-	   if (pSc1->SsRule[r - 1].SrUnitElem)
+	   if (pSc1->SsRule->SrElem[r - 1]->SrUnitElem)
 	     {
 		if (First)
 		  {
@@ -1053,7 +1053,7 @@ int                 main (int argc, char **argv)
 		printf ("THOT_EXPORT\n");
 		for (r = FirstRule; r <= pSc1->SsNRules; r++)
 		  {
-		     pRe1 = &pSc1->SsRule[r - 1];
+		     pRe1 = pSc1->SsRule->SrElem[r - 1];
 		     if (pRe1->SrExportedElem)
 		       {
 			  if (!First)
@@ -1100,7 +1100,7 @@ int                 main (int argc, char **argv)
 		/* ecrit les exceptions des types d'elements */
 		for (r = 1; r <= pSc1->SsNRules; r++)
 		  {
-		     pRe1 = &pSc1->SsRule[r - 1];
+		     pRe1 = pSc1->SsRule->SrElem[r - 1];
 		     if (pRe1->SrFirstExcept > 0)
 			/* ce type a des exceptions */
 		       {
@@ -1147,7 +1147,7 @@ int                 main (int argc, char **argv)
 	  {
 	     First = True;
 	     for (r = FirstRule; r <= pSc1->SsNRules; r++)
-		if (pSc1->SsRule[r - 1].SrConstruct == CsNatureSchema)
+		if (pSc1->SsRule->SrElem[r - 1]->SrConstruct == CsNatureSchema)
 		  {
 		     if (First)
 		       {
@@ -1167,7 +1167,7 @@ int                 main (int argc, char **argv)
 	  {
 	     First = True;
 	     for (r = FirstRule; r <= pSc1->SsNRules; r++)
-		if (pSc1->SsRule[r - 1].SrConstruct == CsNatureSchema)
+		if (pSc1->SsRule->SrElem[r - 1]->SrConstruct == CsNatureSchema)
 		  {
 		     if (First)
 		       {
@@ -1213,7 +1213,7 @@ int                 main (int argc, char **argv)
      {
 	printf ("document\n\ntranslation\n\n");
 	for (k = 0; k < pSchStr->SsNRules; k++)
-	   printName (&(pSchStr->SsRule[k].SrName[0]));
+	   printName (&(pSchStr->SsRule->SrElem[k]->SrName[0]));
 
 	for (k = 0; k < pSchStr->SsNExtensRules; k++)
 	   if (pSchStr->SsExtensBlock->EbExtensRule[k].SrName[0] != '\0')

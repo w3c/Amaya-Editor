@@ -359,14 +359,14 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema *pSPR
 	if (presNum == 0)
 	  {
 	    pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
-	    if (pSP->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	    if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
 	      {
 		/* il y a heritage possible */
-		if ((inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+		if ((inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
 		  {
 		    /* cette table n'existe pas on la genere */
 		    CreateInheritedAttrTable (pEl, pDoc);
-		    inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1];
+		    inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 		  }
 		for (l = 1; l <= pEl->ElStructSchema->SsNAttributes &&
 		       *pSPR == NULL; l++)
@@ -513,7 +513,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc, PtrPSchema *pSPR
 		  if (presNum > 0)
 		    pRule = pSP->PsPresentBox[presNum - 1].PbFirstPRule;
 		  else
-		    pRule = pSP->PsElemPRule[index - 1];
+		    pRule = pSP->PsElemPRule->ElemPres[index - 1];
 		}
 	      /* cherche une regle du type voulu, pour la vue voulue, parmi */
 	      /* les regles du type d'element */
@@ -1090,7 +1090,7 @@ PtrPRule FunctionRule (PtrElement pEl, PtrPSchema * pSchP, PtrDocument pDoc)
      {
 	/* pRule : premiere regle de presentation specifique a ce type */
 	/* d'element */
-	pRule = (*pSchP)->PsElemPRule[index - 1];
+	pRule = (*pSchP)->PsElemPRule->ElemPres[index - 1];
 	if (pRule != NULL)
 	  {
 	     while (pRule->PrType < PtFunction && pRule->PrNextPRule != NULL)
@@ -1518,15 +1518,15 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
 	  /* l'element herite-t-il d'attributs qui ont des fonctions de */
 	  /* presentation */
 	  pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
-	  if (pSP->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	  if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
 	    {
 	      /* il y a heritage possible */
 	      if ((inheritTable =
-		   pSP->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+		   pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
 		{
 		  /* cette table n'existe pas on la genere */
 		  CreateInheritedAttrTable (pEl, pDoc);
-		  inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1];
+		  inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 		}
 	      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 		if ((*inheritTable)[l - 1])    /* pEl herite de l'attribut l */
@@ -2830,7 +2830,7 @@ void TransmitCounterVal (PtrElement pEl, PtrDocument pDoc, Name nameAttr,
 
    /* verifie d'abord qu'il s'agit bien d'une inclusion de document */
    {
-      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsReference)
+      if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsReference)
 	 pRef = pEl->ElReference;
       else
 	 pRef = pEl->ElSource;
@@ -2992,7 +2992,7 @@ static void UpdateNum1Elem (PtrElement pElBegin, PtrElement pElModif,
    ThotBool            trigger;
    Counter            *pCo1;
    CntrItem           *pCp1;
-   SRule              *pRe1;
+   PtrSRule            pRe1;
 
    /* si l'element pElModif est une marque de page, renumerote les */
    /* les sauts de page qui suivent, a partir de pElBegin. */
@@ -3020,7 +3020,7 @@ static void UpdateNum1Elem (PtrElement pElBegin, PtrElement pElModif,
 		   /* cherche si le type de l'element est equivalent a celui */
 		   /* /qui declanche l'operation */
 		  {
-		     pRe1 = &pSS->SsRule[pCp1->CiElemType - 1];
+		     pRe1 = pSS->SsRule->SrElem[pCp1->CiElemType - 1];
 		     if (pRe1->SrConstruct == CsChoice && pRe1->SrNChoices > 0)
 		       {
 			  i = 0;
@@ -3890,8 +3890,8 @@ ThotBool IsIdenticalTextType (PtrElement pEl, PtrDocument pDoc,
 	  SameAttributes (pEl, pEl2) &&
 	  pEl->ElSource == NULL && pEl2->ElSource == NULL &&
 	  BothHaveNoSpecRules (pEl, pEl2) &&
-	  pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsConstant &&
-	  pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
+	  pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct != CsConstant &&
+	  pEl2->ElStructSchema->SsRule->SrElem[pEl2->ElTypeNumber - 1]->SrConstruct != CsConstant)
 	{
 	  equal = TRUE;
 	  if (! MergeTextElements (pEl, pLib, pDoc,

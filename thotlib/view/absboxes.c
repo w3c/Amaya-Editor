@@ -63,10 +63,10 @@ char *AbsBoxType (PtrAbstractBox pAb, ThotBool origName)
       /* copie le nom du type d'element structure auquel appartient la boite */
       if (origName)
 	strcpy (BoxTypeName,
-		pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
+		pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrOrigName);
       else
 	strcpy (BoxTypeName,
-		pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
       if (pAb->AbPresentationBox)
 	/* Ajoute le nom du type de boite de presentation */
 	{

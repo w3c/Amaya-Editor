@@ -52,10 +52,10 @@ void  CreateInheritedAttrTable (PtrElement pEl, PtrDocument pDoc)
   if (pSP != NULL)
     {
       /* table allocation and initialization */
-      if ((table = (InheritAttrTable *) TtaGetMemory (pEl->ElStructSchema->SsNAttributes * sizeof (ThotBool))) == NULL)
+      if ((table = (InheritAttrTable*) TtaGetMemory (pEl->ElStructSchema->SsNAttributes * sizeof (ThotBool))) == NULL)
         /* memory exhausted */
         return;
-      pSP->PsInheritedAttr[pEl->ElTypeNumber - 1] = table;
+      pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1] = table;
       /* for all attributes defined in the structure schema */
       for (attr = 0; attr < pEl->ElStructSchema->SsNAttributes; attr++)
 	{
@@ -302,7 +302,7 @@ void                ApplyTransmitRules (PtrElement pEl, PtrDocument pDoc)
   Counter            *pCounter;
 
   if (pEl != NULL)
-    if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
+    if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrRefImportedDoc)
       {
 	/* it's an inclusion of an external document */
 	/* search the presentation schema that applies to the element */
@@ -321,8 +321,8 @@ void                ApplyTransmitRules (PtrElement pEl, PtrDocument pDoc)
 	      {
 		/* what element type does transmit its contents? */
 		for (srcNumType = 0; srcNumType < pSS->SsNRules &&
-		       pPSch->PsElemTransmit[srcNumType] != rule + 1; srcNumType++);
-		if (pPSch->PsElemTransmit[srcNumType] == rule + 1)
+		       pPSch->PsElemTransmit->Num[srcNumType] != rule + 1; srcNumType++);
+		if (pPSch->PsElemTransmit->Num[srcNumType] == rule + 1)
 		  {
 		    /* elements of type srcNumType+1 transmit their */
 		    /* content to the documents of interest */

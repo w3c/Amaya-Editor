@@ -1255,7 +1255,7 @@ void UndisplayElement (PtrElement pEl, Document document)
 	/* Retransmet les valeurs des compteurs et attributs TRANSMIT */
 	/* s'il y a des elements apres */
         if (pEl->ElStructSchema)
-	   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrRefImportedDoc)
+	   if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrRefImportedDoc)
 	      RepApplyTransmitRules (pEl, pSS, pDoc);
      }
 }

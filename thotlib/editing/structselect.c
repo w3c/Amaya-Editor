@@ -522,7 +522,7 @@ PtrElement          NextInSelection (PtrElement pEl, PtrElement pLastEl)
   ----------------------------------------------------------------------*/
 ThotBool            HiddenType (PtrElement pEl)
 {
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    ThotBool            ret;
 
    ret = FALSE;
@@ -537,7 +537,7 @@ ThotBool            HiddenType (PtrElement pEl)
      }
    else
      {
-	pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+	pSRule = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
 	if (pSRule->SrConstruct == CsChoice)
 	   if (pEl->ElFirstChild != NULL)
 	      /* it's a choice element with a child */
@@ -1509,7 +1509,7 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
 		     stop = TRUE;
 		     if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
 			/* get the structure rule defining the element type */
-			if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
+			if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct ==
 			    CsChoice)
 			  {
 			     /* it's a Choice with a child. Select the child */
@@ -1610,12 +1610,12 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
 					    SelectedDocument, FALSE, &bool);
 	/* if the selected element is a paired element, select the other */
 	/* element of the pair too */
-	if (FirstSelectedElement->ElStructSchema->SsRule[FirstSelectedElement->ElTypeNumber - 1].SrConstruct ==
+	if (FirstSelectedElement->ElStructSchema->SsRule->SrElem[FirstSelectedElement->ElTypeNumber - 1]->SrConstruct ==
 	    CsPairedElement)
 	  {
 	     AddInSelection (GetOtherPairedElement (FirstSelectedElement), TRUE);
 	     if (!FirstSelectedElement->ElStructSchema->
-		  SsRule[FirstSelectedElement->ElTypeNumber - 1].SrFirstOfPair)
+		  SsRule->SrElem[FirstSelectedElement->ElTypeNumber - 1]->SrFirstOfPair)
 		/* the first selected element is the second element of the */
 	        /* pair. Exchange first and last selected elements */
 	       {
@@ -2251,7 +2251,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
   if (doubleClick && pAb != NULL && pAb->AbElement != NULL)
     {
       pEl = pAb->AbElement;
-      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsReference)
+      if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct != CsReference)
 	{
 	  /* search for an inclusion among the ancestors */
 	  pParent = pEl;
@@ -2261,7 +2261,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	    /* it's an inclusion */
 	    pEl = pParent;
 	}
-      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsReference ||
+      if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsReference ||
 	  pEl->ElSource != NULL)
 	/* this element is a reference or an inclusion */
 	{
@@ -2361,7 +2361,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 		  fixed = update;
 		  begin = extension;
 		  pEl = pAb->AbElement;
-		  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
+		  if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant)
 		    /* the element to be selected is a constant */
 		    /* select it entirely */
 		    rank = 0;
@@ -2427,7 +2427,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	 /* user has double-clicked on the same element */
 	 {
 	   pEl = FirstSelectedElement;
-	   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsReference ||
+	   if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsReference ||
 	       pEl->ElSource != NULL)
 	     /* this element is a reference or an inclusion */
 	     doubleClickRef = TRUE;
@@ -2451,7 +2451,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	   OldSelectedView = view;
 	   OldDocSelectedView = pDoc;
 	   pEl = pAb->AbElement;
-	   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
+	   if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant)
 	     /* the element to be selected is a constant */
 	     /* Select it entirely */
 	     rank = 0;
@@ -2698,7 +2698,7 @@ void BuildSelectionMessage ()
       pEl = FirstSelectedElement;
     }
   /* put the type name of the first selected element */
-  strncpy (msgBuf, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
+  strncpy (msgBuf, pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName,
 	   MAX_NAME_LENGTH);
   /* add the types of the ancestors */
   pEl = pEl->ElParent;
@@ -2712,7 +2712,7 @@ void BuildSelectionMessage ()
 	  strcat (msgBuf, " \\ ");
 	  /* put the element type */
 	  strcat (msgBuf,
-		  pEl->ElStructSchema-> SsRule[pEl->ElTypeNumber - 1].SrName);
+		  pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
 	  nbasc++;
 	}
       if (nbasc >= MAX_ITEM_MSG_SEL)

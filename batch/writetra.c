@@ -777,9 +777,9 @@ ThotBool WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS
      }
    WriteShort (pTSch->TsPictureBuffer);
    for (i = 0; i < pSS->SsNRules; i++)
-      WriteBlockPtr (pTSch->TsElemTRule[i]);
+      WriteBlockPtr (pTSch->TsElemTRule->TsElemTransl[i]);
    for (i = 0; i < pSS->SsNRules; i++)
-      WriteBoolean (pTSch->TsInheritAttr[i]);
+      WriteBoolean (pTSch->TsInheritAttr->Bln[i]);
    for (i = 0; i < pSS->SsNAttributes; i++)
      {
        pAttrTr = pTSch->TsAttrTRule->TsAttrTransl[i];
@@ -857,7 +857,7 @@ ThotBool WriteTranslationSchema (Name fileName, PtrTSchema pTSch, PtrSSchema pSS
 	while (pTSch->TsConstant[j - 1] != '\0');
      }
    for (i = 0; i < pSS->SsNRules; i++)
-      WriteBlocks (pTSch->TsElemTRule[i], pSS);
+      WriteBlocks (pTSch->TsElemTRule->TsElemTransl[i], pSS);
    for (i = 0; i < pSS->SsNAttributes; i++)
       WriteTRulesAttr (i + 1, pSS, pTSch);
    for (i = 0; i < MAX_TRANSL_PRULE; i++)

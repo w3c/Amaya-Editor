@@ -880,7 +880,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 	{
 	  /* feuille terminale: on ecrit son contenu entre C_PIV_BEGIN et
 	     C_PIV_END */
-	  if (pSS->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsConstant)
+	  if (pSS->SsRule->SrElem[pEl1->ElTypeNumber - 1]->SrConstruct != CsConstant)
 	    /* on n'ecrit pas le texte des constantes, puisqu'il est cree
 	       automatiquement */
 	    {
@@ -930,8 +930,8 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 			  pEl1->ElNext->ElLanguage == pEl1->ElLanguage &&
 			  pEl1->ElNext->ElSource == NULL &&
 			  /* le suivant n'est pas une inclusion */
-			  pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsConstant &&
-			  pEl1->ElNext->ElStructSchema->SsRule[pEl1->ElNext->ElTypeNumber - 1].SrConstruct != CsConstant &&
+			  pEl1->ElStructSchema->SsRule->SrElem[pEl1->ElTypeNumber - 1]->SrConstruct != CsConstant &&
+			  pEl1->ElNext->ElStructSchema->SsRule->SrElem[pEl1->ElNext->ElTypeNumber - 1]->SrConstruct != CsConstant &&
 			  SameAttributes (*pEl, pEl1->ElNext))
 			/* il a les memes attributs */
 			if (BothHaveNoSpecRules (*pEl, pEl1->ElNext))

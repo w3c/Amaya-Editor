@@ -245,15 +245,20 @@ static void         InitAttrTransl ()
   ----------------------------------------------------------------------*/
 static void         InitElemTransl ()
 {
-   int                 i;
+  int                 i, size;
 
-   for (i = 0; i < pSSchema->SsNRules; i++)
-     {
-	pTSchema->TsElemTRule[i] = NULL; /* pointeurs sur le debut de la chaine
-					    de regles de traduction specifiques
-					    a chaque type d'element */
-	pTSchema->TsInheritAttr[i] = False;
-     }
+  size = pSSchema->SsNRules * sizeof (PtrTRuleBlock);
+  pTSchema->TsElemTRule = (ElemTransTable*) malloc (size);
+  size = pSSchema->SsNRules * sizeof (ThotBool);
+  pTSchema->TsInheritAttr = (BlnTable*) malloc (size);
+  if (pTSchema->TsElemTRule && pTSchema->TsInheritAttr)
+    for (i = 0; i < pSSchema->SsNRules; i++)
+      {
+      pTSchema->TsElemTRule->TsElemTransl[i] = NULL; /* pointeurs sur le debut
+				     de la chaine de regles de traduction
+				     propres a chaque type d'element */
+      pTSchema->TsInheritAttr->Bln[i] = False;
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -269,10 +274,10 @@ static void         EndOfCondition (PtrSSchema pSS)
      /* verifie si le type existe dans le schema de structure */
      {
        i = 0;
-       while (strcmp (TypeWithin, pSS->SsRule[i].SrName) != 0 &&
+       while (strcmp (TypeWithin, pSS->SsRule->SrElem[i]->SrName) != 0 &&
 	      i < pSS->SsNRules - 1)
 	 i++;
-       if (strcmp (TypeWithin, pSS->SsRule[i].SrName) != 0)
+       if (strcmp (TypeWithin, pSS->SsRule->SrElem[i]->SrName) != 0)
 	 /* type inconnu */
 	 CompilerMessage (BeginTypeWithin, TRA, FATAL, BAD_TYPE, inputLine,
 			  LineNum);
@@ -295,10 +300,10 @@ static void ProcessAncestorName (PtrSSchema pSS)
      /* verifie si le type existe dans le schema de structure */
      {
        i = 0;
-       while (strcmp (AncestorName, pSS->SsRule[i].SrName) != 0 &&
+       while (strcmp (AncestorName, pSS->SsRule->SrElem[i]->SrName) != 0 &&
 	      i < pSS->SsNRules - 1)
 	 i++;
-       if (strcmp (AncestorName, pSS->SsRule[i].SrName) != 0)
+       if (strcmp (AncestorName, pSS->SsRule->SrElem[i]->SrName) != 0)
 	 /* type inconnu */
 	 CompilerMessage (BeginAncestorName, TRA, FATAL, BAD_TYPE, inputLine,
 			  LineNum);
@@ -582,7 +587,7 @@ static void NewRuleBlock ()
      /* pas de bloc courant, attache ce bloc au schema de traduction */
      if (InTypeRules)
        /* bloc de regles associe' a un type d'element */
-       pTSchema->TsElemTRule[CurType - 1] = pBlock;
+       pTSchema->TsElemTRule->TsElemTransl[CurType - 1] = pBlock;
      else if (InAttrRules)
        /* bloc de regles associe' a un attribut */
        {
@@ -676,10 +681,10 @@ static void         ProcessTypeName (PtrSSchema pSS)
      /* verifie si le type existe dans le schema de structure */
      {
        i = 1;
-       while (strcmp (TypeInGetRule, pSS->SsRule[i - 1].SrName) != 0 &&
+       while (strcmp (TypeInGetRule, pSS->SsRule->SrElem[i - 1]->SrName) != 0 &&
 	      i < pSS->SsNRules)
 	 i++;
-       if (strcmp (TypeInGetRule, pSS->SsRule[i - 1].SrName) != 0)
+       if (strcmp (TypeInGetRule, pSS->SsRule->SrElem[i - 1]->SrName) != 0)
 	 /* type inconnu */
 	 CompilerMessage (BeginTypeInGetRule, TRA, FATAL, BAD_TYPE, inputLine,
 			  LineNum);
@@ -747,9 +752,9 @@ static void         NewConstant (indLine wl, indLine wi)
   ----------------------------------------------------------------------*/
 static void AttrInCreateOrWrite (int att, SyntRuleNum pr, indLine wi)
 {
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    TranslVariable     *pTransVar;
-   ThotBool             ok;
+   ThotBool            ok;
    int                 j;
 
    /* on refuse les attributs reference */
@@ -774,7 +779,7 @@ static void AttrInCreateOrWrite (int att, SyntRuleNum pr, indLine wi)
        /* cherche si l'attribut est un attribut local de la racine */
        {
 	 ok = False;
-	 pSRule = &pSSchema->SsRule[pSSchema->SsRootElem - 1];
+	 pSRule = pSSchema->SsRule->SrElem[pSSchema->SsRootElem - 1];
 	 j = 1;
 	 while (j <= pSRule->SrNLocalAttrs && !ok)
 	   if (pSRule->SrLocalAttr->Num[j - 1] == att)
@@ -869,10 +874,10 @@ static int          ElementTypeNum (indLine wi, indLine wl)
    CopyWord (n, wi, wl);
    /* verifie si le type existe dans le schema de structure */
    i = 1;
-   while (strcmp (n, pSSchema->SsRule[i - 1].SrName) != 0 &&
+   while (strcmp (n, pSSchema->SsRule->SrElem[i - 1]->SrName) != 0 &&
 	  i < pSSchema->SsNRules)
      i++;
-   if (strcmp (n, pSSchema->SsRule[i - 1].SrName) != 0)
+   if (strcmp (n, pSSchema->SsRule->SrElem[i - 1]->SrName) != 0)
      /* type inconnu */
      {
        CompilerMessage (wi, TRA, FATAL, BAD_TYPE, inputLine, LineNum);
@@ -969,7 +974,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		 if (CurTRule->TrType == TUse)
 		   if (CurType == pSSchema->SsRootElem)
 		     if (CurTRule->TrNature ==
-			 pSSchema->SsRule[CurType - 1].SrName)
+			 pSSchema->SsRule->SrElem[CurType - 1]->SrName)
 		       /* une regle Use pour la racine se termine sans 'For' */
 		       CompilerMessage (wi, TRA, FATAL, FOR_PART_MISSING,
 					inputLine, LineNum);
@@ -1416,7 +1421,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	       /* generer le label de l'element reference' */
 	       {
 	       if ((InTypeRules &&
-		    pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)||
+		    pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct != CsReference)||
 		   (InAttrRules &&
 		    pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		    AtReferenceAttr))
@@ -1430,7 +1435,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	     break;
 
 	   case KWD_PairId:	/* PairId */
-	     if (pSSchema->SsRule[CurType - 1].SrConstruct != CsPairedElement)
+	     if (pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct != CsPairedElement)
 	       /* l'element auquel s'applique la regle n'est pas une paire */
 	       CompilerMessage (wi, TRA, FATAL, NOT_A_PAIR,inputLine, LineNum);
 	     else
@@ -1491,7 +1496,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 
 	   case KWD_Target:	/* Target */
 	     if ((InTypeRules &&
-		  pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
+		  pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct != CsReference) ||
 		 (InAttrRules &&
 		  pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		  AtReferenceAttr))
@@ -1535,7 +1540,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		     TcAscendRelLevel = -1;
 	       }
 	     else if ((InTypeRules &&
-		       pSSchema->SsRule[CurType - 1].SrConstruct !=
+		       pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct !=
 		       CsReference) ||
 		      (InAttrRules &&
 		       pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
@@ -1554,7 +1559,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	     
 	   case KWD_FirstRef:		/* FirstRef */
 	     if ((InTypeRules &&
-		  pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
+		  pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct != CsReference) ||
 		 (InAttrRules &&
 		  pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		  AtReferenceAttr))
@@ -1569,7 +1574,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 
 	   case KWD_LastRef:	/* LastRef */
 	     if ((InTypeRules &&
-		  pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
+		  pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct != CsReference) ||
 		 (InAttrRules &&
 		  pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		  AtReferenceAttr))
@@ -1584,7 +1589,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	     
 	   case KWD_ExternalRef:	/* ExternalRef */
 	     if ((InTypeRules &&
-		  pSSchema->SsRule[CurType - 1].SrConstruct != CsReference) ||
+		  pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct != CsReference) ||
 		 (InAttrRules &&
 		  pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		  AtReferenceAttr))
@@ -1682,7 +1687,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	       /* generer le nom du document reference' */
 	       {
 	       if ((InTypeRules &&
-		    pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)||
+		    pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct != CsReference)||
 		   (InAttrRules &&
 		    pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		    AtReferenceAttr))
@@ -1715,7 +1720,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	       /* generer le nom du directory du document reference' */
 	       {
 	       if ((InTypeRules &&
-		    pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)||
+		    pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct != CsReference)||
 		   (InAttrRules &&
 		    pSSchema->SsAttribute->TtAttr[CurAttr - 1]->AttrType !=
 		    AtReferenceAttr))
@@ -1803,7 +1808,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 
 	   case KWD_Use:	/* Use */
 	     InCondition = False;
-	     if (pSSchema->SsRule[CurType - 1].SrConstruct != CsNatureSchema
+	     if (pSSchema->SsRule->SrElem[CurType - 1]->SrConstruct != CsNatureSchema
 		 && CurType != pSSchema->SsRootElem)
 	       /* l'element auquel s'applique la regle n'est pas une */
 	       /* SyntacticType ni la regle racine, erreur */
@@ -1820,7 +1825,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		   {
 		     CurTRule->TrType = TUse;
 		     strncpy (CurTRule->TrNature,
-			       pSSchema->SsRule[CurType - 1].SrName,
+			       pSSchema->SsRule->SrElem[CurType - 1]->SrName,
 			       MAX_NAME_LENGTH);
 		   }
 	       }
@@ -2335,7 +2340,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 			     if (pr == RULE_TransType)
 			       /* debut des regles associees a un type */
 			       {
-				 if (pSSchema->SsRule[i - 1].SrConstruct ==
+				 if (pSSchema->SsRule->SrElem[i - 1]->SrConstruct ==
 				     CsPairedElement)
 				   /* c'est un element CsPairedElement */
 				   if (!SecondInPair && !FirstInPair)
@@ -2358,7 +2363,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 				     CompilerMessage (wi, TRA, FATAL,
 						      NOT_A_PAIR,
 						      inputLine, LineNum);
-				 if (pTSchema->TsElemTRule[i - 1] != NULL)
+				 if (pTSchema->TsElemTRule->TsElemTransl[i-1])
 				   CompilerMessage (wi, TRA, FATAL,
 						    CANT_REDEFINE,
 						    inputLine, LineNum);
@@ -2375,7 +2380,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 			     else if (pr == RULE_TransAttr)
 			       /* apres un nom d'attribut */
 			       {
-				 pTSchema->TsInheritAttr[i - 1] = True;
+				 pTSchema->TsInheritAttr->Bln[i - 1] = True;
 				 pTSchema->TsAttrTRule->TsAttrTransl[CurAttr - 1]->AtrElemType = i;
 			       }
 			   }

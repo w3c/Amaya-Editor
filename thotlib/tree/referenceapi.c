@@ -545,7 +545,7 @@ int TtaIsElementTypeReference (ElementType elementType)
 	TtaError (ERR_invalid_element_type);
    else
      {
-	if (((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrConstruct == CsReference)
+	if (((PtrSSchema) (elementType.ElSSchema))->SsRule->SrElem[elementType.ElTypeNum - 1]->SrConstruct == CsReference)
 	   result = 1;
      }
    return result;

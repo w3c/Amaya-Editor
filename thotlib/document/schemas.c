@@ -172,7 +172,7 @@ static void ResetNatureRules (PtrSSchema oldSS)
 {
   PtrSSchema   pSS;
   int          i, rule;
-  SRule        *pRule;
+  PtrSRule     pRule;
 
   /* Look at the table of loaded schemas */
   for (i = 0; i < MAX_SSCHEMAS; i++)
@@ -182,7 +182,7 @@ static void ResetNatureRules (PtrSSchema oldSS)
 	/* check all rules of that schema */
 	for (rule = 0; rule < pSS->SsNRules; rule++)
 	  {
-	    pRule = &pSS->SsRule[rule];
+	    pRule = pSS->SsRule->SrElem[rule];
 	    if (pRule->SrConstruct == CsNatureSchema)
 	      {
 		/* it's a nature rule */
@@ -372,10 +372,10 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
 	      pAttrPres = pAttrPres->ApNextAttrPres;
 	    }
 	}
-  
+
       /* libere les regles de presentation des types */
       for (i = 0; i < pSS->SsNRules; i++)
-	FreePRuleList (&pPSchema->PsElemPRule[i]);
+	FreePRuleList (&pPSchema->PsElemPRule->ElemPres[i]);
       /* libere les descripteurs de vues hotes */
       for (i = 0; i < MAX_VIEW; i++)
 	{
@@ -785,16 +785,16 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
 
    /* utilise le nom de la nature comme nom de fichier. */
    /* copie le nom de nature dans schName */
-   strncpy (schName, pSS->SsRule[rule - 1].SrOrigNat, MAX_NAME_LENGTH);
+   strncpy (schName, pSS->SsRule->SrElem[rule-1]->SrOrigNat, MAX_NAME_LENGTH);
    /* cree un schema de structure et le charge depuis le fichier */
    pNatureSS = LoadStructureSchema (schName, pDoc);
    if (!pNatureSS)
       /* echec */
-      pSS->SsRule[rule - 1].SrSSchemaNat = NULL;
+      pSS->SsRule->SrElem[rule - 1]->SrSSchemaNat = NULL;
    else
       /* chargement du schema de structure reussi */
       {
-      pSS->SsRule[rule - 1].SrSSchemaNat = pNatureSS;
+      pSS->SsRule->SrElem[rule - 1]->SrSSchemaNat = pNatureSS;
 #ifndef NODISPLAY
       loaded = FALSE;
       if (PSchName != NULL && PSchName[0] != EOS)
@@ -809,7 +809,7 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
 	 /* ou schema demande' inaccessible */
 	 {
 	 /* on consulte le fichier .conf */
-	 if (!ConfigGetPSchemaNature (pSS, pSS->SsRule[rule - 1].SrOrigNat,
+	 if (!ConfigGetPSchemaNature (pSS, pSS->SsRule->SrElem[rule - 1]->SrOrigNat,
 				      schName))
 	    /* le fichier .conf ne donne pas de schema de presentation pour */
 	    /* cette nature, on le demande a l'utilisateur */
@@ -824,7 +824,7 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
 	 TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_PRS_FILE),
 			    schName);
 	 ReleaseStructureSchema (pNatureSS, pDoc);
-	 pSS->SsRule[rule - 1].SrSSchemaNat = NULL;
+	 pSS->SsRule->SrElem[rule - 1]->SrSSchemaNat = NULL;
 	 }
       if (ThotLocalActions[T_initevents] != NULL)
 	 (*ThotLocalActions[T_initevents]) (pNatureSS);
@@ -834,24 +834,100 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
 
 /*----------------------------------------------------------------------
    AppendSRule
-   Ajoute une nouvelle regle a la fin de la table des regles.
+   Append a new structure rule to structure schema pSS for document pDoc.
+   pPSch is the presentation schema associated with pSS for document pDoc.
   ----------------------------------------------------------------------*/
-static void         AppendSRule (int *ret, PtrSSchema pSS)
+static void         AppendSRule (int *ret, PtrSSchema pSS, PtrPSchema pPSch,
+				 PtrDocument pDoc)
 {
-   if (pSS->SsNRules >= MAX_RULES_SSCHEMA)
-      {
-      /* Table de regles saturee */
-      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_LIB_RULES_TABLE_FULL);
-      *ret = 0;
-      }
-   else
-      /* ajoute une entree a la table */
-      {
-      pSS->SsNRules++;
-      *ret = pSS->SsNRules;
-      if (pSS->SsFirstDynNature == 0)
-	 pSS->SsFirstDynNature = pSS->SsNRules;
-      }
+  int                  size, i;
+  PtrDocSchemasDescr   pPfS;
+
+  *ret = 0;
+#ifndef NODISPLAY
+  if (!pPSch)
+    {
+      /* Search the associated presentation schema */
+      pPfS = pDoc->DocFirstSchDescr;
+      while (pPfS && !pPSch)
+	{
+	  if (pPfS->PfSSchema && (pPfS->PfSSchema == pSS))
+	    pPSch = pPfS->PfPSchema;
+	  pPfS = pPfS->PfNext;
+	}
+    }
+#endif
+  /* reserve 2 additional entries for counter aliases (see function
+     MakeAliasTypeCount in presvariables.c) */
+  if (pSS->SsNRules >= pSS->SsRuleTableSize - 2)
+    {
+      /* rule table is full. Add 10 new entries */
+      size = pSS->SsNRules + 2 + 10;
+      i = size * sizeof (PtrSRule);
+      pSS->SsRule = (SrRuleTable*) realloc (pSS->SsRule, i);
+#ifndef NODISPLAY
+      if (pPSch)
+	{
+	  i = size * sizeof (PtrPRule);
+	  pPSch->PsElemPRule = (PtrPRuleTable*) realloc (pPSch->PsElemPRule,i);
+	  i = size * sizeof (int);
+	  pPSch->PsNInheritedAttrs = (NumberTable*) realloc (pPSch->PsNInheritedAttrs, i);
+	  i = size * sizeof (InheritAttrTable*);
+          pPSch->PsInheritedAttr = (InheritAttrTbTb*) realloc (pPSch->PsInheritedAttr, i);
+	  i = size * sizeof (int);
+          pPSch->PsElemTransmit = (NumberTable*) realloc (pPSch->PsElemTransmit, i);
+	}
+#endif
+      if (!pSS->SsRule
+#ifndef NODISPLAY
+	  || !pPSch->PsElemPRule
+#endif
+	  )
+	{
+	  TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
+	  return;
+	}
+      else
+	{
+	  pSS->SsRuleTableSize = size;
+	  for (i = pSS->SsNRules; i < size; i++)
+	    pSS->SsRule->SrElem[i] = NULL;
+#ifndef NODISPLAY
+	  if (pPSch)
+	    {
+	      for (i = pSS->SsNRules; i < size; i++)
+		{
+		  pPSch->PsElemPRule->ElemPres[i] = NULL;
+		  pPSch->PsNInheritedAttrs->Num[i] = 0;
+                  pPSch->PsInheritedAttr->ElInherit[i] = NULL;
+		  pPSch->PsElemTransmit->Num[i] = 0;
+		}
+	    }
+#endif
+	}
+    }
+
+  /* initializes new entry */
+  i = pSS->SsNRules;
+  pSS->SsRule->SrElem[i] = (PtrSRule) malloc (sizeof (SRule));
+  if (!pSS->SsRule->SrElem[i])
+    {
+      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
+      return;      
+    }
+  memset (pSS->SsRule->SrElem[i], 0, sizeof (SRule));
+#ifndef NODISPLAY
+  if (pPSch)
+    {
+      pPSch->PsElemPRule->ElemPres[i] = NULL;
+      pPSch->PsNInheritedAttrs->Num[i] = 0;
+      pPSch->PsInheritedAttr->ElInherit[i] = NULL;
+      pPSch->PsElemTransmit->Num[i] = 0;
+    }
+#endif
+
+  pSS->SsNRules++;
+  *ret = pSS->SsNRules;
 }
 
 /*----------------------------------------------------------------------
@@ -873,7 +949,7 @@ int          CreateNature (char *SSchName, char *PSchName,
 #ifndef NODISPLAY
    PtrPSchema  pPS;
 #endif
-   SRule              *pRule;
+   PtrSRule           pRule;
    PtrSSchema         pSSch;
    int                ret;
    ThotBool           found;
@@ -883,7 +959,7 @@ int          CreateNature (char *SSchName, char *PSchName,
    ret = 0;
    do
       {
-      pRule = &pSS->SsRule[ret++];
+      pRule = pSS->SsRule->SrElem[ret++];
       if (pRule->SrConstruct == CsNatureSchema)
 	 if (strcmp (pRule->SrOrigNat, SSchName) == 0)
 	    found = TRUE;
@@ -894,27 +970,30 @@ int          CreateNature (char *SSchName, char *PSchName,
       /* regles */
       {
       if (pSS->SsFirstDynNature == 0)
-	 /* pas encore de nature chargee dynamiquement */
-	 /* ajoute une regle a la fin de la table */
-	 AppendSRule (&ret, pSS);
+	/* pas encore de nature chargee dynamiquement */
+	/* ajoute une regle a la fin de la table */
+	{
+	  AppendSRule (&ret, pSS, NULL, pDoc);
+	  pSS->SsFirstDynNature = pSS->SsNRules;
+	}
       else
-	 /* il y a deja des natures dynamiques */
-	 /* cherche s'il y en a une libre */
-	 {
-	 ret = pSS->SsFirstDynNature;
-	 while (ret <= pSS->SsNRules &&
-		pSS->SsRule[ret - 1].SrSSchemaNat != NULL)
+	/* il y a deja des natures dynamiques */
+	/* cherche s'il y en a une libre */
+	{
+	  ret = pSS->SsFirstDynNature;
+	  while (ret <= pSS->SsNRules &&
+		 pSS->SsRule->SrElem[ret - 1]->SrSSchemaNat != NULL)
 	    ret++;
-	 if (ret > pSS->SsNRules)
+	  if (ret > pSS->SsNRules)
 	    /* pas de regle libre, on ajoute une regle a la fin de la */
 	    /* table */
-	    AppendSRule (&ret, pSS);
-	 }
+	    AppendSRule (&ret, pSS, NULL, pDoc);
+	}
       if (ret > 0)
 	 /* il y a une entree libre (celle de rang ret) */
 	 /* remplit la regle nature */
 	 {
-	 pRule = &pSS->SsRule[ret - 1];
+	 pRule = pSS->SsRule->SrElem[ret - 1];
 	 strncpy (pRule->SrOrigNat, SSchName, MAX_NAME_LENGTH);
 	 strncpy (pRule->SrName, SSchName, MAX_NAME_LENGTH);
 	 pRule->SrNDefAttrs = 0;
@@ -925,14 +1004,14 @@ int          CreateNature (char *SSchName, char *PSchName,
 	 /* correspondent a cette nouvelle regle de structure */
 	 pPS = PresentationSchema (pSS, pDoc);
 	 if (pPS != NULL)
-	    pPS->PsElemPRule[ret - 1] = NULL;
+	    pPS->PsElemPRule->ElemPres[ret - 1] = NULL;
 #endif   /* NODISPLAY */
 	 }
       }
    if (ret > 0)
       /* il y a une entree libre (celle de rang ret) */
       {
-      pRule = &pSS->SsRule[ret - 1];
+      pRule = pSS->SsRule->SrElem[ret - 1];
       if (pRule->SrConstruct == CsNatureSchema)
 	 if (pRule->SrSSchemaNat == NULL)
 	    /* charge les schemas de structure et de presentation */
@@ -1108,7 +1187,7 @@ PtrSSchema LoadExtension (char *SSchName, char *PSchName, PtrDocument pDoc)
 static ThotBool FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS,
 				 PtrSSchema pDocSS)
 {
-   SRule              *pRule;
+   PtrSRule            pRule;
    int                 rule;
    ThotBool            ret;
 
@@ -1117,7 +1196,7 @@ static ThotBool FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS,
       /* parcourt les regles de ce schemas */
       for (rule = 0; rule < pSS->SsNRules; rule++)
 	 {
-	 pRule = &pSS->SsRule[rule];
+	 pRule = pSS->SsRule->SrElem[rule];
 	 if (pRule->SrConstruct == CsNatureSchema)
 	   {
 	    /* c'est une regle de nature */
@@ -1476,11 +1555,12 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
   pSS = (PtrSSchema) attrType->AttrSSchema;
   if (pSS == NULL)
     return;
+
   pDoc = LoadedDocument[document - 1];
   pPfS = pDoc->DocFirstSchDescr;
-
   /* Search the associated presentation schema */
   pPSch = NULL;
+#ifndef NODISPLAY
   while (pPfS && !pPSch)
     {
       if (pPfS->PfSSchema && (pPfS->PfSSchema == pSS))
@@ -1496,17 +1576,21 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 
   /* free all element and attribute inherit tables */
   for (i = 0; i < pSS->SsNRules; i++)
-    if (pPSch->PsInheritedAttr[i])
-      {
-	TtaFreeMemory (pPSch->PsInheritedAttr[i]);
-	pPSch->PsInheritedAttr[i] = NULL;
-      }
+    {
+      pPSch->PsNInheritedAttrs->Num[i] = 0;
+      if (pPSch->PsInheritedAttr->ElInherit[i])
+	{
+	  TtaFreeMemory (pPSch->PsInheritedAttr->ElInherit[i]);
+	  pPSch->PsInheritedAttr->ElInherit[i] = NULL;
+	}
+    }
   for (i = 0; i < pSS->SsNAttributes; i++)
     if (pPSch->PsComparAttr->CATable[i])
       {
 	TtaFreeMemory (pPSch->PsComparAttr->CATable[i]);
 	pPSch->PsComparAttr->CATable[i] = NULL;
       }
+#endif
 
   /* extend the attribute table if it's full */
   if (pSS->SsNAttributes >= pSS->SsAttrTableSize)
@@ -1515,7 +1599,8 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
       size = pSS->SsNAttributes + 10;
       i = size * sizeof (PtrTtAttribute);
       pSS->SsAttribute = (TtAttrTable*) realloc (pSS->SsAttribute, i);
-      
+
+#ifndef NODISPLAY      
       /* extend all tables that map attributes */
       /* extend the main presentation schema */
       i = size * sizeof (PtrAttributePres);
@@ -1528,8 +1613,12 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
       pPSch->PsNComparAttrs = (NumberTable*) realloc (pPSch->PsNComparAttrs,i);
       i = size * sizeof (ComparAttrTable*);
       pPSch->PsComparAttr = (CompAttrTbTb*) realloc (pPSch->PsComparAttr, i);
-      if (!pSS->SsAttribute || !pPSch->PsAttrPRule || !pPSch->PsNAttrPRule ||
-	  !pPSch->PsNHeirElems)
+#endif
+      if (!pSS->SsAttribute
+#ifndef NODISPLAY
+	  || !pPSch->PsAttrPRule || !pPSch->PsNAttrPRule || !pPSch->PsNHeirElems
+#endif
+	  )
 	{
 	  TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
 	  return;
@@ -1540,7 +1629,8 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 	  for (i = pSS->SsNAttributes; i < size; i++)
 	    pSS->SsAttribute->TtAttr[i] = NULL;
 	}
-      
+
+#ifndef NODISPLAY      
       /* extend the associated extension schemas */
       pHSP = pPfSsav->PfFirstPSchemaExtens;
       while (pHSP)
@@ -1571,6 +1661,7 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
 	  /* next extension schema */
 	  pHSP = pNextHSP;
 	}
+#endif
     }
 
   /* Add a new attribute type */
@@ -1587,15 +1678,16 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
   pSS->SsAttribute->TtAttr[i]->AttrFirstExcept = 0;
   pSS->SsAttribute->TtAttr[i]->AttrLastExcept = 0;
   pSS->SsAttribute->TtAttr[i]->AttrType = AtTextAttr;
-  
+
+#ifndef NODISPLAY
   /* no presentation rule nor inherit tables for this new attribute */
   pPSch->PsAttrPRule->AttrPres[i] = NULL;
   pPSch->PsNAttrPRule->Num[i] = 0;
   pPSch->PsNHeirElems->Num[i] = 0;
   pPSch->PsNComparAttrs->Num[i] = 0;
   pPSch->PsComparAttr->CATable[i] = NULL;
-  
-  /*no presentation rule nor inherit tables in the extension schemas */
+
+  /* no presentation rule nor inherit tables in the extension schemas */
   pHSP = pPfSsav->PfFirstPSchemaExtens;
   while (pHSP)
     {
@@ -1609,10 +1701,11 @@ void    TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
       /* next extension schema */
       pHSP = pNextHSP;
     }
-  
+
   /* Initialize and insert the presentation rules */
-  /* associed with this new attribute */
+  /* associated with this new attribute */
   InsertXmlAtRules (pPSch, pSS->SsNAttributes);
+#endif
 
   /* Update the type number */
   pSS->SsNAttributes++;
@@ -1641,6 +1734,7 @@ void    TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType)
      }
 }
 
+#ifndef NODISPLAY
 /*----------------------------------------------------------------------
    InsertAXmlPRule
    Add a specific presentation rule.
@@ -1666,7 +1760,7 @@ static PtrPRule InsertAXmlPRule (PRuleType type,  int view, PresMode mode,
    
        /* Add the new rule into the chain */
        if (prevPRule == NULL)
-	 pPSch->PsElemPRule[nSRule] = pRule;
+	 pPSch->PsElemPRule->ElemPres[nSRule] = pRule;
        else
 	 prevPRule->PrNextPRule = pRule;
      }
@@ -1683,7 +1777,7 @@ static void    InsertXmlPRules (PtrPSchema pPSch, int nSRules)
   PtrPRule     prevPRule, pRule, nextPRule;
 
   /* First presention rule associated with this element type */
-  prevPRule = pPSch->PsElemPRule[nSRules];
+  prevPRule = pPSch->PsElemPRule->ElemPres[nSRules];
 
  /* Rule 'NoLine' view 2 */
   pRule = InsertAXmlPRule (PtFunction, STRUCTURE_VIEW, PresFunction,
@@ -1804,7 +1898,7 @@ PtrPRule    TtaGetXmlPRule (PtrPSchema pPSch, int nSRule, PRuleType PrType,
   ThotBool   found;
 
   /* First presention rule associated with this element type */
-  pRule = pPSch->PsElemPRule[nSRule];
+  pRule = pPSch->PsElemPRule->ElemPres[nSRule];
   found = FALSE;
   while (pRule && !found)
     {
@@ -1900,8 +1994,8 @@ void    TtaSetXmlTypeInLine (ElementType elType, Document document)
   if (pRule != NULL)
     return;
 
-  /* First specific rule associated with this element type */
-  prevPRule = pPSch->PsElemPRule[nSRule];
+  /* First presentation rule associated with this element type */
+  prevPRule = pPSch->PsElemPRule->ElemPres[nSRule];
 
   /* Rule 'Line' view 1 */
    pRule = NULL;
@@ -1922,14 +2016,15 @@ void    TtaSetXmlTypeInLine (ElementType elType, Document document)
        pRule->PrElement = 0;
     
        /* Add the new rule into the chain */
-       pPSch->PsElemPRule[nSRule] = pRule;
+       pPSch->PsElemPRule->ElemPres[nSRule] = pRule;
        pRule->PrNextPRule = prevPRule; 
      }
 }
+#endif
 
 /*----------------------------------------------------------------------
-   TtaAppendXMLSRule
-   Add a new rule at the end of the table
+   TtaAppendXMLElement
+   Add a new rule at the end of the rule table
   ----------------------------------------------------------------------*/
 void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
 			     char **mappedName, Document document)
@@ -1938,6 +2033,8 @@ void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
   PtrPSchema          pPSch;
   PtrDocument         pDoc;
   PtrDocSchemasDescr  pPfS;
+  PtrSRule            pRule;
+  int                 rule;
 
   pSS = NULL;
   pPSch = NULL;
@@ -1945,7 +2042,10 @@ void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
   pPfS = pDoc->DocFirstSchDescr;
 
   pSS = (PtrSSchema) elType->ElSSchema;
+  if (pSS == NULL)
+    return;
 
+#ifndef NODISPLAY
   /* Search the associated presentation schema */
   while (pSS && pPfS && !pPSch)
     {
@@ -1954,44 +2054,44 @@ void    TtaAppendXmlElement (char *XMLName, ElementType *elType,
 	pPSch = pPfS->PfPSchema;
       pPfS = pPfS->PfNext;
     }
-
-  if (pSS == NULL || pPSch == NULL)
+  if (pPSch == NULL)
     return;
+#endif
+  AppendSRule (&rule, pSS, pPSch, pDoc);
 
-  if (pSS->SsNRules >= MAX_RULES_SSCHEMA)
-    {
-      TtaDisplaySimpleMessage (FATAL, LIB, TMSG_LIB_RULES_TABLE_FULL);
-      *mappedName = NULL;
-    }
+  if (rule == 0)
+    *mappedName = NULL;
   else
     {
       /* Initializes a new structure rule */
-      strncpy (pSS->SsRule[pSS->SsNRules].SrName, XMLName, MAX_NAME_LENGTH);
-      strncpy (pSS->SsRule[pSS->SsNRules].SrOrigName, XMLName, MAX_NAME_LENGTH);
-      pSS->SsRule[pSS->SsNRules].SrNDefAttrs = 0;
-      pSS->SsRule[pSS->SsNRules].SrNLocalAttrs = 0;
-      pSS->SsRule[pSS->SsNRules].SrLocalAttr = NULL;
-      pSS->SsRule[pSS->SsNRules].SrRequiredAttr = NULL;
-      pSS->SsRule[pSS->SsNRules].SrUnitElem = FALSE;
-      pSS->SsRule[pSS->SsNRules].SrRecursive = FALSE;
-      pSS->SsRule[pSS->SsNRules].SrExportedElem = FALSE;
-      pSS->SsRule[pSS->SsNRules].SrFirstExcept = 0;
-      pSS->SsRule[pSS->SsNRules].SrLastExcept = 0;
-      pSS->SsRule[pSS->SsNRules].SrNInclusions = 0;
-      pSS->SsRule[pSS->SsNRules].SrNExclusions = 0;
-      pSS->SsRule[pSS->SsNRules].SrRefImportedDoc = FALSE;
-      pSS->SsRule[pSS->SsNRules].SrSSchemaNat = NULL;
-      pSS->SsRule[pSS->SsNRules].SrConstruct = CsAny;
+      pRule = pSS->SsRule->SrElem[rule -1];
+      strncpy (pRule->SrName, XMLName, MAX_NAME_LENGTH);
+      strncpy (pRule->SrOrigName, XMLName, MAX_NAME_LENGTH);
+      pRule->SrNDefAttrs = 0;
+      pRule->SrNLocalAttrs = 0;
+      pRule->SrLocalAttr = NULL;
+      pRule->SrRequiredAttr = NULL;
+      pRule->SrUnitElem = FALSE;
+      pRule->SrRecursive = FALSE;
+      pRule->SrExportedElem = FALSE;
+      pRule->SrFirstExcept = 0;
+      pRule->SrLastExcept = 0;
+      pRule->SrNInclusions = 0;
+      pRule->SrNExclusions = 0;
+      pRule->SrRefImportedDoc = FALSE;
+      pRule->SrSSchemaNat = NULL;
+      pRule->SrConstruct = CsAny;
 
-      *mappedName = pSS->SsRule[pSS->SsNRules].SrName;
+      *mappedName = pRule->SrName;
 
+#ifndef NODISPLAY
       /* Initialize and insert the presentation rules */
       /* associed to this new element type */
-      InsertXmlPRules (pPSch, pSS->SsNRules);
+      InsertXmlPRules (pPSch, rule - 1);
+#endif
 
       /* Update the type number */
-      pSS->SsNRules++;
-      elType->ElTypeNum = pSS->SsNRules;
+      elType->ElTypeNum = rule;
     }
 }
 
@@ -2009,10 +2109,10 @@ void    TtaGetXmlElementType (char* XMLName, ElementType *elType,
    pSS = (PtrSSchema) elType->ElSSchema;
    for (rule = 0;  !found && rule < pSS->SsNRules; rule++)
      {
-       if (strcmp (pSS->SsRule[rule].SrName, XMLName) == 0)
+       if (strcmp (pSS->SsRule->SrElem[rule]->SrName, XMLName) == 0)
 	 {
 	   elType->ElTypeNum = rule + 1;
-	   *mappedName = pSS->SsRule[rule].SrName;
+	   *mappedName = pSS->SsRule->SrElem[rule]->SrName;
 	   found = TRUE;
 	 }
      }
@@ -2070,10 +2170,10 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 	  strcpy (pSS->SsDefaultPSchema, sSchemaName);
 	  strcat (pSS->SsDefaultPSchema, "P");
 	  for (i = 0; i < pSS->SsNRules; i++)
-	    if (strcmp (pSS->SsRule[i].SrName, "XML") == 0)
+	    if (strcmp (pSS->SsRule->SrElem[i]->SrName, "XML") == 0)
 	      {
-		strncpy (pSS->SsRule[i].SrName, sSchemaName, MAX_NAME_LENGTH);
-		strncpy (pSS->SsRule[i].SrOrigName, sSchemaName, MAX_NAME_LENGTH);
+		strncpy (pSS->SsRule->SrElem[i]->SrName, sSchemaName, MAX_NAME_LENGTH);
+		strncpy (pSS->SsRule->SrElem[i]->SrOrigName, sSchemaName, MAX_NAME_LENGTH);
 		i = pSS->SsNRules;
 	      }
 	}

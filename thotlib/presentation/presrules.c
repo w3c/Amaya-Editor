@@ -1512,7 +1512,7 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
       GetConstantBuffer (pAb);
       pBu1 = pAb->AbText;
       CopyStringToBuffer ("<", pBu1, &lg);
-      CopyStringToBuffer (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber-1].SrName,
+      CopyStringToBuffer (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber-1]->SrName,
 			pBu1, &i);
       lg += i;
       CopyStringToBuffer (">", pBu1, &i);
@@ -1634,7 +1634,7 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 	  pAb->AbLeafType = LtText;
 	  GetConstantBuffer (pAb);
 	  pBu1 = pAb->AbText;
-	  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrFirstOfPair)
+	  if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrFirstOfPair)
 	    {
 	      pBu1->BuContent[0] = TEXT('<');
 	      pBu1->BuContent[1] = TEXT('<');
@@ -1797,7 +1797,7 @@ void SearchPresSchema (PtrElement pEl, PtrPSchema *pSchP, int *indexElType,
   int                 i;
   PtrSSchema          pSc1;
   PtrPSchema          pSP;
-  SRule              *pSRule;
+  PtrSRule            pSRule;
 
   if (pEl == NULL || pEl->ElStructSchema == NULL)
     {
@@ -1830,7 +1830,7 @@ void SearchPresSchema (PtrElement pEl, PtrPSchema *pSchP, int *indexElType,
 		  do
 		    {
 		      i++;
-		      pSRule = &pSc1->SsRule[i - 1];
+		      pSRule = pSc1->SsRule->SrElem[i - 1];
 		      if (pSRule->SrConstruct == CsNatureSchema)
 			if (pSRule->SrSSchemaNat == pEl->ElStructSchema)
 			  found = TRUE;
@@ -1839,8 +1839,8 @@ void SearchPresSchema (PtrElement pEl, PtrPSchema *pSchP, int *indexElType,
 		  if (found)
 		    {
 		      pSP = PresentationSchema (pSc1, pDoc);
-		    if (pSP && pSP->PsElemPRule[i - 1] != NULL)
-		      /* il y a des regles de presentation specifiques */
+		    if (pSP && pSP->PsElemPRule->ElemPres[i - 1])
+		      /* il y a des regles de presentation pour ce type */
 		      {
 			*pSchP = pSP;
 			*indexElType = i;
@@ -2385,7 +2385,7 @@ static void ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch,
 	  }
 
 	if (!exitingPage &&
-	    pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct != CsChoice)
+	    pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct != CsChoice)
 	  {
 	     /* on cree une marque de page */
 	     pElPage = NewSubtree (PageBreak + 1, pEl->ElStructSchema, pDoc,
@@ -2654,7 +2654,7 @@ static PtrElement SearchElInSubTree (PtrElement pElRoot, int elType,
    if (typeName[0] != EOS)
       /* on compare les noms de type */
      {
-	if (strcmp (typeName, pElRoot->ElStructSchema->SsRule[pElRoot->ElTypeNumber - 1].SrName) == 0)
+	if (strcmp (typeName, pElRoot->ElStructSchema->SsRule->SrElem[pElRoot->ElTypeNumber - 1]->SrName) == 0)
 	   pEC = pElRoot;
      }
    else
@@ -2731,7 +2731,7 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
   pEl1 = pAb->AbElement;
   pE = NULL;
   Ref = FALSE;
-  if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct == CsReference)
+  if (pEl1->ElStructSchema->SsRule->SrElem[pEl1->ElTypeNumber - 1]->SrConstruct == CsReference)
     {
       /* la regle Copy s'applique a un pave' d'un element reference */
       Ref = TRUE;
@@ -2895,7 +2895,7 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
        /* si l'element a copier est lui-meme une reference qui copie un */
        /* autre element, c'est cet autre element qu'on copie */
        pPRule1 = NULL;
-       if (pE->ElStructSchema->SsRule[pE->ElTypeNumber - 1].SrConstruct == CsReference)
+       if (pE->ElStructSchema->SsRule->SrElem[pE->ElTypeNumber - 1]->SrConstruct == CsReference)
 	 {
 	   pPRule1 = GlobalSearchRulepEl (pE, pDoc, &pSchP, &pSchS, 0, NULL,
 					  1, PtFunction, FnAny, FALSE, FALSE,

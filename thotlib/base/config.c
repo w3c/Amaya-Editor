@@ -971,9 +971,10 @@ static ThotBool Translate (PtrSSchema pSS, char *word, char *trans)
    strncpy (terme, AsciiTranslate (word), MAX_NAME_LENGTH - 1);
    /* cherche le mot a traduire d'abord parmi les noms d'elements */
    for (i = 0; i < pSS->SsNRules; i++)
-      if (strcmp (terme, pSS->SsRule[i].SrName) == 0)
+      if (strcmp (terme, pSS->SsRule->SrElem[i]->SrName) == 0)
 	{
-	   strncpy (pSS->SsRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
+	   strncpy (pSS->SsRule->SrElem[i]->SrName, AsciiTranslate (trans),
+		    MAX_NAME_LENGTH - 1);
 	   found = TRUE;
 	}
    /* cherche ensuite parmi les noms d'attributs et de valeurs d'attributs */
@@ -982,14 +983,16 @@ static ThotBool Translate (PtrSSchema pSS, char *word, char *trans)
 	   pAttr = pSS->SsAttribute->TtAttr[i];
 	   if (strcmp (terme, pAttr->AttrName) == 0)
 	     {
-		strncpy (pAttr->AttrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
+		strncpy (pAttr->AttrName, AsciiTranslate (trans),
+			 MAX_NAME_LENGTH - 1);
 		found = TRUE;
 	     }
 	   else if (pAttr->AttrType == AtEnumAttr)
 	      for (j = 0; j < pAttr->AttrNEnumValues; j++)
 		 if (strcmp (terme, pAttr->AttrEnumValue[j]) == 0)
 		   {
-		      strncpy (pAttr->AttrEnumValue[j], AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
+		      strncpy (pAttr->AttrEnumValue[j], AsciiTranslate (trans),
+			       MAX_NAME_LENGTH - 1);
 		      found = TRUE;
 		   }
 	}

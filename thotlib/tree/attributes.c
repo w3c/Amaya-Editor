@@ -490,14 +490,14 @@ void ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc,
 	/* on cherche d'abord si pEl herite de pAttr */
 	pPS = PresentationSchema (pEl->ElStructSchema, pDoc);
 	if (pPS != NULL)
-	   if (pPS->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	   if (pPS->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
 	     {
 		/* pEl peut heriter d'un attribut */
-		if ((inheritedAttr = pPS->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+		if ((inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
 		  {
 		     /* la table d'heritage n'existe pas. On la cree */
 		     CreateInheritedAttrTable (pEl, pDoc);
-		     inheritedAttr = pPS->PsInheritedAttr[pEl->ElTypeNumber - 1];
+		     inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 		  }
 		if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
 		  {
@@ -736,14 +736,14 @@ void RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc,
       /* process element pEl itself */
       pPS = PresentationSchema (pEl->ElStructSchema, pDoc);
       if (pPS != NULL)
-	if (pPS->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+	if (pPS->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
 	  {
 	    /* pEl can inherit some presentation rules from attributes */
-	    if ((inheritedAttr = pPS->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+	    if ((inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
 	      {
 		/* la table d'heritage n'existe pas. On la cree */
 		CreateInheritedAttrTable (pEl, pDoc);
-		inheritedAttr = pPS->PsInheritedAttr[pEl->ElTypeNumber - 1];
+		inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 	      }
 	    if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
 	      RemoveAttrPresentation (pEl, pDoc, pAttr, pElAttr, TRUE, NULL);

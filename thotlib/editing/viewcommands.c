@@ -115,7 +115,7 @@ static ThotBool     ListWithText (PtrElement pEl, PtrDocument pDoc)
 
    ok = FALSE;
    if (!pEl->ElTerminal)
-      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
+      if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct ==
 	                                                               CsList)
 	 /* c'est bien une liste */
 	{

@@ -79,7 +79,7 @@ int GetPageBoxType (PtrElement pEl, PtrDocument pDoc, int viewNb,
 	     /* presentation de l'element pElAscent */
 	     {
 	       SearchPresSchema (pElAscent, pSchPPage, &index, &pSchS, pDoc);
-	       pRule = (*pSchPPage)->PsElemPRule[index - 1];
+	       pRule = (*pSchPPage)->PsElemPRule->ElemPres[index - 1];
 	       stop = FALSE;
 	       do
 		 if (pRule == NULL)

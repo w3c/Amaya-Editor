@@ -839,7 +839,7 @@ static int ReadType (PtrDocument pDoc, PtrSSchema *pSS, BinFile pivFile, char *t
 		 if (rule == 0)
 		   PivotError (pivFile, "PivotError: Nature");
 		 else
-		   *pSS = (*pSS)->SsRule[rule - 1].SrSSchemaNat;
+		   *pSS = (*pSS)->SsRule->SrElem[rule - 1]->SrSSchemaNat;
 	       }
 	   }
 	 }
@@ -877,7 +877,7 @@ static void ExportedContent (ThotBool *createAll, int *elType, PtrSSchema *pSS,
 {
   int                 i;
   ThotBool            ok;
-  SRule              *pSRule;
+  PtrSRule            pSRule;
 
   if (*contentType != 0 && *pContSS != NULL)
     {
@@ -889,7 +889,7 @@ static void ExportedContent (ThotBool *createAll, int *elType, PtrSSchema *pSS,
 	    ok = TRUE;
 	  else
 	    {
-	      pSRule = &(*pContSS)->SsRule[*contentType - 1];
+	      pSRule = (*pContSS)->SsRule->SrElem[*contentType - 1];
 	      if (pSRule->SrConstruct == CsChoice &&
 		  /* le contenu a creer est un choix */
 		  pSRule->SrNChoices > 0)
@@ -910,7 +910,7 @@ static void ExportedContent (ThotBool *createAll, int *elType, PtrSSchema *pSS,
       
       if (!ok && *elType == (*pSS)->SsRootElem)
 	{
-	  pSRule = &(*pContSS)->SsRule[*contentType - 1];
+	  pSRule = (*pContSS)->SsRule->SrElem[*contentType - 1];
 	  if (pSRule->SrConstruct == CsNatureSchema)
 	    {
 	      /* le contenu cherche' est justement une racine de nature */
@@ -927,10 +927,10 @@ static void ExportedContent (ThotBool *createAll, int *elType, PtrSSchema *pSS,
 	      do
 		{
 		  i++;
-		  if ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1]. SrConstruct == CsNatureSchema &&
+		  if ((*pContSS)->SsRule->SrElem[pSRule->SrChoice[i - 1] - 1]->SrConstruct == CsNatureSchema &&
 		      /* l'option i est un changement de nature */
-		      (*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1]. SrSSchemaNat != NULL)
-		    ok = (!strcmp ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat->SsName, (*pSS)->SsName));
+		      (*pContSS)->SsRule->SrElem[pSRule->SrChoice[i - 1] - 1]->SrSSchemaNat != NULL)
+		    ok = (!strcmp ((*pContSS)->SsRule->SrElem[pSRule->SrChoice[i - 1] - 1]->SrSSchemaNat->SsName, (*pSS)->SsName));
 		}
 	      while (!ok && i < pSRule->SrNChoices);
 	    }
@@ -949,7 +949,7 @@ static void ExportedContent (ThotBool *createAll, int *elType, PtrSSchema *pSS,
    schema de structure pSS et, si certains attributs requis        
    manquent, affiche un message d'erreur.                          
   ----------------------------------------------------------------------*/
-static void CheckMandatAttrSRule (PtrElement pEl, SRule *pSRule, PtrSSchema pSS)
+static void CheckMandatAttrSRule (PtrElement pEl, PtrSRule pSRule, PtrSSchema pSS)
 {
   PtrAttribute        pAttr;
   int                 i, att;
@@ -981,7 +981,7 @@ static void CheckMandatAttrSRule (PtrElement pEl, SRule *pSRule, PtrSSchema pSS)
 static void CheckMandatoryAttr (PtrElement pEl, PtrDocument pDoc)
 {
 
-  SRule              *pSRule;
+  PtrSRule            pSRule;
   PtrSSchema          pSS;
 
   if (pEl != NULL)
@@ -989,7 +989,7 @@ static void CheckMandatoryAttr (PtrElement pEl, PtrDocument pDoc)
       /* traite d'abord les attributs requis par la regle de structure */
       /* qui definit l'element */
       pSS = pEl->ElStructSchema;
-      pSRule = &pSS->SsRule[pEl->ElTypeNumber - 1];
+      pSRule = pSS->SsRule->SrElem[pEl->ElTypeNumber - 1];
       CheckMandatAttrSRule (pEl, pSRule, pSS);
       /* traite les attributs requis par toutes les regles d'extension de */
       /* ce type d'element */
@@ -1889,7 +1889,7 @@ PtrElement ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc,
   PtrPRule            pPRule;
   PtrSSchema          pSS;
   PtrReferredDescr    pRefD;
-  SRule              *pSRule;
+  PtrSRule            pSRule;
 static  LabelString         label;
   DocumentIdentifier  docIdent;
   BasicType           leafType;
@@ -1946,7 +1946,7 @@ static  LabelString         label;
 	       exporte' englobant ? */
 	    ExportedContent (&createAll, &elType, &pSSchema, pContSS,
 			     contentType);
-	  pSRule = &pSSchema->SsRule[elType - 1];
+	  pSRule = pSSchema->SsRule->SrElem[elType - 1];
 	  if (createAll)
 	    create = TRUE;
 	  else
@@ -2160,7 +2160,7 @@ static  LabelString         label;
 	if (!inclusion)
 	  /* lit le contenu de l'element create */
 	  /* traitement specifique selon le constructeur de l'element */
-	  switch (pSSchema->SsRule[elType - 1].SrConstruct)
+	  switch (pSSchema->SsRule->SrElem[elType - 1]->SrConstruct)
 	    {
 	    case CsReference:
 	      if (*tag != C_PIV_REFERENCE)
@@ -2198,7 +2198,7 @@ static  LabelString         label;
 		}
 	      break;
 	    case CsBasicElement:
-	      leafType = pSSchema->SsRule[elType - 1].SrBasicType;
+	      leafType = pSSchema->SsRule->SrElem[elType - 1]->SrBasicType;
 	      if (leafType == CharString)
 		{
 		if (pDoc->DocPivotVersion >= 4)
@@ -2691,8 +2691,8 @@ ThotBool AbstractTreeOK (PtrElement pEl, PtrDocument pDoc)
 	       ok = FALSE;
 	       TtaDisplayMessage (INFO,
 				  TtaGetMessage (LIB, TMSG_INVALID_SIBLING),
-				  pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
-				  pEl->ElPrevious->ElStructSchema->SsRule[pEl->ElPrevious->ElTypeNumber - 1].SrName,
+				  pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName,
+				  pEl->ElPrevious->ElStructSchema->SsRule->SrElem[pEl->ElPrevious->ElTypeNumber - 1]->SrName,
 				  pEl->ElLabel);
 	     }
 	 }
@@ -2704,8 +2704,8 @@ ThotBool AbstractTreeOK (PtrElement pEl, PtrDocument pDoc)
 	       ok = FALSE;
 	       TtaDisplayMessage (INFO,
 				  TtaGetMessage (LIB, TMSG_INVALID_CHILD),
-				  pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
-				  pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrName,
+				  pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName,
+				  pEl->ElParent->ElStructSchema->SsRule->SrElem[pEl->ElParent->ElTypeNumber - 1]->SrName,
 				  pEl->ElLabel);
 	     }
 	 }
@@ -2741,7 +2741,7 @@ void                AssociatePairs (PtrElement pRoot)
        pEl1 = FwdSearchRefOrEmptyElem (pEl1, 3);
        if (pEl1 != NULL)
 	 /* on a trouve' un element de paire */
-	 if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber-1].SrFirstOfPair)
+	 if (pEl1->ElStructSchema->SsRule->SrElem[pEl1->ElTypeNumber-1]->SrFirstOfPair)
 	   /* c'est un element de debut de paire */
 	   {
 	     /* on cherche l'element de fin correspondant */
@@ -2992,7 +2992,7 @@ void ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag,
 		     /* echec creation nature */
 		     PivotError (file, "PivotError: Schema 11");
 		   else
-		     pSS = pDoc->DocSSchema->SsRule[i - 1].SrSSchemaNat;
+		     pSS = pDoc->DocSSchema->SsRule->SrElem[i - 1]->SrSSchemaNat;
 		 }
 	     }
 	 }

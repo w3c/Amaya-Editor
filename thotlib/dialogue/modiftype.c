@@ -75,10 +75,10 @@ static void         ComposeItemSplit (char *bufItemSplit)
 	     pEl = pElToDuplicate;
 	     /* si c'est un choix, on utilise le type du fils */
 	     if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
-		if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
+		if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsChoice)
 		   pEl = pEl->ElFirstChild;
 	     sprintf (bufItemSplit, "%s %s", TtaGetMessage (LIB, TMSG_SPLIT),
-		 pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+		 pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
 	  }
      }
 }

@@ -204,7 +204,7 @@ static void         wrnom (Name n)
 static void         wrnomregle (int r)
 {
    if (r > 0)
-      wrnom (pSchemaStr->SsRule[r - 1].SrName);
+      wrnom (pSchemaStr->SsRule->SrElem[r - 1]->SrName);
 }
 
 /*----------------------------------------------------------------------
@@ -1623,17 +1623,17 @@ int                 main (int argc, char **argv)
 	printf ("\nRULES\n\n");
 	for (El = 1; El <= pSchemaStr->SsNRules; El++)
 	  {
-	     if (pSchemaStr->SsRule[El - 1].SrConstruct == CsPairedElement)
-		if (pSchemaStr->SsRule[El - 1].SrFirstOfPair)
+	     if (pSchemaStr->SsRule->SrElem[El - 1]->SrConstruct == CsPairedElement)
+		if (pSchemaStr->SsRule->SrElem[El - 1]->SrFirstOfPair)
 		   printf ("First ");
 		else
 		   printf ("Second ");
 	     wrnomregle (El);
 	     printf (":\n");
-	     if (pSc1->PsElemPRule[El - 1] != NULL)
+	     if (pSc1->PsElemPRule->ElemPres[El - 1])
 		printf ("   BEGIN\n");
-	     wrsuiteregles (pSc1->PsElemPRule[El - 1]);
-	     if (pSc1->PsElemPRule[El - 1] != NULL)
+	     wrsuiteregles (pSc1->PsElemPRule->ElemPres[El - 1]);
+	     if (pSc1->PsElemPRule->ElemPres[El - 1])
 		printf ("   END;\n");
 	     printf ("\n");
 	  }
@@ -1809,7 +1809,7 @@ int                 main (int argc, char **argv)
 	/* ecrit les regles de transmission de valeurs d'elements */
 	if (pSc1->PsNTransmElems > 0)
 	   for (i = 1; i <= pSchemaStr->SsNRules; i++)
-	      if (pSc1->PsElemTransmit[i - 1] > 0)
+	      if (pSc1->PsElemTransmit->Num[i - 1] > 0)
 		{
 		   if (!Transm)
 		     {
@@ -1819,9 +1819,9 @@ int                 main (int argc, char **argv)
 		   printf ("   ");
 		   wrnomregle (i);
 		   printf (" To ");
-		   wrnom (pSc1->PsTransmElem[pSc1->PsElemTransmit[i - 1] - 1].TeTargetAttr);
+		   wrnom (pSc1->PsTransmElem[pSc1->PsElemTransmit->Num[i - 1] - 1].TeTargetAttr);
 		   printf ("(");
-		   wrnomregle (pSc1->PsTransmElem[pSc1->PsElemTransmit[i - 1] - 1].TeTargetDoc);
+		   wrnomregle (pSc1->PsTransmElem[pSc1->PsElemTransmit->Num[i - 1] - 1].TeTargetDoc);
 		   printf (");\n");
 		}
 

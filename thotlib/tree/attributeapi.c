@@ -223,7 +223,7 @@ static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
 void AttachMandatoryAttributes (PtrElement pEl, PtrDocument pDoc)
 {
   PtrElement          pChild;
-  SRule              *pSRule;
+  PtrSRule            pSRule;
   PtrSSchema          pSS;
 
   if (pEl != NULL && pEl->ElStructSchema != NULL)
@@ -231,7 +231,7 @@ void AttachMandatoryAttributes (PtrElement pEl, PtrDocument pDoc)
       /* traite d'abord les attributs requis par la regle de structure qui */
       /* definit l'element */
       pSS = pEl->ElStructSchema;
-      pSRule = &pSS->SsRule[pEl->ElTypeNumber - 1];
+      pSRule = pSS->SsRule->SrElem[pEl->ElTypeNumber - 1];
       AttachMandatoryAttrSRule (pEl, pDoc, pSRule, pSS);
       /* traite toutes les regles d'extension de ce type d'element */
       pSS = pDoc->DocSSchema;

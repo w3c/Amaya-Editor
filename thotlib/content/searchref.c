@@ -289,7 +289,7 @@ void                FindReferredEl ()
 		pRefTable[nMenuItems] = firstSel->ElReference;
 		nMenuItems++;
 		strcpy (menuBuf + menuBufLen,
-			firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrName);
+			firstSel->ElStructSchema->SsRule->SrElem[firstSel->ElTypeNumber - 1]->SrName);
 		menuBufLen += strlen (menuBuf) + 1;
 	     }
 	if (firstSel->ElSource != NULL)

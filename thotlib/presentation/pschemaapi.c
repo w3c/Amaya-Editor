@@ -88,30 +88,50 @@ PSchema             TtaNewPSchema (SSchema nature)
        if (pSchPres)
 	 {
 	   pSS = (PtrSSchema) nature;
-	   size = pSS->SsNAttributes * sizeof (PtrAttributePres);
+	   size = pSS->SsAttrTableSize * sizeof (PtrAttributePres);
 	   pSchPres->PsAttrPRule =  (AttrPresTable*) malloc (size);
 	   if (pSchPres->PsAttrPRule)
 	     memset (pSchPres->PsAttrPRule, 0, size);
 
-	   size = pSS->SsNAttributes * sizeof (int);
+	   size = pSS->SsAttrTableSize * sizeof (int);
 	   pSchPres->PsNAttrPRule = (NumberTable*) malloc (size);
 	   if (pSchPres->PsNAttrPRule)
 	     memset (pSchPres->PsNAttrPRule, 0, size);
 
-	   size = pSS->SsNAttributes * sizeof (int);
+	   size = pSS->SsRuleTableSize * sizeof (PtrPRule);
+	   pSchPres->PsElemPRule = (PtrPRuleTable*) malloc (size);
+	   if (pSchPres->PsElemPRule)
+	     memset (pSchPres->PsElemPRule, 0 , size);
+
+	   size = pSS->SsAttrTableSize * sizeof (int);
 	   pSchPres->PsNHeirElems = (NumberTable*) malloc (size);
 	   if (pSchPres->PsNHeirElems)
 	     memset (pSchPres->PsNHeirElems, 0, size);
 
-	   size = pSS->SsNAttributes * sizeof (int);
+	   size = pSS->SsRuleTableSize * sizeof (int);
+	   pSchPres->PsNInheritedAttrs = (NumberTable*) malloc (size);
+	   if (pSchPres->PsNInheritedAttrs)
+	     memset (pSchPres->PsNInheritedAttrs, 0, size);
+
+	   size = pSS->SsRuleTableSize * sizeof (InheritAttrTable*);
+	   pSchPres->PsInheritedAttr = (InheritAttrTbTb*) malloc (size);
+	   if (pSchPres->PsInheritedAttr)
+	     memset (pSchPres->PsInheritedAttr, 0, size);
+
+	   size = pSS->SsAttrTableSize * sizeof (int);
 	   pSchPres->PsNComparAttrs = (NumberTable*) malloc (size);
 	   if (pSchPres->PsNComparAttrs)
 	     memset (pSchPres->PsNComparAttrs, 0, size);
 
-	   size = pSS->SsNAttributes * sizeof (PtrAttributePres);
+	   size = pSS->SsAttrTableSize * sizeof (PtrAttributePres);
 	   pSchPres->PsComparAttr = (CompAttrTbTb*) malloc (size);
 	   if (pSchPres->PsComparAttr)
 	     memset (pSchPres->PsComparAttr, 0, size);
+
+	   size = pSS->SsRuleTableSize * sizeof (int);
+	   pSchPres->PsElemTransmit = (NumberTable*) malloc (size);
+	   if (pSchPres->PsElemTransmit)
+	     memset (pSchPres->PsElemTransmit, 0, size);
 	 }
      }
    return ((PSchema) pSchPres);

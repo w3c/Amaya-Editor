@@ -50,7 +50,7 @@ PtrPRule GetPageRule (PtrElement pEl, PtrDocument pDoc, int view,
 
    pRPage = NULL;
    SearchPresSchema (pEl, pSchP, &entry, &pSchS, pDoc);
-   pRule = (*pSchP)->PsElemPRule[entry - 1];
+   pRule = (*pSchP)->PsElemPRule->ElemPres[entry - 1];
    /* 1ere regle de pres. du type */
    stop = FALSE;
    do

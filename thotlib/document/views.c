@@ -157,13 +157,13 @@ static void BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS,
 {
    PtrPSchema          pPSchema, pPS;
    DocViewDescr       *pView;
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    int                 view, i;
    ThotBool            open, viewOK, present;
 
    if (pSS != NULL)
       {
-      pSRule = &pSS->SsRule[pSS->SsRootElem - 1];
+      pSRule = pSS->SsRule->SrElem[pSS->SsRootElem - 1];
       if (!pSRule->SrRefImportedDoc || pSS->SsExtension)
 	 {
 	 pPSchema = PresentationSchema (pSS, pDoc);

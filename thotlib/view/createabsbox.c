@@ -421,7 +421,7 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
    /* les copies d'elements inclus ne sont pas modifiables par l'utilisateur */
    pAb->AbCanBeModified = !pEl->ElIsCopy;
    /* les constantes ne sont pas modifiables par l'utilisateur */
-   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
+   if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct ==
        CsConstant)
       pAb->AbCanBeModified = FALSE;
    pAb->AbSelected = FALSE;
@@ -1091,7 +1091,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 					  pSS->SsName));
 		      else
 			equal = (!strcmp (pCond->CoAncestorName,
-					   pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) &&
+					   pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName) &&
 				 !strcmp (pCond->CoSSchemaName,
 					  pAsc->ElStructSchema->SsName));
 		      if (equal)
@@ -1113,7 +1113,7 @@ ThotBool            CondPresentation (PtrCondition pCond, PtrElement pEl,
 					  pSS->SsName));
 		      else
 			equal = (!strcmp (pCond->CoAncestorName,
-					  pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) &&
+					  pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName) &&
 				 !strcmp (pCond->CoSSchemaName,
 					  pAsc->ElStructSchema->SsName)); 
 		      if (equal)
@@ -2356,7 +2356,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		     pSchP = PresentationSchema (pSchS, pDoc);
 		     index = pAb->AbElement->ElTypeNumber;
 		   }
-	       pRule = pSchP->PsElemPRule[index - 1];
+	       pRule = pSchP->PsElemPRule->ElemPres[index - 1];
 	       
 	       /* traite les regles de creation associees au type de l'element */
 	       pAttr = NULL;
@@ -2367,16 +2367,16 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 	       pSchP = PresentationSchema (pAb->AbElement->ElStructSchema,
 					   pDoc);
 	       if (pSchP != NULL)
-		 if (pSchP->PsNInheritedAttrs[pAb->AbElement->ElTypeNumber -1])
+		 if (pSchP->PsNInheritedAttrs->Num[pAb->AbElement->ElTypeNumber -1])
 		   {
 				/* il y a heritage possible */
 		     if ((inheritTable = pSchP->
-			  PsInheritedAttr[pAb->AbElement->ElTypeNumber - 1])
+			  PsInheritedAttr->ElInherit[pAb->AbElement->ElTypeNumber - 1])
 			 == NULL)
 		       {
 			 /* cette table n'existe pas on la genere */
 			 CreateInheritedAttrTable (pAb->AbElement, pDoc);
-			 inheritTable = pSchP->PsInheritedAttr[pAb->AbElement->ElTypeNumber - 1];
+			 inheritTable = pSchP->PsInheritedAttr->ElInherit[pAb->AbElement->ElTypeNumber - 1];
 		       }
 		     for (l = 1; l <= pAb->AbElement->ElStructSchema->SsNAttributes; l++)
 		       if ((*inheritTable)[l - 1])
@@ -3071,14 +3071,14 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
    /* cherche si les attributs herites par l'element modifient la */
    /* visibilite */
    pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
-   if (pSP->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+   if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
      {
 	/* il y a heritage possible */
-	if ((inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1]) == NULL)
+	if ((inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
 	  {
 	     /* cette table n'existe pas on la genere */
 	     CreateInheritedAttrTable (pEl, pDoc);
-	     inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1];
+	     inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 	  }
 	for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 	   if ((*inheritTable)[l - 1])	/* pEl herite de l'attribut l */
@@ -3294,7 +3294,7 @@ static void  ApplPresRules (PtrElement pEl, PtrDocument pDoc,
 	    {
 	      /* applique toutes les regles de presentation associees au type de
 		 l'element */
-	      pRule = pSchPadd->PsElemPRule[pEl->ElTypeNumber - 1];
+	      pRule = pSchPadd->PsElemPRule->ElemPres[pEl->ElTypeNumber - 1];
 	      while (pRule != NULL)
 		{
 		  if (pRule->PrCond == NULL ||
@@ -3318,9 +3318,9 @@ static void  ApplPresRules (PtrElement pEl, PtrDocument pDoc,
   /* poses sur les elements englobants s'il y a heritage, */
   /* alors la table a deja ete calcule precedemment */
   pSP = PresentationSchema (pEl->ElStructSchema, pDoc);
-  inheritTable = pSP->PsInheritedAttr[pEl->ElTypeNumber - 1];
+  inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
   if (pNewAbbox != NULL)
-    if (pSP->PsNInheritedAttrs[pEl->ElTypeNumber - 1])
+    if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
       /* il y a heritage possible */
       for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 	if ((*inheritTable)[l - 1])	   /* pEl herite de l'attribut l */
@@ -3736,7 +3736,7 @@ PtrAbstractBox AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc,
 	      }
 	    /*********/
 	    /* pRSpec: premiere regle de presentation specifique. */
-	    pRSpec = pSchP->PsElemPRule[index - 1];
+	    pRSpec = pSchP->PsElemPRule->ElemPres[index - 1];
 	    /* premiere regle de presentation par defaut */
 	    pRDef = pSchP->PsFirstDefaultPRule;
 	    /* initialise la file des regles qui n'ont pas pu etre appliquees */

@@ -636,7 +636,7 @@ static void         WriteIncludeFile (FILE * dotHFile, FILE * dialogueFile)
    fprintf (dotHFile, "/* #################################### */\n");
    fprintf (dotHFile, "/* Basic types */\n");
    for (i = 0; i < pSSchema->SsNRules; i++)
-       fprintf (dotHFile, "#define %s  %d\n", pSSchema->SsRule[i].SrName, i + 1);
+       fprintf (dotHFile, "#define %s  %d\n", pSSchema->SsRule->SrElem[i]->SrName, i + 1);
 
    /* liste tous les noms de menus et d'items reellement utilises */
    num = 0;

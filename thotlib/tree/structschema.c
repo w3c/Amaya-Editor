@@ -103,20 +103,20 @@ void GetSRuleFromName (int *typeNum, PtrSSchema *pSS, Name typeName,
 	     /* si c'est une regle de changement de nature, on prendra la
 	        regle racine de la nature */
 	    if (whichName == SCHEMA_NAME)
-	      ruleName = pSSch->SsRule[ruleNum].SrOrigName;
+	      ruleName = pSSch->SsRule->SrElem[ruleNum]->SrOrigName;
 	    else
-	      ruleName = pSSch->SsRule[ruleNum].SrName;
+	      ruleName = pSSch->SsRule->SrElem[ruleNum]->SrName;
 	    if (strcmp (typeName, ruleName) == 0
-		 && pSSch->SsRule[ruleNum].SrConstruct != CsNatureSchema)
+		 && pSSch->SsRule->SrElem[ruleNum]->SrConstruct != CsNatureSchema)
 		/* trouve' */
 	       {
 		  *typeNum = ruleNum + 1;
 		  *pSS = pSSch;
 	       }
-	     else if (pSSch->SsRule[ruleNum].SrConstruct == CsNatureSchema)
+	     else if (pSSch->SsRule->SrElem[ruleNum]->SrConstruct == CsNatureSchema)
 		/* une nature, cherche dans son schema de structure */
 	       {
-		  *pSS = pSSch->SsRule[ruleNum].SrSSchemaNat;
+		  *pSS = pSSch->SsRule->SrElem[ruleNum]->SrSSchemaNat;
 		  GetSRuleFromName (typeNum, pSS, typeName, whichName);
 	       }
 	     ruleNum++;
@@ -151,7 +151,7 @@ void GetAttrRuleFromName (int *attrNum, PtrSSchema *pSSch, PtrElement pElem,
   ThotBool            found, newCshema;
   PtrSSchema          pSS;
   PtrElement	      pEl;
-  SRule              *pRe1;
+  PtrSRule            pRe1;
 #define MaxSch 20
   PtrSSchema          attrStruct[MaxSch];
   char               *name;
@@ -214,7 +214,7 @@ void GetAttrRuleFromName (int *attrNum, PtrSSchema *pSSch, PtrElement pElem,
       /* looks in the local attributes of the element */
       /* at first, looks at the rule defining this element */
       pSS = pElem->ElStructSchema;
-      pRe1 = &pSS->SsRule[pElem->ElTypeNumber - 1];
+      pRe1 = pSS->SsRule->SrElem[pElem->ElTypeNumber - 1];
       do
 	{
 	  if (pRe1 != NULL)
@@ -255,8 +255,8 @@ void GetAttrRuleFromName (int *attrNum, PtrSSchema *pSSch, PtrElement pElem,
   ----------------------------------------------------------------------*/
 int                 GetTypeNumIdentity (int typeNum, PtrSSchema pSS)
 {
-   while (pSS->SsRule[typeNum - 1].SrConstruct == CsIdentity)
-      typeNum = pSS->SsRule[typeNum - 1].SrIdentRule;
+   while (pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsIdentity)
+      typeNum = pSS->SsRule->SrElem[typeNum - 1]->SrIdentRule;
    return typeNum;
 }
 
@@ -299,7 +299,7 @@ ThotBool            EquivalentSRules (int typeNum1, PtrSSchema pSS1,
    ThotBool            ret;
    int                 i;
    ThotBool            test;
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    PtrElement          pAsc, pPrev;
    ThotBool            ok;
    PtrSSchema          pSSch;
@@ -312,7 +312,7 @@ ThotBool            EquivalentSRules (int typeNum1, PtrSSchema pSS1,
      {
 	ret = FALSE;
 	test = TRUE;
-	pSRule = &pSS1->SsRule[typeNum1 - 1];
+	pSRule = pSS1->SsRule->SrElem[typeNum1 - 1];
 	if (pSRule->SrRecursive)
 	  {
 	   if (pSRule->SrRecursDone)
@@ -349,7 +349,7 @@ ThotBool            EquivalentSRules (int typeNum1, PtrSSchema pSS1,
 			    if (typeNum2 <= MAX_BASIC_TYPE)
 			       /* basic type */
 			       ret = TRUE;
-			    else if (pSS2->SsRule[typeNum2 - 1].SrUnitElem)
+			    else if (pSS2->SsRule->SrElem[typeNum2 - 1]->SrUnitElem)
 			       /* exported unit */
 			       ret = TRUE;
 			    else
@@ -367,7 +367,7 @@ ThotBool            EquivalentSRules (int typeNum1, PtrSSchema pSS1,
 				      /* search units defined in this schema */
 				      i = 0;
 				      do
-					 if (pSSch->SsRule[i++].SrUnitElem)
+					 if (pSSch->SsRule->SrElem[i++]->SrUnitElem)
 					    ret = EquivalentSRules (i, pSSch, typeNum2, pSS2, pEl);
 				      while (!ret && i < pSSch->SsNRules) ;
 				      if (!ret)
@@ -400,7 +400,7 @@ ThotBool            EquivalentSRules (int typeNum1, PtrSSchema pSS1,
 					   do
 					     {
 						for (i = 0; i < pSSch->SsNRules && !ret; i++)
-						   if (pSSch->SsRule[i].SrUnitElem)
+						   if (pSSch->SsRule->SrElem[i]->SrUnitElem)
 						      ret = EquivalentSRules (i + 1, pSSch, typeNum2, pSS2, pAsc);
 						if (!ret)
 						   pSSch = pSSch->SsNextExtens;
@@ -419,10 +419,10 @@ ThotBool            EquivalentSRules (int typeNum1, PtrSSchema pSS1,
 			    i = 0;
 			    do
 			      {
-				 if (pSS1->SsRule[pSRule->SrChoice[i] - 1].SrConstruct
+				 if (pSS1->SsRule->SrElem[pSRule->SrChoice[i] - 1]->SrConstruct
 				     == CsNatureSchema ||
 				 /* current option is a nature */
-				     pSS1->SsRule[pSRule->SrChoice[i] - 1].SrConstruct
+				     pSS1->SsRule->SrElem[pSRule->SrChoice[i] - 1]->SrConstruct
 				     == CsChoice)
 				    /* current option is a choice */
 				    ret = EquivalentSRules (pSRule->SrChoice[i], pSS1,
@@ -456,8 +456,8 @@ int                 ListRuleOfElem (int typeNum, PtrSSchema pSS)
 
    ret = 0;
    for (rule = 0; ret == 0 && rule < pSS->SsNRules; rule++)
-      if (pSS->SsRule[rule].SrConstruct == CsList)
-	 if (EquivalentSRules (pSS->SsRule[rule].SrListItem, pSS, typeNum, pSS,
+      if (pSS->SsRule->SrElem[rule]->SrConstruct == CsList)
+	 if (EquivalentSRules (pSS->SsRule->SrElem[rule]->SrListItem, pSS, typeNum, pSS,
 			       NULL))
 	    ret = rule + 1;
    return ret;
@@ -472,12 +472,12 @@ int                 ListRuleOfElem (int typeNum, PtrSSchema pSS)
 int                 AggregateRuleOfElem (int typeNum, PtrSSchema pSS)
 {
    int                 rule, comp, ret;
-   SRule              *pRule;
+   PtrSRule            pRule;
 
    ret = 0;
    for (rule = 0; ret == 0 && rule < pSS->SsNRules; rule++)
      {
-	pRule = &pSS->SsRule[rule];
+	pRule = pSS->SsRule->SrElem[rule];
 	if (pRule->SrConstruct == CsAggregate ||
 	    pRule->SrConstruct == CsUnorderedAggregate)
 	   for (comp = 0; ret == 0 && comp < pRule->SrNComponents; comp++)
@@ -495,7 +495,7 @@ int                 AggregateRuleOfElem (int typeNum, PtrSSchema pSS)
   ----------------------------------------------------------------------*/
 ThotBool            ExcludedType (PtrElement pEl, int typeNum, PtrSSchema pSS)
 {
-   SRule              *pRule;
+   PtrSRule            pRule;
    int                 i;
    PtrSSchema          pSSasc, pSSExt;
    ThotBool            StrSchOK;
@@ -512,7 +512,7 @@ ThotBool            ExcludedType (PtrElement pEl, int typeNum, PtrSSchema pSS)
      {
 	/* accede a la regle de structure de l'element */
 	pSSasc = pEl->ElStructSchema;
-	pRule = &pSSasc->SsRule[pEl->ElTypeNumber - 1];
+	pRule = pSSasc->SsRule->SrElem[pEl->ElTypeNumber - 1];
 	pSSExt = NULL;
 	do
 	  {
@@ -538,9 +538,9 @@ ThotBool            ExcludedType (PtrElement pEl, int typeNum, PtrSSchema pSS)
 			     /* 1er est exclus */
 			  if (pRule->SrExclusion[i] + 1 == typeNum)
 			     /* le type precedent est exclus */
-			     if (pSS->SsRule[typeNum - 1].SrConstruct == CsPairedElement)
+			     if (pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsPairedElement)
 				/* l'element est un membre de paire */
-				if (!pSS->SsRule[typeNum - 1].SrFirstOfPair)
+				if (!pSS->SsRule->SrElem[typeNum - 1]->SrFirstOfPair)
 				   /* c'est le 2eme membre de la paire */
 				   ret = TRUE;
 		    }
@@ -575,13 +575,13 @@ ThotBool            AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl,
 {
    ThotBool            ret;
    int                 i;
-   SRule              *pRule;
+   PtrSRule            pRule;
    PtrElement          pAsc;
    PtrSSchema          pSSrule, pSSExt;
 
    ret = FALSE;
-   if (pSS->SsRule[typeNum - 1].SrConstruct == CsPairedElement)
-     if (!pSS->SsRule[typeNum - 1].SrFirstOfPair)
+   if (pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsPairedElement)
+     if (!pSS->SsRule->SrElem[typeNum - 1]->SrFirstOfPair)
        /* c'est un element de fin de paire, on fait comme si */
        /* c'etait l'element de debut de paire */
        typeNum--;
@@ -592,7 +592,7 @@ ThotBool            AllowedIncludedElem (PtrDocument pDoc, PtrElement pEl,
      {
        /* regle de structure de l'ascendant courant */
        pSSrule = pAsc->ElStructSchema;
-       pRule = &pSSrule->SsRule[pAsc->ElTypeNumber - 1];
+       pRule = pSSrule->SsRule->SrElem[pAsc->ElTypeNumber - 1];
        pSSExt = NULL;
        do
 	 {
@@ -643,12 +643,12 @@ void                ListOrAggregateRule (PtrDocument pDoc, PtrElement pEl,
 {
    int                 c;
    ThotBool            test, equiv;
-   SRule              *pSRule;
+   PtrSRule            pSRule;
 
    equiv = FALSE;
    if (*typeNum != 0 && *pSS != NULL)
      {
-	pSRule = &(*pSS)->SsRule[*typeNum - 1];
+	pSRule = (*pSS)->SsRule->SrElem[*typeNum - 1];
 	test = TRUE;
 	if (pSRule->SrRecursive)
 	  {
@@ -723,15 +723,15 @@ RConstruct          GetElementConstruct (PtrElement pEl, int *nComp)
    if (pEl != NULL)
      {
 	typ = pEl->ElTypeNumber;
-	constr = pEl->ElStructSchema->SsRule[typ - 1].SrConstruct;
+	constr = pEl->ElStructSchema->SsRule->SrElem[typ - 1]->SrConstruct;
 	while (constr == CsIdentity)
 	  {
-	     typ = pEl->ElStructSchema->SsRule[typ - 1].SrIdentRule;
-	     constr = pEl->ElStructSchema->SsRule[typ - 1].SrConstruct;
+	     typ = pEl->ElStructSchema->SsRule->SrElem[typ - 1]->SrIdentRule;
+	     constr = pEl->ElStructSchema->SsRule->SrElem[typ - 1]->SrConstruct;
 	  }
      }
    if (constr == CsUnorderedAggregate || constr == CsAggregate)
-      *nComp = pEl->ElStructSchema->SsRule[typ - 1].SrNComponents;
+      *nComp = pEl->ElStructSchema->SsRule->SrElem[typ - 1]->SrNComponents;
    return constr;
 }
 
@@ -782,20 +782,20 @@ ThotBool            CanChangeNumberOfElem (PtrElement pEl, int delta)
    PtrElement          pChild;
    int                 len;
    ThotBool            ret;
-   SRule              *rule;
+   PtrSRule            rule;
    int                 RIdent;
 
    ret = FALSE;
    if (pEl != NULL)
      {
-	rule = &(pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1]);
+	rule = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
 	/* la regle de l'element n'est peut-etre pas une regle liste. */
 	/* C'est peut-etre une identite. On cherche la regle liste */
 	/* a laquelle renvoie la regle identite de l'element. */
 	while (rule->SrConstruct == CsIdentity)
 	  {
 	     RIdent = rule->SrIdentRule;
-	     rule = &(pEl->ElStructSchema->SsRule[RIdent - 1]);
+	     rule = pEl->ElStructSchema->SsRule->SrElem[RIdent - 1];
 	  }
 	if (rule->SrConstruct == CsList)
 	  {
@@ -848,7 +848,7 @@ void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl,
    PtrElement          pE;
    ThotBool            stop;
    PtrElement          pEquivEl;
-   SRule              *pRule;
+   PtrSRule            pRule;
    ThotBool            reverse;
 
    *typeNum = 0;
@@ -875,7 +875,7 @@ void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl,
 	     /* s'il est de la forme X = TEXT, on accepte de creer une
 		autre feuille de texte */
 	     {
-	       if ((pEl->ElParent->ElStructSchema)->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsIdentity)
+	       if ((pEl->ElParent->ElStructSchema)->SsRule->SrElem[pEl->ElParent->ElTypeNumber - 1]->SrConstruct == CsIdentity)
 	          if (pEl->ElTypeNumber == CharString + 1)
 		    {
 		      *pSS = pEl->ElParent->ElStructSchema;
@@ -884,7 +884,7 @@ void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl,
 	     }
 	   else
 	      /* c'est un element de liste ou d'agregat */
-	      if ((*pSS)->SsRule[*typeNum - 1].SrConstruct == CsList)
+	      if ((*pSS)->SsRule->SrElem[*typeNum - 1]->SrConstruct == CsList)
 		 /* c'est un element de liste */
 		{
 		   *list = TRUE;
@@ -902,14 +902,14 @@ void                SRuleForSibling (PtrDocument pDoc, PtrElement pEl,
 			else
 			   /* on va creer un sous-arbre du type des elements */
 			   /* qui constituent la liste */
-			   *typeNum = (*pSS)->SsRule[*typeNum - 1].SrListItem;
+			   *typeNum = (*pSS)->SsRule->SrElem[*typeNum - 1]->SrListItem;
 		     }
 		}
 	      else
 		{
 		   /* on est dans un agregat */
 		   *list = FALSE;
-		   pRule = &(*pSS)->SsRule[*typeNum - 1];	/* regle de l'agregat */
+		   pRule = (*pSS)->SsRule->SrElem[*typeNum - 1]; /* regle de l'agregat */
 		   if (pRule->SrConstruct == CsUnorderedAggregate)
 		      /* agregat sans ordre */
 		     {
@@ -1085,8 +1085,8 @@ void                ReferredType (PtrElement pRefEl, PtrAttribute pRefAttr,
 				  PtrDocument pDoc)
 {
    int                 referredNature;
-   SRule              *pRule;
-   PtrTtAttribute         pAtt;
+   PtrSRule            pRule;
+   PtrTtAttribute      pAtt;
 
    if (pRefEl != NULL)
      {
@@ -1100,7 +1100,7 @@ void                ReferredType (PtrElement pRefEl, PtrAttribute pRefAttr,
       else
 	{
 	   /* la regle definissant la reference */
-	   pRule = &pRefEl->ElStructSchema->SsRule[pRefEl->ElTypeNumber - 1];
+	   pRule = pRefEl->ElStructSchema->SsRule->SrElem[pRefEl->ElTypeNumber - 1];
 	   /* cherche le type de l'element reference' prevu par le schema */
 	   /* de structure */
 	   *typeNum = pRule->SrReferredType;
@@ -1124,7 +1124,7 @@ void                ReferredType (PtrElement pRefEl, PtrAttribute pRefAttr,
 		   {
 		   /* pointeur sur le schema de structure qui definit le */
 		   /* type d'element reference' */
-		   *pSS = (*pSS)->SsRule[referredNature - 1].SrSSchemaNat;
+		   *pSS = (*pSS)->SsRule->SrElem[referredNature - 1]->SrSSchemaNat;
 		   AddSchemaGuestViews (pDoc, *pSS);
 		   }
 	     }
@@ -1159,7 +1159,7 @@ void                ReferredType (PtrElement pRefEl, PtrAttribute pRefAttr,
 	        {
 		/* pointeur sur le schema de structure qui definit le type */
 		/* d'element reference' par l'attribut */
-		*pSS = (*pSS)->SsRule[referredNature - 1].SrSSchemaNat;
+		*pSS = (*pSS)->SsRule->SrElem[referredNature - 1]->SrSSchemaNat;
 		AddSchemaGuestViews (pDoc, *pSS);
 		}
 	  }
@@ -1176,7 +1176,7 @@ ThotBool CanCutElement (PtrElement pEl, PtrDocument pDoc, PtrElement pElCut)
 {
    int                 typeNum;
    PtrSSchema          pSS;
-   SRule              *pRule;
+   PtrSRule            pRule;
    int                 i;
    int                 view;
    PtrElement          viewRoot;
@@ -1223,7 +1223,7 @@ ThotBool CanCutElement (PtrElement pEl, PtrDocument pDoc, PtrElement pElCut)
 		 /* c'est un element de liste ou d'agregat */
 		{
 		   /* SRule qui definit la liste ou l'agregat */
-		   pRule = &pSS->SsRule[typeNum - 1];
+		   pRule = pSS->SsRule->SrElem[typeNum - 1];
 		   if (pRule->SrConstruct == CsList)
 		      /* c'est un element de liste */
 		     {
@@ -1281,7 +1281,7 @@ ThotBool            AllowedSibling (PtrElement pEl, PtrDocument pDoc,
 				    ThotBool inTree)
 {
   PtrSSchema          pAscSS;
-  SRule              *pRule;
+  PtrSRule            pRule;
   PtrElement          pEl1;
   ThotBool            ok;
   ThotBool            isPageBrOrIncl;
@@ -1308,7 +1308,7 @@ ThotBool            AllowedSibling (PtrElement pEl, PtrDocument pDoc,
 	  /* d'un noeud CsChoice ou CsIdentity' */
 	  {
 	    ok = isPageBrOrIncl; 
-	    pRule = &(pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1]);
+	    pRule = pEl->ElParent->ElStructSchema->SsRule->SrElem[pEl->ElParent->ElTypeNumber - 1];
 	    /* on ne fait pas cette verification si l'element y est deja */
 	    if (!inTree)
 	      {
@@ -1387,7 +1387,7 @@ ThotBool            AllowedSibling (PtrElement pEl, PtrDocument pDoc,
 		if (ascTypeNum > 0)
 		  /* c'est un element de liste ou d'agregat */
 		  {
-		    pRule = &pAscSS->SsRule[ascTypeNum - 1];
+		    pRule = pAscSS->SsRule->SrElem[ascTypeNum - 1];
 		    if (pRule->SrConstruct == CsList)
 		      /* c'est un element de liste */
 		      {
@@ -1577,12 +1577,12 @@ ThotBool AllowedFirstComponent (int aggrTypeNum, PtrSSchema pAggrSS,
 				int compTypeNum, PtrSSchema pCompSS)
 {
    int                 i;
-   SRule              *pRule;
+   PtrSRule            pRule;
    ThotBool            ok, optional;
 
    ok = FALSE;
    optional = FALSE;
-   pRule = &pAggrSS->SsRule[aggrTypeNum - 1];
+   pRule = pAggrSS->SsRule->SrElem[aggrTypeNum - 1];
    switch (pRule->SrConstruct)
 	 {
 	    case CsAggregate:
@@ -1593,7 +1593,7 @@ ThotBool AllowedFirstComponent (int aggrTypeNum, PtrSSchema pAggrSS,
 		 {
 		    i = 0;
 		    do
-		       if (pAggrSS->SsRule[pRule->SrComponent[i] - 1].SrConstruct == CsChoice && pAggrSS->SsRule[pRule->SrComponent[i] - 1].SrNChoices == -1)
+		       if (pAggrSS->SsRule->SrElem[pRule->SrComponent[i] - 1]->SrConstruct == CsChoice && pAggrSS->SsRule->SrElem[pRule->SrComponent[i] - 1]->SrNChoices == -1)
 			  /* le composant pre'vu est NATURE */
 			 {
 			    if (compTypeNum == pCompSS->SsRootElem)
@@ -1621,8 +1621,8 @@ ThotBool AllowedFirstComponent (int aggrTypeNum, PtrSSchema pAggrSS,
 	       /* on regarde si le type de l'element a inserer est parmi */
 	       /* les types des composants de l'agregat */
 	       for (i = 0; i < pRule->SrNComponents && !ok; i++)
-		  if (pAggrSS->SsRule[pRule->SrComponent[i] - 1].SrConstruct == CsChoice
-		      && pAggrSS->SsRule[pRule->SrComponent[i] - 1].SrNChoices == -1)
+		  if (pAggrSS->SsRule->SrElem[pRule->SrComponent[i] - 1]->SrConstruct == CsChoice
+		      && pAggrSS->SsRule->SrElem[pRule->SrComponent[i] - 1]->SrNChoices == -1)
 		     /* le composant pre'vu est NATURE */
 		    {
 		       if (compTypeNum == pCompSS->SsRootElem)
@@ -1650,7 +1650,7 @@ ThotBool AllowedFirstComponent (int aggrTypeNum, PtrSSchema pAggrSS,
 ThotBool AllowedFirstChild (PtrElement pEl, PtrDocument pDoc, int typeNum,
 			    PtrSSchema pSS, ThotBool user, ThotBool inTree)
 {
-   SRule              *pRule1, *pRule2;
+   PtrSRule            pRule1, pRule2;
    PtrElement          pAsc, pChild;
    int                 t;
    int                 i;
@@ -1709,7 +1709,7 @@ ThotBool AllowedFirstChild (PtrElement pEl, PtrDocument pDoc, int typeNum,
 	       /* OK si c'est une inclusion pour l'un des ascendants */
 	       else if (AllowedIncludedElem (pDoc, pEl, typeNum, pSS))
 		 ok = TRUE;
-	       pRule1 = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+	       pRule1 = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
 	       if (ok)
 		 /* dans le cas d'une inclusion ou d'une marque de page */
 		 /* on ne peut quand meme pas inserer comme descendant */
@@ -1740,7 +1740,7 @@ ThotBool AllowedFirstChild (PtrElement pEl, PtrDocument pDoc, int typeNum,
 			   ok = TRUE;
 			 else
 			   {
-			     if (pSS->SsRule[typeNum - 1].SrUnitElem)
+			     if (pSS->SsRule->SrElem[typeNum - 1]->SrUnitElem)
 			       /* l'element a inserer est defini comme une unite' */
 			       /* dans son schema. On cherche si ce schema est */
 			       /* celui d'un des ascendants ou une extension */
@@ -1802,7 +1802,7 @@ ThotBool AllowedFirstChild (PtrElement pEl, PtrDocument pDoc, int typeNum,
 			   do
 			     {
 			       t = pRule2->SrIdentRule;
-			       pRule2 = &pEl->ElStructSchema->SsRule[t - 1];
+			       pRule2 = pEl->ElStructSchema->SsRule->SrElem[t - 1];
 			     }
 			   while (pRule2->SrConstruct == CsIdentity);
 			   /* s'il s'agit d'une liste, le type a inserer doit */
@@ -1851,7 +1851,7 @@ void InsertChildFirst (PtrElement pEl, PtrElement pChild,
 {
   ThotBool            same;
 
-  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
+  if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsChoice)
     {
       /* verifie si pChild est la feuille qu'on doit retourner */
       same = pChild == *pLeaf;
@@ -1884,8 +1884,7 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
    int                 i, j;
    Name                N;
    ThotBool            stop;
-   SRule              *pRule1;
-   SRule              *pRule2;
+   PtrSRule            pRule1, pRule2;
 
    if (SameSRules (typeNum, pSS, descTypeNum, pDescSS))
       /* c'est un element du type voulu, on le cree */
@@ -1895,7 +1894,7 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
      }
    else
      {
-	pRule1 = &pSS->SsRule[typeNum - 1];
+	pRule1 = pSS->SsRule->SrElem[typeNum - 1];
 	pEl = NULL;
 	stop = FALSE;
 	if (pRule1->SrRecursive)
@@ -1952,7 +1951,7 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
 		       /* le 1er element de la descendance n'est pas du type */
 		       /* identique */
 		       {
-			 pRule2 = &pSS->SsRule[pRule1->SrIdentRule - 1];
+			 pRule2 = pSS->SsRule->SrElem[pRule1->SrIdentRule - 1];
 			 if (pRule2->SrNInclusions > 0 || pRule2->SrNExclusions > 0)
 			   /* le type identique porte des inclusions ou des */
 			   /* exclusions, on le cree */
@@ -1971,7 +1970,7 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
 				       descTypeNum, pDescSS);
 	       if (pEl != NULL)
 		 {
-		   pRule2 = &pSS->SsRule[pRule1->SrListItem - 1];
+		   pRule2 = pSS->SsRule->SrElem[pRule1->SrListItem - 1];
 		   /* si les elements de la liste portent des inclusions */
 		   /* ou des exclusions, on les cree */
 		   if ((pRule2->SrConstruct == CsNatureSchema ||
@@ -2019,7 +2018,7 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
 		   i = MAX_BASIC_TYPE - 1;
 		   do
 		     {
-		       if (pSS->SsRule[i++].SrConstruct == CsNatureSchema)
+		       if (pSS->SsRule->SrElem[i++]->SrConstruct == CsNatureSchema)
 			 pEl = CreateDescendant (i, pSS, pDoc, pLeaf,
 						 descTypeNum, pDescSS);
 		     }
@@ -2041,7 +2040,7 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
 			    pDesc->ElTypeNumber == pRule1->SrChoice[i - 1]) &&
 			   (!strcmp (pDesc->ElStructSchema->SsName,
 				     pSS->SsName) ||
-			    pSS->SsRule[pRule1->SrChoice[i - 1] - 1].SrConstruct == CsNatureSchema))
+			    pSS->SsRule->SrElem[pRule1->SrChoice[i - 1] - 1]->SrConstruct == CsNatureSchema))
 			 pEl = pDesc;
 		       else
 			 {
@@ -2089,7 +2088,7 @@ PtrElement CreateDescendant (int typeNum, PtrSSchema pSS,
 			pDesc->ElTypeNumber == pRule1->SrComponent[i]) &&
 		       (!strcmp (pDesc->ElStructSchema->SsName,
 				 pSS->SsName) ||
-			pSS->SsRule[pRule1->SrComponent[i] - 1].SrConstruct == CsNatureSchema))
+			pSS->SsRule->SrElem[pRule1->SrComponent[i] - 1]->SrConstruct == CsNatureSchema))
 		     pEl1 = pDesc;
 		   else
 		     {
@@ -2174,8 +2173,7 @@ SSchema TtaGetSchemaExtension (Document document, char *NomExtension)
   ----------------------------------------------------------------------*/
 SRule *ExtensionRule (PtrSSchema pSS, int typeNum, PtrSSchema pExtSS)
 {
-   SRule              *RegleExt;
-   SRule              *Rule;
+  PtrSRule             RegleExt, Rule;
    Name                typeName;
    int                 r;
 
@@ -2184,7 +2182,7 @@ SRule *ExtensionRule (PtrSSchema pSS, int typeNum, PtrSSchema pExtSS)
       if (pExtSS->SsExtension && !pSS->SsExtension)
 	{
 	   /*on cherche d'abord une regle d'extension ayant le nom du type */
-	   strncpy (typeName, pSS->SsRule[typeNum - 1].SrName, MAX_NAME_LENGTH);
+	   strncpy (typeName, pSS->SsRule->SrElem[typeNum - 1]->SrName, MAX_NAME_LENGTH);
 	   r = 0;
 	   while (RegleExt == NULL && r < pExtSS->SsNExtensRules)
 	      if (strcmp (typeName, pExtSS->SsExtensBlock->EbExtensRule[r].SrName) == 0)
@@ -2194,7 +2192,7 @@ SRule *ExtensionRule (PtrSSchema pSS, int typeNum, PtrSSchema pExtSS)
 	   if (RegleExt == NULL)
 	      /* on n'a pas trouve' de regle de meme nom */
 	     {
-		Rule = &pSS->SsRule[typeNum - 1];
+		Rule = pSS->SsRule->SrElem[typeNum - 1];
 		if (typeNum == pSS->SsRootElem)
 		   /* il s'agit d'une racine de document. */
 		   /* On cherche une regle d'extension qui */
@@ -2308,7 +2306,7 @@ ThotBool CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr,
 			   ThotBool *mandatory)
 {
    ThotBool            requested, allowed;
-   SRule              *pRe1;
+   PtrSRule            pRe1;
    int                 locAtt;
 
    if (pEl == NULL || pEl->ElStructSchema == NULL)
@@ -2336,7 +2334,7 @@ ThotBool CanAssociateAttr (PtrElement pEl, PtrAttribute pAttr,
        if (!strcmp (pEl->ElStructSchema->SsName, pNewAttr->AeAttrSSchema->SsName))
 	 {
 	   /* l'attribut est defini dans le meme schema que l'element */
-	   pRe1 = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+	   pRe1 = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
 	   for (locAtt = 0; locAtt < pRe1->SrNLocalAttrs; locAtt++)
 	     if (pRe1->SrLocalAttr->Num[locAtt] == pNewAttr->AeAttrNum)
 	       /* l'attribut fait partie des attributs locaux de ce */

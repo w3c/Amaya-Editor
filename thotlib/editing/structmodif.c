@@ -217,11 +217,11 @@ void RedisplayCopies (PtrElement pEl, PtrDocument pDoc, ThotBool redisplay)
 	   /* cherche d'abord le schema de presentation pour l'element */
 	   SearchPresSchema (pEl, &pSchP, &rule, &pSchS, pDoc);
 	   if (pSchP != NULL)
-	      if (pSchP->PsElemTransmit[rule - 1] > 0)
+	      if (pSchP->PsElemTransmit->Num[rule - 1] > 0)
 		 /* il y a une regle Transmit pour ce type d'element */
 		{
 		   /* applique la regle Transmit */
-		   pTrans = &(pSchP->PsTransmElem[pSchP->PsElemTransmit[rule - 1] - 1]);
+		   pTrans = &(pSchP->PsTransmElem[pSchP->PsElemTransmit->Num[rule - 1] - 1]);
 		   TransmitElementContent (pEl, pDoc, pTrans->TeTargetAttr,
 					   pTrans->TeTargetDoc, pSchS);
 		}
@@ -321,7 +321,7 @@ void AssignPairIdentifiers (PtrElement pRoot, PtrDocument pDoc)
    if (pRoot->ElTerminal)
      {
 	if (pRoot->ElLeafType == LtPairedElem)
-	   if (pRoot->ElStructSchema->SsRule[pRoot->ElTypeNumber - 1].SrFirstOfPair)
+	   if (pRoot->ElStructSchema->SsRule->SrElem[pRoot->ElTypeNumber - 1]->SrFirstOfPair)
 	      /* c'est un element de debut de paire */
 	     {
 		/* on cherche son element de fin */
@@ -640,7 +640,7 @@ ThotBool CompleteElement (PtrElement pEl, PtrDocument pDoc)
 {
    PtrElement          pComponent, pNewEl, pLastEl, pPrev, pClose;
    PtrElement          pSibling, pPage;
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    NotifyElement       notifyEl;
    Document            doc;
    int                 nElExist, nElems, min, comp, NSiblings;
@@ -648,9 +648,9 @@ ThotBool CompleteElement (PtrElement pEl, PtrDocument pDoc)
 
    ret = FALSE;
    /* regle definissant le type de l'element dans son schema de structure */
-   pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+   pSRule = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
    while (pSRule->SrConstruct == CsIdentity)
-      pSRule = &pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1];
+      pSRule = pEl->ElStructSchema->SsRule->SrElem[pSRule->SrIdentRule - 1];
    /* traitement selon le constructeur : seuls les agregats et les listes */
    /* demandent un traitement. */
    doc = IdentDocument (pDoc);

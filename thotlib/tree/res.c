@@ -236,7 +236,7 @@ static TypeTree RecBuildTypeTree (ElementType elemType, ThotBool isSource)
 {
   TypeTree theTree = NULL;
   TypeTree newNode;
-  SRule *strRule;
+  PtrSRule strRule;
   ElementType childType;
   int i;
 
@@ -258,7 +258,7 @@ static TypeTree RecBuildTypeTree (ElementType elemType, ThotBool isSource)
       /* construit un noeud */
       if (theTree == NULL)
 	{
-	  strRule = &(((PtrSSchema)(elemType.ElSSchema))->SsRule[(elemType.ElTypeNum) - 1]);
+	  strRule = ((PtrSSchema)(elemType.ElSSchema))->SsRule->SrElem[(elemType.ElTypeNum) - 1];
 	  childType.ElSSchema = elemType.ElSSchema;
 	  if (strRule->SrConstruct == CsIdentity)
 	    {

@@ -233,7 +233,7 @@ static ThotBool IsolatedPairedElem (PtrElement pEl, PtrElement firstSel,
 static ThotBool IsomorphicTypes (PtrSSchema pSS1, int typeNum1,
 				 PtrSSchema pSS2, int typeNum2)
 {
-   SRule              *pSRule1, *pSRule2;
+   PtrSRule            pSRule1, pSRule2;
    PtrIsomorphDesc     pIsoD;
    ThotBool            ret;
 
@@ -243,8 +243,8 @@ static ThotBool IsomorphicTypes (PtrSSchema pSS1, int typeNum1,
       ret = TRUE;
    else
      {
-	pSRule1 = &pSS1->SsRule[typeNum1 - 1];
-	pSRule2 = &pSS2->SsRule[typeNum2 - 1];
+	pSRule1 = pSS1->SsRule->SrElem[typeNum1 - 1];
+	pSRule2 = pSS2->SsRule->SrElem[typeNum2 - 1];
 	if (pSRule1->SrConstruct == pSRule2->SrConstruct)
 	   switch (pSRule1->SrConstruct)
 	     {
@@ -304,7 +304,7 @@ static ThotBool IsomorphicTypes (PtrSSchema pSS1, int typeNum1,
   ----------------------------------------------------------------------*/
 static void RegisterIfIsomorphic (PtrElement pEl, PtrSSchema pSS, int typeNum)
 {
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    int                 choice;
    ThotBool            found;
    int                 i;
@@ -350,7 +350,7 @@ static void RegisterIfIsomorphic (PtrElement pEl, PtrSSchema pSS, int typeNum)
 		 /* ce type n'est pas isomorphe, mais c'est peut-etre un
 		    Choix */
 		 {
-		   pSRule = &pSS->SsRule[typeNum - 1];
+		   pSRule = pSS->SsRule->SrElem[typeNum - 1];
 		   if (pSRule->SrConstruct == CsChoice)
 		      /* c'est un CsChoix. On essaie de mettre chacune de */
 		      /* ses options dans la table */
@@ -375,7 +375,7 @@ static void IsomorphicTransform (PtrElement pEl, PtrSSchema pSS,
    PtrSSchema          pNewSS;
    PtrAttribute        pAttr, pNextAttr, pAttrDouble, pNextDoubleAttr;
    PtrIsomorphDesc     pIsoD;
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    int                 att, newType;
    ThotBool            found;
 
@@ -383,7 +383,7 @@ static void IsomorphicTransform (PtrElement pEl, PtrSSchema pSS,
        !strcmp (pEl->ElStructSchema->SsName, pSS->SsName))
       /* l'element a deja le type voulu, il n'y a rien a faire */
       return;
-   pSRule = &pSS->SsRule[typeNum - 1];
+   pSRule = pSS->SsRule->SrElem[typeNum - 1];
    /* retire les attributs locaux propres a l'ancien type et qui */
    /* ne s'appliquent pas au nouveau type */
    pAttr = pEl->ElFirstAttr;
@@ -1691,7 +1691,7 @@ void                CutCommand (ThotBool save)
 			while (pS != NULL)
 			  /* parcourt la chaine des elements detruits */
 			  {
-			    if ((pS->ElStructSchema->SsRule[pS->ElTypeNumber - 1].SrRefImportedDoc))
+			    if ((pS->ElStructSchema->SsRule->SrElem[pS->ElTypeNumber - 1]->SrRefImportedDoc))
 			      RepApplyTransmitRules (pS, pSS, pSelDoc);
 			    pS = pS->ElNext;
 			    /* element detruit suivant */
@@ -1780,7 +1780,7 @@ ThotBool            EmptyElement (PtrElement pEl)
 
    if (pEl->ElVolume == 0)
       empty = TRUE;
-   else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
+   else if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant)
       empty = TRUE;
    else if (pEl->ElTerminal)
       empty = FALSE;
@@ -1812,7 +1812,7 @@ static ThotBool CanSurround (int typeNum, PtrSSchema pSS, PtrElement firstEl,
 
    ok = TRUE;
    /* on teste d'abord le constructeur du candidat englobant */
-   switch (pSS->SsRule[typeNum - 1].SrConstruct)
+   switch (pSS->SsRule->SrElem[typeNum - 1]->SrConstruct)
      {
      case CsConstant:
      case CsReference:
@@ -1823,7 +1823,7 @@ static ThotBool CanSurround (int typeNum, PtrSSchema pSS, PtrElement firstEl,
        ok = FALSE;
        break;
      case CsChoice:
-       if (pSS->SsRule[typeNum - 1].SrNChoices == -1)
+       if (pSS->SsRule->SrElem[typeNum - 1]->SrNChoices == -1)
 	 /* NATURE, on n'a pas envie de changer de schema de structure */
 	 ok = FALSE;
        break;
@@ -1958,7 +1958,7 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
 	  {
 	   /* cet element appartient a un schema de structure different de */
 	   /* celui de l'element qui devrait devenir son pere */
-	   if (pElSurround->ElStructSchema->SsRule[pElSurround->ElTypeNumber - 1].SrUnitElem)
+	   if (pElSurround->ElStructSchema->SsRule->SrElem[pElSurround->ElTypeNumber - 1]->SrUnitElem)
 	      /* c'est une unite', on le note */
 	      unit = TRUE;
 	   else if (pElSurround->ElTypeNumber != pElSurround->ElStructSchema->SsRootElem)
@@ -2096,10 +2096,10 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
 static ThotBool SearchChoiceRules (PtrSSchema pSS, int typeNum,
 				   PtrElement pEl, int *param)
 {
-   SRule              *pSRule;
+   PtrSRule             pSRule;
    PtrChoiceOptionDescr pChoiceD, *Anchor;
-   int                 choice;
-   ThotBool            found, doit;
+   int                  choice;
+   ThotBool             found, doit;
 
    found = FALSE;
    Anchor = (PtrChoiceOptionDescr *) param;
@@ -2107,7 +2107,7 @@ static ThotBool SearchChoiceRules (PtrSSchema pSS, int typeNum,
        strcmp (pSS->SsName, pEl->ElStructSchema->SsName))
       /* on n'est pas arrive' encore au type de l'element pEl */
      {
-	pSRule = &(pSS->SsRule[typeNum - 1]);
+	pSRule = pSS->SsRule->SrElem[typeNum - 1];
 	doit = TRUE;
 	if (pSRule->SrRecursive)
 	  {
@@ -2137,7 +2137,7 @@ static ThotBool SearchChoiceRules (PtrSSchema pSS, int typeNum,
 	       if (pSRule->SrNChoices == 0)
 		 /* SRule UNIT */
 		 {
-		   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrUnitElem)
+		   if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrUnitElem)
 		     /* l'element est une unite', on a trouve' la regle */
 		     found = TRUE;
 		 }
@@ -2193,13 +2193,13 @@ static ThotBool SearchChoiceRules (PtrSSchema pSS, int typeNum,
   ----------------------------------------------------------------------*/
 static void BuildChangeTypeTable (PtrElement pEl)
 {
-   PtrIsomorphDesc     pIsoD, pNextIsoD;
+   PtrIsomorphDesc      pIsoD, pNextIsoD;
    PtrChoiceOptionDescr pChoicesFound, pChoiceD, pOldChoiceD;
-   SRule              *pSRule;
-   PtrSSchema          pSSasc;
-   PtrElement          pAncest, pPrev;
-   int                 choice, typeNum;
-   STRING	       strResDyn;
+   PtrSRule             pSRule;
+   PtrSSchema           pSSasc;
+   PtrElement           pAncest, pPrev;
+   int                  choice, typeNum;
+   STRING	        strResDyn;
 
    NChangeTypeItems = 0;	/* la table est vide pour l'instant */
    if (pEl != NULL)
@@ -2234,7 +2234,7 @@ static void BuildChangeTypeTable (PtrElement pEl)
 		while (pChoiceD != NULL)
 		  {
 		     /* la regle CsChoice courante */
-		     pSRule = &(pChoiceD->COStructSch->SsRule[pChoiceD->COtypeNum - 1]);
+		     pSRule = pChoiceD->COStructSch->SsRule->SrElem[pChoiceD->COtypeNum - 1];
 		     if (pSRule->SrNChoices == 0)
 			/* c'est une regle UNIT */
 		       {
@@ -2267,7 +2267,7 @@ static void BuildChangeTypeTable (PtrElement pEl)
 					 /* boucle sur toutes les regles du schema */
 					 for (typeNum = 1; typeNum <= pSSasc->SsNRules &&
 					      NChangeTypeItems < MAX_ITEMS_CHANGE_TYPE - 1; typeNum++)
-					    if (pSSasc->SsRule[typeNum - 1].SrUnitElem)
+					    if (pSSasc->SsRule->SrElem[typeNum - 1]->SrUnitElem)
 					       /* cette regle definit une unite'. On essaie de la */
 					       /* mettre dans la table associee au menu */
 					       RegisterIfIsomorphic (pEl, pSSasc, typeNum);

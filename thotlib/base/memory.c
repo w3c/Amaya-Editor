@@ -283,6 +283,9 @@ void                FreeAll ()
       for (i = 0; i < pSS->SsNAttributes; i++)
 	free (pSS->SsAttribute->TtAttr[i]);
       free (pSS->SsAttribute);
+      for (i = 0; i < pSS->SsNRules; i++)
+	free (pSS->SsRule->SrElem[i]);
+      free (pSS->SsRule);
       TtaFreeMemory ((void *) pSS);
     }
   NbFree_SchStruct = 0;
@@ -1045,24 +1048,44 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
       pSP->PsPresentBox[i].PbFirstPRule = NULL;
     }
   if (pSP->PsAttrPRule)
-    for (i = 0; i < pSS->SsNAttributes; i++)
-      {
-	pAP = pSP->PsAttrPRule->AttrPres[i];
-	while (pAP != NULL)
-	  {
-	    /* free all allocated blocks */
-	    pNextAP = pAP->ApNextAttrPres;
-	    FreeAttributePres (pAP);
-	    pAP = pNextAP;
-	  }
-	pSP->PsAttrPRule->AttrPres[i] = NULL;
-      }
-  if (pSP->PsAttrPRule)
-    free (pSP->PsAttrPRule);
+    {
+      for (i = 0; i < pSS->SsNAttributes; i++)
+	{
+	  pAP = pSP->PsAttrPRule->AttrPres[i];
+	  while (pAP != NULL)
+	    {
+	      /* free all allocated blocks */
+	      pNextAP = pAP->ApNextAttrPres;
+	      FreeAttributePres (pAP);
+	      pAP = pNextAP;
+	    }
+	  pSP->PsAttrPRule->AttrPres[i] = NULL;
+	}
+      free (pSP->PsAttrPRule);
+    }
   if (pSP->PsNAttrPRule)
     free (pSP->PsNAttrPRule);
+  if (pSP->PsElemPRule)
+    {
+      for (i = 0; i < pSS->SsNRules; i++)
+	pSP->PsElemPRule->ElemPres[i] = NULL;
+      free (pSP->PsElemPRule);
+    }
   if (pSP->PsNHeirElems)
     free (pSP->PsNHeirElems);
+  if (pSP->PsNInheritedAttrs)
+    free (pSP->PsNInheritedAttrs);
+  if (pSP->PsInheritedAttr)
+    {
+      for (i = 0; i < pSS->SsNRules; i++)
+	{
+	  if (pSP->PsInheritedAttr->ElInherit[i])
+	    TtaFreeMemory (pSP->PsInheritedAttr->ElInherit[i]);
+	  pSP->PsInheritedAttr->ElInherit[i] = NULL;
+	}
+      free (pSP->PsInheritedAttr);
+      pSP->PsInheritedAttr = NULL;
+    }
   if (pSP->PsNComparAttrs)
     free (pSP->PsNComparAttrs);
   if (pSP->PsComparAttr)
@@ -1075,14 +1098,9 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
 	}
       free (pSP->PsComparAttr);
     }
+  if (pSP->PsElemTransmit)
+    free (pSP->PsElemTransmit);
 
-  for (i = 0; i < pSS->SsNRules; i++)
-    {
-      pSP->PsElemPRule[i] = NULL;
-      if (pSP->PsInheritedAttr[i] != NULL)
-	TtaFreeMemory (pSP->PsInheritedAttr[i]);
-      pSP->PsInheritedAttr[i] = NULL;
-    }
   for (i = 0; i < MAX_VIEW; i++)
     {
       pHostView = pSP->PsHostViewList[i];
@@ -1240,10 +1258,23 @@ void FreeSchTra (PtrTSchema pST, PtrSSchema pSS)
 
   if (pST)
     {
-      for (i = 0; i < pSS->SsNRules; i++)
-	pST->TsElemTRule[i] = NULL;
+      if (pST->TsElemTRule)
+	{
+	  for (i = 0; i < pSS->SsNRules; i++)
+	    pST->TsElemTRule->TsElemTransl[i] = NULL;
+	  TtaFreeMemory (pST->TsElemTRule);
+	  pST->TsElemTRule = NULL;
+	}
+      if (pST->TsInheritAttr)
+	{
+	  TtaFreeMemory (pST->TsInheritAttr);
+	  pST->TsInheritAttr = NULL;
+	}
       if (pST->TsAttrTRule)
-	TtaFreeMemory (pST->TsAttrTRule);
+	{
+	  TtaFreeMemory (pST->TsAttrTRule);
+	  pST->TsAttrTRule = NULL;
+	}
       TtaFreeMemory (pST);
     }
 }
@@ -1337,11 +1368,13 @@ void FreeSchStruc (PtrSSchema pSS)
   free (pSS->SsAttribute);
   for (i = 0; i < pSS->SsNRules; i++)
     {
-      if (pSS->SsRule[i].SrLocalAttr)
-	TtaFreeMemory (pSS->SsRule[i].SrLocalAttr);
-      if (pSS->SsRule[i].SrRequiredAttr)
-	TtaFreeMemory (pSS->SsRule[i].SrRequiredAttr);
+      if (pSS->SsRule->SrElem[i]->SrLocalAttr)
+	TtaFreeMemory (pSS->SsRule->SrElem[i]->SrLocalAttr);
+      if (pSS->SsRule->SrElem[i]->SrRequiredAttr)
+	TtaFreeMemory (pSS->SsRule->SrElem[i]->SrRequiredAttr);
+      free (pSS->SsRule->SrElem[i]);
     }
+  free (pSS->SsRule);
   TtaFreeMemory (pSS);
   NbUsed_SchStruct--;
 }

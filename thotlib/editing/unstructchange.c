@@ -94,7 +94,7 @@ static void InsertPastedElement (PtrElement pEl, ThotBool within,
 
    if (within)
      {
-	if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
+	if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct ==
                                                                      CsChoice)
            InsertOption (pEl, pNew, pDoc);
 	else
@@ -284,7 +284,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 			   {
 			   /* schemes are loaded, changes the structure schema
 			      of the copy */
-			   pSS = pDoc->DocSSchema->SsRule[nR - 1].SrSSchemaNat;
+			   pSS = pDoc->DocSSchema->SsRule->SrElem[nR - 1]->SrSSchemaNat;
 			   AddSchemaGuestViews (pDoc, pSS);
 			   }
 		       }
@@ -341,7 +341,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 				     if (nR != 0)
 				       {
 				       /* schemes are loaded, changes the structure scheme of the copy */
-				       pSS = pDoc->DocSSchema->SsRule[nR - 1].SrSSchemaNat;
+				       pSS = pDoc->DocSSchema->SsRule->SrElem[nR - 1]->SrSSchemaNat;
 				       AddSchemaGuestViews (pDoc, pSS);
 				       }
 				   }
@@ -882,18 +882,18 @@ static void ReturnCreateNewElem (PtrElement pListEl, PtrElement pEl,
 {
    int                 TypeListe, TypeElListe, TypeEl;
    PtrSSchema          pSSList;
-   SRule              *pRegle;
+   PtrSRule            pRegle;
 
    pSSList = pListEl->ElStructSchema;
    *pSS = pEl->ElStructSchema;
    *typeNum = pEl->ElTypeNumber;
    TypeListe = GetTypeNumIdentity (pListEl->ElTypeNumber, pSSList);
    /* le type des elements qui constituent la liste */
-   TypeElListe = pSSList->SsRule[TypeListe - 1].SrListItem;
+   TypeElListe = pSSList->SsRule->SrElem[TypeListe - 1]->SrListItem;
    /* on traverse les regles d'Identite' */
    TypeEl = GetTypeNumIdentity (TypeElListe, pSSList);
    /* la regle qui definit les elements de la liste */
-   pRegle = &pSSList->SsRule[TypeEl - 1];
+   pRegle = pSSList->SsRule->SrElem[TypeEl - 1];
    if (pRegle->SrConstruct == CsChoice)
       if (pRegle->SrNChoices > 0)
 	 /* c'est une liste de choix, on retient la 1ere option de ce choix */
@@ -940,7 +940,7 @@ static ThotBool EmptyOrConstants (PtrElement pEl)
    PtrElement          child;
    ThotBool	       ret;
 
-   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
+   if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant)
       ret = TRUE;
    else
       if (pEl->ElTerminal)
@@ -1656,7 +1656,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
       pParent */
    pParent = pEl->ElParent;
    if (pParent &&
-       pParent->ElStructSchema->SsRule[pParent->ElTypeNumber - 1].SrConstruct == CsConstant)
+       pParent->ElStructSchema->SsRule->SrElem[pParent->ElTypeNumber - 1]->SrConstruct == CsConstant)
      /* delete the constant itself */
      pEl = pParent;
    else
@@ -1693,7 +1693,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
    doc = IdentDocument (pDoc);
    if (before &&
        ((pSibling->ElVolume == 0 && pParent->ElVolume > 0) ||
-	pSibling->ElStructSchema->SsRule[pSibling->ElTypeNumber - 1].SrConstruct == CsConstant))
+	pSibling->ElStructSchema->SsRule->SrElem[pSibling->ElTypeNumber - 1]->SrConstruct == CsConstant))
      /* BackSpace at the beginning of a non empty element (pParent) whose
         previous sibling (pSibling) is empty.  Delete the empty sibling */
      {

@@ -172,7 +172,7 @@ static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl,
 			/* c'est effectivement une inclusion autorisee */
 			/* on ne peut pas mettre une inclusion directement */
 			/* dans un element choix */
-			if (pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsChoice)
+			if (pEl->ElParent->ElStructSchema->SsRule->SrElem[pEl->ElParent->ElTypeNumber - 1]->SrConstruct == CsChoice)
 			   /* on ne colle plus rien */
 			   pSavedEl = NULL;
 			else
@@ -284,8 +284,8 @@ static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl,
 				       /* on a pu creer la descendance voulue */
 				      {
 					 if (!list ||
-					     (pSS->SsRule[typeNum - 1].SrConstruct != CsChoice &&
-					      pSS->SsRule[typeNum - 1].SrConstruct != CsNatureSchema))
+					     (pSS->SsRule->SrElem[typeNum - 1]->SrConstruct != CsChoice &&
+					      pSS->SsRule->SrElem[typeNum - 1]->SrConstruct != CsNatureSchema))
 					    if (pDescRoot->ElTypeNumber != typeNum
 						|| pDescRoot->ElStructSchema != pSS)
 					      {
@@ -606,7 +606,7 @@ void PasteWithin (PtrElement * pFirstPastedEl, PtrDocument pDoc,
    if (FirstSavedElement == NULL)
       return;
    pSavedEl = FirstSavedElement->PeElement;
-   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
+   if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct ==
        CsReference &&
        pSavedEl->ElTypeNumber == pEl->ElTypeNumber &&
        FirstSavedElement->PeNext == NULL &&
@@ -700,7 +700,7 @@ void PasteWithin (PtrElement * pFirstPastedEl, PtrDocument pDoc,
 		  ok = AllowedIncludedElem (pDoc, pEl, pSavedEl->ElTypeNumber, pSavedEl->ElStructSchema);
 		  /* on ne peut pas mettre une inclusion directement dans un
 		     element Choix */
-		  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
+		  if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsChoice)
 		     ok = FALSE;
 	       }
 	     if (!ok && !sameType)
@@ -821,7 +821,7 @@ void PasteWithin (PtrElement * pFirstPastedEl, PtrDocument pDoc,
 		  else
 		     InsertFirstChild (pParent, pPastedEl);
 	       }
-	     else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice)
+	     else if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsChoice)
 	       {
 		  InsertOption (pEl, &pPastedEl, pDoc);
 		  if (!creation)
@@ -921,7 +921,7 @@ void CanCopyOrCut (ThotBool *result, PtrDocument pDoc, PtrElement firstSel,
 	   pParent = firstSel->ElParent;
 	   elemType = pParent->ElTypeNumber;
 	   elemTypeId = GetTypeNumIdentity (elemType, pParent->ElStructSchema);
-	   *result = (pParent->ElStructSchema->SsRule[elemTypeId - 1].SrConstruct == CsList ||
+	   *result = (pParent->ElStructSchema->SsRule->SrElem[elemTypeId - 1]->SrConstruct == CsList ||
 		      elemTypeId == CharString + 1);
 	}
      }

@@ -678,9 +678,6 @@ typedef struct _PrintedView
   int	 	VpNumber;    	/* view number */
 } PrintedView;
 
-typedef PtrPRule PtrPRuleTable[MAX_RULES_SSCHEMA];  /* Table of the addresses
-				  of the presentation rules of the Types */
-
 /* a rule of transmission of a value from an element to an included
    document attribute */
 typedef struct _TransmitElem
@@ -700,6 +697,11 @@ typedef ThotBool ComparAttrTable[1];   /* this table is attached to an element
 					  comparing themselves to it for
 					  presentation */
 
+typedef struct _InheritAttrTbTb
+{
+  InheritAttrTable  *ElInherit[1];
+} InheritAttrTbTb;
+
 typedef struct _CompAttrTbTb
 {
   ComparAttrTable *CATable[1];
@@ -711,6 +713,11 @@ typedef struct _AttrPresTable
 {
   PtrAttributePres  AttrPres[1];
 } AttrPresTable;
+
+typedef struct _PtrPRuleTable
+{
+  PtrPRule ElemPres[1];
+} PtrPRuleTable;
 
 typedef struct _NumberTable
 {
@@ -760,24 +767,22 @@ typedef struct _PresentSchema
 					   packets for each logical attribute,
 					   i.e. size of the strings of
 					   AttributePres in table PsAttrPRule
-					   in the same order as in the table
+					   in the same order as in table
 					   StructSchema.SsAttribute */
-  PtrPRuleTable	PsElemPRule;    	/* pointers on the beginning of the
+  PtrPRuleTable	*PsElemPRule;    	/* pointers on the beginning of the
 					   string of presentation rules related
 					   to each type of element, in the same
-					   order as in tha table
-					   StructSchema.SsRule */
+					   order as in table SsRule */
   NumberTable	*PsNHeirElems;         /* indicates for each attribute,
 					  in the same order as in the table
 					  StructSchema.SsAttribute, the number
 					  of elements that can inherit from the
 					  attribute */
-  int    	PsNInheritedAttrs[MAX_RULES_SSCHEMA]; /* for each element, in
-					  the same order as in the table
-					  StructSchema.SsRule, indicates the
+  NumberTable   *PsNInheritedAttrs;    /* for each element, in the same order
+					  as in table SsRule, indicates the
 					  number of attributes inherited by the
 					  element */
-  InheritAttrTable *PsInheritedAttr[MAX_RULES_SSCHEMA]; /* points for each type
+  InheritAttrTbTb *PsInheritedAttr;    /* points for each type
 					  of element, in the same order as in
 					  the table StructSchema.SsRule, on the
 					  table indicating what are the
@@ -794,14 +799,13 @@ typedef struct _PresentSchema
 					  indicating which attribute compare
 					  themselves to the attribute in order
 					  to deduce a presentation */
-  int	        PsElemTransmit[MAX_RULES_SSCHEMA]; /* for each element type,
-					  in the same order as in table
-					  StructSchema.SsRule, index in the
+  NumberTable   *PsElemTransmit;       /* for each element type, in the same
+					  order as in table SsRule, index in
 					  table SPTransmit of the entry giving
 					  the transmission of the element
 					  values to the attributes of the
 					  included documents */
-  int	      PsNTransmElems;		  /* number of entries in the table
+  int	        PsNTransmElems;	       /* number of entries in the table
 					  PsTransmElem */
   TransmitElem	PsTransmElem[MAX_TRANSM_ELEM];/* table of the transmissions of
 					  the element values to attributes of

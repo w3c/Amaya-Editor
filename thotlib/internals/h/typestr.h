@@ -266,6 +266,13 @@ typedef struct _SRule
 #define SrIndexConst u.s7._SrIndexConst_
 #define SrFirstOfPair u.s8._SrFirstOfPair_
 
+typedef SRule *PtrSRule;
+
+typedef struct _SrRuleTable
+{
+        PtrSRule SrElem[1];
+} SrRuleTable;
+
 typedef struct _ExtensBlock *PtrExtensBlock;
 
 /* block containing all the extension rules (EXTENS section) of an
@@ -316,8 +323,8 @@ typedef struct _StructSchema
    int              SsAttrTableSize;     /* actual size of table SsAttribute */
    int              SsNRules;            /* current number of rules defining
 					    the elements, including the nature
-					    rules */
-                                         /* added dynamically */
+					    rules added dynamically */
+   int              SsRuleTableSize;     /* actual size of table SsRule */
    ThotBool         SsExport;            /* this schema exports elements */
    int              SsNExceptions;       /* number of entries in SsException */
                                          /* All the exception numbers
@@ -332,10 +339,8 @@ typedef struct _StructSchema
 
    TtAttrTable      *SsAttribute;        /* attributes for this schema */
 
-   SRule            SsRule[MAX_RULES_SSCHEMA + 2]; /* structure rules
-					    defining the elements, +2 to be
-					    sure to have two free rules at the
-					    end of the arrays */
+   SrRuleTable      *SsRule;             /* structure rules defining the
+					    elements for this schema */
 } StructSchema;
 
 #endif /* _THOTLIB_TYPESTR_H_ */

@@ -734,7 +734,7 @@ ThotBool SetReference (PtrElement pRefEl, PtrAttribute pRefAttr,
    ret = FALSE;
    if (pRefEl != NULL)
      {
-	if (pRefEl->ElStructSchema->SsRule[pRefEl->ElTypeNumber - 1].SrRefImportedDoc)
+	if (pRefEl->ElStructSchema->SsRule->SrElem[pRefEl->ElTypeNumber - 1]->SrRefImportedDoc)
 	   /* c'est une inclusion d'un document externe */
 	   if (pDoc == pTargetDoc)
 	      /* reference et element reference' sont dans le meme document */
@@ -873,7 +873,7 @@ ThotBool SetReference (PtrElement pRefEl, PtrAttribute pRefAttr,
 		       pRef->RdReferred->ReFirstReference = pRef;
 		    }
 		  if (pRefEl != NULL)
-		     if (pRefEl->ElStructSchema->SsRule[pRefEl->ElTypeNumber - 1].
+		     if (pRefEl->ElStructSchema->SsRule->SrElem[pRefEl->ElTypeNumber - 1]->
 			 SrRefImportedDoc)
 			/* c'est un renvoi a un document importe' */
 		       {
@@ -915,7 +915,7 @@ void UpdateInclusionElements (PtrDocument pDoc, ThotBool loadExternalDoc,
   PtrElement            pSource;
   PtrReference          pRef;
   PtrReferredDescr      pRefD;
-  SRule                *pSRule;
+  PtrSRule              pSRule;
   DocumentIdentifier    docIdent;
   ThotBool              ok = FALSE;
   Document              doc, newdoc;
@@ -1014,7 +1014,7 @@ void UpdateInclusionElements (PtrDocument pDoc, ThotBool loadExternalDoc,
 				  }
 			      }
 			  }
-			pSRule = &pRef->RdElement->ElStructSchema->SsRule[pRef->RdElement->ElTypeNumber - 1];
+			pSRule = pRef->RdElement->ElStructSchema->SsRule->SrElem[pRef->RdElement->ElTypeNumber - 1];
 		      }
 		    /* inclusion d'un document externe */
 		    CopyIncludedElem (pRef->RdElement, pDoc);

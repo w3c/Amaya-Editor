@@ -180,42 +180,41 @@ static ThotBool     GetUSErule (PtrTRuleBlock pBlock, Name schName)
   ----------------------------------------------------------------------*/
 static void         GetTransSchName (Name schName)
 {
-   int                 i;
-   ThotBool            found, natureOK;
-   PtrSSchema          pSS;
-   SRule              *pSRule;
+  int                 i;
+  ThotBool            found, natureOK;
+  PtrSSchema          pSS;
+  PtrSRule            pSRule;
 
-   found = FALSE;
-   /* cherche d'abord si le schema de traduction du document contient */
-   /* une regle USE pour cette nature */
-   /* le schema de traduction du document est le premier de la table */
-   if (LoadedTSchema[0].pTransSchema != NULL)
-      /* cherche la nature dans le schema de structure du document */
-     {
-	natureOK = FALSE;
-	pSS = LoadedTSchema[0].pStructSchema;
-	i = 0;
-	do
-	  {
-	     pSRule = &pSS->SsRule[i++];
-	     if (pSRule->SrConstruct == CsNatureSchema)
+  found = FALSE;
+  /* cherche d'abord si le schema de traduction du document contient */
+  /* une regle USE pour cette nature */
+  /* le schema de traduction du document est le premier de la table */
+  if (LoadedTSchema[0].pTransSchema != NULL)
+    /* cherche la nature dans le schema de structure du document */
+    {
+      natureOK = FALSE;
+      pSS = LoadedTSchema[0].pStructSchema;
+      i = 0;
+      do
+	{
+	  pSRule = pSS->SsRule->SrElem[i++];
+	  if (pSRule->SrConstruct == CsNatureSchema)
             natureOK = strcmp (schName, pSRule->SrName) == 0;
-	  }
-	while (i < pSS->SsNRules && !natureOK);
-	if (natureOK)
-	   /* on a trouve la nature, on cherche une regle USE parmi les */
-	   /* regles de traduction de l'element nature */
-	   found = GetUSErule (LoadedTSchema[0].pTransSchema->TsElemTRule[i - 1], schName);
-	if (!found)
-	   /* on cherche une regle USE parmi les regles de traduction de */
-	   /* l'element racine du document */
-	   found = GetUSErule (LoadedTSchema[0].pTransSchema->
-		TsElemTRule[LoadedTSchema[0].pStructSchema->SsRootElem - 1], schName);
-     }
-   if (!found)
-     schName[0] = EOS;
+	}
+      while (i < pSS->SsNRules && !natureOK);
+      if (natureOK)
+	/* on a trouve la nature, on cherche une regle USE parmi les */
+	/* regles de traduction de l'element nature */
+	found = GetUSErule (LoadedTSchema[0].pTransSchema->TsElemTRule->TsElemTransl[i - 1], schName);
+      if (!found)
+	/* on cherche une regle USE parmi les regles de traduction de */
+	/* l'element racine du document */
+	found = GetUSErule (LoadedTSchema[0].pTransSchema->
+			    TsElemTRule->TsElemTransl[LoadedTSchema[0].pStructSchema->SsRootElem - 1], schName);
+    }
+  if (!found)
+    schName[0] = EOS;
 }
-
 
 /*----------------------------------------------------------------------
    GetTranslationSchema retourne le schema de traduction a`	

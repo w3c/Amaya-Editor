@@ -33,13 +33,13 @@ ThotBool TypeHasException (int exceptNum, int typeNum, PtrSSchema pSS)
 {
    ThotBool            ret;
    int                 e;
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    PtrSSchema          pExtSS;
 
    ret = FALSE;
    if (pSS != NULL && typeNum > 0)
      {
-	pSRule = &pSS->SsRule[typeNum - 1];
+	pSRule = pSS->SsRule->SrElem[typeNum - 1];
 	if (pSRule->SrFirstExcept != 0)
 	   /* il y a des exceptions pour ce type d'element */
 	  {

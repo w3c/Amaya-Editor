@@ -164,7 +164,7 @@ static void         Initialize ()
 {
    int                 i, size;
    PtrTtAttribute      pAttr;
-   SRule              *pRule;
+   PtrSRule            pRule;
 
    pSSchema->SsExtension = False;
    pSSchema->SsNExtensRules = 0;
@@ -200,32 +200,55 @@ static void         Initialize ()
    pSSchema->SsNAttributes++;
 
    pSSchema->SsNRules = 0;
+   /* allocate memory for 10 rules initially */
+   size = MAX_BASIC_TYPE + 2;
+   pSSchema->SsRule = (SrRuleTable*) malloc (size * sizeof (PtrSRule));
+   if (!pSSchema->SsRule)
+     {
+       TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
+       return;
+     }
+   else
+     {
+       pSSchema->SsRuleTableSize = size;
+       for (i = 0; i < size; i++)
+	 pSSchema->SsRule->SrElem[i] = NULL;
+     }
+
    /* first rules of the structure schema are those that define basic types */
-   pRule = &pSSchema->SsRule[CharString];
+   pRule = (PtrSRule) malloc (sizeof (SRule));
+   pSSchema->SsRule->SrElem[CharString] = pRule;
    InitBasicType (pRule, "TEXT_UNIT", CharString);
 
-   pRule = &pSSchema->SsRule[GraphicElem];
+   pRule = (PtrSRule) malloc (sizeof (SRule));
+   pSSchema->SsRule->SrElem[GraphicElem] = pRule;
    InitBasicType (pRule, "GRAPHICS_UNIT", GraphicElem);
 
-   pRule = &pSSchema->SsRule[Symbol];
+   pRule = (PtrSRule) malloc (sizeof (SRule));
+   pSSchema->SsRule->SrElem[Symbol] = pRule;
    InitBasicType (pRule, "SYMBOL_UNIT", Symbol);
 
-   pRule = &pSSchema->SsRule[Picture];
+   pRule = (PtrSRule) malloc (sizeof (SRule));
+   pSSchema->SsRule->SrElem[Picture] = pRule;
    InitBasicType (pRule, "PICTURE_UNIT", Picture);
 
-   pRule = &pSSchema->SsRule[Refer];
+   pRule = (PtrSRule) malloc (sizeof (SRule));
+   pSSchema->SsRule->SrElem[Refer] = pRule;
    InitBasicType (pRule, "REFERENCE_UNIT", Refer);
 
-   pRule = &pSSchema->SsRule[PageBreak];
+   pRule = (PtrSRule) malloc (sizeof (SRule));
+   pSSchema->SsRule->SrElem[PageBreak] = pRule;
    InitBasicType (pRule, "PAGE_BREAK", PageBreak);
 
-   pRule = &pSSchema->SsRule[UnusedBasicType];
+   pRule = (PtrSRule) malloc (sizeof (SRule));
+   pSSchema->SsRule->SrElem[UnusedBasicType] = pRule;
    InitBasicType (pRule, "UNUSED", UnusedBasicType);
 
    pSSchema->SsNRules = MAX_BASIC_TYPE;
 
    /* create the Document rule */
-   pRule = &pSSchema->SsRule[pSSchema->SsNRules++];
+   pRule = (PtrSRule) malloc (sizeof (SRule));
+   pSSchema->SsRule->SrElem[pSSchema->SsNRules++] = pRule;
    pSSchema->SsDocument = pSSchema->SsNRules;
    strcpy (pRule->SrName, "Document");
    pRule->SrConstruct = CsDocument;
@@ -293,17 +316,50 @@ static ThotBool      RuleNameExist ()
    /* initialize the function return */
    ret = False;
    /* keep the last rule name */
-   strncpy (name, pSSchema->SsRule[pSSchema->SsNRules - 1].SrName,
+   strncpy (name, pSSchema->SsRule->SrElem[pSSchema->SsNRules - 1]->SrName,
 	     MAX_NAME_LENGTH);
    if (name[0] != '\0')
      {
 	/* index of the rule in the table */
 	r = 0;
 	do
-	   ret = strcmp (name, pSSchema->SsRule[r++].SrName) == 0;
+	   ret = strcmp (name, pSSchema->SsRule->SrElem[r++]->SrName) == 0;
 	while (!ret && r < pSSchema->SsNRules - 1);
      }
    return ret;
+}
+
+/*----------------------------------------------------------------------
+   AllocateNewRule
+  ----------------------------------------------------------------------*/
+static void      AllocateNewRule (PtrSSchema pSS)
+{
+   PtrSRule     pRule;
+   int          i, size;
+
+   if (pSS->SsNRules >= pSS->SsRuleTableSize)
+     /* the rule table is full. Extend it */
+     {
+       /* add 10 new entries */
+       size = pSS->SsNRules + 10;
+       i = size * sizeof (PtrSRule);
+       pSS->SsRule = (SrRuleTable*) realloc (pSS->SsRule, i);
+       if (!pSS->SsRule)
+	 TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
+       else
+	 {
+	   pSS->SsRuleTableSize = size;
+	   for (i = pSS->SsNRules; i < size; i++)
+	     pSS->SsRule->SrElem[i] = NULL;
+	 }
+     }
+   /* create a new rule descriptor */
+   pRule = (PtrSRule) malloc (sizeof (SRule));
+   memset (pRule, 0, sizeof (SRule));
+   if (pRule == NULL)
+     TtaDisplaySimpleMessage (FATAL, STR,STR_NOT_ENOUGH_MEM);
+   else
+     pSS->SsRule->SrElem[pSS->SsNRules++] = pRule;
 }
 
 /*----------------------------------------------------------------------
@@ -313,44 +369,38 @@ static void         Undefined (int n)
 {
    int                 j;
    SrcIdentDesc       *pIdent;
-   SRule              *pRule;
+   PtrSRule            pRule;
 
    pIdent = &Identifier[n - 1];
    TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_EXTERNAL_STRUCT),
 		      pIdent->SrcIdentifier);
-   if (pSSchema->SsNRules >= MAX_RULES_SSCHEMA)
-      /* too many rules */
-      TtaDisplaySimpleMessage (FATAL, STR, STR_TOO_MAN_RULES);
+   /* add a new rule at the end of the schema */
+   AllocateNewRule (pSSchema);
+   pIdent->SrcIdentDefRule = pSSchema->SsNRules;
+   if (pIdent->SrcIdentLen > MAX_NAME_LENGTH - 1)
+     TtaDisplaySimpleMessage (FATAL, STR, STR_WORD_TOO_LONG);
    else
-     /* add a new rule at the end of the schema */
      {
-	pSSchema->SsNRules++;
-	pIdent->SrcIdentDefRule = pSSchema->SsNRules;
-	if (pIdent->SrcIdentLen > MAX_NAME_LENGTH - 1)
-	   TtaDisplaySimpleMessage (FATAL, STR, STR_WORD_TOO_LONG);
-	else
-	  {
-	     pRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
-	     for (j = 0; j < pIdent->SrcIdentLen; j++)
-		pRule->SrName[j] = pIdent->SrcIdentifier[j];
-	     pRule->SrName[pIdent->SrcIdentLen] = '\0';
-	     pRule->SrNLocalAttrs = 0;
-	     pRule->SrLocalAttr = NULL;
-	     pRule->SrRequiredAttr = NULL;
-	     pRule->SrNInclusions = 0;
-	     pRule->SrNExclusions = 0;
-	     pRule->SrRefImportedDoc = False;
-	     pRule->SrNDefAttrs = 0;
-	     pRule->SrUnitElem = False;
-	     pRule->SrConstruct = CsNatureSchema;
-	     pRule->SrSSchemaNat = NULL;
-	     pRule->SrRecursive = False;
-	     pRule->SrExportedElem = False;
-	     pRule->SrFirstExcept = 0;
-	     pRule->SrLastExcept = 0;
-	     if (RuleNameExist ())
-	       TtaDisplaySimpleMessage (FATAL, STR, STR_NAME_ALREADY_DECLARED);
-	  }
+       pRule = pSSchema->SsRule->SrElem[pSSchema->SsNRules - 1];
+       for (j = 0; j < pIdent->SrcIdentLen; j++)
+	 pRule->SrName[j] = pIdent->SrcIdentifier[j];
+       pRule->SrName[pIdent->SrcIdentLen] = '\0';
+       pRule->SrNLocalAttrs = 0;
+       pRule->SrLocalAttr = NULL;
+       pRule->SrRequiredAttr = NULL;
+       pRule->SrNInclusions = 0;
+       pRule->SrNExclusions = 0;
+       pRule->SrRefImportedDoc = False;
+       pRule->SrNDefAttrs = 0;
+       pRule->SrUnitElem = False;
+       pRule->SrConstruct = CsNatureSchema;
+       pRule->SrSSchemaNat = NULL;
+       pRule->SrRecursive = False;
+       pRule->SrExportedElem = False;
+       pRule->SrFirstExcept = 0;
+       pRule->SrLastExcept = 0;
+       if (RuleNameExist ())
+	 TtaDisplaySimpleMessage (FATAL, STR, STR_NAME_ALREADY_DECLARED);
      }
 }
 
@@ -358,7 +408,7 @@ static void         Undefined (int n)
    ChangeOneRule sets the rigth number of one rule instead of its identifier.
    Undefined elements are considered as external structures (natures).	
   ----------------------------------------------------------------------*/
-static void         ChangeOneRule (SRule * pRule)
+static void         ChangeOneRule (PtrSRule pRule)
 {
    int                 j;
 
@@ -376,7 +426,7 @@ static void         ChangeOneRule (SRule * pRule)
 	  }
 	else if (pRule->SrInclusion[j] < 0)
 	   pRule->SrInclusion[j] = -pRule->SrInclusion[j];
-	pSSchema->SsRule[pRule->SrInclusion[j] - 1].SrRecursDone = False;
+	pSSchema->SsRule->SrElem[pRule->SrInclusion[j] - 1]->SrRecursDone = False;
      }
 
    /* management of exclusions */
@@ -426,7 +476,7 @@ static void         ChangeOneRule (SRule * pRule)
 	 }
        else if (pRule->SrIdentRule < 0)
 	 pRule->SrIdentRule = -pRule->SrIdentRule;
-       pSSchema->SsRule[pRule->SrIdentRule - 1].SrRecursDone = False;
+       pSSchema->SsRule->SrElem[pRule->SrIdentRule - 1]->SrRecursDone = False;
        break;
      case CsList:
        if (pRule->SrListItem > MAX_BASIC_TYPE)
@@ -439,7 +489,7 @@ static void         ChangeOneRule (SRule * pRule)
 	 }
        else if (pRule->SrListItem < 0)
 	 pRule->SrListItem = -pRule->SrListItem;
-       pSSchema->SsRule[pRule->SrListItem - 1].SrRecursDone = False;
+       pSSchema->SsRule->SrElem[pRule->SrListItem - 1]->SrRecursDone = False;
        break;
      case CsChoice:
        if (pRule->SrNChoices > 0)
@@ -456,7 +506,7 @@ static void         ChangeOneRule (SRule * pRule)
 	       }
 	     else if (pRule->SrChoice[j] < 0)
 	       pRule->SrChoice[j] = -pRule->SrChoice[j];
-	     pSSchema->SsRule[pRule->SrChoice[j] - 1].SrRecursDone = False;
+	     pSSchema->SsRule->SrElem[pRule->SrChoice[j] - 1]->SrRecursDone = False;
 	   }
        break;
      case CsUnorderedAggregate:
@@ -474,7 +524,7 @@ static void         ChangeOneRule (SRule * pRule)
 	     }
 	   else if (pRule->SrComponent[j] < 0)
 	     pRule->SrComponent[j] = -pRule->SrComponent[j];
-	   pSSchema->SsRule[pRule->SrComponent[j] - 1].SrRecursDone = False;
+	   pSSchema->SsRule->SrElem[pRule->SrComponent[j] - 1]->SrRecursDone = False;
 	 }
        break;
      case CsConstant:
@@ -500,10 +550,10 @@ static void         ChangeRules ()
    
    /* use SrRecursDone with the mean `unused rule' */
    for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
-      pSSchema->SsRule[i].SrRecursDone = True;
+      pSSchema->SsRule->SrElem[i]->SrRecursDone = True;
    /* go through all rules of built elements */
    for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
-      ChangeOneRule (&pSSchema->SsRule[i]);
+      ChangeOneRule (pSSchema->SsRule->SrElem[i]);
    /* go through all extension rules */
    for (i = 0; i < pSSchema->SsNExtensRules; i++)
       ChangeOneRule (&pSSchema->SsExtensBlock->EbExtensRule[i]);
@@ -568,14 +618,14 @@ static void         Push (indLine wi)
   ----------------------------------------------------------------------*/
 static void         RightIdentifier (int n, indLine wi)
 {
-   SRule              *pRule;
+   PtrSRule              pRule;
 
    if (PreviousRule > 0)
      {
 	n = -PreviousRule;
 	PreviousRule = 0;
      }
-   pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+   pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
    switch (pRule->SrConstruct)
      {
      case CsReference:
@@ -641,12 +691,9 @@ static void CopyLocReqAttr (SRule *pRule)
 static void         NewRule (indLine wi)
 {
    int                 i;
-   SRule              *pRule;
+   PtrSRule            pRule;
 
-   if (pSSchema->SsNRules >= MAX_RULES_SSCHEMA)
-      CompilerMessage (wi, STR, FATAL, STR_TOO_MAN_RULES, inputLine, LineNum);
-   else
-      pSSchema->SsNRules++;
+   AllocateNewRule (pSSchema);
    if (CurNum > 0)
       /* there is a rigth part in this rule */
       if (Identifier[CurNum - 1].SrcIdentDefRule > 0)
@@ -670,11 +717,11 @@ static void         NewRule (indLine wi)
 	   Identifier[CurNum - 1].SrcIdentDefRule = pSSchema->SsNRules;
 	if (Rules)
 	   RRight[RecursLevel - 1] = True;
-	pRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
+	pRule = pSSchema->SsRule->SrElem[pSSchema->SsNRules - 1];
 	strncpy (pRule->SrName, CurName, MAX_NAME_LENGTH);
 	pRule->SrNDefAttrs = 0;
 	if (pRule->SrNLocalAttrs > 0)
-	   /* this element has already local attributes */
+	  /* this element has already local attributes */
 	  CompilerMessage (wi, STR, FATAL, STR_THIS_ELEM_HAS_LOCAL_ATTRS,
 			   inputLine, LineNum);
 	else
@@ -726,7 +773,7 @@ static int          RuleNumber (indLine wl, indLine wi)
    CopyWord (N, wi, wl);
    RuleNum = 0;
    do
-      ok = strcmp (N, pSSchema->SsRule[RuleNum++].SrName) == 0;
+      ok = strcmp (N, pSSchema->SsRule->SrElem[RuleNum++]->SrName) == 0;
    while (!ok && RuleNum < pSSchema->SsNRules);
    if (!ok)
       RuleNum = 0;
@@ -763,7 +810,7 @@ static int          AttributeNumber (indLine wl, indLine wi)
 static void      ExceptionNum (int num, ThotBool checkType, ThotBool checkAttr,
 			       ThotBool CheckIntAttr, indLine wi)
 {
-   SRule              *pRule;
+   PtrSRule            pRule;
    PtrTtAttribute      pAttr;
 
    if (checkType && ExceptType == 0)
@@ -799,7 +846,7 @@ static void      ExceptionNum (int num, ThotBool checkType, ThotBool checkAttr,
 	       if (CurExtensRule != NULL)
 		 pRule = CurExtensRule;
 	       else
-		 pRule = &pSSchema->SsRule[ExceptType - 1];
+		 pRule = pSSchema->SsRule->SrElem[ExceptType - 1];
 	       if (pRule->SrFirstExcept == 0)
 		 pRule->SrFirstExcept = pSSchema->SsNExceptions;
 	       pRule->SrLastExcept = pSSchema->SsNExceptions;
@@ -820,7 +867,7 @@ static void      ExceptionNum (int num, ThotBool checkType, ThotBool checkAttr,
   ----------------------------------------------------------------------*/
 static void         BasicEl (int n, indLine wi, SyntRuleNum pr)
 {
-   SRule              *pRule;
+   PtrSRule           pRule;
 
    pRule = NULL;
    if (pr == RULE_InclElem || pr == RULE_ExclElem)
@@ -828,7 +875,7 @@ static void         BasicEl (int n, indLine wi, SyntRuleNum pr)
      if (CompilExtens)
        pRule = CurExtensRule;
      else
-       pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+       pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
      }
    if (pr == RULE_InclElem)
      {
@@ -857,7 +904,7 @@ static void         BasicEl (int n, indLine wi, SyntRuleNum pr)
      {
        /* there is a basic element type within the exceptions set */
        ExceptType = n;
-       if (pSSchema->SsRule[ExceptType - 1].SrFirstExcept != 0)
+       if (pSSchema->SsRule->SrElem[ExceptType - 1]->SrFirstExcept != 0)
 	 CompilerMessage (wi, STR, FATAL, STR_THIS_TYPE_ALREADY_HAS_EXCEPTS,
 			  inputLine, LineNum);
      }
@@ -933,15 +980,14 @@ static void         InitRule (SRule * pRule)
   ----------------------------------------------------------------------*/
 static void         DuplicatePairRule ()
 {
-   SRule              *newRule;
-   SRule              *prevRule;
+  PtrSRule         newRule, prevRule;
 
-   prevRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
+   prevRule = pSSchema->SsRule->SrElem[pSSchema->SsNRules - 1];
    if (prevRule->SrConstruct == CsPairedElement && prevRule->SrFirstOfPair)
      {
 	/* ajoute une regle CsPairedElement a la fin du schema */
-	pSSchema->SsNRules++;
-	newRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
+	AllocateNewRule (pSSchema);
+	newRule = pSSchema->SsRule->SrElem[pSSchema->SsNRules - 1];
 	InitRule (newRule);
 	strncpy (newRule->SrName, prevRule->SrName, MAX_NAME_LENGTH);
 	newRule->SrConstruct = CsPairedElement;
@@ -1031,7 +1077,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
    int                 SynInteger, i, j, size;
    Name                N;
    PtrTtAttribute      pAttr;
-   SRule              *pRule;
+   PtrSRule            pRule;
    ThotBool            ok;
    int                 attrNum;
 
@@ -1120,7 +1166,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	 /*  (  */
 	 if (r == RULE_Constr)
 	   {
-	     if (pSSchema->SsRule[CurRule[RecursLevel - 1] - 1].SrConstruct ==
+	     if (pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1]->SrConstruct ==
 		 CsList)
 	       /* define elements of a list */
 	       Push (wi);
@@ -1153,7 +1199,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     if (CurBasicElem > 0)
 	       /* end of local attributes of a basic element */
 	       {
-		 pRule = &pSSchema->SsRule[CurBasicElem - 1];
+		 pRule = pSSchema->SsRule->SrElem[CurBasicElem - 1];
 		 if (pRule->SrNLocalAttrs > 0)
 		   /* there are local attributes for this element */
 		   CompilerMessage (wi, STR, FATAL,
@@ -1170,7 +1216,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	   {
 	     CurBasicElem = 0;
 	     if (RecursLevel > 1)
-	       if (pSSchema->SsRule[CurRule[RecursLevel-2] - 1].SrConstruct ==
+	       if (pSSchema->SsRule->SrElem[CurRule[RecursLevel-2] - 1]->SrConstruct ==
 		   CsList)
 		 {
 		   /* end of the right part of the rule LIST */
@@ -1199,7 +1245,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		 do
 		   {
 		     ok = strcmp (ReferredTypeName,
-				   pSSchema->SsRule[i].SrName) == 0;
+				   pSSchema->SsRule->SrElem[i]->SrName) == 0;
 		     /* next rule */
 		     i++;
 		   }
@@ -1208,7 +1254,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		   CompilerMessage (BeginReferredTypeName, STR, FATAL,
 				    STR_TYPE_UNKNOWN, inputLine, LineNum);
 		 else
-		   if (pSSchema->SsRule[i - 1].SrConstruct != CsPairedElement)
+		   if (pSSchema->SsRule->SrElem[i - 1]->SrConstruct != CsPairedElement)
 		     /* it is not a paired type */
 		     CompilerMessage (BeginReferredTypeName, STR, FATAL,
 				      STR_FIRST_SECOND_FORBIDDEN, inputLine,
@@ -1218,9 +1264,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		       if (r == RULE_AttrType)
 			 pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes - 1]->
 			   AttrTypeRef = -(i + 1);
-		       else if (pSSchema->SsRule[CurRule[RecursLevel - 1] - 1].
+		       else if (pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1]->
 				SrConstruct == CsReference)
-			 pSSchema->SsRule[CurRule[RecursLevel - 1] - 1].
+			 pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1]->
 			   SrReferredType = -(i + 1);
 		     }
 	       }
@@ -1258,7 +1304,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     if (CompilExtens)
 	       pRule = CurExtensRule;
 	     else
-	       pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+	       pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 	     pRule->SrDefAttrModif[pRule->SrNDefAttrs - 1] = True;
 	   }
 	 else
@@ -1271,9 +1317,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
        case CHR_42:
 	 /*  *  */
 	 if (r == RULE_min)
-	   pSSchema->SsRule[CurRule[RecursLevel - 1] - 1].SrMinItems = 0;
+	   pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1]->SrMinItems = 0;
 	 else
-	   pSSchema->SsRule[CurRule[RecursLevel - 1] - 1].SrMaxItems = 32000;
+	   pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1]->SrMaxItems = 32000;
 	 break;
        case CHR_43:
 	 /*  +  */
@@ -1405,7 +1451,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     NewRule (wi);
 	     if (!error)
 	       {
-		 pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+		 pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 		 pRule->SrConstruct = CsReference;
 		 pRule->SrRefTypeNat[0] = '\0';
 		 /* by default, the referred element type */
@@ -1434,7 +1480,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	 if (ReferenceAttr)
 	   pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes - 1]->AttrTypeRef = 0;
 	 else
-	   pSSchema->SsRule[CurRule[RecursLevel - 1] - 1].SrReferredType = 0;
+	   pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1]->SrReferredType = 0;
 	 break;
        case KWD_First:
 	 FirstInPair = True;
@@ -1462,7 +1508,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     NewRule (wi);
 	     if (!error)
 	       {
-		 pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+		 pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 		 pRule->SrConstruct = CsChoice;
 		 if (c == KWD_UNIT)
 		   pRule->SrNChoices = 0;	/* UNIT  */
@@ -1494,12 +1540,13 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	       IncludedExternalType[NExternalTypes - 1] = False;
 	       strncpy (ExternalType[NExternalTypes - 1], PreviousIdent,
 			 MAX_NAME_LENGTH);
-	       if (strcmp (PreviousIdent, pSSchema->
-			    SsRule[pSSchema->SsRootElem - 1].SrName) == 0)
+	       if (strcmp (PreviousIdent, pSSchema->SsRule->
+                                SrElem[pSSchema->SsRootElem - 1]->SrName) == 0)
 		 /* the document type is used as external */
 		 {
 		   /* add a SyntacticType rule at the end of the schema */
-		   pRule = &pSSchema->SsRule[pSSchema->SsNRules++];
+		   AllocateNewRule (pSSchema);
+		   pRule = pSSchema->SsRule->SrElem[pSSchema->SsNRules - 1];
 		   strncpy (pRule->SrName, PreviousIdent, MAX_NAME_LENGTH);
 		   pRule->SrNLocalAttrs = 0;
 		   pRule->SrLocalAttr = NULL;
@@ -1537,7 +1584,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	 NewRule (wi);
 	 if (!error)
 	   {
-	     pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+	     pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 	     pRule->SrConstruct = CsList;
 	     pRule->SrMinItems = 0;
 	     pRule->SrMaxItems = 32000;
@@ -1551,7 +1598,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	 NewRule (wi);
 	 if (!error)
 	   {
-	     pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+	     pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 	     if (c == KWD_BEGIN)
 	       pRule->SrConstruct = CsAggregate;
 	     else if (c == KWD_AGGREGATE)
@@ -1568,7 +1615,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	 NewRule (wi);
 	 if (!error)
 	   {
-	     pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+	     pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 	     pRule->SrConstruct = CsChoice;
 	     pRule->SrNChoices = 0;
 	     Push (wi);
@@ -1586,7 +1633,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 			      inputLine, LineNum);
 	   else
 	     {
-	       pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+	       pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 	       pRule->SrConstruct = CsPairedElement;
 	       pRule->SrFirstOfPair = True;
 	     }
@@ -1594,11 +1641,11 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	 break;
        case KWD_Nothing:
 	 /* pno contents for the current exported element */
-	 pRule = &pSSchema->SsRule[RuleExportWith - 1];
+	 pRule = pSSchema->SsRule->SrElem[RuleExportWith - 1];
 	 pRule->SrExportContent = 0;
 	 if ((pRule->SrConstruct == CsChoice) && (pRule->SrNChoices >= 1))
 	   for (j = 0; j < pRule->SrNChoices; j++)
-	     pSSchema->SsRule[pRule->SrChoice[j] - 1].SrExportContent = 0;
+	     pSSchema->SsRule->SrElem[pRule->SrChoice[j] - 1]->SrExportContent = 0;
 	 break;
        case KWD_NoCut:
 	 ExceptionNum (ExcNoCut, True, False, False, wi);
@@ -1866,11 +1913,11 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		   {
 		     i = 0;
 		     while (strcmp (ReferredTypeName,
-				     pExternSSchema->SsRule[i].SrName) != 0 &&
+			     pExternSSchema->SsRule->SrElem[i]->SrName) != 0 &&
 			    i - 1 < pExternSSchema->SsNRules)
 		       i++;
 		     if (strcmp (ReferredTypeName,
-				  pExternSSchema->SsRule[i].SrName) != 0)
+				  pExternSSchema->SsRule->SrElem[i]->SrName) != 0)
 		       /* unknown type */
 		       CompilerMessage (BeginReferredTypeName, STR, FATAL,
 					STR_TYPE_UNKNOWN, inputLine, LineNum);
@@ -1893,7 +1940,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 			   break;
 			 case ElemRef:
 			   /* within construction CsReference */
-			   pRule = &pSSchema->SsRule[CurRule[RecursLevel-1]-1];
+			   pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel-1]-1];
 			   if (SecondInPair)
 			     pRule->SrReferredType = i + 2;
 			   else
@@ -1904,7 +1951,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 			   break;
 			 case ElContent:
 			   /* within exported element contents */
-			   pRule = &pSSchema->SsRule[RuleExportWith - 1];
+			   pRule = pSSchema->SsRule->SrElem[RuleExportWith - 1];
 			   pRule->SrExportContent = i + 1;
 			   strncpy (pRule->SrNatExpContent, N,
 				     MAX_NAME_LENGTH);
@@ -1913,10 +1960,10 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 			     if (pRule->SrNChoices >= 1)
 			       for (j = 0; j < pRule->SrNChoices; j++)
 				 {
-				   pSSchema->SsRule[pRule->SrChoice[j] - 1].
+				   pSSchema->SsRule->SrElem[pRule->SrChoice[j] - 1]->
 				     SrExportContent = i + 1;
-				   strncpy (pSSchema->SsRule[pRule->
-					     SrChoice[j] - 1].SrNatExpContent,
+				   strncpy (pSSchema->SsRule->SrElem[pRule->
+					     SrChoice[j] - 1]->SrNatExpContent,
 					     N, MAX_NAME_LENGTH);
 				 }
 			   break;
@@ -1934,7 +1981,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 				    inputLine, LineNum);
 		 else
 		   {
-		     pRule = &pSSchema->SsRule[i - 1];
+		     pRule = pSSchema->SsRule->SrElem[i - 1];
 		     /* type exists */
 		     pRule->SrExportedElem = True;
 		     RuleExportWith = i;
@@ -1948,11 +1995,11 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		       if (pRule->SrNChoices >= 1)
 			 for (j = 0; j < pRule->SrNChoices; j++)
 			   {
-			     pSSchema->SsRule[pRule->SrChoice[j] - 1].
+			     pSSchema->SsRule->SrElem[pRule->SrChoice[j] - 1]->
 			       SrExportedElem = True;
-			     pSSchema->SsRule[pRule->SrChoice[j] - 1].
+			     pSSchema->SsRule->SrElem[pRule->SrChoice[j] - 1]->
 			       SrExportContent = pRule->SrChoice[j];
-			     pSSchema->SsRule[pRule->SrChoice[j] - 1].
+			     pSSchema->SsRule->SrElem[pRule->SrChoice[j] - 1]->
 			       SrNatExpContent[0] = '\0';
 			   }
 		     /* the first mark of the paired type is exported, */
@@ -1960,9 +2007,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		     if (pRule->SrConstruct == CsPairedElement)
 		       if (pRule->SrFirstOfPair)
 			 {
-			   pSSchema->SsRule[i].SrExportedElem = True;
-			   pSSchema->SsRule[i].SrExportContent = i + 1;
-			   pSSchema->SsRule[i].SrNatExpContent[0] = '\0';
+			   pSSchema->SsRule->SrElem[i]->SrExportedElem = True;
+			   pSSchema->SsRule->SrElem[i]->SrExportContent = i+1;
+			   pSSchema->SsRule->SrElem[i]->SrNatExpContent[0] = '\0';
 			 }
 		   }
 	       }
@@ -1981,14 +2028,14 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		   UnknownContent = True;
 		 else
 		   /* it's a type defined in the schema */
-		   if (pSSchema->SsRule[i - 1].SrConstruct != CsNatureSchema)
+		   if (pSSchema->SsRule->SrElem[i - 1]->SrConstruct != CsNatureSchema)
 		     {
-		       pRule = &pSSchema->SsRule[RuleExportWith - 1];
+		       pRule = pSSchema->SsRule->SrElem[RuleExportWith - 1];
 		       pRule->SrExportContent = i;
 		       if (pRule->SrConstruct == CsChoice)
 			 if (pRule->SrNChoices >= 1)
 			   for (j = 0; j < pRule->SrNChoices; j++)
-			     pSSchema->SsRule[pRule->SrChoice[j] - 1].
+			     pSSchema->SsRule->SrElem[pRule->SrChoice[j] - 1]->
 			       SrExportContent = i;
 		       /* the first mark of the paired type is exported, */
 		       /* the second one is also exported */
@@ -1998,17 +2045,17 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 			   if (i == RuleExportWith)
 			     /* the contents of the second mark */
 			     /* is the mark itself */
-			     pSSchema->SsRule[RuleExportWith].SrExportContent =
+			     pSSchema->SsRule->SrElem[RuleExportWith]->SrExportContent =
 			       i + 1;
 			   else
-			     pSSchema->SsRule[RuleExportWith].SrExportContent =
+			     pSSchema->SsRule->SrElem[RuleExportWith]->SrExportContent =
 			       i;
 			   }
 		     }
 		   else
 		     /* the object contents depends on another */
 		     /* structure schema, read the schema */
-		     if (!ReadStructureSchema (pSSchema->SsRule[i - 1].SrName,
+		     if (!ReadStructureSchema (pSSchema->SsRule->SrElem[i - 1]->SrName,
 					       pExternSSchema))
 		       /* cannot load the schema */
 		       CompilerMessage (wi, STR, FATAL,
@@ -2018,7 +2065,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		       /* structure schema loaded, the contents */
 		       /* the root element of this schema */
 		       {
-			 pRule = &pSSchema->SsRule[RuleExportWith - 1];
+			 pRule = pSSchema->SsRule->SrElem[RuleExportWith - 1];
 			 pRule->SrExportContent = pExternSSchema->SsRootElem;
 			 strncpy (pRule->SrNatExpContent,
 				   pExternSSchema->SsName, MAX_NAME_LENGTH);
@@ -2026,10 +2073,10 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 			   if (pRule->SrNChoices >= 1)
 			     for (j = 0; j < pRule->SrNChoices; j++)
 			       {
-				 pSSchema->SsRule[pRule->SrChoice[j] - 1].
+				 pSSchema->SsRule->SrElem[pRule->SrChoice[j] - 1]->
 				   SrExportContent =pExternSSchema->SsRootElem;
-				 strncpy (pSSchema->SsRule[pRule->
-					   SrChoice[j] - 1].SrNatExpContent,
+				 strncpy (pSSchema->SsRule->SrElem[pRule->
+					   SrChoice[j] - 1]->SrNatExpContent,
 					   pExternSSchema->SsName,
 					   MAX_NAME_LENGTH);
 			       }
@@ -2072,7 +2119,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		       if (FirstInPair || SecondInPair)
 			 /* the element name is preceded by First or Second */
 			 {
-			 if (pSSchema->SsRule[ExceptType - 1].SrConstruct !=
+			 if (pSSchema->SsRule->SrElem[ExceptType - 1]->SrConstruct !=
 			     CsPairedElement)
 			   /* it's not a  paired type */
 			   CompilerMessage (wi, STR, FATAL,
@@ -2081,7 +2128,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 			 else if (SecondInPair)
 			   ExceptType++;
 			 }
-		       if (pSSchema->SsRule[ExceptType - 1].SrFirstExcept != 0)
+		       if (pSSchema->SsRule->SrElem[ExceptType - 1]->SrFirstExcept != 0)
 			 CompilerMessage (wi, STR, FATAL,
 					  STR_THIS_TYPE_ALREADY_HAS_EXCEPTS,
 					  inputLine, LineNum);
@@ -2095,7 +2142,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		 if (CompilExtens)
 		   pRule = CurExtensRule;
 		 else
-		   pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+		   pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 		 if (pRule->SrNInclusions >= MAX_INCL_EXCL_SRULE)
 		   CompilerMessage (wi, STR, FATAL,
 				    STR_TOO_MANY_INCLS_FOR_THAT_ELEM,
@@ -2112,7 +2159,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		 if (CompilExtens)
 		   pRule = CurExtensRule;
 		 else
-		   pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+		   pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 		 if (pRule->SrNExclusions >= MAX_INCL_EXCL_SRULE)
 		   CompilerMessage (wi, STR, FATAL,
 				    STR_TOO_MANY_EXCLUSIONS_FOR_THAT_ELEM,
@@ -2241,7 +2288,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 					STR_TYPE_OR_ATTR_UNKNOWN, inputLine,
 					LineNum);
 		     else
-		       if (pSSchema->SsRule[ExceptType - 1].SrFirstExcept != 0)
+		       if (pSSchema->SsRule->SrElem[ExceptType - 1]->SrFirstExcept != 0)
 			 CompilerMessage (wi, STR, FATAL,
 					  STR_THIS_TYPE_ALREADY_HAS_EXCEPTS,
 					  inputLine, LineNum);
@@ -2263,7 +2310,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		   if (CompilExtens)
 		     pRule = CurExtensRule;
 		   else
-		     pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+		     pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 		   if (pRule->SrNDefAttrs >= MAX_DEFAULT_ATTR)
 		     CompilerMessage (wi, STR, FATAL, STR_TOO_MANY_ATTRS,
 				      inputLine, LineNum);
@@ -2326,7 +2373,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		   if (CompilExtens)
 		     pRule = CurExtensRule;
 		   else
-		     pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+		     pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 		   pAttr = pSSchema->SsAttribute->TtAttr[pRule->
 				       SrDefAttr[pRule->SrNDefAttrs - 1] - 1];
 		   if (pAttr->AttrType != AtEnumAttr)
@@ -2364,7 +2411,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		 /* cree une regle */
 		 if (!error)
 		   {
-		     pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+		     pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 		     pRule->SrConstruct = CsConstant;
 		     pRule->SrIndexConst = TextConstPtr;
 		   }
@@ -2382,7 +2429,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		 ExceptType = RuleNumber (wl, wi);
 	     
 	     if (ExceptType > 0 &&
-		 pSSchema->SsRule[ExceptType - 1].SrFirstExcept != 0)
+		 pSSchema->SsRule->SrElem[ExceptType - 1]->SrFirstExcept != 0)
 	       CompilerMessage (wi, STR, FATAL,
 				STR_THIS_TYPE_ALREADY_HAS_EXCEPTS, inputLine,
 				LineNum);
@@ -2397,7 +2444,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	 if (r == RULE_Integer)
 	   /* check min. and max. numbers in a list */
 	   {
-	     pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+	     pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 	     if (Minimum)
 	       /* min */
 	       pRule->SrMinItems = SynInteger;
@@ -2417,7 +2464,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     if (CompilExtens)
 	       pRule = CurExtensRule;
 	     else
-	       pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+	       pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 	     if (pSSchema->SsAttribute->TtAttr[pRule->SrDefAttr
 			   [pRule->SrNDefAttrs - 1] - 1]->AttrType != AtNumAttr)
 	       CompilerMessage (wi, STR, FATAL,
@@ -2456,7 +2503,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	     if (CompilExtens)
 	       pRule = CurExtensRule;
 	     else
-	       pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+	       pRule = pSSchema->SsRule->SrElem[CurRule[RecursLevel - 1] - 1];
 	     if (pSSchema->SsAttribute->TtAttr[pRule->SrDefAttr
 			 [pRule->SrNDefAttrs - 1] - 1]->AttrType != AtTextAttr)
 	       CompilerMessage (wi, STR, FATAL,
@@ -2484,10 +2531,10 @@ static void         ExternalTypes ()
       /* search the external type in the schema starting from the end */
      {
 	i = pSSchema->SsNRules - 1;
-	while (strcmp (ExternalType[j], pSSchema->SsRule[i].SrName) != 0)
+	while (strcmp (ExternalType[j], pSSchema->SsRule->SrElem[i]->SrName) != 0)
 	   i--;
 	/* the external type is defined by the i rule number */
-	pRule = &pSSchema->SsRule[i];
+	pRule = pSSchema->SsRule->SrElem[i];
 	if (pRule->SrConstruct != CsNatureSchema)
 	   /* it's not an external SyntacticType */
 	  {
@@ -2532,9 +2579,9 @@ static void         CheckRecursivity (int r, int path[], int level,
 				      ThotBool busy[], ThotBool done[])
 {
    int                 m;
-   SRule              *pRule;
+   PtrSRule            pRule;
 
-   pRule = &pSSchema->SsRule[r - 1];
+   pRule = pSSchema->SsRule->SrElem[r - 1];
    /* don't work, if the element is already known */
    if (done[r])
      return;
@@ -2546,7 +2593,7 @@ static void         CheckRecursivity (int r, int path[], int level,
      {
        for (m = level - 1; m >= 0; m--)
 	 {
-	   pSSchema->SsRule[path[m] - 1].SrRecursive = True;
+	   pSSchema->SsRule->SrElem[path[m] - 1]->SrRecursive = True;
 	   if (path[m] == r)
 	     break;
 	 }
@@ -2593,7 +2640,7 @@ static void         ChkRecurs ()
    int                i;
    int                path[100];
    ThotBool           *busy, *done;
-   SRule              *pRule;
+   PtrSRule           pRule;
 
    busy = (ThotBool*) malloc ((pSSchema->SsNRules+1) * sizeof (ThotBool));
    done = (ThotBool*) malloc ((pSSchema->SsNRules+1) * sizeof (ThotBool));
@@ -2605,7 +2652,7 @@ static void         ChkRecurs ()
 
    for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
      {
-	pRule = &pSSchema->SsRule[i];
+	pRule = pSSchema->SsRule->SrElem[i];
 	if (pRule->SrRecursive)
 	   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_RECURSIVE_ELEM),
 			      pRule->SrName);
@@ -2625,54 +2672,53 @@ static void         ListAliasesAndNotCreated ()
    int          *Alias; /* rules which define aliases */
    int          r, rr, i;
    ThotBool     temp;
-   SRule        *pRule;
-   SRule        *pRule2;
+   PtrSRule     pRule, pRule2;
 
    /* Liste les elements consideres comme des alias et verifie les paires */
    Alias = (int*) malloc (pSSchema->SsNRules * sizeof (int));
    NAlias = 0;
    for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
      {
-       if (pSSchema->SsRule[i].SrRecursDone)
+       if (pSSchema->SsRule->SrElem[i]->SrRecursDone)
 	 if (i + 1 != pSSchema->SsRootElem &&
 	     i + 1 != pSSchema->SsDocument &&
-	     !pSSchema->SsRule[i].SrUnitElem)
+	     !pSSchema->SsRule->SrElem[i]->SrUnitElem)
 	   {
-	     if (pSSchema->SsRule[i].SrConstruct == CsChoice)
+	     if (pSSchema->SsRule->SrElem[i]->SrConstruct == CsChoice)
 	       /* it's a choice that defines an alias */
 	       /* insert the element in table of aliases */
 	       {
 		 Alias[NAlias] = i + 1;
 		 NAlias++;
 		 TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ALIAS),
-				    pSSchema->SsRule[i].SrName);
+				    pSSchema->SsRule->SrElem[i]->SrName);
 	       }
 	     else
 	       /* the second elements of a CsPairedElement are never
 		  referenced */
-	       if (pSSchema->SsRule[i].SrConstruct != CsPairedElement ||
-		   pSSchema->SsRule[i].SrFirstOfPair)
+	       if (pSSchema->SsRule->SrElem[i]->SrConstruct != CsPairedElement ||
+		   pSSchema->SsRule->SrElem[i]->SrFirstOfPair)
 		 /* unnecessary definition */
 		 TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_UNUSED),
-				    pSSchema->SsRule[i].SrName);
+				    pSSchema->SsRule->SrElem[i]->SrName);
 	   }
      }
 
    /* clear all creation indicators */
    /* (use SrRecursDone as creation incator) */
    for (r = 0; r < pSSchema->SsNRules; r++)
-     pSSchema->SsRule[r].SrRecursDone = False;
+     pSSchema->SsRule->SrElem[r]->SrRecursDone = False;
    /* we will create the root */
    if (pSSchema->SsRootElem > 0)
-     pSSchema->SsRule[pSSchema->SsRootElem - 1].SrRecursDone = True;
+     pSSchema->SsRule->SrElem[pSSchema->SsRootElem - 1]->SrRecursDone = True;
    /* go through the table of rules */
    for (r = 0; r < pSSchema->SsNRules; r++)
      {
-       pRule = &pSSchema->SsRule[r];
+       pRule = pSSchema->SsRule->SrElem[r];
        /* included elements (SGML) will be created */
        if (pRule->SrNInclusions > 0)
 	 for (i = 0; i < pRule->SrNInclusions; i++)
-	   pSSchema->SsRule[pRule->SrInclusion[i] - 1].SrRecursDone = True;
+	   pSSchema->SsRule->SrElem[pRule->SrInclusion[i] - 1]->SrRecursDone = True;
        if (r < MAX_BASIC_TYPE)
 	 pRule->SrRecursDone = True;
        switch (pRule->SrConstruct)
@@ -2698,7 +2744,7 @@ static void         ListAliasesAndNotCreated ()
 	   break;
 	 case CsList:
 	   /* list elements will be created */
-	   pSSchema->SsRule[pRule->SrListItem - 1].SrRecursDone = True;
+	   pSSchema->SsRule->SrElem[pRule->SrListItem - 1]->SrRecursDone = True;
 	   break;
 	 case CsChoice:
 	   /* choice elements will be created */
@@ -2706,11 +2752,11 @@ static void         ListAliasesAndNotCreated ()
 	     {
 	       for (i = 0; i < pRule->SrNChoices; i++)
 		 {
-		   pSSchema->SsRule[pRule->SrChoice[i] - 1].SrRecursDone =True;
+		   pSSchema->SsRule->SrElem[pRule->SrChoice[i] - 1]->SrRecursDone =True;
 		   /* if the choice is a exported unit, */
 		   /* its options will become exported units */
 		   if (pRule->SrUnitElem)
-		     pSSchema->SsRule[pRule->SrChoice[i] - 1].SrUnitElem =True;
+		     pSSchema->SsRule->SrElem[pRule->SrChoice[i] - 1]->SrUnitElem =True;
 		 }
 	       pRule->SrUnitElem = False;
 	     }
@@ -2719,7 +2765,7 @@ static void         ListAliasesAndNotCreated ()
 	 case CsAggregate:
 	   /* agreggate components will be created */
 	   for (i = 0; i < pRule->SrNComponents; i++)
-	     pSSchema->SsRule[pRule->SrComponent[i] - 1].SrRecursDone = True;
+	     pSSchema->SsRule->SrElem[pRule->SrComponent[i] - 1]->SrRecursDone = True;
 	   break;
 	 case CsConstant:
 	   /* constants will be created */
@@ -2737,7 +2783,7 @@ static void         ListAliasesAndNotCreated ()
    /* write the result */
    for (r = 0; r < pSSchema->SsNRules; r++)
      {
-       pRule = &pSSchema->SsRule[r];
+       pRule = pSSchema->SsRule->SrElem[r];
        if (pRule->SrConstruct == CsChoice)
 	 /* all choices different which are not the root, without
 	    SGML exceptions and not within an agregate are temporary
@@ -2751,10 +2797,10 @@ static void         ListAliasesAndNotCreated ()
 	       temp = False;
 	     else
 	       for (rr = 0; rr < pSSchema->SsNRules; rr++)
-		 if (pSSchema->SsRule[rr].SrConstruct == CsAggregate ||
-		     pSSchema->SsRule[rr].SrConstruct == CsUnorderedAggregate)
-		   for (i = 0; i < pSSchema->SsRule[rr].SrNComponents; i++)
-		     if (pSSchema->SsRule[rr].SrComponent[i] == r + 1)
+		 if (pSSchema->SsRule->SrElem[rr]->SrConstruct == CsAggregate ||
+		     pSSchema->SsRule->SrElem[rr]->SrConstruct == CsUnorderedAggregate)
+		   for (i = 0; i < pSSchema->SsRule->SrElem[rr]->SrNComponents; i++)
+		     if (pSSchema->SsRule->SrElem[rr]->SrComponent[i] == r + 1)
 		       temp = False;
 	     if (temp)
 	       /* is it an alias ? Search in the aliases table */
@@ -2775,7 +2821,7 @@ static void         ListAliasesAndNotCreated ()
 	     /* search if there are REFERENCES to this element type */
 	     for (rr = 0; rr < pSSchema->SsNRules; rr++)
 	       {
-		 pRule2 = &pSSchema->SsRule[rr];
+		 pRule2 = pSSchema->SsRule->SrElem[rr];
 		 if (pRule2->SrConstruct == CsReference)
 		   if (pRule2->SrRefTypeNat[0] == '\0')
 		     if (pRule2->SrReferredType == r + 1)

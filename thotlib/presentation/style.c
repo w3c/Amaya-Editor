@@ -978,7 +978,7 @@ static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
 	}
       else if (ctxt->type)
 	/* we are now sure that only elements are concerned */
-	*chain = &tsch->PsElemPRule[ctxt->type - 1];
+	*chain = &tsch->PsElemPRule->ElemPres[ctxt->type - 1];
       else
 	return (NULL);
     }
@@ -2492,7 +2492,7 @@ void TtaCleanStylePresentation (Element el, PSchema tsch, Document doc)
       max = (unsigned int) pSS->SsNRules;
       for (elType = 0; elType < max; elType++)
 	{
-	  pRule = ((PtrPSchema) tsch)->PsElemPRule[elType];
+	  pRule = ((PtrPSchema) tsch)->PsElemPRule->ElemPres[elType];
 	  while (pRule != NULL)
 	    {
 	      ApplyAGenericStyleRule (doc, pSS, elType+1, 0, 0, pRule, TRUE);

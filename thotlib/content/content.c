@@ -296,8 +296,8 @@ ThotBool MergeTextElements (PtrElement pEl, PtrElement *pFreeEl, PtrDocument pDo
 	  pEl2->ElLeafType == LtText && pEl2->ElTerminal &&
 	  pEl2->ElLanguage == pEl->ElLanguage &&
 	  pEl1->ElSource == NULL && pEl2->ElSource == NULL &&
-	  pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsConstant &&
-	  pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
+	  pEl1->ElStructSchema->SsRule->SrElem[pEl1->ElTypeNumber - 1]->SrConstruct != CsConstant &&
+	  pEl2->ElStructSchema->SsRule->SrElem[pEl2->ElTypeNumber - 1]->SrConstruct != CsConstant)
 	{
 	  merge = TRUE;
 	  if (withAppEvent)

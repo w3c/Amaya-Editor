@@ -107,7 +107,7 @@ PtrElement GetOtherPairedElement (PtrElement pEl)
    pOther = NULL;
    if (pEl != NULL)
      {
-      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
+      if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct ==
 	                                                      CsPairedElement)
 	{
 	 /* check if it's a pair element */
@@ -119,7 +119,7 @@ PtrElement GetOtherPairedElement (PtrElement pEl)
 	   {
 	      /* searches the mark having the same type and number */
 	      pSS = pEl->ElStructSchema;
-	      begin = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
+	      begin = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->
                                                                 SrFirstOfPair;
 	      if (begin)
 		 /* pEl has a begin mark, so we search the end mark */
@@ -239,7 +239,7 @@ static PtrElement FwdSearchTypeNameInSubtree (PtrElement pEl, ThotBool test,
 
   pRet = NULL;
   if (test &&
-      strcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+      strcmp (typeName, pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName) == 0)
     /* got a hit on the element */
     pRet = pEl;
   if (pRet == NULL && !pEl->ElTerminal)
@@ -303,7 +303,7 @@ PtrElement FwdSearchElemByTypeName (PtrElement pEl, char *typeName)
 		       pAsc = pAsc->ElNext;
 		       if (pAsc != NULL)
 			 {
-			  if (strcmp (typeName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0)
+			  if (strcmp (typeName, pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName) == 0)
 			     /* found */
 			     pRet = pAsc;
 			  else
@@ -340,7 +340,7 @@ static PtrElement BackSearchTypeNameInSubtree (PtrElement pEl, char *typeName)
      }
    if (pRet == NULL)
      {
-	if (strcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+	if (strcmp (typeName, pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName) == 0)
 	   pRet = pEl;		/* found ! it's the element itself */
      }
    return pRet;
@@ -372,7 +372,7 @@ PtrElement BackSearchElemByTypeName (PtrElement pEl, char *typeName)
 	   if (pEl->ElParent != NULL)
 	     {
 		pEl = pEl->ElParent;
-		if (strcmp (typeName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+		if (strcmp (typeName, pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName) == 0)
 		   pRet = pEl;	/* found, it's the parent */
 		else
 		   pRet = BackSearchElemByTypeName (pEl, typeName);
@@ -902,7 +902,7 @@ static void CopyAttributes (PtrElement pEl1, PtrElement pEl2,
 		 {
 		   /* schema loaded. Change the structure schema of the copy */
 		   pAttr2->AeAttrSSchema = pTargetDoc->DocSSchema->
-		                                   SsRule[nR - 1].SrSSchemaNat;
+		                          SsRule->SrElem[nR - 1]->SrSSchemaNat;
 		   AddSchemaGuestViews (pTargetDoc, pAttr2->AeAttrSSchema);
 		 }
 	    }
@@ -1024,8 +1024,7 @@ ThotBool            ElemIsWithinSubtree (PtrElement pEl, PtrElement pRoot)
 ThotBool     EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
 {
   ThotBool            ok;
-  SRule              *pRe1;
-  SRule              *pRe2;
+  PtrSRule            pRe1, pRe2;
   int                 i;
   ThotBool            SSok;
 
@@ -1041,7 +1040,7 @@ ThotBool     EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
     ok = TRUE;
   else if (pSS != NULL)
     {
-      pRe1 = &pSS->SsRule[typeNum - 1];
+      pRe1 = pSS->SsRule->SrElem[typeNum - 1];
       /* rule defining the type of element we are searching */
       if (pRe1->SrConstruct == CsChoice)
 	{
@@ -1058,7 +1057,7 @@ ThotBool     EquivalentType (PtrElement pEl, int typeNum, PtrSSchema pSS)
 		    ok = !strcmp (pEl->ElStructSchema->SsName, pSS->SsName);
 		  else
 		    {
-		      pRe2 = &pSS->SsRule[pRe1->SrChoice[i] - 1];
+		      pRe2 = pSS->SsRule->SrElem[pRe1->SrChoice[i] - 1];
 		      if (pRe2->SrConstruct == CsNatureSchema)
 			/* the choice option is a change of nature */
 			/* keeps the root elements of this nature */
@@ -1256,13 +1255,13 @@ PtrElement  GetTypedAncestor (PtrElement pEl, int typeNum, PtrSSchema pSS)
       do
 	{
 	   pEl1 = pEl;
-	   if (pSS->SsRule[typeNum - 1].SrConstruct == CsNatureSchema)
+	   if (pSS->SsRule->SrElem[typeNum - 1]->SrConstruct == CsNatureSchema)
 	     {
 		/* the searched type has a given nature */
 		if (pEl1->ElTypeNumber == pEl1->ElStructSchema->SsRootElem)
 		   /* the current element is the root of a nature, the current element
 		      is appropriate if we have the same structure schemes */
-		   found = (strcmp (pEl1->ElStructSchema->SsName, pSS->SsRule[typeNum - 1].SrOrigNat) == 0);
+		   found = (strcmp (pEl1->ElStructSchema->SsName, pSS->SsRule->SrElem[typeNum - 1]->SrOrigNat) == 0);
 	     }
 	   else
 	      found = EquivalentSRules (typeNum, pSS, pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl);
@@ -1977,17 +1976,17 @@ void InsertElemInChoice (PtrElement pEl, PtrElement *pNew, PtrDocument pDoc,
   PtrSSchema          pSS;
   int                 T;
   PtrElement          pE;
-  SRule              *pSRule;
+  PtrSRule            pSRule;
   
   /* the new element will replace the CHOICE element */
   replace = TRUE;
   if (pEl->ElParent != NULL)
     /* ...except if the choice is a composite element */
-    if (pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsAggregate ||
-	pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsUnorderedAggregate)
+    if (pEl->ElParent->ElStructSchema->SsRule->SrElem[pEl->ElParent->ElTypeNumber - 1]->SrConstruct == CsAggregate ||
+	pEl->ElParent->ElStructSchema->SsRule->SrElem[pEl->ElParent->ElTypeNumber - 1]->SrConstruct == CsUnorderedAggregate)
       replace = FALSE;
   /* except if the choice has exceptions */
-  pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+  pSRule = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
   if (pSRule->SrNInclusions > 0 || pSRule->SrNExclusions > 0)
     replace = FALSE;
   /* except if it's the root of the structure scheme */
@@ -2211,18 +2210,18 @@ void AttachRequiredAttributes (PtrElement pEl, SRule *pSRule, PtrSSchema pSS,
   ----------------------------------------------------------------------*/
 ThotBool          IsConstantConstructor (PtrElement pEl)
 {
-  SRule              *pSRule;
+  PtrSRule        pSRule;
 
   if (pEl == NULL || pEl->ElStructSchema == NULL)
     return FALSE;
   else
     {
-      pSRule = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+      pSRule = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
       if (pSRule->SrConstruct != CsConstant)
 	return TRUE;
       else if (pSRule->SrConstruct != CsIdentity)
 	{
-	  pSRule = &pEl->ElStructSchema->SsRule[pSRule->SrIdentRule - 1];
+	  pSRule = pEl->ElStructSchema->SsRule->SrElem[pSRule->SrIdentRule - 1];
 	  if (pSRule->SrConstruct != CsConstant)
 	    return TRUE;
 	  else
@@ -2260,11 +2259,9 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
   ThotBool            gener, create, error;
   PtrReference        ref;
   Name                PSchName;
-  SRule              *pSRule;
+  PtrSRule            pSRule, pSRule2, pExtRule;
   PtrTextBuffer       pBu1;
-  SRule              *pSRule2;
   PtrSSchema          pExtSSch;
-  SRule              *pExtRule;
 
   if (typeNum == 0)
     return NULL;
@@ -2273,7 +2270,7 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
     /* rule specifying the type of element */
     {
       error = FALSE;
-      pSRule = &pSS->SsRule[typeNum - 1];
+      pSRule = pSS->SsRule->SrElem[typeNum - 1];
       if (pSRule->SrConstruct == CsNatureSchema)
 	/* it's a rule for a nature change, the function will create an element
 	   having the type of the root of the new nature */
@@ -2294,7 +2291,7 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	      typeNum = pSS->SsRootElem;
 	    }
 	}
-      pSRule = &pSS->SsRule[typeNum - 1];
+      pSRule = pSS->SsRule->SrElem[typeNum - 1];
       if (!error)
 	/* get an element */
 	GetElement (&pEl);
@@ -2408,7 +2405,7 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	}
     }
   /* evaluates if the children should be generated */
-  pSRule = &pSS->SsRule[typeNum - 1];
+  pSRule = pSS->SsRule->SrElem[typeNum - 1];
   if (!Desc)
     gener = FALSE;
   else
@@ -2438,7 +2435,7 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	/* structure is the same as that defined by another rule of the */
 	/* same scheme */
 	create = FALSE;
-	pSRule2 = &pSS->SsRule[pSRule->SrIdentRule - 1];
+	pSRule2 = pSS->SsRule->SrElem[pSRule->SrIdentRule - 1];
 	if (pSRule2->SrConstruct == CsBasicElement ||
 	    pSRule2->SrNInclusions > 0 ||
 	    pSRule2->SrNExclusions > 0 ||
@@ -2516,8 +2513,7 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
   ----------------------------------------------------------------------*/
 void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
 {
-   SRule              *pRule;
-   SRule              *pRuleExcl;
+   PtrSRule            pRule, pRuleExcl;
    PtrElement          pAsc, pChild, pNextChild;
    PtrSSchema          pSS, pExtSSch;
    int                 i;
@@ -2533,7 +2529,7 @@ void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
 	     /* examines all the exclusions defined for this type of element */
 	    /* first access the structuring rule */
 	     pSS = pAsc->ElStructSchema;
-	     pRule = &pSS->SsRule[pAsc->ElTypeNumber - 1];
+	     pRule = pSS->SsRule->SrElem[pAsc->ElTypeNumber - 1];
 	     pExtSSch = NULL;
 	     do
 	       {
@@ -2559,7 +2555,7 @@ void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
 				   structure scheme: it's a nature */
 			       {
 				  /* structure rule of the excluded current element */
-				  pRuleExcl = &pSS->SsRule[pRule->SrExclusion[i - 1] - 1];
+				  pRuleExcl = pSS->SsRule->SrElem[pRule->SrExclusion[i - 1] - 1];
 				  if (pRuleExcl->SrConstruct == CsNatureSchema)
 				     /* the exclusion is a nature, the exclusion can be applied */
 				     /* if the nature names are the same */
@@ -2573,9 +2569,9 @@ void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
 				/* the precedent type is excluded */
 				if (!strcmp (pSS->SsName, (*pEl)->ElStructSchema->SsName))
 				   /* we are in the correct structure scheme */
-				   if ((*pEl)->ElStructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+				   if ((*pEl)->ElStructSchema->SsRule->SrElem[(*pEl)->ElTypeNumber - 1]->SrConstruct == CsPairedElement)
 				      /* the element is member of a pair */
-				      if (!(*pEl)->ElStructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrFirstOfPair)
+				      if (!(*pEl)->ElStructSchema->SsRule->SrElem[(*pEl)->ElTypeNumber - 1]->SrFirstOfPair)
 					 /* it's the 2nd member of the pair */
 					 excluded = TRUE;
 		       }
@@ -2942,7 +2938,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
   PtrElement          pEl, pS2, pC1, pC2;
   PtrReference        rf;
   int                 copyType, nR;
-  SRule              *pSRule;
+  PtrSRule            pSRule;
   PtrElement          pAsc;
   PtrSSchema          pSS;
   ThotBool            sameSSchema;
@@ -2974,7 +2970,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 	  if (strcmp (pSource->ElStructSchema->SsName, pSSchema->SsName) != 0)
 	    {
 	    /* change the generic structure */
-	    if (pSource->ElStructSchema->SsRule[pSource->ElTypeNumber - 1]. SrUnitElem ||
+	    if (pSource->ElStructSchema->SsRule->SrElem[pSource->ElTypeNumber - 1]->SrUnitElem ||
 		pSource->ElStructSchema->SsExtension ||
 		pSource->ElTypeNumber <= MAX_BASIC_TYPE)
 	      {
@@ -3054,7 +3050,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		else
 		  /* schema is loaded, changes the structure scheme of the copy */
 		  {
-		    pSRule = &pSSchema->SsRule[nR - 1];
+		    pSRule = pSSchema->SsRule->SrElem[nR - 1];
 		    pSSchema = pSRule->SrSSchemaNat;
 		    AddSchemaGuestViews (pDocCopy, pSSchema);
 		  }
@@ -3346,7 +3342,7 @@ void                CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
 		   default:
 		     break;
 		   }
-	       else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
+	       else if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->
 			                            SrConstruct == CsChoice &&
 			(pEl->ElTypeNumber != pSource->ElTypeNumber ||
 			 strcmp (pEl->ElStructSchema->SsName,

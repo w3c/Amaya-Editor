@@ -1472,8 +1472,8 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	  /* lit les presentations des attributs */
 	  if (!error)
 	    {
-	      pPSch->PsAttrPRule = (AttrPresTable*) malloc (pSS->SsNAttributes * sizeof (PtrAttributePres));
-	      pPSch->PsNAttrPRule = (NumberTable*) malloc (pSS->SsNAttributes * sizeof (int));
+	      pPSch->PsAttrPRule = (AttrPresTable*) malloc (pSS->SsAttrTableSize * sizeof (PtrAttributePres));
+	      pPSch->PsNAttrPRule = (NumberTable*) malloc (pSS->SsAttrTableSize * sizeof (int));
 	      for (i = 0; i < pSS->SsNAttributes && !error; i++)
 		{
 		  /* lecture du nombre de paquet de regles differentes */
@@ -1550,9 +1550,14 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	  /* lit la table des pointeurs de regle de chaque type du */
 	  /* schema de structure */
 	  if (!error)
+	    {
+	      pPSch->PsElemPRule = (PtrPRuleTable*) malloc (pSS->SsRuleTableSize * sizeof (PtrPRule));
+	      if (!pPSch->PsElemPRule)
+		error = TRUE;
+	    }
+	  if (!error)
 	    for (i = 0; i < InitialNElems; i++)
-	      pPSch->PsElemPRule[i] = ReadPRulePtr (file, &pNextPRule);
-
+	      pPSch->PsElemPRule->ElemPres[i] = ReadPRulePtr (file, &pNextPRule);
 	  /* lit toutes les regles de presentation */
 	  /* lit les regles standard */
 	  if (!error)
@@ -1601,27 +1606,56 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	  /* lit les regles des elements structures */
 	  if (!error)
 	    for (i = 0; i < InitialNElems; i++)
-	      ReadPRules (file, &pPSch->PsElemPRule[i], &pNextPRule);
+	      ReadPRules (file, &pPSch->PsElemPRule->ElemPres[i], &pNextPRule);
 
 	  if (!error)
 	    {
-	      pPSch->PsNHeirElems = (NumberTable*) malloc (pSS->SsNAttributes * sizeof (int));
+	      pPSch->PsNHeirElems = (NumberTable*) malloc (pSS->SsAttrTableSize * sizeof (int));
+	      if (!pPSch->PsNHeirElems)
+		error = True;
+	    }
+	  if (!error)
+	    {
 	      for (i = 0; i < pSS->SsNAttributes; i++)
 		TtaReadShort (file, &pPSch->PsNHeirElems->Num[i]);
 	    }
 
 	  if (!error)
+	    {
+	      pPSch->PsNInheritedAttrs = (NumberTable*) malloc (pSS->SsRuleTableSize * sizeof (int));
+	      if (!pPSch->PsNInheritedAttrs)
+		error = True;
+	    }
+
+	  if (!error)
+	    {
+	      pPSch->PsInheritedAttr = (InheritAttrTbTb*) malloc (pSS->SsRuleTableSize * sizeof (InheritAttrTable*));
+	      if (!pPSch->PsInheritedAttr)
+		error = True;
+	    }
+
+	  if (!error)
 	    for (i = 0; i < InitialNElems; i++)
 	      {
-		TtaReadShort (file, &pPSch->PsNInheritedAttrs[i]);
-		pPSch->PsInheritedAttr[i] = NULL;
+		TtaReadShort (file, &pPSch->PsNInheritedAttrs->Num[i]);
+		pPSch->PsInheritedAttr->ElInherit[i] = NULL;
 	      }
 
 	  if (!error)
 	    {
-	      pPSch->PsNComparAttrs = (NumberTable*) malloc (pSS->SsNAttributes * sizeof (int));
-	      pPSch->PsComparAttr = (CompAttrTbTb*) malloc (pSS->SsNAttributes * sizeof (PtrAttributePres));
-	      for (i = 0; i < pSS->SsNAttributes; i++)
+	      pPSch->PsNComparAttrs = (NumberTable*) malloc (pSS->SsAttrTableSize * sizeof (int));
+	      if (!pPSch->PsNComparAttrs)
+		error = True;
+	    }
+	  if (!error)
+	    {
+	      pPSch->PsComparAttr = (CompAttrTbTb*) malloc (pSS->SsAttrTableSize * sizeof (ComparAttrTable*));
+	      if (!pPSch->PsComparAttr)
+		error = True;
+	    }
+	  if (!error)
+	    {
+	      for (i = 0; i < pSS->SsNAttributes && !error; i++)
 		{
 		  TtaReadShort (file, &pPSch->PsNComparAttrs->Num[i]);
 		  pPSch->PsComparAttr->CATable[i] = NULL;
@@ -1629,8 +1663,14 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 	    }
 
 	  if (!error)
+	    {
+	      pPSch->PsElemTransmit = (NumberTable*) malloc (pSS->SsRuleTableSize * sizeof (int));
+	      if (!pPSch->PsElemTransmit)
+		error = True;
+	    }
+	  if (!error)
 	    for (i = 0; i < InitialNElems; i++)
-	      TtaReadShort (file, &pPSch->PsElemTransmit[i]);
+	      TtaReadShort (file, &pPSch->PsElemTransmit->Num[i]);
 	  if (!error)
 	    TtaReadShort (file, &pPSch->PsNTransmElems);
 	  if (!error)

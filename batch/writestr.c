@@ -349,7 +349,7 @@ ThotBool             WriteStructureSchema (Name fileName, PtrSSchema pSS,
      }
    /* ecrit les regles de structure */
    for (i = 0; i < pSS->SsNRules; i++)
-      WriteRule (&pSS->SsRule[i]);
+      WriteRule (pSS->SsRule->SrElem[i]);
 
    /* ecrit les regles d'extension */
    if (pSS->SsExtension)

@@ -394,7 +394,7 @@ void CountNodes (PtrElement pNode, FILE *fileDescriptor, int level)
    PtrElement          f;
    PtrElement          pEl;
    PtrElement          pAsc;
-   SRule              *pRe1;
+   PtrSRule            pRe1;
 
    if (pNode != NULL)
      {
@@ -458,7 +458,7 @@ void CountNodes (PtrElement pNode, FILE *fileDescriptor, int level)
 	     /* ecrit le nom du type de l'element */
 	     if (pEl->ElStructSchema != NULL)
 	       {
-		  pRe1 = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+		  pRe1 = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
 		  fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
 		  /* ecrit le nom du schema de structure de l'element */
 		  fprintf (fileDescriptor, "(%s) ", pEl->ElStructSchema->SsName);
@@ -557,7 +557,7 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
   PtrElement          f;
   PtrAttribute        pAttr;
   PtrPRule            pRule;
-  SRule              *pRe1;
+  PtrSRule            pRe1;
   PtrTtAttribute      pAttr1;
   char                text[100];
   int                 i;
@@ -582,7 +582,7 @@ static void WrTree (PtrElement pNode, int Indent, FILE *fileDescriptor,
 	fprintf (fileDescriptor, "*ElStructSchema=NULL*");
       else
 	{
-	  pRe1 = &pNode->ElStructSchema->SsRule[pNode->ElTypeNumber - 1];
+	  pRe1 = pNode->ElStructSchema->SsRule->SrElem[pNode->ElTypeNumber - 1];
 	  fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
 	  /* ecrit le nom du schema de structure de l'element */
 	  fprintf (fileDescriptor, "(%s %x)", pNode->ElStructSchema->SsName,
@@ -1052,7 +1052,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
    PtrAbstractBox      f;
    ThotBool            root;
    PtrDelayedPRule     pDelPR;
-   SRule              *pRe1;
+   PtrSRule            pRe1;
    AbDimension        *pPavDim;
    PtrAttribute        pAt1;
    PictInfo           *image;
@@ -1063,8 +1063,8 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 
 	for (i = 1; i <= Indent; i++)
 	   fprintf (fileDescriptor, " ");
-	pRe1 = &pAb->AbElement->
-	   ElStructSchema->SsRule[pAb->AbElement->ElTypeNumber - 1];
+	pRe1 = pAb->AbElement->
+	   ElStructSchema->SsRule->SrElem[pAb->AbElement->ElTypeNumber - 1];
 	fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
 	fprintf (fileDescriptor, " ");
 	if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
@@ -2143,7 +2143,7 @@ static void         wrdistunit (TypeUnit u, FILE *fileDescriptor)
 static void wrnomregle (int r, FILE *fileDescriptor)
 {
   if (r > 0)
-    fprintf (fileDescriptor, pSchemaStr->SsRule[r - 1].SrName);
+    fprintf (fileDescriptor, pSchemaStr->SsRule->SrElem[r - 1]->SrName);
 }
 
 
@@ -3262,11 +3262,11 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 		 fprintf (fileDescriptor, "\nRULES\n\n");
 		 for (El = 1; El <= pSchemaStr->SsNRules; El++)
 		   {
-		     if (pSc1->PsElemPRule[El - 1])
+		     if (pSc1->PsElemPRule->ElemPres[El - 1])
 		       {
-			 if (pSchemaStr->SsRule[El - 1].SrConstruct == CsPairedElement)
+			 if (pSchemaStr->SsRule->SrElem[El - 1]->SrConstruct == CsPairedElement)
 			   {
-			   if (pSchemaStr->SsRule[El - 1].SrFirstOfPair)
+			   if (pSchemaStr->SsRule->SrElem[El - 1]->SrFirstOfPair)
 			     fprintf (fileDescriptor, "First ");
 			   else
 			     fprintf (fileDescriptor, "Second ");
@@ -3274,7 +3274,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 			 wrnomregle (El, fileDescriptor);
 			 fprintf (fileDescriptor, ":\n");
 			 fprintf (fileDescriptor, "   BEGIN\n");
-			 wrsuiteregles (pSc1->PsElemPRule[El - 1], fileDescriptor);
+			 wrsuiteregles (pSc1->PsElemPRule->ElemPres[El - 1], fileDescriptor);
 			 fprintf (fileDescriptor, "   END;\n");
 			 fprintf (fileDescriptor, "\n");
 		       }

@@ -460,7 +460,7 @@ SSchema TtaNewNature (Document document, SSchema schema, char *natureName,
 	TtaError (ERR_invalid_parameter);
       else
 	{
-	  natureSchema = ((PtrSSchema) schema)->SsRule[natureRule - 1].SrSSchemaNat;
+	  natureSchema = ((PtrSSchema) schema)->SsRule->SrElem[natureRule - 1]->SrSSchemaNat;
 #ifndef NODISPLAY
 	  if (document > 0)
 	    AddSchemaGuestViews (LoadedDocument[document - 1], natureSchema);

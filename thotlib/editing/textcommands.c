@@ -517,7 +517,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 		   else if ( pBox->BxAbstractBox &&
 			     pBox->BxAbstractBox->AbLeafType == LtCompound)
 		     x = pBox->BxNChars;
-		   else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
+		   else if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant)
 		     x =  pBox->BxNChars;
 		   else
 		     x = pViewSelEnd->VsIndBox + pBox->BxIndChar;

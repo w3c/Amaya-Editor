@@ -1020,7 +1020,7 @@ static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
    PtrAttribute        pAttrEl;
    PtrSSchema          pSS, pRefSS;
    PtrElement          pEl1, pElem, pSibling;
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    PtrPRule            pPRule;
    TranslCondition    *Cond;
    PtrReference        pRef;
@@ -1158,7 +1158,7 @@ static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 		     i = 1;
 		     do
 		       {
-		       pSRule = &pRefSS->SsRule[i++];
+		       pSRule = pRefSS->SsRule->SrElem[i++];
 		       if (pSRule->SrConstruct == CsReference)
 			 /* c'est une reference */
 			 if (pSRule->SrReferredType != 0)
@@ -1944,7 +1944,7 @@ static void ApplyAttrRules (TOrder position, PtrElement pEl,
    /* s'appliquent aux elements du type de notre element */
    pTSch = GetTranslationSchema (pEl->ElStructSchema);
    if (pTSch != NULL)
-     if (pTSch->TsInheritAttr[pEl->ElTypeNumber - 1])
+     if (pTSch->TsInheritAttr->Bln[pEl->ElTypeNumber - 1])
        /* il y a effectivement heritage d'attribut pour ce type d'element */
        {
        /* cherche tous les attributs dont ce type d'element peut heriter. */
@@ -2606,7 +2606,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  
 	case ToPairId:
 	  /* traduit l'identificateur d'une paire */
-	  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber-1].SrConstruct ==
+	  if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber-1]->SrConstruct ==
 	      CsPairedElement)
 	    /* l'element est bien une paire */
 	    PutInt (pEl->ElPairIdent, fnum, NULL, pDoc, *lineBreak);
@@ -2779,18 +2779,17 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	      else
 		{
 		  /* l'element est-il une reference ? */
-		  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
-		      SrConstruct == CsReference)
+		  if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsReference)
 		    pRef = pEl->ElReference;
 		  /* ou est-il defini comme identique a une reference */
-		  else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
+		  else if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->
 			   SrConstruct == CsIdentity)
 		    {
-		      i = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
+		      i = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->
 			SrIdentRule;
-		      if (pEl->ElStructSchema->SsRule[i - 1].SrConstruct ==
+		      if (pEl->ElStructSchema->SsRule->SrElem[i - 1]->SrConstruct ==
 			  CsBasicElement &&
-			  pEl->ElStructSchema->SsRule[i - 1].SrBasicType ==
+			  pEl->ElStructSchema->SsRule->SrElem[i - 1]->SrBasicType ==
 			  CsReference)
 			pRef = pEl->ElReference;
 		    }
@@ -2835,10 +2834,10 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		      i = 1;
 		      do
 			{
-			  if (pSS->SsRule[i].SrConstruct == CsReference &&
+			  if (pSS->SsRule->SrElem[i]->SrConstruct == CsReference &&
 			      /* c'est une reference */
-			      pSS->SsRule[i].SrReferredType != 0)
-			    possibleRef = EquivalentSRules (pSS->SsRule[i].
+			      pSS->SsRule->SrElem[i]->SrReferredType != 0)
+			    possibleRef = EquivalentSRules (pSS->SsRule->SrElem[i]->
 							    SrReferredType, pSS,
 							    pElGet->ElTypeNumber,
 							    pSS, pElGet->ElParent);
@@ -3136,7 +3135,7 @@ static void ApplyElTypeRules (TOrder position, ThotBool *transChar,
    if (*ignoreEl)
       return;
    /* premier bloc de regles correspondant au type de l'element */
-   pBlock = pTSch->TsElemTRule[TypeEl - 1];
+   pBlock = pTSch->TsElemTRule->TsElemTransl[TypeEl - 1];
    /* parcourt les blocs de regles du type de l'element */
    while (pBlock != NULL && !*ignoreEl)
      {
@@ -3185,7 +3184,7 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
    PtrElement          pChild;
    PtrTSchema          pTSch, pTS;
    PtrSSchema          pSS, pParentSS;
-   SRule              *pSRule;
+   PtrSRule            pSRule;
    NotifyElement       notifyEl;
    int                 elemType, i;
    ThotBool            found;
@@ -3233,7 +3232,7 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
 	   i = 0;
 	   do
 	     {
-	     pSRule = &pParentSS->SsRule[i++];
+	     pSRule = pParentSS->SsRule->SrElem[i++];
 	     if (pSRule->SrConstruct == CsNatureSchema)
 	       if (pSRule->SrSSchemaNat == pEl->ElStructSchema)
 		 found = TRUE;
@@ -3243,7 +3242,7 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
 	     {
 	     pTS = GetTranslationSchema (pEl->ElParent->ElStructSchema);
 	     if (pTS != NULL)
-	       if (pTS->TsElemTRule[i - 1] != NULL)
+	       if (pTS->TsElemTRule->TsElemTransl[i - 1] != NULL)
 		 /* il y a des regles de traduction pour la nature, on */
 		 /* les prend */
 		 {

@@ -197,7 +197,7 @@ static ThotBool     ReadAttribute (BinFile file, PtrTtAttribute pAttr)
 /*----------------------------------------------------------------------
    ReadSRule                                  			
   ----------------------------------------------------------------------*/
-static ThotBool     ReadSRule (BinFile file, SRule *pSRule)
+static ThotBool     ReadSRule (BinFile file, PtrSRule pSRule)
 {
    RConstruct          constr;
    int                 j;
@@ -417,14 +417,29 @@ ThotBool ReadStructureSchema (Name fileName, PtrSSchema pSS)
 	      }
 	  }
 
+	/* allocate the element table */
+	if (!pSS->SsRule)
+	  {
+	    /* reserve 2 additional entries for counter aliases (see function
+	       MakeAliasTypeCount in presvariables.c) */
+	    num = pSS->SsNRules + 2;         /* table size */
+	    pSS->SsRule = (SrRuleTable*) malloc (num * sizeof (PtrSRule));
+	    pSS->SsRuleTableSize = num;
+	    for (i = 0; i < num; i++)
+	      pSS->SsRule->SrElem[i] = NULL;
+	  }
+
 	/* lit les elements */
 	for (i = 0; i < pSS->SsNRules; i++)
-	   if (!ReadSRule (file, &pSS->SsRule[i]))
-	     {
+	  {
+	    pSS->SsRule->SrElem[i] = (PtrSRule) malloc (sizeof (SRule));
+	    if (!ReadSRule (file, pSS->SsRule->SrElem[i]))
+	      {
 		/* message 'Fichier .STR incorrect ' */
 		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_STR_FILE), fileName);
 		return FALSE;
-	     }
+	      }
+	  }
 	if (pSS->SsExtension)
 	  {
 	     if (TtaReadShort (file, &pSS->SsNExtensRules))
