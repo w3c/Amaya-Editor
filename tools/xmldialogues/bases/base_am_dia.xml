@@ -914,7 +914,7 @@
 	<message xml:lang="de">Platz (mspace)</message>
 	<message xml:lang="it">Spazio (mspace)</message>
 	<message xml:lang="es">Espacio (mspace)</message>
-	<message xml:lang="pt">Espaço (mspace)</message>
+	<message xml:lang="pt">EspaÃ§o (mspace)</message>
 </label>
 <label define="BMEntity">
 	<message xml:lang="en">Character (&amp;xxx;)</message>
