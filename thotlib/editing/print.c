@@ -181,6 +181,10 @@ LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
      case WM_INITDIALOG:
        GHwnAbort = hwnd;
        EnableMenuItem (GetSystemMenu (hwnd, FALSE), SC_CLOSE, MF_GRAYED);
+	   ShowWindow (hwnd, SW_NORMAL);
+	   SetFocus (hwnd);
+	   UpdateWindow (hwnd);
+	   return TRUE;
        break;
 
      case WM_COMMAND:
@@ -189,13 +193,12 @@ LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 	   case IDCANCEL:
        gbAbort = TRUE;
 	   AbortDoc (TtPrinterDC);
-	   EnableWindow  (WIN_Main_Wd, TRUE);
 	   DestroyWindow (hwnd);
 	   return TRUE;
 	   }
        break;
      }
-   return 0;
+   return FALSE;
 }
 
 /* ---------------------------------------------------------------------- *
@@ -237,7 +240,6 @@ BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
 				    (DLGPROC) AbortDlgProc)))
     WinErrorBox (WIN_Main_Wd, "InitPrinting: DE_LANG");
 
-  EnableWindow (WIN_Main_Wd, FALSE);
   SetAbortProc (TtPrinterDC, AbortProc);
   memset(&DocInfo, 0, sizeof(DOCINFO));
   DocInfo.cbSize      = sizeof(DOCINFO);
@@ -1964,7 +1966,6 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
     
     if (!gbAbort)
       {
-      EnableWindow  (WIN_Main_Wd, TRUE);
       DestroyWindow (GHwnAbort);
       }
     return 0;
