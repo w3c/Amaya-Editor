@@ -15,15 +15,16 @@
 <body xml:lang="de" lang="de">
 
 <table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+summary="Inhaltsverzeichnis" width="100%">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><a href="../Document.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up.gif" /></a> <a href="structure.html.de"
-        accesskey="n"><img alt="nächste Seite" src="../../images/right.gif"
-        /></a></td>
+      <td><p align="right"><a href="../Document.html.de" accesskey="t"><img
+        alt="erste Seite" src="../../images/up.gif" /></a> <a
+        href="structure.html.de" accesskey="n"><img alt="nächste Seite"
+        src="../../images/right.gif" /></a></p>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -42,9 +43,9 @@ Drei Typen von Dokumenten stehen zur Verfügung:</p>
 <p class="ProcedureCaption">Um ein Dokument zu erzeugen:</p>
 <ol>
   <li><strong>Neu</strong> Im Menü <strong>Datei</strong> wählen und den
-    gewünschten Typ auswählen. Es wird ein Dialog angezeigt. </li>
+    gewünschten Typ auswählen. Es wird ein Dialog angezeigt.</li>
   <li>Hier den URI oder den lokalen Pfad des Dokuments eingeben (es wird ein
-    lokaler Pfad vorgeschlagen). </li>
+    lokaler Pfad vorgeschlagen).</li>
   <li>Den Knopf <strong>OK</strong>&nbsp;anklicken. Es wird ein neues Fenster
     geöffnet und ein Wurzelelement eingetragen.</li>
 </ol>

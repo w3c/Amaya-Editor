@@ -26,7 +26,7 @@
 
 <h1 style="text-align: center">Benutzerhandbuch</h1>
 
-<h4 style="text-align: center">Version 6.1&nbsp;&nbsp;&nbsp;&nbsp; April
+<h4 style="text-align: center">Version 6.2&nbsp;&nbsp;&nbsp;&nbsp; June
 2002</h4>
 <hr />
 <dl>
@@ -205,7 +205,21 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
         spaces)</a></li>
     </ul>
   </li>
-  <li><a href="HTML.html.de#page_body">HTML-Elemente</a></li>
+  <li><a href="HTML.html.de#page_body">HTML-Elemente</a> 
+    <ul>
+      <li><a href="HTML-elements/infoTypes.html.de">Informationstypen</a></li>
+      <li><a href="HTML-elements/structure.html.de">Die
+      Dokumentstruktur</a></li>
+      <li><a href="HTML-elements/headings.html.de">Überschriften</a></li>
+      <li><a href="HTML-elements/lists.html.de">Listen</a></li>
+      <li><a href="HTML-elements/address.html.de">Informationen über den
+        Autor</a></li>
+      <li><a href="HTML-elements/inline.html.de">Über inhaltsorientierte
+        Formate</a></li>
+      <li><a href="HTML-elements/40styling.html.de">Über
+        darstellungsorientierte Formate</a></li>
+    </ul>
+  </li>
   <li><a href="Changing.html.de#page_body">Dokumente umstrukturieren</a> 
     <ul>
       <li><a

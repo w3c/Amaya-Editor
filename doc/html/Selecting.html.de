@@ -13,17 +13,19 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5" summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis" width="100%">
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><a href="Browsing.html.de" accesskey="p"><img alt="vorherige Seite"
-        src="../images/left.gif" /></a> <a href="Manual.html.de"
-        accesskey="t"><img alt="erste Seite" src="../images/up.gif" /></a> <a
-        href="Views.html.de" accesskey="n"><img alt="nächste Seite"
-        src="../images/right.gif" /></a>
+      <td><p align="right"><a href="Browsing.html.de" accesskey="p"><img
+        alt="vorherige Seite" src="../images/left.gif" /></a> <a
+        href="Manual.html.de" accesskey="t"><img alt="erste Seite"
+        src="../images/up.gif" /></a> <a href="Views.html.de"
+        accesskey="n"><img alt="nächste Seite" src="../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -36,10 +38,10 @@
 <ul>
   <li><a href="selecting/selecting_with_keyboard_and_mouse.html.de#page_body"
     rel="subdocument">Mit Maus und Tastatur markieren</a></li>
-  <li><a href="selecting/selecting_images.html.de#page_body" rel="subdocument">Bilder
-    markieren</a></li>
-  <li><a href="selecting/selecting_by_structure.html.de#page_body" rel="subdocument">In
-    der Strukturansicht markieren</a></li>
+  <li><a href="selecting/selecting_images.html.de#page_body"
+    rel="subdocument">Bilder markieren</a></li>
+  <li><a href="selecting/selecting_by_structure.html.de#page_body"
+    rel="subdocument">In der Strukturansicht markieren</a></li>
 </ul>
 </div>
 </body>

@@ -25,7 +25,7 @@ summary="Inhaltsverzeichnis">
 
         <p align="right"><a href="address.html.de"><img alt="vorherige Seite"
         border="0" src="../../images/left.gif" /></a> <a
-        href="../Document.html.de"><img alt="erste Seite" border="0"
+        href="../HTML.html.de"><img alt="erste Seite" border="0"
         src="../../images/up.gif" /></a> <a href="40styling.html.de"><img
         alt="nächste Seite" border="0" src="../../images/right.gif" /></a></p>
       </td>
@@ -47,12 +47,12 @@ eingelagerte Elemente sind, werden separat behandelt.</p>
 <h2><a name="Inline21"></a><a name="Definition">Definitionen</a></h2>
 
 <p>Das Element <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-DFN"><code>DFN</code></a> wird
-benutzt um eine in einem Text <dfn>eingelagerte Definition</dfn> zu markieren
-(ein Wort, welches als Definition dient).</p>
+href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-DFN"><code>DFN</code></a>
+wird benutzt um eine in einem Text <dfn>eingelagerte Definition</dfn> zu
+markieren (ein Wort, welches als Definition dient).</p>
 
-<p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um die
-Darstellung von Definitionen zu ändern.</p>
+<p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um
+die Darstellung von Definitionen zu ändern.</p>
 </div>
 
 <div>
@@ -67,8 +67,8 @@ oder über das Tastenkürzel <kbd>Alt t, Alt q</kbd> erstellen. Mit Hilfe des
 Attributs <code>cite</code> kann man in dem Zitat auf die Quelle
 verweisen.</p>
 
-<p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um die
-Darstellung von eingelagerten Zitaten zu ändern. Die HTML-Spezifikation
+<p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um
+die Darstellung von eingelagerten Zitaten zu ändern. Die HTML-Spezifikation
 statuiert, dass man eingelagerte Zitate in die landesüblichen
 Anführungszeichen einschließen sollte.</p>
 </div>
@@ -81,9 +81,12 @@ Programmcode</a></h2>
 <code>statement:do-something</code> mit separater Auszeichnung für
 <var>Variablen</var>, <kbd>Benutzereingaben</kbd> und
 <samp>Programmausgaben</samp> zur Verfügung: die Elemente <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-code"><code>code</code></a>, <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-var"><code>var</code></a>, <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-kbd"><code>kbd</code></a> und <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-code"><code>code</code></a>,
+<a
+href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-var"><code>var</code></a>,
+<a
+href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-kbd"><code>kbd</code></a>
+und <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-samp"><code>samp</code></a>.
 Diese Elemente findet man im Untermenü <strong>Inhaltsorientiert</strong> des
 Menüs <strong>Formate</strong>. Die Tastenkürzel (unter Unix) sind: <kbd>Alt
@@ -91,8 +94,8 @@ t Alt c</kbd> für <code>code</code>, <kbd>Alt t Alt v</kbd> für
 <code>var</code>, <kbd>Alt t Alt k</kbd> für <code>kbd</code> und <kbd>Alt t
 Alt s</kbd> für <code>samp</code>.</p>
 
-<p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um die
-Darstellung dieser Elemente zu ändern.</p>
+<p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um
+die Darstellung dieser Elemente zu ändern.</p>
 </div>
 
 <div>
@@ -118,23 +121,24 @@ Attribut<strong>title</strong> wählen, den Text <kbd>World Wide Web
 Consortium</kbd> eingeben und den Knopf <strong>Übernehmen</strong>
 drücken.</p>
 
-<p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um die
-Darstellung dieser Elemente zu ändern.</p>
+<p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um
+die Darstellung dieser Elemente zu ändern.</p>
 </div>
 
 <div>
 <h2><a name="Inline2">Eingefügter Text und entfernter Text</a></h2>
 
-<p>Die Elemente <a href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-del"
+<p>Die Elemente <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-del"
 name="DEL"><code>del</code></a> und <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-ins"><code>ins</code></a> stehen
-im Untermenü <strong>Inhaltsorientiert</strong> des Menüs
+href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-ins"><code>ins</code></a>
+stehen im Untermenü <strong>Inhaltsorientiert</strong> des Menüs
 <strong>Formate</strong> zur Verfügung, um Text auszuzeichnen, der entfernt
 wurde oder <del>entfernt werden sollte</del> und/oder <ins>durch neuen Text
 ersetzt wurde</ins> oder ersetzt werden sollte.</p>
 
-<p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um die
-Darstellung dieser Elemente zu ändern.</p>
+<p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um
+die Darstellung dieser Elemente zu ändern.</p>
 </div>
 
 <div>
@@ -143,7 +147,8 @@ Darstellung dieser Elemente zu ändern.</p>
 <p>HTML besitzt Elemente um zwei Arten der Betonung zu definieren:</p>
 <ol>
   <li><em>normale Betonung</em> mit dem Element <a
-    href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-EM">em</a> und</li>
+    href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-EM">em</a>
+    und</li>
   <li><strong>starke Betonung (Hervorhebung)</strong> mit dem Element
     <code><a
     href="http://www.w3.org/TR/REC-html40/struct/text.html.de#edef-STRONG">strong</a></code></li>
@@ -164,8 +169,8 @@ oder <kbd>F2</kbd> unter Windows und klickt den Knopf <img
 src="../../images/Strong.gif" alt="Strong" />, dann wird das Element
 <strong>strong</strong> entfernt.</p>
 
-<p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um die
-Darstellung dieser Elemente zu ändern.</p>
+<p>Man kann <a href="../StyleSheets.html.de">Formatvorlagen</a> verwenden um
+die Darstellung dieser Elemente zu ändern.</p>
 </div>
 </div>
 </div>
