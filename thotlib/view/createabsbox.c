@@ -462,7 +462,7 @@ PtrAbstractBox      pAb;
 	       break;
 	    case CharString:
 	       if (pAb->AbText == NULL)
-		  GetBufConst (pAb);
+		  GetConstantBuffer (pAb);
 	       strncpy (pAb->AbText->BuContent, pConst->PdString, MAX_CHAR - 1);
 	       pAb->AbText->BuContent[MAX_CHAR - 1] = '\0';
 	       pAb->AbText->BuLength = strlen (pAb->AbText->BuContent);
@@ -471,7 +471,7 @@ PtrAbstractBox      pAb;
 	       pAb->AbLeafType = LtText;
 	       break;
 	    case Picture:
-	       NewImageDescriptor (pAb, pConst->PdString, UNKNOWN_FORMAT);
+	       NewPictInfo (pAb, pConst->PdString, UNKNOWN_FORMAT);
 	       pAb->AbLeafType = LtPicture;
 	       pAb->AbVolume = 100;
 	       break;
@@ -2572,7 +2572,7 @@ boolean             completeCreator;
 			    if (!pAb->AbElement->ElTerminal ||
 				pAb->AbElement->ElLeafType != LtPicture)
 			       /* ce n'est pas un element image */
-			       FreeImageDescriptor (pAb->AbPictInfo);
+			       FreePictInfo (pAb->AbPictInfo);
 			    pAb->AbPictInfo = NULL;
 			 }
 		       FreeAbstractBox (pAb);
@@ -4129,14 +4129,14 @@ PtrPSchema         *pSchPPage;
 	   if (pEl->ElPageType == PgBegin
 	       || pEl->ElPageType == PgComputed
 	       || pEl->ElPageType == PgUser)
-	      *TypeP = TypeBPage (pEl, viewSch, pSchPPage);
+	      *TypeP = GetPageBoxType (pEl, viewSch, pSchPPage);
 	   else			/* (pEl->ElPageType == ColBegin */
 	      /*  || pEl->ElPageType == ColComputed */
 	      /* || pPage->ElPageType == ColGroup */
 	      /*  || pEl->ElPageType == ColUser) */
 	      *TypeP = TypeBCol (pEl, viewSch, pSchPPage, &NbCol);
 #else  /* __COLPAGE__ */
-	   *TypeP = TypeBPage (pEl, viewSch, pSchPPage);
+	   *TypeP = GetPageBoxType (pEl, viewSch, pSchPPage);
 #endif /* __COLPAGE__ */
 	   if (*TypeP == 0)
 	      /* pas de page definie, on ne cree rien */
@@ -4242,14 +4242,14 @@ PtrPSchema         *pSchPPage;
 		if (pEl1->ElPageType == PgBegin
 		    || pEl1->ElPageType == PgComputed
 		    || pEl1->ElPageType == PgUser)
-		   *TypeP = TypeBPage (pEl1, viewSch, pSchPPage);
+		   *TypeP = GetPageBoxType (pEl1, viewSch, pSchPPage);
 		else		/* (pEl1->ElPageType == ColBegin */
 		   /*  || pEl1->ElPageType == ColComputed */
 		   /*  || pPage->ElPageType == ColGroup */
 		   /*  || pEl1->ElPageType == ColUser) */
 		   *TypeP = TypeBCol (pEl1, viewSch, pSchPPage, &NbCol);
 #else  /* __COLPAGE__ */
-		*TypeP = TypeBPage (pElAssociatedPage, viewSch, pSchPPage);
+		*TypeP = GetPageBoxType (pElAssociatedPage, viewSch, pSchPPage);
 #endif /* __COLPAGE__ */
 		if (*TypeP == 0)
 		  {

@@ -72,7 +72,7 @@ static char         LineStyle;	/* requested line style */
 static boolean      ChngLineWeight;	/* user asks to change the line weight */
 static int          LineWeight;	/* requested line weight in points */
 static boolean      ChngTrame;	/* l'utilisateur veut changer la trame de remplissage */
-static int          Trame;	/* number of the requested trame */
+static int          PaintWithPattern;	/* number of the requested trame */
 static boolean      ChgnStandardChar;	/* standard presentation characters */
 static boolean      ChngStandardColor;	/* standard presentation colors  */
 static boolean      ChngStandardGraph;	/* standard presentation graphics  */
@@ -312,7 +312,7 @@ static void         ApplyPresentMod ()
 
 			  /* trame de remplissage */
 			  if (ChngTrame)
-			     locChngTrame = (Trame != pAb->AbFillPattern);
+			     locChngTrame = (PaintWithPattern != pAb->AbFillPattern);
 			  else
 			     ChngTrame = FALSE;
 		       }
@@ -327,7 +327,7 @@ static void         ApplyPresentMod ()
 		     if (chngGraphics)
 			ModifyGraphics (pEl, pSelDoc, SelectedView, locChngLineStyle,
 			     LineStyle, LocLineWeightUnit, LineWeight, TRUE,
-					locChngTrame, Trame, FALSE, 0,
+					locChngTrame, PaintWithPattern, FALSE, 0,
 					FALSE, 0);
 		     if (chngFormat)
 			ModifyLining (pEl, pSelDoc, SelectedView, locChngCadr, Cadr,
@@ -692,7 +692,7 @@ char               *txt;
 	       if (i >= 0)
 		 {
 		    ChngTrame = TRUE;
-		    Trame = i;
+		    PaintWithPattern = i;
 		 }
 	       break;
 	    case NumTogglePatternUnchanged:

@@ -58,9 +58,9 @@
    possedent les memes attributs avec les memes valeurs            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             MemesAttributs (PtrElement pEl1, PtrElement pEl2)
+boolean             SameAttributes (PtrElement pEl1, PtrElement pEl2)
 #else  /* __STDC__ */
-boolean             MemesAttributs (pEl1, pEl2)
+boolean             SameAttributes (pEl1, pEl2)
 PtrElement          pEl1;
 PtrElement          pEl2;
 
@@ -1009,7 +1009,7 @@ boolean             subTree;
 							  /* le suivant n'est pas une inclusion */
 							  if ((*pEl)->ElStructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrConstruct != CsConstant)
 							     if ((*pEl)->ElNext->ElStructSchema->SsRule[(*pEl)->ElNext->ElTypeNumber - 1].SrConstruct != CsConstant)
-								if (MemesAttributs (*pEl, (*pEl)->ElNext))
+								if (SameAttributes (*pEl, (*pEl)->ElNext))
 								   /* il a les memes attributs */
 								   if (BothHaveNoSpecRules (*pEl, (*pEl)->ElNext))
 								      /* il a les memes regles de */
@@ -1389,7 +1389,7 @@ PtrDocument         pDoc;
    /* ecrit le numero de version */
    WriteVersionNumber (pivFile);
    /* ecrit la valeur max. des labels */
-   LabelIntToString (GetCurrentLabel (pDoc), label);
+   ConvertIntToLabel (GetCurrentLabel (pDoc), label);
    PutLabel (pivFile, label);
    /* ecrit la table des langues utilisees par le document */
    WriteTableLangues (pivFile, pDoc);
@@ -1670,7 +1670,7 @@ PathBuffer          fileName;
 	     TtaWriteDocIdent (refFile, pChnRef->CrNewDocument);
 	     /* on libere le descripteur qu'on vient d'ecrire */
 	     pNextChnRef = pChnRef->CrNext;
-	     FreeElemRefChng (pChnRef);
+	     FreeChangedReferredEl (pChnRef);
 	     pChnRef = pNextChnRef;
 	  }
 	TtaWriteClose (refFile);
@@ -1769,7 +1769,7 @@ PathBuffer          fileName;
 	  }
 	/* libere le descripteur d'element reference' */
 	pNextRefD = pRefD->ReNext;
-	FreeDescReference (pRefD);
+	FreeReferredDescr (pRefD);
 	/* passe au descripteur d'element reference' suivant */
 	pRefD = pNextRefD;
      }
@@ -1884,7 +1884,7 @@ PtrDocument         pDoc;
 			  /* il s'agit d'une reference creee, on ajoute un */
 			  /* descripteur d'element reference' */
 			 {
-			    GetDescReference (&pRefD);
+			    GetReferredDescr (&pRefD);
 			    strncpy (pRefD->ReReferredLabel, pOutRef->OrLabel, MAX_LABEL_LEN);
 			    /* chaine le descripteur en tete */
 			    pRefD->ReNext = pFirstRefD;
@@ -1949,7 +1949,7 @@ PtrDocument         pDoc;
 						   pRefD->ReNext->RePrevious =
 						      pRefD->RePrevious;
 					     }
-					   FreeDescReference (pRefD);
+					   FreeReferredDescr (pRefD);
 					   pRefD = NULL;
 					}
 				   }
@@ -2091,7 +2091,7 @@ PtrDocument         pDoc;
 			       pExtDoc = pNextExtDoc;
 			    }
 			  /* libere le descripteur d'element reference' */
-			  FreeDescReference (pRefD);
+			  FreeReferredDescr (pRefD);
 			  pRefD = NULL;
 		       }
 		     else
@@ -2103,7 +2103,7 @@ PtrDocument         pDoc;
 		/* descripteur d'element reference' */
 	       {
 
-		  GetDescReference (&pRefD);
+		  GetReferredDescr (&pRefD);
 		  strncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
 		  /* chaine le descripteur en tete */
 		  pRefD->ReNext = pExtFileD->ErFirstReferredEl;
@@ -2221,7 +2221,7 @@ PtrDocument         pDoc;
 		       if (!found)
 			 {
 			    /* enregistre le changement dans le fichier .REF charge' */
-			    GetElemRefChng (&pNewChnRef);
+			    GetChangedReferredEl (&pNewChnRef);
 			    pNewChnRef->CrNext = pFile->RcFirstChange;
 			    pFile->RcFirstChange = pNewChnRef;
 			    strncpy (pNewChnRef->CrOldLabel, pChnRef->CrOldLabel, MAX_LABEL_LEN);
@@ -2238,7 +2238,7 @@ PtrDocument         pDoc;
 	       }
 	     pNextChnRef = pChnRef->CrNext;
 	     /* libere le descripteur qui a ete traite' */
-	     FreeElemRefChng (pChnRef);
+	     FreeChangedReferredEl (pChnRef);
 	     /* passe au descripteur suivant */
 	     pChnRef = pNextChnRef;
 	  }
@@ -2574,7 +2574,7 @@ Name                newName;
 	     pPrevChnRef = pChnRef;
 	     pChnRef = pChnRef->CrNext;
 	  }
-	GetElemRefChng (&pChnRef);
+	GetChangedReferredEl (&pChnRef);
 	pChnRef->CrNext = NULL;
 	if (pPrevChnRef == NULL)
 	   pFile->RcFirstChange = pChnRef;

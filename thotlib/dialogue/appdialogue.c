@@ -2259,7 +2259,7 @@ int                 doc;
 	     XmStringFree (title_string);
 	     title_string = XmStringCreateSimple (" ");
 	     XtSetArg (args[n - 1], XmNlabelString, title_string);
-	     i = CarWidth ('M', LargeFontDialogue) * 25;
+	     i = CharacterWidth ('M', LargeFontDialogue) * 25;
 	     XtSetArg (args[n], XmNwidth, (Dimension) i);
 	     n++;
 	     FrameTable[frame].WdStatus = XmCreateLabel (row2, "Thot_MSG", args, n);

@@ -57,10 +57,10 @@ int                 fground;
 
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
-      wcase = CarWidth ('m', FontDialogue) * 12;
+      wcase = CharacterWidth ('m', FontDialogue) * 12;
    else
       /* Affiche les couleurs sur un ecran couleur */
-      wcase = CarWidth ('m', FontDialogue) * 4;
+      wcase = CharacterWidth ('m', FontDialogue) * 4;
 
    hcase = FontHeight (FontDialogue);
    if (LastBg != -1 && LastBg != bground)
@@ -192,10 +192,10 @@ static void         ColorsExpose ()
 
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
-      wcase = CarWidth ('m', FontDialogue) * 12;
+      wcase = CharacterWidth ('m', FontDialogue) * 12;
    else
       /* Affiche les couleurs sur un ecran couleur */
-      wcase = CarWidth ('m', FontDialogue) * 4;
+      wcase = CharacterWidth ('m', FontDialogue) * 4;
 
    w = wcase * COLORS_COL;
    hcase = FontHeight (FontDialogue);
@@ -271,10 +271,10 @@ int                 y;
 
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
-      wcase = CarWidth ('m', FontDialogue) * 12;
+      wcase = CharacterWidth ('m', FontDialogue) * 12;
    else
       /* Affiche les couleurs sur un ecran couleur */
-      wcase = CarWidth ('m', FontDialogue) * 4;
+      wcase = CharacterWidth ('m', FontDialogue) * 4;
    hcase = FontHeight (FontDialogue);
 
    /* Regarde si on n'a pas clique dans le titre */
@@ -468,10 +468,10 @@ int                 y;
    n = 0;
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
-      width = CarWidth ('m', FontDialogue) * 12 * COLORS_COL;
+      width = CharacterWidth ('m', FontDialogue) * 12 * COLORS_COL;
    else
       /* Affiche les couleurs sur un ecran couleur */
-      width = CarWidth ('m', FontDialogue) * 4 * COLORS_COL;
+      width = CharacterWidth ('m', FontDialogue) * 4 * COLORS_COL;
    height = ((NumberOfColors () + COLORS_COL - 1) / COLORS_COL + 1) * FontHeight (FontDialogue);
 
 /*** Cree un DrawingArea pour contenir les touches de la palette ***/

@@ -252,7 +252,7 @@ int                *nSpaces;
 
    /* Calcule la largeur des blancs */
    if (*nSpaces == 0)
-      spaceWidth = CarWidth (_SPACE_, font);
+      spaceWidth = CharacterWidth (_SPACE_, font);
    else
       spaceWidth = *nSpaces;
    i = *width;			/* Index dans le buffer */
@@ -270,7 +270,7 @@ int                *nSpaces;
 	     charWidth = spaceWidth;
 	  }
 	else
-	   charWidth = CarWidth (car, font);
+	   charWidth = CharacterWidth (car, font);
 	*width += charWidth;
 	/* Caractere suivant */
 	if (i >= pBuffer->BuLength)
@@ -310,7 +310,7 @@ int                *height;
    if (pAb->AbVolume == 0 || picture == NULL)
      {
 	font = pBox->BxFont;
-	*width = CarWidth (109, font);	/*'m' */
+	*width = CharacterWidth (109, font);	/*'m' */
 	*height = FontHeight (font);
      }
    else
@@ -343,7 +343,7 @@ int                *height;
    if (pAb->AbVolume == 0)
      {
 	/* Symbol vide */
-	*width = CarWidth (_SPACE_, font);
+	*width = CharacterWidth (_SPACE_, font);
 	*height = hfont * 2;
      }
    else
@@ -354,11 +354,11 @@ int                *height;
 	      {
 		 case 'c':	/*integrale curviligne */
 		 case 'i':	/*integrale */
-		    *width = (int) ((float) (CarWidth (231, font)) * value);
+		    *width = (int) ((float) (CharacterWidth (231, font)) * value);
 		    *height += hfont;
 		    break;
 		 case 'd':	/*integrale double */
-		    *width = CarWidth (231, font) + CarWidth (231, font) / 2;
+		    *width = CharacterWidth (231, font) + CharacterWidth (231, font) / 2;
 		    *height += hfont;
 		    break;
 		 case 'r':	/*racine */
@@ -368,8 +368,8 @@ int                *height;
 		 case 'P':	/*pi */
 		 case 'I':	/*intersection */
 		 case 'U':	/*union */
-		    /* width := CarWidth(229, font) + 4; */
-		    *width = CarWidth (229, font);
+		    /* width := CharacterWidth(229, font) + 4; */
+		    *width = CharacterWidth (229, font);
 		    /* height := FontHeight(font); */
 		    *height = hfont;
 		    break;
@@ -385,16 +385,16 @@ int                *height;
 		 case ']':
 		 case '{':
 		 case '}':
-		    *width = (int) ((float) CarWidth (230, font) * value);
+		    *width = (int) ((float) CharacterWidth (230, font) * value);
 		    *height = hfont;
 		    break;
 		 case '^':
 		 case 'v':
 		 case 'V':
-		    *width = CarWidth (109, font);	/*'m' */
+		    *width = CharacterWidth (109, font);	/*'m' */
 		    break;
 		 default:
-		    *width = CarWidth (_SPACE_, font);
+		    *width = CharacterWidth (_SPACE_, font);
 		    *height = hfont;
 		    break;
 	      }
@@ -419,7 +419,7 @@ int                *height;
    int                 hfont;
 
    font = pAb->AbBox->BxFont;
-   *width = CarWidth (109, font);	/*'m' */
+   *width = CharacterWidth (109, font);	/*'m' */
    hfont = FontHeight (font);
    *height = hfont * 2;
    switch (pAb->AbShape)
@@ -547,7 +547,7 @@ int                *nSpaces;
    nChars = pAb->AbVolume;
    if (nChars == 0)
      {
-	*width = CarWidth (109, font);	/*'m' */
+	*width = CharacterWidth (109, font);	/*'m' */
 	*nSpaces = 0;
      }
    else
@@ -1947,7 +1947,7 @@ int                 frame;
 			      /* Si la boite est justifiee */
 			      if (pBox->BxSpaceWidth != 0)
 				{
-				   i = pBox->BxSpaceWidth - CarWidth (_SPACE_, pBox->BxFont);
+				   i = pBox->BxSpaceWidth - CharacterWidth (_SPACE_, pBox->BxFont);
 				   /* Ecart de largeur */
 				   adjustDelta = width + i * nSpaces + pBox->BxNPixels - pBox->BxWidth;
 				   width = pBox->BxWidth;	/* On prend la largeur justifiee */

@@ -13,11 +13,11 @@ extern void SetImageRule ( PtrElement pEl,
                            int h,
                            int typeimage,
                            PictureScaling presimage );
-extern void NewImageDescriptor ( PtrAbstractBox ppav,
+extern void NewPictInfo ( PtrAbstractBox ppav,
                                  char *filename,
                                  int imagetype );
-extern void FreeImageDescriptor ( int *desc );
-extern void UpdateImageDescriptor ( int *Imdcopie,
+extern void FreePictInfo ( int *desc );
+extern void CopyPictInfo ( int *Imdcopie,
                                     int *Imdsource );
 
 #else /* __STDC__ */
@@ -29,11 +29,11 @@ extern void SetImageRule (/* PtrElement pEl,
                              int h,
                              int typeimage,
                              PictureScaling presimage */);
-extern void NewImageDescriptor (/* PtrAbstractBox ppav,
+extern void NewPictInfo (/* PtrAbstractBox ppav,
                                    char *filename,
                                    int imagetype */);
-extern void FreeImageDescriptor (/* int *desc */);
-extern void UpdateImageDescriptor (/* int *Imdcopie,
+extern void FreePictInfo (/* int *desc */);
+extern void CopyPictInfo (/* int *Imdcopie,
                                       int *Imdsource */);
 
 #endif /* __STDC__ */

@@ -428,7 +428,7 @@ LabelString         oldLabel;
 	 /* l'element est reference' par d'autres documents */
 	{
 	   /* acquiert un descripteur et le remplit */
-	   GetElemRefChng (&pChnRef);
+	   GetChangedReferredEl (&pChnRef);
 	   strncpy (pChnRef->CrOldLabel, oldLabel, MAX_LABEL_LEN);
 	   strncpy (pChnRef->CrNewLabel, pEl->ElLabel, MAX_LABEL_LEN);
 	   CopyDocIdent (&pChnRef->CrOldDocument, DocOfSavedElements->DocIdent);
@@ -476,7 +476,7 @@ PtrDocument         pDoc;
      {
 	/* on affecte un nouveau label a l'element */
 	l = NewLabel (pDoc);
-	LabelIntToString (l, pRoot->ElLabel);
+	ConvertIntToLabel (l, pRoot->ElLabel);
      }
    if (pRoot->ElReferredDescr != NULL)
       /* l'original de l'element colle' est reference' ou possede un label */

@@ -469,14 +469,14 @@ PtrAttribute       *pAttr;
 		  if (pEl->ElPageType == PgBegin
 		      || pEl->ElPageType == PgComputed
 		      || pEl->ElPageType == PgUser)
-		     presNum = TypeBPage (pEl, view, &pSchP);
+		     presNum = GetPageBoxType (pEl, view, &pSchP);
 		  else		/* cas de colonne */
 		     presNum = TypeBCol (pEl, view, &pSchP, &nb);
 #else  /* __COLPAGE__ */
 	     if (presNum == 0 && pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak && isElPage)
 	       {
 		  /* on cherche le type de la boite page */
-		  presNum = TypeBPage (pEl, view, &pSchP);
+		  presNum = GetPageBoxType (pEl, view, &pSchP);
 #endif /* __COLPAGE__ */
 		  pSchS = pEl->ElStructSchema;
 		  index = pEl->ElTypeNumber;
@@ -1800,7 +1800,7 @@ boolean             change;
 
 
 /*----------------------------------------------------------------------
-   PageElAssoc  cherche si l'element associe pEl doit etre affiche 
+   GetPageBreakForAssoc  cherche si l'element associe pEl doit etre affiche 
    dans une boite de haut ou de bas de page, pour la vue   
    viewNb.                                                  
    Si oui, retourne un pointeur sur l'element marque de    
@@ -1811,10 +1811,10 @@ boolean             change;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-PtrElement          PageElAssoc (PtrElement pEl, int viewNb, int *boxType)
+PtrElement          GetPageBreakForAssoc (PtrElement pEl, int viewNb, int *boxType)
 
 #else  /* __STDC__ */
-PtrElement          PageElAssoc (pEl, viewNb, boxType)
+PtrElement          GetPageBreakForAssoc (pEl, viewNb, boxType)
 PtrElement          pEl;
 int                 viewNb;
 int                *boxType;
@@ -1990,7 +1990,7 @@ int                *boxType;
 			else
 			   /* cherche la marque de page ou s'affiche cet element */
 			   /* *associe' qui contient la reference a pEl. */
-			   pElPage = PageElAssoc (pAsc, viewNb, boxType);
+			   pElPage = GetPageBreakForAssoc (pAsc, viewNb, boxType);
 		     }
 		   else
 		      pElPage = NULL;
@@ -2074,7 +2074,7 @@ PtrAbstractBox     *pAbbReDisp;
    *pAbbReDisp = NULL;
    pAbbPageThread = NULL;
    viewSch = pDoc->DocView[viewNb - 1].DvPSchemaView;
-   pElPage = PageElAssoc (pEl, viewSch, &boxType);
+   pElPage = GetPageBreakForAssoc (pEl, viewSch, &boxType);
    if (pElPage != NULL)
      {
 	/* L'element doit etre affiche' dans une boite de haut ou de bas de */
@@ -2105,7 +2105,7 @@ PtrAbstractBox     *pAbbReDisp;
 		/* cette boite de haut ou bas de page n'existe pas, on la cree */
 		/* cherche le type de boite page */
 	       {
-		  TypeP = TypeBPage (pElPage, viewSch, &pSchP);
+		  TypeP = GetPageBoxType (pElPage, viewSch, &pSchP);
 		  if (TypeP > 0)
 		     /* cherche parmi les regles de la boite page celle qui */
 		     /* engendre ce type de boite */
@@ -4012,7 +4012,7 @@ int                 view;
 	     pEl1 = pPage;
 	     numpageprec = pEl1->ElPageNumber;
 	     /* cherche le compteur de page a appliquer a cette page */
-	     cpt = CptPage (pPage, view, &pSchP);
+	     cpt = GetPageCounter (pPage, view, &pSchP);
 	     if (cpt == 0)
 		/* page non numerotee, on s'arrete */
 		stop = TRUE;
@@ -4300,10 +4300,10 @@ boolean             redisp;
 		      /* c'est un element Marque de page */
 		      /* mais pas un pave de colonne */
 		     {
-			/*attention TypeBPage est susceptible de modifier pSchP 
+			/*attention GetPageBoxType est susceptible de modifier pSchP 
 			   il faut donc prendre des precautions */
 			pSchPOrig = pSchP;
-			if (boxType == TypeBPage (pAbbox1->AbElement, viewSch, &pSchPOrig)
+			if (boxType == GetPageBoxType (pAbbox1->AbElement, viewSch, &pSchPOrig)
 			    && pSchPOrig == pSchP)
 			   /* c'est bien ce type de boite page */
 			   boxok = TRUE;
@@ -4604,7 +4604,7 @@ PtrSSchema          pSchS;
 	  {
 	     /* l'attribut est bien defini dans le schema de structure du */
 	     /* document inclus, on le met sur la racine */
-	     GetAttr (&pAttr);
+	     GetAttribute (&pAttr);
 	     pAttr->AeAttrSSchema = pElIncluded->ElStructSchema;
 	     pAttr->AeAttrNum = att;
 	     pAttr->AeAttrType = AtNumAttr;
@@ -5779,7 +5779,7 @@ PtrElement         *pLib;
 	   if (pEl2->ElTerminal && pEl2->ElLeafType == LtText)
 	      if (pEl2->ElLanguage == pEl1->ElLanguage)
 		 if (!pEl2->ElHolophrast && !pEl1->ElHolophrast)
-		    if (MemesAttributs (pEl, pEl2))
+		    if (SameAttributes (pEl, pEl2))
 		       if (pEl->ElSource == NULL && pEl2->ElSource == NULL)
 			  if (BothHaveNoSpecRules (pEl, pEl2))
 			     if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct !=

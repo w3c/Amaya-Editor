@@ -257,7 +257,7 @@ PtrSSchema          pSS;
 	   i++;
 	if (strcmp (TypeWithin, pSS->SsRule[i].SrName) != 0)
 	   /* type inconnu */
-	   CompilerError (BeginTypeWithin, TRA, FATAL, BAD_TYPE, inputLine,
+	   CompilerMessage (BeginTypeWithin, TRA, FATAL, BAD_TYPE, inputLine,
 			  LineNum);
 	else
 	   /* le type existe, il a le numero i */
@@ -292,7 +292,7 @@ PtrSSchema          pSS;
 	   i++;
 	if (strcmp (AncestorName, pSS->SsRule[i].SrName) != 0)
 	   /* type inconnu */
-	   CompilerError (BeginAncestorName, TRA, FATAL, BAD_TYPE, inputLine,
+	   CompilerMessage (BeginAncestorName, TRA, FATAL, BAD_TYPE, inputLine,
 			  LineNum);
 	else
 	   /* le type existe, il a le numero i */
@@ -364,7 +364,7 @@ int                 wi;
 	   /* Presentation a valeur numerique */
 	   if (pPresTrans->RtNCase >= MAX_TRANSL_PRES_CASE)
 	      /* trop de cas pour cette presentation */
-	      CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_CASES_FOR_PRES_OVERFLOW,
+	      CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_CASES_FOR_PRES_OVERFLOW,
 			     inputLine, LineNum);
 	   else
 	      pPresTrans->RtNCase++;	/* un cas de plus */
@@ -422,7 +422,7 @@ int                 wi;
 	     i++;
 	     if (pPresTrans->RtPRuleValue[i] == value)
 		/* deja des regles pour cette valeur */
-		CompilerError (wi, TRA, FATAL, RULES_ALREADY_EXIST_FOR_THAT_VALUE,
+		CompilerMessage (wi, TRA, FATAL, RULES_ALREADY_EXIST_FOR_THAT_VALUE,
 			       inputLine, LineNum);
 	     else if (pPresTrans->RtPRuleValue[i] == '\0')
 		/* une entree libre, on la prend */
@@ -520,7 +520,7 @@ int                 len;
      }
    if (lastEntry >= MAX_TRANSL_CHAR)
       /* message 'Table saturee' */
-      CompilerError (1, TRA, FATAL, NO_SPACE_LEFT_IN_TRANSLATION_TABLE, inputLine,
+      CompilerMessage (1, TRA, FATAL, NO_SPACE_LEFT_IN_TRANSLATION_TABLE, inputLine,
 		     LineNum);
    else
       /* recupere le parametre 'source' */
@@ -531,7 +531,7 @@ int                 len;
 	CurEntry = SrceStringGreater (firstEntry, lastEntry, 0, &equal, source);
 	if (equal)
 	   /* la chaine source est deja dans la table */
-	   CompilerError (indx, TRA, FATAL, CANT_RESPECIFY_TRANSLATION,
+	   CompilerMessage (indx, TRA, FATAL, CANT_RESPECIFY_TRANSLATION,
 			  inputLine, LineNum);
 	else
 	   /* la chaine source n'est pas dans la table */
@@ -726,7 +726,7 @@ PtrSSchema          pSS;
 	   i++;
 	if (strcmp (TypeInGetRule, pSS->SsRule[i - 1].SrName) != 0)
 	   /* type inconnu */
-	   CompilerError (BeginTypeInGetRule, TRA, FATAL, BAD_TYPE, inputLine,
+	   CompilerMessage (BeginTypeInGetRule, TRA, FATAL, BAD_TYPE, inputLine,
 			  LineNum);
 	else
 	   /* le type existe, il a le numero i */ if (CurTRule->TrType == TCreate || CurTRule->TrType == TWrite)
@@ -784,7 +784,7 @@ indLine             wl;
 
 {
    if (wl > MAX_NAME_LENGTH - 1)
-      CompilerError (wi, TRA, FATAL, MAX_NAME_SIZE_OVERFLOW, inputLine, LineNum);
+      CompilerMessage (wi, TRA, FATAL, MAX_NAME_SIZE_OVERFLOW, inputLine, LineNum);
    else
      {
 	strncpy (n, &inputLine[wi - 1], wl);
@@ -811,12 +811,12 @@ indLine             wi;
 
    if (pTSchema->TsNConstants >= MAX_TRANSL_CONST)
       /* table des constantes saturee */
-      CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_CONSTANTS_OVERFLOW, inputLine, LineNum);
+      CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_CONSTANTS_OVERFLOW, inputLine, LineNum);
    else
       /* alloue un nouvelle entree dans la table des const. */
    if (ConstIndx + wl > MAX_TRANSL_CONST_LEN)
       /* plus de place pour les constantes */
-      CompilerError (wi, TRA, FATAL, MAX_CONSTANT_BUFFER_OVERFLOW, inputLine,
+      CompilerMessage (wi, TRA, FATAL, MAX_CONSTANT_BUFFER_OVERFLOW, inputLine,
 		     LineNum);
    else
       /* FnCopy le texte de la constante */
@@ -853,7 +853,7 @@ indLine             wi;
 
    /* on refuse les attributs reference */
    if (pSSchema->SsAttribute[att - 1].AttrType == AtReferenceAttr)
-      CompilerError (wi, TRA, FATAL, REF_ATTR_NOT_ALLOWED, inputLine,
+      CompilerMessage (wi, TRA, FATAL, REF_ATTR_NOT_ALLOWED, inputLine,
 		     LineNum);
    else if (pr == RULE_Token)
      {
@@ -866,7 +866,7 @@ indLine             wi;
       /* du schema de structure sont autorises ici */
       if (pSSchema->SsAttribute[att - 1].AttrType != AtNumAttr)
 	 /* ce n'est pas un attribut numerique, erreur */
-	 CompilerError (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR, inputLine,
+	 CompilerMessage (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR, inputLine,
 			LineNum);
       else
 	 /* cherche si l'attribut est un attribut local de la racine */
@@ -881,7 +881,7 @@ indLine             wi;
 		 j++;
 	   if (!ok)
 	      /* l'attribut ne porte pas sur la racine */
-	      CompilerError (wi, TRA, FATAL, NOT_AN_ATTR_FOR_THE_ROOT_ELEM,
+	      CompilerMessage (wi, TRA, FATAL, NOT_AN_ATTR_FOR_THE_ROOT_ELEM,
 			     inputLine, LineNum);
 	   else
 	      /* le compteur courant prendra cet attribut comme valeur initiale */
@@ -893,7 +893,7 @@ indLine             wi;
 	pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
 	if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 	   /* variable trop longue */
-	   CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW,
+	   CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW,
 			  inputLine, LineNum);
 	else
 	  {
@@ -936,7 +936,7 @@ indLine             wi;
 
    if (!ok)
      {
-	CompilerError (wi, TRA, FATAL, PATTERN_NOT_FOUND, inputLine,
+	CompilerMessage (wi, TRA, FATAL, PATTERN_NOT_FOUND, inputLine,
 		       LineNum);
 	i = 0;
      }
@@ -966,7 +966,7 @@ indLine             wi;
    while (i < MAX_COLOR && strcmp (Name_colors[i], n))
       i++;
    if (i == MAX_COLOR)
-      CompilerError (wi, TRA, FATAL, MISSING_COLOR, inputLine,
+      CompilerMessage (wi, TRA, FATAL, MISSING_COLOR, inputLine,
 		     LineNum);
    return i;
 }
@@ -1000,7 +1000,7 @@ indLine             wl;
    if (strcmp (n, pSSchema->SsRule[i - 1].SrName) != 0)
       /* type inconnu */
      {
-	CompilerError (wi, TRA, FATAL, BAD_TYPE, inputLine, LineNum);
+	CompilerMessage (wi, TRA, FATAL, BAD_TYPE, inputLine, LineNum);
 	i = 0;
      }
    return i;
@@ -1043,7 +1043,7 @@ SyntRuleNum         pr;
    i = 1;
    if (c < 1000)
       /* symbole intermediaire de la grammaire, erreur */
-      CompilerError (wi, TRA, FATAL, INTERMEDIATE_SYMBOL, inputLine, LineNum);
+      CompilerMessage (wi, TRA, FATAL, INTERMEDIATE_SYMBOL, inputLine, LineNum);
    else
      {
 	if (c < 1100)		/* mot-cle court */
@@ -1057,7 +1057,7 @@ SyntRuleNum         pr;
 			       if (CurType == pSSchema->SsRootElem)
 				  if (CurTRule->TrNature == pSSchema->SsRule[CurType - 1].SrName)
 				     /* une regle Use pour la racine se termine sans 'For' */
-				     CompilerError (wi, TRA, FATAL, FOR_PART_MISSING,
+				     CompilerMessage (wi, TRA, FATAL, FOR_PART_MISSING,
 						    inputLine, LineNum);
 			    if (CurTRule->TrType == TGet ||
 				CurTRule->TrType == TCopy ||
@@ -1089,7 +1089,7 @@ SyntRuleNum         pr;
 			  if (!VarDefinition)
 			     /* un nom de schema externe va suivre */
 			     if (CurTRule->TrObject != ToReferredElem)
-				CompilerError (wi, TRA, FATAL, ONLY_FOR_ELEMS, inputLine,
+				CompilerMessage (wi, TRA, FATAL, ONLY_FOR_ELEMS, inputLine,
 					       LineNum);
 			     else
 				ExternalSchema = True;
@@ -1097,7 +1097,7 @@ SyntRuleNum         pr;
 			     /* debut d'une definition de variable */
 			  if (pTSchema->TsNVariables >= MAX_TRANSL_VARIABLE)
 			     /* table des variables saturee */
-			     CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_VARIABLES_OVERFLOW,
+			     CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_VARIABLES_OVERFLOW,
 					    inputLine, LineNum);
 			  else
 			    {
@@ -1235,7 +1235,7 @@ SyntRuleNum         pr;
 		       TextTrans = True;
 		       /* on est dans les traductions de texte */
 		       if (pTSchema->TsNTranslAlphabets >= MAX_TRANSL_ALPHABET)
-			  CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_TEXTTRANSLATE_OVERFLOW,
+			  CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_TEXTTRANSLATE_OVERFLOW,
 					 inputLine, LineNum);
 		       else
 			 {
@@ -1374,7 +1374,7 @@ SyntRuleNum         pr;
 		    case KWD_Picture:	/* Picture */
 		       if (pTSchema->TsPictureBuffer != 0)
 			  /* un seul buffer image autorise' */
-			  CompilerError (wi, TRA, FATAL, CANT_USE_MORE_THAN_ONE_PICTURE_BUFFER, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, CANT_USE_MORE_THAN_ONE_PICTURE_BUFFER, inputLine, LineNum);
 		       else	/* c'est le buffer courant qui est le buffer image */
 			  pTSchema->TsPictureBuffer = pTSchema->TsNBuffers;
 		       break;
@@ -1382,7 +1382,7 @@ SyntRuleNum         pr;
 		    case KWD_Value:	/* Value */
 		       if (r == RULE_Token)
 			  if (!InPresRules)
-			     CompilerError (wi, TRA, FATAL, ONLY_IN_PRES_PART, inputLine, LineNum);
+			     CompilerMessage (wi, TRA, FATAL, ONLY_IN_PRES_PART, inputLine, LineNum);
 		       /* seulement dans les regles de la presentation */
 			  else
 			     CurTRule->TrObject = ToPRuleValue;
@@ -1392,7 +1392,7 @@ SyntRuleNum         pr;
 			    pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
 			    if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 			       /* trop de fonctions */
-			       CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
+			       CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 			    else
 			       pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtCounter;
 			 }
@@ -1404,7 +1404,7 @@ SyntRuleNum         pr;
 			    pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
 			    if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 			       /* trop de fonctions */
-			       CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
+			       CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 			    else
 			       pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtFileDir;
 			 }
@@ -1419,7 +1419,7 @@ SyntRuleNum         pr;
 			    pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
 			    if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 			       /* trop de fonctions */
-			       CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
+			       CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 			    else
 			       pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtFileName;
 			 }
@@ -1434,7 +1434,7 @@ SyntRuleNum         pr;
 			    pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
 			    if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 			       /* trop de fonctions */
-			       CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
+			       CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 			    else
 			       pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtExtension;
 			 }
@@ -1453,7 +1453,7 @@ SyntRuleNum         pr;
 			      (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			     /* l'element ou l'attribut auquel s'applique la regle */
 			     /* n'est pas une reference, erreur */
-			     CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
+			     CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
 			  else
 			     CurTRule->TrObject = ToReferredRefId;
 		       break;
@@ -1461,7 +1461,7 @@ SyntRuleNum         pr;
 		    case KWD_PairId:	/* PairId */
 		       if (pSSchema->SsRule[CurType - 1].SrConstruct != CsPairedElement)
 			  /* l'element auquel s'applique la regle n'est pas une paire */
-			  CompilerError (wi, TRA, FATAL, NOT_A_PAIR,
+			  CompilerMessage (wi, TRA, FATAL, NOT_A_PAIR,
 					 inputLine, LineNum);
 		       else
 			  CurTRule->TrObject = ToPairId;
@@ -1496,7 +1496,7 @@ SyntRuleNum         pr;
 		    case KWD_And:	/* And */
 		       if (CurBlock->TbNConditions >= MAX_TRANSL_COND)
 			  /* trop de conditions */
-			  CompilerError (wi, TRA, FATAL, TOO_MANY_CONDITIONS, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, TOO_MANY_CONDITIONS, inputLine, LineNum);
 		       else
 			 {
 			    EndOfContdition (pSSchema);
@@ -1521,7 +1521,7 @@ SyntRuleNum         pr;
 			   (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			  /* l'element ou l'attribut auquel s'applique la regle */
 			  /* n'est pas une reference, erreur */
-			  CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
 		       else
 			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcTarget = True;
 		       break;
@@ -1547,7 +1547,7 @@ SyntRuleNum         pr;
 		       if (pSSchema->SsRule[CurType - 1].SrParamElem)
 			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondDefined;
 		       else
-			  CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_PARAMETERS, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_PARAMETERS, inputLine, LineNum);
 		       break;
 
 		    case KWD_Refered:	/* Refered */
@@ -1563,7 +1563,7 @@ SyntRuleNum         pr;
 				(InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			  /* l'element ou l'attribut auquel s'applique la regle n'est */
 			  /* pas une reference, erreur */
-			  CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
 		       else if (r == RULE_Token)	/* devant un identificateur de variable */
 			  CurTRule->TrReferredObj = True;
 		       else if (r == RULE_RelPosition)	/* dans une position relative */
@@ -1575,7 +1575,7 @@ SyntRuleNum         pr;
 			   (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			  /* l'element ou l'attribut auquel s'applique la regle n'est */
 			  /* pas une reference, erreur */
-			  CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
 		       else
 			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondFirstRef;
 		       break;
@@ -1585,7 +1585,7 @@ SyntRuleNum         pr;
 			   (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			  /* l'element ou l'attribut auquel s'applique la regle n'est */
 			  /* pas une reference, erreur */
-			  CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
 		       else
 			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondLastRef;
 		       break;
@@ -1595,7 +1595,7 @@ SyntRuleNum         pr;
 			   (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			  /* l'element ou l'attribut auquel s'applique la regle n'est */
 			  /* pas une reference, erreur */
-			  CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
 		       else
 			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondExternalRef;
 		       break;
@@ -1630,7 +1630,7 @@ SyntRuleNum         pr;
 
 		    case KWD_Presentation:	/* Presentation */
 		       if (InPresRules)
-			  CompilerError (wi, TRA, FATAL, FORBIDDEN_IN_PRES_PART, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, FORBIDDEN_IN_PRES_PART, inputLine, LineNum);
 		       else if (r == RULE_TransSchema)
 			  /* debut des regles de traduction de la presentation */
 			 {
@@ -1668,7 +1668,7 @@ SyntRuleNum         pr;
 			    pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
 			    if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 			       /* trop de fonctions */
-			       CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
+			       CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 			    else
 			       pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtDocumentName;
 			 }
@@ -1681,7 +1681,7 @@ SyntRuleNum         pr;
 			      (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			     /* l'element ou l'attribut auquel s'applique la regle */
 			     /* n'est pas une reference, erreur */
-			     CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
+			     CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
 			  else
 			     CurTRule->TrObject = ToReferredDocumentName;
 		       break;
@@ -1692,7 +1692,7 @@ SyntRuleNum         pr;
 			    pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
 			    if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 			       /* trop de fonctions */
-			       CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
+			       CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 			    else
 			       pTransVar->TrvItem[pTransVar->TrvNItems++].TvType = VtDocumentDir;
 			 }
@@ -1705,7 +1705,7 @@ SyntRuleNum         pr;
 			      (InAttrRules && pSSchema->SsAttribute[CurAttr - 1].AttrType != AtReferenceAttr))
 			     /* l'element ou l'attribut auquel s'applique la regle */
 			     /* n'est pas une reference, erreur */
-			     CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
+			     CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
 			  else
 			     CurTRule->TrObject = ToReferredDocumentDir;
 		       break;
@@ -1737,7 +1737,7 @@ SyntRuleNum         pr;
 
 		    case KWD_Alphabet:		/* Alphabet */
 		       if (CurType != CharString + 1)
-			  CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_TEXT_UNITS, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_TEXT_UNITS, inputLine, LineNum);
 		       else
 			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondAlphabet;
 		       break;
@@ -1779,12 +1779,12 @@ SyntRuleNum         pr;
 			   && CurType != pSSchema->SsRootElem)
 			  /* l'element auquel s'applique la regle n'est pas une */
 			  /* SyntacticType ni la regle racine, erreur */
-			  CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_A_DIFFERENT_STRUCT_SCHEM, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_A_DIFFERENT_STRUCT_SCHEM, inputLine, LineNum);
 		       else
 			 {
 			    NewTransRule ();
 			    if (CurBlock->TbNConditions != 0)
-			       CompilerError (wi, TRA, FATAL, MUST_BE_UNCONDITIONAL, inputLine, LineNum);
+			       CompilerMessage (wi, TRA, FATAL, MUST_BE_UNCONDITIONAL, inputLine, LineNum);
 			    else
 			      {
 				 CurTRule->TrType = TUse;
@@ -1796,7 +1796,7 @@ SyntRuleNum         pr;
 		    case KWD_For:	/* For */
 		       if (CurType != pSSchema->SsRootElem)
 			  /* FOR n'est acceptable que pour l'element racine */
-			  CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_THE_ROOT_ELEM, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_THE_ROOT_ELEM, inputLine, LineNum);
 		       break;
 
 		    case KWD_Remove:	/* Remove */
@@ -2028,7 +2028,7 @@ SyntRuleNum         pr;
 		       if (CurType != PageBreak + 1)
 			  /* l'element auquel s'applique la regle n'est pas une marque de page */
 			  /* erreur */
-			  CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_PAGES, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_PAGES, inputLine, LineNum);
 		       else
 			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondComputedPage;
 		       break;
@@ -2037,7 +2037,7 @@ SyntRuleNum         pr;
 		       if (CurType != PageBreak + 1)
 			  /* l'element auquel s'applique la regle n'est pas une marque de page */
 			  /* erreur */
-			  CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_PAGES, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_PAGES, inputLine, LineNum);
 		       else
 			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondStartPage;
 		       break;
@@ -2046,7 +2046,7 @@ SyntRuleNum         pr;
 		       if (CurType != PageBreak + 1)
 			  /* l'element auquel s'applique la regle n'est pas une marque de page */
 			  /* erreur */
-			  CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_PAGES, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_PAGES, inputLine, LineNum);
 		       else
 			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondUserPage;
 		       break;
@@ -2055,7 +2055,7 @@ SyntRuleNum         pr;
 		       if (CurType != PageBreak + 1)
 			  /* l'element auquel s'applique la regle n'est pas une marque de page */
 			  /* erreur */
-			  CompilerError (wi, TRA, FATAL, VALID_ONLY_FOR_PAGES, inputLine, LineNum);
+			  CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_PAGES, inputLine, LineNum);
 		       else
 			  CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondReminderPage;
 		       break;
@@ -2089,7 +2089,7 @@ SyntRuleNum         pr;
 					if (!ReadStructureSchema (pTSchema->TsStructName, pSSchema))
 					   TtaDisplaySimpleMessage (FATAL, TRA, CANT_READ_STRUCT_SCHEM);	/* echec lecture du  schema de structure */
 					else if (strcmp (pTSchema->TsStructName, pSSchema->SsName) != 0)
-					   CompilerError (wi, TRA, FATAL, STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, LineNum);
+					   CompilerMessage (wi, TRA, FATAL, STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, LineNum);
 					else
 					  {
 					     pTSchema->TsStructCode = pSSchema->SsCode;
@@ -2115,7 +2115,7 @@ SyntRuleNum         pr;
 					     CopyWord (n, wi, wl);
 					     /* lit le schema de structure externe */
 					     if (!ReadStructureSchema (n, pExtSSchema))
-						CompilerError (wi, TRA, FATAL, CANT_READ_STRUCT_SCHEM, inputLine, LineNum);
+						CompilerMessage (wi, TRA, FATAL, CANT_READ_STRUCT_SCHEM, inputLine, LineNum);
 					     /* echec lecture du schema */
 					     else
 						/* le schema de structure a ete charge' */
@@ -2143,7 +2143,7 @@ SyntRuleNum         pr;
 					     CopyWord (n, wi, wl);
 					     /* lit le schema de structure externe */
 					     if (!ReadStructureSchema (n, pExtSSchema))
-						CompilerError (wi, TRA, FATAL, CANT_READ_STRUCT_SCHEM, inputLine, LineNum);
+						CompilerMessage (wi, TRA, FATAL, CANT_READ_STRUCT_SCHEM, inputLine, LineNum);
 					     /* echec lecture du schema */
 					     else
 						/* le schema de    structure a ete charge' */
@@ -2176,7 +2176,7 @@ SyntRuleNum         pr;
 						/* recupere dans n le nom du schema externe */
 						/* lit le schema de structure externe */
 						if (!ReadStructureSchema (n, pExtSSchema))
-						   CompilerError (wi, TRA, FATAL, CANT_READ_STRUCT_SCHEM, inputLine, LineNum);
+						   CompilerMessage (wi, TRA, FATAL, CANT_READ_STRUCT_SCHEM, inputLine, LineNum);
 						/* echec lecture du schema */
 						else
 						   /* le schema de    structure a ete charge' */
@@ -2225,7 +2225,7 @@ SyntRuleNum         pr;
 							/* c'est un element CsPairedElement */
 							if (!SecondInPair && !FirstInPair)
 							   /* le nom du type n'etait pas precede' de First ou Second */
-							   CompilerError (wi, TRA, FATAL, MISSING_FIRST_SECOND,
+							   CompilerMessage (wi, TRA, FATAL, MISSING_FIRST_SECOND,
 									  inputLine, LineNum);
 							else
 							  {
@@ -2237,10 +2237,10 @@ SyntRuleNum         pr;
 							/* ce n'est pas un element CsPairedElement */
 						     if (SecondInPair || FirstInPair)
 							/* le nom du type etait precede' de First ou Second, erreur */
-							CompilerError (wi, TRA, FATAL, NOT_A_PAIR,
+							CompilerMessage (wi, TRA, FATAL, NOT_A_PAIR,
 							inputLine, LineNum);
 						     if (pTSchema->TsElemTRule[i - 1] != NULL)
-							CompilerError (wi, TRA, FATAL, CANT_REDEFINE,
+							CompilerMessage (wi, TRA, FATAL, CANT_REDEFINE,
 							inputLine, LineNum);
 						     else
 						       {
@@ -2266,10 +2266,10 @@ SyntRuleNum         pr;
 				   if (ConstDef)	/* une definition de constante */
 				      if (Identifier[nb - 1].SrcIdentDefRule != 0)
 					 /* nom deja declare' */
-					 CompilerError (wi, TRA, FATAL, INVALID_NAME_REDECLARATION, inputLine, LineNum);
+					 CompilerMessage (wi, TRA, FATAL, INVALID_NAME_REDECLARATION, inputLine, LineNum);
 				      else if (pTSchema->TsNConstants >= MAX_TRANSL_CONST)
 					 /* table des constantes saturee */
-					 CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_CONSTANTS_OVERFLOW, inputLine, LineNum);
+					 CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_CONSTANTS_OVERFLOW, inputLine, LineNum);
 				      else
 					 /* alloue un nouvelle entree dans la table des constantes */
 					{
@@ -2295,7 +2295,7 @@ SyntRuleNum         pr;
 					      i++;
 					   if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0)
 					      /* attribut inconnu */
-					      CompilerError (wi, TRA, FATAL, BAD_ATTR, inputLine, LineNum);
+					      CompilerMessage (wi, TRA, FATAL, BAD_ATTR, inputLine, LineNum);
 					   else
 					      /* l'attribut existe, il a le numero i */
 					     {
@@ -2306,13 +2306,13 @@ SyntRuleNum         pr;
 					}
 				      else
 					 /* constante non definie */
-					 CompilerError (wi, TRA, FATAL, UNDECLARED_CONSTANT, inputLine, LineNum);
+					 CompilerMessage (wi, TRA, FATAL, UNDECLARED_CONSTANT, inputLine, LineNum);
 				   else if (VarDef)	/* dans une declaration de variable */
 				     {
 					pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
 					if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 					   /* trop de fonctions */
-					   CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
+					   CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 					else
 					  {
 					     pTransVar->TrvItem[pTransVar->TrvNItems].TvType =
@@ -2334,10 +2334,10 @@ SyntRuleNum         pr;
 				   if (ComptDef)	/* une definition de compteur */
 				      if (Identifier[nb - 1].SrcIdentDefRule != 0)
 					 /* nom deja declare' */
-					 CompilerError (wi, TRA, FATAL, INVALID_NAME_REDECLARATION, inputLine, LineNum);
+					 CompilerMessage (wi, TRA, FATAL, INVALID_NAME_REDECLARATION, inputLine, LineNum);
 				      else if (pTSchema->TsNCounters >= MAX_TRANSL_COUNTER)
 					 /* table des compteurs saturee */
-					 CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_COUNTERS_OVERFLOW, inputLine, LineNum);
+					 CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_COUNTERS_OVERFLOW, inputLine, LineNum);
 				      else
 					 /* alloue un nouvelle entree dans la table des compteurs */
 					{
@@ -2354,7 +2354,7 @@ SyntRuleNum         pr;
 				      /* utilisation d'un compteur */
 				   if (Identifier[nb - 1].SrcIdentDefRule == 0)
 				      /* compteur non defini */
-				      CompilerError (wi, TRA, FATAL, UNDECLARED_COUNTER, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, UNDECLARED_COUNTER, inputLine, LineNum);
 				   else if (pr == RULE_Function)
 				      /* dans une declaration de variable */
 				     {
@@ -2367,7 +2367,7 @@ SyntRuleNum         pr;
 				   else if (pr == RULE_Rule1)
 				      /* un compteur dans une instruction Set ou Add */
 				      if (pTSchema->TsCounter[Identifier[nb - 1].SrcIdentDefRule - 1].TnOperation != TCntrNoOp)
-					 CompilerError (wi, TRA, FATAL, BAD_COUNTER, inputLine, LineNum);
+					 CompilerMessage (wi, TRA, FATAL, BAD_COUNTER, inputLine, LineNum);
 				      else
 					 CurTRule->TrCounterNum = Identifier[nb - 1].SrcIdentDefRule;
 				   break;
@@ -2376,10 +2376,10 @@ SyntRuleNum         pr;
 				   if (BuffDef)		/* une definition de  buffer */
 				      if (Identifier[nb - 1].SrcIdentDefRule != 0)
 					 /* nom deja declare' */
-					 CompilerError (wi, TRA, FATAL, INVALID_NAME_REDECLARATION, inputLine, LineNum);
+					 CompilerMessage (wi, TRA, FATAL, INVALID_NAME_REDECLARATION, inputLine, LineNum);
 				      else if (pTSchema->TsNBuffers >= MAX_TRANSL_BUFFER)
 					 /* table des buffers saturee */
-					 CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_BUFFERS_OVERFLOW, inputLine, LineNum);
+					 CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_BUFFERS_OVERFLOW, inputLine, LineNum);
 				      else
 					{
 					   pTSchema->TsNBuffers++;
@@ -2389,14 +2389,14 @@ SyntRuleNum         pr;
 				      /* utilisation d'un buffer */
 				   if (Identifier[nb - 1].SrcIdentDefRule == 0)
 				      /* buffer non defini */
-				      CompilerError (wi, TRA, FATAL, UNDECLARED_BUFFER, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, UNDECLARED_BUFFER, inputLine, LineNum);
 				   else if (VarDef)
 				      /* dans une declaration de variable */
 				     {
 					pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
 					if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 					   /* trop de fonctions */
-					   CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
+					   CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 					else
 					  {
 					     pTransVar->TrvItem[pTransVar->TrvNItems].TvType = VtBuffer;
@@ -2428,10 +2428,10 @@ SyntRuleNum         pr;
 				      /* une definition de  variable */
 				      if (Identifier[nb - 1].SrcIdentDefRule != 0)
 					 /* nom deja declare' */
-					 CompilerError (wi, TRA, FATAL, INVALID_NAME_REDECLARATION, inputLine, LineNum);
+					 CompilerMessage (wi, TRA, FATAL, INVALID_NAME_REDECLARATION, inputLine, LineNum);
 				      else if (pTSchema->TsNVariables >= MAX_TRANSL_VARIABLE)
 					 /* table des variables saturee */
-					 CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_VARIABLES_OVERFLOW, inputLine, LineNum);
+					 CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_VARIABLES_OVERFLOW, inputLine, LineNum);
 				      else
 					{
 					   pTSchema->TsVariable[pTSchema->TsNVariables++].TrvNItems = 0;
@@ -2441,7 +2441,7 @@ SyntRuleNum         pr;
 				      /* dans une regle Create  ou Write */
 				      if (Identifier[nb - 1].SrcIdentDefRule == 0)
 					 /* variable non definie */
-					 CompilerError (wi, TRA, FATAL, UNKNOWN_VARIABLE, inputLine, LineNum);
+					 CompilerMessage (wi, TRA, FATAL, UNKNOWN_VARIABLE, inputLine, LineNum);
 				      else
 					{
 					   CurTRule->TrObject = ToVariable;
@@ -2469,7 +2469,7 @@ SyntRuleNum         pr;
 				   else if (pr == RULE_Rule1)
 				      if (Identifier[nb - 1].SrcIdentDefRule == 0)
 					 /* variable non definie */
-					 CompilerError (wi, TRA, FATAL, UNKNOWN_VARIABLE, inputLine, LineNum);
+					 CompilerMessage (wi, TRA, FATAL, UNKNOWN_VARIABLE, inputLine, LineNum);
 				      else if (CurTRule->TrType == TCreate)
 					 /* indication du fichier de sortie dans une regle Create */
 					 CurTRule->TrFileNameVar = Identifier[nb - 1].SrcIdentDefRule;
@@ -2489,7 +2489,7 @@ SyntRuleNum         pr;
 				      i++;
 				   if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0)
 				      /* attribut inconnu */
-				      CompilerError (wi, TRA, FATAL, BAD_ATTR, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, BAD_ATTR, inputLine, LineNum);
 				   else
 				      /* l'attribut existe, il a le numero i */
 				   if (pr == RULE_TransAttr)
@@ -2506,7 +2506,7 @@ SyntRuleNum         pr;
 						 case AtNumAttr:	/* attribut a valeur numerique */
 						    if (pAttrTrans->AtrNCases >= MAX_TRANSL_ATTR_CASE)
 						       /* trop de cas pour cet attribut */
-						       CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_CASES_FOR_ATTR_OVERFLOW, inputLine, LineNum);
+						       CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_CASES_FOR_ATTR_OVERFLOW, inputLine, LineNum);
 						    else
 						       pAttrTrans->AtrNCases++;
 						    break;
@@ -2514,13 +2514,13 @@ SyntRuleNum         pr;
 						 case AtTextAttr /* attribut textuel */ :
 						    if (pAttrTrans->AtrTxtTRuleBlock != NULL)
 						       /* attribut deja rencontre' */
-						       CompilerError (wi, TRA, FATAL, RULES_ALREADY_EXIST_FOR_THAT_ATTR, inputLine, LineNum);
+						       CompilerMessage (wi, TRA, FATAL, RULES_ALREADY_EXIST_FOR_THAT_ATTR, inputLine, LineNum);
 						    break;
 
 						 case AtReferenceAttr:
 						    if (pAttrTrans->AtrRefTRuleBlock != NULL)
 						       /* attribut deja rencontre' */
-						       CompilerError (wi, TRA, FATAL, RULES_ALREADY_EXIST_FOR_THAT_ATTR, inputLine, LineNum);
+						       CompilerMessage (wi, TRA, FATAL, RULES_ALREADY_EXIST_FOR_THAT_ATTR, inputLine, LineNum);
 						    break;
 
 						 case AtEnumAttr:
@@ -2578,7 +2578,7 @@ SyntRuleNum         pr;
 				   pAttr = &pSSchema->SsAttribute[k - 1];
 				   if (pAttr->AttrType != AtEnumAttr)
 				      /* pas un attribut a valeur enumerees */
-				      CompilerError (wi, TRA, FATAL, BAD_ATTR_VALUE, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, BAD_ATTR_VALUE, inputLine, LineNum);
 				   else
 				     {
 					i = 1;
@@ -2587,14 +2587,14 @@ SyntRuleNum         pr;
 					   i++;
 					if (strcmp (n, pAttr->AttrEnumValue[i - 1]) != 0)
 					   /* valeur d'attribut  incorrecte */
-					   CompilerError (wi, TRA, FATAL, BAD_ATTR_VALUE, inputLine, LineNum);
+					   CompilerMessage (wi, TRA, FATAL, BAD_ATTR_VALUE, inputLine, LineNum);
 					else
 					   /* la valeur est correcte, elle a le numero i */
 					if (!InCondition)
 					   /* debut des regles de traduction d'un attribut */
 					   if (pTSchema->TsAttrTRule[CurAttr - 1].AtrEnuTRuleBlock[i] != NULL)
 					      /* deja des regles pour cette valeur */
-					      CompilerError (wi, TRA, FATAL, RULES_ALREADY_EXIST_FOR_THAT_VALUE, inputLine, LineNum);
+					      CompilerMessage (wi, TRA, FATAL, RULES_ALREADY_EXIST_FOR_THAT_VALUE, inputLine, LineNum);
 					   else
 					      CurValAttr = i;
 					else
@@ -2609,7 +2609,7 @@ SyntRuleNum         pr;
 				     {
 					for (i = 0; i < pTSchema->TsNTranslAlphabets - 1; i++)
 					   if (pTSchema->TsTranslAlphabet[i].AlAlphabet == inputLine[wi - 1])
-					      CompilerError (wi, TRA, FATAL, CANT_REDEFINE_ALPHABET, inputLine, LineNum);
+					      CompilerMessage (wi, TRA, FATAL, CANT_REDEFINE_ALPHABET, inputLine, LineNum);
 					if (!error)
 					   pTSchema->TsTranslAlphabet[pTSchema->TsNTranslAlphabets - 1].
 					      AlAlphabet = inputLine[wi - 1];
@@ -2698,7 +2698,7 @@ SyntRuleNum         pr;
 				   if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr
 				       || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
-				      CompilerError (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR, inputLine, LineNum);
 				   else
 				     {
 					k = k * AttrValSign + 1;
@@ -2723,7 +2723,7 @@ SyntRuleNum         pr;
 				   if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr
 				       || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
-				      CompilerError (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR, inputLine, LineNum);
 				   else
 				     {
 					k = k * AttrValSign - 1;
@@ -2748,7 +2748,7 @@ SyntRuleNum         pr;
 				   if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr
 				       || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
-				      CompilerError (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR, inputLine, LineNum);
 				   else
 				     {
 					k = k * AttrValSign;
@@ -2773,7 +2773,7 @@ SyntRuleNum         pr;
 				   if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr
 				       || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
-				      CompilerError (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, EXPECTING_A_NUMERICAL_ATTR, inputLine, LineNum);
 				   else
 				     {
 					k = k * AttrValSign;
@@ -2782,14 +2782,14 @@ SyntRuleNum         pr;
 					/* d'attribut numerique sera positive */
 					if (InCondition)
 					   if (CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound > k)
-					      CompilerError (wi, TRA, FATAL, BAD_LIMITS, inputLine, LineNum);
+					      CompilerMessage (wi, TRA, FATAL, BAD_LIMITS, inputLine, LineNum);
 					   else
 					      CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcUpperBound = k;
 					else
 					  {
 					     pAttrTrans = &pTSchema->TsAttrTRule[CurAttr - 1];
 					     if (pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1].TaLowerBound > k)
-						CompilerError (wi, TRA, FATAL, BAD_LIMITS, inputLine, LineNum);
+						CompilerMessage (wi, TRA, FATAL, BAD_LIMITS, inputLine, LineNum);
 					     else
 						pAttrTrans->AtrCase[pAttrTrans->AtrNCases - 1].TaUpperBound = k;
 					  }
@@ -2803,7 +2803,7 @@ SyntRuleNum         pr;
 				      i = CurAttr;
 				   if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
-				      CompilerError (wi, TRA, FATAL, BAD_LIMITS, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, BAD_LIMITS, inputLine, LineNum);
 				   else
 				     {
 					k = k * AttrValSign;
@@ -2875,14 +2875,14 @@ SyntRuleNum         pr;
 				   if (InCondition)
 				      if (CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound > k)
 					 /* BorneInf > BorneSup !! */
-					 CompilerError (wi, TRA, FATAL, BAD_LIMITS, inputLine, LineNum);
+					 CompilerMessage (wi, TRA, FATAL, BAD_LIMITS, inputLine, LineNum);
 				      else
 					 CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcUpperBound = k;
 				   else
 				     {
 					pPresTrans = &pTSchema->TsPresTRule[CurPres - 1];
 					if (pPresTrans->RtCase[pPresTrans->RtNCase - 1].TaLowerBound > k)
-					   CompilerError (wi, TRA, FATAL, BAD_LIMITS, inputLine, LineNum);
+					   CompilerMessage (wi, TRA, FATAL, BAD_LIMITS, inputLine, LineNum);
 					else
 					   pPresTrans->RtCase[pPresTrans->RtNCase - 1].TaUpperBound = k;
 				     }
@@ -2918,7 +2918,7 @@ SyntRuleNum         pr;
 				case RULE_ConstValue:	/* ConstValue */
 				   if (ConstIndx + wl > MAX_TRANSL_CONST_LEN)
 				      /* plus de place pour les constantes */
-				      CompilerError (wi, TRA, FATAL, MAX_CONSTANT_BUFFER_OVERFLOW, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, MAX_CONSTANT_BUFFER_OVERFLOW, inputLine, LineNum);
 				   else
 				      /* FnCopy le texte de la constante */
 				     {
@@ -2938,7 +2938,7 @@ SyntRuleNum         pr;
 					   pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
 					   if (pTransVar->TrvNItems >= MAX_TRANSL_VAR_ITEM)
 					      /* trop de fonctions */
-					      CompilerError (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
+					      CompilerMessage (wi, TRA, FATAL, MAX_POSSIBLE_ELEMS_IN_VARIABLE_OVERFLOW, inputLine, LineNum);
 					   else
 					     {
 						pTransVar->TrvItem[pTransVar->TrvNItems].TvType =
@@ -2959,10 +2959,10 @@ SyntRuleNum         pr;
 				case RULE_TextEqual:	/* TextEqual */
 				   if (pSSchema->SsAttribute[CurAttr - 1].AttrType != AtTextAttr)
 				      /* ce n'est pas un attribut textuel */
-				      CompilerError (wi, TRA, FATAL, NOT_A_TEXTUAL_ATTR, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, NOT_A_TEXTUAL_ATTR, inputLine, LineNum);
 				   else if (wl > MAX_NAME_LENGTH)
 				      /* texte trop long */
-				      CompilerError (wi, TRA, FATAL, MAX_NAME_SIZE_OVERFLOW, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, MAX_NAME_SIZE_OVERFLOW, inputLine, LineNum);
 				   else if (InCondition)
 				     {
 					for (i = 0; i < wl - 1; i++)
@@ -2991,11 +2991,11 @@ SyntRuleNum         pr;
 				case RULE_Source:	/* Source */
 				   if (wl > MAX_SRCE_LEN)
 				      /* chaine source trop longue */
-				      CompilerError (wi, TRA, FATAL, MAX_STRING_SIZE_OVERFLOW, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, MAX_STRING_SIZE_OVERFLOW, inputLine, LineNum);
 				   else if ((SymbTrans || GraphTrans) && wl > 2)
 				      /* dans les traductions de symboles et de graphiques */
 				      /* la chaine source ne peut contenir qu'un caractere */
-				      CompilerError (wi + 1, TRA, FATAL, ONLY_ONE_CHARACTER, inputLine, LineNum);
+				      CompilerMessage (wi + 1, TRA, FATAL, ONLY_ONE_CHARACTER, inputLine, LineNum);
 				   else
 				      NewSourceString (wi, wl);
 				   break;
@@ -3003,7 +3003,7 @@ SyntRuleNum         pr;
 				case RULE_Target:	/* Target */
 				   if (wl > MAX_TARGET_LEN)
 				      /* chaine cible trop longue */
-				      CompilerError (wi, TRA, FATAL, MAX_STRING_SIZE_OVERFLOW, inputLine, LineNum);
+				      CompilerMessage (wi, TRA, FATAL, MAX_STRING_SIZE_OVERFLOW, inputLine, LineNum);
 				   else
 				      ProcessTargetString (wi, wl);
 				   break;
@@ -3165,7 +3165,7 @@ char              **argv;
 		/* incremente le compteur de lignes */
 		LineNum++;
 		if (i >= LINE_LENGTH)
-		  CompilerError (1, TRA, FATAL, MAX_LINE_SIZE_OVERFLOW,
+		  CompilerMessage (1, TRA, FATAL, MAX_LINE_SIZE_OVERFLOW,
 				 inputLine, LineNum);
 		else if (inputLine[0] == '#')
 		  /* cette ligne contient une directive du preprocesseur cpp */

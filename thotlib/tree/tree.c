@@ -1197,7 +1197,7 @@ boolean             Check;
 	  {
 	     if (pAttr2 == NULL)
 	       /* gets an attribute block for the target */
-		GetAttr (&pAttr2);	
+		GetAttribute (&pAttr2);	
 	     /* copies the attribute */
 	     *pAttr2 = *pAttr1;	
 	     if (pAttr2->AeAttrType == AtTextAttr)
@@ -1297,7 +1297,7 @@ boolean             Check;
 	  }
 	while (pAttr1 != NULL);
 	if (pAttr2 != NULL)
-	   FreeAttr (pAttr2);
+	   FreeAttribute (pAttr2);
      }
 }
 
@@ -2728,7 +2728,7 @@ PtrDocument         pDoc;
 
 	att = pSRule->SrDefAttr[i];
 	/* gets an attribute block */
-	GetAttr (&pAttr);
+	GetAttribute (&pAttr);
 	/* links this block to the head of the attributes list of the element */
 	pAttr->AeNext = pEl->ElFirstAttr;
 	pEl->ElFirstAttr = pAttr;
@@ -2857,7 +2857,7 @@ boolean             withLabel;
 	     pEl->ElAssocNum = assocNum;
 	     if (withLabel)
 		/* compute the value of the label */
-		LabelIntToString (NewLabel (pDoc), pEl->ElLabel);
+		ConvertIntToLabel (NewLabel (pDoc), pEl->ElLabel);
 	     /* gives the attributes the default values defined in the structure
 		scheme which specifies the element */
 	     AttachRequiredAttributes (pEl, pSRule, pSS, withAttr, pDoc);
@@ -3336,7 +3336,7 @@ PtrAttribute        pAttr;
 	/* specific processing for deleting the attributes of a Draw */
 	DrawSupprAttr (pAttr, pEl);
 	/* frees the attribute block */
-	FreeAttr (pAttr);
+	FreeAttribute (pAttr);
      }
 }
 
@@ -3398,7 +3398,7 @@ PtrElement         *pEl;
 		  /* frees the image descriptor */
 		  if (pEl1->ElLeafType == LtPicture)
 		    {
-		       FreeImageDescriptor (pEl1->ElPictInfo);
+		       FreePictInfo (pEl1->ElPictInfo);
 		       pEl1->ElPictInfo = NULL;
 		    }
 	       }
@@ -3747,7 +3747,7 @@ boolean             shareRef;
 		      /* the copy is not referenced */
 		       pEl->ElReferredDescr = NULL;
 		       /* computes the value of the label */
-		       LabelIntToString (NewLabel (pDocCopy), pEl->ElLabel);
+		       ConvertIntToLabel (NewLabel (pDocCopy), pEl->ElLabel);
 		    }
 		  pEl->ElIsCopy = pSource->ElIsCopy;
 		  pEl->ElAccess = AccessInherited;
@@ -3850,16 +3850,16 @@ boolean             shareRef;
 }
 
 /*----------------------------------------------------------------------
-  FirstAssocElem
+  FirstAssociatedElement
   Returns the first associated element of type typeNum, defined by the
   structure scheme pSS, belonging to document pDoc. Returns NULL if no
   such element exists.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          FirstAssocElem (PtrDocument pDoc, int typeNum, PtrSSchema pSS)
+PtrElement          FirstAssociatedElement (PtrDocument pDoc, int typeNum, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-PtrElement          FirstAssocElem (pDoc, typeNum, pSS)
+PtrElement          FirstAssociatedElement (pDoc, typeNum, pSS)
 PtrDocument         pDoc;
 int                 typeNum;
 PtrSSchema          pSS;
@@ -3920,7 +3920,7 @@ PtrDocument         pDoc;
 	pE = pEl->ElFirstChild;
 	while (pE != NULL)
 	  {
-	     LabelIntToString (NewLabel (pDoc), pE->ElLabel);
+	     ConvertIntToLabel (NewLabel (pDoc), pE->ElLabel);
 	     ChangeLabels (pE, pDoc);
 	     pE = pE->ElNext;
 	  }
@@ -4135,7 +4135,7 @@ PtrDocument         pDoc;
 	 structure scheme, we incremeent the counter */
      pNew->ElStructSchema->SsNObjects++;
    /* computes the label's value */
-   LabelIntToString (NewLabel (pDoc), pNew->ElLabel);
+   ConvertIntToLabel (NewLabel (pDoc), pNew->ElLabel);
    /* copies the attributes without verifying because we don't change 
       the structure  scheme */
    CopyAttributes (pEl, pNew, FALSE);
@@ -4282,7 +4282,7 @@ PtrElement          pEl;
 	   /* changes the language of the text leaves */
 	   ChangeLanguageLeaves (pEl, lang);
 	   /* applies the langyuage attribute to the element */
-	   GetAttr (&pAttr);
+	   GetAttribute (&pAttr);
 	   pAttr->AeAttrSSchema = pDoc->DocSSchema;
 	   pAttr->AeAttrNum = 1;
 	   pAttr->AeDefAttr = FALSE;

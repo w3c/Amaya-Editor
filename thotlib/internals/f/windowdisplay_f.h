@@ -315,7 +315,7 @@ extern void DrawEllipsFrame ( int frame,
                               int fg,
                               int bg,
                               int pattern );
-extern void PSPageInfo ( int pagenum,
+extern void StorePageInfo ( int pagenum,
                          int width,
                          int height );
 extern void psBoundingBox ( int frame,
@@ -347,7 +347,7 @@ extern void Scroll ( int frame,
 extern int EndOfString ( char *string,
                          char *suffix );
 extern void XFlushOutput ( int frame );
-extern void Trame ( int frame,
+extern void PaintWithPattern ( int frame,
                     int x,
                     int y,
                     int width,
@@ -670,7 +670,7 @@ extern void DrawEllipsFrame (/* int frame,
                                 int fg,
                                 int bg,
                                 int pattern */);
-extern void PSPageInfo (/* int pagenum,
+extern void StorePageInfo (/* int pagenum,
                            int width,
                            int height */);
 extern void psBoundingBox (/* int frame,
@@ -702,7 +702,7 @@ extern void Scroll (/* int frame,
 extern int EndOfString (/* char *string,
                            char *suffix */);
 extern void XFlushOutput (/* int frame */);
-extern void Trame (/* int frame,
+extern void PaintWithPattern (/* int frame,
                       int x,
                       int y,
                       int width,

@@ -69,7 +69,7 @@ AttributeType       attributeType;
      }
    else
      {
-	GetAttr (&pAttr);
+	GetAttribute (&pAttr);
 	pAttr->AeNext = NULL;
 	pAttr->AeAttrSSchema = (PtrSSchema) (attributeType.AttrSSchema);
 	pAttr->AeAttrNum = attributeType.AttrTypeNum;
@@ -152,7 +152,7 @@ Document            document;
    else
      {
 #ifndef NODISPLAY
-	UndisplayHeritAttr ((PtrElement) element, (PtrAttribute) attribute, document, FALSE);
+	UndisplayInheritedAttributes ((PtrElement) element, (PtrAttribute) attribute, document, FALSE);
 #endif
 	if (((PtrElement) element)->ElFirstAttr == NULL)
 	   ((PtrElement) element)->ElFirstAttr = (PtrAttribute) attribute;
@@ -280,7 +280,7 @@ Document            document;
 	       {
 		  DeleteAttribute ((PtrElement) element, pAttr);
 #ifndef NODISPLAY
-		  UndisplayHeritAttr ((PtrElement) element, pAttr, document, TRUE);
+		  UndisplayInheritedAttributes ((PtrElement) element, pAttr, document, TRUE);
 #endif
 		  /* Special processig to suppress an attribute of an element of type object Draw */
 		  DrawSupprAttr (pAttr, (PtrElement) element);
@@ -364,7 +364,7 @@ Document            document;
 	  {
 #ifndef NODISPLAY
 	     if (element != NULL)
-		UndisplayHeritAttr ((PtrElement) element, pAttr, document,
+		UndisplayInheritedAttributes ((PtrElement) element, pAttr, document,
 				    FALSE);
 #endif
 	     pAttr->AeAttrValue = value;
@@ -418,7 +418,7 @@ Document            document;
      {
 #ifndef NODISPLAY
 	if (element != NULL)
-	   UndisplayHeritAttr ((PtrElement) element, pAttr, document, FALSE);
+	   UndisplayInheritedAttributes ((PtrElement) element, pAttr, document, FALSE);
 #endif
 	if (pAttr->AeAttrText == NULL)
 	   GetTextBuffer (&pAttr->AeAttrText);
@@ -428,7 +428,7 @@ Document            document;
 	CopyStringToText (buffer, pAttr->AeAttrText, &lg);
 	if (pAttr->AeAttrNum == 1)
 	  {
-	     GetAttr (&pAttrNouv);
+	     GetAttribute (&pAttrNouv);
 	     pAttrNouv->AeAttrSSchema = pAttr->AeAttrSSchema;
 	     pAttrNouv->AeAttrNum = 1;
 	     pAttrNouv->AeDefAttr = FALSE;

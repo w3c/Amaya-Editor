@@ -189,7 +189,7 @@ boolean             orgYComplete;
 	   pBox = pBoxInLine;
 	if (pBox->BxAbstractBox->AbLeafType == LtText)
 	  {
-	     pBox->BxWidth -= pBox->BxNSpaces * CarWidth (_SPACE_, pBox->BxFont);
+	     pBox->BxWidth -= pBox->BxNSpaces * CharacterWidth (_SPACE_, pBox->BxFont);
 	     nSpaces += pBox->BxNSpaces;
 	  }
 
@@ -408,7 +408,7 @@ PtrTextBuffer      *pNewBuff;
    wordWidth = 0;
    spaceCount = 0;
    still = TRUE;
-   spaceWidth = CarWidth (_SPACE_, font);
+   spaceWidth = CharacterWidth (_SPACE_, font);
    spaceAdjust = spaceWidth;
    language = pBox->BxAbstractBox->AbLanguage;
 
@@ -437,7 +437,7 @@ PtrTextBuffer      *pNewBuff;
 	else if (character == _SPACE_)
 	   carWidth = spaceAdjust;
 	else
-	   carWidth = CarWidth (character, font);
+	   carWidth = CharacterWidth (character, font);
 
 	/* Si le caractere ne rentre pas dans la ligne */
 	/* ou si on arrive a la fin de la boite        */
@@ -729,7 +729,7 @@ PtrTextBuffer      *pNewBuff;
      {
 	/* Engendre un hyphen */
 	dummySpaces = -1;
-	*boxWidth += CarWidth (173, font);
+	*boxWidth += CharacterWidth (173, font);
 
 	/* RemoveElement un ou plusieurs caracteres pour loger l'hyphen */
 	while (*boxWidth > length && *nChars > 1)
@@ -746,7 +746,7 @@ PtrTextBuffer      *pNewBuff;
 	     else
 		(*newIndex)--;
 
-	     *boxWidth -= CarWidth (character, font);
+	     *boxWidth -= CharacterWidth (character, font);
 	     (*nChars)--;
 	  }
      }
@@ -973,7 +973,7 @@ boolean             force;
    if (lostPixels <= 0)
       spaceWidth = 0;
    else
-      spaceWidth = CarWidth (_SPACE_, font);
+      spaceWidth = CharacterWidth (_SPACE_, font);
 
    /* Creation de deux boites de coupure :                           */
    /* - dans le cas general si SearchBreak a trouve' un point de coupure */
@@ -1015,7 +1015,7 @@ boolean             force;
 	  {
 	     /* La boite doit etre completee par un tiret d'hyphenation */
 	     pFirstBox->BxType = BoDotted;
-	     larg -= CarWidth (173, font);
+	     larg -= CharacterWidth (173, font);
 	     lostPixels = 0;	/* il n'y a pas de blanc dummySpacese */
 	  }
 	else
@@ -1131,7 +1131,7 @@ PtrTextBuffer      *pNewBuff;
 	if (character == BREAK_LINE)
 	  {
 	     found = TRUE;
-	     *breakWidth = CarWidth (character, font);
+	     *breakWidth = CharacterWidth (character, font);
 	     /* Faut-il changer de buffer ? */
 	     if (i >= pBuffer->BuLength)
 	       {
@@ -1163,10 +1163,10 @@ PtrTextBuffer      *pNewBuff;
 	     if (character == _SPACE_)
 	       {
 		  (*nSpaces)++;
-		  *boxWidth += CarWidth (_SPACE_, font);
+		  *boxWidth += CharacterWidth (_SPACE_, font);
 	       }
 	     else
-		*boxWidth += CarWidth (character, font);
+		*boxWidth += CharacterWidth (character, font);
 	  }
 	if (i >= pBuffer->BuLength)	/* Faut-il changer de buffer ? */
 	  {
@@ -1249,7 +1249,7 @@ PtrAbstractBox      pRootAb;
    if (lostPixels <= 0)
       spaceWidth = 0;
    else
-      spaceWidth = CarWidth (_SPACE_, font);
+      spaceWidth = CharacterWidth (_SPACE_, font);
 
    /* Creation de la boite suivante qui contient la fin de la chaine */
    /* - dans le cas general si SearchBreak a trouve' un point de coupure */
@@ -1284,7 +1284,7 @@ PtrAbstractBox      pRootAb;
 	  {
 	     /* La boite doit etre completee par un tiret d'hyphenation */
 	     pBox->BxType = BoDotted;
-	     larg -= CarWidth (173, font);
+	     larg -= CharacterWidth (173, font);
 	     lostPixels = 0;	/* il n'y a pas de blanc dummySpacese */
 	  }
 	else
@@ -1740,7 +1740,7 @@ int                *height;
    /* evalue si le positionnement en X et en Y doit etre absolu */
    IsXYPosComplete (pBox, &orgXComplete, &orgYComplete);
 
-   if (pBox->BxWidth > CarWidth (119, pBox->BxFont))	/*'w' */
+   if (pBox->BxWidth > CharacterWidth (119, pBox->BxFont))	/*'w' */
      {
 	/* Acquisition d'une ligne */
 	full = TRUE;
@@ -2274,7 +2274,7 @@ boolean            *changeSelectEnd;
 	pAb = pBox->BxAbstractBox;
 	if (pAb->AbLeafType == LtText)
 	  {
-	     x = CarWidth (_SPACE_, pBox->BxFont);
+	     x = CharacterWidth (_SPACE_, pBox->BxFont);
 	     /* met a jour les marques de selection */
 	     pFrame = &ViewFrameTable[frame - 1];
 	     if (pFrame->FrSelectionBegin.VsBox == pBox)
@@ -2323,7 +2323,7 @@ boolean            *changeSelectEnd;
 		       /* retire l'espace reserve au tiret d'hyphenation */
 		       if (pBox->BxType == BoDotted)
 			 {
-			    width -= CarWidth (173, pBox->BxFont);
+			    width -= CharacterWidth (173, pBox->BxFont);
 			    pBox->BxType = BoPiece;
 			 }
 		       number = pBox->BxNSpaces;
@@ -2347,7 +2347,7 @@ boolean            *changeSelectEnd;
 			      }
 			    else if (pFirstBox->BxType == BoDotted)
 			       /* retire la largeur du tiret d'hyphenation */
-			       width -= CarWidth (173, pFirstBox->BxFont);
+			       width -= CharacterWidth (173, pFirstBox->BxFont);
 
 			    /* Si la boite suivante n'est pas vide */
 			    if (pFirstBox->BxNChars > 0)
@@ -2644,7 +2644,7 @@ int                 frame;
 		       if (charIndex == _SPACE_ && pSelBox->BxSpaceWidth != 0)
 			  pSelEnd->VsXPos += pSelBox->BxSpaceWidth;
 		       else
-			  pSelEnd->VsXPos += CarWidth (charIndex, pSelBox->BxFont);
+			  pSelEnd->VsXPos += CharacterWidth (charIndex, pSelBox->BxFont);
 		    }
 	       }
 	  }
@@ -2665,13 +2665,13 @@ int                 frame;
 
 
 /*----------------------------------------------------------------------
-   MajBloc met a` jour le bloc de ligne (pAb) apres modification  
+   UpdateLineBlock met a` jour le bloc de ligne (pAb) apres modification  
    de la largeur de la boite incluse pBox de xDelta.       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MajBloc (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox, int xDelta, int spaceDelta, int frame)
+void                UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox, int xDelta, int spaceDelta, int frame)
 #else  /* __STDC__ */
-void                MajBloc (pAb, pLine, pBox, xDelta, spaceDelta, frame)
+void                UpdateLineBlock (pAb, pLine, pBox, xDelta, spaceDelta, frame)
 PtrAbstractBox      pAb;
 PtrLine             pLine;
 PtrBox              pBox;
@@ -2737,7 +2737,7 @@ int                 frame;
 	     if (pLine->LiSpaceWidth > 0)
 	       {
 		  /* Line justifiee */
-		  lostPixels = CarWidth (_SPACE_, pBox->BxFont);
+		  lostPixels = CharacterWidth (_SPACE_, pBox->BxFont);
 		  realLength = pLine->LiRealLength + xDelta - spaceDelta * (pLine->LiSpaceWidth - lostPixels);
 		  lostPixels = pLine->LiXMax - pLine->LiMinLength;
 	       }

@@ -334,7 +334,7 @@ PtrDocument         pDoc;
 {
    PtrReferredDescr    pRefD;
 
-   GetDescReference (&pRefD);
+   GetReferredDescr (&pRefD);
    /* insere le nouveau descripteur au debut de la chaine des */
    /* descripteurs de references du document. Le premier descripteur */
    /* de document est bidon. */
@@ -380,7 +380,7 @@ PtrReferredDescr    pRefD;
 	     pExtDoc = pNextExtDoc;
 	  }
 	/* libere le descripteur d'element reference' */
-	FreeDescReference (pRefD);
+	FreeReferredDescr (pRefD);
      }
 }
 
@@ -1252,7 +1252,7 @@ PtrDocument         pDoc;
 	 /* cet element est reference' par d'autres documents */
 	{
 	   /* acquiert un descripteur et le remplit */
-	   GetElemRefChng (&pChngRef);
+	   GetChangedReferredEl (&pChngRef);
 	   strncpy (pChngRef->CrOldLabel, pEl->ElLabel, MAX_LABEL_LEN);
 	   pChngRef->CrNewLabel[0] = '\0';
 	   CopyDocIdent (&(pChngRef->CrOldDocument), pDoc->DocIdent);

@@ -200,10 +200,10 @@ int                *rank;
 
    *rank = 0;
    if (NIdentifiers >= MAX_IDENTIFIERS)
-      CompilerError (index, COMPIL, FATAL, NO_SPACE_LEFT_IN_INDENT_TABLE,
+      CompilerMessage (index, COMPIL, FATAL, NO_SPACE_LEFT_IN_INDENT_TABLE,
 		     inputLine, LineNum);
    else if (len > IDENTIFIER_LENGTH)
-      CompilerError (index, COMPIL, FATAL, INVALID_WORD_SIZE,
+      CompilerMessage (index, COMPIL, FATAL, INVALID_WORD_SIZE,
 		     inputLine, LineNum);
    else
      {
@@ -240,7 +240,7 @@ indLine             len;
    sscanf (&inputLine[index - 1], "%d", &num);
    if (num > 65535)
      {
-	CompilerError (index, COMPIL, FATAL, NUMBER_OVERFLOW, inputLine, LineNum);
+	CompilerMessage (index, COMPIL, FATAL, NUMBER_OVERFLOW, inputLine, LineNum);
 	num = 0;
      }
    return num;
@@ -278,7 +278,7 @@ void                OctalToChar ()
 		  while (inputLine[k] >= '0' && inputLine[k] <= '7' && k < i + 4)
 		     n = n * 8 + ((int) inputLine[k++]) - ((int) '0');
 		  if (n < 1 || n > 255)
-		     CompilerError (i, COMPIL, FATAL, INVALID_CHAR,
+		     CompilerMessage (i, COMPIL, FATAL, INVALID_CHAR,
 				    inputLine, LineNum);
 		  else
 		    {
@@ -416,7 +416,7 @@ SyntacticType      *wn;
 			      case SynInteger:
 				 if (inputLine[j] < '0' || inputLine[j] > '9')
 				   {
-				      CompilerError (j + 1, COMPIL, FATAL, BAD_NUMBER,
+				      CompilerMessage (j + 1, COMPIL, FATAL, BAD_NUMBER,
 						     inputLine, LineNum);
 				      *wn = SynError;
 				      stop = True;
@@ -433,7 +433,7 @@ SyntacticType      *wn;
 				 /* lettre accentuee */
 				       || inputLine[j] == '_'))
 				   {
-				      CompilerError (j + 1, COMPIL, FATAL, BAD_WORD,
+				      CompilerMessage (j + 1, COMPIL, FATAL, BAD_WORD,
 						     inputLine, LineNum);
 				      *wn = SynError;
 				      stop = True;
@@ -456,7 +456,7 @@ SyntacticType      *wn;
 	     do
 		if (inputLine[j] == '\0')
 		  {
-		     CompilerError (*wi,
+		     CompilerMessage (*wi,
 				 COMPIL, FATAL, MULTIPLE_LINE_STRINGS_ERROR,
 				    inputLine, LineNum);
 		     *wn = SynError;
@@ -538,7 +538,7 @@ int                *rank;
 	       }
 	     else
 		/* mot-cle court invalide */
-		CompilerError (wi, COMPIL, FATAL, BAD_SYMBOL, inputLine, LineNum);
+		CompilerMessage (wi, COMPIL, FATAL, BAD_SYMBOL, inputLine, LineNum);
 	  }
      }
    else if (c >= 1100 && c < 2000)
@@ -622,7 +622,7 @@ SyntRuleNum        *pr;
    int                 s;
 
    if (level < 0)
-      CompilerError (wi, COMPIL, FATAL, END_HAS_BEEN_DETECTED,
+      CompilerMessage (wi, COMPIL, FATAL, END_HAS_BEEN_DETECTED,
 		     inputLine, LineNum);
    else
      {
@@ -714,7 +714,7 @@ SyntRuleNum        *pr;
 		     if (*c < 1000)
 			/* symbole non terminal */
 			if (level >= STACKSIZE)
-			   CompilerError (wi, COMPIL, FATAL, NO_SPACE_LEFT_IN_STACK,
+			   CompilerMessage (wi, COMPIL, FATAL, NO_SPACE_LEFT_IN_STACK,
 					  inputLine, LineNum);
 			else
 			   /* empile la regle definissant ce symbole */
@@ -874,7 +874,7 @@ SyntRuleNum        *pr;
 	  }
 	while (!stop && level >= 0);	/* mot ok ou fin de regle */
 	if (!ok)
-	   CompilerError (wi, COMPIL, FATAL, SYNTAX_ERROR, inputLine, LineNum);
+	   CompilerMessage (wi, COMPIL, FATAL, SYNTAX_ERROR, inputLine, LineNum);
      }
 }
 
@@ -894,13 +894,13 @@ void                ParserEnd ()
 {
    if (level >= 0)
       /* la pile n'est pas vide */
-      CompilerError (1, COMPIL, FATAL, ABNORMAL_END, inputLine, LineNum);
+      CompilerMessage (1, COMPIL, FATAL, ABNORMAL_END, inputLine, LineNum);
    else
      {
 	/* la pile est vide */
 	if (GramRule[Stack[0].StRule][Stack[0].StRuleInd] != 2000)
 	   /* la regle initiale n'est pas terminee */
-	   CompilerError (1, COMPIL, FATAL, ABNORMAL_END, inputLine, LineNum);
+	   CompilerMessage (1, COMPIL, FATAL, ABNORMAL_END, inputLine, LineNum);
      }
 }
 
@@ -936,7 +936,7 @@ char               *fileName;
    strcpy (pnomcourt, fileName);
    /* cherche dans le directory compil si le fichier grammaire existe */
    if (SearchFile (pnomcourt, 3, pgrname) == 0)
-      CompilerError (0, COMPIL, FATAL, GRM_FILE_NOT_FOUND,
+      CompilerMessage (0, COMPIL, FATAL, GRM_FILE_NOT_FOUND,
 		     inputLine, LineNum);
    else
      {
@@ -977,7 +977,7 @@ char               *fileName;
 			 {
 			    if (NKeywords >= MAX_KEYWORDS)
 			       /* table saturee */
-			       CompilerError (wind, COMPIL, FATAL, NO_SPACE_LEFT_IN_KEYWORD_TABLE,
+			       CompilerMessage (wind, COMPIL, FATAL, NO_SPACE_LEFT_IN_KEYWORD_TABLE,
 					      inputLine, LineNum);
 			    else
 			       NKeywords++;
@@ -987,7 +987,7 @@ char               *fileName;
 			    if (wlen > KEWWORD_LENGTH)
 			      {
 				 wlen = KEWWORD_LENGTH;
-				 CompilerError (wind, COMPIL, FATAL, INVALID_KEYWORD_SIZE,
+				 CompilerMessage (wind, COMPIL, FATAL, INVALID_KEYWORD_SIZE,
 						inputLine, LineNum);
 			      }
 			    pkw1->SrcKeywordLen = wlen;
@@ -1007,7 +1007,7 @@ char               *fileName;
 			       pkw1->SrcKeywordCode = AsciiToInt (wind, wlen);
 			    else
 			       /* fichier incorrect */
-			       CompilerError (wind, COMPIL, FATAL, INCORR_GRAMMAR_FILE_GRM, inputLine, LineNum);
+			       CompilerMessage (wind, COMPIL, FATAL, INCORR_GRAMMAR_FILE_GRM, inputLine, LineNum);
 			 }
 		       else if (wnat == SynInteger)
 			  /* fin de la table mots-cles */
@@ -1023,7 +1023,7 @@ char               *fileName;
 			     if (currule > MAX_RULES)
 			       {
 				  /* table des regles saturee */
-				  CompilerError (wind, COMPIL, FATAL, NO_SPACE_LEFT_IN_GRAMMAR_TABLE, inputLine, LineNum);
+				  CompilerMessage (wind, COMPIL, FATAL, NO_SPACE_LEFT_IN_GRAMMAR_TABLE, inputLine, LineNum);
 				  currule = MAX_RULES;
 			       }
 			     GramRule[currule - 1][0] = 0;
@@ -1039,7 +1039,7 @@ char               *fileName;
 				ruleptr = 0;	/* fin regle */
 			     else if (ruleptr >= RULE_LENGTH)
 				/* regle trop longue */
-				CompilerError (wind, COMPIL, FATAL, GRAMMAR_RULE_SIZE_EXCEEDED, inputLine, LineNum);
+				CompilerMessage (wind, COMPIL, FATAL, GRAMMAR_RULE_SIZE_EXCEEDED, inputLine, LineNum);
 			     else
 				ruleptr++;
 			  }
@@ -1047,7 +1047,7 @@ char               *fileName;
 			/* ce n'est pas un nombre */
 		     if (wind > 0)
 			/* fichier incorrect */
-			CompilerError (wind, COMPIL, FATAL, INCORR_GRAMMAR_FILE_GRM, inputLine, LineNum);
+			CompilerMessage (wind, COMPIL, FATAL, INCORR_GRAMMAR_FILE_GRM, inputLine, LineNum);
 		  j = wind + wlen;	/* fin du mot */
 	       }
 	     while (wind != 0);	/* plus de mot dans la ligne */

@@ -69,7 +69,7 @@ int                 Val;
    if (!existe)
       /* l'element ne porte pas l'attribut */
      {
-	GetAttr (&pAttr);
+	GetAttribute (&pAttr);
 	/* acquiert un bloc attribut */
 	/* chaine ce bloc en tete de la liste des attributs de l'element */
 	pAttr->AeNext = pEl1->ElFirstAttr;

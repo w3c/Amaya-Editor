@@ -178,7 +178,7 @@ PtrDocument         pDoc;
      {
 	/* l'element ne porte pas cet attribut */
 	/* cree et intialise l'attribut */
-	GetAttr (&pAttr);
+	GetAttribute (&pAttr);
 	/* chaine le nouvel attribut en tete des attributs de l'element */
 	pAttr->AeNext = pEl->ElFirstAttr;
 	pEl->ElFirstAttr = pAttr;
@@ -908,7 +908,7 @@ PtrAttribute        pNewAttr;
    PtrReference        pRef;
    int                 len;
 
-   GetAttr (&pAttr);
+   GetAttribute (&pAttr);
    /* on chaine cet attribut apres le dernier attribut de  l'element */
    if (pEl->ElFirstAttr == NULL)
       /* c'est le 1er attribut de l'element */
@@ -1353,7 +1353,7 @@ PtrSSchema          pSS;
 		   notifyAttr.attributeType.AttrTypeNum = att;
 		   CallEventAttribute (&notifyAttr, TRUE);
 		   /* cree un nouvel attribut pour l'element */
-		   GetAttr (&pAttr);
+		   GetAttribute (&pAttr);
 		   pAttr->AeAttrSSchema = pSS;
 		   pAttr->AeAttrNum = att;
 		   pAttr->AeDefAttr = FALSE;
@@ -1599,7 +1599,7 @@ int                 ExceptNum;
 {
    PtrAttribute        pAttr;
 
-   GetAttr (&pAttr);
+   GetAttribute (&pAttr);
    if (pAttr != NULL)
      {
 	pAttr->AeAttrSSchema = pEl->ElStructSchema;

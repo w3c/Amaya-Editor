@@ -10,11 +10,11 @@ extern int NumberOfFonts ( void );
 extern int PointToPixel ( int value );
 extern int GetCharsCapacity ( int volpixel );
 extern int PixelToPoint ( int value );
-extern int CarWidth ( unsigned char c,
+extern int CharacterWidth ( unsigned char c,
                       ptrfont font );
-extern int CarHeight ( unsigned char c,
+extern int CharacterHeight ( unsigned char c,
                        ptrfont font );
-extern int CarAscent ( unsigned char c,
+extern int CharacterAscent ( unsigned char c,
                        ptrfont font );
 extern int FontAscent ( ptrfont font );
 extern int FontHeight ( ptrfont font );
@@ -55,11 +55,11 @@ extern int NumberOfFonts (/* void */);
 extern int PointToPixel (/* int value */);
 extern int GetCharsCapacity (/* int volpixel */);
 extern int PixelToPoint (/* int value */);
-extern int CarWidth (/* unsigned char c,
+extern int CharacterWidth (/* unsigned char c,
                         ptrfont font */);
-extern int CarHeight (/* unsigned char c,
+extern int CharacterHeight (/* unsigned char c,
                          ptrfont font */);
-extern int CarAscent (/* unsigned char c,
+extern int CharacterAscent (/* unsigned char c,
                          ptrfont font */);
 extern int FontAscent (/* ptrfont font */);
 extern int FontHeight (/* ptrfont font */);

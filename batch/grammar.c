@@ -124,7 +124,7 @@ indLine             wi;
 
 {
    if (ref->NRuleRefs >= MAX_RULE_REF)
-      CompilerError (wi, GRM, FATAL, NO_SPACE_LEFT_IN_REF_TABLL, inputLine, LineNum);
+      CompilerMessage (wi, GRM, FATAL, NO_SPACE_LEFT_IN_REF_TABLL, inputLine, LineNum);
    else
       ref->RuleRef[ref->NRuleRefs++] = curRule;
 }
@@ -146,7 +146,7 @@ indLine             wi;
 
 {
    if (curIndx >= RULE_LENGTH)
-      CompilerError (wi, GRM, FATAL, INVALID_RULE_SIZE, inputLine, LineNum);
+      CompilerMessage (wi, GRM, FATAL, INVALID_RULE_SIZE, inputLine, LineNum);
    else
       SyntRule[curRule - 1][curIndx++] = code;
 }
@@ -235,14 +235,14 @@ int                 rank;
 	      if (curRule <= MAX_RULE_GRM)
 		 NSyntRules = curRule;
 	      else
-		 CompilerError (wi, GRM, FATAL, NO_SPACE_LEFT_IN_RULES_TABLE, inputLine, LineNum);
+		 CompilerMessage (wi, GRM, FATAL, NO_SPACE_LEFT_IN_RULES_TABLE, inputLine, LineNum);
 	   Identifier[rank - 1].SrcIdentDefRule = rank;
 	}
       else
 	{
 	   /* la regle est en cours */
 	   if (rank == curRule)
-	      CompilerError (wi, GRM, FATAL, NO_SPACE_LEFT_IN_RULES_TABLE, inputLine, LineNum);
+	      CompilerMessage (wi, GRM, FATAL, NO_SPACE_LEFT_IN_RULES_TABLE, inputLine, LineNum);
 	   else
 	      PutToken (rank, wi);
 	   Identifier[rank - 1].SrcIdentRefRule = rank;
@@ -254,7 +254,7 @@ int                 rank;
 	i = 0;
 	known = False;
 	if (wl - 1 > IDENTIFIER_LENGTH)
-	   CompilerError (wi, GRM, FATAL, INVALID_STRING_SIZE, inputLine, LineNum);
+	   CompilerMessage (wi, GRM, FATAL, INVALID_STRING_SIZE, inputLine, LineNum);
 	/* est-elle deja dans la table ? */
 	else
 	  {
@@ -279,7 +279,7 @@ int                 rank;
 		AddRefToTable (&kwRef[i - 1], wi);
 	     /* elle n'est pas dans la table, on la met */
 	     else if (Nstrings >= MAX_STRING_GRM)
-		CompilerError (wi, GRM, FATAL, NO_SPACE_LEFT_IN_STRING_TABLE, inputLine, LineNum);
+		CompilerMessage (wi, GRM, FATAL, NO_SPACE_LEFT_IN_STRING_TABLE, inputLine, LineNum);
 	     else
 	       {
 		  strng[Nstrings].SrcIdentLen = wl - 1;
@@ -683,10 +683,10 @@ indLine             wl;
 						    && inputLine[wi - 1] <= '`') || inputLine[wi - 1] == '|' || inputLine[wi - 1] == '~')
 	  {
 	     if (inputLine[wi - 1] == '\'')
-		CompilerError (wi, GRM, FATAL, BAD_KEYWORD, inputLine, LineNum);
+		CompilerMessage (wi, GRM, FATAL, BAD_KEYWORD, inputLine, LineNum);
 	  }
 	else
-	   CompilerError (wi, GRM, FATAL, BAD_KEYWORD, inputLine, LineNum);
+	   CompilerMessage (wi, GRM, FATAL, BAD_KEYWORD, inputLine, LineNum);
      }
    else
      {
@@ -705,13 +705,13 @@ indLine             wl;
 			     && inputLine[j] <= 'z') || (inputLine[j] >= '0'
 		  && inputLine[j] <= '9') || (((int) inputLine[wi - 1]) >= 1
 					      && inputLine[wi - 1] < ' ')))
-		     CompilerError (wi, GRM, FATAL, BAD_KEYWORD, inputLine, LineNum);
+		     CompilerMessage (wi, GRM, FATAL, BAD_KEYWORD, inputLine, LineNum);
 		  j++;
 	       }
 	     while (!error && j < wi + wl - 2);
 	  }
 	else
-	   CompilerError (wi, GRM, FATAL, BAD_KEYWORD, inputLine, LineNum);
+	   CompilerMessage (wi, GRM, FATAL, BAD_KEYWORD, inputLine, LineNum);
      }
 }
 

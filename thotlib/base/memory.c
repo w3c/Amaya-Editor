@@ -463,12 +463,12 @@ PtrElement          pEl;
 }
 
 /*----------------------------------------------------------------------
-   GetAttr alloue un attribut.                                     
+   GetAttribute alloue un attribut.                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetAttr (PtrAttribute * pAttr)
+void                GetAttribute (PtrAttribute * pAttr)
 #else  /* __STDC__ */
-void                GetAttr (pAttr)
+void                GetAttribute (pAttr)
 PtrAttribute       *pAttr;
 
 #endif /* __STDC__ */
@@ -496,12 +496,12 @@ PtrAttribute       *pAttr;
 }
 
 /*----------------------------------------------------------------------
-   FreeAttr libere un attribut.                                    
+   FreeAttribute libere un attribut.                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FreeAttr (PtrAttribute pAttr)
+void                FreeAttribute (PtrAttribute pAttr)
 #else  /* __STDC__ */
-void                FreeAttr (pAttr)
+void                FreeAttribute (pAttr)
 PtrAttribute        pAttr;
 
 #endif /* __STDC__ */
@@ -514,14 +514,14 @@ PtrAttribute        pAttr;
 }
 
 /*----------------------------------------------------------------------
-   GetDescReference alloue un descripteur de reference.            
+   GetReferredDescr alloue un descripteur de reference.            
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                GetDescReference (PtrReferredDescr * pDR)
+void                GetReferredDescr (PtrReferredDescr * pDR)
 
 #else  /* __STDC__ */
-void                GetDescReference (pDR)
+void                GetReferredDescr (pDR)
 PtrReferredDescr   *pDR;
 
 #endif /* __STDC__ */
@@ -551,14 +551,14 @@ PtrReferredDescr   *pDR;
 }
 
 /*----------------------------------------------------------------------
-   FreeDescReference libere un descripteur de reference.           
+   FreeReferredDescr libere un descripteur de reference.           
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                FreeDescReference (PtrReferredDescr pDR)
+void                FreeReferredDescr (PtrReferredDescr pDR)
 
 #else  /* __STDC__ */
-void                FreeDescReference (pDR)
+void                FreeReferredDescr (pDR)
 PtrReferredDescr    pDR;
 
 #endif /* __STDC__ */
@@ -788,14 +788,14 @@ PtrOutReference     pRS;
 }
 
 /*----------------------------------------------------------------------
-   GetElemRefChng alloue un descripteur de changement de reference.
+   GetChangedReferredEl alloue un descripteur de changement de reference.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                GetElemRefChng (PtrChangedReferredEl * pER)
+void                GetChangedReferredEl (PtrChangedReferredEl * pER)
 
 #else  /* __STDC__ */
-void                GetElemRefChng (pER)
+void                GetChangedReferredEl (pER)
 PtrChangedReferredEl *pER;
 
 #endif /* __STDC__ */
@@ -823,14 +823,14 @@ PtrChangedReferredEl *pER;
 }
 
 /*----------------------------------------------------------------------
-   FreeElemRefChng libere un descripteur de changement de reference
+   FreeChangedReferredEl libere un descripteur de changement de reference
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                FreeElemRefChng (PtrChangedReferredEl pER)
+void                FreeChangedReferredEl (PtrChangedReferredEl pER)
 
 #else  /* __STDC__ */
-void                FreeElemRefChng (pER)
+void                FreeChangedReferredEl (pER)
 PtrChangedReferredEl pER;
 
 #endif /* __STDC__ */
@@ -1055,7 +1055,7 @@ PtrDocument        *pDoc;
       pNewDoc->DocParameters[i] = NULL;
    /* cree et initialise un descripteur bidon de reference, debut */
    /* de la chaine des descripteurs de references du document */
-   GetDescReference (&pNewDoc->DocReferredEl);
+   GetReferredDescr (&pNewDoc->DocReferredEl);
    for (i = 0; i < MAX_VIEW_DOC; i++)
      {
 	pNewDoc->DocView[i].DvSSchema = NULL;

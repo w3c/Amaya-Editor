@@ -2113,7 +2113,7 @@ int                 frame;
 				  pLine = pViewSel->VsLine;
 			       else
 				  pLine = SearchLine (pBox);
-			       MajBloc (pAb, pLine, pBox, delta, spaceDelta, frame);
+			       UpdateLineBlock (pAb, pLine, pBox, delta, spaceDelta, frame);
 			    }
 			  /* Si l'englobement n'est pas prevu en fin de traitement */
 			  else if (pAb->AbBox != PackBoxRoot
@@ -2582,10 +2582,10 @@ int                 frame;
 	     switch (pBox->BxAbstractBox->AbShape)
 		   {
 		      case 'd':	/*integrale double */
-			 i = CarWidth (231, font) + CarWidth (231, font) / 2;
+			 i = CharacterWidth (231, font) + CharacterWidth (231, font) / 2;
 		      case 'i':	/*integrale */
 		      case 'c':	/*integrale circulaire */
-			 i = (int) ((float) CarWidth (231, font) * value);
+			 i = (int) ((float) CharacterWidth (231, font) * value);
 			 ResizeWidth (pBox, NULL, NULL, i - pBox->BxWidth, 0, frame);
 			 break;
 		      case '(':
@@ -2594,7 +2594,7 @@ int                 frame;
 		      case '}':
 		      case '[':
 		      case ']':
-			 i = (int) ((float) CarWidth (230, font) * value);
+			 i = (int) ((float) CharacterWidth (230, font) * value);
 			 ResizeWidth (pBox, NULL, NULL, i - pBox->BxWidth, 0, frame);
 			 break;
 		      default:

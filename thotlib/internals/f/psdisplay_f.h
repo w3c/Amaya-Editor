@@ -303,7 +303,7 @@ extern void DrawSlash ( int frame,
                         int RO,
                         int func,
                         int fg );
-extern void PSPageInfo ( int pagenum,
+extern void StorePageInfo ( int pagenum,
                          int width,
                          int height );
 extern void psBoundingBox ( int frame,
@@ -311,7 +311,7 @@ extern void psBoundingBox ( int frame,
                             int height );
 extern int EndOfString ( char *string,
                          char *suffix );
-extern void Trame ( int frame,
+extern void PaintWithPattern ( int frame,
                     int x,
                     int y,
                     int width,
@@ -622,7 +622,7 @@ extern void DrawSlash (/* int frame,
                           int RO,
                           int func,
                           int fg */);
-extern void PSPageInfo (/* int pagenum,
+extern void StorePageInfo (/* int pagenum,
                            int width,
                            int height */);
 extern void psBoundingBox (/* int frame,
@@ -630,7 +630,7 @@ extern void psBoundingBox (/* int frame,
                               int height */);
 extern int EndOfString (/* char *string,
                            char *suffix */);
-extern void Trame (/* int frame,
+extern void PaintWithPattern (/* int frame,
                       int x,
                       int y,
                       int width,

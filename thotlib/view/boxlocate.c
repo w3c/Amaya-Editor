@@ -2077,7 +2077,7 @@ int                *spacesNumber;
 	/* Calcule la largeur des blancs */
 	if (pBox->BxSpaceWidth == 0)
 	  {
-	     spaceWidth = CarWidth (_SPACE_, font);
+	     spaceWidth = CharacterWidth (_SPACE_, font);
 	     extraSpace = 0;
 	  }
 	else
@@ -2097,7 +2097,7 @@ int                *spacesNumber;
 	else if (c == _SPACE_)
 	   charWidth = spaceWidth;
 	else
-	   charWidth = CarWidth (c, font);
+	   charWidth = CharacterWidth (c, font);
 	notfound = (dx + charWidth / 2 < *x);
 #endif
 	while (notfound && length > 0)
@@ -2110,7 +2110,7 @@ int                *spacesNumber;
 	     else if (c == _SPACE_)
 		charWidth = spaceWidth;
 	     else
-		charWidth = CarWidth (c, font);
+		charWidth = CharacterWidth (c, font);
 #endif
 
 	     if (c == _SPACE_)
@@ -2151,7 +2151,7 @@ int                *spacesNumber;
 	     else if (c == _SPACE_)
 		charWidth = spaceWidth;
 	     else
-		charWidth = CarWidth (c, font);
+		charWidth = CharacterWidth (c, font);
 	     notfound = (dx + charWidth / 2 < *x);
 #endif
 	  }

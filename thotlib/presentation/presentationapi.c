@@ -380,7 +380,7 @@ Document            document;
 	  }
 #ifndef NODISPLAY
 	if (ok)
-	   RedispNewPresSpec (document, (PtrElement) element, (PtrPRule) pRule);
+	   RedisplayNewPRule (document, (PtrElement) element, (PtrPRule) pRule);
 #endif
      }
 }
@@ -448,7 +448,7 @@ Document            document;
 	     else
 		pPreviousPres->PrNextPRule = pPres->PrNextPRule;
 #ifndef NODISPLAY
-	     RedispPresStandard (document, (PtrElement) element,
+	     RedisplayDefaultPresentation (document, (PtrElement) element,
 				 pPres->PrType, pPres->PrViewNum);
 #endif
 	     FreePresentRule (pPres);
@@ -759,7 +759,7 @@ Document            document;
 	      }
 #ifndef NODISPLAY
 	if (done)
-	   RedispNewPresSpec (document, (PtrElement) element, (PtrPRule) pRule);
+	   RedisplayNewPRule (document, (PtrElement) element, (PtrPRule) pRule);
 #endif
      }
 }

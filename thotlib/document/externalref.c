@@ -26,15 +26,15 @@
 
 
 /*----------------------------------------------------------------------
-   LabelIntToString converts integer num into a Thot label		
+   ConvertIntToLabel converts integer num into a Thot label		
   ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
-void                LabelIntToString (int num, LabelString strng)
+void                ConvertIntToLabel (int num, LabelString strng)
 
 #else  /* __STDC__ */
-void                LabelIntToString (num, strng)
+void                ConvertIntToLabel (num, strng)
 int                 num;
 LabelString         strng;
 
@@ -69,7 +69,7 @@ BinFile             file;
 	 {
 	    case C_PIV_SHORT_LABEL:
 	       if (TtaReadShort (file, &j))
-		  LabelIntToString (j, label);
+		  ConvertIntToLabel (j, label);
 	       else
 		  /* error */
 		  label[0] = '\0';
@@ -79,7 +79,7 @@ BinFile             file;
 	       if (TtaReadShort (file, &j))
 		  if (TtaReadShort (file, &k))
 		     j = j * 65536 + k;
-	       LabelIntToString (j, label);
+	       ConvertIntToLabel (j, label);
 	       break;
 	    case C_PIV_LABEL:
 	       j = 0;
@@ -142,7 +142,7 @@ boolean             labelsOnly;
 	if (pDoc == NULL)
 	  {
 	     /* acquiert un descripteur d'element reference' */
-	     GetDescReference (&pRefD);
+	     GetReferredDescr (&pRefD);
 	     /* met le label lu dans le descripteur */
 	     strncpy (pRefD->ReReferredLabel, label, MAX_LABEL_LEN);
 	     /* chaine le descripteur */
@@ -257,7 +257,7 @@ PtrChangedReferredEl *Anchor;
 	/* read old label */
 	ReadLabel (c, label, file);
 	/* acquiert un nouveau descripteur */
-	GetElemRefChng (&pChnRef);
+	GetChangedReferredEl (&pChnRef);
 	/* le chaine en queue */
 	pChnRef->CrNext = NULL;
 	if (pPrevChnRef == NULL)
@@ -402,7 +402,7 @@ PtrDocument         pDoc;
 	  }
 	/* libere le descripteur qui a ete traite' */
 	pNextChnRef = pChnRef->CrNext;
-	FreeElemRefChng (pChnRef);
+	FreeChangedReferredEl (pChnRef);
 	/* passe au descripteur suivant */
 	pChnRef = pNextChnRef;
      }

@@ -207,7 +207,7 @@ Document            document;
 	       }
 
 #ifndef NODISPLAY
-	     RedispLeaf ((PtrElement) element, document, delta);
+	     RedisplayLeaf ((PtrElement) element, document, delta);
 	     /* Sets up a new selection if the element is within it */
 	     if (changeSelection)
 	       {
@@ -367,7 +367,7 @@ Document            document;
 #ifndef NODISPLAY
 	if (document > 0)
 	  {
-	     RedispLeaf (pEl, document, delta);
+	     RedisplayLeaf (pEl, document, delta);
 	     /* Sets up a new selection if the element is within it */
 	     if (changeSelection)
 	       {
@@ -693,7 +693,7 @@ Document            document;
 	  }
 #ifndef NODISPLAY
 	/* Redisplays the element */
-	RedispLeaf ((PtrElement) element, document, -delta);
+	RedisplayLeaf ((PtrElement) element, document, -delta);
 	/* Sets up a new selection if the element belongs to it */
 	if (changeSelection)
 	  {
@@ -772,7 +772,7 @@ Document            document;
 	SplitTextElement ((PtrElement) element, position + 1,
 			  LoadedDocument[document - 1], FALSE);
 #ifndef NODISPLAY
-	RedispSplittedText ((PtrElement) element, position, document);
+	RedisplaySplittedText ((PtrElement) element, position, document);
 #endif
      }
 }
@@ -841,7 +841,7 @@ Document            document;
 	      if (pEl2->ElTerminal && pEl2->ElLeafType == LtText)
 		 if (pEl2->ElLanguage == ((PtrElement) element)->ElLanguage)
 		    if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
-		       if (MemesAttributs ((PtrElement) element, pEl2))
+		       if (SameAttributes ((PtrElement) element, pEl2))
 			  if (((PtrElement) element)->ElSource == NULL && pEl2->ElSource == NULL)
 			     if (BothHaveNoSpecRules ((PtrElement) element, pEl2))
 			       {
@@ -852,7 +852,7 @@ Document            document;
 				  MergeTextElements ((PtrElement) element, &FreeElement,
 				       LoadedDocument[document - 1], FALSE);
 #ifndef NODISPLAY
-				  RedispMergedText ((PtrElement) element, document);
+				  RedisplayMergedText ((PtrElement) element, document);
 #endif
 				  if (FreeElement != NULL)
 				     DeleteElement (&FreeElement);
@@ -981,7 +981,7 @@ Document            document;
 		    }
 	       }
 #ifndef NODISPLAY
-	     RedispLeaf ((PtrElement) element, document, delta);
+	     RedisplayLeaf ((PtrElement) element, document, delta);
 #endif
 	  }
      }
@@ -1084,7 +1084,7 @@ Document            document;
 		pEl = pEl->ElParent;
 	     }
 #ifndef NODISPLAY
-	   RedispLeaf ((PtrElement) element, document, 1);
+	   RedisplayLeaf ((PtrElement) element, document, 1);
 #endif
 	}
 }
@@ -1132,7 +1132,7 @@ Document            document;
 		pEl = pEl->ElParent;
 	     }
 #ifndef NODISPLAY
-	   RedispLeaf ((PtrElement) element, document, -1);
+	   RedisplayLeaf ((PtrElement) element, document, -1);
 #endif
 	}
 }
@@ -1189,7 +1189,7 @@ Document            document;
 	     }
 	   ModifyPointInPolyline (((PtrElement) element)->ElPolyLineBuffer, rank, x, y);
 #ifndef NODISPLAY
-	   RedispLeaf ((PtrElement) element, document, 0);
+	   RedisplayLeaf ((PtrElement) element, document, 0);
 #endif
 	}
 }
@@ -1265,7 +1265,7 @@ Document            document;
 	   firstBuffer->BuPoints[0].XCoord = x;
 	   firstBuffer->BuPoints[0].YCoord = y;
 #ifndef NODISPLAY
-	   RedispLeaf ((PtrElement) element, document, 0);
+	   RedisplayLeaf ((PtrElement) element, document, 0);
 #endif
 	}
 }

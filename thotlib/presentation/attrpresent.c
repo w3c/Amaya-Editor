@@ -213,7 +213,7 @@ PtrSSchema          pSS;
 			      {
 				 /* l'attribut est bien defini dans le schema */
 				 /* de structure du document inclus */
-				 GetAttr (&pAttr);
+				 GetAttribute (&pAttr);
 				 pAttr->AeAttrSSchema = pIncludedEl->ElStructSchema;
 				 pAttr->AeAttrNum = att;
 				 pAttr->AeAttrType = AtTextAttr;

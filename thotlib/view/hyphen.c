@@ -425,10 +425,10 @@ int                *width;
 		if (j <= 1)
 		  {
 		     changedebut = TRUE;
-		     lg += CarWidth ((unsigned char) word[j], font);
+		     lg += CharacterWidth ((unsigned char) word[j], font);
 		     if (j == 1)
 			/* Il faut comptabiliser le caractere precedent */
-			lg += CarWidth ((unsigned char) word[j - 1], font);
+			lg += CharacterWidth ((unsigned char) word[j - 1], font);
 		     nbcar += j + 1;
 		     j = 0;
 		  }
@@ -446,7 +446,7 @@ int                *width;
 		    {
 		       /* Le debut du mot est deplace */
 		       changedebut = TRUE;
-		       lg += CarWidth ((unsigned char) word[j], font);
+		       lg += CharacterWidth ((unsigned char) word[j], font);
 		       nbcar++;
 		    }
 	       }
@@ -568,7 +568,7 @@ boolean            *hyphen;
 	/* Longueur et largeur des separateurs avant le mot */
 	nbcar = NextWord (font, &adbuff, &i, mot, &largeur);
 	/* Largeur du tiret d'hyphenantion */
-	lghyphen = CarWidth (173, font);
+	lghyphen = CharacterWidth (173, font);
 	/* Espace restant dans la ligne */
 	lgreste = *width - largeur - lghyphen;
 	/* Nombre de carateres maximum du mot pouvant entrer dans la ligne */
@@ -581,12 +581,12 @@ boolean            *hyphen;
 	     /* Recherche le nombre de caracteres du mot qui rentrent */
 	     /* dans la ligne */
 	     longueur = 0;
-	     lgcar = CarWidth ((unsigned char) mot[longueur], font);
+	     lgcar = CharacterWidth ((unsigned char) mot[longueur], font);
 	     while (lgreste >= lgcar && longueur < lgmot)
 	       {
 		  lgreste -= lgcar;
 		  longueur++;
-		  lgcar = CarWidth ((unsigned char) mot[longueur], font);
+		  lgcar = CharacterWidth ((unsigned char) mot[longueur], font);
 	       }
 
 	     if (longueur > 1)
@@ -614,7 +614,7 @@ boolean            *hyphen;
 			      {
 				 /* comptabilise le caractere */
 				 longueur--;
-				 *width += CarWidth ((unsigned char) (adbuff->BuContent[i++]), font);
+				 *width += CharacterWidth ((unsigned char) (adbuff->BuContent[i++]), font);
 			      }
 			 }	/*while */
 

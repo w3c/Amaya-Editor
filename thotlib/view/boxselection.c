@@ -659,7 +659,7 @@ boolean             alone;
 			    if (charIndex == _SPACE_ && pBox->BxSpaceWidth != 0)
 			       pViewSel->VsXPos += pBox->BxSpaceWidth;
 			    else
-			       pViewSel->VsXPos += CarWidth (charIndex, pBox->BxFont);
+			       pViewSel->VsXPos += CharacterWidth (charIndex, pBox->BxFont);
 			 }
 		    }
 	       }

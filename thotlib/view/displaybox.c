@@ -319,7 +319,7 @@ char                modele;
 		  pBox->BxHeight, RO, op, pBox->BxAbstractBox->AbForeground,
 			     pBox->BxAbstractBox->AbBackground, 0);
 	   else
-	      Trame (frame, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, RO, op,
+	      PaintWithPattern (frame, xd, yd, pBox->BxWidth, pBox->BxHeight, 0, RO, op,
 		     pBox->BxAbstractBox->AbForeground,
 		     pBox->BxAbstractBox->AbBackground, 4);
 	}
@@ -872,7 +872,7 @@ int                 frame;
 
 	      lgspace = pBox->BxSpaceWidth;
 	      if (lgspace == 0)
-		 lgspace = CarWidth (_SPACE_, pBox->BxFont);
+		 lgspace = CharacterWidth (_SPACE_, pBox->BxFont);
 
 	      /* Search the first displayable char */
 	      /* --------------------------------- */
@@ -895,7 +895,7 @@ int                 frame;
 			     }
 			}
 		      else
-			 lg = CarWidth (car, pBox->BxFont);
+			 lg = CharacterWidth (car, pBox->BxFont);
 
 		      charleft--;
 		      /* Skip to next char */
@@ -974,7 +974,7 @@ int                 frame;
 				else
 				   x += lgspace;
 			     else
-				x += CarWidth (car, pBox->BxFont);
+				x += CharacterWidth (car, pBox->BxFont);
 
 			     bl = 1;
 			  }

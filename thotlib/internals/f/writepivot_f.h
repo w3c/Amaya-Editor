@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean MemesAttributs ( PtrElement pEl1,
+extern boolean SameAttributes ( PtrElement pEl1,
                                 PtrElement pEl2 );
 extern void WriteVersionNumber ( BinFile pivFile );
 extern void EcritNat ( PtrSSchema pSS,
@@ -48,7 +48,7 @@ extern void ChangeNomRef ( PtrDocument pDoc,
 
 #else /* __STDC__ */
 
-extern boolean MemesAttributs (/* PtrElement pEl1,
+extern boolean SameAttributes (/* PtrElement pEl1,
                                   PtrElement pEl2 */);
 extern void WriteVersionNumber (/* BinFile pivFile */);
 extern void EcritNat (/* PtrSSchema pSS,

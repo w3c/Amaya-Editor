@@ -297,7 +297,7 @@ boolean             forward;
 
 
 /*----------------------------------------------------------------------
-   TypeBPage cherche le type de boite page qui correspond a`       
+   GetPageBoxType cherche le type de boite page qui correspond a`       
    l'element Marque Page pointe par pEl pour la vue viewNb. 
     Rq : viewNb est un numero de vue de schema de pres       
    On cherche les regles Page des elements englobants      
@@ -310,10 +310,10 @@ boolean             forward;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-int                 TypeBPage (PtrElement pEl, int viewNb, PtrPSchema * pSchPPage)
+int                 GetPageBoxType (PtrElement pEl, int viewNb, PtrPSchema * pSchPPage)
 
 #else  /* __STDC__ */
-int                 TypeBPage (pEl, viewNb, pSchPPage)
+int                 GetPageBoxType (pEl, viewNb, pSchPPage)
 PtrElement          pEl;
 int                 viewNb;
 PtrPSchema         *pSchPPage;
@@ -595,7 +595,7 @@ int                *NbCol;
 		       {
 			  /* on recherche si cet element porte une regle colonne */
 			  /* on recherche la boite page correspondante */
-			  TypeP = TypeBPage (pPrevious, viewNb, pSchPPage);
+			  TypeP = GetPageBoxType (pPrevious, viewNb, pSchPPage);
 			  pRule = (*pSchPPage)->PsPresentBox[TypeP - 1].PbFirstPRule;
 			  /* on recherche la regle colonne de la page */
 			  typeRule = PtFunction;
@@ -709,7 +709,7 @@ int                *NbCol;
 #endif /* __COLPAGE__ */
 
 /*----------------------------------------------------------------------
-   CptPage retourne le numero de compteur a` utiliser pour         
+   GetPageCounter retourne le numero de compteur a` utiliser pour         
    numeroter la marque de page pointee par pEl, dans la    
    vue viewNb. Retourne egalement dans pSchPPage le schema  
    de presentation ou est defini ce compteur. Retourne 0 si
@@ -718,10 +718,10 @@ int                *NbCol;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-int                 CptPage (PtrElement pEl, int viewNb, PtrPSchema * pSchPPage)
+int                 GetPageCounter (PtrElement pEl, int viewNb, PtrPSchema * pSchPPage)
 
 #else  /* __STDC__ */
-int                 CptPage (pEl, viewNb, pSchPPage)
+int                 GetPageCounter (pEl, viewNb, pSchPPage)
 PtrElement          pEl;
 int                 viewNb;
 PtrPSchema         *pSchPPage;
@@ -733,7 +733,7 @@ PtrPSchema         *pSchPPage;
    int                 cptpage;
 
    /* cherche d'abord la boite page */
-   bp = TypeBPage (pEl, viewNb, pSchPPage);
+   bp = GetPageBoxType (pEl, viewNb, pSchPPage);
    if (bp > 0)
       cptpage = (*pSchPPage)->PsPresentBox[bp - 1].PbPageCounter;
    else
@@ -866,7 +866,7 @@ boolean             forward;
 		/* car elle peut etre differente de son pere d'ou vient */
 		/* l'appel de IsViewFull */
 		viewSch = AppliedView (pEl, NULL, pDoc, viewNb);
-		bp = TypeBPage (pEl, viewSch, &pSchPPage);
+		bp = GetPageBoxType (pEl, viewSch, &pSchPPage);
 		if (bp != 0)
 		  {
 		     if (!assoc)
@@ -2998,7 +2998,7 @@ boolean            *arret;
 				 {
 				    if (!pAb->AbElement->ElTerminal || pAb->AbElement->ElLeafType != LtPicture)
 				       /* ce n'est pas un element image */
-				       FreeImageDescriptor (pAb->AbPictInfo);
+				       FreePictInfo (pAb->AbPictInfo);
 				    pAb->AbPictInfo = NULL;
 				 }
 			       FreeAbstractBox (pAb);

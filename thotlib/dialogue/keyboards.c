@@ -494,7 +494,7 @@ XmDrawnButtonCallbackStruct *infos;
    y = 4;
    i = param % 256;		/* indice dans la table des items */
    it = (ITEM *) ((int) it + (sizeof (ITEM) * i));
-   WChar (infos->window, it->name, CarWidth (87, FontDialogue), y, GXcopy, KbFonts[kb], 0, GCkey);
+   WChar (infos->window, it->name, CharacterWidth (87, FontDialogue), y, GXcopy, KbFonts[kb], 0, GCkey);
    if (it->legend)
      {
 	y = FontHeight (KbFonts[kb]);
@@ -687,7 +687,7 @@ int                 nbitem;
 	n++;
 	XtSetArg (args[n], XmNmarginHeight, 0);
 	n++;
-	XtSetArg (args[n], XmNwidth, (Dimension) CarWidth (87, FontDialogue) * 3);
+	XtSetArg (args[n], XmNwidth, (Dimension) CharacterWidth (87, FontDialogue) * 3);
 	n++;
 	XtSetArg (args[n], XmNheight, (Dimension) FontHeight (pFont) + FontHeight (FontDialogue) + 4);
 	n++;

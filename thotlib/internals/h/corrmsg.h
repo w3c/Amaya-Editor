@@ -14,7 +14,7 @@
 #define NO_PARAM		13
 #define NO_KEYBOARD		14
 #define NO_SAVE		15
-#define REFUS_MOT		16
+#define REFUSE_WORD		16
 #define ADD_WORD		17
 #define END_CORR		18
 #define STOP_CORR		19

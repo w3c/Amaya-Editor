@@ -167,7 +167,7 @@ PtrDocument         pDoc;
 		      pPrevRefD->ReNext = pRefD->ReNext;
 		      if (pRefD->ReNext != NULL)
 			 pRefD->ReNext->RePrevious = pPrevRefD;
-		      FreeDescReference (pRefD);
+		      FreeReferredDescr (pRefD);
 		      pRefD = pPrevRefD;
 		   }
      }
@@ -328,7 +328,7 @@ PtrDocument         pDoc;
 	   if (pDoc->DocParameters[i - 1] != NULL)
 	      DeleteElement (&pDoc->DocParameters[i - 1]);
 	/* libere le 1er descripteur de reference (bidon) */
-	FreeDescReference (pDoc->DocReferredEl);
+	FreeReferredDescr (pDoc->DocReferredEl);
 	pDoc->DocReferredEl = NULL;
 	/* libere les descripteurs de references sortantes creees */
 	pOutRef = pDoc->DocNewOutRef;
@@ -360,7 +360,7 @@ PtrDocument         pDoc;
 		  FreeExternalDoc (pExtDoc);
 		  pExtDoc = pNextExtDoc;
 	       }
-	     FreeElemRefChng (pChnRef);
+	     FreeChangedReferredEl (pChnRef);
 	     pChnRef = pNextChnRef;
 	  }
 
@@ -1058,7 +1058,7 @@ BinFile             file;
 	       }
 	     j += (int) c;
 	     /* convertit le label numerique en chaine de caracteres */
-	     LabelIntToString (j, label);
+	     ConvertIntToLabel (j, label);
 	  }
      }
    else
@@ -1653,7 +1653,7 @@ PtrAttribute       *pAttr;
 	     if (!found)
 	       {
 		  /* acquiert un bloc attribut pour l'element */
-		  GetAttr (pAttr);
+		  GetAttribute (pAttr);
 		  /* remplit ce bloc attribut avec ce qu'on vient de lire */
 		  pA = *pAttr;
 		  pA->AeAttrSSchema = pSchAttr;
@@ -3053,7 +3053,7 @@ PtrDocument         pDoc;
      {
 	if (pEl->ElLabel[0] == '\0')
 	   /* l'element n'a pas de label, on lui en met un */
-	   LabelIntToString (NewLabel (pDoc), pEl->ElLabel);
+	   ConvertIntToLabel (NewLabel (pDoc), pEl->ElLabel);
 	if (!pEl->ElTerminal)
 	   /* traite tous les fils de l'element */
 	  {
@@ -3809,7 +3809,7 @@ boolean             withEvent;
 	     /* inutile de liberer les descripteurs de documents */
 	     /* externes, on ne les a pas charge's */
 	     pNextRefD = pRefD->ReNext;
-	     FreeDescReference (pRefD);
+	     FreeReferredDescr (pRefD);
 	     pRefD = pNextRefD;
 	  }
 

@@ -509,7 +509,7 @@ int                 ActiveAttr[];
 
 	/* la table contient tous les attributs applicables aux elements */
 	/* selectionnes */
-	GetAttr (&pAttrNew);
+	GetAttribute (&pAttrNew);
 	if (nbOfEntries > 0)
 	  {
 	     lgmenu = 0;
@@ -681,7 +681,7 @@ char               *valtext;
 	       if (GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
 		  /* il y a bien une selection */
 		 {
-		    GetAttr (&pAttrNew);
+		    GetAttribute (&pAttrNew);
 		    if (SchCurrentAttr != NULL)
 		      {
 			 pAttrNew->AeAttrSSchema = SchCurrentAttr;
@@ -780,7 +780,7 @@ int                 frame;
    if (att >= 0)
       if (GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
 	{
-	   GetAttr (&pAttrNew);
+	   GetAttribute (&pAttrNew);
 	   pAttrNew->AeAttrSSchema = AttrStruct[att];
 	   pAttrNew->AeAttrNum = AttrNumber[att];
 	   pAttrNew->AeDefAttr = FALSE;

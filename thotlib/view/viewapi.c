@@ -1487,14 +1487,14 @@ PtrDocument         pDoc;
 static void         RedisplayCommand ( /* document */ );
 
 /*----------------------------------------------------------------------
-   RedispNewElement affiche un element qui vient d'etre ajoute'    
+   RedisplayNewElement affiche un element qui vient d'etre ajoute'    
    dans un arbre abstrait.                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RedispNewElement (Document document, PtrElement newElement, PtrElement sibling, boolean first, boolean creation)
+void                RedisplayNewElement (Document document, PtrElement newElement, PtrElement sibling, boolean first, boolean creation)
 
 #else  /* __STDC__ */
-void                RedispNewElement (document, newElement, sibling, first, creation)
+void                RedisplayNewElement (document, newElement, sibling, first, creation)
 Document            document;
 PtrElement          newElement;
 PtrElement          sibling;
@@ -2146,13 +2146,13 @@ Document            document;
 
 
 /*----------------------------------------------------------------------
-   RedispReference reaffiche une reference qui vient d'etre        
+   RedisplayReference reaffiche une reference qui vient d'etre        
    modifiee.                                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RedispReference (PtrElement element, Document document)
+void                RedisplayReference (PtrElement element, Document document)
 #else  /* __STDC__ */
-void                RedispReference (element, document)
+void                RedisplayReference (element, document)
 PtrElement          element;
 Document            document;
 
@@ -2182,12 +2182,12 @@ Document            document;
 }
 
 /*----------------------------------------------------------------------
-   RedispLeaf reaffiche le contenu d'une feuille.                  
+   RedisplayLeaf reaffiche le contenu d'une feuille.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RedispLeaf (PtrElement element, Document document, int delta)
+void                RedisplayLeaf (PtrElement element, Document document, int delta)
 #else  /* __STDC__ */
-void                RedispLeaf (element, document, delta)
+void                RedisplayLeaf (element, document, delta)
 PtrElement          element;
 Document            document;
 int                 delta;
@@ -2308,14 +2308,14 @@ int                 delta;
 
 
 /*----------------------------------------------------------------------
-   RedispSplittedText reaffiche le contenu d'un texte divise'.     
+   RedisplaySplittedText reaffiche le contenu d'un texte divise'.     
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                RedispSplittedText (PtrElement element, int position, Document document)
+void                RedisplaySplittedText (PtrElement element, int position, Document document)
 
 #else  /* __STDC__ */
-void                RedispSplittedText (element, position, document)
+void                RedisplaySplittedText (element, position, document)
 PtrElement          element;
 int                 position;
 Document            document;
@@ -2380,14 +2380,14 @@ Document            document;
 }
 
 /*----------------------------------------------------------------------
-   RedispMergedText reaffiche le contenu d'un texte fusionne'.     
+   RedisplayMergedText reaffiche le contenu d'un texte fusionne'.     
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                RedispMergedText (PtrElement element, Document document)
+void                RedisplayMergedText (PtrElement element, Document document)
 
 #else  /* __STDC__ */
-void                RedispMergedText (element, document)
+void                RedisplayMergedText (element, document)
 PtrElement          element;
 Document            document;
 
@@ -2463,16 +2463,16 @@ Document            document;
 }
 
 /*----------------------------------------------------------------------
-   UndisplayHeritAttr      supprime sur l'element pEl et son       
+   UndisplayInheritedAttributes      supprime sur l'element pEl et son       
    sous-arbre la presentation liee a l'attribut decrit par pAttr   
    ou a l'heritage d'un tel attribut.                              
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                UndisplayHeritAttr (PtrElement pEl, PtrAttribute pAttr, Document document, boolean suppression)
+void                UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr, Document document, boolean suppression)
 
 #else  /* __STDC__ */
-void                UndisplayHeritAttr (pEl, pAttr, document, suppression)
+void                UndisplayInheritedAttributes (pEl, pAttr, document, suppression)
 PtrElement          pEl;
 PtrAttribute        pAttr;
 Document            document;
@@ -2671,14 +2671,14 @@ Document            document;
 
 
 /*----------------------------------------------------------------------
-   RedispNewPresSpec                                               
+   RedisplayNewPRule                                               
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                RedispNewPresSpec (Document document, PtrElement pEl, PtrPRule pRule)
+void                RedisplayNewPRule (Document document, PtrElement pEl, PtrPRule pRule)
 
 #else  /* __STDC__ */
-void                RedispNewPresSpec (document, pEl, pRule)
+void                RedisplayNewPRule (document, pEl, pRule)
 Document            document;
 PtrElement          pEl;
 PtrPRule            pRule;
@@ -2703,13 +2703,13 @@ PtrPRule            pRule;
 }
 
 /*----------------------------------------------------------------------
-   RedispPresStandard                                              
+   RedisplayDefaultPresentation                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RedispPresStandard (Document document, PtrElement pEl, PRuleType typeRuleP, int view)
+void                RedisplayDefaultPresentation (Document document, PtrElement pEl, PRuleType typeRuleP, int view)
 
 #else  /* __STDC__ */
-void                RedispPresStandard (document, pEl, typeRuleP, view)
+void                RedisplayDefaultPresentation (document, pEl, typeRuleP, view)
 Document            document;
 PtrElement          pEl;
 PRuleType           typeRuleP;

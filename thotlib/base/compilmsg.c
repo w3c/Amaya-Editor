@@ -68,7 +68,7 @@ int                 errorCode;
 
 
 /*----------------------------------------------------------------------
-   CompilerError
+   CompilerMessage
    displays an simple error message for a compiler.
 
    inputline: the imput line containing the error
@@ -80,9 +80,9 @@ int                 errorCode;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CompilerError (int index, int origin, int level, int msgCode, unsigned char *inputline, int lineNum)
+void                CompilerMessage (int index, int origin, int level, int msgCode, unsigned char *inputline, int lineNum)
 #else  /* __STDC__ */
-void                CompilerError (index, origin, level, msgCode, inputline, lineNum)
+void                CompilerMessage (index, origin, level, msgCode, inputline, lineNum)
 int                 index;
 int                 origin;
 int                 level;
@@ -109,7 +109,7 @@ int                 lineNum;
 
 
 /*----------------------------------------------------------------------
-   CompilerErrorString
+   CompilerMessageString
    displays an error message with a variable part for a compiler.
 
    inputline: the imput line containing the error
@@ -121,9 +121,9 @@ int                 lineNum;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                CompilerErrorString (int index, int origin, int level, int msgCode, char *inputline, int lineNum, char *string)
+void                CompilerMessageString (int index, int origin, int level, int msgCode, char *inputline, int lineNum, char *string)
 #else  /* __STDC__ */
-void                CompilerErrorString (index, origin, level, msgCode, inputline, lineNum, string)
+void                CompilerMessageString (index, origin, level, msgCode, inputline, lineNum, string)
 int                 index;
 int                 origin;
 int                 level;

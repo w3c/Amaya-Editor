@@ -45,10 +45,10 @@ boolean             pre;
 }
 
 #ifdef __STDC__
-void                FreeImageDescriptor (int *desc)
+void                FreePictInfo (int *desc)
 
 #else  /* __STDC__ */
-void                FreeImageDescriptor (desc)
+void                FreePictInfo (desc)
 int                *desc;
 
 #endif /* __STDC__ */

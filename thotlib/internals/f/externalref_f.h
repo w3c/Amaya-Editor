@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void LabelIntToString ( int num,
+extern void ConvertIntToLabel ( int num,
                                LabelString strng );
 extern void ReadLabel ( char labelType,
                         LabelString label,
@@ -22,7 +22,7 @@ extern void UpdateREFdescriptors ( PtrChangedReferredEl Anchor,
 
 #else /* __STDC__ */
 
-extern void LabelIntToString (/* int num,
+extern void ConvertIntToLabel (/* int num,
                                  LabelString strng */);
 extern void ReadLabel (/* char labelType,
                           LabelString label,

@@ -1222,15 +1222,15 @@ PtrAttribute        pAttr;
 
 
 /*----------------------------------------------------------------------
-   	GetBufConst   acquiert un buffer de texte pour la constante de	
+   	GetConstantBuffer   acquiert un buffer de texte pour la constante de	
    		presentation correspondant au pave pointe par pAb.	
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                GetBufConst (PtrAbstractBox pAb)
+void                GetConstantBuffer (PtrAbstractBox pAb)
 
 #else  /* __STDC__ */
-void                GetBufConst (pAb)
+void                GetConstantBuffer (pAb)
 PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
@@ -1301,7 +1301,7 @@ PtrDocument         pDoc;
    if (pEl->ElHolophrast)
      {
 	pAb->AbLeafType = LtText;
-	GetBufConst (pAb);
+	GetConstantBuffer (pAb);
 	pAb->AbLanguage = TtaGetDefaultLanguage ();
 	pBu1 = pAb->AbText;
 	CopyStringToText ("<", pBu1, &lg);
@@ -1325,7 +1325,7 @@ PtrDocument         pDoc;
 		    /* saute les paves crees par FnCreateBefore */
 		    /* while (pAb->AbText != NULL && pAb->AbNext != NULL)
 		       pAb = pAb->AbNext; */
-		    NewImageDescriptor (pAb, pEl->ElText->BuContent, UNKNOWN_FORMAT);
+		    NewPictInfo (pAb, pEl->ElText->BuContent, UNKNOWN_FORMAT);
 		    pAb->AbVolume = pEl->ElTextLength;
 		    break;
 		 case LtText:
@@ -1354,7 +1354,7 @@ PtrDocument         pDoc;
 		    break;
 		 case LtReference:
 		    pAb->AbLeafType = LtText;
-		    GetBufConst (pAb);
+		    GetConstantBuffer (pAb);
 		    pAb->AbLanguage = TtaGetDefaultLanguage ();
 		    pBu1 = pAb->AbText;
 		    pBu1->BuContent[0] = '[';
@@ -1409,7 +1409,7 @@ PtrDocument         pDoc;
 		    break;
 		 case LtPairedElem:
 		    pAb->AbLeafType = LtText;
-		    GetBufConst (pAb);
+		    GetConstantBuffer (pAb);
 		    pAb->AbLanguage = TtaGetDefaultLanguage ();
 		    pBu1 = pAb->AbText;
 		    if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrFirstOfPair)
@@ -1821,7 +1821,7 @@ boolean            *appl;
 			    {
 			       /* on cherche la boite page correspondant a la regle page */
 			       /* portee par un des ascendants  */
-			       b = TypeBPage (pAbbParent->AbFirstEnclosed->AbElement,
+			       b = GetPageBoxType (pAbbParent->AbFirstEnclosed->AbElement,
 					      pAbbParent->AbFirstEnclosed->AbElement->ElViewPSchema,
 					      &pSchPPage);
 			       PageHeaderHeight = pSchPPage->PsPresentBox[b - 1].PbHeaderHeight;
@@ -2639,7 +2639,7 @@ FunctionType        pageType;
 		     pEl1->ElPageType = PgBegin;
 		     pEl1->ElViewPSchema = viewSch;
 		     /* cherche le compteur de pages a appliquer */
-		     counter = CptPage (pElPage, pEl1->ElViewPSchema, &pSchP);
+		     counter = GetPageCounter (pElPage, pEl1->ElViewPSchema, &pSchP);
 		     if (counter > 0)
 			/* calcule la valeur du compteur de pages */
 			pEl1->ElPageNumber = CounterVal (counter, pElPage->ElStructSchema, pSchP, pElPage,
@@ -2657,7 +2657,7 @@ FunctionType        pageType;
 		     pEl1->ElPageType = PgBegin;
 		     pEl1->ElViewPSchema = viewSch;
 		     /* cherche le compteur de pages a appliquer */
-		     counter = CptPage (pElPage, pEl1->ElViewPSchema, &pSchP);
+		     counter = GetPageCounter (pElPage, pEl1->ElViewPSchema, &pSchP);
 		     if (counter > 0)
 			/* calcule la valeur du compteur de pages */
 			pEl1->ElPageNumber = CounterVal (counter, pElPage->ElStructSchema, pSchP, pElPage,
@@ -2722,7 +2722,7 @@ FunctionType        pageType;
 		  pEl1->ElPageType = PgBegin;
 		  pEl1->ElViewPSchema = viewSch;
 		  /* cherche le compteur de pages a appliquer */
-		  counter = CptPage (pElPage, pEl1->ElViewPSchema, &pSchP);
+		  counter = GetPageCounter (pElPage, pEl1->ElViewPSchema, &pSchP);
 		  if (counter > 0)
 		     /* calcule la valeur du compteur de pages */
 		     pEl1->ElPageNumber = CounterVal (counter, pElPage->ElStructSchema, pSchP, pElPage,
@@ -3833,7 +3833,7 @@ PtrAttribute        pAttr;
 
 		       break;
 		    case PtPictInfo:
-		       UpdateImageDescriptor (pAbb1->AbPictInfo, (int *) &(pPRule->PrPictInfo));
+		       CopyPictInfo (pAbb1->AbPictInfo, (int *) &(pPRule->PrPictInfo));
 		       myPictInfo = (PictInfo *) pAbb1->AbPictInfo;
 		       myPictInfo->PicFileName = pAbb1->AbElement->ElText->BuContent;
 		       break;

@@ -215,7 +215,7 @@ PtrAbstractBox      pAb;
 		       if (!pAbbox1->AbElement->ElTerminal || pAbbox1->AbElement->ElLeafType != LtPicture)
 			 {
 			    /* ce n'est pas un element image */
-			    FreeImageDescriptor (pAbbox1->AbPictInfo);
+			    FreePictInfo (pAbbox1->AbPictInfo);
 			    pAbbox1->AbPictInfo = NULL;
 			 }
 		       break;
@@ -1898,7 +1898,7 @@ int                 frame;
 	/* recherche le numero de vue defini dans le schema de presentation */
 	/* Attention il faut appeler AppliedView avec pElRoot */
 	viewSch = AppliedView (pElRoot, NULL, pDoc, view);
-	if (TypeBPage (pEl, viewSch, &pSchPage) != 0)
+	if (GetPageBoxType (pEl, viewSch, &pSchPage) != 0)
 
 	   /* le document est-il pagine dans cette vue ? */
 	   /* si oui, on compte le nombre de pages actuel */
@@ -2119,7 +2119,7 @@ int                 frame;
 	   /* recherche le numero de vue defini dans le schema de presentation */
 	   /* Attention il faut appeler AppliedView avec pElRoot */
 	   viewSch = AppliedView (pElRoot, NULL, pDoc, view);
-	   if (TypeBPage (pEl1, viewSch, &pSchPage) != 0)
+	   if (GetPageBoxType (pEl1, viewSch, &pSchPage) != 0)
 	      pagedView = TRUE;
 	   toCreate = openedView;
 	   /* a priori on cree les paves de l'element */
@@ -2172,7 +2172,7 @@ int                 frame;
 			pEl1 = pElRef;
 			while (!found && pEl1 != NULL)
 			  {
-			     pElPage = PageElAssoc (pEl1, viewSch, &boxType);
+			     pElPage = GetPageBreakForAssoc (pEl1, viewSch, &boxType);
 			     if (pElPage == NULL)
 				/* c'est un element non reference, il faut creer son */
 				/* pave a cote d'un element reference frere */
@@ -2441,7 +2441,7 @@ int                 frame;
 			      /* Serait-ce un element qui s'affiche dans une boite de */
 			      /* haut ou de bas de page ? */
 			     {
-				pElPage = PageElAssoc (pElAscent, pDoc->DocView[view - 1].
+				pElPage = GetPageBreakForAssoc (pElAscent, pDoc->DocView[view - 1].
 						   DvPSchemaView, &boxType);
 				if (pElPage != NULL)
 

@@ -716,7 +716,7 @@ PtrDocument         pDoc;
 	  {
 #ifdef __COLPAGE__
 	     /* test si pagine */
-	     if (TypeBPage (pDoc->DocRootElement->ElFirstChild, view, &pSchPage) != 0)
+	     if (GetPageBoxType (pDoc->DocRootElement->ElFirstChild, view, &pSchPage) != 0)
 		/* document pagine, on initialise NbPages et VolLibre */
 	       {
 		  pDoc->DocViewNPages[0] = 0;
@@ -893,7 +893,7 @@ PtrElement          viewRoot;
 	     pDoc->DocAssocVolume[assoc - 1] = volume;
 	     pDoc->DocAssocFreeVolume[assoc - 1] = pDoc->DocAssocVolume[assoc - 1];
 #ifdef __COLPAGE__
-	     if (TypeBPage (pDoc->DocAssocRoot[assoc - 1]->ElFirstChild, 1, &pPagePsch) != 0)
+	     if (GetPageBoxType (pDoc->DocAssocRoot[assoc - 1]->ElFirstChild, 1, &pPagePsch) != 0)
 		/* document pagine */
 	       {
 		  pDoc->DocAssocNPages[assoc - 1] = 0;	/* nbpages = 0 */
@@ -934,7 +934,7 @@ PtrElement          viewRoot;
 	pDoc->DocViewVolume[freeView - 1] = volume;
 	pDoc->DocViewFreeVolume[freeView - 1] = pDoc->DocViewVolume[freeView - 1];
 #ifdef __COLPAGE__
-	if (TypeBPage (pDoc->DocRootElement->ElFirstChild, v, &pPagePsch) != 0)
+	if (GetPageBoxType (pDoc->DocRootElement->ElFirstChild, v, &pPagePsch) != 0)
 	   /* document pagine */
 	  {
 	     pDoc->DocViewNPages[freeView - 1] = 0;	/* nbpages = 0 */

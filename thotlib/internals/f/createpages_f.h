@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int TypeBPage ( PtrElement pEl,
+extern int GetPageBoxType ( PtrElement pEl,
                        int viewNb,
                        PtrPSchema * pSchPPage );
-extern int CptPage ( PtrElement pEl,
+extern int GetPageCounter ( PtrElement pEl,
                      int viewNb,
                      PtrPSchema * pSchPPage );
 extern void ApplPage ( PtrElement pEl,
@@ -22,10 +22,10 @@ extern void ApplPage ( PtrElement pEl,
 
 #else /* __STDC__ */
 
-extern int TypeBPage (/* PtrElement pEl,
+extern int GetPageBoxType (/* PtrElement pEl,
                          int viewNb,
                          PtrPSchema * pSchPPage */);
-extern int CptPage (/* PtrElement pEl,
+extern int GetPageCounter (/* PtrElement pEl,
                        int viewNb,
                        PtrPSchema * pSchPPage */);
 extern void ApplPage (/* PtrElement pEl,

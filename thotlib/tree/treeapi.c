@@ -234,7 +234,7 @@ PtrDocument         pDoc;
    PtrReference        pPR1;
 
    /* Sets a new label to the element */
-   LabelIntToString (NewLabel (pDoc), pElem->ElLabel);
+   ConvertIntToLabel (NewLabel (pDoc), pElem->ElLabel);
    if (pElem->ElReferredDescr != NULL)
       /* This element is referenced. CopyTree did not copy its referenced element descriptor
          which is shared by the source element.
@@ -593,7 +593,7 @@ boolean             withContent;
 #ifndef NODISPLAY
 			    /* Treats the required attributs of the created elements */
 			    AttachMandatoryAttributes (pE, LoadedDocument[document - 1]);
-			    RedispNewElement (document, pE, pNeighbour,
+			    RedisplayNewElement (document, pE, pNeighbour,
 					      TRUE, TRUE);
 #endif
 			 }
@@ -906,7 +906,7 @@ Document            document;
 		  /* verifies if the new root has an attribut language */
 		  CheckLanguageAttr (pDoc, pRoot);
 #ifndef NODISPLAY
-		  RedispNewElement (document, pRoot, NULL, TRUE, TRUE);
+		  RedisplayNewElement (document, pRoot, NULL, TRUE, TRUE);
 #endif
 	       }
 	  }
@@ -1019,7 +1019,7 @@ Document            document;
 	     if (pNeighbour != NULL)
 		/* The inserted element is not the first nor the last between its brothers */
 		sibling = NULL;
-	     RedispNewElement (document, pEl,
+	     RedisplayNewElement (document, pEl,
 			       (PtrElement) sibling, before, TRUE);
 #endif
 	  }
@@ -1141,7 +1141,7 @@ Document            document;
 		  /* treats the required attibutes of the created elements */
 		  if (AvecControleStruct)
 		     AttachMandatoryAttributes ((PtrElement) (*newElement), LoadedDocument[document - 1]);
-		  RedispNewElement (document, (PtrElement) (*newElement),
+		  RedisplayNewElement (document, (PtrElement) (*newElement),
 				    pNeighbour, TRUE, TRUE);
 #endif
 	       }
@@ -1385,7 +1385,7 @@ Document            document;
 		   HideElement ((PtrElement) element, document);
 		else if (oldAccessRight == AccessHidden)
 		   /* The element is not hiddden, Creating its abstract boxes */
-		   RedispNewElement (document, (PtrElement) element, NULL, TRUE, FALSE);
+		   RedisplayNewElement (document, (PtrElement) element, NULL, TRUE, FALSE);
 		else
 		  {
 		     SaveDisplayMode = TtaGetDisplayMode (document);

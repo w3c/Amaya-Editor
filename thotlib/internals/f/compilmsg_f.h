@@ -10,13 +10,13 @@ extern void DisplayConfirmMessage ( char *text );
 extern void DisplayMessage ( char *text,
                              int msgType );
 extern void TtaError ( int errorCode );
-extern void CompilerError ( int index,
+extern void CompilerMessage ( int index,
                             int origin,
                             int level,
                             int msgCode,
                             unsigned char *inputline,
                             int lineNum );
-extern void CompilerErrorString ( int index,
+extern void CompilerMessageString ( int index,
                                   int origin,
                                   int level,
                                   int msgCode,
@@ -30,13 +30,13 @@ extern void DisplayConfirmMessage (/* char *text */);
 extern void DisplayMessage (/* char *text,
                                int msgType */);
 extern void TtaError (/* int errorCode */);
-extern void CompilerError (/* int index,
+extern void CompilerMessage (/* int index,
                               int origin,
                               int level,
                               int msgCode,
                               unsigned char *inputline,
                               int lineNum */);
-extern void CompilerErrorString (/* int index,
+extern void CompilerMessageString (/* int index,
                                     int origin,
                                     int level,
                                     int msgCode,

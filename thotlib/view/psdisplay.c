@@ -426,7 +426,7 @@ int                 fg;
 	width = 0;
 	j = 0;
 	while (j < lg)
-	   width += CarWidth (ptcar[j++], font);
+	   width += CharacterWidth (ptcar[j++], font);
 	return (width);
      }
    else
@@ -625,8 +625,8 @@ int                 fg;
 	if (type == 2)
 	  {
 	     /* double integral */
-	     fprintf (fout, "-%d %d (\\362) c\n", ym, x - PixelToPoint (CarWidth ('\362', font) / 4));
-	     fprintf (fout, "-%d %d (\\362) c\n", ym, x + PixelToPoint (CarWidth ('\362', font) / 4));
+	     fprintf (fout, "-%d %d (\\362) c\n", ym, x - PixelToPoint (CharacterWidth ('\362', font) / 4));
+	     fprintf (fout, "-%d %d (\\362) c\n", ym, x + PixelToPoint (CharacterWidth ('\362', font) / 4));
 	  }
 	else
 	  {
@@ -642,9 +642,9 @@ int                 fg;
 	  {
 	     /* double integral */
 	     fprintf (fout, "%d -%d -%d %s (\\363) (\\364) (\\365) s3\n",
-	      x - PixelToPoint (CarWidth ('\364', font) / 4), yf, y, Scale);
+	      x - PixelToPoint (CharacterWidth ('\364', font) / 4), yf, y, Scale);
 	     fprintf (fout, "%d -%d -%d %s (\\363) (\\364) (\\365) s3\n",
-	      x + PixelToPoint (CarWidth ('\364', font) / 4), yf, y, Scale);
+	      x + PixelToPoint (CharacterWidth ('\364', font) / 4), yf, y, Scale);
 	  }
 	else
 	  {
@@ -2040,13 +2040,13 @@ int                 fg;
 }				/*DrawSlash */
 
 /*----------------------------------------------------------------------
-   PSPageInfo store the page number, width and height of the page,
+   StorePageInfo store the page number, width and height of the page,
    used later by DrawPage.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                PSPageInfo (int pagenum, int width, int height)
+void                StorePageInfo (int pagenum, int width, int height)
 #else  /* __STDC__ */
-void                PSPageInfo (pagenum, width, height)
+void                StorePageInfo (pagenum, width, height)
 int                 pagenum;
 int                 width;
 int                 height;
@@ -2108,16 +2108,16 @@ char               *suffix;
 }
 
 /*----------------------------------------------------------------------
-   Trame fill the rectangle associated to a window w (or frame if w= 0)
+   PaintWithPattern fill the rectangle associated to a window w (or frame if w= 0)
    located on (x , y) and geometry width x height, using the
    given pattern.
    Parameters fg, bg, and pattern are for drawing
    color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                Trame (int frame, int x, int y, int width, int height, ThotWindow w, int RO, int active, int fg, int bg, int pattern)
+void                PaintWithPattern (int frame, int x, int y, int width, int height, ThotWindow w, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */
-void                Trame (frame, x, y, width, height, w, RO, active, fg, bg, pattern)
+void                PaintWithPattern (frame, x, y, width, height, w, RO, active, fg, bg, pattern)
 int                 frame;
 int                 x;
 int                 y;
@@ -2150,4 +2150,4 @@ int                 pattern;
 	y = PixelToPoint (y);
 	fprintf (fout, "%d %d -%d %d -%d %d -%d %d -%d trm\n", pattern, x, yf, xf, yf, xf, y, x, y);
      }
-}				/*Trame */
+}				/*PaintWithPattern */

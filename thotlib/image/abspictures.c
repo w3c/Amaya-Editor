@@ -123,7 +123,7 @@ int                 typeimage;
 
 
 /*----------------------------------------------------------------------
-   NewImageDescriptor cree un descripteur par element image.       
+   NewPictInfo cree un descripteur par element image.       
    Si le pointeur sur le descripteur existe deja (champ    
    ElPictInfo dans l'element), la procedure recopie 
    le champ ElPictInfo dans le pave.                
@@ -132,10 +132,10 @@ int                 typeimage;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                NewImageDescriptor (PtrAbstractBox ppav, char *filename, int imagetype)
+void                NewPictInfo (PtrAbstractBox ppav, char *filename, int imagetype)
 
 #else  /* __STDC__ */
-void                NewImageDescriptor (ppav, filename, imagetype)
+void                NewPictInfo (ppav, filename, imagetype)
 PtrAbstractBox      ppav;
 char               *filename;
 int                 imagetype;
@@ -194,18 +194,18 @@ int                 imagetype;
 	ppav->AbPictInfo = (int *) image;
      }
 
-}				/*NewImageDescriptor */
+}				/*NewPictInfo */
 
 
 /*----------------------------------------------------------------------
-   FreeImageDescriptor libere le descriteur d'image.               
+   FreePictInfo libere le descriteur d'image.               
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                FreeImageDescriptor (int *desc)
+void                FreePictInfo (int *desc)
 
 #else  /* __STDC__ */
-void                FreeImageDescriptor (desc)
+void                FreePictInfo (desc)
 int                *desc;
 
 #endif /* __STDC__ */
@@ -220,7 +220,7 @@ int                *desc;
 	TtaFreeMemory ((char *) image);
      }
 
-}				/*FreeImageDescriptor */
+}				/*FreePictInfo */
 
 
 
@@ -228,10 +228,10 @@ int                *desc;
    FnCopy d'un PictInfo                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                UpdateImageDescriptor (int *Imdcopie, int *Imdsource)
+void                CopyPictInfo (int *Imdcopie, int *Imdsource)
 
 #else  /* __STDC__ */
-void                UpdateImageDescriptor (Imdcopie, Imdsource)
+void                CopyPictInfo (Imdcopie, Imdsource)
 int                *Imdcopie;
 int                *Imdsource;
 

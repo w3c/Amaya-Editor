@@ -122,12 +122,12 @@ int                 value;
 }
 
 /**
- *      CarWidth returns the width of a char in a given font.
+ *      CharacterWidth returns the width of a char in a given font.
  **/
 #ifdef __STDC__
-int                 CarWidth (unsigned char c, ptrfont font)
+int                 CharacterWidth (unsigned char c, ptrfont font)
 #else  /* __STDC__ */
-int                 CarWidth (c, font)
+int                 CharacterWidth (c, font)
 unsigned char       c;
 ptrfont             font;
 
@@ -159,14 +159,14 @@ ptrfont             font;
 }
 
 /**
- *      CarHeight returns the height of a char in a given font.
+ *      CharacterHeight returns the height of a char in a given font.
  **/
 
 #ifdef __STDC__
-int                 CarHeight (unsigned char c, ptrfont font)
+int                 CharacterHeight (unsigned char c, ptrfont font)
 
 #else  /* __STDC__ */
-int                 CarHeight (c, font)
+int                 CharacterHeight (c, font)
 unsigned char       c;
 ptrfont             font;
 
@@ -196,14 +196,14 @@ ptrfont             font;
 }
 
 /**
- *      CarAscent returns the ascent of a char in a given font.
+ *      CharacterAscent returns the ascent of a char in a given font.
  **/
 
 #ifdef __STDC__
-int                 CarAscent (unsigned char c, ptrfont font)
+int                 CharacterAscent (unsigned char c, ptrfont font)
 
 #else  /* __STDC__ */
-int                 CarAscent (c, font)
+int                 CharacterAscent (c, font)
 unsigned char       c;
 ptrfont             font;
 
@@ -336,7 +336,7 @@ PtrAbstractBox      pAb;
 	       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
 		  dist = 0;
 	       else
-		  dist = (val * CarHeight ('X', pAb->AbBox->BxFont)) / 10;
+		  dist = (val * CharacterHeight ('X', pAb->AbBox->BxFont)) / 10;
 	       break;
 	    case UnPoint:
 	       dist = PointToPixel (val);
@@ -381,7 +381,7 @@ PtrAbstractBox      pAb;
 	       if (pAb == NULL || pAb->AbBox == NULL || pAb->AbBox->BxFont == NULL)
 		  dist = 0;
 	       else
-		  dist = val * 10 / CarHeight ('x', pAb->AbBox->BxFont);
+		  dist = val * 10 / CharacterHeight ('x', pAb->AbBox->BxFont);
 	       break;
 	    case UnPoint:
 	       dist = PixelToPoint (val);

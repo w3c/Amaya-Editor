@@ -319,7 +319,7 @@ int                *LastSelectedChar;
 				  /* c'est une feuille de texte */
 				  if (pEl2->ElLanguage == pEl1->ElLanguage)
 				     /* meme langue */
-				     if (MemesAttributs (first, pEl2))
+				     if (SameAttributes (first, pEl2))
 					/* memes attributs */
 					if (BothHaveNoSpecRules (first, pEl2))
 					   /* meme present. */
@@ -365,7 +365,7 @@ int                *LastSelectedChar;
 				  /* c'est une feuille de texte */
 				  if (pEl2->ElLanguage == pEl1->ElLanguage)
 				     /* meme langue */
-				     if (MemesAttributs (last, pEl2))
+				     if (SameAttributes (last, pEl2))
 					/* memes attributs */
 					if (BothHaveNoSpecRules (last, pEl2))
 					   /* meme present. */
@@ -1138,7 +1138,7 @@ PtrElement          rootEl;
      {
 	/* ajout au 6 dec 93 : compteur de page. Est-ce necessaire ? */
 	/* cherche le compteur de page a appliquer */
-	cpt = CptPage (pElPage, schView, &pSchP);
+	cpt = GetPageCounter (pElPage, schView, &pSchP);
 	if (cpt == 0)		/* page non numerotee */
 	   /* on entretient un compteur de pages pour pouvoir afficher un */
 	   /* message indiquant la progression du formatage */
@@ -1291,7 +1291,7 @@ PtrElement          rootEl;
    pEl1->ElPageType = PgComputed;
    pEl1->ElViewPSchema = schView;
    /* cherche le compteur de page a appliquer */
-   cpt = CptPage (pElPage, schView, &pSchP);
+   cpt = GetPageCounter (pElPage, schView, &pSchP);
    if (cpt == 0)		/* page non numerotee */
       /* on entretient un compteur de pages pour pouvoir afficher un */
       /* message indiquant la progression du formatage */
@@ -2488,7 +2488,7 @@ boolean             withAPP;
 	     pElPage->ElPageType = PgComputed;
 	     pElPage->ElViewPSchema = schView;
 	     /* cherche le compteur de page a appliquer */
-	     cpt = CptPage (pElPage, schView, &pSchP);
+	     cpt = GetPageCounter (pElPage, schView, &pSchP);
 	     if (cpt == 0)
 		/* page non numerotee */
 		pElPage->ElPageNumber = 1;
@@ -2778,7 +2778,7 @@ boolean             Assoc;
 	     /* on renumerote cette marque de page */
 	     pEl1 = pP->AbElement;
 	     /* cherche le compteur de page a appliquer a cette page */
-	     cpt = CptPage (pP->AbElement, schView, &pSchP);
+	     cpt = GetPageCounter (pP->AbElement, schView, &pSchP);
 	     if (cpt == 0)
 		/* page non numerotee */
 	       {
@@ -3122,7 +3122,7 @@ boolean             Assoc;
 			  /* on renumerote cette marque de page */
 			  pEl1 = pP->AbElement;
 			  /* cherche le compteur de page a appliquer a cette page */
-			  cpt = CptPage (pP->AbElement, schView, &pSchP);
+			  cpt = GetPageCounter (pP->AbElement, schView, &pSchP);
 			  if (cpt == 0)
 			     /* page non numerotee */
 			    {

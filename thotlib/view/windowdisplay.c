@@ -358,7 +358,7 @@ int                 fg;
 	width = 0;
 	j = 0;
 	while (j < lg)
-	   width += CarWidth (ptcar[j++], font);
+	   width += CharacterWidth (ptcar[j++], font);
 #endif /* !_WINDOWS */
 
 	LoadColor (0, RO, active, fg);
@@ -539,7 +539,7 @@ int                 fg;
 	ptcar = " .";
 
 	/* compute lenght of the string " ." */
-	width = CarWidth (' ', font) + CarWidth ('.', font);
+	width = CharacterWidth (' ', font) + CharacterWidth ('.', font);
 
 	/* compute the number of string to write */
 	nb = lgboite / width;
@@ -643,34 +643,34 @@ int                 fg;
 
    exnum = 0;
 
-   xm = x + ((l - CarWidth ('\364', font)) / 2);
-   yf = y - FontAscent (font) + CarAscent ('\363', font);
+   xm = x + ((l - CharacterWidth ('\364', font)) / 2);
+   yf = y - FontAscent (font) + CharacterAscent ('\363', font);
    DrawChar ('\363', frame, xm, yf, font, RO, active, fg);
-   yend = y + h - CarHeight ('\365', font) - FontAscent (font) + CarAscent ('\365', font) - 1;
+   yend = y + h - CharacterHeight ('\365', font) - FontAscent (font) + CharacterAscent ('\365', font) - 1;
    DrawChar ('\365', frame, xm, yend, font, RO, active, fg);
 
-   yf += CarHeight ('\363', font);
+   yf += CharacterHeight ('\363', font);
    delta = yend - yf;
    if (delta >= 0)
      {
-	for (yf += CarAscent ('\364', font) - FontAscent (font),
-	     yend -= CarHeight ('\364', font) - 1;
+	for (yf += CharacterAscent ('\364', font) - FontAscent (font),
+	     yend -= CharacterHeight ('\364', font) - 1;
 	     yf < yend;
-	     yf += CarHeight ('\364', font), exnum++)
+	     yf += CharacterHeight ('\364', font), exnum++)
 	   DrawChar ('\364', frame, xm, yf, font, RO, active, fg);
 	if (exnum)
 	   DrawChar ('\364', frame, xm, yend, font, RO, active, fg);
 	else
-	   DrawChar ('\364', frame, xm, yf + ((delta - CarHeight ('\364', font)) / 2), font, RO, active, fg);
+	   DrawChar ('\364', frame, xm, yf + ((delta - CharacterHeight ('\364', font)) / 2), font, RO, active, fg);
      }
 
    if (type == 2)		/* double integral */
-      DrawIntegral (frame, thick, x + (CarWidth ('\364', font) / 2),
+      DrawIntegral (frame, thick, x + (CharacterWidth ('\364', font) / 2),
 		    y, l, h, -1, font, RO, active, fg);
 
    else if (type == 1)		/* contour integral */
-      DrawChar ('o', frame, x + ((l - CarWidth ('o', font)) / 2),
-		y + (h - CarHeight ('o', font)) / 2 - FontAscent (font) + CarAscent ('o', font),
+      DrawChar ('o', frame, x + ((l - CharacterWidth ('o', font)) / 2),
+		y + (h - CharacterHeight ('o', font)) / 2 - FontAscent (font) + CharacterAscent ('o', font),
 		font, RO, active, fg);
 }
 
@@ -703,8 +703,8 @@ int                 fg;
 {
    int                 xm, yf;
 
-   xm = x + ((l - CarWidth (symb, font)) / 2);
-   yf = y + ((h - CarHeight (symb, font)) / 2) - FontAscent (font) + CarAscent (symb, font);
+   xm = x + ((l - CharacterWidth (symb, font)) / 2);
+   yf = y + ((h - CharacterHeight (symb, font)) / 2) - FontAscent (font) + CharacterAscent (symb, font);
 
    DrawChar (symb, frame, xm, yf, font, RO, active, fg);
 }
@@ -737,7 +737,7 @@ int                 fg;
    int                 xm, ym, fh;
 
    fh = FontHeight (font);
-   if (h < fh * 2 && l <= CarWidth ('\345', font))
+   if (h < fh * 2 && l <= CharacterWidth ('\345', font))
      {
 	/* Only one glyph needed */
 	AfMonoSymb ('\345', frame, x, y, l, h, RO, active, font, fg);
@@ -789,7 +789,7 @@ int                 fg;
    int                 fh;
 
    fh = FontHeight (font);
-   if (h < fh * 2 && l <= CarWidth ('\325', font))
+   if (h < fh * 2 && l <= CharacterWidth ('\325', font))
      {
 	/* Only one glyph needed */
 	AfMonoSymb ('\325', frame, x, y, l, h, RO, active, font, fg);
@@ -837,7 +837,7 @@ int                 fg;
    int                 arc, fh;
 
    fh = FontHeight (font);
-   if (h < fh * 2 && l <= CarWidth ('\307', font))
+   if (h < fh * 2 && l <= CharacterWidth ('\307', font))
      {
 	/* Only one glyph needed */
 	AfMonoSymb ('\307', frame, x, y, l, h, RO, active, font, fg);
@@ -888,7 +888,7 @@ int                 fg;
    int                 arc, fh;
 
    fh = FontHeight (font);
-   if (h < fh * 2 && l <= CarWidth ('\310', font))
+   if (h < fh * 2 && l <= CharacterWidth ('\310', font))
      {
 	/* Only one glyph needed */
 	AfMonoSymb ('\310', frame, x, y, l, h, RO, active, font, fg);
@@ -1092,17 +1092,17 @@ int                 fg;
 	if (direction == 0)
 	  {
 	     /* Draw a opening bracket */
-	     xm = x + ((l - CarWidth ('[', font)) / 2);
-	     yf = y + ((h - CarHeight ('[', font)) / 2) -
-		FontAscent (font) + CarAscent ('[', font);
+	     xm = x + ((l - CharacterWidth ('[', font)) / 2);
+	     yf = y + ((h - CharacterHeight ('[', font)) / 2) -
+		FontAscent (font) + CharacterAscent ('[', font);
 	     DrawChar ('[', frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
 	     /* Draw a closing bracket */
-	     xm = x + ((l - CarWidth (']', font)) / 2);
-	     yf = y + ((h - CarHeight (']', font)) / 2) -
-		FontAscent (font) + CarAscent (']', font);
+	     xm = x + ((l - CharacterWidth (']', font)) / 2);
+	     yf = y + ((h - CharacterHeight (']', font)) / 2) -
+		FontAscent (font) + CharacterAscent (']', font);
 	     DrawChar (']', frame, xm, yf, font, RO, active, fg);
 	  }
      }
@@ -1112,31 +1112,31 @@ int                 fg;
 	if (direction == 0)
 	  {
 	     /* Draw a opening bracket */
-	     xm = x + ((l - CarWidth ('\351', font)) / 2);
-	     yf = y - FontAscent (font) + CarAscent ('\351', font);
+	     xm = x + ((l - CharacterWidth ('\351', font)) / 2);
+	     yf = y - FontAscent (font) + CharacterAscent ('\351', font);
 	     DrawChar ('\351', frame, xm, yf, font, RO, active, fg);
-	     yend = y + h - CarHeight ('\353', font) -
-		FontAscent (font) + CarAscent ('\353', font);
+	     yend = y + h - CharacterHeight ('\353', font) -
+		FontAscent (font) + CharacterAscent ('\353', font);
 	     DrawChar ('\353', frame, xm, yend, font, RO, active, fg);
-	     for (yf = yf + CarHeight ('\351', font) -
-		  FontAscent (font) + CarAscent ('\352', font);
+	     for (yf = yf + CharacterHeight ('\351', font) -
+		  FontAscent (font) + CharacterAscent ('\352', font);
 		  yf < yend;
-		  yf += CarHeight ('\352', font))
+		  yf += CharacterHeight ('\352', font))
 		DrawChar ('\352', frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
 	     /* Draw a closing bracket */
-	     xm = x + ((l - CarWidth ('\371', font)) / 2);
-	     yf = y - FontAscent (font) + CarAscent ('\371', font);
+	     xm = x + ((l - CharacterWidth ('\371', font)) / 2);
+	     yf = y - FontAscent (font) + CharacterAscent ('\371', font);
 	     DrawChar ('\371', frame, xm, yf, font, RO, active, fg);
-	     yend = y + h - CarHeight ('\373', font) -
-		FontAscent (font) + CarAscent ('\373', font);
+	     yend = y + h - CharacterHeight ('\373', font) -
+		FontAscent (font) + CharacterAscent ('\373', font);
 	     DrawChar ('\373', frame, xm, yend, font, RO, active, fg);
-	     for (yf = yf + CarHeight ('\371', font) -
-		  FontAscent (font) + CarAscent ('\372', font);
+	     for (yf = yf + CharacterHeight ('\371', font) -
+		  FontAscent (font) + CharacterAscent ('\372', font);
 		  yf < yend;
-		  yf += CarHeight ('\372', font))
+		  yf += CharacterHeight ('\372', font))
 		DrawChar ('\372', frame, xm, yf, font, RO, active, fg);
 	  }
      }
@@ -1180,15 +1180,15 @@ int                 fg;
 	if (direction == 0)
 	  {
 	     /* draw a opening parenthesis */
-	     xm = x + ((l - CarWidth ('(', font)) / 2);
-	     yf = y + ((h - CarHeight ('(', font)) / 2) - FontAscent (font) + CarAscent ('(', font);
+	     xm = x + ((l - CharacterWidth ('(', font)) / 2);
+	     yf = y + ((h - CharacterHeight ('(', font)) / 2) - FontAscent (font) + CharacterAscent ('(', font);
 	     DrawChar ('(', frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
 	     /* draw a closing parenthesis */
-	     xm = x + ((l - CarWidth (')', font)) / 2);
-	     yf = y + ((h - CarHeight (')', font)) / 2) - FontAscent (font) + CarAscent (')', font);
+	     xm = x + ((l - CharacterWidth (')', font)) / 2);
+	     yf = y + ((h - CharacterHeight (')', font)) / 2) - FontAscent (font) + CharacterAscent (')', font);
 	     DrawChar (')', frame, xm, yf, font, RO, active, fg);
 	  }
      }
@@ -1199,50 +1199,50 @@ int                 fg;
 	if (direction == 0)
 	  {
 	     /* draw a opening parenthesis */
-	     xm = x + ((l - CarWidth ('\346', font)) / 2);
-	     yf = y - FontAscent (font) + CarAscent ('\346', font);
+	     xm = x + ((l - CharacterWidth ('\346', font)) / 2);
+	     yf = y - FontAscent (font) + CharacterAscent ('\346', font);
 	     DrawChar ('\346', frame, xm, yf, font, RO, active, fg);
-	     yend = y + h - CarHeight ('\350', font) - FontAscent (font) + CarAscent ('\350', font) - 1;
+	     yend = y + h - CharacterHeight ('\350', font) - FontAscent (font) + CharacterAscent ('\350', font) - 1;
 	     DrawChar ('\350', frame, xm, yend, font, RO, active, fg);
 
-	     yf += CarHeight ('\346', font);
+	     yf += CharacterHeight ('\346', font);
 	     delta = yend - yf;
 	     if (delta >= 0)
 	       {
-		  for (yf += CarAscent ('\347', font) - FontAscent (font),
-		       yend -= CarHeight ('\347', font) - 1;
+		  for (yf += CharacterAscent ('\347', font) - FontAscent (font),
+		       yend -= CharacterHeight ('\347', font) - 1;
 		       yf < yend;
-		       yf += CarHeight ('\347', font), exnum++)
+		       yf += CharacterHeight ('\347', font), exnum++)
 		     DrawChar ('\347', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\347', frame, xm, yend, font, RO, active, fg);
 		  else
-		     DrawChar ('\347', frame, xm, yf + ((delta - CarHeight ('\347', font)) / 2), font, RO, active, fg);
+		     DrawChar ('\347', frame, xm, yf + ((delta - CharacterHeight ('\347', font)) / 2), font, RO, active, fg);
 	       }
 	  }
 
 	else
 	  {
 	     /* draw a closing parenthesis */
-	     xm = x + ((l - CarWidth ('\366', font)) / 2);
-	     yf = y - FontAscent (font) + CarAscent ('\366', font);
+	     xm = x + ((l - CharacterWidth ('\366', font)) / 2);
+	     yf = y - FontAscent (font) + CharacterAscent ('\366', font);
 	     DrawChar ('\366', frame, xm, yf, font, RO, active, fg);
-	     yend = y + h - CarHeight ('\370', font) - FontAscent (font) + CarAscent ('\370', font) - 1;
+	     yend = y + h - CharacterHeight ('\370', font) - FontAscent (font) + CharacterAscent ('\370', font) - 1;
 	     DrawChar ('\370', frame, xm, yend, font, RO, active, fg);
 
-	     yf += CarHeight ('\366', font);
+	     yf += CharacterHeight ('\366', font);
 	     delta = yend - yf;
 	     if (delta >= 0)
 	       {
-		  for (yf += CarAscent ('\367', font) - FontAscent (font),
-		       yend -= CarHeight ('\367', font) - 1;
+		  for (yf += CharacterAscent ('\367', font) - FontAscent (font),
+		       yend -= CharacterHeight ('\367', font) - 1;
 		       yf < yend;
-		       yf += CarHeight ('\367', font), exnum++)
+		       yf += CharacterHeight ('\367', font), exnum++)
 		     DrawChar ('\367', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\367', frame, xm, yend, font, RO, active, fg);
 		  else
-		     DrawChar ('\367', frame, xm, yf + ((delta - CarHeight ('\367', font)) / 2), font, RO, active, fg);
+		     DrawChar ('\367', frame, xm, yf + ((delta - CharacterHeight ('\367', font)) / 2), font, RO, active, fg);
 	       }
 	  }
      }
@@ -1287,15 +1287,15 @@ int                 fg;
 	if (direction == 0)
 	  {
 	     /* just use the opening brace glyph */
-	     xm = x + ((l - CarWidth ('{', font)) / 2);
-	     yf = y + ((h - CarHeight ('{', font)) / 2) - FontAscent (font) + CarAscent ('{', font);
+	     xm = x + ((l - CharacterWidth ('{', font)) / 2);
+	     yf = y + ((h - CharacterHeight ('{', font)) / 2) - FontAscent (font) + CharacterAscent ('{', font);
 	     DrawChar ('{', frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
 	     /* just use the closing brace glyph */
-	     xm = x + ((l - CarWidth ('}', font)) / 2);
-	     yf = y + ((h - CarHeight ('}', font)) / 2) - FontAscent (font) + CarAscent ('}', font);
+	     xm = x + ((l - CharacterWidth ('}', font)) / 2);
+	     yf = y + ((h - CharacterHeight ('}', font)) / 2) - FontAscent (font) + CharacterAscent ('}', font);
 	     DrawChar ('}', frame, xm, yf, font, RO, active, fg);
 	  }
      }
@@ -1306,92 +1306,92 @@ int                 fg;
 	if (direction == 0)
 	  {
 	     /* top */
-	     xm = x + ((l - CarWidth ('\354', font)) / 2);
-	     yf = y - FontAscent (font) + CarAscent ('\354', font);
+	     xm = x + ((l - CharacterWidth ('\354', font)) / 2);
+	     yf = y - FontAscent (font) + CharacterAscent ('\354', font);
 	     DrawChar ('\354', frame, xm, yf, font, RO, active, fg);
 	     /* vertical line */
-	     ym = y + ((h - CarHeight ('\355', font)) / 2) - FontAscent (font)
-		+ CarAscent ('\355', font);
+	     ym = y + ((h - CharacterHeight ('\355', font)) / 2) - FontAscent (font)
+		+ CharacterAscent ('\355', font);
 	     DrawChar ('\355', frame, xm, ym, font, RO, active, fg);
 	     /* bottom */
-	     yend = y + h - CarHeight ('\356', font) - FontAscent (font) + CarAscent ('\356', font);
+	     yend = y + h - CharacterHeight ('\356', font) - FontAscent (font) + CharacterAscent ('\356', font);
 	     DrawChar ('\356', frame, xm, yend, font, RO, active, fg);
 
 	     /* finish top */
-	     yf += CarHeight ('\354', font);
+	     yf += CharacterHeight ('\354', font);
 	     delta = ym - yf;
 	     if (delta >= 0)
 	       {
-		  for (yf += CarAscent ('\357', font) - FontAscent (font),
-		       ym -= CarHeight ('\357', font);
+		  for (yf += CharacterAscent ('\357', font) - FontAscent (font),
+		       ym -= CharacterHeight ('\357', font);
 		       yf < ym;
-		       yf += CarHeight ('\357', font), exnum++)
+		       yf += CharacterHeight ('\357', font), exnum++)
 		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\357', frame, xm, ym, font, RO, active, fg);
 		  else
-		     DrawChar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	     /* finish bottom */
-	     yf = ym + CarHeight ('\355', font) + CarHeight ('\357', font);
+	     yf = ym + CharacterHeight ('\355', font) + CharacterHeight ('\357', font);
 	     delta = yend - yf;
 	     if (delta >= 0)
 	       {
-		  for (yf += CarAscent ('\357', font) - FontAscent (font),
-		       yend -= CarHeight ('\357', font);
+		  for (yf += CharacterAscent ('\357', font) - FontAscent (font),
+		       yend -= CharacterHeight ('\357', font);
 		       yf < yend;
-		       yf += CarHeight ('\357', font), exnum++)
+		       yf += CharacterHeight ('\357', font), exnum++)
 		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\357', frame, xm, yend, font, RO, active, fg);
 		  else
-		     DrawChar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	  }
 
 	else
 	  {
 	     /* top */
-	     xm = x + ((l - CarWidth ('\374', font)) / 2);
-	     yf = y - FontAscent (font) + CarAscent ('\374', font);
+	     xm = x + ((l - CharacterWidth ('\374', font)) / 2);
+	     yf = y - FontAscent (font) + CharacterAscent ('\374', font);
 	     DrawChar ('\374', frame, xm, yf, font, RO, active, fg);
 	     /* center */
-	     ym = y + ((h - CarHeight ('\375', font)) / 2)
-		- FontAscent (font) + CarAscent ('\375', font);
+	     ym = y + ((h - CharacterHeight ('\375', font)) / 2)
+		- FontAscent (font) + CharacterAscent ('\375', font);
 	     DrawChar ('\375', frame, xm, ym, font, RO, active, fg);
 	     /* bottom */
-	     yend = y + h - CarHeight ('\376', font)
-		- FontAscent (font) + CarAscent ('\376', font);
+	     yend = y + h - CharacterHeight ('\376', font)
+		- FontAscent (font) + CharacterAscent ('\376', font);
 	     DrawChar ('\376', frame, xm, yend, font, RO, active, fg);
 	     /* finish top */
-	     yf += CarHeight ('\374', font);
+	     yf += CharacterHeight ('\374', font);
 	     delta = ym - yf;
 	     if (delta >= 0)
 	       {
-		  for (yf += CarAscent ('\357', font) - FontAscent (font),
-		       ym -= CarHeight ('\357', font);
+		  for (yf += CharacterAscent ('\357', font) - FontAscent (font),
+		       ym -= CharacterHeight ('\357', font);
 		       yf < ym;
-		       yf += CarHeight ('\357', font), exnum++)
+		       yf += CharacterHeight ('\357', font), exnum++)
 		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\357', frame, xm, ym, font, RO, active, fg);
 		  else
-		     DrawChar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	     /* finish bottom */
-	     yf = ym + CarHeight ('\375', font) + CarHeight ('\357', font);
+	     yf = ym + CharacterHeight ('\375', font) + CharacterHeight ('\357', font);
 	     delta = yend - yf;
 	     if (delta >= 0)
 	       {
-		  for (yf += CarAscent ('\357', font) - FontAscent (font),
-		       yend -= CarHeight ('\357', font);
+		  for (yf += CharacterAscent ('\357', font) - FontAscent (font),
+		       yend -= CharacterHeight ('\357', font);
 		       yf < yend;
-		       yf += CarHeight ('\357', font), exnum++)
+		       yf += CharacterHeight ('\357', font), exnum++)
 		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
 		     DrawChar ('\357', frame, xm, yend, font, RO, active, fg);
 		  else
-		     DrawChar ('\357', frame, xm, yf + ((delta - CarHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar ('\357', frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	  }
      }
@@ -2784,15 +2784,15 @@ int                 pattern;
 }
 
 /**
- * PSPageInfo and psBoundingBox are empty, they have no meaning in
+ * StorePageInfo and psBoundingBox are empty, they have no meaning in
  * 		this context and are kept for interface compatibility.
  **/
 
 #ifdef __STDC__
-void                PSPageInfo (int pagenum, int width, int height)
+void                StorePageInfo (int pagenum, int width, int height)
 
 #else  /* __STDC__ */
-void                PSPageInfo (pagenum, width, height)
+void                StorePageInfo (pagenum, width, height)
 int                 pagenum;
 int                 width;
 int                 height;
@@ -2996,7 +2996,7 @@ int                 frame;
 
 
 /**
- *      Trame fill the rectangle associated to a window w (or frame if w= 0)
+ *      PaintWithPattern fill the rectangle associated to a window w (or frame if w= 0)
  *		located on (x , y) and geometry width x height, using the
  *		given pattern.
  *              RO indicate whether it's a read-only box
@@ -3005,9 +3005,9 @@ int                 frame;
  *              color, background color and fill pattern.
  **/
 #ifdef __STDC__
-void                Trame (int frame, int x, int y, int width, int height, ThotWindow w, int RO, int active, int fg, int bg, int pattern)
+void                PaintWithPattern (int frame, int x, int y, int width, int height, ThotWindow w, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */
-void                Trame (frame, x, y, width, height, w, RO, active, fg, bg, pattern)
+void                PaintWithPattern (frame, x, y, width, height, w, RO, active, fg, bg, pattern)
 int                 frame;
 int                 x;
 int                 y;

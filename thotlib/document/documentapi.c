@@ -972,7 +972,7 @@ int                *removedAttributes;
 		    {
 		       TtaRemoveAttribute ((Element) (*pEl), (Attribute) attribute, document);
 #ifndef NODISPLAY
-		       UndisplayHeritAttr (*pEl, attribute, document, TRUE);
+		       UndisplayInheritedAttributes (*pEl, attribute, document, TRUE);
 #endif
 #ifndef NODISPLAY
 		       UndisplayAttribute (*pEl, attribute, document);

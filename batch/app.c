@@ -464,7 +464,7 @@ static void         NewMenuComplete ()
 	      else
 		 Item = Item->AppNextItem;
 	if (found)
-	   CompilerError (1, APP, FATAL, APP_ITEM_ALREADY_EXISTS, inputLine,
+	   CompilerMessage (1, APP, FATAL, APP_ITEM_ALREADY_EXISTS, inputLine,
 			  LineNum);
 	else
 	   /* cet item n'existe pas, on le met */
@@ -625,7 +625,7 @@ indLine             wi;
 	       /* le mot-cle' USES */
 	       if (strcmp (fileName, "EDITOR") != 0)
 		  /* ce n'est pas EDITOR.A qu'on compile, refus */
-		  CompilerError (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
+		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
 				 inputLine, LineNum);
 	       else
 		  SchemasUsed = NULL;
@@ -654,7 +654,7 @@ indLine             wi;
 	       MenusSection = True;
 	       if (strcmp (fileName, "EDITOR") != 0)
 		  /* ce n'est pas EDITOR.A qu'on compile, refus */
-		  CompilerError (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
+		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
 				 inputLine, LineNum);
 	       break;
 
@@ -668,7 +668,7 @@ indLine             wi;
 
 	    case KWD_Post:
 	       if (curEvent == TteAttrMenu)
-		  CompilerError (wi, APP, FATAL, ONLY_IF_PRE_ALLOWED, inputLine,
+		  CompilerMessage (wi, APP, FATAL, ONLY_IF_PRE_ALLOWED, inputLine,
 				 LineNum);
 	       PreEvent = False;
 	       break;
@@ -743,7 +743,7 @@ indLine             wi;
    PtrAppName          schUsed, newSchUsed;
 
    if (wl > MAX_NAME_LENGTH - 1)
-      CompilerError (wi, COMPIL, FATAL, INVALID_WORD_SIZE, inputLine, LineNum);
+      CompilerMessage (wi, COMPIL, FATAL, INVALID_WORD_SIZE, inputLine, LineNum);
    else
      {
 	strncpy (name, &inputLine[wi - 1], wl);
@@ -772,10 +772,10 @@ indLine             wi;
 			 /* => on lit le schema de structure compile' */
 			 pSSchema = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
 			 if (!ReadStructureSchema (name, pSSchema))
-			    CompilerError (wi, APP, FATAL, APP_STRUCT_SCHEM_NOT_FOUND,
+			    CompilerMessage (wi, APP, FATAL, APP_STRUCT_SCHEM_NOT_FOUND,
 					   inputLine, LineNum);
 			 else if (strcmp (name, pSSchema->SsName) != 0)
-			    CompilerError (wi, APP, FATAL,
+			    CompilerMessage (wi, APP, FATAL,
 					   UNMATCHING_STRUCT_SCHEME,
 					   inputLine, LineNum);
 			 else
@@ -798,7 +798,7 @@ indLine             wi;
 				 /* c'est un element CsPairedElement */
 				 if (!SecondInPair && !FirstInPair)
 				    /* le nom du type n'etait pas precede' de First ou Second */
-				    CompilerError (wi, APP, FATAL, MISSING_FIRST_SECOND,
+				    CompilerMessage (wi, APP, FATAL, MISSING_FIRST_SECOND,
 						   inputLine, LineNum);
 				 else
 				   {
@@ -810,7 +810,7 @@ indLine             wi;
 				 /* ce n'est pas un element CsPairedElement */
 			      if (SecondInPair || FirstInPair)
 				 /* le nom du type etait precede' de First ou Second */
-				 CompilerError (wi, APP, FATAL, NOT_A_PAIR, inputLine,
+				 CompilerMessage (wi, APP, FATAL, NOT_A_PAIR, inputLine,
 						LineNum);
 			      typeNum = i + 1;
 			   }
@@ -823,7 +823,7 @@ indLine             wi;
 				   typeNum = i + 1;
 				}
 			      else
-				 CompilerError (wi, APP, FATAL, UNKNOWN_TYPE_APP,
+				 CompilerMessage (wi, APP, FATAL, UNKNOWN_TYPE_APP,
 						inputLine, LineNum);
 			   }
 			 FirstInPair = False;
@@ -885,14 +885,14 @@ indLine             wi;
 	       /* cherche si l'evenement est dans la table des evenements definis */
 	       if (!RegisteredEvent (name, &curEvent))
 		  /* il n'y est pas, erreur */
-		  CompilerError (wi, APP, FATAL, UNKNOWN_MESSAGE, inputLine, LineNum);
+		  CompilerMessage (wi, APP, FATAL, UNKNOWN_MESSAGE, inputLine, LineNum);
 	       else if (!DefaultSection)
 		 {
 		    /* on n'est pas dans la section DEFAULT du schema A */
 		    /* on n'accepte pas les evenements pour les documents, pour les */
 		    /* vues, ni pour l'application */
 		    if (curEvent >= TteDocOpen)
-		       CompilerError (wi, APP, FATAL, NOT_IN_DEFAULT, inputLine,
+		       CompilerMessage (wi, APP, FATAL, NOT_IN_DEFAULT, inputLine,
 				      LineNum);
 		 }
 	       else
@@ -902,19 +902,19 @@ indLine             wi;
 		      {
 			 if (strcmp (fileName, "EDITOR") != 0)
 			    /* ce n'est pas EDITOR.A qu'on compile, refus */
-			    CompilerError (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I, inputLine,
+			    CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I, inputLine,
 					   LineNum);
 		      }
 		    else if (AttributesSection)
 		      {
 			 if (curEvent > TteAttrDelete)
-			    CompilerError (wi, APP, FATAL, FORBIDDEN_FOR_AN_ATTR,
+			    CompilerMessage (wi, APP, FATAL, FORBIDDEN_FOR_AN_ATTR,
 					   inputLine, LineNum);
 		      }
 		    else if (ElementsSection)
 		      {
 			 if (curEvent <= TteAttrDelete)
-			    CompilerError (wi, APP, FATAL, FORBIDDEN_FOR_AN_ELEM,
+			    CompilerMessage (wi, APP, FATAL, FORBIDDEN_FOR_AN_ELEM,
 					   inputLine, LineNum);
 		      }
 		 }
@@ -957,7 +957,7 @@ indLine             wi;
 			      attrNum = i;
 			   }
 			 else
-			    CompilerError (wi, APP, FATAL, UNKNOWN_ATTR_APP, inputLine, LineNum);
+			    CompilerMessage (wi, APP, FATAL, UNKNOWN_ATTR_APP, inputLine, LineNum);
 		      }
 		 }
 	       break;
@@ -1036,7 +1036,7 @@ SyntacticCode       pr;
    if (c < 1000)
      {
 	/* symbole intermediaire de la grammaire, erreur */
-	CompilerError (wi, APP, FATAL, INTERMEDIATE_SYMBOL, inputLine,
+	CompilerMessage (wi, APP, FATAL, INTERMEDIATE_SYMBOL, inputLine,
 		       LineNum);
      }
    else if (c < 1100)
@@ -1588,7 +1588,7 @@ char              **argv;
 		       LineNum++;
 		       if (i >= LINE_LENGTH)
 			  /* ligne trop longue */
-			  CompilerError (1, APP, FATAL, MAX_LINE_SIZE_EXCEEDED, inputLine, LineNum);
+			  CompilerMessage (1, APP, FATAL, MAX_LINE_SIZE_EXCEEDED, inputLine, LineNum);
 		       else if (inputLine[0] == '#')
 			  /* cette ligne contient une directive du preprocesseur cpp */
 			 {

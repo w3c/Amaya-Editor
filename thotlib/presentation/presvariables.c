@@ -814,7 +814,7 @@ PtrDocument         pDoc;
    isOld = pAb->AbText;
    /* acquiert un buffer de texte pour y calculer la (nouvelle) valeur */
    /* de la variable */
-   GetBufConst (pAb);
+   GetConstantBuffer (pAb);
    pAb->AbVolume = 0;
    pAttr = NULL;
    /* remplit le buffer avec le contenu defini par la variable */

@@ -161,7 +161,7 @@ static void         Initialize ()
    /* acquiert un schema de presentation */
    if ((pPSchema = (PtrPSchema) malloc (sizeof (PresentSchema))) == NULL)
       /* memoire insuffisante */
-      CompilerError (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+      CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
    /* acquiert un schema de structure pour les structures externes */
    if ((pExternalSS = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
       TtaDisplaySimpleMessage (FATAL, PRS, NO_MORE_MEM_LEFT);
@@ -251,7 +251,7 @@ static void         Initialize ()
    CurType = 1;
    if ((NextRule = (PtrPRule) malloc (sizeof (PresRule))) == NULL)
       /* memoire insuffisante */
-      CompilerError (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+      CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
    Conditions = NULL;
    InclusionRefName = False;
    CopyType[0] = '\0';
@@ -278,7 +278,7 @@ indLine             wl;
 
 {
    if (wl > MAX_NAME_LENGTH - 1)
-      CompilerError (wi, PRS, FATAL, WORD_SIZE_OVERFLOW, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, WORD_SIZE_OVERFLOW, inputLine, LineNum);
    else
      {
 	strncpy (n, &inputLine[wi - 1], MAX_NAME_LENGTH);
@@ -307,7 +307,7 @@ indLine             wi;
       if (pCond->CoCondition != PcWithin && pCond->CoCondition != PcDefaultCond
 	  && pCond->CoCondition != PcElemType)
 	{
-	   CompilerError (wi, PRS, FATAL, ONLY_CONDITION_WITHIN, inputLine, LineNum);
+	   CompilerMessage (wi, PRS, FATAL, ONLY_CONDITION_WITHIN, inputLine, LineNum);
 	   pCond = NULL;
 	}
       else
@@ -324,7 +324,7 @@ static void         ConditionEnd ()
       /* on n'a pas encore traite' le nom de type suppose' externe */
       /* ce nom de type est donc erronne' */
      {
-	CompilerError (BeginCopyType, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
+	CompilerMessage (BeginCopyType, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
 	CopyType[0] = '\0';
 	BeginCopyType = 0;
      }
@@ -355,7 +355,7 @@ indLine             wi;
    CurRule = NextRule;
    if ((NextRule = (PtrPRule) malloc (sizeof (PresRule))) == NULL)
       /*memoire insuffisante */
-      CompilerError (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+      CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
    CurRule->PrType = t;
    CurRule->PrCond = Conditions;
    CurRule->PrNextPRule = NextRule;
@@ -445,7 +445,7 @@ indLine             wi;
 		 if (pPRuleV->PrCond == NULL)
 		    /* les regles sans condition ne peuvent pas figurer en
 		       plusieurs exemplaires */
-		    CompilerError (wi, PRS, FATAL, RULE_ALREADY_DEFINED, inputLine, LineNum);
+		    CompilerMessage (wi, PRS, FATAL, RULE_ALREADY_DEFINED, inputLine, LineNum);
 	pPRuleV = pPRuleV->PrNextPRule;
      }
 }
@@ -467,10 +467,10 @@ indLine             wi;
 {
    if ((CurRule->PrType == PtVertRef || CurRule->PrType == PtHorizRef) &&
        !(lev == RlEnclosed || lev == RlSelf))
-      CompilerError (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED, inputLine, LineNum);
    else if (lev == RlEnclosed && (CurRule->PrType == PtVertPos || CurRule->PrType == PtHorizPos))
       /* position par rapport au contenu, erreur */
-      CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_A_POSITION, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_POSITION, inputLine, LineNum);
    else
       switch (CurRule->PrType)
 	    {
@@ -586,9 +586,9 @@ indLine             wi;
       /* nouvel element */
       if (pVar->PvItem[0].ViType == VarText)
 	 if (pPSchema->PsConstant[pVar->PvItem[0].ViConstant - 1].PdType != CharString)
-	    CompilerError (wi, PRS, FATAL, MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, LineNum);
+	    CompilerMessage (wi, PRS, FATAL, MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, LineNum);
    if (pVar->PvNItems >= MAX_PRES_VAR_ITEM)
-      CompilerError (wi, PRS, FATAL, MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, LineNum);
    else
       pVar->PvNItems++;
 }
@@ -609,7 +609,7 @@ indLine             wi;
    /* acquiert un bloc memoire pour une nouvelle condition */
    if ((newCond = (PtrCondition) malloc (sizeof (Condition))) == NULL)
       /*memoire insuffisante */
-      CompilerError (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+      CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
    else
      {
 	Immediately = False;
@@ -640,7 +640,7 @@ indLine             wi;
 
 {
    if (pPSchema->PsNConstants >= MAX_PRES_CONST)
-      CompilerError (wi, PRS, FATAL, MAX_CONSTANTS_OVERFLOW, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, MAX_CONSTANTS_OVERFLOW, inputLine, LineNum);
    else
       pPSchema->PsConstant[pPSchema->PsNConstants++].PdAlphabet = 'L';
 }
@@ -662,7 +662,7 @@ indLine             wi;
 
 {
    if (pPSchema->PsNVariables >= MAX_PRES_VARIABLE)
-      CompilerError (wi, PRS, FATAL, MAX_VARIABLES_OVERFLOW, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, MAX_VARIABLES_OVERFLOW, inputLine, LineNum);
    else
       pPSchema->PsVariable[pPSchema->PsNVariables++].PvNItems = 0;
 }
@@ -889,7 +889,7 @@ int                 att;
 	      }
      }
    else				/* memoire insuffisante */
-      CompilerError (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+      CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
    pPSchema->PsNAttrPRule[att - 1] += 1;
    return (pPRuleA);
 }
@@ -956,7 +956,7 @@ indLine             wi;
 	       /* c'est un attribut a valeur numerique */
 	       if (pPRuleA->ApNCases >= MAX_PRES_ATTR_CASE)
 		  /* trop de cas pour cet attribut */
-		  CompilerError (wi, PRS, FATAL, MAX_CASES_IN_ATTR_OVERFLOW, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, MAX_CASES_IN_ATTR_OVERFLOW, inputLine, LineNum);
 	       else
 		 {
 		    pAttrCase = &pPRuleA->ApCase[pPRuleA->ApNCases++];
@@ -1010,7 +1010,7 @@ indLine             wi;
 	    case AtReferenceAttr:
 	       if (pPRuleA->ApRefFirstPRule != NULL)
 		  /* attribut deja rencontre' */
-		  CompilerError (wi, PRS, FATAL, CANT_REDEFINE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, CANT_REDEFINE, inputLine, LineNum);
 	       else
 		 {
 		    pPRuleA->ApRefFirstPRule = NextRule;
@@ -1021,7 +1021,7 @@ indLine             wi;
 	    case AtEnumAttr:
 	       if (pPRuleA->ApEnumFirstPRule[CurAttrVal] != NULL)
 		  /* attribut deja rencontre' */
-		  CompilerError (wi, PRS, FATAL, CANT_REDEFINE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, CANT_REDEFINE, inputLine, LineNum);
 	       else
 		 {
 		    pPRuleA->ApEnumFirstPRule[CurAttrVal] = NextRule;
@@ -1118,7 +1118,7 @@ SyntacticCode       gCode;
 			     if (!CurRule->PrDimRule.DrAbsolute)
 				if (CurRule->PrDimRule.DrRelation == RlEnclosed)
 				   if (CurRule->PrDimRule.DrTypeRefElem != 0 || CurRule->PrDimRule.DrValue != 0)
-				      CompilerError (wi, PRS, FATAL, BAD_DIM_RULE, inputLine, LineNum);
+				      CompilerMessage (wi, PRS, FATAL, BAD_DIM_RULE, inputLine, LineNum);
 		    InRule = False;
 		    if (RulesForView && !RuleBlock && !CondBlock)
 		      {
@@ -1178,7 +1178,7 @@ SyntacticCode       gCode;
 		     /* dans une regle Content d'une paire ou d'une reference, */
 		     /* on refuse: seules les constantes sont acceptees dans cette */
 		     /* regle */
-		     CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine, LineNum);
+		     CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine, LineNum);
 	       else if (gCode == RULE_Rule3)
 		  /* dans Rule3 */
 		  InRule = True;
@@ -1205,7 +1205,7 @@ SyntacticCode       gCode;
 			/* on n'a pas encore traite' le nom de type a copier */
 			/* ce nom de type est donc erronne' */
 		       {
-			  CompilerError (BeginCopyType, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
+			  CompilerMessage (BeginCopyType, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
 			  CopyType[0] = '\0';
 			  BeginCopyType = 0;
 		       }
@@ -1239,7 +1239,7 @@ SyntacticCode       gCode;
 		 }
 	       else if (gCode == RULE_AbsDist)	/* introduit une partie decimale */
 		  if (LatestNumberAttr)		/* interdit apres un attribut */
-		     CompilerError (wi, PRS, FATAL, NO_DECIMAL_PART_AFTER_AN_ATTR, inputLine, LineNum);
+		     CompilerMessage (wi, PRS, FATAL, NO_DECIMAL_PART_AFTER_AN_ATTR, inputLine, LineNum);
 	       break;
 	    case CHR_42:
 	       /*  *  */
@@ -1332,7 +1332,7 @@ indLine             wi;
 	       if (!CurRule->PrDimRule.DrPosition)
 		  if ((CurRule->PrType == PtHeight && !(axis == Top || axis == Bottom))
 		      || (CurRule->PrType == PtWidth && !(axis == Left || axis == Right)))
-		     CompilerError (wi, PRS, FATAL, BROKEN_RULE, inputLine, LineNum);
+		     CompilerMessage (wi, PRS, FATAL, BROKEN_RULE, inputLine, LineNum);
 		  else
 		    {
 		       CurRule->PrDimRule.DrPosition = True;
@@ -1421,7 +1421,7 @@ indLine             wi;
 
    pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters - 1];
    if (pCntr->CnNItems >= MAX_PRES_COUNT_ITEM)
-      CompilerError (wi, PRS, FATAL, MAX_OPS_ON_A_COUNTER_OVERFLOW, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, MAX_OPS_ON_A_COUNTER_OVERFLOW, inputLine, LineNum);
    else
      {
 	pCntr->CnItem[pCntr->CnNItems].CiCntrOp = oper;
@@ -1483,7 +1483,7 @@ static void         CreateDefaultRule ()
    CurRule = NextRule;
    if ((NextRule = (PtrPRule) malloc (sizeof (PresRule))) == NULL)
       /* memoire insuffisante */
-      CompilerError (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
+      CompilerMessage (0, PRS, FATAL, NO_MORE_MEM_LEFT, inputLine, LineNum);
    if (pPSchema->PsFirstDefaultPRule == NULL)
       pPSchema->PsFirstDefaultPRule = CurRule;
    CurRule->PrNextPRule = NULL;
@@ -1840,7 +1840,7 @@ indLine             wi;
 	   while (!stop);
 	   if (i > MAX_IDENTIFIERS)
 	      /*erreur dans la declaration FORWARD */
-	      CompilerError (wi, PRS, FATAL, BAD_USE_OF_KEYWORD_FORWARD, inputLine, LineNum);
+	      CompilerMessage (wi, PRS, FATAL, BAD_USE_OF_KEYWORD_FORWARD, inputLine, LineNum);
 	}
 }
 
@@ -1975,15 +1975,15 @@ indLine             wi;
 {
    if (DefaultRuleDef)
       /* pas de creation dans les regles par defaut */
-      CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
    else if (CurView != 1)
       /* regles de creation seulement dans la vue principale */
-      CompilerError (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW, inputLine, LineNum);
    else if ((creatFonct == FnCreateBefore || creatFonct == FnCreateAfter || creatFonct == FnCreateWith ||
 	     creatFonct == FnCreateEnclosing) &&
 	    CurType == pSSchema->SsRootElem)
       /* pas de creation avant, apres ou au-dessus de la racine */
-      CompilerError (wi, PRS, FATAL, PRS_INVALID_RULE_FOR_ROOT_ELEM, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, PRS_INVALID_RULE_FOR_ROOT_ELEM, inputLine, LineNum);
    else
      {
 	CreatePRule (PtFunction, wi);
@@ -2016,15 +2016,15 @@ indLine             wi;
    ConditionEnd ();
    if (PresBoxDef)
       /* interdit pour les boites de presentation */
-      CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_A_PRES_BOX, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_PRES_BOX, inputLine, LineNum);
    else if (DefaultRuleDef)
-      CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
    else if (RuleDef && CurType <= MAX_BASIC_TYPE)
-      CompilerError (wi, PRS, FATAL, BAD_RULE_FOR_A_TERMINAL_ELEM, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, BAD_RULE_FOR_A_TERMINAL_ELEM, inputLine, LineNum);
    else if (layoutFonct != FnLine &&
 	    layoutFonct != FnNoLine &&
 	    pSSchema->SsRule[CurType - 1].SrConstruct == CsChoice)
-      CompilerError (wi, PRS, FATAL, CANT_USE_RULE_FOR_A_CHOICE, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, CANT_USE_RULE_FOR_A_CHOICE, inputLine, LineNum);
    else
      {
 	/* verifie qu'il n'y a que des conditions Within parmi les
@@ -2059,7 +2059,7 @@ indLine             wi;
 			   if (!((layoutFonct == FnColumn && pPRule->PrPresFunction == FnPage) ||
 				 (layoutFonct == FnSubColumn && pPRule->PrPresFunction == FnColumn)))
 #endif /* __COLPAGE__ */
-			      CompilerError (wi, PRS, FATAL, ONLY_ONE_PAGE_RULE, inputLine, LineNum);
+			      CompilerMessage (wi, PRS, FATAL, ONLY_ONE_PAGE_RULE, inputLine, LineNum);
 		  pPRule = pPRule->PrNextPRule;
 	       }
 	  }
@@ -2104,7 +2104,7 @@ indLine             wi;
 		if (R->PrType == PtFunction)
 		   if (R->PrPresFunction == FnContentRef || R->PrPresFunction == FnCopy)
 		      if (R->PrCond == NULL)
-			 CompilerError (wi, PRS, FATAL, ONLY_ONE_COPY_CONTENT_RULE, inputLine, LineNum);
+			 CompilerMessage (wi, PRS, FATAL, ONLY_ONE_COPY_CONTENT_RULE, inputLine, LineNum);
 	     R = R->PrNextPRule;
 	  }
      }
@@ -2383,7 +2383,7 @@ indLine             wi;
 	       while (i < pPSchema->PsNViews && !pPSchema->PsExportView[i - 1])
 		  i++;
 	       if (pPSchema->PsExportView[i - 1])
-		  CompilerError (wi, PRS, FATAL, ONLY_ONE_EXPORT_VIEW_ALLOWED, inputLine, LineNum);	/* deja une vue EXPORT */
+		  CompilerMessage (wi, PRS, FATAL, ONLY_ONE_EXPORT_VIEW_ALLOWED, inputLine, LineNum);	/* deja une vue EXPORT */
 	       else
 		  pPSchema->PsExportView[pPSchema->PsNViews - 1] = True;
 	       break;
@@ -2593,14 +2593,14 @@ indLine             wi;
 	       CreatePRule (PtLineSpacing, wi);
 	       break;
 	    case KWD_Break /* Break */ :
-	       CompilerError (wi, PRS, INFO, USE_PAGEBREAK, inputLine, LineNum);
+	       CompilerMessage (wi, PRS, INFO, USE_PAGEBREAK, inputLine, LineNum);
 	       if (Conditions != NULL)
 		  /* un IF precede la regle Break. Erreur */
-		  CompilerError (wi, PRS, FATAL, FORBIDDEN_CONDITION,
+		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
 				 inputLine, LineNum);
 	       else if (CurView != 1)
 		  /* interdit dans une vue non-principale */
-		  CompilerError (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
+		  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
 				 inputLine, LineNum);
 	       else
 		 {
@@ -2611,10 +2611,10 @@ indLine             wi;
 	    case KWD_PageBreak /* PageBreak */ :
 	       if (Conditions != NULL)
 		  /* un IF precede la regle Break. Erreur */
-		  CompilerError (wi, PRS, FATAL, FORBIDDEN_CONDITION,
+		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
 				 inputLine, LineNum);
 	       else if (CurView != 1)
-		  CompilerError (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
+		  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
 				 inputLine, LineNum);
 	       else
 		 {
@@ -2625,10 +2625,10 @@ indLine             wi;
 	    case KWD_LineBreak /* LineBreak */ :
 	       if (Conditions != NULL)
 		  /* un IF precede la regle Break. Erreur */
-		  CompilerError (wi, PRS, FATAL, FORBIDDEN_CONDITION,
+		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
 				 inputLine, LineNum);
 	       else if (CurView != 1)
-		  CompilerError (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
+		  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
 				 inputLine, LineNum);
 	       else
 		 {
@@ -2639,10 +2639,10 @@ indLine             wi;
 	    case KWD_InLine:
 	       if (Conditions != NULL)
 		  /* un IF precede la regle Break. Erreur */
-		  CompilerError (wi, PRS, FATAL, FORBIDDEN_CONDITION,
+		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
 				 inputLine, LineNum);
 	       else if (CurView != 1)
-		  CompilerError (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
+		  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
 				 inputLine, LineNum);
 	       else
 		 {
@@ -2732,7 +2732,7 @@ indLine             wi;
 	       break;
 	    case KWD_NoBreak1 /* NoBreak1 */ :
 	       if (DefaultRuleDef)
-		  CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);	/* pas de regle NoBreak1
+		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);	/* pas de regle NoBreak1
 													   * dans les regles par
 													   * defaut */
 	       else
@@ -2740,7 +2740,7 @@ indLine             wi;
 	       break;
 	    case KWD_NoBreak2 /* NoBreak2 */ :
 	       if (DefaultRuleDef)
-		  CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);	/* pas de regle NoBreak2
+		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);	/* pas de regle NoBreak2
 													   * dans les regles par
 													   * defaut */
 	       else
@@ -2753,7 +2753,7 @@ indLine             wi;
 		 {
 		    if (Conditions != NULL)
 		       /* un IF precede la regle Content d'une boite de presentation */
-		       CompilerError (wi, PRS, FATAL, FORBIDDEN_CONDITION,
+		       CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
 				      inputLine, LineNum);
 		 }
 	       else
@@ -2763,7 +2763,7 @@ indLine             wi;
 			 pSSchema->SsRule[CurType - 1].SrConstruct == CsPairedElement)))
 		  /* on n'est pas dans les regles d'un element reference */
 		  /* ni dans celles d'un element CsPairedElement */
-		  CompilerError (wi, PRS, FATAL, AUTHORIZED_ONLY_FOR_BOXES_AND_REFS, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, AUTHORIZED_ONLY_FOR_BOXES_AND_REFS, inputLine, LineNum);
 	       else
 		  /* cree une regle "Content" pour le type courant */
 		 {
@@ -2773,15 +2773,15 @@ indLine             wi;
 	       break;
 	    case KWD_Gather /* Gather */ :
 	       if (DefaultRuleDef)
-		  CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);	/* pas de regle Gather
+		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);	/* pas de regle Gather
 													   * dans les regles par defaut */
 	       else if (Conditions != NULL)
 		  /* un IF precede la regle Break. Erreur */
-		  CompilerError (wi, PRS, FATAL, FORBIDDEN_CONDITION,
+		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
 				 inputLine, LineNum);
 	       else if (CurView != 1)
 		  /* interdit dans une vue non-principale */
-		  CompilerError (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW, inputLine, LineNum);
 	       else
 		 {
 		    InGatherRule = True;
@@ -2824,13 +2824,13 @@ indLine             wi;
 	       break;
 	    case KWD_Copy /* Copy */ :
 	       if (DefaultRuleDef)
-		  CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
 	       else if (CurView != 1)
 		  /* regle autorisee seulement dans la vue principale */
-		  CompilerError (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW, inputLine, LineNum);
 	       else if (RuleDef && pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)
 		  /* reserve' aux references */
-		  CompilerError (wi, PRS, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
 	       else
 		 {
 		    GenerateCopyRule (FnCopy, wi);
@@ -2867,7 +2867,7 @@ indLine             wi;
 	       break;
 	    case KWD_nil /* NULL */ :
 	       if (CurRule->PrType == PtHeight || CurRule->PrType == PtWidth)
-		  CompilerError (wi, PRS, FATAL, FORDBIDDEN_IN_HEIGHT_AND_WIDTH, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, FORDBIDDEN_IN_HEIGHT_AND_WIDTH, inputLine, LineNum);
 	       else
 		 {
 		    CurRule->PrPosRule.PoPosDef = NoEdge;
@@ -2876,7 +2876,7 @@ indLine             wi;
 	       break;
 	    case KWD_UserSpecified:
 	       if (!(RuleDef || AttributeDef))
-		  CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_A_PRES_BOX, inputLine, LineNum);	/* interdit pour les boites de presentation */
+		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_PRES_BOX, inputLine, LineNum);	/* interdit pour les boites de presentation */
 	       else if (CurRule->PrType == PtHeight || CurRule->PrType == PtWidth)
 		  CurRule->PrDimRule.DrUserSpecified = True;
 	       else if (CurRule->PrType == PtVertPos || CurRule->PrType == PtHorizPos)
@@ -2896,14 +2896,14 @@ indLine             wi;
 	       if (gCode == RULE_Reference)
 		  SetLevel (RlEnclosed, wi);
 	       else if (CurRule->PrType == PtVisibility)
-		  CompilerError (wi, PRS, FATAL, CANT_INHERIT_FROM_ENCLOSED, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, CANT_INHERIT_FROM_ENCLOSED, inputLine, LineNum);
 	       else
 		  InheritRule (InheritChild);
 	       break;
 	    case KWD_Creator:
 	       if (!PresBoxDef)
 		  /* on n'est pas dans une boite de presentation, erreur */
-		  CompilerError (BeginCopyType, PRS, FATAL, VALID_ONLY_FOR_PRES_BOX, inputLine, LineNum);
+		  CompilerMessage (BeginCopyType, PRS, FATAL, VALID_ONLY_FOR_PRES_BOX, inputLine, LineNum);
 	       else if (gCode == RULE_Reference)
 		  SetLevel (RlCreator, wi);
 	       else
@@ -2913,7 +2913,7 @@ indLine             wi;
 	       if (gCode == RULE_Reference)
 		  SetLevel (RlPrevious, wi);
 	       else if (CurRule->PrType == PtVisibility)
-		  CompilerError (wi, PRS, FATAL, CANT_INHERIT_FROM_PREVIOUS, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, CANT_INHERIT_FROM_PREVIOUS, inputLine, LineNum);
 	       else
 		  InheritRule (InheritPrevious);
 	       break;
@@ -2936,10 +2936,10 @@ indLine             wi;
 		  Conditions->CoCondition = PcReferred;
 	       else if (!AttributeDef && !PresBoxDef)
 		  /* autorise' seulement pour les attributs */
-		  CompilerError (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR, inputLine, LineNum);
 	       else if (AttributeDef && pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtReferenceAttr)
 		  /* seulement pour les attributs reference */
-		  CompilerError (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR, inputLine, LineNum);
 	       else
 		  SetLevel (RlReferred, wi);
 	       break;
@@ -3021,14 +3021,14 @@ indLine             wi;
 	       break;
 	    case KWD_CM /* cm */ :
 	       if (LatestNumberAttr)
-		  CompilerError (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
+		  CompilerMessage (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
 				 inputLine, LineNum);
 	       else
 		  CurUnit = Centimeter;
 	       break;
 	    case KWD_MM /* mm */ :
 	       if (LatestNumberAttr)
-		  CompilerError (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
+		  CompilerMessage (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
 				 inputLine, LineNum);
 	       else
 		  CurUnit = Millimeter;
@@ -3043,7 +3043,7 @@ indLine             wi;
 	       break;
 	    case KWD_PC /* pc */ :
 	       if (LatestNumberAttr)
-		  CompilerError (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
+		  CompilerMessage (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
 				 inputLine, LineNum);
 	       else
 		  CurUnit = Pica;
@@ -3051,7 +3051,7 @@ indLine             wi;
 	    case KWD_IN /* in */ :
 	       if (gCode == RULE_Unit)
 		  if (LatestNumberAttr)
-		     CompilerError (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
+		     CompilerMessage (wi, PRS, FATAL, BAD_UNIT_FOR_AN_ATTR,
 				    inputLine, LineNum);
 		  else
 		     CurUnit = Inch;
@@ -3085,7 +3085,7 @@ indLine             wi;
 	       /* IF */
 	       if (DefaultRuleDef)
 		  /* pas de condition dans les regles par defaut */
-		  CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
 	       else
 		 {
 		    Conditions = NULL;
@@ -3100,10 +3100,10 @@ indLine             wi;
 	       /* Target */
 	       if (RuleDef && pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)
 		  /* reserve' aux elements references */
-		  CompilerError (wi, PRS, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_REFS, inputLine, LineNum);
 	       else if (AttributeDef && pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtReferenceAttr)
 		  /* seulement pour les attributs reference */
-		  CompilerError (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, CANT_USE_IF_NOT_A_REF_ATTR, inputLine, LineNum);
 	       else
 		  Conditions->CoTarget = True;
 	       break;
@@ -3231,7 +3231,7 @@ indLine             wi;
 	    case KWD_Create:
 	       /* Create */
 	       CreationRule (FnCreateFirst, wi);
-	       CompilerError (wi, PRS, INFO, USE_CREATEFIRST, inputLine, LineNum);
+	       CompilerMessage (wi, PRS, INFO, USE_CREATEFIRST, inputLine, LineNum);
 	       break;
 	    case KWD_CreateBefore:
 	       /* CreateBefore */
@@ -3345,7 +3345,7 @@ indLine             wl;
 
    i = GetTypeNumber (wl, wi, typeName);
    if (i == 0)
-      CompilerError (wi, PRS, FATAL, UNKNOWN_TYPE, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, UNKNOWN_TYPE, inputLine, LineNum);
    /* type inconnu */
    else
      {
@@ -3354,7 +3354,7 @@ indLine             wl;
 	  {
 	     if (!SecondInPair && !FirstInPair)
 		/* le nom du type n'etait pas precede' de First ou Second */
-		CompilerError (wi, PRS, FATAL, MISSING_FIRST_SECOND,
+		CompilerMessage (wi, PRS, FATAL, MISSING_FIRST_SECOND,
 			       inputLine, LineNum);
 	     else if (SecondInPair)
 		/* il s'agit du type suivant */
@@ -3364,7 +3364,7 @@ indLine             wl;
 	   /* ce n'est pas un element CsPairedElement */
 	if (SecondInPair || FirstInPair)
 	   /* le nom du type etait precede' de First ou Second, erreur */
-	   CompilerError (wi, PRS, FATAL, NOT_A_PAIR,
+	   CompilerMessage (wi, PRS, FATAL, NOT_A_PAIR,
 			  inputLine, LineNum);
 	if (prevRule == RULE_FSTypeName)
 	   /* un nom de type d'element, avant les regles */
@@ -3376,16 +3376,16 @@ indLine             wl;
 	     pSRule = &pSSchema->SsRule[i - 1];
 	     /* on n'accepte que les listes d'elements associes */
 	     if (pSRule->SrConstruct != CsList)
-		CompilerError (wi, PRS, FATAL, ASSOC_ELEMS_ONLY, inputLine, LineNum);
+		CompilerMessage (wi, PRS, FATAL, ASSOC_ELEMS_ONLY, inputLine, LineNum);
 	     /* ce n'est pas une liste, erreur */
 	     else if (!pSSchema->SsRule[pSRule->SrListItem - 1].SrAssocElem)
-		CompilerError (wi, PRS, FATAL, ASSOC_ELEMS_ONLY, inputLine, LineNum);
+		CompilerMessage (wi, PRS, FATAL, ASSOC_ELEMS_ONLY, inputLine, LineNum);
 	     /* les constituants de la liste ne sont */
 	     /* pas des elements associes */
 	     else
 	       {
 		  if (pPSchema->PsNPrintedViews >= MAX_PRINT_VIEW)
-		     CompilerError (wi, PRS, FATAL, MAX_VIEWS_TO_BE_PRINTED_OVERFLOW, inputLine, LineNum);
+		     CompilerMessage (wi, PRS, FATAL, MAX_VIEWS_TO_BE_PRINTED_OVERFLOW, inputLine, LineNum);
 		  /* table des vues a imprimee saturee */
 		  else
 		    {
@@ -3400,9 +3400,9 @@ indLine             wl;
 	  {
 	     TransmittedElem = i;
 	     if (pPSchema->PsNTransmElems >= MAX_TRANSM_ELEM)
-		CompilerError (wi, PRS, FATAL, MAX_MANY_TRANSMIT_RULES_FOR_ELEMS_OVERFLOW, inputLine, LineNum);		/* table PsTransmElem saturee */
+		CompilerMessage (wi, PRS, FATAL, MAX_MANY_TRANSMIT_RULES_FOR_ELEMS_OVERFLOW, inputLine, LineNum);		/* table PsTransmElem saturee */
 	     else if (pPSchema->PsElemTransmit[i - 1] > 0)
-		CompilerError (wi, PRS, FATAL, ELEM_HAS_A_TRANSMIT_RULE, inputLine, LineNum);	/* deja une regle transmit pout l'element */
+		CompilerMessage (wi, PRS, FATAL, ELEM_HAS_A_TRANSMIT_RULE, inputLine, LineNum);	/* deja une regle transmit pout l'element */
 	     else
 	       {
 		  pPSchema->PsNTransmElems++;
@@ -3413,7 +3413,7 @@ indLine             wl;
 	  {
 	     /* un nom de type a la fin d'une regle Transmit */
 	     if (!pSSchema->SsRule[i - 1].SrRefImportedDoc)
-		CompilerError (wi, PRS, FATAL, NOT_AN_INCLUDED_DOC, inputLine, LineNum);	/* ce n'est pas un document inclus */
+		CompilerMessage (wi, PRS, FATAL, NOT_AN_INCLUDED_DOC, inputLine, LineNum);	/* ce n'est pas un document inclus */
 	     else if (TransmittedCounter > 0)
 		/* c'est une regle Transmit pour un compteur */
 	       {
@@ -3430,12 +3430,12 @@ indLine             wl;
 	   if (!PresBoxDef)
 	      /* on est dans une regle Content d'un element reference ou paire */
 	      /* refus: seules les constantes sont acceptees dans cette regle */
-	      CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine, LineNum);
+	      CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine, LineNum);
 	   else
 	      /* contenu d'une boite de presentation */
 	   if (!pSSchema->SsRule[i - 1].SrAssocElem)
 	      /* ce n'est pas un element associe, erreur */
-	      CompilerError (wi, PRS, FATAL, NOT_AN_ASSOC_ELEM, inputLine, LineNum);
+	      CompilerMessage (wi, PRS, FATAL, NOT_AN_ASSOC_ELEM, inputLine, LineNum);
 	   else
 	     {
 		pPSchema->PsPresentBox[CurPresBox - 1].PbContent = ContElement;
@@ -3458,7 +3458,7 @@ indLine             wl;
 		if (found)
 		   pPSchema->PsPresentBox[CurPresBox - 1].PbContRefElem = i;
 		else
-		   CompilerError (wi, PRS, FATAL, MISSING_REF_TO_ELEM, inputLine, LineNum);
+		   CompilerMessage (wi, PRS, FATAL, MISSING_REF_TO_ELEM, inputLine, LineNum);
 		/* pas de reference dans le schema, erreur */
 	     }
 	else if (CounterDef)
@@ -3474,7 +3474,7 @@ indLine             wl;
 	  {
 
 	     if (pPSchema->PsElemPRule[i - 1] != NULL)
-		CompilerError (wi, PRS, FATAL, CANT_REDEFINE,
+		CompilerMessage (wi, PRS, FATAL, CANT_REDEFINE,
 			       inputLine, LineNum);	/* deja traite' */
 	     else
 	       {
@@ -3491,7 +3491,7 @@ indLine             wl;
 	     if ((CurRule->PrType == PtVertRef
 		  || CurRule->PrType == PtHorizRef)
 		 && CurRule->PrPosRule.PoRelation != RlEnclosed)
-		CompilerError (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED, inputLine, LineNum);
+		CompilerMessage (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED, inputLine, LineNum);
 	     else
 		switch (CurRule->PrType)
 		      {
@@ -3589,7 +3589,7 @@ indLine             wi;
 {
    if (pSSchema->SsAttribute[attr - 1].AttrType != AtNumAttr)
       /* not an attribute of type Integer, error */
-      CompilerError (wi, PRS, FATAL, BAD_ATTR_TYPE, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, BAD_ATTR_TYPE, inputLine, LineNum);
    else
       switch (prevRule)
 	    /* prevRule = number of the rule where the attribute name appears*/
@@ -3710,7 +3710,7 @@ indLine             wi;
 		       TtaDisplaySimpleMessage (FATAL, PRS, MISSING_STRUCT_SCHEM);
 		    /* echec lecture du schema de structure */
 		    else if (strcmp (n, pSSchema->SsName))
-		       CompilerError (wi, PRS, FATAL, STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, LineNum);
 		    else
 		      {
 			 Initialize ();
@@ -3724,7 +3724,7 @@ indLine             wi;
 		    CopyName (n, wi, wl);
 		    if (!ReadStructureSchema (n, pExternalSS))
 		       /* echec lecture du schema de structure */
-		       CompilerError (wi, PRS, FATAL, CANT_LOAD_SCHEMA, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, CANT_LOAD_SCHEMA, inputLine, LineNum);
 		    else
 		       /* le schema de structure externe a ete charge' */
 		      {
@@ -3736,7 +3736,7 @@ indLine             wi;
 			    /* type inconnu */
 			    if (PresBoxDef || InWithinCond)
 			       /* on est dans une boite de presentation, erreur */
-			       CompilerError (BeginCopyType, PRS, FATAL, NOT_FOR_PRES_BOX, inputLine, LineNum);
+			       CompilerMessage (BeginCopyType, PRS, FATAL, NOT_FOR_PRES_BOX, inputLine, LineNum);
 			    else
 			      {
 				 /* on suppose que c'est un nom de boite de presentation */
@@ -3745,12 +3745,12 @@ indLine             wi;
 				 if ((RuleDef && pSSchema->SsRule[CurType - 1].SrRefTypeNat[0] == '\0') ||
 				     (AttributeDef && pSSchema->SsAttribute[CurAttrNum - 1].AttrTypeRefNature[0] == '\0'))
 				    /* la regle ne s'applique pas a` une reference externe */
-				    CompilerError (BeginCopyType, PRS, FATAL, AUTHORIZED_ONLY_FOR_EXT_REFS, inputLine, LineNum);
+				    CompilerMessage (BeginCopyType, PRS, FATAL, AUTHORIZED_ONLY_FOR_EXT_REFS, inputLine, LineNum);
 				 else
 				    /* la regle s'applique a` une reference externe */
 				 if (CurRule->PrNPresBoxes != 0)
 				    /* deja une boite dans la regle, on refuse */
-				    CompilerError (wi, PRS, FATAL, REDEFINITION_OF_CONTENT, inputLine, LineNum);
+				    CompilerMessage (wi, PRS, FATAL, REDEFINITION_OF_CONTENT, inputLine, LineNum);
 				 else
 				   {
 				      strncpy (CurRule->PrPresBoxName, CopyType, MAX_NAME_LENGTH);
@@ -3813,7 +3813,7 @@ indLine             wi;
 			   {
 			      /* la regle est-elle bien pour un attribut ? */
 			      if (!AttributeDef)
-				 CompilerError (wi, PRS, FATAL, VALID_ONLY_FOR_ATTRIBUTES,
+				 CompilerMessage (wi, PRS, FATAL, VALID_ONLY_FOR_ATTRIBUTES,
 						inputLine, LineNum);
 			      else
 				{
@@ -3831,7 +3831,7 @@ indLine             wi;
 				 i++;
 			      if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
 				 /* on ne l'a pas trouve, erreur */
-				 CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
+				 CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER,
 						inputLine, LineNum);
 			      else
 				 /* c'est un nom d'attribut dans une condition */
@@ -3857,7 +3857,7 @@ indLine             wi;
 		       i++;
 		    if (strcmp (n, pSSchema->SsRule[i - 1].SrName))
 		       /* type inconnu */
-		       CompilerError (wi, PRS, FATAL, UNKNOWN_TYPE, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, UNKNOWN_TYPE, inputLine, LineNum);
 		    else
 		       /* le type existe, il a le numero i */
 		       pCntr->CnItem[0].CiElemType = i;
@@ -3872,10 +3872,10 @@ indLine             wi;
 		  /* declaration de vue */
 		 {
 		    if (pPSchema->PsNViews >= MAX_VIEW)
-		       CompilerError (wi, PRS, FATAL, MAX_VIEWS_OVERFLOW, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, MAX_VIEWS_OVERFLOW, inputLine, LineNum);
 		    /* Trop de vues */
 		    else if (Identifier[identnum].SrcIdentDefRule != 0)
-		       CompilerError (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
 		    /* Vue deja declaree */
 		    else
 		       /* ajoute une vue dans la table des vues */
@@ -3900,7 +3900,7 @@ indLine             wi;
 		     /* ce nom a ete declare comme nom de vue */
 		    {
 		       if (pPSchema->PsNPrintedViews >= MAX_PRINT_VIEW)
-			  CompilerError (wi, PRS, FATAL, MAX_VIEWS_TO_BE_PRINTED_OVERFLOW, inputLine, LineNum);
+			  CompilerMessage (wi, PRS, FATAL, MAX_VIEWS_TO_BE_PRINTED_OVERFLOW, inputLine, LineNum);
 		       /* table des vues a imprimee saturee */
 		       else
 			 {
@@ -3918,7 +3918,7 @@ indLine             wi;
 		 }
 	       else if (prevRule == RULE_CounterAttrPage)
 		  if (Identifier[identnum].SrcIdentDefRule == 0)
-		     CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);		/* Vue non declaree */
+		     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);		/* Vue non declaree */
 		  else
 		    {
 		       pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
@@ -3929,10 +3929,10 @@ indLine             wi;
 		  /* dans une instruction 'in ViewName ...' */
 		  if (Identifier[identnum].SrcIdentDefRule == 0)
 		     /* Vue non declaree */
-		     CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
+		     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
 		  else if (Identifier[identnum].SrcIdentDefRule == 1)
 		     /* C'est la vue* principale, erreur */
-		     CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_THE_MAIN_VIEW, inputLine, LineNum);
+		     CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_THE_MAIN_VIEW, inputLine, LineNum);
 		  else
 		    {
 		       CurView = Identifier[identnum].SrcIdentDefRule;
@@ -3945,9 +3945,9 @@ indLine             wi;
 		  /* declaration de compteur */
 		 {
 		    if (pPSchema->PsNCounters >= MAX_PRES_COUNTER)
-		       CompilerError (wi, PRS, FATAL, MAX_COUNTERS_OVERFLOW, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, MAX_COUNTERS_OVERFLOW, inputLine, LineNum);
 		    else if (Identifier[identnum].SrcIdentDefRule != 0)
-		       CompilerError (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
 		    else
 		      {
 			 pCntr = &pPSchema->PsCounter[pPSchema->PsNCounters];
@@ -3963,7 +3963,7 @@ indLine             wi;
 	       else if (Identifier[identnum].SrcIdentDefRule == 0)
 		  /* on n'a pas encore rencontre' ce nom */
 		  if (prevRule != RULE_CounterAttrPage)
-		     CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);		/* compteur non declare' */
+		     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);		/* compteur non declare' */
 		  else
 		     /* on vient de la regle CounterAttrPage; peut-etre est-ce un */
 		     /* nom d'attribut */
@@ -3975,7 +3975,7 @@ indLine             wi;
 			      && i < pSSchema->SsNAttributes)
 			  i++;
 		       if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
-			  CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);	/* on ne l'a pas trouve, erreur */
+			  CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);	/* on ne l'a pas trouve, erreur */
 		       else
 			  /* c'est un nom d'attribut apres VALUE */
 			 {
@@ -4053,7 +4053,7 @@ indLine             wi;
 		    pCntr = &pPSchema->PsCounter[TransmittedCounter - 1];
 		    if (pCntr->CnNTransmAttrs >= MAX_TRANSM_ATTR)
 		      {
-			 CompilerError (wi, PRS, FATAL, MAX_TRANSMIT_RULES_FOR_COUNTER_OVERFLOW, inputLine, LineNum);	/* trop de regles transmit pour ce compteur */
+			 CompilerMessage (wi, PRS, FATAL, MAX_TRANSMIT_RULES_FOR_COUNTER_OVERFLOW, inputLine, LineNum);	/* trop de regles transmit pour ce compteur */
 			 TransmittedCounter = 0;
 		      }
 		    else
@@ -4069,7 +4069,7 @@ indLine             wi;
 		      && i < pSSchema->SsNAttributes)
 		  i++;
 	       if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
-		  CompilerError (wi, PRS, FATAL, NO_SUCH__ATTR, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, NO_SUCH__ATTR, inputLine, LineNum);
 	       /* on ne l'a pas trouve, erreur */
 
 	       else if (!(prevRule == RULE_Attr
@@ -4092,10 +4092,10 @@ indLine             wi;
 		       /* le nouvel element */
 		       if (pPresVar->PvItem[0].ViType == VarText)
 			  if (pPSchema->PsConstant[pPresVar->PvItem[0].ViConstant - 1].PdType != CharString)
-			     CompilerError (wi, PRS, FATAL, MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, LineNum);
+			     CompilerMessage (wi, PRS, FATAL, MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, LineNum);
 
 		    if (pPresVar->PvNItems >= MAX_PRES_VAR_ITEM)
-		       CompilerError (wi, PRS, FATAL, MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, LineNum);
 		    /* variable trop longue */
 		    else
 		      {
@@ -4138,7 +4138,7 @@ indLine             wi;
 		    /* seuls les attributs numeriques sont accepte's */
 		    if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr)
 		       /* ce n'est pas un attribut numerique, erreur */
-		       CompilerError (wi, PRS, FATAL, BAD_ATTR_TYPE, inputLine,
+		       CompilerMessage (wi, PRS, FATAL, BAD_ATTR_TYPE, inputLine,
 				      LineNum);
 		    else
 		      {
@@ -4157,10 +4157,10 @@ indLine             wi;
 		    /* pour comparer la valeur de l'attribut a un attribut pose  */
 		    /* sur un element englobant */
 		    if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr)
-		       CompilerError (wi, PRS, FATAL, FORBIDDEN_FOR_THIS_TYPE_OF_ATTR, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, FORBIDDEN_FOR_THIS_TYPE_OF_ATTR, inputLine, LineNum);
 		    /* interdit pour un attribut non numerique */
 		    else if (pSSchema->SsAttribute[i - 1].AttrType != AtNumAttr)
-		       CompilerError (wi, PRS, FATAL, FORBIDDEN_FOR_THIS_TYPE_OF_ATTR, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, FORBIDDEN_FOR_THIS_TYPE_OF_ATTR, inputLine, LineNum);
 		    /* l'attribut n'est pas un attribut numerique */
 		    else
 		       CurComparAttr = i;
@@ -4178,7 +4178,7 @@ indLine             wi;
 	       if (ConstantDef)
 		  /* definition de constante */
 		  if (Identifier[identnum].SrcIdentDefRule != 0)
-		     CompilerError (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
+		     CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
 		  else
 		    {
 		       NewConst (wi);
@@ -4197,7 +4197,7 @@ indLine             wi;
 			      && i < pSSchema->SsNAttributes)
 			  i++;
 		       if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName))
-			  CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
+			  CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
 		       /* on ne l'a pas trouve, erreur */
 		       else
 			  /* c'est un nom d'attribut dans une variable */
@@ -4213,7 +4213,7 @@ indLine             wi;
 			 }
 		    }
 		  else
-		     CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
+		     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
 	       /* nom de constante inconnu */
 	       else
 		 {
@@ -4253,7 +4253,7 @@ indLine             wi;
 	       if (VariableDef)
 		  /* definition de variable */
 		  if (Identifier[identnum].SrcIdentDefRule != 0)
-		     CompilerError (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
+		     CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
 		  else
 		    {
 		       NewVar (wi);
@@ -4272,7 +4272,7 @@ indLine             wi;
 		       /* maintenant un identificateur de type structure' */
 		    }
 		  else
-		     CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
+		     CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
 	       else
 		 {
 		    if (PresBoxDef)
@@ -4305,7 +4305,7 @@ indLine             wi;
 		    else
 		       /* on est dans une regle Content d'un element reference ou paire, on */
 		       /* refuse: seules les constantes sont acceptees dans cette regle */
-		       CompilerError (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine, LineNum);
 		 }
 	       break;
 	    case RULE_BoxName:
@@ -4314,16 +4314,16 @@ indLine             wi;
 		  /* definition de boite */
 		 {
 		    if (pPSchema->PsNPresentBoxes >= MAX_PRES_BOX)
-		       CompilerError (wi, PRS, FATAL, MAX_BOXES_OVERFLOW, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, MAX_BOXES_OVERFLOW, inputLine, LineNum);
 		    else if (GetTypeNumber (wl, wi, n) != 0)
 		       /* ce nom de boite de presentation est deja un nom de type */
 		       /* d'element, erreur */
-		       CompilerError (wi, PRS, FATAL, CANT_USE_TYPE_NAME_FOR_A_BOX,
+		       CompilerMessage (wi, PRS, FATAL, CANT_USE_TYPE_NAME_FOR_A_BOX,
 				      inputLine, LineNum);
 		    else if (Identifier[identnum].SrcIdentDefRule == 0)
 		       NewBoxName (wl, wi, identnum);
 		    else if (pPSchema->PsPresentBox[Identifier[identnum].SrcIdentDefRule - 1].PbName[0] != ' ')
-		       CompilerError (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, CANT_REDECLARE_NAME, inputLine, LineNum);
 		    /* nom deja rencontre' dans une declaration de vue, de */
 		    /* compteur ou dans une instruction Forward */
 		    else
@@ -4367,14 +4367,14 @@ indLine             wi;
 			      /* maintenant un identificateur de type structure */
 			   }
 			 else if (i != 0)
-			    CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
+			    CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
 		      }
 		    else
 		       /* c'est une boite declaree */
 		       if ((CurRule->PrType == PtVertRef
 			    || CurRule->PrType == PtHorizRef)
 			   && CurRule->PrPosRule.PoRelation != RlEnclosed)
-		       CompilerError (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, ONLY_ENCLOSED_AND_ARE_ALLOWED, inputLine, LineNum);
 		    else
 		       switch (CurRule->PrType)
 			     {
@@ -4402,14 +4402,14 @@ indLine             wi;
 				   break;
 				case PtFunction:
 				   if (CurRule->PrNPresBoxes >= MAX_COLUMN_PAGE)
-				      CompilerError (wi, PRS, FATAL, MAX_COLUMNS_OVERFLOW, inputLine, LineNum);
+				      CompilerMessage (wi, PRS, FATAL, MAX_COLUMNS_OVERFLOW, inputLine, LineNum);
 				   else if (CurRule->PrPresFunction == FnCopy
 					    && pSSchema->SsRule[CurType - 1].SrConstruct ==
 					    CsReference)
 				      /* on est dans une regle FnCopy pour une reference */
 				      if (CurRule->PrNPresBoxes != 0)
 					 /* deja une boite dans la regle, on refuse */
-					 CompilerError (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
+					 CompilerMessage (wi, PRS, FATAL, UNDECLARED_IDENTIFIER, inputLine, LineNum);
 				      else
 					{
 					   CurRule->PrNPresBoxes = 1;
@@ -4440,7 +4440,7 @@ indLine             wi;
 							   if (pPRule->PrPresBox[0] == CurRule->PrPresBox[0])
 							      /* meme boite creee */
 							      if (SameConditions (pPRule->PrCond, CurRule->PrCond))
-								 CompilerError (wi, PRS, FATAL, RULE_ALREADY_DEFINED, inputLine, LineNum);
+								 CompilerMessage (wi, PRS, FATAL, RULE_ALREADY_DEFINED, inputLine, LineNum);
 						  /* regle suivante dans la chaine */
 						  pPRule = pPRule->PrNextPRule;
 					       }
@@ -4505,7 +4505,7 @@ indLine             wi;
 		    while (!ok && i < sizeof (Name_patterns) / sizeof (char *));
 
 		    if (!ok)
-		       CompilerError (wi, PRS, FATAL, MISSING_PATTERN, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, MISSING_PATTERN, inputLine, LineNum);
 		    else
 		       /* on met le rang du pattern dans la regle */
 		      {
@@ -4520,7 +4520,7 @@ indLine             wi;
 		    while (i < MAX_COLOR && strcmp (Name_colors[i], n))
 		       i++;
 		    if (i == MAX_COLOR)
-		       CompilerError (wi, PRS, FATAL, MISSING_COLOR, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, MISSING_COLOR, inputLine, LineNum);
 		    else
 		      {
 			 CurRule->PrAttrValue = False;
@@ -4538,7 +4538,7 @@ indLine             wi;
 	       CopyName (n, wi, wl);
 	       pAttr = &pSSchema->SsAttribute[CurAttrNum - 1];
 	       if (pAttr->AttrType != AtEnumAttr)
-		  CompilerError (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
 	       /* ce n'est pas un attribut a valeur enumerees */
 	       else
 		 {
@@ -4546,7 +4546,7 @@ indLine             wi;
 		    while (strcmp (n, pAttr->AttrEnumValue[i - 1]) && i < pAttr->AttrNEnumValues)
 		       i++;
 		    if (strcmp (n, pAttr->AttrEnumValue[i - 1]))
-		       CompilerError (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
 		    /* on ne trouve pas cette valeur, erreur */
 		    else
 		       CurAttrVal = i;	/* on garde le numero de cette valeur */
@@ -4640,7 +4640,7 @@ indLine             wi;
 			   break;
 			default:
 			   /* trop de decimales */
-			   CompilerError (wi, PRS, FATAL, MAX_AFTER_DIGITS_OVERFLOW, inputLine, LineNum);
+			   CompilerMessage (wi, PRS, FATAL, MAX_AFTER_DIGITS_OVERFLOW, inputLine, LineNum);
 			   break;
 		     }
 	       /* on ajoute cette partie a la partie entiere deja convertie en milliemes */
@@ -4705,7 +4705,7 @@ indLine             wi;
 	       /* MinVal */
 	       if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr
 		   || n >= MAX_INT_ATTR_VAL)
-		  CompilerError (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
 	       /* ce n'est pas un attribut a valeur numerique */
 	       else
 		 {
@@ -4719,7 +4719,7 @@ indLine             wi;
 	       /* MaxVal */
 	       if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr
 		   || n >= MAX_INT_ATTR_VAL)
-		  CompilerError (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
 	       /* ce n'est pas un attribut a valeur numerique */
 	       else
 		 {
@@ -4733,7 +4733,7 @@ indLine             wi;
 	       /* MinInterval */
 	       if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr
 		   || n >= MAX_INT_ATTR_VAL)
-		  CompilerError (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
 	       /* ce n'est pas un attribut a valeur numerique */
 	       else
 		 {
@@ -4747,12 +4747,12 @@ indLine             wi;
 	       /* MaxInterval */
 	       if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr
 		   || n >= MAX_INT_ATTR_VAL)
-		  CompilerError (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
 	       /* ce n'est pas un attribut a valeur numerique */
 	       else
 		 {
 		    if (CurAttrLowerBound > n * AttrValSign)
-		       CompilerError (wi, PRS, FATAL, INVALID_LOWER_BOUND, inputLine, LineNum);
+		       CompilerMessage (wi, PRS, FATAL, INVALID_LOWER_BOUND, inputLine, LineNum);
 		    else
 		       CurAttrUpperBound = n * AttrValSign;
 		    AttrValSign = 1;
@@ -4764,7 +4764,7 @@ indLine             wi;
 	       /* ValEqual */
 	       if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtNumAttr
 		   || n >= MAX_INT_ATTR_VAL)
-		  CompilerError (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
 	       /* ce n'est pas un attribut a valeur numerique */
 	       else
 		 {
@@ -4776,7 +4776,7 @@ indLine             wi;
 	       /* d'attribut numerique sera positive */
 	    case RULE_MinCounterVal:
 	       if (n >= MAX_COUNTER_VAL)
-		  CompilerError (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
 	       else
 		 {
 		    Conditions->CoMinCounter = n * CurCondCntSign + 1;
@@ -4786,7 +4786,7 @@ indLine             wi;
 	       break;
 	    case RULE_MaxCounterVal:
 	       if (n >= MAX_COUNTER_VAL)
-		  CompilerError (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
 	       else
 		 {
 		    Conditions->CoMaxCounter = n * CurCondCntSign - 1;
@@ -4796,7 +4796,7 @@ indLine             wi;
 	       break;
 	    case RULE_MinCounterInter:
 	       if (n >= MAX_COUNTER_VAL)
-		  CompilerError (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
 	       else
 		 {
 		    Conditions->CoMinCounter = n * CurCondCntSign;
@@ -4806,9 +4806,9 @@ indLine             wi;
 	       break;
 	    case RULE_MaxCounterInter:
 	       if (n >= MAX_COUNTER_VAL)
-		  CompilerError (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
 	       else if (Conditions->CoMinCounter > n * CurCondCntSign)
-		  CompilerError (wi, PRS, FATAL, INVALID_LOWER_BOUND, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, INVALID_LOWER_BOUND, inputLine, LineNum);
 	       else
 		 {
 		    Conditions->CoMaxCounter = n * CurCondCntSign;
@@ -4818,7 +4818,7 @@ indLine             wi;
 	       break;
 	    case RULE_CounterValEqual:
 	       if (n >= MAX_COUNTER_VAL)
-		  CompilerError (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
+		  CompilerMessage (wi, PRS, FATAL, BAD_COUNTER_VALUE, inputLine, LineNum);
 	       else
 		 {
 		    Conditions->CoMaxCounter = Conditions->CoMinCounter = n * CurCondCntSign;
@@ -4856,7 +4856,7 @@ indLine             wi;
    if (gCode == RULE_ConstValue)
       /* ConstValue c'est une valeur de constante */
       if (wl > MAX_PRES_CONST_LEN)
-	 CompilerError (wi, PRS, FATAL, MAX_CHAR_STRING_SIZE_OVERFLOW, inputLine, LineNum);
+	 CompilerMessage (wi, PRS, FATAL, MAX_CHAR_STRING_SIZE_OVERFLOW, inputLine, LineNum);
       else
 	{
 	   pPresConst = &pPSchema->PsConstant[pPSchema->PsNConstants - 1];
@@ -4867,10 +4867,10 @@ indLine             wi;
    if (gCode == RULE_TextEqual)
       /* TextEqual c'est une valeur d'attribut */
       if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtTextAttr)
-	 CompilerError (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
+	 CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
    /* ce n'est pas un attribut a valeur textuelle */
       else if (wl > MAX_NAME_LENGTH)
-	 CompilerError (wi, PRS, FATAL, MAX_CHAR_STRING_SIZE_OVERFLOW, inputLine, LineNum);
+	 CompilerMessage (wi, PRS, FATAL, MAX_CHAR_STRING_SIZE_OVERFLOW, inputLine, LineNum);
       else
 	{
 	   for (i = 0; i < wl - 1; i++)
@@ -4905,7 +4905,7 @@ SyntacticCode       pr;
 {
    if (c < 1000)
       /* symbole intermediaire de la grammaire, erreur */
-      CompilerError (wi, PRS, FATAL, INTERMEDIATE_SYMBOL, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, INTERMEDIATE_SYMBOL, inputLine, LineNum);
    else if (c < 1100)
       /* mot-cle court */
       ProcessShortKeyWord (c, wi, r);
@@ -6240,7 +6240,7 @@ char              **argv;
 		  inputLine[i - 1] = '\0';
 		  if (i >= LINE_LENGTH)
 		     /* ligne trop longue */
-		     CompilerError (1, PRS, FATAL, MAX_LINE_SIZE_OVERFLOW, inputLine,
+		     CompilerMessage (1, PRS, FATAL, MAX_LINE_SIZE_OVERFLOW, inputLine,
 				    LineNum);
 		  else if (inputLine[0] == '#')
 		     /* cette ligne contient une directive du preprocesseur cpp */

@@ -109,7 +109,7 @@ extern PtrElement CopyTree ( PtrElement pSource,
                              PtrElement pParent,
                              boolean checkAttr,
                              boolean shareRef );
-extern PtrElement FirstAssocElem ( PtrDocument pDoc,
+extern PtrElement FirstAssociatedElement ( PtrDocument pDoc,
                                    int typeNum,
                                    PtrSSchema pSS );
 extern void CopyIncludedElem ( PtrElement pEl,
@@ -231,7 +231,7 @@ extern PtrElement CopyTree (/* PtrElement pSource,
                                PtrElement pParent,
                                boolean checkAttr,
                                boolean shareRef */);
-extern PtrElement FirstAssocElem (/* PtrDocument pDoc,
+extern PtrElement FirstAssociatedElement (/* PtrDocument pDoc,
                                      int typeNum,
                                      PtrSSchema pSS */);
 extern void CopyIncludedElem (/* PtrElement pEl,

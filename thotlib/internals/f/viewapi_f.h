@@ -64,7 +64,7 @@ extern View TtaGetViewFromName ( Document document,
                                  char *viewName );
 extern void TtaGiveActiveView ( Document * document,
                                 View * view );
-extern void RedispNewElement ( Document document,
+extern void RedisplayNewElement ( Document document,
                                PtrElement newElement,
                                PtrElement sibling,
                                boolean first,
@@ -87,17 +87,17 @@ extern void DisplayHolophrasted ( PtrElement pEl,
                                   Document document );
 extern void HideElement ( PtrElement pEl,
                           Document document );
-extern void RedispReference ( PtrElement element,
+extern void RedisplayReference ( PtrElement element,
                               Document document );
-extern void RedispLeaf ( PtrElement element,
+extern void RedisplayLeaf ( PtrElement element,
                          Document document,
                          int delta );
-extern void RedispSplittedText ( PtrElement element,
+extern void RedisplaySplittedText ( PtrElement element,
                                  int position,
                                  Document document );
-extern void RedispMergedText ( PtrElement element,
+extern void RedisplayMergedText ( PtrElement element,
                                Document document );
-extern void UndisplayHeritAttr ( PtrElement pEl,
+extern void UndisplayInheritedAttributes ( PtrElement pEl,
                                  PtrAttribute pAttr,
                                  Document document,
                                  boolean suppression );
@@ -107,10 +107,10 @@ extern void DisplayAttribute ( PtrElement pEl,
 extern void UndisplayAttribute ( PtrElement pEl,
                                  PtrAttribute pAttr,
                                  Document document );
-extern void RedispNewPresSpec ( Document document,
+extern void RedisplayNewPRule ( Document document,
                                 PtrElement pEl,
                                 PtrPRule pRule );
-extern void RedispPresStandard ( Document document,
+extern void RedisplayDefaultPresentation ( Document document,
                                  PtrElement pEl,
                                  PRuleType typeRuleP,
                                  int view );
@@ -187,7 +187,7 @@ extern View TtaGetViewFromName (/* Document document,
                                    char *viewName */);
 extern void TtaGiveActiveView (/* Document * document,
                                   View * view */);
-extern void RedispNewElement (/* Document document,
+extern void RedisplayNewElement (/* Document document,
                                  PtrElement newElement,
                                  PtrElement sibling,
                                  boolean first,
@@ -210,17 +210,17 @@ extern void DisplayHolophrasted (/* PtrElement pEl,
                                     Document document */);
 extern void HideElement (/* PtrElement pEl,
                             Document document */);
-extern void RedispReference (/* PtrElement element,
+extern void RedisplayReference (/* PtrElement element,
                                 Document document */);
-extern void RedispLeaf (/* PtrElement element,
+extern void RedisplayLeaf (/* PtrElement element,
                            Document document,
                            int delta */);
-extern void RedispSplittedText (/* PtrElement element,
+extern void RedisplaySplittedText (/* PtrElement element,
                                    int position,
                                    Document document */);
-extern void RedispMergedText (/* PtrElement element,
+extern void RedisplayMergedText (/* PtrElement element,
                                  Document document */);
-extern void UndisplayHeritAttr (/* PtrElement pEl,
+extern void UndisplayInheritedAttributes (/* PtrElement pEl,
                                    PtrAttribute pAttr,
                                    Document document,
                                    boolean suppression */);
@@ -230,10 +230,10 @@ extern void DisplayAttribute (/* PtrElement pEl,
 extern void UndisplayAttribute (/* PtrElement pEl,
                                    PtrAttribute pAttr,
                                    Document document */);
-extern void RedispNewPresSpec (/* Document document,
+extern void RedisplayNewPRule (/* Document document,
                                   PtrElement pEl,
                                   PtrPRule pRule */);
-extern void RedispPresStandard (/* Document document,
+extern void RedisplayDefaultPresentation (/* Document document,
                                    PtrElement pEl,
                                    PRuleType typeRuleP,
                                    int view */);

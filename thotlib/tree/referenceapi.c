@@ -137,7 +137,7 @@ Document            targetDocument;
 	       }
 #ifndef NODISPLAY
 	     if (ok)
-		RedispReference ((PtrElement) element, document);
+		RedisplayReference ((PtrElement) element, document);
 #endif
 	  }
      }
@@ -384,7 +384,7 @@ Document            targetDocument;
 		     /* parameter targetDocument is ok */
 		    {
 #ifndef NODISPLAY
-		       UndisplayHeritAttr ((PtrElement) element,
+		       UndisplayInheritedAttributes ((PtrElement) element,
 					   (PtrAttribute) attribute,
 					   document, FALSE);
 #endif

@@ -13,7 +13,7 @@ extern int IntegerRule ( PtrPRule pPRule,
                          boolean * ok,
                          TypeUnit * unit,
                          PtrAttribute pAttr );
-extern void GetBufConst ( PtrAbstractBox pAb );
+extern void GetConstantBuffer ( PtrAbstractBox pAb );
 extern void UpdateFreeVol ( PtrAbstractBox pAb,
                             PtrDocument pDoc );
 extern void FillContent ( PtrElement pEl,
@@ -53,7 +53,7 @@ extern int IntegerRule (/* PtrPRule pPRule,
                            boolean * ok,
                            TypeUnit * unit,
                            PtrAttribute pAttr */);
-extern void GetBufConst (/* PtrAbstractBox pAb */);
+extern void GetConstantBuffer (/* PtrAbstractBox pAb */);
 extern void UpdateFreeVol (/* PtrAbstractBox pAb,
                               PtrDocument pDoc */);
 extern void FillContent (/* PtrElement pEl,
