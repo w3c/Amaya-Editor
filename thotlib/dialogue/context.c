@@ -458,9 +458,13 @@ char               *name;
 	found = FindColor (0, name, "InactiveItemColor", "LightGrey", &InactiveB_Color);
      }
    else
+     {
       /* at least allocate the selection color */
       found = FindColor (0, name, "DocSelectColor", "Black", &Select_Color);
 
+      /* color for borders and buttons */
+      found = FindColor (0, name, "ButtonColor", "White", &Button_Color);
+      }
    /* The reference color */
    found = FindColor (0, name, "ActiveBoxColor", "Red", &(Box_Color));
    if (!found)
