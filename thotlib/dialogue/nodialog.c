@@ -14,8 +14,6 @@
 #include "typemedia.h"
 #include "frame.h"
 
-int                 EndOfPage = 0;
-
 #include "memory_f.h"
 
 /* Les fonctions vides pour l'edition de lien */
@@ -273,7 +271,6 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   EndOfPage = 1;
 }
 
 #ifdef __STDC__

@@ -299,15 +299,12 @@ void                DrawPage (fout)
 FILE               *fout;
 #endif /* __STDC__ */
 {
-   if (EndOfPage == 1)
-     {
-	NumberOfPages++;
-	fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber, LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
-	EndOfPage = 0;
-	/* Enforce loading the font when starting a new page */
-	PoscriptFont = NULL;
-	ColorPs = -1;
-     }
+  NumberOfPages++;
+  fprintf (fout, "%d %d %d nwpage\n%%%%Page: %d %d\n", LastPageNumber, LastPageWidth, LastPageHeight, NumberOfPages, NumberOfPages);
+  fflush (fout);
+  /* Enforce loading the font when starting a new page */
+  PoscriptFont = NULL;
+  ColorPs = -1;
 }
 
 /*----------------------------------------------------------------------
@@ -366,8 +363,6 @@ int                 fg;
 	X = PixelToPoint (x);
 	Y = PixelToPoint (y + FontBase (font));
 	NbWhiteSp = 0;
-	/* Do we need to add a showpage ? */
-	DrawPage (fout);
 
 	/* Do we need to change the current color ? */
 	CurrentColor (fout, fg);
@@ -535,7 +530,6 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   DrawPage (fout);		/* Do we need to add a showpage ? */
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -589,8 +583,6 @@ int                 fg;
    int                 ey, ym, yf;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -665,8 +657,6 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -702,7 +692,6 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   DrawPage (fout);		/* Do we need to add a showpage ? */
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -738,7 +727,6 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   DrawPage (fout);		/* Do we need to add a showpage ? */
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -774,7 +762,6 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   DrawPage (fout);		/* Do we need to add a showpage ? */
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -817,8 +804,6 @@ int                 fg;
       return;
 
    fout = (FILE *) FrRef[frame];
-   DrawPage (fout);
-   /* Do we need to add a showpage ? */
 
    if (thick <= 0)
       return;
@@ -907,8 +892,6 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -968,8 +951,6 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -1029,8 +1010,6 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -1096,8 +1075,6 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
 
    /* Do we need to change the current color ? */
    if (thick > 0)
@@ -1152,8 +1129,6 @@ int                 arrow;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
 
    if (thick == 0)
       return;
@@ -1243,8 +1218,6 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -1315,8 +1288,6 @@ C_points           *controls;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
    if (thick == 0)
       return;
 
@@ -1426,8 +1397,6 @@ C_points           *controls;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -1499,8 +1468,6 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
@@ -1543,8 +1510,6 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
 
    /* Do we need to change the current color ? */
    if (thick > 0)
@@ -1591,8 +1556,6 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   DrawPage (fout);
-
    /* Do we need to change the current color ? */
    if (thick > 0)
       CurrentColor (fout, fg);
@@ -1641,8 +1604,6 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   DrawPage (fout);
-
    if (thick <= 0)
       return;
 
@@ -1699,8 +1660,6 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   DrawPage (fout);
-
    /* Do we need to change the current color ? */
    if (thick > 0)
       CurrentColor (fout, fg);
@@ -1749,8 +1708,6 @@ int                 pattern;
    double              A;
 
    fout = (FILE *) FrRef[frame];
-   DrawPage (fout);
-
    /* Do we need to change the current color ? */
    if (thick > 0)
       CurrentColor (fout, fg);
@@ -1810,9 +1767,6 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
-
    if (thick <= 0)
       return;
 
@@ -1864,9 +1818,6 @@ int                 fg;
       return;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
-
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
 
@@ -1948,9 +1899,6 @@ int                 fg;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
-
    if (thick <= 0)
       return;
 
@@ -2067,9 +2015,6 @@ int                 pattern;
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-   /* Do we need to add a showpage ? */
-   DrawPage (fout);
-
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
 

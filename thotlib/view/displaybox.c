@@ -65,8 +65,6 @@ int                 frame;
    int                 width, height;
    int                 op, RO;
 
-   DrawPage ((FILE *) FrRef[frame]);
-
    if (pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
      {
 	if (pBox->BxAbstractBox->AbSensitive)

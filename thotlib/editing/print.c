@@ -1182,7 +1182,7 @@ int                 frame;
 
    PSfile = (FILE *) FrRef[frame];
    /* Faut-il ajouter un showpage ? */
-   DrawPage (PSfile);
+   /*DrawPage (PSfile);*/
 
    /* Est-ce la fenetre principale ? */
    if (frame == 1)
@@ -1483,15 +1483,14 @@ PtrElement          pPageEl;
 }
 #endif /* __COLPAGE__ */
 
-#ifdef __COLPAGE__
 /*----------------------------------------------------------------------
    NextPage    On cherche dans l'image abstraite     		
    le prochain pave d'une marque de page qui ne soit pas un        
    rappel de page. pAb pointe sur le pave d'une marque de page.   	
-   Reourne un pointeur sur le pave trouve ou NULL si pas trouve    
-   Retourne un pointeur sur le premier pave de la page suivante    
+   (__COLPAGE__)Retourne un pointeur sur le premier pave de la page suivante    
    code plus simple car les paves de page sont au meme niveau      
    dans l'image abstraite.                                         
+   (!__COLPAGE__Retourne un pointeur sur le pave trouve ou NULL si pas trouve    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrAbstractBox NextPage (PtrAbstractBox pAb)
@@ -1501,35 +1500,13 @@ PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
-
-   while (pAb->AbNext != NULL
-	  && pAb->AbElement == pAb->AbNext->AbElement)
+#ifdef __COLPAGE__
+   while (pAb->AbNext != NULL && pAb->AbElement == pAb->AbNext->AbElement)
       pAb = pAb->AbNext;
    /* on passe au premier pave de la page suivante (si existe) */
    pAb = pAb->AbNext;
-   return pAb;
-}
-
+   return (pAb);
 #else  /* __COLPAGE__ */
-
-/*----------------------------------------------------------------------
-   NextPage    On cherche dans l'image abstraite     
-   le prochain pave d'une marque de page qui       
-   ne soit pas un rappel de page. pAb pointe sur  
-   le pave d'une marque de page. Retourne un       
-   pointeur sur le pave trouve ou NULL si pas trouve
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static PtrAbstractBox NextPage (PtrAbstractBox pAb)
-
-#else  /* __STDC__ */
-static PtrAbstractBox NextPage (pAb)
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
-
-{
    /* cherche la derniere feuille dans la marque de page du debut */
    while (pAb->AbFirstEnclosed != NULL)
      {
@@ -1539,39 +1516,42 @@ PtrAbstractBox      pAb;
      }
    /* cherche la marque de page suivante */
    pAb = AbsBoxFromElOrPres (pAb, FALSE, PageBreak + 1, NULL, NULL);
-   return pAb;
-}
+   return (pAb);
 #endif /* __COLPAGE__ */
+}
 
-#ifdef __COLPAGE__
 /*----------------------------------------------------------------------
    PrintView       calcule l'image imprimable de la vue traitee.   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         PrintView (int firstPage, int lastPage)
-
 #else  /* __STDC__ */
 static void         PrintView (firstPage, lastPage)
 int                 firstPage;
 int                 lastPage;
-
 #endif /* __STDC__ */
-
 {
-   FILE               *PSfile;
    PtrAbstractBox      pAb, pPageAb, pNextPageAb, pSpaceAb, pHeaderAb;
    DocViewDescr       *pViewD;
    AbDimension        *pDim;
    PtrBox              pBox;
    Name                viewName;
-   int                 pageHeight, position, nChars, shift, volume, i,
-                       prevVol, h, nb, vertPos, breakChar, height;
-   boolean             bool, stop, full;
+   FILE               *PSfile;
+   int                 pageHeight, position, nChars, shift, volume, prevVol, h;
+   boolean             stop, full;
+#ifdef __COLPAGE__
+   int                 i, nb, vertPos, breakChar, height;
+
+   BreakPageHeight = 0;
+#else  /* __COLPAGE__ */
+   boolean             emptyImage;
+
+   PageHeight = 0;
+#endif /* __COLPAGE__ */
 
    /* on ne construit pas les pages (on respecte les marques de page qui
       existent) */
-   BreakPageHeight = 0;
+   PSfile = (FILE *) FrRef[CurrentFrame];
    pPageAb = NULL;
    pNextPageAb = NULL;
    pHeaderAb = NULL;
@@ -1579,561 +1559,438 @@ int                 lastPage;
    /* cree le debut de l'image du document (le volume libre a ete
       initialise' apres la creation de la fenetre) */
    if (CurAssocNum > 0)
-      /* on traite une vue d'elements associes */
+     /* on traite une vue d'elements associes */
      {
-	strncpy (viewName, TheDoc->DocAssocRoot[CurAssocNum - 1]->
-		 ElStructSchema->SsRule[TheDoc->DocAssocRoot[CurAssocNum - 1]->ElTypeNumber - 1].SrName,
-		 MAX_NAME_LENGTH);
-	pAb = AbsBoxesCreate (TheDoc->DocAssocRoot[CurAssocNum - 1], TheDoc,
-			      1, TRUE, TRUE, &full);
-	RootAbsBox = TheDoc->DocAssocRoot[CurAssocNum - 1]->ElAbstractBox[0];
-	/* les numeros de pages a imprimer ne sont significatifs que pour la 
-	   vue principale de l'arbre principal */
-	firstPage = -9999;
-	lastPage = 9999;
+       strncpy (viewName, TheDoc->DocAssocRoot[CurAssocNum - 1]->
+		ElStructSchema->SsRule[TheDoc->DocAssocRoot[CurAssocNum - 1]->ElTypeNumber - 1].SrName,
+		MAX_NAME_LENGTH);
+       pAb = AbsBoxesCreate (TheDoc->DocAssocRoot[CurAssocNum - 1], TheDoc,
+			     1, TRUE, TRUE, &full);
+       RootAbsBox = TheDoc->DocAssocRoot[CurAssocNum - 1]->ElAbstractBox[0];
+       /* les numeros de pages a imprimer ne sont significatifs que pour la 
+	  vue principale de l'arbre principal */
+       firstPage = -9999;
+       lastPage = 9999;
      }
    else
      {
-	pViewD = &TheDoc->DocView[CurrentView - 1];
-	strncpy (viewName, pViewD->DvSSchema->SsPSchema->
-		 PsView[pViewD->DvPSchemaView - 1], MAX_NAME_LENGTH);
-	TheDoc->DocViewRootAb[CurrentView - 1] =
-	   AbsBoxesCreate (TheDoc->DocRootElement, TheDoc,
-			   CurrentView, TRUE, TRUE, &full);
-	RootAbsBox = TheDoc->DocRootElement->ElAbstractBox[CurrentView - 1];
-	/* les numeros de pages a imprimer ne sont significatifs que pour la
-	   vue principale de l'arbre principal */
-	if (pViewD->DvPSchemaView != 1)
-	  {
-	     firstPage = -9999;
-	     lastPage = 9999;
-	  }
+       pViewD = &TheDoc->DocView[CurrentView - 1];
+       strncpy (viewName, pViewD->DvSSchema->SsPSchema->
+		PsView[pViewD->DvPSchemaView - 1], MAX_NAME_LENGTH);
+       TheDoc->DocViewRootAb[CurrentView - 1] =
+	 AbsBoxesCreate (TheDoc->DocRootElement, TheDoc,
+			 CurrentView, TRUE, TRUE, &full);
+       RootAbsBox = TheDoc->DocRootElement->ElAbstractBox[CurrentView - 1];
+       /* les numeros de pages a imprimer ne sont significatifs que pour la
+	  vue principale de l'arbre principal */
+       if (pViewD->DvPSchemaView != 1)
+	 {
+	   firstPage = -9999;
+	   lastPage = 9999;
+	 }
      }
    /* demande le calcul de l'image */
    h = 0;
-   bool = ChangeConcreteImage (CurrentFrame, &h, RootAbsBox);
+   ChangeConcreteImage (CurrentFrame, &h, RootAbsBox);
    volume = RootAbsBox->AbVolume;
-
+   
    /* cherche le premier element page ou la premiere feuille */
    pAb = RootAbsBox;
+   
+#ifdef __COLPAGE__
    pAb = pAb->AbFirstEnclosed;
    /* si le document est pagine, le premier fils de la racine est une marque
       de page */
    if (pAb->AbElement->ElTypeNumber != PageBreak + 1)
-      /* le document n'est pas pagine */
-      pPageAb = NULL;
+     /* le document n'est pas pagine */
+     pPageAb = NULL;
    else
-      /* on a trouve' une marque de page, on determine la hauteur de ce type */
-      /* de page */
+     /* on a trouve' une marque de page, on determine la hauteur de ce type */
+     /* de page */
      {
-	pPageAb = pAb;
-	pHeaderAb = pAb;
+       pPageAb = pAb;
+       pHeaderAb = pAb;
      }
-
-   if (pPageAb == NULL)
-      /* document non pagine */
-     {
-	TtaDisplaySimpleMessage (INFO, PRINT, PRINT_THE_DOC_DOES_NOT_BEGIN_WITH_A_PAGE_BREAK);
-	/* generation de la bounding box d'un grand graphique */
-	if (pNextPageAb == NULL && RootAbsBox->AbBox != NULL)
-	  {
-	     pBox = RootAbsBox->AbBox;
-	     psBoundingBox (CurrentFrame, pBox->BxWidth + pBox->BxXOrg, pBox->BxHeight + pBox->BxYOrg);
-	  }
-	SetMargins (NULL);
-     }
-
-   /* ecrit le nom de la vue */
-   /* TtaDisplayMessage (INFO, TtaGetMessage (PRINT, PRINT_STRING), viewName); */
-   /* traite une page apres l'autre */
-   do
-     {
-	if (pPageAb != NULL)
-	   /* detruit tous les paves qui precedent la premiere marque de */
-	   /* page contenue dans l'image */
-	  {
-	     if (pPageAb != pHeaderAb)
-	       {
-		  bool = KillAbsBoxBeforePage (pPageAb, CurrentFrame,
-					       TheDoc, CurrentView);
-		  if (pPageAb->AbFirstEnclosed != NULL &&
-		      !pPageAb->AbFirstEnclosed->AbPresentationBox)
-		     /* rend le filet invisible */
-		    {
-		       pPageAb->AbFirstEnclosed->AbShape = ' ';
-		       pPageAb->AbFirstEnclosed->AbRealShape = ' ';
-		    }
-		  /* cette marque de page est le haut de l'image abstraite */
-		  pHeaderAb = pPageAb;
-	       }
-	     /* affiche le numero de page */
-	     /* TtaDisplayMessage (INFO, TtaGetMessage (PRINT, PRINT_PAGE),
-				pPageAb->AbElement->ElPageNumber); */
-	     /* cherche la premiere marque de la page suivante, en ignorant */
-	     /* les rappels de page. */
-	     pNextPageAb = NextPage (pPageAb);
-	  }
-
-	if (pPageAb != NULL && pNextPageAb == NULL)
-	   /* on n'a pas trouve' de marque de page suivante, on complete */
-	   /* l'image abstraite jusqu'a ce qu'elle contienne une marque de */
-	   /* page suivante ou qu'on soit arrive' a la fin de la vue ou que */
-	   /* le volume de l'image soit trop important */
-	  {
-	     while (pNextPageAb == NULL && RootAbsBox->AbTruncatedTail &&
-		    RootAbsBox->AbVolume < MAX_VOLUME)
-		/* on ajoute une page de plus a l'image */
-		/* on compte le nombre de pages actuel pour etre sur d'ajouter
-		   au moins une page */
-		/* (sauf si fin de vue) */
-	       {
-		  nb = NbPages (RootAbsBox);
-		  if (CurAssocNum > 0)
-		     /* element associe */
-		    {
-		       TheDoc->DocAssocFreeVolume[CurAssocNum - 1] = THOT_MAXINT;
-		       TheDoc->DocAssocNPages[CurAssocNum - 1] = nb;
-		    }
-		  else
-		    {
-		       /* element de l'arbre principal */
-		       TheDoc->DocViewFreeVolume[CurrentView - 1] = THOT_MAXINT;
-		       TheDoc->DocViewNPages[CurrentView - 1] = nb;
-		    }
-		  /* demande la creation de paves supplementaires */
-		  AddAbsBoxes (RootAbsBox, TheDoc, FALSE);
-
-		  /* on a effectivement cree de nouveaux paves, on cherche */
-		  /* si on a cree' une marque de la page suivante */
-		  if (pPageAb != NULL)
-		     pNextPageAb = NextPage (pPageAb);
-	       }
-	  }
-	if (pNextPageAb == NULL)
-	   /* on n'a pas trouve' de nouvelle marque de page */
-	   if (RootAbsBox->AbVolume > MAX_VOLUME)
-	      /* on a construit une page bien volumineuse, on le dit */
-	      TtaDisplaySimpleMessage (INFO, PRINT,
-				     PRINT_PAGE_IS_TOO_LONG_FORMAT_THE_DOC);
-
-	/* on demande le calcul de l'image */
-	h = 0;
-	bool = ChangeConcreteImage (CurrentFrame, &h, RootAbsBox);
-
-	/* calcule a priori la position verticale (par rapport au bord */
-	/* superieur de la feuille de papier ) au-dela de laquelle rien ne */
-	/* sera imprime' : C'est la hauteur totale de la page */
-	if (pPageAb == NULL)
-	  {
-	     /* Document sans marques de pages */
-	     /* probablement un graphique: il ne faut pas clipper */
-	     DisplayFrame (CurrentFrame);
-	  }
-	else
-	  {
-	     if (pPageAb->AbElement->ElPageNumber >= firstPage
-		 && pPageAb->AbElement->ElPageNumber <= lastPage)
-	       {
-		  /* evalue la hauteur de page en additionnant les */
-		  /* hauteurs du haut, corps et bas de page */
-		  position = 0;
-		  pAb = pPageAb->AbElement->ElAbstractBox[pPageAb->AbDocView - 1];
-		  while (pAb != NULL && pAb->AbElement == pPageAb->AbElement)
-		    {
-		       /*  on evalue la hauteur de pAb */
-		       SetPageHeight (pAb, TRUE, &height, &vertPos, &breakChar);
-		       position = position + height;
-		       pAb = pAb->AbNext;
-		    }
-		  /* rend le filet invisible */
-		  while (pPageAb->AbNext != NULL
-			 && pPageAb->AbElement == pPageAb->AbNext->AbElement)
-		     pPageAb = pPageAb->AbNext;
-		  /* pPageAb pointe maintenant sur le filet */
-		  pPageAb->AbShape = ' ';
-		  pPageAb->AbRealShape = ' ';
-		  /* indique au formateur la hauteur de la page, pour qu'il */
-		  /* n'imprime pas ce qui se trouve au-dela de cette limite */
-		  GivePageHeight (CurrentFrame, position);
-		  DisplayFrame (CurrentFrame);
-		  PSfile = (FILE *) FrRef[CurrentFrame];
-		  fflush (PSfile);
-		  StorePageInfo (pPageAb->AbElement->ElPageNumber,
-			      pPageAb->AbBox->BxWidth, BreakPageHeight);
-	       }
-	     /* la nouvelle marque de page devient la page courante */
-	     pPageAb = pNextPageAb;
-	     pNextPageAb = NULL;
-	  }
-     }
-   while (pPageAb != NULL);
-}
 #else  /* __COLPAGE__ */
-/*----------------------------------------------------------------------
-   PrintView       calcule l'image imprimable de la vue traitee.   
-   prodedure non utilisee avec le paginateur       
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         PrintView (int firstPage, int lastPage)
-
-#else  /* __STDC__ */
-static void         PrintView (firstPage, lastPage)
-int                 firstPage;
-int                 lastPage;
-
-#endif /* __STDC__ */
-
-{
-   PtrAbstractBox      pAb, pPageAb, pNextPageAb, pSpaceAb, pHeaderAb;
-   DocViewDescr       *pViewD;
-   AbDimension        *pDim;
-   PtrBox              pBox;
-   Name                viewName;
-   int                 pageHeight, position, nChars, shift, volume, prevVol,
-                       h;
-   boolean             stop, emptyImage, full;
-
-   /* on ne construit pas les pages (on respecte les marques de page qui
-      existent) */
-   PageHeight = 0;
-   pPageAb = NULL;
-   pNextPageAb = NULL;
-   pHeaderAb = NULL;
-
-   /* cree le debut de l'image du document (le volume libre a ete */
-   /* initialise' apres la creation de la fenetre) */
-   /*TheDoc = TheDoc; */
-   if (CurAssocNum > 0)
-      /* on traite une vue d'elements associes */
-     {
-	strncpy (viewName, TheDoc->DocAssocRoot[CurAssocNum - 1]->
-		 ElStructSchema->SsRule[TheDoc->DocAssocRoot[CurAssocNum - 1]->ElTypeNumber - 1].SrName,
-		 MAX_NAME_LENGTH);
-	pAb = AbsBoxesCreate (TheDoc->DocAssocRoot[CurAssocNum - 1], TheDoc, 1,
-			      TRUE, TRUE, &full);
-	RootAbsBox = TheDoc->DocAssocRoot[CurAssocNum - 1]->ElAbstractBox[0];
-	/* les numeros de pages a imprimer ne sont significatifs que pour la */
-	/* vue principale de l'arbre principal */
-	firstPage = -9999;
-	lastPage = 9999;
-     }
-   else
-     {
-	pViewD = &TheDoc->DocView[CurrentView - 1];
-	strncpy (viewName, pViewD->DvSSchema->SsPSchema->
-		 PsView[pViewD->DvPSchemaView - 1], MAX_NAME_LENGTH);
-	pAb = AbsBoxesCreate (TheDoc->DocRootElement, TheDoc, CurrentView,
-			      TRUE, TRUE, &full);
-	RootAbsBox = pAb;
-	TheDoc->DocViewRootAb[CurrentView - 1] = pAb;
-	/* les numeros de pages a imprimer ne sont significatifs que pour la */
-	/* vue principale de l'arbre principal */
-	if (pViewD->DvPSchemaView != 1)
-	  {
-	     firstPage = -9999;
-	     lastPage = 9999;
-	  }
-     }
-
-   /* demande le calcul de l'image */
-   h = 0;
-   (void) ChangeConcreteImage (CurrentFrame, &h, RootAbsBox);
-   volume = RootAbsBox->AbVolume;
-
-   /* cherche le premier element page ou la premiere feuille */
-   pAb = RootAbsBox;
-   while (pAb->AbFirstEnclosed != NULL &&
-	  pAb->AbElement->ElTypeNumber != PageBreak + 1)
-      pAb = pAb->AbFirstEnclosed;
-
+   while (pAb->AbFirstEnclosed != NULL && pAb->AbElement->ElTypeNumber != PageBreak + 1)
+     pAb = pAb->AbFirstEnclosed;
+   
    if (pAb->AbElement->ElTypeNumber != PageBreak + 1)
-      /* le document ne commence pas par une marque de page, cherche la */
-      /* premiere marque de page qui suit */
-      pAb = AbsBoxFromElOrPres (pAb, FALSE, PageBreak + 1, NULL, NULL);
-
+     /* le document ne commence pas par une marque de page, cherche la */
+     /* premiere marque de page qui suit */
+     pAb = AbsBoxFromElOrPres (pAb, FALSE, PageBreak + 1, NULL, NULL);
+   
    if (pAb != NULL)
-      if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
-	 /* on a trouve' une marque de page, on determine la hauteur de ce */
-	 /* type de page */
-	{
-	   SetMargins (pAb->AbElement);
-	   pPageAb = pAb;
-	}
-
+     if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
+       /* on a trouve' une marque de page, on determine la hauteur de ce */
+       /* type de page */
+       {
+	 SetMargins (pAb->AbElement);
+	 pPageAb = pAb;
+       }
+#endif /* __COLPAGE__ */
+   
    if (pPageAb == NULL)
+     /* document non pagine */
      {
-	TtaDisplaySimpleMessage (INFO, PRINT,
-			    PRINT_THE_DOC_DOES_NOT_BEGIN_WITH_A_PAGE_BREAK);
-	/* generation de la bounding box d'un grand graphique */
-	if (pNextPageAb == NULL && RootAbsBox->AbBox != NULL)
-	  {
-	     pBox = RootAbsBox->AbBox;
-	     psBoundingBox (CurrentFrame, pBox->BxWidth + pBox->BxXOrg,
-			    pBox->BxHeight + pBox->BxYOrg);
-	  }
-	SetMargins (NULL);
+       TtaDisplaySimpleMessage (INFO, PRINT, PRINT_THE_DOC_DOES_NOT_BEGIN_WITH_A_PAGE_BREAK);
+       /* generation de la bounding box d'un grand graphique */
+       if (pNextPageAb == NULL && RootAbsBox->AbBox != NULL)
+	 {
+	   pBox = RootAbsBox->AbBox;
+	   psBoundingBox (CurrentFrame, pBox->BxWidth + pBox->BxXOrg, pBox->BxHeight + pBox->BxYOrg);
+	 }
+       SetMargins (NULL);
      }
-
+   
    /* ecrit le nom de la vue */
    /* TtaDisplayMessage (INFO, TtaGetMessage (PRINT, PRINT_STRING), viewName); */
-
    /* traite une page apres l'autre */
    do
      {
-	if (pPageAb != NULL)
-	   /* detruit tous les paves qui precedent la premiere marque de */
-	   /* page contenue dans l'image */
-	  {
-	     if (pPageAb != pHeaderAb)
-	       {
-		  (void) KillAbsBoxBeforePage (pPageAb, CurrentFrame,
-					       TheDoc, CurrentView);
-		  if (pPageAb->AbFirstEnclosed != NULL &&
-		      !pPageAb->AbFirstEnclosed->AbPresentationBox)
-		     /* rend le filet invisible */
-		    {
-		       pPageAb->AbFirstEnclosed->AbShape = ' ';
-		       pPageAb->AbFirstEnclosed->AbRealShape = ' ';
-		    }
-		  /* cette marque de page est le haut de l'image abstraite */
-		  pHeaderAb = pPageAb;
-	       }
-	     /* affiche le numero de page */
-	     /* TtaDisplayMessage (INFO, TtaGetMessage (PRINT, PRINT_PAGE),
-				pPageAb->AbElement->ElPageNumber); */
-	     /* On prend la hauteur de ce type de page */
-	     SetMargins (pPageAb->AbElement);
-	     /* cherche la premiere marque de la page suivante */
-	     pNextPageAb = NextPage (pPageAb);
-	  }
-
-	if (pNextPageAb == NULL)
+       if (pPageAb != NULL)
+	 /* detruit tous les paves qui precedent la premiere marque de */
+	 /* page contenue dans l'image */
+	 {
+	   if (pPageAb != pHeaderAb)
+	     {
+	       KillAbsBoxBeforePage (pPageAb, CurrentFrame, TheDoc, CurrentView);
+	       if (pPageAb->AbFirstEnclosed != NULL &&
+		   !pPageAb->AbFirstEnclosed->AbPresentationBox)
+		 /* rend le filet invisible */
+		 {
+		   pPageAb->AbFirstEnclosed->AbShape = ' ';
+		   pPageAb->AbFirstEnclosed->AbRealShape = ' ';
+		 }
+	       /* cette marque de page est le haut de l'image abstraite */
+	       pHeaderAb = pPageAb;
+	     }
+#ifndef __COLPAGE__
+	   /* On prend la hauteur de ce type de page */
+	   SetMargins (pPageAb->AbElement);
+#endif /*__COLPAGE__*/
+	   /* cherche la premiere marque de la page suivante, en ignorant */
+	   /* les rappels de page. */
+	   pNextPageAb = NextPage (pPageAb);
+	 }
+       
+#ifdef __COLPAGE__
+       if (pPageAb != NULL && pNextPageAb == NULL)
 	   /* on n'a pas trouve' de marque de page suivante, on complete */
 	   /* l'image abstraite jusqu'a ce qu'elle contienne une marque de */
 	   /* page suivante ou qu'on soit arrive' a la fin de la vue ou que */
 	   /* le volume de l'image soit trop important */
-	  {
+	   {
 	     while (pNextPageAb == NULL && RootAbsBox->AbTruncatedTail &&
 		    RootAbsBox->AbVolume < MAX_VOLUME)
-		/* on ajoute au moins 100 caracteres a l'image */
+	       /* on ajoute une page de plus a l'image */
+	       /* on compte le nombre de pages actuel pour etre sur d'ajouter
+		  au moins une page */
+	       /* (sauf si fin de vue) */
 	       {
-		  if (volume < 100)
-		     volume = 100;
-		  /* indique le volume qui peut etre cree */
-		  do
-		    {
-		       if (CurAssocNum > 0)
-			 {
-			    TheDoc->DocAssocFreeVolume[CurAssocNum - 1] = volume;
-			    prevVol = RootAbsBox->AbVolume;
-			 }
-		       else
-			 {
-			    TheDoc->DocViewFreeVolume[CurrentView - 1] = volume;
-			    prevVol = RootAbsBox->AbVolume;
-			 }
-		       /* demande la creation de paves supplementaires */
-		       AddAbsBoxes (RootAbsBox, TheDoc, FALSE);
-		       if (RootAbsBox->AbVolume <= prevVol)
-			  /* rien n'a ete cree, augmente le volume de ce qui */
-			  /* peut etre cree' */
-			  volume = 2 * volume;
-		    }
-		  while (RootAbsBox->AbVolume <= prevVol &&
-			 RootAbsBox->AbTruncatedTail);
-		  /* on a effectivement cree de nouveaux paves, on cherche */
-		  /* si on a cree' une marque de la page suivante */
-		  if (pPageAb != NULL)
-		     pNextPageAb = NextPage (pPageAb);
+		 nb = NbPages (RootAbsBox);
+		 if (CurAssocNum > 0)
+		   /* element associe */
+		   {
+		     TheDoc->DocAssocFreeVolume[CurAssocNum - 1] = THOT_MAXINT;
+		     TheDoc->DocAssocNPages[CurAssocNum - 1] = nb;
+		   }
+		 else
+		   {
+		     /* element de l'arbre principal */
+		     TheDoc->DocViewFreeVolume[CurrentView - 1] = THOT_MAXINT;
+		     TheDoc->DocViewNPages[CurrentView - 1] = nb;
+		   }
+		 /* demande la creation de paves supplementaires */
+		 AddAbsBoxes (RootAbsBox, TheDoc, FALSE);
+		 
+		 /* on a effectivement cree de nouveaux paves, on cherche */
+		 /* si on a cree' une marque de la page suivante */
+		 if (pPageAb != NULL)
+		   pNextPageAb = NextPage (pPageAb);
 	       }
-	     if (pNextPageAb == NULL)
+	   }
+
+       if (pNextPageAb == NULL)
+	 /* on n'a pas trouve' de nouvelle marque de page */
+	 if (RootAbsBox->AbVolume > MAX_VOLUME)
+	   /* on a construit une page bien volumineuse, on le dit */
+	   TtaDisplaySimpleMessage (INFO, PRINT,
+				    PRINT_PAGE_IS_TOO_LONG_FORMAT_THE_DOC);
+       
+       /* on demande le calcul de l'image */
+       h = 0;
+       ChangeConcreteImage (CurrentFrame, &h, RootAbsBox);
+       
+       /* calcule a priori la position verticale (par rapport au bord */
+       /* superieur de la feuille de papier ) au-dela de laquelle rien ne */
+       /* sera imprime' : C'est la hauteur totale de la page */
+       if (pPageAb == NULL)
+	 {
+	   /* Document sans marques de pages */
+	   /* probablement un graphique: il ne faut pas clipper */
+	   DisplayFrame (CurrentFrame);
+	   DrawPage (PSfile);
+	 }
+       else
+	 {
+	   if (pPageAb->AbElement->ElPageNumber >= firstPage
+	       && pPageAb->AbElement->ElPageNumber <= lastPage)
+	     {
+	       /* evalue la hauteur de page en additionnant les */
+	       /* hauteurs du haut, corps et bas de page */
+	       position = 0;
+	       pAb = pPageAb->AbElement->ElAbstractBox[pPageAb->AbDocView - 1];
+	       while (pAb != NULL && pAb->AbElement == pPageAb->AbElement)
+		 {
+		   /*  on evalue la hauteur de pAb */
+		   SetPageHeight (pAb, TRUE, &height, &vertPos, &breakChar);
+		   position = position + height;
+		   pAb = pAb->AbNext;
+		 }
+	       /* rend le filet invisible */
+	       while (pPageAb->AbNext != NULL
+		      && pPageAb->AbElement == pPageAb->AbNext->AbElement)
+		 pPageAb = pPageAb->AbNext;
+	       /* pPageAb pointe maintenant sur le filet */
+	       pPageAb->AbShape = ' ';
+	       pPageAb->AbRealShape = ' ';
+	       /* indique au formateur la hauteur de la page, pour qu'il */
+	       /* n'imprime pas ce qui se trouve au-dela de cette limite */
+	       GivePageHeight (CurrentFrame, position);
+	       DisplayFrame (CurrentFrame);
+	       DrawPage (PSfile);
+	       StorePageInfo (pPageAb->AbElement->ElPageNumber,
+			      pPageAb->AbBox->BxWidth, BreakPageHeight);
+	     }
+#else  /* __COLPAGE__ */
+
+       if (pNextPageAb == NULL)
+	 /* on n'a pas trouve' de marque de page suivante, on complete */
+	 /* l'image abstraite jusqu'a ce qu'elle contienne une marque de */
+	 /* page suivante ou qu'on soit arrive' a la fin de la vue ou que */
+	 /* le volume de l'image soit trop important */
+	 {
+	   while (pNextPageAb == NULL && RootAbsBox->AbTruncatedTail &&
+		  RootAbsBox->AbVolume < MAX_VOLUME)
+	     /* on ajoute au moins 100 caracteres a l'image */
+	     {
+	       if (volume < 100)
+		 volume = 100;
+	       /* indique le volume qui peut etre cree */
+	       do
+		 {
+		   if (CurAssocNum > 0)
+		     {
+		       TheDoc->DocAssocFreeVolume[CurAssocNum - 1] = volume;
+		       prevVol = RootAbsBox->AbVolume;
+		     }
+		   else
+		     {
+		       TheDoc->DocViewFreeVolume[CurrentView - 1] = volume;
+		       prevVol = RootAbsBox->AbVolume;
+		     }
+		   /* demande la creation de paves supplementaires */
+		   AddAbsBoxes (RootAbsBox, TheDoc, FALSE);
+		   if (RootAbsBox->AbVolume <= prevVol)
+		     /* rien n'a ete cree, augmente le volume de ce qui */
+		     /* peut etre cree' */
+		     volume = 2 * volume;
+		 }
+	       while (RootAbsBox->AbVolume <= prevVol &&
+		      RootAbsBox->AbTruncatedTail);
+	       /* on a effectivement cree de nouveaux paves, on cherche */
+	       /* si on a cree' une marque de la page suivante */
+	       if (pPageAb != NULL)
+		 pNextPageAb = NextPage (pPageAb);
+	     }
+	   if (pNextPageAb == NULL)
+	     {
+	       /* on n'a pas trouve' de nouvelle marque de page */
+	       if (RootAbsBox->AbVolume > MAX_VOLUME)
+		 /* on a construit une page bien volumineuse, on le dit */
+		 TtaDisplaySimpleMessage (INFO, PRINT,
+					  PRINT_PAGE_IS_TOO_LONG_FORMAT_THE_DOC);
+	     }
+	   else
+	     /* une nouvelle marque de page existe dans l'image abstraite */
+	     if (pPageAb != pHeaderAb)
+	       /* la premiere page n'est pas le haut de l'image, on detruit */
+	       /* tout ce qui precede */
 	       {
-		  /* on n'a pas trouve' de nouvelle marque de page */
-		  if (RootAbsBox->AbVolume > MAX_VOLUME)
-		     /* on a construit une page bien volumineuse, on le dit */
-		     TtaDisplaySimpleMessage (INFO, PRINT,
-				     PRINT_PAGE_IS_TOO_LONG_FORMAT_THE_DOC);
+		 KillAbsBoxBeforePage (pPageAb, CurrentFrame, TheDoc, CurrentView);
+		 if (pPageAb->AbFirstEnclosed != NULL &&
+		     !pPageAb->AbFirstEnclosed->AbPresentationBox)
+		   /* rend le filet invisible */
+		   {
+		     pPageAb->AbFirstEnclosed->AbShape = ' ';
+		     pPageAb->AbFirstEnclosed->AbRealShape = ' ';
+		   }
+		 /* cette marque de page est le haut de l'image abstraite */
+		 pHeaderAb = pPageAb;
+	       }
+	   /* on demande le calcul de l'image */
+	   h = 0;
+	   ChangeConcreteImage (CurrentFrame, &h, RootAbsBox);
+	 }
+       
+       /* calcule a priori la position verticale (par rapport au bord */
+       /* superieur de la feuille de papier) au-dela de laquelle rien ne */
+       /* sera imprime' */
+       position = TopMargin + PageHeight + PageFooterHeight;
+       /* valeur utilisee par SetPageHeight si pas de nouvelle marque page */
+       /* (cas de la fin du document) */
+       /* pas (encore) de pave espace insere' */
+       pSpaceAb = NULL;
+       if (pNextPageAb != NULL &&
+	   (pPageAb == NULL ||
+	    (pPageAb != NULL && pPageAb->AbElement->ElPageNumber >= firstPage
+	     && pPageAb->AbElement->ElPageNumber <= lastPage)))
+	 /* il y a une nouvelle marque de page */
+	 /* cherche le pave du filet saut de page dans la marque de page */
+	 {
+	   pAb = pNextPageAb->AbFirstEnclosed;
+	   stop = FALSE;
+	   do
+	     if (pAb == NULL)
+	       stop = TRUE;
+	     else if (!pAb->AbPresentationBox)
+	       /* Note: le filet n'est pas un pave de presentation, */
+	       /* alors que toutes les autres boites de bas de page sont */
+	       /* des paves de presentation */
+	       {
+		 stop = TRUE;	/* rend le filet invisible */
+		 pAb->AbShape = ' ';
+		 pAb->AbRealShape = ' ';
 	       }
 	     else
-		/* une nouvelle marque de page existe dans l'image abstraite */
-	     if (pPageAb != pHeaderAb)
-		/* la premiere page n'est pas le haut de l'image, on detruit */
-		/* tout ce qui precede */
-	       {
-		  (void) KillAbsBoxBeforePage (pPageAb, CurrentFrame,
-					       TheDoc, CurrentView);
-		  if (pPageAb->AbFirstEnclosed != NULL &&
-		      !pPageAb->AbFirstEnclosed->AbPresentationBox)
-		     /* rend le filet invisible */
-		    {
-		       pPageAb->AbFirstEnclosed->AbShape = ' ';
-		       pPageAb->AbFirstEnclosed->AbRealShape = ' ';
-		    }
-		  /* cette marque de page est le haut de l'image abstraite */
-		  pHeaderAb = pPageAb;
-	       }
-	     /* on demande le calcul de l'image */
-	     h = 0;
-	     (void) ChangeConcreteImage (CurrentFrame, &h, RootAbsBox);
-	  }
-
-	/* calcule a priori la position verticale (par rapport au bord */
-	/* superieur de la feuille de papier) au-dela de laquelle rien ne */
-	/* sera imprime' */
-	position = TopMargin + PageHeight + PageFooterHeight;
-	/* valeur utilisee par SetPageHeight si pas de nouvelle marque page */
-	/* (cas de la fin du document) */
-	/* pas (encore) de pave espace insere' */
-	pSpaceAb = NULL;
-	if (pNextPageAb != NULL &&
-	    (pPageAb == NULL ||
-	   (pPageAb != NULL && pPageAb->AbElement->ElPageNumber >= firstPage
-	    && pPageAb->AbElement->ElPageNumber <= lastPage)))
-	   /* il y a une nouvelle marque de page */
-	   /* cherche le pave du filet saut de page dans la marque de page */
-	  {
-	     pAb = pNextPageAb->AbFirstEnclosed;
-	     stop = FALSE;
-	     do
-		if (pAb == NULL)
-		   stop = TRUE;
-		else if (!pAb->AbPresentationBox)
-		   /* Note: le filet n'est pas un pave de presentation, */
-		   /* alors que toutes les autres boites de bas de page sont */
-		   /* des paves de presentation */
-		  {
-		     stop = TRUE;	/* rend le filet invisible */
-		     pAb->AbShape = ' ';
-		     pAb->AbRealShape = ' ';
-		  }
-		else
-		   pAb = pAb->AbNext;
-	     while (!stop);
-	     if (pAb != NULL)
-		/* demande la position du filet de saut de page */
-	       {
-		  position = 0;
-		  SetPageHeight (pAb, TRUE, &pageHeight, &position, &nChars);
-		  /* position = position du filet */
-		  /* on decale la boite page pour que le filet separateur de */
-		  /* pages se place exactement a la distance prevue du haut de
-		     la page */
-		  shift = TopMargin + PageHeight +
-		     PageFooterHeight - position;
-		  /* shift = valeur du decalage souhaite */
-		  /* mais le pave ajoute doit avoir pour hauteur ce decalage */
-		  /* plus la hauteur effective du bas de page, car on fait */
-		  /* une insertion comme frere du filet (toutes les boites */
-		  /* de bas de page sont positionnees par rapport au filet) */
-		  if (shift <= 0)
-		     shift = 0;
-		  else
-		     /* demande la position (h) du haut de la boite page */
-		    {
-		       h = 0;
-		       SetPageHeight (pNextPageAb, TRUE, &pageHeight, &h,
-				      &nChars);
-		       /* on ajoute un pave avant le filet de page pour
-		          augmenter la hauteur de la boite page
-		          ce pave a pour hauteur shift + position - h
-		          car  position - h = hauteur effective du bas de page */
-		       pSpaceAb = InitAbsBoxes (pNextPageAb->AbElement,
-			 pNextPageAb->AbDocView, pNextPageAb->AbVisibility);
-		       pSpaceAb->AbPSchema = pNextPageAb->AbPSchema;
-		       pSpaceAb->AbVertPos.PosEdge = Bottom;
-		       pSpaceAb->AbVertPos.PosRefEdge = Top;
-		       pSpaceAb->AbVertPos.PosDistance = 0;
-		       pSpaceAb->AbVertPos.PosAbRef = pAb;
-		       pSpaceAb->AbHorizPos.PosAbRef = pAb;
-		       pSpaceAb->AbPresentationBox = TRUE;
-
-		       pDim = &pSpaceAb->AbHeight;
-		       pDim->DimValue = shift + position - h;
-		       pDim->DimUnit = UnPoint;
-		       pDim = &pSpaceAb->AbWidth;
-		       pDim->DimValue = 1;
-		       pDim->DimUnit = UnPoint;
-
-		       pSpaceAb->AbLeafType = LtGraphics;
-		       pSpaceAb->AbShape = ' ';
-		       pSpaceAb->AbGraphAlphabet = 'L';
-		       pSpaceAb->AbVolume = 1;
-		       pSpaceAb->AbAcceptLineBreak = FALSE;
-		       pSpaceAb->AbAcceptPageBreak = FALSE;
-		       pSpaceAb->AbEnclosing = pNextPageAb;
-		       pSpaceAb->AbNext = pAb;
-		       pSpaceAb->AbPrevious = pAb->AbPrevious;
-		       pSpaceAb->AbNew = TRUE;
-		       if (pAb->AbPrevious != NULL)
-			 {
-			    pAb->AbPrevious->AbNext = pSpaceAb;
-			    pAb->AbPrevious = pSpaceAb;
-			 }
-		       if (pNextPageAb->AbFirstEnclosed == pAb)
-			  pNextPageAb->AbFirstEnclosed = pSpaceAb;
-		       /* on signale la creation du pave */
-		       h = 0;
-		       (void) ChangeConcreteImage (CurrentFrame, &h, pSpaceAb);
-		       /* demande la nouvelle position du saut de page */
-		       /* pour donner la hauteur effective a l'impression */
-		       /* cf. appel a SetPageHeight */
-		       position = 0;
-		       SetPageHeight (pAb, TRUE, &pageHeight, &position, &nChars);
-		    }
-	       }
-	  }
-	/* reste-t-il autre chose a afficher qu'un filet de saut
-	   de page a la fin de la vue ? */
-	emptyImage = FALSE;
-	if (!RootAbsBox->AbTruncatedTail)
-	   /* c'est la fin de la vue */
-	  {
-	     pAb = RootAbsBox;
-	     /* cherche le premier pave feuille de l'image */
-	     while (pAb->AbFirstEnclosed != NULL &&
-		    pAb->AbElement->ElTypeNumber != PageBreak + 1)
-		pAb = pAb->AbFirstEnclosed;
-	     if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
-		/* le premier pave feuille est une marque de page. Est-il */
-		/* suivi d'un autre pave ? */
-	       {
-		  while (pAb->AbNext == NULL && pAb->AbEnclosing != NULL)
-		     pAb = pAb->AbEnclosing;
-		  /* l'image est vide si ni la marque de page ni aucun de */
-		  /* ses paves englobants n'a de successeur */
-		  emptyImage = pAb->AbNext == NULL;
-		  /* fait imprimer la page */
-	       }
-	  }
-	if (pPageAb == NULL)
-	  {
-	     /* Document sans marques de pages */
-	     /* probablement un graphique: il ne faut pas clipper */
-	     DisplayFrame (CurrentFrame);
-	  }
-	else if (pPageAb->AbElement->ElPageNumber >= firstPage
-		 && pPageAb->AbElement->ElPageNumber <= lastPage)
-	   if (!emptyImage)
-	      /* indique au formateur la hauteur de la page, pour qu'il */
-	      /* n'imprime pas ce qui se trouve au-dela de cette limite */
+	       pAb = pAb->AbNext;
+	   while (!stop);
+	   if (pAb != NULL)
+	     /* demande la position du filet de saut de page */
 	     {
-		GivePageHeight (CurrentFrame, position);
-		DisplayFrame (CurrentFrame);
-		/* annule le volume du pave espace insere' en bas de page */
-		if (pSpaceAb != NULL)
-		   pSpaceAb->AbVolume = 0;
-		StorePageInfo (pPageAb->AbElement->ElPageNumber,
-			    pPageAb->AbBox->BxWidth, PageHeight);
+	       position = 0;
+	       SetPageHeight (pAb, TRUE, &pageHeight, &position, &nChars);
+	       /* position = position du filet */
+	       /* on decale la boite page pour que le filet separateur de */
+	       /* pages se place exactement a la distance prevue du haut de
+		  la page */
+	       shift = TopMargin + PageHeight +
+		 PageFooterHeight - position;
+	       /* shift = valeur du decalage souhaite */
+	       /* mais le pave ajoute doit avoir pour hauteur ce decalage */
+	       /* plus la hauteur effective du bas de page, car on fait */
+	       /* une insertion comme frere du filet (toutes les boites */
+	       /* de bas de page sont positionnees par rapport au filet) */
+	       if (shift <= 0)
+		 shift = 0;
+	       else
+		 /* demande la position (h) du haut de la boite page */
+		 {
+		   h = 0;
+		   SetPageHeight (pNextPageAb, TRUE, &pageHeight, &h,
+				  &nChars);
+		   /* on ajoute un pave avant le filet de page pour
+		      augmenter la hauteur de la boite page
+		      ce pave a pour hauteur shift + position - h
+		      car  position - h = hauteur effective du bas de page */
+		   pSpaceAb = InitAbsBoxes (pNextPageAb->AbElement,
+					    pNextPageAb->AbDocView, pNextPageAb->AbVisibility);
+		   pSpaceAb->AbPSchema = pNextPageAb->AbPSchema;
+		   pSpaceAb->AbVertPos.PosEdge = Bottom;
+		   pSpaceAb->AbVertPos.PosRefEdge = Top;
+		   pSpaceAb->AbVertPos.PosDistance = 0;
+		   pSpaceAb->AbVertPos.PosAbRef = pAb;
+		   pSpaceAb->AbHorizPos.PosAbRef = pAb;
+		   pSpaceAb->AbPresentationBox = TRUE;
+		   
+		   pDim = &pSpaceAb->AbHeight;
+		   pDim->DimValue = shift + position - h;
+		   pDim->DimUnit = UnPoint;
+		   pDim = &pSpaceAb->AbWidth;
+		   pDim->DimValue = 1;
+		   pDim->DimUnit = UnPoint;
+		   
+		   pSpaceAb->AbLeafType = LtGraphics;
+		   pSpaceAb->AbShape = ' ';
+		   pSpaceAb->AbGraphAlphabet = 'L';
+		   pSpaceAb->AbVolume = 1;
+		   pSpaceAb->AbAcceptLineBreak = FALSE;
+		   pSpaceAb->AbAcceptPageBreak = FALSE;
+		   pSpaceAb->AbEnclosing = pNextPageAb;
+		   pSpaceAb->AbNext = pAb;
+		   pSpaceAb->AbPrevious = pAb->AbPrevious;
+		   pSpaceAb->AbNew = TRUE;
+		   if (pAb->AbPrevious != NULL)
+		     {
+		       pAb->AbPrevious->AbNext = pSpaceAb;
+		       pAb->AbPrevious = pSpaceAb;
+		     }
+		   if (pNextPageAb->AbFirstEnclosed == pAb)
+		     pNextPageAb->AbFirstEnclosed = pSpaceAb;
+		   /* on signale la creation du pave */
+		   h = 0;
+		   ChangeConcreteImage (CurrentFrame, &h, pSpaceAb);
+		   /* demande la nouvelle position du saut de page */
+		   /* pour donner la hauteur effective a l'impression */
+		   /* cf. appel a SetPageHeight */
+		   position = 0;
+		   SetPageHeight (pAb, TRUE, &pageHeight, &position, &nChars);
+		 }
 	     }
-
-	/* la nouvelle marque de page devient la page courante */
-	pPageAb = pNextPageAb;
-	pNextPageAb = NULL;
-     }
+	 }
+       /* reste-t-il autre chose a afficher qu'un filet de saut
+	  de page a la fin de la vue ? */
+       emptyImage = FALSE;
+       if (!RootAbsBox->AbTruncatedTail)
+	 /* c'est la fin de la vue */
+	 {
+	   pAb = RootAbsBox;
+	   /* cherche le premier pave feuille de l'image */
+	   while (pAb->AbFirstEnclosed != NULL &&
+		  pAb->AbElement->ElTypeNumber != PageBreak + 1)
+	     pAb = pAb->AbFirstEnclosed;
+	   if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
+	     /* le premier pave feuille est une marque de page. Est-il */
+	     /* suivi d'un autre pave ? */
+	     {
+	       while (pAb->AbNext == NULL && pAb->AbEnclosing != NULL)
+		 pAb = pAb->AbEnclosing;
+	       /* l'image est vide si ni la marque de page ni aucun de */
+	       /* ses paves englobants n'a de successeur */
+	       emptyImage = pAb->AbNext == NULL;
+	       /* fait imprimer la page */
+	     }
+	 }
+       if (pPageAb == NULL)
+	 {
+	   /* Document sans marques de pages */
+	   /* probablement un graphique: il ne faut pas clipper */
+	   DisplayFrame (CurrentFrame);
+	   DrawPage (PSfile);
+	 }
+       else if (pPageAb->AbElement->ElPageNumber >= firstPage
+	       && pPageAb->AbElement->ElPageNumber <= lastPage)
+	     if (!emptyImage)
+	       /* indique au formateur la hauteur de la page, pour qu'il */
+	       /* n'imprime pas ce qui se trouve au-dela de cette limite */
+	       {
+		 GivePageHeight (CurrentFrame, position);
+		 DisplayFrame (CurrentFrame);
+		 DrawPage (PSfile);
+		 /* annule le volume du pave espace insere' en bas de page */
+		 if (pSpaceAb != NULL)
+		   pSpaceAb->AbVolume = 0;
+		 StorePageInfo (pPageAb->AbElement->ElPageNumber,
+				pPageAb->AbBox->BxWidth, PageHeight);
+	       }
+#endif /* __COLPAGE__ */
+	   /* la nouvelle marque de page devient la page courante */
+	   pPageAb = pNextPageAb;
+	   pNextPageAb = NULL;
+	 }
    while (pPageAb != NULL);
 }
-#endif /* __COLPAGE__ */
 
 
 /*----------------------------------------------------------------------
@@ -2366,7 +2223,9 @@ boolean             assoc;
    AbPosition         *pPos;
    DocViewDescr       *pViewD;
    Name                viewName;
+   FILE               *PSfile;
 
+   PSfile = (FILE *) FrRef[CurrentFrame];
    if (pPageAb != NULL)
      {
 	pDoc = TheDoc;
@@ -2517,7 +2376,7 @@ boolean             assoc;
 			  pNextPageAb->AbFirstEnclosed = pSpaceAb;
 		       /* on signale la creation du pave au Mediateur */
 		       h = 0;
-		       (void) ChangeConcreteImage (CurrentFrame, &h, pSpaceAb);
+		       ChangeConcreteImage (CurrentFrame, &h, pSpaceAb);
 		       /* demande au Mediateur la nouvelle position du saut de page */
 		       /* pour lui donner la hauteur effective a l'impression */
 		       /* cf. appel a SetPageHeight */
@@ -2559,6 +2418,7 @@ boolean             assoc;
 		/* CurrentFrame est une variable globale a print */
 		GivePageHeight (CurrentFrame, position);
 		DisplayFrame (CurrentFrame);
+		DrawPage (PSfile);
 		/* annule le volume du pave espace insere' en bas de page */
 		StorePageInfo (pPageAb->AbElement->ElPageNumber,
 			    pPageAb->AbBox->BxWidth, PageHeight);
@@ -2579,7 +2439,7 @@ boolean             assoc;
 	   pSpaceAb->AbVolume = 0;
 	/* on ne s'occupe pas des hauteurs de page */
 	h = 0;
-	(void) ChangeConcreteImage (CurrentFrame, &h, RootAbsBox);
+	ChangeConcreteImage (CurrentFrame, &h, RootAbsBox);
      }
 }
 
@@ -2628,7 +2488,6 @@ char               *text;
 
 #endif /* __STDC__ */
 {
-   ClientSend (thotWindow, printer, text);
 }
 
 /*----------------------------------------------------------------------
@@ -2836,7 +2695,7 @@ char              **argv;
            } else {
                   index = 0;
                   pChar = &argv [argCounter][2];
-                  while (option[index++] = *pChar++);
+                  while ((option[index++] = *pChar++));
                   option [index] = '\0';
 	          switch (argv [argCounter] [1]) {
                          case 'F': firstPage = atoi (option);

@@ -52,7 +52,7 @@
 #ifdef WITH_SOCKS
 char                __res = 0;
 #endif
-
+#define AMAYA_PAGE "http://www.w3.org/pub/WWW/Amaya/User/Manual.html"
 static int          AmayaInitialized = 0;
 static Pixmap       stopR;
 static Pixmap       stopN;
@@ -1747,32 +1747,29 @@ NotifyEvent        *event;
    if (s)
       strcpy (TempFileDirectory, s);
    else
-     {
 #ifdef _WINDOWS
+     {
 	s = (char *) TtaGetEnvString ("TEMP");
 	if (s)
 	   strcpy (TempFileDirectory, s);
 	else
 	   strcpy (TempFileDirectory, "C:\\TEMP");
-#else  /* !_WINDOWS */
-	strcpy (TempFileDirectory, "/tmp");
-#endif /* !_WINDOWS */
      }
    strcat (TempFileDirectory, DIR_STR);
    strcat (TempFileDirectory, ".amaya");
-#ifdef _WINDOWS
    i = _mkdir (TempFileDirectory);
    if (i != 0 && errno != EEXIST)
-#else  /* _WINDOWS */
-   i = mkdir (TempFileDirectory, S_IRWXU);
-   if (i != 0 && errno != EEXIST)
-#endif /* !_WINDOWS */
      {
-#ifdef _WINDOWS
 	strcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
 	i = _mkdir (TempFileDirectory);
 	if (i != 0 && errno != EEXIST)
-#else  /* _WINDOWS */
+#else  /* !_WINDOWS */
+     strcpy (TempFileDirectory, "/tmp");
+   strcat (TempFileDirectory, DIR_STR);
+   strcat (TempFileDirectory, ".amaya");
+   i = mkdir (TempFileDirectory, S_IRWXU);
+   if (i != 0 && errno != EEXIST)
+     {
 	strcpy (TempFileDirectory, "/tmp/.amaya");
 	i = mkdir (TempFileDirectory, S_IRWXU);
 	if (i != 0 && errno != EEXIST)
@@ -1842,10 +1839,10 @@ NotifyEvent        *event;
       /* No argument in the command line, no HOME_PAGE variable. Open the */
       /* default Amaya URL */
      {
-#ifndef _WINDOWS
-	strcpy (LastURLName, "http://www.w3.org/pub/WWW/Amaya/");
-#else  /* _WINDOWS */
+#ifdef _WINDOWS
         strcpy (LastURLName, "/users/guetari/opera/WINNT/Amaya.html");
+#else  /* _WINDOWS */
+	strcpy (LastURLName, AMAYA_PAGE);
 #endif /* _WINDOWS */
 	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
      }
@@ -2350,7 +2347,8 @@ View                view;
    list = fopen (localname, "w");
    TtaListBoxes (document, view, list);
    fclose (list);
-#endif
+#endif /* AMAYA_DEBUG */
+   document = GetHTMLDocument (AMAYA_PAGE, NULL, 0, 0, DC_FALSE);
 }
 
 
