@@ -764,8 +764,9 @@ Language            languageId;
    if (LangTable[lang].LangDict[0] == NULL)
      {
 	/* Loading the main dictionary */
-	if (LangTable[lang].LangPrincipal[0] != EOS)
+	if (LangTable[lang].LangPrincipal[0] != EOS && !LangTable[lang].LangDict[0])
 	  {
+         dictPtr = NULL;
 	     LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
 	     if (dictPtr != NULL)
 		LangTable[lang].LangDict[0] = (Dictionary) dictPtr;
@@ -776,8 +777,9 @@ Language            languageId;
    if (LangTable[lang].LangDict[1] == NULL)
      {
 	/* Loading the secondary dictionary */
-	if (LangTable[lang].LangSecondary[0] != EOS)
+	if (LangTable[lang].LangSecondary[0] != EOS && !LangTable[lang].LangDict[1])
 	  {
+         dictPtr = NULL;
 	     LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangSecondary, dictPath, TRUE, FALSE);
 	     if (dictPtr != NULL)
 		LangTable[lang].LangDict[1] = (Dictionary) dictPtr;
