@@ -297,7 +297,7 @@ rtl_: rtl
 xml_space_default: default
 xml_space_preserve: preserve
 xml_space: xml:space
-External_Object: \240
+External_Object: img
 Embed_: embed
 DOCTYPE: Doctype
 CDATA: cdata
