@@ -24,3 +24,44 @@
 # character to interpose another module into the current module.  This
 # can be useful for creating a module that consists of many directories
 # spread out over the entire source repository.
+
+amaya_schemas           -a schemas schemasOPERA
+
+amaya_configure         -a Makefile.in Options.in config.h.in \
+                           configure.in stamp-h.in config.guess \
+                           config.sub configure install-sh amaya.spec
+
+amaya_graphics          -a libjpeg libpng
+
+amaya_base              -a config batch fonts \
+                           dicopar tools amaya_configure
+
+amaya_ilu               -a ilulib tools/ilustub
+
+amaya_java              -a classes javalib kaffe-cvs.tar.gz
+
+amaya_plugins           -a pluginlib
+
+amaya_doc               -a doc documents dDocuments
+
+amaya_thotlib           -a thotlib amaya_graphics amaya_tablelib
+
+amaya_thot              -a thotlib
+
+amaya_indexlib          -a indexlib
+
+amaya_tablelib          -a tablelib schemas/exc_Table.h
+
+amaya_drawlib           -a drawlib
+
+amaya_alliance          -a alliance
+amaya_amaya             -a amaya
+
+amaya_full              -a opera
+
+#
+# Macro packages
+#
+
+amaya                   -a amaya_base amaya_thotlib amaya_java \
+                           amaya_java amaya_ilu amaya_amaya amaya_plugins
