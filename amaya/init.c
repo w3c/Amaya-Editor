@@ -7440,7 +7440,7 @@ void HelpAnnotation (Document document, View view)
  -----------------------------------------------------------------------*/
 void HelpBookmarks (Document document, View view)
 {
-  DisplayHelp (document, BOOKMARKS);
+  DisplayHelp (document, BOOK_MARKS);
 }
 
 

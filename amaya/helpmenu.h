@@ -74,7 +74,7 @@ static char *Manual[] = {
 #define CONFIGURE     23
 #define SHORTCUTS     24
 #define ACCESS        25
-#define BOOKMARKS     26
+#define BOOK_MARKS    26
 #define WEBDAV        27
 
 #endif /* AMAYA_HELP_H */
