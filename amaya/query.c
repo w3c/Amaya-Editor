@@ -451,6 +451,9 @@ AHTReqContext      *me;
 	       TtaFreeMemory ((void *) docid_status);
 	     }
 	 }
+
+       HTNoFreeStream_delete (HTRequest_outputStream (me->request));
+       HTRequest_setOutputStream (me->request, NULL); 
        /* JK: no longer needed in libwww 5.2.3
 	  if (me->method != METHOD_PUT && HTRequest_outputStream (me->request))
 	  AHTFWriter_FREE (HTRequest_outputStream (me->request));
