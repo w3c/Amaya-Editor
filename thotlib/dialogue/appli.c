@@ -630,10 +630,6 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
 
 /*----------------------------------------------------------------------
   DrawGL :
-  After all transformation Draw all canvas
-  TODO : Use of display lists in 
-  the pbox tree rendering by redrawframebottom with another function
-  (use of pAb->change ...)
   ----------------------------------------------------------------------*/
 gboolean GL_DrawCallback (ThotWidget widget, 
 			  GdkEventExpose *event, 
@@ -644,6 +640,8 @@ gboolean GL_DrawCallback (ThotWidget widget,
   /*   frame = (int ) data; */
   /*   GL_Swap (frame); */
   /* FrameTable[frame].DblBuffNeedSwap = TRUE; */
+  DefClip ((int ) data, -1, -1, -1, -1);
+  GL_DrawAll ((int ) data);
   return TRUE;
 }
 
@@ -711,9 +709,18 @@ gboolean ExposeCallbackGTK (ThotWidget widget,
   /*if (event->count > 0)*/
   /*    return TRUE; */
 
-  GL_Swap (frame);
+  if (glhard ()) 
+    {
+    DefRegion (frame,
+ 	       0, 0, 
+ 	       FrameTable[frame].FrWidth, FrameTable[frame].FrHeight); 
+    FrameRedraw (frame, FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
+    }
+  else
+    GL_Swap (frame);
   return TRUE;
 }
+
 /*----------------------------------------------------------------------
   FrameResizedGTK When user resize window
   ----------------------------------------------------------------------*/
@@ -723,42 +730,62 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 {
   int                 frame;
   Dimension           width, height;
+  int                 forever = 0;
 
   frame = (int )data;
-
   width = event->width;
   height = event->height;
-
-  /* width = widget->allocation.width; */
-  /*   height = widget->allocation.height; */
   if ((width <= 0) || 
       (height <= 0))
     return TRUE;
-
   if ((width == FrameTable[frame].FrWidth) && 
       (height == FrameTable[frame].FrHeight))
     return TRUE;
-
-  FrameTable[frame].FrWidth = width;
-  FrameTable[frame].FrHeight = height;
   
   if (widget)
     if (GL_prepare (frame))
       {
-	GL_SwapStop (frame);
-	while (gtk_events_pending ()) 
-	  gtk_main_iteration ();	
-	GLResize (width, 
-		  height, 
-		  0, 0);
-	DefRegion (frame, 
- 		   0, 0,
- 		   width, height);	
-	FrameRedraw (frame, width, height);
+	/* prevent flickering*/
+	GL_SwapStop (frame); 	
+
+	while (gtk_events_pending ())
+	  gtk_main_iteration ();
+
+	FrameTable[frame].FrWidth = width;
+	FrameTable[frame].FrHeight = height;
+	GLResize (width, height, 0, 0);
+	DefRegion (frame, 0, 0, width, height);
+        FrameRedraw (frame, width, height);
+
+	/*FrameRedraw can modify Size by hiding scrollbars
+	  so until sizes are stabilized, we resize. 
+	if it never stabilizes itself, we stop at at
+	the tenth resize*/
+
+	while (gtk_events_pending ())
+	  gtk_main_iteration ();
+
+	while ((width != widget->allocation.width ||
+	       height != widget->allocation.height) && 
+	       forever < 10)
+	  {	     
+	    width = widget->allocation.width; 
+	    height = widget->allocation.height; 
+
+	    FrameTable[frame].FrWidth = width;
+	    FrameTable[frame].FrHeight = height;	    
+	    GLResize (width, height, 0, 0);
+	    DefRegion (frame, 0, 0, width, height);
+	    FrameRedraw (frame, width, height);
+
+	    while (gtk_events_pending ())
+	      gtk_main_iteration ();
+
+	    forever++;
+	  }
+	FrameTable[frame].DblBuffNeedSwap = TRUE; 
 	GL_SwapEnable (frame);
 	GL_Swap (frame);
-	/* FrameTable[frame].DblBuffNeedSwap = TRUE; */
-	/* gl_synchronize (); */
       }
   return TRUE;
 }
@@ -3513,9 +3540,6 @@ void UpdateScrollbars (int frame)
       if (GTK_WIDGET_VISIBLE(GTK_WIDGET (hscroll)))
 	{	  
 	  gtk_widget_hide (GTK_WIDGET (hscroll));
-#ifdef _GL
-	  gl_window_resize(frame, 0, -hscroll->allocation.height);
-#endif /*_GL*/
 	}
     }  
   else 
@@ -3535,9 +3559,6 @@ void UpdateScrollbars (int frame)
 	      {
 		gtk_widget_show (GTK_WIDGET (hscroll));
 		gtk_widget_draw_default (GTK_WIDGET (hscroll));
-#ifdef _GL
-		gl_window_resize(frame, 0, hscroll->allocation.height);
-#endif /*_GL*/
 	      }
 	  }  
       }
@@ -3548,9 +3569,6 @@ void UpdateScrollbars (int frame)
       if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)))
 	{
 	  gtk_widget_hide (GTK_WIDGET (vscroll));
-#ifdef _GL
-	  gl_window_resize (frame, -vscroll->allocation.width, 0);
-#endif /*_GL*/
 	}
     }  
   else 
@@ -3570,11 +3588,6 @@ void UpdateScrollbars (int frame)
 	      {
 		gtk_widget_show (GTK_WIDGET (vscroll));
 		gtk_widget_draw_default (GTK_WIDGET (vscroll));
-#ifdef _GL
-		gl_window_resize (frame, 
-				  vscroll->allocation.width, 
-				  0);
-#endif /*_GL*/
 	      }
 	  }
 	}

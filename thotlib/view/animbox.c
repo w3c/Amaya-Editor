@@ -55,6 +55,8 @@
 #include "contentapi_f.h"
 #include "font_f.h"
 #include "boxlocate_f.h"
+#include "frame_f.h"
+
 
 #ifdef _GL
 #include "glwindowdisplay.h"
@@ -75,55 +77,47 @@
 
 #ifdef _GL
 static int Animated_Frame = 0;
-static int Clipx, Clipy, ClipxMax, ClipyMax;
+static float Clipx, Clipy, ClipxMax, ClipyMax;
 
 #define Min(number, min) (number = ( (number < 0) ? min : (((number - min) < 0.00001) ? number : min)) )
 #define Max(number, max) (number = ( (number < 0) ? max : (((number - max) > 0.00001) ? number : max)) )
 #endif /* _GL */
 
-/*----------------------------------------------------------------------
-  populate_path_proportion : interpolate proportion of each point over
-  total path length
 
- PtrPathSeg      FirstPathSeg; linked list of segment defining the path
+#ifdef _GL 
+
+
+/*----------------------------------------------------------------------
+  ComputePropandAngle : interpolate proportion of each point over
+  total list of point
+  
   float           length;      total length 
   ThotPath        *Path;       The Path
   float           *Proportion; per segment % of total length
-
-  ----------------------------------------------------------------------*/
-void populate_path_proportion (void *anim_info)
+   ----------------------------------------------------------------------*/
+static void ComputePropandAngle (AnimPath   *pop_path)
 {
-#ifdef _GL
   int        i, npoints = 0;
-  int        x,y;
-  float      totallength;
-  int        *subpathStart = NULL;
+  float      x, y, totallength;
   ThotPoint  *points;
-  AnimPath   *pop_path;
   float      *proportion, *angle;
-  Animated_Element *animated;
 
-  animated = (Animated_Element *) (anim_info);
-  pop_path = (AnimPath *) animated->from;
-  points = (ThotPoint *) TtaGetMemory (ALLOC_POINTS * sizeof(ThotPoint));
-  points = BuildPolygonForPath (((PtrPathSeg) (pop_path->FirstPathSeg)), 
-				Animated_Frame,
-				&npoints, 
-				&subpathStart);
+  points = pop_path->Path;
+  npoints = pop_path->npoints;
   proportion = (float *) TtaGetMemory (npoints * sizeof(float));
   angle = (float *) TtaGetMemory (npoints * sizeof(float));
   totallength = 0;
   proportion[0] = 0;
-  angle[0] = 0;
   for (i = 1; i < npoints; i++)
     {
       x = points[i].x - points[i-1].x;
       y = points[i].y - points[i-1].y;
 
-      if (x != 0)
+      if (fabs (x) < 0.0001)
 	angle[i] = ARCTAN (y/x);
       else
 	angle[i] = 90;
+
       totallength +=  sqrt ((double) x*x + y*y);
       proportion[i] = totallength;
     }
@@ -133,109 +127,60 @@ void populate_path_proportion (void *anim_info)
     }
   pop_path->Proportion = proportion;
   pop_path->length = totallength;
+  pop_path->Tangent_angle = angle;
+}
+#endif /* _GL */
+/*----------------------------------------------------------------------
+  populate_path_proportion : 
+
+ PtrPathSeg      FirstPathSeg; linked list of segment defining the path
+   ----------------------------------------------------------------------*/
+void populate_path_proportion (void *anim_info)
+{
+#ifdef _GL
+  int        npoints = 0;
+  int        *subpathStart = NULL;
+  ThotPoint  *points;
+  AnimPath   *pop_path;
+  Animated_Element *animated;
+
+  animated = (Animated_Element *) (anim_info);
+  pop_path = (AnimPath *) animated->from;
+  points = (ThotPoint *) TtaGetMemory (ALLOC_POINTS * sizeof(ThotPoint));
+  points = BuildPolygonForPath (((PtrPathSeg) (pop_path->FirstPathSeg)), 
+				Animated_Frame,
+				&npoints, 
+				&subpathStart);
+
   pop_path->npoints = npoints;
   pop_path->Path = points;
-  pop_path->Tangent_angle = angle;
+  ComputePropandAngle (pop_path);
 #endif /* _GL */
 }
 /*----------------------------------------------------------------------
   populate_values_proportion : interpolate proportion of each point over
   total path length
-
- PtrPathSeg      FirstPathSeg; linked list of values list
-  float           length;      total length 
-  ThotPath        *Path;       The Path
-  float           *Proportion; per segment % of total length
-
   ----------------------------------------------------------------------*/
 void populate_values_proportion (void *anim_info)
 {
 #ifdef _GL
-  int        i, npoints = 0;
-  int        x,y;
-  float      totallength;
-  int        *subpathStart = NULL;
-  ThotPoint  *points;
-  AnimPath   *pop_path;
-  float      *proportion;
   Animated_Element *animated;
 
   animated = (Animated_Element *) (anim_info);
-  pop_path = (AnimPath *) animated->from;
-  points = (ThotPoint *) TtaGetMemory (ALLOC_POINTS * sizeof(ThotPoint));
-  points = BuildPolygonForPath (((PtrPathSeg) (pop_path->FirstPathSeg)), 
-				Animated_Frame,
-				&npoints, 
-				&subpathStart);
-  proportion = (float *) TtaGetMemory (npoints * sizeof(float));
-  totallength = 0;
-  proportion[0] = 0;
-  for (i = 1; i < npoints; i++)
-    {
-      x = points[i].x - points[i-1].x;
-      y = points[i].y - points[i-1].y;
-
-      totallength +=  sqrt ((double) x*x + y*y);
-      proportion[i] = totallength;
-    }
-  for (i = 1; i < npoints; i++)
-    {
-      proportion[i] = proportion[i] / totallength;
-    }
-  pop_path->Proportion = proportion;
-  pop_path->length = totallength;
-  pop_path->npoints = npoints;
-  pop_path->Path = points;
+  ComputePropandAngle ((AnimPath *) animated->from);
 #endif /* _GL */
 }
 /*----------------------------------------------------------------------
   populate_fromto_proportion : interpolate proportion of each point over
   total values list
-
- PtrPathSeg      FirstPathSeg; linked list of values
-  float           length;      total length 
-  ThotPath        *Path;       The Path
-  float           *Proportion; per segment % of total length
-
   ----------------------------------------------------------------------*/
 void populate_fromto_proportion (void *anim_info)
 {
 #ifdef _GL
-  int        i, npoints = 0;
-  int        x,y;
-  float      totallength;
-  int        *subpathStart = NULL;
-  ThotPoint  *points;
-  AnimPath   *pop_path;
-  float      *proportion;
   Animated_Element *animated;
 
   animated = (Animated_Element *) (anim_info);
-  pop_path = (AnimPath *) animated->from;
-  points = (ThotPoint *) TtaGetMemory (ALLOC_POINTS * sizeof(ThotPoint));
-  points = BuildPolygonForPath (((PtrPathSeg) (pop_path->FirstPathSeg)), 
-				Animated_Frame,
-				&npoints, 
-				&subpathStart);
-  proportion = (float *) TtaGetMemory (npoints * sizeof(float));
-  totallength = 0;
-  proportion[0] = 0;
-  for (i = 1; i < npoints; i++)
-    {
-      x = points[i].x - points[i-1].x;
-      y = points[i].y - points[i-1].y;
-
-      totallength +=  sqrt ((double) x*x + y*y);
-      proportion[i] = totallength;
-    }
-  for (i = 1; i < npoints; i++)
-    {
-      proportion[i] = proportion[i] / totallength;
-    }
-  pop_path->Proportion = proportion;
-  pop_path->length = totallength;
-  pop_path->npoints = npoints;
-  pop_path->Path = points;
+  ComputePropandAngle ((AnimPath *) animated->from);
 #endif /* _GL */
 }
 
@@ -260,6 +205,42 @@ static PtrTransform GetTransformation (PtrTransform Trans,
     }
   return Trans;   
 }
+/*----------------------------------------------------------------------
+ TtaAnimationReplaceTransform 
+  ----------------------------------------------------------------------*/
+static void TtaAnimationReplaceTransform (AnimTime current_time,
+					  PtrTransform TransNew,
+					  PtrElement El)
+{
+  ThotBool not_found;
+  PtrTransform Trans;
+  PtrTransform previous = NULL;
+  Document doc;
+  View view;
+
+  not_found = TRUE; 
+  if (El->ElTransform)
+    {
+      Trans = El->ElTransform;
+      while (not_found && Trans)
+	{
+	  if (Trans->TransType != TransNew->TransType)
+	    {
+	      previous = Trans;
+	      Trans = Trans->Next;
+	    }
+	  else
+	    not_found = FALSE;      
+	}
+    }	 
+  else  
+    {
+      FrameToView (Animated_Frame, &doc, &view);
+      TtaReplaceTransform ((Element) El, TransNew, doc); 
+    }
+}
+
+
 /*----------------------------------------------------------------------
   Define Minimum to be sure to get real clip.
   ----------------------------------------------------------------------*/
@@ -344,7 +325,7 @@ static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
 {
   PtrBox        pBox;
   PtrElement    El;
-  PtrTransform  Trans;
+  PtrTransform  Trans = NULL;
   int           doc, view;
 
   while (pAb != NULL)
@@ -382,7 +363,7 @@ static void ApplyYToAllBoxes (PtrAbstractBox pAb, float result)
 {
   PtrBox        pBox;
   PtrElement    El;
-  PtrTransform  Trans;
+  PtrTransform  Trans = NULL;
   int           doc, view;
 
   while (pAb != NULL)
@@ -442,7 +423,7 @@ static void ApplyHeightToAllBoxes (PtrAbstractBox pAb, float result)
     }
 }
 /*----------------------------------------------------------------------
-   : Recursivly apply the property
+  : Recursivly apply the property
   ----------------------------------------------------------------------*/
 static void ApplyFontSizeToAllBoxes (PtrAbstractBox pAb, int result)
 {
@@ -463,7 +444,7 @@ static void animate_box_color (PtrElement El,
 			       Animated_Element *animated,
 			       AnimTime current_time)
 {
-  int doc, view;
+  int            doc, view;
   PtrAbstractBox pAb = NULL;
   unsigned short fromred, fromgreen, fromblue, 
     tored, togreen, toblue, 
@@ -492,16 +473,15 @@ static void animate_box_color (PtrElement El,
 	if (strcasecmp (animated->AttrName, "fill") == 0)
 	  ApplyFillColorToAllBoxes (pAb->AbFirstEnclosed, result);
 	else if (strcasecmp (animated->AttrName, "stroke") == 0)
-	  ApplyStrokeColorToAllBoxes (pAb->AbFirstEnclosed, result);	   
-	UpdateClipping (pAb->AbFirstEnclosed);
+	  ApplyStrokeColorToAllBoxes (pAb->AbFirstEnclosed, result);
       }
 }
 /*----------------------------------------------------------------------
   animate_box_animate : Animate any property of an element				
   ----------------------------------------------------------------------*/
 static void animate_box_set (PtrElement El,
-				 Animated_Element *animated,
-				 AnimTime current_time)
+			     Animated_Element *animated,
+			     AnimTime current_time)
 {
   int doc, view;
   PtrAbstractBox pAb = NULL;
@@ -522,9 +502,8 @@ static void animate_box_set (PtrElement El,
 	    pAb->AbOpacity = result;
 	    /*If it's an opaque group manage the opacity*/
 	    if (!TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
-				  pAb->AbElement->ElStructSchema))
+				   pAb->AbElement->ElStructSchema))
 	      ApplyOpacityToAllBoxes (pAb->AbFirstEnclosed, (int) (result));
-	    UpdateClipping (pAb->AbFirstEnclosed);
 	  }      
     }
   else if (strcasecmp (animated->AttrName, "x") == 0)
@@ -533,8 +512,7 @@ static void animate_box_set (PtrElement El,
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
-	  {	    
-	    UpdateClipping (pAb->AbFirstEnclosed);
+	  {
 	    result = atof ((char *) animated->to);
 	    ApplyXToAllBoxes (pAb->AbFirstEnclosed, (float) result);
 	  }
@@ -546,8 +524,7 @@ static void animate_box_set (PtrElement El,
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
-	  {	  
-	    UpdateClipping (pAb->AbFirstEnclosed);
+	  {
 	    result = atof ((char *) animated->to);
 	    ApplyYToAllBoxes (pAb->AbFirstEnclosed, (float) result);
 	  }
@@ -559,20 +536,18 @@ static void animate_box_set (PtrElement El,
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
-	  {	  
-	    UpdateClipping (pAb->AbFirstEnclosed);
+	  {
 	    result = atof ((char *) animated->to);
 	    ApplyWidthToAllBoxes (pAb->AbFirstEnclosed, (float) result);
 	  }
     }
-else if (strcasecmp (animated->AttrName, "height") == 0)
+  else if (strcasecmp (animated->AttrName, "height") == 0)
     {
       FrameToView (Animated_Frame, &doc, &view);
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
-	  {	  
-	    UpdateClipping (pAb->AbFirstEnclosed);	    
+	  {
 	    result = atof ((char *) animated->to);
 	    ApplyHeightToAllBoxes (pAb->AbFirstEnclosed, (float) result);	   
 	  }
@@ -584,8 +559,7 @@ else if (strcasecmp (animated->AttrName, "height") == 0)
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
-	  {	  
-	    UpdateClipping (pAb->AbFirstEnclosed);	    
+	  {
 	    result = atof ((char *) animated->to);
 	  }
       
@@ -626,9 +600,8 @@ static void animate_box_animate (PtrElement El,
 	    pAb->AbOpacity = result;
 	    /*If it's an opaque group manage the opacity*/
 	    if (!TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
-				  pAb->AbElement->ElStructSchema))
+				   pAb->AbElement->ElStructSchema))
 	      ApplyOpacityToAllBoxes (pAb->AbFirstEnclosed, (int) (result));
-	    UpdateClipping (pAb->AbFirstEnclosed);
 	  }      
     }
   else if (strcasecmp (animated->AttrName, "x") == 0)
@@ -637,8 +610,7 @@ static void animate_box_animate (PtrElement El,
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
-	  {	    
-	    UpdateClipping (pAb->AbFirstEnclosed);
+	  {
 	    result = interpolate_double_value (atof ((char *) animated->from), 
 					       atof ((char *) animated->to),
 					       current_time,
@@ -653,8 +625,7 @@ static void animate_box_animate (PtrElement El,
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
-	  {	  
-	    UpdateClipping (pAb->AbFirstEnclosed);
+	  {
 	    result = interpolate_double_value (atof ((char *) animated->from), 
 					       atof ((char *) animated->to),
 					       current_time,
@@ -669,8 +640,7 @@ static void animate_box_animate (PtrElement El,
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
-	  {	  
-	    UpdateClipping (pAb->AbFirstEnclosed);
+	  {
 	    result = interpolate_double_value (atof ((char *) animated->from), 
 					       atof ((char *) animated->to),
 					       current_time,
@@ -678,14 +648,13 @@ static void animate_box_animate (PtrElement El,
 	    ApplyWidthToAllBoxes (pAb->AbFirstEnclosed, (float) result);
 	  }
     }
-else if (strcasecmp (animated->AttrName, "height") == 0)
+  else if (strcasecmp (animated->AttrName, "height") == 0)
     {
       FrameToView (Animated_Frame, &doc, &view);
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
-	  {	  
-	    UpdateClipping (pAb->AbFirstEnclosed);	    
+	  {
 	    result = interpolate_double_value (atof ((char *) animated->from), 
 					       atof ((char *) animated->to),
 					       current_time,
@@ -700,8 +669,7 @@ else if (strcasecmp (animated->AttrName, "height") == 0)
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
-	  {	  
-	    UpdateClipping (pAb->AbFirstEnclosed);	    
+	  {
 	    result = interpolate_double_value (atof ((char *) animated->from), 
 					       atof ((char *) animated->to),
 					       current_time,
@@ -726,7 +694,6 @@ static void animate_box_transformation (PtrElement El,
   float            fx, fy, tx, ty, rotf, rott;
   float            result;
   int              trans_type;
-  PtrAbstractBox   pAb = NULL;
   PtrTransform     Trans = NULL;
   
   if (animated->AttrName == NULL)
@@ -773,16 +740,8 @@ static void animate_box_transformation (PtrElement El,
 	  Trans = TtaNewTransformTranslate (tx, ty, FALSE);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
 	}
-      pAb = El->ElAbstractBox[view - 1];
-      if (pAb)
-	if (pAb->AbFirstEnclosed)
-	  {
-	    UpdateClipping (pAb->AbFirstEnclosed);
-
-	    Trans->XScale = tx;
-	    Trans->YScale = ty;
-	  }
-      
+      Trans->XScale = tx;
+      Trans->YScale = ty;
       break;
 
     case 2 : /*SCALE*/
@@ -822,15 +781,9 @@ static void animate_box_transformation (PtrElement El,
 	  Trans = TtaNewTransformScale (tx, ty, FALSE);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
 	}
-      pAb = El->ElAbstractBox[view - 1];
-      if (pAb)
-	if (pAb->AbFirstEnclosed)
-	  {
-	    UpdateClipping (pAb->AbFirstEnclosed);
+
 	    Trans->XScale = tx;
 	    Trans->YScale = ty;
-	  }
-      
       break;
 
     case 3 :/*Rotate*/
@@ -884,16 +837,10 @@ static void animate_box_transformation (PtrElement El,
 	  Trans = TtaNewTransformRotate (rott, tx, ty);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
 	}
-      pAb = El->ElAbstractBox[view - 1];
-      if (pAb)
-	if (pAb->AbFirstEnclosed)
-	  {
-	    UpdateClipping (pAb->AbFirstEnclosed);	    
+
 	    Trans->TrAngle = rott;
 	    Trans->XRotate = tx;
 	    Trans->YRotate = ty;
-	  }
-      
       break;
       
     case 4 :/*skewX*/
@@ -910,13 +857,7 @@ static void animate_box_transformation (PtrElement El,
 	  Trans = TtaNewTransformSkewX (result);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
 	}
-      pAb = El->ElAbstractBox[view - 1];
-      if (pAb)
-	if (pAb->AbFirstEnclosed)
-	  {
-	    UpdateClipping (pAb->AbFirstEnclosed);	    
-	    Trans->TrFactor = result;
-	  }      
+      Trans->TrFactor = result;
       break;
      
     case 5 :/*SKEWY*/
@@ -933,14 +874,7 @@ static void animate_box_transformation (PtrElement El,
 	  Trans = TtaNewTransformSkewY (result);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
 	}
-      pAb = El->ElAbstractBox[view - 1];
-      if (pAb)
-	if (pAb->AbFirstEnclosed)
-	  {
-	    UpdateClipping (pAb->AbFirstEnclosed);
-	    Trans->TrFactor = result;
-	  }
-      
+      Trans->TrFactor = result;
       break;
     }  
 }
@@ -958,7 +892,7 @@ static void animate_box_motion (PtrElement El,
   float            x,y,x1,y1,x2,y2;
   int              doc, view,i;
   PtrAbstractBox   pAb = NULL;
-  PtrTransform     Trans;
+  PtrTransform     Trans = NULL;
 
   pop_path = (AnimPath *) animated->from;
   proportion = pop_path->Proportion;
@@ -985,8 +919,7 @@ static void animate_box_motion (PtrElement El,
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
-	  {	    
-	    UpdateClipping (pAb->AbFirstEnclosed);	    
+	  {
 	    ApplyXToAllBoxes (pAb->AbFirstEnclosed, 0);
 	    ApplyYToAllBoxes (pAb->AbFirstEnclosed, 0); 
 
@@ -1063,13 +996,13 @@ static int is_animated_now (Animated_Element *animated, AnimTime *current_time)
   if (animated->AnimType == Set) 
     {
       if ((*current_time -  (animated->start + animated->duration)) > 0.00001 &&
-	  fabs (animated->action_time - (animated->start + animated->duration))  > 0.00001)
+	  (animated->action_time - (animated->start + animated->duration))  > 0.00001)
 	{
 	  *current_time = animated->start + animated->duration;
 	  return ANIMATING;
 	}
       else if ((*current_time - animated->start) > 0.00001 && 
-	       fabs (animated->action_time - (animated->start)) > 0.00001)
+	       (animated->action_time - (animated->start)) > 0.00001)
 	{
 	  *current_time = animated->start;
 	  return ANIMATING;
@@ -1092,6 +1025,7 @@ static ThotBool animate_box (PtrElement El, AnimTime current_time)
   AnimTime          rel_time;
   ThotBool          isnotfinished;
   int               animating_state;
+  PtrAbstractBox    pAb;
 
   isnotfinished = FALSE;
   if (El)
@@ -1106,38 +1040,45 @@ static ThotBool animate_box (PtrElement El, AnimTime current_time)
 	      isnotfinished = TRUE;
 	    if (animating_state == ANIMATING)
 	      {
-		switch (animated->AnimType)
+		pAb = El->ElAbstractBox[0];
+		if (pAb)
 		  {
-		  case Color:
-		    if (animated->from && animated->to)
-			animate_box_color (El, animated, rel_time);
-		    break;
+		    UpdateClipping (pAb);
+		    switch (animated->AnimType)
+		      {
+		      case Color:
+			if (animated->from && animated->to)
+			  animate_box_color (El, animated, rel_time);
+			break;
 		  
-		  case Transformation:
-		    if (animated->from && animated->to)
-		      animate_box_transformation (El, animated, rel_time);
-		    break;
+		      case Transformation:
+			if (animated->from && animated->to)
+			  animate_box_transformation (El, animated, rel_time);
+			break;
 		  
-		  case Motion:
-		    if (animated->from)
-		      animate_box_motion (El, animated, rel_time);
-		    break;
+		      case Motion:
+			if (animated->from)
+			  animate_box_motion (El, animated, rel_time);
+			break;
 		  
-		  case Animate:
-		    if (animated->from && animated->to)
-		      animate_box_animate (El, animated, rel_time);
-		    break;
+		      case Animate:
+			if (animated->from && animated->to)
+			  animate_box_animate (El, animated, rel_time);
+			break;
 		  
-		  case Set:
-		    if (animated->to)
-		      animate_box_set (El, animated, rel_time);
-		    break;
+		      case Set:
+			if (animated->to)
+			  animate_box_set (El, animated, rel_time);
+			break;
 		  
-		  case OtherAnim:
-		    break;
+		      case OtherAnim:
+			break;
 		  
-		  default:
-		    break;      
+		      default:
+			break;      
+		      }
+		    ComputeABoundingBox (pAb, Animated_Frame);
+		    UpdateClipping (pAb);
 		  }
 		isnotfinished = TRUE;
 		/*Store last animation render success*/
@@ -1261,7 +1202,17 @@ ThotBool Animate_boxes (int frame,
     }
   if (isfinished)
     return TRUE;
-  DefRegion (frame, Clipx, Clipy, ClipxMax, ClipyMax);
+
+  if (Clipx - 1 < 0.00001)
+    Clipx = 1;
+  if (Clipy - 1 < 0.00001)
+    Clipy = 1;
+  DefRegion (frame, 
+	     (int)(Clipx - 1), 
+	     (int)(Clipy - 1), 
+	     (int)(ClipxMax + 1), 
+	     (int)(ClipyMax + 1));
+
   FrameTable[frame].DblBuffNeedSwap = TRUE;
   return FALSE;
 #endif /* _GL */

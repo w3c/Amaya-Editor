@@ -1989,11 +1989,7 @@ void TtcSwitchButtonBar (Document doc, View view)
 	 gtk_widget_hide (GTK_WIDGET(row));
        else
 	 gtk_widget_show_all (GTK_WIDGET(row));
-#ifdef _GL
-       gl_window_resize (frame, 
-			 row->allocation.width, 
-			 row->allocation.height);
-#endif /* _GL */
+
      }
 #endif /* _GTK */
 #else  /* _WINDOWS */
@@ -2694,11 +2690,7 @@ void TtcSwitchCommands (Document doc, View view)
 		   gtk_widget_hide (row);
 		 else
 		   gtk_widget_show_all (row);
-#ifdef _GL
-		 gl_window_resize (frame, 
-				   row->allocation.width, 
-				   row->allocation.height);
-#endif /* _GL */
+
 	       }
 #endif /* _GTK */
 #else  /* _WINDOWS */

@@ -1666,11 +1666,13 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 			Trans->YScale, 
 			1.0);
 	      break;
+	    case PtElAnimTranslate:
 	    case PtElTranslate:
 	      glTranslatef (Trans->XScale, 
 			    Trans->YScale, 
 			    0);
 	      break;
+	    case PtElAnimRotate:
 	    case PtElRotate:
 	      glTranslatef (Trans->XRotate, 
 			    Trans->YRotate, 
@@ -1945,28 +1947,38 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, in
 {
   GLfloat feedBuffer[4096];
   GLint   size;
-  
-  if (1 || box->VisibleModification)
+    
+  glFeedbackBuffer (4096, GL_2D, feedBuffer);
+  NotFeedBackMode = FALSE;  
+  glRenderMode (GL_FEEDBACK);
+  DisplayBox (box, frame, xmin, xmax, ymin, ymax);
+  size = glRenderMode (GL_RENDER);
+  NotFeedBackMode = TRUE;
+  if (size > 0)
     {
-      glFeedbackBuffer (4096, GL_2D, feedBuffer);
-      NotFeedBackMode = FALSE;  
-      glRenderMode (GL_FEEDBACK);
-      DisplayBox (box, frame, xmin, xmax, ymin, ymax);
-      size = glRenderMode (GL_RENDER);
-      NotFeedBackMode = TRUE;
-      if (size > 0)
-	{
-	  box->BxClipX = -1;
-	  box->BxClipY = -1;
-	  getboundingbox (size, feedBuffer, frame,
-			  &box->BxClipX,
-			  &box->BxClipY,
-			  &box->BxClipW,
-			  &box->BxClipH);      
-	  /* printBuffer (size, feedBuffer); */
-	  box->BxBoundinBoxComputed = TRUE; 
-	}
+      if (size > 4096)
+	size = 4096;
+
+      box->BxClipX = -1;
+      box->BxClipY = -1;
+      getboundingbox (size, feedBuffer, frame,
+		      &box->BxClipX,
+		      &box->BxClipY,
+		      &box->BxClipW,
+		      &box->BxClipH);    
+  
+      /* printBuffer (size, feedBuffer); */ 
+	  
+      box->BxBoundinBoxComputed = TRUE; 
     }
+  else
+    {
+      box->BxClipX = box->BxXOrg;
+      box->BxClipY = box->BxYOrg;
+      box->BxClipW = box->BxW;
+      box->BxClipH = box->BxH;
+      box->BxBoundinBoxComputed = FALSE; 
+    }   
 }
 
 /*---------------------------------------------------
@@ -2007,18 +2019,40 @@ void GL_SwapStop (int frame)
   SwapOK[frame] = FALSE;
 }
 /*----------------------------------------------------------------------
+  GL_SwapGet : 
+  ----------------------------------------------------------------------*/
+ThotBool GL_SwapGet (int frame)
+{
+  return SwapOK[frame];
+}
+/*----------------------------------------------------------------------
   GL_SwapEnable : 
   ----------------------------------------------------------------------*/
 void GL_SwapEnable (int frame)
 {
   SwapOK[frame] = TRUE;
 }
+
+static ThotBool NeedRedraw (int frame)
+{
+  ViewFrame          *pFrame;
+
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pFrame->FrReady &&
+      pFrame->FrAbstractBox && 
+      pFrame->FrAbstractBox->AbElement)
+    return TRUE;
+  return FALSE;
+}
+
 /*----------------------------------------------------------------------
   GL_Swap : swap frontbuffer with backbuffer (display changes)
   ----------------------------------------------------------------------*/
 void GL_Swap (int frame)
 {
-  if (frame < MAX_FRAME && SwapOK[frame])
+  if (frame >= 0 && frame < MAX_FRAME && 
+      SwapOK[frame] && 
+      NeedRedraw (frame))
     {
       /* gl_synchronize ();  */
       glFinish ();
@@ -2035,7 +2069,7 @@ void GL_Swap (int frame)
 #endif /*_WINDOWS*/
       glEnable (GL_SCISSOR_TEST); 
       FrameTable[frame].DblBuffNeedSwap = FALSE;
-	  }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2244,6 +2278,8 @@ ThotBool GL_DrawAll ()
   int             frame;
   AnimTime        current_time; 
   static ThotBool frame_animating = FALSE;  
+  ThotBool was_animation = FALSE; 
+
 #ifdef _FPS_DEBUG
   static double   lastime;
   char    out[2048];
@@ -2251,7 +2287,7 @@ ThotBool GL_DrawAll ()
   unsigned int     i;
 #endif /* _FPS_DEBUG */
 
-  if (!FrameUpdating )
+  if (!FrameUpdating)
     {
       FrameUpdating = TRUE;     
       if (!frame_animating)
@@ -2264,18 +2300,15 @@ ThotBool GL_DrawAll ()
 #ifdef _GL
 		  if (FrameTable[frame].Animated_Boxes &&
 		      FrameTable[frame].Anim_play)
-		    {	
-#ifdef _GTK
-		      while (gtk_events_pending ())
-			gtk_main_iteration ();
-#endif /*_GTK*/
+		    {
 		      current_time = ComputeAmayaCurrentTime (frame);  
 		      if ((current_time + 1) > 0.0001)
 			{
 			  if (Animate_boxes (frame, current_time))
 			    TtaPause (frame);
+			  else
+			    was_animation = TRUE;
 			  FrameTable[frame].LastTime = current_time;
-
 			}
 		      else
 			{
@@ -2308,7 +2341,6 @@ ThotBool GL_DrawAll ()
 				}
 			      DefRegion (frame, 0, 0, 10, 10);		      			      			      
 #endif /* _FPS_DEBUG */
-			      
 			      RedrawFrameBottom (frame, 0, NULL); 
 #ifdef _FPS_DEBUG
 			      if (lastime != 0 && GetFirstFont (12))
@@ -2325,15 +2357,17 @@ ThotBool GL_DrawAll ()
 #endif /* _FPS_DEBUG */
 
 			      GL_Swap (frame);  
-			      /* All transformation are resetted */   
-			      glLoadIdentity (); 
-			      FrameTable[frame].DblBuffNeedSwap = FALSE;
 			    }
 			  GL_Err ();
 			}
 		    }
 		}
-	    }
+	    }	
+#ifdef _GTK
+	  if (was_animation)
+	    while (gtk_events_pending ())
+	      gtk_main_iteration ();
+#endif /*_GTK*/
 	  frame_animating  = FALSE;      
 	}  
       FrameUpdating = FALSE;     
@@ -2642,39 +2676,6 @@ void GLResize (int width, int height, int x, int y)
   glEnable (GL_SCISSOR_TEST);  
 }
 
-/*-----------------------------------
-  gl_window_resize : Some video cards or software 
-  implementations  mechanisms clears when resizing 
-  viewport so we redraw all
-  ------------------------------------*/
-void gl_window_resize (int frame, int width, int height)
-{
-#ifdef _GTK
-#ifdef _GTK
-  GtkWidget *widget;
-
-  GL_SwapStop (frame);
-  widget = FrameTable[frame].WdFrame;
-  while (gtk_events_pending ())
-    gtk_main_iteration ();
-  gtk_widget_queue_resize  (widget->parent->parent);
-  return;
-#endif /*_GTK*/
-
-  if (GL_prepare (frame))
-    {
-#ifdef _GTK
-      DefClip (frame, -1, -1, -1, -1);
-      return;
-#endif /*_GTK*/
-	DefRegion (frame, 
- 		   0, 0,
- 		   width, height);
-	FrameRedraw (frame, width, height);
-	GL_realize (frame);	 
-      }
-#endif /*_GTK*/
-}
 /*-----------------------------------
   glhard : if a 3d card is involved.
 ------------------------------------*/

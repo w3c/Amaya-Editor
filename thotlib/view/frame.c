@@ -78,7 +78,6 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
    int                 xb, xe, yb, ye;
    int                 scrollx, scrolly;
 
-   GetSizesFrame (frame, &width, &height);
    if ((xd == xf && xd == 0 && (yd != yf || yd != 0)) ||
        (yd == yf && yd == 0 && (xd != xf || xd != 0)))
      return;
@@ -388,7 +387,7 @@ static void OpacityAndTransformNext (PtrAbstractBox pAb, int plane, int frame,
     {
       if (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
 			    pAb->AbElement->ElStructSchema) && 
-	  pAb->AbOpacity != 1000 && 
+	  pAb->AbOpacity != 1000 && pAb->AbOpacity != 0 &&
 	  activate_opacity &&
 	  ((xmax - xmin) > 0) && 
 	  ((ymax - ymin) > 0))
@@ -953,6 +952,7 @@ static void SyncBoundingboxes (PtrAbstractBox pInitAb,
   /*   box->BxClipW = w; */
   /*   box->BxClipH = h; */
 }
+
 /*----------------------------------------------------------------------------------
   ComputeBoundingBoxes : Compute clipping coordinate for each box.
   --------------------------------------------------------------------------------*/
@@ -975,6 +975,11 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
 
   pFrame = &ViewFrameTable[frame - 1];
   GetSizesFrame (frame, &l, &h);
+  if (xmax == 0 && ymax == 0)
+    {
+      xmax = l; 
+      ymax = h;
+    }
   winTop = pFrame->FrYOrg;
   winBottom = winTop + h;
   pBox = pInitAb->AbBox;
@@ -1592,8 +1597,9 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 			  if (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
 						pAb->AbElement->ElStructSchema) )
 			    {
-			      if (NoBoxModif (pAb) &&
-				  pAb->AbBox->Post_computed_Pic != NULL)
+			      if (pAb->AbOpacity == 0 ||
+				  (NoBoxModif (pAb) &&
+				   pAb->AbBox->Post_computed_Pic != NULL))
 				{
 				  NotGroupOpacityDisplayed = FALSE;
 				  continue;

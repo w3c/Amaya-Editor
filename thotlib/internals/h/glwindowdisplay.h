@@ -96,6 +96,7 @@ void GL_DrawUnicodeChar (CHAR_T const c,
 ThotBool glhard ();
 ThotBool GL_NotInFeedbackMode ();
 void GL_Swap (int frame);
+ThotBool GL_SwapGet (int frame);
 void SetGlPipelineState ();
 void GLResize (int width, int height, int x, int y);
 void gl_window_resize (int frame, int width, int height);
