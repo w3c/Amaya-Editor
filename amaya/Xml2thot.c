@@ -1143,7 +1143,7 @@ STRING    elName;
 {
    ThotBool      ok;
 
-   if (stackLevel == 0 || nameElementStack[stackLevel - 1] == NULL)
+   if (stackLevel <= 1 || nameElementStack[stackLevel - 1] == NULL)
      return TRUE;
    else
      {
