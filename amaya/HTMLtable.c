@@ -1787,18 +1787,20 @@ void RowDeleted (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  DeleteColumn                                             
+  DeleteColumn
+  A column will be deleted by the user.
   ----------------------------------------------------------------------*/
 ThotBool DeleteColumn (NotifyElement * event)
 {
-  Element             cell, row, colhead, prev;
+  Element             cell, prevCell, row, colhead, prev;
   Document            doc;
   ElementType         elType;
   Attribute           attr;
   AttributeType       attrTypeC, attrTypeR;
-  int                 rowspan, colspan;
+  int                 rowspan, colspan, rs;
   ThotBool            span, inMath;
 
+  /* if called by undo/redo, don't do anything */
   if (event->info != 1)
     {
       colhead = event->element;
@@ -1806,7 +1808,7 @@ ThotBool DeleteColumn (NotifyElement * event)
       elType = TtaGetElementType (colhead);
       attrTypeC.AttrSSchema = elType.ElSSchema;
       attrTypeR.AttrSSchema = elType.ElSSchema;
-      inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
+      inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema("MathML",doc));
       if (inMath)
 	{
 	  elType.ElTypeNum = MathML_EL_TableRow;
@@ -1849,13 +1851,25 @@ ThotBool DeleteColumn (NotifyElement * event)
 		}
 	    }
 	  else
-	    cell = GetCloseCell (row, colhead, doc, TRUE, inMath, FALSE,
-				 &span, &rowspan);
+	    /* there is no cell for the column in that row. Create an empty
+	       cell to allow the column to be pasted correctly later */
+	    {
+	      prevCell = GetCloseCell (row, colhead, doc, TRUE, inMath, FALSE,
+				       &span, &rowspan);
+	    }
 	  prev = row;
 	  while (rowspan >= 1 && row)
 	    {
+	      if (!cell)
+		/* there is no cell for the column in that row. Create an empty
+		   cell to allow the column to be pasted correctly later */
+		AddEmptyCellInRow (row, colhead, prevCell, FALSE, doc,
+				   inMath, FALSE, TRUE);
 	      row = GetSiblingRow (row, FALSE, inMath);
 	      rowspan--;
+	      if (!cell && row && rowspan >= 1)
+		prevCell = GetCloseCell (row, colhead, doc, TRUE, inMath,
+					 FALSE, &span, &rs);
 	    }
 	  if (row == NULL)
 	    {
