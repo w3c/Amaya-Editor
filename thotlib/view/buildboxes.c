@@ -1462,6 +1462,62 @@ static void TransmitMBP (PtrBox pBox, int frame, int i, int j,
 }
 
 /*----------------------------------------------------------------------
+  CheckMBP checks margins, borders and paddings of the current box.
+  Return TRUE when any value was updated.
+  ----------------------------------------------------------------------*/
+static ThotBool CheckMBP (PtrAbstractBox pAb, PtrBox pBox, int frame)
+{
+  int lt, rb;
+
+  /* update vertical margins, borders and paddings */
+  lt = pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
+  rb = pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
+  ComputeMBP (pAb, frame, FALSE);
+  lt = - lt + pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
+  rb = - rb + pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
+  /* Check if the changes affect the inside or the outside width */
+  pAb->AbBox->BxHorizRef += lt;
+  if (pAb->AbBox->BxType == BoGhost)
+    TransmitMBP (pBox, frame, lt, rb, FALSE);
+  else if (lt != 0 || rb != 0)
+    {
+      if (pAb->AbHeight.DimIsPosition ||
+	  pAb->AbHeight.DimAbRef != 0 ||
+	  pAb->AbHeight.DimAbRef == pAb->AbEnclosing)
+	/* the outside height is constrained */
+	ResizeHeight (pBox, pBox, NULL, - lt - rb, lt, rb, frame);
+      else
+	/* the inside height is constrained */
+	ResizeHeight (pBox, pBox, NULL, 0, lt, rb, frame);
+    }
+  
+  /* update horizontal margins, borders and paddings */
+  lt = pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
+  rb = pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
+  ComputeMBP (pAb, frame, TRUE);
+  lt = - lt + pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
+  rb = - rb + pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
+  /* Check if the changes affect the inside or the outside width */
+  if (pAb->AbBox->BxType == BoGhost)
+    TransmitMBP (pBox, frame, lt, rb, TRUE);
+  else if (lt != 0 || rb != 0)
+    {
+      pAb->AbBox->BxVertRef += lt;
+      if (pAb->AbWidth.DimIsPosition ||
+	  pAb->AbWidth.DimAbRef != 0 ||
+	  pAb->AbWidth.DimAbRef == pAb->AbEnclosing)
+	/* the outside width is constrained */
+	ResizeWidth (pBox, pBox, NULL, - lt - rb, lt, rb, 0, frame);
+      else
+	/* the inside width is constrained */
+	ResizeWidth (pBox, pBox, NULL, 0, lt, rb, 0, frame);
+      return TRUE;
+    }
+  return FALSE;
+}
+	   
+
+/*----------------------------------------------------------------------
   CreateBox creates the box associated to the abstract box pAb.
   - compute its constrainted dimensions.
   - compute margins, paddings and borders.
@@ -1551,6 +1607,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
       pCurrentBox->BxYToCompute = FALSE;
       enclosedWidth = ComputeDimRelation (pAb, frame, TRUE);
       enclosedHeight = ComputeDimRelation (pAb, frame, FALSE);
+      CheckMBP (pAb, pCurrentBox, frame);
       if (pAb->AbLeafType != LtCompound)
 	{
 	  /* Positionnement des axes de la boite construite */
@@ -2386,7 +2443,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
   int                 width, height;
-  int                 nSpaces, j;
+  int                 nSpaces;
   int                 i, charDelta, adjustDelta;
   ThotBool            condition;
   ThotBool            result, isCell;
@@ -3191,49 +3248,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  pAb->AbMBPChange = FALSE;
 	  savpropage = Propagate;
 	  Propagate = ToAll;	/* On passe en mode normal de propagation */
-	  /* update vertical margins, borders and paddings */
-	  i = pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
-	  j = pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
-	  ComputeMBP (pAb, frame, FALSE);
-	  i = - i + pBox->BxTMargin + pBox->BxTPadding + pBox->BxTBorder;
-	  j = - j + pBox->BxBMargin + pBox->BxBPadding + pBox->BxBBorder;
-	  /* Check if the changes affect the inside or the outside width */
-	  pAb->AbBox->BxHorizRef += i;
-	  if (pAb->AbBox->BxType == BoGhost)
-	    TransmitMBP (pBox, frame, i, j, FALSE);
-	  else if (i != 0 || j != 0)
+	  if (CheckMBP (pAb, pBox, frame))
 	    {
-	      if (pAb->AbHeight.DimIsPosition ||
-		  pAb->AbHeight.DimAbRef != 0 ||
-		  pAb->AbHeight.DimAbRef == pAb->AbEnclosing)
-		/* the outside height is constrained */
-		ResizeHeight (pBox, pBox, NULL, - i - j, i, j, frame);
-	      else
-		/* the inside height is constrained */
-		ResizeHeight (pBox, pBox, NULL, 0, i, j, frame);
-	    }
-
-	  /* update horizontal margins, borders and paddings */
-	  i = pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
-	  j = pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
-	  ComputeMBP (pAb, frame, TRUE);
-	  i = - i + pBox->BxLMargin + pBox->BxLPadding + pBox->BxLBorder;
-	  j = - j + pBox->BxRMargin + pBox->BxRPadding + pBox->BxRBorder;
-	  /* Check if the changes affect the inside or the outside width */
-	  if (pAb->AbBox->BxType == BoGhost)
-	    TransmitMBP (pBox, frame, i, j, TRUE);
-	  else if (i != 0 || j != 0)
-	    {
-	      pAb->AbBox->BxVertRef += i;
-	      if (pAb->AbWidth.DimIsPosition ||
-		  pAb->AbWidth.DimAbRef != 0 ||
-		  pAb->AbWidth.DimAbRef == pAb->AbEnclosing)
-		/* the outside width is constrained */
-		ResizeWidth (pBox, pBox, NULL, - i - j, i, j, 0, frame);
-	      else
-		/* the inside width is constrained */
-		ResizeWidth (pBox, pBox, NULL, 0, i, j, 0, frame);
-
 	      /* do we have to register that box as filled box */
 	      if (pAb->AbLeafType == LtCompound && pBox->BxType != BoCell)
 		{
@@ -3261,9 +3277,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		      if (pBox->BxType == BoGhost)
 			TransmitFill (pBox, FALSE);
 		    }
-		}
-
-	      /* Check table consistency */
+		}	      /* Check table consistency */
 	      if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
 		(*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
 	      else if (pCurrentBox->BxType == BoCell && ThotLocalActions[T_checkcolumn])
