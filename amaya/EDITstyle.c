@@ -28,7 +28,8 @@
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
-static STRING       ListBuffer;
+static CHAR_T       ListBuffer[MAX_CSS_LENGTH];
+static STRING       OldBuffer;
 static int          NbClass = 0;
 static CHAR_T       CurrentClass[80];
 static Element      ClassReference;
@@ -112,7 +113,7 @@ NotifyElement      *event;
       buflen += TtaGetTextLength (el);
       TtaNextSibling (&el);
     }
-  ListBuffer = TtaGetMemory (buflen);
+  OldBuffer = TtaGetMemory (buflen);
 
   /* now fill the buffer */
   el = first;
@@ -120,11 +121,11 @@ NotifyElement      *event;
   while (el != NULL)
     {
       j = buflen - i;
-      TtaGiveTextContent (el, &ListBuffer[i], &j, &lang);
+      TtaGiveTextContent (el, &OldBuffer[i], &j, &lang);
       i += TtaGetTextLength (el);
       TtaNextSibling (&el);
     }
-  ListBuffer[i] = EOS;
+  OldBuffer[i] = EOS;
    return FALSE;  /* let Thot perform normal operation */
 }
 
@@ -196,15 +197,15 @@ NotifyAttribute    *event;
   previousEnd = i;
   pEnd = ptr1;
   braces = 0;
-  while (ListBuffer[i] == *ptr1 && *ptr1 != EOS)
+  while (OldBuffer[i] == *ptr1 && *ptr1 != EOS)
     {
-      if (i > 0 && ListBuffer[i-1] == '{')
+      if (i > 0 && OldBuffer[i-1] == '{')
 	braces++;
       if (i > 0 &&
-	  (ListBuffer[i-1] == '}' ||
-	   ((ListBuffer[i-1] == ';' || ListBuffer[i-1] == '>') && braces == 0)))
+	  (OldBuffer[i-1] == '}' ||
+	   ((OldBuffer[i-1] == ';' || OldBuffer[i-1] == '>') && braces == 0)))
 	{
-	  if (ListBuffer[i-1] == '}')
+	  if (OldBuffer[i-1] == '}')
 	    braces--;
 	  previousEnd = i;
 	  pEnd = ptr1;
@@ -212,24 +213,24 @@ NotifyAttribute    *event;
       i++;
       ptr1++;
     }
-  /* now ptr1 and ListBuffer[i] point different strings */
+  /* now ptr1 and OldBuffer[i] point different strings */
   if (*ptr1 != EOS)
     {
       ptr2 = ptr1 + ustrlen (ptr1);
-      j = i + ustrlen (&ListBuffer[i]);
+      j = i + ustrlen (&OldBuffer[i]);
       nextEnd = j;
       nEnd = ptr2;
       braces = 0;
-      while (ListBuffer[j] == *ptr2 && ptr2 != ptr1)
+      while (OldBuffer[j] == *ptr2 && ptr2 != ptr1)
 	{
-	  if (j > i && ListBuffer[j-1] == '{')
+	  if (j > i && OldBuffer[j-1] == '{')
 	    braces++;
 	  if (j > i &&
-	      (ListBuffer[j-1] == '}' ||
-	       ((ListBuffer[j-1] == '@' || ListBuffer[j-1] == '<') &&
+	      (OldBuffer[j-1] == '}' ||
+	       ((OldBuffer[j-1] == '@' || OldBuffer[j-1] == '<') &&
 		braces == 0)))
 	    {
-	      if (ListBuffer[j-1] == '}')
+	      if (OldBuffer[j-1] == '}')
 		braces--;
 	      nextEnd = j;
 	      nEnd = ptr2;
@@ -240,11 +241,11 @@ NotifyAttribute    *event;
       if (ptr1 != ptr2)
 	{
 	  /* take complete CSS rules */
-	  ListBuffer[nextEnd] = EOS;
+	  OldBuffer[nextEnd] = EOS;
 	  *nEnd = EOS;
 	  
 	  /* remove previous rules */
-	  ptr1 = &ListBuffer[previousEnd];
+	  ptr1 = &OldBuffer[previousEnd];
 	  ptr2 = ptr1;
 	  do
 	    {
@@ -290,8 +291,8 @@ NotifyAttribute    *event;
 	}
     }
       
-  TtaFreeMemory (ListBuffer);
-  ListBuffer = NULL;
+  TtaFreeMemory (OldBuffer);
+  OldBuffer = NULL;
   TtaFreeMemory (buffer);
 }
 
@@ -758,7 +759,7 @@ View                view;
     return;
   if (ClassReference == NULL)
     return;
-  
+
   /* if only a part of an element is selected, select the parent instead */
   elType = TtaGetElementType (ClassReference);
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
