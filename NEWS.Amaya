@@ -2,7 +2,7 @@ This file lists the bugs that have been fixed and the extensions that
 have been introduced in Amaya and Thot since version 1.4 of Amaya.
  
 =============================================================
-1.5a
+2.0
 =============================================================
 
 Extensions 2.0:
@@ -46,32 +46,17 @@ Extensions 2.0:
   - Amaya at W3C: link to the http://www.w3.org/Amaya/User/BinDist.html page
     from the Help menu.
 
+* First version of the Network and Browsing/Editing configuration menus
+  (only under Unix).
+  Using the configuration menus, it's now possible to choose the default
+  name for saving URLs that end in "/".
+
+* Implementing a new policy of colors management.
+
 * New version of the Thot API:
   - Changing of TtaAddButton and TtaChangeButton to merge Windows and Unix
     dialogue API.
   - New functions: TtaGiveNextElement, TtaGetFirstLeaf, TtaGetLastLeaf
-
-* The Amaya CVS base is now available in read-only mode at
-  http://dev.w3.org/
-  The Root directory is now Amaya instead of Thot and the libwww is no longer
-  considered as a part of the Amaya code. The source tar file includes the
-  libwww code (libwww is a directory next to Amaya) and one who acceedes
-  the CVS base needs to get the libwww code (cvs get libwww) to
-  compile Amaya.
-
-* The 409 HTTP error message (conflict) is now shown in a popup window.
-
-* The VERIFY_PUBLISH option is now turned off by default
-
-* Added DEFLATE content encoding support under Windows
-
-* First version of the Network and Browsing/Editing configuration menus
-  (only under Unix)
-
-* Support of disconnected browsing mode thru the libwww cache
-
-* Using the configuration menus, it's now possible to choose the default
-  name for saving URLs that end in "/".
 
 * All user Amaya preferences and personal files are collected into a
   home directory. By default this directory is $HOME/.amaya on Unix
@@ -83,8 +68,24 @@ Extensions 2.0:
     the Special/Preferences menu.
   - and other temporary files and directories used by Amaya.
 
+* The 409 HTTP error message (conflict) is now shown in a popup window.
+
+* The VERIFY_PUBLISH option is now turned off by default
+
+* Added DEFLATE content encoding support under Windows
+
+* Support of disconnected browsing mode thru the libwww cache
+
 * After a paste command, the selection is now set at the end of the pasted
   text where the user could continue to insert text.
+
+* The Amaya CVS base is now available in read-only mode at
+  http://dev.w3.org/
+  The Root directory is now Amaya instead of Thot and the libwww is no longer
+  considered as a part of the Amaya code. The source tar file includes the
+  libwww code (libwww is a directory next to Amaya) and one who acceedes
+  the CVS base needs to get the libwww code (cvs get libwww) to
+  compile Amaya.
 
 Fixed bugs 2.0:
 ---------------
@@ -116,6 +117,9 @@ Fixed bugs 2.0:
 * When pasting a paragraph with an attribute at the beginning of a table cell
   or list item, it was turned into a pseudo-paragraph, and produced wrong HTML
   code when the document was saved.
+
+* Amaya locked up when one applied the strong command to a text displayed at
+  the beginning of a line.
 
 * CSS selectors like "PRE SPAN.test" didn't work.
 

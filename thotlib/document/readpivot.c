@@ -72,6 +72,7 @@ static int          newColor[] =
 #include "exceptions_f.h"
 #include "fileaccess_f.h"
 #include "font_f.h"
+#include "inites_f.h"
 #include "labelalloc_f.h"
 #include "language_f.h"
 #include "memory_f.h"
@@ -1715,8 +1716,9 @@ boolean             link;
   PtrAttribute        pAttr;
   DimensionRule      *pDimRule;
   TypeUnit            unit;
-  int                 pictureType, val, PicXArea, PicYArea, PicWArea;
-  int                 PicHArea, view, box;
+  int                 pictureType, val, view, box;
+  int                 PicXArea, PicYArea, PicWArea, PicHArea;
+  int                 red, green, blue;
   CHAR                ch;
   boolean             absolute, sign, just;
   
@@ -1842,9 +1844,18 @@ boolean             link;
 	  sign = ReadSign (pivFile);
 	break;
       case PtFillPattern:
+	TtaReadShort (pivFile, &val);
+	break;
       case PtBackground:
       case PtForeground:
-	TtaReadShort (pivFile, &val);
+	if (pDoc->DocPivotVersion < 5)
+	  TtaReadShort (pivFile, &val);
+	else
+	  {
+	    TtaReadShort (pivFile, &red);
+	    TtaReadShort (pivFile, &green);
+	    TtaReadShort (pivFile, &blue);
+	  }
 	break;
       case PtFont:
       case PtStyle:
@@ -1965,7 +1976,10 @@ boolean             link;
 	    /* convertit les couleurs des anciennes versions */
 	    if (pDoc->DocPivotVersion < 4)
 	      val = newColor[val];
-	    pPRule->PrIntValue = val;
+	    if (pDoc->DocPivotVersion < 5)
+	      pPRule->PrIntValue = val;
+	    else
+	      pPRule->PrIntValue = TtaGetThotColor ((unsigned short) red, (unsigned short) green, (unsigned short) blue);
 	    break;
 	  case PtFont:
 	  case PtStyle:

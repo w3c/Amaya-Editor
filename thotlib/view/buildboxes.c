@@ -2324,17 +2324,36 @@ int                 frame;
 	isCell = pAb->AbBox->BxType == BoCell;
 	RemoveBoxes (pAb, FALSE, frame);
 
-	/* Mise a jour de la liste des boites terminales */
+	/* update the list of leaf boxes */
 	if (pCurrentBox == pMainBox)
-	  /* premiere boite de la liste */
+	  /* first box in the list */
 	   pNextBox->BxPrevious = NULL;
 	else
-	   pNextBox->BxPrevious = pCurrentBox;
+	  {
+	    /* backward link */
+	    pNextBox->BxPrevious = pCurrentBox;
+	    if (pNextBox->BxType == BoPiece &&
+		pNextBox->BxAbstractBox->AbBox != NULL)
+	      if (pCurrentBox->BxType == BoPiece)
+		pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox->BxAbstractBox->AbBox;
+	      else
+		pNextBox->BxAbstractBox->AbBox->BxPrevious = pCurrentBox;
+	  }
 	if (pNextBox == pMainBox)
-	  /* derniere boite de la liste */
+	  /* last box in the list */
 	   pCurrentBox->BxNext = NULL;
 	else
-	   pCurrentBox->BxNext = pNextBox;
+	  {
+	    /* forward link */
+	    pCurrentBox->BxNext = pNextBox;
+	    if (pCurrentBox->BxType == BoPiece &&
+		pCurrentBox->BxAbstractBox->AbBox != NULL)
+	      if (pNextBox->BxType == BoPiece)
+		pCurrentBox->BxAbstractBox->AbBox->BxPrevious = pNextBox->BxAbstractBox->AbBox;
+	      else
+		pCurrentBox->BxAbstractBox->AbBox->BxPrevious = pNextBox;
+
+	  }
 
 	/* Check table consistency */
 	if (isCell && ThotLocalActions[T_checkcolumn])

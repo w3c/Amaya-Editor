@@ -45,26 +45,26 @@
 #endif
 #include "platform_tv.h"
 
-#include "tree_f.h"
-#include "attributes_f.h"
-
-#include "callback_f.h"
-#include "units_f.h"
-#include "memory_f.h"
-#include "structmodif_f.h"
-#include "changepresent_f.h"
-#include "language_f.h"
-#include "writepivot_f.h"
-#include "references_f.h"
-#include "externalref_f.h"
-#include "schemas_f.h"
-#include "fileaccess_f.h"
-#include "structschema_f.h"
-#include "content_f.h"
 #include "applicationapi_f.h"
+#include "attributes_f.h"
+#include "callback_f.h"
+#include "changepresent_f.h"
+#include "content_f.h"
+#include "externalref_f.h"
+#include "fileaccess_f.h"
+#include "inites_f.h"
+#include "labelalloc_f.h"
+#include "language_f.h"
+#include "memory_f.h"
 #include "platform_f.h"
 #include "readpivot_f.h"
-#include "labelalloc_f.h"
+#include "references_f.h"
+#include "schemas_f.h"
+#include "structschema_f.h"
+#include "structmodif_f.h"
+#include "tree_f.h"
+#include "units_f.h"
+#include "writepivot_f.h"
 
 /*----------------------------------------------------------------------
    Retourne Vrai si les deux elements pointes par pEl1 et pEl2     
@@ -165,8 +165,8 @@ BinFile             pivFile;
 
    TtaWriteByte (pivFile, (CHAR) C_PIV_VERSION);
    TtaWriteByte (pivFile, (CHAR) C_PIV_VERSION);
-   /* Version courante de PIVOT: 4 */
-   version = 4;
+   /* Version courante de PIVOT: 5 */
+   version = 5;
    TtaWriteByte (pivFile, (CHAR) version);
 }
 
@@ -649,6 +649,8 @@ BinFile       pivFile;
 PtrPRule      pPRule;
 #endif /* __STDC__ */
 {
+  unsigned short     red, green, blue;
+
   /* s'il s'agit d'une regle de dimension elastique, on ne l'ecrit pas */
   if (pPRule->PrType == PtHeight || pPRule->PrType == PtWidth)
     if (pPRule->PrDimRule.DrPosition)
@@ -768,11 +770,17 @@ PtrPRule      pPRule;
 	  break;
 	case PtBackground:
 	  TtaWriteByte (pivFile, C_PR_BACKGROUND);
-	  PutShort (pivFile, pPRule->PrIntValue);
+	  TtaGiveThotRGB (pPRule->PrIntValue, &red, &green, &blue);
+	  PutShort (pivFile, red);
+	  PutShort (pivFile, green);
+	  PutShort (pivFile, blue);
 	  break;
 	case PtForeground:
 	  TtaWriteByte (pivFile, C_PR_FOREGROUND);
-	  PutShort (pivFile, pPRule->PrIntValue);
+	  TtaGiveThotRGB (pPRule->PrIntValue, &red, &green, &blue);
+	  PutShort (pivFile, red);
+	  PutShort (pivFile, green);
+	  PutShort (pivFile, blue);
 	  break;
 	case PtLineStyle:
 	  TtaWriteByte (pivFile, C_PR_LINESTYLE);
