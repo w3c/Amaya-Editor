@@ -931,6 +931,7 @@ char               *appArgv0;
 #endif
 {
    char               *home_dir;
+   char               *thot_dir_env;
    char                filename[MAX_PATH];
    int                 execname_len;
    PathBuffer          execname;
@@ -1095,6 +1096,38 @@ char               *appArgv0;
 
    /* save the binary directory in BinariesDirectory */
    strncpy (BinariesDirectory, &execname[0], sizeof (BinariesDirectory));
+
+#ifndef _WINDOWS
+   /* first check the THOTDIR environment variable */
+   thot_dir_env=getenv("THOTDIR");
+   if ((thot_dir_env != NULL) && (IsThotDir (thot_dir_env)))
+     {
+	AddRegisterEntry ("System", "THOTDIR", thot_dir_env,
+			  REGISTRY_INSTALL, TRUE);
+	goto load_system_settings;
+     }
+   else if (thot_dir_env != NULL) 
+     {
+        fprintf(stderr,"Invalid THOTDIR environment variable : %s\n",
+	        thot_dir_env);
+     }
+#endif
+#ifdef COMPILED_IN_THOTDIR
+   /* Check a compiled-in value (non standard) */
+   if (IsThotDir (COMPILED_IN_THOTDIR))
+     {
+	AddRegisterEntry ("System", "THOTDIR", COMPILED_IN_THOTDIR,
+			  REGISTRY_INSTALL, TRUE);
+	goto load_system_settings;
+     }
+   else if (thot_dir_env != NULL) 
+     {
+        fprintf(stderr,"Invalid COMPILED_IN_THOTDIR compile-time value : %s\n",
+	        COMPILED_IN_THOTDIR);
+     }
+#endif /* COMPILED_IN_THOTDIR */
+
+   /* if all else fails, scan up from where we found the binary */ 
 
    if (IsThotDir (&execname[0]))
      {
