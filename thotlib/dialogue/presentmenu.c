@@ -760,7 +760,7 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
 			  ThotBool modifHyphen, ThotBool Hyphenate)
 {
   PtrElement          pParent, pGParent;
-  PtrPRule            pPRule;
+  PtrPRule            pPRule, pWRule;
   PtrPSchema	      pSPR;
   PtrSSchema	      pSSR;
   PtrAttribute	      pAttr;
@@ -772,14 +772,21 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
   /* apply changes */
   if (modifAdjust && Adjust > 0)
     {
+      /* look for the Width presentation rule applied to the element */
+      pWRule = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
+				    PtWidth, (FunctionType)0, FALSE, TRUE, &pAttr);
       pParent = pEl->ElParent;
       if (pParent)
 	pGParent = pParent->ElParent;
       else
 	pGParent = NULL;
+      /* look for the Line presentation rule */
       pPRule = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
 				    PtFunction, FnLine, FALSE, TRUE, &pAttr);
       if (pPRule || pEl->ElTerminal ||
+	  /* the element width depends on the enclosing box */
+	  (pWRule && pWRule->PrDimRule.DrRelation == RlEnclosing &&
+	   !TypeHasException (ExcIsTable, pEl->ElTypeNumber, pEl->ElStructSchema)) ||
 	  /* align within a cell, a row or a table body */
 	  TypeHasException (ExcIsCell, pEl->ElTypeNumber, pEl->ElStructSchema) ||
 	  TypeHasException (ExcIsRow, pEl->ElTypeNumber, pEl->ElStructSchema) ||
