@@ -304,6 +304,7 @@
 #define TMSG_DOCUMENT_FORMAT			     281
 #define TMSG_EVENTS				     282
 #define TMSG_DEL_ATTR				     283
-#define TMSG_LIB_MSG_MAX			     284
+#define TMSG_PROFILE			             284
+#define TMSG_LIB_MSG_MAX                             285
 
 #endif

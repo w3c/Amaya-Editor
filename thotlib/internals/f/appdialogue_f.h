@@ -45,6 +45,7 @@ extern int TtaAddButton ( Document document,
                           ThotIcon picture,
                           void (*procedure) (),
                           STRING info,
+			  STRING FunctionName,
                           BYTE type,
                           ThotBool state );
 extern void * TtaGetButtonCallback ( Document document,

@@ -1543,87 +1543,91 @@ ThotBool     logFile;
 #endif /* _WINDOWS */
 
 	   /* Add a button */
-	   iStop =TtaAddButton (doc, 1, stopN, StopTransfer,
+	   iStop =TtaAddButton (doc, 1, stopN, StopTransfer,"StopTransfer",
 			 TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
 			 TBSTYLE_BUTTON, FALSE);
-	   iBack = TtaAddButton (doc, 1, iconBackNo, GotoPreviousHTML,
+	   iBack = TtaAddButton (doc, 1, iconBackNo, GotoPreviousHTML ,"GotoPreviousHTML",
 			 TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS),
 			 TBSTYLE_BUTTON, FALSE);
-	   iForward = TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML,
+	   iForward = TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML, "GotoNextHTML",
 			 TtaGetMessage (AMAYA, AM_BUTTON_NEXT),
 			 TBSTYLE_BUTTON, FALSE);
-	   iReload = TtaAddButton (doc, 1, iconReload, Reload,
+	   iReload = TtaAddButton (doc, 1, iconReload, Reload, "Reload",
 			 TtaGetMessage (AMAYA, AM_BUTTON_RELOAD),
 			 TBSTYLE_BUTTON, TRUE);
-	   iHome = TtaAddButton (doc, 1, iconHome, GoToHome,
+	   iHome = TtaAddButton (doc, 1, iconHome, GoToHome, "GoToHome",
 			 TtaGetMessage (AMAYA, AM_BUTTON_HOME),
 			 TBSTYLE_BUTTON, TRUE);
-	   iEditor = TtaAddButton (doc, 1, iconEditor, SetBrowserEditor,
+	   iEditor = TtaAddButton (doc, 1, iconEditor, SetBrowserEditor, "SetBrowserEditor",
 			 TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
-			 TBSTYLE_BUTTON, TRUE);
+			 TBSTYLE_BUTTON, TRUE); 
 	   /* SEPARATOR */
-	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   iSave = TtaAddButton (doc, 1, iconSaveNo, SaveDocument,
+	   TtaAddButton (doc, 1, None, NULL, NULL, "", TBSTYLE_SEP, FALSE);
+	   iSave = TtaAddButton (doc, 1, iconSaveNo, SaveDocument, "SaveDocument",
 			 TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
 			 TBSTYLE_BUTTON, FALSE);
-	   iPrint = TtaAddButton (doc, 1, iconPrint, PrintAs,
+	   iPrint = TtaAddButton (doc, 1, iconPrint, PrintAs,  "PrintAs",
 			 TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
 			 TBSTYLE_BUTTON, TRUE);
-	   iFind = TtaAddButton (doc, 1, iconFind, TtcSearchText,
+	   iFind = TtaAddButton (doc, 1, iconFind, TtcSearchText, "TtcSearchText", 
 			 TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
 			 TBSTYLE_BUTTON, TRUE);
 	   /* SEPARATOR */
-	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   iI =  TtaAddButton (doc, 1, iconI, SetCharEmphasis,
+	   TtaAddButton (doc, 1, None, NULL, NULL, "", TBSTYLE_SEP, FALSE);
+	   iI =  TtaAddButton (doc, 1, iconI, SetCharEmphasis, "SetCharEmphasis",
 				    TtaGetMessage (AMAYA, AM_BUTTON_ITALICS),
 				    TBSTYLE_CHECK, TRUE);
-	   iB =  TtaAddButton (doc, 1, iconB, SetCharStrong,
+	   iB =  TtaAddButton (doc, 1, iconB, SetCharStrong, "SetCharStrong",
 				    TtaGetMessage (AMAYA, AM_BUTTON_BOLD),
 				    TBSTYLE_CHECK, TRUE);
-	   iT = TtaAddButton (doc, 1, iconT, SetCharCode,
+	   iT = TtaAddButton (doc, 1, iconT, SetCharCode, "SetCharCode",
 				    TtaGetMessage (AMAYA, AM_BUTTON_CODE),
 				    TBSTYLE_CHECK, TRUE);
 	   /* SEPARATOR */
-	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_SEP, FALSE);
-	   iImage = TtaAddButton (doc, 1, iconImage, CreateImage,
+	   TtaAddButton (doc, 1, None, NULL, NULL, "", TBSTYLE_SEP, FALSE);
+	   iImage = TtaAddButton (doc, 1, iconImage, CreateImage, "CreateImage", 
 			 TtaGetMessage (AMAYA, AM_BUTTON_IMG),
 			 TBSTYLE_BUTTON, TRUE);
-	   iH1 = TtaAddButton (doc, 1, iconH1, CreateHeading1,
+	   iH1 = TtaAddButton (doc, 1, iconH1, CreateHeading1, "CreateHeading1", 
 			 TtaGetMessage (AMAYA, AM_BUTTON_H1),
 			 TBSTYLE_BUTTON, TRUE);
-	   iH2 = TtaAddButton (doc, 1, iconH2, CreateHeading2,
+	   iH2 = TtaAddButton (doc, 1, iconH2, CreateHeading2, "CreateHeading2", 
 			 TtaGetMessage (AMAYA, AM_BUTTON_H2),
 			 TBSTYLE_BUTTON, TRUE);
-	   iH3 = TtaAddButton (doc, 1, iconH3, CreateHeading3,
+	   iH3 = TtaAddButton (doc, 1, iconH3, CreateHeading3, "CreateHeading3", 
 			 TtaGetMessage (AMAYA, AM_BUTTON_H3),
 			 TBSTYLE_BUTTON, TRUE);
-	   iBullet = TtaAddButton (doc, 1, iconBullet, CreateList,
+	   iBullet = TtaAddButton (doc, 1, iconBullet, CreateList, "CreateList",
 			 TtaGetMessage (AMAYA, AM_BUTTON_UL),
 			 TBSTYLE_BUTTON, TRUE);
-	   iNum = TtaAddButton (doc, 1, iconNum, CreateNumberedList,
+	   iNum = TtaAddButton (doc, 1, iconNum, CreateNumberedList, "CreateNumberedList",
 			 TtaGetMessage (AMAYA, AM_BUTTON_OL),
 			 TBSTYLE_BUTTON, TRUE);
-	   iDL = TtaAddButton (doc, 1, iconDL, CreateDefinitionList,
+	   iDL = TtaAddButton (doc, 1, iconDL, CreateDefinitionList, "CreateDefinitionList",
 			 TtaGetMessage (AMAYA, AM_BUTTON_DL),
 			 TBSTYLE_BUTTON, TRUE);
-	   iLink = TtaAddButton (doc, 1, iconLink, CreateOrChangeLink,
+	   iLink = TtaAddButton (doc, 1, iconLink, CreateOrChangeLink, "CreateOrChangeLink",
 			 TtaGetMessage (AMAYA, AM_BUTTON_LINK),
 			 TBSTYLE_BUTTON, TRUE);
-	   iTable = TtaAddButton (doc, 1, iconTable, CreateTable,
+	   iTable = TtaAddButton (doc, 1, iconTable, CreateTable, "CreateTable",
 			 TtaGetMessage (AMAYA, AM_BUTTON_TABLE),
 			 TBSTYLE_BUTTON, TRUE);
 	   
 #        ifdef AMAYA_PLUGIN 
-	   TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin,
+	   TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin, "TtaCreateFormPlugin",
 			 TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN),
 			 TBSTYLE_BUTTON, TRUE);
 #        endif /* AMAYA_PLUGIN */
 
 #ifdef AMAYA_JAVA
-	   TtaAddButton (doc, 1, iconJava, CreateFormJava,
+	   TtaAddButton (doc, 1, iconJava, CreateFormJava, "CreateFormJava",
 			 TtaGetMessage (AMAYA, AM_BUTTON_JAVA),
 			 TBSTYLE_BUTTON, TRUE);
 #endif /* AMAYA_JAVA */
+
+	   /* FREE THE PROFILE TABLE */
+	   Prof_DeleteFunTable();
+
 #ifdef MATHML
 	   AddMathButton (doc, 1);
 #endif /* MATHML */

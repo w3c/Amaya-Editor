@@ -179,4 +179,7 @@
 178 Page personelle
 179 Liste des langues pr\351f\351r\351es comme "fr, en" :
 180 Location du fichier de définition de profiles
-181 Profile courrant
+181 Ces changements seront effectifs lors du prochain démarrage d'Amaya
+182 Le fichier est introuvable ou ne contient aucun profile
+183 Entrez l'URL du script appelé pour les modèles de page
+184 L'URL est de la forme "http://cgi.w3.org/cgi-bin/createform.pl"

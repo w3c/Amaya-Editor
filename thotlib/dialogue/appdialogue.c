@@ -1033,34 +1033,34 @@ int                 frame;
 	   /* sinon on reduit le nombre d'items */
 	   ptrmenu->ItemsNb = item - 1;
 
-	/* traite le contenu de l'item de menu */
-	action = ptritem[item].ItemAction;
-	if (action != -1)
-	  {
-	     /* Active l'action correspondante pour cette fenetre */
-	     if (MenuActionList[action].ActionEquiv != NULL)
-	       {
-		  withEquiv = TRUE;
-		  lg = ustrlen (MenuActionList[action].ActionEquiv);
-		  if (lg + j < MaxEquivLen)
-		    {
-		       ustrcpy (&equiv[j], MenuActionList[action].ActionEquiv);
-		       j += lg;
-		    }
-	       }
-	     MenuActionList[action].ActionActive[frame] = TRUE;
-	  }
-	equiv[j++] = EOS;
-	
-	LastItemType = ptrmenu->ItemsList[item].ItemType;
-	item++;
+       /* traite le contenu de l'item de menu */
+       action = ptritem[item].ItemAction;
+       if (action != -1)
+	 {
+	   /* Active l'action correspondante pour cette fenetre */
+	   if (MenuActionList[action].ActionEquiv != NULL)
+	     {
+	       withEquiv = TRUE;
+	       lg = ustrlen (MenuActionList[action].ActionEquiv);
+	       if (lg + j < MaxEquivLen)
+		 {
+		   ustrcpy (&equiv[j], MenuActionList[action].ActionEquiv);
+		   j += lg;
+		 }
+	     }
+	   MenuActionList[action].ActionActive[frame] = TRUE;
+	 }
+       equiv[j++] = EOS;
+       
+       LastItemType = ptrmenu->ItemsList[item].ItemType;
+       item++;
      }
    sref = ((entry + 1) * MAX_MENU * MAX_ITEM) + ref;
    /* Creation du Pulldown avec ou sans equiv */
    if (withEquiv)
-      TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, string, equiv, FALSE);
+     TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, string, equiv, FALSE);
    else
-      TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, string, NULL, FALSE);
+     TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, string, NULL, FALSE);
 }
 
 
@@ -1448,14 +1448,15 @@ ThotWidget   toplevel;
   ----------------------------------------------------------------------*/
 #ifndef _WIN_PRINT
 #ifdef __STDC__
-int        TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), STRING info, BYTE type, ThotBool state)
+int        TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), STRING FunctionName, STRING info, BYTE type, ThotBool state)
 #else  /* __STDC__ */
-int        TtaAddButton (document, view, picture, procedure, info, type, state)
+int        TtaAddButton (document, view, picture, procedure, FunctionName, info, type, state)
 Document   document;
 View       view;
 ThotIcon   picture;
 void       (*procedure) ();
 STRING     info;
+STRING FunctionName;
 BYTE       type;
 ThotBool   state;
 #endif /* __STDC__ */
@@ -1487,104 +1488,109 @@ ThotBool   state;
 	    i++;
 	  if (i < MAX_BUTTON)
 	    {
-	      /* Insere le nouveau bouton */
+	      if ( (procedure == NULL)  || Prof_AddButton(FunctionName))
+		{
+
+		  /* Insere le nouveau bouton */
 #ifndef _WINDOWS
-	      row = FrameTable[frame].Button[0];
-	      n = 0;
-	      XtSetArg (args[n], XmNmarginWidth, 0);
-	      n++;
-	      XtSetArg (args[n], XmNmarginHeight, 0);
-	      n++;
-	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	      n++;
-	      XtSetArg (args[n], XmNtraversalOn, FALSE);
-	      n++;
-	      if (picture == None)
-		{
-		  /* insere une chaine vide */
-		  title_string = XmStringCreateSimple ("  ");
-		  XtSetArg (args[n], XmNlabelString, title_string);
+		  row = FrameTable[frame].Button[0];
+		  n = 0;
+		  XtSetArg (args[n], XmNmarginWidth, 0);
 		  n++;
-		  XtSetArg (args[n], XmNforeground, FgMenu_Color);
+		  XtSetArg (args[n], XmNmarginHeight, 0);
 		  n++;
-		  XtSetArg (args[n], XmNheight, (Dimension) 30);
+		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
 		  n++;
-		  w = XmCreateLabel (row, "Logo", args, n);
-		  XtManageChild (w);
-		  XmStringFree (title_string);
-		}
-	      else
-		{
-		  /* insere l'icone du bouton */
-		  XtSetArg (args[n], XmNlabelType, XmPIXMAP);
+		  XtSetArg (args[n], XmNtraversalOn, FALSE);
 		  n++;
-		  XtSetArg (args[n], XmNlabelPixmap, picture);
-		  n++;
-		  if (procedure == NULL)
+		  if (picture == None)
 		    {
-		      w = XmCreateCascadeButton (row, "dialogue", args, n);
+		      /* insere une chaine vide */
+		      title_string = XmStringCreateSimple ("  ");
+		      XtSetArg (args[n], XmNlabelString, title_string);
+		      n++;
+		      XtSetArg (args[n], XmNforeground, FgMenu_Color);
+		      n++;
+		      XtSetArg (args[n], XmNheight, (Dimension) 30);
+		      n++;
+		      w = XmCreateLabel (row, "Logo", args, n);
 		      XtManageChild (w);
+		      XmStringFree (title_string);
 		    }
 		  else
 		    {
-		      w = XmCreatePushButton (row, "dialogue", args, n);
-		      XtManageChild (w);
-		      XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) APP_ButtonCallback, (XtPointer) frame);
-		      FrameTable[frame].Call_Button[i] = (Proc) procedure;
+		      /* insere l'icone du bouton */
+		      XtSetArg (args[n], XmNlabelType, XmPIXMAP);
+		      n++;
+		      XtSetArg (args[n], XmNlabelPixmap, picture);
+		      n++;
+		      if (procedure == NULL)
+			{
+			  w = XmCreateCascadeButton (row, "dialogue", args, n);
+			  XtManageChild (w);
+			}
+		      else
+			{
+			  w = XmCreatePushButton (row, "dialogue", args, n);
+			  XtManageChild (w);
+			  XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) APP_ButtonCallback, (XtPointer) frame);
+			  FrameTable[frame].Call_Button[i] = (Proc) procedure;
+			}
 		    }
-		}
-	      FrameTable[frame].Button[i] = w;
-	      FrameTable[frame].EnabledButton[i] = state;
-	      index = i;
-	      /* force la mise a jour de la fenetre */
-	      XtManageChild (row);
-#else  /* _WINDOWS */
-	      index = i + 1;
-	      if (procedure) {
-		w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
-		if (!w)
-		  WinErrorBox (NULL);
-		else {
-		  w->iBitmap      = picture;
-		  w->idCommand    = TBBUTTONS_BASE + i; 
-		  w->fsState      = TBSTATE_ENABLED;
-		  w->fsStyle      = type;
-		  w->bReserved[0] = 0;
-		  w->bReserved[1] = 0;
-		  w->dwData       = 0;
-		  w->iString      = -1;
-		  CommandToString[frame][tipIndex++] = TBBUTTONS_BASE + i;
-		  CommandToString[frame][tipIndex]   = -1;
-		  nCust [frame][i] = i;
 		  FrameTable[frame].Button[i] = w;
-		  FrameTable[frame].Call_Button[i] = (Proc) procedure;
+		  FrameTable[frame].EnabledButton[i] = state;
+		  index = i;
+		  /* force la mise a jour de la fenetre */
+		  XtManageChild (row);
+#else  /* _WINDOWS */
+		  index = i + 1;
+		  if (procedure) {
+		    w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
+		    if (!w)
+		      WinErrorBox (NULL);
+		    else {
+		      w->iBitmap      = picture;
+		      w->idCommand    = TBBUTTONS_BASE + i; 
+		      w->fsState      = TBSTATE_ENABLED;
+		      w->fsStyle      = type;
+		      w->bReserved[0] = 0;
+		      w->bReserved[1] = 0;
+		      w->dwData       = 0;
+		      w->iString      = -1;
+		      CommandToString[frame][tipIndex++] = TBBUTTONS_BASE + i;
+		      CommandToString[frame][tipIndex]   = -1;
+		      nCust [frame][i] = i;
+		      FrameTable[frame].Button[i] = w;
+		      FrameTable[frame].Call_Button[i] = (Proc) procedure;
+		      
+		      ToolBar_InsertButton (WinToolBar[frame], i, w);
+		      SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (state, 0));
+		    }
+		  } else {
+		    w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
+		    w->iBitmap   = 0;
+		    w->idCommand = 0; 
+		    w->fsState   = TBSTATE_ENABLED;
+		    w->fsStyle   = (BYTE)type;
+		    w->dwData    = 0;
+		    w->iString   = 0;
+		    FrameTable[frame].Button[i] = w;
+		    FrameTable[frame].Call_Button[i] = (Proc) procedure;
+		    ToolBar_InsertButton (WinToolBar[frame], i, w);
+		  }
 		  
-		  ToolBar_InsertButton (WinToolBar[frame], i, w);
-		  SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (state, 0));
-		}
-	      } else {
-		w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
-		w->iBitmap   = 0;
-		w->idCommand = 0; 
-		w->fsState   = TBSTATE_ENABLED;
-		w->fsStyle   = (BYTE)type;
-		w->dwData    = 0;
-		w->iString   = 0;
-		FrameTable[frame].Button[i] = w;
-		FrameTable[frame].Call_Button[i] = (Proc) procedure;
-		ToolBar_InsertButton (WinToolBar[frame], i, w);
-	      }
 #endif /* _WINDOWS */
-	      if (info != NULL) {
+		  if (info != NULL) {
 #ifdef _WINDOWS
-		if (!tbStringsInitialized) {                   
-		  ustrcat (&szTbStrings [strIndex], info);
-		  strIndex += (ustrlen (info) + 1);
-		}
+		    if (!tbStringsInitialized) {                   
+		      ustrcat (&szTbStrings [strIndex], info);
+		      strIndex += (ustrlen (info) + 1);
+		    }
 #else  /* !_WINDOWS */
-		XcgLiteClueAddWidget(liteClue, w,  info, ustrlen(info), 0);
+		    XcgLiteClueAddWidget(liteClue, w,  info, ustrlen(info), 0);
 #endif /* _WINDOWS */
-	      }
+		  }
+		}
 	    }
 	}
     }
@@ -4144,13 +4150,14 @@ STRING              data;
 	       case NumZoneTextSearch:
 	       case NumZoneTextReplace:
 	       case NumSelTypeToSearch:
+	   
 	       case NumSelAttributeToSearch:
 		  /* zone de saisie du texte de remplacement */
 		  (*ThotLocalActions[T_searchtext]) (ref, 0, data);
 		  break;
 	       case NumMenuOrSearchText:
 		  (*ThotLocalActions[T_locatesearch]) (ref, (int) data);
-		  break;
+		  break;  
 
 	       default:
 		  if (ref >= NumMenuAttrName && ref <= NumMenuAttrName + MAX_ITEM)

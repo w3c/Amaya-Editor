@@ -2438,6 +2438,24 @@ View view;
 #endif /* AMAYA_JAVA */
 }
 
+/*----------------------------------------------------------------------
+  ConfigTemplates
+  A frontend to the Templates configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ConfigTemplates (Document doc, View view)
+#else 
+void ConfigTemplates (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+#else 
+   TemplatesConfMenu (doc, view);
+#endif /* AMAYA_JAVA */
+}
+
 
 
 /*----------------------------------------------------------------------

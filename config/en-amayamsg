@@ -179,4 +179,7 @@
 178 Home
 179 List of preferred languages like "en, fr":
 180 Location of profiles definition file 
-181 Current profile 
+181 These changes won't be effective until Amaya is retarted
+182 The file above is unreachable or contains no profile data
+183 Enter the URL of the script called for templates feature
+184 This URL looks like "http://cgi.w3.org/cgi-bin/createform.pl"

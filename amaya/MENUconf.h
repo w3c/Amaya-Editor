@@ -65,8 +65,15 @@
 
 #define ProfileMenu           1
 #define mProfiles_File        2
-#define mProfile              3
-#define MAX_PROFILEMENU_DLG   4
+#define mProfileEmpty1        3
+#define mProfileEmpty2        4
+#define mRadioProfile         5
+#define MAX_PROFILEMENU_DLG   6
+
+#define TemplatesMenu           1
+#define mTemplates              2
+#define mTemplatesEmpty1        3
+#define MAX_TEMPLATESMENU_DLG   4
 
 #endif /* _MENUCONF.h */
 

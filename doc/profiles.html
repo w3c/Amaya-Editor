@@ -2,106 +2,253 @@
                       "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
+  <meta name="RCS-Id" content="$Id: NOTE-SYMM-modules-19990223.html,v 1.2     
+         1999/02/23 19:58:44 renaudb Exp $">
+  <meta content="text/xhtml; charset=iso-8859-1" http-equiv="Content-Type">
   <title>Profiles in Amaya</title>
-  <meta name="GENERATOR" content="amaya V2.1a">
+  <link href="http://cgi.w3.org/templates/black.css" rel="stylesheet"
+  type="text/css">
 </head>
 
-<body style="text-align: left;">
-<p style="text-align: center"><span style="font-size: 24pt"><strong>Profiles
-in Amaya</strong></span></p>
+<body>
 
-<p style="text-align: left"></p>
+<div class="head">
+<a href="http://www.w3.org/"><img height="48" width="72"
+src="http://www.w3.org/w3c_home.gif" alt="W3C">
+</a>
+
+<h1>Profiles in Amaya<br>
+</h1>
+
+<h2></h2>
+
+<table>
+  <tbody>
+    <tr valign="baseline">
+      <td>This document:</td>
+      <td>Amaya/doc/profiles.html</td>
+    </tr>
+    <tr valign="baseline">
+      <td>Date:</td>
+      <td>12/08/1999</td>
+    </tr>
+    <tr valign="baseline">
+      <td>Editors:</td>
+      <td><span class="author"><span class="name">Luc Bonameau</span>
+        <i>(Luc.Bonameau@inrialpes.fr)</i></span><br>
+        <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="copyright"><a
+href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a>
+&copy; 1999 <a href="http://www.w3.org/">W3C</a> (<a
+href="http://www.lcs.mit.edu/">MIT</a>, <a
+href="http://www.inria.fr/">INRIA</a>, <a
+href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. W3C <a
+href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>,
+<a
+href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a>,
+<a href="http://www.w3.org/Consortium/Legal/copyright-documents">document
+use</a> and <a
+href="http://www.w3.org/Consortium/Legal/copyright-software">software
+licensing</a> rules apply.</p>
+</div>
+
+<p></p>
+<hr title="Separator from Header">
+
+
+<h2>Table of Contents</h2>
+<dl>
+    <dd><a href="#Abstract"></a></dd>
+    <dd><a href="#Introduction">1. Introduction</a></dd>
+    <dd><a href="#ModuleIntegration">2. How to use it</a></dd>
+    <dd><a href="#Profiles">3. An exemple of profile configuration
+    file</a></dd>
+    <dd><a href="#Issues">4. Structure of the ProfileDefs file</a></dd>
+    <dd><a href="#refs"></a></dd>
+</dl>
 
 <p></p>
 
-<p style="text-align: left"><span style="font-size: 14pt"><strong>How to use
-it :</strong></span></p>
+<h2><a name="Introduction">1. Introduction</a></h2>
 
-<p>The definition file thot.rc contains two new fields :</p>
+<p></p>
+
+<p>The profile feature allows the user to change the Amaya interface.</p>
+
+<p>The user can select the functions he wishes to have in the menus ane
+toolbar buttons and build his own profile.</p>
+
+<p></p>
+
+<h2><a name="ModuleIntegration">2. How to use it</a></h2>
+
+<p></p>
+
+<h3>2.1. Cr&eacute;ation of a profile</h3>
+
+<p></p>
 <ul>
-  <li>Profiles_File :
-    <p>This field contains the location of the file which defines the
-    available profiles.</p>
-    <p>e.g : <em>Profiles_File=/home/bonameau/.amaya/Profiles.</em></p>
-    <p>You have to create this file and fill it in before using profiles.</p>
-    <p>This file looks like this :</p>
-    <p></p>
-    <p><em><span style="color: #0071FF">[EditorNovice] </span>              /*
-    Profile's name */</em></p>
-    <p><em>OpenDoc                                         /* List of
-    functions added in the profile */</em></p>
-    <p><em>OpenDocInNewWindow</em></p>
-    <p><em>New</em></p>
-    <p><em>NewTemplate</em></p>
-    <p><em>NewCss</em></p>
-    <p><em>SaveDocument</em></p>
-    <p><em>SaveDocumentAs</em></p>
-    <p>MenuAttribute</p>
-    <p>ConfigProfile</p>
-    <p><em>.....</em></p>
-    <p><em><span style="color: #0071FF">[EditorMaster]               <span
-    style="color: #000000">/* Profile's name */</span></span></em></p>
-    <p><em><span style="color: #000000">OpenDoc /* List of functions added in
-    the profile */</span></em></p>
-    <p><em>....</em></p>
-    <p><em>New</em></p>
-    <p><em>NewTemplate</em></p>
-    <p><em>NewCss</em></p>
-    <p><em>....</em></p>
-    <p>MenuAttribute</p>
-    <p>.....</p>
-    <p>ConfigProfile</p>
-    <p>...</p>
-    <p><em><span style="color: #0071FF">[Browser]                      <span
-    style="color: #000000">/* Profile's name */</span></span></em></p>
-    <p><em>OpenDoc                                  /* List of functions added
-    in the profile */</em></p>
-    <p><em>OpenDocInNewWindow</em></p>
-    <p><em>Reload</em></p>
-    <p><em>GotoPreviousHTML</em></p>
-    <p><em>GotoNextHTML</em></p>
-    <p><em>SetupAndPrint</em></p>
-    <p><em>PrintAs</em></p>
-    <p><em>TtcCloseDocument</em></p>
-    <p><em>AmayaClose</em></p>
-    <p><em>TtcCloseView</em></p>
-    <p><em>....</em></p>
-    <p><em>HelpBrowsing</em></p>
-    <p><span style="color: #0071FF">[...........]</span></p>
-    <p>.....</p>
-  </li>
+  <li>Create a file (named as you wish) in your personal Amaya configuration
+    directory (~/.amaya under UNIX) and get it ready for edition**.</li>
+  <li>Open the file Amaya/config/ProfileDefs. This file defines all the
+    functions available in Amaya. These functions are spread into modules
+    (look at the <a href="#Issues">file structure below</a>). This file is
+    usefull to know which modules and functions are available.</li>
+  <li>Give the profile you're working on a title : Type this title between
+    brackets.</li>
+  <li>Under that title, you can add as much modules or functions as you wish
+    (look at <a href="#Profiles">An exemple of profile configuration
+    file</a>). <a href="#Profiles"></a></li>
+  <li>You can add as much profiles as you want in the same profile file but
+    remenber you'll be only proposed the 6 first profiles in the Amaya profile
+    selection..</li>
 </ul>
 
 <p></p>
+
+<p>Note : **All these operations can be done with Amaya. You can open, edit
+and save your profile configuration even if the extension of the file isn't
+html.</p>
+
+<p></p>
+
+<h3>2.2. Profile s&eacute;lection</h3>
+
+<p></p>
+
+<p>A dialog box  has been added in Amaya in order to handle profile
+selection.</p>
 <ul>
-  <li>Profile :
-    <p>This field contains the current profile to use.</p>
-    <p>e.g :  <em>Profile=</em><span style="color:    
-    #0071FF"><em>[Browser]</em></span></p>
+  <li>Open this dialog box.
+    <p>Special -> Preferences -> Profile...</p>
   </li>
+  <li>Fill in the field "Location of profiles definition file" with the path
+    of the created profile file. This choice allows you to have severals
+    profile definition file.</li>
+  <li>Restart Amaya</li>
+  <li>Reopen the profile dialog box</li>
+  <li>If everything' ok, you are proposed one or several profile**. Check the
+    radio box matching the profile you want to use and click the Apply
+  button.</li>
+  <li>Restart Amaya for the changes to take effect.</li>
 </ul>
 
-<p></p>
+<p>Note : ** The profiles choice is limited to 6 profiles. So, if you defined
+10 profiles in the same file, don't be surprised if only the six first
+profiles are proposed. </p>
 
-<p>Use the Profile entry from the config menu to set these fields.</p>
-
-<p>After having done these modifications, just restart Amaya with the new
-profile.</p>
-
-<p>Obviously, if theses fields are empty, Amaya will start with the full
-interface.</p>
+<h2><a name="Profiles">3. An exemple of profile configuration file</a></h2>
 
 <p></p>
 
+<p>This exemple shows two profiles definitions (Amaya4Kids and Editor_Novice
+between brackets).</p>
+
+<p>All strings preceded by a # are modules (defined in ProfileDefs) and others
+are functions. Modules are units of functions.</p>
+
 <p></p>
 
-<p>Notice : The definition profile will later use a list of modules instead of
-a list of functions.</p>
+<p>[Amaya4Kids]</p>
+
+<p>#editbase</p>
+
+<p>#browse</p>
+
+<p>#templates</p>
+
+<p>CreateHeading1</p>
+
+<p>CreateList</p>
+
+<p>CreateImage</p>
 
 <p></p>
 
-<p>--</p>
+<p>[Editor_Novice]</p>
 
-<p>Luc Bonameau</p>
+<p>#editbase</p>
+
+<p>#basicelements</p>
+
+<p>#links</p>
+
+<p>#templates</p>
+
+<p>#views</p>
+
+<p></p>
+
+<h2><a name="Issues">4.  Structure of the ProfileDefs file</a></h2>
+
+<p></p>
+
+<p>The ProfileDefs file contain units of modules definition separated by
+comments lines beginning with several # (like ####VIEWS). These comments are
+there to help you seraching your module (or function).</p>
+
+<p>Beginnig of module definition is represented by a the name of module
+between btackets (like [views] or [zoom])</p>
+
+<p>All the modules or functions under this starting module element belong to
+the module as long as another starting module element starts.</p>
+
+<p></p>
+
+<p>######### VIEWS</p>
+
+<p>[views]</p>
+
+<p>#zoom</p>
+
+<p>#docviews</p>
+
+<p>TtcSwitchButtonBar</p>
+
+<p>TtcSwitchCommands</p>
+
+<p>ShowMapAreas</p>
+
+<p>ShowTargets</p>
+
+<p>wmwShowToC</p>
+
+<p>HelpViews</p>
+
+<p>TtcCloseView</p>
+
+<p></p>
+
+<p>[docviews]</p>
+
+<p>ShowStructure</p>
+
+<p>ShowAlternate</p>
+
+<p>ShowLinks</p>
+
+<p></p>
+
+<p>[zoom]</p>
+
+<p>ZoomIn</p>
+
+<p>ZoomOut</p>
+
+<p></p>
+<hr>
+
+<dl>
+  <dt></dt>
+  <dt></dt>
+  <dt><img src="http://www.w3.org/Amaya/Icons/w3c-amaya.gif" alt="W3C-Amaya"
+  align="middle">
+  </dt>
+</dl>
 </body>
 </html>

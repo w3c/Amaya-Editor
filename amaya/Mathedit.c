@@ -968,7 +968,7 @@ View                view;
 #endif
 {
 #ifdef MATHML
-  MathButton = TtaAddButton (doc, 1, iconMath, CreateMathMenu,
+  MathButton = TtaAddButton (doc, 1, iconMath, CreateMathMenu, "CreateMathMenu",
 			     TtaGetMessage (AMAYA, AM_BUTTON_MATH),
 			     TBSTYLE_BUTTON, TRUE);
 #endif /* MATHML */

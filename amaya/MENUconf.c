@@ -25,7 +25,7 @@
  * - a function to download the default values of the environment variables
  *   (GetDefaulNetworkConf)
  *
- * In addition, each menu should be initialized in the InitConfMenu
+ * In addition, each menu should be initialized in the Ini7tConfMenu
  * function.
  *
  * Authors: J. Kahan
@@ -36,6 +36,7 @@
 
 /* Included headerfiles */
 #define THOT_EXPORT extern
+
 #include "amaya.h"
 #include "MENUconf.h"
 #include "print.h"
@@ -48,6 +49,9 @@
 #ifdef _WINDOWS
 #include "resource.h"
 #include "wininclude.h"
+
+
+
 extern HINSTANCE hInstance;
 #endif /* _WINDOWS */
 
@@ -141,7 +145,12 @@ static CHAR_T Profile [MAX_LENGTH+1];
 static CHAR_T Profiles_File [MAX_LENGTH+1];
 
 
-
+/* Templates menu option */
+#ifdef _WINDOWS
+static HWND TemplatesHwnd = NULL;
+#endif /* _WINDOWS */
+static int TemplatesBase;
+static CHAR_T Templates [MAX_LENGTH+1];
 
 
 /* 
@@ -165,6 +174,8 @@ LRESULT CALLBACK WIN_LanNegDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshLanNegMenu (HWND hwnDlg);
 LRESULT CALLBACK WIN_ProfileDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshProfileMenu (HWND hwnDlg);
+LRESULT CALLBACK WIN_TemplatesDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshTemplatesMenu (HWND hwnDlg);
 #else
 LRESULT CALLBACK WIN_GeneralDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshGeneralMenu (/* HWND hwnDlg */);
@@ -181,6 +192,9 @@ LRESULT CALLBACK WIN_LanNegDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshLanNegMenu (/* HWND hwnDlg */);
 LRESULT CALLBACK WIN_ProfileDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshProfileMenu (/* HWND hwnDlg */);
+LRESULT CALLBACK WIN_TemplatesDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshTemplatesMenu (/* HWND hwnDlg */);
+
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
 
@@ -231,7 +245,6 @@ static void         GeometryCallbackDialog(int ref, int typedata, STRING data);
 #endif /* !_WINDOWS */
 static void         RestoreDefaultGeometryConf (void);
 static void         SetGeometryConf (void);
-
 #ifndef _WINDOWS
 static void         LanNegCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshLanNegMenu (void);
@@ -239,8 +252,6 @@ static void         RefreshLanNegMenu (void);
 static void         GetLanNegConf (void);
 static void         GetDefaultLanNegConf (void);
 static void         SetLanNegConf (void);
-
-/*profile*/
 #ifndef _WINDOWS
 static void         ProfileCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshProfileMenu (void);
@@ -248,6 +259,13 @@ static void         RefreshProfileMenu (void);
 static void         GetProfileConf (void);
 static void         GetDefaultProfileConf (void);
 static void         SetProfileConf (void);
+#ifndef _WINDOWS
+static void         TemplatesCallbackDialog(int ref, int typedata, STRING data);
+static void         RefreshTemplatesMenu (void);
+#endif /* !_WINDOWS */
+static void         GetTemplatesConf (void);
+static void         GetDefaultTemplatesConf (void);
+static void         SetTemplatesConf (void);
 
 #else /* __STDC__ */
 static void         GetEnvString (/* const STRING name, STRING value */);
@@ -310,7 +328,15 @@ static void         RefreshProfileMenu (/* void */);
 static void         GetProfileConf (/* void */);
 static void         GetDefaultProfileConf (/* void */);
 static void         SetProfileConf (/* void */);
+#ifndef _WINDOWS
+static void         LanNegCallbackDialog(/* int ref, int typedata, STRING data */);
+#endif /* !_WINDOWS */
+static void         RefreshTemplatesMenu (/* void */);
+static void         GetTemplatesConf (/* void */);
+static void         GetDefaultTemplatesConf (/* void */);
+static void         SetTemplatesConf (/* void */);
 #endif
+
 
 /*
 ** Common functions
@@ -408,6 +434,8 @@ void                InitConfMenu ()
 			       MAX_LANNEGMENU_DLG);
   ProfileBase = TtaSetCallback (ProfileCallbackDialog,
 			       MAX_PROFILEMENU_DLG);
+  TemplatesBase = TtaSetCallback (TemplatesCallbackDialog,
+			       MAX_LANNEGMENU_DLG);
 #endif /* !_WINDOWS */
 }
 
@@ -736,19 +764,13 @@ LPARAM lParam;
 	case ID_APPLY:
 	  ValidateCacheConf ();
 	  SetCacheConf ();
-#ifdef AMAYA_JAVA
-#else      
 	  libwww_updateNetworkConf (CacheStatus);
-#endif
 	  CacheStatus = 0;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_FLUSHCACHE:
 	  StopAllRequests (1);
-#ifdef AMAYA_JAVA
-#else      
 	  libwww_CleanCache ();
-#endif
 	  break;
 	case ID_DONE:
 	  CacheHwnd = NULL;
@@ -1217,10 +1239,7 @@ LPARAM lParam;
 	  /* action buttons */
 	case ID_APPLY:
 	  SetProxyConf ();	  
-#ifdef AMAYA_JAVA
-#else      
 	  libwww_updateNetworkConf (ProxyStatus);
-#endif
 	  /* reset the status flag */
 	  ProxyStatus = 0;
 	  EndDialog (hwnDlg, ID_DONE);
@@ -1770,10 +1789,7 @@ static void ValidateGeneralConf ()
 	{
 	  usprintf (s, TEXT("%s%clibwww-cache"), AppTmpDir, DIR_SEP);		  
 	  TtaSetEnvString (TEXT("CACHE_DIR"), s, TRUE);
-#ifdef AMAYA_JAVA
-#else      
 	  libwww_updateNetworkConf (AMAYA_CACHE_RESTART);
-#endif
 	}
     }
   
@@ -2573,8 +2589,10 @@ STRING              pathname;
 		   20,
 		   1,
 		   FALSE);
-  TtaNewLabel (ColorBase + mColorEmpty1, ColorBase + ColorMenu,
-	       TtaGetMessage (AMAYA, AM_GEOMETRY_CHANGE));     
+
+   TtaNewLabel (ColorBase + mColorEmpty1, ColorBase + ColorMenu,
+		TtaGetMessage (AMAYA, AM_GEOMETRY_CHANGE));
+     
 #endif /* !_WINDOWS */
  
    /* load and display the current values */
@@ -3268,11 +3286,11 @@ static void SetLanNegConf ()
   TtaSaveAppRegistry ();
 
   /* change the current settings */
-#ifdef AMAYA_JAVA
-#else      
   libwww_updateNetworkConf (AMAYA_LANNEG_RESTART);
-#endif
 }
+
+
+
 
 
 /**********************
@@ -3295,50 +3313,12 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-  switch (msg)
-    {
-    case WM_INITDIALOG:
-      ProfileHwnd = hwnDlg;
-      WIN_RefreshProfileMenu (hwnDlg);
-      break;
-
-    case WM_CLOSE:
-    case WM_DESTROY:
-      /* reset the status flag */
-      ProfileHwnd = NULL;
-      EndDialog (hwnDlg, ID_DONE);
-      break;
-
-    case WM_COMMAND:
-      switch (LOWORD (wParam))
-	{
-	case IDC_LANNEG:
-	  GetDlgItemText (hwnDlg, IDC_LANNEG, Profile,
-			  sizeof (Profile) - 1);
-	  break;
-	  /* action buttons */
-	case ID_APPLY:
-	  SetProfileConf ();	  
-	  /* reset the status flag */
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-	case ID_DONE:
-	  /* reset the status flag */
-	  ProfileHwnd = NULL;
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-	case ID_DEFAULTS:
-	  /* always signal this as modified */
-	  GetDefaultProfileConf ();
-	  WIN_RefreshProfileMenu (hwnDlg);
-	  break;
-	}
-      break;	     
-    default: return FALSE;
-    }
-  return TRUE;
+ 
 }
 #endif /* _WINDOWS */
+
+
+
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
@@ -3355,6 +3335,7 @@ STRING              data;
 #endif
 {
   int val;
+  STRING pro;
 
   if (ref == -1)
     {
@@ -3386,9 +3367,15 @@ STRING              data;
 	    }
 	  break;
 
-	case mProfile:
-	  if (data)
-	    ustrcpy (Profile, data);
+	case mRadioProfile:
+	  
+	  /* Get the desired profile from the item number */
+	  pro = Prof_ItemNumber2Profile(val);
+	  /* ustrcpy (pro, Prof_ItemNumber2Profile (val));  ????*/
+	  if (pro)
+	    {
+	      ustrcpy (Profile, pro);
+	    }
 	  else
 	    Profile [0] = EOS;
 	  break;
@@ -3408,23 +3395,28 @@ STRING              data;
 #endif /* !_WINDOWS */
 
 
+
 /*----------------------------------------------------------------------
   ProfileConfMenu
   Build and display the Conf Menu dialog box and prepare for input.
   ----------------------------------------------------------------------*/
+
 #ifdef __STDC__
 void         ProfileConfMenu (Document document, View view)
-#else
+#else   /* __STDC__ */
 void         ProfileConfMenu (document, view)
 Document            document;
 View                view;
 STRING              pathname;
-
-#endif
+#endif   /* __STDC__ */
 {
-#ifndef _WINDOWS
-   int              i;
 
+#ifndef _WINDOWS
+
+   int              i;   
+   CHAR_T                string[200];
+   int                   nbprofiles = 0;
+  
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
@@ -3433,18 +3425,35 @@ STRING              pathname;
 
    TtaNewSheet (ProfileBase + ProfileMenu, TtaGetViewFrame (document, view),
 		TtaGetMessage (1, BConfigProfile), 2, s, TRUE, 1, 'L', D_DONE);
-   /* first line */
+
+   /* Text Form : Location of the profiles configuration file */
    TtaNewTextForm (ProfileBase + mProfiles_File, ProfileBase + ProfileMenu,
 		   TtaGetMessage (AMAYA, AM_PROFILES_FILE),
-		   20, 1, FALSE);
+		   40, 1, FALSE);
 
-/* -----------*/
-   TtaNewTextForm (ProfileBase + mProfile, ProfileBase + ProfileMenu,
-		   TtaGetMessage (AMAYA, AM_PROFILE),
-		   20, 1, FALSE);
+  
+   /* submenu for profile choice with radio boxes */
 
-/**-------------*/
+       /* get the entries of the menu */
+   nbprofiles = Prof_WhichProfiles(string);
 
+   if (nbprofiles)
+     {
+       TtaNewSubmenu (ProfileBase + mRadioProfile, ProfileBase + ProfileMenu, 0,
+		      TtaGetMessage (LIB, TMSG_PROFILE), nbprofiles, string, NULL, FALSE);
+       TtaSetMenuForm (ProfileBase + mRadioProfile, 0);
+     }
+   else 
+     {
+       /* if no profile, info message */
+       TtaNewLabel (ProfileBase + mProfileEmpty1, ProfileBase + ProfileMenu, TtaGetMessage (AMAYA, AM_NO_PROFILE));
+     }
+ 
+
+   /* message "changes will take effect after Amaya restarts" */
+   TtaNewLabel (ProfileBase + mProfileEmpty2, ProfileBase + ProfileMenu,
+		TtaGetMessage (AMAYA, AM_PROFILE_CHANGE));     
+   
 #endif /* !_WINDOWS */
  
    /* load and display the current values */
@@ -3458,6 +3467,7 @@ STRING              pathname;
    if (!ProfileHwnd)
     /* only activate the menu if it isn't active already */
     {
+/*
       switch (app_lang)
 	{
 	case FR_LANG:
@@ -3472,6 +3482,7 @@ STRING              pathname;
 	  DialogBox (hInstance, MAKEINTRESOURCE (EN_LANNEGMENU), NULL, 
 		     (DLGPROC) WIN_ProfileDlgProc);
 	}
+*/
     }
    else
      SetFocus (ProfileHwnd);
@@ -3492,7 +3503,7 @@ void WIN_RefreshProfileMenu (hwnDlg)
 HWND hwnDlg;
 #endif /* __STDC__ */
 {
-  SetDlgItemText (hwnDlg, IDC_LANNEG, Profile);
+ /* SetDlgItemText (hwnDlg, IDC_LANNEG, Profile); */
 }
 #endif /* WINDOWS */
 
@@ -3507,8 +3518,9 @@ static void RefreshProfileMenu ()
 static void RefreshProfileMenu ()
 #endif /* __STDC__ */
 {
-  TtaSetTextForm (ProfileBase + mProfile, Profile);
+ 
   TtaSetTextForm (ProfileBase + mProfiles_File, Profiles_File);
+  TtaSetMenuForm (ProfileBase + mRadioProfile, Prof_Profile2ItemNumber(Profile));
 }
 #endif /* !_WINDOWS */
 
@@ -3557,8 +3569,239 @@ static void SetProfileConf ()
   TtaSaveAppRegistry ();
 
   /* change the current settings */
-#ifdef AMAYA_JAVA
-#else      
-  libwww_updateNetworkConf (AMAYA_LANNEG_RESTART);
+ /* libwww_updateNetworkConf (AMAYA_LANNEG_RESTART); */
+}
+
+
+
+
+
+
+
+/**********************
+** Templates Menu
+**********************/
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_TemplatesDlgProc
+  Windows callback for the Templates menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK WIN_TemplatesDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
+				     LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK WIN_TemplatesDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+ 
+}
+#endif /* _WINDOWS */
+
+#ifndef _WINDOWS
+/*----------------------------------------------------------------------
+   callback of the Templates configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         TemplatesCallbackDialog (int ref, int typedata, STRING data)
+#else
+static void         TemplatesCallbackDialog (ref, typedata, data)
+int                 ref;
+int                 typedata;
+STRING              data;
+
 #endif
+{
+  int val;
+
+  if (ref == -1)
+    {
+      /* removes the Templates conf menu */
+      TtaDestroyDialogue (TemplatesBase + TemplatesMenu);
+    }
+  else
+    {
+      /* has the user changed the options? */
+      val = (int) data;
+      switch (ref - TemplatesBase)
+	{
+	case TemplatesMenu:
+	  switch (val) 
+	    {
+	    case 0:
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 1:
+	      SetTemplatesConf ();
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 2:
+	      GetDefaultTemplatesConf ();
+	      RefreshTemplatesMenu ();
+	      break;
+	    default:
+	      break;
+	    }
+	  break;
+
+	case mTemplates:
+	  if (data)
+	    ustrcpy (Templates, data);
+	  else
+	    Templates [0] = EOS;
+	  break;
+	  
+	default:
+	  break;
+	}
+    }
+}
+#endif /* !_WINDOWS */
+
+
+/*----------------------------------------------------------------------
+  TemplatesConfMenu
+  Build and display the Conf Menu dialog box and prepare for input.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         TemplatesConfMenu (Document document, View view)
+#else
+void         TemplatesConfMenu (document, view)
+Document            document;
+View                view;
+STRING              pathname;
+
+#endif
+{
+#ifndef _WINDOWS
+   int              i;
+
+   /* Create the dialogue form */
+   i = 0;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
+   i += ustrlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
+
+   TtaNewSheet (TemplatesBase + TemplatesMenu, TtaGetViewFrame (document, view),
+		TtaGetMessage (1, BConfigTemplates), 2, s, TRUE, 1, 'L', D_DONE);
+   
+   TtaNewTextForm (TemplatesBase + mTemplates, TemplatesBase + TemplatesMenu,
+		   TtaGetMessage (AMAYA, AM_TEMPLATES),
+		   20, 1, FALSE);
+
+   TtaNewLabel (TemplatesBase + mTemplatesEmpty1, TemplatesBase+ TemplatesMenu,
+	       TtaGetMessage (AMAYA, AM_TEMPLATES_INFO));
+  
+#endif   /* !_WINDOWS */
+ 
+   /* load and display the current values */
+   GetTemplatesConf ();
+#ifndef _WINDOWS
+   RefreshTemplatesMenu ();
+   /* display the menu */
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (TemplatesBase + TemplatesMenu, TRUE);
+#else 
+   if (!TemplatesHwnd)
+    /* only activate the menu if it isn't active already */
+    {
+/*
+      switch (app_lang)
+	{
+	case FR_LANG:
+	  DialogBox (hInstance, MAKEINTRESOURCE (FR_LANNEGMENU), NULL, 
+		     (DLGPROC) WIN_TemplatesDlgProc);
+	  break;
+	case DE_LANG:
+	  DialogBox (hInstance, MAKEINTRESOURCE (DE_LANNEGMENU), NULL, 
+		     (DLGPROC) WIN_TemplatesDlgProc);
+	  break;
+	default:
+	  DialogBox (hInstance, MAKEINTRESOURCE (EN_LANNEGMENU), NULL, 
+		     (DLGPROC) WIN_TemplatesDlgProc);
+	}
+*/
+    }
+   else
+     SetFocus (TemplatesHwnd);
+#endif /* !_WINDOWS */
+}
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_RefreshTemplatesMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_RefreshTemplatesMenu (HWND hwnDlg)
+#else
+void WIN_RefreshTemplatesMenu (hwnDlg)
+HWND hwnDlg;
+#endif /* __STDC__ */
+{
+ /* SetDlgItemText (hwnDlg, IDC_LANNEG, Templates);*/
+}
+#endif /* WINDOWS */
+
+#ifndef _WINDOWS
+/*----------------------------------------------------------------------
+  RefreshTemplatesMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RefreshTemplatesMenu ()
+#else
+static void RefreshTemplatesMenu ()
+#endif /* __STDC__ */
+{
+  TtaSetTextForm (TemplatesBase + mTemplates, Templates);
+}
+#endif /* !_WINDOWS */
+
+/*----------------------------------------------------------------------
+  GetTemplatesConf
+  Makes a copy of the current registry Templates values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void GetTemplatesConf (void)
+#else
+static void GetTemplatesConf ()
+#endif /* __STDC__ */
+{
+  GetEnvString (TEXT("URL_TEMPLATE"), Templates);
+}
+
+/*----------------------------------------------------------------------
+  GetDefaultTemplatesConf
+  Makes a copy of the default registry Templates values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void GetDefaultTemplatesConf (void)
+#else
+static void GetDefaultTemplatesConf ()
+#endif /* __STDC__ */
+{
+  GetDefEnvString (TEXT("URL_TEMPLATE"), Templates);
+}
+
+
+/*----------------------------------------------------------------------
+  SetTemplatesConf
+  Updates the registry Templates values
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SetTemplatesConf (void)
+#else
+static void SetTemplatesConf ()
+#endif /* __STDC__ */
+{
+  TtaSetEnvString (TEXT("ACCEPT_LANGUAGES"), Templates, TRUE);
+  TtaSaveAppRegistry ();
+
+  /* change the current settings */
+/*  libwww_updateNetworkConf (AMAYA_LANNEG_RESTART);*/
 }

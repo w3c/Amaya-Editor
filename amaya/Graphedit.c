@@ -1354,7 +1354,7 @@ View                view;
 #endif
 {
 #ifdef GRAPHML
-  GraphButton = TtaAddButton (doc, 1, iconGraph, ShowGraphicsPalette,
+  GraphButton = TtaAddButton (doc, 1, iconGraph, ShowGraphicsPalette, "ShowGraphicsPalette",
 			      TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS),
 			      TBSTYLE_BUTTON, TRUE);
 #endif /* GRAPHML */
