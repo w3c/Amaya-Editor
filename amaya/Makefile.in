@@ -230,6 +230,9 @@ AMAYA_OBJ = \
 	wxdialog/InitConfirmDlgWX.o \
 	wxdialogapi.o \
 	AmayaApp.o \
+	wxAmayaTimer.o \
+        wxAmayaSocketEvent.o \
+        wxAmayaSocketEventLoop.o \
 	EDITORAPP.o \
 	HTMLAPP.o \
 	TextFileAPP.o \

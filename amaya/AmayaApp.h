@@ -7,7 +7,7 @@
 #include "wx/app.h"
 #include "wx/strconv.h"
 
-//class AmayaFrame;
+class wxAmayaSocketEventLoop;
 
 class AmayaApp : public wxApp
 {
@@ -16,25 +16,20 @@ public:
   virtual bool 	OnInit();
   virtual int 	OnExit();
 
-  //virtual void OnInitCmdLine(wxCmdLineParser& parser);
-    // Public function used to create Amaya main frame from Amaya kernel (C functions)
-//    AmayaFrame * CreateAmayaFrame ( int frame, const char * frame_name, int x, int y, int w, int h );
+  void OnIdle( wxIdleEvent& event );
+
  public:
   static wxCSConv conv_ascii;
 
 protected:
+  DECLARE_EVENT_TABLE()
+
+  wxAmayaSocketEventLoop * m_SocketEventLoop;
+
   int		amaya_argc;
   char ** 	amaya_argv;
-
-
   void InitAmayaArgs();
   void ClearAmayaArgs();
-//    wxLocale _locale; // locale we'll be using
-
-    // function used to load/save workspace customisation
-//    void LoadWorkspaceParameters( AmayaFrame * pFrame );
-//    void SaveWorkspaceParameters( AmayaFrame * pFrame );
-
 };
 
 DECLARE_APP(AmayaApp)

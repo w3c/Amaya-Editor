@@ -9,14 +9,10 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 
-
 #include "AmayaApp.h"
 
-
-//#include "AmayaFrame.h"
-
-//#include "appdialogue.h"
-
+#include "wxAmayaSocketEventLoop.h"
+#include "wxAmayaSocketEvent.h"
 
 IMPLEMENT_APP(AmayaApp)
 
@@ -72,6 +68,11 @@ bool AmayaApp::OnInit()
   main( amaya_argc, amaya_argv );
 #endif /* #ifndef _GLPRINT */
 
+  /* setup the socket event loop */
+  /* when a socket is active, check every 100 ms if something happend on the socket */
+  m_SocketEventLoop = new wxAmayaSocketEventLoop( 100 );
+  wxAmayaSocketEvent::InitSocketEvent( m_SocketEventLoop );
+
   return true;
 }
 
@@ -84,6 +85,10 @@ bool AmayaApp::OnInit()
  */
 int AmayaApp::OnExit()
 {
+  m_SocketEventLoop->Stop();
+  delete m_SocketEventLoop;
+  m_SocketEventLoop = NULL;
+
   // free arguments
   ClearAmayaArgs();
 
@@ -134,69 +139,16 @@ void AmayaApp::ClearAmayaArgs()
   delete [] amaya_argv;
 }
 
-/*
-// Generique Frame creation
-// Wraping function between wxWindows and Amaya kernel
-AmayaFrame * AmayaApp::CreateAmayaFrame ( int frame, const char * frame_name, int x, int y, int w, int h )
+void AmayaApp::OnIdle( wxIdleEvent& event )
 {
-  AmayaFrame * pFrame = new AmayaFrame( (void *) frame,
-					(wxFrame *) NULL,
-					wxString( frame_name, wxConvUTF8 ),
-					wxPoint( x, y ),
-					wxSize( w, h ),
-					_locale );
-  if ( !pFrame ) return pFrame;
+  //  wxLogDebug( _T("AmayaApp::OnIdle") );
 
-  // Load the user customized workspace corresponding to user profil
-  LoadWorkspaceParameters( pFrame );
-
-  // Register the new frame into global table
-  FrameTable[frame].WdFrame = pFrame;
-  FrameTable[frame].pMenu = pFrame->GetMenuBar();
-  FrameTable[frame].pToolBar = pFrame->GetToolBar();
-  FrameTable[frame].pStatusBar = pFrame->GetStatusBar();
-
-
-  
-  pFrame->Show(TRUE);
-  SetTopWindow(pFrame);
+  event.Skip();
 }
 
-void AmayaApp::LoadWorkspaceParameters( AmayaFrame * pFrame )
-{
-  // TODO : il faut charger les valeurs a partir d'un fichier de config
+BEGIN_EVENT_TABLE(AmayaApp, wxApp)
+  EVT_IDLE( AmayaApp::OnIdle ) // Process a wxEVT_IDLE event  
+END_EVENT_TABLE()
 
-  // load full screen param
-  pFrame->m_IsFullScreenEnable = false;
-
-  // load tool tips param
-  pFrame->m_IsToolTipEnable = true;
-
-  // load history
-  pFrame->AppendURL ( _T("http://www.w3.org/Amaya/") );
-  pFrame->AppendURL ( _T("http://www.google.fr/") );
-  pFrame->AppendURL ( _T("http://www.yahoo.fr/") );
-  pFrame->AppendURL ( _T("http://www.tf1.fr/") );
-
-  // Send an event to toogle fullscreen if needed
-  {
-    pFrame->m_IsFullScreenEnable = !pFrame->m_IsFullScreenEnable;
-    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, AmayaFrame::MENU_VIEW_FULLSCREEN );
-    wxPostEvent( pFrame, event );
-  }
-
-  // Send an event to toogle tooltips if needed
-  {
-    pFrame->m_IsToolTipEnable = !pFrame->m_IsToolTipEnable;
-    wxCommandEvent event( wxEVT_COMMAND_MENU_SELECTED, AmayaFrame::MENU_VIEW_TOOLTIP );
-    wxPostEvent( pFrame, event );
-  }
-}
-
-void AmayaApp::SaveWorkspaceParameters( AmayaFrame * pFrame ) 
-{
-
-}
-*/
 
 #endif /* #ifdef _WX */

@@ -183,7 +183,7 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
   ThotBool         answer;
   char            *tmp_buf;
   AHTReqContext   *me = (AHTReqContext *)HTRequest_context (request);
-  AHTReqStatus     old_reqStatus;
+  AHTReqStatus     old_reqStatus = (AHTReqStatus)NULL;
 
     /* for the moment, we only take into account confirmation for
        authentication */
@@ -191,8 +191,11 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
     return TRUE;
 
   /* protection against having a stop kill this thread */
-  old_reqStatus = me->reqStatus;
-  me->reqStatus = HT_BUSY;
+  if (me)
+    {
+      old_reqStatus = me->reqStatus;
+      me->reqStatus = HT_BUSY;
+    }
 
   switch (msgnum)
     {
@@ -204,14 +207,14 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
       InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM));
       break;
     case HT_MSG_FILE_REPLACE:
-      tmp_buf = (char *)TtaGetMemory (strlen (me->urlName) + strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 10); /*a bit more than enough memory */
-      sprintf (tmp_buf, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), me->urlName);
+      tmp_buf = (char *)TtaGetMemory (strlen (me ? me->urlName : "") + strlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 10); /*a bit more than enough memory */
+      sprintf (tmp_buf, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), me ? me->urlName : "");
       InitConfirm (0, 0, tmp_buf);
       TtaFreeMemory (tmp_buf);
       break;
     case HT_MSG_RULES:
-      tmp_buf = (char *)TtaGetMemory (strlen (me->urlName) + strlen (TtaGetMessage (AMAYA, AM_ETAG_CHANGED)) + 10); /*a bit more than enough memory */
-      sprintf (tmp_buf, TtaGetMessage (AMAYA, AM_ETAG_CHANGED), me->urlName);
+      tmp_buf = (char *)TtaGetMemory (strlen (me ? me->urlName : "") + strlen (TtaGetMessage (AMAYA, AM_ETAG_CHANGED)) + 10); /*a bit more than enough memory */
+      sprintf (tmp_buf, TtaGetMessage (AMAYA, AM_ETAG_CHANGED), me ? me->urlName : "");
       InitConfirm (0, 0, tmp_buf);
       TtaFreeMemory (tmp_buf);
       break;
@@ -221,7 +224,7 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
 	  /* @@@@ IV */
 	  tmp_buf = (char *)TtaGetMemory (strlen (TtaGetMessage (AMAYA, AM_ERROR)) + 20);
 	  sprintf (tmp_buf, "%s %d", TtaGetMessage (AMAYA, AM_ERROR), msgnum);
-	  InitConfirm3L (0, 0, me->urlName, tmp_buf, NULL, FALSE);
+	  InitConfirm3L (0, 0, me ? me->urlName : (char *)"", tmp_buf, NULL, FALSE);
 	  TtaFreeMemory (tmp_buf);
 	}
       else
@@ -233,7 +236,7 @@ BOOL AHTConfirm (HTRequest * request, HTAlertOpcode op, int msgnum,
   else
     answer = FALSE;
 
-  if (me->reqStatus != HT_ABORT)
+  if (me && me->reqStatus != HT_ABORT)
     me->reqStatus = old_reqStatus;
 
   return (answer);
