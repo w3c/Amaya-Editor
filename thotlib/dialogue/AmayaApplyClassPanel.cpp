@@ -251,6 +251,7 @@ BEGIN_EVENT_TABLE(AmayaApplyClassPanel, AmayaSubPanel)
   EVT_BUTTON( XRCID("wxID_APPLY"), AmayaApplyClassPanel::OnApply )
   EVT_BUTTON( XRCID("wxID_REFRESH"), AmayaApplyClassPanel::OnRefresh )
   EVT_LISTBOX( XRCID("wxID_LIST_APPLYCLASS"), AmayaApplyClassPanel::OnSelected ) 
+  EVT_LISTBOX_DCLICK( XRCID("wxID_LIST_APPLYCLASS"), AmayaApplyClassPanel::OnApply )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */
