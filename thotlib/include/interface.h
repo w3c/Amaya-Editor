@@ -291,6 +291,13 @@ extern void TtaGiveSelectPosition (Document document, Element element, View view
    value : TRUE/FALSE
   ----------------------------------------------------------------------*/
 extern void TtaSetMultikey ( ThotBool value );
+/*----------------------------------------------------------------------
+   TtaSetMultiKey
+   Return the state of the multikey support
+   Parameters:
+   value :
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaGetMulitkey();
 #endif /* __CEXTRACT__ */
 
 #endif
