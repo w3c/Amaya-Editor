@@ -3895,7 +3895,6 @@ void                CallbackDialogue (int ref, int typedata, char *data)
 #endif /* XML_GEN */
 		   else
 		     NewDocType = docHTML;
-		   NewDocType = docHTML;
 		   InitializeNewDoc (tempfile, NewDocType, CurrentDocument);
 		 }
 	       TtaFreeMemory (tempfile);
