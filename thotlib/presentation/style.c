@@ -231,7 +231,7 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
   BuildBoxName : generate an unique name encoding for the given context.
   Assume the ancestor list has been sorted.
   ----------------------------------------------------------------------*/
-static void         BuildBoxName (GenericContext ctxt, Name *boxname)
+static void BuildBoxName (GenericContext ctxt, Name *boxname)
 {
   int               i;
   int               len;
@@ -260,7 +260,7 @@ static void         BuildBoxName (GenericContext ctxt, Name *boxname)
  BoxRuleSearch : look in the array of boxes for an entry
         corresponding to the current context.
   ----------------------------------------------------------------------*/
-static PtrPRule     BoxRuleSearch (PtrPSchema tsch, GenericContext ctxt)
+static PtrPRule BoxRuleSearch (PtrPSchema tsch, GenericContext ctxt)
 {
   int                 i;
   Name                boxname;
@@ -715,7 +715,7 @@ static void PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
 /*----------------------------------------------------------------------
   PresRuleAddAttrCond : add a Attr condition to a presentation rule.
   ----------------------------------------------------------------------*/
-static void PresRuleAddAttrCond (PtrPRule rule, int type, char* value)
+static void PresRuleAddAttrCond (PtrPRule rule, int type, int level, char* value)
 {
    PtrCondition        cond = NULL;
 
@@ -726,7 +726,10 @@ static void PresRuleAddAttrCond (PtrPRule rule, int type, char* value)
 	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
 	return;
      }
-   cond->CoCondition = PcInheritAttribute;
+   if (level == 0)
+     cond->CoCondition = PcAttribute;
+   else
+      cond->CoCondition = PcInheritAttribute;
    cond->CoNotNegative = TRUE;
    cond->CoTarget = FALSE;
    cond->CoTypeAttr = type;
@@ -1025,7 +1028,10 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
 	 {
 	   cond = firstCond;
 	   while (cond &&
-		  (cond->CoCondition != PcInheritAttribute ||
+		  ((cond->CoCondition != PcInheritAttribute &&
+		    ctxt->attrLevel[i] != 0) ||
+		   (cond->CoCondition != PcAttribute &&
+		    ctxt->attrLevel[i] == 0) ||
 		   cond->CoTypeAttr != ctxt->attrType[i] ||
 		   cond->CoTestAttrValue != (ctxt->attrText != NULL) ||
 		   (cond->CoTestAttrValue && strcmp (cond->CoAttrTextValue,
@@ -1179,7 +1185,8 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 		PresRuleAddAncestorCond (pRule, ctxt->name[i], ctxt->names_nb[i]);
 	      if (ctxt->attrType[i]  && i != att)
 		/* it's another attribute */
-		PresRuleAddAttrCond (pRule, ctxt->attrType[i], ctxt->attrText[i]);
+		PresRuleAddAttrCond (pRule, ctxt->attrType[i], ctxt->attrLevel[i],
+				     ctxt->attrText[i]);
 	      i++;
 	    }
 

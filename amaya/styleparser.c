@@ -3975,6 +3975,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       ctxt->name[i] = 0;
       ctxt->names_nb[i] = 0;
       ctxt->attrType[i] = 0;
+      ctxt->attrLevel[i] = 0;
       ctxt->attrText[i] = NULL;
     }
   ctxt->box = 0;
@@ -4012,142 +4013,143 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 
       /* now names[0] points to the beginning of the parsed item
 	 and cur to the next chain to be parsed */
-      if (*selector == ':' || *selector == '.' ||
-	  *selector == '#' || *selector == '[')
+      while (*selector == '.' || *selector == ':' ||
+	     *selector == '#' || *selector == '[')
+      {
 	/* point to the following word in sel[] */
 	deb = cur;
-
-      if (*selector == '.')
-	{
-	  selector++;
-	  while (*selector != EOS && *selector != ',' &&
-		 *selector != '.' && *selector != ':' &&
-		 !TtaIsBlank (selector))
-	    *cur++ = *selector++;
-	  /* close the word */
-	  *cur++ = EOS;
-	  /* point to the class in sel[] if it's valid name */
-	  if (deb[0] <= 64)
-	    {
-	      CSSParseError ("Invalid class", deb);
-	      DoApply = FALSE;
-	    }
-	  else
-	    {
-	      classes[0] = deb;
-	      specificity += 10;
-	    }
-	}
-      else if (*selector == ':')
-	{
-	  selector++;
-	  while (*selector != EOS && *selector != ',' &&
-             *selector != '.' && *selector != ':' &&
-             !TtaIsBlank (selector))
-            *cur++ = *selector++;
-	  /* close the word */
-	  *cur++ = EOS;
-	  /* point to the pseudoclass in sel[] if it's valid name */
-	  if (deb[0] <= 64)
-	    {
-	      CSSParseError ("Invalid pseudoclass", deb);
-	      DoApply = FALSE;
-	    }
-	  else
-	    {
-	      if (!strcmp (deb, "first-letter") ||
-		  !strcmp (deb, "first-line") ||
-		  !strcmp (deb, "before") ||
-		  !strcmp (deb, "after"))
-		/* not supported */
-		DoApply = FALSE;
-	      else
-		specificity += 10;
-	      pseudoclasses[0]= deb;
-	    }
-	}
-      else if (*selector == '#')
-	{
-	  selector++;
-	  while (*selector != EOS && *selector != ',' &&
-		 *selector != '.' && *selector != ':' &&
-		 !TtaIsBlank (selector))
-            *cur++ = *selector++;
-	  /* close the word */
-	  *cur++ = EOS;
-	  /* point to the attribute in sel[] if it's valid name */
-	  if (deb[0] <= 64)
-	    {
-	      CSSParseError ("Invalid id", deb);
-	      DoApply = FALSE;
-	    }
-	  else
-	    {
-	      ids[0] = deb;
-	      specificity += 100;
-	    }
-	}
-      else if (*selector == '[')
-	{
-	  selector++;
-	  while (*selector != EOS && *selector != ']' &&
-		 *selector != '=' && *selector != '~')
-	    *cur++ = *selector++;
-	  /* close the word */
-	  *cur++ = EOS;
-	  /* point to the attribute in sel[] if it's valid name */
-	  if (deb[0] <= 64)
-	    {
-	      CSSParseError ("Invalid attribute", deb);
-	      DoApply = FALSE;
-	    }
-	  else
-	    {
-	      attrs[0] = deb;
-	      specificity += 10;
-	    }
-	  if (*selector == '=')
-	    {
-	      /* look for a value "xxxx" */
-	      selector++;
-	      if (*selector != '"')
-		{
-		  CSSParseError ("Invalid attribute value", deb);
-		  DoApply = FALSE;
-		}
-	      else
-		{
-		  /* we are now parsing the attribute value */
-		  selector++;
-		  deb = cur;
-		  while (*selector != '"')
-		    {
-		      if (*selector == EOS)
-			{
-			  CSSParseError ("Invalid attribute value", deb);
-			  DoApply = FALSE;
-			}
-		      else
-			*cur++ = *selector++;
-		    }
-		  /* there is a value */
-		  if (*selector == '"')
-		    {
-		      selector++;
-		      *cur++ = EOS;
-		      attrvals[0] = deb;
-		    }
-		}
-	    }
-	  /* end of the attribute */
-	  if (*selector != ']')
-	    {
-	      CSSParseError ("Invalid attribute", attrs[0]);
-	      DoApply = FALSE;
-	    }
-	  else
+	if (*selector == '.')
+	  {
 	    selector++;
-	}
+	    while (*selector != EOS && *selector != ',' &&
+		   *selector != '.' && *selector != ':' &&
+		   !TtaIsBlank (selector))
+	      *cur++ = *selector++;
+	    /* close the word */
+	    *cur++ = EOS;
+	    /* point to the class in sel[] if it's valid name */
+	    if (deb[0] <= 64)
+	      {
+		CSSParseError ("Invalid class", deb);
+		DoApply = FALSE;
+	      }
+	    else
+	      {
+		classes[0] = deb;
+		specificity += 10;
+	      }
+	  }
+	else if (*selector == ':')
+	  {
+	    selector++;
+	    while (*selector != EOS && *selector != ',' &&
+		   *selector != '.' && *selector != ':' &&
+		   !TtaIsBlank (selector))
+	      *cur++ = *selector++;
+	    /* close the word */
+	    *cur++ = EOS;
+	    /* point to the pseudoclass in sel[] if it's valid name */
+	    if (deb[0] <= 64)
+	      {
+		CSSParseError ("Invalid pseudoclass", deb);
+		DoApply = FALSE;
+	      }
+	    else
+	      {
+		if (!strcmp (deb, "first-letter") ||
+		    !strcmp (deb, "first-line") ||
+		    !strcmp (deb, "before") ||
+		    !strcmp (deb, "after"))
+		  /* not supported */
+		  DoApply = FALSE;
+		else
+		  specificity += 10;
+		pseudoclasses[0]= deb;
+	      }
+	  }
+	else if (*selector == '#')
+	  {
+	    selector++;
+	    while (*selector != EOS && *selector != ',' &&
+		   *selector != '.' && *selector != ':' &&
+		   !TtaIsBlank (selector))
+	      *cur++ = *selector++;
+	    /* close the word */
+	    *cur++ = EOS;
+	    /* point to the attribute in sel[] if it's valid name */
+	    if (deb[0] <= 64)
+	      {
+		CSSParseError ("Invalid id", deb);
+		DoApply = FALSE;
+	      }
+	    else
+	      {
+		ids[0] = deb;
+		specificity += 100;
+	      }
+	  }
+	else if (*selector == '[')
+	  {
+	    selector++;
+	    while (*selector != EOS && *selector != ']' &&
+		   *selector != '=' && *selector != '~')
+	      *cur++ = *selector++;
+	    /* close the word */
+	    *cur++ = EOS;
+	    /* point to the attribute in sel[] if it's valid name */
+	    if (deb[0] <= 64)
+	      {
+		CSSParseError ("Invalid attribute", deb);
+		DoApply = FALSE;
+	      }
+	    else
+	      {
+		attrs[0] = deb;
+		specificity += 10;
+	      }
+	    if (*selector == '=')
+	      {
+		/* look for a value "xxxx" */
+		selector++;
+		if (*selector != '"')
+		  {
+		    CSSParseError ("Invalid attribute value", deb);
+		    DoApply = FALSE;
+		  }
+		else
+		  {
+		    /* we are now parsing the attribute value */
+		    selector++;
+		    deb = cur;
+		    while (*selector != '"')
+		      {
+			if (*selector == EOS)
+			  {
+			    CSSParseError ("Invalid attribute value", deb);
+			    DoApply = FALSE;
+			  }
+			else
+			  *cur++ = *selector++;
+		      }
+		    /* there is a value */
+		    if (*selector == '"')
+		      {
+			selector++;
+			*cur++ = EOS;
+			attrvals[0] = deb;
+		      }
+		  }
+	      }
+	    /* end of the attribute */
+	    if (*selector != ']')
+	      {
+		CSSParseError ("Invalid attribute", attrs[0]);
+		DoApply = FALSE;
+	      }
+	    else
+	      selector++;
+	  }
+      }
 
       selector = SkipBlanksAndComments (selector);
       /* is it a multi-level selector? */
@@ -4316,6 +4318,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 #endif /* XML_GENERIC */
 	  /* add a new entry */
 	  maxAttr = i + 1;
+	  /* update attrLevel */
+	  ctxt->attrLevel[j] = i;
+	  j++;
 	}
       if (pseudoclasses[i])
 	{
@@ -4334,6 +4339,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 #endif /* XML_GENERIC */
 	  /* add a new entry */
 	  maxAttr = i + 1;
+	  /* update attrLevel */
+	  ctxt->attrLevel[j] = i;
+	  j++;
 	}
       if (ids[i])
 	{
@@ -4352,6 +4360,9 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 #endif /* XML_GENERIC */
 	  /* add a new entry */
 	  maxAttr = i + 1;
+	  /* update attrLevel */
+	  ctxt->attrLevel[j] = i;
+	  j++;
 	}
       if (attrs[i])
 	{
@@ -4413,10 +4424,15 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	  else
 	    ctxt->attrText[j] = attrvals[i];
 	  maxAttr = i + 1;
+	  /* update attrLevel */
+	  ctxt->attrLevel[j] = i;
+	  j++;
 	}
       i++;
       /* add a new entry */
       k++;
+      if (k < j)
+	k = j;
       if (i == 1 && ctxt->schema == NULL)
 	/* use the document schema */
 	ctxt->schema = TtaGetDocumentSSchema (doc);
