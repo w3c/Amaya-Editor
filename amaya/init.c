@@ -3454,7 +3454,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	       else if (!strncasecmp (&content_type[i+1], "octet-stream", 12) &&
 			thotType == docSVG)
 		 {
-		   /* it's a SMIL document. We handle it as an XML one */
+		   /* it's a SVG document. We handle it as an XML one */
 		   isXML = TRUE;
 		   docType = thotType;
 		   unknown = FALSE;
@@ -5030,14 +5030,25 @@ static void    ChangeDoctype (ThotBool isXml)
   int          profile;
   Document     doc;
   ElementType  elType;
-  Element      root, doctype, doctypeLine, prevLine, text;
+  Element      root, htmlRoot, doctype, doctypeLine, prevLine, text;
 
   doc = SavingDocument;
-  /* Search the DOCTYPE element */
   root = TtaGetMainRoot (doc);
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
     return;
+
+  /* Update the namespace declaration for the HTML element */
+  elType.ElTypeNum = HTML_EL_HTML;
+  htmlRoot = TtaSearchTypedElement (elType, SearchForward, root);
+  if (!htmlRoot)
+    return;
+  if (isXml)
+    TtaSetANamespaceDeclaration (doc, htmlRoot, NULL, XHTML_URI);
+  else
+    TtaFreeElemNamespaceDeclarations (doc, htmlRoot);
+
+  /* Search the DOCTYPE element */
   elType.ElTypeNum = HTML_EL_DOCTYPE;
   doctype = TtaSearchTypedElement (elType, SearchForward, root);
   if (!doctype)
@@ -5501,9 +5512,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
       switch (val)
 	{
 	case 0:	/* "Save as HTML" button */
-	  if (SaveAsXML == TRUE)
-	    /* XML -> HTML : modify the doctype declaration */
-	    ChangeDoctype (FALSE);
 	  SaveAsHTML = TRUE;
 	  SaveAsXML = FALSE;
 	  SaveAsText = FALSE;
@@ -5511,9 +5519,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  SetFileSuffix ();
 	  break;
 	case 1:	/* "Save as XML" button */
-	  if (SaveAsHTML == TRUE)
-	    /* HTML -> XML : modify the doctype declaration */
-	    ChangeDoctype (TRUE);
 	  SaveAsXML = TRUE;
 	  SaveAsHTML = FALSE;
 	  SaveAsText = FALSE;
@@ -5554,6 +5559,17 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	  /* protect against saving without a MIME type */
 	  if (SavingDocument != 0)
 	    {
+	      if (DocumentTypes[SavingDocument] == docHTML &&
+		  DocumentMeta[SavingDocument])
+		{
+		  if (DocumentMeta[SavingDocument]->xmlformat && SaveAsHTML)
+		    /* XHTML -> HTML */
+		    ChangeDoctype (FALSE);
+		  if (!DocumentMeta[SavingDocument]->xmlformat && SaveAsXML)
+		    /* HTML -> XHTML */
+		    ChangeDoctype (TRUE);
+		}
+	      
 	      if ((!DocumentMeta[SavingDocument] 
 		   || !DocumentMeta[SavingDocument]->content_type
 		   || DocumentMeta[SavingDocument]->content_type[0] == EOS)
