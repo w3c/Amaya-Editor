@@ -218,24 +218,31 @@ void initwgl (HDC hDC, int frame)
     {
       SetGlPipelineState ();
       GLResize (GL_HEIGHT, GL_WIDTH,0,0);
+	  glEnable (GL_SCISSOR_TEST);
       glScissor (0, 0, GL_HEIGHT, GL_WIDTH);
       GL_Err();
-#ifdef _TEST
+#ifndef _TEST
 	  /*permet de verifier la validite du contexte opengl. 
 	  size doit etre >0, sinon cela signifie qu'opengl n'arrive pas a dessiner !!*/
 	  {
+		  int size = 0;
+		  char feedbuffer[16384];
+
 		glFeedbackBuffer (FEEDBUFFERSIZE, GL_2D, feedBuffer);
 		glRenderMode (GL_FEEDBACK);
-		glbegin (GL_LINE)
-			glvertex2i (1, 1);
-			glvertex2i (4, 4);
-		glend ();
+		glBegin (GL_QUADS);
+			glVertex2i (1, 1);
+			glVertex2i (4, 400);
+			glVertex2i (400, 400);
+			glVertex2i (400, 1);
+		glEnd ();
 		size = glRenderMode (GL_RENDER);
 		if (size > 0)
 		{
 	      if (size > 1)
 			  size = 1;
 		}
+	  }
 #endif /*_TEST*/
 	}
 }
@@ -478,7 +485,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 
   used = glRenderMode (GL_RENDER);
   /*
-	used doit etre >0, 
+	used doit etre > 0, 
 	sinon cela signifie qu'opengl n'arrive pas a dessiner !!
   */
   if (used > 0)
