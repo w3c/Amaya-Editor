@@ -168,7 +168,7 @@ static unsigned char *ReadGifImage (FILE *fd, int *w, int *h,
   ReadGIF
   ----------------------------------------------------------------------*/
 unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
-			ThotColorStruct colrs[512])
+			ThotColorStruct *colrs)
 {
   unsigned char       buf[16];
   unsigned char      *data;

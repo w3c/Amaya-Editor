@@ -5083,7 +5083,6 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
   struct Cat_Context *catalogue;
   HMENU              hMenu;
   struct E_List      *adbloc;
-  int                ent = 2;
   int                tmp_val;
   UINT               uCheck;
 
@@ -5102,25 +5101,25 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 
 	  hMenu = catalogue->Cat_Widget;
 
-	  tmp_val = val;
+	  /* the first two entries of the first block
+	      are reserved */
+	  tmp_val = val + 2;
 	  /* find the correct block for the val entry */
-	  while (ent + tmp_val > C_NUMBER)
+	  while (tmp_val >= C_NUMBER)
 	  {
     	/* the entry is not in the first block,
 		    we update the catalog index entry */
 		  /* point to the next block */
 		  adbloc = adbloc->E_Next;
-		  tmp_val = tmp_val - (C_NUMBER - 1);
+		  tmp_val = tmp_val - C_NUMBER;
 		  /* the first two entries of the first block entry 
 		     are reserved */
-		  if (ent == 2)
-			  ent = 0;
 	  }
  
-	  if (IsMenu (adbloc->E_ThotWidget[ent + val]))
+	  if (IsMenu (adbloc->E_ThotWidget[tmp_val]))
 	    {
 		  /* change the menu item */
-          if (CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, uCheck) == 0xFFFFFFFF) 
+          if (CheckMenuItem (adbloc->E_ThotWidget[tmp_val], ref + val, uCheck) == 0xFFFFFFFF) 
 		       WinErrorBox (NULL, "WIN_TtaSetToggleMenu (1)");
 	    }
 	  else if (CheckMenuItem (hMenu, ref + val, uCheck) == 0xFFFFFFFF)
