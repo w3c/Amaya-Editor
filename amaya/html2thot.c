@@ -2403,7 +2403,7 @@ Element             parent;
 #endif
 {
    ElementType         parentType, newElType, elType;
-   Element             newEl, ancestor;
+   Element             newEl, ancestor, prev, prevprev;
    boolean	       ret;
 
    if (parent == NULL)
@@ -2438,6 +2438,22 @@ Element             parent;
 	          TtaInsertFirstChild (el, newEl, theDocument);
 	          BlockInCharLevelElem (newEl);
 		  ret = TRUE;
+
+		  /* if previous siblings of the new Pseudo_paragraph element
+		     are character level elements, move them within the new
+		     Pseudo_paragraph element */
+		  prev = newEl;
+		  TtaPreviousSibling (&prev);
+		  while (prev != NULL)
+		     if (!IsCharacterLevelElement (prev))
+			prev = NULL;
+		     else
+			{
+			prevprev = prev;  TtaPreviousSibling (&prevprev);
+			TtaRemoveTree (prev, theDocument);
+			TtaInsertFirstChild (&prev, newEl, theDocument);
+			prev = prevprev;
+			}
 	        }
      	      }
 	  }
@@ -7259,7 +7275,7 @@ Document doc;
 /*----------------------------------------------------------------------
   MergePseudoParagraph
   if element el is a pseudo-paragraph and its neighbours elements are also
-  pseudo paragraphs, merge these elements into a single pseu paragraph.
+  pseudo paragraphs, merge these elements into a single pseudo-paragraph.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void MergePseudoParagraph (Element el, Document doc)
