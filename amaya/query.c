@@ -96,6 +96,11 @@ static  boolean    AmayaIsAlive;
 #include "AHTMemConv_f.h"
 #include "AHTFWrite_f.h"
 
+#ifdef _WINDOWS
+#ifdef __STDC__
+int  WIN_Activate_Request (HTRequest * request, HTAlertOpcode op, int msgnum, const char *dfault, void *input, HTAlertPar * reply);
+#endif /* __STDC__ */
+#endif /* !WINDOWS */
 
 /*----------------------------------------------------------------------
   GetDocIdStatus
@@ -229,13 +234,6 @@ int                 docid;
    me->read_sock = INVSOC;
    me->write_sock = INVSOC;
    me->except_sock = INVSOC;
-#if 0
-#ifdef _WINDOWS
-   me->read_fd_state  = 0;
-   me->write_fd_state  = 0;
-   me->except_fd_state  = 0;
-#endif /* 0 */
-#endif
 
    /* Update the global context */
    HTList_appendObject (Amaya->reqlist, (void *) me);
@@ -499,7 +497,18 @@ int                 status;
 		      me->status_urlName);
 
 	/* Start request with new credentials */
-	me->reqStatus = HT_NEW; /* reset the status */
+	me->reqStatus = HT_NEW;	/* reset the status */
+
+#ifdef _WINDOWS			
+    if (me->output)	{
+		fclose (me->output)	;
+		me->output = NULL; 
+	}
+    /* Free the associated stream */
+	(*request->output_stream->isa->_free) (request->output_stream);
+
+#endif
+
 	if (me->method == METHOD_PUT || me->method == METHOD_POST)	/* PUT, POST etc. */
 	   status = HTLoadAbsolute (me->urlName, request);
 	else
@@ -549,8 +558,6 @@ int                 status;
 
    if (!AmayaIsAlive)
       me->reqStatus = HT_ABORT;
-   else
-	  me->reqStatus = HT_OK;
 
    if (status == HT_LOADED || status == HT_CREATED || status == HT_NO_DATA)
        error_flag = FALSE;
@@ -572,35 +579,24 @@ int                 status;
    ** ourselves
    */
 
-   if (me->output && me->output != stdout)
-     {
-	/* we are writing to a file */
-	if (me->reqStatus != HT_ABORT)
-	  {			/* if the request was not aborted and */
-	    if (error_flag)
-	      {		/* there were some errors */
-		if (me->error_html == TRUE)
-		  {		/* and we want to print errors */
-		    if (me->error_stream_size == 0)	/* and the stream is empty */
-			  AHTError_MemPrint (request);	/* copy errors from the error stack 
-							   ** into a data structure */
-		       if (me->error_stream)
-			 {	/* if the stream is non-empty */
-			    fprintf (me->output, me->error_stream);	/* output the errors */
-			    error_flag = FALSE;		/* show it in the HTML window */
-			 }
-		       else
-			  me->reqStatus = HT_ERR;	/* we did not get an error msg, 
-							   ** so just
-							   **  mark error 
-							 */
-		    }
-		  else
-		     me->reqStatus = HT_ERR;	/* we don't want to print the error */
-	       }		/* if error_stack */
+   if (me->output && me->output != stdout) {
+	  /* we are writing to a file */
+	  if (me->reqStatus != HT_ABORT){			/* if the request was not aborted and */
+	     if (error_flag) {		/* there were some errors */
+		    if (me->error_html == TRUE) {		/* and we want to print errors */
+		       if (me->error_stream_size == 0)	/* and the stream is empty */
+			      AHTError_MemPrint (request);	/* copy errors from the error stack into a data structure */
+		       if (me->error_stream) {	/* if the stream is non-empty */
+			      fprintf (me->output, me->error_stream);	/* output the errors */
+			      error_flag = FALSE;		/* show it in the HTML window */
+			   } else
+			        me->reqStatus = HT_ERR;	/* we did not get an error msg, so just mark error */
+		    } else
+		         me->reqStatus = HT_ERR;	/* we don't want to print the error */
+		 }		/* if error_stack */
 	  }			/* if != HT_ABORT */
-	fclose (me->output);
-     }
+      fclose (me->output); 
+   }
    else
      {
 	/* We must be doing a PUT. Verify if there was an error */
@@ -719,7 +715,13 @@ int                 status;
 	       sprintf (msg_status, "%d", status); 
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
 	       sprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
-	       return (HT_OK);
+#          ifdef _WINDOWS
+		   if ((me->request->net == (HTNet *) NULL) && ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC)) ) {
+		      AHTPrintPendingRequestStatus (me->docid, YES);
+		      AHTReqContext_delete (me);
+           }
+#          endif /* _WINDOWS */
+		   return (HT_OK);
 	     }
 	     errorElement = error->element;
 
@@ -752,6 +754,14 @@ int                 status;
 	     }
 	 }
      }
+
+#    ifdef _WINDOWS
+     if ((me->request->net == (HTNet *) NULL) && ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC)) ) {
+	    AHTPrintPendingRequestStatus (me->docid, YES);
+	    AHTReqContext_delete (me);
+     }
+#    endif /* _WINDOWS */
+
    return HT_OK;
 }
 
@@ -769,7 +779,6 @@ HTRequest          *request;
 HTResponse         *response;
 void               *param;
 int                 status;
-
 #endif
 {
    AHTReqContext      *me = HTRequest_context (request);
@@ -1012,9 +1021,11 @@ static void         AHTAlertInit ()
 #endif
 {
    HTAlert_add (AHTProgress, HT_A_PROGRESS);
-#ifndef _WINDOWS
+#  ifdef _WINDOWS
+   HTAlert_add ((HTAlertCallback *) WIN_Activate_Request, HT_PROG_CONNECT);
+#  else
    HTAlert_add ((HTAlertCallback *) Add_NewSocket_to_Loop, HT_PROG_CONNECT);
-#endif /* _WINDOWS */
+#  endif /* WINDOWS */
    HTAlert_add (AHTError_print, HT_A_MESSAGE);
    HTError_setShow (~((unsigned int) 0 ) & ~((unsigned int) HT_ERR_SHOW_DEBUG));	/* process all messages except debug ones*/
    HTAlert_add (AHTConfirm, HT_A_CONFIRM);
@@ -1144,9 +1155,9 @@ void                QueryInit ()
 
 #  ifdef _WINDOWS
    HTEventInit ();
-   WIN_InitializeSockets ();
-#else
-    /* New AHTBridge stuff */
+   /* WIN_InitializeSockets ();	*/
+#  else
+   /* New AHTBridge stuff */
    HTEvent_setRegisterCallback (AHTEvent_register);
    HTEvent_setUnregisterCallback (AHTEvent_unregister);
 #  endif _WINDOWS;
@@ -1245,8 +1256,6 @@ static int          LoopForStop (AHTReqContext * me)
              XtAppNextEvent (app_cont, &ev);
              TtaHandleOneEvent (&ev);
           }
-#       else  /* _WINDOWS */
-	WIN_ProcessSocketActivity ();
 #       endif /* !_WINDOWS */
      }
 
@@ -1439,18 +1448,16 @@ boolean error_html;
    /* try to open the outputfile */
 #  ifndef _WINDOWS
    if ((tmp_fp = fopen (outputfile, "w")) == NULL)
-#  else  /* _WINDOWS */
-   if ((tmp_fp = fopen (outputfile, "wb")) == NULL)
-#  endif /* _WINDOWS */
      {
 	outputfile[0] = EOS;	/* file could not be opened */
 	TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), outputfile);
 	TtaFreeMemory (ref);
-
 	if (error_html)
 	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
+
 	return (HT_ERROR);
      }
+#  endif /* _WINDOWS */
 
    /* the terminate_handler closes the above open fp */
    /* Not anymore, we do that in the AHTCallback_bridge, as all
@@ -1460,7 +1467,9 @@ boolean error_html;
    me = AHTReqContext_new (docid);
    if (me == NULL)
      {
+#ifndef _WINDOWS
 	fclose (tmp_fp);
+#endif /* !WINDOWS */
 	outputfile[0] = EOS;
 	/* need an error message here */
 	TtaFreeMemory (ref);
@@ -1502,10 +1511,10 @@ boolean error_html;
    me->context_tcbf = context_tcbf;
    me->output = tmp_fp;
 
+#ifndef _WINDOWS
    HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-/*
-   HTRequest_setOutputStream (me->request, HTFWriter_new (me->request, me->output, YES));
-*/
+#endif
+
    /*for the async. request modes, we need to have our
       own copy of outputfile and urlname
     */
@@ -1568,9 +1577,40 @@ boolean error_html;
    else
       status = HTLoadAnchor ((HTAnchor *) me->anchor, me->request);
 
-   if (status == HT_ERROR || me->reqStatus == HT_END || me->reqStatus == HT_ERR)
+#ifdef _WINDOWS
+
+   if (status == HT_ERROR || (mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
+   {
+	/* in case of error, free all allocated memory and exit */
+
+	if ((mode & AMAYA_ASYNC) || (mode & AMAYA_IASYNC))
+	  {
+	    if(me->outputfile)
+	      TtaFreeMemory (me->outputfile);
+	    if(me->urlName)
+	      TtaFreeMemory (me->urlName);
+	  }
+
+	if (me->reqStatus == HT_ERR)
+	  {
+	    status = HT_ERROR;
+	    /* show an error message on the status bar */
+	  DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
+	    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), me->status_urlName);
+	  }
+	else
+	  status = HT_OK;
+
+	AHTReqContext_delete (me);
+
+   }
+
+#else    
+		  
+  if (status == HT_ERROR || me->reqStatus == HT_END || me->reqStatus == HT_ERR)
      {
 	/* in case of error, free all allocated memory and exit */
+
 	if (me->output)
 	    fclose (me->output);
 
@@ -1634,7 +1674,8 @@ boolean error_html;
 		  }
 	  }
      }
-   TtaHandlePendingEvents ();
+#endif /* _WINDOWS */
+TtaHandlePendingEvents ();
 
    return (status);
 }
@@ -1930,8 +1971,8 @@ int                 docid;
 			      me->reqStatus = HT_ABORT;
 			      HTRequest_kill (me->request);
 
-			      if (me->mode == AMAYA_ASYNC ||
-				  me->mode == AMAYA_IASYNC)
+			      if ((me->mode & AMAYA_ASYNC) ||
+				  (me->mode & AMAYA_IASYNC))
 				{
 
 				   AHTReqContext_delete (me);
@@ -1952,6 +1993,6 @@ int                 docid;
   end of Module query.c
 */
 
-#endif /* AMAYA_JAVA */
+#endif /* !AMAYA_JAVA */
 
 

@@ -29,6 +29,7 @@
 #define APPFILENAMEFILTER   "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0All files (*.*)\0*.*\0"
 
 extern HINSTANCE hInstance;
+extern char*     AttrHREFvalue;
 
 static char   urlToOpen [256];
 static char   message [300];
@@ -36,6 +37,7 @@ static char   wndTitle [100];
 
 static int          currentDoc ;
 static int          currentView ;
+static int          currentRef;
 static BOOL	        saveBeforeClose ;
 static BOOL         closeDontSave ;
 static OPENFILENAME OpenFileName;
@@ -46,24 +48,28 @@ LRESULT CALLBACK PrintDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SearchDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK OpenDocDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CloseDocDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK CharacterDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
 LRESULT CALLBACK LinkDlgProc ();
 LRESULT CALLBACK PrintDlgProc ();
 LRESULT CALLBACK SearchDlgProc ();
 LRESULT CALLBACK OpenDocDlgProc ();
 LRESULT CALLBACK CloseDocDlgProc ();
+LRESULT CALLBACK CharacterDlgProc ();
 #endif /* __STDC__ */
 
 /*-----------------------------------------------------------------------
  CreateLinkDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateLinkDlgWindow (HWND parent)
+void CreateLinkDlgWindow (HWND parent, int ref)
 #else  /* !__STDC__ */
-void CreateLinkDlgWindow (parent)
+void CreateLinkDlgWindow (parent, ref)
 HWND      parent;
+int       ref;
 #endif /* __STDC__ */
 {  
+	currentRef = ref;
 	DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent, (DLGPROC) LinkDlgProc);
 }
 
@@ -130,6 +136,19 @@ BOOL* close_dont_save;
 }
 
 /*-----------------------------------------------------------------------
+ CreateCharacterDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateCharacterDlgWindow (HWND parent)
+#else  /* !__STDC__ */
+void CreateCharacterDlgWindow (parent)
+HWND  parent;
+#endif /* __STDC__ */
+{  
+	DialogBox (hInstance, MAKEINTRESOURCE (CHARACTERSDIALOG), parent, (DLGPROC) CharacterDlgProc);
+}
+
+/*-----------------------------------------------------------------------
  LinkDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -152,6 +171,10 @@ LPARAM lParam;
 	            switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
 						    GetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen, sizeof (urlToOpen) - 1);
+							AttrHREFvalue = (char*) TtaGetMemory (strlen (urlToOpen) + 1);
+							strcpy (AttrHREFvalue, urlToOpen);
+							CallbackDialogue (currentRef, INTEGER_DATA, (char*) 1);
+#if 0
 	                        /* create an attribute HREF for the Link_Anchor */
 	                        attrType.AttrSSchema = TtaGetDocumentSSchema (AttrHREFdocument);
 	                        attrType.AttrTypeNum = HTML_ATTR_HREF_;
@@ -162,6 +185,7 @@ LPARAM lParam;
 	                           TtaAttachAttribute (AttrHREFelement, attrHREF, AttrHREFdocument);
 	                        }
 	                        TtaSetAttributeText (attrHREF, urlToOpen, AttrHREFelement, AttrHREFdocument);
+#endif /* 0 */
 							EndDialog (hwnDlg, ID_CONFIRM);
 					        break;
 				       case ID_DONE:
@@ -344,5 +368,48 @@ LPARAM lParam;
 				default: return FALSE;
 	}
 	return TRUE ;
+}
+
+/*-----------------------------------------------------------------------
+ CloseDocDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK CharacterDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK CharacterDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	static int iFamily;
+	static int iStyle;
+	static int iUnderline;
+	static int iBodySize;
+
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    iFamily    = IDC_TIMES ;
+				iStyle     = IDC_ROMAN ;
+				iUnderline = IDC_NORMAL ;
+				iBodySize  = IDC_12PT ;
+
+				CheckRadioButton (hwnDlg, IDC_TIMES, IDC_DEFAULTFAMILY, iFamily);
+				CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, iStyle);
+				CheckRadioButton (hwnDlg, IDC_NORMAL, IDC_DEFAULTUNDERLINE, iUnderline);
+				CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, iBodySize);
+
+				break;
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+				       case ID_DONE:
+						    EndDialog (hwnDlg, ID_DONE);
+				}
+				break;
+
+		   default:	return FALSE;
+	}
+	return TRUE;
 }
 #endif /* _WINDOWS */

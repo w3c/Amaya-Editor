@@ -76,14 +76,14 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,38,99,12
     LTEXT           "Replaced by",IDC_REPLACEDBY,7,57,48,10
     EDITTEXT        IDC_REPLACEDIT,7,70,199,14,ES_AUTOHSCROLL
-    GROUPBOX        "&Replace", -1, 7,97,199,52
+    GROUPBOX        "&Replace",-1,7,97,199,52
     CONTROL         "No replace",IDC_NOREPLACE,"Button",BS_AUTORADIOBUTTON,
                     13,108,114,9
     CONTROL         "Replace on request",IDC_ONREQUEST,"Button",
                     BS_AUTORADIOBUTTON,13,121,116,11
     CONTROL         "Automatic replace",IDC_AUTOMATIC,"Button",
                     BS_AUTORADIOBUTTON,13,135,120,10
-    GROUPBOX        "&Search where",-1,7,159,199,68, WS_GROUP
+    GROUPBOX        "&Search where",-1,7,159,199,68,WS_GROUP
     CONTROL         "Before selection",IDC_BEFORE,"Button",
                     BS_AUTORADIOBUTTON,14,169,150,10
     CONTROL         "Winthin selection",IDC_WITHIN,"Button",
@@ -115,6 +115,101 @@ BEGIN
     EDITTEXT        IDC_GETURL,7,30,283,16,ES_AUTOHSCROLL
     LTEXT           "Type the URL of the document to load or push Browse button to load a local file",
                     IDC_URLMESSAGE,23,14,257,13
+END
+
+CHARACTERSDIALOG DIALOG DISCARDABLE  0, 0, 214, 255
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Characters"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,66,234,50,14
+    PUSHBUTTON      "Done",ID_DONE,126,234,50,14
+    GROUPBOX        "Font family",-1,7,7,66,68,WS_GROUP
+    CONTROL         "Times",IDC_TIMES,"Button",BS_AUTORADIOBUTTON,12,15,44,
+                    15
+    CONTROL         "Helvetica",IDC_HELVETICA,"Button",BS_AUTORADIOBUTTON,12,
+                    28,47,14
+    CONTROL         "Courier",IDC_COURIER,"Button",BS_AUTORADIOBUTTON,12,42,
+                    47,16
+    CONTROL         "Default",IDC_DEFAULTFAMILY,"Button",BS_AUTORADIOBUTTON,
+                    12,58,44,13
+    GROUPBOX        "Characters style",-1,7,84,66,119,WS_GROUP
+    CONTROL         "Roman",IDC_ROMAN,"Button",BS_AUTORADIOBUTTON,12,94,42,
+                    15
+    CONTROL         "Bold",IDC_BOLD,"Button",BS_AUTORADIOBUTTON,12,109,42,15
+    CONTROL         "Italic",IDC_ITALIC,"Button",BS_AUTORADIOBUTTON,12,124,
+                    42,15
+    CONTROL         "Oblique",IDC_OBLIQUE,"Button",BS_AUTORADIOBUTTON,12,138,
+                    42,15
+    CONTROL         "Bold Italic",IDC_BOLDITALIC,"Button",BS_AUTORADIOBUTTON,
+                    12,154,49,15
+    CONTROL         "Bold Oblique",IDC_BOLDOBLIQUE,"Button",
+                    BS_AUTORADIOBUTTON,12,168,42,15
+    CONTROL         "Default",IDC_DEFAULTSTYLE,"Button",BS_AUTORADIOBUTTON,
+                    12,183,42,15
+    GROUPBOX        "Underline",-1,80,7,63,82,WS_GROUP
+    CONTROL         "Normal",IDC_NORMAL,"Button",BS_AUTORADIOBUTTON,88,18,49,
+                    15
+    CONTROL         "Underline",IDC_UNDERLINE,"Button",BS_AUTORADIOBUTTON,88,
+                    34,49,15
+    CONTROL         "Cross out",IDC_CROSSOUT,"Button",BS_AUTORADIOBUTTON,88,
+                    51,49,15
+    CONTROL         "Default",IDC_DEFAULTUNDERLINE,"Button",
+                    BS_AUTORADIOBUTTON,88,68,49,15
+    GROUPBOX        "Body size (pt)",-1,150,7,57,216,WS_GROUP
+    CONTROL         "6 pt",IDC_06PT,"Button",BS_AUTORADIOBUTTON,156,18,51,16
+    CONTROL         "10 pt",IDC_10PT,"Button",BS_AUTORADIOBUTTON,156,50,51,
+                    16
+    CONTROL         "8 pt",IDC_08PT,"Button",BS_AUTORADIOBUTTON,156,33,51,16
+    CONTROL         "12 pt",IDC_12PT,"Button",BS_AUTORADIOBUTTON,156,65,51,
+                    16
+    CONTROL         "14 pt",IDC_14PT,"Button",BS_AUTORADIOBUTTON,156,81,51,
+                    16
+    CONTROL         "16 pt",IDC_16PT,"Button",BS_AUTORADIOBUTTON,156,97,51,
+                    16
+    CONTROL         "20 pt",IDC_20PT,"Button",BS_AUTORADIOBUTTON,156,114,51,
+                    16
+    CONTROL         "24 pt",IDC_24PT,"Button",BS_AUTORADIOBUTTON,156,133,51,
+                    16
+    CONTROL         "30 pt",IDC_30PT,"Button",BS_AUTORADIOBUTTON,156,151,51,
+                    16
+    CONTROL         "40 pt",IDC_40PT,"Button",BS_AUTORADIOBUTTON,156,168,51,
+                    16
+    CONTROL         "60 pt",IDC_60PT,"Button",BS_AUTORADIOBUTTON,156,185,51,
+                    16
+    CONTROL         "Default",IDC_DEFAULTSIZE,"Button",BS_AUTORADIOBUTTON,
+                    156,202,51,16
+END
+
+ATTRLANGUAGEDIALOG DIALOG DISCARDABLE  0, 0, 179, 197
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Language"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,13,176,50,14
+    PUSHBUTTON      "Delete",ID_DELETE,68,176,50,14
+    PUSHBUTTON      "Done",ID_DONE,127,175,45,15
+    LTEXT           "Language of element",IDC_LANGOFELEM,7,7,76,12
+    LISTBOX         IDC_LISTLANG,7,18,152,122,LBS_SORT | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    SCROLLBAR       IDC_VLANGSCROLL,162,18,10,122,SBS_VERT
+    SCROLLBAR       IDC_HLANGSCROLL,7,141,151,10
+    EDITTEXT        IDC_LANGEDIT,7,153,165,18,ES_AUTOHSCROLL
+END
+
+ATTRIDDIALOG DIALOG DISCARDABLE  0, 0, 228, 103
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Attributes"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,27,82,50,14
+    PUSHBUTTON      "Delete",ID_DELETE,89,82,50,14
+    PUSHBUTTON      "Done",ID_DONE,151,82,46,14
+    LTEXT           "ID",IDC_ID,7,7,14,10
+    LISTBOX         IDC_IDLIST,7,17,202,49,LBS_SORT | LBS_NOINTEGRALHEIGHT | 
+                    WS_VSCROLL | WS_TABSTOP
+    SCROLLBAR       IDC_VIDSCROLL,210,18,11,50,SBS_VERT
+    SCROLLBAR       IDC_HIDSCROLL,7,68,202,11
 END
 
 
@@ -167,6 +262,34 @@ BEGIN
         RIGHTMARGIN, 290
         TOPMARGIN, 7
         BOTTOMMARGIN, 67
+    END
+
+    CHARACTERSDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 207
+        VERTGUIDE, 1
+        VERTGUIDE, 12
+        VERTGUIDE, 88
+        VERTGUIDE, 156
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 248
+    END
+
+    ATTRLANGUAGEDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 172
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 190
+    END
+
+    ATTRIDDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 221
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 96
     END
 END
 #endif    // APSTUDIO_INVOKED

@@ -1090,7 +1090,7 @@ Element             el;
 	     /* initialise the text field in the dialogue box */
 	     TtaSetTextForm (BaseDialog + AttrHREFText, buffer);
 #            else  /* _WINDOWS */
-             CreateLinkDlgWindow (currentWindow);
+             CreateLinkDlgWindow (currentWindow, BaseDialog + AttrHREFForm);
 #            endif /* _WINDOWS */
 	     TtaFreeMemory (buffer);
 	  }
