@@ -15,7 +15,9 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-
+#ifdef GRAPHML
+#include "GraphML.h"
+#endif /* GRAPHML */
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
@@ -305,7 +307,7 @@ STRING              printdir;
   ElementType         elType;
   FILE*               file;
   CSSInfoPtr          css;
-  STRING              ptr, text;
+  STRING              ptr, text, name;
   CHAR_T              tempfile[MAX_LENGTH];
   int                 length, i;
 
@@ -366,14 +368,26 @@ STRING              printdir;
 	  /* Then look for style elements within the document */
 	  el = TtaGetMainRoot (doc);
 	  elType = TtaGetElementType (el);
-	  elType.ElTypeNum = HTML_EL_HEAD;
-	  head = TtaSearchTypedElement (elType, SearchForward, el);
-	  elType.ElTypeNum = HTML_EL_STYLE_;
-	  el = head;
+	  name = TtaGetSSchemaName (elType.ElSSchema);
+	  if (!ustrcmp (name, TEXT("HTML")))
+	    {
+	      elType.ElTypeNum = HTML_EL_HEAD;
+	      head = TtaSearchTypedElement (elType, SearchForward, el);
+	      elType.ElTypeNum = HTML_EL_STYLE_;
+	      el = head;
+	    }
+#ifdef GRAPHML
+	  else if (!ustrcmp (name, TEXT("GraphML")))
+	    {
+	    elType.ElTypeNum = GraphML_EL_style__;
+	    head = el;
+	    }
+#endif /* GRAPHML */
+	  else
+	    el = NULL;
 	  while (el != NULL)
 	    {
-	      el = TtaSearchTypedElementInTree (elType, SearchForward,
-						head, el);
+	      el = TtaSearchTypedElementInTree (elType, SearchForward, head, el);
 	      if (el)
 		{
 		  if (!file)

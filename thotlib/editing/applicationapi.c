@@ -348,15 +348,14 @@ CHAR_T*             applicationName;
    Color_Table = Name_colors;
 
 #ifndef NODISPLAY
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    TtPrinterDC = NULL;
    WIN_GetDeviceContext (-1);
    DOT_PER_INCHE = GetDeviceCaps(TtDisplay, LOGPIXELSY);
    WIN_ReleaseDeviceContext ();
-   /* DOT_PER_INCHE = 72; */
-#  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
    DOT_PER_INCHE = 72;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    numOfJobs = 0;
    /* Initializes patterns */

@@ -63,6 +63,8 @@
 #ifdef _WINDOWS
 #include "thotprinter_f.h"
 #include "wininclude.h"
+static PRINTDLG     Pdlg;
+static ThotBool     LpInitialized = FALSE;
 #endif /* _WINDOWS */
 
 
@@ -585,24 +587,27 @@ Document            document;
    if (!hLib)
       return /* FATAL_EXIT_CODE */;
    ptrMainProc = GetProcAddress (hLib, "PrintDoc");
-   if (!ptrMainProc) {
-      FreeLibrary (hLib);
-      return /* FATAL_EXIT_CODE */;
-   }
+   if (!ptrMainProc)
+     {
+       FreeLibrary (hLib);
+       return /* FATAL_EXIT_CODE */;
+     }
 
-   ptrMainProc (FrRef [currentFrame], printArgc, printArgv, TtPrinterDC, TtIsTrueColor, 
-	            TtWDepth, name, dir, hInstance, buttonCommand);
+   ptrMainProc (FrRef[frame], printArgc, printArgv,
+		TtPrinterDC, TtIsTrueColor, 
+		TtWDepth, name, dir, hInstance, buttonCommand);
    FreeLibrary (hLib);
 
-   if (!IsWindowEnabled (FrRef[currentFrame]))
-      EnableWindow (FrRef[currentFrame], TRUE);
-   SetFocus (FrRef[currentFrame]);
+   if (!IsWindowEnabled (FrRef[frame]))
+      EnableWindow (FrRef[frame], TRUE);
+   SetFocus (FrRef[frame]);
    for (i = 0; i < printArgc; i++)
        TtaFreeMemory (printArgv[i]);
-   if (TtPrinterDC) {
-      DeleteDC (TtPrinterDC);
-      TtPrinterDC = (HDC) 0;
-   }
+   if (TtPrinterDC)
+     {
+       DeleteDC (TtPrinterDC);
+       TtPrinterDC = (HDC) 0;
+     }
 #else /* !_WINDOWS */
    cmd[j] = EOS;
    i = ustrlen (cmd);
@@ -774,6 +779,99 @@ STRING          *printDirName;
    if (!TtaCheckDirectory (PrintDirName))
       TtaMakeDirectory (PrintDirName);
 }
+
+#ifdef _WINDOWS
+/* ------------------------------------------------------------------------ *
+   TtaGetPrinterDC()
+   Call the Windows print dialogue and returns TRUE is the printer is available.
+   Reuses the previous defined printer when the parameter reuse is TRUE.
+   Returns the orientation (0 = portrait, 1 = landscape),and the paper format
+   (0 = A4, 1 = US). 
+  ------------------------------------------------------------------------ */
+#ifdef __STDC__
+ThotBool      TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
+#else  /* __STDC__ */
+ThotBool      TtaGetPrinterDC (reuse, orientation, paper)
+     ThotBool      reuse;
+int          *orientation;
+int          *paper;
+#endif /* __STDC__ */
+{
+  LPDEVNAMES  lpDevNames;
+  LPDEVMODE   lpDevMode;
+  LPSTR       lpDriverName, lpDeviceName, lpPortName;
+  int         palSize;
+
+  /* Display the PRINT dialog box. */
+  if (!LpInitialized)
+    {
+      /* initialize the pinter context */
+      memset(&Pdlg, 0, sizeof(PRINTDLG));
+      Pdlg.lStructSize = sizeof(PRINTDLG);
+      Pdlg.nCopies = 1;
+      Pdlg.Flags       = PD_RETURNDC;
+      Pdlg.hInstance   = (HANDLE) NULL;
+      LpInitialized = TRUE;
+    }
+  else if (reuse && Pdlg.hDevNames)
+    {
+      lpDevNames = (LPDEVNAMES) GlobalLock (Pdlg.hDevNames);
+      lpDriverName = (LPSTR) lpDevNames + lpDevNames->wDriverOffset;
+      lpDeviceName = (LPSTR) lpDevNames + lpDevNames->wDeviceOffset;
+      lpPortName = (LPSTR) lpDevNames + lpDevNames->wOutputOffset;
+      GlobalUnlock (Pdlg.hDevNames);
+      if (Pdlg.hDevMode)
+	{
+	  lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
+	  TtPrinterDC = CreateDC (lpDriverName, lpDeviceName, lpPortName, lpDevMode);
+	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
+	    /* landscape */
+	    *orientation = 1;
+	  else
+	    /* portrait */
+	    *orientation = 0;
+	  if (lpDevMode->dmPaperSize == DMPAPER_A4)
+	    /* A4 */
+	    *paper = 0;
+	  else
+	    /* US */
+	    *paper = 1;
+	  GlobalUnlock (Pdlg.hDevMode);
+	  return TRUE;
+	}
+    }
+
+  Pdlg.hwndOwner   = GetCurrentWindow ();
+  if (PrintDlg (&Pdlg))
+    {
+      if (Pdlg.hDevMode)
+	{
+	  lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
+	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
+	    /* landscape */
+	    *orientation = 1;
+	  else
+	    /* portrait */
+	    *orientation = 0;
+	  if (lpDevMode->dmPaperSize == DMPAPER_A4)
+	    /* A4 */
+	    *paper = 0;
+	  else
+	    /* US */
+	    *paper = 1;
+	  GlobalUnlock (Pdlg.hDevMode);
+	}
+      TtPrinterDC = Pdlg.hDC;
+      return TRUE;
+    }
+  else
+    {
+      TtPrinterDC = NULL;
+      return FALSE;
+    }
+}
+#endif /* _WINDOWS */
+
 
 /*----------------------------------------------------------------------
    TtaPrint
@@ -1265,7 +1363,7 @@ View                view;
 
    /* Print form */
    InitPrintParameters (document);
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), TtaGetMessage (LIB, TMSG_LIB_PRINT), 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_CANCEL);
 
    i = 0;
@@ -1273,7 +1371,7 @@ View                view;
    TtaNewToggleMenu (NumMenuOptions, NumFormPrint, TtaGetMessage (LIB, TMSG_OPTIONS), 1, bufMenu, NULL, FALSE);
    if (ManualFeed)
       TtaSetToggleMenu (NumMenuOptions, 0, TRUE);
-#     endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    /* Paper format submenu */
    i = 0;
@@ -1281,12 +1379,12 @@ View                view;
    i += ustrlen (&bufMenu[i]) + 1;
    usprintf (&bufMenu[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_US));
    TtaNewSubmenu (NumMenuPaperFormat, NumFormPrint, 0, TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, FALSE);
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    if (!ustrcmp (PageSize, TEXT("US")))
       TtaSetMenuForm (NumMenuPaperFormat, 1);
    else
       TtaSetMenuForm (NumMenuPaperFormat, 0);
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 
    /* Print to paper/ Print to file submenu */
    i = 0;
@@ -1295,24 +1393,24 @@ View                view;
    usprintf (&bufMenu[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_PS_FILE));
    TtaNewSubmenu (NumMenuSupport, NumFormPrint, 0,
                   TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
-   /* text capture zone for the printer name */
-#  ifndef _WINDOWS
-   TtaNewTextForm (NumZonePrinterName, NumFormPrint, NULL, 30, 1, FALSE);
-#  endif /* !_WINDOWS */
-
    /* initialization of the PaperPrint selector */
    NewPaperPrint = PaperPrint;
-#  ifndef _WINDOWS
-   if (PaperPrint) {
-      TtaSetMenuForm (NumMenuSupport, 0);
-      TtaSetTextForm (NumZonePrinterName, pPrinter);
-   } else {
-          TtaSetMenuForm (NumMenuSupport, 1);
-          TtaSetTextForm (NumZonePrinterName, PSdir);
-   } 
+#ifndef _WINDOWS
+   if (PaperPrint)
+     {
+       TtaSetMenuForm (NumMenuSupport, 0);
+       TtaSetTextForm (NumZonePrinterName, pPrinter);
+     }
+   else
+     {
+       TtaSetMenuForm (NumMenuSupport, 1);
+       TtaSetTextForm (NumZonePrinterName, PSdir);
+     }
+   /* text capture zone for the printer name */
+   TtaNewTextForm (NumZonePrinterName, NumFormPrint, NULL, 30, 1, FALSE);
 
    /* activates the Print form */
    TtaShowDialogue (NumFormPrint, FALSE);
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 }
 

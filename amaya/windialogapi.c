@@ -182,64 +182,12 @@ static CHAR_T*      string_par1;
 static CHAR_T*      string_par2;
 
 static ThotBool     ReleaseFocus;
-static ThotBool     initialized = 0;
-static PRINTDLG     Pdlg;
 static char         text[1024];
-
 
 ThotWindow          ghwndAbort;
 ThotWindow          ghwndMain;
 ThotWindow          MakeIDHwnd;
 ThotBool            gbAbort;
-
-
-/* ------------------------------------------------------------------------ *
-   GetPrinterDC()
-   Call the Windows print dialogue and returns a handle to the DC if 
-   successful or NULL otherwise.
-  ------------------------------------------------------------------------ */
-HDC PASCAL GetPrinterDC ()
-{
-  LPDEVMODE   lpDevMode;
-
-  /* Display the PRINT dialog box. */
-  if (!initialized)
-  {
-    /* initialize the pinter context */
-    memset(&Pdlg, 0, sizeof(PRINTDLG));
-    Pdlg.lStructSize = sizeof(PRINTDLG);
-	Pdlg.nCopies = 1;
-    Pdlg.Flags       = PD_RETURNDC;
-    Pdlg.hInstance   = (HANDLE) NULL;
-	initialized = TRUE;
-  }
-
-  Pdlg.hwndOwner   = GetCurrentWindow ();
-  if (PrintDlg (&Pdlg))
-  {
-    if (Pdlg.hDevMode)
-	{
-      lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
-	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
-	    /* landscape */
-	    ThotCallback (BasePrint + PaperOrientation, INTEGER_DATA, (CHAR_T*) 1);
-	  else
-		/* portrait */
-	    ThotCallback (BasePrint + PaperOrientation, INTEGER_DATA, (CHAR_T*) 0);
-	  if (lpDevMode->dmPaperSize == DMPAPER_A4)
-		/* A4 */
-	    ThotCallback (BasePrint + PaperFormat, INTEGER_DATA, (CHAR_T*) 0);
-	  else
-		/* US */
-	    ThotCallback (BasePrint + PaperFormat, INTEGER_DATA, (CHAR_T*) 1);
-	  GlobalUnlock (Pdlg.hDevMode);
-	}
-    return (Pdlg.hDC);
-  }
-  else
-    return NULL;
-}
-
 
 /* ------------------------------------------------------------------------ *
    ReusePrinterDC()
@@ -247,61 +195,14 @@ HDC PASCAL GetPrinterDC ()
   ------------------------------------------------------------------------ */
 void ReusePrinterDC ()
 {
-  LPDEVNAMES  lpDevNames;
-  LPDEVMODE   lpDevMode;
-  LPSTR       lpDriverName, lpDeviceName, lpPortName;
+  int        orientation, paper;
 
-  /* Display the PRINT dialog box. */
-  if (!initialized)
-    TtPrinterDC = GetPrinterDC();
-  else if (Pdlg.hDevNames)
-  {
-    lpDevNames = (LPDEVNAMES) GlobalLock (Pdlg.hDevNames);
-	lpDriverName = (LPSTR) lpDevNames + lpDevNames->wDriverOffset;
-	lpDeviceName = (LPSTR) lpDevNames + lpDevNames->wDeviceOffset;
-	lpPortName = (LPSTR) lpDevNames + lpDevNames->wOutputOffset;
-	GlobalUnlock (Pdlg.hDevNames);
-    if (Pdlg.hDevMode)
-	{
-      lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
-	  TtPrinterDC = CreateDC (lpDriverName, lpDeviceName, lpPortName, lpDevMode);
-	  GlobalUnlock (Pdlg.hDevMode);
-	}
-  }
-  
-  if (TtPrinterDC)
-  {
-	WinInitPrinterColors ();    
-	EnableWindow (ghwndMain, FALSE);
-	ThotCallback (BasePrint + PPrinterName, STRING_DATA, currentFileToPrint);
-	ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (CHAR_T*)1);
-	if (TtPrinterDC)
-	{
-	  DeleteDC (TtPrinterDC);
-	  TtPrinterDC = NULL;
-	}
-  }
-}
-
-/* ----------------------------------------------------------------------*/
-/* ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void WinInitPrinterColors (void)
-#else /* __STDC__ */
-void WinInitPrinterColors ()
-#endif /* __STDC__ */
-{
-   int        palSize;
-
-   if (!initialized)
-   {
-     palSize = GetDeviceCaps (TtPrinterDC, SIZEPALETTE);
-     if (palSize == 0)
-       TtIsPrinterTrueColor = TRUE;
-     else  
-       TtIsPrinterTrueColor = FALSE;
-     initialized = TRUE;
-   }
+  if (TtaGetPrinterDC (FALSE, &orientation, &paper))
+    {
+      /* EnableWindow (ghwndMain, FALSE); */
+      ThotCallback (BasePrint + PPrinterName, STRING_DATA, currentFileToPrint);
+      ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (CHAR_T*)1);
+    }
 }
 
 
@@ -750,6 +651,8 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
+  int      orientation, paper;
+
   switch (msg)
     {
     case WM_INITDIALOG:
@@ -785,29 +688,16 @@ LPARAM lParam;
 	case ID_PRINT:
 	  ThotCallback (BasePrint + PrintSupport, INTEGER_DATA, (CHAR_T*) 0);
 	  EndDialog (hwnDlg, ID_PRINT);
-	  if (TtPrinterDC)
-	    DeleteDC (TtPrinterDC);
-	  TtPrinterDC = GetPrinterDC ();
-	  if (TtPrinterDC)
+	  if (TtaGetPrinterDC (FALSE, &orientation, &paper))
 	    {
-	      WinInitPrinterColors ();
-	      
 	      EnableWindow (ghwndMain, FALSE);
+	      ThotCallback (BasePrint + PaperOrientation, INTEGER_DATA, (CHAR_T*) orientation);
+	      ThotCallback (BasePrint + PaperFormat, INTEGER_DATA, (CHAR_T*) paper);
 	      ThotCallback (BasePrint + PPrinterName, STRING_DATA, currentFileToPrint);
 	      ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (CHAR_T*)1);
-	      if (TtPrinterDC)
-		  {
-		     DeleteDC (TtPrinterDC);
-		     TtPrinterDC = NULL;
-	      }
 	    }
 	  break;
 	case IDCANCEL:
-	  if (TtPrinterDC)
-	    {
-	      DeleteDC (TtPrinterDC);
-	      TtPrinterDC = NULL;
-	    }
 	  ThotCallback (BasePrint + FormPrint, INTEGER_DATA, (CHAR_T*)0);
 	  EndDialog (hwnDlg, IDCANCEL);
 	  break;

@@ -2748,8 +2748,8 @@ int                 fg;
    int                 xf, yf;
 
    y += FrameTable[frame].FrTopMargin;
-   xf = x + l - 1 - thick;
-   yf = y + h - 1 - thick;
+   xf = x + l;
+   yf = y + h;
    if (thick > 0 && fg >= 0)
      {
 	InitDrawing (0, style, thick, RO, active, fg);

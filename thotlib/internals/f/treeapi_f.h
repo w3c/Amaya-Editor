@@ -13,6 +13,8 @@ extern Element TtaNewElement ( Document document,
 extern Element TtaNewTree ( Document document,
                             ElementType elementType,
                             char* label );
+extern Element TtaNewTranscludedElement ( Document document,
+                                          Element orig );
 extern Element TtaCopyTree ( Element sourceElement,
                              Document sourceDocument,
                              Document destinationDocument,
@@ -72,6 +74,7 @@ extern Element TtaGetCommonAncestor ( Element element1,
 extern Element TtaGetTypedAncestor ( Element element,
                                      ElementType ancestorType );
 extern ThotBool TtaIsExtensionElement ( Element element );
+extern ThotBool TtaIsTranscludedElement ( Element element );
 extern STRING TtaGetElementTypeName ( ElementType elementType );
 extern STRING TtaGetElementTypeOriginalName ( ElementType elementType );
 extern void TtaGiveTypeFromName ( ElementType * elementType,
@@ -132,6 +135,8 @@ extern Element TtaNewElement (/* Document document,
 extern Element TtaNewTree (/* Document document,
                               ElementType elementType,
                               char* label */);
+extern Element TtaNewTranscludedElement (/* Document document,
+                                            Element orig */);
 extern Element TtaCopyTree (/* Element sourceElement,
                                Document sourceDocument,
                                Document destinationDocument,
@@ -191,6 +196,7 @@ extern Element TtaGetCommonAncestor (/* Element element1,
 extern Element TtaGetTypedAncestor (/* Element element,
                                        ElementType ancestorType */);
 extern ThotBool TtaIsExtensionElement (/* Element element */);
+extern ThotBool TtaIsTranscludedElement (/* Element element */);
 extern STRING TtaGetElementTypeName (/* ElementType elementType */);
 extern STRING TtaGetElementTypeOriginalName (/* ElementType elementType */);
 extern void TtaGiveTypeFromName (/* ElementType * elementType,

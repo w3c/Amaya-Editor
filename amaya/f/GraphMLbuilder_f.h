@@ -30,15 +30,15 @@ extern void GraphMLEntityCreatedWithExpat ( int entityValue,
                                             Language lang,
                                             STRING entityName,
                                             ParserData *XmlContext );
-extern Element CreateGraphicLeaf ( Element el,
-                                   Document doc,
-                                   ThotBool *closed,
-                                   int arrowHead );
 extern void ParseFillStrokeAttributes ( int attrType,
                                         Attribute attr,
                                         Element el,
                                         Document doc,
                                         ThotBool delete );
+extern Element CreateGraphicLeaf ( Element el,
+                                   Document doc,
+                                   ThotBool *closed,
+                                   int arrowHead );
 extern void SetGraphicDepths ( Document doc,
                                Element el );
 extern void GraphMLElementComplete ( Element el,
@@ -94,15 +94,15 @@ extern void GraphMLEntityCreatedWithExpat (/* int entityValue,
                                               Language lang,
                                               STRING entityName,
                                               ParserData *XmlContext */);
-extern Element CreateGraphicLeaf (/* Element el,
-                                     Document doc,
-                                     ThotBool *closed,
-                                     int arrowHead */);
 extern void ParseFillStrokeAttributes (/* int attrType,
                                           Attribute attr,
                                           Element el,
                                           Document doc,
                                           ThotBool delete */);
+extern Element CreateGraphicLeaf (/* Element el,
+                                     Document doc,
+                                     ThotBool *closed,
+                                     int arrowHead */);
 extern void SetGraphicDepths (/* Document doc,
                                  Element el */);
 extern void GraphMLElementComplete (/* Element el,

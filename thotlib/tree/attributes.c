@@ -468,7 +468,7 @@ ThotBool            inherit;
 		doIt = TRUE;
 	     /* si pour cet element, cet attribut a une valeur imposee par */
 	     /* le schema de structure, on ne fait rien d'autre */
-	     else if (!pOldAttr->AeDefAttr)
+	     else if (pOldAttr->AeDefAttr == 0)
 		doIt = TRUE;
 	     /* s'il s'agit d'une suppression de l'attribut, on ne fait rien */
 	     if (doIt)

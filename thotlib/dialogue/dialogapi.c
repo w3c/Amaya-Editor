@@ -319,33 +319,32 @@ void WIN_GetDeviceContext (frame)
 int frame;
 #endif /* __STDC__ */
 {
-   if ((frame < 0) || (frame > MAX_FRAME)) {
-      if (TtDisplay != 0)
+   if (frame < 0 || frame > MAX_FRAME)
+     {
+       if (TtDisplay != 0)
          return;
-
-      TtDisplay = GetDC (WIN_curWin = NULL);
-      return;
-   }
+       TtDisplay = GetDC (WIN_curWin = NULL);
+       return;
+     }
 
    if (FrRef[frame] == 0)
-      return;
-
+     return;
    /* if the correct Device Context is already selected, returns. */
-   if ((WIN_curWin == FrRef[frame]) && (TtDisplay != 0))
-      return;
+   if (WIN_curWin == FrRef[frame] && TtDisplay != 0)
+     return;
 
    /* release the previous Device Context. */
    if (TtDisplay)
-      ReleaseDC (WIN_curWin, TtDisplay);
-
+     ReleaseDC (WIN_curWin, TtDisplay);
    TtDisplay = 0;
 
    /* load the new Context. */
    TtDisplay = GetDC (FrRef[frame]);
-   if (TtDisplay != 0) {
-      WIN_curWin = FrRef[frame];
-      SetICMMode (TtDisplay, ICM_ON);
-   }
+   if (TtDisplay != 0)
+     {
+       WIN_curWin = FrRef[frame];
+       SetICMMode (TtDisplay, ICM_ON);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -357,16 +356,16 @@ void WIN_ReleaseDeviceContext (void)
 void WIN_ReleaseDeviceContext ()
 #endif /* __STDC__ */
 {
-   /* release the previous Device Context. */
-   /* if ((TtDisplay != 0) && (WIN_curWin != (ThotWindow) (-1))) */
-	if (TtDisplay != 0) {     
-       SetICMMode (TtDisplay, ICM_OFF);
-       if (!ReleaseDC (WIN_curWin, TtDisplay))
-          WinErrorBox (NULL, TEXT("WIN_ReleaseDeviceContext"));
-	}
+  /* release the previous Device Context. */
+  if (TtDisplay != 0)
+    {     
+      SetICMMode (TtDisplay, ICM_OFF);
+      if (!ReleaseDC (WIN_curWin, TtDisplay))
+	WinErrorBox (NULL, TEXT("WIN_ReleaseDeviceContext"));
+    }
 
-   WIN_curWin = (ThotWindow) (-1);
-   TtDisplay = 0;
+  WIN_curWin = (ThotWindow) (-1);
+  TtDisplay = 0;
 }
 
 /*----------------------------------------------------------------------

@@ -380,6 +380,21 @@ int                 Num;
 	    case ExcInvisible:
 	       printf ("Invisible");
 	       break;
+	    case ExcEventAttr:
+	       printf ("EventAttr");
+	       break;
+	    case ExcCssId:
+	       printf ("CssId");
+	       break;
+	    case ExcCssClass:
+	       printf ("CssClass");
+	       break;
+	    case ExcCssPseudoClass:
+	       printf ("CssPseudoClass");
+	       break;
+	    case ExcCssBackground:
+	       printf ("CssBackground");
+	       break;
 	    case ExcNoMove:
 	       printf ("NoMove");
 	       break;

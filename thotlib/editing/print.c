@@ -2564,19 +2564,19 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-DLLEXPORT void PrintDoc (HWND hWnd, int argc, STRING* argv, HDC PrinterDC, BOOL isTrueColors, int depth, STRING tmpDocName, STRING tmpDir, HINSTANCE hInst, BOOL buttonCmd)
+DLLEXPORT void PrintDoc (HWND hWnd, int argc, STRING *argv, HDC PrinterDC, ThotBool isTrueColors, int depth, STRING tmpDocName, STRING tmpDir, HINSTANCE hInst, ThotBool buttonCmd)
 #else  /* !__STDC__ */
 DLLEXPORT void PrintDoc (hWnd, argc, argc, PrinterDC, isTrueColors, depth, tmpDocName, tmpDir, hInstance, buttonCmd)
-HWND      hWnd;
-int       argc;
-STRING*    argv;
-HDC       PrinterDC;
-BOOL      isTrueColors;
-int       depth;
-STRING     tmpDocName; 
-STRING     tmpDir;
-HINSTANCE hInst;
-BOOL      buttonCmd;
+HWND           hWnd;
+int            argc;
+STRING        *argv;
+HDC            PrinterDC;
+ThotBool       isTrueColors;
+int            depth;
+STRING         tmpDocName; 
+STRING         tmpDir;
+HINSTANCE      hInst;
+ThotBool       buttonCmd;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__

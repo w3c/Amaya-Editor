@@ -62,8 +62,6 @@ THOT_EXPORT HDC          TtPrinterDC;
 THOT_EXPORT HPALETTE     TtCmap;       /* Color palette                */
 THOT_EXPORT LPLOGPALETTE ptrLogPal;
 THOT_EXPORT HRGN         clipRgn;
-THOT_EXPORT WIN_GC_BLK   TtLineGC;
-THOT_EXPORT ThotBool     TtIsPrinterTrueColor;
 #else /* _WINDOWS */
 #ifdef _GTK
 THOT_EXPORT ThotWidget   RootShell;
