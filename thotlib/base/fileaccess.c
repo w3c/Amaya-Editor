@@ -1,12 +1,16 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
 /*
-   Input/output for Thot binary files (schemas and pivot files)
+ *  Input/output for Thot binary files (schemas and pivot files)
+ *
+ * Authors: V. Quint (INRIA)
+ *          D. Veillard (INRIA) - new functions for MS-Windows
+ *
  */
 
 #include "thot_sys.h"

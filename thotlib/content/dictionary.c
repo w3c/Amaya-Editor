@@ -5,11 +5,12 @@
  *
  */
  
-/*----------------------------------------------------------------------
-   
-   Thot Toolkit: Application Program Interface                     
-   Dictionnary managment                                       
-  ----------------------------------------------------------------------*/
+/*
+ * Dictionnary managment                                       
+ *
+ * Authors: H. Richy, E. Picheral (INRIA)
+ *
+ */
 
 #include "thot_sys.h"
 #include "constmedia.h"

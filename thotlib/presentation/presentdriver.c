@@ -7,6 +7,9 @@
  
 /*
  * Set of function common to presentation drivers.
+ *
+ * Author: D. Veillard (INRIA)
+ *
  */
 
 #include "thot_sys.h"

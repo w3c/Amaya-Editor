@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,9 +15,13 @@
  */
  
 /*
-   procedures liees a la creation des pages et des colonnes
-   appelees par crimabs pour la creation des images abstraites
-   contient quelques procedures du module crimabs
+ * procedures liees a la creation des pages et des colonnes
+ * appelees par crimabs pour la creation des images abstraites
+ * contient quelques procedures du module crimabs
+ *
+ * Authors: V. Quint (INRIA)
+ *          C. Roisin (INRIA) - Columns and pages
+ *
  */
 
 

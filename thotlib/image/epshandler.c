@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -14,7 +14,12 @@
  * 
  */
  
-/* epshandler.c -- Implementation of EPS pictures */
+/*
+ * epshandler.c -- Implementation of EPS pictures
+ *
+ * Author: N. Layaida (INRIA)
+ *
+ */
 
 
 #include "thot_sys.h"

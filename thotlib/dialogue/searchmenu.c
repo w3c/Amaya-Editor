@@ -15,8 +15,10 @@
  */
  
 /*
-   searchmenu.c : diverse document search functions.
-
+ * searchmenu.c : diverse document search functions.
+ *
+ * Author: I. Vatton (INRIA)
+ *
  */
 
 #include "thot_gui.h"

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,7 +15,11 @@
  */
  
 /*
-   hyphen.c :  gestion de la coupure des mots
+ * hyphen.c :  gestion de la coupure des mots
+ *
+ * Authors I. Vatton (INRIA)
+ *         Ph. Louarn (IRISA) - multilingual hyphenation
+ *
  */
 
 #include "thot_sys.h"

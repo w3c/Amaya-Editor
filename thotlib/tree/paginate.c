@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,10 +15,14 @@
  */
  
 /*
-   page.c :  gestion de la pagination d'un arbre abstrait. Insere les diverses
-   marques de saut de page dans l'AA. Les effets de bord sont nombreux.
-   Ce module insere les marques de saut de page dans la
-   structure abstraite des documents.
+ * gestion de la pagination d'un arbre abstrait. Insere les diverses
+ * marques de saut de page dans l'AA. Les effets de bord sont nombreux.
+ * Ce module insere les marques de saut de page dans la
+ * structure abstraite des documents.
+ *
+ * Authors: V. Quint (INRIA)
+ *          C. Roisin (INRIA) - Pagination at printing time
+ *
  */
 
 #include "thot_sys.h"

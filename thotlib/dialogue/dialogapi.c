@@ -15,8 +15,7 @@
  */
  
 /*
- * 
- * This module handles dialogue items         
+ * Dialogue API routines
  *
  * Author: I. Vatton (INRIA)
  *

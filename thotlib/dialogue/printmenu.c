@@ -1,12 +1,16 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
 /*
  * Messages and printing management.
+ *
+ * Authors: I. Vatton (INRIA)
+ *          S. Bonhomme (INRIA) - Print Setup
+ *
  */
 
 #include "thot_sys.h"

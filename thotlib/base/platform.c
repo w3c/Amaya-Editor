@@ -15,7 +15,10 @@
  */
  
 /*
-   platform.c : basic system functions
+ * platform.c : basic system functions
+ *
+ * Author: D. Veillard (INRIA)
+ *
  */
 
 #include "thot_sys.h"

@@ -13,6 +13,13 @@
  * will be available in English in the next release.
  * 
  */
+
+/* 
+ * Creation commands
+ *
+ * Author: I. Vatton (INRIA)
+ *
+ */
  
 #include "thot_gui.h"
 #include "thot_sys.h"

@@ -1,18 +1,17 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
-/*----------------------------------------------------------------------
-   
-   Thot Toolkit: Application Program Interface                     
-   --->logo and image managment                                    
-   
-   I. Vatton       October 92                      
-   
-  ----------------------------------------------------------------------*/
+/*
+ * logo and image managment                                    
+ *
+ * Author: I. Vatton (INRIA)
+ *
+ */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

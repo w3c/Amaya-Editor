@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -14,18 +14,12 @@
  * 
  */
  
-/*----------------------------------------------------------------------
-   
-   Projet THOT                              
-   
-   Traitements specifiques a la structure Draw             
-   
-   
-   V. Quint        mars 1989                               
-   
-   France Logiciel no de depot 88-39-001-00                
-   
-  ----------------------------------------------------------------------*/
+/*
+ * Traitements specifiques a la structure Draw             
+ *
+ * Author: V. Quint (INRIA)
+ *
+ */
 
 #include "thot_sys.h"
 #include "message.h"

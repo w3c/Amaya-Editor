@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,7 +15,12 @@
  */
  
 /*
-   Manage free-lists and memory allocation.
+ * Manage free-lists and memory allocation.
+ *
+ * Authors: V. Quint (INRIA)
+ *          I. Vatton (INRIA) - Boxes and lines
+ *          H. Richy (IRISA) - Dictionaries
+ *
  */
 
 #include "thot_sys.h"

@@ -13,6 +13,11 @@
  * will be available in English in the next release.
  * 
  */
+
+/*
+ * Handle callbacks for Thot events
+ *
+ */
  
 #include "thot_sys.h"
 #include "constmedia.h"

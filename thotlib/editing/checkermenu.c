@@ -14,8 +14,12 @@
  * 
  */
  
-/* Module interface MOTIF du correcteur */
-/* H. Richy  I. Vatton mars 1993 */
+/*
+ * User interface for checker commands
+ *
+ * Author: H. Richy (INRISA)
+ *
+ */
 
 #include "thot_gui.h"
 #include "thot_sys.h"

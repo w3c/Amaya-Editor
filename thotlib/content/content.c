@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,8 +15,11 @@
  */
  
 /*
-   This module handles document contents: text and graphics
-
+ * This module handles document contents: text and graphics
+ *
+ * Authors: V. Quint (INRIA)
+ *          I. Vatton (INRIA) - Polylines
+ *
  */
 
 #include "thot_sys.h"

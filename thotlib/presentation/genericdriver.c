@@ -5,7 +5,7 @@
  *
  */
  
-/*----------------------------------------------------------------------
+/*
  * genericdriver.c : presentation driver used to manipulate presentation  *
  *           using the generic presentation description of a document.	  *
  *                                                                        *
@@ -35,7 +35,10 @@
  *  PcElemType rule have to be first then all rules are sorted by the	  *
  *  value of the CoCondition field, and others fields available for rules *
  *  of teh same kind. The function TstRuleContext rely on this order.	  *
-  ----------------------------------------------------------------------*/
+ *
+ * Author: D. Veillard (INRIA)
+ *
+ */
 
 #include "thot_sys.h"
 #include "application.h"

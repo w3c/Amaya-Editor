@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -16,6 +16,11 @@
  
 /*
  * This module saves into PostScript format thot documents
+ *
+ * Authors: I. Vatton (INRIA)
+ *          C. Roisin (INRIA) - Pagination at printing time
+ *          R. Guetari (INRIA) - Integration of PostScript prologue
+ *
  */
 
 #include "thot_sys.h"

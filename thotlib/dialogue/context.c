@@ -8,6 +8,9 @@
 /*
  * context.c : 
  *     Handle the context of documents.
+ *
+ * Author: I. Vatton (INRIA)
+ *
  */
 
 #include "thot_gui.h"

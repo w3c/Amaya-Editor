@@ -15,9 +15,10 @@
  */
  
 /*
-
-   This module locates words in Thot documents.
-
+ * This module locates words in Thot documents.
+ *
+ * Authors: H. Richy, E. Picheral (INRIA)
+ *
  */
 
 #include "thot_sys.h"

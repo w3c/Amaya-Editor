@@ -13,6 +13,11 @@
  * will be available in English in the next release.
  * 
  */
+
+/*
+ * Author: N. Layaida (INRIA)
+ *
+ */
  
 #include "thot_gui.h"
 #include "thot_sys.h"

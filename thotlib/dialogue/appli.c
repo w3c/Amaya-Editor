@@ -14,11 +14,12 @@
  * 
  */
  
-/*----------------------------------------------------------------------
-   
-   Module de gestion des frames d'application.                     
-   
-  ----------------------------------------------------------------------*/
+/*
+ * Handle application frames
+ *
+ * Author: I. Vatton (INRIA)
+ *
+ */
 
 #include "thot_gui.h"
 #include "thot_sys.h"

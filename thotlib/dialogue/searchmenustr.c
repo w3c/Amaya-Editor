@@ -15,7 +15,12 @@
  */
  
 /*
-   gestion de la commande de recherche.
+ * searchmenu.c : diverse document search functions.
+ *
+ * Authors: I. Vatton (INRIA)
+ *          S. Bonhomme (INRIA) - Separation between structured and
+ *                                unstructured editing modes
+ *
  */
 
 #include "thot_gui.h"

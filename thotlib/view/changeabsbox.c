@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,11 +15,12 @@
  */
  
 /*
-   -- Modifications des images abstraites.
-   Ce module effectue les modifications des images abstraites des documents
-   et demande au Mediateur le reaffichage incremental. 
-   V. Quint    
-
+ * -- Modifications des images abstraites.
+ * Ce module effectue les modifications des images abstraites des documents
+ * et demande au Mediateur le reaffichage incremental. 
+ *
+ * Author: V. Quint (INRIA)
+ *
  */
 
 #include "thot_sys.h"

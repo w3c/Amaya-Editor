@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,9 +15,11 @@
  */
  
 /*
-   gestion des regles de presentation de l'image abstraite.
-   Ce module applique les regles de presentation aux paves.     
-
+ * gestion des regles de presentation de l'image abstraite.
+ * Ce module applique les regles de presentation aux paves.     
+ *
+ * Author: V. Quint (INRIA)
+ *
  */
 
 #include "thot_sys.h"

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -8,6 +8,9 @@
 /*
  * inites.c : module handling colors and patterns in the context of
  *            drawing on a computer screen (initpses is for Postcript).
+ *
+ * Author: I. Vatton (INRIA)
+ *
  */
 
 #include "thot_sys.h"

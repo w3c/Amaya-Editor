@@ -5,10 +5,12 @@
  *
  */
  
-/*----------------------------------------------------------------------
-   Application Program Interface level 3             
-   --->document windows managment                                  
-  ----------------------------------------------------------------------*/
+/*
+ * document windows API
+ *
+ * Author: I. Vatton (INRIA)
+ *
+ */
 
 /* #define DEBUG_MULTIKEY */
 #define OWN_XLOOKUPSTRING	/* Do NOT remove it, it change thot_gui.h includes */

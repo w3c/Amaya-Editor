@@ -16,6 +16,10 @@
 
 /*
    Edition functions == file, view, import, and export menus
+ *
+ * Authors: I. Vatton (INRIA)
+ *          N. Layaida (INRIA) - New picture formats
+ *
  */
 
 #include "thot_sys.h"

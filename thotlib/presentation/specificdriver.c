@@ -5,7 +5,7 @@
  *
  */
  
-/*----------------------------------------------------------------------
+/*
  * specificdriver.c : presentation driver used to manipulate presentation *
  *           using presentation specific attributes.			  *
  *                                                                        *
@@ -20,7 +20,9 @@
  *  the usual way of representing objects which consists of following the *
  *  presentation scheme associated to this kind of document and described *
  * in the P language.                                                     *
-  ----------------------------------------------------------------------
+ *
+ * Author: D. Veillard (INRIA)
+ *
  */
 
 #include "thot_sys.h"

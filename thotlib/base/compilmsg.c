@@ -1,12 +1,15 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
 /*
-   This module handles messages displayed by Thot compilers.
+ * This module handles messages displayed by Thot compilers.
+ *
+ * Author: I. Vatton (INRIA)
+ *
  */
 
 #include "compilmsg.h"

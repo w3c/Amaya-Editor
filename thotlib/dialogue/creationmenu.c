@@ -5,13 +5,12 @@
  *
  */
  
-/*----------------------------------------------------------------------
-   
-   THOT                                     
-   
-   This module handles the creation commands called by the mediator
-
-  ----------------------------------------------------------------------*/
+/*
+ * This module handles the creation commands
+ *
+ * Author: I. Vatton (INRIA)
+ *
+ */
 
 #include "thot_gui.h"
 #include "thot_sys.h"

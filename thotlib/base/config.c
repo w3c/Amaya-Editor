@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,7 +15,10 @@
  */
  
 /*
-   gestion des fichiers de configuration et de langue.
+ * gestion des fichiers de configuration et de langue.
+ *
+ * Author: V. Quint (INRIA)
+ *
  */
 
 #include "thot_gui.h"

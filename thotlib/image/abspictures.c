@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,7 +15,10 @@
  */
  
 /*
- * Gestion de la presentation specifique des images
+ * Handle specific presentation of pictures
+ * Authors: I. Vatton (INRIA)
+ *          N. Layaida (INRIA) - New picture formats
+ *
  */
 #include "thot_sys.h"
 

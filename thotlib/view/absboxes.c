@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,8 +15,11 @@
  */
  
 /*
-   Module de manipulations des images abstraites.
-
+ * Module de manipulations des images abstraites.
+ *
+ * Authors: V. Quint (INRIA)
+ *          C. Roisin (INRIA) - Columns and pages
+ *
  */
 
 

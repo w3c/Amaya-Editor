@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -11,6 +11,9 @@
  *
  * some functions are just fake ones, not used on Postcript output, but needed
  * at link time.
+ *
+ * Author: I. Vatton (INRIA)
+ *
  */
 
 #include "thot_sys.h"

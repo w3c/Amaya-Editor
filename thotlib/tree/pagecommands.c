@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -14,10 +14,15 @@
  * 
  */
  
-/* printpage.c : module de traitement des regles page
-   ce module contient les procedures utilisees par le
-   paginateur et l'imprimeur (extraites et modifiees
-   de page.c et print.c)
+/*
+ *  module de traitement des regles page
+ * ce module contient les procedures utilisees par le
+ * paginateur et l'imprimeur (extraites et modifiees
+ * de page.c et print.c)
+ *
+ * Authors: V. Quint (INRIA)
+ *          C. Roisin (INRIA) - Pagination at printing time
+ *
  */
 
 #include "thot_sys.h"

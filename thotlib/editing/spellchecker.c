@@ -14,7 +14,12 @@
  * 
  */
  
-/* Module de calcul du Correcteur */
+/*
+ * Spell checking
+ *
+ * Author: H. Richy (INRISA)
+ *
+ */
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

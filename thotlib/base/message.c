@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,7 +15,10 @@
  */
  
 /*
-   traitement des messages d'erreur venant de THOT, impression, traduction...
+ * Handles error messages for Thot applications
+ *
+ * Author: I. Vatton (INRIA)
+ *
  */
 
 #include "thot_gui.h"

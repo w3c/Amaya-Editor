@@ -1,7 +1,15 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
+/*
+ * Content API routines
+ *
+ * Authors: V. Quint (INRIA)
+ *          I. Vatton (INRIA) - Polylines
  *
  */
  

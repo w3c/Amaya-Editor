@@ -11,6 +11,12 @@
    be redefined specifically to an applications.
  */
 
+/*
+ *
+ * Author: V. Quint (INRIA)
+ *
+ */
+
 #include "thot_sys.h"
 #include "constint.h"
 #include "typeint.h"

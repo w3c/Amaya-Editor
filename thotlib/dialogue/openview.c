@@ -4,6 +4,12 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
+
+/*
+ *
+ * Author: I. Vatton (INRIA)
+ *
+ */
  
 #include "thot_sys.h"
 #include "constmenu.h"

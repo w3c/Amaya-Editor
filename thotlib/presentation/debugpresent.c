@@ -18,6 +18,9 @@
    Ce programme effectue le chargement d'un schema de presentation et
    du schema de structure associe' et liste le contenu du schema de
    presentation.        
+ *
+ * Author: D. Veillard (INRIA)
+ *
  */
 
 #include "thot_sys.h"

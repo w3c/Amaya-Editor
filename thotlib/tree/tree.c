@@ -1,12 +1,15 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
-   This module implements the operations on the abstract trees used by Thot.
+ * This module implements the operations on the abstract trees used by Thot.
+ *
+ * Author: V. Quint (INRIA)
+ *
  */
 
 #include "libmsg.h"

@@ -26,6 +26,9 @@
  *
  * On Windows platforms, this is of course based on the standard
  * registry mechanism.
+ *
+ * Author: D. Veillard (INRIA)
+ *
  */
 
 #include "thot_sys.h"
