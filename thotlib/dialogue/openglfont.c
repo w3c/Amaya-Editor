@@ -247,18 +247,19 @@ Char_Cache_index *Char_index_lookup_cache (GL_font *font, unsigned int idx,
   cache->index = idx;
   cache->character = FT_Get_Char_Index (font->face, idx);
   cache->next = NULL;
-  if (isPoly)
-    /* here the cache->glyph.data is filled with a glList */
-    /* must be freed with glDeleteLists */
-    MakePolygonGlyph (font, cache->character, &cache->glyph);
-  else
-    /* here the cache->glyph.data is filled with a FT bitmap */
-    /* must be freed with TtaFreeMemory */
-    MakeBitmapGlyph (font, cache->character, &cache->glyph);
-  /* return the new cache entry */
-  /*if (cache->glyph.data_type == GL_GLYPH_DATATYPE_NONE)
-    printf ("Glyph not found idx=%d\n", idx);*/
-  return (cache);  
+  if (idx != 32)
+    {
+      if (isPoly)
+	/* here the cache->glyph.data is filled with a glList */
+	/* must be freed with glDeleteLists */
+	MakePolygonGlyph (font, cache->character, &cache->glyph);
+      else
+	/* here the cache->glyph.data is filled with a FT bitmap */
+	/* must be freed with TtaFreeMemory */
+	MakeBitmapGlyph (font, cache->character, &cache->glyph);
+      /* return the new cache entry */
+    }
+ return (cache);  
 }
 
 /*----------------------------------------------------------------------
