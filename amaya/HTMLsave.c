@@ -1185,6 +1185,9 @@ static void RestartParser (Document doc, char *localFile,
   TtaSetDisplayMode (doc, DeferredDisplay);
   RemoveDocCSSs (doc);  
 
+  /* store the document profile */
+  TtaSetDocumentProfile (doc, parsingLevel);
+
   /* Calls the corresponding parser */
   if (DocumentMeta[doc]->xmlformat)       
     StartXmlParser (doc, localFile, documentname, tempdir,

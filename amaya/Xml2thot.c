@@ -1663,10 +1663,10 @@ static void       StartOfXmlStartElement (char *name)
 		}
 	      else
 		{
-		  /* element invalid for the document profile */
+		  /* invalid element for the document profile */
 		  /* don't process that element */
 		  sprintf (msgBuffer,
-			   "Unknown %s element %s for the document profile",
+			   "Invalid %s element %s for the document profile",
 			   schemaName, elementName);
 		  XmlParseError (errorParsingProfile, msgBuffer, 0);
 		  UnknownElement = TRUE;
