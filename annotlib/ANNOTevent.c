@@ -670,6 +670,9 @@ void *context;
        int source_doc = DocumentMeta[doc]->source_doc;
        AnnotMeta *annot = GetMetaData (source_doc, doc);
 
+       TtaSetDocumentUnmodified (doc);
+       DocStatusUpdate (doc, TRUE);
+
 #if 0 /* @@ RRS - interim idea for updating the annotation.  Doesn't work
 	 unless the POST reply returns all the properties */
        if (annot)
