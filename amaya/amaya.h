@@ -191,14 +191,14 @@ typedef enum _ClickEvent {
 #define DocInfoCharset        467
 #define DocInfoContentTitle   468
 #define DocInfoContent        469
-#define DocInfoLocationTitle  470
-#define DocInfoLocation       471
+#define DocInfoURLTitle       470
+#define DocInfoURL            471
 #define DocInfoTitle1         472
 #define DocInfoTitle2         473
 #define DocInfoContent1       474
 #define DocInfoContent2       475
-#define DocInfoLocation2Title 476
-#define DocInfoLocation2      477
+#define DocInfoLocationTitle  476
+#define DocInfoLocation       477
 #define MAX_REF         478
 
 #define FormPrint        1

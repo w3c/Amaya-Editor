@@ -364,9 +364,9 @@ void DocumentInfo (Document document, View view)
 		"________________");
 
    /* Document URL */
-   TtaNewLabel (BaseDialog + DocInfoLocationTitle,
+   TtaNewLabel (BaseDialog + DocInfoURLTitle,
 		BaseDialog + DocInfoForm,
-		"LOCATION");
+		"URL");
 
    /* Mime Type */
    TtaNewLabel (BaseDialog + DocInfoMimeTypeTitle,
@@ -383,7 +383,7 @@ void DocumentInfo (Document document, View view)
 		"CONTENT LENGTH");
 
    /* Content Location */
-   TtaNewLabel (BaseDialog + DocInfoLocation2Title,
+   TtaNewLabel (BaseDialog + DocInfoLocationTitle,
 		BaseDialog + DocInfoForm,
 		"CONTENT LOCATION");
 
@@ -400,7 +400,7 @@ void DocumentInfo (Document document, View view)
      content = DocumentURLs[document];
    else
      content = TtaGetMessage (AMAYA, AM_UNKNOWN);
-   TtaNewLabel (BaseDialog + DocInfoLocation,
+   TtaNewLabel (BaseDialog + DocInfoURL,
 		BaseDialog + DocInfoForm, content);
 
    /* Mime Type */
@@ -428,11 +428,13 @@ void DocumentInfo (Document document, View view)
 		BaseDialog + DocInfoForm, content);
 
    /* Content Location */
-   if (DocumentMeta[document] && DocumentMeta[document]->content_location != NULL)
+   if (DocumentMeta[document] 
+       && DocumentMeta[document]->content_location != NULL 
+       && DocumentMeta[document]->content_location[0] != EOS)
      content = DocumentMeta[document]->content_location;
    else
      content = TtaGetMessage (AMAYA, AM_UNKNOWN);
-   TtaNewLabel (BaseDialog + DocInfoLocation2,
+   TtaNewLabel (BaseDialog + DocInfoLocation,
 		BaseDialog + DocInfoForm, content);
 
    /* end of dialogue */
