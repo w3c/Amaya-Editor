@@ -744,7 +744,9 @@ PtrAbstractBox      pAb;
 			     pPRule->PrType == PtBorderTopWidth ||
 			     pPRule->PrType == PtBorderRightWidth ||
 			     pPRule->PrType == PtBorderBottomWidth ||
-			     pPRule->PrType == PtBorderLeftWidth )
+			     pPRule->PrType == PtBorderLeftWidth ||
+			     pPRule->PrType == PtXRadius ||
+			     pPRule->PrType == PtYRadius)
                            /* convertit en 1/10 de caractere */
                            i = 10 * i;
                   }
@@ -870,6 +872,14 @@ PtrAbstractBox      pAb;
                       val = pAbb->AbLeftBorder;
                       *unit = pAbb->AbLeftBorderUnit;
                       break;
+                   case PtXRadius:
+                      val = pAbb->AbRx;
+                      *unit = pAbb->AbRxUnit;
+                      break;
+                   case PtYRadius:
+                      val = pAbb->AbRy;
+                      *unit = pAbb->AbRyUnit;
+                      break;
                    default:
                       break;
                    }
@@ -973,7 +983,9 @@ PtrAbstractBox      pAb;
 		    pPRule->PrType == PtBorderTopWidth ||
 		    pPRule->PrType == PtBorderRightWidth ||
 		    pPRule->PrType == PtBorderBottomWidth ||
-		    pPRule->PrType == PtBorderLeftWidth)
+		    pPRule->PrType == PtBorderLeftWidth ||
+		    pPRule->PrType == PtXRadius ||
+		    pPRule->PrType == PtYRadius)
              {
                 if (pPRule->PrMinAttr)
                    /* c'est la valeur d'un attribut */
@@ -1730,6 +1742,12 @@ PtrDocument         pDoc;
 		 case LtSymbol:
 		 case LtGraphics:
 		    pAb->AbShape = pEl->ElGraph;
+		    if (pEl->ElLeafType == LtGraphics && pEl->ElGraph == 'C')
+		      /* rectangle with rounded corners */
+		      {
+			pAb-> AbRx = 0;
+			pAb-> AbRy = 0;
+		      }
 		    pAb->AbGraphAlphabet = 'G';
 		    if (pAb->AbShape == EOS)
 		       pAb->AbVolume = 0;
@@ -3851,6 +3869,18 @@ PtrAttribute        pAttr;
 		pAb->AbLeftBorder = 0;
 		appl = TRUE;
 	      }
+            break;
+
+          case PtXRadius:
+	    pAb->AbRx = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				     &appl, &unit, pAttr, pAb);
+	    pAb->AbRxUnit = unit;
+            break;
+
+          case PtYRadius:
+	    pAb->AbRy = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				     &appl, &unit, pAttr, pAb);
+	    pAb->AbRyUnit = unit;
             break;
 
           case PtVertRef:

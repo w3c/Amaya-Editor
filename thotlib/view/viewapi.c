@@ -1173,21 +1173,27 @@ int                 delta;
 	       pAbbox1->AbLeafType = element->ElLeafType;
 	       pAbbox1->AbShape = element->ElGraph;
 	       pAbbox1->AbGraphAlphabet = TEXT('G');
-	       if (element->ElLeafType == LtGraphics &&
-		   element->ElGraph == 'a' &&
-		   pAbbox1->AbHeight.DimAbRef == NULL)
-		 {
-		   /* force the circle height to be equal to its width */
-		   pAbbox1->AbHeight.DimAbRef = pAbbox1;
-		   pAbbox1->AbHeight.DimSameDimension = FALSE;
-		   pAbbox1->AbHeight.DimValue = 0;
-		   pAbbox1->AbHeight.DimUserSpecified = FALSE;
-		   if (pAbbox1->AbWidth.DimUnit == UnPoint)
-		     pAbbox1->AbHeight.DimUnit = UnPoint;
-		   else
-		     pAbbox1->AbHeight.DimUnit = UnPixel;
-		   pAbbox1->AbHeightChange = TRUE;
-		 }
+	       if (element->ElLeafType == LtGraphics)
+		 if (element->ElGraph == 'a' &&
+		     pAbbox1->AbHeight.DimAbRef == NULL)
+		   {
+		     /* force the circle height to be equal to its width */
+		     pAbbox1->AbHeight.DimAbRef = pAbbox1;
+		     pAbbox1->AbHeight.DimSameDimension = FALSE;
+		     pAbbox1->AbHeight.DimValue = 0;
+		     pAbbox1->AbHeight.DimUserSpecified = FALSE;
+		     if (pAbbox1->AbWidth.DimUnit == UnPoint)
+		       pAbbox1->AbHeight.DimUnit = UnPoint;
+		     else
+		       pAbbox1->AbHeight.DimUnit = UnPixel;
+		     pAbbox1->AbHeightChange = TRUE;
+		   }
+		 else if (element->ElGraph == 'C')
+		   /* a rectangle with rounded corners */
+		   {
+		     pAbbox1->AbRx = 0;
+		     pAbbox1->AbRy = 0;
+		   }
 	       break;
 	     default:
 	       break;

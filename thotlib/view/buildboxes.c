@@ -577,6 +577,7 @@ int                *height;
     case 'C':
     case 'a':
     case 'c':
+    case 'g':
     case 'L':
     case '/':
     case '\\':

@@ -1293,29 +1293,29 @@ int                 frame;
 {
    int                 xDelta, yDelta;
 
-   if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, TRUE))
+   if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, (int)c, frame, TRUE))
      {
-	pAb->AbShape = c;
-	/* Dimensions du symbole */
-	pAb->AbVolume = 1;
-	if (defaultWidth || defaultHeight)
-	   GiveSymbolSize (pAb, &xDelta, &yDelta);
-
-	/* met a jour la boite */
-	if (defaultWidth)
-	   xDelta -= pBox->BxWidth;
-	else
-	   xDelta = 0;
-
-	if (defaultHeight)
-	   yDelta -= pBox->BxHeight;
-	else
-	   yDelta = 0;
-
-	BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
-	/* adjust the width of some symbols */
-	ResizeHeight (pBox, NULL, NULL, 0, 0, 0, frame);
-	APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, FALSE);
+       pAb->AbShape = c;
+       /* Dimensions du symbole */
+       pAb->AbVolume = 1;
+       if (defaultWidth || defaultHeight)
+	 GiveSymbolSize (pAb, &xDelta, &yDelta);
+       
+       /* met a jour la boite */
+       if (defaultWidth)
+	 xDelta -= pBox->BxWidth;
+       else
+	 xDelta = 0;
+       
+       if (defaultHeight)
+	 yDelta -= pBox->BxHeight;
+       else
+	 yDelta = 0;
+       
+       BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
+       /* adjust the width of some symbols */
+       ResizeHeight (pBox, NULL, NULL, 0, 0, 0, frame);
+       APPgraphicModify (pBox->BxAbstractBox->AbElement, (int)c, frame, FALSE);
      }
 }
 
@@ -1348,14 +1348,14 @@ int                 frame;
       /* efface la selection precedente */
       switch (c)
 	{
-	case 'S':	/* Segments */
-	case 'U':	/* Segments vers avant */
-	case 'N':	/* Segments fleches vers arriere */
-	case 'M':	/* Segments fleches dans les deux sens */
-	case 'w':	/* Segments (2 points) */
-	case 'x':	/* Segments (2 points) forward arrow */
-	case 'y':	/* Segments (2 points) backward arrow */
-	case 'z':	/* Segments (2 points) arrows on both directions */
+	case 'S':	/* polyline */
+	case 'U':	/* polyline with forward arrow */
+	case 'N':	/* polyline with backward arrow */
+	case 'M':	/* polyline with arrows at both ends */
+	case 'w':	/* segment */
+	case 'x':	/* segment with forward arrow */
+	case 'y':	/* segment with backward arrow */
+	case 'z':	/* segment with arrows at both ends */
 	case 'B':	/* Beziers (ouvertes) */
 	case 'A':	/* Beziers (ouvertes) flechees vers avant */
 	case 'F':	/* Beziers (ouvertes) flechees vers arriere */
@@ -1450,6 +1450,12 @@ int                 frame;
 
 	  pAb->AbShape = c;
 	  pAb->AbVolume = 1;
+	  if (c == 'C')
+	    /* rectangle with rounded corners */
+	    {
+	      pAb->AbRx = 0;
+	      pAb->AbRy = 0;
+	    }
 	  /* Dimensions du symbole */
 	  GiveGraphicSize (pAb, &xDelta, &yDelta);
 	  /* met a jour la boite */
@@ -1767,7 +1773,8 @@ int                 frame;
 	    /* deplace en deux fois? */
 	    if (i > length)
 	      {
-		ustrncpy (&pTargetBuffer->BuContent[targetInd - 1], &pSourceBuffer->BuContent[sourceInd], length);
+		ustrncpy (&pTargetBuffer->BuContent[targetInd - 1],
+			  &pSourceBuffer->BuContent[sourceInd], length);
 		pTargetBuffer->BuLength = FULL_BUFFER;
 		pTargetBuffer->BuContent[THOT_MAX_CHAR - 1] = EOS;
 		targetInd = 1;
@@ -1775,7 +1782,8 @@ int                 frame;
 		i -= length;
 		pTargetBuffer = pTargetBuffer->BuNext;
 	      }
-	    ustrncpy (&pTargetBuffer->BuContent[targetInd - 1], &pSourceBuffer->BuContent[sourceInd], i);
+	    ustrncpy (&pTargetBuffer->BuContent[targetInd - 1],
+		      &pSourceBuffer->BuContent[sourceInd], i);
 	    i = i + targetInd - 1;
 	  }
 	
@@ -1798,7 +1806,7 @@ int                 frame;
 	    
 	    /* Si la selection courante reference le buffer libere */
 	    if (pTargetBuffer == pViewSel->VsBuffer)
-	      if (pSourceBuffer->BuNext != NULL)	/* Apres la destruction */
+	      if (pSourceBuffer->BuNext != NULL)   /* Apres la destruction */
 		pViewSel->VsBuffer = pSourceBuffer->BuNext;
 	      else
 		/* ElemIsBefore la destruction */
@@ -1871,7 +1879,8 @@ int                 frame;
 	
 	/* Mise a jour des boites */
 	pAb->AbVolume -= charsDelta;
-	BoxUpdate (pAb->AbBox, pLine, -charsDelta, -spacesDelta, -xDelta, -adjust, 0, frame, FALSE);
+	BoxUpdate (pAb->AbBox, pLine, -charsDelta, -spacesDelta, -xDelta,
+		   -adjust, 0, frame, FALSE);
 	CloseTextInsertion ();
 	break;
 	
@@ -1910,6 +1919,11 @@ int                 frame;
 	else
 	  yDelta = 0;
 	BoxUpdate (pBox, pLine, -1, 0, -xDelta, 0, -yDelta, frame, FALSE);
+	if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
+	  {
+	    pAb->AbRx = 0;
+	    pAb->AbRy = 0;
+	  }
 	pAb->AbVolume = 0;
 	pAb->AbShape = EOS;
 	break;
@@ -2554,7 +2568,8 @@ int                 editType;
 		else if (pAb->AbLeafType == LtSymbol && FromKeyboard)
 		  LoadSymbol ((char) editType, pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 		else if ((pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine) && FromKeyboard)
-		  LoadShape ((char) editType, pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+		  LoadShape ((char) editType, pLine, defaultHeight,
+			     defaultWidth, pBox, pAb, frame);
 	      }
           }
 
@@ -2577,7 +2592,8 @@ int                 editType;
 	  {
 	     if (pAb->AbLeafType == LtGraphics)
 		pAb->AbRealShape = pAb->AbShape;
-	     if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
+	     if (pAb->AbLeafType == LtGraphics ||
+		 pAb->AbLeafType == LtPolyLine)
 	       {
 		  /* remonte a la recherche d'un ancetre elastique */
 		  pLastAb = pAb;
@@ -2586,7 +2602,8 @@ int                 editType;
 		       pSelBox = pLastAb->AbBox;
 		       if (pSelBox->BxHorizFlex || pSelBox->BxVertFlex)
 			 {
-			    MirrorShape (pAb, pSelBox->BxHorizInverted, pSelBox->BxVertInverted, FromKeyboard);
+			    MirrorShape (pAb, pSelBox->BxHorizInverted,
+					 pSelBox->BxVertInverted,FromKeyboard);
 			    /* on arrete */
 			    pLastAb = NULL;
 			 }
@@ -2613,7 +2630,8 @@ int                 editType;
 	        /* send event TteElemTextModify.Post */
 	        APPtextModify (pAb->AbElement, frame, FALSE);
 	     else if (graphEdit)
-	       APPgraphicModify (pAb->AbElement,pAb->AbPolyLineShape, frame, FALSE);
+	       APPgraphicModify (pAb->AbElement,pAb->AbPolyLineShape, frame,
+				 FALSE);
 	     /* signale la nouvelle selection courante */
 	     if ((editType == TEXT_CUT || editType == TEXT_PASTE ||
 		  editType == TEXT_X_PASTE || editType == TEXT_DEL ||
@@ -2627,10 +2645,13 @@ int                 editType;
 		  j = pViewSelEnd->VsBox->BxIndChar + pViewSelEnd->VsIndBox;
 		  if (pViewSelEnd->VsIndBuf > 0)
 		     j++;
-		  ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
+		  ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i,
+				   FALSE, TRUE, FALSE, FALSE);
 		  if (pAb->AbLeafType != LtPolyLine)
 		     if (j != i)
-			ChangeSelection (frame, pViewSelEnd->VsBox->BxAbstractBox, j, TRUE, TRUE, FALSE, FALSE);
+			ChangeSelection (frame,
+					 pViewSelEnd->VsBox->BxAbstractBox, j,
+					 TRUE, TRUE, FALSE, FALSE);
 	       }
 	  }
      }
@@ -2700,7 +2721,8 @@ int                 keyboard;
 	      pAb = pViewSel->VsBox->BxAbstractBox;
 	      CloseTextInsertion ();
 	      if (ThotLocalActions[T_deletenextchar] != NULL)
-		(*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, TRUE);
+		(*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement,
+						       TRUE);
 	    }
 	}
       else
@@ -2730,7 +2752,8 @@ int                 keyboard;
 		  /* selection could not be modified by the application */
 
 		  /* Recherche le point d'insertion du texte */
-		  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer, &ind, &xx, &previousChars);
+		  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer, &ind, &xx,
+				   &previousChars);
 		  
 		  if (pAb != NULL)
 		    {
@@ -2740,13 +2763,15 @@ int                 keyboard;
 		      
 		      /* initialise l'insertion */
 		      if (!TextInserting)
-			StartTextInsertion (pAb, frame, pSelBox, pBuffer, ind, previousChars);
+			StartTextInsertion (pAb, frame, pSelBox, pBuffer, ind,
+					    previousChars);
 		      font = pSelBox->BxFont;
 		      
 		      if (pBuffer == NULL)
 			return;
 		      /* La selection doit se trouver en fin de buffer */
-		      if (ind <= pBuffer->BuLength && pBuffer->BuPrevious != NULL)
+		      if (ind <= pBuffer->BuLength &&
+			  pBuffer->BuPrevious != NULL)
 			pBuffer = pBuffer->BuPrevious;
 		      
 		      /* prepare le reaffichage */
@@ -2760,7 +2785,8 @@ int                 keyboard;
 		      
 		      /* Est-on au debut d'une boite entiere ou coupee ? */
 		      pBox = pAb->AbBox->BxNexChild;
-		      if ((pBox == NULL || pSelBox == pBox) && previousChars == 0)
+		      if ((pBox == NULL || pSelBox == pBox) &&
+			  previousChars == 0)
 			beginOfBox = TRUE;
 		      else
 			beginOfBox = FALSE;

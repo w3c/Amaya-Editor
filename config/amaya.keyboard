@@ -36,7 +36,7 @@
 # personal keyboard file for Amaya
 #moving around 
 <Key>Delete:        TtcDeleteSelection() 
-<Key>>Backspace:    TtcDeletePreviousChar() 
+<Key>Backspace:    TtcDeletePreviousChar() 
 <Key>Escape:        TtcParentElement() 
 <Key>Return:        TtcCreateElement() 
 <Key>Home:          TtcStartOfLine() 

@@ -220,6 +220,7 @@ typedef enum
   PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtJustify,
   PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground,
   PtHyphenate, PtVertOverflow, PtHorizOverflow,
+  PtXRadius, PtYRadius,
   /* the three following types must be the last ones */
   PtBreak1, PtBreak2, PtPictInfo
 } PRuleType;
@@ -467,7 +468,7 @@ typedef struct _PresRule
 		PtMarginTop, PtMarginRight, PtMarginBottom, PtMarginLeft
 	        PtPaddingTop, PtPaddingRight, PtPaddingBottom, PtPaddingLeft,
                 PtBorderTopWidth, PtBorderRightWidth, PtBorderBottomWidth,
-                PtBorderLeftWidth */
+                PtBorderLeftWidth, PtXRadius, PtYRadius */
 	{
 	  TypeUnit _PrMinUnit_;	/* the distance is expressed in picas,
 				   1/10 of a character, etc. */

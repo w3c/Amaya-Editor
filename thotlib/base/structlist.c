@@ -179,6 +179,12 @@ FILE               *fileDescriptor;
             case PtBorderLeftWidth:
                fprintf (fileDescriptor, "BorderLeftWidth");
                break;
+	    case PtXRadius:
+	       fprintf (fileDescriptor, "XRadius");
+	       break;
+	    case PtYRadius:
+	       fprintf (fileDescriptor, "YRadius");
+	       break;
             case PtBorderTopColor:
                fprintf (fileDescriptor, "BorderTopColor");
                break;
@@ -629,7 +635,7 @@ ThotBool            premierfils;
 		  if (pRule->PrSpecifAttr > 0)
 		     fprintf (fileDescriptor, "[%s]", pRule->PrSpecifAttrSSchema->
 			    SsAttribute[pRule->PrSpecifAttr - 1].AttrOrigName);
-		  fprintf (fileDescriptor, " vue%d", pRule->PrViewNum);
+		  fprintf (fileDescriptor, " view%d", pRule->PrViewNum);
 		  pRule = pRule->PrNextPRule;
 	       }
 	     fprintf (fileDescriptor, ")");
@@ -1448,6 +1454,13 @@ FILE               *fileDescriptor;
 	   case LtGraphics:
 	      fprintf (fileDescriptor, " alphabet=%c", pAb->AbGraphAlphabet);
 	      fprintf (fileDescriptor, "\'%c\'", pAb->AbShape);
+	      if (pAb->AbShape == 'C')
+		{
+		  fprintf (fileDescriptor, " rx:%d", pAb->AbRx);
+		  wrTypeUnit (pAb->AbRxUnit, fileDescriptor);
+		  fprintf (fileDescriptor, " ry:%d", pAb->AbRy);
+		  wrTypeUnit (pAb->AbRyUnit, fileDescriptor);
+		}
 	      break;
 	   default:
 	      break;
@@ -1850,7 +1863,8 @@ FILE               *fileDescriptor;
 			    fprintf (fileDescriptor, "PictInfo = NULL");
 			 else
 			    fprintf (fileDescriptor, "x = %d, y = %d, w = %d, h = %d, name = %s",
-				     image->PicXArea, image->PicYArea, image->PicWArea, image->PicHArea,
+				     image->PicXArea, image->PicYArea,
+				     image->PicWArea, image->PicHArea,
 				     image->PicFileName);
 			 break;
 		      case LtPageColBreak:
@@ -1874,6 +1888,13 @@ FILE               *fileDescriptor;
 			 fprintf (fileDescriptor, " printed graphics: \'");
 			 putc (pAb->AbRealShape, fileDescriptor);
 			 fprintf (fileDescriptor, "\'");
+			 if (pAb->AbShape == 'C')
+			   {
+			     fprintf (fileDescriptor, " rx:%d", pAb->AbRx);
+			     wrTypeUnit (pAb->AbRxUnit, fileDescriptor);
+			     fprintf (fileDescriptor, " ry:%d", pAb->AbRy);
+			     wrTypeUnit (pAb->AbRyUnit, fileDescriptor);
+			   }
 			 break;
 		      case LtPolyLine:
 			 fprintf (fileDescriptor, "POLYLINE\n");
@@ -3189,6 +3210,14 @@ FILE               *fileDescriptor;
                     break;
                  case PtBorderLeftWidth:
                     fprintf (fileDescriptor, "BorderLeftWidth: ");
+                    wrminind (RP, fileDescriptor);
+                    break;
+	         case PtXRadius:
+                    fprintf (fileDescriptor, "XRadius: ");
+                    wrminind (RP, fileDescriptor);
+                    break;
+	         case PtYRadius:
+                    fprintf (fileDescriptor, "YRadius: ");
                     wrminind (RP, fileDescriptor);
                     break;
                  case PtBorderTopColor:

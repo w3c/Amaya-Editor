@@ -4028,6 +4028,8 @@ PRuleType           typeRule;
     case PtFillPattern:
     case PtBackground:
     case PtForeground:
+    case PtXRadius:
+    case PtYRadius:
       pAb->AbAspectChange = TRUE;
       break;
     default:

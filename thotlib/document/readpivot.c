@@ -1845,6 +1845,12 @@ ThotBool            link;
     case C_PR_BORDERLEFTWIDTH:
       TypeRP = PtBorderLeftWidth;
       break;
+    case C_PR_XRADIUS:
+      TypeRP = PtXRadius;
+      break;
+    case C_PR_YRADIUS:
+      TypeRP = PtYRadius;
+      break;
     case C_PR_JUSTIFY:
       TypeRP = PtJustify;
       break;
@@ -1922,6 +1928,8 @@ ThotBool            link;
       case PtBorderRightWidth:
       case PtBorderBottomWidth:
       case PtBorderLeftWidth:
+      case PtXRadius:
+      case PtYRadius:
 	TtaReadShort (pivFile, &val);
 	unit = ReadUnit (pivFile);
 	if (TypeRP == PtIndent || TypeRP == PtMarginTop ||
@@ -2067,12 +2075,15 @@ ThotBool            link;
 	  case PtBorderRightWidth:
 	  case PtBorderBottomWidth:
 	  case PtBorderLeftWidth:
+          case PtXRadius:
+          case PtYRadius:
 	    pPRule->PrMinAttr = FALSE;
 	    pPRule->PrMinValue = val;
 	    pPRule->PrMinUnit = unit;
-	if (pPRule->PrType == PtIndent || pPRule->PrType == PtMarginTop ||
-	    pPRule->PrType == PtMarginRight || pPRule->PrType == PtMarginBottom ||
-	    pPRule->PrType == PtMarginLeft)
+	    if (pPRule->PrType == PtIndent || pPRule->PrType == PtMarginTop ||
+		pPRule->PrType == PtMarginRight ||
+		pPRule->PrType == PtMarginBottom ||
+		pPRule->PrType == PtMarginLeft)
 	      if (!sign)
 		pPRule->PrMinValue = -pPRule->PrMinValue;
 	    break;

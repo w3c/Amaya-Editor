@@ -1431,6 +1431,7 @@ Document            document;
       > 0 (padding in points).
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
       an integer > 0 (border width in points).
+   PRXRadius, PRYRadius: an integer (radius in points)
    PRVertPos, PRHorizPos: an integer (distance in points)
    PRWidth, PRHeight: an integer (size in points)
    PRJustify: Justified, NotJustified.
@@ -1653,6 +1654,8 @@ Document            document;
 	 case PtBorderRightWidth:
 	 case PtBorderBottomWidth:
 	 case PtBorderLeftWidth:
+	 case PtXRadius:
+	 case PtYRadius:
 	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 	   ((PtrPRule) pRule)->PrMinUnit = UnPoint;
 	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
@@ -1781,6 +1784,7 @@ Document            document;
       > 0 (padding).
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
       an integer > 0 (border width).
+   PRXRadius, PRYRadius: a positive integer (radius)
    PRVertPos, PRHorizPos: an integer (distance)
    PRWidth, PRHeight: an integer (width or height)
 
@@ -1834,6 +1838,8 @@ Document            document;
 	 case PtBorderRightWidth:
 	 case PtBorderBottomWidth:
 	 case PtBorderLeftWidth:
+         case PtXRadius:
+         case PtYRadius:
 	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 	   ((PtrPRule) pRule)->PrMinUnit = unit;
 	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
@@ -2534,6 +2540,7 @@ PRule               pRule;
       > 0 (padding in points).
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
       an integer > 0 (border width).
+   PRXRadius, PRYRadius: radius
    PtVertPos, PtHorizPos: distance
    PtWidth, PtHeight: distance
    PRJustify: Justified, NotJustified.
@@ -2691,6 +2698,8 @@ PRule               pRule;
       case PtBorderRightWidth:
       case PtBorderBottomWidth:
       case PtBorderLeftWidth:
+      case PtXRadius:
+      case PtYRadius:
 	value = ((PtrPRule) pRule)->PrMinValue;
 	break;
 
@@ -2759,6 +2768,7 @@ PRule               pRule;
    PRPaddingTop, PRPaddingRight, PRPaddingBottom, PRPaddingLeft,
    PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth,
    PRBorderLeftWidth,
+   PRXRadius, PRYRadius,
    PRVertPos, PRHorizPos, PRWidth, PRHeight.
 
    This unit could be UnRelative, UnXHeight, UnPoint, UnPixel, UnPercent.
@@ -2799,6 +2809,8 @@ PRule               pRule;
       case PtBorderRightWidth:
       case PtBorderBottomWidth:
       case PtBorderLeftWidth:
+      case PtXRadius:
+      case PtYRadius:
 	value = ((PtrPRule) pRule)->PrMinUnit;
 	break;
       case PtWidth:
@@ -2931,6 +2943,8 @@ PRule               pRule2;
 			    case PtBorderRightWidth:
 			    case PtBorderBottomWidth:
 			    case PtBorderLeftWidth:
+			    case PtXRadius:
+			    case PtYRadius:
 			      if (pR1->PrMinUnit == pR2->PrMinUnit)
 				if (pR1->PrMinAttr == pR2->PrMinAttr)
 				  if (pR1->PrMinValue == pR2->PrMinValue)

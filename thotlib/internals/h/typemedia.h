@@ -475,10 +475,10 @@ typedef struct _AbstractBox
       char     _AbShape_;         /* Drawing code */
       char     _AbGraphAlphabet_; /* Alphabet used*/
       char     _AbRealShape_;     /* Effective drawing code */
-      int      _AbRx;             /* Horizontal radius */
-      int      _AbRy;             /* Vertical radius */     
-      TypeUnit _AbRxUnit;         /* Unit for the horizontal radius */
-      TypeUnit _AbRyUnit;         /* Unit for the vertical radius */
+      int      _AbRx_;            /* Horizontal radius */
+      int      _AbRy_;            /* Vertical radius */     
+      TypeUnit _AbRxUnit_;        /* Unit for the horizontal radius */
+      TypeUnit _AbRyUnit_;        /* Unit for the vertical radius */
     } s2;
     struct /* AbLeafType = LtPicture */
     {
@@ -502,6 +502,10 @@ typedef struct _AbstractBox
 #define AbShape u.s2._AbShape_
 #define AbGraphAlphabet u.s2._AbGraphAlphabet_
 #define AbRealShape u.s2._AbRealShape_
+#define AbRx u.s2._AbRx_
+#define AbRy u.s2._AbRy_
+#define AbRxUnit u.s2._AbRxUnit_
+#define AbRyUnit u.s2._AbRyUnit_
 #define AbPictInfo u.s3._AbPictInfo_
 #define AbPolyLineBuffer u.s4._AbPolyLineBuffer_
 #define AbPolyLineShape u.s4._AbPolyLineShape_

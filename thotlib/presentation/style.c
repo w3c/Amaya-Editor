@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -355,7 +355,8 @@ unsigned int     extra;
 	GetPresentRule (&pRule);
 	if (pRule != NULL)
 	  {
-	    stdRule = GlobalSearchRulepEl (el, &pSPR, &pSSR, 0, NULL, 1, type, extra, FALSE, TRUE, &pAttr);
+	    stdRule = GlobalSearchRulepEl (el, &pSPR, &pSSR, 0, NULL, 1, type,
+					   extra, FALSE, TRUE, &pAttr);
 	    if (stdRule != NULL)
 	      /* copy the standard rule */
 	      *pRule = *stdRule;
@@ -1259,7 +1260,8 @@ ThotBool            generic;
 	  type == PtBorderBottomWidth || type == PtBorderLeftWidth ||
           type == PtLineWeight ||        type == PtThickness ||
 	  type == PtIndent ||            type == PtLineSpacing ||
-          type == PtBreak1 ||            type == PtBreak2)
+          type == PtBreak1 ||            type == PtBreak2 ||
+          type == PtXRadius ||           type == PtYRadius)
 	value *= 10;
       break;
     case STYLE_UNIT_EM:
@@ -1451,6 +1453,8 @@ ThotBool            generic;
     case PtPaddingLeft:
     case PtPaddingBottom:
     case PtPaddingRight:
+    case PtXRadius:
+    case PtYRadius:
       rule->PrPresMode = PresImmediate;
       rule->PrMinUnit = int_unit;
       rule->PrMinValue = value;
@@ -1895,6 +1899,8 @@ PtrPRule                   rule;
     case PtBorderRightWidth:
     case PtBorderBottomWidth:
     case PtBorderLeftWidth:
+    case PtXRadius:
+    case PtYRadius:
       int_unit = rule->PrMinUnit;
       value = rule->PrMinValue;
       break;
@@ -2179,6 +2185,14 @@ ThotBool           *absolute;
     case PRBorderLeftWidth:
       *intRule = PtBorderLeftWidth;
       break;      
+    case PRXRadius:
+      *intRule = PtXRadius;
+      *absolute = TRUE;
+      break;
+    case PRYRadius:
+      *intRule = PtYRadius;
+      *absolute = TRUE;
+      break;
     case PRLineWeight:
       *intRule = PtLineWeight;
       break;
@@ -2464,6 +2478,12 @@ int                 extra;
       break;
     case PtBorderLeftWidth:
       setting->type = PRBorderLeftWidth;
+      break;
+    case PtXRadius:
+      setting->type = PRXRadius;
+      break;
+    case PtYRadius:
+      setting->type = PRYRadius;
       break;
     case PtHeight:
       setting->type = PRHeight;

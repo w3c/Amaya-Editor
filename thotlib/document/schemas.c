@@ -884,7 +884,7 @@ PtrDocument         pDoc;
    int                 rule, nat, nObjects;
    ThotBool            present;
    SRule              *pSRule;
-
+   ThotBool            attrSchema;
 #ifndef NODISPLAY
    PtrElement          pSaved;
 
@@ -895,13 +895,23 @@ PtrDocument         pDoc;
       pSRule = &pSS->SsRule[rule];
       if (pSRule->SrConstruct == CsNatureSchema)
 	 if (pSRule->SrSSchemaNat != NULL)
-	    if (pSRule->SrSSchemaNat->SsNObjects > 0)
+	   /* the structure schema for this nature is loaded */
+	   {
+	    /* number of elements in this document that have been created
+	       following this schema */
+	    nObjects = pSRule->SrSSchemaNat->SsNObjects;
+	    /* if the schema defines only attribute, does not count its
+	       elements. Take it into account anyway */
+	    attrSchema = (pSRule->SrSSchemaNat->SsRootElem == 0);
+	    /* ignore a structure schema for which no elements have been
+               created in the document, except if it's a schema that
+               defines no element, only attributes */
+	    if (nObjects > 0 || attrSchema)
 	       {
+#ifndef NODISPLAY
 	       /* Decompte les objets de cette nature qui sont dans */
 	       /* le buffer de Copier-Couper-Coller */
-	       nObjects = pSRule->SrSSchemaNat->SsNObjects;
-#ifndef NODISPLAY
-	       if (FirstSavedElement != NULL)
+	       if (!attrSchema && FirstSavedElement != NULL)
 		  {
 		  pSaved = FirstSavedElement->PeElement;
 		  do
@@ -916,7 +926,7 @@ PtrDocument         pDoc;
 		  while (pSaved != NULL);
 		  }
 #endif
-	       if (nObjects > 0)
+	       if (attrSchema || nObjects > 0)
 		  {
 		  /* Si les natures contiennent elles-memes des natures  */
 		  /* on pourrait ecrire plusieurs fois un nom de nature. */
@@ -953,6 +963,7 @@ PtrDocument         pDoc;
 		  AddNature (pSRule->SrSSchemaNat, pDoc);
 		  }
 	       }
+	   }
       }
 }
 

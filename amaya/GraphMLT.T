@@ -30,184 +30,16 @@ RULES
 	Create '</svg>\12' After;
 	END;
 
-   XMLcomment:
-	BEGIN
-	NoLineBreak;
-        Create '<!--';
-	NoTranslation;
-        Create '-->\12' after;
-        END;
-
-   XMLcomment_line:
-	if not last create '\12' after;
-
-   desc:
+   g:
 	BEGIN
 	create SOT;
-	create 'desc';
+	create 'g';
 	create attributes;
-	create '>';
+	create CloseTagNL;
 	indent +2;
 	indent -2 after;
 	create SCT after;
-	create 'desc>\12' after;
-	END;
-
-   title:
-	BEGIN
-	create SOT;
-	create 'title';
-	create attributes;
-	create '>';
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'title>\12' after;
-	END;
-
-   metadata:
-	BEGIN
-	create SOT;
-	create 'metadata';
-	create attributes;
-	create '>';
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'metadata>\12' after;
-	END;
-
-   Line_:
-	BEGIN
-	create SOT;
-	create 'line';
-	indent +6;
-	create attributes;
-	if IntEmptyShape
-		create CloseEmptyTagNL;
-	indent -6;
-	if not IntEmptyShape
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'line>\12' after;
-		END;
-	END;
-
-   Rectangle:
-	BEGIN
-	create SOT;
-	create 'rect';
-	indent +6;
-	create attributes;
-	if IntEmptyShape
-		create CloseEmptyTagNL;
-	indent -6;
-	if not IntEmptyShape
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'rect>\12' after;
-		END;
-	END;
-
-   RoundRect:
-	BEGIN
-	create SOT;
-	create 'roundrect';
-	indent +11;
-	create attributes;
-	if IntEmptyShape
-		create CloseEmptyTagNL;
-	indent -11;
-	if not IntEmptyShape
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'roundrect>\12' after;
-		END;
-	END;
-
-   Circle:
-	BEGIN
-	create SOT;
-	create 'circle';
-	indent +8;
-	create attributes;
-	if IntEmptyShape
-		create CloseEmptyTagNL;
-	indent -8;
-	if not IntEmptyShape
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'circle>\12' after;
-		END;
-	END;
-
-   ellipse:
-	BEGIN
-	create SOT;
-	create 'ellipse';
-	indent +6;
-	create attributes;
-	if IntEmptyShape
-		create CloseEmptyTagNL;
-	indent -6;
-	if not IntEmptyShape
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'ellipse>\12' after;
-		END;
-	END;
-
-   Polyline:
-	BEGIN
-	create SOT;
-	create 'polyline';
-	indent +10;
-	create attributes;
-	if IntEmptyShape
-		create CloseEmptyTagNL;
-	indent -10;
-	if not IntEmptyShape
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'polyline>\12' after;
-		END;
-	END;
-
-   Polygon:
-	BEGIN
-	create SOT;
-	create 'polygon';
-	indent +9;
-	create attributes;
-	if IntEmptyShape
-		create CloseEmptyTagNL;
-	indent -9;
-	if not IntEmptyShape
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'polygon>\12' after;
-		END;
+	create 'g>\12' after;
 	END;
 
    Spline:
@@ -248,6 +80,120 @@ RULES
 		END;
 	END;
 
+   rect:
+	BEGIN
+	create SOT;
+	create 'rect';
+	indent +6;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -6;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'rect>\12' after;
+		END;
+	END;
+
+   circle:
+	BEGIN
+	create SOT;
+	create 'circle';
+	indent +8;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -8;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'circle>\12' after;
+		END;
+	END;
+
+   ellipse:
+	BEGIN
+	create SOT;
+	create 'ellipse';
+	indent +6;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -6;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'ellipse>\12' after;
+		END;
+	END;
+
+   line_:
+	BEGIN
+	create SOT;
+	create 'line';
+	indent +6;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -6;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'line>\12' after;
+		END;
+	END;
+
+   polyline:
+	BEGIN
+	create SOT;
+	create 'polyline';
+	indent +10;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -10;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'polyline>\12' after;
+		END;
+	END;
+
+   polygon:
+	BEGIN
+	create SOT;
+	create 'polygon';
+	indent +9;
+	create attributes;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -9;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'polygon>\12' after;
+		END;
+	END;
+
    text_:
 	BEGIN
 	create SOT;
@@ -272,36 +218,6 @@ RULES
 	create 'tspan>' after;
 	END;
 
-   foreignObject:
-	BEGIN
-	create SOT;
-	create 'foreignObject';
-	create attributes;
-	create CloseTagNL;
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'foreignObject>\12' after;
-	END;
-
-   MathML:
-	Use MathMLT;
-
-   HTML:
-	Use HTMLT;
-
-   g:
-	BEGIN
-	create SOT;
-	create 'g';
-	create attributes;
-	create CloseTagNL;
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'g>\12' after;
-	END;
-
    image:
 	BEGIN
 	create SOT;
@@ -321,10 +237,75 @@ RULES
 		END;
 	END;
 
-   PICTURE_UNIT:
-	Remove;
+   desc:
+	BEGIN
+	create SOT;
+	create 'desc';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'desc>\12' after;
+	END;
+
+   title:
+	BEGIN
+	create SOT;
+	create 'title';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'title>\12' after;
+	END;
+
+   foreignObject:
+	BEGIN
+	create SOT;
+	create 'foreignObject';
+	create attributes;
+	create CloseTagNL;
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'foreignObject>\12' after;
+	END;
+
+   metadata:
+	BEGIN
+	create SOT;
+	create 'metadata';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'metadata>\12' after;
+	END;
+
+   XMLcomment:
+	BEGIN
+	NoLineBreak;
+        Create '<!--';
+	NoTranslation;
+        Create '-->\12' after;
+        END;
+
+   XMLcomment_line:
+	if not last create '\12' after;
+
+   HTML:
+	Use HTMLT;
+
+   MathML:
+	Use MathMLT;
 
    GRAPHICS_UNIT:
+	Remove;
+
+   PICTURE_UNIT:
 	Remove;
 
 ATTRIBUTES
@@ -345,11 +326,11 @@ ATTRIBUTES
         create DoubleQuote;
         end;
  
-   style\240:
+   style_:
         begin
         create SAN;
         create 'style="';
-        create style\240;
+        create style_;
         create DoubleQuote;
         end;
  
@@ -361,72 +342,11 @@ ATTRIBUTES
         create DoubleQuote;
 	end;
 
-   linestyle_ = solid_:
+   height_:
 	BEGIN
 	create SAN;
-	create 'linestyle="solid"';
-	END;
-   linestyle_ = dashed_:
-	BEGIN
-	create SAN;
-	create 'linestyle="dashed"';
-	END;
-   linestyle_ = dotted_:
-	BEGIN
-	create SAN;
-	create 'linestyle="dotted"';
-	END;
-
-   arrowhead = none_:
-	BEGIN
-	create SAN;
-	create 'arrowhead="none"';
-	END;
-   arrowhead = start:
-	BEGIN
-	create SAN;
-	create 'arrowhead="start"';
-	END;
-   arrowhead = end_:
-	BEGIN
-	create SAN;
-	create 'arrowhead="end"';
-	END;
-   arrowhead = both:
-	BEGIN
-	create SAN;
-	create 'arrowhead="both"';
-	END;
-
-   depth_:
-	BEGIN
-	create SAN;
-	create 'depth="';
-	create depth_;
-	create DoubleQuote;
-	END;
-
-   position:
-	BEGIN
-	create SAN;
-	create 'position="';
-	create position;
-	create DoubleQuote;
-	END;
-
-   x:
-	BEGIN
-	create SAN;
-	create 'x="';
-	create x;
-	create DoubleQuote;
-	END;
-
-   y:
-	BEGIN
-	create SAN;
-	create 'y="';
-	create y;
+	create 'height="';
+	create height_;
 	create DoubleQuote;
 	END;
 
@@ -435,14 +355,6 @@ ATTRIBUTES
 	create SAN;
 	create 'width="';
 	create width_;
-	create DoubleQuote;
-	END;
-
-   height_:
-	BEGIN
-	create SAN;
-	create 'height="';
-	create height_;
 	create DoubleQuote;
 	END;
 
@@ -467,6 +379,83 @@ ATTRIBUTES
 	create SAN;
 	create 'stroke-width="';
 	create stroke_width;
+	create DoubleQuote;
+	END;
+
+   transform:
+	BEGIN
+	create SAN;
+	create 'transform="';
+	create dy;
+	create DoubleQuote;
+	END;
+
+   linestyle_ = solid_:
+	BEGIN
+	create SAN;
+	create 'linestyle="solid"';
+	END;
+   linestyle_ = dashed_:
+	BEGIN
+	create SAN;
+	create 'linestyle="dashed"';
+	END;
+   linestyle_ = dotted_:
+	BEGIN
+	create SAN;
+	create 'linestyle="dotted"';
+	END;
+
+   depth_:
+	BEGIN
+	create SAN;
+	create 'depth="';
+	create depth_;
+	create DoubleQuote;
+	END;
+
+   points:
+	BEGIN
+	create SAN;
+	create 'points="';
+	create points;
+	create DoubleQuote;
+	END;
+
+   arrowhead = none_:
+	BEGIN
+	create SAN;
+	create 'arrowhead="none"';
+	END;
+   arrowhead = start:
+	BEGIN
+	create SAN;
+	create 'arrowhead="start"';
+	END;
+   arrowhead = end_:
+	BEGIN
+	create SAN;
+	create 'arrowhead="end"';
+	END;
+   arrowhead = both:
+	BEGIN
+	create SAN;
+	create 'arrowhead="both"';
+	END;
+
+   x:
+	BEGIN
+	create SAN;
+	create 'x="';
+	create x;
+	create DoubleQuote;
+	END;
+
+   y:
+	BEGIN
+	create SAN;
+	create 'y="';
+	create y;
 	create DoubleQuote;
 	END;
 
@@ -542,14 +531,6 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   points:
-	BEGIN
-	create SAN;
-	create 'points="';
-	create points;
-	create DoubleQuote;
-	END;
-
    dx:
 	BEGIN
 	create SAN;
@@ -566,14 +547,6 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   transform:
-	BEGIN
-	create SAN;
-	create 'transform="';
-	create dy;
-	create DoubleQuote;
-	END;
-
    xlink_href:
 	BEGIN
 	create SAN;
@@ -583,4 +556,3 @@ ATTRIBUTES
 	END;
 
 END
-

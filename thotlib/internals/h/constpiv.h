@@ -50,6 +50,8 @@
 #define C_PR_LINESPACING 'I'
 #define C_PR_JUSTIFY 'J'
 #define C_PR_WIDTH 'L'
+#define C_PR_XRADIUS 'M'
+#define C_PR_YRADIUS 'N'
 #define C_PR_PICTURE 'P'
 #define C_PR_INDENT 'R'
 #define C_PR_STYLE 'S'

@@ -586,6 +586,7 @@ PtrPRule      pPRule;
        pPRule->PrType == PtBorderRightWidth ||
        pPRule->PrType == PtBorderBottomWidth ||
        pPRule->PrType == PtBorderLeftWidth ||
+       pPRule->PrType == PtXRadius || pPRule->PrType == PtYRadius ||
        pPRule->PrType == PtBorderTopColor ||
        pPRule->PrType == PtBorderRightColor ||
        pPRule->PrType == PtBorderBottomColor ||
@@ -778,6 +779,16 @@ PtrPRule      pPRule;
 	  break;
         case PtBorderLeftWidth:
 	  TtaWriteByte (pivFile, C_PR_BORDERLEFTWIDTH);
+	  PutShort (pivFile, pPRule->PrMinValue);
+	  PutUnit (pivFile, pPRule->PrMinUnit);
+	  break;
+        case PtXRadius:
+	  TtaWriteByte (pivFile, C_PR_XRADIUS);
+	  PutShort (pivFile, pPRule->PrMinValue);
+	  PutUnit (pivFile, pPRule->PrMinUnit);
+	  break;
+        case PtYRadius:
+	  TtaWriteByte (pivFile, C_PR_YRADIUS);
 	  PutShort (pivFile, pPRule->PrMinValue);
 	  PutUnit (pivFile, pPRule->PrMinUnit);
 	  break;

@@ -864,9 +864,9 @@ PtrAbstractBox      pAbEl;
    for (view = 0; view < MAX_VIEW_DOC; view++)
      if (pEl->ElAbstractBox[view] != NULL)
        /* un pave correspondant existe dans la vue view */
-       /* met a jour le volume dans les paves englobants */
        {
 	 assoc = AssocView (pEl);
+	 /* met a jour le volume dans les paves englobants */
 	 pAb = pEl->ElAbstractBox[view]->AbEnclosing;
 	 while (pAb != NULL)
 	   {
@@ -927,6 +927,12 @@ PtrAbstractBox      pAbEl;
 		     pAb->AbLeafType = LtGraphics;
 		     pAb->AbShape = pEl->ElGraph;
 		     pAb->AbGraphAlphabet = TEXT('G');
+		     if (pEl->ElLeafType == LtGraphics && pEl->ElGraph == 'C')
+		       /* rectangle with rounded corners */
+		       {
+			 pAb->AbRx = 0;
+			 pAb->AbRy = 0;
+		       }
 		     break;
 		   default:
 		     break;
@@ -943,7 +949,8 @@ PtrAbstractBox      pAbEl;
 		     h = 0;
 		     /* on ne s'occupe pas de la hauteur de page */
 		     ChangeConcreteImage (frame, &h, pAb);
-		     if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)
+		     if (TtaGetDisplayMode (FrameTable[frame].FrDoc) ==
+			                                  DisplayImmediately)
 		       DisplayFrame (frame);
 		   }
 	       }

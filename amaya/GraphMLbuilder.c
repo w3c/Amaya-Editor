@@ -81,7 +81,8 @@ Document       doc;
 #endif
 {
   attrType->AttrSSchema = GetGraphMLSSchema (doc);
-  MapXMLAttribute (GRAPH_TYPE, attrName, elementName, doc, &(attrType->AttrTypeNum));
+  MapXMLAttribute (GRAPH_TYPE, attrName, elementName, doc,
+		   &(attrType->AttrTypeNum));
 }
 
 /*----------------------------------------------------------------------
@@ -104,14 +105,14 @@ int		   *value;
    i = 0;
    while (GraphMLAttrValueMappingTable[i].ThotAttr != attrType.AttrTypeNum &&
 	  GraphMLAttrValueMappingTable[i].ThotAttr != 0)
-      i++;
+     i++;
    if (GraphMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
-      do
-	 if (!ustrcasecmp (GraphMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
-	    *value = GraphMLAttrValueMappingTable[i].ThotAttrValue;
-	 else
-	    i++;
-      while (*value <= 0 && GraphMLAttrValueMappingTable[i].ThotAttr != 0);
+     do
+       if (!ustrcasecmp (GraphMLAttrValueMappingTable[i].XMLattrValue,AttrVal))
+	 *value = GraphMLAttrValueMappingTable[i].ThotAttrValue;
+       else
+	 i++;
+     while (*value <= 0 && GraphMLAttrValueMappingTable[i].ThotAttr != 0);
 }
 
 /*----------------------------------------------------------------------
@@ -145,7 +146,6 @@ STRING      entityName;
 Document    doc;
 #endif
 {
-
 }
 
 /*----------------------------------------------------------------------
@@ -179,8 +179,7 @@ ThotBool            changeShape;
 	 {
 	 oldShape = TtaGetGraphicsShape (child);
 	 leaf = child;
-	 if (oldShape == EOS ||
-             (changeShape && oldShape != shape))
+	 if (oldShape == EOS || (changeShape && oldShape != shape))
 	    TtaSetGraphicsShape (child, shape, doc);
 	 }
       }
@@ -225,100 +224,103 @@ int		arrowHead;
    *closed = FALSE;
    elType = TtaGetElementType (el);
    switch (elType.ElTypeNum)
-       {
-       case GraphML_EL_Line_:
-	  switch (arrowHead)
-		{
-		case GraphML_ATTR_arrowhead_VAL_none_:
-			shape = 'g';
-			break;
-		case GraphML_ATTR_arrowhead_VAL_start:
-			shape = 'x';
-			break;
-		case GraphML_ATTR_arrowhead_VAL_end_:
-			shape = 'y';
-			break;
-		case GraphML_ATTR_arrowhead_VAL_both:
-			shape = 'z';
-			break;
-		default:
-			shape = 'g';
-			break;
-		}
-	  leaf = CreateGraphicalLeaf (shape, el, doc, arrowHead != 0);
-	  break;
-       case GraphML_EL_Rectangle:
-	  leaf = CreateGraphicalLeaf ('R', el, doc, FALSE);
-	  *closed = TRUE;
-	  break;
-       case GraphML_EL_RoundRect:
-	  leaf = CreateGraphicalLeaf ('C', el, doc, FALSE);
-	  *closed = TRUE;
-	  break;
-       case GraphML_EL_Circle:
-	  leaf = CreateGraphicalLeaf ('a', el, doc, FALSE);
-	  *closed = TRUE;
-	  break;
-       case GraphML_EL_ellipse:
-	  leaf = CreateGraphicalLeaf ('c', el, doc, FALSE);
-	  *closed = TRUE;
-	  break;
-       case GraphML_EL_Polyline:
-	  switch (arrowHead)
-		{
-		case GraphML_ATTR_arrowhead_VAL_none_:
-			shape = 'S';
-			break;
-		case GraphML_ATTR_arrowhead_VAL_start:
-			shape = 'N';
-			break;
-		case GraphML_ATTR_arrowhead_VAL_end_:
-			shape = 'U';
-			break;
-		case GraphML_ATTR_arrowhead_VAL_both:
-			shape = 'M';
-			break;
-		default:
-			shape = 'S';
-			break;
-		}
-	  leaf = CreateGraphicalLeaf (shape, el, doc, arrowHead != 0);
-	  break;
-       case GraphML_EL_Polygon:
-	  leaf = CreateGraphicalLeaf ('p', el, doc, FALSE);
-	  *closed = TRUE;
-	  break;
-       case GraphML_EL_Spline:
-	  switch (arrowHead)
-		{
-		case GraphML_ATTR_arrowhead_VAL_none_:
-			shape = 'B';
-			break;
-		case GraphML_ATTR_arrowhead_VAL_start:
-			shape = 'F';
-			break;
-		case GraphML_ATTR_arrowhead_VAL_end_:
-			shape = 'A';
-			break;
-		case GraphML_ATTR_arrowhead_VAL_both:
-			shape = 'D';
-			break;
-		default:
-			shape = 'B';
-			break;
-		}
-	  leaf = CreateGraphicalLeaf (shape, el, doc, arrowHead != 0);
-	  break;
-       case GraphML_EL_ClosedSpline:
-	  leaf = CreateGraphicalLeaf ('s', el, doc, FALSE);
-	  *closed = TRUE;
-	  break;
-       default:
-	  break;
-       }
+     {
+     case GraphML_EL_Spline:
+       switch (arrowHead)
+	 {
+	 case GraphML_ATTR_arrowhead_VAL_none_:
+	   shape = 'B';
+	   break;
+	 case GraphML_ATTR_arrowhead_VAL_start:
+	   shape = 'F';
+	   break;
+	 case GraphML_ATTR_arrowhead_VAL_end_:
+	   shape = 'A';
+	   break;
+	 case GraphML_ATTR_arrowhead_VAL_both:
+	   shape = 'D';
+	   break;
+	 default:
+	   shape = 'B';
+	   break;
+	 }
+       leaf = CreateGraphicalLeaf (shape, el, doc, arrowHead != 0);
+       break;
+
+     case GraphML_EL_ClosedSpline:
+       leaf = CreateGraphicalLeaf ('s', el, doc, FALSE);
+       *closed = TRUE;
+       break;
+
+     case GraphML_EL_rect:
+       leaf = CreateGraphicalLeaf ('C', el, doc, FALSE);
+       *closed = TRUE;
+       break;
+
+     case GraphML_EL_circle:
+       leaf = CreateGraphicalLeaf ('a', el, doc, FALSE);
+       *closed = TRUE;
+       break;
+
+     case GraphML_EL_ellipse:
+       leaf = CreateGraphicalLeaf ('c', el, doc, FALSE);
+       *closed = TRUE;
+       break;
+
+     case GraphML_EL_line_:
+       switch (arrowHead)
+	 {
+	 case GraphML_ATTR_arrowhead_VAL_none_:
+	   shape = 'g';
+	   break;
+	 case GraphML_ATTR_arrowhead_VAL_start:
+	   shape = 'x';
+	   break;
+	 case GraphML_ATTR_arrowhead_VAL_end_:
+	   shape = 'y';
+	   break;
+	 case GraphML_ATTR_arrowhead_VAL_both:
+	   shape = 'z';
+	   break;
+	 default:
+	   shape = 'g';
+	   break;
+	 }
+       leaf = CreateGraphicalLeaf (shape, el, doc, arrowHead != 0);
+       break;
+
+     case GraphML_EL_polyline:
+       switch (arrowHead)
+	 {
+	 case GraphML_ATTR_arrowhead_VAL_none_:
+	   shape = 'S';
+	   break;
+	 case GraphML_ATTR_arrowhead_VAL_start:
+	   shape = 'N';
+	   break;
+	 case GraphML_ATTR_arrowhead_VAL_end_:
+	   shape = 'U';
+	   break;
+	 case GraphML_ATTR_arrowhead_VAL_both:
+	   shape = 'M';
+	   break;
+	 default:
+	   shape = 'S';
+	   break;
+	 }
+       leaf = CreateGraphicalLeaf (shape, el, doc, arrowHead != 0);
+       break;
+
+     case GraphML_EL_polygon:
+       leaf = CreateGraphicalLeaf ('p', el, doc, FALSE);
+       *closed = TRUE;
+       break;
+
+     default:
+       break;
+     }
    return leaf;
 }
-
 
 /*----------------------------------------------------------------------
    CreateEnclosingElement
@@ -436,6 +438,7 @@ int             *error
      }
    else
      {
+
      /* if the parent element is defined by a different SSchema, insert
         a GraphML root element between the element and its parent */
      parent = TtaGetParent (el);
@@ -449,6 +452,7 @@ int             *error
 	  CreateEnclosingElement (el, newType, doc);
 	  }
        }
+
      /* if it's an image element, create a PICTURE_UNIT child */
      else if (elType.ElTypeNum == GraphML_EL_image)
        {
@@ -461,7 +465,7 @@ int             *error
 
      /* if it's a graphic primitive, create a GRAPHIC_UNIT leaf as a child
 	of the element, if it has not been done when creating attributes
-	(points, arrowhead) */
+	(points, arrowhead, rx, ry) */
      else
        {
 	 leaf = CreateGraphicLeaf (el, doc, &closedShape, 0);
@@ -480,17 +484,16 @@ int             *error
      }
 }
 
-
 /*----------------------------------------------------------------------
- UpdateInternalAttrForPoly
- Create attributes IntPosX, IntPosY, IntWidth, IntHeight for an element
- Polyline, Spline, Polygon or ClosedSpline.
+ UpdatePositionOfPoly
+ Set position, width and height for an element polyline, Spline,
+ polygon or ClosedSpline.
  Change coords of control points accordingly.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void UpdateInternalAttrForPoly (Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY, ThotBool setIntPosition)
+void UpdatePositionOfPoly (Element el, Element leaf, Document doc, int minX, int minY, int maxX, int maxY)
 #else /* __STDC__*/
-void UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY, setIntPosition)
+void UpdatePositionOfPoly (el, leaf, doc, minX, minY, maxX, maxY)
      Element el;
      Element leaf;
      Document doc;
@@ -498,14 +501,18 @@ void UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY, setIntPos
      int minY;
      int maxX;
      int maxY;
-     ThotBool setIntPosition;
 
 #endif /* __STDC__*/
 {
-   Attribute		attr;
-   AttributeType	attrType;
+   PRule                pRule;
    int			height, width, i, nbPoints, x, y;
    TypeUnit		unit;
+   PresentationValue    pval;
+   PresentationContext  ctxt;
+
+   ctxt = TtaGetSpecificStyleContext (doc);
+   ctxt->destroy = FALSE;
+   pval.typed_data.unit = STYLE_UNIT_PT;
 
    unit = UnPoint;
    width = maxX - minX;
@@ -518,35 +525,40 @@ void UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY, setIntPos
       }
    TtaChangeLimitOfPolyline (leaf, unit, width, height, doc);
 
-   attrType.AttrSSchema = GetGraphMLSSchema (doc);
-   if (setIntPosition)
-      {
-      attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr != NULL)
-         x = TtaGetAttributeValue (attr);
-      else
-         {
-         attr = TtaNewAttribute (attrType);
-         TtaAttachAttribute (el, attr, doc);
-         x = 0;
-         }
-      TtaSetAttributeValue (attr, x+minX, el, doc);
-   
-      attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr != NULL)
-         y = TtaGetAttributeValue (attr);
-      else
-         {
-         attr = TtaNewAttribute (attrType);
-         TtaAttachAttribute (el, attr, doc);
-         y = 0;
-         }
-      TtaSetAttributeValue (attr, y+minY, el, doc);
-      }
-}
+   pRule = TtaGetPRule (el, PRHorizPos);
+   if (pRule)
+     {
+     x = TtaGetPRuleValue (pRule);
+     unit = TtaGetPRuleUnit (pRule);
+     }
+   else
+     x = 0;
+   pval.typed_data.value = x+minX;
+   pval.typed_data.real = FALSE;
+   TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
 
+   pRule = TtaGetPRule (el, PRVertPos);
+   if (pRule)
+     {
+     y = TtaGetPRuleValue (pRule);
+     unit = TtaGetPRuleUnit (pRule);
+     }
+   else
+     y = 0;
+   pval.typed_data.value = y+minY;
+   pval.typed_data.real = FALSE;
+   TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
+
+   pval.typed_data.value = width;
+   pval.typed_data.real = FALSE;
+   TtaSetStylePresentation (PRWidth, el, NULL, ctxt, pval);
+          
+   pval.typed_data.value = height;
+   pval.typed_data.real = FALSE;
+   TtaSetStylePresentation (PRHeight, el, NULL, ctxt, pval);
+
+   TtaFreeMemory (ctxt);
+}
 
 /*----------------------------------------------------------------------
    CreatePoints
@@ -572,6 +584,7 @@ Document	doc;
    leaf = CreateGraphicLeaf (el, doc, &closed, 0);
    if (leaf == NULL)
       return;
+
    /* text attribute. Get its value */
    length = TtaGetTextAttributeLength (attr) + 2;
    text = TtaAllocString (length);
@@ -609,67 +622,7 @@ Document	doc;
          nbPoints++;
          TtaAddPointInPolyline (leaf, nbPoints, unit, x, y, doc);
          }
-      UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY, TRUE);
-      TtaFreeMemory (text);
-      }
-}
-
-/*----------------------------------------------------------------------
-   ParsePositionAttribute
-   Create or update attributes IntPosX and IntPosY according to the
-   value of the position attribute attr.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void      ParsePositionAttribute (Attribute attr, Element el, Document doc)
-#else
-void      ParsePositionAttribute (attr, el, doc)
-Attribute	attr;
-Element		el;
-Document	doc;
-
-#endif
-{
-   int                  length, x, y, attrKind;
-   STRING               text, ptr;
-   AttributeType        attrType;
-   Attribute            attrX, attrY;
-
-   length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaAllocString (length);
-   if (text != NULL)
-      {
-      /* get the value of the position attribute */
-      TtaGiveTextAttributeValue (attr, text, &length);
-      x = y = 0;
-      ptr = text;
-      usscanf (ptr, TEXT("%d"), &x);
-      ptr = SkipInt (ptr);
-      ptr = SkipSep (ptr);
-      if (ptr)
-         usscanf (ptr, TEXT("%d"), &y);
-
-      /* Search the IntPosX attribute */
-      TtaGiveAttributeType (attr, &attrType, &attrKind);
-      attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
-      attrX = TtaGetAttribute (el, attrType);
-      if (attrX == NULL)
-        {
-        /* create it */
-        attrX = TtaNewAttribute (attrType);
-        TtaAttachAttribute (el, attrX, doc);
-        }
-      TtaSetAttributeValue (attrX, x, el, doc);
-
-      /* Search the IntPosY attribute */
-      attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
-      attrY = TtaGetAttribute (el, attrType);
-      if (attrY == NULL)
-        {
-        /* create it */
-        attrY = TtaNewAttribute (attrType);
-        TtaAttachAttribute (el, attrY, doc);
-        }
-      TtaSetAttributeValue (attrY, y, el, doc);
+      UpdatePositionOfPoly (el, leaf, doc, minX, minY, maxX, maxY);
       TtaFreeMemory (text);
       }
 }
@@ -744,71 +697,128 @@ Document	doc;
    the value of attribute attr, which is width_, height_, r, rx, or ry.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      ParseWidthHeightAttribute (Attribute attr, Element el, Document doc)
+ThotBool   ParseWidthHeightAttribute (Attribute attr, Element el, Document doc, ThotBool delete)
 #else
-void      ParseWidthHeightAttribute (attr, el, doc)
+ThotBool   ParseWidthHeightAttribute (attr, el, doc, delete)
 Attribute	attr;
 Element		el;
 Document	doc;
+ThotBool        delete;
 
 #endif
 {
    AttributeType	attrType;
+   ElementType          elType;
+   Element              child;
    int			length, val, attrKind, ruleType;
    STRING		text, ptr;
    PresentationValue    pval;
    PresentationContext  ctxt;
+   ThotBool             ret;
 
-   length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaAllocString (length);
-   if (text != NULL)
-      {
-      /* decide of the presentation rule to be created or updated */
-      TtaGiveAttributeType (attr, &attrType, &attrKind);
-      if (attrType.AttrTypeNum == GraphML_ATTR_width_)
-         ruleType = PRWidth;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_height_)
-         ruleType = PRHeight;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_r)
-         ruleType = PRWidth;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_rx)
-         ruleType = PRWidth;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_ry)
-         ruleType = PRHeight;
+   ret = FALSE; /* let Thot perform normal operation */
+   elType = TtaGetElementType (el);
+   text = NULL;
+   if (attr && !delete)
+     {
+       length = TtaGetTextAttributeLength (attr) + 2;
+       text = TtaAllocString (length);
+       if (!text)
+	 return ret;
+     }
+   ctxt = TtaGetSpecificStyleContext (doc);
+   ctxt->destroy = FALSE;
+   /* decide of the presentation rule to be created or updated */
+   TtaGiveAttributeType (attr, &attrType, &attrKind);
+   if (attrType.AttrTypeNum == GraphML_ATTR_width_)
+     ruleType = PRWidth;
+   else if (attrType.AttrTypeNum == GraphML_ATTR_height_)
+     ruleType = PRHeight;
+   else if (attrType.AttrTypeNum == GraphML_ATTR_r)
+     ruleType = PRWidth;
+   else if (attrType.AttrTypeNum == GraphML_ATTR_rx)
+     if (elType.ElTypeNum == GraphML_EL_rect)
+       ruleType = PRXRadius;
+     else
+       ruleType = PRWidth;
+   else if (attrType.AttrTypeNum == GraphML_ATTR_ry)
+     if (elType.ElTypeNum == GraphML_EL_rect)
+       ruleType = PRYRadius;
+     else
+       ruleType = PRHeight;
+   else
+     ruleType = PRWidth;
+   if (delete)
+      /* attribute deleted */
+      if (ruleType != PRXRadius && ruleType != PRYRadius)
+	/* attribute madatory. Do not delete */
+	ret = TRUE;
       else
-	 return;
-      /* get the value of the width_ or height_ attribute */
+	{
+	   /* that's the radius of a rounded corner. Get the graphics leaf
+	      which has the specific presentation rule to be removed */
+	  child = TtaGetFirstChild (el);
+	  while (child &&
+		 TtaGetElementType(child).ElTypeNum != GRAPHICS_UNIT)
+	    TtaNextSibling (&child);
+	  pval.typed_data.value = 0;
+          pval.typed_data.unit = STYLE_UNIT_PT;
+	  ctxt->destroy = FALSE;
+	  TtaSetStylePresentation (ruleType, child, NULL, ctxt, pval);
+	  ctxt->destroy = TRUE;
+	  TtaSetStylePresentation (ruleType, child, NULL, ctxt, pval);
+	  ret = FALSE; /* let Thot perform normal operation */
+	}
+   else
+      /* attribute created or modified */
+      {
+      /* get the value of the attribute */
       TtaGiveTextAttributeValue (attr, text, &length); 
-      ctxt = TtaGetSpecificStyleContext (doc);
-      ctxt->destroy = FALSE;
       /* parse the attribute value (a number followed by a unit) */
       ptr = text;
       ptr = TtaSkipWCBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	 {
-         if (pval.typed_data.value == 0)
-	    /* a value of 0 disables rendering of this element */
-	    ruleType = PRVisibility;
-	 else
-	    {
-	    /* if there was a value of 0 previously, enable rendering */
-	    ctxt->destroy = TRUE;
-	    TtaSetStylePresentation (PRVisibility, el, NULL, ctxt, pval);
-            ctxt->destroy = FALSE;
-	    }
-	 if (attrType.AttrTypeNum == GraphML_ATTR_r ||
-	     attrType.AttrTypeNum == GraphML_ATTR_rx ||
-	     attrType.AttrTypeNum == GraphML_ATTR_ry)
-	   /* that's a radius, multiply the value by 2 to set the width or
-	      height of the box */
+	 if (ruleType != PRXRadius && ruleType != PRYRadius)
+	   /* it's not attribute ry or ry for a rectangle */
+	   if (pval.typed_data.value == 0)
+	     /* a value of 0 disables rendering of this element */
+	     ruleType = PRVisibility;
+	   else
+	     {
+	       /* if there was a value of 0 previously, enable rendering */
+	       ctxt->destroy = TRUE;
+	       TtaSetStylePresentation (PRVisibility, el, NULL, ctxt, pval);
+	       ctxt->destroy = FALSE;
+	     }
+	 if ((elType.ElTypeNum == GraphML_EL_ellipse ||
+	      elType.ElTypeNum == GraphML_EL_circle) &&
+	     (attrType.AttrTypeNum == GraphML_ATTR_r ||
+	      attrType.AttrTypeNum == GraphML_ATTR_rx ||
+	      attrType.AttrTypeNum == GraphML_ATTR_ry))
+	   /* that's the radius of a circle or an ellipse,
+	      multiply the value by 2 to set the width or height of the box */
 	   pval.typed_data.value *= 2;
-         /* set the width or height of the box */
-	 TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
+         if (ruleType == PRXRadius || ruleType == PRYRadius)
+	   /* that's the radius of a rounded corner. Get the graphics leaf
+	      which will receive the specific presentation rule */
+	   {
+	     child = TtaGetFirstChild (el);
+	     while (child &&
+		    TtaGetElementType(child).ElTypeNum != GRAPHICS_UNIT)
+	        TtaNextSibling (&child);
+	     el = child;
+	   }
+         /* set the specific presentation value of the box */
+	 if (el)
+	    TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
 	 }
-      TtaFreeMemory (ctxt);
-      TtaFreeMemory (text);
+      if (text)
+	TtaFreeMemory (text);
       }
+   TtaFreeMemory (ctxt);
+   return ret;
 }
 
 /*----------------------------------------------------------------------
@@ -899,6 +909,7 @@ Document	doc;
 #endif
 {
    AttributeType	attrType;
+   ElementType          elType;
    Element		leaf;
    int			attrKind, value;
    ThotBool		closed;
@@ -907,8 +918,25 @@ Document	doc;
 
    switch (attrType.AttrTypeNum)
      {
-     case GraphML_ATTR_position:
-	ParsePositionAttribute (attr, el, doc);
+     case GraphML_ATTR_height_:
+     case GraphML_ATTR_width_:
+     case GraphML_ATTR_r:
+	ParseWidthHeightAttribute (attr, el, doc, FALSE);
+	break;
+     case GraphML_ATTR_fill:
+     case GraphML_ATTR_stroke:
+     case GraphML_ATTR_stroke_width:
+        ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, el, doc, FALSE);
+	break;
+     case GraphML_ATTR_transform:
+        ParseTransformAttribute (attr, el, doc, FALSE);
+	break;
+     case GraphML_ATTR_points:
+	CreatePoints (attr, el, doc);
+	break;
+     case GraphML_ATTR_arrowhead:
+	value = TtaGetAttributeValue (attr);
+	leaf = CreateGraphicLeaf (el, doc, &closed, value);
 	break;
      case GraphML_ATTR_x:
      case GraphML_ATTR_y:
@@ -922,30 +950,16 @@ Document	doc;
      case GraphML_ATTR_dy:
 	ParseCoordAttribute (attr, el, doc);
 	break;
-     case GraphML_ATTR_transform:
-        ParseTransformAttribute (attr, el, doc, FALSE);
-	break;
-     case GraphML_ATTR_width_:
-     case GraphML_ATTR_height_:
-     case GraphML_ATTR_r:
      case GraphML_ATTR_rx:
      case GraphML_ATTR_ry:
-	ParseWidthHeightAttribute (attr, el, doc);
+        elType = TtaGetElementType (el);
+	if (elType.ElTypeNum == GraphML_EL_rect)
+	  /* attribute rx or ry for a rect element.
+	     create the GRAPHICS_UNIT child to put the corresponding
+             specific presentation rule on it */
+	   leaf = CreateGraphicLeaf (el, doc, &closed, 0);	   
+	ParseWidthHeightAttribute (attr, el, doc, FALSE);
 	break;
-     case GraphML_ATTR_fill:
-     case GraphML_ATTR_stroke:
-     case GraphML_ATTR_stroke_width:
-        ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, el, doc, FALSE);
-	break;
-     case GraphML_ATTR_points:
-	CreatePoints (attr, el, doc);
-	break;
-
-     case GraphML_ATTR_arrowhead:
-	value = TtaGetAttributeValue (attr);
-	leaf = CreateGraphicLeaf (el, doc, &closed, value);
-	break;
-
      default:
 	break;
      }

@@ -425,6 +425,12 @@ PRuleType    pRule;
             case PtBorderLeftWidth:
                return PRBorderLeftWidth;
                break;
+            case PtXRadius:
+               return PRXRadius;
+               break;
+            case PtYRadius:
+               return PRYRadius;
+               break;
             case PtBorderTopColor:
                return PRBorderTopColor;
                break;

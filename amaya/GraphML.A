@@ -15,20 +15,20 @@ ELEMENTS
 	ElemNew.Post ->         SVGCreated;
 	ElemExport.Pre ->       SetEmptyShapeAttribute;
 	END;
-   Line_:
-	ElemGraphModify.Post -> ControlPointChanged;
-   Polyline:
-	ElemGraphModify.Post -> ControlPointChanged;
-   Polygon:
-	ElemGraphModify.Post -> ControlPointChanged;
    Spline:
 	ElemGraphModify.Post -> ControlPointChanged;
    ClosedSpline:
 	ElemGraphModify.Post -> ControlPointChanged;
-   GRAPHICS_UNIT:
-	ElemDelete.Post ->      GraphLeafDeleted;
+   line_:
+	ElemGraphModify.Post -> ControlPointChanged;
+   polyline:
+	ElemGraphModify.Post -> ControlPointChanged;
+   polygon:
+	ElemGraphModify.Post -> ControlPointChanged;
    foreignObject:
 	ElemExport.Pre ->       ExportForeignObject;
+   GRAPHICS_UNIT:
+	ElemDelete.Post ->      GraphLeafDeleted;
 
 ATTRIBUTES
 
@@ -46,58 +46,24 @@ ATTRIBUTES
         AttrDelete.Post -> AttrClassChanged;
         END;
  
-   style\240:
+   style_:
         BEGIN
         AttrDelete.Pre ->  UpdateStyleDelete;
         AttrModify.Pre ->  UpdateStyleDelete;
         AttrCreate.Post -> UpdateStylePost;
         AttrModify.Post -> UpdateStylePost;
         END;
- 
    Namespace:
 	AttrExport.Post -> NameSpaceGenerated;
-
-   position:
-	AttrModify.Post -> AttrPositionChanged;
-   x:
-	AttrModify.Post -> AttrCoordChanged;
-   y:
-	AttrModify.Post -> AttrCoordChanged;
-   cx:
-	AttrModify.Post -> AttrCoordChanged;
-   cy:
-	AttrModify.Post -> AttrCoordChanged;
-   x1:
-	AttrModify.Post -> AttrCoordChanged;
-   y1:
-	AttrModify.Post -> AttrCoordChanged;
-   x2:
-	AttrModify.Post -> AttrCoordChanged;
-   y2:
-	AttrModify.Post -> AttrCoordChanged;
-   dx:
-	AttrModify.Post -> AttrCoordChanged;
-   dy:
-	AttrModify.Post -> AttrCoordChanged;
-   IntPosX:
-	AttrModify.Post -> AttrIntPosChanged;
-   IntPosY:
-        AttrModify.Post -> AttrIntPosChanged;
-   width_:
-	AttrModify.Post -> AttrWidthHeightChanged;
    height_:
-	AttrModify.Post -> AttrWidthHeightChanged;
-   r:
-	AttrModify.Post -> AttrWidthHeightChanged;
-   rx:
-	AttrModify.Post -> AttrWidthHeightChanged;
-   ry:
-	AttrModify.Post -> AttrWidthHeightChanged;
-   transform:
 	BEGIN
-	AttrModify.Post -> AttrTransformChanged;
-	AttrCreate.Post -> AttrTransformChanged;
-	AttrDelete.Pre ->  AttrTransformDelete;
+	AttrModify.Post -> AttrWidthHeightChanged;
+	AttrDelete.Pre ->  AttrWidthHeightDelete;
+	END;
+   width_:
+	BEGIN
+	AttrModify.Post -> AttrWidthHeightChanged;
+	AttrDelete.Pre ->  AttrWidthHeightDelete;
 	END;
    fill:
         BEGIN
@@ -117,15 +83,58 @@ ATTRIBUTES
 	AttrCreate.Post -> AttrFillStrokeModified;
 	AttrDelete.Pre ->  AttrFillStrokeDelete;
 	END;
-   arrowhead:
+   transform:
 	BEGIN
-	AttrModify.Post -> AttrArrowHeadModified;
-	AttrCreate.Post -> AttrArrowHeadModified;
-	AttrDelete.Post -> AttrArrowHeadModified;
+	AttrModify.Post -> AttrTransformChanged;
+	AttrCreate.Post -> AttrTransformChanged;
+	AttrDelete.Pre ->  AttrTransformDelete;
 	END;
    points:
 	BEGIN
 	AttrDelete.Pre ->  DeleteAttrPoints;
 	AttrModify.Post -> AttrPointsModified;
 	END;
+   arrowhead:
+	BEGIN
+	AttrModify.Post -> AttrArrowHeadModified;
+	AttrCreate.Post -> AttrArrowHeadModified;
+	AttrDelete.Post -> AttrArrowHeadModified;
+	END;
+   x:
+	AttrModify.Post -> AttrCoordChanged;
+   y:
+	AttrModify.Post -> AttrCoordChanged;
+   cx:
+	AttrModify.Post -> AttrCoordChanged;
+   cy:
+	AttrModify.Post -> AttrCoordChanged;
+   r:
+	BEGIN
+	AttrModify.Post -> AttrWidthHeightChanged;
+	AttrDelete.Pre ->  AttrWidthHeightDelete;
+	END;
+   rx:
+	BEGIN
+	AttrModify.Post -> AttrWidthHeightChanged;
+	AttrCreate.Post -> AttrWidthHeightChanged;
+	AttrDelete.Pre ->  AttrWidthHeightDelete;
+	END;
+   ry:
+	BEGIN
+	AttrModify.Post -> AttrWidthHeightChanged;
+	AttrCreate.Post -> AttrWidthHeightChanged;
+	AttrDelete.Pre ->  AttrWidthHeightDelete;
+	END;
+   x1:
+	AttrModify.Post -> AttrCoordChanged;
+   y1:
+	AttrModify.Post -> AttrCoordChanged;
+   x2:
+	AttrModify.Post -> AttrCoordChanged;
+   y2:
+	AttrModify.Post -> AttrCoordChanged;
+   dx:
+	AttrModify.Post -> AttrCoordChanged;
+   dy:
+	AttrModify.Post -> AttrCoordChanged;
 END

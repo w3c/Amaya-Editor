@@ -110,6 +110,12 @@ BinFile             file;
             case C_PR_BORDERLEFTWIDTH:
                return PtBorderLeftWidth;
                break;
+            case C_PR_XRADIUS:
+	       return PtXRadius;
+               break;
+            case C_PR_YRADIUS:
+	       return PtYRadius;
+               break;
             case C_PR_BORDERTOPCOLOR:
                return PtBorderTopColor;
                break;
@@ -1295,6 +1301,8 @@ PtrPRule           *pNextPRule;
 				     case PtBorderRightWidth:
 				     case PtBorderBottomWidth:
 				     case PtBorderLeftWidth:
+				     case PtXRadius:
+				     case PtYRadius:
 					pPR->PrMinUnit = rdUnit (file);
 					TtaReadBool (file, &pPR->PrMinAttr);
 					TtaReadSignedShort (file, &pPR->PrMinValue);

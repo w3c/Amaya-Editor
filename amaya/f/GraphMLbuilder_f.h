@@ -34,14 +34,13 @@ extern void ParseFillStrokeAttributes ( int attrType,
 extern void GraphMLElementComplete ( Element el,
                                      Document doc,
                                      int *error );
-extern void UpdateInternalAttrForPoly ( Element el,
-                                        Element leaf,
-                                        Document doc,
-                                        int minX,
-                                        int minY,
-                                        int maxX,
-                                        int maxY,
-                                        ThotBool setIntPosition );
+extern void UpdatePositionOfPoly ( Element el,
+				   Element leaf,
+				   Document doc,
+				   int minX,
+				   int minY,
+				   int maxX,
+				   int maxY );
 extern void CreatePoints ( Attribute attr,
                            Element el,
                            Document doc );
@@ -51,9 +50,10 @@ extern void ParsePositionAttribute ( Attribute attr,
 extern void ParseCoordAttribute ( Attribute attr,
                                   Element el,
                                   Document doc );
-extern void ParseWidthHeightAttribute ( Attribute attr,
-                                        Element el,
-                                        Document doc );
+extern ThotBool ParseWidthHeightAttribute ( Attribute attr,
+					    Element el,
+					    Document doc,
+					    ThotBool delete );
 extern void ParseTransformAttribute ( Attribute attr,
 				      Element el,
 				      Document doc,
@@ -92,14 +92,13 @@ extern void ParseFillStrokeAttributes (/* int attrType,
 extern void GraphMLElementComplete (/* Element el,
                                        Document doc,
                                        int *error */);
-extern void UpdateInternalAttrForPoly (/* Element el,
-                                          Element leaf,
-                                          Document doc,
-                                          int minX,
-                                          int minY,
-                                          int maxX,
-                                          int maxY,
-                                          ThotBool setIntPosition */);
+extern void UpdatePositionOfPoly (/* Element el,
+				     Element leaf,
+				     Document doc,
+				     int minX,
+				     int minY,
+				     int maxX,
+				     int maxY */);
 extern void CreatePoints (/* Attribute attr,
                              Element el,
                              Document doc */);
@@ -109,9 +108,10 @@ extern void ParsePositionAttribute (/* Attribute attr,
 extern void ParseCoordAttribute (/* Attribute attr,
                                     Element el,
                                     Document doc */);
-extern void ParseWidthHeightAttribute (/* Attribute attr,
-                                          Element el,
-                                          Document doc */);
+extern ThotBool ParseWidthHeightAttribute (/* Attribute attr,
+					      Element el,
+					      Document doc,
+					      ThotBool delete */);
 extern void ParseTransformAttribute (/* Attribute attr,
 					Element el,
 					Document doc,

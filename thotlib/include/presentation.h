@@ -83,7 +83,9 @@ typedef int        *PRule;
 #define PRPageBefore 57
 #define PRPageAfter 58
 #define PRPageInside 59
-#define LAST_PRES_RULE_TYPE 59
+#define PRXRadius 60
+#define PRYRadius 61
+#define LAST_PRES_RULE_TYPE 61
 
 /* values for rule PRStyle */
 #define StyleRoman 1

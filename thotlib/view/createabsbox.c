@@ -585,6 +585,14 @@ PtrAbstractBox      pAb;
 	    case GraphicElem:
 	       pAb->AbLeafType = LtGraphics;
 	       pAb->AbShape = (char)pConst->PdString[0];
+	       if (pAb->AbShape == 'C')
+		 /* rectangle with rounded corners */
+		 {
+	         pAb->AbRx = 5;
+		 pAb->AbRxUnit = UnPoint;
+	         pAb->AbRy = 5;
+		 pAb->AbRyUnit = UnPoint;
+		 }
 	       pAb->AbGraphAlphabet = 'L';
 	       pAb->AbVolume = 1;
 	       break;
