@@ -176,13 +176,13 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
       TtaSetEnvBoolean("OPEN_PANEL", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_XHTML", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_ATTRIBUTE", TRUE, FALSE);
-      TtaSetEnvBoolean("OPEN_PANEL_XML", TRUE, FALSE);
-      TtaSetEnvBoolean("OPEN_PANEL_MATHML", TRUE, FALSE);
+      TtaSetEnvBoolean("OPEN_PANEL_XML", FALSE, FALSE);
+      TtaSetEnvBoolean("OPEN_PANEL_MATHML", FALSE, FALSE);
+      TtaSetEnvBoolean("OPEN_PANEL_SPECHAR", FALSE, FALSE);
+      TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_COLORS", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_CHARSTYLE", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_FORMAT", TRUE, FALSE);
-      TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", TRUE, FALSE);
-      TtaSetEnvBoolean("OPEN_PANEL_SPECHAR", TRUE, FALSE);
       
       /* open or close panels */
       ThotBool value;
