@@ -1891,7 +1891,7 @@ Element             el;
 #endif
 {
    ElementType         elType, newElType, childType;
-   Element             constElem, child, grandChild, desc;
+   Element             constElem, child, grandChild, desc, leaf;
    Attribute           attr, nextAttr, oldAttr;
    Attribute           attrChild;
    AttributeType       attrType;
@@ -1968,17 +1968,18 @@ Element             el;
 				      /* copy attribute value into the first
 					 text leaf of element */
 				     {
+				        desc = child;
 					do
 					   {
-					   desc = child;
-					   child = TtaGetFirstChild (desc);
+					   leaf = desc;
+					   desc = TtaGetFirstChild (leaf);
 					   }
-					while (child != NULL);
-					if (desc != NULL)
+					while (desc != NULL);
+					if (leaf != NULL)
 					  {
-					  childType = TtaGetElementType (desc);
+					  childType = TtaGetElementType (leaf);
 					  if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
-					    TtaSetTextContent (desc, text,
+					    TtaSetTextContent (leaf, text,
 						documentLanguage, theDocument);
 					  }
 				     }
