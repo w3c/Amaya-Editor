@@ -103,6 +103,11 @@ typedef struct _Frame_Ctl {
   int        MenuPaste;                 /* Menu including the Paste command or -1 */
   int        MenuContext;               /* Contextual menu ID or -1          */
 
+  int        MenuShowPanelID;             /* parent menu id                         */
+  int        MenuSplitViewID;             /* parent menu id                         */
+  int        MenuItemShowPanelID;         /* show/hide panel menu item ID or -1     */
+  int        MenuItemSplitViewID;         /* split/unsplit menu item ID or -1       */
+
   int        EntryPaste;                /* Entry number of the Paste command */
   int        MenuUndo;                  /* Menu including the Undo command
 					   or -1  */

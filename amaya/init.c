@@ -7386,6 +7386,10 @@ void ChangeAttrOnRoot (Document doc, int attrNum)
   ----------------------------------------------------------------------*/
 void ShowPanel (Document doc, View view)
 {
+#ifdef _WX
+  int frame_id = GetWindowNumber (doc, view);
+  TtaToggleOnOffSidePanel( frame_id );
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -7402,6 +7406,10 @@ void FullScreen (Document doc, View view)
   ----------------------------------------------------------------------*/
 void SplitUnsplitPage (Document doc, View view)
 {
+#ifdef _WX
+  int frame_id = GetWindowNumber (doc, view);
+  TtaToggleOnOffSplitView( frame_id );
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

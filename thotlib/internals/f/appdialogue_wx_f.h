@@ -86,6 +86,9 @@ extern void APP_Callback_PanelButtonActivate ( int type,
                                                int button_id );
 extern ThotBool TtaRegisterWidgetWX ( int ref,
                                       void * p_widget );
+extern void TtaToggleOnOffSidePanel ( int frame_id );
+extern void TtaToggleOnOffSplitView ( int frame_id );
+extern void TtaDoPostFrameCreation ( int frame_id );
 
 #else /* __STDC__ */
 
@@ -169,6 +172,9 @@ extern void APP_Callback_PanelButtonActivate ( int type,
                                                  int button_id );
 extern ThotBool TtaRegisterWidgetWX ( int ref,
                                         void * p_widget );
+extern void TtaToggleOnOffSidePanel ( int frame_id );
+extern void TtaToggleOnOffSplitView ( int frame_id );
+extern void TtaDoPostFrameCreation ( int frame_id );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

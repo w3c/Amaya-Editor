@@ -512,6 +512,19 @@ void AmayaWindow::OnKeyDown(wxKeyEvent& event)
   event.Skip();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  RefreshShowPanelToggleMenu
+ * Description:  is called to toggle on/off the "Show/Hide panel" menu item depeding on
+ *               the panel showing state.
+ *               Only used by AmayaNormalWindow
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::RefreshShowPanelToggleMenu()
+{
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type

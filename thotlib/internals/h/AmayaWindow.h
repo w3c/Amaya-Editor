@@ -95,13 +95,14 @@ class AmayaWindow : public wxFrame
   virtual AmayaPage *  GetActivePage() const;
   virtual AmayaFrame * GetActiveFrame() const;
 
+  // --------------------------------------------- //
+  // WXAMAYAWINDOW_NORMAL interface
   virtual AmayaPanel * GetAmayaPanel() const;
   virtual bool IsPanelOpened();
   virtual void ClosePanel();
   virtual void OpenPanel();
+  virtual void RefreshShowPanelToggleMenu();
 
-  // --------------------------------------------- //
-  // WXAMAYAWINDOW_NORMAL interface
   virtual AmayaPage *    CreatePage( bool attach = false, int position = 0 );
   virtual bool           AttachPage( int position, AmayaPage * p_page );
   virtual bool           DetachPage( int position );

@@ -202,6 +202,10 @@ static void TtaMakeMenuBar( int frame_id, const char * schema_name )
   FrameTable[frame_id].MenuUndo = -1;
   FrameTable[frame_id].MenuRedo = -1;
   FrameTable[frame_id].MenuContext = -1;
+  FrameTable[frame_id].MenuShowPanelID = -1;
+  FrameTable[frame_id].MenuSplitViewID = -1;
+  FrameTable[frame_id].MenuItemShowPanelID = -1;
+  FrameTable[frame_id].MenuItemSplitViewID = -1;
   
   while (p_menu_bar && ptrmenu)
     {
@@ -425,7 +429,7 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   /* wait for frame initialisation (needed by opengl) 
    * this function waits for complete widgets initialisation */
   wxSafeYield();
-	
+
   return TRUE;
 #else
   return FALSE;
@@ -1399,7 +1403,7 @@ wxMenu * TtaGetContextMenu( int window_id, int page_id, int frame_id )
 #ifdef _WX
 /*----------------------------------------------------------------------
   TtaRefreshMenuStats - 
-  this function should be called to synchronize the menu stats (enable/disable)
+  this function should be called to synchronize the menu states (enable/disable)
   with FrameTable.EnabledMenus array.
   params:
     + p_menu_bar : the menu bar to synchronize
@@ -1444,3 +1448,90 @@ void TtaRefreshMenuStats( wxMenuBar * p_menu_bar )
     }
 }
 #endif /* _WX */
+
+/*----------------------------------------------------------------------
+  TtaToggleOnOffSidePanel
+  execute the open/close panel action
+  this methode is directly connected to a menu item action
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaToggleOnOffSidePanel( int frame_id )
+{
+#ifdef _WX
+  /* get the parent window */
+  AmayaWindow * p_window = TtaGetWindowFromId(TtaGetFrameWindowParentId(frame_id));
+  if (!p_window)
+    {
+      wxASSERT(false);
+      return;
+    }
+
+  /* close or open the panel depending on panel state */
+  if (p_window->IsPanelOpened())
+    p_window->ClosePanel();
+  else
+    p_window->OpenPanel();
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaToggleOnOffSplitView
+  execute the split/unsplit action
+  this methode is directly connected to a menu item action
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaToggleOnOffSplitView( int frame_id )
+{
+#ifdef _WX
+  AmayaFrame * p_frame = FrameTable[frame_id].WdFrame;
+  if (!p_frame)
+    {
+      wxASSERT(false);
+      return;
+    }
+
+  AmayaPage * p_page = p_frame->GetPageParent();
+  if (!p_page)
+    {
+      wxASSERT(false);
+      return;
+    }
+
+  // simulate a split action
+  p_page->DoSplitUnsplit();
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaDoPostFrameCreation
+  Misc actions to do after the frame creation
+  - wait for opengl initialisation
+  - give focus to the created frame
+  - refresh specific menu items : "Show panel" toggle
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaDoPostFrameCreation( int frame_id )
+{
+#ifdef _WX
+  /* wait for frame initialisation (needed by opengl) */
+  TtaHandlePendingEvents();
+  /* wait for frame initialisation (needed by opengl) 
+   * this function waits for complete widgets initialisation */
+  wxSafeYield();
+  /* fix accessibility problem : force the created frame to get the focus */
+  FrameTable[frame_id].WdFrame->SetFocus();
+
+  /* get the parent window */
+  AmayaWindow * p_window = TtaGetWindowFromId(TtaGetFrameWindowParentId(frame_id));
+  if (!p_window)
+    {
+      wxASSERT(false);
+      return;
+    }
+  /* refresh specific menu item states */
+  p_window->RefreshShowPanelToggleMenu();
+#endif /* _WX */
+}

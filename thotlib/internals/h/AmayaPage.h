@@ -72,6 +72,8 @@ public:
   AmayaFrame * AttachFrame( AmayaFrame * p_frame, int position );
   AmayaFrame * DetachFrame( int position );
 
+  void DoSplitUnsplit();
+
   bool IsClosed();
   bool IsSelected();
   void SetSelected( bool isSelected );
@@ -115,6 +117,8 @@ public:
 
  protected:
   void AdjustSplitterPos( int height = -1, int width = -1 );
+  void RefreshSplitToggleMenu();
+  void RefreshShowPanelToggleMenu();
 
  protected:
   DECLARE_EVENT_TABLE()

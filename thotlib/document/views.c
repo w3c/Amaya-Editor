@@ -622,13 +622,7 @@ void OpenCreatedView (PtrDocument pDoc, int view,
 	(*(Proc1)ThotLocalActions[T_chattr]) ((void*)pDoc);
 
 #ifdef _WX
-      /* wait for frame initialisation (needed by opengl) */
-      TtaHandlePendingEvents();
-      /* wait for frame initialisation (needed by opengl) 
-       * this function waits for complete widgets initialisation */
-      wxSafeYield();
-      /* fix accessibility problem : force the created frame to get the focus */
-      FrameTable[frame].WdFrame->SetFocus();
+      TtaDoPostFrameCreation( frame );
 #endif /* _WX */
     }
 }

@@ -32,6 +32,7 @@
 #include "appdialogue_wx_f.h"
 #include "appdialogue_f.h"
 #include "boxparams_f.h"
+#include "displayview_f.h"
 
 #include "wx/log.h"
 
@@ -102,6 +103,9 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
   // Create a dummy panel to initilize the splitter window with something
   m_DummyPanel = new wxPanel( m_pSplitterWindow );
   m_pSplitterWindow->Initialize( m_DummyPanel );
+
+  // refresh the correspondig menu item state
+  RefreshSplitToggleMenu();
 
   SetAutoLayout(TRUE);
 }
@@ -210,6 +214,9 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
 
   SetAutoLayout(TRUE);
 
+  // refresh the correspondig menu item state
+  RefreshSplitToggleMenu();
+
   // return the old frame : needs to be manualy deleted ..
   return oldframe;
 }
@@ -313,6 +320,9 @@ AmayaFrame * AmayaPage::DetachFrame( int position )
       wxPostEvent(p_other_frame->GetCanvas(), event );
     }
 
+  // refresh the correspondig menu item state
+  RefreshSplitToggleMenu();
+  
   return oldframe;
 }
 
@@ -334,9 +344,23 @@ void AmayaPage::OnSplitButton( wxCommandEvent& event )
 
   wxLogDebug( _T("AmayaPage::OnSplitButton") );
 
+  DoSplitUnsplit();
+
+  //  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  DoSplitUnsplit
+ * Description:  toggle split/unsplit state
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::DoSplitUnsplit()
+{
   if (!m_pSplitterWindow->IsSplit())
     {
-      /* TODO: montrer la meme vue que la premiere frame */
+      // TODO: montrer la meme vue que la premiere frame
       AmayaFrame * p_frame = GetFrame(1);
       Document document = FrameTable[p_frame->GetFrameId()].FrDoc;
       View view         = FrameTable[p_frame->GetFrameId()].FrView;
@@ -347,9 +371,8 @@ void AmayaPage::OnSplitButton( wxCommandEvent& event )
       // unsplit the page
       DetachFrame(2);
     }
-
-  //  event.Skip();
 }
+
 
 /*
  *--------------------------------------------------------------------------------------
@@ -863,6 +886,13 @@ void AmayaPage::DeletedFrame( AmayaFrame * p_frame )
     }
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaPage::SetActiveFrame( const AmayaFrame * p_frame )
 {
   if ( p_frame == GetFrame(1) )
@@ -873,11 +903,25 @@ void AmayaPage::SetActiveFrame( const AmayaFrame * p_frame )
     m_ActiveFrame = 0;
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
 AmayaFrame * AmayaPage::GetActiveFrame() const
 {
   return GetFrame( m_ActiveFrame );
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaPage::RaisePage()
 {
   AmayaNotebook * p_notebook = GetNotebookParent();
@@ -891,6 +935,13 @@ void AmayaPage::RaisePage()
     GetWindowParent()->Raise();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaPage::OnSetFocus( wxFocusEvent & event )
 {
   AmayaFrame * p_frame = GetActiveFrame();
@@ -910,12 +961,64 @@ void AmayaPage::OnSetFocus( wxFocusEvent & event )
   event.Skip();
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaPage::OnContextMenu( wxContextMenuEvent & event )
 {
   wxLogDebug( _T("AmayaPage::OnContextMenu - (x,y)=(%d,%d)"),
 	      event.GetPosition().x,
 	      event.GetPosition().y );
   event.Skip();
+}
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  RefreshSplitToggleMenu
+ * Description:  is called to toggle on/off the "split/unsplit view" menu item depeding on
+ *               the page split state.
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::RefreshSplitToggleMenu()
+{
+  wxLogDebug( _T("AmayaPage::RefreshSplitToggleMenu") );
+  
+  int frame_id = GetActiveFrame() ? GetActiveFrame()->GetFrameId() : 0;
+  if (!frame_id)
+    return;
+
+  Document document;
+  View view;
+  FrameToView (frame_id, &document, &view);
+
+  int menuID = FrameTable[frame_id].MenuSplitViewID;
+  int itemID = FrameTable[frame_id].MenuItemSplitViewID;
+  ThotBool on = m_pSplitterWindow->IsSplit();
+
+  TtaSetToggleItem( document, view, menuID, itemID, on );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPage
+ *      Method:  RefreshSplitToggleMenu()
+ * Description:  is called to toggle on/off the "Show/Hide panel" menu item depeding on
+ *               the panel showing state.
+ *               Just forward the request to the parent window.
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPage::RefreshShowPanelToggleMenu()
+{
+  wxASSERT(GetWindowParent());
+
+  if (GetWindowParent())
+    GetWindowParent()->RefreshShowPanelToggleMenu();
 }
 
 

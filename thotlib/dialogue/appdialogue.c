@@ -1037,7 +1037,9 @@ void TteAddMenuItem (WindowType windowtype, char *schemaName, int menuID,
 	      ptr[i].ItemID = itemID;
 	      ptr[i].ItemType = itemType;
 	      if (actionName != NULL)
-		ptr[i].ItemAction = FindMenuAction (actionName);
+		{
+		  ptr[i].ItemAction = FindMenuAction (actionName);
+		}
 	    }
 	  else
 	    /* Remove separator */
@@ -1345,7 +1347,20 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
 		  FrameTable[frame].MenuRedo = ref;
 		  FrameTable[frame].EntryRedo = entries;
 		}
-
+#ifdef _WX
+	      /* Is it the "Show/Hide panel" command */
+	      else if (!strcmp (MenuActionList[action].ActionName, "ShowPanel"))
+		{
+		  FrameTable[frame].MenuShowPanelID     = ptrmenu->MenuID;
+		  FrameTable[frame].MenuItemShowPanelID = ptrmenu->ItemsList[item].ItemID;
+		}
+	      /* Is it the "Split/Unsplit view" command */
+	      else if (!strcmp (MenuActionList[action].ActionName, "SplitUnsplitPage"))
+		{
+		  FrameTable[frame].MenuSplitViewID     = ptrmenu->MenuID;
+		  FrameTable[frame].MenuItemSplitViewID = ptrmenu->ItemsList[item].ItemID;
+		}
+#endif /* _WX */
 	      /* activate this entry */
 	      MenuActionList[action].ActionActive[frame] = TRUE;
 	    }

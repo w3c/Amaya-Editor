@@ -32,6 +32,7 @@
 #include "dialogapi_f.h"
 #include "callback_f.h"
 #include "appdialogue_wx_f.h"
+#include "displayview_f.h"
 #include "appdialogue_wx.h"
 
 #include "AmayaNormalWindow.h"
@@ -779,6 +780,9 @@ void AmayaNormalWindow::ClosePanel()
     {
       m_pSplitterWindow->Unsplit( m_pPanel );
       m_pPanel->ShowWhenUnsplit( false );
+
+      // refresh the corresponding menu item state
+      RefreshShowPanelToggleMenu();
     }
 }
 
@@ -802,6 +806,9 @@ void AmayaNormalWindow::OpenPanel()
 
       // now check panels to know if a refresh is needed
       AmayaSubPanelManager::GetInstance()->CheckForDoUpdate();
+
+      // refresh the corresponding menu item state
+      RefreshShowPanelToggleMenu();
     }
 }
 
@@ -830,6 +837,47 @@ AmayaPanel * AmayaNormalWindow::GetAmayaPanel() const
   return m_pPanel;
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  RefreshShowPanelToggleMenu
+ * Description:  is called to toggle on/off the "Show/Hide panel" menu item depeding on
+ *               the panel showing state.
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNormalWindow::RefreshShowPanelToggleMenu()
+{
+  wxLogDebug( _T("AmayaNormalWindow::RefreshShowPanelToggleMenu") );
+  
+
+  // update menu items of each window's frames
+  int         page_id = 0;
+  AmayaPage * p_page  = NULL;
+  int         frame_id = 0;
+  Document document;
+  View view;
+  int menuID;
+  int itemID;
+  ThotBool on;
+  while ( page_id < GetPageCount() )
+    {
+      p_page = GetPage( page_id );
+      frame_id = p_page->GetFrame(1)->GetFrameId();
+      if (frame_id <=0)
+	{
+	  wxASSERT_MSG(false,_T("this page exists without a frame ?"));
+	  continue;
+	}
+
+      FrameToView (frame_id, &document, &view);
+      menuID = FrameTable[frame_id].MenuShowPanelID;
+      itemID = FrameTable[frame_id].MenuItemShowPanelID;
+      on = IsPanelOpened();
+      TtaSetToggleItem( document, view, menuID, itemID, on );
+
+      page_id++;
+    }
+}
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared

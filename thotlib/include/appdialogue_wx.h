@@ -49,6 +49,9 @@ extern void TtaSwitchPanelButton( Document doc, View view,
 				  ThotBool value );
 
 extern void TtaRefreshPanelTooltips( int window_id );
+extern void TtaToggleOnOffSidePanel( int frame_id );
+extern void TtaToggleOnOffSplitView( int frame_id );
+extern int GetWindowNumber (Document, View view);
 
 #endif /* #define __APPDIALOGUE_WX_H__ */
 
