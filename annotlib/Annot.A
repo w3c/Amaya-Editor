@@ -1,5 +1,11 @@
 APPLICATION Annot;
 
+DEFAULT
+
+   BEGIN
+	ElemActivate.Pre -> Annot_RaiseSourceDoc;
+   END;
+
 ELEMENTS
 
    SourceDoc: BEGIN

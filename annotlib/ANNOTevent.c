@@ -1127,8 +1127,9 @@ void Annot_RaiseSourceDoc_callback (int doc, int status,
   -----------------------------------------------------------------------*/
 ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
 {
-  Element          el;
   Document         doc_annot;
+  Element          el;
+  ElementType      elType;
   AttributeType    attrType;
   Attribute	   HrefAttr;
   ThotBool	   docModified;
@@ -1141,6 +1142,17 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   el = event->element;
   doc_annot = event->document;
   docModified = TtaIsDocumentModified (doc_annot);
+
+  /* only do this action for thread items and for source document elements */
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum != Annot_EL_SourceDoc)
+    {
+      elType.ElTypeNum = Annot_EL_Thread_item;
+      el = TtaSearchTypedElement (elType, SearchBackward, el);
+      if (!el)
+	return FALSE; /* let Thot do its usual operations */
+    }
+
   /* remove the selection */
   TtaUnselect (doc_annot);
   /* 

@@ -763,7 +763,7 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 	      annot->thread = thread;
 	      /* sigh, hard coded for the moment */
 	      /* add and show the thread item */
-	      ANNOT_AddThreadItem (doc_thread, annot);
+		ANNOT_AddThreadItem (doc_thread, annot);
 	    }
 	  else
 #endif /* ANNOT_ON_ANNOT */

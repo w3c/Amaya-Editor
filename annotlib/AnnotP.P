@@ -14,7 +14,8 @@ PRINT
 #define MARGIN 1.2
 #define RDF_FgColor Black
 #define RDF_BgColor Yellow
-#define THREAD_INDENT 1.5
+#define THREAD_INDENT 0.5
+#define THREAD_ITEM_INDENT 1
 #define POINT_INDENT 1
 #define Thread_visibility 5
 
@@ -308,8 +309,8 @@ RULES
         BEGIN
 	CreateBefore (Thread_point_box);
         VertPos: Top = Previous AnyElem . Bottom + 0.2;
-	HorizPos: Left = Enclosing . left + THREAD_INDENT;
-	Width: Enclosing . width - THREAD_INDENT;
+	HorizPos: Left = Enclosing . left + THREAD_ITEM_INDENT;
+	Width: Enclosing . width - THREAD_ITEM_INDENT;
 	IN Links_view
 	   Visibility: Thread_visibility;
         END;

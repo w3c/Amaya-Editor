@@ -23,6 +23,7 @@
 
 /* Amaya includes */
 #include "init_f.h"
+#include "AHTURLTools_f.h"
 
 /* schema includes */
 #include "Annot.h"
@@ -449,23 +450,51 @@ static Element ANNOT_ThreadItem_new (Document doc)
 
 /*-----------------------------------------------------------------------
   ANNOT_ThreadItem_init
+  Inits a thread item default fields.
   -----------------------------------------------------------------------*/
 static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta *annot, ThotBool useSource)
 {
-  Element el;
-  ElementType elType;
+  Element             el;
+  ElementType         elType;
+  Attribute           attr;
+  AttributeType       attrType;
+  char               *href;
+  char               *tmp;
+  AnnotMeta          *annot_source;
 
-  /* initialize the TI_Date item */
-  elType.ElSSchema =  TtaGetSSchema ("Annot", doc);
-  elType.ElTypeNum = Annot_EL_TI_Date;
+  attrType.AttrSSchema = elType.ElSSchema = TtaGetSSchema ("Annot", doc);
+
+  /* initialize the reverse link */
+  attrType.AttrTypeNum = Annot_ATTR_HREF_;
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (thread_item, attr, doc);
+  tmp = (useSource) ? annot->source_url : annot->body_url,
+  href = TtaGetMemory (strlen (tmp) + 20);
+  sprintf (href, "%s", tmp);
+  TtaSetAttributeText (attr, href, thread_item, doc);
+  TtaFreeMemory (href);
+
+  /* put the title of the annotation in the subject */
+  elType.ElTypeNum = Annot_EL_TI_Title;
   el = TtaSearchTypedElement (elType, SearchInTree, thread_item);
   if (el)
     {
       el = TtaGetFirstChild (el);
-      TtaSetTextContent (el, 
-			 (useSource) ? annot->source_url : annot->body_url,
+      if (useSource)
+	{
+	  /* @@ JK: Add the different cases here */
+	  annot_source = GetMetaData (DocumentMeta[doc]->source_doc, doc);
+	  if (annot_source)
+	    tmp = annot_source->title;
+	  else
+	    tmp = NULL;
+	}
+      else 
+	tmp = annot->title;
+      TtaSetTextContent (el, (tmp) ? tmp :  "no title", 
 			 TtaGetDefaultLanguage (), doc);
     }
+
 }
 
 /*-----------------------------------------------------------------------
@@ -483,11 +512,12 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta 
 Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
 {
 #ifdef ANNOT_ON_ANNOT
-  ElementType elType;
-  Element     root, thread_item, el;
-  char       *url;
-  Language    lang;
-  int         i;
+  ElementType    elType;
+  Element        root, thread_item, el;
+  Attribute      attr;
+  AttributeType  attrType;
+  char          *url;
+  int            i;
 
   /* we find the the Thread element and make it our root */
   root = TtaGetRootElement (doc);
@@ -495,7 +525,9 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
   elType.ElTypeNum = Annot_EL_Thread;
   el = TtaSearchTypedElement (elType, SearchInTree, root);
 
-  if (!el)
+  if (el)
+    root = el;
+  else
     {
       /* create the thread element */
       elType.ElTypeNum = Annot_EL_Body;
@@ -512,22 +544,22 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
     }
 
   /* try to find where to insert the element */
-  root = el;
-  elType.ElTypeNum = Annot_EL_TI_Date;
-  el = TtaSearchTypedElement (elType, SearchForward, root);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = Annot_ATTR_HREF_;
+  TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
   while (el)
     {
-      el = TtaGetFirstChild (el);
-      i = TtaGetTextLength (el) + 1;
+      i = TtaGetTextAttributeLength (attr) + 1;
       url = TtaGetMemory (i);
-      TtaGiveTextContent (el, url, &i, &lang);
+      TtaGiveTextAttributeValue (attr, url, &i);
       if (!strcasecmp (url, annot->source_url))
 	{
 	  TtaFreeMemory (url);
 	  break;
 	}
       TtaFreeMemory (url);
-      el = TtaSearchTypedElement (elType, SearchForward, el);
+      root = el;
+      TtaSearchAttribute (attrType, SearchForward, root, &el, &attr);
     }
   root = el;
   
@@ -536,11 +568,6 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
     return NULL;
       
   /* find the container and insert it */
-  elType.ElTypeNum = Annot_EL_Thread_item;
-  el = TtaSearchTypedElement (elType, SearchBackward, root);
-  if (!el)
-    return NULL;
-  root = el;
   el = TtaGetLastChild (root);
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum != Annot_EL_TI_content)
@@ -563,6 +590,23 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
 #endif /* ANNOT_ON_ANNOT */
 }
 
+/*-----------------------------------------------------------------------
+  ANNOT_SelectThread
+  Selects an item in the thread view.
+  -----------------------------------------------------------------------*/
+void ANNOT_SelectThread (Document doc)
+{
+  
+}
+
+/*-----------------------------------------------------------------------
+  ANNOT_UpdateThread
+  Updates the metadata of a thread item.
+  -----------------------------------------------------------------------*/
+void ANNOT_UpdateThread (Document doc)
+{
+  
+}
 
 /*-----------------------------------------------------------------------
    ANNOT_InitDocumentStructure

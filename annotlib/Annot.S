@@ -36,7 +36,7 @@ STRUCT
 
   { a thread item contains a description and may contain other thread items }
   Thread_item (ATTR  Selected = Yes_;   {user is viewing this thread item }
-	             AHREF = Text;) =   { link to the annotation }  
+	             HREF_;) =          { link to the annotation }  
                 BEGIN
 	        TI_desc;
 	        ? TI_content = LIST OF (Thread_item);
@@ -75,3 +75,10 @@ EXCEPT
 	TI_desc:        NoCut;
 	TI_content:	NoCut;
 END
+
+
+
+
+
+
+
