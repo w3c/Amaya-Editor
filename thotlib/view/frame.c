@@ -276,15 +276,13 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	h = pBox->BxHeight;
       width = w + 1;
       height = h + 1;
+      xd = xmin - pFrame->FrXOrg;
+      yd = ymin - pFrame->FrYOrg;
       if (pBox->BxFill)
-	{
-	  /* draw the box background */
-	  xd = xmin - pFrame->FrXOrg;
-	  yd = ymin - pFrame->FrYOrg;
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height,
-			 pAb->AbForeground, pAb->AbBackground,
-			 pAb->AbFillPattern);
-	}
+	/* draw the box background */
+	DrawRectangle (frame, 0, 0, xd, yd, width, height,
+		       pAb->AbForeground, pAb->AbBackground,
+		       pAb->AbFillPattern);
     }
   else
     {
@@ -316,17 +314,7 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
     {
       DisplayBorders (pBox, frame, xd - x, yd - y, width, height);
       /* draw over the padding */
-      if (setWindow)
-	{
-#ifdef IV
-	  xd = pBox->BxXOrg;
-	  yd = pBox->BxYOrg;
-	  /* fill the whole window surface */
-	  width = w + 1 - xd;
-	  height = h + 1 - yd;
-#endif
-	}
-      else
+      if (!setWindow)
 	{
 	  xd =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder;
 	  yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder;
