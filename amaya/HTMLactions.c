@@ -680,6 +680,8 @@ Document            doc;
 			TtaFreeMemory (info);
 		       }
 		   }
+		 /* interrupt current transfer */
+		 StopTransfer (doc, 1);	   
 		 /* get the referred document */
 		 targetDocument = GetHTMLDocument (documentURL, form_data,
 				   doc, doc, CE_RELATIVE, TRUE, 
@@ -909,8 +911,6 @@ NotifyElement      *event;
 	while (anchor == NULL && ancestor != NULL);
       }
 
-   /* interrupt current transfer */
-   StopTransfer (event->document, 1);	   
    return (FollowTheLink (anchor, element, event->document));
 }
 

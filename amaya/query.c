@@ -2632,11 +2632,17 @@ void               *context_tcbf;
    /* don't use the cache while saving a document */
    HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
 
+   /* Throw away any reponse body */
+   /*
+   HTRequest_setOutputStream (me->request, HTBlackHole());        
+   */
+
    /* prepare the URLname that will be displayed in teh status bar */
    ChopURL (me->status_urlName, me->urlName);
    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING),
 		     me->status_urlName);
 
+   /* make the request */
    status = HTPutDocumentAbsolute (me->anchor, urlName, me->request);
 
    if (status == YES && me->reqStatus != HT_ERR)
@@ -2705,6 +2711,8 @@ int                 docid;
 #endif /* DEBUG_LIBWWW */
        /* enter the critical section */
        lock_stop = TRUE; 
+       /* expire all outstanding timers */
+       HTTimer_expireAll ();
        /* HTNet_killAll (); */
        cur = Amaya->reqlist;
        while ((me = (AHTReqContext *) HTList_nextObject (cur))) 
@@ -2733,9 +2741,15 @@ int                 docid;
 					       me->outputfile,
 					       me->content_type, 
 					       me->context_tcbf);
+
+		       if (async_flag) 
+			 /* erase the request context */
+			   AHTReqContext_delete (me);
+		       else
+			 /* just indicate that the request was stopped, the context
+			  will be liberated in the LoopForStop */
+			 me->reqStatus = HT_END;
 		     }
-		   if (!async_flag)
-		     AHTReqContext_delete (me);
 		   cur = Amaya->reqlist;
 		 }
 #ifndef _WINDOWS
@@ -2747,8 +2761,6 @@ int                 docid;
 #endif /* !_WINDOWS */
 	     }
 	 }
-       /* expire all outstanding timers */
-       HTTimer_expireAll ();
        /* Delete remaining channels */
        HTChannel_safeDeleteAll ();
        /* exit the critical section */

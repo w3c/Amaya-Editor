@@ -705,9 +705,9 @@ void               *extra;
    for example bypassing the cache.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FetchAndDisplayImages (Document doc, int flags)
+boolean             FetchAndDisplayImages (Document doc, int flags)
 #else  /* __STDC__ */
-void                FetchAndDisplayImages (doc, flags)
+boolean             FetchAndDisplayImages (doc, flags)
 Document            doc;
 int                 flags;
 
@@ -718,6 +718,7 @@ int                 flags;
    Element             el, elFound;
    ElementType         elType;
    char               *currentURL;
+   boolean             status = TRUE;
 
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
    if (FilesLoading[doc] == 0)
@@ -730,7 +731,7 @@ int                 flags;
        TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
        DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
 #endif  /* AMAYA_JAVA || AMAYA_ILU */
-       return;
+       return FALSE;
      }
 
    /* register the current URL */
@@ -750,14 +751,20 @@ int                 flags;
    do
      {
 	TtaHandlePendingEvents ();
-	/* verify if StopTransfer is called */
+	/* verify if StopTransfer was called */
+	if (DocumentURLs[doc] == NULL || strcmp (currentURL, DocumentURLs[doc]))
+	  {
+	    /* the document has been removed */
+	    status = FALSE;
+	    break;
+	  }
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 	if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
-	  break;
+	  {
+	    status = TRUE;
+	    break;
+	  }
 #endif
-	if (DocumentURLs[doc] == NULL || strcmp (currentURL, DocumentURLs[doc]))
-	  /* the document has been removed */
-	  break;
 	/* search the next element having an attribute SRC */
 	TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
 	el = elFound;
@@ -769,5 +776,12 @@ int                 flags;
 
    /* Images fetching is now finished */
    TtaFreeMemory (currentURL);
+
+   return (status);
 }
+
+
+
+
+
 

@@ -38,8 +38,8 @@ extern void FetchImage ( Document doc,
                          int flags,
                          LoadedImageCallback callback,
                          void *extra );
-extern void FetchAndDisplayImages ( Document doc,
-                                    int flags );
+extern boolean FetchAndDisplayImages ( Document doc,
+                                       int flags );
 
 #else /* __STDC__ */
 
@@ -75,8 +75,8 @@ extern void FetchImage (/* Document doc,
                            int flags,
                            LoadedImageCallback callback,
                            void *extra */);
-extern void FetchAndDisplayImages (/* Document doc,
-                                      int flags */);
+extern boolean FetchAndDisplayImages (/* Document doc,
+                                         int flags */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

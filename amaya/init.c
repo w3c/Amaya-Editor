@@ -2568,7 +2568,7 @@ void *context;
 	       /* fetch and display all images referred by the document */
 	       if (doc == baseDoc)
 		 /* it's not a temporary document */
-		 FetchAndDisplayImages (newdoc, 0);
+		 ok = FetchAndDisplayImages (newdoc, 0);
 	     }
 	 }
        else
