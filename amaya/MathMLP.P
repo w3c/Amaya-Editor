@@ -273,10 +273,23 @@ BOXES
 		Visibility: 0;
 	END;
 
+ HR_Graph: BEGIN
+	Content: Graphics 'h';
+	LineWeight: 1 pt;
+	Height: 0.2;
+        Width: Enclosing . Width ;
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	Visibility: 0;
+	IN Math_Structure_view
+		Visibility: 10;
+	END;
+
 RULES
 
    MathML:
 	BEGIN
+	CreateLast(HR_Graph);
 	PageBreak: No;
 	LineBreak: No;
 	LineWeight: 1 pt;

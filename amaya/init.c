@@ -1396,16 +1396,22 @@ View                view;
    int                 x, y, w, h;
 
    structView = TtaGetViewFromName (document, "Structure_view");
+#ifdef MATHML
+   mathView = TtaGetViewFromName (document, "Math_Structure_view");
+#endif /* MATHML */
    if (view == structView)
      {
 	TtaCloseView (document, view);
 	TtaSetToggleItem (document, 1, Views, TShowStructure, FALSE);
 #ifdef MATHML
-	mathView = TtaGetViewFromName (document, "Math_Structure_view");
 	if (mathView != 0 && TtaIsViewOpened (document, mathView))
 	  TtaCloseView (document, mathView);
 #endif /* MATHML */
      }
+#ifdef MATHML
+   else if (view == mathView)
+     TtaCloseView (document, mathView);
+#endif /* MATHML */
    else if (structView != 0 && TtaIsViewOpened (document, structView))
       TtaCloseView (document, structView);
    else
