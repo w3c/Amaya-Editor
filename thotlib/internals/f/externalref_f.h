@@ -11,15 +11,6 @@ extern void ConvertIntToLabel ( int num,
 extern void ReadLabel ( char labelType,
                         LabelString label,
                         BinFile file );
-extern void LoadEXTfile ( BinFile file,
-                          PtrDocument pDoc,
-                          PtrReferredDescr * Anchor,
-                          ThotBool labelsOnly );
-extern void LoadREFfile ( BinFile file,
-                          PtrChangedReferredEl * Anchor );
-extern void UpdateREFdescriptors ( PtrChangedReferredEl Anchor,
-                                   PtrDocument pDoc );
-
 #else /* __STDC__ */
 
 extern void ConvertIntToLabel (/* int num,
@@ -27,14 +18,5 @@ extern void ConvertIntToLabel (/* int num,
 extern void ReadLabel (/* char labelType,
                           LabelString label,
                           BinFile file */);
-extern void LoadEXTfile (/* BinFile file,
-                            PtrDocument pDoc,
-                            PtrReferredDescr * Anchor,
-                            ThotBool labelsOnly */);
-extern void LoadREFfile (/* BinFile file,
-                            PtrChangedReferredEl * Anchor */);
-extern void UpdateREFdescriptors (/* PtrChangedReferredEl Anchor,
-                                     PtrDocument pDoc */);
-
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

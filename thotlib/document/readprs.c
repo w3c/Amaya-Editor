@@ -1247,6 +1247,7 @@ PtrPRule           *pNextPRule;
 				 TtaReadBool (file, &pPR->PrElement);
 				 error = !TtaReadShort (file, &pPR->PrNPresBoxes);
 				 if (!error)
+				   {
 				    if (pPR->PrNPresBoxes == 0)
 				       TtaReadName (file, pPR->PrPresBoxName);
 				    else
@@ -1255,6 +1256,7 @@ PtrPRule           *pNextPRule;
 					    TtaReadShort (file, &pPR->PrPresBox[i]);
 					 pPR->PrPresBoxName[0] = WC_EOS;
 				      }
+				   }
 			      }
 			    break;
 			 case PresImmediate:

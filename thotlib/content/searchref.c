@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * References search
  *
@@ -409,133 +400,6 @@ void                FindReferredEl ()
      }
 }
 
-
-/*----------------------------------------------------------------------
-   RegisterPastedReferredElem					
-   	L'element pEl vient d'etre colle'				
-   dans le document pDoc et l'original vient d'un document		
-   different. S'il possede des elements reference's par d'autres   
-   documents, on note dans le contexte du document pDoc que cet    
-   element a change' de document. Ce sera utile lorsqu'on sauvera  
-   le document pDoc pour mettre a jour les fichiers .REF des       
-   documents referencant les elements deplace's.                   
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RegisterPastedReferredElem (PtrElement pEl, PtrDocument pDoc, LabelString oldLabel)
-#else  /* __STDC__ */
-static void         RegisterPastedReferredElem (pEl, pDoc, oldLabel)
-PtrElement          pEl;
-PtrDocument         pDoc;
-LabelString         oldLabel;
-
-#endif /* __STDC__ */
-{
-   PtrChangedReferredEl pChnRef;
-
-   if (pEl->ElReferredDescr != NULL)
-      if (pEl->ElReferredDescr->ReExtDocRef != NULL)
-	 /* l'element est reference' par d'autres documents */
-	{
-	   /* acquiert un descripteur et le remplit */
-	   GetChangedReferredEl (&pChnRef);
-	   strncpy (pChnRef->CrOldLabel, oldLabel, MAX_LABEL_LEN);
-	   strncpy (pChnRef->CrNewLabel, pEl->ElLabel, MAX_LABEL_LEN);
-	   CopyDocIdent (&pChnRef->CrOldDocument, DocOfSavedElements->DocIdent);
-	   CopyDocIdent (&pChnRef->CrNewDocument, pDoc->DocIdent);
-	   pChnRef->CrReferringDoc = NULL;
-	   /* chaine ce descripteur */
-	   pChnRef->CrNext = pDoc->DocChangedReferredEl;
-	   pDoc->DocChangedReferredEl = pChnRef;
-	   /* copie la liste des documents qui referencent l'element */
-	   CopyDescrExtDoc (pEl, pChnRef);
-	}
-}
-
-/*----------------------------------------------------------------------*/
-  /* UpdateReferences      */    
-   /* traitement particulier a faire sur les references si */
-   /* la copie n'est pas dans le meme document que l'original */
-   /* et que l'on a fait un copier/coller d'un element LtReference */
-   /* ou d'un element portant un attribut reference, */
-/*----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void                UpdateReferences (PtrElement pRoot, PtrDocument pDoc, PtrReference pRef)
-#else  /* __STDC__ */
-static void                updateReferences (pRoot, pDoc, pRef)
-PtrElement          pRoot;
-PtrDocument         pDoc;
-PtrReference        pRef;
-
-#endif /* __STDC__ */
-
-{
-   PtrElement          pElRef;
-   DocumentIdentifier  docIdentRef;
-   PtrDocument         pDocRef;
-   ThotBool            sameDoc;
-
-	   if (pRef->RdReferred != NULL)
-	     {
-		pElRef = ReferredElement (pRef, &docIdentRef, &pDocRef);
-		if (pElRef == NULL && DocIdentIsNull (docIdentRef))
-		   /* la reference ne designe rien */
-		   pRef->RdReferred = NULL;
-		else
-		  {
-		     if (pElRef != NULL)
-			if (!IsASavedElement (pElRef))
-			   if (IsWithinANewElement (pElRef))
-			      /* l'element reference' est aussi colle' */
-			      pDocRef = pDoc;
-		     if (pRef->RdInternalRef)
-			/* l'original etait une reference interne a son document */
-			/* d'origine, l'element reference' appartient donc au */
-			/* document d'origine */
-			pDocRef = DocOfSavedElements;
-		     else
-			/* l'original etait une reference externe a son document */
-			/* d'origine */
-		     if (SameDocIdent (pDoc->DocIdent, docIdentRef))
-			/* l'element reference' et la reference sont dans le */
-			/* meme document */
-			pDocRef = pDoc;
-		     if (pDocRef != NULL)
-			/* le document contenant l'element reference' est charge' */
-		       {
-			  /* si l'original n'est pas une reference interne, */
-			  /* l'element reference' ne peut pas avoir ete copie' en */
-			  /* meme temps */
-			  if (!pRef->RdInternalRef)
-			    {
-			     /* lie la reference a l'element designe' par l'original */
-		             if (pRef->RdAttribute != NULL)
-		               pRoot = NULL;
-			     SetReference (pRoot, pRef->RdAttribute, pElRef, pDoc, pDocRef, FALSE, FALSE);
-			    }
-			  else
-			     /* la reference originale etait une reference interne */
-			    {
-			       sameDoc = FALSE;
-			       if (pElRef != NULL)
-				  if (!IsASavedElement (pElRef))
-				     /* l'element reference' est aussi colle', on ne fait */
-				     /* rien : ce cas est traite' plus haut */
-				     sameDoc = IsWithinANewElement (pElRef);
-			       if (!sameDoc)
-
-				  /* etablit le lien entre la reference copie'e et */
-				  /* l'element reference */
-				 {
-				   if (pRef->RdAttribute != NULL)
-				     pRoot = NULL;
-				  SetReference (pRoot, pRef->RdAttribute, pElRef, pDoc, pDocRef, FALSE, FALSE);
-				 }
-			    }
-		       }
-		  }
-	     }
-}
-
 /*----------------------------------------------------------------------
    CheckReferences        On vient de coller le sous-arbre de racine	
    pRoot dans le document pDoc. Verifie la coherence des elements	
@@ -643,10 +507,6 @@ PtrDocument         pDoc;
 	     pRef = pNextRef;	/* passe a la reference suivante */
 	     pDocRef = pNextDocRef;
 	  }
-	if (!ChangeLabel && pDoc != DocOfSavedElements)
-	   /* l'element a change' de document, on le note dans le */
-	   /* contexte de son nouveau document */
-	   RegisterPastedReferredElem (pRoot, pDoc, oldLabel);
      }
    /* Traite les attributs de type reference porte's par l'element */
    pAttr = pRoot->ElFirstAttr;
@@ -693,9 +553,6 @@ PtrDocument         pDoc;
 				   }
 			       }
 			   }
-		     /* on traite le cas des references qui pointent sur de
-			nouveaux elements */
-		     UpdateReferences (pRoot, pDoc, pAttr->AeAttrReference);
 		     if (delAttr)
 			DeleteAttribute (pRoot, pAttr);
 		   }  
@@ -727,20 +584,6 @@ PtrDocument         pDoc;
 	  }
      }
 
-   /* on n'a pas de traitement particulier a faire sur les references si */
-   /* la copie est dans le meme document que l'original */
-   if (DocOfSavedElements != pDoc)
-     {
-	/* l'element traite' est-il une reference ? */
-	if (pRoot->ElTerminal && pRoot->ElLeafType == LtReference)
-	   /* c'est un element reference */
-	   pRef = pRoot->ElReference;
-	else			/* c'est peut-etre une inclusion */
-	   pRef = pRoot->ElSource;
-	if (pRef != NULL)	/* c'est une reference, on */
-	                        /*  met a jour la reference si besoin */
-	   UpdateReferences (pRoot, pDoc, pRef);
-     }
    if (!pRoot->ElTerminal && pRoot->ElSource == NULL)
       /* ce n'est ni une inclusion ni un terminal, on traite tous les fils */
      {

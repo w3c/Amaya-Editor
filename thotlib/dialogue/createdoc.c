@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -83,6 +83,7 @@ STRING              data;
    else
      {
 	if (ref != 0)
+	  {
 	   if (CurrentDialog == NumFormCreateDoc)
 	     /* confirme la creation */
 	     {
@@ -99,7 +100,7 @@ STRING              data;
 		   if (ThotLocalActions[T_savedoc] != NULL)
 		      (*ThotLocalActions[T_savedoc]) ();
 		}
-
+	  }
 	TtaDestroyDialogue (CurrentDialog);
 	TtaDestroyDialogue (NumFormConfirm);
      }

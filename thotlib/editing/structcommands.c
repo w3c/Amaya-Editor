@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2000
+ *  (c) COPYRIGHT INRIA 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1758,8 +1758,6 @@ ThotBool            save;
 			  /* parcourt la chaine des elements detruits */
 			  {
 			    RedisplayEmptyReferences (pS, &pSelDoc, TRUE);
-			    RegisterExternalRef (pS, pSelDoc, FALSE);
-			    RegisterDeletedReferredElem (pS, pSelDoc);
 			    pS = pS->ElNext;
 			    /* element detruit suivant */
 			  }

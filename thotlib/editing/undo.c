@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1998.
+ *  (c) COPYRIGHT INRIA 1998-2001
  *  Please read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -215,10 +215,12 @@ ThotBool undo;
 
    if (editOp->EoType == EtDelimiter)
       /* update the number of editing sequences remaining in the queue */
+     {
       if (undo)
          UpdateHistoryLength (-1, pDoc);
       else
          UpdateRedoLength (-1, pDoc);
+     }
 
    /* free the editing operation descriptor */
    TtaFreeMemory (editOp);

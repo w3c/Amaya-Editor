@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * This module locates words in Thot documents.
  *
@@ -303,19 +294,21 @@ void                RestoreAfterSearch ()
    CancelSelection ();
    endChar = lastCharInitialSelection;
    if (endChar > 0)
-
-      if (firstCharInitialSelection > 0)
-	{
+     {
+       if (firstCharInitialSelection > 0)
+	 {
 	   if (firstElInitialSelection == lastElInitialSelection)
-	      prevLen = endChar;
+	     prevLen = endChar;
 	   else
-	      prevLen = 0;
+	     prevLen = 0;
 	   SelectString (DocInitialSelection, firstElInitialSelection,
 			 firstCharInitialSelection, prevLen);
-	}
-      else
-	 SelectElement (DocInitialSelection, firstElInitialSelection, TRUE, TRUE);
-
+	 }
+       else
+	 SelectElement (DocInitialSelection, firstElInitialSelection, TRUE,
+			TRUE);
+     }
+   
    if (lastElInitialSelection != firstElInitialSelection &&
        lastElInitialSelection != NULL)
       ExtendSelection (lastElInitialSelection, endChar, TRUE, FALSE, FALSE);
@@ -440,7 +433,9 @@ PtrSearchContext    context;
    /* Check that element is a Text element and that the research does */
    /* not start on the last character */
    if (pEl != NULL)
-      if (pEl->ElTypeNumber != CharString + 1 || iChar + 1 >= pEl->ElTextLength)
+     {
+      if (pEl->ElTypeNumber != CharString + 1 ||
+	  iChar + 1 >= pEl->ElTextLength)
 	{
 	   /* there is no buffer */
 	   pBuf = NULL;
@@ -449,6 +444,7 @@ PtrSearchContext    context;
       else
 	 /* first buffer of element */
 	 pBuf = pEl->ElText;
+     }
 
    /* looks for the end of the research domain */
    if (context == NULL)

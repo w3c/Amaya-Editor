@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1139,15 +1139,18 @@ int                 frame;
 		  while (pChildAb != NULL)
 		    {
 		       if (pChildAb->AbBox != NULL)
+			 {
 			  if (pChildAb->AbBox->BxXOutOfStruct)
 			     toHorizPack = TRUE;
 			  else
 			    {
-			       if (pBox->BxXToCompute && !pChildAb->AbBox->BxHorizFlex)
-				  /* Additionne le decalage de la boite */
-				  pChildAb->AbBox->BxXToCompute = TRUE;
-			       XMoveAllEnclosed (pChildAb->AbBox, delta, frame);
+			      if (pBox->BxXToCompute &&
+				  !pChildAb->AbBox->BxHorizFlex)
+				/* Additionne le decalage de la boite */
+				pChildAb->AbBox->BxXToCompute = TRUE;
+			      XMoveAllEnclosed (pChildAb->AbBox, delta, frame);
 			    }
+			 }
 		       pChildAb = pChildAb->AbNext;
 		    }
 		  pBox->BxXToCompute = FALSE;	/* le decalage eventuel est pris en compte */
@@ -1383,6 +1386,7 @@ int                 frame;
 		    toMove = pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost;
 		
 		if (toMove)
+		  {
 		  if (pBox->BxHorizEdge == VertRef)
 		    {
 		      /* the box position depends on its vertical axis */
@@ -1426,16 +1430,22 @@ int                 frame;
 			      pRelation = &pPosRel->PosRTable[i];
 			      if (pRelation->ReBox->BxAbstractBox != NULL)
 				{
-				  if (pRelation->ReBox != pBox
-				      && pRelation->ReRefEdge != VertRef)
+				  if (pRelation->ReBox != pBox &&
+				      pRelation->ReRefEdge != VertRef)
+				    {
 				    if (pRelation->ReOp == OpHorizRef)
-				      MoveVertRef (pRelation->ReBox, pBox, delta, frame);
-				    else if ((pRelation->ReOp == OpHorizDep
-					      && pRelation->ReBox->BxAbstractBox->AbWidth.DimIsPosition)
+				      MoveVertRef (pRelation->ReBox, pBox,
+						   delta, frame);
+				    else if ((pRelation->ReOp == OpHorizDep &&
+					      pRelation->ReBox->BxAbstractBox->AbWidth.DimIsPosition)
 					     || pRelation->ReOp == OpWidth)
-				      MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, TRUE);
+				      MoveBoxEdge (pRelation->ReBox, pBox,
+						   pRelation->ReOp, delta,
+						   frame, TRUE);
 				    else if (pRelation->ReOp == OpHorizDep)
-				      XMove (pRelation->ReBox, pBox, delta, frame);
+				      XMove (pRelation->ReBox, pBox, delta,
+					     frame);
+				    }
 				}
 			       
 			      i++;
@@ -1462,21 +1472,27 @@ int                 frame;
 			      if (pRelation->ReBox->BxAbstractBox != NULL)
 				{
 				  if (pRelation->ReRefEdge == VertRef)
+				    {
 				    if (pRelation->ReOp == OpHorizRef)
 				      /* move a vertical axis */
-				      MoveVertRef (pRelation->ReBox, pFromBox, delta, frame);
-				    else if ((pRelation->ReOp == OpHorizDep
-					      && pRelation->ReBox->BxAbstractBox->AbWidth.DimIsPosition)
+				      MoveVertRef (pRelation->ReBox, pFromBox,
+						   delta, frame);
+				    else if ((pRelation->ReOp == OpHorizDep &&
+					      pRelation->ReBox->BxAbstractBox->AbWidth.DimIsPosition)
 					     || pRelation->ReOp == OpWidth)
 				      /* move a a edge of a stretchable box */
-				      MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, TRUE);
+				      MoveBoxEdge (pRelation->ReBox, pBox,
+						   pRelation->ReOp, delta,
+						   frame, TRUE);
 				    else if (pRelation->ReOp == OpHorizDep)
 				      {
 					/* move a sibling */
-					XMove (pRelation->ReBox, pBox, delta, frame);
+					XMove (pRelation->ReBox, pBox, delta,
+					       frame);
 					/* verify enclosing */
 					toMove = TRUE;
 				      }
+				    }
 				}
 			      
 			      i++;
@@ -1509,10 +1525,11 @@ int                 frame;
 			    WidthPack (pCurrentAb, pRefBox, frame);
 			}
 		    }
-		 
+		  }
 		/* check the inclusion constraint */
 		pAb = pCurrentAb->AbEnclosing;
 		if (toMove)
+		  {
 		  if (pAb == NULL)
 		    {
 		      if (Propagate == ToAll && pBox->BxXOrg < 0)
@@ -1524,6 +1541,7 @@ int                 frame;
 			   && !IsParentBox (pAb->AbBox, PackBoxRoot))
 		    /* check the inclusion of the sibling box */
 		    WidthPack (pAb, pRefBox, frame);
+		  }
 	      }
 	  }
     }
@@ -1588,6 +1606,7 @@ int                 frame;
 		    toMove = pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost;
 		
 		if (toMove)
+		  {
 		  if (pBox->BxVertEdge == HorizRef)
 		    {
 		      /* the box position depends on its baseline */
@@ -1631,15 +1650,22 @@ int                 frame;
 			      pRelation = &pPosRel->PosRTable[i];
 			      if (pRelation->ReBox->BxAbstractBox != NULL)
 				{
-				  if (pRelation->ReBox != pBox && pRelation->ReRefEdge != HorizRef)
+				  if (pRelation->ReBox != pBox &&
+				      pRelation->ReRefEdge != HorizRef)
+				    {
 				    if (pRelation->ReOp == OpVertRef)
-				      MoveHorizRef (pRelation->ReBox, pBox, delta, frame);
-				    else if ((pRelation->ReOp == OpVertDep
-					      && pRelation->ReBox->BxAbstractBox->AbHeight.DimIsPosition)
+				      MoveHorizRef (pRelation->ReBox, pBox,
+						    delta, frame);
+				    else if ((pRelation->ReOp == OpVertDep &&
+					      pRelation->ReBox->BxAbstractBox->AbHeight.DimIsPosition)
 					     || pRelation->ReOp == OpHeight)
-				      MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, FALSE);
+				      MoveBoxEdge (pRelation->ReBox, pBox,
+						   pRelation->ReOp, delta,
+						   frame, FALSE);
 				    else if (pRelation->ReOp == OpVertDep)
-				      YMove (pRelation->ReBox, pBox, delta, frame);
+				      YMove (pRelation->ReBox, pBox, delta,
+					     frame);
+				    }
 				}
 			      
 			      i++;
@@ -1666,21 +1692,27 @@ int                 frame;
 			      if (pRelation->ReBox->BxAbstractBox != NULL)
 				{
 				  if (pRelation->ReRefEdge == HorizRef)
+				    {
 				    if (pRelation->ReOp == OpVertRef)
 				      /* move a baseline */
-				      MoveHorizRef (pRelation->ReBox, pFromBox, delta, frame);
-				    else if ((pRelation->ReOp == OpVertDep
-					      && pRelation->ReBox->BxAbstractBox->AbHeight.DimIsPosition)
+				      MoveHorizRef (pRelation->ReBox, pFromBox,
+						    delta, frame);
+				    else if ((pRelation->ReOp == OpVertDep &&
+					      pRelation->ReBox->BxAbstractBox->AbHeight.DimIsPosition)
 					     || pRelation->ReOp == OpHeight)
 				      /* move a a edge of a stretchable box */
-				      MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, FALSE);
+				      MoveBoxEdge (pRelation->ReBox, pBox,
+						   pRelation->ReOp, delta,
+						   frame, FALSE);
 				    else if (pRelation->ReOp == OpVertDep)
 				      {
 					/* move a sibling */
-					YMove (pRelation->ReBox, pBox, delta, frame);
+					YMove (pRelation->ReBox, pBox, delta,
+					       frame);
 					/* verify enclosing */
 					toMove = TRUE;
 				      }
+				    }
 				}
 			      
 			      i++;
@@ -1713,10 +1745,11 @@ int                 frame;
 			    HeightPack (pCurrentAb, pRefBox, frame);
 			}
 		    }
-		
+		  }
 		/* check the inclusion constraint */
 		pAb = pCurrentAb->AbEnclosing;
 		if (toMove)
+		  {
 		  if (pAb == NULL)
 		    {
 		      if (Propagate == ToAll && pBox->BxYOrg < 0)
@@ -1732,6 +1765,7 @@ int                 frame;
 			   && !IsParentBox (pAb->AbBox, PackBoxRoot))
 		    /* check the inclusion of the sibling box */
 		    HeightPack (pAb, pRefBox, frame);
+		  }
 	      }
 	  }
     }
@@ -2013,6 +2047,7 @@ int                 frame;
 	    /* or it's within a stretchable box */
 	    /* or it's within a unnested box */
 	    /* or it doesn't inherit the size from its contents */
+	    {
 	    if (pBox->BxType == BoBlock)
 	      RecomputeLines (pCurrentAb, pBox->BxFirstLine, pSourceBox, frame);
 	    else
@@ -2083,7 +2118,7 @@ int                 frame;
 		    pAb = pAb->AbNext;
 		  }
 	      }
-	  
+	    }
 	  /* check dimension constraints */
 	  pDimRel = pBox->BxWidthRelations;
 	  while (pDimRel != NULL)
@@ -2094,6 +2129,7 @@ int                 frame;
 		  box = pDimRel->DimRTable[i];
 		  pAb = box->BxAbstractBox;
 		  if (pAb)
+		    {
 		    /* Is it the same dimension? */
 		    if (pDimRel->DimRSame[i])
 		      {
@@ -2142,7 +2178,7 @@ int                 frame;
 			  }
 			ChangeHeight (box, pSourceBox, NULL, val, frame);
 		      }
-		    
+		    }
 		  i++;
 		}
 	      /* next relation block */
@@ -2812,16 +2848,21 @@ int                 frame;
 			  else
 			     i += delta;
 			  if (pBox->BxHeight > 0)
-			     DefClip (frame, i - k, pBox->BxYOrg - k, j + k, pBox->BxYOrg + pBox->BxHeight + k);
+			     DefClip (frame, i - k, pBox->BxYOrg - k, j + k,
+				      pBox->BxYOrg + pBox->BxHeight + k);
 		       }
 		     /* Is the box not included? */
 		     else if (!pCurrentAb->AbVertEnclosing)
+		       {
 			if (delta > 0)
 			   DefClip (frame, pBox->BxXOrg - delta, pBox->BxYOrg,
-				    pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+				    pBox->BxXOrg + pBox->BxWidth,
+				    pBox->BxYOrg + pBox->BxHeight);
 			else
-			   DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg +
-				    pBox->BxWidth - delta, pBox->BxYOrg + pBox->BxHeight);
+			   DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+				    pBox->BxXOrg + pBox->BxWidth - delta,
+				    pBox->BxYOrg + pBox->BxHeight);
+		       }
 		  }
 
 		/* Keep in mind if the box positionning is absolute or not */
@@ -2884,8 +2925,8 @@ int                 frame;
 				  }
 			      }
 			    /* Ignore the back relation of a stretchable box */
-			    else if (pBox->BxHorizFlex
-				     && pCurrentAb != pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef)
+			    else if (pBox->BxHorizFlex &&
+				     pCurrentAb != pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef)
 				;
 			    /*
 			     * Don't move boxes which have unnested relations
@@ -2898,15 +2939,21 @@ int                 frame;
 				if (!pBox->BxHorizFlex || toComplete)
 				  {
 				    /* Managed by XMoveAllEnclosed */
-				    if (pRelation->ReOp == OpHorizDep && !pRelation->ReBox->BxXOutOfStruct)
+				    if (pRelation->ReOp == OpHorizDep &&
+					!pRelation->ReBox->BxXOutOfStruct)
 				      /* Valid relation with the box origin */
-				      if (pRelation->ReBox->BxHorizFlex
+				      {
+				      if (pRelation->ReBox->BxHorizFlex &&
 					  /* if it's not a child */
-					  && pCurrentAb != pRelation->ReBox->BxAbstractBox->AbEnclosing
-					  && pCurrentAb == pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef)
-					MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, TRUE);
+					  pCurrentAb != pRelation->ReBox->BxAbstractBox->AbEnclosing &&
+					  pCurrentAb == pRelation->ReBox->BxAbstractBox->AbHorizPos.PosAbRef)
+					MoveBoxEdge (pRelation->ReBox, pBox,
+						     pRelation->ReOp, delta,
+						     frame, TRUE);
 				      else
-					XMove (pRelation->ReBox, pBox, delta, frame);
+					XMove (pRelation->ReBox, pBox, delta,
+					       frame);
+				      }
 				  }
 			      }
 			    else if (pRelation->ReOp == OpHorizDep && !pRelation->ReBox->BxHorizFlex)
@@ -3016,16 +3063,21 @@ int                 frame;
 			  else
 			     i += delta;
 			  if (pBox->BxWidth > 0 || k > 0)
-			     DefClip (frame, pBox->BxXOrg - k, i - k, pBox->BxXOrg + pBox->BxWidth + k, j + k);
+			     DefClip (frame, pBox->BxXOrg - k, i - k,
+				      pBox->BxXOrg + pBox->BxWidth + k, j + k);
 		       }
 		     /* Is the box not included? */
 		     else if (!pCurrentAb->AbHorizEnclosing)
+		       {
 			if (delta > 0)
 			   DefClip (frame, pBox->BxXOrg, pBox->BxYOrg - delta,
-				    pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+				    pBox->BxXOrg + pBox->BxWidth,
+				    pBox->BxYOrg + pBox->BxHeight);
 			else
-			   DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg +
-				    pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight - delta);
+			   DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+				    pBox->BxXOrg + pBox->BxWidth, 
+				    pBox->BxYOrg + pBox->BxHeight - delta);
+		       }
 		  }
 
 		/* Keep in mind if the box positionning is absolute or not */
@@ -3102,23 +3154,32 @@ int                 frame;
 				if (!pBox->BxVertFlex || toComplete)
 				  {
 				    /* Managed by YMoveAllEnclosed */
-				    if (pRelation->ReOp == OpVertDep && !pRelation->ReBox->BxYOutOfStruct)
+				    if (pRelation->ReOp == OpVertDep &&
+					!pRelation->ReBox->BxYOutOfStruct)
+				      {
 				      /* Valid relation with the box origin */
-				      if (pRelation->ReBox->BxVertFlex
+				      if (pRelation->ReBox->BxVertFlex &&
 					  /* if it's not a child */
-					  && pCurrentAb != pRelation->ReBox->BxAbstractBox->AbEnclosing
-					  && pCurrentAb == pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
-					MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, FALSE);
+					  pCurrentAb != pRelation->ReBox->BxAbstractBox->AbEnclosing &&
+					  pCurrentAb == pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
+					MoveBoxEdge (pRelation->ReBox, pBox,
+						     pRelation->ReOp, delta,
+						     frame, FALSE);
 				      else
-					YMove (pRelation->ReBox, pBox, delta, frame);
+					YMove (pRelation->ReBox, pBox, delta,
+					       frame);
+				      }
 				  }
 			      }
-			    else if (pRelation->ReOp == OpVertDep && !pRelation->ReBox->BxVertFlex)
+			    else if (pRelation->ReOp == OpVertDep &&
+				     !pRelation->ReBox->BxVertFlex)
 			      YMove (pRelation->ReBox, pBox, delta, frame);
-			    else if ((pRelation->ReOp == OpVertDep
-				      && pCurrentAb == pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
+			    else if ((pRelation->ReOp == OpVertDep &&
+				      pCurrentAb == pRelation->ReBox->BxAbstractBox->AbVertPos.PosAbRef)
 				     || pRelation->ReOp == OpHeight)
-			      MoveBoxEdge (pRelation->ReBox, pBox, pRelation->ReOp, delta, frame, FALSE);
+			      MoveBoxEdge (pRelation->ReBox,
+					   pBox, pRelation->ReOp, delta,
+					   frame, FALSE);
 			  }
 			
 			/* we could clean up the history -> restore it */
@@ -3357,6 +3418,7 @@ int                 frame;
 	ChangeDefaultWidth (pBox, pSourceBox, width, 0, frame);
       /* Now check the ascestor box */
       else if (toMove)
+	{
 	if (pAb->AbEnclosing == NULL)
 	  {
 	    if (pBox->BxXOrg < 0)
@@ -3365,7 +3427,7 @@ int                 frame;
 	else if (!pAb->AbEnclosing->AbInLine
 		 && pAb->AbEnclosing->AbBox->BxType != BoGhost)
 	  WidthPack (pAb->AbEnclosing, pSourceBox, frame);
-      
+	}
       /* the job is performed */
       pBox->BxCycles -= 1;
     }
@@ -3593,6 +3655,7 @@ int                 frame;
 	ChangeDefaultHeight (pBox, pSourceBox, height, frame);
       /* Now check the ascestor box */
       else if (toMove)
+	{
 	if (pAb->AbEnclosing == NULL)
 	  {
 	    if (pBox->BxYOrg < 0)
@@ -3610,7 +3673,7 @@ int                 frame;
 	  }
 	else
 	  HeightPack (pAb->AbEnclosing, pSourceBox, frame);
-
+	}
       /* the job is performed */
       pBox->BxPacking -= 1;
     }

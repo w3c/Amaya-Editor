@@ -1,17 +1,8 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
  */
 
 #include "thot_gui.h"
@@ -112,7 +103,7 @@ STRING              documentName;
 {
   PtrDocument         pDoc;
   BinFile             pivotFile;
-  CHAR_T                path[250];
+  CHAR_T              path[250];
   int                 i;
 
   UserErrorCode = 0;
@@ -139,19 +130,10 @@ STRING              documentName;
 	      /* writing the document in the file in the pivot format */
 	      SauveDoc (pivotFile, pDoc);
 	      TtaWriteClose (pivotFile);
-	      /* modifies files .EXT of new referenced documents or file which
-		 are no more referenced bu the document */
-	      UpdateExt (pDoc);
-	      /* modifies files .REF of documents that reference elements which are
-		 no more in the document and updates the .EXT file relating to the document */
-	      UpdateRef (pDoc);
 	      if (ustrcmp (documentName, pDoc->DocDName) != 0)
 		/* The document is saved under a new name */
 		{
 		  /* The application wants to create a copy of the document */
-		  /* The document copy will be in the .EXT files relating to the 
-		     referenced documents */
-		  ChangeNomExt (pDoc, documentName, TRUE);
 		  /* Puts the new name into the document descriptor */
 		  ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
@@ -350,28 +332,12 @@ ThotBool            move;
 		  /* directory d'origine. */
 		  SetDocumentModified (pDoc, FALSE, 0);
 
-		  /* modifie les fichiers .EXT des documents nouvellement */
-		  /* reference's ou qui ne sont plus reference's par */
-		  /* notre document */
-		  UpdateExt (pDoc);
-		  /* modifie les fichiers .REF des documents qui */
-		  /* referencent des elements qui ne sont plus dans notre */
-		  /* document et met a jour le fichier .EXT de notre */
-		  /* document */
-		  UpdateRef (pDoc);
-		  /* detruit le fichier .REF du document sauve' */
-		  FindCompleteName (pDoc->DocDName, TEXT("REF"), oldDir, buf, &i);
-		  TtaFileUnlink (buf);
 		  if (!sameFile)
 		    {
 		       if (ustrcmp (dirName, oldDir) != 0 && ustrcmp (docName, pDoc->DocDName) == 0)
 			  /* changement de directory sans changement de nom */
 			  if (move)
 			    {
-			       /* deplacer le fichier .EXT dans le nouveau directory */
-			       FindCompleteName (pDoc->DocDName, TEXT("EXT"), oldDir, buf, &i);
-			       FindCompleteName (pDoc->DocDName, TEXT("EXT"), dirName, pivName, &i);
-			       urename (buf, pivName);
 			       /* detruire l'ancien fichier PIV */
 			       FindCompleteName (pDoc->DocDName, TEXT("PIV"), oldDir, buf, &i);
 			       TtaFileUnlink (buf);
@@ -380,25 +346,9 @@ ThotBool            move;
 		       if (ustrcmp (docName, pDoc->DocDName) != 0)
 			 {
 			    /* il y a effectivement changement de nom */
-			    if (copy)
-			       /* l'utilisateur veut creer une copie du document. */
-			       /* on fait apparaitre le document copie dans les */
-			       /* fichiers .EXT des documents reference's */
-			       ChangeNomExt (pDoc, docName, TRUE);
 			    if (move)
 			      {
 				 /* il s'agit d'un changement de nom du document */
-				 /* change le nom du document dans les fichiers */
-				 /* .EXT de tous les documents reference's */
-				 ChangeNomExt (pDoc, docName, FALSE);
-				 /* indique le changement de nom a tous les */
-				 /* documents qui referencent ce document */
-				 ChangeNomRef (pDoc, docName);
-				 /* renomme le fichier .EXT du document qui change */
-				 /* de nom */
-				 FindCompleteName (pDoc->DocDName, TEXT("EXT"), oldDir, buf, &i);
-				 FindCompleteName (docName, TEXT("EXT"), dirName, pivName, &i);
-				 urename (buf, pivName);
 				 /* detruit l'ancien fichier .PIV */
 				 FindCompleteName (pDoc->DocDName, TEXT("PIV"), oldDir, buf, &i);
 				 TtaFileUnlink (buf);

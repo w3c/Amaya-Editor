@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -136,6 +136,7 @@ PtrElement          pEl;
      {
       if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
 	                                                      CsPairedElement)
+	{
 	 /* check if it's a pair element */
 	 if (pEl->ElOtherPairedEl != NULL)
 	    /* the element already has a pointer to the other element of the
@@ -181,6 +182,7 @@ PtrElement          pEl;
 		      pEl->ElPairIdent = pOther->ElPairIdent;
 		}
 	   }
+	}
      }
    return pOther;
 }

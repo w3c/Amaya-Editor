@@ -597,7 +597,7 @@ void                XCharTranslation (ThotKeyEvent *event)
    int                 status;
    int                 PicMask;
    int                 frame;
-   unsigned int        state, save;
+   unsigned int        state;
 
    frame = GetWindowFrame (event->window);
    if (frame > MAX_FRAME)

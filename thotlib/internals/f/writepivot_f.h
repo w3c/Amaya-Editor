@@ -27,20 +27,7 @@ extern void WritePivotHeader ( BinFile pivFile,
                                PtrDocument pDoc );
 extern void SauveDoc ( BinFile pivFile,
                        PtrDocument pDoc );
-extern void SauveRefSortantes ( STRING fileName,
-                                PtrDocument pDoc );
-extern void SauveRef ( PtrChangedReferredEl firstChng,
-                       PathBuffer fileName );
-extern void SauveExt ( PtrReferredDescr pFirstRefD,
-                       PathBuffer fileName );
-extern void UpdateExt ( PtrDocument pDoc );
-extern void UpdateRef ( PtrDocument pDoc );
 extern void TtaRemoveDocument ( Document document );
-extern void ChangeNomExt ( PtrDocument pDoc,
-                           Name newName,
-                           ThotBool copyDoc );
-extern void ChangeNomRef ( PtrDocument pDoc,
-                           Name newName );
 
 #else /* __STDC__ */
 
@@ -65,20 +52,7 @@ extern void WritePivotHeader (/* BinFile pivFile,
                                  PtrDocument pDoc */);
 extern void SauveDoc (/* BinFile pivFile,
                          PtrDocument pDoc */);
-extern void SauveRefSortantes (/* STRING fileName,
-                                  PtrDocument pDoc */);
-extern void SauveRef (/* PtrChangedReferredEl firstChng,
-                         PathBuffer fileName */);
-extern void SauveExt (/* PtrReferredDescr pFirstRefD,
-                         PathBuffer fileName */);
-extern void UpdateExt (/* PtrDocument pDoc */);
-extern void UpdateRef (/* PtrDocument pDoc */);
 extern void TtaRemoveDocument (/* Document document */);
-extern void ChangeNomExt (/* PtrDocument pDoc,
-                             Name newName,
-                             ThotBool copyDoc */);
-extern void ChangeNomRef (/* PtrDocument pDoc,
-                             Name newName */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

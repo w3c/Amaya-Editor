@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /* 
  * locate what is designated in Concret Image in structured mode.
  *
@@ -92,20 +83,21 @@ int                *pointselect;
 	 {
 	   pBox = GetEnclosingClickedBox (pAb, dist, x, y, frame, &pointIndex);
 	   if (pBox != NULL)
-	     /* Si c'est le premier pave trouve */
+	     {
 	     if (pSelBox == NULL)
+	       /* C'est le premier pave trouve */
 	       {
 		 pSelBox = pBox;
 		 /* le point selectionne */
 		 *pointselect = pointIndex;
 	       }
-	   /* Si le pave est sur un plan au dessus du precedent */
-	   /* ou si le pave est un fils du precedent */
 	     else if (pSelBox->BxAbstractBox->AbDepth > pAb->AbDepth ||
 		      (pSelBox->BxAbstractBox->AbDepth == pAb->AbDepth &&
 		       ((pSelBox->BxAbstractBox->AbLeafType == LtCompound &&
 			 pAb->AbLeafType != LtCompound) ||
 			IsParentBox (pSelBox, pBox))))
+	       /* le pave est sur un plan au dessus du precedent */
+	       /* ou le pave est un fils du precedent */
 	       {
 		 pSelBox = pBox;
 		 *pointselect = pointIndex;
@@ -113,8 +105,10 @@ int                *pointselect;
 	     else
 	       {
 		 /* Verifie que le point designe est strictement dans la boite */
-		 pBox = GetEnclosingClickedBox (pAb, x, x, y, frame, &pointIndex);
-		 pCurrentBox = GetEnclosingClickedBox (pSelBox->BxAbstractBox, x, x, y, frame, &pointIndex);
+		 pBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
+						&pointIndex);
+		 pCurrentBox = GetEnclosingClickedBox (pSelBox->BxAbstractBox,
+						  x, x, y, frame, &pointIndex);
 		 if (pCurrentBox == NULL && pBox != NULL)
 		   {
 		     pSelBox = pBox;
@@ -122,6 +116,7 @@ int                *pointselect;
 		     *pointselect = pointIndex;
 		   }
 	       }
+	     }
 	 }
        /* On teste un autre pave de l'arbre */
        pAb = SearchNextAbsBox (pAb, NULL);

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1020,6 +1020,7 @@ Document           *referenceDocument;
 	  {
 	    *referenceDocument = 0;
 	    if (((PtrElement) target)->ElReferredDescr != NULL)
+	      {
 	      /*  The element has a referenced element descriptor */
 	      if (((PtrElement) target)->ElReferredDescr->ReFirstReference != NULL)
 		/* The element has an internal reference */
@@ -1038,6 +1039,7 @@ Document           *referenceDocument;
 		    /* There is an external reference into a loaded document */
 		    *referenceDocument = IdentDocument (pDocRef);
 		}
+	      }
 	  }
 	else
 	  /* Other references were searched for this element o */

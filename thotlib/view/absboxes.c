@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -215,22 +215,25 @@ int                 frame;
 
       /* dechaine pAb de son element */
       if (pAb->AbElement != NULL)
+	{
         if (pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] == pAb)
 	  {
 	    if (pAb->AbNext != NULL)
 	      if (pAb->AbNext->AbElement == pAb->AbElement)
-		pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] = pAb->AbNext;
+		pAb->AbElement->ElAbstractBox[pAb->AbDocView- 1] = pAb->AbNext;
 	      else
 		pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] = NULL;
 	    else
 	      pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] = NULL;
 	  }
 	else
-	  /* est-ce un pave de presentation cree' par une regle FnCreateEnclosing */
+	  /* est-ce un pave de presentation cree' par une regle
+	     FnCreateEnclosing */
 	  if (pAb->AbPresentationBox)
 	    if (pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] != NULL)
 	      if (pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1]->AbEnclosing == pAb)
 		pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] = NULL;
+	}
       /* libere les regles retardees qui n'ont pas ete appliquees */
       if (pAb->AbDelayedPRule != NULL)
 	{
@@ -320,6 +323,7 @@ int                 frame;
 
 
    if (pAb != NULL)
+     {
       if (pAb->AbDead)
 	 FreeAbView (pAb, frame);
       else
@@ -333,6 +337,7 @@ int                 frame;
 		pAbb = pAbbNext;
 	     }
 	}
+     }
 }
 
 
@@ -361,9 +366,11 @@ ThotBool            head;
    if ((head && pAbbRoot->AbTruncatedHead) ||
        (!head && pAbbRoot->AbTruncatedTail))
      {
-       /* cree les paves de la partie coupee jusqu'a concurrence du volume libre */
+       /* cree les paves de la partie coupee jusqu'a concurrence du
+	  volume libre */
        pEl = pAbbRoot->AbElement;
-       pAb = AbsBoxesCreate (pEl, pDoc, pAbbRoot->AbDocView, (ThotBool)(!head), TRUE, (ThotBool*)(&complete));
+       pAb = AbsBoxesCreate (pEl, pDoc, pAbbRoot->AbDocView, (ThotBool)(!head),
+			     TRUE, (ThotBool*)(&complete));
        /* recherche tous les paves crees, a partir du premier pave de plus */
        /* haut niveau cree', et aux niveaux inferieurs. */
        while (pAb != NULL)
@@ -398,15 +405,18 @@ ThotBool            head;
 	     pAbbReDisp = pAb->AbEnclosing;
 	   /* modifie les paves environnant les paves crees */
 	   ApplyRefAbsBoxNew (PcFirst, PcLast, &pAbbR, pDoc);
-	   pAbbReDisp = Enclosing (pAbbReDisp, pAbbR);	/* conserve le pointeur sur le pave a reafficher */
+	   /* conserve le pointeur sur le pave a reafficher */
+	   pAbbReDisp = Enclosing (pAbbReDisp, pAbbR);
 	   
 	   pEl = pAbbRoot->AbElement;
 	   if (AssocView (pAbbRoot->AbElement))
 	     pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
-	       Enclosing (pAbbReDisp, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+	       Enclosing (pAbbReDisp,
+			  pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 	   else
 	     pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1] =
-	       Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1]);
+	       Enclosing (pAbbReDisp,
+			  pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1]);
 	   /* passe au niveau inferieur */
 	   if (head)
 	     pAb = PcLast->AbNext;
@@ -424,6 +434,7 @@ ThotBool            head;
 	       /* passe au premier pave fils */
 	       pAb = pAb->AbFirstEnclosed;
 	       if (pAb != NULL)
+		 {
 		 if (head)
 		   if (pAb->AbNew)
 		     {
@@ -447,7 +458,8 @@ ThotBool            head;
 		     }
 		   else
 		     {
-		       /* cherche le premier niveau ou il y a un nouveau en tete */
+		       /* cherche le premier niveau ou il y a un nouveau
+			  en tete */
 		       stop = FALSE;
 		       do
 			 if (pAb == NULL)
@@ -456,8 +468,10 @@ ThotBool            head;
 			   stop = TRUE;
 			 else
 			   {
-			     /* saute les paves de presentation produits par CreateWith */
-			     while (pAb->AbPresentationBox && pAb->AbNext != NULL)
+			     /* saute les paves de presentation produits par
+				CreateWith */
+			     while (pAb->AbPresentationBox &&
+				    pAb->AbNext != NULL)
 			       pAb = pAb->AbNext;
 			     pAb = pAb->AbFirstEnclosed;
 			   }
@@ -484,8 +498,10 @@ ThotBool            head;
 			     stop = TRUE;
 			   else if (pAb->AbNext == NULL)
 			     {
-			       /* saute les paves de presentation produits par CreateWith */
-			       while (pAb->AbPresentationBox && pAb->AbPrevious != NULL)
+			       /* saute les paves de presentation produits
+				  par CreateWith */
+			       while (pAb->AbPresentationBox &&
+				      pAb->AbPrevious != NULL)
 				 pAb = pAb->AbPrevious;
 			       pAb = pAb->AbFirstEnclosed;
 			     }
@@ -498,6 +514,7 @@ ThotBool            head;
 		       while (pAb->AbNext != NULL)
 			 pAb = pAb->AbNext;
 		   }
+		 }
 	     }
 	 }
     }
@@ -529,12 +546,14 @@ PtrAbstractBox      pAb;
      {
 	if (pAb->AbLeafType == LtCompound)
 	   /* pave' compose' */
+	  {
 	   if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
 	      /* c'est une marque de saut de page, non-secable */
 	      unbreakable = TRUE;
 	   else
 	      /* un pave compose' est non-secable s'il est mis en lignes */
 	      unbreakable = pAb->AbInLine;
+	  }
 	/* regarde dans le schema de presentation du pave s'il est secable */
 	if (!unbreakable)
 	  {
@@ -913,21 +932,23 @@ PtrDocument         pDoc;
    add = FALSE;
    suppress = FALSE;
    if (IsBreakable (pAbbRoot))
+     {
       if (pAbbRoot->AbVolume < VolOpt - VolOpt / 8)
 	 /* il faudrait creer de nouveaux paves dans cette vue */
 	 add = TRUE;
       else if (pAbbRoot->AbVolume > VolOpt + VolOpt / 8)
 	 /* il faudrait supprimer des paves dans cette vue */
 	 suppress = TRUE;
+     }
    if (add || suppress)
      {
-	/* calcule la position actuelle de pElMiddle dans la vue, pour savoir */
-	/* s'il faut modifier le debut ou la fin de la vue */
+	/* calcule la position actuelle de pElMiddle dans la vue, pour */
+	/* savoir s'il faut modifier le debut ou la fin de la vue */
 	view = pAbbRoot->AbDocView;
 	if (pElMiddle->ElAbstractBox[view - 1] == NULL)
 	   /* pElMiddle n'a pas de pave dans cette vue */
-	   /* cherche le 1er element englobant pElMiddle qui ait un pave dans */
-	   /* la vue */
+	   /* cherche le 1er element englobant pElMiddle qui ait un pave */
+	   /* dans la vue */
 	  {
 	     stop = FALSE;
 	     do

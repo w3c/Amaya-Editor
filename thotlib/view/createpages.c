@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * procedures liees a la creation des pages et des colonnes
  * appelees par crimabs pour la creation des images abstraites
@@ -88,48 +79,48 @@ PtrPSchema         *pSchPPage;
    TypeP = 0;
    if (pEl != NULL)
      {
-	pElAscent = pEl->ElParent;
-	if (pElAscent != NULL)
-	  {
-		do
-		   /* cherche une regle Page parmi les regles de */
-		   /* presentation de l'element pElAscent */
-		  {
-		     SearchPresSchema (pElAscent, pSchPPage, &index, &pSchS);
-		     pRule = (*pSchPPage)->PsElemPRule[index - 1];
-		     stop = FALSE;
-		     do
-			if (pRule == NULL)
-			   stop = TRUE;
-			else if (pRule->PrType > PtFunction)
-			   stop = TRUE;
-			else
-			  {
-			     pRe1 = pRule;
-			     if (pRe1->PrType == PtFunction
-				 && pRe1->PrPresFunction == FnPage
-				 && pRe1->PrViewNum == viewNb)
-				/* trouve', c'est une regle Page pour cette vue */
-			       {
-				  TypeP = pRe1->PrPresBox[0];
-				  stop = TRUE;
-				  /* l'element Marque Page appartient au meme schema */
-				  /* de structure que l'element qui porte la regle  */
-				  /* Page. Ainsi, on utilisera le bon schema de */
-				  /* presentation pour construire */
-				  /* le contenu de l'element Marque Page */
-				     pEl->ElStructSchema = pElAscent->ElStructSchema;
-			       }
-			     else
-				pRule = pRe1->PrNextPRule;
-			     /* passe a la regle suivante */
-			  }
-		     while (!stop);
-		     pElAscent = pElAscent->ElParent;
-		     /* passe a l'element ascendant */
-		  }
-		while (TypeP == 0 && pElAscent != NULL);
-	  }
+       pElAscent = pEl->ElParent;
+       if (pElAscent != NULL)
+	 {
+	   do
+	     /* cherche une regle Page parmi les regles de */
+	     /* presentation de l'element pElAscent */
+	     {
+	       SearchPresSchema (pElAscent, pSchPPage, &index, &pSchS);
+	       pRule = (*pSchPPage)->PsElemPRule[index - 1];
+	       stop = FALSE;
+	       do
+		 if (pRule == NULL)
+		   stop = TRUE;
+		 else if (pRule->PrType > PtFunction)
+		   stop = TRUE;
+		 else
+		   {
+		     pRe1 = pRule;
+		     if (pRe1->PrType == PtFunction &&
+			 pRe1->PrPresFunction == FnPage &&
+			 pRe1->PrViewNum == viewNb)
+		       /* trouve', c'est une regle Page pour cette vue */
+		       {
+			 TypeP = pRe1->PrPresBox[0];
+			 stop = TRUE;
+			 /* l'element Marque Page appartient au meme schema */
+			 /* de structure que l'element qui porte la regle  */
+			 /* Page. Ainsi, on utilisera le bon schema de */
+			 /* presentation pour construire */
+			 /* le contenu de l'element Marque Page */
+			 pEl->ElStructSchema = pElAscent->ElStructSchema;
+		       }
+		     else
+		       pRule = pRe1->PrNextPRule;
+		     /* passe a la regle suivante */
+		   }
+	       while (!stop);
+	       pElAscent = pElAscent->ElParent;
+	       /* passe a l'element ascendant */
+	     }
+	   while (TypeP == 0 && pElAscent != NULL);
+	 }
      }				/* fin pEl != NULL */
    return TypeP;
 }
@@ -227,11 +218,13 @@ PtrAbstractBox      pNewAbbox;
 	pRule = GetRule (&pRSpec, &pRDef, pEl, NULL, pEl->ElStructSchema);
 	/* pointeur sur la regle a appliquer pour la vue 1 */
 	if (pRule != NULL)
+	  {
 	   if (pRule->PrType == PtFunction)
 	     {
 		/* parmi les fonctions, on ne traite que les regles */
 		/* CreateBefore et CreateAfter */
-		if (pRule->PrPresFunction == FnCreateBefore || pRule->PrPresFunction == FnCreateAfter)
+		if (pRule->PrPresFunction == FnCreateBefore ||
+		    pRule->PrPresFunction == FnCreateAfter)
 		   CrAbsBoxesPres (pEl, pDoc, pRule, pEl->ElStructSchema,
 				   NULL, viewNb, pSchPPage, FALSE, TRUE);
 		/*else
@@ -255,11 +248,13 @@ PtrAbstractBox      pNewAbbox;
 		     {
 			if (pRegleV == NULL)
 			   pRegleV = pRule;
-			if (!ApplyRule (pRegleV, pSchPPage, pAbbChild, pDoc, NULL))
+			if (!ApplyRule (pRegleV, pSchPPage, pAbbChild, pDoc,
+					NULL))
 			   if (pRegleV->PrType == PtVisibility)
 			     pAbbChild->AbVisibility = pNewAbbox->AbVisibility;
 		     }
 		}
+	  }
      }
    while (pRule != NULL);
    pEl->ElAbstractBox[viewNb - 1] = pNewAbbox;

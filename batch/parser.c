@@ -1,27 +1,13 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
-
-/*
- * Ce module effectue l'analyse syntaxique d'un texte source dont il
- * recoit les mots un par un.
- * Il est parametre' par une grammaire qui lui est fournie dans la table
- * GramRule ou dans un fichier de type .GRM
  *
  * Author: V. Quint (INRIA)
- *         R. Guetari (W3C / INRIA): Unicode.
  *
  */
 
@@ -80,12 +66,13 @@ size_t      n;
    if (n == 0)
       return 0;
 
-   while (n-- != 0 && toupper (*s1) == toupper (*s2)) {
-         if (n == 0 || *s1 == EOS || *s2 == EOS)
-            break;
-   s1++;
-   s2++;
-   }
+   while (n-- != 0 && toupper (*s1) == toupper (*s2))
+     {
+       if (n == 0 || *s1 == EOS || *s2 == EOS)
+	 break;
+       s1++;
+       s2++;
+     }
    return (toupper (*s1) - toupper (*s2));
 }
 #endif /* _WINDOWS */
@@ -167,10 +154,10 @@ SyntacticCode      *ret;
    i = LastShortKeyword;
    do
      {
-	if (Keywords[i].SrcKeywordLen == len)
-	   if (ustrncasecmp (&inputLine[index - 1], Keywords[i].SrcKeyword, len) == 0)
-	      *ret = Keywords[i].SrcKeywordCode;
-	i++;
+       if (Keywords[i].SrcKeywordLen == len)
+	 if (ustrncasecmp (&inputLine[index - 1], Keywords[i].SrcKeyword, len) == 0)
+	   *ret = Keywords[i].SrcKeywordCode;
+       i++;
      }
    while (*ret == 0 && i < NKeywords);
 }
@@ -238,24 +225,26 @@ int                *rank;
 #endif /* __STDC__ */
 
 {
-   indLine             i;
+  indLine             i;
 
-   *rank = 0;
-   if (NIdentifiers >= MAX_IDENTIFIERS)
-      CompilerMessage (index, COMPIL, FATAL, NO_SPACE_LEFT_IN_INDENT_TABLE, inputLine, LineNum);
-   else if (len > IDENTIFIER_LENGTH)
-      CompilerMessage (index, COMPIL, FATAL, INVALID_WORD_SIZE, inputLine, LineNum);
-   else
-     {
-	Identifier[NIdentifiers].SrcIdentLen = len;
-	Identifier[NIdentifiers].SrcIdentDefRule = 0;
-	Identifier[NIdentifiers].SrcIdentRefRule = 0;
-	Identifier[NIdentifiers].SrcIdentCode = code;
-	for (i = 0; i < len; i++)
-	   Identifier[NIdentifiers].SrcIdentifier[i] = inputLine[index + i - 1];
-	NIdentifiers++;
-	*rank = NIdentifiers;
-     }
+  *rank = 0;
+  if (NIdentifiers >= MAX_IDENTIFIERS)
+    CompilerMessage (index, COMPIL, FATAL, NO_SPACE_LEFT_IN_INDENT_TABLE,
+		     inputLine, LineNum);
+  else if (len > IDENTIFIER_LENGTH)
+    CompilerMessage (index, COMPIL, FATAL, INVALID_WORD_SIZE, inputLine,
+		     LineNum);
+  else
+    {
+      Identifier[NIdentifiers].SrcIdentLen = len;
+      Identifier[NIdentifiers].SrcIdentDefRule = 0;
+      Identifier[NIdentifiers].SrcIdentRefRule = 0;
+      Identifier[NIdentifiers].SrcIdentCode = code;
+      for (i = 0; i < len; i++)
+	Identifier[NIdentifiers].SrcIdentifier[i] = inputLine[index + i - 1];
+      NIdentifiers++;
+      *rank = NIdentifiers;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -275,15 +264,16 @@ indLine             len;
 #endif /* __STDC__ */
 
 {
-   int                 num;
+  int                 num;
 
-   usscanf (&inputLine[index - 1], TEXT("%d"), &num);
-   if (num > 65535)
-     {
-	CompilerMessage (index, COMPIL, FATAL, NUMBER_OVERFLOW, inputLine, LineNum);
-	num = 0;
-     }
-   return num;
+  usscanf (&inputLine[index - 1], TEXT("%d"), &num);
+  if (num > 65535)
+    {
+      CompilerMessage (index, COMPIL, FATAL, NUMBER_OVERFLOW, inputLine,
+		       LineNum);
+      num = 0;
+    }
+  return num;
 }
 
 /*----------------------------------------------------------------------
@@ -300,47 +290,50 @@ void                OctalToChar ()
 #endif				/* __STDC__ */
 
 {
-   int                 i, shift, k, n;
+  int                 i, shift, k, n;
 
-   i = 0;
-   while (inputLine[i] != TEXT('\0'))
-     {
-	if (inputLine[i] == TEXT('\\'))
-	  {
-	     shift = 0;
-	     if (inputLine[i + 1] == TEXT('\\'))
-		shift = 1;
-	     else if (inputLine[i + 1] >= TEXT('0') && inputLine[i + 1] <= TEXT('7'))
-	       {
-		  /* \ suivi d'un chiffre octal */
-		  k = i + 1;
-		  n = 0;
-		  while (inputLine[k] >= TEXT('0') && inputLine[k] <= TEXT('7') && k < i + 4)
-		     n = n * 8 + ((int) inputLine[k++]) - ((int) '0');
-		  if (n < 1 || n > 255)
-		     CompilerMessage (i, COMPIL, FATAL, INVALID_CHAR, inputLine, LineNum);
-		  else
-		    {
-		       inputLine[i] = (unsigned char) n;
-		       shift = k - i - 1;
-		    }
+  i = 0;
+  while (inputLine[i] != TEXT('\0'))
+    {
+      if (inputLine[i] == TEXT('\\'))
+	{
+	  shift = 0;
+	  if (inputLine[i + 1] == TEXT('\\'))
+	    shift = 1;
+	  else if (inputLine[i + 1] >= TEXT('0') &&
+		   inputLine[i + 1] <= TEXT('7'))
+	    {
+	      /* \ suivi d'un chiffre octal */
+	      k = i + 1;
+	      n = 0;
+	      while (inputLine[k] >= TEXT('0') &&
+		     inputLine[k] <= TEXT('7') && k < i + 4)
+		n = n * 8 + ((int) inputLine[k++]) - ((int) '0');
+	      if (n < 1 || n > 255)
+		CompilerMessage (i, COMPIL, FATAL, INVALID_CHAR, inputLine,
+				 LineNum);
+	      else
+		{
+		  inputLine[i] = (unsigned char) n;
+		  shift = k - i - 1;
+		}
+	    }
+	  if (shift > 0)
+	    /* decale la fin de la ligne de shift caracteres vers la gauche */
+	    {
+	      k = i + 1;
+	      do
+		{
+		  inputLine[k] = inputLine[k + shift];
+		  k++;
+		}
+	      while (inputLine[k - 1] != TEXT('\0'));
 	       }
-	     if (shift > 0)
-		/* decale la fin de la ligne de shift caracteres vers la gauche */
-	       {
-		  k = i + 1;
-		  do
-		    {
-		       inputLine[k] = inputLine[k + shift];
-		       k++;
-		    }
-		  while (inputLine[k - 1] != TEXT('\0'));
-	       }
-	  }
-	else if (inputLine[i] < TEXT(' '))
-	   inputLine[i] = TEXT(' ');
-	i++;
-     }
+	}
+      else if (inputLine[i] < TEXT(' '))
+	inputLine[i] = TEXT(' ');
+      i++;
+    }
 }
 
 
@@ -367,143 +360,174 @@ SyntacticType      *wn;
 #endif /* __STDC__ */
 
 {
-   indLine             j, k;
-   ThotBool             stop;
+  indLine             j, k;
+  ThotBool             stop;
 
-   *wi = 0;
-   *wl = 0;
-   *wn = SynError;
-   stop = False;
-   j = start - 1;
-   do {
+  *wi = 0;
+  *wl = 0;
+  *wn = SynError;
+  stop = False;
+  j = start - 1;
+  do
+    {
       /* saute les caracteres vides et commentaires */
       /* les commentaires sont delimites par des accolades exclusivement */
-      if (Comment) {
-         /* cherche la fin du commentaire ou de la ligne */
-         while (inputLine[j] != TEXT('}') && inputLine[j] != TEXT('\0'))
-               j++;
-         if (inputLine[j] == TEXT('}')) {
-            Comment = False;
-            j++;
-		 }
-	  }
-      if (inputLine[j] != TEXT(' '))
-         if (inputLine[j] == TEXT('\0'))
-            stop = True;
-         else if (inputLine[j] == TEXT('{')) {
-              /* debut de commentaire */
-              Comment = True;
-              while (inputLine[j] != TEXT('}') && inputLine[j] != TEXT('\0'))
-                    j++;
-              if (inputLine[j] == TEXT('\0'))
-                 stop = True;
-              else
-                  Comment = False;
-		 } else {
-                stop = True;
-                *wi = j + 1;
-		 }
-         j++;
-   } while (!stop);
-
+       if (Comment)
+	 {
+	   /* cherche la fin du commentaire ou de la ligne */
+	   while (inputLine[j] != TEXT('}') && inputLine[j] != TEXT('\0'))
+	     j++;
+	   if (inputLine[j] == TEXT('}'))
+	     {
+	       Comment = False;
+	       j++;
+	     }
+	 }
+       if (inputLine[j] != TEXT(' '))
+	 {
+	   if (inputLine[j] == TEXT('\0'))
+	     stop = True;
+	   else if (inputLine[j] == TEXT('{'))
+	     {
+	       /* debut de commentaire */
+	       Comment = True;
+	       while (inputLine[j] != TEXT('}') && inputLine[j] != TEXT('\0'))
+		 j++;
+	       if (inputLine[j] == TEXT('\0'))
+	       stop = True;
+	       else
+		 Comment = False;
+	     }
+	   else
+	     {
+	       stop = True;
+	       *wi = j + 1;
+	     }
+	 }
+      j++;
+     } 
+   while (!stop);
+   
    /* analyse les caracteres significatifs */
-   if (*wi > 0 && !error) {
-      stop = False;
-      j = *wi - 1;
-      *wl = 1;
-      /* SyntacticType du mot trouve, d'apres son premier caractere */
-      if (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9')) 
+   if (*wi > 0 && !error)
+     {
+       stop = False;
+       j = *wi - 1;
+       *wl = 1;
+       /* SyntacticType du mot trouve, d'apres son premier caractere */
+       if (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9')) 
          *wn = SynInteger;
-      else if ((inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z'))     ||
+       else if ((inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z')) ||
                 inputLine[j] == NBSP || /*nobreakspace */
-                (inputLine[j] >= TEXT('a') && inputLine[j] <= TEXT('z'))    ||
+                (inputLine[j] >= TEXT('a') && inputLine[j] <= TEXT('z')) ||
                 (((int) inputLine[j]) >= 192 &&
                  ((int) inputLine[j]) <= 255))
-           *wn = SynIdentifier;
-      else if (inputLine[j] == TEXT('\''))
-           *wn = SynString;
-      else
-          *wn = SynShortKeyword;
-      j++;
-      if (*wn == SynInteger || *wn == SynIdentifier)
+	 *wn = SynIdentifier;
+       else if (inputLine[j] == TEXT('\''))
+	 *wn = SynString;
+       else
+	 *wn = SynShortKeyword;
+       j++;
+       if (*wn == SynInteger || *wn == SynIdentifier)
          /* verifie que le mot est bien forme et cherche la fin */
-         do {
-            if (inputLine[j] == TEXT('\0') || 
-                inputLine[j] == TEXT(' ')  || 
-                (inputLine[j] >= TEXT('!') && inputLine[j] <= TEXT('/')) ||
-                (inputLine[j] >= TEXT(':') && inputLine[j] <= TEXT('@')) ||
-                (inputLine[j] >= TEXT('[') && inputLine[j] <= TEXT('^')) || 
-                (inputLine[j] >= TEXT('{') && inputLine[j] <= TEXT('~')) || 
-                inputLine[j] == 127 || 
-                inputLine[j] == TEXT('`'))
+         do
+	   {
+	     if (inputLine[j] == TEXT('\0') || 
+		 inputLine[j] == TEXT(' ')  || 
+		 (inputLine[j] >= TEXT('!') && inputLine[j] <= TEXT('/')) ||
+		 (inputLine[j] >= TEXT(':') && inputLine[j] <= TEXT('@')) ||
+		 (inputLine[j] >= TEXT('[') && inputLine[j] <= TEXT('^')) || 
+		 (inputLine[j] >= TEXT('{') && inputLine[j] <= TEXT('~')) || 
+		 inputLine[j] == 127 || 
+		 inputLine[j] == TEXT('`'))
                /* on a trouve un separateur */
                stop = True;	/* verifie l'homogeneite */
-            else {
-                 switch (*wn) {
-                        case SynInteger:
-                             if (inputLine[j] < TEXT('0') || inputLine[j] > TEXT('9')) {
-                                CompilerMessage (j + 1, COMPIL, FATAL, BAD_NUMBER, inputLine, LineNum);
-                                *wn = SynError;
-                                stop = True;
-							 }
-                             break;
-                        case SynIdentifier:
-                             /* @@@@@@@@@ Of course, this kind of test should be replaced by another
-                                          one if you want to handle Unicode indentifiers and text.
-                                          For instance the test (inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z')
-                                          or TEXT('a') && inputLine[j] <= TEXT('z') or
-                                          (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9') should be:
-                                          if (iswalnum (inputLine[j])) to see if inputLine[j] is alphabetical or numerical 
-										  value @@@@@@@@@@ */
+            else
+	      {
+		switch (*wn)
+		  {
+		  case SynInteger:
+		    if (inputLine[j] < TEXT('0') || inputLine[j] > TEXT('9'))
+		      {
+			CompilerMessage (j + 1, COMPIL, FATAL, BAD_NUMBER,
+					 inputLine, LineNum);
+			*wn = SynError;
+			stop = True;
+		      }
+		    break;
+		  case SynIdentifier:
+		    /* @@@@@@@@@ Of course, this kind of test should be
+		       replaced by another one if you want to handle Unicode
+		       indentifiers and text.
+		       For instance the test
+		       (inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z')
+		       or
+		       TEXT('a') && inputLine[j] <= TEXT('z') or
+		       (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9')
+		       should be:
+		       if (iswalnum (inputLine[j])) to see if inputLine[j] is
+		       alphabetical or numerical value @@@@@@@@@@ */
 
-                             if (!((inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z')) || 
-                                   (inputLine[j] >= TEXT('a') && inputLine[j] <= TEXT('z')) || 
-                                   (inputLine[j] == NBSP)                          || /*nobreakspace */
-                                   (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9')) || 
-                                   ((int)inputLine[j] >= 192 && (int) inputLine[j] <= 255)  || /* lettre accentuee */
-                                   inputLine[j] == TEXT('_'))) {
-                                CompilerMessage (j + 1, COMPIL, FATAL, BAD_WORD, inputLine, LineNum);
-                                *wn = SynError;
-                                stop = True;
-							 }
-                             break;
-                        default:
-                             break;
-				 }
-                 (*wl)++;
-			}
-            j++;
-		 } while (!stop);
-		 else if (*wn == SynString) {
-              /* chaine de caracteres */
-              /* saute le quote initial */
-             (*wi)++;
-             *wl = 0;
-             do 
-               if (inputLine[j] == TEXT('\0')) {
-                  CompilerMessage (*wi, COMPIL, FATAL, MULTIPLE_LINE_STRINGS_ERROR, inputLine, LineNum);
-                 *wn = SynError;
+		    if (!((inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z')) || 
+			  (inputLine[j] >= TEXT('a') && inputLine[j] <= TEXT('z')) || 
+			  (inputLine[j] == NBSP) || /*nobreakspace */
+			  (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9')) || 
+			  ((int)inputLine[j] >= 192 && (int) inputLine[j] <= 255)  || /* lettre accentuee */
+			  inputLine[j] == TEXT('_'))) {
+		      CompilerMessage (j + 1, COMPIL, FATAL, BAD_WORD,
+				       inputLine, LineNum);
+		      *wn = SynError;
+		      stop = True;
+		    }
+		    break;
+		  default:
+		    break;
+		  }
+		(*wl)++;
+	      }
+	     j++;
+	   }
+	 while (!stop);
+       else if (*wn == SynString)
+	 {
+	   /* chaine de caracteres */
+	   /* saute le quote initial */
+	   (*wi)++;
+	   *wl = 0;
+	   do 
+	     if (inputLine[j] == TEXT('\0'))
+	       {
+		 CompilerMessage (*wi, COMPIL, FATAL,
+				  MULTIPLE_LINE_STRINGS_ERROR, inputLine,
+				  LineNum);
+		 *wn = SynError;
                  stop = True;
-			   } else {
-                      if (inputLine[j] == TEXT('\''))
-                         if (inputLine[j + 1] == TEXT('\'')) {
-                            /* represente un seul quote */
-                            k = j;
-                            do {
-                               /* ecrase le quote double */
-                               k++;
-                               inputLine[k] = inputLine[k + 1];
-							} while (inputLine[k] != TEXT('\0'));
-                            j++;
-						 } else
-                               stop = True; /* quote final */
-                      else
-                           j++;
-                      (*wl)++;
-			   } 
-             while (!stop);
-		 }
-   }
+	       }
+	     else
+	       {
+		 if (inputLine[j] == TEXT('\''))
+		   if (inputLine[j + 1] == TEXT('\''))
+		     {
+		       /* represente un seul quote */
+		       k = j;
+		       do
+			 {
+			   /* ecrase le quote double */
+			   k++;
+			   inputLine[k] = inputLine[k + 1];
+			 }
+		       while (inputLine[k] != TEXT('\0'));
+		       j++;
+		     }
+		   else
+		     stop = True; /* quote final */
+		 else
+		   j++;
+		 (*wl)++;
+	       } 
+	   while (!stop);
+	 }
+     }
 }
 
 
@@ -530,79 +554,79 @@ int                *rank;
 #endif /* __STDC__ */
 
 {
-   SyntacticCode       code;
-   ThotBool             match;
+  SyntacticCode       code;
+  ThotBool             match;
 
-   match = False;
-   if (c < 1000)
-      /* identificateur attendu */
-      /* a priori ca marche */
-      match = True;
-   else if (c >= 1000 && c < 1100)
-      /* mot-cle court attendu */
-     {
-	if (wl == 1 && wn == SynShortKeyword)
-	   /* c'est un mot-cle court */
-	  {
-	     /* est-il valide ? */
-	     CheckShortKeyword (wi, &code);
-	     if (code > 0)
-		/* mot-cle court valide */
-	       {
-		  if (code == c)
-		     /* c'est le mot-cle court attendu */
-		     match = True;
-	       }
-	     else
-		/* mot-cle court invalide */
-		CompilerMessage (wi, COMPIL, FATAL, BAD_SYMBOL, inputLine, LineNum);
-	  }
-     }
-   else if (c >= 1100 && c < 2000)
-      /* mot-cle long attendu */
-     {
-	CheckLongKeyword (wi, wl, &code);
-	/* est-ce un mot-cle long valide ? */
-	if (code == c)
-	   /* c'est le mot-cle long attendu */
-	   match = True;
-     }
-   else if (c > 3000)
-      /* type de base attendu */
-     {
-	if (c == 3001 && wn == SynIdentifier)
-	   /* on attend un nom et c'est un nom */
-	  {
-	     CheckIdent (wi, wl, &code, rank);
-	     /* est-il dans la table ? */
-	     if (code > 0)
-		/* il y est */
-	       {
-		  if (code == r)
-		     match = True;
-		  /* oui, et avec le type attendu */
-	       }
-	     else
-		/* non, il n'est pas encore connu */
-	       {
-		  CheckLongKeyword (wi, wl, &code);
-		  /* est-ce un mot-cle long ? */
-		  if (code == 0)
-		     /* ce n'est pas un mot-cle long, c'est */
-		     /* donc un identificateur */
-		    {
-		       NewIdent (wi, wl, r, rank);
-		       /* on l'ajoute dans la table */
-		       match = True;	/* et c'est bon... */
-		    }
-	       }
-	  }
-	if (c == 3002 && wn == SynInteger)
-	   match = True;
-	if (c == 3003 && wn == SynString)
-	   match = True;
-     }
-   return match;
+  match = False;
+  if (c < 1000)
+    /* identificateur attendu */
+    /* a priori ca marche */
+    match = True;
+  else if (c >= 1000 && c < 1100)
+    /* mot-cle court attendu */
+    {
+      if (wl == 1 && wn == SynShortKeyword)
+	/* c'est un mot-cle court */
+	{
+	  /* est-il valide ? */
+	  CheckShortKeyword (wi, &code);
+	  if (code > 0)
+	    /* mot-cle court valide */
+	    {
+	      if (code == c)
+		/* c'est le mot-cle court attendu */
+		match = True;
+	    }
+	  else
+	    /* mot-cle court invalide */
+	    CompilerMessage (wi, COMPIL, FATAL, BAD_SYMBOL, inputLine,LineNum);
+	}
+    }
+  else if (c >= 1100 && c < 2000)
+    /* mot-cle long attendu */
+    {
+      CheckLongKeyword (wi, wl, &code);
+      /* est-ce un mot-cle long valide ? */
+      if (code == c)
+	/* c'est le mot-cle long attendu */
+	match = True;
+    }
+  else if (c > 3000)
+    /* type de base attendu */
+    {
+      if (c == 3001 && wn == SynIdentifier)
+	/* on attend un nom et c'est un nom */
+	{
+	  CheckIdent (wi, wl, &code, rank);
+	  /* est-il dans la table ? */
+	  if (code > 0)
+	    /* il y est */
+	    {
+	      if (code == r)
+		match = True;
+	      /* oui, et avec le type attendu */
+	    }
+	  else
+	    /* non, il n'est pas encore connu */
+	    {
+	      CheckLongKeyword (wi, wl, &code);
+	      /* est-ce un mot-cle long ? */
+	      if (code == 0)
+		/* ce n'est pas un mot-cle long, c'est */
+		/* donc un identificateur */
+		{
+		  NewIdent (wi, wl, r, rank);
+		  /* on l'ajoute dans la table */
+		  match = True;	/* et c'est bon... */
+		}
+	    }
+	}
+      if (c == 3002 && wn == SynInteger)
+	match = True;
+      if (c == 3003 && wn == SynString)
+	match = True;
+    }
+  return match;
 }
 
 
@@ -632,266 +656,268 @@ SyntRuleNum        *pr;
 #endif /* __STDC__ */
 
 {
-   ThotBool             stop;
-   ThotBool             st1;
-   ThotBool             ok;
-   ThotBool             meta;
-   int                 s;
+  ThotBool             stop;
+  ThotBool             st1;
+  ThotBool             ok;
+  ThotBool             meta;
+  int                 s;
 
-   *pr = 0;
-   if (level < 0)
-      CompilerMessage (wi, COMPIL, FATAL, END_HAS_BEEN_DETECTED, inputLine, LineNum);
-   else
-     {
-	ok = False;
-	stop = False;
-	for (s = 0; s < level; s++)
-	   Stack[s].Tested = False;
-	/* aucune regle de la pile n'a ete testee avec ce mot, sauf celle
-	   du haut, en cours */
-	do
-	   /* cherche une regle a laquelle le mot correspond */
-	  {
-	     meta = True;
-	     /* traite les meta symboles de la regle courante */
-	     do
-	       {
-		  if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] >= 2000
-		      && GramRule[Stack[level].StRule][Stack[level].StRuleInd] <= 2005)
-		     switch (GramRule[Stack[level].StRule][Stack[level].StRuleInd])
-			   {
-			      case 2001:
-				 /* debut d'option */
-				 Stack[level].Option = True;
-				 Stack[level].StRuleInd++;
-				 break;
-			      case 2002:
-				 /* fin d'option */
-				 Stack[level].Option = False;
-				 Stack[level].StRuleInd++;
-				 break;
-			      case 2000:
-			      case 2003:
-				 /* fin de regle ou alternative */
-				 level--;	/* depile une regle */
-				 if (level < 0)
-				    stop = True;
-				 /* on est a la fin de la regle initiale */
-				 else
-				   {
-				      if (Stack[level].Alt)
-					 /* essaie une alternative de la nvelle regle */
-					{
-					   do
-					      Stack[level].StRuleInd++;
-					   while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2003
-						  && GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
-					   if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
-					      Stack[level].StRuleInd++;
-					}
-				      else
-					 Stack[level].StRuleInd++;
-				   }
-				 break;
-			      case 2004:
-				 /* debut de repetition */
-				 Stack[level].StRuleInd++;
-				 Stack[level].Option = True;
-				 break;
-			      case 2005:
-				 /* fin de repetition */
-				 if (Stack[level].Tested)
-				    /* on a deja essaye ce mot, on saute */
-				   {
-				      Stack[level].StRuleInd++;
-				      Stack[level].Option = False;
-				   }
-				 else
-				    /* ce mot n'a pas ete essaye, on y va */
-				   {
-				      do
-					 Stack[level].StRuleInd--;
-				      while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2004);
-				      Stack[level].StRuleInd++;
-				      Stack[level].Option = True;
-				      Stack[level].Tested = True;
-				   }
-				 break;
-			   }
-
-		  else
-		     meta = False;
-	       }
-	     while (meta && level >= 0);
-	     if (level >= 0)
-	       {
-		  *c = GramRule[Stack[level].StRule][Stack[level].StRuleInd];
-		  if (TokenMatch (wi, wl, wn, *c, Stack[level].StRule + 1, rank))
-		     /* ca correspond */
-		     if (*c < 1000)
-			/* symbole non terminal */
-			if (level >= STACKSIZE)
-			   CompilerMessage (wi, COMPIL, FATAL, NO_SPACE_LEFT_IN_STACK, inputLine, LineNum);
-			else
-			   /* empile la regle definissant ce symbole */
+  *pr = 0;
+  if (level < 0)
+    CompilerMessage (wi, COMPIL, FATAL, END_HAS_BEEN_DETECTED, inputLine,
+		     LineNum);
+  else
+    {
+      ok = False;
+      stop = False;
+      for (s = 0; s < level; s++)
+	Stack[s].Tested = False;
+      /* aucune regle de la pile n'a ete testee avec ce mot, sauf celle
+	 du haut, en cours */
+      do
+	/* cherche une regle a laquelle le mot correspond */
+	{
+	  meta = True;
+	  /* traite les meta symboles de la regle courante */
+	  do
+	    {
+	      if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] >= 2000
+		  && GramRule[Stack[level].StRule][Stack[level].StRuleInd] <= 2005)
+		switch (GramRule[Stack[level].StRule][Stack[level].StRuleInd])
+		  {
+		  case 2001:
+		    /* debut d'option */
+		    Stack[level].Option = True;
+		    Stack[level].StRuleInd++;
+		    break;
+		  case 2002:
+		    /* fin d'option */
+		    Stack[level].Option = False;
+		    Stack[level].StRuleInd++;
+		    break;
+		  case 2000:
+		  case 2003:
+		    /* fin de regle ou alternative */
+		    level--;	/* depile une regle */
+		    if (level < 0)
+		      stop = True;
+		    /* on est a la fin de la regle initiale */
+		    else
+		      {
+			if (Stack[level].Alt)
+			  /* essaie une alternative de la nvelle regle */
 			  {
-			     level++;
-			     Stack[level].StRule = *c - 1;
-			     Stack[level].StRuleInd = 1;
-			     Stack[level].Option = False;
-			     Stack[level].Alt = True;
-			     Stack[level].Tested = True;
+			    do
+			      Stack[level].StRuleInd++;
+			    while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2003
+				   && GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
+			    if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
+			      Stack[level].StRuleInd++;
 			  }
-		     else
-		       {
-			  ok = True;
-			  *r = Stack[level].StRule + 1;
-			  if (level > 0)
-			     *pr = Stack[level - 1].StRule + 1;
-			  for (s = 0; s < level; s++)
-			    {
-			       /* sur toute la pile */
-			       Stack[s].Alt = False;
-			       /* s'il y a une alternative, on ne peut */
-			       /* plus en changer */
-			       Stack[s].Option = False;
-			    }
-			  do
-			     /* si on etait dans une partie */
-			     /* optionnelle, on ne peut plus la sauter */
-			     /* traite les meta symboles suivant le mot ok */
-			    {
-			       Stack[level].StRuleInd++;
-			       if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] >= 2000
-				   && GramRule[Stack[level].StRule][Stack[level].StRuleInd] <= 2005)
-				  switch (GramRule[Stack[level].StRule][Stack[level].StRuleInd])
-					{
-					   case 2001:
-					      stop = True;	/* debut d'option */
-					      break;
-					   case 2002:
-					      Stack[level].Option = False;	/* fin d'option */
-					      break;
-					   case 2000:
-					   case 2003:
-					      /* fin de regle ou alternative */
-					      level--;	/* regle epuisee */
-					      if (level < 0)
-						 stop = True;
-					      /* on est a la fin de la regle initiale */
-					      break;
-					   case 2004:
-					      stop = True;	/* debut de repetition */
-					      break;
-					   case 2005:
-					      /* fin de repetition */
-					      do
-						 Stack[level].StRuleInd--;
-					      while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2004);
-					      Stack[level].StRuleInd++;
-					      Stack[level].Option = True;
-					      stop = True;
-					      break;
-					}
-
-			       else
-				  stop = True;
-			    }
-			  while (!stop && level >= 0);
-		       }
+			else
+			  Stack[level].StRuleInd++;
+		      }
+		    break;
+		  case 2004:
+		    /* debut de repetition */
+		    Stack[level].StRuleInd++;
+		    Stack[level].Option = True;
+		    break;
+		  case 2005:
+		    /* fin de repetition */
+		    if (Stack[level].Tested)
+		      /* on a deja essaye ce mot, on saute */
+		      {
+			Stack[level].StRuleInd++;
+			Stack[level].Option = False;
+		      }
+		    else
+		      /* ce mot n'a pas ete essaye, on y va */
+		      {
+			do
+			  Stack[level].StRuleInd--;
+			while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2004);
+			Stack[level].StRuleInd++;
+			Stack[level].Option = True;
+			Stack[level].Tested = True;
+		      }
+		    break;
+		  }
+	      
+	      else
+		meta = False;
+	    }
+	  while (meta && level >= 0);
+	  if (level >= 0)
+	    {
+	      *c = GramRule[Stack[level].StRule][Stack[level].StRuleInd];
+	      if (TokenMatch (wi, wl, wn, *c, Stack[level].StRule + 1, rank))
+		/* ca correspond */
+		if (*c < 1000)
+		  /* symbole non terminal */
+		  if (level >= STACKSIZE)
+		    CompilerMessage (wi, COMPIL, FATAL, NO_SPACE_LEFT_IN_STACK,
+				     inputLine, LineNum);
 		  else
+		    /* empile la regle definissant ce symbole */
 		    {
-		       /* le mot ne correspond pas */
-		       if (Stack[level].Option)		/* saute la partie optionnelle */
-			  /* cherche la fin de la partie a option */
-			 {
-			    do
-			       Stack[level].StRuleInd++;
-			    while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2002
-				   && GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2005);
-			    Stack[level].StRuleInd++;
-			    Stack[level].Option = False;
-			    if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2000
-				|| GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
-			       /* fin regle */
-			      {
-				 level--;	/* depile une regle */
-				 if (level < 0)
-				    stop = True;	/* pile vide */
-				 else
-				    Stack[level].StRuleInd++;
-			      }
-			 }
-		       else
-			  /* ce n'est pas un element optionnel */
-			 {
-			    st1 = False;
-			    do
-			       /* cherche une alternative dans la regle */
-			      {
-				 do
-				    Stack[level].StRuleInd++;
-				 while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2003
-					&& GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
-				 if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
-				    /* une alternative dans la regle */
-				   {
-				      if (Stack[level].Alt)
-					 /* alternative autorisee */
-					{
-					   Stack[level].StRuleInd++;	/* essaie l'alternative */
-					   st1 = True;
-					}
-				   }
-				 else
-				    /* pas d'alternative dans la regle */
-				    /* depile les regles jusqu'a en trouver une ou on est */
-				    /* dans une partie optionnelle ou un choix */
-				   {
-				      while (level >= 0 && !st1)
-					{
-					   level--;
-					   if (level >= 0)
-					     {
-						if (Stack[level].Option)
-						   /* saute la partie optionnelle */
-						   /* cherche la fin de la partie a option */
-						  {
-						     do
-							Stack[level].StRuleInd++;
-						     while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2002
-							    && GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2005);
-						     Stack[level].StRuleInd++;
-						     Stack[level].Option = False;
-						     st1 = True;
-						  }
-						else if (Stack[level].Alt)
-						   /* cherche une alternative */
-						  {
-						     do
-							Stack[level].StRuleInd++;
-						     while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2003
-							    && GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
-						     if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
-						       {
-							  Stack[level].StRuleInd++;
-							  st1 = True;
-						       }
-						  }
-					     }
-					}
-				      st1 = True;
-				   }
-			      }
-			    while (!st1);
-			 }
+		      level++;
+		      Stack[level].StRule = *c - 1;
+		      Stack[level].StRuleInd = 1;
+		      Stack[level].Option = False;
+		      Stack[level].Alt = True;
+		      Stack[level].Tested = True;
 		    }
-	       }
-	  }
-	while (!stop && level >= 0);	/* mot ok ou fin de regle */
-	if (!ok)
-	   CompilerMessage (wi, COMPIL, FATAL, SYNTAX_ERROR, inputLine, LineNum);
-     }
+		else
+		  {
+		    ok = True;
+		    *r = Stack[level].StRule + 1;
+		    if (level > 0)
+		      *pr = Stack[level - 1].StRule + 1;
+		    for (s = 0; s < level; s++)
+		      {
+			/* sur toute la pile */
+			Stack[s].Alt = False;
+			/* s'il y a une alternative, on ne peut */
+			/* plus en changer */
+			Stack[s].Option = False;
+		      }
+		    do
+		      /* si on etait dans une partie */
+		      /* optionnelle, on ne peut plus la sauter */
+		      /* traite les meta symboles suivant le mot ok */
+		      {
+			Stack[level].StRuleInd++;
+			if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] >= 2000
+			    && GramRule[Stack[level].StRule][Stack[level].StRuleInd] <= 2005)
+			  switch (GramRule[Stack[level].StRule][Stack[level].StRuleInd])
+			    {
+			    case 2001:
+			      stop = True;	/* debut d'option */
+			      break;
+			    case 2002:
+			      Stack[level].Option = False;  /* fin d'option */
+			      break;
+			    case 2000:
+			    case 2003:
+			      /* fin de regle ou alternative */
+			      level--;	/* regle epuisee */
+			      if (level < 0)
+				stop = True;
+			      /* on est a la fin de la regle initiale */
+			      break;
+			    case 2004:
+			      stop = True;	/* debut de repetition */
+			      break;
+			    case 2005:
+			      /* fin de repetition */
+			      do
+				Stack[level].StRuleInd--;
+			      while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2004);
+			      Stack[level].StRuleInd++;
+			      Stack[level].Option = True;
+			      stop = True;
+			      break;
+			    }
+			else
+			  stop = True;
+		      }
+		    while (!stop && level >= 0);
+		  }
+	      else
+		{
+		  /* le mot ne correspond pas */
+		  if (Stack[level].Option)  /* saute la partie optionnelle */
+		    /* cherche la fin de la partie a option */
+		    {
+		      do
+			Stack[level].StRuleInd++;
+		      while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2002
+			     && GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2005);
+		      Stack[level].StRuleInd++;
+		      Stack[level].Option = False;
+		      if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2000
+			  || GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
+			/* fin regle */
+			{
+			  level--;	/* depile une regle */
+			  if (level < 0)
+			    stop = True;	/* pile vide */
+			  else
+			    Stack[level].StRuleInd++;
+			}
+		    }
+		  else
+		    /* ce n'est pas un element optionnel */
+		    {
+		      st1 = False;
+		      do
+			/* cherche une alternative dans la regle */
+			{
+			  do
+			    Stack[level].StRuleInd++;
+			  while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2003
+				 && GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
+			  if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
+			    /* une alternative dans la regle */
+			    {
+			      if (Stack[level].Alt)
+				/* alternative autorisee */
+				{
+				  /* essaie l'alternative */
+				  Stack[level].StRuleInd++;
+				  st1 = True;
+				}
+			    }
+			  else
+			    /* pas d'alternative dans la regle */
+			    /* depile les regles jusqu'a en trouver une ou */
+			    /* on est dans une partie optionnelle ou un choix*/
+			    {
+			      while (level >= 0 && !st1)
+				{
+				  level--;
+				  if (level >= 0)
+				    {
+				      if (Stack[level].Option)
+					/* saute la partie optionnelle */
+					/* cherche la fin de la partie a option */
+					{
+					  do
+					    Stack[level].StRuleInd++;
+					  while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2002
+						 && GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2005);
+					  Stack[level].StRuleInd++;
+					  Stack[level].Option = False;
+					  st1 = True;
+					}
+				      else if (Stack[level].Alt)
+					/* cherche une alternative */
+					{
+					  do
+					    Stack[level].StRuleInd++;
+					  while (GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2003
+						 && GramRule[Stack[level].StRule][Stack[level].StRuleInd] != 2000);
+					  if (GramRule[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
+					    {
+					      Stack[level].StRuleInd++;
+					      st1 = True;
+					    }
+					}
+				    }
+				}
+			      st1 = True;
+			    }
+			}
+		      while (!st1);
+		    }
+		}
+	    }
+	}
+      while (!stop && level >= 0);	/* mot ok ou fin de regle */
+      if (!ok)
+	CompilerMessage (wi, COMPIL, FATAL, SYNTAX_ERROR, inputLine, LineNum);
+    }
 }
 
 
@@ -908,16 +934,16 @@ void                ParserEnd ()
 #endif				/* __STDC__ */
 
 {
-   if (level >= 0)
-      /* la pile n'est pas vide */
-      CompilerMessage (1, COMPIL, FATAL, ABNORMAL_END, inputLine, LineNum);
-   else
-     {
-	/* la pile est vide */
-	if (GramRule[Stack[0].StRule][Stack[0].StRuleInd] != 2000)
-	   /* la regle initiale n'est pas terminee */
-	   CompilerMessage (1, COMPIL, FATAL, ABNORMAL_END, inputLine, LineNum);
-     }
+  if (level >= 0)
+    /* la pile n'est pas vide */
+    CompilerMessage (1, COMPIL, FATAL, ABNORMAL_END, inputLine, LineNum);
+  else
+    {
+      /* la pile est vide */
+      if (GramRule[Stack[0].StRule][Stack[0].StRuleInd] != 2000)
+	/* la regle initiale n'est pas terminee */
+	CompilerMessage (1, COMPIL, FATAL, ABNORMAL_END, inputLine, LineNum);
+    }
 }
 
 
@@ -937,139 +963,156 @@ STRING              fileName;
 #endif /* __STDC__ */
 
 {
-   indLine             j, wind, wlen;
-   SyntacticType       wnat;
-   int                 l;
-   ThotBool            readingKeywordTable;
-   int                 ruleptr;
-   int                 currule;
-   CHAR_T              pgrname[200];
-   CHAR_T              pnomcourt[200];
-   SrcKeywordDesc     *pkw1;
-   BinFile             grmFile;
-   ThotBool             fileOK;
+  indLine             j, wind, wlen;
+  SyntacticType       wnat;
+  int                 l;
+  ThotBool            readingKeywordTable;
+  int                 ruleptr;
+  int                 currule;
+  CHAR_T              pgrname[200];
+  CHAR_T              pnomcourt[200];
+  SrcKeywordDesc     *pkw1;
+  BinFile             grmFile;
+  ThotBool             fileOK;
 
-   ustrcpy (pnomcourt, fileName);
-   /* cherche dans le directory compil si le fichier grammaire existe */
-   if (SearchFile (pnomcourt, 3, pgrname) == 0)
-      CompilerMessage (0, COMPIL, FATAL, GRM_FILE_NOT_FOUND, inputLine, LineNum);
-   else
-     {
-	/* ouvre le fichier grammaire */
-	grmFile = TtaReadOpen (pgrname);
-	NKeywords = 0;
-	LastShortKeyword = 0;
-	/* on commence par la lecture de la table des mots-cles */
-	readingKeywordTable = True;
-	NGramRules = 0;
-	ruleptr = 0;
-	fileOK = True;
-	while (fileOK)
-	  {
-	     /* lit une ligne */
-	     j = 0;
-	     do
-	       {
-		  /* fileOK = TtaReadByte (grmFile, &inputLine[j]); */
-		  fileOK = TtaReadWideChar (grmFile, &inputLine[j], ISO_8859_1);
-		  j++;
-	       }
-#        ifdef _WINDOWS
-	     while (j < LINE_LENGTH && inputLine [j-1] != 13 && inputLine[j - 1] != TEXT('\n') && fileOK);
-#        else
+  ustrcpy (pnomcourt, fileName);
+  /* cherche dans le directory compil si le fichier grammaire existe */
+  if (SearchFile (pnomcourt, 3, pgrname) == 0)
+    CompilerMessage (0, COMPIL, FATAL, GRM_FILE_NOT_FOUND, inputLine, LineNum);
+  else
+    {
+      /* ouvre le fichier grammaire */
+      grmFile = TtaReadOpen (pgrname);
+      NKeywords = 0;
+      LastShortKeyword = 0;
+      /* on commence par la lecture de la table des mots-cles */
+      readingKeywordTable = True;
+      NGramRules = 0;
+      ruleptr = 0;
+      fileOK = True;
+      while (fileOK)
+	{
+	  /* lit une ligne */
+	  j = 0;
+	  do
+	    {
+	      /* fileOK = TtaReadByte (grmFile, &inputLine[j]); */
+	      fileOK = TtaReadWideChar (grmFile, &inputLine[j], ISO_8859_1);
+	      j++;
+	    }
+#ifdef _WINDOWS
+	  while (j < LINE_LENGTH && inputLine [j-1] != 13 &&
+		 inputLine[j - 1] != TEXT('\n') && fileOK);
+#else
 	     while (j < LINE_LENGTH && inputLine[j - 1] != TEXT('\n') && fileOK);
-#        endif
+#endif
 	     /* marque la fin reelle de la ligne */
 	     inputLine[j - 1] = TEXT('\0');
 	     /* traite la ligne */
 	     j = 1;
 	     do
 	       {
-		  /* accede au mot suivant de la ligne */
-		  GetNextToken (j, &wind, &wlen, &wnat);
-		  if (readingKeywordTable)
-		     /* lecture de la table des mots-cles */
-		    {
-		       if (wnat == SynIdentifier && LastShortKeyword == 0)
-			  LastShortKeyword = NKeywords;
-		       /* on passe des courts aux longs */
-		       if (wnat == SynIdentifier || wnat == SynShortKeyword)
-			 {
-			    if (NKeywords >= MAX_KEYWORDS)
-			       /* table saturee */
-			       CompilerMessage (wind, COMPIL, FATAL, NO_SPACE_LEFT_IN_KEYWORD_TABLE, inputLine, LineNum);
-			    else
-			       NKeywords++;
-			    /* entree suivante de la table */
-			    pkw1 = &Keywords[NKeywords - 1];
-			    /* remplit cette nouvelle entree */
-			    if (wlen > KEWWORD_LENGTH)
-			      {
-				 wlen = KEWWORD_LENGTH;
-				 CompilerMessage (wind, COMPIL, FATAL, INVALID_KEYWORD_SIZE, inputLine, LineNum);
-			      }
-			    pkw1->SrcKeywordLen = wlen;
-			    for (l = 0; l < wlen; l++)
-			      {
-				 pkw1->SrcKeyword[l] = inputLine[wind + l - 1];
-				 if ((CHAR_T) (((int) pkw1->SrcKeyword[l]) - 32) >= 'A'
-				     && (CHAR_T) (((int) pkw1->SrcKeyword[l]) - 32) <= 'Z')
-				    pkw1->SrcKeyword[l] = (CHAR_T) (((int) pkw1->SrcKeyword[l]) - 32);
-			      }
-			    /* traduit le mot-cle en majuscules */
-			    j = wind + wlen;
-			    GetNextToken (j, &wind, &wlen, &wnat);
-			    /* lit le code */
-			    /* grammatical du mot-cle */
-			    if (wnat == SynInteger)
-			       pkw1->SrcKeywordCode = AsciiToInt (wind, wlen);
-			    else
-			       /* fichier incorrect */
-			       CompilerMessage (wind, COMPIL, FATAL, INCORR_GRAMMAR_FILE_GRM, inputLine, LineNum);
-			 }
-		       else if (wnat == SynInteger)
-			  /* fin de la table mots-cles */
-			  readingKeywordTable = False;
-		    }
-		  if (!readingKeywordTable)
-		     /* lecture de la table des regles */
+		 /* accede au mot suivant de la ligne */
+		 GetNextToken (j, &wind, &wlen, &wnat);
+		 if (readingKeywordTable)
+		   /* lecture de la table des mots-cles */
+		   {
+		     if (wnat == SynIdentifier && LastShortKeyword == 0)
+		       LastShortKeyword = NKeywords;
+		     /* on passe des courts aux longs */
+		     if (wnat == SynIdentifier || wnat == SynShortKeyword)
+		       {
+			 if (NKeywords >= MAX_KEYWORDS)
+			   /* table saturee */
+			   CompilerMessage (wind, COMPIL, FATAL,
+					    NO_SPACE_LEFT_IN_KEYWORD_TABLE,
+					    inputLine, LineNum);
+			 else
+			   NKeywords++;
+			 /* entree suivante de la table */
+			 pkw1 = &Keywords[NKeywords - 1];
+			 /* remplit cette nouvelle entree */
+			 if (wlen > KEWWORD_LENGTH)
+			   {
+			     wlen = KEWWORD_LENGTH;
+			     CompilerMessage (wind, COMPIL, FATAL,
+					      INVALID_KEYWORD_SIZE, inputLine,
+					      LineNum);
+			   }
+			 pkw1->SrcKeywordLen = wlen;
+			 for (l = 0; l < wlen; l++)
+			   {
+			     pkw1->SrcKeyword[l] = inputLine[wind + l - 1];
+			     if ((CHAR_T) (((int) pkw1->SrcKeyword[l]) - 32) >= 'A'
+				 && (CHAR_T) (((int) pkw1->SrcKeyword[l]) - 32) <= 'Z')
+			       pkw1->SrcKeyword[l] = (CHAR_T) (((int) pkw1->SrcKeyword[l]) - 32);
+			   }
+			 /* traduit le mot-cle en majuscules */
+			 j = wind + wlen;
+			 GetNextToken (j, &wind, &wlen, &wnat);
+			 /* lit le code */
+			 /* grammatical du mot-cle */
+			 if (wnat == SynInteger)
+			   pkw1->SrcKeywordCode = AsciiToInt (wind, wlen);
+			 else
+			   /* fichier incorrect */
+			   CompilerMessage (wind, COMPIL, FATAL,
+					    INCORR_GRAMMAR_FILE_GRM,
+					    inputLine, LineNum);
+		       }
+		     else if (wnat == SynInteger)
+		       /* fin de la table mots-cles */
+		       readingKeywordTable = False;
+		   }
+		 if (!readingKeywordTable)
+		   /* lecture de la table des regles */
+		   {
 		     if (wnat == SynInteger)
-			if (ruleptr == 0)
-			   /* nouvelle regle */
-			  {
-			     currule = AsciiToInt (wind, wlen);		/* numero de regle */
-			     if (currule > MAX_RULES)
-			       {
-				  /* table des regles saturee */
-				  CompilerMessage (wind, COMPIL, FATAL, NO_SPACE_LEFT_IN_GRAMMAR_TABLE, inputLine, LineNum);
-				  currule = MAX_RULES;
-			       }
-			     GramRule[currule - 1][0] = 0;
-			     ruleptr = 1;
-			     if (currule > NGramRules)
-				NGramRules = currule;
-			  }
-			else
-			  {
-			     /* on est dans une regle */
-			     GramRule[currule - 1][ruleptr] = AsciiToInt (wind, wlen);
-			     if (GramRule[currule - 1][ruleptr] == 2000)
-				ruleptr = 0;	/* fin regle */
-			     else if (ruleptr >= RULE_LENGTH)
+		       if (ruleptr == 0)
+			 /* nouvelle regle */
+			 {
+			   /* numero de regle */
+			   currule = AsciiToInt (wind, wlen);	
+			   if (currule > MAX_RULES)
+			     {
+			       /* table des regles saturee */
+			       CompilerMessage (wind, COMPIL, FATAL,
+						NO_SPACE_LEFT_IN_GRAMMAR_TABLE,
+						inputLine, LineNum);
+			       currule = MAX_RULES;
+			     }
+			   GramRule[currule - 1][0] = 0;
+			   ruleptr = 1;
+			   if (currule > NGramRules)
+			     NGramRules = currule;
+			 }
+		       else
+			 {
+			   /* on est dans une regle */
+			   GramRule[currule - 1][ruleptr] = AsciiToInt (wind,
+									wlen);
+			   if (GramRule[currule - 1][ruleptr] == 2000)
+			     ruleptr = 0;	/* fin regle */
+			   else if (ruleptr >= RULE_LENGTH)
 				/* regle trop longue */
-				CompilerMessage (wind, COMPIL, FATAL, GRAMMAR_RULE_SIZE_EXCEEDED, inputLine, LineNum);
-			     else
-				ruleptr++;
-			  }
+			     CompilerMessage (wind, COMPIL, FATAL,
+					      GRAMMAR_RULE_SIZE_EXCEEDED,
+					      inputLine, LineNum);
+			   else
+			     ruleptr++;
+			 }
 		     else
-			/* ce n'est pas un nombre */
-		     if (wind > 0)
-			/* fichier incorrect */
-			CompilerMessage (wind, COMPIL, FATAL, INCORR_GRAMMAR_FILE_GRM, inputLine, LineNum);
-		  j = wind + wlen;	/* fin du mot */
+		       /* ce n'est pas un nombre */
+		       if (wind > 0)
+			 /* fichier incorrect */
+			 CompilerMessage (wind, COMPIL, FATAL,
+					  INCORR_GRAMMAR_FILE_GRM, inputLine,
+					  LineNum);
+		   }
+		 j = wind + wlen;	/* fin du mot */
 	       }
 	     while (wind != 0);	/* plus de mot dans la ligne */
-	  }
-	TtaReadClose (grmFile);
-     }
+	}
+      TtaReadClose (grmFile);
+    }
 }

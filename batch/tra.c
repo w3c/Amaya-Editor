@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2000
+ *  (c) COPYRIGHT INRIA 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -375,6 +375,7 @@ int                 wi;
 	   || TypeRPres == PtBackground
 	   || TypeRPres == PtForeground)
 	 /* Presentation a valeur numerique */
+	 {
 	 if (pPresTrans->RtNCase >= MAX_TRANSL_PRES_CASE)
 	   /* trop de cas pour cette presentation */
 	   CompilerMessage (wi, TRA, FATAL,
@@ -382,6 +383,7 @@ int                 wi;
 			    inputLine, LineNum);
 	 else
 	   pPresTrans->RtNCase++;	/* un cas de plus */
+	 }
      }
    else if (pr == RULE_CondOnAscend)
      /* un nom de presentation dans une condition */
@@ -758,15 +760,17 @@ PtrSSchema          pSS;
 		   {
 		     j++;
 		     if (j == i)
+		       {
 		       if (pSS->SsRule[j - 1].SrAssocElem)
 			 found = True;
 		       else
 			 {
 			   pSRule = &pSS->SsRule[j - 1];
 			   if (pSRule->SrConstruct == CsList)
-			     if (pSS->SsRule[pSRule->SrListItem - 1].SrAssocElem)
+			     if (pSS->SsRule[pSRule->SrListItem-1].SrAssocElem)
 			       found = True;
 			    }
+		       }
 		   }
 		 while (j < pSS->SsNRules && !found);
 		 if (found)
@@ -1080,6 +1084,7 @@ indLine             wl;
    i = ElementTypeNum (wi, wl);
    if (i > 0)
      /* c'est bien un type d'element */
+     {
      /* une condition "if type" ne peut s'appliquer qu'a une regle de */
      /* traduction d'attribnut */
      if (!InAttrRules)
@@ -1091,6 +1096,7 @@ indLine             wl;
 	 /* le type existe,il a le numero i*/
 	 CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttr = i;
        }
+     }
    return (i > 0);
 }
 
@@ -1588,6 +1594,7 @@ SyntRuleNum         pr;
 	       CurTRule->TrObject = ToRefId;
 	     else if (r == RULE_VarOrType)
 	       /* generer le label de l'element reference' */
+	       {
 	       if ((InTypeRules &&
 		    pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)||
 		   (InAttrRules &&
@@ -1599,6 +1606,7 @@ SyntRuleNum         pr;
 				  inputLine, LineNum);
 	       else
 		 CurTRule->TrObject = ToReferredRefId;
+	       }
 	     break;
 
 	   case KWD_PairId:	/* PairId */
@@ -1852,6 +1860,7 @@ SyntRuleNum         pr;
 	       CurTRule->TrObject = ToDocumentName;
 	     else if (r == RULE_VarOrType)
 	       /* generer le nom du document reference' */
+	       {
 	       if ((InTypeRules &&
 		    pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)||
 		   (InAttrRules &&
@@ -1863,6 +1872,7 @@ SyntRuleNum         pr;
 				  inputLine, LineNum);
 	       else
 		 CurTRule->TrObject = ToReferredDocumentName;
+	       }
 	     break;
 	     
 	   case KWD_DocumentDir:	/* DocumentDir */
@@ -1883,6 +1893,7 @@ SyntRuleNum         pr;
 	       CurTRule->TrObject = ToDocumentDir;
 	     else if (r == RULE_VarOrType)
 	       /* generer le nom du directory du document reference' */
+	       {
 	       if ((InTypeRules &&
 		    pSSchema->SsRule[CurType - 1].SrConstruct != CsReference)||
 		   (InAttrRules &&
@@ -1894,6 +1905,7 @@ SyntRuleNum         pr;
 				  inputLine, LineNum);
 	       else
 		 CurTRule->TrObject = ToReferredDocumentDir;
+	       }
 	     break;
 
 	   case KWD_ARABIC:
@@ -2483,6 +2495,7 @@ SyntRuleNum         pr;
 			 i = ElementTypeNum (wi, wl);
 			 if (i > 0)
 			   /* le type existe, il a le numero i */
+			   {
 			   if (ComptDef)
 			     /* dans une declaration de compteur */
 			     {
@@ -2545,6 +2558,7 @@ SyntRuleNum         pr;
 				 pTSchema->TsAttrTRule[CurAttr - 1].
 				   AtrElemType = i;
 			       }
+			   }
 		       }
 		   }
 		 break;
@@ -2666,6 +2680,7 @@ SyntRuleNum         pr;
 		     }
 		   else if (pr == RULE_RuleB)
 		     /* un compteur dans une instruction Set ou Add */
+		     {
 		     if (pTSchema->TsCounter[Identifier[nb - 1].
 				 SrcIdentDefRule - 1].TnOperation != TCntrNoOp)
 		       CompilerMessage (wi, TRA, FATAL, BAD_COUNTER,
@@ -2673,6 +2688,7 @@ SyntRuleNum         pr;
 		     else
 		       CurTRule->TrCounterNum =
 			 Identifier[nb - 1].SrcIdentDefRule;
+		     }
 		 break;
 
 	       case RULE_BufferIdent:		/* BufferIdent */
@@ -2790,6 +2806,7 @@ SyntRuleNum         pr;
 		       }
 		   }
 		 else if (pr == RULE_RuleA || pr == RULE_RuleB)
+		   {
 		   if (Identifier[nb - 1].SrcIdentDefRule == 0)
 		     /* variable non definie */
 		     CompilerMessage (wi, TRA, FATAL, UNKNOWN_VARIABLE,
@@ -2807,6 +2824,7 @@ SyntRuleNum         pr;
 		   else if (CurTRule->TrType == TRemoveFile)
 		     CurTRule->TrNewFileVar =
 		       Identifier[nb - 1].SrcIdentDefRule;
+		   }
 		 break;
 
 	       case RULE_AttrIdent:	/* AttrIdent */
@@ -3353,6 +3371,7 @@ SyntRuleNum         pr;
 	       case RULE_CharString:	/* CharString */
 		 NewConstant (wl, wi);
 		 if (!error)
+		   {
 		   if (pr == RULE_Function)
 		     /* dans une definition de variable */
 		     {
@@ -3378,6 +3397,7 @@ SyntRuleNum         pr;
 		       CurTRule->TrObject = ToConst;
 		       CurTRule->TrObjectNum = pTSchema->TsNConstants;
 		     }
+		   }
 		 break;
 
 	       case RULE_TextEqual:	/* TextEqual */

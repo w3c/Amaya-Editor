@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -430,6 +430,7 @@ PathBuffer          directory;
    int                 i;
 
    if (*pDoc != NULL)
+     {
       if (SSchemaName == NULL || SSchemaName[0] == WC_EOS)
 	 /* L'utilisateur n'a pas fourni de nom de schema */
 	 UnloadDocument (pDoc);
@@ -557,6 +558,7 @@ PathBuffer          directory;
 	       }
 	    }
 	 }
+     }
 }
 
 
@@ -816,8 +818,6 @@ int                *removedAttributes;
 	if ((*pEl)->ElStructSchema == pSSExt)
 	   /* this element belongs to the extension schema to be removed */
 	  {
-	     RegisterExternalRef (*pEl, pDoc, FALSE);
-	     RegisterDeletedReferredElem (*pEl, pDoc);
 #ifndef NODISPLAY
 	     UndisplayElement (*pEl, document);
 #endif

@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * This module handles structure modifications.
  *
@@ -236,7 +227,8 @@ ThotBool            redisplay;
 		pExtDoc = NULL;
 		do
 		  {
-		     pRef = NextReferenceToEl (pEl, pDoc, FALSE, pRef, &pRefDoc, &pExtDoc, TRUE);
+		     pRef = NextReferenceToEl (pEl, pDoc, FALSE, pRef,
+					       &pRefDoc, &pExtDoc, TRUE);
 		     if (pRef != NULL)
 			/* on a trouve' une reference */
 			if (pRef->RdTypeRef == RefInclusion)
@@ -257,7 +249,8 @@ ThotBool            redisplay;
 		{
 		   /* applique la regle Transmit */
 		   pTrans = &(pSchP->PsTransmElem[pSchP->PsElemTransmit[rule - 1] - 1]);
-		   TransmitElementContent (pEl, pDoc, pTrans->TeTargetAttr, pTrans->TeTargetDoc, pSchS);
+		   TransmitElementContent (pEl, pDoc, pTrans->TeTargetAttr,
+					   pTrans->TeTargetDoc, pSchS);
 		}
 	   /* passe a l'element ascendant */
 	   pEl = pEl->ElParent;
@@ -442,13 +435,15 @@ ThotBool            redisplay;
      {
        pRef = NULL;
        pExtDoc = NULL;
-       pRef = NextReferenceToEl (pEl, *pDoc, FALSE, pRef, &pRefDoc, &pExtDoc, TRUE);
+       pRef = NextReferenceToEl (pEl, *pDoc, FALSE, pRef, &pRefDoc, &pExtDoc,
+				 TRUE);
        /* parcourt la chaine des elements qui le referencent */
        while (pRef != NULL)
 	 {
 	   pElRef = pRef->RdElement;
 	   /* un element qui reference */
 	   if (pElRef != NULL && pRefDoc == DocumentOfElement (pElRef))
+	     {
 	     if (pRef->RdAttribute != NULL)
 	       /* reference par attribut */
 	       /* retire la presentation de cet attribut et reaffiche */
@@ -473,10 +468,12 @@ ThotBool            redisplay;
 		 while (!stop);
 		 /* retire provisoirement l'attribut de l'element */
 		 if (pAttr != NULL)
+		   {
 		   if (pPrevAttr == NULL)
 		     pElRef->ElFirstAttr = pAttr->AeNext;
 		   else
 		     pPrevAttr->AeNext = pAttr->AeNext;
+		   }
 		 /* recalcule la presentation de l'element sans l'attribut */
 		 UpdatePresAttr (pElRef, pRef->RdAttribute, pElRef, *pDoc,
 				 TRUE, FALSE, NULL);
@@ -485,10 +482,12 @@ ThotBool            redisplay;
 		   RedisplayDocViews (*pDoc);
 		 /* remet l'attribut a l'element */
 		 if (pAttr != NULL)
+		   {
 		   if (pPrevAttr == NULL)
 		     pElRef->ElFirstAttr = pAttr;
 		   else
 		     pPrevAttr->AeNext = pAttr;
+		   }
 	       }
 	     else if (pElRef->ElTerminal && pElRef->ElLeafType == LtReference)
 	       /* si c'est une inclusion, on ne fait rien */
@@ -518,15 +517,18 @@ ThotBool            redisplay;
 			     frame = pRefDoc->DocViewFrame[view];
 			   h = 0;
 			   /* on ignore la hauteur de page */
-			   ChangeConcreteImage (frame, &h, pElRef->ElAbstractBox[view]);
+			   ChangeConcreteImage (frame, &h,
+						pElRef->ElAbstractBox[view]);
 			   if (redisplay)
 			     DisplayFrame (frame);
 			 }
 		     }
 		 RedisplayCopies (pElRef, pRefDoc, redisplay);
 	       }
+	     }
 	   /* reference suivante */
-	   pRef = NextReferenceToEl (pEl, *pDoc, FALSE, pRef, &pRefDoc, &pExtDoc, TRUE);
+	   pRef = NextReferenceToEl (pEl, *pDoc, FALSE, pRef, &pRefDoc,
+				     &pExtDoc, TRUE);
 	 }
      }
    /* traite les fils de l'element */
@@ -1143,6 +1145,7 @@ ThotBool		    select;
 
 	     /* Coupure eventuelle de l'atome TEXTE */
 	     if (pEl->ElTerminal)
+	       {
 		if (pEl->ElLeafType == LtText && firstChar > 1)
 		  {
 		     if (firstChar > pEl->ElTextLength && pEl->ElNext != NULL)
@@ -1182,6 +1185,7 @@ ThotBool		    select;
 		     else
 			nextChar = 0;
 		  }
+	       }
 	     pClose = pPrev->ElNext;
 	     /* enregistre les elements preexistants */
 	     pE = pPrev->ElNext;
@@ -1384,10 +1388,12 @@ ThotBool		    select;
 		  /* indiquer que le document est modifie' */
 		  SetDocumentModified (pDoc, TRUE, 30);
 		  if (select && pNext != NULL)
+		    {
 		     if (nextChar == 0)
 			SelectElementWithEvent (pDoc, pNext, TRUE, TRUE);
 		     else
 			SelectPositionWithEvent (pDoc, pNext, nextChar);
+		    }
 		  ret = TRUE;
 	       }
 	     for (view = 0; view < MAX_VIEW_DOC; view++)
@@ -1530,11 +1536,14 @@ int                 lastChar;
       SelectString (pDoc, firstSel, 1, lastChar - 1);
 
    if (lastSel != firstSel)
+     {
       if (discreteSelection)
 	 for (index = 1; index <= NSelectedEls; index++)
-	    AddInSelection (SelectedEl[index - 1], (ThotBool)(index == NSelectedEls));
+	    AddInSelection (SelectedEl[index - 1],
+			    (ThotBool)(index == NSelectedEls));
       else if (lastChar == 0)
 	 ExtendSelection (lastSel, lastChar, TRUE, FALSE, FALSE);
       else
 	 ExtendSelection (lastSel, lastChar - 1, TRUE, FALSE, FALSE);
+     }
 }

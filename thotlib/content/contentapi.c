@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1512,6 +1512,7 @@ Document            document;
       /* parameter document is correct */
      {
        if (((PtrElement) element)->ElLeafType == LtGraphics)
+	 {
 	 if (((PtrElement) element)->ElGraph == EOS)
 	   {
 	   ((PtrElement) element)->ElLeafType = LtPath;
@@ -1522,6 +1523,7 @@ Document            document;
 	   TtaError (ERR_invalid_element_type);
 	   element = NULL;
 	   }
+	 }
        if (element)
 	 {
 	   pPa = ((PtrElement) element)->ElFirstPathSeg;

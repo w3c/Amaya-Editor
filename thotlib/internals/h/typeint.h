@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2000
+ *  (c) COPYRIGHT INRIA 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -470,66 +470,6 @@ typedef struct _ElementDescr
    Yet another use is to link the different REFERENCE elements pointing on the
    same element. */
 
-/* a descriptor of a moved or deleted outgoing reference */
-typedef struct _OutReference *PtrOutReference;
-
-typedef struct _OutReference
-{
-  	PtrOutReference	OrNext;	 /* next descriptor */
-  	LabelString	OrLabel; /* label of the referenced external element */
-	DocumentIdentifier OrDocIdent; /* identity of the document containing
-					  this element */
-} OutReference;
-
-/* the descriptor of an element referenced from outside and that was deleted
-   or moved to another document */
-typedef struct _ChangedReferredEl *PtrChangedReferredEl;
-
-typedef struct _ChangedReferredEl
-{
-	PtrChangedReferredEl	CrNext;	/* next descriptor */
-	LabelString	CrOldLabel;	/* element old label */
-	LabelString	CrNewLabel;	/* new label, 0 if the element is
-					   deleted */
- 	DocumentIdentifier	CrOldDocument;	/* document that used to
-						   contain the element */
-	DocumentIdentifier	CrNewDocument;	/* the document that contains
-						   the element now, if the
-						   element was moved */
- 	PtrExternalDoc	CrReferringDoc;	/* list of the documents referencing
-					   the element */
-} ChangedReferredEl;
-
-/* descriptor of a .EXT file loaded in memory: list of the elements of a
-   document that are referenced by other documents */
-typedef struct _EnteringReferences *PtrEnteringReferences;
-
-typedef struct _EnteringReferences
-{
-	PtrEnteringReferences	ErNext;			/* next descriptor */
-	PtrReferredDescr	ErFirstReferredEl;	/* first element
-							   referenced by other
-						  	   documents */
-	DocumentIdentifier	ErDocIdent;		/* the document */
-	PathBuffer		ErFileName;		/* complete name of
-							   the .EXT file */
-} EnteringReferences;
-
-/* descriptor of a .REF file loaded in memory: list of the referenced elements
-   that were part of a document and that were deleted or moved to another
-   document */
-typedef struct _ReferenceChange *PtrReferenceChange;
-
-typedef struct _ReferenceChange
-{
-	PtrReferenceChange	RcNext;		/* next descriptor */
-	PtrChangedReferredEl	RcFirstChange;	/* first changed referenced
-						   element */
-	DocumentIdentifier	RcDocIdent;	/* the document */
-	PathBuffer		RcFileName;	/* complete name of the .REF
-						   file */
-} ReferenceChange;
-
 /* identifier of a document view */
 typedef int		DocViewNumber;
 
@@ -694,16 +634,6 @@ typedef struct _DocumentDescr
   ThotBool        DocUpdated;	  /* any change occurs since the last reset */
   int		  DocBackUpInterval; /* interval between automatic backup */
   int             DocNTypedChars; /* number of characters typed since the last
-				     time the document was saved */
-  PtrOutReference DocNewOutRef;	  /* beginning of the list of outgoing
-				     references created since the last time
-				     the document was saved */
-  PtrOutReference DocDeadOutRef;  /* beginning of the list of outgoing
-				     references deleteted since the last time
-				     the document was saved */
-  PtrChangedReferredEl DocChangedReferredEl; /* beginning of the list of
-				     elements referenced from outside that
-				     were deleted or moved since the last
 				     time the document was saved */
   int		  DocNLanguages;  /* number of languages actually used */
   Language	  DocLanguages[MAX_LANGUAGES_DOC]; /* the languages used in the

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -162,6 +162,7 @@ Document            document;
 			     &firstChar, &lastChar);
    if (ok && selDoc == pDoc)
       /* il y a une selection dans le document traite' */
+     {
       if (SelContinue)
 	 /* la selection est continue */
 	{
@@ -239,6 +240,7 @@ Document            document;
 	      else
 		 selEl = NextInSelection (selEl, lastSelection);
 	}
+     }
 }
 
 
@@ -591,6 +593,7 @@ PtrElement          pLastEl;
    ThotBool            found;
 
    if (pEl != NULL)
+     {
       if (SelContinue)
 	 if (pEl == pLastEl)
 	    /* the last selected element has been returned previously */
@@ -655,6 +658,7 @@ PtrElement          pLastEl;
 		LatestReturned = 0;
 	     }
 	}
+     }
    return pEl;
 }
 
@@ -961,6 +965,7 @@ ThotBool            assoc;
 
    if (pDoc == SelectedDocument)
       /* the current selection is in that document */
+     {
       if (assoc)
 	 /* it's a view for an associated tree */
 	{
@@ -987,6 +992,7 @@ ThotBool            assoc;
 	       /* highlight the current selection in the new active view */
 	       HighlightSelection (TRUE, TRUE);
 	   }
+     }
 }
 
 
@@ -1291,6 +1297,7 @@ ThotBool           *abExist;
       if (pEl == FirstSelectedElement)
 	/* it's the firqt elemenebt in the current selection */
 	if (pEl->ElTerminal)
+	  {
 	  if (pEl->ElLeafType == LtText &&
 	      FirstSelectedChar > 1 && pEl->ElTextLength > 0)
 	    /* the text leaf is partly selected */
@@ -1299,6 +1306,7 @@ ThotBool           *abExist;
 		    pEl->ElLeafType == LtGraphics) &&
 		   SelectedPointInPolyline > 0)
 	    partialSel = TRUE;
+	  }
       if (partialSel)
 	/* skip presentation abtract boxes created before the main box */
 	{
@@ -1328,6 +1336,7 @@ ThotBool           *abExist;
       if (pEl == LastSelectedElement)
 	/* that's the last element in the current selection */
 	if (pEl->ElTerminal)
+	  {
 	  if (pEl->ElLeafType == LtText &&
 	      LastSelectedChar < pEl->ElTextLength &&
 	      pEl->ElTextLength > 0 && LastSelectedChar > 0)
@@ -1337,6 +1346,7 @@ ThotBool           *abExist;
 		    pEl->ElLeafType == LtGraphics) &&
 		   SelectedPointInPolyline > 0)
 	    partialSel = TRUE;
+	  }
       if (partialSel && !pAb->AbPresentationBox)
 	pNextAb = NULL;
       else
@@ -1467,6 +1477,7 @@ ThotBool            createView;
 		    done = FALSE;
 		    if (run == 2)
 		      /* second run. Create missing abstract boxes */
+		      {
 		      if (pEl->ElAbstractBox[view] != NULL)
 			{
 			  done = TRUE;
@@ -1488,6 +1499,7 @@ ThotBool            createView;
 				  pEl->ElAbstractBox[view] != NULL)
 				SetActiveView (0);
 			    }
+		      }
 		    if (!done)
 		      DisplaySel (pEl, view + 1, frame, assoc, &abExist);
 		  }
@@ -1497,6 +1509,7 @@ ThotBool            createView;
 	    /* there is no existing abstract box for this element */
 	    if (createView)
 	      /* try to create a view where this element has an abstract box */
+	      {
 	      if (assoc)
 		/* the element is displayed in an view for associated
 		   elements */
@@ -1568,9 +1581,9 @@ ThotBool            createView;
 			      {
 				/* create that view */
 				createdView = CreateAbstractImage (SelectedDocument,
-								   viewTable[i].VdView, 0,
-								   viewTable[i].VdSSchema, 1,
-								   FALSE, NULL);
+						 viewTable[i].VdView, 0,
+						 viewTable[i].VdSSchema, 1,
+						 FALSE, NULL);
 				/* now, try to select the elment */
 				abExist = SelectAbsBoxes (pEl, FALSE);
 				deleteView = TRUE;
@@ -1583,7 +1596,9 @@ ThotBool            createView;
 				/* search in the config file the */
 				/* position and size of the view */
 				/* to be open */
-				    ConfigGetViewGeometry (SelectedDocument, viewTable[i].VdViewName, &X, &Y, &width, &height); 
+				    ConfigGetViewGeometry (SelectedDocument,
+						    viewTable[i].VdViewName,
+						    &X, &Y, &width, &height); 
 				/* send an event to the application*/
 				    notifyDoc.event = TteViewOpen;
 				    notifyDoc.document = doc;
@@ -1595,8 +1610,9 @@ ThotBool            createView;
 				    else
 				      {
 					/* open the new view */
-					OpenCreatedView (SelectedDocument, createdView, assoc, X, Y,
-							 width, height);
+					OpenCreatedView (SelectedDocument,
+							 createdView, assoc,
+							 X, Y, width, height);
 					/* tell the application that */
 					/* the view has been opened */
 					notifyDoc.event = TteViewOpen;
@@ -1610,6 +1626,7 @@ ThotBool            createView;
 				  /* or the application does not want */
 				  /* the view to be opened */
 				  /* delete the created abstract image */
+				  {
 				  if (assoc)
 				    {
 				      createdView--;
@@ -1619,10 +1636,12 @@ ThotBool            createView;
 				    }
 				  else
 				    FreeView (SelectedDocument, createdView);
+				  }
 			      }
 			}
 		    }
 		}
+	      }
 	}
     }
   return abExist;
@@ -1820,6 +1839,7 @@ ThotBool            string;
 
    if (pEl != NULL && pDoc != NULL)
       /* ignore exception NoSelect */
+     {
       if (pEl->ElIsCopy || holophrast)
 	 /* the string to be selected is in a copy or holophrasted element */
 	 /* select that element: SelectElement will select the first */
@@ -1830,6 +1850,7 @@ ThotBool            string;
 	   oldFirstSelEl = FirstSelectedElement;
 	   oldFirstSelChar = FirstSelectedChar;
 	   if (string && pEl->ElLeafType == LtText)
+	     {
 	      if (lastChar == 0)
 		 lastChar = pEl->ElTextLength;
 	      else if (lastChar < firstChar)
@@ -1838,6 +1859,7 @@ ThotBool            string;
 		   lastChar = firstChar;
 		   firstChar = i;
 		}
+	     }
 	   /* Is the new selection in the same tree as the former seelction */
 	   FirstSelectedElement = pEl;
 	   if (pDoc != SelectedDocument)
@@ -1909,6 +1931,7 @@ ThotBool            string;
 		    if (ThotLocalActions[T_chsplit] != NULL)
 		       (*ThotLocalActions[T_chsplit]) (pDoc);
 	}
+     }
 }
 
 
@@ -2218,6 +2241,7 @@ ThotBool            drag;
 		  LastSelectedElement = pEl;
 		  LastSelectedChar = 0;
 		  if (FixedChar > 0)
+		    {
 		     if (rank < FixedChar)
 		       {
 			  FirstSelectedChar = rank;
@@ -2228,6 +2252,7 @@ ThotBool            drag;
 			  FirstSelectedChar = FixedChar;
 			  LastSelectedChar = rank;
 		       }
+		    }
 	       }
 	     else if (ElemIsAnAncestor (pEl, FixedElement))
 		/* extension to an ancestor of the fixed point. Select that */
@@ -2747,6 +2772,7 @@ ThotBool            drag;
      {
        if (extension)
 	 /* it's a selection extension */
+	 {
 	 if (FirstSelectedElement == pAb->AbElement &&
 	     rank == SelectedPointInPolyline)
 	   /* same polyline and same vertex as before. Then, it's not */
@@ -2755,6 +2781,7 @@ ThotBool            drag;
 	 else
 	   /* select the entire polyline */
 	   rank = 0;
+	 }
        if (doubleClick)
 	 /* a double-click applies to the polyline as a whole */
 	 rank = 0;
@@ -3128,6 +3155,7 @@ void                PrepareSelectionMenu ()
 	{
 	   pEl1 = pEl1->ElPrevious;
 	   if (!ElementIsHidden (pEl1))
+	     {
 	      if (!HiddenType (pEl1))
 		 stop = TRUE;
 	      else
@@ -3144,7 +3172,8 @@ void                PrepareSelectionMenu ()
 			   pEl2 = pEl2->ElFirstChild;
 			   while (pEl2->ElNext != NULL)
 			      pEl2 = pEl2->ElNext;
-			   while (ElementIsHidden (pEl2) && pEl2->ElPrevious != NULL)
+			   while (ElementIsHidden (pEl2) &&
+				  pEl2->ElPrevious != NULL)
 			      pEl2 = pEl2->ElPrevious;
 			   if (!ElementIsHidden (pEl2))
 			     {
@@ -3157,6 +3186,7 @@ void                PrepareSelectionMenu ()
 			     }
 			}
 		}
+	     }
 	}
       else
 	 pEl1 = pEl1->ElParent;
@@ -3172,6 +3202,7 @@ void                PrepareSelectionMenu ()
 	{
 	   pEl1 = pEl1->ElNext;
 	   if (!ElementIsHidden (pEl1))
+	     {
 	      if (!HiddenType (pEl1))
 		 stop = TRUE;
 	      else
@@ -3186,7 +3217,8 @@ void                PrepareSelectionMenu ()
 		      else
 			{
 			   pEl2 = pEl2->ElFirstChild;
-			   while (ElementIsHidden (pEl2) && pEl2->ElNext != NULL)
+			   while (ElementIsHidden (pEl2) &&
+				  pEl2->ElNext != NULL)
 			      pEl2 = pEl2->ElNext;
 			   if (!ElementIsHidden (pEl2))
 			     {
@@ -3199,6 +3231,7 @@ void                PrepareSelectionMenu ()
 			     }
 			}
 		}
+	     }
 	}
       else
 	 pEl1 = pEl1->ElParent;
@@ -3368,6 +3401,7 @@ int                 val;
 		         {
 			 if (FirstSelectedElement != NULL &&
 			     LastSelectedElement != NULL)
+			   {
 			    if (FirstSelectedElement->ElParent ==
 				LastSelectedElement->ElParent)
 			      /* selection is normalized */
@@ -3411,9 +3445,11 @@ int                 val;
 				 SelectElementWithEvent (SelectedDocument,
 						         pFirst, TRUE, FALSE);
 				 if (pFirst != pLast)
-				    ExtendSelection (pLast, 0, FALSE, TRUE, FALSE);
+				    ExtendSelection (pLast, 0, FALSE, TRUE,
+						     FALSE);
 			      }
-		         }
+			   }
+			 }
 		 }
 	       break;
 	    case 2:

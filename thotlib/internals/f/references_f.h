@@ -28,9 +28,6 @@ extern void TransferReferences ( PtrElement pTarget,
                                  PtrDocument pDoc,
                                  PtrElement pEl,
                                  PtrDocument pSourceDoc );
-extern void RegisterExternalRef ( PtrElement pEl,
-                                  PtrDocument pDoc,
-                                  ThotBool IsNew );
 extern void AddDocOfExternalRef ( PtrElement pEl,
                                   DocumentIdentifier docIdent,
                                   PtrDocument pDoc2 );
@@ -41,10 +38,6 @@ extern ThotBool SetReference ( PtrElement pRefEl,
                                PtrDocument pTargetDoc,
                                ThotBool ancestor,
                                ThotBool withAppEvent );
-extern void CopyDescrExtDoc ( PtrElement pEl,
-                              PtrChangedReferredEl pChngRef );
-extern void RegisterDeletedReferredElem ( PtrElement pEl,
-                                          PtrDocument pDoc );
 extern void UpdateInclusionElements ( PtrDocument pDoc,
                                       ThotBool loadExternalDoc,
                                       ThotBool removeExclusions );
@@ -73,9 +66,6 @@ extern void TransferReferences (/* PtrElement pTarget,
                                    PtrDocument pDoc,
                                    PtrElement pEl,
                                    PtrDocument pSourceDoc */);
-extern void RegisterExternalRef (/* PtrElement pEl,
-                                    PtrDocument pDoc,
-                                    ThotBool IsNew */);
 extern void AddDocOfExternalRef (/* PtrElement pEl,
                                     DocumentIdentifier docIdent,
                                     PtrDocument pDoc2 */);
@@ -86,10 +76,6 @@ extern ThotBool SetReference (/* PtrElement pRefEl,
                                  PtrDocument pTargetDoc,
                                  ThotBool ancestor,
                                  ThotBool withAppEvent */);
-extern void CopyDescrExtDoc (/* PtrElement pEl,
-                                PtrChangedReferredEl pChngRef */);
-extern void RegisterDeletedReferredElem (/* PtrElement pEl,
-                                            PtrDocument pDoc */);
 extern void UpdateInclusionElements (/* PtrDocument pDoc,
                                         ThotBool loadExternalDoc,
                                         ThotBool removeExclusions */);

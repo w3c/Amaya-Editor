@@ -1,15 +1,15 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1997-2000
+ *  (c) COPYRIGHT INRIA 1997-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
- /*
+/*
  * HTML tables
  */
 
- /*
+/*
  *
  * Author: I. Vatton (INRIA)
  */
@@ -776,6 +776,7 @@ ThotBool        freely;
 	  sumPercent = (100 - delta) * width / 100;
 	  for (cRef = 0; cRef < cNumber; cRef++)
 	    if (colPercent[cRef])
+	      {
 	      if (colPercent[cRef] <= i)
 		{
 		  colPercent[cRef] = 0;
@@ -784,6 +785,7 @@ ThotBool        freely;
 		}
 	      else if (colPercent[cRef] > i)
 		colPercent[cRef] -= i;
+	      }
 	}
       else
 	sumPercent = sumPercent * width / 100;

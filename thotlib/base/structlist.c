@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1649,12 +1649,14 @@ FILE               *fileDescriptor;
 	     while (f != NULL)
 	       {
 		  if (f->AbEnclosing != pAb)
+		    {
 		     if (f->AbEnclosing == NULL)
 			fprintf (fileDescriptor,
 				 "Next AbstractBox: AbEnclosing=NULL\n");
 		     else
 			fprintf (fileDescriptor,
 			      "Next AbstractBox: bad AbEnclosing\n");
+		    }
 		  ListAbsBoxes (f, Indent + 2, fileDescriptor);
 		  f = f->AbNext;
 	       }
@@ -2746,6 +2748,7 @@ FILE               *fileDescriptor;
 #endif /* __STDC__ */
 {
    if (Def)
+     {
       if (pos.PoPosDef == NoEdge)
 	 fprintf (fileDescriptor, " NULL");
       else
@@ -2753,6 +2756,7 @@ FILE               *fileDescriptor;
 	   wrrepere (pos.PoPosDef, fileDescriptor);
 	   fprintf (fileDescriptor, " = ");
 	}
+     }
    if (!Def || pos.PoPosDef != NoEdge)
      {
 	wrlevel (pos.PoRelation, fileDescriptor);
@@ -3183,10 +3187,12 @@ FILE               *fileDescriptor;
    if (pR->PrPresMode == PresInherit)
       wrnbherit (pR, fileDescriptor);
    if (pR->PrPresMode == PresImmediate)
+     {
       if (pR->PrJustify)
 	 fprintf (fileDescriptor, "Yes;");
       else
 	 fprintf (fileDescriptor, "No;");
+     }
 }
 
 
@@ -3569,10 +3575,12 @@ FILE               *fileDescriptor;
 		     if (pSc1->PsElemPRule[El - 1])
 		       {
 			 if (pSchemaStr->SsRule[El - 1].SrConstruct == CsPairedElement)
+			   {
 			   if (pSchemaStr->SsRule[El - 1].SrFirstOfPair)
 			     fprintf (fileDescriptor, "First ");
 			   else
 			     fprintf (fileDescriptor, "Second ");
+			   }
 			 wrnomregle (El, fileDescriptor);
 			 fprintf (fileDescriptor, ":\n");
 			 fprintf (fileDescriptor, "   BEGIN\n");
@@ -3628,6 +3636,7 @@ FILE               *fileDescriptor;
 				       }
 				     else if (pCa1->CaLowerBound != -MAX_INT_ATTR_VAL - 1
 					      || pCa1->CaUpperBound != MAX_INT_ATTR_VAL + 1)
+				       {
 				       if (pCa1->CaLowerBound != -MAX_INT_ATTR_VAL - 1)
 					 {
 					   fprintf (fileDescriptor, ">");
@@ -3638,6 +3647,7 @@ FILE               *fileDescriptor;
 					   fprintf (fileDescriptor, "<");
 					   wrnumber (pCa1->CaUpperBound + 1, fileDescriptor);
 					 }
+				       }
 				     fprintf (fileDescriptor, ":\n");
 				     if (pCa1->CaFirstPRule == NULL)
 				       fprintf (fileDescriptor, "   BEGIN END;\n");

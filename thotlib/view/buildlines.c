@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * This module handles line constructions
  *
@@ -1777,7 +1768,10 @@ int                 frame;
       *full = FALSE;
 
    /* coupe les blancs en fin de ligne pleine */
-   if ((notComplete || *full) && pBox->BxAbstractBox->AbLeafType == LtText && pBox->BxNSpaces != 0)
+   if ((notComplete || *full) &&
+       pBox->BxAbstractBox->AbLeafType == LtText &&
+       pBox->BxNSpaces != 0)
+     {
       if (pLine->LiLastPiece == NULL)
 	{
 	   maxLength = pBox->BxWidth;
@@ -1798,6 +1792,7 @@ int                 frame;
 	   /* met a jour la largeur de la ligne */
 	   pLine->LiRealLength = pLine->LiRealLength - maxLength + pBox->BxWidth;
 	}
+     }
 
    /* Calcule la hauteur et la base de la ligne */
    pLine->LiHeight = descent + ascent;
@@ -2306,11 +2301,13 @@ int                *height;
 	  
 	  /* is there a breaked box */
 	  if (pBoxToBreak != NULL)
+	    {
 	    /* is it empty ? */
 	    if (pBoxToBreak->BxNChars > 0)
 	      pNextBox = pLine->LiLastBox;
 	    else if (pNextBox == NULL)
 	      pNextBox = pLine->LiLastBox;
+	    }
 
 	  /* Est-ce la derniere ligne du bloc de ligne ? */
 	  if (full)
@@ -3033,24 +3030,30 @@ int                 frame;
 		       else
 			  ibox1 = pLine->LiFirstBox;
 		       if (ibox1->BxWidth > maxLength)
-			  if (ibox1->BxAbstractBox->AbLeafType == LtText && maxLength > 0)
+			 {
+			  if (ibox1->BxAbstractBox->AbLeafType == LtText &&
+			      maxLength > 0)
 			    {
 			       /* Elimine le cas des lignes sans blanc */
 			       if (pLine->LiNSpaces == 0)
-				  maxLength = 1;	/* force la reevaluation */
+				  maxLength = 1;  /* force la reevaluation */
 			       else
 				 {
 				    length = ibox1->BxNChars;
-				    /* regarde si on peut trouver une coupure */
-				    maxLength = SearchBreak (pLine, ibox1, maxLength, ibox1->BxFont, &length, &width,
-					    &nSpaces, &newIndex, &pNewBuff);
+				    /* regarde si on peut trouver une coupure*/
+				    maxLength = SearchBreak (pLine, ibox1,
+                                                maxLength, ibox1->BxFont,
+                                                &length, &width, &nSpaces,
+						&newIndex, &pNewBuff);
 				 }
 
 			       if (maxLength > 0)
-				  RecomputeLines (pAb, pLine->LiPrevious, NULL, frame);
+				  RecomputeLines (pAb, pLine->LiPrevious, NULL,
+						  frame);
 			    }
 			  else
 			     maxLength = 0;
+			 }
 		    }
 		  else
 		     maxLength = 0;
@@ -3058,48 +3061,54 @@ int                 frame;
 		  /* Peut-on remonter le premier mot de la ligne suivante ? */
 		  if (maxLength == 0)
 		    {
-		       if (pLine->LiNext != NULL)
-			 {
-			    maxLength = pLine->LiXMax - pLine->LiRealLength - xDelta;
-			    pLi2 = pLine->LiNext;
-			    if (pLi2->LiFirstPiece != NULL)
-			       ibox1 = pLi2->LiFirstPiece;
-			    else
-			       ibox1 = pLi2->LiFirstBox;
-
-			    if (ibox1->BxWidth > maxLength)
-			       if (ibox1->BxAbstractBox->AbLeafType == LtText && maxLength > 0)
-				 {
-				    /* Elimine le cas des lignes sans blanc */
-				    if (pLi2->LiNSpaces == 0)
-				       maxLength = 1;	/* force la reevaluation */
-				    else
-				      {
-					 length = ibox1->BxNChars;
-					 /* regarde si on peut trouver une coupure */
-					 maxLength = SearchBreak (pLi2, ibox1, maxLength, ibox1->BxFont,
-								  &length, &width, &nSpaces, &newIndex, &pNewBuff);
-				      }
-				 }
-			       else
-				  maxLength = 0;
-			 }
-
-		       if (maxLength > 0)
-			  RecomputeLines (pAb, pLine, NULL, frame);
-		       else if (pLine->LiSpaceWidth == 0)
-			  ShiftLine (pLine, pAb, pBox, xDelta, frame);
-		       else
-			 {
-			    CompressLine (pLine, xDelta, frame, spaceDelta);
-			    pLine->LiRealLength = realLength;
-			 }
+		      if (pLine->LiNext != NULL)
+			{
+			  maxLength = pLine->LiXMax - pLine->LiRealLength - xDelta;
+			  pLi2 = pLine->LiNext;
+			  if (pLi2->LiFirstPiece != NULL)
+			    ibox1 = pLi2->LiFirstPiece;
+			  else
+			    ibox1 = pLi2->LiFirstBox;
+			  
+			  if (ibox1->BxWidth > maxLength)
+			    {
+			      if (ibox1->BxAbstractBox->AbLeafType == LtText &&
+				  maxLength > 0)
+				{
+				  /* Elimine le cas des lignes sans blanc */
+				  if (pLi2->LiNSpaces == 0)
+				    maxLength = 1; /* force la reevaluation */
+				  else
+				    {
+				      length = ibox1->BxNChars;
+				      /* regarde si on peut trouver une
+					 coupure */
+				      maxLength = SearchBreak (pLi2, ibox1,
+						  maxLength, ibox1->BxFont,
+						  &length, &width, &nSpaces,
+						  &newIndex, &pNewBuff);
+				    }
+				}
+			      else
+				maxLength = 0;
+			    }
+			}
+		      
+		      if (maxLength > 0)
+			RecomputeLines (pAb, pLine, NULL, frame);
+		      else if (pLine->LiSpaceWidth == 0)
+			ShiftLine (pLine, pAb, pBox, xDelta, frame);
+		      else
+			{
+			  CompressLine (pLine, xDelta, frame, spaceDelta);
+			  pLine->LiRealLength = realLength;
+			}
 		    }
 		  else
-		     RecomputeLines (pAb, pLine, NULL, frame);
+		    RecomputeLines (pAb, pLine, NULL, frame);
 	       }
 	     else
-		RecomputeLines (pAb, pLine, NULL, frame);
+	       RecomputeLines (pAb, pLine, NULL, frame);
 	  }
      }
 }

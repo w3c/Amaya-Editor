@@ -1,6 +1,6 @@
 /* 
  *
- *  (c) COPYRIGHT INRIA 1996-2000
+ *  (c) COPYRIGHT INRIA 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -406,6 +406,7 @@ SRule              *pRule;
      case CsReference:
        /* we consider only types defined in the same schema */
        if (pRule->SrRefTypeNat[0] == '\0')
+	 {
 	 if (pRule->SrReferredType > MAX_BASIC_TYPE)
 	   {
 	     if (Identifier[pRule->SrReferredType - MAX_BASIC_TYPE - 1].
@@ -417,6 +418,7 @@ SRule              *pRule;
 	   }
 	 else if (pRule->SrReferredType < 0)
 	   pRule->SrReferredType = -pRule->SrReferredType;
+	 }
        break;
      case CsIdentity:
        if (pRule->SrIdentRule > MAX_BASIC_TYPE)
@@ -526,7 +528,9 @@ static void         ChangeRules ()
 	/* don't take care of reference attributes */
 	if (pAttr->AttrType == AtReferenceAttr)
 	   /* only take care of types defined in the same schema */
+	  {
 	   if (pAttr->AttrTypeRefNature[0] == '\0')
+	     {
 	      if (pAttr->AttrTypeRef > MAX_BASIC_TYPE)
 		{
 		   if (Identifier[pAttr->AttrTypeRef - MAX_BASIC_TYPE - 1].
@@ -538,6 +542,8 @@ static void         ChangeRules ()
 		}
 	      else if (pAttr->AttrTypeRef < 0)
 		 pAttr->AttrTypeRef = -pAttr->AttrTypeRef;
+	     }
+	  }
      }
 }
 
@@ -879,10 +885,12 @@ SyntRuleNum         pr;
 
    pRule = NULL;
    if (pr == RULE_InclElem || pr == RULE_ExclElem)
+     {
      if (CompilExtens)
        pRule = CurExtensRule;
      else
        pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
+     }
    if (pr == RULE_InclElem)
      {
        if (pRule->SrNInclusions >= MAX_INCL_EXCL_SRULE)
@@ -1084,6 +1092,7 @@ indLine             wl;
      }
 
    if (pSSchema->SsExtensBlock != NULL)
+     {
      if (pSSchema->SsNExtensRules >= MAX_EXTENS_SSCHEMA)
        CompilerMessage (wi, STR, FATAL, STR_TOO_MAN_RULES, inputLine, LineNum);
      else
@@ -1095,6 +1104,7 @@ indLine             wl;
 	 CopyWord (pRule->SrName, wi, wl);
 	 pRule->SrConstruct = CsExtensionRule;
        }
+     }
    return pRule;
 }
 
@@ -1595,6 +1605,7 @@ SyntRuleNum         pr;
 	 if (r == RULE_ExceptType)
 	   ExceptExternalType = True;
 	 else if (r == RULE_ExtOrDef)
+	   {
 	   if (NExternalTypes >= MAX_EXTERNAL_TYPES)
 	     /* table of external types is full */
 	     CompilerMessage (wi, STR, FATAL, STR_TOO_MANY_EXTERNAL_DOCS,
@@ -1626,6 +1637,7 @@ SyntRuleNum         pr;
 		   PreviousRule = pSSchema->SsNRules;
 		 }
 	     }
+	   }
 	 break;
        case KWD_INCLUDED:
 	 /* included */
@@ -1690,6 +1702,7 @@ SyntRuleNum         pr;
 	 Equal = False;
 	 NewRule (wi);
 	 if (!error)
+	   {
 	   if (pSSchema->SsRootElem == CurRule[RecursLevel - 1])
 	     CompilerMessage (wi, STR, FATAL, STR_ROOT_CANNOT_BE_A_PAIR,
 			      inputLine, LineNum);
@@ -1699,6 +1712,7 @@ SyntRuleNum         pr;
 	       pRule->SrConstruct = CsPairedElement;
 	       pRule->SrFirstOfPair = True;
 	     }
+	   }
 	 break;
        case KWD_Nothing:
 	 /* pno contents for the current exported element */
@@ -1927,6 +1941,7 @@ SyntRuleNum         pr;
 		     Equal = False;
 		   }
 		 if (!error)
+		   {
 		   if (RRight[RecursLevel - 1])
 		     /* the rigth part identifier of the rule */
 		     {
@@ -1942,6 +1957,7 @@ SyntRuleNum         pr;
 		       CopyWord (CurName, wi, wl);
 		       CurNum = nb;
 		     }
+		   }
 	       }
 	     if (pr == RULE_TypeRef && ReferenceAttr)
 	       /* within a reference attribute */
@@ -2099,6 +2115,7 @@ SyntRuleNum         pr;
 		       /* the second one is also exported */
 		       if (pRule->SrConstruct == CsPairedElement)
 			 if (pRule->SrFirstOfPair)
+			   {
 			   if (i == RuleExportWith)
 			     /* the contents of the second mark */
 			     /* is the mark itself */
@@ -2107,6 +2124,7 @@ SyntRuleNum         pr;
 			   else
 			     pSSchema->SsRule[RuleExportWith].SrExportContent =
 			       i;
+			   }
 		     }
 		   else
 		     /* the object contents depends on another */
@@ -2140,6 +2158,7 @@ SyntRuleNum         pr;
 	       }
 	     if (pr == RULE_ExceptType)
 	       /* element type name within exceptions */
+	       {
 	       if (ExceptExternalType)
 		 {
 		   ExceptExternalType = False;
@@ -2173,6 +2192,7 @@ SyntRuleNum         pr;
 		     {
 		       if (FirstInPair || SecondInPair)
 			 /* the element name is preceded by First or Second */
+			 {
 			 if (pSSchema->SsRule[ExceptType - 1].SrConstruct !=
 			     CsPairedElement)
 			   /* it's not a  paired type */
@@ -2181,6 +2201,7 @@ SyntRuleNum         pr;
 					    inputLine, LineNum);
 			 else if (SecondInPair)
 			   ExceptType++;
+			 }
 		       if (pSSchema->SsRule[ExceptType - 1].SrFirstExcept != 0)
 			 CompilerMessage (wi, STR, FATAL,
 					  STR_THIS_TYPE_ALREADY_HAS_EXCEPTS,
@@ -2189,6 +2210,7 @@ SyntRuleNum         pr;
 		   FirstInPair = False;
 		   SecondInPair = False;
 		 }
+	       }
 	     if (pr == RULE_InclElem)
 	       {
 		 if (CompilExtens)
@@ -2276,6 +2298,7 @@ SyntRuleNum         pr;
 		       }
 		   if (CompilLocAttr)
 		     /* local attribute */
+		     {
 		     if (CurNLocAttr >= MAX_LOCAL_ATTR)
 		       /* too many local attributes for this element */
 		       CompilerMessage (wi, STR, FATAL, STR_TOO_MANY_ATTRS,
@@ -2299,6 +2322,7 @@ SyntRuleNum         pr;
 			 CurNLocAttr++;
 			 MandatoryAttr = False;
 		       }
+		     }
 		 }
 	     else if (CompilExcept)
 	       /* attribute name within exceptions set */
@@ -2509,6 +2533,7 @@ SyntRuleNum         pr;
 	 if (r == RULE_ExceptNum)
 	   /* exception number associated with element type */
 	   /* or attribute */
+	   {
 	   if (SynInteger <= 100)
 	     /* values less than 100 are reserved for predefined */
 	     /* exceptions */
@@ -2517,6 +2542,7 @@ SyntRuleNum         pr;
 			      inputLine, LineNum);
 	   else
 	     ExceptionNum (SynInteger, False, False, False, wi);
+	   }
 	 break;
        case 3003:
 	 /* characters string */

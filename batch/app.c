@@ -1,6 +1,6 @@
 /* 
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -488,12 +488,14 @@ static void         NewMenuComplete ()
 	/* separateur: on peut avoir plusieurs separateurs dans le meme menu */
 	found = False;
 	if (ItemType != 'S')
+	  {
 	   while (Item != NULL && !found)
 	      if (Item->AppItemName != NULL &&
 		  ustrcmp (Item->AppItemName, ItemName) == 0)
 		 found = True;
 	      else
 		 Item = Item->AppNextItem;
+	  }
 	if (found)
 	   CompilerMessage (1, APP, FATAL, APP_ITEM_ALREADY_EXISTS, inputLine,
 			  LineNum);
@@ -1495,10 +1497,12 @@ STRING              fname;
 		 !pRule->SrRefImportedDoc &&
 		 !pRule->SrUnitElem)
 		/* ignore lists added for associated elements */
+	       {
 		if (pRule->SrConstruct != CsList)
 		   WriteRule (Hfile, rule, NULL);
 		else if (!pSSchema->SsRule[pRule->SrListItem - 1].SrAssocElem)
 		   WriteRule (Hfile, rule, NULL);
+	       }
 	  }
 	/* write extension rules */
 	if (pSSchema->SsExtension && pSSchema->SsNExtensRules > 0)

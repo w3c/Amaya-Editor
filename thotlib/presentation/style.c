@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -780,6 +780,7 @@ AttributePres     **attrblock;
 	      else
 		val = 0;
 	      if (val)
+		{
 		for (j = 0; j < attrs->ApNCases && !ppRule ; j++)
 		  if (attrs->ApCase[j].CaComparType == ComparConstant &&
 		      attrs->ApCase[j].CaLowerBound == val &&
@@ -791,6 +792,7 @@ AttributePres     **attrblock;
 			  attrs->ApCase[j].CaLowerBound < -MAX_INT_ATTR_VAL &&
 			  attrs->ApCase[j].CaUpperBound > MAX_INT_ATTR_VAL)
 			ppRule = &(attrs->ApCase[j].CaFirstPRule);
+		}
 	      break;
 	    case AtTextAttr:
 	      if (attrVal && !ustrcmp (attrs->ApString, attrVal))

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1110,6 +1110,7 @@ char              **argv;
 	/* ecrit les constantes */
 	r = MAX_BASIC_TYPE + 1;
 	if (pSc1->SsRule[r - 1].SrConstruct == CsConstant)
+	  {
 	   if (!optionh)
 	     {
 		printf ("CONST\n");
@@ -1142,13 +1143,16 @@ char              **argv;
 		     r++;
 		  }
 	     }
+	  }
 	FirstRule = r;
 	/* ecrit les elements structures */
 	if (pSc1->SsNRules >= FirstRule)
+	  {
 	   if (optionh)
 	      printf ("\n/* Elements */\n");
 	   else
 	      printf ("STRUCT\n");
+	  }
 	for (r = FirstRule; r <= pSc1->SsNRules; r++)
 	  {
 	     pRe1 = &pSc1->SsRule[r - 1];
@@ -1158,10 +1162,12 @@ char              **argv;
 		 !pRe1->SrRefImportedDoc &&
 		 !pRe1->SrUnitElem)
 		/* ignore les regles listes ajoutees pour les elements associes */
+	       {
 		if (pRe1->SrConstruct != CsList)
 		   wrrule (r, NULL);
 		else if (!pSc1->SsRule[pRe1->SrListItem - 1].SrAssocElem)
 		   wrrule (r, NULL);
+	       }
 	  }
 	/* ecrit les regles d'extension */
 	if (pSc1->SsExtension && pSc1->SsNExtensRules > 0)
@@ -1289,10 +1295,12 @@ char              **argv;
 		       {
 			  printf ("   ");
 			  if (pRe1->SrConstruct == CsPairedElement)
+			    {
 			     if (pRe1->SrFirstOfPair)
 				printf ("First ");
 			     else
 				printf ("Second ");
+			    }
 			  wrnom (pRe1->SrName);
 			  printf (": ");
 			  for (i = pRe1->SrFirstExcept; i <= pRe1->SrLastExcept; i++)

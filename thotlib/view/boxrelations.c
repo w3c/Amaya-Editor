@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * gestion des Relations entre boites
  *
@@ -916,7 +907,9 @@ ThotBool            horizRef;
       else
 	{
 	  /* explicite rule */
-	  if (pAb->AbEnclosing == pRefAb && pBox->BxVertFlex && pBox->BxType == BoCell)
+	  if (pAb->AbEnclosing == pRefAb &&
+	      pBox->BxVertFlex && pBox->BxType == BoCell)
+	    {
 	    if (!pBox->BxVertInverted &&
 	      (rule.PosRefEdge != Top || rule.PosEdge != Top))
 	      {
@@ -937,7 +930,7 @@ ThotBool            horizRef;
 		rule.PosEdge = Bottom;
 		rule.PosDistance = 0;
 	      }
-
+	    }
 	  if (pAb->AbEnclosing == pRefAb && !pBox->BxVertFlex)
 	    /* it's not a stretchable box and it depends on its enclosing */
 	    op = OpVertInc;
@@ -2702,12 +2695,14 @@ PtrBox              pTargetBox;
 
    /* On detruit la relation de largeur hors-structure */
    if (pTargetBox->BxWOutOfStruct)
+     {
       /* Est-ce une dimension elastique ? */
       if (pTargetBox->BxHorizFlex)
 	{
 	   pOrginBox = pAb->AbWidth.DimPosition.PosAbRef->AbBox;
 	   if (pOrginBox != NULL)
-	      RemovePosRelation (pOrginBox, pTargetBox, NULL, FALSE, FALSE, TRUE);
+	      RemovePosRelation (pOrginBox, pTargetBox, NULL, FALSE, FALSE,
+				 TRUE);
 	}
       else
 	{
@@ -2715,17 +2710,19 @@ PtrBox              pTargetBox;
 	   if (pOrginBox != NULL)
 	      RemoveDimRelation (pOrginBox, pTargetBox, TRUE);
 	}
-
+     }
    /* On detruit la relation de hauteur hors-structure */
    pOrginBox = NULL;
    if (pTargetBox->BxHOutOfStruct)
+     {
       /* Est-ce une dimension elastique ? */
       if (pTargetBox->BxVertFlex)
 	{
 	   if (pAb->AbHeight.DimPosition.PosAbRef != NULL)
 	      pOrginBox = pAb->AbHeight.DimPosition.PosAbRef->AbBox;
 	   if (pOrginBox != NULL)
-	      RemovePosRelation (pOrginBox, pTargetBox, NULL, FALSE, FALSE, FALSE);
+	      RemovePosRelation (pOrginBox, pTargetBox, NULL, FALSE, FALSE,
+				 FALSE);
 	}
       else
 	{
@@ -2734,6 +2731,7 @@ PtrBox              pTargetBox;
 	   if (pOrginBox != NULL)
 	      RemoveDimRelation (pOrginBox, pTargetBox, FALSE);
 	}
+     }
 }
 
 
@@ -2803,15 +2801,17 @@ ThotBool            horizRef;
 		       while (pCurrentAb != NULL)
 			 {
 			    if (pCurrentAb != pAb && pCurrentAb->AbBox != NULL)
-			       /* Si c'est un heritage on retire l'indication hors-structure */
+			      {
+			       /* Si c'est un heritage on retire l'indication
+				  hors-structure */
 			       if (pCurrentAb->AbBox->BxXOutOfStruct
 				   && pCurrentAb->AbHorizPos.PosAbRef == pAb)
 				  pCurrentAb->AbBox->BxXOutOfStruct = FALSE;
-			       else if (pCurrentAb->AbBox->BxWOutOfStruct
-					&& pCurrentAb->AbWidth.DimIsPosition
-					&& pCurrentAb->AbWidth.DimPosition.PosAbRef == pAb)
+			       else if (pCurrentAb->AbBox->BxWOutOfStruct &&
+					pCurrentAb->AbWidth.DimIsPosition &&
+					pCurrentAb->AbWidth.DimPosition.PosAbRef == pAb)
 				  pCurrentAb->AbBox->BxWOutOfStruct = FALSE;
-
+			      }
 			    pCurrentAb = pCurrentAb->AbNext;
 			 }
 		    }
@@ -2820,7 +2820,8 @@ ThotBool            horizRef;
 	       {
 		  pOrginBox->BxYOutOfStruct = FALSE;
 
-		  /* Des boites voisines ont herite de la relation hors-structure ? */
+		  /* Des boites voisines ont herite de la relation
+		     hors-structure ? */
 		  pCurrentAb = pAb->AbEnclosing;
 		  if (pCurrentAb != NULL)
 		    {
@@ -2828,15 +2829,17 @@ ThotBool            horizRef;
 		       while (pCurrentAb != NULL)
 			 {
 			    if (pCurrentAb != pAb && pCurrentAb->AbBox != NULL)
-			       /* Si c'est un heritage on retire l'indication hors-structure */
+			      {
+			       /* Si c'est un heritage on retire l'indication
+				  hors-structure */
 			       if (pCurrentAb->AbBox->BxYOutOfStruct
 				   && pCurrentAb->AbVertPos.PosAbRef == pAb)
 				  pCurrentAb->AbBox->BxYOutOfStruct = FALSE;
-			       else if (pCurrentAb->AbBox->BxHOutOfStruct
-					&& pCurrentAb->AbHeight.DimIsPosition
-					&& pCurrentAb->AbHeight.DimPosition.PosAbRef == pAb)
+			       else if (pCurrentAb->AbBox->BxHOutOfStruct &&
+					pCurrentAb->AbHeight.DimIsPosition &&
+					pCurrentAb->AbHeight.DimPosition.PosAbRef == pAb)
 				  pCurrentAb->AbBox->BxHOutOfStruct = FALSE;
-
+			      }
 			    pCurrentAb = pCurrentAb->AbNext;
 			 }
 

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -941,10 +941,12 @@ STRING              cssNames;
    ConfigGetPresentationOption(pDoc->DocSSchema, TEXT("orientation"), value);
    if (value[0] != WC_EOS)
      if (!ustrcmp (Orientation, value))
+       {
         if (!ustrcmp (Orientation, TEXT("Landscape")))
 	  orientation = 1;
         else
 	  orientation = 0;
+       }
 
    /* restores the presentation scheme */
    ustrcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
@@ -1308,12 +1310,14 @@ STRING              txt;
 	  break;
 	case NumZonePrinterName:
 	  if (txt[0] != EOS)
+	    {
 	    if (NewPaperPrint)
 	      /* text capture zone for the printer name */
 	      ustrncpy (pPrinter, txt, MAX_PATH);
 	    else
 	      /* text capture zone for the name of the PostScript file */
 	      ustrncpy (PSdir, txt, MAX_PATH);
+	    }
 	  break;
 	case NumFormPrint:
 	  /* Print form option */

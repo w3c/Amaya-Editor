@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -306,12 +306,14 @@ Element             element;
 				  &firstChar, &lastChar);
 	dispMode = TtaGetDisplayMode (document);
 	if (ok)
+	  {
 	  if (dispMode == NoComputedDisplay)
 	     /* accept only if immediate display mode */
 	     ok = FALSE;
 	  else
 	     /* is the current selection is in the same document? */
 	     ok = (pDoc == LoadedDocument[document - 1]);
+	  }
 	if (!ok)
 	   /* Error: no selection */
 	   TtaError (ERR_no_selection_in_document);

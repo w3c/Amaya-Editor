@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * gestion des fichiers de configuration et de langue.
  *
@@ -1048,54 +1039,57 @@ CHAR_T*             BufMenu;
       return 0;
    stop = FALSE;
    if (readUntil (file, TEXT("presentation"), TEXT("")))
-      do
-	{
-	   if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
-	      stop = TRUE;
-	   else
-	     {
-		getFirstWord (line, word);
-		if (word[0] != WC_EOS)
-		   /* la ligne n'est pas vide */
-		  {
-		     /* si la ligne contient un mot cle marquant le debut d'une autre */
-		     /* section, on a fini */
-		     if (singleWord (line))
-			if (ustrcmp (word, TEXT("export")) == 0)
-			   stop = TRUE;
-			else if (ustrcmp (word, TEXT("import")) == 0)
-			   stop = TRUE;
-			else if (ustrcmp (word, TEXT("translation")) == 0)
-			   stop = TRUE;
-		     if (!stop)
+     do
+       {
+	 if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
+	   stop = TRUE;
+	 else
+	   {
+	     getFirstWord (line, word);
+	     if (word[0] != WC_EOS)
+	       /* la ligne n'est pas vide */
+	       {
+		 /* si la ligne contient un mot cle marquant le debut */
+		 /* d'une autre section, on a fini */
+		 if (singleWord (line))
+		   {
+		     if (ustrcmp (word, TEXT("export")) == 0)
+		       stop = TRUE;
+		     else if (ustrcmp (word, TEXT("import")) == 0)
+		       stop = TRUE;
+		     else if (ustrcmp (word, TEXT("translation")) == 0)
+		       stop = TRUE;
+		   }
+		 if (!stop)
+		   {
+		     getStringAfterColon (line, text);
+		     if (text[0] == WC_EOS)
+		       fprintf (stderr, "invalid line in file %s\n   %s\n",
+				schema, line);
+		     else
 		       {
-			  getStringAfterColon (line, text);
-			  if (text[0] == WC_EOS)
-			     fprintf (stderr, "invalid line in file %s\n   %s\n", schema, line);
-			  else
-			    {
-			       ustrcpy (textISO, AsciiTranslate (text));
-			       if (pres_items[nbitem] != NULL)
-				  TtaFreeMemory (pres_items[nbitem]);
-			       pres_items[nbitem] = TtaAllocString (ustrlen (word) + 1);
-			       ustrcpy (pres_items[nbitem], word);
-			       if (pres_items_menu[nbitem] != NULL)
-				  TtaFreeMemory (pres_items_menu[nbitem]);
-			       len = ustrlen (textISO) + 1;
-			       pres_items_menu[nbitem] = TtaAllocString (len);
-			       ustrcpy (pres_items_menu[nbitem], textISO);
-			       if (BufMenu != NULL)
-				 {
-				    ustrcpy (&BufMenu[indmenu], textISO);
-				    indmenu += len;
-				 }
-			       nbitem++;
-			    }
+			 ustrcpy (textISO, AsciiTranslate (text));
+			 if (pres_items[nbitem] != NULL)
+			   TtaFreeMemory (pres_items[nbitem]);
+			 pres_items[nbitem] = TtaAllocString (ustrlen(word)+1);
+			 ustrcpy (pres_items[nbitem], word);
+			 if (pres_items_menu[nbitem] != NULL)
+			   TtaFreeMemory (pres_items_menu[nbitem]);
+			 len = ustrlen (textISO) + 1;
+			 pres_items_menu[nbitem] = TtaAllocString (len);
+			 ustrcpy (pres_items_menu[nbitem], textISO);
+			 if (BufMenu != NULL)
+			   {
+			     ustrcpy (&BufMenu[indmenu], textISO);
+			     indmenu += len;
+			   }
+			 nbitem++;
 		       }
-		  }
-	     }
-	}
-      while (!stop);
+		   }
+	       }
+	   }
+       }
+     while (!stop);
    TtaReadClose (file);
    return nbitem;
 }
@@ -1211,15 +1205,17 @@ CHAR_T*             BufMenu;
 		if (word[0] != WC_EOS)
 		   /* la ligne n'est pas vide */
 		  {
-		     /* si la ligne contient un mot cle marquant le debut d'une autre */
-		     /* section, on a fini */
+		    /* si la ligne contient un mot cle marquant le debut */
+		    /* d'une autre section, on a fini */
 		     if (singleWord (line))
+		       {
 			if (ustrcmp (word, TEXT("presentation")) == 0)
 			   stop = TRUE;
 			else if (ustrcmp (word, TEXT("import")) == 0)
 			   stop = TRUE;
 			else if (ustrcmp (word, TEXT("translation")) == 0)
 			   stop = TRUE;
+		       }
 		     if (!stop)
 		       {
 			  getStringAfterColon (line, text);
@@ -1382,29 +1378,34 @@ PtrSSchema          pSS;
 		if (word[0] != WC_EOS)
 		   /* la ligne n'est pas vide */
 		  {
-		     /* si la ligne contient un mot cle marquant le debut d'une autre */
-		     /* section, on a fini */
-		     if (singleWord (line))
+		    /* si la ligne contient un mot cle marquant le debut */
+		    /* d'une autre section, on a fini */
+		    if (singleWord (line))
+		      {
 			if (ustrcmp (word, TEXT("presentation")) == 0)
-			   stop = TRUE;
+			  stop = TRUE;
 			else if (ustrcmp (word, TEXT("export")) == 0)
-			   stop = TRUE;
+			  stop = TRUE;
 			else if (ustrcmp (word, TEXT("import")) == 0)
-			   stop = TRUE;
+			  stop = TRUE;
 			else
 			  {
-			     fprintf (stderr, "invalid line in file %s\n   %s\n", pSS->SsName, line);
-			     error = TRUE;
+			  fprintf (stderr, "invalid line in file %s\n   %s\n",
+				   pSS->SsName, line);
+			  error = TRUE;
 			  }
-		     if (!stop && !error)
-		       {
-			  /* cherche la chaine de caracteres qui suit ':' */
-			  getStringAfterColon (line, text);
-			  if (text[0] == EOS)
-			     fprintf (stderr, "invalid line in file %s\n   %s\n", pSS->SsName, line);
-			  else if (!Translate (pSS, word, text))
-			     fprintf (stderr, "invalid line in file %s\n   %s\n", pSS->SsName, line);
-		       }
+		      }
+		    if (!stop && !error)
+		      {
+			/* cherche la chaine de caracteres qui suit ':' */
+			getStringAfterColon (line, text);
+			if (text[0] == EOS)
+			  fprintf (stderr, "invalid line in file %s\n   %s\n",
+				   pSS->SsName, line);
+			else if (!Translate (pSS, word, text))
+			  fprintf (stderr, "invalid line in file %s\n   %s\n",
+				   pSS->SsName, line);
+		      }
 		  }
 	     }
 	}
@@ -1542,6 +1543,7 @@ CHAR_T*             sectName;
   
    if (file != NULL)
       /* on a ouvert le fichier */
+     {
       /* cherche la ligne "style xxxx" qui correspond au schema P concerne' */
       if (!readUntilStyle (file, pSS->SsDefaultPSchema))
 	 /* pas trouve' */
@@ -1557,6 +1559,7 @@ CHAR_T*             sectName;
 	   TtaReadClose (file);
 	   file = NULL;
 	}
+     }
    return file;
 }
 

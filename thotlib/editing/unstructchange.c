@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -293,6 +293,7 @@ PtrDocument         pDoc;
 		      created */
 		   pSS = pSavedEl->PeAscendSSchema[asc];
 		   if (pDoc != DocOfSavedElements)
+		     {
 		     if (ustrcmp (pDoc->DocSSchema->SsName, pSS->SsName) == 0)
 		       pSS = pDoc->DocSSchema;
 		     else
@@ -310,6 +311,7 @@ PtrDocument         pDoc;
 			   AddSchemaGuestViews (pDoc, pSS);
 			   }
 		       }
+		     }
 		   /* demande a l'application si on peut creer ce type
 		      d'element */
 		   notifyEl.event = TteElemNew;
@@ -352,6 +354,7 @@ PtrDocument         pDoc;
 			       asc--;
 			       pSS = pSavedEl->PeAscendSSchema[asc];
 			       if (pDoc != DocOfSavedElements)
+				 {
 				 if (ustrcmp (pDoc->DocSSchema->SsName,
 					      pSS->SsName) == 0)
 				   pSS = pDoc->DocSSchema;
@@ -367,6 +370,7 @@ PtrDocument         pDoc;
 				       AddSchemaGuestViews (pDoc, pSS);
 				       }
 				   }
+				 }
 			       /* demande a l'application si on peut creer ce type d'elem. */
 			       notifyEl.event = TteElemNew;
 			       notifyEl.document = (Document) IdentDocument (pDoc);
@@ -548,6 +552,7 @@ void                PasteCommand ()
     TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_PASTE);
   else if (GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar,
 				&lastChar))
+    {
     /* on ne peut coller dans un document en lecture seule */
     if (pDoc->DocReadOnly)
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
@@ -722,9 +727,6 @@ void                PasteCommand ()
 	       de paire */
 	    for (i = 0; i < NCreatedElements; i++)
 	      AssignPairIdentifiers (CreatedElement[i], pDoc);
-	    /* Note les references sortantes colle'es */
-	    for (i = 0; i < NCreatedElements; i++)
-	      RegisterExternalRef (CreatedElement[i], pDoc, TRUE);
 	    /* register the pasted elements in the editing history */
 	    OpenHistorySequence (pDoc, firstSel, lastSel, firstChar,
 				 lastChar-1);
@@ -826,6 +828,7 @@ void                PasteCommand ()
 		}
 	  }
       }
+    }
 }
 
 

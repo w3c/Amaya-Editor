@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -818,6 +818,7 @@ PtrTRuleBlock      *pNextBlock;
 			   case TcondPRule:
 			      TtaReadShort (file, &pCond->TcAttr);
 			      if (!error)
+				{
 				 if (pCond->TcAttr == PtSize ||
 				     pCond->TcAttr == PtIndent ||
 				     pCond->TcAttr == PtLineSpacing ||
@@ -825,12 +826,13 @@ PtrTRuleBlock      *pNextBlock;
 				     pCond->TcAttr == PtFillPattern ||
 				     pCond->TcAttr == PtBackground ||
 				     pCond->TcAttr == PtForeground)
-				   {
+				     {
 				      TtaReadSignedShort (file, &pCond->TcLowerBound);
 				      TtaReadSignedShort (file, &pCond->TcUpperBound);
-				   }
+				     }
 				 else
 				    TtaReadByte (file, &pCond->TcPresValue);
+				}
 			      break;
 			   case TcondElementType:
 			      TtaReadShort (file, &pCond->TcAttr);
@@ -996,6 +998,7 @@ PtrTSchema         *pTSch;
      {
 	pPruleTr = &(*pTSch)->TsPresTRule[pres];
 	if (pPruleTr->RtExist)
+	  {
 	   if (pres == PtSize || pres == PtIndent ||
 	       pres == PtLineSpacing || pres == PtLineWeight ||
 	       pres == PtFillPattern || pres == PtBackground ||
@@ -1020,6 +1023,7 @@ PtrTSchema         *pTSch;
 		   ReadBlocks (file, &pPruleTr->RtPRuleValueBlock[i],
 			       pNextTRule, pSS, pNextBlock);
 		}
+	  }
      }
 }
 
@@ -1039,6 +1043,7 @@ PRuleTransl        *pPruleTr;
    int                 i;
 
    if (pPruleTr->RtExist)
+     {
       if (pres == PtSize + 1 || pres == PtIndent + 1 ||
 	  pres == PtLineSpacing + 1 || pres == PtLineWeight + 1 ||
 	  pres == PtFillPattern + 1 || pres == PtBackground + 1 ||
@@ -1049,6 +1054,7 @@ PRuleTransl        *pPruleTr;
       else
 	 for (i = 0; i <= MAX_TRANSL_PRES_VAL; i++)
 	    FreeBlocks (pPruleTr->RtPRuleValueBlock[i]);
+     }
 }
 
 
@@ -1225,6 +1231,7 @@ PtrSSchema          pSS;
 		   pPRuleTr = &pTSch->TsPresTRule[i];
 		   TtaReadBool (file, &pPRuleTr->RtExist);
 		   if (pPRuleTr->RtExist)
+		     {
 		      if (i == PtSize || i == PtIndent || i == PtLineSpacing ||
 			  i == PtLineWeight || i == PtFillPattern ||
 			  i == PtBackground || i == PtForeground)
@@ -1240,6 +1247,7 @@ PtrSSchema          pSS;
 			 for (j = 0; j <= MAX_TRANSL_PRES_VAL; j++)
 			    pPRuleTr->RtPRuleValueBlock[j] =
 			       ReadPtrTRuleBlock (file, &pNextBlock);
+		     }
 		}
 	TtaReadShort (file, &pTSch->TsNTranslAlphabets);
 	if (!error)

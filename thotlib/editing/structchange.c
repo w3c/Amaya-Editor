@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -551,11 +551,6 @@ PtrSSchema          pSS;
 	   for (i = 0; i < NCreatedElements; i++)
 	      AssignPairIdentifiers (CreatedElement[i], pDoc);
 
-	   /* Note les references sortantes colle'es */
-	   for (i = 0; i < NCreatedElements; i++)
-	      RegisterExternalRef (CreatedElement[i], pDoc, TRUE);
-
-	
 	   /* envoie l'evenement ElemPaste.Post */
 	   originDoc = IdentDocument (DocOfSavedElements);
 	   if (before)
@@ -949,8 +944,6 @@ PtrElement         *pFirstFree;
 		       AssignPairIdentifiers (pPastedEl, pDoc);
 		       /* purge les references */
 		       CheckReferences (pCopy, pDoc);
-		       /* Note les references sortantes creees */
-		       RegisterExternalRef (pCopy, pDoc, TRUE);
 		       /* envoie l'evenement ElemPaste.Post a l'application */
 		       NotifySubTree (TteElemPaste, pDoc, pCopy,
 				      IdentDocument (DocOfSavedElements));

@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * Colors Keyboard routines
  *
@@ -37,9 +28,11 @@
 
 static int fgcolor, bgcolor;
 static ThotBool applyToSelection = TRUE;
+#ifdef _WINDOWS
 /* @@ JK: a quick, ugly hack just for selecting the messages drawn on the
 color palette */
 static ThotBool PalMessageSet1 = TRUE;
+#endif
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern

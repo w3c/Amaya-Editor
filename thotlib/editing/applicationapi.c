@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -174,7 +174,9 @@ View                view;
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] != NULL)
-      if (view < 1 || (view > MAX_VIEW_DOC && view < 100) || view > MAX_ASSOC_DOC + 100)
+     {
+      if (view < 1 || (view > MAX_VIEW_DOC && view < 100) ||
+	  view > MAX_ASSOC_DOC + 100)
          TtaError (ERR_invalid_parameter);
       else
         {
@@ -185,6 +187,7 @@ View                view;
 	else
 	   win = pDoc->DocViewFrame[aView - 1];
         }
+     }
    return win;
 }
 

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -553,6 +553,7 @@ PtrDocument         pDoc;
      {
 	pElRow = FwdSearchTypedElem (pElRow, NType, pEl->ElStructSchema);
 	if (pElRow != NULL)
+	  {
 	   if (!ElemIsWithinSubtree (pElRow, pElTheRows))
 	      /* la ligne trouvee ne fait pas partie du tableau */
 	      pElRow = NULL;
@@ -610,6 +611,7 @@ PtrDocument         pDoc;
 				    }
 			    }
 			  if (pCell != NULL)
+			    {
 			     if (pCell->ElNext != NULL)
 				/* passe a la cellule suivante de la ligne */
 				pCell = pCell->ElNext;
@@ -620,6 +622,7 @@ PtrDocument         pDoc;
 				  InsertElementAfter (pCell, pNCell);
 				  pCell = NULL;
 			       }
+			    }
 		       }
 		  }
 		/* on met l'attribut La_Column a la nouvelle cellule et le */
@@ -629,6 +632,7 @@ PtrDocument         pDoc;
 		AttachMandatoryAttributes (pNCell, pDoc);
 		CreateAllAbsBoxesOfEl (pNCell, pDoc);
 	     }
+	  }
      }
 }
 
@@ -679,6 +683,7 @@ PtrDocument         pDoc;
      {
 	pCol = FwdSearchTypedElem (pCol, TypeCol, pEl->ElStructSchema);
 	if (pCol != NULL)
+	  {
 	   if (!ElemIsWithinSubtree (pCol, pElCols))
 	      /* la Column trouvee ne fait pas partie du tableau */
 	      pCol = NULL;
@@ -688,9 +693,10 @@ PtrDocument         pDoc;
 		if (pCell == NULL && pCellPrec != NULL)
 		  {
 		     /* on cree une nouvelle cellule */
-		     pCell = NewSubtree (pCellPrec->ElTypeNumber, pEl->ElStructSchema, pDoc,
-				 pCellPrec->ElAssocNum, TRUE, TRUE,
-				 TRUE, TRUE);
+		     pCell = NewSubtree (pCellPrec->ElTypeNumber,
+					 pEl->ElStructSchema, pDoc,
+					 pCellPrec->ElAssocNum, TRUE, TRUE,
+					 TRUE, TRUE);
 		     /* on insere cette nouvelle cellule dans l'arbre */
 		     InsertElementAfter (pCellPrec, pCell);
 		  }
@@ -701,6 +707,7 @@ PtrDocument         pDoc;
 		pCellPrec = pCell;
 		pCell = pCell->ElNext;
 	     }
+	  }
      }
 
    if (pCell != NULL)
@@ -990,7 +997,9 @@ PtrDocument         pDoc;
    PtrElement          pE;
 
    if (pEl != NULL)
-      if (TypeHasException (EXC_TR_Table_CREATION, pEl->ElTypeNumber, pEl->ElStructSchema))
+     {
+      if (TypeHasException (EXC_TR_Table_CREATION, pEl->ElTypeNumber,
+			    pEl->ElStructSchema))
 	 VerifAndCreate (pEl, pDoc);
       else
 	{
@@ -1005,6 +1014,7 @@ PtrDocument         pDoc;
 		  }
 	     }
 	}
+     }
 }
 
 /* SelectColSimple      selectionne toutes les cellules correspondant */
@@ -1111,70 +1121,79 @@ ThotBool            *ret;
 #endif /* __STDC__ */
 
 {
-   PtrElement          pE;
+  PtrElement          pE;
 
-   pE = NULL;
-   *ret = TRUE;
-   if (selExtension)
-     {
-	/* c'est une extension de la selection */
-	if (FirstSelectedElement != NULL)
-	  {
-	     /* il y a deja une selection */
-	     pEl = FirstSelectedElement;
-	     if (TypeHasException (EXC_TR_Table_SELECT, pEl->ElTypeNumber, pEl->ElStructSchema))
-		/* Deja une Column selectionnee, on refuse l'extension */
-		*ret = FALSE;
-	  }
-	if (TypeHasException (EXC_TR_Table_SELECT, pEl->ElTypeNumber, pEl->ElStructSchema))
-	   /* l'element a ajouter dans la selection est une Column, refus */
-	   *ret = FALSE;
-     }
-
-   else
-     {
-	/* c'est une nouvelle  selection */
-	if (TypeHasException (EXC_TR_Table_SELECT, pEl->ElTypeNumber, pEl->ElStructSchema))
-	   /* il s'agit bien d'un element demandant une selection speciale */
-
-	   if (TypeHasException (EXC_ID_Simple_Column, pEl->ElTypeNumber, pEl->ElStructSchema))
-	     {
-		/* selection d'un element Simple_Column */
-		SelectSimpleCol (pEl);
-		LastSelectedElement = pEl;
+  pE = NULL;
+  *ret = TRUE;
+  if (selExtension)
+    {
+      /* c'est une extension de la selection */
+      if (FirstSelectedElement != NULL)
+	{
+	  /* il y a deja une selection */
+	  pEl = FirstSelectedElement;
+	  if (TypeHasException (EXC_TR_Table_SELECT, pEl->ElTypeNumber,
+				pEl->ElStructSchema))
+	    /* Deja une Column selectionnee, on refuse l'extension */
+	    *ret = FALSE;
+	}
+      if (TypeHasException (EXC_TR_Table_SELECT, pEl->ElTypeNumber,
+			    pEl->ElStructSchema))
+	/* l'element a ajouter dans la selection est une Column, refus */
+	*ret = FALSE;
+    }
+  
+  else
+    {
+      /* c'est une nouvelle  selection */
+      if (TypeHasException (EXC_TR_Table_SELECT, pEl->ElTypeNumber,
+			    pEl->ElStructSchema))
+	/* il s'agit bien d'un element demandant une selection speciale */
+	{
+	  if (TypeHasException (EXC_ID_Simple_Column, pEl->ElTypeNumber,
+				pEl->ElStructSchema))
+	    {
+	      /* selection d'un element Simple_Column */
+	      SelectSimpleCol (pEl);
+	      LastSelectedElement = pEl;
+	    }
+	  
+	  else
+	    {
+	      if (TypeHasException (EXC_ID_Compound_Column, pEl->ElTypeNumber,
+				    pEl->ElStructSchema))
+		/* selection d'un element Compound_Column */
+		{
+		  if (pEl->ElFirstChild != NULL)
+		    if (pEl->ElFirstChild->ElNext != NULL)
+		      /* descend a la premiere sous-Column */
+		      pE = pEl->ElFirstChild->ElNext->ElFirstChild;
+		}
+	      else if (TypeHasException (EXC_ID_Sub_Columns, pEl->ElTypeNumber,
+					 pEl->ElStructSchema))
+		/* selection d'un element Sous Column */
+		pE = pEl->ElFirstChild;
+	      
+	      else if (TypeHasException (EXC_ID_The_Columns, pEl->ElTypeNumber,
+					 pEl->ElStructSchema))
+		/* selection d'un element Les Column */
+		pE = pEl->ElFirstChild;
+	      
+	      /* traite toutes les sous-Columns */
+	      while (pE != NULL && *ret) /* pb BUG ret ?? */
+		{
+		  if (TypeHasException (EXC_ID_Simple_Column,
+					pE->ElTypeNumber, pE->ElStructSchema))
+		    /* c'est une Column simple */
+		    SelectSimpleCol (pE);
+		  else
+		    TableSelection (pE, pDoc, selExtension, ret);
+		  pE = pE->ElNext;
+		}
+	      LastSelectedElement = pEl;
 	     }
-
-	   else
-	     {
-		if (TypeHasException (EXC_ID_Compound_Column, pEl->ElTypeNumber, pEl->ElStructSchema))
-		   /* selection d'un element Compound_Column */
-		  {
-		     if (pEl->ElFirstChild != NULL)
-			if (pEl->ElFirstChild->ElNext != NULL)
-			   /* descend a la premiere sous-Column */
-			   pE = pEl->ElFirstChild->ElNext->ElFirstChild;
-		  }
-		else if (TypeHasException (EXC_ID_Sub_Columns, pEl->ElTypeNumber, pEl->ElStructSchema))
-		   /* selection d'un element Sous Column */
-		   pE = pEl->ElFirstChild;
-
-		else if (TypeHasException (EXC_ID_The_Columns, pEl->ElTypeNumber, pEl->ElStructSchema))
-		   /* selection d'un element Les Column */
-		   pE = pEl->ElFirstChild;
-
-		/* traite toutes les sous-Columns */
-		while (pE != NULL && *ret) /* pb BUG ret ?? */
-		  {
-		     if (TypeHasException (EXC_ID_Simple_Column, pE->ElTypeNumber, pE->ElStructSchema))
-			/* c'est une Column simple */
-			SelectSimpleCol (pE);
-		     else
-			TableSelection (pE, pDoc, selExtension, ret);
-		     pE = pE->ElNext;
-		  }
-		LastSelectedElement = pEl;
-	     }
-     }
+	}
+    }
 }
 
 /* LastSavedIsAColumn       Verifie si le premier element du buffer */
@@ -1243,7 +1262,9 @@ PtrDocument         pDoc;
      {
 	pElRow = FwdSearchTypedElem (pElRow, RowType, pCol->ElStructSchema);
 	if (pElRow != NULL)
-	   if (!ElemIsWithinSubtree (pElRow, pElTheRows))	/* la ligne founde ne fait pas partie du tableau */
+	  {
+	   if (!ElemIsWithinSubtree (pElRow, pElTheRows))
+	     /* la ligne trouvee ne fait pas partie du tableau */
 	      pElRow = NULL;
 	   else
 	     {
@@ -1287,6 +1308,7 @@ PtrDocument         pDoc;
 		NCreatedElements++;
 		CreatedElement[NCreatedElements - 1] = pNCell;
 	     }
+	  }
      }
 
    /* a-t-on colle le nombre voulu de cellules ? */
@@ -1509,7 +1531,9 @@ PtrDocument         pDoc;
 		  while (pE != NULL)
 		    {
 		       pE = FwdSearchTypedElem (pE, colSimpleType, pElPasted->ElStructSchema);
-		       if (pE != NULL)	/* on a found' une Column simple */
+		       if (pE != NULL)
+			 /* on a trouve' une Column simple */
+			 {
 			  if (ElemIsWithinSubtree (pE, pElPasted))
 			    {
 			       nbPastedCols++;
@@ -1518,6 +1542,7 @@ PtrDocument         pDoc;
 			    }
 			  else
 			     pE = NULL;
+			 }
 		    }
 	       }
 
@@ -1717,11 +1742,15 @@ ThotBool             deleteAttr;
    /* accede a l'element designe' par l'attribut */
    pElRef = ReferredElement (pAttr->AeAttrReference, &IdentDoc, &pDoc);
    if (pElRef != NULL)
-      if (AttrHasException (EXC_ID_Extens_Vertic, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+     {
+      if (AttrHasException (EXC_ID_Extens_Vertic, pAttr->AeAttrNum,
+			    pAttr->AeAttrSSchema))
 	 /* c'est l'attribut Debordement_vert */
 	 verif = TRUE;
-      else if (AttrHasException (EXC_ID_Extens_Horiz, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+      else if (AttrHasException (EXC_ID_Extens_Horiz, pAttr->AeAttrNum,
+				 pAttr->AeAttrSSchema))
 	 /* c'est l'attribut Debordement_horiz */
+	{
 	 if (pElFirst != pElLast)
 	    /* l'attribut doit s'appliquer a plusieurs elements, erreur */
 	    error = TRUE;
@@ -1736,6 +1765,8 @@ ThotBool             deleteAttr;
 	      else
 		 verif = TRUE;
 	   }
+	}
+     }
    if (verif)
       /* verifie que les elements qui doivent porter l'attribut sont */
       /* tous des Cellules de tableau et qu'ils sont avant l'element */
@@ -1747,7 +1778,8 @@ ThotBool             deleteAttr;
 	/* parcourt les elements auxquels il faut appliquer l'attribut */
 	while (pEl != NULL && !error)
 	  {
-	     if (!TypeHasException (EXC_ID_Cell, pEl->ElTypeNumber, pEl->ElStructSchema))
+	     if (!TypeHasException (EXC_ID_Cell, pEl->ElTypeNumber,
+				    pEl->ElStructSchema))
 		/* l'element n'est pas une cellule, erreur */
 		error = TRUE;
 	     else if (!ElemIsBefore (pEl, pElRef))
@@ -1778,10 +1810,12 @@ ThotBool             deleteAttr;
      }
    if (error)
       /* il y a erreur, on annule ou supprime l'attribut */
+     {
       if (deleteAttr)
 	 DeleteAttribute (pElFirst, pAttr);
       else
 	 DeleteReference (pAttr->AeAttrReference);
+     }
 }
 
 

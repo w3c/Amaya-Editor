@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -423,6 +423,7 @@ ThotBool            removeAbsBox;
 
 				 /* reporte les references au 2eme element sur le premier */
 				 if (pEl2->ElReferredDescr != NULL)
+				   {
 				    /* le 2eme element est reference */
 				    if (pEl1->ElReferredDescr == NULL)
 				       /* le premier element n'est pas reference' */
@@ -460,6 +461,7 @@ ThotBool            removeAbsBox;
 					      pRef2 = pRef2->RdNext;
 					   }
 				      }
+				   }
 				 pEl2->ElText = NULL;
 				 *pFreeEl = pEl2;
 				 pEl2->ElVolume = 0;
@@ -613,6 +615,7 @@ PtrTextBuffer       pBuf;
       /* les deux sont vides, egalite' */
       equal = TRUE;
    else if (pBuf != NULL && String != NULL)
+     {
       if (String[0] == EOS && pBuf->BuLength == 0)
 	 equal = TRUE;
       else
@@ -643,6 +646,7 @@ PtrTextBuffer       pBuf;
 	   if (pBuf != NULL || lenRest > 0)
 	      equal = FALSE;
 	}
+     }
    return equal;
 }
 

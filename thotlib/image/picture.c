@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -748,8 +748,8 @@ PtrBox       box;
 {
   ViewFrame*        pFrame;
   PictureScaling    picPresent;
-  int               delta;
 #ifdef _WINDOWS
+  int               delta;
   HDC               hMemDC;
   BITMAP            bm;
   HBITMAP           bitmap;
@@ -1393,6 +1393,8 @@ int                 hlogo;
 	   w = (int) ((float) imageDesc->PicWArea * scaleY);
 	 }
        break;
+     default:
+       break;
      }
    
 #ifndef _WINDOWS
@@ -1867,30 +1869,36 @@ PictInfo           *imageDesc;
 	{
 #ifndef _WINDOWS
 	  if (box != NULL)
+	    {
 	    /* set the colors of the  graphic context GC */
 	    if (TtWDepth == 1)
 	      {
 		/* Black and white screen */
 		XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
-		XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (BackgroundColor[frame]));
+		XSetBackground (TtDisplay, TtGraphicGC,
+				ColorPixel (BackgroundColor[frame]));
 	      }
 	    else if (pAb->AbSensitive && !pAb->AbPresentationBox)
 	      {
 		/* Set active Box Color */
 		XSetForeground (TtDisplay, TtGraphicGC, Box_Color);
 		XSetForeground (TtDisplay, GCpicture, Box_Color);
-		XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (pAb->AbBackground));
+		XSetBackground (TtDisplay, TtGraphicGC,
+				ColorPixel (pAb->AbBackground));
 	      }
 	    else
 	      {
 		/* Set Box Color */
-		XSetForeground (TtDisplay, TtGraphicGC, ColorPixel (pAb->AbForeground));
-		XSetForeground (TtDisplay, GCpicture, ColorPixel (pAb->AbForeground));
-		XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (pAb->AbBackground));
+		XSetForeground (TtDisplay, TtGraphicGC,
+				ColorPixel (pAb->AbForeground));
+		XSetForeground (TtDisplay, GCpicture,
+				ColorPixel (pAb->AbForeground));
+		XSetBackground (TtDisplay, TtGraphicGC,
+				ColorPixel (pAb->AbBackground));
 	      }
+	    }
 #endif /* _WINDOWS */
 	}
-      
       if (PictureHandlerTable[typeImage].Produce_Picture != NULL)
 	{
 	  if (typeImage >= InlineHandlers)

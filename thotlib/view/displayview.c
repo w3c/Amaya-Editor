@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -253,6 +253,7 @@ int		view;
         /* look for the first ancestor abstract box that has a next sibling */
 	pAb = pParentAb;
 	if (pAb)
+	  {
 	   if (pAb->AbNext)
 	      pAb = pAb->AbNext;
 	   else
@@ -269,6 +270,7 @@ int		view;
 		    }
 	         }
 	      }
+	  }
 	}
       while (pAb);
       }
@@ -1332,11 +1334,13 @@ DisplayMode         newDisplayMode;
 	/* il y a effectivement changement de mode */
 	{
 	  if (oldDisplayMode == DisplayImmediately)
-	    /* le document passe en mode affichage differe ou sans calcul d'image */
+	    /* le document passe en mode affichage differe ou sans calcul
+	       d'image */
 	    {
-	      /* si on passe au mode sans calcul d'image il faut detruire l'image */
+	      /* si on passe au mode sans calcul d'image il faut detruire
+		 l'image */
 	      if (newDisplayMode == NoComputedDisplay)
-		  DestroyImage (pDoc);
+		DestroyImage (pDoc);
 	      else if (newDisplayMode == SuspendDisplay)
 		TtaClearViewSelections ();
 	      /* on met a jour le mode d'affichage */
@@ -1348,16 +1352,16 @@ DisplayMode         newDisplayMode;
 	    {
 	      /* on met a jour le mode d'affichage */
 	      documentDisplayMode[document - 1] = newDisplayMode;
-
+	      
               if (oldDisplayMode == NoComputedDisplay)
 		/* il faut recalculer l'image */
 		RebuildImage (pDoc);
 	      else if (oldDisplayMode == SuspendDisplay)
 		AbstractImageUpdated (pDoc);
-
+	      
               /* reaffiche ce qui a deja ete prepare' */
               RedisplayDocViews (pDoc);
-
+	      
 	      if (!documentNewSelection[document - 1].SDSelActive)
 		{
 		  /* la selection n'a pas change', on la rallume */
@@ -1370,23 +1374,24 @@ DisplayMode         newDisplayMode;
 		{
 		  if (documentNewSelection[document - 1].SDElemSel == NULL)
 		    /* c'est une annulation de selection */
-		    if (ThotLocalActions[T_resetsel])
-		      (*ThotLocalActions[T_resetsel]) (pDoc);
+		    {
+		      if (ThotLocalActions[T_resetsel])
+			(*ThotLocalActions[T_resetsel]) (pDoc);
+		    }
 		  else
 		    {
 		      /* il y a effectivement une selection a etablir */
 		      if (documentNewSelection[document - 1].SDPremCar == 0 &&
 			  documentNewSelection[document - 1].SDDerCar == 0)
 			/* selection d'un element complet */
-			SelectElement (pDoc,
-				       (PtrElement) (documentNewSelection[document - 1].SDElemSel), TRUE, TRUE);
+			SelectElement (pDoc, (PtrElement) (documentNewSelection[document - 1].SDElemSel), TRUE, TRUE);
 		      else
 			/* selection d'une chaine */
 			if (ThotLocalActions[T_selstring])
 			  (*ThotLocalActions[T_selstring]) (pDoc,
-							   (PtrElement) (documentNewSelection[document - 1].SDElemSel),
-							   documentNewSelection[document - 1].SDPremCar,
-							   documentNewSelection[document - 1].SDDerCar);
+			      (PtrElement) (documentNewSelection[document - 1].SDElemSel),
+			      documentNewSelection[document - 1].SDPremCar,
+			      documentNewSelection[document - 1].SDDerCar);
 		      /* il n'y a plus de selection a etablir */
 		      documentNewSelection[document - 1].SDElemSel = NULL;
 		    }
@@ -1396,8 +1401,8 @@ DisplayMode         newDisplayMode;
 		    {
 		      if (ThotLocalActions[T_extendsel])
 			(*ThotLocalActions[T_extendsel]) ((PtrElement) (documentNewSelection[document - 1].SDElemExt),
-							  documentNewSelection[document - 1].SDCarExt,
-							  FALSE, FALSE, FALSE);
+				documentNewSelection[document - 1].SDCarExt,
+				FALSE, FALSE, FALSE);
 		      /* il n'y a plus d'extension de selection a etablir */
 		      documentNewSelection[document - 1].SDElemExt = NULL;
 		    }
@@ -1421,7 +1426,8 @@ DisplayMode         newDisplayMode;
 	      /* au mode d'affichage differe'  */
 	      RebuildImage (pDoc);
 	    }
-	  else if (oldDisplayMode == SuspendDisplay &&  newDisplayMode == DeferredDisplay)
+	  else if (oldDisplayMode == SuspendDisplay &&
+		   newDisplayMode == DeferredDisplay)
 	    {
 	      /* on met a jour le mode d'affichage */
 	      documentDisplayMode[document - 1] = newDisplayMode;
@@ -1430,7 +1436,7 @@ DisplayMode         newDisplayMode;
 	  else
 	    /* on met a jour le mode d'affichage */
 	    documentDisplayMode[document - 1] = newDisplayMode;
-	    
+
 	}
     }
 }

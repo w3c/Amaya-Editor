@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -671,7 +671,9 @@ int                 val;
 	 case 2:
 	   /* Passer apres maj du dictionnaire */
 	   /* mettre CurrentWord dans le dictionnaire */
-	   if (ChkrElement != NULL)	/* Sauf au 1er lancement */
+	   if (ChkrElement != NULL)
+	     {
+	     /* Sauf au 1er lancement */
 	     if (CorrectWord[0] != EOS &&
 		 (ustrcmp (CorrectWord, ChkrCorrection[1]) != 0))
 	       {
@@ -685,6 +687,7 @@ int                 val;
 		 if (!CheckWord (CurrentWord, ChkrLanguage, ChkrFileDict))
 		   AddWord (CurrentWord, &ChkrFileDict);
 	       }
+	     }
 	   break;
 	 case 3:
 	   /* ToReplace */

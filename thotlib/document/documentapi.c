@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1392,6 +1392,7 @@ CHAR_T*             name;
 
    ret = NULL;
    if (pSS)
+     {
       if (ustrcmp (name, pSS->SsName) == 0)
 	 /* The schema itself */
 	 ret = (SSchema) pSS;
@@ -1407,6 +1408,7 @@ CHAR_T*             name;
 	 if (ret == NULL)
 	    ret = ChSchStruct (pSS->SsNextExtens, name);
 	 }
+     }
    return ret;
 }
 

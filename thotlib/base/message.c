@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -75,6 +75,7 @@ CHAR_T*             pBuffer;
 	/* Teste si on est en presence de deux backslashs ou */
 	/* si on se trouve devant un caractere special */
 	if (pBuffer[i] != WC_EOS)
+	  {
 	   if (pBuffer[i + 1] == TEXT('\\'))
 	     {
 		/* On est dans le cas de deux backslashs consecutifs;
@@ -123,6 +124,7 @@ CHAR_T*             pBuffer;
 			    break;
 		      }
 	     }
+	  }
      }
    result[j] = WC_EOS;
    return (result);
@@ -153,6 +155,7 @@ char*               pBuffer;
 	/* Teste si on est en presence de deux backslashs ou */
 	/* si on se trouve devant un caractere special */
 	if (pBuffer[i] != EOS)
+	  {
 	   if (pBuffer[i + 1] == '\\')
 	     {
 		/* On est dans le cas de deux backslashs consecutifs;
@@ -201,6 +204,7 @@ char*               pBuffer;
 			    break;
 		      }
 	     }
+	  }
      }
    ISOresult[j] = EOS;
    return (ISOresult);

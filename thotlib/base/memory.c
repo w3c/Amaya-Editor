@@ -57,26 +57,9 @@ int                 NbFree_DescCopy;
 int                 NbUsed_DescCopy;
 PtrCopyDescr        PtFree_DescCopy;
 
-
 int                 NbFree_Reference;
 int                 NbUsed_Reference;
 PtrReference        PtFree_Reference;
-
-int                 NbFree_OutputRef;
-int                 NbUsed_OutputRef;
-PtrOutReference     PtFree_OutputRef;
-
-int                 NbFree_ElemRefChng;
-int                 NbUsed_ElemRefChng;
-PtrChangedReferredEl PtFree_ElemRefChng;
-
-int                 NbFree_InputRef;
-int                 NbUsed_InputRef;
-PtrEnteringReferences PtFree_InputRef;
-
-int                 NbFree_UpdateRefFile;
-int                 NbUsed_UpdateRefFile;
-PtrReferenceChange  PtFree_UpdateRefFile;
 
 int                 NbFree_AbsBox;
 int                 NbUsed_AbsBox;
@@ -296,38 +279,6 @@ void                FreeAll ()
       TtaFreeMemory (ptr);
     }
   NbFree_Reference = 0;
-    
-  while (PtFree_OutputRef != NULL)
-    {
-      ptr = (void *)PtFree_OutputRef;
-      PtFree_OutputRef = PtFree_OutputRef->OrNext;
-      TtaFreeMemory (ptr);
-    }
-  NbFree_OutputRef = 0;
-    
-  while (PtFree_ElemRefChng != NULL)
-    {
-      ptr = (void *)PtFree_ElemRefChng;
-      PtFree_ElemRefChng = PtFree_ElemRefChng->CrNext;
-      TtaFreeMemory (ptr);
-    }
-  NbFree_ElemRefChng = 0;
-    
-  while (PtFree_InputRef != NULL)
-    {
-      ptr = (void *)PtFree_InputRef;
-      PtFree_InputRef = PtFree_InputRef->ErNext;
-      TtaFreeMemory (ptr);
-    }
-  NbFree_InputRef = 0;
-    
-  while (PtFree_UpdateRefFile != NULL)
-    {
-      ptr = (void *)PtFree_UpdateRefFile;
-      PtFree_UpdateRefFile = PtFree_UpdateRefFile->RcNext;
-      TtaFreeMemory (ptr);
-    }
-  NbFree_UpdateRefFile = 0;
     
   while (PtFree_AbsBox != NULL)
     {
@@ -635,22 +586,6 @@ void                InitEditorMemory ()
    NbFree_Reference = 0;
    NbUsed_Reference = 0;
    PtFree_Reference = NULL;
-
-   NbFree_OutputRef = 0;
-   NbUsed_OutputRef = 0;
-   PtFree_OutputRef = NULL;
-
-   NbFree_ElemRefChng = 0;
-   NbUsed_ElemRefChng = 0;
-   PtFree_ElemRefChng = NULL;
-
-   NbFree_InputRef = 0;
-   NbUsed_InputRef = 0;
-   PtFree_InputRef = NULL;
-
-   NbFree_UpdateRefFile = 0;
-   NbUsed_UpdateRefFile = 0;
-   PtFree_UpdateRefFile = NULL;
 
    NbFree_AbsBox = 0;
    NbUsed_AbsBox = 0;
@@ -1206,223 +1141,6 @@ PtrReference        pRef;
 }
 
 /*----------------------------------------------------------------------
-   GetOutputRef alloue un descripteur de reference sortante.       
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetOutputRef (PtrOutReference * pRS)
-#else  /* __STDC__ */
-void                GetOutputRef (pRS)
-PtrOutReference    *pRS;
-#endif /* __STDC__ */
-
-{
-   PtrOutReference     pNewRS;
-
-   if (PtFree_OutputRef == NULL)
-      pNewRS = (PtrOutReference) TtaGetMemory (sizeof (OutReference));
-   else
-     {
-	pNewRS = PtFree_OutputRef;
-	PtFree_OutputRef = pNewRS->OrNext;
-	NbFree_OutputRef--;
-     }
-   *pRS = pNewRS;
-   if (pNewRS)
-     {
-       memset (pNewRS, 0, sizeof (OutReference));
-       pNewRS->OrNext = NULL;
-       pNewRS->OrLabel[0] = EOS;
-       ClearDocIdent (&(pNewRS->OrDocIdent));
-       NbUsed_OutputRef++;
-     }
-}
-
-/*----------------------------------------------------------------------
-   FreeOutputRef libere un descripteur de reference sortante.      
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FreeOutputRef (PtrOutReference pRS)
-#else  /* __STDC__ */
-void                FreeOutputRef (pRS)
-PtrOutReference     pRS;
-#endif /* __STDC__ */
-
-{
-#ifdef DEBUG_MEMORY
-       TtaFreeMemory (pRS);
-#else
-   pRS->OrNext = PtFree_OutputRef;
-   PtFree_OutputRef = pRS;
-   NbFree_OutputRef++;
-#endif
-   NbUsed_OutputRef--;
-}
-
-/*----------------------------------------------------------------------
-   GetChangedReferredEl alloue un descripteur de changement de reference.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetChangedReferredEl (PtrChangedReferredEl * pER)
-#else  /* __STDC__ */
-void                GetChangedReferredEl (pER)
-PtrChangedReferredEl *pER;
-#endif /* __STDC__ */
-
-{
-   PtrChangedReferredEl pNewER;
-
-   if (PtFree_ElemRefChng == NULL)
-      pNewER = (PtrChangedReferredEl) TtaGetMemory (sizeof (ChangedReferredEl));
-   else
-     {
-	pNewER = PtFree_ElemRefChng;
-	PtFree_ElemRefChng = pNewER->CrNext;
-	NbFree_ElemRefChng--;
-     }
-   *pER = pNewER;
-   if (pNewER)
-     {
-       memset (pNewER, 0, sizeof (ChangedReferredEl));
-       pNewER->CrNext = NULL;
-       pNewER->CrOldLabel[0] = EOS;
-       pNewER->CrNewLabel[0] = EOS;
-       ClearDocIdent (&(pNewER->CrOldDocument));
-       ClearDocIdent (&(pNewER->CrNewDocument));
-       pNewER->CrReferringDoc = NULL;
-       NbUsed_ElemRefChng++;
-     }
-}
-
-/*----------------------------------------------------------------------
-   FreeChangedReferredEl libere un descripteur de changement de reference
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FreeChangedReferredEl (PtrChangedReferredEl pER)
-#else  /* __STDC__ */
-void                FreeChangedReferredEl (pER)
-PtrChangedReferredEl pER;
-#endif /* __STDC__ */
-
-{
-#ifdef DEBUG_MEMORY
-       TtaFreeMemory (pER);
-#else
-   pER->CrNext = PtFree_ElemRefChng;
-   PtFree_ElemRefChng = pER;
-   NbFree_ElemRefChng++;
-#endif
-   NbUsed_ElemRefChng--;
-}
-
-/*----------------------------------------------------------------------
-   GetInputRef alloue un descripteur de reference entrante.        
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetInputRef (PtrEnteringReferences * pRE)
-#else  /* __STDC__ */
-void                GetInputRef (pRE)
-PtrEnteringReferences *pRE;
-#endif /* __STDC__ */
-
-{
-   PtrEnteringReferences pNewRE;
-
-   if (PtFree_InputRef == NULL)
-      pNewRE = (PtrEnteringReferences) TtaGetMemory (sizeof (EnteringReferences));
-   else
-     {
-	pNewRE = PtFree_InputRef;
-	PtFree_InputRef = pNewRE->ErNext;
-	NbFree_InputRef--;
-     }
-   *pRE = pNewRE;
-   if (pNewRE)
-     {
-       memset (pNewRE, 0, sizeof (EnteringReferences));
-       pNewRE->ErNext = NULL;
-       pNewRE->ErFirstReferredEl = NULL;
-       ClearDocIdent (&(pNewRE->ErDocIdent));
-       pNewRE->ErFileName[0] = EOS;
-       NbUsed_InputRef++;
-     }
-}
-
-/*----------------------------------------------------------------------
-   FreeInputRef libere un descripteur de reference entrante.       
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FreeInputRef (PtrEnteringReferences pRE)
-#else  /* __STDC__ */
-void                FreeInputRef (pRE)
-PtrEnteringReferences pRE;
-
-#endif /* __STDC__ */
-
-{
-#ifdef DEBUG_MEMORY
-       TtaFreeMemory (pRE);
-#else
-   pRE->ErNext = PtFree_InputRef;
-   PtFree_InputRef = pRE;
-   NbFree_InputRef++;
-#endif
-   NbUsed_InputRef--;
-}
-
-/*----------------------------------------------------------------------
-   GetFileRefChng alloue un descripteur de changement de reference 
-   fichier.                                                
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetFileRefChng (PtrReferenceChange * pFRC)
-#else  /* __STDC__ */
-void                GetFileRefChng (pFRC)
-PtrReferenceChange *pFRC;
-#endif /* __STDC__ */
-
-{
-   PtrReferenceChange  pNewFRC;
-
-   if (PtFree_UpdateRefFile == NULL)
-      pNewFRC = (PtrReferenceChange) TtaGetMemory (sizeof (ReferenceChange));
-   else
-     {
-	pNewFRC = PtFree_UpdateRefFile;
-	PtFree_UpdateRefFile = pNewFRC->RcNext;
-	NbFree_UpdateRefFile--;
-     }
-   *pFRC = pNewFRC;
-   if (pNewFRC)
-     {
-       memset (pNewFRC, 0, sizeof (ReferenceChange));
-       NbUsed_UpdateRefFile++;
-     }
-}
-
-/*----------------------------------------------------------------------
-   FreeFileRefChng libere un descripteur de changement de reference
-   fichier                                                 
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FreeFileRefChng (PtrReferenceChange pFRC)
-#else  /* __STDC__ */
-void                FreeFileRefChng (pFRC)
-PtrReferenceChange  pFRC;
-#endif /* __STDC__ */
-
-{
-#ifdef DEBUG_MEMORY
-       TtaFreeMemory (pFRC);
-#else
-   pFRC->RcFirstChange = NULL;
-   pFRC->RcNext = PtFree_UpdateRefFile;
-   PtFree_UpdateRefFile = pFRC;
-   NbFree_UpdateRefFile++;
-#endif
-   NbUsed_UpdateRefFile--;
-}
-
-/*----------------------------------------------------------------------
    GetAbstractBox alloue un pave.                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1546,9 +1264,6 @@ PtrDocument         pDoc;
        pDoc->DocViewSubTree[i] = NULL;
        pDoc->DocViewModifiedAb[i] = NULL;
      }
-   pDoc->DocNewOutRef = NULL;
-   pDoc->DocDeadOutRef = NULL;
-   pDoc->DocChangedReferredEl = NULL;
    pDoc->DocLabels = NULL;
 #ifdef DEBUG_MEMORY
    TtaFreeMemory (pDoc);

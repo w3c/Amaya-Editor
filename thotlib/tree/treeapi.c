@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -823,8 +823,6 @@ Document            document;
 	  {
 	     pDoc = LoadedDocument[document - 1];
 	     pEl = (PtrElement) element;
-	     RegisterExternalRef (pEl, pDoc, FALSE);
-	     RegisterDeletedReferredElem (pEl, pDoc);
 	     root = (pEl->ElParent == NULL);
 #ifndef NODISPLAY
 	     UndisplayElement (pEl, document);
@@ -1347,8 +1345,6 @@ Document            document;
       /* Parameter document is ok */
      {
 	pDoc = LoadedDocument[document - 1];
-	RegisterExternalRef ((PtrElement) element, pDoc, FALSE);
-	RegisterDeletedReferredElem ((PtrElement) element, pDoc);
 	root = (((PtrElement) element)->ElParent == NULL);
 #ifndef NODISPLAY
 	UndisplayElement ((PtrElement) element, document);

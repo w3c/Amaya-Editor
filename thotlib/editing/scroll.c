@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * Handle scrolling in document frames
  *
@@ -84,24 +75,27 @@ int                 selection;
 	       {
 		  /* A priori pas de paves ajoutes */
 		  add = FALSE;
-		  /* Au plus, la limite du document + le debordement vertical */
+		  /* Au plus, la limite du document + le debordement vertical*/
 		  GetSizesFrame (frame, &lframe, &hframe);
 		  if (pAbb->AbTruncatedTail)
 		     max = delta;
 		  else
-		     max = srcbox->BxYOrg + srcbox->BxHeight - pFrame->FrYOrg - hframe;
+		     max = srcbox->BxYOrg + srcbox->BxHeight -
+		                            pFrame->FrYOrg - hframe;
 		  if (pAbb->AbTruncatedHead)
 		     y = delta;
 		  else
 		    {
 		       y = -pFrame->FrYOrg;
-		       /* Il faut respecter la marge initiale si elle est positive */
+		       /* Il faut respecter la marge initiale si elle est
+			  positive */
 		       if (srcbox->BxYOrg < 0)
 			  y += srcbox->BxYOrg;
 		    }
 
-		  /* Le Scroll est possible --> Calcule l'amplitude du Scroll */
+		  /* Le Scroll est possible --> Calcule l'amplitude du Scroll*/
 		  if ((delta > 0 && max > 0) || (delta < 0 && y < 0))
+		    {
 		     if (delta > 0)
 		       {
 			  /* SCROLL AVANT */
@@ -131,6 +125,7 @@ int                 selection;
 			  add = RedrawFrameTop (frame, -delta);
 			  /* On reallume eventuellement une selection cachee */
 		       }
+		    }
 
 		  /* recompute scrolls */
 		  CheckScrollingWidth (frame);
@@ -191,7 +186,7 @@ int                 selection;
 	  /* Right limit is the current scroll width + extra */
 	  max = min + FrameTable[frame].FrScrollWidth - lframe;
 	  /* Left limit is the current scroll width - extra */
-	  /* keep the right margin if the document is smaller than the window */
+	  /* keep the right margin if the document is smaller than the window*/
 	  if (srcbox->BxXOrg  < 0)
 	    min += srcbox->BxXOrg;
 
@@ -208,7 +203,8 @@ int                 selection;
 		  width = lframe - x + 1;
 		  Scroll (frame, width, height, x, 0, 0, 0);
 		  width = pFrame->FrXOrg + lframe;
-		  DefClip (frame, width, pFrame->FrYOrg, width + x, pFrame->FrYOrg + hframe);
+		  DefClip (frame, width, pFrame->FrYOrg, width + x,
+			   pFrame->FrYOrg + hframe);
 		}
 	      else
 		{
@@ -219,7 +215,8 @@ int                 selection;
 		  width = lframe - x + 1;
 		  Scroll (frame, width, height, 0, 0, x, 0);
 		  width = pFrame->FrXOrg;
-		  DefClip (frame, width - x, pFrame->FrYOrg, width, pFrame->FrYOrg + hframe);
+		  DefClip (frame, width - x, pFrame->FrYOrg, width,
+			   pFrame->FrYOrg + hframe);
 		}
 
 	      /* display the rest of the window */
@@ -271,19 +268,23 @@ int                 height;
 		     JumpIntoView (frame, 0);
 		  else
 		    {
-		       /* Regarde si le cadrage en haut n'est pas deja effectue */
+		       /* Regarde si le cadrage en haut n'est pas deja
+			  effectue */
 		       delta = pBox->BxYOrg - shift;
 		       if (delta < 0)
-			  /* Cadre la boite racine sur le bord gauche de la fenetre */
+			  /* Cadre la boite racine sur le bord gauche de la
+			     fenetre */
 			  VerticalScroll (frame, delta, 1);
 		    }
 	       }
-	     else if (y == height && !pFrame->FrAbstractBox->AbTruncatedTail)	/* cadrage en bas */
+	     else if (y == height && !pFrame->FrAbstractBox->AbTruncatedTail)
+	       /* cadrage en bas */
 	       {
 		  /* Recupere la hauteur de la fenetre */
 		  GetSizesFrame (frame, &delta, &height);
 		  /* Regarde si le cadrage en bas n'est pas deja effectue */
-		  delta = pBox->BxYOrg + pBox->BxHeight - pFrame->FrYOrg - height;
+		  delta = pBox->BxYOrg + pBox->BxHeight - pFrame->FrYOrg -
+		                                                      height;
 		  if (delta > 0)
 		     /* Cadre la boite racine en bas de la fenetreentre */
 		     VerticalScroll (frame, delta, 1);
@@ -352,7 +353,8 @@ int                *total;
    if (pFrame->FrAbstractBox == NULL)
       return -1;
    /* Regarde si l'image est complete */
-   else if (!pFrame->FrAbstractBox->AbTruncatedHead && !pFrame->FrAbstractBox->AbTruncatedTail)
+   else if (!pFrame->FrAbstractBox->AbTruncatedHead &&
+	    !pFrame->FrAbstractBox->AbTruncatedTail)
      {
 	premiere = pFrame->FrAbstractBox->AbBox;
 	*total = premiere->BxHeight;
@@ -363,8 +365,8 @@ int                *total;
 	/* Repere la position de l'image abstraite dans le document */
 	premiere = pFrame->FrAbstractBox->AbBox->BxNext;
 	derniere = pFrame->FrAbstractBox->AbBox->BxPrevious;
-	VolumeTree (pFrame->FrAbstractBox, premiere->BxAbstractBox, derniere->BxAbstractBox,
-		    nbCharBegin, nbCharEnd, total);
+	VolumeTree (pFrame->FrAbstractBox, premiere->BxAbstractBox,
+		    derniere->BxAbstractBox, nbCharBegin, nbCharEnd, total);
 
 	/* L'image se trouve au debut du document ? */
 	if (!pFrame->FrAbstractBox->AbTruncatedHead)
@@ -507,7 +509,8 @@ raint              *height;
    /*      +-------------+                   */
 
    /** Compute the part of the document which is not formatted **/
-   if ((!pFrame->FrAbstractBox->AbTruncatedHead) && (!pFrame->FrAbstractBox->AbTruncatedTail))
+   if ((!pFrame->FrAbstractBox->AbTruncatedHead) &&
+       (!pFrame->FrAbstractBox->AbTruncatedTail))
      {
 	/* The whole document is formatted */
 	if (pFrame->FrYOrg - pBox->BxYOrg <= 0)
@@ -520,7 +523,8 @@ raint              *height;
 	   min = - pFrame->FrYOrg + pBox->BxYOrg;	/* marge haut */
 
 	if (pBox->BxYOrg + pBox->BxHeight <= pFrame->FrYOrg + h)
-	   /* Le bas de l'Picture Concrete + le debordement du bas sont visibles */
+	   /* Le bas de l'Picture Concrete + le debordement du bas sont
+	      visibles */
 	   max = 0;
 	else if (pBox->BxYOrg + pBox->BxHeight >= pFrame->FrYOrg + h)
 	   /* le debordement du bas n'est pas visualible */
@@ -542,13 +546,17 @@ raint              *height;
 	     pBoxFirst = pBox->BxNext;	/* pBoxFirst boite terminale */
 	     pBoxLast = pBox->BxPrevious;	/* pBoxLast boite terminale */
 	     /* Elimine les boites de presentations */
-	     while (pBoxFirst->BxAbstractBox->AbPresentationBox && pBoxFirst != pBoxLast)
+	     while (pBoxFirst->BxAbstractBox->AbPresentationBox &&
+		    pBoxFirst != pBoxLast)
 		pBoxFirst = pBoxFirst->BxNext;
-	     while (pBoxLast->BxAbstractBox->AbPresentationBox && pBoxFirst != pBoxLast)
+	     while (pBoxLast->BxAbstractBox->AbPresentationBox &&
+		    pBoxFirst != pBoxLast)
 		pBoxLast = pBoxLast->BxPrevious;
 
-	     /* Evalue la hauteur et la position Y par rapport a l'image abstraite */
-	     VolumeTree (pFrame->FrAbstractBox, pBoxFirst->BxAbstractBox, pBoxLast->BxAbstractBox, &min, &max, &vtotal);
+	     /* Evalue la hauteur et la position Y par rapport a l'image
+		abstraite */
+	     VolumeTree (pFrame->FrAbstractBox, pBoxFirst->BxAbstractBox,
+			 pBoxLast->BxAbstractBox, &min, &max, &vtotal);
 	     /* min donne le volume qui precede l'Picture Concrete */
 	     /* max donne le volume qui suit l'Picture Concrete */
 
@@ -767,7 +775,8 @@ ThotBool            actif;
 	while (pBo1 != NULL && pBo1->BxAbstractBox != NULL &&
 	       pBo1->BxAbstractBox->AbVisibility < pFrame->FrVisibility)
 	  {
-	     if (pBo1->BxAbstractBox->AbSelected || pBo1 == pFrame->FrSelectionBegin.VsBox)
+	     if (pBo1->BxAbstractBox->AbSelected ||
+		 pBo1 == pFrame->FrSelectionBegin.VsBox)
 		pBo1 = pBo1->BxNext;
 	     else
 		return;		/* aucune boite n'est visible */
@@ -789,21 +798,25 @@ ThotBool            actif;
 	       {
 		 if (!pBo1->BxAbstractBox->AbHorizPos.PosUserSpecified)
 		   /* the box position is not given by the user */
+		   {
 		   if (x + dx < xmin + 10)
 		     /* scroll the window */
 		     HorizontalScroll (frame, x + dx - xmin - 10, 0);
 		   else if (x + dx > xmax - 10)
 		     /* scroll the window */
 		     HorizontalScroll (frame, x + dx - xmax + 10, 0);
+		   }
 
 		 if (!pBo1->BxAbstractBox->AbVertPos.PosUserSpecified)
 		   /* the box position is not given by the user */
+		   {
 		   if (y + pBo1->BxHeight < ymin + dy)
 		     /* scroll the window */
 		     VerticalScroll (frame, y + pBo1->BxHeight - ymin - dy, 0);
 		   else if (y > ymax - dy)
 		     /* scroll the window */
 		     VerticalScroll (frame, y - ymax + dy, 0);
+		   }
 	       }
 	  }
      }
@@ -832,7 +845,8 @@ PtrAbstractBox      pAb;
       return (FALSE);		/* pas de pave a tester */
    else if (pAb->AbBox == NULL)
       return (FALSE);		/* pas de boite a tester */
-   else if (pAb->AbVisibility < pFrame->FrVisibility || pAb->AbBox->BxType == BoGhost)
+   else if (pAb->AbVisibility < pFrame->FrVisibility ||
+	    pAb->AbBox->BxType == BoGhost)
       return (FALSE);		/* la boite n'est pas visible par definition */
    else
      {

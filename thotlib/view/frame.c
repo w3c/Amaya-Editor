@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -286,6 +286,7 @@ int                 ymax;
       pBox = pBox->BxNextBackground;
       pAb = pBox->BxAbstractBox;
       if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
+	{
 	if (pBox->BxType == BoGhost)
 	  {
 	    /* see child elements */
@@ -450,6 +451,7 @@ int                 ymax;
 				 pAb->AbBackground, pAb->AbFillPattern);
 	      }
 	  }
+	}
     }
 }
 
@@ -534,12 +536,14 @@ int                 scroll;
 		  else
 		    {
 		       if (pBox->BxYOrg > delta)
+			 {
 			  if (pBox->BxType != BoPiece && pBox->BxType != BoDotted)
 			     /* this is not a breaking box */
 			     vol += pBox->BxAbstractBox->AbVolume;
 			  else if (pBox->BxAbstractBox->AbBox->BxNexChild == pBox)
 			     /* this is the first breaking box */
 			     vol += pBox->BxAbstractBox->AbVolume;
+			 }
 		       if (pBox->BxPrevious == NULL)
 			  isbelow = FALSE;
                        else
@@ -990,9 +994,9 @@ PtrAbstractBox      subtree;
 	     /* Draw all the boxes not yet displayed */
 	     while (pBox != NULL)
 	       {
-
 		  /* Will this volume be on top ? */
 		  if (ontop)
+		    {
 		     if (pBox->BxYOrg + pBox->BxHeight < height - h / 4)
 		       {
 			  if ((pBox->BxType != BoPiece &&
@@ -1002,13 +1006,15 @@ PtrAbstractBox      subtree;
 		       }
 		     else
 			ontop = FALSE;
-
-		  if (pBox->BxAbstractBox != NULL && pBox->BxAbstractBox->AbDepth == plane)
+		    }
+		  if (pBox->BxAbstractBox != NULL &&
+		      pBox->BxAbstractBox->AbDepth == plane)
 		    {
 		       /* The box is drawn in the current plane */
 		       y = pBox->BxYOrg + pBox->BxHeight;
 
-		       /* take into account the filling of the end of the block */
+		       /* take into account the filling of the end of the
+			  block */
 		       x = pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc;
 
 		       /* Save the first visible box */

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -264,9 +264,8 @@ ThotBool		    removeExclusions
    ThotBool            ret;
    int                 i;
    PathBuffer          directoryName;
-   PtrChangedReferredEl pChngRef;
    FILE               *pivotFile;
-   CHAR_T                text[MAX_TXT_LEN];
+   CHAR_T              text[MAX_TXT_LEN];
 
    ret = FALSE;
    if (pDoc != NULL)
@@ -320,31 +319,6 @@ ThotBool		    removeExclusions
 		    {
 		       /* le nom de fichier devient le nom du document */
 		       ret = TRUE;
-		       /* lit le fichier des references externes s'il existe */
-		       /* dans le meme directory que le fichier .PIV */
-		       FindCompleteName (pDoc->DocDName, TEXT("EXT"),
-					 directoryName, text, &i);
-		       pivotFile = TtaReadOpen (text);
-		       if (pivotFile != 0)
-			 {
-			    LoadEXTfile (pivotFile, pDoc, NULL, FALSE);
-			    TtaReadClose (pivotFile);
-			 }
-		       /* lit le fichier de mise a jour des references
-			  sortantes s'il existe dans le meme directory que
-			  le fichier .PIV */
-		       FindCompleteName (pDoc->DocDName, TEXT("REF"),
-					 directoryName, text, &i);
-		       pivotFile = TtaReadOpen (text);
-		       if (pivotFile != 0)
-			 {
-			    LoadREFfile (pivotFile, &pChngRef);
-			    TtaReadClose (pivotFile);
-			    /* traite les mises a jour de */
-			    /* references sortantes */
-			    if (pChngRef != NULL)
-			       UpdateREFdescriptors (pChngRef, pDoc);
-			 }
 		       /* libere les descripteurs d'element reference'
 			  inutilise's */
 		       FreeUnusedReferredElemDesc (pDoc);
@@ -370,9 +344,6 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    int                  i, view;
-   PtrOutReference      pOutRef, pNextOutRef;
-   PtrChangedReferredEl pChnRef, pNextChnRef;
-   PtrExternalDoc       pExtDoc, pNextExtDoc;
 
    if (pDoc != NULL)
      {
@@ -392,40 +363,6 @@ PtrDocument         pDoc;
 	/* libere le 1er descripteur de reference (bidon) */
 	FreeReferredDescr (pDoc->DocReferredEl);
 	pDoc->DocReferredEl = NULL;
-	/* libere les descripteurs de references sortantes creees */
-	pOutRef = pDoc->DocNewOutRef;
-	while (pOutRef != NULL)
-	  {
-	     pNextOutRef = pOutRef->OrNext;
-	     FreeOutputRef (pOutRef);
-	     pOutRef = pNextOutRef;
-	  }
-	/* libere les descripteurs de references sortantes detruites */
-	pOutRef = pDoc->DocDeadOutRef;
-	while (pOutRef != NULL)
-	  {
-	     pNextOutRef = pOutRef->OrNext;
-	     FreeOutputRef (pOutRef);
-	     pOutRef = pNextOutRef;
-	  }
-	/* libere les decripteurs d'element reference's change's */
-	pChnRef = pDoc->DocChangedReferredEl;
-
-	while (pChnRef != NULL)
-	  {
-	     pNextChnRef = pChnRef->CrNext;
-	     pExtDoc = pChnRef->CrReferringDoc;
-	     pChnRef->CrReferringDoc = NULL;
-	     while (pExtDoc != NULL)
-	       {
-		  pNextExtDoc = pExtDoc->EdNext;
-		  FreeExternalDoc (pExtDoc);
-		  pExtDoc = pNextExtDoc;
-	       }
-	     FreeChangedReferredEl (pChnRef);
-	     pChnRef = pNextChnRef;
-	  }
-
      }
 }
 
@@ -930,6 +867,7 @@ PtrDocument         pDoc;
 	   stop = TRUE;
 	else if (strcmp (pRefD->ReReferredLabel, label) == 0)
 	   /* le label correspond */
+	  {
 	   if (DocIdentIsNull (docIdent) && !pRefD->ReExternalRef)
 	      /* on cherche une reference interne et c'en est une */
 	      stop = TRUE;	/* trouve' */
@@ -937,6 +875,7 @@ PtrDocument         pDoc;
 	      /* on cherche une reference externe et c'en est une */
 	      if (SameDocIdent (docIdent, pRefD->ReExtDocument))
 		 stop = TRUE;
+	  }
      }
    while (!stop);
    if (pRefD == NULL)
@@ -1042,6 +981,7 @@ char*               tag;
 	 PivotError (pivFile, TEXT("PivotError: Nature Num"));
        /* lit le tag de type qui suit */
        if (!error)
+	 {
 	 if (!TtaReadByte (pivFile, tag))
 	   PivotError (pivFile, TEXT("PivotError: TypeType"));
          /* teste si le numero lu est celui de la structure generique du doc.*/
@@ -1070,8 +1010,10 @@ char*               tag;
 		   *pSS = (*pSS)->SsRule[rule - 1].SrSSchemaNat;
 	       }
 	   }
+	 }
      }
    if (!error)
+     {
      if (*tag == C_PIV_TYPE)
        {
 	 /* lit le numero de type de l'element */
@@ -1086,7 +1028,7 @@ char*               tag;
 	 rule = 0;
 	 PivotError (pivFile, TEXT("PivotError: Type"));
        }
-   
+     }
    return rule;
 }
 
@@ -1417,10 +1359,12 @@ PtrAttribute       *pAttr;
 	 /* ignore les attributs definis dans les anciennes extensions */
 	 /* ExtCorr et ExtMot */
 	 if (pSchAttr->SsExtension)
+	   {
 	   if (ustrcmp (pSchAttr->SsName, TEXT("ExtCorr")) == 0)
 	     create = FALSE;
 	   else if (ustrcmp (pSchAttr->SsName, TEXT("ExtMot")) == 0)
 	     create = FALSE;
+	   }
        if (!create)
 	 *pAttr = NULL;
        else
@@ -3627,9 +3571,7 @@ ThotBool		    removeExclusions
    PtrReferredDescr    pRefD, pNextRefD;
    SRule              *pSRule;
    NotifyDialog        notifyDoc;
-   BinFile             EXTfile;
    int                 i, j, assoc, rule, typeRead;
-   CHAR_T                buffer[MAX_TXT_LEN];
    char                tag;
    ThotBool            structureOK, createPages, found, ok;
 
@@ -3686,20 +3628,7 @@ ThotBool		    removeExclusions
 		 }
 	     }
 	 }
-       /* Lit d'abord dans le fichier .EXT les labels des elements */
-       /* reference's par d'autres documents (on en aura besoin */
-       /* pendant la lecture du fichier .PIV). On cherche ce */
-       /* fichier dans le meme directory que le fichier .PIV */
-       FindCompleteName (pDoc->DocDName, TEXT("EXT"), pDoc->DocDirectory,
-			 buffer, &i);
-       EXTfile = TtaReadOpen (buffer);
-       if (EXTfile != 0)
-	 {
-	   LoadEXTfile (EXTfile, NULL, &pDoc->DocLabels, TRUE);
-	   TtaReadClose (EXTfile);
-	 }
-       else
-	 pDoc->DocLabels = NULL;
+       pDoc->DocLabels = NULL;
        /* ReadTreePiv le fichier .PIV */
        
        /* lit les elements associes */
