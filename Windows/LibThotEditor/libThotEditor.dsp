@@ -270,10 +270,6 @@ SOURCE=..\..\thotlib\dialogue\font.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\fontserver.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\view\frame.c
 # End Source File
 # Begin Source File
@@ -283,14 +279,6 @@ SOURCE=..\..\thotlib\dialogue\geom.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\image\gifhandler.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\view\gldisplay.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\view\glwindowdisplay.c
 # End Source File
 # Begin Source File
 
@@ -335,10 +323,6 @@ SOURCE=..\..\thotlib\base\message.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\dialogue\modiftype.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\dialogue\openglfont.c
 # End Source File
 # Begin Source File
 
@@ -563,6 +547,10 @@ SOURCE=..\..\thotlib\view\viewapi.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\document\views.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\view\windowdisplay.c
 # End Source File
 # Begin Source File
 
