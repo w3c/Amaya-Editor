@@ -85,7 +85,7 @@ void DrawOutpolygon (HWND hwnd, POINT* pt, int nb)
 }
 #endif /* _WINDOWS */
 
-
+#ifndef _GTK
 /*----------------------------------------------------------------------
   VideoInvert switch to inverse video the area of frame located at
   (x,y) and of size width x height.
@@ -109,7 +109,6 @@ static void VideoInvert (int frame, int width, int height, int x, int y)
     }
 }
 
-#ifndef _GTK
 /*----------------------------------------------------------------------
   BoxGeometry set the geometry of the fake box used to interract with
   the user.
