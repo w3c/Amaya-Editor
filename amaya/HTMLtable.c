@@ -586,7 +586,7 @@ Document            doc;
 			      if (span > 1)
 				{
 				  i = 1;
-				  while (i < span && cRef + i < cNumber)
+				  while (i < span && cRef + 1 < cNumber)
 				    {
 				      cRef++;
 				      colVSpan[cRef] = colVSpan[cRef-1];
@@ -596,10 +596,9 @@ Document            doc;
 				    /* Create additional Column_heads */
 				    while (i < span)
 				      {
-					cRef++;
-					if (cRef < MAX_COLS)
+					if (cRef + 1 < MAX_COLS)
 					  {
-
+					    cRef++;
 					    colElement[cRef] = NewColumnHead (colElement[cRef-1], FALSE, TRUE, row, doc, inMath);
 					    cNumber++;
 					  }
