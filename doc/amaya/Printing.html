@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Printing</title>
-  <meta name="GENERATOR" content="amaya V4.2.2" />
+  <meta name="GENERATOR" content="amaya V4.3" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -51,13 +51,13 @@ language.</p>
     is due to a problem with the use of DLLs on Windows 95.</li>
 </ul>
 
-<h3>Setup and Print command</h3>
+<h3><a name="Setup">Setup and Print command</a></h3>
 
 <p>This command allows you to set up different parameters and options. Note
 that some parameters and options are reset to their default value when you
 browse another document. This clear up depends on each platform.</p>
 
-<h4>Unix platforms</h4>
+<h4><a name="Unix">Unix platforms</a></h4>
 
 <p>Under Unix, you can set the following parameters:</p>
 <ul>
@@ -79,7 +79,7 @@ browse another document. This clear up depends on each platform.</p>
   <li>Printing with or without CSS style sheets</li>
 </ul>
 
-<h4>Windows platforms</h4>
+<h4><a name="Windows">Windows platforms</a></h4>
 
 <p>On Windows platforms, a first dialogue box will propose the following
 options:</p>
@@ -93,7 +93,7 @@ options:</p>
 <p>then the standard Windows dialogue will let you choose the other printing
 parameters.</p>
 
-<h3>Print command</h3>
+<h3><a name="Print">Print command</a></h3>
 This command prints the current document with the default printing parameters
 or with the values previously set with the command <strong>Setup and
 Print</strong>. 
@@ -103,7 +103,13 @@ Print</strong>.
 you check that the default printer is correct. The following
 <strong>Print</strong> commands will be launched without any dialogue.</p>
 
-<h3>Controlling page breaks with CSS</h3>
+<h3><a name="Controllin">Controlling the printing with CSS</a></h3>
+
+<p>Links are not printed as underlined. To make this happen, your user style
+sheet (file <code>amaya.css</code> in your <a
+href="Configure.html#AmayaHome">Amaya home directory</a>) should contain: </p>
+<pre><br />
+@media print {a:link {text-decoration: underline} ... }</pre>
 
 <p>Amaya supports the CSS page break properties: "<strong>page-break-before:
 always</strong>". When that property is attached to a specific element by an

@@ -3,8 +3,8 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Manuel d'utilisation d'Amaya</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <style type="text/css">
 .name { background-color: #FFF6C1}
 body {background-color: #FFFFFF}</style>
@@ -216,7 +216,22 @@ décrits.</p>
             que textes</a></li>
         </ul>
       </li>
-      <li><a href="Printing.html.fr#Printing">Imprimer des documents</a></li>
+      <li><a href="Printing.html.fr#Printing">Imprimer des documents</a>
+        <ul>
+          <li><a href="Printing.html.fr#commande">La commande Paramétrer et
+            Imprimer</a>
+            <ul>
+              <li><a href="Printing.html.fr#Stations">Plate-forme
+              Unix</a></li>
+              <li><a href="Printing.html.fr#L185">Plate-forme Windows</a></li>
+            </ul>
+          </li>
+          <li><a href="Printing.html.fr#commande1">La commande
+          imprimer</a></li>
+          <li><a href="Printing.html.fr#L224">Contrôler l'impression avec les
+            CSS</a></li>
+        </ul>
+      </li>
       <li><a href="Numbering.html.fr#Section">Numéroter une section</a></li>
       <li><a href="MakeBook.html.fr#Assembling">Assembler des collections de
         document</a></li>
