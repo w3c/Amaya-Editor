@@ -3011,6 +3011,48 @@ static void SetAttrParseMe (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  SetContentAfterEntity
+ -----------------------------------------------------------------------*/
+static void SetContentAfterEntity (char *entityName, Element el, Document doc)
+{
+  char	        bufEntity[10], *ptr;
+  ThotBool      found;
+  int           value, i;
+  Language      lang;
+
+  found = MapXMLEntity (MATH_TYPE, entityName, &value);
+  if (!found)
+    {
+      /* Unknown entity */
+      bufEntity[0] = '?';
+      bufEntity[1] = EOS;
+      lang = TtaGetLanguageIdFromAlphabet('L');
+    }
+#ifdef _I18N_
+  else if (value < 1023)
+    {
+      /* get the UTF-8 string of the unicode character */
+      ptr = bufEntity;
+      i = TtaWCToMBstring (value, &ptr);
+      bufEntity[i] = EOS;
+    }
+#endif /* _I18N_ */
+  else
+    {
+      if (value < 255)
+	{
+	  bufEntity[0] = ((unsigned char) value);
+	  bufEntity[1] = EOS;
+	  lang = TtaGetLanguageIdFromAlphabet('L');
+	}
+      else
+	/* Try to find a fallback character */
+	GetFallbackCharacter (value, bufEntity, &lang);
+    }
+  TtaSetTextContent (el, bufEntity, lang, doc);
+}
+
+/*----------------------------------------------------------------------
    InsertMathEntity
    Insert an entity at the currently selected position.
    entityName is the name of the entity to be created.
@@ -3023,10 +3065,8 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
   AttributeType attrType;
   int           firstChar, lastChar, i, len;
   ThotBool      before, done, found;
+  char	        *ptr;
   char          buffer[MAX_LENGTH+2];
-  char	        bufEntity[10], *ptr;
-  int           value;
-  Language      lang;
 
   if (!TtaIsSelectionEmpty ())
     return;
@@ -3111,40 +3151,8 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
   strcat (buffer, entityName);
   strcat (buffer, ";");
   TtaSetAttributeText (attr, buffer, el, document);
-
-  found = MapXMLEntity (MATH_TYPE, entityName, &value);
-  if (!found)
-    {
-      /* Unknown entity */
-      bufEntity[0] = '?';
-      bufEntity[1] = EOS;
-      lang = TtaGetLanguageIdFromAlphabet('L');
-    }
-#ifdef _I18N_
-  else if (value < 1023)
-    {
-      /* get the UTF-8 string of the unicode character */
-      ptr = bufEntity;
-      i = TtaWCToMBstring (value, &ptr);
-      bufEntity[i] = EOS;
-    }
-#endif /* _I18N_ */
-  else
-    {
-      if (value < 255)
-	{
-	  bufEntity[0] = ((unsigned char) value);
-	  bufEntity[1] = EOS;
-	  lang = TtaGetLanguageIdFromAlphabet('L');
-	}
-      else
-	/* Try to find a fallback character */
-	GetFallbackCharacter (value, bufEntity, &lang);
-    }
-
-  TtaSetTextContent (el, bufEntity, lang, document);
-  TtaSetAccessRight (el, ReadOnly, document);
-  len = TtaGetTextLength (el);     
+  SetContentAfterEntity (entityName, el, document);
+  len = TtaGetTextLength (el);
   TtaSelectString (document, el, len+1, len);
   ParseMathString (el, TtaGetParent (el), document);
   TtaSetDocumentModified (document);
@@ -3908,6 +3916,60 @@ void MathAttrOtherCreated (NotifyAttribute *event)
 ThotBool            MathStyleAttrInMenu (NotifyAttribute * event)
 {
   return TRUE;	/* don't put a deprecated attribute in the menu */
+}
+
+/*----------------------------------------------------------------------
+ MathEntityModified
+ An attribute EntityName has been modified by the user.
+ -----------------------------------------------------------------------*/
+void MathEntityModified (NotifyAttribute *event)
+{
+#define buflen 200
+  char          *value;
+  int            length, i, code;
+  ThotBool       changed;
+
+  value = TtaGetMemory (buflen);
+  value[0] = EOS;
+  changed = FALSE;
+  length = TtaGetTextAttributeLength (event->attribute);
+  if (length >= buflen)
+    length = buflen - 2;
+  if (length <= 0)
+    {
+      value[0] = START_ENTITY;
+      value[1] = '?';
+      length = 3;
+      changed = TRUE;
+    }
+  else
+    {
+      TtaGiveTextAttributeValue (event->attribute, value, &length);
+      /* the first character must always be START_ENTITY */
+      if (value[0] != START_ENTITY)
+	{
+	  if (value[0] != '&')
+	    {
+	      for (i = length; i > 0; i--)
+		value[i] = value[i-1];
+	      length++;
+	    }
+	  value[0] = START_ENTITY;
+	  changed = TRUE;
+	}
+      if (value[length-1] != ';')
+	{
+	  length++;
+	  changed = TRUE;
+	}
+    }
+  value[length - 1] = EOS;
+  SetContentAfterEntity (&value[1], event->element, event->document);
+  value[length - 1] = ';';
+  value[length] = EOS;
+  if (changed)
+    TtaSetAttributeText (event->attribute, value, event->element,
+			 event->document);
 }
 
 /*----------------------------------------------------------------------

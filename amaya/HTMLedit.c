@@ -58,7 +58,8 @@ extern HWND currentWindow;
 static ThotBool AttrHREFundoable = FALSE;
 
 /*----------------------------------------------------------------------
-   SetTargetContent sets the new value of Target.                  
+   SetTargetContent
+   Set the new value of Target.                  
   ----------------------------------------------------------------------*/
 void                SetTargetContent (Document doc, Attribute attrNAME)
 {
@@ -88,7 +89,6 @@ void                SetTargetContent (Document doc, Attribute attrNAME)
 	TtaGiveTextAttributeValue (attrNAME, TargetName, &length);
      }
 }
-
 
 /*----------------------------------------------------------------------
    LinkToPreviousTarget
@@ -143,6 +143,7 @@ void                LinkToPreviousTarget (Document doc, View view)
 
 
 /*----------------------------------------------------------------------
+   AddAccessKey
  -----------------------------------------------------------------------*/
 void AddAccessKey (NotifyAttribute *event)
 {
@@ -158,6 +159,7 @@ void AddAccessKey (NotifyAttribute *event)
 
 
 /*----------------------------------------------------------------------
+   RemoveAccessKey
  -----------------------------------------------------------------------*/
 ThotBool RemoveAccessKey (NotifyAttribute *event)
 {
@@ -174,7 +176,8 @@ ThotBool RemoveAccessKey (NotifyAttribute *event)
 
 
 /*----------------------------------------------------------------------
-   RemoveLink: destroy the link element and remove CSS rules when the
+   RemoveLink
+   Destroy the link element and remove CSS rules when the
    link points to a CSS file.
   ----------------------------------------------------------------------*/
 void RemoveLink (Element el, Document doc)
@@ -215,7 +218,8 @@ ThotBool DeleteLink (NotifyElement * event)
 
 
 /*----------------------------------------------------------------------
-   SetREFattribute  sets the HREF or CITE attribue of the element to      
+   SetREFattribute
+   Set the HREF or CITE attribue of the element to      
    the concatenation of targetURL and targetName.
   ----------------------------------------------------------------------*/
 void SetREFattribute (Element element, Document doc, char *targetURL,
@@ -463,7 +467,8 @@ void SetNewTitle (Document doc)
 }
 
 /*----------------------------------------------------------------------
-   SelectDestination selects the destination of the el Anchor.     
+   SelectDestination
+   Select the destination of the el Anchor.     
   ----------------------------------------------------------------------*/
 void SelectDestination (Document doc, Element el, ThotBool withUndo)
 {
@@ -584,7 +589,8 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo)
 }
 
 /*----------------------------------------------------------------------
-   GetNameAttr return the NAME attribute of the enclosing Anchor   
+   GetNameAttr
+   Return the NAME attribute of the enclosing Anchor   
    element or the ID attribute of (an ascendant of) the selected element
    or NULL.
   ----------------------------------------------------------------------*/
@@ -652,8 +658,8 @@ Attribute           GetNameAttr (Document doc, Element selectedElement)
 
 
 /*----------------------------------------------------------------------
-   CreateTargetAnchor creates a NAME or ID attribute with a default    
-   value for element el.
+   CreateTargetAnchor
+   Create a NAME or ID attribute with a default value for element el.
    If the withUndo parameter is true, we'll register the undo sequence.
    If the forceID parameter, we'll always use an ID attribute, rather
    than a NAME one in some cases.
@@ -806,7 +812,8 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
 }
 
 /*----------------------------------------------------------------------
-   CreateAnchor creates a link or target element.                  
+   CreateAnchor
+   Create a link or target element.                  
   ----------------------------------------------------------------------*/
 void                CreateAnchor (Document doc, View view, ThotBool createLink)
 {
@@ -1232,7 +1239,7 @@ void MakeUniqueName (Element el, Document doc)
 
 /*----------------------------------------------------------------------
   GetNextNode
-  Returns the next node in the tree, using a complete traversal algorithm.
+  Return the next node in the tree, using a complete traversal algorithm.
   ----------------------------------------------------------------------*/
 static Element    GetNextNode (Element curr)
 {
@@ -1254,7 +1261,7 @@ static Element    GetNextNode (Element curr)
 
 /*----------------------------------------------------------------------
   SearchTypedElementForward
-  Searchs for a typed element and stops when it finds it or if the
+  Search for a typed element and stops when it finds it or if the
   search reaches the last element.
   ----------------------------------------------------------------------*/
 static Element    SearchTypedElementForward (ElementType elType_search, Element curr, Element last)
@@ -1511,9 +1518,9 @@ void                ElementCreated (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
- ElementDeleted
- An element has been deleted. If it was the only child of element
- BODY, create a first paragraph.
+   ElementDeleted
+   An element has been deleted. If it was the only child of element
+   BODY, create a first paragraph.
  -----------------------------------------------------------------------*/
 void ElementDeleted (NotifyElement *event)
 {
@@ -2007,7 +2014,8 @@ void CheckNewLines (NotifyOnTarget *event)
 }
 
 /*----------------------------------------------------------------------
-   CreateTarget creates a target element.                          
+   CreateTarget
+   Create a target element.                          
   ----------------------------------------------------------------------*/
 void                CreateTarget (Document doc, View view)
 {
@@ -2045,8 +2053,9 @@ void                UpdateAttrID (NotifyAttribute * event)
 
 
 /*----------------------------------------------------------------------
-   CoordsModified  updates x_ccord, y_coord, width, height or      
-   polyline according to the new coords value.             
+   CoordsModified
+   Update x_ccord, y_coord, width, height or polyline according to the
+   new coords value.             
   ----------------------------------------------------------------------*/
 void CoordsModified (NotifyAttribute * event)
 {
@@ -2055,8 +2064,8 @@ void CoordsModified (NotifyAttribute * event)
 
 
 /*----------------------------------------------------------------------
-   GraphicsModified        updates coords attribute value          
-   according to the new coord value.                       
+   GraphicsModified
+   Update coords attribute value according to the new coord value.
   ----------------------------------------------------------------------*/
 void GraphicsModified (NotifyAttribute * event)
 {
@@ -2115,7 +2124,8 @@ void GraphicsModified (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
-   StoreWidth IntWidthPxl will be changed, store the old value.
+   StoreWidth
+   Attribute IntWidthPxl will be changed, store the old value.
   ----------------------------------------------------------------------*/
 ThotBool StoreWidth (NotifyAttribute *event)
 {
@@ -2131,7 +2141,8 @@ ThotBool StoreWidth (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
-   StoreHeight height_ will be changed, store the old value.
+   StoreHeight
+   Attribute height_ will be changed, store the old value.
   ----------------------------------------------------------------------*/
 ThotBool StoreHeight (NotifyAttribute * event)
 {
@@ -2148,7 +2159,8 @@ ThotBool StoreHeight (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
-   AttrHeightDelete An attribute Height_ will be deleted.   
+   AttrHeightDelete
+   An attribute Height_ will be deleted.   
    Delete the corresponding attribute IntHeightPercent or   
    IntHeightPxl.                                            
   ----------------------------------------------------------------------*/
@@ -2171,9 +2183,9 @@ ThotBool AttrHeightDelete (NotifyAttribute *event)
    return FALSE;		/* let Thot perform normal operation */
 }
 
-
 /*----------------------------------------------------------------------
-   AttrHeightModifed  An attribute Height__ has been created or modified.
+   AttrHeightModifed
+   An attribute Height_ has been created or modified.
    Create the corresponding attribute IntHeightPercent or IntHeightPxl.
   ----------------------------------------------------------------------*/
 void AttrHeightModified (NotifyAttribute *event)
@@ -2191,7 +2203,8 @@ void AttrHeightModified (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
-   AttrWidthDelete An attribute Width__ will be deleted.   
+   AttrWidthDelete
+   An attribute Width__ will be deleted.   
    Delete the corresponding attribute IntWidthPercent or   
    IntWidthPxl.                                            
   ----------------------------------------------------------------------*/
@@ -2216,7 +2229,8 @@ ThotBool AttrWidthDelete (NotifyAttribute *event)
 
 
 /*----------------------------------------------------------------------
-   AttrWidthModifed  An attribute Width__ has been created or modified.
+   AttrWidthModifed
+   An attribute Width__ has been created or modified.
    Create the corresponding attribute IntWidthPercent or IntWidthPxl.
   ----------------------------------------------------------------------*/
 void AttrWidthModified (NotifyAttribute *event)
@@ -2234,6 +2248,7 @@ void AttrWidthModified (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
+   AttrFontSizeCreated
    an HTML attribute "size" has been created for a Font element.   
    Create the corresponding internal attribute.                    
   ----------------------------------------------------------------------*/
@@ -2255,7 +2270,8 @@ void AttrFontSizeCreated (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
-   an HTML attribute "size" has been deleted for a Font element.   
+   AttrFontSizeDelete
+   An HTML attribute "size" has been deleted for a Font element.   
    Delete the corresponding internal attribute.                    
   ----------------------------------------------------------------------*/
 ThotBool AttrFontSizeDelete (NotifyAttribute * event)
@@ -2282,7 +2298,8 @@ ThotBool AttrFontSizeDelete (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
-   an attribute color, TextColor or BackgroundColor has been       
+   AttrColorCreated
+   An attribute color, TextColor or BackgroundColor has been       
    created or modified.                                            
   ----------------------------------------------------------------------*/
 void AttrColorCreated (NotifyAttribute * event)
@@ -2316,7 +2333,8 @@ void AttrColorCreated (NotifyAttribute * event)
 
 
 /*----------------------------------------------------------------------
-   an attribute color, TextColor or BackgroundColor is being       
+   AttrColorDelete
+   An attribute color, TextColor or BackgroundColor is being       
    deleted.                                                        
   ----------------------------------------------------------------------*/
 ThotBool AttrColorDelete (NotifyAttribute * event)
@@ -2338,6 +2356,7 @@ ThotBool AttrColorDelete (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
+   ListItemCreated
    An element List_Item has been created or pasted. Set its        
    IntItemStyle attribute according to its surrounding elements.   
   ----------------------------------------------------------------------*/
@@ -2350,6 +2369,7 @@ void ListItemCreated (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
+   SetItemStyleSubtree
    Set the IntItemStyle attribute of all List_Item elements in the 
    el subtree.                                                     
   ----------------------------------------------------------------------*/
@@ -2370,6 +2390,7 @@ static void SetItemStyleSubtree (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+   ListChangedType
    An element Unnumbered_List or Numbered_List has changed type.   
    Set the IntItemStyle attribute for all enclosed List_Items      
   ----------------------------------------------------------------------*/
@@ -2396,6 +2417,7 @@ void UpdateAttrIntItemStyle (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
+   AttrItemStyle
    An attribute ItemStyle has been created, updated or deleted.    
    Create or update the corresponding IntItemStyle attribute.      
   ----------------------------------------------------------------------*/
@@ -2563,7 +2585,8 @@ ThotBool            AttrNAMEinMenu (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
-  The Emphasis button or menu item has been clicked
+   SetOnOffEmphasis
+   The Emphasis button or menu item has been clicked
   ----------------------------------------------------------------------*/
 void                SetOnOffEmphasis (Document document, View view)
 {
@@ -2586,7 +2609,8 @@ void                SetOnOffEmphasis (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  The Strong button or menu item has been clicked
+   SetOnOffStrong
+   The Strong button or menu item has been clicked
   ----------------------------------------------------------------------*/
 void                SetOnOffStrong (Document document, View view)
 {
@@ -2609,7 +2633,7 @@ void                SetOnOffStrong (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  SetOnOffCite
+   SetOnOffCite
   ----------------------------------------------------------------------*/
 void                SetOnOffCite (Document document, View view)
 {
@@ -2618,7 +2642,7 @@ void                SetOnOffCite (Document document, View view)
 
 
 /*----------------------------------------------------------------------
-  SetOnOffDefinition
+   SetOnOffDefinition
   ----------------------------------------------------------------------*/
 void                SetOnOffDefinition (Document document, View view)
 {
@@ -2627,7 +2651,8 @@ void                SetOnOffDefinition (Document document, View view)
 
 
 /*----------------------------------------------------------------------
-  The Code button or menu item has been clicked
+   SetOnOffCode
+   The Code button or menu item has been clicked
   ----------------------------------------------------------------------*/
 void                SetOnOffCode (Document document, View view)
 {
@@ -2794,7 +2819,8 @@ void                SetOnOffBDO (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  SearchAnchor return the enclosing anchor element.
+  SearchAnchor
+  Return the enclosing anchor element.
   If name is true, take into account Anchor(HTML) elements with a name
   attribute.
   ----------------------------------------------------------------------*/
@@ -2894,9 +2920,10 @@ Element    SearchAnchor (Document doc, Element element, Attribute *HrefAttr,
 }
 
 /*----------------------------------------------------------------------
-   UpdateAtom : on X-Windows, update the content of atom           
-   BROWSER_HISTORY_INFO with title and url of current doc  
-   c.f: http://zenon.inria.fr/koala/colas/browser-history/       
+   UpdateAtom
+   On X-Windows, update the content of atom BROWSER_HISTORY_INFO with
+   title and url of current doc  
+   cf: http://zenon.inria.fr/koala/colas/browser-history/       
   ----------------------------------------------------------------------*/
 void UpdateAtom (Document doc, char *url, char *title)
 {
@@ -2927,6 +2954,7 @@ void UpdateAtom (Document doc, char *url, char *title)
 }
 
 /*----------------------------------------------------------------------
+   TitleModified
    The user has modified the contents of element TITLE. Update the    
    the Title field on top of the window.                           
   ----------------------------------------------------------------------*/

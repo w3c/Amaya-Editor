@@ -80,6 +80,9 @@ ATTRIBUTES
    other:
 	AttrCreate.Post -> MathAttrOtherCreated;
 
+   EntityName:
+        AttrModify.Post -> MathEntityModified;
+	
    fontsize:
         BEGIN
         AttrCreate.Post -> MathPresentAttrCreated;
