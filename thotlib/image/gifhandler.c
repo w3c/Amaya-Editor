@@ -33,6 +33,7 @@
 #ifdef _WINDOWS
 #include "winsys.h"
 #endif /* _WINDOWS */
+
 #define THOT_EXPORT extern
 #include "picture_tv.h"
 #include "frame_tv.h"
@@ -46,6 +47,7 @@
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
+
 #define	MAXCOLORMAPSIZE		256
 #define scale 65536 / MAXCOLORMAPSIZE;
 #define CM_RED		0
@@ -91,14 +93,12 @@ static int          stack[(1 << (MAX_LWZ_BITS)) * 2], *sp = stack;
 
 #ifdef _WINDOWS
 #define MAXNUMBER 256
-
 #define ALIGNLONG(i) ((i+3)/4*4)
 
-/* static PALETTEENTRY sysPalEntries[MAX_COLOR]; */
+static signed int   tabCorres [256];
 static PALETTEENTRY sysPalEntries[256];
 ThotBool            peInitialized = FALSE;
-static int          nbSysColors ;
-/* static int          mapIndex; */
+static int          nbSysColors;
 static int          best_dsquare = INT_MAX;
 
 /* ----------------------------------------------------------------------
@@ -171,93 +171,88 @@ int                 height;
 unsigned char       clmap[3][MAXCOLORMAPSIZE];
 int                 interlace;
 int                 ignore;
-
 #endif /* __STDC__ */
 {
-   unsigned char       c;
-   int                 v;
-   int                 xpos = 0, ypos = 0, pass = 0;
-   unsigned char      *data;
-   unsigned char      *dptr;
+  unsigned char       c;
+  int                 v;
+  int                 xpos = 0, ypos = 0, pass = 0;
+  unsigned char      *data;
+  unsigned char      *dptr;
 
-   /*
-    **  Initialize the Compression routines
-    */
-   if (!ReadOK (fd, &c, 1))
-      return (NULL);
+  /* Initialize the Compression routines */
+  if (!ReadOK (fd, &c, 1))
+    return (NULL);
+  if (LWZReadByte (fd, TRUE, c) < 0)
+    return (NULL);
 
-   if (LWZReadByte (fd, TRUE, c) < 0)
-      return (NULL);
-
-   /*
-    **  If this is an "uninteresting picture" ignore it.
-    */
-   if (ignore) {
+   /* If this is an "uninteresting picture" ignore it */
+  if (ignore)
+    {
       while (LWZReadByte (fd, FALSE, c) >= 0)
-	  ;
+	;
       return (NULL);
-   }
+    }
 
-   data = (unsigned char*) TtaGetMemory (sizeof (unsigned char) * len * height);
+  data = (unsigned char*) TtaGetMemory (sizeof (unsigned char) * len * height);
 
-   if (data == NULL)
-      return (NULL);
+  if (data == NULL)
+    return (NULL);
 
-   while ((v = LWZReadByte (fd, FALSE, c)) >= 0)
-     {
-	dptr = (unsigned char *) (data + (ypos * len) + xpos);
-	*dptr = (unsigned char) v;
-
-	++xpos;
-	if (xpos == len)
-	  {
-	     xpos = 0;
-	     if (interlace)
-	       {
+  while ((v = LWZReadByte (fd, FALSE, c)) >= 0)
+    {
+      dptr = (unsigned char *) (data + (ypos * len) + xpos);
+      *dptr = (unsigned char) v;
+      
+      ++xpos;
+      if (xpos == len)
+	{
+	  xpos = 0;
+	  if (interlace)
+	    {
+	      switch (pass)
+		{
+		case 0:
+		case 1:
+		  ypos += 8;
+		  break;
+		case 2:
+		  ypos += 4;
+		  break;
+		case 3:
+		  ypos += 2;
+		  break;
+		}
+	      
+	      if (ypos >= height)
+		{
+		  ++pass;
 		  switch (pass)
-			{
-			   case 0:
-			   case 1:
-			      ypos += 8;
-			      break;
-			   case 2:
-			      ypos += 4;
-			      break;
-			   case 3:
-			      ypos += 2;
-			      break;
-			}
-
-		  if (ypos >= height)
 		    {
-		       ++pass;
-		       switch (pass)
-			     {
-				case 1:
-				   ypos = 4;
-				   break;
-				case 2:
-				   ypos = 2;
-				   break;
-				case 3:
-				   ypos = 1;
-				   break;
-				default:
-				   goto fini;
-			     }
+		    case 1:
+		      ypos = 4;
+		      break;
+		    case 2:
+		      ypos = 2;
+		      break;
+		    case 3:
+		      ypos = 1;
+		      break;
+		    default:
+		      goto fini;
 		    }
-	       }
-	     else
-		++ypos;
-	  }
-	if (ypos >= height)
-	   break;
-     }
+		}
+	    }
+	  else
+	    ++ypos;
+	}
+      if (ypos >= height)
+	break;
+    }
 
  fini:
-   if (LWZReadByte (fd, FALSE, c) >= 0)
-      fprintf (stderr, "gifhandler: too much input data, ignoring extra...\n");
-   return (data);
+  if (LWZReadByte (fd, FALSE, c) >= 0)
+    fprintf (stderr, "gifhandler: too much input data, ignoring extra...\n");
+  return (data);
 }
 
 /*----------------------------------------------------------------------
@@ -673,8 +668,8 @@ int                 input_code_size;
 
 
 /*----------------------------------------------------------------------
-   returns position of highest set bit in 'ul' as an integer (0-31),      	
-   or -1 if none.                                                       
+  highbit returns position of highest set bit in 'ul' as an integer (0-31),
+  or -1 if none.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          highbit (unsigned long ul)
@@ -684,95 +679,87 @@ unsigned long       ul;
 
 #endif /* __STDC__ */
 {
-   /*
-    * returns position of highest set bit in 'ul' as an integer (0-31),
-    * or -1 if none.
-    */
+  int                 i;
 
-   int                 i;
-
-   for (i = 31; ((ul & 0x80000000) == 0) && i >= 0; i--, ul <<= 1) ;
-   return i;
+  for (i = 31; ((ul & 0x80000000) == 0) && i >= 0; i--, ul <<= 1) ;
+  return i;
 }
 
 /*----------------------------------------------------------------------
-   returns position of highest set bit in 'ul' as an integer (0-31),      
-   or -1 if none.                                                         
+  highbit16 returns position of highest set bit in 'ul' as an integer (0-31),
+  or -1 if none.          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 highbit16 (unsigned long ul)
 #else  /* __STDC__ */
 int                 highbit16 (ul)
 unsigned long       ul;
-
 #endif /* __STDC__ */
 {
-   int                 i;
+  int                 i;
 
-   for (i = 15; ((ul & 0x8000) == 0) && i >= 0; i--, ul <<= 1) ;
-   return i;
+  for (i = 15; ((ul & 0x8000) == 0) && i >= 0; i--, ul <<= 1) ;
+  return i;
 }
 
 /*----------------------------------------------------------------------
+  nbbits returns the width of a bit PicMask.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          nbbits (unsigned long ul)
 #else  /* __STDC__ */
 static int          nbbits (ul)
 unsigned long       ul;
-
 #endif /* __STDC__ */
 {
-   /*
-    * returns the width of a bit PicMask.
-    */
-   while (!(ul & 1))
-         ul >>= 1;
-   switch (ul) {
-	  case 0x00:
-	       return (0);
-          case 0x01:
-	       return (1);
-	  case 0x03:
-	       return (2);
-	  case 0x07:
-	       return (3);
-	  case 0x0F:
-	       return (4);
-	  case 0x1F:
-	       return (5);
-	  case 0x3F:
-	       return (6);
-	  case 0x7F:
-	       return (7);
-	  case 0xFF:
-	       return (8);
-	  case 0x01FF:
-	       return (1 + 8);
-	  case 0x03FF:
-	       return (2 + 8);
-	  case 0x07FF:
-	       return (3 + 8);
-	  case 0x0FFF:
-	       return (4 + 8);
-	  case 0x1FFF:
-	       return (5 + 8);
-	  case 0x3FFF:
-	       return (6 + 8);
-	  case 0x7FFF:
-	       return (7 + 8);
-	  case 0xFFFF:
-	       return (8 + 8);
-	  default:
-	       fprintf (stderr, "gifhandler: nbbits : invalid PicMask\n");
-	       return (8);
+  while (!(ul & 1))
+    ul >>= 1;
+  switch (ul)
+    {
+    case 0x00:
+      return (0);
+    case 0x01:
+      return (1);
+    case 0x03:
+      return (2);
+    case 0x07:
+      return (3);
+    case 0x0F:
+      return (4);
+    case 0x1F:
+      return (5);
+    case 0x3F:
+      return (6);
+    case 0x7F:
+      return (7);
+    case 0xFF:
+      return (8);
+    case 0x01FF:
+      return (1 + 8);
+    case 0x03FF:
+      return (2 + 8);
+    case 0x07FF:
+      return (3 + 8);
+    case 0x0FFF:
+      return (4 + 8);
+    case 0x1FFF:
+      return (5 + 8);
+    case 0x3FFF:
+      return (6 + 8);
+    case 0x7FFF:
+      return (7 + 8);
+    case 0xFFFF:
+      return (8 + 8);
+    default:
+      fprintf (stderr, "gifhandler: nbbits : invalid PicMask\n");
+      return (8);
    }
 }
 
-#  ifndef _WINDOWS
-/*
- * Make a shape  of depth 1 for display from image data.
- */
+#ifndef _WINDOWS
+/*----------------------------------------------------------------------
+  Make a shape  of depth 1 for display from image data.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Pixmap              MakeMask (Display* dsp, char* pixelindex, int w, int h, int bg)
 #else  /* __STDC__ */
@@ -781,238 +768,111 @@ Display            *dsp;
 unsigned char      *pixelindex;
 int                 w, h;
 int                 bg;
-
 #endif /* __STDC__ */
 {
-   Pixmap              PicMask;
-   unsigned char      *iptr;
-   char                value;
-   char               *data;
-   int                 bpl, y;
-   unsigned char      *data_ptr, *max_data;
-   int                 diff, count, width, height;
+  Pixmap              PicMask;
+  unsigned char      *iptr;
+  char                value;
+  char               *data;
+  int                 bpl, y;
+  unsigned char      *data_ptr, *max_data;
+  int                 diff, count, width, height;
+  XImage             *newmask;
+  ThotGC              tmp_gc;
 
-   XImage             *newmask;
-   ThotGC              tmp_gc;
+  width  = w;
+  height = h;
 
-   width  = w;
-   height = h;
-
-   newmask = XCreateImage (TtDisplay, theVisual, 1, ZPixmap, 0, 0, width, height, 8, 0);
-   bpl = newmask->bytes_per_line;
-   newmask->data = (char *) TtaGetMemory (bpl * height);
-   data = newmask->data;
-
-   iptr = pixelindex; 
-
-   diff = width & 7;
-
-   width >>= 3;
-   if (newmask->bitmap_bit_order == MSBFirst)
-      for (y = 0; y < height; y++) {
+  newmask = XCreateImage (TtDisplay, theVisual, 1, ZPixmap, 0, 0, width, height, 8, 0);
+  bpl = newmask->bytes_per_line;
+  newmask->data = (char *) TtaGetMemory (bpl * height);
+  data = newmask->data;
+  iptr = pixelindex; 
+  diff = width & 7;
+  width >>= 3;
+  if (newmask->bitmap_bit_order == MSBFirst)
+    for (y = 0; y < height; y++)
+      {
+	data_ptr = data;
+	max_data = data_ptr + width;
+	while (data_ptr < max_data)
+	  {
+	    value = 0;
+	    value = (value << 1) | (*(iptr++) != bg);
+	    value = (value << 1) | (*(iptr++) != bg);
+	    value = (value << 1) | (*(iptr++) != bg);
+	    value = (value << 1) | (*(iptr++) != bg);
+	    value = (value << 1) | (*(iptr++) != bg);
+	    value = (value << 1) | (*(iptr++) != bg);
+	    value = (value << 1) | (*(iptr++) != bg);
+	    value = (value << 1) | (*(iptr++) != bg);
+	    *(data_ptr++) = value;
+	  }
+	if (diff)
+	  {
+	    value = 0;
+	    for (count = 0; count < diff; count++)
+	      if (*(iptr++) != bg)
+		value |= (0x80 >> count);
+	    *(data_ptr++) = value;
+	  }
+	data += bpl;
+      }
+  else
+    {
+      for (y = 0; y < height; y++)
+	{
 	  data_ptr = data;
 	  max_data = data_ptr + width;
-	  while (data_ptr < max_data) {
-		value = 0;
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		*(data_ptr++) = value;
-	  }
-	  if (diff) {
-	     value = 0;
-	     for (count = 0; count < diff; count++)
-		 if (*(iptr++) != bg)
-		    value |= (0x80 >> count);
-	     *(data_ptr++) = value;
-	  }
+	  while (data_ptr < max_data)
+	    {
+	      value = 0;
+	      iptr += 8;
+	      value = (value << 1) | (*(--iptr) != bg);
+	      value = (value << 1) | (*(--iptr) != bg);
+	      value = (value << 1) | (*(--iptr) != bg);
+	      value = (value << 1) | (*(--iptr) != bg);
+	      value = (value << 1) | (*(--iptr) != bg);
+	      value = (value << 1) | (*(--iptr) != bg);
+	      value = (value << 1) | (*(--iptr) != bg);
+	      value = (value << 1) | (*(--iptr) != bg);
+	      iptr += 8;
+	      *(data_ptr++) = value;
+	    }
+	  if (diff)
+	    {
+	      value = 0;
+	      for (count = 0; count < diff; count++)
+		if (*(iptr++) != bg)
+		  value |= (1 << count);	      
+	      *(data_ptr++) = value;
+	    }
 	  data += bpl;
-      }
-   else {
-	for (y = 0; y < height; y++) {
-	    data_ptr = data;
-	    max_data = data_ptr + width;
-	    while (data_ptr < max_data) {
-		  value = 0;
-		  iptr += 8;
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  iptr += 8;
-		  *(data_ptr++) = value;
-	    }
-	    if (diff) {
-	       value = 0;
-	       for (count = 0; count < diff; count++)
-		   if (*(iptr++) != bg)
-		      value |= (1 << count);
-
-	       *(data_ptr++) = value;
-	    }
-	    data += bpl;
 	}
-   }
+    }
 
 #ifndef _GTK
-   PicMask = XCreatePixmap (TtDisplay, TtRootWindow, w, h, 1);
-
-   if ((PicMask == (Pixmap) None) || (newmask == NULL)) {
+  PicMask = XCreatePixmap (TtDisplay, TtRootWindow, w, h, 1);
+  if ((PicMask == (Pixmap) None) || (newmask == NULL))
+    {
       if (newmask != NULL)
-	 XDestroyImage (newmask);
-
+	XDestroyImage (newmask);
       if (PicMask != (Pixmap) None)
-	 XFreePixmap (TtDisplay, PicMask);
-
-	PicMask = None;
-   } else {
-	  tmp_gc = XCreateGC (TtDisplay, PicMask, 0, NULL);
-	  XPutImage (TtDisplay, PicMask, tmp_gc, newmask, 0, 0, 0, 0, w, h);
-	  XDestroyImage (newmask);
-	  XFreeGC (TtDisplay, tmp_gc);
-   }
+	XFreePixmap (TtDisplay, PicMask);
+      PicMask = None;
+    }
+  else
+    {
+      tmp_gc = XCreateGC (TtDisplay, PicMask, 0, NULL);
+      XPutImage (TtDisplay, PicMask, tmp_gc, newmask, 0, 0, 0, 0, w, h);
+      XDestroyImage (newmask);
+      XFreeGC (TtDisplay, tmp_gc);
+    }
 #endif /* _GTK */
-   return (PicMask);
+  return (PicMask);
 }
-#  endif /* _WINDOWS */
-
-#ifdef _WINDOWS
-#ifdef __STDC__
-HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height, int depth, ThotColorStruct * colrs)
-#else  /* __STDC__ */
-HBITMAP WIN_MakeImage (hDC, data, width, height, depth, colrs)
-HDC              dsp;
-unsigned char*   data;
-int              width, height;
-int              depth;
-ThotColorStruct* colrs;
-
-#endif /* __STDC__ */
-{
-   int                 temp;
-   int                 w, h;
-   int                 shiftstart, shiftstop, shiftinc;
-   int                 linepad, shiftnum;
-   int                 bytesperline;
-   HBITMAP             newimage;
-   unsigned char      *bit_data, *bitp, *datap;
-   int                 rshift, gshift, bshift;
-   switch (depth) {
-          case 1:
-          case 2:
-          case 4: 
-               shiftstart = 0;
-               shiftstop = 8;
-               shiftinc = depth;
-               /*
-               shiftstart = 8 - depth;
-               shiftstop = -depth;
-               shiftinc = -depth;
-               */
-               linepad = 8 - (width % 8);
-               bit_data = (unsigned char *) TtaGetMemory (((width + linepad) * height) + 1);
-               bitp = bit_data;
-               datap = data;
-               *bitp = 0;
-               shiftnum = shiftstart;
-               for (h = 0; h < height; h++) {
-                   for (w = 0; w < width; w++) {
-                       temp = *datap++ << shiftnum;
-                       *bitp = *bitp | temp;
-                       shiftnum = shiftnum + shiftinc;
-                       if (shiftnum == shiftstop) {
-                          shiftnum = shiftstart;
-                          bitp++;
-                          *bitp = 0;
-					   }
-				   }
-                   for (w = 0; w < linepad; w++) {
-                       shiftnum = shiftnum + shiftinc;
-                       if (shiftnum == shiftstop) {
-                          shiftnum = shiftstart;
-                          bitp++;
-                          *bitp = 0;
-					   }
-				   }
-			   }
-               bytesperline = (width + linepad) * depth / 8;
-	       break;
-
-          case 16:
-               bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
-               bitp   = bit_data;
-               datap  = data;
-               rshift = 0;
-               gshift = 5;
-               bshift = 11;
-               for (w = (width * height); w > 0; w--) {
-				   if (IS_WIN95)
-                      temp = (((colrs[(int) *datap].red * 255) & 63488) |
-                              (((colrs[(int) *datap].green * 255) >> gshift) & 2016) |
-                              ((((colrs[(int) *datap].blue * 255) >> bshift) & 31)));
-				   else
-                       temp = (((colrs[(int) *datap].red << 8) & 63488) |
-                               (((colrs[(int) *datap].green << 8) >> gshift) & 2016) |
-                               ((((colrs[(int) *datap].blue << 8) >> bshift) & 31)));
-                   *bitp++ = temp & 0xff;
-                   *bitp++ = (temp >> 8) & 0xff;
-       
-                   datap++;
-			   }
-			   break;
-
-		  case 24:
-	               bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
-               bitp   = bit_data;
-               datap  = data;
-              for (h = height; h > 0; h--) {
-				  for (w = width; w > 0; w--) {
-                      *bitp++ = colrs[(int) *datap].blue;
-                      *bitp++ = colrs[(int) *datap].green;
-                      *bitp++ = colrs[(int) *datap].red;
-                      datap++;
-				  }
-				  if (width % 2 != 0) 
-					     *bitp++=0;
-			  }
-			  break;
-
-          case 32:
-               bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
-               bitp   = bit_data;
-               datap  = data;
-               for (w = (width * height); w > 0; w--) {
-                   *bitp++ = colrs[(int) *datap].blue;
-                   *bitp++ = colrs[(int) *datap].green;
-                   *bitp++ = colrs[(int) *datap].red;
-                   *bitp++ = 0;
-       
-                   datap++;
-			   }
-			   break;
-   }
-   
-   newimage = CreateCompatibleBitmap (hDC, width, height);
-   /* if (depth == 1)
-      SetBitmapBits (newimage, width * height, bit_data);
-   else */
-      SetBitmapBits (newimage, width * height * (depth/8), bit_data);
-   TtaFreeMemory (bit_data);
-   return newimage;
-}
-#endif /* _WINDOWS */
 
 
-#  ifndef _WINDOWS
 /*----------------------------------------------------------------------
   Make an image of appropriate depth for display from image data.
   ----------------------------------------------------------------------*/
@@ -1026,172 +886,292 @@ unsigned char      *data;
 int                 width, height;
 int                 depth;
 ThotColorStruct    *colrs;
-
 #endif /* __STDC__ */
 {
-   int                 linepad, shiftnum;
-   int                 shiftstart, shiftstop, shiftinc;
-   int                 bytesperline;
-   int                 temp;
-   int                 w, h;
-   XImage             *newimage = NULL;
-   unsigned char      *bit_data, *bitp, *datap;
-   int                 bmap_order;
-   unsigned long       c;
-   int                 rshift, gshift, bshift;
+  int                 linepad, shiftnum;
+  int                 shiftstart, shiftstop, shiftinc;
+  int                 bytesperline;
+  int                 temp;
+  int                 w, h;
+  XImage             *newimage = NULL;
+  unsigned char      *bit_data, *bitp, *datap;
+  int                 bmap_order;
+  unsigned long       c;
+  int                 rshift, gshift, bshift;
 
-   switch (depth)
-	 {
-	    case 6:
-	    case 8:
-	       bit_data = (unsigned char *) TtaGetMemory (width * height);
-	       bcopy (data, bit_data, (width * height));
-	       bytesperline = width;
-	       newimage = XCreateImage (dsp,
-					theVisual,
-					depth, ZPixmap, 0, (char *) bit_data,
-					width, height, 8, bytesperline);
-	       break;
-	    case 1:
-	    case 2:
-	    case 4:
-	       if (BitmapBitOrder (dsp) == LSBFirst)
-		 {
-		    shiftstart = 0;
-		    shiftstop = 8;
-		    shiftinc = depth;
-		 }
-	       else
-		 {
-		    shiftstart = 8 - depth;
-		    shiftstop = -depth;
-		    shiftinc = -depth;
-		 }
-	       linepad = 8 - (width % 8);
-	       bit_data = (unsigned char *) TtaGetMemory (((width + linepad) * height)
-							  + 1);
-	       bitp = bit_data;
-	       datap = data;
-	       *bitp = 0;
-	       shiftnum = shiftstart;
-	       for (h = 0; h < height; h++)
-		 {
-		    for (w = 0; w < width; w++)
-		      {
-			 temp = *datap++ << shiftnum;
-			 *bitp = *bitp | temp;
-			 shiftnum = shiftnum + shiftinc;
-			 if (shiftnum == shiftstop)
-			   {
-			      shiftnum = shiftstart;
-			      bitp++;
-			      *bitp = 0;
-			   }
-		      }
-		    for (w = 0; w < linepad; w++)
-		      {
-			 shiftnum = shiftnum + shiftinc;
-			 if (shiftnum == shiftstop)
-			   {
-			      shiftnum = shiftstart;
-			      bitp++;
-			      *bitp = 0;
-			   }
-		      }
-		 }
-	       bytesperline = (width + linepad) * depth / 8;
-	       newimage = XCreateImage (dsp,
-					theVisual,
-					depth, ZPixmap, 0, (char *) bit_data,
-				(width + linepad), height, 8, bytesperline);
-	       break;
+  switch (depth)
+    {
+    case 6:
+    case 8:
+      bit_data = (unsigned char *) TtaGetMemory (width * height);
+      bcopy (data, bit_data, (width * height));
+      bytesperline = width;
+      newimage = XCreateImage (dsp,
+			       theVisual,
+			       depth, ZPixmap, 0, (char *) bit_data,
+			       width, height, 8, bytesperline);
+      break;
+    case 1:
+    case 2:
+    case 4:
+      if (BitmapBitOrder (dsp) == LSBFirst)
+	{
+	  shiftstart = 0;
+	  shiftstop = 8;
+	  shiftinc = depth;
+	}
+      else
+	{
+	  shiftstart = 8 - depth;
+	  shiftstop = -depth;
+	  shiftinc = -depth;
+	}
+      linepad = 8 - (width % 8);
+      bit_data = (unsigned char *) TtaGetMemory (((width + linepad) * height) + 1);
+      bitp = bit_data;
+      datap = data;
+      *bitp = 0;
+      shiftnum = shiftstart;
+      for (h = 0; h < height; h++)
+	{
+	  for (w = 0; w < width; w++)
+	    {
+	      temp = *datap++ << shiftnum;
+	      *bitp = *bitp | temp;
+	      shiftnum = shiftnum + shiftinc;
+	      if (shiftnum == shiftstop)
+		{
+		  shiftnum = shiftstart;
+		  bitp++;
+		  *bitp = 0;
+		}
+	    }
+	  for (w = 0; w < linepad; w++)
+	    {
+	      shiftnum = shiftnum + shiftinc;
+	      if (shiftnum == shiftstop)
+		{
+		  shiftnum = shiftstart;
+		  bitp++;
+		  *bitp = 0;
+		}
+	    }
+	}
+      bytesperline = (width + linepad) * depth / 8;
+      newimage = XCreateImage (dsp,
+			       theVisual,
+			       depth, ZPixmap, 0, (char *) bit_data,
+			       (width + linepad), height, 8, bytesperline);
+      break;
+      
+    case 15:
+    case 16:
+      bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
+      bitp = bit_data;
+      datap = data;
+      rshift = 0;
+      gshift = nbbits (theVisual->red_mask);
+      bshift = gshift + nbbits (theVisual->green_mask);
+      for (w = (width * height); w > 0; w--)
+	{
+	  temp = ((colrs[(int) *datap].red & theVisual->red_mask) | 
+		  ((colrs[(int) *datap].green >> gshift) & theVisual->green_mask) |
+		  (((colrs[(int) *datap].blue >> bshift) & theVisual->blue_mask)));
+	  
+	  if (BitmapBitOrder (dsp) == MSBFirst)
+	    {
+	      *bitp++ = (temp >> 8) & 0xff;
+	      *bitp++ = temp & 0xff;
+	    }
+	  else
+	    {
+	      *bitp++ = temp & 0xff;
+	      *bitp++ = (temp >> 8) & 0xff;
+	    }
+	  datap++;
+	}
+      
+      newimage = XCreateImage (dsp,
+			       theVisual,
+			       depth, ZPixmap, 0, (char *) bit_data,
+			       width, height, 16, 0);
+      break;
 
-	    case 15:
-	    case 16:
-	       bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
-	       bitp = bit_data;
-	       datap = data;
-	       rshift = 0;
-	       gshift = nbbits (theVisual->red_mask);
-	       bshift = gshift + nbbits (theVisual->green_mask);
-	       for (w = (width * height); w > 0; w--)
-		 {
-		    temp = ((colrs[(int) *datap].red & theVisual->red_mask) | 
-                            ((colrs[(int) *datap].green >> gshift) & theVisual->green_mask) |
-			    (((colrs[(int) *datap].blue >> bshift) & theVisual->blue_mask)));
+    case 24:
+    case 32:
+      bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
+      rshift = highbit (theVisual->red_mask) - 7;
+      gshift = highbit (theVisual->green_mask) - 7;
+      bshift = highbit (theVisual->blue_mask) - 7;
+      bmap_order = BitmapBitOrder (dsp);
+      
+      bitp = bit_data;
+      datap = data;
+      for (w = (width * height); w > 0; w--)
+	{
+	  c =
+	    (((colrs[(int) *datap].red >> 8) & 0xff) << rshift) |
+	    (((colrs[(int) *datap].green >> 8) & 0xff) << gshift) |
+	    (((colrs[(int) *datap].blue >> 8) & 0xff) << bshift);
+	  
+	  datap++;
+	  
+	  if (bmap_order == MSBFirst)
+	    {
+	      *bitp++ = (unsigned char) ((c >> 24) & 0xff);
+	      *bitp++ = (unsigned char) ((c >> 16) & 0xff);
+	      *bitp++ = (unsigned char) ((c >> 8) & 0xff);
+	      *bitp++ = (unsigned char) (c & 0xff);
+	    }
+	  else
+	    {
+	      *bitp++ = (unsigned char) (c & 0xff);
+	      *bitp++ = (unsigned char) ((c >> 8) & 0xff);
+	      *bitp++ = (unsigned char) ((c >> 16) & 0xff);
+	      *bitp++ = (unsigned char) ((c >> 24) & 0xff);
+	    }
+	}
 
-		    if (BitmapBitOrder (dsp) == MSBFirst)
-		      {
-			 *bitp++ = (temp >> 8) & 0xff;
-			 *bitp++ = temp & 0xff;
-		      }
-		    else
-		      {
-			 *bitp++ = temp & 0xff;
-			 *bitp++ = (temp >> 8) & 0xff;
-		      }
-
-		    datap++;
-		 }
-
-	       newimage = XCreateImage (dsp,
-					theVisual,
-					depth, ZPixmap, 0, (char *) bit_data,
-					width, height, 16, 0);
-	       break;
-	    case 24:
-	    case 32:
-	       bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
-
-
-	       rshift = highbit (theVisual->red_mask) - 7;
-	       gshift = highbit (theVisual->green_mask) - 7;
-	       bshift = highbit (theVisual->blue_mask) - 7;
-	       bmap_order = BitmapBitOrder (dsp);
-
-	       bitp = bit_data;
-	       datap = data;
-	       for (w = (width * height); w > 0; w--)
-		 {
-		    c =
-		       (((colrs[(int) *datap].red >> 8) & 0xff) << rshift) |
-		       (((colrs[(int) *datap].green >> 8) & 0xff) << gshift) |
-		       (((colrs[(int) *datap].blue >> 8) & 0xff) << bshift);
-
-		    datap++;
-
-		    if (bmap_order == MSBFirst)
-		      {
-			 *bitp++ = (unsigned char) ((c >> 24) & 0xff);
-			 *bitp++ = (unsigned char) ((c >> 16) & 0xff);
-			 *bitp++ = (unsigned char) ((c >> 8) & 0xff);
-			 *bitp++ = (unsigned char) (c & 0xff);
-		      }
-		    else
-		      {
-			 *bitp++ = (unsigned char) (c & 0xff);
-			 *bitp++ = (unsigned char) ((c >> 8) & 0xff);
-			 *bitp++ = (unsigned char) ((c >> 16) & 0xff);
-			 *bitp++ = (unsigned char) ((c >> 24) & 0xff);
-		      }
-		 }
-
-	       newimage = XCreateImage (dsp,
-					theVisual,
-					depth, ZPixmap, 0, (char *) bit_data,
-					width, height, 32, 0);
-	       break;
-	    default:
-	       fprintf (stderr, "gifhandler: Don't know how to format image for display of depth %d\n", depth);
-	       return (None);
-	 }
-
+      newimage = XCreateImage (dsp,
+			       theVisual,
+			       depth, ZPixmap, 0, (char *) bit_data,
+			       width, height, 32, 0);
+      break;
+    default:
+      fprintf (stderr, "gifhandler: Don't know how to format image for display of depth %d\n", depth);
+      return (None);
+    }
    return (newimage);
 }
-#  endif /* _WINDOWS */
+#else /* _WINDOWS */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height, int depth, ThotColorStruct * colrs)
+#else  /* __STDC__ */
+HBITMAP WIN_MakeImage (hDC, data, width, height, depth, colrs)
+HDC              dsp;
+unsigned char*   data;
+int              width, height;
+int              depth;
+ThotColorStruct* colrs;
+#endif /* __STDC__ */
+{
+  HBITMAP             newimage;
+  unsigned char      *bit_data, *bitp, *datap;
+  int                 temp;
+  int                 w, h;
+  int                 shiftstart, shiftstop, shiftinc;
+  int                 linepad, shiftnum;
+  int                 bytesperline;
+  int                 bmap_order;
+  int                 rshift, gshift, bshift;
 
-#ifdef _WINDOWS
-static signed int tabCorres [256];
+  switch (depth)
+    {
+    case 1:
+    case 2:
+    case 4: 
+      shiftstart = 0;
+      shiftstop = 8;
+      shiftinc = depth;
+      linepad = 8 - (width % 8);
+      bit_data = (unsigned char *) TtaGetMemory (((width + linepad) * height) + 1);
+      bitp = bit_data;
+      datap = data;
+      *bitp = 0;
+      shiftnum = shiftstart;
+      for (h = 0; h < height; h++)
+	{
+	  for (w = 0; w < width; w++)
+	    {
+	      temp = *datap++ << shiftnum;
+	      *bitp = *bitp | temp;
+	      shiftnum = shiftnum + shiftinc;
+	      if (shiftnum == shiftstop)
+		{
+		  shiftnum = shiftstart;
+		  bitp++;
+		  *bitp = 0;
+		}
+	    }
+	  for (w = 0; w < linepad; w++)
+	    {
+	      shiftnum = shiftnum + shiftinc;
+	      if (shiftnum == shiftstop)
+		{
+		  shiftnum = shiftstart;
+		  bitp++;
+		  *bitp = 0;
+		}
+	    }
+	}
+      bytesperline = (width + linepad) * depth / 8;
+      break;
+
+    case 16:
+      bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
+      bitp   = bit_data;
+      datap  = data;
+      rshift = 0;
+      gshift = 5;
+      bshift = 11;
+      for (w = (width * height); w > 0; w--)
+	{
+	  if (IS_WIN95)
+	    temp = (((colrs[(int) *datap].red * 255) & 63488) |
+		    (((colrs[(int) *datap].green * 255) >> gshift) & 2016) |
+		    ((((colrs[(int) *datap].blue * 255) >> bshift) & 31)));
+	  else
+	    temp = (((colrs[(int) *datap].red << 8) & 63488) |
+		    (((colrs[(int) *datap].green << 8) >> gshift) & 2016) |
+		    ((((colrs[(int) *datap].blue << 8) >> bshift) & 31)));
+	  *bitp++ = temp & 0xff;
+	  *bitp++ = (temp >> 8) & 0xff;	  
+	  datap++;
+	}
+      break;
+    case 24:
+      bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
+      bitp   = bit_data;
+      datap  = data;
+      for (h = height; h > 0; h--)
+	{
+	  for (w = width; w > 0; w--)
+	    {
+	      *bitp++ = colrs[(int) *datap].blue;
+	      *bitp++ = colrs[(int) *datap].green;
+	      *bitp++ = colrs[(int) *datap].red;
+	      datap++;
+	    }
+	  if (width % 2 != 0) 
+	    *bitp++=0;
+	}
+      break;
+      
+    case 32:
+      bit_data = (unsigned char *) TtaGetMemory (width * height * 4);
+      bitp   = bit_data;
+      datap  = data;
+      for (h = height; h > 0; h--)
+	{
+	  for (w = width; w > 0; w--)
+	    {
+	      *bitp++ = colrs[(int) *datap].blue;
+	      *bitp++ = colrs[(int) *datap].green;
+	      *bitp++ = colrs[(int) *datap].red;
+	      *bitp++ = 0;
+	      datap++;
+	    }
+	}
+      break;
+    }
+
+  newimage = CreateCompatibleBitmap (hDC, width, height);
+  SetBitmapBits (newimage, width * height * (depth/8), bit_data);
+  TtaFreeMemory (bit_data);
+  return newimage;
+}
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
