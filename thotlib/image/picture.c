@@ -2372,9 +2372,8 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, PictInfo *imageDesc,
 /*----------------------------------------------------------------------
   Do you have to extend the clipping ?
   ----------------------------------------------------------------------*/
-static void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, 
-			      int w, int h, int top, int bottom, 
-			      int left, int right, int frame)   
+void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, int w, int h,
+		       int top, int bottom, int left, int right, int frame)
 {
 #ifndef _GL
    if (pAb->AbLeafType == LtCompound)

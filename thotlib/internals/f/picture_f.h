@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern void DisplayOpaqueGroup ( PtrAbstractBox pAb,
                                  int frame,
                                  int xmin,
@@ -69,6 +70,15 @@ extern ThotBool Ratio_Calculate ( PtrAbstractBox pAb,
                                   int w,
                                   int h,
                                   int frame );
+extern void ClipAndBoxUpdate ( PtrAbstractBox pAb,
+                               PtrBox box,
+                               int w,
+                               int h,
+                               int top,
+                               int bottom,
+                               int left,
+                               int right,
+                               int frame );
 extern void LoadPicture ( int frame,
                           PtrBox box,
                           PictInfo *imageDesc );
@@ -81,6 +91,7 @@ extern unsigned char *GetScreenshot ( int frame,
                                       char *pngurl );
 
 #else /* __STDC__ */
+
 extern void DisplayOpaqueGroup ( PtrAbstractBox pAb,
                                    int frame,
                                    int xmin,
@@ -145,6 +156,15 @@ extern ThotBool Ratio_Calculate ( PtrAbstractBox pAb,
                                     int w,
                                     int h,
                                     int frame );
+extern void ClipAndBoxUpdate ( PtrAbstractBox pAb,
+                                 PtrBox box,
+                                 int w,
+                                 int h,
+                                 int top,
+                                 int bottom,
+                                 int left,
+                                 int right,
+                                 int frame );
 extern void LoadPicture ( int frame,
                             PtrBox box,
                             PictInfo *imageDesc );
