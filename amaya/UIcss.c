@@ -481,11 +481,13 @@ char *CssToPrint (Document doc, char *printdir)
   ----------------------------------------------------------------------*/
 static void CallbackCSS (int ref, int typedata, char *data)
 {
-  CSSInfoPtr          css;
-  PInfoPtr            pInfo;
-  Element             el;
-  int                 val, length;
-  ThotBool            found;
+  CSSInfoPtr      css;
+  PInfoPtr        pInfo;
+  Element         el;
+  Element         firstSel, lastSel;
+  int             j, firstChar, lastChar;
+  int             val, length;
+  ThotBool        found;
 
   val = (int) data;
   switch (ref - BaseCSS)
@@ -533,6 +535,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
 	      /* remove the link to this file */
 	      css = CSSList;
 	      found = FALSE;
+
 	      while (css != NULL && !found)
 		{
 		  if (css->category == CSS_DOCUMENT_STYLE)
@@ -554,7 +557,15 @@ static void CallbackCSS (int ref, int typedata, char *data)
 			    {
 			      el = pInfo->PiLink;
 			      RemoveLink (el, CSSdocument);
+			      /* give current position */
+			      TtaGiveFirstSelectedElement (CSSdocument, &firstSel, &firstChar, &j);
+			      TtaGiveLastSelectedElement (CSSdocument, &lastSel, &j, &lastChar);
+			      /* register this element in the editing history */
+			      TtaOpenUndoSequence (CSSdocument, firstSel, lastSel, firstChar, lastChar);
+			      TtaRegisterElementDelete (el, CSSdocument);
 			      TtaDeleteTree (el, CSSdocument);
+			      TtaCloseUndoSequence (CSSdocument);
+			      TtaSetDocumentModified (CSSdocument);
 			    }
 			}
 		    }
