@@ -4054,11 +4054,12 @@ static void ExportXmlBuffer (Document doc, unsigned char *buffer)
   
   fnum = 1;
   i = 0;
-  while (buffer[i] != EOS)
-    {
-      c = buffer[i++];
-      PutChar ((wchar_t) c, fnum, NULL, doc, TRUE, FALSE, FALSE);
-    }
+  if (buffer)
+    while (buffer[i] != EOS)
+      {
+	c = buffer[i++];
+	PutChar ((wchar_t) c, fnum, NULL, doc, TRUE, FALSE, FALSE);
+      }
 }
 
 /*----------------------------------------------------------------------
