@@ -485,9 +485,9 @@ void LINK_SaveLink (Document source_doc, ThotBool isReplyTo)
 #endif /* ANNOT_ON_ANNOT */
 
 #ifdef ANNOT_ON_ANNOT
-  thread = AnnotMetaData[source_doc].thread;
   if (isReplyTo)
     {
+      thread = AnnotMetaData[source_doc].thread;
       if (thread)
 	{
 	  rootDoc = AnnotThread_searchRoot (thread->rootOfThread);
@@ -498,6 +498,8 @@ void LINK_SaveLink (Document source_doc, ThotBool isReplyTo)
   else
 #endif /* ANNOT_ON ANNOT */
     {
+      /* the threads that have a root of thread on source_doc */
+      thread = &AnnotThread[source_doc];
       /* the annotations on this URL */
       annot_list = AnnotMetaData[source_doc].annotations;  
       doc_url = DocumentURLs[source_doc];
@@ -709,6 +711,23 @@ void LINK_DelMetaFromMemory (Document doc)
   /* we no longer need this part of the RDF model; it holds only
      for the annotations of this document */
   SCHEMA_FreeRDFModel (&AnnotMetaData[doc].rdf_model);
+#ifdef ANNOT_ON_ANNOT 
+  /* @@ JK: maybe remove the references too */
+  AnnotMetaData[doc].thread = NULL;
+
+  /* free the data associated with the thread */
+  if (AnnotThread[doc].annotations)
+    {
+      /* @@ JK: we need a function to erase all the annotations in the list */
+      /*
+	AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
+	annot->body_url, FALSE);
+      */
+      AnnotThread[doc].annotations = NULL;
+      TtaFreeMemory (AnnotThread[doc].rootOfThread);
+      AnnotThread[doc].rootOfThread = NULL;
+    }
+#endif /* ANNOT_ON_ANNOT */
 }
 
 /*-----------------------------------------------------------------------

@@ -457,21 +457,6 @@ void ANNOT_FreeDocumentResource (Document doc)
   LINK_DelMetaFromMemory (doc);
   /* reset the state */
   AnnotMetaData[doc].local_annot_loaded = FALSE;
-
-#ifdef ANNOT_ON_ANNOT
-  /* free the data associated with the thread */
-  if (AnnotThread[doc].annotations)
-    {
-      /* @@ JK: we need a function to erase all the annotations in the list */
-      /*
-	AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
-	annot->body_url, FALSE);
-      */
-      AnnotThread[doc].annotations = NULL;
-      TtaFreeMemory (AnnotThread[doc].rootOfThread);
-      AnnotThread[doc].rootOfThread = NULL;
-    }
-#endif /* ANNOT_ON_ANNOT */
 }
 
 
