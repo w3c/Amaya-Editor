@@ -17,8 +17,11 @@ th.summary { width: 450;
            }
 td.categ   { width: 200;
            }
-h1         {  size: 14;
-            text-align: center
+h1         { size: 14;
+             text-align: center
+           }
+p.date     { size: 14;
+             text-align: center
            }
 H2         {  size: 12;
            }
