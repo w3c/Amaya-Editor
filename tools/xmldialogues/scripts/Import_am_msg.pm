@@ -54,14 +54,14 @@ use vars  qw(		$in_labelfile
 	my %labels = ();	#values of label (=key)and their reference 
 	my %texts = ();	#references (=key) and their text
 	
-	my $current_label = "";	#to notice the current label occured ,in which we are
 	my $current_tag = ""; #to notice in which tag we are
+	my $current_label = "";	#to notice the current label occured ,in which we are
+	my $current_language = "";
 	
 	my $text = ""; # to store the message text
 	my $english_text = "";# and the english version
 	
 	my $found = 0; #boolean used during the parse of a whole label to treat the new adds
-	my $modification_necessary = 0; #boolean used during the parse of a whole label to treat the updating
 	my @list_of_lang_occur = () ; #as is name
 	 	$encodage = ""; #to load the encoding type of the messages
 	my $end_label = ""; #to now what the latest label used by Amaya
@@ -117,14 +117,13 @@ sub import_a_language {
 	do {
 		$_ = @list = Read_label::init_label ($in_labelfile);
 	}while ($_ == 0);	
-	{#to fill the hach %labels :
-		my $i = $list[0] + 1;
-		#print	 "\n", $list[0] , "\n";	
-		do {
+	#to fill the hach %labels :
+	my $i = $list[0] + 1;
+	do {
 			$labels{ $list[$i] } = $list[$i + 1];
 			$i += 2;
-		}while ( $i <= ($list [0] * 3) );
-	}
+	} while ( $i <= ($list [0] * 3) );
+	
 	
 #to load the messages and their references into %texts
 	my $total = 0;		
@@ -181,7 +180,7 @@ sub start_hndl {
 	my %attributes = ();
 	
 	($expat,$element,%attributes) = @_ ; #to store the parameters : element and attributes and their values	
-	$element = $current_tag;
+	 $current_tag = $element ;
 	 
 #unused
 	my $numberparam = 0; 
@@ -196,19 +195,14 @@ sub start_hndl {
 			delete $attributes {"last_update"} ;
 		}
 		
-		if (	defined ($attributes{"xml:lang"} ) ) {
-			if ( 	$attributes{"xml:lang"} eq $language_code
-					&& defined ( $texts{ $labels{$current_label}} ) 
-				) {
-				debug ("Message necessitant comparaison");
-				$modification_necessary = $found = 1 ;
-			}
-			elsif ($attributes {"xml:lang"} eq "en" ) { # to have the english version when updating 
-				$english_text = "OK";
-			}
+		if (	defined ($attributes{"xml:lang"}) ) {
+			$current_language = $attributes{"xml:lang"};
 			print OUT "\t";	
 			addbegintag ( $element, %attributes );
 			$text = ""; ############to reboot it
+			if ($current_language eq $language_code) {
+				$found = 1;
+			}
 		}
 		else {
 			print "==> The <$element> at line " . $expat->current_line () . 
@@ -247,7 +241,7 @@ sub start_hndl {
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
 	elsif ( $element eq "language" ) {
 		print OUT "\t";	
-		addbegintag ( $element, undef);					
+		addbegintag ( $element, %attributes );					
 	}	
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
 	elsif ($element eq "control") {
@@ -256,16 +250,16 @@ sub start_hndl {
 	}
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
 	elsif ($element eq "messages") {
-		addbegintag ( $element, undef );		
+		addbegintag ( $element);		
 		print OUT "\n";#	small things necessary for presentation 
 	}
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
-	elsif ( $element eq "") {
-		print "empty element at line " .  $expat->current_line () . "\n";
+	elsif ( $element eq "") { #I don't now while it's possible
+		#print "empty element at line " .  $expat->current_line () . " of the base\n";
 	} 
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
 	else {  #treat all the tag mismatched
-		print "tag  $element unknown at line " . $expat->current_line () . "\n";
+		print "tag  $element unknown at line " . $expat->current_line () . " of the base\n";
 	}	
 
 
@@ -302,9 +296,7 @@ sub end_hndl { #	do the modification if necessary
 			$found = 0;
 		}else { # there isn't yet a translate for this label into the base
 			if ( $texts{ $labels{$current_label}} ) {
-				debug ("added");
-				chomp ($date = `date`);
-				print OUT "\t<message xml::lang=\"$language_code\" last_update=\"$date\" >";
+				print OUT "\t<message xml:lang=\"$language_code\">";
 				print OUT $texts{ $labels{$current_label}};
 				print OUT "</message>\n";
 			}else {
@@ -315,16 +307,49 @@ sub end_hndl { #	do the modification if necessary
 				}
 			}	
 		}
+		$text = "";
 		$english_text = "";
+		$current_label = "";
 	}
-#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
-	elsif ($end_tag eq "control") { 
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	elsif ($end_tag eq "message") {
+		if ($current_language eq "en" ) {
+			$english_text = $text;
+		}
+		elsif ($current_language eq $language_code) {
+			
+			if (	defined ($texts{ $labels{$current_label}} )
+					&& $text ne $texts{ $labels{$current_label}}) {	
+				my $choice = 0 ;
+				do {
+						print "The old value is :$text\n";
+						if ($english_text ne "" && $english_text ne "OK") {
+							print "The english version gives :$english_text\n";
+						}
+						print "The new would be :" . $texts{ $labels{$current_label}} . "\n";
+						print "If you agree with update, type 1,\nsinon 0\nOur choice [0] :\n"; 
+						$choice = <STDIN>; chomp $choice;
+						if ($choice eq "") {
+							$choice = 0;
+						}
+				} while ( $choice eq "" || $choice =~ /^\D/ || $choice < 0 || $choice >= 2 ) ;
+				if ( $choice == 1) {
+					$text = $texts{ $labels{$current_label}};
+				}
+			} else {} #no problem they are the same or their isn't a new translate	
+		}
+		#always
+		recopy ( $text );
+		$current_language = $current_tag = undef;
+	}	
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+		elsif ($end_tag eq "control") { 
 #	if we add a new language, we have to mention it	
 		my $exist = 0;
 		foreach $_ (@list_of_lang_occur) {
 			if ($_ eq $language_code) {
 				$exist = 1;	
-				print "\nc'est une mise a jour\n";		
+				print "\n\tIt is an update\n";		
 			}	
 		}
 		if  ($exist == 0) {
@@ -388,31 +413,10 @@ sub default_hndl {	#for all the cases of an invalid xml document
 			@list_of_lang_occur = (@list_of_lang_occur, $data) ;
 		}
 		elsif ($current_tag eq "message") {
-			if ( $modification_necessary) {
-				if ($data ne $texts{ $labels{$current_label}}) {	
-					my $choice = 0 ;
-					do {
-						print "L'ancienne valeur est :$data\n";
-						if ($english_text ne "" && $english_text ne "OK") {
-							print "La version anglaise donne :$english_text\n";
-						}
-						print "La nouvelle serait :" . $texts{ $labels{$current_label}} . "\n";
-						print "Si vous voulez effectuer la mise a jour tapez 1,\nsinon 0\n"; 
-						$choice = <STDIN>;
-					}
-					while ( $choice eq "" || $choice =~ /^\D/ || $choice < 0 || $choice >= 2 ) ;
-					if ( $choice == 1) {
-						$data = $texts{ $labels{$current_label}};
-					}
-				}	
-				$modification_necessary = 0;			
-			}
-			if ($english_text eq "OK") {					
-				$english_text = $data;
-			}
+			$text .= $data;
 			
 		}
-		recopy ( $data );
+		
 	}
 	else { # do nothing
 	}
@@ -424,7 +428,7 @@ __END__
 #------------------end of file Import_am_msg.pm-------------------------------
 
 
-########################no more utility
+Package write by Emmanuel Huck
 
 
 
