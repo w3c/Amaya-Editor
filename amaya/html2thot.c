@@ -1004,103 +1004,118 @@ ThotBool         IsBlockElement (Element el)
   ----------------------------------------------------------------------*/
 static void         TextToDocument ()
 {
-   ElementType      elType, lastType;
-   Element          elText, parent, ancestor, prev;
+   ElementType      elType, lastType, prevType;
+   Element          elText, parent, ancestor, prev, last;
    int              i;
    ThotBool         ignoreLeadingSpaces;
 
    CloseBuffer ();
    if (HTMLcontext.lastElement != NULL)
      {
-	i = 0;
-	if (InsertSibling ())
-	   /* There is a previous sibling (HTMLcontext.lastElement) for the new Text
-	      element */
-	  {
-	     parent = TtaGetParent (HTMLcontext.lastElement);
-	     if (parent == NULL)
-		parent = HTMLcontext.lastElement;
-	     elType = TtaGetElementType (parent);
-	     ignoreLeadingSpaces = TRUE;
-	     if (IsCharacterLevelElement (HTMLcontext.lastElement))
+       i = 0;
+       if (InsertSibling ())
+	 /* There is a previous sibling */
+	 /* (HTMLcontext.lastElement) for the new Text element */
+	 {
+	   ignoreLeadingSpaces = TRUE;
+	   parent = TtaGetParent (HTMLcontext.lastElement);
+	   if (parent == NULL)
+	     parent = HTMLcontext.lastElement;
+	   elType = TtaGetElementType (parent);
+	   if (IsCharacterLevelElement (HTMLcontext.lastElement))
+	     {
+	       if (elType.ElTypeNum != HTML_EL_Option_Menu &&
+		   elType.ElTypeNum != HTML_EL_OptGroup)
 		 {
-		   if (elType.ElTypeNum != HTML_EL_Option_Menu &&
-		       elType.ElTypeNum != HTML_EL_OptGroup)
+		   ignoreLeadingSpaces = FALSE;
+		   elType = TtaGetElementType (HTMLcontext.lastElement);
+		   if (elType.ElTypeNum == HTML_EL_BR)
+		     ignoreLeadingSpaces = TRUE;
+		 }
+	     }
+	   else
+	     {
+	       lastType = TtaGetElementType (HTMLcontext.lastElement);
+	       if ((strcmp (TtaGetSSchemaName (lastType.ElSSchema), "HTML") == 0) &&
+		   ((lastType.ElTypeNum == HTML_EL_Comment_) ||
+		    (lastType.ElTypeNum == HTML_EL_XMLPI)))
+		 {
+		   /* Search lhe last significant sibling */
+		   /* (except comments and PI */
+		   last = HTMLcontext.lastElement;
+		   TtaPreviousSibling (&last);
+		   while (last != NULL && ignoreLeadingSpaces)
 		     {
-		       ignoreLeadingSpaces = FALSE;
-		       elType = TtaGetElementType (HTMLcontext.lastElement);
-		       if (elType.ElTypeNum == HTML_EL_BR)
-			 ignoreLeadingSpaces = TRUE;
+		       prevType = TtaGetElementType (last);
+		       if ((strcmp (TtaGetSSchemaName (prevType.ElSSchema), "HTML") == 0) &&
+			   (prevType.ElTypeNum != HTML_EL_Comment_) &&
+			   (prevType.ElTypeNum != HTML_EL_XMLPI))
+			 ignoreLeadingSpaces = FALSE;
+		       TtaPreviousSibling (&last);
 		     }
 		 }
-	     else
-	       {
-		 lastType = TtaGetElementType (HTMLcontext.lastElement);
-		 if ((strcmp (TtaGetSSchemaName (lastType.ElSSchema), "HTML") == 0) &&
-		     ((lastType.ElTypeNum == HTML_EL_Comment_) ||
-		      (lastType.ElTypeNum == HTML_EL_XMLPI)))
-		   ignoreLeadingSpaces = XhtmlCannotContainText (elType);
-		 
-		 if (ignoreLeadingSpaces)
-		   {
-		     if ((strcmp (TtaGetSSchemaName (lastType.ElSSchema), "MathML") == 0) &&
-			 (lastType.ElTypeNum == MathML_EL_MathML))
-		       ignoreLeadingSpaces = FALSE;
-		   }
-	       }
-	  }
-	else
-	   /* the new Text element should be the first child of the latest
-	      element encountered */
-	  {
-	     parent = HTMLcontext.lastElement;
-	     ignoreLeadingSpaces = TRUE;
-	     elType = TtaGetElementType (HTMLcontext.lastElement);
-	     if (elType.ElTypeNum != HTML_EL_Option_Menu &&
-		 elType.ElTypeNum != HTML_EL_OptGroup)
-		{
-	        ancestor = parent;
-	        while (ancestor && 
-		       ignoreLeadingSpaces && IsCharacterLevelElement (ancestor))
-		   {
+	       
+	       if (ignoreLeadingSpaces)
+		 {
+		   if ((strcmp (TtaGetSSchemaName (lastType.ElSSchema), "MathML") == 0) &&
+		       (lastType.ElTypeNum == MathML_EL_MathML))
+		     ignoreLeadingSpaces = FALSE;
+		 }
+	     }
+	 }
+       else
+	 /* the new Text element should be the first child of the latest
+	    element encountered */
+	 {
+	   parent = HTMLcontext.lastElement;
+	   ignoreLeadingSpaces = TRUE;
+	   elType = TtaGetElementType (HTMLcontext.lastElement);
+	   if (elType.ElTypeNum != HTML_EL_Option_Menu &&
+	       elType.ElTypeNum != HTML_EL_OptGroup)
+	     {
+	       ancestor = parent;
+	       while (ancestor && 
+		      ignoreLeadingSpaces && IsCharacterLevelElement (ancestor))
+		 {
 		   prev = ancestor;
 		   TtaPreviousSibling (&prev);
 		   if (prev == NULL)
-		      ancestor = TtaGetParent (ancestor);
+		     ancestor = TtaGetParent (ancestor);
 		   else
-		      ignoreLeadingSpaces = FALSE;
-		   }
-		}
-	  }
-	if (ignoreLeadingSpaces &&
-	    !Within (HTML_EL_Preformatted, DocumentSSchema) &&
-	    !Within (HTML_EL_STYLE_, DocumentSSchema) &&
-	    !Within (HTML_EL_SCRIPT, DocumentSSchema))
-	  /* suppress leading spaces */
-	  while (inputBuffer[i] <= SPACE && inputBuffer[i] != EOS)
-	    i++;
-	if (inputBuffer[i] != EOS)
-	  {
-	    elType = TtaGetElementType (HTMLcontext.lastElement);
-	    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && HTMLcontext.mergeText)
-	      TtaAppendTextContent (HTMLcontext.lastElement, &(inputBuffer[i]),
-				    HTMLcontext.doc);
-	    else
-	      {
-		/* create a TEXT element */
-		elType.ElSSchema = DocumentSSchema;
-		elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-		elText = TtaNewElement (HTMLcontext.doc, elType);
-		TtaSetElementLineNumber (elText, BufferLineNumber);
-		InsertElement (&elText);
-		HTMLcontext.lastElementClosed = TRUE;
-		HTMLcontext.mergeText = TRUE;
-		/* put the content of the input buffer into the TEXT element */
-		if (elText != NULL)
-		  TtaSetTextContent (elText, &(inputBuffer[i]), HTMLcontext.language,
-				     HTMLcontext.doc);
-	      }
-	  }
+		     ignoreLeadingSpaces = FALSE;
+		 }
+	     }
+	 }
+       
+       if (ignoreLeadingSpaces &&
+	   !Within (HTML_EL_Preformatted, DocumentSSchema) &&
+	   !Within (HTML_EL_STYLE_, DocumentSSchema) &&
+	   !Within (HTML_EL_SCRIPT, DocumentSSchema))
+	 /* suppress leading spaces */
+	 while (inputBuffer[i] <= SPACE && inputBuffer[i] != EOS)
+	   i++;
+       if (inputBuffer[i] != EOS)
+	 {
+	   elType = TtaGetElementType (HTMLcontext.lastElement);
+	   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && HTMLcontext.mergeText)
+	     TtaAppendTextContent (HTMLcontext.lastElement, &(inputBuffer[i]),
+				   HTMLcontext.doc);
+	   else
+	     {
+	       /* create a TEXT element */
+	       elType.ElSSchema = DocumentSSchema;
+	       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	       elText = TtaNewElement (HTMLcontext.doc, elType);
+	       TtaSetElementLineNumber (elText, BufferLineNumber);
+	       InsertElement (&elText);
+	       HTMLcontext.lastElementClosed = TRUE;
+	       HTMLcontext.mergeText = TRUE;
+	       /* put the content of the input buffer into the TEXT element */
+	       if (elText != NULL)
+		 TtaSetTextContent (elText, &(inputBuffer[i]),
+				    HTMLcontext.language, HTMLcontext.doc);
+	     }
+	 }
      }
    InitBuffer ();
 }
