@@ -1411,10 +1411,10 @@ View                view;
    tempfile = TtaGetMemory (MAX_LENGTH);
    tempfile[0] = EOS;
    toparse = 0;
+   ActiveTransfer (newdoc);
    if (IsW3Path (pathname))
      {
        /* load the document from the Web */
-       ActiveTransfer (newdoc);
 #ifdef AMAYA_JAVA
        toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, 
 			       AMAYA_SYNC | AMAYA_NOCACHE,
