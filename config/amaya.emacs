@@ -42,7 +42,7 @@
 
 #moving around 
 <Key>Delete:        TtcDeleteSelection() 
-<Key>Backspace:    TtcDeletePreviousChar() 
+<Key>Backspace:     TtcDeletePreviousChar() 
 <Key>Escape:        TtcParentElement() 
 <Key>Return:        TtcCreateElement() 
 <Key>Home:          TtcStartOfLine() 
@@ -209,8 +209,8 @@ Shift Ctrl <Key>D:                 DeleteAnchor()
 Shift Ctrl <Key>T:                 CreateTarget()
 
 #View Menu
-Shift Alt <Key>V , Alt <Key>a:           TtcSwitchCommands() 
-Shift Alt <Key>V , Alt <Key>b:           TtcSwitchButtonBar() 
+Shift Alt <Key>V , Alt <Key>a:           ShowAddress() 
+Shift Alt <Key>V , Alt <Key>b:           ShowButtons() 
 Shift Alt <Key>V , Alt <Key>c:           ShowToC() 
 Shift Alt <Key>V , Alt <Key>i:           ShowAlternate() 
 Shift Alt <Key>V , Alt <Key>l:           ShowLinks() 

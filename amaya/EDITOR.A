@@ -201,8 +201,8 @@ MENUS
 	view:1 Links button:BDeleteAnchor -> DeleteAnchor;
 	view:1 Links button:BMemorizeXPtr -> XPointer_bufferStore;
 
-	view:1 Views toggle:TShowButtonbar -> TtcSwitchButtonBar;
-	view:1 Views toggle:TShowTextZone -> TtcSwitchCommands;
+	view:1 Views toggle:TShowButtonbar -> ShowButtons;
+	view:1 Views toggle:TShowTextZone -> ShowAddress;
 	view:1 Views toggle:TShowMapAreas -> ShowMapAreas;
 	view:1 Views toggle:TShowTargets -> ShowTargets;
 	view:1 Views toggle:TZoomIn -> ZoomIn;
@@ -257,6 +257,7 @@ MENUS
 	view:1 Special button:BMakeID -> MakeIDMenu;
         view:1 Special Separator;
 	view:1 Special.Coptions button:BConfigGeneral -> ConfigGeneral;
+	view:1 Special.Coptions button:BConfigBrowse -> ConfigBrowse;
 	view:1 Special.Coptions button:BConfigPublish -> ConfigPublish;
 	view:1 Special.Coptions button:BConfigCache -> ConfigCache;
 	view:1 Special.Coptions button:BConfigProxy -> ConfigProxy;

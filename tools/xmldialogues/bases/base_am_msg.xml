@@ -1459,6 +1459,21 @@
 	<message xml:lang="es">Mostrar imágenes de fondo</message>
 	<message xml:lang="pt">Exibir imagens de fundo</message>
 </label>
+<label define="AM_EXPORT_CRLF">
+	<message xml:lang="en">Export CR/LF</message>
+	<message xml:lang="fr">Exporter CR/LF</message>
+	<message xml:lang="de">CR/LF exportieren</message>
+	<message xml:lang="es">Exportar CR/LF</message>
+	<message xml:lang="pt">Exportar CR/LF</message>
+</label>
+<label define="AM_BROWSE_MENU">
+	<message xml:lang="en">Browsing Preferences</message>
+	<message xml:lang="fr">Configuration de navigation</message>
+</label>
+<label define="AM_LOAD_IMAGES">
+	<message xml:lang="en">Load images</message>
+	<message xml:lang="fr">Charger les images</message>
+</label>
 <label define="AM_ENABLE_DOUBLECLICK">
 	<message xml:lang="en">Double click activates link</message>
 	<message xml:lang="fr">Cliquer deux fois pour suivre un lien</message>
@@ -1466,13 +1481,6 @@
 	<message xml:lang="it">Il doppio click attiva il collegamento</message>
 	<message xml:lang="es">Doble clic activa enlaces</message>
 	<message xml:lang="pt">Duplo clique ativa enlace</message>
-</label>
-<label define="AM_EXPORT_CRLF">
-	<message xml:lang="en">Export CR/LF</message>
-	<message xml:lang="fr">Exporter CR/LF</message>
-	<message xml:lang="de">CR/LF exportieren</message>
-	<message xml:lang="es">Exportar CR/LF</message>
-	<message xml:lang="pt">Exportar CR/LF</message>
 </label>
 <label define="AM_PUBLISH_MENU">
 	<message xml:lang="en">Publishing Preferences</message>

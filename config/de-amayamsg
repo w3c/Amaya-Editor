@@ -165,158 +165,160 @@
 163 Dialogsprache
 164 Optionale Mehrfachtasten verwenden
 165 Hintergrundbild anzeigen
-166 Doppelklick aktiviert Verweis
-167 CR/LF exportieren
-168 Veröffentlichen
-169 ETAGS und Preconditions verwenden
-170 PUT durch GET verifizieren
-171 Dateiname, falls URI mit '/' endet
-172 Fenstergeometrie
-173 Aktuelle Geometrie speichern
-174 Standardgeometrie einstellen
-175 Änderungen werden erst beim Öffnen eines neuen Fensters wirksam.
-176 Farben
-177 Schrift (Dokument)
-178 Hintergrund(Dokument)
-179 Schrift (Menüs)
-180 Hintergrund (Menüs)
-181 Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.
-182 Startseite
-183 Bevorzugte Sprachen
-184 Datei der Profildefinitionen
-185 Verfügbare Profile
-186 Änderungen werden erst bei einem Neustart wirksam
-187 Profile
-188 URI des Schablonen-Servers angeben
-189 Schablonen
-190 PUT automatisch an diese Domäne umleiten
-191 Formatvorlagen ignorieren
-192 Transformationstyp
-193 (Einträge durch Leerzeichen trennen)
-194 Ausschließen
-195 Zulassen
-196 Zeichenname
-197 Heimatverzeichnis
-198 Temporärverzeichnis
-199 Palette benutzen
-200 Sprachen
-201 Anmerkungen konfigurieren
-202 Autor
-203 Veröffentlichen auf
-204 Laden von
-205 Lokale Anmerkungen automatisch laden
-206 Entfernte Anmerkungen automatisch laden
-207 Offline-Modus
-208 Markierung
-209 Cursor
-210 Ausrichtung
-211 Hochformat
-212 Querformat
-213 FTP zulassen
-214 XML-Dokument nicht wohlgeformt - als HTML laden oder Parserfehler anzeigen?
-215 XML-Dokument nicht wohlgeformt - Parsefehler anzeigen?
-216 Ungültige Zeichen - als HTML laden oder Parserfehler anzeigen?
-217 Ungültige Zeichen
-218 Dokumenttyp:
-219 Einige Tags/Attribute wurden ignoriert - siehe Ansicht/Parserfehler anzeigen
-220 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
-221 Durch das Bearbeiten und Speichern ändert sich der Dokumenttyp
-222 Nicht verfügbar
-223 Durchsuchen
-224 Durchsuchen
-225 Auswahl
-226 Anmerkungsfilter
-227 Zeigen
-228 Verbergen
-229 Alle
-230 Keine
-231 * = verborgen, - = teilweise verborgen
-232 Filtern nach
-233 Autor
-234 Typ
-235 Server
-236 Zugriffstasten
-237 Ignorieren
-238 Formatelement
-239 Kann XPointer nicht erzeugen
-240 Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich
-241 Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich
-242 Kein Ziel zum Verschieben der Anmerkung gefunden
-243 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
-244 Anmerkung an geändertes Dokument ist nicht möglich, bitte erst speichern
-245 Kein Ersteller für Anmerkung konfiguriert, bitte das Menü "Anmerkungen/Konfiguration" öffnen
-246 Für diese Anmerkung kann kein XPointer erzeugt werden
-247 Neue Anmerkung erzeugen
-248 Absenden der Anmerkung gescheitert
-249 Löschen der Anmerkung gescheitert
-250 Anmerkung gelöscht
-251 Laden des Anmerkungsindex gescheitert
-252 Fehler
-253 Zeichensatz wählen
-254 MIME-Typ wählen
-255 Zeichensatz ändern
-256 MIME-Typ ändern
-257 Ändern
-258 Dieser Dokumenttyp unterstützt keine Zeichensätze
-259 Diese Option kann nur mit einem HTTP URI Ziel verwendet werden
-260 Fehler: ungültiger MIME-Typ
-261 Unbekannt
-262 Formatvorlagen wurden ignoriert - siehe Ansicht/Parserfehler anzeigen
-263 Dieses Dokument wird bereits in einem anderen Fenster angezeigt
-264 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)
-265 Beim Einfügen oder Ändern des Dokumenttyps wird das Dokument neu geparst. Nicht gespeicherte Änderungen bleiben dabei erhalten.
-266 Für XHTML application/xhtml+xml verwenden
-267 MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden
-268 **Lock succeed!
-269 **Lock failed!
-270 **Locking %s...
-271 **Document %s is locked!
-272 **Document %s is locked by %s (timeout %s)
-273 **Overwrite lock information?
-274 **Copy the lock information? 
-275 **Try to unlock the document before...
-276 **Unlock succeed!
-277 **Unlock failed!
-278 **Unlocking %s...
-279 **Document %s is unlocked!
-280 **Unlock the document? 
-281 **Document properties
-282 **Document properties are not available
-283 **Document properties are temporarily unavailable. Try again later...
-284 **Looking for document properties...
-285 **Sorry, no WebDAV support for URLs of this type %s
-286 **Failed to save lock info in the local base
-287 **Failed to remove lok info from local base
-288 **Sorry, this operation is not allowed for %s
-289 **Request failed! Reason: Failed Dependency
-290 **Request failed! Reason: %s
-291 **Try again? 
-292 **WebDAV Preferences
-293 **User's Personal Reference (URL)
-294 **User's WebDAV Resource List (URL URL)
-295 **Lock Depth
-296 **infinity
-297 **Lock Timeout
-298 **Infinite
-299 **Other
-300 **Seconds
-301 **Lock Scope
-302 **exclusive
-303 **shared
-304 **Awarenees
-305 **General awareness
-306 **Awareness on exit
-307 **Timeline
-308 **SVG Library
-309 **Copy option
-310 **Copy selection
-311 **Refer to selection
-312 **Add new model into library
-313 **URL of the new SVG file ...
-314 **Library title
-315 **Library URL
-316 **Create library
-317 **Add library
-318 **Create or search library
-319 **The current selection not contain only SVG elements. Please reselect
-320 **The library title is mandatory
+166 CR/LF exportieren
+167 **Browsing Preferences
+168 **Load images
+169 Doppelklick aktiviert Verweis
+170 Veröffentlichen
+171 ETAGS und Preconditions verwenden
+172 PUT durch GET verifizieren
+173 Dateiname, falls URI mit '/' endet
+174 Fenstergeometrie
+175 Aktuelle Geometrie speichern
+176 Standardgeometrie einstellen
+177 Änderungen werden erst beim Öffnen eines neuen Fensters wirksam.
+178 Farben
+179 Schrift (Dokument)
+180 Hintergrund(Dokument)
+181 Schrift (Menüs)
+182 Hintergrund (Menüs)
+183 Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.
+184 Startseite
+185 Bevorzugte Sprachen
+186 Datei der Profildefinitionen
+187 Verfügbare Profile
+188 Änderungen werden erst bei einem Neustart wirksam
+189 Profile
+190 URI des Schablonen-Servers angeben
+191 Schablonen
+192 PUT automatisch an diese Domäne umleiten
+193 Formatvorlagen ignorieren
+194 Transformationstyp
+195 (Einträge durch Leerzeichen trennen)
+196 Ausschließen
+197 Zulassen
+198 Zeichenname
+199 Heimatverzeichnis
+200 Temporärverzeichnis
+201 Palette benutzen
+202 Sprachen
+203 Anmerkungen konfigurieren
+204 Autor
+205 Veröffentlichen auf
+206 Laden von
+207 Lokale Anmerkungen automatisch laden
+208 Entfernte Anmerkungen automatisch laden
+209 Offline-Modus
+210 Markierung
+211 Cursor
+212 Ausrichtung
+213 Hochformat
+214 Querformat
+215 FTP zulassen
+216 XML-Dokument nicht wohlgeformt - als HTML laden oder Parserfehler anzeigen?
+217 XML-Dokument nicht wohlgeformt - Parsefehler anzeigen?
+218 Ungültige Zeichen - als HTML laden oder Parserfehler anzeigen?
+219 Ungültige Zeichen
+220 Dokumenttyp:
+221 Einige Tags/Attribute wurden ignoriert - siehe Ansicht/Parserfehler anzeigen
+222 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
+223 Durch das Bearbeiten und Speichern ändert sich der Dokumenttyp
+224 Nicht verfügbar
+225 Durchsuchen
+226 Durchsuchen
+227 Auswahl
+228 Anmerkungsfilter
+229 Zeigen
+230 Verbergen
+231 Alle
+232 Keine
+233 * = verborgen, - = teilweise verborgen
+234 Filtern nach
+235 Autor
+236 Typ
+237 Server
+238 Zugriffstasten
+239 Ignorieren
+240 Formatelement
+241 Kann XPointer nicht erzeugen
+242 Anbringen eines Start XPointer an ein internes zusätzliches Element nicht möglich
+243 Anbringen eines End XPointer an ein internes zusätzliches Element nicht möglich
+244 Kein Ziel zum Verschieben der Anmerkung gefunden
+245 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
+246 Anmerkung an geändertes Dokument ist nicht möglich, bitte erst speichern
+247 Kein Ersteller für Anmerkung konfiguriert, bitte das Menü "Anmerkungen/Konfiguration" öffnen
+248 Für diese Anmerkung kann kein XPointer erzeugt werden
+249 Neue Anmerkung erzeugen
+250 Absenden der Anmerkung gescheitert
+251 Löschen der Anmerkung gescheitert
+252 Anmerkung gelöscht
+253 Laden des Anmerkungsindex gescheitert
+254 Fehler
+255 Zeichensatz wählen
+256 MIME-Typ wählen
+257 Zeichensatz ändern
+258 MIME-Typ ändern
+259 Ändern
+260 Dieser Dokumenttyp unterstützt keine Zeichensätze
+261 Diese Option kann nur mit einem HTTP URI Ziel verwendet werden
+262 Fehler: ungültiger MIME-Typ
+263 Unbekannt
+264 Formatvorlagen wurden ignoriert - siehe Ansicht/Parserfehler anzeigen
+265 Dieses Dokument wird bereits in einem anderen Fenster angezeigt
+266 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)
+267 Beim Einfügen oder Ändern des Dokumenttyps wird das Dokument neu geparst. Nicht gespeicherte Änderungen bleiben dabei erhalten.
+268 Für XHTML application/xhtml+xml verwenden
+269 MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden
+270 **Lock succeed!
+271 **Lock failed!
+272 **Locking %s...
+273 **Document %s is locked!
+274 **Document %s is locked by %s (timeout %s)
+275 **Overwrite lock information?
+276 **Copy the lock information? 
+277 **Try to unlock the document before...
+278 **Unlock succeed!
+279 **Unlock failed!
+280 **Unlocking %s...
+281 **Document %s is unlocked!
+282 **Unlock the document? 
+283 **Document properties
+284 **Document properties are not available
+285 **Document properties are temporarily unavailable. Try again later...
+286 **Looking for document properties...
+287 **Sorry, no WebDAV support for URLs of this type %s
+288 **Failed to save lock info in the local base
+289 **Failed to remove lok info from local base
+290 **Sorry, this operation is not allowed for %s
+291 **Request failed! Reason: Failed Dependency
+292 **Request failed! Reason: %s
+293 **Try again? 
+294 **WebDAV Preferences
+295 **User's Personal Reference (URL)
+296 **User's WebDAV Resource List (URL URL)
+297 **Lock Depth
+298 **infinity
+299 **Lock Timeout
+300 **Infinite
+301 **Other
+302 **Seconds
+303 **Lock Scope
+304 **exclusive
+305 **shared
+306 **Awarenees
+307 **General awareness
+308 **Awareness on exit
+309 **Timeline
+310 **SVG Library
+311 **Copy option
+312 **Copy selection
+313 **Refer to selection
+314 **Add new model into library
+315 **URL of the new SVG file ...
+316 **Library title
+317 **Library URL
+318 **Create library
+319 **Add library
+320 **Create or search library
+321 **The current selection not contain only SVG elements. Please reselect
+322 **The library title is mandatory

@@ -2657,8 +2657,18 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   TtaSetItemOff (doc, 1, File, BForward);
 	   TtaSetItemOff (doc, 1, File, BSave);
 	   TtaSetItemOff (doc, 1, File, BSynchro);
-	   TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
-	   TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
+	   /*TtaSetToggleItem (doc, 1, Views, TShowButtonbar, SButtons[doc]);*/
+	   if (SButtons[doc])
+	     TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
+	   else
+	     /* hide buttons */
+	     TtcSwitchButtonBar (doc, 1);
+	   /*TtaSetToggleItem (doc, 1, Views, TShowTextZone, SAddress[doc]);*/
+	   if (SAddress[doc])
+	     TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
+	   else
+	     /* hide the address */
+	     TtcSwitchCommands (doc, 1);
 	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
 	   TtaSetToggleItem (doc, 1, Special, TSectionNumber, SNumbering[doc]);
 	   TtaGetEnvBoolean ("SHOW_TARGET", &show);
@@ -6203,7 +6213,7 @@ void InitAmaya (NotifyEvent * event)
    char               *s;
    char               *tempname;
    int                 i;
-   ThotBool            restoredDoc, numbering, map;
+   ThotBool            restoredDoc, numbering, map, add, bt;
 
    if (AmayaInitialized)
       return;
@@ -6388,10 +6398,14 @@ void InitAmaya (NotifyEvent * event)
 
    /* Initialize environment variables if they are not defined */
    TtaSetEnvBoolean ("SECTION_NUMBERING", FALSE, FALSE);
+   TtaSetEnvBoolean ("SHOW_BUTTONS", TRUE, FALSE);
+   TtaSetEnvBoolean ("SHOW_ADDRESS", TRUE, FALSE);
    TtaSetEnvBoolean ("SHOW_MAP_AREAS", FALSE, FALSE);
    TtaSetEnvBoolean ("SHOW_TARGET", FALSE, FALSE);
    /* get current value */
    TtaGetEnvBoolean ("SECTION_NUMBERING", &numbering);
+   TtaGetEnvBoolean ("SHOW_BUTTONS", &bt);
+   TtaGetEnvBoolean ("SHOW_ADDRESS", &add);
    TtaGetEnvBoolean ("SHOW_MAP_AREAS", &map);
    /* Create and intialize resources needed for each document */
    /* Style sheets are strored in directory .amaya/0 */
@@ -6405,6 +6419,8 @@ void InitAmaya (NotifyEvent * event)
        ReadOnlyDocument[i] = FALSE;
        SNumbering[i] = numbering;
        MapAreas[i] = map;
+       SButtons[i] = bt;
+       SAddress[i] = add;
        /* initialize history */
        InitDocHistory (i);
        /* Create a temporary sub-directory for storing the HTML and
@@ -6624,6 +6640,72 @@ void ShowMapAreas (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  ShowButtons
+  Execute the "Show Buttons" command
+  ----------------------------------------------------------------------*/
+void ShowButtons (Document doc, View view)
+{
+#ifdef _WINDOWS
+  int frame = GetWindowNumber (doc, view);
+
+  if (frame == 0 || frame > 10)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      HMENU hmenu = WIN_GetMenu (frame); 
+      if (!SButtons[doc])
+	{
+          CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
+          SButtons[doc] = TRUE;
+	}
+      else
+	{
+	  hmenu = WIN_GetMenu (frame); 
+	  CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
+	  SButtons[doc] = FALSE;
+	}
+   }
+#else /* _WINDOWS */
+  SButtons[doc] = !SButtons[doc];
+  TtaSetToggleItem (doc, 1, Views, TShowButtonbar, SButtons[doc]);
+#endif /* _WINDOWS */
+  TtcSwitchButtonBar (doc, view);
+}
+
+/*----------------------------------------------------------------------
+  ShowAddress
+  Execute the "Show Address" command
+  ----------------------------------------------------------------------*/
+void ShowAddress (Document doc, View view)
+{
+#ifdef _WINDOWS
+  int frame = GetWindowNumber (doc, view);
+
+  if (frame == 0 || frame > 10)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      HMENU hmenu = WIN_GetMenu (frame); 
+      if (!SAddress[doc])
+	{
+          CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
+          SAddress[doc] = TRUE;
+	}
+      else
+	{
+	  hmenu = WIN_GetMenu (frame); 
+	  CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
+	  SAddress[doc] = FALSE;
+	}
+   }
+#else /* _WINDOWS */
+  SAddress[doc] = !SAddress[doc];
+  TtaSetToggleItem (doc, 1, Views, TShowTextZone, SAddress[doc]);
+#endif /* _WINDOWS */
+  TtcSwitchCommands (doc, view);
+}
+
+/*----------------------------------------------------------------------
   SectionNumbering
   Execute the "Section Numbering" command
   ----------------------------------------------------------------------*/
@@ -6651,6 +6733,7 @@ void SectionNumbering (Document doc, View view)
    }
 #else /* _WINDOWS */
   SNumbering[doc] = !SNumbering[doc];
+  TtaSetToggleItem (doc, 1, Special, TSectionNumber, SNumbering[doc]);
 #endif /* _WINDOWS */
   ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
 }

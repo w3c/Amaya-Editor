@@ -8,13 +8,6 @@ THOTDOC=$(THOTDIR)/doc
 ; THOTPRINT=lpr -Pprintername -#nbex -Trealname
 THOTPRINT=lpr
 
-[thot]
-THOTSYSSCH=$(THOTDIR)/schemas:$(THOTDIR)/amaya:$(THOTDIR)/annotlib
-THOTDOC=$(THOTDIR)/doceditor
-HelpDocument=Thotman-E
-RESDYN=YES
-LANG=en
-
 [amaya]
 HOME_PAGE=
 ENABLE_CACHE=Yes
@@ -34,7 +27,8 @@ SAFE_PUT_REDIRECT=
 Profiles_File=amaya.profiles
 Profile=Editor
 ACCESSKEY_MOD=Alt
-
+SHOW_ADDRESS=Yes
+SHOW_BUTTONS=Yes
 [annotations]
 ANNBASE=$(THOTDIR)/misc/annotations/documents/base
 PERSOANNDIR=$(THOTDIR)/misc/annotations/documents

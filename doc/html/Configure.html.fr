@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -196,7 +195,6 @@ alt="General Preferences Menu" /></p>
       stockées.<br />
       <strong>Note :</strong> l'utilisateur ne peut changer l'adresse de ce
       répertoire.<br />
-      <br />
     </dd>
   <dt><strong>Le répertoire Amaya temporary</strong> (sur stations Windows
   uniquement, non montré dans la figure)</dt>
@@ -209,16 +207,14 @@ alt="General Preferences Menu" /></p>
       Si le <a href="#Cache">cache</a> était localisé sous le répertoire
       temporaire précédent, un nouveau cache sera créé sous le nouveau
       répertoire.<br />
-      <br />
     </dd>
   <dt><strong>Home Page</strong></dt>
     <dd>Spécifie l'URI qu'Amaya chargera au démarrage ou quand l'utilisateur
       pressera le bouton Home. Un exemple est
       <code>http://www.w3.org</code>.<br />
       <strong>Note :</strong> Un URI complet doit être utilisé.<br />
-      <br />
     </dd>
-  <dt><strong><a name="Enable">Activer le multi-touche</a></strong></dt>
+  <dt><strong><a name="Enable">Activer le multi-key</a></strong></dt>
     <dd>Activer ou désactiver la méthode optionnelle d'entrée multi-touches. 
       <p>La méthode optionnelle d'entrée (Multi-Key) est basée sur une
       séquence de deux touches commençant avec "l'accent" suivi de la
@@ -227,63 +223,47 @@ alt="General Preferences Menu" /></p>
       <p>Les séquences de caractères utilisées par les méthodes d'entrée
       multi-touches standard et optionnelle sont résumées dans <a
       href="EditChar.html.fr#Keyboard">deux tables différentes</a>.</p>
-      <p></p>
     </dd>
-  <dt>&nbsp;<strong>Montrer les images en arrière plan</strong></dt>
+  <dt>&nbsp;<strong>Montrer les images de fond</strong></dt>
     <dd>Contrôle si les images en arrière plan doivent être montrées ou non.
       Cette option est effective uniquement quand on charge un nouveau
-      document.</dd>
-</dl>
-
-<h3><span style="font-size: 12pt">Le double clic active les liens</span></h3>
-<dl>
-    <dd>Depuis la première version d'Amaya, les utilisateurs ont besoin de
-      double cliquer sur un lien pour l'activer. Cela permet de différencier
-      l'édition d'un lien de son activation. Vous pouvez changer ce
-      comportement en désactivant cette option. 
-      <p></p>
+      document. <br />
     </dd>
+  <dt><strong>Montrer les boutons</strong></dt>
+    <dd>Contrôle si la barre de boutons est visible ou non dans chaque vue
+      principale de document</dd>
+  <dt><strong>Montrer l'adresse</strong></dt>
+    <dd>Contrôle si la barre de boutons est visible ou non dans chaque vue
+      principale de document</dd>
+  <dt><strong>Montrer boutons</strong></dt>
+    <dd>Contrôle si la barre de boutons est visible ou non dans chaque vue
+      principale de document</dd>
   <dt><strong>Montrer les cibles</strong></dt>
     <dd>Contrôle si les cibles de liens sont visualisées ou non. Montrer les
       cibles peut aider quand on veut <a href="Links.html.fr#L245">créer de
       nouveaux liens</a>. Cette option agit immédiatement sur toutes les vues
-      formatées de documents. 
-      <p></p>
+      formatées de documents. <br />
     </dd>
   <dt><strong>Numéroter les sections</strong></dt>
     <dd>Contrôle si les <a href="Numbering.html.fr">sections sont
       numérotées</a> ou non. Cette option agit immédiatement sur toutes les
-      vues formatées de documents. 
-      <p></p>
+      vues formatées de documents. <br />
     </dd>
   <dt><strong>Exporter CR/LF</strong> (Windows uniquement)</dt>
     <dd>Indique si les fins de lignes des fichiers produits par Amaya se
-      terminent par CR/LF (format DOS) ou par un simple LF (format standard). 
-      <p></p>
-    </dd>
-  <dt><strong>Activer le FTP (expérimental)</strong></dt>
-    <dd>Amaya permet de suivre les URLs de type FTP. Ce support est
-      expérimental et il n'est pas encore débugué. Par exemple, les URLs FTP
-      nécessitent une authentification de l'utilisateur, l'authentification
-      de l'information n'étant pas toujours mémorisée. Aussi, le fait de
-      taper sur le bouton Stop pendant un téléchargement FTP peut faire
-      planter Amaya. Malgré ces problèmes, nous avons rajouté cette option
-      dans Amaya afin que les autres développeurs puissent nous aider à le
-      débuguer rapidement. Par défaut, cette option est inactive.<br />
+      terminent par CR/LF (format DOS) ou par un simple LF (format standard).
+      <br />
     </dd>
   <dt><strong>Accès rapides</strong></dt>
     <dd>Spécifie la touche <strong>Alt</strong> ou <strong>Control</strong>
       utilisée pour mettre en oeuvre les <a
       href="Browsing.html.fr#L294">accès rapides</a> du document ou indique
-      que les accès rapides définis les documents sont ignorés. 
-      <p></p>
+      que les accès rapides définis les documents sont ignorés. <br />
     </dd>
   <dt><strong>Menu de la taille de la police de caractère</strong> (stations
   Unix uniquement)</dt>
     <dd>Spécifie la taille de la police de caractère dans tous les menus
-      d'Amaya. Cette option est aussi prise en compte au démarrage. 
-      <p><br />
-      </p>
+      d'Amaya. Cette option est aussi prise en compte au démarrage. <br />
     </dd>
   <dt><strong>Zoom sur les caractères</strong></dt>
     <dd>Il est possible d'augmenter et de diminuer l'effet de zoom, fenêtre
@@ -293,14 +273,12 @@ alt="General Preferences Menu" /></p>
       Cette option vous permet de changer le zoom par défaut pour toutes les
       fenêtres. Ce changement affecte uniquement les tailles des polices de
       caractères mais pas les images. Cette option est reflétée immédiatement
-      sur tous les documents ouverts.<br />
-      <br />
+      sur tous les documents ouverts. <br />
     </dd>
   <dt><strong>Le délai du double clic</strong> (stations Unix uniquement)</dt>
     <dd>Cette option permet de contrôler le délai pour lequel deux clics de
       souris sont considérés comme un double clic. Cette option est prise en
-      compte uniquement au démarrage.<br />
-      <br />
+      compte uniquement au démarrage. <br />
     </dd>
   <dt><strong>Langue du dialogue</strong></dt>
     <dd>Spécifie la langue de tous les menus d'Amaya et les messages des
@@ -317,7 +295,83 @@ alt="General Preferences Menu" /></p>
       <strong>Amaya/config</strong>) et doivent utiliser le code correct ISO
       639 comme préfixe (it- pour Italien, de- pour Allemand, etc.). Le
       fichier code spécifique HTML doit aussi être créé.</p>
-      <p></p>
+    </dd>
+</dl>
+
+<h4>Préférences de navigation</h4>
+
+<p>Cette boîte de dialogue vous permet d'enregistrer vos préférences de
+navigation.</p>
+
+<p style="text-align: center"><img src="../images/BrowsingMenu-fr.gif"
+alt="Publish Preferences Menu" /></p>
+<dl>
+  <dt></dt>
+  <dt>&nbsp;<strong>Charger les images</strong></dt>
+    <dd>Contrôle si les images doivent être chargées ou non. Cette option est
+      effective pour les nouveaux documentsargés. <br />
+      <br />
+    </dd>
+  <dt><strong>Le double clic active les liens</strong></dt>
+    <dd>Depuis la première version d'Amaya, les utilisateurs ont besoin de
+      double cliquer sur un lien pour l'activer. Cela permet de différencier
+      l'édition d'un lien de son activation. Vous pouvez changer ce
+      comportement en désactivant cette option. <br />
+      <br />
+    </dd>
+  <dt><strong>Activer le FTP</strong></dt>
+    <dd>Amaya permet de suivre les URLs de type FTP. Ce support est
+      expérimental et il n'est pas encore débugué. Par exemple, les URLs FTP
+      nécessitent une authentification de l'utilisateur, l'authentification
+      de l'information n'étant pas toujours mémorisée. Aussi, le fait de
+      taper sur le bouton Stop pendant un téléchargement FTP peut faire
+      planter Amaya. Malgré ces problèmes, nous avons rajouté cette option
+      dans Amaya afin que les autres développeurs puissent nous aider à le
+      débuguer rapidement. Par défaut, cette option est inactive.<br />
+    </dd>
+  <dt><strong>Accès rapides</strong></dt>
+    <dd>Spécifie la touche <strong>Alt</strong> ou <strong>Control</strong>
+      utilisée pour mettre en oeuvre les <a
+      href="Browsing.html.fr#L294">accès rapides</a> du document ou indique
+      que les accès rapides définis les documents sont ignorés. <br />
+    </dd>
+  <dt><strong>Menu de la taille de la police de caractère</strong> (stations
+  Unix uniquement)</dt>
+    <dd>Spécifie la taille de la police de caractère dans tous les menus
+      d'Amaya. Cette option est aussi prise en compte au démarrage. <br />
+    </dd>
+  <dt><strong>Zoom sur les caractères</strong></dt>
+    <dd>Il est possible d'augmenter et de diminuer l'effet de zoom, fenêtre
+      de document par fenêtre de document. Chaque document (texte et images)
+      visualisé à l'intérieur d'une fenêtre zoomée sera visualisée plus gros
+      ou plus petit que sa taille réelle selon le zoom courant.<br />
+      Cette option vous permet de changer le zoom par défaut pour toutes les
+      fenêtres. Ce changement affecte uniquement les tailles des polices de
+      caractères mais pas les images. Cette option est reflétée immédiatement
+      sur tous les documents ouverts. <br />
+    </dd>
+  <dt><strong>Le délai du double clic</strong> (stations Unix uniquement)</dt>
+    <dd>Cette option permet de contrôler le délai pour lequel deux clics de
+      souris sont considérés comme un double clic. Cette option est prise en
+      compte uniquement au démarrage. <br />
+    </dd>
+  <dt><strong>Langue du dialogue</strong></dt>
+    <dd>Spécifie la langue de tous les menus d'Amaya et les messages des
+      dialogues. La langue par défaut est l'Anglais Américain (valeur
+      <code>en_US</code>). A ce moment précis, seulement trois langues sont
+      disponibles : Anglais (<code>en</code>), Français (<code>fr</code>), et
+      Allemand (<code>de</code>). Au démarrage, Amaya charge les fichiers de
+      dialogue selon la langue de dialogue courante : les fichiers en-, fr-,
+      ou de- . Ces fichiers de dialogue se trouvent dans le répertoire
+      <strong>Amaya/config</strong>. 
+      <p>Il est possible d'adapter Amaya aux nouvelles langues ISO-Latin-1 en
+      écrivant les fichiers de dialogue correspondants. Ces fichiers de
+      dialogue doivent se trouver dans le même répertoire (c'est à dire
+      <strong>Amaya/config</strong>) et doivent utiliser le code correct ISO
+      639 comme préfixe (it- pour Italien, de- pour Allemand, etc.). Le
+      fichier code spécifique HTML doit aussi être créé.</p>
+      <p><br />
+      </p>
     </dd>
 </dl>
 
@@ -342,7 +396,7 @@ alt="Publish Preferences Menu" /></p>
       modifie pas le type MIME des anciens documents: le type MIME qui est
       recu est celui qui sera utilisé pour publier le document, sauf si vous
       utilisez la commande <strong>Sauver comme</strong>. Il est à noter que
-      cette  option nécessite aussi de modifier la configuration de votre
+      cette option nécessite aussi de modifier la configuration de votre
       serveur si celui-ci n'enregistre pas les meta-données associées à
       chaque document.</dd>
   <dt><strong>Utiliser les ETAGS et les conditions requises</strong></dt>

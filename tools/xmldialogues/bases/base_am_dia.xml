@@ -1363,7 +1363,7 @@
 	<message xml:lang="pt">Salvar seleção como XPointer</message>
 </label>
 <label define="TShowButtonbar">
-	<message xml:lang="en">Show buttonbar</message>
+	<message xml:lang="en">Show button bar</message>
 	<message xml:lang="fr">Montrer boutons</message>
 	<message xml:lang="de">Symbolleiste</message>
 	<message xml:lang="it">Mostra barra dei pulsanti</message>
@@ -1812,6 +1812,10 @@
 	<message xml:lang="it">Generali...</message>
 	<message xml:lang="es">General...</message>
 	<message xml:lang="pt">Geral...</message>
+</label>
+<label define="BConfigBrowse">
+	<message xml:lang="en">Browsing...</message>
+	<message xml:lang="fr">Navigation...</message>
 </label>
 <label define="BConfigPublish">
 	<message xml:lang="en">Publishing...</message>

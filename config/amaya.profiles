@@ -190,8 +190,8 @@ HelpAmaya
 HelpAtW3C
 HelpIndex
 ParseAsHTML
-TtcSwitchButtonBar
-TtcSwitchCommands
+ShowButtons
+ShowAddress
 ZoomIn
 ZoomOut
 
@@ -478,6 +478,7 @@ HelpStyleSheets
 ########### OPTIONAL MODULES
 [config]
 ConfigGeneral
+ConfigBrowse
 ConfigPublish
 ConfigCache
 ConfigProxy

@@ -155,7 +155,7 @@
 153 Create target
 154 Delete anchor
 155 Store selection as XPointer
-156 Show buttonbar
+156 Show button bar
 157 Show address
 158 Show map areas
 159 Show targets
@@ -207,56 +207,57 @@
 205 Add/Remove IDs...
 206 Preferences
 207 General...
-208 Publishing...
-209 Cache...
-210 Proxy...
-211 Colors...
-212 Window Geometry...
-213 Language Negotiation...
-214 Profiles...
-215 Templates...
-216 Annotate selection
-217 Annotate document
-218 Move to selection
-219 Move to stored XPointer
-220 Reply to annotation
-221 Post to server
-222 Delete
-223 Load
-224 Customize query...
-225 Local filter...
-226 Configure...
-227 Lock resource...
-228 Unlock resource...
-229 View resource properties...
-230 Copy lock information...
-231 Locked?
-232 Preferences...
-233 About Amaya
-234 About Amaya at W3C
-235 Index
-236 Browsing
-237 Views
-238 Selecting
-239 Document
-240 Creating elements
-241 Attributes
-242 Characters
-243 Restructuring
-244 Links
-245 Tables
-246 Image maps
-247 Math
-248 Graphics
-249 Xml support
-250 Style sheets
-251 Searching
-252 Spell Checking
-253 Publishing
-254 Printing
-255 Numbering
-256 Making books
-257 Annotations
-258 Configuring Amaya
-259 ShortCuts
-260 Accessibility in Amaya
+208 Browsing...
+209 Publishing...
+210 Cache...
+211 Proxy...
+212 Colors...
+213 Window Geometry...
+214 Language Negotiation...
+215 Profiles...
+216 Templates...
+217 Annotate selection
+218 Annotate document
+219 Move to selection
+220 Move to stored XPointer
+221 Reply to annotation
+222 Post to server
+223 Delete
+224 Load
+225 Customize query...
+226 Local filter...
+227 Configure...
+228 Lock resource...
+229 Unlock resource...
+230 View resource properties...
+231 Copy lock information...
+232 Locked?
+233 Preferences...
+234 About Amaya
+235 About Amaya at W3C
+236 Index
+237 Browsing
+238 Views
+239 Selecting
+240 Document
+241 Creating elements
+242 Attributes
+243 Characters
+244 Restructuring
+245 Links
+246 Tables
+247 Image maps
+248 Math
+249 Graphics
+250 Xml support
+251 Style sheets
+252 Searching
+253 Spell Checking
+254 Publishing
+255 Printing
+256 Numbering
+257 Making books
+258 Annotations
+259 Configuring Amaya
+260 ShortCuts
+261 Accessibility in Amaya

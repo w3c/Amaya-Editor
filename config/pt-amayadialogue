@@ -207,56 +207,57 @@
 205 Adicionar/Remover IDs...
 206 Preferências
 207 Geral...
-208 Publicação...
-209 Cache...
-210 Proxy...
-211 Cores...
-212 Geometria da janela...
-213 Negociação de idioma...
-214 Perfís...
-215 Templates...
-216 Anotar seleção
-217 Anotar documento
-218 Mover até a seleção
-219 Mover para o XPointer memorizado
-220 Responder à anotação
-221 Registrar
-222 Apagar
-223 Carregar
-224 Personalizar consulta...
-225 Filtro local...
-226 Configurar...
-227 Travar o recurso
-228 Destravar o recurso
-229 Exibir as propriedades do recurso
-230 Copiar a informação da trava...
-231 Travado?
-232 Preferências...
-233 Sobre Amaya
-234 Sobre Amaya no W3C
-235 Índice
-236 Navegar
-237 Vistas
-238 Selecionar
-239 Documento
-240 Criar elementos
-241 Atributos
-242 Caracteres
-243 Reestruturar
-244 Enlaces (links)
-245 Tabelas
-246 Mapas de Imagem
-247 Matemática
-248 Gráficos
-249 Suporte à XML
-250 Folhas de estilo
-251 Achar...
-252 Verificar ortografia
-253 Publicar
-254 Imprimir
-255 Numberar
-256 Criar livros
-257 Anotações
-258 Configurar Amaya
-259 Atalhos
-260 Accessibilidade em Amaya
+208 **Browsing...
+209 Publicação...
+210 Cache...
+211 Proxy...
+212 Cores...
+213 Geometria da janela...
+214 Negociação de idioma...
+215 Perfís...
+216 Templates...
+217 Anotar seleção
+218 Anotar documento
+219 Mover até a seleção
+220 Mover para o XPointer memorizado
+221 Responder à anotação
+222 Registrar
+223 Apagar
+224 Carregar
+225 Personalizar consulta...
+226 Filtro local...
+227 Configurar...
+228 Travar o recurso
+229 Destravar o recurso
+230 Exibir as propriedades do recurso
+231 Copiar a informação da trava...
+232 Travado?
+233 Preferências...
+234 Sobre Amaya
+235 Sobre Amaya no W3C
+236 Índice
+237 Navegar
+238 Vistas
+239 Selecionar
+240 Documento
+241 Criar elementos
+242 Atributos
+243 Caracteres
+244 Reestruturar
+245 Enlaces (links)
+246 Tabelas
+247 Mapas de Imagem
+248 Matemática
+249 Gráficos
+250 Suporte à XML
+251 Folhas de estilo
+252 Achar...
+253 Verificar ortografia
+254 Publicar
+255 Imprimir
+256 Numberar
+257 Criar livros
+258 Anotações
+259 Configurar Amaya
+260 Atalhos
+261 Accessibilidade em Amaya

@@ -475,6 +475,10 @@ THOT_EXPORT DocumentType             DocumentTypes[DocumentTableLength];
 THOT_EXPORT ThotBool                 ReadOnlyDocument[DocumentTableLength];
 /* Document with section numbering */
 THOT_EXPORT ThotBool                 SNumbering[DocumentTableLength];
+/* Document that shows buttons */
+THOT_EXPORT ThotBool                 SButtons[DocumentTableLength];
+/* Document that shows address */
+THOT_EXPORT ThotBool                 SAddress[DocumentTableLength];
 /* Document that shows map areas */
 THOT_EXPORT ThotBool                 MapAreas[DocumentTableLength];
 /* identifier of the document displaying the source code */

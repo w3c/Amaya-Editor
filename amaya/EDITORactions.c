@@ -2595,6 +2595,15 @@ void ConfigGeneral (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  ConfigBrowse
+  A frontend to the Browsing Editing configuration menu
+  ----------------------------------------------------------------------*/
+void ConfigBrowse (Document doc, View view)
+{
+   BrowseConfMenu (doc, view);
+}
+
+/*----------------------------------------------------------------------
   ConfigPublish
   A frontend to the Browsing Editing configuration menu
   ----------------------------------------------------------------------*/

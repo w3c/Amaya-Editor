@@ -165,158 +165,160 @@
 163 Idioma de dialogo
 164 Activar combinación de teclas (`+a=à)
 165 Mostrar imágenes de fondo
-166 Doble clic activa enlaces
-167 Exportar CR/LF
-168 Preferencias de publicación
-169 Usar ETAGS y precondiciones
-170 Verificar cada PUT con un GET
-171 El nombre por omisión de URL termina en '/'
-172 Preferencias de geometría
-173 Guardar geometría actual
-174 Restaurar la geometría por omisión
-175 Los cambios serán efectivos cuando abra una nueva ventana.
-176 Preferencias de color
-177 Color del documento
-178 Color del fondo del documento
-179 Menú color de documento
-180 Menú color de fondo
-181 No pude iniciar el caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el caché.
-182 Principal
-183 Lista de idiomas preferidos como "es, en, fr":
-184 Ubicación de fichero de definición de perfiles
-185 Selección de perfil
-186 Estos cambios no serán efectivos hasta que se reinicie Amaya
-187 Preferencias de perfiles
-188 Introduzca la URL del servidor de plantillas
-189 Preferencias de plantillas
-190 Permitir redirecciones PUT automáticas en estos dominios
-191 Ignorar hojas de estilo
-192 Tipo de transformación
-193 (separar cada entrada con un espacio)
-194 No hay proxy es estos dominios
-195 Sólo proxy en estos dominios
-196 Nombre de carácter
-197 Directorio de usuario de Amaya
-198 Directorio temporal
-199 Usar paleta
-200 Negociación de idioma
-201 Configuración para anotaciones
-202 Anotación de usuario
-203 Servidor de publicación
-204 Servidores de anotaciones
-205 Autocargar anotaciones locales
-206 Autocargar anotaciones remotas
-207 Deshabilitar autorecarga remota en cada inicio (para trabajo off line)
-208 Selección de color
-209 Caret color
-210 Orientación
-211 Vertical
-212 Apaisado
-213 Activar FTP
-214 XML inválido - ¿Recargar como HTML o mostrar análisis de errores?
-215 XML inválido - ¿Mostrar análisis de errores?
-216 Caracteres inválidos - ¿Recargar como HTML o mostrar análisis de errores?
-217 Caracteres inválidos
-218 Perfil de este documento:
-219 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
-220 La codificación de este documento no está soportada por Amaya
-221 Al editar y guardar este documento se cambiará su tipo
-222 No disponible
-223 Buscar
-224 Navegador de ficheros
-225 Selección
-226 Filtro local de anotaciones
-227 Mostrar
-228 Esconder
-229 Mostrar todo
-230 Esconder todo
-231 * significa escondido, - significa parcialmente escondido
-232 Opciones de filtrado
-233 Por autor
-234 Por tipo
-235 Por servidor
-236 Atajos de teclado
-237 Ignorar
-238 Elemento de estilo
-239 No puedo crear un XPointer
-240 Imposible adjuntar un XPointer inicial sobre un elemento interno agregado
-241 Imposible adjuntar un XPointer final sobre un elemento interno agregado
-242 No sé a dónde mover la anotación
-243 No puedo mover la anotación a otro documento
-244 No puede comentar un documento modificado. Por favor guárdelo primero.
-245 No hay comentarios de usuario declarado. Por favor abra el menú de configuración de Comentarios
-246 No puedo construir un XPointer para este comentario
-247 Crear un nuevo comentario
-248 Fallo al enviar el comentario
-249 Fallo al borrar el comentario
-250 ¡Comentario borrado!
-251 Fallo al cargar el índice de comentarios
-252 Error
-253 Seleccionar un juego de caracteres
-254 Seleccionar un tipo MIME
-255 Cambiar juego de caracteres
-256 Cambiar tipo MIME
-257 Cambiar
-258 Este tipo de documento no soporta charsets
-259 Para usar esta opción el destino tiene que ser una URL HTTP
-260 Error: tipo MIME inválido
-261 Desconocido
-262 Se ignoran estilos - vea Vistas/Mostrar fichero log
-263 Este documento ya está cargado en otra ventana
-264 Guardar la copia puede originar un problema de pérdida de actualización
-265 Crear o cambiar el tipo de documento provoca que el documento sea reanalizado.
-266 No se desharán las modificaciones pendientes.
-267 Para documentos XHTML utilice el tipo MIME de la aplicación xhtml+xml
-268 **Lock succeed!
-269 **Lock failed!
-270 **Locking %s...
-271 **Document %s is locked!
-272 **Document %s is locked by %s (timeout %s)
-273 **Overwrite lock information?
-274 **Copy the lock information? 
-275 **Try to unlock the document before...
-276 **Unlock succeed!
-277 **Unlock failed!
-278 **Unlocking %s...
-279 **Document %s is unlocked!
-280 **Unlock the document? 
-281 **Document properties
-282 **Document properties are not available
-283 **Document properties are temporarily unavailable. Try again later...
-284 **Looking for document properties...
-285 **Sorry, no WebDAV support for URLs of this type %s
-286 **Failed to save lock info in the local base
-287 **Failed to remove lok info from local base
-288 **Sorry, this operation is not allowed for %s
-289 **Request failed! Reason: Failed Dependency
-290 **Request failed! Reason: %s
-291 **Try again? 
-292 **WebDAV Preferences
-293 **User's Personal Reference (URL)
-294 **User's WebDAV Resource List (URL URL)
-295 **Lock Depth
-296 **infinity
-297 **Lock Timeout
-298 **Infinite
-299 **Other
-300 **Seconds
-301 **Lock Scope
-302 **exclusive
-303 **shared
-304 **Awarenees
-305 **General awareness
-306 **Awareness on exit
-307 **Timeline
-308 **SVG Library
-309 **Copy option
-310 **Copy selection
-311 **Refer to selection
-312 **Add new model into library
-313 **URL of the new SVG file ...
-314 **Library title
-315 **Library URL
-316 **Create library
-317 **Add library
-318 **Create or search library
-319 **The current selection not contain only SVG elements. Please reselect
-320 **The library title is mandatory
+166 Exportar CR/LF
+167 **Browsing Preferences
+168 **Load images
+169 Doble clic activa enlaces
+170 Preferencias de publicación
+171 Usar ETAGS y precondiciones
+172 Verificar cada PUT con un GET
+173 El nombre por omisión de URL termina en '/'
+174 Preferencias de geometría
+175 Guardar geometría actual
+176 Restaurar la geometría por omisión
+177 Los cambios serán efectivos cuando abra una nueva ventana.
+178 Preferencias de color
+179 Color del documento
+180 Color del fondo del documento
+181 Menú color de documento
+182 Menú color de fondo
+183 No pude iniciar el caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el caché.
+184 Principal
+185 Lista de idiomas preferidos como "es, en, fr":
+186 Ubicación de fichero de definición de perfiles
+187 Selección de perfil
+188 Estos cambios no serán efectivos hasta que se reinicie Amaya
+189 Preferencias de perfiles
+190 Introduzca la URL del servidor de plantillas
+191 Preferencias de plantillas
+192 Permitir redirecciones PUT automáticas en estos dominios
+193 Ignorar hojas de estilo
+194 Tipo de transformación
+195 (separar cada entrada con un espacio)
+196 No hay proxy es estos dominios
+197 Sólo proxy en estos dominios
+198 Nombre de carácter
+199 Directorio de usuario de Amaya
+200 Directorio temporal
+201 Usar paleta
+202 Negociación de idioma
+203 Configuración para anotaciones
+204 Anotación de usuario
+205 Servidor de publicación
+206 Servidores de anotaciones
+207 Autocargar anotaciones locales
+208 Autocargar anotaciones remotas
+209 Deshabilitar autorecarga remota en cada inicio (para trabajo off line)
+210 Selección de color
+211 Caret color
+212 Orientación
+213 Vertical
+214 Apaisado
+215 Activar FTP
+216 XML inválido - ¿Recargar como HTML o mostrar análisis de errores?
+217 XML inválido - ¿Mostrar análisis de errores?
+218 Caracteres inválidos - ¿Recargar como HTML o mostrar análisis de errores?
+219 Caracteres inválidos
+220 Perfil de este documento:
+221 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
+222 La codificación de este documento no está soportada por Amaya
+223 Al editar y guardar este documento se cambiará su tipo
+224 No disponible
+225 Buscar
+226 Navegador de ficheros
+227 Selección
+228 Filtro local de anotaciones
+229 Mostrar
+230 Esconder
+231 Mostrar todo
+232 Esconder todo
+233 * significa escondido, - significa parcialmente escondido
+234 Opciones de filtrado
+235 Por autor
+236 Por tipo
+237 Por servidor
+238 Atajos de teclado
+239 Ignorar
+240 Elemento de estilo
+241 No puedo crear un XPointer
+242 Imposible adjuntar un XPointer inicial sobre un elemento interno agregado
+243 Imposible adjuntar un XPointer final sobre un elemento interno agregado
+244 No sé a dónde mover la anotación
+245 No puedo mover la anotación a otro documento
+246 No puede comentar un documento modificado. Por favor guárdelo primero.
+247 No hay comentarios de usuario declarado. Por favor abra el menú de configuración de Comentarios
+248 No puedo construir un XPointer para este comentario
+249 Crear un nuevo comentario
+250 Fallo al enviar el comentario
+251 Fallo al borrar el comentario
+252 ¡Comentario borrado!
+253 Fallo al cargar el índice de comentarios
+254 Error
+255 Seleccionar un juego de caracteres
+256 Seleccionar un tipo MIME
+257 Cambiar juego de caracteres
+258 Cambiar tipo MIME
+259 Cambiar
+260 Este tipo de documento no soporta charsets
+261 Para usar esta opción el destino tiene que ser una URL HTTP
+262 Error: tipo MIME inválido
+263 Desconocido
+264 Se ignoran estilos - vea Vistas/Mostrar fichero log
+265 Este documento ya está cargado en otra ventana
+266 Guardar la copia puede originar un problema de pérdida de actualización
+267 Crear o cambiar el tipo de documento provoca que el documento sea reanalizado.
+268 No se desharán las modificaciones pendientes.
+269 Para documentos XHTML utilice el tipo MIME de la aplicación xhtml+xml
+270 **Lock succeed!
+271 **Lock failed!
+272 **Locking %s...
+273 **Document %s is locked!
+274 **Document %s is locked by %s (timeout %s)
+275 **Overwrite lock information?
+276 **Copy the lock information? 
+277 **Try to unlock the document before...
+278 **Unlock succeed!
+279 **Unlock failed!
+280 **Unlocking %s...
+281 **Document %s is unlocked!
+282 **Unlock the document? 
+283 **Document properties
+284 **Document properties are not available
+285 **Document properties are temporarily unavailable. Try again later...
+286 **Looking for document properties...
+287 **Sorry, no WebDAV support for URLs of this type %s
+288 **Failed to save lock info in the local base
+289 **Failed to remove lok info from local base
+290 **Sorry, this operation is not allowed for %s
+291 **Request failed! Reason: Failed Dependency
+292 **Request failed! Reason: %s
+293 **Try again? 
+294 **WebDAV Preferences
+295 **User's Personal Reference (URL)
+296 **User's WebDAV Resource List (URL URL)
+297 **Lock Depth
+298 **infinity
+299 **Lock Timeout
+300 **Infinite
+301 **Other
+302 **Seconds
+303 **Lock Scope
+304 **exclusive
+305 **shared
+306 **Awarenees
+307 **General awareness
+308 **Awareness on exit
+309 **Timeline
+310 **SVG Library
+311 **Copy option
+312 **Copy selection
+313 **Refer to selection
+314 **Add new model into library
+315 **URL of the new SVG file ...
+316 **Library title
+317 **Library URL
+318 **Create library
+319 **Add library
+320 **Create or search library
+321 **The current selection not contain only SVG elements. Please reselect
+322 **The library title is mandatory

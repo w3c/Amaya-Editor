@@ -138,6 +138,10 @@ extern void ChangeAttrOnRoot ( Document doc,
                                int attrNum );
 extern void ShowMapAreas ( Document doc,
                            View view );
+extern void ShowButtons ( Document doc,
+                          View view );
+extern void ShowAddress ( Document doc,
+                          View view );
 extern void SectionNumbering ( Document doc,
                                View view );
 extern void MakeIDMenu ( Document doc,
@@ -338,6 +342,10 @@ extern void ChangeAttrOnRoot (/* Document doc,
                                  int attrNum */);
 extern void ShowMapAreas (/* Document doc,
                              View view */);
+extern void ShowButtons (/* Document doc,
+                            View view */);
+extern void ShowAddress (/* Document doc,
+                            View view */);
 extern void SectionNumbering (/* Document doc,
                                  View view */);
 extern void MakeIDMenu (/* Document doc,

@@ -44,6 +44,10 @@
 #define mToggleGeneral       12
 #define MAX_GENERALMENU_DLG  13
 
+#define BrowseMenu          1
+#define mToggleBrowse       2
+#define MAX_BROWSEMENU_DLG  3
+
 #define PublishMenu         1
 #define mTogglePublish      2
 #define mDefaultName        3

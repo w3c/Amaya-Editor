@@ -144,10 +144,7 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 	{IDC_TDIALOGUELANG,AM_DIALOGUE_LANGUAGE},
 	{IDC_ACCESSKEY, AM_ACCESSKEY},
 	{IDC_ANONE, AM_NONE},
-	{IDC_MULTIKEY, AM_ENABLE_MULTIKEY},
 	{IDC_BGIMAGES, AM_SHOW_BG_IMAGES},
-	{IDC_DOUBLECLICK, AM_ENABLE_DOUBLECLICK},
-	{IDC_ENABLEFTP, AM_ENABLE_FTP},
 	{0, 0}
 };
 #endif /* _WINDOWS */
@@ -162,9 +159,26 @@ static char     HomePage [MAX_LENGTH];
 static ThotBool ExportCRLF;
 static ThotBool Multikey;
 static ThotBool BgImages;
-static ThotBool DoubleClick;
+static ThotBool S_Buttons;
+static ThotBool S_Address;
 static ThotBool S_Targets;
 static ThotBool S_Numbers;
+
+/* Browse menu options */
+#ifdef _WINDOWS
+static HWND     BrowseHwnd =  NULL;
+static AM_WIN_MenuText WIN_BrowseMenuText[] = 
+{
+	{AM_INIT_ALL, AM_BROWSE_MENU},
+	{IDC_LOADIMG, AM_LOAD_IMAGES},
+	{IDC_DOUBLECLICK, AM_ENABLE_DOUBLECLICK},
+	{IDC_ENABLEFTP, AM_ENABLE_FTP},
+	{0, 0}
+};
+#endif /* _WINDOWS */
+static int      BrowseBase;
+static ThotBool LoadImages;
+static ThotBool DoubleClick;
 static ThotBool EnableFTP;
 
 /* Publish menu options */
@@ -390,6 +404,7 @@ void InitAmayaDefEnv (void)
   TtaSetDefEnvString ("EXPORT_CRLF", "no", FALSE);
   TtaSetDefEnvString ("ENABLE_MULTIKEY", "no", FALSE);
   TtaSetDefEnvString ("ENABLE_BG_IMAGES", "yes", FALSE);
+  TtaSetDefEnvString ("LOAD_IMAGES", "yes", FALSE);
   TtaSetDefEnvString ("VERIFY_PUBLISH", "no", FALSE);
   TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
   TtaSetDefEnvString ("DEFAULTNAME", "Overview.html", FALSE);
@@ -1549,8 +1564,8 @@ static void GetGeneralConf (void)
     }
   TtaGetEnvBoolean ("ENABLE_MULTIKEY", &Multikey);
   TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &BgImages);
-  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
-  TtaGetEnvBoolean ("ENABLE_FTP", &EnableFTP);
+  TtaGetEnvBoolean ("SHOW_BUTTONS", &S_Buttons);
+  TtaGetEnvBoolean ("SHOW_ADDRESS", &S_Address);
   TtaGetEnvBoolean ("SHOW_TARGET", &S_Targets);
   TtaGetEnvBoolean ("SECTION_NUMBERING", &S_Numbers);
   GetEnvString ("HOME_PAGE", HomePage);
@@ -1731,6 +1746,56 @@ static void UpdateShowTargets ()
 }
 
 /*----------------------------------------------------------------------
+  UpdateShowButtons
+  Sets the show buttons on all documents
+  ----------------------------------------------------------------------*/
+static void UpdateShowButtons ()
+{
+  int               doc;
+
+  for (doc = 1; doc < DocumentTableLength; doc++)
+    {
+      if (DocumentURLs[doc] &&
+	  SButtons[doc] != S_Buttons &&
+	  (DocumentTypes[doc] == docHTML ||
+	   DocumentTypes[doc] == docSVG ||
+	   DocumentTypes[doc] == docXml ||
+	   DocumentTypes[doc] == docMath))
+	/* generate numbers */
+	ShowButtons (doc, 1);
+      else
+	/* update only the indicator */
+	SButtons[doc] = S_Buttons;
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  UpdateShowAddress
+  Sets the show address on all documents
+  ----------------------------------------------------------------------*/
+static void UpdateShowAddress ()
+{
+  int               doc;
+
+  for (doc = 1; doc < DocumentTableLength; doc++)
+    {
+      if (DocumentURLs[doc] &&
+	  SAddress[doc] != S_Address &&
+	  (DocumentTypes[doc] == docHTML ||
+	   DocumentTypes[doc] == docSVG ||
+	   DocumentTypes[doc] == docXml ||
+	   DocumentTypes[doc] == docMath))
+	/* generate numbers */
+	ShowAddress (doc, 1);
+      else
+	/* update only the indicator */
+	SAddress[doc] = S_Address;
+    }
+}
+
+
+/*----------------------------------------------------------------------
   UpdateSectionNumbering
   Sets the section numbering on all documents
   ----------------------------------------------------------------------*/
@@ -1740,16 +1805,14 @@ static void UpdateSectionNumbering ()
 
   for (doc = 1; doc < DocumentTableLength; doc++)
     {
-      if (DocumentURLs[doc] && SNumbering[doc] != S_Numbers)
-	{
-	  TtaSetToggleItem (doc, 1, Special, TSectionNumber, S_Numbers);
-	  if (DocumentTypes[doc] == docHTML)
-	    /* generate numbers */
-	    SectionNumbering (doc, 1);
-	  else
-	    /* update only the indicator */
-	    SNumbering[doc] = S_Numbers;
-	}
+      if (DocumentURLs[doc] &&
+	  SNumbering[doc] != S_Numbers &&
+	  DocumentTypes[doc] == docHTML)
+	/* generate numbers */
+	SectionNumbering (doc, 1);
+      else
+	/* update only the indicator */
+	SNumbering[doc] = S_Numbers;
     }
 }
 
@@ -1775,10 +1838,15 @@ static void SetGeneralConf (void)
   TtaSetEnvBoolean ("ENABLE_MULTIKEY", Multikey, TRUE);
   TtaSetMultikey (Multikey);
   TtaSetEnvBoolean ("ENABLE_BG_IMAGES", BgImages, TRUE);
-  TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, TRUE);
-  /* @@@ */
-  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
-  /* handling show targets and section numbering */
+  /* handling show buttons, address, targets and section numbering */
+  TtaGetEnvBoolean ("SHOW_BUTTONS", &old);
+  TtaSetEnvBoolean ("SHOW_BUTTONS", S_Buttons, TRUE);
+  if (old != S_Buttons)
+    UpdateShowButtons ();
+  TtaGetEnvBoolean ("SHOW_ADDRESS", &old);
+  TtaSetEnvBoolean ("SHOW_ADDRESS", S_Address, TRUE);
+  if (old != S_Address)
+    UpdateShowAddress ();
   TtaGetEnvBoolean ("SHOW_TARGET", &old);
   TtaSetEnvBoolean ("SHOW_TARGET", S_Targets, TRUE);
   if (old != S_Targets)
@@ -1788,9 +1856,6 @@ static void SetGeneralConf (void)
   if (old != S_Numbers)
     UpdateSectionNumbering ();
   TtaSetEnvBoolean ("EXPORT_CRLF", ExportCRLF, TRUE);
-  /* @@@ */
-  TtaSetEnvBoolean ("ENABLE_FTP", EnableFTP, TRUE);
-  AHTFTPURL_flag_set (EnableFTP);
   TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
   TtaSetEnvString ("LANG", DialogueLang, TRUE);
   if (AccesskeyMod == 0)
@@ -1822,17 +1887,17 @@ static void GetDefaultGeneralConf ()
   if (Zoom == 0)
     Zoom = 100;
   GetDefEnvToggle ("ENABLE_MULTIKEY", &Multikey, 
-		       GeneralBase + mToggleGeneral, 0);
+		   GeneralBase + mToggleGeneral, 0);
   GetDefEnvToggle ("ENABLE_BG_IMAGES", &BgImages,
-		       GeneralBase + mToggleGeneral, 1);
-  GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
-		       GeneralBase + mToggleGeneral, 2);
+		   GeneralBase + mToggleGeneral, 1);
+  GetDefEnvToggle ("SHOW_BUTTONS", &S_Buttons,
+		   GeneralBase + mToggleGeneral, 2);
+  GetDefEnvToggle ("SHOW_ADDRESS", &S_Address,
+		   GeneralBase + mToggleGeneral, 3);
   GetDefEnvToggle ("SHOW_TARGET", &S_Targets,
-		       GeneralBase + mToggleGeneral, 3);
+		   GeneralBase + mToggleGeneral, 4);
   GetDefEnvToggle ("SECTION_NUMBERING", &S_Numbers,
-		       GeneralBase + mToggleGeneral, 4);
-  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
-		       GeneralBase + mToggleGeneral, 5);
+		   GeneralBase + mToggleGeneral, 5);
   TtaGetDefEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
   GetDefEnvString ("HOME_PAGE", HomePage);
   GetDefEnvString ("LANG", DialogueLang);
@@ -1862,9 +1927,9 @@ void WIN_RefreshGeneralMenu (HWND hwnDlg)
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_BGIMAGES, (BgImages) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_DOUBLECLICK, (DoubleClick) 
+  CheckDlgButton (hwnDlg, IDC_SHOWBUTONS, (S_Address) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_ENABLEFTP, (EnableFTP) 
+  CheckDlgButton (hwnDlg, IDC_SHOWADDRESS, (S_Buttons) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_SHOWTARGETS, (S_Targets) 
 		  ? BST_CHECKED : BST_UNCHECKED);
@@ -1900,10 +1965,10 @@ static void RefreshGeneralMenu ()
   TtaSetNumberForm (GeneralBase + mZoom, Zoom);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, Multikey);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, BgImages);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, DoubleClick);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, S_Targets);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 4, S_Numbers);
-  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 5, EnableFTP);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, S_Buttons);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 3, S_Address);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 4, S_Targets);
+  TtaSetToggleMenu (GeneralBase + mToggleGeneral, 5, S_Numbers);
   TtaSetTextForm (GeneralBase + mHomePage, HomePage);
   TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
   TtaSetMenuForm (GeneralBase + mGeneralAccessKey, AccesskeyMod);
@@ -1925,6 +1990,8 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
       GeneralHwnd = hwnDlg;
       /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_GeneralMenuText);
+      SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWADDR),
+		     TtaGetMessage (1, TShowTextZone));
       SetWindowText (GetDlgItem (hwnDlg, IDC_SHOWTARGETS),
 		     TtaGetMessage (1, TShowTargets));
       SetWindowText (GetDlgItem (hwnDlg, IDC_NUMBERS),
@@ -1985,8 +2052,11 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_BGIMAGES:
 	  BgImages = !BgImages;
 	  break;
-	case IDC_DOUBLECLICK:
-	  DoubleClick = !DoubleClick;
+	case IDC_SHOWBUTTONS:
+	  S_Buttons = !S_Buttons;
+	  break;
+	case IDC_SHOWADDRESS:
+	  S_Address = !S_Address;
 	  break;
 	case IDC_SHOWTARGETS:
 	  S_Targets = !S_Targets;
@@ -1996,9 +2066,6 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  break;
 	case IDC_CRLF:
 	  ExportCRLF = !ExportCRLF;
-	  break;
-	case IDC_ENABLEFTP:
-	  EnableFTP = !EnableFTP;
 	  break;
 
 	  /* action buttons */
@@ -2085,16 +2152,16 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	      BgImages = !BgImages;
 	      break;
 	    case 2:
-	      DoubleClick = !DoubleClick;
+	      S_Buttons = !S_Buttons;
 	      break;
 	    case 3:
-	      S_Targets = !S_Targets;
+	      S_Address = !S_Address;
 	      break;
 	    case 4:
-	      S_Numbers = !S_Numbers;
+	      S_Targets = !S_Targets;
 	      break;
 	    case 5:
-	      EnableFTP = !EnableFTP;
+	      S_Numbers = !S_Numbers;
 	      break;
 	    }
 	  break;
@@ -2113,6 +2180,7 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	case mGeneralAccessKey:
 	  AccesskeyMod = val;
 	  break;
+
 	default:
 	  break;
 	}
@@ -2182,10 +2250,10 @@ void GeneralConfMenu (Document document, View view)
    sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s%cB%s", 
 	     TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
 	     TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
-	     TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS,
+	     TtaGetMessage (1, TShowButtonbar), EOS,
+	     TtaGetMessage (1, TShowTextZone), EOS,
 	     TtaGetMessage (1, TShowTargets), EOS,
-	     TtaGetMessage (1, TSectionNumber), EOS,
-	     TtaGetMessage (AMAYA, AM_ENABLE_FTP));
+	     TtaGetMessage (1, TSectionNumber));
 
    TtaNewToggleMenu (GeneralBase + mToggleGeneral,
 		     GeneralBase + GeneralMenu,
@@ -2468,7 +2536,7 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
   Build and display the Browsing Editing conf Menu dialog box and prepare 
   for input.
   ----------------------------------------------------------------------*/
-void         PublishConfMenu (Document document, View view)
+void PublishConfMenu (Document document, View view)
 {
 #ifndef _WINDOWS
    int              i;
@@ -2523,6 +2591,256 @@ void         PublishConfMenu (Document document, View view)
 	  (DLGPROC) WIN_PublishDlgProc);
   else
      SetFocus (PublishHwnd);
+#endif /* !_WINDOWS */
+}
+
+
+/**********************
+** Browse menu
+***********************/
+/*----------------------------------------------------------------------
+  GetBrowseConf
+  Makes a copy of the current registry Browse values
+  ----------------------------------------------------------------------*/
+static void GetBrowseConf (void)
+{
+  TtaGetEnvBoolean ("LOAD_IMAGES", &LoadImages);
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
+  TtaGetEnvBoolean ("ENABLE_FTP", &EnableFTP);
+  AHTFTPURL_flag_set (EnableFTP);
+}
+
+/*----------------------------------------------------------------------
+  SetBrowseConf
+  Updates the registry Browse values and calls the Browse functions
+  to take into account the changes
+  ----------------------------------------------------------------------*/
+static void SetBrowseConf (void)
+{
+  TtaSetEnvBoolean ("LOAD_IMAGES", LoadImages, TRUE);
+  TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, TRUE);
+  /* @@@ */
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
+  /* @@@ */
+  TtaSetEnvBoolean ("ENABLE_FTP", EnableFTP, TRUE);
+  AHTFTPURL_flag_set (EnableFTP);
+
+  TtaSaveAppRegistry ();
+}
+
+/*----------------------------------------------------------------------
+  GetDefaultBrowseConf
+  Loads the default registry Browse values
+  ----------------------------------------------------------------------*/
+static void GetDefaultBrowseConf ()
+{
+  GetDefEnvToggle ("LOAD_IMAGES", &LoadImages,
+		   BrowseBase + mToggleBrowse, 0);
+  GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
+		   BrowseBase + mToggleBrowse, 1);
+  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
+		   BrowseBase + mToggleBrowse, 2);
+}
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_RefreshBrowseMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+void WIN_RefreshBrowseMenu (HWND hwnDlg)
+{
+  CheckDlgButton (hwnDlg, IDC_LOADIMG, (LoadImages) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_DOUBLECLICK, (DoubleClick) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_ENABLEFTP, (EnableFTP) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+}
+#else /* WINDOWS */
+/*----------------------------------------------------------------------
+  RefreshBrowseMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+static void RefreshBrowseMenu ()
+{
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 0, LoadImages);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 1, DoubleClick);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 2, EnableFTP);
+}
+#endif /* !_WINDOWS */
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_BrowseDlgProc
+  Windows callback for the publish menu
+  ----------------------------------------------------------------------*/
+LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
+				    LPARAM lParam)
+{ 
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      BrowseHwnd = hwnDlg;
+      /* initialize the menu text */
+      WIN_SetMenuText (hwnDlg, WIN_BrowseMenuText);
+      /* write the current values in the dialog entries */
+      WIN_RefreshBrowseMenu (hwnDlg);
+      break;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      /* reset the status flag */
+      BrowseHwnd = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break; 
+
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	case IDC_BGIMAGES:
+	  LoadImages = !LoadImages;
+	  break;
+	case IDC_DOUBLECLICK:
+	  DoubleClick = !DoubleClick;
+	  break;
+	case IDC_ENABLEFTP:
+	  EnableFTP = !EnableFTP;
+	  break;
+
+	  /* action buttons */
+	case ID_APPLY:
+	  SetBrowseConf ();	  
+	  libwww_updateNetworkConf (SafePutStatus);
+	  /* reset the status flag */
+	  SafePutStatus = 0;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DONE:
+	  /* reset the status flag */
+	  SafePutStatus = 0;
+	  BrowseHwnd = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DEFAULTS:
+	  /* always signal this as modified */
+	  SafePutStatus |= AMAYA_SAFEPUT_RESTART;
+	  GetDefaultBrowseConf ();
+	  WIN_RefreshBrowseMenu (hwnDlg);
+	  break;
+	}
+      break;	     
+    default: return FALSE;
+    }
+  return TRUE;
+}
+#else /* _WINDOWS */
+/*----------------------------------------------------------------------
+   callback of the Browsing menu
+  ----------------------------------------------------------------------*/
+static void BrowseCallbackDialog (int ref, int typedata, char *data)
+{
+  int                 val;
+
+  if (ref == -1)
+    {
+      /* removes the network conf menu */
+      TtaDestroyDialogue (BrowseBase + BrowseMenu);
+    }
+  else
+    {
+      /* has the user changed the options? */
+      val = (int) data;
+      switch (ref - BrowseBase)
+	{
+	case BrowseMenu:
+	  switch (val) 
+	    {
+	    case 0:
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 1:
+	      SetBrowseConf ();
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 2:
+	      GetDefaultBrowseConf ();
+	      RefreshBrowseMenu ();
+	      break;
+	    default:
+	      break;
+	    }
+	  break;
+
+	case mToggleBrowse:
+	  switch (val) 
+	    {
+	    case 0:
+	      LoadImages = !LoadImages;
+	      break;
+	    case 1:
+	      DoubleClick = !DoubleClick;
+	      break;
+	    case 2:
+	      EnableFTP = !EnableFTP;
+	      break;
+	    }
+	  break;
+
+	default:
+	  break;
+	}
+    }
+}
+#endif /* !_WINDOWS */
+
+/*----------------------------------------------------------------------
+  BrowseConfMenu
+  Build and display the Browsing Editing conf Menu dialog box and prepare 
+  for input.
+  ----------------------------------------------------------------------*/
+void BrowseConfMenu (Document document, View view)
+{
+#ifndef _WINDOWS
+   int              i;
+
+   /* Create the dialogue form */
+   i = 0;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
+
+   TtaNewSheet (BrowseBase + BrowseMenu, 
+		TtaGetViewFrame (document, view),
+	       TtaGetMessage (AMAYA, AM_BROWSE_MENU),
+		2, s, FALSE, 11, 'L', D_DONE);
+   sprintf (s, "B%s%cB%s%cB%s", 
+	    TtaGetMessage (AMAYA, AM_LOAD_IMAGES), EOS,
+	    TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS, 
+	    TtaGetMessage (AMAYA, AM_ENABLE_FTP));
+   TtaNewToggleMenu (BrowseBase + mToggleBrowse,
+		     BrowseBase + BrowseMenu,
+		     NULL,
+		     3,
+		     s,
+		     NULL,
+		     FALSE);
+#endif /* !_WINDOWS */
+   /* reset the modified flag */
+   SafePutStatus = 0;
+   /* load the current values */
+   GetBrowseConf ();
+
+   /* display the menu */
+#ifndef _WINDOWS
+   RefreshBrowseMenu ();
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (BrowseBase + BrowseMenu, TRUE);
+#else
+  if (!BrowseHwnd)
+	   DialogBox (hInstance, MAKEINTRESOURCE (PUBLISHMENU), NULL, 
+	  (DLGPROC) WIN_BrowseDlgProc);
+  else
+     SetFocus (BrowseHwnd);
 #endif /* !_WINDOWS */
 }
 
@@ -4217,6 +4535,7 @@ void                InitConfMenu (void)
   CacheBase = TtaSetCallback (CacheCallbackDialog, MAX_CACHEMENU_DLG);
   ProxyBase = TtaSetCallback (ProxyCallbackDialog, MAX_PROXYMENU_DLG);
   GeneralBase = TtaSetCallback (GeneralCallbackDialog, MAX_GENERALMENU_DLG);
+  BrowseBase = TtaSetCallback (BrowseCallbackDialog, MAX_BROWSEMENU_DLG);
   PublishBase = TtaSetCallback (PublishCallbackDialog, MAX_PUBLISHMENU_DLG);
   ColorBase = TtaSetCallback (ColorCallbackDialog,
 			      MAX_COLORMENU_DLG);

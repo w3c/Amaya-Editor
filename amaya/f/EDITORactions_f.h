@@ -177,6 +177,8 @@ extern void ConfigGeometry ( Document doc,
                              View view );
 extern void ConfigGeneral ( Document doc,
                             View view );
+extern void ConfigBrowse ( Document doc,
+                           View view );
 extern void ConfigPublish ( Document doc,
                             View view );
 extern void ConfigCache ( Document doc,
@@ -399,6 +401,8 @@ extern void ConfigGeometry (/* Document doc,
                                View view */);
 extern void ConfigGeneral (/* Document doc,
                               View view */);
+extern void ConfigBrowse (/* Document doc,
+                             View view */);
 extern void ConfigPublish (/* Document doc,
                               View view */);
 extern void ConfigCache (/* Document doc,

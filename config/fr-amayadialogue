@@ -155,8 +155,8 @@
 153 Créer cible
 154 Détruire ancre
 155 Sauver la séléction comme XPointer
-156 Montrer boutons
-157 Montrer adresse
+156 Montrer les boutons
+157 Montrer l'adresse
 158 Montrer les zones actives
 159 Montrer les cibles
 160 Grossir
@@ -207,56 +207,57 @@
 205 Ajouter/Retirer des attributs ID...
 206 Préférences
 207 Générales...
-208 Publication...
-209 Cache...
-210 Proxy...
-211 Couleurs...
-212 Géométrie...
-213 Négociation de Langues...
-214 Profils...
-215 Modèles de page
-216 Annoter la séléction
-217 Annoter le document
-218 Déplacer sur la séléction
-219 Déplacer sur le XPointer enregistré
-220 Répondre à l'annotation
-221 Enregister sur le serveur
-222 Détruire
-223 Charger annotations
-224 Personaliser la requête...
-225 Filtrer local...
-226 Configuration...
-227 Verrouiller la ressource...
-228 Déverrouiller la ressource...
-229 Visualiser les propriétés de la ressource...
-230 Copier les informations du verrou...
-231 Verrouillé ?
-232 Préférences...
-233 À propos de Amaya
-234 À propos de Amaya au W3C
-235 Index
-236 Navigation
-237 Vues
-238 Sélection
-239 Document
-240 Création
-241 Attributs
-242 Caratères
-243 Transformer
-244 Liens
-245 Tables
-246 Zones actives
-247 Math
-248 Graphiques
-249 Support Xml
-250 Feuilles de style
-251 Chercher
-252 Corriger
-253 Publier
-254 Imprimer
-255 Numéroter
-256 Construire un livre
-257 Annotations
-258 Configurer Amaya
-259 Raccourcis clavier
-260 Accessibilité d'Amaya
+208 Navigation...
+209 Publication...
+210 Cache...
+211 Proxy...
+212 Couleurs...
+213 Géométrie...
+214 Négociation de Langues...
+215 Profils...
+216 Modèles de page
+217 Annoter la séléction
+218 Annoter le document
+219 Déplacer sur la séléction
+220 Déplacer sur le XPointer enregistré
+221 Répondre à l'annotation
+222 Enregister sur le serveur
+223 Détruire
+224 Charger annotations
+225 Personaliser la requête...
+226 Filtrer local...
+227 Configuration...
+228 Verrouiller la ressource...
+229 Déverrouiller la ressource...
+230 Visualiser les propriétés de la ressource...
+231 Copier les informations du verrou...
+232 Verrouillé ?
+233 Préférences...
+234 À propos de Amaya
+235 À propos de Amaya au W3C
+236 Index
+237 Navigation
+238 Vues
+239 Sélection
+240 Document
+241 Création
+242 Attributs
+243 Caratères
+244 Transformer
+245 Liens
+246 Tables
+247 Zones actives
+248 Math
+249 Graphiques
+250 Support Xml
+251 Feuilles de style
+252 Chercher
+253 Corriger
+254 Publier
+255 Imprimer
+256 Numéroter
+257 Construire un livre
+258 Annotations
+259 Configurer Amaya
+260 Raccourcis clavier
+261 Accessibilité d'Amaya

@@ -197,8 +197,8 @@ Shift Ctrl <Key>D:                 DeleteAnchor()
 Shift Ctrl <Key>T:                 CreateTarget()
 
 #View Menu
-Alt <Key>v , Alt <Key>a:           TtcSwitchCommands() 
-Alt <Key>v , Alt <Key>b:           TtcSwitchButtonBar() 
+Alt <Key>v , Alt <Key>a:           ShowAddress() 
+Alt <Key>v , Alt <Key>b:           ShowButtons() 
 Alt <Key>v , Alt <Key>c:           ShowToC() 
 Alt <Key>v , Alt <Key>i:           ShowAlternate() 
 Alt <Key>v , Alt <Key>l:           ShowLinks() 

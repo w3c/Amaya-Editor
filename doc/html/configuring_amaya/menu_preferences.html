@@ -3,11 +3,10 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Menu Preferences</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.0, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -146,18 +145,17 @@ optional multi-key input method are summarized in two different tables.</p>
 images should be shown. This option is only effective when loading a new
 document.</p>
 
-<p><strong>Double-click activates link.</strong> Since the first version of
-Amaya, users double-click a link to activate it. This enables you to choose
-whether to edit a link or activate it. You can override this behavior by
-deactivating this option.</p>
+<p><strong>Show button bar.</strong> Controls whether the button bar should
+be shown in all document main views.</p>
 
-<p><strong>Enable FTP (experimental).</strong> Enables Amaya to follow FTP
-URLs. This support is experimental and is not yet fully debugged. For
-example, for FTP URLs needing user authentication, the authentication
-information is not always memorized. Also, pressing the <strong>Stop</strong>
-button during an FTP download may crash Amaya. Because of these problems,
-this option was added to Amaya so that other developers may help to debug it
-faster. By default, this option is turned off.</p>
+<p><strong>Show address.</strong> Controls whether the address should be
+shown in all document main views.</p>
+
+<p><strong>Show targets.</strong> Controls whether link targets should be
+shown in all document main views.</p>
+
+<p><strong>Section numbering.</strong> Controls whether headings are numbered
+in all document main views.</p>
 
 <p><strong>Access keys.</strong> Specifies the key (<code>Alt</code> or
 <code>Control</code>) used to implement the document <a
@@ -205,33 +203,33 @@ it under a specific schema are located in the
 <strong>Amaya/amaya/HTML.</strong><em><strong>code</strong></em> file, where
 the <em>code</em> suffix is a language abbreviation (e.g. <code><span
 xml:lang="EN" lang="EN"
-style='font-family:"Courier New";'>en</span></code><span xml:lang="EN"
-lang="EN">or</span><code><span xml:lang="EN" lang="EN"
-style='font-family:"Courier New";'>fr</span></code><span xml:lang="EN"
-lang="EN">). This file has 4 sections:</span></p>
+style="font-family:&#34;Courier New&#34;;">en</span></code><span
+xml:lang="EN" lang="EN">or</span><code><span xml:lang="EN" lang="EN"
+style="font-family:&#34;Courier New&#34;;">fr</span></code><span
+xml:lang="EN" lang="EN">). This file has 4 sections:</span></p>
 
 <p class="Bullet"><span xml:lang="EN" lang="EN"
 style="font-family:Symbol;">·<span
-style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
+style="font:7.0pt &#34;Times New Roman&#34;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
 xml:lang="EN" lang="EN">extension:</span></strong><span xml:lang="EN"
 lang="EN">Not used by Amaya</span></p>
 
 <p class="Bullet"><span xml:lang="EN" lang="EN"
 style="font-family:Symbol;">·<span
-style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
+style="font:7.0pt &#34;Times New Roman&#34;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
 xml:lang="EN" lang="EN">presentation:</span></strong><span xml:lang="EN"
 lang="EN">Not used by Amaya</span></p>
 
 <p class="Bullet"><span xml:lang="EN" lang="EN"
 style="font-family:Symbol;">·<span
-style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
+style="font:7.0pt &#34;Times New Roman&#34;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
 xml:lang="EN" lang="EN">export</span></strong><span xml:lang="EN" lang="EN">:
 Identifies the text displayed for each translation schema (<strong>Save
 As</strong> command)</span></p>
 
 <p class="Bullet"><span xml:lang="EN" lang="EN"
 style="font-family:Symbol;">·<span
-style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
+style="font:7.0pt &#34;Times New Roman&#34;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
 xml:lang="EN" lang="EN">translation</span></strong><span xml:lang="EN"
 lang="EN">: Identifies the text displayed for each element and attribute in
 the Thot HTML structure.</span></p>
@@ -242,6 +240,34 @@ files must be located in the same directory (for example, Amaya/config) and
 must use the correct ISO 639 code as a prefix (it- for Italian, de- for
 German, and so on). You must also create the specific HTML.code
 file.</span></p>
+
+<h2>Browsing Preferences</h2>
+
+<p>The <strong>Publishing Preferences</strong> dialog lets you set ...</p>
+
+<p><img alt="Browsing Preferences Dialog"
+src="../../images/browsing_preferences.png" /></p>
+
+<h3>Check boxes</h3>
+
+<p>The options below can be toggled on or off by clicking the check box next
+to an option name. A mark in the box indicates that the option is active.</p>
+
+<p><strong>Load images.</strong> Controls whether images should be laoded.
+This option is only effective for new loaded documents.</p>
+
+<p><strong>Double-click activates link.</strong> Since the first version of
+Amaya, users double-click a link to activate it. This enables you to choose
+whether to edit a link or activate it. You can override this behavior by
+deactivating this option.</p>
+
+<p><strong>Enable FTP.</strong> Enables Amaya to follow FTP URLs. This
+support is experimental and is not yet fully debugged. For example, for FTP
+URLs needing user authentication, the authentication information is not
+always memorized. Also, pressing the <strong>Stop</strong> button during an
+FTP download may crash Amaya. Because of these problems, this option was
+added to Amaya so that other developers may help to debug it faster. By
+default, this option is turned off.</p>
 
 <h2>Publishing Preferences</h2>
 
@@ -254,11 +280,11 @@ redirections on specified domains. These options are explained below.</p>
 src="../../images/publishing_preferences.png" /></p>
 
 <p><strong>Use the application/xhtml+xml MIME type for XHTML
-documents.</strong> This option, if enabled, associated the new, official 
+documents.</strong> This option, if enabled, associated the new, official
 XHTML MIME type to all new XTHML documents that are published on the Web.
 This option is disabled by default because not all servers can handle this
 MIME type at the time of this release, Note that this requires also a change
-in your server configuration, if it's not storing somewhere the  metadata
+in your server configuration, if it's not storing somewhere the metadata
 associated with each document. This option does not modify the MIME type of
 existing documents: the MIME type that is received is the same one that will
 be used when saving the document, except if you do a <strong>SaveAs</strong>
