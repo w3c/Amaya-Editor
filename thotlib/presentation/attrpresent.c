@@ -325,7 +325,7 @@ PtrDocument         pDoc;
 		     {
 			/* cette regle Transmit transmet le compteur a un document */
 			/* de la classe du document inclus, on applique la regle */
-			TransmetValCompt (pEl, pDoc, pCounter->CnTransmAttr[rule],
+			TransmitCounterVal (pEl, pDoc, pCounter->CnTransmAttr[rule],
 					  counter+1, pPSch, pSS);
 		     }
 	     }

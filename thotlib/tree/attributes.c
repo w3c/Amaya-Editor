@@ -475,7 +475,7 @@ boolean             inherit;
 	if (doIt)
 	  {
 	     /* applique les regles de presentation de l'attribut */
-	     ChngPresAttr (pEl, pAttr, pDoc, FALSE, inherit, NULL);
+	     UpdatePresAttr (pEl, pAttr, pDoc, FALSE, inherit, NULL);
 	     /* reaffiche les variables de presentation qui utilisent */
 	     /* l'attribut */
 	     RedisplayAttribute (pAttr, pEl, pDoc);
@@ -734,15 +734,15 @@ PtrDocument         pDoc;
 		   if (pCnt->CnItem[0].CiCntrOp == CntrRank && pCnt->CnItem[0].
 		       CiElemType == PageBreak + 1)
 		      /* c'est un compteur de la forme CntrRank of Page(view) */
-		      ReNumPages (pEl, pCnt->CnItem[0].CiViewNum);
+		      ComputePageNum (pEl, pCnt->CnItem[0].CiViewNum);
 		   else
 		      /* c'est un compteur de la forme Set...Add n on Page(view) */
 		      if (pCnt->CnItem[0].CiCntrOp == CntrSet
 			  && pCnt->CnItem[1].CiElemType == PageBreak + 1)
-		      ReNumPages (pEl, pCnt->CnItem[1].CiViewNum);
+		      ComputePageNum (pEl, pCnt->CnItem[1].CiViewNum);
 		   /* fait reafficher toutes les boites de presentation dependant */
 		   /* de la valeur de ce compteur */
-		   ChngBtCompt (pEl, pDoc, counter+1, pPS, pEl->ElStructSchema);
+		   UpdateBoxesCounter (pEl, pDoc, counter+1, pPS, pEl->ElStructSchema);
 		}
 	   }
    }
@@ -776,7 +776,7 @@ PtrAttribute         pCompAttr;
      {
 	/* supprime la presentation attachee a la valeur de l'attribut, si */
 	/* elle n'est pas nulle */
-	ChngPresAttr (pEl, pAttr, pDoc, TRUE, inherit, pCompAttr);
+	UpdatePresAttr (pEl, pAttr, pDoc, TRUE, inherit, pCompAttr);
 
 	/* reaffiche les variables de presentation qui utilisent */
 	/* l'attribut */

@@ -392,7 +392,7 @@ int                 value;
     * for this document.
     */
 
-   n = ImageAbs (frame, &start, &end, &total);
+   n = PositionAbsBox (frame, &start, &end, &total);
    switch (n)
 	 {
 	    case -1:
@@ -562,7 +562,7 @@ int                *param;
 	     XtGetValues (FrameTable[frame].WdScrollV, args, n);
 
 	     /* Regarde ou se situe l'image abstraite dans le document */
-	     n = ImageAbs (frame, &start, &end, &total);
+	     n = PositionAbsBox (frame, &start, &end, &total);
 	     /* au retour n = 0 si l'Picture est complete */
 	     /* Calcule le nombre de caracteres represente par un pixel */
 	     carparpix = (float) total / (float) FrameTable[frame].FrHeight;

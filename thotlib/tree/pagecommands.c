@@ -294,7 +294,7 @@ PtrAbstractBox            *RedispAbsBox;
 	   if (pP->AbElement->ElTypeNumber != PageBreak + 1)
 	      /* demande au Mediateur la position et la hauteur du pave */
 	     {
-		HautCoupure (pP, TRUE, &haut, &y, &NCar);
+		SetPageHeight (pP, TRUE, &haut, &y, &NCar);
 		if (y < limit)
 		   /* le haut du pave est au-dessus de la limite */
 		   /* on ne tue pas les paves qui contiennent une marque de page */
@@ -441,7 +441,7 @@ int                 viewNb;
 	{
 	   stop = TRUE;
 	   /* demande au Mediateur la position verticale du filet */
-	   HautCoupure (pAb, TRUE, &h, &yThread, &NbCar);
+	   SetPageHeight (pAb, TRUE, &h, &yThread, &NbCar);
 	}
       else
 	{
@@ -483,7 +483,7 @@ int                 viewNb;
 	     if (!pNext->AbDead)
 	       {
 		  /* demande au Mediateur la position et la hauteur du pave */
-		  HautCoupure (pNext, TRUE, &h, &yTop, &NbCar);
+		  SetPageHeight (pNext, TRUE, &h, &yTop, &NbCar);
 		  if (yTop < yThread)
 		     /* le haut du pave est au-dessus du saut de page */
 		     if (yTop + h <= yThread && !pNext->AbOnPageBreak)

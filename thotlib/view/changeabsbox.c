@@ -3522,7 +3522,7 @@ boolean             verify;
 
 
 /*----------------------------------------------------------------------
-   ReafReference Reaffiche les paves de la reference pointee par   
+   RedispReference Reaffiche les paves de la reference pointee par   
    pRef appartenant au document pointe' par pDocRef.       
    Si pAb est NULL, tous les paves (sauf les paves de     
    presentation) de la reference, dans toutes les vues,    
@@ -3530,14 +3530,14 @@ boolean             verify;
    qui copient le pave pointe' par pAb sont recalcules et 
    reaffiches s'ils changent.                              
    Note: cette nouvelle procedure est extraite du code de  
-   l'ancienne procedure ChngRef.                           
+   l'ancienne procedure RedispAllReferences.                           
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ReafReference (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
+void                RedispReference (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
 
 #else  /* __STDC__ */
-void                ReafReference (pRef, pAb, pDocRef)
+void                RedispReference (pRef, pAb, pDocRef)
 PtrReference        pRef;
 PtrAbstractBox             pAb;
 PtrDocument         pDocRef;
@@ -3733,17 +3733,17 @@ PtrDocument         pDocRef;
 
 
 /*----------------------------------------------------------------------
-   ChngRef Le pave de presentation pointe' par pAb a change'      
+   RedispAllReferences Le pave de presentation pointe' par pAb a change'      
    de contenu. Cherche toutes les references a un element  
    englobant de l'element creant ce pave et qui copient    
    ce pave. Demande leur reaffichage                       
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ChngRef (PtrAbstractBox pAb, PtrDocument pDoc)
+void                RedispAllReferences (PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                ChngRef (pAb, pDoc)
+void                RedispAllReferences (pAb, pDoc)
 PtrAbstractBox             pAb;
 PtrDocument         pDoc;
 
@@ -3771,7 +3771,7 @@ PtrDocument         pDoc;
 	   while (pRef != NULL)
 	      /* reaffiche les paves de la reference qui copient le pave */
 	     {
-		ReafReference (pRef, pAb, pDocRef);
+		RedispReference (pRef, pAb, pDocRef);
 		/* passe a la reference suivante */
 		pRef = NextReferenceToEl (pEl, pDoc, FALSE, pRef, &pDocRef, &pDocExt, TRUE);
 		/* passe au niveau superieur */
@@ -3838,7 +3838,7 @@ boolean             Pres;
 
 
 /*----------------------------------------------------------------------
-   PavCherche cherche un pave en avant dans un arbre de paves, a   
+   AbsBoxFromElOrPres cherche un pave en avant dans un arbre de paves, a   
    partir du pave pointe' par pAb. Si pres est vrai, on   
    cherche un pave de presentation du type typeElOrPres defini dans 
    le schema de presentation pSchP. Si pres est faux, on   
@@ -3848,9 +3848,9 @@ boolean             Pres;
    NULL si echec.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrAbstractBox             PavCherche (PtrAbstractBox pAb, boolean pres, int typeElOrPres, PtrPSchema pSchP, PtrSSchema pSchStr)
+PtrAbstractBox             AbsBoxFromElOrPres (PtrAbstractBox pAb, boolean pres, int typeElOrPres, PtrPSchema pSchP, PtrSSchema pSchStr)
 #else  /* __STDC__ */
-PtrAbstractBox             PavCherche (pAb, pres, typeElOrPres, pSchP, pSchStr)
+PtrAbstractBox             AbsBoxFromElOrPres (pAb, pres, typeElOrPres, pSchP, pSchStr)
 PtrAbstractBox             pAb;
 boolean             pres;
 int        typeElOrPres;
@@ -3914,7 +3914,7 @@ PtrSSchema        pSchStr;
 			       pAbbResult = pAbbAscent;
 			    /* trouve */
 			    if (pAbbResult == NULL)
-			       pAbbResult = PavCherche (pAbbAscent, pres, typeElOrPres, pSchP, pSchStr);
+			       pAbbResult = AbsBoxFromElOrPres (pAbbAscent, pres, typeElOrPres, pSchP, pSchStr);
 			 }
 		    }
 	       }
@@ -3964,14 +3964,14 @@ int                 nv;
 
 
 /*----------------------------------------------------------------------
-   ReNumPages      renumerote toutes les pages qui concernent      
+   ComputePageNum      renumerote toutes les pages qui concernent      
    la vue view a partir de l'element pointe' par pEl,       
    lui-meme compris.                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ReNumPages (PtrElement pEl, int view)
+void                ComputePageNum (PtrElement pEl, int view)
 #else  /* __STDC__ */
-void                ReNumPages (pEl, view)
+void                ComputePageNum (pEl, view)
 PtrElement          pEl;
 int                 view;
 
@@ -4084,7 +4084,7 @@ boolean             redisp;
 		      DisplayFrame (frame);
 		   /* cherche le pave de presentation suivant de ce type */
 		}
-	pAb = PavCherche (pAb, TRUE, boxType, pSchP, NULL);
+	pAb = AbsBoxFromElOrPres (pAb, TRUE, boxType, pSchP, NULL);
      }
 }
 
@@ -4173,7 +4173,7 @@ boolean             redisp;
 		   /* On va detruire le pave, on cherche d'abord le pave de */
 		   /* presentation suivant de meme type */
 		  {
-		     pAbbFollow = PavCherche (pAb, TRUE, boxType, pSchP, NULL);
+		     pAbbFollow = AbsBoxFromElOrPres (pAb, TRUE, boxType, pSchP, NULL);
 		     /* tue le pave */
 		     SetDeadAbsBox (pAb);
 		     /* signale le pave mort au mediateur */
@@ -4204,7 +4204,7 @@ boolean             redisp;
 	if (pAbbFollow == NULL)
 	  {
 	     if (pAb != NULL)
-		pAb = PavCherche (pAb, TRUE, boxType, pSchP, NULL);
+		pAb = AbsBoxFromElOrPres (pAb, TRUE, boxType, pSchP, NULL);
 	  }
 	else
 	  {
@@ -4542,9 +4542,9 @@ boolean             redisp;
 	/* cherche le pave suivant de ce type */
 	if (page)
 	   /* on cherche une boite page */
-	   pAb = PavCherche (pAb, FALSE, PageBreak + 1, NULL, NULL);
+	   pAb = AbsBoxFromElOrPres (pAb, FALSE, PageBreak + 1, NULL, NULL);
 	else
-	   pAb = PavCherche (pAb, presBox, boxType, pSchP, NULL);
+	   pAb = AbsBoxFromElOrPres (pAb, presBox, boxType, pSchP, NULL);
      }
 }
 
@@ -4613,7 +4613,7 @@ PtrSSchema        pSchS;
 
 
 /*----------------------------------------------------------------------
-   TransmetValCompt pEl (appartenant au document pDoc) est une     
+   TransmitCounterVal pEl (appartenant au document pDoc) est une     
    inclusion de document externe. Transmet a l'attribut de 
    nom nameAttr du document inclus la valeur du compteur     
    counter defini dans le schema de presentation pSchP associe'
@@ -4621,10 +4621,10 @@ PtrSSchema        pSchS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TransmetValCompt (PtrElement pEl, PtrDocument pDoc, Name nameAttr, int counter, PtrPSchema pSchP, PtrSSchema pSchS)
+void                TransmitCounterVal (PtrElement pEl, PtrDocument pDoc, Name nameAttr, int counter, PtrPSchema pSchP, PtrSSchema pSchS)
 
 #else  /* __STDC__ */
-void                TransmetValCompt (pEl, pDoc, nameAttr, counter, pSchP, pSchS)
+void                TransmitCounterVal (pEl, pDoc, nameAttr, counter, pSchP, pSchS)
 PtrElement          pEl;
 PtrDocument         pDoc;
 Name                 nameAttr;
@@ -4808,7 +4808,7 @@ boolean             redisp;
 	     if (pEl->ElTypeNumber == pCounter->CnTransmSSchemaAttr[regle - 1])
 		/* c'est le type de document auquel le compteur est */
 		/* transmis, on applique la regle de transmission */
-		TransmetValCompt (pEl, pDoc, pCounter->CnTransmAttr[regle - 1],
+		TransmitCounterVal (pEl, pDoc, pCounter->CnTransmAttr[regle - 1],
 				  counter, pSchP, pSS);
 	     /* cherche le document inclus suivant */
 	     pEl = FwdSearchTypedElem (pEl, pCounter->CnTransmSSchemaAttr[regle - 1], pSS);
@@ -4850,7 +4850,7 @@ boolean             redisp;
    /* si l'element pElModif est une marque de page, renumerote les */
    /* les sauts de page qui suivent, a partir de pElBegin. */
    if (pElModif->ElTerminal && pElModif->ElLeafType == LtPageColBreak)
-      ReNumPages (pElBegin, pElModif->ElViewPSchema);
+      ComputePageNum (pElBegin, pElModif->ElViewPSchema);
    /* cherche le schema de presentation de l'element : pSchP */
    SearchPresSchema (pElModif, &pSchP, &index, &pSS);
    if (pSchP != NULL)
@@ -4964,7 +4964,7 @@ boolean             redisp;
 
 
 /*----------------------------------------------------------------------
-   ChngBtCompt reaffiche toutes les boites de presentation de pDoc,
+   UpdateBoxesCounter reaffiche toutes les boites de presentation de pDoc,
    qui se trouvent a l'interieur de et apres l'element     
    pointe' par pElBegin et dont le contenu depend du       
    compteur counter defini dans le schema de presentation      
@@ -4972,10 +4972,10 @@ boolean             redisp;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ChngBtCompt (PtrElement pElBegin, PtrDocument pDoc, int counter, PtrPSchema pSchP, PtrSSchema pSS)
+void                UpdateBoxesCounter (PtrElement pElBegin, PtrDocument pDoc, int counter, PtrPSchema pSchP, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-void                ChngBtCompt (pElBegin, pDoc, counter, pSchP, pSS)
+void                UpdateBoxesCounter (pElBegin, pDoc, counter, pSchP, pSS)
 PtrElement          pElBegin;
 PtrDocument         pDoc;
 int                 counter;
@@ -5254,7 +5254,7 @@ PtrAttribute         pAttr;
 
 
 /*----------------------------------------------------------------------
-   ChngPresAttr Pour l'element pEl dans le document pDoc, supprime 
+   UpdatePresAttr Pour l'element pEl dans le document pDoc, supprime 
    ou applique (selon remove) la presentation attachee a    
    l'attribut pointe par pAttr.                            
    Ce changement de la presentation a lieu egalement sur   
@@ -5263,10 +5263,10 @@ PtrAttribute         pAttr;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ChngPresAttr (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc, boolean remove, boolean inherit, PtrAttribute pAttrComp)
+void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc, boolean remove, boolean inherit, PtrAttribute pAttrComp)
 
 #else  /* __STDC__ */
-void                ChngPresAttr (pEl, pAttr, pDoc, remove, inherit, pAttrComp)
+void                UpdatePresAttr (pEl, pAttr, pDoc, remove, inherit, pAttrComp)
 PtrElement          pEl;
 PtrAttribute         pAttr;
 PtrDocument         pDoc;
@@ -5734,7 +5734,7 @@ PtrAttribute         pAttrComp;
  /* elle etait avant dans modif.c */
  /* procedure appelee par les procedures de modif.c et par page.c */
 /*----------------------------------------------------------------------
-   MemeTexte       retourne 'vrai' si l'element pointe par pEl     
+   IsIdenticalTextType       retourne 'vrai' si l'element pointe par pEl     
    (appartenant au document pointe par pDoc) a un frere suivant et 
    si les deux elements sont des feuilles de texte dans le meme    
    alphabet, avec les memes attributs et les memes regles de       
@@ -5746,10 +5746,10 @@ PtrAttribute         pAttrComp;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             MemeTexte (PtrElement pEl, PtrDocument pDoc, PtrElement * pLib)
+boolean             IsIdenticalTextType (PtrElement pEl, PtrDocument pDoc, PtrElement * pLib)
 
 #else  /* __STDC__ */
-boolean             MemeTexte (pEl, pDoc, pLib)
+boolean             IsIdenticalTextType (pEl, pDoc, pLib)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrElement         *pLib;

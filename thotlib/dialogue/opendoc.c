@@ -67,7 +67,7 @@ static Name          NewSchemaName;
 #include "browser_f.h"
 #include "config_f.h"
 #include "views_f.h"
-#include "dofile_f.h"
+
 #include "appdialogue_f.h"
 #include "viewcommands_f.h"
 #include "platform_f.h"

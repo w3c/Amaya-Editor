@@ -49,7 +49,7 @@ static int          newColor[] =
 
 #include "tree_f.h"
 #include "structcreation_f.h"
-#include "dofile_f.h"
+
 #include "callback_f.h"
 #include "viewcommands_f.h"
 #include "exceptions_f.h"
@@ -58,7 +58,7 @@ static int          newColor[] =
 #include "memory_f.h"
 #include "message_f.h"
 #include "changeabsbox_f.h"
-#include "ouvre_f.h"
+
 #include "readpivot_f.h"
 #include "references_f.h"
 #include "externalref_f.h"

@@ -31,13 +31,13 @@
 
 #include "tree_f.h"
 #include "attributes_f.h"
-#include "dofile_f.h"
+
 #include "callback_f.h"
 #include "font_f.h"
 #include "memory_f.h"
 #include "structmodif_f.h"
 #include "changepresent_f.h"
-#include "ouvre_f.h"
+
 #include "writepivot_f.h"
 #include "references_f.h"
 #include "externalref_f.h"

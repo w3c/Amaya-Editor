@@ -12,7 +12,7 @@
 #include "libmsg.h"
 #define EXPORT extern
 #include "platform_tv.h"
-#include "dofile_f.h"
+
 #include "memory_f.h"
 #include "storage.h"
 #include "message.h"

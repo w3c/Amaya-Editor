@@ -35,11 +35,11 @@
 #include "config_f.h"
 #include "views_f.h"
 #include "viewapi_f.h"
-#include "dofile_f.h"
+
 #include "draw_f.h"
 #include "translation_f.h"
 #include "memory_f.h"
-#include "ouvre_f.h"
+
 #include "writepivot_f.h"
 #include "readpivot_f.h"
 #include "readstr_f.h"
@@ -54,10 +54,10 @@ extern int          UserErrorCode;
 static Name          nameBuffer;
 
 #ifdef __STDC__
-void                TraiteExceptionCreation (PtrElement pEl, PtrDocument pDoc)
+void                CreateWithException (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                TraiteExceptionCreation (pEl, pDoc)
+void                CreateWithException (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
 
@@ -161,7 +161,7 @@ char               *documentName;
 		       AttachMandatoryAttributes (pDoc->DocRootElement, pDoc);
 #endif
 		       /* dealing with exceptions */
-		       TraiteExceptionCreation (pDoc->DocRootElement, pDoc);
+		       CreateWithException (pDoc->DocRootElement, pDoc);
 		       /* An attribut Language is stored in the root */
 		       CheckLanguageAttr (pDoc, pDoc->DocRootElement);
 		       /* The document is named */

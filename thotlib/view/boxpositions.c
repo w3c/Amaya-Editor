@@ -818,7 +818,7 @@ boolean             vertRef;
 
 
 /*----------------------------------------------------------------------
-   HautCoupure indique quelles sont les conditions de coupure du   
+   SetPageHeight indique quelles sont les conditions de coupure du   
    pave' passe' en parame`tre :                            
    - ht = hauteur de la boi^te du pave'.                   
    - pos = position de la boite du pave dans la page.      
@@ -830,9 +830,9 @@ boolean             vertRef;
    ou en unite's logiques (Valeur Faux).                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HautCoupure (PtrAbstractBox pAb, boolean pointVal, int *ht, int *pos, int *nChars)
+void                SetPageHeight (PtrAbstractBox pAb, boolean pointVal, int *ht, int *pos, int *nChars)
 #else  /* __STDC__ */
-void                HautCoupure (pAb, pointVal, ht, pos, nChars)
+void                SetPageHeight (pAb, pointVal, ht, pos, nChars)
 PtrAbstractBox      pAb;
 boolean             pointVal;
 int                *ht;

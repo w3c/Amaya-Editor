@@ -27,7 +27,7 @@
 #define MAX_ITEM_CONF 100
 
 #include "views_f.h"
-#include "dofile_f.h"
+
 #include "inites_f.h"
 #include "memory_f.h"
 #include "message_f.h"

@@ -64,12 +64,12 @@ static char         fileName[MAX_PATH];
 static char         fileExtension[MAX_PATH];
 
 #include "tree_f.h"
-#include "dofile_f.h"
+
 #include "callback_f.h"
 #include "translation_f.h"
 #include "absboxes_f.h"
 #include "memory_f.h"
-#include "ouvre_f.h"
+
 #include "readprs_f.h"
 #include "references_f.h"
 #include "externalref_f.h"

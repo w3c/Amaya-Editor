@@ -28,6 +28,7 @@
 #include "externalref_f.h"
 #include "structschema_f.h"
 #include "thotmsg_f.h"
+#include "viewapi_f.h"
 
 extern int          UserErrorCode;
 static Name         nameBuffer;
@@ -584,7 +585,7 @@ boolean             withContent;
 		       if (pE != NULL)
 			 {
 			    /* Dealing with exceptions */
-			    TraiteExceptionCreation (pE, LoadedDocument[document - 1]);
+			    CreateWithException (pE, LoadedDocument[document - 1]);
 #ifndef NODISPLAY
 			    /* Treats the required attributs of the created elements */
 			    AttachMandatoryAttributes (pE, LoadedDocument[document - 1]);
@@ -1002,7 +1003,7 @@ Document            document;
 	if (pEl != NULL)
 	  {
 	     /* Dealing with exceptions */
-	     TraiteExceptionCreation (pEl,
+	     CreateWithException (pEl,
 				      LoadedDocument[document - 1]);
 	     /* If element pair, chain it with its homologue */
 	     if (((PtrElement) newElement)->ElStructSchema->SsRule[((PtrElement) newElement)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
@@ -1130,7 +1131,7 @@ Document            document;
 	     if ((PtrElement) (*newElement) != NULL)
 	       {
 		  /* Dealing with exceptions */
-		  TraiteExceptionCreation ((PtrElement) (*newElement),
+		  CreateWithException ((PtrElement) (*newElement),
 					   LoadedDocument[document - 1]);
 #ifndef NODISPLAY
 		  /* treats the required attibutes of the created elements */
@@ -1394,7 +1395,7 @@ Document            document;
 			  if (SaveDisplayMode != DeferredDisplay)
 			     TtaSetDisplayMode (document, DeferredDisplay);
 			  /* change AbCanBeModified for all abstract boxes */
-			  ChangePavModif ((PtrElement) element, document,
+			  ChangeAbsBoxModif ((PtrElement) element, document,
 				       (newAccessRight == AccessReadWrite));
 			  /* Restore the display mode of the document */
 			  /* Redisplay if the mode is immediat display */

@@ -40,7 +40,7 @@ unsigned char       Code[256];	/* Alphabet characters */
 #include "memory_f.h"
 #include "fileaccess_f.h"
 #include "thotmsg_f.h"
-#include "dofile_f.h"
+
 #include "platform_f.h"
 
 /***************************** ALPHABET ************************************/

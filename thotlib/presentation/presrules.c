@@ -5,7 +5,6 @@
 /*
   gestion des regles de presentation de l'image abstraite.
   Ce module applique les regles de presentation aux paves.	
-  V. Quint
 
  */
 

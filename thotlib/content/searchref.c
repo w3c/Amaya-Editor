@@ -39,7 +39,7 @@
 #include "memory_f.h"
 #include "structmodif_f.h"
 #include "changeabsbox_f.h"
-#include "ouvre_f.h"
+
 #include "references_f.h"
 #include "externalref_f.h"
 #include "schemas_f.h"

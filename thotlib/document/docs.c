@@ -43,7 +43,7 @@
 #include "views_f.h"
 #include "viewapi_f.h"
 #include "draw_f.h"
-#include "dofile_f.h"
+
 #include "callback_f.h"
 #include "viewcommands_f.h"
 #include "platform_f.h"
@@ -53,7 +53,7 @@
 #include "structcommands_f.h"
 #include "memory_f.h"
 #include "changeabsbox_f.h"
-#include "ouvre_f.h"
+
 #include "paginate_f.h"
 #include "writepivot_f.h"
 #include "schemas_f.h"
@@ -125,7 +125,7 @@ PtrDocument         pDoc;
 				      /* c'est une inclusion avec expansion, on */
 				      /* copie d'abord l'element inclus */
 				      CopyIncludedElem (pRef->RdElement, pRefDoc);
-			     ReafReference (pRef, NULL, pRefDoc);
+			     RedispReference (pRef, NULL, pRefDoc);
 			  }
 		  }
 		while (pRef != NULL);

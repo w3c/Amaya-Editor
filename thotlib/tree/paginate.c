@@ -427,7 +427,7 @@ static void SuppressPageMark(pPage, pDoc, pLib)
       {
       /* il y avait un element avant la marque de page, on essaie de le */
       /* fusionner avec l'element qui le suit maintenant. */
-      if (!MemeTexte(pPrevious, pDoc, pLib))
+      if (!IsIdenticalTextType(pPrevious, pDoc, pLib))
         *pLib = NULL;
       while (pPrevious != NULL)
 	{
@@ -1409,7 +1409,7 @@ static int MoveCut(pAb, NoBr1, schView)
     if (!Divisible(pAb, &pRNoBr1, &pA1, &pRNoBr2, &pA2, schView))
       /* le pave est insecable, on coupe avant ce pave */
       {
-	HautCoupure(pAb, TRUE, &High, &PosV, &cuttedChar);
+	SetPageHeight(pAb, TRUE, &High, &PosV, &cuttedChar);
 	ret = PosV;
       } 
     else	/* le pave' n'est pas insecable */
@@ -1434,7 +1434,7 @@ static int MoveCut(pAb, NoBr1, schView)
 	      {
 		pRe1 = pRNoBr1;
 		/* demande au Mediateur la position du haut du pave dans la page */
-		HautCoupure(pAb, TRUE, &High,&PosV, &cuttedChar);
+		SetPageHeight(pAb, TRUE, &High,&PosV, &cuttedChar);
 		/* calcule la hauteur minimum avant coupure, en points typographiques */
 		if (pRe1->PrMinAttr)
 		  i = AttrValue(pA1);
@@ -1472,7 +1472,7 @@ static int MoveCut(pAb, NoBr1, schView)
 	      {
 		pRe1 = pRNoBr2;
 		/* demande au Mediateur ou se place le pave dans la page */
-		HautCoupure(pAb, TRUE, &High, &PosV, &cuttedChar);
+		SetPageHeight(pAb, TRUE, &High, &PosV, &cuttedChar);
 		/* calcule la hauteur minimum apres coupure, en points typographiques */
 		if (pRe1->PrMinAttr)
 		  i = AttrValue(pA2);
@@ -1554,7 +1554,7 @@ static void SetMark(pAb, rootEl, pDoc, schView, absBoxTooHigh, origCutAbsBox, nb
 	      /* demande au mediateur sur quel caractere a lieu la coupure */
 	      /* (si ce n'est pas une feuille de texte, on placera la marque */
 	      /* de page avant le pave) */
-	      HautCoupure(pAb, TRUE, &High, &PosV, &cuttedChar);
+	      SetPageHeight(pAb, TRUE, &High, &PosV, &cuttedChar);
 	      if (cuttedChar <= 0)
 	        /* place la marque de page avant le pave */
 	        *pPage = InsertMark(pAb, frame, nbView,
@@ -1695,7 +1695,7 @@ static void SetMark(pAb, rootEl, pDoc, schView, absBoxTooHigh, origCutAbsBox, nb
 	      /* demande au mediateur sur quel caractere a lieu la coupure */
 	      /* (si ce n'est pas une feuille de texte, on placera la marque */
 	      /* de page avant le pave) */
-	      HautCoupure(pAb, TRUE, &High, &PosV, &cuttedChar);
+	      SetPageHeight(pAb, TRUE, &High, &PosV, &cuttedChar);
 	      if (cuttedChar <= 0)
 	        /* place la marque de page avant le pave */
 	        *pPage = InsertMark(pAb, frame, nbView,
@@ -1971,7 +1971,7 @@ static PtrElement PutMark(rootEl, nbView, pDoc, frame)
 	  putVThread = 0;
 	else
 	  /* demande au mediateur la position verticale de cette boite filet */
-	  HautCoupure(pAb, TRUE, &High, &putVThread, &cuttedChar);
+	  SetPageHeight(pAb, TRUE, &High, &putVThread, &cuttedChar);
 	/* verifie la hauteur de la page */
 	if (putVThread > PageHeight + PageFooterHeight)
 	  /* la page est trop haute */
@@ -2004,7 +2004,7 @@ static PtrElement PutMark(rootEl, nbView, pDoc, frame)
 		  /* page courante juste au-dessus de la premiere reference au */
 		  /* premier element associe' du haut de page. */
 		  {
-		    HautCoupure(PageHeaderRefAssoc->ElAbstractBox[nbView-1], TRUE,
+		    SetPageHeight(PageHeaderRefAssoc->ElAbstractBox[nbView-1], TRUE,
 				&High,&PosV,&cuttedChar);
 		    if (normalPageHeight < PosV)
 		      PageHeight = PosV;
@@ -2196,7 +2196,7 @@ static void PageHeaderFooter(pElPage, view, schView, frame, pDoc)
          /* on appelle Modifvue a partir du pave haut de page */
          bool = ChangeConcreteImage(frame, &h, pAb);
          /* calcul de la hauteur du pave haut ou bas de page */
-         HautCoupure(pAb, TRUE, &High, &PosV, &cuttedChar);
+         SetPageHeight(pAb, TRUE, &High, &PosV, &cuttedChar);
          topPageHeightRef = High;
        }
      /* on saute le corps de page pour voir s'il y a un bas de page */
@@ -2215,7 +2215,7 @@ static void PageHeaderFooter(pElPage, view, schView, frame, pDoc)
          /* on appelle Modifvue a partir du pave haut de page */
          bool = ChangeConcreteImage(frame, &h, pAb);
          /* calcul de la hauteur du pave haut ou bas de page */
-         HautCoupure(pAb, TRUE, &High, &PosV, &cuttedChar);
+         SetPageHeight(pAb, TRUE, &High, &PosV, &cuttedChar);
          bottomPageHeightRef = High;
        }
      /* mise a jour de la hauteur de reference de la page */
@@ -2522,7 +2522,7 @@ static void BalanceColumn (pDoc, rootAbsBox, nbView, schView)
       bool = ChangeConcreteImage(frame, &h, rootAbsBox);
       pP = pP->AbFirstEnclosed; /* pP pave de colonne gauche */
       /* calcul de la hauteur du pave colonne gauche */
-      HautCoupure(pP, TRUE, &High, &PosV, &cuttedChar);
+      SetPageHeight(pP, TRUE, &High, &PosV, &cuttedChar);
       /* Hauteur = dimension verticale du pave colonne simple */
       /* on fait evaluer la coupure de colonne avec h = Hauteur / 2 */
       /* on appelle Modifvue a partir du pave colonne simple */
@@ -2940,7 +2940,7 @@ WholePageHeight = 0;
 		       while (pP->AbElement != pBody->AbElement)
 			 pP = pP->AbEnclosing;
 	               /* calcul de la hauteur du pave haut ou bas de page */
-	               HautCoupure(pP, TRUE, &High, &PosV, &cuttedChar);
+	               SetPageHeight(pP, TRUE, &High, &PosV, &cuttedChar);
 	               /* Hauteur = dim verticale du haut (ou bas) de page */
                 if (pP->AbPrevious == pBody) 
 			/* des paves ont ete ajoutes en bas de page */
@@ -2959,7 +2959,7 @@ WholePageHeight = 0;
                     WholePageHeight - PageFooterHeight -PageHeaderHeight;
              }
            /* on fait evaluer la position du pave reference */
-            HautCoupure(HFPageRefAssoc->ElAbstractBox[nbView-1], TRUE,
+            SetPageHeight(HFPageRefAssoc->ElAbstractBox[nbView-1], TRUE,
                        &High, &PosV, &cuttedChar);
            /* on force la coupure a cette hauteur */
            h = PosV;
@@ -3057,7 +3057,7 @@ WholePageHeight = 0;
   if (pP->AbElement->ElTypeNumber != PageBreak + 1)
     /* le document ne commence pas par une marque de page pour cette */
     /* vue ; on cherche la premiere marque de page qui suit */
-    pP = PavCherche(pP, FALSE, PageBreak + 1, NULL, NULL);
+    pP = AbsBoxFromElOrPres(pP, FALSE, PageBreak + 1, NULL, NULL);
   if (pP != NULL)
     if (pP->AbElement->ElTypeNumber == PageBreak + 1)
       /* on a trouve une marque de page, on determine */
@@ -3100,7 +3100,7 @@ WholePageHeight = 0;
 		}
 	    }
 	  /* cherche la marque de la page suivante */
-	  pP = PavCherche(pP, FALSE, PageBreak+1, NULL, NULL);
+	  pP = AbsBoxFromElOrPres(pP, FALSE, PageBreak+1, NULL, NULL);
 	  if (pP != NULL)
 	    /* on a trouve' une marque de page. C'est une page */
 	    /* de debut d'element ou une page creee par l'utilisateur. */
@@ -3278,7 +3278,7 @@ WholePageHeight = 0;
 	    while (pP->AbNext != NULL)
 	     pP = pP->AbNext;
 	    }
-	  pP = PavCherche(pP, FALSE, PageBreak+1, NULL, NULL);
+	  pP = AbsBoxFromElOrPres(pP, FALSE, PageBreak+1, NULL, NULL);
 	  }
  if (pP != NULL)
  /* on fait calculer l'image par le mediateur avant d'appeler */

@@ -37,7 +37,7 @@
 #include "scroll_f.h"
 #include "views_f.h"
 #include "viewapi_f.h"
-#include "dofile_f.h"
+
 #include "absboxes_f.h"
 #include "buildboxes_f.h"
 #include "inites_f.h"
@@ -1562,16 +1562,16 @@ boolean             creation;
 /*----------------------------------------------------------------------
    ChangeAbsBoxModifAttrIntoView change les booleens AbCanBeModified et AbReadOnly   
    dans tous les paves de l'element pEl qui appartiennent a la vue 
-   vue. newPavModif donne la nouvelle valeur de AbCanBeModified,          
+   vue. newAbsModif donne la nouvelle valeur de AbCanBeModified,          
    reaffiche indique si on veut reafficher.                        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ChangeAbsBoxModifAttrIntoView (PtrElement pEl, int view, boolean newPavModif, boolean redisplay)
+static void         ChangeAbsBoxModifAttrIntoView (PtrElement pEl, int view, boolean newAbsModif, boolean redisplay)
 #else  /* __STDC__ */
-static void         ChangeAbsBoxModifAttrIntoView (pEl, view, newPavModif, redisplay)
+static void         ChangeAbsBoxModifAttrIntoView (pEl, view, newAbsModif, redisplay)
 PtrElement          pEl;
 int                 view;
-boolean             newPavModif;
+boolean             newAbsModif;
 boolean             redisplay;
 
 #endif /* __STDC__ */
@@ -1590,14 +1590,14 @@ boolean             redisplay;
 	   else
 	      /* c'est un pave de l'element, on le traite */
 	     {
-		pAb->AbReadOnly = !newPavModif;
+		pAb->AbReadOnly = !newAbsModif;
 		if (redisplay)
 		   pAb->AbAspectChange = TRUE;
 		if (!pAb->AbPresentationBox)
 		   /* c'est le pave principal de l'element */
 		  {
 		     /* les paves de presentation restent non modifiables */
-		     pAb->AbCanBeModified = newPavModif;
+		     pAb->AbCanBeModified = newAbsModif;
 		     /* traite les paves de presentation crees par Create et */
 		     /* CreateLast */
 		     pAbbChild = pAb->AbFirstEnclosed;
@@ -1606,7 +1606,7 @@ boolean             redisplay;
 			  if (pAbbChild->AbElement == pEl)
 			     /* c'est un pave de l'element */
 			    {
-			       pAbbChild->AbReadOnly = !newPavModif;
+			       pAbbChild->AbReadOnly = !newAbsModif;
 			       if (redisplay)
 				  pAbbChild->AbAspectChange = TRUE;
 			    }
@@ -1624,16 +1624,16 @@ boolean             redisplay;
 
 
 /*----------------------------------------------------------------------
-   ChangePavModif change les booleens AbCanBeModified et AbReadOnly dans 
+   ChangeAbsBoxModif change les booleens AbCanBeModified et AbReadOnly dans 
    tous les paves existants de l'element pEl et de sa descendance. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ChangePavModif (PtrElement pEl, Document document, boolean newPavModif)
+void                ChangeAbsBoxModif (PtrElement pEl, Document document, boolean newAbsModif)
 #else  /* __STDC__ */
-void                ChangePavModif (pEl, document, newPavModif)
+void                ChangeAbsBoxModif (pEl, document, newAbsModif)
 PtrElement          pEl;
 Document            document;
-boolean             newPavModif;
+boolean             newAbsModif;
 
 #endif /* __STDC__ */
 {
@@ -1659,7 +1659,7 @@ boolean             newPavModif;
       for (view = 1; view <= MAX_VIEW_DOC; view++)
 	{
 	   /* on traite tous les paves de l'element dans cette vue */
-	   ChangeAbsBoxModifAttrIntoView (pEl, view, newPavModif, redisplay);
+	   ChangeAbsBoxModifAttrIntoView (pEl, view, newAbsModif, redisplay);
 	   if (redisplay && pEl->ElAbstractBox[view - 1] != NULL)
 	      RedispAbsBox (pEl->ElAbstractBox[view - 1], LoadedDocument[document - 1]);
 	}
@@ -1667,7 +1667,7 @@ boolean             newPavModif;
       /* View of associated elements */
      {
 	/* on traite tous les paves de l'element dans cette vue */
-	ChangeAbsBoxModifAttrIntoView (pEl, 1, newPavModif, redisplay);
+	ChangeAbsBoxModifAttrIntoView (pEl, 1, newAbsModif, redisplay);
 	if (redisplay && pEl->ElAbstractBox[0] != NULL)
 	   RedispAbsBox (pEl->ElAbstractBox[0], LoadedDocument[document - 1]);
      }
@@ -1684,7 +1684,7 @@ boolean             newPavModif;
 	while (pChild != NULL)
 	  {
 	     if (pChild->ElAccess == AccessInherited)
-		ChangePavModif (pChild, document, newPavModif);
+		ChangeAbsBoxModif (pChild, document, newAbsModif);
 	     pChild = pChild->ElNext;
 	  }
      }

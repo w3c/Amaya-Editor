@@ -1546,7 +1546,7 @@ boolean             forward;
 		     frame = pDoc->DocViewFrame[viewNb - 1];
 		     bool = ChangeConcreteImage (frame, &h, pAb);
 		     /* calcul de la hauteur du pave haut ou bas de page */
-		     HautCoupure (pAb, TRUE, &Hauteur, &PosV, &CarCoupe);
+		     SetPageHeight (pAb, TRUE, &Hauteur, &PosV, &CarCoupe);
 		     /* Hauteur = dimension verticale du pave haut (ou bas) de page */
 
 		     if (baspage)	/* des paves ont ete ajoutes en bas de page */
@@ -3322,7 +3322,7 @@ boolean            *arret;
 		  /* il y a un haut de page : on evalue sa hauteur */
 		  pAb = pAbb;
 		  /* calcul de la hauteur du pave haut de page */
-		  HautCoupure (pAb, TRUE, &Hauteur, &PosV, &CarCoupe);
+		  SetPageHeight (pAb, TRUE, &Hauteur, &PosV, &CarCoupe);
 		  PageHeaderHeight = Hauteur;
 	       }
 	     /* on saute le corps de page pour voir s'il y a un bas de page */
@@ -3337,7 +3337,7 @@ boolean            *arret;
 		  /* il y a un bas : on evalue sa hauteur */
 		  pAb = pAbb->AbNext;
 		  /* calcul de la hauteur du pave bas de page */
-		  HautCoupure (pAb, TRUE, &Hauteur, &PosV, &CarCoupe);
+		  SetPageHeight (pAb, TRUE, &Hauteur, &PosV, &CarCoupe);
 		  PageFooterHeight = Hauteur;
 	       }
 	     if (pEl->ElPageType == PgBegin)

@@ -935,7 +935,7 @@ PtrDocument         pDoc;
 	      if (trouve)
 		 /* applique les regles de presentation de l'attribut pour */
 		 /* faire creer la boite filet. */
-		 ChngPresAttr (pLigne, pAttr, pDoc, FALSE, FALSE, NULL);
+		 UpdatePresAttr (pLigne, pAttr, pDoc, FALSE, FALSE, NULL);
 	   }
 }
 

@@ -17,7 +17,7 @@
 #define EXPORT extern
 #include "platform_tv.h"
 
-#include "dofile_f.h"
+
 #include "fileaccess_f.h"
 #include "readstr_f.h"
 #include "memory_f.h"

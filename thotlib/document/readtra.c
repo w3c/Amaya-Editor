@@ -20,7 +20,7 @@
 
 static boolean      error = FALSE;
 
-#include "dofile_f.h"
+
 #include "readtra_f.h"
 #include "memory_f.h"
 #include "fileaccess_f.h"

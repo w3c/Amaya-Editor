@@ -13,8 +13,8 @@
 
 /* procedures importees */
 #include "schemas_f.h"
-#include "dofile_f.h"
-#include "ouvre_f.h"
+
+
 #include "memory_f.h"
 
 /* procedure bidon declarees localement et exportees */

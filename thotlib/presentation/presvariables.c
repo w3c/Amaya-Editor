@@ -1057,6 +1057,6 @@ PtrDocument         pDoc;
      }
    if (!equal)
       /* reaffiche les references qui copient cette variable */
-      ChngRef (pAb, pDoc);
+      RedispAllReferences (pAb, pDoc);
    return !equal;
 }
