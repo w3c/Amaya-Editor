@@ -3471,39 +3471,43 @@ static void         EndOfEntity (CHAR_T c)
 	 PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, TEXT(""));
        else
 	 {
-	   /* PutInBuffer ((CHAR_T)XhtmlEntityTable[EntityTableEntry].charCode);*/
-	   /* put the current content of the input buffer into the document */
-	   TextToDocument ();
-	   HTMLcontext.mergeText = FALSE;
-	   /* create a new text leaf */
-	   elType.ElSSchema = DocumentSSchema;
-	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	   elText = TtaNewElement (HTMLcontext.doc, elType);
-	   TtaSetElementLineNumber (elText, NumberOfLinesRead);
-	   InsertElement (&elText);
-	   HTMLcontext.lastElementClosed = TRUE;
-	   /* put the content in the new text leaf */
-	   buffer[0] = ((UCHAR_T) XhtmlEntityTable[EntityTableEntry].charCode);
-	   buffer[1] = WC_EOS;
-	   lang = TtaGetLanguageIdFromAlphabet('L');
-	   TtaSetTextContent (elText, buffer, lang, HTMLcontext.doc);
-	   HTMLcontext.language = lang;
-	   /* make that text leaf read-only */
-	   TtaSetAccessRight (elText, ReadOnly, HTMLcontext.doc);
-	   /* associate an attribute EntityName with the new text leaf */
-	   attrType.AttrSSchema = DocumentSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_EntityName;
-	   attr = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (elText, attr, HTMLcontext.doc);
-	   len = ustrlen (EntityName);
-	   if (len > MAX_ENTITY_LENGTH - 3)
-	     len = MAX_ENTITY_LENGTH - 3;
-	   buffer[0] = '&';
-	   ustrncpy (&buffer[1], EntityName, len);
-	   buffer[len+1] = ';';
-	   buffer[len+2] = WC_EOS;
-	   TtaSetAttributeText (attr, buffer, elText, HTMLcontext.doc);
-	   HTMLcontext.mergeText = FALSE;
+	   if (ReadingAnAttrValue)
+	     PutInBuffer ((CHAR_T)XhtmlEntityTable[EntityTableEntry].charCode);
+	   else
+	     {
+	       /* put the current content of the input buffer into the document */
+	       TextToDocument ();
+	       HTMLcontext.mergeText = FALSE;
+	       /* create a new text leaf */
+	       elType.ElSSchema = DocumentSSchema;
+	       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	       elText = TtaNewElement (HTMLcontext.doc, elType);
+	       TtaSetElementLineNumber (elText, NumberOfLinesRead);
+	       InsertElement (&elText);
+	       HTMLcontext.lastElementClosed = TRUE;
+	       /* put the content in the new text leaf */
+	       buffer[0] = ((UCHAR_T) XhtmlEntityTable[EntityTableEntry].charCode);
+	       buffer[1] = WC_EOS;
+	       lang = TtaGetLanguageIdFromAlphabet('L');
+	       TtaSetTextContent (elText, buffer, lang, HTMLcontext.doc);
+	       HTMLcontext.language = lang;
+	       /* make that text leaf read-only */
+	       TtaSetAccessRight (elText, ReadOnly, HTMLcontext.doc);
+	       /* associate an attribute EntityName with the new text leaf */
+	       attrType.AttrSSchema = DocumentSSchema;
+	       attrType.AttrTypeNum = HTML_ATTR_EntityName;
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (elText, attr, HTMLcontext.doc);
+	       len = ustrlen (EntityName);
+	       if (len > MAX_ENTITY_LENGTH - 3)
+		 len = MAX_ENTITY_LENGTH - 3;
+	       buffer[0] = '&';
+	       ustrncpy (&buffer[1], EntityName, len);
+	       buffer[len+1] = ';';
+	       buffer[len+2] = WC_EOS;
+	       TtaSetAttributeText (attr, buffer, elText, HTMLcontext.doc);
+	       HTMLcontext.mergeText = FALSE;
+	     }
 	 }
      }
    else
@@ -3565,111 +3569,111 @@ static void         EntityChar (unsigned char c)
 	}
      while (!stop);     
      if (!OK && !ReadingAnAttrValue)
-        {
-	/* If we are not reading an attribute value, assume that semicolon is
-	   missing and put the corresponding char in the document content */
-	EntityName[LgEntityName] = WC_EOS;
-	if (XhtmlEntityTable[EntityTableEntry].charCode > 255)
+       {
+	 /* If we are not reading an attribute value, assume that semicolon is
+	    missing and put the corresponding char in the document content */
+	 EntityName[LgEntityName] = WC_EOS;
+	 if (XhtmlEntityTable[EntityTableEntry].charCode > 255)
 	   PutNonISOlatin1Char (XhtmlEntityTable[EntityTableEntry].charCode, TEXT (""));
-	else
-	  {
-	    /* PutInBuffer ((char)(XhtmlEntityTable[EntityTableEntry].charCode));*/
-	    /* put the current content of the input buffer into the document */
-	    TextToDocument ();
-	    HTMLcontext.mergeText = FALSE;
-	    /* create a new text leaf */
-	    elType.ElSSchema = DocumentSSchema;
-	    elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	    elText = TtaNewElement (HTMLcontext.doc, elType);
-	    TtaSetElementLineNumber (elText, NumberOfLinesRead);
-	    InsertElement (&elText);
-	    HTMLcontext.lastElementClosed = TRUE;
-	    /* put the content in the new text leaf */
-	    buffer[0] = ((UCHAR_T) XhtmlEntityTable[EntityTableEntry].charCode);
-	    buffer[1] = WC_EOS;
-	    lang = TtaGetLanguageIdFromAlphabet('L');
-	    TtaSetTextContent (elText, buffer, lang, HTMLcontext.doc);
-	    HTMLcontext.language = lang;
-	    /* make that text leaf read-only */
-	    TtaSetAccessRight (elText, ReadOnly, HTMLcontext.doc);
-	    /* associate an attribute EntityName with the new text leaf */
-	    attrType.AttrSSchema = DocumentSSchema;
-	    attrType.AttrTypeNum = HTML_ATTR_EntityName;
-	    attr = TtaNewAttribute (attrType);
-	    TtaAttachAttribute (elText, attr, HTMLcontext.doc);
-	    len = ustrlen (EntityName);
-	    if (len > MAX_ENTITY_LENGTH - 3)
-	      len = MAX_ENTITY_LENGTH - 3;
-	    buffer[0] = '&';
-	    ustrncpy (&buffer[1], EntityName, len);
-	    buffer[len+1] = ';';
-	    buffer[len+2] = WC_EOS;
-	    TtaSetAttributeText (attr, buffer, elText, HTMLcontext.doc);
-	    HTMLcontext.mergeText = FALSE;
-	  }
-	if (c != SPACE)
+	 else
+	   {
+	     /* PutInBuffer ((char)(XhtmlEntityTable[EntityTableEntry].charCode));*/
+	     /* put the current content of the input buffer into the document */
+	     TextToDocument ();
+	     HTMLcontext.mergeText = FALSE;
+	     /* create a new text leaf */
+	     elType.ElSSchema = DocumentSSchema;
+	     elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	     elText = TtaNewElement (HTMLcontext.doc, elType);
+	     TtaSetElementLineNumber (elText, NumberOfLinesRead);
+	     InsertElement (&elText);
+	     HTMLcontext.lastElementClosed = TRUE;
+	     /* put the content in the new text leaf */
+	     buffer[0] = ((UCHAR_T) XhtmlEntityTable[EntityTableEntry].charCode);
+	     buffer[1] = WC_EOS;
+	     lang = TtaGetLanguageIdFromAlphabet('L');
+	     TtaSetTextContent (elText, buffer, lang, HTMLcontext.doc);
+	     HTMLcontext.language = lang;
+	     /* make that text leaf read-only */
+	     TtaSetAccessRight (elText, ReadOnly, HTMLcontext.doc);
+	     /* associate an attribute EntityName with the new text leaf */
+	     attrType.AttrSSchema = DocumentSSchema;
+	     attrType.AttrTypeNum = HTML_ATTR_EntityName;
+	     attr = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (elText, attr, HTMLcontext.doc);
+	     len = ustrlen (EntityName);
+	     if (len > MAX_ENTITY_LENGTH - 3)
+	       len = MAX_ENTITY_LENGTH - 3;
+	     buffer[0] = '&';
+	     ustrncpy (&buffer[1], EntityName, len);
+	     buffer[len+1] = ';';
+	     buffer[len+2] = WC_EOS;
+	     TtaSetAttributeText (attr, buffer, elText, HTMLcontext.doc);
+	     HTMLcontext.mergeText = FALSE;
+	   }
+	 if (c != SPACE)
 	   /* print an error message */
 	   ParseHTMLError (HTMLcontext.doc, TEXT("Missing semicolon"));
-	/* next state is the return state from the entity subautomaton, not
-	   the state computed by the automaton. In addition the character read
-	   has not been processed yet */
-	NormalTransition = FALSE;
-	currentState = returnState;
-	/* end of entity */
-	LgEntityName = 0;
-	done = TRUE;
-        }
+	 /* next state is the return state from the entity subautomaton, not
+	    the state computed by the automaton. In addition the character read
+	    has not been processed yet */
+	 NormalTransition = FALSE;
+	 currentState = returnState;
+	 /* end of entity */
+	 LgEntityName = 0;
+	 done = TRUE;
+       }
      }
    if (!done)
      {
-	while (XhtmlEntityTable[EntityTableEntry].charName[CharRank] < c
+       while (XhtmlEntityTable[EntityTableEntry].charName[CharRank] < c
 	       && XhtmlEntityTable[EntityTableEntry].charCode != 0)
-	   EntityTableEntry++;
-	if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] != c)
-	  OK = FALSE;
-	else
-	  if (LgEntityName > 0 &&
-	      ustrncmp (EntityName,
-			XhtmlEntityTable[EntityTableEntry].charName,
-			LgEntityName) != 0)
-	     OK = FALSE;
-	  else
+	 EntityTableEntry++;
+       if (XhtmlEntityTable[EntityTableEntry].charName[CharRank] != c)
+	 OK = FALSE;
+       else
+	 if (LgEntityName > 0 &&
+	     ustrncmp (EntityName,
+		       XhtmlEntityTable[EntityTableEntry].charName,
+		       LgEntityName) != 0)
+	   OK = FALSE;
+	 else
+	   {
+	     OK = TRUE;
+	     CharRank++;
+	     if (LgEntityName < MaxEntityLength - 1)
+	       EntityName[LgEntityName++] = c;
+	   }
+       if (!OK)
+	 {
+	   /* the entity name read so far is not in the table */
+	   /* invalid entity */
+	   /* put the entity name in the buffer */
+	   if (ReadingAnAttrValue)
+	     PutInBuffer ('&');
+	   else
+	     PutAmpersandInDoc ();
+	   for (i = 0; i < LgEntityName; i++)
+	     PutInBuffer (EntityName[i]);
+	   /* print an error message only if it's not the first character
+	      after '&' or if it is a letter */
+	   if (LgEntityName > 0 ||
+	       ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))
 	     {
-	       OK = TRUE;
-	       CharRank++;
-	       if (LgEntityName < MaxEntityLength - 1)
-		  EntityName[LgEntityName++] = c;
+	       /* print an error message */
+	       EntityName[LgEntityName++] = c;
+	       EntityName[LgEntityName++] = WC_EOS;
+	       usprintf (msgBuffer, TEXT("Invalid entity \"&%s\""), EntityName);
+	       ParseHTMLError (HTMLcontext.doc, msgBuffer);
 	     }
-	if (!OK)
-	  {
-	     /* the entity name read so far is not in the table */
-	     /* invalid entity */
-	     /* put the entity name in the buffer */
-	     if (ReadingAnAttrValue)
-	        PutInBuffer ('&');
-	     else
-	        PutAmpersandInDoc ();
-	     for (i = 0; i < LgEntityName; i++)
-		PutInBuffer (EntityName[i]);
-	     /* print an error message only if it's not the first character
-		after '&' or if it is a letter */
-	     if (LgEntityName > 0 ||
-		 ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))
-		{
-	        /* print an error message */
-	        EntityName[LgEntityName++] = c;
-	        EntityName[LgEntityName++] = WC_EOS;
-	        usprintf (msgBuffer, TEXT("Invalid entity \"&%s\""), EntityName);
-	        ParseHTMLError (HTMLcontext.doc, msgBuffer);
-		}
-	     /* next state is the return state from the entity subautomaton,
-		not the state computed by the automaton.
-		In addition the character read has not been processed yet */
-	     NormalTransition = FALSE;
-	     currentState = returnState;
-	     /* end of entity */
-	     LgEntityName = 0;
-	  }
+	   /* next state is the return state from the entity subautomaton,
+	      not the state computed by the automaton.
+	      In addition the character read has not been processed yet */
+	   NormalTransition = FALSE;
+	   currentState = returnState;
+	   /* end of entity */
+	   LgEntityName = 0;
+	 }
      }
 }
 
