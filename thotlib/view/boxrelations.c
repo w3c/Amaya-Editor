@@ -912,6 +912,15 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	  /* don't process this rule */
 	  pRefAb = NULL;
 	}
+      else if (pRefAb && pRefAb == pAb->AbPrevious &&
+	       pRefAb->AbHorizPos.PosAbRef == pAb)
+	{
+	  /* Bad rule: change the ref to the previous box */
+	  while (pRefAb &&
+		 pRefAb->AbHorizPos.PosAbRef == pAb)
+	    pRefAb = pRefAb->AbPrevious;
+	  pAb->AbHorizPos.PosAbRef = pRefAb;
+	}
       
       if (pRefAb == NULL)
 	{
@@ -1056,6 +1065,15 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	    }
 	  /* don't process this rule */
 	  pRefAb = NULL;
+	}
+      else if (pRefAb && pRefAb == pAb->AbPrevious &&
+	       pRefAb->AbVertPos.PosAbRef == pAb)
+	{
+	  /* Bad rule: change the ref to the previous box */
+	  while (pRefAb &&
+		 pRefAb->AbVertPos.PosAbRef == pAb)
+	    pRefAb = pRefAb->AbPrevious;
+	  pAb->AbVertPos.PosAbRef = pRefAb;
 	}
 
       if (pRefAb == NULL)
