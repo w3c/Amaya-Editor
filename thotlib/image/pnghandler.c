@@ -346,25 +346,25 @@ int *bg;
     if (color_type == PNG_COLOR_TYPE_PALETTE) {
        *ncolors = info_ptr->num_palette; 	
        for (i=0; i < *ncolors; i++) {
-#          ifdef _WINDOWS
-           colrs[i] = RGB (info_ptr->palette[i].red, info_ptr->palette[i].green, info_ptr->palette[i].blue);
-#          else /* !_WINDOWS */
+#          ifndef _WINDOWS
 	   colrs[i].red   = info_ptr->palette[i].red << 8;
 	   colrs[i].green = info_ptr->palette[i].green << 8;
 	   colrs[i].blue  = info_ptr->palette[i].blue << 8;
 	   colrs[i].pixel = i;
 	   colrs[i].flags = DoRed|DoGreen|DoBlue;
+#          else /* _WINDOWS */
+	   colrs[i].red   = info_ptr->palette[i].red;
+	   colrs[i].green = info_ptr->palette[i].green;
+	   colrs[i].blue  = info_ptr->palette[i].blue;
 #          endif /* _WINDOWS */
 	}
     } else if (color_type == PNG_COLOR_TYPE_RGB ) {
            *ncolors = 128; 
 	   for (i=0; i < *ncolors ; i++) {
-#              ifdef _WINDOWS
-               colrs[i] = RGB (std_color_cube[i].red, std_color_cube[i].green, std_color_cube[i].blue);
-#              else /* !_WINDOWS */
 	       colrs[i].red   = std_color_cube[i].red << 8;
 	       colrs[i].green = std_color_cube[i].green << 8;
 	       colrs[i].blue  = std_color_cube[i].blue << 8;
+#              ifndef _WINDOWS
 	       colrs[i].pixel = i;
 	       colrs[i].flags = DoRed|DoGreen|DoBlue;
 #              endif /* _WINDOWS */
@@ -373,15 +373,13 @@ int *bg;
 	   /* greymap */
 	   *ncolors = 16; 
            for (i=0; i < 15; i++ ) {
-#              ifdef _WINDOWS
-	       colrs[i] = RGB (i * 255/15, i * 255/15, i * 255/15);
-#              else /* !_WINDOWS */
 	       colrs[i].red   = colrs[i].green = colrs[i].blue = i * 65535/15;
+#              ifndef _WINDOWS
 	       colrs[i].flags = DoRed|DoGreen|DoBlue;
 #              endif /* _WINDOWS */
 	   }
 #          ifdef _WINDOWS
-	   colrs[15] = RGB (255,255,255);
+	   colrs[15].red = colrs[15].green = colrs[15].blue = 255;
 #          else /* !_WINDOWS */
 	   colrs[15].red = colrs[15].green = colrs[15].blue = 65535;
 	   colrs[15].flags = DoRed|DoGreen|DoBlue;

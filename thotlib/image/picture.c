@@ -324,6 +324,12 @@ PictInfo           *imageDesc;
 	case ReScale:
 #         ifndef _WINDOWS
 	  XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
+#         else /* _WINDOWS */
+	  {
+	  HDC hDC = CreateCompatibleDC (TtDisplay);
+	  SelectObject (hDC, pixmap);
+	  BitBlt (TtDisplay, xFrame, yFrame, w, h, hDC, 0, 0, SRCCOPY);
+	  }
 #         endif /* _WINDOWS */
 	  break;
 	  
@@ -828,8 +834,6 @@ int                 hlogo;
    lPt[1].x = 1;
    lPt[1].y = h - 1;
    Polyline  (hMemDc, lPt, 2);
-
-   BitBlt (hDc, x, y, w, h, hMemDc, 0, 0, SRCCOPY);
 #  endif /* _WINDOWS */
 
    /* copying the logo */
@@ -863,6 +867,7 @@ int                 hlogo;
 #  ifndef _WINDOWS
    XCopyArea (TtDisplay, imageDesc->PicPixmap, pixmap, TtDialogueGC, picXOrg, picYOrg, wFrame, hFrame, xFrame, yFrame);
 #  else  /* _WINDOWS */
+   BitBlt (hDc, picXOrg, picYOrg, w, h, hMemDc, 0, 0, SRCCOPY);
 #  endif /* _WINDOWS */
    GetXYOrg (frame, &XOrg, &YOrg);
    xFrame = box->BxXOrg + FrameTable[frame].FrLeftMargin - XOrg;
@@ -871,9 +876,9 @@ int                 hlogo;
    hFrame = box->BxHeight;
    Picture_Center (w, h, wFrame, hFrame, RealSize, &x, &y, &picXOrg, &picYOrg);
    if (w > wFrame)
-     w = wFrame;
+      w = wFrame;
    if (h > hFrame)
-     h = hFrame;
+      h = hFrame;
    x += xFrame;
    y += yFrame;
 #  ifndef _WINDOWS
@@ -925,6 +930,7 @@ int                 frame;
 
 #  ifdef _WINDOWS
    HDC hDC;
+   HBITMAP hBitmap;
 #  endif /* _WINDOWS */
 
    xTranslate = 0;
@@ -990,14 +996,8 @@ int                 frame;
 		 (*(PictureHandlerTable[typeImage].DrawPicture)) (imageDesc, xFrame + xTranslate, yFrame + yTranslate);
 	     }
 	   else
-#           ifndef _WINDOWS
 	    LayoutPicture (imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
 			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, frame, imageDesc);
-#           else /* _WINDOWS */
-            hDC = CreateCompatibleDC (TtDisplay);
-            SelectObject (hDC, imageDesc->PicPixmap);
-            BitBlt (TtDisplay, picXOrg, picYOrg, wFrame, hFrame, hDC, 0, 0, SRCCOPY);
-#           endif /* _WINDOWS */
 	   
 	   if (imageDesc->PicMask)
 	     {
@@ -1280,8 +1280,7 @@ PictInfo           *imageDesc;
 		   /*box->BxHeight = hFrame;*/
 		 }
 	       /* Do you have to extend the clipping */
-	       DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + w,
-			box->BxYOrg + h);
+	       DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + w, box->BxYOrg + h);
 	       NewDimPicture (box->BxAbstractBox);
 	     }
 	 }
@@ -1309,10 +1308,10 @@ PictInfo           *imageDesc;
        picMask = None;
      }
    if (!Printing || imageDesc->PicPixmap != EpsfPictureLogo)
-     UpdatePictInfo (imageDesc, myDrawable, picMask);
+      UpdatePictInfo (imageDesc, myDrawable, picMask);
+
 #  ifdef _WINDOWS
    WIN_ReleaseDeviceContext ();
-   DeleteObject (myDrawable);
 #  endif /* _WINDOWS */
 }
 

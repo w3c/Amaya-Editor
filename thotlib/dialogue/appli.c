@@ -1995,16 +1995,16 @@ int                *height;
 #endif /* __STDC__ */
 
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    *width = FrameTable[frame].FrWidth;
    *height = FrameTable[frame].FrHeight;
-#else  /* _WINDOWS */
+#  else  /* _WINDOWS */
    RECT rWindow ;
 
    GetClientRect (FrRef[frame], &rWindow) ;
    *height = rWindow.bottom - rWindow.top ;
    *width  = rWindow.right - rWindow.left ;
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }
 
 
@@ -2121,21 +2121,21 @@ int                 frame;
    ThotWidget          hscroll, vscroll;
    int                 n;
 
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    RECT       rWindow ;
    SCROLLINFO scrollInfo;
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    /* Demande le volume affiche dans la fenetre */
    ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
    hscroll = FrameTable[frame].WdScrollH;
    vscroll = FrameTable[frame].WdScrollV;
 
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    l = FrameTable[frame].FrWidth;
    h = FrameTable[frame].FrHeight;
    n = 0;
@@ -2165,7 +2165,7 @@ int                 frame;
 	n++;
 	XtSetValues (vscroll, args, n);
      }
-#else  /* _WINDOWS */
+#  else  /* _WINDOWS */
    GetWindowRect (FrRef[frame], &rWindow) ;
    h = rWindow.bottom - rWindow.top ;
    l = rWindow.right - rWindow.left ;
@@ -2186,7 +2186,7 @@ int                 frame;
       scrollInfo.nPos   = Ypos ;
       SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
    }
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 }				/*UpdateScrollbars */
 
 

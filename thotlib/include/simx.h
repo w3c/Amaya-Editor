@@ -102,10 +102,10 @@ extern "C" {
     FUNC(XDefaultDepth, int, (Display *d, Screen *s));
 
 /* color related */
-    FUNC(XParseColor, int, (Display *, Colormap *, char *, ThotColorStruct *));
-    FUNC(XAllocColor, int, (Display *, Colormap *, ThotColorStruct *));
-    FUNC(XQueryColors, void, (Display *display, Colormap *colormap,
-			      ThotColorStruct *xcolors, int ncolors));
+    FUNC(XParseColor, int, (Display*, Colormap*, char*, XColor*));
+    FUNC(XAllocColor, int, (Display*, Colormap*, XColor*));
+    FUNC(XQueryColors, void, (Display* display, Colormap* colormap,
+			      XColor* xcolors, int ncolors));
     FUNC(XFreeColors, int, (Display *d, Colormap cmap,
 			    unsigned long pixels[],
 			    int npixels, unsigned long planes));

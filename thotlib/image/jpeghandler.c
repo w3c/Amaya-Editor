@@ -152,14 +152,12 @@ ThotColorStruct colrs[256];
      {
 	for (i = 0; i < cinfo.actual_number_of_colors; i++)
 	  {
-#            ifndef _WINDOWS
 	     colrs[i].red = cinfo.colormap[0][i] << 8;
 	     colrs[i].green = cinfo.colormap[1][i] << 8;
 	     colrs[i].blue = cinfo.colormap[2][i] << 8;
+#            ifndef _WINDOWS
 	     colrs[i].pixel = i;
 	     colrs[i].flags = DoRed | DoGreen | DoBlue;
-#            else  /* _WINDOWS */
-             colrs[i] = RGB (cinfo.colormap[0][i], cinfo.colormap[1][i], cinfo.colormap[2][i]);
 #            endif /* _WINDOWS */
 	  }
      }
@@ -167,12 +165,10 @@ ThotColorStruct colrs[256];
      {
 	for (i = 0; i < cinfo.actual_number_of_colors; i++)
 	  {
-#            ifndef _WINDOWS
 	     colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i] << 8;
+#            ifndef _WINDOWS
 	     colrs[i].pixel = i;
 	     colrs[i].flags = DoRed | DoGreen | DoBlue;
-#            else  /* _WINDOWS */
-             colrs[i] = RGB (cinfo.colormap[0][i], cinfo.colormap[0][i], cinfo.colormap[0][i]);
 #            endif /* _WINDOWS */
 	  }
      }
@@ -404,14 +400,10 @@ unsigned long       BackGroundPixel;
 	  {
 
 
-#            ifndef _WINDOWS
 	     fprintf ((FILE *) fd, "%02x%02x%02x",
 		      (colrs[*pt].red) >> 8,
 		      (colrs[*pt].green) >> 8,
 		      (colrs[*pt].blue) >> 8);
-#            else  /* _WINDOWS */
-             fprintf ((FILE *) fd, "%02x%02x%02x", GetRValue (colrs[*pt]), GetGValue (colrs[*pt]), GetBValue (colrs[*pt]));
-#endif /* _WINDOWS */
 	     pt++;
 	  }
 	fprintf ((FILE *) fd, "\n");

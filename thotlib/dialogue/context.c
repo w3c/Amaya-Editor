@@ -125,7 +125,7 @@ void                WinInitColors (void)
     * Create initialize and install a color palette for
     * the Thot set of colors.
     */
-   ptrLogPal = (LOGPALETTE *) TtaGetMemory (sizeof (LOGPALETTE) + MAX_COLOR * sizeof (PALETTEENTRY));
+   ptrLogPal = (LOGPALETTE*) TtaGetMemory (sizeof (LOGPALETTE) + MAX_COLOR * sizeof (PALETTEENTRY));
    ptrLogPal->palVersion             = 0x300;
    ptrLogPal->palNumEntries          = MAX_COLOR;
    ptrLogPal->palPalEntry[0].peRed   = 255;

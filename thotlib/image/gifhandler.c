@@ -30,7 +30,7 @@
 #include "application.h"
 #include "xpmP.h"
 #include "xpm.h"
-
+#include "thotcolor.h"
 #define THOT_EXPORT extern
 #include "picture_tv.h"
 #include "frame_tv.h"
@@ -101,12 +101,12 @@ int InitTabAvailColors () {
 	return 1;
     
     hdc = GetDC(hwnd);
-    
+    /*
     if (!(GetDeviceCaps (hdc, RASTERCAPS) & RC_PALETTE)) {
        ReleaseDC(hwnd, hdc);
        return 1;
     }
-    
+    */
     nbSysColors = GetSystemPaletteEntries (hdc, 0, GetDeviceCaps (hdc, SIZEPALETTE), pe);
     /* debugprint ("nbSysColors=%d", nbSysColors); */
     
@@ -128,30 +128,36 @@ int b;
 #endif /* __STDC__ */
 {
     int i, ri, gi, bi, dMin, iMin, d, db, dr, dg;
+    LPLOGPALETTE ptrLogPal ;
     
-    InitTabAvailColors ();
+    /* InitTabAvailColors (); */
+
+    ptrLogPal = (LOGPALETTE*) TtaGetMemory (sizeof (LOGPALETTE) + MAX_COLOR * sizeof (PALETTEENTRY));
+
+    GetPaletteEntries (TtCmap, 0, MAX_COLOR, ptrLogPal->palPalEntry);
     
     iMin= 0;
     dMin= INT_MAX;
-    
+    /*    
     r = r >> 8;
     g = g >> 8;
     b = b >> 8;
+    */
     
-    for (i = 0; i < nbSysColors; i++) {
-	ri = (pe[i].peRed);
+    for (i = 0; i < MAX_COLOR; i++) {
+        ri = ptrLogPal->palPalEntry[i].peRed;
 	dr = r-ri;
 	d  = dr*dr;
 	if (d >= dMin)
 	   continue;
 	
-	bi = pe[i].peBlue;
+	bi = ptrLogPal->palPalEntry[i].peBlue;
 	db = b-bi;
 	d += db*db;
 	if (d >= dMin)
 	   continue;
 	    
-	gi = (pe[i].peGreen);
+	gi = ptrLogPal->palPalEntry[i].peGreen;
 	dg = g-gi;
 	d += dg*dg;
 	if (d >= dMin)
@@ -346,24 +352,20 @@ ThotColorStruct colrs[256];
 	if (ReadColorMap (fd, GifScreen.BitPixel, GifScreen.ColorMap))
 	   return (NULL);
 	for (i = 0; i < GifScreen.BitPixel; i++) {
-#           ifdef _WINDOWS
-	    colrs[i] = RGB (GifScreen.ColorMap[0][i], GifScreen.ColorMap[1][i], GifScreen.ColorMap[2][i]);
-#           else  /* _WINDOWS */
-	    colrs[i].red = GifScreen.ColorMap[0][i] * scale;
+	    colrs[i].red   = GifScreen.ColorMap[0][i] * scale;
 	    colrs[i].green = GifScreen.ColorMap[1][i] * scale;
-	    colrs[i].blue = GifScreen.ColorMap[2][i] * scale;
+	    colrs[i].blue  = GifScreen.ColorMap[2][i] * scale;
+#           ifndef _WINDOWS
 	    colrs[i].pixel = i;
 	    colrs[i].flags = DoRed | DoGreen | DoBlue;
 #           endif /* !_WINDOWS */
 	}
 
 	for (i = GifScreen.BitPixel; i < MAXCOLORMAPSIZE; i++) {
-#           ifdef _WINDOWS
-	    colrs[i] = RGB (0, 0, 0);
-#           else  /* _WINDOWS */
 	    colrs[i].red = 0;
 	    colrs[i].green = 0;
 	    colrs[i].blue = 0;
+#           ifndef _WINDOWS
 	    colrs[i].pixel = i;
 	    colrs[i].flags = DoRed | DoGreen | DoBlue;
 #           endif /* !_WINDOWS */
@@ -406,23 +408,19 @@ ThotColorStruct colrs[256];
 	   if (ReadColorMap (fd, bitPixel, localColorMap))
 	      return (NULL);
 	   for (i = 0; i < bitPixel; i++) {
-#              ifdef _WINDOWS
-	       colrs[i] = RGB (localColorMap[0][i], localColorMap[1][i], localColorMap[2][i]);
-#              else  /* _WINDOWS */
-	       colrs[i].red = localColorMap[0][i] * scale;
+	       colrs[i].red   = localColorMap[0][i] * scale;
 	       colrs[i].green = localColorMap[1][i] * scale;
-	       colrs[i].blue = localColorMap[2][i] * scale;
+	       colrs[i].blue  = localColorMap[2][i] * scale;
+#              ifndef _WINDOWS
 	       colrs[i].pixel = i;
 	       colrs[i].flags = DoRed | DoGreen | DoBlue;
 #              endif /* _WINDOWS */
 	   }
 	   for (i = bitPixel; i < MAXCOLORMAPSIZE; i++) {
-#              ifdef _WINDOWS
-	       colrs[i] = RGB (0, 0, 0);
-#              else  /* _WINDOWS */
-	       colrs[i].red = 0;
+	       colrs[i].red   = 0;
 	       colrs[i].green = 0;
-	       colrs[i].blue = 0;
+	       colrs[i].blue  = 0;
+#              ifndef _WINDOWS
 	       colrs[i].pixel = i;
 	       colrs[i].flags = DoRed | DoGreen | DoBlue;
 #              endif /* _WINDOWS */
@@ -902,6 +900,7 @@ int                 bg;
 	  XFreeGC (TtDisplay, tmp_gc);
    }
 #  else  /* _WINDOWS */
+   /*
    bmp.bmType       = 0;
    bmp.bmWidth      = width;
    bmp.bmHeight     = height;
@@ -915,6 +914,8 @@ int                 bg;
    newmask->height  = height;
    newmask->depth   = 1;
    PicMask          = newmask->bitmap ;
+   */
+   PicMask = (Pixmap) NULL;
 #  endif /* _WINDOWS */
    return (PicMask);
 
@@ -1250,7 +1251,7 @@ ThotColorStruct     colrs[256];
 #  else /* _WINDOWS */
    static int     cbPlanes, cbBits;
    int            i, j, ret= 0, imageIndex, mapIndex;
-   char*          tabBytes;
+   BYTE*          tabBytes;
    HDC            hdcMemOrig, hdcMemDest, hdcMem;  
    HBITMAP        oldBm1, oldBm2, bmpLine, bmp= 0;
    
@@ -1261,7 +1262,7 @@ ThotColorStruct     colrs[256];
     
    /* debugprint ("cbBits= %d cbPlanes=%d", cbBits, cbPlanes); */
    
-   tabBytes = malloc (width);
+   tabBytes = (BYTE*) malloc (width * sizeof (BYTE));
    if (tabBytes == NULL)
       return NULL;
     
@@ -1270,6 +1271,7 @@ ThotColorStruct     colrs[256];
     
    bmp     = CreateBitmap (width, height, cbPlanes, cbBits, NULL);
    bmpLine = CreateBitmap (width, 1, cbPlanes, cbBits, NULL);
+
    if ((bmp == NULL) || (bmpLine == NULL)) {
       free (tabBytes);
       return (Pixmap) bmp;
@@ -1287,9 +1289,7 @@ ThotColorStruct     colrs[256];
 	   if (tabCorres [imageIndex] != -1)
 	       mapIndex = tabCorres [imageIndex];
 	   else {
-	       mapIndex= FindPaletteIndex (GetRValue (colrs [imageIndex]), 
-                                           GetGValue (colrs [imageIndex]), 
-                                           GetBValue (colrs [imageIndex]));
+	       mapIndex = FindPaletteIndex (colrs [imageIndex].red, colrs [imageIndex].green, colrs [imageIndex].blue);
 	       tabCorres [imageIndex]= mapIndex;  
 	   }    
 	   tabBytes[i] = mapIndex;
@@ -1297,8 +1297,7 @@ ThotColorStruct     colrs[256];
        ret = SetBitmapBits(bmpLine, width, tabBytes);
        BitBlt (hdcMemDest, 0, j, width, 1, hdcMemOrig, 0, 0, SRCCOPY);
    }
-    
-    
+        
    /* Cleanup */
    /*.........*/
    SelectObject(hdcMemDest, oldBm1);  
@@ -1476,11 +1475,13 @@ unsigned long       BackGroundPixel;
 	else
 	   i = Gif89.transparent;
 #       ifndef _WINDOWS
-	colrs[i].red = 65535;
+	colrs[i].red   = 65535;
 	colrs[i].green = 65535;
-	colrs[i].blue = 65535;
+	colrs[i].blue  = 65535;
 #       else _WINDOWS
-        colrs[i] = PALETTERGB (255, 255, 255);
+	colrs[i].red   = 255;
+	colrs[i].green = 255;
+	colrs[i].blue  = 255;
 #       endif /* _WINDOWS */
      }
 
@@ -1556,14 +1557,10 @@ unsigned long       BackGroundPixel;
 	for (x = 0; x < wif; x++)
 	  {
 
-#            ifndef _WINDOWS
 	     fprintf (fd, "%02x%02x%02x",
 		      (colrs[*pt].red) >> 8,
 		      (colrs[*pt].green) >> 8,
 		      (colrs[*pt].blue) >> 8);
-#            else /* _WINDOWS */
-             fprintf ((FILE *) fd, "%02x%02x%02x", GetRValue (colrs[*pt]), GetGValue (colrs[*pt]), GetBValue (colrs[*pt]));
-#            endif /* _WINDOWS */
 
 	     pt++;
 	  }

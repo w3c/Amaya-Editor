@@ -450,17 +450,9 @@ int                 ncols;
 #endif /* ndef FOR_MSW */
 		return (1);
 	  }
-#ifdef _WINDOWS
-	*image_pixel = xcolor;
-#else  /* !_WINDOWS */
 	*image_pixel = xcolor.pixel;
-#endif /* _WINDOWS */
 	*mask_pixel = 1;
-#ifdef _WINDOWS
-	(*pixels)[*npixels] = xcolor;
-#else  /* !_WINDOWS */
 	(*pixels)[*npixels] = xcolor.pixel;
-#endif /* !_WINDOWS */
 	*mask_pixel = 1;
 	(*npixels)++;
      }

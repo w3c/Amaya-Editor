@@ -67,7 +67,6 @@ typedef HWND        ThotWidget;
 typedef HWND        ThotWindow;
 typedef HBITMAP     ThotBitmap;
 typedef COLORREF    ThotColor;
-typedef COLORREF    ThotColorStruct;
 typedef COLORREF    Pixel;
 typedef HFONT       ptrfont;
 typedef char       *Pixmap;
@@ -87,6 +86,7 @@ typedef void       *ThotTranslations;
 #define PIXEL_ALREADY_TYPEDEFED /* for XPM stuff ! */
 
 #include "simx.h"
+typedef XColor    ThotColorStruct;
 
 #else  /* defined(_WINDOWS) || defined(_CONSOLE) */
 

@@ -240,15 +240,13 @@ unsigned long       BackGroundPixel;
 
 	  {
 	     TtaGiveThotRGB ((int) BackGroundPixel, &red, &green, &blue);
-#            ifndef _WINDOWS
-	     colorTab[i].pixel = i;
 	     colorTab[i].red = red;
 	     colorTab[i].green = green;
 	     colorTab[i].blue = blue;
+#            ifndef _WINDOWS
+	     colorTab[i].pixel = i;
 	     /*NoneColor = i; */
 	     /*MaskSet = 1; */
-#            else  /* _WINDOWS */
-             colorTab[i] = RGB (red, green, blue);
 #            endif /* _WINDOWS */
 
 	  }
@@ -289,14 +287,10 @@ unsigned long       BackGroundPixel;
 
 	     /* RGB components generation */
 	     pt1 = (unsigned char) (*pt);
-#            ifndef _WINDOWS
 	     fprintf ((FILE *) fd, "%02x%02x%02x",
 		      (colorTab[pt1].red) & 0xff,
 		      (colorTab[pt1].green) & 0xff,
 		      (colorTab[pt1].blue) & 0xff);
-#            else  /* _WINDOWS */
-             fprintf ((FILE *) fd, "%02x%02x%02x", GetRValue (colorTab[pt1]), GetGValue (colorTab[pt1]), GetBValue (colorTab[pt1]));
-#            endif /* _WINDOWS */
 
 	     pt++;
 	  }
