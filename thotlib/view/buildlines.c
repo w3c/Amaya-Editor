@@ -3274,7 +3274,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
     }
   else
     {
-      *height = BoxFontHeight (pBox->BxFont) + spacing;
+      *height = spacing;
       /* compute minimum and maximum width of the paragraph
 	 with no limit as an extensible line*/
       pBox->BxW = 3000;
@@ -3296,6 +3296,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      pLine->LiFirstPiece = NULL;
 	      pLine->LiLastBox = NULL;
 	      pLine->LiLastPiece = NULL;
+	      pLine->LiYOrg = *height;
 	      minWidth = FillLine (pLine, pBox, pRootAb, xAbs, yAbs,
 				   pAb->AbTruncatedTail,
 				   &full, &toAdjust, &breakLine, frame,
@@ -3322,7 +3323,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      if (pBox->BxMaxWidth < pLine->LiRealLength)
 		pBox->BxMaxWidth = pLine->LiRealLength;
 	      if (pLine->LiHeight > *height)
-		*height = pLine->LiHeight;
+		*height += pLine->LiHeight;
 	      Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
 	    }
 	  while (breakLine && pNextBox);

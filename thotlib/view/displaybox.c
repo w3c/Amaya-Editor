@@ -1743,7 +1743,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		}
 	    }
 
-	  if (charleft <= 0)
+	  if (charleft <= 0 && prevfont)
 	    {
 	      /* Draw the end of the box.
 		 Call the function in any case to let Postscript justify the
