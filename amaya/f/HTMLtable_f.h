@@ -50,6 +50,7 @@ extern ThotBool DeleteRow ( NotifyElement *event );
 extern void RowDeleted ( NotifyElement *event );
 extern ThotBool DeleteColumn ( NotifyElement * event );
 extern void ColumnPasted ( NotifyElement * event );
+extern void TableCreated ( NotifyElement * event );
 extern void TablePasted ( NotifyElement * event );
 extern void CopyRow ( Element copyRow,
                       Element origRow,
@@ -131,6 +132,7 @@ extern ThotBool DeleteRow ( NotifyElement *event );
 extern void RowDeleted ( NotifyElement *event );
 extern ThotBool DeleteColumn ( NotifyElement * event );
 extern void ColumnPasted ( NotifyElement * event );
+extern void TableCreated ( NotifyElement * event );
 extern void TablePasted ( NotifyElement * event );
 extern void CopyRow ( Element copyRow,
                         Element origRow,

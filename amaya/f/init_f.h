@@ -25,6 +25,7 @@ extern void ActiveTransfer ( Document document );
 extern void SetStopButton ( Document document );
 extern void DocStatusUpdate ( Document doc,
                               ThotBool modified );
+extern void UpdateEditorMenus ( Document doc );
 extern void ChangeToEditorMode ( Document doc );
 extern void ChangeToBrowserMode ( Document doc );
 extern void SetBrowserEditor ( Document doc,
@@ -107,13 +108,13 @@ extern void ZoomOut ( Document document,
                       View view );
 extern void ShowSource ( Document document,
                          View view );
-extern void ShowStructure ( Document document,
+extern void ShowStructure ( Document doc,
                             View view );
-extern void ShowAlternate ( Document document,
+extern void ShowAlternate ( Document doc,
                             View view );
-extern void ShowLinks ( Document document,
+extern void ShowLinks ( Document doc,
                         View view );
-extern void ShowToC ( Document document,
+extern void ShowToC ( Document doc,
                       View view );
 extern ThotBool ViewToClose ( NotifyDialog *event );
 extern void GetAmayaDoc_callback ( int newdoc,
@@ -187,6 +188,7 @@ extern void ActiveTransfer ( Document document );
 extern void SetStopButton ( Document document );
 extern void DocStatusUpdate ( Document doc,
                                 ThotBool modified );
+extern void UpdateEditorMenus ( Document doc );
 extern void ChangeToEditorMode ( Document doc );
 extern void ChangeToBrowserMode ( Document doc );
 extern void SetBrowserEditor ( Document doc,
@@ -269,13 +271,13 @@ extern void ZoomOut ( Document document,
                         View view );
 extern void ShowSource ( Document document,
                            View view );
-extern void ShowStructure ( Document document,
+extern void ShowStructure ( Document doc,
                               View view );
-extern void ShowAlternate ( Document document,
+extern void ShowAlternate ( Document doc,
                               View view );
-extern void ShowLinks ( Document document,
+extern void ShowLinks ( Document doc,
                           View view );
-extern void ShowToC ( Document document,
+extern void ShowToC ( Document doc,
                         View view );
 extern ThotBool ViewToClose ( NotifyDialog *event );
 extern void GetAmayaDoc_callback ( int newdoc,

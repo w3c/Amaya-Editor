@@ -138,7 +138,7 @@ extern PtrElement CopyTree ( PtrElement pSource,
                              ThotBool shareRef,
                              ThotBool keepAccess,
                              ThotBool deepCopy,
-			     ThotBool copyRef);
+                             ThotBool copyRef );
 extern void CopyIncludedElem ( PtrElement pEl,
                                PtrDocument pDoc );
 extern PtrElement ReplicateElement ( PtrElement pEl,
@@ -353,7 +353,7 @@ extern PtrElement CopyTree ( PtrElement pSource,
                                ThotBool shareRef,
                                ThotBool keepAccess,
                                ThotBool deepCopy,
-			       ThotBool copyRef);
+                               ThotBool copyRef );
 extern void CopyIncludedElem ( PtrElement pEl,
                                  PtrDocument pDoc );
 extern PtrElement ReplicateElement ( PtrElement pEl,

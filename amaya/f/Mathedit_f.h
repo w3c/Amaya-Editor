@@ -122,8 +122,6 @@ extern void AttrFramespacingCreated ( NotifyAttribute *event );
 extern void AttrFramespacingDeleted ( NotifyAttribute *event );
 extern void HandleColAndRowAlignAttributes ( Element row,
                                              Document doc );
-extern void DeleteMColumn ( Document document,
-                            View view );
 
 #else /* __STDC__ */
 
@@ -243,8 +241,6 @@ extern void AttrFramespacingCreated ( NotifyAttribute *event );
 extern void AttrFramespacingDeleted ( NotifyAttribute *event );
 extern void HandleColAndRowAlignAttributes ( Element row,
                                                Document doc );
-extern void DeleteMColumn ( Document document,
-                              View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -554,9 +554,9 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 
   /* Update the Doctype menu */
   UpdateDoctypeMenu (doc);
-  
   /* the document should be saved */
   TtaSetDocumentUnmodified (doc);
+  UpdateEditorMenus (doc);
 }
 
 /*--------------------------------------------------------------------------
@@ -1290,6 +1290,14 @@ void CreateHeading6 (Document document, View view)
    CreateHTMLelement (HTML_EL_H6, document);
 }
 
+
+/*----------------------------------------------------------------------
+  CreateAreaMap
+  ----------------------------------------------------------------------*/
+void CreateMap (Document doc, View view)
+{
+  CreateHTMLelement (HTML_EL_MAP, doc);
+}
 
 /*----------------------------------------------------------------------
   CreateList

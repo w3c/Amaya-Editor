@@ -89,23 +89,21 @@ MENUS
 	Edit_ button:BSpellCheck -> SpellCheck;
 	Edit_ button:BTransform -> TransformType;
 
-	view:2 StructTypes button:BBase -> CreateBase;
-	view:2 StructTypes button:BMeta -> CreateMeta;
-	view:2 StructTypes button:BLink -> CreateLinkInHead;
-	view:2 StructTypes button:BScript -> CreateScript;
-	view:2 StructTypes button:BStyle -> CreateStyle;
-	view:2 StructTypes button:BComment -> CreateComment;
-	
 	Types button:BTitle -> ChangeTitle;
 	Types Separator;
-	Types button:BAddress -> CreateAddress;
-	Types.AreaMap button:BCircle -> CreateAreaCircle;
-	Types.AreaMap button:BPoly -> CreateAreaPoly;
-	Types.AreaMap button:BRectangle -> CreateAreaRect;
+	Types.Heading button:BH1 -> CreateHeading1;
+	Types.Heading button:BH2 -> CreateHeading2;
+	Types.Heading button:BH3 -> CreateHeading3;
+	Types.Heading button:BH4 -> CreateHeading4;
+	Types.Heading button:BH5 -> CreateHeading5;
+	Types.Heading button:BH6 -> CreateHeading6;
 
-	Types button:BBlockQuote -> CreateBlockQuote;
-	Types button:BBreak -> CreateBreak;
-	Types button:BDivision -> CreateDivision;
+	Types.Lists button:BBulletedList -> CreateList;
+	Types.Lists button:BNumberedList -> CreateNumberedList;
+	Types.Lists button:BDefinitionList -> CreateDefinitionList;
+	Types.Lists Separator;
+	Types.Lists button:BTerm -> CreateDefinitionTerm;
+	Types.Lists button:BDefinition -> CreateDefinitionDef;
 
 	Types.Form button:BForm -> CreateForm;
 	Types.Form Separator;
@@ -125,32 +123,8 @@ MENUS
 	Types.Form button:BOptionGroup -> CreateOptGroup;
 	Types.Form button:BTextArea -> CreateTextArea;
 
-	Types.Heading button:BH1 -> CreateHeading1;
-	Types.Heading button:BH2 -> CreateHeading2;
-	Types.Heading button:BH3 -> CreateHeading3;
-	Types.Heading button:BH4 -> CreateHeading4;
-	Types.Heading button:BH5 -> CreateHeading5;
-	Types.Heading button:BH6 -> CreateHeading6;
-	
-	Types button:BRule -> CreateHorizontalRule;
-	Types button:BIFrame -> CreateIFrame;
-	Types button:BImage -> CreateImage;
-
-	Types.Lists button:BBulletedList -> CreateList;
-	Types.Lists button:BNumberedList -> CreateNumberedList;
-	Types.Lists button:BDefinitionList -> CreateDefinitionList;
-	Types.Lists Separator;
-	Types.Lists button:BTerm -> CreateDefinitionTerm;
-	Types.Lists button:BDefinition -> CreateDefinitionDef;
-
-	Types button:BNoScript -> CreateNOSCRIPT;
-
 	Types.Object button:BObject -> CreateObject;
 	Types.Object button:BParameter -> CreateParameter;
-
-	Types button:BParagraph -> CreateParagraph;
-	Types button:BPreformatted -> CreatePreformatted;
-	Types button:BRuby -> CreateRuby;
 
 	Types.Table button:BTable -> CreateTable;
 	Types.Table Separator;
@@ -175,6 +149,31 @@ MENUS
 	Types.Table button:BCreateColumnA -> CreateColumnAfter;
 	Types.Table button:BPasteBefore -> PasteBefore;
 	Types.Table button:BPasteAfter -> PasteAfter;
+	
+	Types.AreaMap button:BMap -> CreateMap;
+	Types.AreaMap button:BCircle -> CreateAreaCircle;
+	Types.AreaMap button:BPoly -> CreateAreaPoly;
+	Types.AreaMap button:BRectangle -> CreateAreaRect;
+
+	Types.StructTypes button:BStyle -> CreateStyle;
+	Types.StructTypes button:BComment -> CreateComment;
+	Types.StructTypes button:BBase -> CreateBase;
+	Types.StructTypes button:BMeta -> CreateMeta;
+	Types.StructTypes button:BLink -> CreateLinkInHead;
+	Types.StructTypes button:BScript -> CreateScript;
+	Types.StructTypes button:BNoScript -> CreateNOSCRIPT;
+
+	Types button:BParagraph -> CreateParagraph;
+	Types button:BPreformatted -> CreatePreformatted;
+	Types button:BAddress -> CreateAddress;	
+	Types button:BRule -> CreateHorizontalRule;
+	Types button:BImage -> CreateImage;
+	Types button:BBreak -> CreateBreak;
+	Types button:BDivision -> CreateDivision;
+	Types button:BBlockQuote -> CreateBlockQuote;
+	Types button:BIFrame -> CreateIFrame;
+	Types button:BRuby -> CreateRuby;
+
 	Types Separator;
         Types.Phrase toggle:TEmphasis -> SetOnOffEmphasis;
         Types.Phrase toggle:TStrong -> SetOnOffStrong;
@@ -237,6 +236,8 @@ MENUS
 	XMLTypes Separator;
         XMLTypes button:BShowLibrary -> ShowLibrary;
 	XMLTypes button:BAddNewModel -> AddNewModelIntoLibraryForm;	
+	XMLTypes Separator;
+	XMLTypes button:BXMLComment -> CreateComment;
 	XMLTypes button:BXMLElement -> CreateXMLElementMenu;
 
 	view:1 Links button:BLinkTarget -> LinkToPreviousTarget;

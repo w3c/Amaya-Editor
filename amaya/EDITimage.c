@@ -392,7 +392,7 @@ static void GetAlt (Document document, View view)
    CreateAltDlgWindow ();
 #endif /* _WINGUI */
 }
-
+ 
 /*----------------------------------------------------------------------
   CreateAreaMap
   create an area in a map. shape indicates the shape of the area to be

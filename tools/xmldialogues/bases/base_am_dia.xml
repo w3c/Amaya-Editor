@@ -71,16 +71,6 @@
 	<message xml:lang="pt">&amp;Editar</message>
 	<message xml:lang="fi">&amp;Muokkaa</message>
 </label>
-<label define="StructTypes">
-	<message xml:lang="en">&amp;Structure</message>
-	<message xml:lang="fr">&amp;Structure</message>
-	<message xml:lang="de">&amp;Struktur</message>
-	<message xml:lang="it">&amp;Struttura</message>
-	<message xml:lang="tr">&amp;Yapı</message>
-	<message xml:lang="es">Es&amp;tructura</message>
-	<message xml:lang="pt">&amp;Estrutura</message>
-	<message xml:lang="fi">&amp;Rakenne</message>
-</label>
 <label define="Types">
 	<message xml:lang="en">XH&amp;TML</message>
 	<message xml:lang="fr">X&amp;HTML</message>
@@ -599,66 +589,6 @@
 	<message xml:lang="pt">Transformar...</message>
 	<message xml:lang="fi">Muunna...</message>
 </label>
-<label define="BBase">
-	<message xml:lang="en">base</message>
-	<message xml:lang="fr">base</message>
-	<message xml:lang="de">Basisadresse (base)</message>
-	<message xml:lang="it">base</message>
-	<message xml:lang="tr">Temel</message>
-	<message xml:lang="es">base</message>
-	<message xml:lang="pt">base</message>
-	<message xml:lang="fi">perus</message>
-</label>
-<label define="BMeta">
-	<message xml:lang="en">meta</message>
-	<message xml:lang="fr">meta</message>
-	<message xml:lang="de">Meta-Information (meta)</message>
-	<message xml:lang="it">meta</message>
-	<message xml:lang="tr">meta</message>
-	<message xml:lang="es">meta</message>
-	<message xml:lang="pt">meta</message>
-	<message xml:lang="fi">meta</message>
-</label>
-<label define="BLink">
-	<message xml:lang="en">link</message>
-	<message xml:lang="fr">Lien (link)</message>
-	<message xml:lang="de">Verweis (link)</message>
-	<message xml:lang="it">link</message>
-	<message xml:lang="tr">Bağlantı (Link)</message>
-	<message xml:lang="es">Enlace (link)</message>
-	<message xml:lang="pt">enlace (link)</message>
-	<message xml:lang="fi">linkki</message>
-</label>
-<label define="BScript">
-	<message xml:lang="en">script</message>
-	<message xml:lang="fr">script</message>
-	<message xml:lang="de">Inline-Script (script)</message>
-	<message xml:lang="it">script</message>
-	<message xml:lang="tr">script</message>
-	<message xml:lang="es">script</message>
-	<message xml:lang="pt">script</message>
-	<message xml:lang="fi">skripti</message>
-</label>
-<label define="BStyle">
-	<message xml:lang="en">style</message>
-	<message xml:lang="fr">style</message>
-	<message xml:lang="de">Inline-Style (style)</message>
-	<message xml:lang="it">style</message>
-	<message xml:lang="tr">Dizayn</message>
-	<message xml:lang="es">Estilo (style)</message>
-	<message xml:lang="pt">estilo</message>
-	<message xml:lang="fi">tyyli</message>
-</label>
-<label define="BComment">
-	<message xml:lang="en">Comment</message>
-	<message xml:lang="fr">Commentaire</message>
-	<message xml:lang="de">Kommentar</message>
-	<message xml:lang="it">Commento</message>
-	<message xml:lang="tr">Yorum</message>
-	<message xml:lang="es">Comentario</message>
-	<message xml:lang="pt">Comentário</message>
-	<message xml:lang="fi">Merkintä</message>
-</label>
 <label define="BTitle">
 	<message xml:lang="en">Change Title...</message>
 	<message xml:lang="fr">Changer le titre...</message>
@@ -669,85 +599,135 @@
 	<message xml:lang="fi">Muuta otsake...</message>
 	<message xml:lang="tr">Başlığı değiştir</message>
 </label>
-<label define="BAddress">
-	<message xml:lang="en">address</message>
-	<message xml:lang="fr">Adresse (address)</message>
-	<message xml:lang="de">Autorenadresse (address)</message>
-	<message xml:lang="it">Indirizzo (address)</message>
-	<message xml:lang="tr">Address</message>
-	<message xml:lang="es">Dirección (address)</message>
-	<message xml:lang="pt">endereço</message>
-	<message xml:lang="fi">osoite</message>
+<label define="Heading">
+	<message xml:lang="en">Heading</message>
+	<message xml:lang="fr">En-tête</message>
+	<message xml:lang="de">Überschrift</message>
+	<message xml:lang="it">Intestazione</message>
+	<message xml:lang="tr">Başlık</message>
+	<message xml:lang="es">Cabecera (heading)</message>
+	<message xml:lang="pt">Cabeçalho</message>
+	<message xml:lang="fi">Otsakke koolla</message>
 </label>
-<label define="AreaMap">
-	<message xml:lang="en">area</message>
-	<message xml:lang="fr">Zone active (area)</message>
-	<message xml:lang="de">Aktiver Bildbereich (area)</message>
-	<message xml:lang="it">Zona attiva (area)</message>
-	<message xml:lang="tr">Aktif alan (area)</message>
-	<message xml:lang="es">Área (area)</message>
-	<message xml:lang="pt">Área</message>
-	<message xml:lang="fi">Kuvio</message>
+<label define="BH1">
+	<message xml:lang="en">h1</message>
+	<message xml:lang="fr">Titre niveau 1 (h1)</message>
+	<message xml:lang="de">h1 (groß)</message>
+	<message xml:lang="it">h1</message>
+	<message xml:lang="tr">Birinci büyüklük başlığı(h1)</message>
+	<message xml:lang="es">h1</message>
+	<message xml:lang="pt">h1</message>
+	<message xml:lang="fi">h1</message>
 </label>
-<label define="BCircle">
-	<message xml:lang="en">Circle</message>
-	<message xml:lang="fr">Cercle</message>
-	<message xml:lang="de">Kreis</message>
-	<message xml:lang="it">Cerchio</message>
-	<message xml:lang="tr">Daire</message>
-	<message xml:lang="es">Círculo</message>
-	<message xml:lang="pt">Círculo</message>
-	<message xml:lang="fi">Ympyrä</message>
+<label define="BH2">
+	<message xml:lang="en">h2</message>
+	<message xml:lang="fr">Titre niveau 2 (h2)</message>
+	<message xml:lang="de">h2</message>
+	<message xml:lang="it">h2</message>
+	<message xml:lang="tr">Ikinci büyüklük başlığı (h2)</message>
+	<message xml:lang="es">h2</message>
+	<message xml:lang="pt">h2</message>
+	<message xml:lang="fi">h2</message>
 </label>
-<label define="BPoly">
-	<message xml:lang="en">Polygon</message>
-	<message xml:lang="fr">Polygone</message>
-	<message xml:lang="de">Polygon</message>
-	<message xml:lang="it">Poligono</message>
-	<message xml:lang="tr">Çokgen</message>
-	<message xml:lang="es">Polígono</message>
-	<message xml:lang="pt">Polígono</message>
-	<message xml:lang="fi">Monikulmio</message>
+<label define="BH3">
+	<message xml:lang="en">h3</message>
+	<message xml:lang="fr">Titre niveau 3 (h3)</message>
+	<message xml:lang="de">h3</message>
+	<message xml:lang="it">h3</message>
+	<message xml:lang="tr">Üçüncü büyüklük başlığı (h3)</message>
+	<message xml:lang="es">h3</message>
+	<message xml:lang="pt">h3</message>
+	<message xml:lang="fi">h3</message>
 </label>
-<label define="BRectangle">
-	<message xml:lang="en">Rectangle</message>
-	<message xml:lang="fr">Rectangle</message>
-	<message xml:lang="de">Rechteck</message>
-	<message xml:lang="it">Rettangolo</message>
-	<message xml:lang="tr">Dikdörtgen</message>
-	<message xml:lang="es">Rectángulo</message>
-	<message xml:lang="pt">Retângulo</message>
-	<message xml:lang="fi">Nelikulmio</message>
+<label define="BH4">
+	<message xml:lang="en">h4</message>
+	<message xml:lang="fr">Titre niveau 4 (h4)</message>
+	<message xml:lang="de">h4</message>
+	<message xml:lang="it">h4</message>
+	<message xml:lang="tr">Dördüncü büyüklük başlığı (h4)</message>
+	<message xml:lang="es">h4</message>
+	<message xml:lang="pt">h4</message>
+	<message xml:lang="fi">h4</message>
 </label>
-<label define="BBlockQuote">
-	<message xml:lang="en">blockquote</message>
-	<message xml:lang="fr">Citation (blockquote)</message>
-	<message xml:lang="de">Eingerücktes Zitat (blockquote)</message>
-	<message xml:lang="it">blockquote</message>
-	<message xml:lang="tr">Bloğu aktar (blockquote)</message>
-	<message xml:lang="es">blockquote</message>
-	<message xml:lang="pt">Citação (blockquote)</message>
-	<message xml:lang="fi">sisennetty kappale</message>
+<label define="BH5">
+	<message xml:lang="en">h5</message>
+	<message xml:lang="fr">Titre niveau 5 (h5)</message>
+	<message xml:lang="de">h5</message>
+	<message xml:lang="it">h5</message>
+	<message xml:lang="tr">Beşinci büyüklük başlığı (h5)</message>
+	<message xml:lang="es">h5</message>
+	<message xml:lang="pt">h5</message>
+	<message xml:lang="fi">h5</message>
 </label>
-<label define="BBreak">
-	<message xml:lang="en">Break (br)</message>
-	<message xml:lang="fr">Saut de ligne (br)</message>
-	<message xml:lang="de">Zeilenumbruch (br)</message>
-	<message xml:lang="it">A capo (br)</message>
-	<message xml:lang="tr">Kesme (br)</message>
-	<message xml:lang="es">Salto de línea (br)</message>
-	<message xml:lang="pt">Quebra de linha (br)</message>
-	<message xml:lang="fi">Rivinvaihto (br)</message>
+<label define="BH6">
+	<message xml:lang="en">h6</message>
+	<message xml:lang="fr">Titre niveau 6 (h6)</message>
+	<message xml:lang="de">h6 (klein)</message>
+	<message xml:lang="it">h6</message>
+	<message xml:lang="tr">Altıncı büyüklük başlığı (h6)</message>
+	<message xml:lang="es">h6</message>
+	<message xml:lang="pt">h6</message>
+	<message xml:lang="fi">h6</message>
 </label>
-<label define="BDivision">
-	<message xml:lang="en">Division (div)</message>
-	<message xml:lang="fr">Division (div)</message>
-	<message xml:lang="de">Ábschnitt (div)</message>
-	<message xml:lang="it">Divisione (div)</message>
-	<message xml:lang="tr">Bölme (div)</message>
-	<message xml:lang="es">División (div)</message>
-	<message xml:lang="pt">Divisão (div)</message>
-	<message xml:lang="fi">Tyhjä rivi (div)</message>
+<label define="Lists">
+	<message xml:lang="en">List</message>
+	<message xml:lang="fr">Liste</message>
+	<message xml:lang="de">Liste</message>
+	<message xml:lang="it">Lista</message>
+	<message xml:lang="tr">Liste</message>
+	<message xml:lang="es">Lista</message>
+	<message xml:lang="pt">Lista</message>
+	<message xml:lang="fi">Luettelo</message>
+</label>
+<label define="BBulletedList">
+	<message xml:lang="en">Bulleted list (ul)</message>
+	<message xml:lang="fr">Liste à puces (ul)</message>
+	<message xml:lang="de">Ungeordnete Liste (ul)</message>
+	<message xml:lang="it">Lista puntata (ul)</message>
+	<message xml:lang="tr">Noktalı liste (ul)</message>
+	<message xml:lang="es">Lista no numerada (ul)</message>
+	<message xml:lang="pt">Lista com bolinhas (ul)</message>
+	<message xml:lang="fi">Pistein erotettu luettelo (ul)</message>
+</label>
+<label define="BNumberedList">
+	<message xml:lang="en">Numbered list (ol)</message>
+	<message xml:lang="fr">Liste numérotée (ol)</message>
+	<message xml:lang="de">Geordnete Liste (ol)</message>
+	<message xml:lang="it">Lista numerata (ol)</message>
+	<message xml:lang="tr">Numaralı liste (ol)</message>
+	<message xml:lang="es">Lista numerada (ol)</message>
+	<message xml:lang="pt">Lista numerada (ol)</message>
+	<message xml:lang="fi">Numeroitu luettelo (ol)</message>
+</label>
+<label define="BDefinitionList">
+	<message xml:lang="en">Definition list (dl)</message>
+	<message xml:lang="fr">Liste de définitions (dl)</message>
+	<message xml:lang="de">Definitionsliste (dl)</message>
+	<message xml:lang="it">Lista di definizioni (dl)</message>
+	<message xml:lang="tr">Tanım listesi (dl)</message>
+	<message xml:lang="es">Lista de Definición (dl)</message>
+	<message xml:lang="pt">Lista de Definição (dl)</message>
+	<message xml:lang="fi">Määrittelyluettelo (dl)</message>
+</label>
+<label define="BTerm">
+	<message xml:lang="en">Term (dt)</message>
+	<message xml:lang="fr">Terme (dt)</message>
+	<message xml:lang="de">Begriff (dt)</message>
+	<message xml:lang="it">Termine (dt)</message>
+	<message xml:lang="tr">Terim (dt)</message>
+	<message xml:lang="es">Término (dt)</message>
+	<message xml:lang="pt">Termo (dt)</message>
+	<message xml:lang="fi">Lopetus (dt)</message>
+</label>
+<label define="BDefinition">
+	<message xml:lang="en">Definition (dd)</message>
+	<message xml:lang="fr">Définition (dd)</message>
+	<message xml:lang="de">Definition (dd)</message>
+	<message xml:lang="it">Definizione (dd)</message>
+	<message xml:lang="tr">Tanım (dd)</message>
+	<message xml:lang="es">Definición (dd)</message>
+	<message xml:lang="pt">Definição (dd)</message>
+	<message xml:lang="fi">Määrittely (dd)</message>
 </label>
 <label define="Form">
 	<message xml:lang="en">Form</message>
@@ -760,8 +740,8 @@
 	<message xml:lang="fi">Lomake</message>
 </label>
 <label define="BForm">
-	<message xml:lang="en">form</message>
-	<message xml:lang="fr">Formulaire (form)</message>
+	<message xml:lang="en">Insert a form</message>
+	<message xml:lang="fr">Insérer un formulaire (form)</message>
 	<message xml:lang="de">Neues Formular (form)</message>
 	<message xml:lang="it">form</message>
 	<message xml:lang="tr">Form (form)</message>
@@ -919,176 +899,6 @@
 	<message xml:lang="pt">Área de texto (textarea)</message>
 	<message xml:lang="fi">tekstialue</message>
 </label>
-<label define="Heading">
-	<message xml:lang="en">Heading</message>
-	<message xml:lang="fr">En-tête</message>
-	<message xml:lang="de">Überschrift</message>
-	<message xml:lang="it">Intestazione</message>
-	<message xml:lang="tr">Başlık</message>
-	<message xml:lang="es">Cabecera (heading)</message>
-	<message xml:lang="pt">Cabeçalho</message>
-	<message xml:lang="fi">Otsakke koolla</message>
-</label>
-<label define="BH1">
-	<message xml:lang="en">h1</message>
-	<message xml:lang="fr">Titre niveau 1 (h1)</message>
-	<message xml:lang="de">h1 (groß)</message>
-	<message xml:lang="it">h1</message>
-	<message xml:lang="tr">Birinci büyüklük başlığı(h1)</message>
-	<message xml:lang="es">h1</message>
-	<message xml:lang="pt">h1</message>
-	<message xml:lang="fi">h1</message>
-</label>
-<label define="BH2">
-	<message xml:lang="en">h2</message>
-	<message xml:lang="fr">Titre niveau 2 (h2)</message>
-	<message xml:lang="de">h2</message>
-	<message xml:lang="it">h2</message>
-	<message xml:lang="tr">Ikinci büyüklük başlığı (h2)</message>
-	<message xml:lang="es">h2</message>
-	<message xml:lang="pt">h2</message>
-	<message xml:lang="fi">h2</message>
-</label>
-<label define="BH3">
-	<message xml:lang="en">h3</message>
-	<message xml:lang="fr">Titre niveau 3 (h3)</message>
-	<message xml:lang="de">h3</message>
-	<message xml:lang="it">h3</message>
-	<message xml:lang="tr">Üçüncü büyüklük başlığı (h3)</message>
-	<message xml:lang="es">h3</message>
-	<message xml:lang="pt">h3</message>
-	<message xml:lang="fi">h3</message>
-</label>
-<label define="BH4">
-	<message xml:lang="en">h4</message>
-	<message xml:lang="fr">Titre niveau 4 (h4)</message>
-	<message xml:lang="de">h4</message>
-	<message xml:lang="it">h4</message>
-	<message xml:lang="tr">Dördüncü büyüklük başlığı (h4)</message>
-	<message xml:lang="es">h4</message>
-	<message xml:lang="pt">h4</message>
-	<message xml:lang="fi">h4</message>
-</label>
-<label define="BH5">
-	<message xml:lang="en">h5</message>
-	<message xml:lang="fr">Titre niveau 5 (h5)</message>
-	<message xml:lang="de">h5</message>
-	<message xml:lang="it">h5</message>
-	<message xml:lang="tr">Beşinci büyüklük başlığı (h5)</message>
-	<message xml:lang="es">h5</message>
-	<message xml:lang="pt">h5</message>
-	<message xml:lang="fi">h5</message>
-</label>
-<label define="BH6">
-	<message xml:lang="en">h6</message>
-	<message xml:lang="fr">Titre niveau 6 (h6)</message>
-	<message xml:lang="de">h6 (klein)</message>
-	<message xml:lang="it">h6</message>
-	<message xml:lang="tr">Altıncı büyüklük başlığı (h6)</message>
-	<message xml:lang="es">h6</message>
-	<message xml:lang="pt">h6</message>
-	<message xml:lang="fi">h6</message>
-</label>
-<label define="BRule">
-	<message xml:lang="en">Horizontal rule (hr)</message>
-	<message xml:lang="fr">Trait horizontal (hr)</message>
-	<message xml:lang="de">Horizontale Linie (hr)</message>
-	<message xml:lang="it">Riga orizzontale (hr)</message>
-	<message xml:lang="tr">Yatay çizgi (hr)</message>
-	<message xml:lang="es">Línea Horizontal (hr)</message>
-	<message xml:lang="pt">Linha horizontal (hr)</message>
-	<message xml:lang="fi">Vaakaviiva (hr)</message>
-</label>
-<label define="BIFrame">
-	<message xml:lang="en">Inline frame (iframe)</message>
-	<message xml:lang="fr">Cadre en ligne (iframe)</message>
-	<message xml:lang="de">Inline-Frame (iframe)</message>
-	<message xml:lang="it">Cornice (iframe)</message>
-	<message xml:lang="es">Inline frame (iframe)</message>
-	<message xml:lang="pt">Quadro em linha (iframe)</message>
-	<message xml:lang="fi">Sisäinen lomake (iframe)</message>
-	<message xml:lang="tr">çizgili çerçeve (iframe)</message>
-</label>
-<label define="BImage">
-	<message xml:lang="en">Image (img)...</message>
-	<message xml:lang="fr">Image (img)...</message>
-	<message xml:lang="de">Bild (img)...</message>
-	<message xml:lang="it">Immagine (img)...</message>
-	<message xml:lang="tr">Görüntü (img)...</message>
-	<message xml:lang="es">Imagen (img)...</message>
-	<message xml:lang="pt">Imagem (img)...</message>
-	<message xml:lang="fi">Kuva (img)...</message>
-</label>
-<label define="Lists">
-	<message xml:lang="en">List</message>
-	<message xml:lang="fr">Liste</message>
-	<message xml:lang="de">Liste</message>
-	<message xml:lang="it">Lista</message>
-	<message xml:lang="tr">Liste</message>
-	<message xml:lang="es">Lista</message>
-	<message xml:lang="pt">Lista</message>
-	<message xml:lang="fi">Luettelo</message>
-</label>
-<label define="BBulletedList">
-	<message xml:lang="en">Bulleted list (ul)</message>
-	<message xml:lang="fr">Liste à puces (ul)</message>
-	<message xml:lang="de">Ungeordnete Liste (ul)</message>
-	<message xml:lang="it">Lista puntata (ul)</message>
-	<message xml:lang="tr">Noktalı liste (ul)</message>
-	<message xml:lang="es">Lista no numerada (ul)</message>
-	<message xml:lang="pt">Lista com bolinhas (ul)</message>
-	<message xml:lang="fi">Pistein erotettu luettelo (ul)</message>
-</label>
-<label define="BNumberedList">
-	<message xml:lang="en">Numbered list (ol)</message>
-	<message xml:lang="fr">Liste numérotée (ol)</message>
-	<message xml:lang="de">Geordnete Liste (ol)</message>
-	<message xml:lang="it">Lista numerata (ol)</message>
-	<message xml:lang="tr">Numaralı liste (ol)</message>
-	<message xml:lang="es">Lista numerada (ol)</message>
-	<message xml:lang="pt">Lista numerada (ol)</message>
-	<message xml:lang="fi">Numeroitu luettelo (ol)</message>
-</label>
-<label define="BDefinitionList">
-	<message xml:lang="en">Definition list (dl)</message>
-	<message xml:lang="fr">Liste de définitions (dl)</message>
-	<message xml:lang="de">Definitionsliste (dl)</message>
-	<message xml:lang="it">Lista di definizioni (dl)</message>
-	<message xml:lang="tr">Tanım listesi (dl)</message>
-	<message xml:lang="es">Lista de Definición (dl)</message>
-	<message xml:lang="pt">Lista de Definição (dl)</message>
-	<message xml:lang="fi">Määrittelyluettelo (dl)</message>
-</label>
-<label define="BTerm">
-	<message xml:lang="en">Term (dt)</message>
-	<message xml:lang="fr">Terme (dt)</message>
-	<message xml:lang="de">Begriff (dt)</message>
-	<message xml:lang="it">Termine (dt)</message>
-	<message xml:lang="tr">Terim (dt)</message>
-	<message xml:lang="es">Término (dt)</message>
-	<message xml:lang="pt">Termo (dt)</message>
-	<message xml:lang="fi">Lopetus (dt)</message>
-</label>
-<label define="BDefinition">
-	<message xml:lang="en">Definition (dd)</message>
-	<message xml:lang="fr">Définition (dd)</message>
-	<message xml:lang="de">Definition (dd)</message>
-	<message xml:lang="it">Definizione (dd)</message>
-	<message xml:lang="tr">Tanım (dd)</message>
-	<message xml:lang="es">Definición (dd)</message>
-	<message xml:lang="pt">Definição (dd)</message>
-	<message xml:lang="fi">Määrittely (dd)</message>
-</label>
-<label define="BNoScript">
-	<message xml:lang="en">noscript</message>
-	<message xml:lang="fr">noscript</message>
-	<message xml:lang="de">Skripalternative (noscript)</message>
-	<message xml:lang="it">noscript</message>
-	<message xml:lang="tr">noscript (Script yok)</message>
-	<message xml:lang="es">noscript</message>
-	<message xml:lang="pt">noscript</message>
-	<message xml:lang="fi">ei skriptiä</message>
-</label>
 <label define="Object">
 	<message xml:lang="en">Object</message>
 	<message xml:lang="fr">Objet</message>
@@ -1118,36 +928,6 @@
 	<message xml:lang="es">Parámetro (param)</message>
 	<message xml:lang="pt">Parâmetro (param)</message>
 	<message xml:lang="fi">Parametri (param)</message>
-</label>
-<label define="BParagraph">
-	<message xml:lang="en">Paragraph (p)</message>
-	<message xml:lang="fr">Paragraphe (p)</message>
-	<message xml:lang="de">Absatz (p)</message>
-	<message xml:lang="it">Paragrafo (p)</message>
-	<message xml:lang="tr">Paragraf (p)</message>
-	<message xml:lang="es">Párrafo (p)</message>
-	<message xml:lang="pt">Parágrafo (p)</message>
-	<message xml:lang="fi">Pykälä (p)</message>
-</label>
-<label define="BPreformatted">
-	<message xml:lang="en">Preformatted (pre)</message>
-	<message xml:lang="fr">Préformaté (pre)</message>
-	<message xml:lang="de">Formatierter Text (pre)</message>
-	<message xml:lang="it">Preformattato (pre)</message>
-	<message xml:lang="tr">Tekrar sekillendirilmi (pre)</message>
-	<message xml:lang="es">Pre-formateado (pre)</message>
-	<message xml:lang="pt">Preformatado (pre)</message>
-	<message xml:lang="fi">Valmiiksi muotoiltu (pre)</message>
-</label>
-<label define="BRuby">
-	<message xml:lang="en">ruby</message>
-	<message xml:lang="fr">ruby</message>
-	<message xml:lang="de">Ruby</message>
-	<message xml:lang="it">ruby</message>
-	<message xml:lang="tr">ruby</message>
-	<message xml:lang="es">ruby</message>
-	<message xml:lang="pt">rubi</message>
-	<message xml:lang="fi">ruby</message>
 </label>
 <label define="Table">
 	<message xml:lang="en">Table</message>
@@ -1284,6 +1064,224 @@
 <label define="BPasteAfter">
 	<message xml:lang="en">Paste after</message>
 	<message xml:lang="fr">Coller après</message>
+</label>
+<label define="AreaMap">
+	<message xml:lang="en">Map area</message>
+	<message xml:lang="fr">Plan</message>
+</label>
+<label define="BMap">
+	<message xml:lang="en">Insert a map</message>
+	<message xml:lang="fr">Insérer un plan (map)</message>
+</label>
+<label define="BCircle">
+	<message xml:lang="en">Circle area</message>
+	<message xml:lang="fr">Cercle (area)</message>
+	<message xml:lang="de">Kreis (area)</message>
+	<message xml:lang="it">Cerchio (area)</message>
+	<message xml:lang="tr">Daire (area)</message>
+	<message xml:lang="es">Círculo (area)</message>
+	<message xml:lang="pt">Círculo (area)</message>
+	<message xml:lang="fi">Ympyrä (area)</message>
+</label>
+<label define="BPoly">
+	<message xml:lang="en">Polygon area</message>
+	<message xml:lang="fr">Polygone (area)</message>
+	<message xml:lang="de">Polygon (area)</message>
+	<message xml:lang="it">Poligono (area)</message>
+	<message xml:lang="tr">Çokgen (area)</message>
+	<message xml:lang="es">Polígono (area)</message>
+	<message xml:lang="pt">Polígono (area)</message>
+	<message xml:lang="fi">Monikulmio (area)</message>
+</label>
+<label define="BRectangle">
+	<message xml:lang="en">Rectangle area</message>
+	<message xml:lang="fr">Rectangle (area)</message>
+	<message xml:lang="de">Rechteck (area)</message>
+	<message xml:lang="it">Rettangolo (area)</message>
+	<message xml:lang="tr">Dikdörtgen (area)</message>
+	<message xml:lang="es">Rectángulo (area)</message>
+	<message xml:lang="pt">Retângulo (area)</message>
+	<message xml:lang="fi">Nelikulmio (area)</message>
+</label>
+<label define="StructTypes">
+	<message xml:lang="en">&amp;Structure</message>
+	<message xml:lang="fr">&amp;Structure</message>
+	<message xml:lang="de">&amp;Struktur</message>
+	<message xml:lang="it">&amp;Struttura</message>
+	<message xml:lang="tr">&amp;Yapı</message>
+	<message xml:lang="es">Es&amp;tructura</message>
+	<message xml:lang="pt">&amp;Estrutura</message>
+	<message xml:lang="fi">&amp;Rakenne</message>
+</label>
+<label define="BStyle">
+	<message xml:lang="en">style</message>
+	<message xml:lang="fr">style</message>
+	<message xml:lang="de">Inline-Style (style)</message>
+	<message xml:lang="it">style</message>
+	<message xml:lang="tr">Dizayn</message>
+	<message xml:lang="es">Estilo (style)</message>
+	<message xml:lang="pt">estilo</message>
+	<message xml:lang="fi">tyyli</message>
+</label>
+<label define="BComment">
+	<message xml:lang="en">Comment</message>
+	<message xml:lang="fr">Commentaire</message>
+	<message xml:lang="de">Kommentar</message>
+	<message xml:lang="it">Commento</message>
+	<message xml:lang="tr">Yorum</message>
+	<message xml:lang="es">Comentario</message>
+	<message xml:lang="pt">Comentário</message>
+	<message xml:lang="fi">Merkintä</message>
+</label>
+<label define="BBase">
+	<message xml:lang="en">base</message>
+	<message xml:lang="fr">base</message>
+	<message xml:lang="de">Basisadresse (base)</message>
+	<message xml:lang="it">base</message>
+	<message xml:lang="tr">Temel</message>
+	<message xml:lang="es">base</message>
+	<message xml:lang="pt">base</message>
+	<message xml:lang="fi">perus</message>
+</label>
+<label define="BMeta">
+	<message xml:lang="en">meta</message>
+	<message xml:lang="fr">meta</message>
+	<message xml:lang="de">Meta-Information (meta)</message>
+	<message xml:lang="it">meta</message>
+	<message xml:lang="tr">meta</message>
+	<message xml:lang="es">meta</message>
+	<message xml:lang="pt">meta</message>
+	<message xml:lang="fi">meta</message>
+</label>
+<label define="BLink">
+	<message xml:lang="en">link</message>
+	<message xml:lang="fr">Lien (link)</message>
+	<message xml:lang="de">Verweis (link)</message>
+	<message xml:lang="it">link</message>
+	<message xml:lang="tr">Bağlantı (Link)</message>
+	<message xml:lang="es">Enlace (link)</message>
+	<message xml:lang="pt">enlace (link)</message>
+	<message xml:lang="fi">linkki</message>
+</label>
+<label define="BScript">
+	<message xml:lang="en">script</message>
+	<message xml:lang="fr">script</message>
+	<message xml:lang="de">Inline-Script (script)</message>
+	<message xml:lang="it">script</message>
+	<message xml:lang="tr">script</message>
+	<message xml:lang="es">script</message>
+	<message xml:lang="pt">script</message>
+	<message xml:lang="fi">skripti</message>
+</label>
+<label define="BNoScript">
+	<message xml:lang="en">noscript</message>
+	<message xml:lang="fr">noscript</message>
+	<message xml:lang="de">Skripalternative (noscript)</message>
+	<message xml:lang="it">noscript</message>
+	<message xml:lang="tr">noscript (Script yok)</message>
+	<message xml:lang="es">noscript</message>
+	<message xml:lang="pt">noscript</message>
+	<message xml:lang="fi">ei skriptiä</message>
+</label>
+<label define="BParagraph">
+	<message xml:lang="en">Paragraph (p)</message>
+	<message xml:lang="fr">Paragraphe (p)</message>
+	<message xml:lang="de">Absatz (p)</message>
+	<message xml:lang="it">Paragrafo (p)</message>
+	<message xml:lang="tr">Paragraf (p)</message>
+	<message xml:lang="es">Párrafo (p)</message>
+	<message xml:lang="pt">Parágrafo (p)</message>
+	<message xml:lang="fi">Pykälä (p)</message>
+</label>
+<label define="BPreformatted">
+	<message xml:lang="en">Preformatted (pre)</message>
+	<message xml:lang="fr">Préformaté (pre)</message>
+	<message xml:lang="de">Formatierter Text (pre)</message>
+	<message xml:lang="it">Preformattato (pre)</message>
+	<message xml:lang="tr">Tekrar sekillendirilmi (pre)</message>
+	<message xml:lang="es">Pre-formateado (pre)</message>
+	<message xml:lang="pt">Preformatado (pre)</message>
+	<message xml:lang="fi">Valmiiksi muotoiltu (pre)</message>
+</label>
+<label define="BAddress">
+	<message xml:lang="en">address</message>
+	<message xml:lang="fr">Adresse (address)</message>
+	<message xml:lang="de">Autorenadresse (address)</message>
+	<message xml:lang="it">Indirizzo (address)</message>
+	<message xml:lang="tr">Address</message>
+	<message xml:lang="es">Dirección (address)</message>
+	<message xml:lang="pt">endereço</message>
+	<message xml:lang="fi">osoite</message>
+</label>
+<label define="BRule">
+	<message xml:lang="en">Horizontal rule (hr)</message>
+	<message xml:lang="fr">Trait horizontal (hr)</message>
+	<message xml:lang="de">Horizontale Linie (hr)</message>
+	<message xml:lang="it">Riga orizzontale (hr)</message>
+	<message xml:lang="tr">Yatay çizgi (hr)</message>
+	<message xml:lang="es">Línea Horizontal (hr)</message>
+	<message xml:lang="pt">Linha horizontal (hr)</message>
+	<message xml:lang="fi">Vaakaviiva (hr)</message>
+</label>
+<label define="BImage">
+	<message xml:lang="en">Image (img)...</message>
+	<message xml:lang="fr">Image (img)...</message>
+	<message xml:lang="de">Bild (img)...</message>
+	<message xml:lang="it">Immagine (img)...</message>
+	<message xml:lang="tr">Görüntü (img)...</message>
+	<message xml:lang="es">Imagen (img)...</message>
+	<message xml:lang="pt">Imagem (img)...</message>
+	<message xml:lang="fi">Kuva (img)...</message>
+</label>
+<label define="BBreak">
+	<message xml:lang="en">Break (br)</message>
+	<message xml:lang="fr">Saut de ligne (br)</message>
+	<message xml:lang="de">Zeilenumbruch (br)</message>
+	<message xml:lang="it">A capo (br)</message>
+	<message xml:lang="tr">Kesme (br)</message>
+	<message xml:lang="es">Salto de línea (br)</message>
+	<message xml:lang="pt">Quebra de linha (br)</message>
+	<message xml:lang="fi">Rivinvaihto (br)</message>
+</label>
+<label define="BDivision">
+	<message xml:lang="en">Division (div)</message>
+	<message xml:lang="fr">Division (div)</message>
+	<message xml:lang="de">Ábschnitt (div)</message>
+	<message xml:lang="it">Divisione (div)</message>
+	<message xml:lang="tr">Bölme (div)</message>
+	<message xml:lang="es">División (div)</message>
+	<message xml:lang="pt">Divisão (div)</message>
+	<message xml:lang="fi">Tyhjä rivi (div)</message>
+</label>
+<label define="BBlockQuote">
+	<message xml:lang="en">blockquote</message>
+	<message xml:lang="fr">Citation (blockquote)</message>
+	<message xml:lang="de">Eingerücktes Zitat (blockquote)</message>
+	<message xml:lang="it">blockquote</message>
+	<message xml:lang="tr">Bloğu aktar (blockquote)</message>
+	<message xml:lang="es">blockquote</message>
+	<message xml:lang="pt">Citação (blockquote)</message>
+	<message xml:lang="fi">sisennetty kappale</message>
+</label>
+<label define="BIFrame">
+	<message xml:lang="en">Inline frame (iframe)</message>
+	<message xml:lang="fr">Cadre en ligne (iframe)</message>
+	<message xml:lang="de">Inline-Frame (iframe)</message>
+	<message xml:lang="it">Cornice (iframe)</message>
+	<message xml:lang="es">Inline frame (iframe)</message>
+	<message xml:lang="pt">Quadro em linha (iframe)</message>
+	<message xml:lang="fi">Sisäinen lomake (iframe)</message>
+	<message xml:lang="tr">çizgili çerçeve (iframe)</message>
+</label>
+<label define="BRuby">
+	<message xml:lang="en">ruby</message>
+	<message xml:lang="fr">ruby</message>
+	<message xml:lang="de">Ruby</message>
+	<message xml:lang="it">ruby</message>
+	<message xml:lang="tr">ruby</message>
+	<message xml:lang="es">ruby</message>
+	<message xml:lang="pt">rubi</message>
+	<message xml:lang="fi">ruby</message>
 </label>
 <label define="Phrase">
 	<message xml:lang="en">Information type</message>
@@ -1810,6 +1808,16 @@
 	<message xml:lang="es">&amp;Añadir la selección a la Biblioteca SVG</message>
 	<message xml:lang="de">Markierung in SVG-Bibliothek einfügen</message>
 	<message xml:lang="tr">SVG kütüphanesine seçili alanı ekle</message>
+</label>
+<label define="BXMLComment">
+	<message xml:lang="en">Comment</message>
+	<message xml:lang="fr">Commentaire</message>
+	<message xml:lang="de">Kommentar</message>
+	<message xml:lang="it">Commento</message>
+	<message xml:lang="tr">Yorum</message>
+	<message xml:lang="es">Comentario</message>
+	<message xml:lang="pt">Comentário</message>
+	<message xml:lang="fi">Merkintä</message>
 </label>
 <label define="BXMLElement">
 	<message xml:lang="en">XML elements...</message>

@@ -41,6 +41,8 @@ extern void TtaGiveReferenceAttributeValue ( Attribute attribute,
                                              char *targetDocumentName,
                                              Document *targetDocument );
 extern int TtaIsElementReferred ( Element element );
+extern Element TtaGetFirstReferringAttribute ( Element element,
+                                               AttributeType attrType );
 extern int TtaSameReferenceAttributes ( Attribute attribute1,
                                         Attribute attribute2 );
 extern void TtaNextLoadedReference ( Element target,
@@ -91,6 +93,8 @@ extern void TtaGiveReferenceAttributeValue ( Attribute attribute,
                                                char *targetDocumentName,
                                                Document *targetDocument );
 extern int TtaIsElementReferred ( Element element );
+extern Element TtaGetFirstReferringAttribute ( Element element,
+                                                 AttributeType attrType );
 extern int TtaSameReferenceAttributes ( Attribute attribute1,
                                           Attribute attribute2 );
 extern void TtaNextLoadedReference ( Element target,

@@ -80,6 +80,8 @@ extern void CreateHeading5 ( Document document,
                              View view );
 extern void CreateHeading6 ( Document document,
                              View view );
+extern void CreateMap ( Document doc,
+                        View view );
 extern void CreateList ( Document document,
                          View view );
 extern void CreateNumberedList ( Document document,
@@ -336,6 +338,8 @@ extern void CreateHeading5 ( Document document,
                                View view );
 extern void CreateHeading6 ( Document document,
                                View view );
+extern void CreateMap ( Document doc,
+                          View view );
 extern void CreateList ( Document document,
                            View view );
 extern void CreateNumberedList ( Document document,

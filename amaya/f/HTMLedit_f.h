@@ -43,7 +43,6 @@ extern void CreateRemoveIDAttribute ( char *elName,
                                       Document doc,
                                       ThotBool createID,
                                       ThotBool inSelection );
-extern ThotBool ElementWillBePasted ( NotifyOnValue *event );
 extern void ElementCreated ( NotifyElement *event );
 extern ThotBool ElementWillBeDeleted ( NotifyElement *event );
 extern void ElementDeleted ( NotifyElement *event );
@@ -170,7 +169,6 @@ extern void CreateRemoveIDAttribute ( char *elName,
                                         Document doc,
                                         ThotBool createID,
                                         ThotBool inSelection );
-extern ThotBool ElementWillBePasted ( NotifyOnValue *event );
 extern void ElementCreated ( NotifyElement *event );
 extern ThotBool ElementWillBeDeleted ( NotifyElement *event );
 extern void ElementDeleted ( NotifyElement *event );
