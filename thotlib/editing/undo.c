@@ -116,7 +116,8 @@ static PtrEditOperation UnchainLatestOp (PtrDocument pDoc, ThotBool undo)
    CancelAnEdit
    Remove and delete an editing operation from the history
   ----------------------------------------------------------------------*/
-static void CancelAnEdit (PtrEditOperation editOp, PtrDocument pDoc, ThotBool undo)
+static void CancelAnEdit (PtrEditOperation editOp, PtrDocument pDoc,
+			  ThotBool undo)
 {
    PtrElement		pEl;
    PtrAttribute         pAttr;
@@ -404,11 +405,13 @@ static void ChangeAttrPointersOlderEdits (PtrEditOperation Op, PtrAttribute pAtt
    removeWhenUndoing: attribute pAttr to must be deleted when the operation
 	 will be undone.
   ----------------------------------------------------------------------*/
-void AddAttrEditOpInHistory (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc,
-			     ThotBool save, ThotBool removeWhenUndoing)
+void AddAttrEditOpInHistory (PtrAttribute pAttr, PtrElement pEl,
+			     PtrDocument pDoc, ThotBool save,
+			     ThotBool removeWhenUndoing)
 {
    PtrEditOperation	editOp = NULL;
-   PtrAttribute		pCopy, pOldAttr;
+   PtrAttribute		pCopy, pOldAttr, pElAttr;
+   int                  rank;
    ThotBool		merge;
 
    if (!pEl && !pAttr)
@@ -440,33 +443,43 @@ void AddAttrEditOpInHistory (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDo
        }
 
    if (!merge)
-      {
-      /* create a new operation descriptor in the history */
-      editOp = (PtrEditOperation) TtaGetMemory (sizeof (EditOperation));
-      /* link the new operation descriptor in the history */
-      editOp->EoPreviousOp = pDoc->DocLastEdit;
-      if (pDoc->DocLastEdit)
+     {
+       /* create a new operation descriptor in the history */
+       editOp = (PtrEditOperation) TtaGetMemory (sizeof (EditOperation));
+       /* link the new operation descriptor in the history */
+       editOp->EoPreviousOp = pDoc->DocLastEdit;
+       if (pDoc->DocLastEdit)
          pDoc->DocLastEdit->EoNextOp = editOp;
-      pDoc->DocLastEdit = editOp;
-      editOp->EoNextOp = NULL;
-      editOp->EoType = EtAttribute;
-      editOp->EoElement = pEl;
-      editOp->EoCreatedAttribute = NULL;
-      editOp->EoSavedAttribute = NULL;
-      }
+       pDoc->DocLastEdit = editOp;
+       editOp->EoNextOp = NULL;
+       editOp->EoType = EtAttribute;
+       editOp->EoElement = pEl;
+       editOp->EoCreatedAttribute = NULL;
+       editOp->EoSavedAttribute = NULL;
+       /* get the rank of pAttr among the attributes associated with the
+	  element */
+       pElAttr = pEl->ElFirstAttr;
+       rank = 0;
+       while (pElAttr && pElAttr != pAttr)
+	 {
+	   pElAttr = pElAttr->AeNext;
+	   rank++;
+	 }
+       editOp->EoAttrRank = rank;
+     }
 
    if (removeWhenUndoing)
-      editOp->EoCreatedAttribute = pAttr;
+     editOp->EoCreatedAttribute = pAttr;
 
    if (save)
      /* copy the attribute concerned by the operation and attach it to the
         operation descriptor */
      {
-     pCopy = AddAttrToElem (NULL, pAttr, NULL);
-     editOp->EoSavedAttribute = pCopy;
-     /* if older editing operations in the history refer to attribute that
-	has been copied, change these references to the copy */
-     ChangeAttrPointersOlderEdits (editOp, pAttr, pCopy);
+       pCopy = AddAttrToElem (NULL, pAttr, NULL);
+       editOp->EoSavedAttribute = pCopy;
+       /* if older editing operations in the history refer to attribute that
+	  has been copied, change these references to the copy */
+       ChangeAttrPointersOlderEdits (editOp, pAttr, pCopy);
      }
 }
 
@@ -679,6 +692,41 @@ void                CancelLastSequenceFromHistory (PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
+  AttachAttr
+  Attach attribute pAttr to element pEl after the attribute of rank rank
+  among all attributes already attached to pEl.
+  ----------------------------------------------------------------------*/
+static void AttachAttr (PtrElement pEl, PtrAttribute pAttr, int rank,
+			Document doc)
+{
+  PtrAttribute    pA;
+
+  UndisplayInheritedAttributes (pEl, pAttr, doc, FALSE);
+  if (rank <= 0 || pEl->ElFirstAttr == NULL)
+    {
+      pAttr->AeNext = pEl->ElFirstAttr;
+      pEl->ElFirstAttr = pAttr;
+    }
+  else
+    {
+      pA = pEl->ElFirstAttr;
+      rank --;
+      while (pA->AeNext != NULL && rank)
+	{
+	  pA = pA->AeNext;
+	  rank --;
+	}
+      pAttr->AeNext = pA->AeNext;
+      pA->AeNext = pAttr;
+    }
+  pAttr->AeDefAttr = FALSE;
+  if (pAttr->AeAttrType == AtReferenceAttr)
+    if (pAttr->AeAttrReference != NULL)
+      pAttr->AeAttrReference->RdElement = pEl;
+  DisplayAttribute (pEl, pAttr, doc);
+}
+
+/*----------------------------------------------------------------------
    UndoOperation
 
    Undo the latest editing operation registered in the Undo (if undo==TRUE)
@@ -841,8 +889,8 @@ static void	UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
             CallEventAttribute (&notifyAttr, TRUE);
 	    }
          /* put the attribute on the element */
-         TtaAttachAttribute ((Element)(editOp->EoElement),
-			     (Attribute)(SavedAttribute), doc);
+         AttachAttr (editOp->EoElement, SavedAttribute, editOp->EoAttrRank,
+		     doc);
 	 if (reverse)
 	    editOp->EoCreatedAttribute = SavedAttribute;
          /* tell the application that an attribute has been put */

@@ -67,10 +67,8 @@ typedef struct _CopyDescriptor
   PtrAbstractBox  CdCopiedAb;	/* the abstract box that is a copy */
   PtrElement	  CdCopiedElem;	/* the copied element */
   PtrPRule	  CdCopyRule;	/* the Copy presentation rule */
-  PtrCopyDescr	  CdPrevious;	/* previous copy descriptor for the
-				   same element */
-  PtrCopyDescr	  CdNext;		/* next copy descriptor for the same
-				   element */
+  PtrCopyDescr	  CdPrevious;	/* previous copy descriptor for the same elem*/
+  PtrCopyDescr	  CdNext;	/* next copy descriptor for the same element */
 } CopyDescriptor;
 
 /* an element Label: an identifier that is unique in the document to which the
@@ -116,20 +114,17 @@ typedef struct _ReferredElemDescriptor
 /* a reference attached to a reference element or a reference attribute */
 typedef struct _ReferenceDescriptor
 {
-  PtrReference	RdNext;		/* next reference to the same element*/
-  PtrReference    	RdPrevious;	/* previous reference to the same
-					   element */ 
-  PtrReferredDescr	RdReferred;	/* descriptor of the referenced
-					   element */
-  PtrElement		RdElement;	/* the referencing element, even if it
-					   is a reference by attribute */
-  PtrAttribute	RdAttribute;	/* corresponding attribute or NULL if
-				   not a reference by attribute */
-  ReferenceType       RdTypeRef;	/* reference type */
-  ThotBool        	RdInternalRef;	/* the reference and the designated
-					   element are in the same document if
-					   True, in different documents if
-					   false */
+  PtrReference	    RdNext;	   /* next reference to the same element */
+  PtrReference      RdPrevious;	   /* previous reference to the same element*/ 
+  PtrReferredDescr  RdReferred;	   /* descriptor of the referenced element */
+  PtrElement	    RdElement;	   /* the referencing element, even if it
+				      is a reference by attribute */
+  PtrAttribute	    RdAttribute;   /* corresponding attribute or NULL if
+				      not a reference by attribute */
+  ReferenceType     RdTypeRef;	   /* reference type */
+  ThotBool          RdInternalRef; /* the reference and the designated
+				      element are in the same document if true,
+				      in different documents if false */
 } ReferenceDescriptor;
 
 typedef struct _HandlePSchema *PtrHandlePSchema;
@@ -140,7 +135,7 @@ typedef struct _HandlePSchema *PtrHandlePSchema;
 typedef struct _HandlePSchema
 {
   PtrPSchema	       HdPSchema;    /* pointer to the presentation schema
-					  extension */
+				        extension */
   PtrHandlePSchema   HdNextPSchema;  /* handle of the next presentation
 					schema extension */     
   PtrHandlePSchema   HdPrevPSchema;  /* handle of the previous presentation
@@ -176,16 +171,16 @@ typedef struct _AttributeBlock
     {
       struct	  /* AeAttrType = AtNumAttr or AtEnumAttr */
       {
-	int		_AeAttrValue_;	/* attribute value or value number */
+	int		_AeAttrValue_;	   /* attribute value or value number*/
       } s0;
       struct	  /* AeAttrType = AtReferenceAttr */
       {
-	PtrReference	_AeAttrReference_;	/* reference to the element
-						referenced by the attribute */
+	PtrReference	_AeAttrReference_; /* reference to the element
+					      referenced by the attribute */
       } s1;
       struct	  /* AeAttrType = AtTextAttr */
       {
-	PtrTextBuffer	_AeAttrText_;	/* textual value of the attribute */
+	PtrTextBuffer	_AeAttrText_;	   /* textual value of the attribute */
       } s2;
     } u;
 } AttributeBlock;
@@ -236,8 +231,8 @@ typedef struct _TextBuffer
 {
   PtrTextBuffer	BuNext;		/* Next buffer */
   PtrTextBuffer	BuPrevious;	/* Previous buffer */
-  int 		BuLength;	/* actual length (number of characters
-				   or number of polyline points */
+  int 		BuLength;	/* actual length (number of characters or
+				   number of polyline points */
   union
   {
     struct
@@ -269,12 +264,12 @@ typedef struct _PathSeg *PtrPathSeg;
 /* Description of a SVG path segment */
 typedef struct _PathSeg
 {
-  PtrPathSeg      PaNext;	      /* Next segment in the same path */
+  PtrPathSeg      PaNext;	/* Next segment in the same path */
   PtrPathSeg      PaPrevious;   /* Previous segment in the same path */
   PathSegType     PaShape;      /* Shape of that segment */
   ThotBool        PaNewSubpath; /* This segment starts a new subpath */
   /* all coordinates are expressed in millipoint from the box origin */
-  int	        XStart;	      /* coordinates of start point */
+  int	        XStart;	        /* coordinates of start point */
   int	        YStart;
   int             XEnd;         /* coordinates of end point */
   int             YEnd;
@@ -317,18 +312,17 @@ typedef struct _PasteElemDescr *PtrPasteElem;
 
 typedef struct _PasteElemDescr
 {
-  PtrPasteElem	PePrevious;	/* descriptor of the previous element
-				   to be pasted */
-  PtrPasteElem	PeNext;		/* descriptor of the next element to
-				   be pasted */
-  PtrElement	PeElement;	/* the element to be paste */
-  int	 	PeElemLevel;	/* level in the abstract tree of the
-				   original element */
-  int		PeAscendTypeNum[MAX_PASTE_LEVEL];  /* type number of
-						      the former ancestors of the element
-						      to be pasted */
-  PtrSSchema	PeAscendSSchema[MAX_PASTE_LEVEL]; /* structure schema
-						     of the former ancestors */
+  PtrPasteElem	PePrevious;  /* descriptor of the previous element to be
+				pasted */
+  PtrPasteElem	PeNext;	     /* descriptor of the next element to be pasted */
+  PtrElement	PeElement;   /* the element to be paste */
+  int	 	PeElemLevel; /* level in the abstract tree of the original
+				element */
+  int		PeAscendTypeNum[MAX_PASTE_LEVEL]; /* type number of the former
+						     ancestors of the element
+						     to be pasted */
+  PtrSSchema	PeAscendSSchema[MAX_PASTE_LEVEL]; /* structure schema of the
+						     former ancestors */
   PtrElement	PeAscend[MAX_PASTE_LEVEL]; /* former ancestor element*/
 } PasteElemDescr;
 
@@ -343,12 +337,12 @@ typedef struct _ElementDescr
 					   to this element */
   PtrAttribute     	ElFirstAttr;	/* pointer on the element first
 					   attribute, NULL if no attribute */
-  PtrPRule    	ElFirstPRule;	/* pointer on the first rule of the
-				   specific presentation rule string
-				   to beiedapply to the element */
+  PtrPRule    	        ElFirstPRule;	/* pointer on the first rule of the
+					   specific presentation rule string
+					   to beiedapply to the element */
   PtrAbstractBox	ElAbstractBox[MAX_VIEW_DOC]; /* pointer on the first
-							abstract box corresponding to the
-							element for each view of the doc. */
+					   abstract box corresponding to the
+					   element for each view of the doc. */
   PtrSSchema    	ElStructSchema;	/* pointer on the structure schema
 					   where te element type is defined */
   int			ElTypeNumber;	/* number of the rule defining the type
@@ -383,27 +377,26 @@ typedef struct _ElementDescr
   ThotBool 		ElTerminal;	/* the element is a leaf in the tree */
   union
   {
-    struct				/* ElTerminal = False */
+    struct		      /* ElTerminal = False */
     {
       PtrElement _ElFirstChild_;	/* first child element */
     } s0;
-    struct				/* ElTerminal = True */
+    struct		      /* ElTerminal = True */
     {
-      LeafType _ElLeafType_;	/* type of leaf */
+      LeafType _ElLeafType_;	        /* type of leaf */
       union
       {
-	struct			/* ElLeafType = LtText */
+	struct		       /* ElLeafType = LtText */
 	{
 	  PtrTextBuffer _ElText_;  	/* pointer on the buffer
 					   containing the
 					   beginning of the text */
-	  int           _ElTextLength_;/* text length */
+	  int           _ElTextLength_; /* text length */
 	  Language      _ElLanguage_;	/* text language */
 	} s0;
-	struct			/*ElLeafType = LtGraphics or LtSymbol*/
+	struct		/* ElLeafType = LtGraphics or LtSymbol*/
 	{
-	  wchar_t       _ElWideChar_; /* Wide char code if
-					 ElGraph = '?' */
+	  wchar_t       _ElWideChar_;   /* Wide char code if ElGraph = '?' */
 	  char          _ElGraph_;	/* code of element */
 	} s1;
 	struct			/* ElLeafType = LtPageColBreak */
@@ -545,15 +538,16 @@ typedef struct _EditOperation
 					     if it's acharacter string */
       PtrElement    _EoLastSelectedEl_;  /* last selected element */
       int           _EoLastSelectedChar_;/* index of last selected character in
-					    the last selected element, if it's a
-					    character string */
+					    the last selected element, if it's
+					    a character string */
     } s0;
     struct        /* EoType = EtElement */
     {
-      PtrElement    _EoParent_;          /* parent of elements to be inserted to
-					    undo the operation */
-      PtrElement    _EoPreviousSibling_; /* previous sibling of first element to
-					    be inserted to undo the operation */
+      PtrElement    _EoParent_;          /* parent of elements to be inserted
+					    to undo the operation */
+      PtrElement    _EoPreviousSibling_; /* previous sibling of first element
+					    to be inserted to undo the
+					    operation */
       PtrElement    _EoCreatedElement_;  /* element to be removed to undo the
 					    operation */
       PtrElement    _EoSavedElement_;    /* copy of the element to be inserted
@@ -561,12 +555,14 @@ typedef struct _EditOperation
     } s1;
     struct      /* EoType = EtAttribute */
     {
-      PtrElement     _EoElement_;         /* the element to which the attribute
+      PtrElement    _EoElement_;         /* the element to which the attribute
 					     belongs */
-      PtrAttribute   _EoCreatedAttribute_;/* attribute to be removed to undo the
-					     operation */
-      PtrAttribute   _EoSavedAttribute_;  /* copy of the attribute to be inserted
-					     to undo the operation */
+      PtrAttribute  _EoCreatedAttribute_;/* attribute to be removed to undo
+					     the operation */
+      PtrAttribute  _EoSavedAttribute_;  /* copy of the attribute to be
+					     inserted to undo the operation */
+      int           _EoAttrRank_;        /* rank of the attribute in the list
+					     of the element's attributes */
     } s2;
   } u;
 } EditOperation;
@@ -582,6 +578,7 @@ typedef struct _EditOperation
 #define EoElement u.s2._EoElement_
 #define EoCreatedAttribute u.s2._EoCreatedAttribute_
 #define EoSavedAttribute u.s2._EoSavedAttribute_
+#define EoAttrRank u.s2._EoAttrRank_
 
 typedef struct _DocumentDescr *PtrDocument;
 
