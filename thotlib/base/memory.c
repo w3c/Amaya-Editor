@@ -1867,6 +1867,7 @@ PtrBox              pBox;
    PtrDimRelations     nedim;
    PtrBox              NextBox;
 
+   NextBox = pBox->BxNexChild;
    /* Insere le contexte de boite en tete de la chaine des libres */
    pBox->BxAbstractBox = NULL;
    pBox->BxPrevious = NULL;
@@ -1880,7 +1881,6 @@ PtrBox              pBox;
    /* On retire l'indicateur de fin de bloc */
    pBox->BxEndOfBloc = 0;
    pBox->BxType = BoComplete;
-   NextBox = pBox->BxNexChild;
    pBox->BxNexChild = PtFreBox;
    PtFreBox = pBox;
    NbFree_Box++;
