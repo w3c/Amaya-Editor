@@ -421,22 +421,17 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 		   int type, PtrFont font, int fg)
 {
    int                 xm, yf, exnum;
-#ifndef _GTK
    int                 yend, delta;
    int                 wd, asc, hd;
-#endif /* !_GTK */
 
    exnum = 0;
-#ifndef _GTK
    if (FontHeight (font) *1.2 >= h)
      /* display a single glyph */
      {
-#endif /* !_GTK */
      xm = x + ((l - CharacterWidth (242, font)) / 2);
      yf = y + ((h - CharacterHeight (242, font)) / 2) - FontAscent (font) +
 	  CharacterAscent (242, font);
      DrawChar ('\362', frame, xm, yf, font, fg);
-#ifndef _GTK
      }
    else
      {
@@ -465,7 +460,6 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 	   DrawChar ('\364', frame, xm+wd, yf + ((delta - hd) / 2), font, fg);
        }
      }
-#endif /* !_GTK */
    if (type == 2)		/* double integral */
       DrawIntegral (frame, thick, x + (CharacterWidth (244, font) / 2),
 		    y, l, h, -1, font, fg);
