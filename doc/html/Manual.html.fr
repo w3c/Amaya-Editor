@@ -15,7 +15,7 @@ body {background-color: #FFFFFF}</style>
 
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 
-<h4 style="text-align: center">Version 6.5 - octobre 2002<br />
+<h4 style="text-align: center">Version 7.0 décembre 2002<br />
 <br />
 <img src="../images/amaya.gif" alt="Amaya" />
 </h4>

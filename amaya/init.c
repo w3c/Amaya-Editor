@@ -7380,15 +7380,15 @@ void AmayaClose (Document document, View view)
   AddURLInCombobox adds the new URL in the string for combobox
   Store that URL inot the file only if keep is TRUE.
   ----------------------------------------------------------------------*/
-void AddURLInCombobox (char *url, ThotBool keep)
+void AddURLInCombobox (char *url_utf8, ThotBool keep)
 {
-  char     *urlstring, *app_home, *ptr;
+  char     *urlstring, *app_home, *ptr, *url;
   int       i, j, len, nb, end;
   FILE     *file = NULL;
 
-  if (url == NULL || url[0] == EOS)
+  if (url_utf8 == NULL || url_utf8[0] == EOS)
     return;
-
+  url = TtaConvertMbsToByte (url_utf8, TtaGetDefaultCharset ());
   urlstring = (char *) TtaGetMemory (MAX_LENGTH);
   /* open the file list_url.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");
@@ -7438,6 +7438,7 @@ void AddURLInCombobox (char *url, ThotBool keep)
     }
   TtaFreeMemory (ptr);
   TtaFreeMemory (urlstring);
+  TtaFreeMemory (url);
 }
 
 
