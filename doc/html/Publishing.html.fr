@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Publication</title>
-  <meta name="GENERATOR" content="amaya V5.0 alpha" />
+  <meta name="GENERATOR" content="amaya 5.2" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -13,8 +13,8 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img
-        alt="Amaya" src="../images/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></p>
       </td>
       <td><p><a href="SpellChecking.html.fr" accesskey="p"><img
         alt="previous" src="../images/left.gif" /></a> <a
@@ -54,18 +54,33 @@ opérations, Amaya tient compte des images.</p>
 <strong>Sauver</strong> depuis le menu <strong>Fichier</strong> (control-s
 pour Windows, control-x, control-s pour Unix) ou bien en cliquant sur le
 bouton <img alt="floppy" src="../images/floppy.gif" />. Cette commande sauve
-le document courant à l'adresse où il a été amené. Les images nouvellement
-ajoutées sont sauvées dans le même répertoire et aucune confirmation n'est
-demandée, excepté si le nom du document est inconnu. Les serveurs permettent
-aux utilisateurs d'importer un document quand seul le nom du serveur ou le
-répertoire du serveur ont donné. C'est très utile au moment de la navigation,
-mais ça n'est pas supporté par la méthode "put". Dans ce cas, Amaya détecte
-que le nom du document manque et propose d'utiliser un nom par défaut pour
-répondre à la demande.</p>
+le document courant à l'adresse d'où il a été amené. Si la réponse du serveur
+inclut l'en-tête HTTP <code>Content-Location</code>, la cible de la
+sauvegarde sera l'URL précisée par cet en-tête. Ceci est utile pour enlever
+les ambiguïtés induites par la négociation du contenu.  Par exemple, soient
+report.html.fr et report.html.en deux versions d'un même document, une écrite
+en français, l'autre en anglais. De même, on utilisera l'URL virtuelle
+report.html pour référencer ce document. En fonction de la configuration du
+client, le serveur retournera soit un ou l'autre document lors de la
+consultation de l'URL report.html. Si le serveur supporte l'en-tête
+<code>Content-Location</code>, il indiquera dans celle-ci l'URL du document
+qu'il a actuellement servi, par exemple, report.html.fr. Dans ce cas, la
+sauvegarde du document sera faite vers cette URL en préférence de l'URL
+virtuel report.html.</p>
+
+<p>Les images nouvellement ajoutées sont sauvées dans le même répertoire que
+celui du document et aucune confirmation n'est demandée, excepté si le nom du
+document est inconnu. Les serveurs permettent aux utilisateurs d'importer un
+document quand seul le nom du serveur ou le répertoire du serveur ont donné.
+C'est très utile au moment de la navigation, mais ça n'est pas supporté par
+la méthode "PUT". Dans ce cas, Amaya détecte que le nom du document manque et
+propose d'utiliser un nom par défaut pour répondre à la demande. Notez que
+l'utilisation de l'en-tête<code> Content-Location</code> permet de
+s'affranchir de ce problème.</p>
 
 <p>Si quelqu'un a besoin de sauver des images nouvellement ajoutées dans un
-autre endroit, la commande <strong>Sauver comme</strong>devra être utilisée à
-la place.</p>
+autre endroit, la commande <strong>Sauver comme</strong> devra être utilisée
+à la place.</p>
 
 <h4><a name="L1518">La commande Sauver comme</a></h4>
 
@@ -100,10 +115,10 @@ sont utilisés comme suit :</p>
     fichier local (par exemple "/pub/html/welcome.html") ou le nom d'un URI
     lointain (par exemple "http://www.w3.org/pub/Welcome.html"). 
     <p><strong>Notez</strong>que vous devrez donner le chemin complet comme
-    si il n'y avait aucun moyen de deviner le nom de
-    "http://www.w3.org/pub". Vous devrez également vous assurer que vous
-    avez le <strong>droit d'éxécuter une méthode PUT</strong> dans le cas
-    d'une adresse lointaine. Regardez la page <a
+    si il n'y avait aucun moyen de deviner le nom de "http://www.w3.org/pub".
+    Vous devrez également vous assurer que vous avez le <strong>droit
+    d'éxécuter une méthode PUT</strong> dans le cas d'une adresse lointaine.
+    Regardez la page <a
     href="http://www.w3.org/Amaya/User/Put.html">configurez votre serveur
     pour permettre la méthode PUT</a> ou demander à votre administrateur
     Web.</p>
@@ -135,11 +150,10 @@ sont utilisés comme suit :</p>
     <ul>
       <li>en utilisant un chemin relatif, les images sont stockées à une
         adresse relative au répertoire du document. Par exemple, si l'adresse
-        du document est "http://www.w3.org/pub/Welcome.html" et que
-        l'adresse des images est "Images", une image "W3C.png" contenue dans
-        le document est stockée à l'URI
-        "http://www.w3.org/pub/Images/W3C.png" et le fichier HTML est
-        modifiée le référant à : 
+        du document est "http://www.w3.org/pub/Welcome.html" et que l'adresse
+        des images est "Images", une image "W3C.png" contenue dans le
+        document est stockée à l'URI "http://www.w3.org/pub/Images/W3C.png"
+        et le fichier HTML est modifiée le référant à : 
         <p>&lt;IMG SRC="Images/W3C.png"&gt;</p>
         <p>C'est la même chose dans le cas d'une adresse dans le fichier
         système local.</p>
@@ -173,10 +187,9 @@ sont utilisés comme suit :</p>
         que le proxy http n'est pas mis, ou que le serveur proxy et le <a
         href="http://www.w3.org/Amaya/User/Put.html">serveur cible sont
         configurés pour travailler avec la méthode PUT</a>.</li>
-      <li><b>Amaya</b>
-         ne contacte pas le serveur lointain (dans le cas d'une destination
-        "http://..." destination) pour contrôler si un tel document existe
-        déjà.</li>
+      <li><b>Amaya</b> ne contacte pas le serveur lointain (dans le cas d'une
+        destination "http://..." destination) pour contrôler si un tel
+        document existe déjà.</li>
     </ul>
   </li>
   <li>En clicquant sur <strong>Butiner</strong> l'utilisateur peur choisir le
