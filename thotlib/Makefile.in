@@ -211,7 +211,6 @@ EDITOR_OBJ = \
 	dialogue/profiles.o \
 	dialogue/presentmenu.o \
 	dialogue/printmenu.o \
-	dialogue/quit.o \
 	dialogue/searchmenu.o \
 	dialogue/selectmenu.o \
 	dialogue/AmayaCallback.o \

@@ -1400,7 +1400,6 @@ void  ConfigGetViewGeometry (PtrDocument pDoc, char *view, int *x,
 void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 		     int *height)
 {
-
 #ifdef _WX
   int window_id = -1;;
  
@@ -1419,37 +1418,6 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   *xmm = 0;
   *ymm = 0;
 #endif /* _WX */
-
-#ifdef _MOTIF  
-  int           frame;
-  ThotWidget    widget;
-  int           n;
-  Arg           args[20];
-  Position      x, y;
-  Dimension     w, h;
-
-  frame =  GetWindowNumber (doc, view);
-  widget = (ThotWidget) FrameTable[frame].WdFrame;
-  widget = XtParent (XtParent (XtParent (widget)));
-  /* Ask X what's the geometry of the frame */
-  n = 0;
-  XtSetArg (args[n], XmNx, &x);
-  n++;
-  XtSetArg (args[n], XmNy, &y);
-  n++;
-  XtSetArg (args[n], XmNwidth, &w);
-  n++;
-  XtSetArg (args[n], XmNheight, &h);
-  n++;
-  XtGetValues (widget, args, n);
-  /* convert the result into mm */
-  *xmm = x;
-  /* take into account the window manager headband */
-  *ymm = y - 18;
-  *width = w;
-  *height = h;;
-#endif /* _MOTIF */
-
 #ifdef _GTK
   int           frame;
   ThotWidget    widget;
@@ -1471,7 +1439,6 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   *width = w;
   *height = h;
 #endif /* _GTK */
-
 #ifdef _WINGUI
   int  frame;
   HWND hWnd;
@@ -1491,7 +1458,6 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
       *height = (int) (rect.bottom - rect.top);
     }
 #endif /* _WINGUI */
-
   return;
 }
 

@@ -384,7 +384,7 @@ void CallbackError (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 ThotBool CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
-#if defined(_MOTIF) || defined(_WINGUI) || defined(_GTK) || defined(_WX)
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
   register int        i;
   register int        index;
   register int        entry;
@@ -456,7 +456,7 @@ ThotBool CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 	}
     }
   return TRUE;
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
 }
 
 
@@ -484,14 +484,13 @@ ThotBool CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
 #endif /* _GTK */
 }
 
-#if defined(_MOTIF) || defined(_WINGUI) || defined(_GTK) || defined(_WX)
-
+#if defined(_WINGUI) || defined(_GTK) || defined(_WX)
 /*----------------------------------------------------------------------
   Callback pour un bouton du toggle-menu
   ----------------------------------------------------------------------*/
-#if defined(_MOTIF) || defined(_WINGUI)
+#ifdef _WINGUI
 ThotBool CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
+#endif /* _WINGUI */
 #ifdef _GTK
 ThotBool CallToggleGTK (ThotWidget w, struct Cat_Context *catalogue)
 #endif /* _GTK */
@@ -540,9 +539,9 @@ ThotBool CallToggleWX (ThotWidget w, struct Cat_Context *catalogue)
   return TRUE;  
 }
 
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_WINGUI) || defined(_GTK) || defined(_WX) */
 
-#if defined(_MOTIF) || defined(_WINGUI)
+#ifdef _WINGUI
 /*----------------------------------------------------------------------
   Callback for entry menus
   ----------------------------------------------------------------------*/
@@ -552,7 +551,6 @@ ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
   register int        index;
   register int        entry;
   struct E_List      *adbloc;
-
 
   /* Enregistre la selection d'un toggle button */
   if (catalogue->Cat_Widget)
@@ -585,7 +583,7 @@ ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
     }
   return TRUE;  
 }
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
+#endif /* _WINGUI */
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
@@ -903,19 +901,13 @@ void WIN_ThotCallBack (HWND hWnd, WPARAM wParam, LPARAM lParam)
        }
    }
 }
-
 #endif /* _WINGUI */
 
-#if defined(_MOTIF) || defined(_GTK)
+#ifdef _GTK
 /*----------------------------------------------------------------------
   Delete a form
   ----------------------------------------------------------------------*/
-#ifdef _MOTIF
-void formKill (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-#endif /* _MOTIF */
-#ifdef _GTK
 ThotBool formKillGTK (GtkWidget *w, GdkEvent *ev, struct Cat_Context *catalogue)
-#endif /* _GTK */
 {
   /* Le widget est detruit */
   if (catalogue && w &&
@@ -924,17 +916,11 @@ ThotBool formKillGTK (GtkWidget *w, GdkEvent *ev, struct Cat_Context *catalogue)
        catalogue->Cat_Type == CAT_SCRPOPUP))
     {
       TtaDestroyDialogue (catalogue->Cat_Ref);
-#ifdef _GTK
       return TRUE;
-#endif /* _GTK */
     }
-#ifdef _GTK
   return FALSE;
-#endif /* _GTK */
 }
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
-#ifdef _GTK
 /*----------------------------------------------------------------------
   Callback for a scrolled window (click) @JK
   ----------------------------------------------------------------------*/
@@ -1008,67 +994,6 @@ ThotBool ListEventGTK (GtkWidget *w, GdkEventButton *ev,
   return FALSE;
 }
 
-#if 0
-/**
-   LIST ALL GTK EVENT ON A WIDGET
- */
-static ThotBool ListEventGTK (GtkWidget *w, GdkEvent *AllEvent, int data)
-{
-
-  g_print ("\nevent!\t");
-  
-  switch (AllEvent->type)
-    {
-    case GDK_CLIENT_EVENT:
-      g_print ("expose");
-      return FALSE;
-
-    case GDK_EXPOSE:
-      g_print ("expose");
-      return FALSE;
-
-    case GDK_PROPERTY_NOTIFY:
-      g_print ("property notify");
-      return FALSE;
-
-    case GDK_BUTTON_PRESS:
-      g_print ("button press");
-      return FALSE;
-
-    case GDK_BUTTON_RELEASE:
-      g_print ("button release");
-      return FALSE;
-
-    case GDK_MOTION_NOTIFY:
-      g_print ("Motion");
-      return FALSE;
-
-    case GDK_FOCUS_CHANGE:
-      g_print ("focus");
-      return FALSE;
-
-    case GDK_LEAVE_NOTIFY:
-      g_print ("leave notify");
-      return FALSE;
-
-    case GDK_ENTER_NOTIFY:
-      g_print ("enter notify");
-      return FALSE;
-
-    case GDK_KEY_PRESS:
-      g_print ("keypress");
-      return FALSE;
-    
-    default:
-      break;
-    }
-  return FALSE;
-}
-#endif /*0*/
-#endif /* _GTK */
-
-#if defined(_MOTIF) || defined(_GTK)
-
 /*----------------------------------------------------------------------
  New input value.
   ----------------------------------------------------------------------*/
@@ -1083,12 +1008,7 @@ void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
     {
       catalogue->Cat_Data = 0;
       wtext = catalogue->Cat_Entries->E_ThotWidget[1];
-#ifdef _MOTIF
-      strncpy (text, XmTextGetString (wtext), 10);
-#endif /* _MOTIF */
-#ifdef _GTK
       strncpy (text, gtk_entry_get_text (GTK_ENTRY (wtext)), 10);
-#endif /* _GTK */
       text[10] = EOS;
       if (text[0] != EOS)
 	{
@@ -1109,22 +1029,6 @@ void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 	  if (val != val1)
 	    {
 	      sprintf (text, "%d", val1);
-
-#ifdef _MOTIF
-	      /* Desactive la procedure de Callback */
-	      if (catalogue->Cat_React)
-		XtRemoveCallback (wtext, XmNvalueChangedCallback,
-				  (XtCallbackProc) CallValueSet, catalogue);
-	      XmTextSetString (wtext, text);
-	      val = strlen (text);
-	      XmTextSetSelection (wtext, val, val, 500);
-	      /* Reactive la procedure de Callback */
-	      if (catalogue->Cat_React)
-		XtAddCallback (wtext, XmNvalueChangedCallback,
-			       (XtCallbackProc) CallValueSet, catalogue);
-#endif /* _MOTIF */
-
-#ifdef _GTK
 	      /* Desactive la procedure de Callback */
 	      if (catalogue->Cat_React)
 		RemoveSignalGTK (GTK_OBJECT(wtext), "changed"); 
@@ -1134,7 +1038,6 @@ void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 	      if (catalogue->Cat_React)
 		ConnectSignalGTK (GTK_OBJECT(wtext), "changed",
 				  GTK_SIGNAL_FUNC(CallValueSet), (gpointer)catalogue);
-#endif /* _GTK */
 	    }
 	  /* retourne la valeur saisie si la feuille de saisie est reactive */
 	  if (catalogue->Cat_React)
@@ -1145,10 +1048,6 @@ void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 	}
     }
 }
-
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
-#if defined(_MOTIF) || defined(_GTK)
 
 /*----------------------------------------------------------------------
   ReturnTogglevalues returns switched entries.
@@ -1193,28 +1092,14 @@ void ReturnTogglevalues (struct Cat_Context *catalogue)
     }
 }
 
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
-
-#if defined(_MOTIF) || defined(_GTK)
-
 /*----------------------------------------------------------------------
   ReturnSheet handles a sheet callback.          
   ----------------------------------------------------------------------*/
 void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
 		  struct E_List *adbloc)
 {
-#ifdef _MOTIF
-  register int        n;
-  Arg                 args[MAX_ARGS];
-  XmStringTable       strings;
-  ThotWidget          wtext;
-#endif /* _MOTIF */
-
-#ifdef _GTK
   ThotWidget          tmpw;
   gchar              *wtext;
-#endif /* _GTK */
   struct Cat_Context *catalogue;
   char                text[100];
   char               *ptr;
@@ -1235,15 +1120,7 @@ void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
 	  if (catalogue->Cat_Widget)
 	    {
 	      if (entry == 0)
-		{
-#ifdef _MOTIF
-		  XtUnmanageChild (catalogue->Cat_Widget);
-#endif /* _MOTIF */
-      
-#ifdef _GTK
 		  gtk_widget_hide (GTK_WIDGET(catalogue->Cat_Widget));
-#endif /* _GTK */
-		}
 	      /* Sinon il faut retourner la valeur du sous-catalogue */
 	      else
 		{
@@ -1262,13 +1139,7 @@ void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
 		  else if (catalogue->Cat_Type == CAT_INT) /* a number */
 		    {
 		      CallValueSet (catalogue->Cat_Entries->E_ThotWidget[1], catalogue, NULL);
-#ifdef _MOTIF
-		      strncpy (text, XmTextGetString (catalogue->Cat_Entries->E_ThotWidget[1]), 10);
-#endif /* _MOTIF */
-          
-#ifdef _GTK
 		      strncpy (text, gtk_entry_get_text(GTK_ENTRY(catalogue->Cat_Entries->E_ThotWidget[1])), 10);
-#endif /* _GTK */
 		      text[10] = EOS;
 		      if (text[0] != EOS)
 			sscanf (text, "%d", &i);
@@ -1281,42 +1152,15 @@ void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
 		    }
 		  else if (catalogue->Cat_Type == CAT_TEXT)
 		    {
-#ifdef _MOTIF
-		      (*(Proc3)CallbackDialogueProc) (
-				(void *)catalogue->Cat_Ref,
-				(void *)STRING_DATA,
-				(void *)(XmTextGetString ((ThotWidget) catalogue->Cat_Entries)));
-#endif /* _MOTIF */
-          
-#ifdef _GTK
 		      (*(Proc3)CallbackDialogueProc) (
 				(void *)catalogue->Cat_Ref,
 				(void *)STRING_DATA,
 				(void *)gtk_entry_get_text(GTK_ENTRY(catalogue->Cat_Entries)));
-#endif /* _GTK */
 		    }
 		  else if (catalogue->Cat_Type == CAT_SELECT)
 		    {
 		      if (catalogue->Cat_SelectList)
 			{
-#ifdef _MOTIF
-			  text[0] = EOS;
-			  n = 0;
-			  XtSetArg (args[n], XmNselectedItems, &strings);
-			  n++;
-			  XtGetValues ((ThotWidget) catalogue->Cat_Entries, args, n);
-			  ptr = text;
-			  if (strings)
-			    XmStringGetLtoR (strings[0], XmSTRING_DEFAULT_CHARSET, &ptr);
-			  (*(Proc3)CallbackDialogueProc) (
-				(void *)catalogue->Cat_Ref,
-				(void *)STRING_DATA,
-				(void *)ptr);
-			  if (strings)
-			    TtaFreeMemory (ptr);
-#endif /* _MOTIF */
-        
-#ifdef _GTK
 			  tmpw = GTK_WIDGET(catalogue->Cat_Entries);
 			  if(GTK_LIST(tmpw)->selection)
 			    {
@@ -1326,20 +1170,9 @@ void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
 				       	(void *)STRING_DATA,
 					(void *)ptr);
 			    }
-#endif /* _GTK */
 			}
 		      else
 			{
-#ifdef _MOTIF
-			  wtext = XmSelectionBoxGetChild ((ThotWidget) catalogue->Cat_Entries, XmDIALOG_TEXT);
-			  /* Retourne la valeur dans tous les cas */
-			  (*(Proc3)CallbackDialogueProc) (
-				(void *)catalogue->Cat_Ref,
-				(void *)STRING_DATA,
-				(void *)XmTextGetString (wtext));
-#endif /* _MOTIF */
-
-#ifdef _GTK
 			  tmpw = GTK_WIDGET(catalogue->Cat_Entries);
 			  tmpw = GTK_WIDGET (gtk_object_get_data (GTK_OBJECT (tmpw), "EntryZone"));
 			  wtext = gtk_entry_get_text (GTK_ENTRY (tmpw));
@@ -1347,7 +1180,6 @@ void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
 				(void *)catalogue->Cat_Ref,
 				(void *)STRING_DATA,
 				(void *)wtext);
-#endif /* _GTK */
 			}
 		    }
 		}
@@ -1367,14 +1199,7 @@ void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
   /*** On fait disparaitre le formulaire ***/
   if (entry == 0 || parentCatalogue->Cat_Type == CAT_DIALOG || parentCatalogue->Cat_Type == CAT_FORM)
     {
-#ifdef _MOTIF
-      XtUnmanageChild (parentCatalogue->Cat_Widget);
-      XtUnmanageChild (XtParent (parentCatalogue->Cat_Widget));
-#endif /* _MOTIF */
-      
-#ifdef _GTK
       gtk_widget_hide (parentCatalogue->Cat_Widget);
-#endif /* _GTK */ 
       /* Si on en a fini avec la feuille de dialogue */
       catalogue = parentCatalogue;
       while (catalogue->Cat_PtParent)
@@ -1388,20 +1213,10 @@ void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
 		(void *)entry);
 }
 
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
-#if defined(_MOTIF) || defined(_GTK)
-
 /*----------------------------------------------------------------------
    CallbackSheet: a button was clicked.                                              
   ----------------------------------------------------------------------*/
-#ifdef _MOTIF
-ThotBool CallSheet (ThotWidget w, struct Cat_Context *catalogue,
-		    caddr_t call_d)
-#endif /* _MOTIF */
-#ifdef _GTK
 gboolean CallSheetGTK (ThotWidget w, struct Cat_Context *catalogue)
-#endif /* _GTK */
 {
   struct E_List      *adbloc;
   int                 i;
@@ -1420,15 +1235,8 @@ gboolean CallSheetGTK (ThotWidget w, struct Cat_Context *catalogue)
 	  i++;
 	}
       /* Si la feuille de dialogue est detruite cela force l'abandon */
-#ifdef _MOTIF
-      if (entry == -1 && catalogue->Cat_Type == CAT_SHEET)
-	entry = 0;
-#endif /* _MOTIF */
-
-#ifdef _GTK
       if (entry == -1)
 	entry = catalogue->Cat_Default;
-#endif /* _GTK */
       if (entry != -1)
 	{
 	  ReturnSheet (catalogue, entry, adbloc);
@@ -1438,40 +1246,11 @@ gboolean CallSheetGTK (ThotWidget w, struct Cat_Context *catalogue)
   return FALSE;
 }
 
-#endif /*#if defined(_MOTIF) || defined(_GTK)*/
-
-#if defined(_MOTIF) || defined(_GTK)
 /*----------------------------------------------------------------------
   Callback for a list selection
   ----------------------------------------------------------------------*/
-#ifdef _MOTIF
-void CallList (ThotWidget w, struct Cat_Context *catalogue, XmListCallbackStruct * infos)
-#endif /*_MOTIF*/
-#ifdef _GTK
 ThotBool CallListGTK (ThotWidget w, struct Cat_Context *catalogue)
-#endif /* _GTK */
 {
-  
-#ifdef _MOTIF
-   char              *text = NULL;
-   ThotBool           ok;
-
-   if (catalogue->Cat_Widget && catalogue->Cat_Type == CAT_SELECT)
-     {
-       ok = XmStringGetLtoR (infos->item, XmSTRING_DEFAULT_CHARSET, &text);
-       /* retourne l'entree choisie */
-       if (ok && text && text[0] != EOS && text[0] != SPACE)
-	 {
-	   (*(Proc3)CallbackDialogueProc) (
-		(void *)catalogue->Cat_Ref,
-		(void *)STRING_DATA,
-		(void *)text);
-	 }
-       TtaFreeMemory (text);
-     }
-#endif /*_MOTIF*/
-
-#ifdef _GTK
    gchar              *text = NULL;
    ThotWidget         tmpw;
 
@@ -1504,12 +1283,8 @@ ThotBool CallListGTK (ThotWidget w, struct Cat_Context *catalogue)
 	 }
      }
    return TRUE;   
-#endif /* _GTK */
 }
 
-#endif /*#if defined(_MOTIF) || defined(_GTK)*/
-
-#ifdef _GTK
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 gboolean DeletePopShell (ThotWidget w, GdkEventButton *bu, gpointer data)
@@ -1542,39 +1317,18 @@ gboolean CallTextEnterGTK (ThotWidget w, GdkEventButton *bu, gpointer data)
     }
   return FALSE;
 }
-#endif /* _GTK */
-
-
-#if defined(_MOTIF) || defined(_GTK)
 
 /*----------------------------------------------------------------------
   Callback de saisie de texte.
   ----------------------------------------------------------------------*/
-#ifdef _MOTIF
-void CallTextChange (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-#endif /*_MOTIF*/
-#ifdef _GTK
 ThotBool CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
-#endif /* _GTK */
 {
-#ifdef _MOTIF
-   ThotWidget         wtext;
-#endif /* _MOTIF */
    char              *text = NULL;
     
    if (catalogue->Cat_Widget)
      {
       if (catalogue->Cat_Type == CAT_TEXT)
 	{
-#ifdef _MOTIF
-	  /* retourne la valeur saisie si la feuille de saisie est reactive */
-	  (*(Proc3)CallbackDialogueProc) (
-		(void *)catalogue->Cat_Ref,
-		(void *)STRING_DATA,
-		(void *)XmTextGetString ((ThotWidget) catalogue->Cat_Entries));
-#endif /*_MOTIF*/
-    
-#ifdef _GTK
 	  if (GTK_IS_ENTRY (catalogue->Cat_Entries))
 	    text = gtk_entry_get_text (GTK_ENTRY (catalogue->Cat_Entries));
 	  else
@@ -1583,73 +1337,25 @@ ThotBool CallTextChangeGTK (ThotWidget w, struct Cat_Context *catalogue)
 		(void *)catalogue->Cat_Ref,
 		(void *)STRING_DATA,
 		(void *)text);
-#endif /* _GTK */
 	}
       else if (catalogue->Cat_Type == CAT_SELECT)
 	{
-#ifdef _MOTIF
-	  wtext = XmSelectionBoxGetChild ((ThotWidget) catalogue->Cat_Entries,
-					  XmDIALOG_TEXT);
-	  /* retourne la valeur saisie si la feuille de saisie est reactive */
-	  text = XmTextGetString (wtext);
-	  (*(Proc3)CallbackDialogueProc) (
-		(void *)catalogue->Cat_Ref,
-		(void *)STRING_DATA,
-		(void *)text);
-	  TtaFreeMemory (text);
-#endif /* _MOTIF */
-
-#ifdef _GTK
 	  text = gtk_entry_get_text (GTK_ENTRY (w));
 	  (*(Proc3)CallbackDialogueProc) (
 		(void *)catalogue->Cat_Ref,
 		(void *)STRING_DATA,
 		(void *)text);
-#endif /* _GTK */
+
 	}
      }
-#ifdef _GTK
    return TRUE;
-#endif /* _GTK */
 }
-
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
-#if defined(_MOTIF) || defined(_GTK)
 
 /*----------------------------------------------------------------------
   Callback pour un bouton du label de selecteur
   ----------------------------------------------------------------------*/
 ThotBool CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
-#ifdef _MOTIF
-  Arg                 args[MAX_ARGS];
-  XmString            text;
-  char               *str = NULL;
-
-  if (catalogue->Cat_Widget)
-    {
-      /* Recupere le texte du label */
-      XtSetArg (args[0], XmNlabelString, &text);
-      XtGetValues (w, args, 1);
-      /* Initialise le champ texte */
-      XtSetArg (args[0], XmNtextString, text);
-      if (catalogue->Cat_SelectList)
-	{
-	  /* retourne la valeur du label */
-	  XmStringGetLtoR (text, XmSTRING_DEFAULT_CHARSET, &str);
-	  (*(Proc3)CallbackDialogueProc) (
-		(void *)catalogue->Cat_Ref,
-		(void *)STRING_DATA,
-		(void *)str);
-	  TtaFreeMemory (str);
-	}
-      else
-	XtSetValues ((ThotWidget) catalogue->Cat_Entries, args, 1);
-     }
-#endif /* _MOTIF */
-  
-#ifdef _GTK
    gchar *str;
 
    if (catalogue->Cat_Widget)
@@ -1661,21 +1367,8 @@ ThotBool CallLabel (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 		(void *)str);
      }
    return TRUE;
-#endif /* _GTK */
 }
 
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-
-/*----------------------------------------------------------------------
-   DefineCallbackDialog de'finit la proce'dure de traitement des      
-   retoursde catalogues dans l'application.                           
-  ----------------------------------------------------------------------*/
-void TtaDefineDialogueCallback ( Proc procedure )
-{
-   CallbackDialogueProc = procedure;
-}
-
-#ifdef _GTK
 /*----------------------------------------------------------------------
   ComboBoxGTK
   Callback function for the combo box
@@ -1699,3 +1392,11 @@ ThotBool ComboBoxGTK (ThotWidget w, struct Cat_Context *catalogue,
 }
 #endif /* _GTK */
 
+/*----------------------------------------------------------------------
+   DefineCallbackDialog de'finit la proce'dure de traitement des      
+   retoursde catalogues dans l'application.                           
+  ----------------------------------------------------------------------*/
+void TtaDefineDialogueCallback ( Proc procedure )
+{
+   CallbackDialogueProc = procedure;
+}

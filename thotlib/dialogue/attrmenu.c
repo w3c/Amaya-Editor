@@ -132,10 +132,10 @@ static void InitFormLanguage (Document doc, View view,
    char                languageCode[MAX_TXT_LEN];
    char                label[200];
    int                 defItem, nbItem;
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
    char                bufMenu[MAX_TXT_LEN];
    int                 i;
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 
    /* Initialize the language selector */
    languageCode[0] = EOS;
@@ -146,8 +146,7 @@ static void InitFormLanguage (Document doc, View view,
    ptr = GetListOfLanguages (WIN_buffMenu, MAX_TXT_LEN, languageCode,
 			     &nbItem, &defItem);
 #endif /* _WINGUI */
-   
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
    /* generate the form with two buttons Apply Cancel */
    strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    i = strlen (bufMenu) + 1;
@@ -174,7 +173,7 @@ static void InitFormLanguage (Document doc, View view,
      TtaSetSelector (NumSelectLanguage, -1, ptr);
    else
      TtaSetSelector (NumSelectLanguage, -1, NULL);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
    
    if (languageCode[0] == EOS)
      {
@@ -194,11 +193,11 @@ static void InitFormLanguage (Document doc, View view,
    else
      label[0] = EOS;
 
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
    TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, label);
    /* affiche le formulaire */
    TtaShowDialogue (NumFormLanguage, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
    
 #ifdef _WINGUI
    sprintf (WIN_Lab, "%s", label);
@@ -532,11 +531,10 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	   TtaUnmapDialogue (NumMenuAttrRequired);
 	   TtaDestroyDialogue (NumMenuAttrRequired);
 	 } 
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
        TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view),
 		   TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-       
+#endif /* _GTK */
 #ifdef _WINGUI
        isForm = TRUE;
        DialogBox (hInstance, MAKEINTRESOURCE (REQATTRDIALOG), NULL, 
@@ -552,12 +550,11 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	 TtaUnmapDialogue (NumMenuAttr);
 	 TtaDestroyDialogue (NumMenuAttr);
 	 } 
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
        TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view),
 		    TtaGetMessage (LIB, TMSG_ATTR), buttons, bufMenu, FALSE, 2,
 		    'L', D_DONE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-       
+#endif /* _GTK */
 #ifdef _WINGUI
        isForm = FALSE;
 #endif /* _WINGUI */
@@ -571,22 +568,20 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
      {
      case AtNumAttr: /* attribut a valeur numerique */
        subform = form + 1;
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
        TtaNewNumberForm (subform, form, title, -MAX_INT_ATTR_VAL,
 			 MAX_INT_ATTR_VAL, TRUE);
        TtaAttachForm (subform);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
        if (currAttr == NULL)
 	 i = 0;
        else
 	 i = currAttr->AeAttrValue;
-       
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
        /* initialize the input area only when an attribute already exists */
        if (currAttr)
 	 TtaSetNumberForm (subform, i);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-       
+#endif /* _GTK */
 #ifdef _WINGUI
        WIN_AtNumAttr  = TRUE;
        WIN_AtTextAttr = FALSE;
@@ -612,12 +607,11 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	 }
        else
 	   TextAttrValue[0] = EOS;
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
        TtaNewTextForm (subform, form, title, 40, 1, FALSE);
        TtaAttachForm (subform);
        TtaSetTextForm (subform, TextAttrValue);       
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-       
+#endif /* _GTK */
 #ifdef _WINGUI
        WIN_AtNumAttr  = FALSE;
        WIN_AtTextAttr = TRUE;
@@ -641,8 +635,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	       val++;
 	     } 
 #endif /* _WINGUI */
-
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
 	   i = strlen (pAttr1->AttrEnumValue[val]) + 2; /* for 'B' and EOS */
 	   if (lgmenu + i < MAX_TXT_LEN)
 	     {
@@ -650,11 +643,10 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	       strcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
 	       val++;
 	     } 
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
 	   lgmenu += i;
 	 }
-
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
        /* cree le menu des valeurs de l'attribut */
        TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, TRUE);
        TtaAttachForm (subform);
@@ -663,8 +655,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
        if (currAttr != NULL)
          val = currAttr->AeAttrValue - 1;
        TtaSetMenuForm (subform, val);
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
-       
+#endif /* _GTK */
 #ifdef _WINGUI
        nbDlgItems = val;
        WIN_AtNumAttr  = FALSE;
@@ -742,10 +733,10 @@ void BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
    pRuleAttr = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1];
    /* toujours lie a la vue 1 du document */
    MenuValues (pRuleAttr, TRUE, NULL, pDoc, 1);
-#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
    TtaShowDialogue (NumMenuAttrRequired, FALSE);
    TtaWaitShowDialogue ();
-#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
@@ -1103,12 +1094,11 @@ void UpdateAttrMenu (PtrDocument pDoc)
 					  (ThotBool) (ActiveEventAttr[i] == 1),
 					  FrMainRef[frame]);
 #endif /* _WINGUI */
-		  
-#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
+#if defined(_GTK) || defined(_WX)
 		  for (i = 0; i < nbEvent; i++)
 		    TtaSetToggleMenu (EventMenu[frame - 1], i,
 				      (ActiveEventAttr[i] == 1));
-#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 		}
 	      
 	      /* post active attributes */
@@ -1121,14 +1111,12 @@ void UpdateAttrMenu (PtrDocument pDoc)
 		WIN_TtaSetToggleMenu (ref, i, (ThotBool) (ActiveAttr[i] == 1),
 				      FrMainRef[frame]);
 #endif /* _WINGUI */
-	      
-#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
-	      TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
-#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
+#if defined(_GTK) || defined(_WX)
+	        TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
+#endif /* #if defined(_GTK) || defined(_WX) */
 	      TtaSetMenuOn (document, view, menuID);
 	    }
 	}
-      
     }
 }
 
@@ -1465,13 +1453,12 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 					 WIN_nbItem, WIN_buffMenu, WIN_Lab, 
 					 (int)WIN_Language);
 #endif /* _WINGUI */
-
-#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
+#if defined(_GTK)  || defined(_WX)
 		if (ActiveAttr[item] == 0)
 		  TtaSetToggleMenu (refmenu, item, FALSE);
 		else
 		  TtaSetToggleMenu (refmenu, item, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 	      }
 	    else if (pAttr->AttrType == AtEnumAttr &&
 		     pAttr->AttrNEnumValues == 1)
@@ -1500,18 +1487,15 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 		/* register the current attribut */
 		CurrentAttr = att;
 		/* restore the toggle state */
-#if defined(_GTK) || defined(_MOTIF) || defined(_WX)
-		/*#ifndef _GTK*/
+#if defined(_GTK) || defined(_WX)
 		if (ActiveAttr[item] == 0)
 		  TtaSetToggleMenu (refmenu, item, FALSE);
 		else
 		  TtaSetToggleMenu (refmenu, item, TRUE);
-		/*#endif*/
 		/* display the form */
 		TtaShowDialogue (NumMenuAttr, TRUE);
-#endif /* #if defined(_GTK) || defined(_MOTIF) || defined(_WX) */
-
-#ifdef _WINGUI 
+#endif /* #if defined(_GTK) || defined(_WX) */
+#ifdef _WINGUI
 		if (WIN_AtNumAttr) 
 		   DialogBox (hInstance, MAKEINTRESOURCE (NUMATTRDIALOG), NULL, 
 		   (DLGPROC) InitNumAttrDialogWndProc);
@@ -1547,9 +1531,9 @@ void CallbackLanguageMenu (int ref, int val, char *txt)
 	LangAttrValue[0] = EOS;
       else
 	strncpy (LangAttrValue, TtaGetLanguageCodeFromName (txt), LgMaxAttrText);
-#if defined(_GTK) || defined(_MOTIF)
+#ifdef _GTK
       TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, "");
-#endif /* #if defined(_GTK) || defined(_MOTIF) */
+#endif /* _GTK */
       val = 1;
       /*doit = TRUE;*/
       break;
