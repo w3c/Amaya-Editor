@@ -67,6 +67,10 @@ BEGIN {
 	my $label_ending = "";
 	my $comment_for_begining_of_h_file  = "";
 	
+	
+	#for the specific file EDITOR.h
+	my $recopy = 1;
+	
 ################################################################################
 ## 									sub  main
 ################################################################################
@@ -84,7 +88,9 @@ sub export {
 	%handle_names_ref = ();	
 	@list_of_dialogues_files = ();
 	@list_of_lang_occur = ();
-	
+
+#to treat EDITOR.h
+	if ($head_name =~ /EDITOR.h/) {$recopy = 0};
 	
 # declaration of the parser
 	my $parser = new XML::Parser (
@@ -144,7 +150,6 @@ sub start_hndl {
 	my $expat = shift; 
 	$current_element = my $element = shift; 	# element is the name of the tag
 	my %attributes ;
-	my $numberparam = 0; #double of parameters, because they're going by pair
 	my $string ;
 	
 	my $attribute;
@@ -154,7 +159,6 @@ sub start_hndl {
 	while (defined $attribute ) {		
 		$attributes { $attribute } = shift ;
 		$attribute = shift;
-		$numberparam += 2 ;
 	}	
 #	print $numberparam . "\n";
 #	foreach ( keys (%attributes)) {
@@ -175,7 +179,7 @@ sub start_hndl {
 	elsif ( $element eq "label") {
 		$current_label = $attributes { "define"};#	to remember the last label if there's a text between begin and end tag
 		$string = "#define $current_label" . "\t\t" . $reference_value ."\n" ;
-		print HEADFILE $string ; 
+		if ($recopy) { print HEADFILE $string ;} 
 	}
 	elsif ( $element eq "base") {
 		#nothing	
@@ -193,9 +197,11 @@ sub start_hndl {
 		#nothing
 	}
 	elsif ($element eq "messages") { #warning: messageS != message
-		open ( HEADFILE, ">$head_name") || die "can't create $head_name because: $! \n";
-		push (@list_of_dialogues_files ,"$head_name");
-		print "$comment_for_begining_of_h_file\n";
+		if ($recopy) { 
+			open ( HEADFILE, ">$head_name") || die "can't create $head_name because: $! \n";
+			push (@list_of_dialogues_files ,"$head_name");
+			print "$comment_for_begining_of_h_file\n";
+		}
 	}
 	elsif ( $element eq "") {
 		print "empty element at line " .  $expat->current_line . "\n";
@@ -257,9 +263,7 @@ sub end_hndl { #	do the modification if necessary
 				$english_text_reference= "$reference_value " .  "**" . $string ;
 			}				
 			$string = "$reference_value " . $string ;
-			$fh =  $list_handles [ 
-			$handle_names_ref{
-			$current_language} ];
+			$fh =  $list_handles [  $handle_names_ref{ $current_language} ];
 	    	print_in_a_file ( $fh,"$string\n");
 			$record_verification {$current_language } = 1 ;
 			
@@ -297,8 +301,9 @@ sub end_hndl { #	do the modification if necessary
 		init_record_verification ();
 	}
 	elsif ($end_tag eq "messages") {
-		close ( HEADFILE ) || die "can't close $head_name because: $! \n";
- 
+		if ($recopy) { 
+			close ( HEADFILE ) || die "can't close $head_name because: $! \n";
+ 		}
 		foreach $prefix (@list_of_lang_occur) {
 			# must close as many files as  present languages
 		 	close ( $list_handles [$handle_names_ref {$prefix} ] ) 
