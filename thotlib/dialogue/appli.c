@@ -36,12 +36,15 @@
 #ifdef _GL
 #include <GL/gl.h>
 #include "glwindowdisplay.h"
+
 #ifdef _GTK
 #include <gtkgl/gtkglarea.h>
 #endif /*_GTK*/
+
 #endif /*_GL*/
 
 #ifdef _WINDOWS
+
 #include "winsys.h"
 #include "wininclude.h"
 
@@ -52,6 +55,7 @@
 #endif /*WM_MOUSELAST*/
 
 #else /* _WINDOWS */
+
 #ifndef _GTK
 #define MAX_ARGS 20
 static Time         T1, T2, T3;
@@ -59,11 +63,10 @@ static XmString     null_string;
 static ThotBool     JumpInProgress = FALSE;
 
 #else /* _GTK */
-#ifdef _GL
-#include <gtkgl/gtkglarea.h>
-#endif /*_GL*/
+
 static gchar *null_string;
 #endif /*_GTK*/
+
 #endif /* _WINDOWS */
 
 static char         OldMsgSelect[MAX_TXT_LEN];
@@ -450,10 +453,12 @@ static void CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
 void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 {
  PAINTSTRUCT         ps;
-#ifndef _GL
  RECT                rect;
+#ifndef _GL
  ViewFrame          *pFrame;
  int                 xmin, xmax, ymin, ymax;
+#else
+ static PFNGLADDSWAPHINTRECTWINPROC p = 0;
 #endif /*_GL*/
 
  if (frame > 0 && frame <= MAX_FRAME)
@@ -462,8 +467,10 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
    /* Do not redraw if the document is in NoComputedDisplay mode. */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
    {
+	   if (GetUpdateRect (w, &rect, FALSE))
+ {
      BeginPaint (w, &ps);
-     GetClientRect (w, &rect);
+ 
      /* save the previous clipping */
      pFrame = &ViewFrameTable[frame - 1];
      xmin = pFrame->FrClipXBegin;
@@ -475,8 +482,8 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
      pFrame->FrClipXEnd = 0;
      pFrame->FrClipYBegin = 0;
      pFrame->FrClipYEnd = 0;
-     DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right,
-		ps.rcPaint.bottom);
+     DefRegion (frame, rect.left, rect.top, rect.right,
+		rect.bottom);
      EndPaint (w, &ps);
      DisplayFrame (frame);
      /* restore the previous clipping */
@@ -485,11 +492,31 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
      pFrame->FrClipXEnd = xmax;
      pFrame->FrClipYBegin = ymin;
      pFrame->FrClipYEnd = ymax;
+ }
    }
 #else /*_GL*/
    BeginPaint (w, &ps);
-   FrameTable[frame].DblBuffNeedSwap = TRUE;
+   if (GetUpdateRect (w, &rect, FALSE))
+   {
+	   if (GL_prepare (frame))
+   {
+
+  if (p == 0)
+    p = (PFNGLADDSWAPHINTRECTWINPROC) wglGetProcAddress("glAddSwapHintRectWIN");
+
+  if (p)
+  {
+  (*p) (rect.left, rect.top, rect.right, rect.bottom);
+
+     GL_Swap (frame);
+	 (*p) (0, 0, FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
+	 }
+  else
+     GL_Swap (frame);
+   }
+   }
    EndPaint (w, &ps);
+
 #endif /*_GL*/
  }
 }
@@ -501,20 +528,24 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
 						 int bottom_delta)
 {
+   int wdiff, hdiff;
+
    if ((width <= 0) || (height <= 0))
       return;
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
    FrameTable[frame].FrTopMargin = top_delta;
+
    FrameTable[frame].FrWidth = (int) width - bottom_delta;
    FrameTable[frame].FrHeight = (int) height;
+
 #ifndef _GL
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);
 #else /*_GL*/
    if (GL_prepare (frame))
      {
-       
+       GL_SwapStop (frame);
    GLResize (width, height, 0 ,0);
    ClearAll (frame);
    GL_ActivateDrawing (frame);
@@ -522,6 +553,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
  		0, width,
  		height);
    RebuildConcreteImage (frame);
+   GL_SwapEnable (frame);
    GL_Swap (frame);
      }
    
@@ -2061,22 +2093,27 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   switch (mMsg)
     {
 
+    case WM_ERASEBKGND:
+      /*Make sure Win32 doesn't draw in our buffer...*/
+      return TRUE;
 	  
-
-    case WM_CREATE:
-      DragAcceptFiles (hwnd, TRUE);
-      return 0;
-
+    case WM_NCPAINT: 
     case WM_PAINT: 
       /* Some part of the Client Area has to be repaint. */
       WIN_HandleExpose (hwnd, frame, wParam, lParam);
-      return 0;
+      return TRUE;
 
     case WM_SIZE:
       cx         = LOWORD (lParam);
       cy         = HIWORD (lParam);
       WIN_ChangeViewSize (frame, cx, cy, 0, 0);
       return 0;
+
+
+    case WM_CREATE:
+      DragAcceptFiles (hwnd, TRUE);
+      return 0;
+
 
     case WM_DROPFILES:
       nNumFiles = DragQueryFile ((HDROP)wParam, 0xFFFFFFFF, NULL, 0);
@@ -2281,13 +2318,9 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       /* Mouse move inside client area*/
       return 0;
 
-#ifdef _GL
-    case WM_ERASEBKGND:
-      /*Make sure Win32 doesn't draw in our buffer...*/
-      return TRUE;
-#endif /*_GL*/
 
     default:
+
       break;
     }
 
