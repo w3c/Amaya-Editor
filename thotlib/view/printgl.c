@@ -142,7 +142,7 @@ static int            X, Y;
 
 /*----------------------------------------------------------------------
   GetGLContext : Main program : init an offscreen rendering context 
-  in order to use OpenGL drawing results  as a base for printing                                      
+  in order to use OpenGL drawing results  as a base for printing
   ----------------------------------------------------------------------*/
 void GetGLContext ()
 {
@@ -187,8 +187,6 @@ void GetGLContext ()
   pixmap = gdk_pixmap_new (NULL, GL_HEIGHT, GL_WIDTH, visual->depth);
   glpixmap = gdk_gl_pixmap_new (visual, pixmap);
   gdk_gl_pixmap_make_current (glpixmap, context);
-
-
 #endif /* _GTK */
 
   SetGlPipelineState ();
@@ -200,13 +198,12 @@ void GetGLContext ()
     LastRgb[i] = -1.;
 
   LastLineWidth = -1.;
-
- /*  GL_SetTransText (TRUE); */
+  /*  GL_SetTransText (TRUE); */
 }
 
 #ifdef _WINDOWS
-
-
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void initwgl (HDC hDC, int frame)
 {
 	HGLRC hGLRC = 0;
@@ -248,11 +245,15 @@ void initwgl (HDC hDC, int frame)
 	}
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void closewgl (HDC hDC, int frame)
 {
-	wglDeleteContext (GL_Context[frame]);
+  wglDeleteContext (GL_Context[frame]);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void SetupPixelFormatPrintGL (HDC hDC, int frame)
 {
   PIXELFORMATDESCRIPTOR pfd = 
@@ -277,41 +278,55 @@ void SetupPixelFormatPrintGL (HDC hDC, int frame)
       0, 0, 0,                        /* no layer, visible, damage masks */
     };
   int pixelFormat;	
-	HDC hdcurrent;
+  HDC hdcurrent;
 
-hdcurrent = hDC;
-   //hdcurrent = GetDC (NULL);//CreateDC ("DISPLAY", NULL, NULL, NULL);
-
+  hdcurrent = hDC;
+  //hdcurrent = GetDC (NULL);//CreateDC ("DISPLAY", NULL, NULL, NULL);
   pixelFormat = ChoosePixelFormat (hdcurrent, &pfd);
   if (pixelFormat == 0) 
     {
-      MessageBox(WindowFromDC(hDC), "ChoosePixelFormat failed.", "Error",
+      MessageBox (WindowFromDC(hDC), "ChoosePixelFormat failed.", "Error",
 		 MB_ICONERROR | MB_OK);
       exit(1);
     }
 
-  if (SetPixelFormat(hdcurrent, pixelFormat, &pfd) != TRUE) 
+  if (SetPixelFormat (hdcurrent, pixelFormat, &pfd) != TRUE) 
     {
 	LPVOID lpMsgBuf;
 
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | 
-	    FORMAT_MESSAGE_IGNORE_INSERTS,
-	    NULL, GetLastError(),
-	    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
-	    (LPTSTR) &lpMsgBuf,  0,  NULL );
-		MessageBox( NULL, (LPCTSTR)lpMsgBuf, "Error", MB_OK | MB_ICONINFORMATION );
-		LocalFree( lpMsgBuf );
-	    MessageBox(WindowFromDC(hDC), "SetPixelFormat failed.", "Error",
-		 MB_ICONERROR | MB_OK);
-		exit(1);
+	FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | 
+		       FORMAT_MESSAGE_IGNORE_INSERTS,
+		       NULL, GetLastError(),
+		       MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
+		       (LPTSTR) &lpMsgBuf,  0,  NULL );
+	MessageBox (NULL, (LPCTSTR)lpMsgBuf, "Error", MB_OK | MB_ICONINFORMATION );
+	LocalFree (lpMsgBuf );
+	MessageBox (WindowFromDC(hDC), "SetPixelFormat failed.", "Error",
+		    MB_ICONERROR | MB_OK);
+	exit(1);
     }
-   initwgl (hdcurrent, frame);
+  initwgl (hdcurrent, frame);
 }
-
-
-
 #endif /*_WINDOWS*/
 
+/*----------------------------------------------------------------------
+  GL_SetPrintForeground: set the foreground color.
+  ----------------------------------------------------------------------*/
+void GL_SetPrintForeground (int fg)
+{
+  unsigned short red, green, blue;
+  float rgb[3];
+
+  TtaGiveThotRGB (fg, &red, &green, &blue);
+  rgb[0] = (float) red;
+  rgb[1] = (float) green;
+  rgb[2] = (float) blue;
+ 
+  GLPrintPostScriptColor (&rgb);    
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static ThotBool NeedRedraw (int frame)
 {
   ViewFrame          *pFrame;
@@ -323,18 +338,18 @@ static ThotBool NeedRedraw (int frame)
     return TRUE;
   return FALSE;
 }
-/*---------------------------------------------------
-  GL_NotInFeedbackMode : if all openGL operation are
-  permitted or not.		    
-  ----------------------------------------------------*/
+
+/*----------------------------------------------------------------------
+  GL_NotInFeedbackMode : if all openGL operation are permitted or not.		    
+  ----------------------------------------------------------------------*/
 ThotBool GL_NotInFeedbackMode ()
 {
   return NotFeedBackMode;
 }
 
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   InitPrintBox :  	     
- ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void InitPrintBox ()
 {
   if (NotFeedBackMode && !CompBoundingBox)
@@ -344,9 +359,10 @@ void InitPrintBox ()
       glRenderMode (GL_FEEDBACK);
     }
 }
-/*---------------------------------------------------
-  ClosePrintBox :  	     
-  ----------------------------------------------------*/
+
+/*----------------------------------------------------------------------
+  FinishPrintBox :  	     
+  ----------------------------------------------------------------------*/
 void FinishPrintBox ()
 {  
   if (NotFeedBackMode == FALSE && !CompBoundingBox)
@@ -355,11 +371,11 @@ void FinishPrintBox ()
       NotFeedBackMode = TRUE;
     }
 }
-/*---------------------------------------------------
+
+/*----------------------------------------------------------------------
   PrintBox :  	     
-  ----------------------------------------------------*/
-void PrintBox (PtrBox box, int frame, 
-	       int xmin, int xmax, 
+  ----------------------------------------------------------------------*/
+void PrintBox (PtrBox box, int frame, int xmin, int xmax, 
 	       int ymin, int ymax)
 {
   CompBoundingBox = TRUE;
@@ -373,13 +389,12 @@ void PrintBox (PtrBox box, int frame,
   CompBoundingBox = FALSE;
 }
 
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   ComputeBoundingBox :
   Modify Bounding Box according to opengl feedback mechanism
   (after transformation, coordinates may have changed)			    
-  ----------------------------------------------------*/
-void ComputeBoundingBox (PtrBox box, int frame, 
-			 int xmin, int xmax, 
+  ----------------------------------------------------------------------*/
+void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, 
 			 int ymin, int ymax)
 {
   
@@ -387,11 +402,11 @@ void ComputeBoundingBox (PtrBox box, int frame,
 
 }
 
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   ComputeFilledBox :
   Modify Bounding Box according to opengl feedback mechanism
   (after transformation, coordinates may have changed)			    
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 {
   
@@ -413,15 +428,14 @@ ThotBool GL_prepare (int frame)
 }
 
 /* system */
-
-
 #define GLSameColor(rgb1, rgb2) (!(rgb1[0] != rgb2[0] || \
                                                     rgb1[1] != rgb2[1] || \
 						    rgb1[2] != rgb2[2]))
 
 
 /* PostScript writings. */
-
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static void GLWriteByte (FILE *stream, unsigned char byte)
 {
   unsigned char h = byte / 16;
@@ -432,6 +446,8 @@ static void GLWriteByte (FILE *stream, unsigned char byte)
 
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void GLPrintPostScriptColor(void *v_rgb)
 {
   GLrgb rgb;
@@ -460,8 +476,9 @@ void GLPrintPostScriptColor(void *v_rgb)
 End POSTCRIPT
 *****************/
 
-/* The feedback buffer parser */
-
+/*----------------------------------------------------------------------
+  The feedback buffer parser
+  ----------------------------------------------------------------------*/
 static GLint GLGetVertex(GLvertex *v, GLfloat *p)
 {
   v->xyz[0] = p[0];
@@ -473,6 +490,7 @@ static GLint GLGetVertex(GLvertex *v, GLfloat *p)
   v->rgb[3] = p[6]; 
   return 7;
 }
+
 /*-----------------------------------------------------------------
 GLParseFeedbackBuffer : Reads the buffer containing the information 
 about each graphic rendered on screen by openGL
@@ -658,9 +676,7 @@ GLint GLText (const char *str,
       fprintf (FILE_STREAM, "%c", str[i]); 
       width += CharacterWidth (42, (PtrFont) font);     
     }
-  fprintf (FILE_STREAM, ") %d %d %d s\n", 
-	   width, x, -y);
-
+  fprintf (FILE_STREAM, ") %d %d %d s\n", width, x, -y);
   return width;
 }
 
@@ -835,10 +851,6 @@ int GLString (unsigned char *buff, int lg, int frame, int x, int y,
   return (width);
 }
 
-
-
-
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
@@ -1003,16 +1015,17 @@ void GL_SwapEnable (int frame)
   ----------------------------------------------------------------------*/
 void WinGL_Swap (HDC hDC)
 {
- 	    /*wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);	 */
+  /*wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);	 */
 }
+
 /*----------------------------------------------------------------------
   GL_KillFrame : if realeasing a source sharing context, name a new one 
 as the source sharing context
   ----------------------------------------------------------------------*/
 void GL_KillFrame (int frame)
 {
-  
 }
+
 #ifdef _WIN_PRINT
 /*----------------------------------------------------------------------
   WDrawString draw a char string of lg chars beginning in buff.
@@ -1041,6 +1054,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 }
 #endif /*_WIN_PRINT*/
 #endif /*_WINDOWS*/
+
 /*----------------------------------------------------------------------
   SetBadCard :  handle video cards that flush backbuffer after each
   buffer swap

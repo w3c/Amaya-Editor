@@ -6,6 +6,32 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void DisplayOpaqueGroup ( PtrAbstractBox pAb,
+                                 int frame,
+                                 int xmin,
+                                 int xmax,
+                                 int ymin,
+                                 int ymax,
+                                 ThotBool do_display_background );
+extern void OpaqueGroupTextureFree ( PtrAbstractBox pAb,
+                                     int frame );
+extern void ClearOpaqueGroup ( PtrAbstractBox pAb,
+                               int frame,
+                               int xmin,
+                               int xmax,
+                               int ymin,
+                               int ymax );
+extern void OpaqueGroupTexturize ( PtrAbstractBox pAb,
+                                   int frame,
+                                   int xmin,
+                                   int xmax,
+                                   int ymin,
+                                   int ymax,
+                                   ThotBool Is_Pre );
+extern ThotBool DisplayGradient ( PtrAbstractBox pAb,
+                                  PtrBox box,
+                                  int frame,
+                                  ThotBool selected );
 extern void FreeAllPicCache ( void );
 extern void FreeAllPicCacheFromFrame ( int frame );
 extern void FreePixmap ( Pixmap pixmap );
@@ -46,6 +72,32 @@ extern unsigned char *GetScreenshot ( int frame,
 
 #else /* __STDC__ */
 
+extern void DisplayOpaqueGroup (/* PtrAbstractBox pAb,
+                                   int frame,
+                                   int xmin,
+                                   int xmax,
+                                   int ymin,
+                                   int ymax,
+                                   ThotBool do_display_background */);
+extern void OpaqueGroupTextureFree (/* PtrAbstractBox pAb,
+                                       int frame */);
+extern void ClearOpaqueGroup (/* PtrAbstractBox pAb,
+                                 int frame,
+                                 int xmin,
+                                 int xmax,
+                                 int ymin,
+                                 int ymax */);
+extern void OpaqueGroupTexturize (/* PtrAbstractBox pAb,
+                                     int frame,
+                                     int xmin,
+                                     int xmax,
+                                     int ymin,
+                                     int ymax,
+                                     ThotBool Is_Pre */);
+extern ThotBool DisplayGradient (/* PtrAbstractBox pAb,
+                                    PtrBox box,
+                                    int frame,
+                                    ThotBool selected */);
 extern void FreeAllPicCache (/* void */);
 extern void FreeAllPicCacheFromFrame (/* int frame */);
 extern void FreePixmap (/* Pixmap pixmap */);

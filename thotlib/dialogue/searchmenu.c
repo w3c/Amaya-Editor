@@ -493,12 +493,6 @@ void TtcSearchText (Document document, View view)
   SearchAfter = ok;
 #endif /* _WINDOWS */
   SearchLoadResources ();
-  /* complete la feuille de dialogue avec les menus de recherche de types */
-  /* d'element et d'attributs si la ressource de recherche avec structure */
-  /* est chargee */
-  if (ThotLocalActions[T_strsearchconstmenu])
-    (*ThotLocalActions[T_strsearchconstmenu]) (pDoc);
-  
   /* active le formulaire */
   if (!ok)
     /* new activation */
@@ -660,18 +654,10 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	pCurrEl = pFirstSel;
        
        /* la recherche est demandee, on recupere les parametres */
-      if (ThotLocalActions[T_strsearchgetparams] != NULL)
-	(*ThotLocalActions[T_strsearchgetparams]) (&error, SearchingD);
       if (!error || SStringLen != 0)
 	{
 	  found = FALSE;
-	  if (SStringLen == 0)
-	    {
-	      if (ThotLocalActions[T_strsearchonly] != NULL)
-		(*ThotLocalActions[T_strsearchonly]) (pCurrEl, SearchingD,
-						      &found);
-	    }
-	  else
+	  if (SStringLen)
 	    /* on cherche une chaine de caracteres */
 	    /* eventuellement, avec remplacement */
 	    {
@@ -703,9 +689,6 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		      /* on ne remplace pas dans une copie */
 		      {
 			found = TRUE;
-			if (ThotLocalActions[T_strsearcheletattr] != NULL)
-			  (*ThotLocalActions[T_strsearcheletattr]) (pFirstSel,
-								    &found);
 			if (found)
 			  {
 			    /* register the editing operation for Undo
@@ -790,12 +773,7 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		      foundString = found;
 		      if (found)
 			/* on a trouve' la chaine cherchee */
-			{
-			  stop = FALSE;
-			  if (ThotLocalActions[T_strsearcheletattr] != NULL)
-			    (*ThotLocalActions[T_strsearcheletattr])(pFirstSel,
-								     &found);
-			}
+			stop = FALSE;
 		    }
 		  while (foundString && !found);
 		  
@@ -843,8 +821,6 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	       }
 #endif /* _WINDOWS */
 	     StartSearch = FALSE;
-	     if (ThotLocalActions[T_strsearchshowvalattr] != NULL)
-	       (*ThotLocalActions[T_strsearchshowvalattr]) ();
 	    }
 	  else
 	    {
@@ -882,8 +858,6 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	}
       break;
     default:
-      if (ThotLocalActions[T_strsearchretmenu] != NULL)
-	(*ThotLocalActions[T_strsearchretmenu]) (ref, val, txt, SearchingD);
       break;
     }
 }

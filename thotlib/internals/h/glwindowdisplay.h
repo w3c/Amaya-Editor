@@ -160,9 +160,6 @@ void GL_SwapStop (int frame);
 void GL_SwapEnable (int frame);
 
 /* Picture */
-void GL_TextureMap (void *Image, 
-		    int xFrame, int yFrame, 
-		    int w, int h, int frame);
 void *Group_shot (int x, int y, 
 		  int width, int height, int frame, ThotBool is_rgb);
 void GL_SetPicForeground ();

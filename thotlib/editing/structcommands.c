@@ -796,7 +796,6 @@ void CopyCommand ()
   PtrDocument         pSelDoc;
   PtrAttribute        pAttrLang, pAttrHerit;
   int                 firstChar, lastChar;
-  ThotBool            cancopy;
 
   pCopy = NULL;
   /* y-a-t'il une selection courante ? */
@@ -805,137 +804,129 @@ void CopyCommand ()
     return;
   else
     {
-      if (ThotLocalActions[T_cancopyorcut] != NULL)
-	ThotLocalActions[T_cancopyorcut] (&cancopy, pSelDoc, firstSel,
-					  lastSel, firstChar, lastChar);
-      else
-	cancopy = TRUE;
-      if (cancopy)
-	/* on sauve les elements selectionnes */
+      /* on sauve les elements selectionnes */
+      if (firstSel->ElTerminal
+	  && firstSel->ElLeafType == LtText
+	  && firstSel->ElTextLength > 0
+	  && firstSel->ElTextLength < firstChar)
+	/* la selection commence apres l'element complet */
 	{
-	  if (firstSel->ElTerminal
-	      && firstSel->ElLeafType == LtText
-	      && firstSel->ElTextLength > 0
-	      && firstSel->ElTextLength < firstChar)
-	    /* la selection commence apres l'element complet */
+	  firstSel = NextElement (firstSel);
+	  firstChar = 0;
+	}
+      if (firstSel &&
+	  (firstSel != lastSel || firstChar < lastChar - 1 ||
+	   firstChar == 0))
+	/* il y a plus d'un caractere selectionne' */
+	{
+	  /* libere la sauvegarde de l'Editeur */
+	  /* sauvegarde la partie selectionnee */
+	  FreeSavedElements ();
+	  /* document d'ou vient la partie sauvee */
+	  DocOfSavedElements = pSelDoc;
+	  /* tell the application what document the saved elements
+	     come from */
+	  if (CopyAndCutFunction)
+	    (*CopyAndCutFunction) (IdentDocument (DocOfSavedElements));
+	  pEl = firstSel;
+	  /* premier element selectionne */
+	  while (pEl != NULL)
+	    /* pEl : pointeur sur l'element a sauver */
 	    {
-	      firstSel = NextElement (firstSel);
-	      firstChar = 0;
-	    }
-	  if (firstSel &&
-	      (firstSel != lastSel || firstChar < lastChar - 1 ||
-	       firstChar == 0))
-	    /* il y a plus d'un caractere selectionne' */
-	    {
-	      /* libere la sauvegarde de l'Editeur */
-	      /* sauvegarde la partie selectionnee */
-	      FreeSavedElements ();
-	      /* document d'ou vient la partie sauvee */
-	      DocOfSavedElements = pSelDoc;
-	      /* tell the application what document the saved elements
-		 come from */
-	      if (CopyAndCutFunction)
-		(*CopyAndCutFunction) (IdentDocument (DocOfSavedElements));
-	      pEl = firstSel;
-	      /* premier element selectionne */
-	      while (pEl != NULL)
-		/* pEl : pointeur sur l'element a sauver */
+	      /* copie l'element courant avec ses attributs */
+	      /* S'il est reference', perd le lien avec la
+		 reference */
+	      if (IsolatedPairedElem (pEl, firstSel, lastSel))
+		pCopy = NULL;
+	      else if (SendEventSubTree (TteElemCopy, pSelDoc, pEl, 0))
+		/* envoie l'evenement ElemCopy.Pre et demande a
+		   l'application si elle est d'accord pour copier
+		   l'element */
+		/* l'application ne veut pas que l'editeur copie
+		   cet element */
+		pCopy = NULL;
+	      else
+		/* The application agrees */
+		/* create a deep copy of the element */
+		pCopy = CopyTree (pEl, pSelDoc, pEl->ElStructSchema,
+				  pSelDoc, NULL, FALSE, TRUE, FALSE, TRUE);
+	      if (pCopy != NULL)
+		/* met la copie de l'element courant dans la 
+		   chaine des elements sauvegardes */
 		{
-		  /* copie l'element courant avec ses attributs */
-		  /* S'il est reference', perd le lien avec la
-		     reference */
-		  if (IsolatedPairedElem (pEl, firstSel, lastSel))
-		    pCopy = NULL;
-		  else if (SendEventSubTree (TteElemCopy, pSelDoc, pEl, 0))
-		    /* envoie l'evenement ElemCopy.Pre et demande a
-		       l'application si elle est d'accord pour copier
-		       l'element */
-		    /* l'application ne veut pas que l'editeur copie
-		       cet element */
-		    pCopy = NULL;
-		  else
-		    /* The application agrees */
-		    /* create a deep copy of the element */
-		    pCopy = CopyTree (pEl, pSelDoc, pEl->ElStructSchema,
-				      pSelDoc, NULL, FALSE, TRUE, FALSE, TRUE);
-		  if (pCopy != NULL)
-		    /* met la copie de l'element courant dans la 
-		       chaine des elements sauvegardes */
+		  if (pEl == firstSel && firstChar > 1)
+		    /* coupe le premier element sauve' */
 		    {
-		      if (pEl == firstSel && firstChar > 1)
-			/* coupe le premier element sauve' */
+		      pE = pCopy;
+		      SplitTextElement (pCopy, firstChar,
+					pSelDoc, FALSE,
+					&pSecond, FALSE);
+		      pCopy = pSecond;
+		      /* supprime la premiere partie */
+		      DeleteElement (&pE, pSelDoc);
+		      if (firstSel == lastSel)
+			/* la fin de la selection est dans le
+			   nouvel element */
+			lastChar = lastChar - firstChar + 1;
+		    }
+		  if (pEl == lastSel &&
+		      lastChar > 0 &&
+		      lastChar <= pCopy->ElTextLength)
+		    /* coupe le dernier element sauve' */
+		    {
+		      SplitTextElement (pCopy, lastChar,
+					pSelDoc, FALSE, &pE,
+					FALSE);
+		      /* supprime la deuxieme partie */
+		      DeleteElement (&pE, pSelDoc);
+		    }
+		  SaveElement (pCopy, pEl->ElParent);
+		  /* met l'attribut langue sur la copie s'il n'y
+		     est pas deja */
+		  if (GetTypedAttrForElem (pCopy, 1, NULL) == NULL)
+		    /* la copie ne possede pas d'attribut Langue,
+		       on le met */
+		    {
+		      /* cherche d'abord la valeur heritee par
+			 l'original */
+		      pAttrHerit = GetTypedAttrAncestor (pEl, 1,
+							 NULL, &pElAttr);
+		      if (pAttrHerit != NULL)
 			{
-			  pE = pCopy;
-			  SplitTextElement (pCopy, firstChar,
-					    pSelDoc, FALSE,
-					    &pSecond, FALSE);
-			  pCopy = pSecond;
-			  /* supprime la premiere partie */
-			  DeleteElement (&pE, pSelDoc);
-			  if (firstSel == lastSel)
-			    /* la fin de la selection est dans le
-			       nouvel element */
-			    lastChar = lastChar - firstChar + 1;
-			}
-		      if (pEl == lastSel &&
-			  lastChar > 0 &&
-			  lastChar <= pCopy->ElTextLength)
-			/* coupe le dernier element sauve' */
-			{
-			  SplitTextElement (pCopy, lastChar,
-					    pSelDoc, FALSE, &pE,
-					    FALSE);
-			  /* supprime la deuxieme partie */
-			  DeleteElement (&pE, pSelDoc);
-			}
-		      SaveElement (pCopy, pEl->ElParent);
-		      /* met l'attribut langue sur la copie s'il n'y
-			 est pas deja */
-		      if (GetTypedAttrForElem (pCopy, 1, NULL) == NULL)
-			/* la copie ne possede pas d'attribut Langue,
-			   on le met */
-			{
-			  /* cherche d'abord la valeur heritee par
-			     l'original */
-			  pAttrHerit = GetTypedAttrAncestor (pEl, 1,
-							     NULL, &pElAttr);
-			  if (pAttrHerit != NULL)
-			    {
-			      pAttrLang = AddAttrToElem (pCopy, pAttrHerit, NULL);
-			      if (pAttrLang != NULL)
-				pAttrLang->AeAttrSSchema = pCopy->ElStructSchema;
-			    }
+			  pAttrLang = AddAttrToElem (pCopy, pAttrHerit, NULL);
+			  if (pAttrLang != NULL)
+			    pAttrLang->AeAttrSSchema = pCopy->ElStructSchema;
 			}
 		    }
-		  
-		  /* cherche l'element a traiter apres l'element
-		     courant */
-		  pEl = NextInSelection (pEl, lastSel);
 		}
+		  
+	      /* cherche l'element a traiter apres l'element
+		 courant */
+	      pEl = NextInSelection (pEl, lastSel);
 	    }
-	  /* parmi les elements de la copie, cherche et traite tous ceux */
-	  /* qui sont reference's */
-	  pSave = FirstSavedElement;
-	  while (pSave != NULL)
-	    {
-	      /* traite un sous-arbre */
-	      ChangeReferences (pSave->PeElement, &pSelDoc);
-	      /* passe au sous-arbre suivant */
-	      pSave = pSave->PeNext;
-	    }
-	  /* il faudra changer les labels des elements insere's par la */
-	  /* prochaine commande coller */
-	  ChangeLabel = TRUE;
-	  
-	  /* envoie l'evenement ElemCopy.Post pour tous les sous-arbres */
-	  /* copie's */
-	  pSave = FirstSavedElement;
-	  while (pSave != NULL)
-	    {
-	      NotifySubTree (TteElemCopy, pSelDoc, pSave->PeElement, 0);
-	      /* passe au sous-arbre suivant */
-	      pSave = pSave->PeNext;
-	    }
+	}
+      /* parmi les elements de la copie, cherche et traite tous ceux */
+      /* qui sont reference's */
+      pSave = FirstSavedElement;
+      while (pSave != NULL)
+	{
+	  /* traite un sous-arbre */
+	  ChangeReferences (pSave->PeElement, &pSelDoc);
+	  /* passe au sous-arbre suivant */
+	  pSave = pSave->PeNext;
+	}
+      /* il faudra changer les labels des elements insere's par la */
+      /* prochaine commande coller */
+      ChangeLabel = TRUE;
+      
+      /* envoie l'evenement ElemCopy.Post pour tous les sous-arbres */
+      /* copie's */
+      pSave = FirstSavedElement;
+      while (pSave != NULL)
+	{
+	  NotifySubTree (TteElemCopy, pSelDoc, pSave->PeElement, 0);
+	  /* passe au sous-arbre suivant */
+	  pSave = pSave->PeNext;
 	}
     }
 }
@@ -1099,304 +1090,297 @@ void CutCommand (ThotBool save)
     return;
   else
     {
-      canCut = TRUE;
-      if (save && ThotLocalActions[T_cancopyorcut] != NULL)
-	ThotLocalActions[T_cancopyorcut] (&canCut, pSelDoc, firstSel,
-					  lastSel, firstChar, lastChar);
       /* on detruit les elements selectionnes, sauf si le document est en */
       /* lecture seule. */
-      if (canCut)
+      if (!pSelDoc->DocReadOnly)
 	{
-	if (!pSelDoc->DocReadOnly)
-	  {
-	    /* cherche si l'un des elements selectionne's est protege' */
-	    stop = FALSE;
-            if (firstSel->ElTerminal && firstSel->ElLeafType == LtText &&
-	        firstChar > 1 && ElementIsReadOnly (firstSel))
-		/* the selection begins with a substring of a ReadOnly
-		   element. This substring can't be deleted */
-	       stop = TRUE;
-	    else if (lastSel->ElTerminal && lastSel->ElLeafType == LtText &&
-		     lastChar > 0 && lastChar < lastSel->ElVolume &&
-		ElementIsReadOnly (lastSel))
-		/* the selection ends with a substring of a ReadOnly
-		   element. This substring can't be deleted */
-		stop = TRUE;
-	    pEl = firstSel;
-	    while (!stop && pEl != NULL)
-	      if (ElementIsReadOnly (pEl->ElParent))
-		stop = TRUE;
-	      else
-		pEl = NextInSelection (pEl, lastSel);
-
-	    if (!stop)
-	      /* pas d'element protege', on peut couper */
-	      {
-		/* conserve la selection initiale pour pouvoir la
-		   retablir au cas ou la commande ne ferait rien */
-		firstSelInit = firstSel;
-		lastSelInit = lastSel;
-		firstCharInit = firstChar;
-		lastCharInit = lastChar;
-		/* annule la selection */
-		TtaClearViewSelections ();
-		/* encore rien detruit */
-		oneAtLeast = FALSE;
-		cutPage = FALSE;
-		/* traitement special pour les pages dans les structures
-		   qui le demandent */
-		if (ThotLocalActions[T_cutpage] != NULL)
-		  (*ThotLocalActions[T_cutpage]) (&firstSel, &lastSel, pSelDoc,
-						  &save, &cutPage);
-		/* "remonte" la selection au niveau des freres si c'est
-		   possible */
-		if (ThotLocalActions[T_selectsiblings] != NULL)
-		  (*ThotLocalActions[T_selectsiblings]) (&firstSel, &lastSel,
-							&firstChar, &lastChar);
+	  /* cherche si l'un des elements selectionne's est protege' */
+	  stop = FALSE;
+	  if (firstSel->ElTerminal && firstSel->ElLeafType == LtText &&
+	      firstChar > 1 && ElementIsReadOnly (firstSel))
+	    /* the selection begins with a substring of a ReadOnly
+	       element. This substring can't be deleted */
+	    stop = TRUE;
+	  else if (lastSel->ElTerminal && lastSel->ElLeafType == LtText &&
+		   lastChar > 0 && lastChar < lastSel->ElVolume &&
+		   ElementIsReadOnly (lastSel))
+	    /* the selection ends with a substring of a ReadOnly
+	       element. This substring can't be deleted */
+	    stop = TRUE;
+	  pEl = firstSel;
+	  while (!stop && pEl != NULL)
+	    if (ElementIsReadOnly (pEl->ElParent))
+	      stop = TRUE;
+	    else
+	      pEl = NextInSelection (pEl, lastSel);
+	  
+	  if (!stop)
+	    /* pas d'element protege', on peut couper */
+	    {
+	      /* conserve la selection initiale pour pouvoir la
+		 retablir au cas ou la commande ne ferait rien */
+	      firstSelInit = firstSel;
+	      lastSelInit = lastSel;
+	      firstCharInit = firstChar;
+	      lastCharInit = lastChar;
+	      /* annule la selection */
+	      TtaClearViewSelections ();
+	      /* encore rien detruit */
+	      oneAtLeast = FALSE;
+	      cutPage = FALSE;
+	      /* traitement special pour les pages dans les structures
+		 qui le demandent */
+	      if (ThotLocalActions[T_cutpage] != NULL)
+		(*ThotLocalActions[T_cutpage]) (&firstSel, &lastSel, pSelDoc,
+						&save, &cutPage);
+	      /* "remonte" la selection au niveau des freres si c'est
+		 possible */
+	      if (ThotLocalActions[T_selectsiblings] != NULL)
+		(*ThotLocalActions[T_selectsiblings]) (&firstSel, &lastSel,
+						       &firstChar, &lastChar);
 /******************/
-		/* Si tout le contenu d'un element est selectionne', on
-		   detruit l'element englobant la selection, sauf s'il
-		   est indestructible. */
-		if (firstChar <= 1 &&
-		    (lastChar == 0 || lastChar > lastSel->ElTextLength))
-		  /* le premier et le dernier element de la selection
-		     sont selectionnes en entier */
-		  {
-		    cutAll = FALSE;
-		    if (firstSel->ElPrevious == NULL
-			&& lastSel->ElNext == NULL
-			&& firstSel->ElParent == lastSel->ElParent
-			&& firstSel->ElParent != NULL)
-		      /* la selection commence par le premier fils et
-			 se termine avec le dernier fils du meme pere.
-			 On verifie tous les elements intermediaires */
-		      {
-			cutAll = TRUE;
-			pEl = firstSel;
-			do
-			  if (!CanCutElement (pEl, pSelDoc, NULL))
-			    /* l'element ne peut pas etre coupe', on
-			       arrete */
-			    cutAll = FALSE;
-			  else
-			    {
-			      /* on passe a l'element selectionne'
-				 suivant */
-			      pEl1 = pEl->ElNext;
-			      pEl = NextInSelection (pEl, lastSel);
-			      if (pEl != NULL)
+	      /* Si tout le contenu d'un element est selectionne', on
+		 detruit l'element englobant la selection, sauf s'il
+		 est indestructible. */
+	      if (firstChar <= 1 &&
+		  (lastChar == 0 || lastChar > lastSel->ElTextLength))
+		/* le premier et le dernier element de la selection
+		   sont selectionnes en entier */
+		{
+		  cutAll = FALSE;
+		  if (firstSel->ElPrevious == NULL
+		      && lastSel->ElNext == NULL
+		      && firstSel->ElParent == lastSel->ElParent
+		      && firstSel->ElParent != NULL)
+		    /* la selection commence par le premier fils et
+		       se termine avec le dernier fils du meme pere.
+		       On verifie tous les elements intermediaires */
+		    {
+		      cutAll = TRUE;
+		      pEl = firstSel;
+		      do
+			if (!CanCutElement (pEl, pSelDoc, NULL))
+			  /* l'element ne peut pas etre coupe', on
+			     arrete */
+			  cutAll = FALSE;
+			else
+			  {
+			    /* on passe a l'element selectionne'
+			       suivant */
+			    pEl1 = pEl->ElNext;
+			    pEl = NextInSelection (pEl, lastSel);
+			    if (pEl != NULL)
 				/* il y a un element selectionne'
 				   suivant */
-				if (pEl != pEl1)
-				  /* mais ce n'est pas le frere
-				     suivant, on arrete */
-				  cutAll = FALSE;
-			    }
-			while (cutAll && pEl != NULL);
-		      }
-		    if (cutAll && CanCutElement (firstSel->ElParent, pSelDoc, NULL))
-		      {
-			/* on fait comme si c'etait le pere qui etait
-			   selectionne' */
+			      if (pEl != pEl1)
+				/* mais ce n'est pas le frere
+				   suivant, on arrete */
+				cutAll = FALSE;
+			  }
+		      while (cutAll && pEl != NULL);
+		    }
+		  if (cutAll && CanCutElement (firstSel->ElParent, pSelDoc, NULL))
+		    {
+		      /* on fait comme si c'etait le pere qui etait
+			 selectionne' */
+		      firstSel = firstSel->ElParent;
+		      /* tant que c'est un fils unique, on prend le
+			 pere */
+		      while (firstSel->ElPrevious == NULL &&
+			     firstSel->ElNext == NULL &&
+			     firstSel->ElParent != NULL &&
+			     CanCutElement (firstSel->ElParent, pSelDoc, NULL))
 			firstSel = firstSel->ElParent;
-			/* tant que c'est un fils unique, on prend le
-			   pere */
-			while (firstSel->ElPrevious == NULL &&
-			       firstSel->ElNext == NULL &&
-			       firstSel->ElParent != NULL &&
-			       CanCutElement (firstSel->ElParent, pSelDoc, NULL))
-			firstSel = firstSel->ElParent;
-			lastSel = firstSel;
-			/* l'element est entierement selectionne' */
-			firstChar = 0;
-			lastChar = 0;
-		      }
-		  }
+		      lastSel = firstSel;
+		      /* l'element est entierement selectionne' */
+		      firstChar = 0;
+		      lastChar = 0;
+		    }
+		}
 /**************/
-		doc = IdentDocument (pSelDoc);
-		dispMode = TtaGetDisplayMode (doc);
-		/* lock tables formatting */
-		if (ThotLocalActions[T_islock])
-		  {
-		    (*ThotLocalActions[T_islock]) (&lock);
-		    if (!lock)
-		      {
-			if (dispMode == DisplayImmediately)
-			  TtaSetDisplayMode (doc, DeferredDisplay);
-			/* table formatting is not locked, lock it now */
-			(*ThotLocalActions[T_lock]) ();
-		      }
-		  }
+	      doc = IdentDocument (pSelDoc);
+	      dispMode = TtaGetDisplayMode (doc);
+	      /* lock tables formatting */
+	      if (ThotLocalActions[T_islock])
+		{
+		  (*ThotLocalActions[T_islock]) (&lock);
+		  if (!lock)
+		    {
+		      if (dispMode == DisplayImmediately)
+			TtaSetDisplayMode (doc, DeferredDisplay);
+		      /* table formatting is not locked, lock it now */
+		      (*ThotLocalActions[T_lock]) ();
+		    }
+		}
 
-		/* on ne supprime pas l'element racine ou un element
-		   obligatoire unique, mais leur contenu */
-		stop = FALSE;
-		do
-		  if (firstSel == lastSel && 
-		      (firstSel->ElParent == NULL  ||
-		       !CanCutElement (firstSel, pSelDoc, NULL)))
-		    /* c'est la racine */
-		    if (firstSel->ElTerminal ||
-			firstSel->ElFirstChild == NULL)
-		      {
-			firstSel = NULL;
-			/* pas de contenu, on ne supprime rien */
-			stop = TRUE;
-		      }
-		    else
-		      /* on va suprimer le contenu */
-		      {
-			firstSel = firstSel->ElFirstChild;
-			lastSel = firstSel;
-			while (lastSel->ElNext != NULL)
-			  lastSel = lastSel->ElNext;
-		      }
+	      /* on ne supprime pas l'element racine ou un element
+		 obligatoire unique, mais leur contenu */
+	      stop = FALSE;
+	      do
+		if (firstSel == lastSel && 
+		    (firstSel->ElParent == NULL  ||
+		     !CanCutElement (firstSel, pSelDoc, NULL)))
+		  /* c'est la racine */
+		  if (firstSel->ElTerminal ||
+		      firstSel->ElFirstChild == NULL)
+		    {
+		      firstSel = NULL;
+		      /* pas de contenu, on ne supprime rien */
+		      stop = TRUE;
+		    }
 		  else
-		    stop = TRUE;
-		while (!stop);
-
-		if (firstSel != NULL)
-		  {
-		    /* cherche l'element qui precede la partie selectionnee */
-		    pPrev = PreviousNotPage (firstSel);
-		    /* cherche le premier element apres la selection */
-		    pNext = NextNotPage (lastSel);
-		    nextChar = 0;
-		    pEl1 = firstSel;
-		    if (pEl1->ElTerminal
-			&& pEl1->ElLeafType == LtText
-			&& pEl1->ElTextLength > 0
-			&& pEl1->ElTextLength < firstChar)
-		      /* debut de la selection apres l'element complet */
-		      {
-			firstSel = NextElement (firstSel);
-			firstChar = 0;
-			pPrev = firstSel;
-		      }
-		  }
-		if (firstSel != NULL)
-		  {
-		    /* open the sequence of editing operations for the history */
-		    OpenHistorySequence (pSelDoc, firstSelInit, lastSelInit,
-				         NULL, firstCharInit, lastCharInit);
-		    recorded = FALSE;
-		    if (firstChar > 1)
-		      /* la selection commence a l'interieur d'un element */
-		      /* coupe le premier element selectionne */
-		      {
+		    /* on va suprimer le contenu */
+		    {
+		      firstSel = firstSel->ElFirstChild;
+		      lastSel = firstSel;
+		      while (lastSel->ElNext != NULL)
+			lastSel = lastSel->ElNext;
+		    }
+		else
+		  stop = TRUE;
+	      while (!stop);
+	      
+	      if (firstSel != NULL)
+		{
+		  /* cherche l'element qui precede la partie selectionnee */
+		  pPrev = PreviousNotPage (firstSel);
+		  /* cherche le premier element apres la selection */
+		  pNext = NextNotPage (lastSel);
+		  nextChar = 0;
+		  pEl1 = firstSel;
+		  if (pEl1->ElTerminal
+		      && pEl1->ElLeafType == LtText
+		      && pEl1->ElTextLength > 0
+		      && pEl1->ElTextLength < firstChar)
+		    /* debut de la selection apres l'element complet */
+		    {
+		      firstSel = NextElement (firstSel);
+		      firstChar = 0;
+		      pPrev = firstSel;
+		    }
+		}
+	      if (firstSel != NULL)
+		{
+		  /* open the sequence of editing operations for the history */
+		  OpenHistorySequence (pSelDoc, firstSelInit, lastSelInit,
+				       NULL, firstCharInit, lastCharInit);
+		  recorded = FALSE;
+		  if (firstChar > 1)
+		    /* la selection commence a l'interieur d'un element */
+		    /* coupe le premier element selectionne */
+		    {
 		      AddEditOpInHistory (firstSel, pSelDoc, TRUE, TRUE);
 		      recorded = TRUE;
 		      pPrev = firstSel;
 		      SplitBeforeSelection (&firstSel, &firstChar,
 					    &lastSel, &lastChar, pSelDoc);
-		      }
+		    }
 
-		    /* On a selectionne' seulement une marque de page ? */
-		    pageSelected = cutPage;
-		    if (firstSel == lastSel)
-		      /* un seul element est selectionne' */
-		      if (firstSel->ElTerminal)
-			if (firstSel->ElLeafType == LtPageColBreak)
-			  pageSelected = TRUE;
-		    /* record the sibling of the ancestors */
-		    if (firstSel == NULL)
-		      pParent = NULL;
-		    else
-		      pParent = firstSel->ElParent;
-		    pAncestorPrev[0] = pPrev;
-		    pAncestorNext[0] = pNext;
-		    pPrev = firstSel;
-		    pNext = lastSel;
-		    for (i = 0; i < MAX_ANCESTOR; i++)
-		      {
-			pAncestor[i] = pParent;
-			if (pParent != NULL)
-			  pParent = pParent->ElParent;
-			if (i > 0)
-			  {
-			    if (pPrev == NULL)
-			      pAncestorPrev[i] = NULL;
-			    else
-			      {
-				pPrev = pPrev->ElParent;
-				if (pPrev == NULL)
-				  pAncestorPrev[i] = NULL;
-				else
-				  pAncestorPrev[i] = pPrev->ElPrevious;
-			      }
-			    if (pNext == NULL)
-			      pAncestorNext[i] = NULL;
-			    else
-			      {
-				pNext = pNext->ElParent;
-				if (pNext == NULL)
-				  pAncestorNext[i] = NULL;
-				else
-				  pAncestorNext[i] = pNext->ElNext;
-			      }
-			  }
-		      }
+		  /* On a selectionne' seulement une marque de page ? */
+		  pageSelected = cutPage;
+		  if (firstSel == lastSel)
+		    /* un seul element est selectionne' */
+		    if (firstSel->ElTerminal)
+		      if (firstSel->ElLeafType == LtPageColBreak)
+			pageSelected = TRUE;
+		  /* record the sibling of the ancestors */
+		  if (firstSel == NULL)
+		    pParent = NULL;
+		  else
+		    pParent = firstSel->ElParent;
+		  pAncestorPrev[0] = pPrev;
+		  pAncestorNext[0] = pNext;
+		  pPrev = firstSel;
+		  pNext = lastSel;
+		  for (i = 0; i < MAX_ANCESTOR; i++)
+		    {
+		      pAncestor[i] = pParent;
+		      if (pParent != NULL)
+			pParent = pParent->ElParent;
+		      if (i > 0)
+			{
+			  if (pPrev == NULL)
+			    pAncestorPrev[i] = NULL;
+			  else
+			    {
+			      pPrev = pPrev->ElParent;
+			      if (pPrev == NULL)
+				pAncestorPrev[i] = NULL;
+			      else
+				pAncestorPrev[i] = pPrev->ElPrevious;
+			    }
+			  if (pNext == NULL)
+			    pAncestorNext[i] = NULL;
+			  else
+			    {
+			      pNext = pNext->ElParent;
+			      if (pNext == NULL)
+				pAncestorNext[i] = NULL;
+			      else
+				pAncestorNext[i] = pNext->ElNext;
+			    }
+			}
+		    }
 
-		    /* traite tous les elements selectionnes */
-		    pEl = firstSel;	/* premier element selectionne */
-		    pS = NULL;
-		    pSave = NULL;
-		    pLastSave = NULL;
-		    pFree = NULL;
-		    while (pEl != NULL && pEl->ElStructSchema != NULL)
-		      {
-			if (!pageSelected)
-			  /* On ne detruit pas les marques de pages,
-			     sauf si rien d'autre n'a ete selectionne'.
-			     On ne detruit pas non plus les elements
-			     indestructibles */
-			  pEl = NextElemToBeCut (pEl, lastSel, pSelDoc, pSave);
-			if (pEl != NULL)
-			  {
-			    /* pE : pointeur sur l'element a detruire */
-			    pE = pEl;
-
-			    if (pE == lastSel)
-			      /* that's the last selected element */
-		              if (lastSel->ElTerminal &&
-				  lastSel->ElLeafType == LtText &&
-				  lastChar > 0 &&
-				  lastChar <= lastSel->ElTextLength)
+		  /* traite tous les elements selectionnes */
+		  pEl = firstSel;	/* premier element selectionne */
+		  pS = NULL;
+		  pSave = NULL;
+		  pLastSave = NULL;
+		  pFree = NULL;
+		  while (pEl != NULL && pEl->ElStructSchema != NULL)
+		    {
+		      if (!pageSelected)
+			/* On ne detruit pas les marques de pages,
+			   sauf si rien d'autre n'a ete selectionne'.
+			   On ne detruit pas non plus les elements
+			   indestructibles */
+			pEl = NextElemToBeCut (pEl, lastSel, pSelDoc, pSave);
+		      if (pEl != NULL)
+			{
+			  /* pE : pointeur sur l'element a detruire */
+			  pE = pEl;
+			  if (pE == lastSel)
+			    /* that's the last selected element */
+			    if (lastSel->ElTerminal &&
+				lastSel->ElLeafType == LtText &&
+				lastChar > 0 &&
+				lastChar <= lastSel->ElTextLength)
 				/* la selection se termine a l'interieur d'un
 				   element, on le coupe en deux */
-				{
-				  AddEditOpInHistory (lastSel, pSelDoc, TRUE,
-						      FALSE);
-				  recorded = TRUE;
-				  SplitAfterSelection (lastSel, lastChar,
-						       pSelDoc);
-				  pNext = lastSel->ElNext;
-				  AddEditOpInHistory (pNext, pSelDoc, FALSE,
-						      TRUE);
-				  pAncestorNext[0] = pNext;
-				}
-
-			    /* cherche l'element a traiter apres
-			       l'element courant */
-			    /* on detruit une marque de page */
-			    if (pageSelected && pE->ElTypeNumber == PageBreak+1
-				&& !cutPage)
 			      {
-				pPrevPage = pE->ElPrevious;
+				AddEditOpInHistory (lastSel, pSelDoc, TRUE,
+						    FALSE);
+				recorded = TRUE;
+				SplitAfterSelection (lastSel, lastChar,
+						     pSelDoc);
+				pNext = lastSel->ElNext;
+				AddEditOpInHistory (pNext, pSelDoc, FALSE,
+						    TRUE);
+				pAncestorNext[0] = pNext;
+			      }
+
+			  /* cherche l'element a traiter apres
+			     l'element courant */
+			  /* on detruit une marque de page */
+			  if (pageSelected && pE->ElTypeNumber == PageBreak+1
+			      && !cutPage)
+			    {
+			      pPrevPage = pE->ElPrevious;
 				/* element suivant de la selection */
 				/* toujours nul */
-				pEl = NULL;
-			      }
-			    else
-			      /* cherche l'element suivant de la
-				 selection */
-			      pEl = NextInSelection (pEl, lastSel);
-			    
-			    /* verifie qu'il ne s'agit pas d'un element
-			       de paire dont l'homologue ne serait pas
-			       dans la selection */
-			    if (!IsolatedPairedElem (pE, pE, lastSel))
-			      {
+			      pEl = NULL;
+			    }
+			  else
+			    /* cherche l'element suivant de la
+			       selection */
+			    pEl = NextInSelection (pEl, lastSel);
+			  
+			  /* verifie qu'il ne s'agit pas d'un element
+			     de paire dont l'homologue ne serait pas
+			     dans la selection */
+			  if (!IsolatedPairedElem (pE, pE, lastSel))
+			    {
 			      /* envoie l'evenement ElemDelete.Pre et
 				 demande a l'application si elle est
 				 d'accord pour detruire l'element */
@@ -1404,377 +1388,372 @@ void CutCommand (ThotBool save)
 				last = TTE_STANDARD_DELETE_LAST_ITEM;
 			      else
 				last = TTE_STANDARD_DELETE_FIRST_ITEMS;
-			      }
-			    if (!SendEventSubTree (TteElemDelete, pSelDoc, pE, last))
-			      {
+			    }
+			  if (!SendEventSubTree (TteElemDelete, pSelDoc, pE, last))
+			    {
 				/* detruit les paves de l'element courant */
-				DestroyAbsBoxes (pE, pSelDoc, TRUE);
+			      DestroyAbsBoxes (pE, pSelDoc, TRUE);
 				/* conserve un pointeur sur le pere */
-				pParentEl = pE->ElParent;
-				notifyEl.event = TteElemDelete;
-				notifyEl.document = doc;
-				notifyEl.element = (Element) pParentEl;
-				notifyEl.info = 0; /* not sent by undo */
-				notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
-				notifyEl.elementType.ElSSchema = (SSchema) (pE->ElStructSchema);
-				NSiblings = 0;
-				pF = pE;
-				while (pF->ElPrevious != NULL)
-				  {
-				    NSiblings++;
-				    pF = pF->ElPrevious;
-				  }
-				notifyEl.position = NSiblings;
-
-				if (!recorded)
-				  /* record that deletion in the history */
-				  AddEditOpInHistory (pE, pSelDoc, TRUE, FALSE);
-				recorded = FALSE;
-
+			      pParentEl = pE->ElParent;
+			      notifyEl.event = TteElemDelete;
+			      notifyEl.document = doc;
+			      notifyEl.element = (Element) pParentEl;
+			      notifyEl.info = 0; /* not sent by undo */
+			      notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
+			      notifyEl.elementType.ElSSchema = (SSchema) (pE->ElStructSchema);
+			      NSiblings = 0;
+			      pF = pE;
+			      while (pF->ElPrevious != NULL)
+				{
+				  NSiblings++;
+				  pF = pF->ElPrevious;
+				}
+			      notifyEl.position = NSiblings;
+			      
+			      if (!recorded)
+				/* record that deletion in the history */
+				AddEditOpInHistory (pE, pSelDoc, TRUE, FALSE);
+			      recorded = FALSE;
+			      
 				/* retire l'element courant de l'arbre */
-				pA = GetOtherPairedElement (pE);
-				RemoveElement (pE);
+			      pA = GetOtherPairedElement (pE);
+			      RemoveElement (pE);
 				/* Si c'est un membre d'une paire de
 				   marques, indique a l'autre membre
 				   qu'il doit etre detruit aussi */
-				if (pA != NULL)
-				  pA->ElOtherPairedEl = pA;
-				SetDocumentModified (pSelDoc, TRUE, 30);
-				CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
-				oneAtLeast = TRUE;
-				if (pageSelected &&
-				    pE->ElTypeNumber == PageBreak + 1)
-				  /* essaie de fusionner l'element
-				     qui precede le saut de page
-				     supprime' avec celui qui suit */
-				  if (pPrevPage != NULL)
-				    /* il y a un elem. precedent */
-				    {
-				      nextChar = pPrevPage->ElTextLength + 1;
-				      if (!IsIdenticalTextType (pPrevPage, pSelDoc, &pF))
-					/* il n'y a pas eu de fusion */
-					nextChar = 0;
-				      else
-					/* il y a eu fusion */
-					{
-					  if (pPrevPage == pPrev)
-					    pNext = pPrev;
-					  if (pF != NULL)
-					    /* chaine l'element libere' par la
-					       fusion a la fin de la liste
-					       des elements a liberer */
-					    {
-					      pF->ElNext = NULL;
-					      /* il est le dernier de la liste */
-					      if (pFree == NULL)
-						/* la liste est vide */
-						pFree = pF;
-					      else
-						/* cherche la fin de la liste */
-						{
-						  pF1 = pFree;
-						  while (pF1->ElNext != NULL)
-						    pF1 = pF1->ElNext;
-						  /* chaine l'element en
-						     fin de liste */
-						  pF1->ElNext = pF;
-						}
-					    }
-					}
-				    }
-				if (save)
+			      if (pA != NULL)
+				pA->ElOtherPairedEl = pA;
+			      SetDocumentModified (pSelDoc, TRUE, 30);
+			      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+			      oneAtLeast = TRUE;
+			      if (pageSelected &&
+				  pE->ElTypeNumber == PageBreak + 1)
+				/* essaie de fusionner l'element
+				   qui precede le saut de page
+				   supprime' avec celui qui suit */
+				if (pPrevPage != NULL)
+				  /* il y a un elem. precedent */
 				  {
-				    if (pS == NULL)
+				    nextChar = pPrevPage->ElTextLength + 1;
+				    if (!IsIdenticalTextType (pPrevPage, pSelDoc, &pF))
+				      /* il n'y a pas eu de fusion */
+				      nextChar = 0;
+				    else
+				      /* il y a eu fusion */
 				      {
-					/* libere l'ancienne sauvegarde */
-					FreeSavedElements ();
-					/* document d'ou vient la
-					   partie sauvee */
-					DocOfSavedElements = pSelDoc;
-					/* tell the application what document
-					   the saved elements come from */
-					if (CopyAndCutFunction)
-					  (*CopyAndCutFunction) (IdentDocument (DocOfSavedElements));
+					if (pPrevPage == pPrev)
+					  pNext = pPrev;
+					if (pF != NULL)
+					  /* chaine l'element libere' par la
+					     fusion a la fin de la liste
+					     des elements a liberer */
+					  {
+					    pF->ElNext = NULL;
+					    /* il est le dernier de la liste */
+					    if (pFree == NULL)
+					      /* la liste est vide */
+					      pFree = pF;
+					    else
+					      /* cherche la fin de la liste */
+					      {
+						pF1 = pFree;
+						while (pF1->ElNext != NULL)
+						  pF1 = pF1->ElNext;
+						/* chaine l'element en
+						   fin de liste */
+						pF1->ElNext = pF;
+					      }
+					  }
 				      }
-				    /* il ne faudra pas changer les
-				       labels des elements exportables
-				       inseres par la prochaine commande
-				       Paster */
-				    ChangeLabel = FALSE;
-				    /* met l'element courant dans la
-				       chaine des elements sauvegarde's */
-				    SaveElement (pE, pParentEl);
 				  }
-				if (pS == NULL)
-				  pSave = pE;
-				else
-				  {
-				    pS->ElNext = pE;
-				    pE->ElPrevious = pS;
-				  }
-				pS = pE;
-				pLastSave = pE;
-				pE->ElParent = pParentEl;
+			      if (save)
+				{
+				  if (pS == NULL)
+				    {
+				      /* libere l'ancienne sauvegarde */
+				      FreeSavedElements ();
+				      /* document d'ou vient la
+					 partie sauvee */
+				      DocOfSavedElements = pSelDoc;
+				      /* tell the application what document
+					 the saved elements come from */
+				      if (CopyAndCutFunction)
+					(*CopyAndCutFunction) (IdentDocument (DocOfSavedElements));
+				    }
+				  /* il ne faudra pas changer les
+				     labels des elements exportables
+				     inseres par la prochaine commande
+				     Paster */
+				  ChangeLabel = FALSE;
+				  /* met l'element courant dans la
+				     chaine des elements sauvegarde's */
+				  SaveElement (pE, pParentEl);
+				}
+			      if (pS == NULL)
+				pSave = pE;
+			      else
+				{
+				  pS->ElNext = pE;
+				  pE->ElPrevious = pS;
+				}
+			      pS = pE;
+			      pLastSave = pE;
+			      pE->ElParent = pParentEl;
 				/* conserve le chainage avec le pere
 				   pour SearchPresSchema appele' par
 				   UpdateNumbers et pour RedisplayCopies */
-			      }
-			    if ((last == TTE_STANDARD_DELETE_LAST_ITEM)
-				&& !cutPage)
-			      pEl = NULL;
-			  }
-		      }
-		    CloseHistorySequence (pSelDoc);
-
-		    /* les elements a couper ont ete coupe's */
-		    /* verifie que les elements suivant et precedent */
-		    /* n'ont pas ete detruits par les actions */
-		    /* declanchees par les evenements TteElemDelete */
-		    /* cherche d'abord le premier ancetre qui soit */
-		    /* encore dans le document */
-		    pParent = NULL;
-		    for (i = 0; i < MAX_ANCESTOR && pParent == NULL; i++)
-		      {
-			if (pAncestor[i] == NULL)
-			  i = MAX_ANCESTOR;
-			else
-			  if (pAncestor[i]->ElStructSchema != NULL &&
-			      DocumentOfElement (pAncestor[i]) ==pSelDoc)
-			    pParent = pAncestor[i];
-		      }
-		    
-		    pNext = NULL;
-		    for (i = 0; i < MAX_ANCESTOR && pNext == NULL; i++)
-		      {
-			if (pAncestorNext[i] != NULL)
-			  {
+			    }
+			  if ((last == TTE_STANDARD_DELETE_LAST_ITEM)
+			      && !cutPage)
+			    pEl = NULL;
+			}
+		    }
+		  CloseHistorySequence (pSelDoc);
+		  
+		  /* les elements a couper ont ete coupe's */
+		  /* verifie que les elements suivant et precedent */
+		  /* n'ont pas ete detruits par les actions */
+		  /* declanchees par les evenements TteElemDelete */
+		  /* cherche d'abord le premier ancetre qui soit */
+		  /* encore dans le document */
+		  pParent = NULL;
+		  for (i = 0; i < MAX_ANCESTOR && pParent == NULL; i++)
+		    {
+		      if (pAncestor[i] == NULL)
+			i = MAX_ANCESTOR;
+		      else if (pAncestor[i]->ElStructSchema != NULL &&
+			       DocumentOfElement (pAncestor[i]) ==pSelDoc)
+			pParent = pAncestor[i];
+		    }
+		  
+		  pNext = NULL;
+		  for (i = 0; i < MAX_ANCESTOR && pNext == NULL; i++)
+		    {
+		      if (pAncestorNext[i] != NULL)
+			{
 			  if (pAncestorNext[i]->ElStructSchema != NULL &&
 			      DocumentOfElement (pAncestorNext[i]) == pSelDoc)
 			    pNext = pAncestorNext[i];
-			  else
-			    if (pAncestorPrev[i] != NULL)
-			      if (pAncestorPrev[i]->ElStructSchema != NULL &&
-				  DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
-				if (pAncestorPrev[i]->ElNext != NULL)
-				  pNext = pAncestorPrev[i]->ElNext;
-			  }
-		      }
-		    
-		    pPrev = NULL;
-		    for (i = 0; i < MAX_ANCESTOR && pPrev == NULL; i++)
-		      {
-			if (pAncestorPrev[i] != NULL)
-			  {
+			  else if (pAncestorPrev[i] != NULL)
+			    if (pAncestorPrev[i]->ElStructSchema != NULL &&
+				DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
+			      if (pAncestorPrev[i]->ElNext != NULL)
+				pNext = pAncestorPrev[i]->ElNext;
+			}
+		    }
+		  
+		  pPrev = NULL;
+		  for (i = 0; i < MAX_ANCESTOR && pPrev == NULL; i++)
+		    {
+		      if (pAncestorPrev[i] != NULL)
+			{
 			  if (pAncestorPrev[i]->ElStructSchema != NULL &&
 			      DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
 			    pPrev = pAncestorPrev[i];
-			  else
-			    if (pAncestorNext[i] != NULL)
-			      if (pAncestorNext[i]->ElStructSchema != NULL &&
-				  DocumentOfElement (pAncestorNext[i]) == pSelDoc)
-				if (pAncestorNext[i]->ElPrevious != NULL)
-				  pPrev = pAncestorNext[i]->ElPrevious;
-			  }
-		      }
-		    
-		    /* reaffiche les paves qui copient les elements detruits */
-		    if (oneAtLeast)
-		      {
-			pS = pSave;
-			while (pS != NULL)
-			  /* parcourt la chaine des elements detruits */
-			  {
-			    RedisplayCopies (pS, pSelDoc, TRUE);
-			    /* element detruit suivant */
-			    pS = pS->ElNext;
-			  }
-		      }
-		    /* renumerote la suite */
-		    pE = pSave;
-		    pS = pNext;
-		    if (pS == NULL)
-		      pS = NextElement (pPrev);
-		    if (pS != NULL)
-		      while (pE != NULL)
-			{
-			  UpdateNumbers (pS, pE, pSelDoc, TRUE);
-			  pE = pE->ElNext;
+			  else if (pAncestorNext[i] != NULL)
+			    if (pAncestorNext[i]->ElStructSchema != NULL &&
+				DocumentOfElement (pAncestorNext[i]) == pSelDoc)
+			      if (pAncestorNext[i]->ElPrevious != NULL)
+				pPrev = pAncestorNext[i]->ElPrevious;
 			}
-		    pNext = pS;
-		    /* annule les pointeurs vers le pere */
-		    pS = pSave;
-		    while (pS != NULL)
-		      /* parcourt la chaine des elements detruits */
+		    }
+		  
+		  /* reaffiche les paves qui copient les elements detruits */
+		  if (oneAtLeast)
+		    {
+		      pS = pSave;
+		      while (pS != NULL)
+			/* parcourt la chaine des elements detruits */
+			{
+			  RedisplayCopies (pS, pSelDoc, TRUE);
+			  /* element detruit suivant */
+			  pS = pS->ElNext;
+			}
+		    }
+		  /* renumerote la suite */
+		  pE = pSave;
+		  pS = pNext;
+		  if (pS == NULL)
+		    pS = NextElement (pPrev);
+		  if (pS != NULL)
+		    while (pE != NULL)
 		      {
-			pS->ElParent = NULL;
-			pS = pS->ElNext;
-			/* element detruit suivant */
+			UpdateNumbers (pS, pE, pSelDoc, TRUE);
+			pE = pE->ElNext;
 		      }
-
-		    if (!oneAtLeast)
-		      {
-			/* nothing was destroyed: reset the selection */
-			if (!lock)
-			  {
-			    /* unlock table formatting */
-			    (*ThotLocalActions[T_unlock]) ();
-			    if (dispMode == DisplayImmediately)
-			      TtaSetDisplayMode (doc, DisplayImmediately);
-			  }
-			if (lastCharInit > 0)
-			  lastCharInit--;
-			if (firstCharInit > 1)
-			  {
-			    if (firstSelInit == lastSelInit)
-			      i = lastCharInit;
-			    else
-			      i = 0;
-			    SelectString (pSelDoc, firstSelInit, firstCharInit, i);
-			  }
-			else if ((lastCharInit == 0 && firstCharInit != 1) ||
-				 lastSelInit != firstSelInit)
-			  SelectElement (pSelDoc, firstSelInit, TRUE, TRUE);
-			else
-			  SelectString (pSelDoc, firstSelInit, 1, lastCharInit);
-			if (lastSelInit != firstSelInit)
-			  ExtendSelection (lastSelInit, lastCharInit, TRUE, FALSE, FALSE);
-		      }
-		    else
-		      {
-			/* some element were destroyed, finish the work:
-			 * check if sibling elements become first or last
-			 */
-			ProcessFirstLast (pPrev, pNext, pSelDoc);
-			if (pPrev != NULL)
-			  /* traitement particulier aux tableaux */
-			  if (ThotLocalActions[T_createhairline] != NULL)
-			    (*ThotLocalActions[T_createhairline]) (pPrev, pSave, pSelDoc);
-			/* reaffiche toutes les vues */
-			AbstractImageUpdated (pSelDoc);
-			RedisplayDocViews (pSelDoc);
-			/* libere les elements qui ont ete fusionnes */
-			if (pFree != NULL)
-			  {
-			    pF = pFree;
-			    while (pF != NULL)
-			      {
-				pF1 = pF->ElNext;
+		  pNext = pS;
+		  /* annule les pointeurs vers le pere */
+		  pS = pSave;
+		  while (pS != NULL)
+		    /* parcourt la chaine des elements detruits */
+		    {
+		      pS->ElParent = NULL;
+		      pS = pS->ElNext;
+		      /* element detruit suivant */
+		    }
+		  
+		  if (!oneAtLeast)
+		    {
+		      /* nothing was destroyed: reset the selection */
+		      if (!lock)
+			{
+			  /* unlock table formatting */
+			  (*ThotLocalActions[T_unlock]) ();
+			  if (dispMode == DisplayImmediately)
+			    TtaSetDisplayMode (doc, DisplayImmediately);
+			}
+		      if (lastCharInit > 0)
+			lastCharInit--;
+		      if (firstCharInit > 1)
+			{
+			  if (firstSelInit == lastSelInit)
+			    i = lastCharInit;
+			  else
+			    i = 0;
+			  SelectString (pSelDoc, firstSelInit, firstCharInit, i);
+			}
+		      else if ((lastCharInit == 0 && firstCharInit != 1) ||
+			       lastSelInit != firstSelInit)
+			SelectElement (pSelDoc, firstSelInit, TRUE, TRUE);
+		      else
+			SelectString (pSelDoc, firstSelInit, 1, lastCharInit);
+		      if (lastSelInit != firstSelInit)
+			ExtendSelection (lastSelInit, lastCharInit, TRUE, FALSE, FALSE);
+		    }
+		  else
+		    {
+		      /* some element were destroyed, finish the work:
+		       * check if sibling elements become first or last
+		       */
+		      ProcessFirstLast (pPrev, pNext, pSelDoc);
+		      if (pPrev != NULL)
+			/* traitement particulier aux tableaux */
+			if (ThotLocalActions[T_createhairline] != NULL)
+			  (*ThotLocalActions[T_createhairline]) (pPrev, pSave, pSelDoc);
+		      /* reaffiche toutes les vues */
+		      AbstractImageUpdated (pSelDoc);
+		      RedisplayDocViews (pSelDoc);
+		      /* libere les elements qui ont ete fusionnes */
+		      if (pFree != NULL)
+			{
+			  pF = pFree;
+			  while (pF != NULL)
+			    {
+			      pF1 = pF->ElNext;
 				/* element suivant a liberer */
-				DeleteElement (&pF, pSelDoc);
+			      DeleteElement (&pF, pSelDoc);
 				/* libere l'element courant */
-				pF = pF1;
+			      pF = pF1;
 				/* passe au suivant */
-			      }
-			  }
-
-			/* la renumerotation est faite plus haut */
-			/* reaffiche les references aux elements detruits */
-			/* et enregistre les references sortantes coupees */
-			/* ainsi que les elements coupe's qui sont reference's */
-			/* par d'autres documents */
-			pS = pSave;
-			while (pS != NULL)
-			  /* parcourt la chaine des elements detruits */
-			  {
-			    RedisplayEmptyReferences (pS, &pSelDoc, TRUE);
-			    pS = pS->ElNext;
-			    /* element detruit suivant */
-			  }
-			/* Retransmet les valeurs des compteurs et attributs
-			   TRANSMIT si il y a des elements apres */
-			if (pPrev != NULL)
-			  pSS = pPrev;
-			else
-			  pSS = pParent;
-			pS = pSave;
-			while (pS != NULL)
-			  /* parcourt la chaine des elements detruits */
-			  {
-			    if ((pS->ElStructSchema->SsRule->SrElem[pS->ElTypeNumber - 1]->SrRefImportedDoc))
-			      RepApplyTransmitRules (pS, pSS, pSelDoc);
-			    pS = pS->ElNext;
-			    /* element detruit suivant */
-			  }
-
-			if (!lock)
-			  {
-			    /* unlock table formatting */
-			    (*ThotLocalActions[T_unlock]) ();
-			    if (dispMode == DisplayImmediately)
-			      TtaSetDisplayMode (doc, DisplayImmediately);
-			  }
-
-			/* did the selection change? */
-			GetCurrentSelection (&pSelDoc, &firstSel, &lastSel,
-					     &firstChar, &lastChar);
-			if (firstSel == pSave ||
-			    ElemIsWithinSubtree(firstSel, pSave) ||
-			    lastSel == pLastSave ||
-			    ElemIsWithinSubtree(lastSel, pLastSave))
-			  {
-			    /* the selection points to deleted elements. Set
-			       a new selection */
-			    /* first, get the depth of the previous and
-			       next elements */
-			    prevDepth = 0;
-			    pE = pPrev;
-			    while (pE)
+			    }
+			}
+		      
+		      /* la renumerotation est faite plus haut */
+		      /* reaffiche les references aux elements detruits */
+		      /* et enregistre les references sortantes coupees */
+		      /* ainsi que les elements coupe's qui sont reference's */
+		      /* par d'autres documents */
+		      pS = pSave;
+		      while (pS != NULL)
+			/* parcourt la chaine des elements detruits */
+			{
+			  RedisplayEmptyReferences (pS, &pSelDoc, TRUE);
+			  pS = pS->ElNext;
+			  /* element detruit suivant */
+			}
+		      /* Retransmet les valeurs des compteurs et attributs
+			 TRANSMIT si il y a des elements apres */
+		      if (pPrev != NULL)
+			pSS = pPrev;
+		      else
+			pSS = pParent;
+		      pS = pSave;
+		      while (pS != NULL)
+			/* parcourt la chaine des elements detruits */
+			{
+			  if ((pS->ElStructSchema->SsRule->SrElem[pS->ElTypeNumber - 1]->SrRefImportedDoc))
+			    RepApplyTransmitRules (pS, pSS, pSelDoc);
+			  pS = pS->ElNext;
+			  /* element detruit suivant */
+			}
+		      
+		      if (!lock)
+			{
+			  /* unlock table formatting */
+			  (*ThotLocalActions[T_unlock]) ();
+			  if (dispMode == DisplayImmediately)
+			    TtaSetDisplayMode (doc, DisplayImmediately);
+			}
+		      
+		      /* did the selection change? */
+		      GetCurrentSelection (&pSelDoc, &firstSel, &lastSel,
+					   &firstChar, &lastChar);
+		      if (firstSel == pSave ||
+			  ElemIsWithinSubtree(firstSel, pSave) ||
+			  lastSel == pLastSave ||
+			  ElemIsWithinSubtree(lastSel, pLastSave))
+			{
+			  /* the selection points to deleted elements. Set
+			     a new selection */
+			  /* first, get the depth of the previous and
+			     next elements */
+			  prevDepth = 0;
+			  pE = pPrev;
+			  while (pE)
+			    {
+			      prevDepth++;
+			      pE = pE->ElParent;
+			    }
+			  nextDepth = 0;
+			  pE = pNext;
+			  while (pE)
+			    {
+			      nextDepth++;
+			      pE = pE->ElParent;
+			    }
+			  if (pNext != NULL && nextDepth >= prevDepth)
+			    /* there is a next element and it's deeper in
+			       the abstract tree. Select its beginning */
+			    if (nextChar == 0)
 			      {
-				prevDepth++;
-				pE = pE->ElParent;
+				/* select the following element */
+				pSel = FirstLeaf (pNext);
+				/* Selectionne le premier caractere, si de type texte, l'elt sinon */
+				if (pSel->ElTerminal && pSel->ElLeafType == LtText)
+				  SelectPositionWithEvent (pSelDoc, pSel, 1);
+				else
+				  SelectElementWithEvent (pSelDoc, pSel, TRUE, TRUE);
 			      }
-			    nextDepth = 0;
-			    pE = pNext;
-			    while (pE)
-			      {
-				nextDepth++;
-				pE = pE->ElParent;
-			      }
-			    if (pNext != NULL && nextDepth >= prevDepth)
-			      /* there is a next element and it's deeper in
-				 the abstract tree. Select its beginning */
-			      if (nextChar == 0)
-				{
-				  /* select the following element */
-				  pSel = FirstLeaf (pNext);
-				  /* Selectionne le premier caractere, si de type texte, l'elt sinon */
-				  if (pSel->ElTerminal && pSel->ElLeafType == LtText)
-				    SelectPositionWithEvent (pSelDoc, pSel, 1);
-				  else
-				    SelectElementWithEvent (pSelDoc, pSel, TRUE, TRUE);
-				}
-			      else
-				SelectPositionWithEvent (pSelDoc, pNext, nextChar);
 			    else
-			      /* s'il n'y a pas de suivant, selectionne le precedent */
-			      if (pPrev != NULL)
-				{
-				  pSel = LastLeaf (pPrev);
-				  if (pSel->ElTerminal && pSel->ElLeafType == LtText)
-				    SelectPositionWithEvent (pSelDoc, pSel, pSel->ElTextLength + 1);
-				  else
-				    SelectElementWithEvent (pSelDoc, pSel, FALSE, TRUE);
-				}
+			      SelectPositionWithEvent (pSelDoc, pNext, nextChar);
+			  else if (pPrev != NULL)
+			    /* s'il n'y a pas de suivant, selectionne le precedent */
+			    {
+			      pSel = LastLeaf (pPrev);
+			      if (pSel->ElTerminal && pSel->ElLeafType == LtText)
+				SelectPositionWithEvent (pSelDoc, pSel, pSel->ElTextLength + 1);
 			      else
+				SelectElementWithEvent (pSelDoc, pSel, FALSE, TRUE);
+			    }
+			  else
 				/* s'il n'y a ni suivant ni precedent, selectionne l'englobant */
-				SelectElementWithEvent (pSelDoc, pParent, TRUE, TRUE);
-			  }
-
-			if (!save)
-			  {
-			    /* libere les elements coupe's */
-			    pE = pSave;
-			    while (pE != NULL)
-			      {
-				pS = pE->ElNext;
-				DeleteElement (&pE, pSelDoc);
-				pE = pS;
-			      }
-			  }
-		      }
-		  }
-	      }
-	  }
+			    SelectElementWithEvent (pSelDoc, pParent, TRUE, TRUE);
+			}
+		      
+		      if (!save)
+			{
+			  /* libere les elements coupe's */
+			  pE = pSave;
+			  while (pE != NULL)
+			    {
+			      pS = pE->ElNext;
+			      DeleteElement (&pE, pSelDoc);
+			      pE = pS;
+			    }
+			}
+		    }
+		}
+	    }
 	}
     }
 }

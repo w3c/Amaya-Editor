@@ -749,7 +749,11 @@ static ThotBool CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
 /*----------------------------------------------------------------------
   Callback pour un bouton du toggle-menu
   ----------------------------------------------------------------------*/
+#ifndef _GTK
 static ThotBool CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+#else /* _GTK */
+static ThotBool CallToggleGTK (ThotWidget w, struct Cat_Context *catalogue)
+#endif /* _GTK */
 {
   register int        i;
   int                 entry;
@@ -788,11 +792,49 @@ static ThotBool CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t
     }
   return TRUE;  
 }
-#ifdef _GTK
+
 /*----------------------------------------------------------------------
-  Callback for radio buttons
+  Callback for entry menus
   ----------------------------------------------------------------------*/
-static ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+#ifndef _GTK
+static ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+{
+  register int        i;
+  register int        index;
+  register int        entry;
+  struct E_List      *adbloc;
+
+
+  /* Enregistre la selection d'un toggle button */
+  if (catalogue->Cat_Widget)
+    {
+      adbloc = catalogue->Cat_Entries;
+      entry = -1;
+      index = 0;
+      i = 2;			/* decalage de 2 pour le widget titre */
+      while (entry == -1 && adbloc)
+	{
+	  while (entry == -1 && i < C_NUMBER)
+	    {
+	      if (adbloc->E_ThotWidget[i] == w)
+		entry = index;
+	      i++;
+	      index++;
+	    }
+	  /* Passe au bloc suivant */
+	  adbloc = adbloc->E_Next;
+	  i = 0;
+	}
+      /*** Sauve la valeur de la derniere selection ***/
+      catalogue->Cat_Data = entry;
+      /* retourne la valeur si le menu est reactif */
+      if (catalogue->Cat_React)
+	(*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
+    }
+  return TRUE;  
+}
+#else /* _GTK */
+static ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue)
 {
   register int        i;
   register int        index;
@@ -868,45 +910,6 @@ static ThotBool CallRadioGTK (ThotWidget w, struct Cat_Context *catalogue, caddr
   return TRUE;  
 }
 #endif /* _GTK */
-/*----------------------------------------------------------------------
-  Callback for entry menus
-  ----------------------------------------------------------------------*/
-static ThotBool CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-{
-  register int        i;
-  register int        index;
-  register int        entry;
-  struct E_List      *adbloc;
-
-
-  /* Enregistre la selection d'un toggle button */
-  if (catalogue->Cat_Widget)
-    {
-      adbloc = catalogue->Cat_Entries;
-      entry = -1;
-      index = 0;
-      i = 2;			/* decalage de 2 pour le widget titre */
-      while (entry == -1 && adbloc)
-	{
-	  while (entry == -1 && i < C_NUMBER)
-	    {
-	      if (adbloc->E_ThotWidget[i] == w)
-		entry = index;
-	      i++;
-	      index++;
-	    }
-	  /* Passe au bloc suivant */
-	  adbloc = adbloc->E_Next;
-	  i = 0;
-	}
-      /*** Sauve la valeur de la derniere selection ***/
-      catalogue->Cat_Data = entry;
-      /* retourne la valeur si le menu est reactif */
-      if (catalogue->Cat_React)
-	(*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, entry);
-    }
-  return TRUE;  
-}
 
 #ifdef _WINDOWS
 /*-----------------------------------------------------------------------
@@ -1153,14 +1156,18 @@ void WIN_ThotCallBack (HWND hWnd, WPARAM wParam, LPARAM lParam)
 #else /* _WINDOWS */
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
+#ifndef _GTK
 static void ConfirmMessage (ThotWidget w, ThotWidget MsgBox, caddr_t call_d)
 {
-#ifndef _GTK
-   XtPopdown (MsgBox);
-#else /* _GTK */
-   gtk_widget_hide (MsgBox);
-#endif /* _GTK */
+  XtPopdown (MsgBox);
 }
+#else /* _GTK */
+static ThotBool ConfirmMessageGTK (ThotWidget w, ThotWidget MsgBox)
+{
+  gtk_widget_hide (MsgBox);
+  return TRUE;
+}
+#endif /* _GTK */
 
 /*----------------------------------------------------------------------
   Delete a form
@@ -1168,100 +1175,93 @@ static void ConfirmMessage (ThotWidget w, ThotWidget MsgBox, caddr_t call_d)
 #ifndef _GTK
 static void formKill (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 #else /* _GTK */
-static void formKillGTK (GtkWidget *widget, GdkEvent *event, gpointer data)
+static ThotBool formKillGTK (GtkWidget *w, GdkEvent *ev, struct Cat_Context *catalogue)
 #endif /* _GTK */
 {
-#ifdef _GTK
-  struct Cat_Context *catalogue;
-  
-  catalogue = (struct Cat_Context *) data;
-  if (catalogue == NULL || widget == NULL)
-    return;
-#endif /* _GTK */
   /* Le widget est detruit */
-  if (catalogue->Cat_Type == CAT_FORM || catalogue->Cat_Type == CAT_SHEET ||
-      catalogue->Cat_Type == CAT_DIALOG || catalogue->Cat_Type == CAT_POPUP ||
-      catalogue->Cat_Type == CAT_SCRPOPUP)
-    TtaDestroyDialogue (catalogue->Cat_Ref);
+  if (catalogue && w &&
+      (catalogue->Cat_Type == CAT_FORM || catalogue->Cat_Type == CAT_SHEET ||
+       catalogue->Cat_Type == CAT_DIALOG || catalogue->Cat_Type == CAT_POPUP ||
+       catalogue->Cat_Type == CAT_SCRPOPUP))
+    {
+      TtaDestroyDialogue (catalogue->Cat_Ref);
+#ifdef _GTK
+      return TRUE;
+#endif /* _GTK */
+    }
+#ifdef _GTK
+  return FALSE;
+#endif /* _GTK */
 }
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
   Callback for a scrolled window (click) @JK
   ----------------------------------------------------------------------*/
-static gboolean CallPopGTK (GtkWidget *widget, gpointer data)
+static ThotBool CallPopGTK (GtkWidget *w, struct Cat_Context *catalogue)
 {
-  struct Cat_Context *catalogue;
   GtkWidget          *window;
 
-  catalogue = (struct Cat_Context *) data;  
-  window = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (widget), 
-					      "window");
-  if (window)
-    if (GTK_WIDGET_HAS_GRAB (window))
-      {
-	gtk_grab_remove (window);
-	gdk_pointer_ungrab (GDK_CURRENT_TIME);
-	gdk_keyboard_ungrab (GDK_CURRENT_TIME);
-      }
-  CallMenuGTK ((ThotWidget) widget, catalogue);
-  return (FALSE);
+  window = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (w), "window");
+  if (window && GTK_WIDGET_HAS_GRAB (window))
+    {
+      gtk_grab_remove (window);
+      gdk_pointer_ungrab (GDK_CURRENT_TIME);
+      gdk_keyboard_ungrab (GDK_CURRENT_TIME);
+    }
+  CallMenuGTK ((ThotWidget) w, catalogue);
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
   Callback for a scrolled window (button press)
   ----------------------------------------------------------------------*/
-static gboolean scr_popup_button_press (GtkWidget *widget, 
-					GdkEventButton *event, 
-					gpointer data)
+static ThotBool scr_popup_button_press (GtkWidget *w, GdkEventButton *ev, 
+					struct Cat_Context *catalogue)
 { 
-  return CallPopGTK (widget, data);
+  return CallPopGTK (w, catalogue);
 }
 
 /*----------------------------------------------------------------------
   Callback for a scrolled window (keypress)
   ----------------------------------------------------------------------*/
-static gboolean scr_popup_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
+static ThotBool scr_popup_key_press (GtkWidget *w, GdkEventKey *ev,
+				     struct Cat_Context *catalogue)
 {
-  if (event->keyval == GDK_Escape) 
+  if (ev->keyval == GDK_Escape) 
     {
-      formKillGTK (widget, NULL, data);
+      formKillGTK (w, NULL, catalogue);
       return TRUE;
     }
-  else if (event->keyval == GDK_Return
-	   || event->keyval == GDK_space)
-    return (CallPopGTK (widget, data));
+  else if (ev->keyval == GDK_Return || ev->keyval == GDK_space)
+    return (CallPopGTK (w, catalogue));
   else
     return FALSE;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-gboolean listeventGTK (GtkWidget *w, GdkEvent *AllEvent, int data)
+static ThotBool ListEventGTK (GtkWidget *w, GdkEventButton *ev, 
+			      struct Cat_Context *catalogue)
 {
-  GdkEventButton *event;
   int x,y;
 
-  switch (AllEvent->type)
+  switch (ev->type)
     {
     case GDK_BUTTON_RELEASE:
       {
-	event = (GdkEventButton *)AllEvent;
-	x = (int) event->x;
-	y = (int) event->y;
+	x = (int) ev->x;
+	y = (int) ev->y;
 	if (x < w->allocation.x || 
 	      x > w->allocation.x + w->allocation.width ||
 	      y > w->allocation.y + w->allocation.height ||
 	      y < w->allocation.y)
-	  {
-	    formKillGTK (w, NULL, (gpointer) data);
-	  }
+	  formKillGTK (w, NULL, catalogue);
       }
       return TRUE;
     case GDK_LEAVE_NOTIFY:
       /*We could hide the widget there ?*/
       return FALSE;
-
     default:
       break;
     }
@@ -1272,7 +1272,7 @@ gboolean listeventGTK (GtkWidget *w, GdkEvent *AllEvent, int data)
 /**
    LIST ALL GTK EVENT ON A WIDGET
  */
-gboolean listeventGTK (GtkWidget *w, GdkEvent *AllEvent, int data)
+static ThotBool ListEventGTK (GtkWidget *w, GdkEvent *AllEvent, int data)
 {
 
   g_print ("\nevent!\t");
@@ -1661,51 +1661,24 @@ static void ReturnSheet (struct Cat_Context *parentCatalogue, int entry,
   (*CallbackDialogue) (parentCatalogue->Cat_Ref,INTEGER_DATA, entry);
 }
 
-#ifdef _GTK
-/*----------------------------------------------------------------------
-   CallbackSheet.                                              
-  ----------------------------------------------------------------------*/
-static void CallEnter (ThotWidget w, struct Cat_Context *parentCatalogue,
-		       caddr_t call_d)
-{
-  struct E_List      *adbloc;
-  int                 i;
-  int                 entry;
-
-  /* On a selectionne une entree du menu */
-  if (parentCatalogue->Cat_Widget)
-    {
-      adbloc = parentCatalogue->Cat_Entries;
-      entry = -1;
-      i = 0;
-      while (entry == -1 && i < C_NUMBER)
-	{
-	  if (adbloc->E_ThotWidget[i] == w)
-	    entry = i;
-	  i++;
-	}
-      /* Si la feuille de dialogue est detruite cela force l'abandon */
-      if (entry == -1 && parentCatalogue->Cat_Type == CAT_SHEET)
-	  entry = 0;
-      ReturnSheet (parentCatalogue, 1, adbloc);
-    }
-}
-#endif /* _GTK */
-
 /*----------------------------------------------------------------------
    CallbackSheet: a button was clicked.                                              
   ----------------------------------------------------------------------*/
-static ThotBool CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue,
+#ifndef _GTK
+static ThotBool CallSheet (ThotWidget w, struct Cat_Context *catalogue,
 		       caddr_t call_d)
+#else /* _GTK */
+static gboolean CallSheetGTK (ThotWidget w, struct Cat_Context *catalogue)
+#endif /* _GTK */
 {
   struct E_List      *adbloc;
   int                 i;
   int                 entry;
 
-  /* On a selectionne une entree du menu */
-  if (parentCatalogue->Cat_Widget)
+  /* Activate an entry */
+  if (catalogue && catalogue->Cat_Widget)
     {
-      adbloc = parentCatalogue->Cat_Entries;
+      adbloc = catalogue->Cat_Entries;
       entry = -1;
       i = 0;
       while (entry == -1 && i < C_NUMBER)
@@ -1715,12 +1688,19 @@ static ThotBool CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue,
 	  i++;
 	}
       /* Si la feuille de dialogue est detruite cela force l'abandon */
-      if (entry == -1 && parentCatalogue->Cat_Type == CAT_SHEET)
-	  entry = 0;
+#ifndef _GTK
+      if (entry == -1 && catalogue->Cat_Type == CAT_SHEET)
+	entry = 0;
+#else /* _GTK */
+      entry = catalogue->Cat_Default;
+#endif /* _GTK */
       if (entry != -1)
-	ReturnSheet (parentCatalogue, entry, adbloc);
+	{
+	  ReturnSheet (catalogue, entry, adbloc);
+	  return TRUE;
+	}
     }
-  return TRUE;  
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -2146,7 +2126,8 @@ void DisplayConfirmMessage (char *text)
    w = gtk_button_new_with_label (TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    gtk_widget_show (GTK_WIDGET(w));
    gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 100);
-   ConnectSignalGTK (GTK_OBJECT(w), "clicked", GTK_SIGNAL_FUNC(ConfirmMessage), (gpointer)msgbox);
+   ConnectSignalGTK (GTK_OBJECT(w), "clicked",
+		     GTK_SIGNAL_FUNC(ConfirmMessageGTK), (gpointer)msgbox);
    gtk_widget_show_all (msgbox);
    gdk_window_raise (msgbox->window);
 #else /* _GTK */
@@ -3783,7 +3764,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 				 GDK_ALL_EVENTS_MASK);
 	  
 	  gtk_signal_connect (GTK_OBJECT (menu), "event",
-				    GTK_SIGNAL_FUNC (listeventGTK), 
+				    GTK_SIGNAL_FUNC (ListEventGTK), 
 				    (gpointer)catalogue);
 
 	  /* add the gtk list to the scr window */
@@ -4141,7 +4122,7 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 0);
 	     /* Connecte the clicked acton to the button */
 	     ConnectSignalGTK (GTK_OBJECT(w), "clicked",
-			       GTK_SIGNAL_FUNC(CallRadio), (gpointer)catalogue);
+			       GTK_SIGNAL_FUNC(CallRadioGTK), (gpointer)catalogue);
 #endif /* _GTK */
 	     adbloc->E_ThotWidget[ent] = w;
 	     i++;
@@ -5280,7 +5261,7 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 			   gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(w), FALSE, FALSE, 0);
 			   ConnectSignalGTK (GTK_OBJECT(w), 
 					     "toggled", 
-					     GTK_SIGNAL_FUNC (CallToggle), 
+					     GTK_SIGNAL_FUNC (CallToggleGTK), 
 					     (gpointer)catalogue);
 #endif /* _GTK */
 			   adbloc->E_ThotWidget[ent] = w;
@@ -6431,9 +6412,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	     gtk_widget_show_all (GTK_WIDGET (w));
 	     gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
 	     ConnectSignalGTK (GTK_OBJECT(w), "clicked",
-			       GTK_SIGNAL_FUNC (CallSheet), (gpointer) catalogue);
-	     /*ConnectSignalGTK (GTK_OBJECT(w), "activate",
-			       GTK_SIGNAL_FUNC (CallSheet), (gpointer) catalogue);*/
+			       GTK_SIGNAL_FUNC (CallSheetGTK), (gpointer) catalogue);
 	     gtk_widget_grab_default (GTK_WIDGET (w));
 	     adbloc->E_ThotWidget[1] = w;
 #endif /* _GTK */
@@ -6466,11 +6445,8 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 		       gtk_widget_show_all (GTK_WIDGET (w));
 		       gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 0);
 		       ConnectSignalGTK (GTK_OBJECT(w), "clicked",
-					 GTK_SIGNAL_FUNC (CallSheet),
+					 GTK_SIGNAL_FUNC (CallSheetGTK),
 					 (gpointer) catalogue);
-		       /*ConnectSignalGTK (GTK_OBJECT(w), "activate",
-					 GTK_SIGNAL_FUNC (CallSheet),
-					 (gpointer) catalogue);*/
 		       gtk_widget_grab_default (GTK_WIDGET(w));
 #endif /* _GTK */
 		       adbloc->E_ThotWidget[ent] = w;
@@ -6530,7 +6506,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	}
 	gtk_widget_show_all (GTK_WIDGET (w));
 	ConnectSignalGTK (GTK_OBJECT (w), "clicked",
-			  GTK_SIGNAL_FUNC (CallSheet), (gpointer)catalogue);
+			  GTK_SIGNAL_FUNC (CallSheetGTK), (gpointer)catalogue);
  
 #endif /* _GTK */
 	/* Range le bouton dans le 1er bloc de widgets */
@@ -7845,7 +7821,7 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 				 GTK_SIGNAL_FUNC (CallTextChangeGTK), (gpointer)catalogue); 
 	     /* report Enter to the form */
 	     ConnectSignalGTK (GTK_OBJECT(w), "activate",
-				 GTK_SIGNAL_FUNC (CallEnter), (gpointer) parentCatalogue);
+				 GTK_SIGNAL_FUNC (CallSheetGTK), (gpointer) parentCatalogue);
 #endif /* _GTK */
 	     catalogue->Cat_Ref = ref;
 	     catalogue->Cat_Type = CAT_TEXT;
@@ -8516,7 +8492,7 @@ void TtaAbortShowDialogue ()
 		{
 		  if (ShowCat->Cat_Widget->parent)
 		    gtk_widget_hide (GTK_WIDGET(ShowCat->Cat_Widget->parent));
-		  CallSheet (None, ShowCat, NULL);
+		  CallSheetGTK (None, ShowCat);
 		}
 	      else
 		gtk_widget_hide (GTK_WIDGET(ShowCat->Cat_Widget));

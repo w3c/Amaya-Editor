@@ -697,12 +697,11 @@ void GL_Win32ContextClose (int frame, HWND hwndClient)
   GL_KillFrame (frame);
 }
 
-/*---------------------------------------
+/*----------------------------------------------------------------------
   BackBufferRegionSwapping
-  We copy region content of the back buffer 
-  on the exposed region 
+  We copy region content of the back buffer on the exposed region 
   => opengl region buffer swapping 
-  --------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void GL_BackBufferRegionSwapping (int x, int y,
 				  int width, int height, 
 				  int Totalheight)
@@ -730,14 +729,15 @@ void GL_BackBufferRegionSwapping (int x, int y,
 }
 
 #endif /*_WINDOWS*/
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   GL_NotInFeedbackMode : if all openGL operation are
   permitted or not.		    
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 ThotBool GL_NotInFeedbackMode ()
 {
   return NotFeedBackMode;
 }
+
 /*----------------------------------------------------------------------
   GL_prepare: If a modif has been done
   ----------------------------------------------------------------------*/
@@ -764,6 +764,7 @@ ThotBool GL_prepare (int frame)
     }
   return FALSE;
 }
+
 /*----------------------------------------------------------------------
   GL_Swap : swap frontbuffer with backbuffer (display changes)
   ----------------------------------------------------------------------*/
@@ -808,6 +809,7 @@ ThotBool GL_SwapGet (int frame)
 {
   return SwapOK[frame];
 }
+
 /*----------------------------------------------------------------------
   GL_SwapEnable : 
   ----------------------------------------------------------------------*/
@@ -815,7 +817,6 @@ void GL_SwapEnable (int frame)
 {
   SwapOK[frame] = TRUE;
 }
-
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
@@ -828,11 +829,11 @@ void WinGL_Swap (HDC hDC)
 }
 #endif /*_WINDOWS*/
 
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   ComputeBoundingBox :
   Modify Bounding Box according to opengl feedback mechanism
   (after transformation, coordinates may have changed)			    
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void ComputeBoundingBox (PtrBox box, int frame, 
 			 int xmin, int xmax, 
 			 int ymin, int ymax)
@@ -876,11 +877,11 @@ void ComputeBoundingBox (PtrBox box, int frame,
     }
 }
 
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   ComputeFilledBox :
   Modify Bounding Box according to opengl feedback mechanism
   (after transformation, coordinates may have changed)			    
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 {
   GLfloat feedBuffer[4096];
@@ -910,24 +911,24 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int 
     }
 }
 
-
- 
-
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   InitPrintBox :  	     
- ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void InitPrintBox ()
 {
 }
-/*---------------------------------------------------
+
+/*----------------------------------------------------------------------
   ClosePrintBox :  	     
- ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void FinishPrintBox ()
 {
  
 }   
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
 			    GLint xorig, GLint yorig,
 			    GLenum format, GLenum type, 
@@ -937,6 +938,8 @@ GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
 return 0;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 int GLString (unsigned char *buff, int lg, int frame, int x, int y,
 		PtrFont font, int boxWidth, int bl, int hyphen,
 	      int startABlock, int fg, int shadow)
@@ -944,6 +947,8 @@ int GLString (unsigned char *buff, int lg, int frame, int x, int y,
 return 0;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 GLint GLText (const char *str,
 	      const int fg,
 	      const void *font,
@@ -954,7 +959,10 @@ GLint GLText (const char *str,
 {
 return 0;
 }
-void GLPrintPostScriptColor(void *rgb)
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void GLPrintPostScriptColor (void *rgb)
 {
 }
 #endif /* _GL */

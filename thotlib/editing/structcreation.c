@@ -2512,13 +2512,7 @@ PtrElement CreateOrPasteInText (ThotBool create, ThotBool paste,
 	pNew = CreateSibling (pDoc, lastSel, FALSE, TRUE, typeNum, pSS, FALSE);
      }
    else if (paste)
-     {
-	pNew = NULL;
-	if (ThotLocalActions[T_pastesibling] != NULL)
-	   (*ThotLocalActions[T_pastesibling]) (&pNew, pDoc, lastSel, FALSE, TRUE,
-				FirstSavedElement->PeElement, pFree, &char1,
-						0, NULL);
-     }
+     pNew = NULL;
    else
       /* inclusion */
      {
@@ -3652,15 +3646,7 @@ void CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
 					 TRUE, TRUE, ElemTypeAction[chosen],
 					      SSchemaAction[chosen], FALSE);
 			       else if (paste)
-				 {
-				    newsel = NULL;
-				    if (ThotLocalActions[T_pastesibling] != NULL)
-				       (*ThotLocalActions[T_pastesibling])
-					  (&newsel, pDoc, ElemAction[chosen],
-					   TRUE, TRUE, FirstSavedElement->PeElement,
-					   &pFree, &char1, ElemTypeAction[chosen],
-					   SSchemaAction[chosen]);
-				 }
+				 newsel = NULL;
 			       else
 				  /* inclusion */
 				  newsel = CreateSibling (pDoc, ElemAction[chosen],
@@ -3677,15 +3663,7 @@ void CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
 					       TRUE, ElemTypeAction[chosen],
 					      SSchemaAction[chosen], FALSE);
 				    else if (paste)
-				      {
-					 newsel = NULL;
-					 if (ThotLocalActions[T_pastesibling] != NULL)
-					    (*ThotLocalActions[T_pastesibling])
-					       (&newsel, pDoc, firstSel, FALSE, TRUE,
-						FirstSavedElement->PeElement, &pFree,
-					     &char1, ElemTypeAction[chosen],
-						SSchemaAction[chosen]);
-				      }
+				      newsel = NULL;
 				    else
 				       /* inclusion */
 				       newsel = CreateSibling (pDoc, firstSel, FALSE, TRUE,
@@ -3716,16 +3694,7 @@ void CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
 						     ElemTypeAction[chosen],
 					      SSchemaAction[chosen], FALSE);
 				      else if (paste)
-					{
-					   newsel = NULL;
-					   if (ThotLocalActions[T_pastesibling] != NULL)
-					      (*ThotLocalActions[T_pastesibling])
-						 (&newsel, pDoc, pFollow, TRUE, TRUE,
-					       FirstSavedElement->PeElement,
-						  &pFree, &char1,
-						  ElemTypeAction[chosen],
-						  SSchemaAction[chosen]);
-					}
+					newsel = NULL;
 				      else
 					 /* inclusion */
 					 newsel = CreateSibling (pDoc, pFollow, TRUE, TRUE,
@@ -3756,15 +3725,7 @@ void CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
 					FALSE, TRUE, ElemTypeAction[chosen],
 					      SSchemaAction[chosen], FALSE);
 			       else if (paste)
-				 {
-				    newsel = NULL;
-				    if (ThotLocalActions[T_pastesibling] != NULL)
-				       (*ThotLocalActions[T_pastesibling])
-					  (&newsel, pDoc, ElemAction[chosen],
-					   FALSE, TRUE, FirstSavedElement->PeElement,
-					   &pFree, &char1, ElemTypeAction[chosen],
-					   SSchemaAction[chosen]);
-				 }
+				 newsel = NULL;
 			       else
 				  newsel = CreateSibling (pDoc, ElemAction[chosen],
 					FALSE, TRUE, ElemTypeAction[chosen],
@@ -3800,11 +3761,7 @@ void CreatePasteIncludeMenuCallback (ThotBool create, ThotBool paste, int item)
 				   }
 			      }
 			    else if (paste)
-			      {
-				 newsel = NULL;
-				 if (ThotLocalActions[T_pastewithin] != NULL)
-				    (*ThotLocalActions[T_pastewithin]) (&newsel, pDoc, pEl, &pFree);
-			      }
+			      newsel = NULL;
 			    else
 			       /* inclusion */
 			      {

@@ -555,27 +555,23 @@ static void PrintPoscriptImage (PictInfo *Image,
  Drawpixel Method for software implementation, as it's much faster for those
  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
-static void GL_TexturePartialMap (void *ImagePt, 
-			   int xFrame, int yFrame, 
-			   int w, int h, int frame)
+static void GL_TexturePartialMap (PictInfo *desc, int xFrame, int yFrame, 
+				  int w, int h, int frame)
 {  
-  PictInfo *Image;
   float    texH, texW;
     
-  Image = ImagePt;
-  texH = Image->TexCoordH * ((float)(Image->PicHeight - h) / Image->PicHeight);
-  texW = Image->TexCoordW * ((float)(w) / Image->PicWidth);
+  texH = desc->TexCoordH * ((float)(desc->PicHeight - h) / desc->PicHeight);
+  texW = desc->TexCoordW * ((float)(w) / desc->PicWidth);
   GL_SetPicForeground ();
   if (PrintingGL)
     {
-      PrintPoscriptImage (Image, xFrame, yFrame, w, h, frame);
+      PrintPoscriptImage (desc, xFrame, yFrame, w, h, frame);
     }
   else
     {
       if (GL_NotInFeedbackMode ())
 	{
-	  glBindTexture (GL_TEXTURE_2D, 
-			 Image->TextureBind); 	
+	  glBindTexture (GL_TEXTURE_2D, desc->TextureBind); 	
 	  glEnable (GL_TEXTURE_2D);
 	}
 
@@ -591,44 +587,36 @@ static void GL_TexturePartialMap (void *ImagePt,
       glTexCoord2f (texW, texH); 
       glVertex2i   (xFrame + w, yFrame + h);
       /* lower right */
-      glTexCoord2f (texW, Image->TexCoordH); 
+      glTexCoord2f (texW, desc->TexCoordH); 
       glVertex2i   (xFrame + w, yFrame); 
       /* upper left */
-      glTexCoord2f (0,  Image->TexCoordH); 
+      glTexCoord2f (0,  desc->TexCoordH); 
       glVertex2i   (xFrame,yFrame);     
       glEnd ();	
 
       /* State disabling */
       if (GL_NotInFeedbackMode ())
-	{
-	  glDisable (GL_TEXTURE_2D); 
-	}
+	glDisable (GL_TEXTURE_2D); 
     }
 }
+
 /*----------------------------------------------------------------------
  GL_TextureMap : map texture on a Quad (sort of a rectangle)
  Drawpixel Method for software implementation, as it's much faster for those
  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
-void GL_TextureMap (void *ImagePt, 
-		    int xFrame, int yFrame, 
+void GL_TextureMap (PictInfo *desc, int xFrame, int yFrame, 
 		    int w, int h, int frame)
 {  
-  PictInfo *Image;
-  
-  Image = ImagePt;  
   GL_SetPicForeground (); 
 
   if (PrintingGL)
-    {
-      PrintPoscriptImage (Image, xFrame, yFrame, w, h, frame);
-    }
+    PrintPoscriptImage (desc, xFrame, yFrame, w, h, frame);
   else
     {
       if (GL_NotInFeedbackMode ())
 	{
-	  glBindTexture (GL_TEXTURE_2D, 
-			 Image->TextureBind);
+	  glBindTexture (GL_TEXTURE_2D, desc->TextureBind);
 	  glEnable (GL_TEXTURE_2D);
 	}
       /* Not sure of the vertex order 
@@ -637,26 +625,368 @@ void GL_TextureMap (void *ImagePt,
       /* Texture coordinates are unrelative 
 	 to the size of the square */      
       /* lower left */
-      glTexCoord2i (0,    0); 
-      glVertex2i (xFrame,     yFrame + h);
+      glTexCoord2i (0, 0); 
+      glVertex2i (xFrame, yFrame + h);
       /* upper right*/
-      glTexCoord2f (Image->TexCoordW, 0.0); 
+      glTexCoord2f (desc->TexCoordW, 0.0); 
       glVertex2i (xFrame + w, yFrame + h);
       /* lower right */
-      glTexCoord2f (Image->TexCoordW, Image->TexCoordH); 
+      glTexCoord2f (desc->TexCoordW, desc->TexCoordH); 
       glVertex2i (xFrame + w, yFrame); 
       /* upper left */
-      glTexCoord2f (0.0,  Image->TexCoordH); 
-      glVertex2i (xFrame,     yFrame);      
+      glTexCoord2f (0.0, desc->TexCoordH); 
+      glVertex2i (xFrame, yFrame);      
       glEnd ();	
       /* State disabling */
       if (GL_NotInFeedbackMode ())
-	{
-	  glDisable (GL_TEXTURE_2D); 
-	}
+	glDisable (GL_TEXTURE_2D); 
     }
 }
+
+/*----------------------------------------------------------------------
+  GetBoundingBox : Get Bounding box of a group
+  ----------------------------------------------------------------------*/
+static void GetRelativeBoundingBox (PtrAbstractBox pAb, int *x, int *y,
+				    int *width, int *height)
+{
+  PtrBox              box;
+  int xprime, yprime, w, h;
+  
+  while (pAb != NULL)
+    { 
+      if (pAb->AbLeafType != LtCompound)
+	{
+	  box = pAb->AbBox;
+	  xprime = box->BxXOrg + box->BxLMargin + box->BxLBorder +
+	    box->BxLPadding;
+	  yprime = box->BxYOrg + box->BxTMargin + box->BxTBorder +
+	    box->BxTPadding;
+	  if (xprime > 0)
+	    {	    
+	      if (*x == -1)
+		*x = xprime;
+	      else
+		if (xprime < *x)
+		  {
+		    *width += *x - xprime;
+		    *x = xprime;
+		  }
+	    }
+	  if (yprime > 0)
+	    {	   
+	      if (*y == -1)
+		*y = yprime;
+	      else
+		if (yprime < *y)
+		  {
+		    *height += *y - yprime;
+		    *y = yprime;
+		  }
+	    }
+	  w = box->BxXOrg + box->BxWidth - box->BxLMargin - box->BxRMargin;
+	  h = box->BxYOrg + box->BxHeight - box->BxTMargin - box->BxBMargin;
+	  if ((*x + *width) < w)
+	    *width = w - *x;
+	  if ((*y + *height) < h)
+	    *height = h - *y;
+	}      
+      GetRelativeBoundingBox (pAb->AbFirstEnclosed, x, y, width, height);
+      pAb = pAb->AbNext;
+    }
+}
+
+/*----------------------------------------------------------------------
+  LimitBoundingBoxToClip : prevent accessing out of screen memory
+  ----------------------------------------------------------------------*/
+static ThotBool LimitBoundingBoxToClip (int *x, int *y,
+                               int *width, int *height, 
+			       int Clipx, int Clipy,
+			       int ClipW, int ClipH)
+{
+  if (*y > (Clipy+ClipH) ||
+      *x > (Clipx+ClipW))
+    return FALSE;  
+
+  if ((*x + *width) < Clipx ||
+      (*y + *height) < Clipy)
+    return FALSE;  
+
+  if (*x < Clipx)
+    {
+      *width += Clipx - *x;
+      *x = Clipx; 
+    }
+  if (*y < Clipy)
+    {
+      *height += Clipy - *y;
+      *y = Clipy;
+    }  
+  if ((*x + *width) > (Clipx+ClipW))
+      *width = (Clipx+ClipW) - *x;
+  if ((*y + *height) > (Clipy+ClipH))
+      *height = (Clipy+ClipH) - *y;  
+
+  if (*x >= 0 && *y >= 0 && 
+      *width > 0 && *height > 0)      
+      return TRUE;    
+  else
+    return FALSE;  
+}
+
+/*----------------------------------------------------------------------
+  GetBoundingBox : Get Bounding box of a group in absolute coord
+  ----------------------------------------------------------------------*/
+static ThotBool GetAbsoluteBoundingBox (PtrAbstractBox pAb, 
+					int *x, int *y, 
+					int *width, int *height, 
+					int frame,
+					int xmin, int xmax, int ymin, int ymax)
+{
+  ViewFrame          *pFrame;
+PtrBox              box;
+
+  pFrame = &ViewFrameTable[frame - 1];
+  box = pAb->AbBox;
+  if (box == NULL)
+    return FALSE;
+
+  *x = box->BxClipX;
+  *y = box->BxClipY;
+  *width = box->BxClipW;
+  *height = box->BxClipH;
+
+  if (LimitBoundingBoxToClip (x, y,
+			      width, height, 
+			      0, 0,
+			      FrameTable[frame].FrWidth, 
+			      FrameTable[frame].FrHeight))
+    return LimitBoundingBoxToClip (x, y,
+				   width, height, 
+				   xmin - pFrame->FrXOrg, ymin - pFrame->FrYOrg,
+				   xmax - xmin, ymax - ymin);
+  return FALSE;    
+}
 #endif /* _GL */
+
+/*----------------------------------------------------------------------
+  DisplayOpaqueGroup display a translucent Group
+  ----------------------------------------------------------------------*/
+void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
+			 int xmin, int xmax, int ymin, int ymax, 
+			 ThotBool do_display_background)
+{
+#ifdef _GL
+  int x, y, width, height; 
+  double *m;
+  
+  if (GetAbsoluteBoundingBox (pAb, &x, &y, &width, &height, 
+			      frame, xmin, xmax, ymin, ymax))  
+    {     
+      m = TtaGetMemory (16 * sizeof (double));      
+      glGetDoublev (GL_MODELVIEW_MATRIX, m);
+      glLoadIdentity (); 
+
+      if (do_display_background)
+	{
+	  GL_SetFillOpacity (1000);     
+	  GL_SetOpacity (1000);
+	  GL_SetStrokeOpacity (1000);
+	  
+	  GL_TextureMap (pAb->AbBox->Pre_computed_Pic,  
+			 x, y, width, height, frame); 
+	  
+	}
+      GL_SetFillOpacity (pAb->AbOpacity);
+      GL_SetOpacity (pAb->AbOpacity);
+      GL_SetStrokeOpacity (pAb->AbOpacity);
+
+     
+      GL_TextureMap (pAb->AbBox->Post_computed_Pic,
+		     x, y, width, height, frame);
+
+      GL_SetFillOpacity (1000);
+      GL_SetOpacity (1000);
+      GL_SetStrokeOpacity (1000);
+
+      glLoadMatrixd (m);      
+      TtaFreeMemory (m);      
+    }
+#endif /*_GL*/
+}
+
+/*----------------------------------------------------------------------
+  OpaqueGroupTextureFree
+  ----------------------------------------------------------------------*/
+void OpaqueGroupTextureFree (PtrAbstractBox pAb, int frame)
+{
+#ifdef _GL
+  PtrBox              box;
+
+  box = pAb->AbBox;
+  if (box)
+    {
+      if (GL_prepare (frame))
+	{
+	  FreeGlTextureNoCache (pAb->AbBox->Pre_computed_Pic);
+	  FreeGlTextureNoCache (pAb->AbBox->Post_computed_Pic);
+	}  
+      TtaFreeMemory (pAb->AbBox->Pre_computed_Pic);
+      TtaFreeMemory (pAb->AbBox->Post_computed_Pic); 
+      pAb->AbBox->Pre_computed_Pic = NULL; 
+      pAb->AbBox->Post_computed_Pic = NULL;
+    }
+#endif /*_GL*/
+}
+
+/*----------------------------------------------------------------------
+  ClearOpaqueGroup clear an area before displaying a non-opaque Group
+  ----------------------------------------------------------------------*/
+void ClearOpaqueGroup (PtrAbstractBox pAb, int frame, 
+		       int xmin, int xmax, int ymin, int ymax)
+{
+#ifdef _GL
+  int x, y, width, height;
+  int xprevclip, yprevclip, heightprevclip, widthprevclip;  
+ 
+  if (GetAbsoluteBoundingBox (pAb, &x, &y, &width, &height, 
+			      frame, xmin, xmax, ymin, ymax))
+    {
+      y = FrameTable[frame].FrHeight
+	+ FrameTable[frame].FrTopMargin
+	- (y + height);
+      GL_GetCurrentClipping (&xprevclip, &yprevclip, 
+			     &widthprevclip, &heightprevclip);
+      GL_SetClipping (x, y, width, height);  
+
+     /* glClearColor (0, 0, 0, 0);  */
+
+      glClear (GL_COLOR_BUFFER_BIT); 
+      GL_UnsetClipping (xprevclip, yprevclip, 
+			widthprevclip, heightprevclip);
+    }
+#endif /*_GL*/
+}
+
+/*----------------------------------------------------------------------
+  OpaqueGroupTexturize display an non-opaque Group
+  ----------------------------------------------------------------------*/
+void OpaqueGroupTexturize (PtrAbstractBox pAb, int frame,
+			   int xmin, int xmax, int ymin, int ymax,
+                           ThotBool Is_Pre)
+{
+#ifdef _GL
+  int x, y, width, height;
+  
+  if (GetAbsoluteBoundingBox (pAb, &x, &y, &width, &height, 
+			      frame, xmin, xmax, ymin, ymax))
+    {
+      y = FrameTable[frame].FrHeight
+	+ FrameTable[frame].FrTopMargin
+	- (y + height);
+      if (Is_Pre)
+	pAb->AbBox->Pre_computed_Pic = Group_shot (x, y,
+						   width, height,
+						   frame, FALSE);
+      else 
+	pAb->AbBox->Post_computed_Pic = Group_shot (x, y,
+						    width, height,
+						    frame, TRUE);
+    }
+#endif /*_GL*/
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box,
+			  int frame, ThotBool selected)
+{
+#ifdef _GL
+  GradDef            *gradient;
+  int                x, y, width, height;
+  unsigned char      *pattern;
+
+  gradient = pAb->AbElement->ElParent->ElGradient;
+  if (gradient->next == NULL)
+    return FALSE;
+  
+  /* orientation*/
+
+  /*
+gradient->x2 - gradient->x1;
+gradient->y2 - gradient->y1;
+hypot ()
+
+  */
+  
+  x = box->BxXOrg;
+  y = box->BxYOrg;
+  width = box->BxWidth;
+  height = box->BxHeight;
+  
+
+  /* if gradient pict not computed*/
+  if (box->Pre_computed_Pic == NULL)
+  {
+    /*create the gradient pattern and put it on a texture*/
+    pattern = fill_linear_gradient_image (gradient->next, width, height);
+    box->Pre_computed_Pic = PutTextureOnImageDesc (pattern, width, height);    
+  }
+    
+  /* GL_GetCurrentClipping (&clipx, &clipy, &clipw, &cliph); */
+  /* if (box->BxClipW && box->BxClipH) */
+  /*     GL_SetClipping (box->BxClipX, box->BxClipY, box->BxClipW, box->BxClipH); */
+  /*   else */
+  /*     GL_SetClipping (box->BxXOrg, box->BxYOrg, box->BxWidth, box->BxHeight); */
+  
+  /* Activate stenciling */
+  glEnable (GL_STENCIL_TEST);
+  glClear(GL_STENCIL_BUFFER_BIT);
+  glStencilFunc (GL_ALWAYS, 1, 1);
+  glStencilOp (GL_REPLACE, GL_REPLACE, GL_REPLACE);
+
+  /* draw the geometric shape to get boundings in the 
+     stencil buffer*/
+
+  if (pAb->AbLeafType == LtGraphics)
+    /* Graphics */
+    DisplayGraph (box, frame, selected);
+  else if (pAb->AbLeafType == LtPolyLine)
+    /* Polyline */
+    DisplayPolyLine (box, frame, selected);
+  else if (pAb->AbLeafType == LtPath)
+    /* Path */
+    DisplayPath (box, frame, selected);
+
+  /*Activate zone where gradient will be drawn*/
+  glClear (GL_DEPTH_BUFFER_BIT);
+  glStencilFunc (GL_EQUAL, 1, 1);
+  glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
+
+  /*then draw the gradient*/
+  GL_TextureMap (box->Pre_computed_Pic, x, y, width, height, frame);
+
+  /* disable stenciling, */
+  glStencilFunc (GL_NOTEQUAL, 1, 1);
+  glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
+  
+  /*then draw the shape 
+    (again, but really, this time)*/
+  if (pAb->AbLeafType == LtGraphics)
+    /* Graphics */
+    DisplayGraph (box, frame, selected);
+  else if (pAb->AbLeafType == LtPolyLine)
+    /* Polyline */
+    DisplayPolyLine (box, frame, selected);
+  else if (pAb->AbLeafType == LtPath)
+    /* Path */
+    DisplayPath (box, frame, selected);  
+
+  glDisable (GL_STENCIL_TEST);
+  /* GL_UnsetClipping (clipx, clipy, clipw, cliph); */
+#endif /*_GL*/
+  return TRUE;
+}
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------

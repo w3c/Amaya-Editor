@@ -376,6 +376,7 @@ void GL_UnsetClippingRestore (ThotBool Restore)
       height_previous_clip = 0;
     }
 }
+
 /*----------------------------------------------------------------------
   GL_UnsetClipping : free the drawing from clipping
   ----------------------------------------------------------------------*/
@@ -394,6 +395,7 @@ void GL_UnsetClipping  (int x, int y, int width, int height)
       height_previous_clip = 0;
     }
 }
+
 /*----------------------------------------------------------------------
   GL_GetCurrentClipping : get  the clipping
   ----------------------------------------------------------------------*/
@@ -404,19 +406,7 @@ void GL_GetCurrentClipping (int *x, int *y, int *width, int *height)
   *width = width_previous_clip;
   *height= height_previous_clip;
 }
-void GL_SetPrintForeground (int fg)
-{
-  unsigned short red, green, blue;
-  float rgb[3];
 
-  TtaGiveThotRGB (fg, &red, &green, &blue);
-  rgb[0] = (float) red;
-  rgb[1] = (float) green;
-  rgb[2] = (float) blue;
- 
-  GLPrintPostScriptColor(&rgb);
-    
-} 
 /*----------------------------------------------------------------------
   GL_SetForeground : set color before drawing a or many vertex
   ----------------------------------------------------------------------*/
