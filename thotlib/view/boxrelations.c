@@ -2093,20 +2093,29 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				val = PixelValue (pDimAb->DimValue, UnPercent,
 						  (PtrAbstractBox) i, 0);
 			      else /* UnAuto */
+				{
 				val = PixelValue (100, UnPercent, 
 						  (PtrAbstractBox) i, 0);
 			      /* the rule gives the outside value */
-			      val = val - dx;
+				val = val - dx;
+				}
 			      if (pParentAb)
 				InsertDimRelation (pParentAb->AbBox, pBox,
 						   pDimAb->DimSameDimension, horizRef,
 						   inLine);
+			    }
+			  else
+			    {
+			      val = PixelValue (pDimAb->DimValue, UnPercent,
+						(PtrAbstractBox) pParentAb->AbBox->BxW, 0);
+			      val = val - dx;
 			    }
 			}
 		      else
 			/* explicit value */
 			val = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb,
 					  ViewFrameTable[frame - 1].FrMagnification);
+
 		      ResizeWidth (pBox, pBox, NULL, val - pBox->BxW, 0, 0, 0, frame);
 		    }
 		  else

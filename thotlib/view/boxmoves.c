@@ -2217,6 +2217,10 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 				val = pBox->BxWidth;
 			      val = val * pAb->AbWidth.DimValue / 100;
 			      val = val - box->BxW;
+			      if (pBox->BxType == BoCell)
+				/* remove margins borders and paddings in that case */
+				val = val - box->BxLMargin - box->BxLBorder - box->BxLPadding
+				  - box->BxLMargin  - box->BxRBorder - box->BxRPadding;
 			    }
 			  else
 			    {
