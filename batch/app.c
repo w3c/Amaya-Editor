@@ -1633,6 +1633,7 @@ char              **argv;
 		       SchemaPath[0] = '\0';
 		       strcpy (srceFileName, fileName);
 		       GenerateApplication (srceFileName, pAppli);
+		       strcpy (srceFileName, fileName);
 		       if (strcmp (srceFileName, "EDITOR") != 0)
 			  WriteDefineFile (srceFileName);
 		    }
