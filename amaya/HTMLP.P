@@ -3379,10 +3379,10 @@ BOXES
 
  ATTR_NAME: BEGIN
 	Content: Text ' name=';
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
 	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
@@ -3390,10 +3390,10 @@ BOXES
 	END;
  VALUE_NAME: BEGIN
 	Content: (NAME);
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
 	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
@@ -5933,7 +5933,7 @@ RULES
 		END;
 	IN Links_view BEGIN
 		MarginTop: 0;
-		MarginLeft: 0;
+		MarginLeft: 0.5;
 		MarginRight: 0;
 		Visibility: Enclosing =;
 		Height: Enclosed . Height;
@@ -6094,21 +6094,21 @@ RULES
 	NoBreak2 : 2;
 #endif
 	VertPos: Top = Previous NOT MAP . Bottom;
-	Width: Enclosing . Width;
 	MarginTop: VSpaceBeforeH1;
 	MarginBottom: 0.2;
+	Width: Enclosing . Width;
 	Size: Enclosing + 6;
 	Weight: Bold;
 	Hyphenate: No;
 	CreateBefore(H1_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
 		MarginTop: 0;
 		MarginBottom: 0;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		VertPos: Top = Previous . Bottom;
 		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
 		Size: Enclosing =;
 		Weight: Enclosing =;
 		NoLine;
@@ -6129,7 +6129,6 @@ RULES
 		Width: Enclosing . Width - 1.2;
 #endif
 		MarginTop: VSpaceInToC;
-		MarginBottom: 1.7;
 		Size: Enclosing +2;
 		Visibility: 10;
 		END;
@@ -6146,16 +6145,17 @@ RULES
 	CreateAfter (HeadingPageNumber);
 #endif
 	VertPos: Top = Previous NOT MAP . Bottom;
+	MarginTop: VSpaceBeforeH2;
 	Width: Enclosing . Width;
 	Size: Enclosing + 4;
 	Weight: Bold;
 	CreateBefore(H2_S);
 	CreateWith(VerticalLine);
-	MarginTop: VSpaceBeforeH2;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
+		MarginTop: 0;
 		Size: Enclosing =;
 		Weight: Enclosing =;
 		NoLine;
@@ -6175,7 +6175,7 @@ RULES
 		Size: Enclosing =;
 		Weight: Enclosing =;
 		Visibility: 9;
-		VertPos: Top = Previous . Bottom + VSpaceInToC;
+		MarginTop: VSpaceInToC;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -6221,7 +6221,7 @@ RULES
 		Size: Enclosing =;
 		Weight: Enclosing =;
 		Visibility: 8;
-		VertPos: Top = Previous . Bottom + VSpaceInToC;
+		MarginTop: VSpaceInToC;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -6268,7 +6268,6 @@ RULES
 		Size: Enclosing =;
 		Weight: Enclosing =;
 		Visibility: 7;
-		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -6309,7 +6308,6 @@ RULES
 		HorizPos: Left = Enclosing . Left + 4;
 		Size: Enclosing =;
 		Visibility: 6;
-		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -6350,7 +6348,6 @@ RULES
 		HorizPos: Left = Enclosing . Left + 5;
 		Size: Enclosing =;
 		Visibility: 5;
-		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		END;
 	IN Links_view
 		Visibility: 0;
@@ -7906,7 +7903,7 @@ RULES
 #ifdef PAGE
 	PageBreak: No;
 #endif
-	VertPos: Top = Previous not Table_head . Bottom + 0.1;
+	VertPos: Top = Previous . Bottom + 0.1;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderRightStyle: Solid;
@@ -7928,7 +7925,7 @@ RULES
 #ifdef PAGE
 	PageBreak: Yes;
 #endif
-	VertPos: Top = Previous not Table_head . Bottom + 0.1;
+	VertPos: Top = Previous . Bottom + 0.1;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderRightStyle: Solid;
