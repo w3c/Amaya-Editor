@@ -22,12 +22,9 @@
 #include "MathMLbuilder_f.h"
 #include "Mathedit_f.h"
 
-static Element      CurrentRow = NULL;
 static Element      CurrentColumn = NULL;
-static Element      CurrentCell = NULL;
 static int          PreviousColspan;
 static int          PreviousRowspan;
-static ThotBool     NewTable = FALSE;
 
 /*----------------------------------------------------------------------
   GetSiblingRow
@@ -908,7 +905,6 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
   int                 i, rowType;
   ThotBool            inMath;
 
-  NewTable = FALSE;
   if (table == NULL)
     return;
   colElement = (Element*)TtaGetMemory (sizeof (Element) * MAX_COLS);
@@ -1919,28 +1915,17 @@ void CellCreated (NotifyElement * event)
   cell = event->element;
   doc = event->document;
   row = TtaGetParent (cell);
-  if (row == CurrentRow)
-    {
-      /* the new cell belongs to the newly created row. Already processed */
-      /* by RowCreated. */
-      if (cell == CurrentCell)
-	CurrentRow = NULL;
-    }
-  else
-    /* a new cell in an existing row */
-    {
-      /* the creation of the cell must be registered after
-	 the created colhead */
-      TtaCancelLastRegisteredOperation (doc);
-      NewCell (cell, doc, TRUE, TRUE);
-      TtaRegisterElementCreate (cell, doc);
-      /* change the value of "info" in the latest cell
-	 deletion recorded in the Undo queue. The goal is to
-	 allow procedure CellPasted to regenerate only one
-	 column head when undoing the operation */
-      TtaChangeInfoLastRegisteredElem (doc, 3);
-      HandleColAndRowAlignAttributes (row, doc);
-    }
+  /* the creation of the cell must be registered after
+     the created colhead */
+  TtaCancelLastRegisteredOperation (doc);
+  NewCell (cell, doc, TRUE, TRUE);
+  TtaRegisterElementCreate (cell, doc);
+  /* change the value of "info" in the latest cell
+     deletion recorded in the Undo queue. The goal is to
+     allow procedure CellPasted to regenerate only one
+     column head when undoing the operation */
+  TtaChangeInfoLastRegisteredElem (doc, 3);
+  HandleColAndRowAlignAttributes (row, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -2340,33 +2325,6 @@ void TablePasted (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
-  TableCreated                                            
-  ----------------------------------------------------------------------*/
-void TableCreated (NotifyElement * event)
-{
-   Element             table;
-   Document            doc;
-   ElementType         elType;
-   AttributeType       attrType;
-   Attribute           attr;
-
-   table = event->element;
-   doc = event->document;
-   elType = TtaGetElementType (table);
-   attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = HTML_ATTR_Border;
-   attr = TtaGetAttribute (table, attrType);
-   if (attr == NULL)
-     {
-	attr = TtaNewAttribute (attrType);
-	if (attr != NULL)
-	   TtaAttachAttribute (table, attr, doc);
-     }
-   TtaSetAttributeValue (attr, 1, table, doc);
-   NewTable = TRUE;
-}
-
-/*----------------------------------------------------------------------
   CopyRow:
   A table row of has been copied. Generate empty cells where appropriate
   in the new copy.
@@ -2595,28 +2553,12 @@ void RowCreated (NotifyElement *event)
   else
     elType.ElTypeNum = HTML_EL_Table;
   table = TtaGetTypedAncestor (row, elType);
-  if (NewTable)
-    {
-      /* the table element is just created now
-       We need to create the table_head element */
-      if (inMath)
-	CheckMTable (table, doc, FALSE);
-      else
-	CheckTable (table, doc);
-      NewTable = FALSE;
-    }
-  else
-    {
-      /* avoid processing the pasted cells in the created row */
-      CurrentRow = row;
-      /* remove the cell created by the editor */
-      cell = TtaGetFirstChild (row);
-      if (cell)
-	TtaDeleteTree (cell, doc);
-      UpdateRowspanForRow (row, doc, inMath, TRUE);
-    }
+  /* remove the cell created by the editor */
+  cell = TtaGetFirstChild (row);
+  if (cell)
+    TtaDeleteTree (cell, doc);
+  UpdateRowspanForRow (row, doc, inMath, TRUE);
   HandleColAndRowAlignAttributes (row, doc);
-  CurrentCell = TtaGetLastChild (row);
 }
 
 /*----------------------------------------------------------------------
@@ -2751,8 +2693,6 @@ void RowPasted (NotifyElement * event)
       }
 
   HandleColAndRowAlignAttributes (row, doc);
-  /* avoid processing the cells of the created row */
-  CurrentCell = TtaGetLastChild (row);
   /* Check attribute NAME or ID in order to make sure that its value */
   /* is unique in the document */
   MakeUniqueName (row, doc);

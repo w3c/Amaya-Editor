@@ -77,7 +77,6 @@ ELEMENTS
 
    Table:
 	BEGIN
-	ElemNew.Post -> TableCreated;
 	ElemPaste.Post -> TablePasted;
 	END;
 
