@@ -418,11 +418,12 @@ char*           GetXMLAttributeName (AttributeType attrType,
 		(ptr[i].XMLelement[0] == EOS ||
 		 !strcmp (ptr[i].XMLelement, tag)))
 	      {
-		if (doc == 0 ||
-		    (ptr[i].Level & ParsingLevel[doc])) 
-		  return ptr[i].XMLattribute;
-		else
+		if (doc != 0 &&
+		    ParsingLevel[doc] != L_Other &&
+		    !(ptr[i].Level & ParsingLevel[doc]))
 		  invalid = TRUE;
+		else
+		  return ptr[i].XMLattribute;
 	      }
 	    i++;
 	  }
