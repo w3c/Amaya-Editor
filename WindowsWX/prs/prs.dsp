@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\batch\f" /D "NDEBUG" /D "_I18N_" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "__STDC__" /D "_WINDOWS_COMPILERS" /D "_SVGLIB" /D "_SVGANIM" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /YX /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\batch\f" /D "_I18N_" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "__STDC__" /D "_WINDOWS_COMPILERS" /D "_SVGLIB" /D "_SVGANIM" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WINGUI" /YX /FD /TP /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x40c /d "NDEBUG"
@@ -52,7 +52,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386 /nodefaultlib:"libcd.lib"
+# ADD LINK32 wxbaseu.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386 /nodefaultlib:"libcmt" /libpath:"..\..\..\wxWindows-2.4.2\lib"
 
 !ELSEIF  "$(CFG)" == "prs - Win32 Debug"
 
@@ -68,7 +68,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\wxWindows-2.4.2\include" /I "..\..\wxWindows-2.4.2\lib\mswud" /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\batch\f" /D "_I18N_" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "__STDC__" /D "_WINDOWS_COMPILERS" /D "_SVGLIB" /D "_SVGANIM" /D "_DEBUG" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WINGUI" /FD /TP /c
+# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\batch\f" /D "_I18N_" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "__STDC__" /D "_WINDOWS_COMPILERS" /D "_SVGLIB" /D "_SVGANIM" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WINGUI" /FD /TP /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x40c /d "_DEBUG"
@@ -78,7 +78,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 wxmswud.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /nodefaultlib:"libcmtd" /pdbtype:sept /libpath:"C:\src\wxWindows-2.4.2\lib"
+# ADD LINK32 wxbaseud.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /nodefaultlib:"libcmtd" /pdbtype:sept /libpath:"C:\src\wxWindows-2.4.2\lib" /libpath:"..\..\..\wxWindows-2.4.2\lib"
 
 !ENDIF 
 

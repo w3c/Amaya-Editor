@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\..\libwww\Library\src" /I "..\..\tablelib\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /I "..\..\freetype-2.1.0\include" /D "NDEBUG" /D "_GLPRINT" /D "__STDC__" /D "_WIN_PRINT" /D "PAGINEETIMPRIME" /D "STDC_HEADERS" /D "_I18N_" /D "_SVG" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /YX /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\..\libwww\Library\src" /I "..\..\tablelib\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /I "..\..\freetype-2.1.0\include" /D "_GLPRINT" /D "_WIN_PRINT" /D "PAGINEETIMPRIME" /D "STDC_HEADERS" /D "_I18N_" /D "_SVG" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /YX /FD /TP /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD BASE RSC /l 0x40c /d "NDEBUG"
@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 freetype.lib comctl32.lib wsock32.lib user32.lib gdi32.lib advapi32.lib comdlg32.lib shell32.lib winspool.lib opengl32.lib glu32.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libc" /libpath:"..\..\freetype-2.1.0\objs\\"
+# ADD LINK32 freetype206ST.lib wxmswu.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libcmt" /libpath:"..\..\freetype-2.1.0\objs\\" /libpath:"..\..\..\wxWindows-2.4.2\lib"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "thotprinter - Win32 Debug"
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MDd /W3 /vd0 /GR /GX /ZI /Od /I "..\..\wxWindows-2.4.2\include" /I "..\..\wxWindows-2.4.2\lib\mswud" /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\..\libwww\Library\src" /I "..\..\tablelib\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /I "..\..\freetype-2.1.0\include" /D "_GLPRINT" /D "_WIN_PRINT" /D "PAGINEETIMPRIME" /D "STDC_HEADERS" /D "_I18N_" /D "_SVG" /D "_DEBUG" /D "__WXMSW__" /D WINVER=0x0400 /D "UNICODE" /D "_UNICODE" /D "__WXDEBUG__" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D WINVER=0x400 /D wxUSE_GUI=1 /FR /FD /TP /c
+# ADD CPP /nologo /MTd /W3 /vd0 /GR /GX /ZI /Od /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\..\libwww\Library\src" /I "..\..\tablelib\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /I "..\..\freetype-2.1.0\include" /D "_GLPRINT" /D "_WIN_PRINT" /D "PAGINEETIMPRIME" /D "STDC_HEADERS" /D "_I18N_" /D "_SVG" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /FR /FD /TP /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD BASE RSC /l 0x40c /d "_DEBUG"
@@ -80,7 +80,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 freetype.lib wxmswud.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib /nologo /subsystem:windows /incremental:no /map /debug /debugtype:both /machine:I386 /nodefaultlib:"libcmt.lib" /nodefaultlib:"libc.lib" /pdbtype:sept /libpath:"..\..\freetype-2.1.0\objs\\" /libpath:"C:\src\wxWindows-2.4.2\lib"
+# ADD LINK32 freetype.lib wxmswud.lib wsock32.lib comctl32.lib rpcrt4.lib winmm.lib advapi32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib /nologo /subsystem:windows /incremental:no /map /debug /debugtype:both /machine:I386 /nodefaultlib:"libcmtd" /pdbtype:sept /libpath:"..\..\freetype-2.1.0\objs\\" /libpath:"..\..\..\wxWindows-2.4.2\lib"
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 

@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\..\thotlib\internals\f" /D "NDEBUG" /D "_I18N_" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "WINDOWS_COMPILERS" /D "_SVGLIB" /D "_SVGANIM" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /YX /FD /c
+# ADD CPP /nologo /MT /W2 /GX /O2 /I "..\..\wxWindows-2.4.2\include" /I "..\..\wxWindows-2.4.2\lib\mswu" /I "..\..\thotlib\internals\f" /D "_I18N_" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "WINDOWS_COMPILERS" /D "_SVGLIB" /D "_SVGANIM" /D "_WINDOWS" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x40c /d "NDEBUG"
@@ -69,8 +69,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\wxWindows-2.4.2\include" /I "..\..\wxWindows-2.4.2\lib\mswud" /I "..\..\thotlib\internals\f" /D "_I18N_" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "WINDOWS_COMPILERS" /D "_SVGLIB" /D "_SVGANIM" /D "_DEBUG" /D "__WXMSW__" /D WINVER=0x0400 /D "UNICODE" /D "_UNICODE" /D "__WXDEBUG__" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /FD /c
-# SUBTRACT CPP /YX
+# ADD CPP /nologo /MTd /W2 /GR /GX /ZI /Od /I "..\..\thotlib\internals\f" /D "_I18N_" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "WINDOWS_COMPILERS" /D "_SVGLIB" /D "_SVGANIM" /D "_WINDOWS" /FD /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x40c /d "_DEBUG"

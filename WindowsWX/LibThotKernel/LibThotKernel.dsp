@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\freetype-2.1.0\include" /D "NDEBUG" /D "XMD_H" /D "_I18N_" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "STDC_HEADERS" /D "NODISPLAY" /D "_WINDOWS_COMPILERS" /D "_SVGLIB" /D "_SVGANIM" /D "__WXDEBUG__" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /YX /FD /TP /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\..\wxWindows-2.4.2\include" /I "..\..\..\wxWindows-2.4.2\lib\mswu" /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\freetype-2.1.0\include" /D "__WXMSW__" /D WINVER=0x0400 /D "UNICODE" /D "_UNICODE" /D "XMD_H" /D "_I18N_" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "STDC_HEADERS" /D "NODISPLAY" /D "_WINDOWS_COMPILERS" /D "_SVGLIB" /D "_SVGANIM" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D wxUSE_GUI=1 /YX /FD /TP /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MDd /W3 /GR /GX /ZI /Od /I "..\..\..\wxWindows-2.4.2\include" /I "..\..\..\wxWindows-2.4.2\lib\mswud" /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\freetype-2.1.0\include" /D "_DEBUG" /D "__WXMSW__" /D WINVER=0x0400 /D "UNICODE" /D "_UNICODE" /D "XMD_H" /D "_I18N_" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "STDC_HEADERS" /D "NODISPLAY" /D "_WINDOWS_COMPILERS" /D "_SVGLIB" /D "_SVGANIM" /D "__WXDEBUG__" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D WINVER=0x400 /D wxUSE_GUI=1 /FD /TP /c
+# ADD CPP /nologo /MDd /W3 /GR /GX /ZI /Od /I "..\..\..\wxWindows-2.4.2\include" /I "..\..\..\wxWindows-2.4.2\lib\mswud" /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\freetype-2.1.0\include" /D "__WXMSW__" /D WINVER=0x0400 /D "UNICODE" /D "_UNICODE" /D "XMD_H" /D "_I18N_" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "STDC_HEADERS" /D "NODISPLAY" /D "_WINDOWS_COMPILERS" /D "_SVGLIB" /D "_SVGANIM" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D wxUSE_GUI=1 /FD /TP /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe

@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /I "..\amaya" /I "..\..\davlib\h" /I "..\..\davlib\f" /I "..\..\davlib\tree\h" /I "..\..\..\libwww\Library\src" /I ".\..\..\libwww\modules\expat" /I "..\..\thotlib\include" /I "..\..\amaya" /I "..\..\amaya\f" /D "NDEBUG" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "_MBCS" /D "_LIB" /D "DAV" /D "HT_DAV" /D "__STDC__" /D "_SVGLIB" /D "_SVGANIM" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\amaya" /I "..\..\davlib\h" /I "..\..\davlib\f" /I "..\..\davlib\tree\h" /I "..\..\..\libwww\Library\src" /I ".\..\..\libwww\modules\expat" /I "..\..\thotlib\include" /I "..\..\amaya" /I "..\..\amaya\f" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "_MBCS" /D "_LIB" /D "DAV" /D "HT_DAV" /D "_SVGLIB" /D "_SVGANIM" /D "__WXMSW__" /D WINVER=0x0400 /D "UNICODE" /D "_UNICODE" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /YX /FD /TP /c
 # ADD BASE RSC /l 0x40c /d "NDEBUG"
 # ADD RSC /l 0x40c /d "NDEBUG"
 BSC32=bscmake.exe
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /GR /GX /ZI /Od /I "..\..\wxWindows-2.4.2\include" /I "..\..\wxWindows-2.4.2\lib\mswud" /I "..\amaya" /I "..\..\davlib\h" /I "..\..\davlib\f" /I "..\..\davlib\tree\h" /I "..\..\..\libwww\Library\src" /I ".\..\..\libwww\modules\expat" /I "..\..\thotlib\include" /I "..\..\amaya" /I "..\..\amaya\f" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "_MBCS" /D "_LIB" /D "DAV" /D "HT_DAV" /D "_SVGLIB" /D "_SVGANIM" /D "_DEBUG" /D "__WXMSW__" /D WINVER=0x0400 /D "UNICODE" /D "_UNICODE" /D "__WXDEBUG__" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /FD /GZ /TP /c
+# ADD CPP /nologo /MDd /W3 /GR /GX /ZI /Od /I "..\amaya" /I "..\..\davlib\h" /I "..\..\davlib\f" /I "..\..\davlib\tree\h" /I "..\..\..\libwww\Library\src" /I ".\..\..\libwww\modules\expat" /I "..\..\thotlib\include" /I "..\..\amaya" /I "..\..\amaya\f" /D "_STIX" /D "_FONTCONFIG" /D "_GLANIM" /D "_GLTRANSFORMATION" /D "_MBCS" /D "_LIB" /D "DAV" /D "HT_DAV" /D "_SVGLIB" /D "_SVGANIM" /D "__WXMSW__" /D WINVER=0x0400 /D "UNICODE" /D "_UNICODE" /D "_WINDOWS" /D "_GL" /D "WIN32" /D "_WX" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /FD /GZ /TP /c
 # ADD BASE RSC /l 0x40c /d "_DEBUG"
 # ADD RSC /l 0x40c /d "_DEBUG"
 BSC32=bscmake.exe
