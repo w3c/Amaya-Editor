@@ -18,143 +18,143 @@ RULES
 
    MROW:
 	begin
-	create '<mrow';
+	create '<MROW';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</mrow>\12' after;
+	create '</MROW>\12' after;
 	end;
 
    MROOT :
         begin
-	create '<mroot';
+	create '<MROOT';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</mroot>\12' after;
+	create '</MROOT>\12' after;
   	end;
    RootBase:
-	if empty create '<none/>\12';
+	if empty create '<NONE/>\12';
    Index:
-	if empty create '<none/>\12';
+	if empty create '<NONE/>\12';
 
    MSQRT :
         begin
-	create '<msqrt';
+	create '<MSQRT';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</msqrt>\12' after;
+	create '</MSQRT>\12' after;
   	end;
 
    MFRAC :
 	begin
-	create '<mfrac';
+	create '<MFRAC';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</mfrac>\12' after;
+	create '</MFRAC>\12' after;
 	end;
    Numerator:
-	if empty create '<none/>\12';
+	if empty create '<NONE/>\12';
    Denominator:
-	if empty create '<none/>\12';
+	if empty create '<NONE/>\12';
 
 
    MSUBSUP :
 	begin
-	create '<msubsup';
+	create '<MSUBSUP';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</msubsup>\12' after;
+	create '</MSUBSUP>\12' after;
 	end;
    Base:
-	if empty create '<none/>\12';
+	if empty create '<NONE/>\12';
    Subscript:
-	if empty create '<none/>\12';
+	if empty create '<NONE/>\12';
    Superscript:
-	if empty create '<none/>\12';
+	if empty create '<NONE/>\12';
 
    MSUB :
 	begin
-	create '<msub';
+	create '<MSUB';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</msub>\12' after;
+	create '</MSUB>\12' after;
 	end;
 
    MSUP :
 	begin
-	create '<msup';
+	create '<MSUP';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</msup>\12' after;
+	create '</MSUP>\12' after;
 	end;
 
    MUNDER :
 	begin
-	create '<munder';
+	create '<MUNDER';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</munder>\12' after;
+	create '</MUNDER>\12' after;
 	end;
    UnderOverBase:
-	if empty create '<none/>\12';
+	if empty create '<NONE/>\12';
    Underscript:
-	if empty create '<none/>\12';
+	if empty create '<NONE/>\12';
 
    MOVER :
 	begin
-	create '<mover';
+	create '<MOVER';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</mover>\12' after;
+	create '</MOVER>\12' after;
 	end;
    Overscript:
-	if empty create '<none/>\12';
+	if empty create '<NONE/>\12';
 
    MUNDEROVER :
 	begin
-	create '<munderover';
+	create '<MUNDEROVER';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</munderover>\12' after;
+	create '</MUNDEROVER>\12' after;
 	end;
 
    MMULTISCRIPTS :
 	begin
-	create '<mmultiscripts';
+	create '<MMULTISCRIPTS';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</mmultiscripts>\12' after;
+	create '</MMULTISCRIPTS>\12' after;
 	end;
    MultiscriptBase:
-	if empty create '<none/>\12';
+	if empty create '<NONE/>\12';
    
    Construct :
 	begin
 	if immediately within MSubscript
-	   create '<none/>\12';
+	   create '<NONE/>\12';
 	if immediately within MSuperscript
-	   create '<none/>\12';
+	   create '<NONE/>\12';
 	end;
    PostscriptPair :
 	if empty Remove;
@@ -162,93 +162,93 @@ RULES
 	if empty Remove;
    PrescriptPairs :
 	if not empty
-	   create '<mprescripts/>\12' before;
+	   create '<MPRESCRIPTS/>\12' before;
 
    MF :
 	begin
-	create '<mf';
+	create '<MF';
 	create Attributes;
 	create '>';
-	create '</mf>\12' after;
+	create '</MF>\12' after;
 	end;
 
    MN :
 	begin
-	create '<mn';
+	create '<MN';
 	create Attributes;
 	create '>';
-	create '</mn>\12' after;
+	create '</MN>\12' after;
 	end;
 
    MI :
 	begin
-	create '<mi';
+	create '<MI';
 	create Attributes;
 	create '>';
-	create '</mi>\12' after;
+	create '</MI>\12' after;
 	end;
 
    MO :
 	begin
-	create '<mo';
+	create '<MO';
 	create Attributes;
 	create '>';
-	create '</mo>\12' after;
+	create '</MO>\12' after;
 	end;
 
    MS :
 	begin
-	create '<ms';
+	create '<MS';
 	create Attributes;
 	create '>';
-	create '</ms>\12' after;
+	create '</MS>\12' after;
 	end;
 
    MTEXT :
 	begin
-	create '<mtext';
+	create '<MTEXT';
 	create Attributes;
 	create '>';
-	create '</mtext>\12' after;
+	create '</MTEXT>\12' after;
 	end;
 
    C_Empty:
 	remove;
 
    SEP:
-	create '<sep/>\12';
+	create '<SEP/>\12';
 
    MSPACE:
-	create '<mspace/>\12';
+	create '<MSPACE/>\12';
 
    MSTYLE:
 	begin
-	create '<mstyle';
+	create '<MSTYLE';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</mstyle>\12' after;
+	create '</MSTYLE>\12' after;
 	end;
 
    MERROR:
 	begin
-	create '<merror';
+	create '<MERROR';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</merror>\12' after;
+	create '</MERROR>\12' after;
 	end;
 
    MPHANTOM:
 	begin
-	create '<mphantom';
+	create '<MPHANTOM';
 	create Attributes;
 	create tagend;
 	indent +2;
 	indent -2 after;
-	create '</mphantom>\12' after;
+	create '</MPHANTOM>\12' after;
 	end;
 
    TEXT_UNIT :
@@ -259,10 +259,10 @@ RULES
 	begin
 	if NOT Within MF
 		begin
-		create '<mo';
+		create '<MO';
 		create Attributes;
 		create '>';
-		create '</mo>\12' after;
+		create '</MO>\12' after;
 		end;
 	end;
 
