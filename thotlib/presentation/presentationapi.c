@@ -564,7 +564,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
     }
 
   /* manage the width change of the box */
-  if (width != 0 && pAb->AbBox != NULL && width != pAb->AbBox->BxWidth)
+  if (width != 0 && pAb->AbBox != NULL && width != pAb->AbBox->BxW)
     {
       /* look for the dimension rule applied to the element */
       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRH, &pSSR, 0, NULL, viewSch,
@@ -733,7 +733,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
     }
 
    /* manage the height change of the box */
-   if (height != 0 && pAb->AbBox != NULL && height != pAb->AbBox->BxHeight)
+   if (height != 0 && pAb->AbBox != NULL && height != pAb->AbBox->BxH)
      {
        /* look for the dimension rule applied to the element */
        pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRV, &pSSR, 0, NULL, viewSch,

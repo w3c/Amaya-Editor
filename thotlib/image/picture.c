@@ -2635,7 +2635,6 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, PictInfo *imageDesc,
 			  int width, int height, int w, int h, int frame)
 {
   PtrBox      box;
-  int         initialw, initialh;
   ThotBool    constrained_Width, constrained_Height, change;
   
   imageDesc->PicWidth = width;
@@ -3164,7 +3163,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) || defined(_NOGUI)
   ThotPixmap          drw = None;
 #endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) || defined(_NOGUI) */
-  PtrAbstractBox      pAb, pBlock;
+  PtrAbstractBox      pAb;
   Picture_Report      status;
 #ifndef _WX
   unsigned long       Bgcolor;

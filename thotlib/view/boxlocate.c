@@ -1450,8 +1450,8 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 			}
 		    }
 		  if (testSegment)
-		    OK = IsOnSegment (x, y, points[i].x, points[i].y,
-				      points[i + 1].x, points[i + 1].y);
+		    OK = IsOnSegment (x, y, (int)points[i].x, (int)points[i].y,
+				      (int)points[i + 1].x, (int)points[i + 1].y);
 		}
 	      if (!OK)
 		/* the point is not on the path. Is it within the path ? */

@@ -297,7 +297,7 @@ void TtaInitialize (char *applicationName)
    InitNatures ();	      /* Initializes the table of Natures */
 
    /* test if the system uses dot or comma in the float syntax */
-   sscanf ("0.5", "%f", &val);
+   sscanf (".5", "%f", &val);
    UseDotForFloat = (val == 0.5);
 
    FullStructureChecking = FALSE;
