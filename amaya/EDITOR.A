@@ -50,7 +50,6 @@ MENUS
 	Edit_ button:BFind -> TtcSearchText;
 	Edit_ button:BSpellCheck -> SpellCheck;
 
-	view:2 StructTypes button:BIsIndex -> CreateIsIndex;
 	view:2 StructTypes button:BBase -> CreateBase;
 	view:2 StructTypes button:BMeta -> CreateMeta;
 	view:2 StructTypes button:BLink -> CreateLinkInHead;
@@ -69,8 +68,6 @@ MENUS
 
 	Types.Lists button:BBulletedList -> CreateList;
 	Types.Lists button:BNumberedList -> CreateNumberedList;
-	Types.Lists button:BMenu -> ThotCreateMenu;
-	Types.Lists button:BDirectory -> ThotCreateDirectory;
 	Types.Lists button:BDefinitionList -> CreateDefinitionList;
 	Types.Lists Separator;
 	Types.Lists button:BTerm -> CreateDefinitionTerm;
@@ -106,9 +103,9 @@ MENUS
 	Types.AreaMap button:BPoly -> CreateAreaPoly;
 
 	Types button:BDivision -> CreateDivision;
-	Types button:BObject -> CreateObject;
-	Types.Applet button:BApplet -> CreateApplet;
-	Types.Applet button:BParameter -> CreateParameter;
+	Types.Object button:BObject -> CreateObject;
+	Types.Object button:BParameter -> CreateParameter;
+	Types button:BIFrame -> CreateIFrame;
 
 	Types.Math button:BInlineMath -> CreateInlineMath;
 	Types.Math button:BDisplayMath -> CreateDisplayMath;
@@ -160,17 +157,18 @@ MENUS
         view:1 Style.Phrase toggle:TVariable -> CreateElemVariable;
         view:1 Style.Phrase toggle:TSample -> CreateElemSample;
         view:1 Style.Phrase toggle:TKeyboard -> CreateElemKeyboard;
- 
+	view:1 Style.Phrase toggle:TAbbreviation -> CreateElemAbbr;
+	view:1 Style.Phrase toggle:TAcronym -> CreateElemAcronym;
+
         view:1 Style.Font toggle:TItalic -> CreateElemItalic;
         view:1 Style.Font toggle:TBold -> CreateElemBold;
         view:1 Style.Font toggle:TTeletype -> CreateElemTeletype;
-        view:1 Style.Font toggle:TUnderline -> CreateElemUnderline;
-        view:1 Style.Font toggle:TStrikeOut -> CreateElemStrikeOut;
         view:1 Style.Font toggle:TBig -> CreateElemBig;
         view:1 Style.Font toggle:TSmall -> CreateElemSmall;
         view:1 Style.Font button:BSub -> CreateSub;
         view:1 Style.Font button:BSup -> CreateSup;
-	view:1 Style.Font button:BFont -> CreateElemFont;
+        view:1 Style.Font button:BQuotation -> CreateQuotation;
+        view:1 Style.Font button:BBDO -> CreateBDO;
 
 	view:1 Special button:BTransform -> TransformType;
 	view:1 Special Separator;

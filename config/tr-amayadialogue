@@ -28,132 +28,130 @@
 27 Temizle
 28 Ara
 29 Yazým hatalarý arama
-30 IsIndex
-31 Base
-32 Meta
-33 Baðlantý
-34 Yorum
-35 Paragraf
-36 Görüntü
-37 Kesme
-38 Baþlýk
-39 H1
-40 H2
-41 H3
-42 H4
-43 H5
-44 H6
-45 Liste
-46 Noktalý liste
-47 Numaralý liste
-48 Menü
-49 Dizin
-50 Taným listesi
-51 Terim
-52 Taným
-53 Yatay çizgi
-54 Block quote
-55 Preformatted
-56 Adres
-57 Tablo
-58 Tablo
-59 Altyazý
-60 THead
-61 TBody
-62 TFoot
-63 Sýra
-64 Veri hücresi
-65 Baþlýk hücresi
-66 Form
-67 Form
-68 Deðiþtir
-69 Radio
-70 Seçenek
-71 Metin giriþi
-72 Metin alaný
-73 Submit
-74 Reset
-75 Alan haritasý
-76 Dikdörtgen
-77 Daire
-78 Çokgen
-79 Bölme
-80 Nesne
-81 Applet
-82 Applet
-83 Parametre
-84 Matematik
-85 Yazý içi matematik
-86 Denklem (göster)
-87 Kök
-88 Karekök
-89 Kesir
-90 Alt ve üstyazý
-91 altyazý
-92 üstyazý
-93 altýnda veya üstünde
-94 altýnda
-95 üstünde
-96 Parantezler
-97 Multiscripts
-98 Matris
-99 Baðlantý yarat
-100 Hedef yarat
-101 Baðlantý yarat
-102 <A> tanýmý sil
-103 Tuþlarý göster
-104 Adres ve baþlýðý göster
-105 Yakýnlaþtýr
-106 Uzaklaþtýr
-107 Harita alanlarýný göster
-108 Yapýyý göster
-109 Alternatif gösterim
-110 Baðlantýlarý göster
-111 Ýçindekileri göster
-112 Karakter tarzý
-113 Renkler
-114 Biçim
-115 Arkaplan görüntüsü
-116 Kural yarat
-117 \'class\' uygula
-118 Tarzý tanýmlarý
-119 Bilgi türü
-120 Vurgu
-121 Kuvvetli
-122 Cite
-123 Taným
-124 Kod
-125 Deðiþken
-126 Örnek
-127 Tuþtakýmý
-128 Karakter birimi
-129 Ýtalik
-130 Kalýn
-131 Teletype
-132 Altçizgi
-133 Strike out
-134 Büyük
-135 Küçük
-136 Alt
-137 Üst
-138 Yazýtipi
-139 Dönüþtür
-140 Bölüm numaralandýrmasý
-141 Kitap yap
-142 Amaya hakkýnda
-143 Tarama
-144 Seçme
-145 Arama
-146 Görünümler
-147 Birim yaratma
-148 Baðlantýlar
-149 Yeniden yapýlandýrma
-150 Tablolar
-151 Matematik
-152 Görüntü haritalarý
-153 Tarz tanýmlarý
-154 Özellikler
-155 Sayfa yerleþtirme
-156 Bastýrma
-157 Kitap oluþturma
-158 Amaya yapýlandýrmasý
+30 Base
+31 Meta
+32 Baðlantý
+33 Yorum
+34 Paragraf
+35 Görüntü
+36 Kesme
+37 Baþlýk
+38 H1
+39 H2
+40 H3
+41 H4
+42 H5
+43 H6
+44 Liste
+45 Noktalý liste
+46 Numaralý liste
+47 Taným listesi
+48 Terim
+49 Taným
+50 Yatay çizgi
+51 Block quote
+52 Preformatted
+53 Adres
+54 Tablo
+55 Tablo
+56 Altyazý
+57 THead
+58 TBody
+59 TFoot
+60 Sýra
+61 Veri hücresi
+62 Baþlýk hücresi
+63 Form
+64 Form
+65 Deðiþtir
+66 Radio
+67 Seçenek
+68 Metin giriþi
+69 Metin alaný
+70 Submit
+71 Reset
+72 Alan haritasý
+73 Dikdörtgen
+74 Daire
+75 Çokgen
+76 Bölme
+77 Nesne
+78 Nesne
+79 Parametre
+80 **IFrame
+81 Matematik
+82 Yazý içi matematik
+83 Denklem (göster)
+84 Kök
+85 Karekök
+86 Kesir
+87 Alt ve üstyazý
+88 altyazý
+89 üstyazý
+90 altýnda veya üstünde
+91 altýnda
+92 üstünde
+93 Parantezler
+94 Multiscripts
+95 Matris
+96 Baðlantý yarat
+97 Hedef yarat
+98 Baðlantý yarat
+99 <A> tanýmý sil
+100 Tuþlarý göster
+101 Adres ve baþlýðý göster
+102 Yakýnlaþtýr
+103 Uzaklaþtýr
+104 Harita alanlarýný göster
+105 Yapýyý göster
+106 Alternatif gösterim
+107 Baðlantýlarý göster
+108 Ýçindekileri göster
+109 Karakter tarzý
+110 Renkler
+111 Biçim
+112 Arkaplan görüntüsü
+113 Kural yarat
+114 \'class\' uygula
+115 Tarzý tanýmlarý
+116 Bilgi türü
+117 Vurgu
+118 Kuvvetli
+119 Cite
+120 Taným
+121 Kod
+122 Deðiþken
+123 Örnek
+124 Tuþtakýmý
+125 **Abbreviation
+126 **Acronym
+127 Karakter birimi
+128 Ýtalik
+129 Kalýn
+130 Teletype
+131 Büyük
+132 Küçük
+133 Alt
+134 Üst
+135 **Quotation
+136 **BDO
+137 Dönüþtür
+138 Bölüm numaralandýrmasý
+139 Kitap yap
+140 Amaya hakkýnda
+141 Tarama
+142 Seçme
+143 Arama
+144 Görünümler
+145 Birim yaratma
+146 Baðlantýlar
+147 Yeniden yapýlandýrma
+148 Tablolar
+149 Matematik
+150 Görüntü haritalarý
+151 Tarz tanýmlarý
+152 Özellikler
+153 Sayfa yerleþtirme
+154 Bastýrma
+155 Kitap oluþturma
+156 Amaya yapýlandýrmasý

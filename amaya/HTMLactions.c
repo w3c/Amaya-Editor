@@ -649,9 +649,9 @@ Document            doc
 
    TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
    /* 
-    * elements PICTURE, Big_text, Small_text, Subscript, Superscript, Font_ 
-    * are not permitted in a Preformatted element. The corresponding
-    * entries in the menus must be turned off 
+    * elements PICTURE, Object, Applet, Big_text, Small_text, Subscript,
+    * Superscript, Font_  are not permitted in a Preformatted element.
+    * The corresponding menu entries must be turned off 
     */
    if (firstSel == NULL)
      NewSelInElem = FALSE;
@@ -667,20 +667,20 @@ Document            doc
 	if (NewSelInElem)
 	  {
 	     TtaSetItemOff (doc, 1, Types, BImage);
+	     TtaSetItemOff (doc, 1, Types, BObject);
 	     TtaSetItemOff (doc, 1, Style, TBig);
 	     TtaSetItemOff (doc, 1, Style, TSmall);
 	     TtaSetItemOff (doc, 1, Style, BSub);
 	     TtaSetItemOff (doc, 1, Style, BSup);
-	     TtaSetItemOff (doc, 1, Style, BFont);
 	  }
 	else
 	  {
 	     TtaSetItemOn (doc, 1, Types, BImage);
+	     TtaSetItemOn (doc, 1, Types, BObject);
 	     TtaSetItemOn (doc, 1, Style, TBig);
 	     TtaSetItemOn (doc, 1, Style, TSmall);
 	     TtaSetItemOn (doc, 1, Style, BSub);
 	     TtaSetItemOn (doc, 1, Style, BSup);
-	     TtaSetItemOn (doc, 1, Style, BFont);
 	  }
      }
    /* 
@@ -756,6 +756,40 @@ Document            doc
      {
 	SelectionInCITE = NewSelInElem;
 	TtaSetToggleItem (doc, 1, Style, TCite, NewSelInElem);
+     }
+
+   if (firstSel == NULL)
+      NewSelInElem = FALSE;
+   else
+     {
+	elType.ElTypeNum = HTML_EL_ABBR;
+	if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
+	    elTypeSel.ElSSchema == elType.ElSSchema)
+	   NewSelInElem = TRUE;
+	else
+	   NewSelInElem = (TtaGetTypedAncestor (firstSel, elType) != NULL);
+     }
+   if (SelectionInABBR != NewSelInElem)
+     {
+	SelectionInABBR = NewSelInElem;
+	TtaSetToggleItem (doc, 1, Style, TAbbreviation, NewSelInElem);
+     }
+
+   if (firstSel == NULL)
+      NewSelInElem = FALSE;
+   else
+     {
+	elType.ElTypeNum = HTML_EL_ACRONYM;
+	if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
+	    elTypeSel.ElSSchema == elType.ElSSchema)
+	   NewSelInElem = TRUE;
+	else
+	   NewSelInElem = (TtaGetTypedAncestor (firstSel, elType) != NULL);
+     }
+   if (SelectionInACRONYM != NewSelInElem)
+     {
+	SelectionInACRONYM = NewSelInElem;
+	TtaSetToggleItem (doc, 1, Style, TAcronym, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -893,40 +927,6 @@ Document            doc
      {
 	SelectionInTT = NewSelInElem;
 	TtaSetToggleItem (doc, 1, Style, TTeletype, NewSelInElem);
-     }
-
-   if (firstSel == NULL)
-      NewSelInElem = FALSE;
-   else
-     {
-	elType.ElTypeNum = HTML_EL_Underlined_text;
-	if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-	    elTypeSel.ElSSchema == elType.ElSSchema)
-	   NewSelInElem = TRUE;
-	else
-	   NewSelInElem = (TtaGetTypedAncestor (firstSel, elType) != NULL);
-     }
-   if (SelectionInU != NewSelInElem)
-     {
-	SelectionInU = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TUnderline, NewSelInElem);
-     }
-
-   if (firstSel == NULL)
-      NewSelInElem = FALSE;
-   else
-     {
-	elType.ElTypeNum = HTML_EL_Struck_text;
-	if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
-	    elTypeSel.ElSSchema == elType.ElSSchema)
-	   NewSelInElem = TRUE;
-	else
-	   NewSelInElem = (TtaGetTypedAncestor (firstSel, elType) != NULL);
-     }
-   if (SelectionInSTRIKE != NewSelInElem)
-     {
-	SelectionInSTRIKE = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TStrikeOut, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -1143,9 +1143,6 @@ int                 eltype;
 	    case HTML_EL_Strong:
 	       SelectionInSTRONG = !remove;
 	       break;
-	    case HTML_EL_Cite:
-	       SelectionInCITE = !remove;
-	       break;
 	    case HTML_EL_Def:
 	       SelectionInDFN = !remove;
 	       break;
@@ -1161,6 +1158,15 @@ int                 eltype;
 	    case HTML_EL_Keyboard:
 	       SelectionInKBD = !remove;
 	       break;
+	    case HTML_EL_Cite:
+	       SelectionInCITE = !remove;
+	       break;
+	    case HTML_EL_ABBR:
+	       SelectionInABBR = !remove;
+	       break;
+	    case HTML_EL_ACRONYM:
+	       SelectionInACRONYM = !remove;
+	       break;
 	    case HTML_EL_Italic_text:
 	       SelectionInI = !remove;
 	       break;
@@ -1169,12 +1175,6 @@ int                 eltype;
 	       break;
 	    case HTML_EL_Teletype_text:
 	       SelectionInTT = !remove;
-	       break;
-	    case HTML_EL_Underlined_text:
-	       SelectionInU = !remove;
-	       break;
-	    case HTML_EL_Struck_text:
-	       SelectionInSTRIKE = !remove;
 	       break;
 	    case HTML_EL_Big_text:
 	       SelectionInBIG = !remove;

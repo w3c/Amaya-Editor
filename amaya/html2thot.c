@@ -208,12 +208,15 @@ static GIMapping    HTMLGIMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
    {"A", SPACE, HTML_EL_Anchor, NULL},
+   {"ABBR", SPACE, HTML_EL_ABBR, NULL},
+   {"ACRONYM", SPACE, HTML_EL_ACRONYM, NULL},
    {"ADDRESS", SPACE, HTML_EL_Address, NULL},
    {"APPLET", SPACE, HTML_EL_Applet, NULL},
    {"AREA", 'E', HTML_EL_AREA, NULL},
    {"B", SPACE, HTML_EL_Bold_text, NULL},
    {"BASE", 'E', HTML_EL_BASE, NULL},
    {"BASEFONT", 'E', HTML_EL_BaseFont, NULL},
+   {"BDO", SPACE, HTML_EL_BDO, NULL},
    {"BIG", SPACE, HTML_EL_Big_text, NULL},
    {"BLOCKQUOTE", SPACE, HTML_EL_Block_Quote, NULL},
    {"BODY", SPACE, HTML_EL_BODY, NULL},
@@ -242,6 +245,7 @@ static GIMapping    HTMLGIMappingTable[] =
    {"HR", 'E', HTML_EL_Horizontal_Rule, NULL},
    {"HTML", SPACE, HTML_EL_HTML, NULL},
    {"I", SPACE, HTML_EL_Italic_text, NULL},
+   {"IFRAME", SPACE, HTML_EL_IFRAME, NULL},
    {"IMG", 'E', HTML_EL_PICTURE_UNIT, NULL},
    {"INPUT", 'E', HTML_EL_Input, NULL},
    {"ISINDEX", 'E', HTML_EL_ISINDEX, NULL},
@@ -263,7 +267,10 @@ static GIMapping    HTMLGIMappingTable[] =
    {"P", SPACE, HTML_EL_Paragraph, NULL},
    {"P*", SPACE, HTML_EL_Pseudo_paragraph, NULL},
    {"PARAM", 'E', HTML_EL_Parameter, NULL},
+   {"PLAINTEXT", SPACE, HTML_EL_Preformatted, NULL},	/* converted to PRE */
    {"PRE", SPACE, HTML_EL_Preformatted, NULL},
+   {"Q", SPACE, HTML_EL_Quotation, NULL},
+   {"S", SPACE, HTML_EL_Struck_text, NULL},
    {"SAMP", SPACE, HTML_EL_Sample, NULL},
    {"SCRIPT", SPACE, HTML_EL_SCRIPT, NULL},
    {"SELECT", SPACE, HTML_EL_Option_Menu, NULL},
@@ -290,7 +297,7 @@ static GIMapping    HTMLGIMappingTable[] =
 #ifdef GRAPHML
    {"XMLGRAPHICS", SPACE, HTML_EL_XMLGraphics, NULL},
 #endif
-   {"XMP", SPACE, HTML_EL_Preformatted, NULL},	/* converted to PRE */
+   {"XMP", SPACE, HTML_EL_Preformatted, NULL},		/* converted to PRE */
    {"", SPACE, 0, NULL}	/* Last entry. Mandatory */
 };
 
@@ -304,7 +311,7 @@ static int          NoTextChild[] =
    HTML_EL_Form, HTML_EL_Menu, HTML_EL_Numbered_List, HTML_EL_Option_Menu,
    HTML_EL_Unnumbered_List, HTML_EL_Definition, HTML_EL_List_Item,
    HTML_EL_MAP, HTML_EL_Applet,
-   HTML_EL_Object,
+   HTML_EL_Object, HTML_EL_IFRAME,
    HTML_EL_Division, HTML_EL_Center,
    HTML_EL_Table, HTML_EL_thead, HTML_EL_tbody, HTML_EL_tfoot, HTML_EL_Table_row,
    HTML_EL_Data_cell, HTML_EL_Heading_cell,
@@ -334,13 +341,14 @@ static int          CharLevelElement[] =
 {
    HTML_EL_TEXT_UNIT, HTML_EL_PICTURE_UNIT,
    HTML_EL_Anchor,
-   HTML_EL_Italic_text, HTML_EL_Bold_text, HTML_EL_Teletype_text,
+   HTML_EL_Teletype_text, HTML_EL_Italic_text, HTML_EL_Bold_text,
    HTML_EL_Underlined_text, HTML_EL_Struck_text, HTML_EL_Big_text,
-   HTML_EL_Small_text, HTML_EL_Subscript, HTML_EL_Superscript,
-   HTML_EL_Font_,
+   HTML_EL_Small_text,
    HTML_EL_Emphasis, HTML_EL_Strong, HTML_EL_Def, HTML_EL_Code, HTML_EL_Sample,
-   HTML_EL_Keyboard, HTML_EL_Variable, HTML_EL_Cite,
-   HTML_EL_Span,
+   HTML_EL_Keyboard, HTML_EL_Variable, HTML_EL_Cite, HTML_EL_ABBR,
+   HTML_EL_ACRONYM,
+   HTML_EL_Font_, HTML_EL_Quotation, HTML_EL_Subscript, HTML_EL_Superscript,
+   HTML_EL_Span, HTML_EL_BDO,
    HTML_EL_Input,
    HTML_EL_Option, HTML_EL_Option_Menu,
    HTML_EL_Text_Input,
@@ -454,6 +462,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"CODE", "", 'A', HTML_ATTR_code},
    {"CODEBASE", "", 'A', HTML_ATTR_codebase},
    {"CODETYPE", "", 'A', HTML_ATTR_codetype},
+   {"COLOR", "BASEFONT", 'A', HTML_ATTR_BaseFontColor},
    {"COLOR", "", 'A', HTML_ATTR_color},
    {"COLS", "", 'A', HTML_ATTR_Columns},
    {"COLSPAN", "", 'A', HTML_ATTR_colspan_},
@@ -463,6 +472,8 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"DATA", "", 'A', HTML_ATTR_data},
    {"DIR", "", 'A', HTML_ATTR_dir},
    {"ENCTYPE", "", 'A', HTML_ATTR_ENCTYPE},
+   {"FACE", "BASEFONT", 'A', HTML_ATTR_BaseFontFace},
+   {"FACE", "FONT", 'A', HTML_ATTR_face},
    {"HEIGHT", "", 'A', HTML_ATTR_Height_},
    {"HREF", "", 'A', HTML_ATTR_HREF_},
    {"HSPACE", "", 'A', HTML_ATTR_hspace},

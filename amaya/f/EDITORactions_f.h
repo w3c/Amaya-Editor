@@ -12,8 +12,6 @@ extern void SpellCheck ( Document document,
                          View view );
 extern void CreateBreak ( Document document,
                           View view );
-extern void CreateIsIndex ( Document document,
-                            View view );
 extern void CreateLinkInHead ( Document document,
                                View view );
 extern void CreateBase ( Document document,
@@ -40,10 +38,6 @@ extern void CreateList ( Document document,
                          View view );
 extern void CreateNumberedList ( Document document,
                                  View view );
-extern void ThotCreateMenu ( Document document,
-                             View view );
-extern void ThotCreateDirectory ( Document document,
-                                  View view );
 extern void CreateDefinitionList ( Document document,
                                    View view );
 extern void CreateDefinitionTerm ( Document document,
@@ -108,10 +102,10 @@ extern void CreateDivision ( Document document,
                              View view );
 extern void CreateObject ( Document document,
                            View view );
-extern void CreateApplet ( Document document,
-                           View view );
 extern void CreateParameter ( Document document,
                               View view );
+extern void CreateIFrame ( Document document,
+                           View view );
 extern void ChangeLink ( Document doc,
                          View view );
 extern void CreateOrChangeLink ( Document doc,
@@ -127,8 +121,6 @@ extern void SpellCheck (/* Document document,
                            View view */);
 extern void CreateBreak (/* Document document,
                             View view */);
-extern void CreateIsIndex (/* Document document,
-                              View view */);
 extern void CreateLinkInHead (/* Document document,
                                  View view */);
 extern void CreateBase (/* Document document,
@@ -155,10 +147,6 @@ extern void CreateList (/* Document document,
                            View view */);
 extern void CreateNumberedList (/* Document document,
                                    View view */);
-extern void ThotCreateMenu (/* Document document,
-                               View view */);
-extern void ThotCreateDirectory (/* Document document,
-                                    View view */);
 extern void CreateDefinitionList (/* Document document,
                                      View view */);
 extern void CreateDefinitionTerm (/* Document document,
@@ -223,10 +211,10 @@ extern void CreateDivision (/* Document document,
                                View view */);
 extern void CreateObject (/* Document document,
                              View view */);
-extern void CreateApplet (/* Document document,
-                             View view */);
 extern void CreateParameter (/* Document document,
                                 View view */);
+extern void CreateIFrame (/* Document document,
+                             View view */);
 extern void ChangeLink (/* Document doc,
                            View view */);
 extern void CreateOrChangeLink (/* Document doc,

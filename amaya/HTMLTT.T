@@ -234,6 +234,12 @@ RULES
 	Create DoubleQuote; 
 	Create DoubleQuote After;
 	END;
+ ABBR:
+	BEGIN
+	END;
+ ACRONYM:
+	BEGIN
+	END;
 
  Font_: BEGIN
 	END;
@@ -250,6 +256,23 @@ RULES
  Object: BEGIN
 	Create Attributes;
 	Remove;
+	END;
+
+ Quotation:
+	BEGIN
+	Create DoubleQuote; 
+	Create DoubleQuote After;
+	END;
+
+ Span:	BEGIN
+	END;
+
+ BDO:	BEGIN
+	END;
+
+ IFRAME: BEGIN
+	Create '\12';
+	Create '\12' After;
 	END;
 
 #ifdef MATHML
@@ -548,33 +571,33 @@ ATTRIBUTES
 	Remove;
 	END;
 
- HREF_ :
+ HREF_:
 	BEGIN
 	If NOT Within LINK AND NOT InternalLink
 	   Create IN TmpFile HREF_;
 	END;
 
- background_ :
+ background_:
 	BEGIN
 	END;
 
- BackgroundColor :
+ BackgroundColor:
 	BEGIN
 	END;
 
- TextColor :
+ TextColor:
 	BEGIN
 	END;
 
- LinkColor :
+ LinkColor:
 	BEGIN
 	END;
 
- VisitedLinkColor :
+ VisitedLinkColor:
 	BEGIN
 	END;
 
- ActiveLinkColor :
+ ActiveLinkColor:
 	BEGIN
 	END;
 
@@ -582,11 +605,23 @@ ATTRIBUTES
 	BEGIN
 	END;
 
- Font_size :
+ BaseFontColor:
 	BEGIN
 	END;
 
- color :
+ BaseFontFace:
+	BEGIN
+	END;
+
+ Font_size:
+	BEGIN
+	END;
+
+ color:
+	BEGIN
+	END;
+
+ face:
 	BEGIN
 	END;
 

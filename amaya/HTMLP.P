@@ -1926,6 +1926,42 @@ BOXES
 		END;
 	END;
 
+ ATTR_FACE: BEGIN
+	Content: Text ' face=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_BASEFONTFACE: BEGIN
+	Content: (BaseFontFace);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ VALUE_FACE: BEGIN
+	Content: (face);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
  ATTR_MAXLENGTH: BEGIN
 	Content: Text ' maxlenght=';
 	HorizPos: Left = Previous . Right;
@@ -2221,6 +2257,26 @@ BOXES
 		END;
 	END;
 
+ ABBR_S: BEGIN
+	Content: Text 'ABBR';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ ACRONYM_S: BEGIN
+	Content: Text 'ACRONYM';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  FONT_S: BEGIN
 	Content: Text 'FONT';
 	Visibility: 0;
@@ -2231,8 +2287,54 @@ BOXES
 		END;
 	END;
 
+ Q_S: BEGIN
+	Content: (Text 'Q');
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ DOUBLE_QUOTE: BEGIN
+	Content: Text '"';
+	VertPos: HRef = Previous . Href;
+	HorizPos:  Left = Previous . Right;
+	IN Structure_view
+		Visibility: 0;
+	END;
+
+ QUOTE: BEGIN
+	Content: Text '''';
+	VertPos: HRef = Previous . Href;
+	HorizPos:  Left = Previous . Right;
+	IN Structure_view
+		Visibility: 0;
+	END;
+
  SPAN_S: BEGIN
 	Content: (Text 'SPAN');
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ BDO_S: BEGIN
+	Content: (Text 'BDO');
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ IFRAME_S: BEGIN
+	Content: (Text 'IFRAME');
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3144,6 +3246,18 @@ BOXES
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ VALUE_BASEFONTCOLOR: BEGIN
+	Content: (BaseFontColor);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Visibility: 0;
+	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
@@ -4854,6 +4968,34 @@ RULES
 		END;
 	END;
 
+ ABBR:
+	BEGIN
+	CreateBefore(ABBR_S);
+	CreateWith(VerticalLine);
+	LineBreak: Yes;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
+ ACRONYM:
+	BEGIN
+	CreateBefore(ACRONYM_S);
+	CreateWith(VerticalLine);
+	LineBreak: Yes;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
  Font_: BEGIN
 	CreateBefore(FONT_S);
 	CreateWith(VerticalLine);
@@ -4928,11 +5070,59 @@ RULES
 		END;
 	END;
 
- Span: BEGIN
+ Quotation: BEGIN
+	CreateBefore(Q_S);
+	CreateWith(VerticalLine);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IF not within Quotation
+	   BEGIN
+	   CreateBefore(DOUBLE_QUOTE);
+	   CreateAfter(DOUBLE_QUOTE);
+	   END;
+	IF within Quotation
+	   BEGIN
+	   CreateBefore(QUOTE);
+	   CreateAfter(QUOTE);
+	   END;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
+ Span:	BEGIN
 	CreateBefore(SPAN_S);
 	CreateWith(VerticalLine);
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
+ BDO:	BEGIN
+	CreateBefore(BDO_S);
+	CreateWith(VerticalLine);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+
+ IFRAME: BEGIN
+	CreateBefore(IFRAME_S);
+	CreateWith(VerticalLine);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Width: 3 cm;
+	LineBreak: No;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -6659,11 +6849,26 @@ ATTRIBUTES
 	CreateBefore(ATTR_SIZE);
 	CreateBefore(VALUE_BASEFONTSIZE);
 	END;
+ BaseFontColor:
+	BEGIN
+	CreateBefore(ATTR_COLOR);
+	CreateBefore(VALUE_BASEFONTCOLOR);
+	END;
+ BaseFontFace:
+	BEGIN
+	CreateBefore(ATTR_FACE);
+	CreateBefore(VALUE_BASEFONTFACE);
+	END;
 
  Font_size:
 	BEGIN
 	CreateBefore(ATTR_SIZE);
 	CreateBefore(VALUE_FONT_SIZE);
+	END;
+ face:
+	BEGIN
+	CreateBefore(ATTR_FACE);
+	CreateBefore(VALUE_FACE);
 	END;
  IntSizeIncr:
 	BEGIN

@@ -194,6 +194,8 @@ THOT_EXPORT boolean      SelectionInComment;
 THOT_EXPORT boolean      SelectionInEM;
 THOT_EXPORT boolean      SelectionInSTRONG;
 THOT_EXPORT boolean      SelectionInCITE;
+THOT_EXPORT boolean      SelectionInABBR;
+THOT_EXPORT boolean      SelectionInACRONYM;
 THOT_EXPORT boolean      SelectionInDFN;
 THOT_EXPORT boolean      SelectionInCODE;
 THOT_EXPORT boolean      SelectionInVAR;
@@ -202,8 +204,6 @@ THOT_EXPORT boolean      SelectionInKBD;
 THOT_EXPORT boolean      SelectionInI;
 THOT_EXPORT boolean      SelectionInB;
 THOT_EXPORT boolean      SelectionInTT;
-THOT_EXPORT boolean      SelectionInU;
-THOT_EXPORT boolean      SelectionInSTRIKE;
 THOT_EXPORT boolean      SelectionInBIG;
 THOT_EXPORT boolean      SelectionInSMALL;
 

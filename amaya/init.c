@@ -2842,6 +2842,8 @@ NotifyEvent        *event;
    SelectionInEM = FALSE;
    SelectionInSTRONG = FALSE;
    SelectionInCITE = FALSE;
+   SelectionInABBR = FALSE;
+   SelectionInACRONYM = FALSE;
    SelectionInDFN = FALSE;
    SelectionInCODE = FALSE;
    SelectionInVAR = FALSE;
@@ -2850,8 +2852,6 @@ NotifyEvent        *event;
    SelectionInI = FALSE;
    SelectionInB = FALSE;
    SelectionInTT = FALSE;
-   SelectionInU = FALSE;
-   SelectionInSTRIKE = FALSE;
    SelectionInBIG = FALSE;
    SelectionInSMALL = FALSE;
    /* initialize icons */

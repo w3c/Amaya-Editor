@@ -107,7 +107,6 @@ STRUCT
 		CONSTANT C_Empty;
 	Table;							{ TABLE }
 	Address = LIST OF (AddressContent);			{ ADDRESS }
-	Applet;							{ APPLET }
 	PICTURE							{ IMG }
 		(ATTR Alignment = Top_, Middle_, Bottom_, Left_, Right_;
 		{     align       top   middle   bottom   left   right }
@@ -118,6 +117,7 @@ STRUCT
 		  ISMAP = Yes_; USEMAP = Text; SRC = Text; ALT = Text);
 		{ ismap        usemap         src         alt }
 	Object;							{ OBJECT }
+	Applet;							{ APPLET }
 #ifdef MATHML
 	MathDisp (ATTR mode = display, inline_math) = MathML;
 #endif
@@ -196,20 +196,24 @@ STRUCT
 #endif
 	END;
 
-  BaseFont (ATTR BaseFontSize = Integer) = CONSTANT C_Empty;	{ BASEFONT }
-		{ size }
+  BaseFont							{ BASEFONT }
+	(ATTR BaseFontSize = Integer; BaseFontColor = Text;
+	    { size                    color }
+	      BaseFontFace = Text) =
+            { face }
+		CONSTANT C_Empty;
 
-  Font = CASE OF			{ fontstyle }
+  Font = CASE OF		{ fontstyle }
+	Teletype_text = Basic_Set;	{ TT }
 	Italic_text = Basic_Set;	{ I }
 	Bold_text = Basic_Set;		{ B }
-	Teletype_text = Basic_Set;	{ TT }
 	Underlined_text = Basic_Set;	{ U }
-	Struck_text = Basic_Set;	{ STRIKE }
+	Struck_text = Basic_Set;	{ S or STRIKE }
 	Big_text = Basic_Set;		{ BIG }
 	Small_text = Basic_Set;		{ SMALL }
 	END;
 
-  Phrase = CASE OF			{ phrase }
+  Phrase = CASE OF		{ phrase }
 	Emphasis = Basic_Set;		{ EM }
 	Strong = Basic_Set;		{ STRONG }
 	Def = Basic_Set;		{ DFN }
@@ -218,10 +222,12 @@ STRUCT
 	Keyboard = Basic_Set;		{ KBD }
 	Variable = Basic_Set;		{ VAR }
 	Cite = Basic_Set;		{ CITE }
+	ABBR = Basic_Set;		{ ABBR }
+        ACRONYM = Basic_Set;		{ ACRONYM }
 	END;
 
-  Font_ (ATTR Font_size = Text; color = Text;			{ FONT }
-	    { size              color }
+  Font_ (ATTR Font_size = Text; color = Text; face = Text;	{ FONT }
+	    { size              color	      face }
 	      IntSizeIncr = Integer; IntSizeDecr = Integer;
 	      IntSizeRel = Integer) = Basic_Set;
 

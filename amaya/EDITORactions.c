@@ -320,28 +320,6 @@ int                 elementT;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateIsIndex (Document document, View view)
-#else  /* __STDC__ */
-void                CreateIsIndex (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
-{
-   ElementType         elType;
-
-   if (MoveWithinHead (document, view, HTML_EL_ISINDEX))
-     {
-       elType.ElSSchema = TtaGetDocumentSSchema (document);
-       elType.ElTypeNum = HTML_EL_ISINDEX;
-       TtaInsertElement (elType, document);
-     }
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateLinkInHead (Document document, View view)
 #else  /* __STDC__ */
 void                CreateLinkInHead (document, view)
@@ -631,50 +609,6 @@ View                view;
        TtaCreateElement (elType, document);
      }
 }
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ThotCreateMenu (Document document, View view)
-#else  /* __STDC__ */
-void                ThotCreateMenu (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
-{
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Menu;
-       TtaCreateElement (elType, document);
-     }
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ThotCreateDirectory (Document document, View view)
-#else  /* __STDC__ */
-void                ThotCreateDirectory (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
-{
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Directory;
-       TtaCreateElement (elType, document);
-     }
-}
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1901,27 +1835,6 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateApplet (Document document, View view)
-#else  /* __STDC__ */
-void                CreateApplet (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
-{
-   ElementType         elType;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
-     {
-       elType.ElTypeNum = HTML_EL_Applet;
-       TtaCreateElement (elType, document);
-     }
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateParameter (Document document, View view)
 #else  /* __STDC__ */
 void                CreateParameter (document, view)
@@ -1937,6 +1850,27 @@ View                view;
      {
        elType.ElTypeNum = HTML_EL_Parameter;
        TtaInsertElement (elType, document);
+     }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateIFrame (Document document, View view)
+#else  /* __STDC__ */
+void                CreateIFrame (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+
+   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+     {
+       elType.ElTypeNum = HTML_EL_IFRAME;
+       TtaCreateElement (elType, document);
      }
 }
 

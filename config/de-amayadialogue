@@ -28,132 +28,130 @@
 27 Löschen
 28 Suchen/Ersetzen...
 29 Rechtschreibung...
-30 Dokument mit Suchindex (ISINDEX)
-31 Basisadresse (BASE)
-32 Meta-Information (META)
-33 Verknüpfung (LINK)
-34 Kommentar (<>)
-35 Absatz (P)
-36 Grafik (IMG)...
-37 Zeilenumbruch (BR)
-38 Überschrift (H)
-39 H1 (groß)
-40 H2
-41 H3
-42 H4
-43 H5
-44 H6 (klein)
-45 Liste
-46 mit Punkten (LI)
-47 numeriert (OL)
-48 evt. mehrspaltig (MENU)
-49 Termliste (DIR)
-50 Definitionsliste (DL)
-51 Term (LI)
-52 Definition (DT)
-53 Waagerechte Linie (HR)
-54 Eingerücktes Zitat (BLOCKQUOTE)
-55 Vorformatierter Text (PRE)
-56 Autorenadresse (ADDRESS)
-57 Tabelle 
-58 Tabelle (TABLE)
-59 Überschrift (CAPTION)
-60 Kopfzeile (THEAD)
-61 Tabellenblock (TBODY)
-62 Fußzeile (TFOOT)
-63 Zeile (TR)
-64 Zelle (TD)
-65 Kopfzelle (TH)
-66 Formular
-67 Formular (FORM)
-68 Checkbutton, mehrere von... (CHECKBOX)
-69 Radiobutton, einer von... (RADIO)
-70 Option (OPTION)
-71 Eingabezeile (TEXT)
-72 Texteingabe (TEXTAREA)
-73 SUBMIT
-74 RESET
-75 Aktiver Grafikbereich (AREA MAP)
-76 Rechteck
-77 Kreis
-78 Polygon
-79 Gruppierung (DIV)
-80 Objekt (OBJECT)
-81 Java-Applet
-82 Applet (APPLET)
-83 Parameter (PARAM)
-84 Formel
-85 Formel im Text (MATH)
-86 Formel abgesetzt (MATH)
-87 Wurzel
-88 Quadratwurzel
-89 Quotient
-90 Term mit Index und Exponent
-91 Term mit Index
-92 Term mit Exponent
-93 Term mit Unter- und Überschrift
-94 Term mit Unterschrift
-95 Term mit Überschrift
-96 Term in Klammern
-97 Term mit Indices links/rechts oben/unten
-98 Tabelle
-99 Markierung als Verknüfung definieren...
-100 Markierung als Verknüpfungsziel definieren
-101 Verknüpfungsziel ändern...
-102 Verknüpfungsziel löschen
-103 Symbolleiste
-104 Dokumentadresse und -titel 
-105 Aktive Grafikbereiche markieren
-106 **Zoom In
-107 **Zoom Out
-108 Strukturfenster
-109 Textbrowserfenster
-110 Verknüpfungsfenster
-111 Inhaltsverzeichnisfenster
-112 Zeichen...
-113 Farben...
-114 Ausrichtung...
-115 Hintergrundbild...
-116 Format in Stylesheet übernehmen...
-117 Klasse anwenden...
-118 Stylesheets bearbeiten
-119 logische Formate
-120 Betont (EM)
-121 Hervorgehoben (STRONG)
-122 Zitat (CITE)
-123 Definition (DFN)
-124 Programmtext (CODE)
-125 Variablenwert (VAR)
-126 Beispiel (SAMP)
-127 Tastatureingabe (KBD)
-128 direkte Zeichenformate
-129 kursiv (I)
-130 fett (B)
-131 Schreibmaschinenschrift (TT)
-132 unterstrichen (U)
-133 durchgestrichen (STRIKE)
-134 größer (BIG)
-135 kleiner (SMALL)
-136 tiefgestellt (SUB)
-137 hochgestellt (SUP)
-138 Schriftgröße
-139 Umformatieren...
-140 Abschnittsnummern
-141 Buch zusammenfügen
-142 Info
-143 Verknüpfungen folgen/Dokumente öffnen
-144 Auswählen
-145 Suchen
-146 Ansichten
-147 Einfügen von Elementen
-148 Verknüpfungen bearbeiten
-149 Umformatieren
-150 Tabellen
-151 Formeln
-152 Aktive Grafikbereiche
-153 Formate/Stylesheets
-154 Attribute
-155 Speichern/Publizieren
-156 Drucken
-157 Buch zusammenfügen
-158 Konfiguration
+30 Basisadresse (BASE)
+31 Meta-Information (META)
+32 Verknüpfung (LINK)
+33 Kommentar (<>)
+34 Absatz (P)
+35 Grafik (IMG)...
+36 Zeilenumbruch (BR)
+37 Überschrift (H)
+38 H1 (groß)
+39 H2
+40 H3
+41 H4
+42 H5
+43 H6 (klein)
+44 Liste
+45 mit Punkten (LI)
+46 numeriert (OL)
+47 Definitionsliste (DL)
+48 Term (LI)
+49 Definition (DT)
+50 Waagerechte Linie (HR)
+51 Eingerücktes Zitat (BLOCKQUOTE)
+52 Vorformatierter Text (PRE)
+53 Autorenadresse (ADDRESS)
+54 Tabelle 
+55 Tabelle (TABLE)
+56 Überschrift (CAPTION)
+57 Kopfzeile (THEAD)
+58 Tabellenblock (TBODY)
+59 Fußzeile (TFOOT)
+60 Zeile (TR)
+61 Zelle (TD)
+62 Kopfzelle (TH)
+63 Formular
+64 Formular (FORM)
+65 Checkbutton, mehrere von... (CHECKBOX)
+66 Radiobutton, einer von... (RADIO)
+67 Option (OPTION)
+68 Eingabezeile (TEXT)
+69 Texteingabe (TEXTAREA)
+70 SUBMIT
+71 RESET
+72 Aktiver Grafikbereich (AREA MAP)
+73 Rechteck
+74 Kreis
+75 Polygon
+76 Gruppierung (DIV)
+77 Objekt (OBJECT)
+78 Objekt
+79 Parameter (PARAM)
+80 ** (IFRAME)
+81 Formel
+82 Formel im Text (MATH)
+83 Formel abgesetzt (MATH)
+84 Wurzel (MROOT)
+85 Quadratwurzel (MSQRT)
+86 Quotient (MFRAC)
+87 Term mit Index und Exponent (MSUBSUP)
+88 Term mit Index (MSUB)
+89 Term mit Exponent (MSUP)
+90 Term mit Unter- und Überschrift (MUNDEROVER)
+91 Term mit Unterschrift (MUNDER)
+92 Term mit Überschrift (MOVER)
+93 Term in Klammern (MFENCED)
+94 Term mit Indices links/rechts oben/unten (MMULTISCRIPT)
+95 **Matrix (MTABLE)
+96 Markierung als Verknüfung definieren...
+97 Markierung als Verknüpfungsziel definieren
+98 Verknüpfungsziel ändern...
+99 Verknüpfungsziel löschen
+100 Symbolleiste
+101 Dokumentadresse und -titel 
+102 Aktive Grafikbereiche markieren
+103 **Zoom In
+104 **Zoom Out
+105 Strukturfenster
+106 Textbrowserfenster
+107 Verknüpfungsfenster
+108 Inhaltsverzeichnisfenster
+109 Zeichen...
+110 Farben...
+111 Ausrichtung...
+112 Hintergrundbild...
+113 Format in Stylesheet übernehmen...
+114 Klasse anwenden...
+115 Stylesheets bearbeiten
+116 logische Formate
+117 Betont (EM)
+118 Hervorgehoben (STRONG)
+119 Zitat (CITE)
+120 Definition (DFN)
+121 Programmtext (CODE)
+122 Variablenwert (VAR)
+123 Beispiel (SAMP)
+124 Tastatureingabe (KBD)
+125 ** (ABBR)
+126 ** (ACRONYM)
+127 direkte Zeichenformate
+128 kursiv (I)
+129 fett (B)
+130 Schreibmaschinenschrift (TT)
+131 größer (BIG)
+132 kleiner (SMALL)
+133 tiefgestellt (SUB)
+134 hochgestellt (SUP)
+135 ** (Q)
+136 ** (BDO)
+137 Umformatieren...
+138 Abschnittsnummern
+139 Buch zusammenfügen
+140 Info
+141 Verknüpfungen folgen/Dokumente öffnen
+142 Auswählen
+143 Suchen
+144 Ansichten
+145 Einfügen von Elementen
+146 Verknüpfungen bearbeiten
+147 Umformatieren
+148 Tabellen
+149 Formeln
+150 Aktive Grafikbereiche
+151 Formate/Stylesheets
+152 Attribute
+153 Speichern/Publizieren
+154 Drucken
+155 Buch zusammenfügen
+156 Konfiguration

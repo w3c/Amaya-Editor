@@ -62,16 +62,16 @@ extern void CreateElemSample ( Document document,
                                View view );
 extern void CreateElemKeyboard ( Document document,
                                  View view );
+extern void CreateElemAbbr ( Document document,
+                                 View view );
+extern void CreateElemAcronym ( Document document,
+                                 View view );
 extern void CreateElemItalic ( Document document,
                                View view );
 extern void CreateElemBold ( Document document,
                              View view );
 extern void CreateElemTeletype ( Document document,
                                  View view );
-extern void CreateElemUnderline ( Document document,
-                                  View view );
-extern void CreateElemStrikeOut ( Document document,
-                                  View view );
 extern void CreateElemBig ( Document document,
                             View view );
 extern void CreateElemSmall ( Document document,
@@ -80,8 +80,10 @@ extern void CreateSub ( Document document,
                         View view );
 extern void CreateSup ( Document document,
                         View view );
-extern void CreateElemFont ( Document document,
-                             View view );
+extern void CreateQuotation ( Document document,
+                        View view );
+extern void CreateBDO ( Document document,
+                        View view );
 extern Element SearchAnchor ( Document doc,
                               Element element,
                               boolean link );
@@ -150,16 +152,16 @@ extern void CreateElemSample (/* Document document,
                                  View view */);
 extern void CreateElemKeyboard (/* Document document,
                                    View view */);
+extern void CreateElemAbbr (/* Document document,
+                                   View view */);
+extern void CreateElemAcronym (/* Document document,
+                                   View view */);
 extern void CreateElemItalic (/* Document document,
                                  View view */);
 extern void CreateElemBold (/* Document document,
                                View view */);
 extern void CreateElemTeletype (/* Document document,
                                    View view */);
-extern void CreateElemUnderline (/* Document document,
-                                    View view */);
-extern void CreateElemStrikeOut (/* Document document,
-                                    View view */);
 extern void CreateElemBig (/* Document document,
                               View view */);
 extern void CreateElemSmall (/* Document document,
@@ -168,8 +170,10 @@ extern void CreateSub (/* Document document,
                           View view */);
 extern void CreateSup (/* Document document,
                           View view */);
-extern void CreateElemFont (/* Document document,
-                               View view */);
+extern void CreateQuotation (/* Document document,
+                          View view */);
+extern void CreateBDO (/* Document document,
+                          View view */);
 extern Element SearchAnchor (/* Document doc,
                                 Element element,
                                 boolean link */);

@@ -284,6 +284,20 @@ RULES
 	Create '>';
 	Create '</cite>' After;
 	END;
+ ABBR:
+	BEGIN
+	Create '<abbr';
+	Create Attributes;
+	Create '>';
+	Create '</abbr>' After;
+	END;
+ ACRONYM:
+	BEGIN
+	Create '<acronym';
+	Create Attributes;
+	Create '>';
+	Create '</acronym>' After;
+	END;
 
  Font_: BEGIN
 	Create '<font';
@@ -318,6 +332,27 @@ RULES
 	Create Attributes;
 	Create '>';
 	Create '</span>' After;
+	END;
+
+ Quotation: BEGIN
+	Create '<q';
+	Create Attributes;
+	Create '>';
+	Create '</q>' After;
+	END;
+
+ BDO: BEGIN
+	Create '<bdo';
+	Create Attributes;
+	Create '>';
+	Create '</bdo>' After;
+	END;
+
+ IFRAME: BEGIN
+	Create '<iframe';
+	Create Attributes;
+	Create '>\12';
+	Create '</iframe>\12' After;	
 	END;
 
 #ifdef MATHML
@@ -788,6 +823,20 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
+ BaseFontColor:
+	BEGIN
+	Create ' color="';
+	Create BaseFontColor;
+	Create DoubleQuote;
+	END;
+
+ BaseFontFace:
+	BEGIN
+	Create ' facee="';
+	Create BaseFontFace;
+	Create DoubleQuote;
+	END;
+
  Font_size :
 	BEGIN
 	Create ' size="';
@@ -799,6 +848,13 @@ ATTRIBUTES
 	BEGIN
 	Create ' color="';
 	Create color;
+	Create DoubleQuote;
+	END;
+
+ face :
+	BEGIN
+	Create ' face="';
+	Create face;
 	Create DoubleQuote;
 	END;
 

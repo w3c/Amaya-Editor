@@ -355,16 +355,13 @@ boolean             createLink;
 	      if (elType.ElSSchema != docSchema)
 		noAnchor = TRUE;
 	      else if (elType.ElTypeNum != HTML_EL_TEXT_UNIT &&
-		  elType.ElTypeNum != HTML_EL_PICTURE_UNIT &&
 		  elType.ElTypeNum != HTML_EL_Teletype_text &&
 		  elType.ElTypeNum != HTML_EL_Italic_text &&
 		  elType.ElTypeNum != HTML_EL_Bold_text &&
 		  elType.ElTypeNum != HTML_EL_Underlined_text &&
 		  elType.ElTypeNum != HTML_EL_Struck_text &&
-		  elType.ElTypeNum != HTML_EL_Small_text &&
 		  elType.ElTypeNum != HTML_EL_Big_text &&
-		  elType.ElTypeNum != HTML_EL_Subscript &&
-		  elType.ElTypeNum != HTML_EL_Superscript &&
+		  elType.ElTypeNum != HTML_EL_Small_text &&
 		  elType.ElTypeNum != HTML_EL_Emphasis &&
 		  elType.ElTypeNum != HTML_EL_Strong &&
 		  elType.ElTypeNum != HTML_EL_Def &&
@@ -373,10 +370,20 @@ boolean             createLink;
 		  elType.ElTypeNum != HTML_EL_Keyboard &&
 		  elType.ElTypeNum != HTML_EL_Variable &&
 		  elType.ElTypeNum != HTML_EL_Cite &&
+		  elType.ElTypeNum != HTML_EL_ABBR &&
+		  elType.ElTypeNum != HTML_EL_ACRONYM &&
+		  elType.ElTypeNum != HTML_EL_PICTURE_UNIT &&
 		  elType.ElTypeNum != HTML_EL_Applet &&
+		  elType.ElTypeNum != HTML_EL_Object &&
 		  elType.ElTypeNum != HTML_EL_Font_ &&
 		  elType.ElTypeNum != HTML_EL_SCRIPT &&
-		  elType.ElTypeNum != HTML_EL_MAP)
+		  elType.ElTypeNum != HTML_EL_MAP &&
+		  elType.ElTypeNum != HTML_EL_Quotation &&
+		  elType.ElTypeNum != HTML_EL_Subscript &&
+		  elType.ElTypeNum != HTML_EL_Superscript &&
+		  elType.ElTypeNum != HTML_EL_Span &&
+		  elType.ElTypeNum != HTML_EL_BDO &&
+		  elType.ElTypeNum != HTML_EL_IFRAME )
 		noAnchor = TRUE;
 	      if (el == last)
 		el = NULL;
@@ -1718,6 +1725,36 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
+void                CreateElemAbbr (Document document, View view)
+#else  /* __STDC__ */
+void                CreateElemAbbr (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   SetCharFontOrPhrase (document, HTML_EL_ABBR);
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateElemAcronym (Document document, View view)
+#else  /* __STDC__ */
+void                CreateElemAcronym (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   SetCharFontOrPhrase (document, HTML_EL_ACRONYM);
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void                CreateElemItalic (Document document, View view)
 #else  /* __STDC__ */
 void                CreateElemItalic (document, view)
@@ -1757,36 +1794,6 @@ View                view;
 #endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_Teletype_text);
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CreateElemUnderline (Document document, View view)
-#else  /* __STDC__ */
-void                CreateElemUnderline (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
-{
-   SetCharFontOrPhrase (document, HTML_EL_Underlined_text);
-}
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CreateElemStrikeOut (Document document, View view)
-#else  /* __STDC__ */
-void                CreateElemStrikeOut (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
-{
-   SetCharFontOrPhrase (document, HTML_EL_Struck_text);
 }
 
 
@@ -1861,9 +1868,9 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateElemFont (Document document, View view)
+void                CreateQuotation (Document document, View view)
 #else  /* __STDC__ */
-void                CreateElemFont (document, view)
+void                CreateQuotation (document, view)
 Document            document;
 View                view;
 
@@ -1872,9 +1879,29 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Font_;
+   elType.ElTypeNum = HTML_EL_Quotation;
    TtaCreateElement (elType, document);
 }
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateBDO (Document document, View view)
+#else  /* __STDC__ */
+void                CreateBDO (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+
+   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   elType.ElTypeNum = HTML_EL_BDO;
+   TtaCreateElement (elType, document);
+}
+
 
 /*----------------------------------------------------------------------
    SearchAnchor return the enclosing Anchor element with an        

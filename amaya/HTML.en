@@ -37,8 +37,12 @@ Teletype_text: TT
 Struck_text: STRIKE
 Big_text: BIG
 Small_text: SMALL
+Quotation: Q
 Subscript: SUB
 Superscript: SUP
+Span: SPAN
+BDO: BDO
+IFRAME: IFRAME
 Phrase: phrase
 Emphasis: EM
 Strong: STRONG
@@ -48,6 +52,8 @@ Sample: SAMP
 Keyboard: KBD
 Variable: VAR
 Cite: CITE
+ABBR: ABBR
+ACRONYM: ACRONYM
 Font_: FONT
 Applet: APPLET
 Parameter: PARAM
