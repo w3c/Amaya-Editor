@@ -620,7 +620,7 @@ int                 applyDomain;
 		/* Graphic properties */
 		if (chngGraphics)
 		  ModifyGraphics (pEl, pSelDoc, SelectedView, locChngLineStyle,
-				  LineStyle, LocLineWeightUnit, LineWeight, TRUE,
+				  LineStyle, locChngLineWeight, LineWeight, LocLineWeightUnit,
 				  locChngTrame, PaintWithPattern, FALSE, 0,
 				  FALSE, 0);
 
