@@ -5938,6 +5938,10 @@ if test "${with_motif+set}" = set; then
   :
 fi
 
+
+if test "GCC" = yes; then
+   CPP="$(CPP) -x c"
+fi
 if test "x$with_motif" = xno; then
   no_motif=yes
 else
@@ -6306,7 +6310,7 @@ if test "$with_ilu" = "yes" ; then
                 # Extract the first word of "c-stubber", so it can be a program name with args.
 set dummy c-stubber; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:6310: checking for $ac_word" >&5
+echo "configure:6314: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_CSTUBBER'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -6408,7 +6412,7 @@ if test "$build_amaya" = "yes" ; then
 	    # kaffe may require libgmp ...
 	    #
 	    echo $ac_n "checking for mpz_abs in -lgmp""... $ac_c" 1>&6
-echo "configure:6412: checking for mpz_abs in -lgmp" >&5
+echo "configure:6416: checking for mpz_abs in -lgmp" >&5
 ac_lib_var=`echo gmp'_'mpz_abs | sed 'y%./+-%__p_%'`
 if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
@@ -6416,7 +6420,7 @@ else
   ac_save_LIBS="$LIBS"
 LIBS="-lgmp  $LIBS"
 cat > conftest.$ac_ext <<EOF
-#line 6420 "configure"
+#line 6424 "configure"
 #include "confdefs.h"
 /* Override any gcc2 internal prototype to avoid an error.  */
 /* We use char because int might match the return type of a gcc2
@@ -6427,7 +6431,7 @@ int main() {
 mpz_abs()
 ; return 0; }
 EOF
-if { (eval echo configure:6431: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
+if { (eval echo configure:6435: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
   rm -rf conftest*
   eval "ac_cv_lib_$ac_lib_var=yes"
 else

@@ -265,6 +265,10 @@ motif_libraries=NONE
 
 AC_MSG_CHECKING(for Motif)
 AC_ARG_WITH(motif, [  --with-motif            enable Motif tests])
+
+if test "GCC" = yes; then
+   CPP="$(CPP) -x c"
+fi
 if test "x$with_motif" = xno; then
   no_motif=yes
 else
