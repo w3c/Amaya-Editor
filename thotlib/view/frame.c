@@ -124,7 +124,7 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
        pFrame->FrClipYEnd = 0;
      }
    else if (pFrame->FrClipXBegin == pFrame->FrClipXEnd &&
-	    pFrame->FrClipXBegin == 0xd == xf &&
+	    pFrame->FrClipXBegin == 0 &&
 	    pFrame->FrClipYBegin == pFrame->FrClipYEnd &&
 	    pFrame->FrClipYBegin == 0)
      {
