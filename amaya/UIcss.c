@@ -597,8 +597,8 @@ char *CssToPrint (Document doc, char *printdir)
   ----------------------------------------------------------------------*/
 static void CallbackCSS (int ref, int typedata, char *data)
 {
-  CSSInfoPtr      css;
-  PInfoPtr        pInfo;
+  CSSInfoPtr      css, cssNext;
+  PInfoPtr        pInfo, pInfoNext;
   Element         el;
   Element         firstSel, lastSel;
   char           *ptr = NULL, *localname = NULL;
@@ -671,6 +671,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
 		  css = CSSList;
 		  while (css)
 		    {
+		      cssNext = css->NextCSS;
 		      if (css->infos[CSSdocument] &&
 			  ((css->url && !strcmp (ptr, css->url)) ||
 			   (css->localName && !strcmp (ptr, css->localName))))
@@ -679,6 +680,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
 			  pInfo = css->infos[CSSdocument];
 			  while (pInfo)
 			    {
+			      pInfoNext = pInfo->PiNext;
 			      if (pInfo->PiCategory == category)
 				{
 				  /* look for the element LINK */
@@ -699,10 +701,10 @@ static void CallbackCSS (int ref, int typedata, char *data)
 				  TtaSetDocumentModified (CSSdocument);
 				}
 			      /* next info context */
-			      pInfo = pInfo->PiNext;
+			      pInfo = pInfoNext;
 			    }
 			}
-		      css = css->NextCSS;
+		      css = cssNext;
 		    }
 		}
 	      break;
