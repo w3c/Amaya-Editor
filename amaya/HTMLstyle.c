@@ -1660,9 +1660,22 @@ char               *cssRule;
 #endif
 {
    PresentationValue   pval;
+   boolean	       real;
 
    cssRule = TtaSkipBlanks (cssRule);
-   if (!strncasecmp (cssRule, "xx-small", 8))
+   if (!strncasecmp (cssRule, "larger", 6))
+     {
+	pval.typed_data.unit = DRIVERP_UNIT_PERCENT;
+	pval.typed_data.value = 130;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "smaller", 7))
+     {
+	pval.typed_data.unit = DRIVERP_UNIT_PERCENT;
+	pval.typed_data.value = 80;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "xx-small", 8))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
 	pval.typed_data.value = 1;
@@ -1712,6 +1725,28 @@ char               *cssRule;
        if (pval.typed_data.unit == DRIVERP_UNIT_REL && pval.typed_data.value > 0)
 	 /* CSS relative sizes have to be higher than Thot ones */
 	 pval.typed_data.value += 1;
+       else 
+	 {
+	 real = FALSE;
+	 if (DRIVERP_UNIT_IS_FLOAT (pval.typed_data.unit))
+	    {
+	    real = TRUE;
+	    DRIVERP_UNIT_UNSET_FLOAT (pval.typed_data.unit);
+	    }
+         if (pval.typed_data.unit == DRIVERP_UNIT_EM)
+	    {
+	    if (real)
+	       {
+	       pval.typed_data.value /= 10;
+	       real = FALSE;
+	       }
+	    else
+	       pval.typed_data.value *= 100;
+	    pval.typed_data.unit = DRIVERP_UNIT_PERCENT;
+	    }
+	 if (real)
+	    DRIVERP_UNIT_SET_FLOAT (pval.typed_data.unit);
+	 }
      }
 
    /* install the attribute */

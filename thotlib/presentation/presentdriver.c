@@ -313,11 +313,6 @@ int                 specific;
       rule->PrMinValue = value;
       break;
     case PtSize:
-      if (int_unit == UnRelative)
-	{
-	  int_unit = UnPercent;
-	  value *= 10;
-	}
       rule->PrMinUnit = int_unit;
       rule->PrPresMode = PresImmediate;
       rule->PrMinAttr = 0;
