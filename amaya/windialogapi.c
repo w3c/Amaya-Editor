@@ -53,6 +53,10 @@ extern ThotBool    searchEnd;
 #define OPT3               1112
 #define OPT4               1113
 #define OPT5               1114
+#define OPT6               1115
+#define OPT7               1116
+#define OPT8               1117
+#define OPT9               1118
 
 #define REPEAT                0
 #define REPEAT_X              1
@@ -812,6 +816,10 @@ LPARAM lParam;
   ThotWindow radio3;
   ThotWindow radio4;
   ThotWindow radio5;
+  ThotWindow radio6;
+  ThotWindow radio7;
+  ThotWindow radio8;
+  ThotWindow radio9;
   ThotWindow groupBx;
   TEXTMETRIC tm;
 
@@ -831,47 +839,105 @@ LPARAM lParam;
       SetWindowText (GetDlgItem (hwnDlg, ID_DELETE), TtaGetMessage (LIB, TMSG_DEL_ATTR));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
       
-      radio1 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      radio1 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+		  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+		  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+		  (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
       i++;
-      radio2 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      radio2 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+		  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+		  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+		  (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
       i++;
       if (attDlgNbItems > 2)
 	{
-	  radio3 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	  radio3 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+		  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+		  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+		  (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 	  ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 	  i++;
 	  if (attDlgNbItems > 3)
 	    {	  
-	      radio4 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	      radio4 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+			  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+			  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+			  (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 	      ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 	      i++;
 	      if (attDlgNbItems > 4)
 		{
-		  radio5 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+		  radio5 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+			  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+			  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+			  (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	      ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 		  i++;
+          if (attDlgNbItems > 5)
+		  {
+	         radio6 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+				 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+				 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+				 (HMENU) OPT6, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	         ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
+	         i++;
+	         if (attDlgNbItems > 6)
+			 {	  
+	            radio7 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+					WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+					cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+					(HMENU) OPT7, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	            ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
+	            i++;
+	            if (attDlgNbItems > 7)
+				{
+		          radio8 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+					  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+					  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+					  (HMENU) OPT8, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	              ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
+		          i++;
+				  if (attDlgNbItems > 8)
+				  {
+		            radio9 = CreateWindow (TEXT("BUTTON"), &WIN_buffMenu [ndx],
+					  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+					  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+					  (HMENU) OPT9, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+	                ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
+		            i++;
+				  }
+				}
+			 }
+			 }
 		}
-	    }
+	   }
 	}
-      groupBx = CreateWindow (TEXT("BUTTON"), attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      groupBx = CreateWindow (TEXT("BUTTON"), attDlgTitle,
+		  WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0,
+		  rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg,
+		  (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       switch (currAttrVal)
 	{
-	case 1: CheckRadioButton (hwnDlg, OPT1, OPT5, OPT1);
+	case 1: CheckRadioButton (hwnDlg, OPT1, OPT9, OPT1);
 	  break;
-	  
-	case 2: CheckRadioButton (hwnDlg, OPT1, OPT5, OPT2);
+	case 2: CheckRadioButton (hwnDlg, OPT1, OPT9, OPT2);
 	  break;
-	  
-	case 3: CheckRadioButton (hwnDlg, OPT1, OPT5, OPT3);
+	case 3: CheckRadioButton (hwnDlg, OPT1, OPT9, OPT3);
 	  break;
-	  
-	case 4: CheckRadioButton (hwnDlg, OPT1, OPT5, OPT4);
+	case 4: CheckRadioButton (hwnDlg, OPT1, OPT9, OPT4);
 	  break;
-	  
-	case 5: CheckRadioButton (hwnDlg, OPT1, OPT5, OPT5);
+	case 5: CheckRadioButton (hwnDlg, OPT1, OPT9, OPT5);
 	  break;
-	  
+	case 6: CheckRadioButton (hwnDlg, OPT1, OPT9, OPT6);
+	  break;
+	case 7: CheckRadioButton (hwnDlg, OPT1, OPT9, OPT7);
+	  break;
+	case 8: CheckRadioButton (hwnDlg, OPT1, OPT9, OPT8);
+	  break;
+	case 9: CheckRadioButton (hwnDlg, OPT1, OPT9, OPT9);
+	  break;	  
 	default:
 	  break;
 	}
@@ -883,28 +949,39 @@ LPARAM lParam;
 	iLocation = 0;
 	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 	break;
-	
       case OPT2:
 	iLocation = 1;
 	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 	break;
-	
       case OPT3:
 	iLocation = 2;
 	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 	break;
-	
       case OPT4:
 	iLocation = 3;
 	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 	break;
-	
       case OPT5:
 	iLocation = 4;
 	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 	break;
-	
-      case ID_APPLY:
+      case OPT6:
+	iLocation = 5;
+	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
+	break;
+      case OPT7:
+	iLocation = 6;
+	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
+	break;
+      case OPT8:
+	iLocation = 7;
+	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
+	break;
+      case OPT9:
+	iLocation = 8;
+	ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
+	break;
+       case ID_APPLY:
 	ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 1);
 	break;
 	
@@ -3862,6 +3939,18 @@ STRING buffer;
     case 5: DialogBox (hInstance, MAKEINTRESOURCE (ATTR5ITEMSDIALOG), NULL, (DLGPROC) AttrItemsDlgProc);
       break;
       
+    case 6: DialogBox (hInstance, MAKEINTRESOURCE (ATTR6ITEMSDIALOG), NULL, (DLGPROC) AttrItemsDlgProc);
+      break;
+      
+    case 7: DialogBox (hInstance, MAKEINTRESOURCE (ATTR7ITEMSDIALOG), NULL, (DLGPROC) AttrItemsDlgProc);
+      break;
+       
+    case 8: DialogBox (hInstance, MAKEINTRESOURCE (ATTR8ITEMSDIALOG), NULL, (DLGPROC) AttrItemsDlgProc);
+      break;
+      
+    case 9: DialogBox (hInstance, MAKEINTRESOURCE (ATTR9ITEMSDIALOG), NULL, (DLGPROC) AttrItemsDlgProc);
+      break;
+ 
     default:
       break;
     } 

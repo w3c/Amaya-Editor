@@ -363,6 +363,11 @@
 #define MATH_ENTITY_DLG                 534
 #define IDD_DIALOG2                     535
 #define INITCONFIRM3LDIALOG             536
+#define IDD_DIALOG3                     537
+#define ATTR6ITEMSDIALOG                538
+#define ATTR7ITEMSDIALOG                539
+#define ATTR8ITEMSDIALOG                540
+#define ATTR9ITEMSDIALOG                541
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -847,7 +852,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        537
+#define _APS_NEXT_RESOURCE_VALUE        538
 #define _APS_NEXT_COMMAND_VALUE         40052
 #define _APS_NEXT_CONTROL_VALUE         1508
 #define _APS_NEXT_SYMED_VALUE           101
