@@ -7724,7 +7724,7 @@ RULES
 	FillPattern: nopattern;
 	IN Structure_view BEGIN
 		Font: Enclosing =;
-		Width: Enclosing . Width - STRUCT_INDENT;
+		Width: 1 px;
 		VertPos: Top = Previous AREA_S . Top;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;

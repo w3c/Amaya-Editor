@@ -459,8 +459,8 @@ char*               shape;
    docModified = TtaIsDocumentModified (doc);
    /* ask Thot to stop displaying changes made in the document */
    dispMode = TtaGetDisplayMode (doc);
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, DeferredDisplay);
+   /*if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);*/
 
    TtaOpenUndoSequence (doc, el, el, 0, 0);
    newElem = NULL;

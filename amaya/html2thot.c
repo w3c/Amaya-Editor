@@ -6978,7 +6978,10 @@ Document   doc;
        InputText = html_buff; 
        /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
-#ifndef EXPAT_PARSER
+#ifdef EXPAT_PARSER
+       if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, &lastelem,
+		      &isclosed, TtaGetDefaultLanguage()))
+#else /* EXPAT_PARSER */
        if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, &lastelem,
 		      &isclosed, TtaGetDefaultLanguage()))
 #endif /* EXPAT_PARSER */
