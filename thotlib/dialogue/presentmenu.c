@@ -232,25 +232,22 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 	}
     }
 
-  /* graphics fill pattern */
-  if (modifFillPattern)
+  /* couleur de fond */
+  if (modifColorBackground)
     {
-      /* cherche la regle de presentation specifique 'FillPattern' de */
+      /* cherche la regle de presentation specifique 'Background' de */
       /* l'element ou en cree une nouvelle */
-      pPRule = SearchPresRule (pEl, PtFillPattern, 0, &isNew, pDoc, viewToApply);
-      /* met les choix de l'utilisateur dans cette regle */
-      pPRule->PrType = PtFillPattern;
+      pPRule = SearchPresRule (pEl, PtBackground, 0, &isNew, pDoc, viewToApply);
+      pPRule->PrType = PtBackground;
       pPRule->PrViewNum = viewSch;
       /* this rule will be translated into style attribute for the element */
       pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
       pPRule->PrAttrValue = FALSE;
-
-      value = pPRule->PrIntValue;
-      pPRule->PrIntValue = FillPattern;
-      if (!PRuleMessagePre (pEl, pPRule, FillPattern, pDoc, isNew))
+      if (!PRuleMessagePre (pEl, pPRule, ColorBackground, pDoc, isNew))
 	{
-	  pPRule->PrIntValue = FillPattern;
+	  pPRule->PrIntValue = ColorBackground;
+	  /* met les choix de l'utilisateur dans cette regle */
 	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
@@ -279,22 +276,25 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 	}
     }
 
-  /* couleur de fond */
-  if (modifColorBackground)
+  /* graphics fill pattern */
+  if (modifFillPattern)
     {
-      /* cherche la regle de presentation specifique 'Background' de */
+      /* cherche la regle de presentation specifique 'FillPattern' de */
       /* l'element ou en cree une nouvelle */
-      pPRule = SearchPresRule (pEl, PtBackground, 0, &isNew, pDoc, viewToApply);
-      pPRule->PrType = PtBackground;
+      pPRule = SearchPresRule (pEl, PtFillPattern, 0, &isNew, pDoc, viewToApply);
+      /* met les choix de l'utilisateur dans cette regle */
+      pPRule->PrType = PtFillPattern;
       pPRule->PrViewNum = viewSch;
       /* this rule will be translated into style attribute for the element */
       pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
       pPRule->PrAttrValue = FALSE;
-      if (!PRuleMessagePre (pEl, pPRule, ColorBackground, pDoc, isNew))
+
+      value = pPRule->PrIntValue;
+      pPRule->PrIntValue = FillPattern;
+      if (!PRuleMessagePre (pEl, pPRule, FillPattern, pDoc, isNew))
 	{
-	  pPRule->PrIntValue = ColorBackground;
-	  /* met les choix de l'utilisateur dans cette regle */
+	  pPRule->PrIntValue = FillPattern;
 	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
@@ -459,7 +459,8 @@ void         ModifyColor (int colorNum, ThotBool Background)
 		       }
 		     else
 		       RuleSetPut (rulesS, PtForeground);
-		     RemoveSpecPresTree (pEl, SelDoc, rulesS, SelectedView);
+		     if (pEl && pEl->ElStructSchema)
+		       RemoveSpecPresTree (pEl, SelDoc, rulesS, SelectedView);
 		   }
 		 else
 		   ModifyGraphics (pEl, SelDoc, SelectedView, FALSE,

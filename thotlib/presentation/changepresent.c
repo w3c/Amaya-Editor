@@ -663,13 +663,15 @@ static void RemoveSpecifPres (PtrElement pEl, PtrDocument pDoc,
    /* type de cette view */
    viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);
    pPRule = pEl->ElFirstPRule;
+   if (pPRule == NULL)
+     return;
    pR = NULL;
    found = FALSE;
    doc = IdentDocument (pDoc);
-   /* parcourt les regles de presentation specifiques de l'element */
-   while (pPRule != NULL)
+   /* manage all specific presentation rules of the element if it still exists */
+   while (pPRule && pEl->ElStructSchema)
       if (pPRule->PrViewNum != viewSch || !RuleSetIn (pPRule->PrType, rules))
-	 /* cette regle n'est pas concernee */
+	 /* skip this rule */
 	{
 	   pR = pPRule;
 	   pPRule = pR->PrNextPRule;
