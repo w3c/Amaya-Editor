@@ -3,6 +3,7 @@
 <html>
 <head>
   <title>How to install the Amaya Binary Release</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 
 <body lang="en">
@@ -16,12 +17,6 @@ border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
 
 <h1>How to install the Unix Amaya Binary Release</h1>
 
-<p><img src="../Icons/warning.gif"> In the following, we assume that the path
-stored in the archive begins with the <code><strong>Amaya</strong></code>
-directory (this change was introduced for the source distribution). Older
-binary distributions use <code><strong>Amaya</strong></code> as the top
-directory name instead.</p>
-
 <h3>Choose a place for Amaya</h3>
 
 <p>Supposing the binary distribution was loaded fine, one must choose a place
@@ -31,9 +26,6 @@ to install it. We suggest</p>
   <li>the user home directory for a personal installation</li>
 </ul>
 
-<p>A Linux version doesn't need more that 5 Megabytes of disk space, even a
-RISC architecture distribution should not exceed 10 Megabytes.</p>
-
 <h3>Extract the distribution</h3>
 
 <p>Move the distribution to this directory, check that the rights on this
@@ -41,36 +33,39 @@ directory allow you to create a directory and extract the distribution.</p>
 
 <p>On a <strong>Linux ELF</strong> platform one must invoke:</p>
 
-<p><code>tar xvzf amaya-linux-elf-<strong>Release</strong>.tar.gz</code></p>
+<p><code>tar xvzf amaya-linux-elf-<strong>Release</strong>.tgz</code></p>
+
+<p>or more generally:</p>
+
+<p><code>gunzip -c
+amaya-<strong>Platform</strong>-<strong>Release</strong>.tgz | tar xvf
+-</code></p>
 
 <p>Where <strong>Release</strong> has to be replaced by the current version
 number.</p>
 
-<p>More generally if the distribution is a tar.gz file:</p>
-
-<p><code>gunzip -c
-amaya-<strong>Platform</strong>-<strong>Release</strong>.tar.gz | tar xvf
--</code></p>
-
 <p>Whatever the method used, this should print around 40 lines of output and
-create a new directory called <code>Thot</code> populated with a few files and
-directories. If not, your distribution file was probably corrupted during
-transfer, please get a new one. Read carefully the <code>COPYRIGHT</code>,
-<code>README</code> and <code>AboutTho</code>t  files.</p>
+create a new directory called <code>Amaya</code> populated with a few files
+and directories. If not, your distribution file was probably corrupted during
+transfer, please get a new one. Read carefully the <code>README</code>.amaya
+file.</p>
 
 <h3>Set up the environment and start Amaya</h3>
 
-<p>The file <code>Amaya/SYSTEM/bin/amaya</code> is the <strong>Amaya</strong>
-binary, the best thing is to add the path to the Amaya/SYSTEM/bin directory to
-your PATH environment variable. For example on a <strong>Linux-ELF</strong>
-system:</p>
+<p>The <strong>Amaya</strong> binary is the file
+<code>Amaya/<strong>Platform</strong>/bin/amaya</code>. The best thing is to
+add the path to the Amaya/<strong>Platform</strong>/bin directory to your PATH
+environment variable.</p>
 
-<p><code>setenv PATH $PATH:/usr/local/Amaya/LINUX-ELF/bin</code></p>
+<p>For example on a <strong>Linux-ELF</strong> system with a csh or tcsh
+shell:</p>
 
-<p>for a csh or tcsh shell. When using sh, bash or another variant of the
-Bourne shell</p>
+<p><code>     setenv PATH $PATH:/usr/local/Amaya/LINUX-ELF/bin</code></p>
 
-<p><code>PATH=$PATH:/usr/local/Amaya/LINUX-ELF/bin ; export PATH</code></p>
+<p>When using sh, bash or another variant of the Bourne shell:</p>
+
+<p><code>     PATH=$PATH:/usr/local/Amaya/LINUX-ELF/bin ; export
+PATH</code></p>
 
 <p>Maybe this command should be added to the .login startup script. Once done
 one can lauch <strong>Amaya</strong> simply by typing "amaya" to the shell
@@ -83,34 +78,32 @@ first page of the <strong>Amaya</strong> documentation.</p>
     points:
     <ol>
       <li>the <code>DISPLAY</code> variable is correctly set.</li>
-      <li>eventually remove your previous registry file $HOME/.thotrc.</li>
       <li>The binary just installed is the correct one, i.e. it is the correct
-        binaries for the current machine (don't try to start the Linux-ELF
+        binary for the current machine (don't try to start the Linux-ELF
         version on a Solaris machine or an old Linux a.out installation).</li>
       <li>If the binary version is ok, check the availability of the dynamic
         libraries needed by the executable file amayamain (located under
-        <code>Amaya/bin/SYSTEM/amaya</code>). for example on a
-        <strong>Linux-ELF</strong> system type
-        <p><code>ldd Amaya/LINUX-ELF/bin/amaya</code></p>
+        <code>Amaya/<strong>Platform</strong>/bin/amaya</code>). 
+        <p>For example on a <strong>Linux-ELF</strong> type:</p>
+        <p><code>    ldd Amaya/LINUX-ELF/bin/amaya</code></p>
         <p>and check that there is no missing libraries.</p>
       </li>
     </ol>
   </li>
   <li>One can install packages for different platform under the same directory
     (for example on a server filesystem exported via NFS to an heterogenous
-    set of machines), use the appropriate <code>PATH</code> on each
-  platform.</li>
+    set of machines), use the appropriate <code><strong>Platform</strong>
+    </code>in each path.</li>
   <li>All the traffic on the Amaya mailing-list is <a
     href="http://lists.w3.org/Archives/Public/www-amaya/">archived</a>. Please
     have a look at it before sending us mail if something goes wrong.
     Remember, it's an Alpha release.</li>
 </ul>
 <hr>
-
 <address>
-  <a href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a><br>
+  <a href="mailto:irene.vatton@w3.org">Irène Vatton</a><br>
   <a href="../../Help/Webmaster">Webmaster</a><br>
-  $Date$
+  $Date$ 
 </address>
 </body>
 </html>
