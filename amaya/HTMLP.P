@@ -922,9 +922,16 @@ BOXES
 		END;
 	END;
 
- SHOW_ALT: BEGIN
+#ifndef PAGE
+ SHOW_IMG: BEGIN
 	Visibility: Enclosing =;
-	Content: (ALT);
+	Content: Text '<img>';
+	Foreground: TAG_Color;
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
+	LineBreak: No;
 	IN Structure_view BEGIN
 		Visibility: 0;
 		END;
@@ -938,6 +945,30 @@ BOXES
 		Visibility: 0;
 		END;
 	END;
+
+ SHOW_ALT: BEGIN
+	Visibility: Enclosing =;
+	Content: (ALT);
+	Foreground: TAG_Color;
+	MarginTop: 1 px;
+	MarginLeft: 3 px;
+	MarginBottom: 1 px;
+	MarginRight: 3 px;
+	LineBreak: No;
+	IN Structure_view BEGIN
+		Visibility: 0;
+		END;
+	IN Alternate_view BEGIN
+		Visibility: 0;
+		END;
+	IN Links_view BEGIN
+		Visibility: 0;
+		END;
+	IN Table_of_contents BEGIN
+		Visibility: 0;
+		END;
+	END;
+#endif
 
  VALUE_ALT: BEGIN
 	Visibility: 0;
@@ -4979,7 +5010,10 @@ ATTRIBUTES
 #ifndef PAGE
  NoImages(PICTURE_UNIT):
 	BEGIN
-        CreateBefore(SHOW_ALT);
+	if ALT
+          CreateBefore(SHOW_ALT);
+	if Not ALT
+	  CreateBefore(SHOW_IMG);
 	END;
 #endif
 
