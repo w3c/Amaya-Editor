@@ -28,10 +28,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-MTL=midl.exe
-RSC=rc.exe
-
 !IF  "$(CFG)" == "thotprinter - Win32 Release"
 
 OUTDIR=.\..\bin
@@ -74,6 +70,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /MT /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D\
@@ -81,7 +78,40 @@ CPP_PROJ=/nologo /MT /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  /Fp"$(INTDIR)\thotprinter.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+MTL=midl.exe
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o NUL /win32 
+RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\thotprinter.bsc" 
 BSC32_SBRS= \
@@ -153,6 +183,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /MTd /W3 /Gm /GX /Zi /Od /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D\
@@ -161,35 +192,6 @@ CPP_PROJ=/nologo /MTd /W3 /Gm /GX /Zi /Od /I "..\..\thotlib\include" /I\
  /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
-MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o NUL /win32 
-BSC32=bscmake.exe
-BSC32_FLAGS=/nologo /o"$(OUTDIR)\thotprinter.bsc" 
-BSC32_SBRS= \
-	
-LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
- advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib\
- odbccp32.lib /nologo /subsystem:windows /dll /incremental:yes\
- /pdb:"$(OUTDIR)\thotprinter.pdb" /debug /machine:I386\
- /out:"$(OUTDIR)\thotprinter.dll" /implib:"$(OUTDIR)\thotprinter.lib"\
- /pdbtype:sept 
-LINK32_OBJS= \
-	"$(INTDIR)\initpses.obj" \
-	"$(INTDIR)\nodialog.obj" \
-	"$(INTDIR)\paginate.obj" \
-	"$(INTDIR)\print.obj" \
-	"$(INTDIR)\psdisplay.obj" \
-	"..\libjpeg.lib" \
-	"..\Libpng.lib" \
-	"..\libThotTable.lib" \
-	"..\printlib.lib"
-
-"$(OUTDIR)\thotprinter.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
-    $(LINK32) @<<
-  $(LINK32_FLAGS) $(LINK32_OBJS)
-<<
-
-!ENDIF 
 
 .c{$(CPP_OBJS)}.obj::
    $(CPP) @<<
@@ -220,6 +222,38 @@ LINK32_OBJS= \
    $(CPP) @<<
    $(CPP_PROJ) $< 
 <<
+
+MTL=midl.exe
+MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o NUL /win32 
+RSC=rc.exe
+BSC32=bscmake.exe
+BSC32_FLAGS=/nologo /o"$(OUTDIR)\thotprinter.bsc" 
+BSC32_SBRS= \
+	
+LINK32=link.exe
+LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
+ advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib\
+ odbccp32.lib /nologo /subsystem:windows /dll /incremental:yes\
+ /pdb:"$(OUTDIR)\thotprinter.pdb" /debug /machine:I386\
+ /out:"$(OUTDIR)\thotprinter.dll" /implib:"$(OUTDIR)\thotprinter.lib"\
+ /pdbtype:sept 
+LINK32_OBJS= \
+	"$(INTDIR)\initpses.obj" \
+	"$(INTDIR)\nodialog.obj" \
+	"$(INTDIR)\paginate.obj" \
+	"$(INTDIR)\print.obj" \
+	"$(INTDIR)\psdisplay.obj" \
+	"..\libjpeg.lib" \
+	"..\Libpng.lib" \
+	"..\libThotTable.lib" \
+	"..\printlib.lib"
+
+"$(OUTDIR)\thotprinter.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+    $(LINK32) @<<
+  $(LINK32_FLAGS) $(LINK32_OBJS)
+<<
+
+!ENDIF 
 
 
 !IF "$(CFG)" == "thotprinter - Win32 Release" || "$(CFG)" ==\
@@ -360,6 +394,7 @@ DEP_CPP_INITP=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -368,6 +403,7 @@ DEP_CPP_INITP=\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
 	"..\..\thotlib\internals\h\frame.h"\
+	"..\..\thotlib\internals\h\pattern.h"\
 	"..\..\thotlib\internals\h\picture.h"\
 	"..\..\thotlib\internals\h\thotcolor.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
@@ -379,6 +415,11 @@ DEP_CPP_INITP=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_INITP=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\initpses.obj" : $(SOURCE) $(DEP_CPP_INITP) "$(INTDIR)"
@@ -404,6 +445,7 @@ DEP_CPP_INITP=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
@@ -467,6 +509,11 @@ DEP_CPP_NODIA=\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_NODIA=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\nodialog.obj" : $(SOURCE) $(DEP_CPP_NODIA) "$(INTDIR)"
@@ -581,6 +628,11 @@ DEP_CPP_PAGIN=\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\appdialogue_tv.h"\
 	"..\..\thotlib\internals\var\page_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_PAGIN=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\paginate.obj" : $(SOURCE) $(DEP_CPP_PAGIN) "$(INTDIR)"
@@ -747,6 +799,11 @@ DEP_CPP_PRINT=\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
 	"..\..\thotlib\internals\var\thotpalette_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_PRINT=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\print.obj" : $(SOURCE) $(DEP_CPP_PRINT) "$(INTDIR)"
@@ -897,6 +954,11 @@ DEP_CPP_PSDIS=\
 	"..\..\thotlib\internals\var\frame_tv.h"\
 	"..\..\thotlib\internals\var\thotcolor_tv.h"\
 	"..\..\thotlib\internals\var\units_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_PSDIS=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
 "$(INTDIR)\psdisplay.obj" : $(SOURCE) $(DEP_CPP_PSDIS) "$(INTDIR)"

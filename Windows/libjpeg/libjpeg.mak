@@ -26,8 +26,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-
 !IF  "$(CFG)" == "libjpeg - Win32 Release"
 
 OUTDIR=.\..
@@ -101,10 +99,42 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS"\
  /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libjpeg.bsc" 
 BSC32_SBRS= \
@@ -236,10 +266,42 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS"\
  /Fp"$(INTDIR)\libjpeg.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libjpeg.bsc" 
 BSC32_SBRS= \
@@ -300,36 +362,6 @@ LIB32_OBJS= \
 
 !ENDIF 
 
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 
 !IF "$(CFG)" == "libjpeg - Win32 Release" || "$(CFG)" ==\
  "libjpeg - Win32 Debug"
@@ -344,6 +376,7 @@ DEP_CPP_JCAPI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jcapimin.obj" : $(SOURCE) $(DEP_CPP_JCAPI) "$(INTDIR)"
@@ -378,6 +411,7 @@ DEP_CPP_JCAPIS=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jcapistd.obj" : $(SOURCE) $(DEP_CPP_JCAPIS) "$(INTDIR)"
@@ -412,6 +446,7 @@ DEP_CPP_JCCOE=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jccoefct.obj" : $(SOURCE) $(DEP_CPP_JCCOE) "$(INTDIR)"
@@ -446,6 +481,7 @@ DEP_CPP_JCCOL=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jccolor.obj" : $(SOURCE) $(DEP_CPP_JCCOL) "$(INTDIR)"
@@ -481,6 +517,7 @@ DEP_CPP_JCDCT=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jcdctmgr.obj" : $(SOURCE) $(DEP_CPP_JCDCT) "$(INTDIR)"
@@ -517,6 +554,7 @@ DEP_CPP_JCHUF=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jchuff.obj" : $(SOURCE) $(DEP_CPP_JCHUF) "$(INTDIR)"
@@ -552,6 +590,7 @@ DEP_CPP_JCINI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jcinit.obj" : $(SOURCE) $(DEP_CPP_JCINI) "$(INTDIR)"
@@ -586,6 +625,7 @@ DEP_CPP_JCMAI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jcmainct.obj" : $(SOURCE) $(DEP_CPP_JCMAI) "$(INTDIR)"
@@ -620,6 +660,7 @@ DEP_CPP_JCMAR=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jcmarker.obj" : $(SOURCE) $(DEP_CPP_JCMAR) "$(INTDIR)"
@@ -654,6 +695,7 @@ DEP_CPP_JCMAS=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jcmaster.obj" : $(SOURCE) $(DEP_CPP_JCMAS) "$(INTDIR)"
@@ -688,6 +730,7 @@ DEP_CPP_JCOMA=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jcomapi.obj" : $(SOURCE) $(DEP_CPP_JCOMA) "$(INTDIR)"
@@ -723,6 +766,7 @@ DEP_CPP_JCPHU=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jcphuff.obj" : $(SOURCE) $(DEP_CPP_JCPHU) "$(INTDIR)"
@@ -758,6 +802,7 @@ DEP_CPP_JCPRE=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jcprepct.obj" : $(SOURCE) $(DEP_CPP_JCPRE) "$(INTDIR)"
@@ -792,6 +837,7 @@ DEP_CPP_JCSAM=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jcsample.obj" : $(SOURCE) $(DEP_CPP_JCSAM) "$(INTDIR)"
@@ -826,6 +872,7 @@ DEP_CPP_JCTRA=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jctrans.obj" : $(SOURCE) $(DEP_CPP_JCTRA) "$(INTDIR)"
@@ -860,6 +907,7 @@ DEP_CPP_JDAPI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdapimin.obj" : $(SOURCE) $(DEP_CPP_JDAPI) "$(INTDIR)"
@@ -894,6 +942,7 @@ DEP_CPP_JDAPIS=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdapistd.obj" : $(SOURCE) $(DEP_CPP_JDAPIS) "$(INTDIR)"
@@ -926,7 +975,9 @@ DEP_CPP_JDATA=\
 	"..\..\libjpeg\jerror.h"\
 	"..\..\libjpeg\jinclude.h"\
 	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdatadst.obj" : $(SOURCE) $(DEP_CPP_JDATA) "$(INTDIR)"
@@ -958,7 +1009,9 @@ DEP_CPP_JDATAS=\
 	"..\..\libjpeg\jerror.h"\
 	"..\..\libjpeg\jinclude.h"\
 	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdatasrc.obj" : $(SOURCE) $(DEP_CPP_JDATAS) "$(INTDIR)"
@@ -992,6 +1045,7 @@ DEP_CPP_JDCOE=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdcoefct.obj" : $(SOURCE) $(DEP_CPP_JDCOE) "$(INTDIR)"
@@ -1026,6 +1080,7 @@ DEP_CPP_JDCOL=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdcolor.obj" : $(SOURCE) $(DEP_CPP_JDCOL) "$(INTDIR)"
@@ -1061,6 +1116,7 @@ DEP_CPP_JDDCT=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jddctmgr.obj" : $(SOURCE) $(DEP_CPP_JDDCT) "$(INTDIR)"
@@ -1097,6 +1153,7 @@ DEP_CPP_JDHUF=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdhuff.obj" : $(SOURCE) $(DEP_CPP_JDHUF) "$(INTDIR)"
@@ -1132,6 +1189,7 @@ DEP_CPP_JDINP=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdinput.obj" : $(SOURCE) $(DEP_CPP_JDINP) "$(INTDIR)"
@@ -1166,6 +1224,7 @@ DEP_CPP_JDMAI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdmainct.obj" : $(SOURCE) $(DEP_CPP_JDMAI) "$(INTDIR)"
@@ -1200,6 +1259,7 @@ DEP_CPP_JDMAR=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdmarker.obj" : $(SOURCE) $(DEP_CPP_JDMAR) "$(INTDIR)"
@@ -1234,6 +1294,7 @@ DEP_CPP_JDMAS=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdmaster.obj" : $(SOURCE) $(DEP_CPP_JDMAS) "$(INTDIR)"
@@ -1268,6 +1329,7 @@ DEP_CPP_JDMER=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdmerge.obj" : $(SOURCE) $(DEP_CPP_JDMER) "$(INTDIR)"
@@ -1303,6 +1365,7 @@ DEP_CPP_JDPHU=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdphuff.obj" : $(SOURCE) $(DEP_CPP_JDPHU) "$(INTDIR)"
@@ -1338,6 +1401,7 @@ DEP_CPP_JDPOS=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdpostct.obj" : $(SOURCE) $(DEP_CPP_JDPOS) "$(INTDIR)"
@@ -1372,6 +1436,7 @@ DEP_CPP_JDSAM=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdsample.obj" : $(SOURCE) $(DEP_CPP_JDSAM) "$(INTDIR)"
@@ -1406,6 +1471,7 @@ DEP_CPP_JDTRA=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jdtrans.obj" : $(SOURCE) $(DEP_CPP_JDTRA) "$(INTDIR)"
@@ -1438,8 +1504,10 @@ DEP_CPP_JERRO=\
 	"..\..\libjpeg\jerror.h"\
 	"..\..\libjpeg\jinclude.h"\
 	"..\..\libjpeg\jmorecfg.h"\
+	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
 	"..\..\libjpeg\jversion.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jerror.obj" : $(SOURCE) $(DEP_CPP_JERRO) "$(INTDIR)"
@@ -1475,6 +1543,7 @@ DEP_CPP_JFDCT=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jfdctflt.obj" : $(SOURCE) $(DEP_CPP_JFDCT) "$(INTDIR)"
@@ -1511,6 +1580,7 @@ DEP_CPP_JFDCTF=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jfdctfst.obj" : $(SOURCE) $(DEP_CPP_JFDCTF) "$(INTDIR)"
@@ -1547,6 +1617,7 @@ DEP_CPP_JFDCTI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jfdctint.obj" : $(SOURCE) $(DEP_CPP_JFDCTI) "$(INTDIR)"
@@ -1583,6 +1654,7 @@ DEP_CPP_JIDCT=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jidctflt.obj" : $(SOURCE) $(DEP_CPP_JIDCT) "$(INTDIR)"
@@ -1619,6 +1691,7 @@ DEP_CPP_JIDCTF=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jidctfst.obj" : $(SOURCE) $(DEP_CPP_JIDCTF) "$(INTDIR)"
@@ -1655,6 +1728,7 @@ DEP_CPP_JIDCTI=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jidctint.obj" : $(SOURCE) $(DEP_CPP_JIDCTI) "$(INTDIR)"
@@ -1691,6 +1765,7 @@ DEP_CPP_JIDCTR=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jidctred.obj" : $(SOURCE) $(DEP_CPP_JIDCTR) "$(INTDIR)"
@@ -1727,6 +1802,7 @@ DEP_CPP_JMEMM=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jmemmgr.obj" : $(SOURCE) $(DEP_CPP_JMEMM) "$(INTDIR)"
@@ -1763,6 +1839,7 @@ DEP_CPP_JMEMN=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jmemnobs.obj" : $(SOURCE) $(DEP_CPP_JMEMN) "$(INTDIR)"
@@ -1798,6 +1875,7 @@ DEP_CPP_JQUAN=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jquant1.obj" : $(SOURCE) $(DEP_CPP_JQUAN) "$(INTDIR)"
@@ -1832,6 +1910,7 @@ DEP_CPP_JQUANT=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jquant2.obj" : $(SOURCE) $(DEP_CPP_JQUANT) "$(INTDIR)"
@@ -1866,6 +1945,7 @@ DEP_CPP_JUTIL=\
 	"..\..\libjpeg\jmorecfg.h"\
 	"..\..\libjpeg\jpegint.h"\
 	"..\..\libjpeg\jpeglib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\jutils.obj" : $(SOURCE) $(DEP_CPP_JUTIL) "$(INTDIR)"

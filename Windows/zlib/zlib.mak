@@ -25,8 +25,6 @@ NULL=
 NULL=nul
 !ENDIF 
 
-CPP=cl.exe
-
 !IF  "$(CFG)" == "zlib - Win32 Release"
 
 OUTDIR=.\..
@@ -69,11 +67,43 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
  "__STDC__" /Fp"$(INTDIR)\zlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c\
  
 CPP_OBJS=.\Release/
 CPP_SBRS=.
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\zlib.bsc" 
 BSC32_SBRS= \
@@ -143,39 +173,12 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
+CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D\
  "__STDC__" /Fp"$(INTDIR)\zlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c\
  
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
-BSC32=bscmake.exe
-BSC32_FLAGS=/nologo /o"$(OUTDIR)\zlib.bsc" 
-BSC32_SBRS= \
-	
-LIB32=link.exe -lib
-LIB32_FLAGS=/nologo /out:"$(OUTDIR)\zlib.lib" 
-LIB32_OBJS= \
-	"$(INTDIR)\adler32.obj" \
-	"$(INTDIR)\compress.obj" \
-	"$(INTDIR)\crc32.obj" \
-	"$(INTDIR)\deflate.obj" \
-	"$(INTDIR)\gzio.obj" \
-	"$(INTDIR)\infblock.obj" \
-	"$(INTDIR)\infcodes.obj" \
-	"$(INTDIR)\inffast.obj" \
-	"$(INTDIR)\inflate.obj" \
-	"$(INTDIR)\inftrees.obj" \
-	"$(INTDIR)\infutil.obj" \
-	"$(INTDIR)\trees.obj" \
-	"$(INTDIR)\uncompr.obj" \
-	"$(INTDIR)\zutil.obj"
-
-"$(OUTDIR)\zlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
-    $(LIB32) @<<
-  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
-<<
-
-!ENDIF 
 
 .c{$(CPP_OBJS)}.obj::
    $(CPP) @<<
@@ -207,6 +210,35 @@ LIB32_OBJS= \
    $(CPP_PROJ) $< 
 <<
 
+BSC32=bscmake.exe
+BSC32_FLAGS=/nologo /o"$(OUTDIR)\zlib.bsc" 
+BSC32_SBRS= \
+	
+LIB32=link.exe -lib
+LIB32_FLAGS=/nologo /out:"$(OUTDIR)\zlib.lib" 
+LIB32_OBJS= \
+	"$(INTDIR)\adler32.obj" \
+	"$(INTDIR)\compress.obj" \
+	"$(INTDIR)\crc32.obj" \
+	"$(INTDIR)\deflate.obj" \
+	"$(INTDIR)\gzio.obj" \
+	"$(INTDIR)\infblock.obj" \
+	"$(INTDIR)\infcodes.obj" \
+	"$(INTDIR)\inffast.obj" \
+	"$(INTDIR)\inflate.obj" \
+	"$(INTDIR)\inftrees.obj" \
+	"$(INTDIR)\infutil.obj" \
+	"$(INTDIR)\trees.obj" \
+	"$(INTDIR)\uncompr.obj" \
+	"$(INTDIR)\zutil.obj"
+
+"$(OUTDIR)\zlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
+    $(LIB32) @<<
+  $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
+<<
+
+!ENDIF 
+
 
 !IF "$(CFG)" == "zlib - Win32 Release" || "$(CFG)" == "zlib - Win32 Debug"
 SOURCE=..\..\libpng\zlib\adler32.c
@@ -216,6 +248,7 @@ SOURCE=..\..\libpng\zlib\adler32.c
 DEP_CPP_ADLER=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\adler32.obj" : $(SOURCE) $(DEP_CPP_ADLER) "$(INTDIR)"
@@ -242,6 +275,7 @@ SOURCE=..\..\libpng\zlib\compress.c
 DEP_CPP_COMPR=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\compress.obj" : $(SOURCE) $(DEP_CPP_COMPR) "$(INTDIR)"
@@ -268,6 +302,7 @@ SOURCE=..\..\libpng\zlib\crc32.c
 DEP_CPP_CRC32=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\crc32.obj" : $(SOURCE) $(DEP_CPP_CRC32) "$(INTDIR)"
@@ -296,6 +331,7 @@ DEP_CPP_DEFLA=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
 	"..\..\libpng\zlib\zutil.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\deflate.obj" : $(SOURCE) $(DEP_CPP_DEFLA) "$(INTDIR)"
@@ -325,6 +361,7 @@ DEP_CPP_GZIO_=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
 	"..\..\libpng\zlib\zutil.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\gzio.obj" : $(SOURCE) $(DEP_CPP_GZIO_) "$(INTDIR)"
@@ -357,6 +394,7 @@ DEP_CPP_INFBL=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
 	"..\..\libpng\zlib\zutil.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\infblock.obj" : $(SOURCE) $(DEP_CPP_INFBL) "$(INTDIR)"
@@ -394,6 +432,7 @@ DEP_CPP_INFCO=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
 	"..\..\libpng\zlib\zutil.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\infcodes.obj" : $(SOURCE) $(DEP_CPP_INFCO) "$(INTDIR)"
@@ -432,6 +471,7 @@ DEP_CPP_INFFA=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
 	"..\..\libpng\zlib\zutil.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\inffast.obj" : $(SOURCE) $(DEP_CPP_INFFA) "$(INTDIR)"
@@ -466,6 +506,7 @@ DEP_CPP_INFLA=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
 	"..\..\libpng\zlib\zutil.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\inflate.obj" : $(SOURCE) $(DEP_CPP_INFLA) "$(INTDIR)"
@@ -497,6 +538,7 @@ DEP_CPP_INFTR=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
 	"..\..\libpng\zlib\zutil.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\inftrees.obj" : $(SOURCE) $(DEP_CPP_INFTR) "$(INTDIR)"
@@ -531,6 +573,7 @@ DEP_CPP_INFUT=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
 	"..\..\libpng\zlib\zutil.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\infutil.obj" : $(SOURCE) $(DEP_CPP_INFUT) "$(INTDIR)"
@@ -565,6 +608,7 @@ DEP_CPP_TREES=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
 	"..\..\libpng\zlib\zutil.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\trees.obj" : $(SOURCE) $(DEP_CPP_TREES) "$(INTDIR)"
@@ -594,6 +638,7 @@ SOURCE=..\..\libpng\zlib\uncompr.c
 DEP_CPP_UNCOM=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\uncompr.obj" : $(SOURCE) $(DEP_CPP_UNCOM) "$(INTDIR)"
@@ -621,6 +666,7 @@ DEP_CPP_ZUTIL=\
 	"..\..\libpng\zlib\zconf.h"\
 	"..\..\libpng\zlib\zlib.h"\
 	"..\..\libpng\zlib\zutil.h"\
+	{$(INCLUDE)}"sys\types.h"\
 	
 
 "$(INTDIR)\zutil.obj" : $(SOURCE) $(DEP_CPP_ZUTIL) "$(INTDIR)"
