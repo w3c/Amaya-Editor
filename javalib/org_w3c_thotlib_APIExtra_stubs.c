@@ -565,6 +565,20 @@ org_w3c_thotlib_Extra_TtaListAbstractTree(jlong element) {
     TtaListAbstractTree(el, stderr);
 }
 
+void
+org_w3c_thotlib_Extra_TtaGiveActiveView(struct Horg_w3c_thotlib_Document* jdocument, struct Horg_w3c_thotlib_IntPtr* jview) {
+    Document *document;
+    View *view;
+
+    JavaDocument2CDocumentPtr(jdocument, &document);
+    JavaIntPtr2CintPtr(jview, &view);
+    JavaThotlibLock();
+    TtaGiveActiveView(document, view);
+    JavaThotlibRelease();
+    CDocumentPtr2JavaDocument(document, &jdocument);
+    CintPtr2JavaIntPtr(view, &jview);
+}
+
 /****************************************************************
  *								*
  * 	Handling of support for new Button from Java		*
@@ -781,6 +795,8 @@ void register_org_w3c_thotlib_Extra_stubs(void)
 	                org_w3c_thotlib_Extra_TtaCreateDescentWithContent);
         addNativeMethod("org_w3c_thotlib_Extra_TtaListAbstractTree",
 	                org_w3c_thotlib_Extra_TtaListAbstractTree);
+        addNativeMethod("org_w3c_thotlib_Extra_TtaGiveActiveView",
+	                org_w3c_thotlib_Extra_TtaGiveActiveView);
         addNativeMethod("org_w3c_thotlib_Extra_TtaNewButton",
 	                org_w3c_thotlib_Extra_TtaNewButton);
 
