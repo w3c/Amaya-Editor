@@ -140,6 +140,13 @@ static int CurrentFont (FILE *fout, PtrFont font)
 	  c1 = TtPsFontName[i + 1]; /* font Helvetica Times Courrier */
 	  /* convert lowercase to uppercase */
 	  c2 = TtPsFontName[i + 2]; /* Style normal bold italique */
+#ifndef _GL
+	  if (c1 == 'n')
+	    {
+	      c0 = c1 = 'g';
+	      c2 = 'r';
+	    }
+#endif /* _GL */
 	  result = 0;
 	}
       

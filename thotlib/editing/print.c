@@ -2603,9 +2603,6 @@ int main (int argc, char **argv)
 #endif /*_WINDOWS*/
 #endif /*_WINDOWS_DLL*/
 
-
-
-
   thotWindow       = 0;
   removeDirectory = FALSE;
   Repaginate     = 0;

@@ -1184,10 +1184,10 @@ PtrFont LoadFont (char *name)
 
 /*----------------------------------------------------------------------
  GeneratePostcriptFont : 
- As poscript name serves also for the font cache
+ As postcript name serves also for the font cache
  ----------------------------------------------------------------------*/
-void GeneratePostcriptFont (char r_name[10], char script, int family,
-			   int highlight, int size)
+static void GeneratePostcriptFont (char r_name[10], char script, int family,
+				   int highlight, int size)
 {
   
   char        *cfamily = "sthc";
@@ -1199,7 +1199,7 @@ void GeneratePostcriptFont (char r_name[10], char script, int family,
       	family = 1;
       sprintf (r_name, "%c%c%c%d", TOLOWER (script), 
 	       cfamily[family], StylesTable[highlight], size);
-    }  
+    }
   else
   {
       /* As poscript name serves also for the font cache
@@ -1246,149 +1246,146 @@ static void FontIdentifier (char script, int family, int highlight, int size,
       highlight=4;
       sprintf (r_nameX, "%s-%s-%s-normal-*-%d-173-100-100-p-106-iso10646-1",
 		 ffamily, wght, slant, size);
-   GeneratePostcriptFont (r_name, script, family, highlight, size);
+      GeneratePostcriptFont (r_name, script, family, highlight, size);
 #if defined(_GTK) || defined(_MOTIF)
-   ptfont = LoadFont (r_nameX);
+      ptfont = LoadFont (r_nameX);
 #endif /*#if defined(_GTK) || defined(_MOTIF)*/
- }   
+    }
   else
     { 
-
-  if (script != 'L' && script != 'G' && script != 'Z' && script != 'E')
-
-    {
-      if (script == 'F')
-	strcpy (encoding, "15");
-      else if (script == 'D')
-	strcpy (encoding, "13");
-      else
-	sprintf (encoding, "%c", script);
-      ffamily = "-*-*";
-      if (highlight > MAX_HIGHLIGHT)
-	wght = "*";
-      else if (highlight == 0 || highlight == 2 || highlight == 3)
-	wght = "medium";
-      else
-	wght = "bold";
-      if (highlight == 0 || highlight == 1)
-	slant = "r";
-      else
-	slant = "o";
-      if (size < 0)
+      if (script != 'L' && script != 'G' && script != 'Z' && script != 'E')
 	{
-	  sprintf (r_nameX, "%s-%s-%s-*-*-13-*-*-*-*-*-iso8859-%s",
-		   ffamily, wght, slant, encoding);
-	  size = 12;
-	}
-      else
-	sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-*-*-*-*-iso8859-%s",
-		 ffamily, wght, slant, size, encoding);
-    }
-  else if (script == 'G' || family == 0)
-    {
-      family = 0;
-      highlight = 0;
-      sprintf (r_nameX, "-*-symbol-medium-r-*-*-%d-*-*-*-*-*-*-fontspecific", size);
-    }
-  else if (script == 'E')
-    {
-      switch (family)
-	{
-	case 6 :
-	  sprintf (r_nameX, 
-		   "-altsys-esstixsix-medium-r-normal-*-%i-*-*-*-p-*-ascii-0",
-		   size);
-	  break;
-	case 7:
-	  sprintf (r_nameX, 
-		   "-altsys-esstixseven-medium-r-normal-*-%i-*-*-*-p-*-ascii-0",
-		   size);
-	  break;	  
-	case 10: 
-	  sprintf (r_nameX, 
-		   "-altsys-esstixten-medium-r-normal-*-%i-*-*-*-p-*-ascii-0",
-		   size);
-	  break;
-	default:
-   	  break;
-	}
-    }
-  else if (script == 'Z')
-    {
-      ffamily = "-ms-*";
-      if (highlight > MAX_HIGHLIGHT)
-	wght = "*";
-      else if (highlight == 0 || highlight == 2 || highlight == 3)
-	wght = "medium";
-      else
-	wght = "bold";
-      if (highlight == 0 || highlight == 1)
-	slant = "r";
-      else
-	slant = "o";
-      if (size < 0)
-	{
-  	  strcpy (r_nameX, "-*-dfgothicu_w5-*-*-*-*-*-*-*-*-*-*-iso10646-*");
-	  size = 12;
-	}
-      else
-	sprintf (r_nameX,  "-*-dfgothicu_w5-*-*-*-*-%i-*-*-*-*-*-iso10646-*",
-		 size);
-    }
-  else
-    {
-      switch (family)
-	{
-	case 1:
-	  ffamily = "-*-times";
-	  break;
-	case 2:
-	  ffamily = "-*-helvetica";
-	  break;
-	case 3:
-	  ffamily = "-adobe-courier";
-	  break;
-	default:
+	  if (script == 'F')
+	    strcpy (encoding, "15");
+	  else if (script == 'D')
+	    strcpy (encoding, "13");
+	  else
+	    sprintf (encoding, "%c", script);
 	  ffamily = "-*-*";
+	  if (highlight > MAX_HIGHLIGHT)
+	    wght = "*";
+	  else if (highlight == 0 || highlight == 2 || highlight == 3)
+	    wght = "medium";
+	  else
+	    wght = "bold";
+	  if (highlight == 0 || highlight == 1)
+	    slant = "r";
+	  else
+	    slant = "o";
+	  if (size < 0)
+	    {
+	      sprintf (r_nameX, "%s-%s-%s-*-*-13-*-*-*-*-*-iso8859-%s",
+		       ffamily, wght, slant, encoding);
+	      size = 12;
+	    }
+	  else
+	    sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-*-*-*-*-iso8859-%s",
+		     ffamily, wght, slant, size, encoding);
 	}
-      
-      switch (highlight)
+      else if (script == 'G' || family == 0)
 	{
-	case 1:
-	  wght = "bold";
-	  slant = "r";
-	  break;
-	case 2:
-	case 3:
-	  wght = "medium";
-	  if (family == 2 || family == 3)
-	    slant = "o";
-	  else
-	    slant = "i";
-	  break;
-	case 4:
-	case 5:
-	  if (family == 2 || family == 2)
-	    {
-	    wght = "bold";
-	    slant = "o";
-	    }
-	  else
-	    {
-	    wght = "bold";
-	    slant = "i";
-	    }
-	  break;
-	default:
-	  wght = "medium";
-	  slant = "r";
-	  break;
+	  family = 0;
+	  highlight = 0;
+	  sprintf (r_nameX, "-*-symbol-medium-r-*-*-%d-*-*-*-*-*-*-fontspecific", size);
 	}
-      sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-75-75-*-*-iso8859-1",
-	       ffamily, wght, slant, size);
-    }
-  GeneratePostcriptFont (r_name, script, family, highlight, size);
-  
+      else if (script == 'E')
+	{
+	  switch (family)
+	    {
+	    case 6 :
+	      sprintf (r_nameX, 
+		       "-altsys-esstixsix-medium-r-normal-*-%i-*-*-*-p-*-ascii-0",
+		       size);
+	      break;
+	    case 7:
+	      sprintf (r_nameX, 
+		       "-altsys-esstixseven-medium-r-normal-*-%i-*-*-*-p-*-ascii-0",
+		       size);
+	      break;	  
+	    case 10: 
+	      sprintf (r_nameX, 
+		       "-altsys-esstixten-medium-r-normal-*-%i-*-*-*-p-*-ascii-0",
+		       size);
+	      break;
+	    default:
+	      break;
+	    }
+	}
+      else if (script == 'Z')
+	{
+	  ffamily = "-ms-*";
+	  if (highlight > MAX_HIGHLIGHT)
+	    wght = "*";
+	  else if (highlight == 0 || highlight == 2 || highlight == 3)
+	    wght = "medium";
+	  else
+	    wght = "bold";
+	  if (highlight == 0 || highlight == 1)
+	    slant = "r";
+	  else
+	    slant = "o";
+	  if (size < 0)
+	    {
+	      strcpy (r_nameX, "-*-dfgothicu_w5-*-*-*-*-*-*-*-*-*-*-iso10646-*");
+	      size = 12;
+	    }
+	  else
+	    sprintf (r_nameX,  "-*-dfgothicu_w5-*-*-*-*-%i-*-*-*-*-*-iso10646-*",
+		     size);
+	}
+      else
+	{
+	  switch (family)
+	    {
+	    case 1:
+	      ffamily = "-*-times";
+	      break;
+	    case 2:
+	      ffamily = "-*-helvetica";
+	      break;
+	    case 3:
+	      ffamily = "-adobe-courier";
+	      break;
+	    default:
+	      ffamily = "-*-*";
+	    }
+      
+	  switch (highlight)
+	    {
+	    case 1:
+	      wght = "bold";
+	      slant = "r";
+	      break;
+	    case 2:
+	    case 3:
+	      wght = "medium";
+	      if (family == 2 || family == 3)
+		slant = "o";
+	      else
+		slant = "i";
+	      break;
+	    case 4:
+	    case 5:
+	      if (family == 2 || family == 2)
+		{
+		  wght = "bold";
+		  slant = "o";
+		}
+	      else
+		{
+		  wght = "bold";
+		  slant = "i";
+		}
+	      break;
+	    default:
+	      wght = "medium";
+	      slant = "r";
+	      break;
+	    }
+	  sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-75-75-*-*-iso8859-1",
+		   ffamily, wght, slant, size);
+	}
+      GeneratePostcriptFont (r_name, script, family, highlight, size);
     }
 }
 
@@ -1826,6 +1823,10 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   ----------------------------------------------------------------------*/
 void *LoadStixFont (int family, int size)
 {
+#if !defined(_GL) && !defined(_WINDOWS)
+  if (Printing)
+    return NULL;
+#endif /* !defined(_GL) && !defined(_WINDOWS */
   return ((void *) LoadNearestFont ('E', family, 0, size, size, ActiveFrame,
 				    FALSE, FALSE));
 }

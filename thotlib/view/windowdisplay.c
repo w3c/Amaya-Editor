@@ -2296,31 +2296,28 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
 			 int l, int h, int align, int fg)
 {
-   int        Y;
+  int        Y;
 
-   if (thick <= 0 || fg < 0)
-     return;
+  if (thick <= 0 || fg < 0)
+    return;
 #ifdef _WIN_PRINT 
-   if (y < 0)
-     return;
+  if (y < 0)
+    return;
 #endif /* _WIN_PRINT */
-   y += FrameTable[frame].FrTopMargin;
-   if (align == 1)
-      Y = y + h / 2;
-   else if (align == 2)
-      Y = y + h - (thick + 1) / 2;
-   else
-      Y = y + thick / 2;
-
-   if (thick > 1 && style == 5)
-  DrawRectangle (frame, 1, style, 
-			   x, 
-			   Y - thick / 2, 
-			   l,
-		    thick, fg, fg, 2);
-else
-   DrawOneLine (frame, thick, style, x + thick / 2, Y, 
-	   x + l - (thick + 1) / 2, Y, fg);
+  y += FrameTable[frame].FrTopMargin;
+  if (align == 1)
+    Y = y + h / 2;
+  else if (align == 2)
+    Y = y + h - (thick + 1) / 2;
+  else
+    Y = y + thick / 2;
+  
+  /*if (thick > 1 && style == 5)
+    DrawRectangle (frame, 1, style, x, Y - thick / 2, l,
+    thick, fg, fg, 2);
+    else*/
+  DrawOneLine (frame, thick, style, x + thick / 2, Y, 
+	       x + l - (thick + 1) / 2, Y, fg);
 }
 /*----------------------------------------------------------------------
   DrawVerticalLine draw a vertical line aligned left center or right
@@ -2347,14 +2344,11 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y, int l,
   else
     X = x + thick / 2;
 
- if (thick > 1 && style == 5)
-  DrawRectangle (frame, 1, style, 
-			   X - thick / 2, 
-			   y, 
-			   thick,
-		    h, fg, fg, 2);
-  else
-   DrawOneLine (frame, thick, style, X, y + thick / 2, X, y + h - (thick + 1) / 2, fg);
+  /*if (thick > 1 && style == 5)
+    DrawRectangle (frame, 1, style, X - thick / 2, y, thick,
+    h, fg, fg, 2);
+    else*/
+  DrawOneLine (frame, thick, style, X, y + thick / 2, X, y + h - (thick + 1) / 2, fg);
 }
 
 /*----------------------------------------------------------------------

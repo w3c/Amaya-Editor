@@ -471,33 +471,34 @@ void GiveStixSize (PtrFont pfont, PtrAbstractBox pAb, int *width,
 void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
 			  int height)
 {
-      switch (typesymb)
-	{
-	  /*integral, union...*/
-	case 'i':
-	case 'c':
-	case 'd':	  
-	case 'I':
-	case 'U':
-	case 'o':
-	case 'u':
-	*font =  LoadStixFont (6, height);
-	  break;
-	case '(':
-	case ')':
-	case '{':
-	case '}':
-	case '[':
-	case ']':
-	case '<':
-	case '>':
-	  if (height > 2)
-	    *font = LoadStixFont (7, height);
-	  break;
-	default:
-	  *font = NULL;	  
-	  return;
-	break;
-      }
+  switch (typesymb)
+    {
+      /*integral, union...*/
+    case 'i':
+    case 'c':
+    case 'd':	  
+    case 'I':
+    case 'U':
+    case 'o':
+    case 'u':
+      *font =  LoadStixFont (6, height);
+      break;
+    case '(':
+    case ')':
+    case '{':
+    case '}':
+    case '[':
+    case ']':
+    case '<':
+    case '>':
+      if (height > 2)
+	*font = LoadStixFont (7, height);
+      break;
+    default:
+      *font = NULL;	  
+      return;
+      break;
+    }
 }
+
 
