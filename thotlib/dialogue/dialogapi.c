@@ -138,18 +138,16 @@ static ThotWidget          MainShell, PopShell;
 
 
 #ifdef _WINDOWS
-static HFONT        formFONT;
+static HFONT          formFONT;
 STRING iconID;
-static  OPENFILENAME OpenFileName;
-static  int cyValue = 10;
-
-static HWND   currentParent;
-
+static  OPENFILENAME  OpenFileName;
+static  int           cyValue = 10;
+static HWND           currentParent;
 #else  /* _WINDOWS */
-static XmFontList   formFONT;
+static XmFontList     formFONT;
 static ThotAppContext Def_AppCont;
-static Display*       GDp;
-#endif /* !_WINDOWS */
+static Display       *GDp;
+#endif /* _WINDOWS */
 
 #include "appdialogue_f.h"
 #include "memory_f.h"
@@ -159,10 +157,10 @@ static Display*       GDp;
 /*****************************
  * MS-Windows Specific part. *
  *****************************/
-
-typedef struct struct_winerror {
-        WORD  errNo;
-        char* errstr;
+typedef struct struct_winerror
+{
+   WORD   errNo;
+   char  *errstr;
 };
 
 struct struct_winerror win_errtab[] = {
@@ -171,14 +169,12 @@ struct struct_winerror win_errtab[] = {
 
 #define NB_WIN_ERROR (sizeof(win_errtab) / sizeof(struct struct_winerror))
 #define MAX_FRAMECAT 50
-
 typedef struct FrCatalogue {
-        struct Cat_Context*  Cat_Table[MAX_FRAMECAT];
+  struct Cat_Context * Cat_Table[MAX_FRAMECAT];
 } FrCatalogue;
 
 
 FrCatalogue FrameCatList [MAX_FRAME + 1];
-
 LRESULT CALLBACK WndProc        (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ClientWndProc  (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ThotDlgProc    (HWND, UINT, WPARAM, LPARAM);
@@ -186,7 +182,6 @@ LRESULT CALLBACK TxtZoneWndProc (HWND, UINT, WPARAM, LPARAM);
 
 static int          nAmayaShow;
 static DWORD        WinLastError;
-
 /* following variables are declared as extern in frame_tv.h */
 HINSTANCE           hInstance = 0;
 HBITMAP             WIN_LastBitmap = 0;
@@ -214,7 +209,6 @@ static CHAR_T     key;
 
 UINT subMenuID [MAX_FRAME];
 static ThotWindow WIN_curWin = NULL;
-
 extern int main (int, CHAR_T**);
 
 /*----------------------------------------------------------------------
@@ -224,17 +218,15 @@ extern int main (int, CHAR_T**);
 void WinErrorBox (HWND hWnd, STRING source)
 {
 #ifndef _AMAYA_RELEASE_
-   int                 msg;
-   CHAR_T                str[200];
+   int                msg;
+   char               str[200];
 
    WinLastError = GetLastError ();
    if (WinLastError == 0)
       return;
-
    for (msg = 0; msg < NB_WIN_ERROR; msg++)
        if (win_errtab[msg].errNo == WinLastError)
 	  break;
-
    if (msg >= NB_WIN_ERROR)
       usprintf (str, TEXT("Error %d : not registered\n"), WinLastError);
    else
@@ -243,18 +235,6 @@ void WinErrorBox (HWND hWnd, STRING source)
 
    MessageBox (hWnd, str, TEXT("Amaya"), MB_OK);
 #endif /* _AMAYA_RELEASE_ */
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-static ThotBool isOnlyBlank (CONST STRING text)
-{
-    STRING pText = text;
-    while (pText && *pText == SPACE)
-	  pText++;
-    if (*pText == EOS)
-       return TRUE;
-    return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -317,7 +297,7 @@ void WIN_ReleaseDeviceContext (void)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-BOOL RegisterWin95 (CONST WNDCLASS* lpwc)
+ThotBool RegisterWin95 (CONST WNDCLASS* lpwc)
 {
    WNDCLASSEX wcex;
 
@@ -339,60 +319,31 @@ BOOL RegisterWin95 (CONST WNDCLASS* lpwc)
 }
 
 /*----------------------------------------------------------------------
-   GetMenuParentNumber :  returns the Thot window number associated to a     
-   given menu.                                          
+  GetMenuParentNumber:  returns the Thot window number associated to a     
+  given menu.
   ----------------------------------------------------------------------*/
-int GetMenuParentNumber (ThotMenu menu)
+static int GetMenuParentNumber (ThotMenu menu)
 {
-   int      menuIndex;
-   int      frameIndex = 0;
-   int      frame      = -1;
-   ThotBool found      = FALSE;
+  int      menuIndex;
+  int      frameIndex = 0;
+  int      frame      = -1;
+  ThotBool found      = FALSE;
   
-   while (frameIndex <= MAX_FRAME && !found) {
-         menuIndex = 0;
-         while (menuIndex < MAX_MENU && !found) 
-	     if (FrameTable[frameIndex].WdMenus[menuIndex] == menu) {
-                frame = frameIndex;
-                found = TRUE;
-             } else 
-                  menuIndex++;
-         if (!found)
-            frameIndex++;
-   }
-   return frame;
-}
-
-/*----------------------------------------------------------------------
-  GetVScrollParentNumber:  returns the Thot window number associated to a     
-   given menu.                                          
-  ----------------------------------------------------------------------*/
-int GetVScrollParentNumber (ThotWidget vScroll)
-{
-   int     frame = 0;
-  
-   while (frame < MAX_FRAME) {
-         if (FrameTable[frame].WdScrollV == vScroll)
-            return frame;
-         frame++;
-   }
-   return -1;
-}
-
-/*----------------------------------------------------------------------
-  GetHScrollParentNumber:  returns the Thot window number associated to a  
-   given menu.                                          
-  ----------------------------------------------------------------------*/
-int GetHScrollParentNumber (ThotWidget hScroll)
-{
-   int     frame = 0;
-  
-   while (frame < MAX_FRAME) {
-         if (FrameTable[frame].WdScrollH == hScroll)
-            return frame;
-         frame++;
-   }
-   return -1;
+  while (frameIndex <= MAX_FRAME && !found)
+    {
+      menuIndex = 0;
+      while (menuIndex < MAX_MENU && !found) 
+	if (FrameTable[frameIndex].WdMenus[menuIndex] == menu)
+	  {
+	    frame = frameIndex;
+	    found = TRUE;
+	  }
+	else 
+	  menuIndex++;
+      if (!found)
+	frameIndex++;
+    }
+  return frame;
 }
 
 /*----------------------------------------------------------------------
@@ -406,79 +357,78 @@ HMENU WIN_GetMenu (int frame)
   ----------------------------------------------------------------------*/
 void WIN_AddFrameCatalogue (ThotWidget parent, struct Cat_Context* catalogue)
 {
-   int                 frameIndex;
-   int                 catIndex;
-   int                 twIndex;
-   int                 i;
-   int                 frame = GetMainFrameNumber (parent);
-   ThotBool            found;
-   struct Cat_Context* tmpCat;
+  int                 frameIndex;
+  int                 catIndex;
+  int                 twIndex;
+  int                 i;
+  int                 frame = GetMainFrameNumber (parent);
+  ThotBool            found;
+  struct Cat_Context* tmpCat;
 
-   if (frame == -1) {
+  if (frame == -1)
+    {
       frame = GetMenuParentNumber ((ThotMenu) parent);
-   
-      if (frame == - 1) {
-         frameIndex = 0;
-         found      = FALSE;
-
-         while (frameIndex <= MAX_FRAME && !found) {
-               catIndex = 0;
-            
-               while (catIndex < MAX_FRAMECAT && !found) {
-                     twIndex = 0;
-
-                     while (twIndex < C_NUMBER && !found)
-                           if (FrameCatList[frameIndex].Cat_Table[catIndex] && FrameCatList[frameIndex].Cat_Table[catIndex]->Cat_Entries &&
-                               FrameCatList[frameIndex].Cat_Table[catIndex]->Cat_Entries->E_ThotWidget[twIndex] == parent) {
-			      
-                              found = TRUE;
-                              frame = frameIndex;
-                           } else
-                                 twIndex++;
+      if (frame == - 1)
+	{
+	  frameIndex = 0;
+	  found      = FALSE;
+	  while (frameIndex <= MAX_FRAME && !found)
+	    {
+	      catIndex = 0;
+	      while (catIndex < MAX_FRAMECAT && !found)
+		{
+		  twIndex = 0;
+		  while (twIndex < C_NUMBER && !found)
+		    if (FrameCatList[frameIndex].Cat_Table[catIndex] &&
+			FrameCatList[frameIndex].Cat_Table[catIndex]->Cat_Entries &&
+			FrameCatList[frameIndex].Cat_Table[catIndex]->Cat_Entries->E_ThotWidget[twIndex] == parent)
+		      {
+			found = TRUE;
+			frame = frameIndex;
+		      }
+		    else
+		      twIndex++;
  
-                           if (!found)
-                              catIndex++;
-               }
+		  if (!found)
+		    catIndex++;
+		}
+	      if (!found)
+		frameIndex++;
+	    }
+	}
+    }
 
-               if (!found)
-                  frameIndex++;
-         }
-      }
-   }
-   
-   if (frame != -1) {
+  if (frame != -1)
+    {
       found = FALSE;
       i = 0;
-      while ((i < MAX_FRAMECAT) && (FrameCatList[frame].Cat_Table[i] != 0) && !found)
-            if (FrameCatList[frame].Cat_Table[i]->Cat_Ref == catalogue->Cat_Ref) {
-               found = TRUE;
-               FrameCatList[frame].Cat_Table[i] = catalogue;
-            } else if (FrameCatList[frame].Cat_Table[i]->Cat_Ref > catalogue->Cat_Ref) {
-                   tmpCat = FrameCatList[frame].Cat_Table[i];
-                   do {
-                       FrameCatList[frame].Cat_Table[i] = catalogue;
-                       catalogue = tmpCat;
-                       i++;
-                       tmpCat = FrameCatList[frame].Cat_Table[i];
-                   } while (tmpCat);
-                   FrameCatList[frame].Cat_Table[i] = catalogue;
-                   found = TRUE;
-            } else
-                  i++;
+      while ((i < MAX_FRAMECAT) && (FrameCatList[frame].Cat_Table[i] != 0) &&
+	     !found)
+	if (FrameCatList[frame].Cat_Table[i]->Cat_Ref == catalogue->Cat_Ref)
+	  {
+	    found = TRUE;
+	    FrameCatList[frame].Cat_Table[i] = catalogue;
+	  }
+	else if (FrameCatList[frame].Cat_Table[i]->Cat_Ref > catalogue->Cat_Ref)
+	  {
+	    tmpCat = FrameCatList[frame].Cat_Table[i];
+	    do
+	      {
+		FrameCatList[frame].Cat_Table[i] = catalogue;
+		catalogue = tmpCat;
+		i++;
+		tmpCat = FrameCatList[frame].Cat_Table[i];
+	      }
+	    while (tmpCat);
+	    FrameCatList[frame].Cat_Table[i] = catalogue;
+	    found = TRUE;
+	  }
+	else
+	  i++;
 
       if (i < MAX_FRAMECAT && !found) 
-         FrameCatList[frame].Cat_Table[i] = catalogue;
-   }
-}
-
-/*----------------------------------------------------------------------
-CleanFrameCatList
-  ----------------------------------------------------------------------*/
-void CleanFrameCatList (int frame) 
-{
-  int catIndex;
-  for (catIndex = 0; catIndex < MAX_FRAMECAT; catIndex++)
-    FrameCatList [frame].Cat_Table[catIndex] = NULL;
+	FrameCatList[frame].Cat_Table[i] = catalogue;
+    }
 }
 
 
@@ -542,12 +492,7 @@ int makeArgcArgv (HINSTANCE hInst, CHAR_T*** pArgv, char* cmdLine)
          nowAt_text
     } nowAt;
 
-#if defined(_WINDOWS) && defined(_I18N_)
-    iso2wc_strcpy (commandLine, cmdLine);
-#else /* !(defined(_WINDOWS) && defined(_I18N_)) */
     strcpy (commandLine, cmdLine);
-#endif /* !(defined(_WINDOWS) && defined(_I18N_)) */
-
     ptr    = commandLine;
     *pArgv = argv;
     argc   = 0;
@@ -605,6 +550,69 @@ BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int 
    main (argc, argv);
    return (TRUE);
 }
+
+/*----------------------------------------------------------------------
+  WIN_ListOpenDirectory
+  ----------------------------------------------------------------------*/
+void WIN_ListOpenDirectory (HWND parent, STRING fileName)
+{
+
+ 	STRING szFilter;
+	CHAR_T szFileName[256];
+
+    szFilter = APPFILENAMEFILTER;
+
+    OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
+    OpenFileName.hwndOwner         = parent; 
+    OpenFileName.hInstance         = hInstance; 
+    OpenFileName.lpstrFilter       = szFilter; 
+    OpenFileName.lpstrCustomFilter = NULL; 
+    OpenFileName.nMaxCustFilter    = 0L; 
+    OpenFileName.nFilterIndex      = 1L; 
+    OpenFileName.lpstrFile         = szFileName; 
+    OpenFileName.nMaxFile          = 256; 
+    OpenFileName.lpstrInitialDir   = NULL; 
+    OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
+    OpenFileName.nFileOffset       = 0; 
+    OpenFileName.nFileExtension    = 0; 
+    OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
+    OpenFileName.lCustData         = 0; 
+    OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
+ 
+    if (GetOpenFileName (&OpenFileName)) {
+	   ustrcpy (fileName, OpenFileName.lpstrFile);
+	}
+
+}
+
+/*----------------------------------------------------------------------
+  WIN_ListSaveDirectory
+  ----------------------------------------------------------------------*/
+void    WIN_ListSaveDirectory (int parentRef, STRING title, STRING fileName)
+{
+
+    struct Cat_Context* parentCatalogue = CatEntry (parentRef);
+ 	STRING               szFilter;
+	CHAR_T               szFileName[256];
+	CHAR_T               szFileTitle[256];
+
+    szFilter = APPFILENAMEFILTER;
+	szFileName[0] = EOS;
+
+    OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
+    OpenFileName.hwndOwner         = parentCatalogue->Cat_Widget; 
+    OpenFileName.lpstrFilter       = szFilter;
+    OpenFileName.lpstrFile         = szFileName; 
+    OpenFileName.nMaxFile          = sizeof (szFileName); 
+    OpenFileName.lpstrFileTitle    = szFileTitle; 
+    OpenFileName.lpstrTitle        = title; 
+    OpenFileName.nMaxFileTitle     = sizeof (szFileTitle); 
+    OpenFileName.lpstrInitialDir   = NULL; 
+    OpenFileName.Flags             = OFN_SHOWHELP | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY;
+
+    if (GetSaveFileName (&OpenFileName))
+      ustrcpy (fileName, OpenFileName.lpstrFile);
+}
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -625,7 +633,7 @@ int GetFrameNumber (ThotWindow win)
 /*----------------------------------------------------------------------
    Procedure de retour par defaut.                                    
   ----------------------------------------------------------------------*/
-static void         CallbackError (int ref, int typedata, STRING data)
+static void CallbackError (int ref, int typedata, STRING data)
 
 {
    printf ("Toolkit error : No callback procedure ...\n");
@@ -687,7 +695,7 @@ static struct E_List *NewEList ()
 /*----------------------------------------------------------------------
    FreeEList: Releases all blocks of elements.                        
   ----------------------------------------------------------------------*/
-static void         FreeEList (struct E_List *adbloc)
+static void FreeEList (struct E_List *adbloc)
 {
    struct E_List      *cebloc;
 
@@ -710,7 +718,7 @@ static void         FreeEList (struct E_List *adbloc)
 /*----------------------------------------------------------------------
    Callback for closing a menu                                        
   ----------------------------------------------------------------------*/
-static void         UnmapMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static void UnmapMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
    struct Cat_Context *icatal;
 
@@ -727,7 +735,7 @@ static void         UnmapMenu (ThotWidget w, struct Cat_Context *catalogue, cadd
 /*----------------------------------------------------------------------
    Callback for a menu button                                         
   ----------------------------------------------------------------------*/
-static void         CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static void CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
    register int        i;
    register int        index;
@@ -791,7 +799,7 @@ static void         CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr
 /*----------------------------------------------------------------------
    Callback pour un bouton du sous-menu de formulaire                 
   ----------------------------------------------------------------------*/
-static void         CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static void CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
    register int        i;
    register int        index;
@@ -831,7 +839,7 @@ static void         CallRadio (ThotWidget w, struct Cat_Context *catalogue, cadd
 /*----------------------------------------------------------------------
    Callback pour un bouton du toggle-menu                             
   ----------------------------------------------------------------------*/
-static void         CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static void  CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
    register int        i;
    int                 entry;
@@ -992,7 +1000,7 @@ static void         INITetPOSform (ThotWidget w, struct Cat_Context *parentCatal
 /*----------------------------------------------------------------------
    Destruction de feuillet.                                           
   ----------------------------------------------------------------------*/
-static void         formKill (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static void formKill (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
    /* Le widget est detruit */
   if ((catalogue->Cat_Type == CAT_FORM)
@@ -1006,7 +1014,7 @@ static void         formKill (ThotWidget w, struct Cat_Context *catalogue, caddr
 /*----------------------------------------------------------------------
    Callback de saisie de valeur.                                      
   ----------------------------------------------------------------------*/
-static void         CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 {
   int                 val, val1;
   CHAR_T              text[11];
@@ -1065,7 +1073,7 @@ static void         CallValueSet (ThotWidget w, struct Cat_Context *catalogue, c
 /*----------------------------------------------------------------------
    Callback de feuillet.                                              
   ----------------------------------------------------------------------*/
-static void         CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
+static void CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
 {
 #ifndef _GTK
   register int        n;
@@ -1463,7 +1471,7 @@ void       TtaInitDialogue (char *server, ThotAppContext *app_context, Display *
    TtaInitDialogueTranslations initialise les translations du         
    dialogue. Ce sont tous les racoursis claviers.                     
   ----------------------------------------------------------------------*/
-void                TtaInitDialogueTranslations (ThotTranslations translations)
+void TtaInitDialogueTranslations (ThotTranslations translations)
 {
    TextTranslations = translations;
 }
@@ -1472,7 +1480,7 @@ void                TtaInitDialogueTranslations (ThotTranslations translations)
 /*----------------------------------------------------------------------
    TtaChangeDialogueFonts change les polices de caracteres du dialogue.
   ----------------------------------------------------------------------*/
-void                TtaChangeDialogueFonts (STRING menufont, STRING formfont)
+void TtaChangeDialogueFonts (STRING menufont, STRING formfont)
 {
 #ifdef _WINDOWS
    /* see code/chap04/ezfont.c */
@@ -1499,7 +1507,7 @@ void                TtaChangeDialogueFonts (STRING menufont, STRING formfont)
    l'application a` partir de la base courante.            
    La fonction retourne la base courante.                  
   ----------------------------------------------------------------------*/
-int                 TtaGetReferencesBase (int number)
+int TtaGetReferencesBase (int number)
 {
    int                 base;
 
@@ -1514,7 +1522,8 @@ int                 TtaGetReferencesBase (int number)
    TtaInitDialogueWindow Cre'ation et initialisation de la fenetree^tre    
    principale d'une application.                           
   ----------------------------------------------------------------------*/
-void                TtaInitDialogueWindow (CHAR_T* name, STRING geometry, Pixmap logo, Pixmap icon, int number, STRING textmenu)
+void TtaInitDialogueWindow (CHAR_T* name, STRING geometry, Pixmap logo,
+			    Pixmap icon, int number, STRING textmenu)
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -1744,7 +1753,7 @@ void                TtaInitDialogueWindow (CHAR_T* name, STRING geometry, Pixmap
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void         ConfirmMessage (Widget w, Widget MsgBox, caddr_t call_d)
+static void ConfirmMessage (Widget w, Widget MsgBox, caddr_t call_d)
 {
 #ifndef _GTK
    XtPopdown (MsgBox);
@@ -1755,10 +1764,10 @@ static void         ConfirmMessage (Widget w, Widget MsgBox, caddr_t call_d)
 /*----------------------------------------------------------------------
    DisplayConfirmMessage displays the given message (text).        
   ----------------------------------------------------------------------*/
-void                DisplayConfirmMessage (STRING text)
+void DisplayConfirmMessage (STRING text)
 {
-#ifndef _GTK
 #ifndef _WINDOWS
+#ifndef _GTK
    XmString            title_string, OK_string;
    Arg                 args[MAX_ARGS];
    ThotWidget          row, w;
@@ -1868,8 +1877,8 @@ void                DisplayConfirmMessage (STRING text)
 
    XmStringFree (title_string);
    XmStringFree (OK_string);
-#endif /* !_WINDOWS */
 #endif /* _GTK */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1878,7 +1887,7 @@ void                DisplayConfirmMessage (STRING text)
    - INFO : bellow the previous message.                   
    - OVERHEAD : instead of the previous message.           
   ----------------------------------------------------------------------*/
-void                DisplayMessage (STRING text, int msgType)
+void DisplayMessage (STRING text, int msgType)
 {
 #ifndef _GTK
 #ifndef _WINDOWS
@@ -1953,7 +1962,7 @@ void                DisplayMessage (STRING text, int msgType)
    DefineCallbackDialog de'finit la proce'dure de traitement des      
    retoursde catalogues dans l'application.                           
   ----------------------------------------------------------------------*/
-void                TtaDefineDialogueCallback (void (*procedure) ())
+void TtaDefineDialogueCallback (void (*procedure) ())
 {
    CallbackDialogue = procedure;
 }
@@ -2077,70 +2086,6 @@ static struct Cat_Context *CatEntry (int ref)
    else
       return (catval);
 }
-#ifdef _WINDOWS
-/*----------------------------------------------------------------------
-  WIN_ListOpenDirectory
-  ----------------------------------------------------------------------*/
-void WIN_ListOpenDirectory (HWND parent, STRING fileName)
-{
-
- 	STRING szFilter;
-	CHAR_T szFileName[256];
-
-    szFilter = APPFILENAMEFILTER;
-
-    OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
-    OpenFileName.hwndOwner         = parent; 
-    OpenFileName.hInstance         = hInstance; 
-    OpenFileName.lpstrFilter       = szFilter; 
-    OpenFileName.lpstrCustomFilter = NULL; 
-    OpenFileName.nMaxCustFilter    = 0L; 
-    OpenFileName.nFilterIndex      = 1L; 
-    OpenFileName.lpstrFile         = szFileName; 
-    OpenFileName.nMaxFile          = 256; 
-    OpenFileName.lpstrInitialDir   = NULL; 
-    OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
-    OpenFileName.nFileOffset       = 0; 
-    OpenFileName.nFileExtension    = 0; 
-    OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
-    OpenFileName.lCustData         = 0; 
-    OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
- 
-    if (GetOpenFileName (&OpenFileName)) {
-	   ustrcpy (fileName, OpenFileName.lpstrFile);
-	}
-
-}
-
-/*----------------------------------------------------------------------
-  WIN_ListSaveDirectory
-  ----------------------------------------------------------------------*/
-void    WIN_ListSaveDirectory (int parentRef, STRING title, STRING fileName)
-{
-
-    struct Cat_Context* parentCatalogue = CatEntry (parentRef);
- 	STRING               szFilter;
-	CHAR_T               szFileName[256];
-	CHAR_T               szFileTitle[256];
-
-    szFilter = APPFILENAMEFILTER;
-	szFileName[0] = EOS;
-
-    OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
-    OpenFileName.hwndOwner         = parentCatalogue->Cat_Widget; 
-    OpenFileName.lpstrFilter       = szFilter;
-    OpenFileName.lpstrFile         = szFileName; 
-    OpenFileName.nMaxFile          = sizeof (szFileName); 
-    OpenFileName.lpstrFileTitle    = szFileTitle; 
-    OpenFileName.lpstrTitle        = title; 
-    OpenFileName.nMaxFileTitle     = sizeof (szFileTitle); 
-    OpenFileName.lpstrInitialDir   = NULL; 
-    OpenFileName.Flags             = OFN_SHOWHELP | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY;
-
-    if (GetSaveFileName (&OpenFileName))
-      ustrcpy (fileName, OpenFileName.lpstrFile);
-}
-#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------
@@ -2712,18 +2657,14 @@ void TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING 
 }
 
 
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
    TtaSetPulldownOff suspend le pulldown                           
   ----------------------------------------------------------------------*/
 void WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
 {
-#ifndef _GTK
    struct Cat_Context *catalogue;
-#ifndef _WINDOWS
-   Arg                 args[MAX_ARGS];
-#else  /* _WINDOWS */
    int                 frame;
-#endif /* _WINDOWS */
 
    if (ref == 0)
       TtaError (ERR_invalid_reference);
@@ -2734,35 +2675,20 @@ void WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
 	catalogue = CatEntry (ref);
 	if (catalogue == NULL)
 	   TtaError (ERR_invalid_reference);
-#ifndef _WINDOWS
-	else if (catalogue->Cat_Widget != 0)
-	  {
-             XtSetArg (args[0], XmNsubMenuId, NULL);
-             XtSetValues (parent, args, 1);
-             XtManageChild (parent);
-	  }
-#else  /* _WINDOWS */
         frame = GetMainFrameNumber (owner);
         EnableMenuItem ((HMENU)WinMenus[frame], (UINT)parent, MF_GRAYED);
 	DrawMenuBar (FrMainRef[frame]); 
-#endif /* _WINDOWS */
      }
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
    TtaSetPulldownOn reactive le pulldown                           
   ----------------------------------------------------------------------*/
-void                WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
+void WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
 {
-#ifndef _GTK
    struct Cat_Context *catalogue;
    ThotWidget          menu;
-#ifndef _WINDOWS
-   Arg                 args[MAX_ARGS];
-#else  /* _WINDOWS */
    int                 frame;
-#endif /* _WINDOWS */
 
    if (ref == 0)
       TtaError (ERR_invalid_reference);
@@ -2776,19 +2702,13 @@ void                WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
 	else if (catalogue->Cat_Widget != 0)
 	  {
 	     menu = catalogue->Cat_Widget;
-#ifndef _WINDOWS
-             XtSetArg (args[0], XmNsubMenuId, menu);
-             XtSetValues (parent, args, 1);
-             XtManageChild (parent);
-#else  /* _WINDOWS */
 	     frame = GetMainFrameNumber (owner);
              EnableMenuItem ((HMENU)WinMenus[frame], (UINT)parent, MF_ENABLED);
 			 DrawMenuBar (FrMainRef[frame]); 
-#endif /* _WINDOWS */
 	  }
      }
-#endif /* _GTK */
 }
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaNewPopup cre'e un pop-up menu :                                 
@@ -3441,7 +3361,8 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, STRING title, int numbe
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-void TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title, int number, STRING text, char* equiv, ThotBool react)
+void TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title,
+		    int number, STRING text, char* equiv, ThotBool react)
 {
   ThotWidget          w;
   ThotWidget          row;
@@ -4183,7 +4104,8 @@ void TtaSetMenuForm (int ref, int val)
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-void TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number, STRING text, STRING equiv, ThotBool react)
+void TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number,
+		       STRING text, STRING equiv, ThotBool react)
 {
 #ifndef _GTK
    register int        count;
@@ -4429,6 +4351,7 @@ void TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number, STRING
 }
 #endif /* _WINDOWS */
 
+
 /*----------------------------------------------------------------------
    TtaSetToggleMenu fixe la selection dans un toggle-menu :           
    The parameter ref donne la re'fe'rence du catalogue.               
@@ -4436,10 +4359,14 @@ void TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number, STRING
    toutes les entre'es). The parameter on indique que le bouton       
    correspondant doit e^tre allume' (on positif) ou e'teint (on nul). 
   ----------------------------------------------------------------------*/
+#ifdef _WINDOWS
 void WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
+#else /* _WINDOWS */
+void TtaSetToggleMenu (int ref, int val, ThotBool on)
+#endif /* _WINDOWS */
 {
 #ifndef _GTK
-#ifdef _WINDOWS 
+#ifdef _WINDOWS
   struct Cat_Context *catalogue;
   HMENU              hMenu;
   struct E_List      *adbloc;
@@ -4482,7 +4409,7 @@ void WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
 	    }
 	}
    }
-#else  /* !_WINDOWS  */
+#else /* WINDOWS */
    ThotWidget          w;
    Arg                 args[MAX_ARGS];
    register int        i, n;
@@ -4590,7 +4517,6 @@ void WIN_TtaSetToggleMenu (int ref, int val, ThotBool on, HWND owner)
 #endif /* _WINDOWS */
 #endif /* _GTK */
 }
-
 
 /*----------------------------------------------------------------------
    TtaChangeMenuEntry modifie l'intitule' texte de l`entre'e entry    
