@@ -93,7 +93,7 @@ STRUCT
   STYLE_							{ STYLE }
      (ATTR Notation = Text; media = Text) =
 	 { type             media }
-	 TEXT;
+	 TEXT - (STYLE_, SCRIPT_, META, LINK);
 
   SCRIPT_							{ SCRIPT }
      (ATTR charset = Text; content_type = Text;
@@ -102,7 +102,7 @@ STRUCT
 	 { language                src }
 	   defer = Yes_; event = Text; for_ = Text) =
 	 { defer         event         for }
-	TEXT with content_type ?= 'text/javascript';
+	TEXT - (STYLE_, SCRIPT_, META, LINK) with content_type ?= 'text/javascript';
 
   META								{ META }
      (ATTR http_equiv = Text;

@@ -997,21 +997,21 @@ static ThotBool InsertElement (Element * el);
   ----------------------------------------------------------------------*/
 static ThotBool InsertSibling ()
 {
-   if (StackLevel == 0)
-      return FALSE;
-   else if (HTMLcontext.lastElementClosed ||
-	    TtaIsLeaf (TtaGetElementType (HTMLcontext.lastElement)) ||
-	    (GINumberStack[StackLevel - 1] >= 0 &&
-	     pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLcontents == 'E'))
-      return TRUE;
-   else
-      return FALSE;
+  if (StackLevel == 0)
+    return FALSE;
+  else if (HTMLcontext.lastElementClosed ||
+	   TtaIsLeaf (TtaGetElementType (HTMLcontext.lastElement)) ||
+	   (GINumberStack[StackLevel - 1] >= 0 &&
+	    pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLcontents == 'E'))
+    return TRUE;
+  else
+    return FALSE;
 }
 
 /*----------------------------------------------------------------------
    IsEmptyElement return TRUE if element el is defined as an empty element.
   ----------------------------------------------------------------------*/
-static ThotBool        IsEmptyElement (Element el)
+static ThotBool IsEmptyElement (Element el)
 {
    ElementType         elType;
    int                 i;
@@ -1055,7 +1055,7 @@ ThotBool            IsCharacterLevelElement (Element el)
 /*----------------------------------------------------------------------
    IsBlockElement  return TRUE if element el is a block element.
   ----------------------------------------------------------------------*/
-ThotBool         IsBlockElement (Element el)
+ThotBool IsBlockElement (Element el)
 {
    ElementType   elType;
    int           i;
@@ -1077,7 +1077,7 @@ ThotBool         IsBlockElement (Element el)
 /*----------------------------------------------------------------------
    TextToDocument  Put the content of input buffer in the document.
   ----------------------------------------------------------------------*/
-static void         TextToDocument ()
+static void TextToDocument ()
 {
    ElementType      elType, lastType;
    Element          elText, parent, ancestor, prev;
@@ -1116,10 +1116,10 @@ static void         TextToDocument ()
 	     {
 	       lastType = TtaGetElementType (HTMLcontext.lastElement);
 	       if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
-		   (elType.ElTypeNum != HTML_EL_HEAD) &&
+		   elType.ElTypeNum != HTML_EL_HEAD &&
 		   (strcmp (TtaGetSSchemaName (lastType.ElSSchema), "HTML") == 0) &&
-		   ((lastType.ElTypeNum == HTML_EL_Comment_) ||
-		    (lastType.ElTypeNum == HTML_EL_XMLPI)))
+		   (lastType.ElTypeNum == HTML_EL_Comment_ ||
+		    lastType.ElTypeNum == HTML_EL_XMLPI))
 		 {
 #ifdef _OLD_
 		   /* Search the last significant sibling prior to a comment or a Pi */
@@ -1410,41 +1410,41 @@ static ThotBool     CheckSurrounding (Element * el, Element parent)
    InsertElement   inserts element el in the abstract tree of the
    Thot document, at the current position.
   ----------------------------------------------------------------------*/
-static ThotBool     InsertElement (Element * el)
+static ThotBool InsertElement (Element *el)
 {
-   ThotBool         ret;
-   Element          parent;
+  ThotBool         ret;
+  Element          parent;
 
-   if (InsertSibling ())
-     {
-	if (HTMLcontext.lastElement == NULL)
-	   parent = NULL;
-	else
-	   parent = TtaGetParent (HTMLcontext.lastElement);
-	if (!CheckSurrounding (el, parent))
-	  {
-	    if (parent != NULL)
-	      TtaInsertSibling (*el, HTMLcontext.lastElement, FALSE, HTMLcontext.doc);
-	    else
-	      {
-		TtaDeleteTree (*el, HTMLcontext.doc);
-		*el = NULL;
-	      }
-	  }
-	ret = TRUE;
-     }
-   else
-     {
-	if (!CheckSurrounding (el, HTMLcontext.lastElement))
-	  TtaInsertFirstChild (el, HTMLcontext.lastElement, HTMLcontext.doc);
-	ret = FALSE;
-     }
-   if (*el != NULL)
-     {
-	HTMLcontext.lastElement = *el;
-	HTMLcontext.lastElementClosed = FALSE;
-     }
-   return ret;
+  if (InsertSibling ())
+    {
+      if (HTMLcontext.lastElement == NULL)
+	parent = NULL;
+      else
+	parent = TtaGetParent (HTMLcontext.lastElement);
+      if (!CheckSurrounding (el, parent))
+	{
+	  if (parent != NULL)
+	    TtaInsertSibling (*el, HTMLcontext.lastElement, FALSE, HTMLcontext.doc);
+	  else
+	    {
+	      TtaDeleteTree (*el, HTMLcontext.doc);
+	      *el = NULL;
+	    }
+	}
+      ret = TRUE;
+    }
+  else
+    {
+      if (!CheckSurrounding (el, HTMLcontext.lastElement))
+	TtaInsertFirstChild (el, HTMLcontext.lastElement, HTMLcontext.doc);
+      ret = FALSE;
+    }
+  if (*el != NULL)
+    {
+      HTMLcontext.lastElement = *el;
+      HTMLcontext.lastElementClosed = FALSE;
+    }
+  return ret;
 }
 
 /*----------------------------------------------------------------------
@@ -2432,7 +2432,7 @@ static void ProcessStartGI (char* GIname)
   ElementType         elType;
   Element             el;
   int                 entry, i;
-  char              msgBuffer[MaxMsgLength];
+  char                msgBuffer[MaxMsgLength];
   PtrClosedElement    pClose;
   ThotBool            sameLevel, removed;
   SSchema	      schema;
@@ -2691,15 +2691,102 @@ static void     EndOfStartGI (char c)
    EndOfStartGIandTag      a ">" has been read. It indicates the
    end of a GI and the end of a start tag.
   ----------------------------------------------------------------------*/
-static void        EndOfStartGIandTag (char c)
+static void EndOfStartGIandTag (char c)
 {
-   EndOfStartGI (c);
-   EndOfStartTag (c);
+  EndOfStartGI (c);
+  EndOfStartTag (c);
   if (c == '<')
     {
       HTMLParseError (HTMLcontext.doc, "Syntax error");
       StartOfTag (c);
     }
+}
+
+/*----------------------------------------------------------------------
+   StartCData  a new CDATA element (<![CDATA[)
+  ----------------------------------------------------------------------*/
+static void StartCData (char c)
+{
+  ElementType         elType;
+  Element             el, child;
+
+  CloseBuffer ();
+  if (!strcasecmp ((char *)inputBuffer, "cdata"))
+    {
+      elType.ElSSchema = DocumentSSchema;
+      elType.ElTypeNum = HTML_EL_CDATA;
+      el = TtaNewElement (HTMLcontext.doc, elType);
+      TtaSetElementLineNumber (el, NumberOfLinesRead);
+      InsertElement (&el);
+      elType.ElTypeNum = HTML_EL_CDATA_line;
+      child = TtaNewTree (HTMLcontext.doc, elType, "");
+      TtaSetElementLineNumber (child, NumberOfLinesRead);
+      TtaInsertFirstChild (&child, el, HTMLcontext.doc);
+      HTMLcontext.lastElement = TtaGetFirstChild (child);
+      /* clear the input buffer */
+      InitBuffer ();
+    }
+}
+
+/*----------------------------------------------------------------------
+   CloseCDataLine closes a CDATA line.
+  ----------------------------------------------------------------------*/
+static void CloseCDataLine (char c)
+{
+
+  CloseBuffer ();
+  if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == EOL)
+    {
+      LgBuffer--;
+      inputBuffer[LgBuffer] = EOS;
+    }
+  if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == ']')
+    {
+      LgBuffer--;
+      inputBuffer[LgBuffer] = EOS;
+    }
+  if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == ']')
+    {
+      LgBuffer--;
+      inputBuffer[LgBuffer] = EOS;
+    }
+  /* copy the input buffer into the document */
+  if (LgBuffer)
+    TtaAppendTextContent (HTMLcontext.lastElement, (unsigned char *)inputBuffer,
+			  HTMLcontext.doc);
+  /* clear the input buffer */
+  InitBuffer ();
+}
+
+/*----------------------------------------------------------------------
+  EndOfCDataLine closes a CDATA line.
+  ----------------------------------------------------------------------*/
+static void EndOfCDataLine (char c)
+{
+  ElementType         elType;
+  Element             el, child;
+
+  CloseCDataLine (c);
+  /* start a new CDATA line */
+  elType.ElSSchema = DocumentSSchema;
+  elType.ElTypeNum = HTML_EL_CDATA_line;
+  child = TtaNewTree (HTMLcontext.doc, elType, "");
+  TtaSetElementLineNumber (child, NumberOfLinesRead);
+  elType = TtaGetElementType (HTMLcontext.lastElement);
+  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+    el = TtaGetParent (HTMLcontext.lastElement);
+  else
+    el = HTMLcontext.lastElement;
+  TtaInsertSibling (child, el, FALSE, HTMLcontext.doc);
+  HTMLcontext.lastElement = TtaGetFirstChild (child);
+}
+
+/*----------------------------------------------------------------------
+   EndOfCdata closes a CDATA.
+  ----------------------------------------------------------------------*/
+static void EndOfCData (char c)
+{
+  CloseCDataLine (c);
 }
 
 /*----------------------------------------------------------------------
@@ -3641,13 +3728,14 @@ static void         PutInComment (unsigned char c)
 	}
       else
 	{
-	   if (LgBuffer >= MaxBufferLength - 1)
-	     {
-		CloseBuffer ();
-		TtaAppendTextContent (CommentText, (unsigned char *)inputBuffer, HTMLcontext.doc);
-		InitBuffer ();
-	     }
-	   inputBuffer[LgBuffer++] = c;
+	  if (LgBuffer >= MaxBufferLength - 1)
+	    {
+	      CloseBuffer ();
+	      TtaAppendTextContent (CommentText, (unsigned char *)inputBuffer,
+				    HTMLcontext.doc);
+	      InitBuffer ();
+	    }
+	  inputBuffer[LgBuffer++] = c;
 	}
     }
 }
@@ -3657,14 +3745,15 @@ static void         PutInComment (unsigned char c)
   ----------------------------------------------------------------------*/
 static void         EndOfComment (char c)
 {
-   if (LgBuffer > 0)
-     {
-	CloseBuffer ();
-	if (CommentText != NULL)
-	   TtaAppendTextContent (CommentText, (unsigned char *)inputBuffer, HTMLcontext.doc);
-     }
-   CommentText = NULL;
-   InitBuffer ();
+  if (LgBuffer > 0)
+    {
+      CloseBuffer ();
+      if (CommentText != NULL)
+	TtaAppendTextContent (CommentText, (unsigned char *)inputBuffer,
+			      HTMLcontext.doc);
+    }
+  CommentText = NULL;
+  InitBuffer ();
 }
 
 /*----------------------------------------------------------------------
@@ -3912,6 +4001,7 @@ static sourceTransition sourceAutomaton[] =
    {9, '*', (Proc) PutInBuffer, 9},
 /* state 10: "<!" has been read */
    {10, '-', (Proc) Do_nothing, 11},
+   {10, '[', (Proc) Do_nothing, 23},		/* call subautomaton 23 */
    {10, 'S', (Proc) Do_nothing, 10},
    {10, '>', (Proc) Do_nothing, 0},            /* weird empty comment <!> */
    {10, '*', (Proc) PutInBuffer, 15},
@@ -3961,6 +4051,17 @@ static sourceTransition sourceAutomaton[] =
    {22, '>', (Proc) EndOfPI, 0},
    {22, '?', (Proc) PutInBuffer, 22},
    {22, '*', (Proc) PutQuestionMark, 21},
+/* state 23: "<![*" has been read, wait for CDATA */
+   {23, '[', (Proc) StartCData, 24},
+   {23, '*', (Proc) PutInBuffer, 23},
+/* state 24: "<![CDATA[" has been read: read its contents */
+   {24, '>', (Proc) Do_nothing, 0},
+   {24, ']', (Proc) Do_nothing, 24},
+   {24, '\n', (Proc) EndOfCDataLine, 24},
+   {24, '*', (Proc) PutInBuffer, 24},
+/* state 25: "]" has been read: check the end of CDATA */
+   {25, ']', (Proc) EndOfCData, 24},
+   {25, '*', (Proc) PutInBuffer, -1},
 
 /* sub automaton for reading entities in various contexts */
 /* state -1 means "return to calling state" */
@@ -4332,7 +4433,8 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
 	    /* LF = end of input line */
 	    {
 	      /* don't replace end of line by space in a doctype declaration */
-	      if (currentState != 12 && currentState != 15)
+	      if (currentState != 12 && currentState != 15 &&
+		  currentState != 24)
 		{
 		  /* don't change characters in comments */
 		  if (currentState != 0)

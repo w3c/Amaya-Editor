@@ -993,11 +993,14 @@ static Element InsertWithinHead (Document document, View view, int elementT)
 	 }
        new_ = TtaNewTree (document, elType, "");
        TtaInsertSibling (new_, el, before, document);
-       /* register this element in the editing history */
-       TtaOpenUndoSequence (document, firstSel, lastSel, firstChar,
-			    lastChar);
-       TtaRegisterElementCreate (new_, document);
-       TtaCloseUndoSequence (document);
+       if (elementT != HTML_EL_SCRIPT_)
+	 {
+	   /* register this element in the editing history */
+	   TtaOpenUndoSequence (document, firstSel, lastSel, firstChar,
+				lastChar);
+	   TtaRegisterElementCreate (new_, document);
+	   TtaCloseUndoSequence (document);
+	 }
        return (new_);
      }
 }
@@ -1009,7 +1012,7 @@ void CreateBase (Document document, View view)
   Element             el;
 
   el = InsertWithinHead (document, view, HTML_EL_BASE);
-  if (el != NULL)
+  if (el)
     TtaSelectElement (document, el);
 }
 
@@ -1020,9 +1023,8 @@ void CreateMeta (Document document, View view)
   Element             el;
 
   el = InsertWithinHead (document, view, HTML_EL_META);
-  if (el != NULL)
+  if (el)
     TtaSelectElement (document, el);
-
 }
 
 /*----------------------------------------------------------------------
@@ -1032,7 +1034,7 @@ void CreateLinkInHead (Document document, View view)
   Element             el;
 
   el = InsertWithinHead (document, view, HTML_EL_LINK); 
-  if (el != NULL)
+  if (el)
     {
       /* The link element is a new created one */
       UseLastTarget = FALSE;
@@ -1052,7 +1054,7 @@ void CreateStyle (Document document, View view)
   Attribute           attr;
 
   el = InsertWithinHead (document, view, HTML_EL_STYLE_);
-  if (el != NULL)
+  if (el)
     {
       /* create an attribute type="text/css" */
       elType = TtaGetElementType (el);
@@ -1074,14 +1076,20 @@ void CreateStyle (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateComment (Document doc, View view)
 {
-  Element             el;
+  Element             el, parent = NULL;
   ElementType         elType;
   char               *s;
   int                 first, last;
 
   TtaGiveFirstSelectedElement (doc, &el, &first, &last);
   if (el)
-    elType = TtaGetElementType (el);
+    {
+      /* get the structure schema of the parent element */
+      parent = TtaGetParent (el);
+      if (parent)
+	el = parent;
+      elType = TtaGetElementType (el);
+    }
   else
     elType.ElSSchema = TtaGetDocumentSSchema (doc);
   s = TtaGetSSchemaName (elType.ElSSchema);
@@ -1101,44 +1109,98 @@ void CreateComment (Document doc, View view)
   ----------------------------------------------------------------------*/
 void CreateScript (Document doc, View view)
 {
-   SSchema             docSchema;
-   ElementType         elType;
-   Element             el, head;
-   char               *s;
-   int                 i, j;
+  SSchema             docSchema;
+  ElementType         elType, headType;
+  Element             el, child, parent = NULL;
+  char               *s;
+  int                 i, j;
 
-   /* test if we have to insert a script in the document head */
-   head = NULL;
-   TtaGiveFirstSelectedElement (doc, &el, &i, &j);
-   docSchema = TtaGetDocumentSSchema (doc);
-   if (el)
-     {
-       elType = TtaGetElementType (el);
-       s = TtaGetSSchemaName (elType.ElSSchema);
-     }
-   else
-     {
-       elType.ElSSchema = docSchema;
-       s = NULL;
-     }
+  /* test if we have to insert a script in the document head */
+  TtaGiveFirstSelectedElement (doc, &el, &i, &j);
+  docSchema = TtaGetDocumentSSchema (doc);
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      s = TtaGetSSchemaName (elType.ElSSchema);
+      if (strcmp (s, "HTML") || elType.ElTypeNum != HTML_EL_HEAD)
+	{
+	  headType.ElSSchema = elType.ElSSchema;
+	  headType.ElTypeNum = HTML_EL_HEAD;
+	  parent = TtaGetTypedAncestor (el, headType);
+	  if (parent)
+	    {
+	      el = parent;
+	      elType.ElTypeNum = HTML_EL_HEAD;
+	    }
+	  else
+	    {
+	      /* within a head 
+		 /* get the structure schema of the parent element */
+	      parent = TtaGetParent (el);
+	      if (parent)
+		el = parent;
+	      elType = TtaGetElementType (el);
+	      s = TtaGetSSchemaName (elType.ElSSchema);
+	    }
+	}
+    }
+  else
+    {
+      elType.ElSSchema = docSchema;
+      elType.ElTypeNum = 0;
+      s = NULL;
+    }
+  
+  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+  if (s == NULL || strcmp (s, "HTML") || elType.ElTypeNum == HTML_EL_HEAD)
+    {
+      /* cannot insert at the current position */
+      if (!strcmp (TtaGetSSchemaName (docSchema), "HTML"))
+	/* insert within the head of this HTML document */
+	el = InsertWithinHead (doc, view, HTML_EL_SCRIPT_);
+      else
+	el = NULL;
+    }
+  else
+    {
+      /* create Script in the body if we are within an HTML document
+	 and within an HTML element */
+      elType.ElTypeNum = HTML_EL_SCRIPT_;
+      TtaInsertElement (elType, doc);
+      TtaGiveFirstSelectedElement (doc, &el, &i, &j);
+    }
 
-   if (s == NULL || strcmp (s, "HTML"))
-     {
-       /* cannot insert here */
-       if (!strcmp (TtaGetSSchemaName (docSchema), "HTML"))
-	 /* cannot insert here: insert within the head of this HTML document */
-	 InsertWithinHead (doc, view, HTML_EL_SCRIPT_);
-     }
-   else
-     {
-       /* create Script in the body if we are within an HTML document
-	  and within an HTML element */
-       elType.ElTypeNum = HTML_EL_SCRIPT_;
-       TtaInsertElement (elType, doc);
-     }
-   /* insert a comment around the contents */
-   elType.ElTypeNum = HTML_EL_Comment_;
-   TtaInsertElement (elType, doc);
+  if (el)
+    {
+      if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+	/* insert a cdata within */
+	elType.ElTypeNum = HTML_EL_CDATA;
+      else
+	/* insert a comment within */
+	elType.ElTypeNum = HTML_EL_Comment_;
+      child = TtaNewTree (doc, elType, "");
+      elType = TtaGetElementType (el);
+      if (TtaIsLeaf (elType))
+	{
+	  TtaInsertSibling (child, el, TRUE, doc);
+	  TtaDeleteTree (el, doc);
+	}
+      else
+	TtaInsertFirstChild (&child, el, doc);
+      /* register new created elements */
+      TtaRegisterElementCreate (el, doc);
+      TtaCloseUndoSequence (doc);
+      while (child)
+	{
+	  el = child;
+	  child = TtaGetFirstChild (el);
+	}
+      if (child)
+	TtaSelectElement (doc, child);
+      else
+	TtaSelectElement (doc, el);
+    }
+  TtaCloseUndoSequence (doc);
 }
 
 /*----------------------------------------------------------------------
