@@ -1,5 +1,7 @@
 #ifdef _WX
 
+#include "wx/wx.h"
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"

@@ -2446,7 +2446,7 @@ ThotBool TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
 	  lpDevMode = (LPDEVMODE) GlobalLock (Pdlg.hDevMode);
 	  if (!lpDevMode)
 		  return FALSE;
-		  TtPrinterDC = CreateDC ((const unsigned short *)lpDriverName, (const unsigned short *)lpDeviceName, (const unsigned short *)lpPortName, lpDevMode);
+		  TtPrinterDC = CreateDC ((LPCSTR)lpDriverName, (LPCSTR)lpDeviceName, (LPCSTR)lpPortName, lpDevMode);
 	  if (lpDevMode->dmOrientation == DMORIENT_LANDSCAPE)
 	    /* landscape */
 	    *orientation = 1;

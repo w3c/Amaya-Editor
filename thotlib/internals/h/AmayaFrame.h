@@ -3,12 +3,8 @@
 #ifndef __AMAYAFRAME_H__
 #define __AMAYAFRAME_H__
 
-#include "wx/wxprec.h"
-
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-    #include "wx/panel.h"
-#endif
+#include "wx/wx.h"
+#include "wx/panel.h"
 
 class AmayaCanvas;
 

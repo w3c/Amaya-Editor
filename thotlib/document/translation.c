@@ -504,7 +504,7 @@ static void GetTime (char *s, PtrDocument pDoc)
 #ifdef _WINDOWS
 	  wcsftime(ws, DATESTRLEN, L"%A %d %B %Y - %H:%M:%S", tmptr);
 	  ptr = TtaConvertWCToByte (ws, pDoc->DocCharset);
-	  strncpy (s, ptr, DATESTRLEN);
+	  strncpy (s, (char *)ptr, DATESTRLEN);
 	  TtaFreeMemory (ptr);
 #else /* _WINDOWS */
 	  strftime(s, DATESTRLEN, "%A %d %B %Y - %H:%M:%S", tmptr);

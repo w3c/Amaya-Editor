@@ -26,10 +26,12 @@
 #endif /* _GTK */
 
 #ifdef _WX
+  #include "wx/wx.h"
+  #include "wx/glcanvas.h"
   #include "AmayaFrame.h"
+#else /* _WX */
+  #include <GL/gl.h>
 #endif /* _WX */
-
-#include <GL/gl.h>
 
 #include "ustring.h"
 #include "math.h"
