@@ -17,7 +17,8 @@ extern void SetHtmlElemLineNumber ( Element el );
 extern int IsWithinHtmlTable ( void );
 extern void InitMapping ( void );
 extern void HTMLParseError ( Document doc,
-                             char* msg );
+                             char* msg,
+			     int lineNumber );
 extern ThotBool IsCharacterLevelElement ( Element el );
 extern ThotBool IsBlockElement ( Element el );
 extern void BlockInCharLevelElem ( Element el );
@@ -84,7 +85,8 @@ extern void SetHtmlElemLineNumber ( Element el );
 extern int IsWithinHtmlTable ( void );
 extern void InitMapping ( void );
 extern void HTMLParseError ( Document doc,
-                               char* msg );
+                               char* msg,
+			       int lineNumber );
 extern ThotBool IsCharacterLevelElement ( Element el );
 extern ThotBool IsBlockElement ( Element el );
 extern void BlockInCharLevelElem ( Element el );

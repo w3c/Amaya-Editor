@@ -945,8 +945,10 @@ static ThotBool Within (int ThotType, SSchema ThotSSchema)
 
 /*----------------------------------------------------------------------
    HTMLParseError  print the error message msg on stderr.
+   If lineNumber = 0, print the current line number in the source file,
+   otherwise print the line number provided.
   ----------------------------------------------------------------------*/
-void HTMLParseError (Document doc, char* msg)
+void HTMLParseError (Document doc, char* msg, int lineNumber)
 {
    HTMLErrorsFound = TRUE;
    if (!ErrFile)
@@ -963,9 +965,12 @@ void HTMLParseError (Document doc, char* msg)
 	   TtaFreeMemory (docURL);
 	   docURL = NULL;
 	 }
-       /* print the line number and character number before the message */
-       fprintf (ErrFile, "@   line %d, char %d: %s\n", NumberOfLinesRead,
-		NumberOfCharRead, msg);
+       if (lineNumber <= 0)
+	 /* print the line number and character number before the message */
+	 fprintf (ErrFile, "@   line %d, char %d: %s\n", NumberOfLinesRead,
+		  NumberOfCharRead, msg);
+       else
+	 fprintf (ErrFile, "@   line %d, char 0: %s\n", lineNumber, msg);
      }
    else
      /* print only the error message */
@@ -1250,7 +1255,7 @@ static void PutInBuffer (unsigned char c)
 	      TruncatedAttrValue = FALSE;
 	    }
 	  else
-	    HTMLParseError (HTMLcontext.doc, "Buffer overflow");
+	    HTMLParseError (HTMLcontext.doc, "Buffer overflow", 0);
 	  LgBuffer = 0;
 	}
 
@@ -2113,7 +2118,7 @@ static void EndOfStartTag (char c)
 
   if (c == '<')
     {
-      HTMLParseError (HTMLcontext.doc, "Syntax error");
+      HTMLParseError (HTMLcontext.doc, "Syntax error", 0);
       StartOfTag (c);
     }
 }
@@ -2326,13 +2331,13 @@ static void ProcessStartGI (char* GIname)
 	      DocumentMeta[HTMLcontext.doc]->xmlformat)
 	    {
 	      sprintf (msgBuffer, "Invalid tag <%s> (removed when saving)", GIname);
-	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
 	      removed = TRUE;
 	    }
 	  else
 	    {
 	      sprintf (msgBuffer, "Warning - unknown tag <%s>", GIname);
-	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
 	      removed = FALSE;
 	    }
 	  /* create an Invalid_element */
@@ -2354,7 +2359,7 @@ static void ProcessStartGI (char* GIname)
 	  sprintf (msgBuffer,
 		   "Invalid start element <%s> for the document profile",
 		   GIname);
-	  HTMLParseError (HTMLcontext.doc, msgBuffer);
+	  HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
 	  XMLErrorsFoundInProfile = TRUE;
 	  UnknownTag = TRUE;
 	}
@@ -2365,7 +2370,7 @@ static void ProcessStartGI (char* GIname)
 		!strcmp (pHTMLGIMapping[entry].XMLname, "th")))
 	    {
 	      sprintf (msgBuffer, "Tags <table>, <tbody> and <tr> added");
-	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
 	      /* generate mandatory parent elements */ 
 	      ProcessStartGI ("table");
 	      HTMLcontext.withinTable = 1;
@@ -2376,7 +2381,7 @@ static void ProcessStartGI (char* GIname)
 	    {
 	      /* generate mandatory parent elements */ 
 	      sprintf (msgBuffer, "Tags <table> and <tbody> added");
-	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
 	      ProcessStartGI ("table");
 	    }
 	  /* does this start tag also imply the end tag of some current elements?*/
@@ -2392,7 +2397,7 @@ static void ProcessStartGI (char* GIname)
 	    /* element not allowed in the current structural context */
 	    {
 	      sprintf (msgBuffer, "Tag <%s> is not allowed here (removed when saving)", GIname);
-	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
 	      UnknownTag = TRUE;
 	      /* create an Invalid_element */
 	      sprintf (msgBuffer, "<%s", GIname);
@@ -2430,7 +2435,7 @@ static void ProcessStartGI (char* GIname)
 	      if (pHTMLGIMapping[entry].XMLcontents != 'E')
 		{
 		if (StackLevel >= MaxStack - 1)
-	          HTMLParseError (HTMLcontext.doc, "Too many nested elements");
+	          HTMLParseError (HTMLcontext.doc, "Too many nested elements", 0);
 		else
 		  {
 		    ElementStack[StackLevel] = el;
@@ -2491,7 +2496,7 @@ static void     EndOfStartGI (char c)
 	  HTMLcontext.lastElement == rootElement)
          /* an element after the tag </html>, ignore it */
          {
-         HTMLParseError (HTMLcontext.doc, "Element after tag </html>. Ignored");
+         HTMLParseError (HTMLcontext.doc, "Element after tag </html>. Ignored", 0);
          return;
          }
       if (!strcmp (theGI, "math") || !strcmp (theGI, "svg"))
@@ -2551,7 +2556,7 @@ static void EndOfStartGIandTag (char c)
   EndOfStartTag (c);
   if (c == '<')
     {
-      HTMLParseError (HTMLcontext.doc, "Syntax error");
+      HTMLParseError (HTMLcontext.doc, "Syntax error", 0);
       StartOfTag (c);
     }
 }
@@ -2708,13 +2713,13 @@ static void EndOfEndTag (char c)
 		   DocumentMeta[HTMLcontext.doc]->xmlformat)
 		 {
 		   sprintf (msgBuffer, "Invalid tag <%s> (removed when saving)", inputBuffer);
-		   HTMLParseError (HTMLcontext.doc, msgBuffer);
+		   HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
 		   removed = TRUE;
 		 }
 	       else
 		 {
 		   sprintf (msgBuffer, "Warning - unknown tag </%s>", inputBuffer);
-		   HTMLParseError (HTMLcontext.doc, msgBuffer);
+		   HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
 		   removed = FALSE;
 		 }
 	       /* create an Invalid_element */
@@ -2732,7 +2737,7 @@ static void EndOfEndTag (char c)
 	       sprintf (msgBuffer,
 			"Invalid end element <%s> for the document profile",
 			inputBuffer);
-	       HTMLParseError (HTMLcontext.doc, msgBuffer);
+	       HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
 	       XMLErrorsFoundInProfile = TRUE;
 	     }
 	   else if (!CloseElement (entry, -1, FALSE))
@@ -2742,7 +2747,7 @@ static void EndOfEndTag (char c)
 		   DocumentMeta[HTMLcontext.doc]->xmlformat)
 		 {
 		   sprintf (msgBuffer, "Invalid end tag <%s>", inputBuffer);
-		   HTMLParseError (HTMLcontext.doc, msgBuffer);
+		   HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
 		 }
 	       else
 		 {
@@ -2796,7 +2801,7 @@ static void EndOfEndTag (char c)
 		   else
 		     /* print an error message... */
 		     sprintf (msgBuffer, "Warning - unexpected end tag </%s>", inputBuffer);
-		   HTMLParseError (HTMLcontext.doc, msgBuffer);
+		   HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
 		 }
 	     }
 	 }
@@ -2805,7 +2810,7 @@ static void EndOfEndTag (char c)
 
   if (c == '<')
     {
-      HTMLParseError (HTMLcontext.doc, "Syntax error");
+      HTMLParseError (HTMLcontext.doc, "Syntax error", 0);
       StartOfTag (c);
     }
 }
@@ -2892,7 +2897,7 @@ static void EndOfAttrName (char c)
 	       if (strlen ((char *)inputBuffer) > MaxMsgLength - 30)
 		 inputBuffer[MaxMsgLength - 30] = EOS;
 	       sprintf (msgBuffer, "Invalid attribute \"%s\"(removed when saving)", inputBuffer);
-	       HTMLParseError (HTMLcontext.doc, msgBuffer);
+	       HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
 	       /* attach an Invalid_attribute to the current element */
 	       tableEntry = &pHTMLAttributeMapping[0];
 	       schema = DocumentSSchema;
@@ -2907,7 +2912,7 @@ static void EndOfAttrName (char c)
 	   sprintf (msgBuffer,
 		    "Invalid attribute \"%s\" for the document profile",
 		    inputBuffer);
-	   HTMLParseError (HTMLcontext.doc, msgBuffer);
+	   HTMLParseError (HTMLcontext.doc, msgBuffer, 0);
 	   XMLErrorsFoundInProfile = TRUE;
 	   UnknownAttr = TRUE;
 	   lastAttrEntry = NULL;
@@ -2994,7 +2999,7 @@ static void         EndOfAttrNameAndTag (char c)
   EndOfStartTag (c);
   if (c == '<')
     {
-      HTMLParseError (HTMLcontext.doc, "Syntax error");
+      HTMLParseError (HTMLcontext.doc, "Syntax error", 0);
       StartOfTag (c);
     }
 }
@@ -3219,7 +3224,7 @@ static void EndOfEntity (unsigned char c)
       PutInBuffer (';');
       /* print an error message */
       sprintf ((char *)msgBuffer, "Unknown entity");
-      HTMLParseError (HTMLcontext.doc, (char *)msgBuffer);
+      HTMLParseError (HTMLcontext.doc, (char *)msgBuffer, 0);
     }
   LgEntityName = 0;
 }
@@ -3277,7 +3282,7 @@ static void EntityChar (unsigned char c)
 	    PutInBuffer ((char)(XhtmlEntityTable[EntityTableEntry].charCode));
 	  if (c != SPACE)
 	    /* print an error message */
-	    HTMLParseError (HTMLcontext.doc, "Missing semicolon");
+	    HTMLParseError (HTMLcontext.doc, "Missing semicolon", 0);
 	  /* next state is the return state from the entity subautomaton, not
 	     the state computed by the automaton. In addition the character read
 	     has not been processed yet */
@@ -3328,7 +3333,7 @@ static void EntityChar (unsigned char c)
 	      EntityName[LgEntityName++] = c;
 	      EntityName[LgEntityName++] = EOS;
 	      sprintf ((char *)msgBuffer, "Unknown entity");
-	      HTMLParseError (HTMLcontext.doc, (char *)msgBuffer);
+	      HTMLParseError (HTMLcontext.doc, (char *)msgBuffer, 0);
 	    }
 	  /* next state is the return state from the entity subautomaton,
 	     not the state computed by the automaton.
@@ -3396,7 +3401,7 @@ static void DecEntityChar (unsigned char c)
 		PutInBuffer (EntityName[i]);
 	      LgEntityName = 0;
 	      /* error message */
-	      HTMLParseError (HTMLcontext.doc, "Invalid decimal entity");
+	      HTMLParseError (HTMLcontext.doc, "Invalid decimal entity", 0);
 	    }
 	  /* next state is state 0, not the state computed by the automaton */
 	  /* and the character read has not been processed yet */
@@ -3465,7 +3470,7 @@ static void     HexEntityChar (char c)
 		PutInBuffer (EntityName[i]);
 	      LgEntityName = 0;
 	      /* error message */
-	    HTMLParseError (HTMLcontext.doc, "Invalid hexadecimal entity");
+	    HTMLParseError (HTMLcontext.doc, "Invalid hexadecimal entity", 0);
 	    }
 	  /* next state is state 0, not the state computed by the automaton */
 	  /* and the character read has not been processed yet */
@@ -3738,7 +3743,7 @@ static void EndOfPI (char c)
   /* useless test as the closing '?' isn't put into the buffer */
   /*
   if (LgBuffer && inputBuffer[LgBuffer - 1] != '?')
-    HTMLParseError (HTMLcontext.doc, "PI should be closed by \"?>\"");
+    HTMLParseError (HTMLcontext.doc, "PI should be closed by \"?>\"", 0);
   */
    CloseBuffer ();
    /* process the Processing Instruction available in inputBuffer */
@@ -6687,7 +6692,7 @@ void ParseExternalHTMLDoc (Document doc, FILE * infile,
 	  charset != ISO_2022_JP  && charset != EUC_JP       &&
 	  charset != SHIFT_JIS)
 	HTMLParseError (doc,
-			TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING));
+			TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), 0);
     }
   
   /* parse the input file and build the external document */
@@ -6855,7 +6860,7 @@ void StartParser (Document doc, char *fileName,
 		  charset != ISO_2022_JP  && charset != EUC_JP       &&
 		  charset != SHIFT_JIS)
 		HTMLParseError (doc,
-				TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING));
+				TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), 0);
 	    }
 	  if (!isHTML)
 	    {

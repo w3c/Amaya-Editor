@@ -174,12 +174,16 @@ ThotBool XhtmlCannotContainText (ElementType elType)
 }
 
 /*----------------------------------------------------------------------
+  CheckMandatoryAttribute
+  If attribute attrNum is not present on element el, generate a
+  parsing error message.
   ----------------------------------------------------------------------*/
 static void CheckMandatoryAttribute (Element el, Document doc, int attrNum)
 {
   ElementType    elType;
   Attribute      attr;
   AttributeType  attrType;
+  int            lineNum;
   char          *name;
   char           msgBuffer[MaxMsgLength];
 
@@ -192,11 +196,13 @@ static void CheckMandatoryAttribute (Element el, Document doc, int attrNum)
        name = GetXMLAttributeName (attrType, elType, doc);
        if (name)
 	 {
-	   sprintf (msgBuffer, "Missing mandatory attribute %s", name);
+	   sprintf (msgBuffer, "Missing mandatory attribute %s for element %s",
+		    name, TtaGetElementTypeName(TtaGetElementType(el)));
+	   lineNum = TtaGetElementLineNumber(el);
 	   if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
-	     XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+	     XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
 	   else
-	     HTMLParseError (doc, msgBuffer);
+	     HTMLParseError (doc, msgBuffer, lineNum);
 	 }
      }
 }
@@ -776,8 +782,13 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 
      case HTML_EL_MAP:
      case HTML_EL_map:
-       /* Check the mandatory name attribute */
-       CheckMandatoryAttribute (el, doc, HTML_ATTR_NAME);
+       /* Check the mandatory attributes */
+       if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+	 /* it's XHTML. Check attribute id */
+	 CheckMandatoryAttribute (el, doc, HTML_ATTR_ID);
+       else
+	 /* it's a HTML document. Check attribute name */
+	 CheckMandatoryAttribute (el, doc, HTML_ATTR_NAME);
        break;
 
      case HTML_EL_AREA:
@@ -1023,7 +1034,7 @@ void HTMLTypeAttrValue (char *val, Attribute lastAttribute,
       if (strlen (val) > MaxMsgLength - 40)
          val[MaxMsgLength - 40] = EOS;
       sprintf (msgBuffer, "Unknown attribute value \"type = %s\"", val);
-      HTMLParseError (context->doc, msgBuffer);
+      HTMLParseError (context->doc, msgBuffer, 0);
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
       sprintf (msgBuffer, "type=%s", val);
@@ -1215,7 +1226,7 @@ void CreateAttrWidthPercentPxl (char *buffer, Element el,
     if (strlen (buffer) > MaxMsgLength - 30)
         buffer[MaxMsgLength - 30] = EOS;
     sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
-    HTMLParseError (doc, msgBuffer);
+    HTMLParseError (doc, msgBuffer, 0);
     }
   if (isImage)
     UpdateImageMap (origEl, doc, oldWidth, -1);
@@ -1323,7 +1334,7 @@ void CreateAttrHeightPercentPxl (char *buffer, Element el,
     if (strlen (buffer) > MaxMsgLength - 30)
         buffer[MaxMsgLength - 30] = EOS;
     sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
-    HTMLParseError (doc, msgBuffer);
+    HTMLParseError (doc, msgBuffer, 0);
     }
   if (isImage)
     UpdateImageMap (origEl, doc, oldHeight, -1);
@@ -1411,7 +1422,7 @@ void CreateAttrIntSize (char *buffer, Element el, Document doc)
        if (strlen (buffer) > MaxMsgLength - 30)
          buffer[MaxMsgLength - 30] = EOS;
        sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
-       HTMLParseError (doc, msgBuffer);
+       HTMLParseError (doc, msgBuffer, 0);
      }
 }
 /*----------------------------------------------------------------------
@@ -1499,7 +1510,7 @@ void EndOfHTMLAttributeValue (char *attrValue, AttributeMapping *lastMappedAttr,
 			/* we are parsing an HTML file, not an XHTML file */
 			{
 			  /* generate an error message in the log */
-			  HTMLParseError (context->doc, msgBuffer);
+			  HTMLParseError (context->doc, msgBuffer, 0);
 			  /* special case for value POLYGON of attribute 
 			     shape (AREA element) */
 			  if (attrType.AttrTypeNum == HTML_ATTR_shape &&
@@ -1552,7 +1563,7 @@ void EndOfHTMLAttributeValue (char *attrValue, AttributeMapping *lastMappedAttr,
 		      if (isXML)
 			XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
 		      else
-			HTMLParseError (context->doc, msgBuffer);
+			HTMLParseError (context->doc, msgBuffer, 0);
 		    }
 		  break;
 		case 2:	/* text */
@@ -1572,7 +1583,7 @@ void EndOfHTMLAttributeValue (char *attrValue, AttributeMapping *lastMappedAttr,
 			      if (isXML)
 				XmlParseError (warningMessage, (unsigned char *)msgBuffer, 0);
 			      else
-				HTMLParseError (context->doc, msgBuffer);
+				HTMLParseError (context->doc, msgBuffer, 0);
 			    }
 			  else
 			    {
