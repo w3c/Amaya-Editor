@@ -2831,9 +2831,7 @@ char               *data;
        /* Document location */
        tempfile = TtaGetMemory (MAX_LENGTH);
        if (!IsW3Path (data))
-	 {
-	   change = NormalizeFile (data, tempfile);
-	 }
+	 change = NormalizeFile (data, tempfile);
        else
 	 strcpy (tempfile, data);
        
@@ -2854,7 +2852,10 @@ char               *data;
        break;
      case ImgDirSave:
        /* Image directory */
-       strcpy (SaveImgsURL, data);
+       if (!IsW3Path (data))
+	 change = NormalizeFile (data, SaveImgsURL);
+       else
+	 strcpy (SaveImgsURL, data);
        break;
      case DirSave:
        if (!IsW3Path (SavePath))
@@ -3314,8 +3315,10 @@ NotifyEvent        *event;
      }
    else
      {
-       if (strncmp(s, "file://localhost", 16) == 0)
-	 s += 16;
+       if (strncmp(s, "file:/", 6) == 0)
+	 s += 6;
+       if (strncmp(s, "/localhost", 10) == 0)
+	s += 10;
        if (TtaFileExist (s))
 	 {
 	   NormalizeFile (s, LastURLName);

@@ -474,10 +474,9 @@ Document	document;
       }
    else
       {
-      if (W3Loading)
-         /* interrupt current transfer */
-         StopTransfer (W3Loading, 1);	   
-      SubmitForm (document, element);
+	/* interrupt current transfer */
+	StopTransfer (document, 1);	   
+	SubmitForm (document, element);
       }
 }
 
@@ -535,8 +534,8 @@ NotifyElement      *event;
      {
 	if (elType.ElTypeNum == HTML_EL_Frame)
 	   {
-	   element = TtaGetParent (element);
-	   elType1 = TtaGetElementType (element);
+	     element = TtaGetParent (element);
+	     elType1 = TtaGetElementType (element);
 	   }
 	else
 	   elType1.ElTypeNum = elType.ElTypeNum;
@@ -544,10 +543,9 @@ NotifyElement      *event;
 	    elType1.ElTypeNum == HTML_EL_Reset_Input)
 	   /* it 's a double click on a submit or reset button */
 	   {
-	   if (W3Loading)
-	      /* interrupt current transfer */
-	      StopTransfer (W3Loading, 1);	   
-	   SubmitForm (event->document, element);
+	     /* interrupt current transfer */
+	     StopTransfer (event->document, 1);	   
+	     SubmitForm (event->document, element);
 	   }
 	else if (elType1.ElTypeNum == HTML_EL_BUTTON)
 	   DblClickOnButton (element, event->document);
@@ -581,9 +579,8 @@ NotifyElement      *event;
 	   if (attr)
 	     /* it's a graphic submit element */
 	     {
-	       if (W3Loading)
-		  /* interrupt current transfer */
-		  StopTransfer (W3Loading, 1);	   
+	       /* interrupt current transfer */
+	       StopTransfer (event->document, 1);	   
 	       SubmitForm (event->document, element);
 	       return (TRUE);
 	     }
@@ -661,9 +658,8 @@ NotifyElement      *event;
 	while (anchor == NULL && ancestor != NULL);
       }
 
-   if (W3Loading)
-      /* interrupt current transfer */
-      StopTransfer (W3Loading, 1);	   
+   /* interrupt current transfer */
+   StopTransfer (event->document, 1);	   
    return (FollowTheLink (anchor, element, event->document));
 }
 

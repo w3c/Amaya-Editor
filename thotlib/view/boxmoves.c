@@ -1844,9 +1844,9 @@ int                 frame;
 	    
 	    /* regarde si les regles de dependance sont valides */
 	    toMove = TRUE;
-	    if (pCurrentAb->AbEnclosing != NULL)
-	      if (pCurrentAb->AbEnclosing->AbBox != NULL)
-		toMove = pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost;
+	    if (pCurrentAb->AbEnclosing != NULL && pCurrentAb->AbEnclosing->AbBox != NULL)
+		toMove = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
+			  pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock);
 	    
 	    /* respecte les contraintes de position */
 	    /* Point fixe sur l'origine */
@@ -1898,6 +1898,7 @@ int                 frame;
 		      i = j;
 		    else if (orgTrans < 0)
 		      i += orgTrans;
+
 		    if (endTrans == 0)
 		      j = i;
 		    else if (endTrans > 0)
@@ -1915,6 +1916,7 @@ int                 frame;
 		    if (endTrans > 0)
 		      j += endTrans;
 		  }
+
 		DefClip (frame, i - k, pBox->BxYOrg - k, j + k, pBox->BxYOrg + pBox->BxHeight + k);
 	      }
 	    

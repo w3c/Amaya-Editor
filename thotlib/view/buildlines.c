@@ -2443,7 +2443,7 @@ int                 frame;
 	   pBox = pLine->LiFirstBox;
 	else
 	   pBox = pLine->LiFirstPiece;
-	xd = pSaveBox->BxXOrg;
+	xd = pBox->BxXOrg;
 	if (x < 0)
 	   xd += x;
 	XMove (pBox, NULL, x, frame);

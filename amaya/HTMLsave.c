@@ -1081,13 +1081,23 @@ char                  *newURL;
    char               *buf, *ptr;
    char               *sStyle, *stringStyle;
    char               *oldStyle;
-   char                url_str [2];
    int                 buflen, max, index;
 
-   if (imgbase && strchr (newURL, '/'))
-      sprintf (url_str, "/");
-   else 
-      sprintf (url_str, "%s", DIR_STR);
+   if (imgbase[0] != EOS)
+     {
+       /* add the separator if needed */
+       buflen = strlen (imgbase) - 1;
+       if (dst_is_local && !IsW3Path (imgbase))
+	 {
+	   if (imgbase[buflen] != DIR_SEP)
+	     strcat (imgbase, DIR_STR);
+	 }
+       else
+	 {
+	   if (imgbase[buflen] != URL_SEP)
+	     strcat (imgbase, URL_STR);
+	 }
+     }
 
    /* save the old document path to locate existing images */
    strcpy (oldpath, DocumentURLs[SavingDocument]);
@@ -1313,7 +1323,6 @@ char                  *newURL;
 			     {
 			       /* compose the relative or absolute name */
 			       strcpy (url, imgbase);
-			       strcat (url, url_str);
 			       strcat (url, imgname);
 			     }
 			   else
@@ -1353,11 +1362,7 @@ DBG(fprintf(stderr, "     SRC from %s to %s\n", buf, url);)
 				 }
 
 			       if (imgbase[0] != EOS)
-				 {
-				   strcpy (tempfile, imgbase);
-				   strcat (tempfile, DIR_STR);
-				   strcat (tempfile, imgname);
-				 }
+				   strcpy (tempfile, tempname);
 			       else
 				 {
 				   strcpy (tempfile, SavePath);
@@ -1553,9 +1558,14 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 	  if (dst_is_local)
 	    {
 	      tempname = TtaGetMemory (MAX_LENGTH);
-	      strcpy (tempname, SavePath);
-	      strcat (tempname, DIR_STR);
-	      strcat (tempname, imgbase);
+	      if (imgbase[0] != DIR_SEP)
+		  {
+		    strcpy (tempname, SavePath);
+		    strcat (tempname, DIR_STR);
+		    strcat (tempname, imgbase);
+		  }
+	      else
+		strcpy(tempname, imgbase);
 	      ok = TtaCheckDirectory (tempname);
 	      if (!ok)
 		{
