@@ -1,3 +1,4 @@
+# Keyboard configuration file for Windows
 # Be careful when using Alt key to define short cuts. 
 # Alt key, referenced by Windows API as VK_MENU is
 # usually used by Windows for some particular purposes
@@ -38,7 +39,7 @@
 #moving around 
 <Key>Delete:        TtcDeleteSelection() 
 <Key>Backspace:     TtcDeletePreviousChar() 
-<Key>F2:	        TtcParentElement()
+<Key>F2:            TtcParentElement()
 <Key>Return:        TtcCreateElement() 
 <Key>Home:          TtcStartOfLine() 
 <Key>End:           TtcEndOfLine()
@@ -58,10 +59,12 @@ Alt <Key>Home:      GoToHome()
 
 #File menu 
 Ctrl <Key>o:                       OpenDoc() 
-Shift Ctrl <Key>o:                 OpenDocInNewWindow() 
-Ctrl <Key>n , Ctrl <Key>n:         New() 
-Ctrl <Key>n , Ctrl <Key>t:         NewTemplate() 
+Shift Ctrl <Key>O:                 OpenDocInNewWindow() 
+Ctrl <Key>n , Ctrl <Key>n:         NewXHTML() 
+Ctrl <Key>n , Ctrl <Key>m:         NewMathML() 
+Ctrl <Key>n , Ctrl <Key>g:         NewSVG() 
 Ctrl <Key>n , Ctrl <Key>c:         NewCss() 
+Ctrl <Key>n , Ctrl <Key>t:         NewTemplate() 
 Shift Ctrl <Key>P:                 PrintAs() 
 Ctrl <Key>p:                       SetupAndPrint() 
 Ctrl <Key>s:                       SaveDocument() 

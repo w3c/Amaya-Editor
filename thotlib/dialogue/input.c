@@ -135,15 +135,13 @@ static int          SpecialCtrlKeys[] = {
 
 /* the automata */
 static KEY         *Automata_normal = NULL;
-
 static KEY         *Automata_ctrl    = NULL;
 static KEY         *Automata_alt     = NULL;
 static KEY         *Automata_CTRL    = NULL;
 static KEY         *Automata_ALT     = NULL;
 static KEY         *Automata_current = NULL;
-
 #ifdef _WINDOWS
-static BOOL specialKey;
+static ThotBool    Special;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -153,20 +151,17 @@ static BOOL specialKey;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char*       NameCode (char* name)
-
 #else  /* __STDC__ */
 static char*       NameCode (name)
 STRING              name;
-
 #endif /* __STDC__ */
-
 {
    if (strlen (name) < 5)
       if (name[0] == ',')
 	 return ("0x2c");
       else
 	 return (name);
-   else if (!strcasecmp (name, "Enter"))
+   else if (!strcasecmp (name, "Return"))
       return ("0x0d");
    else if (!strcasecmp (name, "Backspace"))
       return ("0x08");
@@ -529,31 +524,31 @@ ThotBool isSpecial;
 	   !(keyboard_mask & THOT_MOD_ALT))
 	   return;
    /* check if it's a special key */
-   specialKey = isSpecial;
+   Special = isSpecial;
    if (HIBYTE (GetKeyState (VK_UP)))
-     specialKey = TRUE;
+     Special = TRUE;
    else if (HIBYTE (GetKeyState (VK_LEFT)))
-     specialKey = TRUE;
+     Special = TRUE;
    else if (HIBYTE (GetKeyState (VK_RIGHT)))
-     specialKey = TRUE;
+     Special = TRUE;
    else if (HIBYTE (GetKeyState (VK_UP)))
-     specialKey = TRUE;
+     Special = TRUE;
    else if (HIBYTE (GetKeyState (VK_DOWN)))
-     specialKey = TRUE;
+     Special = TRUE;
    else if (HIBYTE (GetKeyState (VK_BACK)))
-     specialKey = TRUE;
+     Special = TRUE;
    else if (HIBYTE (GetKeyState (VK_DELETE)))
-     specialKey = TRUE;
+     Special = TRUE;
    else if (HIBYTE (GetKeyState (VK_PRIOR)))
-     specialKey = TRUE;
+     Special = TRUE;
    else if (HIBYTE (GetKeyState (VK_NEXT)))
-     specialKey = TRUE;
+     Special = TRUE;
    else if (HIBYTE (GetKeyState (VK_HOME)))
-     specialKey = TRUE;
+     Special = TRUE;
    else if (HIBYTE (GetKeyState (VK_END)))
-     specialKey = TRUE;
+     Special = TRUE;
    else if (HIBYTE (GetKeyState (VK_RETURN)))
-     specialKey = TRUE;
+     Special = TRUE;
    else if (keyboard_mask & THOT_MOD_CTRL && wParam < 32)
 	 {
 	   /* Windows translates Ctrl a-z */
@@ -751,7 +746,7 @@ int                 key;
 		{
 		  if (ptr->K_EntryCode == key &&
 #ifdef _WINDOWS
-			  ptr->K_Special == specialKey &&
+			  ptr->K_Special == Special &&
 #endif /* _WINDOWS */
 			  modtype == ptr->K_Modifier)
 		    found = TRUE;
@@ -786,7 +781,7 @@ int                 key;
 		  {
 #ifdef _WINDOWS
 		    if (ptr->K_EntryCode == key
-			&& ptr->K_Special == specialKey)
+			&& ptr->K_Special == Special)
 #else /* _WINDOWS */
 		    if (ptr->K_EntryCode == key)
 #endif /* _WINDOWS */
@@ -809,7 +804,7 @@ int                 key;
     }
   
 #ifdef _WINDOWS
-  if (specialKey && !found)
+  if (Special && !found)
 #else /* !_WINDOWS */
   if (!found)
 #endif /* _WINDOWS */
@@ -1021,9 +1016,6 @@ int                 key;
 	  else if (value == 9 ||
 		   ( value >= 32 && value < 128) || (value >= 144 && value < 256))
 	    {
-#ifdef _WINDOWS
-	      /*if (!specialKey)*/
-#endif /* _WINDOWS */
 		/* on insere un caractere valide quelque soit la langue */
 		if (MenuActionList[0].Call_Action)
 		  (*MenuActionList[0].Call_Action) (document, view, value);
@@ -1139,176 +1131,197 @@ ThotTranslations      InitTranslations (CHAR_T* appliname)
 #else  /* __STDC__ */
 ThotTranslations      InitTranslations (appliname)
 CHAR_T*               appliname;
-
 #endif /* __STDC__ */
 {
-   CHAR_T*             appHome;	   /* fichier de translation */
-   CHAR_T              fullName[200];  /* ligne en construction pour motif */
-   CHAR_T              home[200]; 
-   CHAR_T              name[80]; 
-   char*               text;	   
-   char*               adr;
-   char                transText [MAX_LENGTH];
-   char                ch[80]; 
-   char                line[200];  /* ligne en construction pour motif */
-   char                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
-   unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
-   int                 e, i;
-   int                 mod1, mod2; /* 1er/ 2eme modifieurs : voir THOT_MOD_xx */
-   int                 len, max;
-   FILE               *file;
-   ThotTranslations    table = 0;
-   ThotBool            isSpecialKey1, isSpecialKey2;
+  CHAR_T*             appHome;	   /* fichier de translation */
+  CHAR_T              fullName[200];  /* ligne en construction pour motif */
+  CHAR_T              home[200]; 
+  CHAR_T              name[80]; 
+  char*               text;	   
+  char*               adr;
+  char                transText [MAX_LENGTH];
+  char                ch[80]; 
+  char                line[200];  /* ligne en construction pour motif */
+  char                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
+  unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
+  int                 e, i;
+  int                 mod1, mod2; /* 1er/ 2eme modifieurs : voir THOT_MOD_xx */
+  int                 len, max;
+  FILE               *file;
+  ThotTranslations    table = 0;
+  ThotBool            isSpecialKey1, isSpecialKey2;
 
-   appHome = TtaGetEnvString ("APP_HOME");
-   ustrcpy (name, appliname);
+  appHome = TtaGetEnvString ("APP_HOME");
+  ustrcpy (name, appliname);
 #ifdef _WINDOWS
-   ustrcat (name, TEXT(".kb"));
+  ustrcat (name, TEXT(".kb"));
 #else  /* _WINDOWS */
-   ustrcat (name, TEXT(".keyboard"));
+  ustrcat (name, TEXT(".keyboard"));
 #endif /* _WINDOWS */
 
-   ustrcpy (home, appHome);
-   ustrcat (home, WC_DIR_STR);
-   ustrcat (home, name);
-   if (!SearchFile (home, 0, fullName))
-     SearchFile (name, 2, fullName);
+  ustrcpy (home, appHome);
+  ustrcat (home, WC_DIR_STR);
+  ustrcat (home, name);
+  if (!SearchFile (home, 0, fullName))
+    SearchFile (name, 2, fullName);
 
-   file = ufopen (fullName, TEXT("r"));
-   if (!file)
-     {
-	/*Fichier inaccessible */
-	TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_KBD);
-	return NULL;
-     }
-   else
-     {
-	/* Lecture du fichier des translations */
-	fseek (file, 0L, 2);	/* fin du fichier */
+  file = ufopen (fullName, TEXT("r"));
+  if (!file)
+    {
+      /*Fichier inaccessible */
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_KBD);
+      return NULL;
+    }
+  else
+    {
+      /* Lecture du fichier des translations */
+      fseek (file, 0L, 2);	/* fin du fichier */
+      
+      len = ftell (file) * 2 + 10;	/* pour assurer de la marge */
+      text = TtaGetMemory (len);
+      fseek (file, 0L, 0);	/* debut du fichier */
+      
+      /* Initialise la lecture du fichier */
+      e = 1;
+      max = MaxMenuAction;
+      len = strlen ("TtcInsertChar") + 2;
+      
+      /* FnCopy la premiere ligne du fichier (#override, ou #...) */
+      strcpy (text, "#override\n");
+      ch[0] = 0;
+      fscanf (file, "%80s", ch);
+      do
+	{
+	  /* Initialisations */
+	  mod1 = mod2 = THOT_NO_MOD;
+	  key1 = key2 = 0;
+	  strcpy (line, "!");	/* initialisation de la ligne */
+	  
+	  /* Est-ce la fin de fichier ? */
+	  if (strlen (ch) == 0 || EndOfString (ch, "^"))
+	    e = 0;
+	  else if (ch[0] != '#')
+	    {
+	      /* it is not a comment */
+	      /* -------> Lecture des autres champs */
+	      if (!strcasecmp (ch, "shift"))
+		{
+		  mod1 = THOT_MOD_SHIFT;
+		  /* copie 1er modifieur */
+		  strcpy (equiv, "Shift");
+		  strcat (equiv, " ");
+		  strcat (line, "Shift");
+		  strcat (line, " ");
+		  /* Lecture enventuelle d'un deuxieme modifieur */
+		  ch[0] = 0;
+		  fscanf (file, "%80s", ch);
+		}
+	      else
+		{
+		  mod1 = THOT_NO_MOD;
+		  equiv[0] = EOS;
+		}
+	      
+	      if (!strcasecmp (ch, "ctrl"))
+		{
+		  mod1 += THOT_MOD_CTRL;
+		  /* copie 2eme modifieur */
+		  strcat (equiv, "Ctrl");
+		  strcat (equiv, " ");
+		  strcat (line, "Ctrl");
+		  strcat (line, " ");
+		  /* Lecture de la cle */
+		  ch[0] = 0;
+		  fscanf (file, "%80s", ch);
+		}
+	      else if (!strcasecmp (ch, "alt") || !strcasecmp (ch, "meta"))
+		{
+		  mod1 += THOT_MOD_ALT;
+		  /* copie 2eme modifieur */
+		  strcat (equiv, "Alt");
+		  strcat (equiv, " ");
+		  strcat (line, "Alt");
+		  strcat (line, " ");
+		  /* Lecture de la cle */
+		  ch[0] = 0;
+		  fscanf (file, "%80s", ch);
+		} 
 
-	len = ftell (file) * 2 + 10;	/* pour assurer de la marge */
-	text = TtaGetMemory (len);
-	fseek (file, 0L, 0);	/* debut du fichier */
+	      /* Extrait la valeur de la cle */
+	      sscanf (ch, "<Key>%80s", transText);
+	      if (name[0] != EOS)
+		{
+		  /* copie de la cle */
+		  strcat (line, "<Key>");
+		  i = strlen (transText);
+		  /* Elimine le : a la fin du nom */
+		  if ((transText[i - 1] == ':') && i != 1)
+		    {
+		      /* Il faut engendrer un : apres le nom */
+		      transText[i - 1] = EOS;
+		      i = 1;
+		    }
+		  else
+		    i = 0;
+		  /* copie le nom normalise */
+		  strcat (line, NameCode (transText));
+		  if (i == 1)
+		    strcat (line, ": ");
+		  else
+		    strcat (line, " ");
+		}
 
-	/* Initialise la lecture du fichier */
-	e = 1;
-	max = MaxMenuAction;
-	len = strlen ("TtcInsertChar") + 2;
+	      /* convertion vers keysym pour l'automate */
+	      key1 = SpecialKey (transText, &isSpecialKey1);
+	      if (!strcmp (transText, "Return"))
+		/* trnalate return by enter */
+		strcat (equiv, "Enter");
+	      else
+		strcat (equiv, transText);
 
-	/* FnCopy la premiere ligne du fichier (#override, ou #...) */
-	strcpy (text, "#override\n");
-	ch[0] = 0;
-	fscanf (file, "%80s", ch);
-	do {
-       /* Initialisations */
-       mod1 = mod2 = THOT_NO_MOD;
-       key1 = key2 = 0;
-       strcpy (line, "!");	/* initialisation de la ligne */
-
-       /* Est-ce la fin de fichier ? */
-       if (strlen (ch) == 0 || EndOfString (ch, "^"))
-          e = 0;
-       else if (ch[0] != '#') {
-            /* it is not a comment */
-            /* -------> Lecture des autres champs */
-            if (!strcasecmp (ch, "shift")) {
-               mod1 = THOT_MOD_SHIFT;
-               /* copie 1er modifieur */
-               strcpy (equiv, "Shift");
-               strcat (equiv, " ");
-               strcat (line, "Shift");
-               strcat (line, " ");
-               /* Lecture enventuelle d'un deuxieme modifieur */
-			   ch[0] = 0;
-               fscanf (file, "%80s", ch);
-			} else {
-                   mod1 = THOT_NO_MOD;
-                   equiv[0] = EOS;
-			}
-
-            if (!strcasecmp (ch, "ctrl")) {
-               mod1 += THOT_MOD_CTRL;
-               /* copie 2eme modifieur */
-               strcat (equiv, "Ctrl");
-               strcat (equiv, " ");
-               strcat (line, "Ctrl");
-               strcat (line, " ");
-               /* Lecture de la cle */
-			   ch[0] = 0;
-               fscanf (file, "%80s", ch);
-			} else if (!strcasecmp (ch, "alt") || !strcasecmp (ch, "meta")) {
-                   mod1 += THOT_MOD_ALT;
-                   /* copie 2eme modifieur */
-                   strcat (equiv, "Alt");
-                   strcat (equiv, " ");
-                   strcat (line, "Alt");
-                   strcat (line, " ");
-                   /* Lecture de la cle */
-				   ch[0] = 0;
-                   fscanf (file, "%80s", ch);
-			} 
-
-            /* Extrait la valeur de la cle */
-            sscanf (ch, "<Key>%80s", transText);
-            if (name[0] != EOS) {
-               /* copie de la cle */
-               strcat (line, "<Key>");
-               i = strlen (transText);
-               /* Elimine le : a la fin du nom */
-               if ((transText[i - 1] == ':') && i != 1) {
-                  /* Il faut engendrer un : apres le nom */
-                  transText[i - 1] = EOS;
-                  i = 1;
-			   } else
-                     i = 0;
-               /* copie le nom normalise */
-               strcat (line, NameCode (transText));
-               if (i == 1)
-                  strcat (line, ": ");
-               else
-                   strcat (line, " ");
-			}
-
-            /* convertion vers keysym pour l'automate */
-            key1 = SpecialKey (transText, &isSpecialKey1);
-            strcat (equiv, transText);
-
-            /* Lecture eventuelle d'une deuxieme composition */
-            fscanf (file, "%80s", transText);
-            if (transText[0] == ',') {
-               /* copie du separateur */
-               strcat (line, ", ");
-			   ch[0] = 0;
-               fscanf (file, "%80s", ch);
+	      /* Lecture eventuelle d'une deuxieme composition */
+	      fscanf (file, "%80s", transText);
+	      if (transText[0] == ',')
+		{
+		  /* copie du separateur */
+		  strcat (line, ", ");
+		  ch[0] = 0;
+		  fscanf (file, "%80s", ch);
 		      
-               if (!strcasecmp (ch, "shift")) {
-                  mod2 = THOT_MOD_SHIFT;
-                  /* copie du 2eme modifieur */
-                  strcat (equiv, "Shift");
-                  strcat (equiv, " ");
-                  strcat (line, "Shift");
-                  strcat (line, " ");
-                  /* Lecture enventuelle d'un deuxieme modifieur */
-				  ch[0] = 0;
-                  fscanf (file, "%80s", ch);
-			   } else {
+		  if (!strcasecmp (ch, "shift"))
+		    {
+		      mod2 = THOT_MOD_SHIFT;
+		      /* copie du 2eme modifieur */
+		      strcat (equiv, "Shift");
+		      strcat (equiv, " ");
+		      strcat (line, "Shift");
+		      strcat (line, " ");
+		      /* Lecture enventuelle d'un deuxieme modifieur */
+		      ch[0] = 0;
+		      fscanf (file, "%80s", ch);
+		    }
+		  else
+		    {
                       mod2 = THOT_NO_MOD;
                       strcat (equiv, " ");
-			   }
+		    }
 
-               if (!strcasecmp (ch, "ctrl")) {
-                  mod2 += THOT_MOD_CTRL;
-                  /* copie 2eme modifieur */
-                  strcat (equiv, "Ctrl");
-                  strcat (equiv, " ");
-                  strcat (line, "Ctrl");
-                  strcat (line, " ");
-                  /* copie de la cle */
-				  ch[0] = 0;
-                  fscanf (file, "%80s", ch);
-                  strcat (line, ch);
-                  strcat (line, " ");
-			   } else if (!strcasecmp (ch, "alt") || !strcasecmp (ch, "meta")) {
+		  if (!strcasecmp (ch, "ctrl"))
+		    {
+		      mod2 += THOT_MOD_CTRL;
+		      /* copie 2eme modifieur */
+		      strcat (equiv, "Ctrl");
+		      strcat (equiv, " ");
+		      strcat (line, "Ctrl");
+		      strcat (line, " ");
+		      /* copie de la cle */
+		      ch[0] = 0;
+		      fscanf (file, "%80s", ch);
+		      strcat (line, ch);
+		      strcat (line, " ");
+		    }
+		  else if (!strcasecmp (ch, "alt") || !strcasecmp (ch, "meta"))
+		    {
                       mod2 += THOT_MOD_ALT;
                       /* copie 2eme modifieur */
                       strcat (equiv, "Alt");
@@ -1316,118 +1329,127 @@ CHAR_T*               appliname;
                       strcat (line, "Alt");
                       strcat (line, " ");
                       /* copie de la cle */
-					  ch[0] = 0;
+		      ch[0] = 0;
                       fscanf (file, "%80s", ch);
                       strcat (line, ch);
                       strcat (line, " ");
-			   }
+		    }
 
-               /* Extrait la valeur de la cle */
-               sscanf (ch, "<Key>%80s", transText);
-               if (transText [0] != EOS) {
-                  strcat (line, "<Key>");   /* copie de la cle */
-                  i = strlen (transText);
-                  /* Elimine le : a la fin du nom */
-                  if (transText[i - 1] == ':' && i != 1) {
-                     /* Il faut engendrer un : apres le nom */
-                     transText[i - 1] = EOS;
-                     i = 1;
-                  } else
+		  /* Extrait la valeur de la cle */
+		  sscanf (ch, "<Key>%80s", transText);
+		  if (transText [0] != EOS)
+		    {
+		      strcat (line, "<Key>");   /* copie de la cle */
+		      i = strlen (transText);
+		      /* Elimine le : a la fin du nom */
+		      if (transText[i - 1] == ':' && i != 1)
+			{
+			  /* Il faut engendrer un : apres le nom */
+			  transText[i - 1] = EOS;
+			  i = 1;
+			}
+		      else
                         i = 0;
-                  strcat (line, NameCode (transText));	/* copie le nom normalise */
-                  if (i == 1)
-                     strcat (line, ": ");
-                  else
-                      strcat (line, " ");
-	       } 
-               key2 = SpecialKey (transText, &isSpecialKey2);
-               strcat (equiv, transText);
+		      /* copie le nom normalise */
+		      strcat (line, NameCode (transText));
+		      if (i == 1)
+			strcat (line, ": ");
+		      else
+			strcat (line, " ");
+		    } 
+		  key2 = SpecialKey (transText, &isSpecialKey2);
+		  if (!strcmp (transText, "Return"))
+		    /* trnalate return by enter */
+		    strcat (equiv, "Enter");
+		  else
+		    strcat (equiv, transText);
 
-               /* Lecture de l'action */
-               fscanf (file, "%80s", transText);
-	    }
+		  /* Lecture de l'action */
+		  fscanf (file, "%80s", transText);
+		}
 
-            /* Isole l'intitule de la commande */
-            strncpy (ch, transText, 80);
-            adr = strchr (ch, '(');
-            if (adr == NULL)
-               adr = strchr (ch, SPACE);
-            if (adr == NULL)
-               i = max;
-            else
-			{
-                 adr[0] = EOS;
-                 /* Selection de la bonne commande */
-                 for (i = 0; i < max; i++)
-                 if (!strcmp (ch, MenuActionList[i].ActionName))
-                    break;
-			} 
+	      /* Isole l'intitule de la commande */
+	      strncpy (ch, transText, 80);
+	      adr = strchr (ch, '(');
+	      if (adr == NULL)
+		adr = strchr (ch, SPACE);
+	      if (adr == NULL)
+		i = max;
+	      else
+		{
+		  adr[0] = EOS;
+		  /* Selection de la bonne commande */
+		  for (i = 0; i < max; i++)
+		    if (!strcmp (ch, MenuActionList[i].ActionName))
+		      break;
+		} 
 
-            /* Est-ce une translation valable pour le texte Motif */
-            if (i <= 8)
-			{
-               /* FnCopy la ligne dans le source de la table de translations */
-               strcat (text, line);
-               if (!strcmp (ch, "TtcInsertChar"))
-			   {
-                  strcat (text, "insert-string(");
-                  strcat (text, ISOAsciiTranslate (&adr[1]));
-			   }
-	       else if (!strcmp (ch, "TtcDeleteSelection"))
-                strcat (text, "delete-selection()");
-               else if (!strcmp (ch, "TtcDeletePreviousChar"))
+	      /* Est-ce une translation valable pour le texte Motif */
+	      if (i <= 8)
+		{
+		  /* FnCopy la ligne dans le source de la table de translations */
+		  strcat (text, line);
+		  if (!strcmp (ch, "TtcInsertChar"))
+		    {
+		      strcat (text, "insert-string(");
+		      strcat (text, ISOAsciiTranslate (&adr[1]));
+		    }
+		  else if (!strcmp (ch, "TtcDeleteSelection"))
+		    strcat (text, "delete-selection()");
+		  else if (!strcmp (ch, "TtcDeletePreviousChar"))
                     strcat (text, "delete-prev-char()");
-               else if (!strcmp (ch, "TtcPreviousChar"))
+		  else if (!strcmp (ch, "TtcPreviousChar"))
                     strcat (text, "backward-char()");
-               else if (!strcmp (ch, "TtcNextChar"))
+		  else if (!strcmp (ch, "TtcNextChar"))
                     strcat (text, "forward-char()");
-               else if (!strcmp (ch, "TtcPreviousLine"))
+		  else if (!strcmp (ch, "TtcPreviousLine"))
                     strcat (text, "previous-line()");
-               else if (!strcmp (ch, "TtcNextLine"))
+		  else if (!strcmp (ch, "TtcNextLine"))
                     strcat (text, "next-line()");
-               else if (!strcmp (ch, "TtcStartOfLine"))
+		  else if (!strcmp (ch, "TtcStartOfLine"))
                     strcat (text, "beginning-of-line()");
-               else if (!strcmp (ch, "TtcEndOfLine"))
+		  else if (!strcmp (ch, "TtcEndOfLine"))
                     strcat (text, "end-of-line()");
-               strcat (text, "\n");
-	    }
+		  strcat (text, "\n");
+		}
 
-            if (i == 0)
-	      {
-		/* C'est l'action insert-string */
-		/* FnCopy la ligne dans le source de la table de translations */
-		strcat (text, line);
-		strcat (text, ISOAsciiTranslate (transText));
-		strcat (text, "\n");
-		/* C'est un encodage de caractere */
-		adr = ISOAsciiTranslate (&transText[len]);
-		MemoKey (mod1, key1, isSpecialKey1, mod2, key2, isSpecialKey2, (unsigned int) adr[0], 0);
-	      }
-	    else if (i < max)
-	      {
-		/* C'est une autre action Thot */
-		MemoKey (mod1, key1, isSpecialKey1, mod2, key2, isSpecialKey2, /*255+i */ 0, i);
-		/* On met a jour l'equivalent clavier */
-		TtaFreeMemory (MenuActionList[i].ActionEquiv);
-		MenuActionList[i].ActionEquiv = TtaStrdup (equiv);
-	      }  
-       } else {
-	 /* skip this line */
-	 do
-	   i = fgetc (file);
-	 while (i != NEW_LINE);
-       }
-       ch[0] = 0;
-       fscanf (file, "%80s", ch);
+	      if (i == 0)
+		{
+		  /* C'est l'action insert-string */
+		  /* FnCopy la ligne dans le source de la table de translations */
+		  strcat (text, line);
+		  strcat (text, ISOAsciiTranslate (transText));
+		  strcat (text, "\n");
+		  /* C'est un encodage de caractere */
+		  adr = ISOAsciiTranslate (&transText[len]);
+		  MemoKey (mod1, key1, isSpecialKey1, mod2, key2, isSpecialKey2, (unsigned int) adr[0], 0);
+		}
+	      else if (i < max)
+		{
+		  /* C'est une autre action Thot */
+		  MemoKey (mod1, key1, isSpecialKey1, mod2, key2, isSpecialKey2, /*255+i */ 0, i);
+		  /* On met a jour l'equivalent clavier */
+		  TtaFreeMemory (MenuActionList[i].ActionEquiv);
+		  MenuActionList[i].ActionEquiv = TtaStrdup (equiv);
+		}
+	    }
+	  else
+	    {
+	      /* skip this line */
+	      do
+		i = fgetc (file);
+	      while (i != NEW_LINE);
+	    }
+	  ch[0] = 0;
+	  fscanf (file, "%80s", ch);
 	} while (e != 0);
 
-    fclose (file);
-
-    /* Creation de la table de translation */
-#   ifndef _WINDOWS
-	table = XtParseTranslationTable (text);
-#   endif  /* !_WINDOWS */
-    TtaFreeMemory (text);
-    return table;
-  }
+      fclose (file);
+      /* Creation de la table de translation */
+#ifndef _WINDOWS
+      table = XtParseTranslationTable (text);
+#endif  /* !_WINDOWS */
+      TtaFreeMemory (text);
+      return table;
+    }
 }

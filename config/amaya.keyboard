@@ -1,9 +1,12 @@
 # Keyboard configuration file for Unix
-#
-# How keys are used:
-#
 # These functions are loosely based on emacs keys.
-# 
+# You have to distinguish between <Alt/Control><Key> sequences and
+# <Shift><Alt/Control><Key> sequences.
+# For example:
+# Alt <Key>+:		ZoomIn()	## is wrong
+# Shift Alt <Key>+:	ZoomIn()	## is correct
+# Alt <Key>=:	    ZoomIn()	## is correct
+#
 # Alt is used, with b,f,Home,r (for reload) and Return (for DoAction),
 #             for navigating from page to page                     
 # Alt-t is used for information types (Types that are in the Style menus)
@@ -44,9 +47,7 @@
 <Key>Return:        TtcCreateElement() 
 <Key>Home:          TtcStartOfLine() 
 <Key>End:           TtcEndOfLine()
-
-#Following commented out to make keyboard
-#selection work. Is this still necessary? 
+#Following commented out to remember default actions
 #<Key>Up:           TtcPreviousLine() 
 #<Key>Down:         TtcNextLine() 
 #<Key>Right:        TtcNextChar() 
@@ -70,12 +71,14 @@ Alt <Key>Home:      GoToHome()
 #File menu 
 Shift Ctrl <Key>N:                 ChangeTitle()
 Ctrl <Key>x , Ctrl <Key>f:         OpenDoc() 
-Ctrl <Key>x , Ctrl <Key>2:         OpenDocInNewWindow() 
-Ctrl <Key>x , Ctrl <Key>n:         New() 
+Ctrl <Key>x , Ctrl <Key>o:         OpenDocInNewWindow() 
+Ctrl <Key>x , Ctrl <Key>n:         NewXHTML() 
+Ctrl <Key>x , Ctrl <Key>m:         NewMathML() 
+Ctrl <Key>x , Ctrl <Key>g:         NewSVG() 
 Ctrl <Key>x , Ctrl <Key>t:         NewTemplate() 
 Ctrl <Key>s , Ctrl <Key>n:         NewCss() 
-Ctrl <Key>x , Ctrl <Key>p:         PrintAs() 
-Ctrl <Key>p:                       SetupAndPrint() 
+Ctrl <Key>p:                       PrintAs() 
+Shift Ctrl <Key>P:                 SetupAndPrint() 
 Ctrl <Key>x , Ctrl <Key>s:         SaveDocument() 
 Ctrl <Key>x , Ctrl <Key>w:         SaveDocumentAs() 
 Alt <Key>b:                        GotoPreviousHTML() 
