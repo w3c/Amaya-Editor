@@ -12,9 +12,15 @@ Extensions 2.1:
   - The Save menu entry and the Save button are disabled when the document
     cannot be saved.
   - Menu entries Quotation, Subscript, Superscript, and BDO can be set
-    and unset from the "Character element" menu.
+    or unset from the "Character element" menu.
   - New colorful button bar
   - New Home button
+  - Changing the New command: there are 3 different menu entries
+    + "New HTML document" displays a form to choose the document location
+      first.
+    + "From templace" proposes a list of templates to build you new document
+      when you have a template server.
+    + "New CSS" displays a form to choose the style sheet location first.
 
 * Thot API: Due to a conflict with the libjpeg definition the Thot type boolean
   has been renamed ThotBool.
@@ -24,6 +30,8 @@ Extensions 2.1:
   expressions.
 
 * LbWWW: 
+
+* New list of Amaya shortcuts for both Windows and Unix platforms.
 
 Fixed bugs 2.1:
 ---------------

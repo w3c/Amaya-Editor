@@ -135,7 +135,6 @@ static int          docSelect;
 static int          dirSelect;
 static int          imageAlt;
 static int          currAttrVal;
-static int          menuAlphaLanguage; 
 static int          LangValue;
 static int          cssSelect;
 static int          formCss;
@@ -858,9 +857,9 @@ BOOL* close_dont_save;
  CreateLanguageDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateLanguageDlgWindow (HWND parent, STRING title, STRING msg1, int nb_item, STRING lang_list, STRING msg2, int nmenuLanguage, int menu_alpha_language, int lang_value, STRING curLang)
+void CreateLanguageDlgWindow (HWND parent, STRING title, STRING msg1, int nb_item, STRING lang_list, STRING msg2, int nmenuLanguage, int lang_value, STRING curLang)
 #else  /* !__STDC__ */
-void CreateLanguageDlgWindow (parent, title, msg1, nb_item, lang_list, msg2, nmenuLanguage, menu_alpha_language, lang_value, curLang)
+void CreateLanguageDlgWindow (parent, title, msg1, nb_item, lang_list, msg2, nmenuLanguage, lang_value, curLang)
 HWND  parent;
 STRING title;
 STRING msg1;
@@ -868,32 +867,31 @@ int   nb_item;
 STRING lang_list;
 STRING msg2;
 int   nmenuLanguage;
-int   menu_alpha_language;
 int   lang_value;
 STRING curLang;
 #endif /* __STDC__ */
 {  
-	sprintf (wndTitle, title);
-	sprintf (message, msg1);
-	sprintf (message2, msg2);
-	sprintf (winCurLang, curLang);
-	langList                = lang_list;
-	nbItem                  = (UINT)nb_item;
-	NumMenuAlphabetLanguage = nmenuLanguage;
-    menuAlphaLanguage       = menu_alpha_language; 
-    LangValue               = lang_value;
-
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
-				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
-				break;
-	}
+  sprintf (wndTitle, title);
+  sprintf (message, msg1);
+  sprintf (message2, msg2);
+  sprintf (winCurLang, curLang);
+  langList                = lang_list;
+  nbItem                  = (UINT)nb_item;
+  NumMenuAlphabetLanguage = nmenuLanguage;
+  LangValue               = lang_value;
+  
+  switch (app_lang)
+    {
+    case FR_LANG:
+      DialogBox (hInstance, MAKEINTRESOURCE (FR_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
+      break;
+    case EN_LANG:
+      DialogBox (hInstance, MAKEINTRESOURCE (EN_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
+      break;
+    case DE_LANG:
+      DialogBox (hInstance, MAKEINTRESOURCE (DE_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
+      break;
+    }
 }
 
 /*-----------------------------------------------------------------------
@@ -2769,6 +2767,10 @@ LPARAM lParam;
 	return TRUE ;
 }
 
+static HWND wndLangList;
+static UINT itemIndex; 
+static CHAR_T szBuffer [MAX_BUFF];
+
 /*-----------------------------------------------------------------------
  LanguageDlgProc
  ------------------------------------------------------------------------*/
@@ -2782,183 +2784,123 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	int  index = 0;
-	UINT  i = 0;
-
-	HWND wndLangEdit;
-	HWND wndMessage1;
-	HWND wndMessage2;
-
-	static HWND wndLangList;
-	static UINT itemIndex; 
-	static CHAR_T szBuffer [MAX_BUFF];
-
-    switch (msg) {
-	       case WM_INITDIALOG:
-			    SetWindowText (hwnDlg, wndTitle);
-                switch (menuAlphaLanguage) {
-                       case 0: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_1);
-                               break;
-
-                       case 1: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_2);
-                               break;
-
-                       case 2: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_9);
-                               break;
-
-                       case 3: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_SYMBOL_ENCOD);
-                               break;
-
-                      default: break;
-				}
-
-				wndMessage1 = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                        10, 10, 200, 20, hwnDlg, (HMENU) 99, 
-											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-
-				wndLangList = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-					                         10, 40, 240, 200, hwnDlg, (HMENU) 1, 
-											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-
-	            SendMessage (wndLangList, LB_RESETCONTENT, 0, 0);
-	            while (i < nbItem && langList[index] != '\0') {
-	                  SendMessage (wndLangList, LB_INSERTSTRING, i, (LPARAM) &langList[index]);  
-	                  index += ustrlen (&langList[index]) + 1;	/* Longueur de l'intitule */
-					  i++;
-				}
-
-				wndLangEdit	= CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-					                         10, 250, 240, 30, hwnDlg, (HMENU) IDC_LANGEDIT, 
-											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-				SetWindowText (wndLangEdit, winCurLang);
-
-				wndMessage2 = CreateWindow ("STATIC", message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                        10, 280, 200, 20, hwnDlg, (HMENU) 99, 
-											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-				break;
-
-		   case WM_COMMAND:
-				if (LOWORD (wParam) == 1) {
-                   if (HIWORD (wParam) == LBN_SELCHANGE) {
-                      itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0);
-                      itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
-				   } else if (HIWORD (wParam) == LBN_DBLCLK) {
-                          if (LB_ERR == (itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0L)))
-                             break;
-                          itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
-				   }
-			       SetDlgItemText (hwnDlg, IDC_LANGEDIT, szBuffer);
-                   ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
-                   switch (WIN_MenuAlphabet) {
-                          case 0: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_1);
-                                  break;
-
-                          case 1: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_2);
-                                  break;
-
-                          case 2: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_9);
-                                  break;
-
-                          case 3: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_SYMBOL_ENCOD);
-                                  break;
-
-                         default: break;
-				   }
-				   if (HIWORD (wParam) == LBN_DBLCLK) {
-                       ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 1);
-                       EndDialog (hwnDlg, ID_APPLY);
-                       return 0;
-				   }
-				}
-#               if 0
-				if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
-				   itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0);
-				   itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
-			       SetDlgItemText (hwnDlg, IDC_LANGEDIT, szBuffer);
-                   ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
-                   switch (WIN_MenuAlphabet) {
-                          case 0: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_1);
-                                  break;
-
-                          case 1: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_2);
-                                  break;
-
-                          case 2: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_9);
-                                  break;
-
-                          case 3: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_SYMBOL_ENCOD);
-                                  break;
-
-                         default: break;
-				   }
-				} else if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_DBLCLK) {
-                       if (LB_ERR == (itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0L)))
-                          break;
-                       itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
-                       SetDlgItemText (hwnDlg, IDC_LANGEDIT, szBuffer);
-                       ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
-                       switch (WIN_MenuAlphabet) {
-                              case 0: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_1);
-                                      break;
-
-                              case 1: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_2);
-                                      break;
-
-                              case 2: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_9);
-                                      break;
-
-                              case 3: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_SYMBOL_ENCOD);
-                                      break;
-
-                              default: break;
-					   }
-                       ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 1);
-                       EndDialog (hwnDlg, ID_APPLY);
-                       return 0;
-				}
-#               endif /* 0 */
-
-			    switch (LOWORD (wParam)) {
-                       case IDC_ISO_LATIN_1:
-                            ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (STRING)0);
-                            break;
-
-                       case IDC_ISO_LATIN_2:
-                            ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (STRING)1);
-                            break;
-
-                       case IDC_ISO_LATIN_9:
-                            ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (STRING)2);
-                            break;
-
-                       case IDC_SYMBOL_ENCOD:
-                            ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (STRING)3);
-                            break;
-
-					   case ID_APPLY:
-							ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 1);
-							EndDialog (hwnDlg, ID_APPLY);
-							break;
-
-				       case ID_DELETE:
-							ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 2);
-					        EndDialog (hwnDlg, ID_DELETE);
-							break;
-
-				       case ID_DONE:
-							ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 0);
-					        EndDialog (hwnDlg, ID_DONE);
-							break;
-
-				       case WM_CLOSE:
-                       case WM_DESTROY:
-					        EndDialog (hwnDlg, ID_DONE);
-							break;
-				}
-				break;
-				default: return FALSE;
+  int  index = 0;
+  UINT  i = 0;  
+  HWND wndLangEdit;
+  HWND wndMessage1;
+  HWND wndMessage2;
+    
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      SetWindowText (hwnDlg, wndTitle);
+      wndMessage1 = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+				  10, 10, 200, 20, hwnDlg, (HMENU) 99, 
+				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      
+      wndLangList = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+				  10, 40, 240, 200, hwnDlg, (HMENU) 1, 
+				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      
+      SendMessage (wndLangList, LB_RESETCONTENT, 0, 0);
+      while (i < nbItem && langList[index] != '\0')
+	{
+	  SendMessage (wndLangList, LB_INSERTSTRING, i, (LPARAM) &langList[index]);  
+	  index += ustrlen (&langList[index]) + 1; /* Longueur de l'intitule */
+	  i++;
+      }
+      
+      wndLangEdit = CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+				  10, 250, 240, 30, hwnDlg, (HMENU) IDC_LANGEDIT, 
+				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      SetWindowText (wndLangEdit, winCurLang);
+      wndMessage2 = CreateWindow ("STATIC", message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
+				  10, 280, 200, 20, hwnDlg, (HMENU) 99, 
+				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      break;
+      
+    case WM_COMMAND:
+      if (LOWORD (wParam) == 1)
+	{
+	  if (HIWORD (wParam) == LBN_SELCHANGE)
+	    {
+	      itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0);
+	      itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
+	    }
+	  else if (HIWORD (wParam) == LBN_DBLCLK)
+	    {
+	      if (LB_ERR == (itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0L)))
+		break;
+	      itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
+	    }
+	  SetDlgItemText (hwnDlg, IDC_LANGEDIT, szBuffer);
+	  ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
+	  switch (WIN_MenuAlphabet)
+	    {
+	    case 0: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_1);
+	      break;
+	      
+	    case 1: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_2);
+	      break;
+	      
+	    case 2: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_ISO_LATIN_9);
+	      break;
+	      
+	    case 3: CheckRadioButton (hwnDlg, IDC_ISO_LATIN_1, IDC_SYMBOL_ENCOD, IDC_SYMBOL_ENCOD);
+	      break;
+	      
+	    default: break;
+	    }
+	  if (HIWORD (wParam) == LBN_DBLCLK)
+	    {
+	      ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 1);
+	      EndDialog (hwnDlg, ID_APPLY);
+	      return 0;
+	    }
 	}
-	return TRUE ;
+      
+      switch (LOWORD (wParam))
+	{
+	case IDC_ISO_LATIN_1:
+	  ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (STRING)0);
+	  break;
+	  
+	case IDC_ISO_LATIN_2:
+	  ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (STRING)1);
+	  break;
+	  
+	case IDC_ISO_LATIN_9:
+	  ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (STRING)2);
+	  break;
+	  
+	case IDC_SYMBOL_ENCOD:
+	  ThotCallback (NumMenuAlphabetLanguage, INTEGER_DATA, (STRING)3);
+	  break;
+	  
+	case ID_APPLY:
+	  ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 1);
+	  EndDialog (hwnDlg, ID_APPLY);
+	  break;
+	  
+	case ID_DELETE:
+	  ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 2);
+	  EndDialog (hwnDlg, ID_DELETE);
+	  break;
+	  
+	case ID_DONE:
+	  ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 0);
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	  
+	case WM_CLOSE:
+	case WM_DESTROY:
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	}
+      break;
+    default: return FALSE;
+    }
+  return TRUE;
 }
 
 /*-----------------------------------------------------------------------

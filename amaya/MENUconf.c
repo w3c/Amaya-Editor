@@ -768,6 +768,7 @@ STRING              data;
 #endif /* !AMAYA_JAVA */
 	      /* reset the status flag */
 	      CacheStatus = 0;
+	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      GetDefaultCacheConf ();
@@ -1239,6 +1240,7 @@ STRING              data;
 #endif /* !AMAYA_JAVA */
 	      /* reset the status flag */
 	      ProxyStatus = 0;
+	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      GetDefaultProxyConf ();
@@ -1557,6 +1559,7 @@ STRING              data;
 	    case 1:
 	      ValidateGeneralConf ();
 	      SetGeneralConf ();
+	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      GetDefaultGeneralConf ();
@@ -2103,6 +2106,7 @@ STRING              data;
 	      break;
 	    case 1:
 	      SetPublishConf ();
+	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      GetDefaultPublishConf ();
@@ -2423,6 +2427,7 @@ STRING              data;
 	      break;
 	    case 1:
 	      SetColorConf ();
+	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      GetDefaultColorConf ();
@@ -2740,6 +2745,7 @@ STRING              data;
 	    case 0:
 	      TtaDestroyDialogue (ref);
 	      GeometryDoc = 0;
+	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
 	      SetGeometryConf ();
@@ -3051,6 +3057,7 @@ STRING              data;
 	      break;
 	    case 1:
 	      SetLanNegConf ();
+	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      GetDefaultLanNegConf ();
