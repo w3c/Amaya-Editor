@@ -21,6 +21,7 @@
 #include "reference.h"
 #include "typecorr.h"
 #include "fileaccess.h"
+#include "message.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT
@@ -35,8 +36,13 @@
 #include "structmodif_f.h"
 #include "memory_f.h"
 #include "readpivot_f.h"
+#include "schemastr_f.h"
+#include "structschema_f.h"
 #include "applicationapi_f.h"
 #include "viewapi_f.h"
+
+
+#define MAX_EXT_DOC 10
 
 extern int          UserErrorCode;
 
@@ -502,6 +508,159 @@ Attribute           source;
 	CopyReference (((PtrAttribute) attribute)->AeAttrReference,
 		       ((PtrAttribute) source)->AeAttrReference, &pEl);
      }
+}
+
+
+/* ----------------------------------------------------------------------
+   TtaUpdateInclusionElements
+
+   Up to date the value of inclusion elements whoses targets elements
+   belong to the document.
+
+   Parameters:
+   document: the document to which targets elements belong.
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                TtaUpdateInclusionElements (Document document)
+#else  /* __STDC__ */
+void                TtaUpdateInclusionElements (document)
+Document            document;
+
+#endif /* __STDC__ */
+
+{
+   PtrDocument           pDoc, pSourceDoc;
+   PtrDocument           pExternalDoc[MAX_EXT_DOC];
+   PtrElement            pSource;
+   PtrReference          pRef;
+   PtrReferredDescr      pRefD;
+   SRule                *pSRule;
+   DocumentIdentifier    docIdent;
+   boolean               ok;
+   int                   d, extDocNum;
+
+
+   UserErrorCode = 0;
+
+   /* Checks the parameter document */
+   if (document < 1 || document > MAX_DOCUMENTS)
+     {
+        TtaError (ERR_invalid_document_parameter);
+        return;
+     }
+   if (LoadedDocument[document - 1] == NULL)
+     {
+        TtaError (ERR_invalid_document_parameter);
+        return;
+     }
+
+   /** Processing ..... **/
+   pDoc = LoadedDocument[document - 1];
+
+   /* nettoie la table des documents externes charge's */
+   for (extDocNum = 0; extDocNum < MAX_EXT_DOC; extDocNum++)
+      pExternalDoc[extDocNum] = NULL;
+
+   /* parcourt la chaine des descripteurs d'elements references */
+   /* du document, pour traiter toutes les references */
+   pRefD = pDoc->DocReferredEl->ReNext;
+   while (pRefD != NULL)
+     {
+        pRef = pRefD->ReFirstReference;
+        /* premiere reference a l'element reference' courant */
+        /* parcourt toutes les references designant l'element */
+        /* reference' courant */
+        while (pRef != NULL)
+          {
+             if (pRef->RdTypeRef == RefInclusion)
+                /* il s'agit bien d'une reference d'inclusion */
+                if (pRef->RdElement->ElSource == pRef)
+                   /* c'est bien une inclusion avec expansion, */
+                   /* on copie l'arbre abstrait de l'element inclus */
+                  {
+                     /* l'element inclus est-il accessible ? */
+                     pSource = ReferredElement (pRef,
+                                                &docIdent,
+                                                &pSourceDoc);
+                     if (pSource == NULL)
+                        if (!DocIdentIsNull (docIdent))
+                           if (pSourceDoc == NULL)
+                              /* il y a bien un objet a inclure qui */
+                              /* appartient au document docIdent et ce */
+                              /* document n'est pas charge'. */
+                              /* On le charge. Cherche une entree libre */
+                              /* dans la table des documents externes */
+                              /* charge's. */
+                             {
+                                extDocNum = 0;
+                                while ( (pExternalDoc[extDocNum] != NULL) &&
+                                        (extDocNum < MAX_EXT_DOC - 1) )
+                                   extDocNum++;
+                                if (pExternalDoc[extDocNum] == NULL)
+                                   /* on a trouve' une entree libre, on */
+                                   /* charge  le document externe */
+                                  {
+                                    CreateDocument (&pExternalDoc[extDocNum]);
+                                    if (pExternalDoc[extDocNum] != NULL)
+                                      {
+                                         CopyDocIdent (
+                                             &pExternalDoc[extDocNum]->DocIdent,
+                                             docIdent);
+                                         ok = OpenDocument (
+                                                  NULL,
+                                                  pExternalDoc[extDocNum],
+                                                  FALSE,
+                                                  FALSE,
+                                                  NULL,
+                                                  FALSE);
+                                         if (!ok)
+                                           {
+                                              /* echec a l'ouverture du */
+                                              /* document. */
+                                              TtaDisplayMessage (
+                                                INFO,
+                                                TtaGetMessage (
+                                                        LIB,
+                                                        TMSG_LIB_MISSING_FILE),
+                                                docIdent);
+                                              FreeDocument (pExternalDoc[extDocNum]);
+                                              pExternalDoc[extDocNum] = NULL;
+                                           }
+                                      }
+                                  }
+                             }
+                      pSRule = &pRef->RdElement->ElStructSchema->SsRule[pRef->RdElement->ElTypeNumber - 1];
+                      /* inclusion d'un document externe */
+                      CopyIncludedElem (pRef->RdElement, pDoc);
+                  }
+              pRef = pRef->RdNext;
+              /* passe a la reference suivante */
+          }
+       pRefD = pRefD->ReNext;
+       /* passe au descripteur d'element reference' suivant */
+     }
+
+     /* on decharge les documents externes qui ont ete charge's */
+     /* pour copier des elements inclus */
+     for (extDocNum = 0; extDocNum < MAX_EXT_DOC; extDocNum++)
+        if (pExternalDoc[extDocNum] != NULL)
+          {
+            DeleteAllTrees (pExternalDoc[extDocNum]);
+            FreeDocumentSchemas (pExternalDoc[extDocNum]);
+            /* cherche le document dans la table */
+            /* des documents */
+            d = 0;
+            while ( (LoadedDocument[d] != pExternalDoc[extDocNum]) &&
+                    (d < MAX_DOCUMENTS - 1) )
+                d++;
+            /* libere l'entree de la table des documents */
+            if (LoadedDocument[d] == pExternalDoc[extDocNum])
+               LoadedDocument[d] = NULL;
+            /* libere tout le document */
+            FreeDocument (pExternalDoc[extDocNum]);
+          }
+
 }
 
 
