@@ -169,8 +169,9 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
   char               *entity;
   int                 i, j, indent;
   int                 nb_bytes2write, index;
-  int                 len;
-
+  int                 len, lineLen;
+  Name                tsEOL, tsTranslEOL;
+  
   if (translate)
     {
       if (c == START_ENTITY)
@@ -281,8 +282,16 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
   else
     {
       /* no translation */
-      nb_bytes2write = 1;
-      mbc[0] =  (unsigned char) c;
+      if (c == START_ENTITY)
+	{
+	  mbc[0] = '&';
+	  nb_bytes2write = 1;
+	}
+      else
+	{
+	  nb_bytes2write = 1;
+	  mbc[0] =  (unsigned char) c;
+	}
     }
 
   if (outBuf != NULL)
@@ -306,10 +315,23 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
       /* write into the file buffer */
       /* get the line length in the translation schema */
       pTSch = GetTranslationSchema (pDoc->DocSSchema);
-      fileDesc = OutFile[fnum].OfFileDesc;
-      if (pTSch && fileDesc)
+      if (pTSch)
 	{
-	  if (pTSch->TsLineLength == 0)
+	  lineLen = pTSch->TsLineLength;
+	  strcpy (tsEOL, pTSch->TsEOL);
+	  strcpy (tsTranslEOL, pTSch->TsTranslEOL);
+	}
+      else
+	{
+	  lineLen = 78;               /* default line length */
+	  strcpy (tsEOL, "\n");	      /* default end of line character */
+	  strcpy (tsTranslEOL, "\n"); /* default inserted end of line */
+	}
+
+      fileDesc = OutFile[fnum].OfFileDesc;
+      if (fileDesc)
+	{
+	  if (lineLen == 0)
 	    {
 	      /* no line length, write into the file directly */
 	      for (index = 0; index < nb_bytes2write; index++)
@@ -323,7 +345,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	      for (i = 0; i < OutFile[fnum].OfBufferLen; i++)
 		putc ((int)OutFile[fnum].OfBuffer[i], fileDesc);
 
-	      fprintf (fileDesc, pTSch->TsEOL);
+	      fprintf (fileDesc, tsEOL);
 	      /* le buffer de sortie est vide maintenant */
 	      OutFile[fnum].OfBufferLen = 0;
 	      OutFile[fnum].OfLineLen = 0;
@@ -335,7 +357,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	      /* other character */
 	      len = OutFile[fnum].OfBufferLen;
 	      if (lineBreak &&
-		   OutFile[fnum].OfLineLen + len + nb_bytes2write > pTSch->TsLineLength)
+		   OutFile[fnum].OfLineLen + len + nb_bytes2write > lineLen)
 		{
 		  /* cannot insert that new character in the line
 		     look for a breaking space before */
@@ -356,12 +378,12 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 			/* generate a CR */
 			putc (__CR__, fileDesc);
 		      /* generate a LF */
-		      fprintf (fileDesc, pTSch->TsTranslEOL);
+		      fprintf (fileDesc, tsTranslEOL);
 		      OutFile[fnum].OfLineLen = 0;
 		      OutFile[fnum].OfLineNumber++;
 		      /* handle indentation */
-		      if (OutFile[fnum].OfIndent > pTSch->TsLineLength - 10)
-			indent = pTSch->TsLineLength - 10;
+		      if (OutFile[fnum].OfIndent > lineLen - 10)
+			indent = lineLen - 10;
 		      else
 			indent = OutFile[fnum].OfIndent;
 		      if (indent < 0)
@@ -3203,9 +3225,9 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 }
 
 /*----------------------------------------------------------------------
-   ApplyElTypeRules   applique a l'element pointe' par pEl les regles 
-   de traduction qui correspondent a son type et qui doivent       
-   s'appliquer a la position position.                             
+   ApplyElTypeRules
+   Applique a l'element pointe par pEl les regles de traduction qui
+   correspondent a son type et qui doivent s'appliquer a la position position.
   ----------------------------------------------------------------------*/
 static void ApplyElTypeRules (TOrder position, ThotBool *transChar,
 			      ThotBool *lineBreak, ThotBool *removeEl,
@@ -3258,9 +3280,9 @@ static void ApplyElTypeRules (TOrder position, ThotBool *transChar,
 
 
 /*----------------------------------------------------------------------
-   TranslateTree   traduit le sous-arbre dont la racine est pEl	
-   et applique les regles de traduction des feuilles si transChar  
-   est vrai.                                                       
+   TranslateTree 
+   Traduit le sous-arbre dont la racine est pEl	et applique les regles
+   de traduction des feuilles si transChar est vrai. 
   ----------------------------------------------------------------------*/
 static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
 			   ThotBool transChar, ThotBool lineBreak,
@@ -3349,6 +3371,7 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
        /* Cherche et applique les regles de traduction associees au type */
        /* de l'element et qui doivent s'appliquer avant la traduction du */
        /* contenu de l'element */
+
        ApplyElTypeRules (TBefore, &transChar, &withBreak, &removeEl, &ignoreEl,
 			 pEl, elemType, pTSch, pSS, pDoc, recordLineNb);
        /* on ne traduit les attributs que si ce n'est pas deja fait par */
@@ -3519,13 +3542,7 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
   int                 i;
   ThotBool            ok = TRUE;
 
-  /*
-  if (tschema == NULL)
-    {
-      printf ("\nSave of XML documents not yet available\n");
-      return TRUE;
-    }
-  */
+  /* tschema is null when we export a generic xml document */
   
   /* does it have to generate simple LF or CRLF */
   TtaGetEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
@@ -3581,7 +3598,7 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
 	  if (tschema == NULL)
 	    {
 	      if (pDoc->DocDocElement != NULL)
-		ExportXmlDocument (pDoc, pDoc->DocDocElement, 0, outputFile);
+		ExportXmlDocument (pDoc, pDoc->DocDocElement, TRUE);
 	    }
 	  else
 	    TranslateTree (pDoc->DocDocElement, pDoc, TRUE, TRUE, FALSE,
@@ -3599,7 +3616,7 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
 
 /*----------------------------------------------------------------------
    ExportAttrNsPrefix
-   Search if the attribute schema is associated with a namespace prefix
+   Search if the attribute pAttr is associated with a namespace prefix
   ----------------------------------------------------------------------*/
 static char* ExportAttrNsPrefix (PtrDocument pDoc, PtrElement pNode,
 				 PtrAttribute pAttr)
@@ -3656,7 +3673,7 @@ static char* ExportAttrNsPrefix (PtrDocument pDoc, PtrElement pNode,
 
 /*----------------------------------------------------------------------
    ExportElemNsPrefix
-   Search if the element schema is associated with a namespace prefix
+   Search if the element pNode is associated with a namespace prefix
   ----------------------------------------------------------------------*/
 static char* ExportElemNsPrefix (PtrDocument pDoc, PtrElement pNode)
 
@@ -3706,17 +3723,35 @@ static char* ExportElemNsPrefix (PtrDocument pDoc, PtrElement pNode)
 }
 
 /*----------------------------------------------------------------------
+  ExportXmlBuffer                    
+  ----------------------------------------------------------------------*/
+static void ExportXmlBuffer (PtrDocument pDoc, unsigned char *buffer)
+{
+  unsigned char    c;
+  int              i, fnum;
+  
+  fnum = 1;
+  i = 0;
+  while (buffer[i] != EOS)
+    {
+      c = buffer[i++];
+      PutChar ((wchar_t) c, fnum, NULL, pDoc, TRUE, FALSE, FALSE);
+    }
+}
+
+/*----------------------------------------------------------------------
    ExportNsDeclaration
-   Export in the fileDescriptor file the namespace attributes
-   of the Element pNode.
+   Export the namespace attributes of the Element pNode into
+   the main output file
    length: max length to export.                         
   ----------------------------------------------------------------------*/
-static void ExportNsDeclaration (PtrDocument pDoc, PtrElement pNode, 
-				 int length, FILE *fileDescriptor)
+static void ExportNsDeclaration (PtrDocument pDoc, PtrElement pNode)
 {
   PtrNsUriDescr    uriDecl;
   PtrNsPrefixDescr prefixDecl;
-  int              i;
+  int              i, fnum;
+
+  fnum = 1; /* main output file */
 
   if (pDoc->DocNsUriDecl == NULL)
     /* There is no namespace declaration for this document */
@@ -3733,15 +3768,20 @@ static void ExportNsDeclaration (PtrDocument pDoc, PtrElement pNode,
 	  if (prefixDecl->NsPrefixElem == pNode)
 	    {
 	      if (i > 0)
-		  fprintf (fileDescriptor, "\n");
+		ExportXmlBuffer (pDoc, "\n");
 	      /* A Namespace declaration has been found for this element */
-	      fprintf (fileDescriptor, " xmlns");
+	      ExportXmlBuffer (pDoc, " xmlns");
 	      if (prefixDecl->NsPrefixName != NULL)
-		fprintf (fileDescriptor, ":%s", prefixDecl->NsPrefixName);
-	      fprintf (fileDescriptor, "=\"%s\"", uriDecl->NsUriName);
+		{
+		  ExportXmlBuffer (pDoc, ":");
+		  ExportXmlBuffer (pDoc, prefixDecl->NsPrefixName);
+		}
+	      ExportXmlBuffer (pDoc, "=\"");
+	      ExportXmlBuffer (pDoc, uriDecl->NsUriName);
+	      ExportXmlBuffer (pDoc, "\"");
 	      i++;
 	    }
-	    prefixDecl = prefixDecl->NsNextPrefixDecl;
+	  prefixDecl = prefixDecl->NsNextPrefixDecl;
 	}
       uriDecl = uriDecl->NsNextUriDecl;
     }
@@ -3754,153 +3794,28 @@ static void ExportNsDeclaration (PtrDocument pDoc, PtrElement pNode,
   of a list of buffers pointed by pBT.
   length gives the max length of exported lines or 0.                         
   ----------------------------------------------------------------------*/
-static void ExportXmlText (PtrDocument pDoc, PtrTextBuffer pBT, int length,
-			   FILE *fileDescriptor, ThotBool translate,
-			   ThotBool entityName)
+static void ExportXmlText (PtrDocument pDoc, PtrTextBuffer pBT,
+			   ThotBool translate, ThotBool entityName)
 {
   PtrTextBuffer       b;
-  unsigned char       mbc [50], *ptr;
-  char               *entity;
   wchar_t             c;
-  int                 nb_bytes2write, index;
-  int                 i, line;
+  int                 i, fnum;
 
-  line = 0;
+  fnum = 1; /* main output file */
   b = pBT;
   while (b)
     {
       i = 0;
       while (i < b->BuLength && b->BuContent[i] != EOS)
 	{
-	  c = b->BuContent[i];
-	  if (translate)
-	    {
-	      if (c == START_ENTITY)
-		{
-		  mbc[0] = '&';
-		  nb_bytes2write = 1;
-		}
-	      else if (c == EOL)
-		{
-		  nb_bytes2write = 0;
-		  if (ExportCRLF)
-		    mbc[nb_bytes2write++] = __CR__;
-		  mbc[nb_bytes2write++] = EOL;
-		  mbc[nb_bytes2write] = EOS;
-		}
-	      /* Predefined entities */
-	      else if (c == 0X22) /* &quot; */
-		{
-		  strcpy (&mbc[0], "&quot;");
-		  nb_bytes2write = 6;
-		}
-	      else if (c == 0X26) /* &amp; */
-		{
-		  strcpy (&mbc[0], "&amp;");
-		  nb_bytes2write = 5;
-		}
-	      else if (c == 0X3C) /* &lt; */
-		{
-		  strcpy (&mbc[0], "&lt;");
-		  nb_bytes2write = 4;
-		}
-	      else if (c == 0X3E) /* &gt; */
-		{
-		  strcpy (&mbc[0], "&gt;");
-		  nb_bytes2write = 4;
-		}
-	      else if (c == 0XA0) /* &nbsp; */
-		{
-		  strcpy (&mbc[0], "&nbsp;");
-		  nb_bytes2write = 6;
-		}
-	      /* Translate the input character */
-	      else if ((c > 127 && pDoc->DocCharset == US_ASCII) ||
-		       (c > 255 && pDoc->DocCharset == ISO_8859_1))
-		{
-		  /* generate an entity into an ASCII or ISO_8859_1 file */
-		  if (entityName && GetEntityFunction)
-		    (*GetEntityFunction) (c, &entity);
-		  else
-		    entity = NULL;
-		  mbc[0] = '&';
-		  if (entity)
-		    {
-		      strncpy (&mbc[1], entity, 40);
-		      mbc[42] = EOS;
-		    }
-		  else
-		    {
-		      mbc[1] = '#';
-		      mbc[2] = 'x';
-		      sprintf (&mbc[3], "%x", (int)c);
-		    }
-		  nb_bytes2write = strlen (mbc);
-		  mbc[nb_bytes2write++] = ';';
-		}
-	      else if (pDoc->DocCharset == UTF_8)
-		{
-		  /* UTF-8 encoding */
-		  ptr = mbc;
-		  nb_bytes2write = TtaWCToMBstring ((wchar_t) c, &ptr);
-		}
-	      else
-		{
-		  /* other encodings */
-#ifdef _I18N_
-		   nb_bytes2write = 1;
-		   mbc[0] = TtaGetCharFromWC (c, pDoc->DocCharset);
-		   if (mbc[0] == EOS && c != EOS)
-		     {
-		       /* generate an entity into an ISO_8859_1 file */
-		       if (entityName && GetEntityFunction)
-			 (*GetEntityFunction) (c, &entity);
-		       else
-			 entity = NULL;
-		       mbc[0] = '&';
-		       if (entity)
-			 {
-			   strncpy (&mbc[1], entity, 40);
-			   mbc[42] = EOS;
-			 }
-		       else
-			 {
-			   mbc[1] = '#';
-			   mbc[2] = 'x';
-			   sprintf (&mbc[3], "%x", (int)c);
-			 }
-		       nb_bytes2write = strlen (mbc);
-		       mbc[nb_bytes2write++] = ';';
-		     }
-#else  /* _I18N_ */
-		   nb_bytes2write = 1;
-		   mbc[0] = (unsigned char) c;
-#endif /* _I18N_ */
-		 }
-	     }
-	   else
-	     {
-	       /* no translation */
-	       nb_bytes2write = 1;
-	       mbc[0] =  (unsigned char) c;
-	     }
-	   
-	   /* Write into the file according to the line length */
-	   if (length > 0 && line + nb_bytes2write > length)
-	     {
-	       /* generate a CR */
-	       putc (__CR__, fileDescriptor);
-	       line = 0;
-	     }
-	   for (index = 0; index < nb_bytes2write; index++)
-	     putc (mbc[index], fileDescriptor);
-	   line =+ nb_bytes2write;
-	   /* Next charcater */
-	   i++;
-	 }
-       /* Export the following text buffer for the same element */
-       b = b->BuNext;
-     }
+	  c = (wchar_t) b->BuContent[i];
+	  PutChar (c, fnum, NULL, pDoc, TRUE, translate, FALSE);
+	  /* Next charcater */
+	  i++;
+	}
+      /* Export the following text buffer for the same element */
+      b = b->BuNext;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3910,8 +3825,7 @@ static void ExportXmlText (PtrDocument pDoc, PtrTextBuffer pBT, int length,
   length gives the max length of exported lines or 0.                         
   ----------------------------------------------------------------------*/
 static void ExportXmlElText (PtrDocument pDoc,  PtrElement pNode,
-			     PtrTextBuffer pBT, int length,
-			     FILE *fileDescriptor)
+			     PtrTextBuffer pBT)
 {
   PtrElement          parent;
   PtrSRule            pRe1;
@@ -3932,8 +3846,7 @@ static void ExportXmlElText (PtrDocument pDoc,  PtrElement pNode,
   /* in MathML, try to generate the name of the char. */
   entityName = !strcmp (pNode->ElStructSchema->SsName, "MathML");
   /* Export the text buffer content */
-  ExportXmlText (pDoc, pBT, length, fileDescriptor, translate,
-		 entityName);
+  ExportXmlText (pDoc, pBT, translate, entityName);
 }
 
 /*----------------------------------------------------------------------
@@ -3941,11 +3854,9 @@ static void ExportXmlElText (PtrDocument pDoc,  PtrElement pNode,
   Produces in a file a human-readable form of an XML abstract tree.
   Parameters:
   pDoc: the root element of the tree to be exported.
-  fileDescriptor: file descriptor of the file that will contain the document.
   This file must be open when calling the function.
   ----------------------------------------------------------------------*/
-void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, int indent,
-			FILE *fileDescriptor)
+void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineNb)
 {
   PtrElement          f;
   PtrSRule            pRe1;
@@ -3953,189 +3864,212 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, int indent,
   PtrTtAttribute      pAttr1;
   CHARSET             charset;
   char                *charset_name;
-  char                startName[MAX_NAME_LENGTH+1];
-  char                endName[MAX_NAME_LENGTH+3];
-  char               *ns_prefix;
-  int                 i;
+  unsigned char       startName[MAX_NAME_LENGTH+1];
+  unsigned char       endName[MAX_NAME_LENGTH+3];
+  unsigned char      *ns_prefix;
+  int                 fnum;
   ThotBool            specialTag;
 
   if (pNode != NULL)
     {
-      if (!pNode->ElTerminal)
+      /* Main output file */
+      fnum = 1;
+      
+      if (strcmp (pNode->ElStructSchema->SsName, "HTML") == 0)
 	{
-	  /* Generate the xml declaration */
-	  if (pNode == pDoc->DocDocElement)
-	    {
-	      /* version */
-	      fprintf (fileDescriptor, "<?xml version=\"1.0\"");
-	      /* encoding */
-	      if (pDoc->DocDefaultCharset)
-		charset = UNDEFINED_CHARSET;
-	      else
-		charset = pDoc->DocCharset;
-	      if (charset != UNDEFINED_CHARSET)
-		{
-		  charset_name = TtaGetCharsetName (charset);
-		  fprintf (fileDescriptor, " encoding=\"%s\"", charset_name);
-		}
-	      fprintf (fileDescriptor, "?>");
-	    }
-	  else
-	    {
-	      specialTag = FALSE;
-	      /* Export the element name */
-	      pRe1 = pNode->ElStructSchema->SsRule->SrElem[pNode->ElTypeNumber - 1];
-	      if ((strcmp (pRe1->SrOrigName, "xmlcomment_line") == 0) ||
-		  (strcmp (pRe1->SrOrigName, "xmlpi_line") == 0) ||
-		  (strcmp (pRe1->SrOrigName, "cdata_line") == 0) ||
-		  (strcmp (pRe1->SrOrigName, "doctype_line") == 0))
-		{
-		  startName[0] = EOS;
-		  f = pNode->ElNext;
-		  if (f != NULL)
-		    strcpy (endName, "\n");
-		  else
-		    endName[0] = EOS;
-		  specialTag = TRUE;
-		}
-	      else
-		{
-		  /* Indentation white-spaces */
-		  fprintf (fileDescriptor, "\n");
-		  for (i = 1; i <= indent; i++)
-		    fprintf (fileDescriptor, " ");
-		  
-		  if (strcmp (pRe1->SrOrigName, "xmlcomment") == 0)
-		    {
-		      strcpy (startName, "<!--");
-		      strcpy (endName, "-->");
-		      specialTag = TRUE;
-		    }
-		  else if (strcmp (pRe1->SrOrigName, "xmlpi") == 0)
-		    {
-		      strcpy (startName, "<?");
-		      strcpy (endName, "?>");
-		      specialTag = TRUE;
-		    }
-		  else if (strcmp (pRe1->SrOrigName, "doctype") == 0)
-		    {
-		      startName[0] = EOS;
-		      endName[0] = EOS;
-		      /*
-		      strcpy (startName, "<!DOCTYPE ");
-		      strcpy (endName, ">");
-		      */
-		      specialTag = TRUE;
-		    }
-		  else if (strcmp (pRe1->SrOrigName, "cdata") == 0)
-		    {
-		      strcpy (startName, "<![CDATA[");
-		      strcpy (endName, "]]>");
-		      specialTag = TRUE;
-		    }
-		  else
-		    {
-		      strcpy (startName, "<");
-		      strcpy (endName, "</");
-		      ns_prefix = ExportElemNsPrefix (pDoc, pNode);
-		      if (ns_prefix != NULL)
-			{
-			  strcat (startName, ns_prefix);
-			  strcat (startName, ":");
-			  strcat (endName, ns_prefix);
-			  strcat (endName, ":");
-			}
-		      strcat (startName, pRe1->SrOrigName);
-		      strcat (endName, pRe1->SrOrigName);
-		      strcat (endName, ">");
-		    }
-		}
-	      fprintf (fileDescriptor, "%s", startName);
-	      
-	      /* Export the namespace declaration */
-	      if (!specialTag)
-		ExportNsDeclaration (pDoc, pNode, 72-indent, fileDescriptor);
-
-	      /* Export the attributes */
-	      pAttr = pNode->ElFirstAttr;
-	      if (pAttr != NULL)
-		fprintf (fileDescriptor, " ");
-	      while (pAttr != NULL)
-		{
-		  /* Export the attribute's prefix if it exists */
-		  ns_prefix = ExportAttrNsPrefix (pDoc, pNode, pAttr);
-		  if (ns_prefix != NULL)
-		    fprintf (fileDescriptor, "%s:", ns_prefix);
-		  
-		  /* Export the attribute's name */
-		  pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
-		  fprintf (fileDescriptor, "%s=", pAttr1->AttrName);
-		  /* Export the attribute's value */
-		  switch (pAttr1->AttrType)
-		    {
-		    case AtNumAttr:
-		      fprintf (fileDescriptor, "\"%d\"", pAttr->AeAttrValue);
-		      break;
-		    case AtTextAttr:
-		      if (pAttr->AeAttrText)
-			{
-			  fprintf (fileDescriptor, "\"");
-			  /* Export the text buffer content */
-			  ExportXmlText (pDoc, pAttr->AeAttrText, 0,
-					 fileDescriptor, TRUE, FALSE);
-			  fprintf (fileDescriptor, "\"");
-			}
-		      break;
-		    case AtEnumAttr:
-		      fprintf (fileDescriptor, "\"%s\"",
-			       pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
-		      break;
-		    default:
-		      break;
-		    }
-                  if (pAttr->AeNext)
-                    fprintf (fileDescriptor, " ");
-		  pAttr = pAttr->AeNext;
-		}
-
-	      if ((startName[0] != EOS) && !specialTag)
-		fprintf (fileDescriptor, ">");
-	    }
-	  
-	  /* Recursive export */
-	  f = pNode->ElFirstChild;
-	  while (f != NULL)
-	    {
-	      ExportXmlDocument (pDoc, f, indent, fileDescriptor);
-	      f = f->ElNext;
-	    }
-	  
-	  /* Export End tag */
-	  if (pNode != pDoc->DocDocElement)
-	    fprintf (fileDescriptor, "%s", endName);
+	  LoadTranslationSchema ("HTMLTX", pNode->ElStructSchema);
+	  TranslateTree (pNode, pDoc, TRUE, TRUE, FALSE, FALSE);
+	}
+      else if (strcmp (pNode->ElStructSchema->SsName, "MathML") == 0)
+	{
+	  LoadTranslationSchema ("MathMLT", pNode->ElStructSchema);
+	  TranslateTree (pNode, pDoc, TRUE, TRUE, FALSE, FALSE);
+	}
+      else if (strcmp (pNode->ElStructSchema->SsName, "SVG") == 0)
+	{
+	  LoadTranslationSchema ("SVGT", pNode->ElStructSchema);
+	  TranslateTree (pNode, pDoc, TRUE, TRUE, FALSE, FALSE);
 	}
       else
 	{
-	  /* It is a terminal element */
-	  switch (pNode->ElLeafType)
+	  if (!pNode->ElTerminal)
 	    {
-	    case LtPicture:
-	      ExportXmlElText (pDoc, pNode, pNode->ElText, 72 - indent, fileDescriptor);
-	      break;
-	    case LtText:
-	      ExportXmlElText (pDoc, pNode, pNode->ElText, 72 - indent, fileDescriptor);
-	      break;
-	    default:
-	      break;	
+	      /* Generate the xml declaration */
+	      if (pNode == pDoc->DocDocElement)
+		{
+		  /* version */
+		  ExportXmlBuffer (pDoc, "<?xml version=\"1.0\"");
+		  /* encoding */
+		  if (pDoc->DocDefaultCharset)
+		    charset = UNDEFINED_CHARSET;
+		  else
+		    charset = pDoc->DocCharset;
+		  if (charset != UNDEFINED_CHARSET)
+		    {
+		      charset_name = TtaGetCharsetName (charset);
+		      ExportXmlBuffer (pDoc, " encoding=\"");
+		      ExportXmlBuffer (pDoc, charset_name);
+		      ExportXmlBuffer (pDoc, "\"");
+		    }
+		  ExportXmlBuffer (pDoc, "?>");
+		}
+	      else
+		{
+		  specialTag = FALSE;
+		  /* Export the element name */
+		  pRe1 = pNode->ElStructSchema->SsRule->SrElem[pNode->ElTypeNumber - 1];
+		  if ((strcmp (pRe1->SrOrigName, "xmlcomment_line") == 0) ||
+		      (strcmp (pRe1->SrOrigName, "xmlpi_line") == 0) ||
+		      (strcmp (pRe1->SrOrigName, "cdata_line") == 0) ||
+		      (strcmp (pRe1->SrOrigName, "doctype_line") == 0))
+		    {
+		      startName[0] = EOS;
+		      f = pNode->ElNext;
+		      if (f != NULL)
+			strcpy (endName, "\n");
+		      else
+			endName[0] = EOS;
+		      specialTag = TRUE;
+		    }
+		  else
+		    {
+		      ExportXmlBuffer (pDoc, "\n");
+		      if (strcmp (pRe1->SrOrigName, "xmlcomment") == 0)
+			{
+			  strcpy (startName, "<!--");
+			  strcpy (endName, "-->");
+			  specialTag = TRUE;
+			}
+		      else if (strcmp (pRe1->SrOrigName, "xmlpi") == 0)
+			{
+			  strcpy (startName, "<?");
+			  strcpy (endName, "?>");
+			  specialTag = TRUE;
+			}
+		      else if (strcmp (pRe1->SrOrigName, "doctype") == 0)
+			{
+			  startName[0] = EOS;
+			  endName[0] = EOS;
+			  specialTag = TRUE;
+			}
+		      else if (strcmp (pRe1->SrOrigName, "cdata") == 0)
+			{
+			  strcpy (startName, "<![CDATA[");
+			  strcpy (endName, "]]>");
+			  specialTag = TRUE;
+			}
+		      else
+			{
+			  strcpy (startName, "<");
+			  strcpy (endName, "</");
+			  ns_prefix = ExportElemNsPrefix (pDoc, pNode);
+			  if (ns_prefix != NULL)
+			    {
+			      strcat (startName, ns_prefix);
+			      strcat (startName, ":");
+			      strcat (endName, ns_prefix);
+			      strcat (endName, ":");
+			    }
+			  strcat (startName, pRe1->SrOrigName);
+			  strcat (endName, pRe1->SrOrigName);
+			  strcat (endName, ">");
+			}
+		    }
+		  ExportXmlBuffer (pDoc, startName);
+
+		  /* if needed, record the current line number of the main
+		     output file in the element being translated */
+		  if (recordLineNb)
+		    pNode->ElLineNb = OutFile[fnum].OfLineNumber + 1;
+		  
+		  /* Export the namespace declarations */
+		  if (!specialTag)
+		    ExportNsDeclaration (pDoc, pNode);
+		  
+		  /* Export the attributes */
+		  pAttr = pNode->ElFirstAttr;
+		  if (pAttr != NULL)
+		    ExportXmlBuffer (pDoc, " ");
+		  while (pAttr != NULL)
+		    {
+		      /* Export the attribute prefix if it exists */
+		      ns_prefix = ExportAttrNsPrefix (pDoc, pNode, pAttr);
+		      if (ns_prefix != NULL)
+			ExportXmlBuffer (pDoc, ns_prefix);
+		      
+		      /* Export the attribute name */
+		      pAttr1 = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum-1];
+		      ExportXmlBuffer (pDoc, pAttr1->AttrName);
+		      ExportXmlBuffer (pDoc, "=");
+		      /* Export the attribute's value */
+		      switch (pAttr1->AttrType)
+			{
+			case AtNumAttr:
+			  ExportXmlBuffer (pDoc, (unsigned char*)pAttr->AeAttrValue);
+			  break;
+			case AtTextAttr:
+			  if (pAttr->AeAttrText)
+			    {
+			      ExportXmlBuffer (pDoc, "\"");
+			      /* Export the text buffer content */
+			      ExportXmlText (pDoc, pAttr->AeAttrText, TRUE, FALSE);
+			      ExportXmlBuffer (pDoc, "\"");
+			    }
+			  break;
+			case AtEnumAttr:
+			  ExportXmlBuffer (pDoc, "\"");
+			  ExportXmlBuffer (pDoc, pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]);
+			  ExportXmlBuffer (pDoc, "\"");
+			  
+			  break;
+			default:
+			  break;
+			}
+		      if (pAttr->AeNext)
+			ExportXmlBuffer (pDoc, " ");
+		      pAttr = pAttr->AeNext;
+		    }
+		  
+		  if ((startName[0] != EOS) && !specialTag)
+		    ExportXmlBuffer (pDoc, ">");
+		}
+	      
+	      /* Recursive export */
+	      f = pNode->ElFirstChild;
+	      while (f != NULL)
+		{
+		  ExportXmlDocument (pDoc, f, recordLineNb);
+		  f = f->ElNext;
+		}
+	      
+	      /* Export End tag */
+	      if (pNode != pDoc->DocDocElement)
+		ExportXmlBuffer (pDoc, endName);
+	    }
+	  else
+	    {
+	      /* It is a terminal element */
+	      switch (pNode->ElLeafType)
+		{
+		case LtPicture:
+		  ExportXmlElText (pDoc, pNode, pNode->ElText);
+		  break;
+		case LtText:
+		  ExportXmlElText (pDoc, pNode, pNode->ElText);
+		  break;
+		default:
+		  break;	
+		}
 	    }
 	}
     }
 }
 
 /*----------------------------------------------------------------------
-  ExportTree   exporte le sous arbre pointe par pEl du document
-  pointe' par pDoc, selon le schema de traduction de nom tschema 
-  et produit le resultat dans le fichier de nom fName ou dans le buffer.
+  ExportTree  
+  Exporte le sous arbre pointe par pEl du document pointe par pDoc,
+  selon le schema de traduction de nom tschema et produit le resultat
+  dans le fichier de nom fName ou dans le buffer.
   ----------------------------------------------------------------------*/
 void ExportTree (PtrElement pEl, PtrDocument pDoc, char *fName,
 		 char *tschema)
