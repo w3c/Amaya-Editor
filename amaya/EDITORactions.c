@@ -1829,6 +1829,8 @@ void CreateTable (Document document, View view)
        TtaLockTableFormatting ();
        elType.ElTypeNum = HTML_EL_Table;
        TtaCreateElement (elType, document);
+       /* close the undo sequence if it's still open */
+       TtaCloseUndoSequence (document);
 
        /* get the new Table element */
        TtaGiveFirstSelectedElement (document, &el, &firstChar, &i);

@@ -3281,6 +3281,9 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			  /* traitement des exceptions */
 			  CreationExceptions (pNew, pSelDoc);
 			  /* cree les paves du nouvel element et */
+			  /* send an event TteElemNew  Post to application */
+			  NotifySubTree (TteElemNew, pSelDoc, pNew, 0, 0,
+					 FALSE, FALSE);
 			  /* met a jour ses voisins */
 			  CreateAllAbsBoxesOfEl (pNew, pSelDoc);
 			  /* Mise a jour des images abstraites */
@@ -3292,9 +3295,6 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			  RedisplayCopies (pNew, pSelDoc, TRUE);
 			  UpdateNumbers (NextElement (pNew), pNew, pSelDoc,
 					 TRUE);
-			  /* envoie un evenement ElemNew.Post a l'application*/
-			  NotifySubTree (TteElemNew, pSelDoc, pNew, 0, 0,
-					 FALSE, FALSE);
 			  if (pNew && pNew->ElParent)
 			    {
 			      /* Indiquer que le document est modifie' */

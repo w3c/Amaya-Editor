@@ -1349,7 +1349,7 @@ void UndoNoRedo (Document doc)
    /* lock tables formatting */
    TtaGiveTableFormattingLock (&lock);
    if (!lock)
-     /* table formatting is not loked, lock it now */
+     /* table formatting is not locked, lock it now */
      TtaLockTableFormatting ();
  
    /* disable structure checking */
@@ -1408,7 +1408,7 @@ void TtcUndo (Document doc, View view)
    /* lock tables formatting */
    TtaGiveTableFormattingLock (&lock);
    if (!lock)
-     /* table formatting is not loked, lock it now */
+     /* table formatting is not locked, lock it now */
      TtaLockTableFormatting ();
     /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);

@@ -954,6 +954,7 @@ EXCEPT
 	shape:		Invisible;
 	Data_cell:	IsCell, NoMove, NoResize, NoBreakByReturn;
 	Heading_cell:	IsCell, NoMove, NoResize, NoBreakByReturn;
+	Table_cell:	IsCell, NoMove, NoResize, NoBreakByReturn;
 	Table:		IsTable, PageBreak, NoReplicate, NoBreakByReturn;
 	Column_head:	IsColHead, NoCut, Hidden, NoBreakByReturn;
 	Table_head:	NoCut, Hidden, NoSelect, NoBreakByReturn;
