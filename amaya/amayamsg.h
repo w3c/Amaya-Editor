@@ -195,4 +195,5 @@ int                 AMAYA;
 #define AM_PROFILE_MENU               183
 #define AM_TEMPLATES_SERVER           184
 #define AM_TEMPLATES_MENU             185
-#define AMAYA_MSG_MAX                 186
+#define AM_SAFE_PUT_REDIRECT          186
+#define AMAYA_MSG_MAX                 187
