@@ -5680,15 +5680,43 @@ void            CheckAbstractTree (char* pathURL, Document doc)
 #ifdef ANNOTATIONS
    if (DocumentTypes[doc] == docAnnot)
      {
+       docSSchema = TtaGetSSchema ("HTML", doc);
        /* we search the start of HTML document in the annotation struct */
        elRoot = ANNOT_GetHTMLRoot (doc);
-       docSSchema = TtaGetSSchema ("HTML", doc);
      }
    else
 #endif /* ANNOTATIONS */
      {
-       elRoot = TtaGetRootElement (doc);
        docSSchema = TtaGetDocumentSSchema (doc);
+       elRoot = TtaGetRootElement (doc);
+       if (!elRoot)
+	 /* there is no <html> element! Create one */
+	 {
+	   /* create a <html> element */
+	   elType.ElSSchema = docSSchema;
+	   elType.ElTypeNum = HTML_EL_HTML;
+	   elRoot = TtaNewElement (doc, elType);
+	   /* insert it as the first child of the Document node */
+	   el = TtaGetMainRoot (doc);
+	   TtaInsertFirstChild (&elRoot, el, doc);
+	   /* move all other children of the Document node within this
+	      new <html> element */
+	   el = elRoot;
+	   TtaNextSibling (&el);
+	   lastChild = NULL;
+	   while (el)
+	     {
+	       nextEl = el;
+	       TtaNextSibling (&nextEl);
+	       TtaRemoveTree (el, doc);
+	       if (!lastChild)
+		 TtaInsertFirstChild (&el, elRoot, doc);
+	       else
+		 TtaInsertSibling (el, lastChild, FALSE, doc);
+	       lastChild = el;
+	       el = nextEl;
+	     }
+	 }
      }
    el = TtaGetFirstChild (elRoot);
    if (el != NULL)
