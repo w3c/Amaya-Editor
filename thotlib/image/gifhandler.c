@@ -230,7 +230,7 @@ ThotColorStruct     colrs[256];
    GifScreen.Width = LM_to_uint (buf[0], buf[1]);
    GifScreen.Height = LM_to_uint (buf[2], buf[3]);
    GifScreen.BitPixel = 2 << (buf[4] & 0x07);
-/*LN */ *ncolors = GifScreen.BitPixel;
+   *ncolors = GifScreen.BitPixel;
    GifScreen.ColorResolution = (((buf[4] & 0x70) >> 3) + 1);
    GifScreen.Background = buf[5];
    GifScreen.AspectRatio = buf[6];
@@ -636,8 +636,8 @@ int                 input_code_size;
 
 
 /* ---------------------------------------------------------------------- */
-/* returns position of highest set bit in 'ul' as an integer (0-31),
-   or -1 if none. */
+/* returns position of highest set bit in 'ul' as an integer (0-31),      */	
+/*   or -1 if none.                                                       */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static int          highbit (unsigned long ul)
@@ -658,8 +658,8 @@ unsigned long       ul;
 }
 
 /* ---------------------------------------------------------------------- */
-/* returns position of highest set bit in 'ul' as an integer (0-31),
- * or -1 if none.*/
+/* returns position of highest set bit in 'ul' as an integer (0-31),      */
+/* or -1 if none.                                                         */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 int                 highbit16 (unsigned long ul)
@@ -1215,7 +1215,7 @@ ThotColorStruct     colrs[256];
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ReadGifToData                   | */
+/* |    ReadGifToData decomresses the file and returns the picture data | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 unsigned char      *ReadGifToData (char *datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256])
@@ -1325,7 +1325,7 @@ ThotBitmap         *mask1;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    GifPrint                | */
+/* |    GifPrint  : reads a gif file and produces PostScirpt            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
@@ -1466,7 +1466,7 @@ unsigned long       BackGroundPixel;
 }			
 
 /* ---------------------------------------------------------------------- */
-/* |    IsGifFormat      | */
+/* |    IsGifFormat  checks the header file if it's of a gif file       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             IsGifFormat (char *datafile)

@@ -27,7 +27,7 @@ extern Pixmap       EpsfPictureLogo;
 
 
 /* ------------------------------------------------------------------- */
-/* | Find EPS picture bounding box.				             | */
+/* | Find EPS picture bounding box.      		             | */
 /* ------------------------------------------------------------------- */
 #ifdef __STDC__
 static void GetPictureBoundaries (char *fn, int *xif, int *yif, int *wif, int *hif)
@@ -77,7 +77,7 @@ int                *hif;
 
 
 /* ------------------------------------------------------------------- */
-/* | Read the bounding box of an eps file  no picture to produce here                | */
+/* | Read the bounding box of an eps file  no picture to produce here| */
 /* ------------------------------------------------------------------- */
 #ifdef __STDC__
 ThotBitmap          EpsCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * PicMask)
@@ -113,7 +113,7 @@ Drawable           *PicMask;
 
 
 /* --------------------------------------------------------------- */
-/* | Print the eps picture with the right parameters : scale and positions                       | */
+/* | Print the eps picture with the right scale and positions    | */
 /* --------------------------------------------------------------- */
 #ifdef __STDC__
 void                EpsPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE * fd, unsigned long BackGroundPixel)
@@ -224,7 +224,7 @@ unsigned long       BackGroundPixel;
 }			
 
 /* ------------------------------------------------------------------- */
-/* | Chech if the picture header is of an eps file or not before going to the dark          | */
+/* | Chech if the picture header is of an eps file                   | */
 /* ------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             IsEpsFormat (char *fn)

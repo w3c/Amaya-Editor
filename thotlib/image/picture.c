@@ -111,16 +111,16 @@ Pixmap       PicMask;
 
 
 /* ---------------------------------------------------------------------- */
-/* |  Picture_Center updates the parameters xtranslate, ytranslate,  | */
-/* |            pxorig, pyorig depending on the values of PicWArea,      | */
-/* |            PicHArea, wif, hif and pres.                                           | */
-/* |            - If we use ReScale, the tranlation is performed            | */
-/* |            in one direction.                                                      | */
-/* |            - If we use FillFrame, there's no translation        | */
-/* |            - if we use RealSize we translate to achieve             | */
-/* |            the centering               .                                      | */
-/* |            if the picture size is greater than the frame then  | */
-/* |          pxorig or pyorig are positive.                                 | */
+/* |  Picture_Center updates the parameters xtranslate, ytranslate,     | */
+/* |            pxorig, pyorig depending on the values of PicWArea,     | */
+/* |            PicHArea, wif, hif and pres.                            | */
+/* |            - If we use ReScale, the tranlation is performed        | */
+/* |            in one direction.                                       | */
+/* |            - If we use FillFrame, there's no translation           | */
+/* |            - if we use RealSize we translate to achieve            | */
+/* |            the centering               .                           | */
+/* |            if the picture size is greater than the frame then      | */
+/* |          pxorig or pyorig are positive.                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         Picture_Center (int wimage, int himage, int wbox, int hbox, PictureScaling pres, int *xtranslate, int *ytranslate, int *pxorig, int *pyorig)
@@ -208,11 +208,11 @@ PictInfo    *imageDesc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  LayoutPicture performs the layout of SrcPix on the screen described    | */
-/* |            by Drawab.                                                 | */
-/* |            if srcorx or srcory are postive, the copy operation is shifted   | */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------- */
+/* | LayoutPicture performs the layout of SrcPix on the screen described | */
+/* | by Drawab.                                                          | */
+/* | if srcorx or srcory are postive, the copy operation is shifted      | */
+/* ----------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         LayoutPicture (Pixmap SrcPix, Drawable Drawab, int srcorx, int srcory, int w, int h, int desorx, int desory)
 #else  /* __STDC__ */
@@ -248,16 +248,16 @@ int                 desory;
 
 
 /* ---------------------------------------------------------------------- */
-/* |   IsValid retourne FALSE si le pixmap contenu dans imageDesc  | */
+/* |   IsValid retourne FALSE si le pixmap contenu dans imageDesc       | */
 /* |            est vide. On retourne TRUE s'il est egal aux images     | */
 /* |            predefinies BadPixmap.                                  | */
-/* |            - if we use RealSize, we  return TRUE.            | */
-/* |            - if we use  ReScale, we return TRUE            | */
-/* |            the box have one of the two  dimensions a least equals   | */
-/* |            to the one of the pixmap.                                        | */
-/* |            - if we use  ReScale FillFrame, we return TRUE if the      | */
-/* |            frame box  has the same size than the pixmap in      | */
-/* |            both directions.                                                     | */
+/* |            - if we use RealSize, we  return TRUE.                  | */
+/* |            - if we use  ReScale, we return TRUE                    | */
+/* |            the box have one of the two  dimensions a least equals  | */
+/* |            to the one of the pixmap.                               | */
+/* |            - if we use  ReScale FillFrame, we return TRUE if the   | */
+/* |            frame box  has the same size than the pixmap in         | */
+/* |            both directions.                                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static boolean      IsValid (PtrBox box, PictInfo * imageDesc)
@@ -303,8 +303,8 @@ PictInfo    *imageDesc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    GetPictureFormat returns the format of a file picture          | */
-/* |    the file  fileName or UNKNOWN_FORMAT if not recognized  */
+/* |    GetPictureFormat returns the format of a file picture           | */
+/* |    the file  fileName or UNKNOWN_FORMAT if not recognized          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static int          GetPictureFormat (char *fileName)
@@ -913,7 +913,7 @@ PictInfo    *imageDesc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |   FreePicture frees the Picture Info structure from pixmaps          | */
+/* |   FreePicture frees the Picture Info structure from pixmaps        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                FreePicture (PictInfo * imageDesc)
@@ -957,7 +957,7 @@ int                 menuIndex;
 }			
 
 /* ---------------------------------------------------------------------- */
-/* |    GetPictTypeIndex returns the menu type index of the picture.      | */
+/* |    GetPictTypeIndex returns the menu type index of the picture.    | */
 /* |		If the type is unkown we return 0.                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
@@ -983,7 +983,7 @@ int                 PicType;
    return 0;
 }			
 /* ---------------------------------------------------------------------- */
-/* |    GetPictPresIndex returns the index of of the presentation.        | */
+/* |    GetPictPresIndex returns the index of of the presentation.      | */
 /* |     	If the presentation is unknown we return RealSize.      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__

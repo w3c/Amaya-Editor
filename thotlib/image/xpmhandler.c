@@ -25,8 +25,8 @@
 
 
 /* ---------------------------------------------------------------------- */
-/* |    XpmCreate reads and produces the bitmap read from the file          | */
-/* |            fn. updates the wif, hif, xif , yif                                                | */
+/* |    XpmCreate reads and produces the bitmap read from the file      | */
+/* |            fn. updates the wif, hif, xif , yif                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 Drawable            XpmCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
@@ -51,6 +51,7 @@ Drawable           *mask1;
    unsigned long       valuemask = 0;
 
    /* pixmap loading parameters passed to the library */
+
    att.valuemask = valuemask;
    att.valuemask |= XpmRGBCloseness;
    att.valuemask |= XpmReturnPixels;
@@ -100,7 +101,7 @@ Drawable           *mask1;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    XpmPrint convertit un Pixmap en PostScript.             | */
+/* |    XpmPrint converts an xpm file to PostScript.                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
@@ -142,13 +143,13 @@ unsigned long       BackGroundPixel;
    unsigned short      red, green, blue;
 
    /* pixmap loading parameters passed to the library */
+
    valuemask |= XpmExactColors;
    valuemask |= XpmColorTable;
    valuemask |= XpmReturnColorTable;
    valuemask |= XpmReturnPixels;
    valuemask |= XpmHotspot;
    valuemask |= XpmCharsPerPixel;
-
 
    status = XpmReadFileToXpmImage (fn, &image, &info);
 
@@ -286,7 +287,7 @@ unsigned long       BackGroundPixel;
 }			
 
 /* ---------------------------------------------------------------------- */
-/* |    IsXpmFormat    check if the file header is of an xbm format  by reading the first bytes  | */
+/* | IsXpmFormat check if the file header is of a pixmap                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean                IsXpmFormat (char *fn)

@@ -13,7 +13,7 @@ void               *dlsym ()
 int                 dlclose ()
 #else  /* __STDC__ */
 int                 dlclose ()
-#endif				/* __STDC__ */
+#endif /* __STDC__ */
 {
    return -1;
 }

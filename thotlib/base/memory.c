@@ -14,105 +14,104 @@
 #define EXPORT
 #include "boxes_tv.h"
 #include "edit_tv.h"
-/* Identification des messages */
 
-static int          NbLibBufTexte;
-static int          NbOccBufTexte;
-static PtrTextBuffer PtFreeBufTexte;
+int          NbFree_TextBuff;
+int          NbUsed_TextBuff;
+PtrTextBuffer PtFree_TextBuff;
 
-static int          NbLibElement;
-static int          NbOccElement;
-static PtrElement   PtFreeElement;
+int          NbFree_Element;
+int          NbUsed_Element;
+PtrElement   PtFree_Element;
 
-static int          NbLibAttr;
-static int          NbOccAttr;
-static PtrAttribute  PtFreeAttr;
+int          NbFree_Attr;
+int          NbUsed_Attr;
+PtrAttribute  PtFree_Attr;
 
-static int          NbLibDescRef;
-static int          NbOccDescRef;
-static PtrReferredDescr PtFreeDescRef;
+int          NbFree_DescRef;
+int          NbUsed_DescRef;
+PtrReferredDescr PtFree_DescRef;
 
-static int          NbLibDocExterne;
-static int          NbOccDocExterne;
-static PtrExternalDoc PtFreeDocExterne;
+int          NbFree_ExternalDoc;
+int          NbUsed_ExternalDoc;
+PtrExternalDoc PtFree_ExternalDoc;
 
-static int          NbLibDescCopie;
-static int          NbOccDescCopie;
-static PtrCopyDescr PtFreeDescCopie;
+int          NbFree_DescCopy;
+int          NbUsed_DescCopy;
+PtrCopyDescr PtFree_DescCopy;
 
 
-static int          NbLibReference;
-static int          NbOccReference;
-static PtrReference PtFreeReference;
+int          NbFree_Reference;
+int          NbUsed_Reference;
+PtrReference PtFree_Reference;
 
-static int          NbLibRefSortante;
-static int          NbOccRefSortante;
-static PtrOutReference PtFreeRefSortante;
+int          NbFree_OutputRef;
+int          NbUsed_OutputRef;
+PtrOutReference PtFree_OutputRef;
 
-static int          NbLibElemRefChng;
-static int          NbOccElemRefChng;
-static PtrChangedReferredEl PtFreeElemRefChng;
+int          NbFree_ElemRefChng;
+int          NbUsed_ElemRefChng;
+PtrChangedReferredEl PtFree_ElemRefChng;
 
-static int          NbLibRefEntrantes;
-static int          NbOccRefEntrantes;
-static PtrEnteringReferences PtFreeRefEntrantes;
+int          NbFree_InputRef;
+int          NbUsed_InputRef;
+PtrEnteringReferences PtFree_InputRef;
 
-static int          NbLibFichRefChng;
-static int          NbOccFichRefChng;
-static PtrReferenceChange PtFreeFichRefChng;
+int          NbFree_FichRefChng;
+int          NbUsed_FichRefChng;
+PtrReferenceChange PtFree_FichRefChng;
 
-static int          NbLibPave;
-static int          NbOccPave;
-static PtrAbstractBox      PtFreePave;
+int          NbFree_Pave;
+int          NbUsed_Pave;
+PtrAbstractBox      PtFree_Pave;
 
-static int          NbLibDocument;
-static int          NbOccDocument;
-static PtrDocument  PtFreeDocument;
+int          NbFree_Document;
+int          NbUsed_Document;
+PtrDocument  PtFree_Document;
 
-static int          NbLibSchPres;
-static int          NbOccSchPres;
-static PtrPSchema   PtFreeSPres;
+int          NbFree_SchPres;
+int          NbUsed_SchPres;
+PtrPSchema   PtFree_SPres;
 
-static int          NbLibHandleSchPres;
-static int          NbOccHandleSchPres;
-static PtrHandlePSchema PtFreeHandleSchPres;
+int          NbFree_HandleSchPres;
+int          NbUsed_HandleSchPres;
+PtrHandlePSchema PtFree_HandleSchPres;
 
-static int          NbLibSchStruct;
-static int          NbOccSchStruct;
-static PtrSSchema PtFreeSStruct;
+int          NbFree_SchStruct;
+int          NbUsed_SchStruct;
+PtrSSchema PtFree_SStruct;
 
-static int          NbLibBlocExtens;
-static int          NbOccBlocExtens;
-static PtrExtensBlock PtFreeBlocExtens;
+int          NbFree_BlocExtens;
+int          NbUsed_BlocExtens;
+PtrExtensBlock PtFree_BlocExtens;
 
-static int          NbLibReglePres;
-static int          NbOccReglePres;
-static PtrPRule PtFreeReglePres;
+int          NbFree_ReglePres;
+int          NbUsed_ReglePres;
+PtrPRule PtFree_ReglePres;
 
-static int          NbLibCondReglePres;
-static int          NbOccCondReglePres;
-static PtrCondition PtFreeCondReglePres;
+int          NbFree_CondReglePres;
+int          NbUsed_CondReglePres;
+PtrCondition PtFree_CondReglePres;
 
-static int          NbLibRRetard;
-static int          NbOccRRetard;
-static PtrDelayedPRule PtFreeRRetard;
+int          NbFree_RRetard;
+int          NbUsed_RRetard;
+PtrDelayedPRule PtFree_RRetard;
 
-static PtrBox 	PtFreBox;	/* File des contextes de boite libres */
-static int     	NbLibBox;
-static int     	NbOccBox;
-static PtrPosRelations 	PtFreBPos; /* File des blocs relation de position libres */
-static int     	NbLibBPos;
-static int     	NbOccBPos;
-static PtrDimRelations 	PtFreBDim; /* File des blocs relation de dimension libres */
-static int     	NbLibBDim;
-static int     	NbOccBDim;
-static PtrLine 	PtFreeLine;	/* File des contextes de ligne libres */
-static int     	NbLibLine;
-static int     	NbOccLine;
+PtrBox 	PtFreBox;	/* File des contextes de boite libres */
+int          NbFree_Box;
+int          NbUsed_Box;
+PtrPosRelations 	PtFreBPos; /* File des blocs relation de position libres */
+int     	NbFree_BPos;
+int     	NbUsed_BPos;
+PtrDimRelations 	PtFreBDim; /* File des blocs relation de dimension libres */
+int          NbFree_BDim;
+int          NbUsed_BDim;
+PtrLine      PtFree_Line;	/* File des contextes de ligne libres */
+int          NbFree_Line;
+int    	     NbUsed_Line;
 
-static int NbLibDico;
-static int NbOccDico;
-static PtrDico PtFreeDico;
+int          NbFree_Dico;
+int          NbUsed_Dico;
+PtrDico      PtFree_Dico;
 
 #include "absboxlist_f.h"
 #include "memory_f.h"
@@ -251,287 +250,104 @@ void                InitEditorMemory ()
 
 {
 
-   NbLibBufTexte = 0;
-   NbOccBufTexte = 0;
-   PtFreeBufTexte = NULL;
+   NbFree_TextBuff = 0;
+   NbUsed_TextBuff = 0;
+   PtFree_TextBuff = NULL;
 
-   NbLibElement = 0;
-   NbOccElement = 0;
-   PtFreeElement = NULL;
+   NbFree_Element = 0;
+   NbUsed_Element = 0;
+   PtFree_Element = NULL;
 
-   NbLibAttr = 0;
-   NbOccAttr = 0;
-   PtFreeAttr = NULL;
+   NbFree_Attr = 0;
+   NbUsed_Attr = 0;
+   PtFree_Attr = NULL;
 
-   NbLibDescRef = 0;
-   NbOccDescRef = 0;
-   PtFreeDescRef = NULL;
+   NbFree_DescRef = 0;
+   NbUsed_DescRef = 0;
+   PtFree_DescRef = NULL;
 
-   NbLibDescCopie = 0;
-   NbOccDescCopie = 0;
-   PtFreeDescCopie = NULL;
+   NbFree_DescCopy = 0;
+   NbUsed_DescCopy = 0;
+   PtFree_DescCopy = NULL;
 
-   NbLibDocExterne = 0;
-   NbOccDocExterne = 0;
-   PtFreeDocExterne = NULL;
+   NbFree_ExternalDoc = 0;
+   NbUsed_ExternalDoc = 0;
+   PtFree_ExternalDoc = NULL;
 
-   NbLibReference = 0;
-   NbOccReference = 0;
-   PtFreeReference = NULL;
+   NbFree_Reference = 0;
+   NbUsed_Reference = 0;
+   PtFree_Reference = NULL;
 
-   NbLibRefSortante = 0;
-   NbOccRefSortante = 0;
-   PtFreeRefSortante = NULL;
+   NbFree_OutputRef = 0;
+   NbUsed_OutputRef = 0;
+   PtFree_OutputRef = NULL;
 
-   NbLibElemRefChng = 0;
-   NbOccElemRefChng = 0;
-   PtFreeElemRefChng = NULL;
+   NbFree_ElemRefChng = 0;
+   NbUsed_ElemRefChng = 0;
+   PtFree_ElemRefChng = NULL;
 
-   NbLibRefEntrantes = 0;
-   NbOccRefEntrantes = 0;
-   PtFreeRefEntrantes = NULL;
+   NbFree_InputRef = 0;
+   NbUsed_InputRef = 0;
+   PtFree_InputRef = NULL;
 
-   NbLibFichRefChng = 0;
-   NbOccFichRefChng = 0;
-   PtFreeFichRefChng = NULL;
+   NbFree_FichRefChng = 0;
+   NbUsed_FichRefChng = 0;
+   PtFree_FichRefChng = NULL;
 
-   NbLibPave = 0;
-   NbOccPave = 0;
-   PtFreePave = NULL;
+   NbFree_Pave = 0;
+   NbUsed_Pave = 0;
+   PtFree_Pave = NULL;
 
-   NbLibDocument = 0;
-   NbOccDocument = 0;
-   PtFreeDocument = NULL;
+   NbFree_Document = 0;
+   NbUsed_Document = 0;
+   PtFree_Document = NULL;
 
-   NbLibSchPres = 0;
-   NbOccSchPres = 0;
-   PtFreeSPres = NULL;
+   NbFree_SchPres = 0;
+   NbUsed_SchPres = 0;
+   PtFree_SPres = NULL;
 
-   NbLibHandleSchPres = 0;
-   NbOccHandleSchPres = 0;
-   PtFreeHandleSchPres = NULL;
+   NbFree_HandleSchPres = 0;
+   NbUsed_HandleSchPres = 0;
+   PtFree_HandleSchPres = NULL;
 
-   NbLibSchStruct = 0;
-   NbOccSchStruct = 0;
-   PtFreeSStruct = NULL;
+   NbFree_SchStruct = 0;
+   NbUsed_SchStruct = 0;
+   PtFree_SStruct = NULL;
 
-   NbLibBlocExtens = 0;
-   NbOccBlocExtens = 0;
-   PtFreeBlocExtens = NULL;
+   NbFree_BlocExtens = 0;
+   NbUsed_BlocExtens = 0;
+   PtFree_BlocExtens = NULL;
 
-   NbLibReglePres = 0;
-   NbOccReglePres = 0;
-   PtFreeReglePres = NULL;
+   NbFree_ReglePres = 0;
+   NbUsed_ReglePres = 0;
+   PtFree_ReglePres = NULL;
 
-   NbLibCondReglePres = 0;
-   NbOccCondReglePres = 0;
-   PtFreeCondReglePres = NULL;
+   NbFree_CondReglePres = 0;
+   NbUsed_CondReglePres = 0;
+   PtFree_CondReglePres = NULL;
 
-   NbLibRRetard = 0;
-   NbOccRRetard = 0;
-   PtFreeRRetard = NULL;
+   NbFree_RRetard = 0;
+   NbUsed_RRetard = 0;
+   PtFree_RRetard = NULL;
 
-/*CORR */ NbLibDico = 0;
-/*CORR */ NbOccDico = 0;
-/*CORR */ PtFreeDico = NULL;
-
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    ListMemoryStatus fait un listing de l'occupation memoire.               | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-void                ListMemoryStatus (FILE * outfile)
-
-#else  /* __STDC__ */
-void                ListMemoryStatus (outfile)
-FILE               *outfile;
-
-#endif /* __STDC__ */
-
-{
-#ifndef PRODUIT_V2
-   int                 Size, Total, GrandTotal;
-
-   GrandTotal = 0;
-   fprintf (outfile, "%10d buffers libres\n", NbLibBufTexte);
-   fprintf (outfile, "%10d buffers utilises\n", NbOccBufTexte);
-   Size = sizeof (TextBuffer);
-   Total = (NbLibBufTexte + NbOccBufTexte) * Size;
-   fprintf (outfile, "     %10d octets par buffer, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d elements libres\n", NbLibElement);
-   fprintf (outfile, "%10d elements utilises\n", NbOccElement);
-   Size = sizeof (ElementDescr);
-   Total = (NbLibElement + NbOccElement) * Size;
-   fprintf (outfile, "     %10d octets par element, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d attributs libres\n", NbLibAttr);
-   fprintf (outfile, "%10d attributs utilises\n", NbOccAttr);
-   Size = sizeof (AttributeBlock);
-   Total = (NbLibAttr + NbOccAttr) * Size;
-   fprintf (outfile, "     %10d octets par attribut, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d descripteurs de reference libres\n", NbLibDescRef);
-   fprintf (outfile, "%10d descripteurs de reference utilises\n", NbOccDescRef);
-   Size = sizeof (ReferredElemDescriptor);
-   Total = (NbLibDescRef + NbOccDescRef) * Size;
-   fprintf (outfile, "     %10d octets par descripteur, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d descripteurs de copie libres\n", NbLibDescCopie);
-   fprintf (outfile, "%10d descripteurs de copie utilises\n", NbOccDescCopie);
-   Size = sizeof (CopyDescriptor);
-   Total = (NbLibDescCopie + NbOccDescCopie) * Size;
-   fprintf (outfile, "     %10d octets par descripteur, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d descripteurs de documents externes libres\n",
-	    NbLibDocExterne);
-   fprintf (outfile, "%10d descripteurs de documents externes utilises\n",
-	    NbOccDocExterne);
-   Size = sizeof (ExternalDoc);
-   Total = (NbLibDocExterne + NbOccDocExterne) * Size;
-   fprintf (outfile, "     %10d octets par descripteur, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d references libres\n", NbLibReference);
-   fprintf (outfile, "%10d references utilisees\n", NbOccReference);
-   Size = sizeof (ReferenceDescriptor);
-   Total = (NbLibReference + NbOccReference) * Size;
-   fprintf (outfile, "     %10d octets par reference, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-
-   fprintf (outfile, "%10d references sortantes libres\n", NbLibRefSortante);
-   fprintf (outfile, "%10d references sortantes utilisees\n", NbOccRefSortante);
-   Size = sizeof (OutReference);
-   Total = (NbLibRefSortante + NbOccRefSortante) * Size;
-   fprintf (outfile, "     %10d octets par reference sortante, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d elem. ref. changes libres\n", NbLibElemRefChng);
-   fprintf (outfile, "%10d elem. ref. changes utilisees\n", NbOccElemRefChng);
-   Size = sizeof (ChangedReferredEl);
-   Total = (NbLibElemRefChng + NbOccElemRefChng) * Size;
-   fprintf (outfile, "     %10d octets par elem. ref. change, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d ref. entrantes libres\n", NbLibRefEntrantes);
-   fprintf (outfile, "%10d ref. entrantes utilisees\n", NbOccRefEntrantes);
-   Size = sizeof (RefEntrantes);
-   Total = (NbLibRefEntrantes + NbOccRefEntrantes) * Size;
-   fprintf (outfile, "     %10d octets par ref. entrante, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d fich. ref. chng. libres\n", NbLibFichRefChng);
-   fprintf (outfile, "%10d fich. ref. chng. utilisees\n", NbOccFichRefChng);
-   Size = sizeof (ReferenceChange);
-   Total = (NbLibFichRefChng + NbOccFichRefChng) * Size;
-   fprintf (outfile, "     %10d octets par fich. ref. chng., total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d paves libres\n", NbLibPave);
-   fprintf (outfile, "%10d paves utilises\n", NbOccPave);
-   Size = sizeof (AbstractBox);
-   Total = (NbLibPave + NbOccPave) * Size;
-   fprintf (outfile, "     %10d octets par pave, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d documents libres\n", NbLibDocument);
-   fprintf (outfile, "%10d documents utilises\n", NbOccDocument);
-   Size = sizeof (DocumentDescr);
-   Total = (NbLibDocument + NbOccDocument) * Size;
-   fprintf (outfile, "     %10d octets par document, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d schemas de presentation libres\n", NbLibSchPres);
-   fprintf (outfile, "%10d schemas de presentation utilises\n", NbOccSchPres);
-   Size = sizeof (PresentSchema);
-   Total = (NbLibSchPres + NbOccSchPres) * Size;
-   fprintf (outfile, "     %10d octets par schema, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d pointeurs de schemas de presentation libres\n", NbLibHandleSchPres);
-   fprintf (outfile, "%10d pointeurs de schemas de presentation utilises\n", NbOccHandleSchPres);
-   Size = sizeof (HandlePSchema);
-   Total = (NbLibHandleSchPres + NbOccHandleSchPres) * Size;
-   fprintf (outfile, "     %10d octets par pointeur de schema, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d schemas de structure libres\n", NbLibSchStruct);
-   fprintf (outfile, "%10d schemas de structure utilises\n", NbOccSchStruct);
-   Size = sizeof (StructSchema);
-   Total = (NbLibSchStruct + NbOccSchStruct) * Size;
-   fprintf (outfile, "     %10d octets par schema, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d blocs extension libres\n", NbLibBlocExtens);
-   fprintf (outfile, "%10d blocs extension utilises\n", NbOccBlocExtens);
-   Size = sizeof (ExtensBlock);
-   Total = (NbLibBlocExtens + NbOccBlocExtens) * Size;
-   fprintf (outfile, "     %10d octets par bloc, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d regles de presentation libres\n", NbLibReglePres);
-   fprintf (outfile, "%10d regles de presentation utilisees\n", NbOccReglePres);
-   Size = sizeof (PresRule);
-   Total = (NbLibReglePres + NbOccReglePres) * Size;
-   fprintf (outfile, "     %10d octets par regle, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d conditions de presentation libres\n", NbLibCondReglePres);
-   fprintf (outfile, "%10d conditions de presentation utilisees\n", NbOccCondReglePres);
-   Size = sizeof (Condition);
-   Total = (NbLibCondReglePres + NbOccCondReglePres) * Size;
-   fprintf (outfile, "     %10d octets par regle, total =%10d\n", Size, Total);
-   GrandTotal += Total;
-
-   fprintf (outfile, "%10d regles retardees libres\n", NbLibRRetard);
-   fprintf (outfile, "%10d regles retardees utilisees\n", NbOccRRetard);
-   Size = sizeof (DelayedPRule);
-   Total = (NbLibRRetard + NbOccRRetard) * Size;
-   fprintf (outfile, "     %10d octets par regle retardee, total =%10d\n",
-	    Size, Total);
-   GrandTotal += Total;
-
- fprintf (outfile, "%10d dicos libres\n", NbLibDico);
- fprintf (outfile, "%10d dicos utilises\n", NbOccDico);
- Size = sizeof (Dictionnaire);
- Total = (NbLibDico + NbOccDico) * Size;
- fprintf (outfile, "     %10d octets par dico, total =%10d\n",
- Size, Total);
- GrandTotal += Total;
-/*CORR il faut ajouter la place occupe par les chaines de caracteres ??? */
-
-   fprintf (outfile, "\n");
-   fprintf (outfile, "Total pour l\'Editeur : %10d octets.\n", GrandTotal);
-   fprintf (outfile, "\n");
-#endif
+   NbFree_Dico = 0;
+   NbUsed_Dico = 0;
+   PtFree_Dico = NULL;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetTextBuffer alloue un buffer de texte.                          | */
+/* |    GetTextBuffer alloue un buffer de texte.                        | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                GetTextBuffer (PtrTextBuffer * pBT)
-
 #else  /* __STDC__ */
 void                GetTextBuffer (pBT)
 PtrTextBuffer     *pBT;
-
 #endif /* __STDC__ */
-
 {
    PtrTextBuffer      pBu1;
 
-   if (PtFreeBufTexte == NULL)
+   if (PtFree_TextBuff == NULL)
      {
 	/* pas de buffer dans la chaine des libres, acquiert un nouveau buffer */
 	*pBT = (PtrTextBuffer) TtaGetMemory (sizeof (TextBuffer));
@@ -539,11 +355,11 @@ PtrTextBuffer     *pBT;
    else
      {
 	/* recupere un buffer en tete de la chaine des libres */
-	*pBT = PtFreeBufTexte;
-	PtFreeBufTexte = (*pBT)->BuNext;
-	NbLibBufTexte--;
+	*pBT = PtFree_TextBuff;
+	PtFree_TextBuff = (*pBT)->BuNext;
+	NbFree_TextBuff--;
      }
-   NbOccBufTexte++;
+   NbUsed_TextBuff++;
    /* initialise le buffer */
    pBu1 = *pBT;
    memset (pBu1, 0, sizeof (TextBuffer));
@@ -554,57 +370,49 @@ PtrTextBuffer     *pBT;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeTextBuffer libere un buffer de texte.                         | */
+/* |    FreeTextBuffer libere un buffer de texte.                       | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                FreeTextBuffer (PtrTextBuffer pBT)
-
 #else  /* __STDC__ */
 void                FreeTextBuffer (pBT)
 PtrTextBuffer      pBT;
-
 #endif /* __STDC__ */
-
 {
 
    /* insere le buffer en tete de la chaine des libres */
    if (pBT != NULL)
      {
-	pBT->BuNext = PtFreeBufTexte;
-	PtFreeBufTexte = pBT;
-	NbLibBufTexte++;
-	NbOccBufTexte--;
+	pBT->BuNext = PtFree_TextBuff;
+	PtFree_TextBuff = pBT;
+	NbFree_TextBuff++;
+	NbUsed_TextBuff--;
      }
 }
 
 /* ---------------------------------------------------------------------- */
 /* |    GetElement alloue un element.                                   | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                GetElement (PtrElement * pEl)
-
 #else  /* __STDC__ */
 void                GetElement (pEl)
 PtrElement         *pEl;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
    PtrElement          pEl1;
 
 
-   if (PtFreeElement == NULL)
+   if (PtFree_Element == NULL)
       *pEl = (PtrElement) TtaGetMemory (sizeof (ElementDescr));
    else
      {
-	*pEl = PtFreeElement;
-	PtFreeElement = (*pEl)->ElNext;
-	NbLibElement--;
+	*pEl = PtFree_Element;
+	PtFree_Element = (*pEl)->ElNext;
+	NbFree_Element--;
      }
-   NbOccElement++;
+   NbUsed_Element++;
    pEl1 = *pEl;
    memset (pEl1, 0, sizeof (ElementDescr));
    pEl1->ElStructSchema = NULL;
@@ -635,50 +443,42 @@ PtrElement         *pEl;
 /* ---------------------------------------------------------------------- */
 /* |    FreeElement libere un element.                                  | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                FreeElement (PtrElement pEl)
-
 #else  /* __STDC__ */
 void                FreeElement (pEl)
 PtrElement          pEl;
-
 #endif /* __STDC__ */
-
 {
 
-   pEl->ElNext = PtFreeElement;
-   PtFreeElement = pEl;
-   NbLibElement++;
-   NbOccElement--;
+   pEl->ElNext = PtFree_Element;
+   PtFree_Element = pEl;
+   NbFree_Element++;
+   NbUsed_Element--;
 }
 
 /* ---------------------------------------------------------------------- */
 /* |    GetAttr alloue un attribut.                                     | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                GetAttr (PtrAttribute * pAttr)
-
 #else  /* __STDC__ */
 void                GetAttr (pAttr)
 PtrAttribute        *pAttr;
-
 #endif /* __STDC__ */
-
 {
    PtrAttribute         pAt1;
 
 
-   if (PtFreeAttr == NULL)
+   if (PtFree_Attr == NULL)
       *pAttr = (PtrAttribute) TtaGetMemory (sizeof (TtAttribute));
    else
      {
-	*pAttr = PtFreeAttr;
-	PtFreeAttr = (*pAttr)->AeNext;
-	NbLibAttr--;
+	*pAttr = PtFree_Attr;
+	PtFree_Attr = (*pAttr)->AeNext;
+	NbFree_Attr--;
      }
-   NbOccAttr++;
+   NbUsed_Attr++;
    pAt1 = *pAttr;
    memset (pAt1, 0, sizeof (TtAttribute));
    pAt1->AeNext = NULL;
@@ -692,22 +492,18 @@ PtrAttribute        *pAttr;
 /* ---------------------------------------------------------------------- */
 /* |    FreeAttr libere un attribut.                                    | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                FreeAttr (PtrAttribute pAttr)
-
 #else  /* __STDC__ */
 void                FreeAttr (pAttr)
 PtrAttribute         pAttr;
-
 #endif /* __STDC__ */
-
 {
 
-   pAttr->AeNext = PtFreeAttr;
-   PtFreeAttr = pAttr;
-   NbLibAttr++;
-   NbOccAttr--;
+   pAttr->AeNext = PtFree_Attr;
+   PtFree_Attr = pAttr;
+   NbFree_Attr++;
+   NbUsed_Attr--;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -727,15 +523,15 @@ PtrReferredDescr   *pDR;
    PtrReferredDescr    pDe1;
 
 
-   if (PtFreeDescRef == NULL)
+   if (PtFree_DescRef == NULL)
       *pDR = (PtrReferredDescr) TtaGetMemory (sizeof (ReferredElemDescriptor));
    else
      {
-	*pDR = PtFreeDescRef;
-	PtFreeDescRef = (*pDR)->ReNext;
-	NbLibDescRef--;
+	*pDR = PtFree_DescRef;
+	PtFree_DescRef = (*pDR)->ReNext;
+	NbFree_DescRef--;
      }
-   NbOccDescRef++;
+   NbUsed_DescRef++;
    pDe1 = *pDR;
    memset (pDe1, 0, sizeof (ReferredElemDescriptor));
    pDe1->ReFirstReference = NULL;
@@ -762,14 +558,14 @@ PtrReferredDescr    pDR;
 
 {
 
-   pDR->ReNext = PtFreeDescRef;
-   PtFreeDescRef = pDR;
-   NbLibDescRef++;
-   NbOccDescRef--;
+   pDR->ReNext = PtFree_DescRef;
+   PtFree_DescRef = pDR;
+   NbFree_DescRef++;
+   NbUsed_DescRef--;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetDescCopy alloue un descripteur de copie.                    | */
+/* |    GetDescCopy alloue un descripteur de copie.                     | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -784,15 +580,15 @@ PtrCopyDescr       *pDC;
 {
    PtrCopyDescr        pDe1;
 
-   if (PtFreeDescCopie == NULL)
+   if (PtFree_DescCopy == NULL)
       *pDC = (PtrCopyDescr) TtaGetMemory (sizeof (CopyDescriptor));
    else
      {
-	*pDC = PtFreeDescCopie;
-	PtFreeDescCopie = (*pDC)->CdNext;
-	NbLibDescCopie--;
+	*pDC = PtFree_DescCopy;
+	PtFree_DescCopy = (*pDC)->CdNext;
+	NbFree_DescCopy--;
      }
-   NbOccDescCopie++;
+   NbUsed_DescCopy++;
    pDe1 = *pDC;
    memset (pDe1, 0, sizeof (CopyDescriptor));
    pDe1->CdCopiedAb = NULL;
@@ -803,7 +599,7 @@ PtrCopyDescr       *pDC;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeDescCopy libere un descripteur de copie.                   | */
+/* |    FreeDescCopy libere un descripteur de copie.                    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -816,14 +612,14 @@ PtrCopyDescr        pDC;
 #endif /* __STDC__ */
 
 {
-   pDC->CdNext = PtFreeDescCopie;
-   PtFreeDescCopie = pDC;
-   NbLibDescCopie++;
-   NbOccDescCopie--;
+   pDC->CdNext = PtFree_DescCopy;
+   PtFree_DescCopy = pDC;
+   NbFree_DescCopy++;
+   NbUsed_DescCopy--;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetExternalDoc alloue un descripteur de document externe.        | */
+/* |    GetExternalDoc alloue un descripteur de document externe.       | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -839,15 +635,15 @@ PtrExternalDoc      *pDE;
    PtrExternalDoc       pDo1;
 
 
-   if (PtFreeDocExterne == NULL)
+   if (PtFree_ExternalDoc == NULL)
       *pDE = (PtrExternalDoc) TtaGetMemory (sizeof (ExternalDoc));
    else
      {
-	*pDE = PtFreeDocExterne;
-	PtFreeDocExterne = (*pDE)->EdNext;
-	NbLibDocExterne--;
+	*pDE = PtFree_ExternalDoc;
+	PtFree_ExternalDoc = (*pDE)->EdNext;
+	NbFree_ExternalDoc--;
      }
-   NbOccDocExterne++;
+   NbUsed_ExternalDoc++;
    pDo1 = *pDE;
    memset (pDo1, 0, sizeof (ExternalDoc));
    pDo1->EdNext = NULL;
@@ -855,7 +651,7 @@ PtrExternalDoc      *pDE;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeExternalDoc libere un descripteur de document externe.       | */
+/* |    FreeExternalDoc libere un descripteur de document externe.      | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -869,10 +665,10 @@ PtrExternalDoc       pDE;
 
 {
 
-   pDE->EdNext = PtFreeDocExterne;
-   PtFreeDocExterne = pDE;
-   NbLibDocExterne++;
-   NbOccDocExterne--;
+   pDE->EdNext = PtFree_ExternalDoc;
+   PtFree_ExternalDoc = pDE;
+   NbFree_ExternalDoc++;
+   NbUsed_ExternalDoc--;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -891,15 +687,15 @@ PtrReference       *pRef;
 {
    PtrReference        pPR1;
 
-   if (PtFreeReference == NULL)
+   if (PtFree_Reference == NULL)
       *pRef = (PtrReference) TtaGetMemory (sizeof (ReferenceDescriptor));
    else
      {
-	*pRef = PtFreeReference;
-	PtFreeReference = (*pRef)->RdNext;
-	NbLibReference--;
+	*pRef = PtFree_Reference;
+	PtFree_Reference = (*pRef)->RdNext;
+	NbFree_Reference--;
      }
-   NbOccReference++;
+   NbUsed_Reference++;
    pPR1 = *pRef;
    memset (pPR1, 0, sizeof (ReferenceDescriptor));
    pPR1->RdNext = NULL;
@@ -926,14 +722,14 @@ PtrReference        pRef;
 
 {
 
-   pRef->RdNext = PtFreeReference;
-   PtFreeReference = pRef;
-   NbLibReference++;
-   NbOccReference--;
+   pRef->RdNext = PtFree_Reference;
+   PtFree_Reference = pRef;
+   NbFree_Reference++;
+   NbUsed_Reference--;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetOutputRef alloue un descripteur de reference sortante.     | */
+/* |    GetOutputRef alloue un descripteur de reference sortante.       | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -948,15 +744,15 @@ PtrOutReference     *pRS;
 {
    PtrOutReference      pRs1;
 
-   if (PtFreeRefSortante == NULL)
+   if (PtFree_OutputRef == NULL)
       *pRS = (PtrOutReference) malloc (sizeof (OutReference));
    else
      {
-	*pRS = PtFreeRefSortante;
-	PtFreeRefSortante = (*pRS)->OrNext;
-	NbLibRefSortante--;
+	*pRS = PtFree_OutputRef;
+	PtFree_OutputRef = (*pRS)->OrNext;
+	NbFree_OutputRef--;
      }
-   NbOccRefSortante++;
+   NbUsed_OutputRef++;
    pRs1 = *pRS;
    memset (pRs1, 0, sizeof (OutReference));
    pRs1->OrNext = NULL;
@@ -965,7 +761,7 @@ PtrOutReference     *pRS;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeOutputRef libere un descripteur de reference sortante.    | */
+/* |    FreeOutputRef libere un descripteur de reference sortante.      | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -978,10 +774,10 @@ PtrOutReference      pRS;
 #endif /* __STDC__ */
 
 {
-   pRS->OrNext = PtFreeRefSortante;
-   PtFreeRefSortante = pRS;
-   NbLibRefSortante++;
-   NbOccRefSortante--;
+   pRS->OrNext = PtFree_OutputRef;
+   PtFree_OutputRef = pRS;
+   NbFree_OutputRef++;
+   NbUsed_OutputRef--;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1000,15 +796,15 @@ PtrChangedReferredEl     *pER;
 {
    PtrChangedReferredEl      pEr1;
 
-   if (PtFreeElemRefChng == NULL)
+   if (PtFree_ElemRefChng == NULL)
       *pER = (PtrChangedReferredEl) malloc (sizeof (ChangedReferredEl));
    else
      {
-	*pER = PtFreeElemRefChng;
-	PtFreeElemRefChng = (*pER)->CrNext;
-	NbLibElemRefChng--;
+	*pER = PtFree_ElemRefChng;
+	PtFree_ElemRefChng = (*pER)->CrNext;
+	NbFree_ElemRefChng--;
      }
-   NbOccElemRefChng++;
+   NbUsed_ElemRefChng++;
    pEr1 = *pER;
    memset (pEr1, 0, sizeof (ChangedReferredEl));
    pEr1->CrNext = NULL;
@@ -1033,14 +829,14 @@ PtrChangedReferredEl      pER;
 #endif /* __STDC__ */
 
 {
-   pER->CrNext = PtFreeElemRefChng;
-   PtFreeElemRefChng = pER;
-   NbLibElemRefChng++;
-   NbOccElemRefChng--;
+   pER->CrNext = PtFree_ElemRefChng;
+   PtFree_ElemRefChng = pER;
+   NbFree_ElemRefChng++;
+   NbUsed_ElemRefChng--;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetInputRef alloue un descripteur de reference entrante.    | */
+/* |    GetInputRef alloue un descripteur de reference entrante.        | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1055,17 +851,17 @@ PtrEnteringReferences    *pRE;
 {
    PtrEnteringReferences     pRe1;
 
-   if (PtFreeRefEntrantes == NULL)
-      *pRE = (PtrEnteringReferences) malloc (sizeof (RefEntrantes));
+   if (PtFree_InputRef == NULL)
+      *pRE = (PtrEnteringReferences) malloc (sizeof (InputRef));
    else
      {
-	*pRE = PtFreeRefEntrantes;
-	PtFreeRefEntrantes = (*pRE)->ErNext;
-	NbLibRefEntrantes--;
+	*pRE = PtFree_InputRef;
+	PtFree_InputRef = (*pRE)->ErNext;
+	NbFree_InputRef--;
      }
-   NbOccRefEntrantes++;
+   NbUsed_InputRef++;
    pRe1 = *pRE;
-   memset (pRe1, 0, sizeof (RefEntrantes));
+   memset (pRe1, 0, sizeof (InputRef));
    pRe1->ErNext = NULL;
    pRe1->ErFirstReferredEl = NULL;
    ClearDocIdent (&pRe1->ErDocIdent);
@@ -1073,7 +869,7 @@ PtrEnteringReferences    *pRE;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeInputRef libere un descripteur de reference entrante.   | */
+/* |    FreeInputRef libere un descripteur de reference entrante.       | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1086,10 +882,10 @@ PtrEnteringReferences     pRE;
 #endif /* __STDC__ */
 
 {
-   pRE->ErNext = PtFreeRefEntrantes;
-   PtFreeRefEntrantes = pRE;
-   NbLibRefEntrantes++;
-   NbOccRefEntrantes--;
+   pRE->ErNext = PtFree_InputRef;
+   PtFree_InputRef = pRE;
+   NbFree_InputRef++;
+   NbUsed_InputRef--;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1109,15 +905,15 @@ PtrReferenceChange     *pFRC;
 {
    PtrReferenceChange      pFrc1;
 
-   if (PtFreeFichRefChng == NULL)
+   if (PtFree_FichRefChng == NULL)
       *pFRC = (PtrReferenceChange) malloc (sizeof (ReferenceChange));
    else
      {
-	*pFRC = PtFreeFichRefChng;
-	PtFreeFichRefChng = (*pFRC)->RcNext;
-	NbLibFichRefChng--;
+	*pFRC = PtFree_FichRefChng;
+	PtFree_FichRefChng = (*pFRC)->RcNext;
+	NbFree_FichRefChng--;
      }
-   NbOccFichRefChng++;
+   NbUsed_FichRefChng++;
    pFrc1 = *pFRC;
    memset (pFrc1, 0, sizeof (ReferenceChange));
    pFrc1->RcNext = NULL;
@@ -1141,14 +937,14 @@ PtrReferenceChange      pFRC;
 #endif /* __STDC__ */
 
 {
-   pFRC->RcNext = PtFreeFichRefChng;
-   PtFreeFichRefChng = pFRC;
-   NbLibFichRefChng++;
-   NbOccFichRefChng--;
+   pFRC->RcNext = PtFree_FichRefChng;
+   PtFree_FichRefChng = pFRC;
+   NbFree_FichRefChng++;
+   NbUsed_FichRefChng--;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetAbstractBox alloue un pave.                                         | */
+/* |    GetAbstractBox alloue un pave.                                  | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1163,15 +959,15 @@ PtrAbstractBox            *pAb;
 {
    PtrAbstractBox             pPa1;
 
-   if (PtFreePave == NULL)
+   if (PtFree_Pave == NULL)
       *pAb = (PtrAbstractBox) TtaGetMemory (sizeof (AbstractBox));
    else
      {
-	*pAb = PtFreePave;
-	PtFreePave = (*pAb)->AbNext;
-	NbLibPave--;
+	*pAb = PtFree_Pave;
+	PtFree_Pave = (*pAb)->AbNext;
+	NbFree_Pave--;
      }
-   NbOccPave++;
+   NbUsed_Pave++;
    pPa1 = *pAb;
    memset (pPa1, 0, sizeof (AbstractBox));
    pPa1->AbElement = NULL;
@@ -1187,7 +983,7 @@ PtrAbstractBox            *pAb;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeAbstractBox libere un pave.                                        | */
+/* |    FreeAbstractBox libere un pave.                                 | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1211,10 +1007,10 @@ PtrAbstractBox             pAb;
    pAb->AbFirstEnclosed = NULL;
    pAb->AbNextRepeated = NULL;
    pAb->AbPreviousRepeated = NULL;
-   pAb->AbNext = PtFreePave;
-   PtFreePave = pAb;
-   NbLibPave++;
-   NbOccPave--;
+   pAb->AbNext = PtFree_Pave;
+   PtFree_Pave = pAb;
+   NbFree_Pave++;
+   NbUsed_Pave--;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1234,15 +1030,15 @@ PtrDocument        *pDoc;
    int                 i;
    PtrDocument         pDo1;
 
-   if (PtFreeDocument == NULL)
+   if (PtFree_Document == NULL)
       *pDoc = (PtrDocument) TtaGetMemory (sizeof (DocumentDescr));
    else
      {
-	*pDoc = PtFreeDocument;
-	PtFreeDocument = (*pDoc)->DocNext;
-	NbLibDocument--;
+	*pDoc = PtFree_Document;
+	PtFree_Document = (*pDoc)->DocNext;
+	NbFree_Document--;
      }
-   NbOccDocument++;
+   NbUsed_Document++;
    /* initialise le contexte de document */
    pDo1 = *pDoc;
    memset (pDo1, 0, sizeof (DocumentDescr));
@@ -1316,10 +1112,10 @@ PtrDocument         pDoc;
 
 {
 
-   pDoc->DocNext = PtFreeDocument;
-   PtFreeDocument = pDoc;
-   NbLibDocument++;
-   NbOccDocument--;
+   pDoc->DocNext = PtFree_Document;
+   PtFree_Document = pDoc;
+   NbFree_Document++;
+   NbUsed_Document--;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1338,13 +1134,13 @@ PtrPSchema         *pSP;
 {
    int                 i;
 
-   if (PtFreeSPres == NULL)
+   if (PtFree_SPres == NULL)
       *pSP = (PtrPSchema) TtaGetMemory (sizeof (PresentSchema));
    else
      {
-	*pSP = PtFreeSPres;
-	PtFreeSPres = (*pSP)->PsNext;
-	NbLibSchPres--;
+	*pSP = PtFree_SPres;
+	PtFree_SPres = (*pSP)->PsNext;
+	NbFree_SchPres--;
      }
    memset ((*pSP), 0, sizeof (PresentSchema));
    (*pSP)->PsNext = NULL;
@@ -1397,11 +1193,11 @@ PtrPSchema         *pSP;
 
    (*pSP)->PsNTransmElems = 0;
 
-   NbOccSchPres++;
+   NbUsed_SchPres++;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeSchPres libere un schemas de presentation.                    | */
+/* |    FreeSchPres libere un schemas de presentation.                  | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1415,10 +1211,10 @@ PtrPSchema          pSP;
 
 {
 
-   pSP->PsNext = PtFreeSPres;
-   PtFreeSPres = pSP;
-   NbLibSchPres++;
-   NbOccSchPres--;
+   pSP->PsNext = PtFree_SPres;
+   PtFree_SPres = pSP;
+   NbFree_SchPres++;
+   NbUsed_SchPres--;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1436,19 +1232,19 @@ PtrHandlePSchema   *pHSP;
 #endif /* __STDC__ */
 
 {
-   if (PtFreeHandleSchPres == NULL)
+   if (PtFree_HandleSchPres == NULL)
       *pHSP = (PtrHandlePSchema) TtaGetMemory (sizeof (HandlePSchema));
    else
      {
-	*pHSP = PtFreeHandleSchPres;
-	PtFreeHandleSchPres = (*pHSP)->HdNextPSchema;
-	NbLibHandleSchPres--;
+	*pHSP = PtFree_HandleSchPres;
+	PtFree_HandleSchPres = (*pHSP)->HdNextPSchema;
+	NbFree_HandleSchPres--;
      }
    memset ((*pHSP), 0, sizeof (HandlePSchema));
    (*pHSP)->HdPSchema = NULL;
    (*pHSP)->HdNextPSchema = NULL;
    (*pHSP)->HdPrevPSchema = NULL;
-   NbOccHandleSchPres++;
+   NbUsed_HandleSchPres++;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1468,14 +1264,14 @@ PtrHandlePSchema    pHSP;
 {
    pHSP->HdPrevPSchema = NULL;
    pHSP->HdPSchema = NULL;
-   pHSP->HdNextPSchema = PtFreeHandleSchPres;
-   PtFreeHandleSchPres = pHSP;
-   NbLibHandleSchPres++;
-   NbOccHandleSchPres--;
+   pHSP->HdNextPSchema = PtFree_HandleSchPres;
+   PtFree_HandleSchPres = pHSP;
+   NbFree_HandleSchPres++;
+   NbUsed_HandleSchPres--;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetExternalBlock alloue un bloc d'extension pour un schema de      | */
+/* |    GetExternalBlock alloue un bloc d'extension pour un schema de   | */
 /* |    structure.                                                      | */
 /* ---------------------------------------------------------------------- */
 
@@ -1491,17 +1287,17 @@ PtrExtensBlock      *pBE;
 
 {
 
-   if (PtFreeBlocExtens == NULL)
+   if (PtFree_BlocExtens == NULL)
       *pBE = (PtrExtensBlock) TtaGetMemory (sizeof (ExtensBlock));
    else
      {
-	*pBE = PtFreeBlocExtens;
-	PtFreeBlocExtens = (*pBE)->EbNextBlock;
-	NbLibBlocExtens--;
+	*pBE = PtFree_BlocExtens;
+	PtFree_BlocExtens = (*pBE)->EbNextBlock;
+	NbFree_BlocExtens--;
      }
    memset (*pBE, 0, sizeof (ExtensBlock));
    (*pBE)->EbNextBlock = NULL;
-   NbOccBlocExtens++;
+   NbUsed_BlocExtens++;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1519,10 +1315,10 @@ PtrExtensBlock       pBE;
 #endif /* __STDC__ */
 
 {
-   pBE->EbNextBlock = PtFreeBlocExtens;
-   PtFreeBlocExtens = pBE;
-   NbLibBlocExtens++;
-   NbOccBlocExtens--;
+   pBE->EbNextBlock = PtFree_BlocExtens;
+   PtFree_BlocExtens = pBE;
+   NbFree_BlocExtens++;
+   NbUsed_BlocExtens--;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1539,15 +1335,15 @@ PtrSSchema       *pSS;
 #endif /* __STDC__ */
 
 {
-   if (PtFreeSStruct == NULL)
+   if (PtFree_SStruct == NULL)
       *pSS = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
    else
      {
-	*pSS = PtFreeSStruct;
-	PtFreeSStruct = (*pSS)->SsNextExtens;
-	NbLibSchStruct--;
+	*pSS = PtFree_SStruct;
+	PtFree_SStruct = (*pSS)->SsNextExtens;
+	NbFree_SchStruct--;
      }
-   NbOccSchStruct++;
+   NbUsed_SchStruct++;
    memset ((*pSS), 0, sizeof (StructSchema));
    (*pSS)->SsNextExtens = NULL;
    (*pSS)->SsPrevExtens = NULL;
@@ -1558,7 +1354,7 @@ PtrSSchema       *pSS;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeSchStruc libere un schema de structure.                      | */
+/* |    FreeSchStruc libere un schema de structure.                     | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1573,14 +1369,14 @@ PtrSSchema        pSS;
 {
    if (pSS->SsExtensBlock != NULL)
       FreeExternalBlock (pSS->SsExtensBlock);
-   pSS->SsNextExtens = PtFreeSStruct;
-   PtFreeSStruct = pSS;
-   NbLibSchStruct++;
-   NbOccSchStruct--;
+   pSS->SsNextExtens = PtFree_SStruct;
+   PtFree_SStruct = pSS;
+   NbFree_SchStruct++;
+   NbUsed_SchStruct--;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetPresentRule alloue une regle de presentation.                  | */
+/* |    GetPresentRule alloue une regle de presentation.                | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1594,15 +1390,15 @@ PtrPRule       *pRP;
 
 {
 
-   if (PtFreeReglePres == NULL)
+   if (PtFree_ReglePres == NULL)
       *pRP = (PtrPRule) TtaGetMemory (sizeof (PresRule));
    else
      {
-	*pRP = PtFreeReglePres;
-	PtFreeReglePres = (*pRP)->PrNextPRule;
-	NbLibReglePres--;
+	*pRP = PtFree_ReglePres;
+	PtFree_ReglePres = (*pRP)->PrNextPRule;
+	NbFree_ReglePres--;
      }
-   NbOccReglePres++;
+   NbUsed_ReglePres++;
    memset ((*pRP), 0, sizeof (PresRule));
    (*pRP)->PrNextPRule = NULL;
    (*pRP)->PrSpecifAttr = 0;
@@ -1611,7 +1407,7 @@ PtrPRule       *pRP;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreePresentRule libere une regle de presentation.                 | */
+/* |    FreePresentRule libere une regle de presentation.               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1633,14 +1429,14 @@ PtrPRule        pRP;
 	FreePresentRuleCond (pCond);
 	pCond = nextCond;
      }
-   pRP->PrNextPRule = PtFreeReglePres;
-   PtFreeReglePres = pRP;
-   NbLibReglePres++;
-   NbOccReglePres--;
+   pRP->PrNextPRule = PtFree_ReglePres;
+   PtFree_ReglePres = pRP;
+   NbFree_ReglePres++;
+   NbUsed_ReglePres--;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetPresentRuleCond alloue une condition pour une regle de         | */
+/* |    GetPresentRuleCond alloue une condition pour une regle de       | */
 /* |    presentation.                                                   | */
 /* ---------------------------------------------------------------------- */
 
@@ -1654,15 +1450,15 @@ PtrCondition       *pCond;
 #endif /* __STDC__ */
 
 {
-   if (PtFreeCondReglePres == NULL)
+   if (PtFree_CondReglePres == NULL)
       *pCond = (PtrCondition) TtaGetMemory (sizeof (Condition));
    else
      {
-	*pCond = PtFreeCondReglePres;
-	PtFreeCondReglePres = (*pCond)->CoNextCondition;
-	NbLibCondReglePres--;
+	*pCond = PtFree_CondReglePres;
+	PtFree_CondReglePres = (*pCond)->CoNextCondition;
+	NbFree_CondReglePres--;
      }
-   NbOccCondReglePres++;
+   NbUsed_CondReglePres++;
    memset ((*pCond), 0, sizeof (Condition));
    (*pCond)->CoNextCondition = NULL;
    (*pCond)->CoNotNegative = FALSE;
@@ -1670,7 +1466,7 @@ PtrCondition       *pCond;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreePresentRuleCond libere une condition sur une regle de         | */
+/* |    FreePresentRuleCond libere une condition sur une regle de       | */
 /* |    presentation.                                                   | */
 /* ---------------------------------------------------------------------- */
 
@@ -1684,14 +1480,14 @@ PtrCondition        pCond;
 #endif /* __STDC__ */
 
 {
-   pCond->CoNextCondition = PtFreeCondReglePres;
-   PtFreeCondReglePres = pCond;
-   NbLibCondReglePres++;
-   NbOccCondReglePres--;
+   pCond->CoNextCondition = PtFree_CondReglePres;
+   PtFree_CondReglePres = pCond;
+   NbFree_CondReglePres++;
+   NbUsed_CondReglePres--;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetDifferedRule alloue une regle retardee.                           | */
+/* |    GetDifferedRule alloue une regle retardee.                      | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1704,15 +1500,15 @@ PtrDelayedPRule    *pRR;
 #endif /* __STDC__ */
 
 {
-   if (PtFreeRRetard == NULL)
+   if (PtFree_RRetard == NULL)
       *pRR = (PtrDelayedPRule) TtaGetMemory (sizeof (DelayedPRule));
    else
      {
-	*pRR = PtFreeRRetard;
-	PtFreeRRetard = (*pRR)->DpNext;
-	NbLibRRetard--;
+	*pRR = PtFree_RRetard;
+	PtFree_RRetard = (*pRR)->DpNext;
+	NbFree_RRetard--;
      }
-   NbOccRRetard++;
+   NbUsed_RRetard++;
    memset (*pRR, 0, sizeof (DelayedPRule));
    (*pRR)->DpPRule = NULL;
    (*pRR)->DpPSchema = NULL;
@@ -1721,7 +1517,7 @@ PtrDelayedPRule    *pRR;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeDifferedRule libere une regle retardee.                          | */
+/* |    FreeDifferedRule libere une regle retardee.                     | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1735,23 +1531,20 @@ PtrDelayedPRule     pRR;
 
 {
 
-   pRR->DpNext = PtFreeRRetard;
-   PtFreeRRetard = pRR;
-   NbLibRRetard++;
-   NbOccRRetard--;
+   pRR->DpNext = PtFree_RRetard;
+   PtFree_RRetard = pRR;
+   NbFree_RRetard++;
+   NbUsed_RRetard--;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    InitKernelMemory initialise l'allocation memoire pour le mediateur.      | */
+/* |  InitKernelMemory initialise l'allocation memoire pour le kernel   | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                InitKernelMemory ()
-
 #else  /* __STDC__ */
 void                InitKernelMemory ()
 #endif				/* __STDC__ */
-
 {
    int                 i;
    ViewFrame            *pFrame;
@@ -1770,25 +1563,25 @@ void                InitKernelMemory ()
      }
    /* Aucune boite allouee et liberee */
    PtFreBox = NULL;
-   NbLibBox = 0;
-   NbOccBox = 0;
+   NbFree_Box = 0;
+   NbUsed_Box = 0;
    PtFreBPos = NULL;
-   NbLibBPos = 0;
-   NbOccBPos = 0;
+   NbFree_BPos = 0;
+   NbUsed_BPos = 0;
    PtFreBDim = NULL;
-   NbLibBDim = 0;
-   NbOccBDim = 0;
+   NbFree_BDim = 0;
+   NbUsed_BDim = 0;
    /* Aucune ligne allouee et liberee */
-   PtFreeLine = NULL;
-   NbLibLine = 0;
-   NbOccLine = 0;
+   PtFree_Line = NULL;
+   NbFree_Line = 0;
+   NbUsed_Line = 0;
    FrameUpdating = FALSE;
    TextInserting = FALSE;
 
 }
 
 /* ---------------------------------------------------------------------- */
-/* |     GetPosBlock alloue un bloc de relations de position.               | */
+/* |     GetPosBlock alloue un bloc de relations de position.           | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1813,9 +1606,9 @@ PtrPosRelations     *adbloc;
      {
 	*adbloc = PtFreBPos;
 	PtFreBPos = (*adbloc)->PosRNext;
-	NbLibBPos--;
+	NbFree_BPos--;
      }
-   NbOccBPos++;
+   NbUsed_BPos++;
    /* Initialisation du bloc */
    pTa1 = *adbloc;
    memset (pTa1, 0, sizeof (PosRelations));
@@ -1826,7 +1619,7 @@ PtrPosRelations     *adbloc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    FreePosBlock libere le bloc de relations.                           | */
+/* |    FreePosBlock libere le bloc de relations.                       | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1843,12 +1636,12 @@ PtrPosRelations     *adbloc;
    /* Insere le bloc en tete de la chaine des libres */
    (*adbloc)->PosRNext = PtFreBPos;
    PtFreBPos = *adbloc;
-   NbLibBPos++;
-   NbOccBPos--;
+   NbFree_BPos++;
+   NbUsed_BPos--;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetDimBlock alloue un bloc de relations de dimension.               | */
+/* |    GetDimBlock alloue un bloc de relations de dimension.            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1873,9 +1666,9 @@ PtrDimRelations     *adbloc;
      {
 	*adbloc = PtFreBDim;
 	PtFreBDim = (*adbloc)->DimRNext;
-	NbLibBDim--;
+	NbFree_BDim--;
      }
-   NbOccBDim++;
+   NbUsed_BDim++;
    /* Initialisation du bloc */
    pTa1 = *adbloc;
    memset (pTa1, 0, sizeof (DimRelations));
@@ -1906,12 +1699,12 @@ PtrDimRelations     *adbloc;
    /* Insere le bloc en tete de la chaine des libres */
    (*adbloc)->DimRNext = PtFreBDim;
    PtFreBDim = *adbloc;
-   NbLibBDim++;
-   NbOccBDim--;
+   NbFree_BDim++;
+   NbUsed_BDim--;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetBox Alloue un nouveau contexte de boite pour le pave pAb. | */
+/* |    GetBox Alloue un nouveau contexte de boite pour le pave pAb.    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1934,9 +1727,9 @@ PtrAbstractBox             pAb;
      {
 	adboite = PtFreBox;
 	PtFreBox = adboite->BxNexChild;
-	NbLibBox--;
+	NbFree_Box--;
      }
-   NbOccBox++;
+   NbUsed_Box++;
 
    /* Initialisation de la boite */
    if (adboite != NULL)
@@ -2027,8 +1820,8 @@ PtrBox            adboite;
    NextBox = pBo1->BxNexChild;
    pBo1->BxNexChild = PtFreBox;
    PtFreBox = adboite;
-   NbLibBox++;
-   NbOccBox--;
+   NbFree_Box++;
+   NbUsed_Box--;
    /* On libere les differents blocs attaches a la boite */
    pPosRel = pBo1->BxPosRelations;
    while (pPosRel != NULL)
@@ -2073,16 +1866,16 @@ PtrLine           *adligne;
    PtrLine            pLi1;
 
    /* Si pas de contexte dans la liste des libres -> acquiert un nouveau */
-   if (PtFreeLine == NULL)
+   if (PtFree_Line == NULL)
       *adligne = (PtrLine) malloc (sizeof (Line));
    /* Sinon recupere le contexte en tete de la chaine des libres */
    else
      {
-	*adligne = PtFreeLine;
-	PtFreeLine = (*adligne)->LiNext;
-	NbLibLine--;
+	*adligne = PtFree_Line;
+	PtFree_Line = (*adligne)->LiNext;
+	NbFree_Line--;
      }
-   NbOccLine++;
+   NbUsed_Line++;
    /* Initialisation de la ligne */
    if (*adligne != NULL)
      {
@@ -2123,11 +1916,11 @@ PtrLine            adligne;
 {
 
    /* Insere le contexte de ligne en tete de la chaine des libres */
-   adligne->LiNext = PtFreeLine;
-   PtFreeLine = adligne;
-   PtFreeLine->LiPrevious = NULL;
-   NbLibLine++;
-   NbOccLine--;
+   adligne->LiNext = PtFree_Line;
+   PtFree_Line = adligne;
+   PtFree_Line->LiPrevious = NULL;
+   NbFree_Line++;
+   NbUsed_Line--;
 }
 
 
@@ -2162,7 +1955,7 @@ PtrSearchContext          *pSearch;
 	s->SStartToEnd = TRUE;
 	s->SWholeDocument = FALSE;
      }
-}				/*GetSearchContext */
+}
 
 /* ---------------------------------------------------------------------- */
 /* | FreeSearchContext libe`re un contexte de recherche.                | */
@@ -2184,11 +1977,11 @@ PtrSearchContext          *pSearch;
 	   free (*pSearch);
 	   *pSearch = NULL;
 	}
-}				/*FreeSearchContext */
+}
 
 
 /* ---------------------------------------------------------------------- */
-/* | FreeStringInDict libere les entre'es d'un dictionnaire.                  | */
+/* | FreeStringInDict libere les entre'es d'un dictionnaire.             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                FreeStringInDict (PtrDico pDict)
@@ -2242,7 +2035,7 @@ unsigned int        n;
 
 
 /* ---------------------------------------------------------------------- */
-/* | GetStringInDict retourne -1 en cas de manque de memoire                  | */
+/* | GetStringInDict retourne -1 en cas de manque de memoire            | */
 /* |            retourne  0 si OK.                                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
@@ -2297,8 +2090,8 @@ boolean             readonly;
 
 
 /* ---------------------------------------------------------------------- */
-/* | GetDictionary retourne dans pDico un pointeur vers le dictionaire alloue | */
-/* | ou NULL si manque de memoire                                       | */
+/* | GetDictionary retourne dans pDico un pointeur vers le dictionaire  | */
+/* | alloue ou NULL si manque de memoire                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                GetDictionary (PtrDico * pDico)
@@ -2310,21 +2103,21 @@ PtrDico            *pDico;
  int       i;
  PtrDico   pdict;
 
- if (PtFreeDico == NULL)
+ if (PtFree_Dico == NULL)
  *pDico = (PtrDico) GetDictContext (sizeof (Dictionnaire));
  
    else
  
      {
- *pDico = PtFreeDico;
- PtFreeDico = (*pDico)->DicoSuivant;
- NbLibDico--;
+ *pDico = PtFree_Dico;
+ PtFree_Dico = (*pDico)->DicoSuivant;
+ NbFree_Dico--;
  
      }
  if (*pDico != NULL)
  
      {
- NbOccDico++;
+ NbUsed_Dico++;
 
 	/* initialise le contexte de dictionnaire */
  pdict = *pDico;
@@ -2354,7 +2147,7 @@ PtrDico            *pDico;
 
 
 /* ---------------------------------------------------------------------- */
-/* | FreeDictionary libere le dictionnaire.                                   | */
+/* | FreeDictionary libere le dictionnaire.                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                FreeDictionary (PtrDico pDico)
@@ -2363,9 +2156,9 @@ void                FreeDictionary (pDico)
 PtrDico             pDico;
 #endif /* __STDC__ */
 {
- pDico->DicoSuivant = PtFreeDico;
- PtFreeDico = pDico;
- NbLibDico++;
- NbOccDico--;
+ pDico->DicoSuivant = PtFree_Dico;
+ PtFree_Dico = pDico;
+ NbFree_Dico++;
+ NbUsed_Dico--;
  
 }

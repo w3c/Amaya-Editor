@@ -546,7 +546,7 @@ int *bg;
 
 
 /* ---------------------------------------------------------------------- */
-/* |	ReadPngToData                    | */
+/* |	ReadPngToData decompresses and return the main picture info     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 unsigned char *ReadPngToData(char *datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256], int *bg)

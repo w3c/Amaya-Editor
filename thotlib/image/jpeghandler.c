@@ -158,7 +158,7 @@ unsigned char      *ReadJPEG (FILE * infile, int *width, int *height, ThotColorS
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ReadJpegToData  Just open the file and pass it to the   ReadJpeg Main Routine          | */
+/* | ReadJpegToData  Just open the file and pass it to the ReadJpeg     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 unsigned char      *ReadJpegToData (char *datafile, int *w, int *h, ThotColorStruct colrs[256])
@@ -254,7 +254,7 @@ ThotBitmap         *mask1;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    JpegPrint              | */
+/* |    JpegPrint produces postscript from a jpeg picture file          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
@@ -386,7 +386,7 @@ unsigned long       BackGroundPixel;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    IsJpegFormat     | */
+/* |    IsJpegFormat checks if the file header conforms the jpeg one    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             IsJpegFormat (char *fn)

@@ -13,8 +13,8 @@
 #include "font_f.h"
 
 /* ---------------------------------------------------------------------- */
-/* |    XbmCreate reads and produces the bitmap read from the file          | */
-/* |            fn. updates the wif, hif, xif , yif                    | */
+/* |    XbmCreate reads and produces the bitmap read from the file      | */
+/* |            fn. updates the wif, hif, xif , yif                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 Drawable            XbmCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
@@ -62,7 +62,7 @@ Drawable           *mask1;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    XbmPrint convertit un bitmap en PostScript.                     | */
+/* |    XbmPrint produces postscript frome an xbm file                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned int BackGroundPixel)
@@ -88,7 +88,7 @@ unsigned int        BackGroundPixel;
    int                 delta;
    int                 xtmp, ytmp;
    float               Scx, Scy;
-   XImage             *Im;
+   XImage             *pict;
    register int        i, j, nbb;
    register char      *pt, *pt1;
    int                 wim, him;
@@ -148,33 +148,35 @@ unsigned int        BackGroundPixel;
 
    if (pix != None)
      {
-	Im = XGetImage (TtDisplay, pix, xtmp, ytmp,
+	pict = XGetImage (TtDisplay, pix, xtmp, ytmp,
 			(unsigned int) PicWArea, (unsigned int) PicHArea,
 			AllPlanes, XYPixmap);
 
-	wim = Im->width;
-	him = Im->height;
+	wim = pict->width;
+	him = pict->height;
 	fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
-	fprintf ((FILE *) fd, "%d %d %d %d DumpImage\n", Im->width, Im->height, PixelToPoint (wif), PixelToPoint (hif));
+	fprintf ((FILE *) fd, "%d %d %d %d DumpImage\n", pict->width, pict->height, PixelToPoint (wif), PixelToPoint (hif));
 
 	nbb = (wim + 7) / 8;
 	if (ImageByteOrder (TtDisplay) == LSBFirst)
-	   LittleXBigEndian((unsigned char *) Im->data, (long) (Im->bytes_per_line * him));
-	for (j = 0, pt1 = Im->data; j < him; j++, pt1 += Im->bytes_per_line)
+	   LittleXBigEndian((unsigned char *) pict->data, (long) (pict->bytes_per_line * him));
+	for (j = 0, pt1 = pict->data; j < him; j++, pt1 += pict->bytes_per_line)
 	  {
 	     for (i = 0, pt = pt1; i < nbb; i++)
 		fprintf ((FILE *) fd, "%02x", ((*pt++) & 0xff) ^ 0xff);
 	     fprintf ((FILE *) fd, "\n");
 	  }
 	fprintf ((FILE *) fd, "grestore\n");
-	XDestroyImage (Im);
+
+        /* frees the allocated space for the bitmap in memory */ 
+	XDestroyImage (pict);
 	XFreePixmap (TtDisplay, pix);
      }
 #endif /* !NEW_WILLOWS */
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    IsXbmFormat check if the file header is of an xbm format  by reading it !        | */
+/* |    IsXbmFormat check if the file header is of an xbm format        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             IsXbmFormat (char *fn)
