@@ -5,7 +5,11 @@
 PRESENTATION HTML;
 
 VIEWS
-   Formatted_view, Structure_view, Links_view, Alternate_view, Table_of_contents;
+   Formatted_view,
+   Structure_view merge with Structure_view,
+   Links_view merge with Links_view,
+   Alternate_view merge with Alternate_view,
+   Table_of_contents;
 
 #ifdef US_PAPER
 #define PAGE

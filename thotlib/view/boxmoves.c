@@ -1198,11 +1198,12 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 			toVertPack = TRUE;
 		      else
 			{
+			  /*****
 			  if (pBox->BxYToCompute &&
 			      Propagate == ToSiblings &&
 			      !pChildAb->AbBox->BxVertFlex)
-			    /* Adding the current position */
-			    /*pChildAb->AbBox->BxYToCompute = TRUE*/;
+			    ** Adding the current position **
+			    pChildAb->AbBox->BxYToCompute = TRUE; *****/
 			  YMoveAllEnclosed (pChildAb->AbBox, delta, frame);
 			}
 		    }
