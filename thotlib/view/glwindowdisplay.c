@@ -1993,7 +1993,9 @@ ThotBool GL_NotInFeedbackMode ()
   Modify Bounding Box according to opengl feedback mechanism
   (after transformation, coordinates may have changed)			    
   ----------------------------------------------------*/
-void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
+void ComputeBoundingBox (PtrBox box, int frame, 
+			 int xmin, int xmax, 
+			 int ymin, int ymax)
 {
   GLfloat feedBuffer[FEEDBUFFERSIZE];
   GLint   size;
@@ -2343,17 +2345,13 @@ static AnimTime ComputeAmayaCurrentTime (int frame)
   ----------------------------------------------------------------------*/
 ThotBool GL_DrawAll ()
 {  
-  int             frame;
-  AnimTime        current_time; 
-  static ThotBool frame_animating = FALSE;  
-  ThotBool was_animation = FALSE; 
-
-#ifdef _FPS_DEBUG
-  static double   lastime;
-  char    out[2048];
-  CHAR_T  outw[2048];
+  int              frame;
+  AnimTime         current_time; 
+  ThotBool         was_animation = FALSE; 
+  char             out[128];
   unsigned int     i;
-#endif /* _FPS_DEBUG */
+  static ThotBool  frame_animating = FALSE;  
+  static double    lastime;
 
   if (!FrameUpdating)
     {
@@ -2365,7 +2363,6 @@ ThotBool GL_DrawAll ()
 	    {
 	      if (FrRef[frame] != 0)
 		{
-#ifdef _GL
 		  if (FrameTable[frame].Animated_Boxes &&
 		      FrameTable[frame].Anim_play)
 		    {
@@ -2384,48 +2381,33 @@ ThotBool GL_DrawAll ()
 			{
 			  current_time = FrameTable[frame].LastTime;
 			}
-		    }
-#endif /* _GL */		    
+		    }	    
 		  if (FrameTable[frame].DblBuffNeedSwap)
 		    {
 		      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] 
 			  != NoComputedDisplay)
 			{
 			  if (GL_prepare (frame))
-			    {	
-#ifdef _FPS_DEBUG
-			      lastime = current_time - lastime;
-			      if (lastime != 0)
-				{
-				  sprintf (out, " t: %2.3f <=> %2.0f fps", 
-					   current_time, 
-					   (double) 1 / lastime);
+			    {
+			      RedrawFrameBottom (frame, 0, NULL); 
 
-				  i = 0;
-				  while (i < strlen (out))
+			      if (was_animation)
+				{
+				  lastime = current_time - lastime;
+				  if (lastime != 0)
 				    {
-				      outw[i] = TtaGetWCFromChar (out[i], 
-								  ISO_8859_1);
-				      i++;
+				      sprintf (out, "t: %2.3f s - %2.0f fps", 
+					       current_time, 
+					       (double) 1 / lastime);
+
+				      i = 0;
+				      TtaSetStatus (FrameTable[frame].FrDoc, 
+						    FrameTable[frame].FrView, 
+						    out, 
+						    NULL);
+				      lastime = current_time;
 				    }
 				}
-			      DefRegion (frame, 0, 0, 10, 10);		      			      			      
-#endif /* _FPS_DEBUG */
-			      RedrawFrameBottom (frame, 0, NULL); 
-#ifdef _FPS_DEBUG
-			      if (lastime != 0 && GetFirstFont (12))
-				{
-				  GL_SetFillOpacity (500);
-				  GL_SetPicForeground ();
-				  UnicodeFontRender (GetFirstFont (12), 
-						     outw, 
-						     10.0f, 10.0f,
-						     strlen (out));
-				  GL_SetFillOpacity (1000);
-				  lastime = current_time;
-				}
-#endif /* _FPS_DEBUG */
-
 			      GL_Swap (frame);  
 			    }
 			  GL_Err ();

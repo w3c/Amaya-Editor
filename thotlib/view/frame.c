@@ -468,7 +468,16 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
   if (FrameTable[frame].FrView == 1)
     FormattedFrame = TRUE;
   else
+    {
     FormattedFrame = FALSE;
+
+      *lowerx += pFrame->FrXOrg;
+      *higherx += pFrame->FrXOrg;
+      *y += pFrame->FrYOrg;
+
+      return;
+
+    }
   OldXOrg = 0;
   OldYOrg = 0;
   ClipXOfFirstCoordSys = ClipYOfFirstCoordSys = 0;

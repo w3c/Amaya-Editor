@@ -3954,6 +3954,14 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  ComputeAxisRelation (pAb->AbVertRef, pBox, frame, TRUE);
 	  result = TRUE;
 	}
+#ifdef _GL  
+      ComputeABoundingBox (pAb, 
+			   frame);
+      DefRegion (frame, pAb->AbBox->BxClipX,
+		 pAb->AbBox->BxClipY,
+		 pAb->AbBox->BxClipX + pAb->AbBox->BxClipW,
+		 pAb->AbBox->BxClipY + pAb->AbBox->BxClipH);
+#endif /* _GL */
     }
 #ifdef _GL  
   FrameUpdating = FrameUpdatingStatus;  

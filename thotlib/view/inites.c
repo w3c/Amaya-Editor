@@ -737,7 +737,6 @@ int PatternNumber (char *name)
   ----------------------------------------------------------------------*/
 Pixmap CreatePattern (int disp, int fg, int bg, int motif)
 {
-#ifndef _GL
    unsigned long       FgPixel;
    unsigned long       BgPixel;
    Pixmap              pixmap;
@@ -1318,9 +1317,4 @@ Pixmap CreatePattern (int disp, int fg, int bg, int motif)
 #endif /* _GTK */
 #endif /* _WINDOWS */
    return (pixmap);
-#else /*_GL*/
-   if (motif == 2)
-	return 1;
-   return 0;
-#endif /*_GL*/
 }

@@ -923,6 +923,7 @@ void RedisplayLeaf (PtrElement element, Document document, int delta)
 	     }
 	}
 
+
    RedisplayCommand (document);
    /* si l'element modifie' appartient soit a un element copie' */
    /* dans des paves par une regle Copy, soit a un element inclus */

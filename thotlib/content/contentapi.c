@@ -2317,7 +2317,7 @@ void *TtaCopyPath (void *void_src)
   memcpy (new_path->Tangent_angle, pop_path->Tangent_angle, npoints * sizeof(float));
 
   return new_path;
-#endif _GL
+#endif /* _GL */
   return NULL;
 }
 /*----------------------------------------------------------------------

@@ -33,7 +33,7 @@ default : tools thotlib tablelib batch amaya_prog @PRINTIFNOTGL@
 
 amaya : amaya_prog tools thotlib tablelib @PRINTIFNOTGL@
 
-print : tools thotlib tablelib print_prog
+@NOPRINT@print : tools thotlib tablelib print_prog
 
 Options:
 	@CP@ Options.orig Options
@@ -56,9 +56,9 @@ amaya_prog: rebuild force bin/str
 	@(if test -d amaya ; then cd amaya ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" amaya ; fi)
 
-print_prog: rebuild force bin/str
-	@(if test -d thotlib ; then cd thotlib ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" print ; fi)
+@NOPRINT@print_prog: rebuild force bin/str
+@NOPRINT@	@(if test -d thotlib ; then cd thotlib ; \
+@NOPRINT@	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" print ; fi)
 
 misc: rebuild force
 	@(if test -d misc ; then cd misc ; \

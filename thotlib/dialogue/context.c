@@ -263,7 +263,6 @@ static void InitColors (char* name)
  ----------------------------------------------------------------------*/
 static void InitGraphicContexts (void)
 {
-#ifndef _GL
 #ifndef _GTK
   unsigned long       valuemask;
   XGCValues           GCmodel;
@@ -385,8 +384,6 @@ static void InitGraphicContexts (void)
    XSetFillStyle (TtDisplay, TtGreyGC, FillTiled);
    XFreePixmap (TtDisplay, pix);
 #endif /* _GTK */
-#endif /* _GL */
-
 }
 #endif /* _WINDOWS */
 

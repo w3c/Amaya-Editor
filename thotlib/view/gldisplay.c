@@ -504,7 +504,6 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
    float               x, y, xb, yb, dx, dy, l, sina, cosa;
    int                 xc, yc, xd, yd;
    float               width, height;
-   Pixmap              pattern;
    ThotPoint           point[3];
 
    width = (float) (5 + thick);
@@ -534,11 +533,8 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
    point[2].x = xd;
    point[2].y = yd;
 
-   pattern = (Pixmap) CreatePattern (0, fg, fg, 1);
-   if (pattern != 0)
-     {
-      GL_DrawPolygon (point, 3);
-     }
+   GL_DrawPolygon (point, 3);
+    
 }
 
 /*----------------------------------------------------------------------
@@ -991,7 +987,6 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
     0x88, 0x88, 0x88, 0x88, 0x22, 0x22, 0x22, 0x22,
     0x88, 0x88, 0x88, 0x88, 0x22, 0x22, 0x22, 0x22,
     0x88, 0x88, 0x88, 0x88, 0x22, 0x22, 0x22, 0x22 };
-  Pixmap              pat;
 
   if (width <= 0 || height <= 0)
     return;
@@ -999,16 +994,14 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
     return;
 
   y += FrameTable[frame].FrTopMargin;
-  pat = (Pixmap) CreatePattern (0, fg, bg, pattern); 
   /* pattern = 4 => we're drawing a math empty place*/
   if (pattern == 4)
     {
       glEnable (GL_POLYGON_STIPPLE);   
       glPolygonStipple (gPat1);
       GL_DrawRectangle (fg, x, y, width, height);
-      pat = 0;      
     }
-  else if (pat != 0) 
+  else if (pattern == 2) 
     GL_DrawRectangle (bg, x, y, width, height);
 
   /* Draw the border */
@@ -1030,24 +1023,21 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
 
 /*----------------------------------------------------------------------
   FDrawRectangle draw a rectangle located at (x, y) (as float number)
-in frame,
+  in frame,
   of geometry width x height.
   thick indicates the thickness of the lines.
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
 void FDrawRectangle (int frame, int thick, int style, float x, float y, float width,
-		    float height, int fg, int bg, int pattern)
+		     float height, int fg, int bg, int pattern)
 {
-  Pixmap              pat;
-
   if (width <= 0 || height <= 0)
     return;
   if (thick == 0 && pattern == 0)
     return;
   y += FrameTable[frame].FrTopMargin;
-  pat = (Pixmap) CreatePattern (0, fg, bg, pattern); 
-  if (pat != 0) 
+  if (pattern == 2) 
     {
       GL_DrawRectanglef (bg, x, y, width, height);
     }
@@ -1073,7 +1063,6 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
 		  int height, int fg, int bg, int pattern)
 {
    ThotPoint           point[5];
-   Pixmap              pat;
 
    if (width > thick + 1)
      width = width - thick - 1;
@@ -1094,11 +1083,10 @@ void DrawDiamond (int frame, int thick, int style, int x, int y, int width,
    point[3].y = point[1].y;
 
    /* Fill in the diamond */
-   pat = CreatePattern (0, fg, bg, pattern);
-   if (pat != 0)
+   if (pattern == 2)
      {
-       LoadColor(bg);
-      GL_DrawPolygon (point, 5);
+       LoadColor (bg);
+       GL_DrawPolygon (point, 5);
      }
 
    /* Draw the border */
@@ -1192,11 +1180,9 @@ static void DoDrawLines (int frame, int thick, int style,
 			   ThotPoint *points, int npoints, int fg, int bg,
 			   int pattern)
 {
-   Pixmap              pat;
 
    /* Fill in the polygon */
-   pat = CreatePattern (0, fg, bg, pattern);
-   if (pat != 0) 
+   if (pattern == 2) 
      {
       /*  InitDrawing (style, thick, bg); */
        GL_SetForeground (bg);
@@ -1390,7 +1376,6 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   int                 i, j;
   float               x1, y1, x2, y2;
   float               cx1, cy1, cx2, cy2;
-  Pixmap              pat;
 
   /* allocate the list of points */
   npoints = 0;
@@ -1465,8 +1450,7 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
 
   /* Fill in the polygone */
-  pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
-  if (pat != 0)
+  if (pattern == 2)
     {
       GL_SetForeground (bg);
       GL_DrawPolygon (points, npoints);
@@ -1507,11 +1491,8 @@ static void DoDrawMesh (int frame, int thick, int style,
 			void *mesh, int fg, int bg,
 			int pattern)
 {
-  Pixmap              pat;
-
   /* Fill in the polygon */
-  pat = CreatePattern (0, fg, bg, pattern);
-  if (pat != 0) 
+  if (pattern == 2) 
     {
       /*  InitDrawing (style, thick, bg); */
       GL_SetForeground (bg); 
@@ -1628,7 +1609,6 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 	       int height, int rx, int ry, int fg, int bg, int pattern)
 {
    int                 i;
-   Pixmap              pat;
    int                 arc, dx, dy;
    int                 xf, yf;
    XArc                xarc[4];
@@ -1707,8 +1687,7 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
    seg[3].y2 = seg[1].y2;
 
    /* Fill in the figure */
-   pat = CreatePattern (0, fg, bg, pattern);
-   if (pat != 0)
+   if (pattern == 2)
      {
 	/* Polygone inscrit: (seg0)       */
 	/*                   0--1         */
@@ -1781,7 +1760,6 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 void DrawEllips (int frame, int thick, int style, int x, int y, int width,
 		 int height, int fg, int bg, int pattern)
 {
-   Pixmap              pat;
    
    width -= thick + 1;
    height -= thick + 1;
@@ -1789,13 +1767,12 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
    y = y + thick / 2 + FrameTable[frame].FrTopMargin;
    
    /* Fill in the rectangle */
-   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
-   if (pat == 0 && thick <= 0)
+   if (pattern != 2 && thick <= 0)
      return;
    if (pattern == fg)
      bg = fg;
    
-   if (pat != 0)
+   if (pattern == 2)
      {
        /* InitDrawing (style, thick, bg); */
        GL_SetForeground (bg);
@@ -2021,7 +1998,6 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
    int                 arc, arc2, xf, yf;
    XArc                xarc[4];
    XSegment            seg[5];
-   Pixmap              pat;
    ThotPoint           point[13];
 
    width -= thick;
@@ -2094,9 +2070,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
      }
 
    /* Fill in the figure */
-   pat = CreatePattern (0, fg, bg, pattern);
-
-   if (pat != 0)
+   if (pattern == 2)
      {
 	/* Polygone:         (seg0)       */
 	/*                   0--1         */
@@ -2183,7 +2157,6 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 {
    int                 px7mm, shiftX;
    double              A;
-   Pixmap              pat;
 
    width -= thick + 1;
    height -= thick + 1;
@@ -2191,8 +2164,7 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
    y = y + FrameTable[frame].FrTopMargin + thick / 2;
 
    /* Fill in the rectangle */
-   pat = CreatePattern (0, fg, bg, pattern);
-   if (pat != 0)
+   if (pattern == 2)
      {
 	GL_SetForeground (bg);
 	GL_DrawArc (x, y, width, height, 0, 360, TRUE);
@@ -2262,11 +2234,9 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 void PaintWithPattern (int frame, int x, int y, int width, int height,
 		       ThotWindow w, int fg, int bg, int pattern)
 {
-   Pixmap              pat;
 
    /* Fill the rectangle associated to the given frame */
-   pat = (Pixmap) CreatePattern (0, fg, 0, pattern);
-   if (pat != 0)
+   if (pattern == 2)
      {
 	if (w != 0) 
 	{
