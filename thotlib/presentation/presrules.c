@@ -2391,147 +2391,146 @@ static void ApplyDim (AbDimension *pdimAb, PtrAbstractBox pAb,
 static void ApplyPage (PtrDocument pDoc, PtrAbstractBox pAb, int viewSch,
 		       PtrPRule pPRule, FunctionType pageType)
 {
-   PtrElement          pElPage, pEl, pElChild, pPrec;
-   PtrAbstractBox      pP;
-   ThotBool            exitingPage, stop;
-   int                 counter;
-   PtrPSchema          pSchP;
-   PtrElement          pEl1;
-   ThotBool            complete;
-   ThotBool            cree;
+  PtrElement          pElPage, pEl, pElChild, pPrec;
+  PtrAbstractBox      pP;
+  PtrPSchema          pSchP;
+  PtrElement          pEl1;
+  int                 counter;
+  ThotBool            exitingPage, stop;
+  ThotBool            complete;
+  ThotBool            create;
 
-   if (pPRule->PrViewNum == viewSch)
-      /* la regle Page concerne la vue du pave traite' */
-     {
-	pElPage = NULL;
-	exitingPage = FALSE;
-	pEl = pAb->AbElement;
-	/* l'element contient-il deja une marque de page de debut */
-	/* d'element pour cette vue ? */
-	if (!pEl->ElTerminal)
-	  {
-	     pElChild = pEl->ElFirstChild;
-	     stop = FALSE;
-	     do
-		if (pElChild == NULL)
-		   stop = TRUE;
-		else
+  if (pPRule->PrViewNum == viewSch)
+    /* la regle Page concerne la vue du pave traite' */
+    {
+      pElPage = NULL;
+      exitingPage = FALSE;
+      pEl = pAb->AbElement;
+      /* l'element contient-il deja une marque de page de debut */
+      /* d'element pour cette vue ? */
+      if (!pEl->ElTerminal)
+	{
+	  pElChild = pEl->ElFirstChild;
+	  stop = FALSE;
+	  do
+	    if (pElChild == NULL)
+	      stop = TRUE;
+	    else
+	      {
+		pEl1 = pElChild;
+		if (pEl1->ElTypeNumber != PageBreak + 1)
+		  stop = TRUE;
+		else if (pEl1->ElViewPSchema == viewSch && pEl1->ElPageType == PgBegin)
 		  {
-		     pEl1 = pElChild;
-		     if (pEl1->ElTypeNumber != PageBreak + 1)
-			stop = TRUE;
-		     else if (pEl1->ElViewPSchema == viewSch && pEl1->ElPageType == PgBegin)
-		       {
-			  pElPage = pEl1;
-			  exitingPage = TRUE;
-			  stop = TRUE;
-		       }
-		     else
-			/* on saute les eventuelles marque page d'autres vues ? */
-			pElChild = pEl1->ElNext;
-		  }
-	     while (!stop);
-	  }
-	if (!exitingPage)
-	   /* l'element ne contient pas de marque de page en tete */
-	   /* l'element est-il precede' par un saut de page identique a */
-	   /* celui qu'on veut creer ? */
-	  {
-	     pPrec = pEl;
-	     while (pPrec->ElPrevious == NULL && pPrec->ElParent != NULL)
-		pPrec = pPrec->ElParent;
-	     pPrec = pPrec->ElPrevious;
-	     stop = pPrec == NULL;
-	     while (!stop)
-		if (pPrec->ElTerminal)
-		  {
-		     stop = TRUE;
-		     /* ignore les saut de pages pour les autres vues */
-		     if (pPrec->ElTypeNumber == PageBreak + 1)
-			if (pPrec->ElViewPSchema != viewSch)
-			  {
-			     pPrec = pPrec->ElPrevious;
-			     stop = pPrec == NULL;
-			  }
+		    pElPage = pEl1;
+		    exitingPage = TRUE;
+		    stop = TRUE;
 		  }
 		else
-		  {
-		     pPrec = pPrec->ElFirstChild;
-		     if (pPrec == NULL)
-			stop = TRUE;
-		     else
-			while (pPrec->ElNext != NULL)
-			   pPrec = pPrec->ElNext;
-		  }
-	     if (pPrec != NULL)
-	       {
-		  pEl1 = pPrec;
-		  if (pEl1->ElTerminal)
-		     if (pEl1->ElTypeNumber == PageBreak + 1)
-			if (pEl1->ElViewPSchema == viewSch && pEl1->ElPageType == PgBegin)
-			  {
-			     exitingPage = TRUE;
-			     pElPage = pEl1;
-			  }
-	       }
-	  }
-
-	if (!exitingPage &&
-	    pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct != CsChoice)
-	  {
-	     /* on cree une marque de page */
-	     pElPage = NewSubtree (PageBreak + 1, pEl->ElStructSchema, pDoc,
-				   TRUE, TRUE, TRUE, TRUE);
-	     if (pElPage != NULL)
-		/* on a cree une marque de page */
-
-		/* le reste de la procedure est different entre les deux versions */
-		/* on la chaine comme premier fils de l'element */
-	       {
-		  InsertFirstChild (pEl, pElPage);
-		  /* on l'initialise */
-		  pEl1 = pElPage;
-		  pEl1->ElPageType = PgBegin;
-		  pEl1->ElViewPSchema = viewSch;
-		  /* cherche le compteur de pages a appliquer */
-		  counter = GetPageCounter (pElPage, pDoc, pEl1->ElViewPSchema,
-					    &pSchP);
-		  if (counter > 0)
-		     /* calcule la valeur du compteur de pages */
-		     pEl1->ElPageNumber = CounterVal (counter,
-						      pElPage->ElStructSchema,
-						      pSchP, pElPage,
-						      pEl1->ElViewPSchema);
-		  else
-		     /* page non numerotee */
-		     pEl1->ElPageNumber = 1;
-		  /* faut-il creer les paves de la marque de page ? */
-		  cree = TRUE;	/* a priori, on les cree */
-		  if (pElPage->ElNext != NULL)
-		     /* la marque de page a un element suivant */
+		  /* on saute les eventuelles marque page d'autres vues ? */
+		  pElChild = pEl1->ElNext;
+	      }
+	  while (!stop);
+	}
+      if (!exitingPage)
+	/* l'element ne contient pas de marque de page en tete */
+	/* l'element est-il precede' par un saut de page identique a */
+	/* celui qu'on veut creer ? */
+	{
+	  pPrec = pEl;
+	  while (pPrec->ElPrevious == NULL && pPrec->ElParent != NULL)
+	    pPrec = pPrec->ElParent;
+	  pPrec = pPrec->ElPrevious;
+	  stop = pPrec == NULL;
+	  while (!stop)
+	    if (pPrec->ElTerminal)
+	      {
+		stop = TRUE;
+		/* ignore les saut de pages pour les autres vues */
+		if (pPrec->ElTypeNumber == PageBreak + 1)
+		  if (pPrec->ElViewPSchema != viewSch)
 		    {
-		       pP = pElPage->ElNext->ElAbstractBox[pAb->AbDocView - 1];
-		       if (pP == NULL)
-			  /* l'element suivant la marque de page n'a pas de pave */
-			  /* dans la vue,on ne cree pas les paves de la marque page */
-			  cree = FALSE;
-		       else
-			  /* on ne cree les paves de la marque de page que le pave */
-			  /* de l'element suivant est complete en tete. */
-			  cree = !pP->AbTruncatedHead;
+		      pPrec = pPrec->ElPrevious;
+		      stop = pPrec == NULL;
 		    }
-		  if (cree)
-		     /* cree les paves de la marque de page */
-		     pP = AbsBoxesCreate (pElPage, pDoc, pAb->AbDocView, TRUE, TRUE, &complete);
-		  /* on met a jour les numeros des pages suivantes */
-		  UpdateNumbers (NextElement (pElPage), pElPage, pDoc, TRUE);
-	       }
-	  }
+	      }
+	    else
+	      {
+		pPrec = pPrec->ElFirstChild;
+		if (pPrec == NULL)
+		  stop = TRUE;
+		else
+		  while (pPrec->ElNext != NULL)
+		    pPrec = pPrec->ElNext;
+	      }
+	  if (pPrec != NULL)
+	    {
+	      pEl1 = pPrec;
+	      if (pEl1->ElTerminal &&
+		  pEl1->ElTypeNumber == PageBreak + 1 &&
+		  pEl1->ElViewPSchema == viewSch && pEl1->ElPageType == PgBegin)
+		{
+		  exitingPage = TRUE;
+		  pElPage = pEl1;
+		}
+	    }
+	}
 
-	/* TODO quand on traitera les regles recto verso */
-	/* on verifie que la cardinalite de la page est en accord avec la regle
-	   appliquee */
-     }
+      if (!exitingPage &&
+	  pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct != CsChoice)
+	{
+	  /* on cree une marque de page */
+	  pElPage = NewSubtree (PageBreak + 1, pEl->ElStructSchema, pDoc,
+				TRUE, TRUE, TRUE, TRUE);
+	  if (pElPage != NULL)
+	    /* on a cree une marque de page */
+	    
+	    /* le reste de la procedure est different entre les deux versions */
+	    /* on la chaine comme premier fils de l'element */
+	    {
+	      InsertFirstChild (pEl, pElPage);
+	      /* on l'initialise */
+	      pEl1 = pElPage;
+	      pEl1->ElPageType = PgBegin;
+	      pEl1->ElViewPSchema = viewSch;
+	      /* cherche le compteur de pages a appliquer */
+	      counter = GetPageCounter (pElPage, pDoc, pEl1->ElViewPSchema, &pSchP);
+	      if (counter > 0)
+		/* calcule la valeur du compteur de pages */
+		pEl1->ElPageNumber = CounterVal (counter,
+						 pElPage->ElStructSchema,
+						 pSchP, pElPage,
+						 pEl1->ElViewPSchema);
+	      else
+		/* page non numerotee */
+		pEl1->ElPageNumber = 1;
+	      /* faut-il creer les paves de la marque de page ? */
+	      create = TRUE;	/* a priori, on les cree */
+	      if (pElPage->ElNext != NULL)
+		/* la marque de page a un element suivant */
+		{
+		  pP = pElPage->ElNext->ElAbstractBox[pAb->AbDocView - 1];
+		  if (pP == NULL)
+		    /* l'element suivant la marque de page n'a pas de pave */
+		    /* dans la vue,on ne cree pas les paves de la marque page */
+		    create = FALSE;
+		  else
+		    /* on ne cree les paves de la marque de page que le pave */
+		    /* de l'element suivant est complete en tete. */
+		    create = !pP->AbTruncatedHead;
+		}
+	      if (create)
+		/* cree les paves de la marque de page */
+		pP = AbsBoxesCreate (pElPage, pDoc, pAb->AbDocView, TRUE, TRUE, &complete);
+	      /* on met a jour les numeros des pages suivantes */
+	      UpdateNumbers (NextElement (pElPage), pElPage, pDoc, TRUE);
+	    }
+	}
+
+      /* TODO quand on traitera les regles recto verso */
+      /* on verifie que la cardinalite de la page est en accord avec la regle
+	 appliquee */
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3048,133 +3047,121 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   AbPosition         *pPavP1;
 
   appl = FALSE;
-  if (pPRule != NULL && pAb != NULL)
-    if (pAb->AbElement != NULL)
-      {
-	viewSch = AppliedView (pAb->AbElement, pAttr, pDoc, pAb->AbDocView);
-	switch (pPRule->PrType)
-	  {
-
-	  case PtVisibility:
-	    pAb->AbVisibility = IntegerRule (pPRule, pAb->AbElement,
-					     pAb->AbDocView, &appl, &unit,
-					     pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbVisibility = 10;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtFunction:
-	    switch (pPRule->PrPresFunction)
-	      {
-	      case FnLine:
-		if (pAb->AbLeafType == LtCompound)
-		  /* si la regle de mise en lignes est definie pour la */
-		  /* vue principale, elle s'applique a toutes les vues, */
-		  /* sinon, elle ne s'applique qu'a la vue pour laquelle */
-		  /* elle est definie */
-		  if (pPRule->PrViewNum == 1 || pPRule->PrViewNum == viewSch)
+  if (pPRule && pAb && pAb->AbElement)
+    {
+      viewSch = AppliedView (pAb->AbElement, pAttr, pDoc, pAb->AbDocView);
+      switch (pPRule->PrType)
+	{
+	case PtVisibility:
+	  pAb->AbVisibility = IntegerRule (pPRule, pAb->AbElement,
+					   pAb->AbDocView, &appl, &unit,
+					   pAttr, pAb);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbVisibility = 10;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtFunction:
+	  switch (pPRule->PrPresFunction)
+	    {
+	    case FnLine:
+	      if (pAb->AbLeafType == LtCompound)
+		/* si la regle de mise en lignes est definie pour la */
+		/* vue principale, elle s'applique a toutes les vues, */
+		/* sinon, elle ne s'applique qu'a la vue pour laquelle */
+		/* elle est definie */
+		if (pPRule->PrViewNum == 1 || pPRule->PrViewNum == viewSch)
+		  {
+		    pAb->AbInLine = TRUE;		      
+		    appl = TRUE;
+		  }
+	      break;
+	    case FnNoLine:
+	      if (pAb->AbLeafType == LtCompound &&
+		  pPRule->PrViewNum == viewSch)
+		{
+		  pAb->AbInLine = FALSE;
+		  appl = TRUE;
+		}
+	      break;
+	    case FnPage:
+	      ApplyPage (pDoc, pAb, viewSch, pPRule, pPRule->PrPresFunction);
+	      appl = TRUE;
+	      break;
+	    case FnColumn:
+	      break;
+	    case FnSubColumn:
+		break;
+	    case FnCopy:
+	      /* on n'applique pas la regle copie a un element holophraste'*/
+	      if (!pAb->AbElement->ElHolophrast)
+		{
+		  ApplyCopy (pDoc, pPRule, pAb, TRUE);
+		  appl = TRUE;
+		}
+	      break;
+	    case FnContentRef:
+	      ConstantCopy (pPRule->PrPresBox[0], pSchP, pAb);
+	      appl = TRUE;
+	      break;
+	    case FnShowBox:
+	      if (pAb->AbLeafType == LtCompound &&
+		  pPRule->PrViewNum == viewSch)
+		{
+		  pAb->AbFillBox = TRUE;
+		  appl = TRUE;
+		}
+	      break;
+	    case FnBackgroundPicture:
+	      if (pAb->AbLeafType == LtCompound &&
+		  pPRule->PrViewNum == viewSch)
+		{
+		  if (pSchP == NULL)
+		    pSchP = PresentationSchema (pDoc->DocSSchema, pDoc);
+		  pConst = &pSchP->PsConstant[pPRule->PrPresBox[0] - 1];
+		  if (pConst->PdString[0] != EOS)
 		    {
-		      pAb->AbInLine = TRUE;		      
+#ifndef _WINDOWS
+		      if (pConst->PdString[0] == DIR_SEP)
+#else  /* _WINDOWS */
+		      if (pConst->PdString[0] == DIR_SEP ||
+			  (pConst->PdString[1] == ':' &&
+			   pConst->PdString[2] == DIR_SEP))
+#endif /* _WINDOWS */
+			/* absolute file name */
+			strncpy (fname, pConst->PdString, MAX_PATH - 1);
+		      else
+			/* relative file name */
+			{
+			  strncpy (directoryName, SchemaPath, MAX_PATH - 1);
+			  MakeCompleteName (pConst->PdString, "",
+					    directoryName, fname, &i);
+			}
+		      NewPictInfo (pAb, fname, UNKNOWN_FORMAT);
 		      appl = TRUE;
 		    }
-		break;
-
-	      case FnNoLine:
-		if (pAb->AbLeafType == LtCompound &&
-		    pPRule->PrViewNum == viewSch)
-		  {
-		    pAb->AbInLine = FALSE;
-		    appl = TRUE;
-		  }
-		break;
-
-	      case FnPage:
-		ApplyPage (pDoc, pAb, viewSch, pPRule, pPRule->PrPresFunction);
-		appl = TRUE;
-		break;
-
-	      case FnColumn:
-		break;
-
-	      case FnSubColumn:
-		break;
-
-	      case FnCopy:
-		/* on n'applique pas la regle copie a un element holophraste'*/
-		if (!pAb->AbElement->ElHolophrast)
-		  {
-		    ApplyCopy (pDoc, pPRule, pAb, TRUE);
-		    appl = TRUE;
-		  }
-		break;
-
-	      case FnContentRef:
-		ConstantCopy (pPRule->PrPresBox[0], pSchP, pAb);
-		appl = TRUE;
-		break;
-
-	      case FnShowBox:
-		if (pAb->AbLeafType == LtCompound &&
-		    pPRule->PrViewNum == viewSch)
-		  {
-		    pAb->AbFillBox = TRUE;
-		    appl = TRUE;
-		  }
-		break;
-
-	      case FnBackgroundPicture:
-		if (pAb->AbLeafType == LtCompound &&
-		    pPRule->PrViewNum == viewSch)
-		  {
-		    if (pSchP == NULL)
-		       pSchP = PresentationSchema (pDoc->DocSSchema, pDoc);
-		    pConst = &pSchP->PsConstant[pPRule->PrPresBox[0] - 1];
-		    if (pConst->PdString[0] != EOS)
-		      {
-#ifndef _WINDOWS
-			if (pConst->PdString[0] == DIR_SEP)
-#else  /* _WINDOWS */
-			if (pConst->PdString[0] == DIR_SEP ||
-			    (pConst->PdString[1] == ':' &&
-			     pConst->PdString[2] == DIR_SEP))
-#endif /* _WINDOWS */
-			  /* absolute file name */
-			  strncpy (fname, pConst->PdString, MAX_PATH - 1);
-			else
-			  /* relative file name */
-			  {
-			    strncpy (directoryName, SchemaPath, MAX_PATH - 1);
-			    MakeCompleteName (pConst->PdString, "",
-					      directoryName, fname, &i);
-			  }
-			NewPictInfo (pAb, fname, UNKNOWN_FORMAT);
-			appl = TRUE;
-		      }
-		  }
-		break;
-
-	      case FnPictureMode:
-		if (pPRule->PrViewNum == viewSch)
-		  {
+		}
+	      break;
+	    case FnPictureMode:
+	      if (pPRule->PrViewNum == viewSch)
+		{
 		  if (pAb->AbElement->ElTerminal &&
 		      pAb->AbElement->ElLeafType == LtPicture)
 		    {
 		      if (pAb->AbElement->ElPictInfo == NULL)
-			 NewPictInfo (pAb, "", UNKNOWN_FORMAT);
+			NewPictInfo (pAb, "", UNKNOWN_FORMAT);
 		      ((PictInfo *) (pAb->AbElement->ElPictInfo))->PicPresent =
-			                  (PictureScaling)pPRule->PrPresBox[0];
+			(PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;
 		    }
 		  else if (pAb->AbPresentationBox)
 		    {
 		      if (pAb->AbPictInfo == NULL)
-			 NewPictInfo (pAb, "", UNKNOWN_FORMAT);
+			NewPictInfo (pAb, "", UNKNOWN_FORMAT);
 		      ((PictInfo *) (pAb->AbPictInfo))->PicPresent =
-			                  (PictureScaling)pPRule->PrPresBox[0];
+			(PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;
 		    }
 		  else if (pAb->AbLeafType == LtCompound)
@@ -3182,98 +3169,90 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		      if (pAb->AbPictBackground == NULL)
 			NewPictInfo (pAb, NULL, UNKNOWN_FORMAT);
 		      ((PictInfo *) (pAb->AbPictBackground))->PicPresent =
-			                  (PictureScaling)pPRule->PrPresBox[0];
+			(PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;
 		    }
-		  }
-		break;
-
-	      case FnNotInLine:
-		if (pPRule->PrViewNum == viewSch)
-		  {
-		    pAb->AbNotInLine = TRUE;
-		    appl = TRUE;
-		  }
-		break;
-
-	      default:
-		break;
-	      }	    
+		}
+	      break;
+	    case FnNotInLine:
+	      if (pPRule->PrViewNum == viewSch)
+		{
+		  pAb->AbNotInLine = TRUE;
+		  appl = TRUE;
+		}
+	      break;
+	    default:
+	      break;
+	    }	    
+	  break;
+	case PtVertOverflow:
+	  pAb->AbVertEnclosing = !BoolRule (pPRule, pAb->AbElement,
+					    pAb->AbDocView, &appl);
+	  break;
+	case PtHorizOverflow:
+	  pAb->AbHorizEnclosing = !BoolRule (pPRule, pAb->AbElement,
+					     pAb->AbDocView, &appl);
+	  break;
+	case PtVertRef:
+	  Posit = pAb->AbVertRef;
+	  ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
+		    pDoc, &appl);
+	  pAb->AbVertRef = Posit;
+	  break;
+	case PtHorizRef:
+	  Posit = pAb->AbHorizRef;
+	  ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
+		    pDoc, &appl);
+	  pAb->AbHorizRef = Posit;
+	  break;
+	case PtHeight:
+	  ApplyDim (&pAb->AbHeight, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
+	  /* traitement special pour le debordement vertical des cellules */
+	  /* de tableau etendues verticalement */
+	  if (ThotLocalActions[T_vertspan] != NULL)
+	    (*ThotLocalActions[T_vertspan]) (pPRule, pAb);
 	    break;
-
-	  case PtVertOverflow:
-	    pAb->AbVertEnclosing = !BoolRule (pPRule, pAb->AbElement,
-					      pAb->AbDocView, &appl);
-	    break;
-
-	  case PtHorizOverflow:
-	    pAb->AbHorizEnclosing = !BoolRule (pPRule, pAb->AbElement,
-					       pAb->AbDocView, &appl);
-	    break;
-
-          case PtVertRef:
-	    Posit = pAb->AbVertRef;
-	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
-		      pDoc, &appl);
-	    pAb->AbVertRef = Posit;
-	    break;
-
-	  case PtHorizRef:
-	    Posit = pAb->AbHorizRef;
-	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
-		      pDoc, &appl);
-	    pAb->AbHorizRef = Posit;
-	    break;
-
-	  case PtHeight:
-	    ApplyDim (&pAb->AbHeight, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
-	    /* traitement special pour le debordement vertical des cellules */
-	    /* de tableau etendues verticalement */
-	    if (ThotLocalActions[T_vertspan] != NULL)
-	       (*ThotLocalActions[T_vertspan]) (pPRule, pAb);
-	    break;
-
-	  case PtWidth:
-	    ApplyDim (&pAb->AbWidth, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
-	    break;
-
-	  case PtVertPos:
-	    /* erreur : ce n'est pas a l'editeur d'interpreter */
-	    /* la mise en ligne. On supprime ce code */
-	    /* Si le precedent est un separateur de page, le pave est */
-	    /* positionne' en dessous de ce saut de page, sauf si le pave */
-	    /* positionne' fait partie d'un separateur de page (c'est une */
-	    /* boite de haut ou de bas de page qui doit etre placee par */
-	    /* rapport au filet separateur) ou s'il se positionne par */
-	    /* rapport a un autre element. */
-	    afterPageBreak = FALSE;
-	    if (pAb->AbPrevious != NULL)
-	      /* il y a un pave precedent */
-	      {
-		if (!pAb->AbPrevious->AbDead &&
-		    pAb->AbPrevious->AbElement-> ElTypeNumber == PageBreak + 1 &&
-		    pAb->AbElement->ElTypeNumber != PageBreak + 1)
-		  {
-		    if (pPRule->PrPosRule.PoRelation == RlSameLevel
-			|| pPRule->PrPosRule.PoRelation == RlPrevious)
-		      afterPageBreak = TRUE;
-		    else if (pPRule->PrPosRule.PoRelation == RlEnclosing &&
-			     pAb->AbPrevious->AbElement-> ElPageType != PgBegin)
-		      afterPageBreak = TRUE;
-		  }
-	      }
-	    else
-	      /* il n'y a pas de pave precedent */
-	      if (pAb->AbElement->ElPrevious != NULL)
-		/* il y a un element precedent */
-		if (pAb->AbElement->ElPrevious->ElTypeNumber == PageBreak + 1
-		    && pAb->AbElement->ElPrevious->ElViewPSchema == viewSch
-		    && pAb->AbElement->ElTypeNumber != PageBreak + 1)
-		  /* l'element precedent est une marque de page pour la vue */
+	case PtWidth:
+	  ApplyDim (&pAb->AbWidth, pAb, pSchP, pAttr, &appl, pPRule, pDoc);
+	  break;
+	case PtVertPos:
+	  /* erreur : ce n'est pas a l'editeur d'interpreter */
+	  /* la mise en ligne. On supprime ce code */
+	  /* Si le precedent est un separateur de page, le pave est */
+	  /* positionne' en dessous de ce saut de page, sauf si le pave */
+	  /* positionne' fait partie d'un separateur de page (c'est une */
+	  /* boite de haut ou de bas de page qui doit etre placee par */
+	  /* rapport au filet separateur) ou s'il se positionne par */
+	  /* rapport a un autre element. */
+	  afterPageBreak = FALSE;
+	  if (pAb->AbPrevious != NULL)
+	    /* il y a un pave precedent */
+	    {
+	      if (!pAb->AbPrevious->AbDead &&
+		  pAb->AbPrevious->AbElement-> ElTypeNumber == PageBreak + 1 &&
+		  pAb->AbElement->ElTypeNumber != PageBreak + 1)
+		{
 		  if (pPRule->PrPosRule.PoRelation == RlSameLevel
 		      || pPRule->PrPosRule.PoRelation == RlPrevious)
 		    afterPageBreak = TRUE;
-	    if (afterPageBreak)
+		  else if (pPRule->PrPosRule.PoRelation == RlEnclosing &&
+			   pAb->AbPrevious->AbElement-> ElPageType != PgBegin)
+		    afterPageBreak = TRUE;
+		}
+	    }
+	  else
+	    /* il n'y a pas de pave precedent */
+	    if (pAb->AbElement->ElPrevious != NULL)
+	      /* il y a un element precedent */
+	      if (pAb->AbElement->ElPrevious->ElTypeNumber == PageBreak + 1
+		  && pAb->AbElement->ElPrevious->ElViewPSchema == viewSch
+		  && pAb->AbElement->ElTypeNumber != PageBreak + 1)
+		/* l'element precedent est une marque de page pour la vue */
+		if (pPRule->PrPosRule.PoRelation == RlSameLevel
+		    || pPRule->PrPosRule.PoRelation == RlPrevious)
+		  afterPageBreak = TRUE;
+	  if (afterPageBreak)
+	    {
 	      /* position: en dessous du pave precedent */
 	      if (pAb->AbPrevious == NULL)
 		/* le pave de la marque de page n'est pas encore cree', on */
@@ -3289,300 +3268,279 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		  pPavP1->PosAbRef = pAb->AbPrevious;
 		  pPavP1->PosUserSpecified = FALSE;
 		}
-	    else
-	      /* s'il s'agit d'une boite page (celle qui englobe le filet */
-	      /* et les hauts et pieds de page), et si elle n'est precedee */
-	      /* d'aucun element, elle se positionne en haut de l'englobant. */
-	      {
-		insidePage = FALSE;
-		if (pAb->AbEnclosing != NULL)
-		  if (pAb->AbElement->ElTypeNumber == PageBreak + 1
-		      && pAb->AbEnclosing->AbElement->
-		      ElTypeNumber != PageBreak + 1
-		      && pAb->AbElement->ElPrevious == NULL)
-		    if (pAb->AbPrevious == NULL)
-		      insidePage = TRUE;
-		
-		if (insidePage)
-		  {
-		    pPavP1 = &pAb->AbVertPos;
-		    pPavP1->PosAbRef = pAb->AbEnclosing;
-		    pPavP1->PosEdge = Top;
-		    pPavP1->PosRefEdge = Top;
-		    pPavP1->PosDistance = 0;
-		    pPavP1->PosUnit = UnPoint;
-		    pPavP1->PosUserSpecified = FALSE;
-		  }
-		else
-		  /* applique la regle de positionnement de l'element */
-		  {
-		    Posit = pAb->AbVertPos;
-		    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr,
-			      pSchP, pAb, pDoc, &appl);
-		    pAb->AbVertPos = Posit;
-		  }
-	      }
-	    /* traitement special pour le debordement vertical des cellules */
-	    /* de tableau etendues verticalement */
-	    if (ThotLocalActions[T_vertspan] != NULL)
-	      (*ThotLocalActions[T_vertspan]) (pPRule, pAb);
-	    break;
-
-	  case PtHorizPos:
-	    Posit = pAb->AbHorizPos;
-	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP,
-		      pAb, pDoc, &appl);
-	    pAb->AbHorizPos = Posit;
-	    break;
-
-          case PtMarginTop:
-	    pAb->AbTopMargin = IntegerRule (pPRule, pAb->AbElement,
+	    }
+	  else
+	    /* s'il s'agit d'une boite page (celle qui englobe le filet */
+	    /* et les hauts et pieds de page), et si elle n'est precedee */
+	    /* d'aucun element, elle se positionne en haut de l'englobant. */
+	    {
+	      insidePage = FALSE;
+	      if (pAb->AbEnclosing != NULL)
+		if (pAb->AbElement->ElTypeNumber == PageBreak + 1
+		    && pAb->AbEnclosing->AbElement->
+		    ElTypeNumber != PageBreak + 1
+		    && pAb->AbElement->ElPrevious == NULL)
+		  if (pAb->AbPrevious == NULL)
+		    insidePage = TRUE;
+	      
+	      if (insidePage)
+		{
+		  pPavP1 = &pAb->AbVertPos;
+		  pPavP1->PosAbRef = pAb->AbEnclosing;
+		  pPavP1->PosEdge = Top;
+		  pPavP1->PosRefEdge = Top;
+		  pPavP1->PosDistance = 0;
+		  pPavP1->PosUnit = UnPoint;
+		  pPavP1->PosUserSpecified = FALSE;
+		}
+	      else
+		/* applique la regle de positionnement de l'element */
+		{
+		  Posit = pAb->AbVertPos;
+		  ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr,
+			    pSchP, pAb, pDoc, &appl);
+		  pAb->AbVertPos = Posit;
+		}
+	    }
+	  /* traitement special pour le debordement vertical des cellules */
+	  /* de tableau etendues verticalement */
+	  if (ThotLocalActions[T_vertspan] != NULL)
+	    (*ThotLocalActions[T_vertspan]) (pPRule, pAb);
+	  break;
+	case PtHorizPos:
+	  Posit = pAb->AbHorizPos;
+	  ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP,
+		    pAb, pDoc, &appl);
+	  pAb->AbHorizPos = Posit;
+	  break;
+	case PtMarginTop:
+	  pAb->AbTopMargin = IntegerRule (pPRule, pAb->AbElement,
+					  pAb->AbDocView, &appl, &unit,
+					  pAttr, pAb);
+	  pAb->AbTopMarginUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbTopMargin = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtMarginRight:
+	  pAb->AbRightMargin = IntegerRule (pPRule, pAb->AbElement,
 					    pAb->AbDocView, &appl, &unit,
 					    pAttr, pAb);
-	    pAb->AbTopMarginUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbTopMargin = 0;
-		appl = TRUE;
-	      }
-            break;
-
-          case PtMarginRight:
-	    pAb->AbRightMargin = IntegerRule (pPRule, pAb->AbElement,
+	  pAb->AbRightMarginUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbRightMargin = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtMarginBottom:
+	  pAb->AbBottomMargin = IntegerRule (pPRule, pAb->AbElement,
+					     pAb->AbDocView, &appl, &unit,
+					     pAttr, pAb);
+	  pAb->AbBottomMarginUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbBottomMargin = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtMarginLeft:
+	  pAb->AbLeftMargin = IntegerRule (pPRule, pAb->AbElement,
+					   pAb->AbDocView, &appl, &unit,
+					   pAttr, pAb);
+	  pAb->AbLeftMarginUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbLeftMargin = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtPaddingTop:
+	  pAb->AbTopPadding = IntegerRule (pPRule, pAb->AbElement,
+					   pAb->AbDocView, &appl, &unit,
+					   pAttr, pAb);
+	  pAb->AbTopPaddingUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbTopPadding = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtPaddingRight:
+	  pAb->AbRightPadding = IntegerRule (pPRule, pAb->AbElement,
+					     pAb->AbDocView, &appl, &unit,
+					     pAttr, pAb);
+	  pAb->AbRightPaddingUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbRightPadding = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtPaddingBottom:
+	  pAb->AbBottomPadding = IntegerRule (pPRule, pAb->AbElement,
 					      pAb->AbDocView, &appl, &unit,
 					      pAttr, pAb);
-	    pAb->AbRightMarginUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbRightMargin = 0;
-		appl = TRUE;
-	      }
-            break;
-
-          case PtMarginBottom:
-	    pAb->AbBottomMargin = IntegerRule (pPRule, pAb->AbElement,
-					       pAb->AbDocView, &appl, &unit,
-					       pAttr, pAb);
-	    pAb->AbBottomMarginUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbBottomMargin = 0;
-		appl = TRUE;
-	      }
-            break;
-
-          case PtMarginLeft:
-	    pAb->AbLeftMargin = IntegerRule (pPRule, pAb->AbElement,
+	  pAb->AbBottomPaddingUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbBottomPadding = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtPaddingLeft:
+	  pAb->AbLeftPadding = IntegerRule (pPRule, pAb->AbElement,
 					    pAb->AbDocView, &appl, &unit,
 					    pAttr, pAb);
-	    pAb->AbLeftMarginUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbLeftMargin = 0;
-		appl = TRUE;
-	      }
-            break;
-
-          case PtPaddingTop:
-	    pAb->AbTopPadding = IntegerRule (pPRule, pAb->AbElement,
-					     pAb->AbDocView, &appl, &unit,
-					     pAttr, pAb);
-	    pAb->AbTopPaddingUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbTopPadding = 0;
-		appl = TRUE;
-	      }
-            break;
-
-          case PtPaddingRight:
-	    pAb->AbRightPadding = IntegerRule (pPRule, pAb->AbElement,
-					     pAb->AbDocView, &appl, &unit,
-					     pAttr, pAb);
-	    pAb->AbRightPaddingUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbRightPadding = 0;
-		appl = TRUE;
-	      }
-            break;
-
-          case PtPaddingBottom:
-	    pAb->AbBottomPadding = IntegerRule (pPRule, pAb->AbElement,
-					     pAb->AbDocView, &appl, &unit,
-					     pAttr, pAb);
-	    pAb->AbBottomPaddingUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbBottomPadding = 0;
-		appl = TRUE;
-	      }
-            break;
-
-          case PtPaddingLeft:
- 	    pAb->AbLeftPadding = IntegerRule (pPRule, pAb->AbElement,
-					     pAb->AbDocView, &appl, &unit,
-					     pAttr, pAb);
-	    pAb->AbLeftPaddingUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbLeftPadding = 0;
-		appl = TRUE;
-	      }
-           break;
-
-          case PtBorderTopWidth:
-	    pAb->AbTopBorder = IntegerRule (pPRule, pAb->AbElement,
+	  pAb->AbLeftPaddingUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbLeftPadding = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtBorderTopWidth:
+	  pAb->AbTopBorder = IntegerRule (pPRule, pAb->AbElement,
+					  pAb->AbDocView, &appl, &unit,
+					  pAttr, pAb);
+	  pAb->AbTopBorderUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbTopBorder = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtBorderRightWidth:
+	  pAb->AbRightBorder = IntegerRule (pPRule, pAb->AbElement,
 					    pAb->AbDocView, &appl, &unit,
 					    pAttr, pAb);
-	    pAb->AbTopBorderUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbTopBorder = 0;
-		appl = TRUE;
-	      }
-            break;
-
-          case PtBorderRightWidth:
-	    pAb->AbRightBorder = IntegerRule (pPRule, pAb->AbElement,
-					      pAb->AbDocView, &appl, &unit,
-					      pAttr, pAb);
-	    pAb->AbRightBorderUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbRightBorder = 0;
-		appl = TRUE;
-	      }
-            break;
-
-          case PtBorderBottomWidth:
-	    pAb->AbBottomBorder = IntegerRule (pPRule, pAb->AbElement,
-					       pAb->AbDocView, &appl, &unit,
-					       pAttr, pAb);
-	    pAb->AbBottomBorderUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbBottomBorder = 0;
-		appl = TRUE;
-	      }
-            break;
-
-          case PtBorderLeftWidth:
-	    pAb->AbLeftBorder = IntegerRule (pPRule, pAb->AbElement,
+	  pAb->AbRightBorderUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbRightBorder = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtBorderBottomWidth:
+	  pAb->AbBottomBorder = IntegerRule (pPRule, pAb->AbElement,
 					     pAb->AbDocView, &appl, &unit,
 					     pAttr, pAb);
-	    pAb->AbLeftBorderUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbLeftBorder = 0;
-		appl = TRUE;
-	      }
-            break;
-
-          case PtBorderTopColor:
-	    pAb->AbTopBColor = IntegerRule (pPRule, pAb->AbElement,
+	  pAb->AbBottomBorderUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbBottomBorder = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtBorderLeftWidth:
+	  pAb->AbLeftBorder = IntegerRule (pPRule, pAb->AbElement,
+					   pAb->AbDocView, &appl, &unit,
+					   pAttr, pAb);
+	  pAb->AbLeftBorderUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbLeftBorder = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtBorderTopColor:
+	  pAb->AbTopBColor = IntegerRule (pPRule, pAb->AbElement,
+					  pAb->AbDocView, &appl, &unit,
+					  pAttr, pAb);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* no BorderTopColor for the root element. Set initial value */
+	    {
+	      pAb->AbTopBColor = -1;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtBorderRightColor:
+	  pAb->AbRightBColor = IntegerRule (pPRule, pAb->AbElement,
 					    pAb->AbDocView, &appl, &unit,
 					    pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* no BorderTopColor for the root element. Set initial value */
-	      {
-		pAb->AbTopBColor = -1;
-		appl = TRUE;
-	      }
-	    break;
-
-          case PtBorderRightColor:
-	    pAb->AbRightBColor = IntegerRule (pPRule, pAb->AbElement,
-					      pAb->AbDocView, &appl, &unit,
-					      pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* no BorderRightColor for the root element. Set initial value */
-	      {
-		pAb->AbRightBColor = -1;
-		appl = TRUE;
-	      }
-	    break;
-
-          case PtBorderBottomColor:
-	    pAb->AbBottomBColor = IntegerRule (pPRule, pAb->AbElement,
-					       pAb->AbDocView, &appl, &unit,
-					       pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* no BorderBottomColor for the root element. Set initial value*/
-	      {
-		pAb->AbBottomBColor = -1;
-		appl = TRUE;
-	      }
-	    break;
-
-          case PtBorderLeftColor:
-	    pAb->AbLeftBColor = IntegerRule (pPRule, pAb->AbElement,
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* no BorderRightColor for the root element. Set initial value */
+	    {
+	      pAb->AbRightBColor = -1;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtBorderBottomColor:
+	  pAb->AbBottomBColor = IntegerRule (pPRule, pAb->AbElement,
 					     pAb->AbDocView, &appl, &unit,
 					     pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* no BorderLeftColor for the root element. Set initial value */
-	      {
-		pAb->AbLeftBColor = -1;
-		appl = TRUE;
-	      }
-	    break;
-
-          case PtBorderTopStyle:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-	        c = '0';
-		appl = TRUE;
-	      }
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* no BorderBottomColor for the root element. Set initial value*/
+	    {
+	      pAb->AbBottomBColor = -1;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtBorderLeftColor:
+	  pAb->AbLeftBColor = IntegerRule (pPRule, pAb->AbElement,
+					   pAb->AbDocView, &appl, &unit,
+					   pAttr, pAb);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* no BorderLeftColor for the root element. Set initial value */
+	    {
+	      pAb->AbLeftBColor = -1;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtBorderTopStyle:
+	  c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    {
+	      c = '0';
+	      appl = TRUE;
+	    }
+	  if (appl)
+	    pAb->AbTopStyle = BorderStyleIntValue (c);
+	  break;
+	case PtBorderRightStyle:
+	  c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    {
+	      c = '0';
+	      appl = TRUE;
+	    }
+	  if (appl)
+	    pAb->AbRightStyle = BorderStyleIntValue (c);
+	  break;
+	case PtBorderBottomStyle:
+	  c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    {
+	      c = '0';
+	      appl = TRUE;
+	    }
+	  if (appl)
+	    pAb->AbBottomStyle = BorderStyleIntValue (c);
+	  break;
+	case PtBorderLeftStyle:
+	  c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    {
+	      c = '0';
+	      appl = TRUE;
+	    }
 	    if (appl)
-                pAb->AbTopStyle = BorderStyleIntValue (c);
+	      pAb->AbLeftStyle = BorderStyleIntValue (c);
 	    break;
-
-          case PtBorderRightStyle:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-	        c = '0';
-		appl = TRUE;
-	      }
-	    if (appl)
-                pAb->AbRightStyle = BorderStyleIntValue (c);
-	    break;
-
-          case PtBorderBottomStyle:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-	        c = '0';
-		appl = TRUE;
-	      }
-	    if (appl)
-                pAb->AbBottomStyle = BorderStyleIntValue (c);
-	    break;
-
-          case PtBorderLeftStyle:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-	        c = '0';
-		appl = TRUE;
-	      }
-	    if (appl)
-                pAb->AbLeftStyle = BorderStyleIntValue (c);
-	    break;
-
 	  case PtSize:
 	    /* on applique la regle de taille */
 	    pAb->AbSize = IntegerRule (pPRule, pAb->AbElement,
@@ -3598,306 +3556,282 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		appl = TRUE;
 	      }
 	    break;
-
-	  case PtStyle:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	case PtStyle:
+	  c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbFontStyle = 0;
+	      appl = TRUE;
+	    }
+	  else
+	    switch (c)
 	      {
+	      case 'I':	/* Italic */
+		pAb->AbFontStyle = 1;
+		break;
+	      case 'O':	/* Oblique */
+		pAb->AbFontStyle = 2;
+		break;
+	      default:	/* Roman */
 		pAb->AbFontStyle = 0;
-		appl = TRUE;
+		break;
 	      }
-	    else
-	      switch (c)
-		{
-		case 'I':	/* Italic */
-		  pAb->AbFontStyle = 1;
-		  break;
-		case 'O':	/* Oblique */
-		  pAb->AbFontStyle = 2;
-		  break;
-		default:	/* Roman */
-		  pAb->AbFontStyle = 0;
-		  break;
-		}
-	    break;
-
-	  case PtWeight:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	  break;
+	case PtWeight:
+	  c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbFontWeight = 0;
+	      appl = TRUE;
+	    }
+	  else
+	    switch (c)
 	      {
+	      case 'B':	/* Bold */
+		pAb->AbFontWeight = 1;
+		break;
+	      default:	/* Normal */
 		pAb->AbFontWeight = 0;
-		appl = TRUE;
+		break;
 	      }
-	    else
-	      switch (c)
-		{
-		case 'B':	/* Bold */
-		  pAb->AbFontWeight = 1;
-		  break;
-		default:	/* Normal */
-		  pAb->AbFontWeight = 0;
-		  break;
-		}
-	    break;
-
-	  case PtFont:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
+	  break;
+	case PtFont:
+	  c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    {
+	      pAb->AbFont = 1;
+	      appl = TRUE;
+	    }
+	  else
+	    pAb->AbFont = (int) c & 0xFF;
+	  break;
+	case PtUnderline:
+	  c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbUnderline = 0;
+	      appl = TRUE;
+	    }
+	  else
+	    switch (c)
 	      {
-		pAb->AbFont = 1;
-		appl = TRUE;
-	      }
-	    else
-	      pAb->AbFont = (int) c & 0xFF;
-	    break;
-
-	  case PtUnderline:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
+	      case 'C':
+		pAb->AbUnderline = 3;
+		break;
+	      case 'O':
+		pAb->AbUnderline = 2;
+		break;
+	      case 'U':
+		pAb->AbUnderline = 1;
+		break;
+	      default:
 		pAb->AbUnderline = 0;
-		appl = TRUE;
+		break;
 	      }
-	    else
-	      switch (c)
-		{
-		case 'C':
-		  pAb->AbUnderline = 3;
-		  break;
-		case 'O':
-		  pAb->AbUnderline = 2;
-		  break;
-		case 'U':
-		  pAb->AbUnderline = 1;
-		  break;
-		default:
-		  pAb->AbUnderline = 0;
-		  break;
-		}
-	    break;
-
-	  case PtThickness:
-	    c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	  break;
+	case PtThickness:
+	  c = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbThickness = 0;
+	      appl = TRUE;
+	    }
+	  else
+	    switch (c)
 	      {
+	      case 'T':
+		pAb->AbThickness = 1;
+		break;
+	      default:
 		pAb->AbThickness = 0;
-		appl = TRUE;
+		break;
 	      }
-	    else
-	      switch (c)
+	  break;
+	case PtIndent:
+	  pAb->AbIndent = IntegerRule (pPRule, pAb->AbElement,
+				       pAb->AbDocView, &appl, &unit,
+				       pAttr, pAb);
+	  pAb->AbIndentUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbIndent = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtLineSpacing:
+	  pAb->AbLineSpacing = IntegerRule (pPRule, pAb->AbElement,
+					    pAb->AbDocView, &appl, &unit,
+					    pAttr, pAb);
+	  pAb->AbLineSpacingUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbLineSpacing = 10;
+	      pAb->AbLineSpacingUnit = UnRelative;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtDepth:
+	  pAb->AbDepth = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				      &appl, &unit, pAttr, pAb);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbDepth = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtAdjust:
+	  pAb->AbAdjust = AlignRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				     &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbAdjust = AlignLeft;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtDirection:
+	  pAb->AbDirection = CharRule (pPRule, pAb->AbElement,
+				       pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    {
+	      /* initial value: LeftToRight */
+	      pAb->AbDirection = 'L';
+	      appl = TRUE;
+	    }
+	  break;
+	case PtUnicodeBidi:
+	  pAb->AbUnicodeBidi = CharRule (pPRule, pAb->AbElement,
+					 pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    {
+	      /* initial value: Normal */
+	      pAb->AbUnicodeBidi = 'N';
+	      appl = TRUE;
+	    }
+	  break;
+	case PtLineStyle:
+	  pAb->AbLineStyle = CharRule (pPRule, pAb->AbElement,
+				       pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    {
+	      pAb->AbLineStyle = 'S';
+	      appl = TRUE;
+	    }
+	  break;
+	case PtLineWeight:
+	  pAb->AbLineWeight = IntegerRule (pPRule, pAb->AbElement,
+					   pAb->AbDocView, &appl, &unit,
+					   pAttr, pAb);
+	  pAb->AbLineWeightUnit = unit;
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbLineWeight = 1;
+	      pAb->AbLineWeightUnit = UnPoint;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtFillPattern:
+	  pAb->AbFillPattern = IntegerRule (pPRule, pAb->AbElement,
+					    pAb->AbDocView, &appl, &unit,
+					    pAttr, pAb);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbFillPattern = 0;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtBackground:
+	  pAb->AbBackground = IntegerRule (pPRule, pAb->AbElement,
+					   pAb->AbDocView, &appl, &unit,
+					   pAttr, pAb);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbBackground = DefaultBColor;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtForeground:
+	  pAb->AbForeground = IntegerRule (pPRule, pAb->AbElement,
+					   pAb->AbDocView, &appl, &unit,
+					   pAttr, pAb);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbForeground = DefaultFColor;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtHyphenate:
+	  pAb->AbHyphenate = BoolRule (pPRule, pAb->AbElement,
+				       pAb->AbDocView, &appl);
+	  if (!appl && pAb->AbElement->ElParent == NULL)
+	    /* Pas de regle pour la racine, on met la valeur par defaut */
+	    {
+	      pAb->AbHyphenate = FALSE;
+	      appl = TRUE;
+	    }
+	  break;
+	case PtPageBreak:
+	  pAb->AbAcceptPageBreak = BoolRule (pPRule, pAb->AbElement,
+					     pAb->AbDocView, &appl);
+	  break;
+	case PtLineBreak:
+	  pAb->AbAcceptLineBreak = BoolRule (pPRule, pAb->AbElement,
+					     pAb->AbDocView, &appl);
+	  break;
+	case PtGather:
+	  pAb->AbBuildAll = BoolRule (pPRule, pAb->AbElement,
+				      pAb->AbDocView, &appl);
+	  break;
+	case PtXRadius:
+	  pAb->AbRx = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				   &appl, &unit, pAttr, pAb);
+	  pAb->AbRxUnit = unit;
+	  break;
+	case PtYRadius:
+	  pAb->AbRy = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				   &appl, &unit, pAttr, pAb);
+	  pAb->AbRyUnit = unit;
+	  break;
+	case PtDisplay:
+	  pAb->AbDisplay = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
+				     &appl);
+	  if (appl)
+	    {
+	      if (pAb->AbDisplay == 'I')
+		/* display: inline */
 		{
-		case 'T':
-		  pAb->AbThickness = 1;
-		  break;
-		default:
-		  pAb->AbThickness = 0;
-		  break;
+		  if (pAb->AbEnclosing)
+		    pAb->AbEnclosing->AbInLine = TRUE;
+		  pAb->AbAcceptLineBreak = TRUE;
 		}
-	    break;
-
-	  case PtIndent:
-	    pAb->AbIndent = IntegerRule (pPRule, pAb->AbElement,
-					 pAb->AbDocView, &appl, &unit,
-					 pAttr, pAb);
-	    pAb->AbIndentUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbIndent = 0;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtLineSpacing:
-	    pAb->AbLineSpacing = IntegerRule (pPRule, pAb->AbElement,
-					      pAb->AbDocView, &appl, &unit,
-					      pAttr, pAb);
-	    pAb->AbLineSpacingUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbLineSpacing = 10;
-		pAb->AbLineSpacingUnit = UnRelative;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtDepth:
-	    pAb->AbDepth = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
-					&appl, &unit, pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbDepth = 0;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtAdjust:
-	    pAb->AbAdjust = AlignRule (pPRule, pAb->AbElement, pAb->AbDocView,
-				       &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbAdjust = AlignLeft;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtDirection:
-	    pAb->AbDirection = CharRule (pPRule, pAb->AbElement,
-					 pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-		/* initial value: LeftToRight */
-		pAb->AbDirection = 'L';
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtUnicodeBidi:
-	    pAb->AbUnicodeBidi = CharRule (pPRule, pAb->AbElement,
-					   pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-		/* initial value: Normal */
-		pAb->AbUnicodeBidi = 'N';
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtLineStyle:
-	    pAb->AbLineStyle = CharRule (pPRule, pAb->AbElement,
-					 pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      {
-		pAb->AbLineStyle = 'S';
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtLineWeight:
-	    pAb->AbLineWeight = IntegerRule (pPRule, pAb->AbElement,
-					     pAb->AbDocView, &appl, &unit,
-					     pAttr, pAb);
-	    pAb->AbLineWeightUnit = unit;
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbLineWeight = 1;
-		pAb->AbLineWeightUnit = UnPoint;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtFillPattern:
-	    pAb->AbFillPattern = IntegerRule (pPRule, pAb->AbElement,
-					      pAb->AbDocView, &appl, &unit,
-					      pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbFillPattern = 0;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtBackground:
-	    pAb->AbBackground = IntegerRule (pPRule, pAb->AbElement,
-					     pAb->AbDocView, &appl, &unit,
-					     pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbBackground = DefaultBColor;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtForeground:
-	    pAb->AbForeground = IntegerRule (pPRule, pAb->AbElement,
-					     pAb->AbDocView, &appl, &unit,
-					     pAttr, pAb);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbForeground = DefaultFColor;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtHyphenate:
-	    pAb->AbHyphenate = BoolRule (pPRule, pAb->AbElement,
-					 pAb->AbDocView, &appl);
-	    if (!appl && pAb->AbElement->ElParent == NULL)
-	      /* Pas de regle pour la racine, on met la valeur par defaut */
-	      {
-		pAb->AbHyphenate = FALSE;
-		appl = TRUE;
-	      }
-	    break;
-
-	  case PtPageBreak:
-	    pAb->AbAcceptPageBreak = BoolRule (pPRule, pAb->AbElement,
-					       pAb->AbDocView, &appl);
-	    break;
-
-	  case PtLineBreak:
-	    pAb->AbAcceptLineBreak = BoolRule (pPRule, pAb->AbElement,
-					       pAb->AbDocView, &appl);
-	    break;
-
-	  case PtGather:
-	    pAb->AbBuildAll = BoolRule (pPRule, pAb->AbElement,
-					pAb->AbDocView, &appl);
-	    break;
-
-          case PtXRadius:
-	    pAb->AbRx = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
-				     &appl, &unit, pAttr, pAb);
-	    pAb->AbRxUnit = unit;
-            break;
-
-          case PtYRadius:
-	    pAb->AbRy = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
-				     &appl, &unit, pAttr, pAb);
-	    pAb->AbRyUnit = unit;
-            break;
-
-	  case PtDisplay:
-	    pAb->AbDisplay = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
-				       &appl);
-	    if (appl)
-	      {
-		if (pAb->AbDisplay == 'I')
-		  /* display: inline */
-		  {
-		    if (pAb->AbEnclosing)
-		      pAb->AbEnclosing->AbInLine = TRUE;
-		    pAb->AbAcceptLineBreak = TRUE;
-		  }
-		else if (pAb->AbDisplay != 'U')
-		  {
-		    /* display: block */
-		    pAb->AbNotInLine = TRUE;
-		    pAb->AbAcceptLineBreak = FALSE;
-		  }
-	      }
-	    else if (pAb->AbElement->ElParent == NULL)
-	      {
-		pAb->AbDisplay = 'U';
-		appl = TRUE;
-	      }
-	    break;
-
-	  default:
-	    break;
-	  }	
-      }
+	      else if (pAb->AbDisplay != 'U')
+		{
+		  /* display: block */
+		  pAb->AbNotInLine = TRUE;
+		  pAb->AbAcceptLineBreak = FALSE;
+		}
+	    }
+	  else if (pAb->AbElement->ElParent == NULL)
+	    {
+	      pAb->AbDisplay = 'U';
+	      appl = TRUE;
+	    }
+	  break;
+	default:
+	  break;
+	}	
+    }
   return appl;
 }
 
