@@ -3468,7 +3468,7 @@ void UpdateScrollbars (int frame)
       documentDisplayMode[FrameTable[frame].FrDoc - 1] 
       == NoComputedDisplay)
     return;
-  /* Demande le volume affiche dans la fenetre */
+  /* Get the displayed volume */
   ComputeDisplayedChars (frame, &x, &y, &width, &height);
   hscroll = FrameTable[frame].WdScrollH;
   vscroll = FrameTable[frame].WdScrollV;
@@ -3495,66 +3495,61 @@ void UpdateScrollbars (int frame)
       XtSetValues (vscroll, args, n);
     }
 #else /*_GTK*/
- 
-
-  if ((width + vscroll->allocation.width) > l && 
-      x == 0 && 
-      width > 60)
+  if (width + x <= l &&
+      (width + vscroll->allocation.width <= l || 
+       x || width <= 60))
+    {
+      tmpw = gtk_range_get_adjustment (GTK_RANGE (hscroll));
+      if (tmpw)
+	{
+	  tmpw->lower = (gfloat) 0;
+	  tmpw->upper = (gfloat) l;
+	  tmpw->page_size = (gfloat) width;
+	  tmpw->page_increment = (gfloat) width-13;
+	  tmpw->step_increment = (gfloat) 8;
+	  tmpw->value = (gfloat) x;
+	  gtk_adjustment_changed (tmpw);
+	  if (GTK_WIDGET_VISIBLE(GTK_WIDGET (hscroll)) == FALSE)
+	    {
+	      gtk_widget_show (GTK_WIDGET (hscroll));
+	      gtk_widget_draw_default (GTK_WIDGET (hscroll));
+	    }
+	}
+    }
+  else
+    /*if ((width + vscroll->allocation.width) > l && 
+      x == 0 && width > 60)*/
     {
       if (GTK_WIDGET_VISIBLE(GTK_WIDGET (hscroll)))
-	{	  
-	  gtk_widget_hide (GTK_WIDGET (hscroll));
-	}
+	gtk_widget_hide (GTK_WIDGET (hscroll));
     }  
-  else 
-    if (width + x <= l)
-      {
-	tmpw = gtk_range_get_adjustment (GTK_RANGE (hscroll));
-	if (tmpw)
-	  {
-	    tmpw->lower = (gfloat) 0;
-	    tmpw->upper = (gfloat) l;
-	    tmpw->page_size = (gfloat) width;
-	    tmpw->page_increment = (gfloat) width-13;
-	    tmpw->step_increment = (gfloat) 8;
-	    tmpw->value = (gfloat) x;
-	    gtk_adjustment_changed (tmpw);
-	    if (GTK_WIDGET_VISIBLE(GTK_WIDGET (hscroll)) == FALSE)
-	      {
-		gtk_widget_show (GTK_WIDGET (hscroll));
-		gtk_widget_draw_default (GTK_WIDGET (hscroll));
-	      }
-	  }  
-      }
   
-  if ((height + hscroll->allocation.height) > h && 
-      y == 0)
+  if (height + y <= h &&
+      (height + hscroll->allocation.height <= h || y))
+    {
+      tmpw = gtk_range_get_adjustment (GTK_RANGE (vscroll));
+      if (tmpw)
+	{
+	  tmpw->lower = (gfloat) 0;
+	  tmpw->upper = (gfloat) h;
+	  tmpw->page_size = (gfloat) height;
+	  tmpw->page_increment = (gfloat) height;
+	  tmpw->step_increment = (gfloat) 6;
+	  tmpw->value = (gfloat) y;
+	  gtk_adjustment_changed (tmpw);
+	  if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)) == FALSE)
+	    {
+	      gtk_widget_show (GTK_WIDGET (vscroll));
+	      gtk_widget_draw_default (GTK_WIDGET (vscroll));
+	    }
+	}
+    }
+  else 
+    /*if ((height + hscroll->allocation.height) > h && y == 0)*/
     {
       if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)))
-	{
-	  gtk_widget_hide (GTK_WIDGET (vscroll));
-	}
+	gtk_widget_hide (GTK_WIDGET (vscroll));
     }  
-  else 
-    if (height + y <= h)
-      {
-	tmpw = gtk_range_get_adjustment (GTK_RANGE (vscroll));
-	if (tmpw)
-	  {
-	    tmpw->lower = (gfloat) 0;
-	    tmpw->upper = (gfloat) h;
-	    tmpw->page_size = (gfloat) height;
-	    tmpw->page_increment = (gfloat) height;
-	    tmpw->step_increment = (gfloat) 6;
-	    tmpw->value = (gfloat) y;
-	    gtk_adjustment_changed (tmpw);
-	    if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)) == FALSE)
-	      {
-		gtk_widget_show (GTK_WIDGET (vscroll));
-		gtk_widget_draw_default (GTK_WIDGET (vscroll));
-	      }
-	  }
-	}
   
 #endif /*_GTK*/  
 #else  /* _WINDOWS */

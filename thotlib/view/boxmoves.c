@@ -1842,9 +1842,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   if (!pCurrentAb)
     return;
 
-  if (pCurrentAb->AbMBPChange)
+  if (pCurrentAb->AbMBPChange || l || r)
     /* margins borders and are not interpreted yet */
-    diff = 0;
+    diff = l + r;
   else
     diff = pBox->BxW + pBox->BxLMargin + pBox->BxRMargin + pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder - pBox->BxWidth;
   if (delta || diff || pCurrentAb->AbLeftMarginUnit == UnAuto || pCurrentAb->AbRightMarginUnit == UnAuto)
@@ -1912,7 +1912,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      middleTrans = pBox->BxWidth / 2 - (pBox->BxWidth + delta + diff) / 2;
 	      endTrans = 0;
 	    }
-	  
+
 	  /* inside width */
 	  pBox->BxW += delta;
 #ifdef _GL
@@ -2104,7 +2104,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		pAb = pCurrentAb->AbFirstEnclosed;
 		while (pAb)
 		  {
-		    if (!pAb->AbDead && pAb->AbBox != NULL)
+		    if (!pAb->AbDead && pAb->AbBox)
 		      {
 			box = pAb->AbBox;
 			/* check if the position box depends on its enclosing */
@@ -2183,6 +2183,10 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		{
 		  box = pDimRel->DimRTable[i];
 		  pAb = box->BxAbstractBox;
+		  if ((pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock) &&
+		      IsParentBox (pBox, box))
+		    /* update managed by ComputeLines */
+		    pAb = NULL;
 		  if (pAb)
 		    {
 		      /* Is it the same dimension? */
@@ -2360,9 +2364,9 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   if (!pCurrentAb)
     return;
 
-  if (pCurrentAb->AbMBPChange)
+  if (pCurrentAb->AbMBPChange || t || b)
     /* margins borders and are not interpreted yet */
-    diff = 0;
+    diff = t + b;
   else
     diff = pBox->BxH + pBox->BxTMargin + pBox->BxBMargin + pBox->BxTPadding + pBox->BxBPadding + pBox->BxTBorder + pBox->BxBBorder - pBox->BxHeight;
   if (delta || diff)
@@ -2695,7 +2699,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  while (pDimRel)
 	    {
 	      i = 0;
-	      while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i] != NULL)
+	      while (i < MAX_RELAT_DIM && pDimRel->DimRTable[i])
 		{
 		  box = pDimRel->DimRTable[i];
 		  pAb = box->BxAbstractBox;		    
@@ -2799,7 +2803,6 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	       * by another sibling box, we need to propagate the change
 	       */
 	      if ((Propagate == ToAll || externalRef) &&
-		  pAb &&
 		  !IsSiblingBox (pBox, pFromBox) &&
 		  !IsSiblingBox (pBox, pSourceBox))
 		{

@@ -2252,99 +2252,119 @@ PtrAbstractBox SearchEnclosingType (PtrAbstractBox pAb, BoxType type1,
   ----------------------------------------------------------------------*/
 PtrLine SearchLine (PtrBox pBox)
 {
-   PtrLine             pLine;
-   PtrBox              pBoxPiece;
-   PtrBox              pBoxInLine;
-   PtrBox              pCurrentBox;
-   PtrAbstractBox      pAb;
-   ThotBool            still;
+  PtrLine             pLine;
+  PtrBox              pBoxPiece;
+  PtrBox              pBoxInLine;
+  PtrBox              box;
+  PtrAbstractBox      pAb;
+  int                 orgY;
+  ThotBool            xAbs, yAbs;
+  ThotBool            still;
 
-   /* check enclosing element */
-   pLine = NULL;
-   pAb = NULL;
-   if (pBox)
-     {
-       pAb = pBox->BxAbstractBox;
-       if (pAb && (pAb->AbNotInLine || !pAb->AbHorizEnclosing))
-	 pAb = NULL;
-       else
-	 pAb = pAb->AbEnclosing;
-     }
+  /* check enclosing element */
+  pLine = NULL;
+  pAb = NULL;
+  if (pBox)
+    {
+      pAb = pBox->BxAbstractBox;
+      if (pAb && (pAb->AbNotInLine || !pAb->AbHorizEnclosing))
+	pAb = NULL;
+      else
+	pAb = pAb->AbEnclosing;
+    }
 
-   /* look for an enclosing block of lines */
-   if (pAb)
-     {
-	if (pAb->AbBox == NULL)
-	   pAb = NULL;
-	else if (pAb->AbBox->BxType == BoGhost)
-	  {
-	     /* It's a ghost, look for the enclosing block */
-	     still = TRUE;
-	     while (still)
-	       {
-		  pAb = pAb->AbEnclosing;
-		  if (pAb == NULL)
-		     still = FALSE;
-		  else if (pAb->AbBox == NULL)
-		    {
-		       pAb = NULL;
-		       still = FALSE;
-		    }
-		  else if (pAb->AbBox->BxType != BoGhost)
-		     still = FALSE;
-	       }
-	  }
-	else if (pAb->AbBox->BxType == BoFloatGhost)
-	  pAb = pAb->AbEnclosing;
-	else if (pAb->AbBox->BxType != BoBlock &&
-		 pAb->AbBox->BxType != BoFloatBlock)
-	  /* the box in not within a block of lines */
-	   pAb = NULL;
-     }
+  /* look for an enclosing block of lines */
+  if (pAb)
+    {
+      if (pAb->AbBox == NULL)
+	pAb = NULL;
+      else if (pAb->AbBox->BxType == BoGhost)
+	{
+	  /* It's a ghost, look for the enclosing block */
+	  still = TRUE;
+	  while (still)
+	    {
+	      pAb = pAb->AbEnclosing;
+	      if (pAb == NULL)
+		still = FALSE;
+	      else if (pAb->AbBox == NULL)
+		{
+		  pAb = NULL;
+		  still = FALSE;
+		}
+	      else if (pAb->AbBox->BxType != BoGhost)
+		still = FALSE;
+	    }
+	}
+      else if (pAb->AbBox->BxType == BoFloatGhost)
+	pAb = pAb->AbEnclosing;
+      else if (pAb->AbBox->BxType != BoBlock &&
+	       pAb->AbBox->BxType != BoFloatBlock)
+	/* the box in not within a block of lines */
+	pAb = NULL;
+    }
 
-   if (pAb)
-     {
-	pCurrentBox = pAb->AbBox;
-	pLine = pCurrentBox->BxFirstLine;
-	/* Look for the line which includes the current box */
-	still = TRUE;
-	while (still && pLine)
-	  {
-	     /* Locate the box in the set of lines */
-	     if (pLine->LiFirstPiece)
+  if (pAb)
+    {
+      box = pAb->AbBox;
+      pLine = box->BxFirstLine;
+      still = TRUE;
+      if (pBox->BxAbstractBox->AbFloat == 'N')
+	{
+	  /* Look for the line which includes the current box */
+	  while (still && pLine)
+	    {
+	      /* Locate the box in the set of lines */
+	      if (pLine->LiFirstPiece)
 		pBoxInLine = pLine->LiFirstPiece;
-	     else
+	      else
 		pBoxInLine = pLine->LiFirstBox;
-	     if (pBoxInLine)
-	       do
-		 {
-		  if (pBoxInLine->BxType == BoSplit ||
-		      pBoxInLine->BxType == BoMulScript)
-		     pBoxPiece = pBoxInLine->BxNexChild;
-		  else
-		     pBoxPiece = pBoxInLine;
-		  if (pBoxPiece == pBox)
-		    {
-		       /* the line is founs */
-		       still = FALSE;
-		       pBoxPiece = pLine->LiLastBox;
-		    }
-		  /* else get next box */
-		  else if ((pBoxPiece->BxType == BoScript ||
-			    pBoxPiece->BxType == BoPiece) &&
-			   pBoxPiece->BxNexChild)
-		    pBoxInLine = pBoxPiece->BxNexChild;
-		  else
-		     pBoxInLine = GetNextBox (pBoxInLine->BxAbstractBox);
-		 }
-	       while (pBoxPiece != pLine->LiLastBox
-		      && pBoxPiece != pLine->LiLastPiece
-		      && pBoxInLine);
-
-	     if (still)
-	       /* get next line */
-	       pLine = pLine->LiNext;
-	  }
+	      if (pBoxInLine)
+		do
+		  {
+		    if (pBoxInLine->BxType == BoSplit ||
+			pBoxInLine->BxType == BoMulScript)
+		      pBoxPiece = pBoxInLine->BxNexChild;
+		    else
+		      pBoxPiece = pBoxInLine;
+		    if (pBoxPiece == pBox)
+		      {
+			/* the line is founs */
+			still = FALSE;
+			pBoxPiece = pLine->LiLastBox;
+		      }
+		    /* else get next box */
+		    else if ((pBoxPiece->BxType == BoScript ||
+			      pBoxPiece->BxType == BoPiece) &&
+			     pBoxPiece->BxNexChild)
+		      pBoxInLine = pBoxPiece->BxNexChild;
+		    else
+		      pBoxInLine = GetNextBox (pBoxInLine->BxAbstractBox);
+		  }
+		while (pBoxPiece != pLine->LiLastBox
+		       && pBoxPiece != pLine->LiLastPiece
+		       && pBoxInLine);
+	      
+	      if (still)
+		/* get next line */
+		pLine = pLine->LiNext;
+	    }
+	}
+      else
+	{
+	  /* Locate the last adjacent line */
+	  orgY = 0;
+	  IsXYPosComplete (box, &xAbs, &yAbs);
+	  if (yAbs)
+	    orgY += box->BxYOrg;
+	  while (still && pLine)
+	    {
+	      still = pLine->LiYOrg + orgY < pBox->BxYOrg;
+	      if (still)
+		/* get next line */
+		pLine = pLine->LiNext;
+	    }
+	}
      }
    return pLine;
 }
