@@ -1295,13 +1295,32 @@ ThotBool            generic;
     case PtBreak1:
     case PtBreak2:
     case PtIndent:
-    case PtSize:
     case PtLineSpacing:
     case PtLineWeight:
       rule->PrPresMode = PresImmediate;
       rule->PrMinUnit = int_unit;
       rule->PrMinValue = value;
       rule->PrMinAttr = FALSE;
+      break;
+    case PtSize:
+      if (int_unit == UnPercent)
+	{
+        rule->PrPresMode = PresInherit;
+        rule->PrInheritMode = InheritParent;
+        rule->PrInhPercent = True;
+        rule->PrInhAttr = False;
+        rule->PrInhDelta = value;
+        rule->PrMinMaxAttr = False;
+        rule->PrInhMinOrMax = 0;
+        rule->PrInhUnit = UnRelative;
+	}
+      else
+	{
+        rule->PrPresMode = PresImmediate;
+        rule->PrMinUnit = int_unit;
+        rule->PrMinValue = value;
+        rule->PrMinAttr = FALSE;
+        }
       break;
     case PtJustify:
       rule->PrPresMode = PresImmediate;
@@ -1585,11 +1604,22 @@ PtrPRule                   rule;
     case PtBreak1:
     case PtBreak2:
     case PtIndent:
-    case PtSize:
     case PtLineSpacing:
     case PtLineWeight:
       int_unit = rule->PrMinUnit;
       value = rule->PrMinValue;
+      break;
+    case PtSize:
+      if (rule->PrPresMode == PresInherit)
+	{
+        int_unit = UnPercent;
+        value = rule->PrInhDelta;
+	}
+      else
+	{
+        int_unit = rule->PrMinUnit;
+        value = rule->PrMinValue;
+	}
       break;
     case PtJustify:
       if (rule->PrJustify)

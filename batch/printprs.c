@@ -357,18 +357,28 @@ PtrPRule            pR;
    if (pRe1->PrPresMode == PresInherit)
      {
 	wrModeHerit (pRe1->PrInheritMode);
-	if (pRe1->PrInhDelta == 0)
-	   printf (" =");
-	else
+	if (pRe1->PrInhPercent)
 	  {
-	     if (pRe1->PrInhDelta > 0)
-		printf ("+");
-	     if (pRe1->PrInhAttr)
-		wrnomattr (pRe1->PrInhDelta);
-	     else
-		wrnb (pRe1->PrInhDelta);
+	  printf (" * ");
+	  if (pRe1->PrInhAttr)
+	     wrnomattr (pRe1->PrInhDelta);
+	  else
+	     wrnb (pRe1->PrInhDelta);
+	  printf (" %");
 	  }
-	wrdistunit (pRe1->PrInhUnit);
+	else
+	   if (pRe1->PrInhDelta == 0)
+	      printf (" =");
+	   else
+	      {
+	      if (pRe1->PrInhDelta > 0)
+		 printf ("+");
+	      if (pRe1->PrInhAttr)
+		 wrnomattr (pRe1->PrInhDelta);
+	      else
+		 wrnb (pRe1->PrInhDelta);
+	      wrdistunit (pRe1->PrInhUnit);
+	      }
 	if (pRe1->PrInhMinOrMax > 0)
 	  {
 	     if (pRe1->PrInhDelta >= 0)
@@ -416,10 +426,10 @@ PtrPRule            pR;
    if (pRe1->PrPresMode == PresInherit)
      {
 	wrModeHerit (pRe1->PrInheritMode);
-	if (pRe1->PrInhDelta == 0)
+	if (pRe1->PrInhDelta == 0 && !pRe1->PrInhPercent)
 	   printf (" =");
 	else
-	   printf ("?????");
+	   printf ("??????");
      }
    else if (pRe1->PrPresMode == PresImmediate)
      {
@@ -548,7 +558,10 @@ PtrPRule            pR;
 
    pRe1 = pR;
    if (pRe1->PrPresMode == PresInherit)
-     {
+     if (pRe1->PrInhPercent)
+	printf ("??????");
+     else
+        {
 	wrModeHerit (pRe1->PrInheritMode);
 	if (pRe1->PrInhDelta == 0)
 	   printf (" =");
@@ -572,7 +585,7 @@ PtrPRule            pR;
 	     else
 		wrnb (pRe1->PrInhMinOrMax);
 	  }
-     }
+        }
    else if (pRe1->PrPresMode == PresImmediate)
       if (pRe1->PrAttrValue)
 	 wrnomattr (pRe1->PrIntValue);
@@ -986,7 +999,7 @@ PtrPRule            pR;
 		    printf ("RepeatY");
 		    break;
 		 default:
-		    printf ("????");
+		    printf ("??????");
 		    break;
 		 }
 	       break;
@@ -994,7 +1007,7 @@ PtrPRule            pR;
 	       printf ("InLine: No");
 	       break;
 	   case FnAny:
-	       printf ("?????");
+	       printf ("??????");
 	       break;		    
 	 }
    if (pRe1->PrPresFunction != FnLine &&

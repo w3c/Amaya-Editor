@@ -584,17 +584,18 @@ PtrAttribute        pAttr;
 			      /* c'est la valeur d'un attribut */
 			      if (pAttr == NULL)
 				 pAttr = GetEnclosingAttr (pEl, pPRule->PrInhDelta);
-			      if (pPRule->PrInhDelta < 0)
+			      if (pPRule->PrInhDelta < 0 && !pPRule->PrInhPercent)
 				 /* il faut retrancher cette valeur */
 				 i = -AttrValue (pAttr);
 			      else
 				 /* il faut ajouter cette valeur */
 				 i = AttrValue (pAttr);
-			      if (pPRule->PrInhUnit == UnRelative ||
-				  pPRule->PrInhUnit == UnXHeight)
-				 if (pPRule->PrType == PtIndent
-				     || pPRule->PrType == PtLineSpacing
-				     || pPRule->PrType == PtLineWeight)
+			      if (!pPRule->PrInhPercent)
+			        if (pPRule->PrInhUnit == UnRelative ||
+				    pPRule->PrInhUnit == UnXHeight)
+				  if (pPRule->PrType == PtIndent ||
+				      pPRule->PrType == PtLineSpacing ||
+				      pPRule->PrType == PtLineWeight)
 				    /* convertit en 1/10 de caractere */
 				    i = 10 * i;
 			   }
@@ -605,10 +606,16 @@ PtrAttribute        pAttr;
 			 switch (pPRule->PrType)
 			       {
 				  case PtVisibility:
-				     val = pAbb->AbVisibility + i;
+				     if (pPRule->PrInhPercent)
+					val = (pAbb->AbVisibility * i) / 100;
+				     else
+				        val = pAbb->AbVisibility + i;
 				     break;
 				  case PtSize:
-				     val = pAbb->AbSize + i;
+				     if (pPRule->PrInhPercent)
+					val = (pAbb->AbSize * i) / 100;
+				     else
+				        val = pAbb->AbSize + i;
 				     *unit = pAbb->AbSizeUnit;
 				     if (*unit == UnRelative)
 					if (val > MAX_LOG_SIZE)
@@ -617,15 +624,24 @@ PtrAttribute        pAttr;
 					   val = 0;
 				     break;
 				  case PtIndent:
-				     val = pAbb->AbIndent + i;
+				     if (pPRule->PrInhPercent)
+					val = (pAbb->AbIndent * i) / 100;
+				     else
+				        val = pAbb->AbIndent + i;
 				     *unit = pAbb->AbIndentUnit;
 				     break;
 				  case PtLineSpacing:
-				     val = pAbb->AbLineSpacing + i;
+				     if (pPRule->PrInhPercent)
+					val = (pAbb->AbLineSpacing * i) / 100;
+				     else
+				        val = pAbb->AbLineSpacing + i;
 				     *unit = pAbb->AbLineSpacingUnit;
 				     break;
 				  case PtDepth:
-				     val = pAbb->AbDepth + i;
+				     if (pPRule->PrInhPercent)
+					val = (pAbb->AbDepth * i) / 100;
+				     else
+				        val = pAbb->AbDepth + i;
 				     break;
 				  case PtFillPattern:
 				     val = pAbb->AbFillPattern;
@@ -637,7 +653,10 @@ PtrAttribute        pAttr;
 				     val = pAbb->AbForeground;
 				     break;
 				  case PtLineWeight:
-				     val = pAbb->AbLineWeight + i;
+				     if (pPRule->PrInhPercent)
+					val = (pAbb->AbLineWeight * i) / 100;
+				     else
+				        val = pAbb->AbLineWeight + i;
 				     if (val < 0)
 					val = 0;
 				     *unit = pAbb->AbLineWeightUnit;
@@ -646,7 +665,7 @@ PtrAttribute        pAttr;
 				     break;
 			       }
 
-			 if (pPRule->PrInhMinOrMax != 0)
+			 if (pPRule->PrInhMinOrMax != 0 && !pPRule->PrInhPercent)
 			    /* il y a un minimum ou un maximum a respecter */
 			   {
 			      if (pPRule->PrMinMaxAttr)

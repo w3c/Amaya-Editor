@@ -114,7 +114,7 @@ STRING              orig;
    int                 lg;
 
    lg = ustrlen (orig) + 1;
-   if (ustrlen (buffer) + lg > lgbuffer)
+   if ((int)ustrlen (buffer) + lg > lgbuffer)
      {
 	/* it is necessary to extend the buffer */
 	if (lg < PARAM_INCREMENT)

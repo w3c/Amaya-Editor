@@ -399,9 +399,6 @@ indLine             wi;
 	       CurRule->PrMinUnit = UnRelative;
 	       CurRule->PrMinAttr = False;
 	       CurRule->PrMinValue = 0;
-	       CurRule->PrInhMinOrMax = 0;
-	       CurRule->PrInhDelta = 0;
-	       CurRule->PrMinMaxAttr = False;
 	       break;
 	    case PtAdjust:
 	       CurRule->PrAdjust = AlignLeft;
@@ -1221,13 +1218,14 @@ SyntacticCode       gCode;
 	       /*  =  */
 	       if (gCode == RULE_InheritVal || gCode == RULE_NameInherit ||
 		   gCode == RULE_BoolInherit || gCode == RULE_InheritDist ||
-		 gCode == RULE_InheritSize || gCode == RULE_AdjustInherit ||
+		   gCode == RULE_InheritSize || gCode == RULE_AdjustInherit ||
 		   gCode == RULE_LineStyleInherit)
 		  /* PresInherit */
 		 {
+		    CurRule->PrInhPercent = False;
+		    CurRule->PrInhAttr = False;
 		    CurRule->PrInhDelta = 0;
 		    CurRule->PrInhUnit = UnRelative;
-		    CurRule->PrInhAttr = False;
 		 }
 	       if (gCode == RULE_InheritDist)
 		 {
@@ -1517,6 +1515,7 @@ InheritMode         inheritType;
 {
    CurRule->PrPresMode = PresInherit;
    CurRule->PrInheritMode = inheritType;
+   CurRule->PrInhPercent = False;
    CurRule->PrInhAttr = False;
    CurRule->PrInhDelta = 0;
    CurRule->PrMinMaxAttr = False;
@@ -3706,6 +3705,13 @@ indLine             wi;
 		  CurRule->PrInhMinOrMax = attr;
 		  CurRule->PrMinMaxAttr = True;
 		  break;
+	       case RULE_PercentSizeA:
+		  /* PercentSizeA */
+		  CurRule->PrInhPercent = True;
+		  CurRule->PrInhAttr = True;
+		  CurRule->PrInhDelta = attr;
+		  CurRule->PrInhUnit = UnRelative;
+		  break;
 	       default:
 		  break;
 	    }
@@ -4590,7 +4596,8 @@ indLine             wi;
 			  ok = True;
 		       else
 			  i++;
-		    while (!ok && i < sizeof (Name_patterns) / sizeof (STRING));
+		    while (!ok && (unsigned int)i <
+				   sizeof (Name_patterns) / sizeof (STRING));
 
 		    if (!ok)
 		       CompilerMessage (wi, PRS, FATAL, MISSING_PATTERN, inputLine, LineNum);
@@ -4788,6 +4795,13 @@ indLine             wi;
 	       /* MinSize */
 	       CurRule->PrInhMinOrMax = n;
 	       CurRule->PrMinMaxAttr = False;
+	       break;
+	    case RULE_PercentSize:
+	       /* PercentSize */
+	       CurRule->PrInhAttr = False;
+	       CurRule->PrInhPercent = True;
+	       CurRule->PrInhDelta = n;
+	       CurRule->PrInhUnit = UnRelative;
 	       break;
 	    case RULE_MinVal:
 	       /* MinVal */

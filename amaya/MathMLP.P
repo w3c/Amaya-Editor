@@ -1983,8 +1983,9 @@ RULES
    	HorizPos: Left = Enclosing . Left;
    	VertPos: Top = Enclosing . Top;
 	Width: ROOT_OFFSET min;
-   	Size: Enclosing -2 min 1;
+   	Size: Enclosing * 60 %;
 	IN Math_Structure_view BEGIN
+		Size: Enclosing =;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
 		END;
@@ -2154,11 +2155,12 @@ RULES
 
    Superscript:
 	BEGIN
-	Size: Enclosing -2 min 1;
+	Size: Enclosing * 60 %;
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
 	VertPos: Bottom = Base . Top + 0.7;
 	IN Math_Structure_view BEGIN
+		Size: Enclosing =;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
 		END;
@@ -2166,11 +2168,12 @@ RULES
 
    Subscript:
 	BEGIN
-	Size: Enclosing -2 min 1;
+	Size: Enclosing * 60 %;
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
 	VertPos: Top = Base . Bottom - 0.7;
 	IN Math_Structure_view BEGIN
+		Size: Enclosing =;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
 		END;
@@ -2233,11 +2236,12 @@ RULES
 
    Underscript:
 	BEGIN
-	Size: Enclosing -2 min 1;
+	Size: Enclosing * 60 %;
 	HorizRef: * . Top;
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: Top = UnderOverBase . Bottom;
 	IN Math_Structure_view BEGIN
+		Size: Enclosing =;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
 		END;
@@ -2245,11 +2249,12 @@ RULES
 
    Overscript:
 	BEGIN
-	Size: Enclosing -2 min 1;
+	Size: Enclosing * 60 %;
 	HorizRef: * . Top;
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: Bottom = UnderOverBase . Top;
 	IN Math_Structure_view BEGIN
+		Size: Enclosing =;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
 		END;
@@ -2282,12 +2287,13 @@ RULES
 
    PostscriptPairs:
 	BEGIN
-	Size: Enclosing -2 min 1;
+	Size: Enclosing * 60 %;
 	HorizRef: * . Top;
 	HorizPos: Left = MultiscriptBase . Right;
 	Height: MultiscriptBase . Height + 1;
 	VertPos: Top = MultiscriptBase . Top - 0.5;
 	IN Math_Structure_view BEGIN
+		Size: Enclosing =;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
 		END;
@@ -2296,12 +2302,13 @@ RULES
    PrescriptPairs:
 	BEGIN
 	CreateBefore(MPRESCRIPTS_S);
-	Size: Enclosing -2 min 1;
+	Size: Enclosing * 60 %;
 	HorizRef: * . Top;
 	HorizPos: Right = MultiscriptBase . Left;
 	Height: MultiscriptBase . Height + 1;
 	VertPos: Top = MultiscriptBase . Top - 0.5;
 	IN Math_Structure_view BEGIN
+		Size: Enclosing =;
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
 		END;

@@ -400,13 +400,15 @@ typedef struct _PresRule
     struct			/* PrPresMode = PresInherit */
     {
       InheritMode  _PrInheritMode_;
+      ThotBool	   _PrInhPercent_;/* PrInhDelta is a precentage if true, an
+				   increment/decrement if false */
       ThotBool     _PrInhAttr_;	/* PrInhDelta is a numerical attribute
-				   number and a value if false */  
-      int	   _PrInhDelta_;	/* positive: increment, zero: equality,
+				   number if true, a value if false */  
+      int	   _PrInhDelta_;/* positive: increment, zero: equality,
 				   negative: decrement */  
-      ThotBool	   _PrMinMaxAttr_; /* PrInhMinOrMax is a numerical
-					   attribute number or a value */
-      int          _PrInhMinOrMax_; /* min or max value of the inheritance */
+      ThotBool	   _PrMinMaxAttr_; /* PrInhMinOrMax is a numerical attribute
+				   number or a value */
+      int          _PrInhMinOrMax_;/* min or max value of the inheritance */
       TypeUnit     _PrInhUnit_;	/* PrInhDelta and PrInhMinOrMax are
 				   expressed in picas, pixels, relative value,
 				   etc. */
@@ -477,6 +479,7 @@ typedef struct _PresRule
 } PresRule;
 
 #define PrInheritMode u.s0._PrInheritMode_
+#define PrInhPercent u.s0._PrInhPercent_
 #define PrInhAttr u.s0._PrInhAttr_
 #define PrInhDelta u.s0._PrInhDelta_
 #define PrMinMaxAttr u.s0._PrMinMaxAttr_

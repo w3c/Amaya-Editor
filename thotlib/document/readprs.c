@@ -1163,6 +1163,7 @@ PtrPRule           *pNextPRule;
 		      {
 			 case PresInherit:
 			    pPR->PrInheritMode = ReadInheritMode (file);
+			    TtaReadBool (file, &pPR->PrInhPercent);
 			    TtaReadBool (file, &pPR->PrInhAttr);
 			    TtaReadSignedShort (file, &pPR->PrInhDelta);
 			    TtaReadBool (file, &pPR->PrMinMaxAttr);

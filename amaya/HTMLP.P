@@ -6618,7 +6618,7 @@ RULES
 	CreateBefore(SUB_S);
 	CreateWith(VerticalLine);
 	LineBreak: No;
-	Size: Enclosing - 3;
+	Size: Enclosing * 60 %;
 	HorizRef: Enclosed . HRef - 0.3;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
@@ -6639,7 +6639,7 @@ RULES
 	CreateBefore(SUP_S);
 	CreateWith(VerticalLine);
 	LineBreak: No;
-	Size: Enclosing - 3;
+	Size: Enclosing * 60 %;
 	HorizRef: Enclosed . HRef + 0.4;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
@@ -7391,7 +7391,6 @@ RULES
 	Height: 2 Min;
 	LineBreak: No;
 	Font: INPUT_Font;
-	{Size: Enclosing - 5;}
 	Depth: 4;
 #ifndef BLACK_WHITE
 	Background : LightRed4;

@@ -380,19 +380,29 @@ PtrPRule            pR;
    if (pRe1->PrPresMode == PresInherit)
      {
 	wrModeHerit (pRe1->PrInheritMode);
-	if (pRe1->PrInhDelta == 0)
-	   fprintf (output, " =");
-	else
-	  {
+        if (pRe1->PrInhPercent)
+          {
+          fprintf (output, " * ");
+          if (pRe1->PrInhAttr)
+             wrnomattr (pRe1->PrInhDelta);
+          else
+             wrnb (pRe1->PrInhDelta);
+          fprintf (output, " %");
+          }
+        else
+	  if (pRe1->PrInhDelta == 0)
+	     fprintf (output, " =");
+	  else
+	     {
 	     if (pRe1->PrInhDelta > 0)
 		fprintf (output, "+");
 	     if (pRe1->PrInhAttr)
 		wrnomattr (pRe1->PrInhDelta);
 	     else
 		wrnb (pRe1->PrInhDelta);
-	  }
-	if (pRe1->PrInhUnit == UnPoint)
-	   fprintf (output, " pt");
+	     if (pRe1->PrInhUnit == UnPoint)
+	        fprintf (output, " pt");
+	     }
 	if (pRe1->PrInhMinOrMax > 0)
 	  {
 	     if (pRe1->PrInhDelta >= 0)
@@ -441,10 +451,10 @@ PtrPRule            pR;
    if (pRe1->PrPresMode == PresInherit)
      {
 	wrModeHerit (pRe1->PrInheritMode);
-	if (pRe1->PrInhDelta == 0)
+	if (pRe1->PrInhDelta == 0 && !pRe1->PrInhPercent)
 	   fprintf (output, " =");
 	else
-	   fprintf (output, "?????");
+	   fprintf (output, "??????");
      }
    else if (pRe1->PrPresMode == PresImmediate)
       if (pRe1->PrType == PtFont)
@@ -571,7 +581,10 @@ PtrPRule            pR;
 
    pRe1 = pR;
    if (pRe1->PrPresMode == PresInherit)
-     {
+     if (pRe1->PrInhPercent)
+        fprintf (output, "??????");
+     else
+        {
 	wrModeHerit (pRe1->PrInheritMode);
 	if (pRe1->PrInhDelta == 0)
 	   fprintf (output, " =");
@@ -595,7 +608,7 @@ PtrPRule            pR;
 	     else
 		wrnb (pRe1->PrInhMinOrMax);
 	  }
-     }
+        }
    else if (pRe1->PrPresMode == PresImmediate)
       if (pRe1->PrAttrValue)
 	 wrnomattr (pRe1->PrIntValue);
@@ -1013,7 +1026,7 @@ PtrPRule            pR;
                     fprintf (output, "RepeatY");
                     break;
                  default:
-                    fprintf (output, "????");
+                    fprintf (output, "??????");
                     break;
                  }
                break;

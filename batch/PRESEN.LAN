@@ -220,6 +220,7 @@ Adjustment =	  'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' .
 SizeInherit =	  SizeA [ 'PT' ] / Link  InheritSize .
 InheritSize =	  '+' PosSizeA [ 'PT' ] [ 'Max' MaxSizeA ] /
 		  '-' NegSizeA [ 'PT' ] [ 'Min' MinSizeA ] /
+		  '*' PercentSizeA '%' /
 		  '=' .
 SizeA =		  Size / AttrName .
 Size =		  NUMBER .
@@ -231,6 +232,8 @@ MaxSizeA =	  MaxSize / AttrName .
 MaxSize =	  NUMBER .
 MinSizeA =	  MinSize / AttrName .
 MinSize =	  NUMBER .
+PercentSizeA =	  PercentSize / AttrName .
+PercentSize =	  NUMBER .
 
 NameInherit =	  Link '=' / FontStyleName .
 FontStyleName =	  NAME .

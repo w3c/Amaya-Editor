@@ -14,7 +14,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of December, 1998</h4>
+<h4>Version of June, 1999</h4>
 <p>
 &copy; 1996 INRIA</p>
 <hr>
@@ -5683,37 +5683,43 @@ between these abstract sizes and the real character sizes is controlled by a
 table which can be modified statically or even dynamically during the
 execution of the Thot editor.</p>
 <p>
-If it is a numeric attribute's presentation rule, the value of the size
-parameter can be specified by the attribute's name, in which case the value of
-the attribute is used.</p>
+If the <tt>Size</tt> rule is a numeric attribute's presentation rule, the
+value of the size parameter can be specified by the attribute's name, in
+which case the value of the attribute is used.</p>
 <p>
 <strong>Note:</strong> the only unit available for  defining an absolute size
 is the typographer's point.  Centimeters and inches may not be used.</p>
 <p>
 If the size is inherited, the rule must specify the relative from which to
-inherit and any difference from that relative's value.  The difference can be
-expressed in either typographer's points or in abstract units.  The maximum or
-minimum size can also be specified, but without specifying the type of unit:
-it is the same as was specified for the difference.</p>
+inherit and any percentage or difference from that relative's value.
+A percentage is indicated by a </tt>*</tt> followed by the value of the
+percentage and a <tt>%</tt>.
+A difference can be expressed in either typographer's points or in abstract
+units and the maximum or minimum size can be specified, but without
+specifying the unit: it is the same as was specified for the difference.</p>
 <p>
-In a numeric attribute's presentation rule, the difference in size can be
-indicated by the attribute's name, which means that the attribute's value
-should be used as the difference.  The attribute can also be used as the
-minimum or maximum size.</p>
-<pre>                    'Size' ':' SizeInherit
-     SizeInherit   = SizeAttr [ 'pt' ] /
-                     Kinship InheritedSize .
-     InheritedSize ='+' SizeAttr [ 'pt' ]
-                     [ 'Max' MaxSizeAttr ] /
-                    '-' SizeAttr [ 'pt' ]
-                     [ 'Min' MinSizeAttr ] /
-                    '=' .
-     SizeAttr      = Size / AttrID .
-     Size          = NUMBER .
-     MaxSizeAttr   = MaxSize / AttrID .
-     MaxSize       = NUMBER .
-     MinSizeAttr   = MinSize / AttrID .
-     MinSize       = NUMBER .</pre>
+In a numeric attribute's presentation rule, the difference in size or the
+percentage can be indicated by the attribute's name instead of the numeric
+value, which means that the attribute's value should be used as the difference
+or percentage.  The attribute can also be used as the minimum or maximum size
+for a difference.</p>
+<pre>                      'Size' ':' SizeInherit
+     SizeInherit     = SizeAttr [ 'pt' ] /
+                       Kinship InheritedSize .
+     InheritedSize   ='+' SizeAttr [ 'pt' ]
+                       [ 'Max' MaxSizeAttr ] /
+                      '-' SizeAttr [ 'pt' ]
+                       [ 'Min' MinSizeAttr ] /
+                      '*' PercentSizeAttr '%' /
+                      '=' .
+     SizeAttr        = Size / AttrID .
+     Size            = NUMBER .
+     MaxSizeAttr     = MaxSize / AttrID .
+     MaxSize         = NUMBER .
+     MinSizeAttr     = MinSize / AttrID .
+     MinSize         = NUMBER .
+     PercentSizeAttr = PercentSize / AttrID .
+     PercentSize     = NUMBER .</pre>
 <blockquote class="example">
 <p>
 <strong>Example:</strong></p>
@@ -8911,6 +8917,7 @@ InheritedSize   = '+' SizeAttr [ 'pt' ]
                       [ 'Max' MaxSizeAttr ] /
                   '-' SizeAttr [ 'pt' ]
                       [ 'Min' MinSizeAttr ] /
+                  '*' PercentSizeAttr '%' /
                   '=' .
 SizeAttr        = Size / AttrID .
 Size            = NUMBER .
@@ -8918,6 +8925,8 @@ MaxSizeAttr     = MaxSize / AttrID .
 MaxSize         = NUMBER .
 MinSizeAttr     = MinSize / AttrID .
 MinSize         = NUMBER .
+PercentSizeAttr = PercentSize / AttrID .
+PercentSize     = NUMBER .
 
 NameInherit     = Kinship '=' / FontName .
 FontName        = NAME .

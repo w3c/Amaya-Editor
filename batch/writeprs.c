@@ -1025,6 +1025,7 @@ PtrPRule            pPRule;
 	      {
 		 case PresInherit:
 		    WriteInheritMode (currentRule->PrInheritMode);
+		    WriteBoolean (currentRule->PrInhPercent);
 		    WriteBoolean (currentRule->PrInhAttr);
 		    WriteSignedShort (currentRule->PrInhDelta);
 		    WriteBoolean (currentRule->PrMinMaxAttr);
