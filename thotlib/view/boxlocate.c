@@ -2135,7 +2135,7 @@ static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
 
 /*----------------------------------------------------------------------
   ApplyDirectTranslate looks for the selected box for a move.
-  If the smaller box enclosing the point xm, ym of the window cannot
+  If the smallest box containing point (xm, ym) in the window cannot
   be moved, the function checks the encolsing box, etc.
   ----------------------------------------------------------------------*/
 void ApplyDirectTranslate (int frame, int xm, int ym)

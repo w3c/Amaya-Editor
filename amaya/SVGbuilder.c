@@ -1632,6 +1632,7 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
    TypeUnit		unit;
    PresentationValue    pval;
    PresentationContext  ctxt;
+   DisplayMode          dispMode;
    char                 *buffer, *text;
 
    leaf = TtaGetFirstChild (el);  /* Thot Graphic element */
@@ -1641,73 +1642,93 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
    ctxt->destroy = FALSE;
    pval.typed_data.unit = UNIT_PX;
 
-   /* translate all coordinates by (-minX, -minY), both in the Thot
-      Graphic leaf element and in the "points" attribute */
+   dispMode = TtaGetDisplayMode (doc);
+   /* ask Thot to stop displaying changes made to the document*/
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
+
    unit = UnPixel;
-   nbPoints = TtaGetPolylineLength (leaf);
-   buffer = TtaGetMemory (20);
-   text = TtaGetMemory (nbPoints * 20);
-   text[0] = EOS;
-   for (i = 1; i <= nbPoints; i++)
-      {
-      TtaGivePolylinePoint (leaf, i, unit, &x, &y);
-      x -= minX;  y -= minY;
-      TtaModifyPointInPolyline (leaf, i, unit, x, y, doc);
-      sprintf (buffer, "%d,%d", x, y);
-      strcat (text, buffer);
-      if (i < nbPoints)
-	strcat (text, " ");
-      }
+   width = maxX; height = maxY;
+   if (minX != 0 || minY != 0)
+     {
+       /* translate all coordinates by (-minX, -minY), both in the Thot
+	  Graphic leaf element and in the "points" attribute */
+       nbPoints = TtaGetPolylineLength (leaf);
+       buffer = TtaGetMemory (20);
+       text = TtaGetMemory (nbPoints * 20);
+       text[0] = EOS;
+       for (i = 1; i <= nbPoints; i++)
+	 {
+	   TtaGivePolylinePoint (leaf, i, unit, &x, &y);
+	   x -= minX;  y -= minY;
+	   TtaModifyPointInPolyline (leaf, i, unit, x, y, doc);
+	   sprintf (buffer, "%d,%d", x, y);
+	   strcat (text, buffer);
+	   if (i < nbPoints)
+	     strcat (text, " ");
+	 }
+       attrType.AttrSSchema = TtaGetElementType(el).ElSSchema;
+       attrType.AttrTypeNum = SVG_ATTR_points;
+       attr = TtaGetAttribute (el, attrType);
+       if (!attr)
+	 {
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (el, attr, doc);
+	 }
+       TtaSetAttributeText (attr, text, el, doc);
+       TtaFreeMemory (buffer);
+       TtaFreeMemory (text);
+     }
+
    width = maxX - minX;
    height = maxY - minY;
-   TtaChangeLimitOfPolyline (leaf, unit, width, height, doc);
-   attrType.AttrSSchema = TtaGetElementType(el).ElSSchema;
-   attrType.AttrTypeNum = SVG_ATTR_points;
-   attr = TtaGetAttribute (el, attrType);
-   if (!attr)
-     {
-       attr = TtaNewAttribute (attrType);
-       TtaAttachAttribute (el, attr, doc);
-     }
-   TtaSetAttributeText (attr, text, el, doc);
-   TtaFreeMemory (buffer);
-   TtaFreeMemory (text);
-
-   pRule = TtaGetPRule (el, PRHorizPos);
-   if (pRule)
-     {
-     x = TtaGetPRuleValue (pRule);
-     unit = TtaGetPRuleUnit (pRule);
-     }
-   else
-     x = 0;
-   pval.typed_data.value = x+minX;
-   pval.typed_data.real = FALSE;
-   TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
-
-   pRule = TtaGetPRule (el, PRVertPos);
-   if (pRule)
-     {
-     y = TtaGetPRuleValue (pRule);
-     unit = TtaGetPRuleUnit (pRule);
-     }
-   else
-     y = 0;
-   pval.typed_data.value = y+minY;
-   pval.typed_data.real = FALSE;
-   TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
    pval.typed_data.value = width;
    pval.typed_data.real = FALSE;
-   TtaSetStylePresentation (PRWidth, el, NULL, ctxt, pval);     
+   TtaSetStylePresentation (PRWidth, el, NULL, ctxt, pval);    
    pval.typed_data.value = height;
    pval.typed_data.real = FALSE;
    TtaSetStylePresentation (PRHeight, el, NULL, ctxt, pval);
+   TtaChangeLimitOfPolyline (leaf, unit, width, height, doc);
+
+   if (minX != 0)
+     {
+       pRule = TtaGetPRule (el, PRHorizPos);
+       if (pRule)
+	 {
+	   x = TtaGetPRuleValue (pRule);
+	   unit = TtaGetPRuleUnit (pRule);
+	 }
+       else
+	 x = 0;
+       pval.typed_data.value = x+minX;
+       pval.typed_data.real = FALSE;
+       TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
+     }
+
+   if (minY != 0)
+     {
+       pRule = TtaGetPRule (el, PRVertPos);
+       if (pRule)
+	 {
+	   y = TtaGetPRuleValue (pRule);
+	   unit = TtaGetPRuleUnit (pRule);
+	 }
+       else
+	 y = 0;
+       pval.typed_data.value = y+minY;
+       pval.typed_data.real = FALSE;
+       TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
+     }
+
    TtaFreeMemory (ctxt);
 
    /* create or update the transform attribute to represent an additional
       translation by (minX, minY) */
-   TranslateElement (el, doc, minX, unit, TRUE, TRUE);
-   TranslateElement (el, doc, minY, unit, FALSE, TRUE);
+   if (minX != 0)
+     TranslateElement (el, doc, minX, unit, TRUE, TRUE);
+   if (minY != 0)
+     TranslateElement (el, doc, minY, unit, FALSE, TRUE);
+   TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------

@@ -1351,12 +1351,16 @@ void TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y,
 		rank = 0;
 		pBuff = pBuff->BuNext;
 	     }
-	   /* Updates the coordinates of the new boundary point */
-	   firstBuffer->BuPoints[0].XCoord = x;
-	   firstBuffer->BuPoints[0].YCoord = y;
+	   if (x != firstBuffer->BuPoints[0].XCoord ||
+	       y != firstBuffer->BuPoints[0].YCoord)
+	     {
+	       /* Updates the coordinates of the new boundary point */
+	       firstBuffer->BuPoints[0].XCoord = x;
+	       firstBuffer->BuPoints[0].YCoord = y;
 #ifndef NODISPLAY
-	   RedisplayLeaf ((PtrElement) element, document, 0);
+	       RedisplayLeaf ((PtrElement) element, document, 0);
 #endif
+	     }
 	}
      }
 }

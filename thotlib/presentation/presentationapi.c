@@ -2144,12 +2144,12 @@ void TtaGiveBoxSize (Element element, Document document, View view,
    element: the element of interest.
    document: the document of interest.
    view: the view.
-   unit: the unit used for the values.
+   unit: the unit used for the returned values.
    Return parameters:
    xCoord: distance from the left edge of the parent box to the left
-   edge of the box, in points.
+   edge of the box.
    yCoord:  distance from the upper edge of the parent box to the upper
-   edge of the box, in points.
+   edge of the box.
   ----------------------------------------------------------------------*/
 void TtaGiveBoxPosition (Element element, Document document, View view,
 			 TypeUnit unit, int *xCoord, int *yCoord)
@@ -2197,16 +2197,16 @@ void TtaGiveBoxPosition (Element element, Document document, View view,
 		  *yCoord = pBox->BxYOrg - pAb->AbEnclosing->AbBox->BxYOrg;
 		}
 	      
-	      /* Convert values to pixels */
+	      /* Convert values to the requested unit */
 	      if (unit == UnPercent)
 		{
-		  *xCoord = PixelValue (*xCoord, UnPercent, (PtrAbstractBox) x, 0);
-		  *yCoord = PixelValue (*yCoord, UnPercent, (PtrAbstractBox) y, 0);
+		  *xCoord = LogicalValue (*xCoord, UnPercent, (PtrAbstractBox) x, 0);
+		  *yCoord = LogicalValue (*yCoord, UnPercent, (PtrAbstractBox) y, 0);
 		}
 	      else
 		{
-		  *xCoord = PixelValue (*xCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-		  *yCoord = PixelValue (*yCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		  *xCoord = LogicalValue (*xCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		  *yCoord = LogicalValue (*yCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		}
 	    }
 	}
@@ -2276,17 +2276,17 @@ void TtaGiveBoxAbsPosition (Element element, Document document, View view,
 	      *yCoord = pBox->BxClipY;
 #endif /* _GL */
 	     
-	      /* Convert values to pixels */
+	      /* Convert values to the requested unit */
 	      if (unit == UnPercent)
 		{
 	          GetSizesFrame (frame, &x, &y);
-		  *xCoord = PixelValue (*xCoord, UnPercent, (PtrAbstractBox) x, 0);
-		  *yCoord = PixelValue (*yCoord, UnPercent, (PtrAbstractBox) y, 0);
+		  *xCoord = LogicalValue (*xCoord, UnPercent, (PtrAbstractBox) x, 0);
+		  *yCoord = LogicalValue (*yCoord, UnPercent, (PtrAbstractBox) y, 0);
 		}
 	      else
 		{
-		  *xCoord = PixelValue (*xCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-		  *yCoord = PixelValue (*yCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		  *xCoord = LogicalValue (*xCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		  *yCoord = LogicalValue (*yCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		}
 	    }
 	}

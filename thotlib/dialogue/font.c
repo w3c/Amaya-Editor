@@ -987,6 +987,8 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
       /* take zoom into account */
       if (zoom != 0)
 	{
+	  if (zoom < -9)
+	    zoom = -9;
 	  dist = val + (val * zoom / 10);
 	  if (dist == 0 && val > 0)
 	    dist = 1;
@@ -1003,6 +1005,8 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
       /* take zoom into account */
       if (zoom != 0)
 	{
+	  if (zoom < -9)
+	    zoom = -9;
 	  dist = val + (val * zoom / 10);
 	  if (dist == 0 && val > 0)
 	    dist = 1;
@@ -1059,7 +1063,9 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
        /* take zoom into account */
        if (zoom != 0)
 	 {
-	   dist = val - (val * zoom / 10);
+	   if (zoom < -9)
+	     zoom = -9;
+           dist = (10 * val) / (10 + zoom);
 	   if (dist == 0 && val > 0)
 	     dist = 1;
 	 }
@@ -1075,7 +1081,9 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
        /* take zoom into account */
        if (zoom != 0)
 	 {
-	   dist = val - (val * zoom / 10);
+	   if (zoom < -9)
+	     zoom = -9;
+           dist = (10 * val) / (10 + zoom);
 	   if (dist == 0 && val > 0)
 	     dist = 1;
 	 }

@@ -943,32 +943,34 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
    - the first inserted point will be linked to x1, y1 when x1!= -1
    - the last inserted point will be linked to x3, y3 when x3!= -1
    - point gives the index of the first inserted point
-   - width and height give the limits of the box
+   - x, y, width and height give the limits of the box
    - Pbuffer and Bbuffer point to the current Abstract Box buffer and
      Box buffer.
   ----------------------------------------------------------------------*/
-static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int x3,
-			int y3, int lastx, int lasty, int point,
-			int width, int height, PtrTextBuffer Pbuffer,
-			PtrTextBuffer Bbuffer, int pointselect)
+static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
+			int x1, int y1, int x3, int y3,
+			int lastx, int lasty, int point,
+                        int x, int y, int width, int height,
+			PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer,
+			int pointselect)
 {
   ThotWindow          w;
 #if defined(_MOTIF) || defined(_WINDOWS)
-   ThotEvent           event;
+  ThotEvent           event;
 #endif 
    
 #ifdef _GTK
-   ThotEvent           *event_tmp;
-   ThotEvent           *event;
-   GdkWindowPrivate    *xwindow;
+  ThotEvent           *event_tmp;
+  ThotEvent           *event;
+  GdkWindowPrivate    *xwindow;
 #endif /*_GTK*/
 
-   float               ratioX, ratioY;
+  float               ratioX, ratioY;
   int                 ret;
   int                 newx, newy;
   ThotBool            input;
   ThotBool            wrap;
-  
+
 #ifdef _WINDOWS
   RECT                rect;
   POINT               cursorPos;
@@ -1064,9 +1066,9 @@ static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int
 	  lastx = newx;
 	  lasty = newy;
 	  /* update the box buffer */
-	  newx = LogicalValue (lastx - x, UnPixel, NULL,
+	  newx = LogicalValue (lastx - firstx, UnPixel, NULL,
 			       ViewFrameTable[frame - 1].FrMagnification);
-	  newy = LogicalValue (lasty - y, UnPixel, NULL,
+	  newy = LogicalValue (lasty - firsty, UnPixel, NULL,
 			       ViewFrameTable[frame - 1].FrMagnification);
 	  ModifyPointInPolyline (Bbuffer, point, newx, newy);
 	  /* update the abstract box buffer */
@@ -1150,9 +1152,9 @@ static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int
 	  lastx = newx;
 	  lasty = newy;
 	  /* update the box buffer */
-	  newx = LogicalValue (lastx - x, UnPixel, NULL,
+	  newx = LogicalValue (lastx - firstx, UnPixel, NULL,
 			       ViewFrameTable[frame - 1].FrMagnification);
-	  newy = LogicalValue (lasty - y, UnPixel, NULL,
+	  newy = LogicalValue (lasty - firsty, UnPixel, NULL,
 			       ViewFrameTable[frame - 1].FrMagnification);
 	  ModifyPointInPolyline (Bbuffer, point, newx, newy);
 	  /* update the abstract box buffer */
@@ -1261,9 +1263,9 @@ static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int
 		      lastx = newx;
 		      lasty = newy;
 		      /* update the box buffer */
-		      newx = LogicalValue (lastx - x, UnPixel, NULL,
+		      newx = LogicalValue (lastx - firstx, UnPixel, NULL,
 					   ViewFrameTable[frame - 1].FrMagnification);
-		      newy = LogicalValue (lasty - y, UnPixel, NULL,
+		      newy = LogicalValue (lasty - firsty, UnPixel, NULL,
 					   ViewFrameTable[frame - 1].FrMagnification);
 
 		      ModifyPointInPolyline (Bbuffer, point, newx, newy);
@@ -1343,9 +1345,9 @@ static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int
 	      lastx = newx;
 	      lasty = newy;
 	      /* update the box buffer */
-	      newx = LogicalValue (lastx - x, UnPixel, NULL,
+	      newx = LogicalValue (lastx - firstx, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification);
-	      newy = LogicalValue (lasty - y, UnPixel, NULL,
+	      newy = LogicalValue (lasty - firsty, UnPixel, NULL,
 				   ViewFrameTable[frame - 1].FrMagnification);
 	      ModifyPointInPolyline (Bbuffer, point, newx, newy);
 	      /* update the abstract box buffer */
@@ -1442,7 +1444,7 @@ int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
 }
 
 /*----------------------------------------------------------------------
-  PolyLineModification interracts with the user to move a point of
+  PolyLineModification interacts with the user to move a point of
   a polyline in a given frame.
   *xOrg and *yOrg values give the position of the box pBox in the frame.
   Bbuffer points to the first buffer of the box, i.e. the list of control
@@ -1498,7 +1500,7 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   /* get the current point */
   RedrawPolyLine (frame, *xOrg, *yOrg, Bbuffer, nbpoints, point, close,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
-  MoveApoint (pBox, frame, x, y, x1, y1, x3, y3, lastx, lasty, point, width, height, Pbuffer, Bbuffer, 0);
+  MoveApoint (pBox, frame, *xOrg, *yOrg, x1, y1, x3, y3, lastx, lasty, point, x, y, width, height, Pbuffer, Bbuffer, 0);
 
 #if defined(_WINDOWS) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
@@ -1731,8 +1733,8 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
   yorg -= pFrame->FrYOrg;
   RedrawPolyLine (frame, xorg, yorg, pBuffer, 3, 1, FALSE,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
-  MoveApoint (pBox, frame, xorg, yorg, x1, y1, x3, y3, lastx, lasty, 1, width,
-	          height, pBuffer, pBuffer, point);
+  MoveApoint (pBox, frame, xorg, yorg, x1, y1, x3, y3, lastx, lasty, 1,
+	      xorg, yorg, width, height, pBuffer, pBuffer, point);
   *xi = PixelValue (pBuffer->BuPoints[1].XCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
   *yi = PixelValue (pBuffer->BuPoints[1].YCoord, UnPixel, NULL,
