@@ -620,9 +620,9 @@ void *context;
 	   TtaFreeMemory (desc->originalName);
 	   pathname = urlName;
 	   desc->originalName = TtaAllocString (ustrlen (pathname) + 1);
+	   ustrcpy (desc->originalName, pathname);
 	*/
 	desc->status = IMAGE_LOADED;
-	ustrcpy (desc->originalName, pathname);
 	/* display for each elements in the list */
 	ctxEl = desc->elImage;
 	desc->elImage = NULL;
