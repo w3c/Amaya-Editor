@@ -2393,7 +2393,7 @@ gboolean FocusInCallbackGTK (GtkWidget *widget,
 
     int frame = (int)user_data;
     /*    GtkWidget *drawing_area = FrameTable[frame].WdFrame;*/
-    printf("focus in\n");
+    /*    printf("focus in\n");*/
     /* Set the drawing area active for the keyboard */
     gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)TRUE);
     /*    gtk_grab_remove (gtk_grab_get_current ());*/
@@ -2407,7 +2407,7 @@ gboolean FocusOutCallbackGTK (GtkWidget *widget,
 			      gpointer user_data)
   {
     int frame = (int)user_data;
-    printf("focus out\n");
+    /*    printf("focus out\n");*/
     /*    GtkWidget *drawing_area = FrameTable[frame].WdFrame;*/
     /* Set the drawing area inactive for the keyboard */	  
     gtk_object_set_data (GTK_OBJECT(widget), "Active", (gpointer)FALSE);
@@ -2421,7 +2421,7 @@ gboolean EnterCallbackGTK (GtkWidget *widget,
 			   GdkEventCrossing *event,
 			   gpointer user_data)
   {
-    printf("enter\n");
+    /*    printf("enter\n");*/
      gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)TRUE);    
      /*     gtk_grab_add (GTK_WIDGET (widget));*/
     return FALSE;
@@ -2431,7 +2431,7 @@ gboolean LeaveCallbackGTK (GtkWidget *widget,
 			   GdkEventCrossing *event,
 			   gpointer user_data)
   {
- printf("leave\n");
+    /* printf("leave\n");*/
     gtk_object_set_data (GTK_OBJECT(widget), "MouseIn", (gpointer)FALSE);        
     /*       gtk_grab_remove (GTK_WIDGET (widget));*/
     return FALSE;

@@ -3533,7 +3533,6 @@ static void FindItemMenu (int frame, int menuID, int itemID, int *menu,
   ----------------------------------------------------------------------*/
 void SwitchUndo (PtrDocument pDoc, ThotBool on)
 {
-#ifndef _GTK
 #ifndef _WINDOWS 
    char              fontname[100];
    char              text[20];
@@ -3570,16 +3569,14 @@ void SwitchUndo (PtrDocument pDoc, ThotBool on)
 		  }  
 	   }  
    } 
-#endif /* _GTK */
 } 
 
 /*----------------------------------------------------------------------
   SwitchRedo enables (on=TRUE) or disables (on=FALSE) the Redo
   entry in all document frames.
   ----------------------------------------------------------------------*/
-void         SwitchRedo (PtrDocument pDoc, ThotBool on)
+void SwitchRedo (PtrDocument pDoc, ThotBool on)
 {
-#ifndef _GTK
 #ifndef _WINDOWS 
   char                fontname[100];
   char                text[20];
@@ -3620,16 +3617,14 @@ void         SwitchRedo (PtrDocument pDoc, ThotBool on)
 	    }
 	}
     }
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
   SwitchPaste enables (on=TRUE) or disables (on=FALSE) the Paste
   entry in all frames.
   ----------------------------------------------------------------------*/
-void         SwitchPaste (PtrDocument pDoc, ThotBool on)
+void SwitchPaste (PtrDocument pDoc, ThotBool on)
 {
-#ifndef _GTK 
 #ifndef _WINDOWS 
   char                fontname[100];
   char                text[20];
@@ -3678,7 +3673,6 @@ void         SwitchPaste (PtrDocument pDoc, ThotBool on)
 	}
       frame++;
     }
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -3761,6 +3755,8 @@ void TtaSetMenuOff (Document document, View view, int menuID)
 		   XtManageChild (w);
 		   XmFontListFree (font);
 		 }
+#else /* _GTK */
+	       gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 	     }
@@ -3837,8 +3833,9 @@ void TtaSetMenuOn (Document document, View view, int menuID)
 		 XtSetValues (w, args, 1);
 		 XtManageChild (w);
 	       }
-#endif /* _GTK */
-
+#else /* _GTK */
+	     gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
+#endif /* !_GTK */
 #endif
 #ifndef _WINDOWS
 		  }  

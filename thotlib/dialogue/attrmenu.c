@@ -1232,7 +1232,6 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
   ----------------------------------------------------------------------*/
 void UpdateAttrMenu (PtrDocument pDoc)
 {
-#ifndef _GTK
   Document            document;
   Menu_Ctl           *pMenu;
   char                bufMenuAttr[MAX_TXT_LEN];
@@ -1333,7 +1332,6 @@ void UpdateAttrMenu (PtrDocument pDoc)
 	    }
 	}
     }
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1568,7 +1566,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
    handles the callbacks of the "Attributes" menu: creates a
    form to capture the value of the chosen attribute.
   ----------------------------------------------------------------------*/
-void                CallbackAttrMenu (int refmenu, int att, int frame)
+void CallbackAttrMenu (int refmenu, int att, int frame)
 {
   TtAttribute        *pAttr;
   PtrAttribute        pAttrNew, currAttr;
@@ -1686,10 +1684,12 @@ void                CallbackAttrMenu (int refmenu, int att, int frame)
 		CurrentAttr = att;
 		/* restore the toggle state */
 #ifndef _WINDOWS 
+#ifndef _GTK
 		if (ActiveAttr[item] == 0)
 		  TtaSetToggleMenu (refmenu, item, FALSE);
 		else
 		  TtaSetToggleMenu (refmenu, item, TRUE);
+#endif
 		/* display the form */
 		TtaShowDialogue (NumMenuAttr, TRUE);
 #else /* _WINDOWS */

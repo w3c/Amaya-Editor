@@ -562,7 +562,7 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    if (frame > MAX_FRAME)
       frame = 0;
    
-   printf("KEY event\n");
+   /*   printf("KEY event\n");*/
    /* the drawing area is the main zone where keypress event must be active */
    drawing_area = FrameTable[frame].WdFrame;
    textzone = FrameTable[frame].Text_Zone[1];

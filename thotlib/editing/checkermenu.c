@@ -715,7 +715,7 @@ static void         ApplyCommand (int val)
 /*----------------------------------------------------------------------
   CallbackChecker
   ----------------------------------------------------------------------*/
-void                CallbackChecker (int ref, int dataType, char *data)
+void CallbackChecker (int ref, int dataType, char *data)
 {
   PtrElement          pEl1, pElN;
   int                 c1, cN;
