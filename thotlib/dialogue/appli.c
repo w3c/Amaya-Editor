@@ -1466,10 +1466,12 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     /* Create toolbar  */
     ThotTBBitmap.hInst = hInstance;
     ThotTBBitmap.nID  = IDR_TOOLBAR;
+	
     dwToolBarStyles = WS_CHILD | WS_VISIBLE | CCS_TOP | TBSTYLE_TOOLTIPS;
     dwToolBarStyles = dwToolBarStyles | TBSTYLE_FLAT;
-    ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
+	ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
 			    0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0);
+
     SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
     if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON, (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
       WinErrorBox (NULL, "WndProc: WM_CREATE");

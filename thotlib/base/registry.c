@@ -1296,7 +1296,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
   ptr = appName;
   while (*ptr)
     {
-      *ptr = utolower (*ptr);
+      *ptr = tolower (*ptr);
       ptr++;
     }
 #endif /* _WINDOWS */
