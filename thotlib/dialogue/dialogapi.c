@@ -2764,7 +2764,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifdef _GTK
                          w = gtk_menu_item_new_with_label (&text[index + 1]);
                          gtk_widget_show (w);
-                         gtk_menu_append (GTK_MENU (parent),w);
+                         gtk_menu_append (GTK_MENU (parent), w);
                          gtk_signal_connect(GTK_OBJECT (w), "activate",
 					    GTK_SIGNAL_FUNC (CallMenuGTK), catalogue);
                          adbloc->E_ThotWidget[ent] = w;

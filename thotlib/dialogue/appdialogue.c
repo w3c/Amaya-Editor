@@ -2727,7 +2727,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			 /*** The menu bar ***/
 #ifdef _GTK
 			 menu_bar = gtk_menu_bar_new ();
-			 GTK_WIDGET_SET_FLAGS (menu_bar, GTK_SENSITIVE);
+			 /*GTK_WIDGET_SET_FLAGS (menu_bar, GTK_SENSITIVE);*/
 
 			 /*			 gtk_widget_ref (menu_bar);*/
 			 /*		 	 gtk_object_set_data_full (GTK_OBJECT (Main_Wd), "menubar", menu_bar,
@@ -2748,8 +2748,14 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		     w = CreateMenu ();
 #else  /* _WINDOWS */
 #ifdef _GTK
+		     menu_item = gtk_menu_item_new_with_label (TtaGetMessage (THOT, ptrmenu->MenuID));
+		     gtk_widget_show (menu_item);
+		     GTK_WIDGET_SET_FLAGS (menu_item, GTK_SENSITIVE);
+		     if (ptrmenu->MenuHelp == TRUE) gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
+		     gtk_container_add(GTK_CONTAINER (menu_bar), menu_item);
 		     w = gtk_menu_new ();
-		     GTK_WIDGET_SET_FLAGS (w, GTK_SENSITIVE);
+		     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), w);
+		     gtk_object_set_data (GTK_OBJECT(w), "MenuItem", (gpointer)menu_item);
 #else /* _GTK */
 		     w = XmCreateCascadeButton (menu_bar, TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
 		     XtManageChild (w);
@@ -2768,17 +2774,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		     AppendMenu (menu_bar, MF_POPUP, (UINT) w,
 				 TtaGetMessage (THOT, ptrmenu->MenuID));
 #else  /* !_WINDOWS */
-#ifdef _GTK
-		     menu_item = gtk_menu_item_new_with_label (TtaGetMessage (THOT, ptrmenu->MenuID));
-		     gtk_widget_show (menu_item);
-		     GTK_WIDGET_SET_FLAGS (menu_item, GTK_SENSITIVE);
-		     if (ptrmenu->MenuHelp == TRUE) gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
-		     gtk_container_add(GTK_CONTAINER (menu_bar), menu_item);
-		     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), w);
-		     /* attache the menu item to the menu in order to set sensitive or not */
-		     gtk_object_set_data (GTK_OBJECT(w), "MenuItem", (gpointer)menu_item);
-
-#else /* _GTK */
+#ifndef _GTK
 		     /* Register dynamic menus */
 		     if (ptrmenu->MenuHelp)
 		       {
