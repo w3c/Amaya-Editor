@@ -86,14 +86,7 @@ void                ConfigInit ()
 /*----------------------------------------------------------------------
    getFirstWord                                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         getFirstWord (unsigned char* line, CHAR_T* word)
-#else  /* __STDC__ */
-static void         getFirstWord (line, word)
-unsigned char*      line;
-CHAR_T*             word;
-
-#endif /* __STDC__ */
 {
    int             indword, indline;
 #  ifdef _I18N_
@@ -152,14 +145,7 @@ CHAR_T*             word;
 /*----------------------------------------------------------------------
    getSecondWord                                                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         getSecondWord (unsigned char* line, CHAR_T* word)
-#else  /* __STDC__ */
-static void         getSecondWord (line, word)
-unsigned char*      line;
-CHAR_T*             word;
-
-#endif /* __STDC__ */
 {
    int              indword, indline;
 #  ifdef _I18N_
@@ -243,13 +229,7 @@ CHAR_T*             word;
 /*----------------------------------------------------------------------
    singleWord                                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     singleWord (unsigned char* line)
-#else  /* __STDC__ */
-static ThotBool     singleWord (line)
-unsigned char*      line;
-
-#endif /* __STDC__ */
 {
    int                 ind;
 #  ifdef _I18N_
@@ -321,14 +301,7 @@ unsigned char*      line;
 /*----------------------------------------------------------------------
    getStringAfterColon                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         getStringAfterColon (unsigned char* line, CHAR_T* text)
-#else  /* __STDC__ */
-static void         getStringAfterColon (line, text)
-unsigned char*      line;
-CHAR_T*             text;
-
-#endif /* __STDC__ */
 {
    int                 indline, indtext;
 #  ifdef _I18N_
@@ -417,15 +390,7 @@ CHAR_T*             text;
    1 si on trouve le 1er mot,                           
    2 si on trouve le 2eme mot.                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     readUntil (FILE * file, CHAR_T* word1, CHAR_T* word2)
-#else  /* __STDC__ */
-static ThotBool     readUntil (file, word1, word2)
-FILE               *file;
-char*               word1;
-char*               word2;
-
-#endif /* __STDC__ */
 {
    ThotBool            stop;
    int                 ret;
@@ -458,17 +423,7 @@ char*               word2;
 /*----------------------------------------------------------------------
    namesOfDocType                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         namesOfDocType (CHAR_T* fname, CHAR_T** doctypeOrig, CHAR_T** doctypeTrans, int *typ, ThotBool * import)
-#else  /* __STDC__ */
-static void         namesOfDocType (fname, doctypeOrig, doctypeTrans, typ, import)
-CHAR_T*             fname;
-CHAR_T**            doctypeOrig;
-CHAR_T**            doctypeTrans;
-int*                typ;
-ThotBool*           import;
-
-#endif /* __STDC__ */
 {
    int                 i, l, point, res;
    FILE*               file;
@@ -614,11 +569,7 @@ ThotBool*           import;
    Frees the table entries of all the document types, natures and
    extensions.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ConfigFree (void)
-#else                        /* __STDC__ */
-void                ConfigFree (void)
-#endif                       /* __STDC__ */
 {
    int i;
 
@@ -663,12 +614,7 @@ void                ConfigFree (void)
    structure (documents, natures et extensions) qui ont    
    des fichiers de langue dans les directories de schemas. 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaConfigReadConfigFiles (CHAR_T* aSchemaPath)
-#else                        /* __STDC__ */
-void                TtaConfigReadConfigFiles (aSchemaPath)
-CHAR_T*             aSchemaPath;
-#endif                       /* __STDC__ */
 {
   int                 nbitemdoc, nbitemnat, nbitemext;
   int                 beginning, i;
@@ -777,17 +723,7 @@ CHAR_T*             aSchemaPath;
    Si doc == TRUE on prend les schemas de documents, sinon 
    les schemas de nature.                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 ConfigMakeDocTypeMenu (CHAR_T* BufMenu, int *lgmenu, ThotBool doc)
-
-#else  /* __STDC__ */
-int                 ConfigMakeDocTypeMenu (BufMenu, lgmenu, doc)
-CHAR_T*             BufMenu;
-int                *lgmenu;
-ThotBool            doc;
-
-#endif /* __STDC__ */
-
+int   ConfigMakeDocTypeMenu (CHAR_T* BufMenu, int *lgmenu, ThotBool doc)
 {
    int                 nbitem, len, i;
 
@@ -847,17 +783,7 @@ ThotBool            doc;
    Typ indique s'il s'agit d'un schema de document (1), de         
    nature (2) ou d'extension (3).                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaConfigSSchemaExternalName (CHAR_T* nameUser, CHAR_T* nameSchema, int Typ)
-
-#else  /* __STDC__ */
-void                TtaConfigSSchemaExternalName (nameUser, nameSchema, Typ)
-CHAR_T*             nameUser;
-CHAR_T*             nameSchema;
-int                 Typ;
-
-#endif /* __STDC__ */
-
+void TtaConfigSSchemaExternalName (CHAR_T* nameUser, CHAR_T* nameSchema, int Typ)
 {
    int                 i;
    ThotBool            found;
@@ -918,18 +844,7 @@ int                 Typ;
    Si Doc est vrai, il s'agit d'un schema de document, sinon c'est 
    un schema de nature.                                            
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                ConfigSSchemaInternalName (CHAR_T* nameUser, CHAR_T* nameSchema, ThotBool Doc)
-
-#else  /* __STDC__ */
-void                ConfigSSchemaInternalName (nameUser, nameSchema, Doc)
-CHAR_T*             nameUser;
-CHAR_T*             nameSchema;
-ThotBool            Doc;
-
-#endif /* __STDC__ */
-
+void  ConfigSSchemaInternalName (CHAR_T* nameUser, CHAR_T* nameSchema, ThotBool Doc)
 {
    int                 i;
    ThotBool            found;
@@ -967,16 +882,7 @@ ThotBool            Doc;
 /*----------------------------------------------------------------------
    openConfigFile                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static FILE        *openConfigFile (CHAR_T* name, ThotBool lang)
-
-#else  /* __STDC__ */
-static FILE        *openConfigFile (name, lang)
-CHAR_T*             name;
-ThotBool            lang;
-
-#endif /* __STDC__ */
-
 {
  
    CHAR_T*             suffix;
@@ -1011,16 +917,7 @@ ThotBool            lang;
    presentation qui peuvent s'appliquer au schema de structure de  
    nom schema.                                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 ConfigMakeMenuPres (CHAR_T* schema, CHAR_T* BufMenu)
-
-#else  /* __STDC__ */
-int                 ConfigMakeMenuPres (schema, BufMenu)
-CHAR_T*             schema;
-CHAR_T*             BufMenu;
-
-#endif /* __STDC__ */
-
 {
    int                 nbitem, len, indmenu;
    FILE*               file;
@@ -1099,16 +996,7 @@ CHAR_T*             BufMenu;
    presentation le nom interne du schema qui se trouve     
    a l'entree de rang choix.                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ConfigGetPSchemaName (int choix, CHAR_T* schpres)
-
-#else  /* __STDC__ */
-void                ConfigGetPSchemaName (choix, schpres)
-int                 choix;
-CHAR_T*             schpres;
-
-#endif /* __STDC__ */
-
 {
    ustrcpy (schpres, pres_items[choix - 1]);
 }
@@ -1118,15 +1006,7 @@ CHAR_T*             schpres;
    structure qui ont des fichiers de langue dans les       
    directories de schemas.                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 ConfigMakeImportMenu (CHAR_T* BufMenu)
-
-#else  /* __STDC__ */
-int                 ConfigMakeImportMenu (BufMenu)
-CHAR_T*             BufMenu;
-
-#endif /* __STDC__ */
-
 {
    int                 nbitem, len, i, lgmenu;
 
@@ -1166,16 +1046,7 @@ CHAR_T*             BufMenu;
    traduction qui peuvent s'appliquer au schema de structure de    
    nom schema.                                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 ConfigMakeMenuExport (CHAR_T* schema, CHAR_T* BufMenu)
-
-#else  /* __STDC__ */
-int                 ConfigMakeMenuExport (schema, BufMenu)
-CHAR_T*             schema;
-CHAR_T*             BufMenu;
-
-#endif /* __STDC__ */
-
 {
    int                 indmenu;
    int                 nbitem, len;
@@ -1254,16 +1125,7 @@ CHAR_T*             BufMenu;
    traduction le nom interne du schema qui se trouve       
    a l'entree de rang choix.                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ConfigGetExportSchemaName (int choix, CHAR_T* schtrad)
-
-#else  /* __STDC__ */
-void                ConfigGetExportSchemaName (choix, schtrad)
-int                 choix;
-CHAR_T*             schtrad;
-
-#endif /* __STDC__ */
-
 {
    ustrcpy (schtrad, export_items[choix - 1]);
 }
@@ -1272,18 +1134,7 @@ CHAR_T*             schtrad;
 /*----------------------------------------------------------------------
    Translate                                                       
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool     Translate (PtrSSchema pSS, CHAR_T* word, CHAR_T* trans)
-
-#else  /* __STDC__ */
-static ThotBool     Translate (pSS, word, trans)
-PtrSSchema          pSS;
-CHAR_T*             word;
-CHAR_T*             trans;
-
-#endif /* __STDC__ */
-
 {
    ThotBool            found;
    int                 i, j;
@@ -1331,16 +1182,7 @@ CHAR_T*             trans;
 /*----------------------------------------------------------------------
    ConfigTranslateSSchema                                          
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                ConfigTranslateSSchema (PtrSSchema pSS)
-
-#else  /* __STDC__ */
-void                ConfigTranslateSSchema (pSS)
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
 {
    FILE*    file;
    ThotBool stop, error;
@@ -1422,16 +1264,7 @@ PtrSSchema          pSS;
    dans le fichier .conf correspondant.                            
    Retourne FALSE si pas trouve', TRUE si OK.                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            ConfigDefaultPSchema (CHAR_T* schstr, CHAR_T* schpres)
-
-#else  /* __STDC__ */
-ThotBool            ConfigDefaultPSchema (schstr, schpres)
-CHAR_T*             schstr;
-CHAR_T*             schpres;
-
-#endif /* __STDC__ */
-
 {
    ThotBool            ok, stop;
    FILE               *file;
@@ -1481,14 +1314,7 @@ CHAR_T*             schpres;
    suivi du nom namePSchema.                                
    Retourne TRUE si trouve, FALSE sinon.                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     readUntilStyle (FILE * file, CHAR_T* namePSchema)
-#else  /* __STDC__ */
-static ThotBool     readUntilStyle (file, namePSchema)
-FILE               *file;
-CHAR_T*             namePSchema;
-
-#endif /* __STDC__ */
 {
    ThotBool            stop;
    ThotBool            ok;
@@ -1524,15 +1350,7 @@ CHAR_T*             namePSchema;
    Retourne le file descriptor du fichier si on a trouve'  
    le fichier .conf et la section, NULL sinon.             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static FILE        *openConfFileAndReadUntil (PtrSSchema pSS, CHAR_T* sectName)
-
-#else  /* __STDC__ */
-static FILE        *openConfFileAndReadUntil (pSS, sectName)
-PtrSSchema          pSS;
-CHAR_T*             sectName;
-
-#endif /* __STDC__ */
+static FILE  *openConfFileAndReadUntil (PtrSSchema pSS, CHAR_T* sectName)
 {
    FILE*    file;
 
@@ -1570,16 +1388,7 @@ CHAR_T*             sectName;
    Retourne TRUE si succes, FALSE si on a atteint la fin   
    de la section courante ou du fichier.                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     getNextLineInSection (FILE * file, char* line)
-
-#else  /* __STDC__ */
-static ThotBool     getNextLineInSection (file, line)
-FILE               *file;
-char*               line;
-
-#endif /* __STDC__ */
-
 {
    ThotBool            ok, stop;
    CHAR_T              word1[MAX_TXT_LEN];
@@ -1639,13 +1448,7 @@ char*               line;
 /*----------------------------------------------------------------------
    ConfigKeyboard.                                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             ConfigKeyboard (int *x, int *y)
-#else  /* __STDC__ */
-void             ConfigKeyboard (x, y)
-int             *x;
-int             *y;
-#endif /* __STDC__ */
 {
    FILE         *file;
    CHAR_T        seqLine[MAX_TXT_LEN];
@@ -1674,19 +1477,8 @@ int             *y;
    open ou geometry d'un fichier .conf                     
    Retourne TRUE si succes.                                
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     getXYWidthHeight (char* line, PtrDocument pDoc, int *x, int *y,
-				      int *width, int *height)
-#else  /* __STDC__ */
-static ThotBool     getXYWidthHeight (line, pDoc, x, y, width, height)
-char*               line;
-PtrDocument         pDoc;
-int                *x;
-int                *y;
-int                *width;
-int                *height;
-
-#endif /* __STDC__ */
+static ThotBool  getXYWidthHeight (char* line, PtrDocument pDoc, int *x,
+				   int *y, int *width, int *height)
 {
   CHAR_T              seqLine[MAX_TXT_LEN];
   int                 nbIntegers;
@@ -1713,13 +1505,7 @@ int                *height;
    specifiees dans la section open du fichier de           
    configuration .conf                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ConfigOpenFirstViews (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                ConfigOpenFirstViews (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
    FILE               *file;
    int                 x, y, width, height;
@@ -1751,18 +1537,8 @@ PtrDocument         pDoc;
    dimensions (width, height) de la fenetre ou doit        
    s'afficher la vue de non view pour le document pDoc.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ConfigGetViewGeometry (PtrDocument pDoc, CHAR_T* view, int *x, int *y, int *width, int *height)
-#else  /* __STDC__ */
-void                ConfigGetViewGeometry (pDoc, view, x, y, width, height)
-PtrDocument         pDoc;
-CHAR_T*             view;
-int                *x;
-int                *y;
-int                *width;
-int                *height;
-
-#endif /* __STDC__ */
+void   ConfigGetViewGeometry (PtrDocument pDoc, CHAR_T* view, int *x,
+			      int *y, int *width, int *height)
 {
    FILE               *file;
    char               line[MAX_TXT_LEN];
@@ -1815,17 +1591,7 @@ int                *height;
    TtaGetViewXYWH returns the current geometry (x, y, width, and height)
    values associated with the frame where a view is displayed
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width, int *height)
-#else  /* __STDC__ */
-void                TtaGetViewXYWH (doc, view, xmm, ymm, width, height)
-Document       doc;
-int            view;
-int           *xmm;
-int           *ymm;
-int           *width;
-int           *height;
-#endif /* __STDC__ */
 {
 #ifndef _WINDOWS
   int                 frame;
@@ -1895,18 +1661,8 @@ int           *height;
    Parameters:    document: the document.                  
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void               TtaGetViewGeometry (Document document, char* name, int *x, int *y, int *width, int *height)
-#else  /* __STDC__ */
-void               TtaGetViewGeometry (document, name, x, y, width, height)
-Document           document;
-char*              name;
-int                *x;
-int                *y;
-int                *width;
-int                *height;
-
-#endif /* __STDC__ */
+void    TtaGetViewGeometry (Document document, char* name, int *x, int *y,
+			    int *width, int *height)
 {
   PtrDocument pDoc;
   char        line[MAX_TXT_LEN];
@@ -1944,18 +1700,8 @@ int                *height;
    Parameters:    document: the document.                  
    name: the name of the view in P schema.  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGetViewGeometryMM (Document document, CHAR_T* name, int *x, int *y, int *width, int *height)
-#else  /* __STDC__ */
-void                TtaGetViewGeometryMM (document, name, x, y, width, height)
-Document            document;
-CHAR_T*             name;
-int                *x;
-int                *y;
-int                *width;
-int                *height;
-
-#endif /* __STDC__ */
+void   TtaGetViewGeometryMM (Document document, CHAR_T* name, int *x,
+			     int *y, int *width, int *height)
 {
    TtaGetViewGeometry (document, name, x, y, width, height);
 }
@@ -1965,15 +1711,7 @@ int                *height;
    schema de presentation a appliquer a la nature de nom   
    nameNature dans le contexte du schema de structure pSS   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            ConfigGetPSchemaNature (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* presNature)
-#else  /* __STDC__ */
-ThotBool            ConfigGetPSchemaNature (pSS, nameNature, presNature)
-PtrSSchema          pSS;
-CHAR_T*             nameNature;
-CHAR_T*             presNature;
-
-#endif /* __STDC__ */
+ThotBool  ConfigGetPSchemaNature (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* presNature)
 {
    FILE               *file;
    char                line[MAX_TXT_LEN];
@@ -2025,18 +1763,7 @@ CHAR_T*             presNature;
    Retourne la valeur trouvee dans optionValue, ou une     
    chaine vide si l'option n'est pas trouvee.              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                ConfigGetPresentationOption (PtrSSchema pSS, CHAR_T* optionName, CHAR_T* optionValue)
-
-#else  /* __STDC__ */
-void                ConfigGetPresentationOption (pSS, optionName, optionValue)
-PtrSSchema          pSS;
-CHAR_T*             optionName;
-CHAR_T*             optionValue;
-
-#endif /* __STDC__ */
-
+void ConfigGetPresentationOption (PtrSSchema pSS, CHAR_T* optionName, CHAR_T* optionValue)
 {
    FILE               *file;
    char                line[MAX_TXT_LEN];
@@ -2084,18 +1811,7 @@ CHAR_T*             optionValue;
    Retourne le nom du schema trouve' dans schemaName, ou   
    une chaine vide si pas trouve'.                         
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                ConfigGetPSchemaForPageSize (PtrSSchema pSS, CHAR_T* pageSize, CHAR_T* schemaName)
-
-#else  /* __STDC__ */
-void                ConfigGetPSchemaForPageSize (pSS, pageSize)
-PtrSSchema          pSS;
-CHAR_T*             pageSize;
-CHAR_T*             schemaName;
-
-#endif /* __STDC__ */
-
+void  ConfigGetPSchemaForPageSize (PtrSSchema pSS, CHAR_T* pageSize, CHAR_T* schemaName)
 {
    FILE*    file;
    char     line[MAX_TXT_LEN];
@@ -2180,17 +1896,7 @@ CHAR_T*             schemaName;
    0 si echec.                                                     
    LgMax indique la taille du buffer BufMenu.                      
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 int                 MakeMenuPattern (STRING BufMenu, int LgMax)
-
-#else  /* __STDC__ */
-int                 MakeMenuPattern (BufMenu, LgMax)
-STRING              BufMenu;
-int                 LgMax;
-
-#endif /* __STDC__ */
-
 {
    int                 nbentree;
    CHAR_T                name[80];
@@ -2239,17 +1945,7 @@ int                 LgMax;
    0 si echec.                                                     
    LgMax indique la taille du buffer BufMenu.                      
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 int                 MakeMenuColor (STRING BufMenu, int LgMax)
-
-#else  /* __STDC__ */
-int                 MakeMenuColor (BufMenu, LgMax)
-STRING              BufMenu;
-int                 LgMax;
-
-#endif /* __STDC__ */
-
 {
    int                 nbentree;
    int                 lgmenu;
@@ -2298,16 +1994,7 @@ int                 LgMax;
    nameNature dans le contexte du schema de structure pSS           
    Retourne FALSE si pas trouve', TRUE si OK.                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            ConfigDefaultTypoSchema (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* schtypo)
-#else  /* __STDC__ */
-ThotBool            ConfigDefaultTypoSchema (pSS, nameNature, schtypo)
-PtrSSchema          pSS;
-CHAR_T*             nameNature;
-CHAR_T*             schtypo;
-
-#endif /* __STDC__ */
-
+ThotBool  ConfigDefaultTypoSchema (PtrSSchema pSS, CHAR_T* nameNature, CHAR_T* schtypo)
 {
    ThotBool            ok, found;
    FILE               *file;
@@ -2351,4 +2038,4 @@ CHAR_T*             schtypo;
      }
    return ok;
 
-}				/*ConfigDefaultTypoSchema */
+}

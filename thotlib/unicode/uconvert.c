@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1999.
+ *  (c) COPYRIGHT INRIA 1999-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -351,23 +351,13 @@ unsigned short WIN1257CP [] = {
 };
 #define WIN1257CP_length sizeof(WIN1257CP) / sizeof(unsigned short);
 
-#ifdef __STDC__
 extern STRING TtaAllocString (unsigned int);
 extern void*  TtaGetMemory (unsigned int);
-#else  /* __STDC__ */
-extern STRING TtaAllocString ();
-extern void*  TtaGetMemory ();
-#endif /* __STDC__ */
 
-/*----------------------------------------------------------------------------
+/*----------------------------------------------------------------------
   uctio
-  ----------------------------------------------------------------------------*/
-#ifdef __STDC__
+  ----------------------------------------------------------------------*/
 int          uatoi (const STRING string)
-#else  /* __STDC__ */
-int          uatoi (string)
-const STRING string;
-#endif /* __STDC__ */
 {
 #ifdef _I18N_
 #ifdef _WINDOWS
@@ -393,15 +383,10 @@ const STRING string;
 #endif /* _I18N_ */
 }
 
-/*----------------------------------------------------------------------------
+/*----------------------------------------------------------------------
   uatol converts a strint to a long
-  ----------------------------------------------------------------------------*/
-#ifdef __STDC__
+  ----------------------------------------------------------------------*/
 long         uatol (const STRING string)
-#else  /* __STDC__ */
-long         uatol (string)
-const STRING string;
-#endif /* __STDC_+_ */
 {
 #ifdef _I18N_
 #ifdef _WINDOWS
@@ -417,15 +402,10 @@ const STRING string;
 #endif /* _I18N_ */
 }
 
-/*----------------------------------------------------------------------------
+/*----------------------------------------------------------------------
  utolower converts uppercases to lowercases
- ----------------------------------------------------------------------------*/
-#ifdef __STDC__
+  ----------------------------------------------------------------------*/
 CHAR_T utolower (CHAR_T c)
-#else  /* __STDC__ */
-CHAR_T utolower (c)
-CHAR_T c;
-#endif /* __STDC__ */
 {
 #ifdef _I18N_
   return (CHAR_T) towlower((wint_t) c);
@@ -435,17 +415,11 @@ CHAR_T c;
 }
 
 
-/*----------------------------------------------------------------------------
+/*----------------------------------------------------------------------
   TtaGetCharFromUnicode: returns the char code in the corresponding encoding
   of  the Unicode value wc.
-  ----------------------------------------------------------------------------*/
-#ifdef __STDC__
+  ----------------------------------------------------------------------*/
 unsigned char  TtaGetCharFromUnicode (const wchar_t wc, CHARSET encoding)
-#else  /* __STDC__ */
-unsigned char  TtaGetCharFromUnicode (wc, encoding)
-const wchar_t  wc;
-CHARSET        encoding;
-#endif /* __STDC__ */
 {
   unsigned int  c, max;
   unsigned short *table;
@@ -538,17 +512,11 @@ CHARSET        encoding;
 }
 
 
-/*----------------------------------------------------------------------------*\
- * TtaGetUnicodeValueFrom_ISO_8859_2_Code: return the Unicode val corresponding
- * to the ISO Latin 2 code c.
-\*----------------------------------------------------------------------------*/
-#ifdef __STDC__
-wchar_t             TtaGetUnicodeFromChar (const unsigned char c, CHARSET encoding)
-#else  /* __STDC__ */
-wchar_t             TtaGetUnicodeFromChar (c, encoding)
-const unsigned char wc;
-CHARSET             encoding;
-#endif /* __STDC__ */
+/*----------------------------------------------------------------------
+  TtaGetUnicodeValueFrom_ISO_8859_2_Code: return the Unicode val corresponding
+  to the ISO Latin 2 code c.
+  ----------------------------------------------------------------------*/
+wchar_t TtaGetUnicodeFromChar (const unsigned char c, CHARSET encoding)
 {
   unsigned int  val, max;
   unsigned short *table;
@@ -638,18 +606,11 @@ CHARSET             encoding;
 }
 
 
-/*------------------------------------------------------------------------------
+/*----------------------------------------------------------------------
   TtaWC2MB converts a wide character into a multibyte character.
   Returns the number of bytes in the multibyte character or -1
-  ------------------------------------------------------------------------------*/
-#ifdef __STDC__
+  ----------------------------------------------------------------------*/
 int     TtaWC2MB (wchar_t wchar, char* mbchar, CHARSET encoding)
-#else  /* __STDC__ */
-int     TtaWC2MB (wchar, mbchar, encoding)
-wchar_t  wchar;
-char*   mbchar; 
-CHARSET encoding;
-#endif /* __STDC__ */
 {
   unsigned char   leadByteMark;
   unsigned char  *mbcptr = mbchar;
@@ -725,19 +686,12 @@ CHARSET encoding;
 }
 
 
-/*--------------------------------------------------------------------------------
-  TtaMBS2WCS converts a multibyte string into a wide character string according 
-  to the charset.
+/*----------------------------------------------------------------------
+  TtaMBS2WCS converts a multibyte string into a wide character string
+  according to the charset.
   Returns the number of bytes in the multibyte character or -1
-  ------------------------------------------------------------------------------*/
-#ifdef __STDC__
-int             TtaMBS2WCS (unsigned char** src, wchar_t** target, CHARSET encoding)
-#else  /* __STDC__ */
-int             TtaMBS2WCS (src, target, encoding)
-unsigned char **src;
-wchar_t       **target;
-CHARSET         encoding;
-#endif /* __STDC__ */
+  ----------------------------------------------------------------------*/
+int TtaMBS2WCS (unsigned char** src, wchar_t** target, CHARSET encoding)
 {
   unsigned char *ptrSrc = *src;
   wchar_t       *ptrTarget = *target;
@@ -813,20 +767,14 @@ CHARSET         encoding;
 }
 
 
-/*--------------------------------------------------------------------------------*\
- * TtaWCS2MBS: converts a wide character string into a multibyte string according *
- * to the charset.                                                                *
- * Return value: -1 if fails                                                      *
- *               Number of bytes in the multibyte character                       *
-\*--------------------------------------------------------------------------------*/
-#ifdef __STDC__
+/*----------------------------------------------------------------------
+  TtaWCS2MBS:
+  converts a wide character string into a multibyte string according to
+  the charset.                                                                
+  Return value: -1 if fails
+  Number of bytes in the multibyte character
+  ----------------------------------------------------------------------*/
 int TtaWCS2MBS (wchar_t** src, unsigned char** target, CHARSET encoding)
-#else  /* __STDC__ */
-int TtaWCS2MBS (src, target, encoding)
-wchar_t**        src;
-unsigned char** target;
-CHARSET         encoding;
-#endif /* __STDC__ */
 {
   wchar_t          *ptrSrc           = *src;
   wchar_t           wc = *ptrSrc++;
@@ -922,14 +870,7 @@ CHARSET         encoding;
   TtaGetNextWideCharFromMultibyteString: Looks for the next Wide character 
   value in a multibyte character string.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int            TtaGetNextWideCharFromMultibyteString (wchar_t *car, unsigned char **txt, CHARSET encoding)
-#else  /* !__STDC__ */
-int            TtaGetNextWideCharFromMultibyteString (car, txt, encoding)
-wchar_t        *car;
-unsigned char **txt;
-CHARSET         encoding;
-#endif /* !__STDC__ */
+int TtaGetNextWideCharFromMultibyteString (wchar_t *car, unsigned char **txt, CHARSET encoding)
 {
   int            nbBytesToRead;
   unsigned char *start = *txt;
@@ -989,13 +930,7 @@ CHARSET         encoding;
   TtaGetNumberOfBytesToRead: 
   Returns the number of bytes to read
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int            TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding)
-#else  /* !__STDC__ */
-int            TtaGetNumberOfBytesToRead (txt, encoding)
-unsigned char  **txt;
-CHARSET          encoding;
-#endif /* !__STDC__ */
+int  TtaGetNumberOfBytesToRead (unsigned char **txt, CHARSET encoding)
 {
   int            nbBytesToRead = 1;
   unsigned char *start = *txt;
