@@ -135,7 +135,13 @@ typedef struct _AHTReqContext
   }
 AHTReqContext;
 
+/*
+** the HTTP error messages
+*/
+/* an interpreted version of the error */
 THOT_EXPORT CHAR_T      AmayaLastHTTPErrorMsg [MAX_LENGTH];
+/* the reason string sent by the server */
+THOT_EXPORT CHAR_T      AmayaLastHTTPErrorMsgR [MAX_LENGTH];
 THOT_EXPORT HTList      *conv;	/* List of global converters */
 THOT_EXPORT AmayaContext *Amaya;	/* Amaya's request global context    */
 #endif /* AMAYA_LIBWWW_H */

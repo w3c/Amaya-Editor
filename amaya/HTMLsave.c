@@ -1385,7 +1385,8 @@ ThotBool            use_preconditions;
 	}
       else
 	{
-	  InitInfo (TEXT("Save"), msg);
+	  InitConfirm3L (document, view, msg, AmayaLastHTTPErrorMsg, 
+			 AmayaLastHTTPErrorMsgR, FALSE);
 	  res = -1;
 	}
       /* erase the last status message */
@@ -1534,7 +1535,8 @@ ThotBool         use_preconditions;
 		    url);
 	  if (confirm)
 	    {
-	      InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, NULL, TRUE);
+	      InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg,
+			     AmayaLastHTTPErrorMsgR, FALSE);
 	      if (UserAnswer)
 		res = -1;
 	      else
@@ -1542,7 +1544,8 @@ ThotBool         use_preconditions;
 	    }
 	  else
 	    {
-	      InitInfo (TEXT("Save"), msg);
+	      InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, 
+			     AmayaLastHTTPErrorMsgR, FALSE);
 	      res = -1;
 	    }
 	  /* JK: to erase the last status message */
@@ -1566,7 +1569,8 @@ ThotBool         use_preconditions;
 		  usprintf (msg, TEXT("%s %s"),
 			    TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
 			    pImage->originalName);
-		  InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, NULL, TRUE);
+		  InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, 
+				 AmayaLastHTTPErrorMsgR, FALSE);
 		  /* erase the last status message */
 		  TtaSetStatus (doc, view, TEXT(""), NULL);
 		  if (UserAnswer)

@@ -642,6 +642,7 @@ int status;
   CHAR_T              msg_status[10];
   char                *server_status = NULL;
   CHAR_T              *wc_tmp;
+  HTResponse          *response;
 
   if (status == 200)
     TtaSetStatus (me->docid, 1,  
@@ -830,7 +831,22 @@ int status;
 		    TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
 	}
     }
+  /* set the reason string */
+  if (status < 0)
+    {
+      response = HTRequest_response (me->request);
+      if (response)
+	{
+	  server_status = HTResponse_reason (response);
+	  if (server_status && *server_status)
+	    {
+	      wc_tmp = TtaISO2WCdup (server_status);
+	      usprintf (AmayaLastHTTPErrorMsgR, TEXT("Server reason: %s"), 
+			wc_tmp);
+	      TtaFreeMemory (wc_tmp);
+	    }
+	}
+    }
 }
-
 
 

@@ -368,7 +368,7 @@ int                 status;
 {
   AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
   HTAtom *tmp_atom;
-  char *content_type;
+  char *tmp_char;
   CHAR_T tmp_wchar[MAX_LENGTH];
   HTParentAnchor *anchor = HTRequest_anchor (request);
 
@@ -382,19 +382,19 @@ int                 status;
    /* copy the content_type */
   tmp_atom = HTAnchor_format (anchor);
   if (tmp_atom)
-    content_type = HTAtom_name (tmp_atom);
+    tmp_char = HTAtom_name (tmp_atom);
   else
-    content_type = "www/unknown";
+    tmp_char = "www/unknown";
   
-  if (content_type && content_type [0] != EOS)
+  if (tmp_char && tmp_char[0] != EOS)
     {
       /* libwww gives www/unknown when it gets an error. As this is 
 	 an HTML test, we force the type to text/html */
-      if (!strcmp (content_type, "www/unknown"))
+      if (!strcmp (tmp_char, "www/unknown"))
 	me->http_headers.content_type = TtaWCSdup (TEXT("text/html"));
       else 
 	{
-	  iso2wc_strcpy (tmp_wchar, content_type);
+	  iso2wc_strcpy (tmp_wchar, tmp_char);
 	  me->http_headers.content_type = TtaWCSdup (tmp_wchar);
 	}
       
@@ -409,6 +409,14 @@ int                 status;
     {
       iso2wc_strcpy (tmp_wchar, HTAtom_name (tmp_atom));
       me->http_headers.charset = TtaWCSdup (tmp_wchar);
+    }
+
+  /* copy the reason */
+  tmp_char = HTResponse_reason (response);
+  if (tmp_char)
+    {
+      iso2wc_strcpy (tmp_wchar, tmp_char);
+      me->http_headers.reason = TtaWCSdup (tmp_wchar);
     }
 }
 
@@ -428,6 +436,9 @@ AHTHeaders me;
 
   if (me.charset)
     TtaFreeMemory (me.charset);
+  
+  if (me.reason)
+    TtaFreeMemory (me.reason);
 }
 
 /*----------------------------------------------------------------------
@@ -455,6 +466,9 @@ AHTHeaderName param;
       break;
     case AM_HTTP_CHARSET:
       result = me->charset;
+      break;
+    case AM_HTTP_REASON:
+      result = me->reason;
       break;
     default:
       result = NULL;
@@ -1169,7 +1183,7 @@ int                 status;
 #endif /* AMAYA_WWW_CACHE */
        || me->reqStatus == HT_ABORT)
      error_flag = FALSE;
-     else
+   else
      error_flag = TRUE;
 
    /* output any errors from the server */
@@ -3256,6 +3270,8 @@ void               *context_tcbf;
    UsePreconditions = mode & AMAYA_USE_PRECONDITIONS;
 
    AmayaLastHTTPErrorMsg [0] = EOS;
+   AmayaLastHTTPErrorMsgR [0] = EOS;
+
    
    if (urlName == NULL || docid == 0 || fileName == NULL 
        || !TtaFileExist (fileName))
