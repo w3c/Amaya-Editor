@@ -79,10 +79,7 @@ Thotbool            selected;
 	op = 1;
       else
 	op = 0;
-      if (pBox->BxAbstractBox->AbReadOnly)
-	RO = 1;
-      else
-	RO = 0;
+      RO = 0;
 
       /* For changing drawing color */
       DrawRectangle (frame, 0, 0, 0, 0, 0, 0, 0, 0, pBox->BxAbstractBox->AbForeground,
@@ -157,10 +154,7 @@ ThotBool            selected;
 	    op = 1;
 	  else
 	    op = 0;
-	  if (pBox->BxAbstractBox->AbReadOnly)
-	    RO = 1;
-	  else
-	    RO = 0;
+	  RO = 0;
 
 	  /* box sizes have to be positive */
 	  width = pBox->BxW;
@@ -314,10 +308,7 @@ ThotBool            selected;
 	op = 1;
       else
 	op = 0;
-      if (pAb->AbReadOnly)
-	RO = 1;
-      else
-	RO = 0;
+      RO = 0;
 
       xd = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
       yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
@@ -396,10 +387,7 @@ ThotBool            selected;
 	op = 1;
       else
 	op = 0;
-      if (pAb->AbReadOnly)
-	RO = 1;
-      else
-	RO = 0;
+      RO = 0;
 
       width = pBox->BxW;
       height = pBox->BxH;
@@ -729,11 +717,7 @@ ThotBool            selected;
 	op = 1;
       else
 	op = 0;
-      
-      if (pAb->AbReadOnly)
-	RO = 1;
-      else
-	RO = 0;
+      RO = 0;
       
       /* box sizes have to be positive */
       width = pBox->BxW;
@@ -931,10 +915,7 @@ ThotBool            selected;
 	op = 1;
       else
 	op = 0;
-      if (pAb->AbReadOnly)
-	RO = 1;
-      else
-	RO = 0;
+      RO = 0;
 	   
       /* box sizes have to be positive */
       width = pBox->BxW;
@@ -1075,9 +1056,15 @@ ThotBool            selected;
 		{
 		  /* display the last chars handled */
 		  dc = indbuff - nbcar;
-		  x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont, 0, bl, 0, blockbegin, RO, op, fg, shadow);
+		  x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y,
+				   pBox->BxFont, 0, bl, 0, blockbegin, RO,
+				   op, fg, shadow);
 		  
-		  if (shadow && (car == SPACE || car == THIN_SPACE || car == HALF_EM || UNBREAKABLE_SPACE || car == TAB))
+		  if (shadow && (car == SPACE ||
+				 car == THIN_SPACE ||
+				 car == HALF_EM ||
+				 UNBREAKABLE_SPACE ||
+				 car == TAB))
 		    DrawChar ('*', frame, x, y, pBox->BxFont, RO, op, fg);
 		  else if (!ShowSpace)
 		    {
@@ -1094,21 +1081,26 @@ ThotBool            selected;
 		 
 		  nbcar = 0;
 		  if (car == SPACE)
-		   if (restbl > 0) {
-		     /* Pixel space splitting */
-		     x = x + lgspace + 1;
-		     restbl--;
-		   } else
-		     x += lgspace;
-		 else
-		   x += CharacterWidth (car, pBox->BxFont);
-		 
-		 bl = 1;
-	       } else /* Just add the next char */
-		 nbcar++;
+		    {
+		      if (restbl > 0)
+			{
+			  /* Pixel space splitting */
+			  x = x + lgspace + 1;
+			  restbl--;
+			}
+		      else
+			x += lgspace;
+		    }
+		  else
+		    x += CharacterWidth (car, pBox->BxFont);
+		  
+		  bl = 1;
+		}
+	      else /* Just add the next char */
+		nbcar++;
 	       
-	       indbuff++; /* Skip to next char */
-	     } 
+	      indbuff++; /* Skip to next char */
+	    }
 	     
 	     /* Draw the last chars from buffer */
 	     dc = indbuff - nbcar;

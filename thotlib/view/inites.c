@@ -57,23 +57,18 @@ int fg;
 int RO;
 #endif /* __STDC__ */
 {
-  if (TtLineGC.capabilities & THOT_GC_PEN) {
-    if (RO && fg == 1)
-      TtLineGC.foreground = RO_Color;
-    else
-      TtLineGC.foreground = fg;
-  }
+  if (TtLineGC.capabilities & THOT_GC_PEN)
+    TtLineGC.foreground = fg;
   
   if (TtLineGC.capabilities & THOT_GC_FOREGROUND)
-    if (RO && fg == 1)
-      SetTextColor (hDC, ColorPixel (RO_Color));
-    else         
-      SetTextColor (hDC, ColorPixel (fg));
+    SetTextColor (hDC, ColorPixel (fg));
   
-  if (TtLineGC.capabilities & THOT_GC_BACKGROUND) {
-    SetBkMode (hDC, OPAQUE);
-    SetBkColor (hDC, TtLineGC.background);
-  } else 
+  if (TtLineGC.capabilities & THOT_GC_BACKGROUND)
+    {
+      SetBkMode (hDC, OPAQUE);
+      SetBkColor (hDC, TtLineGC.background);
+    }
+  else 
     SetBkMode (hDC, TRANSPARENT);
 }
 #else /* _WINDOWS */
@@ -782,12 +777,6 @@ int         motif;
      {
 	/* Color for active boxes */
 	FgPixel = Box_Color;
-	BgPixel = ColorPixel (bg);
-     }
-   else if (RO)
-     {
-	/* Color for read only boxes */
-	FgPixel = RO_Color;
 	BgPixel = ColorPixel (bg);
      }
    else
