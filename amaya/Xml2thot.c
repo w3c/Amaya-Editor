@@ -167,7 +167,6 @@ static ThotBool    UnknownAttr = FALSE;
 
 /* information about the Thot document under construction */
 static CHAR_T	    currentElementContent = ' ';
-static CHAR_T	    previousElementContent = ' ';
 static CHAR_T	    currentMappedName[40];
 static Attribute    currentAttribute = NULL;
 static ThotBool	    HTMLStyleAttribute = FALSE;
@@ -680,8 +679,8 @@ Element    *el;
 
 #endif
 {
-
-   (*(currentParserCtxt->InsertElem)) (el);
+  if (currentParserCtxt != NULL)
+    (*(currentParserCtxt->InsertElem)) (el);
    
    if (*el != NULL)
      {
@@ -832,7 +831,7 @@ static void            InitXmlParserContexts ()
    GetXmlElType
    Search in the mapping tables the entry for the element type of
    name Xmlname and returns the corresponding Thot element type.
-   Returns -1 and schema = NULL if not found.
+   Schema = NULL if not found.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void       GetXmlElType (STRING XMLname,
@@ -863,29 +862,16 @@ Document         doc;
   /* Look at the current context if there is one */
   if (currentParserCtxt != NULL)
     {
-      /* by default we're looking at in the current schema */
       elType->ElSSchema = currentParserCtxt->XMLSSchema;
       MapXMLElementType (currentParserCtxt->XMLtype, XMLname,
 			 elType, mappedName, content, doc);
     }
   else
-    if (elType->ElSSchema != NULL)
-      {
-	/* The schema is known -> search the corresponding context */
-	ctxt = firstParserCtxt;
-	while (ctxt != NULL &&
-	       ustrcmp (TtaGetSSchemaName (elType->ElSSchema),
-			ctxt->SSchemaName))
-	  ctxt = ctxt->NextParserCtxt;
-	/* get the Thot element number */
-	if (ctxt != NULL)
-	  MapXMLElementType (ctxt->XMLtype, XMLname,
-			     elType, mappedName, content, doc);
-      }
-  
-  /* not found */
-  if (elType->ElTypeNum == 0)
+    {
+      /* not found */
+      elType->ElTypeNum = 0;
       elType->ElSSchema = NULL;
+    }
 }
 
 
@@ -1277,7 +1263,6 @@ CHAR_T*             GIname;
       elType.ElSSchema = NULL;
       elType.ElTypeNum = 0;
       currentMappedName[0] = WC_EOS;
-      previousElementContent = currentElementContent;
       GetXmlElType (GIname, &elType, &mappedName,
 		    &currentElementContent, XMLcontext.doc);
       if (ParsingLevel[XMLcontext.doc] != L_Transitional && mappedName == NULL)
@@ -2865,6 +2850,7 @@ const XML_Char **attlist;
    CHAR_T         *bufName;
    CHAR_T         *ptr;
    PtrParserCtxt   elementParserCtxt = NULL;
+   CHAR_T          msgBuffer[MaxMsgLength];
 
 #ifdef LC
    printf ("\n Hndl_ElementStart '%s'", name);
@@ -2899,7 +2885,19 @@ const XML_Char **attlist;
 	   bufName = TtaGetMemory (strlen (buffer));
 	   ustrcpy (bufName, buffer);
 	 }
-       elementParserCtxt = currentParserCtxt;
+
+       /* We stop parsing if context is null, ie,
+	  if Thot doesn't know the corresponding name space */ 
+      if (currentParserCtxt == NULL)
+	{
+	  usprintf (msgBuffer, TEXT("Unknow Name Space :\"%s\""), name);
+	  XmlParseError (XMLcontext.doc, msgBuffer, 0);
+	  XMLabort = TRUE;
+	  DisableExpatParser ();
+	  return;
+	}
+      else
+	  elementParserCtxt = currentParserCtxt;
 
        /* Treatment called at the beginning of start tag */
        StartOfXmlStartTag (bufName);
@@ -3781,7 +3779,7 @@ ThotBool    withDoctype;
   CHAR_T          tempname[MAX_LENGTH];
   CHAR_T          temppath[MAX_LENGTH];
   int             length, error;
-  ThotBool        isHTML;
+  ThotBool        isXHTML;
   ThotBool        isANNOT = FALSE;
   char            www_file_name[MAX_LENGTH];
 
@@ -3847,10 +3845,10 @@ ThotBool    withDoctype;
 	XMLcontext.language = TtaGetDefaultLanguage ();
 	DocumentSSchema = TtaGetDocumentSSchema (doc);
 
-	/* is the current document a HTML document */
-	isHTML = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
-			   TEXT("HTML")) == 0);	
-	if (!isHTML &&
+	/* is the current document a XHTML document */
+	isXHTML = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
+			    TEXT("HTML")) == 0);	
+	if (!isXHTML &&
 	    !(isANNOT = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
 				  TEXT("Annot")) == 0)))
 	  {
@@ -3862,7 +3860,7 @@ ThotBool    withDoctype;
 	    else
 	      TtaSetPSchema (doc, TEXT("HTMLPBW"));
 	    DocumentSSchema = TtaGetDocumentSSchema (doc);
-	    isHTML = TRUE;
+	    isXHTML = TRUE;
 	  }
 	    
 	LoadUserStyleSheet (doc);
@@ -3909,14 +3907,17 @@ ThotBool    withDoctype;
 	/* parse the input file and build the Thot document */
 	XmlParse (stream, xmlDec, withDoctype);
 	
-	/* completes all unclosed elements */
-	el = XMLcontext.lastElement;
-	while (el != NULL)
+	if (currentParserCtxt != NULL)
+	  /* completes all unclosed elements */
 	  {
-	    (*(currentParserCtxt->ElementComplete)) (el,
-						     XMLcontext.doc,
-						     &error);
-	    el = TtaGetParent (el);
+	    el = XMLcontext.lastElement;
+	    while (el != NULL)
+	      {
+		(*(currentParserCtxt->ElementComplete)) (el,
+							 XMLcontext.doc,
+							 &error);
+		el = TtaGetParent (el);
+	      }
 	  }
 	
 	/* check the Thot abstract tree */
