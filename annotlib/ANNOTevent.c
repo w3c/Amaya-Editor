@@ -344,7 +344,7 @@ void ANNOT_Init ()
 }
 
 /*-----------------------------------------------------------------------
-   Procedure ANNOT_Quit
+   ANNOT_Quit
   -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
 
@@ -368,6 +368,40 @@ void ANNOT_Quit ()
   if (annotAlgaeText)
     TtaFreeMemory (annotAlgaeText);
 }
+
+/*-----------------------------------------------------------------------
+   ANNOT_FreeDocumentResource
+  -----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void ANNOT_FreeDocumentResource (Document doc)
+#else /* __STDC__*/
+void ANNOT_FreeDocumentResource (doc)
+Document doc;
+#endif /* __STDC__*/
+{
+  int i;
+
+  /* stop the on-going requests */
+
+  /* close all the open annotation windows, asking the user if he 
+   wants to save them */
+  for (i = 1; i < DocumentTableLength; i++)
+    {
+      if (doc == i)
+	continue;
+      if (DocumentTypes[i] == docAnnot
+	  && DocumentMeta[i]->source_doc == doc)
+	{
+	  DocumentTypes[i] = docHTML;
+	  CloseDocument (i, 1);
+	}
+    }
+  /* free the memory */
+  LINK_DelMetaFromMemory (doc);
+}
+
 
 /*-----------------------------------------------------------------------
    ANNOT_AutoLoad

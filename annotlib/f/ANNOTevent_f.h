@@ -18,6 +18,7 @@ extern CHAR_T *GetAnnotDir ( void );
 extern List *CopyAnnotServers ( CHAR_T *server_list );
 extern void ANNOT_Init ( void );
 extern void ANNOT_Quit ( void );
+extern void ANNOT_FreeDocumentResource ( Document doc );
 extern void ANNOT_AutoLoad ( Document doc,
                              View view );
 extern void RemoteLoad_callback ( int doc,
@@ -73,6 +74,7 @@ extern CHAR_T *GetAnnotDir (/* void */);
 extern List *CopyAnnotServers (/* CHAR_T *server_list */);
 extern void ANNOT_Init (/* void */);
 extern void ANNOT_Quit (/* void */);
+extern void ANNOT_FreeDocumentResource (/* Document doc */);
 extern void ANNOT_AutoLoad (/* Document doc,
                                View view */);
 extern void RemoteLoad_callback (/* int doc,

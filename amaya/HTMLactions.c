@@ -1138,7 +1138,7 @@ Document       doc;
 	  DocumentMeta[doc] = NULL;
 	}
 #ifdef ANNOTATIONS
-       LINK_DelMetaFromMemory (doc);
+       ANNOT_FreeDocumentResource (doc);
 #endif /* ANNOTATIONS */
       if (HighlightDocument == doc)
 	ResetHighlightedElement ();
