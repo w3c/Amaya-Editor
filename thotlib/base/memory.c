@@ -236,7 +236,10 @@ static void TtaFreeMotionPath (void *from)
   AnimPath    *pop_path = (AnimPath *) from;
 
   TtaFreeMemory (pop_path->Proportion);
+  TtaFreeMemory (pop_path->Tangent_angle);
   TtaFreeMemory (pop_path->Path);
+  if (pop_path->FirstPathSeg)
+  {
   pPa = pop_path->FirstPathSeg;
   do
     {
@@ -245,6 +248,7 @@ static void TtaFreeMotionPath (void *from)
       pPa = pPaNext;
     }
   while (pPa);
+  }
 #endif/*  _GL */
 }
 

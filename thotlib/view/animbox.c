@@ -98,7 +98,7 @@ static float Clipx, Clipy, ClipxMax, ClipyMax;
 static void ComputePropandAngle (AnimPath   *pop_path)
 {
   int        i, npoints = 0;
-  float      x, y, totallength;
+  float      x, y, totallength, length;
   ThotPoint  *points;
   float      *proportion, *angle;
 
@@ -112,13 +112,32 @@ static void ComputePropandAngle (AnimPath   *pop_path)
     {
       x = points[i].x - points[i-1].x;
       y = points[i].y - points[i-1].y;
-
-      if (fabs (x) < 0.0001)
-	angle[i] = ARCTAN (y/x);
+	  length = sqrt ((double) x*x + y*y);
+	/*
+	             /|
+                / |
+               /  |
+              /   |
+             /    |
+            /     |
+           /      |
+          /      _|
+         / angle| |
+        +-------+-+
+        <--- x -->
+	  
+		cos j = a1 / square root(a1*a1 + a2*a2) 
+	if (length > 0)
+	  angle[i] = acos (x / length)
+	else
+		angle[i] = 90;
+	  */
+      if (fabs (y) < 0.0001)
+	angle[i] = ARCTAN (x/y);
       else
 	angle[i] = 90;
 
-      totallength +=  sqrt ((double) x*x + y*y);
+      totallength +=  length;
       proportion[i] = totallength;
     }
   if (totallength == 0)

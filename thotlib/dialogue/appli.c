@@ -2115,7 +2115,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	    WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key,
 				 lParam, isSpecial);
 	  if (wParam != VK_MENU)
-	    return 0;
+	return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 	}
       break;
     case WM_SYSCHAR:
@@ -2123,8 +2123,17 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       key = (int) wParam;
       if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (int *)&key))
 	WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, FALSE);
-      if (wParam != VK_MENU)
-	return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+     
+	if (GetKeyState (VK_MENU) && wParam == VK_SPACE) 
+	{
+return 0;
+
+	}
+		else
+	{
+		if (wParam != VK_MENU)
+			return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+	}
       break;
 
 #ifdef IME_INPUT

@@ -2299,6 +2299,8 @@ void *TtaCopyPath (void *void_src)
   AnimPath *pop_path = (AnimPath *) void_src;
   AnimPath *new_path = TtaGetMemory (sizeof(AnimPath));
 
+  memset (new_path, 0, sizeof(AnimPath));
+
   npoints = pop_path->npoints + 1;
 
   new_path->npoints = pop_path->npoints;
