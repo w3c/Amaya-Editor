@@ -198,6 +198,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "librdf"=.\librdf\librdf.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "libwww"=.\libwww\libwww.dsp - Package Owner=<4>
 
 Package=<5>

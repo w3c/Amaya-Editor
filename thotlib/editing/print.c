@@ -1909,6 +1909,7 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   else
       return (-1); /** The .ps file was not generated for any raison **/
 #endif /* _WINDOWS */
+ return 0;
 }
 
 
