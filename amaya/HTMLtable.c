@@ -512,7 +512,7 @@ ThotBool            placeholder;
   if (inMath)
     {
       elType.ElTypeNum = MathML_EL_MColumn_head;
-      rowType = MathML_EL_MTR;
+      rowType = MathML_EL_TableRow;
     }
   else
     {
@@ -549,7 +549,9 @@ ThotBool            placeholder;
 	nextRow = row;
 	TtaNextSibling (&nextRow);
 	elType = TtaGetElementType (row);
-	if (elType.ElTypeNum == rowType)
+	if (elType.ElTypeNum == rowType ||
+            (inMath && (elType.ElTypeNum == MathML_EL_MTR ||
+			elType.ElTypeNum == MathML_EL_MLABELEDTR)))
 	  {
 	  /* treat all cells in the row */
 	  cRef = 0;
@@ -1037,7 +1039,7 @@ ThotBool            genrateColumn;
       /* insert a new column here */
       if (inMath)
 	{
-	  elType.ElTypeNum = MathML_EL_MTR;
+	  elType.ElTypeNum = MathML_EL_TableRow;
 	  attrType.AttrSSchema = elType.ElSSchema;
 	  attrType.AttrTypeNum = MathML_ATTR_MRef_column;
 	}
@@ -1259,26 +1261,37 @@ NotifyElement      *event;
 {
   Element             rowgroup, table;
   ElementType         elType;
+  Attribute           attr;
+  AttributeType       attrType;
   Document            doc;
   ThotBool            inMath;
 
    CurrentDeletedRow = NULL;
+   doc = event->document;
    rowgroup = event->element;
    if (rowgroup == NULL)
      /* the row doesn't exist */
      return;
    elType = TtaGetElementType (rowgroup);
-   inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), event->document));
+   inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("MathML"), doc));
    if (inMath)
      elType.ElTypeNum = MathML_EL_MTABLE;
    else
      elType.ElTypeNum = HTML_EL_Table;
    table = TtaGetTypedAncestor (rowgroup, elType);
-   doc = event->document;
    CheckAllRows (table, doc, FALSE);
    CheckTableAfterCellUpdate = TRUE;
+   /* if it's a row in a math table and if the table has a rowalign attribute,
+      distribute the values of that attribute to all rows in the table */
+   if (inMath)
+     {
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_rowalign;
+     attr = TtaGetAttribute (table, attrType);
+     if (attr)
+       HandleRowalignAttribute (attr, table, doc, FALSE);
+     }
 }
-
 
 /*----------------------------------------------------------------------
    DeleteCell                                              
@@ -1376,7 +1389,7 @@ ThotBool     inMath;
   if (inMath)
     {
       elType.ElTypeNum = MathML_EL_MTABLE;
-      rowType = MathML_EL_MTR;
+      rowType = MathML_EL_TableRow;
     }
   else
     {
@@ -1638,16 +1651,18 @@ NotifyElement      *event;
 
 #endif
 {
-  Element             row;
-  Element             table;
+  Element             row, table;
   ElementType         elType;
+  Attribute           attr;
+  AttributeType       attrType;
   Document            doc;
   ThotBool            inMath;
 
   row = event->element;
   doc = event->document;
   elType = TtaGetElementType (row);
-  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), event->document));
+  inMath = TtaSameSSchemas (elType.ElSSchema,
+			    TtaGetSSchema (TEXT("MathML"), doc));
   if (inMath)
     elType.ElTypeNum = MathML_EL_MTABLE;
   else
@@ -1670,9 +1685,18 @@ NotifyElement      *event;
       /* avoid processing the cells of the created row */
       CurrentRow = row;
     }
+  /* if it's a row in a math table and if the table has a rowalign attribute,
+     distribute the values of that attribute to all rows in the table */
+  if (inMath)
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_rowalign;
+      attr = TtaGetAttribute (table, attrType);
+      if (attr)
+	HandleRowalignAttribute (attr, table, doc, FALSE);
+    }
   CurrentCell = TtaGetLastChild (row);
 }
-
 
 /*----------------------------------------------------------------------
    RowPasted                                               
@@ -1684,16 +1708,18 @@ void               <RowPasted (event)
 NotifyElement      *event;
 #endif
 {
-  Element             row;
-  Element             table;
+  Element             row, table;
   ElementType         elType;
+  Attribute           attr;
+  AttributeType       attrType;
   Document            doc;
   ThotBool            inMath;
 
   row = event->element;
   doc = event->document;
   elType = TtaGetElementType (row);
-  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema (TEXT("HTML"), event->document));
+  inMath = TtaSameSSchemas (elType.ElSSchema,
+			    TtaGetSSchema (TEXT("MathML"), doc));
   if (inMath)
     elType.ElTypeNum = MathML_EL_MTABLE;
   else
@@ -1713,6 +1739,16 @@ NotifyElement      *event;
     {
       CheckAllRows (table, doc, FALSE);
       CheckTableAfterCellUpdate = FALSE;
+    }
+  /* if it's a row in a math table and if the table has a rowalign attribute,
+     distribute the values of that attribute to all rows in the table */
+  if (inMath)
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_rowalign;
+      attr = TtaGetAttribute (table, attrType);
+      if (attr)
+	HandleRowalignAttribute (attr, table, doc, FALSE);
     }
   /* avoid processing the cells of the created row */
   CurrentPastedRow = row;

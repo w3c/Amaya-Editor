@@ -242,7 +242,7 @@ sont :</p>
   </li>
 </ul>
 
-<p>Le dernier item de la palette <strong>Math</strong> (
+<p>Le dernier item de la palette <strong>Math</strong> ( 
 <math xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>&alpha;&beta;&gamma;</mi>
 </math>
@@ -261,8 +261,8 @@ sont indiqués dans le menu). Ceci vous permet de taper plus vite.</p>
 touches de direction du clavier (flèches) pour faire passer le point
 d'insertion d'une construction à une autre. En particulier, les deux flèches
 horizontales permettent de se déplacer selon la structure de l'expression
-mathématique. Par exemple, en fin de numérateur d'une fraction, la touche
-&rarr; fait passer au début du dénominateur.</p>
+mathématique. Par exemple, en fin de numérateur d'une fraction, la touche &rarr;
+fait passer au début du dénominateur.</p>
 
 <h3><a name="Entering1">Entrer des caractères</a></h3>
 
@@ -398,8 +398,8 @@ menu Liens. Ceci crée un attribut <code>id</code> pour l'expression cible.</p>
 
 <p>Amaya implémente seulement les <em>Balises de Présentation</em> à partir du
 MathML 2.0, et non le <em>Balisage du Contenu</em>. Tous les éléments de
-présentation et les attributs sont utilisables, mais seulement quelques
-attributs sont restitués à l'écran (<code>alttext</code>,
+présentation et les attributs sont utilisables, mais seuls les attributs
+suivant sont pris en compte dans le formatage : <code>alttext</code>,
 <code>fontsize</code>, <code>fontweight</code>, <code>fontstyle</code>,
 <code>fontfamily</code>, <code>color</code>, <code>linethickness</code>,
 <code>numalign</code>, <code>denomalign</code>, <code>bevelled</code>,
@@ -407,7 +407,8 @@ attributs sont restitués à l'écran (<code>alttext</code>,
 <code>lspace</code>, <code>rspace</code>, <code>subscriptshift</code>,
 <code>superscriptshift</code>, <code>form</code>, <code>width</code>
 (<code>mspace</code> only), <code>height</code> (<code>mspace</code> only),
-<code>depth</code> (<code>mspace</code> only)).</p>
+<code>depth</code> (<code>mspace</code> only), <code>rowalign</code>,
+<code>columnalign</code>.</p>
 
 <p>Les attributs <code>class</code>, <code>id</code> et <code>style</code>
 sont utilisables, avec la même sémantique que dans HTML : vous pouvez <a

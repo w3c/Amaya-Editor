@@ -1543,14 +1543,16 @@ void CheckMTable (elMTABLE, doc, placeholder)
     TtaRemoveTree (row, doc);
     if (TtaSameSSchemas (elType.ElSSchema, MathMLSSchema) &&
 	(elType.ElTypeNum == MathML_EL_XMLcomment ||
-	 elType.ElTypeNum == MathML_EL_MTR))
+	 elType.ElTypeNum == MathML_EL_MTR ||
+         elType.ElTypeNum == MathML_EL_MLABELEDTR))
        {
        if (prevRow == NULL)
 	  TtaInsertFirstChild (&row, MTableBody, doc);
        else
 	  TtaInsertSibling (row, prevRow, FALSE, doc);
        prevRow = row;
-       if (elType.ElTypeNum == MathML_EL_MTR)
+       if (elType.ElTypeNum == MathML_EL_MTR ||
+	   elType.ElTypeNum == MathML_EL_MLABELEDTR)
           cell = TtaGetFirstChild (row);
        else
 	  cell = NULL;
@@ -2367,6 +2369,8 @@ int             *error;
 {
    ElementType		elType, parentType;
    Element		child, parent, new, prev, next;
+   AttributeType        attrType;
+   Attribute            attr;
    SSchema              MathMLSSchema;
    ThotBool             ok;
 
@@ -2486,6 +2490,33 @@ int             *error;
 	  /* end of a MTABLE. Create all elements defined in the MathML S
              schema */
 	  CheckMTable (el, doc, TRUE);
+	  /* if the table has a rowalign attribute, process it */
+          attrType.AttrSSchema = MathMLSSchema;
+          attrType.AttrTypeNum = MathML_ATTR_rowalign;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr)
+	     HandleRowalignAttribute (attr, el, doc, FALSE);
+	  /* if the table has a columnalign attribute, process it */
+          attrType.AttrTypeNum = MathML_ATTR_columnalign;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr)
+	     HandleColalignAttribute (attr, el, doc, FALSE);
+	  break;
+       case MathML_EL_MTR:
+	  /* if the row has a columnalign attribute, process it */
+          attrType.AttrSSchema = MathMLSSchema;
+          attrType.AttrTypeNum = MathML_ATTR_columnalign;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr)
+	     HandleColalignAttribute (attr, el, doc, FALSE);
+	  break;
+       case MathML_EL_MLABELEDTR:
+	  /* if the row has a columnalign attribute, process it */
+          attrType.AttrSSchema = MathMLSSchema;
+          attrType.AttrTypeNum = MathML_ATTR_columnalign;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr)
+	     HandleColalignAttribute (attr, el, doc, FALSE);
 	  break;
        case MathML_EL_MTD:
 	  /* Create placeholders within the table cell */
@@ -2786,6 +2817,7 @@ Document	doc;
 #define buflen 50
    STRING            value;
    int               val, length;
+   Attribute         intAttr;
  
    /* first get the type of that attribute */
    TtaGiveAttributeType (attr, &attrType, &attrKind);
@@ -2801,6 +2833,51 @@ Document	doc;
 	    ChangeTypeOfElement (el, doc, MathML_EL_BevelledMFRAC);
 	 }
      }
+
+   else if (attrType.AttrTypeNum == MathML_ATTR_rowalign_mtr)
+     {
+       /* create an equivalent IntRowAlign attribute on the same element */
+       attrType.AttrTypeNum = MathML_ATTR_IntRowAlign;
+       intAttr = TtaGetAttribute (el, attrType);
+       if (!intAttr)
+	 /* no IntRowAlign attribute, create one */
+	 {
+	   intAttr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (el, intAttr, doc);
+	 }
+       val = TtaGetAttributeValue (attr);
+       TtaSetAttributeValue (intAttr, val, el, doc);
+     }
+
+   else if (attrType.AttrTypeNum == MathML_ATTR_rowalign)
+     {
+       /* parse the attribute value and create a IntRowAlign attribute
+	  for each mrow contained in the element */
+       HandleRowalignAttribute (attr, el, doc, FALSE);
+     }
+
+   else if (attrType.AttrTypeNum == MathML_ATTR_columnalign_mtd)
+     {
+       /* create an equivalent IntColAlign attribute on the same element */
+       attrType.AttrTypeNum = MathML_ATTR_IntColAlign;
+       intAttr = TtaGetAttribute (el, attrType);
+       if (!intAttr)
+	 /* no IntColAlign attribute, create one */
+	 {
+	   intAttr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (el, intAttr, doc);
+	 }
+       val = TtaGetAttributeValue (attr);
+       TtaSetAttributeValue (intAttr, val, el, doc);
+     }
+
+   else if (attrType.AttrTypeNum == MathML_ATTR_columnalign)
+     {
+       /* parse the attribute value and create a IntColAlign attribute
+	  for each cell */
+       HandleColalignAttribute (attr, el, doc, FALSE);
+     }
+
    else if (attrType.AttrTypeNum == MathML_ATTR_color ||
 	    attrType.AttrTypeNum == MathML_ATTR_mathcolor ||
 	    attrType.AttrTypeNum == MathML_ATTR_background_ ||

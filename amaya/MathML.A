@@ -237,4 +237,32 @@ ATTRIBUTES
         AttrDelete.Pre ->  AttrScriptShiftDelete;
         END;
 
+   rowalign:
+        BEGIN
+        AttrCreate.Post -> AttrRowAlignCreated;
+        AttrModify.Post -> AttrRowAlignCreated;
+        AttrDelete.Post -> AttrRowAlignDeleted;
+        END;
+
+   rowalign_mtr:
+        BEGIN
+        AttrCreate.Post -> AttrRowAlignMtrCreated;
+        AttrModify.Post -> AttrRowAlignMtrCreated;
+        AttrDelete.Post -> AttrRowAlignMtrDeleted;
+        END;
+
+   columnalign:
+        BEGIN
+        AttrCreate.Post -> AttrColAlignCreated;
+        AttrModify.Post -> AttrColAlignCreated;
+        AttrDelete.Post -> AttrColAlignDeleted;
+        END;
+
+   columnalign_mtd:
+        BEGIN
+        AttrCreate.Post -> AttrColAlignMtdCreated;
+        AttrModify.Post -> AttrColAlignMtdCreated;
+        AttrDelete.Post -> AttrColAlignMtdDeleted;
+        END;
+
 END

@@ -91,6 +91,14 @@ extern void FencedSeparatorModified ( NotifyOnTarget *event );
 extern void AttrSeparatorsChanged ( NotifyAttribute *event );
 extern void AttrScriptShiftCreated ( NotifyAttribute *event );
 extern ThotBool AttrScriptShiftDelete ( NotifyAttribute *event );
+extern void HandleRowalignAttribute ( Attribute attr,
+                                      Element el,
+                                      Document doc,
+				      ThotBool delete );
+extern void HandleColalignAttribute ( Attribute attr,
+                                      Element el,
+                                      Document doc,
+				      ThotBool delete );
 
 #else /* __STDC__ */
 
@@ -179,6 +187,14 @@ extern void FencedSeparatorModified (/* NotifyOnTarget *event */);
 extern void AttrSeparatorsChanged (/* NotifyAttribute *event */);
 extern void AttrScriptShiftCreated (/* NotifyAttribute *event */);
 extern ThotBool AttrScriptShiftDelete (/* NotifyAttribute *event */);
+extern void HandleRowalignAttribute (/* Attribute attr,
+                                        Element el,
+                                        Document doc,
+				        ThotBool delete */);
+extern void HandleColalignAttribute (/* Attribute attr,
+                                        Element el,
+                                        Document doc,
+				        ThotBool delete */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -2872,12 +2872,14 @@ RULES
 	HorizPos: Left = Enclosing . Left;
         HorizRef: Enclosed not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view BEGIN
+		Size: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Visibility: 10;
 		END;
 	IN Alternate_view
 		BEGIN
+		Size: Enclosing =;
 		Visibility: Enclosing =;
 		Height: 1 px;	{**** should be 0 ****}
 		END;
@@ -3488,7 +3490,7 @@ RULES
    MColumn_head:
         BEGIN
         HorizRef: * . Top;
-        HorizPos: Left = Previous . Right + 0.8;
+        HorizPos: Left = Previous . Right + 0.6;
         VertPos: Top = Enclosing . Top;
         Width: 2 px;
         END;
@@ -3518,7 +3520,7 @@ RULES
 	CreateBefore(MTR_S);
 	CreateWith(VerticalLine);
 	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Previous . Bottom + 1 ex;
+	VertPos: Top = Previous . Bottom + 0.2;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -4487,6 +4489,37 @@ ATTRIBUTES
   rowalign_mtr = axis:
         CreateBefore(ATTR_rowalign_axis);
 
+  IntRowAlign(MTD) = IntTop:
+	BEGIN
+	VertPos: Top = Enclosing . Top;
+	IN Structure_view
+		VertPos: Top = Previous . Bottom;
+	END;
+  IntRowAlign(MTD) = IntBottom:
+	BEGIN
+	VertPos: Bottom = Enclosing . Bottom;
+	IN Structure_view
+		VertPos: Top = Previous . Bottom;
+	END;
+  IntRowAlign(MTD) = IntCenter:
+	BEGIN
+	VertPos: HMiddle = Enclosing . HMiddle;
+	IN Structure_view
+		VertPos: Top = Previous . Bottom;
+	END;
+  IntRowAlign(MTD) = IntBaseline:
+	BEGIN
+	VertPos: HRef = Enclosing . HRef;
+	IN Structure_view
+		VertPos: Top = Previous . Bottom;
+	END;
+  IntRowAlign(MTD) = IntAxis:
+	BEGIN
+	VertPos: HRef = Enclosing . HRef;
+	IN Structure_view
+		VertPos: Top = Previous . Bottom;
+	END;
+
   columnalign:
 	BEGIN
 	CreateBefore(ATTR_columnalign);
@@ -4499,6 +4532,21 @@ ATTRIBUTES
 	CreateBefore(ATTR_columnalign_center);
   columnalign_mtd = right\240:
 	CreateBefore(ATTR_columnalign_right);
+
+  IntColAlign(CellWrapper) = IntLeft:
+	HorizPos: Left = Enclosing . Left;
+  IntColAlign(CellWrapper) = IntCenter:
+	BEGIN
+	HorizPos: VMiddle = Enclosing . VMiddle;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left;
+	END;
+  IntColAlign(CellWrapper) = IntRight:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	IN Structure_view
+		HorizPos: Left = Enclosing . Left;
+	END;
 
   groupalign:
 	BEGIN

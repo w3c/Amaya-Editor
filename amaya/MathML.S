@@ -358,12 +358,14 @@ STRUCT
 		END; 
    MTR
 	  (ATTR rowalign_mtr = top_, bottom_, center, baseline, axis;
+		IntRowAlign = IntTop, IntBottom, IntCenter, IntBaseline,
+		              IntAxis; 
 		columnalign;
 		groupalign)
 	  = LIST OF (MTD);
 
    MLABELEDTR
-	  (ATTR rowalign_mtr;
+	  (ATTR rowalign_mtr; IntRowAlign;
 		columnalign;
 		groupalign)
 	  = BEGIN
@@ -372,8 +374,9 @@ STRUCT
 	    END	;
 
    MTD
-	  (ATTR rowalign_mtr;
+	  (ATTR rowalign_mtr; IntRowAlign;
 		columnalign_mtd = left\240, center\240, right\240;
+		IntColAlign = IntLeft, IntCenter, IntRight; 
 		groupalign;
 		rowspan\240 = INTEGER;
 		columnspan = INTEGER;
@@ -454,6 +457,8 @@ EXCEPT
    IntAddSpace:	  	Invisible;
    IntHorizStretch:  	Invisible;
    IntVertStretch:  	Invisible;
+   IntRowAlign:	        Invisible;
+   IntColAlign:	        Invisible;
    MRef_column:		ColRef, Invisible;
 
 END
