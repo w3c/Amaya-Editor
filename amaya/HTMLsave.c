@@ -44,7 +44,8 @@ static int          URL_attr_tab[] = {
    HTML_ATTR_Script_URL,
    HTML_ATTR_SRC,
    HTML_ATTR_background_,
-   HTML_ATTR_Style_
+   HTML_ATTR_Style_,
+   HTML_ATTR_cite
 };
 
 static int          SRC_attr_tab[] = {

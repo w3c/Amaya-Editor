@@ -322,16 +322,25 @@ Document            doc;
    int                 length;
    FollowTheLink_context *ctx;
 
+   HrefAttr = NULL;
    docSchema = TtaGetDocumentSSchema (doc);
    if (anchor != NULL)
-     {
-	/* search HREF attribute */
-	attrType.AttrSSchema = docSchema;
-	attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	HrefAttr = TtaGetAttribute (anchor, attrType);
-     }
-   else
-      HrefAttr = NULL;
+      {
+      elType = TtaGetElementType (anchor);
+      if (elType.ElSSchema == docSchema)
+         {
+	 /* search the HREF or CITE attribute */
+         if (elType.ElTypeNum == HTML_EL_Quotation ||
+		  elType.ElTypeNum == HTML_EL_Block_Quote ||
+		  elType.ElTypeNum == HTML_EL_INS ||
+		  elType.ElTypeNum == HTML_EL_DEL)
+	    attrType.AttrTypeNum = HTML_ATTR_cite;
+	 else
+	    attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	 attrType.AttrSSchema = docSchema;
+	 HrefAttr = TtaGetAttribute (anchor, attrType);
+	 }
+      }
 
    if (HrefAttr != NULL)
      {
@@ -422,7 +431,7 @@ Document            doc;
 
 
 /*----------------------------------------------------------------------
-   ]lick     The user has double-clicked an element.         
+  DoubleClick     The user has double-clicked an element.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             DoubleClick (NotifyElement * event)
@@ -434,7 +443,7 @@ NotifyElement      *event;
 {
    AttributeType       attrType;
    Attribute           attr;
-   Element             anchor, elFound;
+   Element             anchor, elFound, ancestor;
    ElementType         elType;
    SSchema             docSchema;
    boolean	       ok;
@@ -548,6 +557,22 @@ NotifyElement      *event;
 	   elType.ElSSchema = docSchema;
 	   anchor = TtaGetTypedAncestor (event->element, elType);
 	}
+   /* if not found, search a cite attribute on an ancestor */
+   if (anchor == NULL)
+      {
+	ancestor = event->element;
+	attrType.AttrSSchema = docSchema;
+	attrType.AttrTypeNum = HTML_ATTR_cite;
+	do
+	   {
+	   attr = TtaGetAttribute (ancestor, attrType);
+	   if (attr)
+	      anchor = ancestor;
+	   else
+	      ancestor = TtaGetParent (ancestor);
+	   }
+	while (anchor == NULL && ancestor != NULL);
+      }
 
    return (FollowTheLink (anchor, event->element, event->document));
 }
@@ -790,6 +815,40 @@ Document            doc
      {
 	SelectionInACRONYM = NewSelInElem;
 	TtaSetToggleItem (doc, 1, Style, TAcronym, NewSelInElem);
+     }
+
+   if (firstSel == NULL)
+      NewSelInElem = FALSE;
+   else
+     {
+	elType.ElTypeNum = HTML_EL_INS;
+	if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
+	    elTypeSel.ElSSchema == elType.ElSSchema)
+	   NewSelInElem = TRUE;
+	else
+	   NewSelInElem = (TtaGetTypedAncestor (firstSel, elType) != NULL);
+     }
+   if (SelectionInINS != NewSelInElem)
+     {
+	SelectionInINS = NewSelInElem;
+	TtaSetToggleItem (doc, 1, Style, TInsertion, NewSelInElem);
+     }
+
+   if (firstSel == NULL)
+      NewSelInElem = FALSE;
+   else
+     {
+	elType.ElTypeNum = HTML_EL_DEL;
+	if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
+	    elTypeSel.ElSSchema == elType.ElSSchema)
+	   NewSelInElem = TRUE;
+	else
+	   NewSelInElem = (TtaGetTypedAncestor (firstSel, elType) != NULL);
+     }
+   if (SelectionInDEL != NewSelInElem)
+     {
+	SelectionInDEL = NewSelInElem;
+	TtaSetToggleItem (doc, 1, Style, TDeletion, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -1167,6 +1226,12 @@ int                 eltype;
 	    case HTML_EL_ACRONYM:
 	       SelectionInACRONYM = !remove;
 	       break;
+	    case HTML_EL_INS:
+	       SelectionInINS = !remove;
+	       break;
+	    case HTML_EL_DEL:
+	       SelectionInDEL = !remove;
+	       break;
 	    case HTML_EL_Italic_text:
 	       SelectionInI = !remove;
 	       break;
@@ -1203,6 +1268,7 @@ Element             el;
    Document            targetDoc;
    Attribute           attrNAME, attrHREF;
    AttributeType       attrType;
+   ElementType	       elType;
    char               *buffer;
    int                 length;
 
@@ -1237,6 +1303,17 @@ Element             el;
 	/* If the anchor has an HREF attribute, put its value in the form */
 	attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
 	attrType.AttrTypeNum = HTML_ATTR_HREF_;
+
+        elType = TtaGetElementType (el);
+        if (elType.ElSSchema == attrType.AttrSSchema)
+           {
+	   /* search the HREF or CITE attribute */
+           if (elType.ElTypeNum == HTML_EL_Quotation ||
+	       elType.ElTypeNum == HTML_EL_Block_Quote ||
+	       elType.ElTypeNum == HTML_EL_INS ||
+	       elType.ElTypeNum == HTML_EL_DEL)
+	       attrType.AttrTypeNum = HTML_ATTR_cite;
+	   }
 	attrHREF = TtaGetAttribute (el, attrType);
 	if (attrHREF != 0)
 	  {

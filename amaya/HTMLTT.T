@@ -264,6 +264,12 @@ RULES
 	Create DoubleQuote After;
 	END;
 
+ INS:	BEGIN
+	END;
+
+ DEL:	BEGIN
+	END;
+
  Span:	BEGIN
 	END;
 
@@ -452,7 +458,6 @@ RULES
 	  Create '[Image]';
 	END;
 
-
  Anchor: BEGIN
 	If HREF_ AND NOT InternalLink
 	  BEGIN
@@ -575,6 +580,27 @@ ATTRIBUTES
 	BEGIN
 	If NOT Within LINK AND NOT InternalLink
 	   Create IN TmpFile HREF_;
+	END;
+
+ cite: BEGIN
+	If NOT InternalLink
+	  BEGIN
+	    Add AnchorCounter 1;
+	    Create In TmpFile  OUT_AnchorCounter;
+	    Create In TmpFile ' ';
+	    Create IN TmpFile '\12' After;
+#ifdef ANCHOR_PREFIX
+	    Create OUT_AnchorCounter;
+	    Create Content;
+	    Remove;
+#else
+	    Create OUT_AnchorCounter After;
+#endif
+	  END;
+	END;
+
+ datetime:
+	BEGIN
 	END;
 
  background_:

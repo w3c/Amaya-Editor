@@ -66,6 +66,10 @@ extern void CreateElemAbbr ( Document document,
                                  View view );
 extern void CreateElemAcronym ( Document document,
                                  View view );
+extern void CreateElemINS ( Document document,
+                                 View view );
+extern void CreateElemDEL ( Document document,
+                                 View view );
 extern void CreateElemItalic ( Document document,
                                View view );
 extern void CreateElemBold ( Document document,
@@ -155,6 +159,10 @@ extern void CreateElemKeyboard (/* Document document,
 extern void CreateElemAbbr (/* Document document,
                                    View view */);
 extern void CreateElemAcronym (/* Document document,
+                                   View view */);
+extern void CreateElemINS (/* Document document,
+                                   View view */);
+extern void CreateElemDEL (/* Document document,
                                    View view */);
 extern void CreateElemItalic (/* Document document,
                                  View view */);

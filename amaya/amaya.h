@@ -196,6 +196,8 @@ THOT_EXPORT boolean      SelectionInSTRONG;
 THOT_EXPORT boolean      SelectionInCITE;
 THOT_EXPORT boolean      SelectionInABBR;
 THOT_EXPORT boolean      SelectionInACRONYM;
+THOT_EXPORT boolean      SelectionInINS;
+THOT_EXPORT boolean      SelectionInDEL;
 THOT_EXPORT boolean      SelectionInDFN;
 THOT_EXPORT boolean      SelectionInCODE;
 THOT_EXPORT boolean      SelectionInVAR;

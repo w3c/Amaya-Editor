@@ -2399,6 +2399,7 @@ char               *data;
 #endif
 {
   AttributeType       attrType;
+  ElementType	      elType;
   Attribute           attrHREF;
   char               *tempfile;
   char               *tempname;
@@ -2789,7 +2790,14 @@ char               *data;
        /* *********HREF Attribute*********** */
        /* create an attribute HREF for the Link_Anchor */
        attrType.AttrSSchema = TtaGetDocumentSSchema (AttrHREFdocument);
-       attrType.AttrTypeNum = HTML_ATTR_HREF_;
+       elType = TtaGetElementType (AttrHREFelement);
+       if (elType.ElTypeNum == HTML_EL_Quotation ||
+	   elType.ElTypeNum == HTML_EL_Block_Quote ||
+	   elType.ElTypeNum == HTML_EL_INS ||
+	   elType.ElTypeNum == HTML_EL_DEL)
+	  attrType.AttrTypeNum = HTML_ATTR_cite;
+       else
+          attrType.AttrTypeNum = HTML_ATTR_HREF_;
        attrHREF = TtaGetAttribute (AttrHREFelement, attrType);
        if (attrHREF == 0)
 	 {
@@ -2803,10 +2811,12 @@ char               *data;
 	 TtaSetAttributeText (attrHREF, "XXX", AttrHREFelement, AttrHREFdocument);
        TtaSetDocumentModified (AttrHREFdocument);
        break;
+
      case AttrHREFText:
        /* save the HREF name */
        strcpy (AttrHREFvalue, data);
        break;
+
      case ClassForm:
      case ClassSelect:
      case AClassForm:
@@ -2844,6 +2854,8 @@ NotifyEvent        *event;
    SelectionInCITE = FALSE;
    SelectionInABBR = FALSE;
    SelectionInACRONYM = FALSE;
+   SelectionInINS = FALSE;
+   SelectionInDEL = FALSE;
    SelectionInDFN = FALSE;
    SelectionInCODE = FALSE;
    SelectionInVAR = FALSE;

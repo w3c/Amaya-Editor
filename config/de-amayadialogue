@@ -125,33 +125,35 @@
 124 Tastatureingabe (KBD)
 125 ** (ABBR)
 126 ** (ACRONYM)
-127 direkte Zeichenformate
-128 kursiv (I)
-129 fett (B)
-130 Schreibmaschinenschrift (TT)
-131 größer (BIG)
-132 kleiner (SMALL)
-133 tiefgestellt (SUB)
-134 hochgestellt (SUP)
-135 ** (Q)
-136 ** (BDO)
-137 Umformatieren...
-138 Abschnittsnummern
-139 Buch zusammenfügen
-140 Info
-141 Verknüpfungen folgen/Dokumente öffnen
-142 Auswählen
-143 Suchen
-144 Ansichten
-145 Einfügen von Elementen
-146 Verknüpfungen bearbeiten
-147 Umformatieren
-148 Tabellen
-149 Formeln
-150 Aktive Grafikbereiche
-151 Formate/Stylesheets
-152 Attribute
-153 Speichern/Publizieren
-154 Drucken
-155 Buch zusammenfügen
-156 Konfiguration
+127 ** (INS)
+128 ** (DEL)
+129 direkte Zeichenformate
+130 kursiv (I)
+131 fett (B)
+132 Schreibmaschinenschrift (TT)
+133 größer (BIG)
+134 kleiner (SMALL)
+135 tiefgestellt (SUB)
+136 hochgestellt (SUP)
+137 ** (Q)
+138 ** (BDO)
+139 Umformatieren...
+140 Abschnittsnummern
+141 Buch zusammenfügen
+142 Info
+143 Verknüpfungen folgen/Dokumente öffnen
+144 Auswählen
+145 Suchen
+146 Ansichten
+147 Einfügen von Elementen
+148 Verknüpfungen bearbeiten
+149 Umformatieren
+150 Tabellen
+151 Formeln
+152 Aktive Grafikbereiche
+153 Formate/Stylesheets
+154 Attribute
+155 Speichern/Publizieren
+156 Drucken
+157 Buch zusammenfügen
+158 Konfiguration

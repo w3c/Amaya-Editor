@@ -125,33 +125,35 @@
 124 Keyboard
 125 Abbreviation
 126 Acronym
-127 Character element
-128 Italic
-129 Bold
-130 Teletype
-131 Big
-132 Small
-133 Subscript
-134 Superscript
-135 Quotation
-136 BiDi override
-137 Transform...
-138 Section numbering
-139 Make book
-140 About Amaya
-141 Browsing
-142 Selecting
-143 Searching
-144 Views
-145 Creating elements
-146 Links
-147 Restructuring
-148 Tables
-149 Math
-150 Image maps
-151 Style sheets
-152 Attributes
-153 Publishing
-154 Printing
-155 Making books
-156 Configuring Amaya
+127 Insertion
+128 Deletion
+129 Character element
+130 Italic
+131 Bold
+132 Teletype
+133 Big
+134 Small
+135 Subscript
+136 Superscript
+137 Quotation
+138 BiDi override
+139 Transform...
+140 Section numbering
+141 Make book
+142 About Amaya
+143 Browsing
+144 Selecting
+145 Searching
+146 Views
+147 Creating elements
+148 Links
+149 Restructuring
+150 Tables
+151 Math
+152 Image maps
+153 Style sheets
+154 Attributes
+155 Publishing
+156 Printing
+157 Making books
+158 Configuring Amaya

@@ -372,6 +372,8 @@ boolean             createLink;
 		  elType.ElTypeNum != HTML_EL_Cite &&
 		  elType.ElTypeNum != HTML_EL_ABBR &&
 		  elType.ElTypeNum != HTML_EL_ACRONYM &&
+		  elType.ElTypeNum != HTML_EL_INS &&
+		  elType.ElTypeNum != HTML_EL_DEL &&
 		  elType.ElTypeNum != HTML_EL_PICTURE_UNIT &&
 		  elType.ElTypeNum != HTML_EL_Applet &&
 		  elType.ElTypeNum != HTML_EL_Object &&
@@ -1749,6 +1751,36 @@ View                view;
 #endif /* __STDC__ */
 {
    SetCharFontOrPhrase (document, HTML_EL_ACRONYM);
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateElemINS (Document document, View view)
+#else  /* __STDC__ */
+void                CreateElemINS (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   SetCharFontOrPhrase (document, HTML_EL_INS);
+}
+
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateElemDEL (Document document, View view)
+#else  /* __STDC__ */
+void                CreateElemDEL (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   SetCharFontOrPhrase (document, HTML_EL_DEL);
 }
 
 

@@ -159,6 +159,8 @@ MENUS
         view:1 Style.Phrase toggle:TKeyboard -> CreateElemKeyboard;
 	view:1 Style.Phrase toggle:TAbbreviation -> CreateElemAbbr;
 	view:1 Style.Phrase toggle:TAcronym -> CreateElemAcronym;
+	view:1 Style.Phrase toggle:TInsertion -> CreateElemINS;
+	view:1 Style.Phrase toggle:TDeletion -> CreateElemDEL;
 
         view:1 Style.Font toggle:TItalic -> CreateElemItalic;
         view:1 Style.Font toggle:TBold -> CreateElemBold;

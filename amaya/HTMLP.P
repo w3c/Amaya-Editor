@@ -70,7 +70,9 @@ COUNTERS
    CptToCPage : Rank of Page(Table_of_contents);
 #endif
 #ifdef LINK_NUMBER
-   AnchorCounter : Set 0 on BODY add 1 on Anchor with ExternalLink;
+   AnchorCounter : Set 0 on BODY add 1 on Anchor with ExternalLink
+				 add 1 on Quotation with ExternalLink
+				 add 1 on Block_Quote with ExternalLink;
 #endif
    H2Counter : Set 0 on H1 add 1 on H2;
    H3Counter : Set 0 on H1 set 0 on H2 add 1 on H3;
@@ -2313,6 +2315,26 @@ BOXES
 		Visibility: 0;
 	END;
 
+ INS_S: BEGIN
+	Content: (Text 'INS');
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ DEL_S: BEGIN
+	Content: (Text 'DEL');
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  SPAN_S: BEGIN
 	Content: (Text 'SPAN');
 	Visibility: 0;
@@ -2419,7 +2441,7 @@ BOXES
 		END;
 	END;
 
- ATTR_HREF_ANCH: BEGIN
+ ATTR_HREF_LINKS_VIEW: BEGIN
 	Content: Text ' href=';
 	Visibility: 0;
 	IN Links_view BEGIN
@@ -2432,11 +2454,79 @@ BOXES
 		END;
 	END;
 
- VALUE_HREF_ANCH: BEGIN
+ VALUE_HREF_LINKS_VIEW: BEGIN
 	Content: (HREF_);
 	Visibility: 0;
 	IN Links_view
 		Visibility: 5;
+	END;
+
+ ATTR_CITE: BEGIN
+	Content: Text ' cite=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_CITE: BEGIN
+	Content: (cite);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+ ATTR_CITE_LINKS_VIEW: BEGIN
+	Content: Text ' cite=';
+	Visibility: 0;
+	IN Links_view BEGIN
+#ifdef PAGE
+		Style: ATTR_Style_Links_view;
+#else
+		Foreground: ATTR_Color;
+#endif
+		Visibility: 5;
+		END;
+	END;
+
+ VALUE_CITE_LINKS_VIEW: BEGIN
+	Content: (cite);
+	Visibility: 0;
+	IN Links_view
+		Visibility: 5;
+	END;
+
+ ATTR_DATETIME: BEGIN
+	Content: Text ' datetime=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+ VALUE_DATETIME: BEGIN
+	Content: (datetime);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
 	END;
 
  ATTR_TITLE: BEGIN
@@ -5092,6 +5182,34 @@ RULES
 		END;
 	END;
 
+ INS:	BEGIN
+	CreateBefore(INS_S);
+	CreateWith(VerticalLine);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Style: Italics;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		Style: Enclosing =;
+		END;
+	END;
+
+ DEL:	BEGIN
+	CreateBefore(DEL_S);
+	CreateWith(VerticalLine);
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	Underline: CrossedOut;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		Underline: Enclosing =;
+		END;
+	END;
+
  Span:	BEGIN
 	CreateBefore(SPAN_S);
 	CreateWith(VerticalLine);
@@ -6194,8 +6312,8 @@ ATTRIBUTES
 	CreateBefore(VALUE_HREF);
 	IF Anchor
 	   BEGIN
-	   CreateLast(ATTR_HREF_ANCH);
-	   CreateLast(VALUE_HREF_ANCH);
+	   CreateLast(ATTR_HREF_LINKS_VIEW);
+	   CreateLast(VALUE_HREF_LINKS_VIEW);
 	   END;
 #ifdef LINK_NUMBER
         IF Anchor and not InternalLink
@@ -6227,6 +6345,31 @@ ATTRIBUTES
 		Foreground: Enclosing =;
 		Underline: Underlined;
 		END;
+	END;
+
+ cite:
+	BEGIN
+	CreateBefore(ATTR_CITE);
+	CreateBefore(VALUE_CITE);
+	CreateLast(ATTR_CITE_LINKS_VIEW);
+	CreateLast(VALUE_CITE_LINKS_VIEW);
+#ifdef LINK_NUMBER
+        IF not InternalLink
+           BEGIN
+           CreateFirst(AnchorNumInLinkView);
+           CreateAfter(AnchorNumInFormattedView);
+           END;
+#endif
+#ifdef PAGE
+	IN Links_view
+	   Visibility: 7;
+#endif
+	END;
+
+ datetime:
+	BEGIN
+	CreateBefore(ATTR_DATETIME);
+	CreateBefore(VALUE_DATETIME);
 	END;
 
  ShowAreas (AREA):

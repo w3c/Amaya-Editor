@@ -47,7 +47,7 @@ STRUCT
 	   { background          bgcolor                 text }
 	     LinkColor = Text; VisitedLinkColor = Text; ActiveLinkColor = Text)
            { link              vlink                    alink }
-	= LIST OF (Element);
+	= LIST OF (Element) + (INS, DEL);
 
   Invalid_element (ATTR Error_type = UnknownTag, BadPosition) = TEXT;
   Comment\240 = LIST OF (Comment_line = TEXT);
@@ -92,7 +92,9 @@ STRUCT
 	Preformatted;						{ PRE preformatted }
 	Division;						{ DIV }
 	Center;							{ CENTER }
-	Block_Quote (ATTR cite = TEXT) =			{ BLOCKQUOTE }
+	Block_Quote (ATTR cite = TEXT;				{ BLOCKQUOTE }
+			{ cite }
+	        InternalLink = Reference(Any); ExternalLink = Yes_) =
 		LIST OF (Element);
 	Form;							{ FORM }
 	ISINDEX;						{ ISINDEX }
@@ -168,29 +170,33 @@ STRUCT
   { A }
   Anchor (ATTR HREF_; NAME = Text; REL; REV;
 	     { href   name         rel  rev }
-	       InternalLink = Reference(Any); ExternalLink = Yes_)
+	       InternalLink; ExternalLink)
 	= Basic_Set;
 
-  Basic_Elem = CASE OF				{ special }
+  Basic_Elem = CASE OF					{ special }
         TEXT;
 	Font;
 	Phrase;
-	Anchor;					{ A }
-	PICTURE;				{ IMG }
-	Applet;					{ APPLET }
-	Object;					{ OBJECT }
-	Font_;					{ FONT }
-	BaseFont;				{ BASEFONT }
-	BR (ATTR Clear = Left_, Right_, All_, None) = CONSTANT C_BR;	{ BR }
+	Anchor;							{ A }
+	PICTURE;						{ IMG }
+	Applet;							{ APPLET }
+	Object;							{ OBJECT }
+	Font_;							{ FONT }
+	BaseFont;						{ BASEFONT }
+	BR (ATTR Clear = Left_, Right_, All_, None) =		{ BR }
 	       { clear   left   right   all   none }
-	SCRIPT;					{ SCRIPT }
-	MAP;					{ MAP }
-	Quotation (ATTR cite) = Basic_Set;	{ Q }
-	Subscript = Basic_Set;			{ SUB }
-	Superscript = Basic_Set;		{ SUP }
-	Span = Basic_Set;			{ SPAN }
-	BDO = Basic_Set;			{ BDO }
-	IFRAME;					{ IFRAME }
+		 CONSTANT C_BR;
+	SCRIPT;							{ SCRIPT }
+	MAP;							{ MAP }
+	Quotation (ATTR cite; InternalLink; ExternalLink) =	{ Q }
+		      { cite }
+		 Basic_Set;
+
+	Subscript = Basic_Set;					{ SUB }
+	Superscript = Basic_Set;				{ SUP }
+	Span = Basic_Set;					{ SPAN }
+	BDO = Basic_Set;					{ BDO }
+	IFRAME;							{ IFRAME }
 #ifdef MATHML
 	Math (ATTR mode) = MathML;
 #endif
@@ -262,6 +268,9 @@ STRUCT
 	Object_Content = LIST OF (CASE OF Element; Parameter; END);
 						 { PARAM }
 	END with Height_ ?= 400, Width__ ?= '400', IntWidthPxl ?= 400;
+
+  INS (ATTR cite; datetime = TEXT) = Basic_Set;			{ INS }
+  DEL (ATTR cite; datetime) = Basic_Set;			{ DEL }
 
   Block = CASE OF						{ block }
 	Paragraph;						{ P }

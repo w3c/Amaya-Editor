@@ -327,6 +327,20 @@ RULES
 	Create '</object>\12' After;	
 	END;
 
+ INS:	BEGIN
+	Create '<ins';
+	Create Attributes;
+	Create '>';
+	Create '</span>' After;
+	END;
+
+ DEL:	BEGIN
+	Create '<del';
+	Create Attributes;
+	Create '>';
+	Create '</span>' After;
+	END;
+
  Span:	BEGIN
 	Create '<span';
 	Create Attributes;
@@ -771,6 +785,21 @@ ATTRIBUTES
 	NoTranslation;
 	Create ' href="';
 	Create HREF_;
+	Create DoubleQuote;
+	END;
+
+ cite:
+	BEGIN
+	NoTranslation;
+	Create ' cite="';
+	Create cite;
+	Create DoubleQuote;
+	END;
+
+ datetime:
+	BEGIN
+	Create ' datetime="';
+	Create datetime;
 	Create DoubleQuote;
 	END;
 
