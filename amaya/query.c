@@ -1089,11 +1089,84 @@ static void         AHTAlertInit ()
 #endif /* AMAYA_WWW_CACHE */
 }
 
+#ifdef AMAYA_WWW_CACHE
+/*----------------------------------------------------------------------
+  CleanCache
+  Clears an existing cache directory
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CleanCache (char *dirname)
+#else
+void CleanCache (dirname)
+char *dirname;
+#endif /* __STDC__ */
+{
+  DIR *dp;
+  struct stat st;
+#ifdef HAVE_DIRENT_H
+  struct dirent *d;
+#else
+  struct direct *d;
+#endif /* HAVE_DIRENT_H */
+  char filename [BUFSIZ+1];
+
+  if ((dp = opendir (dirname)) == NULL) 
+    {
+      /* @@@ we couldn't open the directory ... we need some msg */
+      perror (dirname);
+      exit;
+    }
+  
+  while ((d = readdir (dp)) != NULL)
+    {
+#ifndef _WINDOWS
+      /* skip the UNIX . and .. links */
+      if (!strcmp (d->d_name, "..")
+	  || !strcmp (d->d_name, "."))
+	continue;
+#endif _WINDOWS
+
+      sprintf (filename, "%s%s", dirname, d->d_name);
+      if  (lstat (filename, &st) < 0 ) 
+	{
+	  /* @@2 need some error message */
+	  perror (filename);
+	  continue;
+	}
+      
+      switch (st.st_mode & S_IFMT)
+	{
+	case S_IFDIR:
+	  /* if we find a directory, we erase it, recursively */
+	  strcat (filename, "/");
+	  CleanCache (filename);
+	  break;
+	case S_IFLNK:
+	  /* skip any links we find */
+	  continue;
+	  break;
+	default:
+	  /* erase the filename */
+	  TtaFileUnlink (filename);
+	  break;
+	}
+    }
+  closedir (dp);
+  /* erase the directory */
+  rmdir (dirname);
+}
+#endif /* AMAYA_WWW_CACHE */
+
 /*----------------------------------------------------------------------
   CacheInit
   Reads the cache settings from the thot.ini file.
   ----------------------------------------------------------------------*/
+#ifdef __STDC__
 static void CacheInit (void)
+#else
+static void Cacheinit ()
+#endif
+
 {
 #ifndef AMAYA_WWW_CACHE
    HTCacheMode_setEnabled (NO);
@@ -1150,8 +1223,10 @@ static void CacheInit (void)
 	{
 	  /* remove the lock and clean the cache (the clean cache will remove
 	   all, making the following call unnecessary */
-	  TtaFileUnlink (strptr);
-	  /* CleanCache (cache_dir); */
+	  strcpy (strptr, cache_dir);
+	  /* @@@ add DIRSEP */
+	  strcat (strptr, "/");
+	  CleanCache (strptr); 
 	}
       TtaFreeMemory (strptr);
 
@@ -1172,7 +1247,11 @@ static void CacheInit (void)
   Reads any proxies settings which may be declared as environmental
   variables or in the thot.ini file. The former overrides the latter.
   ----------------------------------------------------------------------*/
+#ifdef __STDC__
 static void ProxyInit (void)
+#else
+static void ProxyInit ()
+#endif /* __STDC__ */
 {
   char *strptr;
   char *str = NULL;
@@ -1203,7 +1282,6 @@ static void ProxyInit (void)
   
   /* use libw3's routine to get all proxy settings from the environment */
    HTProxy_getEnvVar ();
-
 }
 
 
