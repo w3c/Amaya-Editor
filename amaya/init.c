@@ -1208,12 +1208,22 @@ CHAR_T*              label;
 {
 #  ifndef _WINDOWS
    /* Confirm form */
+   static ThotBool critic = FALSE;
+
+   /* JK: This widget can't be called twice, but it happens when downloading a
+      document with protected images. This is a quick silution to avoid the
+      sigsev, although it doesn't fix the problem */
+   if (critic)
+     return;
+   else critic = TRUE;
    TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),  TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_CANCEL);
    TtaNewLabel (BaseDialog + ConfirmText, BaseDialog + ConfirmForm, label);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
    /* wait for an answer */
    TtaWaitShowDialogue ();
+   /* remove the critic section */
+   critic = FALSE;
 #  else  /* _WINDOWS */
    CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), BaseDialog + ConfirmForm, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label);
 #  endif /* _WINDOWS */
