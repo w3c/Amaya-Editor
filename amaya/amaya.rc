@@ -911,20 +911,20 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,195,53,50,14
     PUSHBUTTON      "Browse",IDC_BROWSE,117,52,68,15
     EDITTEXT        IDC_GETURL,7,30,283,16,ES_AUTOHSCROLL
-    LTEXT           "Type the URI or push Browse button",IDC_URLMESSAGE,7,14,
-                    257,13
+    LTEXT           "Type the URI or push the button Browse",IDC_URLMESSAGE,
+                    7,14,257,13
 END
 
 DE_OPENIMAGEDIALOG DIALOG DISCARDABLE  100, 100, 299, 95
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Open Document"
+CAPTION "Add an Image"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "Confirm",ID_CONFIRM,53,74,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,195,74,50,14
     PUSHBUTTON      "Browse",IDC_BROWSE,117,74,68,15
     EDITTEXT        IDC_GETURL,7,18,283,16,ES_AUTOHSCROLL
-    LTEXT           "Type the URL of the document to load or push Browse button to load a local file",
+    LTEXT           "Type the URI of the image or push the button  Browse",
                     IDC_URLMESSAGE,7,7,257,11
     EDITTEXT        IDC_GETALT,7,52,283,16,ES_AUTOHSCROLL
     LTEXT           "Alternate Text",IDC_ALTMESSAGE,7,41,284,11
@@ -1175,7 +1175,8 @@ BEGIN
     DEFPUSHBUTTON   "Apply",ID_APPLY,7,47,50,14
     PUSHBUTTON      "Done",ID_DONE,141,47,50,14
     PUSHBUTTON      "Defaults",ID_DEFAULTS,76,47,50,14
-    LTEXT           "Accept Language",-1,7,7,75,11
+    LTEXT           "List of preferred languages, like ""de, en""",-1,7,7,
+                    146,11
     EDITTEXT        IDC_LANNEG,7,22,184,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
 END
 
@@ -1572,8 +1573,8 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,195,53,50,14
     PUSHBUTTON      "Browse",IDC_BROWSE,117,52,68,15
     EDITTEXT        IDC_GETURL,7,30,283,16,ES_AUTOHSCROLL
-    LTEXT           "Type the URI or push Browse button",IDC_URLMESSAGE,7,14,
-                    257,13
+    LTEXT           "Type the URI or push the button Browse",IDC_URLMESSAGE,
+                    7,14,257,13
 END
 
 EN_CHARACTERSDIALOG DIALOG DISCARDABLE  100, 100, 202, 181
@@ -1936,14 +1937,14 @@ END
 
 EN_OPENIMAGEDIALOG DIALOG DISCARDABLE  100, 100, 299, 95
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Open Document"
+CAPTION "Add an Image"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "Confirm",ID_CONFIRM,53,74,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,195,74,50,14
     PUSHBUTTON      "Browse",IDC_BROWSE,117,74,68,15
     EDITTEXT        IDC_GETURL,7,18,283,16,ES_AUTOHSCROLL
-    LTEXT           "Type the URL of the document to load or push Browse button to load a local file",
+    LTEXT           "Type the URI of the image or push the button Browse",
                     IDC_URLMESSAGE,7,7,257,11
     EDITTEXT        IDC_GETALT,7,52,283,16,ES_AUTOHSCROLL
     LTEXT           "Alternate Text",IDC_ALTMESSAGE,7,41,284,11
@@ -2670,7 +2671,8 @@ BEGIN
     DEFPUSHBUTTON   "Apply",ID_APPLY,7,47,50,14
     PUSHBUTTON      "Done",ID_DONE,141,47,50,14
     PUSHBUTTON      "Defaults",ID_DEFAULTS,76,47,50,14
-    LTEXT           "Accept Language",-1,7,7,75,11
+    LTEXT           "List of preferred languages, like ""en, fr""",-1,7,7,
+                    152,11
     EDITTEXT        IDC_LANNEG,7,22,184,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
 END
 
@@ -3648,7 +3650,7 @@ BEGIN
     LTEXT           "URL de l'image ou appuyez sur Explorer",
                     IDC_OPENLOCATION,7,7,174,11
     EDITTEXT        IDC_BGLOCATION,7,18,168,15,ES_AUTOHSCROLL
-    GROUPBOX        "Mode de répétition",IDC_REPEATMODE,62,40,59,51,WS_GROUP
+    GROUPBOX        "Mode de répétition",IDC_REPEATMODE,62,40,65,51,WS_GROUP
     CONTROL         "Repeat",IDC_REPEAT,"Button",BS_AUTORADIOBUTTON,68,49,42,
                     8
     CONTROL         "Repeat-X",IDC_REPEATX,"Button",BS_AUTORADIOBUTTON,68,58,
@@ -3826,8 +3828,8 @@ BEGIN
     CONTROL         "",IDC_LEFT,"Button",BS_AUTORADIOBUTTON,13,18,11,12
     CONTROL         "",IDC_RIGHT,"Button",BS_AUTORADIOBUTTON,13,33,9,17
     CONTROL         "",IDC_CENTER,"Button",BS_AUTORADIOBUTTON,13,49,11,17
-    CONTROL         "Default",IDC_DEFAULTALIGN,"Button",BS_AUTORADIOBUTTON,
-                    13,68,42,14
+    CONTROL         "Défaut",IDC_DEFAULTALIGN,"Button",BS_AUTORADIOBUTTON,13,
+                    68,42,14
     CONTROL         1104,IDC_BLEFT,"Static",SS_BITMAP | SS_NOTIFY,25,17,25,
                     12
     CONTROL         1106,IDC_BCENTER,"Static",SS_BITMAP | SS_NOTIFY,27,52,25,
@@ -3840,7 +3842,7 @@ BEGIN
     GROUPBOX        "Renforcement",-1,141,7,56,78,WS_GROUP
     CONTROL         "",IDC_INDENT1,"Button",BS_AUTORADIOBUTTON,146,18,10,10
     CONTROL         "",IDC_INDENT2,"Button",BS_AUTORADIOBUTTON,146,44,11,12
-    CONTROL         "Default",IDC_INDENTDEFAULT,"Button",BS_AUTORADIOBUTTON,
+    CONTROL         "Défaut",IDC_INDENTDEFAULT,"Button",BS_AUTORADIOBUTTON,
                     146,68,51,13
     CONTROL         150,IDC_BINDENT1,"Static",SS_BITMAP | SS_NOTIFY,161,18,
                     25,12
@@ -3941,7 +3943,7 @@ BEGIN
     DEFPUSHBUTTON   "Confirmer",ID_CONFIRM,92,44,50,14
     PUSHBUTTON      "Terminer",ID_DONE,150,44,50,14
     EDITTEXT        IDC_URLEDIT,17,18,258,15,ES_AUTOHSCROLL
-    LTEXT           "URL",IDC_URL,16,7,19,11
+    LTEXT           "URI",IDC_URL,16,7,19,11
 END
 
 FR_MATRIXDIALOG DIALOG DISCARDABLE  100, 100, 123, 101
@@ -3971,17 +3973,17 @@ END
 
 FR_OPENIMAGEDIALOG DIALOG DISCARDABLE  100, 100, 299, 95
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Open Document"
+CAPTION "Ajouter une image"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "Confirmer",ID_CONFIRM,53,74,50,14
     PUSHBUTTON      "Annuler",IDCANCEL,195,74,50,14
     PUSHBUTTON      "Explorer",IDC_BROWSE,117,74,68,15
     EDITTEXT        IDC_GETURL,7,18,283,16,ES_AUTOHSCROLL
-    LTEXT           "Tapez l'URL du document (ou Explorer pour un fichier local)",
+    LTEXT           "Tapez l'URI de l'image ou appuyer sur le bouton Explorer",
                     IDC_URLMESSAGE,7,7,257,11
     EDITTEXT        IDC_GETALT,7,52,283,16,ES_AUTOHSCROLL
-    LTEXT           "Valeur de láttribut ALT",IDC_ALTMESSAGE,7,41,284,11
+    LTEXT           "Valeur de l'attribut ALT",IDC_ALTMESSAGE,7,41,284,11
 END
 
 FR_PRINTDIALOG DIALOG DISCARDABLE  100, 100, 172, 70
@@ -4207,13 +4209,13 @@ END
 
 FR_GETALTERNATEDIALOG DIALOG DISCARDABLE  0, 0, 267, 68
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Alternate Text"
+CAPTION "Texte alterné"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,69,47,50,14
-    PUSHBUTTON      "Done",ID_DONE,150,47,50,14
+    DEFPUSHBUTTON   "Confirmer",ID_CONFIRM,69,47,50,14
+    PUSHBUTTON      "Terminer",ID_DONE,150,47,50,14
     EDITTEXT        IDC_GETALT,7,23,253,17,ES_AUTOHSCROLL
-    LTEXT           "Alternate Text",IDC_ALTTEXT,7,7,161,12
+    LTEXT           "Texte alterné",IDC_ALTTEXT,7,7,161,12
 END
 
 FR_LANNEGMENU DIALOG DISCARDABLE  100, 100, 198, 68
@@ -4221,10 +4223,11 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Language Negotiation"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Apply",ID_APPLY,7,47,50,14
-    PUSHBUTTON      "Done",ID_DONE,141,47,50,14
-    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,47,50,14
-    LTEXT           "Accept Language",-1,7,7,75,11
+    DEFPUSHBUTTON   "Appliquer",ID_APPLY,7,47,50,14
+    PUSHBUTTON      "Terminer",ID_DONE,141,47,50,14
+    PUSHBUTTON      "Défaut",ID_DEFAULTS,76,47,50,14
+    LTEXT           "Liste des langues préférées, comme ""fr, en""",-1,7,7,
+                    151,11
     EDITTEXT        IDC_LANNEG,7,22,184,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
 END
 
