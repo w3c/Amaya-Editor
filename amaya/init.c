@@ -75,6 +75,8 @@
 #endif /* !_WINDOWS */
 #endif /* AMAYA_PLUGIN */
 
+#include "XPointer_f.h"
+
 #ifdef ANNOTATIONS
 #include "annotlib.h"
 #include "ANNOTevent_f.h"
@@ -4796,7 +4798,7 @@ void                FreeAmayaStructures ()
       FreeTransform ();
       QueryClose ();
 #ifdef ANNOTATIONS
-      XPointer_bufferDelete ();
+      XPointer_bufferFree ();
       ANNOT_Quit ();
 #endif /* ANNOTATIONS */
     }

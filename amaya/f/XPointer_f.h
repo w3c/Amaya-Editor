@@ -19,7 +19,7 @@ extern char * XPointer_build ( Document doc,
 extern void XPointer_bufferStore ( Document doc,
                                    View view );
 extern char * XPointer_buffer ( void );
-extern void XPointer_bufferDelete ( void );
+extern void XPointer_bufferFree ( void );
 
 #else /* __STDC__ */
 
@@ -36,7 +36,7 @@ extern char * XPointer_build (/* Document doc,
 extern void XPointer_bufferStore (/* Document doc,
                                      View view */);
 extern char * XPointer_buffer (/* void */);
-extern void XPointer_bufferDelete (/* void */);
+extern void XPointer_bufferFree (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1672,10 +1672,10 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
   Element          annotEl;
   AnnotMeta       *annot;
   CHAR_T          *annot_url;
+  int              i;
+  DisplayMode      dispMode;
   char            *xptr;
-
-  /* @@@ try to reassign the pointer... if we can't save it, then
-     restore the precedent one (or signal it as an orphan? */
+  XPointerContextPtr xptr_ctx;
 
   /* 
   **  get the annotation URL, source_doc, and annot_doc
@@ -1685,16 +1685,40 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
       annot_doc = doc;
       source_doc = DocumentMeta[doc]->source_doc;
 
+      /* don't move the XPointer unless we know the document's URL */
+      if (!DocumentURLs[source_doc] || *DocumentURLs[source_doc] == EOS)
+	return;
+
       if (useSel)
 	xptr = XPointer_build (source_doc, view, FALSE);
       else
 	xptr = XPointer_buffer ();
 
-      if (!xptr)
-	/* user didn't save an XPointer was saved */
-	return;
+      if (!xptr || *xptr == EOS)
+	{
+	  TtaSetStatus (doc, 1, "Error: there's no valid XPointer in the annotated document", NULL);
+	  return;
+	}
 
-      /* delete from an annotation document */
+      /* control the stored XPointer */
+      if (!useSel)
+	{
+	  /* don't move the XPointer to an stored XPointer unless this pointer points to the same
+	     source document as the previous one */
+	  i = strlen (DocumentURLs[source_doc]);
+	  if (strncmp (DocumentURLs[source_doc], xptr, i) || xptr[i] != '#')
+	    {
+	      TtaSetStatus (doc, 1, "Error: cannot move the XPointer to a different document", NULL);
+	      return;
+	    }
+	  else
+	    {
+	      /* point to the first char after the hash */
+	      xptr = xptr + i + 1;
+	      if (*xptr == EOS)
+		return;
+	    }
+	}
 
       /* clear the status */
       last_selected_annotation[source_doc] =  NULL;
@@ -1746,6 +1770,15 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
 	  return;
 	}
       
+      /* remove the selection from the annotated doc */
+      if (TtaGetSelectedDocument () == source_doc)
+	TtaUnselect (source_doc);
+
+      /* avoid refreshing the document while moving the  annotation link */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, DeferredDisplay);
+
       /* delete the previous annotation element */
       LINK_RemoveLinkFromSource (source_doc, annotEl);
 
@@ -1758,14 +1791,22 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
 	{
 	  annot->is_visible = TRUE;
 	  annot->show = TRUE;
-	  /* XPointer_select (xptr); */
+	  /* and select it */
+	  xptr_ctx = XPointer_parse (source_doc, xptr);
+	  XPointer_select (xptr_ctx);
+	  XPointer_free (xptr_ctx);
 	}
       else
 	{
 	  annot->is_visible = FALSE;
 	  annot->show = FALSE;
 	}
+
       TtaSetDocumentModified (doc);
+      /* show the document */
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, dispMode);
+
       if (useSel)
 	TtaFreeMemory (xptr);
     }

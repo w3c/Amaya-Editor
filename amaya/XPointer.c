@@ -66,8 +66,8 @@ typedef enum _selType {
   SEL_LAST_EL=1
 } selType;
 
-static char *tmp_buffer; /* temporary buffer where the user may memorize
-			    an XPointer */
+static char * xptr_buffer; /* temporary buffer where the user may store
+			      an XPointer */
 
 /*----------------------------------------------------------------------
   StrACat
@@ -884,14 +884,27 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 
 /*----------------------------------------------------------------------
   XPointer_bufferStore
-  Stores into a local buffer the XPointer corresponding to the
+  Stores into a local buffer the full XPointer corresponding to the
   current selection or caret position.
   ----------------------------------------------------------------------*/
 void XPointer_bufferStore (Document doc, View view)
 {
-  /* clear the precedent buffer */
-  XPointer_bufferDelete ();
-  tmp_buffer = XPointer_build (doc, view, FALSE);
+  char *xptr;
+
+  /* we need to make a full URL */
+  if (!DocumentURLs[doc] || *DocumentURLs[doc] == EOS)
+    return;
+
+  /* free the precedent buffer */
+  XPointer_bufferFree ();
+  /* build  the XPointer */
+  xptr = XPointer_build (doc, view, FALSE);
+  /* make a full URI */
+  if (xptr)
+    {
+      xptr_buffer = TtaGetMemory (strlen (DocumentURLs[doc]) + strlen (xptr) + 2);
+      sprintf (xptr_buffer, "%s#%s", DocumentURLs[doc], xptr);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -901,19 +914,19 @@ void XPointer_bufferStore (Document doc, View view)
   ----------------------------------------------------------------------*/
 char * XPointer_buffer (void)
 {
-  return tmp_buffer;
+  return xptr_buffer;
 }
 
 
 /*----------------------------------------------------------------------
-  XPointer_bufferDelete
+  XPointer_bufferFree
   Frees the memory associated to the local buffer
   ----------------------------------------------------------------------*/
-void XPointer_bufferDelete (void)
+void XPointer_bufferFree (void)
 {
-  if (tmp_buffer) 
+  if (xptr_buffer)
     {
-      TtaFreeMemory (tmp_buffer);
-      tmp_buffer = NULL;
+      TtaFreeMemory (xptr_buffer);
+      xptr_buffer = NULL;
     }
 }
