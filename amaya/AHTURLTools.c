@@ -672,9 +672,9 @@ const CHAR_T*        path;
   returns TRUE if path is in fact a URL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool             IsFilePath (const CHAR_T* path)
+ThotBool             IsFilePath (const CHAR_T* path)
 #else  /* __STDC__ */
-static ThotBool             IsFilePath (path)
+ThotBool             IsFilePath (path)
 const CHAR_T*        path;
 #endif /* __STDC__ */
 {

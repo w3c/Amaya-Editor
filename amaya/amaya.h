@@ -304,6 +304,11 @@ typedef struct _DocumentMetaDataElement
   ClickEvent method;           /* method used to send this data                 */
   ThotBool   put_default_name; /* URL name was concatenated with DEFAULT_NAME   */
   ThotBool   xmlformat;        /* the document should be exported in xml format */
+#ifdef ANNOTATIONS
+  Document   source_doc;       /* if the document is an annotation,
+				  this variable giveso the annoted document
+				  docid */
+#endif /* ANNOTATIONS */
 } DocumentMetaDataElement;
 
 #define DocumentTableLength 10

@@ -2919,6 +2919,11 @@ CHAR_T*       content_type;
 	     AHTRequest_setCustomAcceptHeader (me->request, IMAGE_ACCEPT_NEGOTIATION);
 	   else if (mode & AMAYA_LOAD_CSS)
 	     AHTRequest_setCustomAcceptHeader (me->request, "*/*;q=0.1,css/*");
+#ifdef ANNOTATIONS
+	   else if (content_type && content_type[0] != WC_EOS)
+	     /* use the custom sent content_type */
+	     AHTRequest_setCustomAcceptHeader (me->request, content_type);
+#endif /* ANNOTATIONS */
 	   /*
 	   HTRequest_setConversion(me->request, acceptTypes, TRUE);
 	   */
@@ -3058,7 +3063,7 @@ CHAR_T*       content_type;
 	 me->document = TtaGetMemory (me->block_size 
 				      + strlen ("w3c_annotate=") + 1);
 	 fp = fopen (formdata, "r");
-	 i = 0;
+	 i = 0; 
 	 strcpy (me->document, "w3c_annotate=");
 	 c = getc (fp);
 	 i = strlen(me->document);
