@@ -35,9 +35,9 @@ struct _HTError
      HTErrorElement      element;	/* Index number into HTError */
      HTSeverity          severity;	/* A la VMS */
      BOOL                ignore;	/* YES if msg should not go to user */
-     void               *par;	/* Explanation, e.g. filename  */
+     void               *par;	        /* Explanation, e.g. filename  */
      int                 length;	/* For copying by generic routine */
-     char               *where;	/* Which function */
+     char               *where;	        /* Which function */
   };
 
 
@@ -393,6 +393,9 @@ HTAlertPar         *reply;
 	   else
 	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_SAVE_ERROR), me->urlName);
 	   break;
+	 case HTERR_NO_REMOTE_HOST:
+	   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST), (char *) NULL);
+	     break;
 	 default:
 	   break;
 	 }
@@ -441,6 +444,7 @@ HTRequest          *request;
 	{			/* Error number */
 	  switch (index)
 	    {
+	    case HTERR_NO_REMOTE_HOST:
 	    case HTERR_SYSTEM:
 	    case HTERR_INTERNAL:
 	      if (pres->par != NULL)
@@ -472,7 +476,7 @@ HTRequest          *request;
 		}
 	      else
 		{
-		  sprintf (buffer, "Error: Server is unavaliable or "
+		  sprintf (buffer, "Error: Server is unavailable or "
 			   "doesn't exist");
 		  StrAllocCat (me->error_stream, buffer);
 		}
