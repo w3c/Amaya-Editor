@@ -667,6 +667,12 @@ void  GL_DestroyFrame (int frame)
 	  i = MAX_FRAME + 1;
 	} 
     }
+  if (i > MAX_FRAME)
+    {
+      /* if there is no more frame alive, just reinitialise the shared context to undefined (-1)
+         the next created frame will share its context with others */
+      SetSharedContext(-1);
+    }
 #endif /*_NOSHARELIST*/
   FreeAllPicCacheFromFrame (frame);
 #ifdef _WINGUI
