@@ -49,7 +49,6 @@ src="../Icons/amaya.gif" alt="Amaya"></a></p>
 <p></p>
 <hr>
 
-
 <h2><a name="L125">I.1. Is <b>Amaya</b> an editor or a browser?</a></h2>
 
 <p><b>Amaya</b> is mainly an authoring tool with browser features.  Link
@@ -58,7 +57,6 @@ and these features require seamless integration with browsing features.</p>
 
 <p></p>
 <hr>
-
 
 <h2><a name="Where">I.2. Where can I get <b>Amaya</b>?</a></h2>
 
@@ -78,7 +76,6 @@ can use either ftp or http:</p>
 <p></p>
 <hr>
 
-
 <h2><a name="Amaya1">I.3. Is Amaya available for MacOS?</a></h2>
 
 <p>Currently, Amaya is available for various Unix and Windows platforms. We
@@ -88,7 +85,6 @@ code is available and contributions to a port are welcome.</p>
 <p></p>
 <hr>
 
-
 <h2><a name="release">I.4. Can I release Amaya on a CD-ROM?</a></h2>
 
 <p>Yes, and you can even charge for it, provided the copyright is
@@ -96,7 +92,6 @@ preserved.</p>
 
 <p></p>
 <hr>
-
 
 <h2><a name="make">I.5. Can I make some changes and re-release it?</a></h2>
 
@@ -111,7 +106,6 @@ Specification of the W3C.</p>
 <p></p>
 <hr>
 
-
 <h2><a name="L147">I.6. Why is <b>Amaya</b> written in C?</a></h2>
 
 <p>C has a number of advantages that fit well with our purposes. It's a very
@@ -122,14 +116,12 @@ continue to develop the Amaya code in C.</p>
 <p></p>
 <hr>
 
-
 <h2><a name="I.7.">I.7. <b>Is Amaya Y2K compliant</b>?</a></h2>
 
 <p>Yes <b>Amaya</b> is Y2K compliant.</p>
 
 <p></p>
 <hr>
-
 
 <h2><a name="Amaya">II.1 Is Amaya compliant with MathML?</a></h2>
 
@@ -141,29 +133,26 @@ href="http://www.w3.org/Amaya/User/Math.html">http://www.w3.org/Amaya/User/Math.
 <p></p>
 <hr>
 
-
 <h2><a name="edit">II.2. Can I edit tags directly?</a></h2>
 
 <p>Amaya has been built as a structured document editor.  This approach allows
 it to handle complex documents and highly structured objects such as tables,
 structured graphics or mathematical expressions. While editing in the  HTML or
-the XML mode, Amaya works on the document tree, not on its textual
+the XHML mode, Amaya works on the document tree, not on its textual
 representation, which is generated only at save time, in the syntax you choose
-(plain text, HTML, XML).</p>
+(plain text, HTML, XHML).</p>
 
-<p>Amaya allows one to open the source view of the document and to edit tags.
-This is done in a separated but synchronized document. Amaya is able to show
-what part of the source document is concerned by a current selection in the
-formatted document and .what part of the formatted document is concerned by a
-current selection in the source document. Both the source document and the
-formatted document can be edited.  Modification one within the source view or
-the formatted view can be reported in the other view by the command
-Synchronize.. The synchronisation is also performed when the document is
-saved.</p>
+<p>Amaya also allows you to open the source view of the document and then to
+edit tags. This is done in a separate but synchronized document. Amaya shows
+what part of the source document is concerned by the current selection in the
+formatted document and conversely. Both the source document and the formatted
+document can be edited.  Changes done in any of these two documents are
+reflected in the other by the <code>File/Synchronize</code> command.
+Synchronization is also performed automatically when the document is saved
+from either wiew.</p>
 
 <p></p>
 <hr>
-
 
 <h2><a name="Displayed">II.3. Fonts are too small. What can I do?</a></h2>
 
@@ -181,7 +170,6 @@ not other elements (images, etc.).</p>
 <p></p>
 <hr>
 
-
 <h2><a name="XFonts">II.4. Can I  get fonts for Amaya on linux?</a></h2>
 
 <p>There are interesting X fonts for  linux at: <a
@@ -190,26 +178,22 @@ href="http://www.gimp.org/urw-fonts.tar.gz">http://www.gimp.org/urw-fonts.tar.gz
 <p>To install them:</p>
 <ul>
   <li>Untar the file into /usr/X11R6/lib/X11/fonts</li>
-  <li>Change the file /etc/X11/XF86Config :
-      Section "Files"
-          RgbPath    "/usr/X11R6/lib/X11/rgb"
-          FontPath   "/usr/X11R6/lib/X11/fonts/misc:unscaled"
-          FontPath   "/usr/X11R6/lib/X11/fonts/75dpi:unscaled"
-          FontPath   "/usr/X11R6/lib/X11/fonts/100dpi:unscaled"
-          FontPath   "/usr/X11R6/lib/X11/fonts/URW"
-          FontPath   "/usr/X11R6/lib/X11/fonts/Type1"
-          FontPath   "/usr/X11R6/lib/X11/fonts/Speedo"
-          FontPath   "/usr/X11R6/lib/X11/fonts/misc"
-          FontPath   "/usr/X11R6/lib/X11/fonts/75dpi"
-          FontPath   "/usr/X11R6/lib/X11/fonts/100dpi"
-      EndSection</li>
-  <li>Restart your X server and you will have a better display with Amaya.
-  </li>
+  <li>Change the file /etc/X11/XF86Config : Section "Files" RgbPath   
+    "/usr/X11R6/lib/X11/rgb" FontPath  
+    "/usr/X11R6/lib/X11/fonts/misc:unscaled" FontPath  
+    "/usr/X11R6/lib/X11/fonts/75dpi:unscaled" FontPath  
+    "/usr/X11R6/lib/X11/fonts/100dpi:unscaled" FontPath  
+    "/usr/X11R6/lib/X11/fonts/URW" FontPath   "/usr/X11R6/lib/X11/fonts/Type1"
+    FontPath   "/usr/X11R6/lib/X11/fonts/Speedo" FontPath  
+    "/usr/X11R6/lib/X11/fonts/misc" FontPath  
+    "/usr/X11R6/lib/X11/fonts/75dpi" FontPath  
+    "/usr/X11R6/lib/X11/fonts/100dpi" EndSection</li>
+  <li>Restart your X server and you will have a better display with
+  Amaya.</li>
 </ul>
 
 <p></p>
 <hr>
-
 
 <h2><a name="want">II.5. How can I change the default window size</a></h2>
 
@@ -220,7 +204,6 @@ updated.</p>
 
 <p></p>
 <hr>
-
 
 <h2><a name="parsing">II.6. Can I see parsing errors detected by
 Amaya?</a></h2>
@@ -235,7 +218,6 @@ log file</em>.</p>
 
 <p></p>
 <hr>
-
 
 <h2><a name="What">II.7. What is the reason</a> for a very liberal structure
 enforcement?</h2>
@@ -271,7 +253,6 @@ remain when the document is saved.</p>
 <p></p>
 <hr>
 
-
 <h2><a name="II.7.">II.8. How can I update the document title?</a></h2>
 
 <p>The user can change the document title by editing the field "Title" at the
@@ -283,7 +264,6 @@ document.</p>
 
 <p></p>
 <hr>
-
 
 <h2><a name="Where3">III.1. Where can I get the developer's
 documentation</a></h2>
@@ -310,7 +290,6 @@ following documentation:</p>
 <p></p>
 <hr>
 
-
 <h2><a name="Make">III.2. Make complains with missing files</a></h2>
 
 <p>This error occurs when one forgot to create the object subtree before
@@ -325,7 +304,6 @@ and launch configure to create the Makefile(s):</p>
 
 <p></p>
 <hr>
-
 
 <h2><a name="Make1">III.3. Make fails when compiling the HTML schema</a></h2>
 
@@ -343,7 +321,6 @@ and launch configure to create the Makefile(s):</p>
 <p></p>
 <hr>
 
-
 <h2><a name="don't">III.4. I don't have Motif</a></h2>
 
 <p>The Amaya user interface is based on OSF/Motif, and Motif is not freely
@@ -353,7 +330,6 @@ and later) of <a href="http://www.lesstif.org/">Lesstif</a>.</p>
 
 <p></p>
 <hr>
-
 
 <p><a href="http://validator.w3.org/"><img border="0"
 src="http://validator.w3.org/images/vh40.gif" alt="Valid HTML 4.0!"
@@ -369,9 +345,9 @@ height="31" width="88"></a></p>
   href="http://www.lcs.mit.edu/">MIT</a>, <a
   href="http://www.inria.fr/">INRIA</a>, <a
   href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
-  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal      
+  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal        
   Disclaimer">liability,</a> <a
-  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C      
+  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C        
   Trademarks">trademark</a>, <a
   href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
   use </a>and <a

@@ -1448,7 +1448,8 @@ Document       sourceDoc;
 
 
 /*----------------------------------------------------------------------
-   Synchronize saves locally the current view (source/html) and updates
+   Synchronize
+   save the current view (source/html) in a temporary file and update
    the other view (html/source).      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1463,32 +1464,54 @@ View                view;
    CHAR_T*             tempdocument = NULL;
    CHAR_T              documentname[MAX_LENGTH];
    CHAR_T              tempdir[MAX_LENGTH];
-   Document            htmlDoc;
+   Document            htmlDoc, otherDoc;
 
    if (!DocumentURLs[document])
      /* the document is not loaded yet */
      return;
    if (!TtaIsDocumentModified (document))
-     return;
+     /* nothing new to be saved in this view of the document. Let see if
+        the other view has been modified */
+     {
+       if (DocumentTypes[document] == docHTML ||
+           DocumentTypes[document] == docHTMLRO)
+           /* it's an HTML document */
+	  otherDoc = DocumentSource[document];
+       else if (DocumentTypes[document] == docSource ||
+                DocumentTypes[document] == docSourceRO)
+          otherDoc = GetHTMLdocFromSource (document);
+       else
+	  return;
+       if (!TtaIsDocumentModified (otherDoc))
+	  /* the other view has not been modified either */
+	  return;
+       else
+	  /* save the other view */
+	  document = otherDoc;
+     }
 
    if (DocumentTypes[document] == docHTML ||
        DocumentTypes[document] == docHTMLRO)
+     /* it's an HTML document */
      {
        /* save the current state of the document into the temporary file */
        tempdocument = GetLocalPath (document, DocumentURLs[document]);
        SetNamespacesAndDTD (document);
-       TtaExportDocumentWithNewLineNumbers (document, tempdocument, TEXT("HTMLT"));
+       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+					    TEXT("HTMLT"));
        RedisplaySourceFile (document);
-       /* the source is now up to date */
-       TtaSetDocumentUnmodified (DocumentSource[document]);
+       otherDoc = DocumentSource[document];
      }
    else if (DocumentTypes[document] == docSource ||
        DocumentTypes[document] == docSourceRO)
+     /* it's a source document */
      {
        htmlDoc = GetHTMLdocFromSource (document);
+       otherDoc = htmlDoc;
        /* save the current state of the document into the temporary file */
        tempdocument = GetLocalPath (htmlDoc, DocumentURLs[htmlDoc]);
-       TtaExportDocumentWithNewLineNumbers (document, tempdocument, TEXT("TextFileT"));
+       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
+					    TEXT("TextFileT"));
        TtaExtractName (tempdocument, tempdir, documentname);
        StartParser (htmlDoc, tempdocument, documentname, tempdir, tempdocument,
 		    FALSE);
@@ -1496,13 +1519,14 @@ View                view;
        DocNetworkStatus[htmlDoc] = AMAYA_NET_ACTIVE;
        FetchAndDisplayImages (htmlDoc, AMAYA_LOAD_IMAGE);
        DocNetworkStatus[htmlDoc] = AMAYA_NET_INACTIVE;
-       /* the source document is now up to date */
-       TtaSetDocumentUnmodified (document);
-       /* but the document can be saved */
-       TtaSetDocumentModified (htmlDoc);
-       TtaSetItemOn (htmlDoc, 1, File, BSynchro);
      }
-
+   /* the other document is now different from the original file. It can
+      be saved */
+   TtaSetDocumentModified (otherDoc);
+   TtaSetItemOn (otherDoc, 1, File, BSave);
+   /* disable the Synchronize command for both documents */
+   TtaSetItemOff (otherDoc, 1, File, BSynchro);
+   TtaSetItemOff (document, 1, File, BSynchro);
    /* Synchronize selections */
    event.document = document;
    SynchronizeSourceView (&event);
