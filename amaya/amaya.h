@@ -96,7 +96,7 @@ typedef void  TTcbf (Document doc, int status, CHAR_T* urlName,
 typedef enum _ClickEvent {
   CE_ABSOLUTE, CE_RELATIVE, CE_FORM_POST, CE_FORM_GET,
   CE_HELP, CE_MAKEBOOK, CE_LOG , CE_TEMPLATE, CE_INIT,
-  CE_ANNOT
+  CE_CSS, CE_ANNOT
 } ClickEvent;
 
 #define NO               0

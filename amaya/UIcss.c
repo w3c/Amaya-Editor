@@ -460,7 +460,7 @@ STRING              data;
 	    {
 	    case 1:
 	      /* display the CSS file */
-	      GetHTMLDocument (CSSpath, NULL, 0, 0, CE_ABSOLUTE, FALSE,
+	      GetHTMLDocument (CSSpath, NULL, 0, 0, CE_CSS, FALSE,
 			       NULL, NULL);
 	      break;
 	    case 2:

@@ -1999,13 +1999,17 @@ static void MoveImageFile (Document source_doc, Document dest_doc,
 }
 
 /*----------------------------------------------------------------------
-  LoadHTMLDocument parses the new document and stores its path (or
+  LoadDocument parses the new document and stores its path (or
   URL) into the document table.
   For a local loading, the parameter tempfile must be an empty string.
   For a remote loading, the parameter tempfile gives the file name that
   contains the current copy of the remote file.
   ----------------------------------------------------------------------*/
-static Document     LoadHTMLDocument (Document doc, CHAR_T* pathname, CHAR_T* form_data, CHAR_T* initial_url, int method, CHAR_T* tempfile, CHAR_T* documentname, AHTHeaders *http_headers, ThotBool history)
+static Document  LoadDocument (Document doc, CHAR_T* pathname,
+			       CHAR_T* form_data, CHAR_T* initial_url,
+			       int method, CHAR_T* tempfile,
+			       CHAR_T* documentname, AHTHeaders *http_headers,
+			       ThotBool history)
 {
   CSSInfoPtr          css;
   Document            newdoc = 0;
@@ -2045,7 +2049,12 @@ static Document     LoadHTMLDocument (Document doc, CHAR_T* pathname, CHAR_T* fo
       else
 	CheckCharsetInMeta (pathname, &metacharset);
     }
-  
+  if (method == CE_CSS)
+    {
+      /* we're loading a CSS file */
+      docType = docCSS;
+      unknown = FALSE;
+    }
   if (content_type == NULL || content_type[0] == EOS)
     /* no content type */
     {
@@ -2464,9 +2473,9 @@ static Document     LoadHTMLDocument (Document doc, CHAR_T* pathname, CHAR_T* fo
 /*----------------------------------------------------------------------
   Reload_callback
   ----------------------------------------------------------------------*/
-void                Reload_callback (int doc, int status, CHAR_T* urlName,
-                                     CHAR_T* outputfile, AHTHeaders *http_headers,
-				       void * context)
+void  Reload_callback (int doc, int status, CHAR_T* urlName,
+		       CHAR_T* outputfile, AHTHeaders *http_headers,
+		       void * context)
 {
   Document newdoc;
   CHAR_T* pathname;
@@ -2503,7 +2512,7 @@ void                Reload_callback (int doc, int status, CHAR_T* urlName,
 
        /* parse and display the document, res contains the new document
 	identifier, as given by the thotlib */
-       res = LoadHTMLDocument (newdoc, pathname, form_data, NULL, method,
+       res = LoadDocument (newdoc, pathname, form_data, NULL, method,
 			       tempfile, documentname, http_headers, FALSE);
 
        if (res == 0)
@@ -3093,7 +3102,7 @@ void GetHTMLDocument_callback (int newdoc, int status, CHAR_T* urlName, CHAR_T* 
    
    if (ok && !local_link)
      {
-       /* memorize the initial newdoc value in doc because LoadHTMLDocument */
+       /* memorize the initial newdoc value in doc because LoadDocument */
        /* will open a new document if newdoc is a modified document */
        if (status == 0)
 	 {
@@ -3101,10 +3110,10 @@ void GetHTMLDocument_callback (int newdoc, int status, CHAR_T* urlName, CHAR_T* 
 	     NormalizeURL (pathname, 0, tempdocument, documentname, NULL);
 	   
 	   /* parse and display the document */
-	   res = LoadHTMLDocument (newdoc, pathname, form_data, 
-				   initial_url, method,
-				   tempfile, documentname,
-				   http_headers, history);
+	   res = LoadDocument (newdoc, pathname, form_data, 
+			       initial_url, method,
+			       tempfile, documentname,
+			       http_headers, history);
 	   W3Loading = 0;		/* loading is complete now */
 	   if (res == 0)
 	     {
@@ -3268,6 +3277,8 @@ Document            GetHTMLDocument (const CHAR_T* documentPath, CHAR_T* form_da
      docType = docSVG;
    else if (IsCSSName (documentname))
      docType = docCSS;
+   else if (CE_event == CE_CSS)
+     docType = docCSS;
    else
      docType = docHTML;
     
@@ -3386,9 +3397,8 @@ Document            GetHTMLDocument (const CHAR_T* documentPath, CHAR_T* form_da
 #ifdef ANNOTATIONS
        else if (CE_event == CE_ANNOT)
 	 {
-	   if (newdoc == 0)
-	     /* need to create a new window for the document */
-	     newdoc = InitDocView (doc, documentname, docAnnot, 0, FALSE);
+	   /* need to create a new window for the document */
+	   newdoc = InitDocView (doc, documentname, docAnnot, 0, FALSE);
 	   /* we're downloading an annotation, fix the accept_header
 	      (thru the content_type variable) to application/rdf */
 	   content_type = TEXT("application/rdf");
@@ -4389,16 +4399,16 @@ static int       RestoreOneAmayaDoc (Document doc, CHAR_T* tempdoc, CHAR_T* docn
 	      http_headers.content_type = NULL;
 	  /* we don't know yet how to recover the charset */
 	  http_headers.charset = NULL;
-	  LoadHTMLDocument (newdoc, docname, NULL, NULL, CE_ABSOLUTE, 
-			    tempdoc, DocumentName, &http_headers, FALSE);
+	  LoadDocument (newdoc, docname, NULL, NULL, CE_ABSOLUTE, 
+			tempdoc, DocumentName, &http_headers, FALSE);
 	}
       else
 	{
 	  /* it's a local file */
 	  tempfile[0] = EOS;
 	  /* load the temporary file */
-	  LoadHTMLDocument (newdoc, tempdoc, NULL, NULL, CE_ABSOLUTE,
-			    tempfile, DocumentName, NULL, FALSE);
+	  LoadDocument (newdoc, tempdoc, NULL, NULL, CE_ABSOLUTE,
+			tempfile, DocumentName, NULL, FALSE);
 	  /* change its URL */
 	  TtaFreeMemory (DocumentURLs[newdoc]);
 	  len = ustrlen (docname) + 1;
