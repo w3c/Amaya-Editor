@@ -51,7 +51,6 @@ typedef struct __AmayaContext
      HTList             *reqlist;	/* List of current requests */
      HTList             *docid_status;	/* Status for each active docid */
      int                 open_requests;	/* number of open requests */
-    boolean              cache;         /* cache active */
   }
 AmayaContext;
 
@@ -76,57 +75,57 @@ typedef int XtInputId;
 
 typedef struct _AHTReqContext
   {
-     HTRequest          *request;	/* Pointer to the associated request object     */
-     HTParentAnchor     *anchor;
-     HTMethod            method;	/* What method are we envoking                  */
-     int                 docid;	        /* docid to which this request belongs          */
-     AHTReqStatus        reqStatus;	/* status of the request                        */
-     HTEventType             read_type;	/* The type operation which must be used during
-					   ** an Xt read callback */
-
-     HTEventType             write_type;	/* The type operation which must be used during
-					   ** an Xt write callback */
-
-     HTEventType             except_type;	/* The type operation which must be used during
-					   ** an Xt exception callback */
-
+    HTRequest          *request;	/* Pointer to the associated request object     */
+    HTParentAnchor     *anchor;
+    HTMethod            method;	/* What method are we envoking                  */
+    int                 docid;	        /* docid to which this request belongs          */
+    AHTReqStatus        reqStatus;	/* status of the request                        */
+    HTEventType             read_type;	/* The type operation which must be used during
+					** an Xt read callback */
+    
+    HTEventType             write_type;	/* The type operation which must be used during
+					** an Xt write callback */
+    
+    HTEventType             except_type;	/* The type operation which must be used during
+						** an Xt exception callback */
+    
 #ifdef WWW_XWINDOWS
-     XtInputId           read_xtinput_id;	/* The read xt event id assocciated with
+    XtInputId           read_xtinput_id;	/* The read xt event id assocciated with
 						   the request */
-     XtInputId           write_xtinput_id;	/* The write xt event id assocciated with
+    XtInputId           write_xtinput_id;	/* The write xt event id assocciated with
 						   the request */
-     XtInputId           except_xtinput_id;	/* The except xt event id assocciated with
+    XtInputId           except_xtinput_id;	/* The except xt event id assocciated with
 						   the request */
 #endif				/* WWW_XWINDOWS */
-
+    
     /*** Experimental ****/
-     SOCKET             read_sock;              /* read socket associated with the request */
-     SOCKET             write_sock;             /* write socket associated with the request */
-     SOCKET             except_sock;            /* except socket associated with the request */
+    SOCKET             read_sock;              /* read socket associated with the request */
+    SOCKET             write_sock;             /* write socket associated with the request */
+    SOCKET             except_sock;            /* except socket associated with the request */
     /*** End of experimental stuff ****/
-
-     char               *outputfile;	/* file to receive incoming data         */
-     FILE               *output;	/* file pointer to outputfile            */
-     int                 mode;	/* Mode of request: SYNC/ASYNC/IASYNC/FORM POST/FORM GET   */
-     char               *urlName;	/* url to retrieve/or that was retrieved */
-     char               status_urlName [MAX_LENGTH]; /* url name to be displayed on the status bar */
-     TIcbf              *incremental_cbf;	/* For IASYNC mode, @ of callback function */
-     /* It'll be called each time a new data package */
-     /* is received                                  */
-     void               *context_icbf;	/* Context for the above cbf                  */
-     TTcbf              *terminate_cbf;		/* optional CBF which will be invoked after  */
-     /* a file has been received                  */
-     void               *context_tcbf;	/* Context for the above cbf                 */
-
-     /*                 the following element points to the content type of 
+    
+    char               *outputfile;	/* file to receive incoming data         */
+    FILE               *output;	/* file pointer to outputfile            */
+    int                 mode;	/* Mode of request: SYNC/ASYNC/IASYNC/FORM POST/FORM GET   */
+    char               *urlName;	/* url to retrieve/or that was retrieved */
+    char               status_urlName [MAX_LENGTH]; /* url name to be displayed on the status bar */
+    TIcbf              *incremental_cbf;	/* For IASYNC mode, @ of callback function */
+    /* It'll be called each time a new data package */
+    /* is received                                  */
+    void               *context_icbf;	/* Context for the above cbf                  */
+    TTcbf              *terminate_cbf;		/* optional CBF which will be invoked after  */
+    /* a file has been received                  */
+    void               *context_tcbf;	/* Context for the above cbf                 */
+    
+    /*                 the following element points to the content type of 
                         a requested node */
+    
+    char               *content_type;
 
-     char               *content_type;
+    /* The following elements are used for the PUT and POST */
 
-     /* The following elements are used for the PUT and POST */
-
-     HTParentAnchor     *dest;	/* Destination for PUT etc.              */
-     unsigned long       block_size;	/* size in bytes of the file to put      */
+    HTParentAnchor     *dest;	/* Destination for PUT etc.              */
+    unsigned long       block_size;	/* size in bytes of the file to put      */
     int                 put_counter;	/* number of bytes already put           */
     HTAssocList        *formdata;        /* ptr to a struct containing the formdata used with POST */
 
@@ -142,6 +141,5 @@ AHTReqContext;
 THOT_EXPORT char AmayaLastHTTPErrorMsg [MAX_LENGTH];
 THOT_EXPORT HTList      *conv;	/* List of global converters */
 THOT_EXPORT AmayaContext *Amaya;	/* Amaya's request global context    */
-THOT_EXPORT boolean      libDoStop;
 #endif /* AMAYA_LIBWWW_H */
 

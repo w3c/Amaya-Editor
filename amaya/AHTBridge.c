@@ -23,6 +23,7 @@
 #include "AHTFWrite_f.h"
 #include "query_f.h"
 #include "answer_f.h"
+#include "HTEvtLst.h"
 
 #if 0
 #define DEBUG_LIBWWW
@@ -134,7 +135,7 @@ XtInputId          *id;
    
    /* Invokes the callback associated to the requests */
    
-   libDoStop = 0;
+   CanDoStop_set (FALSE);
    if ((status = HTEventList_dispatch (socket, type, now)) != HT_OK)
      {
 #ifdef DEBUG_LIBWWW
@@ -142,7 +143,7 @@ XtInputId          *id;
 #endif
      }
 
-   libDoStop = 1;
+   CanDoStop_set (TRUE);
 
    return (0);
 }
@@ -169,7 +170,11 @@ int status;
   /* choose a correct treatment in function of the request's
      being associated with an error, with an interruption, or with a
      succesful completion */
-   
+
+#ifdef DEBUG_LIBWWW  
+  if (THD_TRACE)
+    fprintf (stderr,"ProcessTerminateRequest: processing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);  
+#endif /* DEBUG_LIBWWW */
   if (me->reqStatus == HT_END)
     {
       if (AmayaIsAlive ()  && me->terminate_cbf)

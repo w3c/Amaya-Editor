@@ -31,6 +31,7 @@
 #include "amaya.h"
 #include <sys/types.h>
 #include <fcntl.h>
+#include "HTEvtLst.h"
 
 #if defined(__svr4__)
 #define CATCH_SIG
@@ -73,8 +74,10 @@ static HTList      *converters = NULL;	/* List of global converters */
 static HTList      *acceptTypes = NULL; /* List of types for the Accept header */
 static HTList      *encodings = NULL;
 static int          object_counter = 0;	/* loaded objects counter */
-static  boolean     AmayaAlive; /* set to 1 if the application is active;
-			  	   0 if we have killed */
+static  boolean     AmayaAlive_flag; /* set to 1 if the application is active;
+					0 if we have killed */
+static  boolean     CanDoStop_flag; /* set to 1 if we can do a stop, 0
+				       if we're inside a critical section */
 #ifdef  AMAYA_WWW_CACHE
 static int          fd_cachelock; /* open handle to the .lock cache file */
 #endif /* AMAYA_WWW_CACHE */
@@ -521,11 +524,8 @@ static void         Thread_deleteAll ()
 		  RequestKillAllXtevents (me);
 #endif /* !_WINDOWS */
 
-		  if (me->request->net)
-		    HTRequest_kill (me->request);
-#ifndef _WINDOWS
-		  AHTReqContext_delete (me);
-#endif /* _WINDOWS */
+		  if (!HTRequest_kill (me->request))
+		    AHTReqContext_delete (me);
 		}
 	    }		/* while */
 	  
@@ -890,7 +890,7 @@ int                 status;
      } 
 
    /* to avoid a hangup while downloading css files */
-   if (AmayaAlive && (me->mode & AMAYA_LOAD_CSS))
+   if (AmayaAlive_flag && (me->mode & AMAYA_LOAD_CSS))
      TtaSetStatus (me->docid, 1, 
 		   TtaGetMessage (AMAYA, AM_ELEMENT_LOADED),
 		   me->status_urlName);
@@ -930,11 +930,6 @@ int                 status;
    AHTReqContext      *me = HTRequest_context (request);
    HTAlertCallback    *cbf;
    AHTDocId_Status    *docid_status;
-
-#ifdef _WINDOWS
-   /* @@@ I have problems with the trace variables under windows */
-   return HT_OK;
-#endif /* _WINDOWS */
 
    switch (status)
      {
@@ -1689,7 +1684,7 @@ static void                AmayaContextInit ()
 #endif
 
 {
-  AmayaAlive = TRUE;
+  AmayaAlive_flag = TRUE;
   /* Initialization of the global context */
   Amaya = (AmayaContext *) TtaGetMemory (sizeof (AmayaContext));
   Amaya->reqlist = HTList_new ();
@@ -1710,7 +1705,7 @@ void                QueryInit ()
 
    AmayaContextInit ();
    AHTProfile_newAmaya (HTAppName, HTAppVersion);
-   libDoStop = 1;   
+   CanDoStop_set (TRUE);
 
 #ifdef _WINDOWS
    /*** AHTEventInit (); this was the call to my AHTEvent module HTEvtLst today***/
@@ -1839,7 +1834,7 @@ static int          LoopForStop (AHTReqContext * me)
 void QueryClose ()
 {
 
-  AmayaAlive = FALSE;
+  AmayaAlive_flag = FALSE;
 
   /* remove all the handlers and callbacks that may output a message to
      a non-existent Amaya window */
@@ -2241,24 +2236,6 @@ char 	     *content_type;
 
    /* @@@ may need some special windows error msg here */
    /* control the errors */
-   /* @@@test the effect of HTRequest_kill () */
-#if 0
-   /* doesn't look necessary anymore */
-   if (status == NO
-       && HTError_hasSeverity (HTRequest_error (me->request), ERR_NON_FATAL))
-     status = HT_ERROR;
-
-     /** *this should go to term_d @@@@ */
-     if (me->reqStatus == HT_CACHE)
-       {
-	 AHTPrintPendingRequestStatus (me->docid, YES);
-	 /* free the memory allocated for async requests */
-	 InvokeGetObjectWWW_callback (docid, urlName, outputfile, 
-				      terminate_cbf, context_tcbf, HT_OK);
-	 AHTReqContext_delete (me);
-	 return HT_OK;
-       }
-#endif 
 
     if (status == NO)
      /* the request invocation failed */
@@ -2283,7 +2260,6 @@ char 	     *content_type;
 	 /* wait here untilt the asynchronous request finishes */
 	 status = LoopForStop (me);
 	 /* if status returns HT_ERROR, should we invoke the callback? */
-	 /* @@@ this doesn't seem correct ... me->request may not exist ... */
 	 if (!HTRequest_kill (me->request))
 	   AHTReqContext_delete (me);
        }
@@ -2487,12 +2463,11 @@ void                StopRequest (docid)
 int                 docid;
 #endif
 {
-  AHTDocId_Status    *docid_status;
- 
-   if (Amaya && libDoStop)
+   if (Amaya && CanDoStop ())
      { 
 #if 0 /* for later */
-       /* verify if there are any requests at all associated with docid */
+       AHTDocId_Status    *docid_status;
+        /* verify if there are any requests at all associated with docid */
        docid_status = (AHTDocId_Status *) GetDocIdStatus (docid,
 							  Amaya->docid_status);
        if (docid_status == (AHTDocId_Status *) NULL)
@@ -2510,7 +2485,7 @@ int                 docid;
 #ifdef __STDC__
 void                StopAllRequests (int docid)
 #else
-void                StopRequest (docid)
+void                StopAllRequests (docid)
 int                 docid;
 #endif
 {
@@ -2519,7 +2494,7 @@ int                 docid;
 
    /* only do the stop if we're not being called while processing a 
       request */
-   if (Amaya && libDoStop)
+   if (Amaya && CanDoStop ())
      {
 
 #ifdef DEBUG_LIBWWW
@@ -2533,15 +2508,21 @@ int                 docid;
        cur = Amaya->reqlist;
        while ((me = (AHTReqContext *) HTList_nextObject (cur))) 
 	 {
-	   if (AmayaIsAlive ()  && me->terminate_cbf)
-	     (*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile,
-				   me->content_type, me->context_tcbf);
-	   if (!HTRequest_kill (me->request))
-	       AHTReqContext_delete (me);
+	   if (AmayaIsAlive ())
+	     if (me->reqStatus != HT_END)
+	       {
+		 if (me->terminate_cbf)
+		   (*me->terminate_cbf) (me->docid, -1, me->urlName,
+					 me->outputfile,
+					 me->content_type, me->context_tcbf);
+		 fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
+		 AHTReqContext_delete (me);
+	       }
+	   /* to be on the safe side, remove all outstanding X events */
+	   else ( RequestKillAllXtevents (me));
 	 }
-
        /* Delete remaining channels */
-	 HTChannel_deleteAll(); 
+       HTChannel_deleteAll();
        
 #ifdef DEBUG_LIBWWW
        fprintf (stderr, "StopRequest: number of Amaya requests "
@@ -2553,7 +2534,7 @@ int                 docid;
 
 /*----------------------------------------------------------------------
   AmayaIsAlive
-  returns the status of the AmayaAlive flag
+  returns the value of the AmayaAlive_flag
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean AmayaIsAlive (void)
@@ -2561,7 +2542,34 @@ boolean AmayaIsAlive (void)
 boolean AmayaIsAlive ()
 #endif /* _STDC_ */
 {
-  return AmayaAlive;
+  return AmayaAlive_flag;
+}
+
+/*----------------------------------------------------------------------
+  CanDoStop
+  returns the value of the CanDoStop flag
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean CanDoStop (void)
+#else
+boolean CanDoStop ()
+#endif /* _STDC_ */
+{
+  return CanDoStop_flag;
+}
+
+/*----------------------------------------------------------------------
+  CanDoStop_set
+  sets the value of the CanDoStop flag
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CanDoStop_set (boolean value)
+#else
+void CanDoStop (value)
+boolean value;
+#endif /* _STDC_ */
+{
+  CanDoStop_flag = value;
 }
 
 #endif /* AMAYA_JAVA */
@@ -2569,5 +2577,11 @@ boolean AmayaIsAlive ()
 /*
   end of Module query.c
 */
+
+
+
+
+
+
 
 

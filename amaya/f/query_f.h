@@ -44,6 +44,8 @@ extern int PutObjectWWW ( int docid,
 extern void StopRequest ( int docid );
 extern void StopAllRequests ( int docid );
 extern boolean AmayaIsAlive ( void );
+extern boolean CanDoStop ( void );
+extern void CanDoStop_set ( boolean value );
 
 #else /* __STDC__ */
 
@@ -85,6 +87,7 @@ extern int PutObjectWWW (/* int docid,
 extern void StopRequest (/* int docid */);
 extern void StopAllRequests (/* int docid */);
 extern boolean AmayaIsAlive (/* void */);
-
+extern boolean CanDoStop (/* void */);
+extern void CanDoStop_set (/* boolean value */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
