@@ -1708,7 +1708,7 @@ PtrTextBuffer       clipboard;
 
 
 /*----------------------------------------------------------------------
-   detruit le contenu de la selection apres execution de la copie.   
+  RemoveSelection deletes the contents of the current selection.
    - charsDelta le nombre de caracteres copies                     
    - spacesDelta le nombre de blancs copies                        
    - xDelta la largeur de la chaine copiee                         
@@ -1846,10 +1846,8 @@ int                 frame;
 	  adjust = 0;
 	if (charsDelta == pAb->AbVolume)
 	  {
-	    /* La boite devient vide */
-	    yDelta = width;
-	    /* Largeur forcee */
-	    xDelta = pAb->AbBox->BxWidth - yDelta;
+	    /* the box becomes empty */
+	    xDelta = pAb->AbBox->BxWidth - width;
 	    if (pBox == pAb->AbBox && adjust != 0)
 	      adjust = xDelta;
 	    else
@@ -1857,35 +1855,28 @@ int                 frame;
 	      adjust = 0;
 	    pViewSel->VsBox = pAb->AbBox;
 	  }
-	else if (pViewSel->VsIndBox == pBox->BxNChars - charsDelta)
-	  /* En fin de boite */
-	  yDelta = 2;
 	else if (pViewSel->VsIndBuf > pViewSel->VsBuffer->BuLength)
 	  {
 	    /* En fin de buffer -> on va chercher le caractere suivant */
 	    pSourceBuffer = pViewSel->VsBuffer->BuNext;
 	    /* Il peut etre vide s'il y a des blancs en fin de ligne */
-	    if (pSourceBuffer == NULL)
-	      yDelta = 2;
-	    else
+	    if (pSourceBuffer != NULL)
 	      {
 		/* deplace la selection sur le debut du buffer suivant */
 		pViewSel->VsBuffer = pSourceBuffer;
 		pViewSel->VsIndBuf = 1;
-		yDelta = CharacterWidth (pSourceBuffer->BuContent[0], font);
 	      }
 	  }
-	else
-	  yDelta = CharacterWidth (pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1], font);
 	
 	/* Mise a jour de la selection sur le caractere suivant */
 	pFrame->FrSelectionEnd.VsBox = pViewSel->VsBox;
-	pFrame->FrSelectionEnd.VsXPos = pViewSel->VsXPos + yDelta;
+	pFrame->FrSelectionEnd.VsXPos = pViewSel->VsXPos + 2;
 	pFrame->FrSelectionEnd.VsBuffer = pViewSel->VsBuffer;
 	pFrame->FrSelectionEnd.VsIndBuf = pViewSel->VsIndBuf;
 	pFrame->FrSelectionEnd.VsIndBox = pViewSel->VsIndBox;
 	pFrame->FrSelectionEnd.VsNSpaces = pViewSel->VsNSpaces;
 	pFrame->FrSelectionEnd.VsLine = pLine;
+	pFrame->FrSelectOnePosition = TRUE;
 	
 	/* Mise a jour des boites */
 	pAb->AbVolume -= charsDelta;
