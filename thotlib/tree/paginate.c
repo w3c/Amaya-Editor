@@ -430,7 +430,7 @@ PtrElement         *pLib;
    notifyEl.element = (Element) (pPage);
    notifyEl.elementType.ElTypeNum = pPage->ElTypeNumber;
    notifyEl.elementType.ElSSchema = (SSchema) (pPage->ElStructSchema);
-   notifyEl.position = 1;
+   notifyEl.position = TTE_STANDARD_DELETE_LAST_ITEM;
    if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
      {
 	/* traitement de la suppression des pages dans les structures avec */
