@@ -736,9 +736,6 @@ ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
   int                 ymax;
   ThotBool            stop;
   ThotBool            toadd;
-#if defined(_WINDOWS) && !defined(_WIN_PRINT)
-  ThotBool            nodevice = (TtDisplay == NULL);;
-#endif /* __WINDOWS && !_WINT_PRINT */
  
   /* are new abstract boxes needed */
   toadd = FALSE;
@@ -767,7 +764,6 @@ ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       create = NULL;
       /* Redraw from top to bottom all filled boxes */
 #if defined(_WINDOWS) && !defined(_WIN_PRINT)
-      if (nodevice)
         WIN_GetDeviceContext (frame);
 #endif /* __WINDOWS && !_WINT_PRINT */
       DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
@@ -807,7 +803,6 @@ ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       DefClip (frame, 0, 0, 0, 0);
       RemoveClipping (frame);
 #if defined(_WINDOWS) && !defined(_WIN_PRINT)
-	  if (nodevice)
         WIN_ReleaseDeviceContext ();
 #endif /* __WINDOWS && !_WINT_PRINT */
 
@@ -912,13 +907,11 @@ ThotBool     RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
     {
       /* Nothing to draw */
 #if defined(_WINDOWS) && !defined(_WIN_PRINT)
-      if (nodevice)
         WIN_GetDeviceContext (frame);
 #endif /* __WINDOWS && !_WINT_PRINT */
       DefClip (frame, 0, 0, 0, 0);
       RemoveClipping (frame);
 #if defined(_WINDOWS) && !defined(_WIN_PRINT)
-      if (nodevice)
         WIN_ReleaseDeviceContext ();
 #endif /* __WINDOWS && !_WINT_PRINT */
     }

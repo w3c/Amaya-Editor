@@ -1092,6 +1092,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
       bytesperline = (width + linepad) * depth / 8;
       break;
 
+	case 15:
     case 16:
       bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
       bitp   = bit_data;

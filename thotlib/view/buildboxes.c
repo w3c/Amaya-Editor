@@ -3603,10 +3603,8 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
    ThotBool            change;
    ThotBool            result;
    ThotBool            lock = TRUE;
-#ifdef _WINDOWS
-   ThotBool            nodevice = (TtDisplay == NULL);
 
-   if (nodevice)
+#ifdef _WINDOWS
      WIN_GetDeviceContext (frame);
 #endif /* _WINDOWS */
    result = TRUE;
@@ -3809,7 +3807,6 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 	  }
      }
 #ifdef _WINDOWS
-   if (nodevice)
      WIN_ReleaseDeviceContext ();
 #endif /* _WINDOWS */
    return result;

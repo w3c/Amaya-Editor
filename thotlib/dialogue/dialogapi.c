@@ -269,8 +269,8 @@ void WIN_GetDeviceContext (int frame)
   {
     /* release the previous Device Context. */
     if (TtDisplay)
-	  WinErrorBox (NULL, "GetDeviceContext");  
-    /* load the new Context. */
+		WIN_ReleaseDeviceContext ();
+   /* load the new Context. */
     TtDisplay = GetDC (FrRef[frame]);
     if (TtDisplay != NULL)
     {
