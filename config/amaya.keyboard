@@ -90,7 +90,7 @@ Alt <Key>r:                        Reload()
 
 #edit menu 
 Ctrl <Key>w:                       TtcCutSelection() 
-Ctrl <Key>y:                       TtcPaste() 
+Ctrl <Key>y:                       PasteBuffer() 
 Ctrl <Key>z:                       TtcUndo() 
 Shift Ctrl <Key>Z:                 TtcRedo() 
 Shift Alt <Key>%:                  TtcSearchText() 
