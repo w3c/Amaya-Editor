@@ -1209,20 +1209,19 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      hMemDC = CreateCompatibleDC (TtDisplay);
 	      SetMapMode (hMemDC, GetMapMode (TtDisplay));
 	      /* shift in the source image */
-	      x = pFrame->FrClipXBegin - (box->BxXOrg + box->BxTMargin + box->BxLBorder +
-           box->BxLPadding);
-	      y = pFrame->FrClipYBegin - (box->BxYOrg + box->BxTMargin + box->BxTBorder +
-           box->BxTPadding);
+	      x = pFrame->FrClipXBegin /* + pFrame->FrXOrg*/ - box->BxXOrg - box->BxLMargin;
+	      y = pFrame->FrClipYBegin /*+ pFrame->FrYOrg*/ - box->BxYOrg - box->BxTMargin;
+		  if (box->BxAbstractBox->AbLeafType != LtCompound)
+		  {
+			x = x - box->BxLBorder - box->BxLPadding;
+			y = y - box->BxTBorder - box->BxTPadding;
+		  }
 	      /* size of the copied zone */
 	      clipWidth = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
 	      clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
 	      GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm);
-	      if (x < 0)
-		x = 0;
 	      if (clipWidth > bm.bmWidth - x)
 	        clipWidth = bm.bmWidth - x;
-	      if (y < 0)
-		y = 0;
 	      if (clipHeight > bm.bmHeight - y)
 	        clipHeight = bm.bmHeight - y;
 	      bitmap = SelectObject (hMemDC, pixmap);
