@@ -5197,6 +5197,7 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
        /* Standard EXPAT processing */
        if (!XMLNotWellFormed)
 	 {
+	   okay = TRUE;
 	   if (charset == ISO_8859_2   || charset == ISO_8859_3   ||
 	       charset == ISO_8859_4   || charset == ISO_8859_5   ||
 	       charset == ISO_8859_6   || charset == ISO_8859_7   ||
