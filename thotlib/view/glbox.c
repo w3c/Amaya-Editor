@@ -974,6 +974,7 @@ void FinishPrintBox ()
  
 }   
 
+#ifdef _ERROR_LINK_
 GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
 			    GLint xorig, GLint yorig,
 			    GLenum format, GLenum type, 
@@ -982,6 +983,7 @@ GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
 {
 return 0;
 }
+#endif /* _ERROR_LINK_ */
 
 int GLString (unsigned char *buff, int lg, int frame, int x, int y,
 		PtrFont font, int boxWidth, int bl, int hyphen,
@@ -990,6 +992,7 @@ int GLString (unsigned char *buff, int lg, int frame, int x, int y,
 return 0;
 }
 
+#ifdef _ERROR_LINK_
 GLint GLText (const char *str,
 	      const int fg,
 	      const void *font,
@@ -1003,4 +1006,5 @@ return 0;
 void GLPrintPostScriptColor(void *rgb)
 {
 }
+#endif /* _ERROR_LINK_ */
 #endif /* _GL */
