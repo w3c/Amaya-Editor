@@ -1,0 +1,700 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* #define XPTR_PARSE_DEBUG */
+#define XPTR_ACTION_DEBUG
+
+#define BSIZE 128       /* size of the lexical analyzer temporary buffer */
+#define EOS '\0'
+
+#define INC_CUR ctx->cur++
+#define VAL_CUR *(ctx->cur)
+
+#define HAS_STRING_RANGE 1
+
+/***************************************************
+  Symbol table 
+***************************************************/
+
+#define STRMAX 999 /* size of lexemes array */
+#define SYMMAX 100 /* size of symtable */
+
+/* forms of symbol table entry */
+struct entry { 
+  char *lexptr;
+  int token;
+};
+
+/* tokens */
+typedef enum {
+  /* type identifiers */
+  NUM=256,
+  ID,
+  /* the xpointer functions */
+  FID,            
+  FRANGE_TO,
+  FSTRING_RANGE,
+  FSTARTP,
+  FENDP,
+  /* non-operators */
+  DONE,
+  NONE
+} tokEnum;
+
+/* values for pre-initializing the symbol tables */
+struct entry keywords[] = {
+  "id", FID,
+  "range-to", FRANGE_TO,
+  "string-range", FSTRING_RANGE,
+  "start-point", FSTARTP,
+  "end-point", FENDP,
+  "", 0
+};
+
+/* the symbol table */
+typedef struct _symTableCtx {
+  char lexemes[STRMAX];  /* lexemes table */
+  int lastchar;          /* last used position in lexemes */
+  struct entry symtable[SYMMAX]; 
+  int lastentry;        /* last entry in the symtable */
+} symTableCtx;
+
+static symTableCtx symtable;
+
+/***************************************************
+  The parser context
+**************************************************/
+
+/* the node info that the parsing will return */
+typedef struct _nodeInfo {
+  int  el;
+  char node[10];
+  int  type; /* 0, just point at the node, 1, point at its content */
+  int  startC;
+  int  endC;
+  int  index;
+  int  processed;
+} nodeInfo;
+
+typedef struct _parserContext {
+  char *cur;    /* the current char being parsed */
+  char *buffer; /* the input string */
+
+  char *error;    /* error code */
+
+  int   lookahead;  /* the lookahead token */
+  tokEnum tok;      /* token */
+  int tokval;       /* token value */
+
+  symTableCtx *symtable; /* the symbol table */
+  
+  nodeInfo  *curNode;
+  nodeInfo   nodeA;
+  nodeInfo   nodeB;
+} parserContext;
+
+typedef parserContext *parserContextPtr;
+
+
+/***************************************************
+ local function prototypes 
+***************************************************/
+static void Expr (parserContextPtr ctx);
+static void Term (parserContextPtr ctx);
+static void Factor (parserContextPtr ctx);
+
+/*----------------------------------------------------------------------
+  CtxAddError
+  puts an error code in the context
+  ----------------------------------------------------------------------*/
+static int CtxAddError (parserContextPtr ctx, char *msg)
+{
+  if (!ctx->error)
+    ctx->error = strdup (msg);
+}
+
+/****************
+  Symbol table functions
+ ***************/
+
+/*----------------------------------------------------------------------
+  LookupSymbol
+  ----------------------------------------------------------------------*/
+int LookupSymbol (parserContextPtr ctx, char *s)
+{
+  symTableCtx *me = ctx->symtable;
+
+  int p;
+  for (p = me->lastentry; p > 0; p = p - 1)
+    if (strcmp (me->symtable[p].lexptr, s) == 0)
+      return p;
+  return 0;
+}
+
+/*----------------------------------------------------------------------
+  InsertSymbol
+  ----------------------------------------------------------------------*/
+static int InsertSymbol (parserContextPtr ctx, char *s, int tok)
+{
+  int len;
+  symTableCtx *me = ctx->symtable;
+
+  if (ctx->error)
+    return;
+
+  len = strlen (s); /* strlen computes length of s */
+  if (me->lastentry + 1 >= SYMMAX)
+    {
+      CtxAddError (ctx, "Parser: symbol table full");
+      return;
+    }
+  if (me->lastchar + len + 1 >= STRMAX)
+    {
+      CtxAddError (ctx, "Parser: lexemes table full");
+      return;
+    }
+  me->lastentry = me->lastentry + 1;
+  me->symtable[me->lastentry].token = tok;
+  me->symtable[me->lastentry].lexptr = &(me->lexemes[me->lastchar + 1]);
+  me->lastchar = me->lastchar + len + 1;
+  strcpy (me->symtable[me->lastentry].lexptr, s);
+
+  return me->lastentry;
+}
+
+/************************************************** 
+  Actions
+ **************************************************/
+
+static void AddChild (parserContextPtr ctx, char *node)
+{
+  nodeInfo *curNode = ctx->curNode;
+
+#ifdef XPTR_ACTION_DEBUG
+  printf ("Adding child %s\n", node);
+#endif	  
+  strcpy (curNode->node, node);
+}
+
+static void AddIndex (parserContextPtr ctx, int index)
+{
+  nodeInfo *curNode = ctx->curNode;
+
+#ifdef XPTR_ACTION_DEBUG
+  printf ("Adding index %d\n", index);
+#endif	  
+  curNode->index = index;
+}
+
+static void GotoChild (parserContextPtr ctx)
+{
+  nodeInfo *curNode = ctx->curNode;
+
+  if (curNode->processed)
+    {
+#ifdef XPTR_ACTION_DEBUG
+      printf ("Child already processed\n");
+#endif	        
+      return;
+    }
+
+#ifdef XPTR_ACTION_DEBUG
+  if (curNode->node[0])
+    printf ("Going to child: %s, index %d\n", curNode->node, curNode->index);
+  else
+    printf ("Going to root\n");
+#endif	  
+  /* thot search for element with this nameid */
+  /*
+    if (curNode->el == NULL)
+       goto root;
+    if (!node found)
+    CtxAddError (ctx, "GotoChild: no such node");
+    else
+       find the node with el and index.
+    if (not found)
+      CtxAddError (ctx, "GotoChild: no such id");
+      ekse
+        curNode->el = el;
+  */
+  curNode->el++;
+}
+
+static void GotoId (parserContextPtr ctx, char *id)
+{
+  nodeInfo *curNode = ctx->curNode;
+  
+#ifdef XPTR_ACTION_DEBUG
+  printf ("Going to id: %s\n", id);
+#endif	  
+  /* thot search for id */
+  /*
+    if (id found)
+    curNode->el = el;
+    else
+    CtxAddError (ctx, "GotoId: no such id");
+  */
+  if (curNode->el)
+    CtxAddError (ctx, "GotoId: id function is not at the beginning of the expression");
+  curNode->el++;
+}
+
+static void RangeTo (parserContextPtr ctx)
+{
+  nodeInfo *curNode = ctx->curNode;
+  
+#ifdef XPTR_ACTION_DEBUG
+  printf ("RangeTo: clearing curNode\n");
+#endif
+
+  if (!curNode || curNode->el == 0 || curNode == &(ctx->nodeB))
+    /* @@ need to add other error codes */
+    CtxAddError (ctx, "RangeTo: no existing content");
+  else
+    {
+      GotoChild (ctx);
+      curNode->processed = 1;
+      ctx->curNode = &(ctx->nodeB);
+    }
+}
+
+static void StringRange (parserContextPtr ctx, int startC, int len)
+{
+  nodeInfo *curNode = ctx->curNode;
+
+  if (!curNode || curNode->el == 0)
+    {
+      CtxAddError (ctx, "StringRange: no location");
+      return;
+    }
+  
+  GotoChild (ctx);
+  curNode->processed = 1;
+  curNode->startC = startC;
+  curNode->endC = startC + len;
+  curNode->type = curNode->type | HAS_STRING_RANGE;
+#ifdef XPTR_ACTION_DEBUG
+  printf ("StringRange: adding info startc %d, endc %d\n", 
+	  startC, startC + len);
+#endif
+}
+
+
+/************************************************** 
+  Lexical analyzer functions
+ **************************************************/
+
+/*----------------------------------------------------------------------
+  IsValidChar
+  returns true if the character is a valid identifier one.
+  ----------------------------------------------------------------------*/
+static int IsValidChar (char c)
+{
+  if (c == '/'
+      || c == '['
+      || c == ']'
+      || c == '('
+      || c == ')'
+      || c == ','
+      || c == '"')
+    return 0;
+  else
+    return 1;
+}
+
+/*----------------------------------------------------------------------
+  LexAn
+  The lexical analyzer
+  ----------------------------------------------------------------------*/
+static int LexAn (parserContextPtr ctx) 
+{
+  int t;
+  char lexbuf[BSIZE];
+
+  /* convert symbol to token */
+  while (1)
+    {
+      if (VAL_CUR == EOS || ctx->error)
+	return DONE;
+      else if (VAL_CUR == ' ' || VAL_CUR == '\t')
+	{ 
+	  /* strip out white space */
+	  INC_CUR;
+	  continue;
+	}
+
+      else if (isdigit(VAL_CUR))  
+	{ 
+	  /* *s is a digit */
+	  ctx->tokval = 0;
+	  while (VAL_CUR && isdigit (VAL_CUR))
+	    {
+	      ctx->tokval *= 10;
+	      ctx->tokval += VAL_CUR - '0';
+	      INC_CUR;
+	    }
+	  return NUM;
+	}
+	  
+      else if (isalpha (VAL_CUR))  
+	{
+	  /* *s is a letter */
+	  int p, b = 0;
+	  while (VAL_CUR)
+	    {
+	      /* () must be escaped with a ^, ^^ escapes ^ */
+	      if (VAL_CUR == '^')
+		{
+		  if (*(ctx->cur+1) == '('
+		      || *(ctx->cur+1) == ')'
+		      || *(ctx->cur+1) == '^')
+		    INC_CUR;
+		  else
+		    error ("LexAn: syntax error in expression");
+		}
+	      else if (!IsValidChar (VAL_CUR))
+		break;
+
+	      /* *s is alphanumeric */
+	      /* @@ the test should rather be all valid xml chars, and
+		 also escape characters */
+	      lexbuf[b] = VAL_CUR;
+	      INC_CUR;
+	      b++;
+	      if (b >= BSIZE)
+		{
+		CtxAddError (ctx, "LexAn: temp buffer out of space");
+		return;
+		}
+	    }
+	  lexbuf[b] = EOS;
+	  p = LookupSymbol (ctx, lexbuf);
+	  if (p == 0)
+	    p = InsertSymbol (ctx, lexbuf, ID);
+	  ctx->tokval = p;
+	  return ctx->symtable->symtable[p].token;
+	}
+      else 
+	{
+	  /* s is either a valid separator or an invalid character */
+	  /* @@ this case should just return the char */
+	  int i;
+	  switch (VAL_CUR) 
+	    {
+	    case '/':
+	    case '[':
+	    case ']':
+	    case '(':
+	    case ')':
+	    case ',':
+	    case '"':
+	      i = VAL_CUR;
+	      INC_CUR;
+	      ctx->tokval = NONE;
+	      return (i);
+	      break;
+	    default:
+	      CtxAddError (ctx, "LexAn : syntax error");
+	    }
+	  INC_CUR;
+	  return (i);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  Match
+  ----------------------------------------------------------------------*/
+static void Match (parserContextPtr ctx, int t)
+{
+  if (ctx->error)
+    return;
+
+  if (ctx->lookahead == t)
+    ctx->lookahead = LexAn (ctx);
+  else
+    CtxAddError(ctx, "match : syntax error");
+}
+
+/*----------------------------------------------------------------------
+  Term
+  ----------------------------------------------------------------------*/
+static void Term (parserContextPtr ctx)
+{
+  int i;
+  symTableCtx *symt = ctx->symtable;
+
+  while (1)
+    {
+      if (ctx->error)
+	return;
+
+      switch (ctx->lookahead) 
+	{
+	case '/': 		  /* child sequence */
+	  Match (ctx, '/'); 
+#ifdef XPTR_PARSE_DEBUG
+	  printf ("\nchild\n");
+#endif	  
+	  GotoChild (ctx);
+	  break;
+
+	case (ID):
+	  i = ctx->tokval;
+#ifdef XPTR_PARSE_DEBUG
+	  printf ("element %s found\n", 
+		  ctx->symtable->symtable[i].lexptr);
+#endif
+	  Match (ctx, ID);
+	  AddChild (ctx, ctx->symtable->symtable[i].lexptr);
+	  break;
+
+	case (NUM):
+#ifdef XPTR_PARSE_DEBUG
+	  printf ("child number %d found\n", ctx->tokval);	      
+#endif
+	  Match (ctx, NUM);
+	  break;
+
+	case '[':        /* [index counter] */
+	  Match (ctx, '['); 
+	  i = ctx->tokval;
+	  Match (ctx, NUM);
+	  Match (ctx, ']');
+#ifdef XPTR_PARSE_DEBUG
+	  printf ("index %d\n", i);
+#endif
+	  AddIndex (ctx, i);
+	  break;
+	  
+	case FID:       /* id("name") */
+	  Match (ctx, FID);
+	  Match (ctx, '(');
+	  Match (ctx, '\"'); 
+	  i = ctx->tokval;
+	  Match (ctx, ID); 
+	  Match (ctx, '\"');
+	  Match (ctx, ')');
+#ifdef XPTR_PARSE_DEBUG
+	  printf ("id %s\n", ctx->symtable->symtable[i].lexptr);
+#endif
+	  GotoId (ctx, ctx->symtable->symtable[i].lexptr);
+	  break;
+
+	case FSTARTP:       /* start-point(point) */
+#ifdef XPTR_PARSE_DEBUG
+	  printf ("beginning of start-point function\n");
+#endif
+	  Match (ctx, FSTARTP);
+	  Match (ctx, '(');
+	  Factor (ctx);
+	  Match (ctx, ')');
+#ifdef XPTR_PARSE_DEBUG
+	  printf ("end of start-point function\n");
+#endif
+	  break;
+
+	case FENDP:       /* end-point(point) */
+#ifdef XPTR_PARSE_DEBUG
+	  printf ("begining of end-point function\n");
+#endif
+	  Match (ctx, FENDP);
+	  Match (ctx, '(');
+	  Factor (ctx);
+	  Match (ctx, ')');
+#ifdef XPTR_PARSE_DEBUG
+	  printf ("end of end-point function\n");
+#endif
+	  break;
+
+	default:
+	  return;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  Factor
+  ----------------------------------------------------------------------*/
+void Factor (parserContextPtr ctx)
+{
+  int startC;
+  int len;
+
+  Term (ctx);
+  while (1)
+    {
+      if (ctx->error)
+	return;
+
+      switch (ctx->lookahead)
+	{
+	case FSTRING_RANGE: /* string-range (expr, "", [NUM, [NUM]]) */
+#ifdef XPTR_PARSE_DEBUG
+	  printf ("start of string-range\n");
+#endif
+	  startC = 0;
+	  len = 0;
+
+	  Match (ctx, FSTRING_RANGE);
+	  Match (ctx, '('); 
+	  /* expr (arg1) */
+	  if (ctx->lookahead == FSTRING_RANGE)
+	    Factor (ctx);
+	  else
+	    Term (ctx);
+	  /* string (arg2) */
+	  if (ctx->lookahead == ',')
+	    {
+	      Match (ctx, ',');
+	      Match (ctx, '"');
+	      if (ctx->lookahead == ID)
+		{
+#ifdef XPTR_PARSE_DEBUG
+		  printf ("string is %s\n", 
+			  ctx->symtable->symtable[ctx->tokval].lexptr);
+#endif
+		  Match (ctx, ID);
+		}
+	      else
+		  printf ("string is empty\n");
+	      Match (ctx, '"');
+	    }
+	  /* starting char (arg3) */
+	  if (ctx->lookahead == ',')
+	    {
+	      Match (ctx, ',');
+	      startC= ctx->tokval;
+	      Match (ctx, NUM);
+#ifdef XPTR_PARSE_DEBUG
+	      printf ("string starts at char: %d\n", startC);
+#endif
+	    }
+	  /* range length (arg4) */
+	  if (ctx->lookahead == ',')
+	    {
+	      Match (ctx, ',');
+	      len = ctx->tokval;
+	      Match (ctx, NUM);
+#ifdef XPTR_PARSE_DEBUG
+	      printf ("string len is: %d\n", len);
+#endif
+	    }
+	  Match (ctx, ')');
+#ifdef XPTR_PARSE_DEBUG
+	  printf ("end of string-range\n");
+#endif
+	  StringRange (ctx, startC, len);
+	  Term (ctx);
+	  break;
+	  
+	default:
+	  return;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  Expr
+  ----------------------------------------------------------------------*/
+void Expr (parserContextPtr ctx)
+{
+  int i;
+
+  Factor (ctx);
+
+  while (1)
+    {
+      if (ctx->error)
+	return;
+
+      switch (ctx->lookahead)
+	{
+	case FRANGE_TO:    /* range-to (expr) */
+#ifdef XPTR_PARSE_DEBUG
+	  printf ("start of range-to\n");
+#endif
+	  RangeTo (ctx);
+	  Match (ctx, FRANGE_TO);
+	  Match (ctx, '('); Factor (ctx); Match (ctx, ')');
+#ifdef XPTR_PARSE_DEBUG
+	  printf ("end of range-to\n");
+#endif
+	  GotoChild (ctx);
+	  break;
+
+	case DONE:
+	  GotoChild (ctx);
+	  return;
+	  break;
+
+	default:
+	  CtxAddError (ctx, "Expr: unknown expression");
+	  break;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  InitSymTable
+  ----------------------------------------------------------------------*/
+void InitSymtable (parserContextPtr ctx)
+{
+  struct entry *p;
+
+  /* init the symbol table */
+  for (p = keywords; p->token; p++)
+    InsertSymbol (ctx, p->lexptr, p->token);
+}
+
+/*----------------------------------------------------------------------
+  Parse
+  ----------------------------------------------------------------------*/
+int Parse (char *buffer) 
+{
+  parserContext context;
+  
+  /* init the context */
+  memset (&context, 0, sizeof (parserContext));
+
+  /* point to the buffer */
+  context.buffer = buffer;
+  context.cur = buffer;
+
+  /* symtable (in case one day we want to use dynamically 
+     allocated symtables) */
+  symtable.lastchar = -1;
+  symtable.lastentry = 0;
+  context.symtable = &symtable;
+  InitSymtable (&context);
+
+  /* point to the first node */
+  context.curNode = &(context.nodeA);
+
+  /* start parsing */
+  context.lookahead = LexAn (&context);
+  while (context.lookahead != DONE && !context.error)
+    Expr (&context);
+  if (context.error)
+    {
+      printf (context.error);
+      free (context.error);
+    }
+}
+
+int main(void) 
+{
+  char str[500];
+
+  while (1)
+    {
+      printf("\nenter expression (q to quit):\n");
+      /* scan for next symbol */
+      gets(str);
+      if (!str || *str == 'q')
+	exit(0);
+      Parse (str);
+    }
+  return 0;
+}
