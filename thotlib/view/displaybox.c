@@ -1092,17 +1092,23 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      /* number of characters to be displayed in the current buffer */
 	      if (rtl)
 		{
-		  if (charleft <= indbuff)
-		    indmax = indbuff - charleft;
+		  buffleft = indbuff + 1;
+		  if (charleft < buffleft)
+		    {
+		      indmax = indbuff - charleft;
+		      buffleft = charleft;		      
+		    }
 		  else
 		    indmax = 0;
-		  buffleft = indbuff + 1;
 		}
 	      else
 		{
 		  buffleft = adbuff->BuLength - indbuff;
 		  if (charleft < buffleft)
-		    indmax = indbuff + charleft;
+		    {
+		      indmax = indbuff + charleft - 1;
+		      buffleft = charleft;
+		    }
 		  else
 		    indmax = adbuff->BuLength - 1;
 		}
@@ -1277,6 +1283,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
                           x += DrawString (buffer, nbcar, frame, x, y1,
 					   prevfont, 0, bl, 0, blockbegin,
 					   fg, shadow);
+			  /* all previous spaces are declared */
+			  bl = 0;
 			}
 		      nbcar = 0;
 		      prevfont = nextfont;
@@ -1303,12 +1311,15 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  else
 		    {
 		      adbuff = adbuff->BuPrevious;
-		      indbuff = adbuff->BuLength;
-		      if (charleft <= indbuff)
-			indmax = indbuff - charleft;
+		      indbuff = adbuff->BuLength - 1;
+		      buffleft = adbuff->BuLength;
+		      if (charleft < buffleft)
+			{
+			  indmax = indbuff - charleft;
+			  buffleft = charleft;		      
+			}
 		      else
 			indmax = 0;
-		      buffleft = adbuff->BuLength;
 		    }
 		}
 	      else
@@ -1318,26 +1329,27 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  else
 		    {
 		      adbuff = adbuff->BuNext;
-		      if (charleft < adbuff->BuLength)
-			indmax = charleft - 1;
-		      else
-			indmax = adbuff->BuLength - 1;
 		      indbuff = 0;
 		      buffleft = adbuff->BuLength;
+		      if (charleft < buffleft)
+			{
+			  indmax = charleft - 1;
+			  buffleft = charleft;		      
+			}
+		      else
+			indmax = adbuff->BuLength - 1;
 		    }
 		}
 	    }
 	  if (charleft <= 0)
 	    {
 	      /*
-		call the function in any case to let Postscript justify the
+		Draw the content of the buffer.
+		Call the function in any case to let Postscript justify the
 		text of the box.
 	      */
-	      if (charleft < 0)
-		{
-		  bl = 0;
-		  nbcar = 0;
-		}
+	      if (nbcar == 0)
+		bl = 0;
 	      y1 = y + BoxFontBase (pBox->BxFont);
 	      x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
 			       bl, hyphen, blockbegin, fg, shadow);
