@@ -1281,14 +1281,16 @@ static char *GetFloat (char *ptr, float* number)
    Parse an integer or floating point number and skip to the next token.
    Return the value of that number in number and moves ptr to the next
    token to be parsed.
+   If the string to be parsed is not a valid number, set error to TRUE.
   ----------------------------------------------------------------------*/
-static char *GetNumber (char *ptr, int* number)
+static char *GetNumber (char *ptr, int* number, ThotBool *error)
 {
   int      integer, nbdecimal, exponent, i;
   char     *decimal;
   ThotBool negative, negativeExp;
 
   *number = 0;
+  *error = FALSE;
   integer = 0;
   nbdecimal = 0;
   decimal = NULL;
@@ -1302,6 +1304,12 @@ static char *GetNumber (char *ptr, int* number)
       negative = TRUE;
     }
 
+  if (*ptr < '0' || *ptr > '9')
+    {
+      *error = TRUE;
+      ptr++;
+      return (ptr);
+    }
   /* read the integer part */
   while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
     {
@@ -1347,6 +1355,13 @@ static char *GetNumber (char *ptr, int* number)
 	  negativeExp = TRUE;
 	}
       exponent = 0;
+
+      if (*ptr < '0' || *ptr > '9')
+	{
+	  *error = TRUE;
+	  ptr++;
+	  return (ptr);
+	}
 
       while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
 	{
@@ -2072,10 +2087,10 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
       minX = minY = 32000;
       maxX = maxY = 0;
       unit = UnPixel;
-      while (*ptr != EOS)
+      while (*ptr != EOS && !error)
          {
          x = y = 0;
-	 ptr = GetNumber (ptr, &x);
+	 ptr = GetNumber (ptr, &x, &error);
          if (x > maxX)
             maxX = x;
          if (x < minX)
@@ -2087,20 +2102,27 @@ void ParsePointsAttribute (Attribute attr, Element el, Document doc)
 	     ptr++;
 	     ptr = TtaSkipBlanks (ptr);
 	   }
-	 ptr = GetNumber (ptr, &y);
-         if (y > maxY)
-            maxY = y;
-         if (y < minY)
-   	    minY = y;
-         nbPoints++;
-         TtaAddPointInPolyline (leaf, nbPoints, unit, x, y, doc);
-         if (*ptr == ',')
+	 if (!error)
 	   {
-	     ptr++;
-	     ptr = TtaSkipBlanks (ptr);
-	   }	 
+	     ptr = GetNumber (ptr, &y, &error);
+	     if (y > maxY)
+	       maxY = y;
+	     if (y < minY)
+	       minY = y;
+	     if (!error)
+	       {
+		 nbPoints++;
+		 TtaAddPointInPolyline (leaf, nbPoints, unit, x, y, doc);
+		 if (*ptr == ',')
+		   {
+		     ptr++;
+		     ptr = TtaSkipBlanks (ptr);
+		   }
+	       }
+	   }
          }
-      UpdatePositionOfPoly (el, doc, minX, minY, maxX, maxY);
+      if (nbPoints > 0)
+	UpdatePositionOfPoly (el, doc, minX, minY, maxX, maxY);
       TtaFreeMemory (text);
       }
 
@@ -2550,11 +2572,11 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
                 largeArcFlag, sweepFlag;
    Element      leaf;
    PathSegment  seg;
-   ThotBool     relative, newSubpath;
+   ThotBool     relative, newSubpath, error;
    char         *text, *ptr;
    char         command, prevCommand;
    void         *anim_seg = NULL;
-   
+
    /* create (or get) the Graphics leaf */
    if (IsDrawn)
      {
@@ -2592,7 +2614,8 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
       x2prev = 0;
       y2prev = 0;
       newSubpath = FALSE;
-      while (command != EOS)
+      error = FALSE;
+      while (command != EOS && !error)
          {
          relative = TRUE;
          switch (command)
@@ -2607,16 +2630,20 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
 	       x = xcur;
 	       y = ycur;
 	       }
-	     ptr = GetNumber (ptr, &xcur);
-             ptr = GetNumber (ptr, &ycur);
-	     if (relative)
+	     ptr = GetNumber (ptr, &xcur, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &ycur, &error);
+	     if (!error)
 	       {
-	       xcur += x;
-	       ycur += y;
+		 if (relative)
+		   {
+		     xcur += x;
+		     ycur += y;
+		   }
+		 xinit = xcur;
+		 yinit = ycur;
+		 newSubpath = TRUE;
 	       }
-	     xinit = xcur;
-             yinit = ycur;
-	     newSubpath = TRUE;
 	     break;
 
 	   case 'Z':
@@ -2640,22 +2667,26 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
 	   case 'l':
 	     /* lineto */
              ptr = TtaSkipBlanks (ptr);
-             ptr = GetNumber (ptr, &x);
-             ptr = GetNumber (ptr, &y);
-	     if (relative)
+             ptr = GetNumber (ptr, &x, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &y, &error);
+	     if (!error)
 	       {
-	       x += xcur;
-	       y += ycur;
+		 if (relative)
+		   {
+		     x += xcur;
+		     y += ycur;
+		   }
+		 /* draw a line from (xcur, ycur) to (x, y) */
+		 seg = TtaNewPathSegLine (xcur, ycur, x, y, newSubpath);
+		 if (IsDrawn)
+		   TtaAppendPathSeg (leaf, seg, doc);
+		 else
+		   TtaAppendPathSegToAnim (anim_seg, seg, doc);
+		 newSubpath = FALSE;
+		 xcur = x;
+		 ycur = y;
 	       }
-	     /* draw a line from (xcur, ycur) to (x, y) */
-	     seg = TtaNewPathSegLine (xcur, ycur, x, y, newSubpath);
-	     if (IsDrawn)
-	       TtaAppendPathSeg (leaf, seg, doc);
-	     else
-	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
-	     newSubpath = FALSE;
-	     xcur = x;
-	     ycur = y;
 	     break;
 
 	   case 'H':
@@ -2663,17 +2694,20 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
 	   case 'h':
 	     /* horizontal lineto */
              ptr = TtaSkipBlanks (ptr);
-             ptr = GetNumber (ptr, &x);
-	     if (relative)
-	       x += xcur;
-	     /* draw a line from (xcur, ycur) to (x, ycur) */
-	     seg = TtaNewPathSegLine (xcur, ycur, x, ycur, newSubpath);
-	     if (IsDrawn)
-	       TtaAppendPathSeg (leaf, seg, doc);
-	     else
-	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
-	     newSubpath = FALSE;
-	     xcur = x;
+             ptr = GetNumber (ptr, &x, &error);
+	     if (!error)
+	       {
+		 if (relative)
+		   x += xcur;
+		 /* draw a line from (xcur, ycur) to (x, ycur) */
+		 seg = TtaNewPathSegLine (xcur, ycur, x, ycur, newSubpath);
+		 if (IsDrawn)
+		   TtaAppendPathSeg (leaf, seg, doc);
+		 else
+		   TtaAppendPathSegToAnim (anim_seg, seg, doc);
+		 newSubpath = FALSE;
+		 xcur = x;
+	       }
 	     break;
 
 	   case 'V':
@@ -2681,17 +2715,20 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
 	   case 'v':
 	     /* vertical lineto */
              ptr = TtaSkipBlanks (ptr);
-             ptr = GetNumber (ptr, &y);
-	     if (relative)
-	       y += ycur;
-	     /* draw a line from (xcur, ycur) to (xcur, y) */
-	     seg = TtaNewPathSegLine (xcur, ycur, xcur, y, newSubpath);
-	     if (IsDrawn)
-	       TtaAppendPathSeg (leaf, seg, doc);
-	     else
-	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
-	     newSubpath = FALSE;
-	     ycur = y;
+             ptr = GetNumber (ptr, &y, &error);
+	     if (!error)
+	       {
+		 if (relative)
+		   y += ycur;
+		 /* draw a line from (xcur, ycur) to (xcur, y) */
+		 seg = TtaNewPathSegLine (xcur, ycur, xcur, y, newSubpath);
+		 if (IsDrawn)
+		   TtaAppendPathSeg (leaf, seg, doc);
+		 else
+		   TtaAppendPathSegToAnim (anim_seg, seg, doc);
+		 newSubpath = FALSE;
+		 ycur = y;
+	       }
 	     break;
 
 	   case 'C':
@@ -2699,35 +2736,43 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
 	   case 'c':
 	     /* curveto */
              ptr = TtaSkipBlanks (ptr);
-             ptr = GetNumber (ptr, &x1);
-             ptr = GetNumber (ptr, &y1);
-             ptr = GetNumber (ptr, &x2);
-             ptr = GetNumber (ptr, &y2);
-	     ptr = GetNumber (ptr, &x);
-             ptr = GetNumber (ptr, &y);
-	     if (relative)
+             ptr = GetNumber (ptr, &x1, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &y1, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &x2, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &y2, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &x, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &y, &error);
+	     if (!error)
 	       {
-	       x1 += xcur;
-	       y1 += ycur;
-	       x2 += xcur;
-	       y2 += ycur;
-	       x += xcur;
-	       y += ycur;
+		 if (relative)
+		   {
+		     x1 += xcur;
+		     y1 += ycur;
+		     x2 += xcur;
+		     y2 += ycur;
+		     x += xcur;
+		     y += ycur;
+		   }
+		 /* draw a cubic Bezier curve from (xcur, ycur) to (x, y) using
+		    (x1, y1) as the control point at the beginning of the curve
+		    and (x2, y2) as the control point at the end of the curve*/
+		 seg = TtaNewPathSegCubic (xcur, ycur, x, y, x1, y1, x2, y2,
+					   newSubpath);
+		 if (IsDrawn)
+		   TtaAppendPathSeg (leaf, seg, doc);
+		 else
+		   TtaAppendPathSegToAnim (anim_seg, seg, doc);
+		 newSubpath = FALSE;
+		 xcur = x;
+		 ycur = y;
+		 x2prev = x2;
+		 y2prev = y2;
 	       }
-	     /* draw a cubic Bezier curve from (xcur, ycur) to (x, y) using
-                (x1, y1) as the control point at the beginning of the curve
-		and (x2, y2) as the control point at the end of the curve */
-	     seg = TtaNewPathSegCubic (xcur, ycur, x, y, x1, y1, x2, y2,
-				       newSubpath);
-	     if (IsDrawn)
-	       TtaAppendPathSeg (leaf, seg, doc);
-	     else
-	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
-	     newSubpath = FALSE;
-             xcur = x;
-             ycur = y;
-             x2prev = x2;
-             y2prev = y2;
 	     break;
 
 	   case 'S':
@@ -2735,43 +2780,49 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
 	   case 's':
 	     /* smooth curveto */
              ptr = TtaSkipBlanks (ptr);
-             ptr = GetNumber (ptr, &x2);
-             ptr = GetNumber (ptr, &y2);
-	     ptr = GetNumber (ptr, &x);
-             ptr = GetNumber (ptr, &y);
-	     if (relative)
+             ptr = GetNumber (ptr, &x2, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &y2, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &x, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &y, &error);
+	     if (!error)
 	       {
-	       x2 += xcur;
-	       y2 += ycur;
-	       x += xcur;
-	       y += ycur;
+		 if (relative)
+		   {
+		     x2 += xcur;
+		     y2 += ycur;
+		     x += xcur;
+		     y += ycur;
+		   }
+		 /* compute the first control point */
+		 if (prevCommand == 'C' || prevCommand == 'c' || 
+		     prevCommand == 'S' || prevCommand == 's')
+		   {
+		     x1 = 2*xcur - x2prev;
+		     y1 = 2*ycur - y2prev;
+		   }
+		 else
+		   {
+		     x1 = xcur;
+		     y1 = ycur;
+		   }
+		 /* draw a cubic Bezier curve from (xcur, ycur) to (x, y) using
+		    (x1, y1) as the control point at the beginning of the curve
+		    and (x2, y2) as the control point at the end of the curve*/
+		 seg = TtaNewPathSegCubic (xcur, ycur, x, y, x1, y1, x2, y2,
+					   newSubpath);
+		 if (IsDrawn)
+		   TtaAppendPathSeg (leaf, seg, doc);
+		 else
+		   TtaAppendPathSegToAnim (anim_seg, seg, doc);
+		 newSubpath = FALSE;
+		 xcur = x;
+		 ycur = y;
+		 x2prev = x2;
+		 y2prev = y2;
 	       }
-	     /* compute the first control point */
-	     if (prevCommand == 'C' || prevCommand == 'c' || 
-		 prevCommand == 'S' || prevCommand == 's')
-	       {
-		 x1 = 2*xcur - x2prev;
-		 y1 = 2*ycur - y2prev;
-	       }
-	     else
-	       {
-		 x1 = xcur;
-		 y1 = ycur;
-	       }
-	     /* draw a cubic Bezier curve from (xcur, ycur) to (x, y) using
-                (x1, y1) as the control point at the beginning of the curve
-		and (x2, y2) as the control point at the end of the curve */
-	     seg = TtaNewPathSegCubic (xcur, ycur, x, y, x1, y1, x2, y2,
-				       newSubpath);
-	     if (IsDrawn)
-	       TtaAppendPathSeg (leaf, seg, doc);
-	     else
-	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
-	     newSubpath = FALSE;
-             xcur = x;
-             ycur = y;
-             x2prev = x2;
-             y2prev = y2;
 	     break;
 
 	   case 'Q':
@@ -2779,29 +2830,36 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
 	   case 'q':
 	     /* quadratic Bezier curveto */
              ptr = TtaSkipBlanks (ptr);
-             ptr = GetNumber (ptr, &x1);
-             ptr = GetNumber (ptr, &y1);
-	     ptr = GetNumber (ptr, &x);
-             ptr = GetNumber (ptr, &y);
-	     if (relative)
+             ptr = GetNumber (ptr, &x1, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &y1, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &x, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &y, &error);
+	     if (!error)
 	       {
-	       x1 += xcur;
-	       y1 += ycur;
-	       x += xcur;
-	       y += ycur;
+		 if (relative)
+		   {
+		     x1 += xcur;
+		     y1 += ycur;
+		     x += xcur;
+		     y += ycur;
+		   }
+		 /* draw a quadratic Bezier curve from (xcur, ycur) to (x, y)
+		    using (x1, y1) as the control point */
+		 seg = TtaNewPathSegQuadratic (xcur, ycur, x, y, x1, y1,
+					       newSubpath);
+		 if (IsDrawn)
+		   TtaAppendPathSeg (leaf, seg, doc);
+		 else
+		   TtaAppendPathSegToAnim (anim_seg, seg, doc);
+		 newSubpath = FALSE;
+		 xcur = x;
+		 ycur = y;
+		 x1prev = x1;
+		 y1prev = y1;
 	       }
-	     /* draw a quadratic Bezier curve from (xcur, ycur) to (x, y) using
-                (x1, y1) as the control point */
-	     seg = TtaNewPathSegQuadratic (xcur, ycur, x, y, x1, y1, newSubpath);
-	     if (IsDrawn)
-	       TtaAppendPathSeg (leaf, seg, doc);
-	     else
-	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
-	     newSubpath = FALSE;
-             xcur = x;
-             ycur = y;
-             x1prev = x1;
-             y1prev = y1;
 	     break;
 
 	   case 'T':
@@ -2809,37 +2867,42 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
 	   case 't':
 	     /* smooth quadratic Bezier curveto */
              ptr = TtaSkipBlanks (ptr);
-	     ptr = GetNumber (ptr, &x);
-             ptr = GetNumber (ptr, &y);
-	     if (relative)
+	     ptr = GetNumber (ptr, &x, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &y, &error);
+	     if (!error)
 	       {
-	       x += xcur;
-	       y += ycur;
+		 if (relative)
+		   {
+		     x += xcur;
+		     y += ycur;
+		   }
+		 /* compute the control point */
+		 if (prevCommand == 'Q' || prevCommand == 'q' || 
+		     prevCommand == 'T' || prevCommand == 't')
+		   {
+		     x1 = xcur + (xcur - x1prev);
+		     y1 = ycur + (ycur - y1prev);
+		   }
+		 else
+		   {
+		     x1 = xcur;
+		     y1 = ycur;
+		   }
+		 /* draw a quadratic Bezier curve from (xcur, ycur) to (x, y)
+		    using (x1, y1) as the control point */
+		 seg = TtaNewPathSegQuadratic (xcur, ycur, x, y, x1, y1,
+					       newSubpath);
+		 if (IsDrawn)
+		   TtaAppendPathSeg (leaf, seg, doc);
+		 else
+		   TtaAppendPathSegToAnim (anim_seg, seg, doc);
+		 newSubpath = FALSE;
+		 xcur = x;
+		 ycur = y;
+		 x1prev = x1;
+		 y1prev = y1;
 	       }
-	     /* compute the control point */
-	     if (prevCommand == 'Q' || prevCommand == 'q' || 
-		 prevCommand == 'T' || prevCommand == 't')
-	       {
-		 x1 = xcur + (xcur - x1prev);
-		 y1 = ycur + (ycur - y1prev);
-	       }
-	     else
-	       {
-		 x1 = xcur;
-		 y1 = ycur;
-	       }
-	     /* draw a quadratic Bezier curve from (xcur, ycur) to (x, y) using
-                (x1, y1) as the control point */
-	     seg = TtaNewPathSegQuadratic (xcur, ycur, x, y, x1, y1, newSubpath);
-	     if (IsDrawn)
-	       TtaAppendPathSeg (leaf, seg, doc);
-	     else
-	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
-	     newSubpath = FALSE;
-             xcur = x;
-             ycur = y;
-             x1prev = x1;
-             y1prev = y1;
 	     break;
 
 	   case 'A':
@@ -2847,38 +2910,58 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
 	   case 'a':
 	     /* elliptical arc */
              ptr = TtaSkipBlanks (ptr);
-             ptr = GetNumber (ptr, &rx);            /* must be non-negative */
-             ptr = GetNumber (ptr, &ry);            /* must be non-negative */
-             ptr = GetNumber (ptr, &xAxisRotation);
-             ptr = GetNumber (ptr, &largeArcFlag);  /* must be "0" or "1" */
-             ptr = GetNumber (ptr, &sweepFlag);     /* must be "0" or "1" */
-	     ptr = GetNumber (ptr, &x);
-             ptr = GetNumber (ptr, &y);
-	     if (relative)
+             ptr = GetNumber (ptr, &rx, &error);    /* must be non-negative */
+	     if (rx < 0)
+	       error = TRUE;
+	     if (!error)
+	       ptr = GetNumber (ptr, &ry, &error);  /* must be non-negative */
+	     if (ry < 0)
+	       error = TRUE;
+	     if (!error)
+	       ptr = GetNumber (ptr, &xAxisRotation, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &largeArcFlag, &error);  
+	     /* must be "0" or "1" */
+	     if (largeArcFlag != 0 && largeArcFlag != 1)
+	       error = TRUE;
+	     if (!error)
+	       ptr = GetNumber (ptr, &sweepFlag, &error);
+	     /* must be "0" or "1" */
+	     if (sweepFlag != 0 && sweepFlag != 1)
+	       error = TRUE;
+	     if (!error)
+	       ptr = GetNumber (ptr, &x, &error);
+	     if (!error)
+	       ptr = GetNumber (ptr, &y, &error);
+	     if (!error)
 	       {
-	       x += xcur;
-	       y += ycur;
+		 if (relative)
+		   {
+		     x += xcur;
+		     y += ycur;
+		   }
+		 /* draw an elliptical arc from (xcur, ycur) to (x, y) */
+		 seg = TtaNewPathSegArc (xcur, ycur, x, y, rx, ry,
+					 xAxisRotation, largeArcFlag == 1,
+					 sweepFlag == 1, newSubpath);
+		 if (IsDrawn)
+		   TtaAppendPathSeg (leaf, seg, doc);
+		 else
+		   TtaAppendPathSegToAnim (anim_seg, seg, doc);
+		 newSubpath = FALSE;
+		 xcur = x;
+		 ycur = y;
 	       }
-	     /* draw an elliptical arc from (xcur, ycur) to (x, y) */
-	     seg = TtaNewPathSegArc (xcur, ycur, x, y, rx, ry, xAxisRotation,
-				     largeArcFlag == 1, sweepFlag == 1,
-				     newSubpath);
-	     
-	     if (IsDrawn)
-	       TtaAppendPathSeg (leaf, seg, doc);
-	     else
-	       TtaAppendPathSegToAnim (anim_seg, seg, doc);
-	     newSubpath = FALSE;
-             xcur = x;
-             ycur = y;
 	     break;
 
 	   default:
 	     /* unknown command. error. stop parsing. */
+	     error = TRUE;
 	     command = EOS;
 	     break;
 	   }
-	 if (command != EOS)
+
+	 if (command != EOS && !error)
 	   {
 	   prevCommand = command;
 	   if (command == 'Z' || command == 'z')
@@ -2914,6 +2997,7 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
    else 
      return anim_seg;
 }
+
 /*----------------------------------------------------------------------
    ParseIntAttrbute : 
    Parse the value of a integer data attribute
