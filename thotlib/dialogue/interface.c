@@ -19,6 +19,7 @@
 
 #include "thot_gui.h"
 #include "thot_sys.h"
+
 #include "constmenu.h"
 #include "constmedia.h"
 /* Needed for a glitch with Motif 2.0 see ResizeEvents below ! */
@@ -665,8 +666,7 @@ void TtaInstallMultiKey ()
   if (ptr != NULL && !strcasecmp (ptr, "yes"))
     Enable_Multikey = TRUE;
   else
-    Enable_Multikey = FALSE;
-  gtk_set_locale ();
+      Enable_Multikey = FALSE;
   TtaKeyboardMapInstalled = 1;
 #else /* !_GTK */
   KeySym             *keymap;
@@ -1569,6 +1569,16 @@ void TtaSetMultikey (ThotBool value)
   previous_state = 0;
   previous_value = 0;
 #endif /* _WINDOWS */
+}
+/*----------------------------------------------------------------------
+   TtaSetMultiKey
+   Return the state of the multikey support
+   Parameters:
+   value :
+  ----------------------------------------------------------------------*/
+ThotBool TtaGetMulitkey()
+{
+    return Enable_Multikey;
 }
 /* End Of Module */
 
