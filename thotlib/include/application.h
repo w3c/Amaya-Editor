@@ -80,6 +80,12 @@ extern void TtaInitialize (CHAR_T* applicationName);
 extern void TtaSetApplicationQuit (Proc procedure);
 
 /*----------------------------------------------------------------------
+  TtaSetEntityFunction registers the function that gives entity names.
+  procedure (int entityValue, char **entityName)
+  ----------------------------------------------------------------------*/
+void TtaSetEntityFunction (Proc procedure);
+
+/*----------------------------------------------------------------------
    TtaQuit
    Quits the Thot tool kit. No other function of the tool kit can then
    be called by the application.

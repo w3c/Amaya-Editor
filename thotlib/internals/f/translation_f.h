@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void TtaSetEntityFunction ( Proc procedure );
 extern ThotBool ExportDocument ( PtrDocument pDoc,
                                  STRING fName,
                                  STRING TSchemaName,
@@ -23,6 +24,7 @@ extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
 
 #else /* __STDC__ */
 
+extern void TtaSetEntityFunction (/* Proc procedure */);
 extern ThotBool ExportDocument (/* PtrDocument pDoc,
                                    STRING fName,
                                    STRING TSchemaName,
