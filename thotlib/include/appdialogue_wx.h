@@ -26,7 +26,6 @@ extern ThotBool      TtaRegisterWidgetWX( int ref, void * p_widget );
 extern int           TtaGetActiveWindowId();
 extern AmayaWindow * TtaGetActiveWindow();
 extern wxMenu *      TtaGetContextMenu( int window_id );
-extern void          TtaRefreshMenuStats( wxMenuBar * p_menu_bar );
 
 extern int TtaMakeWindow(int x, int y, int w, int h, int kind, int parent_window_id );
 extern int TtaMakeFrame( const char * schema_name,
@@ -37,23 +36,11 @@ extern int TtaMakeFrame( const char * schema_name,
 			 int height,
 			 int * volume );
 extern int TtaGetFreePageId( int window_id );
-extern int TtaAddToolBarButton( int window_id,
-				ThotIcon picture,
-				char * tooltip,
-				char * functionName,
-				void (*procedure) (),
-				ThotBool status );
-extern void TtaSetupPanel( int type,
-			   int button_id,
-			   const char * tooltip,
-			   void (*procedure) () );
-
 extern void TtaSwitchPanelButton( Document doc, View view,
 				  int panel_type,
 				  int button_id,
 				  ThotBool value );
 
-extern void TtaRefreshPanelTooltips( int window_id );
 extern void TtaToggleOnOffSidePanel( int frame_id );
 extern void TtaToggleOnOffSplitView( int frame_id );
 extern void TtaToggleOnOffFullScreen( int frame_id );

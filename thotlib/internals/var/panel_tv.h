@@ -14,7 +14,8 @@
 
 #include "paneltypes_wx.h"
 
-THOT_EXPORT Panel_Ctl PanelTable[WXAMAYA_PANEL_TYPE_NB+1];
+/* this table is no more used ... this file could be removed */
+/*THOT_EXPORT Panel_Ctl PanelTable[WXAMAYA_PANEL_TYPE_NB+1];*/
 
 #endif /* _WX */
 

@@ -114,7 +114,7 @@ PrintDlgWX::PrintDlgWX( int ref,
   XRCCTRL(*this, "wxID_IGNORE_CSS_CHK", wxCheckBox)->SetValue(ignore_css);
 
   // buttons
-  XRCCTRL(*this, "wxID_PRINTBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BUTTON_PRINT) ));
+  XRCCTRL(*this, "wxID_PRINTBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_BUTTON_PRINT) ));
   XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   Layout();

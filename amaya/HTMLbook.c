@@ -742,7 +742,7 @@ void SetupAndPrint (Document doc, View view)
 #ifdef _GTK
   TtaNewSheet (BasePrint + FormPrint, TtaGetViewFrame (doc, view), 
 	       TtaGetMessage (LIB, TMSG_LIB_PRINT), 1,
-	       TtaGetMessage (AMAYA, AM_BUTTON_PRINT), FALSE, 3, 'L', D_CANCEL);
+	       TtaGetMessage (LIB, TMSG_BUTTON_PRINT), FALSE, 3, 'L', D_CANCEL);
 
   /* Paper format submenu */
   i = 0;

@@ -736,10 +736,10 @@ static char *GetImageURL (Document document, View view, ThotBool isObject)
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
    TtaNewSheet (RefFormImage, TtaGetViewFrame (document, view),
-		TtaGetMessage (AMAYA, AM_BUTTON_IMG),
+		TtaGetMessage (LIB, TMSG_BUTTON_IMG),
 		3, s, TRUE, 2, 'L', D_CANCEL);
    TtaNewTextForm (BaseImage + ImageURL, RefFormImage,
-		   TtaGetMessage (AMAYA, AM_BUTTON_IMG), 50, 1, FALSE);
+		   TtaGetMessage (LIB, TMSG_BUTTON_IMG), 50, 1, FALSE);
    TtaNewLabel (BaseImage + ImageLabel, RefFormImage, " ");
    if (isObject)
      /* not ALT attribute for objects */
@@ -770,7 +770,7 @@ static char *GetImageURL (Document document, View view, ThotBool isObject)
 			LastURLImage, UserMimeType);
    else
      CreateImageDlgWX (RefFormImage, TtaGetViewFrame (document, view),
-		       TtaGetMessage (AMAYA, AM_BUTTON_IMG),
+		       TtaGetMessage (LIB, TMSG_BUTTON_IMG),
 		       LastURLImage, ImgAlt);
 #endif /* _WX */
 

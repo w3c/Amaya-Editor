@@ -1365,7 +1365,7 @@ void CheckParsingErrors (Document doc)
 	  /* Raise a popup message */
 	  if (DocumentTypes[doc] == docHTML)
 	    /* when propose a reload */
-	    reload = TtaGetMessage (AMAYA, AM_BUTTON_RELOAD);
+	    reload = TtaGetMessage (LIB, TMSG_BUTTON_RELOAD);
 	  else
 	    reload = NULL;
 
@@ -2796,6 +2796,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	  * we must initialize each things that must be initialized once for the window */
 	 {
 #ifdef _WX
+#if 0
 	   /* Init panels */
 
 	   /* XHTML */
@@ -2812,6 +2813,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_LINK, TtaGetMessage(AMAYA,AM_BUTTON_LINK), (Proc)CreateOrChangeLink );
 	   TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_TABLE, TtaGetMessage(AMAYA,AM_BUTTON_TABLE), (Proc)CreateTable);
 	   TtaRefreshPanelTooltips( window_id );
+#endif /* 0 */
 #endif /* _WX */
 
 	   /* create the  button bar */
@@ -2871,84 +2873,84 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #else /* _WX */
 	   /* use a new window: Create all buttons */
 	   iStop =TtaAddButton (doc, 1, stopN, (Proc)StopTransfer,"StopTransfer",
-				TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
+				TtaGetMessage (LIB,TMSG_BUTTON_INTERRUPT),
 				TBSTYLE_BUTTON, FALSE);
 	   iBack = TtaAddButton (doc, 1, iconBackNo, (Proc)GotoPreviousHTML,
 				 "GotoPreviousHTML",
-				 TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS),
+				 TtaGetMessage (LIB,TMSG_BUTTON_PREVIOUS),
 				 TBSTYLE_BUTTON, FALSE);
 	   iForward = TtaAddButton (doc, 1, iconForwardNo, (Proc)GotoNextHTML,
 				    "GotoNextHTML",
-				    TtaGetMessage (AMAYA, AM_BUTTON_NEXT),
+				    TtaGetMessage (LIB,TMSG_BUTTON_NEXT),
 				    TBSTYLE_BUTTON, FALSE);
 	   iReload = TtaAddButton (doc, 1, iconReload, (Proc)Reload, "Reload",
-				   TtaGetMessage (AMAYA, AM_BUTTON_RELOAD),
+				   TtaGetMessage (LIB,TMSG_BUTTON_RELOAD),
 				   TBSTYLE_BUTTON, TRUE);
 	   iHome = TtaAddButton (doc, 1, iconHome, (Proc)GoToHome, "GoToHome",
-				 TtaGetMessage (AMAYA, AM_BUTTON_HOME),
+				 TtaGetMessage (LIB,TMSG_BUTTON_HOME),
 				 TBSTYLE_BUTTON, TRUE);
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
 	   iSave = TtaAddButton (doc, 1, iconSaveNo, (Proc)SaveDocument,
 				 "SaveDocument",
-				 TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
+				 TtaGetMessage (LIB,TMSG_BUTTON_SAVE),
 				 TBSTYLE_BUTTON, FALSE);
 	   iPrint = TtaAddButton (doc, 1, iconPrint, (Proc)SetupAndPrint,  "SetupAndPrint",
-				  TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
+				  TtaGetMessage (LIB,TMSG_BUTTON_PRINT),
 				  TBSTYLE_BUTTON, TRUE);
 	   iFind = TtaAddButton (doc, 1, iconFind, (Proc)TtcSearchText,
 				 "TtcSearchText", 
-				 TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
+				 TtaGetMessage (LIB,TMSG_BUTTON_SEARCH),
 				 TBSTYLE_BUTTON, TRUE);
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
 	   iI =  TtaAddButton (doc, 1, iconI, (Proc)SetOnOffEmphasis,
 			       "SetOnOffEmphasis",
-			       TtaGetMessage (AMAYA, AM_BUTTON_ITALICS),
+			       TtaGetMessage (LIB,TMSG_BUTTON_ITALICS),
 			       TBSTYLE_CHECK, TRUE);
 	   iB =  TtaAddButton (doc, 1, iconB, (Proc)SetOnOffStrong, "SetOnOffStrong",
-			       TtaGetMessage (AMAYA, AM_BUTTON_BOLD),
+			       TtaGetMessage (LIB,TMSG_BUTTON_BOLD),
 			       TBSTYLE_CHECK, TRUE);
 	   iT = TtaAddButton (doc, 1, iconT, (Proc)SetOnOffCode, "SetOnOffCode",
-			      TtaGetMessage (AMAYA, AM_BUTTON_CODE),
+			      TtaGetMessage (LIB,TMSG_BUTTON_CODE),
 			      TBSTYLE_CHECK, TRUE);
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
 	   iImage = TtaAddButton (doc, 1, iconImage, (Proc)CreateImage,
 				  "CreateImage", 
-				  TtaGetMessage (AMAYA, AM_BUTTON_IMG),
+				  TtaGetMessage (LIB,TMSG_BUTTON_IMG),
 				  TBSTYLE_BUTTON, TRUE);
 	   iH1 = TtaAddButton (doc, 1, iconH1, (Proc)CreateHeading1,
 			       "CreateHeading1", 
-			       TtaGetMessage (AMAYA, AM_BUTTON_H1),
+			       TtaGetMessage (LIB,TMSG_BUTTON_H1),
 			       TBSTYLE_BUTTON, TRUE);
 	   iH2 = TtaAddButton (doc, 1, iconH2, (Proc)CreateHeading2,
 			       "CreateHeading2", 
-			       TtaGetMessage (AMAYA, AM_BUTTON_H2),
+			       TtaGetMessage (LIB,TMSG_BUTTON_H2),
 			       TBSTYLE_BUTTON, TRUE);
 	   iH3 = TtaAddButton (doc, 1, iconH3, (Proc)CreateHeading3,
 			       "CreateHeading3", 
-			       TtaGetMessage (AMAYA, AM_BUTTON_H3),
+			       TtaGetMessage (LIB,TMSG_BUTTON_H3),
 			       TBSTYLE_BUTTON, TRUE);
 	   iBullet = TtaAddButton (doc, 1, iconBullet, (Proc)CreateList,
 				   "CreateList",
-				   TtaGetMessage (AMAYA, AM_BUTTON_UL),
+				   TtaGetMessage (LIB,TMSG_BUTTON_UL),
 				   TBSTYLE_BUTTON, TRUE);
 	   iNum = TtaAddButton (doc, 1, iconNum, (Proc)CreateNumberedList,
 				"CreateNumberedList",
-				TtaGetMessage (AMAYA, AM_BUTTON_OL),
+				TtaGetMessage (LIB,TMSG_BUTTON_OL),
 				TBSTYLE_BUTTON, TRUE);
 	   iDL = TtaAddButton (doc, 1, iconDL, (Proc)CreateDefinitionList,
 			       "CreateDefinitionList",
-			       TtaGetMessage (AMAYA, AM_BUTTON_DL),
+			       TtaGetMessage (LIB,TMSG_BUTTON_DL),
 			       TBSTYLE_BUTTON, TRUE);
 	   iLink = TtaAddButton (doc, 1, iconLink, (Proc)CreateOrChangeLink,
 				 "CreateOrChangeLink",
-				 TtaGetMessage (AMAYA, AM_BUTTON_LINK),
+				 TtaGetMessage (LIB,TMSG_BUTTON_LINK),
 				 TBSTYLE_BUTTON, TRUE);
 	   iTable = TtaAddButton (doc, 1, iconTable, (Proc)CreateTable,
 				  "CreateTable",
-				  TtaGetMessage (AMAYA, AM_BUTTON_TABLE),
+				  TtaGetMessage (LIB,TMSG_BUTTON_TABLE),
 				  TBSTYLE_BUTTON, TRUE);
 	   AddMathButton (doc, 1);
 #ifdef _SVG
@@ -7241,6 +7243,7 @@ void InitAmaya (NotifyEvent * event)
    LinkAsXmlCSS = FALSE;
 
 #ifdef _WX
+#if 0
    /* Init panels */
    /* XHTML */
    TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_EMPH, TtaGetMessage(AMAYA,AM_BUTTON_ITALICS), (Proc)SetOnOffEmphasis );
@@ -7255,6 +7258,7 @@ void InitAmaya (NotifyEvent * event)
    TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_IMG, TtaGetMessage(AMAYA,AM_BUTTON_IMG), (Proc)CreateImage );
    TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_LINK, TtaGetMessage(AMAYA,AM_BUTTON_LINK), (Proc)CreateOrChangeLink );
    TtaSetupPanel( WXAMAYA_PANEL_XHTML, WXAMAYA_PANEL_XHTML_TABLE, TtaGetMessage(AMAYA,AM_BUTTON_TABLE), (Proc)CreateTable);
+#endif /* 0 */
 #endif /* _WX */
 
 

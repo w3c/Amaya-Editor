@@ -98,290 +98,270 @@
 96 Kullanıcı ismini girin:
 97 %d istek var sırada
 98 Olumlu CSS dosyası yoktur
-99 Aktarımı kes
-100 Önceki belge
-101 Sonraki belge
-102 Yeniden yükle
-103 Kaydet
-104 **Don't save
-105 Yazdır
-106 Ara
-107 Vurgu
-108 Kuvvetli
-109 Sabit genişlikli yazıtipi
-110 tekrar yok
-111 Görüntü ekle
-112 Başlık 1
-113 Başlık 2
-114 Başlık 3
-115 Liste
-116 Numaralı liste
-117 Tanım listesi
-118 Bağlantı
-119 Tablo
-120 Belgenin bir ismi yok. Şu isimle kaydediyorum:
-121 Plugin\'ler
-122 %s URL\'ini kaydederken, belirsiz hata
-123 Sunucuya bağlantı yapılamıyor
-124 %s erişimi kural gereği engellenmiş
-125 %s için işlem başarılı
-126 %s yaratıldı
-127 %s güncellendi
-128 İşlem %s durum kodu ile tamamlandı
-129 Sunucu istem yazımını anlamadı
-130 Sunucunun gönderecek yeni bilgisi
-131 Bu yöntem %s için kullanılamaz
-132 %s erişimi için lütfen kendinizi tanıtın
-133 Doğrulanıyor...
-134 %s\'e kaydedilemedi, Diske kaydedeyim mi?
-135 %s bozuk görünüyor, devam edeyim mi?
-136 URL %s %s e yönlendirilmiş, devam edeyim mi?
-137 %s yeniden yüklenemedi, devam edeyim mi?
-138 Sunucu 501 hatası veriyor: %s
-139 Sunucu 501 hatası veriyor
-140 Sunucu bu istem yöntemini kabul etmiyor
-141 Süzgeç
-142 etkin aktarımlar
-143 kuyruktaki aktarımlar
-144 İçindekiler
-145 Bağlantı tablosu
-146 Tekrar modu
-147 tekrar
-148 x\'te tekrar
-149 Son Amaya oturumu kötü bitmiştir. Değiştirilen dosyaları yüklemek istiyormusunuz?
-150 Resmileştirme hatasi. Tekrar?
-151 Operasion yönlendirilecek. Devam?
-152 Sıra sayısı
-153 Sütün sayısı
-154 çerçeve
-155 Yeniden yerleştirme metini
-156 Yeniden yerleştirme metini mecburdur
-157 URL\'i yazdır
-158 Tatbik et
-159 Öntanımlar
-160 Gizli bölümü boşalt
-161 Önbellekleme
-162 Gizli bölümün hızlandırmak
-163 Korunması gereken belgeleri gizli bölüme kayıt edin
-164 Bağlantıda çıkma modu
-165 Expires yazıyı önemsemeyin
-166 Gizli bölümün repertuarı
-167 Gizli bölümün büyüklüğü (Mb)
-168 Gizli bölümün maksimum kapasitesi (Mb)
-169 Önbellekleme
-170 HTTP proxy (e.g., www.w3.org:1234)
-171 Proxy\'nin alan listesi (e.g., lists.w3.org)
-172 Genel
-173 başlangıç sayfası
-174 Bigi süresi (ms)
-175 Iki kere tıklama süresi(ms)
-176 Yazıtipi ailesi büyüklüğü
-177 Karakterleri büyüt
-178 Yazıların dili
-179 **Enable line-by-line paste
-180 **Generate backup files
-181 **Save geometry on exit
-182 Arka görüntülerini göster
-183 Tusları göster
-184 Adres göster
-185 Hedefi göster
-186 CR/LF ihraç et
-187 Tarama
-188 Görüntüyü yükle (img)
-189 Bağlantıyı izlemek için iki kere tuşlayın
-190 Derleme
-191 ETAGS\'ları ve ön-şartları kullanının
-192 Her PUT ve GET\' leri kontrol edin
-193 '/'\'le biten URL\'leri öntanımlı isim
-194 Geometri
-195 Yakın geometriyi kaydet
-196 Öntanımlı geometriye yeniden biçim ver
-197 Bu değişiklikler yeniden pencere açtığınızda gerçerli olurlar
-198 Renk ayarları
-199 Belgenin ön-plan rengi
-200 Belgenin arka-plan rengi
-201 Menünün ön-plan rengi
-202 Menünün arka-plan rengi
-203 Gizli bölümü sıfırlama imkansızdır. Belkide geçersiz bir repertuar kullandınız veya aynı zamanda başka bir amaya kullandınız
-204 Özel sayfa
-205 Istenilen dillerin listesi (mesela "en, fr"):
-206 Bu değişiklikler yeniden Amaya\'yı açtığınız taktirde geçerli olurlar
-207 Bu alanlarda PUT otomatik olarak yeniden yönlerdirmesini kabul edin
-208 Sayfasız
-209 Dönüşüm türü
-210 Her Enter\'ü boşlukla değiştirin
-211 Bu alanlarda Proxy\'yi kullanmayın
-212 Bu alanlarda sadece Proxy\'yi kullanın
-213 Karakterin ismi
-214 Kullanıyıcı repertuarı
-215 Süreli repertuarı
-216 Palet (palette)
-217 Ülke dilleri
-218 Eklemeler
-219 Kullanıyıcı ismi
-220 Dağıtım servörü
-221 Not servörü
-222 Lokal notları otomatik olarak yükleyin
-223 Dıştan notları otomatik olarak yükleyin
-224 Amaya\'nın başlangıcında otomatik dıştan notları yüklemesini durdurun
-225 Renk seçimi
-226 **Selection background color
-227 Yön
-228 Portre
-229 Peysaj
-230 FTP desteği
-231 XML belgesinde hata - Hataları düzeltmek için yeniden yükle veya hataları göster?
-232 XML belgesinde hata - Hataları göster?
-233 **Try the 'File/Force a Character Coding' entry
-234 Yanlış karakter
-235 Belgenin profili:
-236 Hata - Görünümler/Hataları göster bakın
-237 Bu belgenin kodlaması Amaya tarafından yapılamıyor
-238 Yazmak ve kaydetmek bu belgenin tipini değiştirir
-239 Kullanıma hazır değil
-240 Tarayıcı
-241 Tarayıcı dosyası
-242 Seçim
-243 Notların lokal filtresi
-244 Göster
-245 Gizle
-246 Hepsini göster
-247 Hepsini gizle
-248 * gizlemek anlamında, - süreli gizlemek anlamında
-249 Filtrage opsionları
-250 Sahip
-251 Tip
-252 Servör
-253 Hızlı giriş
-254 Geç
-255 Verilerin dizaynı
-256 XPointer yaratılamıyor
-257 Amaya tarafından eklenen XPointer başlanamıyor
-258 Amaya tarafından eklenen XPointer bitiremiyor
-259 Eklemeler yerinden oynatılamıyor
-260 Eklemeler başka bir belgeye konamıyor
-261 Değişlikler gören bir belgeye ekleme imkansıdır. Önce kayıt edin.
-262 Kunlayıcı ismi verilmemiştir. Ekleme/Ayarlar menüsüne bakın
-263 Bu not için XPointer yaratmak imkansızdır
-264 Yeni not yap
-265 Notun yayın hatası
-266 Notun iptal hatası
-267 Not iptal edildi!
-268 Notların içeriğini yüklemek imkansızdır
-269 Hata
-270 Charset seçin
-271 MIME tipi seçin
-272 Charset\'i değiştir
-273 MIME tipini değiştir
-274 Değiştir
-275 Bu tip belgenin Charset\'i yoktur
-276 URL\'i kullanmak için HTTP tipten olması gerekiyor
-277 Hata: MIME tipi doğru değil
-278 Yabancı
-279 Dizayn bilinmiyor - Görünümler/Hataları göster bakın
-280 Bu belge başka bir pencerede açılmıştır
-281 Bu belgeleri kayıt etmek güncelleştirme problemleri çıkara bilir
-282 **Adding or changing the doctype will remove some elements or attributes
-283 **Please confirm operation
-284 XHTML belgeleri için MIME tipi uygulama/xhtml+xml \'li kullanın
-285 **Charset for new documents
-286 Kilitleme başarılı olmuştur!
-287 Kilitleme başarısız olmuştur!
-288 %s için kilit bekleniyor...
-289 %s belgesi kilitlenmiştir!
-290 %s belgesi %s tarafından kilitlenmiştir (son kullanma süresi %s)
-291 Kilidi geçin?
-292 Kilit bilgilerini kaydet?
-293 Belgenin kilidini açmayı deneyin...
-294 Kilit açma başarılı olmuştur!
-295 Kilit açma başarısız olmuştur!
-296 %s kilidini aç...
-297 %s belgenin kilidi açıldı!
-298 Belgenin kilidini aç?
-299 Belge özellikleri
-300 Belgenin özellikleri kullanamazsınız
-301 Belgenin özellikleri şu an kullanamazsınız. Biraz sonra yeniden deneyin...
-302 Belgenin özellikleri bekleniyor...
-303 Malesef, WebDav URL\'leri %s gibi desteklemiyor
-304 Kilidin lokal temelde kayıtı başarısız olmuştur
-305 Kilidin lokal temelde silinmesi imkansızdır
-306 Malesef bu operasion %s için yasaktır
-307 Operasion başarısız olmuştur! Neden: bağımlılık hatası
-308 Operasion başarısız olmuştur! Neden: %s
-309 Yeniden dene?
-310 WebDAV
-311 Kullanıyıcının özel referansı (URL)
-312 Kullanıyıcının referans listesi (URL URL)
-313 Kilit derinliği
-314 Sonsuz
-315 Bitiş süresi
-316 Sonsuz
-317 Diyer (Saniye)
-318 Kilit tipi
-319 Uyuşmaz
-320 paylaş
-321 Bildiri
-322 Genel bildiri
-323 çıkış bildirisi
-324 Hareket
-325 SVG kütüphanesi
-326 Kopya opsionu
-327 Kopyala
-328 Referans et
-329 Kütüphanede yeni model ekle
-330 Yeni SVG dosyasının URL\'i...
-331 Kütüphane başlıgı
-332 URL Kütüphanesi
-333 Kütüphane yarat
-334 Kütüphane tara
-335 Kütüphane yarat veya ara
-336 Vu seçimde SVG olmayan veriler içeriyor. Lütfen başka seçim yapın
-337 Kütüphane başlıgı mecburdur
-338 Açılan belgede yeni anahtar durum tanımlamak için durum kürsörünü oynatın ...
-339 Anahtar durum tanımlaştı. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...
-340 Elemanın başlangıç rengini seçin
-341 Başlangıç rengini seçin. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...
-342 Bitiş rengini seçin...
-343 Hareket tanımlaştı
-344 Hareketli özellikler
-345 Tanımsız eleman
-346 **Add ID
-347 **Remove ID
-348 **Add/Remove IDs
-349 **Apply operation
-350 **Enter an element name
-351 **Apply CSS
-352 **Current screen type
-353 **New Topic
-354 **Bookmark Properties
-355 **Topic Properties
-356 **Topic hierarchy:
-357 Başlık:
-358 **Recalls:
-359 Sahip:
-360 **Created:
-361 **Last modified:
-362 **Description:
-363 **Please select an element
-364 **All CSS
-365 **CSS style rules applied to the <%s> element\n
-366 **Blue lines are links activated by a double (or a single) click\n
-367 **Load objects (object, embed, iframe)
-368 **No style rule for this element
-369 **No insert position defined. Please select first
-370 **Document information
-371 **Document Type
-372 **MIME Type
-373 **Charset
-374 **Content Length
-375 **Content Location
-376 Tercih
-377 Karakter (&xxx;)
-378 **Create Object
-379 **Directory
-380 **File
-381 **Replace current
-382 **In new tab
-383 **In new Window
-384 Anti-aliasing
-385 **Universal date
+99 **Don't save
+100 tekrar yok
+101 Belgenin bir ismi yok. Şu isimle kaydediyorum:
+102 Plugin\'ler
+103 %s URL\'ini kaydederken, belirsiz hata
+104 Sunucuya bağlantı yapılamıyor
+105 %s erişimi kural gereği engellenmiş
+106 %s için işlem başarılı
+107 %s yaratıldı
+108 %s güncellendi
+109 İşlem %s durum kodu ile tamamlandı
+110 Sunucu istem yazımını anlamadı
+111 Sunucunun gönderecek yeni bilgisi
+112 Bu yöntem %s için kullanılamaz
+113 %s erişimi için lütfen kendinizi tanıtın
+114 Doğrulanıyor...
+115 %s\'e kaydedilemedi, Diske kaydedeyim mi?
+116 %s bozuk görünüyor, devam edeyim mi?
+117 URL %s %s e yönlendirilmiş, devam edeyim mi?
+118 %s yeniden yüklenemedi, devam edeyim mi?
+119 Sunucu 501 hatası veriyor: %s
+120 Sunucu 501 hatası veriyor
+121 Sunucu bu istem yöntemini kabul etmiyor
+122 Süzgeç
+123 etkin aktarımlar
+124 kuyruktaki aktarımlar
+125 İçindekiler
+126 Bağlantı tablosu
+127 Tekrar modu
+128 tekrar
+129 x\'te tekrar
+130 Son Amaya oturumu kötü bitmiştir. Değiştirilen dosyaları yüklemek istiyormusunuz?
+131 Resmileştirme hatasi. Tekrar?
+132 Operasion yönlendirilecek. Devam?
+133 Sıra sayısı
+134 Sütün sayısı
+135 çerçeve
+136 Yeniden yerleştirme metini
+137 Yeniden yerleştirme metini mecburdur
+138 URL\'i yazdır
+139 Tatbik et
+140 Öntanımlar
+141 Gizli bölümü boşalt
+142 Önbellekleme
+143 Gizli bölümün hızlandırmak
+144 Korunması gereken belgeleri gizli bölüme kayıt edin
+145 Bağlantıda çıkma modu
+146 Expires yazıyı önemsemeyin
+147 Gizli bölümün repertuarı
+148 Gizli bölümün büyüklüğü (Mb)
+149 Gizli bölümün maksimum kapasitesi (Mb)
+150 Önbellekleme
+151 HTTP proxy (e.g., www.w3.org:1234)
+152 Proxy\'nin alan listesi (e.g., lists.w3.org)
+153 Genel
+154 başlangıç sayfası
+155 Bigi süresi (ms)
+156 Iki kere tıklama süresi(ms)
+157 Yazıtipi ailesi büyüklüğü
+158 Karakterleri büyüt
+159 Yazıların dili
+160 **Enable line-by-line paste
+161 **Generate backup files
+162 **Save geometry on exit
+163 Arka görüntülerini göster
+164 Tusları göster
+165 Adres göster
+166 Hedefi göster
+167 CR/LF ihraç et
+168 Tarama
+169 Görüntüyü yükle (img)
+170 Bağlantıyı izlemek için iki kere tuşlayın
+171 Derleme
+172 ETAGS\'ları ve ön-şartları kullanının
+173 Her PUT ve GET\' leri kontrol edin
+174 '/'\'le biten URL\'leri öntanımlı isim
+175 Geometri
+176 Yakın geometriyi kaydet
+177 Öntanımlı geometriye yeniden biçim ver
+178 Bu değişiklikler yeniden pencere açtığınızda gerçerli olurlar
+179 Renk ayarları
+180 Belgenin ön-plan rengi
+181 Belgenin arka-plan rengi
+182 Menünün ön-plan rengi
+183 Menünün arka-plan rengi
+184 Gizli bölümü sıfırlama imkansızdır. Belkide geçersiz bir repertuar kullandınız veya aynı zamanda başka bir amaya kullandınız
+185 Istenilen dillerin listesi (mesela "en, fr"):
+186 Bu değişiklikler yeniden Amaya\'yı açtığınız taktirde geçerli olurlar
+187 Bu alanlarda PUT otomatik olarak yeniden yönlerdirmesini kabul edin
+188 Sayfasız
+189 Dönüşüm türü
+190 Her Enter\'ü boşlukla değiştirin
+191 Bu alanlarda Proxy\'yi kullanmayın
+192 Bu alanlarda sadece Proxy\'yi kullanın
+193 Karakterin ismi
+194 Kullanıyıcı repertuarı
+195 Süreli repertuarı
+196 Palet (palette)
+197 Ülke dilleri
+198 Eklemeler
+199 Kullanıyıcı ismi
+200 Dağıtım servörü
+201 Not servörü
+202 Lokal notları otomatik olarak yükleyin
+203 Dıştan notları otomatik olarak yükleyin
+204 Amaya\'nın başlangıcında otomatik dıştan notları yüklemesini durdurun
+205 Renk seçimi
+206 **Selection background color
+207 Yön
+208 Portre
+209 Peysaj
+210 FTP desteği
+211 XML belgesinde hata - Hataları düzeltmek için yeniden yükle veya hataları göster?
+212 XML belgesinde hata - Hataları göster?
+213 **Try the 'File/Force a Character Coding' entry
+214 Yanlış karakter
+215 Belgenin profili:
+216 Hata - Görünümler/Hataları göster bakın
+217 Bu belgenin kodlaması Amaya tarafından yapılamıyor
+218 Yazmak ve kaydetmek bu belgenin tipini değiştirir
+219 Kullanıma hazır değil
+220 Tarayıcı
+221 Tarayıcı dosyası
+222 Seçim
+223 Notların lokal filtresi
+224 Göster
+225 Gizle
+226 Hepsini göster
+227 Hepsini gizle
+228 * gizlemek anlamında, - süreli gizlemek anlamında
+229 Filtrage opsionları
+230 Sahip
+231 Tip
+232 Servör
+233 Hızlı giriş
+234 Geç
+235 Verilerin dizaynı
+236 XPointer yaratılamıyor
+237 Amaya tarafından eklenen XPointer başlanamıyor
+238 Amaya tarafından eklenen XPointer bitiremiyor
+239 Eklemeler yerinden oynatılamıyor
+240 Eklemeler başka bir belgeye konamıyor
+241 Değişlikler gören bir belgeye ekleme imkansıdır. Önce kayıt edin.
+242 Kunlayıcı ismi verilmemiştir. Ekleme/Ayarlar menüsüne bakın
+243 Bu not için XPointer yaratmak imkansızdır
+244 Yeni not yap
+245 Notun yayın hatası
+246 Notun iptal hatası
+247 Not iptal edildi!
+248 Notların içeriğini yüklemek imkansızdır
+249 Hata
+250 Charset seçin
+251 MIME tipi seçin
+252 Charset\'i değiştir
+253 MIME tipini değiştir
+254 Değiştir
+255 Bu tip belgenin Charset\'i yoktur
+256 URL\'i kullanmak için HTTP tipten olması gerekiyor
+257 Hata: MIME tipi doğru değil
+258 Yabancı
+259 Dizayn bilinmiyor - Görünümler/Hataları göster bakın
+260 Bu belge başka bir pencerede açılmıştır
+261 Bu belgeleri kayıt etmek güncelleştirme problemleri çıkara bilir
+262 **Adding or changing the doctype will remove some elements or attributes
+263 **Please confirm operation
+264 XHTML belgeleri için MIME tipi uygulama/xhtml+xml \'li kullanın
+265 **Charset for new documents
+266 Kilitleme başarılı olmuştur!
+267 Kilitleme başarısız olmuştur!
+268 %s için kilit bekleniyor...
+269 %s belgesi kilitlenmiştir!
+270 %s belgesi %s tarafından kilitlenmiştir (son kullanma süresi %s)
+271 Kilidi geçin?
+272 Kilit bilgilerini kaydet?
+273 Belgenin kilidini açmayı deneyin...
+274 Kilit açma başarılı olmuştur!
+275 Kilit açma başarısız olmuştur!
+276 %s kilidini aç...
+277 %s belgenin kilidi açıldı!
+278 Belgenin kilidini aç?
+279 Belge özellikleri
+280 Belgenin özellikleri kullanamazsınız
+281 Belgenin özellikleri şu an kullanamazsınız. Biraz sonra yeniden deneyin...
+282 Belgenin özellikleri bekleniyor...
+283 Malesef, WebDav URL\'leri %s gibi desteklemiyor
+284 Kilidin lokal temelde kayıtı başarısız olmuştur
+285 Kilidin lokal temelde silinmesi imkansızdır
+286 Malesef bu operasion %s için yasaktır
+287 Operasion başarısız olmuştur! Neden: bağımlılık hatası
+288 Operasion başarısız olmuştur! Neden: %s
+289 Yeniden dene?
+290 WebDAV
+291 Kullanıyıcının özel referansı (URL)
+292 Kullanıyıcının referans listesi (URL URL)
+293 Kilit derinliği
+294 Sonsuz
+295 Bitiş süresi
+296 Sonsuz
+297 Diyer (Saniye)
+298 Kilit tipi
+299 Uyuşmaz
+300 paylaş
+301 Bildiri
+302 Genel bildiri
+303 çıkış bildirisi
+304 Hareket
+305 SVG kütüphanesi
+306 Kopya opsionu
+307 Kopyala
+308 Referans et
+309 Kütüphanede yeni model ekle
+310 Yeni SVG dosyasının URL\'i...
+311 Kütüphane başlıgı
+312 URL Kütüphanesi
+313 Kütüphane yarat
+314 Kütüphane tara
+315 Kütüphane yarat veya ara
+316 Vu seçimde SVG olmayan veriler içeriyor. Lütfen başka seçim yapın
+317 Kütüphane başlıgı mecburdur
+318 Açılan belgede yeni anahtar durum tanımlamak için durum kürsörünü oynatın ...
+319 Anahtar durum tanımlaştı. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...
+320 Elemanın başlangıç rengini seçin
+321 Başlangıç rengini seçin. Hareket zamanını tanımlamak için zaman kürsörünü oynatın...
+322 Bitiş rengini seçin...
+323 Hareket tanımlaştı
+324 Hareketli özellikler
+325 Tanımsız eleman
+326 **Add ID
+327 **Remove ID
+328 **Add/Remove IDs
+329 **Apply operation
+330 **Enter an element name
+331 **Apply CSS
+332 **Current screen type
+333 **New Topic
+334 **Bookmark Properties
+335 **Topic Properties
+336 **Topic hierarchy:
+337 Başlık:
+338 **Recalls:
+339 Sahip:
+340 **Created:
+341 **Last modified:
+342 **Description:
+343 **Please select an element
+344 **All CSS
+345 **CSS style rules applied to the <%s> element\n
+346 **Blue lines are links activated by a double (or a single) click\n
+347 **Load objects (object, embed, iframe)
+348 **No style rule for this element
+349 **No insert position defined. Please select first
+350 **Document information
+351 **Document Type
+352 **MIME Type
+353 **Charset
+354 **Content Length
+355 **Content Location
+356 Tercih
+357 Karakter (&xxx;)
+358 **Create Object
+359 **Directory
+360 **File
+361 **Replace current
+362 **In new tab
+363 **In new Window
+364 Anti-aliasing
+365 **Universal date

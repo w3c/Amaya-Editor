@@ -22,6 +22,7 @@
 #include "appdialogue_wx.h"
 #include "appdialogue_wx_f.h"
 #include "panel.h"
+#include "displayview_f.h"
 
 #define THOT_EXPORT extern
 #include "frame_tv.h"
@@ -47,12 +48,10 @@ AmayaXHTMLPanel::AmayaXHTMLPanel( wxWindow * p_parent_window, AmayaNormalWindow 
 {
   wxLogDebug( _T("AmayaXHTMLPanel::AmayaXHTMLPanel") );
 
-  //  m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
-
   // setup labels
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_XHTML)));
-
+  
   m_OffColour = XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->GetBackgroundColour();
   m_OnColour  = wxColour(250, 200, 200);
 
@@ -94,20 +93,19 @@ int AmayaXHTMLPanel::GetPanelType()
  *--------------------------------------------------------------------------------------
  */
 void AmayaXHTMLPanel::RefreshToolTips()
-{  
-  const char ** p_tooltip_array = PanelTable[WXAMAYA_PANEL_XHTML].Tooltip_Panel;
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_STRONG]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_EMPH",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_EMPH])); 
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_CODE",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_CODE]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_H1",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H1]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_H2",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H2]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_H3",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H3]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_BULLET", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_BULLET]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_NL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_NL]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_DL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_DL]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_IMG",    wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_IMG]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_LINK",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_LINK]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_TABLE",  wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_TABLE]));
+{
+  XRCCTRL(*this,"wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_BOLD)));
+  XRCCTRL(*this,"wxID_PANEL_XHTML_EMPH",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_ITALICS))); 
+  XRCCTRL(*this,"wxID_PANEL_XHTML_CODE",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_CODE)));
+  XRCCTRL(*this,"wxID_PANEL_XHTML_H1",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_H1)));
+  XRCCTRL(*this,"wxID_PANEL_XHTML_H2",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_H2)));
+  XRCCTRL(*this,"wxID_PANEL_XHTML_H3",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_H3)));
+  XRCCTRL(*this,"wxID_PANEL_XHTML_BULLET", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_UL)));
+  XRCCTRL(*this,"wxID_PANEL_XHTML_NL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_OL)));
+  XRCCTRL(*this,"wxID_PANEL_XHTML_DL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_DL)));
+  XRCCTRL(*this,"wxID_PANEL_XHTML_IMG",    wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_IMG)));
+  XRCCTRL(*this,"wxID_PANEL_XHTML_LINK",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_LINK)));
+  XRCCTRL(*this,"wxID_PANEL_XHTML_TABLE",  wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_BUTTON_TABLE)));
 }
 
 /*
@@ -120,39 +118,37 @@ void AmayaXHTMLPanel::RefreshToolTips()
 void AmayaXHTMLPanel::OnButton( wxCommandEvent& event )
 {
   wxLogDebug( _T("AmayaXHTMLPanel::OnButton") );
-  
-  int id       = event.GetId();
-  int amaya_id = -1;
+
+  int id = event.GetId();
+
+  Document doc;
+  View view;
+  FrameToView (TtaGiveActiveFrame(), &doc, &view);
 
   if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_STRONG")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_STRONG;
+    TtaExecuteMenuAction ("SetOnOffStrong", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_EMPH")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_EMPH;
+    TtaExecuteMenuAction ("SetOnOffEmphasis", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_CODE")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_CODE;
+    TtaExecuteMenuAction ("SetOnOffCode", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_H1")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_H1;
+    TtaExecuteMenuAction ("CreateHeading1", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_H2")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_H2;
+    TtaExecuteMenuAction ("CreateHeading2", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_H3")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_H3;
+    TtaExecuteMenuAction ("CreateHeading3", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_BULLET")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_BULLET;
+    TtaExecuteMenuAction ("CreateList", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_NL")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_NL;
+    TtaExecuteMenuAction ("CreateNumberedList", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_DL")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_DL;
+    TtaExecuteMenuAction ("CreateDefinitionList", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_IMG")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_IMG;
+    TtaExecuteMenuAction ("CreateImage", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_LINK")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_LINK;
+    TtaExecuteMenuAction ("CreateOrChangeLink", doc, view, FALSE);
   else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_TABLE")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_TABLE;
-  
-  if (amaya_id != -1)
-    APP_Callback_PanelButtonActivate ( WXAMAYA_PANEL_XHTML,
-				       TtaGiveActiveFrame(),
-				       amaya_id );
+    TtaExecuteMenuAction ("CreateTable", doc, view, FALSE);
 }
 
 /*
@@ -169,19 +165,19 @@ void AmayaXHTMLPanel::SendDataToPanel( AmayaParams& p )
   wxLogDebug(_T("AmayaXHTMLPanel::SendDataToPanel") );
 
   if (p_checked_array[WXAMAYA_PANEL_XHTML_STRONG])
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OffColour );
   
   if (p_checked_array[WXAMAYA_PANEL_XHTML_EMPH])
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OffColour );
   
   if (p_checked_array[WXAMAYA_PANEL_XHTML_CODE])
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    XRCCTRL(*this, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OffColour );
 
   Refresh();
   Layout();

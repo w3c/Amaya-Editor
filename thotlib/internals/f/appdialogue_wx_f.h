@@ -73,12 +73,6 @@ extern void APP_Callback_URLActivate ( int frame_id,
                                        const char *text );
 extern void APP_Callback_ToolBarButtonActivate ( int frame_id,
                                                  int button_id );
-extern int TtaAddToolBarButton ( int window_id,
-                                 ThotIcon picture,
-                                 char * tooltip,
-                                 char * functionName,
-                                 void (*procedure) (),
-                                 ThotBool status );
 extern void TtaRefreshPanelButton ( Document doc,
                                     View view,
                                     int panel_type );
@@ -87,14 +81,6 @@ extern void TtaSwitchPanelButton ( Document doc,
                                    int panel_type,
                                    int button_id,
                                    ThotBool value );
-extern void TtaSetupPanel ( int panel_type,
-                            int button_id,
-                            const char * tooltip,
-                            void (*procedure) () );
-extern void TtaRefreshPanelTooltips ( int window_id );
-extern void APP_Callback_PanelButtonActivate ( int type,
-                                               int frame_id,
-                                               int button_id );
 extern ThotBool TtaRegisterWidgetWX ( int ref,
                                       void * p_widget );
 extern void TtaToggleOnOffSidePanel ( int frame_id );
@@ -173,12 +159,6 @@ extern void APP_Callback_URLActivate ( int frame_id,
                                          const char *text );
 extern void APP_Callback_ToolBarButtonActivate ( int frame_id,
                                                    int button_id );
-extern int TtaAddToolBarButton ( int window_id,
-                                   ThotIcon picture,
-                                   char * tooltip,
-                                   char * functionName,
-                                   void (*procedure) (),
-                                   ThotBool status );
 extern void TtaRefreshPanelButton ( Document doc,
                                       View view,
                                       int panel_type );
@@ -187,14 +167,6 @@ extern void TtaSwitchPanelButton ( Document doc,
                                      int panel_type,
                                      int button_id,
                                      ThotBool value );
-extern void TtaSetupPanel ( int panel_type,
-                              int button_id,
-                              const char * tooltip,
-                              void (*procedure) () );
-extern void TtaRefreshPanelTooltips ( int window_id );
-extern void APP_Callback_PanelButtonActivate ( int type,
-                                                 int frame_id,
-                                                 int button_id );
 extern ThotBool TtaRegisterWidgetWX ( int ref,
                                         void * p_widget );
 extern void TtaToggleOnOffSidePanel ( int frame_id );

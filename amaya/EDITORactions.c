@@ -1984,7 +1984,7 @@ void CreateTable (Document document, View view)
 #endif /* _WX */
 #ifdef _GTK
 	  TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1),
-		      TtaGetMessage (AMAYA, AM_BUTTON_TABLE), TRUE, 1, 'L', D_CANCEL);
+		      TtaGetMessage (LIB, TMSG_BUTTON_TABLE), TRUE, 1, 'L', D_CANCEL);
 	  TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
 			    TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
 	  TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm,

@@ -1552,6 +1552,7 @@ void APP_Callback_ToolBarButtonActivate (int frame_id, int button_id)
 #endif /* 0 */
 }
 
+#if 0
 /*----------------------------------------------------------------------
   TtaAddToolBarButton - 
   add a toolbar button to a window
@@ -1568,7 +1569,6 @@ int TtaAddToolBarButton( int window_id,
 			 void (*procedure) (),
 			 ThotBool status )
 {
-#if 0
 #ifdef _WX
   AmayaWindow * p_window = TtaGetWindowFromId(window_id);
   wxASSERT( p_window );
@@ -1634,9 +1634,9 @@ int TtaAddToolBarButton( int window_id,
 #else /* _WX */
   return 0;
 #endif /* _WX */
-#endif /* 0 */
   return 0;
 }
+#endif /* 0 */
 
 /*----------------------------------------------------------------------
   TtaRefreshPanelButton - 
@@ -1739,6 +1739,7 @@ void TtaSwitchPanelButton( Document doc, View view,
 }
 
 
+#if 0
 /*----------------------------------------------------------------------
   TtaSetupPanel - 
   init the panel for the given window
@@ -1759,7 +1760,9 @@ void TtaSetupPanel( int panel_type,
   PanelTable[WXAMAYA_PANEL_XHTML].Call_Panel[button_id]    = procedure;
 #endif /* _WX */
 }
+#endif /* 0 */
 
+#if 0
 /*----------------------------------------------------------------------
   TtaRefreshPanelTooltips
   this function refresh the window's panel tooltips because the tooltips
@@ -1787,7 +1790,9 @@ void TtaRefreshPanelTooltips( int window_id )
   p_panel->RefreshToolTips();
 #endif /* _WX */
 }
+#endif /* 0 */
 
+#if 0
 /*----------------------------------------------------------------------
   APP_Callback_PanelButtonActivate - this callback is activated when a tool has been pressed
   params:
@@ -1817,7 +1822,7 @@ void APP_Callback_PanelButtonActivate (int type, int frame_id, int button_id)
     }
 #endif /* _WX */
 }
-
+#endif /* 0 */
 
 /*----------------------------------------------------------------------
   TtaRegisterWidgetWX - 
@@ -1885,6 +1890,7 @@ wxMenu * TtaGetContextMenu( int window_id )
 }
 #endif /* _WX */
 
+#if 0
 #ifdef _WX
 /*----------------------------------------------------------------------
   TtaRefreshMenuStats - 
@@ -1897,7 +1903,6 @@ wxMenu * TtaGetContextMenu( int window_id )
 void TtaRefreshMenuStats( wxMenuBar * p_menu_bar )
 {
   wxASSERT_MSG(FALSE, _T("TtaRefreshMenuStats: to remove"));
-#if 0
   // find the frame owner
   int        frame_id = 1;
   ThotBool   found = FALSE;
@@ -1937,9 +1942,9 @@ void TtaRefreshMenuStats( wxMenuBar * p_menu_bar )
 	}
       menu_id++;
     }
-#endif /* 0 */
 }
 #endif /* _WX */
+#endif /* 0 */
 
 /*----------------------------------------------------------------------
   TtaToggleOnOffSidePanel

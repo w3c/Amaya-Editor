@@ -98,290 +98,270 @@
 96 Digita lo username:
 97 %d richieste inevase
 98 Non è disponibile nessun file CSS
-99 Interrompi trasferimento
-100 Documento precedente
-101 Documento successivo
-102 Ricarica
-103 Salvare
-104 Non salvare
-105 Stampa
-106 Cerca
-107 Enfasi
-108 Forte
-109 Font non proporzionale
-110 no-repeat
-111 Inserisci immagine
-112 Intestazione di livello 1
-113 Intestazione di livello 2
-114 Intestazione di livello 3
-115 Lista puntata
-116 Lista numerata
-117 Lista di definizioni
-118 Collegamento
-119 Tabella
-120 Il documento non ha nome. Salva come:
-121 Plugin
-122 Errore sconosciuto durante il salvataggio dell'URL %s
-123 Impossibile connettersi al server
-124 L'accesso a %s è proibito dal server
-125 L'operazione ha avuto successo per %s
-126 %s è stato creato
-127 %s è stato aggiornato
-128 Operazione completata con codice %s
-129 Il server non ha compreso la sintassi della richiesta
-130 Il server non ha nuove informazioni da inviare
-131 Questo metodo non è consentito
-132 Identificazione richiesta per accedere a %s
-133 Verifica in corso ...
-134 Il salvataggio su %s è fallito, salvo su disco?
-135 Il salvataggio su %s sembra non funzionare, ignora?
-136 L'URL %s è rediretto su %s, ignora ?
-137 Ricaricamento di %s fallito, ignora ?
-138 Il server riporta un errore 501: %s
-139 Il server riporta un errore 501
-140 Il server non supporta questo metodo di richiesta
-141 Filtro
-142 trasferimenti attivi
-143 trasferimenti in coda
-144 Sommario
-145 Sommario dei collegamenti
-146 Repeat Mode
-147 repeat
-148 repeat-x
-149 La precedente sessione con Amaya non è terminata correttamente. Vuoi ricaricare i documenti di backup?
-150 Autenticazione fallita. Vuoi riprovare?
-151 L'operazione sarà rediretta. Vuoi continuare?
-152 Numero di righe
-153 Numero di colonne
-154 Bordo
-155 Testo alternativo
-156 Il testo alternativo è obbligatorio
-157 Stampa URL
-158 Applica
-159 Predefinite
-160 Svuota la cache
-161 Cache
-162 Abilita la cache
-163 Proteggi i documenti nella cache
-164 Modo non in linea
-165 Ignora le scadenze: header
-166 Directory della cache
-167 Dimensione della cache (Mb)
-168 Dimensione dell'indice della cache (Mb)
-169 Proxy
-170 HTTP proxy (es., http://groucho.marx.edu)
-171 Domini di proxy (es., www.w3.org)
-172 Generali
-173 Home Page
-174 Ritardo del ToolTip (ms)
-175 Ritardo del doppio click (ms)
-176 Dimensione dei caratteri dei menu
-177 Ingrandimento della fonte
-178 Lingua delle finestre di dialogo
-179 Incolla mantenendo le righe originali
-180 Crea copie di salvataggio
-181 Salvare la geometria all'uscita
-182 Mostra le immagini di sfondo
-183 Mostra barra dei pulsanti
-184 Mostra indirizzo
-185 Mostra obiettivi
-186 Esprotare CR/LF
-187 Visualizzazione
-188 Caricare immagini (img)
-189 Il doppio click attiva il collegamento
-190 Pubblicazione
-191 Usa gli ETAGS e le precondizioni
-192 Verifica ogni PUT con un GET
-193 Nome di default per gli URL che terminano con '/'
-194 Geometria
-195 Salva la geometria corrente
-196 Ripristina la geometria di default
-197 La modifica sarà effettiva quando aprirai una nuova finestra.
-198 Colori
-199 Colore in primo piano nei documenti
-200 Colore dello sfondo nei documenti
-201 Colore in primo piano nei menu
-202 Colore dello sfondo nei menu
-203 Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.
-204 Home
-205 Lista delle lingue preferite, come "it, en, fr":
-206 Queste modifiche saranno effettive alla prossima esecuzione
-207 Consenti la redirezione automatica dei PUT su questi domini
-208 Ignora gli stili CSS
-209 Trasforma tipo
-210 (separa ogni campo con uno spazio)
-211 Escludi l'utilizzo del proxy su questi domini
-212 Utilizza il proxy solo su questi domini
-213 Nome del carattere
-214 Directory dell'utente
-215 Directory temporanea
-216 Usa la palette
-217 Negoziazione della lingua
-218 Annotazioni
-219 Nome utente
-220 Server per la pubblicazione
-221 Server per le annotazioni
-222 Caricamento automatico delle annotazioni local
-223 Caricamento automatico delle annotazioni remote
-224 Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)
-225 Colore della selezione
-226 Selezione colore di sfondo
-227 Orientamento
-228 Ritratto
-229 Paesaggio
-230 Abilita FTP
-231 XML non valido - Ricarico come HTML o mostro gli errori di parsificazione?
-232 XML non valido - Mostro gli errori di parsificazione?
-233 Prova la voce 'File/Forza codifica caratteri'
-234 Caratteri non validi
-235 Profilo di documento:
-236 Errore - vedi File/Mostra le errore
-237 La codifica per questo documento non e` supportata da Amaya
-238 Editando e salvando questo documento il suo tipo verrà cambiato
-239 Non disponibile
-240 Scorri
-241 File Browser
-242 Selezione
-243 Menu per i filtri locali - annotazioni
-244 Mostra
-245 Nascondi
-246 Mostra tutto
-247 Nascondi tutto
-248 * significa nascosto, - significa parzialmente nascosto
-249 Opzioni per i filtri
-250 Per autore
-251 Per tipo
-252 Per server
-253 Chiavi di accesso
-254 Ignora
-255 Elemento si stile
-256 No posso create un XPointer
-257 Impossibile attaccare uno start XPointer su un elemento aggiunto internamente
-258 Impossibile attaccare uno end XPointer su un elemento aggiunto internamente
-259 Non trovo dove muovere l'annotazione
-260 Non posso muovere l'annotazione su un diverso documento
-261 Non puoi annotare un documento modificato. Prima salvalo.
-262 Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.
-263 Non posso creare un XPointer per questa annotazione
-264 Aggiungi una nuova annotazione
-265 Non posso postare l'annotazione
-266 Non posso cancellare l'annotazione
-267 Annotazione cancellata!
-268 Non posso caricare l'indice delle annotazioni
-269 Errore
-270 Seleziona un Character Coding
-271 Seleziona un tipo MIME
-272 Cambia Character Coding
-273 Cambia tipo MIME
-274 Cambia
-275 Questo tipo di documento non supporta i charset
-276 Per usare questa opzione, il target deve essere un'URL HTTP
-277 Errore: MIME type non valido
-278 Sconosciuto
-279 I stili sono ignorati - vedi Viste/Mostra le errore
-280 Questo documento è già caricato in un'altra finestra
-281 Salvare questa istanza può fare perdere degli aggiornamenti
-282 Aggiungere o cambiare doctype eliminerà alcuni elementi o attributi
-283 Confermi l'operazione?
-284 Per un documento XHTML, usa il MIME type application/xhtml+xml
-285 Charset per i nuovi documenti
-286 Lock riuscito!
-287 Lock fallito!
-288 Metto il lock su %s...
-289 Il documento %s ha un lock!
-290 Il documento %s ha un lock da %s (timeout %s)
-291 Sovrascrivere l'informazione di lock?
-292 Copiare l'informazione di lock?
-293 Prova a togliere prima il lock dal documento..."
-294 Lock tolto!
-295 Lock non tolto!
-296 Tolgo il lock su %s...
-297 Tolto il lock al documento %s!
-298 Tolgo il lock al documento?
-299 Proprietà del documento
-300 Le proprietà del documento non sono disponibili
-301 Le proprietà del documento non sono al momento disponibili. Riprova più tardi...
-302 Cerco le proprietà del documento...
-303 Mi spiace, non c'è supporto WebDAV per URL di questo tipo %s
-304 Impossibile salvare le informazioni di lock sulla base locale
-305 Impossibile togliere le informazioni di lock dalla base locale
-306 Mi spiace, questa operazione non è permessa per %s
-307 Richiesta fallita! Motivo: Dipendenza non riuscita
-308 Richiesta fallita! Motivo: %s
-309 Riprovo?
-310 WebDAV
-311 Riferimento personale utente (URL)
-312 Resource List WebDAV per l'utente(URL URL)
-313 Profondità lock
-314 infinito
-315 Timeout per il lock
-316 Infinito
-317 Altro (Secondi)
-318 Scopo per il lock
-319 esclusivo
-320 condiviso
-321 Awarenees
-322 General awareness
-323 Awareness on exit
-324 Animazione
-325 Libreria SVG
-326 Opzione di copia
-327 Copia la selezione
-328 Riferisciti alla selezione
-329 Aggiungi un nuovo modello alla libreria
-330 URL del nuovo file SVG ...
-331 Titolo della libreria
-332 URL per la libreria
-333 Crea libreria
-334 Scorri la libreria
-335 Crea o cerca libreria
-336 La selezione non contiene solo elementi SVG. Per favore riseleziona.
-337 Il titolo della libreria è obbligatorio
-338 Muovi il cursore nel documento editato per definire la nuova posizione chiave...
-339 Posizione chiave definta. Sposta il cursore per definire la durata dell'animazione...
-340 Scegli il colore iniziale dell'elemento...
-341 Colore iniziale definito. Sposta il cursore per definire la durata dell'animazione...
-342 Scegli il colore finale...
-343 Animazione definita.
-344 Attributo animato
-345 Elemento senza ID
-346 Aggiungi ID
-347 Elimina ID
-348 Aggiungi/Elimina ID
-349 Applica l'operazione
-350 Inserisci un nome di elemento
-351 Applica il CSS
-352 Output corrente
-353 Nuova rubrica
-354 Proprietà del bookmark
-355 Proprietà della rubrica
-356 Gerarchia delle rubriche :
-357 Titolo :
-358 Richiama :
-359 Autore :
-360 Creato :
-361 Ultima modifica :
-362 Descrizione :
-363 Selezionare un elemento
-364 Tutti i CSS
-365 Regole di stile CSS applicate all'elemento <%s>\n
-366 Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n
-367 Carica oggetti (object, embed, iframe)
-368 Nessuna regola di stile per questo elemento
-369 **No insert position defined. Please select first
-370 **Document information
-371 **Document Type
-372 **MIME Type
-373 **Charset
-374 **Content Length
-375 **Content Location
-376 Preferenze
-377 Carattere (&xxx;)
-378 **Create Object
-379 **Directory
-380 **File
-381 **Replace current
-382 **In new tab
-383 **In new Window
-384 Anti-aliasing
-385 **Universal date
+99 Non salvare
+100 no-repeat
+101 Il documento non ha nome. Salva come:
+102 Plugin
+103 Errore sconosciuto durante il salvataggio dell'URL %s
+104 Impossibile connettersi al server
+105 L'accesso a %s è proibito dal server
+106 L'operazione ha avuto successo per %s
+107 %s è stato creato
+108 %s è stato aggiornato
+109 Operazione completata con codice %s
+110 Il server non ha compreso la sintassi della richiesta
+111 Il server non ha nuove informazioni da inviare
+112 Questo metodo non è consentito
+113 Identificazione richiesta per accedere a %s
+114 Verifica in corso ...
+115 Il salvataggio su %s è fallito, salvo su disco?
+116 Il salvataggio su %s sembra non funzionare, ignora?
+117 L'URL %s è rediretto su %s, ignora ?
+118 Ricaricamento di %s fallito, ignora ?
+119 Il server riporta un errore 501: %s
+120 Il server riporta un errore 501
+121 Il server non supporta questo metodo di richiesta
+122 Filtro
+123 trasferimenti attivi
+124 trasferimenti in coda
+125 Sommario
+126 Sommario dei collegamenti
+127 Repeat Mode
+128 repeat
+129 repeat-x
+130 La precedente sessione con Amaya non è terminata correttamente. Vuoi ricaricare i documenti di backup?
+131 Autenticazione fallita. Vuoi riprovare?
+132 L'operazione sarà rediretta. Vuoi continuare?
+133 Numero di righe
+134 Numero di colonne
+135 Bordo
+136 Testo alternativo
+137 Il testo alternativo è obbligatorio
+138 Stampa URL
+139 Applica
+140 Predefinite
+141 Svuota la cache
+142 Cache
+143 Abilita la cache
+144 Proteggi i documenti nella cache
+145 Modo non in linea
+146 Ignora le scadenze: header
+147 Directory della cache
+148 Dimensione della cache (Mb)
+149 Dimensione dell'indice della cache (Mb)
+150 Proxy
+151 HTTP proxy (es., http://groucho.marx.edu)
+152 Domini di proxy (es., www.w3.org)
+153 Generali
+154 Home Page
+155 Ritardo del ToolTip (ms)
+156 Ritardo del doppio click (ms)
+157 Dimensione dei caratteri dei menu
+158 Ingrandimento della fonte
+159 Lingua delle finestre di dialogo
+160 Incolla mantenendo le righe originali
+161 Crea copie di salvataggio
+162 Salvare la geometria all'uscita
+163 Mostra le immagini di sfondo
+164 Mostra barra dei pulsanti
+165 Mostra indirizzo
+166 Mostra obiettivi
+167 Esprotare CR/LF
+168 Visualizzazione
+169 Caricare immagini (img)
+170 Il doppio click attiva il collegamento
+171 Pubblicazione
+172 Usa gli ETAGS e le precondizioni
+173 Verifica ogni PUT con un GET
+174 Nome di default per gli URL che terminano con '/'
+175 Geometria
+176 Salva la geometria corrente
+177 Ripristina la geometria di default
+178 La modifica sarà effettiva quando aprirai una nuova finestra.
+179 Colori
+180 Colore in primo piano nei documenti
+181 Colore dello sfondo nei documenti
+182 Colore in primo piano nei menu
+183 Colore dello sfondo nei menu
+184 Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.
+185 Lista delle lingue preferite, come "it, en, fr":
+186 Queste modifiche saranno effettive alla prossima esecuzione
+187 Consenti la redirezione automatica dei PUT su questi domini
+188 Ignora gli stili CSS
+189 Trasforma tipo
+190 (separa ogni campo con uno spazio)
+191 Escludi l'utilizzo del proxy su questi domini
+192 Utilizza il proxy solo su questi domini
+193 Nome del carattere
+194 Directory dell'utente
+195 Directory temporanea
+196 Usa la palette
+197 Negoziazione della lingua
+198 Annotazioni
+199 Nome utente
+200 Server per la pubblicazione
+201 Server per le annotazioni
+202 Caricamento automatico delle annotazioni local
+203 Caricamento automatico delle annotazioni remote
+204 Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)
+205 Colore della selezione
+206 Selezione colore di sfondo
+207 Orientamento
+208 Ritratto
+209 Paesaggio
+210 Abilita FTP
+211 XML non valido - Ricarico come HTML o mostro gli errori di parsificazione?
+212 XML non valido - Mostro gli errori di parsificazione?
+213 Prova la voce 'File/Forza codifica caratteri'
+214 Caratteri non validi
+215 Profilo di documento:
+216 Errore - vedi File/Mostra le errore
+217 La codifica per questo documento non e` supportata da Amaya
+218 Editando e salvando questo documento il suo tipo verrà cambiato
+219 Non disponibile
+220 Scorri
+221 File Browser
+222 Selezione
+223 Menu per i filtri locali - annotazioni
+224 Mostra
+225 Nascondi
+226 Mostra tutto
+227 Nascondi tutto
+228 * significa nascosto, - significa parzialmente nascosto
+229 Opzioni per i filtri
+230 Per autore
+231 Per tipo
+232 Per server
+233 Chiavi di accesso
+234 Ignora
+235 Elemento si stile
+236 No posso create un XPointer
+237 Impossibile attaccare uno start XPointer su un elemento aggiunto internamente
+238 Impossibile attaccare uno end XPointer su un elemento aggiunto internamente
+239 Non trovo dove muovere l'annotazione
+240 Non posso muovere l'annotazione su un diverso documento
+241 Non puoi annotare un documento modificato. Prima salvalo.
+242 Non sono state dichiarate annotazioni utente. Apri il menu Annotazioni/Configura.
+243 Non posso creare un XPointer per questa annotazione
+244 Aggiungi una nuova annotazione
+245 Non posso postare l'annotazione
+246 Non posso cancellare l'annotazione
+247 Annotazione cancellata!
+248 Non posso caricare l'indice delle annotazioni
+249 Errore
+250 Seleziona un Character Coding
+251 Seleziona un tipo MIME
+252 Cambia Character Coding
+253 Cambia tipo MIME
+254 Cambia
+255 Questo tipo di documento non supporta i charset
+256 Per usare questa opzione, il target deve essere un'URL HTTP
+257 Errore: MIME type non valido
+258 Sconosciuto
+259 I stili sono ignorati - vedi Viste/Mostra le errore
+260 Questo documento è già caricato in un'altra finestra
+261 Salvare questa istanza può fare perdere degli aggiornamenti
+262 Aggiungere o cambiare doctype eliminerà alcuni elementi o attributi
+263 Confermi l'operazione?
+264 Per un documento XHTML, usa il MIME type application/xhtml+xml
+265 Charset per i nuovi documenti
+266 Lock riuscito!
+267 Lock fallito!
+268 Metto il lock su %s...
+269 Il documento %s ha un lock!
+270 Il documento %s ha un lock da %s (timeout %s)
+271 Sovrascrivere l'informazione di lock?
+272 Copiare l'informazione di lock?
+273 Prova a togliere prima il lock dal documento..."
+274 Lock tolto!
+275 Lock non tolto!
+276 Tolgo il lock su %s...
+277 Tolto il lock al documento %s!
+278 Tolgo il lock al documento?
+279 Proprietà del documento
+280 Le proprietà del documento non sono disponibili
+281 Le proprietà del documento non sono al momento disponibili. Riprova più tardi...
+282 Cerco le proprietà del documento...
+283 Mi spiace, non c'è supporto WebDAV per URL di questo tipo %s
+284 Impossibile salvare le informazioni di lock sulla base locale
+285 Impossibile togliere le informazioni di lock dalla base locale
+286 Mi spiace, questa operazione non è permessa per %s
+287 Richiesta fallita! Motivo: Dipendenza non riuscita
+288 Richiesta fallita! Motivo: %s
+289 Riprovo?
+290 WebDAV
+291 Riferimento personale utente (URL)
+292 Resource List WebDAV per l'utente(URL URL)
+293 Profondità lock
+294 infinito
+295 Timeout per il lock
+296 Infinito
+297 Altro (Secondi)
+298 Scopo per il lock
+299 esclusivo
+300 condiviso
+301 Awarenees
+302 General awareness
+303 Awareness on exit
+304 Animazione
+305 Libreria SVG
+306 Opzione di copia
+307 Copia la selezione
+308 Riferisciti alla selezione
+309 Aggiungi un nuovo modello alla libreria
+310 URL del nuovo file SVG ...
+311 Titolo della libreria
+312 URL per la libreria
+313 Crea libreria
+314 Scorri la libreria
+315 Crea o cerca libreria
+316 La selezione non contiene solo elementi SVG. Per favore riseleziona.
+317 Il titolo della libreria è obbligatorio
+318 Muovi il cursore nel documento editato per definire la nuova posizione chiave...
+319 Posizione chiave definta. Sposta il cursore per definire la durata dell'animazione...
+320 Scegli il colore iniziale dell'elemento...
+321 Colore iniziale definito. Sposta il cursore per definire la durata dell'animazione...
+322 Scegli il colore finale...
+323 Animazione definita.
+324 Attributo animato
+325 Elemento senza ID
+326 Aggiungi ID
+327 Elimina ID
+328 Aggiungi/Elimina ID
+329 Applica l'operazione
+330 Inserisci un nome di elemento
+331 Applica il CSS
+332 Output corrente
+333 Nuova rubrica
+334 Proprietà del bookmark
+335 Proprietà della rubrica
+336 Gerarchia delle rubriche :
+337 Titolo :
+338 Richiama :
+339 Autore :
+340 Creato :
+341 Ultima modifica :
+342 Descrizione :
+343 Selezionare un elemento
+344 Tutti i CSS
+345 Regole di stile CSS applicate all'elemento <%s>\n
+346 Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n
+347 Carica oggetti (object, embed, iframe)
+348 Nessuna regola di stile per questo elemento
+349 **No insert position defined. Please select first
+350 **Document information
+351 **Document Type
+352 **MIME Type
+353 **Charset
+354 **Content Length
+355 **Content Location
+356 Preferenze
+357 Carattere (&xxx;)
+358 **Create Object
+359 **Directory
+360 **File
+361 **Replace current
+362 **In new tab
+363 **In new Window
+364 Anti-aliasing
+365 **Universal date

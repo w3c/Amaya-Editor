@@ -818,7 +818,7 @@ ThotBool CreateCreateTableDlgWX ( int ref, ThotWindow parent,
   if (TtaRaiseDialogue (ref))
     return FALSE;
 
-  wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_BUTTON_TABLE) );
+  wxString wx_title = TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_BUTTON_TABLE) );
   CreateTableDlgWX * p_dlg = new CreateTableDlgWX( ref,
 						   parent,
 						   def_cols,

@@ -1091,61 +1091,6 @@
 	<message xml:lang="tr">Olumlu CSS dosyası yoktur</message>
 	<message xml:lang="ru">Нет доступных файлов CSS</message>
 </label>
-<label define="AM_BUTTON_INTERRUPT">
-	<message xml:lang="en">Interrupt transfer</message>
-	<message xml:lang="fr">Interrompre le chargement</message>
-	<message xml:lang="de">Stop</message>
-	<message xml:lang="it">Interrompi trasferimento</message>
-	<message xml:lang="tr">Aktarımı kes</message>
-	<message xml:lang="es">Detener</message>
-	<message xml:lang="pt">Interromper transferência</message>
-	<message xml:lang="fi">Keskeytä tiedonsiirto</message>
-	<message xml:lang="ru">Прервать передачу</message>
-</label>
-<label define="AM_BUTTON_PREVIOUS">
-	<message xml:lang="en">Previous document</message>
-	<message xml:lang="fr">Document précédent</message>
-	<message xml:lang="de">Zurück</message>
-	<message xml:lang="it">Documento precedente</message>
-	<message xml:lang="tr">Önceki belge</message>
-	<message xml:lang="es">Atrás</message>
-	<message xml:lang="pt">Documento precedente</message>
-	<message xml:lang="fi">Edellinen dokumentti</message>
-	<message xml:lang="ru">Предыдущий документ</message>
-</label>
-<label define="AM_BUTTON_NEXT">
-	<message xml:lang="en">Next document</message>
-	<message xml:lang="fr">Document suivant</message>
-	<message xml:lang="de">Vorwärts</message>
-	<message xml:lang="it">Documento successivo</message>
-	<message xml:lang="tr">Sonraki belge</message>
-	<message xml:lang="es">Adelante</message>
-	<message xml:lang="pt">Documento seguinte</message>
-	<message xml:lang="fi">Seuraava dokumentti</message>
-	<message xml:lang="ru">Следующий документ</message>
-</label>
-<label define="AM_BUTTON_RELOAD">
-	<message xml:lang="en">Reload</message>
-	<message xml:lang="fr">Recharger</message>
-	<message xml:lang="de">Aktualisieren</message>
-	<message xml:lang="it">Ricarica</message>
-	<message xml:lang="tr">Yeniden yükle</message>
-	<message xml:lang="es">Actualizar</message>
-	<message xml:lang="pt">Recarregar</message>
-	<message xml:lang="fi">Päivitä</message>
-	<message xml:lang="ru">Обновить</message>
-</label>
-<label define="AM_BUTTON_SAVE">
-	<message xml:lang="en">Save</message>
-	<message xml:lang="fr">Sauver</message>
-	<message xml:lang="de">Speichern</message>
-	<message xml:lang="it">Salvare</message>
-	<message xml:lang="tr">Kaydet</message>
-	<message xml:lang="es">Guardar</message>
-	<message xml:lang="pt">Salvar</message>
-	<message xml:lang="fi">Tallenna</message>
-	<message xml:lang="ru">Сохранить</message>
-</label>
 <label define="AM_DONT_SAVE">
 	<message xml:lang="en">Don't save</message>
 	<message xml:lang="fr">Ne pas sauver</message>
@@ -1153,61 +1098,6 @@
 	<message xml:lang="it">Non salvare</message>
 	<message xml:lang="es">No guardar</message>
 	<message xml:lang="ru">Не сохранять</message>
-</label>
-<label define="AM_BUTTON_PRINT">
-	<message xml:lang="en">Print</message>
-	<message xml:lang="fr">Imprimer</message>
-	<message xml:lang="de">Drucken</message>
-	<message xml:lang="it">Stampa</message>
-	<message xml:lang="tr">Yazdır</message>
-	<message xml:lang="es">Imprimir</message>
-	<message xml:lang="pt">Imprimir</message>
-	<message xml:lang="fi">Tulosta</message>
-	<message xml:lang="ru">Печать</message>
-</label>
-<label define="AM_BUTTON_SEARCH">
-	<message xml:lang="en">Search</message>
-	<message xml:lang="fr">Chercher</message>
-	<message xml:lang="de">Suchen/Ersetzen</message>
-	<message xml:lang="it">Cerca</message>
-	<message xml:lang="tr">Ara</message>
-	<message xml:lang="es">Buscar</message>
-	<message xml:lang="pt">Buscar</message>
-	<message xml:lang="fi">Etsi</message>
-	<message xml:lang="ru">Поиск</message>
-</label>
-<label define="AM_BUTTON_ITALICS">
-	<message xml:lang="en">Emphasis</message>
-	<message xml:lang="fr">Mise en évidence</message>
-	<message xml:lang="de">Betont</message>
-	<message xml:lang="it">Enfasi</message>
-	<message xml:lang="tr">Vurgu</message>
-	<message xml:lang="es">Énfasis (em)</message>
-	<message xml:lang="pt">Ênfase</message>
-	<message xml:lang="fi">Korosta</message>
-	<message xml:lang="ru">Акцент</message>
-</label>
-<label define="AM_BUTTON_BOLD">
-	<message xml:lang="en">Strong</message>
-	<message xml:lang="fr">Important</message>
-	<message xml:lang="de">Hervorgehoben</message>
-	<message xml:lang="it">Forte</message>
-	<message xml:lang="tr">Kuvvetli</message>
-	<message xml:lang="es">Enérgico (strong)</message>
-	<message xml:lang="pt">Forte</message>
-	<message xml:lang="fi">Lihavoi</message>
-	<message xml:lang="ru">Строго</message>
-</label>
-<label define="AM_BUTTON_CODE">
-	<message xml:lang="en">Fixed font</message>
-	<message xml:lang="fr">Fonte fixe</message>
-	<message xml:lang="de">Code</message>
-	<message xml:lang="it">Font non proporzionale</message>
-	<message xml:lang="tr">Sabit genişlikli yazıtipi</message>
-	<message xml:lang="es">Código (code)</message>
-	<message xml:lang="pt">Tipo (font) fixo</message>
-	<message xml:lang="fi">Vakio fontti</message>
-	<message xml:lang="ru">Код</message>
 </label>
 <label define="AM_NO_REPEAT">
 	<message xml:lang="en">no-repeat</message>
@@ -1219,105 +1109,6 @@
 	<message xml:lang="pt">Não repetir</message>
 	<message xml:lang="fi">ei toistoa</message>
 	<message xml:lang="ru">не повторять</message>
-</label>
-<label define="AM_BUTTON_IMG">
-	<message xml:lang="en">Insert image</message>
-	<message xml:lang="fr">Ajout d'une image</message>
-	<message xml:lang="de">Bild</message>
-	<message xml:lang="it">Inserisci immagine</message>
-	<message xml:lang="tr">Görüntü ekle</message>
-	<message xml:lang="es">Imagen</message>
-	<message xml:lang="pt">Inserir imagem</message>
-	<message xml:lang="fi">Syötä kuva</message>
-	<message xml:lang="ru">Вставить изображение</message>
-</label>
-<label define="AM_BUTTON_H1">
-	<message xml:lang="en">Heading level 1</message>
-	<message xml:lang="fr">Titre niveau 1</message>
-	<message xml:lang="de">Überschrift Ebene 1</message>
-	<message xml:lang="it">Intestazione di livello 1</message>
-	<message xml:lang="tr">Başlık 1</message>
-	<message xml:lang="es">Cabecera nivel 1 (h1)</message>
-	<message xml:lang="pt">Cabeçalho nível 1</message>
-	<message xml:lang="fi">Otsikkokoko 1</message>
-	<message xml:lang="ru">Заголовк уровень 1</message>
-</label>
-<label define="AM_BUTTON_H2">
-	<message xml:lang="en">Heading level 2</message>
-	<message xml:lang="fr">Titre niveau 2</message>
-	<message xml:lang="de">Überschrift Ebene 2</message>
-	<message xml:lang="it">Intestazione di livello 2</message>
-	<message xml:lang="tr">Başlık 2</message>
-	<message xml:lang="es">Cabecera nivel 2 (h2)</message>
-	<message xml:lang="pt">Cabeçalho nível 2</message>
-	<message xml:lang="fi">Otsikkokoko 2</message>
-	<message xml:lang="ru">Заголовк уровень 2</message>
-</label>
-<label define="AM_BUTTON_H3">
-	<message xml:lang="en">Heading level 3</message>
-	<message xml:lang="fr">Titre niveau 3</message>
-	<message xml:lang="de">Überschrift Ebene 3</message>
-	<message xml:lang="it">Intestazione di livello 3</message>
-	<message xml:lang="tr">Başlık 3</message>
-	<message xml:lang="es">Cabecera nivel 3 (h3)</message>
-	<message xml:lang="pt">Cabeçalho nível 3</message>
-	<message xml:lang="fi">Otsikkokoko 3</message>
-	<message xml:lang="ru">Заголовк уровень 3</message>
-</label>
-<label define="AM_BUTTON_UL">
-	<message xml:lang="en">Bulleted list</message>
-	<message xml:lang="fr">Liste</message>
-	<message xml:lang="de">Ungeordnete Liste</message>
-	<message xml:lang="it">Lista puntata</message>
-	<message xml:lang="tr">Liste</message>
-	<message xml:lang="es">Lista no ordenada (ul)</message>
-	<message xml:lang="pt">Lista com bolinhas</message>
-	<message xml:lang="fi">Pisteellinen luettelo</message>
-	<message xml:lang="ru">Маркированный список</message>
-</label>
-<label define="AM_BUTTON_OL">
-	<message xml:lang="en">Numbered list</message>
-	<message xml:lang="fr">Liste numérotée</message>
-	<message xml:lang="de">Geordnete Liste</message>
-	<message xml:lang="it">Lista numerata</message>
-	<message xml:lang="tr">Numaralı liste</message>
-	<message xml:lang="es">Lista ordenada (ol)</message>
-	<message xml:lang="pt">Lista numerada</message>
-	<message xml:lang="fi">Numeroituluettelo</message>
-	<message xml:lang="ru">Нумерованный список</message>
-</label>
-<label define="AM_BUTTON_DL">
-	<message xml:lang="en">Definition list</message>
-	<message xml:lang="fr">Liste de définitions</message>
-	<message xml:lang="de">Definitionsliste</message>
-	<message xml:lang="it">Lista di definizioni</message>
-	<message xml:lang="tr">Tanım listesi</message>
-	<message xml:lang="es">Lista de definición (dl)</message>
-	<message xml:lang="pt">Lista de definição</message>
-	<message xml:lang="fi">Määrittelyluettelo</message>
-	<message xml:lang="ru">Список определений</message>
-</label>
-<label define="AM_BUTTON_LINK">
-	<message xml:lang="en">Link</message>
-	<message xml:lang="fr">Lien</message>
-	<message xml:lang="de">Verweis</message>
-	<message xml:lang="it">Collegamento</message>
-	<message xml:lang="tr">Bağlantı</message>
-	<message xml:lang="es">Enlace</message>
-	<message xml:lang="pt">Enlace</message>
-	<message xml:lang="fi">Linkki</message>
-	<message xml:lang="ru">Ссылка</message>
-</label>
-<label define="AM_BUTTON_TABLE">
-	<message xml:lang="en">Table</message>
-	<message xml:lang="fr">Table</message>
-	<message xml:lang="de">Tabelle</message>
-	<message xml:lang="it">Tabella</message>
-	<message xml:lang="tr">Tablo</message>
-	<message xml:lang="es">Tabla</message>
-	<message xml:lang="pt">Tabela</message>
-	<message xml:lang="fi">Taulukko</message>
-	<message xml:lang="ru">Таблица</message>
 </label>
 <label define="AM_NO_NAME">
 	<message xml:lang="en">Document doesn't have a name. Saving to:</message>
@@ -2231,17 +2022,6 @@
 	<message xml:lang="fi">Välimuistin käynnistys epäonnistui.Välimuistin hakemisto on viallinen tai toinen Amaya-prosessi käyttää välimuistia.</message>
 	<message xml:lang="tr">Gizli bölümü sıfırlama imkansızdır. Belkide geçersiz bir repertuar kullandınız veya aynı zamanda başka bir amaya kullandınız</message>
 	<message xml:lang="ru">Невозможно запустить кэш. Вероятно неправильно задана директория кэша или другой Amaya использует кэш.</message>
-</label>
-<label define="AM_BUTTON_HOME">
-	<message xml:lang="en">Home</message>
-	<message xml:lang="fr">Page personnelle</message>
-	<message xml:lang="de">Startseite</message>
-	<message xml:lang="it">Home</message>
-	<message xml:lang="es">Inicio</message>
-	<message xml:lang="pt">Home</message>
-	<message xml:lang="fi">Aloitussivu</message>
-	<message xml:lang="tr">Özel sayfa</message>
-	<message xml:lang="ru">Домашняя страница</message>
 </label>
 <label define="AM_LANG_NEGOTIATION">
 	<message xml:lang="en">List of preferred languages like "en, fr":</message>

@@ -128,7 +128,7 @@ LRESULT CALLBACK GetSaveDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     case WM_INITDIALOG:
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SAVE_AS));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-		     TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
+		     TtaGetMessage (LIB, TMSG_BUTTON_SAVE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), "Browse");
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL),
 		     TtaGetMessage (LIB, TMSG_CANCEL));
@@ -517,7 +517,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
    
    /* dialogue form for saving a document */
    i = 0;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
+   strcpy (&s[i], TtaGetMessage (LIB, TMSG_BUTTON_SAVE));
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
    i += strlen (&s[i]) + 1;
@@ -2568,7 +2568,7 @@ ThotBool CanReplaceCurrentDocument (Document doc, View view)
 	 /* ask if the user wants to save, quit or cancel */
 	 ConfirmError (doc, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED),
 		       TtaGetMessage (AMAYA, AM_DONT_SAVE),
-		       TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
+		       TtaGetMessage (LIB, TMSG_BUTTON_SAVE));
        if (UserAnswer)
 	   SaveDocument (doc, view);
        else if (ExtraChoice)
