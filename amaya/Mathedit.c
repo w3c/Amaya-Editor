@@ -2307,7 +2307,6 @@ void MathAttrFontsizeCreated(event)
 {
 #define buflen 200
   STRING           value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
-  CHAR_T           css_command[buflen+20];
   int              length;
 
   value[0] = EOS;
