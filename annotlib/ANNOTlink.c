@@ -406,7 +406,11 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
 	  List_add (&AnnotMetaDataList[doc], (void*) annot);
 	}
       /* @@@ */
-      List_del (&list_ptr);
+#if 0
+      List_delObject (&list_ptr);
+#else
+      list_ptr = list_ptr->next;
+#endif
     }
 }
 

@@ -22,7 +22,8 @@
 /* some state variables */
 static CHAR_T *annotUser; /* user id for saving the annotation */
 static CHAR_T *annotDir;   /* directory where we're storing the annotations */
-static CHAR_T *annotServer; /* URL pointing to the annot server script */
+static List   *annotServers;   /* URL pointing to the annot server script */
+static CHAR_T *annotPostServer; /* URL pointing to the annot server script */
 static CHAR_T *annotMainIndex; /* index file where we give the correspondance
 				between URLs and annotations */
 static ThotBool annotAutoLoad; /* should annotations be downloaded
@@ -56,17 +57,31 @@ CHAR_T *GetAnnotUser (void)
 }
 
 /*-----------------------------------------------------------------------
-   GetAnnotServer
-   Returns the URL of the annotation server
+   GetAnnotServers
+   Returns the URLs of the annotation servers
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-CHAR_T *GetAnnotServer (void)
+List *GetAnnotServers (void)
 #else /* __STDC__*/
-CHAR_T *GetAnnotServer (void)
+List *GetAnnotServers (void)
 #endif /* __STDC__*/
 {
-  return annotServer;
+  return annotServers;
+}
+
+/*-----------------------------------------------------------------------
+   GetAnnotPostServer
+   Returns the URLs of the annotation Post server
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+CHAR_T *GetAnnotPostServer (void)
+#else /* __STDC__*/
+CHAR_T *GetAnnotPostServer (void)
+#endif /* __STDC__*/
+{
+  return annotPostServer;
 }
 
 /*-----------------------------------------------------------------------
@@ -100,6 +115,47 @@ CHAR_T *GetAnnotDir (void)
 }
 
 /*-----------------------------------------------------------------------
+   Procedure GetAnnotDir
+  -----------------------------------------------------------------------
+   Returns the directory where the annotations of a given document are stored.
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+List *CopyAnnotServers (CHAR_T *server_list)
+#else /* __STDC__*/
+List *CopyAnnotServers (CHAR_T *server_list)
+#endif /* __STDC__*/
+{
+  List *me = NULL;
+  CHAR_T *server;
+  CHAR_T *ptr;
+  CHAR_T *scratch;
+
+
+  if (!server_list || *server_list == WC_EOS)
+    return NULL;
+
+  /* make a copy we can modify */
+  scratch = TtaWCSdup (server_list);
+  ptr = scratch;
+  while (*ptr != WC_EOS)
+    {
+      server = ptr;
+      while (*ptr != TEXT(' ') && *ptr != WC_EOS)
+	ptr++;
+      if (*ptr == TEXT(' '))
+	{
+	  *ptr = WC_EOS;
+	  ptr++;
+	}
+      List_add (&me, TtaWCSdup (server));
+    }
+  TtaFreeMemory (scratch);
+  return me;
+}
+
+
+/*-----------------------------------------------------------------------
    Procedure ANNOT_Init
   -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
@@ -127,11 +183,19 @@ void ANNOT_Init ()
   annotMainIndex = TtaWCSdup (TtaGetEnvString ("ANNOT_MAIN_INDEX"));
   annotUser = TtaWCSdup (TtaGetEnvString ("ANNOT_USER"));
   annotAutoLoad = !ustrcasecmp (TtaGetEnvString ("ANNOT_AUTOLOAD"), "yes");
-  tmp = TtaGetEnvString ("ANNOT_SERVER");
+  tmp = TtaGetEnvString ("ANNOT_SERVERS");
   if (tmp)
-    annotServer = TtaWCSdup (tmp);
+    annotServers = CopyAnnotServers (tmp);
   else
-    annotServer = NULL;
+    annotServers = NULL;
+  tmp = TtaGetEnvString ("ANNOT_POST_SERVER");
+  tmp = TtaGetEnvString ("ANNOT_POST_SERVER");
+  if (tmp)
+    annotPostServer = TtaWCSdup (tmp);
+  else
+    annotPostServer = TtaWCSdup (TEXT("localhost"));
+  /* create the directory where we'll store the annotations if it
+     doesn't exist ** how to check that with the thotlib? */
   /* @@ should be a nice mode! */
   umkdir (annotDir, 0777);
 }
@@ -153,8 +217,11 @@ void ANNOT_Quit ()
     TtaFreeMemory (annotMainIndex);
   if (annotUser)
     TtaFreeMemory (annotUser);
-  if (annotServer)  
-    TtaFreeMemory (annotServer);
+  /* remove all the annotServers */
+  if (annotServers)  
+      List_delAll (&annotServers);
+  if (annotPostServer)  
+    TtaFreeMemory (annotPostServer);
 }
 
 /*-----------------------------------------------------------------------
@@ -233,6 +300,8 @@ View view;
   char *proto;
   REMOTELOAD_context *ctx;
   int res;
+  List *ptr;
+  CHAR_T *server;
 
   /* only HTML documents can be annotated */
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
@@ -244,46 +313,59 @@ View view;
   */
 
   /*
-   * load the local annotations 
+   * load the local annotations if there's no annotserver or if
+   * annotServers include the localhost
    */
-  annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[doc]);
+  if (!annotServers || List_search (annotServers, TEXT("localhost")))
+    {
+      annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[doc]);
 #if 1
-  LINK_LoadAnnotationIndex (doc, annotIndex);
+      LINK_LoadAnnotationIndex (doc, annotIndex);
 #else
-  LINK_LoadAnnotationIndex (doc, "/tmp/rdfquery.xml");
+      LINK_LoadAnnotationIndex (doc, "/tmp/rdfquery.xml");
 #endif
-  TtaFreeMemory (annotIndex);
-
+      TtaFreeMemory (annotIndex);
+    }
   /* 
    * load the remote annotation index
+   *  @@ this should be in fact a for each annot in AnnotServers
    */
-  if (annotServer) 
+  if (annotServers) 
     {
-      /* create the context for the callback */
-      ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
-      /* make some space to store the remote file name */
-      ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
-      /* "compute" the url we're looking up in the annotation server */
-      annotURL = TtaGetMemory (MAX_LENGTH);
-      if (!IsW3Path (DocumentURLs[doc]) &&
-	  !IsFilePath (DocumentURLs[doc]))
-	proto = "file://";
-      else
-	proto = "";
-      sprintf (annotURL, "w3c_annotates=%s%s", proto, DocumentURLs[doc]);
-      /* launch the request */
-      res = GetObjectWWW (doc,
-			  annotServer,
-			  annotURL,
-			  ctx->remoteAnnotIndex,
-			  AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
-			  NULL,
-			  NULL, 
-			  (void *)  RemoteLoad_callback,
-			  (void *) ctx,
-			  NO,
-			  TEXT("application/rdf"));
-      TtaFreeMemory (annotURL);
+      /* load the annotations, server by server */
+      ptr = annotServers;
+      while (ptr)
+	{
+	  server = ptr->object;
+	  ptr = ptr->next;
+	  if (!ustrcasecmp (server, TEXT("localhost")))
+	    continue;
+	  /* create the context for the callback */
+	  ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
+	  /* make some space to store the remote file name */
+	  ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
+	  /* "compute" the url we're looking up in the annotation server */
+	  annotURL = TtaGetMemory (MAX_LENGTH);
+	  if (!IsW3Path (DocumentURLs[doc]) &&
+	      !IsFilePath (DocumentURLs[doc]))
+	    proto = "file://";
+	  else
+	    proto = "";
+	  sprintf (annotURL, "w3c_annotates=%s%s", proto, DocumentURLs[doc]);
+	  /* launch the request */
+	  res = GetObjectWWW (doc,
+			      server,
+			      annotURL,
+			      ctx->remoteAnnotIndex,
+			      AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
+			      NULL,
+			      NULL, 
+			      (void *)  RemoteLoad_callback,
+			      (void *) ctx,
+			      NO,
+			      TEXT("application/rdf"));
+	  TtaFreeMemory (annotURL);
+	}
     }
 }
 
@@ -473,7 +555,7 @@ View view;
   ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
   /* launch the request */
   res = GetObjectWWW (doc,
-		      annotServer,
+		      annotPostServer,
 		      TEXT("/tmp/rdf.tmp"),
 		      ctx->remoteAnnotIndex,
 		      AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
@@ -506,7 +588,7 @@ void ANNOT_Delete (document, view)
 {
   ElementType elType;
   Element     first, last;
-  CHAR_T *     annotName, fileName;
+  CHAR_T      *annotName, *fileName;
   int         i;
 
   printf ("(ANNOT_Delete) DEBUT\n");

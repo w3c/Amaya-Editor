@@ -8,9 +8,15 @@
 
 extern void List_add ( List **me,
                        char *object );
-extern void List_del ( List **me );
+extern void List_delFirst ( List **me );
+extern void List_delAll ( List **me );
+extern void List_delObject ( List **list,
+                             char *object );
+extern List *List_search ( List *list,
+                           char *object );
 extern AnnotMeta *AnnotMeta_new ( void );
 extern void AnnotList_free ( List *annot_list );
+extern void Annot_free ( AnnotMeta *annot );
 extern void AnnotList_print ( List *annot_list );
 extern void AnnotList_writeIndex ( CHAR_T *indexFile,
                                    List *annot_list );
@@ -39,9 +45,15 @@ extern Document AnnotationTargetDocument ( Document annotDoc );
 
 extern void List_add (/* List **me,
                          char *object */);
-extern void List_del (/* List **me */);
+extern void List_delFirst (/* List **me */);
+extern void List_delAll (/* List **me */);
+extern void List_delObject (/* List **list,
+                               char *object */);
+extern List *List_search (/* List *list,
+                             char *object */);
 extern AnnotMeta *AnnotMeta_new (/* void */);
 extern void AnnotList_free (/* List *annot_list */);
+extern void Annot_free (/* AnnotMeta *annot */);
 extern void AnnotList_print (/* List *annot_list */);
 extern void AnnotList_writeIndex (/* CHAR_T *indexFile,
                                      List *annot_list */);

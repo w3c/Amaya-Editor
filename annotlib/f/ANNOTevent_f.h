@@ -7,9 +7,11 @@
 #ifdef __STDC__
 
 extern CHAR_T *GetAnnotUser ( void );
-extern CHAR_T *GetAnnotServer ( void );
+extern List *GetAnnotServers ( void );
+extern CHAR_T *GetAnnotPostServer ( void );
 extern CHAR_T *GetAnnotMainIndex ( void );
 extern CHAR_T *GetAnnotDir ( void );
+extern List *CopyAnnotServers ( CHAR_T *server_list );
 extern void ANNOT_Init ( void );
 extern void ANNOT_Quit ( void );
 extern void ANNOT_AutoLoad ( Document doc,
@@ -40,9 +42,11 @@ extern void ANNOT_Save ( Document docAnnot,
 #else /* __STDC__ */
 
 extern CHAR_T *GetAnnotUser (/* void */);
-extern CHAR_T *GetAnnotServer (/* void */);
+extern List *GetAnnotServers (/* void */);
+extern CHAR_T *GetAnnotPostServer (/* void */);
 extern CHAR_T *GetAnnotMainIndex (/* void */);
 extern CHAR_T *GetAnnotDir (/* void */);
+extern List *CopyAnnotServers (/* CHAR_T *server_list */);
 extern void ANNOT_Init (/* void */);
 extern void ANNOT_Quit (/* void */);
 extern void ANNOT_AutoLoad (/* Document doc,

@@ -228,7 +228,9 @@ static void start_hndl(void *data, const char *el, const char **attr)
    ------------------------------------------------------------*/
 static void end_hndl(void *data, const char *el) 
 {
-  List_del (&element_list);
+  if (element_list)
+    TtaFreeMemory (element_list->object);
+  List_delFirst (&element_list);
 
   if (! strcmp (el, "http:Body"))
     /* turn off the literal mode */

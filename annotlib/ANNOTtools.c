@@ -52,10 +52,10 @@ void List_add (List **me, char *object)
 }
 
 /* ------------------------------------------------------------
-   list_del
+   list_delFirst
    Deletes the first element of a linked list.
    ------------------------------------------------------------*/
-void List_del (List **me)
+void List_delFirst (List **me)
 {
   List *ptr;
 
@@ -68,10 +68,26 @@ void List_del (List **me)
 }
 
 /* ------------------------------------------------------------
-   List_rem
+   list_delAll
+   Deletes all the elements in a list and the list structure
+   ------------------------------------------------------------*/
+void List_delAll (List **me)
+{
+  List *ptr;
+
+  while (*me)
+    {
+      ptr = (List *) (*me)->next;
+      free (*me);
+      *me = ptr;
+    }
+}
+
+/* ------------------------------------------------------------
+   List_delObject
    Removes an element of a linked list.
    ------------------------------------------------------------*/
-void List_rem (List **list, char *object)
+void List_delObject (List **list, char *object)
 {
   List *item = *list;
 
@@ -85,6 +101,22 @@ void List_rem (List **list, char *object)
       *list = item->next;
       free (item);
     }
+}
+
+/* ------------------------------------------------------------
+   List_search
+   Returns list item that contains the object
+   ------------------------------------------------------------*/
+List *List_search (List *list, CHAR_T *object)
+{
+  List *item = list;
+
+  while (item && (ustrcasecmp (item->object, object)))
+    {
+      item = item->next;
+    }
+
+  return (item);
 }
 
 /* ------------------------------------------------------------

@@ -141,8 +141,8 @@ Document doc;
 
 /*-----------------------------------------------------------------------
   AnnotURI
-  Recomputes the real URI for an annotation.  @@ This is bogus; the
-  annotation server should tell us the truth from the start.
+  Recomputes the real URI for an annotation. 
+  @@ This is bogus; the annotation server should tell us the truth from the start.
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
 char* AnnotURI (char* givenURI)
@@ -152,14 +152,14 @@ char* AnnotURI (givenURI)
 #endif /* __STDC__*/
 {
 #if BROKEN_SERVER
-  char *realURI  = TtaGetMemory (ustrlen (GetAnnotServer ()) 
+  char *realURI  = TtaGetMemory (ustrlen (GetAnnotServers ()) 
 				 + ustrlen (givenURI) 
 				 + sizeof ("?w3c_annotation=")
 				 + 20);
 
   usprintf (realURI,
 	    TEXT("%s?w3c_annotation=%s"),
-	    GetAnnotServer (),
+	    GetAnnotServers (),
 	    givenURI);
 #else /* BROKEN_SERVER */
   char *realURI = TtaStrdup (givenURI);
