@@ -48,7 +48,6 @@
 #include "tesse_f.h"
 #include "applicationapi_f.h"
 
-#include "glwindowdisplay_f.h"
 #include "glwindowdisplay.h"
 
 

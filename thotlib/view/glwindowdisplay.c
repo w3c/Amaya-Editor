@@ -794,13 +794,6 @@ void GL_Win32ContextClose (int frame, HWND hwndClient)
   GL_KillFrame (frame);
 }
 
-/*----------------------------------------------------------------------
-  MyTimerProc : Call drawing upon timer calls
-  ----------------------------------------------------------------------*/
-VOID CALLBACK MyTimerProc (HWND hwnd, UINT message, UINT idTimer, DWORD dwTime)     
-{ 
- GL_DrawAll ();   
-} 
 
 #endif /*_WINDOWS*/
 

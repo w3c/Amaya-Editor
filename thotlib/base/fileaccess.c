@@ -273,7 +273,7 @@ union ieee754_float {
     unsigned int exponent:8;
     unsigned int mantissa:23;
 #else /*_WINDOWS*/
-#if defined(i386) || defined(__i386) || 
+#if defined(i386) || defined(__i386)
 #if     __BYTE_ORDER == __BIG_ENDIAN
     unsigned int negative:1;
     unsigned int exponent:8;

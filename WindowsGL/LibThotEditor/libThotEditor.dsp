@@ -295,7 +295,15 @@ SOURCE=..\..\thotlib\image\gifhandler.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\view\glbox.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\view\gldisplay.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\view\glevents.c
 # End Source File
 # Begin Source File
 
@@ -304,6 +312,10 @@ SOURCE=..\..\thotlib\dialogue\glglyph.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\view\glgradient.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\view\gltimer.c
 # End Source File
 # Begin Source File
 
@@ -492,6 +504,10 @@ SOURCE=..\..\thotlib\editing\selectionapi.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\editing\spellchecker.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\view\spline.c
 # End Source File
 # Begin Source File
 
