@@ -50,7 +50,6 @@ CLEAN :
 	-@erase "$(INTDIR)\absboxes.obj"
 	-@erase "$(INTDIR)\abspictures.obj"
 	-@erase "$(INTDIR)\actions.obj"
-	-@erase "$(INTDIR)\alloca.obj"
 	-@erase "$(INTDIR)\applicationapi.obj"
 	-@erase "$(INTDIR)\attributes.obj"
 	-@erase "$(INTDIR)\attrpresent.obj"
@@ -85,7 +84,6 @@ CLEAN :
 	-@erase "$(INTDIR)\message.obj"
 	-@erase "$(INTDIR)\pagecommands.obj"
 	-@erase "$(INTDIR)\picture.obj"
-	-@erase "$(INTDIR)\picturebase.obj"
 	-@erase "$(INTDIR)\platform.obj"
 	-@erase "$(INTDIR)\pnghandler.obj"
 	-@erase "$(INTDIR)\presrules.obj"
@@ -140,7 +138,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\absboxes.obj" \
 	"$(INTDIR)\abspictures.obj" \
 	"$(INTDIR)\actions.obj" \
-	"$(INTDIR)\alloca.obj" \
 	"$(INTDIR)\applicationapi.obj" \
 	"$(INTDIR)\attributes.obj" \
 	"$(INTDIR)\attrpresent.obj" \
@@ -175,7 +172,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\message.obj" \
 	"$(INTDIR)\pagecommands.obj" \
 	"$(INTDIR)\picture.obj" \
-	"$(INTDIR)\picturebase.obj" \
 	"$(INTDIR)\platform.obj" \
 	"$(INTDIR)\pnghandler.obj" \
 	"$(INTDIR)\presrules.obj" \
@@ -201,10 +197,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\ustring.obj" \
 	"$(INTDIR)\windowdisplay.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj" \
-	"$(OUTDIR)\libjpeg.lib" \
-	"$(OUTDIR)\libpng.lib" \
-	"$(OUTDIR)\libThotTable.lib"
+	"$(INTDIR)\xpmhandler.obj"
 
 "$(OUTDIR)\printlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -233,7 +226,6 @@ CLEAN :
 	-@erase "$(INTDIR)\absboxes.obj"
 	-@erase "$(INTDIR)\abspictures.obj"
 	-@erase "$(INTDIR)\actions.obj"
-	-@erase "$(INTDIR)\alloca.obj"
 	-@erase "$(INTDIR)\applicationapi.obj"
 	-@erase "$(INTDIR)\attributes.obj"
 	-@erase "$(INTDIR)\attrpresent.obj"
@@ -268,7 +260,6 @@ CLEAN :
 	-@erase "$(INTDIR)\message.obj"
 	-@erase "$(INTDIR)\pagecommands.obj"
 	-@erase "$(INTDIR)\picture.obj"
-	-@erase "$(INTDIR)\picturebase.obj"
 	-@erase "$(INTDIR)\platform.obj"
 	-@erase "$(INTDIR)\pnghandler.obj"
 	-@erase "$(INTDIR)\presrules.obj"
@@ -323,7 +314,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\absboxes.obj" \
 	"$(INTDIR)\abspictures.obj" \
 	"$(INTDIR)\actions.obj" \
-	"$(INTDIR)\alloca.obj" \
 	"$(INTDIR)\applicationapi.obj" \
 	"$(INTDIR)\attributes.obj" \
 	"$(INTDIR)\attrpresent.obj" \
@@ -358,7 +348,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\message.obj" \
 	"$(INTDIR)\pagecommands.obj" \
 	"$(INTDIR)\picture.obj" \
-	"$(INTDIR)\picturebase.obj" \
 	"$(INTDIR)\platform.obj" \
 	"$(INTDIR)\pnghandler.obj" \
 	"$(INTDIR)\presrules.obj" \
@@ -384,10 +373,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\ustring.obj" \
 	"$(INTDIR)\windowdisplay.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj" \
-	"$(OUTDIR)\libjpeg.lib" \
-	"$(OUTDIR)\libpng.lib" \
-	"$(OUTDIR)\libThotTable.lib"
+	"$(INTDIR)\xpmhandler.obj"
 
 "$(OUTDIR)\printlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -733,33 +719,6 @@ DEP_CPP_ACTIO=\
 	
 
 "$(INTDIR)\actions.obj" : $(SOURCE) $(DEP_CPP_ACTIO) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\thotlib\base\alloca.c
-
-!IF  "$(CFG)" == "printlib - Win32 Release"
-
-DEP_CPP_ALLOC=\
-	"..\..\thotlib\include\ustring.h"\
-	
-NODEP_CPP_ALLOC=\
-	"..\..\thotlib\base\config.h"\
-	
-
-"$(INTDIR)\alloca.obj" : $(SOURCE) $(DEP_CPP_ALLOC) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
-
-DEP_CPP_ALLOC=\
-	"..\..\thotlib\include\ustring.h"\
-	
-
-"$(INTDIR)\alloca.obj" : $(SOURCE) $(DEP_CPP_ALLOC) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -3819,6 +3778,7 @@ DEP_CPP_FRAME=\
 	"..\..\thotlib\internals\f\buildboxes_f.h"\
 	"..\..\thotlib\internals\f\displaybox_f.h"\
 	"..\..\thotlib\internals\f\displayselect_f.h"\
+	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\picture_f.h"\
@@ -3887,6 +3847,7 @@ DEP_CPP_FRAME=\
 	"..\..\thotlib\internals\f\buildboxes_f.h"\
 	"..\..\thotlib\internals\f\displaybox_f.h"\
 	"..\..\thotlib\internals\f\displayselect_f.h"\
+	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
 	"..\..\thotlib\internals\f\frame_f.h"\
 	"..\..\thotlib\internals\f\picture_f.h"\
@@ -4701,11 +4662,14 @@ DEP_CPP_MESSA=\
 	"..\..\thotlib\internals\f\message_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
 	"..\..\thotlib\internals\f\ustring_f.h"\
+	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -4753,11 +4717,14 @@ DEP_CPP_MESSA=\
 	"..\..\thotlib\internals\f\message_f.h"\
 	"..\..\thotlib\internals\f\registry_f.h"\
 	"..\..\thotlib\internals\f\ustring_f.h"\
+	"..\..\thotlib\internals\h\appdialogue.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -4906,6 +4873,7 @@ DEP_CPP_PICTU=\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\include\wininclude.h"\
 	"..\..\thotlib\internals\f\appli_f.h"\
+	"..\..\thotlib\internals\f\boxmoves_f.h"\
 	"..\..\thotlib\internals\f\epshandler_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
@@ -4988,6 +4956,7 @@ DEP_CPP_PICTU=\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\include\wininclude.h"\
 	"..\..\thotlib\internals\f\appli_f.h"\
+	"..\..\thotlib\internals\f\boxmoves_f.h"\
 	"..\..\thotlib\internals\f\epshandler_f.h"\
 	"..\..\thotlib\internals\f\fileaccess_f.h"\
 	"..\..\thotlib\internals\f\font_f.h"\
@@ -5033,118 +5002,6 @@ DEP_CPP_PICTU=\
 	
 
 "$(INTDIR)\picture.obj" : $(SOURCE) $(DEP_CPP_PICTU) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\thotlib\image\picturebase.c
-
-!IF  "$(CFG)" == "printlib - Win32 Release"
-
-DEP_CPP_PICTUR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\simx.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\xpm.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PICTUR=\
-	"..\..\thotlib\include\HTVMSUtils.h"\
-	"..\..\thotlib\internals\h\amigax.h"\
-	
-
-"$(INTDIR)\picturebase.obj" : $(SOURCE) $(DEP_CPP_PICTUR) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
-
-DEP_CPP_PICTUR=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\content.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\thot_uio.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\uconvert.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\fileaccess_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\picture_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\picture.h"\
-	"..\..\thotlib\internals\h\simx.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\h\xpm.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\platform_tv.h"\
-	
-
-"$(INTDIR)\picturebase.obj" : $(SOURCE) $(DEP_CPP_PICTUR) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -6726,6 +6583,7 @@ DEP_CPP_STRUC=\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\schemastr_f.h"\
 	"..\..\thotlib\internals\f\structschema_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
@@ -6783,6 +6641,7 @@ DEP_CPP_STRUC=\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
+	"..\..\thotlib\internals\f\schemas_f.h"\
 	"..\..\thotlib\internals\f\schemastr_f.h"\
 	"..\..\thotlib\internals\f\structschema_f.h"\
 	"..\..\thotlib\internals\f\tree_f.h"\
@@ -6843,14 +6702,17 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\changeabsbox_f.h"\
 	"..\..\thotlib\internals\f\changepresent_f.h"\
+	"..\..\thotlib\internals\f\context_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\style_f.h"\
+	"..\..\thotlib\internals\f\uaccess_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\htmlstylecolor.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -6899,14 +6761,17 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\changeabsbox_f.h"\
 	"..\..\thotlib\internals\f\changepresent_f.h"\
+	"..\..\thotlib\internals\f\context_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\style_f.h"\
+	"..\..\thotlib\internals\f\uaccess_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\htmlstylecolor.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
