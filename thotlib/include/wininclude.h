@@ -4,6 +4,7 @@
 #include "fileaccess.h"
 
 #ifdef __STDC__
+extern BOOL       RegisterWin95 (CONST WNDCLASS* lpwc);
 extern void       DropFile (Document, View, STRING);
 extern HMENU      WIN_GetMenu (int);
 extern void       WinErrorBox (ThotWindow, STRING);
@@ -67,7 +68,7 @@ extern void       CreateInitConfirmDlgWindow (ThotWindow, int, STRING, STRING);
 extern void       CreateInitConfirm3LDlgWindow (ThotWindow, int, STRING, STRING, STRING, STRING, ThotBool withCancel);
 extern void       CreateChangeFormatDlgWindow (int, int, int, int, int, int, int, int);
 extern void       CreateGreekKeyboardDlgWindow (ThotWindow);
-extern void       CreateAuthenticationDlgWindow (ThotWindow, STRING, STRING);
+extern void       CreateAuthenticationDlgWindow (ThotWindow, const STRING, STRING);
 extern void       CreateBackgroundImageDlgWindow (ThotWindow parent, STRING image_location);
 extern void       TtaHandleOneEvent (ThotEvent*);
 extern ThotWindow TtaGetThotWindow (int);
@@ -78,6 +79,7 @@ extern void       KbdCallbackHandler (ThotWidget, int, caddr_t);
 extern void       CheckTtCmap ();
 
 #else  /* __STDC__ */
+extern BOOL       RegisterWin95 ();
 extern void       DropFile ();
 extern HMENU      WIN_GetMenu ();
 extern void       WinErrorBox ();
