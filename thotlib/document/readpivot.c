@@ -1955,6 +1955,7 @@ boolean             link;
 	}
       
       if (link)
+	{
 	/* chaine la nouvelle regle de presentation en queue de la */
 	/* chaine des regles de presentation de l'element */
 	if (pEl->ElFirstPRule == NULL)
@@ -1970,6 +1971,20 @@ boolean             link;
 	    /* chaine la nouvelle regle */
 	    pPRule1->PrNextPRule = pPRule;
 	  }
+	if (pPRule->PrType == PtBackground)
+	  /* add a ShowBox rule for the Background rule */
+	  {
+	  GetPresentRule (&pPRule1);
+	  pPRule->PrNextPRule = pPRule1;
+	  pPRule = pPRule1;
+	  pPRule->PrType = PtFunction;
+          pPRule->PrViewNum = view;
+          pPRule->PrPresMode = PresFunction;
+          pPRule->PrPresFunction = FnShowBox;
+          pPRule->PrPresBoxRepeat = FALSE;
+          pPRule->PrNPresBoxes = 0;
+	  }
+	}
       /* c'est la derniere regle */
       pPRule->PrNextPRule = NULL;
     }

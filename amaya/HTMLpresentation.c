@@ -19,6 +19,7 @@
 #include "css.h"
 
 #include "HTMLstyle_f.h"
+#include "html2thot_f.h"
 #include "presentation.h"
 
 
@@ -212,7 +213,44 @@ NotifyAttribute    *event;
 
 
 /*----------------------------------------------------------------------
+  MovePRule
+  remove presentation rule presRule from element fromEl and associate a copy
+  of that rule with element toEl, for the main view.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void MovePRule (PRule* presRule, Element fromEl, Element toEl, Document doc)
+#else  /* __STDC__ */
+static void MovePRule (presRule, fromEl, toEl, doc)
+PRule* presRule;
+Element fromEl;
+Element toEl;
+Document doc;
+
+#endif /* __STDC__ */
+{
+   int         presRuleType;
+   PRule       newPRule, oldPRule;
+
+   presRuleType = TtaGetPRuleType (*presRule);
+   newPRule = TtaCopyPRule (*presRule);
+   TtaRemovePRule (fromEl, *presRule, doc);
+   /* if the destination element already has a PRule of that type, remove
+      that PRule from the destination element */
+   oldPRule = TtaGetPRule (toEl, presRuleType);
+   if (oldPRule != NULL)
+      if (TtaGetPRuleView (oldPRule) == 1)
+         TtaRemovePRule (toEl, oldPRule, doc);
+   /* this PRule applies to view 1 (main view) */
+   TtaSetPRuleView (newPRule, 1);
+   TtaAttachPRule (toEl, newPRule, doc);
+   *presRule = newPRule;
+}
+
+
+/*----------------------------------------------------------------------
   ChangePRule
+  A specific PRule has been created, modified or deleted by the user for
+  a given element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ChangePRule (NotifyPresentation * event)
@@ -224,50 +262,63 @@ NotifyPresentation *event;
 {
    AttributeType       attrType;
    Attribute           styleAttr;
-   Element	       elem, span;
-   PRule	       newPRule, prule, oldPRule;
+   ElementType	       elType;
+   Element	       elem, span, body, root;
+   PRule	       presRule;
    Document	       doc;
 #define STYLELEN 1000
    char                style[STYLELEN];
-   int                 len, pruleType;
+   int                 presType, len;
 
    elem = event->element;
    doc = event->document;
+   presType = event->pRuleType;
+   presRule = event->pRule;
+   if (event->event != TtePRuleDelete)
+      {
+      elType = TtaGetElementType (elem);
+      if (presType == PRFillPattern || presType == PRBackground ||
+          presType == PRShowBox)
+         /* this is a rule for the background */
+         {
+         if (elType.ElTypeNum == HTML_EL_BODY)
+	    {
+	    root = TtaGetParent (elem);
+	    MovePRule (&presRule, elem, root, doc);
+	    elem = root;
+	    }
+	 }
+      else
+	 if (elType.ElTypeNum == HTML_EL_HTML)
+	    {
+	    elType.ElTypeNum = HTML_EL_BODY;
+	    body = TtaSearchTypedElement (elType, SearchInTree, elem);
+	    MovePRule (&presRule, elem, body, doc);
+	    elem = body;
+	    }
+      }
 
    if (event->event == TtePRuleCreate)
      /* a new presentation rule has been created */
      {
-     prule = event->pRule;
-     pruleType = TtaGetPRuleType (prule);
-     /* if the rule does not apply to the main view, applies it to the main
-        view. */
-     if (TtaGetPRuleView (event->pRule) > 1)
-	{
-	newPRule = TtaCopyPRule (prule);
-	TtaRemovePRule (elem, prule, doc);
-	/* if that element already has a PRule of that type, remove that PRule
-	   first */
-        oldPRule = TtaGetPRule (elem, pruleType);
-	if (oldPRule != NULL)
-	   if (TtaGetPRuleView (oldPRule) == 1)
-	       TtaRemovePRule (elem, oldPRule, doc);
-	TtaSetPRuleView (newPRule, 1);
-	TtaAttachPRule (elem, newPRule, doc);
-	prule = newPRule;
-	}
+     /* if the rule is a Format rule applied to a character-level element,
+	move it to the first enclosing non character-level element */
+     if (presType == PRIndent || presType == PRLineSpacing ||
+	 presType == PRAdjust || presType == PRJustify ||
+	 presType == PRHyphenate)
+	if (IsCharacterLevelElement (elem))
+	  {
+	  do
+	     elem = TtaGetParent (elem);
+	  while (elem != NULL && IsCharacterLevelElement (elem));
+	  MovePRule (&presRule, event->element, elem, doc);
+	  }
+
      /* if it is a new PRule on a text string, create a SPAN element that
         encloses this text string and move the PRule to that SPAN element */
      if (MakeASpan (elem, &span, doc))
         {
-        newPRule = TtaCopyPRule (prule);
-        TtaRemovePRule (elem, prule, doc);
-	/* if the Span element already has a PRule of that type, remove
-	   that PRule from the Span element */
-        oldPRule = TtaGetPRule (span, pruleType);
-	if (oldPRule != NULL)
-	   if (TtaGetPRuleView (oldPRule) == 1)
-	       TtaRemovePRule (span, oldPRule, doc);
-        TtaAttachPRule (span, newPRule, doc);
+	MovePRule (&presRule, elem, span, doc);
         elem = span;
         }
      }

@@ -3446,7 +3446,6 @@ PtrAttribute        pAttr;
   char                c;
   int                 viewSch, i;
   PtrAbstractBox      pAbb1;
-  PictInfo           *myPictInfo;
   PresConstant	      *pConst;
   char		       fname[MAX_PATH];
   PathBuffer	       directoryName;
@@ -3944,22 +3943,23 @@ PtrAttribute        pAttr;
 
 
 /*----------------------------------------------------------------------
-   	SearchPresRule	Cherche si la regle de presentation specifique	
-   		de type ruleType concernant la vue de numero view existe	
-   		pour l'element pEl.					
-   		Retourne un pointeur sur cette regle si elle existe,	
-   		sinon cree une nouvelle regle de ce type, l'ajoute a la	
-   		chaine des regles de presentation specifiques de	
+   	SearchPresRule	Cherche si la regle de presentation specifique
+   		de type ruleType concernant la vue de numero view existe
+   		pour l'element pEl.
+   		Retourne un pointeur sur cette regle si elle existe,
+   		sinon cree une nouvelle regle de ce type, l'ajoute a la
+   		chaine des regles de presentation specifiques de
    		l'element et retourne un pointeur sur la nouvelle regle.
-   		Au result, isNew indique s'il s'agit d'une regle	
-   		nouvellement creee ou non.				
+   		Au retour, isNew indique s'il s'agit d'une regle
+   		nouvellement creee ou non.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrPRule            SearchPresRule (PtrElement pEl, PRuleType ruleType, boolean * isNew, PtrDocument pDoc, int view)
+PtrPRule            SearchPresRule (PtrElement pEl, PRuleType ruleType, FunctionType funcType, boolean * isNew, PtrDocument pDoc, int view)
 #else  /* __STDC__ */
-PtrPRule            SearchPresRule (pEl, ruleType, isNew, pDoc, view)
+PtrPRule            SearchPresRule (pEl, ruleType, funcType, isNew, pDoc, view)
 PtrElement          pEl;
 PRuleType           ruleType;
+FunctionType	    funcType;
 boolean            *isNew;
 PtrDocument         pDoc;
 int                 view;
@@ -3968,6 +3968,7 @@ int                 view;
 {
    PtrPRule            pResultRule;
    PtrPRule            pPRule;
+   boolean	       found;
 
    *isNew = FALSE;
    pResultRule = NULL;
@@ -3976,12 +3977,11 @@ int                 view;
 	/* l'element du pave */
 	if (pEl->ElFirstPRule == NULL)
 	  {
-	     /* cet element n'a aucune regle de presentation specifique, on en */
-	     /* cree une et on la chaine a l'element */
+	     /* cet element n'a aucune regle de presentation specifique, on */
+	     /* en cree une et on la chaine a l'element */
 	     GetPresentRule (&pResultRule);
 	     *isNew = TRUE;
 	     pEl->ElFirstPRule = pResultRule;
-	     pResultRule->PrType = ruleType;
 	  }
 	else
 	  {
@@ -3991,23 +3991,40 @@ int                 view;
 	     pPRule = pEl->ElFirstPRule;	/* premiere regle specifique de l'element */
 	     while (pResultRule == NULL)
 	       {
-		  if (pPRule->PrType == ruleType &&
-		  pPRule->PrViewNum == pDoc->DocView[view - 1].DvPSchemaView)
+		  found = FALSE;
+		  if (pPRule->PrViewNum == pDoc->DocView[view-1].DvPSchemaView)
+		     if (pPRule->PrType == ruleType)
+			if (ruleType == PtFunction)
+			   found = (pPRule->PrPresFunction == funcType);
+			else
+			   found = TRUE;
+		  if (found)
 		     /* la regle existe deja */
 		     pResultRule = pPRule;
-		  else if (pPRule->PrNextPRule != NULL)
-		     /* passe a la regle specifique suivante de l'element */
-		     pPRule = pPRule->PrNextPRule;
 		  else
-		    {
+		    if (pPRule->PrNextPRule != NULL)
+		       /* passe a la regle specifique suivante de l'element */
+		       pPRule = pPRule->PrNextPRule;
+		    else
+		      {
 		       /* On a examine' toutes les regles specifiques de */
 		       /* l'element, ajoute une nouvelle regle en fin de chaine */
 		       GetPresentRule (&pResultRule);
 		       *isNew = TRUE;
 		       pPRule->PrNextPRule = pResultRule;
-		       pResultRule->PrType = ruleType;
-		    }
+		      }
 	       }
+	  }
+	if (*isNew)
+	  {
+	     pResultRule->PrType = ruleType;
+	     if (ruleType == PtFunction)
+	        {
+		pResultRule->PrPresMode = PresFunction;
+		pResultRule->PrPresFunction = funcType;
+		pResultRule->PrPresBoxRepeat = FALSE;
+		pResultRule->PrNPresBoxes = 0;
+		}
 	  }
      }
    return pResultRule;
@@ -4113,7 +4130,7 @@ PtrAbstractBox      pAb;
    if (ok)
      {
 	/* cherche si l'element a deja une regle de largeur specifique */
-	pPRuleDimH = SearchPresRule (pEl, PtWidth, &new, pDoc, view);
+	pPRuleDimH = SearchPresRule (pEl, PtWidth, 0, &new, pDoc, view);
 	if (new)
 	   /* on a cree' une regle de largeur pour l'element */
 	  {
@@ -4148,7 +4165,7 @@ PtrAbstractBox      pAb;
    if (ok)
      {
 	/* cherche si l'element a deja une regle de hauteur specifique */
-	pPRuleDimV = SearchPresRule (pEl, PtHeight, &new, pDoc, view);
+	pPRuleDimV = SearchPresRule (pEl, PtHeight, 0, &new, pDoc, view);
 	if (new)
 	   /* on a cree' une regle de hauteur pour l'element */
 	  {

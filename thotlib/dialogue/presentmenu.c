@@ -629,7 +629,7 @@ int                 val;
 	  StdBodySize = TRUE;
 	  break;
 	case 1:
-	  /* graphiques standard */
+	  /* format standard */
 	  StdCadr = TRUE;
 	  StdJustif = TRUE;
 	  StdHyphen = TRUE;
@@ -641,7 +641,7 @@ int                 val;
 	  ChngStandardColor = TRUE;
 	  break;
 	case 3:
-	  /* format standard */
+	  /* graphiques standard */
 	  StdLineStyle = TRUE;
 	  StdLineWeight = TRUE;
 	  StdTrame = TRUE;

@@ -48,9 +48,9 @@ RULES
 
  BASE:	BEGIN
 	NoLineBreak;
-        Create IN TmpFile 'Document''s BASE: ';
-        Create Attributes;
-        Create IN TmpFile '\12' After;
+	Create IN TmpFile 'Document''s BASE: ';
+	Create Attributes;
+	Create IN TmpFile '\12' After;
 	END;
 
  Styles:BEGIN
@@ -132,7 +132,7 @@ RULES
 	   Remove;
 	If Last
 	   Remove;
-        END;
+	END;
 
  Italic_text:
 	BEGIN
@@ -186,7 +186,7 @@ RULES
  Cite:
 	BEGIN
 	Create DoubleQuote; 
-        Create DoubleQuote After;
+	Create DoubleQuote After;
 	END;
 
  Font_: BEGIN
@@ -214,23 +214,21 @@ RULES
 
  Pseudo_paragraph:
 	BEGIN
-        Create '\12\12' After;
-        END;
+	Create '\12\12' After;
+	END;
 
  TEXT_UNIT: BEGIN
 	IF Within Text_Area
 		Remove;
 	IF Within Text_Input
 		Remove;
-        IF Within HEAD and not Within TITLE
-	        Remove;
-        IF Within STYLE 
-                Remove;
+	IF Within HEAD and not Within TITLE
+		Remove;
+	IF Within STYLE 
+		Remove;
 	END;
 
  Definition_List: BEGIN
-	Indent +3;
-	Indent -3 After;
 	END;
 
  Term:	BEGIN
@@ -301,8 +299,8 @@ RULES
 	END;
 
  Toggle_Item: BEGIN
-        If NOT Selected
-           Remove;
+	If NOT Selected
+	   Remove;
 	Create Content;
 	Remove;
 	END;
@@ -312,13 +310,13 @@ RULES
 
  Radio_Item: BEGIN
        If NOT Selected
-           Remove;
-        Create Content;
-        Remove;
+	   Remove;
+	Create Content;
+	Remove;
 	END;
 
  Text_Input_Line: BEGIN
-        If Empty
+	If Empty
 	   Remove;
 	END;
 
@@ -334,14 +332,14 @@ RULES
 	If Checked = Yes_
 	   Create '[x] ';
 	If Checked = No_
-           Create '[ ] ';
+	   Create '[ ] ';
 	END;
 
  Radio_Input: BEGIN
 	If Checked =  Yes_
 	   Create '(x)';
 	If Checked = No_
-           Create '( )';
+	   Create '( )';
 	Remove;
 	END;
 
@@ -417,7 +415,7 @@ RULES
 #else
 	    Create OUT_AnchorCounter After;
 #endif
-          END;
+	  END;
 	END;
 
  MAP:
@@ -462,7 +460,8 @@ RULES
 #endif
 
  Table_body:
-	Get tfoot;
+	BEGIN
+	END;
 
  Table_row:
 	If Empty
@@ -480,8 +479,7 @@ RULES
 	Remove;
 
  Table_foot:
-	If Empty
-	   Remove;
+	Remove;
 
  Division: 
 	If Empty
@@ -528,7 +526,7 @@ ATTRIBUTES
  HREF_ :
 	BEGIN
 	If NOT Within LINK AND NOT InternalLink
-           Create IN TmpFile HREF_;
+	   Create IN TmpFile HREF_;
 	END;
 
  background_ :

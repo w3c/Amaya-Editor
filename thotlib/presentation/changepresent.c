@@ -437,20 +437,17 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          NumTypePRuleAPI (PRuleType tr)
+static int          NumTypePRuleAPI (PtrPRule pRule)
 #else  /* __STDC__ */
-static int          NumTypePRuleAPI (tr)
-PRuleType           tr;
+static int          NumTypePRuleAPI (pRule)
+PRuleType           pRule;
 
 #endif /* __STDC__ */
 {
-   switch (tr)
+   switch (pRule->PrType)
 	 {
 	    case PtVisibility:
 	       return PRVisibility;
-	       break;
-	    case PtFunction:
-	       return PRFunction;
 	       break;
 	    case PtVertRef:
 	       return PRVertRef;
@@ -524,6 +521,12 @@ PRuleType           tr;
 	    case PtBreak2:
 	       return PRNoBreak2;
 	       break;
+	    case PtFunction:
+	       if (pRule->PrPresFunction == FnShowBox)
+		  return PRShowBox;
+	       else
+	          return PRFunction;
+	       break;
 	    default:
 	       return 0;
 	       break;
@@ -564,7 +567,7 @@ boolean             isNew;
      }
    notifyPres.document = (Document) IdentDocument (pDoc);
    notifyPres.element = (Element) pEl;
-   notifyPres.pRuleType = NumTypePRuleAPI (pPRule->PrType);
+   notifyPres.pRuleType = NumTypePRuleAPI (pPRule);
    noApply = CallEventType ((NotifyEvent *) & notifyPres, TRUE);
    if (noApply)
       /* l'application demande a l'editeur de ne rien faire */
@@ -625,7 +628,7 @@ boolean             isNew;
    notifyPres.pRule = (PRule) pPRule;
    notifyPres.document = (Document) IdentDocument (pDoc);
    notifyPres.element = (Element) pEl;
-   notifyPres.pRuleType = NumTypePRuleAPI (pPRule->PrType);
+   notifyPres.pRuleType = NumTypePRuleAPI (pPRule);
    CallEventType ((NotifyEvent *) & notifyPres, FALSE);
 }
 
@@ -879,7 +882,7 @@ boolean             display;
 	       {
 		  /* cherche si l'element possede deja une regle de position */
 		  /* verticale specifique */
-		  pPRule = SearchPresRule (pEl, PtVertPos, &isNew, pDoc, pAb->AbDocView);
+		  pPRule = SearchPresRule (pEl, PtVertPos, 0, &isNew, pDoc, pAb->AbDocView);
 		  /* envoie un message APP a l'application */
 
 		  doit = !PRuleMessagePre (pEl, pPRule, pDoc, isNew);
@@ -1024,7 +1027,7 @@ boolean             display;
 	       {
 		  /* cherche si l'element possede deja une regle de position */
 		  /* horizontale specifique */
-		  pPRule = SearchPresRule (pEl, PtHorizPos, &isNew, pDoc, pAb->AbDocView);
+		  pPRule = SearchPresRule (pEl, PtHorizPos, 0, &isNew, pDoc, pAb->AbDocView);
 		  /* envoie un message APP a l'application */
 		  doit = !PRuleMessagePre (pEl, pPRule, pDoc, isNew);
 		  if (doit)
@@ -1261,7 +1264,7 @@ boolean             display;
 		/* de presentation specifique */
 	       {
 		  /* cherche si l'element a deja une regle de largeur specifique */
-		  pPRule = SearchPresRule (pEl, PtWidth, &isNew, pDoc, pAb->AbDocView);
+		  pPRule = SearchPresRule (pEl, PtWidth, 0, &isNew, pDoc, pAb->AbDocView);
 		  /* envoie un message APP a l'application */
 		  doit = !PRuleMessagePre (pEl, pPRule, pDoc, isNew);
 		  if (doit)
@@ -1421,7 +1424,7 @@ boolean             display;
 		/* de presentation specifique */
 	       {
 		  /* cherche si l'element a deja une regle de hauteur specifique */
-		  pPRule = SearchPresRule (pEl, PtHeight, &isNew, pDoc, pAb->AbDocView);
+		  pPRule = SearchPresRule (pEl, PtHeight, 0, &isNew, pDoc, pAb->AbDocView);
 		  /* envoie un message APP a l'application */
 		  doit = !PRuleMessagePre (pEl, pPRule, pDoc, isNew);
 		  if (doit)
@@ -1642,7 +1645,7 @@ int                 LineColor;
 
 {
    boolean             isNew;
-   PtrPRule            pPRule;
+   PtrPRule            pPRule, pFunctRule;
    int                 viewSch;
 
    viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);	/* numero de cette view */
@@ -1651,7 +1654,7 @@ int                 LineColor;
      {
 	/*cherche la regle de presentation specifique 'LineStyle' de l'element */
 	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtLineStyle, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtLineStyle, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     /* met les choix de l'utilisateur dans cette regle */
@@ -1670,7 +1673,7 @@ int                 LineColor;
      {
 	/* cherche la regle de presentation specifique 'Epaisseur Trait' de */
 	/* l'element ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtLineWeight, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtLineWeight, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     /* met les choix de l'utilisateur dans cette regle */
@@ -1689,9 +1692,9 @@ int                 LineColor;
    /* trame de remplissage */
    if (modifFillPattern)
      {
-	/* cherche la regle de presentation specifique 'FillPattern' de l'element */
-	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtFillPattern, &isNew, pDoc, viewToApply);
+	/* cherche la regle de presentation specifique 'FillPattern' de */
+	/* l'element ou en cree une nouvelle */
+	pPRule = SearchPresRule (pEl, PtFillPattern, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     /* met les choix de l'utilisateur dans cette regle */
@@ -1704,6 +1707,22 @@ int                 LineColor;
 	     /* si le pave existe, applique la nouvelle regle au pave */
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+
+	     /* create a ShowBox rule for the element if there is none */
+	     pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
+					  pDoc, viewToApply);
+	     if (isNew)
+	       if (!PRuleMessagePre (pEl, pFunctRule, pDoc, isNew))
+		{
+		pFunctRule->PrType = PtFunction;
+		pFunctRule->PrViewNum = viewSch;
+		pFunctRule->PrPresMode = PresFunction;
+		pFunctRule->PrPresFunction = FnShowBox;
+		pFunctRule->PrPresBoxRepeat = FALSE;
+		pFunctRule->PrNPresBoxes = 0;
+		ApplyNewRule (pDoc, pFunctRule, pEl);
+		PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
+		}
 	  }
      }
    /* couleur de fond */
@@ -1711,7 +1730,7 @@ int                 LineColor;
      {
 	/* cherche la regle de presentation specifique 'ColoreurFond' de */
 	/* l'element ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtBackground, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtBackground, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     /* met les choix de l'utilisateur dans cette regle */
@@ -1724,6 +1743,21 @@ int                 LineColor;
 	     /* si le pave existe, applique la nouvelle regle au pave */
 	     ApplyNewRule (pDoc, pPRule, pEl);
 	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	     /* create a ShowBox rule for the element if there is none */
+	     pFunctRule = SearchPresRule (pEl, PtFunction, FnShowBox, &isNew,
+					  pDoc, viewToApply);
+	     if (isNew)
+	      if (!PRuleMessagePre (pEl, pFunctRule, pDoc, isNew))
+		{
+		pFunctRule->PrType = PtFunction;
+		pFunctRule->PrViewNum = viewSch;
+		pFunctRule->PrPresMode = PresFunction;
+		pFunctRule->PrPresFunction = FnShowBox;
+		pFunctRule->PrPresBoxRepeat = FALSE;
+		pFunctRule->PrNPresBoxes = 0;
+		ApplyNewRule (pDoc, pFunctRule, pEl);
+		PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
+		}
 	  }
      }
    /* couleur du trace' */
@@ -1731,7 +1765,7 @@ int                 LineColor;
      {
 	/* cherche la regle de presentation specifique 'CouleurTrace' de */
 	/* l'element ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtForeground, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtForeground, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     /* met les choix de l'utilisateur dans cette regle */
@@ -1765,7 +1799,6 @@ int                 viewToApply;
 #endif /* __STDC__ */
 {
    PtrPRule            pPRule, pR, pRS;
-   PRuleType           ruleType;
    int                 viewSch;
    NotifyPresentation  notifyPres;
 
@@ -1790,26 +1823,25 @@ int                 viewToApply;
 	   notifyPres.document = (Document) IdentDocument (pDoc);
 	   notifyPres.element = (Element) pEl;
 	   notifyPres.pRule = (PRule) pPRule;
-	   notifyPres.pRuleType = NumTypePRuleAPI (pPRule->PrType);
+	   notifyPres.pRuleType = NumTypePRuleAPI (pPRule);
 	   if (!CallEventType ((NotifyEvent *) & notifyPres, TRUE))
 	     {
 		if (pR == NULL)
 		   pEl->ElFirstPRule = pRS;
 		else
 		   pR->PrNextPRule = pRS;
-		ruleType = pPRule->PrType;
-		/* libere la regle */
-		FreePresentRule (pPRule);
 		pDoc->DocModified = TRUE;	/* le document est modifie' */
 		/* applique la regle standard de meme type que la regle courante */
 		/* aux paves de l'element qui existent dans les vues de meme type */
 		/* que la view active. */
-		ApplyStandardRule (pEl, pDoc, ruleType, viewSch);
+		ApplyStandardRule (pEl, pDoc, pPRule->PrType, viewSch);
 		notifyPres.event = TtePRuleDelete;
 		notifyPres.document = (Document) IdentDocument (pDoc);
 		notifyPres.element = (Element) pEl;
 		notifyPres.pRule = NULL;
-		notifyPres.pRuleType = NumTypePRuleAPI (ruleType);
+		notifyPres.pRuleType = NumTypePRuleAPI (pPRule);
+		/* libere la regle */
+		FreePresentRule (pPRule);
 		CallEventType ((NotifyEvent *) & notifyPres, FALSE);
 	     }
 	   /* passe a la regle suivante */
@@ -1851,7 +1883,8 @@ boolean             Background;
 	/* Coupe les elements du debut et de la fin de la selection */
 	/* s'ils sont partiellement selectionnes */
 	if (firstChar > 1 || lastChar > 0)
-	   CutSelection (SelDoc, &pElFirstSel, &pElLastSel, &firstChar, &lastChar);
+	   CutSelection (SelDoc, &pElFirstSel, &pElLastSel, &firstChar,
+			 &lastChar);
 	/* parcourt les elements selectionnes */
 	pEl = pElFirstSel;
 	while (pEl != NULL)
@@ -1871,15 +1904,13 @@ boolean             Background;
 			     pAb = AbsBoxOfEl (pEl, SelectedView);
 			     if (pAb != NULL)
 				if (pAb->AbFillPattern < 2)
-				   /* on force la trame backgroundcolor si la trame du pave */
+				   /* on force la trame backgroundcolor si la
+				      trame du pave */
 				   /* est nopattern ou foregroundcolor */
 				  {
 				     modifFillPattern = TRUE;
 				     fillPatternNum = 2;
 				  }
-			     /* force background display */
-			     if (pAb->AbLeafType == LtCompound)
-			       pAb->AbFillBox = TRUE;
 			  }
 			if (colorNum == -1)
 			  {
@@ -1889,18 +1920,18 @@ boolean             Background;
 			       {
 				  RuleSetPut (rulesS, PtFillPattern);
 				  RuleSetPut (rulesS, PtBackground);
-				  /*RuleSetPut (rulesS, PtShowBox);*/
-				  /* force background display */
-				  if (pAb->AbLeafType == LtCompound)
-				    pAb->AbFillBox = FALSE;
+				  RuleSetPut (rulesS, PtFunction);
 			       }
 			     else
 				RuleSetPut (rulesS, PtForeground);
 			     RemoveSpecifPres (pEl, SelDoc, rulesS, SelectedView);
 			  }
 			else
-			   ModifyGraphics (pEl, SelDoc, SelectedView, FALSE, ' ', FALSE, 0, FALSE,
-					   modifFillPattern, fillPatternNum, Background, colorNum, !Background, colorNum);
+			   ModifyGraphics (pEl, SelDoc, SelectedView, FALSE,
+					   ' ', FALSE, 0, FALSE,
+					   modifFillPattern, fillPatternNum,
+					   Background, colorNum, !Background,
+					   colorNum);
 			/* si on est dans un element copie' par inclusion,   */
 			/* on met a jour les copies de cet element. */
 			RedisplayCopies (pEl, SelDoc, TRUE);
@@ -1952,7 +1983,7 @@ int                 weightUnderline;
      {
 	/* cherche la regle de presentation specifique 'Fonte' de l'element */
 	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtFont, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtFont, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     /* met les choix de l'utilisateur dans cette regle */
@@ -1971,7 +2002,7 @@ int                 weightUnderline;
      {
 	/* cherche la regle de presentation specifique 'charStyle' de l'element */
 	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtStyle, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtStyle, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     /* met les choix de l'utilisateur dans cette regle */
@@ -2013,7 +2044,7 @@ int                 weightUnderline;
      {
 	/* cherche la regle de presentation specifique 'Corps' de l'element */
 	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtSize, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtSize, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     /* met les choix de l'utilisateur dans cette regle */
@@ -2035,7 +2066,7 @@ int                 weightUnderline;
      {
 	/* cherche la regle de presentation specifique 'Souligne' de l'element */
 	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtUnderline, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtUnderline, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     /* met les choix de l'utilisateur dans cette regle */
@@ -2071,7 +2102,7 @@ int                 weightUnderline;
      {
 	/* cherche la regle de presentation specifique weightUnderline de l'element */
 	/* ou en cree une nouvelle */
-	pPRule = SearchPresRule (pEl, PtThickness, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtThickness, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     /* met les choix de l'utilisateur dans cette regle */
@@ -2131,7 +2162,7 @@ boolean             Hyphenate;
    /* applique les choix de l'utilisateur */
    if (modifAdjust && Adjust > 0)
      {
-	pPRule = SearchPresRule (pEl, PtAdjust, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtAdjust, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     pPRule->PrType = PtAdjust;
@@ -2163,7 +2194,7 @@ boolean             Hyphenate;
    /* Justification */
    if (modifJustif)
      {
-	pPRule = SearchPresRule (pEl, PtJustify, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtJustify, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     pPRule->PrType = PtJustify;
@@ -2178,7 +2209,7 @@ boolean             Hyphenate;
    /* Coupure des mots */
    if (modifHyphen)
      {
-	pPRule = SearchPresRule (pEl, PtHyphenate, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtHyphenate, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     pPRule->PrType = PtHyphenate;
@@ -2193,7 +2224,7 @@ boolean             Hyphenate;
    /* Renfoncement de la 1ere ligne */
    if (modifIndent)
      {
-	pPRule = SearchPresRule (pEl, PtIndent, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtIndent, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     pPRule->PrType = PtIndent;
@@ -2211,7 +2242,7 @@ boolean             Hyphenate;
    /* Interligne */
    if (modifLineSpacing)
      {
-	pPRule = SearchPresRule (pEl, PtLineSpacing, &isNew, pDoc, viewToApply);
+	pPRule = SearchPresRule (pEl, PtLineSpacing, 0, &isNew, pDoc, viewToApply);
 	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
 	  {
 	     pPRule->PrType = PtLineSpacing;

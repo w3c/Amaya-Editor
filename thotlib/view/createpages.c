@@ -1583,7 +1583,8 @@ boolean             forward;
 		     pRStd = GlobalSearchRulepEl (pElPage, &pSPR, &pSS, 0, NULL, viewSch,
 					     PtHeight, FALSE, TRUE, &pAttr);
 		     /* cherche si l'element a deja une regle de hauteur specifique */
-		     pRuleDimV = SearchPresRule (pElPage, PtHeight, &nouveau, pDoc, viewNb);
+		     pRuleDimV = SearchPresRule (pElPage, PtHeight, 0,
+						 &nouveau, pDoc, viewNb);
 		     if (nouveau)
 			/* on a cree' une regle de hauteur pour l'element */
 		       {

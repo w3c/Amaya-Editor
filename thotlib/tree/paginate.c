@@ -2265,7 +2265,7 @@ PtrDocument         pDoc;
 	     pRStd = GlobalSearchRulepEl (pElPage, &pSPR, &pSS, 0, NULL, schView,
 					  PtHeight, FALSE, TRUE, &pAttr);
 	     /* cherche si l'element a deja une regle de hauteur specifique */
-	     pRuleDimV = SearchPresRule (pElPage, PtHeight, &New, pDoc, view);
+	     pRuleDimV = SearchPresRule (pElPage, PtHeight, 0, &New, pDoc, view);
 	     if (New)
 		/* on a cree' une regle de hauteur pour l'element */
 	       {
@@ -2978,7 +2978,7 @@ boolean             Assoc;
 				 /* on modifie la regle de presentation specifique */
 				 /* du corps de page */
 				 pRuleDimV = SearchPresRule (pBody->AbElement,
-					      PtHeight, &New, pDoc, nbView);
+					      PtHeight, 0, &New, pDoc, nbView);
 				 /* change le parametre de la regle */
 				 pRuleDimV->PrDimRule.DrValue =
 				    WholePageHeight - PageFooterHeight - PageHeaderHeight;
