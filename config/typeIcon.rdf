@@ -16,31 +16,31 @@
 </rdf:Property>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#SeeAlso">
-  <i:usesIcon rdf:resource="$THOTDIR/config/seealso.png" />
+  <i:usesIcon rdf:resource="$THOTDIR/amaya/seealso.png" />
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Question">
-  <i:usesIcon rdf:resource="$THOTDIR/config/question.png" />
+  <i:usesIcon rdf:resource="$THOTDIR/amaya/question.png" />
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Explanation">
-  <i:usesIcon rdf:resource="$THOTDIR/config/explanation.png" />
+  <i:usesIcon rdf:resource="$THOTDIR/amaya/explanation.png" />
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Example">
-  <i:usesIcon rdf:resource="$THOTDIR/config/example.png" />
+  <i:usesIcon rdf:resource="$THOTDIR/amaya/example.png" />
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Comment">
-  <i:usesIcon rdf:resource="$THOTDIR/config/annot.png" />
+  <i:usesIcon rdf:resource="$THOTDIR/amaya/annot.png" />
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Change">
-  <i:usesIcon rdf:resource="$THOTDIR/config/change.png" />
+  <i:usesIcon rdf:resource="$THOTDIR/amaya/change.png" />
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Advice">
-  <i:usesIcon rdf:resource="$THOTDIR/config/advice.png" />
+  <i:usesIcon rdf:resource="$THOTDIR/amaya/advice.png" />
 </rdf:Description>
 
 </rdf:RDF>
