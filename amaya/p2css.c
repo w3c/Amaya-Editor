@@ -294,8 +294,9 @@ PRuleInfoPtr        cour;
     * in-core structures.
     */
    context = (PresentationContext) cour->ctxt;
-   if (context->drv->CleanPresentation)
-      context->drv->CleanPresentation (cour->pschema, context, unused);
+   cour->ctxt->destroy = 1;
+   ParseHTMLStyleDecl (cour->pschema, context, cour->css_rule);
+   cour->ctxt->destroy = 0;
 
    /*
     * mark the RPI as removed.

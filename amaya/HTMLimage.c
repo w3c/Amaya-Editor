@@ -388,9 +388,12 @@ void               *extra;
 	    {
 	      if (desc == NULL) {
 		/* it is a local image */
-		if (callback)
-		    callback(doc, el, pathname, extra);
-		else
+		if (callback) {
+		    if (!strncmp(pathname, "file:/", 6))
+		        callback(doc, el, &pathname[6], extra);
+		    else
+		        callback(doc, el, &pathname[0], extra);
+		} else
 		    DisplayImage (doc, el, pathname);
 	      } else if (TtaFileExist (desc->localName)) {
 	        /* remote image, but already here */
