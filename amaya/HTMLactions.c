@@ -426,15 +426,14 @@ Document            doc;
 		     if (info != NULL)
 		       {
 			 /* @@ what do we do with the precedent parameters? */
-			 form_data = &info[1];
+			strcat (documentURL, info);
+			TtaFreeMemory (info);
 		       }
 		   }
 		 /* get the referred document */
 		 targetDocument = GetHTMLDocument (documentURL, form_data,
 				   doc, doc, CE_TRUE, TRUE, 
 				   (void *) FollowTheLink_callback, (void *) ctx);
-		 if (info)
-		   TtaFreeMemory (info);
 	       }
 	return (TRUE);
 	  }
