@@ -638,16 +638,7 @@ View                view;
 	 }
        else
 	 {
-	   TtaGetDocumentDirectory (doc, tempname, MAX_LENGTH);
-	   ustrcpy (SavePath, tempname);
-	   ustrcpy (SaveName, TtaGetDocumentName (doc));
-	   ustrcat (tempname, DIR_STR);
-	   /* add the suffix .html for HTML documents */
-	   if (!TextFormat &&
-	       !IsHTMLName (SaveName) &&
-	       !IsXMLName (SaveName))
-	     ustrcat (SaveName, html_EXT);
-	   ustrcat (tempname, SaveName);
+	   TtaExtractName (tempname, SavePath, SaveName);
 	 }
 #      ifndef _WINDOWS
        TtaSetDialoguePosition ();
