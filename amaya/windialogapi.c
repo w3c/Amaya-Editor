@@ -24,9 +24,6 @@
 
 extern ThotWindow  FrRef[MAX_FRAME + 2];
 extern int         currentFrame;
-#ifdef  APPFILENAMEFILTER
-#undef  APPFILENAMEFILTER
-#endif  /* APPFILENAMEFILTER */
 
 #ifndef MAX_PROPOSAL_CHKR
 #define MAX_PROPOSAL_CHKR 10
