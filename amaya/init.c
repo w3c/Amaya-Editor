@@ -5748,20 +5748,33 @@ void                InitAmaya (NotifyEvent * event)
    else
      {
        NormalizeFile (s, LastURLName, AM_CONV_NONE);
-         /* check if it is an absolute or a relative name */
+       if (IsW3Path (LastURLName))
+       {
+	   /* if the command line paremeter 
+	      is a url without http://
+	      it's a remote document or 
+	      a new file (doesn't exist yet )
+	      in the current path */
+	   strcpy (s, LastURLName);
+	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+       }
+       else
+       {
+	   /* check if it is an absolute or a relative name */
 #ifdef _WINDOWS
-	 if ((LastURLName[0] == DIR_SEP) || (LastURLName[1] == ':'))
+	   if ((LastURLName[0] == DIR_SEP) || (LastURLName[1] == ':'))
 #else  /* !_WINDOWS */
-           if (LastURLName[0] == DIR_SEP)
+	   if (LastURLName[0] == DIR_SEP)
 #endif /* !_WINDOWS */
-	     /* it is an absolute name */
-	     TtaExtractName (LastURLName, DirectoryName, DocumentName);
+		   /* it is an absolute name */
+		   TtaExtractName (LastURLName, DirectoryName, DocumentName);
 	   else
 	     /* it is a relative name */
-	     strcpy (DocumentName, LastURLName);
+	       strcpy (DocumentName, LastURLName);
 	   /* start with the local document */
 	   LastURLName[0] = EOS;
 	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+       }
      }
    Loading_method = CE_ABSOLUTE;
 }
