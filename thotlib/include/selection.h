@@ -13,6 +13,12 @@
 
 #ifndef __CEXTRACT__
 
+
+/*----------------------------------------------------------------------
+   TtaCancelSelection removes the current selection. 
+  ----------------------------------------------------------------------*/
+extern void TtaCancelSelection ();
+
 /*----------------------------------------------------------------------
    TtaIsDocumentSelected answers TRUE if the document is selected.  
   ----------------------------------------------------------------------*/

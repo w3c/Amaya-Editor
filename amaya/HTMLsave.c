@@ -1460,6 +1460,7 @@ void RestartParser (Document doc, char *localFile,
   /* Clear all editing operations registered in the editing history of the
      document */
   TtaClearUndoHistory (doc);
+  TtaCancelSelection ();
   /* Free access keys table */
   TtaRemoveDocAccessKeys (doc);
   /* Store the document profile if it has been modified */

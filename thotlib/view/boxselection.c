@@ -43,6 +43,7 @@
 #include "memory_f.h"
 #include "scroll_f.h"
 #include "structcreation_f.h"
+#include "structselect_f.h"
 #include "textcommands_f.h"
 #include "viewapi_f.h"
 
@@ -250,6 +251,19 @@ void ClearViewSelection (int frame)
 }
 
 /*----------------------------------------------------------------------
+   TtaCancelSelection removes the current selection. 
+  ----------------------------------------------------------------------*/
+void TtaCancelSelection ()
+{
+  int d;
+
+  for (d = 0; d < MAX_DOCUMENTS - 1; d++)
+    NewSelection (d, NULL, NULL, 0, 0);
+   CancelSelection ();
+}
+
+
+/*----------------------------------------------------------------------
    TtaClearViewSelections unselects and clears all current displayed
    selections.                                  
   ----------------------------------------------------------------------*/
@@ -258,7 +272,6 @@ void TtaClearViewSelections ()
    int                 frame;
 
    /* manage all frames */
-   NewSelection (1, NULL, NULL, 0, 0);
    for (frame = 1; frame <= MAX_FRAME; frame++)
       if (ViewFrameTable[frame - 1].FrAbstractBox != NULL)
 	{
