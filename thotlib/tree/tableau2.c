@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    tableau2.c : Traitements specifiques a la structure Tableau.
 

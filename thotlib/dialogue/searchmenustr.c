@@ -1,5 +1,3 @@
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    cherche.c : gestion de la commande de recherche.
    Major Changes:

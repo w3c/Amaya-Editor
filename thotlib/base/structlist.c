@@ -1,7 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-
 /* 
    Module de trace et mise au point
    V. Quint - Avril 1985        

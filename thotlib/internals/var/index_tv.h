@@ -1,5 +1,3 @@
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /* index.var */
 /* modif Janvier 1996 H. Richy */
 

@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /* res.var */
 	
 EXPORT char BasicStamps [7];

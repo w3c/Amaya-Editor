@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    printmsg.c : affichage des messages d'erreur de different niveau 
    B. Dulauroy  Avril 1991

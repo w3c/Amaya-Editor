@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
  * Gestion de la presentation specifique des images
  * IV : Refonte du code des images Janv 1995

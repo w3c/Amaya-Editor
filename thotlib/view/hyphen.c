@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    hyphen.c :  gestion de la coupure des mots
    I. Vatton - Aout 92

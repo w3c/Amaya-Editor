@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    Gestion de la selection dans l'arbre abstrait.
    V. Quint     Mai 1992

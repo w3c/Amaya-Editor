@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

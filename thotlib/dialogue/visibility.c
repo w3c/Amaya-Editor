@@ -1,7 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-/* I. Vatton    Mai 1994 */
-
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"

@@ -1,6 +1,3 @@
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/****************************************************************/
 	/*                                                              */
 	/*      Ce module implemente les fonctions de l'API Thot qui    */
 	/*      permettent de lire ou d'ecrire certaines parties de     */
@@ -11,7 +8,6 @@
 	/*                                                              */
 	/*      V. Quint        Juin 1992                               */
 	/*                                                              */
-/****************************************************************/
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    rdschtrad.c : chargement des schemas de traduction
    Chargement des schemas de traduction

@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    thotmsg.c : affichage des messages d'erreur de different niveau 
    IV : Mai 92   adaptation Tool Kit

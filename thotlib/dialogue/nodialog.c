@@ -1,5 +1,3 @@
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    nodialog : fonctions vides pour l'edition de lien
    Major changes:
