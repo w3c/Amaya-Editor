@@ -637,16 +637,22 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
       annot_list = NULL;
 #ifdef RAPTOR_RDF_PARSER
       TtaFreeMemory (full_file_name);
-      raptor_free (rdfxml_parser);
 #ifdef AM_REDLAND
+      raptor_free_parser (rdfxml_parser);
       raptor_free_uri (uri);
+#else
+      raptor_free (rdfxml_parser);
 #endif /* AM_REDLAND */
 #endif
       return NULL;
     }
 #ifdef RAPTOR_RDF_PARSER
-  TtaFreeMemory(full_file_name);
-  raptor_free(rdfxml_parser);
+  TtaFreeMemory (full_file_name);
+#ifdef AM_REDLAND
+  raptor_free_parser (rdfxml_parser);
+#else
+  raptor_free (rdfxml_parser);
+#endif /* AM_REDLAND */
 #endif
 
 #ifdef AM_REDLAND
