@@ -2410,11 +2410,13 @@ static Document LoadDocument (Document doc, char *pathname,
   ThotBool            plainText;
   ThotBool            xmlDec, withDoctype, isXML;
   DocumentType        thotType;
+  char                local_content_type[MAX_LENGTH];
 
   docType = docText;
   unknown = TRUE;
   tempdir = tempdocument = NULL;
   charsetname[0] = EOS;
+  local_content_type[0] = EOS;
   http_content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
   /* make a copy we can modify */
   if (http_content_type)
@@ -2450,8 +2452,7 @@ static Document LoadDocument (Document doc, char *pathname,
       /* check file name extension */
       if (isXML)
 	{
-	  /* it seems to be an XML document */
-	  isXML = TRUE;
+	  /* it seems to be a XML document */
 	  docType = thotType;
 	  unknown = FALSE;
 	}
@@ -2482,7 +2483,19 @@ static Document LoadDocument (Document doc, char *pathname,
 	  parsingLevel = L_Transitional;
 	  unknown = FALSE;
 	}
-      }
+      /* Assign a content type to that local document */
+      if (docType == docMath)
+	strcpy (local_content_type , "text/mathml+xml");
+      else if (docType == docSVG)
+	strcpy (local_content_type , "image/svg");
+      else if (docType == docXml)
+	strcpy (local_content_type , "text/xml");
+      else if (docType == docText || docType == docCSS ||
+	       docType == docSource || docType == docLog )
+	strcpy (local_content_type , "text/plain");
+      else if (docType == docHTML)
+	strcpy (local_content_type , "text/html");
+    }
    else
      /* the server returned a content type */
      {
@@ -2816,7 +2829,11 @@ static Document LoadDocument (Document doc, char *pathname,
       if (http_content_type)
 	DocumentMeta[newdoc]->content_type = TtaStrdup (http_content_type);
       else
-	DocumentMeta[newdoc]->content_type = NULL;
+	if (local_content_type[0] != EOS)
+	  /* assign a content type to the local files */
+	  DocumentMeta[newdoc]->content_type = TtaStrdup (local_content_type);
+	else
+	  DocumentMeta[newdoc]->content_type = NULL;
       /* content-length */
       s = HTTP_headers (http_headers, AM_HTTP_CONTENT_LENGTH);
       if (s)
@@ -2945,6 +2962,7 @@ void Reload_callback (int doc, int status, char *urlName,
        initial_url = DocumentMeta[doc]->initial_url;
        DocumentMeta[doc]->initial_url = NULL;
 
+       RemoveParsingErrors (newdoc);
        /* parse and display the document, res contains the new document
 	identifier, as given by the thotlib */
        res = LoadDocument (newdoc, pathname, form_data, NULL, method,
@@ -2985,13 +3003,16 @@ void Reload_callback (int doc, int status, char *urlName,
 	       el = ElementAtPosition (newdoc, ctx->position);
 	       TtaShowElement (newdoc, 1, el, ctx->distance);
 	     }
-	   /* check parsing errors */
-	   CheckParsingErrors (newdoc);
 	 }
      }
 
   if (stopped_flag == FALSE && newdoc)
     ResetStop(newdoc);
+
+  /* check parsing errors */
+  CheckParsingErrors (newdoc);
+
+
   TtaFreeMemory (pathname);
   TtaFreeMemory (documentname);
   if (form_data)
