@@ -551,11 +551,11 @@ void TtaRemoveInitialSpaces (Element element, Document document)
   TtaRemoveFinalSpaces
 
   Removes spaces and NEWLINE at the end of the text element if the
-  parameter all is TRUE, only the last space if the parameter is FALSE.
+  parameter all is TRUE, only the last CR/EOL if the parameter is FALSE.
   Parameters:
   element: the Text element to be modified.
   document: the document containing that element.
-  all: when TRUE removes all spaces, when FALSE only the last space.
+  all: when TRUE removes all spaces, when FALSE only the last CR/EOL.
   ----------------------------------------------------------------------*/
 void TtaRemoveFinalSpaces (Element element, Document document,
 			   ThotBool all)
@@ -581,42 +581,51 @@ void TtaRemoveFinalSpaces (Element element, Document document,
       while (pBuf && pBuf->BuNext)
 	pBuf = pBuf->BuNext;
       still = (pBuf != NULL);
-      while (still)
+      if (!all)
 	{
-	  /* there is almost one space at the end of the text element */
 	  i = pBuf->BuLength - 1;
-	  while (i >= 0 && (delta == 0 || all) &&
-		 (pBuf->BuContent[i] == SPACE || pBuf->BuContent[i] == EOL))
+	  if (pBuf->BuContent[i] == __CR__ || pBuf->BuContent[i] == EOL)
+	    delta++;
+	}
+      else
+	{
+	  while (still)
 	    {
-	      i--;
-	      delta++;
-	    }
-	  still = (i < 0);
-	  if (still)
-	    {
-	      /* remove the last buffer */
-	      pPrev = pBuf->BuPrevious;
-	      if (pPrev)
+	      /* there is almost one space at the end of the text element */
+	      i = pBuf->BuLength - 1;
+	      while (i >= 0 &&
+		     (pBuf->BuContent[i] == SPACE || pBuf->BuContent[i] == EOL))
 		{
-		  pPrev->BuNext = NULL;
-#ifdef NODISPLAY
-		  FreeTextBuffer (pBuf);
-#else /* NODISPLAY */
-		  DeleteBuffer (pBuf, ActiveFrame);
-#endif /* NODISPLAY */
-		  pBuf = pPrev;
+		  i--;
+		  delta++;
 		}
-	      else
-	      /* stop if there is no previous buffer */ 
-		still = FALSE;
-	    }
-	  else if ( pBuf->BuLength != i + 1)
-	    {
-	      pBuf->BuContent[i + 1] = EOS;
-	      pBuf->BuLength = i + 1;
+	      still = (i < 0);
+	      if (still)
+		{
+		  /* remove the last buffer */
+		  pPrev = pBuf->BuPrevious;
+		  if (pPrev)
+		    {
+		      pPrev->BuNext = NULL;
+#ifdef NODISPLAY
+		      FreeTextBuffer (pBuf);
+#else /* NODISPLAY */
+		      DeleteBuffer (pBuf, ActiveFrame);
+#endif /* NODISPLAY */
+		      pBuf = pPrev;
+		    }
+		  else
+		    /* stop if there is no previous buffer */ 
+		    still = FALSE;
+		}
+	      else if ( pBuf->BuLength != i + 1)
+		{
+		  pBuf->BuContent[i + 1] = EOS;
+		  pBuf->BuLength = i + 1;
+		}
 	    }
 	}
-
+      
       if (delta)
 	{
           if (delta == pEl->ElVolume)
