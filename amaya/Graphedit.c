@@ -1891,6 +1891,36 @@ void                TspanCreated (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
+   UsePasted
+   A use element has been pasted by the user.
+   Copy the referred element.
+  ----------------------------------------------------------------------*/
+void                UsePasted (NotifyElement * event)
+{
+  ElementType	elType;
+  AttributeType	attrType;
+  Attribute	attr;
+  int           length;
+  char          *href;
+
+  /* first, get the xlink:href attribute */
+  elType = TtaGetElementType (event->element);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+  attr = TtaGetAttribute (event->element, attrType);
+  if (attr)
+    /* the use element has a xlink:href attribute */
+    {
+      /* get its value */
+      length = TtaGetTextAttributeLength (attr);
+      href = TtaGetMemory (length + 1);
+      TtaGiveTextAttributeValue (attr, href, &length);
+      CopyUseContent (event->element, event->document, href);
+      TtaFreeMemory (href);
+    }
+}
+
+/*----------------------------------------------------------------------
    AttrXlinkHrefWillBeChanged: attribute xlink:href will be modified.
    Keep its initial value in case an invalid value be entered.
   ----------------------------------------------------------------------*/

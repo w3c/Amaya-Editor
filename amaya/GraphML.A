@@ -40,6 +40,8 @@ ELEMENTS
 	ElemNew.Post ->         TspanCreated;
 	ElemPaste.Post ->       TspanCreated;
 	END;
+   use_:
+	ElemPaste.Post ->       UsePasted;
    image:
 	ElemNew.Post ->         SvgImageCreated;
    style__:
