@@ -103,22 +103,22 @@ ATTRIBUTES
       	AttrModify.Post -> CoordsModified;
       	END;
       
-    x_coord:
+   x_coord:
      	BEGIN
       	AttrModify.Post -> GraphicsModified;
      	END;
      
-    y_coord:
+   y_coord:
      	BEGIN
       	AttrModify.Post -> GraphicsModified;
      	END;
      
-    width\240:
+   width\240:
    	BEGIN
     	AttrModify.Post -> GraphicsModified;
     	END;
     
-    height\240:
+   height\240:
    	BEGIN
    	AttrModify.Post -> GraphicsModified;
    	END;

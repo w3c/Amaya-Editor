@@ -17,7 +17,7 @@ CONST
    C_BR   = '\212';
 
 STRUCT
-  HTML (ATTR SectionNumbering = Yes_) =
+  HTML (ATTR SectionNumbering = Yes_; LinkNumbering = Yes_) =
 	BEGIN
 	HEAD;
 	BODY;
@@ -302,7 +302,7 @@ STRUCT
 	Table_foot = CONSTANT C_Foot;
 	END;
   Column_head (ATTR Col_width_percent = INTEGER; Col_width_pxl = INTEGER;
-		    IntMaxVol = Integer) =
+		    Col_width_delta = INTEGER; IntMaxVol = Integer) =
 	CONSTANT C_Head with Col_width_percent ?= 100;
   Table_row (ATTR Row_align = Row_left, Row_center, Row_right;
 		  Row_valign = Row_top, Row_middle, Row_bottom, Row_baseline) =
@@ -386,10 +386,12 @@ EXCEPT
 	DefaultSelected: Invisible;
 	DefaultChecked:	Invisible;
 	SectionNumbering:Invisible;
+	LinkNumbering:	Invisible;
 
 	Table:		PageBreak;
-	Column_head:	NoHMove, NoVMove, NoCut, Hidden;
-	Table_head:	NoHMove, NoVMove, NoCut, Hidden, PageBreakRepetition;
+	Column_head:	NoHMove, NoVMove, NoCut, Hidden, NoSelect;
+	Table_head:	NoHMove, NoVMove, NoCut, Hidden, NoSelect,
+			PageBreakRepetition;
 	C_Head:		Hidden, NoSelect;
 	Table_foot:	NoMove, NoResize, NoCut, Hidden, PageBreakRepBefore;
 	C_Foot:		Hidden, NoSelect;
@@ -400,6 +402,7 @@ EXCEPT
 	Heading_cell:	NoHMove, NoHResize;
 	Col_width_percent:	Invisible;
 	Col_width_pxl:	Invisible;
+	Col_width_delta:	Invisible;
 	ColExt:		Invisible;
 	RowExt:		Invisible;
 	Ref_column:	Invisible;

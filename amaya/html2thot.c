@@ -3959,7 +3959,7 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   PutDash put a dash character in the input buffer.
+   PutDash put a dash character in the current comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutDash (char c)
@@ -3974,7 +3974,7 @@ char                c;
 }
 
 /*----------------------------------------------------------------------
-   PutDashDash     put 2 dash characters in the input buffer.
+   PutDashDash     put 2 dash characters in the current comment.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PutDashDash (char c)

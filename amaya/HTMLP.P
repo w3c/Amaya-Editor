@@ -1,6 +1,6 @@
 	{ I. Vatton 	 Novembre 1994-1995  }
 
-{ Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER, LINK_NUMBER }
+{ Variables used in ifdefs: PAGE, BLACK_WHITE, US_PAPER }
 PRESENTATION HTML;
 
 VIEWS
@@ -62,9 +62,7 @@ COUNTERS
    CptLinksPage : Rank of Page(Links_view);
    CptToCPage : Rank of Page(Table_of_contents);
 #endif
-#ifdef LINK_NUMBER
    AnchorCounter : Set 0 on BODY add 1 on Anchor;
-#endif
    H2Counter : Set 0 on H1 add 1 on H2;
    H3Counter : Set 0 on H2 add 1 on H3;
    H4Counter : Set 0 on H3 add 1 on H4;
@@ -98,7 +96,6 @@ DEFAULT
 
 BOXES
 
-#ifdef LINK_NUMBER
  AnchorNumInFormattedView:
 	BEGIN
 	Content: (Text ' [' Value(AnchorCounter, Arabic) Text ']');
@@ -131,9 +128,10 @@ BOXES
 		END;
 	END;
 
+#ifdef PAGE
  TargetPageNumber:
 	BEGIN
-	Content: (Text ' (cf. p. ' Value(PageNumber(Formatted_view), Arabic) Text ')');
+	Content: (Text ' (page ' Value(PageNumber(Formatted_view), Arabic) Text ')');
 	Visibility: 0;
 	END;
 
@@ -3760,11 +3758,10 @@ RULES
 	CreateBefore(SCRIPT_S);
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
+	Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Foreground: Enclosing =;
 		Visibility: Enclosing =;
-		Line;
 		END;		
 	END;
 
@@ -3895,16 +3892,8 @@ RULES
 		Height: 1.7 min;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		END;
-	IN Links_view BEGIN
-#ifdef PAGE
-		Adjust: VMiddle;
-#endif
-		Size: Enclosing +2;
-		Visibility: 10;
-		Height: 1.7 min;
-		VertPos: Top = Previous . Bottom + VSpaceInToC;
-		HorizPos: Left = Enclosing . Left;
-		END;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  H2:	BEGIN
@@ -5448,7 +5437,7 @@ RULES
 	BEGIN
 	IF First CreateFirst(COMMENT_S);
 	IF Last CreateLast(COMMENT_END);
-	Width: Enclosing . Width;
+	Width: Enclosed . Width;
 	VertPos: Top = Previous . Bottom + 0.2;
 	END;
 
@@ -5463,13 +5452,6 @@ ATTRIBUTES
 	   CreateLast(ATTR_HREF_ANCH);
 	   CreateLast(VALUE_HREF_ANCH);
 	   END;
-#ifdef LINK_NUMBER
-	IF Anchor and not InternalLink
-	   BEGIN
-	   CreateFirst(AnchorNumInLinkView);
-	   CreateAfter(AnchorNumInFormattedView);
-	   END;
-#endif
 #ifdef PAGE
 	IF Anchor
 	   Underline: Underlined;
@@ -5495,6 +5477,27 @@ ATTRIBUTES
 		END;
 	END;
 
+ LinkNumbering (Anchor):
+	BEGIN
+	IF HREF_ and not InternalLink
+	   BEGIN
+	   CreateFirst(AnchorNumInLinkView);
+	   CreateAfter(AnchorNumInFormattedView);
+	   END;
+#ifdef PAGE
+	IF InternalLink
+	   CreateAfter(SeeTargetPage);
+	IF NAME
+	   CreateAfter(TargetPageNumber);
+#endif
+	END;
+
+#ifdef PAGE
+ InternalLink:
+	IN Links_view
+	   Visibility: 0;
+#endif
+
  SectionNumbering (H2):
 	CreateFirst(H2_section_number);
  SectionNumbering (H3):
@@ -5505,17 +5508,6 @@ ATTRIBUTES
 	CreateFirst(H5_section_number);
  SectionNumbering (H6):
 	CreateFirst(H6_section_number);
-
- InternalLink:
-	BEGIN
-#ifdef LINK_NUMBER
-	CreateAfter(SeeTargetPage);
-#endif
-#ifdef PAGE
-	IN Links_view
-	   Visibility: 0;
-#endif
-	END;
 
 #ifndef PAGE
 #ifndef BLACK_WHITE
@@ -5586,9 +5578,6 @@ ATTRIBUTES
 	CreateBefore(VALUE_NAME);
 	CreateLast(ATTR_NAME_ANCH);
 	CreateLast(VALUE_NAME_ANCH);
-#ifdef LINK_NUMBER
-	CreateAfter(TargetPageNumber);
-#endif
 #ifndef PAGE
 #ifdef BLACK_WHITE
 	Underline: Underlined;
@@ -6249,6 +6238,9 @@ dans des paragraphes s affichent a cote de leur cadre...
 
  Col_width_pxl:
 	Width: Col_width_pxl px;
+
+ Col_width_delta:
+	Width: Enclosing . Width - Col_width_delta px;
 
  Ref_column:
 	BEGIN

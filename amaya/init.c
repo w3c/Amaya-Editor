@@ -610,6 +610,7 @@ char               *pathname;
 	     }
 	TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
 	TtaSetToggleItem (doc, 1, Special, TSectionNumber, FALSE);
+	TtaSetToggleItem (doc, 1, Special, TLinkNumber, FALSE);
 	/* remove the current selection */
 	TtaUnselect (doc);
 	UpdateContextSensitiveMenus (doc);
@@ -1884,7 +1885,7 @@ NotifyEvent        *event;
 /*----------------------------------------------------------------------
   SectionNumbering
   The user wants to number sections if they are not currently numbered,
-  or to stop numbering if section are numbered.
+  or to stop numbering if sections are numbered.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SectionNumbering (Document document, View view)
@@ -1909,6 +1910,44 @@ View                view;
       TtaRemoveAttribute (root, attr, document);
    else
       /* the root element has no SectionNumbering attribute. Create one */
+      {
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (root, attr, document);
+        TtaSetAttributeValue (attr, 1, root, document);
+      }
+   if (!docModified)
+	TtaSetDocumentUnmodified (document);
+}
+
+
+/*----------------------------------------------------------------------
+  LinkNumbering
+  The user wants to number links if they are not currently numbered,
+  or to stop numbering if links are numbered.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                LinkNumbering (Document document, View view)
+#else
+void                LinkNumbering (document, view)
+Document            document;
+View                view;
+#endif
+{
+   Element	    root;
+   AttributeType    attrType;
+   Attribute	    attr;
+   boolean	    docModified;
+
+   docModified = TtaIsDocumentModified (document);
+   root = TtaGetMainRoot (document);
+   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+   attrType.AttrTypeNum = HTML_ATTR_LinkNumbering;
+   attr = TtaGetAttribute (root, attrType);
+   if (attr != NULL)
+      /* the root element has a LinkNumbering attribute. Remove it */
+      TtaRemoveAttribute (root, attr, document);
+   else
+      /* the root element has no LinkNumbering attribute. Create one */
       {
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (root, attr, document);
@@ -2221,7 +2260,7 @@ View                view;
       el = GetIncludedDocuments (el, document);
    SetInternalLinks (body, document);		
    /********
-   TtaPrint (document, "Formatted_view Links_view Table_of_contents");
+   TtaPrint (document, "Formatted_view Links_view");
    *********/
 }
 

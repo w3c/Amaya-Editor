@@ -871,6 +871,18 @@ boolean             createLink;
 	     /* Create the corresponding anchor */
 	     elType.ElTypeNum = HTML_EL_Anchor;
 	     anchor = TtaNewElement (doc, elType);
+	     if (createLink)
+	       {
+		/* create an attributeHREF for the new anchor */
+		attrType.AttrSSchema = elType.ElSSchema;
+		attrType.AttrTypeNum = HTML_ATTR_HREF_;
+		attr = TtaGetAttribute (anchor, attrType);
+		if (attr == NULL)
+		  {
+		     attr = TtaNewAttribute (attrType);
+		     TtaAttachAttribute (anchor, attr, doc);
+		  }
+		}
 	     TtaInsertSibling (anchor, first, TRUE, doc);
 	     /* move the selected elements within the new Anchor element */
 	     child = first;
@@ -898,18 +910,6 @@ boolean             createLink;
 	  }
      }
 
-   if (createLink)
-     {
-	/* create an attributeHREF for the new anchor */
-	attrType.AttrSSchema = elType.ElSSchema;
-	attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	attr = TtaGetAttribute (anchor, attrType);
-	if (attr == NULL)
-	  {
-	     attr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (anchor, attr, doc);
-	  }
-     }
    TtaSetDocumentModified (doc);
    /* ask Thot to display changes made in the document */
    TtaSetDisplayMode (doc, DisplayImmediately);
