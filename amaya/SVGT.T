@@ -36,7 +36,7 @@ RULES
 
    SVG:
 	BEGIN
-        if within use_
+        if immediately within use_
 	   Ignore;
 	Use HTMLTX for HTML;
         Use MathMLT for MathML;
@@ -54,7 +54,7 @@ RULES
 
    g:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'g';
@@ -107,7 +107,7 @@ RULES
 
    symbol_:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'symbol';
@@ -141,7 +141,7 @@ RULES
 
    image:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'image';
@@ -162,7 +162,7 @@ RULES
 
    switch:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'switch';
@@ -190,7 +190,7 @@ RULES
 
    path:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'path';
@@ -211,7 +211,7 @@ RULES
 
    rect:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'rect';
@@ -232,7 +232,7 @@ RULES
 
    circle:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'circle';
@@ -253,7 +253,7 @@ RULES
 
    ellipse:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'ellipse';
@@ -274,7 +274,7 @@ RULES
 
    line_:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'line';
@@ -295,7 +295,7 @@ RULES
 
    polyline:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'polyline';
@@ -316,7 +316,7 @@ RULES
 
    polygon:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'polygon';
@@ -337,7 +337,7 @@ RULES
 
    text_:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'text';
@@ -352,7 +352,7 @@ RULES
 
    tspan:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'tspan';
@@ -367,7 +367,7 @@ RULES
 
    tref:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'tref';
@@ -401,7 +401,7 @@ RULES
 
    a:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'a';
@@ -416,7 +416,7 @@ RULES
 
    script_:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'script';
@@ -431,8 +431,6 @@ RULES
  
    animate:
 	BEGIN
-	if within use_
-           Ignore;
 	create SOT;
 	create 'animate';
  	indent +9;
@@ -452,8 +450,6 @@ RULES
 
    set_:
 	BEGIN
-	if within use_
-           Ignore;
 	create SOT;
 	create 'set';
 	indent +5;
@@ -473,8 +469,6 @@ RULES
 
    animateMotion:
 	BEGIN
-	if within use_
-           Ignore;
 	create SOT;
 	create 'animateMotion';
         indent +15;
@@ -494,7 +488,7 @@ RULES
 
    mpath:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'mpath';
@@ -515,8 +509,6 @@ RULES
 
    animateColor:
 	BEGIN
-	if within use_
-           Ignore;
 	create SOT;
 	create 'animateColor';
  	indent +14;
@@ -536,7 +528,7 @@ RULES
 
     linearGradient:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'linearGradient';
@@ -557,7 +549,7 @@ RULES
 
     stop:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'stop';
@@ -578,8 +570,6 @@ RULES
 
    animateTransform:
 	BEGIN
-	if within use_
-           Ignore;
 	create SOT;
 	create 'animateTransform';
 	indent +18;
@@ -612,7 +602,7 @@ RULES
 
    foreignObject:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	create SOT;
 	create 'foreignObject';
@@ -678,7 +668,7 @@ RULES
 
    TEXT_UNIT:
 	BEGIN
-	if within use_
+	if immediately within use_
            Ignore;
 	if within tref and
            not within desc and not within metadata and not within title
