@@ -19,8 +19,9 @@
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="Configure.html.fr"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
-        alt="top" border="0" src="../Icons/up.gif" /></a></p>
+        border="0" src="../Icons/left.gif" /></a> <a
+        href="Manual.html.fr"><img alt="top" border="0" src="../Icons/up.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -36,15 +37,15 @@ href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content Accessibility
 Guidelines</a> du W3C. Certaines caractéristiques, comme par exemple
 l'obligation d'avoir un attribut "alt" pour les images et les zones actives ,
 ont déjà été incluses _ il est impossible d'ajouter une image tant qu'il n'y a
-pas de texte associé. Amaya produit aussi automatiquement un balisage valide
+pas de texte alterné. Amaya produit aussi automatiquement un balisage valide
 conforme au W3C. D'autres caractéristiques, comme les longues descriptions
 spécifiques et les légendes, doivent être effectuées par l'auteur à l'aide des
-attributs des menus ou des menus structure.</p>
+attributs des menus ou des menus de structure.</p>
 
 <p>La documentation d'aide d'Amaya décrit <a
 href="HTML-elements/infoTypes.html.fr">comment utiliser quelques éléments
 individuels HTML </a>et inclue une aide en ligne sur comment assurer que les
-pages produites soient accessibles. En attendant, les guides en ligne les plus
+pages produites soient accessibles. De plus, les guides en ligne  plus
 complets sont les <a href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content
 Accessibility Guidelines</a> du W3C. Le <a href="http://www.w3.org/WAI">Web
 Accessibility Initiative</a> du W3C publie également "<a
@@ -55,12 +56,12 @@ pratiques qui sont:</p>
   <li><strong>Images &amp; animations.</strong> Utilisez l'attribut
     <code>alt</code> pour décrire la fonction de chaque optique.</li>
   <li><strong>Zones actives.</strong> Utilisez le <code>MAP</code> côté-client
-    et le texte pour les hotspots.</li>
+    et le texte pour les zones sensibles.   </li>
   <li><strong>Multimedia.</strong> Fournissez des légendes et des
     transcriptions audio, et des descriptions vidéo.</li>
   <li><strong>Liens hypertextes.</strong> Utilisez un texte qui a un sens même
-    lorsqu' il est lu en-dehors du contexte. Par exemple, évitez "cliquer
-    ici".</li>
+    lorsqu'il est lu en-dehors du contexte. Par exemple, évitez "cliquer
+  ici".</li>
   <li><strong>Organisation de la page.</strong> Utilisez les en-têtes, les
     listes, ainsi qu'une structure logique. Utilisez les <strong>CSS</strong>
     pour la bordure et le style quand cela est possible.</li>
@@ -85,7 +86,7 @@ pratiques qui sont:</p>
 <p>L'accessibilité d'Amaya pour les gens ayant des incapacités s'améliore à
 chaque version. Il est maintenant possible d'exécuter un grand nombre de
 fonctions sans utiliser une souris, et d'exécuter des fonctions d'édition (à
-l'exception de: entrer le texte) sans utiliser le clavier.</p>
+l'exception la saisie de texte) sans utiliser le clavier.</p>
 
 <p>Les caractéristiques d'accessibilité dans la version courante incluent:</p>
 <ul>
@@ -94,16 +95,16 @@ l'exception de: entrer le texte) sans utiliser le clavier.</p>
   formatée.</li>
   <li>Editer la source.</li>
   <li>Ajouter, supprimer et éditer dynamiquement plusieurs feuilles de style,
-    incluant un utilisateur feuilles de style.</li>
-  <li>Activation des commandes du clavier, des liens et des contrôles de forme
+    incluant une feuille de style.</li>
+  <li>Activation des commandes au clavier, des liens et des contrôles de forme
     (bien que quelques caractéristiques supplémentaires, comme par exemple
     "sélectionner un lien cible", nécessitent encore une souris).</li>
 </ul>
 </div>
 
 <p align="right"><a href="Configure.html.fr"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
-src="../Icons/up.gif" /></a></p>
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
+border="0" src="../Icons/up.gif" /></a></p>
 <hr />
 </body>
 </html>

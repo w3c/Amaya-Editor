@@ -159,14 +159,14 @@ décrits.</p>
             actives</a></li>
         </ul>
       </li>
-      <li><a href="StyleSheets.html.fr#Style">Les seuilles de style</a>
+      <li><a href="StyleSheets.html.fr#Style">Les feuilles de style</a>
         <ul>
           <li><a href="StyleSheets.html.fr#Creating">Créer et mettre à jour un
             attribut de style</a></li>
           <li><a href="StyleSheets.html.fr#Creating,">Créer un style générique
             pour un élément ou une classe</a></li>
           <li><a href="StyleSheets.html.fr#Managing">Gérer des feuilles de
-            style CSS externes </a></li>
+            style CSS externes</a></li>
           <li><a href="StyleSheets.html.fr#L1371">Mettre du style en utilisant
             des éléments HTML</a></li>
         </ul>
@@ -195,7 +195,7 @@ décrits.</p>
       <li><a href="Printing.html.fr#Printing">Imprimer des documents</a></li>
       <li><a href="Numbering.html.fr#Section">Numéroter une section</a></li>
       <li><a href="MakeBook.html.fr#Assembling">Assembler des collections de
-        document </a></li>
+        document</a></li>
     </ul>
   </li>
   <li><a href="Configure.html.fr#Configuring">Configurer Amaya</a>
@@ -282,7 +282,7 @@ spécifique d'Amaya:</p>
   <li><a rel="Chapter" href="Numbering.html.fr#Section">Numéroter une
     section</a></li>
   <li><a rel="Chapter" href="MakeBook.html.fr#Assembling">Assembler des
-    collections de document </a></li>
+    collections de document</a></li>
 </ul>
 
 <p>Il est également possible de changer les options par défaut (reportez-vous
@@ -306,15 +306,16 @@ utiliser.</a></p>
     du document HTML</a></li>
   <li><a href="HTML-elements/headings.html.fr#Heading"
     rel="Chapter">En-têtes</a></li>
-  <li><a href="HTML-elements/lists.html.fr#List" rel="Chapter">Listes</a></li>
+  <li><a href="HTML-elements/lists.html.fr#List" rel="Chapter">Eléments d'une
+    liste</a></li>
   <li><a href="HTML-elements/address.html.fr#About" rel="Chapter">A propos de
     l'auteur</a></li>
   <li><a href="HTML-elements/inline.html.fr#Inline3" rel="Chapter">Définitions
     en ligne, citations, sample code, insertions et suppressions,
     abréviations, etc</a></li>
   <li><a href="HTML-elements/40styling.html.fr#Character"
-    rel="Chapter">Eléments de style ( ce qu'il ne faut pas faire et ce qui
-    doit être fait...)</a></li>
+    rel="Chapter">Eléments style de HTML ( ce qu'il ne faut pas faire et ce
+    qui doit être fait...)</a></li>
 </ul>
 <hr />
 <address>

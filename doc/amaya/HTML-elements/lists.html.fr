@@ -27,7 +27,7 @@
 </table>
 
 <div>
-<h1>Éléments d'une liste</h1>
+<h1>Éléments de  liste</h1>
 
 <p>Il y a trois types de liste dans HTML. Les deux types simples sont: liste
 ordonnée et liste non ordonnée. Il y a aussi une liste de définitions. Les
@@ -37,45 +37,45 @@ l'intérieur d'autres listes.</p>
 <p>Par exemple:</p>
 <dl>
   <dt>Liste de définitions</dt>
-    <dd>C'est une liste de définitions_ elle contient des termes de définition
+    <dd>C'est une liste de définitions. Elle contient des termes de définition
       (<code><a
       href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DT">DT</a></code>)
-      et des définitions (<code><a
-      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DD">DD</a></code>)
-      filles.</dd>
+      et des textes explicatifs (<code><a
+      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DD">DD</a></code>).
+       </dd>
     <dd>Un terme de définition peut être suivi par un nombre ou par des
       définitions.</dd>
-  <dt>Listes ordonnées</dt>
+  <dt>Liste ordonnée</dt>
     <dd>Il y a trois types de liste:
       <ol>
-        <li>Listes ordonnées(<code><a
+        <li>Liste ordonnée(<code><a
           href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-OL">OL</a></code>)</li>
-        <li>Listes non ordonnées (<code><a
+        <li>Liste non ordonnée (<code><a
           href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-UL"
           name="UL" id="UL">UL</a></code>)</li>
-        <li>Listes de définition (<code><a
+        <li>Liste de définition (<code><a
           href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DL">DL</a></code>)</li>
       </ol>
     </dd>
-  <dt>Listes non ordonnées</dt>
+  <dt>Liste  non ordonnée</dt>
     <dd>Les listes ordonnées et les listes non ordonnées partagent quelques
       caractéristiques:
       <ul>
-        <li>Listes simples</li>
-        <li>Les deux types de liste ont des enfants qui sont des listes
-          d'items (éléments <code><a
+        <li>Ce sont des listes simples. </li>
+        <li>Les deux types de liste ont des fils  qui sont des items de liste
+          (éléments <code><a
           href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-LI">LI</a></code>)</li>
       </ul>
     </dd>
 </dl>
 
-<p>Les trois types de listes peuvent toutes les trois être créées avec la
-barre d'outil en utilisant les boutons <img src="../../Icons/OList.gif"
+<p>Les trois types de liste  peuvent tous  les trois être créés avec la barre
+d'outil en utilisant les boutons <img src="../../Icons/OList.gif"
 alt="Bulleted List" />, <img src="../../Icons/NumList.gif" alt="Numbered List"
 />, <img src="../../Icons/DL.gif" alt="Definition List" />. Tous les types de
 liste peuvent être créés à partir du menu <strong>Eléments,</strong> ou en
 utilisant les raccourcis clavier. Les raccourcis clavier par défaut dans les
-systèmes unix sont <kbd>control-l control-o</kbd> pour une liste ordonnée,
+systèmes Unix sont <kbd>control-l control-o</kbd> pour une liste ordonnée,
 <kbd>control-l control-u</kbd> pour une liste non ordonnée, et <kbd>control-l
 control-d</kbd> pour une liste de définitions.</p>
 

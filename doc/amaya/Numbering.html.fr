@@ -33,12 +33,12 @@
 automatiquement numérotées pour refléter la structure du document. L'élément
 <code>H1</code> est supposé être le titre du document et il n'est pas
 numéroté, mais, quand la fonction est enclenchée, toutes les autres en-têtes
-(<code>H2</code> à <code>H6</code>) reçoivent un numéro estimé suivant leur
-type et leur position dans la structure du document. Ces numéros sont affichés
-en bleu et ne peuvent pas être édités directement, mais ils sont
-automatiquement mis à jour toutes les fois qu'une en-tête est créée ou
-effacée. Ils n'apparaissent pas seulement dans la vue principale, mais aussi
-dans la Vue table des matières.</p>
+(<code>H2</code> à <code>H6</code>) reçoivent un numéro calculé en fonction de
+ leur type et de leur position dans la structure du document. Ces numéros sont
+affichés en bleu et ne peuvent pas être édités directement, mais ils sont
+automatiquement mis à jour chaque fois qu'une en-tête est créée ou effacée.
+Ils n'apparaissent pas seulement dans la vue principale, mais aussi dans la
+Vue table des matières.</p>
 
 <p>Quand le document est <a href="Printing.html.fr#L1062">imprimé</a>, les
 numéros de section apparaissent dans le document imprimé seulement si la
