@@ -3749,11 +3749,6 @@ void UpdateScrollbars (int frame)
     pageSize : The size of the page size in scroll units. This is the number of units the scrollbar will scroll when it is paged up or down. Often it is the same as the thumb size.
     refresh : true to redraw the scrollbar, false otherwise.
   */
-  /*
-   * SG : there is a missing feature in wxWidgets, it's not possible to parameter step increment.
-   * It's why when clicking up/down on the scrollbar, the increment is 1pixel.
-   * I've patched wxWidgets to fix the step increment to 8, better than 1 ...
-   */
   if (width < l || x > 0)
   {
     FrameTable[frame].WdFrame->ShowScrollbar(2);

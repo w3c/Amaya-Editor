@@ -16,6 +16,8 @@
 #include "frame.h"
 #include "thot_key.h"
 #include "appdialogue_wx.h"
+#include "logdebug.h"
+
 #ifdef _GL
   #include "glwindowdisplay.h"
 #endif /* _GL */
@@ -99,6 +101,8 @@ void AmayaScrollBar::OnKillFocus( wxFocusEvent & event )
  */
 void AmayaScrollBar::OnTop( wxScrollEvent& event )
 {
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnTop") );
+
   if (event.GetOrientation() == wxVERTICAL)
     {
       JumpIntoView (m_ParentFrameID, 0);
@@ -118,6 +122,8 @@ void AmayaScrollBar::OnTop( wxScrollEvent& event )
  */
 void AmayaScrollBar::OnBottom( wxScrollEvent& event )
 {
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnBottom") );
+
   if (event.GetOrientation() == wxVERTICAL)
     {
       JumpIntoView (m_ParentFrameID, 100);
@@ -141,9 +147,15 @@ void AmayaScrollBar::OnLineUp( wxScrollEvent& event )
   View     view;
   FrameToView( m_ParentFrameID, &doc, &view );
   if (event.GetOrientation() == wxVERTICAL)
-    TtcLineUp (doc, view); 
+    {
+      TtcLineUp (doc, view); 
+      TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnLineUp - TtcLineUp(%d, %d)"), doc, view );
+    }
   else
-    TtcScrollLeft(doc, view);
+    {
+      TtcScrollLeft(doc, view);
+      TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnLineUp - TtcScrollLeft(%d, %d)"), doc, view );
+    }
 
   GL_DrawAll();
 
@@ -163,9 +175,15 @@ void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
   View     view;
   FrameToView( m_ParentFrameID, &doc, &view );
   if (event.GetOrientation() == wxVERTICAL)
-    TtcLineDown (doc, view); 
+    {
+      TtcLineDown (doc, view);
+      TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnLineDown [TtcLineDown(%d, %d)]"), doc, view );
+    }
   else
-    TtcScrollRight(doc, view);
+    {
+      TtcScrollRight(doc, view);
+      TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnLineDown [TtcScrollRight(%d, %d)]"), doc, view );
+    }
   
   GL_DrawAll();
 
@@ -183,21 +201,20 @@ void AmayaScrollBar::OnScroll( wxScrollEvent& event )
 {
   if (event.GetOrientation() == wxHORIZONTAL)
    {
-     FrameHScrolledCallback(
-	m_ParentFrameID,
-	event.GetPosition(),
-	GetPageSize() );
-     /* now repaint the canvas because wxWidgets is not able to know himself that the canvas has changed */
-     GL_DrawAll();
+     TTALOGDEBUG_3( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnScroll [wxHORIZONTAL][frameid=%d][pos=%d][pagesize=%d]"), m_ParentFrameID, event.GetPosition(), GetPageSize() );
+     FrameHScrolledCallback( m_ParentFrameID,
+			     event.GetPosition(),
+			     GetPageSize() );
    }
   else if (event.GetOrientation() == wxVERTICAL)
-   {
-     FrameVScrolledCallback(
-	m_ParentFrameID,
-	event.GetPosition() );
-     /* now repaint the canvas because wxWidgets is not able to know himself that the canvas has changed */
-     GL_DrawAll();
+    {
+      TTALOGDEBUG_3( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnScroll [wxVERTICAL][frameid=%d][pos=%d][pagesize=%d]"), m_ParentFrameID, event.GetPosition(), GetPageSize() );
+      FrameVScrolledCallback( m_ParentFrameID,
+			      event.GetPosition() );
    }
+  
+  /* now repaint the canvas because wxWidgets is not able to know himself that the canvas has changed */
+  GL_DrawAll();
 
   event.Skip();
 }
