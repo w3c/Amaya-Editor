@@ -690,9 +690,9 @@ float               e;
    register int        result;
 
    if (e < 0.0)
-      result = e - 0.5;
+      result = (int) (e - 0.5);
    else
-      result = e + 0.5;
+      result = (int) (e + 0.5);
    return result;
 }
 
@@ -6240,9 +6240,11 @@ char              **argv;
    int                 i;
    int                 param;
 #  ifdef _WINDOWS
-   STRING               cmd [100];
+   STRING              cmd [100];
    int                 ndx, pIndex = 0;
    CHAR                msg [800];
+   HANDLE              cppLib;
+   FARPROC             ptrMainProc;
 #  else  /* !_WINDOWS */
    CHAR                cmd [800];
 #  endif /* _WINDOWS */
@@ -6360,7 +6362,10 @@ char              **argv;
 #                 endif /* _WINDOWS */
 		   }
 #          ifdef _WINDOWS
-           i = CPPmain (hwnd, pIndex, cmd, &_CY_);
+           cppLib = LoadLibrary ("cpp");
+           ptrMainProc = GetProcAddress (cppLib, "CPPmain");
+           i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
+           FreeLibrary (cppLib);
            for (ndx = 0; ndx < pIndex; ndx++) {
                free (cmd [ndx]);
                cmd [ndx] = (STRING) 0;

@@ -1573,6 +1573,8 @@ char              **argv;
    int                 ndx, pIndex = 0;
    int                 len;
    CHAR                msg [800];
+   HANDLE              cppLib;
+   FARPROC             ptrMainProc;
 #  else  /* !_WINDOWS */
    CHAR                cmd[800];
 #  endif /* _WINDOWS */
@@ -1693,7 +1695,10 @@ char              **argv;
 #                        endif /* _WINDOWS */
 				  }
 #                 ifdef _WINDOWS
-                  i = CPPmain (hwnd, pIndex, cmd, &_CY_);
+                  cppLib = LoadLibrary ("cpp");
+                  ptrMainProc = GetProcAddress (cppLib, "CPPmain");
+                  i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
+                  FreeLibrary (cppLib);
                   for (ndx = 0; ndx < pIndex; ndx++) {
                       free (cmd [ndx]);
                       cmd [ndx] = (STRING) 0;
