@@ -390,6 +390,10 @@ RULES
    XMLPI_line:
 	if not last create '\12' after;
 
+   SVG_Image: BEGIN
+	Remove;
+	END;
+
    TEXT_UNIT:
         if immediately within text_
 	    create '\12' after;

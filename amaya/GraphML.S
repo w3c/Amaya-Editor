@@ -197,6 +197,7 @@ STRUCT
         = AGGREGATE
               desc; ? title; ? metadata;
               PICTURE;
+              SVG_Image;
 	      END;
 
    symbol_
@@ -310,6 +311,8 @@ STRUCT
 	      title;
 	      metadata;
 	      END;
+	
+   SVG_Image = GraphML;
    
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
@@ -353,6 +356,7 @@ EXCEPT
    Ghost_restruct:      Invisible;
    Namespace:	        Invisible;
    IntEmptyShape:       Invisible;
+   SVG_Image:           Hidden;
 
 END
 

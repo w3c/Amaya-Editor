@@ -182,9 +182,10 @@ static ThotBool	    ParsingSubTree = FALSE;
 static ThotBool	    ImmediatelyAfterTag = FALSE;
 static ThotBool	    HTMLStyleAttribute = FALSE;
 static ThotBool	    XMLSpaceAttribute = FALSE;
+static ThotBool     ParsingCDATA = FALSE;
+static ThotBool     IgnoreCommentAndPi = FALSE;;
 static char	    currentElementContent = ' ';
 static char	    currentElementName[40];
-static ThotBool     IgnoreCommentAndPi;
 
 /* Global variable to handle white-space in XML documents */
 static ThotBool     RemoveLineBreak = FALSE;
@@ -2274,9 +2275,11 @@ static void    EndOfAttributeName (char *xmlName)
        strcpy (attrName, buffer);
      }
    
+#ifdef XML_GENERIC
    /* We assign the generic XML context by default */ 
    if (currentParserCtxt == NULL)
      currentParserCtxt = XmlGenericParserCtxt;
+#endif /* XML_GENERIC */
    
    /* Is it a xml:space attribute */
    if (strncmp (attrName, "xml:space", 9) == 0)
@@ -2286,10 +2289,15 @@ static void    EndOfAttributeName (char *xmlName)
    if (strncmp (attrName, "xml:lang", 8) == 0)
      strcpy (attrName, "lang");
    
-   if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
-     EndOfXhtmlAttributeName (attrName, XMLcontext.lastElement, XMLcontext.doc);
-   else
-     EndOfXmlAttributeName (attrName, ptr, XMLcontext.lastElement, XMLcontext.doc);
+   if (currentParserCtxt != NULL)
+     {
+       if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
+	 EndOfXhtmlAttributeName (attrName,
+				  XMLcontext.lastElement, XMLcontext.doc);
+       else
+	 EndOfXmlAttributeName (attrName, ptr,
+				XMLcontext.lastElement, XMLcontext.doc);
+     }
    
    TtaFreeMemory (buffer);
    TtaFreeMemory (attrName);
@@ -3029,6 +3037,8 @@ static void     Hndl_CdataStart (void *userData)
 #ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_CdataStart");
 #endif /* EXPAT_PARSER_DEBUG */
+
+  ParsingCDATA = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -3041,6 +3051,8 @@ static void     Hndl_CdataEnd (void *userData)
 #ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_CdataEnd");
 #endif /* EXPAT_PARSER_DEBUG */
+
+  ParsingCDATA = FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -3788,6 +3800,7 @@ static void  InitializeXmlParsingContext (Document doc,
   XMLRootName[0] = EOS;
   XMLrootClosed = FALSE;
   IgnoreCommentAndPi = FALSE;
+  ParsingCDATA = FALSE;
 
   htmlLineRead = 0;
   htmlCharRead = 0;
@@ -3803,47 +3816,69 @@ static void  InitializeXmlParsingContext (Document doc,
 Element         ChangeSvgImageType (Element el, Document doc)
 {
   ElementType   elType;
-  Element       svgImageElement, svgImageLine;
+  Element       svgImageElement, svgImageContent;
   Attribute     attr, nextattr;
  
-
-  elType = TtaGetElementType (el);
-  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") ||
-      elType.ElTypeNum != HTML_EL_PICTURE_UNIT)
-    return NULL;
-  
-  /* create a SVG_Image element */
-  elType.ElTypeNum = HTML_EL_SVG_Image;
   svgImageElement = NULL;
-  svgImageElement = TtaNewElement (doc, elType);
-  if (svgImageElement == NULL)
-    return NULL;
-  else
-    TtaInsertSibling (svgImageElement, el, FALSE, doc);
+  svgImageContent = NULL;
+  elType = TtaGetElementType (el);
 
-  /* Attach the attributes to that new element */
-  nextattr = NULL;
-  TtaNextAttribute (el, &nextattr);
-  while (nextattr != NULL)
+  if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
+      elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
     {
-      attr = nextattr;
+      /* create a SVG_Image element within a HTML element*/
+      elType.ElTypeNum = HTML_EL_SVG_Image;
+      svgImageElement = TtaNewElement (doc, elType);
+      if (svgImageElement == NULL)
+	return NULL;
+      else
+	TtaInsertSibling (svgImageElement, el, FALSE, doc);
+      
+      /* Attach the attributes to that new element */
+      nextattr = NULL;
       TtaNextAttribute (el, &nextattr);
-      TtaAttachAttribute (svgImageElement, attr, doc);
+      while (nextattr != NULL)
+	{
+	  attr = nextattr;
+	  TtaNextAttribute (el, &nextattr);
+	  TtaAttachAttribute (svgImageElement, attr, doc);
+	}
+      
+      /* create a SVG_ImageContent element */
+      elType.ElTypeNum = HTML_EL_SVG_ImageContent;
+      svgImageContent = TtaNewElement (doc, elType);
+      if (svgImageContent != NULL)
+	TtaInsertFirstChild (&svgImageContent, svgImageElement, doc);
+      
+      /* Remove the PICTURE_UNIT element form the tree */
+      TtaRemoveTree (el, doc);
+    }
+  else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0) &&
+	   elType.ElTypeNum == GraphML_EL_PICTURE_UNIT)
+    {
+      /* create a SVG_Image element within a SVG element*/
+      elType.ElTypeNum = GraphML_EL_SVG_Image;
+      svgImageContent = TtaNewElement (doc, elType);
+      if (svgImageContent == NULL)
+	return NULL;
+      else
+	TtaInsertSibling (svgImageContent, el, FALSE, doc);
+      
+      /* Attach the attributes to that new element */
+      nextattr = NULL;
+      TtaNextAttribute (el, &nextattr);
+      while (nextattr != NULL)
+	{
+	  attr = nextattr;
+	  TtaNextAttribute (el, &nextattr);
+	  TtaAttachAttribute (svgImageContent, attr, doc);
+	}
+            
+      /* Remove the PICTURE_UNIT element form the tree */
+      TtaRemoveTree (el, doc);
     }
 
-  /* create a SVG_ImageContent element */
-  elType.ElTypeNum = HTML_EL_SVG_ImageContent;
-  svgImageLine = NULL;
-  svgImageLine = TtaNewElement (doc, elType);
-  if (svgImageLine == NULL)
-    return NULL;
-  else
-    TtaInsertFirstChild (&svgImageLine, svgImageElement, doc);
-  
-  /* Remove the PICTURE_UNIT element form the tree */
-  TtaRemoveTree (el, doc);
-
-  return svgImageLine;
+  return svgImageContent;
 }
 
 /*----------------------------------------------------------------------
@@ -3889,7 +3924,8 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
  
   /* general initialization */
   RootElement = NULL;
-  if (DTDname && strcmp (DTDname, "SVG") == 0)
+  if (fileName != NULL && DTDname!= NULL &&
+      strcmp (DTDname, "SVG") == 0)
     /* We are parsing an external SVG image */
     {
       svgEl = ChangeSvgImageType (el, doc);
@@ -3925,6 +3961,8 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
     charset = ISO_8859_1;
   InitializeExpatParser (charset);
  
+  TtaSetStructureChecking (0, doc);
+
   if (xmlBuffer != NULL)
     {
       /* Parse virtual DOCTYPE */
@@ -3992,6 +4030,7 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
       docURL = NULL;
     }
 
+  TtaSetStructureChecking (1, doc);
   TtaSetDisplayMode (doc, DisplayImmediately);
 
   return (!XMLNotWellFormed);

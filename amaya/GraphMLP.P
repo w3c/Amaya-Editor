@@ -750,6 +750,15 @@ RULES
 		Visibility: 0;
 	END;
 
+   SVG_Image: BEGIN
+	LineBreak: No;
+	PageBreak: No;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
 ATTRIBUTES
 
   id:
