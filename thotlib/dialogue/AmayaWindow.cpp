@@ -651,6 +651,11 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
   wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
   wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
 
+  if ((p_combo_box || p_text_ctrl)&& proceed_key && thot_keysym != WXK_F2)
+    {
+      event.Skip();
+      return true;
+    }
 
 #ifdef _WINDOWS
   /* on windows, when the notebook is focused, the RIGHT and LEFT key are forwarded to wxWidgets,
