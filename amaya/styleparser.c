@@ -1760,30 +1760,36 @@ static char *ParseCSSVerticalAlign (Element element, PSchema tsch,
   else if (!strncasecmp (cssRule, "top", 3))
     {
       /* Not supported yet */
+      pval.typed_data.value = 0;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "text-top", 8))
     {
       /* Not supported yet */
+      pval.typed_data.value = 0;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "middle", 6))
     {
       /* Not supported yet */
+      pval.typed_data.value = 0;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "bottom", 6))
     {
       /* Not supported yet */
+      pval.typed_data.value = 0;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "text-bottom", 11))
     {
       /* Not supported yet */
+      pval.typed_data.value = 0;
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
+      pval.typed_data.value = 0;
       cssRule = SkipWord (cssRule);
     }
   else
