@@ -482,6 +482,7 @@ XmlEntity XhtmlEntityTable[] =
 {"empty", 8709},  /* empty set = null set = diameter, U+2205 ISOamso */
 {"emsp", 8195},   /* em space, U+2003 ISOpub */
 {"ensp", 8194},   /* en space, U+2002 ISOpub */
+{"epsi", 949},    /* greek small letter epsilon, U+03B5 ISOgrk3 */
 {"epsilon", 949}, /* greek small letter epsilon, U+03B5 ISOgrk3 */
 {"equiv", 8801},  /* identical to, U+2261 ISOtech */
 {"eta", 951},     /* greek small letter eta, U+03B7 ISOgrk3 */
