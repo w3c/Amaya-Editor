@@ -4,7 +4,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>The Languages of Thot</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
 <body>
@@ -16,7 +15,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of March 5, 2002</h4>
+<h4>Version of October 21, 2002</h4>
 
 <p>© 1996-2002 INRIA</p>
 <hr />
@@ -6094,27 +6093,33 @@ translator.</p>
 <p>A buffer is a unit of memory managed by the translator, which can either
 contain text read from the terminal during the translation (see the <a
 href="#sectc5212"><tt>Read</tt> rule</a>), or the name of the last picture
-(bit-map) encountered by the translator in its traversal of the document.
-Remember the pictures are stored in files that are separate for the document
-files and that the canonical form contains only the names of the files in
-which the pictures are found.</p>
+(bit-map) encountered by the translator in its traversal of the document, or
+a character string set by program. Remember the pictures are stored in files
+that are separate for the document files and that the canonical form contains
+only the names of the files in which the pictures are found.</p>
 
-<p>Thus, there are two types of buffers: buffers for reading from the
-terminal (filled by the <tt>Read</tt> rule) and the buffer of picture names
-(containing the name of the last picture encountered). A translation schema
-can use either type, one or several read buffers and one (and only one)
-picture name buffer.</p>
+<p>Thus, there are three types of buffers: buffers for reading from the
+terminal (filled by the <tt>Read</tt> rule), the buffer of picture names
+(containing the name of the last picture encountered) and buffer filled by
+programs (see function <code>SetVariableBuffer</code> in the code) also
+called <em>variable buffers</em>. A translation schema can use all types of
+buffers, one or several read buffers, one (and only one) picture name buffer,
+and one or several variable buffers.</p>
 
 <p>If any buffers are used, the <tt>BUFFERS</tt> keyword must be present,
 followed by declarations of every buffer used in the translation schema. Each
-buffer declaration is composed only of the name of the buffer, chosen freely
-by the programmer. The picture name buffer is identified by the
-<tt>Picture</tt> keyword, between parentheses, following the buffer name. The
-<tt>Picture</tt> keyword may only appear once. Each buffer declaration is
-terminated by a semicolon.</p>
-<pre>     BufferSeq = Buffer &lt; Buffer &gt; .
-     Buffer    = BufferID [ '(' 'Picture' ')' ] ';' .
-     BufferID  = NAME .</pre>
+buffer declaration is composed of the name of the buffer, chosen freely by
+the programmer, followed by a keyword between parentheses to define the type
+of the buffer (read buffers do not require any keyword, as they are the
+default type). The picture name buffer is identified by the <tt>Picture</tt>
+keyword, between parentheses, following the buffer name. The <tt>Picture</tt>
+keyword may only appear once. A variable buffer is identified by the
+<tt>Variable</tt> keyword, between parentheses, following the buffer name.
+Each buffer declaration is terminated by a semicolon.</p>
+<pre>     BufferSeq  = Buffer &lt; Buffer &gt; .
+     Buffer     = BufferID [ '(' BufferType ')' ] ';' .
+     BufferID   = NAME .
+     BufferType = 'Picture' / 'Variable' .</pre>
 
 <blockquote class="example">
   <p><strong>Example:</strong></p>
@@ -8222,8 +8227,9 @@ END</pre>
 LineLength    = NUMBER .
 
 BufferSeq     = Buffer &lt; Buffer &gt; .
-Buffer        = BufferID [ '(' 'Picture' ')' ] ';' .
+Buffer        = BufferID [ '(' BufferType ')' ] ';' .
 BufferID      = NAME .
+BufferType    = 'Picture' / 'Variable' .
 
 CounterSeq    = Counter &lt; Counter &gt; .
 Counter       = CounterID [ ':' CounterFunc ] ';' .
