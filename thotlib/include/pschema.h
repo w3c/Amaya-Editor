@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 #ifndef _PSCHEMA_H_
 #define _PSCHEMA_H_
 
@@ -24,8 +15,6 @@ typedef int        *PSchema;
 #include "document.h"
 
 #ifndef __CEXTRACT__
-#ifdef __STDC__
-
 
 /*----------------------------------------------------------------------
    TtaNewPSchema
@@ -117,16 +106,6 @@ extern PSchema      TtaGetFirstPSchema (Document document, SSchema nature);
   ----------------------------------------------------------------------*/
 extern void         TtaNextPSchema ( /*INOUT*/ PSchema * schema, Document document, SSchema nature);
 
-#else  /* __STDC__ */
-
-extern PSchema      TtaNewPSchema ();
-extern void         TtaUnlinkPSchema (/* PSchema schema, Document document, SSchema nature */);
-extern void         TtaRemovePSchema ( /* PSchema schema, Document document */ );
-extern void         TtaAddPSchema ( /* PSchema schema, PSchema oldSchema, ThotBool before, Document document */ );
-extern PSchema      TtaGetFirstPSchema ( /* Document document */ );
-extern void         TtaNextPSchema ( /* PSchema *schema, Document document */ );
-
-#endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 
 #endif

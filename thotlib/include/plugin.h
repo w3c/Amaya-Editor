@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -9,15 +9,8 @@
 #define _PLUGIN_H_
 
 #ifndef __CEXTRACT__
-#ifdef __STDC__
 extern void TtaCreateFormPlugin (Document document,
 			      View view);
-
-#else  /* __STDC__ */
-
-extern void TtaCreateFormPlugin (/* Document document,
-				 View view */);
-#endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 
 #endif

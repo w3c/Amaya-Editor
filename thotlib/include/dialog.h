@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 #ifndef _DIALOG_H_
 #define _DIALOG_H_
 
@@ -33,7 +24,6 @@ enum DButtons
   };
 
 #ifndef __CEXTRACT__
-#ifdef __STDC__
 #ifdef _GTK 
 #include <gtk/gtk.h> 
 /*-------------------------------------------------------------------------------
@@ -340,41 +330,6 @@ extern void         TtaAbortShowDialogue (void);
   ----------------------------------------------------------------------*/
 extern void         TtaUnmapDialogue (int ref);
 
-#else  /* __STDC__ */
-
-extern void         TtaNewPulldown ( /* int ref, ThotWidget parent, char *title, int number, char *text, char *equiv */ );
-extern void         TtaSetPulldownOff ( /* int ref, ThotWidget parent */ );
-extern void         TtaSetPulldownOn ( /* int ref, ThotWidget parent */ );
-extern void         TtaNewPopup ( /* int ref, ThotWidget parent, char *title, int number, char *text, char *equiv, char button */ );
-extern void         TtaNewSubmenu ( /* int ref, int ref_parent, int entry, char *title, int number, char *text, char *equiv, ThotBool react */ );
-extern void         TtaNewIconMenu ( /*int ref, int ref_parent, int entry, char *title, int number, Pixmap *icons,  ThotBool horizontal */ );
-extern void         TtaSetMenuForm ( /* int ref, int val */ );
-extern void         TtaNewToggleMenu ( /* int ref, int ref_parent, char *title, int number, char *text, char *equiv, ThotBool react */ );
-extern void         TtaSetToggleMenu ( /* int ref, int val, ThotBool on */ );
-extern void         TtaChangeMenuEntry ( /* int ref, int entry, char *texte */ );
-extern void         TtaRedrawMenuEntry ( /* int ref, int entry, char *fontname, Pixel color, int activate */ );
-extern void         TtaDestroyDialogue ( /* int ref */ );
-extern void         TtaNewForm (/* int ref, ThotWidget parent, STRING title, ThotBool horizontal, int packet, char button, int dbutton */);
-extern void         TtaNewSheet (/* int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int packet, CHAR_T button, int dbutton */);
-void                TtaNewDialogSheet (/* int ref, ThotWidget parent, STRING title, int number, STRING text, ThotBool horizontal, int packet, CHAR_T button */);
-extern void         TtaChangeFormTitle ( /* int ref, char *title */ );
-extern void         TtaAttachForm ( /* int ref */ );
-extern void         TtaDetachForm ( /* int ref */ );
-extern void         TtaNewSelector ( /* int ref, int ref_parent, char *title, int number, char *text, int height, char *label, ThotBool withText, ThotBool react */ );
-extern void         TtaSetSelector ( /* int ref, int entry, char *text */ );
-extern void         TtaNewLabel ( /* int ref, int ref_parent, char *text */ );
-extern void         TtaNewTextForm ( /* int ref, int ref_parent, char *title, int width, int height, ThotBool react */ );
-extern void         TtaSetTextForm ( /* int ref, char *text */ );
-extern void         TtaNewNumberForm ( /* int ref, int ref_parent, char *title, int min, int max, ThotBool react */ );
-extern void         TtaSetNumberForm ( /* int ref, int val */ );
-extern void         TtaSetDialoguePosition ( /* void */ );
-extern void         TtaShowDialogue ( /* int ref, ThotBool remanent */ );
-extern void         TtaWaitShowDialogue ( /* void */ );
-extern ThotBool     TtaTestWaitShowDialogue ( /* void */ );
-extern void         TtaAbortShowDialogue ( /* void */ );
-extern void         TtaUnmapDialogue ( /* int ref */ );
-
-#endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 
 #endif

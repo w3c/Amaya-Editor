@@ -10,10 +10,10 @@ extern ThotBool IsSeparatorChar ( CHAR_T c );
 extern void SmallLettering ( STRING word );
 extern int HyphenLastWord ( ptrfont font,
                             Language language,
-                            PtrTextBuffer * buffer,
+                            PtrTextBuffer *buffer,
                             int *rank,
                             int *width,
-                            ThotBool * hyphen );
+                            ThotBool *hyphen );
 extern ThotBool CanHyphen ( PtrBox pBox );
 
 #else /* __STDC__ */
@@ -22,10 +22,10 @@ extern ThotBool IsSeparatorChar (/* CHAR_T c */);
 extern void SmallLettering (/* STRING word */);
 extern int HyphenLastWord (/* ptrfont font,
                               Language language,
-                              PtrTextBuffer * buffer,
+                              PtrTextBuffer *buffer,
                               int *rank,
                               int *width,
-                              ThotBool * hyphen */);
+                              ThotBool *hyphen */);
 extern ThotBool CanHyphen (/* PtrBox pBox */);
 
 #endif /* __STDC__ */

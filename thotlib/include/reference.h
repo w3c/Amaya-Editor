@@ -1,27 +1,16 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 #ifndef _REFERENCE_H_
 #define _REFERENCE_H_
 #include "tree.h"
 #include "attribute.h"
 
 #ifndef __CEXTRACT__
-#ifdef __STDC__
-
 
 /*----------------------------------------------------------------------
    TtaSetReference
@@ -299,24 +288,6 @@ extern void         TtaNextUnloadedReferringDocument (Element target, Document t
   ----------------------------------------------------------------------*/
 extern Element      TtaSearchReferenceElement (SearchDomain scope, Element element);
 
-#else  /* __STDC__ */
-
-extern void         TtaSetReference ( /* Element element, Document document, Element target, Document targetDocument */ );
-extern Element      TtaNewInclusion ( /* Document document, Element target, Document targetDocument */ );
-extern void         TtaCopyReference ( /* Element element, Element source, Document document */ );
-extern void         TtaSetAttributeReference ( /* Attribute attribute, Element element, Document document, Element target, Document targetDocument */ );
-extern void         TtaCopyAttributeReference ( /* Attribute attribute, Element element, Attribute source */ );
-extern void         TtaGiveReferredElement ( /* Element element, Element *target, char *targetDocumentName, Document *targetDocument */ );
-extern int          TtaIsElementTypeReference ( /* ElementType elementType */ );
-extern int          TtaSameReferences ( /* Element element1, Element element2 */ );
-extern void         TtaGiveReferenceAttributeValue ( /* Attribute attribute, Element *target, char *targetDocumentName, Document *targetDocument */ );
-extern int          TtaIsElementReferred ( /* Element element */ );
-extern int          TtaSameReferenceAttributes ( /* Attribute attribute1, Attribute attribute2 */ );
-extern void         TtaNextLoadedReference ( /* Element target, Document targetDocument, Element * referenceElement, Attribute * referenceAttribute, Document * referenceDocument */ );
-extern void         TtaNextUnloadedReferringDocument ( /* Element target, Document targetDocument, char * referringDocumentName */ );
-extern Element      TtaSearchReferenceElement ( /* SearchDomain scope, Element element */ );
-
-#endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 
 #endif

@@ -6,9 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern UCHAR_T NextCharacter ( PtrTextBuffer * buffer,
+extern UCHAR_T NextCharacter ( PtrTextBuffer *buffer,
                                int *rank );
-extern UCHAR_T PreviousCharacter ( PtrTextBuffer * buffer,
+extern UCHAR_T PreviousCharacter ( PtrTextBuffer *buffer,
                                    int *rank );
 extern ThotBool InitSearchDomain ( int domain,
                                    PtrSearchContext context );
@@ -19,19 +19,21 @@ extern ThotBool NextTree ( PtrElement * pEl,
                            int *charIndx,
                            PtrSearchContext context );
 extern ThotBool SearchNextWord ( PtrElement * curEl,
-                                 int *curChar,
+                                 int *beginning,
+                                 int *end,
                                  CHAR_T word[MAX_WORD_LEN],
                                  PtrSearchContext context );
 extern ThotBool SearchPreviousWord ( PtrElement * curEl,
-                                     int *curChar,
+                                     int *beginning,
+                                     int *end,
                                      CHAR_T word[MAX_WORD_LEN],
                                      PtrSearchContext context );
 
 #else /* __STDC__ */
 
-extern UCHAR_T NextCharacter (/* PtrTextBuffer * buffer,
+extern UCHAR_T NextCharacter (/* PtrTextBuffer *buffer,
                                  int *rank */);
-extern UCHAR_T PreviousCharacter (/* PtrTextBuffer * buffer,
+extern UCHAR_T PreviousCharacter (/* PtrTextBuffer *buffer,
                                      int *rank */);
 extern ThotBool InitSearchDomain (/* int domain,
                                      PtrSearchContext context */);
@@ -42,11 +44,13 @@ extern ThotBool NextTree (/* PtrElement * pEl,
                              int *charIndx,
                              PtrSearchContext context */);
 extern ThotBool SearchNextWord (/* PtrElement * curEl,
-                                   int *curChar,
+                                   int *beginning,
+                                   int *end,
                                    CHAR_T word[MAX_WORD_LEN],
                                    PtrSearchContext context */);
 extern ThotBool SearchPreviousWord (/* PtrElement * curEl,
-                                       int *curChar,
+                                       int *beginning,
+                                       int *end,
                                        CHAR_T word[MAX_WORD_LEN],
                                        PtrSearchContext context */);
 

@@ -34,10 +34,13 @@
 #include "select_tv.h"
 #include "appdialogue_tv.h"
 
-static ThotBool RightExtended;
-static ThotBool LeftExtended;
-static ThotBool Retry = FALSE;
-static ThotBool Moving = FALSE;
+static ThotBool      RightExtended;
+static ThotBool      LeftExtended;
+static ThotBool      Retry = FALSE;
+static ThotBool      Moving = FALSE;
+static SearchContext WordSearchContext = {
+  NULL, 0, NULL, 0, NULL, 0, TRUE, TRUE
+};
 
 /* cursor movement callback procedures for Math */
 static Func     MathMoveForwardCursorFunction = NULL;
@@ -260,24 +263,26 @@ void  TtaSetMoveBackwardCallback (Func callbackFunc)
 /*----------------------------------------------------------------------
    Commandes de deplacement                                           
   ----------------------------------------------------------------------*/
-static void MovingCommands (int code, Document document, View view,
-			    ThotBool extendSel)
+static void MovingCommands (int code, Document doc, View view, ThotBool extendSel)
 {
    PtrBox              pBox, pBoxBegin, pBoxEnd;
+   PtrElement          pEl;
    PtrLine             pLine;
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
    ViewSelection      *pViewSelEnd;
+   CHAR_T              word[MAX_WORD_LEN];
    int                 frame, x, y, i;
    int                 xDelta, yDelta;
-   int                 h, w, doc;
+   int                 h, w;
    int                 indpos, xpos;
+   int                 first, last;
    ThotBool            done, top = TRUE;
 
    indpos = 0;
    xpos = 0;
    CloseInsertion ();
-   frame = GetWindowNumber (document, view);
+   frame = GetWindowNumber (doc, view);
    if (frame > 0)
      {
        pFrame = &ViewFrameTable[frame - 1];
@@ -442,7 +447,6 @@ static void MovingCommands (int code, Document document, View view,
 		     /* the x is equal to FirstSelectedChar - 1 */
 		     ChangeSelection (frame, pBox->BxAbstractBox, x, FALSE, TRUE, FALSE, FALSE);
 		   /* show the beginning of the selection */
-		   doc = FrameTable[frame].FrDoc;
 		   if (pBoxBegin->BxXOrg + pViewSel->VsXPos + 4 < pFrame->FrXOrg)
 		     {
 		       if (pFrame->FrXOrg > 0)
@@ -525,7 +529,6 @@ static void MovingCommands (int code, Document document, View view,
 		   else
 		     ChangeSelection (frame, pBox->BxAbstractBox, x + 2, FALSE, TRUE, FALSE, FALSE);
 		   /* show the beginning of the selection */
-		   doc = FrameTable[frame].FrDoc;
 		   if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos > pFrame->FrXOrg + w)
 		     {
 		       if (FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth > pFrame->FrXOrg + w)
@@ -651,15 +654,51 @@ static void MovingCommands (int code, Document document, View view,
 	   break;
 	   
 	 case 9:	/* Previous word (^<-) */
+	   WordSearchContext.SDocument = LoadedDocument[doc - 1];
+	   WordSearchContext.SStartToEnd = FALSE;
+	   pEl = FirstSelectedElement;
+	   first = FirstSelectedChar - 1;
+	   done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
+	   if (last == FirstSelectedChar)
+	     /* It was not the beginning of the next word */
+	     done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
+	   SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
 	   break;
 	   
 	 case 10:	/* Next word (^->) */
+	   WordSearchContext.SDocument =  LoadedDocument[doc - 1];
+	   WordSearchContext.SStartToEnd = TRUE;
+	   pEl = FirstSelectedElement;
+	   last = LastSelectedChar;
+	   done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
+	   if (first == LastSelectedChar)
+	     /* It was not the beginning of the next word */
+	     done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
+	   SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
 	   break;
 	   
 	 case 11:	/* Extend to previous word (Shift ^<-) */
+	   WordSearchContext.SDocument =  LoadedDocument[doc - 1];
+	   WordSearchContext.SStartToEnd = FALSE;
+	   pEl = FirstSelectedElement;
+	   first = FirstSelectedChar;
+	   done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
+	   if (last == FirstSelectedChar)
+	     /* It was not the beginning of the next word */
+	     done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
+	   SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
 	   break;
 	   
-	 case 12:	/* Previous line (Shift ^->) */
+	 case 12:	/* Extent to next word (Shift ^->) */
+	   WordSearchContext.SDocument =  LoadedDocument[doc - 1];
+	   WordSearchContext.SStartToEnd = TRUE;
+	   pEl = FirstSelectedElement;
+	   last = LastSelectedChar;
+	   done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
+	   if (first == LastSelectedChar)
+	     /* It was not the beginning of the next word */
+	     done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
+	   SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
 	   break;
 	 }
        Moving = FALSE;

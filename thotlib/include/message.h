@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 #ifndef _MESSAGE_H_
 #define _MESSAGE_H_
 
@@ -30,7 +21,6 @@
 /*extern int THOT ; */
 
 #ifndef __CEXTRACT__
-#ifdef __STDC__
 
 extern int          TtaGetMessageTable (CONST CHAR_T* msgName, int msgNumber);
 extern STRING       TtaGetMessage (int, int);
@@ -38,16 +28,7 @@ extern void         TtaDisplaySimpleMessage (int, int, int);
 extern void         TtaDisplaySimpleMessageString (int, int, int, STRING);
 extern void         TtaDisplaySimpleMessageNum (int, int, int, int);
 extern void	        TtaDisplayMessage (int msgType, STRING fmt, ...);
-#else  /* __STDC__ */
 
-extern int          TtaGetMessageTable ();
-extern STRING       TtaGetMessage ();
-extern void         TtaDisplaySimpleMessage ();
-extern void         TtaDisplaySimpleMessageString ();
-extern void         TtaDisplaySimpleMessageNum ();
-extern void	        TtaDisplayMessage ();
-
-#endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 
 #endif

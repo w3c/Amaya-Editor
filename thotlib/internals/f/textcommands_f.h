@@ -28,6 +28,14 @@ extern void TtcPreviousSelLine ( Document document,
                                  View view );
 extern void TtcNextSelLine ( Document document,
                              View view );
+extern void TtcPreviousWord ( Document document,
+                              View view );
+extern void TtcNextWord ( Document document,
+                          View view );
+extern void TtcPreviousSelWord ( Document document,
+                                 View view );
+extern void TtcNextSelWord ( Document document,
+                             View view );
 extern void TtcCopyToClipboard ( Document document,
                                  View view );
 
@@ -54,6 +62,14 @@ extern void TtcNextSelChar (/* Document document,
 extern void TtcPreviousSelLine (/* Document document,
                                    View view */);
 extern void TtcNextSelLine (/* Document document,
+                               View view */);
+extern void TtcPreviousWord (/* Document document,
+                                View view */);
+extern void TtcNextWord (/* Document document,
+                            View view */);
+extern void TtcPreviousSelWord (/* Document document,
+                                   View view */);
+extern void TtcNextSelWord (/* Document document,
                                View view */);
 extern void TtcCopyToClipboard (/* Document document,
                                    View view */);

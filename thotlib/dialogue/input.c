@@ -121,8 +121,21 @@ static int          SpecialShiftKeys[] = {
 };
 static int          SpecialCtrlKeys[] = {
   CMD_LineUp,
-  CMD_ScrollLeft,
-  CMD_ScrollRight,
+  CMD_PreviousWord,
+  CMD_NextWord,
+  CMD_LineDown,
+  CMD_DeletePrevChar,
+  CMD_DeleteSelection,
+  CMD_PageUp,
+  CMD_PageDown,
+  CMD_PageTop,
+  CMD_PageEnd,
+  CMD_LineBreak
+};
+static int          SpecialShiftCtrlKeys[] = {
+  CMD_LineUp,
+  CMD_PreviousSelWord,
+  CMD_NextSelWord,
   CMD_LineDown,
   CMD_DeletePrevChar,
   CMD_DeleteSelection,
@@ -641,6 +654,7 @@ void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int k
   int                 modtype;
   int                 command;
   int                 mainframe;
+  int                 index;
   ThotBool            found;
   
   if (frame > MAX_FRAME)
@@ -785,146 +799,86 @@ void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int k
 #else /* !_WINDOWS */
   if (!found)
 #endif /* _WINDOWS */
-    /* Handling special keys */
-    switch (key)
-      {
-      case THOT_KEY_Up:
+    {
+      /* Handling special keys */
+      switch (key)
+	{
+	case THOT_KEY_Up:
 #ifdef THOT_KEY_R8
-      case THOT_KEY_R8:
+	case THOT_KEY_R8:
 #endif
-	if (modtype == THOT_MOD_SHIFT)
-	  command = SpecialShiftKeys[MY_KEY_Up];
-	else if (modtype == THOT_MOD_CTRL)
-	  command = SpecialCtrlKeys[MY_KEY_Up];
-	else
-	  command = SpecialKeys[MY_KEY_Up];
-	Automata_current = NULL;
-	break;
-	
-     case THOT_KEY_Return:
-	if (modtype == THOT_MOD_SHIFT)
-	  command = SpecialShiftKeys[MY_KEY_Return];
-	else if (modtype == THOT_MOD_CTRL)
-	  command = SpecialCtrlKeys[MY_KEY_Return];
-	else
-	  command = SpecialKeys[MY_KEY_Return];
-	Automata_current = NULL;
-	break;
-
-      case THOT_KEY_Left:
+	  index = MY_KEY_Up;
+	  break;
+	case THOT_KEY_Return:
+	  index = MY_KEY_Return;
+	  break;
+	case THOT_KEY_Left:
 #ifdef THOT_KEY_R10
-      case THOT_KEY_R10:
+	case THOT_KEY_R10:
 #endif
-	if (modtype == THOT_MOD_SHIFT)
-	  command = SpecialShiftKeys[MY_KEY_Left];
-	else if (modtype == THOT_MOD_CTRL)
-	  command = SpecialCtrlKeys[MY_KEY_Left];
-	else
-	  command = SpecialKeys[MY_KEY_Left];
-	Automata_current = NULL;
-	break;
-	
-      case THOT_KEY_Right:
+	  index = MY_KEY_Left;
+	  break;
+	case THOT_KEY_Right:
 #ifdef THOT_KEY_R12
-      case THOT_KEY_R12:
+	case THOT_KEY_R12:
 #endif
-	if (modtype == THOT_MOD_SHIFT)
-	  command = SpecialShiftKeys[MY_KEY_Right];
-	else if (modtype == THOT_MOD_CTRL)
-	  command = SpecialCtrlKeys[MY_KEY_Right];
-	else
-	  command = SpecialKeys[MY_KEY_Right];
-	Automata_current = NULL;
-	break;
-	
-      case THOT_KEY_Down:
+	  index = MY_KEY_Right;
+	  break;
+	case THOT_KEY_Down:
 #ifdef THOT_KEY_R14
-      case THOT_KEY_R14:
+	case THOT_KEY_R14:
 #endif
-	if (modtype == THOT_MOD_SHIFT)
-	  command = SpecialShiftKeys[MY_KEY_Down];
-	else if (modtype == THOT_MOD_CTRL)
-	  command = SpecialCtrlKeys[MY_KEY_Down];
-	else
-	  command = SpecialKeys[MY_KEY_Down];
-	Automata_current = NULL;
-	break;
-	
-      case THOT_KEY_Prior:
+	  index = MY_KEY_Down;
+	  break;
+	case THOT_KEY_Prior:
 #ifdef THOT_KEY_R9
-      case THOT_KEY_R9:
+	case THOT_KEY_R9:
 #endif
-	if (modtype == THOT_MOD_SHIFT)
-	  command = SpecialShiftKeys[MY_KEY_Prior];
-	else if (modtype == THOT_MOD_CTRL)
-	  command = SpecialCtrlKeys[MY_KEY_Prior];
-	else
-	  command = SpecialKeys[MY_KEY_Prior];
-	Automata_current = NULL;
-	break;
-
-      case THOT_KEY_Next:
+	  index = MY_KEY_Prior;
+	  break;
+	case THOT_KEY_Next:
 #ifdef THOT_KEY_R15
-      case THOT_KEY_R15:
+	case THOT_KEY_R15:
 #endif
-	if (modtype == THOT_MOD_SHIFT)
-	  command = SpecialShiftKeys[MY_KEY_Next];
-	else if (modtype == THOT_MOD_CTRL)
-	  command = SpecialCtrlKeys[MY_KEY_Next];
-	else
-	  command = SpecialKeys[MY_KEY_Next];
-	Automata_current = NULL;
-	break;
-	
-      case THOT_KEY_Home:
+	  index = MY_KEY_Next;
+	  break;
+	case THOT_KEY_Home:
 #ifdef THOT_KEY_R7
-      case THOT_KEY_R7:
+	case THOT_KEY_R7:
 #endif
-	if (modtype == THOT_MOD_SHIFT)
-	  command = SpecialShiftKeys[MY_KEY_Home];
-	else if (modtype == THOT_MOD_CTRL)
-	  command = SpecialCtrlKeys[MY_KEY_Home];
-	else
-	  command = SpecialKeys[MY_KEY_Home];
-	Automata_current = NULL;
-	break;
-	
-      case THOT_KEY_End:
+	  index = MY_KEY_Home;
+	  break;
+	case THOT_KEY_End:
 #ifdef THOT_KEY_R13
-      case THOT_KEY_R13:
+	case THOT_KEY_R13:
 #endif
-	if (modtype == THOT_MOD_SHIFT)
-	  command = SpecialShiftKeys[MY_KEY_End];
-	else if (modtype == THOT_MOD_CTRL)
-	  command = SpecialCtrlKeys[MY_KEY_End];
-	else
-	  command = SpecialKeys[MY_KEY_End];
-	Automata_current = NULL;
-	break;
-	
-      case THOT_KEY_BackSpace:
-	if (modtype == THOT_MOD_SHIFT)
-	  command = SpecialShiftKeys[MY_KEY_BackSpace];
-	else if (modtype == THOT_MOD_CTRL)
-	  command = SpecialCtrlKeys[MY_KEY_BackSpace];
-	else
-	  command = SpecialKeys[MY_KEY_BackSpace];
-	Automata_current = NULL;
-	break;
-	
-      case THOT_KEY_Delete:
-	if (modtype == THOT_MOD_SHIFT)
-	  command = SpecialShiftKeys[MY_KEY_Delete];
-	else if (modtype == THOT_MOD_CTRL)
-	  command = SpecialCtrlKeys[MY_KEY_Delete];
-	else
-	  command = SpecialKeys[MY_KEY_Delete];
-	Automata_current = NULL;
-	break;
-	
-      default: break;
-      } 
-  
+	  index = MY_KEY_End;
+	  break;
+	case THOT_KEY_BackSpace:
+	  index = MY_KEY_BackSpace;
+	  break;
+	case THOT_KEY_Delete:
+	  index = MY_KEY_Delete;
+	  break;
+	default:
+	  index = -1;
+	  break;
+	}
+
+      if (index >= 0)
+	{
+	  if (modtype == THOT_MOD_SHIFT)
+	    command = SpecialShiftKeys[index];
+	  else if (modtype == THOT_MOD_CTRL)
+	    command = SpecialCtrlKeys[index];
+	  else if (modtype == THOT_MOD_S_CTRL)
+	    command = SpecialShiftCtrlKeys[index];
+	  else
+	    command = SpecialKeys[index];
+	  Automata_current = NULL;
+	}
+    } 
+
   if (Automata_current == NULL)
     {
       /* Appel d'une action Thot */

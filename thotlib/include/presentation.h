@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 #ifndef _PRESENTATION_H_
 #define _PRESENTATION_H_
 #include "view.h"
@@ -128,7 +119,6 @@ typedef int        *PRule;
 #define NoHyphenation 2
 
 #ifndef __CEXTRACT__
-#ifdef __STDC__
 
 
 /*----------------------------------------------------------------------
@@ -624,37 +614,6 @@ extern int          TtaGetPRuleView (PRule pRule);
   ----------------------------------------------------------------------*/
 extern int          TtaSamePRules (PRule pRule1, PRule pRule2);
 
-#else  /* __STDC__ */
-
-extern void         TtaSetFontZoom (/* int zoom */);
-extern PRule        TtaNewPRule ( /* int presentationType, View view, Document document */ );
-extern PRule        TtaNewPRuleForView (/* int presentationType, int view, Document document */);
-extern PRule        TtaNewPRuleForNamedView ( /* int presentationType, STRING viewName, Document document */ );
-extern PRule        TtaCopyPRule ( /* PRule pRule */ );
-extern void         TtaAttachPRule ( /* Element element, PRule pRule, Document document */ );
-extern ThotBool     TtaIsCSSPRule ( /* PRule pRule */ );
-extern void         TtaRemovePRule ( /* Element element, PRule pRule, Document document */ );
-extern void         TtaSetPRuleValue ( /* Element element, PRule pRule, int value, Document document */ );
-extern void         TtaSetPRuleValueWithUnit ( /* Element element, PRule pRule, int value, TypeUnit unit, Document document */ );
-extern void         TtaSetPRuleView ( /* PRule pRule, int view */ );
-extern void         TtaChangeBoxSize ( /* Element element, View view, Document document, int deltaX, int deltaY, TypeUnit unit */ );
-extern void         TtaChangeBoxPosition ( /* Element element, Document document, View view, int X, int Y, TypeUnit unit */ );
-extern int          TtaGetDepth (/*Element element, Document document, View view*/);
-extern void         TtaGiveBoxSize ( /* Element element, Document document, View view, TypeUnit unit, int *width, int *height */ );
-extern void         TtaGiveBoxPosition ( /* Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord */ );
-extern void         TtaGiveBoxAbsPosition ( /* Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord */ );
-extern void         TtaGiveWindowSize ( /* Document document, View view, TypeUnit unit, int *width, int *height */ );
-extern CHAR_T      *TtaGiveRGB ( /* CHAR_T* colname, unsigned short *red, unsigned short *green, unsigned short *blue*/ );
-extern void         TtaGiveThotRGB (/*int num, unsigned short *red, unsigned short *green, unsigned short *blue*/);
-extern void         TtaNextPRule ( /* Element element, PRule *pRule */ );
-extern PRule        TtaGetPRule ( /* Element element, int presentationType */ );
-extern int          TtaGetPRuleType ( /* PRule pRule */ );
-extern int          TtaGetPRuleValue ( /* PRule pRule */ );
-extern int          TtaGetPRuleUnit ( /* PRule pRule */);
-extern int          TtaGetPRuleView ( /* PRule pRule */ );
-extern int          TtaSamePRules ( /* PRule pRule1, PRule pRule2 */ );
-
-#endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 
 #endif

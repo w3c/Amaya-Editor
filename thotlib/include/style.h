@@ -207,7 +207,6 @@ typedef void (*SettingsApplyHandler) (Element element,
 				      void *param);
 
 
-#ifdef __STDC__
 /*----------------------------------------------------------------------
   GetGenericStyleContext : user level function needed to allocate and
   initialize a GenericContext.
@@ -258,15 +257,5 @@ extern void TtaCleanStylePresentation (Element el, PSchema tsch, Document doc );
 
   ----------------------------------------------------------------------*/
 extern void TtaListStyleSchemas (Document document, FILE * fileDescriptor);
-
-#else  /* __STDC__ */
-extern GenericContext TtaGetGenericStyleContext (/* doc */)
-extern PresentationContext TtaGetSpecificStyleContext (/* doc */)
-extern int TtaSetStylePresentation (/* unsigned int type, Element el, PSchema tsch, PresentationContext c, PresentationValue v */);
-extern int TtaGetStylePresentation (/* unsigned int type, Element el, PSchema tsch, PresentationContext c, PresentationValue *v */);
-extern void TtaApplyAllSpecificSettings (/* Element element, Document doc, SettingsApplyHandler handler, void *param */);
-extern void TtaCleanStylePresentation (/* Element el, PSchema tsch, Document doc */);
-extern void TtaListStyleSchemas (/* Document document, FILE * fileDescriptor */);
-#endif /* __STDC__ */
 
 #endif /* __STYLE_H__ */

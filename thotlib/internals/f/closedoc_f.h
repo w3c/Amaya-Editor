@@ -12,8 +12,8 @@ extern void CallbackCloseDocMenu ( int ref,
 extern void AskToConfirm ( PtrDocument pDoc,
                            Document document,
                            View view,
-                           ThotBool * confirmation,
-                           ThotBool * save );
+                           ThotBool *confirmation,
+                           ThotBool *save );
 extern ThotBool CloseADocument ( Document document,
                                  Document docform,
                                  View viewform );
@@ -28,8 +28,8 @@ extern void CallbackCloseDocMenu (/* int ref,
 extern void AskToConfirm (/* PtrDocument pDoc,
                              Document document,
                              View view,
-                             ThotBool * confirmation,
-                             ThotBool * save */);
+                             ThotBool *confirmation,
+                             ThotBool *save */);
 extern ThotBool CloseADocument (/* Document document,
                                    Document docform,
                                    View viewform */);

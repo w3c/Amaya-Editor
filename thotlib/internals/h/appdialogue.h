@@ -230,8 +230,12 @@ typedef struct _SchemaMenu_Ctl
 #define CMD_LineDown		25
 #define CMD_ScrollLeft		26
 #define CMD_ScrollRight		27
-#define CMD_LineBreak       28
-#define MAX_INTERNAL_CMD	29
+#define CMD_LineBreak           28
+#define CMD_PreviousWord        29
+#define CMD_NextWord            30
+#define CMD_PreviousSelWord     31
+#define CMD_NextSelWord         32
+#define MAX_INTERNAL_CMD	33
 
 #define CST_EquivLineUp TEXT("C Up")
 #define CST_EquivScrollLeft TEXT("C Left")

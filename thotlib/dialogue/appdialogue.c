@@ -310,6 +310,12 @@ void                TteInitMenus (CHAR_T* name, int number)
    MenuActionList[CMD_NextLine].ActionName = "TtcNextLine";
    MenuActionList[CMD_NextLine].Call_Action = (Proc) TtcNextLine;
 
+   MenuActionList[CMD_PreviousWord].ActionName = "TtcPreviousWord";
+   MenuActionList[CMD_PreviousWord].Call_Action = (Proc) TtcPreviousWord;
+
+   MenuActionList[CMD_NextWord].ActionName = "TtcNextWord";
+   MenuActionList[CMD_NextWord].Call_Action = (Proc) TtcNextWord;
+
    MenuActionList[CMD_BeginningOfLine].ActionName = "TtcStartOfLine";
    MenuActionList[CMD_BeginningOfLine].Call_Action = (Proc) TtcStartOfLine;
 
@@ -384,6 +390,12 @@ void                TteInitMenus (CHAR_T* name, int number)
 
    MenuActionList[CMD_NextSelLine].ActionName = "TtcNextSelLine";
    MenuActionList[CMD_NextSelLine].Call_Action = (Proc) TtcNextSelLine;
+
+   MenuActionList[CMD_PreviousSelWord].ActionName = "TtcPreviousSelWord";
+   MenuActionList[CMD_PreviousSelWord].Call_Action = (Proc) TtcPreviousSelWord;
+
+   MenuActionList[CMD_NextSelWord].ActionName = "TtcNextSelWord";
+   MenuActionList[CMD_NextSelWord].Call_Action = (Proc) TtcNextSelWord;
 }
 
 

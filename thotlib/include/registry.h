@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * Header file for the acess to the Registry.
  */
@@ -21,7 +12,6 @@
 #ifndef THOT_REGISTRY_H
 #define THOT_REGISTRY_H
 
-#ifdef __STDC__
 /*
  * TtaSkipBlanks skips all spaces, tabs, linefeeds and newlines at the
  * beginning of the string and returns the pointer to the new position. 
@@ -130,29 +120,6 @@ extern CHAR_T*    TtaGetDefEnvString (char* name);
  *       in the user's directory.
  */
 extern void         TtaSaveAppRegistry (void);
-
-#else  /* __STDC__ */
-extern char*        TtaSkipBlanks (/* char* ptr */);
-extern CHAR_T*      TtaSkipWCBlanks (/* CHAR_T* ptr */);
-extern ThotBool     TtaIsBlank (/* char* ptr */);
-extern ThotBool     TtaIsWCBlank (/* CHAR_T* ptr */);
-extern void         TtaInitializeAppRegistry ( /* CHAR_T* appArgv0 */ );
-extern void         TtaFreeAppRegistry ( /* void */ );
-extern ThotBool     TtaGetEnvBoolean ( /* STRING name, ThotBool *value */ );
-extern ThotBool     TtaGetEnvInt ( /* char* name, int *value */ );
-extern CHAR_T*      TtaGetEnvString ( /* STRING name */ );
-extern void         TtaClearEnvString ( /* char* name */ );
-extern void         TtaSetEnvInt ( /* char* name, int value, int overwrite */ );
-extern void         TtaSetEnvBoolean ( /* char* name, ThotBool value, int overwrite */ );
-extern void         TtaSetEnvString ( /* char* name, CHAR_T* value, int overwrite */ );
-extern void         TtaSetDefEnvString ( /* char* name, CHAR_T* value, int overwrite */ );
-
-extern ThotBool     TtaGetDefEnvBoolean ( /* char* name, ThotBool *value */ );
-extern ThotBool     TtaGetDefEnvInt ( /* char* name, int *value */ );
-extern CHAR_T*    TtaGetDefEnvString ( /* char* name */ );
-extern void         TtaSaveAppRegistry ( /* void */ );
-
-#endif /* __STDC__ */
 
 #endif	/* THOT_REGISTRY_H */
 

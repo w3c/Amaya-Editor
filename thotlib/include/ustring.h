@@ -62,7 +62,6 @@ typedef char*           STRING;
 typedef unsigned char*  USTRING;
 #endif /* _I18N_ */
 
-#ifdef __STDC__
 /*----------------------------------------------------------------------
   TtaGetCharset gives the charset 
   ----------------------------------------------------------------------*/
@@ -95,36 +94,6 @@ extern int          iso2wc_strcasecmp                     (const char*, const CH
 extern int          wc2iso_strcmp                         (CHAR_T*, const char*);
 extern CHAR_T*      iso2wc_strcpy                         (CHAR_T* dest, const char* src);
 extern char*        wc2iso_strcpy                         (char*, const CHAR_T*);
-
-#else  /* __STDC__ */
-extern CHARSET      TtaGetCharset (/* const CHAR_T *charsetname */);
-extern CHAR_T      *TtaGetCharsetName (/* CHARSET charset */);
-extern int          uputchar                              ();
-extern int          ustrcasecmp                           ();
-extern int          cus2iso_strcasecmp                    ();
-extern int          iso2cus_strcasecmp                    ();
-extern CHAR_T*      ustrcat                               ();
-extern CHAR_T*      ustrchr                               ();
-extern int          ustrcmp                               ();
-extern int          ustrcoll                              ();
-extern CHAR_T*      ustrcpy                               ();
-extern CHAR_T*      ustrdup                               ();
-extern size_t       ustrlen                               ();
-extern int          ustrncasecmp                          ();
-extern CHAR_T*      ustrncat                              ();
-extern CHAR_T*      ustrncmp                              ();
-extern CHAR_T*      ustrncpy                              ();
-extern CHAR_T*      ustrrchr                              ();
-extern CHAR_T*      ustrstr                               ();
-extern CHAR_T*      ustrtok                               ();
-extern char*        wc2iso_strncpy                        ();
-extern int          wc2iso_strcasecmp                     ();
-extern int          iso2wc_strcasecmp                     ();
-extern int          wc2iso_strcmp                         ();
-extern CHAR_T*      iso2wc_strcpy                         ();
-extern CHAR_T*      cus2wc_strcpy                         ();
-extern char*        wc2iso_strcpy                         ();
-#endif /* __STDC__ */
 
 #endif /* _USTRING_H */
 

@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 #ifndef _APPLICATION_H_
 #define _APPLICATION_H_
 
@@ -68,7 +59,6 @@
 #define ERR_language_not_found 		101
 
 #ifndef __CEXTRACT__
-#ifdef __STDC__
 
 
 /*----------------------------------------------------------------------
@@ -154,26 +144,6 @@ extern CHAR_T*   TtaWCSdup (CHAR_T* str);
 extern char*     TtaWC2ISOdup (CHAR_T* str);
 extern CHAR_T*   TtaISO2WCdup (char* str);
 
-#else  /* __STDC__ */
-extern void      TtaInitialize ( /* CHAR_T* applicationName */ );
-extern void      TtaSetApplicationQuit (/* Proc procedure */);
-extern void      TtaQuit ( /* void */ );
-extern void      TtaSetErrorMessages ( /* int on */ );
-extern STRING    TtaGetVersion ( /* void */ );
-extern int       TtaGetErrorCode ( /* void */ );
-extern STRING    TtaGetStrError ( /* int errorCode */ );
-extern void      TtaExtractName ( /* CHAR_T* text, CHAR_T* aDirectory, CHAR_T* aName */ );
-extern ThotBool  TtaIsPrinting ();
-extern void*     TtaGetMemory ( /* int size */ );
-extern void      TtaFreeMemory ( /* STRING buffer */ );
-extern STRING    TtaAllocString ( /* unsigned int n */ );
-extern void*     TtaRealloc ( /* void *ptr, unsigned int n */ );
-extern char*    TtaStrdup ( /* char *str */ );
-extern CHAR_T*   TtaWCSdup (/* CHAR_T* str */);
-extern char*     TtaWC2ISOdup (/* CHAR_T* str */);
-extern CHAR_T*   TtaISO2WCdup (/* char* str */);
-
-#endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 
 #endif

@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * Spell checking
  *
@@ -76,14 +67,8 @@ static int           type_err;	/* Type du mot errone (majuscule, SmallLettering)
    Returns -1 if the dictionary can't be loaded.                     
    Returns 1 if the dictionary is loaded.                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary, ThotBool ToCreate)
-#else  /* __STDC__ */
-ThotBool            TtaLoadDocumentDictionary (document, pDictionary, ToCreate)
-PtrDocument         document;
-int                *pDictionary;
-ThotBool            ToCreate;
-#endif /* __STDC__ */
+ThotBool TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary,
+				    ThotBool ToCreate)
 {
   STRING            extenddic;
   CHAR_T               path[MAX_PATH], dictname[MAX_PATH];
@@ -114,12 +99,7 @@ ThotBool            ToCreate;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         Asci2Code (STRING string)
-#else  /* __STDC__ */
-static void         Asci2Code (string)
-STRING              string;
-#endif /* __STDC__ */
 {
    int                 i;
 
@@ -134,12 +114,7 @@ STRING              string;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         Code2Asci (STRING string)
-#else  /* __STDC__ */
-static void         Code2Asci (string)
-STRING              string;
-#endif /* __STDC__ */
 {
    int                 i = 0;
 
@@ -154,12 +129,7 @@ STRING              string;
 /*----------------------------------------------------------------------
   minMAJ returns TRUE if the string doesn't contains only lowercases 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            minMAJ (STRING string)
-#else  /* __STDC__ */
-ThotBool            minMAJ (string)
-STRING              string;
-#endif /* __STDC__ */
 {
    int                 maj = 0;
    int                 i = 0;
@@ -176,12 +146,7 @@ STRING              string;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T                tomin (CHAR_T caract)
-#else  /* __STDC__ */
-CHAR_T                tomin (caract)
-CHAR_T                caract;
-#endif /* __STDC__ */
 {
    CHAR_T                c;
 
@@ -195,12 +160,7 @@ CHAR_T                caract;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         SetUpperCase (STRING string)
-#else  /* __STDC__ */
-void         SetUpperCase (string)
-STRING              string;
-#endif /* __STDC__ */
 {
    int                 i = 0;
 
@@ -215,12 +175,7 @@ STRING              string;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         SetCapital (STRING string)
-#else  /* __STDC__ */
-void         SetCapital (string)
-STRING              string;
-#endif /* __STDC__ */
 {
    if (isimin (string[0]) != 0)
       string[0] = toupper (string[0]);
@@ -230,12 +185,7 @@ STRING              string;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool     IsUpperCase (STRING string)
-#else  /* __STDC__ */
-ThotBool     IsUpperCase (string)
-STRING              string;
-#endif /* __STDC__ */
 {
    int                 maj = 1;
    int                 i = 0;
@@ -252,12 +202,7 @@ STRING              string;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool     IsCapital (STRING string)
-#else  /* __STDC__ */
-ThotBool     IsCapital (string)
-STRING              string;
-#endif /* __STDC__ */
 {
    int                 cap = 0;
    int                 i = 0;
@@ -278,12 +223,7 @@ STRING              string;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsIso (STRING string)
-#else  /* __STDC__ */
-ThotBool            IsIso (string)
-STRING              string;
-#endif /* __STDC__ */
 {
    int                 iso = 1;
    int                 i = 0;
@@ -304,13 +244,7 @@ STRING              string;
    retourne -3  si le mot est present dans le dict                          
    retourne >=0 si le mot n'est pas dans le dict (indice de sa place future) 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 WordInDictionary (CHAR_T word[MAX_WORD_LEN], PtrDict dict)
-#else  /* __STDC__ */
-int                 WordInDictionary (word, dict)
-CHAR_T                word[MAX_WORD_LEN];
-PtrDict             dict;
-#endif /* __STDC__ */
+int WordInDictionary (CHAR_T word[MAX_WORD_LEN], PtrDict dict)
 {
    int                 inf, sup, med, rescomp, size;
 
@@ -356,14 +290,7 @@ PtrDict             dict;
    0 si le mot est inconnu ou vide                         
    -1 s'il n'y a pas de dictionnaire pour verifier ce mot   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 CheckWord (CHAR_T word[MAX_WORD_LEN], Language language, PtrDict dict)
-#else  /* __STDC__ */
-int                 CheckWord (word, language, dict)
-CHAR_T                word[MAX_WORD_LEN];
-Language            language;
-PtrDict             dict;
-#endif /* __STDC__ */
+int CheckWord (CHAR_T word[MAX_WORD_LEN], Language language, PtrDict dict)
 {
    ThotBool            present = TRUE;
    int                 res;
@@ -435,14 +362,7 @@ PtrDict             dict;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          Insert (int x, int pWord, PtrDict dict)
-#else  /* __STDC__ */
-static int          Insert (x, pWord, dict)
-int                 x;
-int                 pWord;
-PtrDict             dict;
-#endif /* __STDC__ */
 {
    int                 i, k;
 
@@ -473,13 +393,7 @@ PtrDict             dict;
    1 si le mot a pu etre ajoute dans le dictionnaire 
    par defaut : tous les mots nouveaux sont insecables        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          InsertWord (PtrDict dict, CHAR_T word[MAX_WORD_LEN])
-#else  /* __STDC__ */
-static int          InsertWord (dict, word)
-PtrDict             dict;
-CHAR_T                word[MAX_WORD_LEN];
-#endif /* __STDC__ */
 {
    int                 size, place, i, k;
 
@@ -527,13 +441,7 @@ CHAR_T                word[MAX_WORD_LEN];
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         Cmp (CHAR_T wordtest[], PtrDict dict)
-#else  /* __STDC__ */
-static void         Cmp (wordtest, dict)
-CHAR_T                wordtest[];
-PtrDict             dict;
-#endif /* __STDC__ */
 {
   int                 dist[MAX_WORD_LEN][MAX_WORD_LEN];
   UCHAR_T       wordcmp[MAX_WORD_LEN];
@@ -709,12 +617,7 @@ static void         LoadSpellChecker ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SaveDictFile (PtrDict docDict)
-#else  /* __STDC__ */
-static void         SaveDictFile (docDict)
-PtrDict             docDict;
-#endif /* __STDC__ */
 {
    FILE               *f;
    int                 i, j;
@@ -759,13 +662,7 @@ PtrDict             docDict;
    (s'il n'y a plus de place : ferme et ouvre avec plus d'espace) 
    creation eventuelle et initialisation de ChkrFileDict             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AddWord (CHAR_T word[MAX_WORD_LEN], PtrDict * pDict)
-#else  /* __STDC__ */
-void                AddWord (word, pDict)
-CHAR_T                word[MAX_WORD_LEN];
-PtrDict            *pDict;
-#endif /* __STDC__ */
 {
    CHAR_T              word1[MAX_WORD_LEN];
    int                 ret;
@@ -864,13 +761,7 @@ static void            InitChecker ()
    met dans ChkrCorrection les propositions de correction du mot       
    qui se trouve dans ChkrErrWord                                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                GiveProposal (Language language, PtrDict docDict)
-#else  /* __STDC__ */
-void                GiveProposal (language, docDict)
-Language            language;
-PtrDict             docDict;
-#endif /* __STDC__ */
 {
    PtrDict             globalDict;
    PtrDict             personalDict;
@@ -911,12 +802,7 @@ PtrDict             docDict;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         init_Tsub (FILE * ftsub)
-#else  /* __STDC__ */
-static void         init_Tsub (ftsub)
-FILE               *ftsub;
-#endif /* __STDC__ */
 {
    int                 i, j;
    UCHAR_T       ch1[80], ch2[80], ch3[80];
@@ -953,12 +839,7 @@ FILE               *ftsub;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         init_param (FILE * fd)
-#else  /* __STDC__ */
-static void         init_param (fd)
-FILE               *fd;
-#endif /* __STDC__ */
 {
    int                 i, cc, ii, oo, pp, bb, mm, dd, ss, rr;
 
@@ -1002,12 +883,7 @@ FILE               *fd;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         DefaultParams (int lettres)
-#else  /* __STDC__ */
-static void         DefaultParams (lettres)
-int                 lettres;
-#endif /* __STDC__ */
 {
    int                 i;
 
@@ -1085,13 +961,7 @@ int                 ParametrizeChecker ()
 /*----------------------------------------------------------------------
    WordReplace                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                WordReplace (CHAR_T orgWord[MAX_WORD_LEN], CHAR_T newWord[MAX_WORD_LEN])
-#else  /* __STDC__ */
-void                WordReplace (orgWord, newWord)
-CHAR_T                orgWord[MAX_WORD_LEN];
-CHAR_T                newWord[MAX_WORD_LEN];
-#endif /* __STDC__ */
+void WordReplace (CHAR_T orgWord[MAX_WORD_LEN], CHAR_T newWord[MAX_WORD_LEN])
 {
    int                 idx;
    int                 stringLength;	/* longueur de cette chaine */
@@ -1199,13 +1069,7 @@ ThotBool            CheckChangeSelection ()
    retourne TRUE si oui                               
    FALSE sinon                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     CheckCharList (CHAR_T car, STRING listcar)
-#else  /* __STDC__ */
-static ThotBool     CheckCharList (car, listcar)
-CHAR_T                car;
-STRING              listcar;
-#endif /* __STDC__ */
 {
    int                 i;
 
@@ -1221,12 +1085,7 @@ STRING              listcar;
    ACeCar retourne TRUE si le mot contient un des caracteres       
    contenu dans ListCar.                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     ACeCar (CHAR_T word[MAX_WORD_LEN])
-#else  /* __STDC__ */
-static ThotBool     ACeCar (word)
-CHAR_T                word[MAX_WORD_LEN];
-#endif /* __STDC__ */
 {
 
    ThotBool            result;
@@ -1248,12 +1107,7 @@ CHAR_T                word[MAX_WORD_LEN];
    IncludeANumber                                                       
    retourne TRUE si le mot contient au moins un chiffre arabe.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     IncludeANumber (CHAR_T word[MAX_WORD_LEN])
-#else  /* __STDC__ */
-static ThotBool     IncludeANumber (word)
-CHAR_T                word[MAX_WORD_LEN];
-#endif /* __STDC__ */
 {
 
    ThotBool            result;
@@ -1275,12 +1129,7 @@ CHAR_T                word[MAX_WORD_LEN];
    IsANumber retourne TRUE si le mot est forme' uniquement de    
    chiffres decimaux arabes.                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     IsANumber (CHAR_T word[MAX_WORD_LEN])
-#else  /* __STDC__ */
-static ThotBool     IsANumber (word)
-CHAR_T                word[MAX_WORD_LEN];
-#endif /* __STDC__ */
 {
 
    ThotBool            result;
@@ -1304,12 +1153,7 @@ CHAR_T                word[MAX_WORD_LEN];
    InRoman retourne TRUE si le mot est forme' uniquement de       
    chiffres romains.                                               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     InRoman (CHAR_T word[MAX_WORD_LEN])
-#else  /* __STDC__ */
-static ThotBool     InRoman (word)
-CHAR_T                word[MAX_WORD_LEN];
-#endif /* __STDC__ */
 {
    /* description des chiffres romains (majuscule) */
    static CHAR_T         NRomain[] = {
@@ -1383,12 +1227,7 @@ CHAR_T                word[MAX_WORD_LEN];
    chiffre arabe, car. special)                                       
    retourne FALSE sinon : le mot sera alors verifie par le correcteur 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     IgnoreWord (CHAR_T word[MAX_WORD_LEN])
-#else  /* __STDC__ */
-static ThotBool     IgnoreWord (word)
-CHAR_T                word[MAX_WORD_LEN];
-#endif /* __STDC__ */
 {
 
    ThotBool            result = FALSE;
@@ -1421,72 +1260,65 @@ CHAR_T                word[MAX_WORD_LEN];
    selectionne dans la vue courante du document.                
    Le mot errone' est mis dans ChkrErrWord.                           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                NextSpellingError (CHAR_T word[MAX_WORD_LEN], PtrDict docDict)
-#else  /* __STDC__ */
-void                NextSpellingError (word, docDict)
-CHAR_T                word[MAX_WORD_LEN];
-PtrDict             docDict;
-
-#endif /* __STDC__ */
+void NextSpellingError (CHAR_T word[MAX_WORD_LEN], PtrDict docDict)
 {
-   Language            language;
-   ThotBool            ok, novalid;
-   int                 i;
+  Language            language;
+  ThotBool            ok, novalid;
+  int                 i;
 
-   i = 0;
-   do
-     {
-	/* Recherche un mot a corriger */
-	novalid = TRUE;
-        ok = TRUE;
-	while (ok && novalid)
-	  {
-	     if (ChkrRange->SStartToEnd)
-		ok = SearchNextWord (&ChkrElement, &ChkrIndChar, word, ChkrRange);
-	     else
-		ok = SearchPreviousWord (&ChkrElement, &ChkrIndChar, word, ChkrRange);
-	     /* Is it a valid selection ? */
-	     if (ok && ChkrElement->ElParent != NULL)
-		novalid = TypeHasException (ExcNoSpellCheck, ChkrElement->ElParent->ElTypeNumber, ChkrElement->ElParent->ElStructSchema);
-	  }
-
-	if (ok)
-	  {
-	     /* verifie si c'est un nombre ou s'il doit etre ignore' */
-	     if (IsANumber (word) || IgnoreWord (word))
-		i = -1;
-	     else
-	       {
-		  /* Charge si necessaire les dictionnaires de la langue */
-		  language = ChkrElement->ElLanguage;
-		  if (language != ChkrLanguage)
-		    {
-		       ChkrLanguage = language;
-		       TtaLoadLanguageDictionaries (ChkrLanguage);
-		    }
-		  i = CheckWord (word, ChkrLanguage, docDict);
-		  /* 1   = mot trouve dans l'un des dict */
-		  /* 0   = mot inconnu ou vide */
-		  /* -1  = pas de dict pour verifier un mot de cette language */
-		  if (i != 1)
-		     /* est-ce un chiffre romain correct */
-		     i = (InRoman (word) == TRUE) ? 1 : i;
-	       }
-	  }
-     }
-   /* saute les mots qui sont dans une langue SANS dictionnaire */
-   while (ok && (i > 0 || i == -1));
-
-   i = ustrlen (word);
-   if (i > 0)
-     {
-	/* on a trouve un mot */
-	/* selectionner le mot a corriger */
-	if (ChkrRange->SStartToEnd)
-	   SelectString (ChkrRange->SDocument, ChkrElement, ChkrIndChar - i + 1, ChkrIndChar);
-	else
-	   SelectString (ChkrRange->SDocument, ChkrElement, ChkrIndChar + 1, ChkrIndChar + i);
-     }
-   ustrcpy (ChkrErrWord, word);
+  i = 0;
+  do
+    {
+      /* Recherche un mot a corriger */
+      novalid = TRUE;
+      ok = TRUE;
+      while (ok && novalid)
+	{
+	  if (ChkrRange->SStartToEnd)
+	    ok = SearchNextWord (&ChkrElement, &i, &ChkrIndChar, word, ChkrRange);
+	  else
+	    ok = SearchPreviousWord (&ChkrElement, &ChkrIndChar, &i, word, ChkrRange);
+	  /* Is it a valid selection ? */
+	  if (ok && ChkrElement->ElParent != NULL)
+	    novalid = TypeHasException (ExcNoSpellCheck, ChkrElement->ElParent->ElTypeNumber, ChkrElement->ElParent->ElStructSchema);
+	}
+      
+      if (ok)
+	{
+	  /* verifie si c'est un nombre ou s'il doit etre ignore' */
+	  if (IsANumber (word) || IgnoreWord (word))
+	    i = -1;
+	  else
+	    {
+	      /* Charge si necessaire les dictionnaires de la langue */
+	      language = ChkrElement->ElLanguage;
+	      if (language != ChkrLanguage)
+		{
+		  ChkrLanguage = language;
+		  TtaLoadLanguageDictionaries (ChkrLanguage);
+		}
+	      i = CheckWord (word, ChkrLanguage, docDict);
+	      /* 1   = mot trouve dans l'un des dict */
+	      /* 0   = mot inconnu ou vide */
+	      /* -1  = pas de dict pour verifier un mot de cette language */
+	      if (i != 1)
+		/* est-ce un chiffre romain correct */
+		i = (InRoman (word) == TRUE) ? 1 : i;
+	    }
+	}
+    }
+  /* saute les mots qui sont dans une langue SANS dictionnaire */
+  while (ok && (i > 0 || i == -1));
+  
+  i = ustrlen (word);
+  if (i > 0)
+    {
+      /* on a trouve un mot */
+      /* selectionner le mot a corriger */
+      if (ChkrRange->SStartToEnd)
+	SelectString (ChkrRange->SDocument, ChkrElement, ChkrIndChar - i + 1, ChkrIndChar);
+      else
+	SelectString (ChkrRange->SDocument, ChkrElement, ChkrIndChar + 1, ChkrIndChar + i);
+    }
+  ustrcpy (ChkrErrWord, word);
 }

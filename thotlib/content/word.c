@@ -88,29 +88,6 @@ UCHAR_T PreviousCharacter (PtrTextBuffer *buffer, int *rank)
      }
 }
 
-#ifdef IV
-/*----------------------------------------------------------------------
-   MotOk teste que la chaine designee constitue bien un MOT.       
-  ----------------------------------------------------------------------*/
-ThotBool MotOk (PtrElement firstEl, int firstChar, PtrElement lastEl,
-		int lastChar)
-{
-   if (lastChar > 0)
-     {
-	if (lastEl->ElTextLength >= lastChar)
-	   /* there is a following character in the same element */
-	   if (!IsSeparatorChar (lastEl->ElText->BuContent[lastChar - 1]))
-	      /* it's not a word separator. The string is not a word */
-	      return (FALSE);
-	if (firstChar > 1)
-	   /* there is a previous character in the same element */
-	   if (!IsSeparatorChar (firstEl->ElText->BuContent[firstChar - 2]))
-	      /* it's not a word separator. The string is not a word */
-	      return (FALSE);
-     }
-   return (TRUE);
-}
-#endif
 
 /*----------------------------------------------------------------------
    InitSearchDomain rend vrai si l'initialisation s'est bien passee   
@@ -122,7 +99,7 @@ ThotBool MotOk (PtrElement firstEl, int firstChar, PtrElement lastEl,
    Le parame`tre context pointe sur le contexte de domaine de      
    recherche a` initialiser.                                       
   ----------------------------------------------------------------------*/
-ThotBool            InitSearchDomain (int domain, PtrSearchContext context)
+ThotBool InitSearchDomain (int domain, PtrSearchContext context)
 {
    ThotBool            ok;
 
@@ -319,14 +296,12 @@ ThotBool NextTree (PtrElement * pEl, int *charIndx, PtrSearchContext context)
 }
 
 /*----------------------------------------------------------------------
-   SearchNextWord recherche dans le domaine de recherche le mot qui	
-   suit la position courante.                                  	
-   Retourne le mot selectionne et met a jour le pointeur           
-   a la fin du mot selectionne.                                    
-   Le parame`tre context pointe sur le contexte de domaine de      
-   recherche concerne' ou NULL si aucun domaine fixe'.             
+  SearchNextWord look for the next word in the search domain from the
+  current end position.
+  Returns the selected word, its beginning and end postion.
+  The parameter context points to the search domain.
   ----------------------------------------------------------------------*/
-ThotBool SearchNextWord (PtrElement * curEl, int *curChar,
+ThotBool SearchNextWord (PtrElement * curEl, int *beginning, int *end,
 			 CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
 {
    PtrElement          pEl, endEl;
@@ -335,10 +310,10 @@ ThotBool SearchNextWord (PtrElement * curEl, int *curChar,
    int                 len;
    int                 index;
    PtrTextBuffer       pBuf;
-   UCHAR_T       charact;
+   UCHAR_T             charact;
 
    pEl = *curEl;
-   iChar = *curChar;
+   iChar = *end;
    word[0] = EOS;
 
    if (pEl == NULL && context != NULL)
@@ -434,10 +409,9 @@ ThotBool SearchNextWord (PtrElement * curEl, int *curChar,
 	  }
 	index = len;
 	charact = pBuf->BuContent[index];
-
 	/* On se place au debut du mot */
-	while (charact != 0 && IsSeparatorChar (charact)
-	       && (pEl != endEl || iChar < endChar))
+	while (charact != WC_EOS && IsSeparatorChar (charact) &&
+	       (pEl != endEl || iChar < endChar))
 	  {
 	     charact = NextCharacter (&pBuf, &index);
 	     iChar++;
@@ -446,9 +420,10 @@ ThotBool SearchNextWord (PtrElement * curEl, int *curChar,
 	/* Recherche le premier separateur apres le mot */
 	/* On verifie que l'on ne depasse pas la fin du domaine de recherche */
 	len = 0;
-	while (len < MAX_WORD_LEN-1 && charact != 0
-	       && !IsSeparatorChar (charact)
-	       && (pEl != endEl || iChar < endChar))
+	*beginning = iChar;
+	while (len < MAX_WORD_LEN-1 && charact != WC_EOS &&
+	       !IsSeparatorChar (charact) &&
+	       (pEl != endEl || iChar < endChar))
 	  {
 	     word[len++] = charact;
 	     charact = NextCharacter (&pBuf, &index);
@@ -458,29 +433,26 @@ ThotBool SearchNextWord (PtrElement * curEl, int *curChar,
 	/* positionne les valeurs de retour */
 	word[len] = EOS;
 	*curEl = pEl;
-	*curChar = iChar;
+	*end = iChar;
 	/* Si on a trouve effectivement un mot */
 	if (len > 0)
 	   return (TRUE);
 	else
 	   /* On peut etre en fin de feuille qui se termine par un espace */
 	   /* On continue la recherche */
-	   return (SearchNextWord (curEl, curChar, word, context));
+	   return (SearchNextWord (curEl, beginning, end, word, context));
      }
 }
 
 
 /*----------------------------------------------------------------------
-   SearchPreviousWord recheche dans le domaine de recherche le mot   
-   qui precede la position courante.                       
-   Retourne le mot selectionne et met a jour le pointeur   
-   au debut du mot selectionne.                            
-   Le parame`tre context pointe sur le contexte de domaine de      
-   recherche concerne' ou NULL si aucun domaine fixe'.             
+  SearchPreviousWord look for the next word in the search domain from the
+  current beginning position.
+  Returns the selected word, its beginning and end postion.
+  The parameter context points to the search domain.
   ----------------------------------------------------------------------*/
-ThotBool SearchPreviousWord (PtrElement * curEl, int *curChar,
-			     CHAR_T word[MAX_WORD_LEN],
-			     PtrSearchContext context)
+ThotBool SearchPreviousWord (PtrElement * curEl, int *beginning, int *end,
+			     CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
 {
    PtrElement          pEl, endEl;
    PtrElement          pAncestor;
@@ -488,11 +460,11 @@ ThotBool SearchPreviousWord (PtrElement * curEl, int *curChar,
    int                 len;
    int                 index;
    PtrTextBuffer       pBuf;
-   UCHAR_T       charact;
-   CHAR_T                reverse[MAX_WORD_LEN];
+   UCHAR_T             charact;
+   CHAR_T              reverse[MAX_WORD_LEN];
 
    pEl = *curEl;
-   iChar = *curChar;
+   iChar = *beginning;
    word[0] = EOS;
 
    if (pEl == NULL)
@@ -594,8 +566,8 @@ ThotBool SearchPreviousWord (PtrElement * curEl, int *curChar,
 	index = len;
 	charact = pBuf->BuContent[index];
 	/* On se place a la fin du mot */
-	while (charact != 0 && iChar >= 0 && IsSeparatorChar (charact)
-	       && (pEl != endEl || iChar >= endChar))
+	while (charact != WC_EOS && iChar >= 0 && IsSeparatorChar (charact) &&
+	       (pEl != endEl || iChar >= endChar))
 	  {
 	     charact = PreviousCharacter (&pBuf, &index);
 	     iChar--;
@@ -603,9 +575,10 @@ ThotBool SearchPreviousWord (PtrElement * curEl, int *curChar,
 
 	/* On se place au debut du mot et recupere le mot a l'envers */
 	len = 0;
-	while (len < MAX_WORD_LEN-1 && charact != 0 && iChar >= 0
-	       && !IsSeparatorChar (charact)
-	       && (pEl != endEl || iChar >= endChar))
+	*end = iChar;
+	while (len < MAX_WORD_LEN-1 && charact != WC_EOS && iChar >= 0 &&
+	       !IsSeparatorChar (charact) &&
+	       (pEl != endEl || iChar >= endChar))
 	  {
 	     reverse[len++] = charact;
 	     charact = PreviousCharacter (&pBuf, &index);
@@ -624,13 +597,13 @@ ThotBool SearchPreviousWord (PtrElement * curEl, int *curChar,
 	/* positionne les valeurs de retour */
 	word[len] = EOS;
 	*curEl = pEl;
-	*curChar = iChar;
+	*beginning = iChar;
 	/* Si on a trouve effectivement un mot */
 	if (len > 0)
 	   return (TRUE);
 	else
 	   /* On peut etre en fin de feuille qui se termine par un espace */
 	   /* On continue la recherche */
-	   return (SearchPreviousWord (curEl, curChar, word, context));
+	   return (SearchPreviousWord (curEl, beginning, end, word, context));
      }
 }

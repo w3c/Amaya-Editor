@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -9,7 +9,6 @@
 #define _UNDO_H_
 
 #ifndef __CEXTRACT__
-#ifdef __STDC__
 /* ----------------------------------------------------------------------
    TtaPrepareUndo returns TRUE if a undo sequence is opened
   ----------------------------------------------------------------------*/
@@ -174,23 +173,6 @@ extern void         TtaCancelLastRegisteredOperation (Document document);
   ----------------------------------------------------------------------*/
 extern void         TtaUndoNoRedo (Document document);
 
-#else  /* __STDC__ */
-extern ThotBool     TtaPrepareUndo (/* Document document */);
-extern void         TtaOpenUndoSequence (/* Document document, Element firstSel,Element lastSel, int firstSelChar, int lastSelChar */);
-extern ThotBool     TtaCloseUndoSequence (/* Document document */);
-extern void         TtaRegisterElementCreate (/* Element element, Document document */);
-extern void         TtaRegisterElementDelete (/* Element element, Document document */);
-extern void         TtaRegisterElementReplace (/* Element element, Document document */);
-extern void         TtaRegisterAttributeCreate (/* Attribute attribute, Element element, Document document */);
-extern void         TtaRegisterAttributeDelete (/* Attribute attribute, Element element, Document document */);
-extern void         TtaRegisterAttributeReplace (/* Attribute attribute, Element element, Document document */);
-extern void         TtaClearUndoHistory (/* Document document */);
-extern void         TtaCancelLastRegisteredSequence (/* Document document */);
-extern void         TtaChangeLastRegisteredAttr (/* Element oldEl, Element newEl, Attribute oldAttr, Attribute newAttr, Document document */);
-extern void         TtaReplaceLastRegisteredAttr (/* Document document */);
-extern void         TtaCancelLastRegisteredOperation (/* Document document */);
-extern void         TtaUndoNoRedo (/* Document document */);
-#endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 
 #endif

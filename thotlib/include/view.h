@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 #ifndef _VIEW_H_
 #define _VIEW_H_
 #include "tree.h"
@@ -30,9 +21,6 @@ typedef enum _DisplayMode
      DisplayImmediately, DeferredDisplay, NoComputedDisplay, SuspendDisplay
   }
 DisplayMode;
-
-
-#ifdef __STDC__
 
 
 /*----------------------------------------------------------------------
@@ -476,39 +464,4 @@ extern int          TtaGetThotColor (unsigned short red, unsigned short green, u
 extern void         TtaClearViewSelections ( void );
 
 extern void         TtaChangeWindowTitle (Document, View, STRING);
-#else  /* __STDC__ */
-
-extern void         TtaGetViewXYWH ( /* Document doc, int view, int *x, int *y, int *w, int *h */ );
-extern void         TtaGetViewGeometry ( /* Document document, CHAR_T* name, int *x, int *y, int *width, int *height */ );
-extern void         TtaGetViewGeometryMM ( /* Document document, CHAR_T* name, int *x, int *y, int *width, int *height */ );
-extern View         TtaOpenMainView ( /* Document document, int x, int y, int w, int h */ );
-extern View         TtaOpenSubView ( /* Document document, STRING viewName, int x, int y, int w, int h, Element subtree */ );
-extern void         TtaChangeViewTitle ( /*Document document, View view, STRING title */ );
-extern void         TtaCloseView ( /* Document document, View view */ );
-extern void         TtaFreeView ( /*Document document, View view */ );
-extern void         TtaSetSensibility ( /* Document document, View view, int value */ );
-extern void         TtaSetZoom ( /* Document document, View view, int value */ );
-extern Element      TtaGetFirstElementShown (/* Document document, View view, int *position */);
-extern void         TtaShowElement ( /* Document document, View view, Element element, int position */ );
-extern int          TtaGetSensibility ( /* Document document, View view */ );
-extern int          TtaGetZoom ( /* Document document, View view */ );
-extern int          TtaIsPSchemaValid ( /* STRING structureName, STRING presentationName */ );
-extern void         TtaGiveViewsToOpen ( /* Document document, STRING buffer, int *nbViews */ );
-extern STRING       TtaGetViewName ( /* Document document, View view */ );
-extern ThotBool     TtaIsViewOpen ( /*Document document, View view */ );
-extern View         TtaGetViewFromName ( /* Document document, char* viewName */ );
-extern void         TtaRaiseView ( /*Document document, View view */ );
-extern void         TtaGiveActiveView ( /* Document *document, View *view */ );
-extern void         TtaSetDisplayMode ( /* Document document, DisplayMode newDisplayMode */ );
-extern DisplayMode  TtaGetDisplayMode ( /* Document document */ );
-extern void         TtaLockTableFormatting ();
-extern void         TtaUnlockTableFormatting ();
-extern void         TtaGiveTableFormattingLock (/*ThotBool *lock*/);
-extern void         TtaListView ( /*Document document, View view, FILE *fileDescriptor */ );
-extern void         TtaListBoxes ( /*Document document, View view, FILE *fileDescriptor */ );
-extern int          TtaGetThotColor ( /*unsigned short red, unsigned short green, unsigned short blue */ );
-extern void         TtaClearViewSelections ( /*void*/ );
-extern void         TtaChangeWindowTitle ();
-
-#endif /* __STDC__ */
 #endif
