@@ -902,9 +902,9 @@ int            zoom;
 #endif /* __STDC__ */
 {
   int             w, h;
-  Pixmap          pixmap;
+  Pixmap          pixmap = (Pixmap) 0;
   ThotColorStruct colrs[256];
-  unsigned char   *buffer; 
+  unsigned char   *buffer = (unsigned char*)0; 
 # ifndef _WIN_PRINT
   unsigned char* buffer2;
 # endif /* _WIN_PRINT */
@@ -917,6 +917,7 @@ int            zoom;
 # endif /* _WINDOWS */
 
   buffer = ReadPngToData (fn, &w, &h, &ncolors, &cpp, colrs, &bg);
+
   /* return image dimensions */
   *width = w;
   *height = h;
@@ -949,8 +950,10 @@ int            zoom;
   }
 #endif /* _WINPRINT */
     
-  if (buffer == NULL)
+  if (buffer == NULL) {
+      WinErrorBox (NULL, "PngCreate: (1)");
     return (ThotBitmapNone);
+  }
 
   if (bg >= 0) {
 #   ifndef _WINDOWS
@@ -966,9 +969,10 @@ int            zoom;
   if (imageDesc->PicColors != NULL)
     imageDesc->PicNbColors = ncolors;
   TtaFreeMemory (buffer);
-  if (pixmap == None) 
+  if (pixmap == None) {
+     WinErrorBox (NULL, "PngCreate: (2)");
     return (ThotBitmapNone); 
-  else
+  } else
     { 
       *wif = w;
       *hif = h;      

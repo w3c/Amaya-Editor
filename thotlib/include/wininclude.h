@@ -9,7 +9,7 @@
 #ifdef __STDC__
 extern void       DropFile (Document, View, STRING);
 extern HMENU      WIN_GetMenu (int);
-extern void       WinErrorBox (HWND);
+extern void       WinErrorBox (HWND, STRING);
 extern void       WinLoadGC (HDC, int, int);
 extern HFONT      WinLoadFont (HDC, ptrfont);
 extern int        WIN_InitSystemColors ();

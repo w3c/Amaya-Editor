@@ -5680,7 +5680,7 @@ ThotBool         *endOfFile;
 	  res = gzread (infile, FileBufferA, INPUT_FILE_BUFFER_SIZE);
 #        ifdef _WINDOWS
 	  if (!MultiByteToWideChar (1256, 0, FileBufferA, sizeof(FileBufferA), FileBuffer, sizeof (FileBufferA)))
-            WinErrorBox (NULL);
+            WinErrorBox (NULL, "GetNextChar");
 	  /* Ubuffer = ISO2WideChar (FileBufferA); */
 #        else  /* _WINDOWS */
 	  mbstowcs (FileBuffer, FileBufferA, sizeof (FileBufferA));

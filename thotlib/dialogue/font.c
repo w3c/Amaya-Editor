@@ -163,7 +163,7 @@ TypeUnit unit;
                        WIN_lpszFace);
 
    if (hFont == NULL) {
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LoadFont");
    } 
 
    return (hFont);
@@ -189,7 +189,7 @@ ptrfont font;
 
       if (currentActiveFont != (HFONT)0) {
          if (!DeleteObject (SelectObject (hdc, GetStockObject (SYSTEM_FONT))))
-            WinErrorBox (NULL);
+            WinErrorBox (NULL, "WinLoadFont (1)");
          currentActiveFont = (HFONT)0;
 	  }
    } else if ((LastUsedFont->highlight != font->highlight) ||
@@ -198,7 +198,7 @@ ptrfont font;
               (LastUsedFont->family    != font->family)) {
           if (currentActiveFont != (HFONT)0) {
              if (!DeleteObject (SelectObject (hdc, GetStockObject (SYSTEM_FONT))))
-                WinErrorBox (NULL);
+                WinErrorBox (NULL, "WinLoadFont (2)");
              currentActiveFont = (HFONT)0;
 
              LastUsedFont->highlight = font->highlight; 
@@ -211,7 +211,7 @@ ptrfont font;
    if (currentActiveFont == (HFONT)0) {
       currentActiveFont = WIN_LoadFont (font->alphabet, font->family, font->highlight, font->size, 0);
       if (currentActiveFont == (HFONT)0)
-         WinErrorBox (NULL);
+         WinErrorBox (NULL, "WinLoadFont (3)");
    }
    return (SelectObject (hdc, currentActiveFont));
 }
@@ -1007,7 +1007,7 @@ ThotBool            increase;
 		   }
            /* SelectObject (TtDisplay, hOldFont); */
            if (!DeleteObject (SelectObject (TtDisplay, currentActiveFont)))
-              WinErrorBox (NULL);
+              WinErrorBox (NULL, "LoadNearestFont (1)");
            currentActiveFont = 0;
 	  }
 #      else  /* _WINDOWS */

@@ -1499,9 +1499,10 @@ int                *height;
 int                 zoom;
 #endif /* __STDC__ */
 {
-  Pixmap              pixmap;
+  Pixmap              pixmap = (Pixmap) 0;
   ThotColorStruct     colrs[256];
-  unsigned char      *buffer, *buffer2;
+  unsigned char*      buffer = (unsigned char*)0;
+  unsigned char*      buffer2 = (unsigned char*)0;
   int                 w, h;
   int                 i, ratio;
   int                 ncolors, cpp;
@@ -1521,8 +1522,12 @@ int                 zoom;
   /* return image dimensions */
   *width = w;
   *height = h;
-  if (buffer == NULL)
+  if (buffer == NULL) {
+#    ifdef _WINDOWS
+     WinErrorBox (NULL, "GifCreate: buffer == 0x00000000");
+#    endif /* _WINDOWS */
      return (ThotBitmapNone);
+  }
 
   if (zoom != 0 && *xif == 0 && *yif == 0)
     {
@@ -1543,26 +1548,26 @@ int                 zoom;
      WIN_GetDeviceContext (-1);
 # endif /* _WINDOWS */
 
-
-  if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
-    {
-      /* xif and yif contain width and height of the box */	  
-      if ((*xif * *yif) > 4000000 )
-	{
-	  ratio = 4000000 / (*xif * *yif);
-	  *xif = ratio * *xif;
-	  *yif = ratio * *yif;
-	}
-      buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-      TtaFreeMemory (buffer);
-      buffer = buffer2;
-      buffer2 = NULL;
-      w = *xif;
-      h = *yif;
-    }
+# ifndef _WIN_PRINT
+  if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif)) {
+     /* xif and yif contain width and height of the box */	  
+     if ((*xif * *yif) > 4000000 ) {
+        ratio = 4000000 / (*xif * *yif);
+        *xif = ratio * *xif;
+        *yif = ratio * *yif;
+	 } 
+     buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
+     TtaFreeMemory (buffer);
+     buffer = buffer2;
+     buffer2 = NULL;
+     w = *xif;
+     h = *yif;
+  }
+# endif /* _WIN_PRINT */
   
-  if (buffer == NULL)
+  if (buffer == NULL) {
     return (ThotBitmapNone);	
+  }
   if (Gif89.transparent != -1)
     {
       if (Gif89.transparent < 0)
@@ -1582,9 +1587,12 @@ int                 zoom;
    if (imageDesc->PicColors != NULL)
      imageDesc->PicNbColors = ncolors;
    TtaFreeMemory (buffer);
-   if (pixmap == None)
+   if (pixmap == None) {
+#     ifdef _WINDOWS
+      WinErrorBox (NULL, "GifCreate: pixmap == 0x00000000");
+#     endif /* _WINDOWS */
      return (ThotBitmapNone);
-   else
+   } else
      {
        *wif = w;
        *hif = h;

@@ -88,7 +88,7 @@ ThotBool		    attr;
    PtrEventsSet        eventsSet;
    ThotBool            status;
    Proc                procEvent;
-   UserProc            userProcEvent;
+   UserProc            userProcEvent = (UserProc)0;
    void               *userProcArg;
    Func                funcEvent;
    UserProc            userFuncEvent;

@@ -257,9 +257,10 @@ int                 zoom;
 #endif /* __STDC__ */
 {
   int                 w, h;
-  Pixmap              pixmap;
+  Pixmap              pixmap = (Pixmap)0;
   ThotColorStruct     colrs[256];
-  unsigned char      *buffer,*buffer2;
+  unsigned char*      buffer = (unsigned char*) 0;
+  unsigned char*      buffer2 = (unsigned char*) 0;
 
 # ifdef _WINDOWS
   bgRed   = -1;
@@ -272,8 +273,12 @@ int                 zoom;
   /* return image dimensions */
   *width = w;
   *height = h;
-  if (!buffer)
+  if (!buffer) {
+#    ifdef _WINDOWS 
+     WinErrorBox (NULL, "JpegCreate: buffer == 0x00000000");
+#    endif /* _WINDOWS */
     return (ThotBitmapNone);
+  }
 
   if (zoom != 0 && *xif == 0 && *yif == 0)
     {
@@ -289,6 +294,7 @@ int                 zoom;
 	*yif = PixelValue (h, UnPixel, NULL, zoom);
     }
 
+# ifndef _WIN_PRINT
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
     {   
       /* xif and yif contain width and height of the box */
@@ -299,7 +305,8 @@ int                 zoom;
       w = *xif;
       h = *yif;
     }
-  
+# endif /* _WIN_PRINT */
+
   if (buffer == NULL)
     return (ThotBitmapNone);	
 
@@ -307,8 +314,12 @@ int                 zoom;
   if (imageDesc->PicColors != NULL)
     imageDesc->PicNbColors = 100;
   TtaFreeMemory (buffer);  
-  if (pixmap == None)
+  if (pixmap == None) {
+#    ifdef _WINDOWS
+     WinErrorBox (NULL, "JpegCreate: pixmap == 0x00000000");
+#    endif /* _WINDOWS */
     return (ThotBitmapNone);
+  }
   else
     {
       *wif = w;

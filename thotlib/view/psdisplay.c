@@ -142,7 +142,7 @@ int                 style;
    LineTo (TtPrinterDC, x2, y2);
    SelectObject (TtPrinterDC, hOldPen);
    if (!DeleteObject (pen))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "psdisplay.c - DoPrintOneLine");
    pen = (HPEN) 0;
 }
 
@@ -207,7 +207,7 @@ int                 fg;
       Polyline (TtPrinterDC, point, 4);
       SelectObject (TtPrinterDC, hOldPen);
 	  if (!DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawArrowHead");
       hPen = (HPEN) 0;
    }
 }
@@ -581,8 +581,10 @@ int                 shadow;
 
       /* Do we need to change the current font ? */
 #     ifdef _WINDOWS
-      if (TtPrinterDC)
-         hOldFont = SelectObject (TtPrinterDC, currentActiveFont);
+      if (TtPrinterDC) {
+         /* hOldFont = SelectObject (TtPrinterDC, currentActiveFont); */
+         hOldFont = WinLoadFont (TtPrinterDC, font);
+	  }
 #     else  /* _WINDOWS */
       encoding = CurrentFont (fout, font);
       fprintf (fout, "(");
@@ -616,14 +618,17 @@ int                 shadow;
 
       if (lg > 0)
          if (!TextOut (TtPrinterDC, x, y, (USTRING) ptcar, lg))
-            WinErrorBox (NULL);
+            WinErrorBox (NULL, "psdisplay.c - DrawString (1)");
 
       if (hyphen) /* draw the hyphen */
          if (!TextOut (TtPrinterDC, x + width, y, TEXT("\255"), 1))
-            WinErrorBox (NULL);
+            WinErrorBox (NULL, "psdisplay.c - DrawString (2)");
       if (lgboite != 0)
           SameBox = 0;
    }
+   SelectObject (TtPrinterDC, hOldFont);
+   DeleteObject (currentActiveFont);
+   currentActiveFont = (HFONT)0;
 #  else  /* _WINDOWS */
        if (bl > 0)
 	 {
@@ -1175,7 +1180,7 @@ int                 fg;
              Arc (TtPrinterDC, x + 1, y + h - arc , x + l - 2, y + h, x + 1, y + h - arc, x + l - 2, y + h - arc);
              SelectObject (TtPrinterDC, hOldPen);
              if (!DeleteObject (pen))
-                WinErrorBox (WIN_Main_Wd);
+                WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawUnion");
              pen = (HPEN) 0;
 	  }
    }
@@ -1711,13 +1716,13 @@ int                 pattern;
          PatBlt (TtPrinterDC, x, y, larg, height, PATCOPY);
          SelectObject (TtPrinterDC, hOldBrush);
          if (!DeleteObject (hBrush))
-            WinErrorBox (WIN_Main_Wd);
+            WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawRectangle (1)");
          hBrush = (HBRUSH) 0;
 	  }
 
       if (thick > 0) {
          if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
-            WinErrorBox (WIN_Main_Wd);
+            WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawRectangle (2)");
          hOldPen = SelectObject (TtPrinterDC, hPen) ;
          SelectObject (TtPrinterDC, GetStockObject (NULL_BRUSH)) ;
          Rectangle (TtPrinterDC, x, y, xf, yf);
@@ -1975,7 +1980,7 @@ int                 pattern;
       Polyline (TtPrinterDC, points, nb);
 	  SelectObject (TtPrinterDC, hOldPen);
 	  if (!DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawPolygon");
       hPen = (HPEN) 0;
    }
    /* free the table of points */
@@ -2361,21 +2366,21 @@ int                 pattern;
 	  }  
    } else {
           if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-             WinErrorBox (WIN_Main_Wd);
+             WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawOval (1)");
    }
 
    hOldPen = SelectObject (TtPrinterDC, hPen) ;
 
    if (!RoundRect (TtPrinterDC, x, y, x + larg, y + height, arc * 2, arc * 2))
-      WinErrorBox (FrRef  [frame]);
+      WinErrorBox (FrRef  [frame], "psdisplay.c - DrawOval (2)");
    SelectObject (TtPrinterDC, hOldPen);
    if (!DeleteObject (hPen))
-      WinErrorBox (FrRef [frame]);
+      WinErrorBox (FrRef [frame], "psdisplay.c - DrawOval (3)");
    hPen = (HPEN) 0;
    if (hBrush) {
       SelectObject (TtPrinterDC, hOldBrush);
       if (!DeleteObject (hBrush))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawOval (4)");
       hBrush = (HBRUSH)0;
    }
 #  else  /* !_WINDOWS */
@@ -2508,20 +2513,20 @@ int                 pattern;
 		 }  
 	  } else {
              if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-                WinErrorBox (WIN_Main_Wd);
+                WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawEllips (1)");
 	  }
       hOldPen = SelectObject (TtPrinterDC, hPen) ;
 
       if (!Ellipse (TtPrinterDC, x, y, x + larg, y + height))
-         WinErrorBox (FrRef  [frame]);
+         WinErrorBox (FrRef  [frame], "psdisplay.c - DrawEllips (2)");
       SelectObject (TtPrinterDC, hOldPen);
       if (!DeleteObject (hPen))
-         WinErrorBox (FrRef [frame]);
+         WinErrorBox (FrRef [frame], "psdisplay.c - DrawEllipse (3)");
       hPen = (HPEN) 0;
       if (hBrush) {
          SelectObject (TtPrinterDC, hOldBrush);
          if (!DeleteObject (hBrush))
-            WinErrorBox (WIN_Main_Wd);
+            WinErrorBox (WIN_Main_Wd, "psdisplay.c - DrawEllips (4)");
          hBrush = (HBRUSH)0;
 	  }
    }

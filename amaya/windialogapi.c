@@ -21,6 +21,8 @@
 #include "constmenu.h"
 #include "wininclude.h"
 
+extern ThotWindow  FrRef[MAX_FRAME + 2];
+extern int         currentFrame;
 #ifdef  APPFILENAMEFILTER
 #       undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
@@ -174,8 +176,6 @@ static ThotBool     selectionFound;
 static OPENFILENAME OpenFileName;
 static STRING       szFilter;
 static CHAR_T       szFileName[256];
-static HWND         currentWnd;
-static HWND         parentWnd;
 static HWND         currentDlg;
 static UINT         nbClass;
 static UINT         nbItem;
@@ -366,7 +366,6 @@ STRING title;
     cssSelect  = css_select;
 	formCss    = form_css;
 	cssList    = buffer;
-    currentWnd = parent;
 	usprintf (message, TEXT("%s"), msg);
     usprintf (wndTitle, title);
 
@@ -461,8 +460,6 @@ HWND      frame;
 #endif /* __STDC__ */
 {  
 	baseDlg = mathRef;
-	currentWnd = frame;
-	parentWnd  = parent;
 
 	switch (app_lang) {
            case FR_LANG:
@@ -772,7 +769,6 @@ int  menu_graph;
 HWND frame;
 #endif /* __STDC__ */
 {
-    currentWnd = frame;
     graphDialog  = graph_dlg;
     formGraph    = form_graph;
     menuGraph    = menu_graph;
@@ -1510,7 +1506,7 @@ LPARAM lParam;
 {
     switch (msg) {
            case WM_COMMAND:
-                SetFocus (currentWnd);
+                /* SetFocus (FrRef[currentFrame]); */
 	            switch (LOWORD (wParam)) {
 				       case ID_DONE:
 							EndDialog (hwnDlg, ID_DONE);
@@ -1577,7 +1573,7 @@ LPARAM lParam;
 						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)13);
                             break;
 				}
-				SetFocus (parentWnd);
+				SetFocus (FrRef[currentFrame]);
 				break;
 
            default: return (FALSE);
@@ -2619,7 +2615,7 @@ LPARAM lParam;
 {
     switch (msg) {
            case WM_COMMAND:
-                SetFocus (currentWnd);
+                SetFocus (FrRef[currentFrame]);
 	            switch (LOWORD (wParam)) {
 				       case ID_DONE:
 							EndDialog (hwnDlg, ID_DONE);

@@ -265,7 +265,7 @@ void         FreeDocColors ()
 #ifdef _WINDOWS
   /* free extended colors */
   if (!TtIsTrueColor && TtCmap && !DeleteObject (TtCmap))
-    WinErrorBox (WIN_Main_Wd);
+    WinErrorBox (WIN_Main_Wd, "FreeDocColors (1)");
   TtCmap = 0;
 #else /* _WINDOWS */
   int        i;
@@ -806,7 +806,7 @@ int         motif;
      {
 	if (!DeleteObject (WIN_LastBitmap))
 #ifndef _WIN_PRINT
-	  WinErrorBox (WIN_Main_Wd);
+	  WinErrorBox (WIN_Main_Wd, "CreatePattern (1)");
 #endif /* _WIN_PRINT */
 	;
 	WIN_LastBitmap = 0;

@@ -1336,7 +1336,7 @@ LPARAM      lParam;
     SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
     
     if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON, (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
-      WinErrorBox (NULL);
+      WinErrorBox (NULL, "WndProc: WM_CREATE");
     
     hwndToolTip = ToolBar_GetToolTips (ToolBar);
     
@@ -2555,7 +2555,7 @@ int                 raz;
        WIN_GetDeviceContext (frame);
     if (!(clipRgn = CreateRectRgn (clipx, clipy + FrameTable[frame].FrTopMargin, 
                              clipx + clipwidth, clipy + FrameTable[frame].FrTopMargin + clipheight)))
-       WinErrorBox (NULL);
+       WinErrorBox (NULL, "DefineClipping");
 #endif /* _WINDOWS */
 	if (raz > 0)
 #ifdef _WINDOWS 
@@ -2605,7 +2605,7 @@ int                 frame;
    WIN_GetDeviceContext (frame);
    SelectClipRgn(TtDisplay, NULL); 
    if (clipRgn && !DeleteObject (clipRgn))
-      WinErrorBox (NULL);
+      WinErrorBox (NULL, "RemoveClipping");
    clipRgn = (HRGN) 0;
    WIN_ReleaseDeviceContext ();
 #endif /* _WINDOWS */

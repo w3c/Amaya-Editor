@@ -61,6 +61,7 @@ static ThotBool applyToSelection = TRUE;
 #      define DEFAULTCOLOR 103
 
 static BOOL   wndRegistered = FALSE;
+static HWND   HwndColorPal  = (HWND)0;
 
 extern LPCTSTR iconID;
 
@@ -663,7 +664,6 @@ int                 y;
    LastFg = -1;
 #else  /* _WINDOWS */
    WNDCLASSEX  wndThotPaletteClass;
-   HWND  HwndColorPal;
    int   frame;
    /* static STRING szAppName; */
    MSG         msg;
@@ -771,26 +771,24 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
     
     case WM_LBUTTONDOWN:
       YPos = HIWORD (lParam);
-      if (HIWORD (lParam) >= 40 && HIWORD (lParam) <= 345)
-	{
-	  ColorsPress (1, LOWORD (lParam), HIWORD (lParam));
+      if (HIWORD (lParam) >= 40 && HIWORD (lParam) <= 345) {
+         ColorsPress (1, LOWORD (lParam), HIWORD (lParam));
 	  
-	  /* Switch off last FG color */
-	  if (WIN_LastFg >= 0 && WIN_LastFg != WIN_CurrentFg)
-	    {
-	      x = (WIN_LastFg % COLORS_COL) * 39;
-	      y = (WIN_LastFg / COLORS_COL) * 15 + 60;
+         /* Switch off last FG color */
+         if (WIN_LastFg >= 0 && WIN_LastFg != WIN_CurrentFg) {
+            x = (WIN_LastFg % COLORS_COL) * 39;
+            y = (WIN_LastFg / COLORS_COL) * 15 + 60;
 	      
-	      hdc = GetDC (hwnd);
-	      hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastFg].red, RGB_Table [WIN_LastFg].green, RGB_Table [WIN_LastFg].blue));
-	      hOldBrush = SelectObject (hdc, hBrush);
-	      if (!Rectangle (hdc, x, y, x + 39, y + 15))
-		WinErrorBox (NULL);
-	      SelectObject (hdc, hOldBrush);
-	      DeleteObject (hBrush);
-	      EndPaint (hwnd, &ps);
-	      DeleteDC (hdc);
-	    }
+            hdc = GetDC (hwnd);
+            hBrush = CreateSolidBrush (RGB (RGB_Table [WIN_LastFg].red, RGB_Table [WIN_LastFg].green, RGB_Table [WIN_LastFg].blue));
+            hOldBrush = SelectObject (hdc, hBrush);
+            if (!Rectangle (hdc, x, y, x + 39, y + 15))
+               WinErrorBox (NULL, "ThotColorPaletteWndProc: WM_LBUTTONDOWN");
+            SelectObject (hdc, hOldBrush);
+            DeleteObject (hBrush);
+            EndPaint (hwnd, &ps);
+            DeleteDC (hdc);
+		 }
       
 	  /* Switch on last FG color */
 	  if (WIN_LastFg != WIN_CurrentFg)
@@ -819,7 +817,6 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 	    }
 	  SetFocus (FrRef[currentFrame]);
 	} 
-      DestroyWindow (hwnd);
       break;
       
     case WM_MBUTTONDOWN:
@@ -866,7 +863,6 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 	  DeleteDC (hdc);
 	}
       SetFocus (FrRef[currentFrame]);
-      DestroyWindow (hwnd);
       break;
       
     case WM_RBUTTONDOWN:
@@ -915,13 +911,12 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 	}
       
       SetFocus (FrRef[currentFrame]);
-      DestroyWindow (hwnd);
       break;
       
     case WM_PAINT:
       CheckTtCmap ();
       if (TtCmap == NULL) 
-	WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "ThotColorPaletteWndProc: WM_PAINT");
       else
 	{
 	  hdc = BeginPaint (hwnd, &ps);
@@ -936,7 +931,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 		Rectangle (hdc, x * cxBlock, (y * cyBlock) + 60,(x + 1) * cxBlock, (y + 1) * cyBlock + 60);
 		SelectObject (hdc, hOldBrush);
 		if (!DeleteObject (hBrush))
-		  WinErrorBox (WIN_Main_Wd);
+		  WinErrorBox (WIN_Main_Wd, "ThotColorPaletteWndProc: WM_PAINT");
 		hBrush = (HBRUSH) 0;
 	      }
 	  
@@ -1001,13 +996,14 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 	{
 	case _IDDONE_:
 	  if (!DeleteObject (TtCmap))
-	    WinErrorBox (WIN_Main_Wd);
+	    WinErrorBox (WIN_Main_Wd, "ThotColorPaletteWndProc: _IDDONE_");
 	  TtCmap = 0;
 	  DestroyWindow (hwnd);
 	  break;
 	}
     case WM_CLOSE:
     case WM_DESTROY :
+      HwndColorPal = (HWND) 0;
       PostQuitMessage (0);
       break;
     }
@@ -1084,7 +1080,10 @@ View                view;
 	if (pAb != NULL)
 	   ThotSelectPalette (pAb->AbBackground, pAb->AbForeground);
 #   ifdef _WINDOWS
-	    ThotCreatePalette (KbX, KbY);
+	if (HwndColorPal == (HWND) 0) 
+       ThotCreatePalette (KbX, KbY);
+    else 
+        SetForegroundWindow (HwndColorPal);
 #   endif /* _WINDOWS */
      }
 }

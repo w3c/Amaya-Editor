@@ -256,10 +256,11 @@ extern void main ();
    occured.                                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WinErrorBox (HWND hWnd)
+void WinErrorBox (HWND hWnd, STRING source)
 #else  /* !__STDC__ */
-void WinErrorBox (hWnd)
+void WinErrorBox (hWnd, source)
 HWND hWnd;
+STRING source;
 #endif /* __STDC__ */
 {
 #  ifndef _AMAYA_RELEASE_
@@ -277,7 +278,7 @@ HWND hWnd;
    if (msg >= NB_WIN_ERROR)
       usprintf (str, TEXT("Error %d : not registered\n"), WinLastError);
    else
-       usprintf (str, TEXT("Error %d : %s\n"), WinLastError, win_errtab[msg].errstr);
+       usprintf (str, TEXT("(source: %s) Error %d : %s\n"), source, WinLastError, win_errtab[msg].errstr);
 
    MessageBox (hWnd, str, TEXT("Amaya"), MB_OK);
 #  endif /* _AMAYA_RELEASE_ */
@@ -374,7 +375,7 @@ void WIN_ReleaseDeviceContext ()
 	if (TtDisplay != 0) {     
        SetICMMode (TtDisplay, ICM_OFF);
        if (!ReleaseDC (WIN_curWin, TtDisplay))
-          WinErrorBox (NULL);
+          WinErrorBox (NULL, "WIN_ReleaseDeviceContext");
 	}
 
    WIN_curWin = (ThotWindow) (-1);
@@ -4853,11 +4854,11 @@ ThotBool            on;
         if (on) {
 			if (IsMenu (adbloc->E_ThotWidget[ent + val])) {
               if (CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, MF_CHECKED) == 0xFFFFFFFF) 
-				  WinErrorBox (NULL);
+				  WinErrorBox (NULL, "WIN_TtaSetToggleMenu (1)");
 			} else if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF) {
                    hMenu = GetMenu (owner);
                    if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF) 
-                      WinErrorBox (NULL);
+                      WinErrorBox (NULL, "WIN_TtaSetToggleMenu (2)");
 			}
         } else {
 			if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF) {
@@ -4865,7 +4866,7 @@ ThotBool            on;
                if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF) {
                   if (IsMenu (adbloc->E_ThotWidget[ent + val]))
                      if (CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, MF_UNCHECKED) == 0xFFFFFFFF) 
-                         WinErrorBox (NULL);
+                         WinErrorBox (NULL, "WIN_TtaSetToggleMenu (3)");
 			   }
 			}
 		}
@@ -5442,7 +5443,7 @@ int                 ref;
                  for (itNdx = 0; itNdx < nbMenuItems; itNdx ++) 
                      if (!DeleteMenu (w, ref + itNdx, MF_BYCOMMAND))
                         if (!DeleteMenu (w, ref + itNdx, MF_BYPOSITION))
-                           WinErrorBox (NULL);;
+                           WinErrorBox (NULL, "TtaDestroyDialogue");
                      /* RemoveMenu (w, ref + itNdx, MF_BYCOMMAND); */
                  DestroyMenu (w);
                  subMenuID [currentFrame] = (UINT)w;
@@ -7327,7 +7328,7 @@ ThotBool            remanent;
    if (catalogue->Cat_Type == CAT_POPUP) {
       GetCursorPos (&curPoint);
       if (!TrackPopupMenu (w,  TPM_LEFTALIGN, curPoint.x, curPoint.y, 0, currentParent, NULL))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "TtaShowDialogue (1)");
 	} else {
           ShowWindow (w, SW_SHOWNORMAL);
           UpdateWindow (w);

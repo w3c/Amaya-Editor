@@ -211,7 +211,7 @@ int                 y2;
    SelectObject (TtDisplay, hOldPen);
    WIN_ReleaseDeviceContext ();
    if (!DeleteObject (pen))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DoDrawOneLine");
    pen = (HPEN) 0;
 }
 
@@ -397,7 +397,7 @@ int                 shadow;
          fontLangInfo = GetFontLanguageInfo (TtDisplay);
 
          if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
-            WinErrorBox (NULL);
+            WinErrorBox (NULL, "windowdisplay.c - DrawString (1)");
 
          if (fontLangInfo & GCP_DIACRITIC)
             infoFlag |= GCP_DIACRITIC;
@@ -454,7 +454,7 @@ int                 shadow;
                 fontLangInfo = GetFontLanguageInfo (TtDisplay);
 
                 if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
-                   WinErrorBox (NULL);
+                   WinErrorBox (NULL, "windowdisplay.c - DrawString (2)");
 
                 if (fontLangInfo & GCP_DIACRITIC)
                    infoFlag |= GCP_DIACRITIC;
@@ -952,7 +952,7 @@ int                 fg;
         Arc (TtPrinterDC, x + 1, y + arc , x + l - 2, y, x + 1, y + arc, x + l - 2, y - arc);
         SelectObject (TtPrinterDC, hOldPen);
         if (!DeleteObject (pen))
-          WinErrorBox (WIN_Main_Wd);
+          WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawIntersection");
         pen = (HPEN) 0;
 	FinishDrawing (0, RO, active);
      }
@@ -1006,7 +1006,7 @@ int                 fg;
         Arc (TtPrinterDC, x + 1, y - arc , x + l - 2, y, x + 1, y - arc, x + l - 2, y - arc);
         SelectObject (TtPrinterDC, hOldPen);
         if (!DeleteObject (pen))
-          WinErrorBox (WIN_Main_Wd);
+          WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawUnion");
         pen = (HPEN) 0;
 	FinishDrawing (0, RO, active);
      }
@@ -1078,13 +1078,13 @@ int                 fg;
          WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
       if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "windowdisplay.c  - ArrowDrawing (1)");
       hOldPen = SelectObject (TtDisplay, hPen) ;
       Polyline (TtDisplay, point, 4);
       SelectObject (TtDisplay, hOldPen);
       WIN_ReleaseDeviceContext ();
 	  if (!DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "windowdisplay.c  - ArrowDrawing (2)");
       hPen = (HPEN) 0;
      }
 }
@@ -1598,28 +1598,28 @@ int                 pattern;
 	  }  
    } else {
           if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-             WinErrorBox (WIN_Main_Wd);
+             WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawRectangle (1)");
    }
    hOldPen = SelectObject (TtDisplay, hPen) ;
    result = SelectClipRgn (TtDisplay, clipRgn); 
    if (result == ERROR)
       ClipError (frame);
    if (!Rectangle (TtDisplay, x, y, x + width, y + FrameTable[frame].FrTopMargin + height))
-      WinErrorBox (FrRef  [frame]);
+      WinErrorBox (FrRef  [frame], "windowdisplay.c - DrawRectangle (2)");
    SelectObject (TtDisplay, hOldPen);
    if (!DeleteObject (hPen))
-      WinErrorBox (FrRef [frame]);
+      WinErrorBox (FrRef [frame], "windowdisplay.c - DrawRectangle (3)");
    hPen = (HPEN) 0;
    if (hBrush) {
       SelectObject (TtDisplay, hOldBrush);
       if (!DeleteObject (hBrush))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawRectangle (4)");
       hBrush = (HBRUSH)0;
    }
    WIN_ReleaseDeviceContext ();
    if (pat != (Pixmap)0)
       if (!DeleteObject ((HGDIOBJ)pat))
-         WinErrorBox (NULL);
+         WinErrorBox (NULL, "windowdisplay.c - DrawRectangle (5)");
 }
 
 /*----------------------------------------------------------------------
@@ -1809,7 +1809,7 @@ int                 pattern;
          WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
       if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawPolygon (1)");
       hOldPen = SelectObject (TtDisplay, hPen) ;
       InitDrawing (0, style, thick, RO, active, fg);
       Polyline (TtDisplay, points, nb);
@@ -1817,7 +1817,7 @@ int                 pattern;
 	  SelectObject (TtDisplay, hOldPen);
       WIN_ReleaseDeviceContext ();
 	  if (!DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawPolygon (2)");
       hPen = (HPEN) 0;
    }
    /* free the table of points */
@@ -2198,7 +2198,7 @@ C_points           *controls;
          WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
       if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg))))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawSpline (1)");
       hOldPen = SelectObject (TtDisplay, hPen) ;
       InitDrawing (0, style, thick, RO, active, fg);
       Polyline (TtDisplay, points, npoints);
@@ -2206,14 +2206,14 @@ C_points           *controls;
 	  SelectObject (TtDisplay, hOldPen);
       WIN_ReleaseDeviceContext ();
 	  if (!DeleteObject (hPen))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawSpline (2)");
       hPen = (HPEN) 0;
       FinishDrawing (0, RO, active);
    }
 
    if (pat != (Pixmap)0)
       if (!DeleteObject ((HGDIOBJ) pat))
-         WinErrorBox (NULL);
+         WinErrorBox (NULL, "windowdisplay.c - DrawSpline (3)");
 
    /* free the table of points */
    free (points);
@@ -2310,7 +2310,7 @@ int                 pattern;
 	  }  
    } else {
           if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-             WinErrorBox (WIN_Main_Wd);
+             WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawOval (1)");
    }
 
    hOldPen = SelectObject (TtDisplay, hPen) ;
@@ -2318,22 +2318,22 @@ int                 pattern;
    if (result == ERROR)
       ClipError (frame);
    if (!RoundRect (TtDisplay, x, y, x + width, y + height, arc * 2, arc * 2))
-      WinErrorBox (FrRef  [frame]);
+      WinErrorBox (FrRef  [frame], "windowdisplay.c - DrawOval (2)");
    SelectObject (TtDisplay, hOldPen);
    if (!DeleteObject (hPen))
-      WinErrorBox (FrRef [frame]);
+      WinErrorBox (FrRef [frame], "windowdisplay.c - DrawOval (3)");
    hPen = (HPEN) 0;
    if (hBrush) {
       SelectObject (TtDisplay, hOldBrush);
       if (!DeleteObject (hBrush))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawOval (4)");
       hBrush = (HBRUSH)0;
    }
    WIN_ReleaseDeviceContext ();
    
    if (pat != (Pixmap) 0)
       if (!DeleteObject ((HGDIOBJ) pat))
-         WinErrorBox (NULL);
+         WinErrorBox (NULL, "windowdisplay.c - DrawOval (5)");
 }
 
 /*----------------------------------------------------------------------
@@ -2439,7 +2439,7 @@ int                 pattern;
 	  }  
    } else {
           if (!(hPen = CreatePen (PS_SOLID, thick, ColorPixel (bg))))
-             WinErrorBox (WIN_Main_Wd);
+             WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawEllips (1)");
    }
 
    hOldPen = SelectObject (TtDisplay, hPen) ;
@@ -2447,21 +2447,21 @@ int                 pattern;
    if (result == ERROR)
       ClipError (frame);
    if (!Ellipse (TtDisplay, x, y, x + width, y + height))
-      WinErrorBox (FrRef  [frame]);
+      WinErrorBox (FrRef  [frame], "windowdisplay.c - DrawEllips (2)");
    SelectObject (TtDisplay, hOldPen);
    if (!DeleteObject (hPen))
-      WinErrorBox (FrRef [frame]);
+      WinErrorBox (FrRef [frame], "windowdisplay.c - DrawEllips (3)");
    hPen = (HPEN) 0;
    if (hBrush) {
       SelectObject (TtDisplay, hOldBrush);
       if (!DeleteObject (hBrush))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawEllips (4)");
       hBrush = (HBRUSH)0;
    }
    WIN_ReleaseDeviceContext ();
    if (pat != (Pixmap)0)
       if (!DeleteObject ((HGDIOBJ) pat))
-         WinErrorBox (NULL);
+         WinErrorBox (NULL, "windowdisplay.c - DrawEllips (5)");
    pat = (Pixmap) 0;
 }
 
@@ -2677,7 +2677,7 @@ int                 fg;
    SelectObject (TtDisplay, hOldPen);
    WIN_ReleaseDeviceContext ();
    if (!DeleteObject (pen))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "windowdisplay.c - DrawCorner (1)");
    pen = (HPEN) 0;
 }
 
@@ -2818,7 +2818,7 @@ int                 y;
 	SelectObject (TtDisplay, hOldBrush);
     WIN_ReleaseDeviceContext ();
 	if (!DeleteObject (hBrush))
-       WinErrorBox (WIN_Main_Wd);
+       WinErrorBox (WIN_Main_Wd, "windowdisplay.c - Clear");
     hBrush = (HBRUSH) 0;
      }
 }

@@ -529,7 +529,7 @@ int                 maxPoints;
   lastx = x + rect.left; 
   lasty = y + rect.top + FrameTable[frame].FrTopMargin;
   if (!SetCursorPos (lastx, lasty))
-    WinErrorBox (FrRef[frame]);
+    WinErrorBox (FrRef[frame], "PolyLineCreation (1)");
 # else /* !_WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   XMapRaised (TtDisplay, w);
@@ -580,7 +580,7 @@ int                 maxPoints;
                  newy += FrameTable[frame].FrTopMargin + rect.top;
 	  
             if (!SetCursorPos (newx, newy))
-               WinErrorBox (FrRef [frame]);
+               WinErrorBox (FrRef [frame], "PolyLineCreation (2)");
 		 } else 
               newy += FrameTable[frame].FrTopMargin;
 		 
@@ -634,7 +634,7 @@ int                 maxPoints;
                        input = TRUE;
                        if (newx - rect.left < x || newx - rect.left > x + width || newy - rect.top < y || newy - rect.top > y + height)
 	                      if (!SetCursorPos (lastx, lasty))
-	                         WinErrorBox (FrRef [frame]);
+	                         WinErrorBox (FrRef [frame], "PolyLineCreation (3)");
 	                   break;
 	  
 	              case WM_LBUTTONUP:
@@ -930,7 +930,7 @@ ThotBool            close;
   w = FrRef[frame];
 # ifdef _WINDOWS
   if (!GetWindowRect (w, &rect))
-     WinErrorBox (w);
+     WinErrorBox (w, "PolyLineModification (1)");
 
   wrap = FALSE;
 
@@ -1517,7 +1517,7 @@ int                 percentH;
 #ifdef _WINDOWS
   /* if (!GetWindowPlacement (w, &wp)) */
   if (!GetWindowRect (w, &rect))
-    WinErrorBox (w);
+    WinErrorBox (w, "UserGeometryCreate (1)");
 #else /* !_WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   ThotGrab (w, HVCurs, e, 0);
@@ -1543,7 +1543,7 @@ int                 percentH;
   /* if (!SetCursorPos (*x + wp.rcNormalPosition.left, *y + wp.rcNormalPosition.top)) */
   if (!SetCursorPos (*x + rect.left, *y + rect.top))
     /* if (!SetCursorPos (*x, *y)) */
-    WinErrorBox (FrRef [frame]);
+    WinErrorBox (FrRef [frame], "UserGeometryCreate (2)");
 #else  /* !_WINDOWS */
   XMapRaised (TtDisplay, w);
   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x, *y + FrameTable[frame].FrTopMargin);
@@ -1862,7 +1862,7 @@ int                 percentH;
                    if (warpy >= 0)
                       ym = warpy + FrameTable[frame].FrTopMargin;
                    if (!SetCursorPos (xm, ym))
-                      WinErrorBox (FrRef [frame]);
+                      WinErrorBox (FrRef [frame], "UserGeometryCreate (3)");
 				} 
                 break;
       
@@ -2150,7 +2150,7 @@ int                 ym;
    w = FrRef[frame];
 #  ifdef _WINDOWS
   if (!GetWindowRect (w, &rect))
-     WinErrorBox (w);
+     WinErrorBox (w, "UserGeometryMove (1)");
 
   ret = 0;
   while (ret == 0) {
@@ -2484,7 +2484,7 @@ int                 percentH;
 
 # ifdef _WINDOWS
   if (!GetWindowRect (w, &rect))
-     WinErrorBox (w);
+     WinErrorBox (w, "UserGeometryResize (1)");
 
   ret = 0;
   while (ret == 0) {

@@ -272,7 +272,7 @@ HBITMAP hBmp;
     /* Retrieve the bitmap's color format, width, and height. */ 
  
     if (!GetObject (hBmp, sizeof(BITMAP), (LPSTR)&bmp))
-       WinErrorBox (hwnd); 
+       WinErrorBox (hwnd, "CreateBitmapInfoStruct (1)"); 
  
 
     /* Convert the color format to a count of bits. */ 
@@ -437,10 +437,10 @@ LPBITMAPINFO* lpBmpInfo;
 
    lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, (*lpBmpInfo)->bmiHeader.biSizeImage);
    if (!lpBits)
-      WinErrorBox (NULL);
+      WinErrorBox (NULL, "GetTransparentDIBits (1)");
 
    if (!GetDIBits (hDC, (HBITMAP) bitmapDest, 0, (WORD)(*lpBmpInfo)->bmiHeader.biHeight, lpBits, *lpBmpInfo, DIB_RGB_COLORS))
-      WinErrorBox (NULL);        
+      WinErrorBox (NULL, "GetTransparentDIBits (2)");        
 
    SelectObject (hDestDC, pOldBitmapDest);
    SelectObject (hInvAndDC, pOldBitmapInvAnd);
@@ -449,49 +449,49 @@ LPBITMAPINFO* lpBmpInfo;
    SelectObject (hImageDC, bitmap);
 
    if (hDestDC && !DeleteDC (hDestDC))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (3)");
    hDestDC = (HDC) 0;
    if (hInvAndDC && !DeleteDC (hInvAndDC))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (4)");
    hInvAndDC = (HDC) 0;
    if (hAndDC && !DeleteDC (hAndDC))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (5)");
    hAndDC = (HDC) 0;
    if (hOrDC && !DeleteDC (hOrDC))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (6)");
    hOrDC = (HDC) 0;
    if (hImageDC && !DeleteDC (hImageDC))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (7)");
    hImageDC = (HDC) 0;
    if (hDC && !DeleteDC (hDC))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (8)");
    hDC = (HDC) 0;
    if (bitmap && !DeleteObject (bitmap))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (9)");
    bitmap = (HBITMAP) 0;
    if (bitmapOr && !DeleteObject (bitmapOr))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (10)");
    bitmapOr = (HBITMAP) 0;
    if (pOldBitmapOr && !DeleteObject (pOldBitmapOr))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (11)");
    pOldBitmapOr = (HBITMAP) 0;
    if (bitmapAnd && !DeleteObject (bitmapAnd))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (12)");
    bitmapAnd = (HBITMAP) 0;
    if (pOldBitmapAnd && !DeleteObject (pOldBitmapAnd))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (13)");
    pOldBitmapAnd = (HBITMAP) 0;
    if (bitmapInvAnd && !DeleteObject (bitmapInvAnd))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (14)");
    bitmapInvAnd = (HBITMAP) 0;
    if (pOldBitmapInvAnd && !DeleteObject (pOldBitmapInvAnd))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (15)");
    pOldBitmapInvAnd = (HBITMAP) 0;
    if (bitmapDest && !DeleteObject (bitmapDest))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (16)");
    bitmapDest = (HBITMAP) 0;
    if (pOldBitmapDest && !DeleteObject (pOldBitmapDest))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "GetTransparentDIBits (17)");
    pOldBitmapDest = (HBITMAP) 0;
 
    return lpBits;
@@ -579,47 +579,47 @@ int      blue;
    SelectObject (hImageDC, bitmap);
 
    if (hDestDC && !DeleteDC (hDestDC))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (1)");
    hDestDC = (HDC) 0;
    if (hInvAndDC && !DeleteDC (hInvAndDC))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (2)");
    hInvAndDC = (HDC) 0;
    if (hAndDC && !DeleteDC (hAndDC))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (3)");
    hAndDC = (HDC) 0;
    if (hOrDC && !DeleteDC (hOrDC))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (4)");
    hOrDC = (HDC) 0;
    if (hImageDC && !DeleteDC (hImageDC))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (5)");
    hImageDC = (HDC) 0;
 
    if (bitmap && !DeleteObject (bitmap))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (6)");
    bitmap = (HBITMAP) 0;
    if (bitmapOr && !DeleteObject (bitmapOr))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (7)");
    bitmapOr = (HBITMAP) 0;
    if (pOldBitmapOr && !DeleteObject (pOldBitmapOr))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (8)");
    pOldBitmapOr = (HBITMAP) 0;
    if (bitmapAnd && !DeleteObject (bitmapAnd))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (9)");
    bitmapAnd = (HBITMAP) 0;
    if (pOldBitmapAnd && !DeleteObject (pOldBitmapAnd))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (10)");
    pOldBitmapAnd = (HBITMAP) 0;
    if (bitmapInvAnd && !DeleteObject (bitmapInvAnd))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (11)");
    bitmapInvAnd = (HBITMAP) 0;
    if (pOldBitmapInvAnd && !DeleteObject (pOldBitmapInvAnd))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (12)");
    pOldBitmapInvAnd = (HBITMAP) 0;
    if (bitmapDest && !DeleteObject (bitmapDest))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (13)");
    bitmapDest = (HBITMAP) 0;
    if (pOldBitmapDest && !DeleteObject (pOldBitmapDest))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "WIN_LayoutTransparentPicture (14)");
    pOldBitmapDest = (HBITMAP) 0;
 }
 #endif /* _WINDOWS */
@@ -659,7 +659,7 @@ Pixmap              pixmap;
       XFreePixmap (TtDisplay, pixmap);
 #     else  /* _WINDOWS */
       if (pixmap && !DeleteObject ((HBITMAP)pixmap))
-         WinErrorBox (WIN_Main_Wd);
+         WinErrorBox (WIN_Main_Wd, "FreePixmap");
       pixmap = 0;
 #     endif /* _WINDOWS */
 }
@@ -892,10 +892,10 @@ PictInfo           *imageDesc;
 	    DPtoLP (hMemDC, &ptOrg, 1);
 	    
 	    if (!BitBlt (TtDisplay, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY))
-           WinErrorBox (NULL);
+           WinErrorBox (NULL, "LayoutPicture (1)");
 		SelectObject (hMemDC, hOldBitmap1);
 	    if (hMemDC && !DeleteDC (hMemDC))
-           WinErrorBox (NULL);
+           WinErrorBox (NULL, "LayoutPicture (2)");
         hMemDC = (HDC) 0;
 	  } else {
            WIN_LayoutTransparentPicture (TtDisplay, pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
@@ -1047,7 +1047,7 @@ PictInfo           *imageDesc;
              x = 0;
              do {
                 if (!BitBlt (hMemDC, x, y, imageDesc->PicWArea, imageDesc->PicHArea, hOrigDC, 0, 0, SRCCOPY))
-                   WinErrorBox (WIN_Main_Wd);
+                   WinErrorBox (WIN_Main_Wd, "LayoutPicture (3)");
                 x += imageDesc->PicWArea;
              } while (x < (w - xFrame));
 			 y += imageDesc->PicHArea;
@@ -1061,16 +1061,16 @@ PictInfo           *imageDesc;
           SelectClipRgn(TtDisplay, NULL); 
 
           if (hMemDC && !DeleteDC (hMemDC))
-             WinErrorBox (WIN_Main_Wd);
+             WinErrorBox (WIN_Main_Wd, "LayoutPicture (4)");
           hMemDC = (HDC) 0;
           if (hOrigDC && !DeleteDC (hOrigDC))
-             WinErrorBox (WIN_Main_Wd);
+             WinErrorBox (WIN_Main_Wd, "LayoutPicture (5)");
           hOrigDC = (HDC) 0;
           if (hBkgBmp && !DeleteObject (hBkgBmp))
-             WinErrorBox (WIN_Main_Wd);
+             WinErrorBox (WIN_Main_Wd, "LayoutPicture (6)");
           hBkgBmp = (HBITMAP) 0;
 		  if (hrgn && !DeleteObject (hrgn))
-             WinErrorBox (NULL);;
+             WinErrorBox (NULL, "LayoutPicture (7)");
           hrgn = (HRGN) 0;
 #         endif /* _WINDOWS */
 	  break;
@@ -1556,7 +1556,7 @@ int                 hlogo;
 
 #ifdef _WINDOWS
    if (pixmap && !DeleteObject (pixmap))
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (WIN_Main_Wd, "DrawEpsBox (1)");
    pixmap = (HBITMAP) 0;
 #else /* _WINDOWS */ 
    XFreePixmap (TtDisplay, pixmap);
@@ -1616,13 +1616,13 @@ PictInfo           *imageDesc;
    status = PictureFileOk (fileName, &typeImage);
    w = 0;
    h = 0;
-
+ 
   Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
   if (status != Supported_Format) {  
       if (TtPrinterDC == NULL) {
          imageDesc->PicType = 3;
          pres = RealSize;
-	 imageDesc->PicPresent = pres;
+         imageDesc->PicPresent = pres;
          myDrawable = (*(PictureHandlerTable [GIF_FORMAT].Produce_Picture)) 
                         (LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
 	  }
@@ -1658,7 +1658,11 @@ PictInfo           *imageDesc;
                 if (box->BxHeight != 0)
                    yFrame = box->BxHeight;
 		   }
-           myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) 
+           /* myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) 
+                          (fileName, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height); */
+           if (imageDesc->PicPixmap != NULL)
+              DeleteObject (imageDesc->PicPixmap);
+           imageDesc->PicPixmap = (*(PictureHandlerTable[typeImage].Produce_Picture)) 
                           (fileName, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
            /* intrinsic width and height */
            imageDesc->PicWidth = width;
@@ -1668,8 +1672,9 @@ PictInfo           *imageDesc;
            imageDesc->bgBlue  = bgBlue;
 		}
        
-        if (myDrawable == None) {
-           myDrawable = PictureLogo;
+        if (imageDesc->PicPixmap == None) {
+           WinErrorBox (NULL, "LoadPicture2Print (1)");
+           imageDesc->PicPixmap = PictureLogo;
            imageDesc->PicType = -1;
            wFrame = w = 40;
            hFrame = h = 40;
@@ -1698,9 +1703,9 @@ PictInfo           *imageDesc;
       FreePixmap (picMask);
       picMask = None;
    }
-   if (imageDesc->PicPixmap != NULL)
+   /* if (imageDesc->PicPixmap != NULL)
       DeleteObject (imageDesc->PicPixmap);
-   imageDesc->PicPixmap = myDrawable;
+   imageDesc->PicPixmap = myDrawable; */
 }
 #endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
@@ -1736,6 +1741,7 @@ int                 frame;
 #  ifdef _WINDOWS
 #  ifdef _WIN_PRINT
    LPBITMAPINFO lpBmpInfo;
+   char str [1024];
 #  endif /* _WIN_PRINT */
 #  endif /* _WINDOWS */
 
@@ -1818,23 +1824,21 @@ int                 frame;
         LoadPicture2Print (frame, box, imageDesc);
 
         /* if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) || imageDesc->PicType == -1) { */
-           lpBmpInfo = CreateBitmapInfoStruct(FrRef [frame], imageDesc->PicPixmap);
+		if (imageDesc->PicPixmap == (Pixmap)0) 
+           WinErrorBox (NULL, "DrawPicture (1)");
+		else {
+               lpBmpInfo = CreateBitmapInfoStruct(FrRef [frame], imageDesc->PicPixmap);
 
-           lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, lpBmpInfo->bmiHeader.biSizeImage);
-           /* lpBits = (LPBYTE) GlobalAlloc (GHND, lpBmpInfo->bmiHeader.biSizeImage); */
-           if (!lpBits) 
-              WinErrorBox (NULL);
+               lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, lpBmpInfo->bmiHeader.biSizeImage);
+               /* lpBits = (LPBYTE) GlobalAlloc (GHND, lpBmpInfo->bmiHeader.biSizeImage); */
+               if (!lpBits) 
+                  WinErrorBox (NULL, "DrawPicture (2)");
 
-           if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0, (UINT)lpBmpInfo->bmiHeader.biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS))
-              WinErrorBox (NULL);
-		/* else 
-             lpBits = GetTransparentDIBits (frame, (HBITMAP) imageDesc->PicPixmap, xFrame, yFrame, imageDesc->PicWidth, imageDesc->PicHeight, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue, &lpBmpInfo); */
-
-		/* pBuf = (LPSTR) TtaGetMemory (picWArea * picHArea * 32); */
-        /* nbLines = GetDIBits (TtDisplay, imageDesc->PicPixmap, 0, picWArea * picHArea, pBuf, lpBmpInfoHeader, DIB_RGB_COLORS); */
-        /* PrintDIB (&lpBmpInfo->bmiHeader, lpBits, FrRef [frame], TtPrinterDC, xFrame, yFrame, picWArea, picHArea) ; */
-        /* PrintDIB (lpBmpInfo, lpBits, FrRef [frame], TtPrinterDC, xFrame, yFrame, picWArea, picHArea) ; */
-        PrintDIB (lpBmpInfo, lpBits, FrRef [frame], TtPrinterDC, xFrame, yFrame, box->BxWidth, box->BxHeight) ;
+               if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0, (UINT)lpBmpInfo->bmiHeader.biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS)) 
+                  WinErrorBox (NULL, "DrawPicture (3)");
+			    
+               PrintDIB (lpBmpInfo, lpBits, FrRef [frame], TtPrinterDC, xFrame, yFrame, box->BxWidth, box->BxHeight) ;
+		}
 	 } else {
            (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xFrame, yFrame, wFrame, hFrame, picXArea,
 							                                       picYArea, picWArea, picHArea,

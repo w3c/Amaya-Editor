@@ -1651,7 +1651,7 @@ ThotBool   state;
 		  FrameTable[frame].Button[i] = w;
 		  FrameTable[frame].Call_Button[i] = (Proc) procedure;
 		  if (!w)
-		    WinErrorBox (NULL);
+		    WinErrorBox (NULL, "TtaAddButton");
 		  else
 		    {
 		      w->fsState      = TBSTATE_ENABLED;
@@ -2840,7 +2840,7 @@ int                 doc;
 				     NULL);	/* creation parameters     */
 
 	   if (Main_Wd == 0)
-	     WinErrorBox (WIN_Main_Wd);
+	     WinErrorBox (WIN_Main_Wd, "MakeFrame");
 	   else {
 	     /* store everything. */
 	     FrMainRef[frame]            = Main_Wd;
@@ -2851,7 +2851,7 @@ int                 doc;
                   
 	     menu_bar = CreateMenu ();
 	     if (!menu_bar) 
-	       WinErrorBox (Main_Wd);
+	       WinErrorBox (Main_Wd, "MakeFrame");
 	     else 
 	       WinMenus[frame] = menu_bar;
 	   }
@@ -3603,7 +3603,6 @@ int                 frame;
       DestroyWindow (FrMainRef[frame]);
    }
 #endif
-
 }
 
 

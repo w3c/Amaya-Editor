@@ -3508,7 +3508,7 @@ View                view;
    TtcCopyToClipboard (document, view);
 
    if (!OpenClipboard (FrRef[frame]))
-      WinErrorBox (FrRef [frame]);
+      WinErrorBox (FrRef [frame], "TtcCutSelection (1)");
    else {
       EmptyClipboard ();
 
@@ -3707,7 +3707,7 @@ View                view;
    if (activeWnd != FrRef [frame]) {
       frame = -1;
       if (!OpenClipboard (activeWnd))
-         WinErrorBox (FrRef [frame]);
+         WinErrorBox (FrRef [frame], "TtcCopySelection (1)");
       else {
            EmptyClipboard ();
            SendMessage (activeWnd, WM_COPY, 0, 0);
@@ -3718,7 +3718,7 @@ View                view;
           TtcCopyToClipboard (document, view);
 
           if (!OpenClipboard (FrRef[frame]))
-             WinErrorBox (FrRef [frame]);
+             WinErrorBox (FrRef [frame], "TtcCopySelection (2)");
           else {
                EmptyClipboard ();
 
