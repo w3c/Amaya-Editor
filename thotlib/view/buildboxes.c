@@ -2203,10 +2203,15 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    pNextBox = pNextBox->BxNext;
 	  /* On etablit le chainage pour inserer en fin les nouvelles boites */
 	  /* Faut-il dechainer la boite englobante ? */
-	  if (pCurrentBox == NULL)
-	    pMainBox->BxNext = NULL;	/* debut du chainage */
-	  pLastBox = pMainBox->BxPrevious;	/* memorise la derniere boite*/
-	  pMainBox->BxPrevious = pCurrentBox;/* fin provisoire du chainage*/
+	  if (pMainBox)
+	    {
+	      if (pCurrentBox == NULL)
+		pMainBox->BxNext = NULL;	/* debut du chainage */
+	      pLastBox = pMainBox->BxPrevious;	/* memorise la derniere boite*/
+	      pMainBox->BxPrevious = pCurrentBox;/* fin provisoire du chainage*/
+	    }
+	  else
+	      pLastBox = NULL;	/* memorise la derniere boite*/
 	}
       
       /* Faut-il dechainer la boite englobante ? */

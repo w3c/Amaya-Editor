@@ -1182,6 +1182,8 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin,
 			ChangeConcreteImage (frame, &h, pAbbRoot);
 			pAbbRoot->AbDead = FALSE;
 			FreeDeadAbstractBoxes (pAbbRoot, frame);
+			/* the root box should be regenerated */
+			pAbbRoot->AbNew = TRUE;
 		      }
 		  }
 		if (begin)
