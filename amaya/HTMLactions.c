@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -10,7 +10,6 @@
  * These functions concern links and other HTML general features.
  *
  * Authors: V. Quint, I. Vatton
- *          R. Guetari - Unicode and Windows version.
  *
  */
 
@@ -45,13 +44,6 @@
 #include "annotlib.h"
 #include "ANNOTevent_f.h"
 #endif /* ANNOTATIONS */
-
-#ifdef _WINDOWS
-#include "wininclude.h"
-
-HWND currentWindow = NULL;
-static char WIN_buffer [1024];
-#endif /* _WINDOWS */
 
 /* info about the last element highlighted when synchronizing with the
    source view */
@@ -376,7 +368,7 @@ static void SetFontOrPhraseOnElement (Document document, Element elem,
 	TtaRegisterElementCreate (child, document);
 	}
      }
-   while (child != NULL)
+   while (child)
      {
 	next = child;
 	TtaNextSibling (&next);

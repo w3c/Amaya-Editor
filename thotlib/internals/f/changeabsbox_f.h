@@ -22,7 +22,7 @@ extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
                                       FunctionType typeFunc,
                                       ThotBool isElPage,
                                       ThotBool attr,
-                                      PtrAttribute * pAttr );
+                                      PtrAttribute *pAttr );
 extern PtrPRule SearchRulepAb ( PtrDocument pDoc,
                                 PtrAbstractBox pAb,
                                 PtrPSchema * pSPR,
@@ -120,7 +120,7 @@ extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
                                         FunctionType typeFunc,
                                         ThotBool isElPage,
                                         ThotBool attr,
-                                        PtrAttribute * pAttr */);
+                                        PtrAttribute *pAttr */);
 extern PtrPRule SearchRulepAb (/* PtrDocument pDoc,
                                   PtrAbstractBox pAb,
                                   PtrPSchema * pSPR,

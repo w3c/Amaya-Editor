@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -63,6 +63,10 @@ static ThotBool     JumpInProgress = FALSE;
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
 #include "thotcolor_tv.h"
+
+#include "appdialogue_f.h"
+#include "inites_f.h"
+#include "uconvert_f.h"
 
 #ifdef _WINDOWS
 #define URL_TXTZONE     0
@@ -127,9 +131,6 @@ int         Y_Pos;
 int         cyToolBar;
 TBADDBITMAP ThotTBBitmap;
 
-#include "wininclude.h"
-#include "appdialogue_f.h"
-#include "inites_f.h"
 
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
@@ -202,10 +203,10 @@ ThotBool InitToolTip (HWND hwndToolBar)
 #include "absboxes_f.h"
 #ifdef _GTK
 #include "gtk-functions.h"
-#else /* !_GTK */
+#else /* _GTK */
 #include "appli_f.h"
 #include "input_f.h"
-#endif /* !_GTK */
+#endif /* _GTK */
 
 #include "applicationapi_f.h"
 #include "boxlocate_f.h"
@@ -653,7 +654,7 @@ void FrameResizedGTK (GtkWidget *widget,
       }
 }
 
-#else /* !_GL*/
+#else /* _GL*/
 /*----------------------------------------------------------------------
    FrameResizedGTK When user resize window
   ----------------------------------------------------------------------*/
@@ -695,8 +696,8 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
     }
   return FALSE;
 }
-#endif /* !_GL */
-#else /* !_GTK */
+#endif /* _GL */
+#else /* _GTK */
 
 void FrameResized (int *w, int frame, int *info)
 {
@@ -713,8 +714,8 @@ void FrameResized (int *w, int frame, int *info)
 
    FrameRedraw (frame, width, height);
 }
-#endif /* !_GTK */
-#endif /* !_WINDOWS */
+#endif /* _GTK */
+#endif /* _WINDOWS */
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
@@ -847,7 +848,7 @@ void WIN_ChangeHScroll (int frame, int reason, int value)
 void FrameHScrolled (int *w, int frame, int *param)
 #else /* _GTK */
 void FrameHScrolledGTK (GtkAdjustment *w, int frame)
-#endif /* !_GTK */
+#endif /* _GTK */
 {
    int                 delta, l;
    int                 view;
@@ -855,7 +856,7 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
    int                 n;
    Arg                 args[MAX_ARGS];
    XmScrollBarCallbackStruct *info;
-#endif /* !_GTK */
+#endif /* _GTK */
    NotifyWindow        notifyDoc;
    Document            doc;
 
@@ -881,7 +882,7 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
 #else /* _GTK */
    /* delta is the position into the page */
    delta = w->value;
-#endif  /* !_GTK */
+#endif  /* _GTK */
 
    notifyDoc.event = TteViewScroll;
    FrameToView (frame, &doc, &view);
@@ -903,14 +904,14 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
 	   /* l is the width of the page */
 	   l = w->page_size;
 	   /*	   l = FrameTable[frame].FrWidth;*/
-#endif /* !_GTK */
+#endif /* _GTK */
 #ifndef _GTK
 	   /* On regarde si le deplacement bute sur le bord droit */
 	   if (info->value + l >= FrameTable[frame].FrWidth)
 #else /* _GTK */
 	   /* On regarde si le deplacement bute sur le bord droit */
 	   if (w->value + l >= FrameTable[frame].FrWidth)	     
-#endif /* !_GTK */
+#endif /* _GTK */
        	     delta = FrameTable[frame].FrScrollWidth;
 	   else
 	     {
@@ -920,7 +921,7 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
 #else /* _GTK */
 	       /* translate the position in the scroll bar into a shift value in the document */
 	       delta = (int) ((float) (w->value * FrameTable[frame].FrScrollWidth) / (float) FrameTable[frame].FrWidth);
-#endif /* !_GTK */
+#endif /* _GTK */
 	       delta = FrameTable[frame].FrScrollOrg + delta - ViewFrameTable[frame - 1].FrXOrg;
 	     }
 #ifndef _GTK
@@ -931,7 +932,7 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
        else if (info->reason == XmCR_TO_BOTTOM)
 	 /* force the right alignment */
 	 delta = FrameTable[frame].FrScrollWidth;
-#endif /* !_GTK */
+#endif /* _GTK */
        HorizontalScroll (frame, delta, 1);
        notifyDoc.document = doc;
        notifyDoc.view = view;
@@ -948,7 +949,7 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
 void FrameVScrolled (int *w, int frame, int *param)
 #else /* _GTK */
 void FrameVScrolledGTK (GtkAdjustment *w, int frame)
-#endif /* !_GTK */
+#endif /* _GTK */
 {
   int                 delta;
   int                 h, y;
@@ -958,7 +959,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 #ifndef _GTK
   Arg                 args[MAX_ARGS];
   XmScrollBarCallbackStruct *infos;
-#endif /* !_GTK */
+#endif /* _GTK */
   float               carparpix;
   NotifyWindow        notifyDoc;
   Document            doc;
@@ -985,7 +986,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
     delta = MAX_SIZE;		/* indeterminee */
 #else /* _GTK */
   delta = w->value;
-#endif /* !_GTK */
+#endif /* _GTK */
   notifyDoc.event = TteViewScroll;
   notifyDoc.document = doc;
   notifyDoc.view = view;
@@ -1009,7 +1010,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
        	  h = w->page_size;
 	  /* Absolute move in the document */
 	  delta = w->value;
-#endif /* !_GTK */      
+#endif /* _GTK */      
 	  /* Regarde ou se situe l'image abstraite dans le document */
 	  n = PositionAbsBox (frame, &start, &end, &total);
 	  /* au retour n = 0 si l'Picture est complete */
@@ -1019,7 +1020,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 	  y = (int) ((float) infos->value * carparpix);
 #else /* _GTK */
 	  y = (int) ((float) w->value * carparpix);
-#endif /* !_GTK */
+#endif /* _GTK */
       
 	  if (n == 0 || (y >= start && y <= total - end))
 	    {
@@ -1040,7 +1041,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 		y = delta;
 	      else
 	        y = w->value - start;
-#endif /* !_GTK */
+#endif /* _GTK */
 	      ShowYPosition (frame, y, delta);
 	    }
 	  else if (!JumpInProgress)
@@ -1079,7 +1080,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
       else
 	VerticalScroll (frame, delta, 1);
 #else /* _GTK */
-#endif /* !_GTK */
+#endif /* _GTK */
     notifyDoc.document = doc;
     notifyDoc.view = view;
     notifyDoc.verticalValue = delta;
@@ -1087,7 +1088,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
     }
 }
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    TtcLineUp scrolls one line up.                                    
@@ -1228,7 +1229,7 @@ void TtcPageDown (Document document, View view)
    XmScrollBarCallbackStruct infos;
 #else   /* _WINDOWS && GTK */
    int                       delta;
-#endif  /* !_WINDOWS && GTK */
+#endif  /* _WINDOWS && GTK */
   int                        frame;
 
    if (document != 0)
@@ -1252,7 +1253,7 @@ void TtcPageTop (Document document, View view)
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
    XmScrollBarCallbackStruct infos;
-#endif  /* !_WINDOWS && GTK */
+#endif  /* _WINDOWS && GTK */
   int                        frame;
 
   if (document != 0)
@@ -1275,7 +1276,7 @@ void TtcPageEnd (Document document, View view)
 {
 #if !defined(_WINDOWS) && !defined(_GTK)
    XmScrollBarCallbackStruct infos;
-#endif  /* !_WINDOWS && GTK */
+#endif  /* _WINDOWS && GTK */
   int                        frame;
 
    if (document != 0)
@@ -1318,7 +1319,7 @@ void InitializeOtherThings ()
    null_string = XmStringCreateSimple ("");
 #else /* _GTK */
    null_string = (gchar *)"";
-#endif /* !_GTK */
+#endif /* _GTK */
 #endif /* _WINDOWS */
    OldMsgSelect[0] = EOS;
    OldDocMsgSelect = NULL;
@@ -1370,7 +1371,7 @@ void TtaRaiseView (Document document, View view)
 #else /* _GTK */
 	if (w!=0)
 	  gdk_window_raise (GTK_WIDGET(w->parent->parent->parent)->window);
-#endif /* !_GTK */
+#endif /* _GTK */
 #else  /* _WINDOWS */
 	SetForegroundWindow (FrMainRef [idwindow]);
 #endif /* _WINDOWS */
@@ -1412,7 +1413,7 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
    XmString            title_string;
 #else /* _GTK */
    gchar * title_string;
-#endif /* !_GTK */
+#endif /* _GTK */
 #endif /* _WINDOWS */
 
    if (document == 0)
@@ -1471,7 +1472,7 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 				 (guint)gtk_object_get_data (GTK_OBJECT(FrameTable[frame].WdStatus), "MainSerie"),
 				title_string);
 	     gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].WdStatus));
-#endif /* !_GTK */
+#endif /* _GTK */
 #endif /* _WINDOWS */
 	     TtaFreeMemory (s);
 	    }
@@ -2114,7 +2115,7 @@ gboolean GtkLiningSelection(gpointer data)
 void FrameCallback (int frame, void *evnt)
 #else /* _GTK */
 gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer data)
-#endif /* !_GTK */
+#endif /* _GTK */
 {
 #ifndef _GTK
   ThotEvent           event;
@@ -2151,7 +2152,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   else if (event == NULL)
     return FALSE;
   else if (ClickIsDone == 1 && event->type == GDK_BUTTON_PRESS)
-#endif /* !_GTK */
+#endif /* _GTK */
     /* Amaya is waiting for a selection */
       {
 	ClickIsDone = 0;
@@ -2643,7 +2644,7 @@ void ThotUngrab ()
 #ifndef _WINDOWS
 #ifndef _GTK
    XUngrabPointer (TtDisplay, CurrentTime);
-#endif /* !_GTK */
+#endif /* _GTK */
 #endif /* _WINDOWS */
 }
 
@@ -2665,7 +2666,7 @@ void SetCursorWatch (int thotThotWindowid)
 #ifdef _GTK   
    int                 frame;
    ThotWidget          w;
-#endif /* !_GTK */
+#endif /* _GTK */
 
   
    drawable = (Drawable)TtaGetThotWindow (thotThotWindowid);
@@ -2679,7 +2680,7 @@ void SetCursorWatch (int thotThotWindowid)
 		if (w->window != NULL)
 		    gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
 	}
-#endif /* !_GTK */
+#endif /* _GTK */
 #else  /* _WINDOWS */
    SetCursor (LoadCursor (NULL, IDC_WAIT));
    ShowCursor (TRUE);
@@ -2696,7 +2697,7 @@ void ResetCursorWatch (int thotThotWindowid)
 #ifdef _GTK
    int                 frame;
    ThotWidget          w;
-#endif /* !_GTK */
+#endif /* _GTK */
 
    drawable = (Drawable) TtaGetThotWindow (thotThotWindowid);
 #ifndef _GTK
@@ -2709,7 +2710,7 @@ void ResetCursorWatch (int thotThotWindowid)
 		if (w->window != NULL)
 		    gdk_window_set_cursor (GTK_WIDGET(w)->window, ArrowCurs);
 	}
-#endif /* !_GTK */
+#endif /* _GTK */
 #  else  /* _WINDOWS */
    ShowCursor (FALSE);
    SetCursor (LoadCursor (NULL, IDC_ARROW));
@@ -2744,7 +2745,7 @@ void TtaSetCursorWatch (Document document, View view)
 		     w = FrameTable[frame].WdFrame;
 		     gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
 		 }
-#endif /* !_GTK */
+#endif /* _GTK */
 #endif /* _WINDOWS */
 	  }
      }
@@ -2760,7 +2761,7 @@ void TtaSetCursorWatch (Document document, View view)
 		w = FrameTable[frame].WdFrame;
 		gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
 	   }
-#endif /* !_GTK */
+#endif /* _GTK */
 #   endif /* _WINDOWS */
      }
 }
@@ -2774,7 +2775,7 @@ void TtaResetCursor (Document document, View view)
    Drawable            drawable;
 #ifdef _GTK
    ThotWidget          w;
-#endif /* !_GTK */
+#endif /* _GTK */
 #  endif /* _WINDOWS */
 
    UserErrorCode = 0;
@@ -2795,7 +2796,7 @@ void TtaResetCursor (Document document, View view)
 		    if (w->window != NULL)
 			gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
 	    }  
-#endif /* !_GTK */
+#endif /* _GTK */
 #endif /* _WINDOWS */
 	  }
      }
@@ -2813,7 +2814,7 @@ void TtaResetCursor (Document document, View view)
 		    if (w->window != NULL)
 			gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
 	    }  
-#endif /* !_GTK */
+#endif /* _GTK */
 #endif /* _WINDOWS */
      }
 }
@@ -2846,7 +2847,7 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
    /* Changement du curseur */
 #  ifdef _WINDOWS
    cursor = LoadCursor (hInstance, MAKEINTRESOURCE (Window_Curs));
-#  else  /* !_WINDOWS */
+#  else  /* _WINDOWS */
    for (i = 1; i <= MAX_FRAME; i++)
      {
        drawable = (Drawable)TtaGetThotWindow (i);
@@ -2861,7 +2862,7 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
 	   }
 #endif /* _GTK */
      }
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 
    /* Boucle d'attente de designation */
    ClickIsDone = 1;
@@ -2878,7 +2879,7 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
        curFrame = GetFrameNumber (event.hwnd);
        TtaHandleOneEvent (&event);
        SetCursor (cursor);
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
      }
 
    /* Restauration du curseur */
@@ -2908,40 +2909,49 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
 }
 
 /*----------------------------------------------------------------------
-   Modifie le titre de la fenetre d'indice frame.                     
+  Change the window title of the frame            
   ----------------------------------------------------------------------*/
 void ChangeFrameTitle (int frame, char *text)
 {
-#ifdef _WINDOWS
-   if (FrMainRef [frame] != 0)
-      SetWindowText (FrMainRef[frame], text);
-#else  /* !_WINDOWS */
-#ifndef _GTK
-   int                 n;
-   Arg                 args[MAX_ARGS];
-   ThotWidget          w;
-
-   w = FrameTable[frame].WdFrame;
-   if (w != 0)
-     {
-        w = XtParent (XtParent (XtParent (w)));
-        n = 0;
-        XtSetArg (args[n], XmNtitle, text);
-        n++;
-        XtSetArg (args[n], XmNiconName, text);
-        n++;
-        XtSetValues (w, args, n);
-     }
-#else /* _GTK */
-   ThotWidget          w;
-   w = FrameTable[frame].WdFrame;
-   if (w != 0)
-     {
-       w=gtk_widget_get_toplevel(w);
-       gtk_window_set_title (GTK_WINDOW(w), text);
-     }
-#endif /* !_GTK */
+  unsigned char      *title;
+#ifndef _WINDOWS
+  ThotWidget          w;
 #endif /* _WINDOWS */
+#if !defined(_GTK) && !defined(_WINDOWS)
+  int                 n;
+  Arg                 args[MAX_ARGS];
+#endif /* _GTK  && _WINDOWS*/
+
+#ifdef _I18N_
+  title = TtaConverMbsToIso (text, ISO_8859_1);
+#else /* _I18N_ */
+  title = text;
+#endif /* _I18N_ */
+
+#ifdef _WINDOWS
+  if (FrMainRef [frame])
+    SetWindowText (FrMainRef[frame], title);
+#else  /* _WINDOWS */
+  w = FrameTable[frame].WdFrame;
+  if (w)
+    {
+#ifdef _GTK
+       w = gtk_widget_get_toplevel (w);
+       gtk_window_set_title (GTK_WINDOW(w), title);
+#else /* _GTK */
+      w = XtParent (XtParent (XtParent (w)));
+      n = 0;
+      XtSetArg (args[n], XmNtitle, title);
+      n++;
+      XtSetArg (args[n], XmNiconName, title);
+      n++;
+      XtSetValues (w, args, n);
+#endif /* _GTK */
+    }
+#endif /* _WINDOWS */
+#ifdef _I18N_
+  TtaFreeMemory (title);
+#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -2970,7 +2980,7 @@ void ChangeSelFrame (int frame)
 		XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #else /* _GTK */
 
-#endif /* !_GTK */
+#endif /* _GTK */
 #endif /* _WINDOWS */
 	  }
      }
@@ -3140,7 +3150,7 @@ void RemoveClipping (int frame)
     so here we swap only what we do..*/
 
 #endif /*_GL*/
-#else /* !_GTK */
+#else /* _GTK */
    XRectangle          rect;
 
    rect.x = 0;
@@ -3207,7 +3217,7 @@ void UpdateScrollbars (int frame)
        tmpw->step_increment = 8;
        tmpw->value = Xpos;
        gtk_adjustment_changed (tmpw);
-#endif /* !_GTK */
+#endif /* _GTK */
      }
    if (height + Ypos <= h)
      {
@@ -3227,7 +3237,7 @@ void UpdateScrollbars (int frame)
        tmpw->step_increment = 6;
        tmpw->value = Ypos;
        gtk_adjustment_changed (tmpw);
-#endif /* !_GTK */
+#endif /* _GTK */
      }
 #else  /* _WINDOWS */
    GetWindowRect (FrRef[frame], &rWindow);

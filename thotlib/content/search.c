@@ -167,7 +167,7 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
     /* les deux chaines ont meme longueur */
     diff = 0;
 
-  /* copy the remplacing string */
+  /* copy the remplacing string (dialogue is supposed ISO_8859_1) */
   s = TtaConvertIsoToCHAR (replaceStr, ISO_8859_1);
   len = 0;
   pBufn = pBuf1;

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1999-2001.
+ *  (c) COPYRIGHT INRIA, 1999-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -14,8 +14,9 @@
 #include <stdlib.h>
 #include "thot_sys.h"
 
+#include "registry_f.h"
 #include "ustring_f.h"
- 
+
 unsigned long offset[6] = {
   0x00000000UL,
   0x00003080UL,
@@ -354,6 +355,21 @@ CHARSET TtaGetCharset (char *charsetname)
   return UNDEFINED_CHARSET;
 }
 
+
+/*----------------------------------------------------------------------
+  TtaGetDefaultCharset gives the default charset 
+  ----------------------------------------------------------------------*/
+CHARSET TtaGetDefaultCharset ()
+{
+  char     *charsetname;
+
+  /* it should be given by the system locale */
+  charsetname = TtaGetEnvString ("Default_Charset");
+  if (charsetname)
+    return TtaGetCharset (charsetname);
+  else
+    return ISO_8859_1;
+}
 
 /*----------------------------------------------------------------------
   TtaGetCharsetName gives the constant string of the charset ISO name.

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
@@ -1478,7 +1478,8 @@ void SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
   InitFormAnswer
   Dialogue form for answering text, user name and password
   ----------------------------------------------------------------------*/
-void InitFormAnswer (Document document, View view, const char *auth_realm, char *server)
+void InitFormAnswer (Document document, View view, const char *auth_realm,
+		     char *server)
 {
 #ifndef _WINDOWS
    char *label;

@@ -382,14 +382,16 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 
 
 /*----------------------------------------------------------------------
-   ChangeTitle
-   Update the TITLE for the document.
+   ChangeTitle displays a form to change the TITLE for the document.
   ----------------------------------------------------------------------*/
 void ChangeTitle (Document doc, View view)
 {
    ElementType         elType;
    Element             el, child;
    Language            lang;
+#ifdef _I18N_
+  unsigned char       *title;
+#endif /* _I18N_ */
    int                 length;
 
    if (!TtaGetDocumentAccessMode (doc))
@@ -414,6 +416,12 @@ void ChangeTitle (Document doc, View view)
 	 }
        length = MAX_LENGTH;
        TtaGiveTextContent (child, Answer_text, &length, &lang);
+#ifdef _I18N_
+       title = TtaConverMbsToIso (Answer_text, ISO_8859_1);
+       strcpy (Answer_text, title);
+       TtaFreeMemory (title);
+#endif /* _I18N_ */
+
        CurrentDocument = doc;
 #ifndef _WINDOWS 
        TtaNewForm (BaseDialog + TitleForm, TtaGetViewFrame (doc, 1),
@@ -431,40 +439,59 @@ void ChangeTitle (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-   SetNewTitle
-   Update the TITLE for the document.
+  SetNewTitle stores the new TITLE in the title element and updates
+  the windows title.
   ----------------------------------------------------------------------*/
 void SetNewTitle (Document doc)
 {
-   ElementType         elType;
-   Element             el, child;
+  ElementType         elType;
+  Element             el, child;
+#ifdef _I18N_
+  unsigned char       *title;
+#endif /* _I18N_ */
 
-   if (!TtaGetDocumentAccessMode (doc))
-     /* the document is in ReadOnly mode */
-     return;
-
-   /* search the Title element */
-   el = TtaGetMainRoot (doc);
-   elType.ElSSchema = TtaGetDocumentSSchema (doc);
-   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-     {
-       elType.ElTypeNum = HTML_EL_TITLE;
-       el = TtaSearchTypedElement (elType, SearchForward, el);
-       child = TtaGetFirstChild (el);
-       if (child)
-	 {
-	    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-	    TtaRegisterElementReplace (el, doc);
-	    TtaSetTextContent (child, Answer_text, TtaGetDefaultLanguage (),
-			       doc);
-	    TtaCloseUndoSequence (doc);
-	    TtaSetDocumentModified (doc);
-	    SetWindowTitle (doc, doc, 0);
-	    if (DocumentSource[doc])
-	      SetWindowTitle (doc, DocumentSource[doc], 0);
-	 }
-     }
+  if (!TtaGetDocumentAccessMode (doc))
+    /* the document is in ReadOnly mode */
+    return;
+  /* search the Title element */
+  el = TtaGetMainRoot (doc);
+  elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+    {
+      elType.ElTypeNum = HTML_EL_TITLE;
+      el = TtaSearchTypedElement (elType, SearchForward, el);
+      child = TtaGetFirstChild (el);
+      if (child)
+	{
+	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+	  TtaRegisterElementReplace (el, doc);
+#ifdef _I18N_
+	  title = TtaConvertIsoToMbs (Answer_text, ISO_8859_1);
+	  TtaSetTextContent (child, title, TtaGetDefaultLanguage (), doc);
+	  TtaFreeMemory (title);
+#else /* _I18N_ */
+	  TtaSetTextContent (child, Answer_text, TtaGetDefaultLanguage (),
+			     doc);
+#endif /* _I18N_ */
+	  TtaCloseUndoSequence (doc);
+	  TtaSetDocumentModified (doc);
+	  SetWindowTitle (doc, doc, 0);
+	  if (DocumentSource[doc])
+	    SetWindowTitle (doc, DocumentSource[doc], 0);
+	}
+    }
 }
+
+/*----------------------------------------------------------------------
+   TitleModified
+   The user has modified the contents of element TITLE. Update the    
+   the Title field on top of the window.                           
+  ----------------------------------------------------------------------*/
+void TitleModified (NotifyOnTarget *event)
+{
+   UpdateTitle (event->element, event->document);
+}
+
 
 /*----------------------------------------------------------------------
    SelectDestination
@@ -594,7 +621,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo)
    element or the ID attribute of (an ascendant of) the selected element
    or NULL.
   ----------------------------------------------------------------------*/
-Attribute           GetNameAttr (Document doc, Element selectedElement)
+Attribute GetNameAttr (Document doc, Element selectedElement)
 {
    Element             el;
    ElementType         elType;
@@ -3081,12 +3108,3 @@ void UpdateAtom (Document doc, char *url, char *title)
 #endif /* !_GTK */
 }
 
-/*----------------------------------------------------------------------
-   TitleModified
-   The user has modified the contents of element TITLE. Update the    
-   the Title field on top of the window.                           
-  ----------------------------------------------------------------------*/
-void                TitleModified (NotifyOnTarget * event)
-{
-   UpdateTitle (event->element, event->document);
-}

@@ -69,6 +69,7 @@ static Func     MathMoveBackwardCursorFunction = NULL;
 #include "structselect_f.h"
 #include "textcommands_f.h"
 #include "tree_f.h"
+#include "ustring_f.h"
 #include "viewapi_f.h"
 #include "views_f.h"
 #include "windowdisplay_f.h"
@@ -952,9 +953,9 @@ static int CopyXClipboard (unsigned char **buffer, View view)
       pLastEl = LastSelectedElement;
       firstChar = FirstSelectedChar;
       lastChar = LastSelectedChar;
-      if (lastChar == 0)
+      if (!SelPosition && lastChar == 0)
 	/* Il faut prendre tout le contenu de tout l'element */
-	lastChar = pLastEl->ElVolume;
+	lastChar = pLastEl->ElVolume + 1;
       if (pFirstEl->ElTypeNumber != CharString + 1)
 	/* if it's an image firstChar is not significant here. Set it to 0 */
 	firstChar = 0;
@@ -1066,7 +1067,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   if (*buffer)
     TtaFreeMemory (*buffer);
   /* What is the encoding used by external applications ??? */
-  *buffer = TtaConvertCHARToIso (text, ISO_8859_1);
+  *buffer = TtaConvertCHARToIso (text, TtaGetDefaultCharset ());
   TtaFreeMemory (text);
   return i;
 }
@@ -1088,6 +1089,11 @@ void TtcCopyToClipboard (Document doc, View view)
       if (Xbuffer)
 	free (Xbuffer);
       Xbuffer = buffer;
+    }
+  else if (Xbuffer)
+    {
+	free (Xbuffer);
+      Xbuffer = NULL;
     }
 #else /* _GTK */
 #ifndef _WINDOWS

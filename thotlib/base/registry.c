@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -558,17 +558,17 @@ char *TtaGetEnvString (char *name)
    /* first lookup in the System defaults */
    cour = AppRegistryEntry;
    while (cour != NULL)
- {
+     {
          if (!strcasecmp (cour->appli, "System") &&
 	     !strcmp (cour->name, name) && cour->value[0] != EOS)
- {
+	   {
 #ifdef DEBUG_REGISTRY
             fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
 #endif
             return (cour->value);
-		 }
+	   }
          cour = cour->next;
-   }
+     }
 
    /* then lookup in the application user preferences */
    cour = AppRegistryEntry;

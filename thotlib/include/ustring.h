@@ -61,6 +61,11 @@ typedef unsigned char  *STRING;
 extern CHARSET TtaGetCharset (char *charsetname);
 
 /*----------------------------------------------------------------------
+  TtaGetDefaultCharset gives the default charset 
+  ----------------------------------------------------------------------*/
+extern CHARSET TtaGetDefaultCharset ();
+
+/*----------------------------------------------------------------------
   TtaGetCharsetName gives the constant string of the charset ISO name.
   ----------------------------------------------------------------------*/
 extern char *TtaGetCharsetName (CHARSET charset);

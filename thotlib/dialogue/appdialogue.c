@@ -1,5 +1,5 @@
 /*
- * Copyright (c) INRIA 1996-2001
+ * Copyright (c) INRIA 1996-2002
  */
 
 /*
@@ -197,58 +197,52 @@ HWND GetCurrentWindow ()
   ----------------------------------------------------------------------*/
 void TteInitMenus (char *name, int number)
 {
-   int                 i;
-   char                namef1[100];
-   char                namef2[100];
-   char                text[100];
-   char                script;
-
+  int                 i;
+  char                namef1[100];
+  char                namef2[100];
+  char                text[100];
+  char                script;
 #ifndef _WINDOWS
-   Display            *Dp;
-#endif /* _WINDOWS */
+  Display            *Dp;
+#else /* _WINDOWS */
 
-   /* Initialisation du  contexte serveur */
-   FrRef[0] = 0;
-#ifdef _WINDOWS
-   FrMainRef [0] = 0;
+  FrMainRef [0] = 0;
 #endif /* _WINDOWS */
-   InitDocContexts ();
+  /* Initialisation du  contexte serveur */
+  FrRef[0] = 0;
+  InitDocContexts ();
 
-   /* Init the profile table */
-   Prof_InitTable(NULL);
- 
-   /* Initialise le dialogue */
-   servername = NULL;
-   if (appArgc > 2)
-     {
-	i = 1;
-	while (i < appArgc - 1)
-	   if (strcmp (appArgv[i], "-display") != 0)
-	      i++;
-	   else
-	     {
-		/* l'argument est "-display" et celui qui suit le nom du display */
-		servername = appArgv[i + 1];
-		i = appArgc;
-	     }
-     }
+  /* Init the profile table */
+  Prof_InitTable(NULL);
+  /* Initialise le dialogue */
+  servername = NULL;
+  if (appArgc > 2)
+    {
+      i = 1;
+      while (i < appArgc - 1)
+	if (strcmp (appArgv[i], "-display") != 0)
+	  i++;
+	else
+	  {
+	    /* l'argument est "-display" et celui qui suit le nom du display */
+	    servername = appArgv[i + 1];
+	    i = appArgc;
+	  }
+    }
 #ifdef _WINDOWS
-   WIN_TtaInitDialogue (servername);
+  WIN_TtaInitDialogue (servername);
 #else  /* _WINDOWS */
-   TtaInitDialogue (servername, &app_cont, &Dp);
+  TtaInitDialogue (servername, &app_cont, &Dp);
 #ifndef _GTK
-   if (!RootShell)
-     {
-	/* Connection au serveur X impossible */
-	printf ("*** Not initialized\n");
-	printf ("*** Fatal Error: X connexion refused\n");
-#ifdef _GTK
-	gtk_exit (1);
-#endif /* _GTK */	
-	exit (1);
-     }
-   TtDisplay = Dp;
-#endif
+  if (!RootShell)
+    {
+      /* Connection au serveur X impossible */
+      printf ("*** Not initialized\n");
+      printf ("*** Fatal Error: X connexion refused\n");
+      exit (1);
+    }
+  TtDisplay = Dp;
+#endif /* _GTK */
 #endif /* _WINDOWS */
 
    /* Definition de la procedure de retour des dialogues */
@@ -2435,18 +2429,18 @@ void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
   Signal handler called when the selections owner 
   (another application) returns the data 
 -------------------------------------------------------------------------*/
-void selection_received( GtkWidget *widget, GtkSelectionData *sel_data,  gpointer data )
+void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
+			 gpointer data)
 {   
-     if(sel_data->length<0)
-	return;
-    if(sel_data->type!=GDK_SELECTION_TYPE_STRING)
-	return;
-    if (Xbuffer != NULL)
-      free(Xbuffer);
-    Xbuffer = NULL;
-    Xbuffer = TtaGetMemory ((sel_data->length+1) * sizeof(unsigned char));
-    strcpy(Xbuffer,sel_data->data);
+  if (sel_data->length < 0)
     return;
+  if (sel_data->type != GDK_SELECTION_TYPE_STRING)
+    return;
+  if (Xbuffer)
+    free(Xbuffer);
+  Xbuffer = TtaGetMemory ((sel_data->length + 1) * sizeof (unsigned char));
+  strcpy (Xbuffer, sel_data->data);
+  return;
 } 
 
 /*-----------------------------------------------------------------------

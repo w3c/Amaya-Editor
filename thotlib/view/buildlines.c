@@ -2034,7 +2034,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 		      pNextBox = ibox1->BxNext;
 		      if (pNextBox && pNextBox->BxScript == ibox1->BxScript)
 			/* add skipped spaces at the end of the box */
-			lost = ibox1->BxFirstChar - ibox1->BxNChars;
+			lost = ibox1->BxFirstChar + ibox1->BxNChars;
 		      /* if the next box is not empty */
 		      if (ibox1->BxNChars > 0)
 			{
