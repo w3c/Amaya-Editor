@@ -2490,7 +2490,7 @@ void SaveDocument (Document doc, View view)
 	  ok = BM_DocSave (doc, tempname);
 #else
 	  ok = FALSE;
-#endif BOOKMARKS
+#endif /* BOOKMARKS */
 	}
       else
 	{
