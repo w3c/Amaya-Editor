@@ -576,7 +576,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
     si.cb = sizeof(si);
     ZeroMemory( &pi, sizeof(pi) );
 
-	CreateProcess( NULL,   /* No module name (use command line). */
+	CreateProcess ( NULL,   /* No module name (use command line). */
         cmd,               /* Command line. */
         NULL,             /* Process handle not inheritable. */
         NULL,             /* Thread handle not inheritable. */

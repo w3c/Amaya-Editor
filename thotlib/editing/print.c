@@ -999,7 +999,10 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 		   "/T  { newpath moveto lineto lineto closepath fill } BD\n");
 
 	  /* Flat-shaded triangle with middle color:
-	     x3 y3 r3 g3 b3 x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 Tm */
+	     x3 y3 r3 g3 b3 x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 Tm 
+	  This is the postscript function that will reproduce the opengl rendering,
+	  triangle by triangle
+	  */
 	  fprintf (PSfile,
 		   /* stack : x3 y3 r3 g3 b3 x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 */
 		   "/Tm { 3 -1 roll 8 -1 roll 13 -1 roll add add 3 div\n" /* r = (r1+r2+r3)/3 */
@@ -1009,7 +1012,6 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 		   "      3 -1 roll 6 -1 roll 9 -1 roll add add 3 div" /* b = (b1+b2+b3)/3 */
 		   /* stack : x3 y3 x2 y2 x1 y1 r g b */
 		   " C T } BD\n");
-	 /*  fprintf (PSfile, "end\n"); */
 #endif /* _GL */
 
 	  fprintf (PSfile, "/DumpImage { %%%% Wim Him Wdr Hdr DumpImage\n");

@@ -220,6 +220,23 @@ void initwgl (HDC hDC, int frame)
       GLResize (GL_HEIGHT, GL_WIDTH,0,0);
       glScissor (0, 0, GL_HEIGHT, GL_WIDTH);
       GL_Err();
+#ifdef _TEST
+	  /*permet de verifier la validite du contexte opengl. 
+	  size doit etre >0, sinon cela signifie qu'opengl n'arrive pas a dessiner !!*/
+	  {
+		glFeedbackBuffer (FEEDBUFFERSIZE, GL_2D, feedBuffer);
+		glRenderMode (GL_FEEDBACK);
+		glbegin (GL_LINE)
+			glvertex2i (1, 1);
+			glvertex2i (4, 4);
+		glend ();
+		size = glRenderMode (GL_RENDER);
+		if (size > 0)
+		{
+	      if (size > 1)
+			  size = 1;
+		}
+#endif /*_TEST*/
 	}
 }
 
@@ -314,10 +331,6 @@ void InitPrintBox ()
 {
   if (NotFeedBackMode && !CompBoundingBox)
     {
-#ifdef _WINDOWS
-	  /*ReleasePrinterDC ();
-	  SetGLDC ():*/
-#endif /*_WINDOWS*/
       NotFeedBackMode = FALSE;  
       glFeedbackBuffer (FEEDBUFFERSIZE, GL_3D_COLOR, feedBuffer);
       glRenderMode (GL_FEEDBACK);
@@ -330,11 +343,6 @@ void FinishPrintBox ()
 {  
   if (NotFeedBackMode == FALSE && !CompBoundingBox)
     {  
-#ifdef _WINDOWS
-	/*ReleaseDC (w, hDC);*/
-	  /*ReleaseGLDC ();
-	  SetPrinterDC ():TtPrinterDC*/
-#endif /*_WINDOWS*/
       GLParseFeedbackBuffer (feedBuffer); 
       NotFeedBackMode = TRUE;
     }
@@ -457,7 +465,10 @@ static GLint GLGetVertex(GLvertex *v, GLfloat *p)
   v->rgb[3] = p[6]; 
   return 7;
 }
-
+/*-----------------------------------------------------------------
+GLParseFeedbackBuffer : Reads the buffer containing the information 
+about each graphic rendered on screen by openGL
+-------------------------------------------------------------------*/
 GLint GLParseFeedbackBuffer (GLfloat *current)
 {
   char flag, dash = 0;
@@ -466,6 +477,10 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
   GLvertex vertices[3];
 
   used = glRenderMode (GL_RENDER);
+  /*
+	used doit etre >0, 
+	sinon cela signifie qu'opengl n'arrive pas a dessiner !!
+  */
   if (used > 0)
     {
       while (used > 0)
@@ -478,10 +493,17 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      i = GLGetVertex (&vertices[0], current);
 	      current += i;
 	      used    -= i;
-
+#ifndef _WINDOWS
 	      GLPrintPostScriptColor (vertices[0].rgb);
 	      fprintf (FILE_STREAM, "%g -%g %g P\n", 
 		       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1], 0.5*psize);
+#else /*_WINDOWS*/
+		  
+		   /* dessiner un point A de taille 0.5*psize avec les fonctions win32 
+			  (cf windowdisplay)
+			  A : vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1]
+			  */
+#endif/*_WINDOWS*/
 
 	      break;
 
@@ -495,7 +517,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      i = GLGetVertex (&vertices[1], current);
 	      current += i;
 	      used    -= i;
-
+#ifndef _WINDOWS
 	      if (LastLineWidth != lwidth)
 		{
 		  LastLineWidth = lwidth;
@@ -513,6 +535,13 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 		{
 		  fprintf (FILE_STREAM, "[] 0 setdash\n");
 		}
+		  #else /*_WINDOWS*/
+		   /* dessiner une ligne AB avec les fonctions win32 
+			  (cf windowdisplay)
+			  A : vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
+			  B : vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]
+			  */
+#endif/*_WINDOWS*/
 	      break;
 
 	    case GL_POLYGON_TOKEN :
@@ -530,12 +559,22 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 		  if (v == 2)
 		    {
                       flag = 0;
+#ifndef _WINDOWS
 		      GLPrintPostScriptColor (vertices[0].rgb);
 		      fprintf (FILE_STREAM, "%g -%g %g -%g %g -%g T\n",
 			       vertices[2].xyz[0], GL_HEIGHT - vertices[2].xyz[1],
 			       vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
 			       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]);
 		      vertices[1] = vertices[2];
+		  #else /*_WINDOWS*/
+
+			  /* dessiner avec les fonctions win32 un triangle ABC avec les 3 points suivant
+			  (cf windowdisplay)
+			  A : vertices[2].xyz[0], GL_HEIGHT - vertices[2].xyz[1],
+			  B : vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
+			  C : vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]
+			  */
+#endif/*_WINDOWS*/
 		    }
 		  else
 		    v ++;
@@ -979,13 +1018,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 	  buff[j++] = '*';
 	}
     }
-  /*return (GL_UnicodeDrawString (fg, 
-				buff, 
-				(float) x,
-				(float) y, 
-				hyphen,
-				(void *)font, 
-				lg));*/
+  /* Appeler un fonction win32 de rendu de texte  !!! */
   return 1;
 }
 #endif /*_WIN_PRINT*/
