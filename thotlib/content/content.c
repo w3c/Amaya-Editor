@@ -738,10 +738,13 @@ int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int max)
   while (max > 0 && pBuf)
     {
 #ifdef _I18N_
+for (l = 0; l <pos; l++)
+printf ("_");
       l = 0;
       while (pos < THOT_MAX_CHAR - 1 && max > l)
 	{
 	  l += TtaMBstringToWC (&src, &pBuf->BuContent[pos]);
+printf ("%c", (char)pBuf->BuContent[pos]);
 	  pos++;
 	  length++;
 	}
@@ -763,7 +766,10 @@ int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int max)
 	{
 	  pBuf->BuLength = pos;
 	  src += l;
-	  pBuf->BuContent[pBuf->BuLength] = WC_EOS;
+	  pBuf->BuContent[pos] = WC_EOS;
+#ifdef _I18N_
+printf ("\n");
+#endif /* _I18N_ */
 	  max -= l;
 	}
       if (max > 0)
@@ -809,7 +815,7 @@ int CopyBuffer2MBs (PtrTextBuffer pBuf, int pos, unsigned char *des, int max)
 	  ptr = s;
 	  l = TtaWCToMBstring (pBuf->BuContent[pos], &ptr);
 	  pos++;
-	  if (l < max)
+	  if (l <= max)
 	    {
 	      /* there is enough space to insert these characters */
 	      strncpy (&des[length], s, l);

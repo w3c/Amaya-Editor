@@ -38,15 +38,18 @@ STRUCT
   XLink
      (ATTR AnnotIsHidden = Yes_;
            { AnnotIsHidden : do not show this annotation }
+	   AnnotIcon = TEXT;
            AnnotIcon1 = Yes_;
            AnnotOrphIcon = Yes_;
            { the icons we can associate with an annotation }) =
-	CONSTANT C_Empty;
+	BEGIN PICTURE; END;
 
 EXCEPT
 
     XLink:          Hidden;
+    {PICTURE:        SelectParent;}
     AnnotIsHidden:  Invisible;
+    AnnotIcon:      Invisible;
     AnnotIcon1:     Invisible;
     AnnotOrphIcon:  Invisible;
 

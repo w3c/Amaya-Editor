@@ -183,14 +183,13 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
   Element       el, first, anchor;
   AttributeType attrType;
   Attribute     attr;
-  char       *annot_user;
-  char       *docSchemaName;
-  int          c1, cN;
-  int          check_mode;
-  SSchema      XLinkSchema;
+  char          s[MAX_LENGTH];
+  char         *docSchemaName;
+  int           c1, cN;
+  int           check_mode;
+  SSchema       XLinkSchema;
 
-  annot_user = GetAnnotUser ();
-  
+  /*annot_user = GetAnnotUser ();*/
   if (annot->xptr)
     {
       XPointerContextPtr ctx;
@@ -230,7 +229,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
   XLinkSchema = GetXLinkSSchema (source_doc);
   elType.ElSSchema = XLinkSchema;
   elType.ElTypeNum = XLink_EL_XLink;
-  anchor = TtaNewElement (source_doc, elType);
+  anchor = TtaNewTree (source_doc, elType, "");
   
   /*
   ** insert the anchor in the document tree
@@ -438,7 +437,10 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
   TtaAttachAttribute (anchor, attr, source_doc);
   /* set the ID value (anchor endpoint) */
   TtaSetAttributeText (attr, annot->name, anchor, source_doc);
-
+  el = TtaGetFirstChild (anchor);
+  sprintf (s, "%s%camaya%cannot.gif",
+	   TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
+  TtaSetPictureContent (el, s, SPACE, source_doc, "image/gif");
   return (!(annot->is_orphan));
 }
 

@@ -182,7 +182,7 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	{
 	  if (pBox->BxAbstractBox->AbLeafType == LtText)
 	    {
-	      delta = pBox->BxNSpaces * CharacterWidth (SPACE, pBox->BxFont);
+	      delta = pBox->BxNSpaces * CharacterWidth (WC_SPACE, pBox->BxFont);
 	      pBox->BxW -= delta;
 	      pBox->BxWidth -= delta;
 	      nSpaces += pBox->BxNSpaces;
@@ -533,7 +533,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
 
   while (j <= nChars && !found && pBuffer != NULL)
     {
-      character = (unsigned char) (pBuffer->BuContent[i - 1]);
+      character = pBuffer->BuContent[i - 1];
       if (character == BREAK_LINE || character ==  NEW_LINE)
 	{
 	  /* It's a break element */
@@ -564,10 +564,10 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
       else
 	{
 	  /* No break element found, continue */
-	  if (character == SPACE)
+	  if (character == WC_SPACE)
 	    {
 	      (*nSpaces)++;
-	      *boxWidth += CharacterWidth (SPACE, font);
+	      *boxWidth += CharacterWidth (WC_SPACE, font);
 	      /* compare word widths */
 	      if (*wordWidth < wWidth)
 		*wordWidth = wWidth;
@@ -627,7 +627,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
   PtrTextBuffer       pBuffer;
   PtrBox              pParentBox;
   Language            language;
-  CHAR_T             character;
+  CHAR_T              character;
   int                 i, count;
   int                 carWidth, newWidth;
   int                 width;
@@ -655,7 +655,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
   wordLength = 0;
   spaceCount = 0;
   still = TRUE;
-  spaceWidth = CharacterWidth (SPACE, font);
+  spaceWidth = CharacterWidth (WC_SPACE, font);
   spaceAdjust = spaceWidth;
   language = pBox->BxAbstractBox->AbLanguage;
 
@@ -677,10 +677,10 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
   while (still)
     {
       /* width of the next character */
-      character = (CHAR_T) (pBuffer->BuContent[charIndex - 1]);
-      if (character == NUL)
+      character = pBuffer->BuContent[charIndex - 1];
+      if (character == WC_EOS)
 	carWidth = 0;
-      else if (character == SPACE)
+      else if (character == WC_SPACE)
 	carWidth = spaceAdjust;
       else
 	carWidth = CharacterWidth (character, font);
@@ -709,7 +709,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
 		/* the previous character is in the same buffer */
 		charIndex--;
 	    }
-	  else if (character == SPACE)
+	  else if (character == WC_SPACE)
 	    {
 	      /* it is a space, skip all following spaces */
 	      dummySpaces = 1;
@@ -796,7 +796,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
 		charIndex--;
 	    }
 	}
-      else if (character == NUL)
+      else if (character == WC_EOS)
 	/* end of the buffer */
 	if (pBuffer->BuNext == NULL)
 	  {
@@ -816,7 +816,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
 	    pBuffer = pBuffer->BuNext;
 	    charIndex = 1;
 	  }
-      else if (character == SPACE)
+      else if (character == WC_SPACE)
 	{
 	  /* register the current space for the future */
 	  *pNewBuff = pBuffer;
@@ -857,8 +857,8 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
   
   while (still && *boxLength > 0)
     {
-      character = (unsigned char) (pBuffer->BuContent[charIndex - 1]);
-      if (character == SPACE)
+      character = pBuffer->BuContent[charIndex - 1];
+      if (character == WC_SPACE)
 	{
 	  if (*pNewBuff == NULL)
 	    {
@@ -1000,8 +1000,8 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, ptrfont font,
   
   while (still)
     {
-      character = (unsigned char) ((*pNewBuff)->BuContent[*newIndex - 1]);
-      if (character == SPACE)
+      character = (*pNewBuff)->BuContent[*newIndex - 1];
+      if (character == WC_SPACE)
 	{
 	  /* next char */
 	  if (*newIndex >= (*pNewBuff)->BuLength)
@@ -1061,7 +1061,7 @@ static void BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
     spaceWidth = 0;
   else
     /* break on a space */
-    spaceWidth = CharacterWidth (SPACE, font);
+    spaceWidth = CharacterWidth (WC_SPACE, font);
 
   /*
    * Generate two pieces:
@@ -1228,7 +1228,7 @@ static void BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
     spaceWidth = 0;
   else
     /* break on a space */
-    spaceWidth = CharacterWidth (SPACE, font);
+    spaceWidth = CharacterWidth (WC_SPACE, font);
 
   /*
    * Generate a new piece:
@@ -1764,7 +1764,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
       pAb = pBox->BxAbstractBox;
       if (pAb != NULL && pAb->AbLeafType == LtText)
 	{
-	  x = CharacterWidth (SPACE, pBox->BxFont);
+	  x = CharacterWidth (WC_SPACE, pBox->BxFont);
 	  if (pFrame->FrSelectionBegin.VsBox == pBox)
 	    {
 	      /* need to update the current selection */
@@ -2149,7 +2149,7 @@ void                ComputeLines (PtrBox pBox, int frame, int *height)
 		  lostPixels = pBoxToBreak->BxIndChar - pLine->LiLastPiece->BxNChars - pLine->LiLastPiece->BxIndChar;
 		  if (lostPixels != 0)
 		    {
-		      lostPixels = lostPixels * CharacterWidth (SPACE, pBoxToBreak->BxFont);
+		      lostPixels = lostPixels * CharacterWidth (WC_SPACE, pBoxToBreak->BxFont);
 		      noWrappedWidth += lostPixels;
 		    }
 		  if (pLine->LiLastPiece->BxType == BoDotted)
@@ -2515,7 +2515,7 @@ static void CompressLine (PtrLine pLine, int xDelta, int frame, int spaceDelta)
 		    else
 		      pViewSel->VsXPos += pViewSel->VsNSpaces;
 		    if (pViewSel->VsIndBox < ibox1->BxNChars
-			&& pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1] == SPACE)
+			&& pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1] == WC_SPACE)
 		      pViewSel->VsXPos -= spaceValue;
 		  }
 	      }
@@ -2614,7 +2614,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 		     int frame)
 {
    Propagation         propagateStatus;
-   CHAR_T             charIndex;
+   CHAR_T              charIndex;
    PtrLine             pLine;
    PtrBox              pBox;
    PtrBox              pSelBox;
@@ -2747,8 +2747,8 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 		       pSelEnd->VsXPos += 2;
 		     else
 		       {
-			 charIndex = (unsigned char) (pSelEnd->VsBuffer->BuContent[pSelEnd->VsIndBuf - 1]);
-			 if (charIndex == SPACE && pSelBox->BxSpaceWidth != 0)
+			 charIndex = (pSelEnd->VsBuffer->BuContent[pSelEnd->VsIndBuf - 1]);
+			 if (charIndex == WC_SPACE && pSelBox->BxSpaceWidth != 0)
 			   pSelEnd->VsXPos += pSelBox->BxSpaceWidth;
 			 else
 			   pSelEnd->VsXPos += CharacterWidth (charIndex, pSelBox->BxFont);
@@ -2838,7 +2838,7 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
 	     if (pLine->LiSpaceWidth > 0)
 	       {
 		  /* Line justifiee */
-		  lostPixels = CharacterWidth (SPACE, pBox->BxFont);
+		  lostPixels = CharacterWidth (WC_SPACE, pBox->BxFont);
 		  realLength = pLine->LiRealLength + xDelta - spaceDelta * (pLine->LiSpaceWidth - lostPixels);
 		  lostPixels = pLine->LiXMax - pLine->LiMinLength;
 	       }

@@ -172,6 +172,19 @@ RULES
 		END;
 	END;
 
+ PICTURE_UNIT: BEGIN
+#ifndef PAGE
+ 	{Visibility: 0;}
+        HorizRef: * . Bottom;
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
+	Width: 16 px;
+	Height: 16 px;
+   	IN Links_view
+		Visibility: ATTR_Visibility;
+#endif	
+	END;
+
 ATTRIBUTES
 
   AnnotOrphIcon:
@@ -193,8 +206,8 @@ ATTRIBUTES
         CreateAfter(ATTR_href_links_view);
   	CreateAfter(VALUE_href_links_view);
 	Foreground: Blue;
-        if AnnotIcon1
-                CreateFirst(Annot_gif1);
+        {if AnnotIcon1
+                CreateFirst(Annot_gif1);}
 	IN Structure_view
 		Foreground: Enclosing =;
    	IN Links_view

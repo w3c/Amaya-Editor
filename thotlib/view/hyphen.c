@@ -139,14 +139,14 @@ ThotBool IsSeparatorChar (CHAR_T c)
 static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
 		     CHAR_T word[THOT_MAX_CHAR], int *width)
 {
+   PtrTextBuffer       adbuff;
    int                 i, j;
    int                 lg, nbChars;
    ThotBool            still;
    ThotBool            changedebut;
-   PtrTextBuffer       adbuff;
 
    /* Initialisations */
-   word[0] = EOS;
+   word[0] = WC_EOS;
    lg = 0;
    nbChars = 0;
    j = 0;
@@ -180,10 +180,10 @@ static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
 		if (j <= 1)
 		  {
 		     changedebut = TRUE;
-		     lg += CharacterWidth ((CHAR_T) word[j], font);
+		     lg += CharacterWidth (word[j], font);
 		     if (j == 1)
 			/* Il faut comptabiliser le caractere precedent */
-			lg += CharacterWidth ((CHAR_T) word[j - 1], font);
+			lg += CharacterWidth (word[j - 1], font);
 		     nbChars += j + 1;
 		     j = 0;
 		  }
@@ -194,14 +194,14 @@ static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
 		  /* On ne traite pas les separateurs en debut de mot */
 		  if (j != 0)
 		    {
-		       word[j] = EOS;
+		       word[j] = WC_EOS;
 		       still = FALSE;
 		    }
 		  else
 		    {
 		       /* Le debut du mot est deplace */
 		       changedebut = TRUE;
-		       lg += CharacterWidth ((CHAR_T) word[j], font);
+		       lg += CharacterWidth (word[j], font);
 		       nbChars++;
 		    }
 	       }
@@ -223,7 +223,7 @@ static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
      }
 
    /* Termine le mot */
-   word[j] = EOS;
+   word[j] = WC_EOS;
    if (nbChars == 0)
       *width = 0;
    else
@@ -239,7 +239,7 @@ static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
    Rend un indicateur qui vaut VRAI s'il faut engendrer un 
    tiret d'hyphe'nation.                                   
    Le parame`tre language donne l'indice de la langue dans 
-   la table des langues courante.                          
+   la table des langues courante.
   ----------------------------------------------------------------------*/
 static int WordHyphen (STRING word, int length, Language language,
 		       ThotBool *hyphen)
@@ -306,12 +306,12 @@ int HyphenLastWord (ptrfont font, Language language, PtrTextBuffer *buffer,
 	  /* Recherche le nombre de caracteres du word qui rentrent */
 	  /* dans la ligne */
 	  length = 0;
-	  charWidth = CharacterWidth ((CHAR_T) word[length], font);
+	  charWidth = CharacterWidth (word[length], font);
 	  while (rest >= charWidth && length < wordLength)
 	    {
 	      rest -= charWidth;
 	      length++;
-	      charWidth = CharacterWidth ((CHAR_T) word[length], font);
+	      charWidth = CharacterWidth (word[length], font);
 	    }
 
 	  if (length > 1)
@@ -339,7 +339,7 @@ int HyphenLastWord (ptrfont font, Language language, PtrTextBuffer *buffer,
 			{
 			  /* comptabilise le caractere */
 			  length--;
-			  *width += CharacterWidth ((CHAR_T) (adbuff->BuContent[i++]), font);
+			  *width += CharacterWidth (adbuff->BuContent[i++], font);
 			}
 		    }
 		  
@@ -368,7 +368,7 @@ int HyphenLastWord (ptrfont font, Language language, PtrTextBuffer *buffer,
    coupure des mots et l'autorisation de coupure pour la   
    boi^te donne'e.                                         
   ----------------------------------------------------------------------*/
-ThotBool            CanHyphen (PtrBox pBox)
+ThotBool CanHyphen (PtrBox pBox)
 {
   Language            language;
 
