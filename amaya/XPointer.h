@@ -61,7 +61,8 @@ typedef symTableCtx *symTableCtxPtr;
 /* the node info that the parsing will return */
 typedef struct _nodeInfo {
   Element  el;
-  char node[10];
+  char *node;      /* temporary buffer for storing a node's name */
+  int  nodeSize;   /* size of the above temporary buffer */
   nodeType type;
   int  startC;
   int  endC;

@@ -29,8 +29,9 @@
 #include <string.h>
 
 
+/* To turn on debugging */
+/* #define XPTR_ACTION_DEBUG */
 /* #define XPTR_PARSE_DEBUG */
-#undef XPTR_ACTION_DEBUG
 
 #define BSIZE 128       /* size of the lexical analyzer temporary buffer */
 
@@ -128,7 +129,24 @@ static void AddChild (XPointerContextPtr ctx, char *node)
 
 #ifdef XPTR_ACTION_DEBUG
   printf ("Adding child %s\n", node);
-#endif	  
+#endif
+
+  if (curNode->nodeSize < strlen (node) + 1)
+    {
+      if (curNode->node == NULL)
+	{
+	  curNode->nodeSize = 30 + strlen (node) * 2 + 1;
+	  curNode->node = (char *) TtaGetMemory (sizeof (CHAR_T) * curNode->nodeSize);
+	}
+      else
+	{
+	  curNode->nodeSize = curNode->nodeSize + strlen (node) * 2 + 1;
+	  /* we do a free, rather than a calloc because we're not interested
+	     in keeping whatever was stored in this buffer */
+	  TtaFreeMemory (curNode->node);
+	  curNode->node =  (char *) TtaGetMemory (sizeof (CHAR_T) * (curNode->nodeSize));
+	}
+    }
   strcpy (curNode->node, node);
 }
 
@@ -154,7 +172,7 @@ static void GotoChild (XPointerContextPtr ctx)
       return;
     }
 
-  if (curNode->node[0])
+  if (curNode->node && curNode->node[0])
     {
 #ifdef XPTR_ACTION_DEBUG
       printf ("Going to child: %s, index %d\n", curNode->node, curNode->index);
@@ -706,6 +724,11 @@ void XPointer_free (XPointerContextPtr ctx)
   
   if (ctx->error)
     TtaFreeMemory (ctx->error);
+  if (ctx->nodeStart.node)
+    TtaFreeMemory (ctx->nodeStart.node);
+  if (ctx->nodeEnd.node)
+    TtaFreeMemory (ctx->nodeEnd.node);
+
   TtaFreeMemory (ctx);
 }
 
