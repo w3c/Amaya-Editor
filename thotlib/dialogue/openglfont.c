@@ -704,7 +704,7 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
 	{
 	  /*Last parameter tells that we destroy font's bitmap
 	    So we MUST cache it    */
-	  if (Glyph->format != FT_GLYPH_FORMAT_BITMAP)
+	  if (Glyph->format != ft_glyph_format_bitmap)
 	    err = FT_Glyph_To_Bitmap (&Glyph, ft_render_mode_normal, 0, 1);
 	  if (err)
 	    FT_Done_Glyph (Glyph);
