@@ -18,6 +18,15 @@
           <object class="spacer">
             <size>0,5</size>
           </object>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_LABEL_SERVER">
+              <label>server ''</label>
+            </object>
+            <border></border>
+          </object>
+          <object class="spacer">
+            <size>0,5</size>
+          </object>
           <object class="spacer">
             <size>0,5</size>
           </object>
@@ -25,9 +34,6 @@
             <object class="wxStaticText" name="wxID_LABEL_NAME">
               <label>Give your name</label>
             </object>
-          </object>
-          <object class="spacer">
-            <size>0,5</size>
           </object>
           <object class="sizeritem">
             <object class="wxTextCtrl" name="wxID_AU">
