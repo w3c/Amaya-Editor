@@ -66,7 +66,7 @@ s'arrête et la couleur de la barre reflète le type d'animation :</p>
 </ul>
 
 <p class="figure"><img alt="Animation view"
-src="//home/vatton/Amaya/doc/images/timeline_view.png" /></p>
+src="../images/timeline_view.png" /></p>
 </div>
 
 <h3>Edition des animations</h3>

@@ -8,7 +8,7 @@
   &#xf0;&#xf3;&#xea;&#xee;&#xe2;&#xee;&#xe4;&#xf1;&#xf2;&#xe2;&#xee;
   &#xef;&#xee;&#xeb;&#xfc;&#xe7;&#xee;&#xe2;&#xe0;&#xf2;&#xe5;&#xeb;&#xff;
   Amaya</title>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
   </style>
@@ -518,11 +518,8 @@ href="Configure.html.ru">конфигурировать домашнюю страницу</a>) или страница
     руссифицированного Amaya и его документация</a></li>
 </ul>
 <hr />
-<address>
-  <a href="mailto:vatton@w3.org">I. Vatton</a>
-</address>
 
-<p class="policyfooter"><small>Copyright &nbsp;©&nbsp; 1994-2003 <a
+<p class="policyfooter"><small>Copyright  ©  1994-2005 <a
 href="http://www.inria.fr/">INRIA</a> and <a
 href="http://www.w3.org/">W3C</a><sup>®</sup>(<a
 href="http://www.lcs.mit.edu/">MIT</a>, <a

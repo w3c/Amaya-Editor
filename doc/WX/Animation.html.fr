@@ -6,26 +6,23 @@
   <title>Graphiques et Animation SMIL</title>
   <meta http-equiv="Content-Type"
   content="application/xhtml+xml; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
-  />
+  <meta name="generator" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="fr" lang="fr">
 
-<div id="page_body" xml:lang="fr" lang="fr">
-
 <div>
-<img alt="W3C" src="../images/w3c_home" /><img alt="Amaya"
-src="../../resources/icons/22x22/logo.png" />
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" />
 
-<p><a href="SVG.html.fr" accesskey="p"><img alt="previous"
+<p class="nav"><a href="SVG.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
 accesskey="t"><img alt="top" src="../../resources/icons/misc/up.png" /></a>
 <a href="Xml.html.fr" accesskey="n"><img alt="next"
 src="../../resources/icons/misc/right.png" /></a></p>
 </div>
 
+<div id="page_body" xml:lang="fr" lang="fr">
 <h2>Graphiques et Animation SMIL</h2>
 
 <p>SVG représente l'animation comme des éléments intermédiaires dans la
@@ -65,7 +62,7 @@ s'arrête et la couleur de la barre reflète le type d'animation :</p>
 </ul>
 
 <p class="figure"><img alt="Animation view"
-src="//home/vatton/Amaya/doc/images/timeline_view.png" /></p>
+src="../images/timeline_view.png" /></p>
 </div>
 
 <h3>Edition des animations</h3>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Changer la structure</title>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -17,11 +17,11 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Selecting.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="Creating.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
+      <td><p><a href="Selecting.html.fr" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html.fr"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="Creating.html.fr" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -34,9 +34,8 @@
 </div>
 
 <p>Amaya vous permet ce créer de nouveaux documents locaux ou distants. Trois
-types de documents sont disponibles&nbsp;: <a
-href="../../../../../domenon/carcone/w3c/Amaya/doc/amaya/Creating.html.fr#Creating">XHTML</a>,
-<a href="Math.html.fr#Math">MathML</a> ou <a href="SVG.html.fr">SVG.</a></p>
+types de documents sont disponibles : <a href="HTML.html.fr">XHTML</a>, <a
+href="Math.html.fr#Math">MathML</a> ou <a href="SVG.html.fr">SVG.</a></p>
 
 <p>Pour créer un document, aller sur l'entrée <strong>Nouveau</strong> du
 menu <strong>Fichier</strong> et sélectionner le type de document désiré.

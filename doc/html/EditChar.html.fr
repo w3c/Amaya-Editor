@@ -18,11 +18,11 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Attributes.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="Changing.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
+      <td><p><a href="Attributes.html.fr" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html.fr"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="Changing.html.fr" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -39,11 +39,10 @@ système.</p>
 certains caractères non disponibles au clavier comme :</p>
 <ul>
   <li>Pour obtenir un espace non sécable, vous devez taper <code>Control -
-    espace</code>. 
-    <p>Ce caractère sera <a
-    href="http://jigedit.w3.org/ivatton/WWW/Amaya/User/Browsing.html.fr#entite">sauvé
-    comme une entité</a> (<code>&amp;nbsp;</code>) et est visualisé dans la
-    vue source avec le caractère coloré suivant : <span
+    espace</code>.
+    <p>Ce caractère sera <a href="Browsing.html.fr#entite">sauvé comme une
+    entité</a> (<code>&amp;nbsp;</code>) et est visualisé dans la vue source
+    avec le caractère coloré suivant : <span
     style="color: #008BB2">~</span></p>
   </li>
   <li>Pour obtenir un &euro; (euro), vous devez taper <code>Alt -
@@ -731,12 +730,5 @@ elle pourra être appliquée dès qu'on lancera le serveur X.</p>
 <p></p>
 <hr />
 </div>
-
-<p></p>
-<address>
-  <a href="mailto:vatton@w3.org">Irène Vatton</a><br />
-  <br />
-
-</address>
 </body>
 </html>

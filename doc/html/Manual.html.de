@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -5,8 +6,7 @@
   <meta http-equiv="Content-Type"
   content="application/xhtml+xml; charset=iso-8859-1" />
   <title>Amaya Benutzerhandbuch</title>
-  <meta name="GENERATOR"
-  content="amaya 8.7-pre, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
   </style>
@@ -506,11 +506,11 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
 </ul>
 <hr />
 <address>
-  <a href="mailto:vatton@w3.org">I. Vatton</a> Originalfassung, <a
+  <strong>I. Vatton</strong> Originalfassung, <a
   href="mailto:rudolf.troeller@dwd.de">R. Tröller</a> deutsche Übersetzung
 </address>
 
-<p><small>Copyright 2000-2003 <a href="http://www.inria.fr/">INRIA</a> and <a
+<p><small>Copyright 2000-2005 <a href="http://www.inria.fr/">INRIA</a> and <a
 href="http://www.w3.org/">W3C</a> (<a href="http://www.lcs.mit.edu/">MIT</a>,
 <a href="http://www.ercim.org/">ERCIM</a>, <a
 href="http://www.keio.ac.jp/">Keio</a>), alle Rechte vorbehalten. Die

@@ -156,9 +156,6 @@ et comment les utiliser.</a></p>
     qui doit être fait...)</a></li>
 </ul>
 <hr />
-<address>
-  <a href="mailto:irene.vatton@inrialpes.fr">I. Vatton</a>
-</address>
 
 <p class="policyfooter"><small>Copyright  ©  1994-2005 <a
 href="http://www.inria.fr/">INRIA</a> and <a

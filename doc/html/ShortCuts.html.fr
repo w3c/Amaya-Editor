@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Raccourcis clavier</title>
-  <meta name="GENERATOR"
-  content="amaya 9.0-pre, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -202,12 +201,5 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
 /></a><a href="Manual.html.fr"><img alt="top" src="../images/up.gif" /></a>
 <a href="Access.html.fr"><img alt="next" src="../images/right.gif" /></a></p>
 <hr />
-<address>
-  <a href="mailto:vatton@w3.org">Irène Vatton</a><br />
-  <br />
-
-</address>
-
-<p></p>
 </body>
 </html>
