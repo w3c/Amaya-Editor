@@ -1757,7 +1757,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   int                 width, breakWidth;
   int                 boxLength, nSpaces;
   int                 newIndex, wordWidth;
-  int                 xi;
+  int                 xi, floatWidth;
   int                 maxLength, minWidth;
   ThotBool            still;
   ThotBool            toCut;
@@ -1771,6 +1771,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   still = FALSE;
   minWidth = 0;
   wordWidth = 0;
+  floatWidth = 0;
   xi = 0;
   ascent = 0;
   descent = 0;
@@ -1849,8 +1850,9 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	      ResizeWidth (pNextBox, pBlock, NULL,
 			   pLine->LiXMax - pNextBox->BxWidth, 0, 0, 0, frame);
 	    }
-	  else if (pNextBox->BxWidth >  pLine->LiXMax - xi &&
+	  else if (pNextBox->BxWidth > pLine->LiXMax - xi &&
 		   (floatL || floatR))
+	    /* check if the line could be moved under floating boxes */
 	    InitLine (pLine, pBlock, indent, *floatL, *floatR, pNextBox, xAbs, yAbs);
 	}
       if (pNextBox->BxAbstractBox->AbFloat != 'N' ||
@@ -1861,7 +1863,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	  if (pNextBox->BxAbstractBox->AbFloat != 'N')
 	    {
 	      /* skip over the box */
-	      minWidth += pNextBox->BxWidth;
+	      floatWidth += pNextBox->BxWidth;
 	      lastbox = pNextBox;
 	      pNextBox = GetNextBox (lastbox->BxAbstractBox);
 	      if (lastbox == pLine->LiFirstBox)
@@ -1917,15 +1919,6 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	  else
 	    {
 	      found = FALSE;
-	      if (pNextBox->BxType == BoBlock ||
-		  pNextBox->BxType == BoFloatBlock ||
-		  pNextBox->BxType == BoTable)
-		wordWidth = pNextBox->BxMinWidth;
-	      else if (!pNextBox->BxAbstractBox->AbWidth.DimIsPosition &&
-		       pNextBox->BxAbstractBox->AbHorizEnclosing &&
-		       (pNextBox->BxAbstractBox->AbWidth.DimAbRef == NULL ||
-			!IsParentBox (pNextBox->BxAbstractBox->AbWidth.DimAbRef->AbBox, pNextBox)))
-		wordWidth = pNextBox->BxWidth;
 	    }
 	   
 	  if (found && width + xi <= pLine->LiXMax)
@@ -1956,6 +1949,20 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	  else if (pNextBox->BxWidth + xi <= pLine->LiXMax)
 	    {
 	      /* the whole box can be inserted in the line */
+	      if (pNextBox->BxType == BoBlock ||
+		  pNextBox->BxType == BoFloatBlock ||
+		  pNextBox->BxType == BoTable)
+		wordWidth = pNextBox->BxMinWidth;
+	      else if (!pNextBox->BxAbstractBox->AbWidth.DimIsPosition &&
+		       pNextBox->BxAbstractBox->AbHorizEnclosing &&
+		       (pNextBox->BxAbstractBox->AbWidth.DimAbRef == NULL ||
+			!IsParentBox (pNextBox->BxAbstractBox->AbWidth.DimAbRef->AbBox, pNextBox)))
+		  {
+			  if (pNextBox->BxWidth < pLine->LiXMax)
+		wordWidth = pNextBox->BxWidth;
+			  else
+		wordWidth = pLine->LiXMax;
+		  }
 	      pBox = pNextBox;
 	      xi += pNextBox->BxWidth;
 	      if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
@@ -1990,9 +1997,6 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	minWidth = wordWidth;
       wordWidth = 0;
     }
-  /* compare different word widths */
-  if (!toCut && minWidth < wordWidth)
-    minWidth = wordWidth;
 
   if (toCut)
     {
@@ -2258,7 +2262,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   /* Calcule la hauteur et la base de la ligne */
   pLine->LiHeight = descent + ascent;
   pLine->LiHorizRef = ascent;
-  return (minWidth);
+  return (minWidth + floatWidth);
 }
 
 
