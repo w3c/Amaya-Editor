@@ -144,9 +144,5 @@ SOURCE=..\..\libpng\pngwtran.c
 
 SOURCE=..\..\libpng\pngwutil.c
 # End Source File
-# Begin Source File
-
-SOURCE=..\zlib.lib
-# End Source File
 # End Target
 # End Project

@@ -562,9 +562,5 @@ SOURCE=..\..\..\Libwww\Modules\Expat\Xmltok\xmlrole.c
 
 SOURCE=..\..\..\Libwww\Modules\Expat\Xmltok\xmltok.c
 # End Source File
-# Begin Source File
-
-SOURCE=..\zlib.lib
-# End Source File
 # End Target
 # End Project

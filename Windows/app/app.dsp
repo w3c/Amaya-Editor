@@ -107,9 +107,5 @@ SOURCE=..\..\batch\parser.c
 
 SOURCE=..\..\batch\writeapp.c
 # End Source File
-# Begin Source File
-
-SOURCE=..\LibThotKernel.lib
-# End Source File
 # End Target
 # End Project

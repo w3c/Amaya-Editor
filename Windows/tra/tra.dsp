@@ -103,9 +103,5 @@ SOURCE=..\..\batch\tra.c
 
 SOURCE=..\..\batch\writetra.c
 # End Source File
-# Begin Source File
-
-SOURCE=..\LibThotKernel.lib
-# End Source File
 # End Target
 # End Project

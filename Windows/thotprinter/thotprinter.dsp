@@ -119,9 +119,5 @@ SOURCE=..\..\thotlib\view\psdisplay.c
 
 SOURCE=..\..\Amaya\styleparser.c
 # End Source File
-# Begin Source File
-
-SOURCE=..\printlib.lib
-# End Source File
 # End Target
 # End Project
