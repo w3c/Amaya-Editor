@@ -160,7 +160,8 @@ STRUCT
 {***   only 25 attributes can be declared...
 		maxsize; minsize; largeop; movablelimits;
 ***}
-		accent; lquote; rquote; linethickness;
+		accent;
+	        lquote; rquote; linethickness;
 		scriptlevel = TEXT;
 		scriptsizemultiplier = TEXT;
 		scriptminsize = TEXT;
@@ -176,6 +177,7 @@ STRUCT
 		align = TEXT;
 		rowalign = TEXT;
 		columnalign = TEXT;
+		columnwidth = TEXT;
 		groupalign = TEXT;
 		alignmentscope = TEXT;
 		rowspacing = TEXT;
@@ -315,9 +317,9 @@ STRUCT
 	  (ATTR align = TEXT;
 		rowalign = TEXT;
 		columnalign = TEXT;
+		columnwidth = TEXT;
 		groupalign = TEXT;
 		alignmentscope = TEXT;
-		columnwidth = TEXT;
 		rowspacing = TEXT;
 		columnspacing = TEXT;
 		rowlines = TEXT	; 

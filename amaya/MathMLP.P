@@ -3363,7 +3363,7 @@ RULES
         HorizRef: * . Top;
         VertPos : Top = Enclosing . Top;
         Width: 2 px;
-        Height: 1 px;
+        Height: 1 px;   {***** should be 0 }
         FillPattern: nopattern;
         END;
 
@@ -3538,7 +3538,7 @@ RULES
 	Width: 1 px;   {***** should be 0 }
 	Height: 1 px;  {***** should be 0 }
 	HorizRef: * . Bottom;
-	IN Structure_view
+	IN Structure_view 
 		Visibility: 0;
 	END;
 
@@ -3548,8 +3548,8 @@ RULES
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
-		VertPos: Top =  Previous AnyBox . Bottom;
-		Width: Enclosing . Width;
+		VertPos: Top =  Previous . Bottom;
+		Height: 1 pt;   {***** should be 0 }
 		END;
 	END;
 
@@ -3626,7 +3626,7 @@ RULES
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Top;
-		Height: 1 pt;
+		Height: 1 pt;   {***** should be 0 }
 		END;
 	END;
 

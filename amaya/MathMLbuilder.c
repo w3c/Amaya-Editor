@@ -2677,7 +2677,8 @@ void MathMLSpacingAttr (doc, el, value, attr)
 
   /* provisionally, handles only mspace elements */
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum != MathML_EL_MSPACE)
+  if (elType.ElTypeNum != MathML_EL_MSPACE &&
+      elType.ElTypeNum != MathML_EL_MPADDED)
      return;
   switch (attr)
     {
