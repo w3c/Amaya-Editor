@@ -30,6 +30,15 @@
 #ifdef _WINDOWS
 #include "winsys.h"
 #include "wininclude.h"
+
+#ifdef WM_MOUSELAST
+#ifndef WM_MOUSEWHEEL
+#define WM_MOUSEWHEEL WM_MOUSELAST+1 
+    // Message ID for IntelliMouse wheel
+#endif /*WM_MOUSEWHEEL*/
+#endif /*WM_MOUSELAST*/
+
+
 #else /* _WINDOWS */
 #ifndef _GTK
 #define MAX_ARGS 20
@@ -1588,7 +1597,18 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
       }
     return 0L;
 
-  case WM_VSCROLL:
+#ifdef WM_MOUSEWHEEL
+  case WM_MOUSEWHEEL:
+	  {
+         short int ydelta;
+		 
+		 ydelta = - (HIWORD (wParam));
+		 VerticalScroll (frame, ydelta, 1);
+	  }
+    return 0L;
+#endif /*WM_MOUSEWHEEL*/
+
+   case WM_VSCROLL:
     WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
     return 0L;
 
