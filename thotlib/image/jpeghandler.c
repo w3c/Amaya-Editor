@@ -25,7 +25,7 @@
 
 struct my_error_mgr
   {
-     struct jpeg_error_mgr pub;            	/* "public" fields */
+     struct jpeg_error_mgr pub;	/* "public" fields */
      jmp_buf             setjmp_buffer;		/* for return to caller */
   };
 
@@ -204,6 +204,7 @@ void                JpegPrintErrorMsg (int ErrorNumber)
 #else  /* __STDC__ */
 void                JpegPrintErrorMsg (ErrorNumber)
 int                 ErrorNumber;
+
 #endif /* __STDC__ */
 {
 }
@@ -216,13 +217,14 @@ ThotBitmap          JpegCreate (char *fn, PictureScaling pres, int *xif, int *yi
 #else  /* __STDC__ */
 ThotBitmap          JpegCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 char               *fn;
-PictureScaling           pres;
+PictureScaling      pres;
 int                *xif;
 int                *yif;
 int                *wif;
 int                *hif;
 unsigned long       BackGroundPixel;
 ThotBitmap         *mask1;
+
 #endif /* __STDC__ */
 {
    int                 w, h;
@@ -265,7 +267,7 @@ void                JpegPrint (char *fn, PictureScaling pres, int xif, int yif, 
 #else  /* __STDC__ */
 void                JpegPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
 char               *fn;
-PictureScaling           pres;
+PictureScaling      pres;
 int                 xif;
 int                 yif;
 int                 wif;
@@ -276,6 +278,7 @@ int                 PicWArea;
 int                 PicHArea;
 int                 fd;
 unsigned long       BackGroundPixel;
+
 #endif /* __STDC__ */
 {
    int                 delta;
@@ -353,7 +356,7 @@ unsigned long       BackGroundPixel;
 	       break;
 	 }
 
-  wim = w;
+   wim = w;
    /*him = h; */
 
 
@@ -397,6 +400,7 @@ boolean             IsJpegFormat (char *fn)
 #else  /* __STDC__ */
 boolean             IsJpegFormat (fn)
 char               *fn;
+
 #endif /* __STDC__ */
 {
    /*JSAMPROW buffer[1]; *//* row pointer array for read_scanlines */

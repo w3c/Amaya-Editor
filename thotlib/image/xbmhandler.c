@@ -25,42 +25,43 @@ Drawable            XbmCreate (char *fn, PictureScaling pres, int *xif, int *yif
 #else  /* __STDC__ */
 Drawable            XbmCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 char               *fn;
-PictureScaling           pres;
+PictureScaling      pres;
 int                *xif;
 int                *yif;
 int                *wif;
 int                *hif;
 unsigned long       BackGroundPixel;
 Drawable           *mask1;
+
 #endif /* __STDC__ */
 {
-  Pixmap              pix;
+   Pixmap              pix;
 
 #ifdef NEW_WILLOWS
-  return (Drawable)None;
+   return (Drawable) None;
 #else  /* NEW_WILLOWS */
-  int                 status;
-  int                 w, h;
-  Pixmap              bitmap;
-  int                 xHot, yHot;
+   int                 status;
+   int                 w, h;
+   Pixmap              bitmap;
+   int                 xHot, yHot;
 
-  *mask1 = None;
+   *mask1 = None;
 
-  status = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &w, &h, &bitmap, &xHot, &yHot);
-  if (status != BitmapSuccess)
-    return (Drawable)None;
-  else
-    {
-      *xif = 0;
-      *yif = 0;
-      *wif = w;
-      *hif = h;
-      
-      pix = XCreatePixmap (TtDisplay, TtRootWindow, w, h, DefaultDepth (TtDisplay, DefaultScreen (TtDisplay)));
-      XCopyPlane (TtDisplay, bitmap, pix, GCpicture, 0, 0, w, h, 0, 0, 1);
-      XFreePixmap (TtDisplay, bitmap);
-      return pix;
-    }
+   status = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &w, &h, &bitmap, &xHot, &yHot);
+   if (status != BitmapSuccess)
+      return (Drawable) None;
+   else
+     {
+	*xif = 0;
+	*yif = 0;
+	*wif = w;
+	*hif = h;
+
+	pix = XCreatePixmap (TtDisplay, TtRootWindow, w, h, DefaultDepth (TtDisplay, DefaultScreen (TtDisplay)));
+	XCopyPlane (TtDisplay, bitmap, pix, GCpicture, 0, 0, w, h, 0, 0, 1);
+	XFreePixmap (TtDisplay, bitmap);
+	return pix;
+     }
 #endif /* !NEW_WILLOWS */
 }
 
@@ -73,7 +74,7 @@ void                XbmPrint (char *fn, PictureScaling pres, int xif, int yif, i
 #else  /* __STDC__ */
 void                XbmPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
 char               *fn;
-PictureScaling           pres;
+PictureScaling      pres;
 int                 xif;
 int                 yif;
 int                 wif;
@@ -84,6 +85,7 @@ int                 PicWArea;
 int                 PicHArea;
 int                 fd;
 unsigned int        BackGroundPixel;
+
 #endif /* __STDC__ */
 {
 #ifdef NEW_WILLOWS
@@ -153,8 +155,8 @@ unsigned int        BackGroundPixel;
    if (pix != None)
      {
 	pict = XGetImage (TtDisplay, pix, xtmp, ytmp,
-			(unsigned int) PicWArea, (unsigned int) PicHArea,
-			AllPlanes, XYPixmap);
+			  (unsigned int) PicWArea, (unsigned int) PicHArea,
+			  AllPlanes, XYPixmap);
 
 	wim = pict->width;
 	him = pict->height;
@@ -163,7 +165,7 @@ unsigned int        BackGroundPixel;
 
 	nbb = (wim + 7) / 8;
 	if (ImageByteOrder (TtDisplay) == LSBFirst)
-	   LittleXBigEndian((unsigned char *) pict->data, (long) (pict->bytes_per_line * him));
+	   LittleXBigEndian ((unsigned char *) pict->data, (long) (pict->bytes_per_line * him));
 	for (j = 0, pt1 = pict->data; j < him; j++, pt1 += pict->bytes_per_line)
 	  {
 	     for (i = 0, pt = pt1; i < nbb; i++)
@@ -172,7 +174,7 @@ unsigned int        BackGroundPixel;
 	  }
 	fprintf ((FILE *) fd, "grestore\n");
 
-        /* frees the allocated space for the bitmap in memory */ 
+	/* frees the allocated space for the bitmap in memory */
 	XDestroyImage (pict);
 	XFreePixmap (TtDisplay, pix);
      }
@@ -187,6 +189,7 @@ boolean             IsXbmFormat (char *fn)
 #else  /* __STDC__ */
 boolean             IsXbmFormat (fn)
 char               *fn;
+
 #endif /* __STDC__ */
 {
 #ifdef NEW_WILLOWS

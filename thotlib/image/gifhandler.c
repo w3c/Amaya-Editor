@@ -36,7 +36,7 @@
 #define LM_to_uint(a,b)		(((b)<<8)|(a))
 
 struct
-{
+  {
      unsigned int        Width;
      unsigned int        Height;
      unsigned char       ColorMap[3][MAXCOLORMAPSIZE];
@@ -44,19 +44,25 @@ struct
      unsigned int        ColorResolution;
      unsigned int        Background;
      unsigned int        AspectRatio;
-} GifScreen;
+  }
+GifScreen;
 
 struct
-{
+  {
      int                 transparent;
      int                 delayTime;
      int                 inputFlag;
      int                 disposal;
-} Gif89 ={-1, -1, -1, 0};
+  }
+Gif89 =
+{
+   -1, -1, -1, 0
+};
 
 int                 verbose;
 int                 showComment;
-unsigned char       nibMask[8] = {1, 2, 4, 8, 16, 32, 64, 128 };
+unsigned char       nibMask[8] =
+{1, 2, 4, 8, 16, 32, 64, 128};
 int                 ZeroDataBlock = FALSE;
 
 #ifdef __STDC__
@@ -79,6 +85,7 @@ int                 height;
 unsigned char       clmap[3][MAXCOLORMAPSIZE];
 int                 interlace;
 int                 ignore;
+
 #endif /* __STDC__ */
 {
    unsigned char       c;
@@ -91,10 +98,10 @@ int                 ignore;
       **  Initialize the Compression routines
     */
    if (!ReadOK (fd, &c, 1))
-	return (NULL);
+      return (NULL);
 
    if (LWZReadByte (fd, TRUE, c) < 0)
-	return (NULL);
+      return (NULL);
 
    /*
       **  If this is an "uninteresting picture" ignore it.
@@ -107,8 +114,9 @@ int                 ignore;
      }
 
    data = (unsigned char *) TtaGetMemory (sizeof (unsigned char) * len * height);
+
    if (data == NULL)
-	return (NULL);
+      return (NULL);
 
    while ((v = LWZReadByte (fd, FALSE, c)) >= 0)
      {
@@ -155,7 +163,7 @@ int                 ignore;
 		    }
 	       }
 	     else
-		  ++ypos;
+		++ypos;
 	  }
 	if (ypos >= height)
 	   break;
@@ -179,6 +187,7 @@ int                *h;
 int                *ncolors;
 int                *cpp;
 ThotColorStruct     colrs[256];
+
 #endif /* __STDC__ */
 {
    unsigned char       buf[16];
@@ -242,7 +251,7 @@ ThotColorStruct     colrs[256];
    if (BitSet (buf[4], LOCALCOLORMAP))
      {				/* Global Colormap */
 	if (ReadColorMap (fd, GifScreen.BitPixel, GifScreen.ColorMap))
-	  return (NULL);
+	   return (NULL);
 	for (i = 0; i < GifScreen.BitPixel; i++)
 	  {
 
@@ -276,30 +285,30 @@ ThotColorStruct     colrs[256];
    for (;;)
      {
 	if (!ReadOK (fd, &c, 1))
-	  return (NULL);
+	   return (NULL);
 
 	if (c == ';')
 	  {			/* GIF terminator */
 	     if (imageCount < imageNumber)
-	       return (NULL);
+		return (NULL);
 	     break;
 	  }
 
 	if (c == '!')
 	  {			/* Extension */
 	     if (!ReadOK (fd, &c, 1))
-	       return (NULL);
+		return (NULL);
 	     DoExtension (fd, c);
 	     continue;
 	  }
 
 	if (c != ',')
-	  continue;
+	   continue;
 
 	++imageCount;
 
 	if (!ReadOK (fd, buf, 9))
-	  return (NULL);
+	   return (NULL);
 
 	useGlobalColormap = !BitSet (buf[8], LOCALCOLORMAP);
 
@@ -310,7 +319,7 @@ ThotColorStruct     colrs[256];
 	if (!useGlobalColormap)
 	  {
 	     if (ReadColorMap (fd, bitPixel, localColorMap))
-	       return (NULL);
+		return (NULL);
 	     for (i = 0; i < bitPixel; i++)
 	       {
 
@@ -398,6 +407,7 @@ int                 DoExtension (FILE * fd, int label)
 int                 DoExtension (fd, label)
 FILE               *fd;
 int                 label;
+
 #endif /* __STDC__ */
 {
    char                buf[256];
@@ -410,7 +420,7 @@ int                 label;
 	       break;
 	    case 0xfe:		/* Comment Extension */
 	       while (GetDataBlock (fd, (unsigned char *) buf) != 0)
-		 ;
+		  ;
 	       return FALSE;
 	    case 0xf9:		/* Graphic Control Extension */
 	       (void) GetDataBlock (fd, (unsigned char *) buf);
@@ -456,9 +466,9 @@ unsigned char      *buf;
 
    ZeroDataBlock = (count == 0);
    if ((count != 0) && (!ReadOK (fd, buf, count)))
-	return -1;
+      return -1;
    else
-     return count;
+      return count;
 }
 
 /*----------------------------------------------------------------------
@@ -470,6 +480,7 @@ int                 GetCode (fd, code_size, flag)
 FILE               *fd;
 int                 code_size;
 int                 flag;
+
 #endif /* __STDC__ */
 {
    static unsigned char buf[280];
@@ -489,7 +500,7 @@ int                 flag;
    if ((curbit + code_size) >= lastbit)
      {
 	if (done)
-	     return -1;
+	   return -1;
 	buf[0] = buf[last_byte - 2];
 	buf[1] = buf[last_byte - 1];
 
@@ -519,6 +530,7 @@ int                 LWZReadByte (fd, flag, input_code_size)
 FILE               *fd;
 int                 flag;
 int                 input_code_size;
+
 #endif /* __STDC__ */
 {
    static int          fresh = FALSE;
@@ -615,7 +627,7 @@ int                 input_code_size;
 		return -2;	/* stop a code dump */
 	     *sp++ = table[1][code];
 	     if (code == table[0][code])
-	       return (code);
+		return (code);
 	     code = table[0][code];
 	  }
 	*sp++ = firstcode = table[1][code];
@@ -648,6 +660,7 @@ static int          highbit (unsigned long ul)
 #else  /* __STDC__ */
 static int          highbit (ul)
 unsigned long       ul;
+
 #endif /* __STDC__ */
 {
    /*
@@ -670,6 +683,7 @@ int                 highbit16 (unsigned long ul)
 #else  /* __STDC__ */
 int                 highbit16 (ul)
 unsigned long       ul;
+
 #endif /* __STDC__ */
 {
    int                 i;
@@ -1071,14 +1085,15 @@ ThotColorStruct     colrs[256];
    unsigned char      *ptr;
    unsigned char      *ptr2;
    boolean             need_to_dither;
-   
+
    /* find the visual class. */
    if (THOT_vInfo.depth == 1)
-     need_to_dither = TRUE;
+      need_to_dither = TRUE;
    else
-     need_to_dither = FALSE;
+      need_to_dither = FALSE;
 
    Mapping = (int *) TtaGetMemory (num_colors * sizeof (int));
+
 #ifndef NEW_WILLOWS
    for (i = 0; i < num_colors; i++)
      {
@@ -1088,17 +1103,17 @@ ThotColorStruct     colrs[256];
 	tmpcolr.flags = DoRed | DoGreen | DoBlue;
 	if ((THOT_vInfo.class == THOT_TrueColor) ||
 	    (THOT_vInfo.class == THOT_DirectColor))
-	  Mapping[i] = i;
+	   Mapping[i] = i;
 	else if (need_to_dither == TRUE)
 	  {
-	    Mapping[i] = ((tmpcolr.red >> 5) * 11 +
-			  (tmpcolr.green >> 5) * 16 +
-			  (tmpcolr.blue >> 5) * 5) / (65504 / 64);
+	     Mapping[i] = ((tmpcolr.red >> 5) * 11 +
+			   (tmpcolr.green >> 5) * 16 +
+			   (tmpcolr.blue >> 5) * 5) / (65504 / 64);
 	  }
 	else
 	  {
-	    FindOutColor (TtDisplay, TtCmap, &tmpcolr);
-	    Mapping[i] = tmpcolr.pixel;
+	     FindOutColor (TtDisplay, TtCmap, &tmpcolr);
+	     Mapping[i] = tmpcolr.pixel;
 	  }
      }
 #endif /* NEW_WILLOWS */
@@ -1112,107 +1127,107 @@ ThotColorStruct     colrs[256];
      {
 	if (Mapping[0] < Mapping[1])
 	  {
-	    Mapping[0] = 0;
-	    Mapping[1] = 64;
+	     Mapping[0] = 0;
+	     Mapping[1] = 64;
 	  }
 	else
 	  {
-	    Mapping[0] = 64;
-	    Mapping[1] = 0;
+	     Mapping[0] = 64;
+	     Mapping[1] = 0;
 	  }
      }
 
    size = width * height;
    if (size == 0)
-     tmpdata = NULL;
+      tmpdata = NULL;
    else
-     tmpdata = (unsigned char *) TtaGetMemory (size);
+      tmpdata = (unsigned char *) TtaGetMemory (size);
    if (tmpdata == NULL)
      {
-       tmpimage = None;
-       Img = (Pixmap) None;
+	tmpimage = None;
+	Img = (Pixmap) None;
      }
    else
      {
-       ptr = image_data;
-       ptr2 = tmpdata;
-       
-       if (need_to_dither == TRUE)
-	 {
-	   int                 cx, cy;
-	   
-	   for (ptr2 = tmpdata, ptr = image_data;
-		ptr2 < tmpdata + (size - 1); ptr2++, ptr++)
-	     {
-	       *ptr2 = Mapping[(int) *ptr];
-	     }
-	   
-	   ptr2 = tmpdata;
-	   for (cy = 0; cy < height; cy++)
-	     {
-	       for (cx = 0; cx < width; cx++)
-		 {
-		   /* Assume high numbers are really negative. */
-		   if (*ptr2 > 128)
-		     *ptr2 = 0;
-		   else if (*ptr2 > 64)
-		     *ptr2 = 64;
-		   
-		   /* Traditional Floyd-Steinberg */
-		   if (*ptr2 < 32)
-		     {
-		       delta = *ptr2;
-		       *ptr2 = Black_Color;
-		     }
-		   else
-		     {
-		       delta = *ptr2 - 64;
-		       *ptr2 = White_Color;
-		     }
-		   if ((not_right_col = (cx < (width - 1))))
-		     *(ptr2 + 1) += delta * 7 >> 4;
-		   
-		   if ((not_last_row = (cy < (height - 1))))
-		     (*(ptr2 + width)) += delta * 5 >> 4;
-		   
-		   if (not_right_col && not_last_row)
-		     (*(ptr2 + width + 1)) += delta >> 4;
-		   
-		   if (cx && not_last_row)
-		     (*(ptr2 + width - 1)) += delta * 3 >> 4;
-		   ptr2++;
-		 }
-	     }
-	 }
-       else
-	 {
-	   for (i = 0; i < size; i++)
-	     {
-	       *ptr2++ = (unsigned char) Mapping[(int) *ptr];
-	       ptr++;
-	     }
-	 }
-       tmpimage = MakeImage (TtDisplay, tmpdata, width, height, TtWDepth, colrs);
-       TtaFreeMemory (tmpdata);
-       Img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
+	ptr = image_data;
+	ptr2 = tmpdata;
+
+	if (need_to_dither == TRUE)
+	  {
+	     int                 cx, cy;
+
+	     for (ptr2 = tmpdata, ptr = image_data;
+		  ptr2 < tmpdata + (size - 1); ptr2++, ptr++)
+	       {
+		  *ptr2 = Mapping[(int) *ptr];
+	       }
+
+	     ptr2 = tmpdata;
+	     for (cy = 0; cy < height; cy++)
+	       {
+		  for (cx = 0; cx < width; cx++)
+		    {
+		       /* Assume high numbers are really negative. */
+		       if (*ptr2 > 128)
+			  *ptr2 = 0;
+		       else if (*ptr2 > 64)
+			  *ptr2 = 64;
+
+		       /* Traditional Floyd-Steinberg */
+		       if (*ptr2 < 32)
+			 {
+			    delta = *ptr2;
+			    *ptr2 = Black_Color;
+			 }
+		       else
+			 {
+			    delta = *ptr2 - 64;
+			    *ptr2 = White_Color;
+			 }
+		       if ((not_right_col = (cx < (width - 1))))
+			  *(ptr2 + 1) += delta * 7 >> 4;
+
+		       if ((not_last_row = (cy < (height - 1))))
+			  (*(ptr2 + width)) += delta * 5 >> 4;
+
+		       if (not_right_col && not_last_row)
+			  (*(ptr2 + width + 1)) += delta >> 4;
+
+		       if (cx && not_last_row)
+			  (*(ptr2 + width - 1)) += delta * 3 >> 4;
+		       ptr2++;
+		    }
+	       }
+	  }
+	else
+	  {
+	     for (i = 0; i < size; i++)
+	       {
+		  *ptr2++ = (unsigned char) Mapping[(int) *ptr];
+		  ptr++;
+	       }
+	  }
+	tmpimage = MakeImage (TtDisplay, tmpdata, width, height, TtWDepth, colrs);
+	TtaFreeMemory (tmpdata);
+	Img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
      }
-   
+
    if ((tmpimage == None) || (Img == (Pixmap) None))
      {
-       if (tmpimage != None)
-	 XDestroyImage (tmpimage);
-       if (Img != (Pixmap) None)
-	 XFreePixmap (TtDisplay, Img);
-       Img = None;
+	if (tmpimage != None)
+	   XDestroyImage (tmpimage);
+	if (Img != (Pixmap) None)
+	   XFreePixmap (TtDisplay, Img);
+	Img = None;
      }
    else
      {
-       XPutImage (TtDisplay, Img, TtGraphicGC, tmpimage, 0, 0, 0, 0, width, height);
-       XDestroyImage (tmpimage);
+	XPutImage (TtDisplay, Img, TtGraphicGC, tmpimage, 0, 0, 0, 0, width, height);
+	XDestroyImage (tmpimage);
      }
-   
+
    TtaFreeMemory ((char *) Mapping);
-   
+
    return (Img);
 #endif /* NEW_WILLOWS */
 }
@@ -1264,13 +1279,14 @@ ThotBitmap          GifCreate (char *fn, PictureScaling pres, int *xif, int *yif
 #else  /* __STDC__ */
 ThotBitmap          GifCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 char               *fn;
-PictureScaling           pres;
+PictureScaling      pres;
 int                *xif;
 int                *yif;
 int                *wif;
 int                *hif;
 unsigned long       BackGroundPixel;
 ThotBitmap         *mask1;
+
 #endif /* __STDC__ */
 {
    int                 w, h;
@@ -1325,7 +1341,7 @@ ThotBitmap         *mask1;
 	return (ThotBitmap) pixmap;
 
      }
-}			
+}
 
 
 /*----------------------------------------------------------------------
@@ -1336,7 +1352,7 @@ void                GifPrint (char *fn, PictureScaling pres, int xif, int yif, i
 #else  /* __STDC__ */
 void                GifPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
 char               *fn;
-PictureScaling           pres;
+PictureScaling      pres;
 int                 xif;
 int                 yif;
 int                 wif;
@@ -1347,6 +1363,7 @@ int                 PicWArea;
 int                 PicHArea;
 int                 fd;
 unsigned long       BackGroundPixel;
+
 #endif /* __STDC__ */
 {
    int                 delta;
@@ -1382,62 +1399,62 @@ unsigned long       BackGroundPixel;
      }
 
    if (!buffer)
-     return;
+      return;
    PicWArea = w;
    PicHArea = h;
    xtmp = 0;
    ytmp = 0;
    switch (pres)
-     {
-     case RealSize:
-       
-       delta = (wif - PicWArea) / 2;
-       if (delta > 0)
 	 {
-	   xif += delta;
-	   wif = PicWArea;
-	 }
-       else
-	 {
-	   xtmp = -delta;
-	   PicWArea = wif;
-	 }
-       delta = (hif - PicHArea) / 2;
-       if (delta > 0)
-	 {
-	   yif += delta;
-	   hif = PicHArea;
-	 }
-       else
-	 {
-	   
-	   ytmp = -delta;
-	   PicHArea = hif;
-	 }
-       break;
-     case ReScale:
-       if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
-	 {
-	   Scx = (float) wif / (float) PicWArea;
-	   yif += (hif - (PicHArea * Scx)) / 2;
-	   hif = PicHArea * Scx;
-	 }
-       else
-	 {
-	   Scy = (float) hif / (float) PicHArea;
-	   xif += (wif - (PicWArea * Scy)) / 2;
-	   wif = PicWArea * Scy;
-	 }
-       break;
-     case FillFrame:
-       break;
-     default:
-       break;
-     }
+	    case RealSize:
 
-  wim = w;
+	       delta = (wif - PicWArea) / 2;
+	       if (delta > 0)
+		 {
+		    xif += delta;
+		    wif = PicWArea;
+		 }
+	       else
+		 {
+		    xtmp = -delta;
+		    PicWArea = wif;
+		 }
+	       delta = (hif - PicHArea) / 2;
+	       if (delta > 0)
+		 {
+		    yif += delta;
+		    hif = PicHArea;
+		 }
+	       else
+		 {
+
+		    ytmp = -delta;
+		    PicHArea = hif;
+		 }
+	       break;
+	    case ReScale:
+	       if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
+		 {
+		    Scx = (float) wif / (float) PicWArea;
+		    yif += (hif - (PicHArea * Scx)) / 2;
+		    hif = PicHArea * Scx;
+		 }
+	       else
+		 {
+		    Scy = (float) hif / (float) PicHArea;
+		    xif += (wif - (PicWArea * Scy)) / 2;
+		    wif = PicWArea * Scy;
+		 }
+	       break;
+	    case FillFrame:
+	       break;
+	    default:
+	       break;
+	 }
+
+   wim = w;
    /*m = h; */
-   
+
    fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
    fprintf ((FILE *) fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
    fprintf ((FILE *) fd, "\n");
@@ -1467,7 +1484,7 @@ unsigned long       BackGroundPixel;
    fprintf ((FILE *) fd, "\n");
    free (buffer);
 
-}			
+}
 
 /*----------------------------------------------------------------------
    IsGifFormat  checks the header file if it's of a gif file       
@@ -1477,6 +1494,7 @@ boolean             IsGifFormat (char *datafile)
 #else  /* __STDC__ */
 boolean             IsGifFormat (datafile)
 char               *datafile;
+
 #endif /* __STDC__ */
 {
    unsigned char       buf[16];

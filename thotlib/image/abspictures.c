@@ -20,18 +20,18 @@
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static PtrPRule FindImageDescriptor (PtrElement pEl)
+static PtrPRule     FindImageDescriptor (PtrElement pEl)
 
 #else  /* __STDC__ */
-static PtrPRule FindImageDescriptor (pEl)
+static PtrPRule     FindImageDescriptor (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRegle = NULL;
-   PtrPRule        pR = NULL;
-   boolean                new = FALSE;
+   PtrPRule            pRegle = NULL;
+   PtrPRule            pR = NULL;
+   boolean             new = FALSE;
 
    if (pEl->ElFirstPRule == NULL)
      {
@@ -100,13 +100,13 @@ int                 x;
 int                 y;
 int                 w;
 int                 h;
-PictureScaling           presimage;
+PictureScaling      presimage;
 int                 typeimage;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pRegle;
+   PtrPRule            pRegle;
 
    pRegle = FindImageDescriptor (pEl);
    if (pRegle != NULL)
@@ -136,15 +136,15 @@ void                NewImageDescriptor (PtrAbstractBox ppav, char *filename, int
 
 #else  /* __STDC__ */
 void                NewImageDescriptor (ppav, filename, imagetype)
-PtrAbstractBox             ppav;
+PtrAbstractBox      ppav;
 char               *filename;
 int                 imagetype;
 
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pBuffer;
-   PictInfo    *image;
+   PtrTextBuffer       pBuffer;
+   PictInfo           *image;
 
    if (ppav->AbElement->ElTerminal && ppav->AbElement->ElLeafType == LtPicture)
      {
@@ -211,7 +211,7 @@ int                *desc;
 #endif /* __STDC__ */
 
 {
-   PictInfo    *image;
+   PictInfo           *image;
 
    if (desc != NULL)
      {
@@ -238,8 +238,8 @@ int                *Imdsource;
 #endif /* __STDC__ */
 
 {
-   PictInfo    *imagec;
-   PictInfo    *images;
+   PictInfo           *imagec;
+   PictInfo           *images;
 
    imagec = (PictInfo *) Imdcopie;
    images = (PictInfo *) Imdsource;
