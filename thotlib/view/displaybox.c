@@ -40,6 +40,7 @@
 #endif /*_GL*/
 
 #include "stix.h"
+#include "fileaccess.h"
 
 /*----------------------------------------------------------------------
   GetLineWeight computes the line weight of an abstract box.
@@ -107,13 +108,40 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
 	}
     }
 }
-
 #ifdef _WINDOWS
-#define DrawStixIntegral(A,B,C,D,E,F,G,H,I) DrawIntegral(A,B,C,D,E,F,G,H,I) 
-#define DrawStixBrace(A,B,C,D,E,F,G,H,I) DrawBrace(A,B,C,D,E,F,G,H,I)
-#define DrawStixParenthesis(A,B,C,D,E,F,G,H,I) DrawParenthesis(A,B,C,D,E,F,G,H,I)
-#define DrawStixPointyBracket(A,B,C,D,E,F,G,H,I) DrawPointyBracket(A,B,C,D,E,F,G,H,I)
-#define DrawStixBracket(A,B,C,D,E,F,G,H,I) DrawBracket(A,B,C,D,E,F,G,H,I)
+/*----------------------------------------------------------------------
+  WinFontExist : Test existence of a font based on its filename
+  as the Windows API fucntion CreateFont always return a font 
+  even it's not the one we want (win2000)
+  ----------------------------------------------------------------------*/
+ThotBool WinFontExist (char *fontname)
+{
+	static unsigned char Exists = 'D';
+	char filename [MAX_LENGTH];
+
+	if (Exists == 'T')
+		return TRUE;
+	else if (Exists == 'F')
+		return FALSE;
+	else
+	{
+		
+	  GetWindowsDirectory (filename , 1024);  
+	  strcat (filename, "\\fonts\\"); 
+	  strcat (filename, fontname); 
+	  if (TtaFileExist (filename))
+		{
+			Exists = 'T';
+			return TRUE;
+		}
+		else
+		{
+			Exists = 'F';
+			return FALSE;
+		}
+
+	}
+}
 #endif /*_WINDOWS*/
 
 /*----------------------------------------------------------------------
@@ -128,7 +156,8 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
   int                 xd, yd, i, w;
   int                 fg, bg;
   int                 width, height;
-  ThotBool            StixExist;
+  static   ThotBool   StixExist = TRUE;
+
   fg = pBox->BxAbstractBox->AbForeground;
   bg = pBox->BxAbstractBox->AbBackground;
   withbackground = (pBox->BxFill && pBox->BxDisplay);
@@ -136,7 +165,12 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
     {
       font = NULL;
-      GetMathFontFromChar (pBox->BxAbstractBox->AbShape, (void **) &font, pBox->BxFont->FontSize);
+
+#ifdef _WINDOWS
+	if (WinFontExist ("esstix6_.ttf"))
+#endif /*_WINDOWS*/
+	   if (StixExist == TRUE)
+           GetMathFontFromChar (pBox->BxAbstractBox->AbShape, (void **) &font, pBox->BxFont->FontSize);
       if (font == NULL)
 	{
 	  GetFontAndIndexFromSpec (32, pBox->BxFont, &font);

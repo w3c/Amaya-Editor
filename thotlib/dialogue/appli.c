@@ -1628,7 +1628,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
       InitToolTip (ToolBar);	
     
     /* Create status bar  */
-    dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
+    dwStatusBarStyles = WS_CHILD | WS_VISIBLE | CCS_BOTTOM | SBARS_SIZEGRIP;
     StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2);
     ShowWindow (StatusBar, SW_SHOWNORMAL);
     UpdateWindow (StatusBar); 
@@ -1637,7 +1637,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 								 "ClientWndProc", 
 								 NULL,
 								 WS_CHILD | 
-								 WS_CLIPSIBLINGS |
 								 WS_BORDER, 
 								 0, 0, 0, 0,
 				                 hwnd, 
@@ -3424,26 +3423,48 @@ void UpdateScrollbars (int frame)
 #endif /*_GL*/
 #endif /*_GTK*/  
 #else  /* _WINDOWS */
-   GetWindowRect (FrRef[frame], &rWindow);
-   h = rWindow.bottom - rWindow.top;
-   l = rWindow.right - rWindow.left;
+   l = FrameTable[frame].FrWidth;
+   h = FrameTable[frame].FrHeight;
+
    scrollInfo.cbSize = sizeof (SCROLLINFO);
    scrollInfo.fMask  = SIF_PAGE | SIF_POS | SIF_RANGE;
    scrollInfo.nMin   = 0;
 
-   if (width + Xpos <= l) 
-     {
-      scrollInfo.nMax   = l;
+	
+	if (width == l && Xpos == 0 && width > 60)
+	/*hide*/
+	  ShowScrollBar(FrameTable[frame].WdScrollH, SB_CTL, FALSE);
+   else
+     if (width + Xpos <= l)
+       {
+		 /*show*/
+		 ShowScrollBar(FrameTable[frame].WdScrollH, SB_CTL, TRUE);
+	  scrollInfo.nMax   = l;
       scrollInfo.nPage  = width;
-      scrollInfo.nPos   = Xpos;
-      SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);
-     }
-   if (height + Ypos <= h) 
-     {
-      scrollInfo.nMax   = h;
-      scrollInfo.nPage  = height;
-      scrollInfo.nPos   = Ypos;
-      SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
-     }
+      scrollInfo.nPos   = Xpos;	 
+	 SetScrollInfo (FrameTable[frame].WdScrollH, SB_CTL, &scrollInfo, TRUE);	
+       }
+   else
+	   /*show*/
+	  ShowScrollBar(FrameTable[frame].WdScrollH, SB_CTL, FALSE);
+
+   if (height == h && Ypos == 0)
+		/*hide*/
+		ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+   else
+     if (height + Ypos <= h)
+       {
+		 /*show*/
+		ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+		 scrollInfo.nMax   = h;
+		 scrollInfo.nPage  = height;
+         scrollInfo.nPos   = Ypos;
+   SetScrollInfo (FrameTable[frame].WdScrollV, SB_CTL, &scrollInfo, TRUE);
+	 
+       }
+     else
+		 /*show*/
+		ShowScrollBar(FrameTable[frame].WdScrollV, SB_CTL, TRUE);
+
 #endif /* _WINDOWS */
 }

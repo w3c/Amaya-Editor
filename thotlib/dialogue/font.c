@@ -188,7 +188,25 @@ static HFONT WIN_LoadFont (char script, int family, int highlight, int size)
 
    if (script == 'Z')
      sprintf (&lpszFace[0], "Arial Unicode MS");
-     /* sprintf (&lpszFace[0], "Bitsream Cyberbit"); */
+     /* sprintf (&lpszFace[0], "Bitstream Cyberbit"); */
+   else if (script == 'E')
+   {
+	   switch (family)
+   {
+	case 6:
+		sprintf (&lpszFace[0], "esstixsix");
+       break;
+     case 7:
+		 sprintf (&lpszFace[0], "esstixseven");
+		 break;     
+     case 10:
+		 sprintf (&lpszFace[0], "esstixten");
+		 break;
+     default:
+		 break;
+   }
+	highlight = 0;
+   }
 
    switch (highlight)
      {
