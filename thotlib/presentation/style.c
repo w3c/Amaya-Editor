@@ -753,7 +753,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 	}
       else
 	{
-	  switch (pSS->SsAttribute->TtAttr[attrType]->AttrType)
+	  switch (pSS->SsAttribute->TtAttr[attrType - 1]->AttrType)
 	    {
 	    case AtNumAttr:
 	      if (attrVal)
@@ -785,10 +785,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 	      ppRule = &(attrs->ApRefFirstPRule);
 	      break;
 	    case AtEnumAttr:
-	      if (attrVal)
-		sscanf (attrVal, "%d", &val);
-	      else
-		val = 0;
+	      val = (int) attrVal;
 	      if (val)
 		ppRule = &(attrs->ApEnumFirstPRule[val - 1]);
 	      else
