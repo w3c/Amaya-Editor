@@ -101,7 +101,7 @@ static SocketStatus persSockets[SOCK_TABLE_SIZE];
   -------------------------------------------------------------------*/
 #ifndef _WINDOWS
 #ifndef _GTK
-static void *AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
+void *AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
 {
    int                 status;  /* the status result of the libwwww call */
    HTEventType         type  = HTEvent_ALL;	
