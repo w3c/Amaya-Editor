@@ -1598,6 +1598,9 @@ PtrElement         *pSelEl;
 	if (*pSelEl != NULL)
 	  if (!SetReference (pEl, pAttr, *pSelEl, pDoc, pDoc, TRUE, TRUE))
 	    TtaDisplaySimpleMessage (INFO, LIB, TMSG_UNABLE_LINK_NEW_ELEM);
+	  else
+            /* une reference modifiee vaut 10 caracteres saisis */
+            SetDocumentModified (pDoc, TRUE, 10);
 	pCreatedElem = *pSelEl;
 	ret = TRUE;
      }
@@ -1669,6 +1672,8 @@ PtrElement         *pSelEl;
 						pSelDoc, TRUE, TRUE);
 			    if (ret)
 			      {
+		                 /* une reference modifiee vaut 10 caracteres saisis */
+		                 SetDocumentModified (pDoc, TRUE, 10);
 				 if (pEl != NULL)
 				    /* si le lien est une inclusion de document */
 				    /* externe, applique les regles de transmission */

@@ -1261,9 +1261,10 @@ NotifyElement      *event;
   anchor = NULL;
   if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_Anchor)
       anchor = el;
-  else if (elType.ElTypeNum == HTML_EL_STYLE_)
+  else if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_STYLE_)
     {
-      /* read the text in a buffer */
+      /* The pasted element is a STYLE element in the HEAD.
+         Read the text in a buffer */
       child = TtaGetFirstChild (el);
       length = TtaGetTextLength (child);
       value = TtaAllocString (length + 1);
