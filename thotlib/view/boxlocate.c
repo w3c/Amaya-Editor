@@ -1555,7 +1555,11 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
 		{
 		  /* move one line down */
 		  *x = 0;
+#ifdef _GL
+		  *y = pBox->BxClipY + pBox->BxClipH;
+#else /* _GL */
 		  *y = pBox->BxYOrg + pBox->BxHeight;
+#endif /* _GL */
 		  xDelta = 0;
 		  yDelta = h;
 		  found = FALSE;
@@ -1568,7 +1572,11 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
 		      box = pBox->BxAbstractBox->AbEnclosing->AbBox;
 		      while (box->BxType == BoGhost || box->BxType == BoFloatGhost)
 			box = box->BxAbstractBox->AbEnclosing->AbBox;
-		      *x = box->BxXOrg + pLine->LiPrevious->LiRealLength;
+#ifdef _GL
+                      *x = box->BxClipX + pLine->LiXOrg + pLine->LiPrevious->LiRealLength;
+#else /* _GL */
+		      *x = box->BxXOrg + pLine->LiXOrg + pLine->LiPrevious->LiRealLength;
+#endif /* _GL */
 		      yDelta = -2;
 		    }
 		  else
@@ -1576,7 +1584,11 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
 		    *x = max;
 		    yDelta = -h;
 		    }
+#ifdef _GL
+		  *y = pBox->BxClipY;
+#else /* _GL */
 		  *y = pBox->BxYOrg;
+#endif /* _GL */
 		  xDelta = 0;
 		  found = FALSE;
 		}
@@ -1586,14 +1598,30 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
 	    {
 	      /* the box doesn't match, skip it */
 	      if (xDelta > 0)
+#ifdef _GL
+		*x = pBox->BxClipX + pBox->BxClipW;
+#else /* _GL */
 		*x = pBox->BxXOrg + pBox->BxWidth;
+#endif /* _GL */
 	      else if (xDelta < 0)
+#ifdef _GL
+		*x = pBox->BxClipX;
+#else /* _GL */
 		*x = pBox->BxXOrg;
+#endif /* _GL */
 	      
 	      if (yDelta > 0)
-		*y = pBox->BxYOrg + pBox->BxHeight;
+#ifdef _GL
+	        *y = pBox->BxClipY + pBox->BxClipH;
+#else /* _GL */
+	        *y = pBox->BxYOrg + pBox->BxHeight;
+#endif /* _GL */
 	      else if (yDelta < 0)
-		*y = pBox->BxYOrg;
+#ifdef _GL
+	        *y = pBox->BxClipY;
+#else /* _GL */
+	        *y = pBox->BxYOrg;
+#endif /* _GL */
 	      pBox = pSourceBox;
 	    }
 	}
