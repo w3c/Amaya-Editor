@@ -3655,9 +3655,10 @@ static void     Hndl_DefaultExpand (void *userData,
 
 #ifdef EXPAT_PARSER_DEBUG
    int i;
-   printf ("Hndl_DefaultExpand - length = %d - \n", length);
+   printf ("Hndl_DefaultExpand - length = %d - '", length);
    for (i=0; i<length; i++)
        printf ("%c", data[i]);
+   printf ("'\n");
 #endif /* EXPAT_PARSER_DEBUG */
 
    ptr = (unsigned char *) data;

@@ -2864,8 +2864,9 @@ static Document LoadDocument (Document doc, char *pathname,
       docType = docCSS;
       unknown = FALSE;
     }
+
   if (content_type == NULL || content_type[0] == EOS)
-    /* no content type */
+    /* Local document - no content type  */
     {
       /* check file name extension */
       if (isXML)
@@ -2894,6 +2895,20 @@ static Document LoadDocument (Document doc, char *pathname,
 	  unknown = FALSE;
 	  parsingLevel = L_Transitional;
 	}
+     else if (IsMathMLName (pathname))
+	{
+	  docType = docMath;
+	  parsingLevel = L_Other;
+	  isXML = TRUE;
+	  unknown = FALSE;
+	}
+     else if (IsSVGName (pathname))
+	{
+	  docType = docSVG;
+	  parsingLevel = L_Other;
+	  isXML = TRUE;
+	  unknown = FALSE;
+	}
       else if (parsingLevel != L_Other || IsHTMLName (pathname))
 	{
 	  /* it seems to be an HTML document */
@@ -2914,7 +2929,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	strcpy (local_content_type , "text/html");
     }
    else
-     /* the server returned a content type */
+     /* The server returned a content type */
      {
        i = 0;
        while (content_type[i] != URL_SEP && content_type[i] != EOS)
@@ -3311,8 +3326,8 @@ static Document LoadDocument (Document doc, char *pathname,
       else
 	DocumentMeta[newdoc]->initial_url = NULL;
       DocumentMeta[newdoc]->method = (ClickEvent) method;
-      DocumentMeta[newdoc]->xmlformat = isXML;
       DocumentSource[newdoc] = 0;
+      DocumentMeta[newdoc]->xmlformat = isXML;
 
       /* Set character encoding */
       DocumentMeta[newdoc]->charset = NULL;

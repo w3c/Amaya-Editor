@@ -23,10 +23,10 @@ extern ThotBool ImageElement ( Document doc,
                                Element *image );
 extern char *DocImageMimeType ( Document doc );
 extern ThotBool IsHTMLName ( const char *path );
-extern ThotBool IsXMLName ( const char *path );
-extern ThotBool IsUndisplayedName ( const char *path );
 extern ThotBool IsMathMLName ( const char *path );
 extern ThotBool IsSVGName ( const char *path );
+extern ThotBool IsXMLName ( const char *path );
+extern ThotBool IsUndisplayedName ( const char *path );
 extern ThotBool IsCSSName ( const char *path );
 extern ThotBool IsImageName ( const char *path );
 extern ThotBool IsImageType ( const char *type );
@@ -83,10 +83,10 @@ extern ThotBool ImageElement (/* Document doc,
                                  Element *image */);
 extern char *DocImageMimeType (/* Document doc */);
 extern ThotBool IsHTMLName (/* const char *path */);
-extern ThotBool IsXMLName (/* const char *path */);
-extern ThotBool IsUndisplayedName (/* const char *path */);
 extern ThotBool IsMathMLName (/* const char *path */);
 extern ThotBool IsSVGName (/* const char *path */);
+extern ThotBool IsXMLName (/* const char *path */);
+extern ThotBool IsUndisplayedName (/* const char *path */);
 extern ThotBool IsCSSName (/* const char *path */);
 extern ThotBool IsImageName (/* const char *path */);
 extern ThotBool IsImageType (/* const char *type */);

@@ -420,17 +420,16 @@ char *DocImageMimeType (Document doc)
   return (mime_type);
 }
 
-
 /*----------------------------------------------------------------------
   IsHTMLName                                                         
   returns TRUE if path points to an HTML resource.
   ----------------------------------------------------------------------*/
 ThotBool IsHTMLName (const char *path)
 {
-  char              temppath[MAX_LENGTH];
-  char              suffix[MAX_LENGTH];
-  char              nsuffix[MAX_LENGTH];
-  int               i; 
+  char      temppath[MAX_LENGTH];
+  char      suffix[MAX_LENGTH];
+  char      nsuffix[MAX_LENGTH];
+  int       i; 
 
   if (!path)
     return (FALSE);
@@ -487,13 +486,73 @@ ThotBool IsHTMLName (const char *path)
 }
 
 /*----------------------------------------------------------------------
+  IsMathMLName                                                         
+  returns TRUE if path points to an MathML resource.
+  ----------------------------------------------------------------------*/
+ThotBool IsMathMLName (const char *path)
+{
+   char        temppath[MAX_LENGTH];
+   char        suffix[MAX_LENGTH];
+
+   if (!path)
+      return (FALSE);
+
+   strcpy (temppath, path);
+   TtaExtractSuffix (temppath, suffix);
+
+   if (!strcasecmp (suffix, "mml"))
+     return (TRUE);
+   else if (!strcmp (suffix, "gz"))
+     {
+       /* take into account compressed files */
+       TtaExtractSuffix (temppath, suffix);       
+       if (!strcasecmp (suffix, "mml"))
+	 return (TRUE);
+       else
+	 return (FALSE);
+     }
+   else
+     return (FALSE);
+}
+
+/*----------------------------------------------------------------------
+  IsSVGName                                                         
+  returns TRUE if path points to an SVG resource.
+  ----------------------------------------------------------------------*/
+ThotBool IsSVGName (const char *path)
+{
+   char        temppath[MAX_LENGTH];
+   char        suffix[MAX_LENGTH];
+
+   if (!path)
+      return (FALSE);
+
+   strcpy (temppath, path);
+   TtaExtractSuffix (temppath, suffix);
+
+   if (!strcasecmp (suffix, "svg"))
+     return (TRUE);
+   else if (!strcmp (suffix, "gz"))
+     {
+       /* take into account compressed files */
+       TtaExtractSuffix (temppath, suffix);       
+       if (!strcasecmp (suffix, "svg"))
+	 return (TRUE);
+       else
+	 return (FALSE);
+     }
+   else
+     return (FALSE);
+}
+
+/*----------------------------------------------------------------------
   IsXMLName                                                         
   returns TRUE if path points to an XML resource.
   ----------------------------------------------------------------------*/
 ThotBool IsXMLName (const char *path)
 {
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
+   char        temppath[MAX_LENGTH];
+   char        suffix[MAX_LENGTH];
 
    if (!path)
       return (FALSE);
@@ -561,66 +620,6 @@ ThotBool IsUndisplayedName (const char *path)
 	   !strcasecmp (suffix, "tar") ||
 	   !strcasecmp (suffix, "ddl") ||
 	   !strcasecmp (suffix, "o"))
-	 return (TRUE);
-       else
-	 return (FALSE);
-     }
-   else
-     return (FALSE);
-}
-
-/*----------------------------------------------------------------------
-  IsMathMLName                                                         
-  returns TRUE if path points to an MathML resource.
-  ----------------------------------------------------------------------*/
-ThotBool IsMathMLName (const char *path)
-{
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
-
-   if (!path)
-      return (FALSE);
-
-   strcpy (temppath, path);
-   TtaExtractSuffix (temppath, suffix);
-
-   if (!strcasecmp (suffix, "mml"))
-     return (TRUE);
-   else if (!strcmp (suffix, "gz"))
-     {
-       /* take into account compressed files */
-       TtaExtractSuffix (temppath, suffix);       
-       if (!strcasecmp (suffix, "mml"))
-	 return (TRUE);
-       else
-	 return (FALSE);
-     }
-   else
-     return (FALSE);
-}
-
-/*----------------------------------------------------------------------
-  IsSVGName                                                         
-  returns TRUE if path points to an SVG resource.
-  ----------------------------------------------------------------------*/
-ThotBool IsSVGName (const char *path)
-{
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
-
-   if (!path)
-      return (FALSE);
-
-   strcpy (temppath, path);
-   TtaExtractSuffix (temppath, suffix);
-
-   if (!strcasecmp (suffix, "svg"))
-     return (TRUE);
-   else if (!strcmp (suffix, "gz"))
-     {
-       /* take into account compressed files */
-       TtaExtractSuffix (temppath, suffix);       
-       if (!strcasecmp (suffix, "svg"))
 	 return (TRUE);
        else
 	 return (FALSE);

@@ -1279,7 +1279,10 @@ void RestartParser (Document doc, char *localFile,
   /* check if there is an XML declaration with a charset declaration */
   CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &xmlns,
 		  &parsingLevel, &charset, charsetname, &thotType);
-  DocumentMeta[doc]->xmlformat = isXML;
+  if (isXML || IsMathMLName (localFile) || IsSVGName (localFile))
+    DocumentMeta[doc]->xmlformat = TRUE;
+  else
+    DocumentMeta[doc]->xmlformat = FALSE;
 
   /* When the mode was set to browser by a parsing error,
      restore the original mode */
