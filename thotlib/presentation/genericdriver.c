@@ -55,6 +55,7 @@
 
 #include "genericdriver.h"
 #include "changepresent_f.h"
+#include "presentdriver_f.h"
 
 #ifdef __STDC__
 extern void         GetPresentRule (PtrPRule * pRP);
@@ -129,6 +130,7 @@ Document            doc;
    ctxt->drv = &GenericStrategy;
    ctxt->doc = doc;
    ctxt->schema = TtaGetDocumentSSchema (doc);
+   ctxt->destroy = 0;
    CleanGenericContext (ctxt);
    return (ctxt);
 }
@@ -1138,6 +1140,117 @@ int                 extra;
 }
 
 /*
+ * PresRuleRemove : remove an existing presentation rule for a given type
+ *     in a chain if it exists.
+ */
+
+#ifdef __STDC__
+static void     PresRuleRemove (PSchema tsch, GenericContext ctxt,
+				    PRuleType pres, int extra)
+#else  /* __STDC__ */
+static void     PresRuleRemove (tsch, ctxt, pres, extra)
+PSchema             tsch;
+GenericContext      ctxt;
+PRuleType           pres;
+int                 extra;
+
+#endif /* !__STDC__ */
+{
+   /* PtrSSchema   pSchemaStr = (PtrSSchema) ctxt->schema; */
+   PtrPSchema          pSchemaPrs = (PtrPSchema) tsch;
+   PtrPRule           *chain;
+   PtrPRule            cur, prev = NULL;
+   int                 i, j, tmp, nb_ancestors;
+
+   /* first sort the ancestors list */
+   for (i = 0; i < MAX_ANCESTORS; i++)
+      if (ctxt->ancestors[i] == 0)
+	 break;
+   nb_ancestors = i;
+   for (i = 0; i < nb_ancestors; i++)
+      for (j = i + 1; j < nb_ancestors; j++)
+	 if (ctxt->ancestors[i] > ctxt->ancestors[j])
+	   {
+	      tmp = ctxt->ancestors[i];
+	      ctxt->ancestors[i] = ctxt->ancestors[j];
+	      ctxt->ancestors[j] = tmp;
+	      tmp = ctxt->ancestors_nb[i];
+	      ctxt->ancestors_nb[i] = ctxt->ancestors_nb[j];
+	      ctxt->ancestors_nb[j] = tmp;
+	   }
+
+   /*
+    * select the good starting point depending on the context
+    */
+   if (ctxt->box != 0)
+     {
+	chain = BoxRuleInsert (tsch, ctxt);
+     }
+   else if ((ctxt->attr) || (ctxt->class))
+     {
+	chain = PresAttrRuleInsert (tsch, ctxt);
+     }
+   else if (ctxt->type != 0)
+     {
+	chain = &pSchemaPrs->PsElemPRule[ctxt->type - 1];
+     }
+   else
+     {
+	fprintf (stderr, "Internal : invalid Generic Context\n");
+	return;
+     }
+
+   /*
+    * scan the chain of presentation rules looking for an existing
+    * rule for this context and kind of presentation attribute.
+    */
+   cur = *chain;
+   prev = NULL;
+   while (cur != NULL)
+     {
+	/* shortcut : rules are sorted by type and view number and
+	   Functions rules are sorted by number */
+	if ((cur->PrType > pres) ||
+	    ((cur->PrType == pres) && (cur->PrViewNum > 1)) ||
+	    ((cur->PrType == pres) && (pres == PtFunction) &&
+	     (cur->PrPresFunction > extra)))
+	  {
+	     cur = NULL;
+	     break;
+	  }
+	
+	/* check for extra specification in case of function rule */
+	if ((pres == PtFunction) && (cur->PrPresFunction != extra)) {
+	    prev = cur;
+	    cur = cur->PrNextPRule;
+	    continue;
+	}
+
+	/* check this rule */
+	if (TstRuleContext (cur, ctxt, pres))
+	   break;
+
+	/* jump to next and keep track of previous */
+	prev = cur;
+	cur = cur->PrNextPRule;
+     }
+   if (cur == NULL)
+      return;
+
+   /* found, remove it from the chain */
+   if (prev == NULL)
+	*chain = cur->PrNextPRule;
+   else
+	prev->PrNextPRule = cur->PrNextPRule;
+   cur->PrNextPRule = NULL;
+
+   /* Free the PRule */
+   FreePresentRule(cur);
+
+   return;
+}
+
+/*
  * PresRuleSearch : search a presentation rule for a given view
  *     in a chain.
  */
@@ -1867,6 +1980,10 @@ int GenericSet##name(PresentationTarget t, PresentationContext c,	\
     GenericValue   val = /* (GenericValue) - EGP */ v;			\
     PtrPRule   rule;							\
 									\
+    if (cont->destroy) {						\
+        PresRuleRemove(tsch, cont,Pt##genre,0);				\
+	return(0);							\
+    }									\
     rule = PresRuleInsert(tsch, cont,Pt##genre,0);			\
     if (rule == NULL) return(-1);					\
     etoi_convert(rule,val,cont,0);					\
@@ -1898,6 +2015,10 @@ int GenericSet##name(PresentationTarget t, PresentationContext c,	\
     GenericValue   val = /* (GenericValue) - EGP */ v;			\
     PtrPRule   rule;							\
 									\
+    if (cont->destroy) {						\
+        PresRuleRemove(tsch, cont,Pt##genre,category);			\
+	return(0);							\
+    }									\
     rule = PresRuleInsert(tsch, cont,Pt##genre, category);		\
     if (rule == NULL) return(-1);					\
     etoi_convert(rule,val,cont,category);				\
@@ -1933,6 +2054,10 @@ int GenericSet/**/name(t,c,v)						\
     GenericValue   val = (GenericValue) v;				\
     PtrPRule   rule;							\
 									\
+    if (cont->destroy) {						\
+        PresRuleRemove(tsch, cont,Pt/**/genre,0);			\
+	return(0);							\
+    }									\
     rule = PresRuleInsert(tsch, cont,Pt/**/genre, 0);			\
     if (rule == NULL) return(-1);					\
     etoi_convert(rule,val,cont,0);					\
@@ -1947,7 +2072,7 @@ int GenericGet/**/name(t,c,v)						\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
     GenericValue   *val = (GenericValue *) v;				\
-    PtrPRule   rule;						\
+    PtrPRule   rule;							\
 									\
     rule = PresRuleSearch(tsch, cont, Pt/**/genre, 0);			\
     if (rule == NULL) return(-1);					\
@@ -1968,6 +2093,10 @@ int GenericSet/**/name(t,c,v)						\
     GenericValue   val = (GenericValue) v;				\
     PtrPRule   rule;							\
 									\
+    if (cont->destroy) {						\
+        PresRuleRemove(tsch, cont,Pt/**/genre, category);		\
+	return(0);							\
+    }									\
     rule = PresRuleInsert(tsch, cont,Pt/**/genre, category);		\
     if (rule == NULL) return(-1);					\
     etoi_convert(rule,val,cont,category);				\
@@ -2037,6 +2166,9 @@ PresentationValue   v;
    PtrPRule            rule;
    int                 box;
 
+   if (ctxt->destroy) {
+       return(0);
+   }
    BoxRuleInsert (tsch, ctxt);
    box = ctxt->box;
    ctxt->box = 0;
@@ -2086,6 +2218,10 @@ PresentationValue   v;
    PtrPRule            rule;
    int                 cst;
 
+   if (ctxt->destroy) {
+       PresRuleRemove (tsch, ctxt, PtFunction, FnBackgroundPicture);
+       return(0);
+   }
    cst = PresConstInsert (tsch, v.pointer);
    rule = PresRuleInsert (tsch, ctxt, PtFunction, FnBackgroundPicture);
    if (rule == NULL)
@@ -2146,6 +2282,10 @@ int                 GenericSetVPos (PresentationTarget t, PresentationContext c,
    GenericValue        val = /* (GenericValue) - EGP */ v;
    PtrPRule            rule;
 
+   if (cont->destroy) {
+       PresRuleRemove (tsch, cont, PtVertPos, 0);
+       return(0);
+   }
    rule = PresRuleInsert (tsch, cont, PtVertPos, 0);
    if (rule == NULL)
       return (-1);

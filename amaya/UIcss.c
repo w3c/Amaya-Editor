@@ -97,13 +97,13 @@ View                view;
    TtaNewLabel (BaseCSSDialog + CSSLabel, BaseCSSDialog + FormCSS, " CSS ");
    TtaNewSelector (BaseCSSDialog + CSSRName, BaseCSSDialog + FormCSS,
 		   TtaGetMessage (AMAYA, AM_CSS_FILE_2), 1, " ", 3, NULL, FALSE, TRUE);
-   TtaNewSelector (BaseCSSDialog + RPIRList, BaseCSSDialog + FormCSS,
-		   TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_2), 1,
+   TtaNewSelector (BaseCSSDialog + RPILList, BaseCSSDialog + FormCSS,
+		   TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_1), 1,
 		   " ", 5, NULL, FALSE, TRUE);
    TtaNewIconMenu (BaseCSSDialog + RPIActions, BaseCSSDialog + FormCSS, 0,
 		   NULL, 5, opIcons, FALSE);
-   TtaNewSelector (BaseCSSDialog + RPILList, BaseCSSDialog + FormCSS,
-		   TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_1), 1,
+   TtaNewSelector (BaseCSSDialog + RPIRList, BaseCSSDialog + FormCSS,
+		   TtaGetMessage (AMAYA, AM_RULE_LIST_FILE_2), 1,
 		   " ", 5, NULL, FALSE, TRUE);
    TtaNewTextForm (BaseCSSDialog + RPIText, BaseCSSDialog + FormCSS,
 		   "CSS Rule", 70, 3, TRUE);

@@ -48,6 +48,7 @@ typedef struct struct_GenericContext
      PresentationStrategy *drv;	/* pointer to the driver strategy block */
      Document            doc;	/* document number */
      SSchema             schema;	/* associated structure */
+     int                 destroy;/* destructive mode ? */
 
      /*
       * below is the context description.

@@ -1308,8 +1308,7 @@ Document            doc;
 #endif
 {
    PresentationTarget  target;
-   SpecificContextBlock block;
-   PresentationContext context;
+   SpecificContext     context;
    PresentationValue   unused;
    ElementType         elType;
    Element             el;
@@ -1335,24 +1334,18 @@ Document            doc;
    /*
     * create the context of the Specific presentation driver.
     */
-   context = (PresentationContext) & block;
+   context = GetSpecificContext(doc);
+   if (context == NULL) return;
    target = (PresentationTarget) elem;
-   block.drv = &SpecificStrategy;
-   block.doc = doc;
-   block.schema = TtaGetDocumentSSchema (doc);
-
+   if (HTMLStyleParserDestructiveMode) context->destroy = 1;
 
    /*
     * Call the parsor.
     */
-   if (HTMLStyleParserDestructiveMode)
-     {
-	if (context->drv->CleanPresentation != NULL)
-	   context->drv->CleanPresentation (target,
-				     (PresentationContext) context, unused);
-     }
-   else
-      ParseHTMLStyleDecl (target, (PresentationContext) context, attrstr);
+   ParseHTMLStyleDecl (target, (PresentationContext) context, attrstr);
+
+   /* free the context */
+   FreeSpecificContext(context);
 }
 
 /*----------------------------------------------------------------------
@@ -1541,16 +1534,7 @@ PSchema             gPres;
     }
 
   if (attrstr)
-    {
-      if (HTMLStyleParserDestructiveMode)
-	{
-	  if (ctxt->drv->CleanPresentation != NULL)
-	    ctxt->drv->CleanPresentation (target, (PresentationContext) ctxt,
-					  unused);
-	}
-      else
-	ParseHTMLStyleDecl (target, (PresentationContext) ctxt, attrstr);
-    }
+      ParseHTMLStyleDecl (target, (PresentationContext) ctxt, attrstr);
   return (selector);
 }
 
@@ -1580,6 +1564,9 @@ PSchema             gPres;
    ctxt = GetGenericContext (doc);
    if (ctxt == NULL)
       return;
+
+   if (HTMLStyleParserDestructiveMode) ctxt->destroy = 1;
+
    while ((selector != NULL) && (*selector != 0))
       selector = ParseHTMLGenericSelector (selector, attrstr, ctxt,
 					   doc, gPres);

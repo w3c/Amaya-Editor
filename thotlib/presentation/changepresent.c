@@ -2539,7 +2539,7 @@ boolean            remove;
 				  && pAb->AbPictInfo != NULL)
 				{
 				  TtaFreeMemory ((((PictInfo *) (pAb->AbPictInfo))->PicFileName));
-				  FreePictInfo ((PictInfo *) (pAb->AbPictInfo));
+				  FreePictInfo ((int *) (pAb->AbPictInfo));
 				  pAb->AbPictInfo = NULL;
 				}
 			      else if (pRP->PrPresFunction == FnPictureMode

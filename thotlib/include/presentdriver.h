@@ -49,10 +49,13 @@ typedef struct struct_PresentationContext
       *    to a strategy block holding the specific routines
       *    a descriptor for the current document and the
       *    associated schema structure.
+      *    destroy indicate whether the parser will build the
+      *    associated presentation or remove it.
       */
      PtrPresentationStrategy drv;
      Document            doc;	/* document number */
      SSchema             schema;	/* associated structure */
+     int                 destroy;/* destructive mode ? */
 
      /*
       * The end of the block is to be filled with other kind

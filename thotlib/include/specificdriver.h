@@ -42,6 +42,7 @@ typedef struct struct_SpecificContext
      PresentationStrategy *drv;
      Document            doc;
      SSchema             schema;
+     int                 destroy;/* destructive mode ? */
      unsigned long       magic1;
      unsigned long       magic2;
   }

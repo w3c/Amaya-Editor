@@ -65,6 +65,7 @@ Document            doc;
    ctxt->drv = &SpecificStrategy;
    ctxt->doc = doc;
    ctxt->schema = TtaGetDocumentSSchema (doc);
+   ctxt->destroy = 0;
    return (ctxt);
 }
 
@@ -262,6 +263,68 @@ int                 extra;
 }
 
 /*----------------------------------------------------------------------
+   Function used to to remove a specific presentation rule
+   for a given type of rule associated to an element.
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static void  RemoveElementPRule (SpecificTarget el, PRuleType type, int extra)
+#else
+static void  RemoveElementPRule (el, type, extra)
+SpecificTarget      el;
+PRuleType           type;
+int                 extra;
+
+#endif
+{
+    PtrPRule cur, prev;
+    
+    prev = NULL;
+    cur = ((PtrElement) el)->ElFirstPRule;
+
+    while (cur != NULL) {
+	/* shortcut : rules are sorted by type and view number */
+	if ((cur->PrType > type) ||
+	    ((cur->PrType == type) && (cur->PrViewNum > 1)) ||
+	    (((cur->PrType == type) && (type == PRFunction) &&
+	     (cur->PrPresFunction > extra))))
+	  {
+	     cur = NULL;
+	     break;
+	  }
+	
+	/* check for extra specification in case of function rule */
+	if ((type == PRFunction) && (cur->PrPresFunction != extra)) {
+	    prev = cur;
+	    cur = cur->PrNextPRule;
+	    continue;
+	}
+
+	/* check this rule */
+	if (type == cur->PrType)
+	   break;
+
+	/* jump to next and keep track of previous */
+	prev = cur;
+	cur = cur->PrNextPRule;
+    }
+    if (cur == NULL)
+	return;
+
+    /* remove the rule from the chain */
+    if (prev == NULL)
+	((PtrElement) el)->ElFirstPRule = cur->PrNextPRule;
+    else
+	prev->PrNextPRule = cur->PrNextPRule;
+    cur->PrNextPRule = NULL;
+
+    /* Free the PRule */
+    FreePresentRule(cur);
+
+    return;
+}
+
+/*----------------------------------------------------------------------
    Function used to to search all specific presentation rules
    for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
@@ -384,6 +447,10 @@ int SpecificSet##name(PresentationTarget t, PresentationContext c,	\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue val = /* (SpecificValue) - EGP */ v;			\
 									\
+    if (cont->destroy) {						\
+        RemoveElementPRule(el, PR##type, 0);				\
+	return(0);							\
+    }									\
     prule = InsertElementPRule(el, PR##type, 0);			\
     if (prule == NULL) return(-1);					\
     etoi_convert(el, PR##type, val, (PRule)prule, cont->doc, 0);	\
@@ -414,6 +481,10 @@ int SpecificSet##name(PresentationTarget t, PresentationContext c,	\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue val = /* (SpecificValue) - EGP */ v;			\
 									\
+    if (cont->destroy) {						\
+        RemoveElementPRule(el, PR##type, category);			\
+	return(0);							\
+    }									\
     prule = InsertElementPRule(el, PR##type, category);			\
     if (prule == NULL) return(-1);					\
     etoi_convert(el, PR##type, val, (PRule)prule, cont->doc, category);	\
@@ -446,6 +517,10 @@ int SpecificSet/**/name(PresentationTarget t, PresentationContext c,	\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue val = /* (SpecificValue) - EGP */ v;			\
 									\
+    if (cont->destroy) {						\
+        RemoveElementPRule(el, PR/**/type, 0);				\
+	return(0);							\
+    }									\
     prule = InsertElementPRule(el, PR/**/type, 0);			\
     if (prule == NULL) return(-1);					\
     etoi_convert(el, PR/**/type, val, (PRule)prule, cont->doc, 0);	\
@@ -476,6 +551,10 @@ int SpecificSet/**/name(PresentationTarget t, PresentationContext c,	\
     SpecificContext cont = (SpecificContext) c;				\
     SpecificValue val = /* (SpecificValue) - EGP */ v;			\
 									\
+    if (cont->destroy) {						\
+        RemoveElementPRule(el, PR/**/type, category);			\
+	return(0);							\
+    }									\
     prule = InsertElementPRule(el, PR/**/type, category);		\
     if (prule == NULL) return(-1);					\
     etoi_convert(el, PR/**/type, val,(PRule)prule, cont->doc, category);\
@@ -547,6 +626,10 @@ PresentationValue   v;
    int                 cst;
    PSchema             tsch = GetDocumentMainPSchema (ctxt->doc);
 
+   if (ctxt->destroy) {
+       RemoveElementPRule (el, PtFunction, FnBackgroundPicture);
+       return;
+   }
    cst = PresConstInsert (tsch, v.pointer);
    rule = InsertElementPRule (el, PtFunction, FnBackgroundPicture);
    if (rule == NULL)
