@@ -102,12 +102,6 @@ wxString cancelbutton;
   ----------------------------------------------------------------------*/
 InitConfirmDlgWX::~InitConfirmDlgWX()
 {
-  /* when the dialog is destroyed it's important
-     to restore these global variable to default value 
-     because if the user click on X (OnClose callback),
-     the dialog is just destroyed so precedent global stats will be used */
-  UserAnswer = 0;
-  ExtraChoice = 0;
 }
 
 /*----------------------------------------------------------------------

@@ -2567,10 +2567,14 @@ ThotBool CanReplaceCurrentDocument (Document doc, View view)
 	   UserAnswer = FALSE;
 	 }
        else
-	 /* ask if the user wants to save, quit or cancel */
-	 ConfirmError (doc, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED),
-		       TtaGetMessage (AMAYA, AM_DONT_SAVE),
-		       TtaGetMessage (LIB, TMSG_BUTTON_SAVE));
+	{
+	   ExtraChoice = FALSE;
+	   UserAnswer = FALSE;
+           /* ask if the user wants to save, quit or cancel */
+	   ConfirmError (doc, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED),
+		         TtaGetMessage (AMAYA, AM_DONT_SAVE),
+		         TtaGetMessage (LIB, TMSG_BUTTON_SAVE));
+        }
        if (UserAnswer)
 	   SaveDocument (doc, view);
        else if (ExtraChoice)
