@@ -506,11 +506,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
        SaveAsXML = FALSE;
        SaveAsText = TRUE;
      }
-  else if (IsXMLName (pathname) || DocumentMeta[document]->xmlformat ||
-	   (!DocumentMeta[document]->xmlformat && 
-	    (TtaGetDocumentProfile(document) == L_Basic ||
-	     TtaGetDocumentProfile(document) == L_Xhtml11 ||
-	     TtaGetDocumentProfile(document) == L_Strict)))
+  else if (IsXMLName (pathname) || DocumentMeta[document]->xmlformat)
     {
       SaveAsHTML = FALSE;
       SaveAsXML = TRUE;
