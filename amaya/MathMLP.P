@@ -97,6 +97,17 @@ BOXES
 		END;
 	END;
 
+ Prescripts: BEGIN
+        Content: Text 'prescripts';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  NONE_S: BEGIN
 	Content: Text 'none';
 	Visibility: 0;
@@ -927,7 +938,7 @@ RULES
 
    PrescriptPairs:
 	BEGIN
-	CreateBefore(ElementName);
+	CreateBefore(Prescripts);
 	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
 	HorizRef: * . Top;
 	HorizPos: Right = MultiscriptBase . Left;
