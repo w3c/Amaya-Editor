@@ -2089,8 +2089,6 @@ PtrAbstractBox      pNewAbbox;
    pAbbChild->AbShape = 'h';
    pAbbChild->AbGraphAlphabet = 'L';
    pAbbChild->AbVolume = 1;
-   pAbbChild->AbLineWeight = 1;
-   pAbbChild->AbLineWeightUnit = UnPoint;
    pAbbChild->AbCanBeModified = FALSE;
    pAbbChild->AbEnclosing->AbVolume = pAbbChild->AbVolume;
    pAbbChild->AbAcceptLineBreak = FALSE;
@@ -2152,7 +2150,9 @@ PtrAbstractBox      pNewAbbox;
    pAbbChild->AbHighlight = 0;
    pAbbChild->AbUnderline = 0;
    pAbbChild->AbThickness = 0;
-   pAbbChild->AbVisibility = pAbbChild->AbEnclosing->AbVisibility;
+   pAbbChild->AbLineWeight = 1;
+   pAbbChild->AbLineWeightUnit = UnPoint;
+   pAbbChild->AbVisibility = pNewAbbox->AbVisibility;
 }				/* end of ApplPage */
 
 #endif /* __COLPAGE__ */
