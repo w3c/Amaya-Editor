@@ -965,6 +965,14 @@ EXCEPT
 	onkeypress:	EventAttr;
 	onkeydown:	EventAttr;
 	onkeyup:	EventAttr;
+	onload:		EventAttr;
+	onunload:	EventAttr;
+	onfocus:	EventAttr;
+	onblur:		EventAttr;
+	onsubmit:	EventAttr;
+	onreset:	EventAttr;
+	onchange:	EventAttr;
+	onselect:	EventAttr;
 	ID :		CssId;
 	Class:		CssClass;
 	SVG_ImageContent: Hidden;
