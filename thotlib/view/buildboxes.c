@@ -3053,8 +3053,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
       pAb->AbAspectChange || pAb->AbSizeChange)
     {
       /* look at if the box or an enclosing box has a background */
-      if (pAb->AbNew || pAb->AbDead ||
-	  pAb->AbHorizPosChange || pAb->AbVertPosChange)
+      if (pAb->AbHorizEnclosing && pAb->AbVertEnclosing &&
+	  (pAb->AbNew || pAb->AbDead ||
+	   pAb->AbHorizPosChange || pAb->AbVertPosChange))
 	{
 	  pCurrentAb = pParent;
 	  curr = pCurrentAb;
@@ -3078,7 +3079,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		curr = curr->AbEnclosing;
 	    }
 	  if (pCurrentAb == NULL)
-	    /* no background and not parent: clip the current box */
+	    /* no background and no parent: clip the current box */
 	    pCurrentAb = pAb;
 	}
       else
