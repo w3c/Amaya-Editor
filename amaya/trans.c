@@ -1499,9 +1499,11 @@ strNode            *TN;
 	  found = FALSE;
 	  while (!found && ancestor != NULL)
 	    {		/* searching for source element (in current element ancestors) */
-	      found = (!strcmp (ancestor->MatchSymb->SymbolName, 
-				AD->AttrTag)
-		       || !strcmp (ancestor->MatchSymb->Tag, AD->AttrTag));
+	      if (ancestor->MatchSymb != NULL)
+		found = (!strcmp (ancestor->MatchSymb->SymbolName, AD->AttrTag)
+			 || !strcmp (ancestor->MatchSymb->Tag, AD->AttrTag));
+	      else
+		found = (!strcmp (ancestor->Tag, AD->AttrTag));
 	      if (!found)
 		ancestor = ancestor->Parent;
 	    }

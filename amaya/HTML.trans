@@ -145,32 +145,26 @@ Table: DL{(DT|DD)+};
 	DD > TABLE.TBODY.TR:TD;
 	}
 
-Numbered List:TABLE{?CAPTION,?THEAD{(t:TR{(chead:TD|chead2:TH)+})+},(TBODY{(TR{TD,?(TD2:TD)+})+})+,?TFOOT{(tf:TR{(cfoot:TD|cfoot2:TH)+})+}};
+Numbered List:TABLE{?CAPTION,(block:*{(TR{(TD|TH),?(TD2:TD|TH2:TH)+})+})+};
   	{
-	CAPTION > :OL.LI.STRONG;
-	chead > OL:LI;
-	chead2> OL:LI;
-	TBODY > :OL;
+	CAPTION > :P.STRONG;
+	block > :OL;
 	TR > OL:LI;
 	TD > OL.LI:;
+	TH > OL.LI:;
 	TD2 >OL.LI.UL:LI;
-	tf > :OL;	
-	cfoot > OL:LI;
-	cfoot2 > OL:LI;
+	TH2 >OL.LI.UL:LI;
 	}
 
-Bulleted List:TABLE{?CAPTION,?THEAD{(t:TR{(chead:TD|chead2:TH)+})+},TBODY{(TR{TD,?(TD2:TD)+})+},?TFOOT{(tf:TR{(cfoot:TD|cfoot2:TH)+})+}};
+Bulleted List:TABLE{?CAPTION,(block:*{(TR{(TD|TH),?(TD2:TD|TH2:TH)+})+})+};
 	{
-	CAPTION > :UL.LI.STRONG;
-	chead > UL:LI;
-	chead2> UL:LI;
-	TBODY > :UL;
+	CAPTION > :P.STRONG;
+	block > :UL;
 	TR > UL:LI;
 	TD > UL.LI:;
+	TH > UL.LI:;
 	TD2 >UL.LI.UL:LI;
-	tf > :UL;	
-	cfoot > UL:LI;
-	cfoot2 > UL:LI;
+	TH2 >UL.LI.UL:LI;
 	}
 
 ! List transformations
@@ -271,18 +265,29 @@ Horizontal Table : *,*+;
 	*><TABLE border=1>.TR:TD.*;
 	}
 
-Remove Table:TABLE{?CAPTION,?(body:*{(TR{(TD{(?cell_content:*)+}|TH{(?cell_content:*)+})+})+})+};
+Remove Table:TABLE{?CAPTION,?(body:*{(TR{(*{(?cell_content:*)+})+})+})+};
 	{
 	CAPTION>H3;
 	cell_content>:*;
 	}
 
-Transpose Table:TABLE{TBODY{TR{(TD)+}|(TR{td2:TD})+}};
+Transpose Table:TABLE{TBODY{TR{(TD|TH)+}|(TR{td2:TD|th2:TH})+}};
 	{
-	TD><TABLE BORDER=1>:TR.TD;
-	td2><TABLE BORDER=1>.TR:TD;
+	TD><TABLE BORDER=TABLE.BORDER>:TR.TD;
+	TH>TABLE:TR.TD;
+	td2><TABLE BORDER=TABLE.BORDER>.TR:TD;
+	th2>TABLE.TR:TD;
 	}
 
+Heading Cell :?(TD|TH)+,TD,?(TD|TH)+;
+	{
+	TD>:TH;
+	}
+
+Data Cell :?(TD|TH)+,TH,?(TD|TH)+;
+	{
+	TH>:TD;
+	}
 
 !headings to/from definitions
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
