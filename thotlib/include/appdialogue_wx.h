@@ -1,12 +1,14 @@
-#ifdef _WX
 
 #ifndef __APPDIALOGUE_WX_H__
 #define __APPDIALOGUE_WX_H__
 
 #include "constmenu.h"
 
+#ifndef _WINGUI
 /* amaya need to know this function in order to launch callbacks */
 extern void          ThotCallback ( int ref, int typedata, char *data );
+#endif /* _WINGUI */
+#ifdef _WX
 /* amaya need to know thotlib color list in order to setup the dialogs */
 extern int           NumberOfColors ( void );
 extern char *        ColorName ( int num );

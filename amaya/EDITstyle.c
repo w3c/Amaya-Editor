@@ -38,11 +38,12 @@
 #include "styleparser_f.h"
 #ifdef _WINGUI
 #include "wininclude.h"
+#else /* _WINGUI */
+#include "appdialogue_wx.h"
 #endif /* _WINGUI */
 
 #ifdef _WX
   #include "wxdialogapi_f.h"
-  #include "appdialogue_wx.h"
   #include "paneltypes_wx.h"
 #endif /* _WX */
 
