@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,9 +15,7 @@
 
 #define C_PIV_ATTR 1		/* attribute mark */
 #define C_PIV_ASSOC 2		/* associated element mark */
-#define C_PIV_OLD_COMMENT 3	/* old comment mark */	
 #define C_PIV_BEGIN 4		/* contents beginning mark */
-#define C_PIV_COMMENT 5		/* comment mark */
 #define C_PIV_END 6		/* contents ending mark */	
 #define C_PIV_PRESENT 7		/* presentation rule mark */
 #define C_PIV_LANG 8		/* language mark */
@@ -28,7 +26,6 @@
 #define C_PIV_LONG_LABEL 13	/* long (4-byte) numerical label mark */
 #define C_PIV_NATURE 14		/* nature mark */
 #define C_PIV_DOCNAME 15	/* document name mark */
-#define C_PIV_PARAM 16		/* parameter mark */
 #define C_PIV_REFERRED 17	/* referenced element mark */
 #define C_PIV_REFERENCE 18	/* reference mark */
 #define C_PIV_STRUCTURE 19	/* element mark */

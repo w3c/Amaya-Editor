@@ -1,10 +1,9 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
 
 /*
  * Constant declarations for internal representation of documents
@@ -19,7 +18,6 @@
 #ifdef _WINDOWS
 #define MAX_ASSOC_DOC 1  	/* max. number of associated element types for
 				   a document */
-#define MAX_PARAM_DOC 1		/* max. number of parameters for a document */
 #define MAX_NATURES 4		/* max. number of simultaneous natures */
 #define MAX_PSCHEMAS 4		/* max. number of loaded presentation schemas*/
 #define MAX_DOCUMENTS 10	/* max. number of simultaneous documents */
@@ -30,7 +28,6 @@
 #else /* _WINDOWS ---------------------------------- */
 #define MAX_ASSOC_DOC 8  	/* max. number of associated element types for
 				   a document */
-#define MAX_PARAM_DOC 7		/* max. number of parameters for a document */
 #define MAX_NATURES 7		/* max. number of simultaneous natures */
 #define MAX_PSCHEMAS 10		/* max. number of loaded presentation schemas*/
 #define MAX_DOCUMENTS 10	/* max. number of simultaneous documents */

@@ -1,17 +1,8 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
  */
 
 /*
@@ -1496,9 +1487,6 @@ ThotBool		    reDisplay;
    if (pAttr->AeAttrNum == 1)	/* attribut Langue = 1 */
       if (pFirstSel == pDoc->DocRootElement)
 	{
-	   for (i = 1; i <= MAX_PARAM_DOC; i++)
-	      if (pDoc->DocParameters[i - 1] != NULL)
-		 AttachAttrToElem (pAttr, pDoc->DocParameters[i - 1], pDoc);
 	   for (i = 1; i <= MAX_ASSOC_DOC; i++)
 	      if (pDoc->DocAssocRoot[i - 1] != NULL)
 		 AttachAttrToElem (pAttr, pDoc->DocAssocRoot[i - 1], pDoc);

@@ -84,10 +84,6 @@ PtrElement          pEl;
 	     for (j = 0; j < MAX_ASSOC_DOC; j++)
 		if (pDoc->DocAssocRoot[j] == pE)
 		   return pDoc;
-	     /* searches among the parameters */
-	     for (j = 0; j < MAX_PARAM_DOC; j++)
-		if (pDoc->DocParameters[j] == pE)
-		   return pDoc;
 	  }
      }
    return NULL;
@@ -138,7 +134,8 @@ PtrElement          pEl;
    pOther = NULL;
    if (pEl != NULL)
      {
-      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsPairedElement)
+      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
+	                                                      CsPairedElement)
 	 /* check if it's a pair element */
 	 if (pEl->ElOtherPairedEl != NULL)
 	    /* the element already has a pointer to the other element of the
@@ -148,7 +145,8 @@ PtrElement          pEl;
 	   {
 	      /* searches the mark having the same type and number */
 	      pSS = pEl->ElStructSchema;
-	      begin = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrFirstOfPair;
+	      begin = pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
+                                                                SrFirstOfPair;
 	      if (begin)
 		 /* pEl has a begin mark, so we search the end mark */
 		 typeNum = pEl->ElTypeNumber + 1;
@@ -171,7 +169,8 @@ PtrElement          pEl;
 		         the of the element we are searching */
 		      /* it's a hit, if it has the same identifier */
 		      found = (pOther->ElPairIdent == pEl->ElPairIdent ||
-			       (pEl->ElPairIdent == 0 && pOther->ElOtherPairedEl == NULL));
+			       (pEl->ElPairIdent == 0 &&
+				pOther->ElOtherPairedEl == NULL));
 		}
 	      if (found)
 		 /* found it! Now link the two elements */
@@ -1043,98 +1042,6 @@ PtrElement          pNew;
 	  }
 	while (pEl != NULL);
      }
-}
-
-
-/*----------------------------------------------------------------------
-   CreateParameter
-   creates a parameter for the document pointed by pDoc.
-   This parameter is of tyme elemType of the structure scheme pointed
-   by pSSS and belongs to the list of associated elements assocNum.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrElement   CreateParameter (int elemType, PtrSSchema pSS, PtrDocument pDoc, int assocNum)
-#else  /* __STDC__ */
-static PtrElement   CreateParameter (elemType, pSS, pDoc, assocNum)
-int                 elemType;
-PtrSSchema          pSS;
-PtrDocument         pDoc;
-int                 assocNum;
-#endif /* __STDC__ */
-
-{
-
-   int                 par, i;
-   ThotBool            found;
-   PtrElement          pEl;
-
-   PtrElement          pPar;
-   SRule              *pR;
-
-   /* Searches if this parameter has a value for the document */
-   par = 0;
-   found = FALSE;
-   do
-     {
-	if (pDoc->DocParameters[par] != NULL)
-	  {
-	     pPar = pDoc->DocParameters[par];
-	     if (pPar->ElTypeNumber == elemType && pPar->ElStructSchema == pSS)
-		found = TRUE;
-	  }
-	par++;
-     }
-   while (!found && par < MAX_PARAM_DOC);
-   if (found)
-      /* the parameter has a value: the tree pointed by DocParameters[par] */
-      /* we copy this tree */
-     {
-	pEl = CopyTree (pDoc->DocParameters[par - 1], pDoc, assocNum, pSS, pDoc,
-			NULL, TRUE, FALSE);
-
-	/* we protect this copy */
-	if (pEl != NULL)
-	   ProtectElement (pEl);
-     }
-   else
-      /* the parameter has no value. we create a texte element containing
-	 its name enclosed by two '$' characters */
-     {
-	pEl = NewSubtree (CharString + 1, pSS, pDoc, assocNum, TRUE, TRUE,
-			  TRUE, FALSE);
-	if (pEl != NULL)
-	  {
-	    /* change its type: it's not a text */
-	     pEl->ElTypeNumber = elemType;	
-	     /* the element is protected */
-	     pEl->ElIsCopy = TRUE;
-
-	     i = 1;
-	     pR = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
-	     pEl->ElText->BuContent[0] = '$';
-	     do
-	       {
-		  i++;
-		  pEl->ElText->BuContent[i - 1] = pR->SrName[i - 2];
-	       }
-	     while (pEl->ElText->BuContent[i - 1] != EOS && i != THOT_MAX_CHAR);
-	     if (i < THOT_MAX_CHAR)
-	       {
-		  pEl->ElText->BuContent[i - 1] = '$';
-		  i++;
-	       }
-
-	     else
-		pEl->ElText->BuContent[i - 2] = '$';
-	     pEl->ElText->BuContent[i - 1] = EOS;
-	     pEl->ElTextLength = i - 1;
-	     pEl->ElVolume = pEl->ElTextLength;
-	     pEl->ElText->BuLength = i - 1;
-	     pEl->ElLanguage = TtaGetDefaultLanguage ();
-	  }
-
-     }
-   return pEl;
 }
 
 
@@ -2761,9 +2668,12 @@ PtrElement        pEl;
    withLabel tells if one must give the element a new label.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc, int assocNum, ThotBool Desc, ThotBool Root, ThotBool withAttr, ThotBool withLabel)
+PtrElement          NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
+				int assocNum, ThotBool Desc, ThotBool Root,
+				ThotBool withAttr, ThotBool withLabel)
 #else  /* __STDC__ */
-PtrElement          NewSubtree (typeNum, pSS, pDoc, assocNum, Desc, Root, withAttr, withLabel)
+PtrElement          NewSubtree (typeNum, pSS, pDoc, assocNum, Desc, Root,
+				withAttr, withLabel)
 int                 typeNum;
 PtrSSchema          pSS;
 PtrDocument         pDoc;
@@ -2775,270 +2685,271 @@ ThotBool            withLabel;
 #endif /* __STDC__ */
 
 {  
-   PtrElement          pEl, t1, t2;
-   int                 i;
-   ThotBool            gener, create, error;
-   PtrReference        ref;
-   Name                PSchName;
-   SRule              *pSRule;
-   PtrTextBuffer       pBu1;
-   SRule              *pSRule2;
-   PtrSSchema          pExtSSch;
-   SRule              *pExtRule;
+  PtrElement          pEl, t1, t2;
+  int                 i;
+  ThotBool            gener, create, error;
+  PtrReference        ref;
+  Name                PSchName;
+  SRule              *pSRule;
+  PtrTextBuffer       pBu1;
+  SRule              *pSRule2;
+  PtrSSchema          pExtSSch;
+  SRule              *pExtRule;
 
-   if (typeNum == 0)
-      return NULL;
-   pEl = NULL;			/* no element has been (yet) created */
-   if (Root)
-     /* rule specifying the type of element */
-     {
-	error = FALSE;
-	pSRule = &pSS->SsRule[typeNum - 1];
-	if (pSRule->SrConstruct == CsNatureSchema)
-	   /* it's a rule for a nature change, the function will create an element 
-	      having the type of the root of the new nature */
-	  {
-	     if (pSRule->SrSSchemaNat == NULL)
-		/* nature scheme is not loaded */
-		/* so, load it! */
-	       {
-		  PSchName[0] = EOS;
-		  LoadNatureSchema (pSS, PSchName, typeNum);
-		  AddSchemaGuestViews (pDoc, pSRule->SrSSchemaNat);
-	       }
-	     if (pSRule->SrSSchemaNat == NULL)
-		/* could not load the scheme */
-		error = TRUE;
-	     else
-		/* nature scheme is loaded */
-		/* there's an additional object of this nature */
-	       {
-		  /* change the structure scheme */
-		  pSS = pSRule->SrSSchemaNat;
-		  /* type of the root of the new structure scheme */
-		  typeNum = pSS->SsRootElem;
-	       }
-	  }
-	pSRule = &pSS->SsRule[typeNum - 1];
-	if (!error)
-	  {
-	   if (pSRule->SrParamElem)
-	      pEl = CreateParameter (typeNum, pSS, pDoc, assocNum);
-	   else
-	     /* get an element */
-	      GetElement (&pEl);
-	  }
-	if (pEl != NULL)
-	  {
-	     if (typeNum == pSS->SsRootElem)
-		/* we create an element and build it up according to the
-		   root rule of its structure scheme, we increment the counter */
-		pSS->SsNObjects++;
-	     pEl->ElStructSchema = pSS;
-	     pEl->ElTypeNumber = typeNum;
-	     pEl->ElAssocNum = assocNum;
-	     if (withLabel)
-		/* compute the value of the label */
-		ConvertIntToLabel (NewLabel (pDoc), pEl->ElLabel);
-	     /* gives the attributes the default values defined in the structure
-		scheme which specifies the element */
-	     AttachRequiredAttributes (pEl, pSRule, pSS, withAttr, pDoc);
-	     /* updates the attribute values which are imposed */
-	     /* by the extensions of the structure scheme specifying the element */
-	     pExtSSch = pSS->SsNextExtens;
-	     while (pExtSSch != NULL)
-	       {
-		  pExtRule = ExtensionRule (pSS, typeNum, pExtSSch);
-		  if (pExtRule != NULL)
-		     AttachRequiredAttributes (pEl, pExtRule, pExtSSch, withAttr, pDoc);
-		  pExtSSch = pExtSSch->SsNextExtens;
-	       }
-
-	     /* links the blocks specific to the constructor */
-	     switch (pSRule->SrConstruct)
-		   {
-		      case CsReference:
-			 pEl->ElTerminal = TRUE;
-			 pEl->ElLeafType = LtReference;
-			 /* gets a reference descriptor */
-			 GetReference (&ref);
-			 pEl->ElReference = ref;
-			 pEl->ElReference->RdElement = pEl;
-			 break;
-		      case CsPairedElement:
-			 pEl->ElTerminal = TRUE;
-			 pEl->ElLeafType = LtPairedElem;
-			 if (pSRule->SrFirstOfPair)
-			    pDoc->DocMaxPairIdent++;
-			 pEl->ElPairIdent = pDoc->DocMaxPairIdent;
-			 pEl->ElOtherPairedEl = NULL;
-			 break;
-		      case CsBasicElement:
-			 pEl->ElTerminal = TRUE;
-			 switch (pSRule->SrBasicType)
-			       {
-				  case CharString:
-				     CreateTextBuffer (pEl);
-				     pEl->ElLeafType = LtText;
-				     pEl->ElLanguage = TtaGetDefaultLanguage ();
-				     pEl->ElVolume = 0;
-				     pEl->ElTextLength = 0;
-				     break;
-				  case Picture:
-				     CreateTextBuffer (pEl);
-				     pEl->ElLeafType = LtPicture;
-				     pEl->ElVolume = 0;
-				     pEl->ElPictInfo = NULL;
-				     break;
-				  case GraphicElem:
-				     pEl->ElLeafType = LtGraphics;
-				     pEl->ElGraph = EOS;
-				     pEl->ElWideChar = 0;
-				     pEl->ElVolume = 0;
-				     break;
-				  case Symbol:
-				     pEl->ElLeafType = LtSymbol;
-				     pEl->ElGraph = EOS;
-				     pEl->ElWideChar = 0;
-				     pEl->ElVolume = 0;
-				     break;
-				  case PageBreak:
-				     pEl->ElLeafType = LtPageColBreak;
-				     pEl->ElPageType = PgComputed;
-				     pEl->ElPageNumber = 1;
-				     pEl->ElPageNumber = 0;
-				     pEl->ElViewPSchema = 0;
-				     pEl->ElPageModified = FALSE;
-				     pEl->ElAssocHeader = TRUE;
-				     pEl->ElVolume = 10;
-				     break;
-				  case Refer:
-				     break;
-				  default:
-				     break;
-			       }
-			 break;
-		      case CsConstant:
-			 pEl->ElTerminal = TRUE;
-			 CreateTextBuffer (pEl);
-			 /* copies the value of the constant */
-			 i = 0;
-			 pBu1 = pEl->ElText;
-			 do
-			   {
-			      pBu1->BuContent[i] = pSS->SsConstBuffer[i + pSRule->SrIndexConst - 1];
-			      i++;
-			   }
-			 while (pBu1->BuContent[i - 1] != EOS && i < THOT_MAX_CHAR);
-			 pBu1->BuContent[i - 1] = EOS;
-			 pEl->ElTextLength = i - 1;
-			 pEl->ElVolume = pEl->ElTextLength;
-			 pEl->ElText->BuLength = i - 1;
-			 pEl->ElLanguage = TtaGetDefaultLanguage ();
-			 break;
-		      default:
-			 break;
-		   }
-	  }
-     }
-   /* evaluates if the children should be generated */
-   pSRule = &pSS->SsRule[typeNum - 1];
-   if (!Desc || pSRule->SrParamElem)
-      gener = FALSE;
-   else
-     {
-	gener = TRUE;
-	if (pSRule->SrRecursive)
-	  {
-	   /* recursive rule */
-	   if (pSRule->SrRecursDone)
-	      /* rule's already been applied */
-	      gener = FALSE;	/* don't generate its children */
-	   else
-	      /* it's not been yet applied */
-	     /* apply the rule and remember this */
-	      pSRule->SrRecursDone = TRUE;
-	  }
-     }
-   if (gener)
-      /* generate the  according to the constructor of the rule */
-      switch (pSRule->SrConstruct)
+  if (typeNum == 0)
+    return NULL;
+  pEl = NULL;			/* no element has been (yet) created */
+  if (Root)
+    /* rule specifying the type of element */
+    {
+      error = FALSE;
+      pSRule = &pSS->SsRule[typeNum - 1];
+      if (pSRule->SrConstruct == CsNatureSchema)
+	/* it's a rule for a nature change, the function will create an element
+	   having the type of the root of the new nature */
+	{
+	  if (pSRule->SrSSchemaNat == NULL)
+	    /* nature scheme is not loaded */
+	    /* so, load it! */
 	    {
-	       case CsNatureSchema:
-		  /* this case does not happen, we changed */
-		  /* the element's type (cf. here above) */
-		  break;
-	       case CsIdentity:
-		  /* structure is the same as that defined by another rule of the */
-  		  /* same scheme */
-		  create = FALSE;
-		  pSRule2 = &pSS->SsRule[pSRule->SrIdentRule - 1];
-		  if (pSRule2->SrParamElem || pSRule2->SrAssocElem || pSRule2->SrConstruct == CsBasicElement ||
-		  pSRule2->SrNInclusions > 0 || pSRule2->SrNExclusions > 0 ||
-		      pSRule2->SrConstruct == CsConstant || pSRule2->SrConstruct == CsChoice ||
-		      pSRule2->SrConstruct == CsPairedElement ||
-		      pSRule2->SrConstruct == CsReference || pSRule2->SrConstruct == CsNatureSchema)
-		     create = TRUE;
-		  t1 = NewSubtree (pSRule->SrIdentRule, pSS, pDoc, assocNum, Desc,
-				   create, withAttr, withLabel);
-		  if (pEl == NULL)
-		     pEl = t1;
-		  else
-		     InsertFirstChild (pEl, t1);
-		  break;
-	       case CsBasicElement:
-	       case CsConstant:
-	       case CsReference:
-	       case CsPairedElement:
-	       case CsChoice:
-		  break;
-	       case CsList:
-		  t1 = NewSubtree (pSRule->SrListItem, pSS, pDoc, assocNum, Desc,
-				   TRUE, withAttr, withLabel);
-		  if (pEl == NULL)
-		     pEl = t1;
-		  else
-		     InsertFirstChild (pEl, t1);
-		  if (t1 != NULL)
-		     for (i = 2; i <= pSRule->SrMinItems; i++)
-		       {
-			  t2 = NewSubtree (pSRule->SrListItem, pSS, pDoc, assocNum, Desc,
-					   TRUE, withAttr, withLabel);
-			  if (t2 != NULL)
-			    {
-			       InsertElemAfterLastSibling (t1, t2);
-			       t1 = t2;
-			    }
-		       }
-		  break;
-	       case CsAggregate:
-	       case CsUnorderedAggregate:
-		  t1 = NULL;
-		  for (i = 1; i <= pSRule->SrNComponents; i++)
-		     if (!pSRule->SrOptComponent[i - 1])
-			/* don't create the optional components */
-		       {
-			  t2 = NewSubtree (pSRule->SrComponent[i - 1], pSS, pDoc, assocNum, Desc, TRUE,
-					   withAttr, withLabel);
-			  if (t2 != NULL)
-			    {
-			       if (t1 != NULL)
-				  InsertElemAfterLastSibling (t1, t2);
-			       else if (pEl == NULL)
-				  pEl = t2;
-			       else
-				  InsertFirstChild (pEl, t2);
-			       t1 = t2;
-			    }
-		       }
-		  break;
-	       default:
-		  break;
+	      PSchName[0] = EOS;
+	      LoadNatureSchema (pSS, PSchName, typeNum);
+	      AddSchemaGuestViews (pDoc, pSRule->SrSSchemaNat);
+	    }
+	  if (pSRule->SrSSchemaNat == NULL)
+	    /* could not load the scheme */
+	    error = TRUE;
+	  else
+	    /* nature scheme is loaded */
+	    /* there's an additional object of this nature */
+	    {
+	      /* change the structure scheme */
+	      pSS = pSRule->SrSSchemaNat;
+	      /* type of the root of the new structure scheme */
+	      typeNum = pSS->SsRootElem;
+	    }
+	}
+      pSRule = &pSS->SsRule[typeNum - 1];
+      if (!error)
+	/* get an element */
+	GetElement (&pEl);
+      if (pEl != NULL)
+	{
+	  if (typeNum == pSS->SsRootElem)
+	    /* we create an element and build it up according to the root
+	       rule of its structure scheme, we increment the counter */
+	    pSS->SsNObjects++;
+	  pEl->ElStructSchema = pSS;
+	  pEl->ElTypeNumber = typeNum;
+	  pEl->ElAssocNum = assocNum;
+	  if (withLabel)
+	    /* compute the value of the label */
+	    ConvertIntToLabel (NewLabel (pDoc), pEl->ElLabel);
+	  /* gives the attributes the default values defined in the structure
+	     scheme which specifies the element */
+	  AttachRequiredAttributes (pEl, pSRule, pSS, withAttr, pDoc);
+	  /* updates the attribute values which are imposed by the extensions*/
+	  /* of the structure scheme specifying the element */
+	  pExtSSch = pSS->SsNextExtens;
+	  while (pExtSSch != NULL)
+	    {
+	      pExtRule = ExtensionRule (pSS, typeNum, pExtSSch);
+	      if (pExtRule != NULL)
+		AttachRequiredAttributes (pEl, pExtRule, pExtSSch, withAttr,
+					  pDoc);
+	      pExtSSch = pExtSSch->SsNextExtens;
 	    }
 
-   if (pSRule->SrRecursive && pSRule->SrRecursDone && gener)
-      pSRule->SrRecursDone = FALSE;	/* for next time.... */
-   return pEl;
+	  /* links the blocks specific to the constructor */
+	  switch (pSRule->SrConstruct)
+	    {
+	    case CsReference:
+	      pEl->ElTerminal = TRUE;
+	      pEl->ElLeafType = LtReference;
+	      /* gets a reference descriptor */
+	      GetReference (&ref);
+	      pEl->ElReference = ref;
+	      pEl->ElReference->RdElement = pEl;
+	      break;
+	    case CsPairedElement:
+	      pEl->ElTerminal = TRUE;
+	      pEl->ElLeafType = LtPairedElem;
+	      if (pSRule->SrFirstOfPair)
+		pDoc->DocMaxPairIdent++;
+	      pEl->ElPairIdent = pDoc->DocMaxPairIdent;
+	      pEl->ElOtherPairedEl = NULL;
+	      break;
+	    case CsBasicElement:
+	      pEl->ElTerminal = TRUE;
+	      switch (pSRule->SrBasicType)
+		{
+		case CharString:
+		  CreateTextBuffer (pEl);
+		  pEl->ElLeafType = LtText;
+		  pEl->ElLanguage = TtaGetDefaultLanguage ();
+		  pEl->ElVolume = 0;
+		  pEl->ElTextLength = 0;
+		  break;
+		case Picture:
+		  CreateTextBuffer (pEl);
+		  pEl->ElLeafType = LtPicture;
+		  pEl->ElVolume = 0;
+		  pEl->ElPictInfo = NULL;
+		  break;
+		case GraphicElem:
+		  pEl->ElLeafType = LtGraphics;
+		  pEl->ElGraph = EOS;
+		  pEl->ElWideChar = 0;
+		  pEl->ElVolume = 0;
+		  break;
+		case Symbol:
+		  pEl->ElLeafType = LtSymbol;
+		  pEl->ElGraph = EOS;
+		  pEl->ElWideChar = 0;
+		  pEl->ElVolume = 0;
+		  break;
+		case PageBreak:
+		  pEl->ElLeafType = LtPageColBreak;
+		  pEl->ElPageType = PgComputed;
+		  pEl->ElPageNumber = 1;
+		  pEl->ElPageNumber = 0;
+		  pEl->ElViewPSchema = 0;
+		  pEl->ElPageModified = FALSE;
+		  pEl->ElAssocHeader = TRUE;
+		  pEl->ElVolume = 10;
+		  break;
+		case Refer:
+		  break;
+		default:
+		  break;
+		}
+	      break;
+	    case CsConstant:
+	      pEl->ElTerminal = TRUE;
+	      CreateTextBuffer (pEl);
+	      /* copies the value of the constant */
+	      i = 0;
+	      pBu1 = pEl->ElText;
+	      do
+		{
+		  pBu1->BuContent[i] =
+		             pSS->SsConstBuffer[i + pSRule->SrIndexConst - 1];
+		  i++;
+		}
+	      while (pBu1->BuContent[i - 1] != EOS && i < THOT_MAX_CHAR);
+	      pBu1->BuContent[i - 1] = EOS;
+	      pEl->ElTextLength = i - 1;
+	      pEl->ElVolume = pEl->ElTextLength;
+	      pEl->ElText->BuLength = i - 1;
+	      pEl->ElLanguage = TtaGetDefaultLanguage ();
+	      break;
+	    default:
+	      break;
+	    }
+	}
+    }
+  /* evaluates if the children should be generated */
+  pSRule = &pSS->SsRule[typeNum - 1];
+  if (!Desc)
+    gener = FALSE;
+  else
+    {
+      gener = TRUE;
+      if (pSRule->SrRecursive)
+	{
+	  /* recursive rule */
+	  if (pSRule->SrRecursDone)
+	    /* rule's already been applied */
+	    gener = FALSE;	/* don't generate its children */
+	  else
+	    /* it's not been yet applied */
+	    /* apply the rule and remember this */
+	    pSRule->SrRecursDone = TRUE;
+	}
+    }
+  if (gener)
+    /* generate the  according to the constructor of the rule */
+    switch (pSRule->SrConstruct)
+      {
+      case CsNatureSchema:
+	/* this case does not happen, we changed */
+	/* the element's type (cf. here above) */
+	break;
+      case CsIdentity:
+	/* structure is the same as that defined by another rule of the */
+	/* same scheme */
+	create = FALSE;
+	pSRule2 = &pSS->SsRule[pSRule->SrIdentRule - 1];
+	if (pSRule2->SrAssocElem ||
+	    pSRule2->SrConstruct == CsBasicElement ||
+	    pSRule2->SrNInclusions > 0 ||
+	    pSRule2->SrNExclusions > 0 ||
+	    pSRule2->SrConstruct == CsConstant ||
+	    pSRule2->SrConstruct == CsChoice ||
+	    pSRule2->SrConstruct == CsPairedElement ||
+	    pSRule2->SrConstruct == CsReference ||
+	    pSRule2->SrConstruct == CsNatureSchema)
+	  create = TRUE;
+	t1 = NewSubtree (pSRule->SrIdentRule, pSS, pDoc, assocNum, Desc,
+			 create, withAttr, withLabel);
+	if (pEl == NULL)
+	  pEl = t1;
+	else
+	  InsertFirstChild (pEl, t1);
+	break;
+      case CsBasicElement:
+      case CsConstant:
+      case CsReference:
+      case CsPairedElement:
+      case CsChoice:
+	break;
+      case CsList:
+	t1 = NewSubtree (pSRule->SrListItem, pSS, pDoc, assocNum, Desc,
+			 TRUE, withAttr, withLabel);
+	if (pEl == NULL)
+	  pEl = t1;
+	else
+	  InsertFirstChild (pEl, t1);
+	if (t1 != NULL)
+	  for (i = 2; i <= pSRule->SrMinItems; i++)
+	    {
+	      t2 = NewSubtree (pSRule->SrListItem, pSS, pDoc, assocNum, Desc,
+			       TRUE, withAttr, withLabel);
+	      if (t2 != NULL)
+		{
+		  InsertElemAfterLastSibling (t1, t2);
+		  t1 = t2;
+		}
+	    }
+	break;
+      case CsAggregate:
+      case CsUnorderedAggregate:
+	t1 = NULL;
+	for (i = 1; i <= pSRule->SrNComponents; i++)
+	  if (!pSRule->SrOptComponent[i - 1])
+	    /* don't create the optional components */
+	    {
+	      t2 = NewSubtree (pSRule->SrComponent[i - 1], pSS, pDoc,
+			       assocNum, Desc, TRUE, withAttr, withLabel);
+	      if (t2 != NULL)
+		{
+		  if (t1 != NULL)
+		    InsertElemAfterLastSibling (t1, t2);
+		  else if (pEl == NULL)
+		    pEl = t2;
+		  else
+		    InsertFirstChild (pEl, t2);
+		  t1 = t2;
+		}
+	    }
+	break;
+      default:
+	break;
+      }
+
+  if (pSRule->SrRecursive && pSRule->SrRecursDone && gener)
+    pSRule->SrRecursDone = FALSE;	/* for next time.... */
+  return pEl;
 }
 
 
@@ -3459,14 +3370,6 @@ PtrDocument         pDoc;
 	   FreePresentRule (pRule);
 	   pRule = pNextRule;
 	 }
-       /* frees the comment associated to the element */
-       pBuf = pEl1->ElComment;
-       while (pBuf != NULL)
-	 {
-	   pNextBuf = pBuf->BuNext;
-	   DeleteTextBuffer (&pBuf);
-	   pBuf = pNextBuf;
-	 }
        /* frees all the references to the element */
        DeleteAllReferences (*pEl);
        /* frees the descriptor of the referenced element */
@@ -3706,39 +3609,36 @@ ThotBool            shareRef;
 	    }
 	  if (copyType != 0)
 	    {
-	      /* gest an element for the copy */
-	      GetElement (&pEl);
-	      /* fills the copy */
-	      pEl->ElStructSchema = pSSchema;
-	      pEl->ElTypeNumber = copyType;
-	      if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
-		/* we create an element and build it according to the root rule
-		   of its structure scheme. We then increment the counter */
-		pSSchema->SsNObjects++;
-	      pEl->ElAssocNum = assocNum;
-	      /* copies the attributes */
-	      CopyAttributes (pSource, pEl, pDocSource, pDocCopy, checkAttr);
-	      /* copies the specific presentation rules */
+	    /* gest an element for the copy */
+	    GetElement (&pEl);
+	    /* fills the copy */
+	    pEl->ElStructSchema = pSSchema;
+	    pEl->ElTypeNumber = copyType;
+	    if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
+	      /* we create an element and build it according to the root rule
+		 of its structure scheme. We then increment the counter */
+	      pSSchema->SsNObjects++;
+	    pEl->ElAssocNum = assocNum;
+	    /* copies the attributes */
+	    CopyAttributes (pSource, pEl, pDocSource, pDocCopy, checkAttr);
+	    /* copies the specific presentation rules */
 	    CopyPresRules (pSource, pEl);	
-	    /* copies the commentary associated to the element */
-	    if (pSource->ElComment != NULL)
-	       pEl->ElComment = CopyText (pSource->ElComment, pEl);
 	    if (shareRef)
-	       {
-	       strncpy (pEl->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
-	       pEl->ElReferredDescr = pSource->ElReferredDescr;	
-	       /* (temporarily) shares the descriptor of the element
-		  referenced between the source element and the copy element
-		  so that CopyCommand or the Paste procedures can
-		  link the copied references to the copied elements */
-	       }
+	      {
+		strncpy (pEl->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
+		pEl->ElReferredDescr = pSource->ElReferredDescr;	
+		/* (temporarily) shares the descriptor of the element
+		   referenced between the source element and the copy element
+		   so that CopyCommand or the Paste procedures can
+		   link the copied references to the copied elements */
+	      }
 	    else
-	       {
-	       /* the copy is not referenced */
-	       pEl->ElReferredDescr = NULL;
-	       /* computes the value of the label */
-	       ConvertIntToLabel (NewLabel (pDocCopy), pEl->ElLabel);
-	       }
+	      {
+		/* the copy is not referenced */
+		pEl->ElReferredDescr = NULL;
+		/* computes the value of the label */
+		ConvertIntToLabel (NewLabel (pDocCopy), pEl->ElLabel);
+	      }
 	    pSource->ElCopy = pEl;
 	    pEl->ElCopy = pSource;
 	    pEl->ElIsCopy = pSource->ElIsCopy;
@@ -3975,11 +3875,6 @@ PtrDocument         pDoc;
 		  CopyAttributes (pSource, pEl, pDocSource, pDoc, TRUE);
 		  /* we copy the specific presentation rules */
 		  CopyPresRules (pSource, pEl);
-		  /* we copy the comment associated to the element */
-		  ClearText (pEl->ElComment);
-		  FreeTextBuffer (pEl->ElComment);
-		  if (pSource->ElComment != NULL)
-		     pEl->ElComment = CopyText (pSource->ElComment, pEl);
 		  if (pEl->ElTerminal)
 		     switch (pSource->ElLeafType)
 			   {
@@ -4125,7 +4020,6 @@ PtrDocument         pDoc;
    pNew->ElText = NULL;
    pNew->ElFirstChild = NULL;
    pNew->ElLanguage = pEl->ElLanguage;
-   pNew->ElComment = NULL;
    pNew->ElCopyDescr = NULL;
    pNew->ElVolume = 0;
    for (view = 0; view < MAX_VIEW_DOC; view++)

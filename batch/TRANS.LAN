@@ -89,8 +89,7 @@ SeqOfCond =      Condition < 'And' Condition > .
 
 Condition =      [ 'Not' ] [ 'Target' ] Cond .
 Cond =		 CondOnSelf / CondAscend .
-CondOnSelf =     'Defined' /
-                 'FirstRef' / 'LastRef' / 'ExternalRef' /
+CondOnSelf =     'FirstRef' / 'LastRef' / 'ExternalRef' /
 		 'Alphabet' '=' Alphabet /
 		 'FirstAttr' / 'LastAttr' /
 		 'ComputedPage' / 'StartPage' / 'UserPage' / 'ReminderPage' /
@@ -109,7 +108,7 @@ CondOnAscend =   'First' / 'Last' /
 		 'Attributes' /
 		  AttrIdent [ AttrRelat ] /
 		  TypeIdent /
-                 'Presentation' / PresRule / 'Comment' .
+                 'Presentation' / PresRule .
 
 ParentLevel =	 [ GreaterLess ] RelLevel .
 GreaterLess =	 '>' / '<' .
@@ -148,7 +147,7 @@ Token =		 ConstIdent / VariableIdent /
                  CharString /
                  BufferIdent / '(' Function < Function > ')' /
 		 'Translated' AttrIdent /
-                 AttrIdent / 'Value' / 'Content' / 'Comment' /
+                 AttrIdent / 'Value' / 'Content' /
 		 'FileDir' / 'FileName' / 'Extension' /
 		 'DocumentName' / 'DocumentDir' /
                  'Attributes' / 'Presentation' / 'RefId' / 'PairId' .

@@ -775,7 +775,6 @@ PtrElement         *pEl;
        pNewEl->ElVolume = 0;
        pNewEl->ElCopyDescr = NULL;
        pNewEl->ElFirstPRule = NULL;
-       pNewEl->ElComment = NULL;
        for (i = 1; i <= MAX_VIEW_DOC; i++)
 	 pNewEl->ElAbstractBox[i - 1] = NULL;
        pNewEl->ElParent = NULL;
@@ -1439,7 +1438,6 @@ PtrDocument         pDoc;
 {
    int                 i;
 
-   pDoc->DocComment = NULL;
    pDoc->DocSSchema = NULL;
    pDoc->DocRootElement = NULL;
    for (i = 0; i < MAX_ASSOC_DOC; i++)
@@ -1448,8 +1446,6 @@ PtrDocument         pDoc;
        pDoc->DocAssocSubTree[i] = NULL;
        pDoc->DocAssocModifiedAb[i] = NULL;
      }
-   for (i = 0; i < MAX_PARAM_DOC; i++)
-     pDoc->DocParameters[i] = NULL;
    for (i = 0; i < MAX_VIEW_DOC; i++)
      {
        pDoc->DocView[i].DvSSchema = NULL;

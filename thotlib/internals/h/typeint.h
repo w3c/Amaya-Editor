@@ -268,9 +268,6 @@ typedef struct _ElementDescr
     PtrPRule    	ElFirstPRule;	/* pointer on the first rule of the
 					   specific presentation rule string
 					   to beiedapply to the element */
-    PtrTextBuffer  	ElComment;	/* pointer on the buffer containing the
-					   beginning of the comment associated
-					   with the element */
     PtrAbstractBox	ElAbstractBox[MAX_VIEW_DOC]; /* pointer on the first
 					   abstract box corresponding to the
 					   element for each view of the doc. */
@@ -407,7 +404,8 @@ typedef struct _ElementDescr
    the preceding and following element in the list or the aggregate it is part
    of, if its parent's constructor is CsList or CsAggregate.
    These pointers are also used to link associated elements of the same type.
-   They are left unused if the parent's constructor is CsIdentity or CsConstant. 
+   They are left unused if the parent's constructor is CsIdentity or
+   CsConstant. 
    Yet another use is to link the different REFERENCE elements pointing on the
    same element. */
 
@@ -575,113 +573,105 @@ typedef struct _DocumentDescr *PtrDocument;
 typedef struct _DocumentDescr
 {
   PtrDocument     DocNext;	/* to link the free blocks */
-  PtrTextBuffer	  DocComment;	/* comment attached to the document */
   PtrSSchema	  DocSSchema;	/* structure schema of the document */
   PtrElement      DocRootElement; /* pointer on the root element of the
 				     main abstract tree */
-  PtrElement      DocAssocRoot[MAX_ASSOC_DOC];	/* pointers on the
-						   roots of each associated tree */
+  PtrElement      DocAssocRoot[MAX_ASSOC_DOC];	/* pointers on the roots of
+						   each associated tree */
   PtrElement	  DocAssocSubTree[MAX_ASSOC_DOC]; /* root of the subtree
-						     to be displayed in the associated
-						     elements view, NULL if the whole
-						     tree is displayed */
+					   to be displayed in the associated
+					   elements view, NULL if the whole
+					   tree is displayed */
   int             DocAssocFrame[MAX_ASSOC_DOC];  /* number of the windows
 						    of the associated trees */
   int             DocAssocVolume[MAX_ASSOC_DOC]; /* total volume of the
-						    windows of the associated trees */
-  int             DocAssocFreeVolume[MAX_ASSOC_DOC]; /* free space
-							remaining in the windows of the
-							the associated trees */
-  int             DocAssocNPages[MAX_ASSOC_DOC];   /* number of pages in
-						      each associated tree */
+					   windows of the associated trees */
+  int             DocAssocFreeVolume[MAX_ASSOC_DOC]; /* free space remaining
+					   in the windows of the the
+					   associated trees */
+  int             DocAssocNPages[MAX_ASSOC_DOC];   /* number of pages in each
+						      associated tree */
   PtrAbstractBox  DocAssocModifiedAb[MAX_ASSOC_DOC]; /* pointers on the
-							abstract box to be redisplayed for
-							the associated trees */
-  PtrElement      DocParameters[MAX_PARAM_DOC]; /* pointers on the
-						   parameters of each type */
-  /* In the field DocParameters, the pointers are in the same order as
-     the rules that define the structure of the pointed elements in the
-     array StructSchema.SsRule. */
+					   abstract box to be redisplayed for
+					   the associated trees */
   PtrReferredDescr DocReferredEl;	/* pointer on the fake descriptor,
 					   beginning of the string of
 					   descriptors of elements referenced
 					   in the document */
   DocViewDescr    DocView[MAX_VIEW_DOC]; /* correspondence between the
-					    document views and those defined in
-					    the presentation schemas used in
-					    the document */
+					   document views and those defined in
+					   the presentation schemas used in
+					   the document */
   PtrAbstractBox  DocViewRootAb[MAX_VIEW_DOC]; /* pointer on the root
-						  abstract box of each view of the
-						  main tree, in the same order as
-						  in DocView */
-  PtrElement	  DocViewSubTree[MAX_VIEW_DOC];	/* root of the subtree
-						   of the main tree to display in the
-						   view, null by default */
+					   abstract box of each view of the
+					   main tree, in the same order as
+					   in DocView */
+  PtrElement	  DocViewSubTree[MAX_VIEW_DOC];	/* root of the subtree of the
+					   main tree to display in the view,
+					   null by default */
   int		  DocViewFrame[MAX_VIEW_DOC];	/* ident. of the window
-						   corresponding to the view */
+					   corresponding to the view */
   int		  DocViewVolume[MAX_VIEW_DOC];   /* volume of the view */
-  int             DocViewFreeVolume[MAX_VIEW_DOC]; /* free volume of the view */
+  int             DocViewFreeVolume[MAX_VIEW_DOC]; /* free volume in the view*/
   int             DocViewNPages[MAX_VIEW_DOC];  /* number of pages */
-  PtrAbstractBox  DocViewModifiedAb[MAX_VIEW_DOC]; /* pointer on the
-						      abstract box to redisplay for the
-						      view */
-  ADocumentName	  DocDName;	/* document name for the user */
-  DocumentIdentifier DocIdent;	/* unique document id for the storage
-				   system */
-  PathBuffer      DocDirectory;	/* directory of the document */
-  PathBuffer	  DocSchemasPath;	/* path of the document schemas */
-  ThotBool	  DocNotifyAll;	/* Thot must indicate to the application the creation
-				   of ALL the subtree elements that were created or
-				   pasted */
-  ThotBool        DocReadOnly;	/* document is read only */
-  ThotBool        DocExportStructure; /* the logical structure contains
-					 only the skeleton elements */
-  int             DocLabelExpMax;	/* maximum value of element labels */
+  PtrAbstractBox  DocViewModifiedAb[MAX_VIEW_DOC]; /* pointer on the abstract
+					    box to redisplay for the view */
+  ADocumentName	  DocDName;	  /* document name for the user */
+  DocumentIdentifier DocIdent;	  /* unique document id for the storage
+				     system */
+  PathBuffer      DocDirectory;	  /* directory of the document */
+  PathBuffer	  DocSchemasPath; /* path of the document schemas */
+  ThotBool	  DocNotifyAll;	  /* Thot must indicate to the application the
+				     creation of ALL the subtree elements that
+				     were created or pasted */
+  ThotBool        DocReadOnly;	  /* document is read only */
+  ThotBool        DocExportStructure; /* the logical structure contains only
+				     the skeleton elements */
+  int             DocLabelExpMax; /* maximum value of element labels */
   int		  DocMaxPairIdent;/* higher document pair id. value */
-  ThotBool        DocModified;	/* the document was modified */
-  ThotBool        DocUpdated;	/* any change occurs since the last reset */
+  ThotBool        DocModified;	  /* the document was modified */
+  ThotBool        DocUpdated;	  /* any change occurs since the last reset */
   int		  DocBackUpInterval; /* interval between automatic backup */
-  int             DocNTypedChars;	/* number of characters typed since the
-					   last time the document was saved */
-  PtrOutReference DocNewOutRef;	/* beginning of the list of outgoing
-					   references created since the last
-					   time the document was saved */
-  PtrOutReference DocDeadOutRef;	/* beginning of the list of outgoing
-					   references deleteted since the last
-					   time the document was saved */
-  PtrChangedReferredEl DocChangedReferredEl;	/* beginning of the
-						   list of elements referenced from
-						   outside that were deleted or moved
-						   since the last time the document
-						   was saved */
-  int		  DocNLanguages;	/* number of languages actually used */
-  Language	  DocLanguages[MAX_LANGUAGES_DOC]; /* the languages used
-						    in the document */
+  int             DocNTypedChars; /* number of characters typed since the last
+				     time the document was saved */
+  PtrOutReference DocNewOutRef;	  /* beginning of the list of outgoing
+				     references created since the last time
+				     the document was saved */
+  PtrOutReference DocDeadOutRef;  /* beginning of the list of outgoing
+				     references deleteted since the last time
+				     the document was saved */
+  PtrChangedReferredEl DocChangedReferredEl; /* beginning of the list of
+				     elements referenced from outside that
+				     were deleted or moved since the last
+				     time the document was saved */
+  int		  DocNLanguages;  /* number of languages actually used */
+  Language	  DocLanguages[MAX_LANGUAGES_DOC]; /* the languages used in the
+						      document */
   /* table of the structure schemas (natures) used in the document */
-  int		  DocNNatures;	/* number of natures */
+  int		  DocNNatures;	  /* number of natures */
   Name		  DocNatureName[MAX_NATURES_DOC]; /* names of natures */
-  Name		  DocNaturePresName[MAX_NATURES_DOC]; /* names of the presentation
-						       schemas of these natures */
+  Name		  DocNaturePresName[MAX_NATURES_DOC]; /* names of the
+                                     presentationschemas of these natures */
   PtrSSchema	  DocNatureSSchema[MAX_NATURES_DOC];/* structure schemas
 						       of these natures */
   /* information used while reading the pivot file */
   int		  DocPivotVersion;/* pivot version number */
-  PtrReferredDescr DocLabels;	/* external labels */
-  UCHAR_T	  DocCheckingMode; /* check document structure against
-				      the structure schemas */
-  ThotBool	  DocPivotError;  /* an format error has been detected */
+  PtrReferredDescr DocLabels;	  /* external labels */
+  UCHAR_T	  DocCheckingMode;/* check document structure against the
+				     structure schemas */
+  ThotBool	  DocPivotError;  /* a format error has been detected */
   
   /* history of last changes made in the document */
-  PtrEditOperation DocLastEdit;	/* latest editing operation */
-  int		  DocNbEditsInHistory; /* number of editing commands
-					recorded in the history */
-  ThotBool	  DocEditSequence;/* indicate whether a sequence of
-				     editing operations is open */
+  PtrEditOperation DocLastEdit;	  /* latest editing operation */
+  int		  DocNbEditsInHistory; /* number of editing commands recorded
+				     in the history */
+  ThotBool	  DocEditSequence;/* indicate whether a sequence of editing
+				     operations is open */
   /* queue of latest undone commands */
-  PtrEditOperation DocLastUndone;	/* latest editing operation undone */
-  int		  DocNbUndone;	        /* number of undone editing commands */
-  CHARSET         DocCharset;           /* charset of the document */
-  ThotBool	  DocDefaultCharset;    /* TRUE if the charset is set by default */
+  PtrEditOperation DocLastUndone; /* latest editing operation undone */
+  int		  DocNbUndone;	  /* number of undone editing commands */
+  CHARSET         DocCharset;     /* charset of the document */
+  ThotBool	  DocDefaultCharset;/* TRUE if the charset is set by default */
 } DocumentDescr;
 
 #endif /* __TYPE_INT_H__ */

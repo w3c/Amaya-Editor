@@ -95,8 +95,7 @@ number
 	
    52	Condition =      [ 'Not' ] [ 'Target' ] Cond .
    53	Cond =		 CondOnSelf / CondAscend .
-   54	CondOnSelf =     'Defined' /
-	                 'FirstRef' / 'LastRef' / 'ExternalRef' /
+   54	CondOnSelf =     'FirstRef' / 'LastRef' / 'ExternalRef' /
 			 'Alphabet' '=' Alphabet /
 			 'FirstAttr' / 'LastAttr' /
 			 'ComputedPage' / 'StartPage' / 'UserPage' / 'ReminderPage' /
@@ -115,7 +114,7 @@ number
 			 'Attributes' /
 			  AttrIdent [ AttrRelat ] /
 			  TypeIdent /
-	                 'Presentation' / PresRule / 'Comment' .
+	                 'Presentation' / PresRule .
 	
    61	ParentLevel =	 [ GreaterLess ] RelLevel .
    63	GreaterLess =	 '>' / '<' .
@@ -154,7 +153,7 @@ number
 	                 CharString /
 	                 BufferIdent / '(' Function < Function > ')' /
 			 'Translated' AttrIdent /
-	                 AttrIdent / 'Value' / 'Content' / 'Comment' /
+	                 AttrIdent / 'Value' / 'Content' /
 			 'FileDir' / 'FileName' / 'Extension' /
 			 'DocumentName' / 'DocumentDir' /
 	                 'Attributes' / 'Presentation' / 'RefId' / 'PairId' .
@@ -290,91 +289,89 @@ code  key-word      numbers of rules using the key-word
 1140  And             50
 1141  Not             52
 1142  Target          52
-1143  Defined         54
-1144  FirstRef        54
-1145  LastRef         54
-1146  ExternalRef     54
-1147  Alphabet        54
-1148  FirstAttr       54
-1149  LastAttr        54
-1150  ComputedPage    54
-1151  StartPage       54
-1152  UserPage        54
-1153  ReminderPage    54
-1154  Empty           54
-1155  Parent          57
-1156  Ancestor        57
-1157  Last            58
-1158  Refered         58  68  70
-1159  Referred        58  68  70
-1160  Immediately     58
-1161  Within          58
-1162  FirstWithin     58
-1163  Comment         58  68
-1164  Create          66
-1165  Get             66
-1166  Copy            66
-1167  Use             66
-1168  For             66
-1169  Remove          66
-1170  Ignore          66
-1171  Write           66
-1172  Read            66
-1173  Include         66
-1174  NoTranslation   66
-1175  NoLineBreak     66
-1176  ChangeMainFile  67
-1177  Indent          67  62
-1178  RemoveFile      67
-1179  Suspend         72
-1180  Resume          72
-1181  Translated      68
-1182  Content         68
-1183  RefId           68  75
-1184  PairId          68
-1185  After           69
-1186  Before          69
-1187  Included        70
-1188  Size            62
-1189  LineSpacing     62
-1190  Adjust          62
-1191  Justify         62
-1192  Hyphenate       62
-1193  Style           62
-1194  Weight          62
-1195  Font            62
-1196  UnderLine       62  87
-1197  Thickness       62
-1198  LineStyle       62
-1199  LineWeight      62
-1200  FillPattern     62
-1201  Background      62
-1202  Foreground      62
-1203  Left            82
-1204  Right           82
-1205  VMiddle         82
-1206  LeftWithDots    82
-1207  Yes             83
-1208  No              83  87
-1209  Roman           84
-1210  Italics         84
-1211  Oblique         84
-1212  Normal          85
-1213  Bold            85
-1214  Times           86
-1215  Helvetica       86
-1216  Courier         86
-1217  NoUnderline     87
-1218  Underlined      87
-1219  Overlined       87
-1220  CrossedOut      87
-1221  OverLine        87
-1222  StrikeOut       87
-1223  Thick           88
-1224  Thin            88
-1225  Solid           89
-1226  Dashed          89
-1227  Dotted          89
+1143  FirstRef        54
+1144  LastRef         54
+1145  ExternalRef     54
+1146  Alphabet        54
+1147  FirstAttr       54
+1148  LastAttr        54
+1149  ComputedPage    54
+1150  StartPage       54
+1151  UserPage        54
+1152  ReminderPage    54
+1153  Empty           54
+1154  Parent          57
+1155  Ancestor        57
+1156  Last            58
+1157  Refered         58  68  70
+1158  Referred        58  68  70
+1159  Immediately     58
+1160  Within          58
+1161  FirstWithin     58
+1162  Create          66
+1163  Get             66
+1164  Copy            66
+1165  Use             66
+1166  For             66
+1167  Remove          66
+1168  Ignore          66
+1169  Write           66
+1170  Read            66
+1171  Include         66
+1172  NoTranslation   66
+1173  NoLineBreak     66
+1174  ChangeMainFile  67
+1175  Indent          67  62
+1176  RemoveFile      67
+1177  Suspend         72
+1178  Resume          72
+1179  Translated      68
+1180  Content         68
+1181  RefId           68  75
+1182  PairId          68
+1183  After           69
+1184  Before          69
+1185  Included        70
+1186  Size            62
+1187  LineSpacing     62
+1188  Adjust          62
+1189  Justify         62
+1190  Hyphenate       62
+1191  Style           62
+1192  Weight          62
+1193  Font            62
+1194  UnderLine       62  87
+1195  Thickness       62
+1196  LineStyle       62
+1197  LineWeight      62
+1198  FillPattern     62
+1199  Background      62
+1200  Foreground      62
+1201  Left            82
+1202  Right           82
+1203  VMiddle         82
+1204  LeftWithDots    82
+1205  Yes             83
+1206  No              83  87
+1207  Roman           84
+1208  Italics         84
+1209  Oblique         84
+1210  Normal          85
+1211  Bold            85
+1212  Times           86
+1213  Helvetica       86
+1214  Courier         86
+1215  NoUnderline     87
+1216  Underlined      87
+1217  Overlined       87
+1218  CrossedOut      87
+1219  OverLine        87
+1220  StrikeOut       87
+1221  Thick           88
+1222  Thin            88
+1223  Solid           89
+1224  Dashed          89
+1225  Dotted          89
 
 
 

@@ -1,17 +1,8 @@
 /* 
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
  */
 
 /*
@@ -1493,28 +1484,14 @@ STRING              fname;
 		WriteRule (Hfile, rule++, NULL);
 	  }
 	firstRule = rule;
-	/* write parameters */
-	first = True;
-	for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
-	   if (pSSchema->SsRule[rule].SrParamElem)
-	     {
-		if (first)
-		  {
-		     fprintf (Hfile, "\n/* Parameters */\n");
-		     first = False;
-		  }
-		WriteRule (Hfile, rule, NULL);
-	     }
 	/* write rules */
 	if (pSSchema->SsNRules >= firstRule)
 	   fprintf (Hfile, "\n/* Elements */\n");
 	for (rule = firstRule; rule < pSSchema->SsNRules; rule++)
 	  {
 	     pRule = &pSSchema->SsRule[rule];
-	     /* skip parameters, associated elements, */
-	     /* Extern and Included elements and units */
-	     if (!pRule->SrParamElem &&
-		 !pRule->SrAssocElem &&
+	     /* skip associated elements, Extern, Included elements and units*/
+	     if (!pRule->SrAssocElem &&
 		 !pRule->SrRefImportedDoc &&
 		 !pRule->SrUnitElem)
 		/* ignore lists added for associated elements */

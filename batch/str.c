@@ -61,7 +61,6 @@ static int          TextConstPtr;  /* current index in constants buffer */
 static SRule       *CurExtensRule; /* current extension rule */
 static ThotBool     CompilAttr;    /* we are parsing global attributes */
 static ThotBool     CompilLocAttr; /* we are parsing local attributes */
-static ThotBool     CompilParam;   /* we are parsing parameters */
 static ThotBool     CompilAssoc;   /* we are parsing associed elements */
 static ThotBool     CompilUnits;   /* we are parsing exported units */
 static ThotBool     RootRule;	   /* we are waiting for the root rule */
@@ -85,7 +84,6 @@ static int          CurLocAttr[MAX_LOCAL_ATTR]; /* local attributes attached
 static ThotBool     CurReqAttr[MAX_LOCAL_ATTR];/* 'Required' booleans of
 						   local attributes associated
 						   to CurName */
-static ThotBool     CurParam;	   /* the last met rule is a parameter */
 static ThotBool     CurAssoc;	   /* the last met rule is a associated
 				      element */
 static ThotBool     CurUnit;	   /* the last met rule is a exported unit */
@@ -157,7 +155,6 @@ BasicType           typ;
    pRule->SrConstruct = CsBasicElement;
    pRule->SrBasicType = typ;
    pRule->SrAssocElem = False;
-   pRule->SrParamElem = False;
    pRule->SrUnitElem = False;
    pRule->SrExportedElem = False;
    pRule->SrFirstExcept = 0;
@@ -241,7 +238,6 @@ static void         Initialize ()
    TextConstPtr = 1;
    CompilAttr = False;
    CompilLocAttr = False;
-   CompilParam = False;
    CompilAssoc = False;
    CompilUnits = False;
    RootRule = False;
@@ -256,7 +252,6 @@ static void         Initialize ()
    CurName[0] = '\0';
    CurNum = 0;
    CurNLocAttr = 0;
-   CurParam = False;
    CurAssoc = False;
    CurUnit = False;
    Equal = False;
@@ -345,7 +340,6 @@ int                 n;
 	     pRule->SrRefImportedDoc = False;
 	     pRule->SrNDefAttrs = 0;
 	     pRule->SrAssocElem = False;
-	     pRule->SrParamElem = False;
 	     pRule->SrUnitElem = False;
 	     pRule->SrConstruct = CsNatureSchema;
 	     pRule->SrSSchemaNat = NULL;
@@ -549,7 +543,7 @@ static void         ChangeRules ()
 
 
 /*----------------------------------------------------------------------
-   CopyWord copies into the name parameter the current word.                     
+   CopyWord copies  the current word into the name parameter.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CopyWord (Name name, indLine wi, indLine wl)
@@ -708,7 +702,6 @@ indLine             wi;
 	     pRule->SrLocalAttr[i] = CurLocAttr[i];
 	     pRule->SrRequiredAttr[i] = CurReqAttr[i];
 	  }
-	pRule->SrParamElem = CurParam;
 	pRule->SrAssocElem = CurAssoc;
 	pRule->SrUnitElem = CurUnit;
 	pRule->SrRecursive = False;
@@ -737,7 +730,6 @@ indLine             wi;
 	CurName[0] = '\0';
 	CurNum = 0;
 	CurNLocAttr = 0;
-	CurParam = False;
 	CurAssoc = False;
 	CurUnit = False;
      }
@@ -991,7 +983,6 @@ SRule              *pRule;
    pRule->SrNDefAttrs = 0;
    pRule->SrNLocalAttrs = 0;
    pRule->SrAssocElem = False;
-   pRule->SrParamElem = False;
    pRule->SrUnitElem = False;
    pRule->SrRecursive = False;
    pRule->SrExportedElem = False;
@@ -1176,7 +1167,6 @@ SyntRuleNum         pr;
 		   CurNum = 0;
 		   CurName[0] = '\0';
 		   CurNLocAttr = 0;
-		   CurParam = False;
 		   CurAssoc = False;
 		   CurUnit = False;
 		 }
@@ -1290,7 +1280,6 @@ SyntRuleNum         pr;
 		       CurNum = 0;
 		       CurName[0] = '\0';
 		       CurNLocAttr = 0;
-		       CurParam = False;
 		       CurAssoc = False;
 		       CurUnit = False;
 		     }
@@ -1431,22 +1420,10 @@ SyntRuleNum         pr;
        case KWD_CONST:
 	 CompilAttr = False;
 	 break;
-       case KWD_PARAM:
-	 if (pSSchema->SsExtension)
-	   CompilerMessage (wi, STR, FATAL, STR_NOT_ALLOWED_IN_AN_EXTENSION,
-			    inputLine, LineNum);
-	 else
-	   {
-	     CompilParam = True;
-	     Rules = True;
-	     CompilAttr = False;
-	   }
-	 break;
        case KWD_STRUCT:
 	 /* the first rule is the root rule */
 	 RootRule = True;
 	 Rules = True;
-	 CompilParam = False;
 	 CompilAttr = False;
 	 break;
        case KWD_EXTENS:
@@ -1456,7 +1433,6 @@ SyntRuleNum         pr;
 			    LineNum);
 	 else
 	   {
-	     CompilParam = False;
 	     CompilAttr = False;
 	     CompilExtens = True;
 	   }
@@ -1467,7 +1443,6 @@ SyntRuleNum         pr;
 			    inputLine, LineNum);
 	 else
 	   {
-	     CompilParam = False;
 	     CompilAttr = False;
 	     CompilAssoc = True;
 	     CompilExtens = False;
@@ -1476,7 +1451,6 @@ SyntRuleNum         pr;
        case KWD_UNITS:
 	 CompilUnits = True;
 	 CompilAssoc = False;
-	 CompilParam = False;
 	 CompilAttr = False;
 	 CompilExtens = False;
 	 break;
@@ -1489,7 +1463,6 @@ SyntRuleNum         pr;
 			    inputLine, LineNum);
 	 else
 	   {
-	     CompilParam = False;
 	     CompilAttr = False;
 	     CompilExtens = False;
 	     CompilAssoc = False;
@@ -1500,7 +1473,6 @@ SyntRuleNum         pr;
 	   }
 	 break;
        case KWD_EXCEPT:
-	 CompilParam = False;
 	 CompilAttr = False;
 	 CompilExtens = False;
 	 CompilAssoc = False;
@@ -1519,7 +1491,6 @@ SyntRuleNum         pr;
 		 CurNum = 0;
 		 CurName[0] = '\0';
 		 CurNLocAttr = 0;
-		 CurParam = False;
 		 CurAssoc = False;
 		 CurUnit = False;
 	       }
@@ -1645,7 +1616,6 @@ SyntRuleNum         pr;
 		   pRule->SrNLocalAttrs = 0;
 		   pRule->SrNDefAttrs = 0;
 		   pRule->SrAssocElem = False;
-		   pRule->SrParamElem = False;
 		   pRule->SrUnitElem = False;
 		   pRule->SrConstruct = CsNatureSchema;
 		   pRule->SrSSchemaNat = NULL;
@@ -1934,10 +1904,6 @@ SyntRuleNum         pr;
 	       {
 		 CopyWord (CurName, wi, wl);
 		 CurNum = nb;
-		 if (CompilParam)
-		   CurParam = True;
-		 else
-		   CurParam = False;
 		 if (CompilAssoc)
 		   CurAssoc = True;
 		 else
@@ -2467,7 +2433,6 @@ SyntRuleNum         pr;
 	       {
 		 CopyWord (CurName, wi, wl);
 		 CurNum = nb;
-		 CurParam = False;
 		 CurAssoc = False;
 		 CurUnit = False;
 		 NewRule (wi);
@@ -2737,7 +2702,7 @@ static void         ChkRecurs ()
 
 /*----------------------------------------------------------------------
    ListAssocElem       liste les elements consideres comme		
-   parametres et elements associes                         
+   elements associes                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ListAssocElem ()
@@ -2751,10 +2716,6 @@ static void         ListAssocElem ()
    /* go through all rules table */
    for (i = MAX_BASIC_TYPE; i < pSSchema->SsNRules; i++)
      {
-       if (pSSchema->SsRule[i].SrParamElem)
-	 /* display a message */
-	 TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_PARAMETER),
-			    pSSchema->SsRule[i].SrName);
        if (pSSchema->SsRule[i].SrAssocElem)
 	 if (!pSSchema->SsRule[i].SrRecursDone)
 	   /* the associated element associe is used within another rule */
@@ -2786,7 +2747,6 @@ static void         ListAssocElem ()
 	     pRule->SrNExclusions = 0;
 	     pRule->SrRefImportedDoc = False;
 	     pRule->SrAssocElem = False;
-	     pRule->SrParamElem = False;
 	     pRule->SrUnitElem = False;
 	     pRule->SrRecursive = False;
 	     pRule->SrExportedElem = False;
@@ -2856,9 +2816,6 @@ static void         ListNotCreated ()
    for (r = 0; r < pSSchema->SsNRules; r++)
      {
        pRule = &pSSchema->SsRule[r];
-       if (pRule->SrParamElem)
-	 /* parameters will be create */
-	 pRule->SrRecursDone = True;
        /* included elements (SGML) will be created */
        if (pRule->SrNInclusions > 0)
 	 for (i = 0; i < pRule->SrNInclusions; i++)

@@ -15,7 +15,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of December 26, 2000</h4>
+<h4>Version of December 28, 2000</h4>
 
 <p>© 1996-2000 INRIA</p>
 <hr>
@@ -70,7 +70,6 @@
             schemas</a></li>
           <li><a href="#sectc324">The default presentation</a></li>
           <li><a href="#sectc325">Global Attributes</a></li>
-          <li><a href="#sectc326">Parameters</a></li>
           <li><a href="#sectc327">Structured elements</a></li>
           <li><a href="#sectc328">Structure definitions</a>
             <ul>
@@ -107,7 +106,7 @@
           <li><a href="#sectc413">Views and visibility</a></li>
           <li><a href="#sectc414">Pages</a></li>
           <li><a href="#sectc415">Numbering</a></li>
-          <li><a href="#sectc416">Presentation parameters</a></li>
+          <li><a href="#sectc416">Presentation properties</a></li>
         </ul>
       </li>
       <li><strong><a href="#sectb42">Presentation description
@@ -173,7 +172,7 @@
           <li><a href="#sectc4223">Page breaking and line breaking
             conditions</a></li>
           <li><a href="#sectc4224">Visibility</a></li>
-          <li><a href="#sectc4225">Character style parameters</a>
+          <li><a href="#sectc4225">Character style properties</a>
             <ul>
               <li><small><a href="#sectd42251">Character size</a></small></li>
               <li><small><a href="#sectd42252">Font and character
@@ -221,16 +220,12 @@
                 position of the element</a></small></li>
               <li><small><a href="#sectd5282">Conditions on
                 references</a></small></li>
-              <li><small><a href="#sectd5283">Conditions on the
-                parameters</a></small></li>
               <li><small><a href="#sectd5284">Conditions on the
                 alphabets</a></small></li>
               <li><small><a href="#sectd5285">Conditions on page
                 breaks</a></small></li>
               <li><small><a href="#sectd5286">Conditions on the element's
                 content</a></small></li>
-              <li><small><a href="#sectd5287">Conditions on the presence of
-                comments</a></small></li>
               <li><small><a href="#sectd5288">Conditions on the presence of
                 specific presentation rules</a></small></li>
               <li><small><a href="#sectd5289">Conditions on the presence of
@@ -1231,26 +1226,24 @@ followed by a semicolon.</p>
 <p>In the case of a complete schema (that is, a schema which is not an
 extension), the definition of the name of the structure is followed by the
 declarations of the default presentation schema, the global attributes, the
-parameters, the structure rules, the associated elements, the units, the
-skeleton elements and the exceptions.  Only the definition of the structure
-rules is required.  Each series of declarations begins with a keyword:
-<tt>DEFPRES</tt>, <tt>ATTR</tt>, <tt>PARAM</tt>, <tt>STRUCT</tt>,
-<tt>ASSOC</tt>, <tt>UNITS</tt>, <tt>EXPORT</tt>, <tt>EXCEPT</tt>.</p>
+structure rules, the associated elements, the units, the skeleton elements and
+the exceptions.  Only the definition of the structure rules is required.  Each
+series of declarations begins with a keyword: <tt>DEFPRES</tt>, <tt>ATTR</tt>,
+<tt>STRUCT</tt>, <tt>ASSOC</tt>, <tt>UNITS</tt>, <tt>EXPORT</tt>,
+<tt>EXCEPT</tt>.</p>
 
-<p>In the case of an extension schema, there are neither parameters nor
-skeleton elements and the <tt>STRUCT</tt> section is optional, while that
-section is required in a schema that is not an extension.  On the other hand,
-extension schemas can contain an <tt>EXTENS</tt> section, which must not
-appear in a schema which is not an extension; this section defines the
-complements to attach to the rules found in the schema to which the extension
-will be added. The sections <tt>ATTR</tt>, <tt>STRUCT</tt>, <tt>ASSOC</tt>,
-and <tt>UNITS</tt> define new attributes, new elements, new associated
-elements, and new units which add their definitions to the principal
-schema.</p>
+<p>In the case of an extension schema, there are no skeleton elements and the
+<tt>STRUCT</tt> section is optional, while that section is required in a
+schema that is not an extension.  On the other hand, extension schemas can
+contain an <tt>EXTENS</tt> section, which must not appear in a schema which is
+not an extension; this section defines the complements to attach to the rules
+found in the schema to which the extension will be added. The sections
+<tt>ATTR</tt>, <tt>STRUCT</tt>, <tt>ASSOC</tt>, and <tt>UNITS</tt> define new
+attributes, new elements, new associated elements, and new units which add
+their definitions to the principal schema.</p>
 <pre>     StructSchema ='STRUCTURE' ElemID ';'
                    'DEFPRES' PresID ';'
                  [ 'ATTR' AttrSeq ]
-                 [ 'PARAM' RulesSeq ]
                    'STRUCT' RulesSeq
                  [ 'ASSOC' RulesSeq ]
                  [ 'UNITS' RulesSeq ]
@@ -1349,29 +1342,6 @@ declared attribute: the system acts as if every structure schema contains</p>
   <pre>ATTR
    WordType = Definition, IndexWord, DocumentTitle;</pre>
 </blockquote>
-</div>
-
-<div class="subsection">
-<h3><a name="sectc326">Parameters</a></h3>
-
-<p>A parameter is a document element which can appear many times in the
-document, but always has the same value.  This value can only be modified in a
-controlled way by certain applications.  For example, in an advertising
-circular, the name of the recipient may appear in the address part and in the
-text of the circular.  If the recipient's name were a parameter, it might only
-be able to be changed by a ``mail-merge'' application.</p>
-
-<p>Parameters are not needed for every document class, but if the schema
-includes parameters they are declared after the keyword <tt>PARAM</tt>. Each
-parameter declaration is made in the same way as a <a
-href="#sectc327">structure element declaration</a>.</p>
-
-<p>During editing, Thot permits the insertion of parameters wherever the
-structure schema allows; it also permits the removal of parameters which are
-already in the document but does not allow the modification of the parameter's
-content in any way.  The content is generated automatically by Thot during the
-creation of the parameter, based on the value of the parameter in the
-document.</p>
 </div>
 
 <div class="subsection">
@@ -2674,53 +2644,53 @@ type, whereas all fraction bars are horizontal lines and the same word
 </div>
 
 <div class="subsection">
-<h3><a name="sectc416">Presentation parameters</a></h3>
+<h3><a name="sectc416">Presentation properties</a></h3>
 
-<p>The principal parameters which determine document presentation are the
+<p>The principal properties which determine document presentation are the
 <em>positions</em> and <em>dimensions</em> of boxes, the <em>font</em>, the
 <em>style</em>, the <em>size</em>, the <em>underlining</em> and the
-<em>color</em> of their content.  From these parameters, and some others of
-less importance, it is possible to represent the usual typographic parameters
-for the textual parts of the document.  These same parameters can be used to
+<em>color</em> of their content.  From these properties, and some others of
+less importance, it is possible to represent the usual typographic properties
+for the textual parts of the document.  These same properties can be used to
 describe the geometry of the non-textual elements, even though they are
 two-dimensional elements unlike the text, which is linear.</p>
 
 <p>As we have already  seen, the positions of the boxes always respect the
 rule of enclosure: a box in the tree encloses all the boxes of the next lower
-level which are attached to it.  The positional parameters permit the
+level which are attached to it.  The positional properties permit the
 specification of the position of each box in relation to the enclosing box or
 to its sibling boxes (boxes directly attached to the same enclosing box in the
 tree of boxes).</p>
 
-<p>The presentation parameters also provide control over the dimensions of the
+<p>The presentation properties also provide control over the dimensions of the
 boxes.  The dimensions of a box can depend either on its content or on its
 context (its sibling boxes and the enclosing box). Each dimension (height or
 width) can be defined independently of the other.</p>
 
-<p>Because of the position and dimension parameters, it is possible to do the
+<p>Because of the position and dimension properties, it is possible to do the
 same things that are normally done in typography by changing margins, line
 lengths, and vertical or horizontal skips.  This approach can also align or
 center elements and groups of elements.</p>
 
-<p>In contrast to the position and dimension parameters, the font, style,
+<p>In contrast to the position and dimension properties, the font, style,
 size, underlining, and color do not concern the box itself (the rectangle
-delimiting the element), but its content.  These parameters indicate the
+delimiting the element), but its content.  These properties indicate the
 typographic attributes which must be applied to the text contained in the box,
 and by extension, to all base elements.</p>
 
-<p>For text, the font parameter is used to change the family of characters
+<p>For text, the font property is used to change the family of characters
 (Times, Helvetica, Courier, etc.); the style is used to obtain italic or
 roman, bold or light characters;  the size determines the point size of the
 characters; underlining defines the type and thickness of the lines drawn
 above, below, or through the characters.</p>
 
-<p>For graphics, the line style parameter can be either solid, dotted, or
-dashed; the line thickness parameter controls the width of the lines; the fill
-pattern parameter determines how closed geometric figures must be filled.</p>
+<p>For graphics, the line style property can be either solid, dotted, or
+dashed; the line thickness property controls the width of the lines; the fill
+pattern property determines how closed geometric figures must be filled.</p>
 
-<p>While some of the parameters which determine the appearance of a box's
+<p>While some of the properties which determine the appearance of a box's
 contents make sense only for one content type (text or graphic), other
-parameters apply to all content types: these are the color parameters. These
+properties apply to all content types: these are the color properties. These
 indicate the color of lines and the background color.</p>
 </div>
 </div>
@@ -2728,10 +2698,10 @@ indicate the color of lines and the background color.</p>
 <div class="section">
 <h2><a name="sectb42">Presentation description language</a></h2>
 
-<p>A generic presentation defines the values of presentation parameters (or
+<p>A generic presentation defines the values of presentation properties (or
 the way to calculate those values) for a generic structure, or more precisely,
 for all the element types and all the global and local attributes defined in
-that generic structure.  This definition of the presentation parameters is
+that generic structure.  This definition of the presentation properties is
 made with the P language.  A program written in this language, that is a
 generic presentation expressed in P, is call a <em>presentation schema</em>.
 This section describes the syntax and semantics of the language, using the
@@ -3257,14 +3227,14 @@ concerned by the function.</p>
 
 <p>In order to avoid having to specify, for each element type defined in the
 structure schema, values for every one of the numerous presentation
-parameters, the presentation schema allows the definition of a set of default
+properties, the presentation schema allows the definition of a set of default
 presentation rules.  These rules apply to all the boxes of the elements
 defined in the structure schema and to the presentation boxes and page layout
 boxes defined in the presentation schema.  Only rules which differ from these
 default need to be specified in other sections of the presentation schema.</p>
 
 <p>For the primary view, the default rules can define every presentation
-parameter, but not the <a href="#presfunct">presentation functions</a> or the
+property, but not the <a href="#presfunct">presentation functions</a> or the
 <a href="#sectc4223">linebreaking conditions</a> (the <tt>NoBreak1</tt>,
 <tt>NoBreak2</tt>, and <tt>Gather</tt> rules).</p>
 
@@ -4015,8 +3985,8 @@ conditions are syntactically correct but can be expressed more simply by
 <div class="subsection">
 <h3><a name="sectc4215">A presentation rule</a></h3>
 
-<p>A presentation rule defines either a presentation parameter or presentation
-function.  The parameters are:</p>
+<p>A presentation rule defines either a presentation property or presentation
+function.  The properties are:</p>
 <ul>
   <li>the position of the vertical and horizontal reference axes of the
   box,</li>
@@ -4046,19 +4016,19 @@ function.  The parameters are:</p>
   <li>the display of a background picture and its aspect.</li>
 </ul>
 
-<p>For each box and each view, every presentation parameter is defined once
-and only once, either explicitly or by the <a href="#sectc427">default
-rules</a>. In contrast, presentation functions are not obligatory and can
-appear many times for the same element.  for example an element can create
-many presentation boxes.  Another element may not use any presentation
+<p>For each box and each view, every presentation property is defined once and
+only once, either explicitly or by the <a href="#sectc427">default rules</a>.
+In contrast, presentation functions are not obligatory and can appear many
+times for the same element.  for example an element can create many
+presentation boxes.  Another element may not use any presentation
 functions.</p>
 
-<p>Each rule defining a presentation parameter begins with a keyword followed
-by a colon.  The keyword indicates the parameter which is the subject of the
+<p>Each rule defining a presentation property begins with a keyword followed
+by a colon.  The keyword indicates the property which is the subject of the
 rule. After the keyword and the colon, the remainder of the rule varies.  All
 rules are terminated by a semicolon.</p>
-<pre>     Rule      = PresParam ';' / PresFunc ';' .
-     PresParam ='VertRef' ':'       PositionHoriz /
+<pre>     Rule      = Property ';' / PresFunc ';' .
+     Property  ='VertRef' ':'       PositionHoriz /
                 'HorizRef' ':'      PositionVert /
                 'VertPos' ':'       VPos /
                 'HorizPos' ':'      HPos /
@@ -4731,8 +4701,8 @@ ColorName     =  NAME .</pre>
 <div class="subsection">
 <h3><a name="sectc4221">Inheritance</a></h3>
 
-<p>A presentation parameter can be defined by reference to the same parameter
-of another box in the tree of boxes.  These structural links are expressed by
+<p>A presentation property can be defined by reference to the same property of
+another box in the tree of boxes.  These structural links are expressed by
 kinship.  The reference box can be that of the element immediately above in
 the structure (<tt>Enclosing</tt>), two levels above (<tt>GrandFather</tt>),
 immediately below (<tt>Enclosed</tt>) or immediately before
@@ -4742,7 +4712,7 @@ case, the reference box may be the element which created the presentation box
 
 <p>Kinship is expressed in terms of the logical structure of the document and
 not in terms of the tree of boxes.  The presentation box cannot transmit any
-of their parameters by inheritance; only structured element boxes can do so.
+of their properties by inheritance; only structured element boxes can do so.
 As an example, consider an element B which follows an element A in the logical
 structure.  The element B creates a presentation box P in front of itself,
 using the <tt>CreateBefore</tt> rule (see the <a href="#sectc4232">creation
@@ -4751,12 +4721,12 @@ rules</a>).  If element B's box inherits its character style using the
 not from P's box.  Inheritance works differently for positions and extents,
 which can refer to presentation boxes.</p>
 
-<p>The inherited parameter value can be the same as that of the reference box.
-This is indicated by an equals sign.  However, for numeric parameters, a
+<p>The inherited property value can be the same as that of the reference box.
+This is indicated by an equals sign.  However, for numeric properties, a
 different value can be obtained by adding or subtracting a number from the
-reference box's parameter value.  Addition is indicated by a plus sign before
+reference box's property value.  Addition is indicated by a plus sign before
 the number, while subtraction is specified with a minus sign.  The value of a
-parameter can also be given a maximum (if the sign is a plus) or minimum (if
+property can also be given a maximum (if the sign is a plus) or minimum (if
 the sign is a minus).</p>
 
 <p>If the rule is being applied to a numeric attribute, the number to add or
@@ -4778,7 +4748,7 @@ of the attribute is used.</p>
   minimumA       = minimum / AttrID .
   minimum        = NUMBER .</pre>
 
-<p>The parameters which can be obtained by inheritance are justification,
+<p>The properties which can be obtained by inheritance are justification,
 hyphenation, interline spacing, character font (font family), font style, font
 size, visibility, indentation, underlining, alignment of text, stacking order
 of objects, the style and thickness of lines, fill pattern and the colors of
@@ -4907,7 +4877,7 @@ and produced by a <tt>Line</tt> rule should be extended horizontally to occupy
 the entire width of their enclosing box.  The first and last lines are treated
 specially: the position of the beginning of the first line is fixed by the
 <tt>Indent</tt> rule and last line is not extended.  The justification
-parameter defined by this rule takes a boolean value, which can be a constant
+property defined by this rule takes a boolean value, which can be a constant
 or inherited.  A constant boolean value is expressed by either the
 <tt>Yes</tt> or the <tt>No</tt> keyword.  An inherited value can only be the
 same as that of the reference box and is specified by a kinship keyword
@@ -4916,7 +4886,7 @@ followed by an equals sign.</p>
      BoolInherit = Boolean / Kinship '=' .
      Boolean     ='Yes' / 'No' .</pre>
 
-<p>When the lines are justified, the alignment parameter specified in the
+<p>When the lines are justified, the alignment property specified in the
 <tt>Adjust</tt> rule has no influence, other than on the last line produced.
 This occurs because, when the other are extended to the limits of the box, the
 alignment style is no longer perceptible.</p>
@@ -4968,7 +4938,7 @@ by hyphenation at the end of lines.  It affects the lines produced by the
 <tt>Line</tt> rule and contained in the box carrying the <tt>Hyphenate</tt>
 rule.</p>
 
-<p>The hyphenation parameter takes a boolean value, which can be either
+<p>The hyphenation property takes a boolean value, which can be either
 constant or inherited.  A constant boolean value is expressed by either the
 <tt>Yes</tt> or the <tt>No</tt> keyword.  An inherited value can only be the
 same as that of the reference box and is specified by a kinship keyword
@@ -5141,7 +5111,7 @@ to all views defined in the presentation schema.</p>
 <div class="subsection">
 <h3><a name="sectc4224">Visibility</a></h3>
 
-<p>The visibility parameter is used to control which elements should or should
+<p>The visibility property is used to control which elements should or should
 not be displayed, based on context.  An element can have different
 visibilities in different views.  If an element's visibility is zero for a
 view, that element is not displayed in that view and does not occupy any space
@@ -5149,11 +5119,11 @@ view, that element is not displayed in that view and does not occupy any space
 
 <p>Visibility takes non-negative integer values (positive or zero).  If values
 greater than 1 are used, they allow the user to choose a degree of visibility
-and, thus, to see only those boxes whose visibility parameter exceeds a
-certain threshold.  This gives the user control over the granularity of the
-displayed pictures.</p>
+and, thus, to see only those boxes whose visibility property exceeds a certain
+threshold.  This gives the user control over the granularity of the displayed
+pictures.</p>
 
-<p>The visibility parameter can be defined as a constant or by inheritance. If
+<p>The visibility property can be defined as a constant or by inheritance. If
 defined by inheritance, it cannot be based on the value of the next or
 previous box.  Visibility can only be inherited from above.</p>
 
@@ -5183,18 +5153,18 @@ used.</p>
 </div>
 
 <div class="subsection">
-<h3><a name="sectc4225">Character style parameters</a></h3>
+<h3><a name="sectc4225">Character style properties</a></h3>
 
-<p>Four parameters are used to determine which characters are used to display
+<p>Four properties are used to determine which characters are used to display
 text.  They are size, font, style, and underlining.</p>
 
 <div class="subsubsection">
 <h4><a name="sectd42251">Character size</a></h4>
 
-<p>The size parameter has two effects.  First, it is used to specify the
-actual size and distance units for boxes defined in <a
-href="#sectc4217">relative units</a>.  Second, it defines the size of the
-characters contained in the box.</p>
+<p>The size property has two effects.  First, it is used to specify the actual
+size and distance units for boxes defined in <a href="#sectc4217">relative
+units</a>.  Second, it defines the size of the characters contained in the
+box.</p>
 
 <p>As a distance or length, the size can be expressed in abstract or absolute
 units.  It can also be inherited.  If it is not inherited, it is expressed
@@ -5207,7 +5177,7 @@ table which can be modified statically or even dynamically during the
 execution of the Thot editor.</p>
 
 <p>If the <tt>Size</tt> rule is a numeric attribute's presentation rule, the
-value of the size parameter can be specified by the attribute's name, in which
+value of the size property can be specified by the attribute's name, in which
 case the value of the attribute is used.</p>
 
 <p><strong>Note:</strong> the only unit available for  defining an absolute
@@ -5266,7 +5236,7 @@ Summary :
      Size : Enclosing - 1;</pre>
 
   <p>Thus, the character sizes in the entire document can be changed by
-  changing the size parameter of the Report element, while preserving the
+  changing the size property of the Report element, while preserving the
   relationships between the sizes of the different elements.</p>
 </blockquote>
 </div>
@@ -5338,18 +5308,18 @@ ThicknessInherit = Kinship '=' / 'Thick' / 'Thin' .</pre>
 
 <p>The <tt>Depth</tt> rule is used to define the stacking order of terminal
 boxes when multiple boxes at least partially overlap.  This rule defines how
-the depth parameter, which is zero or a positive integer, is calculated.  The
-depth parameter has a value for all boxes.  For terminal boxes in the
-structure and for presentation boxes, the depth value is used during display
-and printing: the boxes with the lowest value overlap those with higher
-depths.  For non-terminal boxes, the depth is not interpreted during display,
-but it is used to calculate the depth of terminal boxes by inheritance.</p>
+the depth property, which is zero or a positive integer, is calculated.  The
+depth property has a value for all boxes.  For terminal boxes in the structure
+and for presentation boxes, the depth value is used during display and
+printing: the boxes with the lowest value overlap those with higher depths.
+For non-terminal boxes, the depth is not interpreted during display, but it is
+used to calculate the depth of terminal boxes by inheritance.</p>
 
 <p>Like most other rules, the depth rule is defined in the <a
 href="#sectc427">default rules</a> of each presentation schema.  Thus, there
 is always a depth value, even when it is not necessary because there is no
 overlapping.  To avoid useless operations, a zero value can be given to the
-depth parameter, which signifies that overlapping is never a problem.</p>
+depth property, which signifies that overlapping is never a problem.</p>
 
 <p>The depth rule has the same form as the <a href="#sectc4224">visibility
 rule</a>. It can be defined by inheritance or by a constant numeric value.
@@ -5751,9 +5721,8 @@ href="#sectc4231">content</a>.</p>
 <p>Creation rules can only appear in the block of rules for the primary view;
 creation is provoked by a document element for all views. However, for each
 view, the presentation box is only created if the creating element is itself a
-box in the view. Moreover, the visibility parameter of the presentation box
-can be adjusted to control the creation of the box on a view-by-view
-basis.</p>
+box in the view. Moreover, the visibility property of the presentation box can
+be adjusted to control the creation of the box on a view-by-view basis.</p>
 <pre>                     Creation '(' BoxID ')'
      Creation      = Create [ 'Repeated' ] .
      Create        ='CreateFirst' / 'CreateLast' /
@@ -6575,13 +6544,13 @@ ancestor, the key word <tt>Ancestor</tt> must be used, followed by</p>
 <tt>Parent</tt> instead of <tt>Ancestor 1</tt>.</p>
 
 <p>Only conditions <tt>First</tt>, <tt>Last</tt>, <tt>Referred</tt>,
-<tt>Within</tt>, <tt>Attributes</tt>, <tt>Presentation</tt>, <tt>Comment</tt>
-and those concerning an attribute or a specific presentation can apply to an
-ancestor. Conditions <tt>Defined</tt>, <tt>FirstRef</tt>, <tt>LastRef</tt>,
-<tt>ExternalRef</tt>, <tt>Alphabet</tt>, <tt>FirstAttr</tt>,
-<tt>LastAttr</tt>, <tt>ComputedPage</tt>, <tt>StartPage</tt>,
-<tt>UserPage</tt>, <tt>ReminderPage</tt>, <tt>Empty</tt> cannot be preceded by
-keywords <tt>Parent</tt> or <tt>Ancestor</tt>.</p>
+<tt>Within</tt>, <tt>Attributes</tt>, <tt>Presentation</tt>, and those
+concerning an attribute or a specific presentation can apply to an ancestor.
+Conditions <tt>FirstRef</tt>, <tt>LastRef</tt>, <tt>ExternalRef</tt>,
+<tt>Alphabet</tt>, <tt>FirstAttr</tt>, <tt>LastAttr</tt>,
+<tt>ComputedPage</tt>, <tt>StartPage</tt>, <tt>UserPage</tt>,
+<tt>ReminderPage</tt>, <tt>Empty</tt> cannot be preceded by keywords
+<tt>Parent</tt> or <tt>Ancestor</tt>.</p>
 
 <p>In condition <tt>Referred</tt> and in the condition that applies to a named
 attribute, a symbol '<tt>*</tt>' can indicate that the condition is related
@@ -6646,15 +6615,6 @@ keyword.</p>
 </div>
 
 <div class="subsubsection">
-<h4><a name="sectd5283">Conditions on the parameters</a></h4>
-
-<p>Elements which are <a href="#sectc326">parameters</a> can be given a
-particular condition which is based on whether or not the parameter is given a
-value in the document (<tt>Defined</tt> or <tt>NOT Defined</tt>,
-respectively).</p>
-</div>
-
-<div class="subsubsection">
 <h4><a name="sectd5284">Conditions on the alphabets</a></h4>
 
 <p>The character string base type (and only this type) can use the condition
@@ -6689,14 +6649,6 @@ of page breaking.</p>
 element which has no children or whose leaves are all empty is considered to
 be empty itself.  This condition is expressed by the <tt>Empty</tt> keyword,
 optionally preceded by the <tt>NOT</tt> keyword.</p>
-</div>
-
-<div class="subsubsection">
-<h4><a name="sectd5287">Conditions on the presence of comments</a></h4>
-
-<p>The condition can be based on the presence or absence of comments
-associated with the translated element.  This condition is expressed by the
-keyword <tt>Comment</tt>, optionally preceded by the keyword <tt>NOT</tt>.</p>
 </div>
 
 <div class="subsubsection">
@@ -6832,7 +6784,6 @@ between the keywords <tt>BEGIN</tt> and <tt>END</tt>.</p>
    Cond         = CondElem / CondAscend .
    CondElem     ='FirstRef' / 'LastRef' /
                  'ExternalRef' /
-                 'Defined' /
                  'Alphabet' '=' Alphabet /
                  'ComputedPage' / 'StartPage' / 
                  'UserPage' / 'ReminderPage' /
@@ -6850,8 +6801,7 @@ between the keywords <tt>BEGIN</tt> and <tt>END</tt>.</p>
                  'Attributes' /
                   AttrID [ RelatAttr ] /
                  'Presentation' /
-                  PresRule /
-                 'Comment' .                  
+                  PresRule .
    NumParent    = [ GreaterLess ] NParent .
    GreaterLess  = '&gt;' / '&lt;' .
    NParent      = NUMBER.
@@ -6979,7 +6929,6 @@ when the translation is finished.</p>
                 [ 'Translated' ] AttrID /
                'Value' /
                'Content' /
-               'Comment' / 
                'Attributes' /
                'Presentation' /
                'RefId' /
@@ -7021,9 +6970,6 @@ when the translation is finished.</p>
   <li>the element's content.  That is, the content of the leaves of the
     subtree of the translated element.  This is specified by the
     <tt>Content</tt> keyword;</li>
-  <li>the comment attached to the element.  When the element doesn't have a
-    comment, nothing is generated.  This is indicated by the <tt>Comment</tt>
-    keyword;</li>
   <li>the translation of all attributes of the element (which is primarily
     used to apply the attribute translation rules <a
     href="#sectc5222">before</a> those of the element type).  This is
@@ -7899,7 +7845,6 @@ here in the M meta-language.</p>
 <pre>StructSchema   = 'STRUCTURE' [ 'EXTENSION' ] ElemID ';'
                  'DEFPRES' PresID ';'
                [ 'ATTR' AttrSeq ]
-               [ 'PARAM' RulesSeq ]
                [ 'STRUCT' RulesSeq ]
                [ 'EXTENS' ExtensRuleSeq ]
                [ 'ASSOC' RulesSeq ]
@@ -8145,8 +8090,8 @@ EqCtrVal        = NUMBER .
 MaxCtrBound     = NUMBER .
 MinCtrBound     = NUMBER .
 
-Rule            = PresParam ';' / PresFunc ';' .
-PresParam       = 'VertRef' ':' HorizPosition /
+Rule            = Property ';' / PresFunc ';' .
+Property        = 'VertRef' ':' HorizPosition /
                   'HorizRef' ':' VertPosition /
                   'VertPos' ':' VPos /
                   'HorizPos' ':' HPos /
@@ -8420,7 +8365,6 @@ Condition     = [ 'NOT' ] [ 'Target' ] Cond .
 Cond          = CondElem / CondAscend .
 CondElem      = 'FirstRef' / 'LastRef' /
                 'ExternalRef' /
-                'Defined' /
                 'Alphabet' '=' Alphabet /
                 'ComputedPage' / 'StartPage' / 
                 'UserPage' / 'ReminderPage' /
@@ -8438,8 +8382,7 @@ CondOnAscend  = 'First' / 'Last' /
                 'Attributes' /
                 AttrID [ RelatAttr ] /
                 'Presentation' /
-                PresRule /
-                'Comment' .                  
+                PresRule .
 NumParent     = [ GreaterLess ] NParent .
 GreaterLess   = '&gt;' / '&lt;' .
 NParent       = NUMBER.
@@ -8491,7 +8434,6 @@ Object        = ConstID / CharString /
                  [ 'Translated' ] AttrID /
                 'Value' /
                 'Content' /
-                'Comment' / 
                 'Attributes' /
                 'Presentation' /
                 'RefId' /

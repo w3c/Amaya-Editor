@@ -485,7 +485,7 @@ Element*            elementRead;
 	  }
 	*elementRead = (Element) ReadTreePiv (pivotFile, pSS,
 				    LoadedDocument[document - 1], 
-                                    byte, NumAssoc, FALSE, TRUE, &TypeCont,
+                                    byte, NumAssoc, TRUE, &TypeCont,
 				    &pSchStrCont, &TypeLu, &SchStrLu, TRUE,
                                     (PtrElement) element, TRUE);
 	if (*elementRead != NULL)

@@ -295,55 +295,12 @@ ThotBool            expansion;
 }
 
 /*----------------------------------------------------------------------
-   PutComment ecrit dans le fichier un commentaire dont le		
-   texte commence dans le buffer pointe par pBuf.          
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PutComment (BinFile pivFile, PtrTextBuffer pBuf)
-#else  /* __STDC__ */
-static void         PutComment (pivFile, pBuf)
-BinFile             pivFile;
-PtrTextBuffer       pBuf;
-
-#endif /* __STDC__ */
-{
-   int                 i, len;
-   PtrTextBuffer       pBuf1;
-
-   /* ecrit la marque de commentaire */
-   TtaWriteByte (pivFile, (CHAR_T) C_PIV_COMMENT);
-   /* calcule la longeur du commentaire */
-   pBuf1 = pBuf;
-   len = 0;
-   while (pBuf1 != NULL)
-      /* parcourt tous les buffers de texte du commentaire */
-     {
-	len += pBuf1->BuLength;
-	pBuf1 = pBuf1->BuNext;
-     }
-   /* ecrit la longueur du commentaire */
-   PutShort (pivFile, len);
-   /* ecrit dans le fichier le texte du commentaire */
-   while (pBuf != NULL)
-      /* lit tous les buffers de texte du commentaire */
-     {
-	i = 1;
-	while (i <= pBuf->BuLength)
-	  {
-	     TtaWriteWideChar (pivFile, pBuf->BuContent[i - 1], ISO_8859_1);
-	     i++;
-	  }
-	pBuf = pBuf->BuNext;
-     }
-}
-
-
-/*----------------------------------------------------------------------
    WriteNatureNumber ecrit une marque de nature suivie du numero du schema    
    de structure pointe par pSS.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                WriteNatureNumber (PtrSSchema pSS, BinFile pivFile, PtrDocument pDoc)
+void                WriteNatureNumber (PtrSSchema pSS, BinFile pivFile,
+				       PtrDocument pDoc)
 #else  /* __STDC__ */
 void                WriteNatureNumber (pSS, pivFile, pDoc)
 PtrSSchema          pSS;
@@ -502,7 +459,8 @@ PtrDocument         pDoc;
 	n = 0;
 	stop = FALSE;
 	do
-	   if (ustrcmp (pAttr->AeAttrSSchema->SsName, pDoc->DocNatureName[n]) == 0)
+	   if (ustrcmp (pAttr->AeAttrSSchema->SsName,
+			pDoc->DocNatureName[n]) == 0)
 	      stop = TRUE;
 	   else if (n < pDoc->DocNNatures - 1)
 	      n++;
@@ -536,7 +494,8 @@ PtrDocument         pDoc;
 		      {
 			 i = 0;
 			 while (pBuf->BuContent[i] != EOS)
-			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++], ISO_8859_1);
+			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++],
+					      ISO_8859_1);
 			 pBuf = pBuf->BuNext;
 		      }
 		    TtaWriteByte (pivFile, EOS);
@@ -986,7 +945,8 @@ ThotBool            subTree;
 
   /*****TO BE CHANGED**** */
   /* write a specific rule for each picture element */
-  if (pEl1->ElTerminal && pEl1->ElLeafType == LtPicture && pEl1->ElPictInfo != NULL)
+  if (pEl1->ElTerminal && pEl1->ElLeafType == LtPicture &&
+      pEl1->ElPictInfo != NULL)
     {
       /* write the rule mark */
       TtaWriteByte (pivFile, (CHAR_T) C_PIV_PRESENT);
@@ -1031,10 +991,6 @@ ThotBool            subTree;
       PutPresRule (pivFile, pPRule);
       pPRule = pPRule->PrNextPRule;
     }
-  /* ecrit les commentaires associes a l'element */
-  if (pEl1->ElComment != NULL)
-    PutComment (pivFile, pEl1->ElComment);
-
   /* ecrit le contenu de l'element */
   if (pEl1->ElSource == NULL)
     /* on n'ecrit pas le contenu d'un element inclus */
@@ -1042,11 +998,11 @@ ThotBool            subTree;
       pSS = pEl1->ElStructSchema;
       if (pEl1->ElTerminal)
 	{
-	  /* feuille terminale: on ecrit son contenu entre C_PIV_BEGIN et C_PIV_END */
-	  if (pSS->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsConstant
-	      && !pSS->SsRule[pEl1->ElTypeNumber - 1].SrParamElem)
-	    /* on n'ecrit pas le texte des constantes, ni celui des */
-	    /* parametres, il est cree automatiquement */
+	  /* feuille terminale: on ecrit son contenu entre C_PIV_BEGIN et
+	     C_PIV_END */
+	  if (pSS->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsConstant)
+	    /* on n'ecrit pas le texte des constantes, puisqu'il est cree
+	       automatiquement */
 	    {
 	      if (pEl1->ElTypeNumber == CharString + 1)
 		/* ecrit le numero de langue de la feuille de texte, si ce */
@@ -1078,8 +1034,10 @@ ThotBool            subTree;
 		      while (c < pEl1->ElTextLength && pBuf != NULL)
 			{
 			  i = 0;
-			  while (pBuf->BuContent[i] != EOS && i < pBuf->BuLength)
-			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++], ISO_8859_1);
+			  while (pBuf->BuContent[i] != EOS &&
+				 i < pBuf->BuLength)
+			    TtaWriteWideChar (pivFile, pBuf->BuContent[i++],
+					      ISO_8859_1);
 			  c = c + i;
 			  /* buffer suivant du meme element */
 			  pBuf = pBuf->BuNext;
@@ -1103,14 +1061,11 @@ ThotBool            subTree;
 					if (BothHaveNoSpecRules (*pEl, pEl1->ElNext))
 					  /* il a les memes regles de */
 					  /* presentation specifique  */
-					  if (pEl1->ElNext->ElComment == NULL)
-					    if (pEl1->ElComment == NULL)
-					      /* aucun des deux n'a de */
-					      /* commentaires, on concatene */
-					      {
-						stop = FALSE;
-						pEl1 = pEl1->ElNext;
-					      }
+					  /* on concatene */
+					  {
+					    stop = FALSE;
+					    pEl1 = pEl1->ElNext;
+					  }
 		    }
 		  while (!stop);
 		  /* update pEl value */
@@ -1156,7 +1111,7 @@ ThotBool            subTree;
 			  PutInteger (pivFile, pBuf->BuPoints[i].YCoord);
 			}
 		      c += pBuf->BuLength;
-		      pBuf = pBuf->BuNext;	/* buffer suivant du meme element */
+		      pBuf = pBuf->BuNext; /* buffer suivant du meme element */
 		    }
 		  break;
 		default:
@@ -1170,50 +1125,48 @@ ThotBool            subTree;
 	/* ce n'est pas un element terminal */
 	if (subTree)
 	  /* on veut ecrire les fils de l'element */
-	  if (!pSS->SsRule[pEl1->ElTypeNumber - 1].SrParamElem)
-	    /* on n'ecrit pas le contenu des parametres */
-	    {
-	      /* ecrit une marque de debut */
-	      TtaWriteByte (pivFile, (CHAR_T) C_PIV_BEGIN);
-	      pChild = pEl1->ElFirstChild;
-	      /* ecrit successivement la representation pivot de tous */
-	      /* les fils de l'element */
-	      while (pChild != NULL)
-		{
-		  /* envoie l'evenement ElemSave.Pre a l'application, si */
-		  /* elle le demande */
-		  notifyEl.event = TteElemSave;
-		  notifyEl.document = (Document) IdentDocument (pDoc);
-		  notifyEl.element = (Element) pChild;
-		  notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
-		  notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
-		  notifyEl.position = 0;
-		  if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		    /* l'application accepte que Thot sauve l'element */
-		    {
-		      /* Ecrit d'abord le numero de la structure generique s'il y */
-		      /* a changement de schema de structure par rapport au pere */
-		      if (pEl1->ElStructSchema != pChild->ElStructSchema)
-			WriteNatureNumber (pChild->ElStructSchema, pivFile,
-					   pDoc);
-		      /* Ecrit un element fils */
-		      Externalise (pivFile, &pChild, pDoc, subTree);
-		      /* envoie l'evenement ElemSave.Post a l'application, si */
-		      /* elle le demande */
-		      notifyEl.event = TteElemSave;
-		      notifyEl.document = (Document) IdentDocument (pDoc);
-		      notifyEl.element = (Element) pChild;
-		      notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
-		      notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
-		      notifyEl.position = 0;
-		      CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-		    }
-		  /* passe au fils suivant */
-		  pChild = pChild->ElNext;
-		}
-	      /* ecrit une marque de fin */
-	      TtaWriteByte (pivFile, (CHAR_T) C_PIV_END);
-	    }
+	  {
+	    /* ecrit une marque de debut */
+	    TtaWriteByte (pivFile, (CHAR_T) C_PIV_BEGIN);
+	    pChild = pEl1->ElFirstChild;
+	    /* ecrit successivement la representation pivot de tous */
+	    /* les fils de l'element */
+	    while (pChild != NULL)
+	      {
+		/* envoie l'evenement ElemSave.Pre a l'application, si */
+		/* elle le demande */
+		notifyEl.event = TteElemSave;
+		notifyEl.document = (Document) IdentDocument (pDoc);
+		notifyEl.element = (Element) pChild;
+		notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
+		notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
+		notifyEl.position = 0;
+		if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		  /* l'application accepte que Thot sauve l'element */
+		  {
+		    /* Ecrit d'abord le numero de la structure generique */
+		    /* s'il y a changement de schema de structure par */
+		    /* rapport au pere */
+		    if (pEl1->ElStructSchema != pChild->ElStructSchema)
+		      WriteNatureNumber (pChild->ElStructSchema, pivFile,pDoc);
+		    /* Ecrit un element fils */
+		    Externalise (pivFile, &pChild, pDoc, subTree);
+		    /* envoie l'evenement ElemSave.Post a l'application, si*/
+		    /* elle le demande */
+		    notifyEl.event = TteElemSave;
+		    notifyEl.document = (Document) IdentDocument (pDoc);
+		    notifyEl.element = (Element) pChild;
+		    notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
+		    notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
+		    notifyEl.position = 0;
+		    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		  }
+		/* passe au fils suivant */
+		pChild = pChild->ElNext;
+	      }
+	    /* ecrit une marque de fin */
+	    TtaWriteByte (pivFile, (CHAR_T) C_PIV_END);
+	  }
     }
 }
 
@@ -1319,8 +1272,6 @@ PtrDocument         pDoc;
    int                 i;
 
    pDoc->DocNLanguages = 0;
-   for (i = 0; i < MAX_PARAM_DOC; i++)
-      UpdateLanguageTable (pDoc, pDoc->DocParameters[i]);
    for (i = 0; i < MAX_ASSOC_DOC; i++)
       UpdateLanguageTable (pDoc, pDoc->DocAssocRoot[i]);
    UpdateLanguageTable (pDoc, pDoc->DocRootElement);
@@ -1377,45 +1328,10 @@ PtrDocument         pDoc;
 
    /* ecrit l'entete du fichier pivot */
    WritePivotHeader (pivFile, pDoc);
-   /* ecrit le commentaire associe au fichier, s'il y en a un */
-   if (pDoc->DocComment != NULL)
-      PutComment (pivFile, pDoc->DocComment);
    /* ecrit les noms de tous les schemas de structure et de presentation */
    /* utilises par le document */
    WriteSchemaNamesOfDoc (pivFile, pDoc);
 
-   /* ecrit la representation pivot de tous les parametres. */
-   for (i = 0; i < MAX_PARAM_DOC; i++)
-      if (pDoc->DocParameters[i] != NULL)
-	{
-	   pEl = pDoc->DocParameters[i];
-	   pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrParamElem = FALSE;
-	   /* envoie l'evenement ElemSave.Pre a l'application, si */
-	   /* elle le demande */
-	   notifyEl.event = TteElemSave;
-	   notifyEl.document = (Document) IdentDocument (pDoc);
-	   notifyEl.element = (Element) pEl;
-	   notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-	   notifyEl.position = 0;
-	   if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-	      /* l'application accepte que Thot sauve l'element */
-	     {
-		TtaWriteByte (pivFile, (CHAR_T) C_PIV_PARAM);
-		/* Ecrit l'element */
-		Externalise (pivFile, &pEl, pDoc, TRUE);
-		/* envoie l'evenement ElemSave.Post a l'application, si */
-		/* elle le demande */
-		notifyEl.event = TteElemSave;
-		notifyEl.document = (Document) IdentDocument (pDoc);
-		notifyEl.element = (Element) pEl;
-		notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-		notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-		notifyEl.position = 0;
-		CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-	     }
-	   pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrParamElem = TRUE;
-	}
    /* ecrit la representation pivot de tous les arbres d'elements */
    /* associes qui ne sont pas vides */
    for (i = 0; i < MAX_ASSOC_DOC; i++)
@@ -1452,16 +1368,16 @@ PtrDocument         pDoc;
 		       {
 			  /* ecrit une marque d'element associe' */
 			  TtaWriteByte (pivFile, (CHAR_T) C_PIV_ASSOC);
-			  /* si ces elements associes sont definis dans une extension */
-			  /* du schema de structure du document, on ecrit un */
-			  /* changement de nature */
+			  /* si ces elements associes sont definis dans une
+			     extension du schema de structure du document,
+			     on ecrit un changement de nature */
 			  if (pEl->ElStructSchema != pDoc->DocSSchema)
 			     WriteNatureNumber (pEl->ElStructSchema, pivFile,
 						pDoc);
 			  /* Ecrit l'element */
 			  Externalise (pivFile, &pEl, pDoc, TRUE);
-			  /* envoie l'evenement ElemSave.Post a l'application, si */
-			  /* elle le demande */
+			  /* envoie l'evenement ElemSave.Post a l'application,
+			     si elle le demande */
 			  notifyEl.event = TteElemSave;
 			  notifyEl.document = (Document) IdentDocument (pDoc);
 			  notifyEl.element = (Element) pEl;
@@ -1534,63 +1450,65 @@ PtrDocument         pDoc;
    refFile = NULL;
    pRefD = pDoc->DocReferredEl;
    if (pRefD != NULL)
-      /* saute le premier descripteur d'element reference' bidon */
-      pRefD = pRefD->ReNext;
+     /* saute le premier descripteur d'element reference' bidon */
+     pRefD = pRefD->ReNext;
    fileOpen = FALSE;
    /* le fichier n'est pas encore ouvert */
    noExtRef = TRUE;
    /* a priori, il n'y a pas de reference sortante */
    /* parcourt la chaine des descripteurs d'elements reference's */
    while (pRefD != NULL)
-      /* on ne considere que les elements reference's externes au document */
+     /* on ne considere que les elements reference's externes au document */
      {
-	if (pRefD->ReExternalRef)
-	  {
-	     pRef = pRefD->ReFirstReference;
-	     /* parcourt la chaine des references a cet element externe */
-	     while (pRef != NULL)
-		/* on ignore les references qui sont dans */
-		/* le tampon de couper-coller */
-	       {
-		  if (!IsASavedElement (pRef->RdElement))
-		    {
-		       noExtRef = FALSE;
-		       /* au moins une reference sortante */
-		       /* ouvre le fichier si ce n'est pas encore fait */
-		       if (!fileOpen)
+       if (pRefD->ReExternalRef)
+	 {
+	   pRef = pRefD->ReFirstReference;
+	   /* parcourt la chaine des references a cet element externe */
+	   while (pRef != NULL)
+	     /* on ignore les references qui sont dans */
+	     /* le tampon de couper-coller */
+	     {
+	       if (!IsASavedElement (pRef->RdElement))
+		 {
+		   noExtRef = FALSE;
+		   /* au moins une reference sortante */
+		   /* ouvre le fichier si ce n'est pas encore fait */
+		   if (!fileOpen)
+		     {
+		       /* ouvre le fichier */
+		       refFile = TtaWriteOpen (fileName);
+		       if (refFile != 0)
+			 fileOpen = TRUE;
+		       else
+			 /* ouverture fichier impossible */
 			 {
-			    /* ouvre le fichier */
-			    refFile = TtaWriteOpen (fileName);
-			    if (refFile != 0)
-			       fileOpen = TRUE;
-			    else
-			       /* ouverture fichier impossible */
-			      {
-				 TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_WRITING_IMP), fileName);
-				 pRefD = NULL;
-				 pRef = NULL;
-			      }
+			   TtaDisplayMessage (INFO,
+					 TtaGetMessage (LIB, TMSG_WRITING_IMP),
+					 fileName);
+			   pRefD = NULL;
+			   pRef = NULL;
 			 }
-		       if (fileOpen)
-			  /* ecrit la ref dans le fichier */
-			  PutReference (refFile, pRef);
-		    }
-		  /* passe a la reference suivante au meme element */
-		  if (pRef != NULL)
-		     pRef = pRef->RdNext;
-	       }
-	  }
-	/* passe au descripteur d'element reference' suivant */
-	if (pRefD != NULL)
-	   pRefD = pRefD->ReNext;
+		     }
+		   if (fileOpen)
+		     /* ecrit la ref dans le fichier */
+		     PutReference (refFile, pRef);
+		 }
+	       /* passe a la reference suivante au meme element */
+	       if (pRef != NULL)
+		 pRef = pRef->RdNext;
+	     }
+	 }
+       /* passe au descripteur d'element reference' suivant */
+       if (pRefD != NULL)
+	 pRefD = pRefD->ReNext;
      }
    /* fin du parcours des descripteurs d'elements reference's */
    if (fileOpen)
-      TtaWriteClose (refFile);
+     TtaWriteClose (refFile);
    /* vide le buffer d'entree-sortie */
    if (noExtRef)
-      /* il n'y a pas de reference sortante, on detruit le fichier */
-      TtaFileUnlink (fileName);
+     /* il n'y a pas de reference sortante, on detruit le fichier */
+     TtaFileUnlink (fileName);
 }
 
 /*----------------------------------------------------------------------
@@ -1668,73 +1586,74 @@ PathBuffer          fileName;
    /* parcourt la chaine des descripteurs d'elements reference's */
    while (pRefD != NULL)
      {
-	pExtDoc = pRefD->ReExtDocRef;
-	if (pExtDoc != NULL)
-	   /* l'element est reference' par au moins un document externe */
-	  {
-	     noExtRef = FALSE;	/* il y a au moins une reference externe */
-	     /* ouvre le fichier si ce n'est pas encore fait */
-	     if (!fileOpen)
-	       {
-		  /* ouvre le fichier */
-		  extFile = TtaWriteOpen (fileName);
-		  if (extFile != 0)
-		     fileOpen = TRUE;
-		  else
-		     /* ouverture fichier impossible */
-		    {
-		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_WRITING_IMP),
-					  fileName);
-		       pRefD = NULL;
-		    }
-	       }
-	     if (fileOpen)
-		/* ecrit le label de l'element reference' */
-	       {
-		  PutLabel (extFile, pRefD->ReReferredLabel);
-		  /* parcourt la chaine des documents referencant l'element */
-		  do
-		    {
-		       /* ecrit une marque de nom de document */
-		       TtaWriteByte (extFile, (CHAR_T) C_PIV_DOCNAME);
-		       /* ecrit le nom du document referencant */
-		       TtaWriteDocIdent (extFile, pExtDoc->EdDocIdent);
-		       /* passe au descripteur de document referencant suivant */
-		       pExtDoc = pExtDoc->EdNext;
-		    }
-		  while (pExtDoc != NULL);
-	       }
-	  }
-	/* passe au descripteur d'element reference' suivant */
-	if (pRefD != NULL)
-	   pRefD = pRefD->ReNext;
+       pExtDoc = pRefD->ReExtDocRef;
+       if (pExtDoc != NULL)
+	 /* l'element est reference' par au moins un document externe */
+	 {
+	   noExtRef = FALSE;	/* il y a au moins une reference externe */
+	   /* ouvre le fichier si ce n'est pas encore fait */
+	   if (!fileOpen)
+	     {
+	       /* ouvre le fichier */
+	       extFile = TtaWriteOpen (fileName);
+	       if (extFile != 0)
+		 fileOpen = TRUE;
+	       else
+		 /* ouverture fichier impossible */
+		 {
+		   TtaDisplayMessage (INFO,
+				      TtaGetMessage (LIB, TMSG_WRITING_IMP),
+				      fileName);
+		   pRefD = NULL;
+		 }
+	     }
+	   if (fileOpen)
+	     /* ecrit le label de l'element reference' */
+	     {
+	       PutLabel (extFile, pRefD->ReReferredLabel);
+	       /* parcourt la chaine des documents referencant l'element */
+	       do
+		 {
+		   /* ecrit une marque de nom de document */
+		   TtaWriteByte (extFile, (CHAR_T) C_PIV_DOCNAME);
+		   /* ecrit le nom du document referencant */
+		   TtaWriteDocIdent (extFile, pExtDoc->EdDocIdent);
+		   /* passe au descripteur de document referencant suivant */
+		   pExtDoc = pExtDoc->EdNext;
+		 }
+	       while (pExtDoc != NULL);
+	     }
+	 }
+       /* passe au descripteur d'element reference' suivant */
+       if (pRefD != NULL)
+	 pRefD = pRefD->ReNext;
      }
    if (fileOpen)
-      TtaWriteClose (extFile);
-
+     TtaWriteClose (extFile);
+   
    if (noExtRef)
-      /* il n'y a pas de reference externe, on detruit le fichier */
-      TtaFileUnlink (fileName);
+     /* il n'y a pas de reference externe, on detruit le fichier */
+     TtaFileUnlink (fileName);
    /* libere la chaine de decripteurs d'elements reference's */
    pRefD = pFirstRefD;
    while (pRefD != NULL)
      {
-	/* libere la chaine de descripteurs de documents externes */
-	pExtDoc = pRefD->ReExtDocRef;
-	while (pExtDoc != NULL)
-	  {
-	     pNextExtDoc = pExtDoc->EdNext;
-	     /* libere le descripteur de document externe */
-	     FreeExternalDoc (pExtDoc);
-	     pExtDoc = pNextExtDoc;
-	  }
-	/* libere le descripteur d'element reference' */
-	pNextRefD = pRefD->ReNext;
-	FreeReferredDescr (pRefD);
-	/* passe au descripteur d'element reference' suivant */
-	pRefD = pNextRefD;
+       /* libere la chaine de descripteurs de documents externes */
+       pExtDoc = pRefD->ReExtDocRef;
+       while (pExtDoc != NULL)
+	 {
+	   pNextExtDoc = pExtDoc->EdNext;
+	   /* libere le descripteur de document externe */
+	   FreeExternalDoc (pExtDoc);
+	   pExtDoc = pNextExtDoc;
+	 }
+       /* libere le descripteur d'element reference' */
+       pNextRefD = pRefD->ReNext;
+       FreeReferredDescr (pRefD);
+       /* passe au descripteur d'element reference' suivant */
+       pRefD = pNextRefD;
      }
-
+   
 }
 
 
@@ -1774,191 +1693,192 @@ PtrDocument         pDoc;
    /* fois pour chaque document externe qui y figure */
    while (pDoc->DocNewOutRef != NULL || pDoc->DocDeadOutRef != NULL)
      {
-	/* positionne les pointeurs courants au debut de chacune des */
-	/* deux listes */
-	pCreatedRef = pDoc->DocNewOutRef;
-	pDeadRef = pDoc->DocDeadOutRef;
-	pPrevCreatedRef = NULL;
-	pPrevDeadRef = NULL;
-	/* prend le nom du document externe qui est en tete de liste */
-	if (pCreatedRef != NULL)
-	   CopyDocIdent (&extDocIdent, pCreatedRef->OrDocIdent);
-	else
-	   CopyDocIdent (&extDocIdent, pDeadRef->OrDocIdent);
-	pFirstRefD = NULL;
-	/* Charge le fichier .EXT du document externe */
-	/* demande d'abord dans quel directory se trouve le fichier .PIV */
-	ustrncpy (directoryName, DocumentPath, MAX_PATH);
-	MakeCompleteName (extDocIdent, TEXT("PIV"), directoryName, fileName, &i);
-	/* cherche le fichier .EXT dans le meme directory */
-	FindCompleteName (extDocIdent, TEXT("EXT"), directoryName, fileName, &i);
-	if (fileName[0] != EOS)
-	  {
-	     extFile = TtaReadOpen (fileName);
-	     if (extFile != 0)
+       /* positionne les pointeurs courants au debut de chacune des */
+       /* deux listes */
+       pCreatedRef = pDoc->DocNewOutRef;
+       pDeadRef = pDoc->DocDeadOutRef;
+       pPrevCreatedRef = NULL;
+       pPrevDeadRef = NULL;
+       /* prend le nom du document externe qui est en tete de liste */
+       if (pCreatedRef != NULL)
+	 CopyDocIdent (&extDocIdent, pCreatedRef->OrDocIdent);
+       else
+	 CopyDocIdent (&extDocIdent, pDeadRef->OrDocIdent);
+       pFirstRefD = NULL;
+       /* Charge le fichier .EXT du document externe */
+       /* demande d'abord dans quel directory se trouve le fichier .PIV */
+       ustrncpy (directoryName, DocumentPath, MAX_PATH);
+       MakeCompleteName (extDocIdent, TEXT("PIV"), directoryName, fileName,&i);
+       /* cherche le fichier .EXT dans le meme directory */
+       FindCompleteName (extDocIdent, TEXT("EXT"), directoryName, fileName,&i);
+       if (fileName[0] != EOS)
+	 {
+	   extFile = TtaReadOpen (fileName);
+	   if (extFile != 0)
+	     {
+	       /* le fichier .EXT existe, on le charge */
+	       LoadEXTfile (extFile, NULL, &pFirstRefD, FALSE);
+	       TtaReadClose (extFile);
+	     }
+	 }
+       /* parcourt les deux listes de references sortantes et traite */
+       /* toutes les references sortantes (creees ou detruites) qui */
+       /* design(ai)ent un element du document externe courant */
+       while (pCreatedRef != NULL || pDeadRef != NULL)
+	 {
+	   if (pCreatedRef != NULL)
+	     pOutRef = pCreatedRef;
+	   else
+	     pOutRef = pDeadRef;
+	   if (!SameDocIdent (pOutRef->OrDocIdent, extDocIdent))
+	     /* cette reference sortante ne designe pas le document */
+	     /* externe courant, on passe a la suivante */
+	     if (pOutRef == pCreatedRef)
 	       {
-		  /* le fichier .EXT existe, on le charge */
-		  LoadEXTfile (extFile, NULL, &pFirstRefD, FALSE);
-		  TtaReadClose (extFile);
+		 pPrevCreatedRef = pCreatedRef;
+		 pCreatedRef = pCreatedRef->OrNext;
 	       }
-	  }
-	/* parcourt les deux listes de references sortantes et traite */
-	/* toutes les references sortantes (creees ou detruites) qui */
-	/* design(ai)ent un element du document externe courant */
-	while (pCreatedRef != NULL || pDeadRef != NULL)
-	  {
-	     if (pCreatedRef != NULL)
-		pOutRef = pCreatedRef;
 	     else
-		pOutRef = pDeadRef;
-	     if (!SameDocIdent (pOutRef->OrDocIdent, extDocIdent))
-		/* cette reference sortante ne designe pas le document */
-		/* externe courant, on passe a la suivante */
-		if (pOutRef == pCreatedRef)
-		  {
-		     pPrevCreatedRef = pCreatedRef;
-		     pCreatedRef = pCreatedRef->OrNext;
-		  }
-		else
-		  {
-		     pPrevDeadRef = pDeadRef;
-		     pDeadRef = pDeadRef->OrNext;
-		  }
-	     else
-		/* cette reference designe le document externe courant */
 	       {
-		  /* cherche si l'element designe' par la reference sortante */
-		  /* traitee a un descripteur d'element reference' dans le */
-		  /* document externe */
-		  pRefD = pFirstRefD;
-		  found = FALSE;
-		  while (!found && pRefD != NULL)
-		     if (strcmp (pOutRef->OrLabel, pRefD->ReReferredLabel) == 0)
-			found = TRUE;
+		 pPrevDeadRef = pDeadRef;
+		 pDeadRef = pDeadRef->OrNext;
+	       }
+	   else
+	     /* cette reference designe le document externe courant */
+	     {
+	       /* cherche si l'element designe' par la reference sortante */
+	       /* traitee a un descripteur d'element reference' dans le */
+	       /* document externe */
+	       pRefD = pFirstRefD;
+	       found = FALSE;
+	       while (!found && pRefD != NULL)
+		 if (strcmp (pOutRef->OrLabel, pRefD->ReReferredLabel) == 0)
+		   found = TRUE;
+		 else
+		   pRefD = pRefD->ReNext;
+	       if (!found)
+		 /* l'element designe' n'a pas de descripteur d'element */
+		 /* reference' */
+		 {
+		   if (pOutRef == pCreatedRef)
+		     /* il s'agit d'une reference creee, on ajoute un */
+		     /* descripteur d'element reference' */
+		     {
+		       GetReferredDescr (&pRefD);
+		       strncpy (pRefD->ReReferredLabel, pOutRef->OrLabel,
+				MAX_LABEL_LEN);
+		       /* chaine le descripteur en tete */
+		       pRefD->ReNext = pFirstRefD;
+		       pRefD->RePrevious = NULL;
+		       if (pRefD->ReNext != NULL)
+			 pRefD->ReNext->RePrevious = pRefD;
+		       pFirstRefD = pRefD;
+		       /* associe a ce descripteur un 1er descripteur de */
+		       /* document referencant */
+		       GetExternalDoc (&pExtDoc);
+		       CopyDocIdent (&pExtDoc->EdDocIdent, pDoc->DocIdent);
+		       pRefD->ReExtDocRef = pExtDoc;
+		     }
+		   /* s'il s'agit d'une reference detruite, on ne devrait */
+		   /* pas arriver la... */
+		 }
+	       else
+		 /* l'element designe' possede un descripteur d'element */
+		 /* reference' */
+		 {
+		   /* le document est-il dans les documents referencants ? */
+		   pExtDoc = pRefD->ReExtDocRef;
+		   pPrevExtDoc = NULL;
+		   found = FALSE;
+		   while (!found && pExtDoc != NULL)
+		     if (SameDocIdent (pExtDoc->EdDocIdent, pDoc->DocIdent))
+		       found = TRUE;
 		     else
-			pRefD = pRefD->ReNext;
-		  if (!found)
-		     /* l'element designe' n'a pas de descripteur d'element */
-		     /* reference' */
-		    {
-		       if (pOutRef == pCreatedRef)
-			  /* il s'agit d'une reference creee, on ajoute un */
-			  /* descripteur d'element reference' */
+		       {
+			 pPrevExtDoc = pExtDoc;
+			 pExtDoc = pExtDoc->EdNext;
+		       }
+		   if (found)
+		     /* le document figure parmi les documents referencants */
+		     {
+		       /* s'il s'agit d'une reference creee, on ne fait rien */
+		       if (pOutRef == pDeadRef)
+			 /* il s'agit d'une reference detruite, on enleve le */
+			 /* descripteur de document referencant */
 			 {
-			    GetReferredDescr (&pRefD);
-			    strncpy (pRefD->ReReferredLabel, pOutRef->OrLabel, MAX_LABEL_LEN);
-			    /* chaine le descripteur en tete */
-			    pRefD->ReNext = pFirstRefD;
-			    pRefD->RePrevious = NULL;
-			    if (pRefD->ReNext != NULL)
-			       pRefD->ReNext->RePrevious = pRefD;
-			    pFirstRefD = pRefD;
-			    /* associe a ce descripteur un 1er descripteur de */
-			    /* document referencant */
-			    GetExternalDoc (&pExtDoc);
-			    CopyDocIdent (&pExtDoc->EdDocIdent, pDoc->DocIdent);
-			    pRefD->ReExtDocRef = pExtDoc;
+			   if (pPrevExtDoc != NULL)
+			     pPrevExtDoc->EdNext = pExtDoc->EdNext;
+			   else
+			     {
+			       pRefD->ReExtDocRef = pExtDoc->EdNext;
+			       if (pRefD->ReExtDocRef == NULL)
+				 /* c'etait le dernier descripteur de document
+				    referencant, on enleve le descripteur
+				    d'element reference' */
+				 {
+				   if (pRefD == pFirstRefD)
+				     {
+				       pFirstRefD = pRefD->ReNext;
+				       if (pRefD->ReNext != NULL)
+					 pRefD->ReNext->RePrevious = NULL;
+				     }
+				   else
+				     {
+				       pRefD->RePrevious->ReNext =
+					                        pRefD->ReNext;
+				       if (pRefD->ReNext != NULL)
+					 pRefD->ReNext->RePrevious =
+					                    pRefD->RePrevious;
+				     }
+				   FreeReferredDescr (pRefD);
+				   pRefD = NULL;
+				 }
+			     }
+			   FreeExternalDoc (pExtDoc);
 			 }
-		       /* s'il s'agit d'une reference detruite, on ne devrait */
-		       /* pas arriver la... */
-		    }
-		  else
-		     /* l'element designe' possede un descripteur d'element */
-		     /* reference' */
-		    {
-		       /* le document est-il dans les documents referencants ? */
-		       pExtDoc = pRefD->ReExtDocRef;
-		       pPrevExtDoc = NULL;
-		       found = FALSE;
-		       while (!found && pExtDoc != NULL)
-			  if (SameDocIdent (pExtDoc->EdDocIdent, pDoc->DocIdent))
-			     found = TRUE;
-			  else
-			    {
-			       pPrevExtDoc = pExtDoc;
-			       pExtDoc = pExtDoc->EdNext;
-			    }
-		       if (found)
-			  /* le document figure parmi les documents referencants */
-			 {
-			    /* s'il s'agit d'une reference creee, on ne fait rien */
-			    if (pOutRef == pDeadRef)
-			       /* il s'agit d'une reference detruite, on enleve le */
-			       /* descripteur de document referencant */
-			      {
-				 if (pPrevExtDoc != NULL)
-				    pPrevExtDoc->EdNext = pExtDoc->EdNext;
-				 else
-				   {
-				      pRefD->ReExtDocRef = pExtDoc->EdNext;
-				      if (pRefD->ReExtDocRef == NULL)
-					 /* c'etait le dernier descripteur de document */
-					 /* referencant, on enleve le descripteur */
-					 /* d'element reference' */
-					{
-					   if (pRefD == pFirstRefD)
-					     {
-						pFirstRefD = pRefD->ReNext;
-						if (pRefD->ReNext != NULL)
-						   pRefD->ReNext->RePrevious = NULL;
-					     }
-					   else
-					     {
-						pRefD->RePrevious->ReNext =
-						   pRefD->ReNext;
-						if (pRefD->ReNext != NULL)
-						   pRefD->ReNext->RePrevious =
-						      pRefD->RePrevious;
-					     }
-					   FreeReferredDescr (pRefD);
-					   pRefD = NULL;
-					}
-				   }
-				 FreeExternalDoc (pExtDoc);
-			      }
-			 }
-		       else
-			  /* le document ne figure pas parmi les documents */
-			  /* referencants */
-			  /* s'il s'agit d'une reference detruite,on ne fait rien */
-		       if (pOutRef == pCreatedRef)
-			  /* il s'agit d'une reference creee, on ajoute un */
-			  /* descripteur de document referencant */
-			 {
-			    GetExternalDoc (&pExtDoc);
-			    CopyDocIdent (&pExtDoc->EdDocIdent, pDoc->DocIdent);
-			    pExtDoc->EdNext = pRefD->ReExtDocRef;
-			    pRefD->ReExtDocRef = pExtDoc;
-			 }
-		    }
-		  /* dechaine et supprime cette reference sortante traitee */
-		  if (pOutRef == pCreatedRef)
-		    {
-		       pNextCreatedRef = pCreatedRef->OrNext;
-		       if (pPrevCreatedRef == NULL)
-			  pDoc->DocNewOutRef = pCreatedRef->OrNext;
-		       else
-			  pPrevCreatedRef->OrNext = pCreatedRef->OrNext;
-		       FreeOutputRef (pCreatedRef);
-		       pCreatedRef = pNextCreatedRef;
-		    }
-		  else
-		    {
-		       pNextDeadRef = pDeadRef->OrNext;
-		       if (pPrevDeadRef == NULL)
-			  pDoc->DocDeadOutRef = pDeadRef->OrNext;
-		       else
-			  pPrevDeadRef->OrNext = pDeadRef->OrNext;
-		       FreeOutputRef (pDeadRef);
-		       pDeadRef = pNextDeadRef;
-		    }
-	       }
-	  }
-	/* on a traite' toutes les references sortantes creees et */
-	/* detruites de pDoc qui designaient des elements du document */
-	/* externe courant. On sauve maintenant les elements reference's */
-	/* de ce document dans son fichier .EXT */
-	SauveExt (pFirstRefD, fileName);
+		     }
+		   else
+		     /* le document ne figure pas parmi les documents */
+		     /* referencants */
+		     /* s'il s'agit d'une reference detruite,on ne fait rien */
+		     if (pOutRef == pCreatedRef)
+		       /* il s'agit d'une reference creee, on ajoute un */
+		       /* descripteur de document referencant */
+		       {
+			 GetExternalDoc (&pExtDoc);
+			 CopyDocIdent (&pExtDoc->EdDocIdent, pDoc->DocIdent);
+			 pExtDoc->EdNext = pRefD->ReExtDocRef;
+			 pRefD->ReExtDocRef = pExtDoc;
+		       }
+		 }
+	       /* dechaine et supprime cette reference sortante traitee */
+	       if (pOutRef == pCreatedRef)
+		 {
+		   pNextCreatedRef = pCreatedRef->OrNext;
+		   if (pPrevCreatedRef == NULL)
+		     pDoc->DocNewOutRef = pCreatedRef->OrNext;
+		   else
+		     pPrevCreatedRef->OrNext = pCreatedRef->OrNext;
+		   FreeOutputRef (pCreatedRef);
+		   pCreatedRef = pNextCreatedRef;
+		 }
+	       else
+		 {
+		   pNextDeadRef = pDeadRef->OrNext;
+		   if (pPrevDeadRef == NULL)
+		     pDoc->DocDeadOutRef = pDeadRef->OrNext;
+		   else
+		     pPrevDeadRef->OrNext = pDeadRef->OrNext;
+		   FreeOutputRef (pDeadRef);
+		   pDeadRef = pNextDeadRef;
+		 }
+	     }
+	 }
+       /* on a traite' toutes les references sortantes creees et */
+       /* detruites de pDoc qui designaient des elements du document */
+       /* externe courant. On sauve maintenant les elements reference's */
+       /* de ce document dans son fichier .EXT */
+       SauveExt (pFirstRefD, fileName);
      }
 }
 
@@ -1996,231 +1916,248 @@ PtrDocument         pDoc;
    PtrReferredDescr    pRefD;
 
    if (pDoc->DocChangedReferredEl != NULL)
-      /* des elements reference's ont effectivement ete touches */
+     /* des elements reference's ont effectivement ete touches */
      {
-	/* on va charger le fichier .EXT du document */
-	/* acquiert d'abord un descripteur de ce fichier */
-	GetInputRef (&pExtFileD);
-	/* ce fichier est dans le meme directory que le document */
-	ustrncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
-	FindCompleteName (pDoc->DocDName, TEXT("EXT"), directoryName, fileName, &i);
-	/* initialise le descripteur du fichier .EXT */
-	pExtFileD->ErFirstReferredEl = NULL;
-	CopyDocIdent (&pExtFileD->ErDocIdent, pDoc->DocIdent);
-	ustrncpy (pExtFileD->ErFileName, fileName, MAX_PATH);
-	if (fileName[0] != EOS)
-	  {
-	     extFile = TtaReadOpen (fileName);
-	     if (extFile != 0)
-		/* ce fichier existe, on le charge */
-	       {
-		  LoadEXTfile (extFile, NULL, &(pExtFileD->ErFirstReferredEl), FALSE);
-		  TtaReadClose (extFile);
-	       }
-	  }
-	pChnRef = pDoc->DocChangedReferredEl;
-	pFirstFile = NULL;
-	/* parcourt la liste des elements reference's change's */
-	while (pChnRef != NULL)
-	  {
-	     /* enregistre la modification dans la forme en memoire du */
-	     /* fichier .EXT */
-	     if (pChnRef->CrNewLabel[0] == EOS)
-		/* cet element reference' a ete detruit, on supprime son */
-		/* descripteur d'element reference' */
-	       {
-		  /* cherche le descripteur */
-		  pRefD = pExtFileD->ErFirstReferredEl;
-		  while (pRefD != NULL)
-		     if (strcmp (pChnRef->CrOldLabel, pRefD->ReReferredLabel) == 0)
-			/* supprime ce descripteur */
+       /* on va charger le fichier .EXT du document */
+       /* acquiert d'abord un descripteur de ce fichier */
+       GetInputRef (&pExtFileD);
+       /* ce fichier est dans le meme directory que le document */
+       ustrncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
+       FindCompleteName (pDoc->DocDName, TEXT("EXT"), directoryName, fileName,
+			 &i);
+       /* initialise le descripteur du fichier .EXT */
+       pExtFileD->ErFirstReferredEl = NULL;
+       CopyDocIdent (&pExtFileD->ErDocIdent, pDoc->DocIdent);
+       ustrncpy (pExtFileD->ErFileName, fileName, MAX_PATH);
+       if (fileName[0] != EOS)
+	 {
+	   extFile = TtaReadOpen (fileName);
+	   if (extFile != 0)
+	     /* ce fichier existe, on le charge */
+	     {
+	       LoadEXTfile (extFile, NULL, &(pExtFileD->ErFirstReferredEl),
+			    FALSE);
+	       TtaReadClose (extFile);
+	     }
+	 }
+       pChnRef = pDoc->DocChangedReferredEl;
+       pFirstFile = NULL;
+       /* parcourt la liste des elements reference's change's */
+       while (pChnRef != NULL)
+	 {
+	   /* enregistre la modification dans la forme en memoire du */
+	   /* fichier .EXT */
+	   if (pChnRef->CrNewLabel[0] == EOS)
+	     /* cet element reference' a ete detruit, on supprime son */
+	     /* descripteur d'element reference' */
+	     {
+	       /* cherche le descripteur */
+	       pRefD = pExtFileD->ErFirstReferredEl;
+	       while (pRefD != NULL)
+		 if (strcmp (pChnRef->CrOldLabel, pRefD->ReReferredLabel) == 0)
+		   /* supprime ce descripteur */
+		   {
+		     /* on le retire d'abord de sa chaine */
+		     if (pRefD->RePrevious == NULL)
+		       pExtFileD->ErFirstReferredEl = pRefD->ReNext;
+		     else
+		       pRefD->RePrevious->ReNext = pRefD->ReNext;
+		     if (pRefD->ReNext != NULL)
+		       pRefD->ReNext->RePrevious = pRefD->RePrevious;
+		     /* on libere les descripteurs de documents externes */
+		     pExtDoc = pRefD->ReExtDocRef;
+		     while (pExtDoc != NULL)
 		       {
-			  /* on le retire d'abord de sa chaine */
-			  if (pRefD->RePrevious == NULL)
-			     pExtFileD->ErFirstReferredEl = pRefD->ReNext;
-			  else
-			     pRefD->RePrevious->ReNext = pRefD->ReNext;
-			  if (pRefD->ReNext != NULL)
-			     pRefD->ReNext->RePrevious = pRefD->RePrevious;
-			  /* on libere les descripteurs de documents externes */
-			  pExtDoc = pRefD->ReExtDocRef;
-			  while (pExtDoc != NULL)
-			    {
-			       pNextExtDoc = pExtDoc->EdNext;
-			       /* libere le descripteur de document externe */
-			       FreeExternalDoc (pExtDoc);
-			       pExtDoc = pNextExtDoc;
-			    }
-			  /* libere le descripteur d'element reference' */
-			  FreeReferredDescr (pRefD);
-			  pRefD = NULL;
+			 pNextExtDoc = pExtDoc->EdNext;
+			 /* libere le descripteur de document externe */
+			 FreeExternalDoc (pExtDoc);
+			 pExtDoc = pNextExtDoc;
 		       }
-		     else
-			/* passe au descripteur suivant */
-			pRefD = pRefD->ReNext;
-	       }
-	     else
-		/* cet element reference' a ete colle', on lui cree un */
-		/* descripteur d'element reference' */
-	       {
-
-		  GetReferredDescr (&pRefD);
-		  strncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
-		  /* chaine le descripteur en tete */
-		  pRefD->ReNext = pExtFileD->ErFirstReferredEl;
-		  pRefD->RePrevious = NULL;
-		  if (pRefD->ReNext != NULL)
-		     pRefD->ReNext->RePrevious = pRefD;
-		  pExtFileD->ErFirstReferredEl = pRefD;
-		  /* copie la chaine des descripteurs de documents externes */
-		  pOriginExtDoc = pChnRef->CrReferringDoc;
-		  pPrevExtDoc = NULL;
-		  while (pOriginExtDoc != NULL)
-		    {
-		       GetExternalDoc (&pExtDoc);
-		       CopyDocIdent (&pExtDoc->EdDocIdent, pOriginExtDoc->EdDocIdent);
-		       /* chaine la copie */
-		       if (pPrevExtDoc == NULL)
-			  pRefD->ReExtDocRef = pExtDoc;
-		       else
-			  pPrevExtDoc->EdNext = pExtDoc;
-		       pPrevExtDoc = pExtDoc;
-		       /* original suivant */
-		       pOriginExtDoc = pOriginExtDoc->EdNext;
-		    }
-	       }
-	     pExtDoc = pChnRef->CrReferringDoc;
-	     /* traite tous les documents qui font reference a cet element */
-	     while (pExtDoc != NULL)
-	       {
-		  /* le fichier .REF de ce document est-il deja charge'? */
-		  found = FALSE;
-		  pFile = pFirstFile;
-		  while (pFile != NULL && !found)
-		     if (SameDocIdent (pExtDoc->EdDocIdent, pFile->RcDocIdent))
-			found = TRUE;
-		     else
-			pFile = pFile->RcNext;
-		  if (!found)
-		     /* le fichier .REF n'est pas charge', on le charge */
-		    {
-		       GetFileRefChng (&pFile);
-		       pFile->RcNext = pFirstFile;
-		       pFirstFile = pFile;
-		       pFile->RcFirstChange = NULL;
-		       CopyDocIdent (&pFile->RcDocIdent, pExtDoc->EdDocIdent);
-		       /* demande d'abord dans quel directory se trouve le */
-		       /* fichier .PIV de ce document */
-		       ustrncpy (directoryName, DocumentPath, MAX_PATH);
-		       MakeCompleteName (pFile->RcDocIdent, TEXT("PIV"), directoryName, fileName, &i);
-		       /* cherche le fichier .REF dans le meme directory */
-		       FindCompleteName (pFile->RcDocIdent, TEXT("REF"), directoryName, fileName, &i);
-		       ustrncpy (pFile->RcFileName, fileName, MAX_PATH);
-		       if (fileName[0] != EOS)
+		     /* libere le descripteur d'element reference' */
+		     FreeReferredDescr (pRefD);
+		     pRefD = NULL;
+		   }
+		 else
+		   /* passe au descripteur suivant */
+		   pRefD = pRefD->ReNext;
+	     }
+	   else
+	     /* cet element reference' a ete colle', on lui cree un */
+	     /* descripteur d'element reference' */
+	     {
+	       
+	       GetReferredDescr (&pRefD);
+	       strncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel,
+			MAX_LABEL_LEN);
+	       /* chaine le descripteur en tete */
+	       pRefD->ReNext = pExtFileD->ErFirstReferredEl;
+	       pRefD->RePrevious = NULL;
+	       if (pRefD->ReNext != NULL)
+		 pRefD->ReNext->RePrevious = pRefD;
+	       pExtFileD->ErFirstReferredEl = pRefD;
+	       /* copie la chaine des descripteurs de documents externes */
+	       pOriginExtDoc = pChnRef->CrReferringDoc;
+	       pPrevExtDoc = NULL;
+	       while (pOriginExtDoc != NULL)
+		 {
+		   GetExternalDoc (&pExtDoc);
+		   CopyDocIdent (&pExtDoc->EdDocIdent,
+				 pOriginExtDoc->EdDocIdent);
+		   /* chaine la copie */
+		   if (pPrevExtDoc == NULL)
+		     pRefD->ReExtDocRef = pExtDoc;
+		   else
+		     pPrevExtDoc->EdNext = pExtDoc;
+		   pPrevExtDoc = pExtDoc;
+		   /* original suivant */
+		   pOriginExtDoc = pOriginExtDoc->EdNext;
+		 }
+	     }
+	   pExtDoc = pChnRef->CrReferringDoc;
+	   /* traite tous les documents qui font reference a cet element */
+	   while (pExtDoc != NULL)
+	     {
+	       /* le fichier .REF de ce document est-il deja charge'? */
+	       found = FALSE;
+	       pFile = pFirstFile;
+	       while (pFile != NULL && !found)
+		 if (SameDocIdent (pExtDoc->EdDocIdent, pFile->RcDocIdent))
+		   found = TRUE;
+		 else
+		   pFile = pFile->RcNext;
+	       if (!found)
+		 /* le fichier .REF n'est pas charge', on le charge */
+		 {
+		   GetFileRefChng (&pFile);
+		   pFile->RcNext = pFirstFile;
+		   pFirstFile = pFile;
+		   pFile->RcFirstChange = NULL;
+		   CopyDocIdent (&pFile->RcDocIdent, pExtDoc->EdDocIdent);
+		   /* demande d'abord dans quel directory se trouve le */
+		   /* fichier .PIV de ce document */
+		   ustrncpy (directoryName, DocumentPath, MAX_PATH);
+		   MakeCompleteName (pFile->RcDocIdent, TEXT("PIV"),
+				     directoryName, fileName, &i);
+		   /* cherche le fichier .REF dans le meme directory */
+		   FindCompleteName (pFile->RcDocIdent, TEXT("REF"),
+				     directoryName, fileName, &i);
+		   ustrncpy (pFile->RcFileName, fileName, MAX_PATH);
+		   if (fileName[0] != EOS)
+		     {
+		       refFile = TtaReadOpen (fileName);
+		       if (refFile != 0)
 			 {
-			    refFile = TtaReadOpen (fileName);
-			    if (refFile != 0)
-			      {
-				 /* le fichier .REF existe, on le charge */
-				 LoadREFfile (refFile, &pChnRefRead);
-				 TtaReadClose (refFile);
-				 pFile->RcFirstChange = pChnRefRead;
-			      }
+			   /* le fichier .REF existe, on le charge */
+			   LoadREFfile (refFile, &pChnRefRead);
+			   TtaReadClose (refFile);
+			   pFile->RcFirstChange = pChnRefRead;
 			 }
-		    }
-		  if (pFile != NULL)
-		    {
-		       /* cherche dans le fichier .REF charge', si l'element */
-		       /* change' ne figure pas deja */
-		       pChnRefRead = pFile->RcFirstChange;
-		       found = FALSE;
-		       while (pChnRefRead != NULL && !found)
-			 {
-			    if (strcmp (pChnRefRead->CrOldLabel, pChnRef->CrOldLabel) == 0)
-			       if (SameDocIdent (pChnRefRead->CrOldDocument, pChnRef->CrOldDocument))
-				  /* il s'agit du meme ancien element */
-				  if (pChnRefRead->CrNewLabel[0] == EOS)
-				     /* on a lu une destruction */
-				    {
-				       found = TRUE;
-				       if (pChnRef->CrNewLabel[0] != EOS)
-					  /* c'est un deplacement, on transforme la */
-					  /* destruction en deplacement */
-					 {
-					    strncpy (pChnRefRead->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
-					    CopyDocIdent (&pChnRefRead->CrNewDocument,
-						    pChnRef->CrNewDocument);
-					 }
-				    }
-				  else
-				     /* on a lu un changement de document */
-				    {
-				       if (pChnRef->CrNewLabel[0] == EOS)
-					  /* c'est la destruction de l'element, on */
-					  /* l'ignore : le deplacement a priorite' */
-					  /* meme s'il est enregistre' apres */
-					  found = TRUE;
-				    }
-			    if (!found)
-			       if (pChnRefRead->CrNewLabel[0] != EOS &&
-				   pChnRef->CrNewLabel[0] != EOS)
-				  /* ce sont deux deplacements d'element */
-				  if (strcmp (pChnRefRead->CrNewLabel, pChnRef->CrOldLabel) == 0)
-				     if (SameDocIdent (pChnRefRead->CrNewDocument, pChnRef->CrOldDocument))
-					/* deux deplacements successifs du meme element */
-					/* on reduit a un seul deplacement */
-				       {
-					  found = TRUE;
-					  strncpy (pChnRefRead->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
-					  CopyDocIdent (&pChnRefRead->CrNewDocument,
-						    pChnRef->CrNewDocument);
-				       }
-			    if (!found)
-			       pChnRefRead = pChnRefRead->CrNext;
-			 }
+		     }
+		 }
+	       if (pFile != NULL)
+		 {
+		   /* cherche dans le fichier .REF charge', si l'element */
+		   /* change' ne figure pas deja */
+		   pChnRefRead = pFile->RcFirstChange;
+		   found = FALSE;
+		   while (pChnRefRead != NULL && !found)
+		     {
+		       if (strcmp (pChnRefRead->CrOldLabel,
+				   pChnRef->CrOldLabel) == 0)
+			 if (SameDocIdent (pChnRefRead->CrOldDocument,
+					   pChnRef->CrOldDocument))
+			   /* il s'agit du meme ancien element */
+			   if (pChnRefRead->CrNewLabel[0] == EOS)
+			     /* on a lu une destruction */
+			     {
+			       found = TRUE;
+			       if (pChnRef->CrNewLabel[0] != EOS)
+				 /* c'est un deplacement, on transforme la */
+				 /* destruction en deplacement */
+				 {
+				   strncpy (pChnRefRead->CrNewLabel,
+					    pChnRef->CrNewLabel,
+					    MAX_LABEL_LEN);
+				   CopyDocIdent (&pChnRefRead->CrNewDocument,
+						 pChnRef->CrNewDocument);
+				 }
+			     }
+			   else
+			     /* on a lu un changement de document */
+			     {
+			       if (pChnRef->CrNewLabel[0] == EOS)
+				 /* c'est la destruction de l'element, on */
+				 /* l'ignore : le deplacement a priorite' */
+				 /* meme s'il est enregistre' apres */
+				 found = TRUE;
+			     }
 		       if (!found)
-			 {
-			    /* enregistre le changement dans le fichier .REF charge' */
-			    GetChangedReferredEl (&pNewChnRef);
-			    pNewChnRef->CrNext = pFile->RcFirstChange;
-			    pFile->RcFirstChange = pNewChnRef;
-			    strncpy (pNewChnRef->CrOldLabel, pChnRef->CrOldLabel, MAX_LABEL_LEN);
-			    strncpy (pNewChnRef->CrNewLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
-			    CopyDocIdent (&pNewChnRef->CrOldDocument, pChnRef->CrOldDocument);
-			    CopyDocIdent (&pNewChnRef->CrNewDocument, pChnRef->CrNewDocument);
-			 }
-		    }
-		  pNextExtDoc = pExtDoc->EdNext;
-		  /* libere le descripteur de document externe */
-		  FreeExternalDoc (pExtDoc);
-		  /* passe au document externe suivant */
-		  pExtDoc = pNextExtDoc;
-	       }
-	     pNextChnRef = pChnRef->CrNext;
-	     /* libere le descripteur qui a ete traite' */
-	     FreeChangedReferredEl (pChnRef);
-	     /* passe au descripteur suivant */
-	     pChnRef = pNextChnRef;
-	  }
-	/* tous les descripteurs du document ont ete traites */
-	pDoc->DocChangedReferredEl = NULL;
-	/* ecrit le fichier .EXT mis a jour */
-	SauveExt (pExtFileD->ErFirstReferredEl, pExtFileD->ErFileName);
-	/* rend le descripteur de ce fichier */
-	FreeInputRef (pExtFileD);
-	/* ecrit les fichiers .REF mis a jour */
-	pFile = pFirstFile;
-	while (pFile != NULL)
-	  {
-	     /* ecrit ce fichier .REF */
-	     if (pFile->RcFirstChange != NULL)
-		SauveRef (pFile->RcFirstChange, pFile->RcFileName);
-	     pNextFile = pFile->RcNext;
-	     /* libere le descripteur de fichier */
-	     FreeFileRefChng (pFile);
-	     /* passe au fichier suivant */
-	     pFile = pNextFile;
-	  }
+			 if (pChnRefRead->CrNewLabel[0] != EOS &&
+			     pChnRef->CrNewLabel[0] != EOS)
+			   /* ce sont deux deplacements d'element */
+			   if (strcmp (pChnRefRead->CrNewLabel,
+				       pChnRef->CrOldLabel) == 0)
+			     if (SameDocIdent (pChnRefRead->CrNewDocument,
+					       pChnRef->CrOldDocument))
+			       /* deux deplacements successifs du meme element
+			          on reduit a un seul deplacement */
+			       {
+				 found = TRUE;
+				 strncpy (pChnRefRead->CrNewLabel,
+					  pChnRef->CrNewLabel, MAX_LABEL_LEN);
+				 CopyDocIdent (&pChnRefRead->CrNewDocument,
+					       pChnRef->CrNewDocument);
+			       }
+		       if (!found)
+			 pChnRefRead = pChnRefRead->CrNext;
+		     }
+		   if (!found)
+		     {
+		       /* enregistre le changement dans le fichier .REF charge' */
+		       GetChangedReferredEl (&pNewChnRef);
+		       pNewChnRef->CrNext = pFile->RcFirstChange;
+		       pFile->RcFirstChange = pNewChnRef;
+		       strncpy (pNewChnRef->CrOldLabel, pChnRef->CrOldLabel,
+				MAX_LABEL_LEN);
+		       strncpy (pNewChnRef->CrNewLabel, pChnRef->CrNewLabel,
+				MAX_LABEL_LEN);
+		       CopyDocIdent (&pNewChnRef->CrOldDocument,
+				     pChnRef->CrOldDocument);
+		       CopyDocIdent (&pNewChnRef->CrNewDocument,
+				     pChnRef->CrNewDocument);
+		     }
+		 }
+	       pNextExtDoc = pExtDoc->EdNext;
+	       /* libere le descripteur de document externe */
+	       FreeExternalDoc (pExtDoc);
+	       /* passe au document externe suivant */
+	       pExtDoc = pNextExtDoc;
+	     }
+	   pNextChnRef = pChnRef->CrNext;
+	   /* libere le descripteur qui a ete traite' */
+	   FreeChangedReferredEl (pChnRef);
+	   /* passe au descripteur suivant */
+	   pChnRef = pNextChnRef;
+	 }
+       /* tous les descripteurs du document ont ete traites */
+       pDoc->DocChangedReferredEl = NULL;
+       /* ecrit le fichier .EXT mis a jour */
+       SauveExt (pExtFileD->ErFirstReferredEl, pExtFileD->ErFileName);
+       /* rend le descripteur de ce fichier */
+       FreeInputRef (pExtFileD);
+       /* ecrit les fichiers .REF mis a jour */
+       pFile = pFirstFile;
+       while (pFile != NULL)
+	 {
+	   /* ecrit ce fichier .REF */
+	   if (pFile->RcFirstChange != NULL)
+	     SauveRef (pFile->RcFirstChange, pFile->RcFileName);
+	   pNextFile = pFile->RcNext;
+	   /* libere le descripteur de fichier */
+	   FreeFileRefChng (pFile);
+	   /* passe au fichier suivant */
+	   pFile = pNextFile;
+	 }
      }
 }
 
@@ -2267,13 +2204,6 @@ Document            document;
 	  {
 	    RegisterExternalRef (pDoc->DocAssocRoot[i - 1], pDoc, FALSE);
 	    RegisterDeletedReferredElem (pDoc->DocAssocRoot[i - 1], pDoc);
-	  }
-      /* treats the parameters */
-      for (i = 1; i <= MAX_PARAM_DOC; i++)
-	if (pDoc->DocParameters[i - 1] != NULL)
-	  {
-	    RegisterExternalRef (pDoc->DocParameters[i - 1], pDoc, FALSE);
-	    RegisterDeletedReferredElem (pDoc->DocParameters[i - 1], pDoc);
 	  }
       /* modifies files .EXT of documents referenced by destroyed documents */
       UpdateExt (pDoc);
@@ -2333,147 +2263,149 @@ ThotBool            copyDoc;
    pFirstInRef = NULL;
    pRefD = pDoc->DocReferredEl;
    if (pRefD != NULL)
-      /* saute le 1er descripteur, bidon */
-      pRefD = pRefD->ReNext;
+     /* saute le 1er descripteur, bidon */
+     pRefD = pRefD->ReNext;
    /* cherche tous les descripteurs d'elements reference's externes */
    while (pRefD != NULL)
      {
-	if (pRefD->ReExternalRef)
-	   /* il s'agit d'un element reference' externe */
-	  {
-	     /* le document contenant cet element externe est-il charge' ? */
-	     pDocExt = GetPtrDocument (pRefD->ReExtDocument);
-	     if (pDocExt != NULL)
-		/* le document externe est charge' */
-	       {
-		  /* cherche dans ce document externe le descripteur de */
-		  /* l'element reference' */
-		  pElemRefD = pDocExt->DocReferredEl;
-		  if (pElemRefD != NULL)
-		     /* saute le 1er descripteur, bidon */
+       if (pRefD->ReExternalRef)
+	 /* il s'agit d'un element reference' externe */
+	 {
+	   /* le document contenant cet element externe est-il charge' ? */
+	   pDocExt = GetPtrDocument (pRefD->ReExtDocument);
+	   if (pDocExt != NULL)
+	     /* le document externe est charge' */
+	     {
+	       /* cherche dans ce document externe le descripteur de */
+	       /* l'element reference' */
+	       pElemRefD = pDocExt->DocReferredEl;
+	       if (pElemRefD != NULL)
+		 /* saute le 1er descripteur, bidon */
+		 pElemRefD = pElemRefD->ReNext;
+	       found = FALSE;
+	       while (pElemRefD != NULL && !found)
+		 {
+		   if (!pElemRefD->ReExternalRef)
+		     /* il s'agit d'un element reference' appartenant au */
+		     /* document */
+		     if (pElemRefD->ReReferredElem != NULL)
+		       if (strcmp (pElemRefD->ReReferredElem->ElLabel,
+				   pRefD->ReReferredLabel) == 0)
+			 /* c'est le descripteur de notre element */
+			 found = TRUE;
+		   if (!found)
+		     /* passe au descripteur d'element reference' suivant */
+		     /* dans le document externe */
 		     pElemRefD = pElemRefD->ReNext;
-		  found = FALSE;
-		  while (pElemRefD != NULL && !found)
-		    {
-		       if (!pElemRefD->ReExternalRef)
-			  /* il s'agit d'un element reference' appartenant au */
-			  /* document */
-			  if (pElemRefD->ReReferredElem != NULL)
-			     if (strcmp (pElemRefD->ReReferredElem->ElLabel, pRefD->ReReferredLabel) == 0)
-				/* c'est le descripteur de notre element */
-				found = TRUE;
-		       if (!found)
-			  /* passe au descripteur d'element reference' suivant */
-			  /* dans le document externe */
-			  pElemRefD = pElemRefD->ReNext;
-		    }
-		  if (found)
-		     /* cherche le descripteur de document contenant des */
-		     /* references a l'element et qui represente le document */
-		     /* qui change de nom */
-		    {
-		       found = FALSE;
-		       pExtDoc = pElemRefD->ReExtDocRef;
-		       while (pExtDoc != NULL && !found)
+		 }
+	       if (found)
+		 /* cherche le descripteur de document contenant des */
+		 /* references a l'element et qui represente le document */
+		 /* qui change de nom */
+		 {
+		   found = FALSE;
+		   pExtDoc = pElemRefD->ReExtDocRef;
+		   while (pExtDoc != NULL && !found)
+		     {
+		       if (SameDocIdent (pExtDoc->EdDocIdent, pDoc->DocIdent))
 			 {
-			    if (SameDocIdent (pExtDoc->EdDocIdent, pDoc->DocIdent))
-			      {
-				 found = TRUE;
-				 /* met a jour le nom du document dans le */
-				 /* descripteur de document externe */
-				 CopyDocIdent (&pExtDoc->EdDocIdent, newName);
-			      }
-			    else
-			       pExtDoc = pExtDoc->EdNext;
+			   found = TRUE;
+			   /* met a jour le nom du document dans le */
+			   /* descripteur de document externe */
+			   CopyDocIdent (&pExtDoc->EdDocIdent, newName);
 			 }
-		    }
-	       }
-	     /* le fichier .EXT du document contenant cet element est-il */
-	     /* charge' ? */
-	     load = FALSE;
-	     pInRef = pFirstInRef;
-	     /* parcourt la liste des fichiers .EXT charge's */
-	     while (pInRef != NULL && !load)
-		if (SameDocIdent (pInRef->ErDocIdent, pRefD->ReExtDocument))
-		   load = TRUE;
-		else
-		   pInRef = pInRef->ErNext;
-	     if (!load)
-		/* le fichier .EXT de ce document n'est pas encore charge' */
-	       {
-		  /* charge le fichier .EXT du document externe */
-		  pFirstRefD = NULL;
-		  /* demande d'abord dans quel directory se trouve le */
-		  /* fichier .PIV */
-		  ustrncpy (directoryName, DocumentPath, MAX_PATH);
-		  MakeCompleteName (pRefD->ReExtDocument, TEXT("PIV"), directoryName,
-				    fileName, &i);
-		  /* cherche le fichier .EXT dans le meme directory */
-		  FindCompleteName (pRefD->ReExtDocument, TEXT("EXT"), directoryName, fileName, &i);
-		  if (fileName[0] != EOS)
-		    {
-		       extFile = TtaReadOpen (fileName);
-		       if (extFile != 0)
-			 {
-			    /* ce fichier existe, on le charge */
-			    LoadEXTfile (extFile, NULL, &pFirstRefD, FALSE);
-			    TtaReadClose (extFile);
-			 }
-		    }
-		  if (pFirstRefD != NULL)
-		     /* on a effectivement charge' le fichier .EXT */
-		    {
-		       /* on garde la chaine de descripteurs chargee et le */
-		       /* nom du fichier fileName */
-		       GetInputRef (&pInRef);
-		       pInRef->ErNext = pFirstInRef;
-		       pFirstInRef = pInRef;
-		       pInRef->ErFirstReferredEl = pFirstRefD;
-		       CopyDocIdent (&pInRef->ErDocIdent, pRefD->ReExtDocument);
-		       ustrncpy (pInRef->ErFileName, fileName, MAX_PATH);
-		    }
-	       }
-	  }
-	/* passe au descripteur d'element reference' suivant */
-	pRefD = pRefD->ReNext;
+		       else
+			 pExtDoc = pExtDoc->EdNext;
+		     }
+		 }
+	     }
+	   /* le fichier .EXT du document contenant cet element est-il */
+	   /* charge' ? */
+	   load = FALSE;
+	   pInRef = pFirstInRef;
+	   /* parcourt la liste des fichiers .EXT charge's */
+	   while (pInRef != NULL && !load)
+	     if (SameDocIdent (pInRef->ErDocIdent, pRefD->ReExtDocument))
+	       load = TRUE;
+	     else
+	       pInRef = pInRef->ErNext;
+	   if (!load)
+	     /* le fichier .EXT de ce document n'est pas encore charge' */
+	     {
+	       /* charge le fichier .EXT du document externe */
+	       pFirstRefD = NULL;
+	       /* demande d'abord dans quel directory se trouve le */
+	       /* fichier .PIV */
+	       ustrncpy (directoryName, DocumentPath, MAX_PATH);
+	       MakeCompleteName (pRefD->ReExtDocument,
+				 TEXT("PIV"), directoryName, fileName, &i);
+	       /* cherche le fichier .EXT dans le meme directory */
+	       FindCompleteName (pRefD->ReExtDocument, TEXT("EXT"),
+				 directoryName, fileName, &i);
+	       if (fileName[0] != EOS)
+		 {
+		   extFile = TtaReadOpen (fileName);
+		   if (extFile != 0)
+		     {
+		       /* ce fichier existe, on le charge */
+		       LoadEXTfile (extFile, NULL, &pFirstRefD, FALSE);
+		       TtaReadClose (extFile);
+		     }
+		 }
+	       if (pFirstRefD != NULL)
+		 /* on a effectivement charge' le fichier .EXT */
+		 {
+		   /* on garde la chaine de descripteurs chargee et le */
+		   /* nom du fichier fileName */
+		   GetInputRef (&pInRef);
+		   pInRef->ErNext = pFirstInRef;
+		   pFirstInRef = pInRef;
+		   pInRef->ErFirstReferredEl = pFirstRefD;
+		   CopyDocIdent (&pInRef->ErDocIdent, pRefD->ReExtDocument);
+		   ustrncpy (pInRef->ErFileName, fileName, MAX_PATH);
+		 }
+	     }
+	 }
+       /* passe au descripteur d'element reference' suivant */
+       pRefD = pRefD->ReNext;
      }
    /* parcourt toutes les chaines de descripteurs chargees */
    pInRef = pFirstInRef;
    while (pInRef != NULL)
      {
-	/* parcourt la chaine des descripteur d'elements reference's */
-	pRefD = pInRef->ErFirstReferredEl;
-	while (pRefD != NULL)
-	  {
-	     /* parcourt la chaine des descripteurs de documents */
-	     /* referencant l'element treference' courant */
-	     pExtDoc = pRefD->ReExtDocRef;
-	     while (pExtDoc != NULL)
-	       {
-		  if (SameDocIdent (pExtDoc->EdDocIdent, pDoc->DocIdent))
-		     /* il s'agit de notre document */
-		    {
-		       if (copyDoc)
-			 {
-			    /* ajoute un descripteur de document referencant */
-			    pOriginExtDoc = pExtDoc;
-			    GetExternalDoc (&pExtDoc);
-			    pExtDoc->EdNext = pOriginExtDoc->EdNext;
-			    pOriginExtDoc->EdNext = pExtDoc;
-			 }
-		       /* met le nouveau nom du document referencant */
-		       CopyDocIdent (&pExtDoc->EdDocIdent, newName);
-		    }
-		  pExtDoc = pExtDoc->EdNext;
-	       }
-	     pRefD = pRefD->ReNext;
-	  }
-	/* ecrit le fichier .EXT traite' */
-	SauveExt (pInRef->ErFirstReferredEl, pInRef->ErFileName);
-	pNextInRef = pInRef->ErNext;
-	FreeInputRef (pInRef);
-	/* passe au fichier .EXT suivant en memoire */
-	pInRef = pNextInRef;
+       /* parcourt la chaine des descripteur d'elements reference's */
+       pRefD = pInRef->ErFirstReferredEl;
+       while (pRefD != NULL)
+	 {
+	   /* parcourt la chaine des descripteurs de documents */
+	   /* referencant l'element treference' courant */
+	   pExtDoc = pRefD->ReExtDocRef;
+	   while (pExtDoc != NULL)
+	     {
+	       if (SameDocIdent (pExtDoc->EdDocIdent, pDoc->DocIdent))
+		 /* il s'agit de notre document */
+		 {
+		   if (copyDoc)
+		     {
+		       /* ajoute un descripteur de document referencant */
+		       pOriginExtDoc = pExtDoc;
+		       GetExternalDoc (&pExtDoc);
+		       pExtDoc->EdNext = pOriginExtDoc->EdNext;
+		       pOriginExtDoc->EdNext = pExtDoc;
+		     }
+		   /* met le nouveau nom du document referencant */
+		   CopyDocIdent (&pExtDoc->EdDocIdent, newName);
+		 }
+	       pExtDoc = pExtDoc->EdNext;
+	     }
+	   pRefD = pRefD->ReNext;
+	 }
+       /* ecrit le fichier .EXT traite' */
+       SauveExt (pInRef->ErFirstReferredEl, pInRef->ErFileName);
+       pNextInRef = pInRef->ErNext;
+       FreeInputRef (pInRef);
+       /* passe au fichier .EXT suivant en memoire */
+       pInRef = pNextInRef;
      }
 }
 
@@ -2513,47 +2445,49 @@ Name                newName;
    /* saute d'abord le premier descripteur, bidon */
    pRefD = pDoc->DocReferredEl;
    if (pRefD != NULL)
-      pRefD = pRefD->ReNext;
+     pRefD = pRefD->ReNext;
    /* parcourt les descripteurs d'elements reference's */
    while (pRefD != NULL)
      {
-	if (!pRefD->ReExternalRef)
-	   /* c'est un element reference' interne */
-	  {
-	     pExtDoc = pRefD->ReExtDocRef;
-	     /* parcourt la liste des documents referencant */
-	     while (pExtDoc != NULL)
-	       {
-		  /* ce document referencant a-t-il deja ete rencontre' ? */
-		  found = FALSE;
-		  pFile = pFirstREFfile;
-		  while (pFile != NULL && !found)
-		     if (SameDocIdent (pExtDoc->EdDocIdent, pFile->RcDocIdent))
-			found = TRUE;
-		     else
-			pFile = pFile->RcNext;
-		  if (!found)
-		     /* le document referencant n'a pas encore ete rencontre' */
-		     /* on le met dans la liste des document referencant */
-		    {
-		       GetFileRefChng (&pFile);
-		       pFile->RcNext = pFirstREFfile;
-		       pFirstREFfile = pFile;
-		       pFile->RcFirstChange = NULL;
-		       CopyDocIdent (&pFile->RcDocIdent, pExtDoc->EdDocIdent);
-		       /* demande dans quel directory se trouve le fichier */
-		       /* .PIV de ce document */
-		       ustrncpy (directoryName, DocumentPath, MAX_PATH);
-		       MakeCompleteName (pFile->RcDocIdent, TEXT("PIV"), directoryName, fileName, &i);
-		       /* cherche le fichier .REF dans le meme directory */
-		       FindCompleteName (pFile->RcDocIdent, TEXT("REF"), directoryName, pFile->RcFileName, &i);
-		    }
-		  /* passe au descripteur de document referencant suivant */
-		  pExtDoc = pExtDoc->EdNext;
-	       }
-	  }
-	/* passe au descripteur d'element reference' suivant */
-	pRefD = pRefD->ReNext;
+       if (!pRefD->ReExternalRef)
+	 /* c'est un element reference' interne */
+	 {
+	   pExtDoc = pRefD->ReExtDocRef;
+	   /* parcourt la liste des documents referencant */
+	   while (pExtDoc != NULL)
+	     {
+	       /* ce document referencant a-t-il deja ete rencontre' ? */
+	       found = FALSE;
+	       pFile = pFirstREFfile;
+	       while (pFile != NULL && !found)
+		 if (SameDocIdent (pExtDoc->EdDocIdent, pFile->RcDocIdent))
+		   found = TRUE;
+		 else
+		   pFile = pFile->RcNext;
+	       if (!found)
+		 /* le document referencant n'a pas encore ete rencontre' */
+		 /* on le met dans la liste des document referencant */
+		 {
+		   GetFileRefChng (&pFile);
+		   pFile->RcNext = pFirstREFfile;
+		   pFirstREFfile = pFile;
+		   pFile->RcFirstChange = NULL;
+		   CopyDocIdent (&pFile->RcDocIdent, pExtDoc->EdDocIdent);
+		   /* demande dans quel directory se trouve le fichier */
+		   /* .PIV de ce document */
+		   ustrncpy (directoryName, DocumentPath, MAX_PATH);
+		   MakeCompleteName (pFile->RcDocIdent, TEXT("PIV"),
+				     directoryName, fileName, &i);
+		   /* cherche le fichier .REF dans le meme directory */
+		   FindCompleteName (pFile->RcDocIdent, TEXT("REF"),
+				     directoryName, pFile->RcFileName, &i);
+		 }
+	       /* passe au descripteur de document referencant suivant */
+	       pExtDoc = pExtDoc->EdNext;
+	     }
+	 }
+       /* passe au descripteur d'element reference' suivant */
+       pRefD = pRefD->ReNext;
      }
    /* Tous les documents referencant sont dans la liste. On charge */
    /* leurs fichiers .REF, on y ajoute un enregistrement indiquant */
@@ -2561,40 +2495,42 @@ Name                newName;
    pFile = pFirstREFfile;
    while (pFile != NULL)	/* parcourt la liste */
      {
-	/* ce document referencant est-il charge' ? */
-	pDocExt = GetPtrDocument (pFile->RcDocIdent);
+       /* ce document referencant est-il charge' ? */
+       pDocExt = GetPtrDocument (pFile->RcDocIdent);
 	if (pDocExt != NULL)
-	   /* le document referencant est charge' */
+	  /* le document referencant est charge' */
 	  {
-	     /* cherche dans ce document referencant les descripteurs */
-	     /* d'elements reference's appartenant au document qui */
-	     /* change de nom */
-	     pElemRefD = pDocExt->DocReferredEl;
-	     if (pElemRefD != NULL)
-		/* saute le 1er descripteur, bidon */
+	    /* cherche dans ce document referencant les descripteurs */
+	    /* d'elements reference's appartenant au document qui */
+	    /* change de nom */
+	    pElemRefD = pDocExt->DocReferredEl;
+	    if (pElemRefD != NULL)
+	      /* saute le 1er descripteur, bidon */
+	      pElemRefD = pElemRefD->ReNext;
+	    while (pElemRefD != NULL)
+	      {
+		if (pElemRefD->ReExternalRef)
+		  /* il s'agit d'un element reference' externe */
+		  if (ustrcmp (pElemRefD->ReExtDocument, pDoc->DocIdent) == 0)
+		    /* l'element reference' se trouve dans le document */
+		    /* qui change de nom, on change le nom */
+		    ustrncpy (pElemRefD->ReExtDocument, newName,
+			      MAX_DOC_IDENT_LEN);
+		/* passe au descripteur d'element reference' suivant */
+		/* dans le document externe */
 		pElemRefD = pElemRefD->ReNext;
-	     while (pElemRefD != NULL)
-	       {
-		  if (pElemRefD->ReExternalRef)
-		     /* il s'agit d'un element reference' externe */
-		     if (ustrcmp (pElemRefD->ReExtDocument, pDoc->DocIdent) == 0)
-			/* l'element reference' se trouve dans le document */
-			/* qui change de nom, on change le nom */
-			ustrncpy (pElemRefD->ReExtDocument, newName, MAX_DOC_IDENT_LEN);
-		  /* passe au descripteur d'element reference' suivant */
-		  /* dans le document externe */
-		  pElemRefD = pElemRefD->ReNext;
-	       }
+	      }
 	  }
 	if (pFile->RcFileName[0] != EOS)
 	  {
-	     refFile = TtaReadOpen (pFile->RcFileName);
-	     if (refFile != 0)
-	       {
-		  /* le fichier .REF du document referencant existe, on le charge */
-		  LoadREFfile (refFile, &(pFile->RcFirstChange));
+	    refFile = TtaReadOpen (pFile->RcFileName);
+	    if (refFile != 0)
+	      {
+		/* le fichier .REF du document referencant existe,
+		   on le charge */
+		LoadREFfile (refFile, &(pFile->RcFirstChange));
 		  TtaReadClose (refFile);
-	       }
+	      }
 	  }
 	/* ajoute un enregistrement en queue : s'il y a plusieurs */
 	/* changements de noms successifs, ils doivent etre pris en */
@@ -2603,15 +2539,15 @@ Name                newName;
 	pChnRef = pFile->RcFirstChange;
 	while (pChnRef != NULL)
 	  {
-	     pPrevChnRef = pChnRef;
-	     pChnRef = pChnRef->CrNext;
+	    pPrevChnRef = pChnRef;
+	    pChnRef = pChnRef->CrNext;
 	  }
 	GetChangedReferredEl (&pChnRef);
 	pChnRef->CrNext = NULL;
 	if (pPrevChnRef == NULL)
-	   pFile->RcFirstChange = pChnRef;
+	  pFile->RcFirstChange = pChnRef;
 	else
-	   pPrevChnRef->CrNext = pChnRef;
+	  pPrevChnRef->CrNext = pChnRef;
 	/* remplit cet enregistrement en indiquant que c'est un */
 	/* changement de nom de document referencant. */
 	pChnRef->CrOldLabel[0] = EOS;

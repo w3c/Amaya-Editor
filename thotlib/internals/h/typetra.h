@@ -34,7 +34,6 @@ typedef enum
 {
 	TcondFirst,
 	TcondLast,
-	TcondDefined,
 	TcondReferred,
 	TcondFirstRef,
 	TcondLastRef,
@@ -43,7 +42,6 @@ typedef enum
 	TcondAttr,
 	TcondPresentation,
 	TcondPRule,
-	TcondComment,
 	TcondAttributes,
 	TcondFirstAttr,
 	TcondLastAttr,
@@ -209,7 +207,6 @@ typedef enum
 	ToAttr,
 	ToPRuleValue,
 	ToContent,
-	ToComment,
 	ToAllAttr,
 	ToAllPRules,
 	ToRefId,

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -9,9 +9,8 @@
    printstr.c : Impression en clair sur la sortie standard du contenu 
    d'un fichier .STR contenant un schema de structure.  
 
-   V. Quint     Mars 1985
+   V. Quint
   ----------------------------------------------------------------------*/
-
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -30,11 +29,11 @@ static int          a;
 static int          i, min, nb;
 static Name         fn;
 static int          r;
-static int          PremRegle;
-static ThotBool      Prem;
-static ThotBool      optionh = False;
-static ThotBool      optionl = False;
-static int          NbCommentaire;
+static int          FirstRule;
+static ThotBool     First;
+static ThotBool     optionh = False;
+static ThotBool     optionl = False;
+static int          CommentNum;
 static int          STR;	/* Identification des messages Str */
 PtrSSchema          pSc1;
 SRule              *pRe1;
@@ -247,9 +246,9 @@ static void         DebutComment ()
 #endif				/* __STDC__ */
 
 {
-   if (NbCommentaire == 0)
+   if (CommentNum == 0)
       printf ("{ ");
-   NbCommentaire++;
+   CommentNum++;
 }
 
 
@@ -265,8 +264,8 @@ static void         FinComment ()
 #endif				/* __STDC__ */
 
 {
-   NbCommentaire--;
-   if (NbCommentaire == 0)
+   CommentNum--;
+   if (CommentNum == 0)
       printf (" }");
 }
 
@@ -1007,7 +1006,7 @@ char              **argv;
    char               *exec, c;
    int                 inputfile = False;
    int                 k, l;
-   ThotBool             premattrlocal;
+   ThotBool            premattrlocal;
 
    TtaInitializeAppRegistry (argv[0]);
    STR = TtaGetMessageTable (TEXT("strdialogue"), STR_MSG_MAX);
@@ -1050,7 +1049,7 @@ char              **argv;
 	      printf ("{ This generic structure exports elements }\n");
 	if (optionh)
 	   printf ("/* Types and attributes for the document type %s */\n", pSc1->SsName);
-	NbCommentaire = 0;
+	CommentNum = 0;
 	if (!optionh)
 	  {
 	     printf ("STRUCTURE ");
@@ -1143,35 +1142,19 @@ char              **argv;
 		     r++;
 		  }
 	     }
-	PremRegle = r;
-	/* ecrit les parametres */
-	Prem = True;
-	for (r = PremRegle; r <= pSc1->SsNRules; r++)
-	   if (pSc1->SsRule[r - 1].SrParamElem)
-	     {
-		if (Prem)
-		  {
-		     if (!optionh)
-			printf ("PARAM\n");
-		     else
-			printf ("\n/* Parameters */\n");
-		     Prem = False;
-		  }
-		wrrule (r, NULL);
-	     }
+	FirstRule = r;
 	/* ecrit les elements structures */
-	if (pSc1->SsNRules >= PremRegle)
+	if (pSc1->SsNRules >= FirstRule)
 	   if (optionh)
 	      printf ("\n/* Elements */\n");
 	   else
 	      printf ("STRUCT\n");
-	for (r = PremRegle; r <= pSc1->SsNRules; r++)
+	for (r = FirstRule; r <= pSc1->SsNRules; r++)
 	  {
 	     pRe1 = &pSc1->SsRule[r - 1];
-	     /* saute les parametres, les elements associes, les */
-	     /* elements Extern et Included et les unites */
-	     if (!pRe1->SrParamElem &&
-		 !pRe1->SrAssocElem &&
+	     /* saute les elements associes, les elements Extern et Included
+		et les unites */
+	     if (!pRe1->SrAssocElem &&
 		 !pRe1->SrRefImportedDoc &&
 		 !pRe1->SrUnitElem)
 		/* ignore les regles listes ajoutees pour les elements associes */
@@ -1194,21 +1177,21 @@ char              **argv;
 	       }
 	  }
 	/* ecrit les elements associes */
-	Prem = True;
-	for (r = PremRegle; r <= pSc1->SsNRules; r++)
+	First = True;
+	for (r = FirstRule; r <= pSc1->SsNRules; r++)
 	   if (pSc1->SsRule[r - 1].SrAssocElem)
 	     {
-		if (Prem)
+		if (First)
 		  {
 		     if (!optionh)
 			printf ("ASSOC\n");
 		     else
 			printf ("\n/* Associated elements */\n");
-		     Prem = False;
+		     First = False;
 		  }
 		wrrule (r, NULL);
 	     }
-	if (!Prem)
+	if (!First)
 	   /* il y a au moins un element associe', on ecrit les regles listes */
 	   /* ajoutees pour les elements associes */
 	  {
@@ -1217,7 +1200,7 @@ char              **argv;
 		  DebutComment ();
 		  printf ("lists of associated elements:\n");
 	       }
-	     for (r = PremRegle; r <= pSc1->SsNRules; r++)
+	     for (r = FirstRule; r <= pSc1->SsNRules; r++)
 	       {
 		  pRe1 = &pSc1->SsRule[r - 1];
 		  if (pRe1->SrConstruct == CsList)
@@ -1231,17 +1214,17 @@ char              **argv;
 	       }
 	  }
 	/* ecrit les unites exportees */
-	Prem = True;
-	for (r = PremRegle; r <= pSc1->SsNRules; r++)
+	First = True;
+	for (r = FirstRule; r <= pSc1->SsNRules; r++)
 	   if (pSc1->SsRule[r - 1].SrUnitElem)
 	     {
-		if (Prem)
+		if (First)
 		  {
 		     if (!optionh)
 			printf ("UNITS\n");
 		     else
 			printf ("\n/* Units */\n");
-		     Prem = False;
+		     First = False;
 		  }
 		wrrule (r, NULL);
 	     }
@@ -1249,16 +1232,16 @@ char              **argv;
 	if (!optionh)
 	   if (pSc1->SsExport)
 	     {
-		Prem = True;
+		First = True;
 		printf ("THOT_EXPORT\n");
-		for (r = PremRegle; r <= pSc1->SsNRules; r++)
+		for (r = FirstRule; r <= pSc1->SsNRules; r++)
 		  {
 		     pRe1 = &pSc1->SsRule[r - 1];
 		     if (pRe1->SrExportedElem)
 		       {
-			  if (!Prem)
+			  if (!First)
 			     printf (",\n");
-			  Prem = False;
+			  First = False;
 			  printf ("   ");
 			  wrnomregle (r);
 			  if (pRe1->SrExportContent == 0)
@@ -1343,14 +1326,14 @@ char              **argv;
 	/* ecrit en commentaire les natures importees */
 	if (!optionh)
 	  {
-	     Prem = True;
-	     for (r = PremRegle; r <= pSc1->SsNRules; r++)
+	     First = True;
+	     for (r = FirstRule; r <= pSc1->SsNRules; r++)
 		if (pSc1->SsRule[r - 1].SrConstruct == CsNatureSchema)
 		  {
-		     if (Prem)
+		     if (First)
 		       {
 			  printf ("{ External structures used: ");
-			  Prem = False;
+			  First = False;
 		       }
 		     printf ("\n");
 		     printf ("   ");
@@ -1358,19 +1341,19 @@ char              **argv;
 		     putchar ('\t');
 		     wrnomregle (r);
 		  }
-	     if (!Prem)
+	     if (!First)
 		printf (" }\n");
 	  }
 	else
 	  {
-	     Prem = True;
-	     for (r = PremRegle; r <= pSc1->SsNRules; r++)
+	     First = True;
+	     for (r = FirstRule; r <= pSc1->SsNRules; r++)
 		if (pSc1->SsRule[r - 1].SrConstruct == CsNatureSchema)
 		  {
-		     if (Prem)
+		     if (First)
 		       {
 			  printf ("\n/* Imported natures */\n");
-			  Prem = False;
+			  First = False;
 		       }
 		     Wdefine ();
 		     wrnom (pSc1->SsName);

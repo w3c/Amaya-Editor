@@ -13,7 +13,6 @@ StructModel =	   'STRUCTURE' [ 'EXTENSION' ] ElemName ';'
 		   'DEFPRES' PresentName ';'
 		 [ 'ATTR' AttrList ]
 		 [ 'CONST' ConstList ]
-		 [ 'PARAM' RuleList ]
 		 [ 'STRUCT' RuleList ]
 		 [ 'EXTENS' ExtensList ]
 		 [ 'ASSOC' RuleList ]

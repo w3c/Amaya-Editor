@@ -69,9 +69,6 @@ BinFile             file;
 	       case C_TR_LAST:
 		  cond = TcondLast;
 		  break;
-	       case C_TR_DEFINED:
-		  cond = TcondDefined;
-		  break;
 	       case C_TR_REFERRED:
 		  cond = TcondReferred;
 		  break;
@@ -95,9 +92,6 @@ BinFile             file;
 		  break;
 	       case C_TR_PRULE:
 		  cond = TcondPRule;
-		  break;
-	       case C_TR_COMMENT:
-		  cond = TcondComment;
 		  break;
 	       case C_TR_ALPHABET:
 		  cond = TcondAlphabet;
@@ -321,9 +315,6 @@ BinFile             file;
 		  break;
 	       case C_OB_CONTENT:
 		  obj = ToContent;
-		  break;
-	       case C_OB_COMMENT:
-		  obj = ToComment;
 		  break;
 	       case C_OB_ATTRIBUTES:
 		  obj = ToAllAttr;

@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
    that module read documents in pivot format and build an abstract tree
  */
@@ -281,10 +272,11 @@ ThotBool		    removeExclusions
    if (pDoc != NULL)
      {
 	if (!DocIdentIsNull (pDoc->DocIdent))
-	   /* l'identificateur du document est connu, on accede au document par */
-	   /* cet identificateur */
+	   /* l'identificateur du document est connu, on accede au document
+	      par cet identificateur */
 	  {
-	     /* on n'a pas d'autre outil de stockage des documents que le SGF UNIX */
+	     /* on n'a pas d'autre outil de stockage des documents que le SGF
+		UNIX */
 	     /* On confond identificateur et nom de document */
 	     ustrncpy (pDoc->DocDName, pDoc->DocIdent, MAX_NAME_LENGTH);
 	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
@@ -294,7 +286,8 @@ ThotBool		    removeExclusions
 	  {
 	     ustrncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
 	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-	     /* on n'a pas d'autre outil de stockage des documents que le SGF UNIX */
+	     /* on n'a pas d'autre outil de stockage des documents que le SGF
+		UNIX */
 	     /* On confond identificateur et nom de document */
 	     ustrncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
 	     pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
@@ -308,7 +301,8 @@ ThotBool		    removeExclusions
 		ustrncpy (directoryName, DocumentPath, MAX_PATH);
 	     else
 		ustrncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
-	     MakeCompleteName (pDoc->DocDName, TEXT("PIV"), directoryName, text, &i);
+	     MakeCompleteName (pDoc->DocDName, TEXT("PIV"), directoryName,
+			       text, &i);
 	     /* ouvre le fichier 'PIV' */
 	     pivotFile = TtaReadOpen (text);
 	     if (pivotFile != 0)
@@ -318,7 +312,8 @@ ThotBool		    removeExclusions
 	       {
 		  /* le document appartient au directory courant */
 		  ustrncpy (pDoc->DocDirectory, directoryName, MAX_PATH);
-		  LoadDocumentPiv (pivotFile, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent, removeExclusions);
+		  LoadDocumentPiv (pivotFile, pDoc, loadIncludedDoc, skeleton,
+				   pSS, withAppEvent, removeExclusions);
 		  TtaReadClose (pivotFile);
 		  if (pDoc->DocRootElement != NULL)
 		     /* le document lu n'est pas vide */
@@ -327,16 +322,19 @@ ThotBool		    removeExclusions
 		       ret = TRUE;
 		       /* lit le fichier des references externes s'il existe */
 		       /* dans le meme directory que le fichier .PIV */
-		       FindCompleteName (pDoc->DocDName, TEXT("EXT"), directoryName, text, &i);
+		       FindCompleteName (pDoc->DocDName, TEXT("EXT"),
+					 directoryName, text, &i);
 		       pivotFile = TtaReadOpen (text);
 		       if (pivotFile != 0)
 			 {
 			    LoadEXTfile (pivotFile, pDoc, NULL, FALSE);
 			    TtaReadClose (pivotFile);
 			 }
-		       /* lit le fichier de mise a jour des references sortantes */
-		       /* s'il existe dans le meme directory que le fichier .PIV */
-		       FindCompleteName (pDoc->DocDName, TEXT("REF"), directoryName, text, &i);
+		       /* lit le fichier de mise a jour des references
+			  sortantes s'il existe dans le meme directory que
+			  le fichier .PIV */
+		       FindCompleteName (pDoc->DocDName, TEXT("REF"),
+					 directoryName, text, &i);
 		       pivotFile = TtaReadOpen (text);
 		       if (pivotFile != 0)
 			 {
@@ -347,7 +345,8 @@ ThotBool		    removeExclusions
 			    if (pChngRef != NULL)
 			       UpdateREFdescriptors (pChngRef, pDoc);
 			 }
-		       /* libere les descripteurs d'element reference' inutilise's */
+		       /* libere les descripteurs d'element reference'
+			  inutilise's */
 		       FreeUnusedReferredElemDesc (pDoc);
 		    }
 	       }
@@ -370,23 +369,13 @@ void                DeleteAllTrees (pDoc)
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
-   int                 i, view;
-   PtrOutReference     pOutRef, pNextOutRef;
+   int                  i, view;
+   PtrOutReference      pOutRef, pNextOutRef;
    PtrChangedReferredEl pChnRef, pNextChnRef;
-   PtrTextBuffer       pBuf, pNextBuf;
-   PtrExternalDoc      pExtDoc, pNextExtDoc;
+   PtrExternalDoc       pExtDoc, pNextExtDoc;
 
    if (pDoc != NULL)
      {
-	/* libere les buffers de commentaire */
-	pBuf = pDoc->DocComment;
-	while (pBuf != NULL)
-	  {
-	     pNextBuf = pBuf->BuNext;
-	     FreeTextBuffer (pBuf);
-	     pBuf = pNextBuf;
-	  }
-	pDoc->DocComment = NULL;
 	/* libere tout l'arbre du document et ses descripteurs de reference */
 	DeleteElement (&pDoc->DocRootElement, pDoc);
 	/* document views are now empty */
@@ -400,11 +389,6 @@ PtrDocument         pDoc;
 	      /* document views are now empty */
 	      pDoc->DocAssocRoot[view] = NULL;
 	    }
-
-	/* libere les parametres */
-	for (i = 1; i <= MAX_PARAM_DOC; i++)
-	   if (pDoc->DocParameters[i - 1] != NULL)
-	      DeleteElement (&pDoc->DocParameters[i - 1], pDoc);
 	/* libere le 1er descripteur de reference (bidon) */
 	FreeReferredDescr (pDoc->DocReferredEl);
 	pDoc->DocReferredEl = NULL;
@@ -650,180 +634,51 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = EOS;
-	PivotError (file, TEXT("PivotError (PageType)"));
+       c = EOS;
+       PivotError (file, TEXT("PivotError (PageType)"));
      }
    switch (c)
-	 {
-	    case C_PIV_COMPUTED_PAGE:
-	       typ = PgComputed;
-	       break;
-	    case C_PIV_START_PAGE:
-	       typ = PgBegin;
-	       break;
-	    case C_PIV_USER_PAGE:
-	       typ = PgUser;
-	       break;
-	       /* les tags colonnes sont traduites en tags pages pour */
-	       /* la version qui ne gere pas les colonnes */
-	       /* un message est affiche a l'utilisateur pour qu'il */
-	       /* repagine s'il le desire */
-	    case C_PIV_COMPUTED_COL:
-	       typ = PgComputed;
-	       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
-	       break;
-	    case C_PIV_START_COL:
-	       typ = PgComputed;
-	       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
-	       break;
-	    case C_PIV_USER_COL:
-	       typ = PgComputed;
-	       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
-	       break;
-	    case C_PIV_COL_GROUP:
-	       typ = PgComputed;
-	       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
-	       break;
-	    case C_PIV_REPEAT_PAGE:
-	       /* les tags page rappel sont transformees */
-	       /* en tags page calculees, car le nouveau */
-	       /* code ne traite plus ces types de tags */
-	       typ = PgComputed;
-	       break;
-	    default:
-	       PivotError (file, TEXT("PivotError (PageType 1)"));
-	       typ = PgComputed;
-	       break;
-	 }
+     {
+     case C_PIV_COMPUTED_PAGE:
+       typ = PgComputed;
+       break;
+     case C_PIV_START_PAGE:
+       typ = PgBegin;
+       break;
+     case C_PIV_USER_PAGE:
+       typ = PgUser;
+       break;
+       /* les tags colonnes sont traduites en tags pages pour */
+       /* la version qui ne gere pas les colonnes */
+       /* un message est affiche a l'utilisateur pour qu'il */
+       /* repagine s'il le desire */
+     case C_PIV_COMPUTED_COL:
+       typ = PgComputed;
+       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
+       break;
+     case C_PIV_START_COL:
+       typ = PgComputed;
+       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
+       break;
+     case C_PIV_USER_COL:
+       typ = PgComputed;
+       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
+       break;
+     case C_PIV_COL_GROUP:
+       typ = PgComputed;
+       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COLUMNS_PAGINATE_AGAIN);
+       break;
+     case C_PIV_REPEAT_PAGE:
+       /* les tags page rappel sont transformees en tags page calculees,
+	  car le nouveau code ne traite plus ces types de tags */
+       typ = PgComputed;
+       break;
+     default:
+       PivotError (file, TEXT("PivotError (PageType 1)"));
+       typ = PgComputed;
+       break;
+     }
    return typ;
-}
-
-/*----------------------------------------------------------------------
-   ReadComment lit un commentaire dans le fichier file et retourne 
-   un pointeur sur le premier buffer du texte du           
-   commentaire lu, si store est vrai. Si store est		
-   faux, le commentaire est simplement saute' et la        
-   fonction retourne NULL.                                 
-   Si oldformat est vrai, le commentaire est lu selon      
-   l'ancien format.                                        
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrTextBuffer       ReadComment (BinFile file, ThotBool store, ThotBool oldformat)
-#else  /* __STDC__ */
-PtrTextBuffer       ReadComment (file, store, oldformat)
-BinFile             file;
-ThotBool            store;
-ThotBool            oldformat;
-#endif /* __STDC__ */
-{
-   PtrTextBuffer firstBuf, pBuf;
-   int           n, len;
-   char          c;
-
-   len = 0;
-   /* lit l'octet qui suit le tag commentaire */
-   if (!TtaReadByte (file, &c))
-     {
-	c = EOS;
-	PivotError (file, TEXT("PivotError: Comment"));
-     }
-   if (oldformat && c != C_PIV_BEGIN)
-     {
-	PivotError (file, TEXT("PivotError: Comment 2"));
-	/* tag debut de commentaire ancien format absente */
-	firstBuf = NULL;
-     }
-   else
-     {
-	if (!oldformat)
-	   /* l'octet lu est l'octet de poids fort de la longueur */
-	  {
-	     len = 256 * ((int) c);
-	     /* lit le 2eme octet de la longueur */
-	     if (!TtaReadByte (file, &c))
-	       {
-		  c = EOS;
-		  PivotError (file, TEXT("PivotError: Cooment 3"));
-	       }
-	     len += (int) c;
-	  }
-	if (!store)
-	  {
-	     /* on saute le texte du commentaire */
-	     firstBuf = NULL;
-	     if (oldformat)
-		/* lit le fichier jusqu'au 1er zero */
-		do
-		   if (!TtaReadByte (file, &c))
-		     {
-			c = EOS;
-			PivotError (file, TEXT("PivotError: Comment 4"));
-		     }
-		while (c != EOS) ;
-	     else
-		while (len > 0)
-		  {
-		     /* lit le nombre d'octets indique' */
-		     if (!TtaReadByte (file, &c))
-			PivotError (file, TEXT("PivotError: Comment 5"));
-		     len--;
-		  }
-	  }
-	else
-	  {
-	     /* on lit effectivement le texte du commentaire */
-	     GetTextBuffer (&pBuf);
-	     firstBuf = pBuf;
-	     n = 0;
-	     if (oldformat)
-		/* il faut lire au moins le zero final */
-		len = 1;
-	     if (len > 0)
-		do
-		  {
-		     /* lit le texte du commentaire */
-		     if (n == THOT_MAX_CHAR - 1)
-			/* le buffer courant est plein, on change de buffer */
-		       {
-			  pBuf->BuLength = n;
-			  pBuf->BuContent[n] = EOS;
-			  pBuf = NewTextBuffer (pBuf);
-			  n = 0;
-
-		       }
-		     if (!TtaReadByte (file, &c))
-		       {
-			  c = EOS;
-			  PivotError (file, TEXT("PivotError: Comment 6"));
-		       }
-		     n++;
-		     pBuf->BuContent[n - 1] = c;
-		     if (!oldformat)
-			/* decremente le nombre d'octets  restant a lire */
-			len--;
-		     else if (c == EOS)
-		       {
-			  n--;
-			  len = 0;
-		       }
-		  }
-		while (len != 0);
-	     /* termine le buffer en cours */
-	     pBuf->BuLength = n;
-	     pBuf->BuContent[n] = EOS;
-	  }
-	if (oldformat)
-	  {
-	     /* lit le tag de fin */
-	     if (!TtaReadByte (file, &c))
-		c = EOS;
-	     if (c != C_PIV_END)
-	       {
-		  PivotError (file, TEXT("PivotError: Comment 7"));
-	       }
-	  }
-     }
-   return firstBuf;
 }
 
 /*----------------------------------------------------------------------
@@ -950,10 +805,12 @@ BinFile             file;
 	if (msgOldFormat)
 	  {
 	     PivotError (file, TEXT("PivotError: Reference 1"));
-	     TtaDisplaySimpleMessage (INFO, LIB, TMSG_OLD_PIV_FORMAT_SAVE_DOC_WITH_THOT);
+	     TtaDisplaySimpleMessage (INFO, LIB,
+				      TMSG_OLD_PIV_FORMAT_SAVE_DOC_WITH_THOT);
 	     msgOldFormat = FALSE;	/* c'est fait */
 	  }
-	if (c == MOldRefInterne || c == MOldRefExterne || c == MOldRefInclusion)
+	if (c == MOldRefInterne || c == MOldRefExterne ||
+	    c == MOldRefInclusion)
 	   /* ancien format version 2 */
 	  {
 	     /* l'octet lu represente le type de la reference */
@@ -1008,17 +865,17 @@ BinFile             file;
      {
 	/* l'octet lu represente le type de la reference */
 	switch (c)
-	      {
-		 case C_PIV_REF_FOLLOW:
-		    *refType = RefFollow;
-		    break;
-		 case C_PIV_REF_INCLUSION:
-		    *refType = RefInclusion;
-		    break;
-		 case C_PIV_REF_INCLUS_EXP:
-		    *refType = RefInclusion;
-		    break;
-	      }
+	  {
+	  case C_PIV_REF_FOLLOW:
+	    *refType = RefFollow;
+	    break;
+	  case C_PIV_REF_INCLUSION:
+	    *refType = RefInclusion;
+	    break;
+	  case C_PIV_REF_INCLUS_EXP:
+	    *refType = RefInclusion;
+	    break;
+	  }
 	/* lit l'indicateur reference  interne/externe */
 	*refExt = !ReadBoolean (file);
 	/* lit le type de label */
@@ -1030,8 +887,8 @@ BinFile             file;
 	/* lit la valeur du label */
 	ReadLabel (c, label, file);
 	if (*refExt && label[0] != EOS)
-	   /* lit l'identificateur du document contenant l'element reference' */
-	   TtaReadDocIdent (file, docIdent);
+	  /* lit l'identificateur du document contenant l'element reference' */
+	  TtaReadDocIdent (file, docIdent);
 
      }
 }
@@ -1179,60 +1036,57 @@ char*               tag;
    rule = 0;
    if (*tag == C_PIV_NATURE)
      {
-	/* lit le numero de nature */
-	TtaReadShort (pivFile, &nat);
-	if (nat < 0 || nat >= pDoc->DocNNatures)
-	  {
-	     PivotError (pivFile, TEXT("PivotError: Nature Num"));
-	  }
-	/* lit le tag de type qui suit */
-	if (!error)
-	   if (!TtaReadByte (pivFile, tag))
-	      PivotError (pivFile, TEXT("PivotError: TypeType"));
-	/* teste si le numero lu est celui de la structure generique du document */
-	   else if (nat == 0)
-	      *pSS = pDoc->DocSSchema;
-	   else
-	     {
-		/* teste s'il s'agit d'une extension de la structure generique du */
-		/* document */
-		Extension = FALSE;	/* a priori, non */
-		if (pDoc->DocNatureSSchema[nat] != NULL)
-		   if (pDoc->DocNatureSSchema[nat]->SsExtension)
-		     {
-			Extension = TRUE;
-			*pSS = pDoc->DocNatureSSchema[nat];
-		     }
-		if (!Extension)
-		  {
-		     /* pas de presentation preferentielle */
-		     rule = CreateNature (pDoc->DocNatureName[nat], pDoc->DocNaturePresName[nat], *pSS);
-		     /* recupere le numero de la regle de nature */
-		     if (rule == 0)
-		       {
-			  PivotError (pivFile, TEXT("PivotError: Nature"));
-		       }
-		     else
-			*pSS = (*pSS)->SsRule[rule - 1].SrSSchemaNat;
-		  }
-	     }
+       /* lit le numero de nature */
+       TtaReadShort (pivFile, &nat);
+       if (nat < 0 || nat >= pDoc->DocNNatures)
+	 PivotError (pivFile, TEXT("PivotError: Nature Num"));
+       /* lit le tag de type qui suit */
+       if (!error)
+	 if (!TtaReadByte (pivFile, tag))
+	   PivotError (pivFile, TEXT("PivotError: TypeType"));
+         /* teste si le numero lu est celui de la structure generique du doc.*/
+	 else if (nat == 0)
+	   *pSS = pDoc->DocSSchema;
+	 else
+	   {
+	     /* teste s'il s'agit d'une extension de la structure generique
+		du document */
+	     Extension = FALSE;	/* a priori, non */
+	     if (pDoc->DocNatureSSchema[nat] != NULL)
+	       if (pDoc->DocNatureSSchema[nat]->SsExtension)
+		 {
+		   Extension = TRUE;
+		   *pSS = pDoc->DocNatureSSchema[nat];
+		 }
+	     if (!Extension)
+	       {
+		 /* pas de presentation preferentielle */
+		 rule = CreateNature (pDoc->DocNatureName[nat],
+				      pDoc->DocNaturePresName[nat], *pSS);
+		 /* recupere le numero de la regle de nature */
+		 if (rule == 0)
+		   PivotError (pivFile, TEXT("PivotError: Nature"));
+		 else
+		   *pSS = (*pSS)->SsRule[rule - 1].SrSSchemaNat;
+	       }
+	   }
      }
    if (!error)
-      if (*tag == C_PIV_TYPE)
-	{
-	   /* lit le numero de type de l'element */
-	   TtaReadShort (pivFile, &rule);
-	   if (pDoc->DocPivotVersion < 4)
-	      /* on tient compte de l'ajout du type de base PolyLine */
-	      if (rule >= MAX_BASIC_TYPE)
-		 rule++;
-	}
-      else
-	{
-	   rule = 0;
-	   PivotError (pivFile, TEXT("PivotError: Type"));
-	}
-
+     if (*tag == C_PIV_TYPE)
+       {
+	 /* lit le numero de type de l'element */
+	 TtaReadShort (pivFile, &rule);
+	 if (pDoc->DocPivotVersion < 4)
+	   /* on tient compte de l'ajout du type de base PolyLine */
+	   if (rule >= MAX_BASIC_TYPE)
+	     rule++;
+       }
+     else
+       {
+	 rule = 0;
+	 PivotError (pivFile, TEXT("PivotError: Type"));
+       }
+   
    return rule;
 }
 
@@ -1261,70 +1115,71 @@ int                *contentType;
 
    if (*contentType != 0 && *pContSS != NULL)
      {
-	ok = FALSE;
-	if (!ustrcmp ((*pContSS)->SsName, (*pSS)->SsName))
-	  {
+       ok = FALSE;
+       if (!ustrcmp ((*pContSS)->SsName, (*pSS)->SsName))
+	 {
 	   if (*elType == *contentType)
-	      /* meme numero de type */
-	      ok = TRUE;
+	     /* meme numero de type */
+	     ok = TRUE;
 	   else
 	     {
-		pSRule = &(*pContSS)->SsRule[*contentType - 1];
-		if (pSRule->SrConstruct == CsChoice)
-		   /* le contenu a creer est un choix */
-		   if (pSRule->SrNChoices > 0)
-		      /* on compare le type de l'element courant */
-		      /* avec toutes les options du choix */
-		      /* choix explicite */
-		     {
-			i = 0;
-			do
-			  {
-			     i++;
-			     ok = pSRule->SrChoice[i - 1] == *elType;
-			  }
-			while (!ok && i < pSRule->SrNChoices);
-		     }
+	       pSRule = &(*pContSS)->SsRule[*contentType - 1];
+	       if (pSRule->SrConstruct == CsChoice)
+		 /* le contenu a creer est un choix */
+		 if (pSRule->SrNChoices > 0)
+		   /* on compare le type de l'element courant */
+		   /* avec toutes les options du choix */
+		   /* choix explicite */
+		   {
+		     i = 0;
+		     do
+		       {
+			 i++;
+			 ok = pSRule->SrChoice[i - 1] == *elType;
+		       }
+		     while (!ok && i < pSRule->SrNChoices);
+		   }
 	     }
-	  }
-
-	if (!ok &&
-	    *elType == (*pSS)->SsRootElem)
-	  {
-	    pSRule = &(*pContSS)->SsRule[*contentType - 1];
-	    if (pSRule->SrConstruct == CsNatureSchema)
-	      {
-		/* le contenu cherche' est justement une racine de nature */
-		if (pSRule->SrSSchemaNat != NULL)
-		  ok = !ustrcmp (pSRule->SrSSchemaNat->SsName, (*pSS)->SsName);
-	      }
-	    else if (pSRule->SrConstruct == CsChoice &&
-		     pSRule->SrNChoices > 0)
-	      /* le contenu cherche' est un choix. Y a-t-il, parmi les */
-	      /* options de ce choix, la nature dont l'element courant est */
-	      /* racine? */
-	      /* choix explicite */
-	      {
-		i = 0;
-		do
-		  {
-		    i++;
-		    if ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrConstruct == CsNatureSchema &&
-			/* l'option i est un changement de nature */
-			(*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat != NULL)
-		      ok = (!ustrcmp ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat->SsName, (*pSS)->SsName));
-		  }
-		while (!ok && i < pSRule->SrNChoices);
-	      }
-	  }
-	if (ok)
-	  {
-	    *createAll = TRUE;	/* on cree toute la descendance de l'element */
-	    *contentType = 0;	/* on ne creera plus de contenu pour cet element */
-	  }
+	 }
+       
+       if (!ok &&
+	   *elType == (*pSS)->SsRootElem)
+	 {
+	   pSRule = &(*pContSS)->SsRule[*contentType - 1];
+	   if (pSRule->SrConstruct == CsNatureSchema)
+	     {
+	       /* le contenu cherche' est justement une racine de nature */
+	       if (pSRule->SrSSchemaNat != NULL)
+		 ok = !ustrcmp (pSRule->SrSSchemaNat->SsName, (*pSS)->SsName);
+	     }
+	   else if (pSRule->SrConstruct == CsChoice &&
+		    pSRule->SrNChoices > 0)
+	     /* le contenu cherche' est un choix. Y a-t-il, parmi les */
+	     /* options de ce choix, la nature dont l'element courant est */
+	     /* racine? */
+	     /* choix explicite */
+	     {
+	       i = 0;
+	       do
+		 {
+		   i++;
+		   if ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].
+		                              SrConstruct == CsNatureSchema &&
+		       /* l'option i est un changement de nature */
+		       (*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].
+		                              SrSSchemaNat != NULL)
+		     ok = (!ustrcmp ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat->SsName, (*pSS)->SsName));
+		 }
+	       while (!ok && i < pSRule->SrNChoices);
+	     }
+	 }
+       if (ok)
+	 {
+	   *createAll = TRUE;	/* on cree toute la descendance de l'element */
+	   *contentType = 0;	/* on ne creera plus de contenu pour cet elem*/
+	 }
      }
 }
-
 
 /*----------------------------------------------------------------------
    CheckMandatAttrSRule verifie que l'element pointe' par pEl      
@@ -1347,25 +1202,27 @@ PtrSSchema          pSS;
 
    /* parcourt tous les attributs locaux definis dans la regle */
    for (i = 0; i < pSRule->SrNLocalAttrs; i++)
-      if (pSRule->SrRequiredAttr[i])
-	 /* cet attribut local est requis */
-	{
-	   att = pSRule->SrLocalAttr[i];
-	   /* cherche si l'element possede cet attribut */
-	   pAttr = pEl->ElFirstAttr;
-	   found = FALSE;
-	   while (pAttr != NULL && !found)
-	      if (pAttr->AeAttrNum == att &&
-		  !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
-		 found = TRUE;
-	      else
-		 pAttr = pAttr->AeNext;
-	   if (!found)
-	      /* l'element ne possede pas cet attribut requis */
-	      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ATTR_REQUIRED_FOR_EL), pSS->SsAttribute[att - 1].AttrName, pSRule->SrName);
-	}
+     if (pSRule->SrRequiredAttr[i])
+       /* cet attribut local est requis */
+       {
+	 att = pSRule->SrLocalAttr[i];
+	 /* cherche si l'element possede cet attribut */
+	 pAttr = pEl->ElFirstAttr;
+	 found = FALSE;
+	 while (pAttr != NULL && !found)
+	   if (pAttr->AeAttrNum == att &&
+	       !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
+	     found = TRUE;
+	   else
+	     pAttr = pAttr->AeNext;
+	 if (!found)
+	   /* l'element ne possede pas cet attribut requis */
+	   TtaDisplayMessage (INFO,
+			      TtaGetMessage (LIB, TMSG_ATTR_REQUIRED_FOR_EL),
+			      pSS->SsAttribute[att - 1].AttrName,
+			      pSRule->SrName);
+       }
 }
-
 
 /*----------------------------------------------------------------------
    CheckMandatoryAttr verifie que l'element pointe' par pEl possede  
@@ -1400,9 +1257,10 @@ PtrDocument         pDoc;
 	     /* parcourt tous les schemas d'extension du document */
 	     while (pSS != NULL)
 	       {
-		  /* cherche dans ce schema d'extension la regle qui concerne */
-		  /* le type de l'element */
-		  pSRule = ExtensionRule (pEl->ElStructSchema, pEl->ElTypeNumber, pSS);
+		  /* cherche dans ce schema d'extension la regle qui concerne
+		     le type de l'element */
+		  pSRule = ExtensionRule (pEl->ElStructSchema,
+					  pEl->ElTypeNumber, pSS);
 		  if (pSRule != NULL)
 		     /* il y a une regle d'extension, on la traite */
 		     CheckMandatAttrSRule (pEl, pSRule, pSS);
@@ -1428,10 +1286,14 @@ PtrDocument         pDoc;
    ATTENTION: ReadAttributePiv utilise la table des natures du document    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ReadAttributePiv (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, ThotBool create, PtrAttribute * pReadAttr, PtrAttribute * pAttr)
+void                ReadAttributePiv (BinFile pivFile, PtrElement pEl,
+				      PtrDocument pDoc, ThotBool create,
+				      PtrAttribute * pReadAttr,
+				      PtrAttribute * pAttr)
 
 #else  /* __STDC__ */
-void                ReadAttributePiv (pivFile, pEl, pDoc, create, pReadAttr, pAttr)
+void                ReadAttributePiv (pivFile, pEl, pDoc, create, pReadAttr,
+				      pAttr)
 BinFile             pivFile;
 PtrElement          pEl;
 PtrDocument         pDoc;
@@ -1465,164 +1327,164 @@ PtrAttribute       *pAttr;
    /* lit le numero du schema de structure definissant l'attribut */
    TtaReadShort (pivFile, &n);
    if (n < 0 || n >= pDoc->DocNNatures)
-	PivotError (pivFile, TEXT("PivotError: Nature Num 2"));
+     PivotError (pivFile, TEXT("PivotError: Nature Num 2"));
    else
-      pSchAttr = pDoc->DocNatureSSchema[n];
+     pSchAttr = pDoc->DocNatureSSchema[n];
    if (pSchAttr == NULL)
-     {
-	PivotError (pivFile, TEXT("PivotError: Nature Num 3"));
-     }
+     PivotError (pivFile, TEXT("PivotError: Nature Num 3"));
    /* lit l'attribut */
    TtaReadShort (pivFile, &attr);
    if (pDoc->DocPivotVersion < 4)
-      /* on tient compte de l'ajout de l'attribut Langue */
-      attr++;
+     /* on tient compte de l'ajout de l'attribut Langue */
+     attr++;
    /* lit le contenu de l'attribut selon son type */
    if (!error)
-      switch (pSchAttr->SsAttribute[attr - 1].AttrType)
-	    {
-	       case AtEnumAttr:
-		  TtaReadShort (pivFile, &val);
-		  if (val > pSchAttr->SsAttribute[attr - 1].AttrNEnumValues)
-		    {
-		       printf ("Attribute value error: %s = %d\n", pSchAttr->SsAttribute[attr - 1].AttrOrigName, val);
-		       create = FALSE;
-		    }
-		  break;
-	       case AtNumAttr:
-		  TtaReadShort (pivFile, &val);
-		  signe = ReadSign (pivFile);
-		  break;
-	       case AtReferenceAttr:
-		  ReadReference (&refType, label, &refExt, &I, pivFile);
-		  break;
-	       case AtTextAttr:
-		  if (!create)
-		     /* on consomme le texte de l'attribut, sans le garder */
-		     do
-			if (!TtaReadByte (pivFile, &c))
-			  {
-			     PivotError (pivFile, TEXT("Attribute"));
-			  }
-		     while (!error && c != EOS) ;
-		  else
-		    { 
-		       /* acquiert un premier buffer de texte */
-		       GetTextBuffer (&pPremBuff);
-		       pBT = pPremBuff;
-		       /* lit tout le texte de l'attribut */
-		       stop = FALSE;
-		       do
-			  if (!TtaReadWideChar (pivFile, &pBT->BuContent[pBT->BuLength++], pDoc->DocCharset))
-			     /* erreur de lecture */
-			    {
-			       PivotError (pivFile, TEXT("Attribute1"));
-			    }
-			  else
-			     /* on a lu correctement un caractere */
-			  if (pBT->BuContent[pBT->BuLength - 1] == EOS)
-			     /* c'est la fin du texte de l'attribut */
-			     stop = TRUE;
-			  else
-			     /* ce n'est pas la fin du texte de l'attribut */
-			  if (pBT->BuLength >= THOT_MAX_CHAR - 1)
-			     /* le buffer courant est plein */
-			    {
-			       pBT->BuContent[pBT->BuLength] = EOS;	/* fin du buffer */
-			       /* acquiert un nouveau buffer */
-			       pBT = NewTextBuffer (pBT);
-			    }
-		       while (!error && !stop) ;
-		       pBT->BuLength--;
-		       /* convert old language names into RFC-1766 codes */
-		       if (attr == 1)
-			  /* language attribute */
-			  if (ustrlen(pPremBuff->BuContent) != 2 &&
-			      pPremBuff->BuContent[1] != TEXT('-') &&
-			      pPremBuff->BuContent[2] != TEXT('-'))
-			    /* it's not a valid language code. Convert it */
-			    {
-			    iso2wc_strcpy (pPremBuff->BuContent, TtaGetLanguageCodeFromName (pPremBuff->BuContent));
-			    pBT->BuLength = ustrlen (pPremBuff->BuContent);
-			    }
-		    }
-		  break;
-	    }
+     switch (pSchAttr->SsAttribute[attr - 1].AttrType)
+       {
+       case AtEnumAttr:
+	 TtaReadShort (pivFile, &val);
+	 if (val > pSchAttr->SsAttribute[attr - 1].AttrNEnumValues)
+	   {
+	     printf ("Attribute value error: %s = %d\n",
+		     pSchAttr->SsAttribute[attr - 1].AttrOrigName, val);
+	     create = FALSE;
+	   }
+	 break;
+       case AtNumAttr:
+	 TtaReadShort (pivFile, &val);
+	 signe = ReadSign (pivFile);
+	 break;
+       case AtReferenceAttr:
+	 ReadReference (&refType, label, &refExt, &I, pivFile);
+	 break;
+       case AtTextAttr:
+	 if (!create)
+	   /* on consomme le texte de l'attribut, sans le garder */
+	   do
+	     if (!TtaReadByte (pivFile, &c))
+	       PivotError (pivFile, TEXT("Attribute"));
+	   while (!error && c != EOS) ;
+	     else
+	       { 
+		 /* acquiert un premier buffer de texte */
+		 GetTextBuffer (&pPremBuff);
+		 pBT = pPremBuff;
+		 /* lit tout le texte de l'attribut */
+		 stop = FALSE;
+		 do
+		   if (!TtaReadWideChar (pivFile,
+					 &pBT->BuContent[pBT->BuLength++],
+					 pDoc->DocCharset))
+		     /* erreur de lecture */
+		     PivotError (pivFile, TEXT("Attribute1"));
+		   else
+		     /* on a lu correctement un caractere */
+		     if (pBT->BuContent[pBT->BuLength - 1] == EOS)
+		       /* c'est la fin du texte de l'attribut */
+		       stop = TRUE;
+		     else
+		       /* ce n'est pas la fin du texte de l'attribut */
+		       if (pBT->BuLength >= THOT_MAX_CHAR - 1)
+			 /* le buffer courant est plein */
+			 {
+			   /* fin du buffer */
+			   pBT->BuContent[pBT->BuLength] = EOS;
+			   /* acquiert un nouveau buffer */
+			   pBT = NewTextBuffer (pBT);
+			 }
+		 while (!error && !stop);
+		 pBT->BuLength--;
+		 /* convert old language names into RFC-1766 codes */
+		 if (attr == 1)
+		   /* language attribute */
+		   if (ustrlen(pPremBuff->BuContent) != 2 &&
+		       pPremBuff->BuContent[1] != TEXT('-') &&
+		       pPremBuff->BuContent[2] != TEXT('-'))
+		     /* it's not a valid language code. Convert it */
+		     {
+		       iso2wc_strcpy (pPremBuff->BuContent,
+			    TtaGetLanguageCodeFromName (pPremBuff->BuContent));
+		       pBT->BuLength = ustrlen (pPremBuff->BuContent);
+		     }
+	       }
+	 break;
+       }
    if (error)
-      *pAttr = NULL;
+     *pAttr = NULL;
    else
      {
-	if (pDoc->DocPivotVersion < 4)
-	   /* ignore les attributs definis dans les anciennes extensions */
-	   /* ExtCorr et ExtMot */
-	   if (pSchAttr->SsExtension)
-	      if (ustrcmp (pSchAttr->SsName, TEXT("ExtCorr")) == 0)
-		 create = FALSE;
-	      else if (ustrcmp (pSchAttr->SsName, TEXT("ExtMot")) == 0)
-		 create = FALSE;
-	if (!create)
-	   *pAttr = NULL;
-	else
-	  {
-	     /* Si c'est un attribut impose', a valeur fixe ou modifiable, */
-	     /* il a deja ete cree' par NewSubtree. On cherche si l'element */
-	     /* possede deja cet attribut */
-	     found = FALSE;
-	     if (pEl != NULL)
-	       {
-		  pA = pEl->ElFirstAttr;
-		  while (pA != NULL && !found)
-		    {
-		       if (pA->AeAttrSSchema == pSchAttr)
-			  if (pA->AeAttrNum == attr)
-			     found = TRUE;
-		       if (!found)
-			  pA = pA->AeNext;
-		    }
-	       }
-	     if (!found)
-	       {
-		  /* acquiert un bloc attribut pour l'element */
-		  GetAttribute (pAttr);
-		  /* remplit ce bloc attribut avec ce qu'on vient de lire */
-		  pA = *pAttr;
-		  pA->AeAttrSSchema = pSchAttr;
-		  pA->AeAttrNum = attr;
-		  pA->AeDefAttr = FALSE;
-		  /* prend le type de l'attribut dans le schema de structure */
-		  pA->AeAttrType = pA->AeAttrSSchema->SsAttribute[pA->AeAttrNum - 1].AttrType;
-	       }
-	     else
-		*pAttr = NULL;
-	     *pReadAttr = pA;
-	     /* lit la valeur de l'attribut selon son type */
-	     switch (pA->AeAttrType)
-		   {
-		      case AtEnumAttr:
-			 pA->AeAttrValue = val;
-			 break;
-		      case AtNumAttr:
-			 pA->AeAttrValue = val;
-			 if (!signe)
-			    pA->AeAttrValue = -pA->AeAttrValue;
-			 break;
-		      case AtReferenceAttr:
-			 pA->AeAttrReference = NULL;
-			 /* acquiert une reference et l'initialise */
-			 GetReference (&pRef);
-			 pA->AeAttrReference = pRef;
-			 pRef->RdElement = pEl;
-			 pRef->RdAttribute = pA;
-			 /* lie la reference a l'objet qu'elle designe */
-			 CreateReference (pA->AeAttrReference, refType, label, refExt, I, pDoc);
-			 break;
-		      case AtTextAttr:
-			 pA->AeAttrText = pPremBuff;
-			 break;
-		      default:
-			 break;
-		   }
-	  }
+       if (pDoc->DocPivotVersion < 4)
+	 /* ignore les attributs definis dans les anciennes extensions */
+	 /* ExtCorr et ExtMot */
+	 if (pSchAttr->SsExtension)
+	   if (ustrcmp (pSchAttr->SsName, TEXT("ExtCorr")) == 0)
+	     create = FALSE;
+	   else if (ustrcmp (pSchAttr->SsName, TEXT("ExtMot")) == 0)
+	     create = FALSE;
+       if (!create)
+	 *pAttr = NULL;
+       else
+	 {
+	   /* Si c'est un attribut impose', a valeur fixe ou modifiable, */
+	   /* il a deja ete cree' par NewSubtree. On cherche si l'element */
+	   /* possede deja cet attribut */
+	   found = FALSE;
+	   if (pEl != NULL)
+	     {
+	       pA = pEl->ElFirstAttr;
+	       while (pA != NULL && !found)
+		 {
+		   if (pA->AeAttrSSchema == pSchAttr)
+		     if (pA->AeAttrNum == attr)
+		       found = TRUE;
+		   if (!found)
+		     pA = pA->AeNext;
+		 }
+	     }
+	   if (!found)
+	     {
+	       /* acquiert un bloc attribut pour l'element */
+	       GetAttribute (pAttr);
+	       /* remplit ce bloc attribut avec ce qu'on vient de lire */
+	       pA = *pAttr;
+	       pA->AeAttrSSchema = pSchAttr;
+	       pA->AeAttrNum = attr;
+	       pA->AeDefAttr = FALSE;
+	       /* prend le type de l'attribut dans le schema de structure */
+	       pA->AeAttrType = pA->AeAttrSSchema->SsAttribute[pA->AeAttrNum - 1].AttrType;
+	     }
+	   else
+	     *pAttr = NULL;
+	   *pReadAttr = pA;
+	   /* lit la valeur de l'attribut selon son type */
+	   switch (pA->AeAttrType)
+	     {
+	     case AtEnumAttr:
+	       pA->AeAttrValue = val;
+	       break;
+	     case AtNumAttr:
+	       pA->AeAttrValue = val;
+	       if (!signe)
+		 pA->AeAttrValue = -pA->AeAttrValue;
+	       break;
+	     case AtReferenceAttr:
+	       pA->AeAttrReference = NULL;
+	       /* acquiert une reference et l'initialise */
+	       GetReference (&pRef);
+	       pA->AeAttrReference = pRef;
+	       pRef->RdElement = pEl;
+	       pRef->RdAttribute = pA;
+	       /* lie la reference a l'objet qu'elle designe */
+	       CreateReference (pA->AeAttrReference, refType, label, refExt,
+				I, pDoc);
+	       break;
+	     case AtTextAttr:
+	       pA->AeAttrText = pPremBuff;
+	       break;
+	     default:
+	       break;
+	     }
+	 }
      }
 }
 
@@ -2042,7 +1904,8 @@ ThotBool            link;
 		pDimRule->DrPosRule.PoDistance = val;
 		pDimRule->DrPosRule.PoDistUnit = unit;
 		if (!sign)
-		  pDimRule->DrPosRule.PoDistance = -pDimRule->DrPosRule.PoDistance;
+		  pDimRule->DrPosRule.PoDistance =
+		                             -pDimRule->DrPosRule.PoDistance;
 	      }
 	    else
 	      {
@@ -2053,8 +1916,10 @@ ThotBool            link;
 		  /* l'element, puis on la modifie selon    */
 		  /* ce qui est lu dans le fichier          */
 		  {
-		    pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
-					       pPRule->PrType, FnAny, FALSE, TRUE, &pAttr);
+		    pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL,
+					       pPRule->PrViewNum,
+					       pPRule->PrType, FnAny, FALSE,
+					       TRUE, &pAttr);
 		    if (pR1 != NULL)
 		      {
 			*pPRule = *pR1;
@@ -2086,8 +1951,10 @@ ThotBool            link;
 		/* la regle qui devrait s'appliquer a    */
 		/* l'element, puis on la modifie selon   */
 		/* ce qui est lu dans le fichier         */
-		pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
-					   pPRule->PrType, FnAny, FALSE, TRUE, &pAttr);
+		pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL,
+					   pPRule->PrViewNum,
+					   pPRule->PrType, FnAny, FALSE,
+					   TRUE, &pAttr);
 		if (pR1 != NULL)
 		  *pPRule = *pR1;
 		pPRule->PrViewNum = view;
@@ -2270,34 +2137,35 @@ PtrDocument         pDoc;
    pAttr = pEl->ElFirstAttr;
    while (pAttr != NULL)
      {
-	/* prepare et envoie l'evenement AttrRead.Pre s'il est demande' */
-	notifyAttr.event = TteAttrRead;
-	notifyAttr.document = (Document) IdentDocument (pDoc);
-	notifyAttr.element = (Element) pEl;
-	notifyAttr.attribute = NULL;
-	notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-	notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-	pNextAttr = pAttr->AeNext;
-	if (CallEventAttribute (&notifyAttr, TRUE))
-	   /* l'application ne veut pas lire l'attribut */
-	   /* on l'avait deja lu, on le retire */
-	   {
+       /* prepare et envoie l'evenement AttrRead.Pre s'il est demande' */
+       notifyAttr.event = TteAttrRead;
+       notifyAttr.document = (Document) IdentDocument (pDoc);
+       notifyAttr.element = (Element) pEl;
+       notifyAttr.attribute = NULL;
+       notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
+       notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
+       pNextAttr = pAttr->AeNext;
+       if (CallEventAttribute (&notifyAttr, TRUE))
+	 /* l'application ne veut pas lire l'attribut */
+	 /* on l'avait deja lu, on le retire */
+	 {
 	   RemoveAttribute (pEl, pAttr);
 	   DeleteAttribute (pEl, pAttr);
-	   }
-	else
-	  {
-	     /* prepare et envoie l'evenement AttrRead.Post s'il est demande' */
-	     notifyAttr.event = TteAttrRead;
-	     notifyAttr.document = (Document) IdentDocument (pDoc);
-	     notifyAttr.element = (Element) pEl;
-	     notifyAttr.attribute = (Attribute) pAttr;
-	     notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-	     notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-	     CallEventAttribute (&notifyAttr, FALSE);
-	  }
-	/* passe a l'attribut suivant de l'element */
-	pAttr = pNextAttr;
+	 }
+       else
+	 {
+	   /* prepare et envoie l'evenement AttrRead.Post s'il est demande' */
+	   notifyAttr.event = TteAttrRead;
+	   notifyAttr.document = (Document) IdentDocument (pDoc);
+	   notifyAttr.element = (Element) pEl;
+	   notifyAttr.attribute = (Attribute) pAttr;
+	   notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
+	   notifyAttr.attributeType.AttrSSchema =
+	                                     (SSchema) (pAttr->AeAttrSSchema);
+	   CallEventAttribute (&notifyAttr, FALSE);
+	 }
+       /* passe a l'attribut suivant de l'element */
+       pAttr = pNextAttr;
      }
 }
 
@@ -2318,7 +2186,6 @@ PtrDocument         pDoc;
    - assocNum:  numero de la liste d'elements associes a`  
    laquelle appartient le texte a` internaliser. Zero si   
    c'est l'arbre principal.                                
-   - createParam: indique s'il faut creer un parametre ou non.
    - createAll:indique qu'il faut creer tous les elements  
    qui descendent de l'element courant et qui sont dans le 
    fichier. Si createAll est faux, on ne cree que les      
@@ -2334,15 +2201,14 @@ PtrDocument         pDoc;
    l'element lu ni sa descendance. Prioritaire sur createAll
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrElement          ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc, char* tag, int assocNum, ThotBool createParam, ThotBool createAll, int *contentType, PtrSSchema * pContSS, int *typeRead, PtrSSchema * pSSRead, ThotBool createPage, PtrElement pParent, ThotBool createDesc)
+PtrElement          ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc, char* tag, int assocNum, ThotBool createAll, int *contentType, PtrSSchema * pContSS, int *typeRead, PtrSSchema * pSSRead, ThotBool createPage, PtrElement pParent, ThotBool createDesc)
 #else  /* __STDC__ */
-PtrElement          ReadTreePiv (pivFile, pSSchema, pDoc, tag, assocNum, createParam, createAll, contentType, pContSS, typeRead, pSSRead, createPage, pParent, createDesc)
+PtrElement          ReadTreePiv (pivFile, pSSchema, pDoc, tag, assocNum, createAll, contentType, pContSS, typeRead, pSSRead, createPage, pParent, createDesc)
 BinFile             pivFile;
 PtrSSchema          pSSchema;
 PtrDocument         pDoc;
 char*               tag;
 int                 assocNum;
-ThotBool            createParam;
 ThotBool            createAll;
 int                *contentType;
 PtrSSchema         *pContSS;
@@ -2355,7 +2221,7 @@ ThotBool            createDesc;
 
 {
   PtrAttribute        pAttr;
-  PtrTextBuffer       pBuf, pBufComment;
+  PtrTextBuffer       pBuf;
   PtrElement          pPrevEl, p, pEl, pEl2, pElInt, pElRead, pfutParent;
   PtrPRule            pPRule;
   PtrSSchema          pSS;
@@ -2372,7 +2238,7 @@ static  LabelString         label;
   int                 i, j, n, view, pictureType, elType, rule;
   CHAR_T              alphabet;
   char                c, ch;
-  ThotBool            create, inclusion, modif, parameter;
+  ThotBool            create, inclusion, modif;
   ThotBool            findtype, refExt, found, withReferences;
   
   pSRule = NULL;
@@ -2410,10 +2276,11 @@ static  LabelString         label;
 	  *typeRead = elType;	/* numero de type de l'element en cours */
 	  *pSSRead = pSSchema;	/* schema de structure de l'element en cours */
 	  if (!createAll)
-	    /* on ne cree que les elements de type exporte'. L'element en cours */
-	    /* de lecture est-il du type qui constitue le contenu de l'element */
-	    /* exporte' englobant ? */
-	    ExportedContent (&createAll, &elType, &pSSchema, pContSS, contentType);
+	    /* on ne cree que les elements de type exporte'. L'element en cours
+	       de lecture est-il du type qui constitue le contenu de l'element
+	       exporte' englobant ? */
+	    ExportedContent (&createAll, &elType, &pSSchema, pContSS,
+			     contentType);
 	  pSRule = &pSSchema->SsRule[elType - 1];
 	  if (createAll)
 	    create = TRUE;
@@ -2421,7 +2288,8 @@ static  LabelString         label;
 	    /* on ne cree que les elements de type exporte' */
 	    {
 	      create = FALSE;
-	      if (pSRule->SrExportedElem)	/* l'element est d'un type exporte' */
+	      if (pSRule->SrExportedElem)
+		/* l'element est d'un type exporte' */
 		if (pSRule->SrExportContent != 0)
 		  /* on veut creer au moins une partie de son contenu */
 		  {
@@ -2439,9 +2307,11 @@ static  LabelString         label;
 			i = 0;
 			do
 			  i++;
-			while (pDoc->DocNatureName[i - 1] != pSRule->SrNatExpContent &&
+			while (pDoc->DocNatureName[i - 1] !=
+			                        pSRule->SrNatExpContent &&
 			       i != pDoc->DocNNatures);
-			if (pDoc->DocNatureName[i - 1] == pSRule->SrNatExpContent)
+			if (pDoc->DocNatureName[i - 1] ==
+			                             pSRule->SrNatExpContent)
 			  /* trouve' */
 			  *pContSS = pDoc->DocNatureSSchema[i - 1];
 			else
@@ -2453,7 +2323,8 @@ static  LabelString         label;
 			    /* tout le contenu de l'element */
 			  }
 		      }
-		    ExportedContent (&createAll, &elType, &pSSchema, pContSS, contentType);
+		    ExportedContent (&createAll, &elType, &pSSchema, pContSS,
+				     contentType);
 		  }
 	      if (elType == PageBreak + 1)
 		if (createPage)
@@ -2465,7 +2336,8 @@ static  LabelString         label;
 		    /* il faudra creer son contenu */
 		    /* cherche le schema de structure ou est */
 		    /* defini son contenu */
-		    ExportedContent (&createAll, &elType, &pSSchema, pContSS, contentType);
+		    ExportedContent (&createAll, &elType, &pSSchema, pContSS,
+				     contentType);
 		  }
 	    }
 	  if (createDesc)
@@ -2494,22 +2366,13 @@ static  LabelString         label;
 	  else
 	    /* cree un element du type lu */
 	    {
-	      if (pSSchema->SsRule[elType - 1].SrParamElem && createParam)
-		/* simule un element ordinaire, si c'est un parametre a creer */
-		{
-		  pSSchema->SsRule[elType - 1].SrParamElem = FALSE;
-		  parameter = TRUE;
-		}
-	      else
-		parameter = FALSE;
 	      /* il ne faut pas que le label max. du document augmente */
-	      pEl = NewSubtree (elType, pSSchema, pDoc, assocNum, FALSE, TRUE, FALSE, FALSE);
+	      pEl = NewSubtree (elType, pSSchema, pDoc, assocNum, FALSE, TRUE,
+				FALSE, FALSE);
 	      if (pEl != NULL)
 		pEl->ElLabel[0] = EOS;
-	      if (parameter)
-		pSSchema->SsRule[elType - 1].SrParamElem = TRUE;
 	    }
-	  
+
 	  if (!TtaReadByte (pivFile, tag))
 	    PivotError (pivFile, TEXT("PivotError: Type 2"));
 	}
@@ -2523,7 +2386,8 @@ static  LabelString         label;
 	    {
 	      GetReference (&pEl->ElSource);
 	      pEl->ElSource->RdElement = pEl;
-	      CreateReference (pEl->ElSource, refType, label, refExt, docIdent, pDoc);
+	      CreateReference (pEl->ElSource, refType, label, refExt,
+			       docIdent, pDoc);
 	      pEl->ElIsCopy = TRUE;
 	    }
 	  if (!TtaReadByte (pivFile, tag))
@@ -2546,7 +2410,8 @@ static  LabelString         label;
       /* traite le label s'il est present */
       label[0] = EOS;
       if (!error)
-	if (*tag == C_PIV_SHORT_LABEL || *tag == C_PIV_LONG_LABEL || *tag == C_PIV_LABEL)
+	if (*tag == C_PIV_SHORT_LABEL || *tag == C_PIV_LONG_LABEL ||
+	    *tag == C_PIV_LABEL)
 	  {
 	    ReadLabel (*tag, label, pivFile);
 	    /* lit le tag qui suit le label */
@@ -2610,10 +2475,10 @@ static  LabelString         label;
       if (!error && create)
 	CheckMandatoryAttr (pEl, pDoc);
       
-      /* lit les regles de presentation de l'element */
-      /* etablit d'abord le chainage de l'element avec son pere pour que la */
-      /* procedure GlobalSearchRulepEl appelee par ReadPRulePiv puisse trouver les */
-      /* regles de presentation heritees des attributs des ascendants */
+      /* lit les regles de presentation de l'element. Etablit d'abord le
+	 chainage de l'element avec son pere pour que la procedure
+	 GlobalSearchRulepEl appelee par ReadPRulePiv puisse trouver les
+         regles de presentation heritees des attributs des ascendants */
       if (pEl != NULL)
 	pEl->ElParent = pParent;
       while (*tag == C_PIV_PRESENT && !error)
@@ -2624,17 +2489,6 @@ static  LabelString         label;
 	    if (!TtaReadByte (pivFile, tag))
 	      PivotError (pivFile, TEXT("PivotError: Rule"));
 	}
-      /* lit le commentaire qui accompagne eventuellement l'element */
-      if (!error)
-	if (*tag == C_PIV_COMMENT || *tag == C_PIV_OLD_COMMENT)
-	  {
-	    pBufComment = ReadComment (pivFile, create, (ThotBool) (*tag == C_PIV_OLD_COMMENT));	/*  */
-	    if (create)
-	      pEl->ElComment = pBufComment;
-	    /* lit l'octet suivant le commentaire */
-	    if (!TtaReadByte (pivFile, tag))
-	      PivotError (pivFile, TEXT("PivotError: Comment end"));
-	  }
       if (!error)
 	/* si l'element est une copie par inclusion, il n'a pas de contenu */
 	if (!inclusion)
@@ -2644,24 +2498,22 @@ static  LabelString         label;
 	    {
 	    case CsReference:
 	      if (*tag != C_PIV_REFERENCE)
-		{
-		  PivotError (pivFile, TEXT("Reference"));	/* erreur */
-		}
+		PivotError (pivFile, TEXT("Reference"));	/* erreur */
 	      else
 		/* traitement des references : on lit la reference */
 		{
 		  ReadReference (&refType, label, &refExt, &docIdent, pivFile);
 		  if (create)
-		    CreateReference (pEl->ElReference, refType, label, refExt, docIdent, pDoc);
+		    CreateReference (pEl->ElReference, refType, label, refExt,
+				     docIdent, pDoc);
 		  if (!TtaReadByte (pivFile, tag))
 		    PivotError (pivFile, TEXT("Reference 1"));
 		}
 	      break;
 	    case CsPairedElement:
 	      if (*tag != C_PIV_BEGIN)
-		{
-		  PivotError (pivFile, TEXT("PairedElement"));	/* erreur, pas de tag debut */
-		}
+		/* erreur, pas de tag debut */
+		PivotError (pivFile, TEXT("PairedElement"));
 	      else
 		/* traitement des paires : on lit l'identificateur */
 		{
@@ -2674,9 +2526,7 @@ static  LabelString         label;
 		    PivotError (pivFile, TEXT("PivotError: PairedElement 1"));
 		  if (*tag != C_PIV_END)
 		    /* erreur, pas de tag de fin */
-		    {
-		      PivotError (pivFile, TEXT("PairedElement 2"));
-		    }
+		    PivotError (pivFile, TEXT("PairedElement 2"));
 		  else if (!TtaReadByte (pivFile, tag))
 		    PivotError (pivFile, TEXT("PivotError: PairedElement 3"));
 		}
@@ -2688,12 +2538,13 @@ static  LabelString         label;
 		if (pDoc->DocPivotVersion >= 4)
 		  {
 		    if (*tag != C_PIV_LANG)
-		      /* pas de tag de langue, c'est la premiere langue de la */
-		      /* table des langues du document */
+		      /* pas de tag de langue, c'est la premiere langue de la
+		         table des langues du document */
 		      i = 0;
 		    else
 		      {
-			/* lit le numero de langue (pour la table des langues du document */
+			/* lit le numero de langue (pour la table des langues
+			   du document */
 			if (!TtaReadByte (pivFile, tag))
 			  PivotError (pivFile, TEXT("Language"));
 			else
@@ -2721,9 +2572,10 @@ static  LabelString         label;
 		    alphabet = TEXT('L');
 		    /* dans le cas d'une inclusion sans expansion, il */
 		    /* n'y a pas d'alphabet. */
-		    /* dans les versions pivot anciennes, il peut y avoir une */
-		    /* tag d'alphabet. On la saute */
-		    if (*tag != C_PIV_BEGIN && *tag != C_PIV_END && *tag != C_PIV_TYPE && *tag != C_PIV_NATURE)
+		    /* dans les versions pivot anciennes, il peut y avoir un */
+		    /* tag d'alphabet. On le saute */
+		    if (*tag != C_PIV_BEGIN && *tag != C_PIV_END &&
+			*tag != C_PIV_TYPE && *tag != C_PIV_NATURE)
 		      /* on a lu l'alphabet */
 		      {
 			alphabet = *tag;
@@ -2733,9 +2585,10 @@ static  LabelString         label;
 		      }
 		    if (create)
 		      {
-			pEl->ElLanguage = TtaGetLanguageIdFromAlphabet (alphabet);
-			/* verifie que la langue est dans la table des langues */
-			/* du document */
+			pEl->ElLanguage =
+			             TtaGetLanguageIdFromAlphabet (alphabet);
+			/* verifie que la langue est dans la table des langues
+			   du document */
 			found = FALSE;
 			for (i = 0; i < pDoc->DocNLanguages && !found; i++)
 			  if (pDoc->DocLanguages[i] == pEl->ElLanguage)
@@ -2743,7 +2596,8 @@ static  LabelString         label;
 			if (!found && pDoc->DocNLanguages < MAX_LANGUAGES_DOC)
 			  /* elle n'y est pas, on la met */
 			  {
-			    pDoc->DocLanguages[pDoc->DocNLanguages] = pEl->ElLanguage;
+			    pDoc->DocLanguages[pDoc->DocNLanguages] =
+			                                      pEl->ElLanguage;
 			    pDoc->DocNLanguages++;
 			  }
 		      }
@@ -2766,10 +2620,11 @@ static  LabelString         label;
 			      ch = *tag;
 			      while (ch != EOS && !error)
 				if (!TtaReadByte (pivFile, &ch))
-				  PivotError (pivFile, TEXT("PivotError: Text 2"));
+				  PivotError (pivFile,
+					      TEXT("PivotError: Text 2"));
 			    }
 			  else
-			    /* lit le texte et remplit les buffers de texte    */
+			    /* lit le texte et remplit les buffers de texte */
 			    {
 			      pBuf = pEl->ElText;
 			      n = 0;
@@ -2787,7 +2642,7 @@ static  LabelString         label;
 					n = 0;
 				      }
 				    n++;
-				    /* mise a la norme iso des anciens pivots */
+				    /* mise a la norme iso des anciens pivots*/
 				    if (pDoc->DocPivotVersion < 3)
 				      if (((int) ch) >= 1 && ch < SPACE)
 					switch (ch)
@@ -2822,7 +2677,8 @@ static  LabelString         label;
 				    /* range le caractere et lit le suivant */
 				    pBuf->BuContent[n - 1] = ch;
 				    if (!TtaReadByte (pivFile, &ch))
-				      PivotError (pivFile, TEXT("PivotError: Text 3"));
+				      PivotError (pivFile,
+						  TEXT("PivotError: Text 3"));
 				  }
 			      while (ch != EOS) ;
 			      pEl->ElTextLength += n;
@@ -2840,10 +2696,11 @@ static  LabelString         label;
 			      ch = *tag;
 			      while (ch != EOS)
 				if (!TtaReadByte (pivFile, &ch))
-				  PivotError (pivFile, TEXT("PivotError: Picture 1"));
+				  PivotError (pivFile,
+					      TEXT("PivotError: Picture 1"));
 			    }
 			  else
-			    /* lit le texte et remplit les buffers de texte    */
+			    /* lit le texte et remplit les buffers de texte */
 			    {
 			      pBuf = pEl->ElPictureName;
 			      n = 0;
@@ -2854,26 +2711,30 @@ static  LabelString         label;
 				  {
 				    /* TODO : nom d'image > THOT_MAX_CHAR */
 				    if (n == THOT_MAX_CHAR - 1)
-				      {
-					PivotError (pivFile, TEXT("PiveotError: Picture 2"));
-				      }
+					PivotError (pivFile,
+					       TEXT("PiveotError: Picture 2"));
 				    n++;
 				    /* range le caractere et lit le suivant */
 				    pBuf->BuContent[n - 1] = ch;
 				    if (!TtaReadByte (pivFile, &ch))
-				      PivotError (pivFile, TEXT("PivotError: Picture 3"));
+				      PivotError (pivFile,
+						TEXT("PivotError: Picture 3"));
 				  }
 			      while (ch != EOS);
 
-			      /* on suppose que le nom tient en entier dans un buffer */
-			      /* on normalise le nom */
-			      ustrcpy (pBuf->BuContent, NormalizeFileName (pBuf->BuContent, &pictureType,
-									  &pres, &findtype));
+			      /* on suppose que le nom tient en entier dans un
+				 buffer. On normalise le nom */
+			      ustrcpy (pBuf->BuContent,
+				       NormalizeFileName (pBuf->BuContent,
+							  &pictureType,
+							  &pres, &findtype));
 			      if (findtype)
 				{
-				  /* on a trouve une image v1, on cree une regle */
-				  /* de presentation PictInfo pour l'element */
-				  SetImageRule (pEl, 0, 0, 0, 0, pictureType, pres);
+				  /* on a trouve une image v1, on cree une
+				     regle de presentation PictInfo pour
+				     l'element */
+				  SetImageRule (pEl, 0, 0, 0, 0, pictureType,
+						pres);
 				}
 			      /* complete the Picture information block */
 			      image = (PictInfo *)pEl->ElPictInfo;
@@ -2885,7 +2746,8 @@ static  LabelString         label;
 			      pEl->ElVolume = pEl->ElNameLength;
 			    }
 			  if (!TtaReadByte (pivFile, tag))
-			    PivotError (pivFile, TEXT("PivotError: Picture 4"));
+			    PivotError (pivFile,
+					TEXT("PivotError: Picture 4"));
 			  break;
 			case Symbol:
 			case GraphicElem:
@@ -2893,7 +2755,8 @@ static  LabelString         label;
 			  ch = *tag;
 			  /* lit l'octet qui suit */
 			  if (!TtaReadByte (pivFile, tag))
-			    PivotError (pivFile, TEXT("PivotError: Graphic 1"));
+			    PivotError (pivFile,
+					TEXT("PivotError: Graphic 1"));
 			  else if (*tag != C_PIV_POLYLINE)
 			    /* c'est un element graphique simple */
 			    {
@@ -2901,11 +2764,13 @@ static  LabelString         label;
 				{
 				  pEl->ElGraph = ch;
 				  pEl->ElWideChar = 0;
-				  /* remplace les anciens rectangles trame's par */
-				  /* de simple rectangles */
-				  if (pEl->ElGraph >= '0' && pEl->ElGraph <= '9')
+				  /* remplace les anciens rectangles trame's */
+				  /* par de simple rectangles */
+				  if (pEl->ElGraph >= '0' &&
+				      pEl->ElGraph <= '9')
 				    pEl->ElGraph = 'R';
-				  else if (pEl->ElGraph >= '\260' && pEl->ElGraph <= '\270')
+				  else if (pEl->ElGraph >= '\260' &&
+					   pEl->ElGraph <= '\270')
 				    pEl->ElGraph = 'R';
 				  if (ch == EOS)
 				    pEl->ElVolume = 0;
@@ -2918,14 +2783,16 @@ static  LabelString         label;
 			    {
 			      /* lit le nombre de points de la ligne */
 			      if (!TtaReadShort (pivFile, &n))
-				PivotError (pivFile, TEXT("PivotError: Polyline"));
+				PivotError (pivFile,
+					    TEXT("PivotError: Polyline"));
 			      /* lit tous les points */
 			      else if (!create)
 				for (i = 0; i < n; i++)
 				  TtaReadInteger (pivFile, &j);
 			      else
 				{
-				  /* transforme l'element graphique simple en Polyline */
+				  /* transforme l'element graphique simple
+				     en Polyline */
 				  pEl->ElLeafType = LtPolyLine;
 				  GetTextBuffer (&pEl->ElPolyLineBuffer);
 				  pEl->ElVolume = n;
@@ -2941,15 +2808,18 @@ static  LabelString         label;
 					  pBuf = NewTextBuffer (pBuf);
 					  j = 0;
 					}
-				      TtaReadInteger (pivFile, &pBuf->BuPoints[j].XCoord);
-				      TtaReadInteger (pivFile, &pBuf->BuPoints[j].YCoord);
+				      TtaReadInteger (pivFile,
+						    &pBuf->BuPoints[j].XCoord);
+				      TtaReadInteger (pivFile,
+						    &pBuf->BuPoints[j].YCoord);
 				      pBuf->BuLength++;
 				      j++;
 				    }
 				}
 			      /* lit l'octet qui suit (tag de fin d'element) */
 			      if (!TtaReadByte (pivFile, tag))
-				PivotError (pivFile, TEXT("PivotError: Polyline 1"));
+				PivotError (pivFile,
+					    TEXT("PivotError: Polyline 1"));
 			    }
 			  break;
 			case PageBreak:
@@ -2967,7 +2837,8 @@ static  LabelString         label;
 			      pEl->ElPageModified = modif;
 			    }
 			  if (!TtaReadByte (pivFile, tag))
-			    PivotError (pivFile, TEXT("PivotError: PageBreak"));
+			    PivotError (pivFile,
+					TEXT("PivotError: PageBreak"));
 			  break;
 			default:
 			  break;
@@ -2975,9 +2846,7 @@ static  LabelString         label;
 		      
 		    }
 		  if (*tag != C_PIV_END)
-		    {
-		      PivotError (pivFile, TEXT("PivotError: End"));
-		    }
+		    PivotError (pivFile, TEXT("PivotError: End"));
 		  
 		  if (!TtaReadByte (pivFile, tag))
 		    PivotError (pivFile, TEXT("PivotError: End 1"));
@@ -2989,9 +2858,7 @@ static  LabelString         label;
 		{
 		  if (pEl != NULL)
 		    if (pEl->ElTerminal)
-		      {
-			PivotError (pivFile, TEXT("PivotError: Begin"));
-		      }
+		      PivotError (pivFile, TEXT("PivotError: Begin"));
 		  /* erreur: feuille avec contenu */
 		  if (!error)
 		    {
@@ -3008,7 +2875,10 @@ static  LabelString         label;
 			    pfutParent = pEl;
 			  else
 			    pfutParent = pParent;
-			  p = ReadTreePiv (pivFile, pSSchema, pDoc, tag, assocNum, createParam, createAll, contentType, pContSS, &rule, &pSS, createPage, pfutParent, createDesc);
+			  p = ReadTreePiv (pivFile, pSSchema, pDoc, tag,
+					   assocNum, createAll, contentType,
+					   pContSS, &rule, &pSS, createPage,
+					   pfutParent, createDesc);
 			  pElRead = p;
 			  if (!error)
 			    if (p != NULL)
@@ -3025,19 +2895,24 @@ static  LabelString         label;
 				  {
 				    if (!createAll)
 				      if (p->ElTypeNumber != PageBreak + 1)
-					if (p->ElStructSchema != pEl->ElStructSchema)
-					  /* l'element a inserer dans l'arbre appartient       */
-					  /* a un schema different de celui de son pere        */
-					  if (p->ElTypeNumber != p->ElStructSchema->SsRootElem)
-					    /* ce n'est pas la racine d'une nature, on ajoute  */
-					    /* un element intermediaire */
+					if (p->ElStructSchema !=
+					                 pEl->ElStructSchema)
+					  /* l'element a inserer dans l'arbre
+					  appartient a un schema different de
+					  celui de son pere */
+					  if (p->ElTypeNumber !=
+					         p->ElStructSchema->SsRootElem)
+					    /* ce n'est pas la racine d'une
+					       nature, on ajoute un element
+					       intermediaire */
 					    {
 					      pEl2 = p;
 					      /* il ne faut pas que le label */
 					      /* max. du document augmente */
 					      pElInt = NewSubtree (pEl2->ElStructSchema->SsRootElem,
-								   pEl2->ElStructSchema,
-								   pDoc, assocNum, FALSE, TRUE, FALSE, FALSE);
+						       pEl2->ElStructSchema,
+						       pDoc, assocNum, FALSE,
+						       TRUE, FALSE, FALSE);
 					      
 					      pElInt->ElLabel[0] = EOS;
 					      InsertFirstChild (pElInt, p);
@@ -3052,20 +2927,21 @@ static  LabelString         label;
 				
 				pPrevEl = p;
 				SendEventAttrRead (pElRead, pDoc);
-				/* Si l'element qu'on vient de lire n'a pas ete      */
-				/* cree' (lecture squelette) mais que certains de    */
-				/* ses descendants l'ont ete,ReadTreePiv a retourne' */
-				/* un pointeur sur le premier descendant cree'. On   */
-				/* cherche le dernier frere, qui devient l'element   */
-				/* precedent du prochain element lu. */
-				
+				/* Si l'element qu'on vient de lire n'a pas ete
+				   cree' (lecture squelette) mais que certains
+				   de ses descendants l'ont ete,ReadTreePiv a
+				   retourne' un pointeur sur le premier
+				   descendant cree'. On cherche le dernier
+				   frere, qui devient l'element precedent du
+				   prochain element lu. */
 				while (pPrevEl->ElNext != NULL)
 				  pPrevEl = pPrevEl->ElNext;
 			      }
 			}
 		      if (!error)
 			if (!TtaReadByte (pivFile, tag))
-			  PivotError (pivFile, TEXT("PivotError: End element"));
+			  PivotError (pivFile,
+				      TEXT("PivotError: End element"));
 		    }
 		}
 	      break;
@@ -3111,41 +2987,43 @@ PtrDocument         pDoc;
    ok = TRUE;
    if (pEl != NULL)
      {
-	if (pEl->ElPrevious != NULL)
-	  {
-	     if (!AllowedSibling (pEl->ElPrevious, pDoc, pEl->ElTypeNumber,
-				  pEl->ElStructSchema, FALSE, FALSE, TRUE))
-	       {
-		  ok = FALSE;
-		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INVALID_SIBLING),
-		  pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
-				     pEl->ElPrevious->ElStructSchema->SsRule[pEl->ElPrevious->ElTypeNumber - 1].SrName,
-				     pEl->ElLabel);
-	       }
-	  }
-	else if (pEl->ElParent != NULL)
-	  {
-	     if (!AllowedFirstChild (pEl->ElParent, pDoc, pEl->ElTypeNumber,
-				     pEl->ElStructSchema, FALSE, TRUE))
-	       {
-		  ok = FALSE;
-		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INVALID_CHILD),
-		  pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
-				     pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrName,
-				     pEl->ElLabel);
-	       }
-	  }
-
-	if (!pEl->ElTerminal)
-	  {
-	     pChild = pEl->ElFirstChild;
-	     while (pChild != NULL)
-	       {
-		  childOK = AbstractTreeOK (pChild, pDoc);
-		  ok = ok && childOK;
-		  pChild = pChild->ElNext;
-	       }
-	  }
+       if (pEl->ElPrevious != NULL)
+	 {
+	   if (!AllowedSibling (pEl->ElPrevious, pDoc, pEl->ElTypeNumber,
+				pEl->ElStructSchema, FALSE, FALSE, TRUE))
+	     {
+	       ok = FALSE;
+	       TtaDisplayMessage (INFO,
+				  TtaGetMessage (LIB, TMSG_INVALID_SIBLING),
+				  pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
+				  pEl->ElPrevious->ElStructSchema->SsRule[pEl->ElPrevious->ElTypeNumber - 1].SrName,
+				  pEl->ElLabel);
+	     }
+	 }
+       else if (pEl->ElParent != NULL)
+	 {
+	   if (!AllowedFirstChild (pEl->ElParent, pDoc, pEl->ElTypeNumber,
+				   pEl->ElStructSchema, FALSE, TRUE))
+	     {
+	       ok = FALSE;
+	       TtaDisplayMessage (INFO,
+				  TtaGetMessage (LIB, TMSG_INVALID_CHILD),
+				  pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
+				  pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrName,
+				  pEl->ElLabel);
+	     }
+	 }
+       
+       if (!pEl->ElTerminal)
+	 {
+	   pChild = pEl->ElFirstChild;
+	   while (pChild != NULL)
+	     {
+	       childOK = AbstractTreeOK (pChild, pDoc);
+	       ok = ok && childOK;
+	       pChild = pChild->ElNext;
+	     }
+	 }
      }
    return ok;
 }
@@ -3170,31 +3048,32 @@ PtrElement          pRoot;
    /* cherche tous les elements produits par le constructeur CsPairedElement */
    while (pEl1 != NULL)
      {
-	pEl1 = FwdSearchRefOrEmptyElem (pEl1, 3);
-	if (pEl1 != NULL)
-	   /* on a trouve' un element de paire */
-	   if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrFirstOfPair)
-	      /* c'est un element de debut de paire */
-	     {
-		/* on cherche l'element de fin correspondant */
-		pEl2 = pEl1;
-		found = FALSE;
-		do
-		  {
-		     pEl2 = FwdSearchTypedElem (pEl2, pEl1->ElTypeNumber + 1, pEl1->ElStructSchema);
-		     if (pEl2 != NULL)
-			/* on a trouve' un element du type cherche' */
-			/* c'est le bon s'il a le meme identificateur */
-			found = (pEl2->ElPairIdent == pEl1->ElPairIdent);
-		  }
-		while ((pEl2 != NULL) && (!found));
-		if (found)
-		   /* On etablit le chainage entre les 2 elements */
-		  {
-		     pEl1->ElOtherPairedEl = pEl2;
-		     pEl2->ElOtherPairedEl = pEl1;
-		  }
-	     }
+       pEl1 = FwdSearchRefOrEmptyElem (pEl1, 3);
+       if (pEl1 != NULL)
+	 /* on a trouve' un element de paire */
+	 if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber-1].SrFirstOfPair)
+	   /* c'est un element de debut de paire */
+	   {
+	     /* on cherche l'element de fin correspondant */
+	     pEl2 = pEl1;
+	     found = FALSE;
+	     do
+	       {
+		 pEl2 = FwdSearchTypedElem (pEl2, pEl1->ElTypeNumber + 1,
+					    pEl1->ElStructSchema);
+		 if (pEl2 != NULL)
+		   /* on a trouve' un element du type cherche' */
+		   /* c'est le bon s'il a le meme identificateur */
+		   found = (pEl2->ElPairIdent == pEl1->ElPairIdent);
+	       }
+	     while ((pEl2 != NULL) && (!found));
+	     if (found)
+	       /* On etablit le chainage entre les 2 elements */
+	       {
+		 pEl1->ElOtherPairedEl = pEl2;
+		 pEl2->ElOtherPairedEl = pEl1;
+	       }
+	   }
      }
 }
 
@@ -3278,8 +3157,10 @@ int                 rank;
 	     ustrncpy (N1, pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
 	     ustrncpy (N2, pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
 	     pDoc->DocNatureSSchema[rank - 1] = pDoc->DocNatureSSchema[i - 1];
-	     ustrncpy (pDoc->DocNatureName[rank - 1], pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH);
-	     ustrncpy (pDoc->DocNaturePresName[rank - 1], pDoc->DocNaturePresName[i - 1], MAX_NAME_LENGTH);
+	     ustrncpy (pDoc->DocNatureName[rank - 1],
+		       pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH);
+	     ustrncpy (pDoc->DocNaturePresName[rank - 1],
+		       pDoc->DocNaturePresName[i - 1], MAX_NAME_LENGTH);
 	     pDoc->DocNatureSSchema[i - 1] = pSS;
 	     ustrncpy (pDoc->DocNatureName[i - 1], N1, MAX_NAME_LENGTH);
 	     ustrncpy (pDoc->DocNaturePresName[i - 1], N2, MAX_NAME_LENGTH);
@@ -3294,9 +3175,12 @@ int                 rank;
 	   pDoc->DocNNatures++;
 	else
 	  {
-	     pDoc->DocNatureSSchema[pDoc->DocNNatures] = pDoc->DocNatureSSchema[rank - 1];
-	     ustrncpy (pDoc->DocNatureName[pDoc->DocNNatures], pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
-	     ustrncpy (pDoc->DocNaturePresName[pDoc->DocNNatures], pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
+	     pDoc->DocNatureSSchema[pDoc->DocNNatures] =
+	                                    pDoc->DocNatureSSchema[rank - 1];
+	     ustrncpy (pDoc->DocNatureName[pDoc->DocNNatures],
+		       pDoc->DocNatureName[rank - 1], MAX_NAME_LENGTH);
+	     ustrncpy (pDoc->DocNaturePresName[pDoc->DocNNatures],
+		       pDoc->DocNaturePresName[rank - 1], MAX_NAME_LENGTH);
 	     pDoc->DocNNatures++;
 	  }
 	pDoc->DocNatureSSchema[rank - 1] = NULL;
@@ -3331,58 +3215,61 @@ void (*withThisPSchema) ();
    rank = 1;
    /* lit le type du document */
    do
-      if (!TtaReadWideChar (file, &SSName[i++], ISO_8859_1))
-         PivotError (file, TEXT("PivotError: Schema"));
+     if (!TtaReadWideChar (file, &SSName[i++], ISO_8859_1))
+       PivotError (file, TEXT("PivotError: Schema"));
    while (!error && SSName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH) ;
    if (SSName[i - 1] != WC_EOS)
-     {
-        PivotError (file, TEXT("PivotError: Schema 1"));
-     }
+     PivotError (file, TEXT("PivotError: Schema 1"));
    else
      {
-         if (pDoc->DocPivotVersion >= 4)
-            /* Lit le code du schema de structure */
-            if (!error)
-               if (!TtaReadShort (file, &versionSchema))
-                  PivotError (file, TEXT("PivotError: Schema 2"));
-            /* Lit le nom du schema de presentation associe' */
-            i = 0;
-            do
-              if (!TtaReadWideChar (file, &PSchemaName[i++], ISO_8859_1))
-                 PivotError (file, TEXT("PivotError: Schema 3"));
-            while (!error && PSchemaName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH) ;
+       if (pDoc->DocPivotVersion >= 4)
+	 /* Lit le code du schema de structure */
+	 if (!error)
+	   if (!TtaReadShort (file, &versionSchema))
+	     PivotError (file, TEXT("PivotError: Schema 2"));
+       /* Lit le nom du schema de presentation associe' */
+       i = 0;
+       do
+	 if (!TtaReadWideChar (file, &PSchemaName[i++], ISO_8859_1))
+	   PivotError (file, TEXT("PivotError: Schema 3"));
+       while (!error && PSchemaName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH);
 
-         if (!TtaReadByte (file, tag))
-            PivotError (file, TEXT("PivotError: Schema 4"));
-         if (withThisPSchema != NULL)
-            (*withThisPSchema) ((Document) IdentDocument (pDoc), SSName, PSchemaName);
-         PutNatureInTable (pDoc, SSName, rank);
-         /* charge les schemas de structure et de presentation du document */
-		 if (pDoc->DocSSchema == NULL) 
-           LoadSchemas (SSName, PSchemaName, &pDoc->DocSSchema, pLoadedSS, FALSE);
-		 
+       if (!TtaReadByte (file, tag))
+	 PivotError (file, TEXT("PivotError: Schema 4"));
+       if (withThisPSchema != NULL)
+	 (*withThisPSchema) ((Document) IdentDocument (pDoc), SSName,
+			     PSchemaName);
+       PutNatureInTable (pDoc, SSName, rank);
+       /* charge les schemas de structure et de presentation du document */
+       if (pDoc->DocSSchema == NULL) 
+	 LoadSchemas (SSName, PSchemaName, &pDoc->DocSSchema, pLoadedSS,FALSE);
+
         if (pDoc->DocSSchema == NULL)
-           PivotError (file, TEXT("PivotError: Schema 5"));
+	  PivotError (file, TEXT("PivotError: Schema 5"));
         else if (pDoc->DocPivotVersion >= 4)
-             /* on verifie que la version du schema charge' est la meme */
-             /* que celle du document */
-        if (pDoc->DocSSchema->SsCode != versionSchema)
-           {
+	  /* on verifie que la version du schema charge' est la meme */
+	  /* que celle du document */
+	  if (pDoc->DocSSchema->SsCode != versionSchema)
+	    {
               pDoc->DocCheckingMode |= PIV_CHECK_MASK;
-              TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED), pDoc->DocSSchema->SsName);
-           }
+              TtaDisplayMessage (INFO,
+				 TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED),
+				 pDoc->DocSSchema->SsName);
+	    }
      }
    if (pDoc->DocNatureSSchema[rank - 1] == NULL)
      {
-        pDoc->DocNatureSSchema[rank - 1] = pDoc->DocSSchema;
-        ustrncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
-        ustrncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName, MAX_NAME_LENGTH);
-        if (pDoc->DocSSchema != NULL)
-           if (pDoc->DocSSchema->SsPSchema == NULL)
-              /* le schema de presentation n'a pas ete charge' (librairie  */
-              /* Kernel, par exemple). On memorise dans le schema de */
-              /* structure charge' le nom du schema P associe' */
-              ustrncpy (pDoc->DocSSchema->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
+       pDoc->DocNatureSSchema[rank - 1] = pDoc->DocSSchema;
+       ustrncpy (pDoc->DocNatureName[rank - 1], SSName, MAX_NAME_LENGTH);
+       ustrncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName,
+		 MAX_NAME_LENGTH);
+       if (pDoc->DocSSchema != NULL)
+	 if (pDoc->DocSSchema->SsPSchema == NULL)
+	   /* le schema de presentation n'a pas ete charge' (librairie  */
+	   /* Kernel, par exemple). On memorise dans le schema de */
+	   /* structure charge' le nom du schema P associe' */
+	   ustrncpy (pDoc->DocSSchema->SsDefaultPSchema, PSchemaName,
+		     MAX_NAME_LENGTH);
      }
    /* lit les noms des fichiers contenant les schemas de nature  */
    /* dynamiques et charge ces schemas, sauf si on ne charge que */
@@ -3390,77 +3277,82 @@ void (*withThisPSchema) ();
    while ((*tag == (CHAR_T) C_PIV_NATURE || *tag == (CHAR_T) C_PIV_SSCHEMA_EXT)
 	  && !error)
      {
-	ExtensionSch = (*tag == (CHAR_T) C_PIV_SSCHEMA_EXT);
-	i = 0;
-	rank++;
-	do
-	   if (!TtaReadWideChar (file, &SSName[i++], ISO_8859_1))
-	      PivotError (file, TEXT("PivotError: Schema ext"));
-	while (SSName[i - 1] != EOS && !error) ;
-	if (pDoc->DocPivotVersion >= 4)
-	   /* Lit le code du schema de structure */
-	   if (!error)
-	      if (!TtaReadShort (file, &versionSchema))
-		 PivotError (file, TEXT("PivotError: Schema 7"));
-	/* Lit le nom du schema de presentation associe' */
-	if (!error)
-	   if (!TtaReadByte (file, tag))
-	      PivotError (file, TEXT("PivotError: Schema 8"));
-	if (*tag >= TEXT('!') && *tag <= TEXT('~') && !error)
-	   /* il y a un nom de schema de presentation */
-	  {
-	     PSchemaName[0] = *tag;
-	     i = 1;
-	     do
-		if (!TtaReadWideChar (file, &PSchemaName[i++], ISO_8859_1))
-		   PivotError (file, TEXT("PivotError: Schema 9"));
-	     while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
+       ExtensionSch = (*tag == (CHAR_T) C_PIV_SSCHEMA_EXT);
+       i = 0;
+       rank++;
+       do
+	 if (!TtaReadWideChar (file, &SSName[i++], ISO_8859_1))
+	   PivotError (file, TEXT("PivotError: Schema ext"));
+       while (SSName[i - 1] != EOS && !error) ;
+       if (pDoc->DocPivotVersion >= 4)
+	 /* Lit le code du schema de structure */
+	 if (!error)
+	   if (!TtaReadShort (file, &versionSchema))
+	     PivotError (file, TEXT("PivotError: Schema 7"));
+       /* Lit le nom du schema de presentation associe' */
+       if (!error)
+	 if (!TtaReadByte (file, tag))
+	   PivotError (file, TEXT("PivotError: Schema 8"));
+       if (*tag >= TEXT('!') && *tag <= TEXT('~') && !error)
+	 /* il y a un nom de schema de presentation */
+	 {
+	   PSchemaName[0] = *tag;
+	   i = 1;
+	   do
+	     if (!TtaReadWideChar (file, &PSchemaName[i++], ISO_8859_1))
+	       PivotError (file, TEXT("PivotError: Schema 9"));
+	   while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH);
 
-	     if (!TtaReadByte (file, tag))
-		PivotError (file, TEXT("PivotError: Schema 10"));
-	  }
-	else
-	   /* il n'y a pas de nom */
-	   PSchemaName[0] = EOS;
-	pSS = NULL;
-	if (!error)
-	  {
-             if (withThisPSchema != NULL)
-                (*withThisPSchema) ((Document) IdentDocument (pDoc), SSName, PSchemaName);
-	     PutNatureInTable (pDoc, SSName, rank);
-	     if (pDoc->DocNatureSSchema[rank - 1] == NULL)
+	   if (!TtaReadByte (file, tag))
+	     PivotError (file, TEXT("PivotError: Schema 10"));
+	 }
+       else
+	 /* il n'y a pas de nom */
+	 PSchemaName[0] = EOS;
+       pSS = NULL;
+       if (!error)
+	 {
+	   if (withThisPSchema != NULL)
+	     (*withThisPSchema) ((Document) IdentDocument (pDoc), SSName,
+				 PSchemaName);
+	   PutNatureInTable (pDoc, SSName, rank);
+	   if (pDoc->DocNatureSSchema[rank - 1] == NULL)
+	     {
+	       if (ExtensionSch)
+		 /* charge l'extension de schema */
+		 pSS = LoadExtension (SSName, PSchemaName, pDoc);
+	       else 
+		 {
+		   i = CreateNature (SSName, PSchemaName, pDoc->DocSSchema);
+		   if (i == 0)
+		     /* echec creation nature */
+		     PivotError (file, TEXT("PivotError: Schema 11"));
+		   else
+		     pSS = pDoc->DocSSchema->SsRule[i - 1].SrSSchemaNat;
+		 }
+	     }
+	 }
+       if (!error && pSS != NULL)
+	 {
+	   if (pDoc->DocPivotVersion >= 4)
+	     /* on verifie que la version du schema charge' est la meme */
+	     /* que celle du document */
+	     if (pSS->SsCode != versionSchema)
 	       {
-		if (ExtensionSch)
-		   /* charge l'extension de schema */
-		   pSS = LoadExtension (SSName, PSchemaName, pDoc);
-		else 
-		  {
-		     i = CreateNature (SSName, PSchemaName, pDoc->DocSSchema);
-		     if (i == 0)
-			PivotError (file, TEXT("PivotError: Schema 11"));	/* echec creation nature */
-		     else
-			pSS = pDoc->DocSSchema->SsRule[i - 1].SrSSchemaNat;
-		  }
+		 pDoc->DocCheckingMode |= PIV_CHECK_MASK;
+		 TtaDisplayMessage (INFO,
+				    TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED),
+				    pSS->SsName);
 	       }
-	  }
-	if (!error && pSS != NULL)
-	  {
-	     if (pDoc->DocPivotVersion >= 4)
-		/* on verifie que la version du schema charge' est la meme */
-		/* que celle du document */
-		if (pSS->SsCode != versionSchema)
-		  {
-		    pDoc->DocCheckingMode |= PIV_CHECK_MASK;
-		    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_STR_SCH_CHANGED), pSS->SsName);
-		  }
-	     pDoc->DocNatureSSchema[rank - 1] = pSS;
-	     ustrncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName, MAX_NAME_LENGTH);
-	     if (pSS->SsPSchema == NULL)
-		/* le schema de presentation n'a pas ete charge' (librairie
-		   Kernel, par exemple). On memorise dans le schema de structure
-		   charge' le nom du schema P associe' */
-		ustrncpy (pSS->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
-	  }
+	   pDoc->DocNatureSSchema[rank - 1] = pSS;
+	   ustrncpy (pDoc->DocNaturePresName[rank - 1], PSchemaName,
+		     MAX_NAME_LENGTH);
+	   if (pSS->SsPSchema == NULL)
+	     /* le schema de presentation n'a pas ete charge' (librairie
+		Kernel, par exemple). On memorise dans le schema de structure
+		charge' le nom du schema P associe' */
+	     ustrncpy (pSS->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
+	 }
      }
 }
 
@@ -3485,27 +3377,27 @@ char*               tag;
    /* lit la table des langues utilisees par le document */
    pDoc->DocNLanguages = 0;
    if (pDoc->DocPivotVersion >= 4)
-      while (*tag == (CHAR_T) C_PIV_LANG && !error)
-	{
-	   i = 0;
-	   do
-	      if (!TtaReadWideChar (file, &languageName[i++], ISO_8859_1))
-		 PivotError (file, TEXT("PivotError: Language 2"));
-	   while (!error && languageName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH) ;
-	   if (languageName[i - 1] != WC_EOS)
-	     {
-		PivotError (file, TEXT("PivotError: Language 3"));
-	     }
-	   else
-	     {
-		if (languageName[0] != WC_EOS)
-		   if (pDoc->DocNLanguages < MAX_LANGUAGES_DOC)
-		      pDoc->DocLanguages[pDoc->DocNLanguages++] = TtaGetLanguageIdFromName (languageName);
-		/* lit l'octet suivant le nom de langue */
-		if (!TtaReadByte (file, tag))
-		   PivotError (file, TEXT("PivotError: Laguage 4"));
-	     }
-	}
+     while (*tag == (CHAR_T) C_PIV_LANG && !error)
+       {
+	 i = 0;
+	 do
+	   if (!TtaReadWideChar (file, &languageName[i++], ISO_8859_1))
+	     PivotError (file, TEXT("PivotError: Language 2"));
+	 while (!error && languageName[i - 1] != WC_EOS &&
+		i != MAX_NAME_LENGTH) ;
+	 if (languageName[i - 1] != WC_EOS)
+	   PivotError (file, TEXT("PivotError: Language 3"));
+	 else
+	   {
+	     if (languageName[0] != WC_EOS)
+	       if (pDoc->DocNLanguages < MAX_LANGUAGES_DOC)
+		 pDoc->DocLanguages[pDoc->DocNLanguages++] =
+		                       TtaGetLanguageIdFromName (languageName);
+	     /* lit l'octet suivant le nom de langue */
+	     if (!TtaReadByte (file, tag))
+	       PivotError (file, TEXT("PivotError: Laguage 4"));
+	   }
+       }
 }
 
 
@@ -3647,399 +3539,352 @@ ThotBool		    removeExclusions
    pDoc->DocNNatures = 0;
    /* lit l'entete du fichier pivot */
    ReadPivotHeader (file, pDoc, &tag);
-   /* lit le commentaire du document s'il est present */
-   if (!error && (tag == (CHAR_T) C_PIV_COMMENT ||
-		  tag == (CHAR_T) C_PIV_OLD_COMMENT))
-     {
-	pDoc->DocComment = ReadComment (file, TRUE, (ThotBool)(tag == (CHAR_T) C_PIV_OLD_COMMENT));
-	/* lit l'octet suivant le commentaire */
-	if (!TtaReadByte (file, &tag))
-	   PivotError (file, TEXT("PivotError: Doc"));
-     }
    /* Lit le nom du schema de structure qui est en tete du fichier pivot */
    if (!error && tag != (CHAR_T) C_PIV_NATURE)
-     {
-	PivotError (file, TEXT("PivotError: Class"));	/* tag classe absente */
-     }
+     /* tag classe absent */
+     PivotError (file, TEXT("PivotError: Class"));
    if (!error)
-      /* lit les noms des schemas de structure et de presentation */
-      ReadSchemaNamesPiv (file, pDoc, &tag, pLoadedSS, NULL);
+     /* lit les noms des schemas de structure et de presentation */
+     ReadSchemaNamesPiv (file, pDoc, &tag, pLoadedSS, NULL);
    if (withEvent && pDoc->DocSSchema != NULL && !error)
      {
-	notifyDoc.event = TteDocOpen;
-	notifyDoc.document = (Document) IdentDocument (pDoc);
-	notifyDoc.view = 0;
-	if (CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-	   error = TRUE;
+       notifyDoc.event = TteDocOpen;
+       notifyDoc.document = (Document) IdentDocument (pDoc);
+       notifyDoc.view = 0;
+       if (CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+	 error = TRUE;
      }
    if (pDoc->DocSSchema != NULL && !error)
      {
-	if (pDoc->DocSSchema->SsExport)
-	   /* le schema de structure du document prevoit l'exportation     */
-	   /* d'elements. On demande a l'utilisateur s'il veut charger la  */
-	   /* forme complete ou les seuls elements exportables, mais       */
-	   /* seulement si le schema de presentation a une vue THOT_EXPORT      */
-	  {
-	     createPages = FALSE;
-	     ok = FALSE;
-	     pPSchema = pDoc->DocSSchema->SsPSchema;
-	     if (pPSchema != NULL)
-		for (i = 0; i < pPSchema->PsNViews; i++)
-		   ok = ok || pPSchema->PsExportView[i];
-	     if (ok)
-	       {
-		  /* une vue THOT_EXPORT est prevue */
-		  if (skeleton)
-		    {
-		       pDoc->DocExportStructure = TRUE;
-		       /* Un document charge' sous sa forme export n'est pas */
-		       /* modifiable */
-		       pDoc->DocReadOnly = TRUE;
-		       createPages = TRUE;
-		    }
-	       }
-	  }
-	/* Lit d'abord dans le fichier .EXT les labels des elements */
-	/* reference's par d'autres documents (on en aura besoin */
-	/* pendant la lecture du fichier .PIV). On cherche ce */
-	/* fichier dans le meme directory que le fichier .PIV */
-	FindCompleteName (pDoc->DocDName, TEXT("EXT"), pDoc->DocDirectory, buffer, &i);
-	EXTfile = TtaReadOpen (buffer);
-	if (EXTfile != 0)
-	  {
-	     LoadEXTfile (EXTfile, NULL, &pDoc->DocLabels, TRUE);
-	     TtaReadClose (EXTfile);
-	  }
-	else
-	   pDoc->DocLabels = NULL;
-	/* ReadTreePiv le fichier .PIV */
-
-	/* lit les parametres */
-	for (i = 0; i < MAX_PARAM_DOC; i++)
-	   pDoc->DocParameters[i] = NULL;
-	i = 1;
-	while (tag == (CHAR_T) C_PIV_PARAM && !error)
-	   if (i > MAX_PARAM_DOC)
+       if (pDoc->DocSSchema->SsExport)
+	 /* le schema de structure du document prevoit l'exportation     */
+	 /* d'elements. On demande a l'utilisateur s'il veut charger la  */
+	 /* forme complete ou les seuls elements exportables, mais       */
+	 /* seulement si le schema de presentation a une vue THOT_EXPORT */
+	 {
+	   createPages = FALSE;
+	   ok = FALSE;
+	   pPSchema = pDoc->DocSSchema->SsPSchema;
+	   if (pPSchema != NULL)
+	     for (i = 0; i < pPSchema->PsNViews; i++)
+	       ok = ok || pPSchema->PsExportView[i];
+	   if (ok)
 	     {
-		PivotError (file, TEXT("PivotError: Param"));
+	       /* une vue THOT_EXPORT est prevue */
+	       if (skeleton)
+		 {
+		   pDoc->DocExportStructure = TRUE;
+		   /* Un document charge' sous sa forme export n'est pas */
+		   /* modifiable */
+		   pDoc->DocReadOnly = TRUE;
+		   createPages = TRUE;
+		 }
+	     }
+	 }
+       /* Lit d'abord dans le fichier .EXT les labels des elements */
+       /* reference's par d'autres documents (on en aura besoin */
+       /* pendant la lecture du fichier .PIV). On cherche ce */
+       /* fichier dans le meme directory que le fichier .PIV */
+       FindCompleteName (pDoc->DocDName, TEXT("EXT"), pDoc->DocDirectory,
+			 buffer, &i);
+       EXTfile = TtaReadOpen (buffer);
+       if (EXTfile != 0)
+	 {
+	   LoadEXTfile (EXTfile, NULL, &pDoc->DocLabels, TRUE);
+	   TtaReadClose (EXTfile);
+	 }
+       else
+	 pDoc->DocLabels = NULL;
+       /* ReadTreePiv le fichier .PIV */
+       
+       /* lit les elements associes */
+       for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+	 pDoc->DocAssocRoot[assoc] = NULL;
+       assoc = 0;
+       while (tag == (CHAR_T) C_PIV_ASSOC && !error)
+	 /* debut d'un nouveau type d'element associe */
+	 {
+	   assoc++;
+	   if (!TtaReadByte (file, &tag))
+	     PivotError (file, TEXT("PivotError: Assoc"));
+	   /* lit et cree le premier element associe de ce type */
+	   rule = 0;
+	   pNat = NULL;
+	   p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc,
+			    (ThotBool)(!pDoc->DocExportStructure), &rule,
+			    &pNat, &typeRead, &pSS, createPages, NULL, TRUE);
+	   if (withEvent && pDoc->DocSSchema != NULL && !error)
+	     SendEventAttrRead (p, pDoc);
+	   pSRule = &pSS->SsRule[typeRead - 1];
+
+	   if (pSRule->SrConstruct == CsList &&
+	       pSS->SsRule[pSRule->SrListItem - 1].SrAssocElem)
+	     /* l'element lu est la racine d'un arbre d'elements associe'.*/
+	     /* L'arbre a ete lu entierement */
+	     {
+	       pDoc->DocAssocRoot[assoc - 1] = p;
+	       /* retire les elements exclus */
+	       if (p != NULL)
+		 {
+		   if (removeExclusions)
+		     RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1], pDoc);
+		   /* accouple les paires */
+		   AssociatePairs (p);
+		 }
 	     }
 	   else
 	     {
-		if (!TtaReadByte (file, &tag))
-		   PivotError (file, TEXT("PivotError: Param 1"));
-		rule = 0;
-		pNat = NULL;
-		p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, 0, TRUE, (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat, &typeRead, &pSS, createPages, NULL, TRUE);
-		if (withEvent && pDoc->DocSSchema != NULL && !error)
-		   SendEventAttrRead (p, pDoc);
-		if (!error)
-		  {
-		     /* retire les elements exclus */
-		     if (removeExclusions)
-		        RemoveExcludedElem (&p, pDoc);
-		     /* accouple les paires */
-		     AssociatePairs (p);
-		     pDoc->DocParameters[i - 1] = p;
-		     if (pDoc->DocCheckingMode & PIV_CHECK_MASK)
-			/* verifie que cet arbre est correct */
+	       /* c'est sans doute l'ancienne forme pivot, ou` la racine de
+		  l'arbre d'elements associes, n'est pas presente, mais
+		  seulement ses fils */
+	       pFirst = p;
+	       /* on lit les tags de page jusqu'au premier element
+		  associe' */
+	       if (!error && typeRead == PageBreak + 1)
+		 while (typeRead == PageBreak + 1)
+		   {
+		     rule = 0;
+		     pNat = NULL;
+		     s = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag,assoc,
+				      (ThotBool)(!pDoc->DocExportStructure),
+				      &rule, &pNat, &typeRead, &pSS,
+				      createPages, NULL, TRUE);
+		     if (withEvent && pDoc->DocSSchema != NULL && !error)
+		       SendEventAttrRead (s, pDoc);
+		     if (s != NULL)
 		       {
-			  ok = AbstractTreeOK (p, pDoc);
-			  structureOK = structureOK && ok;
+			 if (pFirst == NULL)
+			   pFirst = s;
+			 if (p != NULL)
+			   InsertElementAfter (p, s);
+			 p = s;
 		       }
-		  }
-		i++;
-	     }
-	/* lit les elements associes */
-	for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-	   pDoc->DocAssocRoot[assoc] = NULL;
-	assoc = 0;
-	while (tag == (CHAR_T) C_PIV_ASSOC && !error)
-	   /* debut d'un nouveau type d'element associe */
-	  {
-	     assoc++;
-	     if (!TtaReadByte (file, &tag))
-		PivotError (file, TEXT("PivotError: Assoc"));
-	     /* lit et cree le premier element associe de ce type */
-	     rule = 0;
-	     pNat = NULL;
-
-	     p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc, FALSE,
-			      (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat,
-			      &typeRead, &pSS, createPages, NULL, TRUE);
-	     if (withEvent && pDoc->DocSSchema != NULL && !error)
-		SendEventAttrRead (p, pDoc);
-	     pSRule = &pSS->SsRule[typeRead - 1];
-
-	     if (pSRule->SrConstruct == CsList &&
-		 pSS->SsRule[pSRule->SrListItem - 1].SrAssocElem)
-		/* l'element lu est la racine d'un arbre d'elements associe'. */
-		/* L'arbre a ete lu entierement */
-	       {
-		  pDoc->DocAssocRoot[assoc - 1] = p;
-		  /* retire les elements exclus */
-		  if (p != NULL)
-		    {
+		   }
+	       if (p != NULL)
+		 /* cherche la regle liste de ce type d'element */
+		 {
+		   pSchS1 = pDoc->DocSSchema;
+		   /* on cherche dans le schema du document et dans les */
+		   /* extensions de ce schema */
+		   do
+		     {
+		       j = pSchS1->SsNRules;
+		       found = FALSE;
+		       do
+			 {
+			   if (pSchS1->SsRule[j - 1].SrConstruct == CsList)
+			     if (EquivalentSRules (pSchS1->SsRule[j - 1].SrListItem,
+						  pSchS1, typeRead, pSS, NULL))
+			       found = TRUE;
+			   if (!found)
+			     j--;
+			 }
+		       while (!found && j != 1);
+		       if (!found)
+			 /* pas trouve', on cherche dans l'extension suivante*/
+			 /* du schema de structure du document */
+			 pSchS1 = pSchS1->SsNextExtens;
+		     }
+		   while (!found && pSchS1 != NULL);
+		   if (!found)
+		     PivotError (file, TEXT("Schema extend"));
+		   else
+		     /* cree l'element liste pour ce type d'elements associes*/
+		     {
+		       pDoc->DocAssocRoot[assoc - 1] = NewSubtree (j, pSchS1,
+				        pDoc, assoc, FALSE, TRUE, FALSE, TRUE);
+		       if (pFirst != NULL)
+			 {
+			   /* chaine le 1er elem. associe dans cette liste */
+			   InsertFirstChild (pDoc->DocAssocRoot[assoc - 1],
+					     pFirst);
+			   /* retire les elements exclus */
+			   if (removeExclusions)
+			     RemoveExcludedElem (&pDoc->DocAssocRoot[assoc-1],
+						 pDoc);
+			   /* accouple les paires */
+			   AssociatePairs (pDoc->DocAssocRoot[assoc - 1]);
+			 }
+		     }
+		 }
+	       /* lit les elements associes suivants de meme type */
+	       while (!error && (tag == (CHAR_T) C_PIV_TYPE ||
+				 tag == (CHAR_T) C_PIV_NATURE))
+		 {
+		   rule = 0;
+		   pNat = NULL;
+		   s = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc,
+				 (ThotBool)(!pDoc->DocExportStructure),
+				 &rule, &pNat,&typeRead, &pSS, createPages,
+				 pDoc->DocAssocRoot[assoc - 1], TRUE);
+		   if (withEvent && pDoc->DocSSchema != NULL && !error)
+		     SendEventAttrRead (s, pDoc);
+		   if (s != NULL)
+		     {
+		       if (p == NULL)
+			 InsertFirstChild (pDoc->DocAssocRoot[assoc - 1], s);
+		       else
+			 InsertElementAfter (p, s);
+		       /* retire les elements exclus */
 		       if (removeExclusions)
-		          RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1], pDoc);
+			 RemoveExcludedElem (&s, pDoc);
 		       /* accouple les paires */
-		       AssociatePairs (p);
-		    }
+		       AssociatePairs (s);
+		       if (s != NULL)
+			 p = s;
+		     }
+		 }
+	     }
+	   if (!error && (pDoc->DocCheckingMode & PIV_CHECK_MASK))
+	     /* verifie que cet arbre est correct */
+	     {
+	       ok = AbstractTreeOK (pDoc->DocAssocRoot[assoc - 1], pDoc);
+	       structureOK = structureOK && ok;
+	     }
+	 }
+       
+       /* lit le corps du document */
+       if (!error &&
+	   tag != (CHAR_T) C_PIV_DOC_END)
+	 {
+	   if (tag != (CHAR_T) C_PIV_STRUCTURE)
+	     PivotError (file, TEXT("Open"));
+	   else
+	     {
+	       if (!TtaReadByte (file, &tag))
+		 PivotError (file, TEXT("Open 1"));
+	       if (tag != (CHAR_T) C_PIV_TYPE && tag != (CHAR_T) C_PIV_NATURE)
+		 PivotError (file, TEXT("Open 2"));
+	       else
+		 {
+		   rule = 0;
+		   pNat = NULL;
+		   p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, 0,
+				  (ThotBool)(!pDoc->DocExportStructure),
+                                  &rule, &pNat, &typeRead, &pSS, createPages,
+                                  NULL, TRUE);
+		   if (withEvent && pDoc->DocSSchema != NULL && !error)
+		     SendEventAttrRead (p, pDoc);
+		   /* force la creation d'un element racine */
+		   if (p == NULL)
+		     /* rien n'a ete cree */
+		     p = NewSubtree (pDoc->DocSSchema->SsRootElem,
+				     pDoc->DocSSchema, pDoc, 0,
+				     FALSE, TRUE, TRUE, TRUE);
+		   else if (p->ElStructSchema != pDoc->DocSSchema ||
+			    p->ElTypeNumber != pDoc->DocSSchema->SsRootElem)
+		     /* ce n'est pas la racine attendue */
+		     {
+		       s = p;
+		       p = NewSubtree (pDoc->DocSSchema->SsRootElem,
+				       pDoc->DocSSchema, pDoc, 0,
+				       FALSE, TRUE, TRUE, TRUE);
+		       InsertFirstChild (p, s);
+		     }
+		   /* traite les elements exclus */
+		   if (removeExclusions)
+		     RemoveExcludedElem (&p, pDoc);
+		   /* accouple les paires */
+		   AssociatePairs (p);
+		   pDoc->DocRootElement = p;
+		   if (pDoc->DocCheckingMode & PIV_CHECK_MASK)
+		     /* verifie que cet arbre est correct */
+		     {
+		       ok = AbstractTreeOK (p, pDoc);
+		       structureOK = structureOK && ok;
+		     }
+		 }
+	     }
+	 }
+       if (!structureOK)
+	 /* Le document n'est pas correct */
+	 {
+	   /* on previent l'utilisateur */
+	   TtaDisplayMessage (INFO,
+			     TtaGetMessage (LIB, TMSG_INCORRECT_DOC_STRUCTURE),
+			      pDoc->DocDName);
+#ifdef IV
+	   debugstr = TtaGetEnvString ("DEBUG");
+	   if(debugstr == NULL || ustrcasecmp(debugstr,"YES"))
+	     {
+	       /* on met le document en Read-Only */
+	       pDoc->DocReadOnly = TRUE;
+	       TtaDisplayMessage (INFO,
+				  TtaGetMessage (LIB, TMSG_LOCKED_DOC),
+				  pDoc->DocDName);
+	     }
+#endif
+	 }
+       /* libere les labels des elements reference's par d'autres */
+       /* documents */
+       pRefD = pDoc->DocLabels;
+       while (pRefD != NULL)
+	 {
+	   /* inutile de liberer les descripteurs de documents */
+	   /* externes, on ne les a pas charge's */
+	   pNextRefD = pRefD->ReNext;
+	   FreeReferredDescr (pRefD);
+	   pRefD = pNextRefD;
+	 }
+       
+       /* supprime les extensions de schemas ExtCorr et ExtMot */
+       /* les attributs definis dans ces extensions ont deje ete retire's par*/
+       /* ReadAttributePiv (ces extensions ne definissent que des attributs) */
+       if (!error && pDoc->DocPivotVersion < 4)
+	 {
+	   previousSSchema = pDoc->DocSSchema;
+	   curExtension = previousSSchema->SsNextExtens;
+	   while (curExtension != NULL)
+	     if (ustrcmp (curExtension->SsName, TEXT("ExtCorr")) == 0 ||
+		 ustrcmp (curExtension->SsName, TEXT("ExtMot")) == 0)
+	       {
+		 previousSSchema->SsNextExtens = curExtension->SsNextExtens;
+		 if (curExtension->SsNextExtens != NULL)
+		   curExtension->SsNextExtens->SsPrevExtens = previousSSchema;
+		 FreeSchStruc (curExtension);
+		 curExtension = previousSSchema->SsNextExtens;
 	       }
 	     else
 	       {
-		  /* c'est sans doute l'ancienne forme pivot, ou` la racine de */
-		  /* l'arbre d'elements associes, n'est pas presente, mais */
-		  /* seulement ses fils */
-		  pFirst = p;
-		  /* on lit les tags de pages jusqu'au premier element associe' */
-		  if (!error && typeRead == PageBreak + 1)
-		     while (typeRead == PageBreak + 1)
-		       {
-			  rule = 0;
-			  pNat = NULL;
-			  s = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc,
-			     FALSE, (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat,
-				  &typeRead, &pSS, createPages, NULL, TRUE);
-			  if (withEvent && pDoc->DocSSchema != NULL && !error)
-			     SendEventAttrRead (s, pDoc);
-			  if (s != NULL)
-			    {
-			       if (pFirst == NULL)
-				  pFirst = s;
-			       if (p != NULL)
-				  InsertElementAfter (p, s);
-			       p = s;
-			    }
-		       }
-		  if (p != NULL)
-		     /* cherche la regle liste de ce type d'element */
-		    {
-		       pSchS1 = pDoc->DocSSchema;
-		       /* on cherche dans le schema du document et dans les */
-		       /* extensions de ce schema */
-		       do
-			 {
-			    j = pSchS1->SsNRules;
-			    found = FALSE;
-			    do
-			      {
-				 if (pSchS1->SsRule[j - 1].SrConstruct == CsList)
-				    if (EquivalentSRules (pSchS1->SsRule[j - 1].SrListItem,
-					       pSchS1, typeRead, pSS, NULL))
-				       found = TRUE;
-				 if (!found)
-				    j--;
-			      }
-			    while (!found && j != 1);
-			    if (!found)
-			       /* pas trouve', on cherche dans l'extension suivante du */
-			       /* schema de structure du document */
-			       pSchS1 = pSchS1->SsNextExtens;
-			 }
-		       while (!found && pSchS1 != NULL);
-		       if (!found)
-			 {
-			    PivotError (file, TEXT("Schema extend"));
-			 }
-		       else
-			  /* cree l'element liste pour ce type d'elements associes */
-			 {
-			    pDoc->DocAssocRoot[assoc - 1] = NewSubtree (j, pSchS1,
-				     pDoc, assoc, FALSE, TRUE, FALSE, TRUE);
-			    if (pFirst != NULL)
-			      {
-				 /* chaine le 1er elem. associe dans cette liste */
-				 InsertFirstChild (pDoc->DocAssocRoot[assoc - 1], pFirst);
-				 /* retire les elements exclus */
-				 if (removeExclusions)
-				    RemoveExcludedElem (&pDoc->DocAssocRoot[assoc - 1], pDoc);
-				 /* accouple les paires */
-				 AssociatePairs (pDoc->DocAssocRoot[assoc - 1]);
-			      }
-			 }
-		    }
-		  /* lit les elements associes suivants de meme type */
-		  while (!error && (tag == (CHAR_T) C_PIV_TYPE || tag == (CHAR_T) C_PIV_NATURE))
-		    {
-		       rule = 0;
-		       pNat = NULL;
-		       s = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, assoc,
-			     FALSE, (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat,
-					&typeRead, &pSS, createPages,
-					pDoc->DocAssocRoot[assoc - 1], TRUE);
-		       if (withEvent && pDoc->DocSSchema != NULL && !error)
-			  SendEventAttrRead (s, pDoc);
-		       if (s != NULL)
-			 {
-			    if (p == NULL)
-			       InsertFirstChild (pDoc->DocAssocRoot[assoc - 1], s);
-			    else
-			       InsertElementAfter (p, s);
-			    /* retire les elements exclus */
-			    if (removeExclusions)
-			       RemoveExcludedElem (&s, pDoc);
-			    /* accouple les paires */
-			    AssociatePairs (s);
-			    if (s != NULL)
-			       p = s;
-			 }
-		    }
+		 previousSSchema = curExtension;
+		 curExtension = curExtension->SsNextExtens;
 	       }
-	     if (!error && (pDoc->DocCheckingMode & PIV_CHECK_MASK))
-		/* verifie que cet arbre est correct */
+	 }
+       if (!error)
+	 /* affecte un label a tous les elements qui n'en ont pas et */
+	 /* recherche toutes les references d'inclusion du document et */
+	 /* copie les elements inclus */
+	 {
+	   /* on affecte des labels aux elements de l'arbre principal */
+	   if (pDoc->DocRootElement != NULL)
+	     SetLabel (pDoc->DocRootElement, pDoc);
+	   /* on affecte des labels aux elements des arbres associes */
+	   for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
+	     if (pDoc->DocAssocRoot[assoc] != NULL)
+	       SetLabel (pDoc->DocAssocRoot[assoc], pDoc);
+	   
+	   /* Update the inclusions values */
+	   UpdateInclusionElements (pDoc, loadExternalDoc, removeExclusions);
+	   
+	   /* verifie que les racines de tous les arbres du document
+	      possedent bien un attribut langue */
+	   CheckLanguageAttr (pDoc, pDoc->DocRootElement);
+	   pDoc->DocRootElement->ElAccess = AccessReadWrite;
+	   for (i = 0; i < MAX_ASSOC_DOC; i++)
+	     if (pDoc->DocAssocRoot[i] != NULL)
 	       {
-		  ok = AbstractTreeOK (pDoc->DocAssocRoot[assoc - 1], pDoc);
-		  structureOK = structureOK && ok;
+		 CheckLanguageAttr (pDoc, pDoc->DocAssocRoot[i]);
+		 pDoc->DocAssocRoot[i]->ElAccess = AccessReadWrite;
 	       }
-	  }
-
-	/* lit le corps du document */
-	if (!error &&
-	    tag != (CHAR_T) C_PIV_DOC_END)
-	  {
-	    if (tag != (CHAR_T) C_PIV_STRUCTURE)
-	      PivotError (file, TEXT("Open"));
-	    else
-	      {
-		if (!TtaReadByte (file, &tag))
-		  PivotError (file, TEXT("Open 1"));
-		if (tag != (CHAR_T) C_PIV_TYPE && tag != (CHAR_T) C_PIV_NATURE)
-		  {
-		    PivotError (file, TEXT("Open 2"));
-		  }
-		else
-		  {
-		    rule = 0;
-		    pNat = NULL;
-		    p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, 0,
-				     FALSE, (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat,
-				     &typeRead, &pSS, createPages, NULL, TRUE);
-		    if (withEvent && pDoc->DocSSchema != NULL && !error)
-		      SendEventAttrRead (p, pDoc);
-		    /* force la creation d'un element racine */
-		    if (p == NULL)
-		      /* rien n'a ete cree */
-		      p = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
-				      FALSE, TRUE, TRUE, TRUE);
-		    else if (p->ElStructSchema != pDoc->DocSSchema
-			     || p->ElTypeNumber != pDoc->DocSSchema->SsRootElem)
-		      /* ce n'est pas la racine attendue */
-		      {
-			s = p;
-			p = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
-					FALSE, TRUE, TRUE, TRUE);
-			InsertFirstChild (p, s);
-		      }
-		    /* traite les elements exclus */
-		    if (removeExclusions)
-		      RemoveExcludedElem (&p, pDoc);
-		    /* accouple les paires */
-		    AssociatePairs (p);
-		    pDoc->DocRootElement = p;
-		    if (pDoc->DocCheckingMode & PIV_CHECK_MASK)
-		      /* verifie que cet arbre est correct */
-		      {
-			ok = AbstractTreeOK (p, pDoc);
-			structureOK = structureOK && ok;
-		      }
-		  }
-	      }
-	  }
-	if (!structureOK)
-	   /* Le document n'est pas correct */
-	  {
-	     /* on previent l'utilisateur */
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_DOC_STRUCTURE), pDoc->DocDName);
-#ifdef IV
-             debugstr = TtaGetEnvString ("DEBUG");
-	     if(debugstr == NULL || ustrcasecmp(debugstr,"YES"))
-	       {
-	         /* on met le document en Read-Only */
-	         pDoc->DocReadOnly = TRUE;
-	         TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LOCKED_DOC), pDoc->DocDName);
-               }
-#endif
-	  }
-	/* libere les labels des elements reference's par d'autres */
-	/* documents */
-	pRefD = pDoc->DocLabels;
-	while (pRefD != NULL)
-	  {
-	     /* inutile de liberer les descripteurs de documents */
-	     /* externes, on ne les a pas charge's */
-	     pNextRefD = pRefD->ReNext;
-	     FreeReferredDescr (pRefD);
-	     pRefD = pNextRefD;
-	  }
-
-	/* supprime les extensions de schemas ExtCorr et ExtMot */
-	/* les attributs definis dans ces extensions ont deje ete retire's par */
-	/* ReadAttributePiv (ces extensions ne definissent que des attributs) */
-	if (!error && pDoc->DocPivotVersion < 4)
-	  {
-	     previousSSchema = pDoc->DocSSchema;
-	     curExtension = previousSSchema->SsNextExtens;
-	     while (curExtension != NULL)
-		if (ustrcmp (curExtension->SsName, TEXT("ExtCorr")) == 0 ||
-		    ustrcmp (curExtension->SsName, TEXT("ExtMot")) == 0)
-		  {
-		     previousSSchema->SsNextExtens = curExtension->SsNextExtens;
-		     if (curExtension->SsNextExtens != NULL)
-			curExtension->SsNextExtens->SsPrevExtens = previousSSchema;
-		     FreeSchStruc (curExtension);
-		     curExtension = previousSSchema->SsNextExtens;
-		  }
-		else
-		  {
-		     previousSSchema = curExtension;
-		     curExtension = curExtension->SsNextExtens;
-		  }
-	  }
-	if (!error)
-	   /* affecte un label a tous les elements qui n'en ont pas et */
-	   /* recherche toutes les references d'inclusion du document et */
-	   /* copie les elements inclus */
-	  {
-	     /* on affecte des labels aux elements de l'arbre principal */
-	     if (pDoc->DocRootElement != NULL)
-		SetLabel (pDoc->DocRootElement, pDoc);
-	     /* on affecte des labels aux elements des arbres associes */
-	     for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
-		if (pDoc->DocAssocRoot[assoc] != NULL)
-		   SetLabel (pDoc->DocAssocRoot[assoc], pDoc);
-	     /* on affecte des labels aux elements des parametres */
-	     for (i = 0; i < MAX_PARAM_DOC; i++)
-		if (pDoc->DocParameters[i] != NULL)
-		   SetLabel (pDoc->DocParameters[i], pDoc);
-
-             /* Update the inclusions values */
-             UpdateInclusionElements (pDoc, loadExternalDoc, removeExclusions);
-
-	     /* verifie que les racines de tous les arbres du document possedent */
-	     /* bien un attribut langue */
-	     CheckLanguageAttr (pDoc, pDoc->DocRootElement);
-	     pDoc->DocRootElement->ElAccess = AccessReadWrite;
-	     for (i = 0; i < MAX_PARAM_DOC; i++)
-		if (pDoc->DocParameters[i] != NULL)
-		  {
-		     CheckLanguageAttr (pDoc, pDoc->DocParameters[i]);
-		     pDoc->DocParameters[i]->ElAccess = AccessReadOnly;
-		  }
-	     for (i = 0; i < MAX_ASSOC_DOC; i++)
-		if (pDoc->DocAssocRoot[i] != NULL)
-		  {
-		     CheckLanguageAttr (pDoc, pDoc->DocAssocRoot[i]);
-		     pDoc->DocAssocRoot[i]->ElAccess = AccessReadWrite;
-		  }
-	     if (ThotLocalActions[T_indexschema] != NULL)
-		(*ThotLocalActions[T_indexschema]) (pDoc);
-	     if (withEvent && pDoc->DocSSchema != NULL && !error)
-	       {
-		  notifyDoc.event = TteDocOpen;
-		  notifyDoc.document = (Document) IdentDocument (pDoc);
-		  notifyDoc.view = 0;
-		  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-	       }
-	  }
+	   if (ThotLocalActions[T_indexschema] != NULL)
+	     (*ThotLocalActions[T_indexschema]) (pDoc);
+	   if (withEvent && pDoc->DocSSchema != NULL && !error)
+	     {
+	       notifyDoc.event = TteDocOpen;
+	       notifyDoc.document = (Document) IdentDocument (pDoc);
+	       notifyDoc.view = 0;
+	       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+	     }
+	 }
      }
 }

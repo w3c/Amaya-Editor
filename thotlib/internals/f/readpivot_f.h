@@ -15,9 +15,6 @@ extern ThotBool OpenDocument ( CHAR_T* docName,
                                ThotBool withAppEvent,
                                ThotBool removeExclusions );
 extern void DeleteAllTrees ( PtrDocument pDoc );
-extern PtrTextBuffer ReadComment ( BinFile file,
-                                   ThotBool store,
-                                   ThotBool oldformat );
 extern void LabelStringToInt ( LabelString string,
                                int *number );
 extern void ReadAttributePiv ( BinFile pivFile,
@@ -39,7 +36,6 @@ extern PtrElement ReadTreePiv ( BinFile pivFile,
                                 PtrDocument pDoc,
                                 char* tag,
                                 int assocNum,
-                                ThotBool createParam,
                                 ThotBool createAll,
                                 int *contentType,
                                 PtrSSchema * pContSS,
@@ -85,9 +81,6 @@ extern ThotBool OpenDocument (/* CHAR_T* docName,
                                  ThotBool withAppEvent,
                                  ThotBool removeExclusions */);
 extern void DeleteAllTrees (/* PtrDocument pDoc */);
-extern PtrTextBuffer ReadComment (/* BinFile file,
-                                     ThotBool store,
-                                     ThotBool oldformat */);
 extern void LabelStringToInt (/* LabelString string,
                                  int *number */);
 extern void ReadAttributePiv (/* BinFile pivFile,
@@ -109,7 +102,6 @@ extern PtrElement ReadTreePiv (/* BinFile pivFile,
                                   PtrDocument pDoc,
                                   char* tag,
                                   int assocNum,
-                                  ThotBool createParam,
                                   ThotBool createAll,
                                   int *contentType,
                                   PtrSSchema * pContSS,

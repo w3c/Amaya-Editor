@@ -130,9 +130,6 @@ TransCondition      cond;
 	    case TcondLast:
 	       TtaWriteByte (outfile, C_TR_LAST);
 	       break;
-	    case TcondDefined:
-	       TtaWriteByte (outfile, C_TR_DEFINED);
-	       break;
 	    case TcondReferred:
 	       TtaWriteByte (outfile, C_TR_REFERRED);
 	       break;
@@ -156,9 +153,6 @@ TransCondition      cond;
 	       break;
 	    case TcondPRule:
 	       TtaWriteByte (outfile, C_TR_PRULE);
-	       break;
-	    case TcondComment:
-	       TtaWriteByte (outfile, C_TR_COMMENT);
 	       break;
 	    case TcondAlphabet:
 	       TtaWriteByte (outfile, C_TR_ALPHABET);
@@ -357,9 +351,6 @@ CreatedObject       obj;
 	       break;
 	    case ToContent:
 	       TtaWriteByte (outfile, C_OB_CONTENT);
-	       break;
-	    case ToComment:
-	       TtaWriteByte (outfile, C_OB_COMMENT);
 	       break;
 	    case ToAllAttr:
 	       TtaWriteByte (outfile, C_OB_ATTRIBUTES);

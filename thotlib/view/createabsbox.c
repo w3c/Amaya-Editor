@@ -346,8 +346,6 @@ ThotBool            ro;
 
 {
    PtrAbstractBox      pAb;
-   PtrElement          pAscend;
-   ThotBool            stop;
 
    GetAbstractBox (&pAb);
    pAb->AbElement = pEl;
@@ -478,8 +476,7 @@ ThotBool            ro;
    pAb->AbHorizEnclosing = TRUE;
    pAb->AbVertEnclosing = TRUE;
 
-   /* les copies de parametres ou d'elements inclus ne sont pas */
-   /* modifiables par l'utilisateur */
+   /* les copies d'elements inclus ne sont pas modifiables par l'utilisateur */
    pAb->AbCanBeModified = !pEl->ElIsCopy;
    /* les constantes ne sont pas modifiables par l'utilisateur */
    if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
@@ -496,46 +493,14 @@ ThotBool            ro;
 	 /* une reference = un pave actif (double-cliquable) */
 	 pAb->AbSensitive = TRUE;
    if (pEl->ElIsCopy)
-      /* un element appartenant a un element copie' = pave actif, sauf */
-      /* s'il s'agit d'un parametre. */
-     {
-	pAb->AbSensitive = TRUE;
-	pAscend = pEl;
-	while (pAscend != NULL)	/* un ascendant est-il un parametre ? */
-	   if (pAscend->ElStructSchema->SsRule[pAscend->ElTypeNumber - 1].SrParamElem)
-	     {
-		pAscend = NULL;
-		pAb->AbSensitive = FALSE;   /* un parametre n'est pas actif */
-	     }
-	   else
-	      pAscend = pAscend->ElParent;
-     }
+      /* un element appartenant a un element copie' = pave actif */
+      pAb->AbSensitive = TRUE;
    pAb->AbReadOnly = FALSE;
    if (ro || ElementIsReadOnly (pEl))
      {
 	pAb->AbCanBeModified = FALSE;
 	pAb->AbReadOnly = TRUE;
      }
-   else
-     {
-	/* cherche si un ascendant est un parametre */
-	pAscend = pEl;
-	stop = FALSE;
-	do
-	   if (pAscend == NULL)
-	      stop = TRUE;
-	   else if (pAscend->ElStructSchema->SsRule[pAscend->ElTypeNumber - 1].SrParamElem)
-	     {
-		/* le contenu d'un parametre ne peut pas etre modifie */
-		stop = TRUE;
-		pAb->AbReadOnly = TRUE;
-		pAb->AbCanBeModified = FALSE;
-	     }
-	   else
-	      pAscend = pAscend->ElParent;
-	while (!stop);
-     }
-
    pAb->AbNew = TRUE;
    pAb->AbDead = FALSE;
    pAb->AbWidthChange = FALSE;

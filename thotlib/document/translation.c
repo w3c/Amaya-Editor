@@ -1044,7 +1044,7 @@ PtrDocument         pDoc;
    PtrReference        pRef;
    DocumentIdentifier  docIdent;
    PtrDocument         pExtDoc;
-   int                 i, par, nCond;
+   int                 i, nCond;
    ThotBool            ret, possibleRef, typeOK, stop;
 
    if (pBlock->TbNConditions == 0)
@@ -1146,25 +1146,6 @@ PtrDocument         pDoc;
 	       ret = pSibling == NULL;
 	       break;
 	       
-	     case TcondDefined:
-	       /* la condition est satisfaite si l'element, qui est un
-		  parametre, a une valeur */
-	       /* parcourt les parametres du document*/
-	       par = 0;
-	       ret = FALSE;
-	       do
-		 {
-		 par++;
-		 if (pDoc->DocParameters[par - 1] != NULL)
-		   {
-		   pEl1 = pDoc->DocParameters[par - 1];
-		   ret = pEl1->ElTypeNumber == pElem->ElTypeNumber &&
-		         !ustrcmp (pEl1->ElStructSchema->SsName, pElem->ElStructSchema->SsName);
-		   }
-		 }
-	       while (!ret && par < MAX_PARAM_DOC);
-	       break;
-
 	     case TcondReferred:
 	       /* la condition est satisfaite si l'element (ou le premier de
 		  ses ascendants sur lequel peut porter une reference) est
@@ -1459,12 +1440,6 @@ PtrDocument         pDoc;
 	       ret = pElem->ElFirstPRule != NULL;
 	       break;
 
-	     case TcondComment:
-	       /* la condition est satisfaite si l'element porte des
-		  commentaires */
-	       ret = (pElem->ElComment != NULL);
-	       break;
-	       
 	     case TcondAlphabet:
 	       /* la condition porte sur l'alphabet */
 	       if (pElem->ElTypeNumber == CharString + 1)
@@ -2725,18 +2700,6 @@ ThotBool            recordLineNb;
 	      default:
 		break;
 	      }
-	  break;
-
-	case ToComment:
-	  /* produit le contenu du commentaire de l'element */
-	  pBuf = pEl->ElComment;
-	  while (pBuf != NULL)
-	    {
-	      i = 0;
-	      while (i < pBuf->BuLength)
-		PutChar ((wchar_t) (pBuf->BuContent[i++]), fileNum, NULL, pDoc, *lineBreak, TRUE);
-	      pBuf = pBuf->BuNext;
-	    }
 	  break;
 
 	case ToAllAttr:

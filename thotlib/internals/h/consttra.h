@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -56,7 +56,6 @@
 /* a type of translation rule application condition */
 #define C_TR_FIRST L'P'
 #define C_TR_LAST L'D'
-#define C_TR_DEFINED L'd'
 #define C_TR_REFERRED L'R'
 #define C_TR_FIRSTREF L'F'
 #define C_TR_LAST_REF L'L'
@@ -65,7 +64,6 @@
 #define C_TR_ATTRIBUTE L'A'
 #define C_TR_PRESENT L'S'
 #define C_TR_PRULE L's'
-#define C_TR_COMMENT L'c'
 #define C_TR_ALPHABET L'a'
 #define C_TR_ATTRIBUTES L'E'
 #define C_TR_FIRSTATTR L'p'
@@ -108,7 +106,6 @@
 #define C_OB_CONTENT L'D'
 #define C_OB_PRES_VAL L'P'
 #define C_OB_PRESENTATION L'p'
-#define C_OB_COMMENT L'c'
 #define C_OB_ATTRIBUTES L'T'
 #define C_OB_REFID L'R'
 #define C_OB_PAIRID L'M'
@@ -162,7 +159,6 @@
 /* a type of translation rule application condition */
 #define C_TR_FIRST 'P'
 #define C_TR_LAST 'D'
-#define C_TR_DEFINED 'd'
 #define C_TR_REFERRED 'R'
 #define C_TR_FIRSTREF 'F'
 #define C_TR_LAST_REF 'L'
@@ -171,7 +167,6 @@
 #define C_TR_ATTRIBUTE 'A'
 #define C_TR_PRESENT 'S'
 #define C_TR_PRULE 's'
-#define C_TR_COMMENT 'c'
 #define C_TR_ALPHABET 'a'
 #define C_TR_ATTRIBUTES 'E'
 #define C_TR_FIRSTATTR 'p'
@@ -214,7 +209,6 @@
 #define C_OB_CONTENT 'D'
 #define C_OB_PRES_VAL 'P'
 #define C_OB_PRESENTATION 'p'
-#define C_OB_COMMENT 'c'
 #define C_OB_ATTRIBUTES 'T'
 #define C_OB_REFID 'R'
 #define C_OB_PAIRID 'M'

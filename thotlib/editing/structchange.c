@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -96,21 +96,21 @@ PtrElement         *pAnchor;
 #endif /* __STDC__ */
 
 {
-   PtrElement          pEl;
+  PtrElement          pEl;
 
-   if (pFree != NULL)
-     {
-	pFree->ElNext = NULL;
-	if (*pAnchor == NULL)
-	   *pAnchor = pFree;
-	else
-	  {
-	     pEl = *pAnchor;
-	     while (pEl->ElNext != NULL)
-		pEl = pEl->ElNext;
-	     pEl->ElNext = pFree;
-	  }
-     }
+  if (pFree != NULL)
+    {
+      pFree->ElNext = NULL;
+      if (*pAnchor == NULL)
+	*pAnchor = pFree;
+      else
+	{
+	  pEl = *pAnchor;
+	  while (pEl->ElNext != NULL)
+	    pEl = pEl->ElNext;
+	  pEl->ElNext = pFree;
+	}
+    }
 }
 #endif /* IV */
 
@@ -136,9 +136,17 @@ PtrElement         *pAnchor;
    de numero typeNum defini dans le schema de structure pSS
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl, PtrDocument pDoc, PtrElement pEl, ThotBool before, ThotBool updateVol, PtrElement pSavedEl, PtrElement * pFirstFree, int *firstPastedChar, int typeNum, PtrSSchema pSS)
+static void         PasteBeforeOrAfter (PtrElement * pFirstPastedEl,
+					PtrDocument pDoc, PtrElement pEl,
+					ThotBool before, ThotBool updateVol,
+					PtrElement pSavedEl,
+					PtrElement * pFirstFree,
+					int *firstPastedChar, int typeNum,
+					PtrSSchema pSS)
 #else  /* __STDC__ */
-static void         PasteBeforeOrAfter (pFirstPastedEl, pDoc, pEl, before, updateVol, pSavedEl, pFirstFree, firstPastedChar, typeNum, pSS)
+static void         PasteBeforeOrAfter (pFirstPastedEl, pDoc, pEl, before,
+					updateVol, pSavedEl, pFirstFree,
+					firstPastedChar, typeNum, pSS)
 PtrElement         *pFirstPastedEl;
 PtrDocument         pDoc;
 PtrElement          pEl;
@@ -293,14 +301,12 @@ PtrSSchema          pSS;
 			  while (!typeOK && siblingType != 0);
 			  if (!typeOK)
 			     /* s'il n'y a qu'un element a coller, cherche si
-			        le contenu de cet element convient, a condition
-			        que ce ne soit pas un parametre. */
+			        le contenu de cet element convient */
 			    {
 			       if (pSavedEl->ElPrevious == NULL
 				   && pSavedEl->ElNext == NULL
 				   && !pSavedEl->ElTerminal
-				   && pSavedEl->ElFirstChild != NULL
-				   && !pSavedEl->ElStructSchema->SsRule[pSavedEl->ElTypeNumber - 1].SrParamElem)
+				   && pSavedEl->ElFirstChild != NULL)
 				 {
 				    pSavedChild = pSavedEl->ElFirstChild;
 				    /* cherche le dernier element sauvegarde'

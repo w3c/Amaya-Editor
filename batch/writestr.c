@@ -279,7 +279,6 @@ SRule              *pSRule;
    for (j = 0; j < pSRule->SrNLocalAttrs; j++)
       WriteBoolean (pSRule->SrRequiredAttr[j]);
    WriteBoolean (pSRule->SrAssocElem);
-   WriteBoolean (pSRule->SrParamElem);
    WriteBoolean (pSRule->SrUnitElem);
    WriteBoolean (pSRule->SrRecursive);
    WriteBoolean (pSRule->SrExportedElem);

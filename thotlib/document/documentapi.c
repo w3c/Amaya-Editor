@@ -1579,13 +1579,6 @@ char*               presentationName;
 	       }
 	  }
 
-	/* Gets the comment of the document if it exists */
-	if (!error && (charGotten == (CHAR_T) C_PIV_COMMENT || charGotten == (CHAR_T) C_PIV_OLD_COMMENT))
-	  {
-	     /* Get the byte following the comment */
-	     if (!TtaReadByte (file, &charGotten))
-		error = TRUE;
-	  }
 	/* Gets the name of the schema structure which is at the begenning of the pivot file */
 	if (!error && charGotten != (CHAR_T) C_PIV_NATURE)
 	   error = TRUE;

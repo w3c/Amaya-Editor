@@ -1695,15 +1695,6 @@ SyntRuleNum         pr;
 	     CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition =
 	       TcondLast;
 	     break;
-	   case KWD_Defined:	/* Defined */
-	     if (pSSchema->SsRule[CurType - 1].SrParamElem)
-	       CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition =
-		 TcondDefined;
-	     else
-	       CompilerMessage (wi, TRA, FATAL, VALID_ONLY_FOR_PARAMETERS,
-				inputLine, LineNum);
-	     break;
-	     
 	   case KWD_Refered:	/* Refered */
 	   case KWD_Referred:		/* Referred */
 	     if (r == RULE_CondOnAscend)	/* dans une condition */
@@ -1841,19 +1832,6 @@ SyntRuleNum         pr;
 	     else if (r == RULE_Token)
 	       /* ce qu'il faut generer */
 	       CurTRule->TrObject = ToAllPRules;
-	     break;
-	     
-	   case KWD_Comment:	/* Comment */
-	     if (r == RULE_CondOnAscend)
-	       /* dans une condition */
-	       {
-		 ProcessAncestorName (pSSchema);
-		 CurBlock->TbCondition[CurBlock->TbNConditions - 1].
-		   TcCondition = TcondComment;
-	       }
-	     else if (r == RULE_Token)
-	       /* ce qu'il faut generer */
-	       CurTRule->TrObject = ToComment;
 	     break;
 	     
 	   case KWD_DocumentName:	/* DocumentName */
