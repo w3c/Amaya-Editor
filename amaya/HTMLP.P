@@ -68,6 +68,7 @@ PRINT
 #define LIST_INDENT 0.2
 #define LIST_NUMBER_WIDTH 0.2
 #define LIST_SHIFT 1
+#define DEFINITION_INDENT 2.3
 
 COUNTERS
    ItemCounter : Rank of List_Item init Start Reinit ItemValue;
@@ -3171,7 +3172,7 @@ RULES
  Definition: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	MarginLeft: LIST_INDENT;
+	MarginLeft: DEFINITION_INDENT;
 	Width: Enclosing . Width;
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view BEGIN
@@ -7094,7 +7095,7 @@ ATTRIBUTES
 	END;
   dir (Definition) = ltr_:
 	BEGIN
-	MarginLeft: LIST_INDENT;
+	MarginLeft: DEFINITION_INDENT;
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view BEGIN
 		MarginLeft: 0;
@@ -7102,12 +7103,12 @@ ATTRIBUTES
 		END;
 	IN Alternate_view BEGIN
 		MarginLeft: 0;
-		HorizPos: Left = Enclosing . Left + LIST_INDENT;
+		HorizPos: Left = Enclosing . Left + DEFINITION_INDENT;
 		END;
 	END;
   dir (Definition) = rtl_:
 	BEGIN
-	MarginRight: LIST_INDENT;
+	MarginRight: DEFINITION_INDENT;
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view BEGIN
 		MarginRight: 0;
@@ -7115,7 +7116,7 @@ ATTRIBUTES
 		END;
 	IN Alternate_view BEGIN
 		MarginRight: 0;
-		HorizPos: Right = Enclosing . Right - LIST_INDENT;
+		HorizPos: Right = Enclosing . Right - DEFINITION_INDENT;
 		END;
 	END;
   dir (Option_Menu) = ltr_:
