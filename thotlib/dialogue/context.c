@@ -30,8 +30,9 @@
 #include "thotcolor_tv.h"
 #include "appdialogue_tv.h"
 
- ThotColorStruct  cblack;
+ThotColorStruct  cblack;
 static ThotColorStruct  cwhite;
+static ThotColor        Select_Color;
 
 #include "appli_f.h"
 #include "checkermenu_f.h"
@@ -47,11 +48,11 @@ static ThotColorStruct  cwhite;
 #ifdef _WINDOWS
 #include "wininclude.h"
 
-static int   palSize;
-static int   initialized = 0;
-int          nbPalEntries;
-PALETTEENTRY palEntries[256];
-int          nbSysColors;
+static int       palSize;
+static int       initialized = 0;
+int              nbPalEntries;
+PALETTEENTRY     palEntries[256];
+int              nbSysColors;
 
 /*----------------------------------------------------------------------
  *      WinCreateGC is an emulation of the XWindows XCreateGC under
@@ -231,6 +232,8 @@ ThotColor*  colorpixel;
    /* register the default background color */
    else if (strcmp (colorplace, "ForegroundColor") == 0)
      DefaultFColor = col;
+   else if (strcmp (colorplace, "DocSelectColor") == 0)
+     SelColor = col;
 #ifdef _WINDOWS 
    *colorpixel = col;
 #else  /* _WINDOWS */

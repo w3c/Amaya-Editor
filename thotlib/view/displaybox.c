@@ -320,7 +320,7 @@ CHAR_T                modele;
        /* show the selection on the current symbol */
       if (pFrame->FrSelectionBegin.VsBox == pBox ||
 	  pFrame->FrSelectionEnd.VsBox == pBox)
-	bg = Select_Color;
+	bg = SelColor;
       else
 	bg = pAb->AbBackground;
       

@@ -41,10 +41,10 @@ THOT_EXPORT CHAR_T      wTitle [256];
 THOT_EXPORT ThotColor BackgroundColor[MAX_FRAME + 2]; /* Background color */
 THOT_EXPORT int       DefaultBColor;    /* default background color index */
 THOT_EXPORT int       DefaultFColor;    /* default foreground color index */
+THOT_EXPORT int       SelColor;         /* selection color                */
 THOT_EXPORT ThotColor Black_Color;      /* writing color                  */
 THOT_EXPORT ThotColor White_Color;      /* background color               */
 THOT_EXPORT ThotColor Scroll_Color;     /* scroll color                   */
-THOT_EXPORT ThotColor Select_Color;     /* selection color                */
 THOT_EXPORT ThotColor BgMenu_Color;     /* menu background color          */
 THOT_EXPORT ThotColor FgMenu_Color;     /* menu foreground color          */
 THOT_EXPORT ThotColor Box_Color;        /* active box color               */
@@ -134,3 +134,5 @@ extern HINSTANCE  hInstance;
 #endif /* _WINDOWS */
 #endif /* !NODISPLAY */
 #endif
+
+
