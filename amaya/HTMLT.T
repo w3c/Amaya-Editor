@@ -473,21 +473,37 @@ RULES
 	END;
 
  Math: BEGIN
+#ifdef XML
 	Create '<m:math';
+#else
+	Create '<math';
+#endif
 	Create Attributes;
 	Create '>\12';
 	indent +2;
 	indent -2 after;
+#ifdef XML
 	Create '</m:math>\12' After;
+#else
+	Create '</math>\12' After;
+#endif
 	END;
 
  XMLGraphics: BEGIN
+#ifdef XML
 	Create '<g:xmlgraphics';
+#else
+	Create '<xmlgraphics';
+#endif
 	Create Attributes;
 	Create '>\12';
 	indent +2;
 	indent -2 after;
+#ifdef XML
 	Create '</g:xmlgraphics>\12' After;
+#else
+	Create '</xmlgraphics>\12' After;
+#endif
 	END;
 
  Paragraph: BEGIN
