@@ -290,6 +290,10 @@ SOURCE=..\..\thotlib\image\gifhandler.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\base\global.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\view\hyphen.c
 # End Source File
 # Begin Source File

@@ -126,6 +126,10 @@ SOURCE=..\..\thotlib\base\fileaccess.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\base\global.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\tree\labelalloc.c
 # End Source File
 # Begin Source File
