@@ -285,6 +285,18 @@ extern void TtaNewLabel (int ref, int ref_parent, char *text);
 extern void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 			    int height, ThotBool react);
 
+
+/*----------------------------------------------------------------------
+   TtaNewPwdForm creates a dialogue element to input password text:   
+   Parameter ref gives the Thot reference.
+   Parameter title gives the dialogue title.
+   Parameters width and height give the box size. 
+   If the parameter react is TRUE, any change in the input box generates a
+   callback to the application.
+  ----------------------------------------------------------------------*/
+extern void TtaNewPwdForm (int ref, int ref_parent, char *title, int width,
+			   int height, ThotBool react);
+
 /*----------------------------------------------------------------------
    TtaSetTextForm initialise une feuille de saisie de texte :         
    Le parame`tre ref donne la re'fe'rence du catalogue.               
