@@ -1141,6 +1141,7 @@ View                view;
   TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
   /* wait for an answer from the user */
   TtaWaitShowDialogue ();
+  TtaDestroyDialogue (BaseDialog + OptionMenu);
   if (ReturnOption >= 0 && ReturnOptionMenu >= 0) 
     {
       /* make the returned option selected */
