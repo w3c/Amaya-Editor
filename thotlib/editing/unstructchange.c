@@ -967,13 +967,13 @@ void                TtcCreateElement (doc, view)
    if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
       /* there is no selection */
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-   else if (pDoc->DocReadOnly)
-      /* Read-only document */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   else if (AscentReturnCreateNL (firstSel) != NULL)
+   else if (!ElementIsReadOnly (firstSel) && AscentReturnCreateNL (firstSel) != NULL)
       /* one of the ancestors of the first selected element says that the
 	 Return key should generate a "new line" character */
       InsertChar (GetWindowNumber (doc, view), '\n', -1);
+   else if (firstSel->ElParent == NULL || ElementIsReadOnly (firstSel->ElParent))
+      /* Read-only document */
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
    else
      {
 	pListEl = NULL;
