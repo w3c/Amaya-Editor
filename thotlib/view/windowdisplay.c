@@ -155,6 +155,8 @@ int                 fg;
      }
 #  endif /* _WINDOWS */
    /* Load the correct color */
+    TtLineGC.thick = thick;
+    TtLineGC.style = style;
     LoadColor (disp, RO, active, fg);
 }
 
@@ -204,11 +206,70 @@ int                 y2;
    y2 += FrameTable[frame].FrTopMargin;
 #  ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
-   pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
+   if (TtLineGC.style == 0)
+      pen = CreatePen (PS_SOLID, TtLineGC.thick, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
+   else if (TtLineGC.style == 1)
+       pen = CreatePen (PS_DASH, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
+   else
+       pen = CreatePen (PS_DOT, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
+
    hOldPen = SelectObject (TtDisplay, pen);
 
-   MoveToEx (TtDisplay, x1, y1, NULL);
-   LineTo (TtDisplay, x2, y2);
+   if (TtLineGC.style == 0 || TtLineGC.thick <= 1) {
+      MoveToEx (TtDisplay, x1, y1, NULL);
+      LineTo (TtDisplay, x2, y2);
+   } else {
+         int i, delta = TtLineGC.thick / 2;
+         if (abs (y1 - y2) > abs (x1 - x2)) {
+            int xd = x1 - delta;
+            int xf = x2 - delta;
+            for (i = 0; i < TtLineGC.thick; i++) {
+                MoveToEx (TtDisplay, xd, y1, NULL);
+                LineTo (TtDisplay, xf, y2);
+                xd++; 
+                xf++;
+			} 
+		 } else {
+              int yd = y1 - delta;
+              int yf = y2 - delta;
+              for (i = 0; i < TtLineGC.thick; i++) {
+                  MoveToEx (TtDisplay, x1, yd, NULL);
+                  LineTo (TtDisplay, x2, yf);
+                  yd++; 
+                  yf++;
+			  }  
+		 }  
+#        if 0 /**************************************************************************/
+         float  a, b;
+         int    newX = x1, newY = y1;
+		 double theta;
+		 if (x1 != x2) {
+            theta = atan2((double)(y2 - y1), (double) (x2- x1));
+            while (x1 < x2 && y1 < y2) {
+                  newX = x1 + (int) (20 * cos (theta));
+				  newY = y1 + (int) (20 * sin (theta));
+                  MoveToEx (TtDisplay, x1, y1, NULL);
+                  LineTo (TtDisplay, newX, newY);
+                  x1 = newX + (int) (10 * cos (theta));
+				  y1 = newY + (int) (10 * sin (theta));
+			}
+			if  (x1 < x2 && y1 < y2) {
+                MoveToEx (TtDisplay, x1, y1, NULL);
+                LineTo (TtDisplay, x2, y2);
+			}
+		 } else {
+            int i, delta = TtLineGC.thick / 2;
+            int xd = x1 - delta;
+            int xf = x2 - delta;
+            for (i = 0; i < TtLineGC.thick; i++) {
+                MoveToEx (TtDisplay, xd, y1, NULL);
+                LineTo (TtDisplay, xf, y2);
+                xd++; 
+                xf++;
+			} 
+		 }
+#        endif /*************************************************************************/
+   } 
    SelectObject (TtDisplay, hOldPen);
    WIN_ReleaseDeviceContext ();
    if (!DeleteObject (pen))
@@ -950,12 +1011,17 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
    float               x, y, xb, yb, dx, dy, l, sina, cosa;
    int                 xc, yc, xd, yd;
    float               width, height;
-   ThotPoint           point[3];
    Pixmap              pattern;
+#  ifdef _WINDOWS 
+   HPEN                hPen;
+   HPEN                hOldPen;
+   ThotPoint           point[4];
+#  else  /* !_WINDOWS */
+   ThotPoint           point[3];
+#  endif /* _WINDOWS */
 
    width = 5 + thick;
    height = 10;
@@ -983,14 +1049,32 @@ int                 fg;
    point[1].y = yc;
    point[2].x = xd;
    point[2].y = yd;
+#  ifdef _WINDOWS 
+   point[3].x = x2;
+   point[3].y = y2;
+#  endif /* _WINDOWS */
+
    pattern = CreatePattern (0, RO, active, fg, fg, 1);
    if (pattern != 0)
      {
+#  ifdef _WINDOWS
+      WIN_GetDeviceContext (frame);
+      GetClipRgn(TtDisplay, clipRgn);
+      WinLoadGC (TtDisplay, fg, RO);
+      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
+         WinErrorBox (WIN_Main_Wd);
+      hOldPen = SelectObject (TtDisplay, hPen) ;
+      Polyline (TtDisplay, point, 4);
+      SelectObject (TtDisplay, hOldPen);
+      WIN_ReleaseDeviceContext ();
+	  if (!DeleteObject (hPen))
+         WinErrorBox (WIN_Main_Wd);
+#  else  /* _WINDOWS */
 	XSetTile (TtDisplay, TtGreyGC, pattern);
 	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, point, 3, Convex, CoordModeOrigin);
 	XFreePixmap (TtDisplay, pattern);
-     }
 #  endif /* _WINDOWS */
+     }
 }
 
 #ifndef _WIN_PRINT
@@ -1455,6 +1539,7 @@ int                 pattern;
 #     endif /* _WINDOWS */
       return;
      }
+
    if (width > thick + 1)
      width = width - thick - 1;
    if (height > thick + 1)
@@ -1471,15 +1556,24 @@ int                 pattern;
                       x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
       XFreePixmap (TtDisplay, pat);
 #  else /* _WINDOWS */
-      SelectClipRgn(TtDisplay, clipRgn); 
+      /* SelectClipRgn(TtDisplay, clipRgn); */
+      GetClipRgn(TtDisplay, clipRgn);
       WinLoadGC (TtDisplay, fg, RO);
    
       hBrush = CreateSolidBrush (Pix_Color[bg]);
       hOldBrush = SelectObject (TtDisplay, hBrush);
-      PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
+      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [bg])))
+         WinErrorBox (WIN_Main_Wd);
+      hOldPen = SelectObject (TtDisplay, hPen) ;
+      Rectangle (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height);
+      /* PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY); */
       SelectObject (TtDisplay, hOldBrush);
       if (!DeleteObject (hBrush))
          WinErrorBox (WIN_Main_Wd);
+      SelectObject (TtDisplay, hOldPen);
+      if (hPen && !DeleteObject (hPen))
+         WinErrorBox (WIN_Main_Wd);
+	  hPen = (HPEN)0;
 #     endif /* _WINDOWS */
    }
 
@@ -1741,6 +1835,8 @@ int                 pattern;
    if (thick > 0) {
 #     ifdef _WINDOWS
       WIN_GetDeviceContext (frame);
+      GetClipRgn(TtDisplay, clipRgn);
+      WinLoadGC (TtDisplay, fg, RO);
       if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
          WinErrorBox (WIN_Main_Wd);
       hOldPen = SelectObject (TtDisplay, hPen) ;
@@ -2177,7 +2273,7 @@ int                 pattern;
    Pixmap              pat;
    int                 arc;
 #  ifdef _WINDOWS
-   HBRUSH              hBrush;
+   HBRUSH              hBrush = (HBRUSH)0;
    HBRUSH              hOldBrush;
    HPEN                hPen = 0;
    HPEN                hOldPen;
@@ -2206,6 +2302,33 @@ int                 pattern;
 
    /* Fill in the rectangle */
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
+   if (thick > 0) {
+      /* SelectClipRgn(TtDisplay, clipRgn); */
+      GetClipRgn(TtDisplay, clipRgn);
+      WinLoadGC (TtDisplay, fg, RO);
+      if (pat != 0) {
+         hBrush = CreateSolidBrush (Pix_Color[bg]);
+         hOldBrush = SelectObject (TtDisplay, hBrush);
+	  } else
+            SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
+
+      if (!(hPen = CreatePen (PS_SOLID, thick, Pix_Color [fg])))
+         WinErrorBox (WIN_Main_Wd);
+      hOldPen = SelectObject (TtDisplay, hPen) ;
+	  if (!RoundRect (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height, arc * 2, arc * 2))
+         WinErrorBox (FrRef  [frame]);
+	  SelectObject (TtDisplay, hOldPen);
+	  if (!DeleteObject (hPen))
+         WinErrorBox (FrRef [frame]);
+      if (hBrush) {
+         SelectObject (TtDisplay, hOldBrush);
+         if (!DeleteObject (hBrush))
+            WinErrorBox (WIN_Main_Wd);
+	     hBrush = (HBRUSH)0;
+	  }
+   }
+
+#  if 0 /*************************************************************************/
    if (pat != 0) {
       SelectClipRgn(TtDisplay, clipRgn); 
       WinLoadGC (TtDisplay, fg, RO);
@@ -2218,11 +2341,8 @@ int                 pattern;
 	  if (!RoundRect (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height, arc * 2, arc * 2))
          WinErrorBox (FrRef  [frame]);
 	  SelectObject (TtDisplay, hOldPen);
-      SelectObject (TtDisplay, hOldBrush);
 	  if (!DeleteObject (hPen))
          WinErrorBox (FrRef [frame]);
-      if (!DeleteObject (hBrush))
-         WinErrorBox (WIN_Main_Wd);
    }
 
    /* Draw the border */
@@ -2240,6 +2360,13 @@ int                 pattern;
 	WIN_ReleaseDeviceContext ();
     if (hPen && !DeleteObject (hPen))
        WinErrorBox (WIN_Main_Wd);
+    if (hBrush) {
+       SelectObject (TtDisplay, hOldBrush);
+       if (!DeleteObject (hBrush))
+          WinErrorBox (WIN_Main_Wd);
+	   hBrush = (HBRUSH)0;
+	}	
+#endif /* 0 ****************************************************************/
 #  else  /* !_WINDOWS */
    width -= thick;
    height -= thick;
@@ -2405,7 +2532,8 @@ int                 pattern;
    if (pat != 0) {
 #     ifdef _WINDOWS
       WIN_GetDeviceContext (frame);
-      SelectClipRgn(TtDisplay, clipRgn); 
+      /* SelectClipRgn(TtDisplay, clipRgn); */
+      GetClipRgn(TtDisplay, clipRgn);
       WinLoadGC (TtDisplay, fg, RO);
    
       hBrush = CreateSolidBrush (Pix_Color[bg]);
@@ -2664,7 +2792,7 @@ int                 fg;
 #  else /* _WINDOWS */
    WIN_GetDeviceContext (frame);
    WinLoadGC (TtDisplay, fg, RO);
-   pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
+   pen = CreatePen (PS_SOLID, thick, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
    hOldPen = SelectObject (TtDisplay, pen);
    Polyline (TtDisplay, point, 3);
    SelectObject (TtDisplay, hOldPen);
@@ -2993,12 +3121,12 @@ int                 y;
 #       ifndef _WINDOWS
 	XClearArea (TtDisplay, w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, FALSE);
 #       else /* _WINDOWS */
-	WIN_GetDeviceContext (frame);
+	/* WIN_GetDeviceContext (frame); */
 	hBrush = CreateSolidBrush (ColorPixel (BackgroundColor[frame]));
 	hOldBrush = SelectObject (TtDisplay, hBrush);
 	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
 	SelectObject (TtDisplay, hOldBrush);
-    WIN_ReleaseDeviceContext ();
+    /* WIN_ReleaseDeviceContext (); */
 	if (!DeleteObject (hBrush))
        WinErrorBox (WIN_Main_Wd);
 #       endif /* _WINDOWS */
