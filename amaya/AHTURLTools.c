@@ -1002,6 +1002,15 @@ char  *GetBaseURL (Document doc)
 		strcat (basename, URL_STR);
 	      length++;
 	    }
+	  else if (!ptr || ptr[0] == EOS)
+	    {
+	      /* no host was detected, we may have a relative URL. We test
+	         if it begins with a URL_SEP, DIR_SEP or period. If yes, it's
+	         relative. */
+	      if (! (basename[0] == '.' || basename[0] == URL_SEP 
+		     || basename[0] == DIR_SEP))
+		basename[0] = EOS;
+	    }
 	  if (ptr)
 	    TtaFreeMemory (ptr);
 	}
