@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -25,42 +25,35 @@
 
 /* Included headerfiles */
 #define THOT_EXPORT extern
-
 #include "amaya.h"
-
 #define PARAM_INCREMENT 50
-
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
+
+
 #include "init_f.h"
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLform_f.h"
+#include "HTMLimage_f.h"
 #include "AHTURLTools_f.h"
 
-static STRING       buffer;    /* temporary buffer used to build the query
+static char        *buffer;    /* temporary buffer used to build the query
 				  string */
 static int          lgbuffer;  /* size of the temporary buffer */
 static int          documentStatus;
- 
-extern STRING GetActiveImageInfo (Document document, Element element);
 
 #ifdef _WINDOWS 
-extern HWND FrMainRef [12];
-extern int  currentFrame;
-Document  opDoc;
-Element   opOption [200];
+extern HWND         FrMainRef [12];
+extern int          currentFrame;
+Document            opDoc;
+Element             opOption [200];
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/ 
-#ifdef __STDC__
 ThotBool SaveDocumentStatus (NotifyOnTarget *event)
-#else /* __STDC__*/
-ThotBool SaveDocumentStatus (event)
-     NotifyOnTarget *event;
-#endif /* __STDC__*/
 {
   /* save the document status */
   documentStatus = TtaIsDocumentModified (event->document);
@@ -70,12 +63,7 @@ ThotBool SaveDocumentStatus (event)
  
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/ 
-#ifdef __STDC__
 void RestoreDocumentStatus (NotifyOnTarget *event)
-#else /* __STDC__*/
-void RestoreDocumentStatus (event)
-     NotifyOnTarget *event;
-#endif /* __STDC__*/
 {
   if (!documentStatus)
     {
@@ -90,13 +78,7 @@ void RestoreDocumentStatus (event)
   AddToBuffer
   reallocates memory and concatenates a string into buffer	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AddToBuffer (STRING orig)
-#else
-static void         AddToBuffer (orig)
-STRING              orig;
-
-#endif
+static void AddToBuffer (char *orig)
 {
    void               *status;
    int                 lg;
@@ -125,7 +107,7 @@ STRING              orig;
   AddElement
   add a string into the query buffer				
   ----------------------------------------------------------------------*/
-static void         AddElement (USTRING element)
+static void AddElement (unsigned char *element)
 {
    char                tmp[4];
    char                tmp2[2];
@@ -196,16 +178,11 @@ static void         AddElement (USTRING element)
   TrimSpaces
   Removes beginning and ending spaces in a char string
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         TrimSpaces (STRING string)
-#else
-static void         TrimSpaces (string)
-STRING              string;
-#endif
+static void TrimSpaces (char *string)
 {
-  STRING start;
-  STRING end;
-  STRING ptr;
+  char *start;
+  char *end;
+  char *ptr;
 
   if (!string || *string == EOS)
     return;
@@ -232,12 +209,7 @@ STRING              string;
   AddNameValue
   add a name=value pair, and a trailling & into the query buffer	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         AddNameValue (STRING name, STRING value)
-#else
-static void         AddNameValue (name, value)
-STRING              name, value,
-#endif
+static void AddNameValue (char *name, char *value)
 {
    AddElement (name);
    AddToBuffer ("=");
@@ -250,14 +222,7 @@ STRING              name, value,
   SubmitOption
   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SubmitOption (Element option, STRING name, Document doc)
-#else
-static void         SubmitOption (option, name, doc)
-Element		    option;
-STRING	            name;
-Document	    doc;
-#endif
+static void SubmitOption (Element option, char *name, Document doc)
 {
   Element             elText;
   Attribute           attr;
@@ -308,14 +273,7 @@ Document	    doc;
   SubmitOptionMenu
   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void        SubmitOptionMenu (Element menu, Attribute nameAttr, Document doc)
-#else
-static void        SubmitOptionMenu (menu, nameAttr, doc)
-Element		   menu;
-Attribute	   nameAttr;
-Document	   doc;
-#endif
+static void SubmitOptionMenu (Element menu, Attribute nameAttr, Document doc)
 {
   ElementType         elType;
   Element             option, child;
@@ -356,15 +314,8 @@ Document	   doc;
   ResetOption
   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void        ResetOption (Element option, ThotBool multipleSelects, ThotBool *defaultSelected, Document doc)
-#else
-static void        ResetOption (option,  multipleSelects, defaultSelected, doc)
-Element		   option;
-ThotBool		   multipleSelects;
-ThotBool		  *defaultSelected;
-Document	   doc;
-#endif
+static void ResetOption (Element option, ThotBool multipleSelects,
+			 ThotBool *defaultSelected, Document doc)
 {
    Attribute           attr, def;
    AttributeType       attrType;
@@ -405,13 +356,7 @@ Document	   doc;
   ResetOptionMenu
   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void        ResetOptionMenu (Element menu, Document doc)
-#else
-static void        ResetOptionMenu (menu, doc)
-Element		   menu;
-Document	   doc;
-#endif
 {
    ElementType	       elType;
    Element             option, firstOption, child;
@@ -492,27 +437,20 @@ Document	   doc;
    traverses the tree of element, applying the parse_input 
    function to each element with an attribute NAME                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ParseForm (Document doc, Element ancestor, Element el, int mode, ThotBool withinForm)
-#else
-static void         ParseForm (doc, ancestor el, mode, withinForm)
-Document            doc;
-Element             ancestor;
-Element             el;
-int                 mode;
-ThotBool            withinForm;
-#endif
+static void ParseForm (Document doc, Element ancestor, Element el,
+		       int mode, ThotBool withinForm)
 {
   ElementType         elType;
   Element             elForm;
   Attribute           attr, attrS, def;
   AttributeType       attrType, attrTypeS;
-  char              name[MAX_LENGTH], *value = NULL;
-  char*             text;
   Language            lang;
+  DisplayMode         dispMode;
+  char                name[MAX_LENGTH];
+  char               *value = NULL;
+  char               *text;
   int                 length;
   int                 modified = FALSE;
-  DisplayMode         dispMode;
 
   if (el)
     {
@@ -748,19 +686,11 @@ ThotBool            withinForm;
   DoSubmit
   submits a form : builds the query string and sends the request	       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         DoSubmit (Document doc, int method, STRING action)
-#else
-static void         DoSubmit (doc, method, action)
-Document            doc;
-int                 method;
-STRING              action;
-
-#endif
+static void         DoSubmit (Document doc, int method, char *action)
 {
   int                 buffer_size;
   int                 i;
-  STRING              urlName;
+  char               *urlName;
 
   /* remove any trailing & */
   if (buffer)
@@ -792,7 +722,7 @@ STRING              action;
       break;		/* case INDEX */
     case HTML_ATTR_METHOD_VAL_Get_:
       urlName = TtaGetMemory (strlen (action) + buffer_size + 2);
-      if (urlName != (STRING) NULL)
+      if (urlName != NULL)
 	{
 	  strcpy (urlName, action);
 	  GetHTMLDocument (urlName, buffer, doc, doc,
@@ -816,26 +746,19 @@ STRING              action;
   callback handler that launches the parsing of the form containing 
   the element and sends	the query to the server
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SubmitForm (Document doc, Element element)
-#else
-void                SubmitForm (doc, element)
-Document            doc;
-Element             element;
-
-#endif
+void SubmitForm (Document doc, Element element)
 {
    Element             ancestor, elForm;
    ElementType         elType;
    Attribute           attr;
    AttributeType       attrType;
-   STRING              action, name, value, info;
+   char               *action, *name, *value, *info;
    int                 i, length, button_type;
    int                 method;
    ThotBool	       found, withinForm;
 
-   buffer = (STRING) NULL;
-   action = (STRING) NULL;
+   buffer = NULL;
+   action = NULL;
 
    /* find out the characteristics of the button which was pressed */
    found = FALSE;
@@ -856,66 +779,66 @@ Element             element;
    button_type = 0;
    attrType.AttrSSchema = elType.ElSSchema;
    switch (elType.ElTypeNum)
-	      {
-		 case HTML_EL_Reset_Input:
-		    button_type = HTML_EL_Reset_Input;
-		    break;
-
-		 case HTML_EL_BUTTON:
-	            attrType.AttrTypeNum = HTML_ATTR_Button_type;
-	            attr = TtaGetAttribute (element, attrType);
-	            if (!attr)
-	               /* default value of attribute type is submit */
- 	               button_type = HTML_EL_Submit_Input;
-	            else
-		       {
-		       i = TtaGetAttributeValue (attr);
-		       if (i == HTML_ATTR_Button_type_VAL_submit)
-			   button_type = HTML_EL_Submit_Input;
-		       else if (i == HTML_ATTR_Button_type_VAL_reset)
-		           button_type = HTML_EL_Reset_Input;
-		       }
-		    break;
-
-		 case HTML_EL_Submit_Input:
-		    button_type = HTML_EL_Submit_Input;
-		    break;
-
-	         case HTML_EL_PICTURE_UNIT:
-		    button_type = HTML_EL_Submit_Input;
-		    /* get the button's name, if it exists */
-		    attrType.AttrTypeNum = HTML_ATTR_NAME;
-		    attr = TtaGetAttribute (element, attrType);
-		    if (attr != NULL)
-		      {
-			length = TtaGetTextAttributeLength (attr);
-			name = TtaGetMemory (length + 3);
-			TtaGiveTextAttributeValue (attr, name, &length);
-			strcat (name, ". ");
-			length ++;
-			/* get the x and y coordinates */
-			info = GetActiveImageInfo (doc, element);
-			if (info != NULL) 
-			  {
-			    /* create the x name-value pair */
-			    name [length] = 'x';
-			    for (i = 0; info[i] != ','; i++);
-			    info[i] = EOS;
-			    /* skip the ? char */
-			    value = &info[1];
-			    AddNameValue (name, value);
-			    /* create the y name-value pair */
-			    name [length] = 'y';
-			    value = &info[i+1];
-			    AddNameValue (name, value);
-			    TtaFreeMemory (info);
-			  }
-			if (name)
-			    TtaFreeMemory (name);
-		      }
-		    break;
-	      }
-
+     {
+     case HTML_EL_Reset_Input:
+       button_type = HTML_EL_Reset_Input;
+       break;
+       
+     case HTML_EL_BUTTON:
+       attrType.AttrTypeNum = HTML_ATTR_Button_type;
+       attr = TtaGetAttribute (element, attrType);
+       if (!attr)
+	 /* default value of attribute type is submit */
+	 button_type = HTML_EL_Submit_Input;
+       else
+	 {
+	   i = TtaGetAttributeValue (attr);
+	   if (i == HTML_ATTR_Button_type_VAL_submit)
+	     button_type = HTML_EL_Submit_Input;
+	   else if (i == HTML_ATTR_Button_type_VAL_reset)
+	     button_type = HTML_EL_Reset_Input;
+	 }
+       break;
+       
+     case HTML_EL_Submit_Input:
+       button_type = HTML_EL_Submit_Input;
+       break;
+       
+     case HTML_EL_PICTURE_UNIT:
+       button_type = HTML_EL_Submit_Input;
+       /* get the button's name, if it exists */
+       attrType.AttrTypeNum = HTML_ATTR_NAME;
+       attr = TtaGetAttribute (element, attrType);
+       if (attr != NULL)
+	 {
+	   length = TtaGetTextAttributeLength (attr);
+	   name = TtaGetMemory (length + 3);
+	   TtaGiveTextAttributeValue (attr, name, &length);
+	   strcat (name, ". ");
+	   length ++;
+	   /* get the x and y coordinates */
+	   info = GetActiveImageInfo (doc, element);
+	   if (info != NULL) 
+	     {
+	       /* create the x name-value pair */
+	       name [length] = 'x';
+	       for (i = 0; info[i] != ','; i++);
+	       info[i] = EOS;
+	       /* skip the ? char */
+	       value = &info[1];
+	       AddNameValue (name, value);
+	       /* create the y name-value pair */
+	       name [length] = 'y';
+	       value = &info[i+1];
+	       AddNameValue (name, value);
+	       TtaFreeMemory (info);
+	     }
+	   if (name)
+	     TtaFreeMemory (name);
+	 }
+       break;
+     }
+   
    if (button_type == 0)
 	return;
 
@@ -1034,14 +957,7 @@ Element             element;
    The user has triggered the Browse button associated with a File_Input
    element.  Display a file selector.
    ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ActivateFileInput (Document doc, Element el)
-#else
-void                ActivateFileInput (doc, el)
-Document            doc;
-Element             el;
-
-#endif
 {
 	/******* TO DO *******/
 }
@@ -1051,14 +967,7 @@ Element             el;
    SelectCheckbox
    selects a Checkbox input				
    ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SelectCheckbox (Document doc, Element el)
-#else
-void                SelectCheckbox (doc, el)
-Document            doc;
-Element             el;
-
-#endif
 {
    ElementType         elType;
    Attribute           attr;
@@ -1108,14 +1017,7 @@ Element             el;
    SelectOneRadio
    selects one Radio input				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SelectOneRadio (Document doc, Element el)
-#else
-void                SelectOneRadio (doc, el)
-Document            doc;
-Element             el;
-
-#endif
 {
   ElementType         elType;
   Element             elForm;
@@ -1225,13 +1127,7 @@ Element             el;
   put the caret at the end of the text element within the Inserted_Text
   element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            SelectInsertedText (NotifyElement * event)
-#else  /* __STDC__ */
-ThotBool            SelectInsertedText (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             textLeaf, parent;
@@ -1268,13 +1164,7 @@ NotifyElement      *event;
    SelectOneOption
    selects an option in option menu			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SelectOneOption (Document doc, Element el)
-#else
-void                SelectOneOption (doc, el)
-Document            doc;
-Element             el;
-#endif
 {
 #ifdef _WINDOWS
   int                 nbOldEntries = 20;
@@ -1412,134 +1302,150 @@ Element             el;
 #ifdef _WINDOWS
 		     WIN_TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE, FrMainRef [currentFrame]);
 #else  /* !_WINDOWS */
-	       TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
+	             TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
 #endif /* _WINDOWS */
-	       if (nbsubmenus > 0) {
-		 /* There ia at least 1 OPTGROUP. Create submenus corresponding to OPTGROUPs */
-		 nbitems = 0;	/* item number in main (SELECT) menu */
-		 /* check all children of element SELECT */
-		 el = TtaGetFirstChild (menuEl);
-		 nbsubmenus = 0;
-		 while (nbsubmenus < MAX_SUBMENUS && el) {
-		   elType = TtaGetElementType (el);
-		   if (elType.ElTypeNum == HTML_EL_Option && elType.ElSSchema == htmlSch)
-		     /* this is an OPTION */
-		     nbitems++;	/* item number in the main menu */
-		   else if (elType.ElTypeNum == HTML_EL_OptGroup && elType.ElSSchema == htmlSch) {
-		     /* this is an OPTGROUP.  Create the corresponding sub menu */
-		     /* First, check all children of OPTGROUP */
-		     child = TtaGetFirstChild (el);
-		     lgmenu = 0;
-		     nbsubitems = 0;
-		     while (nbsubitems < MAX_SUBOPTIONS && child) {
-		       childType = TtaGetElementType (child);
-		       if (childType.ElTypeNum == HTML_EL_Option && childType.ElSSchema == htmlSch) {
-			 /* it's an OPTION. Create a submenu item */
-			 subOptions[nbsubmenus][nbsubitems] = child;
-			 if (multipleOptions) {
-			   attrType.AttrTypeNum = HTML_ATTR_Selected;
-			   subSelected[nbsubmenus][nbsubitems] = (TtaGetAttribute (child, attrType) != NULL);
-			 } 
-			 /* get the item label */
-			 attrType.AttrTypeNum = HTML_ATTR_label;
-			 attr = TtaGetAttribute (child, attrType);
-			 length = MAX_LABEL_LENGTH - 1;
-			 if (attr) /* there is a label attribute. Take it */
-			   TtaGiveTextAttributeValue (attr, text, &length);
-			 else { /* take the element's content */
-			   elText = TtaGetFirstChild (child);
-			   if (elText)
-			     TtaGiveTextContent (elText, text, &length, &lang);
-			   else
-			     length = 0;
-			 } 
-			 /* count the EOS character */
-			 text[length] = EOS;
-			 length++;
-			 /* we have to add the 'B'or 'T' character */
-			 length++;
-			 if (lgmenu + length < MAX_LENGTH) { /* append that item to the buffer */
+	       if (nbsubmenus > 0)
+		 {
+		   /* There ia at least 1 OPTGROUP. Create submenus corresponding to OPTGROUPs */
+		   nbitems = 0;	/* item number in main (SELECT) menu */
+		   /* check all children of element SELECT */
+		   el = TtaGetFirstChild (menuEl);
+		   nbsubmenus = 0;
+		   while (nbsubmenus < MAX_SUBMENUS && el)
+		     {
+		       elType = TtaGetElementType (el);
+		       if (elType.ElTypeNum == HTML_EL_Option &&
+			   elType.ElSSchema == htmlSch)
+			 /* this is an OPTION */
+			 nbitems++;	/* item number in the main menu */
+		       else if (elType.ElTypeNum == HTML_EL_OptGroup &&
+				elType.ElSSchema == htmlSch)
+			 {
+			   /* this is an OPTGROUP.  Create the corresponding sub menu */
+			   /* First, check all children of OPTGROUP */
+			   child = TtaGetFirstChild (el);
+			   lgmenu = 0;
+			   nbsubitems = 0;
+			   while (nbsubitems < MAX_SUBOPTIONS && child)
+			     {
+			       childType = TtaGetElementType (child);
+			       if (childType.ElTypeNum == HTML_EL_Option &&
+				   childType.ElSSchema == htmlSch)
+				 {
+				   /* it's an OPTION. Create a submenu item */
+				   subOptions[nbsubmenus][nbsubitems] = child;
+				   if (multipleOptions)
+				     {
+				       attrType.AttrTypeNum = HTML_ATTR_Selected;
+				       subSelected[nbsubmenus][nbsubitems] = (TtaGetAttribute (child, attrType) != NULL);
+				     }
+				   /* get the item label */
+				   attrType.AttrTypeNum = HTML_ATTR_label;
+				   attr = TtaGetAttribute (child, attrType);
+				   length = MAX_LABEL_LENGTH - 1;
+				   if (attr) /* there is a label attribute. Take it */
+				     TtaGiveTextAttributeValue (attr, text, &length);
+				   else
+				     { /* take the element's content */
+				       elText = TtaGetFirstChild (child);
+				       if (elText)
+					 TtaGiveTextContent (elText, text, &length, &lang);
+				       else
+					 length = 0;
+				     } 
+				   /* count the EOS character */
+				   text[length] = EOS;
+				   length++;
+				   /* we have to add the 'B'or 'T' character */
+				   length++;
+				   if (lgmenu + length < MAX_LENGTH)
+				     { /* append that item to the buffer */
+				       if (multipleOptions)
+					 sprintf (&buffmenu[lgmenu], "T%s", text);
+				       else
+					 sprintf (&buffmenu[lgmenu], "B%s", text);
+				       nbsubitems++;
+				     } 
+				   lgmenu += length;
+				 } 
+			       /* next child of OPTGROUP */
+			       TtaNextSibling (&child);
+			     }
+			   /* All children of OPTGROUP have been checked. */
+			   /* create the submenu */
+#ifdef _WINDOWS
+			   TtaNewSubmenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
+#else  /* !_WINDOWS */
+			   TtaNewSubmenu (BaseDialog+OptionMenu+nbsubmenus+1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
+#endif /* _WINDOWS */
 			   if (multipleOptions)
-			     sprintf (&buffmenu[lgmenu], "T%s", text);
-			   else
-			     sprintf (&buffmenu[lgmenu], "B%s", text);
-			   nbsubitems++;
-			 } 
-			 lgmenu += length;
-		       } 
-		       /* next child of OPTGROUP */
-		       TtaNextSibling (&child);
+			     for (i = 0; i < nbsubitems; i++)
+			       if (subSelected[nbsubmenus][i])
+#ifdef _WINDOWS
+				 WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, i, TRUE, FrMainRef [currentFrame]);
+#else  /* !_WINDOWS */
+			         TtaSetToggleMenu (BaseDialog+OptionMenu+nbsubmenus+1, i, TRUE);
+#endif /* _WINDOWS */
+			   nbsubmenus++;
+			   nbitems++;	/* item number in the main menu */
+			 }  
+		       /* Next child of SELECT */
+		       TtaNextSibling (&el);
 		     }
-		     /* All children of OPTGROUP have been checked. */
-		     /* create the submenu */
-#                               ifdef _WINDOWS
-		     TtaNewSubmenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
-#                               else  /* !_WINDOWS */
-		     TtaNewSubmenu (BaseDialog+OptionMenu+nbsubmenus+1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
-#                               endif /* _WINDOWS */
-		     if (multipleOptions)
-		       for (i = 0; i < nbsubitems; i++)
-			 if (subSelected[nbsubmenus][i])
-#                                         ifdef _WINDOWS
-			   WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, i, TRUE, FrMainRef [currentFrame]);
-#                                         else  /* !_WINDOWS */
-		     TtaSetToggleMenu (BaseDialog+OptionMenu+nbsubmenus+1, i, TRUE);
-#                                         endif /* _WINDOWS */
-		     nbsubmenus++;
-		     nbitems++;	/* item number in the main menu */
-		   }  
-		   /* Next child of SELECT */
-		   TtaNextSibling (&el);
 		 }
-	       }
 	       /* activate the menu that has just been created */
 	       ReturnOption = -1;
 	       ReturnOptionMenu = -1;
-#                ifndef _WINDOWS
+#ifndef _WINDOWS
 	       TtaSetDialoguePosition ();
-#                endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	       TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	       /* wait for an answer from the user */
 	       TtaWaitShowDialogue ();
-	       if (ReturnOption >= 0 && ReturnOptionMenu >= 0) {
-		 /* make the returned option selected */
-		 if (ReturnOptionMenu == 0) { /* an item in the main (SELECT) menu */
-		   el = option[ReturnOption];
-		   sel = selected[ReturnOption];
-		 } else { /* an item in a submenu */
-#                           ifdef _WINDOWS
-		   /* el = subOptions[ReturnOptionMenu - nbOldEntries - 1][ReturnOption]; */
-		   el = subOptions[ReturnOptionMenu / nbOldEntries ][ReturnOption];
-		   sel = subSelected[ReturnOptionMenu / nbOldEntries][ReturnOption];
-#                           else  /* _WINDOWS */
-		   el = subOptions[ReturnOptionMenu - 1][ReturnOption];
-		   sel = subSelected[ReturnOptionMenu - 1][ReturnOption];
-#                           endif /* _WINDOWS */
+	       if (ReturnOption >= 0 && ReturnOptionMenu >= 0)
+		 {
+		   /* make the returned option selected */
+		   if (ReturnOptionMenu == 0)
+		     { /* an item in the main (SELECT) menu */
+		       el = option[ReturnOption];
+		       sel = selected[ReturnOption];
+		     }
+		   else
+		     { /* an item in a submenu */
+#ifdef _WINDOWS
+		       el = subOptions[ReturnOptionMenu / nbOldEntries ][ReturnOption];
+		       sel = subSelected[ReturnOptionMenu / nbOldEntries][ReturnOption];
+#else  /* _WINDOWS */
+		       el = subOptions[ReturnOptionMenu - 1][ReturnOption];
+		       sel = subSelected[ReturnOptionMenu - 1][ReturnOption];
+#endif /* _WINDOWS */
+		     }
+		   modified = TtaIsDocumentModified (doc);	  
+		   if (!multipleOptions)
+		     OnlyOneOptionSelected (el, doc, FALSE);
+		   else
+		     {
+		       attrType.AttrTypeNum = HTML_ATTR_Selected;
+		       attr = TtaGetAttribute (el, attrType);
+		       if (sel)
+			 TtaRemoveAttribute (el, attr, doc);
+		       else
+			 {
+			   if (!attr)
+			     attr = TtaNewAttribute (attrType);
+			   TtaAttachAttribute (el, attr, doc);
+			   TtaSetAttributeValue (attr, HTML_ATTR_Selected_VAL_Yes_, el, doc);
+			 }
+		     }
+		   if (!modified)
+		     {
+		       TtaSetDocumentUnmodified (doc);
+		       /* switch Amaya buttons and menus */
+		       DocStatusUpdate (doc, modified);
+		     }
 		 }
-		 modified = TtaIsDocumentModified (doc);	  
-		 if (!multipleOptions)
-		   OnlyOneOptionSelected (el, doc, FALSE);
-		 else {
-		   attrType.AttrTypeNum = HTML_ATTR_Selected;
-		   attr = TtaGetAttribute (el, attrType);
-		   if (sel)
-		     TtaRemoveAttribute (el, attr, doc);
-		   else {
-		     if (!attr)
-		       attr = TtaNewAttribute (attrType);
-		     TtaAttachAttribute (el, attr, doc);
-		     TtaSetAttributeValue (attr, HTML_ATTR_Selected_VAL_Yes_, el, doc);
-		   } 
-		 } 
-		 if (!modified)
-		   {
-		     TtaSetDocumentUnmodified (doc);
-		     /* switch Amaya buttons and menus */
-		     DocStatusUpdate (doc, modified);
-		   }
-	       } 
-	     } 
-	 } 
-     } 
+	     }
+	 }
+     }
 }
  
