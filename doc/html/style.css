@@ -380,13 +380,13 @@ DIV, DL, DT, EM, FORM, H1, H2, H3, H4, H5, H6, IFRAME, IMG, KBD,
 LI, OBJECT, OL, P, Q, SAMP, SMALL, SPAN, STRONG, SUB, SUP, UL, VAR,
 APPLET, B, BIG, CENTER, DIR, FONT, HR, I, MENU, PRE, S, STRIKE, TT,
 U, ABBR, ACRONYM, BDO, BUTTON, FIELDSET, INS, LABEL {
-  margin-top: 0;
+  /*margin-top: 0;
   margin-bottom:  0;
   padding-top:  0;
   padding-bottom: 0;
   border-top: 0;
   border-bottom:  0;
-  vertical-align: baseline;
+  vertical-align: baseline;*/
   }
 
 DIV > P:first-child, BODY > P:first-child, TD > P:first-child {
