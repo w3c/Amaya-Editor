@@ -1091,7 +1091,7 @@ NotifyElement      *event;
 }
 
 /*----------------------------------------------------------------------
-  AnnotClick     The user has clicked on an annotation icon
+  AnnotSimpleClick     The user has clicked on an annotation icon
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool            AnnotSimpleClick (NotifyElement *event)
@@ -1101,10 +1101,8 @@ NotifyElement      *event;
 
 #endif /* __STDC__ */
 {
-  ThotBool usedouble;
-
 #ifdef ANNOTATIONS
-  /* if it's an annotation link, highlight the selection */
+  /* if it's an annotation link, highlight the annotated text  */
   ANNOT_SelectSourceDoc (event->document, event->element);
 #endif /* ANNOTATIONS */
   return SimpleClick (event);
