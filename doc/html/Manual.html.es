@@ -14,7 +14,7 @@
 <div id="page_body">
 <h1 style="text-align : center">Manual de Usuario de Amaya</h1>
 
-<h4 style="text-align:center">Versión 8.0 - Abril 2003<br />
+<h4 style="text-align:center">Versión 8.1 - Abril 2003<br />
 <br />
 <img src="../images/amaya.gif" alt="Amaya" />
 </h4>
