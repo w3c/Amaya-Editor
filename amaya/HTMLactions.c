@@ -315,15 +315,19 @@ static void SetFontOrPhraseOnElement (Document document, Element elem,
 	next = child;
 	TtaNextSibling (&next);
 	elType = TtaGetElementType (child);
-	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	   if (remove)
-	      ResetFontOrPhraseOnText (document, child, elemtype);
-	   else
-	      SetFontOrPhraseOnText (document, child, elemtype);
-	else if (!TtaIsLeaf (elType))
-	   SetFontOrPhraseOnElement (document, child, elemtype, remove);
+	/* process only HTML elements */
+	if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	  {
+	    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	      if (remove)
+		ResetFontOrPhraseOnText (document, child, elemtype);
+	      else
+		SetFontOrPhraseOnText (document, child, elemtype);
+	    else if (!TtaIsLeaf (elType))
+	      SetFontOrPhraseOnElement (document, child, elemtype, remove);
+	  }
 	child = next; 
-    }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -2462,7 +2466,9 @@ void SetCharFontOrPhrase (int document, int elemtype)
    ThotBool            remove, done, toset;
 
    if (!TtaGetDocumentAccessMode (document))
+     /* document is ReadOnly */
      return;
+
    TtaGiveFirstSelectedElement (document, &selectedEl, &firstSelectedChar,
 				&lastSelectedChar);
    if (selectedEl == NULL)
@@ -2471,6 +2477,7 @@ void SetCharFontOrPhrase (int document, int elemtype)
 
    toset = TRUE;
    TtaClearViewSelections ();
+   /* don't display immediately every change made to the document structure */
    dispMode = TtaGetDisplayMode (document);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (document, DeferredDisplay);
@@ -2493,18 +2500,19 @@ void SetCharFontOrPhrase (int document, int elemtype)
    elType.ElTypeNum = elemtype;
    remove = (TtaGetTypedAncestor (elem, elType) != NULL);
 
-   /* split the last selected elements if it's a text leaf */
    TtaGiveLastSelectedElement (document, &lastEl, &i, &lastSelectedChar);
    TtaUnselect (document);
 
    TtaOpenUndoSequence (document, selectedEl, lastEl, firstSelectedChar,
 			lastSelectedChar);
 
+   /* split the last selected elements if it's a text leaf in a HTML element */
    selType = TtaGetElementType (lastEl);
-   if (selType.ElTypeNum == HTML_EL_TEXT_UNIT)
+   if (selType.ElTypeNum == HTML_EL_TEXT_UNIT &&
+       !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
      /* the last selected element is a text leaf */
      {
-     /* is this element within an element of the requested type ? */
+     /* is this element within an element of the requested type? */
      done = FALSE;
      elFont = TtaGetTypedAncestor (lastEl, elType);
      if (remove)
@@ -2540,9 +2548,10 @@ void SetCharFontOrPhrase (int document, int elemtype)
    while (child != NULL);
    lastSelectedElem = elem;
 
-   /* split the first selected elements if it's a text leaf */
+   /* split the first selected element if it's a text leaf in a HTML element */
    selType = TtaGetElementType (selectedEl);
-   if (selType.ElTypeNum == HTML_EL_TEXT_UNIT)
+   if (selType.ElTypeNum == HTML_EL_TEXT_UNIT &&
+       !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
      /* the first selected element is a text leaf */
      {
      /* is this element within an element of the requested type ? */
@@ -2593,39 +2602,43 @@ void SetCharFontOrPhrase (int document, int elemtype)
 	   TtaGiveNextElement (document, &next, lastEl);
 	   }
 	selType = TtaGetElementType (selectedEl);
-	if (!TtaIsLeaf (selType))
+	if (!strcmp (TtaGetSSchemaName (selType.ElSSchema), "HTML"))
+	  /* process only HTML elements */
 	  {
-	    /* this selected element is not a leaf. Process all text leaves */
-	    /* of that element */
-	    SetFontOrPhraseOnElement ((Document) document, selectedEl,
-				      elemtype, remove);
-	    elem = selectedEl;
-	    toset = FALSE;
-	  }
-	else if (selType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	   /* this selected element is a text leaf */
-	  {
-	     /* is this element within an element of the requested type ? */
-	     done = FALSE;
-	     elFont = TtaGetTypedAncestor (selectedEl, elType);
-	     if (remove)
-		/* the element has to be removed from an element of type
-		   elType */
-		/* If it is not within such an element, nothing to do */
-		done = (elFont == NULL);
-	     else
-		/* the element should be within an element of type elType */
-		/* If it is already within such an element, nothing to do */
-		done = (elFont != NULL);
-	     if (!done)
-	       {
-		  /* process the text leaf */
-		  elem = selectedEl;
-		  if (remove)
-		     ResetFontOrPhraseOnText (document, elem, elemtype);
-		  else
-		     SetFontOrPhraseOnText (document, elem, elemtype);
-	       }
+	    if (!TtaIsLeaf (selType))
+	      {
+		/* this selected element is not a leaf. Process all text */
+		/* leaves of that element */
+		SetFontOrPhraseOnElement ((Document) document, selectedEl,
+					  elemtype, remove);
+		elem = selectedEl;
+		toset = FALSE;
+	      }
+	    else if (selType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	      /* this selected element is a text leaf */
+	      {
+		/* is this element within an element of the requested type ? */
+		done = FALSE;
+		elFont = TtaGetTypedAncestor (selectedEl, elType);
+		if (remove)
+		  /* the element has to be removed from an element of type
+		     elType */
+		  /* If it is not within such an element, nothing to do */
+		  done = (elFont == NULL);
+		else
+		  /* the element should be within an element of type elType */
+		  /* If it is already within such an element, nothing to do */
+		  done = (elFont != NULL);
+		if (!done)
+		  {
+		    /* process the text leaf */
+		    elem = selectedEl;
+		    if (remove)
+		      ResetFontOrPhraseOnText (document, elem, elemtype);
+		    else
+		      SetFontOrPhraseOnText (document, elem, elemtype);
+		  }
+	      }
 	  }
 	/* next selected element */
 	selectedEl = next;
