@@ -3318,7 +3318,7 @@ static void CreateDoctypeElement (char *name, char *sysid, char *pubid)
 	  /* the spell_chekcer to check this element */
 	  TtaSetTextContent (doctypeLeaf, (unsigned char *)"<!DOCTYPE ",
 			     Latin_Script, XMLcontext.doc);
-	  TtaCancelSelection (); /* TtaSetTextContent added a selection */
+	  TtaCancelSelection (XMLcontext.doc); /* TtaSetTextContent added a selection */
 	}
      
       if (name != NULL)
@@ -3336,7 +3336,7 @@ static void CreateDoctypeElement (char *name, char *sysid, char *pubid)
 		TtaInsertSibling (doctypeLeaf, lastChild,
 				  FALSE, XMLcontext.doc);
 	      TtaSetTextContent (doctypeLeaf, (unsigned char *)name, Latin_Script, XMLcontext.doc);
-	      TtaCancelSelection (); /* TtaSetTextContent added a selection */
+	      TtaCancelSelection (XMLcontext.doc); /* TtaSetTextContent added a selection */
 	    }
 	}
       /* Is there any external DTD ? */
@@ -3359,7 +3359,7 @@ static void CreateDoctypeElement (char *name, char *sysid, char *pubid)
 		TtaInsertSibling (doctypeLeaf, lastChild,
 				  FALSE, XMLcontext.doc);
 	      TtaSetTextContent (doctypeLeaf, (unsigned char *)buffer, Latin_Script, XMLcontext.doc);
-	      TtaCancelSelection (); /* TtaSetTextContent added a selection */
+	      TtaCancelSelection (XMLcontext.doc); /* TtaSetTextContent added a selection */
 	      TtaFreeMemory (buffer);
 	    }
 	}
@@ -3397,7 +3397,7 @@ static void CreateDoctypeElement (char *name, char *sysid, char *pubid)
 	      strcat (buffer, sysid);
 	      strcat (buffer, "\"");
 	      TtaSetTextContent (doctypeLeaf, (unsigned char *)buffer, Latin_Script, XMLcontext.doc);
-	      TtaCancelSelection (); /* TtaSetTextContent added a selection */
+	      TtaCancelSelection (XMLcontext.doc); /* TtaSetTextContent added a selection */
 	      TtaFreeMemory (buffer);
 	    }
 	}

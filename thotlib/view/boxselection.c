@@ -253,13 +253,17 @@ void ClearViewSelection (int frame)
 /*----------------------------------------------------------------------
    TtaCancelSelection removes the current selection. 
   ----------------------------------------------------------------------*/
-void TtaCancelSelection ()
+void TtaCancelSelection (Document document)
 {
-  int d;
+  PtrDocument pDoc;
 
-  for (d = 0; d < MAX_DOCUMENTS - 1; d++)
-    NewSelection (d, NULL, NULL, 0, 0);
-   CancelSelection ();
+  if (document > 0 && document < MAX_DOCUMENTS)
+    {
+      NewSelection (document, NULL, NULL, 0, 0);
+      pDoc = LoadedDocument[document - 1];
+      if (pDoc == SelectedDocument || pDoc == DocSelectedAttr)
+	CancelSelection ();
+    }
 }
 
 

@@ -17,7 +17,7 @@
 /*----------------------------------------------------------------------
    TtaCancelSelection removes the current selection. 
   ----------------------------------------------------------------------*/
-extern void TtaCancelSelection ();
+extern void TtaCancelSelection (Document document);
 
 /*----------------------------------------------------------------------
    TtaIsDocumentSelected answers TRUE if the document is selected.  

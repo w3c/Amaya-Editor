@@ -8,6 +8,7 @@
 
 extern void ClearViewSelMarks ( int frame );
 extern void ClearViewSelection ( int frame );
+extern void TtaCancelSelection ( Document document );
 extern void TtaClearViewSelections ( void );
 extern void UpdateViewSelMarks ( int frame,
                                  int xDelta,
@@ -32,6 +33,7 @@ extern ThotBool IsAbstractBoxDisplayed ( PtrAbstractBox pAb,
 
 extern void ClearViewSelMarks ( int frame );
 extern void ClearViewSelection ( int frame );
+extern void TtaCancelSelection ( Document document );
 extern void TtaClearViewSelections ( void );
 extern void UpdateViewSelMarks ( int frame,
                                    int xDelta,

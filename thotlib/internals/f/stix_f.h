@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern void DrawCenteredStixChar ( ThotFont font,
                                    unsigned char symb,
                                    int x,
@@ -77,6 +78,7 @@ extern int GetStixFontAndIndex ( int c,
                                  ThotFont **font );
 
 #else /* __STDC__ */
+
 extern void DrawCenteredStixChar ( ThotFont font,
                                      unsigned char symb,
                                      int x,

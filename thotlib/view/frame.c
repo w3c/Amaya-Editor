@@ -2351,6 +2351,9 @@ void DisplayFrame (int frame)
 	  /* recompute scrolls */
 	  CheckScrollingWidth (frame);
 	  UpdateScrollbars (frame);
+#ifdef _GL
+	  GL_Swap (frame);
+#endif /* _GL */
 	}
       else
 	{
