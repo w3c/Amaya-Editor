@@ -757,9 +757,9 @@ ThotBool MultipleBookmarks (void)
 {
   ThotBool multiple_bm;
 
-  TtaGetEnvBoolean ("ENABLE_MULTIPLE_BM", &multiple_bm);
+  TtaGetEnvBoolean ("DISABLE_MULTIPLE_BM", &multiple_bm);
 
-  return (multiple_bm);
+  return (multiple_bm == FALSE);
 }
 
 /*----------------------------------------------------------------------
