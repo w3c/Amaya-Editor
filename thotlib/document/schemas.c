@@ -751,7 +751,8 @@ PtrSSchema LoadStructureSchema (char *schemaURI, Name schemaName,
    if (schemaURI)
      /* check with the namespace URI */
      while (pPfS && pPfS->PfSSchema &&
-	    strcmp (schemaURI, pPfS->PfSSchema->SsUriName))
+	    (pPfS->PfSSchema->SsUriName == NULL ||
+	     strcmp (schemaURI, pPfS->PfSSchema->SsUriName)))
        pPfS = pPfS->PfNext;
    else
      /* check with the schema name */
@@ -767,6 +768,7 @@ PtrSSchema LoadStructureSchema (char *schemaURI, Name schemaName,
      /* check with the namespace URI */
      for (i = 0; i < MAX_SSCHEMAS &&
 	         (LoadedSSchema[i].pStructSchema == NULL ||
+		  LoadedSSchema[i].pStructSchema->SsUriName == NULL ||
 		  strcmp (schemaURI, LoadedSSchema[i].pStructSchema->SsUriName)); i++);
    else
      /* check with the schema name */
@@ -2827,8 +2829,9 @@ char * GiveCurrentNsUri (PtrDocument pDoc, PtrElement pEl)
   uriDecl = pDoc->DocNsUriDecl;
   while (uriDecl != NULL && !found)
     {
-      if ((uriDecl->NsUriName != NULL) &&
-	  (strcmp (uriDecl->NsUriName, pEl->ElStructSchema->SsUriName) == 0))
+      if (uriDecl->NsUriName != NULL &&
+	  pEl->ElStructSchema->SsUriName != NULL &&
+	  strcmp (uriDecl->NsUriName, pEl->ElStructSchema->SsUriName) == 0)
 	{
 	  /* The URI corresponding to the element schema has been found */
 	  /* Search the first associated prefix */
