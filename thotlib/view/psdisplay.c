@@ -1831,10 +1831,10 @@ int                 fg;
    if (align == 1)
      Y = y + (h - thick) / 2;
    else if (align == 2)
-     Y = y + h - thick - 1;
+     Y = y + h - thick / 2;
    else
-     Y = y;
-   xf = PixelToPoint (x + l - 1);
+     Y = y + thick / 2;
+   xf = PixelToPoint (x + l);
    x = PixelToPoint (x);
    Y = PixelToPoint (Y);
    thick = PixelToPoint (thick);
@@ -1879,10 +1879,10 @@ int                 fg;
    if (align == 1)
       X = x + (l - thick) / 2;
    else if (align == 2)
-      X = x + l - thick - 1;
+      X = x + l - thick / 2;
    else
-      X = x;
-   yf = PixelToPoint (y + h - 1);
+      X = x + thick / 2;
+   yf = PixelToPoint (y + h);
    y = PixelToPoint (y);
    X = PixelToPoint (X);
    thick = PixelToPoint (thick);

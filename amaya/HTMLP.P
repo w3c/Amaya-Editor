@@ -6903,9 +6903,13 @@ RULES
 	Adjust: Enclosing =;
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
-	if NOT within Definition and NOT within List_Item
-	    MarginTop: 0.4;
+	if NOT within Definition and NOT within List_Item BEGIN
+	    MarginTop: 0.2;
+	    MarginBottom: 0.4;
+	    END;
 	IN Structure_view BEGIN
+		MarginTop: 0;
+		MarginBottom: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -6931,9 +6935,13 @@ RULES
 	Adjust: Enclosing =;
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
-	if NOT within Definition and NOT within List_Item
-	    MarginTop: 0.4;
+	if NOT within Definition and NOT within List_Item BEGIN
+	    MarginTop: 0.2;
+	    MarginBottom: 0.2;
+	    END;
 	IN Structure_view BEGIN
+		MarginTop: 0;
+		MarginBottom: 0;
 		VertPos: Top = Previous . Bottom;
 		NoLine;
 		END;
