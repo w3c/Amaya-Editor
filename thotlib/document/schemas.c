@@ -654,7 +654,8 @@ PtrSSchema LoadStructureSchema (Name schemaName, PtrDocument pDoc)
 
    /* is this schema already used by the document? */
    pPfS = pDoc->DocFirstSchDescr;
-   while (pPfS && strcmp (schemaName, pPfS->PfSSchema->SsName))
+   while (pPfS && pPfS->PfSSchema &&
+	  strcmp (schemaName, pPfS->PfSSchema->SsName))
      pPfS = pPfS->PfNext;
    if (pPfS)
      /* this schema is already used by the document */
