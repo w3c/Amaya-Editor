@@ -1348,7 +1348,9 @@ Document       doc;
 	}
       if (HighlightDocument == doc)
 	ResetHighlightedElement ();
-      if (DocumentTypes[doc] != docLog)
+      if (DocumentTypes[doc] == docLog)
+	DocumentSource[doc] = 0;
+      else
 	{
 	  if (DocumentSource[doc])
 	    {
