@@ -56,21 +56,12 @@
 
 
 /*----------------------------------------------------------------------
-   	PRuleMessagePre	On veut ajouter ou modifier (selon isNew) la	
-   	regle de presentation specifique pPRule a l'element pEl du	
-   	document pDoc. On envoie le message APP correspondant a		
-   	l'application et on retourne la reponse de l'application.	
+  PRuleMessagePre	On veut ajouter ou modifier (selon isNew) la	
+  regle de presentation specifique pPRule a l'element pEl du	
+  document pDoc. On envoie le message APP correspondant a		
+  l'application et on retourne la reponse de l'application.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool        PRuleMessagePre (PtrElement pEl, PtrPRule pPRule, PtrDocument pDoc, ThotBool isNew)
-#else  /* __STDC__ */
-ThotBool        PRuleMessagePre (pEl, pPRule, pDoc, isNew)
-PtrElement      pEl;
-PtrPRule        pPRule;
-PtrDocument     pDoc;
-ThotBool        isNew;
-
-#endif /* __STDC__ */
+ThotBool PRuleMessagePre (PtrElement pEl, PtrPRule pPRule, PtrDocument pDoc, ThotBool isNew)
 {
    NotifyPresentation  notifyPres;
    PtrPRule            pR, pRPrec;
@@ -121,18 +112,7 @@ ThotBool        isNew;
   la regle de presentation specifique pPRule pour l'element pEl du document
   pDoc. On envoie le message APP correspondant a l'application.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void           PRuleMessagePost (PtrElement pEl, PtrPRule pPRule, PtrDocument pDoc, ThotBool isNew)
-
-#else  /* __STDC__ */
-void           PRuleMessagePost (pEl, pPRule, pDoc, isNew)
-PtrElement     pEl;
-PtrPRule       pPRule;
-PtrDocument    pDoc;
-ThotBool       isNew;
-
-#endif /* __STDC__ */
-
+void PRuleMessagePost (PtrElement pEl, PtrPRule pPRule, PtrDocument pDoc, ThotBool isNew)
 {
    NotifyPresentation  notifyPres;
 
@@ -155,19 +135,8 @@ ThotBool       isNew;
   frame is the frame.				
   display is TRUE when it's necessary to redisplay the concrete image.
 ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref, int frame, ThotBool display)
-#else  /* __STDC__ */
-void                NewPosition (pAb, X, xref, Y, yref, frame, display)
-PtrAbstractBox      pAb;
-int                 X;
-int                 xref;
-int                 Y;
-int                 yref;
-int                 frame;
-ThotBool            display;
-
-#endif /* __STDC__ */
+void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
+		  int frame, ThotBool display)
 {
 #ifndef NODISPLAY
   PtrPRule            pR, pRStd;
@@ -541,16 +510,8 @@ ThotBool            display;
   frame is the frame.				
   display is TRUE when it's necessary to redisplay the concrete image.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                NewDimension (PtrAbstractBox pAb, int width, int height, int frame, ThotBool display)
-#else  /* __STDC__ */
-void                NewDimension (pAb, width, height, frame, display)
-PtrAbstractBox      pAb;
-int                 width;
-int                 height;
-int                 frame;
-ThotBool            display;
-#endif /* __STDC__ */
+void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
+		   ThotBool display)
 {
 #ifndef NODISPLAY
   PtrPRule            pR, pRStd;
@@ -1013,24 +974,15 @@ ThotBool            display;
    TtaNewPRule
    Creates a new presentation rule of a given type for a given view of a given
    document.
-
    Parameter:
    presentationType: type of the presentation rule to be created. Available
    values are defined in file presentation.h
    view: the view (this view must be open).
    document: the document.
-
    Return value:
    new presentation rule.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PRule               TtaNewPRule (int presentationType, View view, Document document)
-#else  /* __STDC__ */
-PRule               TtaNewPRule (presentationType, view, document)
-int                 presentationType;
-View                view;
-Document            document;
-#endif /* __STDC__ */
+PRule TtaNewPRule (int presentationType, View view, Document document)
 {
    PtrPRule            pPres;
    int                 v;
@@ -1110,25 +1062,15 @@ Document            document;
 
    Creates a new presentation rule of a given type for a given view of a given
    document. The view is identified by its number.
-
    Parameter:
    presentationType: type of the presentation rule to be created. Available
    values are defined in file presentation.h
    viewName: the name of the view (this view does not need to be open).
    document: the document.
-
    Return value:
    new presentation rule.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PRule               TtaNewPRuleForView (int presentationType, int view, Document document)
-#else  /* __STDC__ */
-PRule               TtaNewPRuleForView (presentationType, view, document)
-int                 presentationType;
-int                 view;
-Document            document;
-#endif /* __STDC__ */
+PRule TtaNewPRuleForView (int presentationType, int view, Document document)
 {
    PtrPRule            pPres;
 
@@ -1187,25 +1129,16 @@ Document            document;
 
    Creates a new presentation rule of a given type for a given view of a given
    document. The view is identified by its name.
-
    Parameter:
    presentationType: type of the presentation rule to be created. Available
    values are defined in file presentation.h
    viewName: the name of the view (this view does not need to be open).
    document: the document.
-
    Return value:
    new presentation rule.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PRule               TtaNewPRuleForNamedView (int presentationType, STRING viewName, Document document)
-#else  /* __STDC__ */
-PRule               TtaNewPRuleForNamedView (presentationType, viewName, document)
-int                 presentationType;
-STRING              viewName;
-Document            document;
-#endif /* __STDC__ */
+PRule TtaNewPRuleForNamedView (int presentationType, STRING viewName,
+			       Document document)
 {
    PtrPRule            pPres;
    PtrDocument         pDoc;
@@ -1238,8 +1171,8 @@ Document            document;
 	 for (v = 1; v <= MAX_ASSOC_DOC && vue == 0; v++)
 	   {
 	     pEl = pDoc->DocAssocRoot[v - 1];
-	     if (pEl != NULL)
-	       if (ustrcmp (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+	     if (pEl != NULL &&
+		 strcmp (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
 		 vue = 1;
 	   }
        if (vue == 0)
@@ -1289,19 +1222,12 @@ Document            document;
 
    Creates a new presentation rule and initializes it with a copy of an
    existing presentation rule.
-
    Parameter:
    pRule: presentation rule to be copied.
-
    Return value:
    new presentation rule.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PRule               TtaCopyPRule (PRule pRule)
-#else  /* __STDC__ */
-PRule               TtaCopyPRule (pRule)
-PRule               pRule;
-#endif /* __STDC__ */
 {
    PtrPRule            copy;
 
@@ -1330,14 +1256,7 @@ PRule               pRule;
    document: the document to which the element belongs.
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaAttachPRule (Element element, PRule pRule, Document document)
-#else  /* __STDC__ */
-void                TtaAttachPRule (element, pRule, document)
-Element             element;
-PRule               pRule;
-Document            document;
-#endif /* __STDC__ */
+void TtaAttachPRule (Element element, PRule pRule, Document document)
 {
    PtrPRule            pPres;
    ThotBool            stop;
@@ -1397,13 +1316,11 @@ Document            document;
 
    Changes the value of a presentation rule. The presentation rule must
    be attached to an element that is part of a document.
-
    Parameters:
    element: the element to which the presentation rule is attached.
    pRule: the presentation rule to be changed.
    value: the value to be set.
    document: the document to which the element belongs.
-
    Valid values according to rule type:
    PRDepth: an integer (z-index of the element).
    PRVisibility: an integer >= 0 (visibility level).
@@ -1437,17 +1354,8 @@ Document            document;
    PRWidth, PRHeight: an integer (size in points)
    PRHyphenate: Hyphenation, NoHyphenation.
    PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetPRuleValue (Element element, PRule pRule, int value, Document document)
-#else  /* __STDC__ */
-void                TtaSetPRuleValue (element, pRule, value, document)
-Element             element;
-PRule               pRule;
-int                 value;
-Document            document;
-#endif /* __STDC__ */
+void TtaSetPRuleValue (Element element, PRule pRule, int value, Document document)
 {
 #ifndef NODISPLAY
    ThotBool            done;
@@ -1749,7 +1657,6 @@ Document            document;
    Changes the value and the length unit of a presentation rule.
    The presentation rule must be attached to an element that is part of
    a document.
-
    Parameters:
    element: the element to which the presentation rule is attached.
    pRule: the presentation rule to be changed.
@@ -1772,18 +1679,9 @@ Document            document;
    PRXRadius, PRYRadius: a positive integer (radius)
    PRVertPos, PRHorizPos: an integer (distance)
    PRWidth, PRHeight: an integer (width or height)
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetPRuleValueWithUnit (Element element, PRule pRule, int value, TypeUnit unit, Document document)
-#else  /* __STDC__ */
-void                TtaSetPRuleValueWithUnit (element, pRule, value, unit, document)
-Element             element;
-PRule               pRule;
-int                 value;
-TypeUnit            unit;
-Document            document;
-#endif /* __STDC__ */
+void TtaSetPRuleValueWithUnit (Element element, PRule pRule, int value,
+			       TypeUnit unit, Document document)
 {
 #ifndef NODISPLAY
    ThotBool            done;
@@ -1867,19 +1765,11 @@ Document            document;
 
    Sets the view to which a presentation rule applies. The presentation rule
    must not be attached yet to an element.
-
    Parameters:
    pRule: the presentation rule to be changed.
    view: the value to be set.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetPRuleView (PRule pRule, int view)
-#else  /* __STDC__ */
-void                TtaSetPRuleView (pRule, view)
-PRule               pRule;
-int                 view;
-#endif /* __STDC__ */
+void TtaSetPRuleView (PRule pRule, int view)
 {
    UserErrorCode = 0;
    if (pRule == NULL)
@@ -1898,7 +1788,6 @@ int                 view;
 
    Changes the height and width of the box corresponding to an element in
    a given view.
-
    Parameters:
    element: the element of interest.
    document: the document to which the element belongs.
@@ -1906,19 +1795,9 @@ int                 view;
    deltaX: width increment in points (positive, negative or zero).
    deltaY: height increment in points (positive, negative or zero).
    unit: the unit used for the values.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaChangeBoxSize (Element element, Document document, View view, int deltaX, int deltaY, TypeUnit unit)
-#else  /* __STDC__ */
-void                TtaChangeBoxSize (element, document, view, deltaX, deltaY, unit)
-Element             element;
-Document            document;
-View                view;
-int                 deltaX;
-int                 deltaY;
-TypeUnit            unit;
-#endif /* __STDC__ */
+void TtaChangeBoxSize (Element element, Document document, View view,
+		       int deltaX, int deltaY, TypeUnit unit)
 {
    PtrAbstractBox      pAb;
    int                 v, frame;
@@ -1979,7 +1858,6 @@ TypeUnit            unit;
    TtaChangeBoxPosition
 
    Moves the box of an element in a given view.
-
    Parameters:
    element: the element of interest.
    document: the document to which the element belongs.
@@ -1987,20 +1865,9 @@ TypeUnit            unit;
    deltaX: horizontal shift in points (positive, negative or zero).
    deltaY: vertical shift in points (positive, negative or zero).
    unit: the unit used for the values.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaChangeBoxPosition (Element element, Document document, View view, int deltaX, int deltaY, TypeUnit unit)
-#else  /* __STDC__ */
-void                TtaChangeBoxPosition (element, document, view, deltaX, deltaY, unit)
-Element             element;
-Document            document;
-View                view;
-int                 deltaX;
-int                 deltaY;
-TypeUnit            unit;
-
-#endif /* __STDC__ */
+void TtaChangeBoxPosition (Element element, Document document, View view,
+			   int deltaX, int deltaY, TypeUnit unit)
 {
 #ifndef NODISPLAY
 
@@ -2069,14 +1936,7 @@ TypeUnit            unit;
    document: the document of interest.
    view: the view.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int              TtaGetDepth (Element element, Document document, View view)
-#else  /* __STDC__ */
-int              TtaGetDepth (element, document, view)
-Element             element;
-Document            document;
-View                view;
-#endif /* __STDC__ */
+int TtaGetDepth (Element element, Document document, View view)
 {
    PtrAbstractBox      pAb;
    int                 v, frame;
@@ -2118,28 +1978,17 @@ View                view;
    TtaGiveBoxSize
    Returns the height and width of the box corresponding to an element in
    a given view.
-
    Parameters:
    element: the element of interest.
    document: the document of interest.
    view: the view.
    unit: the unit used for the values.
-
    Return parameters:
    width: box width in units.
    height: box height in units.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void          TtaGiveBoxSize (Element element, Document document, View view, TypeUnit unit, int *width, int *height)
-#else  /* __STDC__ */
-void          TtaGiveBoxSize (element, document, view, unit, width, height)
-Element       element;
-Document      document;
-View          view;
-TypeUnit      unit;
-int          *width;
-int          *height;
-#endif /* __STDC__ */
+void TtaGiveBoxSize (Element element, Document document, View view,
+		     TypeUnit unit, int *width, int *height)
 {
    PtrAbstractBox      pAb;
    int                 v, frame;
@@ -2205,32 +2054,19 @@ int          *height;
    a given view. The returned coordinates indicate the distance
    between the upper left corner of the box and the upper left corner of its
    parent box.
-
    Parameters:
    element: the element of interest.
    document: the document of interest.
    view: the view.
    unit: the unit used for the values.
-
    Return parameters:
    xCoord: distance from the left edge of the parent box to the left
    edge of the box, in points.
    yCoord:  distance from the upper edge of the parent box to the upper
    edge of the box, in points.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGiveBoxPosition (Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord)
-#else  /* __STDC__ */
-void                TtaGiveBoxPosition (element, Document document, view, unit, xCoord, yCoord)
-Element             element;
-Document            document;
-View                view;
-TypeUnit            unit;
-int                *xCoord;
-int                *yCoord;
-
-#endif /* __STDC__ */
+void TtaGiveBoxPosition (Element element, Document document, View view,
+			 TypeUnit unit, int *xCoord, int *yCoord)
 {
   PtrAbstractBox      pAb;
   PtrBox              pBox;
@@ -2304,32 +2140,19 @@ int                *yCoord;
    a given view. The returned coordinates indicate the distance
    between the upper left corner of the box and the upper left corner of its
    window.
-
    Parameters:
    element: the element of interest.
    document: the document of interest.
    view: the view.
    unit: the unit used for the values.
-
    Return parameters:
    xCoord: distance from the left edge of the window to the left
    edge of the box.
    yCoord:  distance from the upper edge of the window to the upper
    edge of the box.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGiveBoxAbsPosition (Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord)
-#else  /* __STDC__ */
-void                TtaGiveBoxAbsPosition (element, Document document, view, unit, xCoord, yCoord)
-Element             element;
-Document            document;
-View                view;
-TypeUnit            unit;
-int                *xCoord;
-int                *yCoord;
-
-#endif /* __STDC__ */
+void TtaGiveBoxAbsPosition (Element element, Document document, View view,
+			    TypeUnit unit, int *xCoord, int *yCoord)
 {
   PtrAbstractBox      pAb;
   PtrBox              pBox;
@@ -2406,17 +2229,8 @@ int                *yCoord;
    height: window height in units.
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGiveWindowSize (Document document, View view, TypeUnit unit, int *width, int *height)
-#else  /* __STDC__ */
-void                TtaGiveWindowSize (document, view, unit, width, height)
-Document            document;
-View                view;
-TypeUnit            unit;
-int                *width;
-int                *height;
-
-#endif /* __STDC__ */
+void TtaGiveWindowSize (Document document, View view, TypeUnit unit,
+			int *width, int *height)
 {
   int                 frame;
   int                 w, h;
@@ -2450,25 +2264,15 @@ int                *height;
    TtaGetPRule
 
    Returns a presentation rule of a given type associated with a given element.
-
    Parameters:
    element: the element of interest.
    presentationType: type of the desired presentation rule. Available
    values are defined in file presentation.h
-
    Return value:
    the presentation rule found, or NULL if the element
    does not have this type of presentation rule.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PRule               TtaGetPRule (Element element, int presentationType)
-#else  /* __STDC__ */
-PRule               TtaGetPRule (element, presentationType)
-Element             element;
-int                 presentationType;
-#endif /* __STDC__ */
-
 {
   PtrPRule          pRule;
   PtrPRule          pPres;
@@ -2508,21 +2312,13 @@ int                 presentationType;
    TtaGetPRuleType
 
    Returns the type of a presentation rule.
-
    Parameters:
    pRule: the presentation rule of interest.
-
    Return value:
    type of that presentation rule. Available values are defined in
            file presentation.h
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaGetPRuleType (PRule pRule)
-#else  /* __STDC__ */
-int                 TtaGetPRuleType (pRule)
-PRule               pRule;
-#endif /* __STDC__ */
 {
   int               presentationType;
 
@@ -2584,14 +2380,8 @@ PRule               pRule;
    PtWidth, PtHeight: distance
    PRHyphenate: Hyphenation, NoHyphenation.
    PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots, Justify.
- 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaGetPRuleValue (PRule pRule)
-#else  /* __STDC__ */
-int                 TtaGetPRuleValue (pRule)
-PRule               pRule;
-#endif /* __STDC__ */
 {
   int                 value;
 
@@ -2796,10 +2586,8 @@ PRule               pRule;
    TtaGetPRuleUnit
 
    Returns the unit of a presentation rule.
-
    Parameters:
    pRule: the presentation rule of interest.
-
    Return the unit of the rule type PRNoBreak1, PRNoBreak2,
    PRIndent, PRSize, PRLineSpacing, PRLineWeight,
    PRMarginTop, PRMarginRight, PRMarginBottom, PRMarginLeft,
@@ -2808,17 +2596,10 @@ PRule               pRule;
    PRBorderLeftWidth,
    PRXRadius, PRYRadius,
    PRVertPos, PRHorizPos, PRWidth, PRHeight.
-
    This unit could be UnRelative, UnXHeight, UnPoint, UnPixel, UnPercent.
    Return UnRelative in other cases.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaGetPRuleUnit (PRule pRule)
-#else  /* __STDC__ */
-int                 TtaGetPRuleUnit (pRule)
-PRule               pRule;
-#endif /* __STDC__ */
 {
   int                 value;
 
@@ -2872,20 +2653,12 @@ PRule               pRule;
    TtaGetPRuleView
 
    Returns the number of the view to which a presentation rule applies.
-
    Parameters:
        pRule: the presentation rule of interest.
-
    Return value:
        number of the view to which the presentation rule applies.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaGetPRuleView (PRule pRule)
-#else  /* __STDC__ */
-int                 TtaGetPRuleView (pRule)
-PRule               pRule;
-#endif /* __STDC__ */
 {
    int                 view;
 
@@ -2903,22 +2676,13 @@ PRule               pRule;
 
    Compares two presentation rules associated with the same element or with
    different elements.
-
    Parameters:
    pRule1: first presentation rule to be compared.
    pRule2: second presentation rule to be compared.
-
    Return value:
    0 if both rules are different, 1 if they are identical.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaSamePRules (PRule pRule1, PRule pRule2)
-#else  /* __STDC__ */
-int                 TtaSamePRules (pRule1, pRule2)
-PRule               pRule1;
-PRule               pRule2;
-#endif /* __STDC__ */
 {
    int                 result;
    PtrPRule            pR1, pR2;
