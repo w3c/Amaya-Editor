@@ -3,6 +3,45 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
+Project: "Compilers"=.\Compilers\Compilers.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name app
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name cpp
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name prs
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name str
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name tra
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "LibThotKernel"=.\LibThotKernel\libThotKernel.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "amaya"=.\amaya.dsp - Package Owner=<4>
 
 Package=<5>
@@ -32,6 +71,9 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name thotprinter
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name Compilers
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -50,6 +92,36 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name libThotTable
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name Compilers
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "app"=.\app\app.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name LibThotKernel
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "cpp"=.\cpp\cpp.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
 }}}
 
 ###############################################################################
@@ -132,6 +204,36 @@ Package=<4>
 
 ###############################################################################
 
+Project: "prs"=.\prs\prs.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name LibThotKernel
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "str"=.\str\str.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name LibThotKernel
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "thotprinter"=.\thotprinter\thotprinter.dsp - Package Owner=<4>
 
 Package=<5>
@@ -151,6 +253,21 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name printlib
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "tra"=.\tra\tra.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name LibThotKernel
     End Project Dependency
 }}}
 
