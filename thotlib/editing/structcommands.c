@@ -511,6 +511,8 @@ ThotBool SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl,
     notify = FALSE;
   if (notify)
     cancel = CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
+  else
+    cancel = FALSE;
   if (pDoc->DocNotifyAll && !cancel && !pEl->ElTerminal)
     {
       /* le document demande un evenement pour chaque element du sous-arbre */
