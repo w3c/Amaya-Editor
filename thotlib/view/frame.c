@@ -230,7 +230,12 @@ static void   DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin, int xmax, 
     return;
   if (pAb == pFrame->FrAbstractBox)
     {
-      if (pBox->BxFill && Printing)
+      if (pBox->BxFill
+#ifdef _WINDOWS
+		  )
+#else /*_WINDOWS */
+		  && Printing)
+#endif /* _WINDOWS */
 	{
 	  /* draw the box background */
 	  xd = xmin - pFrame->FrXOrg;

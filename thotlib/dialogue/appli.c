@@ -1138,7 +1138,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   RECT                rect;
   RECT                rWindow;
   LPNMHDR             pnmh;
-  int                 frame = GetMainFrameNumber (hwnd);
+  int                 frame;
   int                 view;
   int                 frameNDX;
   int                 idCtrl;
@@ -1154,6 +1154,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   DWORD               dwStyle;
   ThotBool            assoc;
 
+  frame = GetMainFrameNumber (hwnd);
   if (frame != -1)
     currentFrame = frame;
   GetWindowRect (hwnd, &rect);

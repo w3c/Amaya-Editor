@@ -623,12 +623,11 @@ int GetFrameNumber (ThotWindow win)
 {
    int frame;
 
-   for (frame = 0; frame <= MAX_FRAME; frame++)
+   for (frame = 1; frame <= MAX_FRAME; frame++)
        if (FrRef[frame] == win)
 	  return (frame);
 
-   fprintf (stderr, "Could not get X-Window number for %X\n", (unsigned int)win);
-   return (-1);
+  return (-1);
 }
 
 /*----------------------------------------------------------------------

@@ -3188,9 +3188,8 @@ void                DestroyFrame (int frame)
      }
 #endif /* _GTK */		
 #ifdef _WINDOWS
-   if (FrMainRef [frame]) {
+   if (FrMainRef [frame])
       DestroyWindow (FrMainRef[frame]);
-   }
 #endif
 }
 

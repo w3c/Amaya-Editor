@@ -2131,7 +2131,6 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
   Pixmap              pat;
   HPEN                hPen;
   HPEN                hOldPen;
-  HDC                 display;
   LOGBRUSH            logBrush;
   HBRUSH              hBrush = NULL;
   HBRUSH              hOldBrush;
@@ -2152,7 +2151,6 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 	  logBrush.lbStyle = BS_SOLID;
 	  hBrush = CreateBrushIndirect (&logBrush); 
 	  hOldBrush = SelectObject (display, hBrush);
-	  Polygon (display, points, npoints);
 	  SelectObject (display, hOldBrush);
 	}
       if (thick <= 0)
