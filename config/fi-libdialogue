@@ -95,7 +95,7 @@
 93 Grafiikkaa
 94 Symboli
 95 Kuva
-96 Elementin tyyppi
+96 XML Elementin tyyppi
 97 j‰lkeen
 98 ennen
 99 ymp‰rill‰
@@ -144,7 +144,7 @@
 142 **Background color
 143 **Foreground color
 144 **Switch colors
-145 **No element can be inserted
+145 **Select a generic XML structure
 146 Tarkistetaan
 147 Etsi/Hylk‰‰
 148 Korvaa (+ dic)

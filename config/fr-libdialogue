@@ -95,7 +95,7 @@
 93 Graphique
 94 Symbole
 95 Image
-96 Type d'élément
+96 Type d'élément XML
 97 après
 98 avant
 99 autour
@@ -144,7 +144,7 @@
 142 Couleur de l'arrière-plan
 143 Couleur du premier plan
 144 Echanger les couleurs
-145 Pas d'élément à insérer
+145 Séléctionner une structure XML générique
 146 Où corriger
 147 Chercher/Suivant
 148 Remplacer (+ dic)

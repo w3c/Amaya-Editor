@@ -1065,14 +1065,14 @@
 	<message xml:lang="ru">Тип элемента</message>
 </label>
 <label define="TMSG_EL_TYPE">
-	<message xml:lang="en">Element type</message>
-	<message xml:lang="fr">Type d'élément</message>
-	<message xml:lang="de">Art des Elements</message>
-	<message xml:lang="it">Tipo di elemento</message>
+	<message xml:lang="en">XML Element type</message>
+	<message xml:lang="fr">Type d'élément XML</message>
+	<message xml:lang="de">Art des XML Elements</message>
+	<message xml:lang="it">Tipo di elemento XML</message>
 	<message xml:lang="tr">Birim tipi</message>
-	<message xml:lang="es">Tipo de elemento</message>
-	<message xml:lang="pt">Tipo de elemento</message>
-	<message xml:lang="fi">Elementin tyyppi</message>
+	<message xml:lang="es">Tipo de elemento XML</message>
+	<message xml:lang="pt">Tipo de elemento XML</message>
+	<message xml:lang="fi">XML Elementin tyyppi</message>
 	<message xml:lang="ru">после</message>
 </label>
 <label define="TMSG_AFTER">
@@ -1586,11 +1586,8 @@
 	<message xml:lang="es">Intercambiar colores</message>
 </label>
 <label define="TMSG_NO_ELEMENT">
-	<message xml:lang="en">No element can be inserted</message>
-	<message xml:lang="fr">Pas d'élément à insérer</message>
-	<message xml:lang="es">No se puede insertar ningún elemento</message>
-	<message xml:lang="de">Es kann kein Element eingefügt werden</message>
-	<message xml:lang="it">Non si possono inserire elementi</message>
+	<message xml:lang="en">Select a generic XML structure</message>
+	<message xml:lang="fr">Séléctionner une structure XML générique</message>
 </label>
 <label define="TMSG_What">
 	<message xml:lang="en">Checking</message>

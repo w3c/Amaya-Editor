@@ -95,7 +95,7 @@
 93 Gráfico
 94 Símbolo
 95 Imagen
-96 Tipo de elemento
+96 Tipo de elemento XML
 97 después
 98 antes
 99 alrededor
@@ -144,7 +144,7 @@
 142 Color del fondo
 143 Color del texto
 144 Intercambiar colores
-145 No se puede insertar ningún elemento
+145 **Select a generic XML structure
 146 Comprobar
 147 Buscar/Saltar
 148 Reemplazar (+ dic)

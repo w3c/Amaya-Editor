@@ -95,7 +95,7 @@
 93 Zeichnung
 94 Symbol
 95 Bild
-96 Art des Elements
+96 Art des XML Elements
 97 nach
 98 vor
 99 um
@@ -144,7 +144,7 @@
 142 **Background color
 143 **Foreground color
 144 **Switch colors
-145 Es kann kein Element eingefügt werden
+145 **Select a generic XML structure
 146 Überprüfe
 147 Suchen
 148 Ersetzen (PW)

@@ -95,7 +95,7 @@
 93 Graphic
 94 Symbol
 95 Image
-96 Element type
+96 XML Element type
 97 after
 98 before
 99 around
@@ -144,7 +144,7 @@
 142 Background color
 143 Foreground color
 144 Switch colors
-145 No element can be inserted
+145 Select a generic XML structure
 146 Checking
 147 Search/Skip
 148 Replace (+ dic)
