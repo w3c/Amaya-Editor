@@ -1219,7 +1219,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
   /* Chargement de la fonte attachee au pave */
   height = pAb->AbSize;
   unit = pAb->AbSizeUnit;
-  height += ViewFrameTable[frame - 1].FrMagnification;
   if (pAb->AbLeafType == LtText)
     {
       if (pAb->AbLanguage < 4)
@@ -1355,7 +1354,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	  
 	  if (picture->PicPixmap == None)
 	    LoadPicture (frame, pCurrentBox, picture);
-	  GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification,
+	  GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
 			   &width, &height);
 	  break;
 	case LtSymbol:
@@ -1384,7 +1383,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	  pCurrentBox->BxPictInfo = NULL;
 	  pCurrentBox->BxXRatio = 1;
 	  pCurrentBox->BxYRatio = 1;
-	  GivePolylineSize (pAb, ViewFrameTable[frame-1].FrMagnification,
+	  GivePolylineSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
 			    &width, &height);
 	  break;
 	case LtPath:
@@ -2548,8 +2547,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  /* check the font of the abstract box */
 	  height = pAb->AbSize;
 	  unit = pAb->AbSizeUnit;
-	  height += pFrame->FrMagnification;
-
 	  if (pAb->AbLeafType == LtText)
 	    pBox->BxFont = ThotLoadFont (TtaGetAlphabet (pAb->AbLanguage),
 					 pAb->AbFont, FontStyleAndWeight(pAb),
@@ -2606,7 +2603,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		      LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
 		      ResetCursorWatch (frame);
 		      GivePictureSize (pAb,
-				       ViewFrameTable[frame-1].FrMagnification,
+				       ViewFrameTable[frame - 1].FrMagnification,
 				       &width, &height);
 		    }
 		  else
@@ -2672,7 +2669,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 			}
 		    }
 		  GivePolylineSize (pAb,
-				    ViewFrameTable[frame-1].FrMagnification,
+				    ViewFrameTable[frame - 1].FrMagnification,
 				    &width, &height);
 		  break;
 		case LtPath:
@@ -2681,7 +2678,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		      /* Libere les anciens descripteurs de path */
 		      FreePath (pBox);
 		      /* Recopie les descripteurs depuis le pave */
-		      pBox->BxFirstPathSeg = CopyPath(pAb->AbFirstPathSeg);
+		      pBox->BxFirstPathSeg = CopyPath (pAb->AbFirstPathSeg);
 		      pBox->BxNChars = pAb->AbVolume;
 		      /* remonte a la recherche d'un ancetre elastique */
 		      pCurrentAb = pAb;
@@ -2773,7 +2770,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  GiveTextSize (pAb, &width, &height, &i);
 		  break;
 		case LtPicture:
-		  GivePictureSize (pAb, ViewFrameTable[frame-1].FrMagnification, &width, &height);
+		  GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
+				   &width, &height);
 		  break;
 		case LtSymbol:
 		  GiveSymbolSize (pAb, &width, &height);

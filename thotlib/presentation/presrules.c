@@ -676,7 +676,7 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 			else
 			  val = (pAbb->AbSize * i) / 100;
 		      }
-		    else if (pPRule->PrInhUnit == *unit)
+		    else if (pPRule->PrInhUnit == *unit || i == 0)
 		      val = pAbb->AbSize + i;
 		    else if (pPRule->PrInhUnit == UnRelative)
 		      {
@@ -686,7 +686,6 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		      }
 		    else
 		      {
-			
 			val = FontPointSize (pAbb->AbSize) + i;
 			*unit = UnPoint;
 		      }

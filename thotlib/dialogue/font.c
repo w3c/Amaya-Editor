@@ -20,6 +20,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "frame.h"
+#include "appdialogue.h"
 
 /*  tolower(c) was a macro defined in ctypes.h that returns
    something wrong if c is not an upper case letter. */
@@ -29,9 +30,11 @@
 #include "frame_tv.h"
 #include "units_tv.h"
 #include "edit_tv.h"
+#include "boxes_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "font_tv.h"
+
 /* that table for the charSThotLoacter glyphs */
 static int          FirstRemovableFont = 1;
 static char         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
@@ -1359,17 +1362,19 @@ static SpecFont LoadFontSet (char alphabet, int family, int highlight,
 SpecFont ThotLoadFont (char alphabet, int family, int highlight, int size,
 		       TypeUnit unit, int frame)
 {
+  int          zoom;
+
   if (unit == UnPixel)
     {
-     if (Printing)
+      if (Printing)
 #ifdef _WIN_PRINT
-	  size = (size * 72 + ScreenDPI / 2) / ScreenDPI;
+	size = (size * 72 + ScreenDPI / 2) / ScreenDPI;
 #else /* _WIN_PRINT */
-	  /* adjust the font size to the printer definition */
-	  size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
+      /* adjust the font size to the printer definition */
+      size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
 #endif /* _WIN_PRINT */
-     else
-	  size = LogicalValue (size, UnPoint, NULL, 0);
+      else
+	size = LogicalValue (size, UnPoint, NULL, 0);
       unit = UnPoint;
     }
   else if (unit == UnXHeight || unit == UnPercent)
@@ -1380,18 +1385,33 @@ SpecFont ThotLoadFont (char alphabet, int family, int highlight, int size,
     }
 
   /* take the zoom into account */
-   if (frame && FontZoom)
-     {
-       if (unit == UnPoint)
-	 size = size + (2 * FontZoom);
-       else
-	 size = size + FontZoom;
-     }
+  if (frame)
+    {
+      if (FontZoom)
+	{
+	  if (unit == UnRelative)
+	    {
+	      size = FontPointSize (size);
+	      unit = UnPoint;
+	    }
+	  size = size + (size * FontZoom / 10);
+	}
+      zoom = ViewFrameTable[frame - 1].FrMagnification;
+      if (zoom)
+	{
+	  if (unit == UnRelative)
+	    {
+	      size = FontPointSize (size);
+	      unit = UnPoint;
+	    }
+	  size = size + (size * zoom / 10);
+	}
+    }
 
    /* the minimum size is 6 points */
-   if (size < 6 && unit == UnPoint)
-      size = 6;
-   return LoadFontSet (alphabet, family, highlight, size, unit, frame);
+  if (size < 6 && unit == UnPoint)
+    size = 6;
+  return LoadFontSet (alphabet, family, highlight, size, unit, frame);
 }
 
 /*----------------------------------------------------------------------
