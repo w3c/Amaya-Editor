@@ -226,7 +226,7 @@ alt="General Preferences Menu" /></p>
       'a'. Pour obtenir un '~' vous devez tapez '~' deux fois.</p>
       <p>Les séquences de caractères utilisées par les méthodes d'entrée
       multi-touches standard et optionnelle sont résumées dans <a
-      href="Keyboard.html.fr#Keyboard">deux tables différentes</a>.</p>
+      href="EditChar.html.fr#Keyboard">deux tables différentes</a>.</p>
       <p></p>
     </dd>
   <dt> <strong>Montrer les images en arrière plan</strong></dt>

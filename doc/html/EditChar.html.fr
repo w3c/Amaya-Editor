@@ -1109,6 +1109,7 @@ disponibles :</p>
 </table>
 <hr />
 </div>
+<p></p>
 <address>
   <a href="mailto:vatton@w3.org">Irène Vatton</a><br />
   <br />

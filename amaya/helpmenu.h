@@ -19,18 +19,20 @@
 static char *Manual[] = {
   "Index.html",
 "Browsing.html",
-"Selecting.html",
-"Searching.html",
 "Views.html",
+"Selecting.html",
 "Creating.html",
-"Links.html",
+"Attributes.html",
+"EditChar.html",
 "Changing.html",
+"Links.html",
 "Tables.html",
+"ImageMaps.html",
 "Math.html",
 "SVG.html",
-"ImageMaps.html",
+"Xml.html",
 "StyleSheets.html",
-"Attributes.html",
+"Searching.html",
 "SpellChecking.html",
 "Publishing.html",
 "Printing.html",
@@ -45,27 +47,29 @@ static char *Manual[] = {
 /* index name... which relates to the precedent table */
 #define INDEX          0
 #define BROWSING       1
-#define SELECTING      2
-#define SEARCHING      3
-#define VIEWS          4
-#define CREATING       5
-#define LINKS          6
+#define VIEWS          2
+#define SELECTING      3
+#define CREATING       4
+#define ATTRIBUTES     5
+#define EDITCHAR       6
 #define CHANGING       7
-#define TABLES         8
-#define MATH           9
-#define SVG           10
-#define IMAGEMAPS     11
-#define CSS           12
-#define ATTRIBUTES    13
-#define SPELLCHECKING 14
-#define PUBLISHING    15
-#define PRINTING      16
-#define NUMBERING     17
-#define MAKEBOOK      18
-#define ANNOTATE      19
-#define CONFIGURE     20
-#define SHORTCUTS     21
-#define ACCESS        22
+#define LINKS          8
+#define TABLES         9
+#define IMAGEMAPS     10
+#define MATH          11
+#define SVG           12
+#define XML           13
+#define CSS           14
+#define SEARCHING     15
+#define SPELLCHECKING 16
+#define PUBLISHING    17
+#define PRINTING      18
+#define NUMBERING     19
+#define MAKEBOOK      20
+#define ANNOTATE      21
+#define CONFIGURE     22
+#define SHORTCUTS     23
+#define ACCESS        24
 
 #endif /* AMAYA_HELP_H */
 

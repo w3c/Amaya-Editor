@@ -1948,23 +1948,6 @@
 	<message xml:lang="es">Hojear</message>
 	<message xml:lang="pt">Navegar</message>
 </label>
-<label define="BHelpSelecting">
-	<message xml:lang="en">Selecting</message>
-	<message xml:lang="fr">Sélection</message>
-	<message xml:lang="de">Auswählen</message>
-	<message xml:lang="it">Selezione</message>
-	<message xml:lang="tr">Tarama</message>
-	<message xml:lang="es">Seleccionar</message>
-	<message xml:lang="pt">Selecionar</message>
-</label>
-<label define="B">
-	<message xml:lang="en">Searching</message>
-	<message xml:lang="fr">Chercher</message>
-	<message xml:lang="de">Suchen</message>
-	<message xml:lang="it">Ricerca</message>
-	<message xml:lang="tr">Seçme</message>
-	<message xml:lang="es">Buscar</message>
-</label>
 <label define="BHelpViews">
 	<message xml:lang="en">Views</message>
 	<message xml:lang="fr">Vues</message>
@@ -1973,6 +1956,15 @@
 	<message xml:lang="tr">Arama</message>
 	<message xml:lang="es">Vistas</message>
 	<message xml:lang="pt">Vistas</message>
+</label>
+<label define="BHelpSelecting">
+	<message xml:lang="en">Selecting</message>
+	<message xml:lang="fr">Sélection</message>
+	<message xml:lang="de">Auswählen</message>
+	<message xml:lang="it">Selezione</message>
+	<message xml:lang="tr">Tarama</message>
+	<message xml:lang="es">Seleccionar</message>
+	<message xml:lang="pt">Selecionar</message>
 </label>
 <label define="BHelpCreating">
 	<message xml:lang="en">Creating elements</message>
@@ -1983,14 +1975,18 @@
 	<message xml:lang="es">Creación de elementos</message>
 	<message xml:lang="pt">Criar elementos</message>
 </label>
-<label define="BHelpLinks">
-	<message xml:lang="en">Links</message>
-	<message xml:lang="fr">Liens</message>
-	<message xml:lang="de">Verknüpfungen bearbeiten</message>
-	<message xml:lang="it">Collegamenti</message>
-	<message xml:lang="tr">Birim yaratma</message>
-	<message xml:lang="es">Enlaces</message>
-	<message xml:lang="pt">Enlaces (links)</message>
+<label define="BHelpAttributes">
+	<message xml:lang="en">Attributes</message>
+	<message xml:lang="fr">Attributs</message>
+	<message xml:lang="de">Attribute</message>
+	<message xml:lang="it">Attributi</message>
+	<message xml:lang="tr">Tarz tanýmlarý</message>
+	<message xml:lang="es">Atributos</message>
+	<message xml:lang="pt">Atributos</message>
+</label>
+<label define="BHelpText">
+	<message xml:lang="en">Characters</message>
+	<message xml:lang="fr">Caratères</message>
 </label>
 <label define="BHelpChanging">
 	<message xml:lang="en">Restructuring</message>
@@ -2001,6 +1997,15 @@
 	<message xml:lang="es">Restructuración</message>
 	<message xml:lang="pt">Reestruturar</message>
 </label>
+<label define="BHelpLinks">
+	<message xml:lang="en">Links</message>
+	<message xml:lang="fr">Liens</message>
+	<message xml:lang="de">Verknüpfungen bearbeiten</message>
+	<message xml:lang="it">Collegamenti</message>
+	<message xml:lang="tr">Birim yaratma</message>
+	<message xml:lang="es">Enlaces</message>
+	<message xml:lang="pt">Enlaces (links)</message>
+</label>
 <label define="BHelpTables">
 	<message xml:lang="en">Tables</message>
 	<message xml:lang="fr">Tables</message>
@@ -2009,6 +2014,15 @@
 	<message xml:lang="tr">Yeniden yapýlandýrma</message>
 	<message xml:lang="es">Tablas</message>
 	<message xml:lang="pt">Tabelas</message>
+</label>
+<label define="BHelpImageMaps">
+	<message xml:lang="en">Image maps</message>
+	<message xml:lang="fr">Zones actives</message>
+	<message xml:lang="de">Aktive Grafikbereiche</message>
+	<message xml:lang="it">Zone attive</message>
+	<message xml:lang="tr">Matematik</message>
+	<message xml:lang="es">Mapas de imagen</message>
+	<message xml:lang="pt">Mapas de Imagem</message>
 </label>
 <label define="BHelpMath">
 	<message xml:lang="en">Math</message>
@@ -2027,14 +2041,9 @@
 	<message xml:lang="it">Graphics</message>
 	<message xml:lang="pt">Gráficos</message>
 </label>
-<label define="BHelpImageMaps">
-	<message xml:lang="en">Image maps</message>
-	<message xml:lang="fr">Zones actives</message>
-	<message xml:lang="de">Aktive Grafikbereiche</message>
-	<message xml:lang="it">Zone attive</message>
-	<message xml:lang="tr">Matematik</message>
-	<message xml:lang="es">Mapas de imagen</message>
-	<message xml:lang="pt">Mapas de Imagem</message>
+<label define="BHelpXml">
+	<message xml:lang="en">Xml support</message>
+	<message xml:lang="fr">support Xml</message>
 </label>
 <label define="BHelpStyleSheets">
 	<message xml:lang="en">Style sheets</message>
@@ -2045,14 +2054,13 @@
 	<message xml:lang="es">Hojas de estilo</message>
 	<message xml:lang="pt">Folhas de estilo</message>
 </label>
-<label define="BHelpAttributes">
-	<message xml:lang="en">Attributes</message>
-	<message xml:lang="fr">Attributs</message>
-	<message xml:lang="de">Attribute</message>
-	<message xml:lang="it">Attributi</message>
-	<message xml:lang="tr">Tarz tanýmlarý</message>
-	<message xml:lang="es">Atributos</message>
-	<message xml:lang="pt">Atributos</message>
+<label define="BSearching">
+	<message xml:lang="en">Searching</message>
+	<message xml:lang="fr">Chercher</message>
+	<message xml:lang="de">Suchen</message>
+	<message xml:lang="it">Ricerca</message>
+	<message xml:lang="tr">Seçme</message>
+	<message xml:lang="es">Buscar</message>
 </label>
 <label define="BHelpSpellChecking">
 	<message xml:lang="en">Spell Checking</message>

@@ -81,12 +81,12 @@ décrits.</p>
   </li>
   <li><a href="#L932">Éditer des pages Web avec Amaya</a> 
     <ul>
-      <li><a href="Keyboard.html.fr#Keyboard">Entrer des caractères ISO-Latin
+      <li><a href="EditChar.html.fr#Keyboard">Entrer des caractères ISO-Latin
         et Unicode</a> 
         <ul>
-          <li><a href="Keyboard.html.fr#Standard">Le support multi-touches
+          <li><a href="EditChar.html.fr#Standard">Le support multi-touches
             standard des versions Motif et GTK</a></li>
-          <li><a href="Keyboard.html.fr#Optional">Le support multi-touches
+          <li><a href="EditChar.html.fr#Optional">Le support multi-touches
             optionnel pour les versions Motif et Windows</a></li>
         </ul>
       </li>
@@ -328,7 +328,7 @@ spécifique d'Amaya :</p>
 <ul>
   <li><a rel="Chapter" href="Searching.html.fr#Searching">Rechercher et
     remplacer du texte</a></li>
-  <li><a href="Keyboard.html.fr#Keyboard" rel="Chapter">Entrer des caractères
+  <li><a href="EditChar.html.fr#Keyboard" rel="Chapter">Entrer des caractères
     ISO-Latin-1</a></li>
   <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer de nouveaux
     éléments</a></li>

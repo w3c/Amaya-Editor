@@ -222,6 +222,7 @@ HelpAttributes
 HelpChanging
 HelpPublishing
 HelpAccess
+HelpXml
 &MenuAttribute
 &NewXHTML11
 &NewXHTMLTransitional
@@ -300,6 +301,7 @@ SetupAndPrint
 &SetOnOffStrong
 &SetOnOffVariable
 HelpCreating
+HelpEditChar
 
 [hypertext-module]
 &CreateOrChangeLink
