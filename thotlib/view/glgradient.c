@@ -14,6 +14,12 @@
  */
 #ifdef _GL
 
+#ifdef _GTK
+#include <gtkgl/gtkglarea.h>
+#else /*WINDOWS*/
+#include <windows.h>
+#endif /*_GTK*/
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 
