@@ -232,7 +232,7 @@ static ThotBool  itemChecked = FALSE;
 #include "UIcss_f.h"
 #include "styleparser_f.h"
 #include "templates_f.h"
-#include "ustring_f.h"
+#include "ustring.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
