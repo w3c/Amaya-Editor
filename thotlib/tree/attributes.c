@@ -599,7 +599,7 @@ void ChangeLanguage (PtrDocument pDoc, PtrElement pEl, Language lang,
    else
       /* this element is a leaf */
       if (pEl->ElLeafType == LtText &&
-	  pEl->ElLanguage != lang && pEl->ElLanguage  >= 4)
+	  pEl->ElLanguage != lang && (pEl->ElLanguage >= 4 || force))
        /* That's a text leaf in a different language */
 	/*
 	  Changes the language of the element:
