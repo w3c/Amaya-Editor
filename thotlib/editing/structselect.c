@@ -868,8 +868,6 @@ void ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
 		{
 		  pNextAb = pNextEl->ElAbstractBox[view - 1];
 		  pEl = pNextEl;
-		  selEnd = (pNextEl == LastSelectedElement &&
-			    (pNextAb == NULL || pNextAb->AbNext == NULL));
 		}
 	      else
 		selEnd = TRUE;
@@ -896,6 +894,8 @@ void ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
 	    
 	  /* next abstract box to be highlighted */
 	  pAb = pNextAb;
+	  selEnd = (pNextEl == LastSelectedElement &&
+		    (pAb == NULL || pAb->AbNext == NULL));
 	}
       /* display the new selection */
       DisplayFrame (frame);
@@ -1718,6 +1718,12 @@ void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 	  oldLastEl = LastSelectedElement;
 	  oldFirstChar = FirstSelectedChar;
 	  oldLastChar = LastSelectedChar;
+	  if (oldLastChar == 0 && oldFirstEl == oldLastEl && oldFirstChar == oldLastChar)
+	    {
+	      /* the whole element was selected */
+	      oldFirstChar = 1;
+	      oldLastChar = oldFirstEl->ElVolume + 1;
+	    }
 	  SelectedPointInPolyline = 0;
 	  SelectedPictureEdge = 0;
 	  if (pEl->ElHolophrast)
@@ -1741,7 +1747,7 @@ void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 	      LastSelectedChar = 0;
 	      if (FixedChar > 0)
 		{
-		  if (rank < FixedChar)
+		  if (rank > 0 && rank < FixedChar)
 		    {
 		      FirstSelectedChar = rank;
 		      LastSelectedChar = FixedChar;
@@ -1895,7 +1901,7 @@ void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 		  LastSelectedElement = FirstSelectedElement;
 		  LastSelectedChar = 0;
 		}
-	      if (LastSelectedChar == 0)
+	      if (LastSelectedChar == 0 && LastSelectedElement != FirstSelectedElement)
 		while (LastSelectedElement->ElNext == NULL
 		       && LastSelectedElement->ElPrevious == NULL
 		       && LastSelectedElement->ElParent != NULL)

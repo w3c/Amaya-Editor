@@ -1236,8 +1236,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  /* almost one character is selected */
 		  if (pBox == pFrame->FrSelectionBegin.VsBox)
 		    left = pFrame->FrSelectionBegin.VsXPos;
-		  if (pBox == pFrame->FrSelectionEnd.VsBox &&
-		      pFrame->FrSelectionEnd.VsXPos != 0)
+		  if (pBox == pFrame->FrSelectionEnd.VsBox)
 		    right = pFrame->FrSelectionEnd.VsXPos;
 		  else
 		    right = pBox->BxW;

@@ -34,8 +34,8 @@
 #include "select_tv.h"
 #include "appdialogue_tv.h"
 
-static ThotBool      RightExtended;
-static ThotBool      LeftExtended;
+static ThotBool      RightExtended = FALSE;
+static ThotBool      LeftExtended = FALSE;
 static ThotBool      Retry = FALSE;
 static ThotBool      Moving = FALSE;
 static SearchContext WordSearchContext = {
@@ -161,7 +161,7 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
 			   int yDelta, PtrBox pFrom, ThotBool extendSel)
 {
    ViewFrame          *pFrame;
-   PtrBox              pBox, pLastBox;
+   PtrBox              pBox, endBox;
    PtrTextBuffer       pBuffer;
    PtrAbstractBox      pAb;
    int                 index;
@@ -171,17 +171,17 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
 
    pFrame = &ViewFrameTable[frame - 1];
    if (pFrom != NULL)
-     pLastBox = pFrom;
+     endBox = pFrom;
    else
-     /* pLastBox = current selected box */
-     pLastBox = pFrame->FrSelectionBegin.VsBox;
+     /* endBox = current selected box */
+     endBox = pFrame->FrSelectionBegin.VsBox;
 
    /* skip presentation boxes */
-   while (pLastBox->BxNext != NULL &&
-	  pLastBox->BxAbstractBox->AbPresentationBox &&
+   while (endBox->BxNext != NULL &&
+	  endBox->BxAbstractBox->AbPresentationBox &&
 	  /* constants */
-	  !pLastBox->BxAbstractBox->AbCanBeModified)
-     pLastBox = pLastBox->BxNext;
+	  !endBox->BxAbstractBox->AbCanBeModified)
+     endBox = endBox->BxNext;
 
    /* do we need to scroll the document */
    doc = FrameTable[frame].FrDoc;
@@ -197,11 +197,11 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
        do
 	 {
 	   /* scroll as long as the top of the view is not reached */
-	   org = pLastBox->BxYOrg;
+	   org = endBox->BxYOrg;
 	   TtcLineUp (doc, view);
 	   /* update the new position */
-	   if (org != pLastBox->BxYOrg)
-	     y = y - org + pLastBox->BxYOrg;
+	   if (org != endBox->BxYOrg)
+	     y = y - org + endBox->BxYOrg;
 	 }
        while (y + yDelta < pFrame->FrYOrg &&
 	      /* we don't see the top of the box */
@@ -219,11 +219,11 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
        do
 	 {
 	   /* scroll as long as the bottom of the view is not reached */
-	   org = pLastBox->BxYOrg;
+	   org = endBox->BxYOrg;
 	   TtcLineDown (doc, view);
 	   /* update the new position */
-	   if (org != pLastBox->BxYOrg)
-	     y = y - org + pLastBox->BxYOrg;
+	   if (org != endBox->BxYOrg)
+	     y = y - org + endBox->BxYOrg;
 	 }
        while (y + yDelta > pFrame->FrYOrg + h &&
 	      /* we don't see the bottom of the box */
@@ -233,8 +233,16 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
 	       pFrame->FrAbstractBox->AbTruncatedTail));
      }
 
-   pBox = GetLeafBox (pLastBox, frame, &x, &y, xDelta, yDelta);
-    if (pBox)
+   if ( RightExtended && yDelta < 0 &&
+	(endBox->BxFirstChar + endBox->BxNChars == LastSelectedChar ||
+	 (endBox->BxFirstChar + endBox->BxNChars == LastSelectedElement->ElVolume + 1 &&
+	  LastSelectedChar == 0)) &&
+	x < endBox->BxXOrg + endBox->BxH + endBox->BxLMargin + endBox->BxLBorder + endBox->BxLPadding)
+     /* stay in the same box */
+     pBox = endBox;
+   else
+     pBox = GetLeafBox (endBox, frame, &x, &y, xDelta, yDelta);
+   if (pBox)
      {
 	pAb = pBox->BxAbstractBox;
 	if (pAb)
@@ -244,9 +252,14 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
 		  x -= pBox->BxXOrg;
 		  LocateClickedChar (pBox, extendSel, &pBuffer, &x, &index,
 				     &nChars, &nbbl);
-		  nChars = pBox->BxFirstChar + nChars;
-		  if (extendSel && LeftExtended && nChars <= pBox->BxNChars)
+		  if (LeftExtended && nChars > 0 && nChars <= pBox->BxNChars)
 		    nChars--;
+		  nChars = pBox->BxFirstChar + nChars;
+		  if (extendSel && yDelta > 0 &&
+			   pAb->AbElement == LastSelectedElement &&
+			   LastSelectedElement &&
+			   nChars <= LastSelectedChar)
+		    nChars = LastSelectedElement->ElVolume + 1;
 	       }
 	     else
 	       nChars = 0;
@@ -404,6 +417,8 @@ static void MovingCommands (int code, Document doc, View view,
 	  lastC = LastSelectedChar;
 	  firstEl = FirstSelectedElement;
 	  lastEl = LastSelectedElement;
+	  if (firstC == lastC && firstC == 0 && firstEl == lastEl)
+	    lastC = firstEl->ElVolume + 1;
 	}
       /* could we shrink the current extended selection */
       if (extendSel)
@@ -511,18 +526,25 @@ static void MovingCommands (int code, Document doc, View view,
 			ibox = ibox->BxPrevious;
 		      if (ibox)
 			{
-			  /* check if the box is within a line */
+			  /* check if boxes are within the same line */
 			  pLine = SearchLine (pBox);
-			  if (pLine)
+			  if (pLine && pLine == SearchLine (ibox))
 			    {
+			      /* moving to the beginning of the current box */
 			      y = pBox->BxYOrg + (pBox->BxHeight / 2);
 			      x = pBox->BxXOrg + xpos;
+			      if (pBox->BxScript == 'A' ||
+				  pBox->BxScript == 'H')
+				x += pBox->BxWidth + 2;
 			    }
 			  else
 			    {
-			      /* moving outside a block of lines */
-			      y = pBox->BxYOrg - 2;
-			      x = pBox->BxXOrg + pBox->BxWidth;
+			      /* moving to the end of the next box */
+			      y = ibox->BxYOrg + ibox->BxHeight;
+			      x = ibox->BxXOrg;
+			      if (ibox->BxScript != 'A' &&
+				  ibox->BxScript != 'H')
+				x += ibox->BxWidth + 2;
 			    }
 			  xDelta = -2;
 			  LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
@@ -565,7 +587,7 @@ static void MovingCommands (int code, Document doc, View view,
 		      (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant))
 			  {
 			  if (pBox->BxNChars)
-              x =  pBox->BxNChars;
+			    x =  pBox->BxNChars;
 			  else
 			  x = 1;
 			  }
@@ -604,7 +626,7 @@ static void MovingCommands (int code, Document doc, View view,
 		      else
 			ChangeSelection (frame, pBox->BxAbstractBox, x + 1,
 					 FALSE, TRUE, FALSE, FALSE);
-		      /* show the beginning of the selection */
+		      /* show the end of the selection */
 		      if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos > pFrame->FrXOrg + w)
 			{
 			  if (FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth > pFrame->FrXOrg + w)
@@ -622,18 +644,29 @@ static void MovingCommands (int code, Document doc, View view,
 			ibox = ibox->BxNext;
 		      if (ibox)
 			{
-			  /* check if the box is within a line */
+			  /* check if boxes are within the same line */
 			  pLine = SearchLine (pBox);
-			  if (pLine)
+			  if (pLine && pLine == SearchLine (ibox))
 			    {
+			      /* moving to the end of the current box */
 			      y = pBox->BxYOrg + (pBox->BxHeight / 2);
-			      x = pBox->BxXOrg + pBox->BxWidth;
+			      x = pBox->BxXOrg;
+			      if (pBox->BxScript != 'A' &&
+				  pBox->BxScript != 'H')
+				x += pBox->BxWidth;
+			      else
+				x -= 2;
 			    }
 			  else
 			    {
-			      /* moving ouside a block of lines */
-			      y = pBox->BxYOrg + pBox->BxHeight + 2;
-			      x = pBox->BxXOrg;
+			      /* moving to the beginning of the next box */
+			      y = ibox->BxYOrg;
+			      x = ibox->BxXOrg;
+			      if (ibox->BxScript == 'A' ||
+				  ibox->BxScript == 'H')
+				x += ibox->BxWidth;
+			      else
+				x -= 2;
 			    }
 			  xDelta = 2;
 			  LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
@@ -671,6 +704,7 @@ static void MovingCommands (int code, Document doc, View view,
 	    TtcNextElement (doc, view);
 	  else if (pBox)
 	    {
+	      done = FALSE;
 	      pBox = pBoxEnd;
 	      if (SelPosition || RightExtended)
 		x = pViewSel->VsXPos + pBoxBegin->BxXOrg;
@@ -681,12 +715,15 @@ static void MovingCommands (int code, Document doc, View view,
 	      /* store the end position of the selection as the new reference */
 	      if (extendSel && LeftExtended)
 		{
-		  i = pBoxBegin->BxYOrg - pBoxEnd->BxYOrg;
-		  if (i < 5 && i > -5)
+		  i = pBoxEnd->BxYOrg - pBoxBegin->BxYOrg;
+		  if (i < 15 /* less than 150% of yDelta */)
 		    {
-		      /* change the extension direction */
+		      /* no more extension */
 		      LeftExtended = FALSE;
-		      RightExtended = TRUE;
+		      extendSel = FALSE;
+		      ChangeSelection (frame, pBox->BxAbstractBox, FixedChar,
+				       FALSE, TRUE, FALSE, FALSE);
+		      done = TRUE;
 		    }
 		  else
 		    {
@@ -710,8 +747,8 @@ static void MovingCommands (int code, Document doc, View view,
 		}
 	      else
 		RightExtended = TRUE;
-
-	      LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
+	      if (!done)
+		LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
 	    }
 	  break;
 	   
@@ -724,6 +761,7 @@ static void MovingCommands (int code, Document doc, View view,
 	    TtcPreviousElement (doc, view);
 	  else if (pBox)
 	    {
+	      done = FALSE;
 	      y = pBoxBegin->BxYOrg;
 	      if (SelPosition || RightExtended)
 		x = pViewSel->VsXPos + pBoxBegin->BxXOrg;
@@ -732,18 +770,20 @@ static void MovingCommands (int code, Document doc, View view,
 	      yDelta = -10;
 	      if (extendSel && RightExtended)
 		{
-		  i = pBoxBegin->BxYOrg - pBoxEnd->BxYOrg;
-		  if (i < 5 && i > -5)
+		  i = pBoxEnd->BxYOrg - pBoxBegin->BxYOrg;
+		  if (i < 15 /* less than 150% of yDelta */)
 		    {
-		      /* change the extension direction */
+		      /* no more extension */
 		      RightExtended = FALSE;
-		      LeftExtended = TRUE;
+		      extendSel = FALSE;
+		      ChangeSelection (frame, pBox->BxAbstractBox, FixedChar,
+				       FALSE, TRUE, FALSE, FALSE);
+		      done = TRUE;
 		    }
 		  else
 		    {
 		      /* just decrease the curent extension */
 		      y = pBoxEnd->BxYOrg;
-		      /*x = pViewSelEnd->VsXPos + pBoxEnd->BxXOrg;*/
 		      pBox = pBoxEnd;
 		    }
 		}
@@ -761,8 +801,8 @@ static void MovingCommands (int code, Document doc, View view,
 		}
 	      else if (extendSel)
 		LeftExtended = TRUE;
-
-	      LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
+	      if (!done)
+		LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
 	    }
 	  break;
 	   

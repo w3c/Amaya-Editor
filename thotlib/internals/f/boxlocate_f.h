@@ -95,8 +95,8 @@ extern void LocateClickedChar ( PtrBox pBox,
                                 PtrTextBuffer *pBuffer,
                                 int *x,
                                 int *index,
-                                int *charsNumber,
-                                int *spacesNumber );
+                                int *nChars,
+                                int *nSpaces );
 
 #else /* __STDC__ */
 
@@ -189,8 +189,8 @@ extern void LocateClickedChar (/* PtrBox pBox,
                                   PtrTextBuffer *pBuffer,
                                   int *x,
                                   int *index,
-                                  int *charsNumber,
-                                  int *spacesNumber */);
+                                  int *nChars,
+                                  int *nSpaces */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

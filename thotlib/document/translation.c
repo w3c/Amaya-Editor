@@ -2585,17 +2585,14 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		    /* don't insert line breaks in attribute values */
 		    if (!pTransTextSch || !pTransAlph)
 		      /* no translation */
-		      while (pBuf != NULL)
+		      while (pBuf)
 			{
 			  i = 0;
 			  while (i < pBuf->BuLength)
 			    {
 			      c = pBuf->BuContent[i++];
-			      if (encode &&
-				  (c == 0X22 || c == 0X26 || c == 0X3C || c == 0X3E || c == 0XA0))
-				entityName = TRUE;
 			      PutChar ((wchar_t) c, fnum, NULL, pDoc,
-				       FALSE, TRUE, entityName);
+				       FALSE, encode, entityName);
 			    }
 			  pBuf = pBuf->BuNext;
 			}

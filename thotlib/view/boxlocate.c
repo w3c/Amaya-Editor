@@ -245,8 +245,8 @@ void LocateSelectionInView (int frame, int x, int y, int button)
   PtrElement          el = NULL;
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel;
-  int                 charsNumber;
-  int                 spacesNumber;
+  int                 nChars;
+  int                 nSpaces;
   int                 index, pos;
   int                 xOrg, yOrg;
   int                 doc, view;
@@ -261,7 +261,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
       x += pFrame->FrXOrg;
       y += pFrame->FrYOrg;
       pAb = pFrame->FrAbstractBox;
-      charsNumber = 0;
+      nChars = 0;
       if (button == 6 && SelectedPointInPolyline != 0 &&
 	  FirstSelectedElement &&
 	  FirstSelectedElement == LastSelectedElement &&
@@ -275,7 +275,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	  extend = (button == 0 || button == 1);
 	  /* get the selected box */
 	  if (ThotLocalActions[T_selecbox] != NULL)
-	    (*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y, &charsNumber);
+	    (*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y, &nChars);
 	  /* When it's an extended selection, avoid to extend to the
 	 enclosing box */
 	  if (extend)
@@ -293,8 +293,8 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  pos = x - pBox->BxXOrg - pBox->BxLMargin - pBox->BxLBorder
 		    - pBox->BxLPadding;
 		  LocateClickedChar (pBox, extend, &pBuffer, &pos, &index,
-				     &charsNumber, &spacesNumber);
-		  charsNumber = pBox->BxFirstChar + charsNumber;
+				     &nChars, &nSpaces);
+		  nChars = pBox->BxFirstChar + nChars;
 		  if (extend)
 		    {
 		      pEl = pAb->AbElement;
@@ -309,14 +309,19 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 			  firstC = FirstSelectedChar;
 			  firstEl = FirstSelectedElement;
 			}
-		      if (pEl == firstEl && charsNumber < firstC)
+		      if (pEl == firstEl && nChars < firstC)
 			left = TRUE;
 		      else if (ElemIsBefore (pEl, firstEl))
 			left = TRUE;
-		      else if (charsNumber == pBox->BxFirstChar && pEl == firstEl)
+		      else if (nChars == pBox->BxFirstChar && pEl == firstEl)
 			/* extension until the beginning of this box
 			   select the end of the previous box */
-			charsNumber--;
+			nChars--;
+		      else if (y > pBox->BxYOrg + pBox->BxHeight &&
+			       pEl == LastSelectedElement &&
+			       LastSelectedElement &&
+			       nChars <= LastSelectedChar)
+			nChars = LastSelectedElement->ElVolume + 1;
 		    }
 		}
 	    }
@@ -335,14 +340,14 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  if (SkipClickEvent)
 		    /* the application asks Thot to do nothing */
 		    return;
-		  ChangeSelection (frame, pAb, charsNumber, TRUE, left, FALSE, FALSE);
+		  ChangeSelection (frame, pAb, nChars, TRUE, left, FALSE, FALSE);
 		  break;
 		case 1:
 		  /* Extension of selection */
 		  if (SkipClickEvent)
 		    /* the application asks Thot to do nothing */
 		    return;
-		  ChangeSelection (frame, pAb, charsNumber, TRUE, left, FALSE, TRUE);
+		  ChangeSelection (frame, pAb, nChars, TRUE, left, FALSE, TRUE);
 		  break;
 		case 2:
 		  /* send event TteElemLClick.Pre to the application */
@@ -351,14 +356,14 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  if (SkipClickEvent)
 		    /* the application asks Thot to do nothing */
 		    return;
-		  ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
+		  ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 		  NotifyClick (TteElemLClick, FALSE, el, doc);
 		  break;
 		case 3:
-		  if (!ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE) &&
+		  if (!ChangeSelection (frame, pAb, nChars, FALSE, TRUE, TRUE, FALSE) &&
 		      pAb->AbLeafType == LtText &&
 		      (!pAb->AbPresentationBox || pAb->AbCanBeModified))
-		    SelectCurrentWord (frame, pBox, charsNumber, index, pBuffer,
+		    SelectCurrentWord (frame, pBox, nChars, index, pBuffer,
 				       TRUE);
 		  break;
 		case 4:
@@ -3012,7 +3017,7 @@ void                DirectCreation (PtrBox pBox, int frame)
   ----------------------------------------------------------------------*/
 void LocateClickedChar (PtrBox pBox, ThotBool extend,
 			PtrTextBuffer *pBuffer, int *x, int *index,
-			int *charsNumber, int *spacesNumber)
+			int *nChars, int *nSpaces)
 {
   int                 dx, ind;
   int                 length;
@@ -3035,10 +3040,10 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
   /* locate the first character */
   LocateFirstChar (pBox, rtl, pBuffer, &ind);
   if (rtl)
-      *charsNumber = pBox->BxNChars;
+      *nChars = pBox->BxNChars;
   else
-      *charsNumber = 0;
-  *spacesNumber = 0;
+      *nChars = 0;
+  *nSpaces = 0;
   if (pBox->BxNChars == 0 || *x <= 0)
       *x = 0;
   else
@@ -3082,7 +3087,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 	      /* continue */
 	      if (c == SPACE)
 		{
-		  (*spacesNumber)++;
+		  (*nSpaces)++;
 		  if (extraSpace > 0)
 		    {
 		      dx++;
@@ -3091,9 +3096,9 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 		}	  
 	      dx += charWidth;
 	      if (rtl)
-		(*charsNumber)--;
+		(*nChars)--;
 	      else
-		(*charsNumber)++;
+		(*nChars)++;
 	      /* next character */
 	      if (LocateNextChar (pBuffer, &ind, rtl))
 		length--;
@@ -3116,7 +3121,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 		}
 	      else
 		ind++;
-	      (*charsNumber)--;
+	      (*nChars)--;
 	    }
 	  else
 	    {
@@ -3128,7 +3133,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 		}
 	      else
 		ind++;
-	      (*charsNumber)++;
+	      (*nChars)++;
 	    }
 	}
     }

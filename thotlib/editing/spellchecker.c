@@ -1231,9 +1231,12 @@ void NextSpellingError (unsigned char *word, PtrDict docDict)
 	    ok = SearchPreviousWord (&ChkrElement, &ChkrIndChar, &i, s, ChkrRange);
 	  /* Is it a valid selection ? */
 	  if (ok && ChkrElement->ElParent != NULL)
-	    novalid = TypeHasException (ExcNoSpellCheck,
+	    novalid = (TypeHasException (ExcNoSpellCheck,
 					ChkrElement->ElParent->ElTypeNumber,
-					ChkrElement->ElParent->ElStructSchema);
+					ChkrElement->ElParent->ElStructSchema) ||
+		       TypeHasException (ExcHidden,
+					 ChkrElement->ElParent->ElTypeNumber,
+					 ChkrElement->ElParent->ElStructSchema));
 	}
 
 #ifdef _I18N_
