@@ -408,7 +408,7 @@ int doc;
   /* finish writing the annotation */
   fprintf (fp, 
 	   "</http:Body>\n"
-	   "</r:Description/>\n"
+	   "</r:Description>\n"
 	   "</a:body>\n"
 	   "</r:Description>\n"
 	   "</r:RDF>\n");
