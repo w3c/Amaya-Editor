@@ -6,18 +6,9 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
- * User interface for checker commands
+ * User interface for spell checking
  *
- * Authors: H. Richy (INRISA)
+ * Authors: H. Richy (IRISA)
  *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
@@ -78,7 +69,8 @@ extern HWND hwndLanguage;
 extern CHAR_T currentWord [30];
 
 #ifdef __STDC__
-extern void CreateSpellCheckDlgWindow (HWND, STRING, STRING, int, int, int, int, int, int, int);
+extern void CreateSpellCheckDlgWindow (HWND, STRING, STRING, int, int, int,
+				       int, int, int, int);
 #else  /* __STDC__ */
 extern void CreateSpellCheckDlgWindow ();
 #endif /* __STDC__ */
@@ -129,7 +121,8 @@ static void         DisplayWords ()
    entry = ChkrCorrection[0];
    /* remplir le formulaire CORRIGER */
    /* attention i = nbpropositions + 1 (le mot errone) */
-   TtaNewSelector (SpellingBase + ChkrSelectProp, SpellingBase + ChkrFormCorrect,
+   TtaNewSelector (SpellingBase + ChkrSelectProp,
+		   SpellingBase + ChkrFormCorrect,
 		   TtaGetMessage (CORR, Correct), i - 1,
 		   ((i < 2) ? "" : BufMenu), 3, entry, TRUE, FALSE);
    /* selectionner la proposition 0 dans le selecteur - si elle existe */
@@ -150,28 +143,34 @@ void WIN_DisplayWords (void)
 void WIN_DisplayWords ()
 #endif /* __STDC__ */
 {
-	int i;
-
-	SetWindowText (wordButton, ChkrCorrection[0]);
-	SendMessage (hwnListWords, LB_RESETCONTENT, 0, 0);
-    if ((ustrcmp (ChkrCorrection[1], TEXT("$"))) == 0)	{
-       currentWord [0] = EOS;
-       SetWindowText (hwndCurrentWord, TEXT(""));
-	   SendMessage (hwnListWords, LB_ADDSTRING, 0, (LPARAM) (TEXT("")));  
-    } else {
-         usprintf (currentWord, TEXT("%s"), ChkrCorrection[1]);
-         SetWindowText (hwndCurrentWord, ChkrCorrection[1]);
-	     for (i = 1; (i <= NC && ustrcmp (ChkrCorrection[i], TEXT("$")) != 0); i++) {
-	         SendMessage (hwnListWords, LB_INSERTSTRING, i - 1, (LPARAM) ((LPCTSTR)ChkrCorrection[i]));  
-	   }
+  int i;
+  
+  SetWindowText (wordButton, ChkrCorrection[0]);
+  SendMessage (hwnListWords, LB_RESETCONTENT, 0, 0);
+  if ((ustrcmp (ChkrCorrection[1], TEXT("$"))) == 0)
+    {
+      currentWord [0] = EOS;
+      SetWindowText (hwndCurrentWord, TEXT(""));
+      SendMessage (hwnListWords, LB_ADDSTRING, 0, (LPARAM) (TEXT("")));  
+    }
+  else
+    {
+      usprintf (currentWord, TEXT("%s"), ChkrCorrection[1]);
+      SetWindowText (hwndCurrentWord, ChkrCorrection[1]);
+      for (i = 1; (i <= NC && ustrcmp (ChkrCorrection[i], TEXT("$")) != 0);
+	   i++)
+	{
+	  SendMessage (hwnListWords, LB_INSERTSTRING, i - 1,
+		       (LPARAM) ((LPCTSTR)ChkrCorrection[i]));  
 	}
-    OldNC = NC;
+    }
+  OldNC = NC;
 }
 #endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------
-   ActionCorriger active le formulaire de correction                
+  TtcSpellCheck  active le formulaire de correction                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSpellCheck (Document doc, View view)
@@ -183,13 +182,13 @@ view                view;
 {
    PtrDocument         document;
    int                 i;
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    PtrElement          pEl1, pElN;
    int                 c1, cN;
    int                 indx;
    CHAR_T                BufMenu[MAX_TXT_LEN];
    ThotBool            ok;
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 
    /* SpecialChars = "@#$&+~"; */
 
@@ -199,13 +198,13 @@ view                view;
       return;
    SpellCheckLoadResources ();
 
-#  ifndef _WINDOWS 
+#ifndef _WINDOWS 
    if (ChkrRange != NULL)
       RemoveSpellForm ();
    TtaDestroyDialogue (SpellingBase + ChkrFormCorrect);
    /* creer la feuille de dialogue de CORRECTION */
    /* attache'e au bouton Confirmer du formulaire (1) CORRIGER */
-   indx = 0;			/* tous les boutons du dialogue de correction */
+   indx = 0;		   /* tous les boutons du dialogue de correction */
    ustrcpy (&BufMenu[indx], TtaGetMessage (CORR, Pass_Without));
    indx += ustrlen(&BufMenu[indx]) + 1;
    ustrcpy(&BufMenu[indx], TtaGetMessage(CORR, Pass_With));
@@ -215,18 +214,20 @@ view                view;
    ustrcpy(&BufMenu[indx], TtaGetMessage(CORR, Replace_With));
    /* ne pas afficher cette feuille maintenant */
    TtaNewSheet (SpellingBase + ChkrFormCorrect, TtaGetViewFrame (doc, view), 
-		TtaGetMessage (CORR, Correct), 4, BufMenu, FALSE, 4, TEXT('L'), D_DONE);
+		TtaGetMessage (CORR, Correct), 4, BufMenu, FALSE, 4, TEXT('L'),
+		D_DONE);
 
    /* initialise le champ langue de correction courante */
-   TtaNewLabel (SpellingBase + ChkrLabelLanguage, SpellingBase + ChkrFormCorrect, " ");
-#  endif /* !_WINDOWS */
+   TtaNewLabel (SpellingBase + ChkrLabelLanguage,
+		SpellingBase + ChkrFormCorrect, " ");
+#endif /* !_WINDOWS */
 
    /* Afficher une liste de mots EMPTY */
    ustrcpy (ChkrCorrection[0], TEXT(" "));
    for (i = 1; i <= NC; i++)
       ustrcpy (ChkrCorrection[i], TEXT("$"));
 
-#  ifndef _WINDOWS 
+#ifndef _WINDOWS 
    DisplayWords ();
 
    /* creer le sous-menu OU dans la feuille OPTIONS */
@@ -240,7 +241,7 @@ view                view;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
    TtaNewSubmenu (SpellingBase + ChkrMenuOR, SpellingBase + ChkrFormCorrect, 0,
 		  TtaGetMessage (CORR, What), 4, BufMenu, NULL, FALSE);
-   TtaSetMenuForm (SpellingBase + ChkrMenuOR, 2);	/* apres la selection */
+   TtaSetMenuForm (SpellingBase + ChkrMenuOR, 2);     /* apres la selection */
    /* Initialiser le formulaire CORRIGER */
    /* Document selectionne */
    ok = GetCurrentSelection (&pDocSel, &pEl1, &pElN, &c1, &cN);
@@ -283,20 +284,22 @@ view                view;
 		     4, BufMenu, NULL, TRUE);
 
    /* liste des caracteres speciaux dans le formulaire OPTIONS */
-   TtaNewTextForm (SpellingBase + ChkrSpecial, SpellingBase + ChkrFormCorrect, NULL, 20, 1, TRUE);
+   TtaNewTextForm (SpellingBase + ChkrSpecial, SpellingBase + ChkrFormCorrect,
+		   NULL, 20, 1, TRUE);
    TtaSetTextForm (SpellingBase + ChkrSpecial, TEXT("@#$&+~"));
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
-/* ne pas ignorer les mots en capitale, chiffres romains */
+   /* ne pas ignorer les mots en capitale, chiffres romains */
    /* ou contenant des chiffres arabes,  certains car. speciaux */
-   ustrncpy (RejectedChar, TEXT("@#$&+~"), MAX_REJECTED_CHARS);	/* liste par defaut */
+   ustrncpy (RejectedChar, TEXT("@#$&+~"), MAX_REJECTED_CHARS);
+   /* liste par defaut */
 
-   IgnoreUppercase = FALSE;
-   IgnoreArabic = FALSE;
-   IgnoreRoman = FALSE;
-   IgnoreSpecial = FALSE;
+   IgnoreUppercase = TRUE;
+   IgnoreArabic = TRUE;
+   IgnoreRoman = TRUE;
+   IgnoreSpecial = TRUE;
 
-#  ifndef _WINDOWS 
+#ifndef _WINDOWS 
    /* Selectionne les types de mots a ne ignorer par defaut */
    TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 0, IgnoreUppercase);
    TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 1, IgnoreArabic);
@@ -308,7 +311,7 @@ view                view;
 
    /* Et enfin, afficher le formulaire de CORRECTION */
    TtaShowDialogue (SpellingBase + ChkrFormCorrect, TRUE);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    /* Indique que c'est une nouvelle correction qui debute */
    FirstStep = TRUE;
@@ -320,12 +323,14 @@ view                view;
    /* ne cree pas inutilement le dictionnaire fichier */
    TtaLoadDocumentDictionary (document, (int*) &ChkrFileDict, FALSE);
 
-#  ifdef _WINDOWS 
-   CreateSpellCheckDlgWindow (TtaGetViewFrame (doc, view), TtaGetMessage (CORR, Correct), 
-	                          RejectedChar, SpellingBase, ChkrSelectProp, ChkrMenuOR, 
-							  ChkrFormCorrect, ChkrMenuIgnore, ChkrCaptureNC, ChkrSpecial);
+#ifdef _WINDOWS 
+   CreateSpellCheckDlgWindow (TtaGetViewFrame (doc, view),
+			      TtaGetMessage (CORR, Correct), RejectedChar,
+			      SpellingBase, ChkrSelectProp, ChkrMenuOR, 
+			      ChkrFormCorrect, ChkrMenuIgnore, ChkrCaptureNC,
+			      ChkrSpecial);
 
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -344,11 +349,11 @@ Language            language;
    /* calculer les propositions de correction du mot courant */
    GiveProposal (language, ChkrFileDict);
    /* afficher les mots proposes contenus dans ChkrErrWord */
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    DisplayWords ();
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    WIN_DisplayWords ();
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    /* recopier la premiere proposition dans CorrectWord */
    if (ustrcmp (ChkrCorrection[1], TEXT("$")) != 0)
       ustrcpy (CorrectWord, ChkrCorrection[1]);
@@ -356,12 +361,14 @@ Language            language;
       CorrectWord[0] = EOS;
 
    /* afficher la langue de correction courante */
-   usprintf (Lab, TEXT("%s: %s"), TtaGetMessage (LIB, TMSG_LANGUAGE), TtaGetLanguageName (ChkrLanguage));
-#  ifdef _WINDOWS
+   usprintf (Lab, TEXT("%s: %s"), TtaGetMessage (LIB, TMSG_LANGUAGE),
+	     TtaGetLanguageName (ChkrLanguage));
+#ifdef _WINDOWS
    SetWindowText (hwndLanguage, Lab);
-#  else  /* !_WINDOWS */
-   TtaNewLabel (SpellingBase + ChkrLabelLanguage, SpellingBase + ChkrFormCorrect, Lab);
-#  endif /* _WINDOWS */
+#else  /* !_WINDOWS */
+   TtaNewLabel (SpellingBase + ChkrLabelLanguage,
+		SpellingBase + ChkrFormCorrect, Lab);
+#endif /* _WINDOWS */
 }
 
 
@@ -392,17 +399,19 @@ static ThotBool     StartSpellChecker ()
       SetProposals (ChkrLanguage);
    else
      {
-	/* Correction TERMINEE */
-#   ifdef _WINDOWS
-    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND), TEXT("Spell checking"), MB_OK | MB_ICONINFORMATION);
-#   else  /* _WINDOWS */
-	TtaDisplaySimpleMessage (INFO, CORR, END_CHECK);
-	/* message 'Pas trouve' dans le formulaire */
-	TtaNewLabel (SpellingBase + ChkrLabelNotFound, SpellingBase + ChkrFormCorrect,
-		     TtaGetMessage (LIB, TMSG_NOT_FOUND));
-#   endif /* _WINDOWS */
-	FirstStep = TRUE;
-	ok = FALSE;
+       /* Correction TERMINEE */
+#ifdef _WINDOWS
+       MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND), \
+		   TEXT("Spell checking"), MB_OK | MB_ICONINFORMATION);
+#else  /* _WINDOWS */
+       TtaDisplaySimpleMessage (INFO, CORR, END_CHECK);
+       /* message 'Pas trouve' dans le formulaire */
+       TtaNewLabel (SpellingBase + ChkrLabelNotFound,
+		    SpellingBase + ChkrFormCorrect,
+		    TtaGetMessage (LIB, TMSG_NOT_FOUND));
+#endif /* _WINDOWS */
+       FirstStep = TRUE;
+       ok = FALSE;
      }
    return (ok);
 }
@@ -433,63 +442,64 @@ int                 val;
 
    if (document != ChkrRange->SDocument || val == 0)
      {
-	/* ABANDON de la corrrection */
-	RemoveSpellForm ();
+       /* ABANDON de la corrrection */
+       RemoveSpellForm ();
      }
    else
      {
-	change = TRUE;		/* On passe a priori au mot suivant */
-	switch (val)
-	      {
-		 case 1:
-		    /* Passer sans maj du dictionnaire */
-		    break;
-		 case 2:
-		    /* Passer apres maj du dictionnaire */
-		    /* mettre CurrentWord dans le dictionnaire */
-		    if (ChkrElement != NULL)	/* Sauf au 1er lancement */
-		       if (CorrectWord[0] != EOS && (ustrcmp (CorrectWord, ChkrCorrection[1]) != 0))
-			 {
-			    /* ajouter le mot corroge dans le dictionaire */
-			    if (!CheckWord (CorrectWord, ChkrLanguage, ChkrFileDict))
-			       AddWord (CorrectWord, &ChkrFileDict);
-			 }
-		       else
-			 {
-			    /* ajouter le mot courant dans le dictionnaire */
-			    if (!CheckWord (CurrentWord, ChkrLanguage, ChkrFileDict))
-			       AddWord (CurrentWord, &ChkrFileDict);
-			 }
-		    break;
-		 case 3:
-		    /* ToReplace */
-		    if (ToReplace)	/* CorrectWord est rempli */
-		      {		/* et ce n'est pas 1er lancement */
-			 if (ChkrElement != NULL && CurrentWord[0] != EOS)
-			    WordReplace (CurrentWord, CorrectWord);
-			 ToReplace = FALSE;
-		      }
-		    break;
-		 case 4:
-		    /* ToReplace et maj dictionnaire */
-		    if (ToReplace)	/* CorrectWord est rempli */
-		      {		/* et ce n'est pas 1er lancement */
-			 if (ChkrElement != NULL && CurrentWord[0] != EOS)
-			   {
-			      WordReplace (CurrentWord, CorrectWord);
-			      /* mettre CorrectWord dans le dictionnaire */
-			      if (!CheckWord (CorrectWord, ChkrLanguage, ChkrFileDict))
-				 /* mettre ce nouveau mot dans le dictionnaire */
-				 AddWord (CorrectWord, &ChkrFileDict);
-			   }
-			 ToReplace = FALSE;
-		      }
-		    break;
-	      }	
-
-	if (change)
-	   /* Lancement de la recherche d'erreur suivante */
-	   StartSpellChecker ();
+       change = TRUE;		/* On passe a priori au mot suivant */
+       switch (val)
+	 {
+	 case 1:
+	   /* Passer sans maj du dictionnaire */
+	   break;
+	 case 2:
+	   /* Passer apres maj du dictionnaire */
+	   /* mettre CurrentWord dans le dictionnaire */
+	   if (ChkrElement != NULL)	/* Sauf au 1er lancement */
+	     if (CorrectWord[0] != EOS &&
+		 (ustrcmp (CorrectWord, ChkrCorrection[1]) != 0))
+	       {
+		 /* ajouter le mot corroge dans le dictionaire */
+		 if (!CheckWord (CorrectWord, ChkrLanguage, ChkrFileDict))
+		   AddWord (CorrectWord, &ChkrFileDict);
+	       }
+	     else
+	       {
+		 /* ajouter le mot courant dans le dictionnaire */
+		 if (!CheckWord (CurrentWord, ChkrLanguage, ChkrFileDict))
+		   AddWord (CurrentWord, &ChkrFileDict);
+	       }
+	   break;
+	 case 3:
+	   /* ToReplace */
+	   if (ToReplace)	/* CorrectWord est rempli */
+	     {		/* et ce n'est pas 1er lancement */
+	       if (ChkrElement != NULL && CurrentWord[0] != EOS)
+		 WordReplace (CurrentWord, CorrectWord);
+	       ToReplace = FALSE;
+	     }
+	   break;
+	 case 4:
+	   /* ToReplace et maj dictionnaire */
+	   if (ToReplace)	/* CorrectWord est rempli */
+	     {		/* et ce n'est pas 1er lancement */
+	       if (ChkrElement != NULL && CurrentWord[0] != EOS)
+		 {
+		   WordReplace (CurrentWord, CorrectWord);
+		   /* mettre CorrectWord dans le dictionnaire */
+		   if (!CheckWord (CorrectWord, ChkrLanguage, ChkrFileDict))
+		     /* mettre ce nouveau mot dans le dictionnaire */
+		     AddWord (CorrectWord, &ChkrFileDict);
+		 }
+	       ToReplace = FALSE;
+	     }
+	   break;
+	 }	
+       
+       if (change)
+	 /* Lancement de la recherche d'erreur suivante */
+	 StartSpellChecker ();
      }
 }
 
@@ -545,9 +555,9 @@ STRING              data;
 	if (!IgnoreSpecial)
 	  {
 	    IgnoreSpecial = TRUE;
-#       ifndef _WINDOWS 
+#ifndef _WINDOWS 
 	    TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 3, IgnoreSpecial);
-#       endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	  }
 	break;
       case ChkrCaptureNC:
@@ -556,11 +566,11 @@ STRING              data;
 	if (NC > OldNC && ChkrElement != NULL && CurrentWord[0] != EOS)
 	  SetProposals (ChkrLanguage);
 	else
-#     ifndef _WINDOWS 
+#ifndef _WINDOWS 
 	  DisplayWords ();
-#     else  /* _WINDOWS */
-	  WIN_DisplayWords ();
-#     endif /* _WINDOWS */
+#else  /* _WINDOWS */
+	WIN_DisplayWords ();
+#endif /* _WINDOWS */
 	break;
       case ChkrMenuOR:
 	/* definition du sens de correction OU? */
@@ -584,12 +594,12 @@ STRING              data;
 	  {
 	    InitSearchDomain ((int) data, ChkrRange);
 	    /* On prepare la recheche suivante */
-#       ifndef _WINDOWS
+#ifndef _WINDOWS
 	    if (ChkrRange->SStartToEnd)
 	      TtaSetMenuForm (SpellingBase + ChkrMenuOR, 2);
 	    else
 	      TtaSetMenuForm (SpellingBase + ChkrMenuOR, 0);
-#       endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	  }
 	else if (ChkrRange != NULL)
 	  /* Est-ce que le document vient de recevoir la selection */
@@ -597,14 +607,14 @@ STRING              data;
 	    {
 	      /* Est-ce encore vrai */
 	      GetCurrentSelection (&pDocSel, &pEl1, &pElN, &c1, &cN);
-#         ifndef _WINDOWS
+#ifndef _WINDOWS
 	      if (pDocSel == ChkrRange->SDocument) {
-             /* Il faut reactiver les entree */
-             TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 0, NULL, -1, 1);
-             TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 1, NULL, -1, 1);
-             TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 2, NULL, -1, 1);
-		  } 
-#         endif /* !_WINDOWS */
+		/* Il faut reactiver les entree */
+		TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 0, NULL, -1, 1);
+		TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 1, NULL, -1, 1);
+		TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 2, NULL, -1, 1);
+	      } 
+#endif /* !_WINDOWS */
 	    }
 	break;
       case ChkrSelectProp:
