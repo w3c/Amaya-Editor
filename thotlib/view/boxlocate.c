@@ -1294,12 +1294,17 @@ int                *max;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox             pParentAb;
+   PtrAbstractBox    pParentAb;
    PtrBox            pBox;
-   boolean             ok;
+   PtrElement        pEl;
+   PtrDocument       pDoc;
+   boolean           ok;
 
    pBox = pAb->AbBox;
    pParentAb = pAb->AbEnclosing;
+   pEl = pAb->AbElement;
+   pDoc = DocumentOfElement(pEl); 
+
    /* Deplacement nul si ok est faux */
    if (horizRef)
       *min = pBox->BxXOrg;
@@ -1307,15 +1312,21 @@ int                *max;
       *min = pBox->BxYOrg;
    *max = *min;
 
-#ifndef STRUCT_EDIT
+   if (pDoc->DocReadOnly)
+     ok = FALSE;
+   else if (!TypeHasException (ExcMoveResize, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
    /* For Amaya only !!!!!!!!!!!! */
-   if (!TypeHasException (ExcMoveResize, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
       ok = FALSE;
-   else
-#endif
-      /* Box non deplacable */
-   if (!PavMovable (pAb, horizRef))
-      ok = FALSE;
+   else if (pEl->ElIsCopy)
+    ok = FALSE;
+  else if (ElementIsReadOnly(pEl))
+    ok = FALSE;
+  else if (TypeHasException(ExcNoMove, pEl->ElTypeNumber, pEl->ElStructSchema))
+    ok = FALSE;
+  else if (horizRef &&TypeHasException(ExcNoHMove, pEl->ElTypeNumber, pEl->ElStructSchema))
+    ok = FALSE;
+  else if (!horizRef && TypeHasException(ExcNoVMove, pEl->ElTypeNumber, pEl->ElStructSchema))
+    ok = FALSE;
    /* Box de presentation */
    else if (pAb->AbPresentationBox)
       ok = FALSE;
@@ -1619,79 +1630,88 @@ int                *max;
 
 #endif /* __STDC__ */
 {
-   boolean             ok;
-   PtrBox            pBox;
-   PtrAbstractBox             pParentAb;
+  boolean           ok;
+  PtrBox            pBox;
+  PtrAbstractBox    pParentAb;
+  PtrElement pEl;
+  PtrDocument pDoc;
+  
+  pBox = pAb->AbBox;
+  pParentAb = pAb->AbEnclosing;
+  pEl = pAb->AbElement;
+  pDoc = DocumentOfElement(pEl); 
 
-   pBox = pAb->AbBox;
-   pParentAb = pAb->AbEnclosing;
-   /* Modification nulle si ok est faux */
-   if (horizRef)
-      *min = pBox->BxXOrg;
-   else
-      *min = pBox->BxYOrg;
-   *max = *min;
+  if (horizRef)
+    *min = pBox->BxXOrg;
+  else
+    *min = pBox->BxYOrg;
+  *max = *min;
 
-
-#ifndef STRUCT_EDIT
+  if (pDoc->DocReadOnly)
+    ok = FALSE;
+  else if (!TypeHasException (ExcMoveResize, pEl->ElTypeNumber, pEl->ElStructSchema))
    /* For Amaya only !!!!!!!!!!!! */
-   if (!TypeHasException (ExcMoveResize, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
-      ok = FALSE;
-   else
-#endif
-      /* Box non retaillable */
-   if (!PavResizable (pAb, horizRef))
-      ok = FALSE;
-   /* Box de presentation */
-   else if (pAb->AbPresentationBox)
-      ok = FALSE;
-   /* Box elastique */
-   else if (horizRef && pAb->AbWidth.DimIsPosition)
-      ok = FALSE;
-   else if (!horizRef && pAb->AbHeight.DimIsPosition)
-      ok = FALSE;
-   /* Box racine */
-   else if (pParentAb == NULL)
-     {
-	if ((horizRef && pAb->AbWidth.DimValue == 0)
-	    || (!horizRef && pAb->AbHeight.DimValue == 0))
-	   ok = FALSE;
-	else
-	   ok = TRUE;
-     }
-   /* Texte mise en lignes */
-   else if (pAb->AbLeafType == LtText
-	    && (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost))
-      ok = FALSE;
-   /* Il est impossible de modifier si la dimension du contenu */
-   /* d'une boite construite ou de type texte                  */
-   else if (pAb->AbLeafType == LtCompound || pAb->AbLeafType == LtText)
-      if (horizRef && (pBox->BxContentWidth || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum)))
-	 ok = FALSE;
-      else if (!horizRef && (pBox->BxContentHeight || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum)))
-	 ok = FALSE;
+       ok = FALSE;
+  else if (pEl->ElIsCopy)
+    ok = FALSE;
+  else if (ElementIsReadOnly(pEl))
+    ok = FALSE;
+  else if (TypeHasException(ExcNoResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+    ok = FALSE;
+  else if (horizRef && TypeHasException(ExcNoHResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+    ok = FALSE;
+  else if (!horizRef && TypeHasException(ExcNoVResize, pEl->ElTypeNumber, pEl->ElStructSchema))
+    ok = FALSE;
+  /* Box de presentation */
+  else if (pAb->AbPresentationBox)
+    ok = FALSE;
+  /* Box elastique */
+  else if (horizRef && pAb->AbWidth.DimIsPosition)
+    ok = FALSE;
+  else if (!horizRef && pAb->AbHeight.DimIsPosition)
+    ok = FALSE;
+  /* Box racine */
+  else if (pParentAb == NULL)
+    {
+      if ((horizRef && pAb->AbWidth.DimValue == 0)
+	  || (!horizRef && pAb->AbHeight.DimValue == 0))
+	ok = FALSE;
       else
-	 ok = TRUE;
-   else
+	ok = TRUE;
+    }
+  /* Texte mise en lignes */
+  else if (pAb->AbLeafType == LtText
+	   && (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost))
+    ok = FALSE;
+  /* Il est impossible de modifier si la dimension du contenu */
+  /* d'une boite construite ou de type texte                  */
+  else if (pAb->AbLeafType == LtCompound || pAb->AbLeafType == LtText)
+    if (horizRef && (pBox->BxContentWidth || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum)))
+      ok = FALSE;
+    else if (!horizRef && (pBox->BxContentHeight || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum)))
+      ok = FALSE;
+    else
       ok = TRUE;
-
-   if (horizRef)
-      if (ok)
-	 GiveMovingArea (pAb, frame, horizRef, min, max);
-      else
-	{
-	   *min = pBox->BxXOrg;
-	   *max = *min + pBox->BxWidth;
-	}
-   else if (ok)
+  else
+    ok = TRUE;
+  
+  if (horizRef)
+    if (ok)
       GiveMovingArea (pAb, frame, horizRef, min, max);
-   else
-     {
-	*min = pBox->BxYOrg;
-	*max = *min + pBox->BxHeight;
-     }
-
-   return ok;
+    else
+      {
+	*min = pBox->BxXOrg;
+	*max = *min + pBox->BxWidth;
+      }
+  else if (ok)
+    GiveMovingArea (pAb, frame, horizRef, min, max);
+  else
+    {
+      *min = pBox->BxYOrg;
+      *max = *min + pBox->BxHeight;
+    }
+  
+  return ok;
 }
 
 
