@@ -578,6 +578,10 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
   if (mode == AM_LOAD_NONE)
     return;
 
+  /* the user may have aborted the request */
+  if (!DocumentURLs[doc])
+    return;
+
   /* we can only annotate some types of documents */
   if (!ANNOT_CanAnnotate(doc))
     return;
