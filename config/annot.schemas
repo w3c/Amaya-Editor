@@ -14,7 +14,7 @@
 #            and will be expanded to the Amaya installation directory
 #            and the user's amaya home directory respectively.
 
-#alpha release testing schema
+# Historical schema presented at WWW9. Obsolete.
 #http://www.w3.org/1999/xx/annotation-ns#
 
 #first release schema; do not change unless you also change the service
