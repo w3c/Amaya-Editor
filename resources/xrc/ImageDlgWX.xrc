@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
-  <object class="wxDialog" name="InitConfirmDlgWX">
+  <object class="wxDialog" name="ImageDlgWX">
     <title></title>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER</style>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
@@ -11,62 +11,53 @@
           <orient>wxVERTICAL</orient>
           <object class="sizeritem">
             <object class="wxStaticText" name="wxID_LABEL">
-              <label></label>
-              <style>wxALIGN_CENTRE</style>
+              <label>Get the Image name</label>
             </object>
-            <flag>wxEXPAND</flag>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_LABEL_2">
-              <label></label>
-              <style>wxALIGN_CENTRE</style>
-            </object>
-            <flag>wxEXPAND</flag>
+            <object class="wxTextCtrl" name="wxID_IMAGE_NAME"/>
+            <flag>wxALL|wxEXPAND</flag>
           </object>
           <object class="sizeritem">
-            <object class="wxStaticText" name="wxID_LABEL_3">
-              <label></label>
-              <style>wxALIGN_CENTRE</style>
+            <object class="wxStaticText" name="wxID_ALT_LABEL">
+              <label>Get the ALT value</label>
             </object>
-            <flag>wxEXPAND</flag>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxStaticLine"/>
-            <flag>wxEXPAND</flag>
+            <object class="wxTextCtrl" name="wxID_ALT"/>
+            <flag>wxALL|wxEXPAND</flag>
           </object>
         </object>
-        <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
-        <border>10</border>
+        <border>5</border>
       </object>
       <object class="sizeritem">
-        <option>0</option>
-        <flag>wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
-        <border>10</border>
+        <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxADJUST_MINSIZE</flag>
+        <border>5</border>
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <flag>wxALL</flag>
-            <object class="wxButton" name="wxID_EXTRABUTTON">
-              <label>EXTRABUTTON</label>
+            <border>5</border>
+            <object class="wxButton" name="wxID_OPENBUTTON">
+              <label>OPENBUTTON</label>
               <default>1</default>
-              <focused>1</focused>
             </object>
-          </object>
-          <object class="spacer">
-            <size>10,0</size>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
-            <object class="wxButton" name="wxID_CONFIRMBUTTON">
-              <label>CONFIRMBUTTON</label>
+            <border>5</border>
+            <object class="wxButton" name="wxID_BROWSEBUTTON">
+              <label>BROWSEBUTTON</label>
             </object>
-          </object>
-          <object class="spacer">
-            <size>10,0</size>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
+            <border>5</border>
             <object class="wxButton" name="wxID_CANCELBUTTON">
               <label>CANCELBUTTON</label>
             </object>
