@@ -15,6 +15,10 @@ extern Element SearchNAMEattribute ( Document doc,
                                      char *nameVal,
                                      Attribute ignoreAtt,
                                      Element ignoreEl );
+extern void CheckUniqueName ( Element el,
+                              Document doc,
+                              Attribute attr,
+                              AttributeType attrType );
 extern void FollowTheLink_callback ( int targetDocument,
                                      int status,
                                      char *urlName,
@@ -73,6 +77,10 @@ extern Element SearchNAMEattribute ( Document doc,
                                        char *nameVal,
                                        Attribute ignoreAtt,
                                        Element ignoreEl );
+extern void CheckUniqueName ( Element el,
+                                Document doc,
+                                Attribute attr,
+                                AttributeType attrType );
 extern void FollowTheLink_callback ( int targetDocument,
                                        int status,
                                        char *urlName,

@@ -41,8 +41,8 @@ extern void CreateTargetAnchor ( Document doc,
 extern void CreateAnchor ( Document doc,
                            View view,
                            ThotBool createLink );
-extern void MakeUniqueName ( Element el,
-                             Document doc );
+extern ThotBool MakeUniqueName ( Element el,
+                                 Document doc );
 extern void CreateRemoveIDAttribute ( char *elName,
                                       Document doc,
                                       ThotBool createID,
@@ -166,8 +166,8 @@ extern void CreateTargetAnchor ( Document doc,
 extern void CreateAnchor ( Document doc,
                              View view,
                              ThotBool createLink );
-extern void MakeUniqueName ( Element el,
-                               Document doc );
+extern ThotBool MakeUniqueName ( Element el,
+                                   Document doc );
 extern void CreateRemoveIDAttribute ( char *elName,
                                         Document doc,
                                         ThotBool createID,

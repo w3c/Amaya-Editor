@@ -28,6 +28,7 @@ extern XmlEntity *pMathEntityTable;
 
 #define MaxMsgLength 200
 
+#include "HTMLactions_f.h"
 #include "HTMLtable_f.h"
 #include "Mathedit_f.h"
 #include "styleparser_f.h"
@@ -4653,6 +4654,9 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
 	     case MathML_ATTR_height_:
 	     case MathML_ATTR_depth_:
 	       MathMLSpacingAttr (doc, el, value, attrType.AttrTypeNum);
+	       break;
+	     case MathML_ATTR_id:
+	       CheckUniqueName (el, doc, attr, attrType);
 	       break;
 	     default:
 	       break;

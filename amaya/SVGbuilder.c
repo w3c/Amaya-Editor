@@ -3181,8 +3181,11 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
        TtaFreeMemory (color);
        TtaSetStopColorGradient (red, green, blue, el);
        break;
+     case SVG_ATTR_id:
+       CheckUniqueName (el, doc, attr, attrType);
+       break;
      default:
-	break;
+       break;
      }
 }
 

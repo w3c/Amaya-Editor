@@ -37,8 +37,6 @@
 #include "XHTMLbuilder_f.h"
 #include "Xml2thot_f.h"
 
-#define MaxMsgLength 200
-
 /* Elements that cannot contain text as immediate children.
    When some text is present in the HTML file it must be 
    surrounded by a Pseudo_paragraph element */
@@ -206,7 +204,6 @@ static void CheckMandatoryAttribute (Element el, Document doc, int attrNum)
 	 }
      }
 }
-
 
 
 /*----------------------------------------------------------------------
@@ -1650,6 +1647,10 @@ void EndOfHTMLAttributeValue (char *attrValue, AttributeMapping *lastMappedAttr,
 				}
 			    }
 			}
+		      else if (attrType.AttrTypeNum == HTML_ATTR_ID ||
+			       attrType.AttrTypeNum == HTML_ATTR_NAME)
+			CheckUniqueName (lastAttrElement, context->doc,
+					 currentAttribute, attrType);
 		      else if (attrType.AttrTypeNum == HTML_ATTR_accesskey)
 			TtaAddAccessKey (context->doc, (unsigned int)attrValue[0],
 					 lastAttrElement);

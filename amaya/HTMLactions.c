@@ -31,6 +31,7 @@
 #include "init_f.h"
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
+#include "fetchXMLname_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLform_f.h"
@@ -45,6 +46,7 @@
 #include "trans_f.h"
 #include "transparse_f.h"
 #include "UIcss_f.h"
+#include "Xml2thot_f.h"
 
 #ifdef ANNOTATIONS
 #include "annotlib.h"
@@ -417,7 +419,6 @@ Element GetElemWithAttr (Document doc, AttributeType attrType, char *nameVal,
 
    if (!nameVal)
      return NULL;
-
    elFound = NULL;
    el = TtaGetMainRoot (doc);
    found = FALSE;
@@ -518,6 +519,35 @@ Element SearchNAMEattribute (Document doc, char *nameVal, Attribute ignoreAtt,
 #endif /* ANNOTATIONS */
 
    return (elFound);
+}
+
+
+/*----------------------------------------------------------------------
+  CheckUniqueName
+  If attribute value is duplicated generate a parsing error message.
+  ----------------------------------------------------------------------*/
+void CheckUniqueName (Element el, Document doc, Attribute attr, AttributeType attrType)
+{
+#define MaxMsgLength 200
+  ElementType    elType;
+  int            lineNum;
+  char          *name;
+  char           msgBuffer[MaxMsgLength];
+
+  elType = TtaGetElementType (el);
+  if (attr)
+    {
+      name = GetXMLAttributeName (attrType, elType, doc);
+      if (MakeUniqueName (el, doc))
+	{
+	  sprintf (msgBuffer, "Duplicate attribute value %s", name);
+	  lineNum = TtaGetElementLineNumber(el);
+	  if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
+	    XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
+	  else
+	    HTMLParseError (doc, msgBuffer, lineNum);
+	}
+    }
 }
 
 

@@ -1637,8 +1637,9 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
    Check attribute NAME or ID in order to make sure that its value is unique
    in the document.
    If the NAME or ID is already used, add a number at the end of the value.
+   Return TRUE if the initial value was changed.
   ----------------------------------------------------------------------*/
-void MakeUniqueName (Element el, Document doc)
+ThotBool MakeUniqueName (Element el, Document doc)
 {
   ElementType	    elType;
   AttributeType     attrType;
@@ -1647,7 +1648,7 @@ void MakeUniqueName (Element el, Document doc)
   char             *value;
   char              url[MAX_LENGTH];
   int               length, i;
-  ThotBool          change, checkID, checkNAME;
+  ThotBool          change, checkID, checkNAME, result = FALSE;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -1710,6 +1711,7 @@ void MakeUniqueName (Element el, Document doc)
 		  change = TRUE;
 		  i++;
 		  sprintf (&value[length], "%d", i);
+		  result = TRUE;
 		}
 	      
 	      if (change)
@@ -1788,6 +1790,7 @@ void MakeUniqueName (Element el, Document doc)
 	  TtaFreeMemory (value);
 	}
     }
+  return result;
 }
 
 /*----------------------------------------------------------------------
