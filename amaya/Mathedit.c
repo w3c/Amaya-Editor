@@ -250,16 +250,16 @@ static void RemoveAttr (el, doc, attrTypeNum)
       TtaRemoveAttribute (el, attr, doc);
 }
 
+
 /*----------------------------------------------------------------------
-   CallbackMaths: manage Maths dialogue events.
+   CreateMathConstruct
+   Create a MathML construct at the current position
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackMaths (int ref, int typedata, char *data)
+static void         CreateMathConstruct (int construct)
 #else
-void                CallbackMaths (ref, typedata, data)
-int                 ref;
-int                 typedata;
-char               *data;
+static void         CreateMathConstruct (construct)
+int                 construct;
 
 #endif
 {
@@ -267,31 +267,11 @@ char               *data;
   Element            sibling, last, el, row, fence, symbol, child, leaf;
   ElementType        newType, elType, symbType;
   SSchema            docSchema, mathSchema;
-  int                val, c1, c2, i, j, len;
+  int                c1, c2, i, j, len;
   boolean	     before, ParBlock, surround, insertSibling,
 		     selectFirstChild;
 
-  val = (int) data;
-  ParBlock = FALSE;
-  switch (ref - MathsDialogue)
-    {
-    case FormMaths:
-      /* the user has clicked the DONE button in the Math dialog box */
-      InitMaths = FALSE;
-      TtaDestroyDialogue (ref);	   
-      break;
-    case MenuMaths:
-      /* the user has selected an entry in the math menu */
       doc = TtaGetSelectedDocument ();
-      if (val == 13)
-	{
-	  TtcDisplayGreekKeyboard (doc, 1);
-	  return;
-	}
-      else if (doc == 0)
-	/* no document selected */
-	return;
-
       TtaGiveLastSelectedElement (doc, &last, &c2, &j);
       TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
     
@@ -299,14 +279,14 @@ char               *data;
       elType = TtaGetElementType (sibling);
       docSchema = TtaGetDocumentSSchema (doc);
 
-      if (val == 0 || val == 1)
+      if (construct == 0 || construct == 1)
 	/* button Math or MathDisp */
 	{
 	/* cannot create a Math or MathDisp element within a MathML element */
 	if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
 	   /* not within a MathML element */
 	   {
-	   if (val == 0)
+	   if (construct == 0)
               newType.ElTypeNum = HTML_EL_Math;
 	   else
 	      newType.ElTypeNum = HTML_EL_MathDisp;
@@ -475,7 +455,8 @@ char               *data;
       elType = TtaGetElementType (sibling);
       newType.ElSSchema = mathSchema;
       selectFirstChild = TRUE;
-      switch (val)
+      ParBlock = FALSE;
+      switch (construct)
 	{
 	case 0:	/* create a Math element */
 	  /* handled above */
@@ -499,19 +480,19 @@ char               *data;
 	  newType.ElTypeNum = MathML_EL_MSUBSUP;
 	  break;
 	case 6:
-	  newType.ElTypeNum = MathML_EL_MSUP;
+	  newType.ElTypeNum = MathML_EL_MSUB;
 	  break;
 	case 7:
-	  newType.ElTypeNum = MathML_EL_MSUB;
+	  newType.ElTypeNum = MathML_EL_MSUP;
 	  break;
 	case 8:
 	  newType.ElTypeNum = MathML_EL_MUNDEROVER;
 	  break;
 	case 9:
-	  newType.ElTypeNum = MathML_EL_MOVER;
+	  newType.ElTypeNum = MathML_EL_MUNDER;
 	  break;
 	case 10:
-	  newType.ElTypeNum = MathML_EL_MUNDER;
+	  newType.ElTypeNum = MathML_EL_MOVER;
 	  break;
 	case 11:
 	  newType.ElTypeNum = MathML_EL_MROW;
@@ -625,7 +606,45 @@ char               *data;
 	    }
 	  TtaSelectElement (doc, leaf);
 	}
+}
+
+/*----------------------------------------------------------------------
+   CallbackMaths: manage Maths dialogue events.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CallbackMaths (int ref, int typedata, char *data)
+#else
+void                CallbackMaths (ref, typedata, data)
+int                 ref;
+int                 typedata;
+char               *data;
+
+#endif
+{
+  Document           doc;
+
+  switch (ref - MathsDialogue)
+    {
+    case FormMaths:
+      /* the user has clicked the DONE button in the Math dialog box */
+      InitMaths = FALSE;
+      TtaDestroyDialogue (ref);	   
       break;
+
+    case MenuMaths:
+      /* the user has selected an entry in the math menu */
+      doc = TtaGetSelectedDocument ();
+      if ((int) data == 13)
+	/* the user asks for the Symbol palette */
+	{
+	  TtcDisplayGreekKeyboard (doc, 1);
+	  return;
+	}
+      else if (doc > 0)
+	/* there is a selection */
+        CreateMathConstruct ((int) data);
+      break;
+
     default:
       break;
     }
@@ -683,6 +702,200 @@ View                view;
   KeyboardsLoadResources ();
 }
 
+/*----------------------------------------------------------------------
+  CreateInlineMath
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateInlineMath (Document document, View view)
+#else  /* __STDC__ */
+void                CreateInlineMath (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (0);
+}
+
+/*----------------------------------------------------------------------
+  CreateDisplayMath
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateDisplayMath (Document document, View view)
+#else  /* __STDC__ */
+void                CreateDisplayMath (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (1);
+}
+
+/*----------------------------------------------------------------------
+  CreateMROOT
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateMROOT (Document document, View view)
+#else  /* __STDC__ */
+void                CreateMROOT (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (2);
+}
+
+/*----------------------------------------------------------------------
+  CreateMSQRT
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateMSQRT (Document document, View view)
+#else  /* __STDC__ */
+void                CreateMSQRT (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (3);
+}
+
+/*----------------------------------------------------------------------
+  CreateMFRAC
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateMFRAC (Document document, View view)
+#else  /* __STDC__ */
+void                CreateMFRAC (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (4);
+}
+
+/*----------------------------------------------------------------------
+  CreateMSUBSUP
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateMSUBSUP (Document document, View view)
+#else  /* __STDC__ */
+void                CreateMSUBSUP (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (5);
+}
+
+/*----------------------------------------------------------------------
+  CreateMSUB
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateMSUB (Document document, View view)
+#else  /* __STDC__ */
+void                CreateMSUB (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (6);
+}
+
+/*----------------------------------------------------------------------
+  CreateMSUP
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateMSUP (Document document, View view)
+#else  /* __STDC__ */
+void                CreateMSUP (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (7);
+}
+
+/*----------------------------------------------------------------------
+  CreateMUNDEROVER
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateMUNDEROVER (Document document, View view)
+#else  /* __STDC__ */
+void                CreateMUNDEROVER (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (8);
+}
+
+/*----------------------------------------------------------------------
+  CreateMUNDER
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateMUNDER (Document document, View view)
+#else  /* __STDC__ */
+void                CreateMUNDER (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (9);
+}
+
+/*----------------------------------------------------------------------
+  CreateMOVER
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateMOVER (Document document, View view)
+#else  /* __STDC__ */
+void                CreateMOVER (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (10);
+}
+
+/*----------------------------------------------------------------------
+  CreateMROW
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateMROW (Document document, View view)
+#else  /* __STDC__ */
+void                CreateMROW (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (11);
+}
+
+/*----------------------------------------------------------------------
+  CreateMMULTISCRIPTS
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateMMULTISCRIPTS (Document document, View view)
+#else  /* __STDC__ */
+void                CreateMMULTISCRIPTS (document, view)
+Document            document;
+View                view;
+ 
+#endif /* __STDC__ */
+{
+   CreateMathConstruct (12);
+}
 
 /*----------------------------------------------------------------------
    InitMathML initializes MathML context.           
@@ -698,11 +911,11 @@ void                InitMathML ()
    mIcons[3] = TtaCreatePixmapLogo (sqrt_xpm);
    mIcons[4] = TtaCreatePixmapLogo (frac_xpm);
    mIcons[5] = TtaCreatePixmapLogo (subsup_xpm);
-   mIcons[6] = TtaCreatePixmapLogo (sup_xpm);
-   mIcons[7] = TtaCreatePixmapLogo (sub_xpm);
+   mIcons[6] = TtaCreatePixmapLogo (sub_xpm);
+   mIcons[7] = TtaCreatePixmapLogo (sup_xpm);
    mIcons[8] = TtaCreatePixmapLogo (overunder_xpm);
-   mIcons[9] = TtaCreatePixmapLogo (over_xpm);
-   mIcons[10] = TtaCreatePixmapLogo (under_xpm);
+   mIcons[9] = TtaCreatePixmapLogo (under_xpm);
+   mIcons[10] = TtaCreatePixmapLogo (over_xpm);
    mIcons[11] = TtaCreatePixmapLogo (fence_xpm);
    mIcons[12] = TtaCreatePixmapLogo (mscript_xpm);
    mIcons[13] = TtaCreatePixmapLogo (greek_xpm);

@@ -106,6 +106,20 @@ MENUS
 	Types.Applet button:BApplet -> CreateApplet;
 	Types.Applet button:BParameter -> CreateParameter;
 
+	Types.Math button:BInlineMath -> CreateInlineMath;
+	Types.Math button:BDisplayMath -> CreateDisplayMath;
+        Types.Math button:BNthRoot -> CreateMROOT;
+        Types.Math button:BSquareRoot -> CreateMSQRT;
+        Types.Math button:BFraction -> CreateMFRAC;
+        Types.Math button:BSubscriptAndSuperscript -> CreateMSUBSUP;
+        Types.Math button:BSubscript -> CreateMSUB;
+        Types.Math button:BSuperscript -> CreateMSUP;
+        Types.Math button:BUnderAndOver -> CreateMUNDEROVER;
+        Types.Math button:BUnder -> CreateMUNDER;
+        Types.Math button:BOver -> CreateMOVER;
+        Types.Math button:BParentheses -> CreateMROW;
+        Types.Math button:BMultiscripts -> CreateMMULTISCRIPTS;
+
 	view:1 Links button:BCreateLink -> CreateLink;
 	view:1 Links button:BCreateTarget -> CreateTarget;
 	view:1 Links button:BChangeLink -> ChangeLink;
