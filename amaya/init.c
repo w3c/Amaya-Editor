@@ -2726,9 +2726,6 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 
 #ifdef DAV    /* after all, we active the WebDAV menu in the main view */
      TtaSetMenuOn (doc,DAV_VIEW,Cooperation_);     
-/*     DAVLockIndicatorState = FALSE;
-       DAVSetLockIndicator (doc);
-*/       
 #else
      TtaSetMenuOff (doc,1,Cooperation_);
 #endif   
