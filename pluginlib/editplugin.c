@@ -17,7 +17,7 @@
 #include "dialog.h"
 #include "view.h"
 #include "document.h"
-#include "app.h"
+#include "appstruct.h"
 
 #define PLUGIN_MAX_REF	   4
 
