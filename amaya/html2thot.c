@@ -516,6 +516,22 @@ static int          NoTextChild[] =
    HTML_EL_Data_cell, HTML_EL_Heading_cell,
    0};
 
+/* epmty elements */
+static int          EmptyElement[] =
+{
+   HTML_EL_AREA,
+   HTML_EL_BASE,
+   HTML_EL_BaseFont,
+   HTML_EL_BR,
+   HTML_EL_Horizontal_Rule,
+   HTML_EL_PICTURE_UNIT,
+   HTML_EL_Input,
+   HTML_EL_ISINDEX,
+   HTML_EL_LINK,
+   HTML_EL_META,
+   HTML_EL_Parameter,
+   0};
+
 /* character level elements */
 static int          CharLevelElement[] =
 {
@@ -1650,6 +1666,31 @@ static boolean      InsertSibling ()
 }
 
 /*----------------------------------------------------------------------
+   IsEmptyElement return TRUE if element el is defined as an empty element.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean         IsEmptyElement (Element el)
+#else
+static boolean         IsEmptyElement (el)
+Element             el;
+
+#endif
+{
+   ElementType         elType;
+   int                 i;
+   boolean             ret;
+
+   ret = FALSE;
+   elType = TtaGetElementType (el);
+   i = 0;
+   while (EmptyElement[i] > 0 && EmptyElement[i] != elType.ElTypeNum)
+      i++;
+   if (EmptyElement[i] == elType.ElTypeNum)
+      ret = TRUE;
+   return ret;
+}
+
+/*----------------------------------------------------------------------
    IsCharacterLevelElement return TRUE if element el is a
    character level element, FALSE if not.
   ----------------------------------------------------------------------*/
@@ -2209,7 +2250,7 @@ Element             parent;
 #endif
 {
    ElementType         parentType, newElType, elType;
-   Element             newEl, ancestor, prev, last, nprev;
+   Element             newEl, ancestor;
    boolean	       ret;
 
    if (parent == NULL)
@@ -2242,34 +2283,6 @@ Element             parent;
 	        {
 	          /* insert the Text element in the tree */
 	          TtaInsertFirstChild (el, newEl, theDocument);
-		  /* if the previous siblings of the new Pseudo_paragraph */
-		  /* element are character-level elements, move them within */
-		  /* the Pseudo_paragraph */
-		  prev = newEl;
-		  TtaPreviousSibling (&prev);
-		  if (prev != NULL)
-		     /* there is at least one previous sibling */
-		     {
-		     last = *el;
-		     while (prev != NULL)
-			{
-			/* get the sibling to be processed next */
-			nprev = prev;
-			TtaPreviousSibling (&nprev);
-		        if (!IsCharacterLevelElement (prev))
-			   /* this sibling is not a character-level element */
-			   /* stop */
-			   nprev = NULL;
-			else
-			   /* move the current sibling */
-		           {
-		           TtaRemoveTree (prev, theDocument);
-		           TtaInsertSibling (prev, last, TRUE, theDocument);
-			   last = prev;
-		           }
-			prev = nprev;
-			}
-		     }
 	          BlockInCharLevelElem (newEl);
 		  ret = TRUE;
 	        }
@@ -2911,11 +2924,6 @@ Element el;
    if (IsBlockElement (el))
       /* it's a block element. */
       {
-      /* skip pseudo-paragraphs, as they could be temporary elements
-	 (see function CheckBlocksInCharElem) */
-      elType = TtaGetElementType (el);
-      if (elType.ElTypeNum != HTML_EL_Pseudo_paragraph)
-	 {
 	   /* Search the last leaf in the element's tree */
 	   lastLeaf = LastLeafInElement (el);
 	   if (lastLeaf != NULL)
@@ -2952,7 +2960,6 @@ Element el;
 		 }
 	     }
 	   endingSpacesDeleted = TRUE;
-	 }
       }
    return endingSpacesDeleted;
 }
@@ -3657,7 +3664,7 @@ int                 start;
 	       parent = TtaGetParent (lastElement);
 	     else
 	       parent = lastElement;
-	     if (parent != NULL)
+	     while (parent != NULL && !ret)
 	       {
 		 parentType = TtaGetElementType (parent);
 		 if (elType.ElTypeNum == parentType.ElTypeNum)
@@ -3666,20 +3673,8 @@ int                 start;
 		     lastElementClosed = TRUE;
 		     ret = TRUE;
 		   }
-		 else if (TtaIsLeaf (TtaGetElementType (lastElement)))
-		   {
+		 else
 		     parent = TtaGetParent (parent);
-		     if (parent != NULL)
-		       {
-			 parentType = TtaGetElementType (parent);
-			 if (elType.ElTypeNum == parentType.ElTypeNum)
-			   {
-			     lastElement = parent;
-			     lastElementClosed = TRUE;
-			     ret = TRUE;
-			   }
-		       }
-		   }
 	       }
 	   }
        if (ret)
@@ -3693,7 +3688,11 @@ int                 start;
 		 i = 0;
 	       }
 	     else
-	       i--;
+	       {
+		 if (TtaIsAncestor (ElementStack[i], lastElement))
+	           StackLevel = i;
+	         i--;
+	       }
 	   if (StackLevel > 0)
 	     currentLanguage = LanguageStack[StackLevel - 1];
 
@@ -6351,6 +6350,8 @@ Document doc;
 {
    Element          child, next, copy, prev, elem;
 
+   if (IsEmptyElement (el))
+      return;
    child = TtaGetFirstChild (el);
    if (child == NULL)
      {
@@ -6504,7 +6505,10 @@ Document            doc;
 	 el = NULL;
        else
          if (!IsCharacterLevelElement (parent))
+	   {
+	   MergePseudoParagraph (el, doc);
 	   el = NULL;
+	   }
 	 else
 	   {
 	   /* move all children of element parent as siblings of this element*/
@@ -7319,7 +7323,7 @@ char              *filename;
   char            *buffer, *new;
   int              bufsize = 2000;
   int              index = 0;
-  int              res, c, diff;
+  int              res, c, diff, nbNul;
   boolean          ok;
 
   stream = gzopen (filename, "r");
@@ -7352,10 +7356,13 @@ char              *filename;
 	    {
 	      if (buffer[index+c] == EOS)
 		{
-		  res--;
+		  nbNul = 0;
+		  while (buffer[index+c+nbNul] == EOS)
+		     nbNul++;
+		  res-= nbNul;
 		  diff = res - c;
 		  if (diff > 0)
-		    strncpy (&buffer[index+c], &buffer[index+c+1], diff);
+		    strncpy (&buffer[index+c], &buffer[index+c+nbNul], diff);
 		}
 	      else
 		c++;
