@@ -380,8 +380,8 @@ static int          StackLevel = 0;	     /* first free element on the
 static char         FileBuffer[INPUT_FILE_BUFFER_SIZE+1];
 #ifdef _I18N_
 static char         FileBufferA[INPUT_FILE_BUFFER_SIZE+1];
-#endif
 static CHARSET      ParsingCharset;           /* encoding of the parsed document */
+#endif
 static int	    LastCharInFileBuffer = 0; /* last char. in the buffer */
 static int          CurrentBufChar;           /* current character read */
 static int          StartOfTagIndx;           /* last "<" read */

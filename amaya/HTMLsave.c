@@ -1135,6 +1135,7 @@ STRING            documentName;
   ustrcpy (tempname, directoryName);
   ustrcat (tempname, WC_DIR_STR);
   ustrcat (tempname, documentName);
+  ok = FALSE;
 
   if (SaveAsText) 
     {

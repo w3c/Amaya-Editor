@@ -284,7 +284,6 @@ static int      AnnotBase;
 static CHAR_T   AnnotUser [MAX_LENGTH];
 static CHAR_T   AnnotPostServer [MAX_LENGTH];
 static CHAR_T   AnnotServers [MAX_LENGTH];
-static CHAR_T   AnnotSchema [MAX_LENGTH];
 static ThotBool AnnotAutoLoad;
 #endif /* ANNOTATIONS */
 
@@ -3000,7 +2999,7 @@ char       *env_var;
 Document    doc;
 #endif /* _STDC_ */
 {
-  int x, y, w, h;
+  /* int x, y, w, h; */
 
   CHAR_T EnvVar[MAX_LENGTH];
   iso2wc_strcpy (EnvVar, env_var);
