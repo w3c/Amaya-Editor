@@ -1448,16 +1448,19 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
     }
 
   /* @@ JK: a patch so that we can follow the reverse link */
-  tmp_doc = Annot_IsDocumentLoaded (doc_annot, url, NULL);
-  if (tmp_doc) 
+  if (!has_thread)
     {
-      char *tmp_ptr;
-
-      ExtractTarget (url, target);
-      tmp_ptr = TtaGetMemory (strlen (DocumentURLs[tmp_doc]) + strlen (target) + 2);  
-      sprintf (tmp_ptr, "%s#%s", DocumentURLs[tmp_doc], target);
-      TtaFreeMemory (url);
-      url = tmp_ptr;
+      tmp_doc = Annot_IsDocumentLoaded (doc_annot, url, NULL);
+      if (tmp_doc) 
+	{
+	  char *tmp_ptr;
+	  
+	  ExtractTarget (url, target);
+	  tmp_ptr = TtaGetMemory (strlen (DocumentURLs[tmp_doc]) + strlen (target) + 2);  
+	  sprintf (tmp_ptr, "%s#%s", DocumentURLs[tmp_doc], target);
+	  TtaFreeMemory (url);
+	  url = tmp_ptr;
+	}
     }
 
 #endif /* ANNOT_ON_ANNOT */
