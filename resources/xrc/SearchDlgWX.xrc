@@ -87,13 +87,12 @@
       </object>
       <object class="sizeritem">
         <option>0</option>
-        <flag>wxALL|wxALIGN_CENTRE</flag>
+        <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL|wxADJUST_MINSIZE</flag>
         <border>5</border>
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
-            <option>0</option>
-            <flag>wxRIGHT|wxEXPAND</flag>
+            <flag>wxALL</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_CONFIRMBUTTON">
               <label>OK</label>
@@ -101,15 +100,14 @@
             </object>
           </object>
           <object class="sizeritem">
-            <option>0</option>
-            <flag>wxEXPAND</flag>
+            <flag>wxALL</flag>
             <object class="wxButton" name="wxID_NOREPLACEBUTTON">
               <label>Do not replace</label>
             </object>
+            <border>5</border>
           </object>
           <object class="sizeritem">
-            <option>0</option>
-            <flag>wxLEFT|wxEXPAND</flag>
+            <flag>wxALL</flag>
             <border>5</border>
             <object class="wxButton" name="wxID_CANCELBUTTON">
               <label>CANCEL</label>

@@ -13,7 +13,7 @@
           <style platform="unix">wxNB_LEFT</style>
           <focused>1</focused>
           <object class="notebookpage">
-            <label>Configuration generale</label>
+            <label>Generale/Editeur</label>
             <object class="wxPanel" name="wxID_PAGE_GENERAL">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -212,7 +212,7 @@
             <selected>1</selected>
           </object>
           <object class="notebookpage">
-            <label>Configuration de navigation</label>
+            <label>Navigation</label>
             <object class="wxPanel" name="wxID_PAGE_BROWSE">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -311,7 +311,7 @@
             </object>
           </object>
           <object class="notebookpage">
-            <label>Configuration de la publication</label>
+            <label>Publication</label>
             <object class="wxPanel" name="wxID_PAGE_PUBLISH">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -419,7 +419,7 @@
             </object>
           </object>
           <object class="notebookpage">
-            <label>Configuration du cache</label>
+            <label>Cache</label>
             <object class="wxPanel" name="wxID_PAGE_CACHE">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -551,7 +551,7 @@
             </object>
           </object>
           <object class="notebookpage">
-            <label>Configuration du proxy</label>
+            <label>Proxy</label>
             <object class="wxPanel" name="wxID_PAGE_PROXY">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -622,7 +622,7 @@
             </object>
           </object>
           <object class="notebookpage">
-            <label>Configuration des couleurs</label>
+            <label>Couleurs</label>
             <object class="wxPanel" name="wxID_PAGE_COLOR">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -748,7 +748,7 @@
             </object>
           </object>
           <object class="notebookpage">
-            <label>Configuration de la geometrie</label>
+            <label>Geometrie </label>
             <object class="wxPanel" name="wxID_PAGE_GEOMETRY">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -787,7 +787,7 @@
             </object>
           </object>
           <object class="notebookpage">
-            <label>Negociation de langues</label>
+            <label>Annotations</label>
             <object class="wxPanel" name="wxID_PAGE_ANNOT">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -811,12 +811,81 @@
                   <flag>wxALL|wxEXPAND</flag>
                   <border>10</border>
                 </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_POST_SERVER">
+                        <label>Nom du serveur des annotations  :</label>
+                      </object>
+                    </object>
+                    <object class="spacer">
+                      <size>0,5</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxTextCtrl" name="wxID_POST_SERVER"/>
+                      <flag>wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_SERVERS">
+                        <label>Nom des serveurs des annotations  :</label>
+                      </object>
+                    </object>
+                    <object class="spacer">
+                      <size>0,5</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxTextCtrl" name="wxID_ANNOT_USER"/>
+                      <flag>wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="wxID_CHECK_LOCAL_LOAD">
+                        <label>Chargement automatique des annotations locales</label>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="wxID_CHECK_REMOTE_LOAD">
+                        <label>Chargement automatique des annotations distantes</label>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="wxID_CHECK_DISABLELOAD">
+                        <label>Desactiver le chargement des annotations distantes au lancement</label>
+                      </object>
+                      <option>1</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
               </object>
               <focused>1</focused>
             </object>
           </object>
           <object class="notebookpage">
-            <label>WebDAV Preferences</label>
+            <label>WebDAV</label>
             <object class="wxPanel" name="wxID_PAGE_DAV">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -896,7 +965,7 @@
                         <value>300</value>
                         <min>300</min>
                         <max>1000</max>
-                        <style>wxSL_LABELS</style>
+                        <style>wxSL_HORIZONTAL|wxSL_LABELS</style>
                       </object>
                       <option>1</option>
                       <flag>wxALIGN_BOTTOM</flag>
