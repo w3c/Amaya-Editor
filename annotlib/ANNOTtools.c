@@ -1097,7 +1097,7 @@ Element SearchAnnotation (Document doc, STRING annotDoc)
 
   /* Search the anchor that points to the annotDoc */
   elCour = TtaSearchTypedElement (elType, SearchInTree, 
-				  TtaGetMainRoot (doc));
+				  TtaGetRootElement (doc));
   while (elCour != NULL) 
   {
     ancName = SearchAttributeInEl (doc, elCour, XLink_ATTR_id, "XLink");
@@ -1161,7 +1161,7 @@ Element SearchElementInDoc (Document doc, int elTypeNum)
   Element     root;
   ElementType elType;
 
-  if ((root = TtaGetMainRoot (doc)) == NULL)
+  if ((root = TtaGetRootElement (doc)) == NULL)
     return NULL;
   elType = TtaGetElementType (root);
   elType.ElTypeNum = elTypeNum;
@@ -1327,7 +1327,7 @@ CHAR_T *ANNOT_GetHTMLTitle (Document doc)
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   elType.ElTypeNum = HTML_EL_TITLE;
   /* find the title */
-  el = TtaGetMainRoot (doc);
+  el = TtaGetRootElement (doc);
   el = TtaSearchTypedElement (elType, SearchInTree, el);
   /* no title */
   if (!el)
@@ -1365,7 +1365,7 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   elType.ElTypeNum = Annot_EL_RDFtype;
   /* find the type */
-  el = TtaGetMainRoot (doc);
+  el = TtaGetRootElement (doc);
   el = TtaSearchTypedElement (elType, SearchInTree, el);
   /* no such element */
   if (!el)
@@ -1377,7 +1377,7 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
 		     TtaGetDefaultLanguage (), doc);
 
   /* update the metadata */
-  el = TtaGetMainRoot (doc);
+  el = TtaGetRootElement (doc);
   elType.ElTypeNum = Annot_EL_SourceDoc;
   el = TtaSearchTypedElement (elType, SearchInTree, el);
   if (!el)
@@ -1482,7 +1482,7 @@ Element ANNOT_GetHTMLRoot (Document doc)
   /* we search the start of HTML document in the annotation struct */
   if (DocumentTypes[doc] == docAnnot)
     {
-      el = TtaGetMainRoot (doc);
+      el = TtaGetRootElement (doc);
       elType = TtaGetElementType (el);
       elType.ElTypeNum = Annot_EL_Body;
       el = TtaSearchTypedElement (elType, SearchInTree, el);

@@ -638,6 +638,11 @@ AnnotLoadMode mode;
      graphic documents */
   if (!ANNOT_CanAnnotate(doc))
     return;
+  else if (DocumentTypes[doc] == docAnnot) 
+    {
+      ANNOT_AddThreadItem (doc, NULL, TRUE);
+      return;
+    }
 
   /*
    * Parsing test!
@@ -799,6 +804,11 @@ void ANNOT_Create (doc, view)
 
   if (!ANNOT_CanAnnotate (doc))
     return;
+  else if (DocumentTypes[doc] == docAnnot) 
+    {
+      ANNOT_AddThreadItem (doc, NULL, TRUE);
+      return;
+    }
 
   if (!annotUser || *annotUser == EOS)
     {
@@ -817,7 +827,7 @@ void ANNOT_Create (doc, view)
   if (!xptr)
     {
       TtaSetStatus (doc, 1,
-		    /*		    TtaGetMessage (AMAYA, AM_CANNOT_ANNOTATE), */
+		    /*  TtaGetMessage (AMAYA, AM_CANNOT_ANNOTATE), */
 		    "Unable to build an XPointer for this annotation",
 		    NULL);
       return;
@@ -866,7 +876,7 @@ void ANNOT_Create (doc, view)
   /* ready for primetime, but do we want to do it or highlight
      the annotated text? */
   /* select the new annotation document */
-  el = TtaGetMainRoot (doc_annot);
+  el = TtaGetRootElement (doc_annot);
   elType.ElSSchema =  TtaGetSSchema ("HTML", doc);
   elType.ElTypeNum = HTML_EL_BODY;
   el = TtaSearchTypedElement (elType, SearchInTree, el);
@@ -1852,7 +1862,7 @@ void ANNOT_AddLink (document, view)
   Attribute attr;
   AttributeType       attrType;
 
-  root = TtaGetMainRoot (doc);
+  root = TtaGetRootElement (doc);
   elType.ElSSchema =  TtaGetDocumentSSchema (doc);
   elType.ElTypeNum = Annot_EL_Description;
   root = TtaSearchTypedElement (elType, SearchInTree, root);

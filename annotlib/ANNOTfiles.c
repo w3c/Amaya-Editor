@@ -234,7 +234,7 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
   */
 
   /* point to the first node */
-  root = TtaGetMainRoot (docAnnot);
+  root = TtaGetElementRoot (docAnnot);
   elType = TtaGetElementType (root);
 
   /* point to the metadata structure */
@@ -356,7 +356,7 @@ CHAR_T *title;
   */
 
   /* we find the the HTML nature */
-  root = TtaGetMainRoot (docAnnot);
+  root = TtaGetRootElement (docAnnot);
   elType = TtaGetElementType (root);
   head = TtaSearchTypedElement (elType, SearchInTree, root);
   elType.ElTypeNum = Annot_EL_Body;
@@ -447,7 +447,7 @@ Element ANNOT_AddThreadItem (Document docAnnot, Element root, ThotBool AsSibling
   else
     {
       /* we find the the Thread element and make it our root */
-      root = TtaGetMainRoot (docAnnot);
+      root = TtaGetRootElement (docAnnot);
       elType = TtaGetElementType (root);
       elType.ElTypeNum = Annot_EL_Thread;
       thread = TtaSearchTypedElement (elType, SearchInTree, root);
@@ -647,7 +647,7 @@ void  ANNOT_InitDocumentStructure (docAnnot, document)
 
   /* avoid refreshing the document while we're constructing it */
   TtaSetDisplayMode (docAnnot, NoComputedDisplay);
-  root = TtaGetMainRoot (docAnnot);
+  root = TtaGetRootElement (docAnnot);
   elType = TtaGetElementType (root);
   elType.ElTypeNum = HTML_EL_HEAD;
   head = TtaSearchTypedElement (elType, SearchInTree, root);
@@ -878,7 +878,7 @@ CHAR_T             *html_filename;
 
   /* and show the new mdate on the document */
   /* point to the root node */
-  el = TtaGetMainRoot (doc_annot);
+  el = TtaGetRootElement (doc_annot);
   elType = TtaGetElementType (el);
 
   /* point to the metadata structure */

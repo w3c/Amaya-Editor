@@ -502,7 +502,7 @@ ThotBool show;
     TtaSetDisplayMode (doc, NoComputedDisplay);
 
   /* initialize */
-  el = TtaGetMainRoot (doc);
+  el = TtaGetRootElement (doc);
   elType.ElSSchema = XLinkSchema;
   elType.ElTypeNum = XLink_EL_XLink;
   attrType.AttrSSchema = XLinkSchema;
@@ -648,7 +648,7 @@ ThotBool show;
     TtaSetDisplayMode (document, NoComputedDisplay);
 
   /* initialize */
-  el = TtaGetMainRoot (document);
+  el = TtaGetRootElement (document);
   elType.ElTypeNum = XLink_EL_XLink;
   elType.ElSSchema = XLinkSchema;
   attrType.AttrSSchema = XLinkSchema;

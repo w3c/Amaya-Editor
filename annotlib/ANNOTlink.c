@@ -199,7 +199,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
   else
     {
       first  = TtaSearchElementByLabel(annot->labf, 
-				       TtaGetMainRoot (source_doc));
+				       TtaGetRootElement (source_doc));
       c1 = annot->c1;
       cN = annot->cl;
     }
@@ -210,7 +210,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
   else
     {
       /* it's an orphan annotation */
-      first = TtaGetMainRoot (source_doc);
+      first = TtaGetRootElement (source_doc);
       annot->is_orphan = TRUE;
     }
   
@@ -282,7 +282,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	{
 	  /* we can't put the annotation icon here, so let's find
 	     the first child of body and add it to it */
-	  el = TtaGetMainRoot (source_doc);
+	  el = TtaGetRootElement (source_doc);
 	  elType.ElTypeNum = HTML_EL_BODY;
 	  el = TtaSearchTypedElement (elType, SearchForward, el);
 	  if (el)
