@@ -204,8 +204,6 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	}
-      /*else if (isNew)
-	pPRule->PrChrValue = LineStyle;*/
     }
 
   /* graphics line weight */
@@ -459,8 +457,7 @@ void         ModifyColor (int colorNum, ThotBool Background)
 		       }
 		     else
 		       RuleSetPut (rulesS, PtForeground);
-		     if (pEl && pEl->ElStructSchema)
-		       RemoveSpecPresTree (pEl, SelDoc, rulesS, SelectedView);
+		     RemoveSpecPresTree (pEl, SelDoc, rulesS, SelectedView);
 		   }
 		 else
 		   ModifyGraphics (pEl, SelDoc, SelectedView, FALSE,
@@ -545,8 +542,6 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       /*else if (isNew)
-	 pPRule->PrChrValue = value;*/
      }
    /* Style de caracteres */
    if (modifStyle)
@@ -588,8 +583,6 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       /*else if (isNew)
-	 pPRule->PrChrValue = value;*/
      }
    /* Graisse des caracteres */
    if (modifWeight)
@@ -626,8 +619,6 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       /*else if (isNew)
-	 pPRule->PrChrValue = value;*/
      }
    /* Taille des caracteres */
    if (modifsize)
@@ -651,8 +642,6 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       /*else if (isNew)
-	 pPRule->PrMinValue = size;*/
      }
 
    /* Souligne' */
@@ -698,8 +687,6 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       /*else if (isNew)
-	 pPRule->PrChrValue = value;*/
      }
    /* Epaisseur du souligne */
    if (modifUlWeight)
@@ -736,8 +723,6 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       /*else if (isNew)
-	 pPRule->PrChrValue = value;*/
      }
 }
 
@@ -793,8 +778,6 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       /*else if (isNew)
-	 pPRule->PrAdjust = value;*/
      }
    /* Coupure des mots */
    if (modifHyphen)
@@ -812,8 +795,6 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       /*else if (isNew)
-	 pPRule->PrBoolValue = Hyphenate;*/
      }
    /* Renfoncement de la 1ere ligne */
    if (modifIndent)
@@ -834,8 +815,6 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       /*else if (isNew)
-	 pPRule->PrMinValue = ValIndent;*/
      }
    /* Interligne */
    if (modifLineSpacing)
@@ -855,8 +834,6 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
 	 }
-       /*else if (isNew)
-	 pPRule->PrMinValue = LineSpacing;*/
      }
 }
 
