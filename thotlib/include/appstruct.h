@@ -86,7 +86,7 @@ extern void         TteInitMenus (char *name, int number);
 extern void         TteAddMenuAction (char* actionName, Proc procedure, ThotBool state);
 extern void         TteAddMenu (int view, int menuID, int itemsNumber, char* menuName);
 extern void         TteAddSubMenu (int menuID, int itemID, int itemsNumber);
-extern void         TteAddMenuItem (int menuID, int subMenuID, int itemID, const char* actionName, char itemType);
+extern void         TteAddMenuItem (int menuID, int subMenuID, int itemID, const char* actionName, char itemType, const char * iconName);
 
 extern void         TteAddAction (char* actionName, Proc doIt);
 extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, ThotBool pre, char* actionName);

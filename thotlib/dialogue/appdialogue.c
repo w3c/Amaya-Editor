@@ -952,7 +952,7 @@ void TteAddSubMenu( int menuID,	int itemID, int itemsNumber )
 /*----------------------------------------------------------------------
    TteAddMenuItem ajoute une nouvel item dans un menu.                
   ----------------------------------------------------------------------*/
-void TteAddMenuItem (int menuID, int subMenu, int itemID, const char *actionName, char itemType)
+void TteAddMenuItem (int menuID, int subMenu, int itemID, const char *actionName, char itemType, const char * iconName)
 {
   Menu_Ctl           *ptrmenu;
   Item_Ctl           *ptr;
@@ -999,9 +999,11 @@ void TteAddMenuItem (int menuID, int subMenu, int itemID, const char *actionName
 	      ptr[i].ItemID = itemID;
 	      ptr[i].ItemType = itemType;
 	      if (actionName != NULL)
-		{
-		  ptr[i].ItemAction = FindMenuAction (actionName);
-		}
+		ptr[i].ItemAction = FindMenuAction (actionName);
+	      if (iconName != NULL)
+		strcpy(ptr[i].ItemIconName, iconName);
+	      else
+		ptr[i].ItemIconName[0] = '\0';
 	    }
 	  else
 	    /* Remove separator */

@@ -45,11 +45,16 @@ MenuList =		'BEGIN' NewMenu < NewMenu > 'END' ';' /
 NewMenu =		[ 'view' ':' ViewNum ] MenuIdent
 			[ '.' SubmenuIdent] [ ItemCascade ] ';' .
 
-ItemCascade =		'Separator' / 'Button' ':' ItemAction /
-			'Toggle' ':' ItemAction /
+ItemCascade =		'Separator' /
+			'Button' ':' ItemAction [ 'Icon' ':' IconIdent '.' IconType ] /
+			'Toggle' ':' ItemAction [ 'Icon' ':' IconIdent '.' IconType ] /
 			'Dynamic' ':' ItemIdent .
 
 ItemAction = 		ItemIdent '-' '>' ActionIdent .
+
+IconIdent =		NAME .
+
+IconType =		NAME .
 
 ActionList =		ActionIdent < ',' ActionIdent > ';' .
 

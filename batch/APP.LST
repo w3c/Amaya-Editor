@@ -51,11 +51,16 @@ number
    19	NewMenu =		[ 'view' ':' ViewNum ] MenuIdent
 				[ '.' SubmenuIdent] [ ItemCascade ] ';' .
 	
-   23	ItemCascade =		'Separator' / 'Button' ':' ItemAction /
-				'Toggle' ':' ItemAction /
+   23	ItemCascade =		'Separator' /
+				'Button' ':' ItemAction [ 'Icon' ':' IconIdent '.' IconType ] /
+				'Toggle' ':' ItemAction [ 'Icon' ':' IconIdent '.' IconType ] /
 				'Dynamic' ':' ItemIdent .
 	
    24	ItemAction = 		ItemIdent '-' '>' ActionIdent .
+	
+   25	IconIdent =		NAME .
+	
+   26	IconType =		NAME .
 	
     8	ActionList =		ActionIdent < ',' ActionIdent > ';' .
 	
@@ -65,7 +70,7 @@ number
 	
    22	SubmenuIdent = 		NAME .
 	
-   25	ItemIdent = 		NAME .
+   27	ItemIdent = 		NAME .
 	
    13	ActionIdent =		NAME .
 	
@@ -87,10 +92,10 @@ code  character  numbers of rules using the key-word
 
 1001      ;       1   3   4  10  18  19   8
 1002      ,       3   8
-1003      .      10  19
+1003      .      10  19  23  23
 1004      -      10  24
 1005      >      10  24
-1006      :      14  16   7   7   7  19  23  23  23
+1006      :      14  16   7   7   7  19  23  23  23  23  23
 
 
 
@@ -118,8 +123,9 @@ code  key-word      numbers of rules using the key-word
 1118  view         19
 1119  Separator    23
 1120  Button       23
-1121  Toggle       23
-1122  Dynamic      23
+1121  Icon         23  23
+1122  Toggle       23
+1123  Dynamic      23
 
 
 
@@ -156,14 +162,16 @@ their right part.
    22  SubmenuIdent     19
    23  ItemCascade      19
    24  ItemAction       23  23
-   25  ItemIdent        23  24
+   25  IconIdent        23  23
+   26  IconType         23  23
+   27  ItemIdent        23  24
 
 
 
 *** REFERENCES TO BASIC TYPES ***
 
 Numbers of the rules using NAME
-   9  21  22  25  13   2  11  17
+  25  26   9  21  22  27  13   2  11  17
 
 Numbers of the rules using NUMBER
   20

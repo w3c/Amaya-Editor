@@ -31,25 +31,25 @@ DEFAULT
 MENUS
    Document Windows:
 	BEGIN
-	File.New1 button:BHtml11 -> NewXHTML11;
-	File.New1 button:BHtmlTransitional -> NewXHTMLTransitional;
-	File.New1 button:BHtmlStrict -> NewXHTMLStrict;
-	File.New1 button:BHtmlBasic -> NewXHTMLBasic;
+	File.New1 button:BHtml11 -> NewXHTML11 icon:default_document.png;
+	File.New1 button:BHtmlTransitional -> NewXHTMLTransitional icon:default_document.png;
+	File.New1 button:BHtmlStrict -> NewXHTMLStrict icon:default_document.png;
+	File.New1 button:BHtmlBasic -> NewXHTMLBasic icon:default_document.png;
 	File.New1 Separator;
-	File.New1 button:BMathml -> NewMathML;
-	File.New1 button:BSvg -> NewSVG;
-	File.New1 button:BCss -> NewCss;
+	File.New1 button:BMathml -> NewMathML icon:default_document.png;
+	File.New1 button:BSvg -> NewSVG icon:default_document.png;
+	File.New1 button:BCss -> NewCss icon:default_document.png;
 	File.New1 button:BTemplate -> NewTemplate;
 
-	File button:BOpenDoc -> OpenDoc;
-	File button:BOpenInNewWindow -> OpenDocInNewWindow;
-	File button:BReload -> Reload;
-	File button:BBack -> GotoPreviousHTML;
-	File button:BForward -> GotoNextHTML;
+	File button:BOpenDoc -> OpenDoc icon:open.png;
+	File button:BOpenInNewWindow -> OpenDocInNewWindow icon:open.png;
+	File button:BReload -> Reload icon:reload.png;
+	File button:BBack -> GotoPreviousHTML icon:back.png;
+	File button:BForward -> GotoNextHTML icon:forward.png;
 	File Separator;
-	File button:BSave -> SaveDocument;
-	File button:BSaveAs -> SaveDocumentAs;
-	File button:BSynchro -> Synchronize;
+	File button:BSave -> SaveDocument icon:save.png;
+	File button:BSaveAs -> SaveDocumentAs icon:saveas.png;
+	File button:BSynchro -> Synchronize icon:synchronize.png;
 	File.Doctype1 button:BRemoveDoctype -> RemoveDoctype;
 	File.Doctype1 button:BAddDoctype -> AddDoctype;
 	File.Doctype1 Separator;
@@ -82,36 +82,36 @@ MENUS
 	File.Charset1 button:BISO_2022_JP -> ReadAsISO_2022_JP;
 	File.Charset1 button:BEUC_JP -> ReadAsEUC_JP;
 	File.Charset1 button:BSHIFT_JIS -> ReadAsSHIFT_JIS;
-	File button:BShowLogFile -> ShowLogFile;
-	File button:BDocInfo -> DocumentInfo;
+	File button:BShowLogFile -> ShowLogFile icon:error.png;
+	File button:BDocInfo -> DocumentInfo icon:document_info.png;
 	File Separator;
-	File button:BSetUpandPrint -> SetupAndPrint;
-	File button:BPrint -> PrintAs;
+	File button:BSetUpandPrint -> SetupAndPrint icon:setup_and_print.png;
+	File button:BPrint -> PrintAs icon:print.png;
 	File Separator;
-	File button:BCloseTab -> AmayaCloseTab;
-	File button:BCloseWindow -> AmayaCloseWindow;
-	File button:BExit -> AmayaClose;
+	File button:BCloseTab -> AmayaCloseTab icon:close_tab.png;
+	File button:BCloseWindow -> AmayaCloseWindow icon:close_window.png;
+	File button:BExit -> AmayaClose icon:exit.png;
 
-	Context_ button:BOpenDoc -> OpenDoc;
-	Context_ button:BCloseTab -> AmayaCloseTab;
+	Context_ button:BOpenDoc -> OpenDoc icon:open.png;
+	Context_ button:BCloseTab -> AmayaCloseTab icon:close_tab.png;
 	Context_ Separator;
-	Context_ button:BCloseWindow -> AmayaCloseWindow;
+	Context_ button:BCloseWindow -> AmayaCloseWindow icon:close_window.png;
 
-	Edit_ button:BUndo -> TtcUndo;
-	Edit_ button:BRedo -> TtcRedo;
+	Edit_ button:BUndo -> TtcUndo icon:undo.png;
+	Edit_ button:BRedo -> TtcRedo icon:redo.png;
 	Edit_ Separator;
-	Edit_ button:BCut -> TtcCutSelection;
-	Edit_ button:BCopy -> TtcCopySelection;
-	Edit_ button:BPaste -> PasteBuffer;
-	Edit_ button:BClear -> TtcDeleteSelection;
-	Edit_ button:BInsertBefore -> InsertBefore;
-	Edit_ button:BInsertAfter -> InsertAfter;
+	Edit_ button:BCut -> TtcCutSelection icon:cut.png;
+	Edit_ button:BCopy -> TtcCopySelection icon:copy.png;
+	Edit_ button:BPaste -> PasteBuffer icon:paste.png;
+	Edit_ button:BClear -> TtcDeleteSelection icon:editdelete.png;
+	Edit_ button:BInsertBefore -> InsertBefore icon:insert.png;
+	Edit_ button:BInsertAfter -> InsertAfter icon:append.png;
 	Edit_ Separator;
-	Edit_ button:BFind -> TtcSearchText;
-	Edit_ button:BSpellCheck -> SpellCheck;
+	Edit_ button:BFind -> TtcSearchText icon:find.png;
+	Edit_ button:BSpellCheck -> SpellCheck icon:spellcheck.png;
 	Edit_ button:BTransform -> TransformType;
 	Edit_ Separator;
-	Edit_ button:BConfigure -> ConfigAmaya;
+	Edit_ button:BConfigure -> ConfigAmaya icon:preferences.png;
 	Edit_.Coptions button:BConfigGeneral -> ConfigGeneral;
 	Edit_.Coptions button:BConfigBrowse -> ConfigBrowse;
 	Edit_.Coptions button:BConfigPublish -> ConfigPublish;
@@ -124,16 +124,16 @@ MENUS
 
 	Types button:BTitle -> ChangeTitle;
 	Types Separator;
-	Types.Heading button:BH1 -> CreateHeading1;
-	Types.Heading button:BH2 -> CreateHeading2;
-	Types.Heading button:BH3 -> CreateHeading3;
+	Types.Heading button:BH1 -> CreateHeading1 icon:XHTML_H1.png;
+	Types.Heading button:BH2 -> CreateHeading2 icon:XHTML_H2.png;
+	Types.Heading button:BH3 -> CreateHeading3 icon:XHTML_H3.png;
 	Types.Heading button:BH4 -> CreateHeading4;
 	Types.Heading button:BH5 -> CreateHeading5;
 	Types.Heading button:BH6 -> CreateHeading6;
 
-	Types.Lists button:BBulletedList -> CreateList;
-	Types.Lists button:BNumberedList -> CreateNumberedList;
-	Types.Lists button:BDefinitionList -> CreateDefinitionList;
+	Types.Lists button:BBulletedList -> CreateList icon:XHTML_Bullet.png;
+	Types.Lists button:BNumberedList -> CreateNumberedList icon:XHTML_Num.png;
+	Types.Lists button:BDefinitionList -> CreateDefinitionList icon:XHTML_DL.png;
 	Types.Lists Separator;
 	Types.Lists button:BTerm -> CreateDefinitionTerm;
 	Types.Lists button:BDefinition -> CreateDefinitionDef;
@@ -159,7 +159,7 @@ MENUS
 	Types.Object button:BObject -> CreateObject;
 	Types.Object button:BParameter -> CreateParameter;
 
-	Types.Table button:BTable -> CreateTable;
+	Types.Table button:BTable -> CreateTable icon:XHTML_Table.png;
 	Types.Table Separator;
 	Types.Table button:BCaption -> CreateCaption;
 	Types.Table button:BColgroup -> CreateColgroup;
@@ -175,18 +175,18 @@ MENUS
 	Types.Table button:BCellHShrink -> CellHorizShrink;
 	Types.Table button:BCellVShrink -> CellVertShrink;
 	Types.Table button:BSelectRow -> SelectRow;
-	Types.Table button:BCreateRowB -> CreateRowBefore;
-	Types.Table button:BCreateRowA -> CreateRowAfter;
+	Types.Table button:BCreateRowB -> CreateRowBefore icon:insert_table_row.png;
+	Types.Table button:BCreateRowA -> CreateRowAfter icon:insert_table_row.png;
 	Types.Table button:BSelectColumn -> SelectColumn;
-	Types.Table button:BCreateColumnB -> CreateColumnBefore;
-	Types.Table button:BCreateColumnA -> CreateColumnAfter;
-	Types.Table button:BPasteBefore -> PasteBefore;
-	Types.Table button:BPasteAfter -> PasteAfter;
+	Types.Table button:BCreateColumnB -> CreateColumnBefore icon:insert_table_col.png;
+	Types.Table button:BCreateColumnA -> CreateColumnAfter icon:insert_table_col.png;
+	Types.Table button:BPasteBefore -> PasteBefore icon:insert.png;
+	Types.Table button:BPasteAfter -> PasteAfter icon:append.png;
 	
 	Types.AreaMap button:BMap -> CreateMap;
-	Types.AreaMap button:BCircle -> CreateAreaCircle;
-	Types.AreaMap button:BPoly -> CreateAreaPoly;
-	Types.AreaMap button:BRectangle -> CreateAreaRect;
+	Types.AreaMap button:BCircle -> CreateAreaCircle icon:circle.png;
+	Types.AreaMap button:BPoly -> CreateAreaPoly icon:polygon.png;
+	Types.AreaMap button:BRectangle -> CreateAreaRect icon:rectangle.png;
 
 	Types.StructTypes button:BStyle -> CreateStyle;
 	Types.StructTypes button:BComment -> CreateComment;
@@ -198,9 +198,9 @@ MENUS
 
 	Types button:BParagraph -> CreateParagraph;
 	Types button:BPreformatted -> CreatePreformatted;
-	Types button:BAddress -> CreateAddress;	
+	Types button:BAddress -> CreateAddress;
 	Types button:BRule -> CreateHorizontalRule;
-	Types button:BImage -> CreateImage;
+	Types button:BImage -> CreateImage icon:XHTML_Image.png;
 	Types button:BBreak -> CreateBreak;
 	Types button:BDivision -> CreateDivision;
 	Types button:BBlockQuote -> CreateBlockQuote;
@@ -213,11 +213,11 @@ MENUS
 	Types button:BMakeBook -> MakeBook;
 
 	Types Separator;
-    Types.Phrase toggle:TEmphasis -> SetOnOffEmphasis;
-    Types.Phrase toggle:TStrong -> SetOnOffStrong;
+    Types.Phrase toggle:TEmphasis -> SetOnOffEmphasis icon:XHTML_I.png;
+    Types.Phrase toggle:TStrong -> SetOnOffStrong icon:XHTML_B.png;
     Types.Phrase toggle:TCite -> SetOnOffCite;
     Types.Phrase toggle:TDefinition -> SetOnOffDefinition;
-    Types.Phrase toggle:TCode -> SetOnOffCode;
+    Types.Phrase toggle:TCode -> SetOnOffCode icon:XHTML_T.png;
     Types.Phrase toggle:TVariable -> SetOnOffVariable;
     Types.Phrase toggle:TSample -> SetOnOffSample;
     Types.Phrase toggle:TKeyboard -> SetOnOffKeyboard;
@@ -231,8 +231,8 @@ MENUS
     Types.Font toggle:TTeletype -> SetOnOffTeletype;
     Types.Font toggle:TBig -> SetOnOffBig;
     Types.Font toggle:TSmall -> SetOnOffSmall;
-    Types.Font toggle:TSub -> SetOnOffSub;
-    Types.Font toggle:TSup -> SetOnOffSup;
+    Types.Font toggle:TSub -> SetOnOffSub icon:sub.png;
+    Types.Font toggle:TSup -> SetOnOffSup icon:super.png;
     Types.Font toggle:TQuotation -> SetOnOffQuotation;
     Types.Font toggle:TBDO -> SetOnOffBDO;
 
@@ -242,22 +242,22 @@ MENUS
 	XMLTypes.MathElement button:BMNumber -> CreateMN;
 	XMLTypes.MathElement button:BMOperator -> CreateMO;
 	XMLTypes.MathElement button:BMSpace -> CreateMSPACE;
-	XMLTypes.MathElement button:BMEntity -> CreateMathEntity;
+	XMLTypes.MathElement button:BMEntity -> CreateMathEntity icon:MATHML_greek.png;
 	XMLTypes.MathElement button:BMInvisibleTimes -> CreateInvisibleTimes;
 	XMLTypes.MathElement button:BMApplyFunction -> CreateApplyFunction;
-        XMLTypes.MathConstruct button:BNthRoot -> CreateMROOT;
-        XMLTypes.MathConstruct button:BSquareRoot -> CreateMSQRT;
+        XMLTypes.MathConstruct button:BNthRoot -> CreateMROOT icon:MATHML_root.png;
+        XMLTypes.MathConstruct button:BSquareRoot -> CreateMSQRT icon:MATHML_sqrt.png;
         XMLTypes.MathConstruct button:BEnclose -> CreateMENCLOSE;
-        XMLTypes.MathConstruct button:BFraction -> CreateMFRAC;
-        XMLTypes.MathConstruct button:BSubscriptAndSuperscript -> CreateMSUBSUP;
-        XMLTypes.MathConstruct button:BSubscript -> CreateMSUB;
-        XMLTypes.MathConstruct button:BSuperscript -> CreateMSUP;
-        XMLTypes.MathConstruct button:BUnderAndOver -> CreateMUNDEROVER;
-        XMLTypes.MathConstruct button:BUnder -> CreateMUNDER;
-        XMLTypes.MathConstruct button:BOver -> CreateMOVER;
-        XMLTypes.MathConstruct button:BParentheses -> CreateMROW;
-        XMLTypes.MathConstruct button:BMultiscripts -> CreateMMULTISCRIPTS;
-        XMLTypes.MathMatrics button:BMatrix -> CreateMTABLE;
+        XMLTypes.MathConstruct button:BFraction -> CreateMFRAC icon:MATHML_frac.png;
+        XMLTypes.MathConstruct button:BSubscriptAndSuperscript -> CreateMSUBSUP icon:MATHML_subsup.png;
+        XMLTypes.MathConstruct button:BSubscript -> CreateMSUB icon:MATHML_sub.png;
+        XMLTypes.MathConstruct button:BSuperscript -> CreateMSUP icon:MATHML_sup.png;
+        XMLTypes.MathConstruct button:BUnderAndOver -> CreateMUNDEROVER icon:MATHML_overunder.png;
+        XMLTypes.MathConstruct button:BUnder -> CreateMUNDER icon:MATHML_under.png;
+        XMLTypes.MathConstruct button:BOver -> CreateMOVER icon:MATHML_over.png;
+        XMLTypes.MathConstruct button:BParentheses -> CreateMROW icon:MATHML_fence.png;
+        XMLTypes.MathConstruct button:BMultiscripts -> CreateMMULTISCRIPTS icon:MATHML_mscript.png;
+        XMLTypes.MathMatrics button:BMatrix -> CreateMTABLE icon:MATHML_matrix.png;
 	XMLTypes.MathMatrics Separator;
 	XMLTypes.MathMatrics button:BMCellHExtend -> CellHorizExtend;
 	XMLTypes.MathMatrics button:BMCellVExtend -> CellVertExtend;
@@ -273,25 +273,25 @@ MENUS
 	XMLTypes.MathMatrics button:BMPasteAfter -> PasteAfter;
 	XMLTypes Separator;
         XMLTypes button:BShowLibrary -> ShowLibrary;
-	XMLTypes button:BAddNewModel -> AddNewModelIntoLibraryForm;	
+	XMLTypes button:BAddNewModel -> AddNewModelIntoLibraryForm;
 	XMLTypes Separator;
 	XMLTypes button:BXMLComment -> CreateComment;
 	XMLTypes button:BXMLElement -> CreateXMLElementMenu;
 
 	Links button:BLinkTarget -> LinkToPreviousTarget;
-	Links button:BCreateLink -> CreateOrChangeLink;
+	Links button:BCreateLink -> CreateOrChangeLink icon:XHTML_Link.png;
 	Links button:BCreateTarget -> CreateTarget;
 	Links button:BDeleteAnchor -> DeleteAnchor;
 	Links button:BMakeID -> MakeIDMenu;
 
-	Views toggle:TShowPanel -> ShowPanel;
-	Views toggle:TFullScreen -> FullScreen;
+	Views toggle:TShowPanel -> ShowPanel icon:panel_on_off.png;
+	Views toggle:TFullScreen -> FullScreen icon:fullscreen.png;
 	Views toggle:TShowButtonbar -> ShowButtons;
 	Views toggle:TShowTextZone -> ShowAddress;
 	Views toggle:TShowMapAreas -> ShowMapAreas;
 	Views toggle:TShowTargets -> ShowTargets;
-	Views toggle:TZoomIn -> ZoomIn;
-	Views toggle:TZoomOut -> ZoomOut;
+	Views toggle:TZoomIn -> ZoomIn icon:zoom_plus.png;
+	Views toggle:TZoomOut -> ZoomOut icon:zoom_minus.png;
 	Views Separator;
 	Views button:BShowFormatted -> ShowFormatted;
 	Views button:BShowStructure -> ShowStructure;
@@ -300,12 +300,12 @@ MENUS
 	Views button:BShowAlternate -> ShowAlternate;
 	Views button:BShowToC -> ShowToC;
 	Views button:BShowTimeLine -> ShowTimeLineWindow;
-	Views toggle:TSplitUnsplitPage -> SplitUnsplitPage;
+	Views toggle:TSplitUnsplitPage -> SplitUnsplitPage icon:split_on_off.png;
 
         Style button:BCharacterStyle -> TtcChangeCharacters;
         Style button:BColors -> TtcChangeColors;
         Style button:BFormat -> TtcChangeFormat;
-	Style button:BBackgroundImage -> ChangeBackgroundImage;
+	Style button:BBackgroundImage -> ChangeBackgroundImage icon:BG_repeat.png;
 	Style Separator;
 
 	Style button:BCreateClass -> CreateClass;
@@ -350,7 +350,7 @@ MENUS
 	Cooperation_ Separator;
         Cooperation_ toggle:BLockIndicator -> LockIndicator;
 
-	Help_ button:BInformation -> HelpAmaya;
+	Help_ button:BInformation -> HelpAmaya icon:about.png;
 	Help_ button:BAtW3C -> HelpAtW3C;
 	Help_ button:BHelpIndex -> HelpIndex;
 	Help_ Separator;

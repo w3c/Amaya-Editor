@@ -38,7 +38,8 @@ extern void TteAddMenuItem ( int menuID,
                              int subMenu,
                              int itemID,
                              const char *actionName,
-                             char itemType );
+                             char itemType,
+                             const char * iconName );
 extern void BuildPopdown ( Menu_Ctl *ptrmenu,
                            int ref,
                            ThotMenu button,
@@ -175,7 +176,8 @@ extern void TteAddMenuItem ( int menuID,
                                int subMenu,
                                int itemID,
                                const char *actionName,
-                               char itemType );
+                               char itemType,
+                               const char * iconName );
 extern void BuildPopdown ( Menu_Ctl *ptrmenu,
                              int ref,
                              ThotMenu button,

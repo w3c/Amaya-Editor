@@ -31,8 +31,9 @@
 #define KWD_view 	1118
 #define KWD_Separator 	1119
 #define KWD_Button 	1120
-#define KWD_Toggle 	1121
-#define KWD_Dynamic 	1122
+#define KWD_Icon 	1121
+#define KWD_Toggle 	1122
+#define KWD_Dynamic 	1123
 
 /*  RULES  */
 
@@ -60,4 +61,6 @@
 #define RULE_SubmenuIdent 	  22
 #define RULE_ItemCascade 	  23
 #define RULE_ItemAction 	  24
-#define RULE_ItemIdent 	  25
+#define RULE_IconIdent 	  25
+#define RULE_IconType 	  26
+#define RULE_ItemIdent 	  27

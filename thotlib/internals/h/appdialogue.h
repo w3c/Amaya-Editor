@@ -29,10 +29,10 @@ typedef struct _Action_Ctl
 /* Structure to declare a Menu Item */
 typedef struct _Item_Ctl
 {
-  int		ItemID;		/* ID of the menu item			*/
-  char          ItemType;	/* 'B'=Button, 'T'=Toggle, 'D'=Dynamic	*/
-  				/* 'S'=Separator, 'M'=Menu		*/
-  int           ItemIconId;     /* a icon identifier to show in the menu near the item (on the left) */
+  int		ItemID;		   /* ID of the menu item			*/
+  char          ItemType;	   /* 'B'=Button, 'T'=Toggle, 'D'=Dynamic	*/
+  				   /* 'S'=Separator, 'M'=Menu		*/
+  char          ItemIconName[100]; /* a icon resource identifier to show in the menu near the item (on the left) */
   union
   {
     struct

@@ -264,13 +264,14 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
   char *       item_label = NULL;
   int          item_label_lg = 0;
   char *       item_equiv = NULL;
+  char *       item_icon = NULL;
   char         item_type = ' ';
   int          item_action = 0;
   wxMenuItem * p_menu_item = NULL;
   wxMenu *     p_submenu = NULL;
   int          max_item_label_lg = 0;
   wxString     label;
-
+  
   /* first of all check for the largest menuitem label */
   while (item_nb < ptrmenu->ItemsNb)
     {
@@ -289,6 +290,7 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
       item_id      = ptritem[item_nb].ItemID;
       item_label   = TtaGetMessage (THOT, item_id);
       item_type    = ptritem[item_nb].ItemType;
+      item_icon    = ptritem[item_nb].ItemIconName;
 
       label = TtaConvMessageToWX(item_label);
       label.Pad(max_item_label_lg-strlen(item_label)+1, wxChar(' '));
@@ -299,19 +301,19 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
 	  item_action  = ptritem[item_nb].ItemAction;
 	  item_equiv   = MenuActionList[item_action].ActionEquiv;
 	  label += TtaConvMessageToWX(item_equiv);
-	  p_menu_item = p_menu->Append(item_id, label, _T(""), wxITEM_NORMAL);
+	  p_menu_item = new wxMenuItem(p_menu, item_id, label, _T(""), wxITEM_NORMAL);
 	  break;
 
 	case 'S': /* a separator */
 	  item_action  = -1;
-	  p_menu_item = p_menu->AppendSeparator();
+	  p_menu_item = new wxMenuItem(p_menu, wxID_SEPARATOR, _T(""), _T(""), wxITEM_SEPARATOR);
 	  break;
 
 	case 'T': /* a toggle menu item (checkbox) */
 	  item_action  = ptritem[item_nb].ItemAction;
 	  item_equiv   = MenuActionList[item_action].ActionEquiv;
 	  label += TtaConvMessageToWX(item_equiv);
-	  p_menu_item = p_menu->AppendCheckItem(item_id, label);
+	  p_menu_item = new wxMenuItem(p_menu, item_id, label, _T(""), wxITEM_CHECK);
 	  break;
 
 	case 'M': /* a submenu */
@@ -319,7 +321,7 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
 	  item_submenu = ptritem[item_nb].SubMenu;
 	  p_submenu = new wxMenu();
 	  BuildPopdownWX( window_id, item_submenu, p_submenu );
-	  p_menu_item = p_menu->Append(item_id, TtaConvMessageToWX(item_label), p_submenu);
+	  p_menu_item = new wxMenuItem(p_menu, item_id, label, _T(""), wxITEM_NORMAL, p_submenu);
 	  break;
 
 	default: /* a unknown type */
@@ -350,6 +352,14 @@ static void BuildPopdownWX ( int window_id, Menu_Ctl *ptrmenu, ThotMenu p_menu )
 	  else if (!strcmp (MenuActionList[item_action].ActionName, "TtcRedo"))
 	    WindowTable[window_id].MenuItemRedo = item_id;
 	}
+
+      if (p_menu_item && item_icon[0] != '\0' && item_action != -1 && item_type != 'T')
+	{
+	  p_menu_item->SetBitmap( wxBitmap(TtaGetResourcePathWX(WX_RESOURCES_ICON,item_icon), wxBITMAP_TYPE_PNG) );
+	}
+
+      if (p_menu_item)
+	p_menu->Append(p_menu_item);
 
       item_nb++;
     }

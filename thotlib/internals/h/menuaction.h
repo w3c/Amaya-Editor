@@ -37,6 +37,7 @@ typedef struct _AppMenuItem
 {
   char          *AppItemName;
   char          *AppItemActionName;
+  char          *AppItemIconName;
   PtrAppMenuItem AppSubMenu;
   char           AppItemType;
   ThotBool       AppStandardAction;

@@ -141,10 +141,16 @@ static void PrintSubMenu (PtrAppMenuItem item, char *menuName)
 	   fprintf (AppFile, ", %s", subitem->AppItemName);
 
 	if (subitem->AppItemActionName == NULL)
-	   fprintf (AppFile, ", NULL, '%c');\n", (char)subitem->AppItemType);
+	   fprintf (AppFile, ", NULL, '%c'", (char)subitem->AppItemType);
 	else
-	   fprintf (AppFile, ", \"%s\", '%c');\n", subitem->AppItemActionName, (char)subitem->AppItemType);
-
+	   fprintf (AppFile, ", \"%s\", '%c'", subitem->AppItemActionName, (char)subitem->AppItemType);
+	
+	/* on traite l'icon si elle existe */
+	if (subitem->AppItemIconName == NULL)
+	  fprintf (AppFile, ", NULL);\n");
+	else
+	  fprintf (AppFile, ", \"%s\");\n", subitem->AppItemIconName);
+	
 	/* item suivant */
 	subitem = subitem->AppNextItem;
      }
@@ -217,9 +223,15 @@ static void         PrintMenus (PtrAppMenu firstMenu)
 		    fprintf (AppFile, ", %s", item->AppItemName);
 
 		  if (item->AppItemActionName == NULL)
-		    fprintf (AppFile, ", NULL, '%c');\n", (char)item->AppItemType);
+		    fprintf (AppFile, ", NULL, '%c'", (char)item->AppItemType);
 		  else
-		    fprintf (AppFile, ", \"%s\", '%c');\n", item->AppItemActionName, (char)item->AppItemType);
+		    fprintf (AppFile, ", \"%s\", '%c'", item->AppItemActionName, (char)item->AppItemType);
+
+		  /* on traite l'icon si elle existe */
+		  if (item->AppItemIconName == NULL)
+		    fprintf (AppFile, ", NULL);\n");
+		  else
+		    fprintf (AppFile, ", \"%s\");\n", item->AppItemIconName);
 		}
 	      /* item suivant */
 	      item = item->AppNextItem;

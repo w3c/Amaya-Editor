@@ -92,6 +92,7 @@ static char         ItemType;		/* 'B' = Button,    'T' = Toggle,    */
 
 				     	/* 'S' = Separator, 'D' = Dynamic.   */
 static char         ActionName[100];
+static char         IconName[100];
 
 /* the list RegisteredAppEvents have to be conform to the type enum APPevent
    defined into appaction.h */
@@ -467,6 +468,7 @@ static void NewMenuComplete ()
 	     NewItem = (PtrAppMenuItem) TtaGetMemory (sizeof (AppMenuItem));
 	     NewItem->AppItemName = TtaStrdup (SubmenuName);
 	     NewItem->AppItemActionName = NULL;
+	     NewItem->AppItemIconName = NULL;
 	     NewItem->AppSubMenu = NULL;
 	     NewItem->AppItemType = ' ';
 	     NewItem->AppStandardAction = False;
@@ -518,6 +520,7 @@ static void NewMenuComplete ()
 	     else
 		NewItem->AppItemName = TtaStrdup (ItemName);
 	     NewItem->AppItemActionName = NULL;
+	     NewItem->AppItemIconName = NULL;
 	     NewItem->AppSubMenu = NULL;
 	     NewItem->AppItemType = ItemType;
 	     NewItem->AppStandardAction = False;
@@ -553,6 +556,12 @@ static void NewMenuComplete ()
 		  /* Il faut tester s'il s'agit d'une action standard */
 		  NewItem->AppStandardAction = (strncmp (ActionName, "Ttc", 3) == 0);
 	       }
+
+	     /* on associe l'icone a notre entree du menu */
+	     if (IconName[0] != '\0')
+	       {
+		 NewItem->AppItemIconName = TtaStrdup (IconName);
+	       }
 	  }
      }
 }
@@ -569,6 +578,7 @@ static void InitMenu ()
    ItemName[0] = '\0';
    ItemType = ' ';
    ActionName[0] = '\0';
+   IconName[0] = '\0';
 }
 
 
@@ -738,6 +748,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode r, indLine wi)
       ItemType = 'S';
       ItemName[0] = '\0';
       ActionName[0] = '\0';
+      IconName[0] = '\0';
       break;
       
     case KWD_Button:
@@ -747,10 +758,14 @@ static void ProcessLongKeyWord (int x, SyntacticCode r, indLine wi)
     case KWD_Toggle:
       ItemType = 'T';
       break;
-      
+
+    case KWD_Icon:
+      break;
+
     case KWD_Dynamic:
       ItemType = 'D';
       ActionName[0] = '\0';
+      IconName[0] = '\0';
       break;
       
     default:
@@ -951,6 +966,22 @@ static void ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl,
 	}
       break;
 
+    case RULE_IconType:
+      if (IconName[0] != '\0')
+	{
+	  strcat (IconName, ".");
+	  strcat (IconName, name);
+	}
+      break;
+
+    case RULE_IconIdent:
+      if (ActionName[0] != '\0')
+	{
+	  /* action associee a un item de menu */
+	  strcpy (IconName, name);
+	}
+      break;
+
     case RULE_ActionIdent:
       if (pr == RULE_ItemAction)
 	/* action associee a un item de menu */
@@ -1037,6 +1068,7 @@ static void ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl,
       ItemName[0] = '\0';
       ItemType = ' ';
       ActionName[0] = '\0';
+      IconName[0] = '\0';
       break;
 
     case RULE_SubmenuIdent:
