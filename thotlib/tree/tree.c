@@ -906,7 +906,7 @@ ThotBool            Kind;
 
 /*----------------------------------------------------------------------
    ChangeLanguageLeaves
-   changes the language attribute for all the text leaves in the
+   changes the language for all the text leaves in the
    subtree of the element pointed by pEl.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -924,7 +924,7 @@ Language            lang;
       return;
 
    if (!pEl->ElTerminal)
-      /*The element is not a leave. We recursively process all of the */
+      /* The element is not a leaf. We recursively process all of the */
       /* element's subtree */
      {
 	pChild = pEl->ElFirstChild;
@@ -937,9 +937,9 @@ Language            lang;
 	  }
      }
    else
-      /* element is a leave  */
+      /* element is a leaf */
      if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
-      /* the text is written in another language */
+      /* this is text and the text is written in another language */
       if (TtaGetAlphabet (pEl->ElLanguage) == TtaGetAlphabet (lang))
 	 /* this language uses the same alphabet  */
 	 /* changes the language of the element */

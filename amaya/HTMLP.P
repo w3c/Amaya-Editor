@@ -8041,9 +8041,9 @@ RULES
 	CreateBefore(TH_S);
 	CreateWith(VerticalLine);
 	PaddingTop: 0.2;
-	PaddingLeft: 1;
+	PaddingLeft: 0.2;
 	PaddingBottom: 0.2;
-	PaddingRight: 1;
+	PaddingRight: 0.2;
 	BorderTopStyle: Solid;
 	BorderLeftStyle: Solid;
 	BorderRightStyle: Solid;

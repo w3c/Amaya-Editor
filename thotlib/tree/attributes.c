@@ -699,9 +699,11 @@ ThotBool            force;
      }
    else
       /* l'element est une feuille */
-   if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
-      /* c'est du texte dans une autre langue */
-    	 /* change la langue de l'element */
+      if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
+       /* c'est du texte dans une autre langue */
+       if (TtaGetAlphabet (pEl->ElLanguage) == TtaGetAlphabet (lang))
+	 /* this language uses the same alphabet */
+    	 /* change the language of the element */
 	{
 	  oldElLang = pEl->ElLanguage;
 	   pEl->ElLanguage = lang;

@@ -4585,14 +4585,12 @@ int                 code;
 STRING              prefix;
 #endif
 {
-   int		 len;
    Language	 lang, l;
    ElementType	 elType;
    Element	 elText;
    AttributeType attrType;
    Attribute	 attr;
-#define MAX_ENTITY_LENGTH 80
-   CHAR_T	 buffer[MAX_ENTITY_LENGTH];
+   CHAR_T	 buffer[MaxEntityLength+10];
 
    if (ReadingAnAttrValue)
      /* this entity belongs to an attribute value */
@@ -4627,9 +4625,6 @@ STRING              prefix;
        attrType.AttrTypeNum = HTML_ATTR_EntityName;
        attr = TtaNewAttribute (attrType);
        TtaAttachAttribute (elText, attr, theDocument);
-       len = ustrlen (EntityName);
-       if (len > MAX_ENTITY_LENGTH -5)
-	 EntityName[MAX_ENTITY_LENGTH -5] = WC_EOS;
        buffer[0] = '&';
        ustrcpy (&buffer[1], prefix);
        ustrcat (buffer, EntityName);
