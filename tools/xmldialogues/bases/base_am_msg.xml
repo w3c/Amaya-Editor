@@ -1660,6 +1660,36 @@
 	<message xml:lang="de">Auswahl</message>
 	<message xml:lang="es">Selección</message>
 </label>
+<label define="AM_AFILTER">
+  	<message xml:lang="en">Annotation Local Filter Menu</message>
+</label>
+<label define="AM_AFILTER_SHOW">
+  	<message xml:lang="en">Show</message>
+</label>
+<label define="AM_AFILTER_HIDE">
+  	<message xml:lang="en">Hide</message>
+</label>
+<label define="AM_AFILTER_SHOW_ALL">
+  	<message xml:lang="en">Show all</message>
+</label>
+<label define="AM_AFILTER_HIDE_ALL">
+  	<message xml:lang="en">Hide all</message>
+</label>
+<label define="AM_AFILTER_HELP">
+  	<message xml:lang="en">* means hidden, - means partially hidden</message>
+</label>
+<label define="AM_AFILTER_OPTIONS">
+  	<message xml:lang="en">Filter options</message>
+</label>
+<label define="AM_AFILTER_BYAUTHOR">
+  	<message xml:lang="en">By author</message>
+</label>
+<label define="AM_AFILTER_BYTYPE">
+  	<message xml:lang="en">By type</message>
+</label>
+<label define="AM_AFILTER_BYSERVER">
+  	<message xml:lang="en">By server</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

@@ -219,3 +219,13 @@
 217 Browsen
 218 Datei-Browser
 219 Auswahl
+220 **Annotation Local Filter Menu
+221 **Show
+222 **Hide
+223 **Show all
+224 **Hide all
+225 *** means hidden, - means partially hidden
+226 **Filter options
+227 **By author
+228 **By type
+229 **By server
