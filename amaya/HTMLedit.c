@@ -51,7 +51,6 @@ static int          OldHeight;
 #include "XLinkedit_f.h"
 
 #ifdef _WINDOWS
-extern HWND currentWindow;
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
@@ -610,7 +609,8 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo)
 	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE);
 #else  /* _WINDOWS */
-    CreateHRefDlgWindow (currentWindow, AttrHREFvalue, DocSelect, DirSelect, 2);
+    CreateHRefDlgWindow (TtaGetViewFrame (document, 1), AttrHREFvalue,
+			 DocSelect, DirSelect, 2);
 #endif  /* _WINDOWS */
      }
 }
