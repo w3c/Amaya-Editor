@@ -1740,9 +1740,6 @@
 	<message xml:lang="es">Por servidor</message>
 	<message xml:lang="it">Per server</message>
 </label>
-<label define="AM_ENABLE_PARSER_WARNING">
-	<message xml:lang="en">Enable parser warnings</message>
-</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>
