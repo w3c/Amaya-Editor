@@ -39,12 +39,12 @@ bindir = @bindir@
 #
 # specific entry point check the dependancies
 #
-amaya : $(AMAYA_SCHEMAS) $(AMAYA_SRC) ../thotlib/libThotEditor.a ../tablelib/libThotTable.a ../bin/amaya
+amaya : amaya_schemas amaya_src ../thotlib/libThotEditor.a ../tablelib/libThotTable.a ../bin/amaya
 
 #
 # General entry point everything should have compiled correctly
 #
-all : $(AMAYA_SCHEMAS) $(AMAYA_SRC) ../bin/amaya
+all : amaya_schemas amaya_src ../bin/amaya
 
 clean :
 	$(RM) *.o EDITORAPP.c EDITOR.A
@@ -131,6 +131,10 @@ AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ -I@srcdir@/f 
 
 AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
             $(AMAYA_OPTION_LIBS) ../libpng.a ../libz.a ../libjpeg.a
+
+amaya_schemas : $(AMAYA_SCHEMAS)
+
+amaya_src : $(AMAYA_SRC) 
 
 #
 # Rule to build objects
