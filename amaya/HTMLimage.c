@@ -519,9 +519,10 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 		   char *localfile, char *mime_type)
 {
-  ElementType         elType;
+  ElementType         elType, parentType;
+  Element             parent;
   int                 modified, i;
-  ThotBool            is_svg, is_mml, is_html;
+  ThotBool            is_svg, is_mml, is_html, ok;
   ThotBool            xmlDec, withDoctype, isXML, isKnown;
   DocumentType        thotType;
   int                 parsingLevel;
@@ -549,7 +550,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
   if ((elType.ElTypeNum == HTML_EL_PICTURE_UNIT) ||
       ((elType.ElTypeNum == HTML_EL_Object ||
 	elType.ElTypeNum == HTML_EL_Embed_) &&
-       (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")  == 0)))
+       (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)))
     {
       /** for the moment, the above function won't identify SVG images.
 	  So, we do the job here.
@@ -560,43 +561,54 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 
       if (TtaGetPictureType (el) == unknown_type)
 	{
-	  is_svg = FALSE;
-	  is_mml = FALSE;
-	  if (mime_type)
+	  ok = TRUE;
+	  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
+	      (elType.ElTypeNum == HTML_EL_PICTURE_UNIT))
 	    {
-	      if (!strncmp (mime_type, "image/svg", 9) 
-		  || !strcmp (mime_type, AM_SVG_MIME_TYPE))
-		is_svg = TRUE;
-	      else if (!strncmp (mime_type, "text/mathml", 11)
-		  || !strcmp (mime_type, AM_MATHML_MIME_TYPE))
-		is_mml = TRUE;
-	      else if (!strncmp (mime_type, "text/htm", 8)
-		  || !strcmp (mime_type, AM_XHTML_MIME_TYPE))
-		is_html = TRUE;
-	      else if (!IsImageType (mime_type))
-		/* unknown mime_type, check with another method */
-		mime_type = NULL;
+	      parent = TtaGetParent (el);
+	      parentType = TtaGetElementType (parent);
+	      if (parentType.ElTypeNum != HTML_EL_Object &&
+		  parentType.ElTypeNum != HTML_EL_Embed_)
+		ok = FALSE;
 	    }
-	  if (!mime_type)
+	  if (ok)
 	    {
-	      /* try the file's extension */
-	      for (i = strlen (imageName); i > 0 && imageName[i] != '.'; i--);
-	      if (imageName[i] == '.' && !strcmp (&imageName[i+1], "svg"))
-		is_svg = TRUE;
-	      else if (imageName[i] == '.' && !strcmp (&imageName[i+1], "mml"))
-		is_mml = TRUE;
-	      else if (imageName[i] == '.' && !strncmp (&imageName[i+1], "htm", 3))
-		is_html = TRUE;
-	      else /* try sniffing */
+	      if (mime_type)
 		{
-		  CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &isKnown,
-				  &parsingLevel, &charset, charsetname, &thotType);
-		  if (isXML && thotType == docSVG)
+		  if (!strncmp (mime_type, "image/svg", 9) ||
+		      !strcmp (mime_type, AM_SVG_MIME_TYPE))
 		    is_svg = TRUE;
-		  if (isXML && thotType == docMath)
+		  else if (!strncmp (mime_type, "text/mathml", 11) ||
+			   !strcmp (mime_type, AM_MATHML_MIME_TYPE))
 		    is_mml = TRUE;
-		  if (isXML && thotType == docHTML)
+		  else if (!strncmp (mime_type, "text/htm", 8) ||
+			   !strcmp (mime_type, AM_XHTML_MIME_TYPE))
 		    is_html = TRUE;
+		  else if (!IsImageType (mime_type))
+		    /* unknown mime_type, check with another method */
+		    mime_type = NULL;
+		}
+	      if (!mime_type)
+		{
+		  /* try the file's extension */
+		  for (i = strlen (imageName); i > 0 && imageName[i] != '.'; i--);
+		  if (imageName[i] == '.' && !strcmp (&imageName[i+1], "svg"))
+		    is_svg = TRUE;
+		  else if (imageName[i] == '.' && !strcmp (&imageName[i+1], "mml"))
+		    is_mml = TRUE;
+		  else if (imageName[i] == '.' && !strncmp (&imageName[i+1], "htm", 3))
+		    is_html = TRUE;
+		  else /* try sniffing */
+		    {
+		      CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &isKnown,
+				      &parsingLevel, &charset, charsetname, &thotType);
+		      if (isXML && thotType == docSVG)
+			is_svg = TRUE;
+		      if (isXML && thotType == docMath)
+			is_mml = TRUE;
+		      if (isXML && thotType == docHTML)
+			is_html = TRUE;
+		    }
 		}
 	    }
 	}
