@@ -507,7 +507,7 @@ char          *target;
 boolean        deleteTree;
 #endif
 {
-  Element	   root, body, ancestor, elem, firstInserted;
+  Element	   root, ancestor, elem, firstInserted;
   Element          lastInserted, srce, copy, old, parent, sibling;
   ElementType	   elType;
   NotifyElement    event;
@@ -557,7 +557,12 @@ boolean        deleteTree;
 	}
       while (ancestor != NULL);
       parent = TtaGetParent (elem);
-     
+
+      /* insert a DIV element */
+      elType.ElTypeNum = HTML_EL_DIV;
+      copy = TtaNewElement (destDoc, elType);
+      TtaInsertSibling (copy, elem, TRUE, destDoc);
+
       /* do copy */
       lastInserted = NULL;
       srce = TtaGetFirstChild (root);
