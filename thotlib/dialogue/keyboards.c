@@ -447,6 +447,8 @@ void KbdCallbackHandler (ThotWidget w, int param, caddr_t call_d)
 #endif /* _I18N_ */
    if (ThotLocalActions[T_insertchar] != NULL)
       (*ThotLocalActions[T_insertchar]) (ActiveFrame, car, KeyboardMode);
+   if (KeyboardMode == 3)
+     CloseTextInsertion();
 }
 
 #ifndef _WINDOWS

@@ -958,9 +958,6 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 			  elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
 			  for (i = 0; i < len; i++)
 			    {
-			      if (selEl != NULL)
-				if (*selEl == textEl)
-				  *selEl = symbolEl;
 			      c = (unsigned char) text[i];
 #ifdef _I18N_
 		              if (text[i] == 0x222B)
@@ -987,6 +984,9 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 			      TtaInsertSibling (symbolEl, textEl, TRUE,doc);
 			      TtaSetGraphicsShape (symbolEl, c, doc);
 			      TtaRegisterElementCreate (symbolEl, doc);
+			      if (selEl != NULL)
+				if (*selEl == textEl)
+				  *selEl = symbolEl;
 			    }
 			  TtaRegisterElementDelete (textEl, doc);
 			  TtaDeleteTree (textEl, doc);
