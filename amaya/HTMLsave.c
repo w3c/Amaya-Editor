@@ -1100,14 +1100,15 @@ DBG(fprintf(stderr, "   Uploading document to net %s\n", documentFile);)
 
        /* now save the file as through the normal process of saving */
        /* to a remote URL. */
+       doc = SavingDocument;
        res = SaveDocumentThroughNet (SavingDocument, 1, TRUE, CopyImages);
 
        if (res)
 	 /* restore all urls */
-	 SaveDocumentAs(SavingDocument, 1);
+	 SaveDocumentAs(doc, 1);
        else
 	 {
-	   TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
+	   TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
 	   SavingDocument = 0;
 	 }
      }
