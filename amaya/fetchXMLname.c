@@ -356,13 +356,11 @@ void MapXMLAttributeValue (int XMLtype, char *attVal, AttributeType attrType,
 
   /* Select the right table */
   if (XMLtype == XHTML_TYPE)
-    ptr = XHTMLAttributeMappingTable;
+    ptr = XhtmlAttrValueMappingTable;
   else if (XMLtype == MATH_TYPE)
     ptr = MathMLAttrValueMappingTable;
   else if (XMLtype == SVG_TYPE)
-    ptr = SVGAttributeMappingTable;
-  else if (XMLtype == XLINK_TYPE)
-    ptr = XLinkAttributeMappingTable;
+    ptr = SVGAttrValueMappingTable;
   else
     ptr = NULL;
   
