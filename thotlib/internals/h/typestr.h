@@ -83,9 +83,9 @@ typedef enum
  
 typedef struct _TtAttribute
 {
-        Name       AttrName;          /* name of the attribute, may be
+        char      *AttrName;          /* name of the attribute, may be
                                          translated in the user's language */
-        Name       AttrOrigName;      /* real name of the attribute */
+        char      *AttrOrigName;      /* real name of the attribute */
         ThotBool   AttrGlobal;        /* the attribute can apply to all
                                          the elements defined in the schema */
         int        AttrFirstExcept;   /* index in SsException of the first

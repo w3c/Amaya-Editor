@@ -161,9 +161,11 @@ static ThotBool     ReadAttribute (BinFile file, PtrTtAttribute pAttr)
 {
    AttribType          attrType;
    int                 j;
+   Name                buffer;
 
-   TtaReadName (file, pAttr->AttrName);
-   strcpy (pAttr->AttrOrigName, pAttr->AttrName);
+   TtaReadName (file, buffer);
+   pAttr->AttrName = TtaStrdup (buffer);
+   pAttr->AttrOrigName = TtaStrdup (buffer);
    TtaReadBool (file, &pAttr->AttrGlobal);
    TtaReadShort (file, &pAttr->AttrFirstExcept);
    TtaReadShort (file, &pAttr->AttrLastExcept);

@@ -141,7 +141,10 @@ static ThotBool     ImportExcept;  /* we met exception ImportLine or
 static void InitBasicType (SRule *pRule, char *name, BasicType typ)
 {
   if (pRule->SrName == NULL)
-    pRule->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+    {
+      pRule->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+      pRule->SrOrigName = TtaGetMemory (MAX_NAME_LENGTH);
+    }
   strncpy (pRule->SrName, name, MAX_NAME_LENGTH);
   pRule->SrConstruct = CsBasicElement;
   pRule->SrBasicType = typ;
@@ -193,6 +196,8 @@ static void         Initialize ()
    /* create the language attribute */
    pAttr = (PtrTtAttribute) malloc (sizeof (TtAttribute));
    pSSchema->SsAttribute->TtAttr[0] = pAttr;
+   pAttr->AttrName = TtaGetMemory (MAX_NAME_LENGTH);   
+   pAttr->AttrOrigName = TtaGetMemory (MAX_NAME_LENGTH);   
    strncpy (pAttr->AttrName, "Language", MAX_NAME_LENGTH);
    pAttr->AttrOrigName[0] = '\0';
    pAttr->AttrGlobal = True;
@@ -260,6 +265,7 @@ static void         Initialize ()
    pSSchema->SsRule->SrElem[pSSchema->SsNRules++] = pRule;
    pSSchema->SsDocument = pSSchema->SsNRules;
    pRule->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+   pRule->SrOrigName = TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pRule->SrName, "Document");
    pRule->SrConstruct = CsDocument;
    pRule->SrUnitElem = False;
@@ -371,6 +377,7 @@ static void      AllocateNewRule (PtrSSchema pSS)
      {
        memset (pRule, 0, sizeof (SRule));
        pRule->SrName = TtaGetMemory (MAX_NAME_LENGTH);
+       pRule->SrOrigName = TtaGetMemory (MAX_NAME_LENGTH);
        pSS->SsRule->SrElem[pSS->SsNRules++] = pRule;
      }
 }
@@ -2261,10 +2268,12 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		     /* create a new attribute descriptor */
 		     pAttr = (PtrTtAttribute) malloc (sizeof (TtAttribute));
 		     if (pAttr == NULL)
-		       TtaDisplaySimpleMessage (FATAL, STR,STR_NOT_ENOUGH_MEM);
+		       TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
 		     else
 		       {
 			 pSSchema->SsAttribute->TtAttr[pSSchema->SsNAttributes] = pAttr;
+			 pAttr->AttrName = TtaGetMemory (MAX_NAME_LENGTH);   
+			 pAttr->AttrOrigName = TtaGetMemory (MAX_NAME_LENGTH);   
 			 CopyWord (pAttr->AttrName, wi, wl);
 			 pAttr->AttrOrigName[0] = '\0';
 			 pAttr->AttrGlobal = !CompilLocAttr;
@@ -3164,8 +3173,8 @@ int main (int argc, char **argv)
 				       srceFileName);
 		} 
 	   } 
-           free (pSSchema);
-           free (pExternSSchema);
+	   FreeSchStruc (pSSchema);
+	   FreeSchStruc (pExternSSchema);
       } 
    } 
    fflush (stdout);

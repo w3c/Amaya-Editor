@@ -144,8 +144,8 @@ void GetSRuleFromName (int *typeNum, PtrSSchema *pSS, char *typeName,
    trouve dans ce schema. attrNum vaut zero si le nom     
    n'est pas trouve'.                                      
   ----------------------------------------------------------------------*/
-void GetAttrRuleFromName (int *attrNum, PtrSSchema *pSSch, PtrElement pElem,
-			  Name attrName, int whichName)
+void GetAttrRuleFromName (int *attrNum, PtrSSchema *pSSch,
+			  PtrElement pElem, char *attrName, int whichName)
 {
   int                 i;
   ThotBool            found, newCshema;

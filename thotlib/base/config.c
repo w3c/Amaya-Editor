@@ -949,10 +949,12 @@ static ThotBool Translate (PtrSSchema pSS, char *word, char *trans)
    for (i = 0; i < pSS->SsNAttributes; i++)
 	{
 	   pAttr = pSS->SsAttribute->TtAttr[i];
-	   if (strcmp (AsciiTranslate (word), pAttr->AttrName) == 0)
+	   if (pAttr->AttrName != NULL &&
+	       strcmp (AsciiTranslate (word), pAttr->AttrName) == 0)
 	     {
-		strncpy (pAttr->AttrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
-		found = TRUE;
+	       TtaFreeMemory (pAttr->AttrName);
+	       pAttr->AttrName = TtaStrdup (AsciiTranslate (trans));
+	       found = TRUE;
 	     }
 	   else if (pAttr->AttrType == AtEnumAttr)
 	      for (j = 0; j < pAttr->AttrNEnumValues; j++)

@@ -43,7 +43,8 @@
 #include "tree_f.h"
 #include "viewapi_f.h"
 
-static Name bufferName;
+#define ELEM_NAME_LENGTH 100
+static char bufferName[ELEM_NAME_LENGTH];
 
 
 /*----------------------------------------------------------------------
@@ -703,8 +704,7 @@ void TtaGiveAttributeTypeFromName (char *name, Element element,
   (*attType).AttrSSchema = NULL;
   (*attType).AttrTypeNum = 0;
   *attrKind = 0;
-  if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH ||
-      element == NULL)
+  if (name[0] == EOS || element == NULL)
     TtaError (ERR_invalid_parameter);
   else
     {
@@ -751,8 +751,7 @@ void TtaGiveAttributeTypeFromName (char *name, Element element,
    3 = CsReference
    ---------------------------------------------------------------------- */
 void TtaGiveAttributeTypeFromOriginalName (char *name, Element element,
-					   AttributeType *attType,
-					   int *attrKind)
+					   AttributeType *attType, int *attrKind)
 {
   PtrSSchema          pSS;
 
@@ -760,8 +759,7 @@ void TtaGiveAttributeTypeFromOriginalName (char *name, Element element,
   (*attType).AttrSSchema = NULL;
   (*attType).AttrTypeNum = 0;
   *attrKind = 0;
-  if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH ||
-      element == NULL)
+  if (name[0] == EOS || element == NULL)
     TtaError (ERR_invalid_parameter);
   else
     {
@@ -814,7 +812,7 @@ char *TtaGetAttributeName (AttributeType attType)
 	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else
-    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrName, MAX_NAME_LENGTH);
+    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrName, ELEM_NAME_LENGTH);
   return bufferName;
 }
 
@@ -837,7 +835,7 @@ char *TtaGetAttributeOriginalName (AttributeType attType)
 	   attType.AttrTypeNum > ((PtrSSchema) (attType.AttrSSchema))->SsNAttributes)
     TtaError (ERR_invalid_attribute_type);
   else
-    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrOrigName, MAX_NAME_LENGTH);
+    strncpy (bufferName, ((PtrSSchema) (attType.AttrSSchema))->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrOrigName, ELEM_NAME_LENGTH);
   return bufferName;
 }
 

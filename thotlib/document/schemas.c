@@ -1904,8 +1904,8 @@ void AppendXmlAttribute (char *xmlName, AttributeType *attrType, PtrDocument pDo
       TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
       return;
     }
-  strncpy (pSS->SsAttribute->TtAttr[i]->AttrName, xmlName, MAX_NAME_LENGTH);
-  strncpy (pSS->SsAttribute->TtAttr[i]->AttrOrigName, xmlName, MAX_NAME_LENGTH);
+  pSS->SsAttribute->TtAttr[i]->AttrName = TtaStrdup (xmlName);
+  pSS->SsAttribute->TtAttr[i]->AttrOrigName = TtaStrdup (xmlName);
   pSS->SsAttribute->TtAttr[i]->AttrGlobal = TRUE;
   pSS->SsAttribute->TtAttr[i]->AttrFirstExcept = 0;
   pSS->SsAttribute->TtAttr[i]->AttrLastExcept = 0;
@@ -2359,7 +2359,8 @@ void GetXmlAttributeType (char* xmlName, AttributeType *attrType, PtrDocument pD
 	       attrType->AttrTypeNum = 1;
 	       found = TRUE;
 	     }
-	   else if (strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, xmlName) == 0)
+	   else if (pSS->SsAttribute->TtAttr[att]->AttrName != NULL &&
+		    !strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, xmlName))
 	     {
 	       attrType->AttrTypeNum = att + 1;
 	       found = TRUE;
@@ -2383,7 +2384,8 @@ void GetXmlAttributeType (char* xmlName, AttributeType *attrType, PtrDocument pD
 		       attrType->AttrTypeNum = 1;
 		       found = TRUE;
 		     }
-		   else if (strncmp (pSS->SsAttribute->TtAttr[att]->AttrName, xmlName, MAX_NAME_LENGTH) == 0)
+		   else if (pSS->SsAttribute->TtAttr[att]->AttrName != NULL &&
+			    !strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, xmlName))
 		     {
 		       attrType->AttrTypeNum = att + 1;
 		       attrType->AttrSSchema = (SSchema) pSS;

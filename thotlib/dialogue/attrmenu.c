@@ -774,7 +774,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
    char             *tmp;
 #endif /* _I18N_ */
    char              bufMenu[MAX_TXT_LEN];
-   char              title[MAX_NAME_LENGTH + 2];
+   char             *title = NULL;
    int               i, lgmenu, val, buttons;
    int               form, subform;
 
@@ -825,7 +825,9 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
        AttrFormExists = TRUE;
      }  
 
-   strncpy (title, pAttr1->AttrName, MAX_NAME_LENGTH);
+   title = TtaGetMemory (strlen (pAttr1->AttrName) + 2);
+   strcpy (title, pAttr1->AttrName);
+
    switch (pAttr1->AttrType)
      {
      case AtNumAttr: /* attribut a valeur numerique */
@@ -924,7 +926,10 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
        break;
        
      default: break;
-     } 
+   }
+       
+       if (title != NULL)
+	 TtaFreeMemory (title);
 } 
 
 /*----------------------------------------------------------------------
@@ -1033,7 +1038,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
   PtrAttribute        pAttr;
   PtrSRule            pRe1;
   PtrTtAttribute      pAt;
-  char                tempBuffer[MAX_NAME_LENGTH + 1];
+  char                tempBuffer[100];
   int                 i, j, k;
   int                 firstChar, lastChar;
   int                 lgmenu = 0, lgsubmenu;

@@ -1495,7 +1495,13 @@ void FreeSchStruc (PtrSSchema pSS)
   pSS->SsNExtensRules = 0;
   pSS->SsExtensBlock = NULL;
   for (i = 0; i < pSS->SsNAttributes; i++)
-    free (pSS->SsAttribute->TtAttr[i]);
+    {
+      if (pSS->SsAttribute->TtAttr[i]->AttrName != NULL)
+	TtaFreeMemory (pSS->SsAttribute->TtAttr[i]->AttrName);
+      if (pSS->SsAttribute->TtAttr[i]->AttrOrigName != NULL)
+	TtaFreeMemory (pSS->SsAttribute->TtAttr[i]->AttrOrigName);
+      free (pSS->SsAttribute->TtAttr[i]);
+    }
   free (pSS->SsAttribute);
   for (i = 0; i < pSS->SsNRules; i++)
     {
