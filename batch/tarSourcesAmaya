@@ -8,13 +8,12 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 #
-AMAYAVERSION=2.0a
+AMAYAVERSION=2.1
 THOTDIR=/tahiti/diffusion
 DEST=/tahiti/thottape
 
 TAR="tar cvbfh 200"
 COMPRESS="gzip -9"
-
 cd $THOTDIR
 
 $TAR - \
@@ -350,13 +349,16 @@ Amaya/Windows/tra/*.dsp \
 Amaya/Windows/zlib/*.mak \
 Amaya/Windows/zlib/*.dsp \
 libwww/COPYRIGH \
-libwww/README.Amaya \
+libwww/README.html \
+libwww/LICENSE.html \
 libwww/Makefile.am \
 libwww/Makefile.in \
 libwww/acconfig.h \
 libwww/acinclude.m4 \
 libwww/aclocal.m4 \
-libwww/config.h.in \
+libwww/libwww-config.in \
+libwww/wwwconf.h.in \
+libwww/w3c-libwww.spec.in \
 libwww/configure \
 libwww/configure.in \
 libwww/stamp-h.in \
@@ -369,19 +371,22 @@ libwww/Library/src/Makefile.am \
 libwww/Library/src/vms/COPYING.LIB \
 libwww/Library/src/vms/Makefile.am \
 libwww/Library/src/vms/Makefile.in \
-libwww/Library/src/vms/README \
 libwww/Library/src/vms/build_multinet.com \
 libwww/Library/src/vms/descrip.mms \
 libwww/Library/src/*.c \
 libwww/Library/src/*.h \
 libwww/Library/src/windows/Makefile.am \
 libwww/Library/src/windows/Makefile.in \
-libwww/Library/src/windows/README \
-libwww/Library/src/windows/libwww.mak \
 libwww/Library/src/windows/*.c \
 libwww/Library/src/windows/*.h \
 libwww/Library/src/windows/*.def \
 libwww/Library/src/windows/*.files \
+libwww/modules/Makefile.am \
+libwww/modules/Makefile.in \
+libwww/modules/md5/Makefile.am \
+libwww/modules/md5/Makefile.in \
+libwww/modules/md5/*.c \
+libwww/modules/md5/*.h \
 libwww/config/Makefile.am \
 libwww/config/Makefile.in \
 libwww/config/config.guess \
@@ -392,4 +397,6 @@ libwww/config/ltconfig \
 libwww/config/makedefs.pl \
 libwww/config/makexprt.pl \
 libwww/config/mkinstalldirs \
+libwww/config/winConfigure.pl \
+libwww/config/missing \
  | $COMPRESS  > $DEST/amaya-src-$AMAYAVERSION.tar.gz
