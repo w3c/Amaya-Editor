@@ -156,6 +156,15 @@ ISOlat1entry        ISOlat1table[] =
    {"zzzz", 0}			/* this last entry is required */
 };
 
+typedef struct _ElemToBeChecked *PtrElemToBeChecked;
+
+typedef struct _ElemToBeChecked
+  {
+     Element               Elem;	 /* the element to be checked */
+     PtrElemToBeChecked    nextElemToBeChecked;
+  }
+ElemToBeChecked;
+
 typedef struct _ClosedElement *PtrClosedElement;
 
 typedef struct _ClosedElement
@@ -619,6 +628,7 @@ static AttrValueMapping AttrValueMappingTable[] =
 typedef int         State;	/* a state of the automaton */
 
 /******************************* static variables ***********************/
+
 /* parser stack */
 #define MaxStack 200		/* maximum stack height */
 static int          GINumberStack[MaxStack];	/* entry of GIMappingTable */
@@ -697,6 +707,9 @@ static int          EntityTableEntry = 0;	/* entry of the entity table which */
 static int          CharRank = 0;	/* rank of the last matching */
 					/* character in that entry */
 static char	    prevChar = EOS;
+
+static PtrElemToBeChecked FirstElemToBeChecked = NULL;
+static PtrElemToBeChecked LastElemToBeChecked = NULL;
 
 /*----------------------------------------------------------------------
    ParseAreaCoords computes x, y, width and height of the box from
@@ -1953,9 +1966,10 @@ Element             el;
 #endif
 {
    ElementType         elType, newElType, childType;
-   Element             constElem, child, desc, leaf;
+   Element             parent, constElem, child, desc, leaf;
    Attribute           attr;
    AttributeType       attrType;
+   PtrElemToBeChecked  elTBC;
    int                 length;
    char               *text;
    char                lastChar[2];
@@ -1968,6 +1982,23 @@ Element             el;
    char               *name1, *name2;
 #endif
 
+   /* is this an block-level element in a character-level element? */
+   if (!IsCharacterLevelElement (el))
+      {
+      parent = TtaGetParent (el);
+      if (parent != NULL)
+         if (IsCharacterLevelElement (parent))
+	    {
+	    elTBC = (PtrElemToBeChecked) TtaGetMemory(sizeof(ElemToBeChecked));
+	    elTBC->Elem = el;
+	    elTBC->nextElemToBeChecked = NULL;
+	    if (LastElemToBeChecked == NULL)
+	       FirstElemToBeChecked = elTBC;
+	    else
+	       LastElemToBeChecked->nextElemToBeChecked = elTBC;
+	    LastElemToBeChecked = elTBC;
+	    }
+      }
    elType = TtaGetElementType (el);
    newElType.ElSSchema = elType.ElSSchema;
    switch (elType.ElTypeNum)
@@ -2220,7 +2251,6 @@ Element             el;
 	       UpdateTitle (el, theDocument);
 	       break;
 #endif
-
 	    default:
 	       break;
 	 }
@@ -4477,6 +4507,156 @@ Document            doc;
 
 
 /*----------------------------------------------------------------------
+  EncloseCharLevelElem
+  create a copy of element charEl for all descendants of el which are not
+  block level elements.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         EncloseCharLevelElem (Element el, Element charEl, Document doc)
+#else
+static void         EncloseCharLevelElem (el, charEl, doc)
+Element	el;
+Element charEl;
+Document doc;
+
+#endif
+{
+   Element          child, next, copy, prev, elem;
+
+   child = TtaGetFirstChild (el);
+   if (child == NULL)
+     {
+     copy = TtaCopyTree (charEl, doc, doc, el);
+     TtaInsertFirstChild (&copy, el, doc);
+     }
+   else
+     {
+     prev = NULL;
+     do
+       {
+	next = child;
+	TtaNextSibling (&next);
+	elem = child;
+	if (!IsCharacterLevelElement (elem))
+	   /* create copies of element parent for all decendants of elem */
+	   {
+	   EncloseCharLevelElem (elem, charEl, doc);
+	   prev = NULL;
+	   }
+	else
+	   /* enclose elem in a copy of charEl */
+	   {
+	   if (prev != NULL)
+		{
+		TtaRemoveTree (elem, doc);
+		TtaInsertSibling (elem, prev, FALSE, doc);
+		}
+	   else
+	        {
+	        copy = TtaCopyTree (charEl, doc, doc, el);
+	        TtaInsertSibling (copy, elem, TRUE, doc);
+	        TtaRemoveTree (elem, doc);
+	        TtaInsertFirstChild (&elem, copy, doc);
+		}
+	   prev = elem;
+	   }
+	child = next;
+       }
+     while (child != NULL);
+     }
+}
+
+/*----------------------------------------------------------------------
+  CkeckBlocksInCharElem
+  handle character-level elements which contain block-level elements
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         CkeckBlocksInCharElem (Document doc)
+#else
+static void         CkeckBlocksInCharElem (doc)
+Document            doc;
+
+#endif
+{
+   Element             el, parent, child, first, last, next, copy, newparent,
+		       elem, prev;
+   PtrElemToBeChecked  elTBC, nextElTBC;
+
+   /* check all block-level elements whose parent was a character-level
+      element */
+   elTBC = FirstElemToBeChecked;
+   while (elTBC != NULL)
+     {
+     el = elTBC->Elem;
+     parent = TtaGetParent (el);
+     if (parent != NULL)
+       if (IsCharacterLevelElement (parent))
+	 {
+	 /* move all children of element parent as siblings of this element */
+	 first = TtaGetFirstChild (parent);
+	 child = first;
+	 do
+	    {
+	    next = child;
+	    TtaNextSibling (&next);
+	    TtaRemoveTree (child, doc);
+	    TtaInsertSibling (child, parent, TRUE, doc);
+	    last = child;
+	    child = next;
+	    }
+	 while (child != NULL);
+	 /* copy the character-level element for all elements that have been
+	    moved */
+	 newparent = TtaGetParent (parent);
+	 elem = first;
+	 prev = NULL;
+	 do
+	   {
+	    if (elem == last)
+	       next = NULL;
+	    else
+	       {
+	       next = elem;
+	       TtaNextSibling (&next);
+	       }
+	    if (!IsCharacterLevelElement (elem))
+	      /* create copies of element parent for all decendants of child */
+	      {
+	      EncloseCharLevelElem (elem, parent, doc);
+	      prev = NULL;
+	      }
+	    else
+	      /* enclose elem in a copy of parent element */
+	      {
+	      if (prev != NULL)
+		{
+		TtaRemoveTree (elem, doc);
+		TtaInsertSibling (elem, prev, FALSE, doc);
+		}
+	      else
+	        {
+	        copy = TtaCopyTree (parent, doc, doc, newparent);
+	        TtaInsertSibling (copy, elem, TRUE, doc);
+	        TtaRemoveTree (elem, doc);
+	        TtaInsertFirstChild (&elem, copy, doc);
+		}
+	      prev = elem;
+	      }
+	    elem = next;
+	   }
+	 while (elem != NULL);
+	 TtaDeleteTree (parent, doc);
+	 }
+     nextElTBC = elTBC->nextElemToBeChecked;
+     TtaFreeMemory (elTBC);
+     elTBC = nextElTBC;
+     }
+   FirstElemToBeChecked = NULL;
+   LastElemToBeChecked = NULL;
+}
+
+
+/*----------------------------------------------------------------------
    CheckAbstractTree       Check the Thot abstract tree and create
    the missing elements.
   ----------------------------------------------------------------------*/
@@ -4729,6 +4909,9 @@ char               *pathURL;
 	     elHead = TtaNewTree (theDocument, newElType, "");
 	     TtaInsertSibling (elHead, elBody, TRUE, theDocument);
 	  }
+
+	/* handle character-level elements which contain block-level elements*/
+	CkeckBlocksInCharElem (theDocument);
 
 	/* create an element Term_List for each sequence of elements Term */
 	el = TtaGetFirstChild (rootElement);
