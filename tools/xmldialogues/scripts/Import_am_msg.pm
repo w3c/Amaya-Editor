@@ -221,8 +221,9 @@ use Unicode::String qw(utf8 latin1);
 		#	group @else in $text with ' ' like character space beetween the elements
 		$text = join (' ', @else) ;
 #	tests if it not a false translate		
-		if ( !defined ($text) ||
-			 $text =~ /^\*\*/ ) {
+		if ( 	!defined ($text) 
+				|| ($text =~ /^\*\*/ && $text !~ /^\*\*\*/ )
+			 	) {
 			print "the reference $label_ref don't have a text at line $line:$text\n";
 		}	
 		else {
