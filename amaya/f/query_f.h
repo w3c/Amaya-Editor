@@ -62,6 +62,7 @@ extern ThotBool AHTFTPURL_flag ( void );
 extern ThotBool CheckSingleInstance ( char *pid_dir );
 extern void FreeAmayaCache ( void );
 extern void InitAmayaCache ( void );
+extern void ClearCacheEntry ( char *url );
 
 #else /* __STDC__ */
 
@@ -121,6 +122,7 @@ extern ThotBool AHTFTPURL_flag (/* void */);
 extern ThotBool CheckSingleInstance (/* char *pid_dir */);
 extern void FreeAmayaCache (/* void */);
 extern void InitAmayaCache (/* void */);
+extern void ClearCacheEntry (/* char *url */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

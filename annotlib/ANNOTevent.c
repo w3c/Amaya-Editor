@@ -1299,6 +1299,10 @@ void ANNOT_Post (Document doc, View view)
     } 
   else
     {
+      /* clear the cache entries for the annotation and its body */
+      ClearCacheEntry (annot->annot_url);
+      ClearCacheEntry (annot->body_url);
+
       if (annotPOSTUpdate) /* left here to keep a backward compatiblity in case
 			      that servers don't support the PUT yet. */
 	{

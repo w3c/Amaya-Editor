@@ -3945,3 +3945,23 @@ void InitAmayaCache (void)
     printf ("Couldn't create fd_pid %s\n", str);
 #endif /* _WINDOWS */
 }
+
+/*-----------------------------------------------------------------------
+  ClearCacheEntry
+  Clears the libwww cache entry for the corresponding URL, if it exists.
+  -----------------------------------------------------------------------*/
+void ClearCacheEntry (char *url)
+{
+  HTCache * cache;
+  HTAnchor * anchor;
+  HTParentAnchor * panchor;
+
+  if (!url || !*url)
+    return;
+  
+  anchor = HTAnchor_findAddress (url);
+  panchor = HTAnchor_parent (anchor);
+  cache = HTCache_find (panchor, NULL);
+  if (cache)
+    HTCache_remove (cache);
+}
