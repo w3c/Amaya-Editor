@@ -859,12 +859,20 @@ Document doc;
   ThotBool	      result = FALSE;
   struct stat        *StatBuffer;
   int		      status;
+  SSchema	      sch;
+
 
   len = BUFFER_LEN - szHTML;
   ustrcpy (tmpfilename, TtaGetEnvString ("TMPDIR"));
   ustrcat (tmpfilename, WC_DIR_STR);
   ustrcat (tmpfilename, TEXT("amayatrans.tmp"));
-  TtaExportTree (subTree, doc, tmpfilename, TEXT("HTMLT"));     
+  
+  sch = TtaGetDocumentSSchema (doc);
+  if (ustrcmp (TtaGetSSchemaName (sch), TEXT("MathML")) == 0)
+    TtaExportTree (subTree, doc, tmpfilename, TEXT("MathMLT"));     
+  else
+    TtaExportTree (subTree, doc, tmpfilename, TEXT("HTMLT"));     
+
   StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
   status = ustat (tmpfilename, StatBuffer);
   if (status != -1)
