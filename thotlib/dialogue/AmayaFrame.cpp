@@ -132,7 +132,7 @@ AmayaCanvas * AmayaFrame::CreateDrawingArea()
     }
   else
     {
-      wxASSERT( FrameTable[GetSharedContext()].WdFrame );
+      wxASSERT( FrameTable[GetSharedContext()].WdFrame != NULL );
       wxGLContext * p_SharedContext = FrameTable[GetSharedContext()].WdFrame->GetCanvas()->GetContext();
       wxASSERT( p_SharedContext );
       // create the new canvas with the opengl shared context

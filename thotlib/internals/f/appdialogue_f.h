@@ -45,8 +45,6 @@ extern void BuildPopdown ( Menu_Ctl *ptrmenu,
 extern void TteOpenMainWindow ( char *name,
                                 ThotIcon logo,
                                 ThotPixmap icon );
-extern void ToolBarActionCallback ( int button_id,
-                                    int frame );
 extern int TtaAddButton ( Document document,
                           View view,
                           ThotIcon picture,
@@ -67,6 +65,7 @@ extern void TtcSwitchButtonBar ( Document doc,
                                  View view );
 extern ThotBool TtaIsButtonActivated ( Document document,
                                        View view );
+extern ThotBool TtaSetButtonActivatedStatus ( ThotBool new_status );
 extern void APP_TextCallback ( ThotWidget w,
                                int frame,
                                void *call_d );
@@ -176,8 +175,6 @@ extern void BuildPopdown ( Menu_Ctl *ptrmenu,
 extern void TteOpenMainWindow ( char *name,
                                   ThotIcon logo,
                                   ThotPixmap icon );
-extern void ToolBarActionCallback ( int button_id,
-                                      int frame );
 extern int TtaAddButton ( Document document,
                             View view,
                             ThotIcon picture,
@@ -198,6 +195,7 @@ extern void TtcSwitchButtonBar ( Document doc,
                                    View view );
 extern ThotBool TtaIsButtonActivated ( Document document,
                                          View view );
+extern ThotBool TtaSetButtonActivatedStatus ( ThotBool new_status );
 extern void APP_TextCallback ( ThotWidget w,
                                  int frame,
                                  void *call_d );

@@ -15,15 +15,14 @@
 #ifndef NODISPLAY
 
 /* Frames table 
- * _WX : a frame is a document's view, 2 frame could be shown in one Page_Ctrl
+ * _WX : a frame is a document's view, 2 frame could be shown in one page
  * */
-THOT_EXPORT Frame_Ctl   FrameTable[MAX_FRAME+1];
+THOT_EXPORT Frame_Ctl FrameTable[MAX_FRAME+1];
 
 #ifdef _WX
-/* each AmayaWindow can contains several documents
+/* each Window can contains several documents
  * */
-class AmayaWindow;
-THOT_EXPORT AmayaWindow * WindowsTable[MAX_WINDOW+1];
+THOT_EXPORT Window_Ctl WindowTable[MAX_WINDOW+1];
 #endif /* _WX */
 
 #ifdef _GTK

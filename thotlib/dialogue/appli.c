@@ -1802,6 +1802,10 @@ void InitializeOtherThings ()
 #endif /* _WX */      
     }
 
+#ifdef _WX
+  memset( WindowTable, 0, sizeof(Window_Ctl)*(MAX_WINDOW+1) );
+#endif /* _WX */
+
   ClickIsDone = 0;
   ClickFrame = 0;
   ClickX = 0;

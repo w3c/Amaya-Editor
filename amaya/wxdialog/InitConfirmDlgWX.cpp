@@ -10,7 +10,6 @@
 
 #include "InitConfirmDlgWX.h"
 
-
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------

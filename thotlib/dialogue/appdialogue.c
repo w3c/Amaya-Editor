@@ -1559,34 +1559,6 @@ void TteOpenMainWindow (char *name, ThotIcon logo, ThotPixmap icon)
      }
 }
 
-/*----------------------------------------------------------------------
-   Toolbar Action callback
-   generic way
-   this callback is activated when a toolbar button has been pressed
-   ----------------------------------------------------------------------*/
-void ToolBarActionCallback (int button_id, int frame)
-{
-  Document            document;
-  View                view;
-
-  if ( button_id < MAX_BUTTON &&
-       button_id >= 0 )
-    {
-#ifndef _WX // TODO      
-      if (!FrameTable[frame].EnabledButton[button_id])
-	{
-	  /* the button is not active */
-    	  return;
-	}
-      CloseInsertion ();
-      FrameToView (frame, &document, &view);
-      ActivatedButton = TRUE;
-      (*(Proc2)FrameTable[frame].Call_Button[button_id]) ((void *)document, (void *)view);
-      ActivatedButton = FALSE;
-#endif // #ifndef _WX // TODO      
-    }
-}
-
 #if defined(_MOTIF) || defined(_WINGUI) || defined(_GTK)
 /*----------------------------------------------------------------------
    Toolbar Action callback (MOTIF, GTK, WINDOWS)
@@ -1620,9 +1592,9 @@ static gboolean APP_ButtonCallbackGTK (ThotButton w, int frame)
 	}
       CloseInsertion ();
       FrameToView (frame, &document, &view);
-      ActivatedButton = TRUE;
+      TtaSetButtonActivatedStatus (TRUE);
       (*(Proc2)FrameTable[frame].Call_Button[i]) ((void *)document, (void *)view);
-      ActivatedButton = FALSE;
+      TtaSetButtonActivatedStatus (FALSE);
 #ifdef _WINGUI
       /* check the button status */
       if (FrameTable[frame].EnabledButton[i])
@@ -1695,7 +1667,7 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 	      /* Avoid to have two consecutive separators
 		 and test if the function is available in the current profile */
 	      if ((procedure == NULL && LastProcedure != NULL)  ||
-			  (procedure != NULL &&  Prof_ShowButton(functionName)))
+		  (procedure != NULL &&  Prof_ShowButton(functionName)))
 		{
 		  LastProcedure = procedure;
 
@@ -1906,12 +1878,21 @@ void TtaSwitchButton (Document doc, View view, int index)
       frame = GetWindowNumber (doc, view);
       if (frame == 0 || frame > MAX_FRAME)
 	TtaError (ERR_invalid_parameter);
-#ifndef _WX // TODO	
       else if (FrameTable[frame].WdFrame != 0)
 	{
-	  if (index < MAX_BUTTON && index > 0 &&
-		  FrameTable[frame].Button[index] != 0)
-	  {
+#ifdef _WX
+	  int window_id = FrameTable[frame].FrWindowId;
+	  if ( window_id <= 0 )
+	    return; /* there is no parents */
+#endif /* _WX */        
+#ifndef _WX
+	  if ( index < MAX_BUTTON && index > 0 &&
+	       FrameTable[frame].Button[index] != 0 )
+#else /* _WX */
+	  if ( index < MAX_BUTTON && index > 0 &&
+	       WindowTable[window_id].Button[index] != 0 )
+#endif /* _WX */
+	    {
 	      /* Change the button state */
 	      status = FrameTable[frame].CheckedButton[index];
 	      FrameTable[frame].CheckedButton[index] = !status;
@@ -1950,10 +1931,13 @@ void TtaSwitchButton (Document doc, View view, int index)
 	      gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
 
 #endif /* _GTK */
-        
+
+#ifdef _WX
+	      /* TODO: cette fonction est appele pour les toggle buttons (exemple: Strong Emphasis ...), a prioris on en a pas besoin pour la nouvelle interface */
+	      /*WindowTable[window_id].Button[index]*/
+#endif /* _WX */        
 	    }
 	}
-#endif // #ifndef _WX // TODO
     }
 }
 
@@ -1995,10 +1979,20 @@ void TtaChangeButton (Document doc, View view, int index,
       frame = GetWindowNumber (doc, view);
       if (frame == 0 || frame > MAX_FRAME)
 	TtaError (ERR_invalid_parameter);
-#ifndef _WX // TODO	
       else if (FrameTable[frame].WdFrame != 0)
 	{
-	  if (index < MAX_BUTTON && index > 0 && FrameTable[frame].Button[index] != 0)
+#ifdef _WX
+	  int window_id = FrameTable[frame].FrWindowId;
+	  if ( window_id <= 0 )
+	    return; /* there is no parents */
+#endif /* _WX */        
+#ifndef _WX
+	  if ( index < MAX_BUTTON && index > 0 &&
+	       FrameTable[frame].Button[index] != 0 )
+#else /* _WX */
+	  if ( index < MAX_BUTTON && index > 0 &&
+	       WindowTable[window_id].Button[index] != 0 )
+#endif /* _WX */
 	    {
 	      /* store the new state */
 #ifdef _WINGUI
@@ -2030,10 +2024,13 @@ void TtaChangeButton (Document doc, View view, int index,
 	      gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
 #endif /* _GTK */
 
-        FrameTable[frame].EnabledButton[index] = state;
+#ifdef _WX
+	      wxLogDebug(_T("TtaChangeButton"));
+	      WindowTable[window_id].Button[index]->Enable( state );
+#endif /* _WX */
+	      FrameTable[frame].EnabledButton[index] = state;
 	    }
 	}
-#endif // #ifndef _WX // TODO	      
     }
 }
 
@@ -2158,6 +2155,14 @@ ThotBool TtaIsButtonActivated (Document document, View view)
   return (ActivatedButton);
 }
 
+/*----------------------------------------------------------------------
+   TtaSetButtonActivatedStatus
+   Used to setup the button activated status from outside
+  ----------------------------------------------------------------------*/
+ThotBool TtaSetButtonActivatedStatus( ThotBool new_status )
+{
+  ActivatedButton = new_status;
+}
 /*----------------------------------------------------------------------
  ----------------------------------------------------------------------*/
 void APP_TextCallback (ThotWidget w, int frame, void *call_d)
@@ -4294,9 +4299,9 @@ void DestroyFrame (int frame)
 #ifndef _WX      
       FrRef[frame] = 0;
       FrameTable[frame].WdFrame = 0;
-#endif /* #ifndef _WX */      
-
       FrameTable[frame].WdStatus = NULL;
+#endif /* #ifndef _WX */
+
       /* Elimine les evenements ButtonRelease, DestroyNotify, FocusOut */
       ClearConcreteImage (frame);
       ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */

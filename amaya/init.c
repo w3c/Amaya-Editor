@@ -17,6 +17,7 @@
 
 #ifdef _WX
   #include "wx/wx.h"
+  #include "AmayaApp.h"
 #endif /* _WX */
 
 #undef THOT_EXPORT
@@ -703,7 +704,7 @@ void SetArrowButton (Document document, ThotBool back, ThotBool on)
 
   if (back)
     {
-      index = 2;
+      index = iBack;
       if (on)
 	{
 	  state   = TRUE;
@@ -719,7 +720,7 @@ void SetArrowButton (Document document, ThotBool back, ThotBool on)
     }
   else
     {
-      index = 3;
+      index = iForward;
       if (on)
 	{
 	  state = TRUE;
@@ -2913,6 +2914,60 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	 }
        else if (!isOpen)
 	 {
+#ifdef _WX
+	   iBack = TtaAddToolBarButton( window_id,
+					iconBackNo,
+					TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS),
+					"GotoPreviousHTML",
+					(Proc)GotoPreviousHTML,
+					FALSE );
+	   iForward = TtaAddToolBarButton( window_id,
+					   iconForwardNo,
+					   TtaGetMessage (AMAYA, AM_BUTTON_NEXT),
+					   "GotoNextHTML",
+					   (Proc)GotoNextHTML,
+					   FALSE );
+	   iReload = TtaAddToolBarButton( window_id,
+					  iconReload,
+					  TtaGetMessage (AMAYA, AM_BUTTON_RELOAD),
+					  "Reload",
+					  (Proc)Reload,
+					  TRUE );
+	   iStop = TtaAddToolBarButton( window_id,
+					stopN,
+					TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
+					"StopTransfer",
+					(Proc)StopTransfer,
+					FALSE );
+	   iHome = TtaAddToolBarButton( window_id,
+					iconHome,
+					TtaGetMessage (AMAYA, AM_BUTTON_HOME),
+					"GoToHome",
+					(Proc)GoToHome,
+					TRUE );
+	   /* SEPARATOR */
+	   TtaAddToolBarButton( window_id, NULL, NULL, NULL, NULL, FALSE );
+	   iSave = TtaAddToolBarButton( window_id,
+					iconSaveNo,
+					TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
+					"SaveDocument",
+					(Proc)SaveDocument,
+					FALSE );
+	   iPrint = TtaAddToolBarButton( window_id,
+					 iconPrint,
+					 TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
+					 "SetupAndPrint",
+					 (Proc)SetupAndPrint,
+					 TRUE );
+	   iPrint = TtaAddToolBarButton( window_id,
+					 iconFind,
+					 TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
+					 "TtcSearchText",
+					 (Proc)TtcSearchText,
+					 TRUE );
+#endif /* _WX */
+
+#ifndef _WX
 	   /* use a new window: Create all buttons */
 	   iStop =TtaAddButton (doc, 1, stopN, (Proc)StopTransfer,"StopTransfer",
 				TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
@@ -2941,12 +2996,12 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
 #endif /* _WINGUI */
 
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)  
+#if defined(_MOTIF) || defined(_GTK)
 	   iEditor = TtaAddButton (doc, 1, iconEditor, (Proc)SetBrowserEditor,
 				   "SetBrowserEditor",
 				   TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
 				   TBSTYLE_BUTTON, TRUE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
      
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
@@ -3011,6 +3066,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 				  "CreateTable",
 				  TtaGetMessage (AMAYA, AM_BUTTON_TABLE),
 				  TBSTYLE_BUTTON, TRUE);
+#endif /* !_WX */
+
 	   AddMathButton (doc, 1);
 #ifdef _SVG
 	   AddGraphicsButton (doc, 1);
@@ -7040,7 +7097,50 @@ void InitAmaya (NotifyEvent * event)
    iconTableNo = (ThotIcon) 0;
 #endif /* #ifdef _NOGUI */
 
-#if defined(_GTK) || defined(_WX)
+#ifdef _WX
+   wxString amaya_directory( TtaGetEnvString ("THOTDIR"), AmayaApp::conv_ascii );
+
+   stopR         = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/stop.gif") );
+   stopN         = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/stop.gif") );
+   iconSave      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/save.gif") );
+   iconSaveNo    = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/save.gif") );
+   iconFind      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/find.gif") );
+   iconReload    = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/reload.gif") );
+   iconHome      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/home.gif") );
+   iconBack      = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/back.gif") );
+   iconBackNo    = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/back.gif") );
+   iconForward   = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/forward.gif") );
+   iconForwardNo = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/forward.gif") );
+   iconPrint     = new wxBitmap( amaya_directory + _T("/resources/icons/toolbar/print.gif") );
+   iconI = (ThotIcon) 0;
+   iconINo = (ThotIcon) 0;
+   iconB = (ThotIcon) 0;
+   iconBNo = (ThotIcon) 0;
+   iconT = (ThotIcon) 0;
+   iconTNo = (ThotIcon) 0;
+   iconBrowser = (ThotIcon) 0;
+   iconEditor = (ThotIcon) 0;
+   iconH1 = (ThotIcon) 0;
+   iconH1No = (ThotIcon) 0;
+   iconH2 = (ThotIcon) 0;
+   iconH2No = (ThotIcon) 0;
+   iconH3 = (ThotIcon) 0;
+   iconH3No = (ThotIcon) 0;
+   iconBullet = (ThotIcon) 0;
+   iconBulletNo = (ThotIcon) 0;
+   iconNum = (ThotIcon) 0;
+   iconNumNo = (ThotIcon) 0;
+   iconImage = (ThotIcon) 0;
+   iconImageNo = (ThotIcon) 0;
+   iconDL = (ThotIcon) 0;
+   iconDLNo = (ThotIcon) 0;
+   iconLink = (ThotIcon) 0;
+   iconLinkNo = (ThotIcon) 0;
+   iconTable = (ThotIcon) 0;
+   iconTableNo = (ThotIcon) 0;
+#endif /* _WX */
+
+#if defined(_GTK)
    stopR = (ThotIcon) TtaCreatePixmapLogo (stopR_xpm);
    stopN = (ThotIcon) TtaCreatePixmapLogo (stopN_xpm);
    iconSave = (ThotIcon) TtaCreatePixmapLogo (save_xpm);
@@ -7079,7 +7179,7 @@ void InitAmaya (NotifyEvent * event)
    iconLinkNo = (ThotIcon) TtaCreatePixmapLogo (LinkNo_xpm);
    iconTable = (ThotIcon) TtaCreatePixmapLogo (Table_xpm);
    iconTableNo = (ThotIcon) TtaCreatePixmapLogo (TableNo_xpm);
-#endif /* _GTK  || defined(_WX) */
+#endif /* _GTK */
 
 #ifdef _MOTIF   
    stopR = TtaCreatePixmapLogo (stopR_xpm);

@@ -348,7 +348,7 @@ extern void TtaUpdateMenus (Document doc, View view, ThotBool RO);
 
 /*----------------------------------------------------------------------
   TtaMakeWindow create a AmayaWindow object and place it
-  into WindowsTable array
+  into WindowTable array
   returns:
  	+ the window id
         + -1 if too much created windows
@@ -390,6 +390,22 @@ extern int TtaGetFreePageId( int window_id );
    Produces in a file a human-readable the list of current shortcuts.  
   ----------------------------------------------------------------------*/
 extern void TtaListShortcuts (Document doc, FILE *fileDescriptor);
+
+/*----------------------------------------------------------------------
+  TtaAddToolBarButton - 
+  add a toolbar button to a window
+  params:
+    + window_id : window identifier
+  returns:
+    + int button_id : the button identifier used to change its state or bitmap
+  ----------------------------------------------------------------------*/
+extern int TtaAddToolBarButton( int window_id,
+				ThotIcon picture,
+				char * tooltip,
+				char * functionName,
+				void (*procedure) (),
+				ThotBool status );
+
 #endif /* __CEXTRACT__  */
 
 #endif

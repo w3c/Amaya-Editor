@@ -8,6 +8,8 @@
 class wxObject;
 class wxScrollBar;
 class AmayaFrame;
+class AmayaWindow;
+class AmayaToolBar;
 class wxStatusBar;
 class wxWindow;
 class wxButton;
@@ -30,7 +32,7 @@ typedef wxWindow *	ThotWindow;
 typedef wxButton * 	ThotButton;
 typedef wxMenuBar *	ThotMenuBar;
 typedef wxMenu *	ThotMenu;
-typedef wxToolBar *	ThotToolBar;
+typedef AmayaToolBar *	ThotToolBar;
 typedef wxControl *	ThotControl;
 typedef wxColour *      ThotColor;
 #ifdef _GL

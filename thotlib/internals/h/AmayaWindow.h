@@ -19,6 +19,8 @@ class AmayaPage;
 class AmayaFrame;
 class AmayaNotebook;
 class AmayaCParam;
+class AmayaURLBar;
+class AmayaToolBar;
 
 #define MAX_DOC 50
 
@@ -86,7 +88,9 @@ public:
   AmayaPage * GetPage( int position ) const;
   int GetPageCount() const;
   bool IsClosing();
-  
+
+  AmayaToolBar * GetAmayaToolBar();
+
   void DesactivateMenuBar();
   void ActivateMenuBar();
 
@@ -107,7 +111,7 @@ public:
 //  void OnSplitterDClick( wxSplitterEvent& event );
   void OnSplitterUnsplit( wxSplitterEvent& event );
   
-//  void OnSize( wxSizeEvent& event );
+  void OnSize( wxSizeEvent& event );
   
   // url bar control
   wxString GetURL();
@@ -122,6 +126,7 @@ public:
   AmayaPage * GetActivePage() const;
   AmayaFrame * GetActiveFrame() const;
 
+  void SetupURLBar();
 
  public:
 
@@ -157,8 +162,9 @@ public:
   
   wxSplitterWindow * m_pSplitterWindow;
   
-  wxComboBox *		m_pURLBar;
-  
+  AmayaURLBar *	     m_pURLBar;
+  AmayaToolBar *     m_pToolBar;
+
 
  public:
   enum

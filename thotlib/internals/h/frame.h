@@ -75,7 +75,7 @@ typedef struct _Frame_Ctl {
 
 #if defined(_WX)
 /*
- * wxWindow Frame_Ctl definition
+ * wxWidgets Frame_Ctl definition
  * this is the description of a document's view widget.
  * It contains : horizontal/vertical scrollbars, and a OpenGL area.
  * */
@@ -83,8 +83,10 @@ typedef struct _Frame_Ctl {
   int        FrTopMargin;               /* Frame Top Margin                  */
   int        FrScrollOrg;               /* Scrolling origin                  */
   int        FrScrollWidth;             /* Scrolling width                   */
+
   int        FrWidth;                   /* Frame Width                       */
   int        FrHeight;                  /* Frame Height                      */
+
   int        FrWindowId;                /* Parent window id                  */
   int        FrPageId;                  /* Frame page id                     */
   int        FrDoc;                     /* Document ID                       */
@@ -93,7 +95,6 @@ typedef struct _Frame_Ctl {
   ThotScrollBar WdScrollV;              /* Widget of Vertical Scroll         */
   ThotScrollBar WdScrollH;              /* Widget of Horizontal Scroll       */
   ThotFrame  	WdFrame;                /* Widget of the Document Frame      */
-  ThotStatusBar WdStatus;               /* Widget of the Document status bar */
 
   struct     _Menu_Ctl *FrMenus;        /* First menu context                */
   int        MenuAttr;                  /* Attributes menu ID or -1          */
@@ -112,8 +113,8 @@ typedef struct _Frame_Ctl {
 
 //  Proc       		Call_Button[MAX_BUTTON];   /* List of toolbar button Callbacks  */
 //  ThotControl 	Button[MAX_BUTTON];        /* List of toolbar button Widgets    */
-//  ThotBool   		EnabledButton[MAX_BUTTON]; /* Enabled toolbar buttons           */
-//  ThotBool   		CheckedButton[MAX_BUTTON]; /* Checked toolbar buttons           */  
+  ThotBool   		EnabledButton[MAX_BUTTON]; /* Enabled toolbar buttons           */
+  ThotBool   		CheckedButton[MAX_BUTTON]; /* Checked toolbar buttons           */  
 
 //  ThotWidget Row_Zone;                  /* Parent widget of Text_Zone        */
 //  ThotWidget Combo;                     /* List of combobox Widgets          */
@@ -132,6 +133,27 @@ typedef struct _Frame_Ctl {
 #endif /*_GL*/
 
 } Frame_Ctl;
+
+/*
+ * wxWidgets Window_Ctl definition
+ * this is the description of a Frame_Ctl container
+ * It contains : toolbar, urlbar, pages
+ * */
+typedef struct _Window_Ctl {
+  int        FrWidth;                   /* Window Width                      */
+  int        FrHeight;                  /* Window Height                     */
+  
+  AmayaWindow * WdWindow;               /* Widget of the wxWidgets window    */  
+  ThotStatusBar WdStatus;               /* Widget of the window status bar   */
+
+  ThotControl 	Button[MAX_BUTTON];               /* List of toolbar button Widgets */
+  ThotBool   	EnabledButtonDefault[MAX_BUTTON]; /* Default status for toolbar buttons */
+  ThotBool   	CheckedButtonDefault[MAX_BUTTON]; /* Default checked value for toolbar buttons */  
+  Proc          Call_Button[MAX_BUTTON];          /* List of toolbar button Callbacks  */
+  Proc          Call_Text;                        /* This is the callback which is called when a url is activated */
+
+} Window_Ctl;
+
 #endif /* #if defined(_WX) */
 
 

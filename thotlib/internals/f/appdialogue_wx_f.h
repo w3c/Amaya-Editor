@@ -20,9 +20,6 @@ extern ThotBool TtaAttachFrame ( int frame_id,
                                  int window_id,
                                  int page_id,
                                  int position );
-extern ThotBool TtaDetachFrame2 ( int window_id,
-                                  int page_id,
-                                  int position );
 extern ThotBool TtaDetachFrame ( int frame_id );
 extern ThotBool TtaDestroyFrame ( int frame_id );
 extern int TtaGetFreePageId ( int window_id );
@@ -34,7 +31,6 @@ extern void TtaGetDocumentPageId ( Document doc_id,
                                    int * page_id,
                                    int * page_position );
 extern int TtaGetFrameDocumentId ( int frame_id );
-extern char * TtaGetDocumentURL ( Document doc_id );
 extern int TtaMakePanel ( const char * panel_title );
 extern int TtaAttachPanel ( int window_id );
 extern ThotBool TtaDetachPanel ( int panel_id,
@@ -49,6 +45,17 @@ extern void TtaSetURLBar ( int frame_id,
                            const char * listUrl );
 extern void APP_Callback_URLActivate ( int frame_id,
                                        const char *text );
+extern void APP_Callback_ToolBarButtonActivate ( int frame_id,
+                                                 int button_id );
+extern int TtaAddToolBarButton ( int window_id,
+                                 ThotIcon picture,
+                                 char * tooltip,
+                                 char * functionName,
+                                 void (*procedure) (),
+                                 ThotBool status );
+extern void TtaInitFrameToolBarButton ( int frame_id,
+                                        void (*procedure) (),
+                                        ThotBool state );
 
 #else /* __STDC__ */
 
@@ -66,9 +73,6 @@ extern ThotBool TtaAttachFrame ( int frame_id,
                                    int window_id,
                                    int page_id,
                                    int position );
-extern ThotBool TtaDetachFrame2 ( int window_id,
-                                    int page_id,
-                                    int position );
 extern ThotBool TtaDetachFrame ( int frame_id );
 extern ThotBool TtaDestroyFrame ( int frame_id );
 extern int TtaGetFreePageId ( int window_id );
@@ -80,7 +84,6 @@ extern void TtaGetDocumentPageId ( Document doc_id,
                                      int * page_id,
                                      int * page_position );
 extern int TtaGetFrameDocumentId ( int frame_id );
-extern char * TtaGetDocumentURL ( Document doc_id );
 extern int TtaMakePanel ( const char * panel_title );
 extern int TtaAttachPanel ( int window_id );
 extern ThotBool TtaDetachPanel ( int panel_id,
@@ -95,6 +98,17 @@ extern void TtaSetURLBar ( int frame_id,
                              const char * listUrl );
 extern void APP_Callback_URLActivate ( int frame_id,
                                          const char *text );
+extern void APP_Callback_ToolBarButtonActivate ( int frame_id,
+                                                   int button_id );
+extern int TtaAddToolBarButton ( int window_id,
+                                   ThotIcon picture,
+                                   char * tooltip,
+                                   char * functionName,
+                                   void (*procedure) (),
+                                   ThotBool status );
+extern void TtaInitFrameToolBarButton ( int frame_id,
+                                          void (*procedure) (),
+                                          ThotBool state );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -1,6 +1,7 @@
 
 #ifdef _WX
   #include "wx/wx.h"
+  #include "wx/bmpbuttn.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -26,10 +27,7 @@
 #include "AmayaFrame.h"
 #include "AmayaWindow.h"
 #include "AmayaPage.h"
-
-/* this is an extern declaration of a global variable located into amaya part (not in thotlib)
- * maybe there is a more elegent way to communicate with amaya ? */
-extern char *DocumentURLs[];
+#include "AmayaToolBar.h"
 
 /* 
  * In this file there is a list of functions useful
@@ -67,7 +65,7 @@ extern char *DocumentURLs[];
 void TtaShowWindow( int window_id, ThotBool show )
 {
 #ifdef _WX  
-  AmayaWindow * p_window = WindowsTable[window_id];
+  AmayaWindow * p_window = WindowTable[window_id].WdWindow;
   if (p_window == NULL)
     return;
 
@@ -77,7 +75,7 @@ void TtaShowWindow( int window_id, ThotBool show )
 
 /*----------------------------------------------------------------------
   TtaMakeWindow create a AmayaWindow object and place it
-  into WindowsTable array
+  into WindowTable array
   returns:
  	+ the window id
         + 0 if too much created windows
@@ -99,7 +97,10 @@ int TtaMakeWindow( )
   p_AmayaWindow->SetSize(-1, -1, 800, 600);
   
   /* save the window reference into the global array */ 
-  WindowsTable[window_id] = p_AmayaWindow;
+  WindowTable[window_id].WdWindow = p_AmayaWindow;
+  WindowTable[window_id].FrWidth  = p_AmayaWindow->GetSize().GetWidth();
+  WindowTable[window_id].FrHeight = p_AmayaWindow->GetSize().GetHeight();
+  WindowTable[window_id].WdStatus = p_AmayaWindow->GetStatusBar();
 
   // show it
   TtaShowWindow( window_id, TRUE );
@@ -238,11 +239,11 @@ int TtaMakeFrame( const char * schema_name,
 	    frame_id++;
 	}
     }
-
-
+  
+  
   if (!found)
     return 0; /* too much created frames : bye bye ! */
-
+  
   AmayaFrame * p_AmayaFrame = FrameTable[frame_id].WdFrame;
   if (p_AmayaFrame == NULL)
     {
@@ -251,7 +252,7 @@ int TtaMakeFrame( const char * schema_name,
       /* get the first existing window (a virtual parent) */
       /* the window parent is override when the frame is attached to a page */
       int window_id = 1;
-      AmayaWindow * p_AmayaWindow = WindowsTable[window_id]; 
+      AmayaWindow * p_AmayaWindow = WindowTable[window_id].WdWindow; 
       wxASSERT_MSG(p_AmayaWindow, _T("TtaMakeFrame: the window must be created before any frame"));
       
       /* create the new frame (window_id is the parent) */
@@ -262,41 +263,41 @@ int TtaMakeFrame( const char * schema_name,
       /* if a frame allready exist, be sure to cleanup all its atributs */
       DestroyFrame( frame_id );
     }
-
-      /* save frame parameters */
-      FrameTable[frame_id].WdFrame 	  = p_AmayaFrame;
-      //      FrameTable[frame_id].WdStatus 	  = p_AmayaWindow->GetStatusBar(); /* this attribut is set when TtaAttachFrame is called */
-      FrameTable[frame_id].WdScrollH 	  = p_AmayaFrame->GetScrollbarH();
-      FrameTable[frame_id].WdScrollV 	  = p_AmayaFrame->GetScrollbarV();
-      FrameTable[frame_id].FrWindowId     = -1; /* this attribut is set when TtaAttachFrame is called */
-      FrameTable[frame_id].FrPageId       = -1; /* this attribut is set when TtaAttachFrame is called */
-      FrameTable[frame_id].FrTopMargin 	  = 0;// TODO
-      FrameTable[frame_id].FrScrollOrg 	  = 0;// TODO
-      FrameTable[frame_id].FrScrollWidth  = 0;// TODO
-      FrameTable[frame_id].FrWidth        = width;// TODO
-      FrameTable[frame_id].FrHeight 	  = height;// TODO
-
-      /* get registry default values for visibility */
-      char * visiStr = TtaGetEnvString ("VISIBILITY");
-      int visiVal;
-      if (visiStr == NULL)
+  
+  /* save frame parameters */
+  FrameTable[frame_id].WdFrame 	  = p_AmayaFrame;
+  //      FrameTable[frame_id].WdStatus 	  = p_AmayaWindow->GetStatusBar(); /* this attribut is set when TtaAttachFrame is called */
+  FrameTable[frame_id].WdScrollH      = p_AmayaFrame->GetScrollbarH();
+  FrameTable[frame_id].WdScrollV      = p_AmayaFrame->GetScrollbarV();
+  FrameTable[frame_id].FrWindowId     = -1; /* this attribut is set when TtaAttachFrame is called */
+  FrameTable[frame_id].FrPageId       = -1; /* this attribut is set when TtaAttachFrame is called */
+  FrameTable[frame_id].FrTopMargin    = 0;// TODO
+  FrameTable[frame_id].FrScrollOrg    = 0;// TODO
+  FrameTable[frame_id].FrScrollWidth  = 0;// TODO
+  FrameTable[frame_id].FrWidth        = width;// TODO
+  FrameTable[frame_id].FrHeight       = height;// TODO
+  
+  /* get registry default values for visibility */
+  char * visiStr = TtaGetEnvString ("VISIBILITY");
+  int visiVal;
+  if (visiStr == NULL)
+    visiVal = 5;
+  else
+    {
+      visiVal = atoi (visiStr);
+      if (visiVal < 0 || visiVal > 10)
 	visiVal = 5;
-      else
-	{
-	  visiVal = atoi (visiStr);
-	  if (visiVal < 0 || visiVal > 10)
-	    visiVal = 5;
-	}
-      /* Initialise la visibilite et le zoom de la fenetre */
-      InitializeFrameParams (frame_id, visiVal, 0);
-      /* Initialise la couleur de fond */
-      /* SG : not used */
-      /*BackgroundColor[frame_id] = DefaultBColor;*/
-    
+    }
+  /* Initialise la visibilite et le zoom de la fenetre */
+  InitializeFrameParams (frame_id, visiVal, 0);
+  /* Initialise la couleur de fond */
+  /* SG : not used */
+  /*BackgroundColor[frame_id] = DefaultBColor;*/
+  
   
   /* the document title will be used to name the frame's page */
   p_AmayaFrame->SetPageTitle( wxString(doc_name, AmayaWindow::conv_ascii) );
-
+  
   /* Window volume in characters */
   *volume = GetCharsCapacity (width * height * 5);
   FrameTable[frame_id].FrDoc   		= doc_id;
@@ -329,7 +330,7 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   if (!FrameTable[frame_id].WdFrame)
     return FALSE;
   
-  AmayaWindow * p_window = WindowsTable[window_id];
+  AmayaWindow * p_window = WindowTable[window_id].WdWindow;
   if (p_window == NULL)
     return FALSE;
   
@@ -354,9 +355,12 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
     p_oldframe->Hide();
 
   /* update frame infos */
-  /*  FrameTable[frame_id].WdStatus 	= p_window->GetStatusBar(); */
   FrameTable[frame_id].FrWindowId   	= window_id;
   FrameTable[frame_id].FrPageId         = page_id;
+
+  /* initialize toolbar button default stats */
+  memcpy( WindowTable[window_id].EnabledButtonDefault, FrameTable[frame_id].EnabledButton, sizeof(ThotBool) * MAX_BUTTON );
+  memcpy( WindowTable[window_id].CheckedButtonDefault, FrameTable[frame_id].CheckedButton, sizeof(ThotBool) * MAX_BUTTON );
 
   p_page->Show();
   FrameTable[frame_id].WdFrame->RaiseFrame();
@@ -365,50 +369,6 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   TtaHandlePendingEvents();
   
   return TRUE;
-#else
-  return FALSE;
-#endif /* #ifdef _WX */
-}
-
-/*----------------------------------------------------------------------
-  TtaDetachFrame detachs a frame from a window
-  params:
-    + window_id : windows identifier
-	+ page_id : the page identifier
-	+ position : the frame position into the page (1=first or 2=second)
-  returns:
-    + true if ok
-    + false if it's impossible to attach the frame to the window
-  ----------------------------------------------------------------------*/
-ThotBool TtaDetachFrame2( int window_id, int page_id, int position )
-{
-#ifdef _WX
-  AmayaWindow * p_window = WindowsTable[window_id];
-  if (p_window == NULL)
-    return FALSE;
-  
-  AmayaPage * p_page = p_window->GetPage(page_id);
-  if (!p_page)
-    return FALSE;
-
-  /* now detach the frame from this page */
-  AmayaFrame * p_frame = NULL;
-  p_frame = p_page->DetachFrame( position );
-
-  if (p_frame)
-    {
-      /* a frame hs been detached so get his frame id and update the FrameTable */
-      int frame_id = p_frame->GetFrameId();
-   
-      /* update frame infos */
-      //      FrameTable[frame_id].WdStatus 	= NULL;
-      FrameTable[frame_id].FrWindowId   = -1;
-      FrameTable[frame_id].FrPageId     = -1;
-
-      return TRUE;
-    }
-
-  return FALSE;
 #else
   return FALSE;
 #endif /* #ifdef _WX */
@@ -433,7 +393,7 @@ ThotBool TtaDetachFrame( int frame_id )
   if (window_id < 0 || page_id < 0)
     return FALSE;
 
-  AmayaWindow * p_window = WindowsTable[window_id];
+  AmayaWindow * p_window = WindowTable[window_id].WdWindow;
   if (p_window == NULL)
     return FALSE;
   
@@ -502,7 +462,7 @@ ThotBool TtaDestroyFrame( int frame_id )
 int TtaGetFreePageId( int window_id )
 {
 #ifdef _WX
-  AmayaWindow * p_window = WindowsTable[window_id];
+  AmayaWindow * p_window = WindowTable[window_id].WdWindow;
   if (p_window == NULL)
     return -1;
 
@@ -525,7 +485,7 @@ int TtaGetFreeWindowId()
   int window_id = 1;
   while ( window_id < MAX_WINDOW )
     {
-      if ( WindowsTable[window_id] == NULL )
+      if ( WindowTable[window_id].WdWindow == NULL )
 	return window_id;
       window_id++;
     }
@@ -604,7 +564,7 @@ void TtaGetDocumentPageId( Document doc_id, int schView,
 
   if (FrameTable[frame_id].FrWindowId <= 0)
     return;
-  AmayaWindow * p_window = WindowsTable[FrameTable[frame_id].FrWindowId];
+  AmayaWindow * p_window = WindowTable[FrameTable[frame_id].FrWindowId].WdWindow;
   if (p_window == NULL)
     return;
   AmayaPage * p_page = p_window->GetPage( *page_id );
@@ -628,26 +588,6 @@ int TtaGetFrameDocumentId( int frame_id )
   return FrameTable[frame_id].FrDoc;
 #else
   return -1;
-#endif /* #ifdef _WX */
-}
-
-/*----------------------------------------------------------------------
-  TtaGetDocumentURL returns the correspondig document url
-  params:
-    + doc_id : 
-  returns:
-    + char * : a pointer to document url
-    + NULL if the doc_id is not valide of there is no associated urls
-  ----------------------------------------------------------------------*/
-char * TtaGetDocumentURL( Document doc_id )
-{
-#ifdef _WX
-  if (doc_id > 0)
-    return DocumentURLs[doc_id];
-  else
-    return NULL;
-#else
-  return NULL;
 #endif /* #ifdef _WX */
 }
 
@@ -738,6 +678,7 @@ ThotBool TtaFrameIsClosed( int frame_id )
 
 /*----------------------------------------------------------------------
   TtaInitializeURLBar initialize urlbar with given parameters
+  this will add the urlbar to the toolbar if it doesn't exist yet
   params:
     + frame_id : frame identifier
     + label : the new url entry
@@ -753,10 +694,13 @@ void TtaInitializeURLBar( int          frame_id,
 #ifdef _WX
   if (!FrameTable[frame_id].WdFrame || FrameTable[frame_id].FrWindowId == -1)
     return;
-  AmayaWindow * p_window = WindowsTable[FrameTable[frame_id].FrWindowId];
+  AmayaWindow * p_window = WindowTable[FrameTable[frame_id].FrWindowId].WdWindow;
   if ( !p_window )
     return;
   
+  // add the url to the toolbar if it's not allready done
+  p_window->SetupURLBar();
+
   // setup the callback to activate when a url is selected
   FrameTable[frame_id].Call_Text = procedure;
 
@@ -778,7 +722,7 @@ void TtaSetURLBar( int frame_id,
 #ifdef _WX
   if (!FrameTable[frame_id].WdFrame || FrameTable[frame_id].FrWindowId == -1)
     return;
-  AmayaWindow * p_window = WindowsTable[FrameTable[frame_id].FrWindowId];
+  AmayaWindow * p_window = WindowTable[FrameTable[frame_id].FrWindowId].WdWindow;
   if ( !p_window )
     return;
 
@@ -836,3 +780,126 @@ void APP_Callback_URLActivate (int frame_id, const char *text)
 	(*(Proc3)FrameTable[frame_id].Call_Text) ((void *)doc, (void *)view, (void *)text);
     }
 }
+
+/*----------------------------------------------------------------------
+  APP_Callback_ToolBarButtonActivate - this callback is activated when a toolbar button has been pressed
+  params:
+    + frame_id : frame identifier (current active frame)
+    + button_id : the button position
+  returns:
+  ----------------------------------------------------------------------*/
+void APP_Callback_ToolBarButtonActivate (int frame_id, int button_id)
+{
+#ifdef _WX
+  Document            document;
+  View                view;
+
+  if ( button_id < MAX_BUTTON &&
+       button_id > 0 )
+    {
+      if ( !FrameTable[frame_id].EnabledButton[button_id] )
+	  return; /* the button is not active */
+
+      // get the parent window
+      int window_id = FrameTable[frame_id].FrWindowId;
+      if ( window_id < 0 )
+	return; /* there is no parents */
+
+      CloseInsertion ();
+      FrameToView (frame_id, &document, &view);
+      TtaSetButtonActivatedStatus (TRUE);
+      (*(Proc2)WindowTable[window_id].Call_Button[button_id]) ((void *)document, (void *)view);
+      TtaSetButtonActivatedStatus (FALSE);
+    }
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaAddToolBarButton - 
+  add a toolbar button to a window
+  params:
+    + window_id : window identifier
+  returns:
+    + int button_id : the button identifier used to change its state or bitmap
+                      0 is an invalide value
+  ----------------------------------------------------------------------*/
+int TtaAddToolBarButton( int window_id,
+			 ThotIcon picture,
+			 char * tooltip,
+			 char * functionName,
+			 void (*procedure) (),
+			 ThotBool status )
+{
+#ifdef _WX
+  AmayaWindow * p_window = WindowTable[window_id].WdWindow;
+  wxASSERT( p_window );
+  if ( !p_window )
+    return 0;
+  
+  // Setup callback into the window callback list
+  int button_id = 1;
+  while ( button_id < MAX_BUTTON && WindowTable[window_id].Call_Button[button_id])
+    button_id++;
+  if ( button_id >= MAX_BUTTON )
+    {
+      wxASSERT_MSG(FALSE, _T("Too much toolbar buttons !"));
+      return 0;
+    }
+  WindowTable[window_id].Call_Button[button_id]          = procedure;
+  WindowTable[window_id].EnabledButtonDefault[button_id] = status;
+
+  // Init existing window's frames default values
+  int        frame_id = 1;
+  while (frame_id <= MAX_FRAME)
+    {
+      if ( FrameTable[frame_id].FrWindowId == window_id )
+	{
+	  FrameTable[frame_id].EnabledButton[button_id] = status;
+	  /*FrameTable[frame_id].CheckedButton[button_id] = ??? ;*/
+	}
+      frame_id++;
+    }
+
+  // Add a new tool to the toolbar
+  AmayaToolBar * p_toolbar = p_window->GetAmayaToolBar();
+  wxASSERT( p_toolbar );
+  if ( picture )
+    {
+      wxBitmapButton * p_button = new wxBitmapButton( p_toolbar
+						      ,button_id /* the id used to identify the button when clicked */
+						      ,*picture
+						      ,wxDefaultPosition
+						      ,wxSize(32,32)
+						      ,wxBU_AUTODRAW | wxNO_BORDER | wxBU_EXACTFIT );
+      p_button->SetToolTip( wxString(tooltip, AmayaWindow::conv_ascii) );
+      p_toolbar->AddTool( p_button );
+      WindowTable[window_id].Button[button_id] = p_button;
+      WindowTable[window_id].Button[button_id]->Enable( status );
+    }
+  else
+    {
+      // no picture ? it's a separator
+      p_toolbar->AddSeparator();
+      WindowTable[window_id].Button[button_id] = NULL;
+    }
+
+  return button_id;
+#else /* _WX */
+  return 0;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaInitFrameToolBarButton - 
+  init the toolbar buttons for the given frame
+  params:
+    + frame_id : frame identifier
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaInitFrameToolBarButton( int frame_id,
+				void (*procedure) (),
+				ThotBool state )
+{
+  
+}
+

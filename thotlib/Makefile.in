@@ -225,6 +225,7 @@ EDITOR_OBJ = \
 	dialogue/AmayaCanvas.o \
 	dialogue/AmayaNotebook.o \
 	dialogue/AmayaURLBar.o \
+	dialogue/AmayaToolBar.o \
 	dialogue/appdialogue_wx.o \
 	document/pivot.o \
 	document/docs.o \

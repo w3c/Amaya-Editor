@@ -26,10 +26,12 @@ public:
   virtual ~AmayaURLBar();
 
   void OnURLSelected( wxCommandEvent& event );
-  void OnURLSelectedd( wxMouseEvent& event );
   void OnURLText( wxCommandEvent& event );
   void OnURLTextEnter( wxCommandEvent& event );
-  
+
+  void OnSize( wxSizeEvent& event );
+  void ReSize( int width, int height );
+
  protected:
   DECLARE_EVENT_TABLE()
   

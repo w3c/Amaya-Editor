@@ -1,6 +1,8 @@
 #ifdef _WX
 
 #include "wx/wx.h"
+#include "wx/tglbtn.h"
+
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -37,6 +39,7 @@
 #include "AmayaFrame.h"
 #include "AmayaCallback.h"
 #include "AmayaURLBar.h"
+#include "AmayaToolBar.h"
 
 // TODO : a deplacer dans un .h
 #define DEFAULT_TOOGLE_FULLSCREEN    false
@@ -69,7 +72,8 @@ AmayaWindow::AmayaWindow (  int            window_id
   m_IsFullScreenEnable( DEFAULT_TOOGLE_FULLSCREEN ),
   m_IsToolTipEnable( DEFAULT_TOOGLE_TOOLTIP ),
   m_SlashRatio( 0.20 ),
-  m_IsClosing( FALSE )
+  m_IsClosing( FALSE ),
+  m_pURLBar( NULL )
 {
   // Create a splitted vertical window
   m_pSplitterWindow = new wxSplitterWindow( this, -1,
@@ -103,22 +107,21 @@ AmayaWindow::AmayaWindow (  int            window_id
   // Creation of frame sizer to contains differents frame areas
   wxBoxSizer * p_SizerFrame = new wxBoxSizer ( wxHORIZONTAL );
   p_SizerFrame->Add( m_pSplitterWindow, 1, wxEXPAND );
-
-  SetSizer(p_SizerFrame);
-  SetAutoLayout(TRUE);
-  p_SizerFrame->Fit(this);
-
-  // Creation of the toolbar
-  CreateToolBar( wxHORIZONTAL|wxTB_DOCKABLE|wxTB_FLAT );
-  GetToolBar()->SetMargins( 2, 2 );
   
-  // Create the url entry
-  m_pURLBar = new AmayaURLBar( GetToolBar(), this );
-  m_pURLBar->Fit();
-  GetToolBar()->AddControl( m_pURLBar );
-  
+  // Create the toolbar
+  m_pToolBar = new AmayaToolBar( this );
+
+  // Creation of the top sizer to contain toolbar and framesizer
+  wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
+  p_TopSizer->Add( m_pToolBar, 0, wxALL | wxEXPAND, 5 );
+  p_TopSizer->Add( p_SizerFrame, 1, wxEXPAND );
+  SetSizer(p_TopSizer);
+  p_TopSizer->Fit(this);
+
   // Creation of the statusbar
   CreateStatusBar( 1 );
+
+  SetAutoLayout(TRUE);
 
   // NOTICE : the menu bar is created for each AmayaFrame, 
   //          the menu bar is not managed by the window
@@ -133,6 +136,23 @@ AmayaWindow::AmayaWindow (  int            window_id
  */
 AmayaWindow::~AmayaWindow()
 {
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  SetupURLBar
+ * Description:  create and add the url to the toolbar if it's not allready done
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::SetupURLBar()
+{
+  if ( !m_pURLBar )
+    {
+      // Create the url entry and add it to the toolbar
+      m_pURLBar = new AmayaURLBar( m_pToolBar, this );
+      m_pToolBar->AddTool( m_pURLBar, TRUE );
+    }
 }
 
 /*
@@ -396,7 +416,8 @@ AmayaFrame * AmayaWindow::GetActiveFrame() const
  */
 void AmayaWindow::SetURL ( const wxString & new_url )
 {
-  m_pURLBar->SetValue( new_url );
+  if (m_pURLBar)
+    m_pURLBar->SetValue( new_url );
 
   // Just select url
   //m_pURLBar->SetSelection( 0, new_url.Length() );
@@ -411,7 +432,10 @@ void AmayaWindow::SetURL ( const wxString & new_url )
  */
 wxString AmayaWindow::GetURL( )
 {
-  return m_pURLBar->GetValue();
+  if (m_pURLBar)
+    return m_pURLBar->GetValue();
+  else
+    return wxString(_T(""));
 }
 
 /*
@@ -423,7 +447,8 @@ wxString AmayaWindow::GetURL( )
  */
 void AmayaWindow::SetEnableURL( bool urlenabled )
 {
-  m_pURLBar->Enable( urlenabled );
+  if (m_pURLBar)
+    m_pURLBar->Enable( urlenabled );
 }
 
 /*
@@ -435,7 +460,8 @@ void AmayaWindow::SetEnableURL( bool urlenabled )
  */
 void AmayaWindow::AppendURL ( const wxString & new_url )
 {
-  m_pURLBar->Append( new_url );
+  if (m_pURLBar)
+    m_pURLBar->Append( new_url );
 }
 
 /*
@@ -447,7 +473,8 @@ void AmayaWindow::AppendURL ( const wxString & new_url )
  */
 void AmayaWindow::EmptyURLBar()
 {
-  m_pURLBar->Clear();
+  if (m_pURLBar)
+    m_pURLBar->Clear();
 }
 
 
@@ -517,7 +544,7 @@ void AmayaWindow::ActivateMenuBar()
   window_id = TtaGetDocumentWindowId( doc, view );
   TtaGetDocumentPageId( doc, view, &page_id, &page_position );
 
-  AmayaWindow * p_AmayaWindow = WindowsTable[window_id];
+  AmayaWindow * p_AmayaWindow = WindowTable[window_id].WdWindow;
 
   if ( p_AmayaWindow != this )
     {
@@ -537,6 +564,41 @@ void AmayaWindow::ActivateMenuBar()
     return;
 
   SetMenuBar( p_AmayaFrame->GetMenuBar() );
+}
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  OnSize
+ * Description:  the window is resized, we must recalculate by hand the new urlbar size
+ *               (wxWidgets is not able to do that itself ...)
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::OnSize( wxSizeEvent& event )
+{
+  wxLogDebug( _T("AmayaWindow::OnSize - ")+
+	      wxString(_T(" w=%d h=%d")),
+	      event.GetSize().GetWidth(),
+	      event.GetSize().GetHeight() );
+
+  // save the new window size
+  WindowTable[GetWindowId()].FrWidth  = event.GetSize().GetWidth();
+  WindowTable[GetWindowId()].FrHeight = event.GetSize().GetHeight();
+
+  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  GetAmayaToolBar
+ * Description:  return the current toolbar
+ *--------------------------------------------------------------------------------------
+ */
+AmayaToolBar * AmayaWindow::GetAmayaToolBar()
+{
+  return m_pToolBar;
 }
 
 /*----------------------------------------------------------------------
@@ -559,7 +621,7 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
 //  EVT_SPLITTER_DCLICK( -1, AmayaWindow::OnSplitterDClick )
   EVT_SPLITTER_UNSPLIT( -1, AmayaWindow::OnSplitterUnsplit )
 
-//  EVT_SIZE( AmayaWindow::OnSize )
+  EVT_SIZE( AmayaWindow::OnSize )
 
 END_EVENT_TABLE()
 
