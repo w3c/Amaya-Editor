@@ -24,7 +24,7 @@
  * MS-Windows specific definition, constants ...		*
  *								*
  ****************************************************************/
-#include "simx.h"
+#include "windows.h"
 #include <commdlg.h>
 #include <commctrl.h>
 #include <stdlib.h>

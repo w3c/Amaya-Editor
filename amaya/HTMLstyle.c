@@ -2288,7 +2288,7 @@ boolean             isHTML;
   cssRule = ParseCSSUnit (cssRule, &margin);
   margin.typed_data.value = - margin.typed_data.value;
   if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetBMargin)
-    context->drv->SetBMargin (target, context, margin);
+    /*context->drv->SetBMargin (target, context, margin)*/;
   return (cssRule);
 }
 
@@ -2346,7 +2346,7 @@ boolean             isHTML;
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
   if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetRMargin)
-    /*context->drv->SetRMargin (target, context, margin);*/
+    /*context->drv->SetRMargin (target, context, margin)*/;
   return (cssRule);
 }
 
