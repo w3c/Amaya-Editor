@@ -1311,7 +1311,7 @@ const char *prefix;
     char *altprefix;
     name = tmpnam (NULL);	/* get a possibly unique string */
     altprefix = TtaGetMemory(ustrlen (prefix) + ustrlen(name) + 1);
-    sprintf (altprefix, "%s%s", prefix, name+ustrlen(_P_tmpdir));
+    sprintf (altprefix, "%s%s", prefix, name + ustrlen(_P_tmpdir));
     name = _tempnam (dir, altprefix); /* get a name that isn't yet in use */
     TtaFreeMemory (altprefix);
   }
@@ -1327,7 +1327,7 @@ const char *prefix;
 #else
       putenv (tmpdir);
 #endif /* _WINDOWS */
-      /* no need to free this string */
+	   /* Shouldn't be free (see man for putenv ())
       /* TtaFreeMemory (tmpdir); */
     }
   return (name);
