@@ -4581,17 +4581,13 @@ void SetProp_DAV( const Prop_DAV * prop )
   ----------------------------------------------------------------------*/
 Prop_DAV GetProp_DAV()
 {
-#ifdef DAV
-#ifdef _WX
+#if defined(DAV) && defined(_WX)
   return GProp_DAV;
-#else /* _WX */
+#else /* _WX && DAV */
   Prop_DAV prop;
   memset(&prop, 0, sizeof(Prop_DAV) );
   return prop;
-#endif /* _WX */
-#else /* DAV */
-  return NULL;
-#endif /* DAV */
+#endif /* _WX && DAV */
 }
 
 /*----------------------------------------------------------------------
