@@ -94,6 +94,12 @@ Ctrl <Key>z:                       TtcUndo()
 #Shift Ctrl <Key>*:                 SetBrowserEditor() 
 
 #Headings sbmenu
+Shift Ctrl <Key>1:                 CreateHeading1() 
+Shift Ctrl <Key>2:                 CreateHeading2() 
+Shift Ctrl <Key>3:                 CreateHeading3() 
+Shift Ctrl <Key>4:                 CreateHeading4() 
+Shift Ctrl <Key>5:                 CreateHeading5() 
+Shift Ctrl <Key>6:                 CreateHeading6() 
 Ctrl <Key>1:                       CreateHeading1() 
 Ctrl <Key>2:                       CreateHeading2() 
 Ctrl <Key>3:                       CreateHeading3() 
