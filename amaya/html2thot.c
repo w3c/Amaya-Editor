@@ -5644,7 +5644,7 @@ DocumentType   *thotType;
   *isXML = FALSE;
   *parsingLevel = L_Other;
   *charset = UNDEFINED_CHARSET;
-  *thotType = docText;
+  *thotType = docHTML;
   wc2iso_strcpy (file_name, fileName);
   stream = gzopen (file_name, "r");
   if (stream != 0)
@@ -5783,6 +5783,7 @@ DocumentType   *thotType;
 		      /* the html tag is found */
 		      i += 5;
 		      /* it's not necessary to continue */
+		      *thotType = docHTML;
 		      found = FALSE;
 		      endOfSniffedFile = TRUE;
 		      /* by default all HTML tags are accepted */
@@ -5792,10 +5793,8 @@ DocumentType   *thotType;
 		      if (!ptr || (ptr && ptr > end))
 			ptr = strstr (&FileBuffer[i], "xhtml");
 		      if (ptr && ptr < end)
-			{
-			  *isXML = TRUE;
-			  *thotType = docHTML;
-			}
+			*isXML = TRUE;
+
 		      ptr = strstr (&FileBuffer[i], "Strict");
 		      if (!ptr || (ptr && ptr > end))
 			ptr = strstr (&FileBuffer[i], "strict");
