@@ -3342,6 +3342,7 @@ PtrDocument         pDoc;
 	       if (pEl1->ElLeafType == LtPicture)
 		 {
 		   FreePictInfo ((PictInfo *)(pEl1->ElPictInfo));
+		   TtaFreeMemory (pEl1->ElPictInfo);
 		   pEl1->ElPictInfo = NULL;
 		 }
 	     }
@@ -3536,7 +3537,6 @@ boolean             shareRef;
    PtrElement          pEl, pS2, pC1, pC2, pSP;
    PtrReference        rf;
    int                 copyType, nR;
-   Name                PSchName;
    SRule              *pSRule;
    PtrElement          pAsc;
    PtrSSchema          pSS;
@@ -3640,14 +3640,13 @@ boolean             shareRef;
 		      the schemes for the copy */
 		  {
 		     /* loads the structure and presentation schemes for the copy */
-		     PSchName[0] = EOS;
 		     /* no preference for the presentation scheme */
-		     nR = CreateNature (pSource->ElStructSchema->SsName, PSchName, pSSchema);
+		     nR = CreateNature (pSource->ElStructSchema->SsName, NULL, pSSchema);
 		     if (nR == 0)
-			/* could not load the schemes */
+			/* could not load the schema */
 			copyType = 0;
 		     else
-			/* schemes are loaded, changes the structure scheme of the copy */
+			/* schema is loaded, changes the structure scheme of the copy */
 		       {
 			  pSRule = &pSSchema->SsRule[nR - 1];
 			  pSSchema = pSRule->SrSSchemaNat;

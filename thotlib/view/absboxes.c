@@ -179,6 +179,7 @@ int                 frame;
 	      {
 		/* c'est une boite de presentation image */
 		FreePictInfo ((PictInfo *)(pAb->AbPictInfo));
+		TtaFreeMemory (pAb->AbPictInfo);
 		pAb->AbPictInfo = NULL;
 	      }
 	    break;
@@ -189,6 +190,7 @@ int                 frame;
 		TtaFreeMemory (((PictInfo *)(pAb->AbPictBackground))->PicFileName);
 		/* ce n'est pas un element image */
 		FreePictInfo ((PictInfo *)(pAb->AbPictBackground));
+		TtaFreeMemory (pAb->AbPictBackground);
 		pAb->AbPictBackground = NULL;
 	      }
 	    break;

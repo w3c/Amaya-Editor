@@ -18,6 +18,14 @@ extern void TtcStartOfLine ( Document document,
                              View view );
 extern void TtcEndOfLine ( Document document,
                            View view );
+extern void TtcPreviousSelChar ( Document document,
+                                 View view );
+extern void TtcNextSelChar ( Document document,
+                             View view );
+extern void TtcPreviousSelLine ( Document document,
+                                 View view );
+extern void TtcNextSelLine ( Document document,
+                             View view );
 extern void TtcCopyToClipboard ( Document document,
                                  View view );
 
@@ -35,6 +43,14 @@ extern void TtcStartOfLine (/* Document document,
                                View view */);
 extern void TtcEndOfLine (/* Document document,
                              View view */);
+extern void TtcPreviousSelChar (/* Document document,
+                                   View view */);
+extern void TtcNextSelChar (/* Document document,
+                               View view */);
+extern void TtcPreviousSelLine (/* Document document,
+                                   View view */);
+extern void TtcNextSelLine (/* Document document,
+                               View view */);
 extern void TtcCopyToClipboard (/* Document document,
                                    View view */);
 

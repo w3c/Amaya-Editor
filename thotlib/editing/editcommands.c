@@ -1690,6 +1690,7 @@ int                 frame;
 	       if (i != 0)
 		 {
 		   pictInfo = (PictInfo *) pBox->BxPictInfo;
+		   /* free the pictInfo contents, but not the struture */
 		   FreePictInfo (pictInfo);
 		   ustrcpy (pictInfo->PicFileName, buffer);
 		   pictInfo->PicPresent = (PictureScaling) pres;

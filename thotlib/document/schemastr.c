@@ -5,15 +5,6 @@
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /* 
    Chargement et liberation des schemas de structure sans schemas
    de presentation
@@ -44,14 +35,13 @@ void                InitNatures ()
    du schema de structure pointe par pSS.				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadNatureSchema (PtrSSchema pSS, Name PSchName, int rule)
+void                LoadNatureSchema (PtrSSchema pSS, USTRING PSchName, int rule)
 
 #else  /* __STDC__ */
 void                LoadNatureSchema (pSS, PSchName, rule)
 PtrSSchema          pSS;
-Name                PSchName;
+USTRING              PSchName;
 int                 rule;
-
 #endif /* __STDC__ */
 
 {
@@ -128,13 +118,12 @@ PtrSSchema          pSS;
    creee ou 0 si echec creation.                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 CreateNature (Name SSchName, Name PSchName, PtrSSchema pSS)
-
+int                CreateNature (USTRING SSchName, USTRING PSchName, PtrSSchema pSS)
 #else  /* __STDC__ */
-int                 CreateNature (SSchName, PSchName, pSS)
-Name                SSchName;
-Name                PSchName;
-PtrSSchema          pSS;
+int                CreateNature (SSchName, PSchName, pSS)
+USTRING             SSchName;
+USTRING             PSchName;
+PtrSSchema         pSS;
 
 #endif /* __STDC__ */
 
@@ -215,12 +204,12 @@ PtrSSchema          pSS;
    schema de structure complet.                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadSchemas (Name SSchName, Name PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, boolean Extension)
+void                LoadSchemas (USTRING SSchName, USTRING PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, boolean Extension)
 
 #else  /* __STDC__ */
 void                LoadSchemas (SSchName, PSchName, pSS, pLoadedSS, Extension)
-Name                SSchName;
-Name                PSchName;
+USTRING              SSchName;
+USTRING              PSchName;
 PtrSSchema         *pSS;
 PtrSSchema          pLoadedSS;
 boolean             Extension;
@@ -259,12 +248,12 @@ boolean             Extension;
    d'extension de nom SSchName.                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrSSchema          LoadExtension (Name SSchName, Name PSchName, PtrDocument pDoc)
+PtrSSchema          LoadExtension (USTRING SSchName, USTRING PSchName, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 PtrSSchema          LoadExtension (SSchName, PSchName, pDoc)
-Name                SSchName;
-Name                PSchName;
+USTRING              SSchName;
+USTRING              PSchName;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -279,9 +268,8 @@ PtrDocument         pDoc;
 	LoadSchemas (SSchName, PSchName, &pExtens, NULL, TRUE);
 	if (pExtens != NULL)
 	  {
-	     if (PSchName[0] != EOS)
-		ustrncpy (pExtens->SsDefaultPSchema, PSchName,
-			 MAX_NAME_LENGTH - 1);
+	     if (PSchName != NULL && PSchName[0] != EOS)
+		ustrncpy (pExtens->SsDefaultPSchema, PSchName, MAX_NAME_LENGTH - 1);
 	     /* cherche le dernier schema d'extension du document */
 	     pPrevExtens = pDoc->DocSSchema;
 	     while (pPrevExtens->SsNextExtens != NULL)

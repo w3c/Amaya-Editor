@@ -9,12 +9,16 @@
 extern void ColorsEvent ( ThotEvent * event );
 extern void TtcChangeColors ( Document document,
                               View view );
+extern void TtcGetPaletteColors ( int *fg,
+                                  int *bg );
 
 #else /* __STDC__ */
 
 extern void ColorsEvent (/* ThotEvent * event */);
 extern void TtcChangeColors (/* Document document,
                                 View view */);
+extern void TtcGetPaletteColors (/* int *fg,
+                                    int *bg */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

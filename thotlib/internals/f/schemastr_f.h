@@ -8,18 +8,18 @@
 
 extern void InitNatures ( void );
 extern void LoadNatureSchema ( PtrSSchema pSS,
-                               Name PSchName,
+                               USTRING PSchName,
                                int rule );
-extern int CreateNature ( Name SSchName,
-                          Name PSchName,
+extern int CreateNature ( USTRING SSchName,
+                          USTRING PSchName,
                           PtrSSchema pSS );
-extern void LoadSchemas ( Name SSchName,
-                          Name PSchName,
+extern void LoadSchemas ( USTRING SSchName,
+                          USTRING PSchName,
                           PtrSSchema * pSS,
                           PtrSSchema pLoadedSS,
                           boolean Extension );
-extern PtrSSchema LoadExtension ( Name SSchName,
-                                  Name PSchName,
+extern PtrSSchema LoadExtension ( USTRING SSchName,
+                                  USTRING PSchName,
                                   PtrDocument pDoc );
 extern boolean FreeNature ( PtrSSchema pSS,
                             PtrSSchema pNatureSS );
@@ -29,18 +29,18 @@ extern void FreeDocumentSchemas ( PtrDocument pDoc );
 
 extern void InitNatures (/* void */);
 extern void LoadNatureSchema (/* PtrSSchema pSS,
-                                 Name PSchName,
+                                 USTRING PSchName,
                                  int rule */);
-extern int CreateNature (/* Name SSchName,
-                            Name PSchName,
+extern int CreateNature (/* USTRING SSchName,
+                            USTRING PSchName,
                             PtrSSchema pSS */);
-extern void LoadSchemas (/* Name SSchName,
-                            Name PSchName,
+extern void LoadSchemas (/* USTRING SSchName,
+                            USTRING PSchName,
                             PtrSSchema * pSS,
                             PtrSSchema pLoadedSS,
                             boolean Extension */);
-extern PtrSSchema LoadExtension (/* Name SSchName,
-                                    Name PSchName,
+extern PtrSSchema LoadExtension (/* USTRING SSchName,
+                                    USTRING PSchName,
                                     PtrDocument pDoc */);
 extern boolean FreeNature (/* PtrSSchema pSS,
                               PtrSSchema pNatureSS */);

@@ -303,15 +303,6 @@ boolean         removed;
     return;
   else
     {
-      /* look at if this css is alway used */
-      used = (css->doc != 0);
-      i = 0;
-      while (!used && i < DocumentTableLength)
-	{
-	  used = css->documents[i];
-	  i++;
-	}
-
       /* look for the specific P descriptors in the css */
       pInfo = css->infos;
       prevInfo = NULL;
@@ -329,7 +320,7 @@ boolean         removed;
 		css->infos = pInfo->PiNext;
 	      else
 		prevInfo->PiNext = pInfo->PiNext;
-	      used = FALSE;
+	      css->documents[doc] = FALSE;
 	    }
 	  /* disapply the CSS */
 	  if (pInfo->PiPSchema)
@@ -345,6 +336,14 @@ boolean         removed;
 	    TtaFreeMemory (pInfo);
 	}
 
+      /* look at if this css is alway used */
+      used = (css->doc != 0);
+      i = 0;
+      while (!used && i < DocumentTableLength)
+	{
+	  used = css->documents[i];
+	  i++;
+	}
       if (!used)
 	{
 	  if (css->category == CSS_EXTERNAL_STYLE && IsW3Path (css->url))
@@ -641,7 +640,10 @@ Document            doc;
     {
       /* allocate a new Presentation structure */ 
       if (TtaFileExist (UserCSS))
-	css = AddCSS (0, doc, CSS_USER_STYLE, NULL, UserCSS);
+	{
+	  css = AddCSS (0, doc, CSS_USER_STYLE, NULL, UserCSS);
+	  css->documents[doc] = TRUE;
+	}
     }
   else if (!css->documents[doc])
     {

@@ -113,15 +113,6 @@ extern void CreateSubmit ( Document doc,
                            View view );
 extern void CreateReset ( Document doc,
                           View view );
-extern void SetAreaCoords ( Document document,
-                            Element element,
-                            int attrNum );
-extern void CreateAreaRect ( Document doc,
-                             View view );
-extern void CreateAreaCircle ( Document doc,
-                               View view );
-extern void CreateAreaPoly ( Document doc,
-                             View view );
 extern void CreateDivision ( Document document,
                              View view );
 extern void CreateNOSCRIPT ( Document document,
@@ -264,15 +255,6 @@ extern void CreateSubmit (/* Document doc,
                              View view */);
 extern void CreateReset (/* Document doc,
                             View view */);
-extern void SetAreaCoords (/* Document document,
-                              Element element,
-                              int attrNum */);
-extern void CreateAreaRect (/* Document doc,
-                               View view */);
-extern void CreateAreaCircle (/* Document doc,
-                                 View view */);
-extern void CreateAreaPoly (/* Document doc,
-                               View view */);
 extern void CreateDivision (/* Document document,
                                View view */);
 extern void CreateNOSCRIPT (/* Document document,

@@ -1969,12 +1969,11 @@ boolean             completeCreator;
 	       if (pAb->AbBox != NULL)
 		 {
 		   /* libere le pave */
-		   if (pAb->AbLeafType == LtPicture)
+		   if (pAb->AbLeafType == LtPicture && pAb->AbPresentationBox)
 		     {
-		       if (!pAb->AbElement->ElTerminal ||
-			   pAb->AbElement->ElLeafType != LtPicture)
-			 /* ce n'est pas un element image */
-			 FreePictInfo ((PictInfo *)(pAb->AbPictInfo));
+		       /* ce n'est pas un element image */
+		       FreePictInfo ((PictInfo *)(pAb->AbPictInfo));
+		       TtaFreeMemory (pAb->AbPictInfo);
 		       pAb->AbPictInfo = NULL;
 		     }
 		 }
@@ -1984,6 +1983,7 @@ boolean             completeCreator;
 		   /* in this particular case we need to free filename */
 		   TtaFreeMemory (((PictInfo *)(pAb->AbPictBackground))->PicFileName);
 		   FreePictInfo ((PictInfo *)(pAb->AbPictBackground));
+		   TtaFreeMemory (pAb->AbPictBackground);
 		   pAb->AbPictBackground = NULL;
 		 }
 	       FreeAbstractBox (pAb);

@@ -600,8 +600,13 @@ Document            doc;
   el = TtaGetMainRoot (doc);
   /* search the BASE element */
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
-  elType.ElTypeNum = HTML_EL_BASE;
-  el = TtaSearchTypedElement (elType, SearchInTree, el);
+  elType.ElTypeNum = HTML_EL_HEAD;
+  el = TtaSearchTypedElement (elType, SearchForward, el);
+  if (el)
+    {
+      elType.ElTypeNum = HTML_EL_BASE;
+      el = TtaSearchTypedElement (elType, SearchInTree, el);
+    }
   if (el)
     {
       /*  The document has a BASE element -> Get the HREF attribute */

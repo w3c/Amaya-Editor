@@ -1081,10 +1081,11 @@ STRING              text;
 	  /* change the text value */
 	  TtaSetTextZone (document, view, 1, s);
 	  CallbackDialogue (BaseDialog + URLName, STRING_DATA, s);
-	  TtaFreeMemory (s);
 	}
       else
 	CallbackDialogue (BaseDialog + URLName, STRING_DATA, text);
+      if (s)
+	TtaFreeMemory (s);
       InNewWindow = FALSE;
       CurrentDocument = document;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (STRING) 1);

@@ -666,6 +666,8 @@ View                view;
    /* Alloue un Xbuffer de la longueur voulue */
    Xbuffer = (USTRING) TtaGetMemory (sizeof (CHAR_T) * max);
 
+   if (*buffer)
+     TtaFreeMemory (*buffer);
    *buffer = Xbuffer;
    /* Recopie le texte dans le Xbuffer */
    i = 0;

@@ -1219,7 +1219,7 @@ int               **thotColors;
 
    /* find the visual class. */
    Mapping = (int*) TtaGetMemory (num_colors * sizeof (int));
-   tcolors = NULL;
+   tcolors = *thotColors;
    for (i = 0; i < num_colors; i++)
      {
        tmpcolr.red   = colrs[i].red;

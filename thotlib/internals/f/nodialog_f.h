@@ -71,12 +71,11 @@ extern void ComputeViewSelMarks ( ViewSelection * marque );
 extern void HighlightSelection ( boolean DebVisible,
                                  boolean clearOldSel );
 extern void CancelSelection ( void );
-extern void MergeAndSelect ( PtrDocument SelDoc,
-                             PtrElement PremSel,
-                             PtrElement DerSel,
-                             int premcar,
-                             int dercar,
-                             boolean caret );
+extern void SelectRange ( PtrDocument SelDoc,
+                          PtrElement PremSel,
+                          PtrElement DerSel,
+                          int premcar,
+                          int dercar );
 extern void SetNewSelectionStatus ( int frame,
                                     PtrAbstractBox pAb,
                                     boolean Etat );
@@ -164,12 +163,11 @@ extern void ComputeViewSelMarks (/* ViewSelection * marque */);
 extern void HighlightSelection (/* boolean DebVisible,
                                    boolean clearOldSel */);
 extern void CancelSelection (/* void */);
-extern void MergeAndSelect (/* PtrDocument SelDoc,
-                               PtrElement PremSel,
-                               PtrElement DerSel,
-                               int premcar,
-                               int dercar,
-                               boolean caret */);
+extern void SelectRange (/* PtrDocument SelDoc,
+                            PtrElement PremSel,
+                            PtrElement DerSel,
+                            int premcar,
+                            int dercar */);
 extern void SetNewSelectionStatus (/* int frame,
                                       PtrAbstractBox pAb,
                                       boolean Etat */);

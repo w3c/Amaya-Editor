@@ -8,6 +8,8 @@
 
 extern void InitAmayaDefEnv ( void );
 extern void InitConfMenu ( void );
+extern int CleanDirSep ( STRING name );
+extern int CleanSpace ( STRING name );
 extern void CacheConfMenu ( Document document,
                             View view );
 extern void ProxyConfMenu ( Document document,
@@ -25,6 +27,8 @@ extern void GeometryConfMenu ( Document document,
 
 extern void InitAmayaDefEnv (/* void */);
 extern void InitConfMenu (/* void */);
+extern int CleanDirSep (/* STRING name */);
+extern int CleanSpace (/* STRING name */);
 extern void CacheConfMenu (/* Document document,
                               View view */);
 extern void ProxyConfMenu (/* Document document,

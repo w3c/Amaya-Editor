@@ -2027,7 +2027,6 @@ STRING              natureName;
 
 #endif /* __STDC__ */
 {
-   Name                PSchemaName;
    Name                SSchemaName;
 
    if (natureName != NULL)
@@ -2043,9 +2042,8 @@ STRING              natureName;
 		/* ce nom n'est pas dans le fichier langue, on le */
 		/* prend tel quel */
 		ustrncpy (SSchemaName, natureName, MAX_NAME_LENGTH);
-	     PSchemaName[0] = EOS;
 	     /* cree une nouvelle nature */
-	     ChosenTypeNum = CreateNature (SSchemaName, PSchemaName, ChoiceMenuSSchema[0]);
+	     ChosenTypeNum = CreateNature (SSchemaName, NULL, ChoiceMenuSSchema[0]);
 	     ChosenTypeSSchema = ChoiceMenuSSchema[0];
 	  }
      }

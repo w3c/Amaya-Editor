@@ -1262,7 +1262,6 @@ int                *typeNum;
 
 {
    int                 referredNature;
-   Name                presName;
    SRule              *pRule;
    TtAttribute        *pAtt;
 
@@ -1292,9 +1291,8 @@ int                *typeNum;
 	      /* cherche, ou charge si ce n'est pas deja fait, le schema de */
 	      /* structure qui definit le type reference' */
 	     {
-		presName[0] = EOS;
 		/* pas de schema de presentation prefere' */
-		referredNature = CreateNature (pRule->SrRefTypeNat, presName, *pSS);
+		referredNature = CreateNature (pRule->SrRefTypeNat, NULL, *pSS);
 		if (referredNature == 0)
 		   *pSS = NULL;
 		else
@@ -1323,9 +1321,8 @@ int                *typeNum;
 	   /* cherche, ou charge si ce n'est pas deja fait, le schema de */
 	   /* structure qui definit le type reference' */
 	  {
-	     presName[0] = EOS;
 	     /* pas de schema de presentation prefere' */
-	     referredNature = CreateNature (pAtt->AttrTypeRefNature, presName, *pSS);
+	     referredNature = CreateNature (pAtt->AttrTypeRefNature, NULL, *pSS);
 	     if (referredNature == 0)
 		*pSS = NULL;
 	     else

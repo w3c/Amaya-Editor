@@ -6,15 +6,6 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
    Chargement et liberation des schemas de structure et de presentation
  */
 
@@ -303,12 +294,12 @@ PtrSSchema          pSS;
    presentation de nom PSchName.					
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadNatureSchema (PtrSSchema pSS, Name PSchName, int rule)
+void                LoadNatureSchema (PtrSSchema pSS, USTRING PSchName, int rule)
 
 #else  /* __STDC__ */
 void                LoadNatureSchema (pSS, PSchName, rule)
 PtrSSchema          pSS;
-Name                PSchName;
+USTRING              PSchName;
 int                 rule;
 
 #endif /* __STDC__ */
@@ -335,14 +326,14 @@ int                 rule;
 	/* traduit le schema de structure dans la langue de l'utilisateur */
 	ConfigTranslateSSchema (pNatureSS);
 	pSS->SsRule[rule - 1].SrSSchemaNat = pNatureSS;
-	if (PSchName[0] != EOS)
+	if (PSchName != NULL && PSchName[0] != EOS)
 	   /* l'appelant indique un schema de presentation, on essaie de le
 	      charger */
 	  {
 	     ustrncpy (schName, PSchName, MAX_NAME_LENGTH);
 	     pNatureSS->SsPSchema = LoadPresentationSchema (schName, pNatureSS);
 	  }
-	if (PSchName[0] == EOS || pNatureSS->SsPSchema == NULL)
+	if (PSchName == NULL || PSchName[0] == EOS || pNatureSS->SsPSchema == NULL)
 	   /* pas de schema de presentation particulier demande' par l'appelant */
 	   /* ou schema demande' inaccessible */
 	  {
@@ -419,12 +410,12 @@ PtrSSchema          pSS;
    structure, sauf si le premier octet de PSchName est nul.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 CreateNature (Name SSchName, Name PSchName, PtrSSchema pSS)
+int                 CreateNature (USTRING SSchName, USTRING PSchName, PtrSSchema pSS)
 
 #else  /* __STDC__ */
 int                 CreateNature (SSchName, PSchName, pSS)
-Name                SSchName;
-Name                PSchName;
+USTRING              SSchName;
+USTRING              PSchName;
 PtrSSchema          pSS;
 
 #endif /* __STDC__ */
@@ -516,12 +507,12 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                LoadSchemas (Name SSchName, Name PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, boolean extension)
+void                LoadSchemas (USTRING SSchName, USTRING PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, boolean extension)
 
 #else  /* __STDC__ */
 void                LoadSchemas (SSchName, PSchName, pSS, pLoadedSS, extension)
-Name                SSchName;
-Name                PSchName;
+USTRING              SSchName;
+USTRING              PSchName;
 PtrSSchema         *pSS;
 PtrSSchema          pLoadedSS;
 boolean             extension;
@@ -565,14 +556,14 @@ boolean             extension;
 	   /* pour eviter que ReadPresentationSchema recharge le schema de
 	      structure */
 	   (*pSS)->SsRootElem = 1;
-	if (PSchName[0] != EOS)
+	if (PSchName != NULL && PSchName[0] != EOS)
 	   /* l'appelant specifie le schema de presentation a prendre, on
 	      essaie de le charger */
 	  {
 	     ustrncpy (schName, PSchName, MAX_NAME_LENGTH);
 	     (*pSS)->SsPSchema = LoadPresentationSchema (schName, *pSS);
 	  }
-	if (PSchName[0] == EOS || (*pSS)->SsPSchema == NULL)
+	if (PSchName == NULL || PSchName[0] == EOS || (*pSS)->SsPSchema == NULL)
 	   /* pas de presentation specifiee par l'appelant, ou schema specifie'
 	      inaccessible */
 	  {
@@ -608,12 +599,12 @@ boolean             extension;
    nom PSchName.                                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrSSchema          LoadExtension (Name SSchName, Name PSchName, PtrDocument pDoc)
+PtrSSchema          LoadExtension (USTRING SSchName, USTRING PSchName, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 PtrSSchema          LoadExtension (SSchName, PSchName, pDoc)
-Name                SSchName;
-Name                PSchName;
+USTRING              SSchName;
+USTRING              PSchName;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -637,7 +628,7 @@ PtrDocument         pDoc;
 	if (!extensionExist)
 	   /* le schema d'extension n'existe pas, on le charge */
 	  {
-	     if (PSchName[0] == EOS)
+	     if (PSchName == NULL || PSchName[0] == EOS)
 		/* pas de schema de presentation precise' */
 		/* cherche le schema de presentation de l'extension prevu */
 		/* dans le fichier .conf pour ce type de document */

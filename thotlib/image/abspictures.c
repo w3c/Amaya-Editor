@@ -166,14 +166,13 @@ int                 imagetype;
 
 
 /*----------------------------------------------------------------------
-   FreePictInfo  frees the Picture Info structure
+  FreePictInfo  frees the picture information but not the structure itself
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FreePictInfo (PictInfo * imageDesc)
 #else  /* __STDC__ */
 void                FreePictInfo (imageDesc)
 PictInfo           *imageDesc;
-
 #endif /* __STDC__ */
 {
   int        i;

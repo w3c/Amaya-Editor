@@ -163,9 +163,10 @@ PtrDocument         pDoc;
                        pAncest, pE, pElAttr, newElement;
    PtrAttribute        pInheritLang, pLangAttr;
    PtrPasteElem        pPasteD;
+   PtrSSchema          pSS;
    NotifyOnValue       notifyVal;
    NotifyElement       notifyEl;
-   int                 NSiblings, i, asc;
+   int                 NSiblings, i, asc, nR;
    boolean             stop, ok, possible;
 
    pPasted = NULL;
@@ -288,13 +289,27 @@ PtrDocument         pDoc;
 		        ce type */
 		    {
 		       stop = TRUE;
+		       /* Look for the Structure schema of the element to be created */
+		       pSS = pSavedEl->PeAscendSSchema[asc];
+		       if (pDoc != DocOfSavedElements)
+		         if (ustrcmp (pDoc->DocSSchema->SsName, pSS->SsName) == 0)
+			   pSS = pDoc->DocSSchema;
+			 else
+			   {
+			     /* loads the structure and presentation schemes for the new element */
+			     /* no preference for the presentation scheme */
+			     nR = CreateNature (pSS->SsName, NULL, pDoc->DocSSchema);
+			     if (nR != 0)
+			       /* schemes are loaded, changes the structure scheme of the copy */
+			       pSS = pDoc->DocSSchema->SsRule[nR - 1].SrSSchemaNat;
+			   }
 		       /* demande a l'application si on peut creer ce type
 		          d'element */
 		       notifyEl.event = TteElemNew;
 		       notifyEl.document = (Document) IdentDocument (pDoc);
 		       notifyEl.element = (Element) (pParent);
 		       notifyEl.elementType.ElTypeNum = pSavedEl->PeAscendTypeNum[asc];
-		       notifyEl.elementType.ElSSchema = (SSchema) (pSavedEl->PeAscendSSchema[asc]);
+		       notifyEl.elementType.ElSSchema = (SSchema) (pSS);
 		       notifyEl.position = NSiblings;
 		       if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 			  /* l'application refuse */
@@ -302,7 +317,7 @@ PtrDocument         pDoc;
 		       else
 			 {
 			    pAncest = NewSubtree (pSavedEl->PeAscendTypeNum[asc],
-						  pSavedEl->PeAscendSSchema[asc], pDoc, pEl->ElAssocNum, FALSE,
+						  pSS, pDoc, pEl->ElAssocNum, FALSE,
 						  TRUE, TRUE, TRUE);
 			    if (pAncest != NULL)
 			      {
@@ -322,13 +337,25 @@ PtrDocument         pDoc;
 				 while (asc > 0)
 				   {
 				      asc--;
+				      pSS = pSavedEl->PeAscendSSchema[asc];
+				      if (pDoc != DocOfSavedElements)
+					if (ustrcmp (pDoc->DocSSchema->SsName, pSS->SsName) == 0)
+					  pSS = pDoc->DocSSchema;
+					else
+					  {
+					    /* loads the structure and presentation schemes for the new element */
+					    /* no preference for the presentation scheme */
+					    nR = CreateNature (pSS->SsName, NULL, pDoc->DocSSchema);
+					    if (nR != 0)
+					      /* schemes are loaded, changes the structure scheme of the copy */
+					      pSS = pDoc->DocSSchema->SsRule[nR - 1].SrSSchemaNat;
+					  }
 				      /* demande a l'application si on peut creer ce type d'elem. */
 				      notifyEl.event = TteElemNew;
 				      notifyEl.document = (Document) IdentDocument (pDoc);
 				      notifyEl.element = (Element) (pParent);
 				      notifyEl.elementType.ElTypeNum = pSavedEl->PeAscendTypeNum[asc];
-				      notifyEl.elementType.ElSSchema =
-					 (SSchema) (pSavedEl->PeAscendSSchema[asc]);
+				      notifyEl.elementType.ElSSchema = (SSchema) pSS;
 				      notifyEl.position = NSiblings;
 				      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 					 /* l'application refuse */
@@ -342,7 +369,7 @@ PtrDocument         pDoc;
 					 /* l'application accepte, on cree l'element */
 					{
 					   pE = NewSubtree (pSavedEl->PeAscendTypeNum[asc],
-							    pSavedEl->PeAscendSSchema[asc], pDoc, pEl->ElAssocNum,
+							    pSS, pDoc, pEl->ElAssocNum,
 						   FALSE, TRUE, TRUE, TRUE);
 					   /* on insere ce nouvel element dans l'arbre abstrait */
 					   InsertFirstChild (pParent, pE);

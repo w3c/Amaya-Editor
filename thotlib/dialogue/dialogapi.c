@@ -1432,6 +1432,73 @@ caddr_t             call_d;
 
 
 /*----------------------------------------------------------------------
+   Callback de saisie de valeur.                                      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+#else  /* __STDC__ */
+static void         CallValueSet (w, catalogue, call_d)
+ThotWidget          w;
+struct Cat_Context *catalogue;
+caddr_t             call_d;
+
+#endif /* __STDC__ */
+{
+  int                 val, val1;
+  CHAR_T              text[11];
+  ThotWidget          wtext;
+
+  /* Indication de valeur */
+  if (catalogue->Cat_Widget != 0)
+    if (catalogue->Cat_Type == CAT_INT)
+      {
+	catalogue->Cat_Data = 0;
+	wtext = catalogue->Cat_Entries->E_ThotWidget[1];
+	
+	ustrncpy (text, XmTextGetString (wtext), 10);
+	text[10] = EOS;
+	if (text[0] != EOS)
+	  {
+	    if ((text[0] == '-') && (text[1] == EOS))
+	      /* cas ou le caractere - a ete tape, on met val a 0 */
+	      val = 0;
+	    else
+	      sscanf (text, "%d", &val);
+	    
+	    /* Est-ce une valeur valide ? */
+	    if (val < (int) catalogue->Cat_Entries->E_ThotWidget[2])
+	      val1 = (int) catalogue->Cat_Entries->E_ThotWidget[2];
+	    else if (val > (int) catalogue->Cat_Entries->E_ThotWidget[3])
+	      val1 = (int) catalogue->Cat_Entries->E_ThotWidget[3];
+	    else
+	      val1 = val;	/* valeur inchangee */
+	    
+	    /* Est-ce qu'il faut changer le contenu du widget ? */
+	    if (val != val1)
+	      {
+		usprintf (text, "%d", val1);
+		/* Desactive la procedure de Callback */
+		if (catalogue->Cat_React)
+		  XtRemoveCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
+		
+		XmTextSetString (wtext, text);
+		val = ustrlen (text);
+		XmTextSetSelection (wtext, val, val, 500);
+		
+		/* Reactive la procedure de Callback */
+		if (catalogue->Cat_React)
+		  XtAddCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
+	      }
+
+	    /* retourne la valeur saisie si la feuille de saisie est reactive */
+	    if (catalogue->Cat_React)
+	      (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, val);
+	  }
+      }
+}
+
+
+/*----------------------------------------------------------------------
    Callback de feuillet.                                              
   ----------------------------------------------------------------------*/
 #ifndef _WINDOWS
@@ -1446,207 +1513,142 @@ caddr_t             call_d;
 
 #endif /* __STDC__ */
 {
-   register int        n;
-   int                 i;
-   int                 ent;
-   int                 entry;
-   CHAR_T                text[100];
-   STRING              ptr;
-   Arg                 args[MAX_ARGS];
-   XmStringTable       strings;
-   struct E_List      *adbloc;
-   struct Cat_Context *catalogue;
-   ThotWidget          wtext;
+  register int        n;
+  int                 i;
+  int                 ent;
+  int                 entry;
+  CHAR_T              text[100];
+  STRING              ptr;
+  Arg                 args[MAX_ARGS];
+  XmStringTable       strings;
+  struct E_List      *adbloc;
+  struct Cat_Context *catalogue;
+  ThotWidget          wtext;
 
-   /* On a selectionne une entree du menu */
-   if (parentCatalogue->Cat_Widget != 0)
-     {
-	adbloc = parentCatalogue->Cat_Entries;
-	entry = -1;
-	i = 0;
-	while ((entry == -1) && (i < C_NUMBER))
-	  {
-	     if (adbloc->E_ThotWidget[i] == w)
-		entry = i;
-	     i++;
-	  }			/*while */
-
-	/* Si la feuille de dialogue est detruite cela force l'abandon */
-	if (entry == -1)
-	   if (parentCatalogue->Cat_Type == CAT_SHEET)
-	      entry = 0;
-	   else
-	      return;
-
-	/*** Retour vers l'application ***/
-	/*** Eteins les sous-widgets du feuillet si on quitte ***/
-	/*** Recupere les retours des sous-catalogues         ***/
-	adbloc = adbloc->E_Next;
-	ent = 1;
-	while (adbloc->E_ThotWidget[ent] != 0)
-	  {
-	     /* Il faut sauter les widgets des RowColumns */
-	     if (adbloc->E_Free[ent] == 'N')
-	       {
-		  catalogue = (struct Cat_Context *) adbloc->E_ThotWidget[ent];
-		  if (catalogue->Cat_Widget != 0)
-		    {
-		       if (entry == 0)
-			  XtUnmanageChild (catalogue->Cat_Widget);
-
-		       /* Sinon il faut retourner la valeur du sous-catalogue */
-		       else
-			 {
-			    if (catalogue->Cat_React)
-			       ;	/* La valeur est deja transmise */
-/*________________________________________________ Un sous-menu __*/
-			    else if (catalogue->Cat_Type == CAT_FMENU)
-			      {
-				 i = catalogue->Cat_Data;
-				 (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, i);
-			      }
-/*______________________________________________ Un toggle-menu __*/
-			    else if (catalogue->Cat_Type == CAT_TMENU)
-			       ReturnTogglevalues (catalogue);
-/*______________________________ Une feuille de saisie d'entier __*/
-			    else if (catalogue->Cat_Type == CAT_INT)
-			      {
-				 ustrncpy (text, XmTextGetString (catalogue->Cat_Entries->E_ThotWidget[1]), 10);
-
-				 text[10] = EOS;
-				 if (text[0] != EOS)
-				    sscanf (text, "%d", &i);
-				 else
-				    i = 0;
-				 (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, i);
-			      }
-/*______________________________ Une feuille de saisie de texte __*/
-			    else if (catalogue->Cat_Type == CAT_TEXT)
-			      {
-				 (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA,
-						      XmTextGetString ((ThotWidget) catalogue->Cat_Entries));
-			      }
-/*_______________________________________________ Un selecteur __*/
-			    else if (catalogue->Cat_Type == CAT_SELECT)
-			      {
-				 if (catalogue->Cat_SelectList)
-				   {
-				      text[0] = EOS;
-				      n = 0;
-				      XtSetArg (args[n], XmNselectedItems, &strings);
-				      n++;
-				      XtGetValues ((ThotWidget) catalogue->Cat_Entries, args, n);
-				      ptr = text;
-				      if (strings != NULL)
-					 XmStringGetLtoR (strings[0], XmSTRING_DEFAULT_CHARSET, &ptr);
-				      (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, ptr);
-				   }
-				 else
-				   {
-				      wtext = XmSelectionBoxGetChild ((ThotWidget) catalogue->Cat_Entries, XmDIALOG_TEXT);
-				      /* Retourne la valeur dans tous les cas */
-				      (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, XmTextGetString (wtext));
-				   }
-			      }
-			 }
-		    }
-	       }
-
-	     /* Faut-il passer au bloc suivant ? */
-	     ent++;
-	     if (ent >= C_NUMBER)
-	       {
-		  ent = 0;
-		  if (adbloc->E_Next == NULL)
-		     break;
-		  else
-		     adbloc = adbloc->E_Next;
-	       }
-	  }			/*while */
-
-	/*** On fait disparaitre le formulaire ***/
-	if (entry == 0 || parentCatalogue->Cat_Type == CAT_DIALOG || parentCatalogue->Cat_Type == CAT_FORM)
-	  {
-	     XtUnmanageChild (parentCatalogue->Cat_Widget);
-	     XtUnmanageChild (XtParent (parentCatalogue->Cat_Widget));
-
-	     /* Si on en a fini avec la feuille de dialogue */
-	     catalogue = parentCatalogue;
-	     while (catalogue->Cat_PtParent != NULL)
-		catalogue = catalogue->Cat_PtParent;
-
-	     if (catalogue == ShowCat && ShowReturn == 1)
-		ShowReturn = 0;
-	  }
-
-	(*CallbackDialogue) (parentCatalogue->Cat_Ref, INTEGER_DATA, entry);
-     }
-}
-
-
-/*----------------------------------------------------------------------
-   Callback de saisie de valeur.                                      
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-#else  /* __STDC__ */
-static void         CallValueSet (w, catalogue, call_d)
-ThotWidget          w;
-struct Cat_Context *catalogue;
-caddr_t             call_d;
-
-#endif /* __STDC__ */
-{
-   int                 val, val1;
-   CHAR_T                text[11];
-   ThotWidget          wtext;
-
-   /* Indication de valeur */
-   if (catalogue->Cat_Widget != 0)
-      if (catalogue->Cat_Type == CAT_INT)
+  /* On a selectionne une entree du menu */
+  if (parentCatalogue->Cat_Widget != 0)
+    {
+      adbloc = parentCatalogue->Cat_Entries;
+      entry = -1;
+      i = 0;
+      while ((entry == -1) && (i < C_NUMBER))
 	{
-	   catalogue->Cat_Data = 0;
-	   wtext = catalogue->Cat_Entries->E_ThotWidget[1];
-
-	   ustrncpy (text, XmTextGetString (wtext), 10);
-	   text[10] = EOS;
-	   if (text[0] != EOS)
-	     {
-		if ((text[0] == '-') && (text[1] == EOS))
-		   /* cas ou le caractere - a ete tape, on met val a 0 */
-		   val = 0;
-		else
-		   sscanf (text, "%d", &val);
-
-		/* Est-ce une valeur valide ? */
-		if (val < (int) catalogue->Cat_Entries->E_ThotWidget[2])
-		   val1 = (int) catalogue->Cat_Entries->E_ThotWidget[2];
-		else if (val > (int) catalogue->Cat_Entries->E_ThotWidget[3])
-		   val1 = (int) catalogue->Cat_Entries->E_ThotWidget[3];
-		else
-		   val1 = val;	/* valeur inchangee */
-
-		/* Est-ce qu'il faut changer le contenu du widget ? */
-		if (val != val1)
-		  {
-		     usprintf (text, "%d", val1);
-		     /* Desactive la procedure de Callback */
-		     XtRemoveCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
-
-		     XmTextSetString (wtext, text);
-		     val = ustrlen (text);
-		     XmTextSetSelection (wtext, val, val, 500);
-
-		     /* Reactive la procedure de Callback */
-		     XtAddCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
-		  }
-
-		/* retourne la valeur saisie si la feuille de saisie est reactive */
-		if (catalogue->Cat_React)
-		   (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, val);
-
-	     }
+	  if (adbloc->E_ThotWidget[i] == w)
+	    entry = i;
+	  i++;
 	}
+
+      /* Si la feuille de dialogue est detruite cela force l'abandon */
+      if (entry == -1)
+	if (parentCatalogue->Cat_Type == CAT_SHEET)
+	  entry = 0;
+	else
+	  return;
+
+      /*** Retour vers l'application ***/
+      /*** Eteins les sous-widgets du feuillet si on quitte ***/
+      /*** Recupere les retours des sous-catalogues         ***/
+      adbloc = adbloc->E_Next;
+      ent = 1;
+      while (adbloc->E_ThotWidget[ent] != 0)
+	{
+	  /* Il faut sauter les widgets des RowColumns */
+	  if (adbloc->E_Free[ent] == 'N')
+	    {
+	      catalogue = (struct Cat_Context *) adbloc->E_ThotWidget[ent];
+	      if (catalogue->Cat_Widget != 0)
+		{
+		  if (entry == 0)
+		    XtUnmanageChild (catalogue->Cat_Widget);
+		  
+		  /* Sinon il faut retourner la valeur du sous-catalogue */
+		  else
+		    {
+		      if (catalogue->Cat_React)
+			;	/* La valeur est deja transmise */
+		      /*________________________________________________ Un sous-menu __*/
+		      else if (catalogue->Cat_Type == CAT_FMENU)
+			{
+			  i = catalogue->Cat_Data;
+			  (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, i);
+			}
+		      /*______________________________________________ Un toggle-menu __*/
+		      else if (catalogue->Cat_Type == CAT_TMENU)
+			ReturnTogglevalues (catalogue);
+		      /*______________________________ Une feuille de saisie d'entier __*/
+		      else if (catalogue->Cat_Type == CAT_INT)
+			{
+			  CallValueSet (catalogue->Cat_Entries->E_ThotWidget[1], catalogue, NULL);
+			  ustrncpy (text, XmTextGetString (catalogue->Cat_Entries->E_ThotWidget[1]), 10);
+			  
+			  text[10] = EOS;
+			  if (text[0] != EOS)
+			    sscanf (text, "%d", &i);
+			  else
+			    i = 0;
+			  (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, i);
+			}
+		      /*______________________________ Une feuille de saisie de texte __*/
+		      else if (catalogue->Cat_Type == CAT_TEXT)
+			{
+			  (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA,
+					       XmTextGetString ((ThotWidget) catalogue->Cat_Entries));
+			}
+		      /*_______________________________________________ Un selecteur __*/
+		      else if (catalogue->Cat_Type == CAT_SELECT)
+			{
+			  if (catalogue->Cat_SelectList)
+			    {
+			      text[0] = EOS;
+			      n = 0;
+			      XtSetArg (args[n], XmNselectedItems, &strings);
+			      n++;
+			      XtGetValues ((ThotWidget) catalogue->Cat_Entries, args, n);
+			      ptr = text;
+			      if (strings != NULL)
+				XmStringGetLtoR (strings[0], XmSTRING_DEFAULT_CHARSET, &ptr);
+			      (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, ptr);
+			    }
+			  else
+			    {
+			      wtext = XmSelectionBoxGetChild ((ThotWidget) catalogue->Cat_Entries, XmDIALOG_TEXT);
+			      /* Retourne la valeur dans tous les cas */
+			      (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, XmTextGetString (wtext));
+			    }
+			}
+		    }
+		}
+	    }
+
+	  /* Faut-il passer au bloc suivant ? */
+	  ent++;
+	  if (ent >= C_NUMBER)
+	    {
+	      ent = 0;
+	      if (adbloc->E_Next == NULL)
+		break;
+	      else
+		adbloc = adbloc->E_Next;
+	    }
+	}
+
+      /*** On fait disparaitre le formulaire ***/
+      if (entry == 0 || parentCatalogue->Cat_Type == CAT_DIALOG || parentCatalogue->Cat_Type == CAT_FORM)
+	{
+	  XtUnmanageChild (parentCatalogue->Cat_Widget);
+	  XtUnmanageChild (XtParent (parentCatalogue->Cat_Widget));
+	  
+	  /* Si on en a fini avec la feuille de dialogue */
+	  catalogue = parentCatalogue;
+	  while (catalogue->Cat_PtParent != NULL)
+	    catalogue = catalogue->Cat_PtParent;
+	  
+	  if (catalogue == ShowCat && ShowReturn == 1)
+	    ShowReturn = 0;
+	}
+
+      (*CallbackDialogue) (parentCatalogue->Cat_Ref, INTEGER_DATA, entry);
+    }
 }
 
 
@@ -7458,7 +7460,8 @@ boolean             react;
 	     n++;
 	     w = XmCreateText (row, "Dialogue", args, n);
 	     XtManageChild (w);
-	     XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
+	     if (catalogue->Cat_React)
+	       XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
 	     catalogue->Cat_Entries->E_ThotWidget[1] = w;
 	  }
      }
@@ -7481,7 +7484,7 @@ int                 val;
 #endif /* __STDC__ */
 {
 #  ifndef _WINDOWS 
-   CHAR_T                text[10];
+   CHAR_T              text[10];
    int                 lg;
 #  endif /* !_WINDOWS */
    ThotWidget          wtext;
@@ -7512,7 +7515,8 @@ int                 val;
 
 	/* Desactive la procedure de Callback */
 #       ifndef _WINDOWS
-	XtRemoveCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
+	if (catalogue->Cat_React)
+	  XtRemoveCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
 
 	usprintf (text, "%d", val);
 	XmTextSetString (wtext, text);
@@ -7520,7 +7524,8 @@ int                 val;
 	XmTextSetSelection (wtext, lg, lg, 500);
 
 	/* Reactive la procedure de Callback */
-	XtAddCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
+	if (catalogue->Cat_React)
+	  XtAddCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
 #       endif /* _WINDOWS */
      }
 }

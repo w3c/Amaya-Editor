@@ -1167,7 +1167,6 @@ BinFile             pivFile;
 STRING              tag;
 #endif /* __STDC__ */
 {
-   Name                PSchemaName;
    int                 nat, rule;
    boolean             Extension;
 
@@ -1202,7 +1201,6 @@ STRING              tag;
 		if (!Extension)
 		  {
 		     /* pas de presentation preferentielle */
-		     PSchemaName[0] = EOS;
 		     rule = CreateNature (pDoc->DocNatureName[nat], pDoc->DocNaturePresName[nat], *pSS);
 		     /* recupere le numero de la regle de nature */
 		     if (rule == 0)

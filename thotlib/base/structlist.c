@@ -481,7 +481,7 @@ boolean             premierfils;
 	     pRe1 = &pNode->ElStructSchema->SsRule[pNode->ElTypeNumber - 1];
 	     fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
 	     /* ecrit le nom du schema de structure de l'element */
-	     fprintf (fileDescriptor, "(%s)", pNode->ElStructSchema->SsName);
+	     fprintf (fileDescriptor, "(%s %x)", pNode->ElStructSchema->SsName, pNode->ElStructSchema);
 	  }
 	fprintf (fileDescriptor, " Label=%s", pNode->ElLabel);
 	/* ecrit le volume de l'element */

@@ -7,8 +7,6 @@
 <Key>End:	TtcEndOfLine()
 <Key>Up:	TtcPreviousLine()
 <Key>Down:	TtcNextLine()
-<Key>Right:	TtcNextChar()
-<Key>Left:	TtcPreviousChar()
 <Key>L6:	TtcCopyToClipboard()
 <Key>L8:	TtcPasteFromClipboard()
 <Key>F6:	TtcCopyToClipboard()
