@@ -183,7 +183,6 @@ Thot/w3c-libwww-5.0a/Library/src/vms/build_multinet.com \
 Thot/w3c-libwww-5.0a/Library/src/vms/descrip.mms \
 Thot/w3c-libwww-5.0a/Library/src/*.c \
 Thot/w3c-libwww-5.0a/Library/src/*.h \
-Thot/w3c-libwww-5.0a/Library/src/*.html \
 Thot/w3c-libwww-5.0a/Library/src/windows/Makefile.am \
 Thot/w3c-libwww-5.0a/Library/src/windows/Makefile.in \
 Thot/w3c-libwww-5.0a/Library/src/windows/README \
