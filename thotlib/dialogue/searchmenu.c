@@ -244,6 +244,11 @@ LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	    }
 	  break;
 	  
+	case IDCANCEL:
+	  SearchW = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+
 	case ID_DONE:
 	  SearchW = NULL;
 	  ThotCallback (120, 1, NULL);

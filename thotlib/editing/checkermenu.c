@@ -357,12 +357,14 @@ static LRESULT CALLBACK SpellCheckDlgProc (ThotWindow hwnDlg, UINT msg,
 	  SetWindowText (hwndCurrentWord, currentWord);
 	  break;
 	  
+	case IDCANCEL:
 	case ID_DONE:
 	  SpellChecker = NULL;
 	  hwndLanguage = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;	  
-	}
+
+	  }
       break;
     default: return FALSE;
     }

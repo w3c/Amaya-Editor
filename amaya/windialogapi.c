@@ -315,6 +315,7 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  break;
 
+	case IDCANCEL:
 	case ID_DONE:
 	  ThotCallback (BaseCSS + CSSForm, INTEGER_DATA, (char*) 0);
 	  EndDialog (hwnDlg, ID_DONE);
@@ -3401,6 +3402,7 @@ LRESULT CALLBACK MakeIDDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	   SetDlgItemText (hwnDlg, IDC_IDSTATUS, IdStatus);
 	  break;
 	  
+	case IDCANCEL:
 	case ID_DONE:
 	  MakeIDHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
@@ -3512,6 +3514,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg,
       switch (LOWORD (wParam))
 	{
 	  /* action buttons */
+	case IDCANCEL:
 	case ID_DONE:
 	  ResetDocInfo (hwnDlg);
 	  EndDialog (hwnDlg, ID_DONE);
