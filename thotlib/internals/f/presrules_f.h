@@ -12,7 +12,8 @@ extern int IntegerRule ( PtrPRule pPRule,
                          DocViewNumber view,
                          ThotBool * ok,
                          TypeUnit * unit,
-                         PtrAttribute pAttr );
+                         PtrAttribute pAttr,
+                         PtrAbstractBox pAb );
 extern void GetConstantBuffer ( PtrAbstractBox pAb );
 extern void UpdateFreeVol ( PtrAbstractBox pAb,
                             PtrDocument pDoc );
@@ -53,7 +54,8 @@ extern int IntegerRule (/* PtrPRule pPRule,
                            DocViewNumber view,
                            ThotBool * ok,
                            TypeUnit * unit,
-                           PtrAttribute pAttr */);
+                           PtrAttribute pAttr,
+                           PtrAbstractBox pAb */);
 extern void GetConstantBuffer (/* PtrAbstractBox pAb */);
 extern void UpdateFreeVol (/* PtrAbstractBox pAb,
                               PtrDocument pDoc */);

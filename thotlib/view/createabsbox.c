@@ -357,22 +357,21 @@ ThotBool            ro;
 
    GetAbstractBox (&pAb);
    pAb->AbElement = pEl;
+   pAb->AbBox = NULL;
    pAb->AbEnclosing = NULL;
    pAb->AbNext = NULL;
    pAb->AbPrevious = NULL;
    pAb->AbFirstEnclosed = NULL;
+   pAb->AbNextRepeated = NULL;
+   pAb->AbPreviousRepeated = NULL;
    pAb->AbPSchema = NULL;
-   pAb->AbCreatorAttr = NULL;
    pAb->AbDocView = view;
-   pAb->AbInLine = TRUE;
-   pAb->AbVisibility = Visib;
-
-   pAb->AbHorizRef.PosEdge = HorizRef;
-   pAb->AbHorizRef.PosRefEdge = HorizRef;
-   pAb->AbHorizRef.PosDistance = 0;
-   pAb->AbHorizRef.PosUnit = UnRelative;
-   pAb->AbHorizRef.PosAbRef = NULL;
-   pAb->AbHorizRef.PosUserSpecified = FALSE;
+   pAb->AbCopyDescr = NULL;
+   pAb->AbCreatorAttr = NULL;
+   pAb->AbDelayedPRule = NULL;
+   pAb->AbVolume = 0;
+   pAb->AbTypeNum = pEl->ElTypeNumber;
+   pAb->AbNum = 0;
 
    pAb->AbVertRef.PosEdge = VertRef;
    pAb->AbVertRef.PosRefEdge = VertRef;
@@ -380,6 +379,13 @@ ThotBool            ro;
    pAb->AbVertRef.PosUnit = UnRelative;
    pAb->AbVertRef.PosAbRef = NULL;
    pAb->AbVertRef.PosUserSpecified = FALSE;
+
+   pAb->AbHorizRef.PosEdge = HorizRef;
+   pAb->AbHorizRef.PosRefEdge = HorizRef;
+   pAb->AbHorizRef.PosDistance = 0;
+   pAb->AbHorizRef.PosUnit = UnRelative;
+   pAb->AbHorizRef.PosAbRef = NULL;
+   pAb->AbHorizRef.PosUserSpecified = FALSE;
 
    pAb->AbVertPos.PosEdge = Top;
    pAb->AbVertPos.PosRefEdge = Top;
@@ -394,9 +400,6 @@ ThotBool            ro;
    pAb->AbHorizPos.PosUnit = UnRelative;
    pAb->AbHorizPos.PosAbRef = NULL;
    pAb->AbHorizPos.PosUserSpecified = FALSE;
-
-   pAb->AbBox = NULL;
-   pAb->AbSelected = FALSE;
 
    pAb->AbHeight.DimIsPosition = FALSE;
    pAb->AbHeight.DimValue = 0;
@@ -414,24 +417,73 @@ ThotBool            ro;
    pAb->AbWidth.DimUserSpecified = FALSE;
    pAb->AbWidth.DimMinimum = FALSE;
 
-   pAb->AbVolume = 0;
-   pAb->AbIndent = 0;
-   pAb->AbDepth = 0;
-   pAb->AbNum = 0;
-   pAb->AbVisibility = Visib;
-   pAb->AbFont = 'T';
-   pAb->AbFontStyle = 0;
-   pAb->AbFontWeight = 0;
    pAb->AbUnderline = 0;
    pAb->AbThickness = 0;
+   pAb->AbIndent = 0;
+   pAb->AbDepth = 0;
+   pAb->AbVisibility = Visib;
+   pAb->AbFontStyle = 0;
+   pAb->AbFontWeight = 0;
    pAb->AbSize = 1;
-   pAb->AbSizeUnit = UnRelative;
+   pAb->AbLineWeight = 1;
+   pAb->AbLineSpacing = 10;
    pAb->AbFillPattern = 0;
    pAb->AbBackground = DefaultBColor;	/* blanc */
    pAb->AbForeground = DefaultFColor;	/* noir */
+
+   pAb->AbTopBColor = -1;
+   pAb->AbRightBColor = -1;
+   pAb->AbBottomBColor = -1;
+   pAb->AbLeftBColor = -1;
+   pAb->AbTopStyle = 1;
+   pAb->AbRightStyle = 1;
+   pAb->AbBottomStyle = 1;
+   pAb->AbLeftStyle = 1;
+
+   pAb->AbTopMargin = 0;
+   pAb->AbRightMargin = 0;
+   pAb->AbBottomMargin = 0;
+   pAb->AbLeftMargin = 0;
+   pAb->AbTopPadding = 0;
+   pAb->AbRightPadding = 0;
+   pAb->AbBottomPadding = 0;
+   pAb->AbLeftPadding = 0;
+   pAb->AbTopBorder = 0;
+   pAb->AbRightBorder = 0;
+   pAb->AbBottomBorder = 0;
+   pAb->AbLeftBorder = 0;
+
+   pAb->AbFont = 'T';
    pAb->AbLineStyle = 'S';
-   pAb->AbLineWeight = 1;
+   pAb->AbAdjust = AlignLeft;
+   pAb->AbSizeUnit = UnRelative;
+   pAb->AbIndentUnit = UnRelative;
    pAb->AbLineWeightUnit = UnPoint;
+   pAb->AbLineSpacingUnit = UnRelative;
+
+   pAb->AbTopMarginUnit = UnRelative;
+   pAb->AbRightMarginUnit = UnRelative;
+   pAb->AbBottomMarginUnit = UnRelative;
+   pAb->AbLeftMarginUnit = UnRelative;
+   pAb->AbTopPaddingUnit = UnRelative;
+   pAb->AbRightPaddingUnit = UnRelative;
+   pAb->AbBottomPaddingUnit = UnRelative;
+   pAb->AbLeftPaddingUnit = UnRelative;
+   pAb->AbTopBorderUnit = UnPoint;
+   pAb->AbRightBorderUnit = UnPoint;
+   pAb->AbBottomBorderUnit = UnPoint;
+   pAb->AbLeftBorderUnit = UnPoint;
+
+   pAb->AbJustify = FALSE;
+   pAb->AbAcceptLineBreak = TRUE;
+   pAb->AbAcceptPageBreak = TRUE;
+   pAb->AbHyphenate = FALSE;
+   pAb->AbOnPageBreak = FALSE;
+   pAb->AbAfterPageBreak = FALSE;
+   pAb->AbNotInLine = FALSE;
+   pAb->AbHorizEnclosing = TRUE;
+   pAb->AbVertEnclosing = TRUE;
+
    /* les copies de parametres ou d'elements inclus ne sont pas */
    /* modifiables par l'utilisateur */
    pAb->AbCanBeModified = !pEl->ElIsCopy;
@@ -439,16 +491,9 @@ ThotBool            ro;
    if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
       pAb->AbCanBeModified = FALSE;
    pAb->AbSelected = FALSE;
-   pAb->AbOnPageBreak = FALSE;
-   pAb->AbAfterPageBreak = FALSE;
-   pAb->AbLineSpacing = 10;
-   pAb->AbAdjust = AlignLeft;
-   pAb->AbJustify = FALSE;
-   pAb->AbLineSpacingUnit = UnRelative;
-   pAb->AbIndentUnit = UnRelative;
-   pAb->AbAcceptLineBreak = TRUE;
-   pAb->AbAcceptPageBreak = TRUE;
-   pAb->AbNotInLine = FALSE;
+   pAb->AbBox = NULL;
+   pAb->AbPresentationBox = FALSE;
+   pAb->AbRepeatedPresBox = FALSE;
    pAb->AbSensitive = FALSE;
    /* cherche si l'element est une reference ou une copie d'element inclus */
    if (pEl->ElTerminal)
@@ -465,7 +510,7 @@ ThotBool            ro;
 	   if (pAscend->ElStructSchema->SsRule[pAscend->ElTypeNumber - 1].SrParamElem)
 	     {
 		pAscend = NULL;
-		pAb->AbSensitive = FALSE;	/* un parametre n'est pas actif */
+		pAb->AbSensitive = FALSE;   /* un parametre n'est pas actif */
 	     }
 	   else
 	      pAscend = pAscend->ElParent;
@@ -495,14 +540,7 @@ ThotBool            ro;
 	      pAscend = pAscend->ElParent;
 	while (!stop);
      }
-   pAb->AbHyphenate = FALSE;
-   pAb->AbPresentationBox = FALSE;
-   pAb->AbTypeNum = pEl->ElTypeNumber;
-   /* ce pave respecte les regles d'englobement */
-   pAb->AbHorizEnclosing = TRUE;
-   pAb->AbVertEnclosing = TRUE;
-   pAb->AbDelayedPRule = NULL;
-   pAb->AbText = NULL;
+
    pAb->AbNew = TRUE;
    pAb->AbDead = FALSE;
    pAb->AbWidthChange = FALSE;
@@ -515,6 +553,9 @@ ThotBool            ro;
    pAb->AbAspectChange = FALSE;
    pAb->AbMBPChange = FALSE;
    pAb->AbChange = FALSE;
+
+   pAb->AbInLine = TRUE;
+   pAb->AbText = NULL;
 
    if (pEl->ElTerminal && pEl->ElLeafType == LtText)
      {
@@ -1691,7 +1732,7 @@ ThotBool            completeCreator;
 	   if (view == viewSch)
 	     {
 	       /* c'est la regle de la vue traitee */
-	       vis = IntegerRule (pR, pEl, viewNb, &ok, &unit, NULL);
+	       vis = IntegerRule (pR, pEl, viewNb, &ok, &unit, NULL, NULL);
 	       /* si la regle de visibilite n'a pas pu etre appliquee, */
 	       /* on prend la visibilite du pave de l'element createur */
 	       if (!ok)
@@ -2563,9 +2604,74 @@ PtrPRule            pRule;
    while (!stop);
 }
 
+/*----------------------------------------------------------------------
+   SetVerticalSpace
+   Generate all vertical spaces (margin, border and padding) at the
+   top of abstract box pAb if head is TRUE, at its bottom if head
+   is FALSE.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         SetVerticalSpace (PtrAbstractBox pAb, ThotBool head, PtrDocument pDoc)
+
+#else  /* __STDC__ */
+static void         SetVerticalSpace (pAb, head, pDoc)
+PtrAbstractBox      pAb;
+ThotBool            head;
+PtrDocument         pDoc;
+#endif /* __STDC__ */
+
+{
+   PtrPRule            pRule;
+   PtrPSchema          pSchP;
+   PtrAttribute        pAttr;
+   ThotBool            result;
+
+   result = FALSE;
+   if (head)
+     /* generate space at the top of the abstract box */
+     {
+     pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtMarginTop, FnAny, TRUE,
+			    &pAttr);
+     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+     if (pAb->AbTopMargin != 0)
+        result = TRUE;
+     pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtBorderTopWidth, FnAny, TRUE,
+			    &pAttr);
+     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+     if (pAb->AbTopBorder != 0)
+        result = TRUE;
+     pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtPaddingTop, FnAny, TRUE,
+			    &pAttr);
+     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+     if (pAb->AbTopPadding != 0)
+        result = TRUE;
+     }
+   else
+     /* generate space at the bottom of the abstract box */
+     {
+     pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtMarginBottom, FnAny, TRUE,
+			    &pAttr);
+     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+     if (pAb->AbBottomMargin != 0)
+        result = TRUE;
+     pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtBorderBottomWidth, FnAny,
+			    TRUE, &pAttr);
+     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+     if (pAb->AbBottomBorder != 0)
+        result = TRUE;
+     pRule = SearchRulepAb (pDoc, pAb, &pSchP, PtPaddingBottom, FnAny, TRUE,
+			    &pAttr);
+     ApplyRule (pRule, pSchP, pAb, pDoc, pAttr);
+     if (pAb->AbBottomPadding != 0)
+        result = TRUE;
+     }
+   if (result && !pAb->AbNew)
+      pAb->AbMBPChange = TRUE;
+}
 
 /*----------------------------------------------------------------------
-   TruncateOrCompleteAbsBox coupe ou complete le pave pAb. pAb est coupe' si    
+   TruncateOrCompleteAbsBox
+   Coupe ou complete le pave pAb. pAb est coupe' si    
    truncate est vrai ou complete si truncate est faux. La coupure 
    ou la completion concerne la tete du pave si head est   
    vrai ou la queue du pave si head est faux. Marque cette 
@@ -2602,150 +2708,193 @@ PtrDocument         pDoc;
 
    pAbbCreated = NULL;
    if (pAb != NULL)
-	   if (pAb->AbLeafType == LtCompound)
-	      if (pAb->AbInLine)
-		{
-		   if (!truncate)
-		      if (head)
-			 pAb->AbTruncatedHead = FALSE;
-		      else
-			 pAb->AbTruncatedTail = FALSE;
-		}
-	      else if ((head && pAb->AbTruncatedHead != truncate)
-		       || (!head && pAb->AbTruncatedTail != truncate))
-		 /* il y a effectivement changement */
-		{
-		   if (!truncate)
-		     {
-			/* le pave n'est plus coupe' a` une extremite. Cree les */
-			/* paves de presentation a` cette extremite. */
-			/* cherche la 1ere regle de presentation associee a ce type */
-			/* d'element */
-			SearchPresSchema (pAb->AbElement, &pSchP, &index, &pSchS);
-/*********/
-			if (pSchS != NULL && pSchS != pAb->AbElement->ElStructSchema)
-			   /* il s'agit de l'element racine d'une nature qui
-			   utilise le schema de presentation de son englobant*/
-			   if (pDoc->DocView[pAb->AbDocView - 1].DvSSchema !=
-					 pDoc->DocSSchema)
-			      {
-			      pSchS = pAb->AbElement->ElStructSchema;
-			      pSchP = pSchS->SsPSchema;
-			      index = pAb->AbElement->ElTypeNumber;
-			      }
-/*********/
-			pRule = pSchP->PsElemPRule[index - 1];
-
-			/* traite les regles de creation associees au type de l'element */
-			pAttr = NULL;
-			ApplCrPresRule (pSchS, pSchP, &pAbbCreated, NULL, pDoc,
-					pAb, head, pRule);
-			/* traite les regles de creation dues a */
-			/* l'heritage des attributs */
-			if (pAb->AbElement->ElStructSchema->SsPSchema != NULL)
-			   if (pAb->AbElement->ElStructSchema->SsPSchema->
-			       PsNInheritedAttrs[pAb->AbElement->ElTypeNumber - 1])
-			     {
+     if (pAb->AbLeafType == LtCompound)
+       if (pAb->AbInLine)
+	 {
+	   if (!truncate)
+	     if (head)
+	       pAb->AbTruncatedHead = FALSE;
+	     else
+	       pAb->AbTruncatedTail = FALSE;
+	 }
+       else if ((head && pAb->AbTruncatedHead != truncate)
+		|| (!head && pAb->AbTruncatedTail != truncate))
+	 /* il y a effectivement changement */
+	 {
+	   if (truncate)
+	     /* the abstract box is now truncated */
+	     {
+	     /* remove all vertical space (margin, border and padding)
+	        at the end that is changed */
+	     if (head)
+	       {
+		 if (pAb->AbTopMargin != 0)
+		   {
+		     pAb->AbTopMargin = 0;
+		     pAb->AbMBPChange = TRUE;
+		   }
+		 if (pAb->AbTopBorder != 0)
+		   {
+		     pAb->AbTopBorder = 0;
+		     pAb->AbMBPChange = TRUE;
+		   }
+		 if (pAb->AbTopPadding != 0)
+		   {
+		     pAb->AbTopPadding = 0;
+		     pAb->AbMBPChange = TRUE;
+		   }
+	       }
+	     else
+	       {
+		 if (pAb->AbBottomMargin != 0)
+		   {
+		     pAb->AbBottomMargin = 0;
+		     pAb->AbMBPChange = TRUE;
+		   }
+		 if (pAb->AbBottomBorder != 0)
+		   {
+		     pAb->AbBottomBorder = 0;
+		     pAb->AbMBPChange = TRUE;
+		   }
+		 if (pAb->AbBottomPadding != 0)
+		   {
+		     pAb->AbBottomPadding = 0;
+		     pAb->AbMBPChange = TRUE;
+		   }
+	       }
+	     }
+	   else
+	     /* le pave n'est plus coupe' a` une extremite. */
+	     {
+	       /* Cree les paves de presentation a` cette extremite. */
+	       /* cherche la 1ere regle de presentation associee a ce type */
+	       /* d'element */
+	       SearchPresSchema (pAb->AbElement, &pSchP, &index, &pSchS);
+	       if (pSchS != NULL && pSchS != pAb->AbElement->ElStructSchema)
+		 /* il s'agit de l'element racine d'une nature qui
+		    utilise le schema de presentation de son englobant*/
+		 if (pDoc->DocView[pAb->AbDocView - 1].DvSSchema !=
+		     pDoc->DocSSchema)
+		   {
+		     pSchS = pAb->AbElement->ElStructSchema;
+		     pSchP = pSchS->SsPSchema;
+		     index = pAb->AbElement->ElTypeNumber;
+		   }
+	       pRule = pSchP->PsElemPRule[index - 1];
+	       
+	       /* traite les regles de creation associees au type de l'element */
+	       pAttr = NULL;
+	       ApplCrPresRule (pSchS, pSchP, &pAbbCreated, NULL, pDoc,
+			       pAb, head, pRule);
+	       /* traite les regles de creation dues a */
+	       /* l'heritage des attributs */
+	       if (pAb->AbElement->ElStructSchema->SsPSchema != NULL)
+		 if (pAb->AbElement->ElStructSchema->SsPSchema->
+		     PsNInheritedAttrs[pAb->AbElement->ElTypeNumber - 1])
+		   {
 				/* il y a heritage possible */
-				if ((inheritTable = pAb->AbElement->ElStructSchema->SsPSchema->
-				     PsInheritedAttr[pAb->AbElement->ElTypeNumber - 1])
-				    == NULL)
-				  {
-				     /* cette table n'existe pas on la genere */
-				     CreateInheritedAttrTable (pAb->AbElement);
-				     inheritTable = pAb->AbElement->ElStructSchema->
-					SsPSchema->PsInheritedAttr[pAb->AbElement->ElTypeNumber - 1];
-				  }
-				for (l = 1; l <= pAb->AbElement->ElStructSchema->SsNAttributes; l++)
-				   if ((*inheritTable)[l - 1])
-				      /* pAb->AbElement herite de l'attribut l */
-				      if ((pAttr = GetTypedAttrAncestor (pAb->AbElement, l,
-									 pAb->AbElement->ElStructSchema, &pElAttr)) != NULL)
-					 /* cherche si l existe au dessus */
-					{
-					   /* on cherchera d'abord dans le schema de */
-					   /* presentation principal de l'attribut */
-					   pSchP = pAttr->AeAttrSSchema->SsPSchema;
-					   pHd = NULL;
-					   while (pSchP != NULL)
-					     {
-						pRule = AttrPresRule (pAttr, pAb->AbElement,
-							 TRUE, NULL, pSchP);
-						ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
-								&pAbbCreated, pAttr, pDoc, pAb,
-								head, pRule);
-						if (pHd == NULL)
-						  {
-						     /* on n'a pas encore cherche' dans les schemas
-						        de presentation additionnels. On prend le
-						        premier schema additionnel si on travaille
-						        pour la vue principale, sinon on ignore les
-						        schemas additionnels */
-						     if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1)
-							pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
-						  }
-						else
-						   /* passe au schema additionnel suivant */
-						   pHd = pHd->HdNextPSchema;
-						if (pHd == NULL)
-						   /* il n'y a pas (ou plus) de schemas
-						      additionnels a prendre en compte */
-						   pSchP = NULL;
-						else
-						   pSchP = pHd->HdPSchema;
-					     }
-					}
-			     }
-			/* traite les regles de creation associees aux attributs de */
-			/* l'element */
-			pAttr = pAb->AbElement->ElFirstAttr;
-			/* 1er attribut de l'element */
-			/* boucle sur les attributs de l'element */
-			while (pAttr != NULL)
-			  {
-			     /* cherche le debut des regles de presentation a */
-			     /* appliquer pour l'attribut */
+		     if ((inheritTable = pAb->AbElement->ElStructSchema->SsPSchema->
+			  PsInheritedAttr[pAb->AbElement->ElTypeNumber - 1])
+			 == NULL)
+		       {
+			 /* cette table n'existe pas on la genere */
+			 CreateInheritedAttrTable (pAb->AbElement);
+			 inheritTable = pAb->AbElement->ElStructSchema->
+			   SsPSchema->PsInheritedAttr[pAb->AbElement->ElTypeNumber - 1];
+		       }
+		     for (l = 1; l <= pAb->AbElement->ElStructSchema->SsNAttributes; l++)
+		       if ((*inheritTable)[l - 1])
+			 /* pAb->AbElement herite de l'attribut l */
+			 if ((pAttr = GetTypedAttrAncestor (pAb->AbElement, l,
+			    pAb->AbElement->ElStructSchema, &pElAttr)) != NULL)
+			   /* cherche si l existe au dessus */
+			   {
 			     /* on cherchera d'abord dans le schema de */
 			     /* presentation principal de l'attribut */
 			     pSchP = pAttr->AeAttrSSchema->SsPSchema;
 			     pHd = NULL;
 			     while (pSchP != NULL)
 			       {
-				  pRule = AttrPresRule (pAttr, pAb->AbElement, FALSE,
-							NULL, pSchP);
-				  ApplCrPresRule (pAttr->AeAttrSSchema, pSchP, &pAbbCreated, pAttr,
-						  pDoc, pAb, head, pRule);
-				  if (pHd == NULL)
-				    {
-				       /* on n'a pas encore cherche' dans les schemas de
-				          presentation additionnels. On prend le premier schema
-				          additionnel si on travaille pour la vue principale,
-				          sinon on ignore les schemas additionnels. */
-				       if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1)
-					  pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
-				    }
-				  else
-				     /* passe au schema additionnel suivant */
-				     pHd = pHd->HdNextPSchema;
-				  if (pHd == NULL)
-				     /* il n'y a pas (ou plus) de schemas additionnels a
-				        prendre en compte */
-				     pSchP = NULL;
-				  else
-				     pSchP = pHd->HdPSchema;
+				 pRule = AttrPresRule (pAttr, pAb->AbElement,
+						       TRUE, NULL, pSchP);
+				 ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
+						 &pAbbCreated, pAttr, pDoc, pAb,
+						 head, pRule);
+				 if (pHd == NULL)
+				   /* on n'a pas encore cherche' dans les schemas
+				   de presentation additionnels. On prend le
+				   premier schema additionnel si on travaille
+				   pour la vue principale, sinon on ignore les
+				   schemas additionnels */
+				   {
+				     if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1)
+				       pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
+				   }
+				 else
+				   /* passe au schema additionnel suivant */
+				   pHd = pHd->HdNextPSchema;
+				 if (pHd == NULL)
+				   /* il n'y a pas (ou plus) de schemas
+				      additionnels a prendre en compte */
+				   pSchP = NULL;
+				 else
+				   pSchP = pHd->HdPSchema;
 			       }
-			     /* passe a l'attribut suivant de l'element */
-			     pAttr = pAttr->AeNext;
-			  }
+			   }
+		   }
+	       /* traite les regles de creation associees aux attributs de */
+	       /* l'element */
+	       pAttr = pAb->AbElement->ElFirstAttr;
+	       /* 1er attribut de l'element */
+	       /* boucle sur les attributs de l'element */
+	       while (pAttr != NULL)
+		 {
+		   /* cherche le debut des regles de presentation a */
+		   /* appliquer pour l'attribut */
+		   /* on cherchera d'abord dans le schema de */
+		   /* presentation principal de l'attribut */
+		   pSchP = pAttr->AeAttrSSchema->SsPSchema;
+		   pHd = NULL;
+		   while (pSchP != NULL)
+		     {
+		       pRule = AttrPresRule (pAttr, pAb->AbElement, FALSE,
+					     NULL, pSchP);
+		       ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
+				  &pAbbCreated, pAttr, pDoc, pAb, head, pRule);
+		       if (pHd == NULL)
+			 /* on n'a pas encore cherche' dans les schemas de
+			 presentation additionnels. On prend le premier schema
+			 additionnel si on travaille pour la vue principale,
+			 sinon on ignore les schemas additionnels. */
+			 {
+			   if (pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView == 1)
+			     pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
+			 }
+		       else
+			 /* passe au schema additionnel suivant */
+			 pHd = pHd->HdNextPSchema;
+		       if (pHd == NULL)
+			 /* il n'y a pas (ou plus) de schemas additionnels a
+			    prendre en compte */
+			 pSchP = NULL;
+		       else
+			 pSchP = pHd->HdPSchema;
 		     }
-		   if (head)
-		      pAb->AbTruncatedHead = truncate;
-		   else
-		      pAb->AbTruncatedTail = truncate;
-		}
+		   /* passe a l'attribut suivant de l'element */
+		   pAttr = pAttr->AeNext;
+		 }
+	     }
+	   if (head)
+	     pAb->AbTruncatedHead = truncate;
+	   else
+	     pAb->AbTruncatedTail = truncate;
+	   if (!truncate)
+	     /* generate all vertical spaces (margin, border and padding)
+	        at the end that is changed */
+	     SetVerticalSpace (pAb, head, pDoc);
+	 }
    return (pAbbCreated);
 }
-
 
 /*----------------------------------------------------------------------
    IsViewFull retourne vrai si la vue viewNb est pleine.             
@@ -3336,7 +3485,8 @@ ThotBool            inheritRule;
 					      view, pAttr->AeAttrSSchema))
 			  {
 			     /* regle trouvee, on l'evalue */
-			     *vis = IntegerRule (pR, pEl, viewNb, ok, &unit, pAttr);
+			     *vis = IntegerRule (pR, pEl, viewNb, ok, &unit,
+						 pAttr, NULL);
 			     useView1 = FALSE;
 			     stop = TRUE;
 			  }
@@ -3353,7 +3503,8 @@ ThotBool            inheritRule;
 		if (useView1 && pRuleView1 != NULL)
 		   /* on n'a pas trouve de regle specifique pour la vue view */
 		   /* On utilise la regle de visibilite de la vue 1 si elle existe */
-		   *vis = IntegerRule (pRuleView1, pEl, viewNb, ok, &unit, pAttr);
+		   *vis = IntegerRule (pRuleView1, pEl, viewNb, ok, &unit,
+				       pAttr, NULL);
 	     }
 	if (pHd == NULL)
 	  {
@@ -3431,10 +3582,11 @@ PtrPSchema         *pSchPPage;
 	   /* s'il y a une regle de visibilite pour cette vue, on */
 	   /* la prend */
 	   if (pRegleV != NULL)
-	      *vis = IntegerRule (pRegleV, pEl, viewNb, &ok, &unit, NULL);
+	      *vis = IntegerRule (pRegleV, pEl, viewNb, &ok, &unit, NULL,
+				  NULL);
 	/* sinon, on prend celle de la vue 1 */
 	   else
-	      *vis = IntegerRule (pRule, pEl, viewNb, &ok, &unit, NULL);
+	      *vis = IntegerRule (pRule, pEl, viewNb, &ok, &unit, NULL, NULL);
      }
 
    /* cherche si les attributs herites par l'element modifient la */

@@ -658,31 +658,55 @@ PtrAttribute    pAInit;
    		points typo, en relatif (numero de corps si PtSize),	
    		etc. Si la regle est une regle de presentation		
    		d'attribut, pAttr pointe sur le bloc d'attribut auquel	
-   		la regle correspond.					
+   		la regle correspond.
+		If the abstract box for which the rule is evaluated exists,
+		it's pAb. Otherwise, pAb is NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok, TypeUnit * unit, PtrAttribute pAttr)
+int                 IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok, TypeUnit * unit, PtrAttribute pAttr, PtrAbstractBox pAb)
 #else  /* __STDC__ */
-int                 IntegerRule (pPRule, pEl, view, ok, unit, pAttr)
+int                 IntegerRule (pPRule, pEl, view, ok, unit, pAttr, pAb)
 PtrPRule            pPRule;
 PtrElement          pEl;
 DocViewNumber       view;
 ThotBool           *ok;
 TypeUnit           *unit;
 PtrAttribute        pAttr;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAbb;
    PtrElement          pElInherit;
    int                 val, i;
+   ThotBool            done;
 
    val = 0;
    *ok = TRUE;
    *unit = UnRelative;
    if (pPRule != NULL && pEl != NULL)
      {
-     switch (pPRule->PrPresMode)
+     done = FALSE;
+     if (pAb && !pAb->AbInLine)
+       /* the abstract box exists */
+       {
+       if (pAb->AbTruncatedHead &&
+            (pPRule->PrType == PtMarginTop ||
+	     pPRule->PrType == PtPaddingTop ||
+	     pPRule->PrType == PtBorderTopWidth))
+	  /* the beginning of the abstract box is not generated and it's a rule
+	     about spacing at the beginning. Return 0 */
+	  done = TRUE;
+       if (pAb->AbTruncatedTail &&
+            (pPRule->PrType == PtMarginBottom ||
+	     pPRule->PrType == PtPaddingBottom ||
+	     pPRule->PrType == PtBorderBottomWidth))
+	  /* the end of the abstract box is not generated and it's a rule
+	     about spacing at the end. Return 0 */
+	  done = TRUE;
+       }
+     if (!done)
+      switch (pPRule->PrPresMode)
         {
         case PresInherit:
            if (pPRule->PrType == PtVisibility)
@@ -3356,7 +3380,7 @@ PtrAttribute        pAttr;
 	  case PtVisibility:
 	    pAb->AbVisibility = IntegerRule (pPRule, pAb->AbElement,
 					     pAb->AbDocView, &appl, &unit,
-					     pAttr);
+					     pAttr, pAb);
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
 	      {
@@ -3367,7 +3391,7 @@ PtrAttribute        pAttr;
 
 	  case PtDepth:
 	    pAb->AbDepth = IntegerRule (pPRule, pAb->AbElement, pAb->AbDocView,
-					&appl, &unit, pAttr);
+					&appl, &unit, pAttr, pAb);
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
 	      {
@@ -3379,7 +3403,7 @@ PtrAttribute        pAttr;
 	  case PtFillPattern:
 	    pAb->AbFillPattern = IntegerRule (pPRule, pAb->AbElement,
 					      pAb->AbDocView, &appl, &unit,
-					      pAttr);
+					      pAttr, pAb);
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
 	      {
@@ -3391,7 +3415,7 @@ PtrAttribute        pAttr;
 	  case PtBackground:
 	    pAb->AbBackground = IntegerRule (pPRule, pAb->AbElement,
 					     pAb->AbDocView, &appl, &unit,
-					     pAttr);
+					     pAttr, pAb);
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
 	      {
@@ -3403,7 +3427,7 @@ PtrAttribute        pAttr;
 	  case PtForeground:
 	    pAb->AbForeground = IntegerRule (pPRule, pAb->AbElement,
 					     pAb->AbDocView, &appl, &unit,
-					     pAttr);
+					     pAttr, pAb);
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
 	      {
@@ -3415,7 +3439,7 @@ PtrAttribute        pAttr;
           case PtBorderTopColor:
 	    pAb->AbTopBColor = IntegerRule (pPRule, pAb->AbElement,
 					    pAb->AbDocView, &appl, &unit,
-					    pAttr);
+					    pAttr, pAb);
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* no BorderTopColor for the root element. Set initial value */
 	      {
@@ -3427,7 +3451,7 @@ PtrAttribute        pAttr;
           case PtBorderRightColor:
 	    pAb->AbRightBColor = IntegerRule (pPRule, pAb->AbElement,
 					      pAb->AbDocView, &appl, &unit,
-					      pAttr);
+					      pAttr, pAb);
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* no BorderRightColor for the root element. Set initial value */
 	      {
@@ -3439,7 +3463,7 @@ PtrAttribute        pAttr;
           case PtBorderBottomColor:
 	    pAb->AbBottomBColor = IntegerRule (pPRule, pAb->AbElement,
 					       pAb->AbDocView, &appl, &unit,
-					       pAttr);
+					       pAttr, pAb);
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* no BorderBottomColor for the root element. Set initial value*/
 	      {
@@ -3451,7 +3475,7 @@ PtrAttribute        pAttr;
           case PtBorderLeftColor:
 	    pAb->AbLeftBColor = IntegerRule (pPRule, pAb->AbElement,
 					     pAb->AbDocView, &appl, &unit,
-					     pAttr);
+					     pAttr, pAb);
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* no BorderLeftColor for the root element. Set initial value */
 	      {
@@ -3617,7 +3641,8 @@ PtrAttribute        pAttr;
 
 	  case PtIndent:
 	    pAb->AbIndent = IntegerRule (pPRule, pAb->AbElement,
-					 pAb->AbDocView, &appl, &unit, pAttr);
+					 pAb->AbDocView, &appl, &unit,
+					 pAttr, pAb);
 	    pAb->AbIndentUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3630,7 +3655,8 @@ PtrAttribute        pAttr;
 	  case PtSize:
 	    /* on applique la regle de taille */
 	    pAb->AbSize = IntegerRule (pPRule, pAb->AbElement,
-				       pAb->AbDocView, &appl, &unit, pAttr);
+				       pAb->AbDocView, &appl, &unit,
+				       pAttr, pAb);
 	    if (appl)
 	      pAb->AbSizeUnit = unit;
 	    else if (pAb->AbElement->ElParent == NULL)
@@ -3645,7 +3671,7 @@ PtrAttribute        pAttr;
 	  case PtLineSpacing:
 	    pAb->AbLineSpacing = IntegerRule (pPRule, pAb->AbElement,
 					      pAb->AbDocView, &appl, &unit,
-					      pAttr);
+					      pAttr, pAb);
 	    pAb->AbLineSpacingUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3659,7 +3685,7 @@ PtrAttribute        pAttr;
 	  case PtLineWeight:
 	    pAb->AbLineWeight = IntegerRule (pPRule, pAb->AbElement,
 					     pAb->AbDocView, &appl, &unit,
-					     pAttr);
+					     pAttr, pAb);
 	    pAb->AbLineWeightUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3673,7 +3699,7 @@ PtrAttribute        pAttr;
           case PtMarginTop:
 	    pAb->AbTopMargin = IntegerRule (pPRule, pAb->AbElement,
 					    pAb->AbDocView, &appl, &unit,
-					    pAttr);
+					    pAttr, pAb);
 	    pAb->AbTopMarginUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3686,7 +3712,7 @@ PtrAttribute        pAttr;
           case PtMarginRight:
 	    pAb->AbRightMargin = IntegerRule (pPRule, pAb->AbElement,
 					      pAb->AbDocView, &appl, &unit,
-					      pAttr);
+					      pAttr, pAb);
 	    pAb->AbRightMarginUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3699,7 +3725,7 @@ PtrAttribute        pAttr;
           case PtMarginBottom:
 	    pAb->AbBottomMargin = IntegerRule (pPRule, pAb->AbElement,
 					       pAb->AbDocView, &appl, &unit,
-					       pAttr);
+					       pAttr, pAb);
 	    pAb->AbBottomMarginUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3712,7 +3738,7 @@ PtrAttribute        pAttr;
           case PtMarginLeft:
 	    pAb->AbLeftMargin = IntegerRule (pPRule, pAb->AbElement,
 					    pAb->AbDocView, &appl, &unit,
-					    pAttr);
+					    pAttr, pAb);
 	    pAb->AbLeftMarginUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3725,7 +3751,7 @@ PtrAttribute        pAttr;
           case PtPaddingTop:
 	    pAb->AbTopPadding = IntegerRule (pPRule, pAb->AbElement,
 					     pAb->AbDocView, &appl, &unit,
-					     pAttr);
+					     pAttr, pAb);
 	    pAb->AbTopPaddingUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3738,7 +3764,7 @@ PtrAttribute        pAttr;
           case PtPaddingRight:
 	    pAb->AbRightPadding = IntegerRule (pPRule, pAb->AbElement,
 					     pAb->AbDocView, &appl, &unit,
-					     pAttr);
+					     pAttr, pAb);
 	    pAb->AbRightPaddingUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3751,7 +3777,7 @@ PtrAttribute        pAttr;
           case PtPaddingBottom:
 	    pAb->AbBottomPadding = IntegerRule (pPRule, pAb->AbElement,
 					     pAb->AbDocView, &appl, &unit,
-					     pAttr);
+					     pAttr, pAb);
 	    pAb->AbBottomPaddingUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3764,7 +3790,7 @@ PtrAttribute        pAttr;
           case PtPaddingLeft:
  	    pAb->AbLeftPadding = IntegerRule (pPRule, pAb->AbElement,
 					     pAb->AbDocView, &appl, &unit,
-					     pAttr);
+					     pAttr, pAb);
 	    pAb->AbLeftPaddingUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3777,7 +3803,7 @@ PtrAttribute        pAttr;
           case PtBorderTopWidth:
 	    pAb->AbTopBorder = IntegerRule (pPRule, pAb->AbElement,
 					    pAb->AbDocView, &appl, &unit,
-					    pAttr);
+					    pAttr, pAb);
 	    pAb->AbTopBorderUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3790,7 +3816,7 @@ PtrAttribute        pAttr;
           case PtBorderRightWidth:
 	    pAb->AbRightBorder = IntegerRule (pPRule, pAb->AbElement,
 					      pAb->AbDocView, &appl, &unit,
-					      pAttr);
+					      pAttr, pAb);
 	    pAb->AbRightBorderUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3803,7 +3829,7 @@ PtrAttribute        pAttr;
           case PtBorderBottomWidth:
 	    pAb->AbBottomBorder = IntegerRule (pPRule, pAb->AbElement,
 					       pAb->AbDocView, &appl, &unit,
-					       pAttr);
+					       pAttr, pAb);
 	    pAb->AbBottomBorderUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
@@ -3816,7 +3842,7 @@ PtrAttribute        pAttr;
           case PtBorderLeftWidth:
 	    pAb->AbLeftBorder = IntegerRule (pPRule, pAb->AbElement,
 					     pAb->AbDocView, &appl, &unit,
-					     pAttr);
+					     pAttr, pAb);
 	    pAb->AbLeftBorderUnit = unit;
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */

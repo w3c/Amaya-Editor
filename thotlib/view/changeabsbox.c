@@ -611,7 +611,7 @@ PtrAttribute       *pAttr;
    des attributs porte's par l'element auquel correspond   
    pAb.                                                   
    Au retour, pSPR contient un pointeur sur le schema de   
-   presenrtation auquel appartient la regle.                   
+   presentation auquel appartient la regle.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrPRule            SearchRulepAb (PtrDocument pDoc, PtrAbstractBox pAb, PtrPSchema * pSPR, PRuleType typeRule, FunctionType typeFunc, ThotBool attr, PtrAttribute * pAttr)
@@ -2347,7 +2347,10 @@ int                 viewNb;
 				   else
 				     /* le pave englobant est coupe' en tete, il faut */
 				     /* encore detruire les paves qui le precedent. */
+				     {
+				     TruncateOrCompleteAbsBox (pAb, TRUE, TRUE, pDoc);
 				     pAb->AbTruncatedHead = TRUE;
+				     }
 			       }
 			     while (pAb != NULL);
 			   }
@@ -2385,7 +2388,10 @@ int                 viewNb;
 				       pAb = NULL;
 				     else
 				       /* le pave englobant est coupe' en queue */
+				       {
+				       TruncateOrCompleteAbsBox (pAb, TRUE, FALSE, pDoc);
 				       pAb->AbTruncatedTail = TRUE;
+				       }
 				 }
 			       while (pAb != NULL);
 			     }
@@ -2407,6 +2413,7 @@ int                 viewNb;
 			     /* traite le pave de l'element et les paves englobants */
 			     do		/* marque le pave coupe' */
 			       {
+				 TruncateOrCompleteAbsBox (pAb, TRUE, FALSE, pDoc);
 				 pAb->AbTruncatedTail = TRUE;
 				 /* supprime tous ses freres suivants */
 				 pAbbSibling = pAb->AbNext;
@@ -4489,7 +4496,7 @@ PtrAttribute        pAttrComp;
 		       if (createBox && pEl->ElAbstractBox[view - 1] == NULL && typeRule == PtVisibility)
 			  /* le pave n'existe pas et c'est une regle de visibilite */
 			 {
-			    val = IntegerRule (pR, pEl, view, &appl, &unit, pAttr);
+			    val = IntegerRule (pR, pEl, view, &appl, &unit, pAttr, NULL);
 			    if ((!remove && val > 0) || (remove && val <= 0))
 			       /* cette regle rend le pave visible et ce n'est pas une suppression
 			          ou c'est une suppression et le pave etait rendu invisible par la regle

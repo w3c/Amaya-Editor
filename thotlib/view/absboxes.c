@@ -579,6 +579,7 @@ ThotBool            exceptCrWith;
 	}
    while (!stop);
 }
+
 /*----------------------------------------------------------------------
    KillPresEnclosing supprime tous les paves de presentation           
    crees par pAb et les paves de presentation crees par   
@@ -622,6 +623,8 @@ ThotBool            exceptCrWith;
       else
 	{
 	   if (IsBreakable (pAbbEnclosing))
+	     {
+	      TruncateOrCompleteAbsBox (pAbbEnclosing, TRUE, head, pDoc);
 	      if (head)
 		{
 		   pAbbEnclosing->AbTruncatedHead = TRUE;
@@ -736,6 +739,7 @@ ThotBool            exceptCrWith;
 			}
 		   while (!stop);
 		}
+	     }
 	   /* passe au niveau superieur */
 	   pAbbEnclosing = pAbbEnclosing->AbEnclosing;
 	}
