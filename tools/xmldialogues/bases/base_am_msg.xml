@@ -1784,21 +1784,6 @@
 	<message xml:lang="de">Kann keinen XPointer erzeugen</message>
 	<message xml:lang="it">No posso create un XPointer</message>
 </label>
-<label define="AM_DOC_INFO_TITLE">
-	<message xml:lang="en">Document Informations</message>
-</label>
-<label define="AM_DOC_INFO_LOCATION_TITLE">
-	<message xml:lang="en">LOCATION</message>
-</label>
-<label define="AM_DOC_INFO_TYPE_TITLE">
-	<message xml:lang="en">MIME TYPE</message>
-</label>
-<label define="AM_DOC_INFO_CHARSET_TITLE">
-	<message xml:lang="en">CHARSET</message>
-</label>
-<label define="AM_DOC_INFO_CONTENT_TITLE">
-	<message xml:lang="en">CONTENT LENGTH</message>
-</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

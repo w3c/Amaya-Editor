@@ -334,7 +334,7 @@ void                DocumentInfo (Document document, View view)
   CHAR_T         *charsetName = NULL;
   /* Main form */
    TtaNewSheet (BaseDialog + DocInfoForm, TtaGetViewFrame (document, 1),
-		TtaGetMessage (AMAYA, AM_DOC_INFO_TITLE),
+		TEXT ("Document Information"),
 		0, NULL, FALSE, 6, 'L', D_DONE);
 
    /* Document information labels */
@@ -345,21 +345,21 @@ void                DocumentInfo (Document document, View view)
    /* Document URL */
    TtaNewLabel (BaseDialog + DocInfoLocationTitle,
 		BaseDialog + DocInfoForm,
-		TtaGetMessage (AMAYA, AM_DOC_INFO_LOCATION_TITLE));
+		TEXT ("LOCATION"));
 
    /* Mime Type */
    TtaNewLabel (BaseDialog + DocInfoMimeTypeTitle,
 		BaseDialog + DocInfoForm,
-		TtaGetMessage (AMAYA, AM_DOC_INFO_TYPE_TITLE));
+		TEXT ("MIME TYPE"));
    /* Charset */
    TtaNewLabel (BaseDialog + DocInfoCharsetTitle,
 		BaseDialog + DocInfoForm,
-		TtaGetMessage (AMAYA, AM_DOC_INFO_CHARSET_TITLE));
+		TEXT ("CHARSET"));
 
    /* Content Length */
    TtaNewLabel (BaseDialog + DocInfoContentTitle,
 		BaseDialog + DocInfoForm,
-		TtaGetMessage (AMAYA, AM_DOC_INFO_CONTENT_TITLE));
+		TEXT ("CONTENT LENGTH"));
 
    TtaNewLabel (BaseDialog + DocInfoTitle2,
 		BaseDialog + DocInfoForm,
@@ -368,7 +368,7 @@ void                DocumentInfo (Document document, View view)
    /* Document information contents */
    TtaNewLabel (BaseDialog + DocInfoContent1,
 		BaseDialog + DocInfoForm,
-		"__________________________________");
+		"___________________________________________");
 
    /* Document URL */
    if (DocumentURLs[document] != NULL)
@@ -402,7 +402,7 @@ void                DocumentInfo (Document document, View view)
 
    TtaNewLabel (BaseDialog + DocInfoContent2,
 		BaseDialog + DocInfoForm,
-		"__________________________________");
+		"___________________________________________");
 
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + DocInfoForm, TRUE);

@@ -2997,23 +2997,21 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
 	  doc = TmpDoc;
       DocInfo[doc] = hwnDlg;
       /* init the dialog's text */
-      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_DOC_INFO_TITLE));
+      SetWindowText (hwnDlg, TEXT ("Document Information"));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), 
 		     TtaGetMessage (LIB, TMSG_DONE));
 
       /* set up the other fields */
 
       /* document URL */
-      SetDlgItemText (hwnDlg, IDC_DIURL,
-		      TtaGetMessage (AMAYA, AM_DOC_INFO_LOCATION_TITLE));
+      SetDlgItemText (hwnDlg, IDC_DIURL, TEXT ("LOCATION"));
       if (DocumentURLs[doc] != NULL)
 	SetDlgItemText (hwnDlg, IDC_DIURL_VAL, DocumentURLs[doc]);
       else
 	SetDlgItemText (hwnDlg, IDC_DIURL_VAL, TEXT("Unknown"));
 
       /* MIME type */
-      SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE,
-		      TtaGetMessage (AMAYA, AM_DOC_INFO_TYPE_TITLE));
+      SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE, TEXT ("MIME TYPE"));
       if (DocumentMeta[doc]->content_type != NULL)
 	SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, 
 			DocumentMeta[doc]->content_type);
@@ -3021,17 +3019,15 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
 	SetDlgItemText (hwnDlg, IDC_DICONTENTTYPE_VAL, TEXT("Unknown"));
 
       /* charset */
-      SetDlgItemText (hwnDlg, IDC_DICHARSET,
-		      TtaGetMessage (AMAYA, AM_DOC_INFO_CHARSET_TITLE));
-      charsetName = DocumentMeta[document]->charset;
+      SetDlgItemText (hwnDlg, IDC_DICHARSET, TEXT ("CHARSET"));
+      charsetName = DocumentMeta[doc]->charset;
       if (charsetName != NULL)
 	SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, charsetName);
       else
 	SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, TEXT("Unknown"));
 
       /* content length */
-      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN,
-		      TtaGetMessage (AMAYA, AM_DOC_INFO_CONTENT_TITLE));
+      SetDlgItemText (hwnDlg, IDC_DICONTENTLEN, TEXT ("CONTENT LENGTH"));
       SetDlgItemText (hwnDlg, IDC_DICONTENTLEN_VAL, TEXT("Unknown"));
       break;
 
