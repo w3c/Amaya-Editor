@@ -275,15 +275,7 @@ static int FTLibraryInit ()
       FTlib = 0;
       return FALSE;
     }
-  i = 0;
-  while (i < 1024)
-    {
-      FontTab[i].ref = 0;
-      FontTab[i].name = NULL;
-      FontTab[i].font = NULL;
-      FontTab[i].size = 0;
-      i++;
-    }
+  memset(FontTab, 0, sizeof(Font_Slot)*1024);
   return TRUE;
 }
 
