@@ -237,11 +237,12 @@ bool AmayaNormalWindow::ClosePage( int page_id )
       //TtaHandlePendingEvents ();
       
       // we force old_page_id to regivefocus to the last active page before the close
+      old_page_id--; // a page has been deleted so the old page position should be -1
       if (old_page_id < 0)
 	old_page_id = 0;
       if (old_page_id >= m_pNotebook->GetPageCount())
 	old_page_id = m_pNotebook->GetPageCount()-1;
-      if (old_page_id > 0)
+      if (old_page_id >= 0)
 	m_pNotebook->SetSelection( old_page_id );
 
       // here GetSelection should return the right value acording to SetSelection above.
