@@ -1118,7 +1118,10 @@ static void FontIdentifier (char script, int family, int highlight, int size,
 {
   char        *wght, *slant, *ffamily;
   char        encoding[3];
+#ifndef _WINDOWS
   PtrFont     ptfont;
+#endif /*_WINDOWS*/
+
   /* apply the current font zoom */
   if (unit == UnRelative)
     {
@@ -1143,9 +1146,8 @@ static void FontIdentifier (char script, int family, int highlight, int size,
 		 ffamily, wght, slant, size);
    GeneratePoscriptFont (r_name, script, family, highlight, size);
 #ifndef _WINDOWS
-   ptfont=LoadFont(r_nameX);
+   ptfont = LoadFont (r_nameX);
 #endif /*_WINDOWS*/
-
  }   
   else
     { 
@@ -2252,6 +2254,7 @@ void InitDialogueFonts (char *name)
   while (LogicalPointsSizes[index] < MenuSize && index <= MaxNumberOfSizes)
     index++;
   FontDialogue =  ReadFont (script, 2, 0, index, UnRelative);
+#ifndef _WINDOWS
   if (FontDialogue == NULL)
     {
       FontDialogue = ReadFont ('L', 2, 0, index, UnRelative);
@@ -2276,6 +2279,7 @@ void InitDialogueFonts (char *name)
       if (LargeFontDialogue == NULL)
 	LargeFontDialogue = IFontDialogue;
     }
+#endif /*_WINDOWS*/
   FirstRemovableFont = FirstFreeFont;
 }
 
