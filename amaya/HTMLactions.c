@@ -725,12 +725,15 @@ static ThotBool FollowTheLink (Element anchor, Element elSource, Document doc)
 			 }
 		     }
 		 }
-	       targetDocument = GetHTMLDocument (documentURL, NULL,
-						 reldoc, 
-						 doc, 
-						 method, history, 
-						 (void *) FollowTheLink_callback,
-						 (void *) ctx);
+	       if (method != CE_RELATIVE || InNewWindow ||
+		   CanReplaceCurrentDocument (doc, 1))
+		 /* Load the new document */
+		 targetDocument = GetHTMLDocument (documentURL, NULL,
+						   reldoc, 
+						   doc, 
+						   method, history, 
+						   (void *) FollowTheLink_callback,
+						   (void *) ctx);
 	     }
 	   return (TRUE);
 	 }

@@ -2408,7 +2408,7 @@ static Document LoadDocument (Document doc, char *pathname,
 
 	  if (method == CE_RELATIVE)
 	    {
-	      if (TtaIsDocumentModified (doc) || docType == docCSS)
+	      if (/*TtaIsDocumentModified (doc) || */docType == docCSS)
 		{
 		  /* open a new window to display the new document */
 		  newdoc = InitDocView (0, documentname, docType, 0, FALSE);

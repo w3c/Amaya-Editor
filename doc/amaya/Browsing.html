@@ -28,15 +28,15 @@
 <div id="Browsing">
 <h2>Browsing versus Editing</h2>
 
-<p><strong>Amaya</strong> is mainly an editor with browsing capabilities. When
-used as a browser, it behaves like many other Web browsers, except for <a
-href="#Activating">activating links</a>. In normal operation
-<strong>Amaya</strong> allows you to browse and edit documents simultaneously,
-but you can change this standard behavior for each document window
-independently. The <img src="../Icons/Editor.gif" alt="editor-mode" /> button
-shows up that the window is in editor mode: you can edit the current document
-and browse in this window. By clicking on that button, you switch the window
-to browser mode. The button is then displayed as <img
+<p><strong>Amaya</strong> is mainly an editor with browsing capabilities.
+When used as a browser, it behaves like many other Web browsers, except for
+<a href="#Activating">activating links</a>. In normal operation
+<strong>Amaya</strong> allows you to browse and edit documents
+simultaneously, but you can change this standard behavior for each document
+window independently. The <img src="../Icons/Editor.gif" alt="editor-mode" />
+button shows up that the window is in editor mode: you can edit the current
+document and browse in this window. By clicking on that button, you switch
+the window to browser mode. The button is then displayed as <img
 src="../Icons/Browser.gif" alt="browser-mode" /> and you can only browse and
 fill in forms. This option is also available from the Edit menu option
 <strong>Editor Mode</strong>, and as a keyboard shortcut (the default is
@@ -46,18 +46,18 @@ fill in forms. This option is also available from the Edit menu option
 information about the charset in the HTTP header or in a META element, a HTML
 document is considered as encoded in ISO-latin-1. XHTML documents are read by
 default as UTF 8 files. When there is no information about the charset in the
-HTTP header, in the XML declaration, or in a META element, a XHTML document is
-considered as encoded in UTF 8. As the default charset is different for HTML
-documents and XHTML documents, it often occurs that authors created
-ISO-latin-1 XHTML documents which don't provide information about the charset.
-As soon as a character analyzed by the XML parser doesn't match a valid UTF 8
-character (it should occur if the document is encoded in ISO-latin-1 but
-parsed as an UTF 8 file), the document is considered as invalid: the parsing
-is stopped and an error message is displayed. In that specific case, the
-command "<strong>Reopen in ISO-latin-1</strong>" is activated. That command
-allows you to reopen the document with a charset set to ISO-latin-1. The
-reopen document is now considered as modified (a charset has been added) and
-can be saved.</p>
+HTTP header, in the XML declaration, or in a META element, a XHTML document
+is considered as encoded in UTF 8. As the default charset is different for
+HTML documents and XHTML documents, it often occurs that authors created
+ISO-latin-1 XHTML documents which don't provide information about the
+charset. As soon as a character analyzed by the XML parser doesn't match a
+valid UTF 8 character (it should occur if the document is encoded in
+ISO-latin-1 but parsed as an UTF 8 file), the document is considered as
+invalid: the parsing is stopped and an error message is displayed. In that
+specific case, the command "<strong>Reopen in ISO-latin-1</strong>" is
+activated. That command allows you to reopen the document with a charset set
+to ISO-latin-1. The reopen document is now considered as modified (a charset
+has been added) and can be saved.</p>
 
 <p>Amaya interprets character entities.: When it's not able to interpret it,
 it displays a '?' (or it displays the entity value when the entity is within
@@ -69,10 +69,11 @@ entities.</p>
 
 <h3><a name="Activating">Activating a link</a></h3>
 
-<p>Links are usually displayed in blue (or underlined on monochrome displays).
-As <strong>Amaya</strong> is an editor, you must double click on a link to
-activate it. A single click just moves the insertion point and displays the
-expanded URI of the link into the status bar of the main view.</p>
+<p>Links are usually displayed in blue (or underlined on monochrome
+displays). As <strong>Amaya</strong> is an editor, you must double click on a
+link to activate it. A single click just moves the insertion point and
+displays the expanded URI of the link into the status bar of the main
+view.</p>
 
 <p>This behavior can be changed as well as many other parameters using a
 preferences menu. By changing the "Double click activates link", you can
@@ -82,30 +83,29 @@ the insert point within an anchor. It is also possible to use the keyboard to
 activate links, as well as form controls. The default keyboard command is
 <strong>Alt-Enter</strong>.</p>
 
-<p>The document retrieved by this operation normally <em>replaces</em> the
-current document in the same window, in the same mode (editor or browser ).
-However, if the current document has been modified and has not been saved yet,
-another window is created for the new document, to avoid losing last
-changes.</p>
+<p>The document retrieved by this operation <em>replaces</em> the current
+document in the same window, in the same mode (editor or browser). If the
+current document has been modified and has not been saved yet, Amaya pops up
+a dialogue box that asks if you accept to lose modifications.</p>
 
-<p>A simple clic or a double clic with the right button of the mouse (it works
-also with the middle button on Windows platforms) opens the target document
-into a new window.</p>
+<p>A simple clic or a double clic with the right button of the mouse (it
+works also with the middle button on Windows platforms) <em>opens</em> the
+target document into a new window.</p>
 
 <h3><a name="Access">Access keys</a></h3>
 
 <p>An author could associate an attribute <code>accesskey</code> to a form
-field, an area, or a link. The following elements support the accesskey: AREA,
-BUTTON, INPUT, LABEL, LEGEND, and TEXTAREA.This can be crucial to people with
-motoric disabilities but there are other conditions where it could be
-necessary or useful.</p>
+field, an area, or a link. The following elements support the accesskey:
+AREA, BUTTON, INPUT, LABEL, LEGEND, and TEXTAREA.This can be crucial to
+people with motoric disabilities but there are other conditions where it
+could be necessary or useful.</p>
 
 <p>When the author associated an attribute accesskey to a link in a document
 (example <code>accesskey="n" or accesskey="N"</code>), the command
-<strong>Alt-accesskey</strong> (in the example Alt-a) will activate that link.
-Pressing <strong>Alt- accesskey</strong> when assigned to a form element will
-give the focus to that element (the following element for LABEL and
-LEGEND).</p>
+<strong>Alt-accesskey</strong> (in the example Alt-a) will activate that
+link. Pressing <strong>Alt- accesskey</strong> when assigned to a form
+element will give the focus to that element (the following element for LABEL
+and LEGEND).</p>
 
 <p>Access keys overwrite Amaya shortcuts. For example Help pages declare
 access keys: "n" for going to the next page, "p" for going to the previous
@@ -120,10 +120,10 @@ configuration. The user can use the key <strong>Control</strong> instead of
 <h3><a name="L515">Target anchors</a></h3>
 
 <p>Some pieces of text can be displayed with a <a name="target">target icon
-<img src="../Icons/target.gif" alt=" target " /></a>. These icons are not part
-of the document and can be displayed or hidden just by controlling the
-<strong>Show targets</strong> status of the current window, which is an option
-in the <strong>Views</strong> menu. The default keyboard command is
+<img src="../Icons/target.gif" alt=" target " /></a>. These icons are not
+part of the document and can be displayed or hidden just by controlling the
+<strong>Show targets</strong> status of the current window, which is an
+option in the <strong>Views</strong> menu. The default keyboard command is
 <strong>Control-v Control-t</strong> in Unix, <strong>Alt-v Alt-l</strong> in
 Windows.</p>
 
@@ -140,14 +140,15 @@ href="Links.html#L245">create links</a> faster.</p>
 <dl>
   <dt>File menu</dt>
     <dd>Two entries from the File menu, <strong>Open Document</strong> and
-      <strong>Open in New Window</strong>, allow you to open a new document in
-      the same window or in a new window respectively. The default keyboard
-      commands are respectively <strong>Control-x Contol-f</strong> and
-      <strong>Control-x Control-o</strong> in Unix, <strong>Control-o</strong>
-      and <strong>Shift-Control-O</strong> in Windows. Both commands bring up
-      a dialog box where you can enter either a local file name or an URI. You
-      can also select a file from the <strong>Browse</strong> option that
-      contains a file browser and helps you to locate local files. 
+      <strong>Open in New Window</strong>, allow you to open a new document
+      in the same window or in a new window respectively. The default
+      keyboard commands are respectively <strong>Control-x Contol-f</strong>
+      and <strong>Control-x Control-o</strong> in Unix,
+      <strong>Control-o</strong> and <strong>Shift-Control-O</strong> in
+      Windows. Both commands bring up a dialog box where you can enter either
+      a local file name or an URI. You can also select a file from the
+      <strong>Browse</strong> option that contains a file browser and helps
+      you to locate local files. 
       <p>When the document is correctly specified, click on the
       <strong>Confirm</strong> button. This command could be also used to
       create a new local document.</p>
@@ -156,8 +157,8 @@ href="Links.html#L245">create links</a> faster.</p>
     <dd>This area displays the file name or the URI of the current document.
       You can edit it to specify a different (local or remote) document to be
       displayed in the same window. Press the Enter key when the cursor is in
-      this area to actually load the document. This command could be also used
-      to create a new local document.</dd>
+      this area to actually load the document. This command could be also
+      used to create a new local document.</dd>
   <dt>Following links</dt>
     <dd><a href="#L311">Activating a link</a> to get the corresponding
       document.</dd>
@@ -176,8 +177,8 @@ list:</p>
   <dt>Button bar</dt>
     <dd>Two buttons: <img alt="Back " border="0" src="../Icons/Back.gif"
       align="middle" /> and <img alt="Forward " border="0"
-      src="../Icons/Forward.gif" align="middle" /> allow you to go back to the
-      previous page or forward to the next one.</dd>
+      src="../Icons/Forward.gif" align="middle" /> allow you to go back to
+      the previous page or forward to the next one.</dd>
 </dl>
 
 <h3><a name="Reloading">Reloading a page</a></h3>
@@ -195,10 +196,10 @@ section on <a href="Configure.html">Configuring Amaya</a> describes how to
 change the defaults, and the current key bindings are provided next to the
 relevant menu option in all menus.</p>
 
-<p>For Emacs users, a configuration file <code>Amaya/config/amaya.emacs</code>
-is available. The user can create a link from his own private space
-<code>$HOME/.amaya/amaya.keyboard</code> to this file if he wants to work with
-Emacs shortcuts.</p>
+<p>For Emacs users, a configuration file
+<code>Amaya/config/amaya.emacs</code> is available. The user can create a
+link from his own private space <code>$HOME/.amaya/amaya.keyboard</code> to
+this file if he wants to work with Emacs shortcuts.</p>
 
 <p>Some keys are predefined, like:</p>
 <ul>

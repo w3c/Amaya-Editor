@@ -19,7 +19,7 @@ alt="Doc" /></a></p>
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 <hr />
 
-<p><strong>Version :</strong> 4.3.1 - mars 2001</p>
+<p><strong>Version :</strong> 4.4 - avril 2001</p>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
@@ -32,11 +32,11 @@ alt="Doc" /></a></p>
 
 <p>Ce manuel présente l'interface utilisateur d'Amaya pour les stations Unix.
 L'interface utilisateur de Windows est légèrement différente dans certains
-cas. Ce manuel d'utilisation n'est pas complet. Son but est simplement d'aider
-les utilisateurs à découvrir les principales caractéristiques du logiciel. Ce
-document est organisé comme un livre. Vous pouvez utiliser la commande "<a
-href="MakeBook.html.fr#L1065">Construire un livre</a>" pour assembler et
-imprimer la totalité du manuel.</p>
+cas. Ce manuel d'utilisation n'est pas complet. Son but est simplement
+d'aider les utilisateurs à découvrir les principales caractéristiques du
+logiciel. Ce document est organisé comme un livre. Vous pouvez utiliser la
+commande "<a href="MakeBook.html.fr#L1065">Construire un livre</a>" pour
+assembler et imprimer la totalité du manuel.</p>
 
 <p>Beaucoup de commandes <strong>Amaya</strong> sont les mêmes que celles
 fournies par les éditeurs et les outils classiques. Elles ne sont pas
@@ -125,8 +125,8 @@ décrits.</p>
           <li><a href="Changing.html.fr#L141">La commande Transformer</a></li>
           <li><a href="Changing.html.fr#Inserting">Insérer une
           Division</a></li>
-          <li><a href="Changing.html.fr#Back">Les touches Back Space et Delete
-            fusionnées</a></li>
+          <li><a href="Changing.html.fr#Back">Les touches Back Space et
+            Delete fusionnées</a></li>
         </ul>
       </li>
       <li><a
@@ -140,8 +140,8 @@ décrits.</p>
           <li><a href="Tables.html.fr#Adding1">Ajouter un nouvelle ligne, un
             nouveau tbody</a></li>
           <li><a href="Tables.html.fr#Removing">Détruire une colonne</a></li>
-          <li><a href="Tables.html.fr#Adding2">Ajouter quelque chose après une
-            table</a></li>
+          <li><a href="Tables.html.fr#Adding2">Ajouter quelque chose après
+            une table</a></li>
         </ul>
       </li>
       <li><a href="Math.html.fr#Math">Éditer des mathématiques</a> 
@@ -183,16 +183,16 @@ décrits.</p>
       </li>
       <li><a href="StyleSheets.html.fr#Style">Les feuilles de style</a> 
         <ul>
-          <li><a href="StyleSheets.html.fr#Creating">Créer et mettre à jour un
-            attribut de style</a></li>
-          <li><a href="StyleSheets.html.fr#Creating,">Créer un style générique
-            pour un élément ou une classe</a></li>
-          <li><a href="StyleSheets.html.fr#feuilles">Les feuilles de style CSS
-            externes et les feuilles de style CSS utilisateur</a></li>
+          <li><a href="StyleSheets.html.fr#Creating">Créer et mettre à jour
+            un attribut de style</a></li>
+          <li><a href="StyleSheets.html.fr#Creating,">Créer un style
+            générique pour un élément ou une classe</a></li>
+          <li><a href="StyleSheets.html.fr#feuilles">Les feuilles de style
+            CSS externes et les feuilles de style CSS utilisateur</a></li>
           <li><a href="StyleSheets.html.fr#Managing">Gérer des feuilles de
             style CSS externes</a></li>
-          <li><a href="StyleSheets.html.fr#L1371">Mettre du style en utilisant
-            des éléments HTML</a></li>
+          <li><a href="StyleSheets.html.fr#L1371">Mettre du style en
+            utilisant des éléments HTML</a></li>
         </ul>
       </li>
       <li><a href="Attributes.html.fr#Attributes">Éditer des attributs</a> 
@@ -286,15 +286,15 @@ décrits.</p>
 <pre>    amaya [-display host] [document]</pre>
 
 <p>Le paramètre [-display host] est optionnel. Il détermine l'écran hôte
-lointain où Amaya doit afficher des pages Web. Si ce paramètre est omis, Amaya
-affiche dans l'écran  local.</p>
+lointain où Amaya doit afficher des pages Web. Si ce paramètre est omis,
+Amaya affiche dans l'écran  local.</p>
 
-<p>Le paramètre <code>[document]</code> est optionnel. C'est le nom de fichier
-ou le URI du premier document qu' <strong>Amaya</strong> doit afficher quand
-il démarre. Si aucun paramètre n'est donné, un document par défaut est
-présenté. Le document par défaut pourrait être votre <em>home page</em> (voir
-<a href="Configure.html.fr#L138">comment configurer votre Home Page</a>) ou la
-page de bienvenue d'Amaya.</p>
+<p>Le paramètre <code>[document]</code> est optionnel. C'est le nom de
+fichier ou le URI du premier document qu' <strong>Amaya</strong> doit
+afficher quand il démarre. Si aucun paramètre n'est donné, un document par
+défaut est présenté. Le document par défaut pourrait être votre <em>home
+page</em> (voir <a href="Configure.html.fr#L138">comment configurer votre
+Home Page</a>) ou la page de bienvenue d'Amaya.</p>
 
 <h2><a name="Parcourir" id="Parcourir">Parcourir des pages Web avec
 Amaya</a></h2>
@@ -322,8 +322,8 @@ serveurs Web lointains.</p>
 <p>Nous tentons de rendre Amaya aussi robuste que possible. Une session
 d'Amaya peut néanmoins faillir. Si cela arrive, Amaya tente de sauver les
 documents couramment modifiés dans les fichiers de sauvegarde. Quand
-l'utilisateur redémarre une nouvelle session d'Amaya, la recharge des fichiers
-de sauvegarde est automatiquement proposée.</p>
+l'utilisateur redémarre une nouvelle session d'Amaya, la recharge des
+fichiers de sauvegarde est automatiquement proposée.</p>
 
 <p>Chaque section suivante décrit brièvement comment utiliser une fonction
 spécifique d'Amaya :</p>
@@ -336,8 +336,8 @@ spécifique d'Amaya :</p>
     éléments</a></li>
   <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et modifier des
     liens et des ancres</a></li>
-  <li><a rel="Chapter" href="Changing.html.fr#Changing">Éditer la structure du
-    document</a></li>
+  <li><a rel="Chapter" href="Changing.html.fr#Changing">Éditer la structure
+    du document</a></li>
   <li><a rel="Chapter" href="Tables.html.fr#Editing">Éditer des
   tables</a></li>
   <li><a href="Math.html.fr#Math" rel="Chapter">Éditer des
@@ -389,9 +389,9 @@ utiliser.</a></p>
     liste</a></li>
   <li><a href="HTML-elements/address.html.fr#About" rel="Chapter">A propos de
     l'auteur</a></li>
-  <li><a href="HTML-elements/inline.html.fr#Inline3" rel="Chapter">Définitions
-    en ligne, citations, sample code, insertions et suppressions,
-    abréviations, etc</a></li>
+  <li><a href="HTML-elements/inline.html.fr#Inline3"
+    rel="Chapter">Définitions en ligne, citations, sample code, insertions et
+    suppressions, abréviations, etc</a></li>
   <li><a href="HTML-elements/40styling.html.fr#Character"
     rel="Chapter">Éléments style de HTML ( ce qu'il ne faut pas faire et ce
     qui doit être fait...)</a></li>
@@ -410,7 +410,8 @@ href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
 href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal Disclaimer">liability,</a>
 <a
 href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C Trademarks">trademark</a>,
-<a href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
+<a
+href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
 use</a>and <a
 href="http://www.w3.org/Consortium/Legal/copyright-software.html">software
 licensing</a>rules apply. Your interactions with this site are in accordance
