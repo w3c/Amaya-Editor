@@ -1945,7 +1945,7 @@ static void CheckPseudoParagraph (Element el, Document doc)
 		elType.ElTypeNum == HTML_EL_Heading_cell ||
 		elType.ElTypeNum == HTML_EL_Object_Content ||
 		elType.ElTypeNum == HTML_EL_map)
-		TtaChangeElementType (el, HTML_EL_Pseudo_paragraph);
+	      TtaChangeTypeOfElement (el, doc, HTML_EL_Pseudo_paragraph);
 	    }
 	 }
     }
@@ -1967,7 +1967,7 @@ static void CheckPseudoParagraph (Element el, Document doc)
     /* the next element is a Pseudo-paragraph */
     /* turn it into an ordinary paragraph */
     {
-      TtaChangeElementType (next, HTML_EL_Paragraph);
+      TtaChangeTypeOfElement (next, doc, HTML_EL_Paragraph);
       TtaRegisterElementTypeChange (next, elType.ElTypeNum, doc);
     }
 }
