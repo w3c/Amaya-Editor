@@ -899,7 +899,8 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
    Document            doc;
 
    /* ne pas traiter si le document est en mode NoComputedDisplay */
-   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+   if (FrameTable[frame].FrDoc &&
+       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
 #ifndef _GTK
    info = (XmScrollBarCallbackStruct *) param;
@@ -1102,7 +1103,8 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
   int        delta, Xpos, Ypos, width, height, viewed, left;
   static int PreviousPosition = 0;
 
-  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+  if (FrameTable[frame].FrDoc &&
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return;
   ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
   delta = (int) w->value - PreviousPosition;

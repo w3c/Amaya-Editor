@@ -1828,6 +1828,11 @@ void TtaGiveBufferContent (Element element, CHAR_T *buffer, int length,
 
   UserErrorCode = 0;
   pEl = (PtrElement) element;
+  if (pEl)
+    *language = pEl->ElLanguage;
+  else
+    *language = TtaGetDefaultLanguage ();
+
   if (element == NULL)
     TtaError (ERR_invalid_parameter);
   else if (!pEl->ElTerminal)
@@ -1849,7 +1854,6 @@ void TtaGiveBufferContent (Element element, CHAR_T *buffer, int length,
 	  len = len + (l - 1);
 	  pBuf = pBuf->BuNext;
 	}
-      *language = pEl->ElLanguage;
     }
 }
 
