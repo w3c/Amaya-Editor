@@ -999,7 +999,6 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
     return;
 
   y += FrameTable[frame].FrTopMargin;
-
   pat = (Pixmap) CreatePattern (0, fg, bg, pattern); 
   /* pattern = 4 => we're drawing a math empty place*/
   if (pattern == 4)
@@ -1010,9 +1009,7 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
       pat = 0;      
     }
   else if (pat != 0) 
-    {
-      GL_DrawRectangle (bg, x, y, width, height);
-    }
+    GL_DrawRectangle (bg, x, y, width, height);
 
   /* Draw the border */
   if (thick > 0 && fg >= 0)
@@ -1027,11 +1024,10 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
       InitDrawing (style, thick, fg); 
       GL_DrawEmptyRectangle (fg, x,  y, width, height);
     }
- if (pattern == 4)
-    {
-      glDisable (GL_POLYGON_STIPPLE);      
-    }
+  if (pattern == 4)
+    glDisable (GL_POLYGON_STIPPLE);      
 }
+
 /*----------------------------------------------------------------------
   FDrawRectangle draw a rectangle located at (x, y) (as float number)
 in frame,
@@ -1540,6 +1536,7 @@ float PixelValueDble (int nb, int real_nb, int frame)
   else
     return (float) (nb + real_nb);
 }
+
 /*----------------------------------------------------------------------
   DrawPath draws a path.
   Parameter path is a pointer to the list of path segments
@@ -1621,6 +1618,7 @@ void DrawPath (int frame, int thick, int style, int x, int y,
     FreeMesh (mesh);
     }  
 }
+
 /*----------------------------------------------------------------------
   DrawOval draw a rectangle with rounded corners.
   Parameters fg, bg, and pattern are for drawing
@@ -1766,12 +1764,11 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
    if (thick > 0 && fg >= 0)
      {
 	InitDrawing (style, thick, fg);
-	for (i=0;i<4;i++){
+	for (i=0;i<4;i++)
 	  GL_DrawArc (xarc[i].x, xarc[i].y, 
 		      xarc[i].width, xarc[i].height, 
 		      xarc[i].angle1, xarc[i].angle2,
 		      FALSE);
-	} 
 	GL_DrawSegments (seg, 4);
      }
 }

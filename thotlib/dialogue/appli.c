@@ -697,13 +697,14 @@ gboolean GL_Init (ThotWidget widget, GdkEventExpose *event, gpointer data)
 }
 #endif /* _GL */
 
+static ThotBool  FrameResizedGTKInProgress = FALSE;
 /*----------------------------------------------------------------------
   FrameResizedGTK When user resize window
   ----------------------------------------------------------------------*/
 gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 {
-  int         frame;
-  int         width, height;
+  int            frame;
+  Dimension   width, height;
 #ifdef _GL
   int         forever = 0;
 #endif /* _GL */
@@ -711,10 +712,17 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   frame = (int) data;
   width = event->width;
   height = event->height; 
-  if (width <= 0 || height <= 0)
-    return TRUE;
+  if (width <= 0 || height <= 0 || frame == 0 || frame > MAX_FRAME)
+    return FALSE;
+  if (FrameTable[frame].FrDoc == 0 ||
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    return FALSE; 
   if (FrameTable[frame].FrWidth == width && FrameTable[frame].FrHeight == height)
-    return TRUE;
+    return FALSE;
+  if (FrameResizedGTKInProgress)
+    return FALSE;
+  else
+    FrameResizedGTKInProgress = TRUE;
 #ifdef _GL
   if (w)
     if (GL_prepare (frame))
@@ -726,7 +734,7 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 	GLResize (width, height, 0, 0);
 	DefRegion (frame, 0, 0, width, height);
         FrameRedraw (frame, width, height);
-
+#ifdef IV
 	/*FrameRedraw can modify Size by hiding scrollbars
 	  so until sizes are stabilized, we resize. 
 	if it never stabilizes itself, we stop at at
@@ -753,6 +761,7 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 
 	    forever++;
 	  }
+#endif
 	FrameTable[frame].DblBuffNeedSwap = TRUE; 
 	GL_SwapEnable (frame);
 	if (GL_prepare (frame))
@@ -760,9 +769,8 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
       }
 #else /* _GL */
   FrameRedraw (frame, width, height);
-  while (gtk_events_pending ()) 
-    gtk_main_iteration ();
 #endif /* _GL */
+  FrameResizedGTKInProgress = FALSE;
   return TRUE;
 }
 
@@ -774,10 +782,8 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer data)
 {
   int                  frame;
-  int                  x;
-  int                  y;
-  int                  w;
-  int                  h;
+  int                  x, y;
+  Dimension            w, h;
 
   frame = (int) data;
   x = event->area.x;
@@ -3393,18 +3399,14 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
       if (raz > 0)
 	Clear (frame, clipwidth, clipheight, clipx, clipy);
 #else /* _GL */
-    
       GL_SetClipping (clipx,
-		      FrameTable[frame].FrHeight
-		      + FrameTable[frame].FrTopMargin
+		      FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin
 		      - (clipy + clipheight),
 		      clipwidth,
 		      clipheight); 
 
-      if (raz > 0)
-	ClearAll (frame);
-      /* Clear (frame, clipwidth, clipheight,  */
-      /* 		 clipx, clipy); */
+      if (raz > 0 && GL_prepare (frame))
+	glClear (GL_COLOR_BUFFER_BIT);
 #endif /*_GL*/
     }
 }

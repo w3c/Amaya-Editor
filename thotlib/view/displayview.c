@@ -581,7 +581,7 @@ static void RebuildImage (PtrDocument pDoc)
        ChangeConcreteImage (frame, &h, pAbbRoot);
        /* force to redraw all the frame */
        pFrame = &ViewFrameTable[frame - 1];
-       CheckScrollingWidth (frame);
+       /*CheckScrollingWidth (frame);*/
        if (FrameTable[frame].FrScrollOrg < 0)
 	 /* by default show the left side */
 	  pFrame->FrXOrg = FrameTable[frame].FrScrollOrg;

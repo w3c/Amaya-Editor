@@ -32,8 +32,6 @@ extern void GetBoxTransformedCoord ( PtrAbstractBox pAbSeeked,
                                      int *higherx,
                                      int *x,
                                      int *y );
-extern void ComputeABoundingBox ( PtrAbstractBox pAbSeeked,
-                                  int frame );
 extern PtrBox DisplayAllBoxes ( int frame,
                                 int xmin,
                                 int xmax,
@@ -42,6 +40,8 @@ extern PtrBox DisplayAllBoxes ( int frame,
                                 PtrBox *create,
                                 int *tVol,
                                 int *bVol );
+extern void ComputeABoundingBox ( PtrAbstractBox pAbSeeked,
+                                  int frame );
 extern ThotBool RedrawFrameTop ( int frame,
                                  int scroll );
 extern ThotBool RedrawFrameBottom ( int frame,
@@ -77,8 +77,6 @@ extern void GetBoxTransformedCoord (/* PtrAbstractBox pAbSeeked,
                                        int *higherx,
                                        int *x,
                                        int *y */);
-extern void ComputeABoundingBox (/* PtrAbstractBox pAbSeeked,
-                                    int frame */);
 extern PtrBox DisplayAllBoxes (/* int frame,
                                   int xmin,
                                   int xmax,
@@ -87,6 +85,8 @@ extern PtrBox DisplayAllBoxes (/* int frame,
                                   PtrBox *create,
                                   int *tVol,
                                   int *bVol */);
+extern void ComputeABoundingBox (/* PtrAbstractBox pAbSeeked,
+                                    int frame */);
 extern ThotBool RedrawFrameTop (/* int frame,
                                    int scroll */);
 extern ThotBool RedrawFrameBottom (/* int frame,
