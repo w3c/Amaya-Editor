@@ -778,18 +778,16 @@ XpmAttributes      *attributes;
    if (!ximage_pixels)
       return (XpmNoMemory);
 
-   mask_pixels = (Pixel *) XpmMalloc (sizeof ((Pixel) * image->ncolors));
+   mask_pixels = (Pixel *) XpmMalloc (sizeof (Pixel) * image->ncolors);
    if (!mask_pixels)
       RETURN (XpmNoMemory);
 
    mask_pixel = XpmUndefPixel;
 
    /* maximum of allocated pixels will be the number of colors */
-   pixels = (Pixel *) XpmMalloc (sizeof ((Pixel) * image->ncolors));
+   pixels = (Pixel *) XpmMalloc (sizeof (Pixel) * image->ncolors);
    if (!pixels)
       RETURN (XpmNoMemory);
-   else
-     memset (pixels, 0, sizeof ((Pixel) * image->ncolors));
 
    /* get pixel colors, store them in index tables */
    ErrorStatus = CreateColors (display, attributes, image->colorTable,
