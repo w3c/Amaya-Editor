@@ -130,7 +130,6 @@ char *comment_end = NULL;
 
 char *javaOutputFile = NULL;
 char *stubCOutputFile = NULL;
-char *stubHOutputFile = NULL;
 
 int main_argc;
 char **main_argv;
@@ -907,97 +906,6 @@ void dump_java(FILE *out) {
     fprintf(out,"}\n");
 }
 
-void dump_h(FILE *out) {
-    int i,n,p;
-    Function *f;
-    Arg *a;
-    Type *t;
-    int argc = main_argc;
-    char **argv = main_argv;
-    char buffer[256];
-    char *ptr;
-
-    fprintf(out,"/*\n");
-    dump_cmd(out);
-    fprintf(out," */\n");
-    fprintf(out,"/*\n * External definitions needed for class %s stubs\n",
-           classname);
-    fprintf(out," */\n\n");
-    fprintf(out,"#ifndef _Included_%s_stub_h\n",classname);
-    fprintf(out,"#define _Included_%s_stub_h\n",classname);
-
-    while (--argc > 0) {
-       char *name = *++argv;
-
-       if (name[0] == '-') {
-	   switch (name[1]) {
-	       case 'c':
-	       case 'C':
-		   ++argv;
-		   --argc;
-		   break;
-	       case 'h':
-	       case 'H':
-		   ++argv;
-		   --argc;
-		   break;
-	       case 'j':
-	       case 'J':
-		   ++argv;
-		   --argc;
-		   break;
-	       case 't':
-	       case 'T':
-		   ++argv;
-		   --argc;
-		   break;
-	       case 'M':
-	       case 'm':
-		   ++argv;
-		   --argc;
-		   break;
-	   }
-	   continue;
-       }
-       ptr = &buffer[0];
-       do {
-           if (*name == '/') ptr = &buffer[0];
-	   else if (*name == '\\') ptr = &buffer[0];
-	   else *ptr++ = *name;
-       } while (*name++ != 0);
-       fprintf(out,"#include \"%s\"\n", &buffer[0]);
-    }
-    fprintf(out,"\n\n");
-    for (i = 0;i < nbFunctions;i++) {
-        f = &tabFunctions[i];
-	t = &tabType[f->type];
-
-        fprintf(out,"extern %s ", t->name);
-	for (p = 0;p < t->indir;p++) fprintf(out,"*");
-	fprintf(out,"%s(", f->name);
-
-        for (n = 0;n < f->nb_args;n++) {
-	    a = &f->args[n];
-	    t = &tabType[a->type];
-
-	    if (n != 0) fprintf(out,", ");
-
-	    if (a->retval == TYPE_OUT)
-	        fprintf(out,"/*OUT*/ ");
-	    if (a->retval == TYPE_INOUT)
-	        fprintf(out,"/*INOUT*/ ");
-
-	    fprintf(out,"%s ", t->name);
-            for (p = 0;p < t->indir;p++) fprintf(out,"*");
-	    fprintf(out,"%s", a->name);
-	}
-        if (n == 0) fprintf(out,"void");
-	fprintf(out,");\n");
-    }
-    fprintf(out,"extern void register_%s_stubs(void);\n\n", classname);
-    fprintf(out,"#endif /* _Included_%s_stub_h */\n",classname);
-}
-
 void dump_stubs(FILE *out) {
     int i,n,p;
     Function *f;
@@ -1019,7 +927,19 @@ void dump_stubs(FILE *out) {
     fprintf(out," */\n\n");
     fprintf(out,"#include \"JavaTypes.h\"\n");
     fprintf(out,"#include \"%s.h\"\n", classname);
-    fprintf(out,"#include \"%s\"\n\n", stubHOutputFile);
+    /* get rid of basename */
+    {
+	char buffer[256];
+	char *ptr;
+	char *name = filename;
+	ptr = &buffer[0];
+	do {
+	    if (*name == '/') ptr = &buffer[0];
+	    else if (*name == '\\') ptr = &buffer[0];
+	    else *ptr++ = *name;
+	} while (*name++ != 0);
+	fprintf(out,"#include \"%s\"\n\n", &buffer[0]);
+    }
     fprintf(out,"#ifndef %s_LOCK\n", classname);
     fprintf(out,"#define %s_LOCK() fprintf(stderr,\"%s_LOCK undefined\");\n",
             classname, classname);
@@ -1037,14 +957,8 @@ void dump_stubs(FILE *out) {
 	rt = &tabType[f->type];
 
         fprintf(out,"/*\n * Java to C function %s stub.\n */\n",f->name);
-#if 0
-        /* Pre kaffe-0.9.2 */
-	fprintf(out,"%s\n%s_%s(struct H%s* none, ", rt->itype, classname,
-	       f->name, classname);
-#else
 	fprintf(out,"%s\n%s_%s(", rt->itype, classname,
 	       f->name);
-#endif
 	for (n = 0;n < f->nb_args;n++) {
 	    a = &f->args[n];
 	    t = &tabType[a->type];
@@ -1251,11 +1165,6 @@ int main(int argc, char **argv)
 			    javaOutputFile = *++argv;
 			    --argc;
 			    break;
-		        case 'h':
-		        case 'H':
-			    stubHOutputFile = *++argv;
-			    --argc;
-			    break;
 		        case 'c':
 		        case 'C':
 			    stubCOutputFile = *++argv;
@@ -1283,7 +1192,6 @@ int main(int argc, char **argv)
 		            fprintf(stderr,"\t-m modulename\n");
 		            fprintf(stderr,"\t-t type_definition_file\n");
 		            fprintf(stderr,"\t-c c_stubs_output_file\n");
-		            fprintf(stderr,"\t-h h_stubs_output_file\n");
 		            fprintf(stderr,"\t-j java_class_output_file\n");
 		            exit(1);
 		    }
@@ -1309,10 +1217,6 @@ int main(int argc, char **argv)
 		    sprintf(output, "%s.java", classname);
 		    javaOutputFile = strdup(output);
 		}
-		if (stubHOutputFile == NULL) {
-		    sprintf(output, "%s_stubs.h", classname);
-		    stubHOutputFile = strdup(output);
-		}
 
 		/*
 		 * parse the file for definitions.
@@ -1335,13 +1239,6 @@ int main(int argc, char **argv)
 		}
 		dump_java(out);
 		fclose(out);
-		if ((out = fopen(stubHOutputFile,"w")) == NULL) {
-		    fprintf(stderr,"Cannot open %s\n", output);
-		    exit(1);
-		}
-		dump_h(out);
-		fclose(out);
-
 	}
 	return 0;
 }
