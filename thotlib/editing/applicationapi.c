@@ -328,6 +328,8 @@ STRING              applicationName;
    NColors = MAX_COLOR;
    RGB_Table = RGB_colors;
    Color_Table = Name_colors;
+
+#ifndef NODISPLAY
 #  ifdef _WINDOWS
    WIN_GetDeviceContext (-1);
    DOT_PER_INCHE = GetDeviceCaps(TtDisplay, LOGPIXELSY);
@@ -336,6 +338,8 @@ STRING              applicationName;
 #  else  /* !_WINDOWS */
    DOT_PER_INCHE = 72;
 #  endif /* _WINDOWS */
+#endif /* NODISPLAY */
+
    numOfJobs = 0;
    /* Initializes patterns */
    NbPatterns = sizeof (Name_patterns) / sizeof (STRING);

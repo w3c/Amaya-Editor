@@ -41,6 +41,7 @@
 #include "references_f.h"
 #include "callback_f.h"
 #include "changeabsbox_f.h"
+#include "thotmsg_f.h"
 
 
 /*----------------------------------------------------------------------
