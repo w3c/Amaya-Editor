@@ -3150,11 +3150,11 @@ static void InsertMathEntity (entityName, document)
   Attribute     attr;
   AttributeType attrType;
   int           firstChar, lastChar, i, len;
-  ThotBool      before, done;
+  ThotBool      before, done, found;
   CHAR_T        buffer[MAX_LENGTH+2];
-  CHAR_T        value[8];
-  CHAR_T        alphabet;
+  int           value;
   Language      lang;
+  CHAR_T	bufEntity[8];
 
   if (!TtaIsSelectionEmpty ())
     return;
@@ -3237,17 +3237,29 @@ static void InsertMathEntity (entityName, document)
   ustrcat (buffer, entityName);
   ustrcat (buffer, TEXT(";"));
   TtaSetAttributeText (attr, buffer, el, document);
-  MapMathMLEntity (entityName, value, &alphabet);
-  if (alphabet == EOS)
-    /* unknown entity */
+
+  found = MapXMLEntity (MATH_TYPE, entityName, &value);
+  if (!found)
     {
-      value[0] = '?';
-      value[1] = EOS;
+      /* Unknown entity */
+      bufEntity[0] = '?';
+      bufEntity[1] = EOS;
       lang = TtaGetLanguageIdFromAlphabet('L');
     }
   else
-    lang = TtaGetLanguageIdFromAlphabet(alphabet);
-  TtaSetTextContent (el, value, lang, document);
+    {
+      if (value < 255)
+	{
+	  bufEntity[0] = ((UCHAR_T) value);
+	  bufEntity[1] = WC_EOS;
+	  lang = TtaGetLanguageIdFromAlphabet('L');
+	}
+      else
+	/* Try to find a fallback character */
+	GetFallbackCharacter (value, bufEntity, &lang);
+    }
+
+  TtaSetTextContent (el, bufEntity, lang, document);
   TtaSetAccessRight (el, ReadOnly, document);
   len = TtaGetTextLength (el);     
   TtaSelectString (document, el, len+1, len);
