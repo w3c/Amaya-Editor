@@ -792,7 +792,6 @@ int                 status;
   AHTReqContext  *me = (AHTReqContext *) HTRequest_context (request);
   HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
   boolean force_put;
-  char *tmp_buf;
 
   if (!me)
     return HT_OK;		/* not an Amaya request */
@@ -846,7 +845,6 @@ static int check_handler (HTRequest * request, HTResponse * response,
   AHTReqContext  *me = (AHTReqContext *) HTRequest_context (request);
   HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
   boolean force_put;
-  char *tmp_buf;
 
   if (!me)
     return HT_OK;		/* not an Amaya request */
@@ -2663,7 +2661,7 @@ void               *context_tcbf;
    /* we go thru setOutputFormat, rather than change the parent's
       anchor, as that's the place that libwww expects it to be */
 
-   HTAnchor_setFormat (me->source,
+   HTAnchor_setFormat (HTAnchor_parent (me->source),
 		       HTAtom_for (tmp));
    HTRequest_setOutputFormat (me->request,
 			      HTAtom_for (tmp));
