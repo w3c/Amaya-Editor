@@ -695,10 +695,10 @@ PtrAbstractBox             pAb;
    PtrSSchema        pSchS;
    PtrAbstractBox             pAbbox1;
 
-   retour = TRUE;
-   /* a priori le pave est secable */
+   retour = FALSE;
+   
    /* boucle sur les paves englobants */
-   while (pAb != NULL && retour)
+   while (pAb != NULL && !retour)
      {
 	pAbbox1 = pAb;
 #ifndef __COLPAGE__
@@ -711,16 +711,16 @@ PtrAbstractBox             pAb;
 	      /* un pave compose' est non-secable s'il est mis en lignes */
 	      retour = pAbbox1->AbInLine;
 	/* regarde dans le schema de presentation du pave s'il est secable */
-	if (retour)
+	if (!retour)
 #endif /* __COLPAGE__ */
 	  {
 	     ChSchemaPres (pAbbox1->AbElement, &pSchP, &Entree, &pSchS);
-	     retour = !(pSchP->PsBuildAll[Entree - 1]);
+	     retour = (pSchP->PsBuildAll[Entree - 1]);
 	  }
 	pAb = pAbbox1->AbEnclosing;
 	/* passe a l'englobant */
      }
-   return retour;
+   return (!retour);
 }
 
 #ifdef __COLPAGE__
