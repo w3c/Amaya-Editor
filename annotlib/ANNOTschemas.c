@@ -40,6 +40,8 @@ static const char * ANNOT_NS = "http://www.w3.org/1999/xx/annotation-ns#";
 static const char * RDFMS_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 
 static RDFResourceP subclassOfP = NULL;
+static RDFResourceP typeP = NULL;
+static RDFPropertyP labelP = NULL;
 
 /********************** global variables ***********************/
 
@@ -136,7 +138,6 @@ static void _AddSubClass( RDFClassP class, RDFClassP sub )
 static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 {
   List **listP = (List**)context;
-  static RDFResourceP typeP = NULL;
 
   if (rdfp && triple) 
     {
@@ -290,7 +291,6 @@ char *ANNOT_GetLabel (listP, r)
      RDFResourceP r;
 #endif /*  __STDC__ */
 {
-  static RDFPropertyP labelP = NULL;
   RDFStatementP labelS = NULL;
 
   if (!labelP)
@@ -587,4 +587,7 @@ void SCHEMA_FreeRDFModel()
 #endif /* __STDC__ */
 {
   List_delAll (&annot_schema_list, SCHEMA_FreeRDFResource);
+  subclassOfP = NULL;
+  typeP = NULL;
+  labelP = NULL;
 }

@@ -395,6 +395,7 @@ void ANNOT_Quit ()
   if (annotAlgaeText)
     TtaFreeMemory (annotAlgaeText);
   SCHEMA_FreeRDFModel();
+  schema_init = FALSE;
 }
 
 /*-----------------------------------------------------------------------
