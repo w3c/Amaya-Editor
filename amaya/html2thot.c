@@ -3229,18 +3229,24 @@ STRING              val;
   value = MapAttrValue (DummyAttribute, val);
   if (value < 0)
     {
+      if (ustrlen (val) > MaxMsgLength - 40)
+	 val[MaxMsgLength - 40] = EOS;
       usprintf (msgBuffer, TEXT("Unknown attribute value \"TYPE = %s\""), val);
       ParseHTMLError (theDocument, msgBuffer);
       attrType.AttrSSchema = DocumentSSchema;
       attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
-      usprintf (msgBuffer, TEXT("type=%s"),val);
+      usprintf (msgBuffer, TEXT("type=%s"), val);
       CreateAttr (lastElement, attrType, msgBuffer, TRUE);
     }
   else
     {
       elType = TtaGetElementType (lastElement);
       if (elType.ElTypeNum != HTML_EL_Input)
-	usprintf (msgBuffer, TEXT("Duplicate attribute \"TYPE = %s\""),val);
+	{
+        if (ustrlen (val) > MaxMsgLength - 40)
+	   val[MaxMsgLength - 40] = EOS;
+	usprintf (msgBuffer, TEXT("Duplicate attribute \"TYPE = %s\""), val);
+	}
       else
 	{
 	  elType.ElSSchema = DocumentSSchema;
@@ -3726,7 +3732,7 @@ STRING              GIname;
   ElementType         elType;
   Element             el;
   int                 entry;
-  UCHAR_T       msgBuffer[MaxMsgLength];
+  UCHAR_T             msgBuffer[MaxMsgLength];
   PtrClosedElement    pClose;
   ThotBool            sameLevel;
   SSchema	      schema;
@@ -3743,6 +3749,8 @@ STRING              GIname;
   if (entry < 0)
     /* not found in the HTML DTD */
     {
+      if (ustrlen (GIname) > MaxMsgLength - 20)
+	 GIname[MaxMsgLength - 20] = EOS;
       usprintf (msgBuffer, TEXT("Unknown tag <%s>"), GIname);
       ParseHTMLError (theDocument, msgBuffer);
       UnknownTag = TRUE;
@@ -3900,7 +3908,7 @@ CHAR_T                c;
 #endif
 {
    SSchema	       schema;
-   UCHAR_T       msgBuffer[MaxMsgLength];
+   UCHAR_T	       msgBuffer[MaxMsgLength];
    int                 entry;
    int                 i;
    ThotBool            ok;
@@ -3953,6 +3961,8 @@ CHAR_T                c;
       entry = MapGI (inputBuffer, &schema, theDocument);
       if (entry < 0)
         {
+        if (ustrlen (inputBuffer) > MaxMsgLength - 20)
+	   inputBuffer[MaxMsgLength - 20] = EOS;
 	usprintf (msgBuffer, TEXT("Unknown tag </%s>"), inputBuffer);
 	ParseHTMLError (theDocument, msgBuffer);
 	/* create an Invalid_element */
@@ -4004,6 +4014,8 @@ CHAR_T                c;
 	if (!ok)
 	  /* unrecoverable error. Create an Invalid_element */
 	  {
+            if (ustrlen (inputBuffer) > MaxMsgLength - 10)
+	       inputBuffer[MaxMsgLength - 10] = EOS;
 	    usprintf (msgBuffer, TEXT("</%s"), inputBuffer);
 	    InsertInvalidEl (msgBuffer, TRUE);
 	  }
@@ -4071,8 +4083,8 @@ CHAR_T                c;
    Element             child;
    Attribute           attr;
    SSchema	       schema;
-   CHAR_T                translation;
-   UCHAR_T       msgBuffer[MaxMsgLength];
+   CHAR_T              translation;
+   UCHAR_T             msgBuffer[MaxMsgLength];
 
    CloseBuffer ();
    /* if a single '/' or '?' has been read instead of an attribute name, ignore
@@ -4108,6 +4120,8 @@ CHAR_T                c;
 	   lastAttrEntry = NULL;
 	else
 	   {
+           if (ustrlen (inputBuffer) > MaxMsgLength - 30)
+	      inputBuffer[MaxMsgLength - 30] = EOS;
 	   usprintf (msgBuffer, TEXT("Unknown attribute \"%s\""), inputBuffer);
 	   ParseHTMLError (theDocument, msgBuffer);
 	   /* attach an Invalid_attribute to the current element */
@@ -4237,7 +4251,7 @@ int                 oldWidth;
   AttributeType      attrTypePxl, attrTypePercent;
   Attribute          attrOld, attrNew;
   int                length, val;
-  UCHAR_T      msgBuffer[MaxMsgLength];
+  UCHAR_T            msgBuffer[MaxMsgLength];
 #ifndef STANDALONE
   ElementType	     elType;
   int                w, h;
@@ -4310,6 +4324,8 @@ int                 oldWidth;
     /* its not a number. Delete attribute and send an error message */
     {
     TtaRemoveAttribute (el, attrNew, doc);
+    if (ustrlen (buffer) > MaxMsgLength - 30)
+        buffer[MaxMsgLength - 30] = EOS;
     usprintf (msgBuffer, TEXT("Invalid attribute value \"%s\""), buffer);
     ParseHTMLError (doc, msgBuffer);
     }
@@ -4336,7 +4352,7 @@ Document            doc;
    AttributeType       attrType;
    int                 val, ind, factor, delta;
    Attribute           attr;
-   UCHAR_T       msgBuffer[MaxMsgLength];
+   UCHAR_T             msgBuffer[MaxMsgLength];
 
    /* is the first character a '+' or a '-' ? */
    ind = 0;
@@ -4377,6 +4393,8 @@ Document            doc;
       {
       if (attr)
          TtaRemoveAttribute (el, attr, doc);
+      if (ustrlen (buffer) > MaxMsgLength - 30)
+         buffer[MaxMsgLength - 30] = EOS;
       usprintf (msgBuffer, TEXT("Invalid attribute value \"%s\""), buffer);
       ParseHTMLError (doc, msgBuffer);
       }
@@ -4472,6 +4490,8 @@ CHAR_T                c;
 			TtaGiveAttributeType (lastAttribute, &attrType,
 					      &attrKind);
 			attrName = TtaGetAttributeName (attrType);
+                        if (ustrlen (inputBuffer) > MaxMsgLength - 30)
+                           inputBuffer[MaxMsgLength - 30] = EOS;
 			usprintf (msgBuffer, TEXT("Unknown attribute value \"%s = %s\""),
 				 attrName, inputBuffer);
 			ParseHTMLError (theDocument, msgBuffer);
@@ -4629,6 +4649,8 @@ CHAR_T                c;
      /*      color          ->                   color              */
      else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("BACKGROUND")))
         {
+        if (ustrlen (inputBuffer) > MaxMsgLength - 30)
+            inputBuffer[MaxMsgLength - 30] = EOS;
         usprintf (msgBuffer, TEXT("background: url(%s)"), inputBuffer);
         ParseHTMLSpecificStyle (lastElement, msgBuffer, theDocument, FALSE);
         }
@@ -4762,7 +4784,7 @@ CHAR_T                c;
 #endif
 {
    int                 i;
-   UCHAR_T       msgBuffer[MaxMsgLength];
+   UCHAR_T             msgBuffer[MaxMsgLength];
 
    EntityName[LgEntityName] = EOS;
    if (CharEntityTable[EntityTableEntry].charName[CharRank] == EOS)
@@ -4798,7 +4820,7 @@ UCHAR_T       c;
 #endif
 {
    int                 i;
-   UCHAR_T       msgBuffer[MaxMsgLength];
+   UCHAR_T             msgBuffer[MaxMsgLength];
    ThotBool	       OK, done, stop;
 
    done = FALSE;
