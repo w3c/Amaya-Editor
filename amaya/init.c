@@ -54,6 +54,7 @@
   #include "paneltypes_wx.h"
   #include "registry_wx.h"
   #include "appdialogue_wx.h"
+  #include "AmayaWindowIterator.h"
 #endif /* _WX */
 
 #if defined(_GTK) || defined(_WX) 
@@ -7705,13 +7706,11 @@ void AmayaCloseWindow (Document doc, View view)
 void AmayaClose (Document document, View view)
 {
 #ifdef _WX
-  int window_id = 1;
-  int window_number = TtaGetWindowNumber();
-  while ( window_id <= window_number )
+  AmayaWindowIterator it;
+  for( it.first(); !it.isDone(); it.next() )
     {
       /* close each window one by one */
-      TtaCloseWindow(window_id);
-      window_id++;
+      TtaCloseWindow( it.currentWindowId() );
     }
 #endif /* _WX */
 

@@ -223,6 +223,7 @@ EDITOR_OBJ = \
 	dialogue/selectmenu.o \
 	dialogue/AmayaDialog.o \
 	dialogue/AmayaWindow.o \
+	dialogue/AmayaWindowIterator.o \
 	dialogue/AmayaSimpleWindow.o \
 	dialogue/AmayaNormalWindow.o \
 	dialogue/AmayaQuickSplitButton.o \

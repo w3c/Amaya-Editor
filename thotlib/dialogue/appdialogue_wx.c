@@ -863,11 +863,14 @@ int TtaGetWindowNumber( )
 {
 #ifdef _WX
   int window_id = 1;
-  while ( window_id < MAX_WINDOW && TtaGetWindowFromId( window_id ) )
+  int nb_window = 0;
+  while ( window_id < MAX_WINDOW )
     {
+      if (TtaGetWindowFromId(window_id))
+	nb_window++;
       window_id++;
     }
-  return TtaGetWindowFromId(window_id) ? MAX_WINDOW : window_id - 1;
+  return nb_window;
 #else /* #ifdef _WX */
   return 1;
 #endif /* #ifdef _WX */
