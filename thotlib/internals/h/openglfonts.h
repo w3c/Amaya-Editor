@@ -32,7 +32,22 @@ typedef struct _GL_font
   FT_Face   *face;
   int       kerning;
   GL_glyph  **glyphList;
+  int		Cache_index;
 } GL_font;
+
+
+typedef struct F_VECTOR {
+        float x;
+		float y;
+} FLOAT_VECTOR;
+
+
+typedef struct F_Slot {
+        char     *name;
+		GL_font  *font;
+		int      size;
+		int      ref;
+} Font_Slot;
 
 
 static GL_font       *FontOpen (const char* fontname);

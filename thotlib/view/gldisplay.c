@@ -137,48 +137,6 @@ static void DoDrawOneLine (int frame, int x1, int y1, int x2, int y2)
 
 
 /*----------------------------------------------------------------------
-  TranslateChars replaces in the text space chars to their visual
-  equivalents and the character 128 by '&'.
-  ----------------------------------------------------------------------*/
-void TranslateChars (CHAR_T *text)
-{
-  int                 i;
-
-  if (text == NULL)
-    return;
-  i = 0;
-  while (text[i] != 0)
-    {
-      switch (text[i])
-	{
-	case BREAK_LINE:
-      if (!ShowSpace)
-	    text[i] = SHOWN_BREAK_LINE;
-	  break;
-	case THIN_SPACE:
-      if (!ShowSpace)
-	    text[i] = SHOWN_THIN_SPACE;
-	  break;
-	case HALF_EM:
-      if (!ShowSpace)
-	    text[i] = SHOWN_HALF_EM;
-	  break;
-	case UNBREAKABLE_SPACE:
-      if (!ShowSpace)
-	    text[i] = SHOWN_UNBREAKABLE_SPACE;
-	  break;
-	case SPACE:
-      if (!ShowSpace)
-	    text[i] = SHOWN_SPACE;
-	  break;
-	case START_ENTITY:
-	  text[i] = '&';
-	}
-      i++;
-    }
-}
-
-/*----------------------------------------------------------------------
   DrawChar draw a char at location (x, y) in frame and with font.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
@@ -191,7 +149,7 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
       return;
    
    y = y + FrameTable[frame].FrTopMargin;
-   GL_DrawUnicodeChar((CHAR_T) car, x, y, font, fg);
+   GL_DrawUnicodeChar ((CHAR_T) car, x, y, font, fg);
 }
 
 /*----------------------------------------------------------------------
@@ -228,7 +186,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	  while (j < lg)
 	    {
 	      buff[j++] = '*';
-	      width += UnicodeCharacterWidth (42, font);
+	      width += CharacterWidth (42, font);
 	    }
 	  
 	}
@@ -336,7 +294,7 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 	ptcar = " . ";
 
 	/* compute lenght of the string " ." */
-	width = UnicodeCharacterWidth (SPACE, font) + UnicodeCharacterWidth (46, font);
+	width = CharacterWidth (SPACE, font) + CharacterWidth (46, font);
 	/* compute the number of string to write */
 	nb = boxWidth / width;
 	xcour = x + (boxWidth % width);
@@ -362,10 +320,13 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
 
    if (fg < 0)
      return;
+
    fh = FontHeight (font);
+
    xm = x + (fh / 2);
    xp = x + (fh / 4);
    y += FrameTable[frame].FrTopMargin;
+
    InitDrawing (5, 1, fg);
    /* vertical part */
    DoDrawOneLine (frame, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
@@ -390,57 +351,42 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
    int                 yf;
    int                 yend, delta;
    int                 wd, asc, hd;
-  
-   if (FontHeight (font) *1.2 >= h)
+
+  /* Integrals using esstix6 charmap
+     52 - => 3x text 3 line eq
+     33 - => 2x text 2 line eq
+     69 - => 1x+2 text or 18 for oneline eq */
+
+   if (h < 37)
      /* display a single glyph */
      {
-       yf = y + ((h - CharacterHeight (242, font)) / 2) + CharacterAscent (242, font);
-       DrawChar ('\362', frame, x, yf, font, fg);       
+	   GL_DrawStixChar (font, 69, x, y, fg, 18, l, h, FrameTable[frame].FrHeight);
+     }
+   else if (h < 60)
+	/* display a single glyph */
+     {
+	   GL_DrawStixChar (font, 33, x, y, fg, 24, l, h, FrameTable[frame].FrHeight);
      }
    else
+    /* display a single glyph */
      {
-       /* Need more than one glyph */
-       yf = y + CharacterAscent (243, font);
-       DrawChar ('\363', frame, x, yf, font, fg);
-       yend = y + h - CharacterHeight (245, font) + CharacterAscent (245, font) - 1;
-       DrawChar ('\365', frame, x, yend, font, fg);
-       asc = CharacterAscent (244, font);
-       hd = CharacterHeight (244, font);
-       delta = yend - yf - asc;
-       yf += asc;
-       wd = (UnicodeCharacterWidth (243, font) - UnicodeCharacterWidth (244, font)) / 2;
-       if (delta > 0 && hd > 0)
-	 {
-	   while (yf < yend)
-	     {
-	       DrawChar ('\364', frame, x + wd, yf, font, fg);
-	       yf += hd;
-	     }
-	 }
+	   GL_DrawStixChar (font, 52, x, y, fg, 36, l, h, FrameTable[frame].FrHeight);
      }
-   if (type == 2)		/* double integral */
-      DrawIntegral (frame, thick, x + (UnicodeCharacterWidth (244, font) / 2),
-		    y, l, h, -1, font, fg);
-   
-   else if (type == 1)		/* contour integral */
-     DrawChar ('o', frame, x + ((l - UnicodeCharacterWidth (111, font)) / 2),
-	       y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
-	       font, fg);
 }
 
 /*----------------------------------------------------------------------
   DrawMonoSymb draw a one glyph symbol.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-static void DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l,
+static int DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l,
 			  int h, PtrFont font, int fg)
 {
-   int                 xm, yf;
+	int xm, yf;
 
-   xm = x + ((l - UnicodeCharacterWidth (symb, font)) / 2);
-   yf = y + ((h - CharacterHeight (symb, font)) / 2) + CharacterAscent (symb, font);
+	xm = x + ((l - CharacterWidth (symb, font)) / 2);
+    yf = y + ((h - CharacterHeight (symb, font)) / 2) + CharacterAscent (symb, font);
 
-   DrawChar ((char)symb, frame, xm, yf, font, fg);
+	DrawChar ((char) (symb), frame, xm, yf, font, fg);
 }
 
 /*----------------------------------------------------------------------
@@ -454,17 +400,46 @@ void DrawSigma (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 
    if (fg < 0)
      return;
+
+
+/* Integrals using esstix6 charmap
+     52 - => 3x text 3 line eq
+     33 - => 2x text 2 line eq
+     69 - => 1x+2 text or 18 for oneline eq */
+
+   if (h < 37)
+     /* display a single glyph */
+     {
+	   GL_DrawStixChar (font, 83, x, y, fg, 18, l, h, FrameTable[frame].FrHeight);
+     }
+   else if (h < 60)
+	/* display a single glyph */
+     {
+	   GL_DrawStixChar (font, 45, x, y, fg, 24, l, h, FrameTable[frame].FrHeight);
+     }
+   else
+    /* display a single glyph */
+     {
+	   GL_DrawStixChar (font, 62, x, y, fg, 36, l, h, FrameTable[frame].FrHeight);
+     }
+
+	return ;
+
+
    fh = FontHeight (font);
-   if (0 && h < fh * 2 && l <= UnicodeCharacterWidth (229, font))
+   if (0 && h < fh * 2 && l <= CharacterWidth (229, font))
      {
 	/* Only one glyph needed */
-	DrawMonoSymb ('\345', frame, x, y, l, h, font, fg);
+	//DrawMonoSymb ('\345', frame, x, y, l, h, font, fg);
+	GL_DrawStixChar (font, 69, x, y, fg, 18, l, h, FrameTable[frame].FrHeight);
+     
      }
    else
      {
         y += FrameTable[frame].FrTopMargin;
 	xm = x + (l / 3);
 	ym = y + (h / 2) - 1;
+
 	InitDrawing (5, 1, fg);
 	/* Center */
 	DoDrawOneLine (frame, x, y + 1, xm, ym);
@@ -488,7 +463,7 @@ void DrawPi (int frame, int x, int y, int l, int h, PtrFont font, int fg)
    if (fg < 0)
      return;
    fh = FontHeight (font);
-   if (0 && h < fh * 2 && l <= UnicodeCharacterWidth (213, font))
+   if (0 && h < fh * 2 && l <= CharacterWidth (213, font))
      {
 	/* Only one glyph needed */
 	DrawMonoSymb ('\325', frame, x, y, l, h, font, fg);
@@ -518,8 +493,13 @@ void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
 
    if (fg < 0)
      return;
+   
+   
+   GL_DrawStixChar (font, 88, x, y, fg, 18, l, h, FrameTable[frame].FrHeight);
+   return;
+   
    fh = FontHeight (font);
-   if (0 && h < fh * 2 && l <= UnicodeCharacterWidth (199, font))
+   if (0 && h < fh * 2 && l <= CharacterWidth (199, font))
      {
 	/* Only one glyph needed */
 	DrawMonoSymb ('\307', frame, x, y, l, h, font, fg);
@@ -549,8 +529,12 @@ void DrawUnion (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 
    if (fg < 0)
      return;
+
+   GL_DrawStixChar (font, 87, x, y, fg, 18, l, h, FrameTable[frame].FrHeight);
+   return;
+
    fh = FontHeight (font);
-   if (0 && h < fh * 2 && l <= UnicodeCharacterWidth (200, font))
+   if (0 && h < fh * 2 && l <= CharacterWidth (200, font))
      {
 	/* Only one glyph needed */
 	DrawMonoSymb ('\310', frame, x, y, l, h, font, fg);
@@ -702,14 +686,14 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
       if (direction == 0)
 	{
 	  /* Draw a opening bracket */
-	  xm = x + ((l - UnicodeCharacterWidth (91, font)) / 2);
+	  xm = x + ((l - CharacterWidth (91, font)) / 2);
 	  yf = y + ((h - CharacterHeight (91, font)) / 2) + CharacterAscent (91, font);
 	  DrawChar ('[', frame, xm, yf, font, fg);
 	}
       else
 	{
 	  /* Draw a closing bracket */
-	  xm = x + ((l - UnicodeCharacterWidth (93, font)) / 2);
+	  xm = x + ((l - CharacterWidth (93, font)) / 2);
 	  yf = y + ((h - CharacterHeight (93, font)) / 2) + CharacterAscent (93, font);
 	  DrawChar (']', frame, xm, yf, font, fg);
 	}
@@ -720,7 +704,7 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
        if (direction == 0)
 	 {
 	   /* Draw a opening bracket */
-	   xm = x + ((l - UnicodeCharacterWidth (233, font)) / 2);
+	   xm = x + ((l - CharacterWidth (233, font)) / 2);
 	   yf = y + CharacterAscent (233, font);
 	   DrawChar ('\351', frame, xm, yf, font, fg);
 	   yend = y + h - CharacterHeight (235, font) + CharacterAscent (235, font);
@@ -734,7 +718,7 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
        else
 	 {
 	   /* Draw a closing bracket */
-	   xm = x + ((l - UnicodeCharacterWidth (249, font)) / 2);
+	   xm = x + ((l - CharacterWidth (249, font)) / 2);
 	   yf = y + CharacterAscent (249, font);
 	   DrawChar ('\371', frame, xm, yf, font, fg);
 	   yend = y + h - CharacterHeight (251, font) + CharacterAscent (251, font);
@@ -766,14 +750,14 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
       if (direction == 0)
 	{
 	  /* Draw a opening bracket */
-	  xm = x + ((l - UnicodeCharacterWidth (225, font)) / 2);
+	  xm = x + ((l - CharacterWidth (225, font)) / 2);
 	  yf = y + ((h - CharacterHeight (225, font)) / 2) + CharacterAscent (225, font);
 	  DrawChar ('\341', frame, xm, yf, font, fg);
 	}
       else
 	{
 	  /* Draw a closing bracket */
-	  xm = x + ((l - UnicodeCharacterWidth (241, font)) / 2);
+	  xm = x + ((l - CharacterWidth (241, font)) / 2);
 	  yf = y + ((h - CharacterHeight (241, font)) / 2) + CharacterAscent (241, font);
 	  DrawChar ('\361', frame, xm, yf, font, fg);
 	}
@@ -807,31 +791,61 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 {
   int                 xm, yf, yend, delta, asc, hd;
 
-  if (h <= (int) (1.3 * FontHeight (font)) )
+  /*
+  Esstix 7 : 
+  61 normal
+  33 2 line
+  48 3 line
+  */
+  if (h < 25)
     {
       /* With only one glyph */
       if (direction == 0)
 	{
 	  /* draw a opening parenthesis */
-	  xm = x + ((l - UnicodeCharacterWidth (40, font)) / 2);
-	  yf = y + ((h - CharacterHeight (40, font)) / 2) + CharacterAscent (40, font);
-	  DrawChar ('(', frame, xm, yf, font, fg);
+	  GL_DrawStixChar (font, 61, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
 	}
       else
 	{
 	  /* draw a closing parenthesis */
-	  xm = x + ((l - UnicodeCharacterWidth (41, font)) / 2);
-	  yf = y + ((h - CharacterHeight (41, font)) / 2) + CharacterAscent (41, font);
-	  DrawChar (')', frame, xm, yf, font, fg);
+	  GL_DrawStixChar (font, 62, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
 	}
     }
+  else if (h <= 57)
+  {
+  /* With only one glyph */
+      if (direction == 0)
+	{
+	  /* draw a opening parenthesis */
+	  GL_DrawStixChar (font, 33, x, y, fg, h, l, h, FrameTable[frame].FrHeight);
+	}
+      else
+	{
+	  /* draw a closing parenthesis */
+	  GL_DrawStixChar (font, 35, x, y, fg, 24, l, h, FrameTable[frame].FrHeight);
+	}
+  }
+  else if ( h > 57)
+  {
+  /* With only one glyph */
+      if (direction == 0)
+	{
+	  /* draw a opening parenthesis */
+	  GL_DrawStixChar (font, 48, x, y, fg, 36, l, h, FrameTable[frame].FrHeight);
+	}
+      else
+	{
+	  /* draw a closing parenthesis */
+	  GL_DrawStixChar (font, 49, x, y, fg, 36, l, h, FrameTable[frame].FrHeight);
+	}
+  }
   else
     {
       /* Need more than one glyph */
       if (direction == 0)
 	{
 	  /* draw a opening parenthesis */
-	  xm = x + ((l - UnicodeCharacterWidth (230, font)) / 2);
+	  xm = x + ((l - CharacterWidth (230, font)) / 2);
 	  yf = y + CharacterAscent (230, font);
 	  DrawChar ('\346', frame, xm, yf, font, fg);
 	  yend = y + h - CharacterHeight (232, font) + CharacterAscent (232, font) - 1;
@@ -853,7 +867,7 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
       else
 	{
 	  /* draw a closing parenthesis */
-	  xm = x + ((l - UnicodeCharacterWidth (246, font)) / 2);
+	  xm = x + ((l - CharacterWidth (246, font)) / 2);
 	  yf = y + CharacterAscent (246, font);
 	  DrawChar ('\366', frame, xm, yf, font, fg);
 	  yend = y + h - CharacterHeight (248, font) + CharacterAscent (248, font) - 1;
@@ -889,14 +903,14 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
       if (direction == 0)
 	{
 	  /* just use the opening brace glyph */
-	  xm = x + ((l - UnicodeCharacterWidth (123, font)) / 2);
+	  xm = x + ((l - CharacterWidth (123, font)) / 2);
 	  yf = y + ((h - CharacterHeight (123, font)) / 2) + CharacterAscent (123, font);
 	  DrawChar ('{', frame, xm, yf, font, fg);
 	}
       else
 	{
 	  /* just use the closing brace glyph */
-	  xm = x + ((l - UnicodeCharacterWidth (125, font)) / 2);
+	  xm = x + ((l - CharacterWidth (125, font)) / 2);
 	  yf = y + ((h - CharacterHeight (125, font)) / 2) + CharacterAscent (125, font);
 	  DrawChar ('}', frame, xm, yf, font, fg);
 	}
@@ -907,7 +921,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
       if (direction == 0)
 	{
 	  /* top */
-	  xm = x + ((l - UnicodeCharacterWidth (236, font)) / 2);
+	  xm = x + ((l - CharacterWidth (236, font)) / 2);
 	  yf = y + CharacterAscent (236, font);
 	  DrawChar ('\354', frame, xm, yf, font, fg);
 	  /* vertical line */
@@ -945,7 +959,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
       else
 	{
 	  /* top */
-	  xm = x + ((l - UnicodeCharacterWidth (252, font)) / 2);
+	  xm = x + ((l - CharacterWidth (252, font)) / 2);
 	  yf = y + CharacterAscent (252, font);
 	  DrawChar ('\374', frame, xm, yf, font, fg);
 	  /* center */

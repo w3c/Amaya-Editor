@@ -17,11 +17,107 @@
  
 #ifdef _GL
  
+#define THOT_EXPORT extern
+#include "constmedia.h"
+#include "typemedia.h"
+#include "memory_f.h"
+
 #include "openglfonts.h"
+
+
 
 /* Memory state Var needed often*/
 static FT_Library FTlib = NULL;
 static int init_done = 0;
+
+
+/*--------------Font Caching---------------------------*/
+
+/*Font Cache */
+static Font_Slot FontTab[1024];
+
+/*---------------------------- 
+  FontAlreadyLoaded : Checks if font not already loaded
+------------------------------*/
+static GL_font* FontAlreadyLoaded (const char *font_filename, int size)
+{
+	int i;
+	
+	i = 0;
+	while (i < 1023)
+	{
+		if (FontTab[i].ref)
+		  if (size == FontTab[i].size)
+			if (strcasecmp (font_filename, FontTab[i].name) == 0)			
+			{
+				FontTab[i].ref++;
+				return FontTab[i].font;
+			}
+		i++;
+	}
+	return NULL;
+}
+/*---------------------------- 
+  FontCache : Add font in cache
+------------------------------*/
+static void FontCache (GL_font *font, const char *font_filename, int size)
+{
+	int i;
+	
+	i = 0;
+	while (FontTab[i].ref != 0 && i < 1023)
+		i++;
+	FontTab[i].font = font;
+	FontTab[i].font->Cache_index = i;
+	FontTab[i].size = size;
+	FontTab[i].name = TtaGetMemory (strlen(font_filename) + 1);
+	strcpy (FontTab[i].name, font_filename);
+	FontTab[i].ref = 1;
+}
+/*---------------------------- 
+ FreeFontCache :
+------------------------------*/
+static void FreeFontCache ()
+{
+	int i;
+	
+	i = 0;
+	while (i < 1024)
+	{
+		if (FontTab[i].ref)
+		{
+
+			FontClose (FontTab[i].font);
+			TtaFreeMemory (FontTab[i].name);
+			FontTab[i].ref = 0;
+			FontTab[i].size = 0;
+		}
+		i++;
+	}
+}
+/*---------------------------- 
+ FreeFontEntry :
+------------------------------*/
+static void FreeFontEntry (GL_font* font)
+{
+	int i;
+	
+	if (font == NULL) 
+		return;
+	i = font->Cache_index;
+	if (FontTab[i].ref == 1)
+	{			
+	   FontClose (FontTab[i].font);
+	   TtaFreeMemory (FontTab[i].name);
+	   FontTab[i].name = NULL;
+	   FontTab[i].font = NULL;
+	   FontTab[i].ref = 0;
+	   FontTab[i].size = 0;
+	}
+	else
+	   FontTab[i].ref--;
+	font = NULL;
+}
 
 /*--------------------------------------------------
  Freetype library Handling
@@ -29,7 +125,8 @@ static int init_done = 0;
 static int FTLibraryInit ()
 {
   int err;
-  
+  int i;
+
   if (FTlib != 0 )
     return TRUE;
   err = FT_Init_FreeType( &FTlib);
@@ -38,6 +135,15 @@ static int FTLibraryInit ()
       FTlib = 0;
       return FALSE;
     }
+  i = 0;
+  while (i < 1024)
+  {
+	FontTab[i].ref = 0;
+	FontTab[i].name = NULL;
+	FontTab[i].font = NULL;
+	FontTab[i].size = 0;
+	i++;
+  }
   return TRUE;
 }
 
@@ -47,176 +153,14 @@ static int FTLibraryInit ()
 void FTLibraryFree ()
 {
   if (init_done)
-    {
-      FT_Done_FreeType (FTlib);
+    {      
+	  FreeFontCache();
+	  FT_Done_FreeType (FTlib);
       FTlib= 0;
     }
 }
 
 
-/*--------------------------------------------------
-  MakeAlphaBitmap : Make an Alpha bitmap of a glyph
-  (Alpha is the glyph's transparency level that will 
-  permits antialiasing)
---------------------------------------------------*/
-static unsigned char *MakeAlphaBitmap (unsigned char *source,
-				       int destWidth, 
-				       int destHeight, 
-				       int Pitch)
-{
-  unsigned char *data, *ptr;
-  int x, y, current;;
-
-  current = 0;
-  data = (unsigned char *) malloc (destWidth * destHeight * sizeof (unsigned char));
-  for (y = destHeight; y > 0; y--)
-    {
-      ptr = source + (y * destWidth - Pitch);
-      for (x = 0; x < destWidth; x++)
-	{
-	  *( data + current) = *(ptr++);
-	  current++;
-	}
-    }
-  return data;
-}
-
-/*-----------------------------------------------------------
-  MakeBitmapGlyph : Make bitmap and struct to handle the glyph
--------------------------------------------------------------*/
-static GL_glyph  *MakeBitmapGlyph (GL_font *font, unsigned int g)
-{
-  FT_BitmapGlyph  bitmap;
-  FT_Bitmap       *source;
-  FT_Glyph        Glyph;
-  GL_glyph        *BitmapGlyph;
-  unsigned   char *data;
-  int             err;
-
-  data = NULL;
-
-  FT_Load_Glyph (*font->face, 
-		 g, 
-		 FT_LOAD_NO_HINTING
-		 /*FT_LOAD_MONOCHROME*/
-		 /*FT_LOAD_RENDER*/
-		 );
-  FT_Get_Glyph( (*(font->face))->glyph, &Glyph);
-  if(Glyph)
-    {
-      /*Last parameter tells that we destroy font's bitmap
-	So we MUST cache it    */
-      err = FT_Glyph_To_Bitmap( &Glyph, 
-				ft_render_mode_normal, 
-				0, 
-				1);
-      if( err || ft_glyph_format_bitmap != Glyph->format)
-	{
-	  FT_Done_Glyph (Glyph);
-	  return NULL; 	
-	}
-      else
-	{
-	  bitmap = (FT_BitmapGlyph) Glyph;
-	  source = &bitmap->bitmap;
-	  if (source->width && source->rows)
-	      data = MakeAlphaBitmap (source->buffer, 
-				      source->width, 
-				      source->rows, 
-				      source->pitch);  
-	  BitmapGlyph = (GL_glyph *) malloc (sizeof (GL_glyph) );
-	  FT_Glyph_Get_CBox (Glyph, ft_glyph_bbox_subpixels, &(BitmapGlyph->bbox));
-	  BitmapGlyph->data = data;
-	  BitmapGlyph->advance = Glyph->advance.x >> 16;
-	  BitmapGlyph->pos.x = bitmap->left;
-	  BitmapGlyph->pos.y = source->rows - bitmap->top;   
-	  BitmapGlyph->dimension.x = source->width;
-	  BitmapGlyph->dimension.y = source->rows;  	  
-	  FT_Done_Glyph (Glyph);
-	  return BitmapGlyph;
-	}
-    }
-  else
-    return NULL;
-}
-
-  
-/*---------------------------- 
-  FontClose :
-------------------------------*/
-static void FontClose (GL_font *font)
-{
-  FreeGlyphList (font);
-  FT_Done_Face (*(font->face));
-  free (font->face);
-  free (font);
-  font = NULL;
-}
-/*---------------------------- 
-   Common Font handling 
-------------------------------*/
-static GL_font *FontOpen (const char* fontname)
-{
-  GL_font *font;
-  int err;
-
-  if (!init_done)
-    FTLibraryInit ();
-  font = (GL_font *) malloc (sizeof (GL_font));
-  font->face = (FT_Face *) malloc (sizeof (FT_Face *));
-  font->glyphList = NULL;
-  err = FT_New_Face( FTlib, fontname, 0, font->face);
-  if(err)
-    {
-      font->face = 0;
-      return NULL;
-    }
-  return font; 
-}
-/*---------------------------- 
-   FontBBox : String bounding box
-------------------------------*/
-static void FontBBox (GL_font *font,
-		      wchar_t *string,
-		      int length,
-		      float *llx, float *lly, 
-		      float *llz, float *urx, 
-		      float *ury, float *urz)
-{
-  unsigned int left, right, i;
-  wchar_t *c; 
-  FT_BBox bbox;
-
-  *llx = *lly = *llz = *urx = *ury = *urz = 0;
-  c = string;
-  left = FT_Get_Char_Index (*(font->face), c[0]);
-  right = 0;
-  i = 0;
-  while (i < length)
-    {
-      if (!font->glyphList[left])
-	  font->glyphList[left] = MakeBitmapGlyph (font, left);
-      bbox = font->glyphList[left]->bbox;
-      bbox.yMin = bbox.yMin >> 6;
-      bbox.yMax = bbox.yMax >> 6;
-      *lly = (*lly < bbox.yMin) ? *lly: bbox.yMin;
-      *ury = (*ury > bbox.yMax) ? *ury: bbox.yMax;
-      i++;
-      right = FT_Get_Char_Index (*(font->face), c[i]);
-      *urx += FaceKernAdvance (*(font->face), 
-			       left, right);
-      left = right;
-    }
-  left = FT_Get_Char_Index (*(font->face), c[i]);
-  if( !font->glyphList[left])
-      font->glyphList[left] = MakeBitmapGlyph (font, left);
-  bbox = font->glyphList[left]->bbox;
-  *llx = bbox.xMin >> 6;
-  FaceKernAdvance (*(font->face), left, right);
-  *urx -= FaceKernAdvance (*(font->face), left, right)
-          - font->glyphList[left]->advance;
-  *urx += bbox.xMax >> 6;
-}
 /*--------------------------------------------------- 
    FreeGlyphList : Free all glyph previously cached 
    and the array
@@ -228,21 +172,67 @@ static void FreeGlyphList (GL_font *font)
 
   if (font)
     {
-      numglyphs = (*(font->face))->num_glyphs;      
+	  numglyphs = (*(font->face))->num_glyphs;      
       glyphListPtr = font->glyphList;
       for (c = 0; c < numglyphs; c++)
 	{
 	  if (font->glyphList[c] != NULL)
 	    {
 	      if (font->glyphList[c]->data != NULL)
-		free (font->glyphList[c]->data);
-	      free (font->glyphList[c]);
-	    }
+			TtaFreeMemory (font->glyphList[c]->data);
+	      TtaFreeMemory (font->glyphList[c]);
+	    }		
 	}
-      free (font->glyphList); 
+      TtaFreeMemory (font->glyphList); 
       font->glyphList = NULL;
     }
 }
+
+
+/*---------------------------- 
+  FontClose :
+------------------------------*/
+static void FontClose (GL_font *font)
+{
+  FreeGlyphList (font);
+  if (font->face)
+  {
+	if (*(font->face))
+	   FT_Done_Face (*(font->face));
+	TtaFreeMemory (font->face);
+  }
+  TtaFreeMemory (font);
+  font = NULL;
+}
+
+/*---------------------------- 
+   Common Font handling 
+------------------------------*/
+static GL_font *FontOpen (const char* fontname)
+{
+  GL_font *font;
+  int err; 
+
+  if (!init_done)
+  {
+	  FTLibraryInit ();
+	  init_done = TRUE;
+  }
+	
+  font = (GL_font *) TtaGetMemory (sizeof (GL_font));
+  font->face = (FT_Face *) TtaGetMemory (sizeof (FT_Face *));
+  font->glyphList = NULL;
+  err = FT_New_Face( FTlib, fontname, 0, font->face);
+  if(err)
+    {
+	  TtaFreeMemory (font->face);
+	  TtaFreeMemory (font);
+      font->face = 0;
+      return NULL;
+    }
+  return font; 
+}
+
 /*--------------------------------------------------- 
    FontFaceSize : set char Size
 ------------------------------------------------------*/
@@ -261,7 +251,7 @@ static int FontFaceSize (GL_font *font, const unsigned int size, const unsigned 
   if (font->glyphList)
     FreeGlyphList (font);
   num = (*(font->face))->num_glyphs;
-  font->glyphList = (GL_glyph **) malloc ( sizeof(GL_glyph *) * num );
+  font->glyphList = (GL_glyph **) TtaGetMemory ( sizeof(GL_glyph *) * num );
   for (c=0 ; c < num; c++)
      font->glyphList[c] = NULL;
   return err;
@@ -280,6 +270,7 @@ static int FontCharMap (GL_font *font, FT_Encoding encoding, char alphabet)
   int         n, err;
   int         my_platform_id, my_encoding_id;
 
+  err = 1;
   /* Get a Unicode mapping for this font */      
   if (encoding == ft_encoding_unicode)
     {
@@ -320,23 +311,153 @@ static int FontCharMap (GL_font *font, FT_Encoding encoding, char alphabet)
 	}
     }
    else
-      { 
-	err = FT_Select_Charmap (*(font->face), ft_encoding_symbol);
-	if (err)
-	  err = FT_Select_Charmap ((*(font->face)), ft_encoding_apple_roman);
-	if (err)	  
-	  err = FT_Select_Charmap ((*(font->face)), ft_encoding_adobe_custom);
+      {
+	   if (encoding == ft_encoding_symbol)
+	   {
+		err = FT_Select_Charmap (*(font->face), ft_encoding_symbol);
+		if (err)
+			 err = FT_Select_Charmap ((*(font->face)), ft_encoding_apple_roman);
+		if (err)	  
+			err = FT_Select_Charmap ((*(font->face)), ft_encoding_adobe_custom);
+	   }
+	   else
+		{
+		   /* Esstix Charmap is unknown so we use the first charmap 
+		   we found in the font itself */
+		   if ((*(font->face))->num_charmaps > 0) 
+			{ 
+				FT_Set_Charmap( (*(font->face)), 
+						(*(font->face))->charmaps[0]);
+				return 0; 
+			} 
+		   else 
+			 return err;
+		}
       } 
-/*   if (err && (*(font->face))->num_charmaps > 0) */
-/*     { */
-/*       FT_Set_Charmap( (*(font->face)), */
-/* 		      (*(font->face))->charmaps[0]); */
-/*       return 0; */
-/*     } */
-/*   else */
-    return err;
+   return err;
 }
 
+/*--------------------------------------------------
+  gl_font_init : Load a font
+  From the freetype docs... http://www.freetype.org/
+	 "By default, when a new face object is created, 
+	 (freetype) lists all the charmaps contained in the font face 
+	 and selects the one that supports Unicode character codes 
+	 if it finds one. 
+	 Otherwise, it tries to find support for Latin-1, then ASCII."
+	 Here are encoding possible value as a parameter :
+	 ft_encoding_none	ft_encoding_symbol
+	 ft_encoding_unicode	ft_encoding_latin_2
+	 ft_encoding_sjis	ft_encoding_gb2312
+	 ft_encoding_big5	ft_encoding_wansung
+	 ft_encoding_johab	ft_encoding_adobe_standard
+	 ft_encoding_adobe_expert ft_encoding_adobe_custom
+	 ft_encoding_apple_roman 
+---------------------------------------------------*/
+void *gl_font_init (const char *font_filename, char alphabet, int size)
+{
+  GL_font* gl_font = NULL;
+  int err;
+  
+  err= 0;
+  gl_font = NULL;
+
+  /* Checks if font not already loaded */
+  gl_font = FontAlreadyLoaded (font_filename, size);
+  if (gl_font)
+	return (void *) (gl_font);
+
+  gl_font = FontOpen (font_filename);
+  if (gl_font != NULL)
+    {   
+     if (alphabet == 'G')
+		  FontCharMap (gl_font, ft_encoding_symbol, alphabet);
+      else 
+	  
+		  if (alphabet == 'M')
+			FontCharMap (gl_font, ft_encoding_none, alphabet);/*err = 0;*/
+		  else
+			err = FontCharMap (gl_font, ft_encoding_unicode, alphabet);
+      if (err) 
+ 	{ 
+ 	  FT_Done_Face (*(gl_font->face)); 
+ 	  free (gl_font); 
+ 	  return NULL; 
+ 	} 
+      err = FontFaceSize (gl_font, size, 0);	
+      if (err)
+	{
+	  FT_Done_Face (*(gl_font->face));
+	  free (gl_font);
+	  return NULL;
+	}
+      if (FT_HAS_KERNING((*(gl_font->face))))
+	gl_font->kerning = 1;
+      else
+	gl_font->kerning = 0;
+	  /*Cache font*/
+	  FontCache (gl_font, font_filename, size);
+      return (void *) gl_font;
+    }
+  return NULL;
+}
+
+
+/************** Generic Calls *****************/ 
+
+void gl_font_delete (void *gl_void_font)
+{ 
+   FreeFontEntry ((GL_font *) gl_void_font);
+}
+
+int gl_font_height (void *gl_void_font)
+{
+  GL_font* gl_font = (GL_font *) gl_void_font;
+
+  return (FontAscender(gl_font) - FontDescender(gl_font));
+}
+
+int gl_font_ascent (void *gl_void_font)
+{
+  return (FontAscender((GL_font *) gl_void_font));
+}
+
+int gl_font_char_width (void *gl_void_font, wchar_t c)
+{
+  GL_font* font = (GL_font *) gl_void_font;
+  unsigned int glyph_index;
+ 
+  glyph_index = FT_Get_Char_Index (*(font->face), c);
+  if( !font->glyphList[glyph_index] )
+    font->glyphList[glyph_index] = MakeBitmapGlyph (font, glyph_index);
+  if (font->glyphList[glyph_index])
+    return ((int) (font->glyphList[glyph_index]->advance ));
+  else 
+    return 0;
+}
+
+int gl_font_char_height (void *gl_void_font, wchar_t *c)
+{
+  float llx, lly, llz, urx, ury, urz;          
+  
+  FontBBox ((GL_font *) gl_void_font, c, 2,
+	      &llx, &lly, &llz, 
+	    &urx, &ury, &urz);
+  return ((int) (ury - lly));
+ 
+}
+
+int gl_font_char_ascent (void *gl_void_font, wchar_t *c)
+{
+  float llx, lly, llz, urx, ury, urz;          
+  
+  FontBBox ((GL_font *) gl_void_font, c, 2,
+	    &llx, &lly, &llz, 
+	    &urx, &ury, &urz);
+  return ((int) ury);
+}
+
+/**********FONT INFO ***********/
 /*--------------------------------------------------- 
    FontAscender : return ascent
 ------------------------------------------------------*/
@@ -366,154 +487,148 @@ static float FaceKernAdvance (FT_Face face,
   kernAdvance.x = 0;  
   if (index1 && index2)
     {
-      /*  kernAdvance->y = 0;  */
       FT_Get_Kerning (face, 
 		      index1, index2, 
-		      /*ft_kerning_default, */
-		      /*ft_kerning_unfitted,*/ 
 		      ft_kerning_unscaled,
 		      &kernAdvance);
-      return (kernAdvance.x >> 16); 
-      /*kernAdvance->y = kernAdvance->y >> 6;*/
+	  if (kernAdvance.x)
+		return (float) (kernAdvance.x >> 16); 
     }
   return (0x0);
 }
 
-/* Generic Calls */ 
-
-void gl_font_delete (void *gl_void_font)
-{ 
-  FontClose ((GL_font *) gl_void_font);
-}
-
-int gl_font_height (void *gl_void_font)
+/*---------------------------- 
+   FontBBox : String bounding box
+------------------------------*/
+static void FontBBox (GL_font *font,
+		      wchar_t *string,
+		      int length,
+		      float *llx, float *lly, 
+		      float *llz, float *urx, 
+		      float *ury, float *urz)
 {
-  GL_font* gl_font = (GL_font *) gl_void_font;
+  unsigned int left, right, i;
+  wchar_t *c; 
+  FT_BBox bbox;
 
-  return (FontAscender(gl_font) - FontDescender(gl_font));
+  *llx = *lly = *llz = *urx = *ury = *urz = 0;
+  c = string;
+  left = FT_Get_Char_Index (*(font->face), c[0]);
+  right = 0;
+  i = 0;
+  while (i < length)
+    {
+      if (!font->glyphList[left])
+	  font->glyphList[left] = MakeBitmapGlyph (font, left);
+      bbox = font->glyphList[left]->bbox;
+      bbox.yMin = bbox.yMin >> 6;
+      bbox.yMax = bbox.yMax >> 6;
+      *lly = (*lly < bbox.yMin) ? *lly: bbox.yMin;
+      *ury = (*ury > bbox.yMax) ? *ury: bbox.yMax;
+      i++;
+      right = FT_Get_Char_Index (*(font->face), c[i]);
+      *urx += FaceKernAdvance (*(font->face), 
+			       left, right);
+      left = right;
+    }
+  left = FT_Get_Char_Index (*(font->face), c[i]);
+  if( !font->glyphList[left])
+      font->glyphList[left] = MakeBitmapGlyph (font, left);
+  bbox = font->glyphList[left]->bbox;
+  *llx = (float) (bbox.xMin >> 6);
+  FaceKernAdvance (*(font->face), left, right);
+  *urx -= FaceKernAdvance (*(font->face), left, right)
+          - font->glyphList[left]->advance;
+  *urx += bbox.xMax >> 6;
 }
 
-int gl_font_ascent (void *gl_void_font)
-{
-  return (FontAscender((GL_font *) gl_void_font));
-}
 
-int gl_font_char_width (void *gl_void_font, wchar_t c)
-{
-  GL_font* font = (GL_font *) gl_void_font;
-  unsigned int glyph_index;
- 
-  glyph_index = FT_Get_Char_Index (*(font->face), c);
-  if( !font->glyphList[glyph_index] )
-    font->glyphList[glyph_index] = MakeBitmapGlyph (font, glyph_index);
-  if (font->glyphList[glyph_index])
-    return ((int) (font->glyphList[glyph_index]->advance 
-	    + FaceKernAdvance(*(font->face), glyph_index, 0))); 
-  else 
-    return 0;
-  /* return ( (font->glyphList[glyph_index]->dimension.x > font->glyphList[glyph_index]->advance)? */
-  /* 	  font->glyphList[glyph_index]->dimension.x */
-  /* 	  : */
-  /* 	  font->glyphList[glyph_index]->advance */
-  /* 	  );  */
-}
-
-int gl_font_char_height (void *gl_void_font, wchar_t *c)
-{
-  /* GL_font* font = (GL_font *) gl_void_font; */
-/*   unsigned int glyph_index; */
- 
-/*   glyph_index = FT_Get_Char_Index (*(font->face), *c); */
-/*   if( !font->glyphList[glyph_index] ) */
-/*     font->glyphList[glyph_index] = MakeBitmapGlyph (font, glyph_index); */
-/*   if (font->glyphList[glyph_index]) */
-/*     return (font->glyphList[glyph_index]->dimension.y);  */
-/*   else  */
-/*     return 0; */
-
-  float llx, lly, llz, urx, ury, urz;          
-  
-  FontBBox ((GL_font *) gl_void_font, c, 2,
-	      &llx, &lly, &llz, 
-	    &urx, &ury, &urz);
-  return ((int) (ury - lly));
- 
-}
-
-int gl_font_char_ascent (void *gl_void_font, wchar_t *c)
-{
- /*  GL_font* font = (GL_font *) gl_void_font; */
-/*   unsigned int glyph_index; */
- 
-
- /*  glyph_index = FT_Get_Char_Index (*(font->face), *c); */
-/*   if( !font->glyphList[glyph_index] ) */
-/*     font->glyphList[glyph_index] = MakeBitmapGlyph (font, glyph_index); */
-/*   if (font->glyphList[glyph_index]) */
-/*     return (font->glyphList[glyph_index]->dimension.y);  */
-/*   else  */
-/*     return 0; */
-
-  float llx, lly, llz, urx, ury, urz;          
-  
-  FontBBox ((GL_font *) gl_void_font, c, 2,
-	    &llx, &lly, &llz, 
-	    &urx, &ury, &urz);
-  return ((int) ury);
-}
-
+/********OPENGL BITMAP CONSTRUCTION SET********/
 
 /*--------------------------------------------------
-  gl_font_init : Load a font
----------------------------------------------------*/
-void *gl_font_init (const char *font_filename, char alphabet, int size)
+  MakeAlphaBitmap : Make an Alpha bitmap of a glyph
+  (Alpha is the glyph's transparency level that will 
+  permits antialiasing)
+--------------------------------------------------*/
+static unsigned char *MakeAlphaBitmap (unsigned char *source,
+				       int destWidth, 
+				       int destHeight, 
+				       int Pitch)
 {
-  GL_font* gl_font = NULL;
-  int err;
-  
-  err= 0;
-  gl_font = FontOpen (font_filename);
-  if (gl_font != NULL)
-    {        
-      /* From the freetype docs... http://www.freetype.org/
-	 "By default, when a new face object is created, 
-	 (freetype) lists all the charmaps contained in the font face 
-	 and selects the one that supports Unicode character codes 
-	 if it finds one. 
-	 Otherwise, it tries to find support for Latin-1, then ASCII."
-	 Here are encoding possible value as a parameter :
-	 ft_encoding_none	ft_encoding_symbol
-	 ft_encoding_unicode	ft_encoding_latin_2
-	 ft_encoding_sjis	ft_encoding_gb2312
-	 ft_encoding_big5	ft_encoding_wansung
-	 ft_encoding_johab	ft_encoding_adobe_standard
-	 ft_encoding_adobe_expert ft_encoding_adobe_custom
-	 ft_encoding_apple_roman 
-      */
-      if (alphabet == 'G')
-	err = FontCharMap (gl_font, ft_encoding_symbol, alphabet);
-      else
-	err = FontCharMap (gl_font, ft_encoding_unicode, alphabet);
-      if (err) 
- 	{ 
- 	  FT_Done_Face (*(gl_font->face)); 
- 	  free (gl_font); 
- 	  return NULL; 
- 	} 
-      err = FontFaceSize (gl_font, size, 0);	
-      if (err)
+  unsigned char *data, *ptr;
+  int x, y, current;;
+
+  current = 0;
+  data = (unsigned char *) TtaGetMemory (destWidth * destHeight * sizeof (unsigned char));
+  for (y = destHeight; y > 0; y--)
+    {
+      ptr = source + (y * destWidth - Pitch);
+      for (x = 0; x < destWidth; x++)
 	{
-	  FT_Done_Face (*(gl_font->face));
-	  free (gl_font);
-	  return NULL;
+	  *( data + current) = *(ptr++);
+	  current++;
 	}
-      if (FT_HAS_KERNING((*(gl_font->face))))
-	gl_font->kerning = 1;
-      else
-	gl_font->kerning = 0;
-      return (void *) gl_font;
     }
-  return NULL;
+  return data;
+}
+
+/*-----------------------------------------------------------
+  MakeBitmapGlyph : Make bitmap and struct to handle the glyph
+-------------------------------------------------------------*/
+static GL_glyph  *MakeBitmapGlyph (GL_font *font, unsigned int g)
+{
+  FT_BitmapGlyph  bitmap;
+  FT_Bitmap       *source;
+  FT_Glyph        Glyph;
+  GL_glyph        *BitmapGlyph;
+  unsigned   char *data;
+  int             err;
+
+  data = NULL;
+
+  FT_Load_Glyph (*font->face, 
+		 g, 
+		 FT_LOAD_NO_HINTING
+		 /*FT_LOAD_MONOCHROME*/
+		 /*FT_LOAD_RENDER*/
+		 );
+  FT_Get_Glyph( (*(font->face))->glyph, &Glyph);
+  if (Glyph)
+    {
+      /*Last parameter tells that we destroy font's bitmap
+	So we MUST cache it    */
+      err = FT_Glyph_To_Bitmap( &Glyph, 
+				ft_render_mode_normal, 
+				0, 
+				1);
+      if( err || ft_glyph_format_bitmap != Glyph->format)
+	{
+	  FT_Done_Glyph (Glyph);
+	  return NULL; 	
+	}
+      else
+	{
+	  bitmap = (FT_BitmapGlyph) Glyph;
+	  source = &bitmap->bitmap;
+	  if (source->width && source->rows)
+	      data = MakeAlphaBitmap (source->buffer, 
+				      source->width, 
+				      source->rows, 
+				      source->pitch);  
+	  BitmapGlyph = (GL_glyph *) TtaGetMemory (sizeof (GL_glyph) );
+	  FT_Glyph_Get_CBox (Glyph, ft_glyph_bbox_subpixels, &(BitmapGlyph->bbox));
+	  BitmapGlyph->data = data;
+	  BitmapGlyph->advance = (float) (Glyph->advance.x >> 16);
+	  BitmapGlyph->pos.x = bitmap->left;
+	  BitmapGlyph->pos.y = source->rows - bitmap->top;   
+	  BitmapGlyph->dimension.x = source->width;
+	  BitmapGlyph->dimension.y = source->rows;  	  
+	  FT_Done_Glyph (Glyph);
+	  return BitmapGlyph;
+	}
+    }
+  else
+    return NULL;
 }
 /*--------------------------------------------------
   BitmapAppend : Add the right portion of a 
@@ -525,13 +640,13 @@ static void BitmapAppend (unsigned char *data,
 			  register int height,
 			  unsigned int Width)
 {  
-  register int i = 0;
+  register unsigned int i = 0;
  
   while (height--)
     {      
       while (i < width)
 	{
-	  if (*(append_data + i) > 15)
+	  if (*(append_data + i) > 0)
 	    *(data + i) = *(append_data + i);
 	  i++;
 	}
@@ -540,6 +655,115 @@ static void BitmapAppend (unsigned char *data,
       append_data += width;
     }
 }
+
+
+
+/*-------------------------------------
+ UnicodeFontRenderCharSize :
+--------------------------------------*/
+int UnicodeFontRenderCharSize (void *gl_font, wchar_t c, float x, float y, int size,
+		       int TotalHeight)
+{
+  GL_font* font;
+  GL_glyph *glyph;
+  int left, right, i;   
+  
+  i = 0;
+  font = (GL_font *) gl_font;
+  i = FT_Get_Char_Index (*(font->face), c); 
+  if (i != 0)
+	{
+#ifdef _WINDOWS
+      FT_Set_Char_Size (*(font->face), 0, size * 64, 96, 96);
+#else 
+      FT_Set_Char_Size (*(font->face), 0, size * 64, 0, 0);
+#endif /*_WINDOWS*/
+
+  glyph = MakeBitmapGlyph (font, i);
+  /* If y > height or x < 0 
+     Opengl doesn't draw bitmap 
+     with his clipping mechanism
+     so we must translate them*/
+
+  y += glyph->pos.y;
+  x += glyph->pos.x;
+
+  if ((int)y > TotalHeight)
+    {
+      left = (int) y - TotalHeight;
+      y = (float) TotalHeight;
+    }
+  else 
+    left = 0;
+  
+  if ((int)x < 0)
+    {
+      right = -(int) x;
+      x = (float) 0;
+    }
+  else 
+    right = 0;
+
+  
+  /* Position inside the canvas*/
+  glRasterPos2f (x, y);
+  /*Translation for outside clipping strings*/
+  glBitmap (0, 0,
+	    0, 0,
+	    (float) -right, 
+	    (float) -left,
+	    NULL);
+  glDrawPixels ((int) glyph->dimension.x,
+		        (int) glyph->dimension.y,
+		        GL_ALPHA,
+		        GL_UNSIGNED_BYTE,
+		        (const GLubyte *) glyph->data);
+ 
+
+  /*We restore originale translation state*/
+  glBitmap (0, 0,
+	        0, 0,
+	        (float) right, 
+	        (float) left,
+	        NULL);
+  i = (int) glyph->advance;
+  if (glyph->data != NULL)
+	free (glyph->data);
+  free (glyph);
+  return (i);
+  }
+  else
+	return 0;
+}
+  
+/*----------------------------------------------------------------------
+  DrawMonoSymb draw a one glyph symbol.
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void StixFontRenderCharSize (PtrFont font, CHAR_T symb, 
+							 int x, int y, 
+							int size, int l, int h,  
+							int TotalHeight)
+
+				 
+{
+   int                 xm, yf;
+  GL_font* glfont;
+
+glfont = (GL_font*) font;
+#ifdef _WINDOWS
+      FT_Set_Char_Size (*(glfont->face), 0, size * 64, 96, 96);
+#else 
+      FT_Set_Char_Size (*(glfont->face), 0, size * 64, 0, 0);
+#endif /*_WINDOWS*/
+
+   xm = x + ((l - CharacterWidth (symb, font)) / 2);
+   yf = y + ((h - CharacterHeight (symb, font)) / 2) + CharacterAscent (symb, font);
+
+   UnicodeFontRenderCharSize (font, symb, (float) xm, (float) yf, size,
+		       TotalHeight);
+}
+
 
 /*--------------------------------------------------------
   UnicodeFontRender : Render an unicode string 
@@ -556,21 +780,19 @@ static void BitmapAppend (unsigned char *data,
          ("FULL" in italic for example), 
          bitmap size is bigger than string size...
 ---------------------------------------------------------*/
-#define MAX_LENGTH 1024
 int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int size,
 		       int TotalHeight)
 {
-  GL_font* font;
-  GL_glyph *glyph;
-  float Xpos, Xpostest, XWidth;
-  int left, right, i;
-  int Height, Width, maxy, miny;
-  unsigned char *data;
-  GL_glyph      *bitmaps[MAX_LENGTH];
-  FT_Vector     bitmap_pos[MAX_LENGTH];
-  float llx, lly, llz, urx, ury, urz;          
-  wchar_t *c;
-  
+  GL_font*			font;
+  GL_glyph			*glyph;
+  float				Xpos, Xpostest, XWidth,	maxy, miny;
+  int               left, right, i, Height, Width;
+
+  unsigned char     *data;
+  GL_glyph          *bitmaps[MAX_LENGTH];
+  FLOAT_VECTOR       bitmap_pos[MAX_LENGTH];        
+  wchar_t            *c;
+
   c = string;
   font = (GL_font *) gl_font;
   miny = 10000;
@@ -578,11 +800,10 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
   i = 0;
   Xpos = 0x0;
   left = FT_Get_Char_Index (*(font->face), string[0]); 
-  /* left =  FT_Get_Char_Index (*(font->face), */
-  /* 			    ((*(font->face))->charmap->encoding == ft_encoding_symbol) ?  */
-  /* 			     *string | 0xf000: *string); */
   Xpos = 0;
   XWidth = 0;
+
+
   /* First We conmpute all character size (width and height)
    and their respective placement in the string */
   while (i < size)
@@ -593,28 +814,24 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 	    font->glyphList[left] = MakeBitmapGlyph (font, left);
 	  glyph = font->glyphList[left];
 	  bitmaps[i] = glyph;
-	  bitmap_pos[i].x = ((int) Xpos);
-	  bitmap_pos[i].y = - glyph->pos.y;
+	  bitmap_pos[i].x = Xpos;
+	  bitmap_pos[i].y = (float) ( - glyph->pos.y );
 	  if (miny > bitmap_pos[i].y)
 	    miny = bitmap_pos[i].y;
 	  if ((glyph->dimension.y - glyph->pos.y) > maxy)
-	    maxy =  glyph->dimension.y - glyph->pos.y;
+	    maxy =  (float) (glyph->dimension.y - glyph->pos.y);
 	  Xpostest = glyph->advance;
 	}
       else
 	Xpostest = 0;
       /* distance between chars
-	 aka kerning */
+	 (aka kerning) */
       i++;
       if (string[i])
 	{
-	  right = FT_Get_Char_Index (*(font->face), string[i]); 	
-	  /* right = FT_Get_Char_Index (*(font->face), */
-	  /* 			    ((*(font->face))->charmap->encoding ==  ft_encoding_symbol) ?  */
-	  /* 			     *string | 0xf000: *string); */
-  
+	  right = FT_Get_Char_Index (*(font->face), string[i]); 	  
 	  if (font->kerning)
-	    Xpostest += FaceKernAdvance (*(font->face), left, right);
+			Xpostest += FaceKernAdvance (*(font->face), left, right);
 	  left = right;
 	}
       else
@@ -629,6 +846,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 	  /* First char can have negative X 
 	   so we store it for use after string creation
 	  (in order to avoid segfault...)*/
+
 	  if ((i-1) == 0)
 	    {
 	      if (bitmaps[0]->pos.x > 0)
@@ -636,14 +854,15 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 	    }
 	  else
 	    Xpostest += bitmaps[i-1]->pos.x;
+
 	  if (glyph->dimension.x > glyph->advance)
 	    XWidth += glyph->dimension.x - glyph->advance + Xpostest;
 	  else
 	    XWidth += Xpostest;
 	}
     } 
-  Height = maxy - miny;  
-  Width = ((int) XWidth);
+  Height = (int) (maxy - miny);
+  Width = (int) XWidth;
   if (Height <= 0 || Width <= 0 || miny == 10000)
     return 0;
   data = (unsigned char *) TtaGetMemory (sizeof (unsigned char)
@@ -659,7 +878,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 	  left = 0;
       else
 	left = bitmaps[i]->pos.x;
-      left = (bitmap_pos[i].y - miny)*Width + bitmap_pos[i].x + left;
+      left = (int) ((bitmap_pos[i].y - miny)*Width + bitmap_pos[i].x + left);
       BitmapAppend (data + left,
 		    bitmaps[i]->data,
 		    bitmaps[i]->dimension.x,
@@ -712,17 +931,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 	    NULL);
   free (data);
 
-  
-  return (((int) Xpos) + (bitmaps[0]->pos.x < 0 ? bitmaps[0]->pos.x : 0)); 
-  
-  
-  FontBBox (font, 
-	    c, 
-	    size+1,
-	    &llx, &lly, &llz, 
-	    &urx, &ury, &urz);
-  
-  return ((int)(urx + llx));
+  return (((int) Xpos) + (bitmaps[0]->pos.x < 0 ? bitmaps[0]->pos.x : 0));  
 }
 
 #endif /* _GL */

@@ -298,6 +298,10 @@ SOURCE=..\..\thotlib\document\schtrad.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\stix.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\tree\structschema.c
 # End Source File
 # Begin Source File

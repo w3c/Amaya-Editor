@@ -2468,17 +2468,6 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
   return;
 } 
 
-/*When user begin a new selection*/
-void gtk_claim_selection()
-{
-  if (FrameTable[ActiveFrame].WdFrame)
-    {
-      /* but now we own the selection, so goodbye to the other app */
-      gtk_selection_owner_set (GTK_WIDGET(FrameTable[ActiveFrame].WdFrame),
-			       GDK_SELECTION_PRIMARY,
-			       GDK_CURRENT_TIME);
-    }
-}
 
 /*-----------------------------------------------------------------------
   get_targets
@@ -2703,9 +2692,12 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     X = 2;
 	   if (Y < 0)
 	     Y = 2;
-	   Main_Wd = CreateWindowEx (0L, "Amaya",    /* window class name */
+	   Main_Wd = CreateWindowEx (WS_EX_ACCEPTFILES | WS_EX_APPWINDOW | WS_EX_WINDOWEDGE, 
+					"Amaya",    /* window class name */
 				     NULL,	/* window caption    */
-				     WS_OVERLAPPEDWINDOW, /* window style            */
+				     WS_OVERLAPPEDWINDOW |
+					 WS_CLIPSIBLINGS |
+					 WS_CLIPCHILDREN, /* window style */
 				     X,	    /* initial x pos           */
 				     Y,	    /* initial y pos           */
 				     width, /* initial x size          */

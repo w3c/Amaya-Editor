@@ -384,6 +384,7 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
      RedrawFrameBottom (frame, 0, NULL);
      /* glMatroxBUG (frame, x, y, width, height);	*/
      GL_Swap (frame);
+	 GL_MakeCurrent (ActiveFrame);
      EndPaint (w, &ps);
 #endif /*_GL*/
    }
@@ -1569,6 +1570,8 @@ void CheckTtCmap ()
     }
 }
 
+
+
 /*----------------------------------------------------------------------
   WndProc:  The main MS-Windows event handler for the Thot Library
   ----------------------------------------------------------------------*/
@@ -1615,7 +1618,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 
     SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
     if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON, (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
-      WinErrorBox (NULL, "WndProc: WM_CREATE");
+      WinErrorBox (NULL, "WndProc: WM_CREATE cannot create toolbar");
     
     hwndToolTip = ToolBar_GetToolTips (ToolBar);
     if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
@@ -1625,19 +1628,27 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
     StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2);
     ShowWindow (StatusBar, SW_SHOWNORMAL);
-    UpdateWindow (StatusBar);
- 
-    hwndClient = CreateWindowEx (WS_EX_OVERLAPPEDWINDOW |
-								 WS_EX_ACCEPTFILES
-								 , 
+    UpdateWindow (StatusBar); 
+	hwndClient = 0;
+    hwndClient = CreateWindowEx (WS_EX_ACCEPTFILES, 
 								 "ClientWndProc", 
 								 NULL,
-								 WS_CLIPCHILDREN | WS_CHILD | WS_VISIBLE | WS_BORDER, 
+								 WS_CHILD | 
+								 WS_CLIPSIBLINGS |
+								 WS_BORDER, 
 								 0, 0, 0, 0,
-				 hwnd, (HMENU) 2, hInstance, NULL);
+				                 hwnd, 
+								 (HMENU) 2,
+								 hInstance, 
+								 NULL);
 #ifdef _GL
+	if (!hwndClient) 
+	{      
+		MessageBox(NULL, "ERROR!", "Failed to create new client window in function WndProc()", MB_OK); 
+		return 0;    
+	}
         /* initialize OpenGL rendering */
-       GL_Win32ContextInit (hwndClient, frame);
+     GL_Win32ContextInit (hwndClient, frame);
 #endif /*_GL*/
     ShowWindow (hwndClient, SW_SHOWNORMAL);
     UpdateWindow (hwndClient);
@@ -1745,15 +1756,12 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
       }
     return 0L;
 
-  case WM_CLOSE:
-#ifdef _GL
-	  GL_Win32ContextClose (frame);
-#endif /*_GL*/
   case WM_DESTROY:
     if (frame >= 0 && frame <= MAX_FRAME)
       {
-#ifdef _GL
-	  GL_Win32ContextClose (frame);
+#ifdef _GL 
+	  GL_Win32ContextClose (frame, hwnd);
+	  
 #endif /*_GL*/
 	GetDocAndView (frame, &pDoc, &view);
 	if (pDoc && view)
@@ -1770,11 +1778,16 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 		  FrMainRef[frame] = 0;
 		  return 0L;
 		}
+		  
+		UnregisterClass ("Amaya",hInstance);
+		UnregisterClass ("ClientWndProc",hInstance);
+		UnregisterClass ("WNDIALOGBOX",hInstance);
 	    TtaQuit();
 	  }
       }
     if (mMsg == WM_DESTROY)
       PostQuitMessage (0);
+	DestroyWindow (hwnd);
     return 0L;
         
   case WM_SIZE:
@@ -1933,7 +1946,9 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	    }
 	}
     }
-
+#ifdef _DEBUG
+if (mMsg != 641 && mMsg != 256)
+#endif /*_DEBUG*/
   switch (mMsg)
     {
     case WM_CREATE:
@@ -2169,7 +2184,9 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     default:
       break;
     }
-	
+#ifdef _GL
+  GL_DrawAll (NULL, -1);
+#endif /*GL*/
   return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 }
 #endif /* _WINDOWS */
@@ -3230,7 +3247,7 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 	if (raz > 0)
 	  Clear (frame, clipwidth, clipheight, clipx, clipy);
 #else /* _GL */
-	glEnable (GL_SCISSOR_TEST);
+	/*glEnable (GL_SCISSOR_TEST);*/
 	glScissor ( clipx,
 		    FrameTable[frame].FrHeight
 		    + FrameTable[frame].FrTopMargin
@@ -3282,11 +3299,11 @@ void RemoveClipping (int frame)
    clipRgn = (HRGN) 0;
 #endif /* _WINDOWS */
 #else /* _GL */
-   glDisable (GL_SCISSOR_TEST);
-   /* glScissor ( 0, */
-   /* 	       0, */
-   /* 	       FrameTable[frame].FrWidth, */
-   /* 	       FrameTable[frame].FrHeight); */
+   /*glDisable (GL_SCISSOR_TEST);*/
+    glScissor (0, 
+    	       0, 
+    	       FrameTable[frame].FrWidth, 
+   	           FrameTable[frame].FrHeight); 
 #endif /*_GL*/
 }
 

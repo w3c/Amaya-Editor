@@ -2583,7 +2583,18 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      topY = pSelBox->BxYOrg;
 		      /* point d'insertion inferieur en y */
 		      bottomY = topY + pSelBox->BxHeight;
-		      DefClip (frame, xx, topY, xx, bottomY);
+#ifdef _GL
+			  if (xx)
+				xx = xx - 1;
+			  if (bottomY + 1 < FrameTable[frame].FrHeight)
+				bottomY = bottomY + 1;
+		      DefClip (frame, 
+						xx, topY, 
+						xx, bottomY);
+#else /*_GL*/
+			  DefClip (frame, xx, topY, xx, bottomY );
+#endif /*_GL*/
+
 		      
 		      /* Est-on au debut d'une boite entiere ou coupee ? */
 		      pBox = pAb->AbBox->BxNexChild;

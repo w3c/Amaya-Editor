@@ -408,7 +408,6 @@ int SpecialCharBoxWidth (CHAR_T c)
   ----------------------------------------------------------------------*/
 int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 {
-#ifndef _GL
 #ifdef _I18N_
   PtrFont         font;
   int             car;
@@ -419,21 +418,14 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
   if (font == NULL)
     return 6;
   else
+#ifndef _GL
     return CharacterWidth (car, font);
+#else
+	return CharacterWidth (c, font);
+#endif _GL
 #else /* _I18N_ */
   return CharacterWidth (c, specfont);
 #endif /* _I18N_ */
-#else /*_GL*/
-  PtrFont         font;
-
-  /*if (SpecialCharBoxWidth (c))
-   return 1;*/
-  GetFontAndIndexFromSpec (c, specfont, &font);
-  if (font == NULL)
-    return 6;
-  else 
-    return UnicodeCharacterWidth (c, font);
-#endif /*_GL*/
 }
 /*----------------------------------------------------------------------
   CharacterHeight returns the height of a char in a given font
@@ -1685,7 +1677,7 @@ void InitDialogueFonts (char *name)
 #endif /* _WINDOWS */
   if (value == NULL)
     {
-      FontFamily = TtaGetMemory (8);
+	  FontFamily = TtaGetMemory (8);
       strcpy (FontFamily, "-*");
     }
   else
@@ -1825,7 +1817,11 @@ static void FreeAFont (int i)
       if (!found)
 	/* we free this font */
 #ifdef _WINDOWS
+#ifndef _GL 
 	TtaFreeMemory (TtFonts[i]);
+#else /*_GL */
+	gl_font_delete (TtFonts[i]);
+#endif /*_GL*/	
 #else  /* _WINDOWS */
 #ifdef _GTK
 #ifndef _GL 
@@ -1930,6 +1926,7 @@ void ThotFreeAllFonts (void)
 #endif /* _I18N_ */
   int                 i;
 
+
 #ifdef _I18N_
   /* free all attached fontsets */
   fontset = FirstFontSel;
@@ -1944,5 +1941,10 @@ void ThotFreeAllFonts (void)
   for (i = 0; i < MAX_FONT && TtFonts[i]; i++)
     FreeAFont (i);
   TtaFreeMemory (FontFamily);
+  
+#ifdef _GL
+  FreeMathFonts();
+  FTLibraryFree ();
+#endif _GL
 }
 

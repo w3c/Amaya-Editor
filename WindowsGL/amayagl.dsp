@@ -314,6 +314,10 @@ SOURCE=..\amaya\sroot.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=..\thotlib\dialogue\stix.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\styleparser.c
 # End Source File
 # Begin Source File

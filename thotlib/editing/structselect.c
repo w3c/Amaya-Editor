@@ -76,6 +76,9 @@ static int          SelectedPictureEdge;/* if the current selection is a
 #define MAX_TRANSMIT 10
 
 
+#ifdef _GTK
+#include "gtk-functions.h"
+#endif _GTK
 
 /*----------------------------------------------------------------------
    TtaSetCurrentKeyboard
@@ -1493,6 +1496,7 @@ void SelectString (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar
       /* it's a position */
       string = FALSE;
    SelectStringOrPosition (pDoc, pEl, firstChar, lastChar, string);
+
 }
 
 /*----------------------------------------------------------------------

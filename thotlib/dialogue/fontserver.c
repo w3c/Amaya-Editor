@@ -244,11 +244,19 @@ int GetFontFilename (char script, int family, int highlight, int size,
   return ok;
 #else /* _GTK */
 
-  GetWindowsDirectory (filename , 1024);  
-  strcat (filename, "\\fonts\\"); 
+  char *s;
+  
 
   if (script == 'G')
-	family = 0;
+  {
+	  GetWindowsDirectory (filename , 1024);  
+	  strcat (filename, "\\fonts\\"); 
+	  strcat (filename, "Times");
+  }
+  else
+	{
+  GetWindowsDirectory (filename , 1024);  
+  strcat (filename, "\\fonts\\"); 
   /*charset ???*/
   switch (family)
      {
@@ -282,9 +290,13 @@ int GetFontFilename (char script, int family, int highlight, int size,
        break;
      default:
        break;
-     }
-  strcat (filename, ".ttf");
+	}
+	}
+  strcat (filename, ".ttf\0");
   return 1;
 #endif /* _GTK */
 }
+
+
+
 #endif /* _GL */

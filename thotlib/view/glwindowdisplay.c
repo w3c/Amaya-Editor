@@ -196,6 +196,114 @@ void Clear (int frame, int width, int height, int x, int y)
 static HDC   GL_Windows[50];	
 static HGLRC GL_Context[50];
 
+
+int ChoosePixelFormatEx(HDC hdc)
+{ 
+  int wbpp = 32; 
+  int wdepth = 16; 
+  int wdbl = 1; 
+  int wacc = 1; 
+  PIXELFORMATDESCRIPTOR pfd; 
+  int num;
+  unsigned int maxqual=0; 
+  int maxindex=0;
+  int max_bpp, max_depth, max_dbl, max_acc;
+  int i;
+  int bpp;
+  int depth;
+  int pal, mcd, soft, icd,opengl, window, bitmap, dbuff;
+  unsigned int q=0;
+
+  ZeroMemory(&pfd,sizeof(pfd)); 
+  pfd.nSize=sizeof(pfd); 
+  pfd.nVersion=1;
+  num=DescribePixelFormat(hdc,1,sizeof(pfd),&pfd);
+  if (num==0) 
+	  return 0;
+  for (i=1; i<=num; i++)
+  { 
+	ZeroMemory(&pfd,sizeof(pfd)); 
+	pfd.nSize=sizeof(pfd); 
+	pfd.nVersion=1;
+    DescribePixelFormat(hdc,i,sizeof(pfd),&pfd);
+    bpp=pfd.cColorBits;
+    depth=pfd.cDepthBits;
+    pal=(pfd.iPixelType==PFD_TYPE_COLORINDEX);
+    mcd=((pfd.dwFlags & PFD_GENERIC_FORMAT) && (pfd.dwFlags & PFD_GENERIC_ACCELERATED));
+    soft=((pfd.dwFlags & PFD_GENERIC_FORMAT) && !(pfd.dwFlags & PFD_GENERIC_ACCELERATED));
+    icd=(!(pfd.dwFlags & PFD_GENERIC_FORMAT) && !(pfd.dwFlags & PFD_GENERIC_ACCELERATED));
+    opengl=(pfd.dwFlags & PFD_SUPPORT_OPENGL);
+    window=(pfd.dwFlags & PFD_DRAW_TO_WINDOW);
+    bitmap=(pfd.dwFlags & PFD_DRAW_TO_BITMAP);
+    dbuff=(pfd.dwFlags & PFD_DOUBLEBUFFER);
+    if (opengl && window) 
+		q=q+0x8000;
+    if (wdepth==-1 || (wdepth>0 && depth>0)) 
+		q=q+0x4000;
+    if (wdbl==-1 || (wdbl==0 && !dbuff) || (wdbl==1 && dbuff)) 
+		q=q+0x2000;
+    if (wacc==-1 || (wacc==0 && soft) || (wacc==1 && (mcd || icd))) 
+		q=q+0x1000;
+    if (mcd || icd) 
+		q=q+0x0040; 
+	if (icd) 
+		q=q+0x0002;
+    if (wbpp==-1 || (wbpp==bpp)) 
+		q=q+0x0800;
+    if (bpp>=16) 
+		q=q+0x0020; 
+	if (bpp==16) 
+		q=q+0x0008;
+    if (wdepth==-1 || (wdepth==depth)) 
+		q=q+0x0400;
+    if (depth>=16) 
+		q=q+0x0010; 
+	if (depth==16) 
+		q=q+0x0004;
+    if (!pal) 
+		q=q+0x0080;
+    if (bitmap) 
+		q=q+0x0001;
+    if (q>maxqual) 
+	{
+		maxqual=q; 
+		maxindex=i;
+		max_bpp=bpp; 
+		max_depth=depth; 
+		max_dbl=dbuff?1:0; 
+		max_acc=soft?0:1;
+	}
+  }
+  if (maxindex==0) 
+	  return maxindex;
+  return maxindex;
+}
+
+void init_pfd ()
+{
+static PIXELFORMATDESCRIPTOR pfd = 
+	{
+        sizeof(PIXELFORMATDESCRIPTOR),  /* size */
+        1,                              /* version */
+        PFD_DRAW_TO_WINDOW |			/* Format Must Support Window*/
+		PFD_SUPPORT_OPENGL |			/* Format Must Support OpenGL*/
+		PFD_DOUBLEBUFFER,               /* support double-buffering */
+        PFD_TYPE_RGBA,                  /* color type */
+        16,                             /* prefered color depth */
+        0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
+        0,                              /* no alpha buffer */
+        0,                              /* alpha bits (ignored) */
+        0,                              /* no accumulation buffer */
+        0, 0, 0, 0,                     /* accum bits (ignored) */
+        0,                              /* depth buffer */
+        0,                              /* no stencil buffer */
+        0,                              /* no auxiliary buffers */
+        PFD_MAIN_PLANE,                 /* main layer */
+        0,                              /* reserved */
+        0, 0, 0,                        /* no layer, visible, damage masks */
+    };
+}
+
 /*----------------------------------------------------------------------
  GL_SetupPixelFormat : Sets up opengl buffers pixel format.
  Double Buffer, RGBA (32 bits), 
@@ -205,21 +313,23 @@ static HGLRC GL_Context[50];
   ----------------------------------------------------------------------*/
 static void GL_SetupPixelFormat (HDC hDC)
 {
-    PIXELFORMATDESCRIPTOR pfd = 
+    static PIXELFORMATDESCRIPTOR pfd = 
 	{
         sizeof(PIXELFORMATDESCRIPTOR),  /* size */
         1,                              /* version */
         PFD_DRAW_TO_WINDOW |			/* Format Must Support Window*/
 		PFD_SUPPORT_OPENGL |			/* Format Must Support OpenGL*/
-		PFD_DOUBLEBUFFER,               /* support double-buffering */
+		PFD_DOUBLEBUFFER   |            /* support double-buffering */
+		PFD_DEPTH_DONTCARE |            /* If Depth is obligated by hardware*/
+		PFD_GENERIC_ACCELERATED,        /* We try to get hardware here */       
         PFD_TYPE_RGBA,                  /* color type */
-        32,                             /* prefered color depth */
+        24,                             /* prefered color depth */
         0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
         0,                              /* no alpha buffer */
         0,                              /* alpha bits (ignored) */
         0,                              /* no accumulation buffer */
         0, 0, 0, 0,                     /* accum bits (ignored) */
-        0,                             /* depth buffer */
+        0,                              /* depth buffer */
         0,                              /* no stencil buffer */
         0,                              /* no auxiliary buffers */
         PFD_MAIN_PLANE,                 /* main layer */
@@ -227,8 +337,12 @@ static void GL_SetupPixelFormat (HDC hDC)
         0, 0, 0,                        /* no layer, visible, damage masks */
     };
     int pixelFormat;
+	
+	//int goodpixel;
 
-    pixelFormat = ChoosePixelFormat(hDC, &pfd);
+	//goodpixel = ChoosePixelFormatEx (hDC);
+	//DescribePixelFormat(hDC, goodpixel, sizeof(pfd), &pfd);
+pixelFormat = ChoosePixelFormat (hDC, &pfd);
     if (pixelFormat == 0) 
 	{
         MessageBox(WindowFromDC(hDC), "ChoosePixelFormat failed.", "Error",
@@ -242,6 +356,7 @@ static void GL_SetupPixelFormat (HDC hDC)
                 MB_ICONERROR | MB_OK);
         exit(1);
     }
+
 }
 
 /*----------------------------------------------------------------------
@@ -257,7 +372,21 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
   HDC hDC;
   ThotBool found;
 
-  hDC = GetDC (hwndClient);
+  hDC = 0;
+  hDC = GetDC (hwndClient);	
+  if (!hDC) 
+	{      
+		MessageBox(NULL, "ERROR!", "No device context", MB_OK); 
+		return;    
+	}
+  else
+  {
+   for (frame_index = 0 ; frame_index <= MAX_FRAME; frame_index++)
+	  {  
+	    if (GL_Windows[frame_index] == hDC) 
+			return;
+	  }
+  }
   found = FALSE;       
   if (frame <= 0)
     {
@@ -280,7 +409,6 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 		frame++;
 	    }
 	}
-      ActiveFrame = frame;
     }
   GL_SetupPixelFormat (hDC);
   hGLRC = wglCreateContext (hDC);
@@ -308,12 +436,15 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 /*----------------------------------------------------------------------
  GL_Win32ContextInit : Free opengl contexts
   ----------------------------------------------------------------------*/
-void GL_Win32ContextClose (int frame)
+void GL_Win32ContextClose (int frame, HWND hwndClient)
 {
   /* make our context 'un-'current */
   wglMakeCurrent (NULL, NULL);
   /* delete the rendering context */
-  wglDeleteContext (GL_Context[frame]);
+  if (GL_Context[frame])
+	wglDeleteContext (GL_Context[frame]);
+  if (GL_Windows[frame])
+	ReleaseDC (hwndClient, GL_Windows[frame]);
   GL_Windows[frame] = 0;
   GL_Context[frame] = 0;
 }
@@ -329,7 +460,7 @@ void GL_SetForeground (int fg)
     unsigned short red, green, blue;
 
     TtaGiveThotRGB (fg, &red, &green, &blue);
-    glColor4ub (red, green, blue, 255);
+	glColor4ub (red, green, blue, 255);
 }
 /*----------------------------------------------------------------------
   InitDrawing update the Graphic Context accordingly to parameters.
@@ -804,6 +935,93 @@ static void SetPixelTransferBias (int fg)
   glPixelTransferf (GL_BLUE_BIAS,  BIT8DIVIDE(blue));
 }
 /*----------------------------------------------------------------------
+  TranslateChars replaces in the text space chars to their visual
+  equivalents and the character 128 by '&'.
+  ----------------------------------------------------------------------*/
+void TranslateChars (CHAR_T *text)
+{
+  int                 i;
+
+  if (text == NULL)
+    return;
+  i = 0;
+  while (text[i] != 0)
+    {
+      switch (text[i])
+	{
+	case BREAK_LINE:
+      if (!ShowSpace)
+	    text[i] = SHOWN_BREAK_LINE;
+	  break;
+	case THIN_SPACE:
+      if (!ShowSpace)
+	    text[i] = SHOWN_THIN_SPACE;
+	  break;
+	case HALF_EM:
+      if (!ShowSpace)
+	    text[i] = SHOWN_HALF_EM;
+	  break;
+	case UNBREAKABLE_SPACE:
+      if (!ShowSpace)
+	    text[i] = SHOWN_UNBREAKABLE_SPACE;
+	  break;
+	case SPACE:
+      if (!ShowSpace)
+	    text[i] = SHOWN_SPACE;
+	  break;
+	case START_ENTITY:
+	  text[i] = '&';
+	}
+      i++;
+    }
+}
+
+
+void DrawStyxSymb (CHAR_T symb, int frame, 
+				   int x, int y, int l,
+					int h, PtrFont font, 
+					int size, int fg, int TotalHeight);
+
+/*----------------------------------------------------------------------
+  GL_DrawStixChar : draw a character in a texture or a bitmap 
+  ----------------------------------------------------------------------*/
+void GL_DrawStixChar (void *GL_font, CHAR_T const c, int x, int y, 
+					   int fg, int size, int l, int h, int Totalheight)
+{
+  if (fg < 0 || GL_font == NULL)
+    return;
+  SetPixelTransferBias (fg);
+  StixFontRenderCharSize (GL_font, c, x, y, 
+	  size, l, h, Totalheight);
+  ResetPixelTransferBias();
+}
+/*----------------------------------------------------------------------
+  GL_DrawUnicodeChar : draw a character in a texture or a bitmap 
+  ----------------------------------------------------------------------*/
+void GL_DrawUnicodeChar (CHAR_T const c, float x, float y, void *GL_font, int fg)
+{
+  if (fg < 0 || GL_font == NULL)
+    return;
+  SetPixelTransferBias (fg);
+  UnicodeFontRenderCharSize (GL_font, c, x, y, 36,
+	  FrameTable[ActiveFrame].FrHeight);
+  ResetPixelTransferBias();
+}
+/*----------------------------------------------------------------------
+  GL_DrawUnicodeChar : draw a character in a texture or a bitmap 
+  with a specific size
+  ----------------------------------------------------------------------*/
+void GL_DrawUnicodeCharSized (CHAR_T const c, float x, float y, void *GL_font, int fg, int size)
+{
+  if (fg < 0 || GL_font == NULL)
+    return;
+  SetPixelTransferBias (fg);
+  UnicodeFontRenderCharSize (GL_font, c, x, y, 
+	  size, FrameTable[ActiveFrame].FrHeight);
+  ResetPixelTransferBias();
+}
+
+/*----------------------------------------------------------------------
  GL_DrawString : Draw a string in a texture or a bitmap 
   ----------------------------------------------------------------------*/
 int GL_UnicodeDrawString (int fg, 
@@ -816,30 +1034,16 @@ int GL_UnicodeDrawString (int fg,
 
   if (end <= 0 || fg < 0 || GL_font == NULL)
     return 0;
-  if (hyphen)
-    {
-      str[end] = '\255';
-      str[end+1] = EOS;
-    }
-  else
-    str[end] = EOS;
-  /*TranslateChars (str);*/
+  str[end] = EOS;
+  TranslateChars (str);
   SetPixelTransferBias (fg);
   width = UnicodeFontRender (GL_font, str, x, y, end, 
 			     FrameTable[ActiveFrame].FrHeight);
+   if (hyphen)
+	    /* draw the hyphen */
+		UnicodeFontRenderCharSize (GL_font, '\255', x + width, y, -1, FrameTable[ActiveFrame].FrHeight);
   ResetPixelTransferBias();
   return width;
-}
-/*----------------------------------------------------------------------
-  GL_DrawUnicodeChar : draw a character in a texture or a bitmap 
-  ----------------------------------------------------------------------*/
-void GL_DrawUnicodeChar (CHAR_T const c, float x, float y, void *GL_font, int fg)
-{
-  CHAR_T str[2];
-
-  str[0] = (CHAR_T) c;
-  str[1] = EOS;
-  GL_UnicodeDrawString (fg, str, x, y, 0, GL_font, 1);
 }
 
 
@@ -851,27 +1055,38 @@ void GL_DrawUnicodeChar (CHAR_T const c, float x, float y, void *GL_font, int fg
 int CharacterWidth (int c, PtrFont font)
 {
   int                 i, l;
-
+  
   if (font == NULL)
     return 0;
   else if (c == INVISIBLE_CHAR)
     return 1;
+
   if (c == START_ENTITY)
     c = '&';
   else if (c == TAB || c == UNBREAKABLE_SPACE)
     /* we use the SPACE width for the character TAB */
     c = SPACE;
+
   if (c == NEW_LINE || c == BREAK_LINE)
     /* characters NEW_LINE and BREAK_LINE are equivalent */
     l = 1;
   else
     {
+	/* Thin space and Half em in gtk and win => w(32)/4 and w(32)/2
+		in Motif w(32)
+	  */
       if (c == THIN_SPACE)
-	l = gl_font_char_width ((void *) font, 32) / 4;
+		l = gl_font_char_width ((void *) font, 32) / 4;
       else if (c == HALF_EM)
-	l = gl_font_char_width ((void *) font, 32) / 2;
+		l = gl_font_char_width ((void *) font, 32) / 2;
       else
-	l = gl_font_char_width ((void *) font, c);
+		l = gl_font_char_width ((void *) font, c);
+
+		/* the Max*/
+	  if (l == 0)
+		  l = gl_font_char_width ((void *) font, 'M');
+
+#ifndef _STYX
 #ifndef _WINDOWS
       if (c == 244)
 	{
@@ -887,56 +1102,11 @@ int CharacterWidth (int c, PtrFont font)
 	    l = 4;
 	}
 #endif /*_WINDOWS*/
+#endif _STYX
     }
   return l;
 }
 
-
-/*----------------------------------------------------------------------
-  UnicodeCharacterWidth returns the width of a char in a given font.
-  ----------------------------------------------------------------------*/
-int UnicodeCharacterWidth (CHAR_T c, PtrFont font)
-{
-  int                 i, l;
-
-  if (font == NULL)
-    return 0;
-  else if (c == INVISIBLE_CHAR)
-    return 1;
-  if (c == START_ENTITY)
-    c = '&';
-  else if (c == TAB || c == UNBREAKABLE_SPACE)
-    /* we use the SPACE width for the character TAB */
-    c = SPACE;
-  if (c == NEW_LINE || c == BREAK_LINE)
-    /* characters NEW_LINE and BREAK_LINE are equivalent */
-    l = 1;
-  else
-    {
-      if (c == THIN_SPACE)
-	l = gl_font_char_width ((void *) font, 32) / 4;
-      else if (c == HALF_EM)
-	l = gl_font_char_width ((void *) font, 32) / 2;
-      else
-	l = gl_font_char_width ((void *) font, c);
-#ifndef _WINDOWS
-      if (c == 244)
-	{
-	  /* a patch due to errors in standard symbol fonts */
-	  i = 0;
-	  while (i < MAX_FONT && font != TtFonts[i])
-	    i++;
-	  if (TtPatchedFont[i] == 8 || TtPatchedFont[i] == 10)
-	    l = 1;
-	  else if (TtPatchedFont[i] == 12 || TtPatchedFont[i] == 14)
-	    l = 2;
-	  else if (TtPatchedFont[i] == 24)
-	    l = 4;
-	}
-#endif /*_WINDOWS*/
-    }
-  return l;
-}
 #ifdef _I18N_
 /*----------------------------------------------------------------------
   DisplayJustifiedText display the content of a Text box tweaking
@@ -1073,7 +1243,7 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    } 
 		}
 	      else
-		lg = UnicodeCharacterWidth (bchar, nextfont);
+		lg = CharacterWidth (bchar, nextfont);
 	      /* Skip to the next char */
 	      if (x + lg <= 0)
 		{
@@ -1253,7 +1423,7 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			x += lgspace;
 		    }
 		  else
-		    x += UnicodeCharacterWidth (bchar, nextfont);
+		    x += CharacterWidth (bchar, nextfont);
 		    }
 		  /* a new space is handled */
 		  bl++;
@@ -1518,12 +1688,13 @@ void GL_DrawAll (ThotWidget widget, int frame)
 void SetGlPipelineState ()
 {  
   const char *version = (const char *) gluGetString (GLU_VERSION);
+  const char *renderer = glGetString (GL_RENDERER);
 
   Software_Mode = FALSE;
-  if (strstr ((char *) glGetString (GL_RENDERER), "Mesa")
-      || strstr ((char *) glGetString (GL_RENDERER), "Microsoft")
-      || strstr ((char *) glGetString (GL_RENDERER), "Sgi"))
-    if (!strstr ((char *) glGetString (GL_RENDERER), "Mesa DRI"))
+  if (strstr (renderer, "Mesa")
+      || strstr (renderer, "Microsoft")
+      || strstr (renderer, "Sgi"))
+    if (!strstr (renderer, "Mesa DRI"))
       Software_Mode = TRUE;  
   if (strstr (version, "1.0") || strstr (version, "1.1")) 
     {
@@ -1561,7 +1732,8 @@ void SetGlPipelineState ()
       /* No stencil buffer (one day perhaps, for background)*/
       glDisable (GL_STENCIL_TEST);
       /* At the beginning, there was no clipping*/
-      glDisable (GL_SCISSOR_TEST);
+      glEnable (GL_SCISSOR_TEST);
+	  glScissor (0, 0, 0, 0); 
       /* Modulated Transparency*/
       glDisable (GL_ALPHA_TEST); 	 
       /* Polygon are alway filled (until now)
@@ -1716,6 +1888,7 @@ void GLResize (int width, int height, int x, int y)
   /* Needed for 3d only...*/
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity (); 
+  glScissor (0, 0, width, height); 
 }
 /*-----------------------------------
   glMatroxBUG : expose without a drawing 
@@ -1733,9 +1906,7 @@ void glMatroxBUG (int frame, int x, int y, int width, int height)
 
 /*-------------------------------
  SaveBuffer :
- Take a picture (tga) of the backbuffer.
- mainly for debug purpose, 
- (but Amaya could be used as a svg renderer)
+ Take a picture (png) of the backbuffer.
 --------------------------------*/
 void saveBuffer (int width, int height)
 {
