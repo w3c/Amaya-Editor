@@ -939,7 +939,11 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 
   while (list_ptr)
     {
+      char *url;
+      AnnotMetaDataSearch searchType;
+
       annot = (AnnotMeta *) list_ptr->object;
+      
       /* don't add an annotation if it's already on the list */
       /* @@ JK: later, Ralph will add code to delete the old one.
 	 We should remove the old annotations and preserve the newer
@@ -947,13 +951,23 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 	 and that we'll have to close it without saving... or just update
 	 the metadata... */
       
+      if (IsW3Path (annot->annot_url))
+	{
+	  url = annot->annot_url;
+	  searchType = AM_ANNOT_URL;
+	}
+      else
+	{
+	  url = annot->body_url;
+	  searchType = AM_BODY_URL;
+	}
       old_annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations,
-					 annot->annot_url, AM_ANNOT_URL);
+					     url, searchType);
 #ifdef ANNOT_ON_ANNOT
       /* do the same thing to avoid duplicating the thread items */
       if (!old_annot && AnnotThread[doc].annotations)
 	old_annot = AnnotList_searchAnnot (AnnotThread[doc].annotations,
-					   annot->annot_url, AM_ANNOT_URL);
+					   url, searchType);
 #endif /* ANNOT_ON_ANNOT */
 
       if (!old_annot)

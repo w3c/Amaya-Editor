@@ -755,7 +755,7 @@ ThotBool AnnotList_delAnnot (List **list, char *url, ThotBool useAnnotUrl)
     {
       annot = (AnnotMeta *) item->object;
       /* @@ this crashes... why? */
-      if (useAnnotUrl)
+      if (useAnnotUrl && annot->annot_url)
 	ptr = annot->annot_url;
       else
 	ptr = annot->body_url;
@@ -1200,7 +1200,6 @@ static void  AnnotThread_markOrphan (Container *root)
       tmp_entry = tmp_entry->next;
     }
 }
-
 #endif /* ANNOT_ON_ANNOT */
 
 /*------------------------------------------------------------
@@ -1240,7 +1239,7 @@ void AnnotThread_sortThreadList (List **thread_list)
 
       /* create the message container */
       /* use either body_url or annot_url */
-      if (IsFilePath (annot_cur->annot_url))
+      if (!annot_cur->annot_url || IsFilePath (annot_cur->annot_url))
 	url = annot_cur->body_url;
       else
 	url = annot_cur->annot_url;
