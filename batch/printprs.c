@@ -361,7 +361,7 @@ PtrPRule            pR;
 	     wrnomattr (pR->PrInhDelta);
 	  else
 	     wrnb (pR->PrInhDelta);
-	  printf (" %");
+	  printf (" %%");
 	  }
 	else
 	   if (pR->PrInhDelta == 0)
