@@ -8,12 +8,8 @@
 
 extern char CSSparser ( AmayaReadChar readfunc,
                         Document doc );
-extern char *GetHTML3Name ( Element elem,
-                            Document doc );
-extern int GetHTML3Names ( Element elem,
-                           Document doc,
-                           char **lst,
-                           int max );
+extern char *GetCSSName ( Element elem,
+			  Document doc );
 extern void PresentationSettingsToCSS ( PresentationSetting settings,
                                         char *buffer,
                                         int len );
@@ -29,15 +25,6 @@ extern void ParseHTMLStyleDecl ( PresentationTarget target,
 extern void ParseHTMLSpecificStyle ( Element elem,
                                      char *attrstr,
                                      Document doc );
-extern char *ParseHTMLGenericSelector ( char *selector,
-                                        char *attrstr,
-                                        GenericContext ctxt,
-                                        Document doc,
-                                        PSchema gPres );
-extern void ParseHTMLGenericStyle ( char *selector,
-                                    char *attrstr,
-                                    Document doc,
-                                    PSchema gPres );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element el,
                                               char *file,
@@ -102,12 +89,8 @@ extern void HTMLResetAvisitedColor ( Document doc );
 
 extern char CSSparser (/* AmayaReadChar readfunc,
                           Document doc */);
-extern char *GetHTML3Name (/* Element elem,
-                              Document doc */);
-extern int GetHTML3Names (/* Element elem,
-                             Document doc,
-                             char **lst,
-                             int max */);
+extern char *GetCSSName (/* Element elem,
+			    Document doc */);
 extern void PresentationSettingsToCSS (/* PresentationSetting settings,
                                           char *buffer,
                                           int len */);
@@ -123,15 +106,6 @@ extern void ParseHTMLStyleDecl (/* PresentationTarget target,
 extern void ParseHTMLSpecificStyle (/* Element elem,
                                        char *attrstr,
                                        Document doc */);
-extern char *ParseHTMLGenericSelector (/* char *selector,
-                                          char *attrstr,
-                                          GenericContext ctxt,
-                                          Document doc,
-                                          PSchema gPres */);
-extern void ParseHTMLGenericStyle (/* char *selector,
-                                      char *attrstr,
-                                      Document doc,
-                                      PSchema gPres */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element el,
                                                 char *file,

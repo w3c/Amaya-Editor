@@ -304,10 +304,6 @@ Element             elem;
 	  }
 	/* copy the style string into the style attribute */
 	TtaSetAttributeText (styleAttr, style, elem, doc);
-
-	/*********/
-	/* ParseHTMLSpecificStyle (elem, style, doc); */
-	/*********/
      }
 }
 

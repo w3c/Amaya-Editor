@@ -1144,25 +1144,28 @@ View                view;
 
    structView = TtaGetViewFromName (document, "Structure_view");
    if (structView != 0 && TtaIsViewOpened (document, structView))
-        TtaRaiseView (document, structView);
+     TtaRaiseView (document, structView);
    else
-	{
-	TtaGetViewGeometry (document, "Structure_view", &x, &y, &w, &h);
-	structView = TtaOpenView (document, "Structure_view", x, y, w, h);
-	TtcSwitchButtonBar (document, structView);
-	TtcSwitchCommands (document, structView);
-	}
+     {
+       TtaGetViewGeometry (document, "Structure_view", &x, &y, &w, &h);
+       structView = TtaOpenView (document, "Structure_view", x, y, w, h);
+       TtcSwitchButtonBar (document, structView);
+       TtcSwitchCommands (document, structView);
+     }
 #ifdef MATHML
    mathView = TtaGetViewFromName (document, "Math_Structure_view");
    if (mathView != 0 && TtaIsViewOpened (document, mathView))
-	TtaRaiseView (document, mathView);
+     TtaRaiseView (document, mathView);
    else
-	{
-	TtaGetViewGeometry (document, "Math_Structure_view", &x, &y, &w, &h);
-	mathView = TtaOpenView (document, "Math_Structure_view", x, y, w, h);
-	TtcSwitchButtonBar (document, mathView);
-	TtcSwitchCommands (document, mathView);
-	}
+     {
+       TtaGetViewGeometry (document, "Math_Structure_view", &x, &y, &w, &h);
+       mathView = TtaOpenView (document, "Math_Structure_view", x, y, w, h);
+       if (mathView != 0)
+	 {
+	   TtcSwitchButtonBar (document, mathView);
+	   TtcSwitchCommands (document, mathView);
+	 }
+     }
 #endif /* MATHML */
 }
 

@@ -879,7 +879,7 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTMLStyleHeader : parse an HTML3 Style description stored  
+   ParseHTMLStyleHeader : parse an CSS Style description stored  
    in the header of a HTML document                               
    We expect the style string to be of the form :                    
    [                                                                 
@@ -897,11 +897,13 @@ boolean                rebuild;
 {
   AttributeType       newAtType;
   Attribute           newAt;
-  char               *decl_end;
-  char                saved;
   PSchema             gPres;
   PSchema             cour, prev = NULL;
   CSSInfoPtr          style;
+  char               *decl_end;
+  char                saved;
+  char               *buf;
+  int                 len;
 
   /*
    * Create a specific Presentation structure for this document
@@ -937,9 +939,8 @@ boolean                rebuild;
 	      /*
 	       * concatenate the existing css rule with the next fragment.
 	       */
-	      char               *buf = style->css_rule;
-	      int                 len = strlen (style->css_rule) + 1 + strlen (attrstr) + 1;
-	      
+	      buf = style->css_rule;
+	      len = strlen (style->css_rule) + 1 + strlen (attrstr) + 1;
 	      style->css_rule = TtaGetMemory (len);
 	      if (style->css_rule == NULL)
 		style->css_rule = buf;
@@ -1514,7 +1515,7 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   MergeNewCSS : parse a set of HTML3 CSS rules and add them to an 
+   MergeNewCSS : parse a set of CSS rules and add them to an 
    existing pschema.                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

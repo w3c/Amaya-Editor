@@ -56,24 +56,7 @@ int                 strncasecmp (char *s1, char *s2, size_t n)
 #define MAX_DEEP 10
 #include "HTMLstyleColor.h"
 
-/************************************************************************
- *									*  
- *			PARSER FRONT-END				*                                  
- *									*  
- ************************************************************************/
 
-/*----------------------------------------------------------------------
-   CSSparser :  is the front-end function called by the HTML parser
-        when detecting a <STYLE TYPE="text/css"> indicating it's the
-        beginning of a CSS fragment. readfunc is a function used to
-        read one character at a time from the input stream.
-  
-        The CSS parser has to handle <!-- ... --> constructs used to
-        prevent prehistoric browser from displaying the CSS as a text
-        content. It will stop on any sequence "<x" where x is different
-        from ! and will return x as to the caller. Theorically x should
-        be equal to / for the </STYLE> end of style marker but who knows !
-  ----------------------------------------------------------------------*/
 
 #define CSS_CHECK_BUFFER					\
 {								\
@@ -84,99 +67,115 @@ int                 strncasecmp (char *s1, char *s2, size_t n)
 	buffer = new;						\
     }}
 
+/*----------------------------------------------------------------------
+   CSSparser :  is the front-end function called by the HTML parser
+   when detecting a <STYLE TYPE="text/css"> indicating it's the
+   beginning of a CSS fragment. readfunc is a function used to
+   read one character at a time from the input stream.
+  
+   The CSS parser has to handle <!-- ... --> constructs used to
+   prevent prehistoric browser from displaying the CSS as a text
+   content. It will stop on any sequence "<x" where x is different
+   from ! and will return x as to the caller. Theorically x should
+   be equal to / for the </STYLE> end of style marker but who knows !
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char                CSSparser (AmayaReadChar readfunc, Document doc)
 #else
 char                CSSparser (readfunc, doc)
 AmayaReadChar       readfunc;
 Document            doc;
-
 #endif
 {
-   char               *buffer = NULL;
-   int                 buffer_size = 2000;
-   int                 index = 0;
-   char                cour = readfunc ();
+  char               *buffer = NULL;
+  int                 buffer_size = 2000;
+  int                 index = 0;
+  char                cour = readfunc ();
+  
+  buffer = TtaGetMemory (buffer_size);
+  if (buffer == NULL)
+    return (EOS);
 
-   buffer = TtaGetMemory (buffer_size);
-   if (buffer == NULL)
-      return (EOS);
-
-   while (cour != EOS)
-     {
-	switch (cour)
-	      {
-		 case '/':
-		    cour = readfunc ();
-		    if (cour == '*') {
-		        /* Skip the comments */
-			do {
-			    cour = readfunc ();
-			    if (cour == '*') {
-				cour = readfunc ();
-				if (cour == '/') break;
-			    }
-		        } while (cour != '\0');
-		    } else {
-			CSS_CHECK_BUFFER
-			    buffer[index++] = '/';
-			CSS_CHECK_BUFFER
-			    buffer[index++] = cour;
+  while (cour != EOS)
+    {
+      switch (cour)
+	{
+	case '/':
+	  cour = readfunc ();
+	  if (cour == '*')
+	    {
+	      /* Skip the comments */
+	      do
+		{
+		  cour = readfunc ();
+		  if (cour == '*')
+		    {
+		      cour = readfunc ();
+		      if (cour == '/')
+			break;
 		    }
-	            continue;
-		 case '<':
-		    cour = readfunc ();
-		    if (cour != '!')
-		      {
+		}
+	      while (cour != '\0');
+	    }
+	  else
+	    {
+	      CSS_CHECK_BUFFER
+		buffer[index++] = '/';
+	      CSS_CHECK_BUFFER
+		buffer[index++] = cour;
+	    }
+	  continue;
+	case '<':
+	  cour = readfunc ();
+	  if (cour != '!')
+	    {
+	      /* Ok we consider this as a closing tag ! */
+	      if (index > 0)
+		{
+		  CSS_CHECK_BUFFER
+		    buffer[index++] = EOS;
+		  ParseHTMLStyleHeader (NULL, buffer, doc, TRUE);
+		  index = 0;
+		}
+	      TtaFreeMemory (buffer);
+	      return (cour);
+	    }
+	  cour = readfunc ();
+	  continue;
+	case '-':
+	  cour = readfunc ();
+	  if (cour != '-')
+	    {
+	      CSS_CHECK_BUFFER
+		buffer[index++] = '-';
+	      continue;
+	    }
+	  cour = readfunc ();
+	  if (cour != '>')
+	    {
+	      CSS_CHECK_BUFFER
+		buffer[index++] = '-';
+	      CSS_CHECK_BUFFER
+		buffer[index++] = '-';
+	      continue;
+	    }
+	  cour = readfunc ();
+	  continue;
+	}
+      CSS_CHECK_BUFFER
+	buffer[index++] = cour;
+      cour = readfunc ();
+    }
 
-			 /*
-			  * Ok we consider this as a closing tag !
-			  */
-			 if (index > 0)
-			   {
-			      CSS_CHECK_BUFFER
-				 buffer[index++] = EOS;
-			      ParseHTMLStyleHeader (NULL, buffer, doc, TRUE);
-			      index = 0;
-			   }
-			 TtaFreeMemory (buffer);
-			 return (cour);
-		      }
-		    cour = readfunc ();
-		    continue;
-		 case '-':
-		    cour = readfunc ();
-		    if (cour != '-')
-		      {
-			 CSS_CHECK_BUFFER
-			    buffer[index++] = '-';
-			 continue;
-		      }
-		    cour = readfunc ();
-		    if (cour != '>')
-		      {
-			 CSS_CHECK_BUFFER
-			    buffer[index++] = '-';
-			 CSS_CHECK_BUFFER
-			    buffer[index++] = '-';
-			 continue;
-		      }
-		    cour = readfunc ();
-		    continue;
-	      }
-	CSS_CHECK_BUFFER
-	   buffer[index++] = cour;
-	cour = readfunc ();
-     }
-   if (index > 0)
-     {
-	/* give this piece of CSS to the parser */
-	CSS_CHECK_BUFFER
-	   buffer[index++] = EOS;
-	ParseHTMLStyleHeader (NULL, buffer, doc, TRUE);
-     }
-   TtaFreeMemory (buffer);
-   return (cour);
+  if (index > 0)
+    {
+      /* give this piece of CSS to the parser */
+      CSS_CHECK_BUFFER
+	buffer[index++] = EOS;
+      ParseHTMLStyleHeader (NULL, buffer, doc, TRUE);
+    }
+  TtaFreeMemory (buffer);
+  return (cour);
 }
 
 /************************************************************************
@@ -190,7 +189,6 @@ Document            doc;
  * instead of adding the corresponding style, the rule are deleted.
  * Manipulate with care !!!
  */
-
 static boolean         HTMLStyleParserDestructiveMode = FALSE;
 
 /*
@@ -199,15 +197,12 @@ static boolean         HTMLStyleParserDestructiveMode = FALSE;
  * e.g. : "red" for a color attribute or "12pt bold helvetica"
  * for a font attribute.
  */
-
 #ifdef __STDC__
 typedef char       *(*HTMLStyleValueParser)
                     (PresentationTarget target,
 		     PresentationContext context, char *attrstr);
-
 #else
 typedef char       *(*HTMLStyleValueParser) ();
-
 #endif
 
 
@@ -300,7 +295,7 @@ VALUEPARSER(Magnification)
 VALUEPARSER(Test)
 
 /*
- * Description of the set of HTML3 Style Attributes supported.
+ * Description of the set of CSS Style Attributes supported.
  */
 
 typedef struct HTMLStyleAttribute
@@ -385,7 +380,7 @@ static HTMLStyleAttribute HTMLStyleAttributes[] =
    {"test", ParseCSSTest},
 };
 
-#define NB_HTML3STYLEATTRIBUTE (sizeof(HTMLStyleAttributes) / \
+#define NB_CSSSTYLEATTRIBUTE (sizeof(HTMLStyleAttributes) / \
                                 sizeof(HTMLStyleAttributes[0]))
 
 /*
@@ -439,39 +434,11 @@ static char        *last_message = NULL;
  *									*  
  ************************************************************************/
 
-/********** UNUSED *************
-#ifdef __STDC__
-static int is_float(const char *ptr)
-#else
-static int is_float(ptr)
-    char *ptr;
-#endif
-{
-     if ((*ptr == '+') || (*ptr == '-')) ptr++;
-     if (!((isdigit(*ptr)) || (*ptr == '.'))) return(0);
-     while (isdigit(*ptr)) ptr++;
-     if (*ptr == '.') return(1);
-     return(0);
-}
-#ifdef __STDC__
-static int is_int(const char *ptr)
-#else
-static int is_int(ptr)
-    char *ptr;
-#endif
-{
-     if ((*ptr == '+') || (*ptr == '-')) ptr++;
-     if (isdigit(*ptr)) return(1);
-     return(0);
-}
- ********** UNUSED *************/
-
 #ifdef __STDC__
 static unsigned int hexa_val (char c)
 #else
 static unsigned int hexa_val (c)
 char                c;
-
 #endif
 {
    if ((c >= '0') && (c <= '9'))
@@ -483,12 +450,6 @@ char                c;
    return (0);
 }
 
-/*----------------------------------------------------------------------
-   ParseHTML3Unit :                                                  
-   parse a CSS Unit substring and returns the corresponding      
-   value and its unit.                                           
-  ----------------------------------------------------------------------*/
-
 #define UNIT_INVALID	0
 #define UNIT_POINT	1
 #define UNIT_EM		2
@@ -498,7 +459,7 @@ struct unit_def
    char               *sign;
    int                 unit;
 };
-static struct unit_def HTML3UnitNames[] =
+static struct unit_def CSSUnitNames[] =
 {
    {"pt", DRIVERP_UNIT_PT},
    {"pc", DRIVERP_UNIT_PC},
@@ -511,109 +472,117 @@ static struct unit_def HTML3UnitNames[] =
    {"%", DRIVERP_UNIT_PERCENT},
 };
 
-#define NB_UNITS (sizeof(HTML3UnitNames) / sizeof(struct unit_def))
+#define NB_UNITS (sizeof(CSSUnitNames) / sizeof(struct unit_def))
 
+/*----------------------------------------------------------------------
+   ParseCSSUnit :                                                  
+   parse a CSS Unit substring and returns the corresponding      
+   value and its unit.                                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseHTML3Unit (char *attrstr, PresentationValue * pval)
+static char        *ParseCSSUnit (char *attrstr, PresentationValue * pval)
 #else
-static char        *ParseHTML3Unit (attrstr, pval)
+static char        *ParseCSSUnit (attrstr, pval)
 char               *attrstr;
 PresentationValue  *pval;
 
 #endif
 {
-   int                 val = 0;
-   int                 minus = 0;
-   int                 real = 0;
-   int                 valid = 0;
-   int                 f = 0;
-   int                 uni;
+  int                 val = 0;
+  int                 minus = 0;
+  int                 real = 0;
+  int                 valid = 0;
+  int                 f = 0;
+  int                 uni;
 
-   pval->typed_data.unit = DRIVERP_UNIT_REL;
+  pval->typed_data.unit = DRIVERP_UNIT_REL;
+  SKIP_BLANK (attrstr);
+  if (*attrstr == '-')
+    {
+      minus = 1;
+      attrstr++;
+      SKIP_BLANK (attrstr);
+    }
 
-   SKIP_BLANK (attrstr);
-   if (*attrstr == '-')
-     {
-	minus = 1;
-	attrstr++;
-	SKIP_BLANK (attrstr);
-     }
-   if (*attrstr == '+')
-     {
-	attrstr++;
-	SKIP_BLANK (attrstr);
-     }
-   while ((*attrstr >= '0') && (*attrstr <= '9'))
-     {
-	val *= 10;
-	val += *attrstr - '0';
-	attrstr++;
-	valid = 1;
-     }
+  if (*attrstr == '+')
+    {
+      attrstr++;
+      SKIP_BLANK (attrstr);
+    }
+
+  while ((*attrstr >= '0') && (*attrstr <= '9'))
+    {
+      val *= 10;
+      val += *attrstr - '0';
+      attrstr++;
+      valid = 1;
+    }
+
    if (*attrstr == '.')
      {
-	real = 1;
-	f = val;
-	val = 0;
-	attrstr++;
-	/* keep only 3 digits */
-	if ((*attrstr >= '0') && (*attrstr <= '9'))
-	  {
-	     val = (*attrstr - '0') * 100;
+       real = 1;
+       f = val;
+       val = 0;
+       attrstr++;
+       /* keep only 3 digits */
+       if ((*attrstr >= '0') && (*attrstr <= '9'))
+	 {
+	   val = (*attrstr - '0') * 100;
+	   attrstr++;
+	   if ((*attrstr >= '0') && (*attrstr <= '9'))
+	     {
+	       val += (*attrstr - '0') * 10;
+	       attrstr++;
+	       if ((*attrstr >= '0') && (*attrstr <= '9'))
+		 {
+		   val += *attrstr - '0';
+		   attrstr++;
+		 }
+	     }
+
+	   while ((*attrstr >= '0') && (*attrstr <= '9'))
 	     attrstr++;
-	     if ((*attrstr >= '0') && (*attrstr <= '9'))
-	       {
-		  val += (*attrstr - '0') * 10;
-		  attrstr++;
-		  if ((*attrstr >= '0') && (*attrstr <= '9'))
-		    {
-		       val += *attrstr - '0';
-		       attrstr++;
-		    }
-	       }
-	     while ((*attrstr >= '0') && (*attrstr <= '9'))
-	       {
-		  attrstr++;
-	       }
-	     valid = 1;
-	  }
+	   valid = 1;
+	 }
      }
+
    if (!valid)
      {
-	SKIP_WORD (attrstr);
-	pval->typed_data.unit = DRIVERP_UNIT_INVALID;
-	pval->typed_data.value = 0;
-	return (attrstr);
+       SKIP_WORD (attrstr);
+       pval->typed_data.unit = DRIVERP_UNIT_INVALID;
+       pval->typed_data.value = 0;
+       return (attrstr);
      }
+
    SKIP_BLANK (attrstr);
    for (uni = 0; uni < NB_UNITS; uni++)
      {
 #ifdef WWW_WINDOWS
-	if (!_strnicmp (HTML3UnitNames[uni].sign, attrstr,
-			strlen (HTML3UnitNames[uni].sign)))
+       if (!_strnicmp (CSSUnitNames[uni].sign, attrstr,
+		       strlen (CSSUnitNames[uni].sign)))
 #else  /* WWW_WINDOWS */
-	if (!strncasecmp (HTML3UnitNames[uni].sign, attrstr,
-			  strlen (HTML3UnitNames[uni].sign)))
+	 if (!strncasecmp (CSSUnitNames[uni].sign, attrstr,
+			   strlen (CSSUnitNames[uni].sign)))
 #endif /* !WWW_WINDOWS */
-	  {
-	     pval->typed_data.unit = HTML3UnitNames[uni].unit;
+	   {
+	     pval->typed_data.unit = CSSUnitNames[uni].unit;
 	     if (real)
 	       {
-		  DRIVERP_UNIT_SET_FLOAT (pval->typed_data.unit);
-		  if (minus)
-		     pval->typed_data.value = -(f * 1000 + val);
-		  else
-		     pval->typed_data.value = f * 1000 + val;
+		 DRIVERP_UNIT_SET_FLOAT (pval->typed_data.unit);
+		 if (minus)
+		   pval->typed_data.value = -(f * 1000 + val);
+		 else
+		   pval->typed_data.value = f * 1000 + val;
 	       }
 	     else
 	       {
-		  if (minus)
-		     pval->typed_data.value = -val;
-		  else
-		     pval->typed_data.value = val;
+		 if (minus)
+		   pval->typed_data.value = -val;
+		 else
+		   pval->typed_data.value = val;
 	       }
-	     return (attrstr + strlen (HTML3UnitNames[uni].sign));
-	  }
+	     return (attrstr + strlen (CSSUnitNames[uni].sign));
+	   }
      }
 
    /*
@@ -621,9 +590,9 @@ PresentationValue  *pval;
     */
    pval->typed_data.unit = DRIVERP_UNIT_REL;
    if (minus)
-      pval->typed_data.value = -val;
+     pval->typed_data.value = -val;
    else
-      pval->typed_data.value = val;
+     pval->typed_data.value = val;
    return (attrstr);
 }
 
@@ -697,7 +666,7 @@ int                *index;
 
    SKIP_BLANK (attrstr);
 
-   for (i = 0; i < NB_HTML3STYLEATTRIBUTE; i++)
+   for (i = 0; i < NB_CSSSTYLEATTRIBUTE; i++)
       if (IS_WORD (attrstr, HTMLStyleAttributes[i].name))
 	{
 	   *index = i;
@@ -707,13 +676,13 @@ int                *index;
 }
 
 /*----------------------------------------------------------------------
-   GetHTML3Name : return a string corresponding to the CSS name of   
+   GetCSSName : return a string corresponding to the CSS name of   
    an element                                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *GetHTML3Name (Element elem, Document doc)
+char               *GetCSSName (Element elem, Document doc)
 #else
-char               *GetHTML3Name (elem, doc)
+char               *GetCSSName (elem, doc)
 Element             elem;
 Document            doc;
 #endif
@@ -727,13 +696,13 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   GetHTML3Names : return the list of strings corresponding to the   
+   GetCSSNames : return the list of strings corresponding to the   
    CSS names of an element                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int             GetHTML3Names (Element elem, Document doc, char **lst, int max)
+static int      GetCSSNames (Element elem, Document doc, char **lst, int max)
 #else
-int             GetHTML3Names (elem, doc, lst, max)
+static int      GetCSSNames (elem, doc, lst, max)
 Element         elem;
 Document        doc;
 char          **lst;
@@ -773,285 +742,282 @@ int             max;
  *									*  
  ************************************************************************/
 
-/*
- * PresentationSettingsToCSS :  translate a PresentationSetting to the
- *      equivalent CSS string, and add it to the buffer given as the
- *      argument. It is used when extracting the CSS string from actual
- *      presentation.
- *
- * All the possible values returned by the presentation drivers are
- * described in thotlib/include/presentdriver.h (PresentationType enum).
- */
-
+/*----------------------------------------------------------------------
+ PresentationSettingsToCSS :  translate a PresentationSetting to the
+     equivalent CSS string, and add it to the buffer given as the
+      argument. It is used when extracting the CSS string from actual
+      presentation.
+ 
+  All the possible values returned by the presentation drivers are
+  described in thotlib/include/presentdriver.h (PresentationType enum).
+ -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         PresentationSettingsToCSS (PresentationSetting settings,
-                         char *buffer, int len)
+void   PresentationSettingsToCSS (PresentationSetting settings, char *buffer, int len)
 #else
-void         PresentationSettingsToCSS (settings, buffer, len)
-PresentationSetting settings;
-char               *param;
-
+void   PresentationSettingsToCSS (settings, buffer, len)
+PresentationSetting  settings;
+char                *param;
+int                  len
 #endif
 {
-   unsigned short      red, green, blue;
-   LoadedImageDesc    *imgInfo;
-   int                 add_unit = 0;
-   int                 real = 0;
-   float               fval = 0;
-   int                 unit, i;
+  unsigned short      red, green, blue;
+  LoadedImageDesc    *imgInfo;
+  int                 add_unit = 0;
+  int                 real = 0;
+  float               fval = 0;
+  int                 unit, i;
 
-   buffer[0] = EOS;
-   if (len < 40) return;
+  buffer[0] = EOS;
+  if (len < 40)
+    return;
 
-   unit = settings->value.typed_data.unit;
-   if (DRIVERP_UNIT_IS_FLOAT (unit))
-     {
-	DRIVERP_UNIT_UNSET_FLOAT (unit);
-	real = 1;
-	fval = (float) settings->value.typed_data.value;
-	fval /= 1000;
-     }
+  unit = settings->value.typed_data.unit;
+  if (DRIVERP_UNIT_IS_FLOAT (unit))
+    {
+      DRIVERP_UNIT_UNSET_FLOAT (unit);
+      real = 1;
+      fval = (float) settings->value.typed_data.value;
+      fval /= 1000;
+    }
 
-   switch (settings->type)
-	 {
-	    case DRIVERP_NONE:
-	       break;
-	    case DRIVERP_FOREGROUND_COLOR:
-	       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-	       sprintf (buffer, "color : #%02X%02X%02X", red, green, blue);
-	       break;
-	    case DRIVERP_BACKGROUND_COLOR:
-	       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-	       sprintf (buffer, "background-color : #%02X%02X%02X", red, green, blue);
-	       break;
-	    case DRIVERP_FONT_SIZE:
-	       if (unit == DRIVERP_UNIT_REL) {
-		  if (real) {
-		      sprintf (buffer, "font-size : %g", fval);
-		      add_unit = 1;
-		  } else switch (settings->value.typed_data.value)
-			{
-			   case 1:
-			      strcpy (buffer, "font-size : xx-small");
-			      break;
-			   case 2:
-			      strcpy (buffer, "font-size : x-small");
-			      break;
-			   case 3:
-			      strcpy (buffer, "font-size : small");
-			      break;
-			   case 4:
-			      strcpy (buffer, "font-size : medium");
-			      break;
-			   case 5:
-			      strcpy (buffer, "font-size : large");
-			      break;
-			   case 6:
-			      strcpy (buffer, "font-size : x-large");
-			      break;
-			   case 7:
-			   case 8:
-			   case 9:
-			   case 10:
-			   case 11:
-			   case 12:
-			      strcpy (buffer, "font-size : xx-large");
-			      break;
-			}
-	       } else {
-		    if (real)
-		       sprintf (buffer, "font-size : %g", fval);
-		    else
-		       sprintf (buffer, "font-size : %d", settings->value.typed_data.value);
-		    add_unit = 1;
-		 }
-	       break;
-	    case DRIVERP_FONT_STYLE:
-	       switch (settings->value.typed_data.value)
-		     {
-			case DRIVERP_FONT_BOLD:
-			   strcpy (buffer, "font-weight : bold");
-			   break;
-			case DRIVERP_FONT_ROMAN:
-			   strcpy (buffer, "font-style : normal");
-			   break;
-			case DRIVERP_FONT_ITALICS:
-			   strcpy (buffer, "font-style : italic");
-			   break;
-			case DRIVERP_FONT_BOLDITALICS:
-			   strcpy (buffer, "font-weight : bold, font-style : italic");
-			   break;
-			case DRIVERP_FONT_OBLIQUE:
-			   strcpy (buffer, "font-style : oblique");
-			   break;
-			case DRIVERP_FONT_BOLDOBLIQUE:
-			   strcpy (buffer, "font-weight : bold, font-style : oblique");
-			   break;
-		     }
-	       break;
-	    case DRIVERP_FONT_FAMILY:
-	       switch (settings->value.typed_data.value)
-		     {
-			case DRIVERP_FONT_HELVETICA:
-			   strcpy (buffer, "font-family : helvetica");
-			   break;
-			case DRIVERP_FONT_TIMES:
-			   strcpy (buffer, "font-family : times");
-			   break;
-			case DRIVERP_FONT_COURIER:
-			   strcpy (buffer, "font-family : courrier");
-			   break;
-		     }
-	       break;
-	    case DRIVERP_TEXT_UNDERLINING:
-	       switch (settings->value.typed_data.value)
-		     {
-			case DRIVERP_UNDERLINE:
-			   strcpy (buffer, "text-decoration : underline");
-			   break;
-			case DRIVERP_OVERLINE:
-			   strcpy (buffer, "text-decoration : overline");
-			   break;
-			case DRIVERP_CROSSOUT:
-			   strcpy (buffer, "text-decoration : line-through");
-			   break;
-		     }
-	       break;
-	    case DRIVERP_ALIGNMENT:
-	       switch (settings->value.typed_data.value)
-		     {
-                        case DRIVERP_ADJUSTLEFT:
-                           strcpy (buffer, "text-align : left");
-                           break;
-                        case DRIVERP_ADJUSTRIGHT:
-                           strcpy (buffer, "text-align : right");
-                           break;
-                        case DRIVERP_ADJUSTCENTERED:
-                           strcpy (buffer, "text-align : center");
-                           break;
-                        case DRIVERP_ADJUSTLEFTWITHDOTS:
-                           strcpy (buffer, "text-align : left");
-                           break;
-		     }
-	       break;
-	    case DRIVERP_LINE_SPACING:
-	       if (real)
-		  sprintf (buffer, "line-height : %g", fval);
-	       else
-		  sprintf (buffer, "line-height : %d", settings->value.typed_data.value);
-	       add_unit = 1;
-	       break;
-	    case DRIVERP_INDENT:
-	       if (real)
-		  sprintf (buffer, "text-indent : %g", fval);
-	       else
-		  sprintf (buffer, "text-indent : %d", settings->value.typed_data.value);
-	       add_unit = 1;
-	       break;
-	    case DRIVERP_JUSTIFICATION:
-	       if (settings->value.typed_data.value == DRIVERP_JUSTIFIED)
-		  sprintf (buffer, "text-align: justify");
-	       break;
-	    case DRIVERP_HYPHENATION:
-#if 0
-	       /* not yet in CSS */
-	       if (settings->value.typed_data.value == DRIVERP_JUSTIFIED)
-		  sprintf (buffer, "text-align: justify");
-#endif
-	       break;
-	    case DRIVERP_FILL_PATTERN:
-	       break;
-	    case DRIVERP_VERTICAL_POSITION:
-	       if (real)
-		  sprintf (buffer, "marging-top : %g", fval);
-	       else
-		  sprintf (buffer, "marging-top : %d", settings->value.typed_data.value);
-	       add_unit = 1;
-	       break;
-	    case DRIVERP_HORIZONTAL_POSITION:
-	       if (real)
-		  sprintf (buffer, "margin-left : %g", fval);
-	       else
-		  sprintf (buffer, "margin-left : %d", settings->value.typed_data.value);
-	       add_unit = 1;
-	       break;
-	    case DRIVERP_HEIGHT:
-	       if (real)
-		  sprintf (buffer, "height : %g", fval);
-	       else
-		  sprintf (buffer, "height : %d", settings->value.typed_data.value);
-	       add_unit = 1;
-	       break;
-	    case DRIVERP_RELATIVE_HEIGHT:
-	       break;
-	    case DRIVERP_WIDTH:
-	       if (real)
-		  sprintf (buffer, "width : %g", fval);
-	       else
-		  sprintf (buffer, "width : %d", settings->value.typed_data.value);
-	       add_unit = 1;
-	       break;
-	       break;
-	    case DRIVERP_RELATIVE_WIDTH:
-	       break;
-	    case DRIVERP_IN_LINE:
-	       if (settings->value.typed_data.value == DRIVERP_INLINE)
-		  strcpy (buffer, "display: inline");
-	       else if (settings->value.typed_data.value == DRIVERP_NOTINLINE)
-		  strcpy (buffer, "display: block");
-	       break;
-	    case DRIVERP_SHOW:
-	       break;
-	    case DRIVERP_BOX:
-	       break;
-	    case DRIVERP_SHOWBOX:
-	       break;
-	    case DRIVERP_BGIMAGE:
-	       if (settings->value.pointer != NULL)
-		 {
-		   imgInfo = SearchLoadedImage((char *)settings->value.pointer,
-		                               0);
-		   if (imgInfo != NULL)
-		       sprintf (buffer, "background-image: url(%s)",
-				(char *) imgInfo->originalName);
-		   else
-		       sprintf (buffer, "background-image: url(file:/%s)",
-		                (char *)settings->value.pointer);
-		 }
-	       else
-		   sprintf (buffer, "background-image: none");
-	       break;
-	    case DRIVERP_PICTUREMODE:
-	       switch (settings->value.typed_data.value) {
-	           case DRIVERP_REALSIZE:
-		       sprintf (buffer, "background-repeat: no-repeat");
-		       break;
-	           case DRIVERP_REPEAT:
-		       sprintf (buffer, "background-repeat: repeat");
-		       break;
-	           case DRIVERP_VREPEAT:
-		       sprintf (buffer, "background-repeat: repeat-y");
-		       break;
-	           case DRIVERP_HREPEAT:
-		       sprintf (buffer, "background-repeat: repeat-x");
-		       break;
-	       }
-	       break;
-	 }
-   if (add_unit)
-     {
-	/*
-	 * add the unit string to the CSS string.
-	 */
-	for (i = 0; i < NB_UNITS; i++)
-	  {
-	     if (HTML3UnitNames[i].unit == unit)
-	       {
-		  strcat (buffer, HTML3UnitNames[i].sign);
-		  break;
-	       }
-	  }
-     }
+  switch (settings->type)
+    {
+    case DRIVERP_NONE:
+      break;
+    case DRIVERP_FOREGROUND_COLOR:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      sprintf (buffer, "color : #%02X%02X%02X", red, green, blue);
+      break;
+    case DRIVERP_BACKGROUND_COLOR:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      sprintf (buffer, "background-color : #%02X%02X%02X", red, green, blue);
+      break;
+    case DRIVERP_FONT_SIZE:
+      if (unit == DRIVERP_UNIT_REL)
+	{
+	  if (real)
+	    {
+	      sprintf (buffer, "font-size : %g", fval);
+	      add_unit = 1;
+	    }
+	  else
+	    switch (settings->value.typed_data.value)
+	      {
+	      case 1:
+		strcpy (buffer, "font-size : xx-small");
+		break;
+	      case 2:
+		strcpy (buffer, "font-size : x-small");
+		break;
+	      case 3:
+		strcpy (buffer, "font-size : small");
+		break;
+	      case 4:
+		strcpy (buffer, "font-size : medium");
+		break;
+	      case 5:
+		strcpy (buffer, "font-size : large");
+		break;
+	      case 6:
+		strcpy (buffer, "font-size : x-large");
+		break;
+	      case 7:
+	      case 8:
+	      case 9:
+	      case 10:
+	      case 11:
+	      case 12:
+		strcpy (buffer, "font-size : xx-large");
+		break;
+	      }
+	}
+      else
+	{
+	  if (real)
+	    sprintf (buffer, "font-size : %g", fval);
+	  else
+	    sprintf (buffer, "font-size : %d", settings->value.typed_data.value);
+	  add_unit = 1;
+	}
+      break;
+    case DRIVERP_FONT_STYLE:
+      switch (settings->value.typed_data.value)
+	{
+	case DRIVERP_FONT_BOLD:
+	  strcpy (buffer, "font-weight : bold");
+	  break;
+	case DRIVERP_FONT_ROMAN:
+	  strcpy (buffer, "font-style : normal");
+	  break;
+	case DRIVERP_FONT_ITALICS:
+	  strcpy (buffer, "font-style : italic");
+	  break;
+	case DRIVERP_FONT_BOLDITALICS:
+	  strcpy (buffer, "font-weight : bold, font-style : italic");
+	  break;
+	case DRIVERP_FONT_OBLIQUE:
+	  strcpy (buffer, "font-style : oblique");
+	  break;
+	case DRIVERP_FONT_BOLDOBLIQUE:
+	  strcpy (buffer, "font-weight : bold, font-style : oblique");
+	  break;
+	}
+      break;
+    case DRIVERP_FONT_FAMILY:
+      switch (settings->value.typed_data.value)
+	{
+	case DRIVERP_FONT_HELVETICA:
+	  strcpy (buffer, "font-family : helvetica");
+	  break;
+	case DRIVERP_FONT_TIMES:
+	  strcpy (buffer, "font-family : times");
+	  break;
+	case DRIVERP_FONT_COURIER:
+	  strcpy (buffer, "font-family : courrier");
+	  break;
+	}
+      break;
+    case DRIVERP_TEXT_UNDERLINING:
+      switch (settings->value.typed_data.value)
+	{
+	case DRIVERP_UNDERLINE:
+	  strcpy (buffer, "text-decoration : underline");
+	  break;
+	case DRIVERP_OVERLINE:
+	  strcpy (buffer, "text-decoration : overline");
+	  break;
+	case DRIVERP_CROSSOUT:
+	  strcpy (buffer, "text-decoration : line-through");
+	  break;
+	}
+      break;
+    case DRIVERP_ALIGNMENT:
+      switch (settings->value.typed_data.value)
+	{
+	case DRIVERP_ADJUSTLEFT:
+	  strcpy (buffer, "text-align : left");
+	  break;
+	case DRIVERP_ADJUSTRIGHT:
+	  strcpy (buffer, "text-align : right");
+	  break;
+	case DRIVERP_ADJUSTCENTERED:
+	  strcpy (buffer, "text-align : center");
+	  break;
+	case DRIVERP_ADJUSTLEFTWITHDOTS:
+	  strcpy (buffer, "text-align : left");
+	  break;
+	}
+      break;
+    case DRIVERP_LINE_SPACING:
+      if (real)
+	sprintf (buffer, "line-height : %g", fval);
+      else
+	sprintf (buffer, "line-height : %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case DRIVERP_INDENT:
+      if (real)
+	sprintf (buffer, "text-indent : %g", fval);
+      else
+	sprintf (buffer, "text-indent : %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case DRIVERP_JUSTIFICATION:
+      if (settings->value.typed_data.value == DRIVERP_JUSTIFIED)
+	sprintf (buffer, "text-align: justify");
+      break;
+    case DRIVERP_HYPHENATION:
+      break;
+    case DRIVERP_FILL_PATTERN:
+      break;
+    case DRIVERP_VERTICAL_POSITION:
+      if (real)
+	sprintf (buffer, "marging-top : %g", fval);
+      else
+	sprintf (buffer, "marging-top : %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case DRIVERP_HORIZONTAL_POSITION:
+      if (real)
+	sprintf (buffer, "margin-left : %g", fval);
+      else
+	sprintf (buffer, "margin-left : %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case DRIVERP_HEIGHT:
+      if (real)
+	sprintf (buffer, "height : %g", fval);
+      else
+	sprintf (buffer, "height : %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case DRIVERP_RELATIVE_HEIGHT:
+      break;
+    case DRIVERP_WIDTH:
+      if (real)
+	sprintf (buffer, "width : %g", fval);
+      else
+	sprintf (buffer, "width : %d", settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case DRIVERP_RELATIVE_WIDTH:
+      break;
+    case DRIVERP_IN_LINE:
+      if (settings->value.typed_data.value == DRIVERP_INLINE)
+	strcpy (buffer, "display: inline");
+      else if (settings->value.typed_data.value == DRIVERP_NOTINLINE)
+	strcpy (buffer, "display: block");
+      break;
+    case DRIVERP_SHOW:
+      break;
+    case DRIVERP_BOX:
+      break;
+    case DRIVERP_SHOWBOX:
+      break;
+    case DRIVERP_BGIMAGE:
+      if (settings->value.pointer != NULL)
+	{
+	  imgInfo = SearchLoadedImage((char *)settings->value.pointer, 0);
+	  if (imgInfo != NULL)
+	    sprintf (buffer, "background-image: url(%s)",
+		     (char *) imgInfo->originalName);
+	  else
+	    sprintf (buffer, "background-image: url(file:/%s)",
+		     (char *)settings->value.pointer);
+	}
+      else
+	sprintf (buffer, "background-image: none");
+      break;
+    case DRIVERP_PICTUREMODE:
+      switch (settings->value.typed_data.value) {
+      case DRIVERP_REALSIZE:
+	sprintf (buffer, "background-repeat: no-repeat");
+	break;
+      case DRIVERP_REPEAT:
+	sprintf (buffer, "background-repeat: repeat");
+	break;
+      case DRIVERP_VREPEAT:
+	sprintf (buffer, "background-repeat: repeat-y");
+	break;
+      case DRIVERP_HREPEAT:
+	sprintf (buffer, "background-repeat: repeat-x");
+	break;
+      }
+      break;
+    }
+
+  if (add_unit)
+    {
+      /* add the unit string to the CSS string */
+      for (i = 0; i < NB_UNITS; i++)
+	{
+	  if (CSSUnitNames[i].unit == unit)
+	    {
+	      strcat (buffer, CSSUnitNames[i].sign);
+	      break;
+	    }
+	}
+    }
 }
 
 /************************************************************************
@@ -1155,15 +1121,14 @@ NotifyAttribute    *event;
    SpecificSettingsToCSS :  Callback for ApplyAllSpecificSettings,
        enrich the CSS string.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-static void         SpecificSettingsToCSS (SpecificTarget target,
-     SpecificContext ctxt,PresentationSetting settings, void *param)
+static void  SpecificSettingsToCSS (SpecificTarget target, SpecificContext ctxt, PresentationSetting settings, void *param)
 #else
-static void         SpecificSettingsToCSS (settings, param)
+static void  SpecificSettingsToCSS (SpecificTarget target, SpecificContext ctxt, PresentationSetting settings, void *param)
+SpecificTarget      target;
+SpecificContext     ctxt;
 PresentationSetting settings;
 void               *param;
-
 #endif
 {
    char               *css_rules = param;
@@ -1196,48 +1161,52 @@ char               *buf;
 int                *len;
 #endif
 {
-   SpecificContext      ctxt;
-   ElementType          elType;
+  SpecificContext      ctxt;
+  ElementType          elType;
 
-   if ((buf == NULL) || (len == NULL) || (*len <= 0))
-      return;
+  if ((buf == NULL) || (len == NULL) || (*len <= 0))
+    return;
 
-   /*
-    * this will transform all the Specific Settings associated to
-    * the element to one CSS string.
-    */
-   buf[0] = EOS;
-   ctxt = GetSpecificContext(doc);
-   ApplyAllSpecificSettings (elem, ctxt, SpecificSettingsToCSS, &buf[0]);
-   FreeSpecificContext(ctxt);
+  /*
+   * this will transform all the Specific Settings associated to
+   * the element to one CSS string.
+   */
+  buf[0] = EOS;
+  ctxt = GetSpecificContext (doc);
+  ApplyAllSpecificSettings (elem, ctxt, SpecificSettingsToCSS, &buf[0]);
+  FreeSpecificContext (ctxt);
+  *len = strlen (buf);
 
-   *len = strlen (buf);
+  /*
+   * BODY / HTML elements specific handling.
+   */
+  elType = TtaGetElementType (elem);
 
-   /*
-    * BODY / HTML elements specific handling.
-    */
-   elType = TtaGetElementType(elem);
-
-   if (elType.ElTypeNum == HTML_EL_HTML) {
+   if (elType.ElTypeNum == HTML_EL_HTML)
+     {
        elType.ElTypeNum = HTML_EL_BODY;
        elem = TtaSearchTypedElement(elType, SearchForward, elem);
-       if (!elem) return;
+       if (!elem)
+	 return;
        if (*len > 0)
-           strcat(buf,";");
+	 strcat(buf,";");
        *len = strlen (buf);
-       ctxt = GetSpecificContext(doc);
+       ctxt = GetSpecificContext (doc);
        ApplyAllSpecificSettings (elem, ctxt, SpecificSettingsToCSS, &buf[*len]);
-       FreeSpecificContext(ctxt);
+       FreeSpecificContext (ctxt);
        *len = strlen (buf);
-   } else if (elType.ElTypeNum == HTML_EL_BODY) {
-       elem = TtaGetParent(elem);
-       if (!elem) return;
+     }
+   else if (elType.ElTypeNum == HTML_EL_BODY)
+     {
+       elem = TtaGetParent (elem);
+       if (!elem)
+	 return;
        if (*len > 0)
-           strcat(buf,";");
+	 strcat(buf,";");
        *len = strlen (buf);
-       ctxt = GetSpecificContext(doc);
+       ctxt = GetSpecificContext (doc);
        ApplyAllSpecificSettings (elem, ctxt, SpecificSettingsToCSS, &buf[*len]);
-       FreeSpecificContext(ctxt);
+       FreeSpecificContext (ctxt);
        *len = strlen (buf);
    }
 }
@@ -1250,7 +1219,7 @@ int                *len;
  ************************************************************************/
 
 /*----------------------------------------------------------------------
-   ParseHTMLStyleDecl : parse an HTML3 Style string                        
+   ParseHTMLStyleDecl : parse an CSS Style string                        
    we expect the input string describing the style to be of the  
    form : ATTRIBUTE : DESCRIPTION [ , ATTIBUTE : DESCRIPTION ] * 
    but tolerate incorrect or incomplete input                    
@@ -1318,7 +1287,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTMLSpecificStyle : parse and apply an HTML3 Style string. 
+   ParseHTMLSpecificStyle : parse and apply an CSS Style string. 
    This function must be called only to in the context of        
    specific style applying to an element, we will use the        
    specific presentation driver to reflect the new presentation  
@@ -1342,7 +1311,7 @@ Document            doc;
    unused.data = 0;
 #ifdef DEBUG_STYLES
    fprintf (stderr, "ParseHTMLSpecificStyle(%s,%s,%d)\n",
-	    GetHTML3Name (elem, doc), attrstr, doc);
+	    GetCSSName (elem, doc), attrstr, doc);
 #endif
    /* 
     * A rule applying to BODY is really meant to address HTML.
@@ -1384,10 +1353,10 @@ Document            doc;
    Need to add multi-DTD support here !!!!
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *ParseHTMLGenericSelector (char *selector, char *attrstr,
+static char        *ParseHTMLGenericSelector (char *selector, char *attrstr,
 			   GenericContext ctxt, Document doc, PSchema gPres)
 #else
-char               *ParseHTMLGenericSelector (selector, attrstr, ctxt, doc, gPres)
+static char        *ParseHTMLGenericSelector (selector, attrstr, ctxt, doc, gPres)
 char               *selector;
 char               *attrstr;
 GenericContext      ctxt;
@@ -1422,19 +1391,19 @@ PSchema             gPres;
    * first format the first selector item, uniformizing blanks.
    */
   SKIP_BLANK (selector);
-  sel[0] = 0;
-  class[0] = 0;
-  pseudoclass[0] = 0;
-  id[0] = 0;
-  attrelemname[0] = 0;
+  sel[0] = EOS;
+  class[0] = EOS;
+  pseudoclass[0] = EOS;
+  id[0] = EOS;
+  attrelemname[0] = EOS;
   while (1)
     {
       /* put one word in the sel buffer */
-      while ((*selector != 0) && (*selector != ',') &&
+      while ((*selector != EOS) && (*selector != ',') &&
 	     (*selector != '.') && (*selector != ':') &&
 	     (*selector != '#') && (!IS_BLANK (selector)))
 	*cur++ = *selector++;
-      *cur++ = 0;
+      *cur++ = EOS;
       
       if ((*selector == ':') || (*selector == '.') || (*selector == '#'))
 	{
@@ -1447,14 +1416,14 @@ PSchema             gPres;
       deb = cur;
       
       /* store elem in the list if the string is non-empty */
-      if (*elem != 0)
+      if (*elem != EOS)
 	{
 	  for (i = MAX_ANCESTORS - 1; i > 0; i--)
 	    ancestors[i] = ancestors[i - 1];
 	  ancestors[0] = elem;
 	}
       /* why did we stop ? */
-      if (*selector == 0)
+      if (*selector == EOS)
 	/* end of the selector */
 	break;
       else if (*selector == ',')
@@ -1466,40 +1435,40 @@ PSchema             gPres;
       else if (*selector == '.')
 	{
 	  /* read the class id : only one allowed by selector */
-	  class[0] = 0;
+	  class[0] = EOS;
 	  cur = &class[0];
 	  selector++;
-	  while ((*selector != 0) && (*selector != ',') &&
+	  while ((*selector != EOS) && (*selector != ',') &&
 		 (*selector != '.') && (*selector != ':') &&
 		 (!IS_BLANK (selector)))
 	    *cur++ = *selector++;
-	  *cur++ = 0;
+	  *cur++ = EOS;
 	  cur = deb;
 	}
       else if (*selector == ':')
 	{
 	  /* read the pseudoclass id : only one allowed by selector */
-	  pseudoclass[0] = 0;
+	  pseudoclass[0] = EOS;
 	  cur = &pseudoclass[0];
 	  selector++;
-	  while ((*selector != 0) && (*selector != ',') &&
+	  while ((*selector != EOS) && (*selector != ',') &&
 		 (*selector != '.') && (*selector != ':') &&
 		 (!IS_BLANK (selector)))
 	    *cur++ = *selector++;
-	  *cur++ = 0;
+	  *cur++ = EOS;
 	  cur = deb;
 	}
       else if (*selector == '#')
 	{
 	  /* read the id : only one allowed by selector */
-	  id[0] = 0;
+	  id[0] = EOS;
 	  cur = &id[0];
 	  selector++;
-	  while ((*selector != 0) && (*selector != ',') &&
+	  while ((*selector != EOS) && (*selector != ',') &&
 		 (*selector != '.') && (*selector != ':') &&
 		 (!IS_BLANK (selector)))
 	    *cur++ = *selector++;
-	  *cur++ = 0;
+	  *cur++ = EOS;
 	  cur = deb;
 	}
       else if (IS_BLANK (selector))
@@ -1507,30 +1476,30 @@ PSchema             gPres;
     }
 
   elem = ancestors[0];
-  if ((elem == NULL) || (*elem == 0))
+  if ((elem == NULL) || (*elem == EOS))
     elem = &class[0];
-  if (*elem == 0)
+  if (*elem == EOS)
     elem = &pseudoclass[0];
-  if (*elem == 0)
+  if (*elem == EOS)
     elem = &id[0];
-  if (*elem == 0)
+  if (*elem == EOS)
     return (selector);
 
    /*
     * set up the context block.
     */
   ctxt->box = 0;
-  if (class[0] != 0)
+  if (class[0] != EOS)
     {
       ctxt->class = &class[0];
       ctxt->classattr = HTML_ATTR_Class;
     }
-  else if (pseudoclass[0] != 0)
+  else if (pseudoclass[0] != EOS)
     {
       ctxt->class = &pseudoclass[0];
       ctxt->classattr = HTML_ATTR_PseudoClass;
     }
-  else if (id[0] != 0)
+  else if (id[0] != EOS)
     {
       ctxt->class = &id[0];
       ctxt->classattr = HTML_ATTR_ID;
@@ -1543,13 +1512,14 @@ PSchema             gPres;
 
   HTMLschema = TtaGetDocumentSSchema (doc);
   ctxt->type = ctxt->attr = ctxt->attrval = ctxt->attrelem = 0;
-  if (attrelemname[0] != EOS) {
-    GIType (attrelemname, &elType, doc);
-    ctxt->attrelem = elType.ElTypeNum;
-    /*** what about elType.ElSSchema ?  ***/
-    if (ctxt->attrelem == HTML_EL_BODY && elType.ElSSchema == HTMLschema)
-       ctxt->attrelem = HTML_EL_HTML;
-  }
+  if (attrelemname[0] != EOS)
+    {
+      GIType (attrelemname, &elType, doc);
+      ctxt->attrelem = elType.ElTypeNum;
+      /*** what about elType.ElSSchema ?  ***/
+      if (ctxt->attrelem == HTML_EL_BODY && elType.ElSSchema == HTMLschema)
+	ctxt->attrelem = HTML_EL_HTML;
+    }
   
   GIType (elem, &elType, doc);
   ctxt->type = elType.ElTypeNum;
@@ -1598,15 +1568,15 @@ PSchema             gPres;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTMLGenericStyle : parse and apply an HTML3 Style string.  
+   ParseHTMLGenericStyle : parse and apply an CSS Style string.  
    This function must be called only to in the context of        
    a generic style applying to class of element. The generic     
    presentation driver is used to reflect the new presentation.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLGenericStyle (char *selector, char *attrstr, Document doc, PSchema gPres)
+static void         ParseHTMLGenericStyle (char *selector, char *attrstr, Document doc, PSchema gPres)
 #else
-void                ParseHTMLGenericStyle (selector, attrstr, doc, gPres)
+static void         ParseHTMLGenericStyle (selector, attrstr, doc, gPres)
 char               *selector;
 char               *attrstr;
 Document            doc;
@@ -1662,7 +1632,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderTopWidth : parse an HTML3 BorderTopWidth
+   ParseCSSBorderTopWidth : parse an CSS BorderTopWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1681,7 +1651,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderRightWidth : parse an HTML3 BorderRightWidth
+   ParseCSSBorderRightWidth : parse an CSS BorderRightWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1700,7 +1670,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderBottomWidth : parse an HTML3 BorderBottomWidth
+   ParseCSSBorderBottomWidth : parse an CSS BorderBottomWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1719,7 +1689,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderLeftWidth : parse an HTML3 BorderLeftWidth
+   ParseCSSBorderLeftWidth : parse an CSS BorderLeftWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1738,7 +1708,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderWidth : parse an HTML3 BorderWidth
+   ParseCSSBorderWidth : parse an CSS BorderWidth
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1757,7 +1727,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderTop : parse an HTML3 BorderTop
+   ParseCSSBorderTop : parse an CSS BorderTop
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1776,7 +1746,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderRight : parse an HTML3 BorderRight
+   ParseCSSBorderRight : parse an CSS BorderRight
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1795,7 +1765,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderBottom : parse an HTML3 BorderBottom
+   ParseCSSBorderBottom : parse an CSS BorderBottom
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1814,7 +1784,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderLeft : parse an HTML3 BorderLeft
+   ParseCSSBorderLeft : parse an CSS BorderLeft
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1833,7 +1803,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderColor : parse an HTML3 border-color        
+   ParseCSSBorderColor : parse an CSS border-color        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1852,7 +1822,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorderStyle : parse an HTML3 border-style        
+   ParseCSSBorderStyle : parse an CSS border-style        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1871,7 +1841,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBorder : parse an HTML3 border        
+   ParseCSSBorder : parse an CSS border        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1890,7 +1860,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSClear : parse an HTML3 clear attribute string    
+   ParseCSSClear : parse an CSS clear attribute string    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSClear (PresentationTarget target,
@@ -1908,7 +1878,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSDisplay : parse an HTML3 display attribute string        
+   ParseCSSDisplay : parse an CSS display attribute string        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSDisplay (PresentationTarget target,
@@ -1961,7 +1931,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFloat : parse an HTML3 float attribute string    
+   ParseCSSFloat : parse an CSS float attribute string    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSFloat (PresentationTarget target,
@@ -1979,7 +1949,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSLetterSpacing : parse an HTML3 letter-spacing    
+   ParseCSSLetterSpacing : parse an CSS letter-spacing    
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1998,7 +1968,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStyleType : parse an HTML3 list-style-type
+   ParseCSSListStyleType : parse an CSS list-style-type
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2017,7 +1987,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStyleImage : parse an HTML3 list-style-image
+   ParseCSSListStyleImage : parse an CSS list-style-image
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2036,7 +2006,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStylePosition : parse an HTML3 list-style-position
+   ParseCSSListStylePosition : parse an CSS list-style-position
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2055,7 +2025,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSListStyle : parse an HTML3 list-style            
+   ParseCSSListStyle : parse an CSS list-style            
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2074,7 +2044,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMagnification : parse an HTML3 magnification     
+   ParseCSSMagnification : parse an CSS magnification     
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2090,7 +2060,7 @@ char               *attrstr;
    PresentationValue   pval;
 
    SKIP_BLANK (attrstr);
-   attrstr = ParseHTML3Unit (attrstr, &pval);
+   attrstr = ParseCSSUnit (attrstr, &pval);
    if ((pval.typed_data.unit == DRIVERP_UNIT_REL) && (pval.typed_data.value >= -10) &&
        (pval.typed_data.value <= 10))
      {
@@ -2115,7 +2085,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginLeft : parse an HTML3 margin-left          
+   ParseCSSMarginLeft : parse an CSS margin-left          
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2134,7 +2104,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginRight : parse an HTML3 margin-right        
+   ParseCSSMarginRight : parse an CSS margin-right        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2153,7 +2123,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMargin : parse an HTML3 margin attribute string. 
+   ParseCSSMargin : parse an CSS margin attribute string. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSMargin (PresentationTarget target,
@@ -2171,7 +2141,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSPaddingTop : parse an HTML3 PaddingTop
+   ParseCSSPaddingTop : parse an CSS PaddingTop
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2190,7 +2160,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSPaddingRight : parse an HTML3 PaddingRight
+   ParseCSSPaddingRight : parse an CSS PaddingRight
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2210,7 +2180,7 @@ char               *attrstr;
 
 
 /*----------------------------------------------------------------------
-   ParseCSSPaddingBottom : parse an HTML3 PaddingBottom
+   ParseCSSPaddingBottom : parse an CSS PaddingBottom
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2229,7 +2199,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSPaddingLeft : parse an HTML3 PaddingLeft
+   ParseCSSPaddingLeft : parse an CSS PaddingLeft
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2248,7 +2218,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSPadding : parse an HTML3 padding attribute string. 
+   ParseCSSPadding : parse an CSS padding attribute string. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSPadding (PresentationTarget target,
@@ -2266,7 +2236,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSTextAlign : parse an HTML3 text-align            
+   ParseCSSTextAlign : parse an CSS text-align            
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2333,7 +2303,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSTextIndent : parse an HTML3 text-indent          
+   ParseCSSTextIndent : parse an CSS text-indent          
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2349,7 +2319,7 @@ char               *attrstr;
    PresentationValue   pval;
 
    SKIP_BLANK (attrstr);
-   attrstr = ParseHTML3Unit (attrstr, &pval);
+   attrstr = ParseCSSUnit (attrstr, &pval);
    if (pval.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
 	fprintf (stderr, "invalid font size\n");
@@ -2366,7 +2336,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSTextTransform : parse an HTML3 text-transform    
+   ParseCSSTextTransform : parse an CSS text-transform    
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2385,7 +2355,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSVerticalAlign : parse an HTML3 vertical-align    
+   ParseCSSVerticalAlign : parse an CSS vertical-align    
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2404,7 +2374,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSWhiteSpace : parse an HTML3 white-space          
+   ParseCSSWhiteSpace : parse an CSS white-space          
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2436,7 +2406,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSWordSpacing : parse an HTML3 word-spacing        
+   ParseCSSWordSpacing : parse an CSS word-spacing        
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2455,7 +2425,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFont : parse an HTML3 font attribute string      
+   ParseCSSFont : parse an CSS font attribute string      
    we expect the input string describing the attribute to be     
    !!!!!!                                                  
   ----------------------------------------------------------------------*/
@@ -2475,7 +2445,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontSize : parse an HTML3 font size attr string  
+   ParseCSSFontSize : parse an CSS font size attr string  
    we expect the input string describing the attribute to be     
    xx-small, x-small, small, medium, large, x-large, xx-large      
    or an absolute size, or an imcrement relative to the parent     
@@ -2537,7 +2507,7 @@ char               *attrstr;
      }
    else
      {
-	attrstr = ParseHTML3Unit (attrstr, &pval);
+	attrstr = ParseCSSUnit (attrstr, &pval);
 	if (pval.typed_data.unit == DRIVERP_UNIT_INVALID)
 	  {
 	     fprintf (stderr, "invalid font size\n");
@@ -2554,7 +2524,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontFamily : parse an HTML3 font family string   
+   ParseCSSFontFamily : parse an CSS font family string   
    we expect the input string describing the attribute to be     
    a common generic font style name                                
   ----------------------------------------------------------------------*/
@@ -2620,7 +2590,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontWeight : parse an HTML3 font weight string   
+   ParseCSSFontWeight : parse an CSS font weight string   
    we expect the input string describing the attribute to be     
    extra-light, light, demi-light, medium, demi-bold, bold, extra-bold
    or a number encoding for the previous values                       
@@ -2719,7 +2689,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFontVariant : parse an HTML3 font variant string     
+   ParseCSSFontVariant : parse an CSS font variant string     
    we expect the input string describing the attribute to be     
    normal or small-caps
   ----------------------------------------------------------------------*/
@@ -2788,7 +2758,7 @@ char               *attrstr;
 
 
 /*----------------------------------------------------------------------
-   ParseCSSFontStyle : parse an HTML3 font style string     
+   ParseCSSFontStyle : parse an CSS font style string     
    we expect the input string describing the attribute to be     
    italic, oblique or normal                         
   ----------------------------------------------------------------------*/
@@ -2880,7 +2850,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSLineSpacing : parse an HTML3 font leading string 
+   ParseCSSLineSpacing : parse an CSS font leading string 
    we expect the input string describing the attribute to be     
    value% or value                                               
   ----------------------------------------------------------------------*/
@@ -2896,7 +2866,7 @@ char               *attrstr;
 {
    PresentationValue   lead;
 
-   attrstr = ParseHTML3Unit (attrstr, &lead);
+   attrstr = ParseCSSUnit (attrstr, &lead);
    if (lead.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
 	MSG ("invalid line spacing\n");
@@ -2911,7 +2881,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSTextDecoration : parse an HTML3 text decor string   
+   ParseCSSTextDecoration : parse an CSS text decor string   
    we expect the input string describing the attribute to be     
    underline, overline, line-through, box, shadowbox, box3d,       
    cartouche, blink or none                                        
@@ -2994,7 +2964,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSColor : parse an HTML3 color attribute string    
+   ParseCSSColor : parse an CSS color attribute string    
    we expect the input string describing the attribute to be     
    either a color name, a 3 tuple or an hexadecimal encoding.    
    The color used will be approximed from the current color      
@@ -3140,7 +3110,7 @@ PresentationValue  *val;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSWidth : parse an HTML3 width attribute           
+   ParseCSSWidth : parse an CSS width attribute           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSWidth (PresentationTarget target,
@@ -3176,7 +3146,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginTop : parse an HTML3 margin-top attribute  
+   ParseCSSMarginTop : parse an CSS margin-top attribute  
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -3197,7 +3167,7 @@ char               *attrstr;
    /*
     * first parse the attribute string
     */
-   attrstr = ParseHTML3Unit (attrstr, &margin);
+   attrstr = ParseCSSUnit (attrstr, &margin);
    if (margin.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
 	MSG ("invalid margin top\n");
@@ -3209,7 +3179,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginBottom : parse an HTML3 margin-bottom      
+   ParseCSSMarginBottom : parse an CSS margin-bottom      
    attribute                                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3229,7 +3199,7 @@ char               *attrstr;
    /*
     * first parse the attribute string
     */
-   attrstr = ParseHTML3Unit (attrstr, &margin);
+   attrstr = ParseCSSUnit (attrstr, &margin);
    if (margin.typed_data.unit == DRIVERP_UNIT_INVALID)
      {
 	MSG ("invalid margin top\n");
@@ -3241,7 +3211,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSHeight : parse an HTML3 height attribute                 
+   ParseCSSHeight : parse an CSS height attribute                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSHeight (PresentationTarget target,
@@ -3267,13 +3237,13 @@ char               *attrstr;
      }
    /*
     * read the value, and if necessary convert to point size
-    attrstr = ParseHTML3Unit(attrstr, &new_height, &unit);
+    attrstr = ParseCSSUnit(attrstr, &new_height, &unit);
     */
    return (attrstr);
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSForeground : parse an HTML3 foreground attribute 
+   ParseCSSForeground : parse an CSS foreground attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSForeground (PresentationTarget target,
@@ -3302,7 +3272,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundColor : parse an HTML3 background color attribute 
+   ParseCSSBackgroundColor : parse an CSS background color attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBackgroundColor (PresentationTarget target,
@@ -3476,7 +3446,7 @@ void *extra;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundImage : parse an HTML3 BackgroundImage
+   ParseCSSBackgroundImage : parse an CSS BackgroundImage
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3580,7 +3550,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundRepeat : parse an HTML3 BackgroundRepeat
+   ParseCSSBackgroundRepeat : parse an CSS BackgroundRepeat
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3633,7 +3603,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundAttachment : parse an HTML3 BackgroundAttachment
+   ParseCSSBackgroundAttachment : parse an CSS BackgroundAttachment
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3652,7 +3622,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackgroundPosition : parse an HTML3 BackgroundPosition
+   ParseCSSBackgroundPosition : parse an CSS BackgroundPosition
    attribute string.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3671,7 +3641,7 @@ char               *attrstr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSBackground : parse an HTML3 background attribute 
+   ParseCSSBackground : parse an CSS background attribute 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *ParseCSSBackground (PresentationTarget target,
@@ -3891,7 +3861,7 @@ PSchema             gPres;
 }
 
 /*----------------------------------------------------------------------
-   ParseHTMLClass : parse an HTML3 Class string                    
+   ParseHTMLClass : parse an CSS Class string                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ParseHTMLClass (Element elem, char *attrstr, Document doc)
@@ -4135,8 +4105,8 @@ Document            doc;
 
 #endif
 
-   elHtmlName = GetHTML3Name (elem, doc);
-   GetHTML3Names (elem, doc, &names[0], MAX_DEEP);
+   elHtmlName = GetCSSName (elem, doc);
+   GetCSSNames (elem, doc, &names[0], MAX_DEEP);
 
 #ifdef DEBUG_STYLES
    fprintf (stderr, "EvaluateClassContext(%s,%s,%s,%d)\n",
@@ -4436,41 +4406,51 @@ Element             elem;
 Document            doc;
 #endif
 {
-   Attribute           at;
-   AttributeType       atType;
-   int                 len;
-   char                name[100];
+  Attribute           attr;
+  AttributeType       attrType;
+  Element             el;
+  int                 len;
+  char                name[100], value[100];
 
-   if (elClass == NULL)
-      return;
+  if (elClass == NULL)
+    return;
 
-   /*
-    * get the name of the class.
-    */
-   atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   atType.AttrTypeNum = HTML_ATTR_Selector;
-
-   at = TtaGetAttribute (elClass, atType);
-   if (at)
+   /* get the name of the class */
+   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+   attrType.AttrTypeNum = HTML_ATTR_Selector;
+   attr = TtaGetAttribute (elClass, attrType);
+   if (attr)
      {
 	len = 100;
-	TtaGiveTextAttributeValue (at, name, &len);
-     }
-   else
-     {
-#ifdef AMAYA_DEBUG
-	fprintf (stderr, "RemoveStyleRule(%d), invalid element\n", doc);
-#endif
-	return;
-     }
+	TtaGiveTextAttributeValue (attr, name, &len);
 #ifdef DEBUG_STYLES
-   fprintf (stderr, "RemoveStyleRule(%d,%s)\n", doc, name);
+	fprintf (stderr, "RemoveStyleRule(%d,%s)\n", doc, name);
 #endif
+	/* search this class in the whole document */
+	el = TtaGetMainRoot (doc);
+	attrType.AttrTypeNum = HTML_ATTR_Class;
+	while (el != NULL)
+	  {
+	    TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+	    if (attr != NULL)
+	      {
+		len = 100;
+		TtaGiveTextAttributeValue (attr, value, &len);
+		if (!strcmp (value, name))
+		  {
+		    TtaRemoveAttribute (el, attr, doc);
+		    DeleteSpanIfNoAttr (el, doc);
+		  }
+	      }
+	  }
 
-   /*
-    * Remove the element fom the StyleRule List.
-    */
-   TtaRemoveTree (elClass, doc);
+	/* Remove the element fom the StyleRule List */
+	TtaRemoveTree (elClass, doc);
+     }
+#ifdef AMAYA_DEBUG
+   else
+     fprintf (stderr, "RemoveStyleRule(%d), invalid element\n", doc);
+#endif
 }
 
 /*----------------------------------------------------------------------
@@ -4486,8 +4466,8 @@ Document          doc;
 boolean           removeSpan;
 #endif
 {
-   Attribute            at;
-   AttributeType        atType;
+   Attribute            attr;
+   AttributeType        attrType;
    PresentationTarget   target;
    SpecificContextBlock block;
    PresentationContext  context;
@@ -4501,30 +4481,30 @@ boolean           removeSpan;
       return;
 
 #ifdef DEBUG_STYLES
-   elHtmlName = GetHTML3Name (elem, doc);
+   elHtmlName = GetCSSName (elem, doc);
    fprintf (stderr, "RemoveStyle(%s,%d)\n", elHtmlName, doc);
 #endif
 
    /*
     * remove any Class or ImplicitClass associated to the element.
     */
-   atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   atType.AttrTypeNum = HTML_ATTR_Class;
+   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+   attrType.AttrTypeNum = HTML_ATTR_Class;
 
-   at = TtaGetAttribute (elem, atType);
-   if (at != NULL)
+   attr = TtaGetAttribute (elem, attrType);
+   if (attr != NULL)
      {
-	TtaRemoveAttribute (elem, at, doc);
+	TtaRemoveAttribute (elem, attr, doc);
 	if (removeSpan)
 	  DeleteSpanIfNoAttr (elem, doc);
      }
-   atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   atType.AttrTypeNum = HTML_ATTR_Style_;
+   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+   attrType.AttrTypeNum = HTML_ATTR_Style_;
 
-   at = TtaGetAttribute (elem, atType);
-   if (at != NULL)
+   attr = TtaGetAttribute (elem, attrType);
+   if (attr != NULL)
      {
-	TtaRemoveAttribute (elem, at, doc);
+	TtaRemoveAttribute (elem, attr, doc);
 	if (removeSpan)
 	  DeleteSpanIfNoAttr (elem, doc);
      }

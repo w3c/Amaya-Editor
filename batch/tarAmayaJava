@@ -68,6 +68,7 @@ do
    Thot/batch/MachineType \
    Thot/amaya/COPYRIGHT \
    Thot/amaya/COPYRIGHT.html \
+   Thot/amaya/*.gif \
    Thot/amaya/HTML.STR \
    Thot/amaya/HTML.conf \
    Thot/amaya/HTML.trans \

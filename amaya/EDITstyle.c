@@ -44,14 +44,11 @@
 
 static char         ClassList[50 * 80];
 static int          NbClass = 0;
-
 static char         CurrentClass[80];
 static Element      ClassReference;
 static Document     DocReference;
-
 static char         AClassList[50 * 80];
 static int          NbAClass = 0;
-
 static char         CurrentAClass[80];
 static Element      AClassFirstReference;
 static Element      AClassLastReference;
@@ -71,8 +68,8 @@ Document            doc;
 #endif /* __STDC__ */
 {
    Element             cour;
-   Attribute           at;
-   AttributeType       atType;
+   Attribute           attr;
+   AttributeType       attrType;
    char               *a_class = CurrentAClass;
 
 #ifdef DEBUG_STYLES
@@ -102,41 +99,34 @@ Document            doc;
 		break;
 	     TtaNextSibling (&cour);
 	  }
-	/*
-	RedisplayDocument (doc);
-	 */
 	return;
      }
-   /* loop on each selected element. */
+
+   /* loop on each selected element */
    cour = AClassFirstReference;
    while (cour != NULL)
      {
 	/* remove any Style attribute left */
 	RemoveStyle (cour, doc, FALSE);
 
-	/* set the Class attribute of the element. */
-
-	atType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	/* set the Class attribute of the element */
+	attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
 	if (!IsImplicitClassName (CurrentAClass, doc))
 	  {
-	     atType.AttrTypeNum = HTML_ATTR_Class;
-	     at = TtaGetAttribute (cour, atType);
-	     if (!at)
+	     attrType.AttrTypeNum = HTML_ATTR_Class;
+	     attr = TtaGetAttribute (cour, attrType);
+	     if (!attr)
 	       {
-		  at = TtaNewAttribute (atType);
-		  TtaAttachAttribute (cour, at, doc);
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (cour, attr, doc);
 	       }
-	     TtaSetAttributeText (at, CurrentAClass, cour, doc);
+	     TtaSetAttributeText (attr, CurrentAClass, cour, doc);
 	  }
 	/* jump on next element until last one is reached. */
 	if (cour == AClassLastReference)
 	   break;
 	TtaNextSibling (&cour);
      }
-
-   /*last, update the display.
-   RedisplayDocument (doc);
-    */
 }
 
 /*----------------------------------------------------------------------
@@ -144,15 +134,15 @@ Document            doc;
    attributes of the selected elements                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                UpdateClass (Document doc)
+static void         UpdateClass (Document doc)
 #else  /* __STDC__ */
-void                UpdateClass (doc)
+static void         UpdateClass (doc)
 Document            doc;
 
 #endif /* __STDC__ */
 {
-   Attribute           at;
-   AttributeType       atType;
+   Attribute           attr;
+   AttributeType       attrType;
    int                 len, base;
    char                stylestring[1000];
    char               *a_class;
@@ -169,27 +159,23 @@ Document            doc;
    /* change the selected element to be of the new class. */
    RemoveStyle (ClassReference, doc, FALSE);
 
-   atType.AttrSSchema = TtaGetDocumentSSchema (doc);
+   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
    if (!IsImplicitClassName (CurrentClass, doc))
      {
 	a_class = &CurrentClass[0];
 	if (*a_class == '.')
 	   a_class++;
-	atType.AttrTypeNum = HTML_ATTR_Class;
-	at = TtaGetAttribute (ClassReference, atType);
-	if (!at)
+	attrType.AttrTypeNum = HTML_ATTR_Class;
+	attr = TtaGetAttribute (ClassReference, attrType);
+	if (!attr)
 	  {
-	     at = TtaNewAttribute (atType);
-	     TtaAttachAttribute (ClassReference, at, doc);
+	     attr = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (ClassReference, attr, doc);
 	  }
-	TtaSetAttributeText (at, a_class, ClassReference, doc);
+	TtaSetAttributeText (attr, a_class, ClassReference, doc);
      }
    /* parse and apply this new CSS to the current document. */
    ParseHTMLStyleHeader (NULL, &stylestring[0], doc, TRUE);
-
-   /* last, update the display.
-   RedisplayDocument (doc);
-    */
 }
 
 /*----------------------------------------------------------------------
@@ -208,17 +194,17 @@ char               *first;
 {
    ElementType         elType;
    Element             el;
-   Attribute           at;
-   AttributeType       atType;
+   Attribute           attr;
+   AttributeType       attrType;
+   char                val[100];
+   char               *ptr;
    int                 free = size;
    int                 len;
    int                 nb = 0;
    int                 index = 0;
-   char                val[100];
    int                 valen;
-   char               *ptr;
 
-   /* ad the first element if specified. */
+   /* add the first element if specified */
    buf[0] = 0;
    if (first)
      {
@@ -235,14 +221,14 @@ char               *first;
 
    while (el != NULL)
      {
-	atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-	atType.AttrTypeNum = HTML_ATTR_Selector;
+	attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+	attrType.AttrTypeNum = HTML_ATTR_Selector;
 
-	at = TtaGetAttribute (el, atType);
-	if (at)
+	attr = TtaGetAttribute (el, attrType);
+	if (attr)
 	  {
 	     valen = 100;
-	     TtaGiveTextAttributeValue (at, &val[0], &valen);
+	     TtaGiveTextAttributeValue (attr, &val[0], &valen);
 
              /*
 	      * if the selector uses # this is an ID so don't show it
@@ -250,8 +236,10 @@ char               *first;
 	      * not a class name.
 	      */
 	     ptr = &val[0];
-	     while ((*ptr != '\0') && (*ptr != '#') && (*ptr != ' ')) ptr++;
-	     if (*ptr == '\0') {
+	     while ((*ptr != EOS) && (*ptr != '#') && (*ptr != ' '))
+	       ptr++;
+	     if (*ptr == EOS)
+	       {
 		 /*
 		  * Type name are not class names, remove them.
 		  * Don't list the first field twice, too.
@@ -260,13 +248,13 @@ char               *first;
 		 if ((elType.ElTypeNum == 0) && (strcmp (val, first)))
 		   {
 		      len = free;
-		      TtaGiveTextAttributeValue (at, &buf[index], &len);
+		      TtaGiveTextAttributeValue (attr, &buf[index], &len);
 		      len++;
 		      free -= len;
 		      index += len;
 		      nb++;
 		   }
-	     }
+	       }
 	     
 	  }
 	/* get next StyleRule */
@@ -291,10 +279,9 @@ View                view;
 
 #endif /* __STDC__ */
 {
-  Attribute           at;
-  AttributeType       atType;
+  Attribute           attr;
+  AttributeType       attrType;
   Element             last_elem;
-  Element             parent;
   ElementType         elType;
   char                a_class[50];
   char               *elHtmlName;
@@ -325,7 +312,7 @@ View                view;
   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
     ClassReference = TtaGetParent (ClassReference);
   /* updating the class name selector. */
-  elHtmlName = GetHTML3Name (ClassReference, doc);
+  elHtmlName = GetCSSName (ClassReference, doc);
   
 #  ifndef _WINDOWS
   TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
@@ -340,14 +327,14 @@ View                view;
 #  endif /* !_WINDOWS */
   
   /* preselect the entry corresponding to the class of the element. */
-  atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-  atType.AttrTypeNum = HTML_ATTR_Class;
+  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrType.AttrTypeNum = HTML_ATTR_Class;
   
-  at = TtaGetAttribute (ClassReference, atType);
-  if (at)
+  attr = TtaGetAttribute (ClassReference, attrType);
+  if (attr)
     {
       len = 50;
-      TtaGiveTextAttributeValue (at, a_class, &len);
+      TtaGiveTextAttributeValue (attr, a_class, &len);
 #   ifndef _WINDOWS
       TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
 #   endif /* _WINDOWS */
@@ -382,8 +369,8 @@ View                view;
 
 #endif /* __STDC__ */
 {
-  Attribute           at;
-  AttributeType       atType;
+  Attribute           attr;
+  AttributeType       attrType;
   Element             cour, parent;
   ElementType         elType;
   char                a_class[50];
@@ -474,13 +461,13 @@ View                view;
 #  endif /* !_WINDOWS */
 
   /* preselect the entry corresponding to the class of the element. */
-  atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-  atType.AttrTypeNum = HTML_ATTR_Class;
-  at = TtaGetAttribute (AClassFirstReference, atType);
-  if (at)
+  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrType.AttrTypeNum = HTML_ATTR_Class;
+  attr = TtaGetAttribute (AClassFirstReference, attrType);
+  if (attr)
     {
       len = 50;
-      TtaGiveTextAttributeValue (at, a_class, &len);
+      TtaGiveTextAttributeValue (attr, a_class, &len);
       TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
       strcpy (CurrentAClass, a_class);
     }
