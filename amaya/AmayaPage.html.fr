@@ -53,13 +53,13 @@ height="349">
   style="font: 24pt helvetica; font-weight: bold; fill: #488B9B;">AMAYA
   </text>
   <text id="version" x="344px" y="306"
-  style="font: bold 16pt italic; fill: #0192BF;">Release 4.2
+  style="font: bold 16pt italic; fill: #0192BF;">Release 4.2.1
   </text>
   <g id="polygonMask" style="stroke: none;">
     <polygon style="fill: #0192BF;" points="30,60  30,230  108,208"
              stroke="1"/>
     <foreignObject y="156px" x="35px">
-       xmlns="http://www.w3.org/1999/xhtml"
+      xmlns="http://www.w3.org/1999/xhtml" 
       <math xmlns="http://www.w3.org/1998/Math/MathML"
       style="color: #FFFFFF; font-family: times">
         <mrow>
