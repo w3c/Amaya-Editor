@@ -4455,7 +4455,9 @@ static void     FreeExpatParser ()
 static void InitializeExpatParser (CHARSET charset)
 {  
   int        paramEntityParsing;
+#ifdef IV
   char       msgBuffer[MaxMsgLength];
+#endif
 
   /* Enable parsing of parameter entities */
   paramEntityParsing = XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE;
