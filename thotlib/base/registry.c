@@ -31,7 +31,7 @@
 #include "application.h"
 #define THOT_EXPORT
 #include "platform_tv.h"
-
+#include "applicationapi_f.h"
 #include "fileaccess_f.h"
 #include "memory_f.h"
 #include "platform_f.h"
@@ -1140,10 +1140,7 @@ static void         InitEnviron ()
        if (!TtaMakeDirectory (pT))
 	 {
 	   fprintf (stderr, "Couldn't create directory %s\n", pT);
-#ifdef _GTK
-	   gtk_exit (1);
-#endif /* _GTK */	
-	   exit (1);
+	   ThotExit (1);
 	 }	 
        /* update the registry entry */
        TtaSetEnvString ("TMPDIR", pT, TRUE);
@@ -1199,10 +1196,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
 #else  /* _WINDOWS */
       fprintf (stderr, "TtaInitializeAppRegistry called with invalid argv[0] value\n");
 #endif /* _WINDOWS */
-#ifdef _GTK
-      gtk_exit (1);
-#endif /* _GTK */	
-      exit (1);
+      ThotExit (1);
     }
 
   /*
@@ -1241,10 +1235,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
       if (my_path == NULL)
 	{
 	  fprintf (stderr, "TtaInitializeAppRegistry cannot found PATH environment\n");
-#ifdef _GTK
-	  gtk_exit (1);
-#endif /* _GTK */	
-	  exit (1);
+	  ThotExit (1);
 	}
       /*
        * make our own copy of the string, in order to preserve the
@@ -1265,10 +1256,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	{
 	  fprintf (stderr, "TtaInitializeAppRegistry internal error\n");
 	  fprintf (stderr, "\tcannot find path to binary : %s\n", appArgv0);
-#ifdef _GTK
-	  gtk_exit (1);
-#endif /* _GTK */	
-	  exit (1);
+	  ThotExit (1);
 	}
     }
    
@@ -1422,10 +1410,7 @@ void TtaInitializeAppRegistry (char *appArgv0)
       else
 	{
 	  fprintf (stderr, "Cannot find THOTDIR\n");
-#ifdef _GTK
-	  gtk_exit (1);
-#endif /* _GTK */	
-	  exit (1);
+	  ThotExit (1);
 	} 
      }
    
