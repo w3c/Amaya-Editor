@@ -800,7 +800,6 @@ int          *paper;
   LPDEVNAMES  lpDevNames;
   LPDEVMODE   lpDevMode;
   LPSTR       lpDriverName, lpDeviceName, lpPortName;
-  int         palSize;
 
   /* Display the PRINT dialog box. */
   if (!LpInitialized)

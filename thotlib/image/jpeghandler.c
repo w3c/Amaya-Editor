@@ -244,9 +244,9 @@ int                 ErrorNumber;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap          JpegCreate (CHAR_T *fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
+Drawable            JpegCreate (CHAR_T *fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
 #else  /* __STDC__ */
-ThotBitmap          JpegCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
+Drawable            JpegCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
 CHAR_T             *fn;
 PictInfo           *imageDesc;
 int                *xif;
@@ -281,7 +281,7 @@ int                 zoom;
 #    ifdef _WINDOWS 
      WinErrorBox (NULL, TEXT("JpegCreate(1): buffer == 0x00000000"));
 #    endif /* _WINDOWS */
-    return (ThotBitmapNone);
+    return (NULL);
   }
 
   if (zoom != 0 && *xif == 0 && *yif == 0)
@@ -312,7 +312,7 @@ int                 zoom;
 # endif /* _WIN_PRINT */
 
   if (buffer == NULL)
-    return (ThotBitmapNone);	
+    return (NULL);	
 
   pixmap = DataToPixmap (buffer, w, h, 100, colrs, &(imageDesc->PicColors));
   if (imageDesc->PicColors != NULL)
@@ -322,7 +322,7 @@ int                 zoom;
 #    ifdef _WINDOWS
      WinErrorBox (NULL, TEXT("JpegCreate(2): pixmap == 0x00000000"));
 #    endif /* _WINDOWS */
-    return (ThotBitmapNone);
+    return (NULL);
   }
   else
     {
@@ -330,7 +330,7 @@ int                 zoom;
       *hif = h;
       *xif = 0;
       *yif = 0;
-      return ((ThotBitmap) pixmap);
+      return ((Drawable) pixmap);
     }
 }
 

@@ -25,7 +25,8 @@ THOT_EXPORT int             currentExtraHandler;
 THOT_EXPORT ThotGC          GCpicture;
 THOT_EXPORT Pixmap          EpsfPictureLogo;
 
-/* bg colors used by Windows */#ifdef _WINDOWS
+/* bg colors used by Windows */
+#ifdef _WINDOWS
 THOT_EXPORT int             bgRed;
 THOT_EXPORT int             bgGreen;
 THOT_EXPORT int             bgBlue;

@@ -64,13 +64,20 @@ int                *height;
 int                 zoom;
 #endif /* __STDC__ */
 {
+# ifdef _WINDOWS
+  *width = 0;
+  *height = 0;
+  *wif = 0;
+  *hif = 0;
+  *xif = 0;
+  *yif = 0;
+  return (NULL);
+# else /* !_WINDOWS */
   int                 status;
   Pixmap              pixmap;
   XpmAttributes       att;
   unsigned long       valuemask = 0;
-# ifndef _WINDOWS
   char                fileNameStr[MAX_PATH];
-# endif /* !_WINDOWS */
 
   /* pixmap loading parameters passed to the library */
   att.valuemask = valuemask;
@@ -82,10 +89,8 @@ int                 zoom;
   att.numsymbols = 1;
   att.mask_pixel = BackGroundPixel;
 
-# ifndef _WINDOWS
   wc2iso_strcpy (fileNameStr, fn);
   status = XpmReadFileToPixmap (TtDisplay, TtRootWindow, fileNameStr, &pixmap, mask1, &att);
-# endif  /* _WINDOWS */
   /* return image dimensions */
   *width = att.width;
   *height = att.height;
@@ -120,12 +125,11 @@ int                 zoom;
       *yif = 0;
       
       /* frees the library's internal structures */
-#     ifndef _WINDOWS
       XpmFreeAttributes (&att);
-#     endif  /* _WINDOWS */
       att.valuemask = valuemask;/* reinitialises the value mask */
       return (Drawable) pixmap;
     }
+#     endif  /* _WINDOWS */
 }
 
 
@@ -150,19 +154,18 @@ FILE               *fd;
 unsigned long       BackGroundPixel;
 #endif /* __STDC__ */
 {
+#ifndef _WINDOWS 
    int                 delta;
    int                 xtmp, ytmp;
    float               Scx, Scy;
    register int        i;
    unsigned int       *pt;
-   UCHAR_T               pt1;
+   UCHAR_T             pt1;
    int                 x, y;
    int                 wim ;
-#  ifndef _WINDOWS 
    XpmAttributes       att;
    XpmInfo             info;
    ThotColorStruct     exactcolor;
-#  endif /* !_WINDOWS */
    int                 status;
    unsigned long       valuemask = 0;
    ThotColorStruct     colorTab[256];
@@ -179,10 +182,7 @@ unsigned long       BackGroundPixel;
    valuemask |= XpmHotspot;
    valuemask |= XpmCharsPerPixel;
 
-#  ifndef _WINDOWS
    status = XpmReadFileToXpmImage (fn, &image, &info);
-#  endif  /* _WINDOWS */
-
    if (status < XpmSuccess)
      return;
 
@@ -252,23 +252,18 @@ unsigned long       BackGroundPixel;
 	     colorTab[i].red = (unsigned char) red;
 	     colorTab[i].green = (unsigned char) green;
 	     colorTab[i].blue = (unsigned char) blue;
-#            ifndef _WINDOWS
 	     colorTab[i].pixel = i;
 	     /*NoneColor = i; */
 	     /*MaskSet = 1; */
-#            endif /* _WINDOWS */
 
 	  }
 	else
 	  {
-#            ifndef _WINDOWS
 	     XParseColor (TtDisplay, TtCmap, image.colorTable[i].c_color, &exactcolor);
 	     colorTab[i].pixel = i;
 	     colorTab[i].red = exactcolor.red;
 	     colorTab[i].green = exactcolor.green;
 	     colorTab[i].blue = exactcolor.blue;
-#            else  /* _WINDOWS */
-#            endif /* _WINDOWS */
 
 	  }
      }
@@ -303,11 +298,10 @@ unsigned long       BackGroundPixel;
    fprintf (fd, "\n");
    fprintf (fd, "grestore\n");
    fprintf (fd, "\n");
-#  ifndef _WINDOWS
    XpmFreeXpmInfo (&info);
    XpmFreeXpmImage (&image);
    att.valuemask = valuemask;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }			
 
 /*----------------------------------------------------------------------

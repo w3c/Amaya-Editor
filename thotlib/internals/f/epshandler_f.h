@@ -6,17 +6,17 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern ThotBitmap EpsCreate ( STRING fn,
-                              PictInfo *imageDesc,
-                              int *xif,
-                              int *yif,
-                              int *wif,
-                              int *hif,
-                              unsigned long BackGroundPixel,
-                              ThotBitmap *PicMask,
-                              int *width,
-                              int *height,
-                              int zoom );
+extern Drawable EpsCreate ( STRING fn,
+                            PictInfo *imageDesc,
+                            int *xif,
+                            int *yif,
+                            int *wif,
+                            int *hif,
+                            unsigned long BackGroundPixel,
+                            ThotBitmap *PicMask,
+                            int *width,
+                            int *height,
+                            int zoom );
 extern void EpsPrint ( STRING fn,
                        PictureScaling pres,
                        int xif,
@@ -33,17 +33,17 @@ extern ThotBool IsEpsFormat ( CHAR_T* fn );
 
 #else /* __STDC__ */
 
-extern ThotBitmap EpsCreate (/* STRING fn,
-                                PictInfo *imageDesc,
-                                int *xif,
-                                int *yif,
-                                int *wif,
-                                int *hif,
-                                unsigned long BackGroundPixel,
-                                ThotBitmap *PicMask,
-                                int *width,
-                                int *height,
-                                int zoom */);
+extern Drawable EpsCreate (/* STRING fn,
+                              PictInfo *imageDesc,
+                              int *xif,
+                              int *yif,
+                              int *wif,
+                              int *hif,
+                              unsigned long BackGroundPixel,
+                              ThotBitmap *PicMask,
+                              int *width,
+                              int *height,
+                              int zoom */);
 extern void EpsPrint (/* STRING fn,
                          PictureScaling pres,
                          int xif,

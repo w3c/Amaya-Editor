@@ -39,7 +39,7 @@
 #include "font_f.h"
 #include "frame_f.h"
 #include "units_f.h"
-#include "windowdisplay_f.h"
+#include "xwindowdisplay_f.h"
 
 
 /*----------------------------------------------------------------------

@@ -65,7 +65,7 @@ int                 X, Y;
 #include "memory_f.h"
 #include "inites_f.h"
 #include "units_f.h"
-#include "windowdisplay_f.h"
+#include "xwindowdisplay_f.h"
 
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
@@ -229,42 +229,42 @@ int          y2;
 int          fg;
 #endif /* __STDC__ */
 {
-  HPEN     pen;
+  HPEN     hPen;
   HPEN     hOldPen;
 
   if (thick == 0)
-    pen = CreatePen (PS_NULL, thick, ColorPixel (fg));
+    hPen = CreatePen (PS_NULL, thick, ColorPixel (fg));
   else
     {
       switch (style)
 	{
 	case 3:
-	  pen = CreatePen (PS_DOT, thick, ColorPixel (fg));
+	  hPen = CreatePen (PS_DOT, thick, ColorPixel (fg));
 	  break;
 	case 4:
-	  pen = CreatePen (PS_DASH, thick, ColorPixel (fg)); 
+	  hPen = CreatePen (PS_DASH, thick, ColorPixel (fg)); 
 	  break;
 	default:
-	  pen = CreatePen (PS_SOLID, thick, ColorPixel (fg));   
+	  hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg));   
 	  break;
 	}
     }
 #ifdef _WIN_PRINT
-  hOldPen = SelectObject (TtPrinterDC, pen);
+  hOldPen = SelectObject (TtPrinterDC, hPen);
   MoveToEx (TtPrinterDC, x1, y1, NULL);
   LineTo (TtPrinterDC, x2, y2);
 
   SelectObject (TtPrinterDC, hOldPen);
 #else /* _WIN_PRINT */
   WIN_GetDeviceContext (frame);
-  hOldPen = SelectObject (TtDisplay, pen);
+  hOldPen = SelectObject (TtDisplay, hPen);
   MoveToEx (TtDisplay, x1, y1, NULL);
   LineTo (TtDisplay, x2, y2);
 
   SelectObject (TtDisplay, hOldPen);
   WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-  if (!DeleteObject (pen))
+  if (!DeleteObject (hPen))
     WinErrorBox (WIN_Main_Wd, TEXT("DrawOneLine"));
 }
 

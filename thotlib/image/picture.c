@@ -1369,17 +1369,16 @@ int                 hlogo;
 {
 #ifndef _GTK
    Pixmap              pixmap;
+   Drawable            drawable;
    float               scaleX, scaleY;
    int                 x, y, w, h, xFrame, yFrame, wFrame, hFrame;
    int                 XOrg, YOrg, picXOrg, picYOrg;
 #ifdef _WINDOWS
-   ThotWindow          drawable;
    HDC                 hDc, hMemDc;
    POINT               lPt[2];
    HBITMAP             hOldBitmap;
 #else  /* _WINDOWS */
    CHAR_T              filename[255];
-   Drawable            drawable;
    int                 fileNameWidth;
    int                 fnposx, fnposy;
 #endif /* !_WINDOWS */
@@ -1548,19 +1547,15 @@ int                 frame;
 {
   PathBuffer          fileName;
   PictureScaling      pres;
+  Drawable            drawable;
   int                 typeImage;
   int                 picXArea, picYArea, picWArea, picHArea;
   int                 xTranslate, yTranslate, picXOrg, picYOrg;
   int                 xFrame, yFrame;
   ThotColor           BackGroundPixel;
-#ifdef _WINDOWS
-  ThotWindow          drawable;
 #ifdef _WIN_PRINT
   LPBITMAPINFO        lpBmpInfo;
 #endif /* _WIN_PRINT */
-#else  /* !_WINDOWS */
-  Drawable            drawable;
-#endif /* !_WINDOWS */
   
   if (w == 0 && h == 0)
     /* the picture is not visible */

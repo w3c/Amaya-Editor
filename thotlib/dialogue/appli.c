@@ -195,7 +195,7 @@ HWND hwndToolBar;
 #include "views_f.h"
 #include "viewcommands_f.h"
 #include "viewapi_f.h"
-#include "windowdisplay_f.h"
+#include "xwindowdisplay_f.h"
 
 /*----------------------------------------------------------------------
    FrameToView retourne, sous la forme qui convient a l'API Thot, 

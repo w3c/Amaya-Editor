@@ -888,9 +888,9 @@ int*            bg;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap PngCreate (STRING fn, PictInfo *imageDesc, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
+Drawable       PngCreate (STRING fn, PictInfo *imageDesc, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
 #else /* __STDC__ */
-ThotBitmap PngCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
+Drawable       PngCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
 STRING         fn;
 PictInfo      *imageDesc;
 int*           xif;
@@ -925,7 +925,7 @@ int            zoom;
   *width = w;
   *height = h;
   if (buffer == NULL) 
-     return (ThotBitmapNone);
+     return (NULL);
 
   if (zoom != 0 && *xif == 0 && *yif == 0)
     {
@@ -957,7 +957,7 @@ int            zoom;
 #     ifdef _WINDOWS
       WinErrorBox (NULL, TEXT("PngCreate: (1)"));
 #     endif /* _WINDOWS */
-    return (ThotBitmapNone);
+    return (NULL);
   }
 
   if (bg >= 0) {
@@ -978,14 +978,14 @@ int            zoom;
 #    ifdef _WINDOWS
      WinErrorBox (NULL, TEXT("PngCreate: (2)"));
 #    endif /* _WINDOWS */
-    return (ThotBitmapNone); 
+    return (NULL); 
   } else
     { 
       *wif = w;
       *hif = h;      
       *xif = 0;
       *yif = 0;
-      return (ThotBitmap) pixmap;
+      return (Drawable) pixmap;
     }
 }
 

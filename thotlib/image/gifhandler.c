@@ -1466,10 +1466,10 @@ ThotColorStruct     colrs[256];
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap          GifCreate (CHAR_T* fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1, int *width, int *height, int zoom)
+Drawable            GifCreate (CHAR_T* fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1, int *width, int *height, int zoom)
 #else  /* __STDC__ */
-ThotBitmap          GifCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
-CHAR_T*             fn;
+Drawable            GifCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
+STRING              fn;
 PictInfo           *imageDesc;
 int                *xif;
 int                *yif;
@@ -1509,7 +1509,7 @@ int                 zoom;
 #ifdef _WINDOWS
      WinErrorBox (NULL, TEXT("GifCreate(1): buffer == 0x00000000"));
 #endif /* _WINDOWS */
-     return (ThotBitmapNone);
+     return (NULL);
   }
 
   if (zoom != 0 && *xif == 0 && *yif == 0)
@@ -1549,7 +1549,7 @@ int                 zoom;
 #endif /* _WIN_PRINT */
   
   if (buffer == NULL)
-    return (ThotBitmapNone);	
+    return (NULL);	
 
   if (Gif89.transparent != -1)
     {
@@ -1574,14 +1574,14 @@ int                 zoom;
 #ifdef _WINDOWS
       WinErrorBox (NULL, TEXT("GifCreate(2): pixmap == 0x00000000"));
 #endif /* _WINDOWS */
-     return (ThotBitmapNone);
+     return (NULL);
    } else
      {
        *wif = w;
        *hif = h;
        *xif = 0;
        *yif = 0;
-       return (ThotBitmap) pixmap;
+       return (Drawable) pixmap;
      }
 }
 

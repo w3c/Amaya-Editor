@@ -44,7 +44,7 @@
 #include "font_f.h"
 #include "frame_f.h"
 #include "picture_f.h"
-#include "windowdisplay_f.h"
+#include "xwindowdisplay_f.h"
 
 /*----------------------------------------------------------------------
    GetXYOrg : do a coordinate shift related to current frame.

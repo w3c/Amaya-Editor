@@ -107,56 +107,62 @@ TypeUnit unit;
    if (alphabet != 'L' && alphabet != 'G' && alphabet != 'g')
       return NULL;
 
-   if (alphabet == 'g' || alphabet == 'G') {
+   if (alphabet == 'g' || alphabet == 'G')
+   {
       family    = 's';
       highlight = 0 ;
    }
 
-   switch (family) {
-          case 'T':
-          case 't':
-               sprintf (&WIN_lpszFace[0], "Times New Roman");
-               break;
+   switch (family)
+   {
+     case 'T':
+     case 't':
+       sprintf (&WIN_lpszFace[0], "Times New Roman");
+       break;
 
-          case 'H':
-          case 'h':
-               sprintf (&WIN_lpszFace[0], "Arial");
-               break;
+     case 'H':
+     case 'h':
+       sprintf (&WIN_lpszFace[0], "Arial");
+       break;
 
-          case 'C':
-          case 'c':
-               sprintf (&WIN_lpszFace[0], "Courier New");
-               break;
+     case 'C':
+     case 'c':
+       sprintf (&WIN_lpszFace[0], "Courier New");
+       break;
 
-          case 'S':
-          case 's':
-               sprintf (&WIN_lpszFace[0], "Symbol");
-               break;
+     case 'S':
+     case 's':
+       sprintf (&WIN_lpszFace[0], "Symbol");
+       break;
 
-          default:
-               return NULL;
+     default:
+       return NULL;
    }
 
-   switch (StylesTable[highlight]) {
-          case 'r':
-               break;
+   switch (StylesTable[highlight])
+   {
+     case 'r':
+       break;
 
-          case 'i':
-          case 'o':
-               WIN_fdwItalic = TRUE;
-               break;
+     case 'i':
+     case 'o':
+       WIN_fdwItalic = TRUE;
+       break;
 
-          case 'b':
-          case 'g':
-          case 'q':
-               WIN_fnWeight = FW_BOLD;
-               break;
+     case 'b':
+     case 'g':
+     case 'q':
+       WIN_fnWeight = FW_BOLD;
+       break;
 
-          default:
-               return NULL;
+     default:
+       return NULL;
    }
 
-   WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 83);
+   if (unit == UnPixel)
+     WIN_nHeight = size;
+   else
+     WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 83);
    iso2wc_strcpy (lpszFace, WIN_lpszFace);
    hFont = CreateFont (WIN_nHeight, WIN_nWidth, 0, 0, WIN_fnWeight,
                        WIN_fdwItalic, WIN_fdwUnderline, WIN_fdwStrikeOut,
@@ -164,10 +170,8 @@ TypeUnit unit;
                        PROOF_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
                        lpszFace);
 
-   if (hFont == NULL) {
+   if (hFont == NULL)
       WinErrorBox (WIN_Main_Wd, TEXT("WIN_LoadFont"));
-   } 
-
    return (hFont);
 }
 
@@ -211,7 +215,8 @@ ptrfont font;
 		  } 
    }
 
-   if (currentActiveFont == (HFONT)0) {
+   if (currentActiveFont == (HFONT)0)
+   {
       currentActiveFont = WIN_LoadFont (font->alphabet, font->family, font->highlight, font->size, 0);
       if (currentActiveFont == (HFONT)0)
          WinErrorBox (NULL, TEXT("WinLoadFont (3)"));

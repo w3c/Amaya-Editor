@@ -84,7 +84,7 @@ typedef COLORREF       ThotColor;
 typedef COLORREF       Pixel;
 typedef void*          Pixmap;
 typedef HCURSOR        ThotCursor;
-typedef HBITMAP        Drawable;
+typedef HWND           Drawable;
 typedef POINT          ThotPoint;
 typedef MSG            ThotEvent;
 typedef MSG            ThotKeyEvent;
