@@ -64,6 +64,14 @@ ELEMENTS
 
 ATTRIBUTES
 
+   Language:
+	BEGIN
+	AttrCreate.Post -> AttrLangCreated;
+	AttrDelete.Pre  -> AttrLangShouldBeDeleted;
+	AttrDelete.Post -> AttrLangDeleted;
+	AttrModify.Post -> AttrLangModified;
+	END;
+
    id:
         BEGIN
         AttrCreate.Post -> UpdateAttrID;

@@ -595,7 +595,6 @@ ThotBool ChangePRule (NotifyPresentation *event)
   return (ret);
 }
 
-
 /*----------------------------------------------------------------------
   PRuleDeleted
   A specific PRule has been deleted by the user for a given element
@@ -607,29 +606,39 @@ void PRuleDeleted (NotifyPresentation * event)
   SetStyleAttribute (event->document, event->element);
 }
 
-
 /*----------------------------------------------------------------------
  AttrLangDeleted
  A Lang attribute has been deleted
  -----------------------------------------------------------------------*/
 void AttrLangDeleted (NotifyAttribute *event)
 {
-   Element	 firstChild, lastChild;
-   AttributeType attrType;
-   Attribute	 attr;
+  Element	 elem, firstChild, lastChild;
+  ElementType    elType;
+  AttributeType  attrType;
+  Attribute	 attr;
 
+  elem = event->element;
+  elType = TtaGetElementType (elem);
   /* if the element is a SPAN without any other attribute, remove the SPAN
      element */
-  DeleteSpanIfNoAttr (event->element, event->document, &firstChild,&lastChild);
-  /* if it's the root (HTML) element, delete the RealLang attribute */
-  if (!TtaGetParent (event->element))
-     /* it's the root element */
-     {
-     attrType.AttrSSchema = event->attributeType.AttrSSchema;
-     attrType.AttrTypeNum = HTML_ATTR_RealLang;
-     attr = TtaGetAttribute (event->element, attrType);
-     if (attr)
-	TtaRemoveAttribute (event->element, attr, event->document);
+  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+    DeleteSpanIfNoAttr (elem, event->document, &firstChild,&lastChild);
+  /* if it's the root (HTML, SVG, MathML) element, delete the RealLang
+     attribute */
+  if (elem == TtaGetRootElement (event->document))
+    /* it's the root element */
+    {
+      elType = TtaGetElementType (elem);
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	attrType.AttrTypeNum = HTML_ATTR_RealLang;
+      else if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
+	attrType.AttrTypeNum = SVG_ATTR_RealLang;
+      else if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+	attrType.AttrTypeNum = MathML_ATTR_RealLang;
+      attrType.AttrSSchema = event->attributeType.AttrSSchema;
+      attr = TtaGetAttribute (elem, attrType);
+      if (attr)
+	TtaRemoveAttribute (elem, attr, event->document);
      }
 }
 
@@ -640,13 +649,14 @@ void AttrLangDeleted (NotifyAttribute *event)
 void AttrLangCreated (NotifyAttribute *event)
 {
   Element	elem;
-  int		len;
   ElementType   elType;
+  int		len;
   AttributeType attrType;
   Attribute	attr;
   char	       *value = TtaGetMemory (ATTRLEN); 
 
   elem = event->element;
+  elType = TtaGetElementType (elem);
   len = ATTRLEN - 1;
   TtaGiveTextAttributeValue (event->attribute, value, &len);
   if (strcasecmp(value, "Symbol") == 0)
@@ -654,18 +664,25 @@ void AttrLangCreated (NotifyAttribute *event)
        a language */
     TtaRemoveAttribute (elem, event->attribute, event->document);      
   else
-    /* if the LANG attribute is on a text string, create a SPAN element that
-       encloses this text string and move the LANG attribute to that SPAN
-       element */
-    AttrToSpan (elem, event->attribute, event->document);
-  /* if it's the root (HTML) element, create a RealLang attribute too */
-  elType = TtaGetElementType (elem);
-  if (elType.ElTypeNum == HTML_EL_HTML &&
-      !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-     /* it's the HTML root element */
+    /* if the LANG attribute is on a text string in a HTML document, create
+       a SPAN element that encloses this text string and move the LANG
+       attribute to that SPAN element */
+    {
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	AttrToSpan (elem, event->attribute, event->document);
+    }
+  /* if it's the root (HTML, SVG, MathML) element, create a RealLang
+     attribute too */
+  if (elem == TtaGetRootElement (event->document))
+     /* it's the root element */
      {
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	attrType.AttrTypeNum = HTML_ATTR_RealLang;
+      else if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
+	attrType.AttrTypeNum = SVG_ATTR_RealLang;
+      else if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+	attrType.AttrTypeNum = MathML_ATTR_RealLang;
      attrType.AttrSSchema = event->attributeType.AttrSSchema;
-     attrType.AttrTypeNum = HTML_ATTR_RealLang;
      attr = TtaNewAttribute (attrType);
      TtaAttachAttribute (elem, attr, event->document);
      TtaSetAttributeValue (attr, HTML_ATTR_RealLang_VAL_Yes_, elem,
@@ -681,23 +698,31 @@ void AttrLangCreated (NotifyAttribute *event)
 void AttrLangModified (NotifyAttribute *event)
 {
   Element	elem;
+  ElementType   elType;
   AttributeType attrType;
   Attribute	attr;
 
   elem = event->element;
-  /* if it's the root (HTML) element, create a RealLang attribute */
-  if (!TtaGetParent (elem))
-     /* it's the root element */
-     {
-     attrType.AttrSSchema = event->attributeType.AttrSSchema;
-     attrType.AttrTypeNum = HTML_ATTR_RealLang;
-     attr = TtaGetAttribute (elem, attrType);
-     if (!attr)
+  /* if it's the root (HTML, SVG, MathML) element, create a RealLang
+     attribute */
+  if (elem == TtaGetRootElement (event->document))
+    /* it's the root element */
+    {
+      elType = TtaGetElementType (elem);
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	attrType.AttrTypeNum = HTML_ATTR_RealLang;
+      else if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
+	attrType.AttrTypeNum = SVG_ATTR_RealLang;
+      else if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+	attrType.AttrTypeNum = MathML_ATTR_RealLang;
+      attrType.AttrSSchema = event->attributeType.AttrSSchema;
+      attr = TtaGetAttribute (elem, attrType);
+      if (!attr)
 	{
-        attr = TtaNewAttribute (attrType);
-        TtaAttachAttribute (elem, attr, event->document);
-        TtaSetAttributeValue (attr, HTML_ATTR_RealLang_VAL_Yes_, elem,
-			      event->document);
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (elem, attr, event->document);
+	  TtaSetAttributeValue (attr, HTML_ATTR_RealLang_VAL_Yes_, elem,
+				event->document);
 	}
      }  
 }
@@ -709,19 +734,26 @@ void AttrLangModified (NotifyAttribute *event)
 ThotBool AttrLangShouldBeDeleted (NotifyAttribute *event)
 {
   Element	elem;
+  ElementType   elType;
   AttributeType attrType;
   Attribute	attr;
 
   elem = event->element;
   /* if it's the root (HTML) element, delete the RealLang attribute */
-  if (!TtaGetParent (elem))
-     /* it's the root element */
-     {
-     attrType.AttrSSchema = event->attributeType.AttrSSchema;
-     attrType.AttrTypeNum = HTML_ATTR_RealLang;
-     attr = TtaGetAttribute (elem, attrType);
-     if (attr)
+  if (elem == TtaGetRootElement (event->document))
+    /* it's the root element */
+    {
+      elType = TtaGetElementType (elem);
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	attrType.AttrTypeNum = HTML_ATTR_RealLang;
+      else if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0)
+	attrType.AttrTypeNum = SVG_ATTR_RealLang;
+      else if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+	attrType.AttrTypeNum = MathML_ATTR_RealLang;
+      attrType.AttrSSchema = event->attributeType.AttrSSchema;
+      attr = TtaGetAttribute (elem, attrType);
+      if (attr)
 	TtaRemoveAttribute (elem, attr, event->document);
-     }  
+    }  
   return FALSE; /* let Thot perform normal operation */
 }

@@ -55,7 +55,15 @@ ELEMENTS
 
 ATTRIBUTES
 
-   class:
+  Language:
+	BEGIN
+	AttrCreate.Post -> AttrLangCreated;
+	AttrDelete.Pre  -> AttrLangShouldBeDeleted;
+	AttrDelete.Post -> AttrLangDeleted;
+	AttrModify.Post -> AttrLangModified;
+	END;
+
+  class:
         BEGIN
         AttrCreate.Post -> AttrClassChanged;
         AttrModify.Post -> AttrClassChanged;

@@ -1973,7 +1973,8 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
   ----------------------------------------------------------------------*/
 void      SVGAttributeComplete (Attribute attr, Element el, Document doc)
 {
-   AttributeType	attrType;
+   AttributeType	attrType, attrType1;
+   Attribute            intAttr;
    ElementType          elType;
    Element		leaf;
    int			attrKind;
@@ -2029,6 +2030,23 @@ void      SVGAttributeComplete (Attribute attr, Element el, Document doc)
 	break;
      case SVG_ATTR_d:
 	ParsePathDataAttribute (attr, el, doc);
+        break;
+     case SVG_ATTR_Language:
+        if (el == TtaGetRootElement (doc))
+	  /* it's the lang attribute on the root element */
+	  /* set the RealLang attribute */
+	  {
+	    attrType1.AttrSSchema = attrType.AttrSSchema ;
+	    attrType1.AttrTypeNum = MathML_ATTR_RealLang;
+	    if (!TtaGetAttribute (el, attrType1))
+	      /* it's not present. Add it */
+	      {
+		intAttr = TtaNewAttribute (attrType1);
+		TtaAttachAttribute (el, intAttr, doc);
+		TtaSetAttributeValue (intAttr, SVG_ATTR_RealLang_VAL_Yes_,
+				      el, doc);
+	      }
+	  }
         break;
      default:
 	break;

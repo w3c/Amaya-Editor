@@ -39,7 +39,8 @@ STRUCT
 	        overflow = scroll, elide, truncate, scale_;
 	        altimg = TEXT;
 	        alttext = TEXT;
-	        Charset = TEXT)
+	        RealLang = Yes_;
+		Charset = TEXT)
 	  = MROW + (XMLcomment, XMLPI, Unknown_namespace);
 
    DOCTYPE = LIST OF (DOCTYPE_line = TEXT);
@@ -472,6 +473,8 @@ EXCEPT
    class:		CssClass;
    PseudoClass:	        Invisible, CssPseudoClass;
    { attributes for internal use }
+   RealLang:	        Invisible;
+   Charset:	        Invisible;   
    Highlight:	        Invisible;
    Unknown_attribute:	Invisible;
    EntityName:	        Invisible; 

@@ -47,6 +47,7 @@ STRUCT
               y = text;
 	      width_ = text;
 	      height_ = text;
+	      RealLang = Yes_;
 	      Charset = text)
         = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, Unknown_namespace);
 
@@ -465,11 +466,10 @@ EXCEPT
    Ghost_restruct:      Invisible;
    Namespace:	        Invisible;
    IntEmptyShape:       Invisible;
+   RealLang:	        Invisible;
+   Charset:	        Invisible;
    XMLcomment_line:     Hidden;
    XMLPI_line:          Hidden;
    DOCTYPE_line:        Hidden;
 
 END
-
-
-

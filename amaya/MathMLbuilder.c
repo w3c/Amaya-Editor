@@ -238,7 +238,6 @@ void MapMathMLEntity (char *entityName, char *entityValue,
   ----------------------------------------------------------------------*/
 void MathMLEntityCreated (unsigned char *entityValue, Language lang,
                         char *entityName, Document doc)
-
  {
  }
 
@@ -249,14 +248,13 @@ void MathMLEntityCreated (unsigned char *entityValue, Language lang,
 ThotBool     ElementNeedsPlaceholder (Element el)
 {
   ElementType   elType;
-  Element	child, parent;
+  Element	child, parent, sibling;
   ThotBool	ret;
  
   ret = FALSE;
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == MathML_EL_MS ||
       elType.ElTypeNum == MathML_EL_MSPACE ||
-      elType.ElTypeNum == MathML_EL_MROW ||
       elType.ElTypeNum == MathML_EL_MFRAC ||
       elType.ElTypeNum == MathML_EL_BevelledMFRAC ||
       elType.ElTypeNum == MathML_EL_MSQRT ||
@@ -277,29 +275,62 @@ ThotBool     ElementNeedsPlaceholder (Element el)
       elType.ElTypeNum == MathML_EL_MTABLE ||
       elType.ElTypeNum == MathML_EL_MACTION)
      ret = TRUE;
-  else
-     if (elType.ElTypeNum == MathML_EL_MO)
-	/* an operator that contains a single Symbol needs a placeholder,
-	   except when it is in a Base or UnderOverBase */
+  else if (elType.ElTypeNum == MathML_EL_MROW)
+    /* a mrow needs a place holder only if it's not the sole child of
+       an element such as Numerator, Denominator, RootBase, Index, etc. */
+    {
+      ret = TRUE;
+      sibling = el;  TtaNextSibling (&sibling);
+      if (!sibling)
 	{
-	child = TtaGetFirstChild (el);
-	if (child != NULL)
-	   {
-	   elType = TtaGetElementType (child);
-	   if (elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
-	      {
+	  sibling = el;  TtaNextSibling (&sibling);
+	  if (!sibling)
+	    {
+	      parent = TtaGetParent (el);
+	      if (parent)
+		{
+		  elType = TtaGetElementType (parent);
+		  if (elType.ElTypeNum == MathML_EL_Numerator ||
+		      elType.ElTypeNum == MathML_EL_Denominator ||
+		      elType.ElTypeNum == MathML_EL_RootBase ||
+		      elType.ElTypeNum == MathML_EL_Index ||
+		      elType.ElTypeNum == MathML_EL_FencedExpression ||
+		      elType.ElTypeNum == MathML_EL_Base ||
+		      elType.ElTypeNum == MathML_EL_Subscript ||
+		      elType.ElTypeNum == MathML_EL_Superscript ||
+		      elType.ElTypeNum == MathML_EL_UnderOverBase ||
+		      elType.ElTypeNum == MathML_EL_Underscript ||
+		      elType.ElTypeNum == MathML_EL_Overscript ||
+		      elType.ElTypeNum == MathML_EL_MultiscriptBase ||
+		      elType.ElTypeNum == MathML_EL_MSubscript ||
+		      elType.ElTypeNum == MathML_EL_MSuperscript)
+		    ret = FALSE;
+		}
+	    }
+	}
+    }
+  else if (elType.ElTypeNum == MathML_EL_MO)
+    /* an operator that contains a single Symbol needs a placeholder,
+       except when it is in a Base or UnderOverBase */
+    {
+      child = TtaGetFirstChild (el);
+      if (child != NULL)
+	{
+	  elType = TtaGetElementType (child);
+	  if (elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
+	    {
 	      ret = TRUE;
 	      parent = TtaGetParent (el);
 	      if (parent != NULL)
 		{
-		elType = TtaGetElementType (parent);
-		if (elType.ElTypeNum == MathML_EL_Base ||
-		    elType.ElTypeNum == MathML_EL_UnderOverBase)
-		   ret = FALSE;
+		  elType = TtaGetElementType (parent);
+		  if (elType.ElTypeNum == MathML_EL_Base ||
+		      elType.ElTypeNum == MathML_EL_UnderOverBase)
+		    ret = FALSE;
 		}
-	      }
-	   }
+	    }
 	}
+    }
   return ret;
 }
 
@@ -2284,7 +2315,8 @@ void MathMLlinethickness (Document doc, Element el, char *value)
  The MathML attribute attr is associated with element el. Generate
  the corresponding style property for this element.
  -----------------------------------------------------------------------*/
-void MathMLAttrToStyleProperty (Document doc, Element el, char *value, int attr)
+void MathMLAttrToStyleProperty (Document doc, Element el, char *value,
+				int attr)
 {
   char           css_command[buflen+20];
 
@@ -2516,6 +2548,25 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
       complete yet. Handle it when the element is complete.
    else if (attrType.AttrTypeNum == MathML_ATTR_columnalign)
    */
+
+   else if (attrType.AttrTypeNum == MathML_ATTR_Language)
+     {
+       if (el == TtaGetRootElement (doc))
+	 /* it's the lang attribute on the root element */
+	 /* set the RealLang attribute */
+	 {
+	   depAttrType.AttrSSchema = attrType.AttrSSchema ;
+	   depAttrType.AttrTypeNum = MathML_ATTR_RealLang;
+	   if (!TtaGetAttribute (el, depAttrType))
+	     /* it's not present. Add it */
+	     {
+	       intAttr = TtaNewAttribute (depAttrType);
+	       TtaAttachAttribute (el, intAttr, doc);
+	       TtaSetAttributeValue (intAttr, MathML_ATTR_RealLang_VAL_Yes_,
+				     el, doc);
+	     }
+	 }
+     }
 
    else if (attrType.AttrTypeNum == MathML_ATTR_color ||
 	    attrType.AttrTypeNum == MathML_ATTR_mathcolor ||

@@ -444,7 +444,13 @@ ATTRIBUTES
 
  Language:
 	begin
-	if not TEXT_UNIT
+	if not TEXT_UNIT and not SVG
+	    begin
+	    Create ' xml:lang="';
+	    Create Language;
+	    Create DoubleQuote;
+	    end;
+	if SVG and RealLang
 	    begin
 	    Create ' xml:lang="';
 	    Create Language;

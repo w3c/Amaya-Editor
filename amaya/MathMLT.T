@@ -597,7 +597,13 @@ ATTRIBUTES
 
  Language:
 	begin
-	if not TEXT_UNIT
+	if not TEXT_UNIT and not MathML
+	    begin
+	    Create ' xml:lang="';
+	    Create Language;
+	    Create '"';
+	    end;
+	if MathML and RealLang
 	    begin
 	    Create ' xml:lang="';
 	    Create Language;
