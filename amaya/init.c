@@ -3038,7 +3038,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaSetItemOff (doc, 1, Bookmarks_, BMoveItem);
 	   TtaSetItemOff (doc, 1, Bookmarks_, BEditTopics);
 	   TtaSetItemOff (doc, 1, Bookmarks_, BAddSeparator);
-	   TtaSetItemOff (doc, 1, Bookmarks_, BImportTopics);
 #endif /* BOOKMARKS */
 	   TtaSetMenuOn (doc, 1, Views);
 	   TtaSetItemOn (doc, 1, Views, TShowTargets);
