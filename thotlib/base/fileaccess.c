@@ -273,8 +273,8 @@ ThotBool TtaReadSignedShort (BinFile file, int *sval)
     return (FALSE);
   else
     {
-      /**      if (((int) car) < 0 || ((int) car) > 127 )
-       *sval = SIGNED_SHORT_MASK; **/
+     if (((int) car) < 0 || ((int) car) > 127 )
+       *sval = SIGNED_SHORT_MASK;
       *sval |= ((((int) car) & LMASK) << DECAL_1);
       if (!TtaReadByte (file, &car))
 	{
