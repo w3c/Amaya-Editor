@@ -2380,7 +2380,7 @@ void GetXmlAttributeType (char* xmlName, AttributeType *attrType, PtrDocument pD
 		       attrType->AttrTypeNum = 1;
 		       found = TRUE;
 		     }
-		   else if (strcmp (pSS->SsAttribute->TtAttr[att]->AttrName, xmlName) == 0)
+		   else if (strncmp (pSS->SsAttribute->TtAttr[att]->AttrName, xmlName, MAX_NAME_LENGTH) == 0)
 		     {
 		       attrType->AttrTypeNum = att + 1;
 		       attrType->AttrSSchema = (SSchema) pSS;
@@ -2414,7 +2414,7 @@ void GetXmlElementType (char *xmlName, ElementType *elType,
        pSS = (PtrSSchema) elType->ElSSchema;
        for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 	 {
- 	   if (strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName) == 0)
+ 	   if (strncmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName, MAX_NAME_LENGTH) == 0)
 	     {
 	       elType->ElTypeNum = rule + 1;
 	       if (mappedName)
@@ -2435,7 +2435,7 @@ void GetXmlElementType (char *xmlName, ElementType *elType,
 	       pSS = (PtrSSchema) pPfS->PfSSchema;
 	       for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 		 {
-		   if (strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName) == 0)
+		   if (strncmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName, MAX_NAME_LENGTH) == 0)
 		     {
 		       elType->ElTypeNum = rule + 1;
 		       if (mappedName)
