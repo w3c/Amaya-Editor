@@ -2035,7 +2035,7 @@ char 	     *content_type;
 #ifndef _WINDOWS
    /* @@@ may need some special windows error msg here */
    /* control the errors */
-   if (status != HT_OK
+   if (status == NO
        && HTError_hasSeverity (HTRequest_error (me->request), ERR_NON_FATAL))
      status = HT_ERROR;
 #endif /* !_WINDOWS */      
