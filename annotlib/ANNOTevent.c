@@ -440,7 +440,7 @@ void ANNOT_FreeDocumentResource (Document doc)
       char *body_url;
       
       source_doc = DocumentMeta[doc]->source_doc;
-      if (!IsW3Path(body_url))
+      if (!IsW3Path(DocumentURLs[doc]))
 	body_url = FixFileURL (DocumentURLs[doc]);
       else
 	body_url = DocumentURLs[doc];
