@@ -1104,7 +1104,8 @@ NotifyPresentation *event;
 		elType.ElTypeNum == GraphML_EL_polyline ||
 		elType.ElTypeNum == GraphML_EL_polygon ||
 		elType.ElTypeNum == GraphML_EL_line_ ||
-		elType.ElTypeNum == GraphML_EL_image))
+		elType.ElTypeNum == GraphML_EL_image ||
+		elType.ElTypeNum == GraphML_EL_foreignObject))
 	{
 	  /* the new value is the old one plus the delta */
 	  height = TtaGetPRuleValue (presRule);
@@ -1119,7 +1120,8 @@ NotifyPresentation *event;
 		elType.ElTypeNum == GraphML_EL_polyline ||
 		elType.ElTypeNum == GraphML_EL_polygon ||
 		elType.ElTypeNum == GraphML_EL_line_ ||
-		elType.ElTypeNum == GraphML_EL_image))
+		elType.ElTypeNum == GraphML_EL_image ||
+		elType.ElTypeNum == GraphML_EL_foreignObject))
 	{
 	  /* the new value is the old one plus the delta */
 	  width = TtaGetPRuleValue (presRule);

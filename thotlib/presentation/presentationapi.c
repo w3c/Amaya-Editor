@@ -2110,7 +2110,7 @@ View                view;
 	   else
 	     /* View of associated elements */
 	     v = 1;
-       pAb = AbsBoxOfEl ((PtrElement) element, v);
+	   pAb = AbsBoxOfEl ((PtrElement) element, v);
 	   if (pAb == NULL)
 	     TtaError (ERR_element_has_no_box);
 	   else
