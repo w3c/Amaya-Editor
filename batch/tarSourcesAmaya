@@ -59,6 +59,7 @@ amaya/HTMLsave.c \
 amaya/HTMLstyle.c \
 amaya/HTMLstyleColor.h \
 amaya/HTMLtable.c \
+amaya/MathML.A \
 amaya/MathML.S \
 amaya/MathMLP.P \
 amaya/MathMLT.T \
@@ -172,6 +173,7 @@ config/fr-javamsg \
 config/thot.ini \
 config/java.properties \
 javalib/JavaDialog.c \
+javalib/JavaVMaccesses.h \
 javalib/JavaTypes.c \
 javalib/JavaTypes.def \
 javalib/JavaTypes.h \
@@ -180,11 +182,14 @@ javalib/Makefile \
 javalib/StubPreamble.h \
 javalib/biss_awt_APIstubs.c \
 javalib/biss_awt_APIstubs.h \
+javalib/debug_stubs.h \
+javalib/debug_stubs.c \
 javalib/javamsg.h \
 javalib/kaffeine.c \
 javalib/thotlib_APIExtra_stubs.c \
 javalib/thotlib_APIExtra_stubs.h \
 javalib/thotlib_Extra.h \
+javalib/f/debug_stubs_f.h \
 javalib/f/JavaDialog_f.h \
 javalib/f/JavaTypes_f.h \
 javalib/f/JavaWWWInterf_f.h \
