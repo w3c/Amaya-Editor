@@ -182,11 +182,15 @@ typedef BOOL        ThotBool;
 
 #endif /* _WINDOWS *//***********************************WINDOWS**/
 
-#if defined(_UNIX) || defined(_GTK)
+#if defined(_UNIX)
 
 /* Unix definitions */
 #define None	    0L	/* X11/X.h */
+#ifndef _WX
 typedef unsigned char   ThotBool;
+#else /* _WX */
+typedef bool ThotBool;
+#endif /* _WX */
 typedef ThotBool BOOL;
 #define ThotPid_get()	getpid()
 #define ThotPid		pid_t
@@ -202,7 +206,7 @@ typedef ThotBool BOOL;
 #define WC_DIR_STR  "/"
 #define WC_PATH_STR ":"
 
-#endif /* #if defined(_UNIX) || defined(_GTK) */
+#endif /* #if defined(_UNIX) */
 
 #define ___TEXT___(str) L##str
 #ifndef TEXT
