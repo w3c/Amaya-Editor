@@ -116,6 +116,8 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    /* initialize the print command */
    ptr = TtaGetEnvString ("LANG");
 #ifdef _WINDOWS_DLL
+   for (i=0; i<100; i++)
+     printArgv[i] = NULL;
    printArgv[printArgc] = TtaGetMemory (strlen (BinariesDirectory) + 7);
    strcpy (printArgv[printArgc], BinariesDirectory);
    strcat (printArgv[printArgc], DIR_STR);
@@ -539,7 +541,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	     /* there is a file name after the flag */
 	     {
 #ifdef _WINDOWS_DLL
-	       printArgv[printArgc] = TtaGetMemory (50);
+	       printArgv[printArgc] = TtaGetMemory (99);
 		   j = 0;
 #endif /* _WINDOWS_DLL */
 	       while (cssToPrint[i] != SPACE && cssToPrint[i] != EOS)
