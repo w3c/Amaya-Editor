@@ -4690,6 +4690,7 @@ void rd_func (GtkButton *button, gpointer  user_data)
 /*----------------------------------------------------------------
  Callback function called by the "Done" button
   ----------------------------------------------------------------*/
+void spell_done_func (GtkButton *button, gpointer  user_data)
 {
  printf ("checking : %d\n", spell_form->checking);
  printf ("caps : %d\n", spell_form->caps);
