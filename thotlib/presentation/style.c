@@ -2218,6 +2218,7 @@ PresentationContext c;
    PtrSSchema     pSS;
    PtrPRule       pRule;
    AttributePres *attrs;
+   DisplayMode    dispMode;
    int            elType = 0;
    int            attrType = 0;
    int            presBox = 0;
@@ -2226,13 +2227,15 @@ PresentationContext c;
      return;
 
    doc = c->doc;
+   dispMode = TtaGetDisplayMode (doc);
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
+   
    if (el != NULL)
      {
        pRule = ((PtrElement)el)->ElFirstPRule;
-       if (pRule == NULL)
-	 return;
-       doc = ctxt->doc;
-       ApplyPRulesElement (pRule, (PtrElement) el, LoadedDocument[doc - 1], (boolean)c->destroy);
+       if (pRule != NULL)
+	 ApplyPRulesElement (pRule, (PtrElement) el, LoadedDocument[doc - 1], (boolean)c->destroy);
      }
    else
      {
@@ -2257,12 +2260,12 @@ PresentationContext c;
 	   pRule = PresAttrRuleSearch ((PtrPSchema) tsch, attrType, ctxt, &attrs);
 	 }
        else
-	 return;
+	 pRule = NULL;
 
-       if (pRule == NULL)
-	 return;
-       ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, FALSE);
+       if (pRule != NULL)
+	 ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, FALSE);
      }
+   TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------

@@ -413,10 +413,10 @@ View                view;
   el = InsertWithinHead (document, view, HTML_EL_LINK);
   if (el != NULL)
     {
-      TtaSelectElement (document, el);
-       /* Select a new destination */
-       SelectDestination (document, el);
-     }
+      /*TtaSelectElement (document, el);*/
+      /* Select a new destination */
+      SelectDestination (document, el);
+    }
 }
 
 

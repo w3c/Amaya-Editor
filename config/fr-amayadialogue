@@ -134,58 +134,63 @@
 133 Cr\351er une r\350gle...
 134 Appliquer une classe...
 135 Feuilles de style
-136 Types information
-137 Emphase
-138 Strong
-139 Cite
-140 D\351finition
-141 Code
-142 Variable
-143 Sample
-144 Keyboard
-145 Abr\351viation
-146 Acronyme
-147 Insertion
-148 Suppression
-149 El\351ments caract\350res
-150 Italique
-151 Gras
-152 T\351l\351type
-153 Gros
-154 Petit
-155 Indice
-156 Exposant
-157 Citation (Q)
-158 BiDi (BDO)
-159 Num\351roter les sections
-160 Construire un livre
-161 Ouvrir fichier log
-162 Options
-163 Générale...
-164 Publication...
-165 Cache...
-166 Proxy...
-167 Imprimante...
-168 Couleurs...
-169 Géométrie...
-170 Sauver les options
-171 propos de Amaya
-172 A propos de Amaya au W3C
-173 Naviguation
-174 S\351lection
-175 Chercher
-176 Vues
-177 Cr\351ation
-178 Liens
-179 Transformer
-180 Tables
-181 Math
-182 Zones actives
-183 Feuilles de style
-184 Attributs
-185 Corriger
-186 Publier
-187 Imprimer
-188 Num\351roter
-189 Construire un livre
-190 Configurer Amaya
+136 Ajouter...
+137 Ouvrir...
+138 D\351sactiver...
+139 R\351activer...
+140 Retirer...
+141 Types information
+142 Emphase
+143 Strong
+144 Cite
+145 D\351finition
+146 Code
+147 Variable
+148 Sample
+149 Keyboard
+150 Abr\351viation
+151 Acronyme
+152 Insertion
+153 Suppression
+154 El\351ments caract\350res
+155 Italique
+156 Gras
+157 T\351l\351type
+158 Gros
+159 Petit
+160 Indice
+161 Exposant
+162 Citation (Q)
+163 BiDi (BDO)
+164 Num\351roter les sections
+165 Construire un livre
+166 Ouvrir fichier log
+167 Options
+168 Générale...
+169 Publication...
+170 Cache...
+171 Proxy...
+172 Imprimante...
+173 Couleurs...
+174 Géométrie...
+175 Sauver les options
+176 propos de Amaya
+177 A propos de Amaya au W3C
+178 Naviguation
+179 S\351lection
+180 Chercher
+181 Vues
+182 Cr\351ation
+183 Liens
+184 Transformer
+185 Tables
+186 Math
+187 Zones actives
+188 Feuilles de style
+189 Attributs
+190 Corriger
+191 Publier
+192 Imprimer
+193 Num\351roter
+194 Construire un livre
+195 Configurer Amaya

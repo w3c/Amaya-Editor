@@ -29,10 +29,6 @@
 #include "UIcss_f.h"
 #include "styleparser_f.h"
 
-#ifdef _WINDOWS
-extern STRING WIN_Home;
-#endif /* _WINDOWS */
-
 
 /*----------------------------------------------------------------------
   GetPExtension returns the Presentation Extension Schema associated with
@@ -171,179 +167,34 @@ STRING               url;
 
 
 /*----------------------------------------------------------------------
-   RemoveCSS removes a CSS context and frees all attached information.
-   The parameter removeFile is TRUE when the local copy of the CSS file
-   should be removed.
+   CSSRemoved a link to this CSS was removed.
+   If this CSS is no longer used the context and attached information
+   are freed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     RemoveCSS (CSSInfoPtr css, boolean removeFile)
+static void     CSSRemoved (CSSInfoPtr css, Document doc)
 #else
-static void     RemoveCSS (css, removeFile)
+static void     CSSRemoved (css, doc)
 CSSInfoPtr      css;
-boolean         removeFile;
+Document        doc;
 #endif
 {
   CSSInfoPtr          prev;
-  PInfoPtr            pInfo, nextInfo;
+  PInfoPtr            pInfo, prevInfo;
+  int                 i;
+  boolean             used;
 
   if (css == NULL)
     return;
   else
     {
-      if (removeFile && css->category == CSS_EXTERNAL_STYLE && IsW3Path (css->url))
-	/* remove the file */
-	TtaFileUnlink (css->localName);
-      TtaFreeMemory (css->localName);
-      TtaFreeMemory (css->url);
-      /* remove presentation schemas and P descriptors in the css */
-      pInfo = css->infos;
-      while (pInfo != NULL)
-	{
-	  /* remove presentation schemas */
-	  nextInfo = pInfo->PiNext;
-	  TtaRemovePSchema (pInfo->PiPSchema, pInfo->PiDoc, pInfo->PiSSchema);
-	  /* remove P descriptors in the css structure */
-	  TtaFreeMemory (pInfo);
-	  pInfo = nextInfo;
-	}
-      css->infos = NULL;
-
-      if (CSSList == css)
-	CSSList = css->NextCSS;
-      else
-	{
-	  prev = CSSList;
-	  while (prev != NULL && prev->NextCSS != css)
-	    prev = prev->NextCSS;
-	  if (prev != NULL)
-	    prev->NextCSS = css->NextCSS;
-	}
-      TtaFreeMemory (css);
-    }
-}
-
-/*----------------------------------------------------------------------
-   RemoveDocCSSs removes all CSS information linked with the document.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RemoveDocCSSs (Document doc, boolean removeFile)
-#else
-void                RemoveDocCSSs (doc, removeFile)
-Document            doc;
-boolean             removeFile;
-#endif
-{
-  CSSInfoPtr          css, next;
-  PInfoPtr            pInfo, prevInfo;
-  int                 i;
-  boolean             used;
-
-  css = CSSList;
-  while (css != NULL)
-    {
-      if (css->doc == doc)
-	{
-	  next = css->NextCSS;
-	  RemoveCSS (css, removeFile);
-	  css = next;
-	}	
-      else if (css->documents[doc])
-	{
-	  css->documents[doc] = FALSE;
-	  /* look at if this css is alway used */
-	  used = FALSE;
-	  i = 0;
-	  while (!used && i < DocumentTableLength)
-	    {
-	      used = css->documents[i];
-	      i++;
-	    }
-	  if (!used)
-	    {
-	      /* remove this css file */
-	      next = css->NextCSS;
-	      RemoveCSS (css, removeFile);
-	      css = next;
-	    }
-	  else
-	    {
-	      /* look for the specific P descriptors in the css */
-	      pInfo = css->infos;
-	      prevInfo = NULL;
-	      while (pInfo != NULL && pInfo->PiDoc != doc)
-		{
-		  prevInfo = pInfo;
-		  pInfo = pInfo->PiNext;
-		}
-	      if (pInfo != NULL)
-		{
-		  /* update the the list of  P descriptors in the css */
-		  if (prevInfo == NULL)
-		    css->infos = pInfo->PiNext;
-		  else
-		    prevInfo->PiNext = pInfo->PiNext;
-		  /* remove presentation schemas */
-		  TtaRemovePSchema (pInfo->PiPSchema, pInfo->PiDoc, pInfo->PiSSchema);
-		  /* remove P descriptors in the css structure */
-		  TtaFreeMemory (pInfo);
-		}
-	    }
-	}	
-      else
-	css = css->NextCSS;
-    }
-}
-
-/*----------------------------------------------------------------------
-   RemoveStyleSheet removes a style sheet.
-   It could be an external CSS file linked with the document (url not NULL)
-   or the document Style element.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RemoveStyleSheet (STRING url, Document doc)
-#else
-void                RemoveStyleSheet (url, doc)
-STRING              url;
-Document            doc;
-#endif
-{
-  CSSInfoPtr          css, prev;
-  PInfoPtr            pInfo, prevInfo;
-  int                 i;
-  boolean             used;
-
-  css = CSSList;
-  prev = NULL;
-  used = FALSE;
-  while (css != NULL && !used)
-    {
-      if (url && ((css->url && !ustrcmp (url, css->url)) ||
-		  (css->localName && !ustrcmp (url, css->localName))))
-	/* an external CSS */
-	used = TRUE;
-      else if (!url && css->doc == doc)
-	/* a document CSS */
-	used = TRUE;
-      else
-	{
-	  prev = css;
-	  css = css->NextCSS;
-	}
-    }
-
-  if (css != NULL)
-    {
-      css->documents[doc] = FALSE;
       /* look at if this css is alway used */
-      used = FALSE;
-      if (css->category != CSS_DOCUMENT_STYLE)
+      used = (css->doc != 0);
+      i = 0;
+      while (!used && i < DocumentTableLength)
 	{
-	  i = 0;
-	  while (!used && i < DocumentTableLength)
-	    {
-	      used = css->documents[i];
-	      i++;
-	    }
+	  used = css->documents[i];
+	  i++;
 	}
 
       /* look for the specific P descriptors in the css */
@@ -370,13 +221,91 @@ Document            doc;
 
       if (!used)
 	{
-	  /* remove this css file */
-	  if (prev)
-	    prev->NextCSS = css->NextCSS;
-	  else
+	  if (css->category == CSS_EXTERNAL_STYLE && IsW3Path (css->url))
+	    /* remove the file */
+	    TtaFileUnlink (css->localName);
+	  TtaFreeMemory (css->localName);
+	  TtaFreeMemory (css->url);
+	  if (CSSList == css)
 	    CSSList = css->NextCSS;
-	  RemoveCSS (css, TRUE);
+	  else
+	    {
+	      prev = CSSList;
+	      while (prev != NULL && prev->NextCSS != css)
+		prev = prev->NextCSS;
+	      if (prev != NULL)
+		prev->NextCSS = css->NextCSS;
+	    }
+	  TtaFreeMemory (css);
 	}
+    }
+}
+
+/*----------------------------------------------------------------------
+   RemoveDocCSSs removes all CSS information linked with the document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                RemoveDocCSSs (Document doc)
+#else
+void                RemoveDocCSSs (doc)
+Document            doc;
+#endif
+{
+  CSSInfoPtr          css, next;
+
+  css = CSSList;
+  while (css != NULL)
+    {
+      next = css->NextCSS;
+      if (css->doc == doc)
+	{
+	  /* the document displays the CSS file itself */
+	  css->doc = 0;
+	  CSSRemoved (css, doc);
+	}
+      else if (css->documents[doc])
+	{
+	  css->documents[doc] = FALSE;
+	  CSSRemoved (css, doc);
+	}
+      /* look at the next CSS context */
+      css = next;
+    }
+}
+
+/*----------------------------------------------------------------------
+   RemoveStyleSheet removes a style sheet.
+   It could be an external CSS file linked with the document (url not NULL)
+   or the document Style element.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                RemoveStyleSheet (STRING url, Document doc)
+#else
+void                RemoveStyleSheet (url, doc)
+STRING              url;
+Document            doc;
+#endif
+{
+  CSSInfoPtr          css;
+  int                 i;
+  boolean             found;
+
+  css = CSSList;
+  found = FALSE;
+  while (css != NULL && !found)
+    {
+      if (url && ((css->url && !ustrcmp (url, css->url)) ||
+		  (css->localName && !ustrcmp (url, css->localName))))
+	/* an external CSS */
+	found = TRUE;
+      else
+	css = css->NextCSS;
+    }
+
+  if (css != NULL)
+    {
+      css->documents[doc] = FALSE;
+      CSSRemoved (css, doc);
     }
 }
 
@@ -523,7 +452,7 @@ CSSInfoPtr          css;
 	  ReadCSSRules (oldcss->doc, doc, oldcss, buffer, FALSE);
 	}
       /* store the element which links the CSS */
-      pInfo = css->infos;
+      pInfo = oldcss->infos;
       while (pInfo != NULL && pInfo->PiDoc != doc)
 	/* next info context */
 	pInfo = pInfo->PiNext;
@@ -531,12 +460,11 @@ CSSInfoPtr          css;
 	{
 	  /* add the presentation info block */
 	  pInfo = (PInfoPtr) TtaGetMemory (sizeof (PInfo));
-	  pInfo->PiNext = css->infos;
-	  css->infos = pInfo;
+	  pInfo->PiNext = oldcss->infos;
 	  pInfo->PiDoc = doc;
 	  pInfo->PiSSchema = NULL;
 	  pInfo->PiPSchema = NULL;
-	  css->infos = pInfo;
+	  oldcss->infos = pInfo;
 	}
       pInfo->PiLink = el;
 
@@ -559,15 +487,15 @@ Document            doc;
   CSSInfoPtr          css;
   struct stat         buf;
   FILE               *res;
-  CHAR                tempfile[MAX_LENGTH];
-  STRING               buffer, ptr;
-  STRING               home;
-  STRING               thotdir;
+  STRING              buffer, ptr;
   int                 len;
 
   /* look for the User preferences */
+  if (!UserCSS)
+    return;
+
   buffer = NULL;
-  ptr = tempfile;
+  ptr = UserCSS;
   css = CSSList;
   while (css != NULL)
     {
@@ -579,36 +507,9 @@ Document            doc;
 
   if (css == NULL)
     {
-      /* Load User preferences */
-#     ifdef _WINDOWS
-      home = (STRING) TtaGetMemory (ustrlen (WIN_Home) + 1);
-      ustrcpy (home, WIN_Home);
-#     else  /* !_WINDOWS */
-      home = TtaGetEnvString ("HOME");
-#     endif /* _WINDOWS */
-
-      tempfile[0] = EOS;
-      /* try to load the user preferences */
-      if (home)
-#   ifdef _WINDOWS
-	sprintf (tempfile, "%s%s%s.css", home, DIR_STR, HTAppName);
-#   else  /* !_WINDOWS */
-	sprintf (tempfile, "%s%s.%s.css", home, DIR_STR, HTAppName);
-#   endif /* _WINDOWS */
-
-      if (tempfile[0] == EOS || !TtaFileExist (tempfile))
-	{
-	  thotdir = TtaGetEnvString ("THOTDIR");
-	  if (thotdir)
-	    {
-	      /* file not found */
-	      sprintf (tempfile, "%s%samaya%s%s.css", thotdir, DIR_STR, DIR_STR, HTAppName);
-	    }
-	}
-
       /* allocate a new Presentation structure */ 
-      if (tempfile[0] != EOS  && TtaFileExist (tempfile))
-	css = AddCSS (0, doc, CSS_USER_STYLE, NULL, tempfile);
+      if (TtaFileExist (UserCSS))
+	css = AddCSS (0, doc, CSS_USER_STYLE, NULL, UserCSS);
     }
   else if (!css->documents[doc])
     {

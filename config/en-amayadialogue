@@ -134,58 +134,63 @@
 133 Create rule...
 134 Apply class...
 135 Style sheets
-136 Information type
-137 Emphasis
-138 Strong
-139 Cite
-140 Definition
-141 Code
-142 Variable
-143 Sample
-144 Keyboard
-145 Abbreviation
-146 Acronym
-147 Insertion
-148 Deletion
-149 Character element
-150 Italic
-151 Bold
-152 Teletype
-153 Big
-154 Small
-155 Subscript
-156 Superscript
-157 Quotation
-158 BiDi override
-159 Section numbering
-160 Make book
-161 Show log file
-162 Options
-163 General...
-164 Publishing...
-165 Cache...
-166 Proxy...
-167 Printer...
-168 Colors...
-169 Geometry...
-170 Save the options
-171 About Amaya
-172 About Amaya at W3C
-173 Browsing
-174 Selecting
-175 Searching
-176 Views
-177 Creating elements
-178 Links
-179 Restructuring
-180 Tables
-181 Math
-182 Image maps
-183 Style sheets
-184 Attributes
-185 Spell Checking
-186 Publishing
-187 Printing
-188 Numbering
-189 Making books
-190 Configuring Amaya
+136 Link a new one...
+137 Open...
+138 Disable...
+139 Enable...
+140 Remove...
+141 Information type
+142 Emphasis
+143 Strong
+144 Cite
+145 Definition
+146 Code
+147 Variable
+148 Sample
+149 Keyboard
+150 Abbreviation
+151 Acronym
+152 Insertion
+153 Deletion
+154 Character element
+155 Italic
+156 Bold
+157 Teletype
+158 Big
+159 Small
+160 Subscript
+161 Superscript
+162 Quotation
+163 BiDi override
+164 Section numbering
+165 Make book
+166 Show log file
+167 Options
+168 General...
+169 Publishing...
+170 Cache...
+171 Proxy...
+172 Printer...
+173 Colors...
+174 Geometry...
+175 Save the options
+176 About Amaya
+177 About Amaya at W3C
+178 Browsing
+179 Selecting
+180 Searching
+181 Views
+182 Creating elements
+183 Links
+184 Restructuring
+185 Tables
+186 Math
+187 Image maps
+188 Style sheets
+189 Attributes
+190 Spell Checking
+191 Publishing
+192 Printing
+193 Numbering
+194 Making books
+195 Configuring Amaya

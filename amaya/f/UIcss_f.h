@@ -7,14 +7,30 @@
 #ifdef __STDC__
 
 extern void InitCSS ( void );
-extern void InitCSSDialog ( Document doc,
-                            View view );
+extern void LinkCSS ( Document doc,
+                      View view );
+extern void OpenCSS ( Document doc,
+                      View view );
+extern void DisableCSS ( Document doc,
+                         View view );
+extern void EnableCSS ( Document doc,
+                        View view );
+extern void RemoveCSS ( Document doc,
+                        View view );
 
 #else /* __STDC__ */
 
 extern void InitCSS (/* void */);
-extern void InitCSSDialog (/* Document doc,
-                              View view */);
+extern void LinkCSS (/* Document doc,
+                        View view */);
+extern void OpenCSS (/* Document doc,
+                        View view */);
+extern void DisableCSS (/* Document doc,
+                           View view */);
+extern void EnableCSS (/* Document doc,
+                          View view */);
+extern void RemoveCSS (/* Document doc,
+                          View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

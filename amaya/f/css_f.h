@@ -16,11 +16,10 @@ extern CSSInfoPtr AddCSS ( Document doc,
                            STRING localName );
 extern CSSInfoPtr SearchCSS ( Document doc,
                               STRING url );
-extern void RemoveDocCSSs ( Document doc,
-                            boolean removeFile );
-extern void RemoveStyleSheet ( STRING URL,
+extern void RemoveDocCSSs ( Document doc );
+extern void RemoveStyleSheet ( STRING url,
                                Document doc );
-extern void LoadStyleSheet ( STRING URL,
+extern void LoadStyleSheet ( STRING url,
                              Document doc,
                              Element el,
                              CSSInfoPtr css );
@@ -38,11 +37,10 @@ extern CSSInfoPtr AddCSS (/* Document doc,
                              STRING localName */);
 extern CSSInfoPtr SearchCSS (/* Document doc,
                                 STRING url */);
-extern void RemoveDocCSSs (/* Document doc,
-                              boolean removeFile */);
-extern void RemoveStyleSheet (/* STRING URL,
+extern void RemoveDocCSSs (/* Document doc */);
+extern void RemoveStyleSheet (/* STRING url,
                                  Document doc */);
-extern void LoadStyleSheet (/* STRING URL,
+extern void LoadStyleSheet (/* STRING url,
                                Document doc,
                                Element el,
                                CSSInfoPtr css */);

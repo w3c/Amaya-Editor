@@ -48,12 +48,16 @@
 47 Für die Markierung ist keine Umwandlung anwendbar
 48 Umwandlung fehlerhaft
 49 Sytaxfehler in der HTML-Datei, Zeile %s
-50 Hinzufügen
-51 **Remove
-52 **Update
-53 Formel
-54 Grafiken
-55 Speichern unter
+50 Formel
+51 Grafiken
+52 Speichern unter
+53 Bitte für die Domain \'%s\' auf dem Server \'%s\' einloggen:
+54 Editor/Browser
+55 Timeout - server antwortet nicht
+56 **%s already exists. Overwrite it?
+57 **%s has changed. Overwrite it?
+58 **Background image
+59 **Background image not allowed here
 60 CSS
 61 Speichern überschreibt die folgenden URL:
 62 Speichern der URL fehlerhaft
@@ -74,7 +78,7 @@
 77 <HTML><HEAD><TITLE>ERROR: Kann nicht zugreifen auf URL</TITLE></HEAD><BODY><H1>Die angeforderte URL konnte nicht geladen werden </H1><HR><P>Beim Laden der URL:<A HREF=\"%s\">%s</A></P><P> ist folgender Fehler aufgetreten:</P><UL><LI><STRONG>Verbindung nicht möglich</STRONG></UL><P>Das System meldete:</P><PRE><I>(%d) %s</I></PRE><P>Dies bedeutet, daß:</P><PRE>Die Gegenseite oder der Server sind nicht erreichbar oder existieren nicht.</PRE><PRE>Bitte später noch einmal versuchen.</PRE><P></P><HR>\n</BODY></HTML>
 78 Bitter Usernamen eingeben:
 79 %d offene Anfrage(n)
-80 Räume Cachespeicher auf - Bitte warten...
+80 **No CSS file available
 81 Übertragung unterbrechen
 82 Vorheriges Dokument
 83 Nachfolgendes Dokument
@@ -134,10 +138,3 @@
 137 Alternativer Text
 138 Alternativer Text ist erforderlich!
 139 mit URL
-140 Bitte für die Domain \'%s\' auf dem Server \'%s\' einloggen:
-141 Editor/Browser
-142 Timeout - server antwortet nicht
-143 **%s already exists. Overwrite it?
-144 **%s has changed. Overwrite it?
-145 **Background image
-146 **Background image not allowed here

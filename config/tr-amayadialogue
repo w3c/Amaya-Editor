@@ -134,58 +134,63 @@
 133 Kural yarat...
 134 \'class\' uygula...
 135 Tarzý tanýmlarý
-136 Bilgi türü
-137 Vurgu
-138 Kuvvetli
-139 Cite
-140 Taným
-141 Kod
-142 Deðiþken
-143 Örnek
-144 Tuþtakýmý
-145 **Abbreviation
-146 **Acronym
-147 **Insertion
-148 **Deletion
-149 Karakter birimi
-150 Ýtalik
-151 Kalýn
-152 Teletype
-153 Büyük
-154 Küçük
-155 Alt
-156 Üst
-157 **Quotation
-158 **BDO
-159 Bölüm numaralandýrmasý
-160 Kitap yap
-161 **Show log file
-162 **Options
-163 **General...
-164 **Publishing...
-165 **Cache...
-166 **Proxy...
-167 **Printer...
-168 **Colors...
-169 **Geometry...
-170 **Save the options
-171 Amaya hakkýnda
-172 **About Amaya at W3C
-173 Tarama
-174 Seçme
-175 Arama
-176 Görünümler
-177 Birim yaratma
-178 Baðlantýlar
-179 Yeniden yapýlandýrma
-180 Tablolar
-181 Matematik
-182 Görüntü haritalarý
-183 Tarz tanýmlarý
-184 Özellikler
-185 Yazým hatalarý aranýyor
-186 Sayfa yerleþtirme
-187 Bastýrma
-188 Numaralandýrmasý
-189 Kitap oluþturma
-190 Amaya yapýlandýrmasý
+136 **Link a new one...
+137 **Open...
+138 **Disable...
+139 **Enable...
+140 **Remove...
+141 Bilgi türü
+142 Vurgu
+143 Kuvvetli
+144 Cite
+145 Taným
+146 Kod
+147 Deðiþken
+148 Örnek
+149 Tuþtakýmý
+150 **Abbreviation
+151 **Acronym
+152 **Insertion
+153 **Deletion
+154 Karakter birimi
+155 Ýtalik
+156 Kalýn
+157 Teletype
+158 Büyük
+159 Küçük
+160 Alt
+161 Üst
+162 **Quotation
+163 **BDO
+164 Bölüm numaralandýrmasý
+165 Kitap yap
+166 **Show log file
+167 **Options
+168 **General...
+169 **Publishing...
+170 **Cache...
+171 **Proxy...
+172 **Printer...
+173 **Colors...
+174 **Geometry...
+175 **Save the options
+176 Amaya hakkýnda
+177 **About Amaya at W3C
+178 Tarama
+179 Seçme
+180 Arama
+181 Görünümler
+182 Birim yaratma
+183 Baðlantýlar
+184 Yeniden yapýlandýrma
+185 Tablolar
+186 Matematik
+187 Görüntü haritalarý
+188 Tarz tanýmlarý
+189 Özellikler
+190 Yazým hatalarý aranýyor
+191 Sayfa yerleþtirme
+192 Bastýrma
+193 Numaralandýrmasý
+194 Kitap oluþturma
+195 Amaya yapýlandýrmasý

@@ -25,6 +25,7 @@
 #define MAX_CSS_REF     2
 
 static int         BaseCSS;
+static int         CSScase;
 static STRING      CSSpath;
 static Document    CSSdocument;
 
@@ -57,43 +58,58 @@ STRING              data;
     {
     case CSSForm:
       TtaDestroyDialogue (ref);
-      if (val == 1 && CSSpath != NULL)
-	/* display the CSS file */
-	GetHTMLDocument (CSSpath, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
-      else if (val == 2)
-	/* re-parse the CSS file */
-	  ;
-      else if (val == 3 && CSSpath)
+      if (val == 1)
 	{
-	  /* remove the link to this file */
-	  css = CSSList;
-	  found = FALSE;
-	  while (css != NULL && !found)
+	  switch (CSScase)
 	    {
-	      if (css->category != CSS_DOCUMENT_STYLE &&
-		  css->documents[CSSdocument] &&
-		  ((css->url && !ustrcmp (CSSpath, css->url)) ||
-		   (css->localName && !ustrcmp (CSSpath, css->localName))))
+	    case 1:
+	      if (CSSpath != NULL)
+		/* display the CSS file */
+		GetHTMLDocument (CSSpath, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
+	      break;
+	    case 2:
+	      /* disable the CSS file */
+      	      break;
+	    case 3:
+	      /* enable the CSS file */
+      	      break;
+	    case 4:
+	      /* remove the link to this file */
+	      if (CSSpath != NULL)
 		{
-		  /* we found out the CSS */
-		  found = TRUE;
-		  if (css->category == CSS_EXTERNAL_STYLE)
+		  css = CSSList;
+		  found = FALSE;
+		  while (css != NULL && !found)
 		    {
-		      /* look for the element LINK */
-		      pInfo = css->infos;
-		      while (pInfo != NULL && pInfo->PiDoc != CSSdocument)
-			/* next info context */
-			pInfo = pInfo->PiNext;
-		      if (pInfo != NULL)
-			RemoveLink (pInfo->PiLink, CSSdocument);
+		      if (css->category != CSS_DOCUMENT_STYLE &&
+			  css->documents[CSSdocument] &&
+			  ((css->url && !ustrcmp (CSSpath, css->url)) ||
+			   (css->localName && !ustrcmp (CSSpath, css->localName))))
+			{
+			  /* we found out the CSS */
+			  found = TRUE;
+			  if (css->category == CSS_EXTERNAL_STYLE)
+			    {
+			      /* look for the element LINK */
+			      pInfo = css->infos;
+			      while (pInfo != NULL && pInfo->PiDoc != CSSdocument)
+				/* next info context */
+				pInfo = pInfo->PiNext;
+			      if (pInfo != NULL && pInfo->PiLink != NULL)
+				{
+				  RemoveLink (pInfo->PiLink, CSSdocument);
+				  TtaDeleteTree (pInfo->PiLink, CSSdocument);
+				}
+			    }
+			}
+		      css = css->NextCSS;
 		    }
 		}
-	      css = css->NextCSS;
+	      break;
+	    default:
+	      break;
 	    }
 	}
-      else if (val == 4)
-	/* add a new link to a CSS file */
-	CreateLinkInHead (CSSdocument, 1);
       /* clean CSSpath */
       TtaFreeMemory (CSSpath);
       CSSpath = NULL;
@@ -104,6 +120,8 @@ STRING              data;
       length = ustrlen (data);
       CSSpath = TtaGetMemory (length + 1);
       ustrcpy (CSSpath, data);      
+      break;
+    default:
       break;
     }
 }
@@ -126,11 +144,10 @@ void                InitCSS ()
    InitCSSDialog list downloaded CSS files
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitCSSDialog (Document doc, View view)
+static void         InitCSSDialog (Document doc)
 #else
-void                InitCSSDialog (doc, view)
+static void         InitCSSDialog (doc)
 Document            doc;
-View                view;
 #endif
 {
   CSSInfoPtr          css;
@@ -149,21 +166,17 @@ View                view;
   size = 400;
 #  ifndef _WINDOWS
   /* create the form */
-  i = 0;
-  ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_OPEN));
-  i += ustrlen (&s[i]) + 1;
-  ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
-  i += ustrlen (&s[i]) + 1;
-  ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_REMOVE));
-  i += ustrlen (&s[i]) + 1;
-  ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_ADD));
-  TtaNewSheet (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1), TtaGetMessage (AMAYA, AM_CSS), 4, s, TRUE, 2, 'L', D_DONE);
+  TtaNewSheet (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1),
+	       TtaGetMessage (AMAYA, AM_CSS), 1,
+	       TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_DONE);
 #  endif /* !_WINDOWS */
   select = -1;
   i = 0;
   while (css != NULL)
     {
-      if (css->category != CSS_DOCUMENT_STYLE && css->documents[doc])
+      if (css->category != CSS_DOCUMENT_STYLE &&
+	  css->documents[doc] &&
+	  (CSScase < 4 || css->category == CSS_EXTERNAL_STYLE))
 	{
 	  /* build the CSS list */
 	  if (css->url == NULL)
@@ -178,13 +191,23 @@ View                view;
 	  index += len;
 	  nb++;
 	  size -= len;
-	  if (select == -1 && css->category == CSS_EXTERNAL_STYLE)
+	  if (select == -1 &&
+	      (CSScase < 4 || css->category == CSS_EXTERNAL_STYLE))
 	    {
 	      if (CSSpath != NULL)
 		TtaFreeMemory (CSSpath);
-	      len = ustrlen (css->url);
-	      CSSpath = TtaGetMemory (len + 1);
-	      ustrcpy (CSSpath, css->url);
+	      if (css->url)
+		{
+		  len = ustrlen (css->url);
+		  CSSpath = TtaGetMemory (len + 1);
+		  ustrcpy (CSSpath, css->url);
+		}
+	      else
+		{
+		  len = ustrlen (css->localName);
+		  CSSpath = TtaGetMemory (len + 1);
+		  ustrcpy (CSSpath, css->localName);
+		}
 	      select = i;
 	    }
 	  i++;
@@ -200,7 +223,86 @@ View                view;
     TtaNewSelector (BaseCSS + CSSSelect, BaseCSS + CSSForm,
 		    TtaGetMessage (AMAYA, AM_CSS_FILE),
 		    nb, buf, 5, NULL, FALSE, TRUE);
+  else
+    TtaNewLabel (BaseCSS + CSSSelect, BaseCSS + CSSForm,
+		 TtaGetMessage (AMAYA, AM_NO_CCS_FILE));
   TtaShowDialogue (BaseCSS + CSSForm, TRUE);
-  TtaSetSelector (BaseCSS + CSSSelect, select, NULL);
+  if (nb > 0)
+    TtaSetSelector (BaseCSS + CSSSelect, select, NULL);
 #  endif /* !_WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+   LinkCSS
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                LinkCSS (Document doc, View view)
+#else
+void                LinkCSS (doc, view)
+Document            doc;
+View                view;
+#endif
+{
+  /* add a new link to a CSS file */
+  CreateLinkInHead (CSSdocument, 1);
+}
+
+/*----------------------------------------------------------------------
+   OpenCSS lists downloaded CSS files
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                OpenCSS (Document doc, View view)
+#else
+void                OpenCSS (doc, view)
+Document            doc;
+View                view;
+#endif
+{
+  CSScase = 1;
+  InitCSSDialog (doc);
+}
+
+/*----------------------------------------------------------------------
+   DisableCSS list downloaded CSS files
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DisableCSS (Document doc, View view)
+#else
+void                DisableCSS (doc, view)
+Document            doc;
+View                view;
+#endif
+{
+  CSScase = 2;
+  InitCSSDialog (doc);
+}
+
+/*----------------------------------------------------------------------
+  EnableCSS list downloaded CSS files
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                EnableCSS (Document doc, View view)
+#else
+void                EnableCSS (doc, view)
+Document            doc;
+View                view;
+#endif
+{
+  CSScase = 3;
+  InitCSSDialog (doc);
+}
+
+/*----------------------------------------------------------------------
+   RemoveCSS lists downloaded CSS files
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                RemoveCSS (Document doc, View view)
+#else
+void                RemoveCSS (doc, view)
+Document            doc;
+View                view;
+#endif
+{
+  CSScase = 4;
+  InitCSSDialog (doc);
 }

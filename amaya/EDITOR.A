@@ -173,8 +173,11 @@ MENUS
 
 	view:1 Style button:BCreateClass -> CreateClass;
 	view:1 Style button:BApplyClass -> ApplyClass;
-	view:1 Style Separator;
-	view:1 Style button:BCSS -> InitCSSDialog;
+	view:1 Style.StyleSheet button:BLinkCSS -> LinkCSS;
+	view:1 Style.StyleSheet button:BOpenCSS -> OpenCSS;
+	view:1 Style.StyleSheet button:BDisableCSS -> DisableCSS;
+	view:1 Style.StyleSheet button:BEnableCSS -> EnableCSS;
+	view:1 Style.StyleSheet button:BRemoveCSS -> RemoveCSS;
         view:1 Style Separator;
         view:1 Style.Phrase toggle:TEmphasis -> CreateElemEmphasis;
         view:1 Style.Phrase toggle:TStrong -> CreateElemStrong;

@@ -140,10 +140,10 @@ extern void ShowLogFile ( Document doc,
                           View view );
 extern void FlushCache ( Document doc,
                          View view );
-extern void ConfigColor ( Document doc,
-                          View view );
 extern void ConfigPrinter ( Document doc,
                             View view );
+extern void ConfigColor ( Document doc,
+                          View view );
 extern void ConfigGeometry ( Document doc,
                              View view );
 extern void ConfigGeneral ( Document doc,
@@ -293,10 +293,10 @@ extern void ShowLogFile (/* Document doc,
                             View view */);
 extern void FlushCache (/* Document doc,
                            View view */);
-extern void ConfigColor (/* Document doc,
-                            View view */);
 extern void ConfigPrinter (/* Document doc,
                               View view */);
+extern void ConfigColor (/* Document doc,
+                            View view */);
 extern void ConfigGeometry (/* Document doc,
                                View view */);
 extern void ConfigGeneral (/* Document doc,

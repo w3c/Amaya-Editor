@@ -963,7 +963,6 @@ Document       doc;
     {
       if (IsHTTPPath (DocumentURLs[doc]))
 	{
-	  /* remove the temporary document file */
 	  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
 	  TtaFileUnlink (tempdocument);
 	  TtaFreeMemory (tempdocument);
@@ -971,14 +970,14 @@ Document       doc;
 	  if (TtaFileExist (htmlErrFile))
 	    TtaFileUnlink (htmlErrFile);
 	}
-      else 
-	if (DocumentTypes[doc] == docImage || DocumentTypes[doc] == docImageRO) 
-	  {
-	    /* remove the HTML container for the local images */
-	    tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
-	    TtaFileUnlink (tempdocument); 
-	    TtaFreeMemory (tempdocument);
-	  }
+      else if (DocumentTypes[doc] == docImage ||
+	       DocumentTypes[doc] == docImageRO) 
+	{
+	  /* remove the HTML container for the local images */
+	  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
+	  TtaFileUnlink (tempdocument); 
+	  TtaFreeMemory (tempdocument);
+	}
 
       if (DocumentTypes[doc] == docImage)
 	DocumentTypes[doc] = docHTML;
@@ -991,7 +990,7 @@ Document       doc;
 	TtaFreeMemory (DocumentMeta[doc]->form_data);
       TtaFreeMemory (DocumentMeta[doc]);
       DocumentMeta[doc] = NULL;
-      RemoveDocCSSs (doc, TRUE);
+      RemoveDocCSSs (doc);
       /* avoid to free images of backup documents */
       if (BackupDocument != doc)
 	RemoveDocumentImages (doc);
@@ -1023,6 +1022,7 @@ Document       doc;
 	  TtaFreeMemory (SaveImgsURL);
 	  TtaFreeMemory (SavingFile);
 	  TtaFreeMemory (AttrHREFvalue);
+	  TtaFreeMemory (UserCSS);
 	  FreeHTMLParser ();
 	  FreeXMLParser ();
 	  FreeDocHistory ();

@@ -48,12 +48,16 @@
 47 No transformation applicable to the selection
 48 Transformation failed 
 49 syntax error in file HTML.trans line %s
-50 Add
-51 Remove
-52 Update
-53 Maths
-54 Graphics
-55 Save as
+50 Maths
+51 Graphics
+52 Save as
+53 Please authenticate for realm \'%s\' at server \'%s\'
+54 Editor/Browser
+55 Request timeout - server did not respond
+56 %s already exists. Overwrite it?
+57 %s has changed. Overwrite it?
+58 Background image
+59 Background image not allowed here
 60 CSS
 61 Saving will overwrite the following URLs:
 62 Failed to save to URL
@@ -74,7 +78,7 @@
 77 <HTML><HEAD><TITLE>ERROR: Cannot access a URL</TITLE></HEAD><BODY><H1>The requested URL could not be retrieved</H1><HR><P>While trying to retrieve the URL:<A HREF=\"%s\">%s</A></P><P>The following error was encountered:</P><UL><LI><STRONG>Connection Failed</STRONG></UL><P>The system returned:</P><PRE><I>(%d) %s</I></PRE><P>This means that:</P><PRE>The remote site or server may be down or non-existant.</PRE><PRE>Please try again soon.</PRE><P></P><HR>\n</BODY></HTML>
 78 Please enter username:
 79 %d outstanding requests
-80 Garbage collecting persistent cache - please wait...
+80 No CSS file available
 81 Interrupt transfer
 82 Previous document
 83 Next document
@@ -134,10 +138,3 @@
 137 Alternate text
 138 Attribute ALT is mandatory
 139 Print URL
-140 Please authenticate for realm \'%s\' at server \'%s\'
-141 Editor/Browser
-142 Request timeout - server did not respond
-143 %s already exists. Overwrite it?
-144 %s has changed. Overwrite it?
-145 Background image
-146 Background image not allowed here

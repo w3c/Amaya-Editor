@@ -27,6 +27,7 @@
 #include "HTML.h"
 #ifndef _WINDOWS
 #include "Graph.xpm"
+#include "GraphNo.xpm"
 #include "line.xpm"
 #include "rect.xpm"
 #include "roundrect.xpm"
@@ -44,7 +45,8 @@
 #define MenuGraph 1
 #define MAX_GRAPH 2
 
-static Pixmap   iconGraphics;
+static Pixmap   iconGraph;
+static Pixmap   iconGraphNo;
 static Pixmap   mIcons[12];
 static int      GraphDialogue;
 static boolean  PaletteDisplayed = FALSE;
@@ -53,7 +55,8 @@ static boolean  PaletteDisplayed = FALSE;
 #include "HTMLpresentation_f.h"
 #ifdef _WINDOWS
 #include "wininclude.h"
-#define iconGraphics 22
+#define iconGraph 22
+#define iconGraphNo 22
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -1277,8 +1280,12 @@ STRING              data;
 void                InitGraphML ()
 {
 #  ifndef _WINDOWS
-   iconGraphics = TtaCreatePixmapLogo (Graph_xpm);
-   TtaRegisterPixmap("Graph", iconGraphics);
+   iconGraph = TtaCreatePixmapLogo (Graph_xpm);
+   iconGraphNo = TtaCreatePixmapLogo (GraphNo_xpm);
+#  ifdef AMAYA_JAVA
+   TtaRegisterPixmap("Graph", iconGraph);
+   TtaRegisterPixmap("GraphNo", iconGraphNo);
+#  endif /* AMAYA_JAVA */
    mIcons[0] = TtaCreatePixmapLogo (line_xpm);
    mIcons[1] = TtaCreatePixmapLogo (rect_xpm);
    mIcons[2] = TtaCreatePixmapLogo (roundrect_xpm);
@@ -1341,7 +1348,23 @@ Document            doc;
 View                view;
 #endif
 {
-  TtaAddButton (doc, 1, iconGraphics, ShowGraphicsPalette, TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS), TBSTYLE_BUTTON, TRUE);
+  TtaAddButton (doc, 1, iconGraph, ShowGraphicsPalette, TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS), TBSTYLE_BUTTON, TRUE);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void              SwitchIconGraph (Document doc, View view, boolean state)
+#else  /* __STDC__ */
+void              SwitchIconGraph (doc, view, state)
+Document          doc;
+ View             view;
+boolean           state;
+#endif /* __STDC__ */
+{
+  if (state)
+    TtaChangeButton (doc, view, 24, iconGraph, state);
+  else
+    TtaChangeButton (doc, view, 24, iconGraphNo, state);
+}
 #endif /* GRAPHML */

@@ -4239,105 +4239,109 @@ boolean             withUndo;
       else
 	c = GetNextInputChar (&eof);
       CSSbuffer[CSSindex] = c;
-      switch (c)
+      if (CSScomment == MAX_CSS_LENGTH || c == '*' || c == '/')
 	{
-	case '\r':
-	  c = EOS;
-	  break;
-	case '@':
-	  /* perhaps an import primitive */
-	  import = CSSindex;
-	  break;
-	case ';':
-	  if (import != MAX_CSS_LENGTH)
+	  /* we're not within a comment or we're parsing * or / */
+	  switch (c)
 	    {
-	      if (ustrncasecmp (&CSSbuffer[import+1], "import", 6))
-		/* it's not an import */
-		import = MAX_CSS_LENGTH;
-	      /* save the text */
-	      noRule = TRUE;
+	    case '\r':
+	      c = EOS;
+	      break;
+	    case '@':
+	      /* perhaps an import primitive */
+	      import = CSSindex;
+	      break;
+	    case ';':
+	      if (import != MAX_CSS_LENGTH)
+		{
+		  if (ustrncasecmp (&CSSbuffer[import+1], "import", 6))
+		    /* it's not an import */
+		    import = MAX_CSS_LENGTH;
+		  /* save the text */
+		  noRule = TRUE;
+		}
+	      break;
+	    case '*':
+	      if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '/')
+		/* start a comment */
+		CSScomment = CSSindex - 1;
+	      break;
+	    case '/':
+	      if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '*' && CSScomment != MAX_CSS_LENGTH)
+		{
+		  /* close a comment */
+		  CSSindex = CSScomment - 1; /* incremented later */
+		  CSScomment = MAX_CSS_LENGTH;
+		}
+	      else if (CSSindex > 0 && CSSbuffer[CSSindex - 1] ==  '<')
+		{
+		  /* this is the closing tag ! */
+		  CSSparsing = FALSE;
+		  CSSindex -= 2; /* remove </ from the CSS string */
+		}	    
+	      break;
+	    case '<':
+	      if (buffer != NULL)
+		{
+		  c = buffer[index++];
+		  eof = (c == EOS);
+		}
+	      else
+		c = GetNextInputChar (&eof);
+	      if (c == '!')
+		{
+		  /* CSS within an HTML comment */
+		  HTMLcomment = TRUE;
+		  CSSindex++;
+		  CSSbuffer[CSSindex] = c;
+		}
+	      else if (c == '/' && CSScomment == MAX_CSS_LENGTH)
+		{
+		  CSSindex--;
+		  /* Ok we consider this as a closing tag ! */
+		  CSSparsing = FALSE;
+		}
+	      else if (c == EOS)
+		CSSindex++;
+	      break;
+	    case '-':
+	      if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '-' && HTMLcomment)
+		/* CSS within an HTML comment */
+		noRule = TRUE;
+	      break;
+	    case '>':
+	      if (HTMLcomment)
+		noRule = TRUE;
+	      break;
+	    case '{':
+	      openRule++;
+	      if (import != MAX_CSS_LENGTH && openRule == 1)
+		{
+		  /* is it the screen concerned? */
+		  CSSbuffer[CSSindex+1] = EOS;
+		  base = ustrstr (&CSSbuffer[import], "screen");
+		  if (base == NULL)
+		    ignoreMedia = TRUE;
+		  noRule = TRUE;
+		}
+	      break;
+	    case '}':
+	      openRule--;
+	      if (import != MAX_CSS_LENGTH && openRule == 0)
+		{
+		  import = MAX_CSS_LENGTH;
+		  noRule = TRUE;
+		  ignoreMedia = FALSE;
+		}
+	      else
+		toParse = TRUE;
+	      break;
+	    default:
+	      break;
 	    }
-	  break;
-	case '*':
-	  if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '/')
-	    /* start a comment */
-	    CSScomment = CSSindex - 1;
-	  break;
-	case '/':
-	  if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '*' && CSScomment != MAX_CSS_LENGTH)
-	    {
-	      /* close a comment */
-	      CSSindex = CSScomment - 1; /* incremented later */
-	      CSScomment = MAX_CSS_LENGTH;
-	    }
-	  else if (CSSindex > 0 && CSSbuffer[CSSindex - 1] ==  '<')
-	    {
-	      /* this is the closing tag ! */
-	      CSSparsing = FALSE;
-	      CSSindex -= 2; /* remove </ from the CSS string */
-	    }	    
-	  break;
-	case '<':
-	  if (buffer != NULL)
-	    {
-	      c = buffer[index++];
-	      eof = (c == EOS);
-	    }
-	  else
-	    c = GetNextInputChar (&eof);
-	  if (c == '!')
-	    {
-	      /* CSS within an HTML comment */
-	      HTMLcomment = TRUE;
-	      CSSindex++;
-	      CSSbuffer[CSSindex] = c;
-	    }
-	  else if (c == '/' && CSScomment == MAX_CSS_LENGTH)
-	    {
-	      CSSindex--;
-	      /* Ok we consider this as a closing tag ! */
-	      CSSparsing = FALSE;
-	    }
-	  else if (c == EOS)
+	  if (c != EOS)
 	    CSSindex++;
-	  break;
-	case '-':
-	  if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '-' && HTMLcomment)
-	    /* CSS within an HTML comment */
-	    noRule = TRUE;
-	  break;
-	case '>':
-	  if (HTMLcomment)
-	      noRule = TRUE;
-	  break;
-	case '{':
-	  openRule++;
-	  if (import != MAX_CSS_LENGTH && openRule == 1)
-	    {
-	      /* is it the screen concerned? */
-	      CSSbuffer[CSSindex+1] = EOS;
-	      base = ustrstr (&CSSbuffer[import], "screen");
-	      if (base == NULL)
-		ignoreMedia = TRUE;
-	      noRule = TRUE;
-	    }
-	  break;
-	case '}':
-	  openRule--;
-	  if (import != MAX_CSS_LENGTH && openRule == 0)
-	    {
-	      import = MAX_CSS_LENGTH;
-	      noRule = TRUE;
-	      ignoreMedia = FALSE;
-	    }
-	  else
-	    toParse = TRUE;
-	  break;
-        default:
-	  break;
 	}
-      if (c != EOS)
-	CSSindex++;
       if  (CSSindex >= MAX_CSS_LENGTH || !CSSparsing || toParse || noRule)
 	{
 	  CSSbuffer[CSSindex] = EOS;

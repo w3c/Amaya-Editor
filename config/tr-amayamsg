@@ -48,12 +48,16 @@
 47 Seçili bölge için hiç bir dönüþüm kullanýlamaz
 48 Dönüþüm baþarýsýz
 49 HTML.trans dosyasý, %s satýrýnda yazým hatasý
-50 Ekle
-51 **Remove
-52 **Update
-53 Matematik
-54 Grafik
-55 Ýsimle kaydet
+50 Matematik
+51 Grafik
+52 Ýsimle kaydet
+53 **Please authenticate for realm \'%s\' at server \'%s\'
+54 **Editor/Browser
+55 **Request timeout - server did not respond
+56 **%s already exists. Overwrite it?
+57 **%s has changed. Overwrite it?
+58 **Background image
+59 **Background image not allowed here
 60 CSS
 61 Kaydetmek þu URL\'lerin üzerine yazacaktýr:
 62 URL kaydedilemedi
@@ -74,7 +78,7 @@
 77 <HTML><HEAD><TITLE>HATA: URL eriþilemiyor</TITLE></HEAD><BODY><H1>Belirtilen URL alýnamadý</H1><HR><P>Belirtilen URL alýnýrken:<A HREF=\"%s\">%s</A></P><P>Aþaðýdaki hata ile karþýlaþýldý:</P><UL><LI><STRONG>Baðlantý baþarýsýz</STRONG></UL><P>Sistem hata olarak:</P><PRE><I>(%d) %s</I></PRE>mesajýný verdi<P>Bunun anlamý:</P><PRE>Karþý sunucunun çalýþmýyor olmasý veya istenen belgenin sunucuda yer almamasý.</PRE><PRE>Lütfen bir süre sonra tekrar deneyin.</PRE><P></P><HR>\n</BODY></HTML>
 78 Kullanýcý ismini girin:
 79 %d istek sýrada
-80 Önbellek temizleniyor, lütfen bekleyiniz...
+80 **No CSS file available
 81 Aktarýmý kes
 82 Önceki belge
 83 Sonraki belge
@@ -134,10 +138,3 @@
 137 **Alternate text
 138 **Attribute ALT is mandatory
 139 **Print URL
-140 **Please authenticate for realm \'%s\' at server \'%s\'
-141 **Editor/Browser
-142 **Request timeout - server did not respond
-143 **%s already exists. Overwrite it?
-144 **%s has changed. Overwrite it?
-145 **Background image
-146 **Background image not allowed here

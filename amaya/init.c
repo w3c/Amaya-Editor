@@ -292,53 +292,48 @@ STRING              form_data;
 
 #endif
 {
-   int                 i;
-   boolean             found;
-   STRING              otherURL;
-   CHAR                URL_DIR_STR[2];
+  CHAR                otherURL[MAX_LENGTH];
+  int                 i;
+  boolean             found;
 
-   if (documentURL && ustrchr (documentURL, '/'))
-	  sprintf (URL_DIR_STR, "/");
-   else 
-	   sprintf (URL_DIR_STR, DIR_STR);
+  if (!documentURL)
+    return ((Document) None);
 
-   if (!documentURL)
-      return ((Document) None);
+  if (IsW3Path (documentURL))
+    {
+      ustrcpy (otherURL, documentURL);
+      ustrcat (otherURL, URL_STR);
+    }
+  else
+    otherURL[0] = EOS;
 
-   i = 1;
-   found = FALSE;
-   otherURL = TtaGetMemory (MAX_LENGTH);
-   ustrcpy (otherURL, documentURL);
-   ustrcat (otherURL, URL_DIR_STR);
-   while (!found && i < DocumentTableLength)
-     {
-	if (!DocumentURLs[i])
-	   i++;
-	else
-	  {
-	    /* compare the url */
-	     found = (ustrcmp (documentURL, DocumentURLs[i]) == 0
-		      || ustrcmp (otherURL, DocumentURLs[i]) == 0);
-	     /* compare the form_data */
-	     if (found 
-		 && (!((!form_data && !DocumentMeta[i]->form_data)
-		       || (form_data && DocumentMeta[i]->form_data
-			   && !ustrcmp (form_data, 
-				       DocumentMeta[i]->form_data)))))
-		 found = FALSE;
-
-	     if (!found)
-		i++;
-	  }
-     }
-   TtaFreeMemory (otherURL);
-
-   if (found)
-      /* document is found */
-      return ((Document) i);
-   else
-      /* document is not found */
-      return ((Document) None);
+  i = 1;
+  found = FALSE;
+  /* look for the URL into the list of downloaded documents */
+  while (!found && i < DocumentTableLength)
+    {
+      if (DocumentURLs[i])
+	{
+	  /* compare the url */
+	  found = (!ustrcmp (documentURL, DocumentURLs[i]) ||
+		   !ustrcmp (otherURL, DocumentURLs[i]));
+	  /* compare the form_data */
+	  if (found &&
+	      (!((!form_data && !DocumentMeta[i]->form_data) ||
+		 (form_data && DocumentMeta[i]->form_data &&
+		  !ustrcmp (form_data, DocumentMeta[i]->form_data)))))
+	    found = FALSE;	  
+	}
+      if (!found)
+	i++;
+    }
+  
+  if (found)
+    /* document is found */
+    return ((Document) i);
+  else
+    /* document is not found */
+    return ((Document) None);
 }
 
 /*----------------------------------------------------------------------
@@ -697,6 +692,9 @@ Document            doc;
 #ifdef MATHML
        SwitchIconMath (document, 1, FALSE);
 #endif /* MATHML */
+#ifdef GRAPHML
+       SwitchIconGraph (document, 1, FALSE);
+#endif /* GRAPHML */
        /* change the document status */
        if (DocumentTypes[document] == docHTML)
 	 DocumentTypes[document] = docReadOnly;
@@ -809,6 +807,9 @@ Document            doc;
 #ifdef MATHML
        SwitchIconMath (document, 1, TRUE);
 #endif /* MATHML */
+#ifdef GRAPHML
+       SwitchIconGraph (document, 1, TRUE);
+#endif /* GRAPHML */
        /* change the document status */
        if (DocumentTypes[document] == docReadOnly)
 	 DocumentTypes[document] = docHTML;
@@ -1701,6 +1702,9 @@ boolean             logFile;
 #ifdef MATHML
 	 SwitchIconMath (doc, 1, FALSE);
 #endif /* MATHML */
+#ifdef GRAPHML
+	 SwitchIconGraph (doc, 1, FALSE);
+#endif /* GRAPHML */
 	 TtaSetMenuOff (doc, 1, Types);
 	 TtaSetMenuOff (doc, 1, Links);
 	 TtaSetMenuOff (doc, 1, Style);
@@ -1734,6 +1738,9 @@ boolean             logFile;
 #ifdef MATHML
 	     SwitchIconMath (doc, 1, TRUE);
 #endif /* MATHML */
+#ifdef GRAPHML
+	     SwitchIconGraph (doc, 1, TRUE);
+#endif /* GRAPHML */
 
  	     TtaSetItemOn (doc, 1, Views, TShowMapAreas);
 	     TtaSetItemOn (doc, 1, Views, TShowTargets);
@@ -1878,6 +1885,7 @@ STRING              content_type;
 boolean		    history;
 #endif
 {
+  CSSInfoPtr          css;
   Document            newdoc = 0;
   DocumentType        docType;
   STRING              tempdocument;
@@ -2088,18 +2096,55 @@ boolean		    history;
 	      TtaFileCopy (tempfile, tempdocument);
 	      TtaFileUnlink (tempfile);
 	      /* if it's an IMAGEfile, we copy it too to the new directory */
-	      if (DocumentTypes[newdoc] == docImage || DocumentTypes[newdoc] == docImageRO) 
-		  MoveImageFile (doc, newdoc, documentname);
+	      if (DocumentTypes[newdoc] == docImage ||
+		  DocumentTypes[newdoc] == docImageRO) 
+		MoveImageFile (doc, newdoc, documentname);
 	    }
+	  else if (DocumentTypes[newdoc] == docCSS ||
+		   DocumentTypes[newdoc] == docCSSRO)
+	      TtaFileCopy (tempfile, tempdocument);
+	    /* now we can rename the local name of a remote document */
 	  else
 	    /* now we can rename the local name of a remote document */
 	    rename (tempfile, tempdocument);
+
+	  if (DocumentTypes[newdoc] == docCSS ||
+	      DocumentTypes[newdoc] == docCSSRO)
+	    { 
+	      css = SearchCSS (0, pathname);
+	      if (css == NULL)
+		{
+		  /* store a copy of this new CSS context in .amaya/0 */
+		  s = GetLocalPath (0, pathname);
+		  TtaFileCopy (tempdocument, s);
+		  /* initialize a new CSS context */
+		  AddCSS (newdoc, 0, CSS_EXTERNAL_STYLE, pathname, s);
+		  TtaFreeMemory (s);
+		}
+	      else
+		css->doc = newdoc;
+	    }
 	}
       else
 	{
 	  /* It is a local document */
 	  tempdocument = TtaGetMemory (MAX_LENGTH);
 	  ustrcpy (tempdocument, pathname);
+	  if (DocumentTypes[newdoc] == docCSS ||
+	      DocumentTypes[newdoc] == docCSSRO)
+	    { 
+	      css = SearchCSS (0, pathname);
+	      if (css == NULL)
+		{
+		  /* initialize a new CSS context */
+		  if (UserCSS && !ustrcmp (pathname, UserCSS))
+		    AddCSS (newdoc, 0, CSS_USER_STYLE, NULL, UserCSS);
+		  else
+		    AddCSS (newdoc, 0, CSS_EXTERNAL_STYLE, pathname, pathname);
+		}
+	      else
+		css->doc = newdoc;
+	    }
 	}
       
       /* save the document name into the document table */
@@ -2849,7 +2894,7 @@ void *context;
        tempfile[MAX_LENGTH] = EOS;
      }
    else
-     tempfile[0] = 0;
+     tempfile[0] = EOS;
    
    if (ok && !local_link)
      {
@@ -2977,6 +3022,7 @@ void               *ctx_cbf;
 #endif
 {
    Document            newdoc;
+   CSSInfoPtr          css;
    STRING              tempfile;
    STRING              tempdocument;
    STRING              parameters;
@@ -3020,7 +3066,11 @@ void               *ctx_cbf;
      NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
 
    if (parameters[0] == EOS)
-     newdoc = IsDocumentLoaded (pathname, form_data);
+     {
+       newdoc = IsDocumentLoaded (pathname, form_data);
+       if (newdoc != 0)
+	 TtaRaiseView (newdoc, 1);
+     }
    else
      {
        /* we need to ask the server */
@@ -3131,6 +3181,7 @@ void               *ctx_cbf;
 		 }
 	     }
 #endif /* AMAYA_JAVA */
+
 	   if (ok)
 	     {
 	       /* this document is currently in load */
@@ -3157,6 +3208,8 @@ void               *ctx_cbf;
 			 if (slash && pathname[slash - 1] != '/')
 			   ustrcat (pathname, "/");
 		       }
+		     css = SearchCSS (0, pathname);
+		     if (css == NULL)
 		       toparse =  GetObjectWWW (newdoc,
 						pathname,
 						form_data, 
@@ -3168,6 +3221,19 @@ void               *ctx_cbf;
 						(void *) ctx,
 						YES,
 						NULL);
+		     else
+		       {
+			 /* it was already loaded, we need to open it */
+			 TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+			 /* just take a copy of the local temporary file */
+			 ustrcpy (tempfile, css->localName);
+			 GetHTMLDocument_callback (newdoc, 0,
+						   pathname,
+						   tempfile, 
+						   NULL,
+						   (void *) ctx);
+			 TtaHandlePendingEvents ();
+		       }
 		   }
 		 else
 		   {
@@ -3319,14 +3385,14 @@ STRING              data;
 {
   STRING              tempfile;
   STRING              tempname;
-  CHAR                url_sep;
+  CHAR                sep;
   int                 val, i;
   boolean             change;
 
   if (typedata == STRING_DATA && data && ustrchr (data, '/'))
-    url_sep = '/';
+    sep = URL_SEP;
   else 
-    url_sep = DIR_SEP;
+    sep = DIR_SEP;
 
    val = (int) data;
 
@@ -3640,7 +3706,7 @@ STRING              data;
        else
 	 ustrcpy (tempfile, data);
        
-       if (tempfile[ustrlen (tempfile) - 1] == url_sep)
+       if (tempfile[ustrlen (tempfile) - 1] == sep)
 	 {
 	   ustrcpy (SavePath, tempfile);
 	   SaveName[0] = EOS;
@@ -4009,36 +4075,52 @@ NotifyEvent        *event;
    TargetName = NULL;
    /* initialize temporary directory for loaded files */
 
-#  ifdef _WINDOWS 
+   /* Build the User preferences file name */
+   UserCSS = TtaGetEnvString ("HOME");
+   if (UserCSS)
+     /* Name = $HOME/.amaya.css */
+     sprintf (TempFileDirectory, "%s%c.%s.css", UserCSS, DIR_SEP, HTAppName);
+   else
+     {
+       /* Name = $THOTDIR/amaya/amaya.css */
+       UserCSS = TtaGetEnvString ("THOTDIR");
+       sprintf (TempFileDirectory, "%s%camaya%c%s.css", UserCSS, DIR_SEP, DIR_SEP, HTAppName);
+     }
+#ifdef _WINDOWS 
    s = NULL;
-#  else  /* !_WINDOWS */
-   s = (STRING) TtaGetEnvString ("HOME");
-#  endif /* _WINDOWS */
+#else  /* !_WINDOWS */
+   s = UserCSS;
+#endif /* _WINDOWS */
+   if (TtaFileExist (TempFileDirectory))
+     UserCSS = TtaStrdup (TempFileDirectory);
+   else
+     /* no User preferences */
+     UserCSS = NULL;
 
    if (s)
       ustrcpy (TempFileDirectory, s);
    else
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
      if (!TtaFileExist ("C:\\TEMP"))
         _mkdir ("C:\\TEMP");
    ustrcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
-#  else  /* !_WINDOWS */
-     ustrcpy (TempFileDirectory, "/tmp");
+#else  /* !_WINDOWS */
+   ustrcpy (TempFileDirectory, "/tmp");
    ustrcat (TempFileDirectory, "/.amaya");
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    i = _mkdir (TempFileDirectory);
-#  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
    i = mkdir (TempFileDirectory, S_IRWXU);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    if (i != 0 && errno != EEXIST)
      {
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
        ustrcpy (TempFileDirectory, "/tmp/.amaya");
        i = mkdir (TempFileDirectory, S_IRWXU);
        if (i != 0 && errno != EEXIST)
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	 { 
 	   fprintf (stderr, "cannot create %s\n", TempFileDirectory);
 	   exit (1);

@@ -59,13 +59,16 @@ int                 AMAYA;
 #define AM_NO_TRANS		       47
 #define AM_TRANS_FAILED		       48
 #define AM_TRANS_PARSE_ERROR	       49
-#define AM_ADD                         50
-#define AM_REMOVE                      51
-#define AM_BROWSE                      52
-#define AM_BUTTON_MATH                 53
-#define AM_BUTTON_GRAPHICS             54
-#define AM_SAVE_AS                     55
-
+#define AM_BUTTON_MATH                 50
+#define AM_BUTTON_GRAPHICS             51
+#define AM_SAVE_AS                     52
+#define AM_AUTHENTICATION_REALM	       53
+#define AM_BUTTON_BrowseEdit           54
+#define AM_REQUEST_TIMEOUT	       55
+#define AM_OVERWRITE_CHECK             56
+#define AM_ETAG_CHANGED	      	       57
+#define AM_BACKGROUND_IMAGE            58
+#define AM_BG_IMAGE_NOT_ALLOWED        59
 #define AM_CSS                         60
 #define AM_WARNING_SAVE_OVERWRITE      61
 #define AM_URL_SAVE_FAILED             62
@@ -86,7 +89,7 @@ int                 AMAYA;
 #define AM_SYS_ERROR_TMPL              77
 #define AM_GET_USER_NAME               78
 #define AM_WAITING_REQUESTS            79
-#define AM_CACHE_GC                    80
+#define AM_NO_CCS_FILE                 80
 #define AM_BUTTON_INTERRUPT            81
 #define AM_BUTTON_PREVIOUS             82
 #define AM_BUTTON_NEXT                 83
@@ -146,11 +149,4 @@ int                 AMAYA;
 #define AM_ALT                	      137
 #define AM_ALT_MISSING                138
 #define AM_PRINT_URL                  139
-#define AM_AUTHENTICATION_REALM	      140
-#define AM_BUTTON_BrowseEdit          141
-#define AM_REQUEST_TIMEOUT	      142
-#define AM_OVERWRITE_CHECK            143
-#define AM_ETAG_CHANGED	      	      144
-#define AM_BACKGROUND_IMAGE           145
-#define AM_BG_IMAGE_NOT_ALLOWED       146
-#define AMAYA_MSG_MAX                 147
+#define AMAYA_MSG_MAX                 140
