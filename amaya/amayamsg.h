@@ -112,4 +112,16 @@ int                 AMAYA;
 #define AM_BUTTON_TABLE               100
 #define AM_NO_NAME                    101
 #define AM_BUTTON_PLUGIN              102
-#define AMAYA_MSG_MAX                 103
+#define AM_UNKNOWN_SAVE_ERROR         103
+#define AM_CANT_CONNECT_TO_HOST       104
+#define AM_FORBIDDEN_ACCESS           105
+#define AM_REQUEST_SUCCEEDED          106
+#define AM_CREATED_NEW_REMOTE_RESSOURCE 107
+#define AM_UPDATED_REMOTE_RESSOURCE   108
+#define AM_UNKNOWN_XXX_STATUS         109
+#define AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX 110
+#define AM_NO_DATA                    111
+#define AM_METHOD_NOT_ALLOWED         112
+#define AM_PLEASE_AUTHENTICATE        113
+#define AMAYA_MSG_MAX                 114
+

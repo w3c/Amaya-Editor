@@ -39,8 +39,8 @@
 38 english system errors messages
 39 An anchor cannot contain these elements
 40 Cannot create an anchor within an anchor
-41 Sorry, no GET support yet for this kind of URL: %s
-42 Sorry, no PUT support yet for this kind of URL: %s
+41 Sorry, no GET support yet for URLs of this type: %s
+42 Sorry, no PUT support yet for URLs of this type: %s
 43 This version of Amaya does not support this feature
 44 Finished writing %s
 45 Could not normalize %s
@@ -101,3 +101,14 @@
 100 Table
 101 Document doesn't have a name. Saving to:
 102 Plugins
+103 Unknown error while saving URL %s
+104 Cannot make a connection to the server
+105 Access to %s is forbidden by rule
+106 Operation succeded for %s
+107 %s has been created
+108 %s has been updated
+109 Operation completed with a %s status code
+110 Server did not understand the request syntax
+111 Server has no new information to send back
+112 This method is not allowed for %s
+113 Please authenticate to access %s
