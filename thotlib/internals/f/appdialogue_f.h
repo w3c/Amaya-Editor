@@ -72,8 +72,7 @@ extern int TtaAddTextZone ( Document doc,
 extern void TtaSetTextZone ( Document doc,
                              View view,
                              int index,
-                             char *text,
-                             char *listUrl );
+                             char *text);
 extern void TtcSwitchCommands ( Document doc,
                                 View view );
 extern void DrawingInput ( int *w,
