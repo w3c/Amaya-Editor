@@ -34,6 +34,31 @@ mkdir $DIR
    cp -p Thot/config/fr-prsdialogue $DIR/config/
    cp -p Thot/config/fr-strdialogue $DIR/config/
    cp -p Thot/config/fr-tradialogue $DIR/config/
+ mkdir $DIR/doc
+   cp -p Thot/doc/Appman.html $DIR/doc/
+   cp -p Thot/doc/Appman.toc.html $DIR/doc/
+   cp -p Thot/doc/APIman.html $DIR/doc/
+   cp -p Thot/doc/APIman.toc.html $DIR/doc/
+   cp -p Thot/doc/languages.html $DIR/doc/
+   cp -p Thot/doc/languages.toc.html $DIR/doc/
+   cp -p Thot/doc/thoteditor/Bilbon.gif $DIR/doc/
+ mkdir $DIR/doc/thoteditor
+   cp -p Thot/doc/thoteditor/Bilbon.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/ManDraw.PIV $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/Thotman-E.PIV $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/Thotman-E.EXT $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/Thotman-F.PIV $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/mainwindow.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/opera.xpm $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/outils.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/palette1.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/palette2.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/polygones.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/thot.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/thotdraw.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/traits.gif $DIR/doc/thoteditor/
+ mkdir $DIR/doc/thoteditor/manual_html
+   cp -p Thot/doc/thoteditor/manual_html/*.html $DIR/doc/thoteditor/manual_html/
  mkdir $DIR/dicopar
    cp -p Thot/dicopar/*.ptn $DIR/dicopar/
    cp -p Thot/dicopar/alphabet $DIR/dicopar/
@@ -61,6 +86,7 @@ do
    cp -p Thot/$MACH/bin/tra $DIR/$MACH/bin/
    cp -p Thot/batch/concatps* $DIR/$MACH/bin/
 done
+
 DIR=/mnt/thot/$THOTVERSION
 echo "Intallation version " $DIR
 mkdir $DIR
@@ -91,6 +117,31 @@ mkdir $DIR
    cp -p Thot/config/fr-prsdialogue $DIR/config/
    cp -p Thot/config/fr-strdialogue $DIR/config/
    cp -p Thot/config/fr-tradialogue $DIR/config/
+ mkdir $DIR/doc
+   cp -p Thot/doc/Appman.html $DIR/doc/
+   cp -p Thot/doc/Appman.toc.html $DIR/doc/
+   cp -p Thot/doc/APIman.html $DIR/doc/
+   cp -p Thot/doc/APIman.toc.html $DIR/doc/
+   cp -p Thot/doc/languages.html $DIR/doc/
+   cp -p Thot/doc/languages.toc.html $DIR/doc/
+   cp -p Thot/doc/thoteditor/Bilbon.gif $DIR/doc/
+ mkdir $DIR/doc/thoteditor
+   cp -p Thot/doc/thoteditor/Bilbon.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/ManDraw.PIV $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/Thotman-E.PIV $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/Thotman-E.EXT $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/Thotman-F.PIV $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/mainwindow.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/opera.xpm $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/outils.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/palette1.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/palette2.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/polygones.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/thot.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/thotdraw.gif $DIR/doc/thoteditor/
+   cp -p Thot/doc/thoteditor/traits.gif $DIR/doc/thoteditor/
+ mkdir $DIR/doc/thoteditor/manual_html
+   cp -p Thot/doc/thoteditor/manual_html/*.html $DIR/doc/thoteditor/manual_html/
  mkdir $DIR/dicopar
    cp -p Thot/dicopar/*.ptn $DIR/dicopar/
    cp -p Thot/dicopar/alphabet $DIR/dicopar/
