@@ -98,131 +98,133 @@
 96 Number (mn)
 97 Operator (mo)
 98 Character (&xxx;)
-99 Root (mroot)
-100 Square root (msqrt)
-101 Enclose (menclose)
-102 Fraction (mfrac)
-103 Subscript and superscript (msubsup)
-104 Subscript (msub)
-105 Superscript (msup)
-106 Under and over (munderover)
-107 Under (munder)
-108 Over (mover)
-109 Parentheses (mrow)
-110 Multiscripts (mmultiscripts)
-111 Matrix (mtable)
-112 Delete matrix column
-113 noscript
-114 Object
-115 object
-116 Parameter (param)
-117 Paragraph (p)
-118 Preformatted (pre)
-119 Table
-120 table
-121 caption
-122 colgroup
-123 col
-124 thead
-125 tbody
-126 tfoot
-127 Row (tr)
-128 Data cell (td)
-129 Heading cell (th)
-130 Delete table column
-131 Link to previous target
-132 Create or change link...
-133 Create target
-134 Delete anchor
-135 Show buttonbar
-136 Show address
-137 Show map areas
-138 Show targets
-139 Zoom in
-140 Zoom out
-141 Show structure
-142 Show alternate
-143 Show links
-144 Show table of contents
-145 Show source
-146 Character style...
-147 Colors...
-148 Format...
-149 Background image...
-150 Create rule...
-151 Apply class...
-152 Style sheets
-153 Link...
-154 Open...
-155 Disable...
-156 Enable...
-157 Remove...
-158 Information type
-159 Emphasis (em)
-160 strong
-161 cite
-162 Definition (dfn)
-163 code
-164 Variable (var)
-165 Sample (samp)
-166 Keyboard (kbd)
-167 Abbreviation (abbr)
-168 acronym
-169 Insertion (ins)
-170 Deletion (del)
-171 Character element
-172 Italic (i)
-173 Bold (b)
-174 Teletype (tt)
-175 big
-176 small
-177 Subscript (sub)
-178 Superscript (sup)
-179 Quotation (q)
-180 BiDi override (bdo)
-181 Section numbering
-182 Make book
-183 Add/Remove IDs...
-184 Show log file
-185 Preferences
-186 General...
-187 Publishing...
-188 Cache...
-189 Proxy...
-190 Colors...
-191 Window Geometry...
-192 Language Negotiation...
-193 Profiles...
-194 Templates...
-195 Annotate selection
-196 Annotate document
-197 Post annotation
-198 Delete annotation
-199 Load annotations
-200 Customize query...
-201 Local filter...
-202 Configure...
-203 About Amaya
-204 About Amaya at W3C
-205 Browsing
-206 Selecting
-207 Searching
-208 Views
-209 Creating elements
-210 Links
-211 Restructuring
-212 Tables
-213 Math
-214 Graphics
-215 Image maps
-216 Style sheets
-217 Attributes
-218 Spell Checking
-219 Publishing
-220 Printing
-221 Numbering
-222 Making books
-223 Annotations
-224 Configuring Amaya
-225 ShortCuts
-226 Accessibility in Amaya
+99 InvisibleTimes
+100 ApplyFunction
+101 Root (mroot)
+102 Square root (msqrt)
+103 Enclose (menclose)
+104 Fraction (mfrac)
+105 Subscript and superscript (msubsup)
+106 Subscript (msub)
+107 Superscript (msup)
+108 Under and over (munderover)
+109 Under (munder)
+110 Over (mover)
+111 Parentheses (mrow)
+112 Multiscripts (mmultiscripts)
+113 Matrix (mtable)
+114 Delete matrix column
+115 noscript
+116 Object
+117 object
+118 Parameter (param)
+119 Paragraph (p)
+120 Preformatted (pre)
+121 Table
+122 table
+123 caption
+124 colgroup
+125 col
+126 thead
+127 tbody
+128 tfoot
+129 Row (tr)
+130 Data cell (td)
+131 Heading cell (th)
+132 Delete table column
+133 Link to previous target
+134 Create or change link...
+135 Create target
+136 Delete anchor
+137 Show buttonbar
+138 Show address
+139 Show map areas
+140 Show targets
+141 Zoom in
+142 Zoom out
+143 Show structure
+144 Show alternate
+145 Show links
+146 Show table of contents
+147 Show source
+148 Character style...
+149 Colors...
+150 Format...
+151 Background image...
+152 Create rule...
+153 Apply class...
+154 Style sheets
+155 Link...
+156 Open...
+157 Disable...
+158 Enable...
+159 Remove...
+160 Information type
+161 Emphasis (em)
+162 strong
+163 cite
+164 Definition (dfn)
+165 code
+166 Variable (var)
+167 Sample (samp)
+168 Keyboard (kbd)
+169 Abbreviation (abbr)
+170 acronym
+171 Insertion (ins)
+172 Deletion (del)
+173 Character element
+174 Italic (i)
+175 Bold (b)
+176 Teletype (tt)
+177 big
+178 small
+179 Subscript (sub)
+180 Superscript (sup)
+181 Quotation (q)
+182 BiDi override (bdo)
+183 Section numbering
+184 Make book
+185 Add/Remove IDs...
+186 Show log file
+187 Preferences
+188 General...
+189 Publishing...
+190 Cache...
+191 Proxy...
+192 Colors...
+193 Window Geometry...
+194 Language Negotiation...
+195 Profiles...
+196 Templates...
+197 Annotate selection
+198 Annotate document
+199 Post annotation
+200 Delete annotation
+201 Load annotations
+202 Customize query...
+203 Local filter...
+204 Configure...
+205 About Amaya
+206 About Amaya at W3C
+207 Browsing
+208 Selecting
+209 Searching
+210 Views
+211 Creating elements
+212 Links
+213 Restructuring
+214 Tables
+215 Math
+216 Graphics
+217 Image maps
+218 Style sheets
+219 Attributes
+220 Spell Checking
+221 Publishing
+222 Printing
+223 Numbering
+224 Making books
+225 Annotations
+226 Configuring Amaya
+227 ShortCuts
+228 Accessibility in Amaya

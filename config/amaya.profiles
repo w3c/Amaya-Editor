@@ -317,7 +317,7 @@ HelpTables
 &CreateMO
 &CreateMathEntity
 &CreateInvisibleTimes
-&CreateAlppyFunction
+&CreateApplyFunction
 &CreateMROOT
 &CreateMSQRT
 &CreateMENCLOSE

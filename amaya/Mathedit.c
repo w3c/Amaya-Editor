@@ -3102,13 +3102,13 @@ void CreateInvisibleTimes (document, view)
 }
 
 /*----------------------------------------------------------------------
- CreateAlppyFunction
+ CreateApplyFunction
  Insert a character entity CreateAlppyFunction at the current position
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateAlppyFunction (Document document, View view)
+void CreateApplyFunction (Document document, View view)
 #else /* __STDC__*/
-void CreateAlppyFunction (document, view)
+void CreateApplyFunction (document, view)
      Document document;
      View view;
 #endif /* __STDC__*/
