@@ -11,7 +11,7 @@
  * on the elements of the form (e.g., clicking on a radio button), 
  * functions for resetting a form to its default value, and, finally,
  * functions for parsing and for submitting a form.
- * If you compile this module with -DDEBUG, then each time you press on
+ * If you compile this module with -DFORM_DEBUG, then each time you press on
  * a Submit or Reset button, the subtree of the form will be printed
  * out to /tmp/FormTree.dbg.
  *
@@ -20,7 +20,7 @@
  */
 
 /*
-#define DEBUG
+#define FORM_DEBUG
 */
 
 /* Included headerfiles */
@@ -724,7 +724,7 @@ Element             element;
    else
      ancestor = elForm;
 
-#ifdef DEBUG
+#ifdef FORM_DEBUG
 {
   /* dump the abstract tree */
  FILE               *fp2;
