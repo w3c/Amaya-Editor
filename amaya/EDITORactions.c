@@ -359,8 +359,7 @@ void                CreateBreak (Document document, View view)
    elType.ElTypeNum = HTML_EL_BR;
    TtaCreateElement (elType, document);
    TtaGiveLastSelectedElement (document, &el, &firstChar, &lastChar);
-   br = TtaGetParent (el);
-   el = br;
+   br = el;
    TtaNextSibling (&el);
    if (el == NULL)
      {
