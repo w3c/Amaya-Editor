@@ -519,9 +519,12 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 		   char *localfile, char *mime_type)
 {
-  ElementType         elType;
+  Element             parent;
+  ElementType         elType, parentType;
+  AttributeType       attrType;
+  Attribute           attr;
   int                 modified, i;
-  ThotBool            is_svg, is_mml;
+  ThotBool            is_svg, is_mml, is_html;
   ThotBool            xmlDec, withDoctype, isXML, isKnown;
   DocumentType        thotType;
   int                 parsingLevel;
@@ -553,6 +556,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	  This block should at some time be integrated with the above one */
       is_svg = FALSE;
       is_mml = FALSE;
+      is_html = FALSE;
 
       if (TtaGetPictureType (el) == unknown_type)
 	{
@@ -566,6 +570,9 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	      else if (!strncmp (mime_type, "text/mathml", 11)
 		  || !strcmp (mime_type, AM_MATHML_MIME_TYPE))
 		is_mml = TRUE;
+	      else if (!strncmp (mime_type, "text/htm", 8)
+		  || !strcmp (mime_type, AM_XHTML_MIME_TYPE))
+		is_html = TRUE;
 	      else
 		/* unknown mime_type, check with another method */
 		mime_type = NULL;
@@ -578,6 +585,8 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 		is_svg = TRUE;
 	      else if (imageName[i] == '.' && !strcmp (&imageName[i+1], "mml"))
 		is_mml = TRUE;
+	      else if (imageName[i] == '.' && !strncmp (&imageName[i+1], "htm", 3))
+		is_html = TRUE;
 	      else /* try sniffing */
 		{
 		  CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &isKnown,
@@ -586,24 +595,66 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 		    is_svg = TRUE;
 		  if (isXML && thotType == docMath)
 		    is_mml = TRUE;
+		  if (isXML && thotType == docHTML)
+		    is_html = TRUE;
 		}
 	    }
 	}
 
+      if ((is_html || is_svg || is_mml) &&
+	  (elType.ElTypeNum == HTML_EL_PICTURE_UNIT) &&
+	  (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")))
+	{
+	  parent = TtaGetParent (el);
+	  parentType = TtaGetElementType (parent);
+	  if (parentType.ElTypeNum == HTML_EL_Object)
+	    {
+	      /* Remove the IntHeightPercent and IntHeightPxl Thot attribute */
+	      /* Thot attributes for an HTML 'object' element */
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = HTML_ATTR_IntHeightPxl;
+	      attr = TtaGetAttribute (el, attrType);
+	      if (attr != NULL)
+		TtaRemoveAttribute (el, attr, doc);
+	      else
+		{
+		  attrType.AttrTypeNum = HTML_ATTR_IntHeightPercent;
+		  attr = TtaGetAttribute (el, attrType);
+		  if (attr != NULL)
+		    TtaRemoveAttribute (el, attr, doc);
+		}
+	    }	
+	}
+      
       if (is_svg)
 	{
-	  TtaSetPictureType (el,  AM_SVG_MIME_TYPE);
+	  TtaSetPictureType (el, AM_SVG_MIME_TYPE);
+	  if (desc)
+	    desc->imageType = svg_type;
 	  /* parse the SVG file and include the parsed tree at the
 	     position of the image element */
-	  ParseExternalXmlResource (tempfile, el, FALSE, doc, 
-				    TtaGetDefaultLanguage(), "SVG");
+	  ParseExternalDocument (tempfile, el, FALSE, doc, 
+				 TtaGetDefaultLanguage(), "SVG");
 	}
       else if (is_mml)
 	{
+	  TtaSetPictureType (el, AM_MATHML_MIME_TYPE);
+	  if (desc)
+	    desc->imageType = mathml_type;
 	  /* parse the MathML file and include the parsed tree at the
 	     position of the image element */
-	  ParseExternalXmlResource (tempfile, el, FALSE, doc, 
-				    TtaGetDefaultLanguage(), "MathML");
+	  ParseExternalDocument (tempfile, el, FALSE, doc, 
+				 TtaGetDefaultLanguage(), "MathML");
+	}
+      else if (is_html)
+	{
+	  TtaSetPictureType (el, AM_XHTML_MIME_TYPE);
+	  if (desc)
+	    desc->imageType = html_type;
+	  /* parse the HTML file and include the parsed tree at the
+	     position of the image element */
+	  ParseExternalDocument (tempfile, el, FALSE, doc, 
+				 TtaGetDefaultLanguage(), "HTML");
 	}
       else
 	{
@@ -619,8 +670,8 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
     {
       /* parse the SVG file and include the parsed sub-tree at the
 	 position of the use element */
-      ParseExternalXmlResource (tempfile, el, FALSE, doc, 
-				TtaGetDefaultLanguage(), "SVG");
+      ParseExternalDocument (tempfile, el, FALSE, doc, 
+			     TtaGetDefaultLanguage(), "SVG");
     }
   else  
     {
@@ -643,8 +694,8 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 }
 
 /*----------------------------------------------------------------------
-   HandleImageLoaded is the callback procedure when the image is loaded	
-   		from the web.						
+  HandleImageLoaded is the callback procedure when the image is loaded	
+  from the web.						
   ----------------------------------------------------------------------*/
 static void HandleImageLoaded (int doc, int status, char *urlName,
 			       char *outputfile,
@@ -776,10 +827,9 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	    /* get image type */
 	    if (desc->imageType == unknown_type)
 	      desc->imageType = TtaGetPictureType (ctxEl->currentElement);
-
 	    ctxPrev = ctxEl;
 	    ctxEl = ctxEl->nextElement;
-	    TtaFreeMemory ( ctxPrev);
+	    TtaFreeMemory (ctxPrev);
 	  }
      }
 }

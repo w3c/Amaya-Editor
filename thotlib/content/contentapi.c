@@ -2296,8 +2296,16 @@ void TtaSetPictureType (Element element, char *mime_type)
 	 typeImage = jpeg_type;
        else if (!strcmp (mime_type, "image/png"))
 	 typeImage = png_type;
-       else if (!strcmp (mime_type, "image/svg") || !strcmp (mime_type, "application/svg+xml"))
+       else if (!strcmp (mime_type, "image/svg") ||
+		!strcmp (mime_type, "image/svg+xml") ||
+		!strcmp (mime_type, "application/svg+xml"))
 	 typeImage = svg_type;
+       else if (!strcmp (mime_type, "text/html") ||
+		!strcmp (mime_type, "application/xhtml+xml"))
+	 typeImage = html_type;
+       else if (!strcmp (mime_type, "text/mml") ||
+		!strcmp (mime_type, "application/mathml+xml"))
+	 typeImage = mathml_type;
        else 
 	 typeImage = UNKNOWN_FORMAT;
        imageDesc->PicType = typeImage;

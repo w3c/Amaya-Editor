@@ -245,7 +245,8 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 		     !strcmp (&data[length-4], "jpeg") ||
 		     !strcmp (&data[length-3], "png") ||
 		     !strcmp (&data[length-3], "svg") ||
-		     !strcmp (&data[length-4], "svgz"))
+		     !strcmp (&data[length-4], "svgz") ||
+		     !strcmp (&data[length-3], "htm"))
 		   isImage = TRUE;
 	     }
 	 }
@@ -650,7 +651,7 @@ void       XhtmlElementComplete (ParserData *context, Element el, int *error)
 	       TtaInsertFirstChild (&child, el, doc);
 	 }
        
-       /* detect whether we're parsing a whole table or just a cell */
+       /* detect whether we are parsing a whole table or just a cell */
        if (DocumentMeta[doc]->xmlformat)
 	 {
 	   if (IsWithinXmlTable ())

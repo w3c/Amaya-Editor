@@ -400,7 +400,13 @@ char *PicTypeToMIME (PicType contentType)
       mime_type ="image/png";
       break;
     case svg_type:
-      mime_type =AM_SVG_MIME_TYPE;
+      mime_type = AM_SVG_MIME_TYPE;
+      break;
+    case html_type:
+      mime_type = AM_XHTML_MIME_TYPE;
+      break;
+    case mathml_type:
+      mime_type = AM_MATHML_MIME_TYPE;
       break;
    case unknown_type:
    default:

@@ -6551,7 +6551,6 @@ void ParseIncludedHTML (Element elem, char *closingTag)
 
 /*----------------------------------------------------------------------
    ParseSubTree
-   
   ----------------------------------------------------------------------*/
 void ParseSubTree (char* HTMLbuf, Element lastelem, Language language,
 		   ThotBool isclosed, Document doc)
@@ -6586,12 +6585,105 @@ void ParseSubTree (char* HTMLbuf, Element lastelem, Language language,
      }
 }
 
-/*----------------------------------------------------------------------
-   StartParser loads the file Directory/htmlFileName for
-   displaying the document documentName.
-   The parameter pathURL gives the original (local or
-   distant) path or URL of the html document.
-  ----------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------
+  ParseExternalHTMLDoc
+  Parse an external HTML document called from an other document
+  ------------------------------------------------------------------------------*/
+void ParseExternalHTMLDoc (Document doc, FILE * infile,
+			   CHARSET charset, char *extDocURL)
+{
+  Element         el, oldel;
+  int             error;
+
+  /* Context initialization */
+  HTMLcontext.doc = doc;
+  HTMLcontext.docRef = doc;
+  HTMLcontext.elementRef = NULL;
+  FirstElemToBeChecked = NULL;
+  LastElemToBeChecked = NULL;
+  HTMLcontext.lastElement = NULL;
+  HTMLcontext.lastElementClosed = FALSE;
+  lastElemEntry = 0;
+  lastAttribute = NULL;
+  lastAttrElement = NULL;
+  lastAttrEntry = NULL;
+  UnknownAttr = FALSE;
+  ReadingAnAttrValue = FALSE;
+  CommentText = NULL;
+  UnknownTag = FALSE;
+  HTMLcontext.mergeText = FALSE;
+  LgEntityName = 0;
+  EntityTableEntry = 0;
+  CharRank = 0;
+  HTMLcontext.encoding = TtaGetDocumentCharset (doc);
+  HTMLcontext.withinTable = 0;
+  FileBuffer[0] = EOS;
+  HTMLcontext.language = TtaGetDefaultLanguage ();
+  DocumentSSchema = TtaGetDocumentSSchema (doc);
+
+  rootElement = TtaGetMainRoot (doc);
+  /* delete all element except the root element and its parent document
+     element */
+  el = TtaGetFirstChild (rootElement);
+  while (el != NULL)
+    {
+      oldel = el;
+      TtaNextSibling (&el);
+      TtaDeleteTree (oldel, doc);
+    }
+
+  docURL = TtaGetMemory (strlen (extDocURL) + 1);
+  strcpy (docURL, extDocURL);
+
+  /* Check if it's a valid encoding */
+  if (DocumentMeta[doc]->charset)
+    {
+      charset = TtaGetCharset (DocumentMeta[doc]->charset);
+      if (charset != UTF_8        && charset != ISO_8859_1   &&
+	  charset != ISO_8859_2   && charset != ISO_8859_3   &&
+	  charset != ISO_8859_4   && charset != ISO_8859_5   &&
+	  charset != ISO_8859_6   && charset != ISO_8859_7   &&
+	  charset != ISO_8859_8   && charset != ISO_8859_9   &&
+	  charset != ISO_8859_15  && charset != KOI8_R       &&
+	  charset != WINDOWS_1250 && charset != WINDOWS_1251 &&
+	  charset != WINDOWS_1252 && charset != WINDOWS_1253 &&
+	  charset != WINDOWS_1254 && charset != WINDOWS_1255 &&
+	  charset != WINDOWS_1256 && charset != WINDOWS_1257 &&
+	  charset != US_ASCII     && charset != SHIFT_JIS    &&
+	  charset != ISO_2022_JP  && charset != EUC_JP       &&
+	  charset != SHIFT_JIS)
+	HTMLParseError (doc,
+			TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING));
+    }
+  
+  /* parse the input file and build the external document */
+  /* initialize parsing environment */
+  InitializeHTMLParser (NULL, FALSE, 0);
+  HTMLparse (infile, NULL);
+  /* completes all unclosed elements */
+  el = HTMLcontext.lastElement;
+  while (el != NULL)
+    {
+      XhtmlElementComplete (&HTMLcontext, el, &error);
+      el = TtaGetParent (el);
+    }
+  
+  TtaFreeMemory (docURL);
+  DocumentSSchema = NULL;
+  
+  HTMLcontext.doc = 0;
+  HTMLcontext.docRef = 0;
+  HTMLcontext.elementRef = NULL;
+
+  return;
+}
+
+/*-------------------------------------------------------------------------------
+   StartParser 
+   Loads the file Directory/htmlFileName for displaying the document documentName.
+   The parameter pathURL gives the original (local or distant)
+   path or URL of the html document.
+  ------------------------------------------------------------------------------*/
 void StartParser (Document doc, char *fileName,
 		  char *documentName, char* documentDirectory,
 		  char *pathURL, ThotBool plainText)

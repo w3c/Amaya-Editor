@@ -63,6 +63,10 @@ extern void ParseSubTree ( char* HTMLbuf,
                            Language language,
                            ThotBool isclosed,
                            Document doc );
+extern void ParseExternalHTMLDoc ( Document doc,
+                                   FILE * infile,
+                                   CHARSET charset,
+                                   char *extDocURL );
 extern void StartParser ( Document doc,
                           char *fileName,
                           char *documentName,
@@ -129,6 +133,10 @@ extern void ParseSubTree (/* char* HTMLbuf,
                              Language language,
                              ThotBool isclosed,
                              Document doc */);
+extern void ParseExternalHTMLDoc (/* Document doc,
+                                     FILE * infile,
+                                     CHARSET charset,
+                                     char *extDocURL */);
 extern void StartParser (/* Document doc,
                             char *fileName,
                             char *documentName,

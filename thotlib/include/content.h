@@ -12,8 +12,8 @@
 #include "tree.h"
 typedef enum _PicType
   {
-    xbm_type, eps_type, xpm_type, gif_type, png_type, jpeg_type, svg_type, 
-    unknown_type
+    xbm_type, eps_type, xpm_type, gif_type, png_type, jpeg_type,
+    svg_type, html_type, mathml_type, unknown_type
   }
 PicType;
 
