@@ -66,16 +66,16 @@ extern void AnnotList_writeIndex ( char *indexFile,
 extern char * ANNOT_PreparePostBody ( Document doc );
 extern char *StrdupDate ( void );
 extern Element SearchAnnotation ( Document doc,
-                                  STRING annotDoc );
+                                  char *annotDoc );
 extern ThotBool ReplaceLinkToAnnotation ( Document doc,
-                                          STRING annotName,
-                                          STRING newAnnotURL );
+                                          char *annotName,
+                                          char *newAnnotURL );
 extern Element SearchElementInDoc ( Document doc,
                                     int elTypeNum );
-extern STRING SearchAttributeInEl ( Document doc,
-                                    Element el,
-                                    int attrTypeNum,
-                                    char *schema );
+extern char *SearchAttributeInEl ( Document doc,
+                                   Element el,
+                                   int attrTypeNum,
+                                   char *schema );
 extern void SubstituteCharInString ( char *buffer,
                                      char old,
                                      char new );
@@ -158,16 +158,16 @@ extern void AnnotList_writeIndex (/* char *indexFile,
 extern char * ANNOT_PreparePostBody (/* Document doc */);
 extern char *StrdupDate (/* void */);
 extern Element SearchAnnotation (/* Document doc,
-                                    STRING annotDoc */);
+                                    char *annotDoc */);
 extern ThotBool ReplaceLinkToAnnotation (/* Document doc,
-                                            STRING annotName,
-                                            STRING newAnnotURL */);
+                                            char *annotName,
+                                            char *newAnnotURL */);
 extern Element SearchElementInDoc (/* Document doc,
                                       int elTypeNum */);
-extern STRING SearchAttributeInEl (/* Document doc,
-                                      Element el,
-                                      int attrTypeNum,
-                                      char *schema */);
+extern char *SearchAttributeInEl (/* Document doc,
+                                     Element el,
+                                     int attrTypeNum,
+                                     char *schema */);
 extern void SubstituteCharInString (/* char *buffer,
                                        char old,
                                        char new */);

@@ -1272,11 +1272,11 @@ char *StrdupDate (void)
    Searches doc and returns the link element that points to annotDoc, or
    NULL if it doesn't exist.
   -----------------------------------------------------------------------*/
-Element SearchAnnotation (Document doc, STRING annotDoc)
+Element SearchAnnotation (Document doc, char *annotDoc)
 {
   ElementType elType;
   Element     elCour;
-  STRING ancName = NULL;
+  char       *ancName = NULL;
 
   elType.ElSSchema = TtaGetSSchema ("XLink", doc);
   if (!elType.ElSSchema)
@@ -1317,7 +1317,8 @@ Element SearchAnnotation (Document doc, STRING annotDoc)
    to newAnnotURL.
    If no oldAnnotURL link is found, returns FALSE, otherwise returns TRUE.
   -----------------------------------------------------------------------*/
-ThotBool ReplaceLinkToAnnotation (Document doc, STRING annotName, STRING newAnnotURL)
+ThotBool ReplaceLinkToAnnotation (Document doc, char *annotName,
+				  char *newAnnotURL)
 {
   Element anchor;
   ElementType elType;
@@ -1362,12 +1363,12 @@ Element SearchElementInDoc (Document doc, int elTypeNum)
    Returns the value of attribute type attrTypeNum if it exists in the
    document element or NULL otherwise.
   -----------------------------------------------------------------------*/
-STRING SearchAttributeInEl (Document doc, Element el, int attrTypeNum, 
-			    char *schema)
+char *SearchAttributeInEl (Document doc, Element el, int attrTypeNum, 
+			   char *schema)
 {
   AttributeType  attrType;
   Attribute      attr;
-  char        *text;
+  char          *text;
   int            length;
 
   if (!el) 

@@ -193,13 +193,7 @@ AnnotMeta *GetMetaData (Document doc, Document doc_annot)
   its body.
   (@@ JK: weird function!)
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ANNOT_LoadAnnotation (Document doc, Document docAnnot)
-#else /* __STDC__*/
-void ANNOT_LoadAnnotation (doc, annotDoc)
-     Document doc;
-     Document annotDoc;
-#endif /* __STDC__*/
 {
   AnnotMeta *annot;
 
@@ -213,12 +207,7 @@ void ANNOT_LoadAnnotation (doc, annotDoc)
 /*-----------------------------------------------------------------------
   ANNOT_ReloadAnnotMeta
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ANNOT_ReloadAnnotMeta (Document annotDoc)
-#else /* __STDC__*/
-void ANNOT_ReloadAnnotMeta (annotDoc)
-     Document annotDoc;
-#endif /* __STDC__*/
 {
   Document source_doc; 
   AnnotMeta *annot;
@@ -247,9 +236,9 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   Element        root, head, el;
   Attribute      attr;
   AttributeType  attrType;
-  STRING         user;
-  STRING         doc_anchor;
-  STRING         source_url;
+  char          *user;
+  char          *doc_anchor;
+  char          *source_url;
   char          *cdate;
   char          *mdate;
   char          *type;
@@ -915,8 +904,8 @@ void ANNOT_UpdateThread (Document doc, AnnotMeta *annot)
    Initializes an annotation document by adding a BODY part
    and adding META elements for title, author, date, and type
   -----------------------------------------------------------------------*/
-void  ANNOT_InitDocumentStructure (Document doc, Document docAnnot, 
-				   AnnotMeta *annot, AnnotMode mode)
+void ANNOT_InitDocumentStructure (Document doc, Document docAnnot, 
+				  AnnotMeta *annot, AnnotMode mode)
 {
   char *source_doc_title;
   char *text;
@@ -973,25 +962,18 @@ void  ANNOT_InitDocumentStructure (Document doc, Document docAnnot,
    Initializes an annotation document by adding a BODY part
    and adding META elements for title, author, date, and type
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void  ANNOT_InitDocumentStructure (Document docAnnot, Document document)
-#else /* __STDC__*/
-void  ANNOT_InitDocumentStructure (docAnnot, document)
-     Document docAnnot;
-     Document document;
-#endif /* __STDC__*/
+void ANNOT_InitDocumentStructure (Document docAnnot, Document document)
 {
-  ElementType elType;
-  Element     root, head, body, el, di, tl, top, child, meta;
+  ElementType  elType;
+  Element      root, head, body, el, di, tl, top, child, meta;
   Attribute           attr;
   AttributeType       attrType;
-  time_t      curDate;
+  time_t       curDate;
   struct tm   *localDate;
-  STRING      strDate;
-  STRING      doc_anchor;
-  char      tempfile[MAX_LENGTH];
-  char       *annot_user;
+  char        *strDate;
+  char        *doc_anchor;
+  char         tempfile[MAX_LENGTH];
+  char        *annot_user;
 
   annot_user = GetAnnotUser ();
 
@@ -1149,13 +1131,7 @@ void  ANNOT_InitDocumentStructure (docAnnot, document)
    Removes all  unused buttons and menus). Returns the number of the opened 
    view or 0 in case of failure.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void ANNOT_PrepareAnnotView (Document document)
-#else /* __STDC__*/
-void ANNOT_PrepareAnnotView (document)
-     Document document;
-#endif /* __STDC__*/
 {
   View view;
 
@@ -1211,14 +1187,7 @@ void ANNOT_PrepareAnnotView (document)
   ANNOT_LocalSave
   Saves the annotation document doc_annot to the local filesystem
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            ANNOT_LocalSave (Document doc_annot, char *html_filename)
-#else  /* __STDC__ */
-ThotBool            ANNOT_LocalSave (doc_annot, html_filename)
-Document            doc_annot;
-char             *html_filename;
-
-#endif /* __STDC__ */
+ThotBool ANNOT_LocalSave (Document doc_annot, char *html_filename)
 {
   Element el;
   ElementType elType;
