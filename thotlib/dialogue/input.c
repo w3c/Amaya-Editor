@@ -1657,7 +1657,11 @@ void InitTranslations (char *appliname)
   strcat (name, ".kb");
 #endif  /* _WINDOWS */
 #if defined(_UNIX)
+#ifdef _MACOS
+  strcat (name, ".kb-mac");
+#else /* _MACOS */
   strcat (name, ".keyboard");
+#endif /* _MACOS */
 #endif /* defined(_UNIX) */
 
   strcpy (home, appHome);
@@ -1698,6 +1702,47 @@ void InitTranslations (char *appliname)
 	    e = 0;
 	  else if (ch[0] != '#')
 	    {
+#ifdef _MACOS
+	      /* it is not a comment */
+	      /* -------> Lecture des autres champs */
+              /* copie modifieur */
+	      strcpy (equiv, "\t");
+	      strcat (equiv, ch);
+	      strcat (equiv, "-");
+	      strcat (line, ch);
+	      strcat (line, "-");
+
+	      /* Lecture de la cle */
+	      ch[0] = 0;
+	      fscanf (file, "%80s", ch);
+	      /* Extrait la valeur de la cle */
+	      sscanf (ch, "<Key>%80s", transText);
+	      if (name[0] != EOS)
+		{
+		  /* copie de la cle */
+		  strcat (line, "<Key>");
+		  i = strlen (transText);
+		  /* Elimine le : a la fin du nom */
+		  if ((transText[i - 1] == ':') && i != 1)
+		    {
+		      /* Il faut engendrer un : apres le nom */
+		      transText[i - 1] = EOS;
+		      i = 1;
+		    }
+		  else
+		    i = 0;
+		  /* copie le nom normalise */
+		  strcat (line, NameCode (transText));
+		  if (i == 1)
+		    strcat (line, ": ");
+		  else
+		    strcat (line, " ");
+		}
+	      strcat (equiv, transText);
+
+   	      /* Lecture de l'action */
+	      fscanf (file, "%80s", transText);
+#else /* _MACOS */
 	      /* it is not a comment */
 	      /* -------> Lecture des autres champs */
 	      if (!strcasecmp (ch, "shift"))
@@ -1855,7 +1900,7 @@ void InitTranslations (char *appliname)
 		  /* Lecture de l'action */
 		  fscanf (file, "%80s", transText);
 		}
-
+#endif /* _MACOS */
 	      /* Isole l'intitule de la commande */
 	      strncpy (ch, transText, 80);
 	      addr = strchr (ch, '(');
@@ -1875,7 +1920,7 @@ void InitTranslations (char *appliname)
 
 	      if (i <= 8)
 		{
-		  /* Prepare translations for Motif */
+		  /* Prepare translations */
 		  strcat (text, line);
 		  if (!strcmp (ch, "TtcInsertChar"))
 		    {

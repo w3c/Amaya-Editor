@@ -1,0 +1,164 @@
+# Keyboard configuration file for WindowsMac OSX
+
+# Unlike Windows and Linux versions, shortcuts 
+# for Mac OSX are not managed by the application
+# but by the toolkit (wxWidgets in this case) 
+# So, the syntax to define user's specific shortcuts
+# in this file has to follow some rules :
+# - The Modifier key 'Command' (with the Apple
+# logo) is named 'Ctrl'.
+# - The Modifier key 'Option' is named 'Alt'.
+# - Each specific shortcut contains only one key in
+# combination with one or several Modifier key(s).
+
+# Some shortcuts are also used by the operating systems
+# Refer to 'Keyboard Shortcuts Quick Reference'
+# http://developer.apple.com/documentation/UserExperience/Conceptual/OSXHIGuidelines
+# before to define your own shortcuts.
+
+
+# personal keyboard file for Amaya
+#moving around 
+#<Key>Delete:        TtcDeleteSelection() 
+#<Key>Backspace:     TtcDeletePreviousChar() 
+#<Key>Return:        TtcCreateElement() 
+#<Key>End:           TtcEndOfLine()
+#<Key>Home:          TtcStartOfLine() 
+#Ctrl <Key>K:        TtcParentElement()
+
+#Following commented out to remember default actions
+#<Key>Up:           TtcPreviousLine() 
+#<Key>Down:         TtcNextLine() 
+#<Key>Right:        TtcNextChar() 
+#<Key>Left:         TtcPreviousChar() 
+#Ctrl <Key>Up:      TtcLineUp()
+#Ctrl <Key>Down:    TtcLineDown()
+#<Key>Tab:           NextLinkOrFormElement()
+#Shift <Key>Tab:     PreviousLinkOrFormElement()
+#Ctrl <Key>a:        TtcStartOfLine() 
+#Shift Ctrl <Key>A:  TtcSelStartOfLine() 
+#Ctrl <Key>e:        TtcEndOfLine() 
+#Shift Ctrl <Key>E:  TtcSelEndOfLine() 
+#Ctrl <Key>Home:     TtcPageTop() 
+#Ctrl <Key>End:      TtcPageEnd() 
+#Alt <Key>Return:    DoAction() 
+#Alt <Key>Home:      GoToHome()
+
+#File menu 
+Ctrl <Key>O:                        OpenDoc() 
+Ctrl <Key>R:			    Reload() 
+Ctrl <Key>S:                        SaveDocument() 
+Ctrl-Shift <Key>S:                  SaveDocumentAs() 
+Ctrl-Shift <Key>P:                  PrintAs() 
+Ctrl <Key>P:                        SetupAndPrint() 
+#Ctrl <Key>b , Ctrl <Key>b:         GotoPreviousHTML() 
+#Ctrl <Key>b , Ctrl <Key>f:         GotoNextHTML() 
+#Ctrl <Key>b , Ctrl <Key>y:         Synchronize()
+Ctrl-Shift <Key>Q:                  AmayaCloseTab() 
+Ctrl <Key>Q:                        AmayaClose()
+
+#Edit menu 
+Ctrl <Key>Z:                        TtcUndo() 
+Ctrl-Shift <Key>Z:                  TtcRedo() 
+Ctrl <Key>C:                        TtcCopySelection() 
+Ctrl <Key>V:	                    PasteBuffer()
+Ctrl <Key>X:	                    TtcCutSelection()
+#Ctrl <Key>d:                       TtcDeleteSelection() 
+Ctrl <Key>F:	                    TtcSearchText()
+Ctrl-Shift <Key>F:		    SpellCheck()
+
+#Headings sbmenu
+Ctrl <Key>1:                        CreateHeading1() 
+Ctrl <Key>2:                        CreateHeading2() 
+Ctrl <Key>3:                        CreateHeading3() 
+Ctrl <Key>4:                        CreateHeading4() 
+Ctrl <Key>5:                        CreateHeading5() 
+Ctrl <Key>6:                        CreateHeading6()
+# BR and &nbsp;
+#Ctrl <Key>Return:                   CreateBreak("\212") 
+#Ctrl <Key>Space:                    TtcInsertChar("\240")
+
+#Types 
+Ctrl-Alt <Key>Return:    CreateParagraph() 
+Ctrl-Alt <Key>A:         CreateAddress() 
+Ctrl-Alt <Key>Z:         CreateComment() 
+Ctrl-Alt <Key>D:         CreateDefinitionList() 
+Ctrl-Alt <Key>R:         CreateHorizontalRule() 
+Ctrl-Alt <Key>I:         CreateImage() 
+Ctrl-Alt <Key>L:         CreateList() 
+Ctrl-Alt <Key>M:         CreateMap()
+Ctrl-Alt <Key>N:         CreateNumberedList() 
+Ctrl-Alt <Key>O:         CreateObject() 
+Ctrl-Alt <Key>F:         CreatePreformatted() 
+Ctrl-Alt <Key>Q:         CreateBlockQuote() 
+Ctrl-Alt <Key>Y:         CreateRuby() 
+Ctrl-Alt <Key>T:         ChangeTitle()
+Ctrl-Alt <Key>V:         CreateDivision() 
+Ctrl-Alt <Key>W:         CreateParameter() 
+
+#Links
+Ctrl-Alt <Key>H:         DeleteAnchor() 
+Ctrl-Alt <Key>C:         CreateOrChangeLink() 
+Ctrl-Alt <Key>K:         LinkToPreviousTarget() 
+Ctrl-Alt <Key>G:         CreateTarget()
+
+#Style menu and Information types
+#Ctrl <Key>i , Ctrl <Key>a:         ApplyClass() 
+#Ctrl <Key>i , Ctrl <Key>b:         ChangeBackgroundImage() 
+#Ctrl <Key>i , Ctrl <Key>c:         CreateClass() 
+#Ctrl <Key>i , Ctrl <Key>d:         SetOnOffDEL()
+#Ctrl <Key>i , Ctrl <Key>d:         DisableCSS()
+#Ctrl <Key>i , Ctrl <Key>e:         EnableCSS()
+#Ctrl <Key>i , Ctrl <Key>e:         SetOnOffEmphasis() 
+#Ctrl <Key>i , Ctrl <Key>f:         TtcChangeFormat() 
+#Ctrl <Key>i , Ctrl <Key>h:         TtcChangeCharacters() 
+#Ctrl <Key>i , Ctrl <Key>i:         SetOnOffINS() 
+#Ctrl <Key>i , Ctrl <Key>k:         SetOnOffKeyboard() 
+#Ctrl <Key>i , Ctrl <Key>l:         LinkCSS()
+#Ctrl <Key>i , Ctrl <Key>m:         SetOnOffSample() 
+#Ctrl <Key>i , Ctrl <Key>o:         OpenCSS() 
+#Ctrl <Key>i , Ctrl <Key>p:         TtcChangeColors() 
+#Ctrl <Key>i , Ctrl <Key>q:         SetOnOffQuotation() 
+#Ctrl <Key>i , Ctrl <Key>r:         RemoveCSS() 
+#Ctrl <Key>i , Ctrl <Key>s:         SetOnOffStrong() 
+#Ctrl <Key>i , Ctrl <Key>t:         SetOnOffCode() 
+#Ctrl <Key>i , Ctrl <Key>u:         SetOnOffAbbr() 
+#Ctrl <Key>i , Ctrl <Key>v:         SetOnOffVariable() 
+#Ctrl <Key>i , Ctrl <Key>w:         SetOnOffCite() 
+#Ctrl <Key>i , Ctrl <Key>x:         SetOnOffDefinition() 
+#Ctrl <Key>i , Ctrl <Key>y:         SetOnOffAcronym() 
+#Ctrl <Key>i , Ctrl <Key>z:         SetOnOffBDO() 
+
+#SvgLibrary
+#Ctrl <Key>l , Ctrl <Key>s:	    ShowLibrary()
+#Ctrl <Key>l , Ctrl <Key>f:	    AddNewModelIntoLibraryForm()
+#Ctrl <Key>l , Ctrl <Key>a:         AddNewModelIntoLibrary()
+
+#Math (types submenu)
+
+#Annotations, Bookmarks and New
+
+#Forms and Open
+
+#Transform and Tables
+
+#View Menu
+#<Key>F12:          ShowPanel()
+Alt <Key>A:         ShowAlternate()
+Alt <Key>B:         ShowButtons() 
+Alt <Key>D:         ShowAddress()
+Alt <Key>L:         ShowLinks() 
+Alt <Key>M:         ShowMapAreas() 
+Alt <Key>O:         ShowToC() 
+Alt <Key>U:         ShowStructure()
+Alt <Key>T:         ShowTargets() 
+Alt <Key>S:         ShowSource()
+Alt <Key>P:         SplitUnsplitPage()
+Alt <Key>F:         ShowFormatted()
+Alt <Key>-:         ZoomOut()
+Alt <Key>=:         ZoomIn()
+
+#Try to override bizzare behaviour
+#Shift <Key>End:     TtcSelEndOfLine()
+#Shift <Key>Home:    TtcSelStartOfLine()
+
