@@ -91,10 +91,13 @@ void BM_Init (void)
     {
       /* the bookmark file is empty, we create it and add the home topic */
       BookmarkP me;
-      
+      char *tmp;
+
       me = Bookmark_new_init (NULL, TRUE);
       strcpy (me->title, HOME_TOPIC_TITLE);
-      strcpy (me->author, GetAnnotUser ());
+      tmp = TtaConvertMbsToByte (GetAnnotUser (), ISO_8859_1);
+      strcpy (me->author, tmp);
+      TtaFreeMemory (tmp);
       strcpy (me->self_url, HomeTopicURI);
       me->created = StrdupDate ();
       me->modified = StrdupDate ();
