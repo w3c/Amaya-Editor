@@ -72,7 +72,7 @@
 70 il editor/browser del W3C
 71 (scrivere a www-amaya@w3.org per informazioni)
 72 Impossibile gestire URL composti da piú di %s caratteri
-73  consentito il solo tipo di default
+73 consentito il solo tipo di default
 74 Aggiornamento dei collegamenti: %s%% è stato fatto
 75 Niente di nuovo da salvare
 76 repeat-y
@@ -206,3 +206,4 @@
 204 Orientamento
 205 Ritratto
 206 Paesaggio
+207 **Enable FTP (experimental)

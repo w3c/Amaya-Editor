@@ -1,4 +1,4 @@
-	# encoding= latin1
+# encoding= latin1
 0 Dateien
 1 Datei
 2 Löschen
@@ -206,3 +206,4 @@
 204 Ausrichtung
 205 Hochformat
 206 Querformat
+207 **Enable FTP (experimental)
