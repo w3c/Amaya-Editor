@@ -3169,6 +3169,11 @@ int status;
     }
 }
 
+PUBLIC int HTLoadTelnet (SOCKET soc, HTRequest * request)
+{
+  return HT_ERR;
+}
+
 #endif /* AMAYA_JAVA */
 
 /*

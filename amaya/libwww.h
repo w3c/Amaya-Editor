@@ -24,9 +24,9 @@ typedef unsigned long ms_t;
 /************/
 
 #include "WWWLib.h"
+#include "AHTInit.h"
 #include "WWWApp.h"
 #include "WWWHTTP.h"
-#include "WWWInit.h"
 #include "HTReqMan.h"
 #include "HTReq.h"
 #include "HTAncMan.h"

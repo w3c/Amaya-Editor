@@ -11,83 +11,56 @@ AMAYA_LIBWWW_OBJ= \
 	AHTFWrite.o \
 	answer.o \
 	query.o \
-	AHTMemConv.o 
+	AHTMemConv.o \
+	AHTInit.o
 
-AMAYA_LIBWWW_LIBS= 	../libwwwinit.a \
-			../libwwwapp.a \
-			../libwwwxml.a \
-			../libwwwhtml.a \
-			../libwwwnews.a \
+AMAYA_LIBWWW_LIBS= 	../libwwwapp.a \
 			../libwwwhttp.a \
+			../libwwwhtml.a \
 			../libwwwmime.a \
-			../libwwwgopher.a \
-			../libwwwtelnet.a \
-			../libwwwftp.a \
-			../libwwwdir.a \
 			../libwwwcache.a \
 			../libwwwstream.a \
 			../libwwwfile.a \
-			../libwwwmux.a \
+			../libwwwdir.a \
 			../libwwwtrans.a \
 			../libwwwcore.a \
 			../libwwwutils.a \
 			../libwwwzip.a \
-			../libmd5.a \
-			../libxmlparse.a \
-			../libxmltok.a
+			../libmd5.a
 
-LIBWWW_LIBS= -L..	-lwwwinit \
-			-lwwwapp \
-			-lwwwxml \
-			-lwwwhtml \
-			-lwwwnews \
+LIBWWW_LIBS= -L..	-lwwwapp \
 			-lwwwhttp \
+			-lwwwhtml \
 			-lwwwmime \
-			-lwwwgopher \
-			-lwwwtelnet \
-			-lwwwftp \
-			-lwwwdir \
 			-lwwwcache \
 			-lwwwstream \
 			-lwwwfile \
-			-lwwwmux \
+			-lwwwdir \
 			-lwwwtrans \
 			-lwwwcore \
 			-lwwwutils \
 			-lwwwzip \
-			-lmd5 \
-			-lxmlparse \
-			-lxmltok
+			-lmd5
 
 AMAYA_LIBWWW_EXTRA_LIBS=
 
 AMAYA_LIBWWW_INCLUDES= -I$(THOTDIR)/../libwww/Library/src \
 		-I$(THOTDIR)/../libwww/modules/md5 \
-		-I$(THOTDIR)/..libwww/modules/expat/xmltok \
-		-I$(THOTDIR)/..libwww/modules/expat/xmlparse
+		-I$../libwww
 
-../libwwwinit.a \
 ../libwwwapp.a \
-../libwwwxml.a \
-../libwwwhtml.a \
-../libwwwnews.a \
 ../libwwwhttp.a \
+../libwwwhtml.a \
 ../libwwwmime.a \
-../libwwwgopher.a \
-../libwwwtelnet.a \
-../libwwwftp.a \
-../libwwwdir.a \
 ../libwwwcache.a \
 ../libwwwstream.a \
 ../libwwwfile.a \
-../libwwwmux.a \
+../libwwwdir.a \
 ../libwwwtrans.a \
 ../libwwwcore.a \
 ../libwwwutils.a \
 ../libwwwzip.a \
-../libmd5.a \
-../libxmlparse.a \
-../libxmltok.a :
+../libmd5.a :
 	@(cd .. ; $(MAKE) libwww)
 
 
