@@ -585,6 +585,7 @@ if test "$with_gl" = "yes" ; then
 		if test "$ac_dir" != "/usr/include" ; then
 		   GL_INCLUDES="-I$ac_dir"
 		fi
+		AC_MSG_RESULT([yes])
        	 	break	
     	    fi
 	done	
@@ -605,6 +606,7 @@ if test "$with_gl" = "yes" ; then
 		   	    GL_INCLUDES="$GL_INCLUDES -I$ac_dir"
 			fi
 		fi
+		AC_MSG_RESULT([yes])
        	 	break	
     	    fi
 	done	
@@ -626,6 +628,7 @@ if test "$with_gl" = "yes" ; then
 				fi
 			fi
 		fi
+		AC_MSG_RESULT([yes])
        	 	break	
     	    fi
 	done	
@@ -638,10 +641,24 @@ if test "$with_gl" = "yes" ; then
 	do  if test -r "$ac_dir/ft2build.h" ; then
                 freetype_inc="yes"
 		GL_INCLUDES="$GL_INCLUDES `freetype-config --cflags`"
-       	 	break	
+       	        AC_MSG_RESULT([yes])	
+		break	
     	    fi
-	done		
-	if test "$gl_inc" = "" ; then
+	done	
+
+	AC_MSG_CHECKING([gcc3])	
+	for ac_dir in               		\
+		/usr/lib 			\
+		/usr/X11R6/lib 		\
+		/usr/local/lib		\
+		; \
+	do  if test -r "$ac_dir/libstdc++.so.5" ; then
+                stdglu_inc="yes"
+       	        AC_MSG_RESULT([yes])	
+		break
+    	    fi
+	done
+	if test "$gl_inc" = "" ; then	        
 	 	AC_MSG_WARN(Opengl headers (gl.h) not found !!)
 	   	AC_MSG_WARN(Disabling opengl build !)
 	   	with_gl="no"
@@ -681,8 +698,12 @@ if test "$with_gl" = "yes" ; then
 	if test "$gl_inc" = "yes" ; then
 		if test "$glu_inc" = "yes" ; then
 			if test "$gtkgl_inc" = "yes" ; then
-	                    if test "$freetype_inc" = "yes" ; then	
-				GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl "
+	                    if test "$freetype_inc" = "yes" ; then
+			    	if test "$stdglu_inc" = "yes" ; then
+				   GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl -lstdc++"
+				else
+				   GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl"
+				fi				
 				GL_OPTIONS=-D_GL 
 	  			no_motif=yes
 			    fi

@@ -960,7 +960,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS="$ac_save_CFLAGS"
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-O2"
+    CFLAGS="-g -O2"
   else
     CFLAGS="-g"
   fi
@@ -1130,7 +1130,7 @@ fi
 
 fi
 
-for ac_prog in mawk gawk nawk awk
+for ac_prog in gawk mawk nawk awk
 do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -6516,11 +6516,12 @@ echo "configure:6508: checking OpenGL" >&5
 		if test "$ac_dir" != "/usr/include" ; then
 		   GL_INCLUDES="-I$ac_dir"
 		fi
+		echo "$ac_t""yes" 1>&6
        	 	break	
     	    fi
 	done	
   	echo $ac_n "checking GLU""... $ac_c" 1>&6
-echo "configure:6524: checking GLU" >&5	
+echo "configure:6525: checking GLU" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6537,11 +6538,12 @@ echo "configure:6524: checking GLU" >&5
 		   	    GL_INCLUDES="$GL_INCLUDES -I$ac_dir"
 			fi
 		fi
+		echo "$ac_t""yes" 1>&6
        	 	break	
     	    fi
 	done	
   	echo $ac_n "checking GTKGLAREA""... $ac_c" 1>&6
-echo "configure:6545: checking GTKGLAREA" >&5	
+echo "configure:6547: checking GTKGLAREA" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6559,11 +6561,12 @@ echo "configure:6545: checking GTKGLAREA" >&5
 				fi
 			fi
 		fi
+		echo "$ac_t""yes" 1>&6
        	 	break	
     	    fi
 	done	
   	echo $ac_n "checking freetype""... $ac_c" 1>&6
-echo "configure:6567: checking freetype" >&5	
+echo "configure:6570: checking freetype" >&5	
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
@@ -6572,10 +6575,25 @@ echo "configure:6567: checking freetype" >&5
 	do  if test -r "$ac_dir/ft2build.h" ; then
                 freetype_inc="yes"
 		GL_INCLUDES="$GL_INCLUDES `freetype-config --cflags`"
-       	 	break	
+       	        echo "$ac_t""yes" 1>&6	
+		break	
     	    fi
-	done		
-	if test "$gl_inc" = "" ; then
+	done	
+
+	echo $ac_n "checking gcc3""... $ac_c" 1>&6
+echo "configure:6585: checking gcc3" >&5	
+	for ac_dir in               		\
+		/usr/lib 			\
+		/usr/X11R6/lib 		\
+		/usr/local/lib		\
+		; \
+	do  if test -r "$ac_dir/libstdc++.so.5" ; then
+                stdglu_inc="yes"
+       	        echo "$ac_t""yes" 1>&6	
+		break
+    	    fi
+	done
+	if test "$gl_inc" = "" ; then	        
 	 	echo "configure: warning: Opengl headers (gl.h) not found !!" 1>&2
 	   	echo "configure: warning: Disabling opengl build !" 1>&2
 	   	with_gl="no"
@@ -6615,8 +6633,12 @@ echo "configure:6567: checking freetype" >&5
 	if test "$gl_inc" = "yes" ; then
 		if test "$glu_inc" = "yes" ; then
 			if test "$gtkgl_inc" = "yes" ; then
-	                    if test "$freetype_inc" = "yes" ; then	
-				GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl "
+	                    if test "$freetype_inc" = "yes" ; then
+			    	if test "$stdglu_inc" = "yes" ; then
+				   GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl -lstdc++"
+				else
+				   GL_LIBRARIES=" -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl"
+				fi				
 				GL_OPTIONS=-D_GL 
 	  			no_motif=yes
 			    fi
