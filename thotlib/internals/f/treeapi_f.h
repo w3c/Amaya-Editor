@@ -120,6 +120,8 @@ extern Element TtaSearchEmptyElement ( SearchDomain scope,
 extern Element TtaSearchOtherPairedElement ( Element element );
 extern Element TtaSearchNoPageBreak ( Element element,
                                       ThotBool forward );
+extern ThotBool TtaHasHiddenException ( ElementType elType );
+extern ThotBool TtaHasInvisibleException ( AttributeType attrType );
 
 #else /* __STDC__ */
 
@@ -237,6 +239,8 @@ extern Element TtaSearchEmptyElement (/* SearchDomain scope,
 extern Element TtaSearchOtherPairedElement (/* Element element */);
 extern Element TtaSearchNoPageBreak (/* Element element,
                                         ThotBool forward */);
+extern ThotBool TtaHasHiddenException (/* ElementType elType */);
+extern ThotBool TtaHasInvisibleException (/* AttributeType attrType */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

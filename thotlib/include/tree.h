@@ -1198,6 +1198,30 @@ extern void         TtaListAbstractTree (Element root, FILE * fileDescriptor);
    ---------------------------------------------------------------------- */
 extern void         TtaAskFirstCreation ();
 
+/* ----------------------------------------------------------------------
+   TtaHasHiddenException
+
+   Parameters:
+   elType : the element type we want to test.
+   Returns TRUE if the elType is defined by the document schema's
+   DTD. For example, elements with the hidden and exception
+   attributes are not included in the DTD.
+
+   ---------------------------------------------------------------------- */
+extern ThotBool     TtaHasHiddenException (ElementType elType);
+
+/* ----------------------------------------------------------------------
+   TtaHasInvisibleException
+
+   Parameters:
+   attrType : the attribute type we want to test.
+   Returns TRUE if the attrType is defined by the document schema's
+   DTD. For example, elements with the hidden and exception
+   attributes are not included in the DTD.
+
+   ---------------------------------------------------------------------- */
+/* extern ThotBool     TtaHasInvisibleException (AttributeType attrType); */
+
 #else  /* __STDC__ */
 
 extern void         ChangeElementType ( /* Element element, int typeNum */ );
@@ -1271,7 +1295,8 @@ extern Element      TtaSearchOtherPairedElement ( /* Element element */ );
 extern Element      TtaSearchNoPageBreak ( /* Element element, ThotBool forward */ );
 extern void         TtaListAbstractTree ( /* Element root, FILE *fileDescriptor */ );
 extern void         TtaAskFirstCreation ();
-
+extern ThotBool     TtaHasHiddenException (/* ElementType elType */);
+/* extern ThotBool     TtaHasInvisibleException (* AttributeType attrType *);*/
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 

@@ -36,6 +36,7 @@
 #include "attributeapi_f.h"
 #include "displayview_f.h"
 #include "documentapi_f.h"
+#include "exceptions_f.h"
 #include "externalref_f.h"
 #include "labelalloc_f.h"
 #include "references_f.h"
@@ -3465,4 +3466,43 @@ ThotBool            forward;
 	  }
      }
    return ((Element) noPage);
+}
+
+
+/* ----------------------------------------------------------------------
+   TtaHasHiddenException
+
+   Returns TRUE if the elType is defined by the document schema's
+   DTD. For example, elements with the hidden and exception
+   attributes are not included in the DTD.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+ThotBool            TtaHasHiddenException (ElementType elType)
+#else  /* __STDC__ */
+ThotBool            TtaHasHiddenException (elType)
+ElementType         elType;
+#endif /* __STDC__ */
+{
+  return TypeHasException (ExcHidden, elType.ElTypeNum, 
+			   (PtrSSchema) elType.ElSSchema);
+}
+
+/* ----------------------------------------------------------------------
+   TtaHasInvisibleException
+
+   Returns TRUE if the elType is defined by the document schema's
+   DTD. For example, elements with the hidden and exception
+   attributes are not included in the DTD.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+ThotBool            TtaHasInvisibleException (AttributeType attrType)
+#else  /* __STDC__ */
+ThotBool            TtaHasInvisibleException (attrType)
+AttributeType       attrType
+#endif /* __STDC__ */
+{
+  return TypeHasException (ExcInvisible, attrType.AttrTypeNum, 
+			   (PtrSSchema) attrType.AttrSSchema);
 }
