@@ -363,7 +363,7 @@ cache est activé et est stocké dans le répertoire
     <dd>Récupère toujours les documents depuis le cache.</dd>
   <dt><strong>Ignorer les expiration: entête</strong></dt>
     <dd>N'expire pas les entrées de cache.</dd>
-  <dt><strong>Répertoire du cache  </strong></dt>
+  <dt><strong>Répertoire du cache</strong></dt>
     <dd>Donne le répertoire parent pour le répertoire libwww-cache directory.
       Le fait de changer ce répertoire n'effacera pas le contenu du précédant.
       Vous aurez à le supprimer vous même.<br />
@@ -371,7 +371,7 @@ cache est activé et est stocké dans le répertoire
       (Network File System) pour le répertoire du cache en raison de leurs
       mécanismes de verrouillage. Utiliser un répertoire 'local' pour le
       cache.</dd>
-  <dt><strong>Taille du cache </strong></dt>
+  <dt><strong>Taille du cache</strong></dt>
     <dd>Donner la taille, en megabytes, du dépôt du cache.</dd>
   <dt><strong>Taille limite de l'entrée du cache</strong></dt>
     <dd>Donne la taille maximum d'entrée d'un cache.</dd>
@@ -402,7 +402,7 @@ ou ne devrait pas être utilisé par le biais de ce menu.</p>
     </dd>
 </dl>
 <dl>
-  <dt><strong>Liste du domaine proxy </strong></dt>
+  <dt><strong>Liste du domaine proxy</strong></dt>
     <dd>Donne une liste des domaines séparés par des espaces où vous voulez
       utililser votre proxy. Par exemple:
       <pre>harpo.marx.edu zeppo.marx.edu chico.marx.edu
@@ -454,7 +454,7 @@ ouvrirez une nouvelle fenêtre de document ou quand vous télechargez un
 document.</p>
 
 <p>Le moyen de fixer ou de changer les couleurs des liens, des liens visités
-et des liens activés est donné dans la feuille de style Amaya.css </p>
+et des liens activés est donné dans la feuille de style Amaya.css</p>
 
 <h4><a name="HTML">Les préférences de géométrie</a></h4>
 
@@ -466,7 +466,7 @@ taille des différentes vues d'un document (formaté, structure, alterné, liens,
 and Table des Matières.) ou pour restaurer les valeurs par défaut. Notez que
 les valeurs qui sont sauvées appartiennent aux vues du document d'où vous
 appeliez le menu. Ces changements seront effectifs quand vous ouvrirez des
-nouvelles fenêtres document. </p>
+nouvelles fenêtres document.</p>
 
 <h4><a name="lang">Les préférences de négociation de langues</a></h4>
 
@@ -479,7 +479,7 @@ pour entrer vos préférences de langue (La première à la plus grande priorité).
 Essayez de naviguer ce<a
 href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html"> communiqué</a>,
 qui existe en versions Française, Anglaise et Japonaise. En changeant la
-négociation de la langue en code ISO pour les langues ci dessus 
+négociation de la langue en code ISO pour les langues ci dessus
 (<strong>fr</strong>, <strong>en</strong>, ou <strong>ja</strong>) vous pouvez
 demander de façon transparente n'importe laquelle de ces versions.</p>
 
@@ -567,95 +567,92 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
     boîte de dialogue (menu, bouton, etc.):
     <p class="menuItems">DoAction.</p>
   </li>
-  <li>Dans le menu <code>Fichier</code>:
-    <p class="menuItems">Nouveau, Nouveau document HTML, Nouvelle feuille de
-    style, Ouvrir, Ouvrir dans nouvelle fenêtre, Recharger le document,
-    Précédant, Suivant, Fermer la fenêtre, Sauver, Sauver comme, Synchroniser,
-    Paramétrer et imprimer, Imprimer, Quitter Amaya</p>
+  <li>Dans le menu <code>Fichier</code>:<span style="color: #FFDA95"></span>
+    <p class="menuItems">New, NewTemplate, NewCss, OpenDoc,
+    OpenDocInNewWindow, Reload, GotoPreviousHTML, GotoNextHTML, GoToHome,
+    SaveDocument, SaveDocumentAs, Synchronize, SetupAndPrint, PrintAs
+    CloseDocument, AmayaClose</p>
   </li>
-  <li>Dans le menu Édition:
-    <p class="menuItems">Défaire, Refaire, Couper, Copier, Coller,
-    TtcDeleteSelection, SetBrowserEditor, TtcSearchText, SpellCheck,
+  <li>Dans le menu Édition: 
+    <p class="menuItems">TtcUndo, TtcRedo, TtcCutSelection, TtcCopySelection,
+    TtcPaste, TtcDeleteSelection, SetBrowserEditor, TtcSearchText, SpellCheck,
     TransformType.</p>
   </li>
-  <li>In <code>Structure</code> menu:
+  <li>Dans le menu <code>structure</code>:
     <p class="menuItems">CreateBase, CreateMeta, CreateLinkInHead,
     CreateScript, CreateStyle, CreateComment.</p>
   </li>
-  <li>In Types menu:
+  <li>Dans le menu Éléments:
     <dl>
-      <dt>Main Menu:</dt>
-        <dd class="menuItems">ChangeTitle, CreateAddress, CreateParagraph,
-          CreateImage, CreateHorizontalRule, CreateBlockQuote,
-          CreatePreformatted, CreateAddress, CreateDivision, CreateNOSCRIPT,
-          CreateObject, CreateParameter, CreateIFrame,
-        CreateBreak("\212")</dd>
-      <dt>AREA submenu:</dt>
-        <dd class="menuItems">CreateAreaRect, CreateAreaCircle,
-        CreateAreaPoly</dd>
-      <dt>Form submenu:</dt>
-        <dd class="menuItems">CreateForm, CreateFileInput, CreateImageInput,
-          CreatePasswordInput, CreateHiddenInput, CreateLabel, CreateFieldset,
-          CreateOptGroup, CreateToggle, CreateRadio, CreateOption,
-          CreateTextInput, CreateTextArea, CreateSubmit, CreateReset,</dd>
-      <dt>Heading submenu:</dt>
-        <dd class="menuItems">CreateHeading1, CreateHeading2, CreateHeading3,
-          CreateHeading4, CreateHeading5, CreateHeading6</dd>
-      <dt>List submenu:</dt>
-        <dd class="menuItems">CreateList, CreateNumberedList, ThotCreateMenu,
-          ThotCreateDirectory, CreateDefinitionList, CreateDefinitionTerm,
-          CreateDefinitionDef</dd>
-      <dt>Math submenu:</dt>
-        <dd class="menuItems">CreateInlineMath, CreateMath, CreateMROOT,
-          CreateMSQRT, CreateMFRAC, CreateMSUBSUP, CreateMSUB, CreateMSUP,
-          CreateMUNDEROVER, CreateMUNDER, CreateMOVER, CreateMROW,
-          CreateMMULTISCRIPTS, CreateMTABLE</dd>
-      <dt>OBJECT submenu:</dt>
-        <dd class="menuItems">CreateObject, CreateParameter</dd>
-      <dt>Table submenu:</dt>
-        <dd class="menuItems">CreateTable, CreateCaption, CreateTHead,
-          CreateTBody, CreateTFoot, CreateRow, CreateDataCell,
-          CreateHeadingCell, DeleteColumn</dd>
+      <dt>Menu principal:</dt>
+      <dt style="color: #E55500">ChangeTitle, CreateAddress, CreateParagraph,
+      CreateImage, CreateHorizontalRule, CreateBlockQuote, CreatePreformatted,
+      CreateAddress, CreateDivision, CreateNOSCRIPT, CreateObject,
+      CreateParameter, CreateIFrame, CreateBreak("\212")</dt>
+      <dt>sous menu Zone active:</dt>
+      <dt><span style="color: #E55500">CreateAreaRect, CreateAreaCircle,
+      CreateAreaPoly</span></dt>
+      <dt>sous menu Formulaire:</dt>
+      <dt style="color: #E55500">CreateForm, CreateFileInput,
+      CreateImageInput, CreatePasswordInput, CreateHiddenInput, CreateLabel,
+      CreateFieldset, CreateOptGroup, CreateToggle, CreateRadio, CreateOption,
+      CreateTextInput, CreateTextArea, CreateSubmit, CreateReset,</dt>
+      <dt>sous-menu Entête:</dt>
+      <dt style="color: #E55500">CreateHeading1, CreateHeading2,
+      CreateHeading3, CreateHeading4, CreateHeading5, CreateHeading6</dt>
+      <dt>sous-menu Liste:</dt>
+      <dt style="color: #E55500">CreateList, CreateNumberedList,
+      ThotCreateMenu, ThotCreateDirectory, CreateDefinitionList,
+      CreateDefinitionTerm, CreateDefinitionDef</dt>
+      <dt>sous-menu Math:</dt>
+      <dt style="color: #E55500">CreateInlineMath, CreateMath, CreateMROOT,
+      CreateMSQRT, CreateMFRAC, CreateMSUBSUP, CreateMSUB, CreateMSUP,
+      CreateMUNDEROVER, CreateMUNDER, CreateMOVER, CreateMROW,
+      CreateMMULTISCRIPTS, CreateMTABLE</dt>
+      <dt>sous-menu Objet:</dt>
+      <dt style="color: #E55500">CreateObject, CreateParameter</dt>
+      <dt>sous-menu Table:</dt>
+      <dt style="color: #E55500">CreateTable, CreateCaption, CreateTHead,
+      CreateTBody, CreateTFoot, CreateRow, CreateDataCell, CreateHeadingCell,
+      DeleteColumn</dt>
     </dl>
   </li>
-  <li>In <code>Links</code> menu:
+  <li>Dans le menu <code>Liens</code>:
     <p class="menuItems">LinkToPreviousTarget, CreateOrChangeLink,
     CreateTarget, DeleteAnchor.</p>
   </li>
-  <li>In <code>Views</code> menu:
+  <li>Dans le menu <code>Vues</code>:
     <p class="menuItems">TtcSwitchButtonBar, TtcSwitchCommands, ShowMapAreas,
     ShowTargets, ZoomIn, ZoomOut, ShowStructure, ShowAlternate, ShowLinks,
     ShowToC., ShowSource</p>
   </li>
-  <li>In <code>Style</code> menu:
+  <li>Dans le menu <code>Style</code>:
     <dl>
-      <dt>Main Menu:</dt>
-        <dd><p class="menuItems">TtcChangeCharacters, TtcChangeColors,
-          TtcChangeFormat, ChangeBackgroundImage, CreateClass, ApplyClass.</p>
-        </dd>
-      <dt>Style Sheets submenu:</dt>
-        <dd><p class="menuItems">LinkCSS, OpenCSS, DisableCSS, EnableCSS,
-          RemoveCSS.</p>
-        </dd>
-      <dt>Information Types submenu:</dt>
-        <dd><p class="menuItems">SetOnOffEmphasis, SetOnOffStrong,
-          SetOnOffCite, SetOnOffDefinition, SetOnOffCode, SetOnOffVariable,
-          SetOnOffSample, SetOnOffKeyboard, SetOnOffAbbr, SetOnOffAcronym,
-          SetOnOffINS, SetOnOffDEL.</p>
-        </dd>
-      <dt>Character Element submenu:</dt>
-        <dd><p class="menuItems">SetOnOffItalic, SetOnOffBold,
-          SetOnOffTeletype, SetOnOffBig, SetOnOffSmall, SetOnOffSub,
-          SetOnOffSup, SetOnOffQuotation, SetOnOffBDO.</p>
-        </dd>
+      <dt>Menu principal:</dt>
+      <dt style="color: #E55500">TtcChangeCharacters, TtcChangeColors,
+      TtcChangeFormat, ChangeBackgroundImage, CreateClass, ApplyClass.</dt>
+      <dt>sous-menu feuilles de style:</dt>
+      <dt style="color: #E55500">LinkCSS, OpenCSS, DisableCSS, EnableCSS,
+      RemoveCSS.</dt>
+      <dt>sous-menu types information:</dt>
+      <dt style="color: #E55500">SetOnOffEmphasis, SetOnOffStrong,
+      SetOnOffCite, SetOnOffDefinition, SetOnOffCode, SetOnOffVariable,
+      SetOnOffSample, SetOnOffKeyboard, SetOnOffAbbr, SetOnOffAcronym,
+      SetOnOffINS, SetOnOffDEL.</dt>
+      <dt>sous-menu éléments caractères:</dt>
+      <dt style="color: #E55500">SetOnOffItalic, SetOnOffBold,
+      SetOnOffTeletype, SetOnOffBig, SetOnOffSmall, SetOnOffSub, SetOnOffSup,
+      SetOnOffQuotation, SetOnOffBDO.</dt>
     </dl>
   </li>
-  <li>In <code>Special</code> menu:
+  <li>Dans le menu <code>Spécial</code>:
     <p class="menuItems">SectionNumbering, MakeBook, ShowLogFile,
     ConfigGeneral, ConfigPublish, ConfigCache, ConfigProxy, ConfigColor,
     ConfigGeometry, ConfigLanNeg, ConfigProfile, ConfigTemplates.</p>
   </li>
-  <li>In <code>Help</code> menu:
+</ul>
+<ul>
+  <li>Dans le menu <code>Aide</code>:
     <p class="menuItems">HelpAmaya, HelpAtW3C, HelpBrowsing, HelpSelecting,
     HelpSearching, HelpViews, HelpCreating, HelpLinks, HelpChanging,
     HelpTables, HelpMath, HelpImageMaps, HelpStyleSheets, HelpAttributes,
