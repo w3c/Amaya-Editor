@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 #
-AMAYAVERSION=1.1b
+AMAYAVERSION=1.2
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 
@@ -20,6 +20,27 @@ cd $THOTDIR
 $TAR - \
 Thot/WINNT/*.mak \
 Thot/WINNT/Makefile.orig \
+Thot/config.guess \
+Thot/config.h.in \
+Thot/config.sub \
+Thot/configure \
+Thot/configure.in \
+Thot/Makefile.in \
+Thot/install-sh \
+Thot/stamp-h.in \
+Thot/Options.in \
+Thot/batch/Makefile.in \
+Thot/drawlib/Makefile.in \
+Thot/indexlib/Makefile.in \
+Thot/libjpeg/Makefile.in \
+Thot/libpng/Makefile.in \
+Thot/tablelib/Makefile.in \
+Thot/thotlib/Makefile.in \
+Thot/tools/Makefile.in \
+Thot/libpng/zlib/Makefile.in \
+Thot/thotlib/include/Makefile.in \
+Thot/tools/cextract-1.7/Makefile.in \
+Thot/tools/mkdep/Makefile.in \
 Thot/amaya/Makefile.in \
 Thot/amaya/Makefile.libwww \
 Thot/amaya/Makefile.math \

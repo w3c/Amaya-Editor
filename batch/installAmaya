@@ -1,8 +1,8 @@
 #!/bin/sh
 cd ../..
-AMAYAVERSION=1.1b
+AMAYAVERSION=1.2
 THOTDIR=/tahiti/diffusion/opera
-PLATFORMS="solaris2 SGI RS6000 osf1"
+PLATFORMS="solaris2 SGI RS6000 osf1 SUN4"
 cd $THOTDIR
 rm solaris2 LINUX-ELF
 ln -s solaris-www solaris2
@@ -27,6 +27,7 @@ mkdir $DIR
    cp -p Thot/config/fr-transdialogue $DIR/config/
    cp -p Thot/config/fr-corrdialogue $DIR/config/
  ln -s ../../thot/Current/dicopar $DIR/dicopar
+ ln -s ../../thot/Current/fonts $DIR/fonts
  mkdir $DIR/amaya
    cp -p Thot/amaya/COPYRIGHT $DIR/amaya/
    cp -p Thot/amaya/AmayaPage.html $DIR/amaya/
@@ -42,7 +43,47 @@ mkdir $DIR
    cp -p Thot/amaya/MathMLT.TRA $DIR/amaya/
    cp -p Thot/amaya/MathML.trans $DIR/amaya/
    cp -p Thot/amaya/*.gif $DIR/amaya/
- ln -s ../../thot/Current/fonts $DIR/fonts
+ mkdir $DIR/doc
+ mkdir $DIR/doc/amaya
+   cp -p Thot/doc/amaya/Creating.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/MakeBook.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/StyleSheets.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Manual.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Tables.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/AmayaArchi.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Math.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Registry.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Transform.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Attributes.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/New.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Views.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Autoconf.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Saving.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/ImageMaps.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Numbering.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Searching.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/BinDist.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Selecting.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Browsing.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/CSS.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Plugins.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Keyboard.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Printing.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Changing.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Publishing.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Configure.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Links.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Put.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/SpellChecking.html $DIR/doc/amaya/
+ mkdir $DIR/doc/Icons
+   cp -p Thot/doc/Icons/*.gif $DIR/doc/Icons/
+ mkdir $DIR/Icons
+ mkdir $DIR/Icons/WWW
+   cp -p Thot/Icons/WWW/activity_48x48 $DIR/Icons/WWW/
+   cp -p Thot/Icons/WWW/guide48x $DIR/Icons/WWW/
+   cp -p Thot/Icons/WWW/new_red $DIR/Icons/WWW/
+   cp -p Thot/Icons/WWW/relnotes48x $DIR/Icons/WWW/
+   cp -p Thot/Icons/WWW/w3c_home $DIR/Icons/WWW/
 
 for MACH in $PLATFORMS
 do
@@ -53,7 +94,7 @@ do
 done
 
 DIR=/mnt/amaya/$AMAYAVERSION
-PLATFORMS="solaris2 SGI RS6000 osf1 LINUX-ELF"
+PLATFORMS="solaris2 SGI RS6000 osf1 LINUX-ELF SUN4"
 echo "Intallation version " $DIR
 mkdir $DIR
  mkdir $DIR/config
@@ -73,7 +114,6 @@ mkdir $DIR
    cp -p Thot/config/fr-corrdialogue $DIR/config/
    cp -p Thot/config/fr-javamsg $DIR/config/
    cp -p Thot/config/java.properties $DIR/config/
- ln -s ../../thot/Current/dicopar $DIR/dicopar
  mkdir $DIR/amaya
    cp -p Thot/amaya/COPYRIGHT $DIR/amaya/
    cp -p Thot/amaya/AmayaPage.html $DIR/amaya/
@@ -84,7 +124,64 @@ mkdir $DIR
    cp -p Thot/amaya/HTML.fr $DIR/amaya/
    cp -p Thot/amaya/HTML*.PRS $DIR/amaya/
    cp -p Thot/amaya/HTML*.TRA $DIR/amaya/
+ mkdir $DIR/amaya
+   cp -p Thot/amaya/COPYRIGHT $DIR/amaya/
+   cp -p Thot/amaya/AmayaPage.html $DIR/amaya/
+   cp -p Thot/amaya/HTML.STR $DIR/amaya/
+   cp -p Thot/amaya/HTML.conf $DIR/amaya/
+   cp -p Thot/amaya/HTML.trans $DIR/amaya/
+   cp -p Thot/amaya/HTML.en $DIR/amaya/
+   cp -p Thot/amaya/HTML.fr $DIR/amaya/
+   cp -p Thot/amaya/HTML*.PRS $DIR/amaya/
+   cp -p Thot/amaya/HTML*.TRA $DIR/amaya/
+   cp -p Thot/amaya/MathML.STR $DIR/amaya/
+   cp -p Thot/amaya/MathMLP.PRS $DIR/amaya/
+   cp -p Thot/amaya/MathMLT.TRA $DIR/amaya/
+   cp -p Thot/amaya/MathML.trans $DIR/amaya/
+   cp -p Thot/amaya/*.gif $DIR/amaya/
+ ln -s ../../thot/Current/dicopar $DIR/dicopar
  ln -s ../../thot/Current/fonts $DIR/fonts
+ mkdir $DIR/doc
+ mkdir $DIR/doc/amaya
+   cp -p Thot/doc/amaya/Creating.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/MakeBook.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/StyleSheets.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Manual.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Tables.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/AmayaArchi.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Math.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Registry.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Transform.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Attributes.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/New.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Views.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Autoconf.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Saving.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/ImageMaps.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Numbering.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Searching.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/BinDist.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Selecting.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Browsing.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/CSS.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Plugins.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Keyboard.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Printing.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Changing.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Publishing.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Configure.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Links.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/Put.html $DIR/doc/amaya/
+   cp -p Thot/doc/amaya/SpellChecking.html $DIR/doc/amaya/
+ mkdir $DIR/doc/Icons
+   cp -p Thot/doc/Icons/*.gif $DIR/doc/Icons/
+ mkdir $DIR/Icons
+ mkdir $DIR/Icons/WWW
+   cp -p Thot/Icons/WWW/activity_48x48 $DIR/Icons/WWW/
+   cp -p Thot/Icons/WWW/guide48x $DIR/Icons/WWW/
+   cp -p Thot/Icons/WWW/new_red $DIR/Icons/WWW/
+   cp -p Thot/Icons/WWW/relnotes48x $DIR/Icons/WWW/
+   cp -p Thot/Icons/WWW/w3c_home $DIR/Icons/WWW/
 
 for MACH in $PLATFORMS
 do
