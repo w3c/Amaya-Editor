@@ -268,7 +268,7 @@ HTAlertPar         *reply;
 	         DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
       } else {
 	    if (THD_TRACE)
-	        fprintf (stderr, "Add_NewSocket_to_Loop: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
+	        fprintf (stderr, "WIN_Activate_Request: Activating pending %s . Open fd %d\n", me->urlName, (int) me->output);
 	     HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));    
         /*change the status of the request */
         me->reqStatus = HT_WAITING;
@@ -385,6 +385,7 @@ HTPriority          p;
 
    /* get the request associated to the socket number */
 
+
    if ((status = HTEventrg_register (sock, rqp, ops,
 				     cbf, p)) != HT_OK)
       return (status);
@@ -392,6 +393,11 @@ HTPriority          p;
    if (rqp)
      {
 	me = HTRequest_context (rqp);
+
+    /*** VERY EXPERIMENTAL ***/
+    me->read_sock = sock;
+    me->write_sock = FD_CLOSE;
+    /*** END OF VERY EXPERIMENTAL ***/
 
 	/* verify if we need to open the fd */
 	if (me->reqStatus == HT_NEW)
@@ -442,6 +448,46 @@ HTPriority          p;
    }
    return (status);
 }
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  AHTEvent_unregister
+  callback called by libwww each time a request is unregistered. This
+  function takes care of unregistering the pertinent Xt events
+  associated with the request's socket. In addition, it unregisters
+  the request from libwww.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 AHTEvent_unregister (SOCKET sock, SockOps ops)
+#else
+int                 AHTEvent_unregister (sock, ops)
+SOCKET              sock;
+SockOps             ops;
+
+#endif /* __STDC__ */
+{
+   int                 status;
+
+   HTRequest          *rqp = NULL;
+   AHTReqContext      *me;
+
+   /* Libwww 5.0a does not take into account the third parameter
+      **  for this function call */
+
+   HTEventCallback    *cbf = (HTEventCallback *) __RetrieveCBF (sock, (SockOps) NULL, &rqp);
+
+   if (cbf)	{
+      	if (rqp) {
+	        me = HTRequest_context (rqp);
+ 	        status = HTEventrg_unregister (sock, ops);
+			if (me->reqStatus == HT_END)
+				AHTReqContext_delete (me);
+		}
+   }
+   return (status);
+}
+
+#endif /* !WINDOWS */
 
 #ifndef _WINDOWS
 

@@ -27,7 +27,7 @@
 #       undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
 
-#define APPFILENAMEFILTER   "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0All files (*.*)\0*.*\0"
+#define APPFILENAMEFILTER   "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
 
 extern HINSTANCE hInstance;
 extern char*     AttrHREFvalue;
@@ -50,6 +50,7 @@ LRESULT CALLBACK SearchDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK OpenDocDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CloseDocDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CharacterDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK InitConfirmDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
 LRESULT CALLBACK LinkDlgProc ();
 LRESULT CALLBACK PrintDlgProc ();
@@ -57,6 +58,7 @@ LRESULT CALLBACK SearchDlgProc ();
 LRESULT CALLBACK OpenDocDlgProc ();
 LRESULT CALLBACK CloseDocDlgProc ();
 LRESULT CALLBACK CharacterDlgProc ();
+LRESULT CALLBACK InitConfirmDlgProc ();
 #endif /* __STDC__ */
 
 /*-----------------------------------------------------------------------
@@ -150,6 +152,23 @@ HWND  parent;
 }
 
 /*-----------------------------------------------------------------------
+ CreateInitConfirmDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateInitConfirmDlgWindow (HWND parent, int ref, char* title, char* msg)
+#else  /* !__STDC__ */
+void CreateInitConfirmDlgWindow (parent, title, msg)
+HWND  parent;
+char* msg;
+#endif /* __STDC__ */
+{  
+	sprintf (message, msg);
+	sprintf (wndTitle, title);
+	currentRef = ref;
+	DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
+}
+
+/*-----------------------------------------------------------------------
  LinkDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -239,6 +258,7 @@ LPARAM lParam;
 	static int iMode, iLocation;
 	static char textToSearch [255];
 	static char newText [255];
+	static BOOL upper_lower = FALSE ;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, "");
@@ -256,24 +276,35 @@ LPARAM lParam;
 				       case ID_CONFIRM:
 						    GetDlgItemText (hwnDlg, IDC_SEARCHEDIT, textToSearch, sizeof (textToSearch) - 1);
 						    GetDlgItemText (hwnDlg, IDC_REPLACEDIT, newText, sizeof (newText) - 1);
-							if (newText && newText[0] != '\0' && iMode == 0)
+							if (newText && newText[0] != '\0' && iMode == 0) {
 							   iMode = 1;
-
-						    if (iMode == 1 || iMode == 2) {
-							   ThotCallback (NumZoneTextReplace, STRING_DATA, newText);
 				               CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_ONREQUEST);
-							   iMode = 1;
 							}
+
+						    if (iMode == 1 || iMode == 2) 
+							   ThotCallback (NumZoneTextReplace, STRING_DATA, newText);
+							
 						    ThotCallback (NumZoneTextSearch, STRING_DATA, textToSearch);
 						    ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char*) iMode);
 						    ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (char*) iLocation);
 						    ThotCallback (NumFormSearchText, INTEGER_DATA, (char*) 1);
-				            CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-							iLocation = 2;
+							if (iLocation == 3) {
+				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+							   iLocation = 2;
+							}
 							break;
 
 					   case ID_NOREPLACE:
+						    ThotCallback (NumZoneTextSearch, STRING_DATA, textToSearch);
+						    ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (char*) 0);
+						    ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (char*) iLocation);
+						    ThotCallback (NumFormSearchText, INTEGER_DATA, (char*) 1);
+							if (iLocation == 3) {
+				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+							   iLocation = 2;
+							}
 						    break;
+
 				       case ID_DONE:
 						    ThotCallback (120, 1, NULL);
 					        EndDialog (hwnDlg, ID_DONE);
@@ -312,6 +343,10 @@ LPARAM lParam;
 					   case IDC_WHOLEDOC:
 						    iLocation = 3;
 							CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
+							break;
+
+					   case	IDC_UPPERLOWER:
+						    ThotCallback (NumToggleUpperEqualLower, INTEGER_DATA, (char*) 0);
 							break;
 				}
 				break;
@@ -419,32 +454,175 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	static int iFamily;
-	static int iStyle;
-	static int iUnderline;
-	static int iBodySize;
-
     switch (msg) {
 	       case WM_INITDIALOG:
-			    iFamily    = IDC_TIMES ;
-				iStyle     = IDC_ROMAN ;
-				iUnderline = IDC_NORMAL ;
-				iBodySize  = IDC_12PT ;
-
-				CheckRadioButton (hwnDlg, IDC_TIMES, IDC_DEFAULTFAMILY, iFamily);
-				CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, iStyle);
-				CheckRadioButton (hwnDlg, IDC_NORMAL, IDC_DEFAULTUNDERLINE, iUnderline);
-				CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, iBodySize);
+				CheckRadioButton (hwnDlg, IDC_TIMES, IDC_DEFAULTFAMILY, IDC_TIMES);
+				CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_ROMAN);
+				CheckRadioButton (hwnDlg, IDC_NORMAL, IDC_DEFAULTUNDERLINE, IDC_NORMAL);
+				CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_12PT);
 
 				break;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
 				       case ID_DONE:
+						    ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 0);
 						    EndDialog (hwnDlg, ID_DONE);
+							break;
+
+					   case ID_APPLY:
+						    ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case IDC_TIMES:
+						    ThotCallback (NumMenuCharFamily, INTEGER_DATA, (char*) 0);
+							break;
+
+					   case IDC_HELVETICA:
+						    ThotCallback (NumMenuCharFamily, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case IDC_COURIER:
+						    ThotCallback (NumMenuCharFamily, INTEGER_DATA, (char*) 2);
+							break;
+
+					   case IDC_DEFAULTFAMILY:
+						    ThotCallback (NumMenuCharFamily, INTEGER_DATA, (char*) 3);
+							break;
+
+					   case IDC_ROMAN:
+						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (char*) 0);
+							break;
+
+					   case IDC_BOLD:
+						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case IDC_ITALIC:
+						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (char*) 2);
+							break;
+
+					   case IDC_OBLIQUE:
+						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (char*) 3);
+							break;
+
+					   case IDC_BOLDITALIC:
+						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (char*) 4);
+							break;
+
+					   case IDC_BOLDOBLIQUE:
+						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (char*) 5);
+							break;
+
+					   case IDC_DEFAULTSTYLE:
+						    ThotCallback (NumMenuStyleChar, INTEGER_DATA, (char*) 6);
+							break;
+
+					   case IDC_NORMAL:
+						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (char*) 0);
+							break;
+
+					   case IDC_UNDERLINE:
+						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case IDC_CROSSOUT:
+						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (char*) 2);
+							break;
+
+					   case IDC_DEFAULTUNDERLINE:
+						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (char*) 3);
+							break;
+
+					   case IDC_06PT:
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*) 0);
+							break;
+
+					   case IDC_08PT:
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*) 1);
+							break;
+
+					   case IDC_10PT:
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*) 2);
+							break;
+
+					   case IDC_12PT:
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*) 3);
+							break;
+
+					   case IDC_14PT:
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*) 4);
+							break;
+
+					   case IDC_16PT:
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*) 5);
+							break;
+
+					   case IDC_20PT:
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*) 6);
+							break;
+
+					   case IDC_24PT:
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*) 7);
+							break;
+
+					   case IDC_30PT:
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*) 8);
+							break;
+
+					   case IDC_40PT:
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*) 9);
+							break;
+
+					   case IDC_60PT:
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*) 10);
+							break;
+
+					   case IDC_DEFAULTSIZE:
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*) 11);
+							break;
 				}
 				break;
 
 		   default:	return FALSE;
+	}
+	return TRUE;
+}
+
+/*-----------------------------------------------------------------------
+ CloseDocDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK InitConfirmDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK InitConfirmDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	HWND messageWnd;
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    SetWindowText (hwnDlg, wndTitle);
+				messageWnd = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+					                       15, 15, 303, 60, hwnDlg, (HMENU) 99, hInstance, NULL);
+				break;
+
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+		               case ID_CONFIRM:
+			                EndDialog (hwnDlg, ID_CONFIRM);
+				            ThotCallback (currentRef, INTEGER_DATA, (char*) 1);
+			                break;
+
+		               case IDCANCEL:
+			                EndDialog (hwnDlg, IDCANCEL);
+				            break;
+				}
+				break;
+
+				default: return FALSE;
 	}
 	return TRUE;
 }

@@ -387,6 +387,7 @@ View                view;
       StopRequest (document);
     }
 #else
+#ifndef _WINDOWS
   if (DocNetworkStatus[document] & AMAYA_NET_ACTIVE)
     {
       TtaChangeButton (document, 1, 1, stopN);
@@ -394,6 +395,15 @@ View                view;
       FilesLoading[document] = 0;
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
     }
+#else
+  if (DocNetworkStatus[document] & AMAYA_NET_ACTIVE)
+    {
+     /* TtaChangeButton (document, 1, 1, stopN); */
+      StopRequest (document);
+      FilesLoading[document] = 0;
+      DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
+    }
+#endif /* !_WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 
@@ -553,6 +563,7 @@ char               *label;
 
 #endif
 {
+#  ifndef _WINDOWS
    /* Confirm form */
    TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),  TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_CANCEL);
    TtaNewLabel (BaseDialog + ConfirmText, BaseDialog + ConfirmForm, label);
@@ -560,6 +571,9 @@ char               *label;
    TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
    /* wait for an answer */
    TtaWaitShowDialogue ();
+#  else  /* _WINDOWS */
+   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), BaseDialog + ConfirmForm, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label);
+#  endif /* _WINDOWS */
 }
 
 

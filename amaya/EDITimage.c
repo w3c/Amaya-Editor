@@ -271,6 +271,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS
    int                 i;
    char                s[MAX_LENGTH];
 
@@ -307,6 +308,10 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormImage, FALSE);
    TtaWaitShowDialogue ();
+#  else /* _WINDOWS */
+   CreateOPenDocDlgWindow (TtaGetViewFrame (document, view), LastURLImage) ;
+
+#  endif /* _WINDOWS */
    return (LastURLImage);
 }
 

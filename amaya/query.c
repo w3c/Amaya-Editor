@@ -273,6 +273,9 @@ AHTReqContext      *me;
 {
    AHTDocId_Status    *docid_status;
 
+
+   return;
+
    if (me)
      {
 
@@ -764,7 +767,14 @@ int                 status;
 	     }
 	 }
      }
-   return HT_OK;
+
+   /* erase the context if we're dealing with an asynchronous request */
+   if ((me->mode & AMAYA_ASYNC) ||	(me->mode & AMAYA_IASYNC)) {
+	   me->reqStatus = HT_END;
+       /** AHTReqContext_delete (me); **/
+   }
+
+  return HT_OK;
 }
 
 /*----------------------------------------------------------------------
@@ -1158,9 +1168,7 @@ void                QueryInit ()
    /* New AHTBridge stuff */
 
 
-#  ifndef _WINDOWS 
    HTEvent_setUnregisterCallback (AHTEvent_unregister);
-#  endif /* !_WINDOWS */
    
 #  ifdef _WINDOWS
    HTEventInit ();
@@ -1517,7 +1525,8 @@ boolean error_html;
    } else
         status = HTLoadAnchor ((HTAnchor *) me->anchor, me->request);
 
-   if (status == HT_ERROR || me->reqStatus == HT_END || me->reqStatus == HT_ERR) {
+   if (status == HT_ERROR) {
+
       /* in case of error, free all allocated memory and exit */
       if (me->output)
 	 fclose (me->output);
@@ -1853,15 +1862,20 @@ int                 docid;
 			      RequestKillAllXtevents (me);
 #                 endif /* !_WINDOWS */
 			      me->reqStatus = HT_ABORT;
-			      HTRequest_kill (me->request);
-
-			      if (me->mode == AMAYA_ASYNC ||
-				  me->mode == AMAYA_IASYNC)
+#                 ifndef _WINDOWS
+				  HTRequest_kill (me->request);
+				  
+			      if ((me->mode & AMAYA_ASYNC) ||
+				  (me->mode & AMAYA_IASYNC))
 				{
 
 				   AHTReqContext_delete (me);
 				}
-			      cur = Amaya->reqlist;
+#               else
+				AHTReqContext_delete (me);
+#               endif /* !WINDOWS */
+
+				  cur = Amaya->reqlist;
 
 			      open_requests--;
 
