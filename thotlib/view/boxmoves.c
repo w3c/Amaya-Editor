@@ -865,6 +865,7 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 {
   PtrAbstractBox      pAb;
   BoxEdge             oldPosEdge, oldVertEdge, oldHorizEdge;
+  int                 t, l, b, r;
   int                 translation;
 
   pAb = pBox->BxAbstractBox;
@@ -922,7 +923,10 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 	      XMove (pBox, pSourceBox, translation, frame);
 	    }
 	  /* Resize the box */
-	  delta = delta + pBox->BxWidth - pBox->BxW - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder;
+	  GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+	  l += pBox->BxLMargin +  pBox->BxLBorder +  pBox->BxLPadding;
+	  r += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+	  delta = delta + pBox->BxWidth - pBox->BxW - l - r;
 	  ResizeWidth (pBox, pSourceBox, NULL, delta, 0, 0, 0, frame);
 	  /* restore the fixed edge */
 	  pBox->BxHorizEdge = oldHorizEdge;
@@ -976,6 +980,10 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 	      
 	    }
 	  /* Resize the box */
+	  GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+	  t += pBox->BxTMargin +  pBox->BxTBorder +  pBox->BxTPadding;
+	  b += pBox->BxBMargin + pBox->BxBBorder + pBox->BxBPadding;
+	  delta = delta + pBox->BxHeight - pBox->BxH - t - b;
 	  ResizeHeight (pBox, pSourceBox, NULL, delta, 0, 0, frame);
 	  /* restore the fixed edge */
 	  pBox->BxVertEdge = oldVertEdge;
@@ -2003,9 +2011,13 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   GetExtraMargins (pBox, NULL, &i, &j, &extraL, &extraR);
   if (pCurrentAb->AbMBPChange || l || r)
     /* margins borders and are not interpreted yet */
-    diff = l + r;
+    diff = l + extraL + r + extraR;
   else
-    diff = pBox->BxW + pBox->BxLMargin + pBox->BxRMargin + pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder + extraL + extraR - pBox->BxWidth;
+    {
+      extraL += pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+      extraR += pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+      diff = pBox->BxW + extraL + extraR - pBox->BxWidth;
+    }
 
   if (delta || diff ||
       pCurrentAb->AbLeftMarginUnit == UnAuto || pCurrentAb->AbRightMarginUnit == UnAuto)
@@ -2541,9 +2553,13 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   GetExtraMargins (pBox, NULL, &extraT, &extraB, &i, &j);
   if (pCurrentAb->AbMBPChange || t || b)
     /* margins borders and are not interpreted yet */
-    diff = t + b;
+    diff = t + extraT + b + extraB;
   else
-    diff = pBox->BxH + pBox->BxTMargin + pBox->BxBMargin + pBox->BxTPadding + pBox->BxBPadding + pBox->BxTBorder + pBox->BxBBorder + extraT + extraB - pBox->BxHeight;
+    {
+      extraT += pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
+      extraB += pBox->BxBMargin + pBox->BxBBorder + pBox->BxBPadding;
+      diff = pBox->BxH + extraT + extraB - pBox->BxHeight;
+    }
 
   if (delta || diff)
     {
@@ -3178,6 +3194,8 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
        * and it's not a stretchable box.
        * In other cases, move also enclosed boxes.
        */
+if (!strcmp (pCurrentAb->AbElement->ElLabel, "L94"))
+  printf ("Move L94 x=%d delta=%d \n", pBox->BxXOrg, delta);
       if (absoluteMove)
 	{
 	  

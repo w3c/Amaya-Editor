@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Jul 12 11:09:50 CEST 2004" version="82">
+<base last_update="Mon Aug 16 13:17:10 CEST 2004" version="83">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -306,6 +306,7 @@
 	<message xml:lang="es">Abrir &amp;pestaña...</message>
 	<message xml:lang="it">Apri &amp;tab...</message>
 	<message xml:lang="de">Öffnen (neues &amp;Registerkarte)...</message>
+	<message xml:lang="ru">Открыть в новой пан&amp;ели...</message>
 </label>
 <label define="BOpenInNewWindow">
 	<message xml:lang="en">Open in new &amp;window...</message>
@@ -790,6 +791,7 @@
 	<message xml:lang="de">Registerkarte schließen</message>
 	<message xml:lang="es">&amp;Cerrar pestaña</message>
 	<message xml:lang="it">&amp;Chiudi tab</message>
+	<message xml:lang="ru">Закрыть пан&amp;ель</message>
 </label>
 <label define="BCloseWindow">
 	<message xml:lang="en">&amp;Close window</message>
@@ -896,7 +898,7 @@
 	<message xml:lang="es">&amp;Insertar</message>
 	<message xml:lang="it">&amp;Inserisci</message>
 	<message xml:lang="de">&amp;Einfügen (davor)</message>
-	<message xml:lang="ru">Вставить перед</message>
+	<message xml:lang="ru">Вставить</message>
 </label>
 <label define="BInsertAfter">
 	<message xml:lang="en">&amp;Append</message>
@@ -907,7 +909,7 @@
 	<message xml:lang="pt">&amp;Adicionar</message>
 	<message xml:lang="fi">&amp;Lisää</message>
 	<message xml:lang="tr">&amp;Ekle</message>
-	<message xml:lang="ru">Вставить после</message>
+	<message xml:lang="ru">Добавить</message>
 </label>
 <label define="BFind">
 	<message xml:lang="en">&amp;Find...</message>
@@ -918,7 +920,7 @@
 	<message xml:lang="es">&amp;Buscar...</message>
 	<message xml:lang="pt">Achar...</message>
 	<message xml:lang="fi">Etsi...</message>
-	<message xml:lang="ru">Режим правки</message>
+	<message xml:lang="ru">Н&amp;айти</message>
 </label>
 <label define="BSpellCheck">
 	<message xml:lang="en">Chec&amp;k spelling...</message>
@@ -929,7 +931,7 @@
 	<message xml:lang="es">&amp;Verificar ortografía...</message>
 	<message xml:lang="pt">Verificar ortografia...</message>
 	<message xml:lang="fi">Tarkista oikeinkirjoitus...</message>
-	<message xml:lang="ru">Основные...</message>
+	<message xml:lang="ru">Проверка правописания...</message>
 </label>
 <label define="BTransform">
 	<message xml:lang="en">Transfor&amp;m...</message>
@@ -940,7 +942,7 @@
 	<message xml:lang="es">&amp;Transformar...</message>
 	<message xml:lang="pt">Transformar...</message>
 	<message xml:lang="fi">Muunna...</message>
-	<message xml:lang="ru">Просмотр...</message>
+	<message xml:lang="ru">Преобразоват&amp;ь...</message>
 </label>
 <label define="Coptions">
 	<message xml:lang="en">&amp;Preferences</message>
@@ -951,7 +953,7 @@
 	<message xml:lang="pt">Preferências</message>
 	<message xml:lang="fi">Asetukset</message>
 	<message xml:lang="tr">Tercih</message>
-	<message xml:lang="ru">Публикация...</message>
+	<message xml:lang="ru">Настройки</message>
 </label>
 <label define="BConfigGeneral">
 	<message xml:lang="en">&amp;General...</message>
@@ -962,7 +964,7 @@
 	<message xml:lang="pt">Geral...</message>
 	<message xml:lang="fi">Yleiset...</message>
 	<message xml:lang="tr">Genel...</message>
-	<message xml:lang="ru">Кэш...</message>
+	<message xml:lang="ru">Основные...</message>
 </label>
 <label define="BConfigBrowse">
 	<message xml:lang="en">&amp;Browsing...</message>
@@ -972,7 +974,7 @@
 	<message xml:lang="it">Visualizzazione...</message>
 	<message xml:lang="es">&amp;Navegación...</message>
 	<message xml:lang="tr">Tarama...</message>
-	<message xml:lang="ru">Прокси...</message>
+	<message xml:lang="ru">Просмотр...</message>
 </label>
 <label define="BConfigPublish">
 	<message xml:lang="en">P&amp;ublishing...</message>
@@ -983,7 +985,7 @@
 	<message xml:lang="pt">Publicação...</message>
 	<message xml:lang="fi">Julkaisu...</message>
 	<message xml:lang="tr">Derleme...</message>
-	<message xml:lang="ru">Цвет...</message>
+	<message xml:lang="ru">Публикация...</message>
 </label>
 <label define="BConfigCache">
 	<message xml:lang="en">&amp;Cache...</message>
@@ -994,7 +996,7 @@
 	<message xml:lang="pt">Cache...</message>
 	<message xml:lang="fi">Välimuisti...</message>
 	<message xml:lang="tr">Önbellekleme...</message>
-	<message xml:lang="ru">Геометрия окна...</message>
+	<message xml:lang="ru">Кэш...</message>
 </label>
 <label define="BConfigProxy">
 	<message xml:lang="en">Pro&amp;xy...</message>
@@ -1005,7 +1007,7 @@
 	<message xml:lang="pt">Proxy...</message>
 	<message xml:lang="fi">Välityspalvelin...</message>
 	<message xml:lang="tr">Proxy...</message>
-	<message xml:lang="ru">Язык обсуж&amp;дения...</message>
+	<message xml:lang="ru">Прокси (proxy)...</message>
 </label>
 <label define="BConfigColor">
 	<message xml:lang="en">C&amp;olors...</message>
@@ -1016,7 +1018,7 @@
 	<message xml:lang="pt">Cores...</message>
 	<message xml:lang="fi">Värit...</message>
 	<message xml:lang="tr">Renkler...</message>
-	<message xml:lang="ru">Профили...</message>
+	<message xml:lang="ru">Цвет...</message>
 </label>
 <label define="BConfigGeometry">
 	<message xml:lang="en">&amp;Window Geometry...</message>
@@ -1027,7 +1029,7 @@
 	<message xml:lang="pt">Geometria da janela...</message>
 	<message xml:lang="fi">Ikkunan asetukset...</message>
 	<message xml:lang="tr">Geometri...</message>
-	<message xml:lang="ru">Шаблоны...</message>
+	<message xml:lang="ru">Геометрия окна...</message>
 </label>
 <label define="BConfigLanNeg">
 	<message xml:lang="en">&amp;Language Negotiation...</message>
@@ -1038,7 +1040,7 @@
 	<message xml:lang="pt">Negociação de idioma...</message>
 	<message xml:lang="fi">Kieliasetukset...</message>
 	<message xml:lang="tr">Ülke dilleri...</message>
-	<message xml:lang="ru">Поиск...</message>
+	<message xml:lang="ru">Язык обсуже&amp;дения...</message>
 </label>
 <label define="BConfigProfile">
 	<message xml:lang="en">&amp;Profiles...</message>
@@ -1049,7 +1051,7 @@
 	<message xml:lang="pt">Perfís...</message>
 	<message xml:lang="fi">Profiilit...</message>
 	<message xml:lang="tr">Profiller...</message>
-	<message xml:lang="ru">Проверка правописания...</message>
+	<message xml:lang="ru">Профили...</message>
 </label>
 <label define="BConfigTemplates">
 	<message xml:lang="en">&amp;Templates...</message>
@@ -1060,7 +1062,7 @@
 	<message xml:lang="pt">Templates...</message>
 	<message xml:lang="fi">Mallit...</message>
 	<message xml:lang="tr">Sayfa modelleri...</message>
-	<message xml:lang="ru">Преобразоват&amp;ь...</message>
+	<message xml:lang="ru">Шаблоны...</message>
 </label>
 <label define="BTitle">
 	<message xml:lang="en">Change Title...</message>
@@ -1225,7 +1227,7 @@
 	<message xml:lang="es">Formulario</message>
 	<message xml:lang="pt">Formulário</message>
 	<message xml:lang="fi">Lomake</message>
-	<message xml:lang="ru">Форма</message>
+	<message xml:lang="ru">Форма-Form</message>
 </label>
 <label define="BForm">
 	<message xml:lang="en">Insert a form</message>
@@ -1247,7 +1249,7 @@
 	<message xml:lang="pt">Botão (input)</message>
 	<message xml:lang="fi">Painike (input)</message>
 	<message xml:lang="tr">Düğme (giriş = input)</message>
-	<message xml:lang="ru">Кнопка (input)</message>
+	<message xml:lang="ru">Кнопка-Button (input)</message>
 </label>
 <label define="BToggle">
 	<message xml:lang="en">Checkbox (input)</message>
@@ -1258,7 +1260,7 @@
 	<message xml:lang="es">Casilla de verificación (input)</message>
 	<message xml:lang="pt">Caixa de verificação (Checkbox) (input)</message>
 	<message xml:lang="fi">Valintalaatikko (input)</message>
-	<message xml:lang="ru">Переключатель (input)</message>
+	<message xml:lang="ru">Переключатель-Checkbox (input)</message>
 </label>
 <label define="BFileInput">
 	<message xml:lang="en">File selector (input)</message>
@@ -1335,7 +1337,7 @@
 	<message xml:lang="es">Enviar (input)</message>
 	<message xml:lang="pt">Submeter (input)</message>
 	<message xml:lang="fi">Lähetä (input)</message>
-	<message xml:lang="ru">Подтвердить-Commit (input)</message>
+	<message xml:lang="ru">Подтвердить-Submit (input)</message>
 </label>
 <label define="BTextInput">
 	<message xml:lang="en">Text (input)</message>
@@ -1401,7 +1403,7 @@
 	<message xml:lang="es">Área de texto (textarea)</message>
 	<message xml:lang="pt">Área de texto (textarea)</message>
 	<message xml:lang="fi">tekstialue</message>
-	<message xml:lang="ru">Область ввода текста (text)</message>
+	<message xml:lang="ru">Область ввода текста (textarea)</message>
 </label>
 <label define="Object">
 	<message xml:lang="en">Object</message>
@@ -1456,7 +1458,7 @@
 	<message xml:lang="es">Tabla (table)</message>
 	<message xml:lang="pt">tabela</message>
 	<message xml:lang="fi">taulukko</message>
-	<message xml:lang="ru">Таблица (table)</message>
+	<message xml:lang="ru">таблица (table)</message>
 </label>
 <label define="BCaption">
 	<message xml:lang="en">caption</message>
@@ -1467,7 +1469,7 @@
 	<message xml:lang="es">Leyenda (caption)</message>
 	<message xml:lang="pt">Legenda (caption)</message>
 	<message xml:lang="fi">nimike</message>
-	<message xml:lang="ru">Заголовок (title)</message>
+	<message xml:lang="ru">заголовок (title)</message>
 </label>
 <label define="BColgroup">
 	<message xml:lang="en">colgroup</message>
@@ -1478,7 +1480,7 @@
 	<message xml:lang="es">Grupo de columnas (colgroup)</message>
 	<message xml:lang="pt">Grupo de colunas (colgroup)</message>
 	<message xml:lang="fi">pystyriviryhmä</message>
-	<message xml:lang="ru">Группа столбцов (colgroup)</message>
+	<message xml:lang="ru">группа столбцов (colgroup)</message>
 </label>
 <label define="BCol">
 	<message xml:lang="en">col</message>
@@ -1489,7 +1491,7 @@
 	<message xml:lang="es">Columna (col)</message>
 	<message xml:lang="pt">Coluna (col)</message>
 	<message xml:lang="fi">pystyrivi</message>
-	<message xml:lang="ru">Столбец (col)</message>
+	<message xml:lang="ru">столбец (col)</message>
 </label>
 <label define="BTHead">
 	<message xml:lang="en">thead</message>
@@ -1500,7 +1502,7 @@
 	<message xml:lang="es">thead</message>
 	<message xml:lang="pt">Cabeçalho (thead)</message>
 	<message xml:lang="fi">Taulukon otsikko</message>
-	<message xml:lang="ru">Голова (thead)</message>
+	<message xml:lang="ru">голова (thead)</message>
 </label>
 <label define="BTBody">
 	<message xml:lang="en">tbody</message>
@@ -1511,7 +1513,7 @@
 	<message xml:lang="es">tbody</message>
 	<message xml:lang="pt">Corpo (tbody)</message>
 	<message xml:lang="fi">Taulukon sisältö</message>
-	<message xml:lang="ru">Тело (tbody)</message>
+	<message xml:lang="ru">тело (tbody)</message>
 </label>
 <label define="BTFoot">
 	<message xml:lang="en">tfoot</message>
@@ -1522,7 +1524,7 @@
 	<message xml:lang="es">tfoot</message>
 	<message xml:lang="pt">Rodapé (tfoot)</message>
 	<message xml:lang="fi">Taulukon alaotsikko</message>
-	<message xml:lang="ru">Нижний колонтитул таблицы (tfoot)</message>
+	<message xml:lang="ru">нижний колонтитул таблицы (tfoot)</message>
 </label>
 <label define="BDataCell">
 	<message xml:lang="en">Change to Data cell (td)</message>
@@ -1586,7 +1588,7 @@
 	<message xml:lang="it">Inserisci una riga</message>
 	<message xml:lang="de">Zeile einfügen (davor)</message>
 	<message xml:lang="es">Insertar fila</message>
-	<message xml:lang="ru">Вставить строку перед</message>
+	<message xml:lang="ru">Вставить строку</message>
 </label>
 <label define="BCreateRowA">
 	<message xml:lang="en">Append a row</message>
@@ -1594,7 +1596,7 @@
 	<message xml:lang="it">Aggiungi una riga</message>
 	<message xml:lang="de">Zeile inzufügen (danach)</message>
 	<message xml:lang="es">Añadir fila</message>
-	<message xml:lang="ru">Вставить строку после</message>
+	<message xml:lang="ru">Добавить строку</message>
 </label>
 <label define="BSelectColumn">
 	<message xml:lang="en">Select the column</message>
@@ -1610,7 +1612,7 @@
 	<message xml:lang="it">Inserisci una colonna</message>
 	<message xml:lang="de">Spalte einfügen (davor)</message>
 	<message xml:lang="es">Insertar columna</message>
-	<message xml:lang="ru">Вставить столбец перед</message>
+	<message xml:lang="ru">Вставить столбец</message>
 </label>
 <label define="BCreateColumnA">
 	<message xml:lang="en">Append a column</message>
@@ -1618,7 +1620,7 @@
 	<message xml:lang="it">Aggiungi una colonna</message>
 	<message xml:lang="de">Spalte inzufügen (danach)</message>
 	<message xml:lang="es">Añadir columna</message>
-	<message xml:lang="ru">Вставить столбец после</message>
+	<message xml:lang="ru">Добавить столбец</message>
 </label>
 <label define="BPasteBefore">
 	<message xml:lang="en">Paste before</message>
@@ -1672,7 +1674,7 @@
 	<message xml:lang="es">Polígono (area)</message>
 	<message xml:lang="pt">Polígono (area)</message>
 	<message xml:lang="fi">Monikulmio (area)</message>
-	<message xml:lang="ru">Область полигон</message>
+	<message xml:lang="ru">Область многоугольник</message>
 </label>
 <label define="BRectangle">
 	<message xml:lang="en">Rectangle area</message>
@@ -1705,7 +1707,7 @@
 	<message xml:lang="es">Estilo (style)</message>
 	<message xml:lang="pt">estilo</message>
 	<message xml:lang="fi">tyyli</message>
-	<message xml:lang="ru">Стиль</message>
+	<message xml:lang="ru">стиль</message>
 </label>
 <label define="BComment">
 	<message xml:lang="en">Comment</message>
@@ -1727,7 +1729,7 @@
 	<message xml:lang="es">base</message>
 	<message xml:lang="pt">base</message>
 	<message xml:lang="fi">perus</message>
-	<message xml:lang="ru">основа</message>
+	<message xml:lang="ru">основа (base)</message>
 </label>
 <label define="BMeta">
 	<message xml:lang="en">meta</message>
@@ -1738,7 +1740,7 @@
 	<message xml:lang="es">meta</message>
 	<message xml:lang="pt">meta</message>
 	<message xml:lang="fi">meta</message>
-	<message xml:lang="ru">мета</message>
+	<message xml:lang="ru">мета (meta)</message>
 </label>
 <label define="BLink">
 	<message xml:lang="en">link</message>
@@ -1749,7 +1751,7 @@
 	<message xml:lang="es">Enlace (link)</message>
 	<message xml:lang="pt">enlace (link)</message>
 	<message xml:lang="fi">linkki</message>
-	<message xml:lang="ru">ссылка</message>
+	<message xml:lang="ru">ссылка (link)</message>
 </label>
 <label define="BScript">
 	<message xml:lang="en">script</message>
@@ -1760,7 +1762,7 @@
 	<message xml:lang="es">script</message>
 	<message xml:lang="pt">script</message>
 	<message xml:lang="fi">skripti</message>
-	<message xml:lang="ru">сценарий</message>
+	<message xml:lang="ru">сценарий (script)</message>
 </label>
 <label define="BNoScript">
 	<message xml:lang="en">noscript</message>
@@ -1771,7 +1773,7 @@
 	<message xml:lang="es">noscript</message>
 	<message xml:lang="pt">noscript</message>
 	<message xml:lang="fi">ei skriptiä</message>
-	<message xml:lang="ru">без сценария</message>
+	<message xml:lang="ru">без сценария (noscript)</message>
 </label>
 <label define="BParagraph">
 	<message xml:lang="en">Paragraph (p)</message>
@@ -1804,7 +1806,7 @@
 	<message xml:lang="es">Dirección (address)</message>
 	<message xml:lang="pt">endereço</message>
 	<message xml:lang="fi">osoite</message>
-	<message xml:lang="ru">Адрес (address)</message>
+	<message xml:lang="ru">адрес (address)</message>
 </label>
 <label define="BRule">
 	<message xml:lang="en">Horizontal rule (hr)</message>
@@ -1859,7 +1861,7 @@
 	<message xml:lang="es">blockquote</message>
 	<message xml:lang="pt">Citação (blockquote)</message>
 	<message xml:lang="fi">sisennetty kappale</message>
-	<message xml:lang="ru">Длиная цитата (blockquote)</message>
+	<message xml:lang="ru">Длинная цитата (blockquote)</message>
 </label>
 <label define="BIFrame">
 	<message xml:lang="en">Inline frame (iframe)</message>
@@ -1892,7 +1894,7 @@
 	<message xml:lang="es">&amp;Numeración de sección</message>
 	<message xml:lang="pt">Numeração de seção</message>
 	<message xml:lang="fi">Osien numerointi</message>
-	<message xml:lang="ru">Нумеровать разделы</message>
+	<message xml:lang="ru">Нумеровать раздел&amp;ы</message>
 </label>
 <label define="BMakeBook">
 	<message xml:lang="en">&amp;Make book</message>
@@ -1911,6 +1913,7 @@
 	<message xml:lang="es">Insertar marca de tiempo</message>
 	<message xml:lang="de">Zeitstempel einfügen</message>
 	<message xml:lang="it">Inserisci timestamp</message>
+	<message xml:lang="ru">Вставить метку времени</message>
 </label>
 <label define="Phrase">
 	<message xml:lang="en">Information type</message>
@@ -1943,7 +1946,7 @@
 	<message xml:lang="es">Enérgico (strong)</message>
 	<message xml:lang="pt">Forte (strong)</message>
 	<message xml:lang="fi">voimakas</message>
-	<message xml:lang="ru">Строгое акцентирование (strong)</message>
+	<message xml:lang="ru">строгое акцентирование (strong)</message>
 </label>
 <label define="TCite">
 	<message xml:lang="en">cite</message>
@@ -1954,7 +1957,7 @@
 	<message xml:lang="es">Cita (cite)</message>
 	<message xml:lang="pt">Citação (cite)</message>
 	<message xml:lang="fi">siteeraus</message>
-	<message xml:lang="ru">Цитирование (cite)</message>
+	<message xml:lang="ru">цитирование (cite)</message>
 </label>
 <label define="TDefinition">
 	<message xml:lang="en">Definition (dfn)</message>
@@ -1976,7 +1979,7 @@
 	<message xml:lang="es">Código (code)</message>
 	<message xml:lang="pt">Código (code)</message>
 	<message xml:lang="fi">koodi</message>
-	<message xml:lang="ru">Код (code)</message>
+	<message xml:lang="ru">код (code)</message>
 </label>
 <label define="TVariable">
 	<message xml:lang="en">Variable (var)</message>
@@ -2031,7 +2034,7 @@
 	<message xml:lang="pt">Acrônimo (acronym)</message>
 	<message xml:lang="fi">kirjainsana</message>
 	<message xml:lang="tr">acronym</message>
-	<message xml:lang="ru">Акроним (acronym)</message>
+	<message xml:lang="ru">акроним (acronym)</message>
 </label>
 <label define="TInsertion">
 	<message xml:lang="en">Insertion (ins)</message>
@@ -2108,7 +2111,7 @@
 	<message xml:lang="es">Grande (big)</message>
 	<message xml:lang="pt">Grande (big)</message>
 	<message xml:lang="fi">iso</message>
-	<message xml:lang="ru">Большой текст (big)</message>
+	<message xml:lang="ru">большой текст (big)</message>
 </label>
 <label define="TSmall">
 	<message xml:lang="en">small</message>
@@ -2119,7 +2122,7 @@
 	<message xml:lang="es">Pequeña (small)</message>
 	<message xml:lang="pt">Pequeno (small)</message>
 	<message xml:lang="fi">pieni</message>
-	<message xml:lang="ru">Малый текст (small)</message>
+	<message xml:lang="ru">малый текст (small)</message>
 </label>
 <label define="TSub">
 	<message xml:lang="en">Subscript (sub)</message>
@@ -2278,7 +2281,7 @@
 	<message xml:lang="it">&amp;Costruzioni</message>
 	<message xml:lang="de">&amp;Konstrukte</message>
 	<message xml:lang="es">&amp;Construcciones</message>
-	<message xml:lang="ru">Математика</message>
+	<message xml:lang="ru">Конструкции</message>
 </label>
 <label define="BNthRoot">
 	<message xml:lang="en">Root (mroot)</message>
@@ -2479,7 +2482,7 @@
 	<message xml:lang="it">Inserisci una riga</message>
 	<message xml:lang="de">Zeile einfügen (davor)</message>
 	<message xml:lang="es">Insertar fila</message>
-	<message xml:lang="ru">Вставить строку перед</message>
+	<message xml:lang="ru">Вставить строку</message>
 </label>
 <label define="BMCreateRowA">
 	<message xml:lang="en">Append a row</message>
@@ -2487,7 +2490,7 @@
 	<message xml:lang="it">Aggiungi una riga</message>
 	<message xml:lang="de">Zeile inzufügen (danach)</message>
 	<message xml:lang="es">Añadir fila</message>
-	<message xml:lang="ru">Вставить строку после</message>
+	<message xml:lang="ru">Добавить строку</message>
 </label>
 <label define="BMSelectColumn">
 	<message xml:lang="en">Select the column</message>
@@ -2503,7 +2506,7 @@
 	<message xml:lang="it">Inserisci una colonna</message>
 	<message xml:lang="de">Spalte einfügen (davor)</message>
 	<message xml:lang="es">Insertar columna</message>
-	<message xml:lang="ru">Вставить столбец перед</message>
+	<message xml:lang="ru">Вставить столбец</message>
 </label>
 <label define="BMCreateColumnA">
 	<message xml:lang="en">Append a column</message>
@@ -2511,7 +2514,7 @@
 	<message xml:lang="it">Aggiungi una colonna</message>
 	<message xml:lang="de">Spalte inzufügen (danach)</message>
 	<message xml:lang="es">Añadir columna</message>
-	<message xml:lang="ru">Вставить столбец после</message>
+	<message xml:lang="ru">Добавить столбец</message>
 </label>
 <label define="BMPasteBefore">
 	<message xml:lang="en">Paste before</message>
@@ -2751,6 +2754,7 @@
 	<message xml:lang="it">Timeline</message>
 	<message xml:lang="es">Planificación</message>
 	<message xml:lang="tr">Zaman sırası</message>
+	<message xml:lang="ru">Шкала времени</message>
 </label>
 <label define="BCharacterStyle">
 	<message xml:lang="en">C&amp;haracter style...</message>
@@ -2956,7 +2960,7 @@
 	<message xml:lang="pt">Registrar</message>
 	<message xml:lang="fi">Lähetä palvelimelle</message>
 	<message xml:lang="tr">Server\'e kaydet</message>
-	<message xml:lang="ru">Опубликовать (Post) на сервере</message>
+	<message xml:lang="ru">Опубликовать (post) на сервере</message>
 </label>
 <label define="BDeleteAnnot">
 	<message xml:lang="en">Delete</message>
@@ -2967,7 +2971,7 @@
 	<message xml:lang="pt">Apagar</message>
 	<message xml:lang="fi">Poista</message>
 	<message xml:lang="tr">Sil</message>
-	<message xml:lang="ru">Удалить аннотации</message>
+	<message xml:lang="ru">Удалить</message>
 </label>
 <label define="BLoadAnnotations">
 	<message xml:lang="en">Load</message>
@@ -2978,7 +2982,7 @@
 	<message xml:lang="pt">Carregar</message>
 	<message xml:lang="fi">Lataa</message>
 	<message xml:lang="tr">Yükle</message>
-	<message xml:lang="ru">Загрузить аннотации</message>
+	<message xml:lang="ru">Загрузить</message>
 </label>
 <label define="BCustomQuery">
 	<message xml:lang="en">Customize query...</message>
@@ -3058,7 +3062,7 @@
 	<message xml:lang="it">Lock resource...</message>
 	<message xml:lang="es">Bloquear recurso</message>
 	<message xml:lang="tr">Tekrar okumayı kitle...</message>
-	<message xml:lang="ru">Заблокировать ресурс...</message>
+	<message xml:lang="ru">Блокировать ресурс...</message>
 </label>
 <label define="BUnlock">
 	<message xml:lang="en">Unlock resource...</message>
@@ -3102,7 +3106,7 @@
 	<message xml:lang="it">Lock?</message>
 	<message xml:lang="es">¿Bloqueado?</message>
 	<message xml:lang="tr">kitli mi?</message>
-	<message xml:lang="ru">Блокировать?</message>
+	<message xml:lang="ru">Заблокирован?</message>
 </label>
 <label define="BCoopConfig">
 	<message xml:lang="en">Preferences...</message>

@@ -2062,6 +2062,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	    }
 	}
 
+if (!strcmp (pAb->AbElement->ElLabel, "L94"))
+  printf ("InitialBuild \n");
       /* Dimensionnement de la boite par contraintes */
       /* Il faut initialiser le trace reel et l'indication */
       /* des reperes inverses (en cas de boite elastique)  */
