@@ -27,7 +27,7 @@ int                 UserErrorCode;
 
 #ifdef _WINDOWS
 extern HDC compilersDC;
-extern HWND hWnd;
+extern HWND COMPWnd;
 extern int    _CY_;
 #endif /* _WINDOWS */
 
@@ -106,8 +106,8 @@ int                 msgType;
       cyChar = textMetric.tmHeight + textMetric.tmExternalLeading + 1;
 
 	  if (_CY_ >= 550) {
-         ScrollWindow (hWnd, 0, -cyChar, NULL, NULL);
-         UpdateWindow (hWnd);
+         ScrollWindow (COMPWnd, 0, -cyChar, NULL, NULL);
+         UpdateWindow (COMPWnd);
 	  } else
            _CY_ += cyChar;
 

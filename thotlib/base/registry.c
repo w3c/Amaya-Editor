@@ -668,6 +668,7 @@ static char        *WINIni_get (CONST char *env)
   ----------------------------------------------------------------------*/
 void                TtaSaveAppRegistry ()
 {
+
 #ifndef WWW_MSWINDOWS
    char               *home_dir;
    char                filename[MAX_PATH];
