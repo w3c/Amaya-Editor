@@ -156,10 +156,8 @@ TypeUnit unit;
                return NULL;
    }
 
-   WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 72);
-
+   WIN_nHeight = -MulDiv (size, DOT_PER_INCHE, 83);
    iso2wc_strcpy (lpszFace, WIN_lpszFace);
-   
    hFont = CreateFont (WIN_nHeight, WIN_nWidth, 0, 0, WIN_fnWeight,
                        WIN_fdwItalic, WIN_fdwUnderline, WIN_fdwStrikeOut,
                        DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,

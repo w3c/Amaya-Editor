@@ -113,7 +113,6 @@ int                 height;
    createdFrame = MakeFrame (pDoc->DocSSchema->SsName, view, buf, X, Y,
 			     width, height, vol, IdentDocument (pDoc));
    return createdFrame;
-   return -1;
 }
 
 
