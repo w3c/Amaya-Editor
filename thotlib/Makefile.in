@@ -200,7 +200,6 @@ EDITOR_OBJ = \
 	dialogue/printmenu.o \
 	dialogue/quit.o \
 	dialogue/searchmenu.o \
-	dialogue/searchmenustr.o \
 	dialogue/selectmenu.o \
 	document/pivot.o \
 	document/docs.o \
