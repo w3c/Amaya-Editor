@@ -265,14 +265,14 @@ parenthesize:*;
         }
 
 !surround a sequence of elements with parentheses
-parenthesize: first:*,?*+, last:* ;
-        {
-        first > mrow:mo."(";
-        first > mrow:*;
-        * > mrow:*;
-        last > mrow:*;
-        last > mrow:mo.")";
-        }
+!group: first:*,?*+, last:* ;
+!        {
+!        first > mrow:mo."(";
+!        first > mrow:*;
+!        * > mrow:*;
+!        last > mrow:*;
+!        last > mrow:mo.")";
+!        }
 
 !remove parenthesis
 remove parenthesis: mrow{mo,?*+,mo};

@@ -315,6 +315,12 @@ ATTRIBUTES
 	AttrDelete.Pre ->  DeleteAttrSelected;	
 	END;
 
+   Style\240:
+	BEGIN
+	AttrExport.Pre ->  GenerateQuoteBefore;	
+	AttrExport.Post -> GenerateQuoteAfter;	
+	END;
+
    meta_content:
 	BEGIN
 	AttrExport.Pre ->  GenerateQuoteBefore;	

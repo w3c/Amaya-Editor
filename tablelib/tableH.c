@@ -621,11 +621,12 @@ boolean         force;
   PtrAbstractBox      pBlock, pCell;
   PtrBox              pBox, pOldBox;
   Propagation         savePropagate;
-  int                 j, var, delta, px, val;
+  int                 j, var, delta, px;
   int                 width, i, cRef, minsize;
   int                 min, max, sum, remainder;
   int                 percent, sumPercent, n;
   int                 realMin, realMax;
+  int                 minWithPercent, maxWithPercent;
   boolean             constraint, still;
   boolean             useMax, checkEnclosing;
 
@@ -662,6 +663,8 @@ boolean         force;
   var = 0;
   realMin = 0;
   realMax = 0;
+  minWithPercent = 0;
+  maxWithPercent = 0;
   /* additional space */ 
     remainder = 0;
   /* no previous column */
@@ -691,7 +694,11 @@ printf("<<<<<<<<<<<<<<<%d\n", table->AbBox->BxWidth);
 	  (colPercent[cRef] * 100 / width) < pBox->BxMinWidth)
 	colPercent[cRef] = 0;
       if (colPercent[cRef] != 0)
-	sumPercent += colPercent[cRef];
+	{
+	  sumPercent += colPercent[cRef];
+	  minWithPercent += pBox->BxMinWidth;
+	  maxWithPercent += pBox->BxMaxWidth;
+	}
       else if (colWidth[cRef] != 0)
 	{
 	  sum += colWidth[cRef];
@@ -701,6 +708,8 @@ printf("<<<<<<<<<<<<<<<%d\n", table->AbBox->BxWidth);
 	{
 	  min += pBox->BxMinWidth;
 	  max += pBox->BxMaxWidth;
+	  minWithPercent += pBox->BxMinWidth;
+	  maxWithPercent += pBox->BxMaxWidth;
 	  if (pBox->BxMaxWidth > minsize)
 	    {
 	      i++;
@@ -744,7 +753,7 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
     }
 
   /* check if percent values are ok */
-  if (width > 0 && percent == 0)
+  if (width > 0)
     delta = (min + sum) * 100 / width;
   else
     delta = 0;
@@ -752,6 +761,8 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
     {
       /* remove each colPercent */
       sumPercent = 0;
+      min = maxWithPercent;
+      max = maxWithPercent;
       for (cRef = 0; cRef < cNumber; cRef++)
 	colPercent[cRef] = 0;
     }
@@ -766,10 +777,10 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
       constraint = FALSE;
       if (percent != 0)
 	{
-	  /* limit given by precent of available space */
-	  if (table->AbEnclosing->AbBox->BxWidth > 0 && pCell == NULL)
+	  /* the limit is given by a precent rule */
+	  if (table->AbEnclosing->AbBox->BxWidth > 0 && pCell == NULL && percent != 100)
 	    {
-	      percent = min * 100 / table->AbEnclosing->AbBox->BxWidth;
+	      percent = 100;
 	      SetAttrWidthPercent (table, percent);
 	      table->AbWidth.DimValue = percent;
 	    }
@@ -777,13 +788,13 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
       else
 	{
 	  SetAttrWidthPxl (table, min);
-	  /* update the width rule of table */
+	  /* update the width rule of the table element */
 	  table->AbWidth.DimValue = min;
 	}
       checkEnclosing = TRUE;
     }
 
-  if (constraint && percent == 0)
+  if (constraint)
     {
       table->AbBox->BxMinWidth = width;
       table->AbBox->BxMaxWidth = width;
@@ -1132,7 +1143,7 @@ int             frame;
   int                 cNumber, spanNumber, rspanNumber;
   int                 span, delta, j;
   int                 width, i, cRef;
-  int                 min, max, percent;
+  int                 min, max, percent, realMin, realMax;
   int                 attrVSpan, attrHSpan;
   int                 attrHeight, cellWidth;
   int                 tabWidth, tabPercent, minsize;
@@ -1450,7 +1461,7 @@ int             frame;
     tabWidth = table->AbEnclosing->AbBox->BxWidth;
   else if (tabPercent != 0)
     {
-      /* limit given by percent of available space */
+      /* the table width is given by a percent value */
       tabWidth = table->AbEnclosing->AbBox->BxWidth * tabPercent / 100;
     }
   minsize = (int)(((float) tabWidth /(float) cNumber) /2.);
@@ -1461,6 +1472,8 @@ int             frame;
 	{
 	  min = 0;
 	  max = 0;
+	  realMin = 0;
+	  realMax = 0;
 	  percent = 0;
 	  span = 0;
 	  width = 0;
@@ -1483,6 +1496,8 @@ int             frame;
 		  span++;
 		  j++;
 		}
+	      realMin += colMinWidth[cRef];
+	      realMax += colMaxWidth[cRef];
 	    }
 	  
 	  /* compare percent values */
@@ -1516,13 +1531,13 @@ int             frame;
 	    }
 	  
 	  /* compare min and max values */
-	  percent = percent * tabWidth / 100;
+	  /*percent = percent * tabWidth / 100;
 	  min = min + width + percent;
-	  max = max + width + percent;
-	  if (colSpan_MinWidth[i] > min)
+	  max = max + width + percent;*/
+	  if (colSpan_MinWidth[i] > realMin)
 	    {
 	      /* change width of included columns */
-	      width = colSpan_MinWidth[i] - min;
+	      width = colSpan_MinWidth[i] - realMin;
 	      if (span > 0)
 		width = (width + span - 1) / span;
 	      else
@@ -1531,14 +1546,14 @@ int             frame;
 		  width = (width + delta - 1) / delta;
 		}
 	      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
-		if (colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
-		    (colMaxWidth[cRef] > minsize || span == 0))
+		if ((colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
+		     colMaxWidth[cRef] > minsize) || span == 0)
 		  colMinWidth[cRef] += width;
 	    }
-	  if (colSpan_MaxWidth[i] > max)
+	  if (colSpan_MaxWidth[i] > realMax)
 	    {
 	      /* change width of included columns */
-	      width = colSpan_MaxWidth[i] - max;
+	      width = colSpan_MaxWidth[i] - realMax;
 	      if (span > 0)
 		width = (width + span - 1) / span;
 	      else
@@ -1547,8 +1562,8 @@ int             frame;
 		  width = (width + delta - 1) / delta;
 		}
 	      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
-		if (colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
-		    (colMaxWidth[cRef] > minsize || span == 0))
+		if ((colPercent[cRef] == 0 && colWidth[cRef] == 0 &&
+		     colMaxWidth[cRef] > minsize) || span == 0)
 		  colMaxWidth[cRef] += width;
 	    }
 	}

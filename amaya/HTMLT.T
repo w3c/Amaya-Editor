@@ -1313,9 +1313,8 @@ ATTRIBUTES
  Style\240: BEGIN
 	IF not Within HEAD
 	    BEGIN
-	    Create ' style="';
+	    Create ' style=';
 	    Create Style\240;
-	    Create DoubleQuote;
 	    END;
 	END;
 
