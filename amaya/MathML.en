@@ -20,6 +20,8 @@ PAGE_BREAK: Page_break
 C_Empty: \0
 MathML: math
 XMLcomment: comment
+DOCTYPE: doctype
+CDATA: cdata
 MTEXT: mtext
 MI: mi
 MN: mn
@@ -58,6 +60,7 @@ Construct: \0
 Construct1: \0
 
 Language: xml:lang
+style\240: style
 xml_space_default: default
 xml_space_preserve: preserve
 xml_space: xml:space
@@ -81,5 +84,14 @@ columnalign_mtd: columnalign
 top_: top
 bottom_: bottom
 groupalign_malgr: groupalign
-DOCTYPE: doctype
-CDATA: cdata
+width\240: width
+height\240: height
+depth\240: depth
+left\240: left
+center\240: center
+right\240: right
+background\240: background
+none\240: none
+solid\240: solid
+dashed\240: dashed
+rowspan\240: rowspan
