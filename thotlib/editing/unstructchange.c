@@ -1077,7 +1077,7 @@ void TtcCreateElement (Document doc, View view)
 	{
 	  (*(Proc1)ThotLocalActions[T_islock]) ((void *)&lock);
 	  if (!lock)
-	    /* table formatting is not loked, lock it now */
+	    /* table formatting is not locked, lock it now */
 	    (*ThotLocalActions[T_lock]) ();
 	}
       pListEl = NULL;
@@ -1562,6 +1562,7 @@ void TtcCreateElement (Document doc, View view)
 		    }
 		  notifyEl.position = NSiblings;
 		  pClose = NextElement (pElDelete);
+
 		  /* retire l'element de l'arbre abstrait */
 		  RemoveElement (pElDelete);
 		  dispMode = TtaGetDisplayMode (doc);
@@ -1570,6 +1571,7 @@ void TtcCreateElement (Document doc, View view)
 		  UpdateNumbers (pClose, pElDelete, pDoc, TRUE);
 		  if (dispMode == DisplayImmediately)
 		    TtaSetDisplayMode (doc, dispMode);
+
 		  RedisplayCopies (pElDelete, pDoc, TRUE);
 		  DeleteElement (&pElDelete, pDoc);
 		  /* envoie l'evenement ElemDelete.Post a l'application */
@@ -1639,27 +1641,33 @@ void TtcCreateElement (Document doc, View view)
 		{
 		  /* traitement des exceptions */
 		  CreationExceptions (pNew, pDoc);
+
+		  /* Avoid too many redisplay when updating a table */
+		  dispMode = TtaGetDisplayMode (doc);
+		  if (dispMode == DisplayImmediately)
+		    TtaSetDisplayMode (doc, DeferredDisplay);
 		  /* envoie un evenement ElemNew.Post a l'application */
 		  NotifySubTree (TteElemNew, pDoc, pNew, 0);
 		  /* Mise a jour des images abstraites */
 		  CreateAllAbsBoxesOfEl (pNew, pDoc);
-		  /* cree les paves du nouvel element et */
-		  /* met a jour ses voisins */
+		  /* generate abstract boxes */
 		  AbstractImageUpdated (pDoc);
-
- 
-		  /* indique au Mediateur les modifications */
+		  /* update boxes */
 		  RedisplayDocViews (pDoc);
 		  /* si on est dans un element copie' par inclusion, */
 		  /* on met a jour les copies de cet element. */
 		  RedisplayCopies (pNew, pDoc, TRUE);
+#ifdef IV
+		  /* old position of the sequence */
 		  dispMode = TtaGetDisplayMode (doc);
 		  if (dispMode == DisplayImmediately)
 		    TtaSetDisplayMode (doc, DeferredDisplay);
+#endif
 		  UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
 		  if (dispMode == DisplayImmediately)
 		    TtaSetDisplayMode (doc, dispMode);
-		  /* Indiquer que le document est modifie' */
+
+		  /* Set the document modified */
 		  SetDocumentModified (pDoc, TRUE, 30);
 		  if (!lock)
 		    {
@@ -1667,7 +1675,7 @@ void TtcCreateElement (Document doc, View view)
 		      (*ThotLocalActions[T_unlock]) ();
 		      lock = TRUE; /* unlock is done */
 		    }
-		  /* Replace la selection */
+		  /* restore a selection */
 		  SelectElementWithEvent (pDoc, FirstLeaf (pNew), TRUE, TRUE);
 		}
 	    }
