@@ -52,30 +52,31 @@ typedef int        *PRule;
 #define PRLineSpacing 35
 #define PRDepth 36
 #define PRAdjust 37
-#define PRLineStyle 39
-#define PRLineWeight 40
-#define PRFillPattern 41
-#define PRBackground 42
-#define PRForeground 43
-#define PRHyphenate 44
-#define PRVertOverflow 45
-#define PRHorizOverflow 46
-#define PRNoBreak1 47
-#define PRNoBreak2 48
-/* 49 reserved */
-#define PRLine 50
-#define PRCreateEnclosing 51
-#define PRShowBox 52
-#define PRBackgroundPicture 53
-#define PRPictureMode 54
-#define PRNotInLine 55
-#define PRNone 56
-#define PRPageBefore 57
-#define PRPageAfter 58
-#define PRPageInside 59
-#define PRXRadius 60
-#define PRYRadius 61
-#define LAST_PRES_RULE_TYPE 61
+#define PRLineStyle 38
+#define PRLineWeight 39
+#define PRFillPattern 40
+#define PRBackground 41
+#define PRForeground 42
+#define PRHyphenate 43
+#define PRVertOverflow 44
+#define PRHorizOverflow 45
+/* PtPageBreak, PtLineBreak, PtGather */
+#define PRXRadius 49
+#define PRYRadius 50
+#define PRNoBreak1 51
+#define PRNoBreak2 52
+/* PtPictInfo */
+#define PRLine 54
+#define PRCreateEnclosing 55
+#define PRShowBox 56
+#define PRBackgroundPicture 57
+#define PRPictureMode 58
+#define PRNotInLine 59
+#define PRNone 60
+#define PRPageBefore 61
+#define PRPageAfter 62
+#define PRPageInside 63
+#define LAST_PRES_RULE_TYPE 63
 
 /* values for rule PRStyle */
 #define StyleRoman 1
