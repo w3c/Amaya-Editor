@@ -17,7 +17,7 @@
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
                           <bitmap>../icons/expand_on.gif</bitmap>
-                          <style>wxNO_BORDER</style>
+                          <style>wxBU_AUTODRAW|wxNO_BORDER</style>
                         </object>
                         <flag>wxALIGN_CENTRE</flag>
                       </object>
@@ -32,7 +32,7 @@
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
                           <bitmap>../icons/detach.gif</bitmap>
-                          <style>wxNO_BORDER</style>
+                          <style>wxBU_AUTODRAW|wxNO_BORDER</style>
                         </object>
                         <flag>wxALIGN_CENTRE</flag>
                       </object>
