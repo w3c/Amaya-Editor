@@ -4981,35 +4981,6 @@ View                view;
 #endif /* _WINDOWS */
 }
 
-/*----------------------------------------------------------------------
-  MakeIDMenu
-  A menu for adding or removing ID attributes in a document
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AddAnIDd (Document document, View view)
-#else
-void                AddAnId (document, view)
-Document            document;
-View                view;
-
-#endif
-{
-}
-
-/*----------------------------------------------------------------------
-  MakeIDMenu
-  A menu for adding or removing ID attributes in a document
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DelAnIDd (Document document, View view)
-#else
-void                DelAnId (document, view)
-Document            document;
-View                view;
-
-#endif
-{
-}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -5019,7 +4990,6 @@ void                HelpAmaya (Document document, View view)
 void                HelpAmaya (document, view)
 Document            document;
 View                view;
-
 #endif
 {
    CHAR_T                localname[MAX_LENGTH];
@@ -5285,6 +5255,20 @@ void HelpMath (document, view)
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
+void HelpSVG (Document document, View view)
+#else /* __STDC__*/
+void HelpSVG (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+  DisplayHelp (document, SVG);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
 void HelpImageMaps (Document document, View view)
 #else /* __STDC__*/
 void HelpImageMaps (document, view)
@@ -5396,6 +5380,20 @@ void HelpMakeBook (document, view)
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
+void HelpAnnotation (Document document, View view)
+#else /* __STDC__*/
+void HelpAnnotation (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+  DisplayHelp (document, ANNOTATE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
 void HelpConfigure (Document document, View view)
 #else /* __STDC__*/
 void HelpConfigure (document, view)
@@ -5404,6 +5402,20 @@ void HelpConfigure (document, view)
 #endif /* __STDC__*/
 {
   DisplayHelp (document, CONFIGURE);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpShortCuts (Document document, View view)
+#else /* __STDC__*/
+void HelpShortCuts (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+  DisplayHelp (document, SHORTCUTS);
 }
 
 /*----------------------------------------------------------------------

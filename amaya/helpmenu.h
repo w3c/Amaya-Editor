@@ -26,6 +26,7 @@ TEXT("Links.html"),
 TEXT("Changing.html"),
 TEXT("Tables.html"),
 TEXT("Math.html"),
+TEXT("SVG.html"),
 TEXT("ImageMaps.html"),
 TEXT("StyleSheets.html"),
 TEXT("Attributes.html"),
@@ -34,7 +35,9 @@ TEXT("Publishing.html"),
 TEXT("Printing.html"),
 TEXT("Numbering.html"),
 TEXT("MakeBook.html"),
+TEXT("Annotations.html"),
 TEXT("Configure.html"),
+TEXT("ShorCuts.html"),
 TEXT("Access.html")
 };
 
@@ -49,16 +52,19 @@ TEXT("Access.html")
 #define CHANGING       6
 #define TABLES         7
 #define MATH           8
-#define IMAGEMAPS      9
-#define CSS           10
-#define ATTRIBUTES    11
-#define SPELLCHECKING 12
-#define PUBLISHING    13
-#define PRINTING      14
-#define NUMBERING     15
-#define MAKEBOOK      16
-#define CONFIGURE     17
-#define ACCESS        18
+#define SVG            9
+#define IMAGEMAPS     10
+#define CSS           11
+#define ATTRIBUTES    12
+#define SPELLCHECKING 13
+#define PUBLISHING    14
+#define PRINTING      15
+#define NUMBERING     16
+#define MAKEBOOK      17
+#define ANNOTATE      18
+#define CONFIGURE     19
+#define SHORTCUTS     20
+#define ACCESS        21
 
 #endif /* AMAYA_HELP_H */
 

@@ -393,6 +393,7 @@ ShowGraphicsPalette
 &SetOnOffSub
 &SetOnOffSup
 &SetOnOffBDO
+HelpSVG
 
 [html-style]
 +strict-style
@@ -434,6 +435,7 @@ ConfigColor
 ConfigGeometry
 ConfigLanNeg
 HelpConfigure
+HelpShortCuts
 
 [templates]
 ConfigTemplates
@@ -461,3 +463,4 @@ DeleteAnnotation
 FilterAnnot
 CustomQuery
 ConfigAnnot
+HelpAnnotation

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="16" last_update="Tue Oct 24 16:05:59 CEST 2000">
+<base version="20" last_update="Wed Oct 25 12:02:06 CEST 2000">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1629,6 +1629,13 @@
 	<message xml:lang="tr">Tablolar</message>
 	<message xml:lang="es">Matemáticas</message>
 </label>
+<label define="BHelpSVG">
+	<message xml:lang="en">SVG</message>
+	<message xml:lang="fr">SVG</message>
+	<message xml:lang="es">SVG</message>
+	<message xml:lang="de">SVG</message>
+	<message xml:lang="it">SVG</message>
+</label>
 <label define="BHelpImageMaps">
 	<message xml:lang="en">Image maps</message>
 	<message xml:lang="fr">Zones actives</message>
@@ -1693,6 +1700,10 @@
 	<message xml:lang="tr">Numaralandýrmasý</message>
 	<message xml:lang="es">Crear libros</message>
 </label>
+<label define="BHelpAnnotation">
+	<message xml:lang="en">Annotations</message>
+	<message xml:lang="fr">Annotations</message>
+</label>
 <label define="BHelpConfigure">
 	<message xml:lang="en">Configuring Amaya</message>
 	<message xml:lang="fr">Configurer Amaya</message>
@@ -1700,6 +1711,10 @@
 	<message xml:lang="it">Configurazione di Amaya</message>
 	<message xml:lang="tr">Kitap oluþturma</message>
 	<message xml:lang="es">Configurar Amaya</message>
+</label>
+<label define="BHelpShortCuts">
+	<message xml:lang="en">ShortCuts</message>
+	<message xml:lang="fr">Raccourcis clavier</message>
 </label>
 <label define="BHelpAccess">
 	<message xml:lang="en">Accessibility in Amaya</message>

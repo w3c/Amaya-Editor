@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "DTD/xhtml1-1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>No title</title>
+  <title>Raccourcis clavier</title>
   <meta name="GENERATOR" content="amaya V3.9" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
