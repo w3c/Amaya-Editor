@@ -324,6 +324,15 @@
 #define DE_SEARCHDIALOG                 479
 #define DE_SPELLCHECKDIALOG             480
 #define DE_TABLEDIALOG                  481
+#define EN_PUBLISHMENU                  482
+#define EN_CACHEMENU                    485
+#define EN_PROXYMENU                    486
+#define DE_PUBLISHMENU                  493
+#define FR_PUBLISHMENU                  494
+#define FR_PROXYMENU                    495
+#define DE_PROXYMENU                    496
+#define DE_CACHEMENU                    497
+#define FR_CACHEMENU                    498
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -682,6 +691,21 @@
 #define IDC_BGIMAGES                    1424
 #define IDC_DOUBLECLICK                 1425
 #define IDC_TAB1                        1427
+#define IDC_LOSTUPDATECHECK             1430
+#define IDC_NOPROXY                     1430
+#define IDC_VERIFYPUBLISH               1431
+#define IDC_DEFAULTNAME                 1432
+#define IDC_ENABLECACHE                 1433
+#define IDC_CACHEPROTECTEDDOCS          1434
+#define IDC_CACHEDISCONNECTEDMODE       1435
+#define IDC_CACHEEXPIREIGNORE           1436
+#define IDC_CACHEDIRECTORY              1437
+#define IDC_CACHESIZE                   1439
+#define IDC_MAXCACHEFILE                1442
+#define ID_FLUSHCACHE                   1443
+#define IDC_HTTPPROXY                   1445
+#define IDC_APPHOME                     1446
+#define IDC_TMPDIR                      1447
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -716,9 +740,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        482
+#define _APS_NEXT_RESOURCE_VALUE        499
 #define _APS_NEXT_COMMAND_VALUE         40048
-#define _APS_NEXT_CONTROL_VALUE         1429
+#define _APS_NEXT_CONTROL_VALUE         1449
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

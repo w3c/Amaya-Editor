@@ -2737,9 +2737,7 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
-#ifndef _WINDOWS 
    PublishConfMenu (doc, view);
-#endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 
@@ -2757,9 +2755,7 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
-#ifndef _WINDOWS 
   CacheConfMenu (doc, view);
-#endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 
@@ -2777,9 +2773,7 @@ View view;
 {
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
-#ifndef _WINDOWS 
   ProxyConfMenu (doc, view);
-#endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 

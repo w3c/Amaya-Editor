@@ -54,6 +54,7 @@ static int ProxyStatus;
 /* Cache menu options */
 #ifdef _WINDOWS
 static boolean CacheActive = FALSE;
+static HWND CacheHwnd;
 #endif _WINDOWS
 static int CacheBase;
 static boolean EnableCache;
@@ -67,6 +68,7 @@ static int MaxCacheFile;
 /* Proxy menu options */
 #ifdef _WINDOWS
 static boolean ProxyActive = FALSE;
+static HWND ProxyHwnd;
 #endif _WINDOWS
 static int ProxyBase;
 static CHAR HttpProxy [MAX_LENGTH+1];
@@ -75,6 +77,9 @@ static CHAR NoProxy [MAX_LENGTH+1];
 /* General menu options */
 #ifdef _WINDOWS
 static boolean GeneralActive = FALSE;
+static CHAR AppHome [MAX_LENGTH+1];
+static CHAR TmpDir [MAX_LENGTH+1];
+static HWND GeneralHwnd;
 #endif _WINDOWS
 static int GeneralBase;
 static int ToolTipDelay;
@@ -90,6 +95,7 @@ static int FontMenuSize;
 /* Publish menu options */
 #ifdef _WINDOWS
 static boolean PublishActive = FALSE;
+static HWND PublishHwnd;
 #endif _WINDOWS
 static int PublishBase;
 static boolean LostUpdateCheck;
@@ -278,9 +284,6 @@ void InitAmayaDefEnv ()
     HomePage[0]  = EOS;
   TtaSetDefEnvString ("HOME_PAGE", HomePage, FALSE);
   HomePage[0] = EOS;
-  /*** @@@ don't add it yet!
-  TtaSetDefEnvString ("TMPDIR", "", FALSE);
-  ***/
   TtaSetDefEnvString ("ENABLE_MULTIKEY", "no", FALSE);
   TtaSetDefEnvString ("ENABLE_BG_IMAGES", "yes", FALSE);
   TtaSetDefEnvString ("VERIFY_PUBLISH", "no", FALSE);
@@ -429,7 +432,6 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 { 
-#if 0
   switch (msg)
     {
     case WM_INITDIALOG:
@@ -450,21 +452,31 @@ LPARAM lParam;
       switch (LOWORD (wParam))
 	{
 	case IDC_ENABLECACHE:
+      CacheStatus |= AMAYA_CACHE_RESTART;
 	  EnableCache = !EnableCache;
 	  break;
 	case IDC_CACHEPROTECTEDDOCS:
+	  CacheStatus |= AMAYA_CACHE_RESTART;
 	  CacheProtectedDocs = !CacheProtectedDocs;
 	  break;
 	case IDC_CACHEDISCONNECTEDMODE:
-	  CacheDisconnectedMode = !CacheDisconnectedMode;
+	  CacheStatus |= AMAYA_CACHE_RESTART;
+	  CacheDisconnectMode = !CacheDisconnectMode;
 	  break;
 	case IDC_CACHEEXPIREIGNORE:
+	  CacheStatus |= AMAYA_CACHE_RESTART;
 	  CacheExpireIgnore = !CacheExpireIgnore;
 	  break;
 
 	  /* action buttons */
 	case ID_APPLY:
-	  SetCacheConf ();	  
+	  SetCacheConf ();
+	  libwww_updateNetworkConf (CacheStatus);
+	  CacheStatus = 0;
+	  break;
+	case ID_FLUSHCACHE:
+	  StopAllRequests (1);
+	  libwww_CleanCache ();
 	  break;
 	case ID_DONE:
 	  CacheActive = FALSE;
@@ -473,15 +485,14 @@ LPARAM lParam;
 	case ID_DEFAULTS:
 	  GetDefaultCacheConf ();
 	  WIN_RefreshCacheMenu (hwnDlg);
+	  /* always signal this as modified */
+      CacheStatus |= AMAYA_CACHE_RESTART;
 	  break;
 	}
       break;	     
     default: return FALSE;
     }
   return TRUE;
-#else
- return FALSE;
-#endif /* 0 */
 }
 #endif /* _WINDOWS */
 
@@ -677,19 +688,17 @@ static void WIN_RefreshCacheMenu (hwnDlg)
 HWND hwnDlg;
 #endif /* __STDC__ */
 {
-#if 0
   CheckDlgButton (hwnDlg, IDC_ENABLECACHE, (EnableCache)
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_CACHEPROTECTEDDOCS, (CacheProtectedDocs)
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_CACHEDISCONNECTEDMODE, (CacheDisconnectedMode)
+  CheckDlgButton (hwnDlg, IDC_CACHEDISCONNECTEDMODE, (CacheDisconnectMode)
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_CACHEEXPIREIGNORE, (CacheExpireIgnore)
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_CACHEDIRECTORY, CacheDirectory);
   SetDlgItemInt (hwnDlg, IDC_CACHESIZE, CacheSize, FALSE);
   SetDlgItemInt (hwnDlg, IDC_MAXCACHEFILE, MaxCacheFile, FALSE);
-#endif /* 0 */
 }
 #endif /* WINDOWS */
 
@@ -783,15 +792,25 @@ View                view;
   /* display the menu */
   TtaShowDialogue (CacheBase + CacheMenu, TRUE);
 #else /* !_WINDOWS */
-#if 0
   if (!CacheActive)
     /* only activate the menu if it isn't active already */
     {
       CacheActive = TRUE;
-      DialogBox (hInstance, MAKEINTRESOURCE (CACHEMENU), NULL, 
-		 (DLGPROC) CacheDlgProc);
-    }
-#endif
+	  	   switch (app_lang)
+	   { 
+	   case FR_LANG:
+           DialogBox (hInstance, MAKEINTRESOURCE (FR_CACHEMENU), NULL, 
+		  (DLGPROC) WIN_CacheDlgProc);
+	       break;
+	   case DE_LANG:
+		   DialogBox (hInstance, MAKEINTRESOURCE (DE_CACHEMENU), NULL, 
+		  (DLGPROC) WIN_CacheDlgProc);
+	       break;
+	   default:
+		   DialogBox (hInstance, MAKEINTRESOURCE (EN_CACHEMENU), NULL, 
+		  (DLGPROC) WIN_CacheDlgProc);
+		}
+  }
 #endif /* !_WINDOWS */
 }
 
@@ -815,7 +834,6 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-#if 0
   switch (msg)
     {
     case WM_INITDIALOG:
@@ -865,9 +883,6 @@ LPARAM lParam;
     default: return FALSE;
     }
   return TRUE;
-#else
- return FALSE;
-#endif /* 0 */ 
 }
 #endif /* _WINDOWS */
 
@@ -1004,10 +1019,8 @@ void WIN_RefreshProxyMenu (hwnDlg)
 HWND hwnDlg;
 #endif /* __STDC__ */
 {
-#if 0
   SetDlgItemText (hwnDlg, IDC_HTTPPROXY, HttpProxy);
   SetDlgItemText (hwnDlg, IDC_NOPROXY, NoProxy);
-#endif
 }
 #endif /* WINDOWS */
 
@@ -1076,15 +1089,26 @@ View                view;
   /* display the menu */
   TtaShowDialogue (ProxyBase + ProxyMenu, TRUE);
 #else
-#if 0
   if (!ProxyActive)
     /* only activate the menu if it isn't active already */
     {
       ProxyActive = TRUE;
-      DialogBox (hInstance, MAKEINTRESOURCE (PROXYMENU), NULL, 
-		 (DLGPROC) WIN_ProxyDlgProc);
+	  switch (app_lang)
+	   { 
+	   case FR_LANG:
+           DialogBox (hInstance, MAKEINTRESOURCE (FR_PROXYMENU), NULL, 
+		  (DLGPROC) WIN_ProxyDlgProc);
+	       break;
+	   case DE_LANG:
+		   DialogBox (hInstance, MAKEINTRESOURCE (DE_PROXYMENU), NULL, 
+		  (DLGPROC) WIN_ProxyDlgProc);
+	       break;
+	   default:
+		   DialogBox (hInstance, MAKEINTRESOURCE (EN_PROXYMENU), NULL, 
+		  (DLGPROC) WIN_ProxyDlgProc);
+		   break;
+	   }
     }
-#endif
 #endif /* !_WINDOWS */
 }
 
@@ -1112,6 +1136,7 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       WIN_RefreshGeneralMenu (hwnDlg);
+	  GeneralHwnd = hwnDlg;
       break;
       
     case WM_COMMAND:
@@ -1123,11 +1148,14 @@ LPARAM lParam;
 	      GetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage, 
 			      sizeof (HomePage) - 1);
 	      break;
-	    case IDC_FONTMENUSIZE:
-	      /* @@@ do we need to check the boolean variable? */
-	      FontMenuSize = GetDlgItemInt (hwnDlg, IDC_FONTMENUSIZE, FALSE,
-					    FALSE);
-	      break;
+        case IDC_APPHOME:
+		  GetDlgItemText (hwnDlg, IDC_APPHOME, AppHome,
+			       sizeof (AppHome) - 1);
+		  break;
+        case IDC_TMPDIR:
+		  GetDlgItemText (hwnDlg, IDC_TMPDIR, TmpDir,
+			       sizeof (TmpDir) - 1);
+		  break;
 	    case IDC_DIALOGUELANG:
 	      GetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang,
 			      sizeof (DialogueLang) - 1);
@@ -1155,6 +1183,7 @@ LPARAM lParam;
 	  break;
 	case ID_DONE:
 	  GeneralActive = FALSE;
+	  GeneralHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DEFAULTS:
@@ -1285,6 +1314,10 @@ static void GetGeneralConf ()
   GetEnvString ("HOME_PAGE", HomePage);
   GetEnvString ("LANG", DialogueLang);
   TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
+#ifdef _WINDOWS
+  GetEnvString ("TMPDIR", TmpDir);
+  GetEnvString ("APP_HOME", AppHome);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1316,6 +1349,10 @@ static void SetGeneralConf ()
   TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
   TtaSetEnvString ("LANG", DialogueLang, TRUE);
   TtaSetEnvInt ("FontMenuSize", FontMenuSize, TRUE);
+#ifdef _WINDOWS
+  TtaSetEnvString ("TMPDIR", TmpDir, TRUE);
+  TtaSetEnvString ("APP_HOME", AppHome, TRUE);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1340,7 +1377,10 @@ static void GetDefaultGeneralConf ()
   GetDefEnvString ("HOME_PAGE", HomePage);
   GetDefEnvString ("LANG", DialogueLang);
   TtaGetDefEnvInt ("FontMenuSize", &FontMenuSize);
-
+#ifdef _WINDOWS
+  GetDefEnvString ("TMPDIR", TmpDir);
+  GetDefEnvString ("APP_HOME", AppHome);
+#endif /* _WINDOWS */
 }
 
 #ifdef _WINDOWS
@@ -1365,6 +1405,8 @@ HWND hwnDlg;
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
   SetDlgItemInt (hwnDlg, IDC_ZOOM, Zoom, FALSE);
+  SetDlgItemText (hwnDlg, IDC_TMPDIR, TmpDir);
+  SetDlgItemText (hwnDlg, IDC_APPHOME, AppHome);
 }
 #endif _WINDOWS
 
@@ -1487,9 +1529,24 @@ STRING              pathname;
      /* only activate the menu if it isn't active already */
      {
        GeneralActive = TRUE;
-       DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL, 
+	   switch (app_lang)
+	   { 
+	   case FR_LANG:
+           DialogBox (hInstance, MAKEINTRESOURCE (FR_GENERALMENU), NULL, 
 		  (DLGPROC) WIN_GeneralDlgProc);
+	       break;
+	   case DE_LANG:
+		   DialogBox (hInstance, MAKEINTRESOURCE (DE_GENERALMENU), NULL, 
+		  (DLGPROC) WIN_GeneralDlgProc);
+	       break;
+	   default:
+		   DialogBox (hInstance, MAKEINTRESOURCE (EN_GENERALMENU), NULL, 
+		  (DLGPROC) WIN_GeneralDlgProc);
+		   break;
+	   }
      }
+   else
+	 SetFocus (GeneralHwnd);
 #endif /* !_WINDOWS */
 }
 
@@ -1513,7 +1570,6 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 { 
-#if 0
   switch (msg)
     {
     case WM_INITDIALOG:
@@ -1525,7 +1581,7 @@ LPARAM lParam;
 	{
           switch (LOWORD (wParam))
 	    {
-	    case IDC_HTTPPublish:
+	    case IDC_DEFAULTNAME:
 	      GetDlgItemText (hwnDlg, IDC_DEFAULTNAME, DefaultName,
 			      sizeof (DefaultName) - 1);
 	      break;
@@ -1543,19 +1599,15 @@ LPARAM lParam;
 	  /* action buttons */
 	case ID_APPLY:
 	  SetPublishConf ();	  
-	  libwww_updateNetworkConf (PublishStatus);
 	  /* reset the status flag */
-	  PublishStatus = 0;
 	  break;
 	case ID_DONE:
 	  /* reset the status flag */
-	  PublishStatus = 0;
 	  PublishActive = FALSE;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DEFAULTS:
 	  /* always signal this as modified */
-	  PublishStatus |= AMAYA_Publish_RESTART;
 	  GetDefaultPublishConf ();
 	  WIN_RefreshPublishMenu (hwnDlg);
 	  break;
@@ -1564,9 +1616,6 @@ LPARAM lParam;
     default: return FALSE;
     }
   return TRUE;
-#else
-  return FALSE;
-#endif /* 0 */
 }
 #endif /* _WINDOWS */
 
@@ -1701,13 +1750,11 @@ void WIN_RefreshPublishMenu (hwnDlg)
 HWND hwnDlg;
 #endif /* __STDC__ */
 {
-#if 0
   CheckDlgButton (hwnDlg, IDC_LOSTUPDATECHECK, (LostUpdateCheck)
 		  ? BST_CHECKED : BST_UNCHECKED);
-  CheckDlgButton (hwnDlg, IDC_VERIFYPUBLISH, (Verifypublish)
+  CheckDlgButton (hwnDlg, IDC_VERIFYPUBLISH, (VerifyPublish)
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DEFAULTNAME, DefaultName);
-#endif
 }
 #endif /* WINDOWS */
 
@@ -1780,15 +1827,26 @@ STRING              pathname;
    RefreshPublishMenu ();
   TtaShowDialogue (PublishBase + PublishMenu, TRUE);
 #else
-#if 0
   if (!PublishActive)
     /* only activate the menu if it isn't active already */
     {
       PublishActive = TRUE;
-      DialogBox (hInstance, MAKEINTRESOURCE (PUBLISHMENU), NULL, 
-		 (DLGPROC) WIN_PublishDlgProc);
+	  switch (app_lang)
+	   { 
+	   case FR_LANG:
+           DialogBox (hInstance, MAKEINTRESOURCE (FR_PUBLISHMENU), NULL, 
+		  (DLGPROC) WIN_PublishDlgProc);
+	       break;
+	   case DE_LANG:
+		   DialogBox (hInstance, MAKEINTRESOURCE (DE_PUBLISHMENU), NULL, 
+		  (DLGPROC) WIN_PublishDlgProc);
+	       break;
+	   default:
+		   DialogBox (hInstance, MAKEINTRESOURCE (EN_PUBLISHMENU), NULL, 
+		  (DLGPROC) WIN_PublishDlgProc);
+		   break;
+	   }
     }
-#endif
 #endif /* !_WINDOWS */
 }
 

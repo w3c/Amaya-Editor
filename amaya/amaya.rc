@@ -747,30 +747,6 @@ BEGIN
                     WS_EX_CLIENTEDGE | WS_EX_STATICEDGE
 END
 
-DE_GENERALMENU DIALOG DISCARDABLE  0, 0, 219, 185
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "General Configuration"
-FONT 8, "MS Sans Serif"
-BEGIN
-    DEFPUSHBUTTON   "Apply",ID_APPLY,7,164,50,14
-    PUSHBUTTON      "Done",ID_DONE,162,164,50,14
-    PUSHBUTTON      "Defaults",ID_DEFAULTS,83,164,50,14
-    LTEXT           "Home Page",IDC_STATIC,7,7,65,15
-    EDITTEXT        IDC_HOMEPAGE,7,22,187,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
-    LTEXT           "Menu Font size (8..20)",IDC_STATIC,7,44,87,10
-    EDITTEXT        IDC_FONTMENUSIZE,7,59,83,12,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "Zoom (0..10)",IDC_STATIC,96,44,116,10
-    EDITTEXT        IDC_ZOOM,98,59,41,12,ES_AUTOHSCROLL
-    LTEXT           "Dialogue language",IDC_STATIC,7,77,60,8
-    EDITTEXT        IDC_DIALOGUELANG,7,91,63,12,ES_AUTOHSCROLL
-    CONTROL         "Enable multikey",IDC_MULTIKEY,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,113,66,8
-    CONTROL         "Show background images",IDC_BGIMAGES,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,126,98,10
-    CONTROL         "Double click activates link",IDC_DOUBLECLICK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,139,99,10
-END
-
 DE_GETSAVEDIALOG DIALOG DISCARDABLE  100, 100, 263, 65
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Save File as"
@@ -1106,6 +1082,92 @@ BEGIN
     LTEXT           "Border (1..50)",IDC_BORDER,39,79,46,10
 END
 
+DE_PUBLISHMENU DIALOG DISCARDABLE  0, 0, 179, 101
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Publishing Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,80,50,14
+    PUSHBUTTON      "Done",ID_DONE,122,80,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,65,80,50,14
+    LTEXT           "Default name for URLs finishing in '/'",IDC_STATIC,7,38,
+                    116,8
+    EDITTEXT        IDC_DEFAULTNAME,7,49,116,12,ES_AUTOHSCROLL
+    CONTROL         "Use ETAGS and preconditions",IDC_LOSTUPDATECHECK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,7,111,8
+    CONTROL         "Verify each PUT with a GET",IDC_VERIFYPUBLISH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,19,105,10
+END
+
+DE_PROXYMENU DIALOG DISCARDABLE  0, 0, 190, 114
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Proxy Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,93,50,14
+    PUSHBUTTON      "Done",ID_DONE,133,93,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,70,93,50,14
+    LTEXT           "HTTP proxy",IDC_STATIC,7,7,39,8
+    EDITTEXT        IDC_HTTPPROXY,7,19,176,14,ES_AUTOHSCROLL
+    LTEXT           "No proxy on these domains",IDC_STATIC,7,41,86,8
+    EDITTEXT        IDC_NOPROXY,7,54,175,14,ES_AUTOHSCROLL
+    LTEXT           "(Separate entries with a space)",IDC_STATIC,7,74,98,8
+END
+
+DE_GENERALMENU DIALOG DISCARDABLE  0, 0, 202, 230
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "General Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,209,50,14
+    PUSHBUTTON      "Done",ID_DONE,145,209,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,209,50,14
+    LTEXT           "Home Page",IDC_STATIC,7,7,65,11
+    EDITTEXT        IDC_HOMEPAGE,7,22,187,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
+    LTEXT           "Zoom (0..10)",IDC_STATIC,7,99,116,10
+    EDITTEXT        IDC_ZOOM,7,113,41,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Dialogue language",IDC_STATIC,7,129,60,8
+    EDITTEXT        IDC_DIALOGUELANG,7,141,60,12,ES_AUTOHSCROLL
+    CONTROL         "Enable multikey",IDC_MULTIKEY,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,162,66,8
+    CONTROL         "Show background images",IDC_BGIMAGES,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,174,98,10
+    CONTROL         "Double click activates link",IDC_DOUBLECLICK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,188,99,10
+    LTEXT           "Parent directory for the Amaya user directory",
+                    IDC_STATIC,7,39,140,8
+    EDITTEXT        IDC_APPHOME,7,51,188,14,ES_AUTOHSCROLL
+    LTEXT           "Temporary directory",IDC_STATIC,7,69,63,8
+    EDITTEXT        IDC_TMPDIR,7,81,188,14,ES_AUTOHSCROLL
+END
+
+DE_CACHEMENU DIALOG DISCARDABLE  0, 0, 243, 178
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Cache Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,8,156,50,14
+    PUSHBUTTON      "Done",ID_DONE,184,156,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,67,156,50,14
+    LTEXT           "Parent directory for the cache directory",IDC_STATIC,8,
+                    68,123,8
+    EDITTEXT        IDC_CACHEDIRECTORY,8,79,202,12,ES_AUTOHSCROLL
+    CONTROL         "Enable cache",IDC_ENABLECACHE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,8,13,66,8
+    CONTROL         "Cache protected documents",IDC_CACHEPROTECTEDDOCS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,25,105,10
+    CONTROL         "Disconnected mode",IDC_CACHEDISCONNECTEDMODE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,8,39,79,10
+    CONTROL         "Ignore Expires: header",IDC_CACHEEXPIREIGNORE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,8,53,87,10
+    LTEXT           "Cache size (Mb)",IDC_STATIC,8,94,52,8
+    EDITTEXT        IDC_CACHESIZE,8,105,42,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Cache entry size limit (Mb)",IDC_STATIC,8,120,82,8,
+                    WS_TABSTOP
+    EDITTEXT        IDC_MAXCACHEFILE,8,131,42,12,ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "Flush Cache",ID_FLUSHCACHE,126,156,49,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1205,14 +1267,6 @@ BEGIN
         HORZGUIDE, 105
         HORZGUIDE, 185
         HORZGUIDE, 207
-    END
-
-    DE_GENERALMENU, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 212
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 178
     END
 
     DE_GETSAVEDIALOG, DIALOG
@@ -1318,6 +1372,38 @@ BEGIN
         HORZGUIDE, 158
         HORZGUIDE, 168
         HORZGUIDE, 174
+    END
+
+    DE_PUBLISHMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 172
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 94
+    END
+
+    DE_PROXYMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 183
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 107
+    END
+
+    DE_GENERALMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 195
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 223
+    END
+
+    DE_CACHEMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 236
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 171
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -2315,28 +2401,31 @@ BEGIN
                     WS_EX_CLIENTEDGE | WS_EX_STATICEDGE
 END
 
-EN_GENERALMENU DIALOG DISCARDABLE  0, 0, 219, 185
+EN_GENERALMENU DIALOG DISCARDABLE  0, 0, 202, 230
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "General Configuration"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Apply",ID_APPLY,7,164,50,14
-    PUSHBUTTON      "Done",ID_DONE,162,164,50,14
-    PUSHBUTTON      "Defaults",ID_DEFAULTS,83,164,50,14
-    LTEXT           "Home Page",IDC_STATIC,7,7,65,15
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,209,50,14
+    PUSHBUTTON      "Done",ID_DONE,145,209,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,209,50,14
+    LTEXT           "Home Page",IDC_STATIC,7,7,65,11
     EDITTEXT        IDC_HOMEPAGE,7,22,187,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
-    LTEXT           "Menu Font size (8..20)",IDC_STATIC,7,44,87,10
-    EDITTEXT        IDC_FONTMENUSIZE,7,59,83,12,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "Zoom (0..10)",IDC_STATIC,96,44,116,10
-    EDITTEXT        IDC_ZOOM,98,59,41,12,ES_AUTOHSCROLL
-    LTEXT           "Dialogue language",IDC_STATIC,7,77,60,8
-    EDITTEXT        IDC_DIALOGUELANG,7,91,63,12,ES_AUTOHSCROLL
+    LTEXT           "Zoom (0..10)",IDC_STATIC,7,99,116,10
+    EDITTEXT        IDC_ZOOM,7,113,41,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Dialogue language",IDC_STATIC,7,129,60,8
+    EDITTEXT        IDC_DIALOGUELANG,7,141,60,12,ES_AUTOHSCROLL
     CONTROL         "Enable multikey",IDC_MULTIKEY,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,113,66,8
+                    WS_TABSTOP,7,162,66,8
     CONTROL         "Show background images",IDC_BGIMAGES,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,126,98,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,174,98,10
     CONTROL         "Double click activates link",IDC_DOUBLECLICK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,139,99,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,188,99,10
+    LTEXT           "Parent directory for the Amaya user directory",
+                    IDC_STATIC,7,39,140,8
+    EDITTEXT        IDC_APPHOME,7,51,188,14,ES_AUTOHSCROLL
+    LTEXT           "Temporary directory",IDC_STATIC,7,69,63,8
+    EDITTEXT        IDC_TMPDIR,7,81,188,14,ES_AUTOHSCROLL
 END
 
 EN_GETSAVEDIALOG DIALOG DISCARDABLE  100, 100, 263, 65
@@ -2418,6 +2507,65 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,94,141,50,14
     LTEXT           "Saving will overwrite the following URLs:",IDC_MSG,28,7,
                     127,12
+END
+
+EN_PUBLISHMENU DIALOG DISCARDABLE  0, 0, 179, 101
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Publishing Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,80,50,14
+    PUSHBUTTON      "Done",ID_DONE,122,80,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,65,80,50,14
+    LTEXT           "Default name for URLs finishing in '/'",IDC_STATIC,7,38,
+                    116,8
+    EDITTEXT        IDC_DEFAULTNAME,7,49,116,12,ES_AUTOHSCROLL
+    CONTROL         "Use ETAGS and preconditions",IDC_LOSTUPDATECHECK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,7,111,8
+    CONTROL         "Verify each PUT with a GET",IDC_VERIFYPUBLISH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,19,105,10
+END
+
+EN_CACHEMENU DIALOG DISCARDABLE  0, 0, 243, 178
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Cache Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,8,156,50,14
+    PUSHBUTTON      "Done",ID_DONE,184,156,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,67,156,50,14
+    LTEXT           "Parent directory for the cache directory",IDC_STATIC,8,
+                    68,123,8
+    EDITTEXT        IDC_CACHEDIRECTORY,8,79,202,12,ES_AUTOHSCROLL
+    CONTROL         "Enable cache",IDC_ENABLECACHE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,8,13,66,8
+    CONTROL         "Cache protected documents",IDC_CACHEPROTECTEDDOCS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,25,105,10
+    CONTROL         "Disconnected mode",IDC_CACHEDISCONNECTEDMODE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,8,39,79,10
+    CONTROL         "Ignore Expires: header",IDC_CACHEEXPIREIGNORE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,8,53,87,10
+    LTEXT           "Cache size (Mb)",IDC_STATIC,8,94,52,8
+    EDITTEXT        IDC_CACHESIZE,8,105,42,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Cache entry size limit (Mb)",IDC_STATIC,8,120,82,8,
+                    WS_TABSTOP
+    EDITTEXT        IDC_MAXCACHEFILE,8,131,42,12,ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "Flush Cache",ID_FLUSHCACHE,126,156,49,14
+END
+
+EN_PROXYMENU DIALOG DISCARDABLE  0, 0, 190, 114
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Proxy Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,93,50,14
+    PUSHBUTTON      "Done",ID_DONE,133,93,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,70,93,50,14
+    LTEXT           "HTTP proxy",IDC_STATIC,7,7,39,8
+    EDITTEXT        IDC_HTTPPROXY,7,19,176,14,ES_AUTOHSCROLL
+    LTEXT           "No proxy on these domains",IDC_STATIC,7,41,86,8
+    EDITTEXT        IDC_NOPROXY,7,54,175,14,ES_AUTOHSCROLL
+    LTEXT           "(Separate entries with a space)",IDC_STATIC,7,74,98,8
 END
 
 
@@ -2590,9 +2738,9 @@ BEGIN
     EN_GENERALMENU, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 212
+        RIGHTMARGIN, 195
         TOPMARGIN, 7
-        BOTTOMMARGIN, 178
+        BOTTOMMARGIN, 223
     END
 
     EN_GETSAVEDIALOG, DIALOG
@@ -2630,6 +2778,30 @@ BEGIN
         RIGHTMARGIN, 179
         TOPMARGIN, 7
         BOTTOMMARGIN, 155
+    END
+
+    EN_PUBLISHMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 172
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 94
+    END
+
+    EN_CACHEMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 236
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 171
+    END
+
+    EN_PROXYMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 183
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 107
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -2766,7 +2938,7 @@ FR_MATHDIALOG DIALOGEX 400, 0, 55, 178
 STYLE DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CLIENTEDGE
 CAPTION "Maths"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "Terminer",ID_DONE,11,158,35,16
     CONTROL         183,IDC_MATH,"Static",SS_BITMAP | SS_NOTIFY,4,6,23,21,
@@ -2815,7 +2987,7 @@ END
 FR_GALPHABETDIALOG DIALOGEX 400, 200, 185, 293
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Alphabet Grec"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "Annuler",IDCANCEL,69,268,50,14
     CONTROL         201,IDC_GKEY002,"Static",SS_BITMAP | SS_NOTIFY | 
@@ -3556,34 +3728,10 @@ BEGIN
                     30,14
 END
 
-FR_GENERALMENU DIALOG DISCARDABLE  0, 0, 219, 185
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "General Configuration"
-FONT 8, "MS Sans Serif"
-BEGIN
-    DEFPUSHBUTTON   "Apply",ID_APPLY,7,164,50,14
-    PUSHBUTTON      "Done",ID_DONE,162,164,50,14
-    PUSHBUTTON      "Defaults",ID_DEFAULTS,83,164,50,14
-    LTEXT           "Home Page",IDC_STATIC,7,7,65,15
-    EDITTEXT        IDC_HOMEPAGE,7,22,187,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
-    LTEXT           "Menu Font size (8..20)",IDC_STATIC,7,44,87,10
-    EDITTEXT        IDC_FONTMENUSIZE,7,59,83,12,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "Zoom (0..10)",IDC_STATIC,96,44,116,10
-    EDITTEXT        IDC_ZOOM,98,59,41,12,ES_AUTOHSCROLL
-    LTEXT           "Dialogue language",IDC_STATIC,7,77,60,8
-    EDITTEXT        IDC_DIALOGUELANG,7,91,63,12,ES_AUTOHSCROLL
-    CONTROL         "Enable multikey",IDC_MULTIKEY,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,113,66,8
-    CONTROL         "Show background images",IDC_BGIMAGES,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,126,98,10
-    CONTROL         "Double click activates link",IDC_DOUBLECLICK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,139,99,10
-END
-
 FR_GRAPHICSDIALOG DIALOGEX 400, 20, 68, 148
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Graphiques"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "Terminer",ID_DONE,12,127,44,14
     CONTROL         405,IDC_GELLIPSE,"Static",SS_BITMAP | SS_NOTIFY,7,44,27,
@@ -3834,6 +3982,92 @@ BEGIN
     CTEXT           "Epaisseur des traits (1..50)",IDC_BORDER,19,78,87,11
 END
 
+FR_PUBLISHMENU DIALOG DISCARDABLE  0, 0, 179, 101
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Publishing Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,80,50,14
+    PUSHBUTTON      "Done",ID_DONE,122,80,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,65,80,50,14
+    LTEXT           "Default name for URLs finishing in '/'",IDC_STATIC,7,38,
+                    116,8
+    EDITTEXT        IDC_DEFAULTNAME,7,49,116,12,ES_AUTOHSCROLL
+    CONTROL         "Use ETAGS and preconditions",IDC_LOSTUPDATECHECK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,7,111,8
+    CONTROL         "Verify each PUT with a GET",IDC_VERIFYPUBLISH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,19,105,10
+END
+
+FR_PROXYMENU DIALOG DISCARDABLE  0, 0, 190, 114
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Proxy Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,93,50,14
+    PUSHBUTTON      "Done",ID_DONE,133,93,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,70,93,50,14
+    LTEXT           "HTTP proxy",IDC_STATIC,7,7,39,8
+    EDITTEXT        IDC_HTTPPROXY,7,19,176,14,ES_AUTOHSCROLL
+    LTEXT           "No proxy on these domains",IDC_STATIC,7,41,86,8
+    EDITTEXT        IDC_NOPROXY,7,54,175,14,ES_AUTOHSCROLL
+    LTEXT           "(Separate entries with a space)",IDC_STATIC,7,74,98,8
+END
+
+FR_GENERALMENU DIALOG DISCARDABLE  0, 0, 202, 230
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "General Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,209,50,14
+    PUSHBUTTON      "Done",ID_DONE,145,209,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,209,50,14
+    LTEXT           "Home Page",IDC_STATIC,7,7,65,11
+    EDITTEXT        IDC_HOMEPAGE,7,22,187,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
+    LTEXT           "Zoom (0..10)",IDC_STATIC,7,99,116,10
+    EDITTEXT        IDC_ZOOM,7,113,41,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Dialogue language",IDC_STATIC,7,129,60,8
+    EDITTEXT        IDC_DIALOGUELANG,7,141,60,12,ES_AUTOHSCROLL
+    CONTROL         "Enable multikey",IDC_MULTIKEY,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,162,66,8
+    CONTROL         "Show background images",IDC_BGIMAGES,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,174,98,10
+    CONTROL         "Double click activates link",IDC_DOUBLECLICK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,188,99,10
+    LTEXT           "Parent directory for the Amaya user directory",
+                    IDC_STATIC,7,39,140,8
+    EDITTEXT        IDC_APPHOME,7,51,188,14,ES_AUTOHSCROLL
+    LTEXT           "Temporary directory",IDC_STATIC,7,69,63,8
+    EDITTEXT        IDC_TMPDIR,7,81,188,14,ES_AUTOHSCROLL
+END
+
+FR_CACHEMENU DIALOG DISCARDABLE  0, 0, 243, 178
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Cache Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,8,156,50,14
+    PUSHBUTTON      "Done",ID_DONE,184,156,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,67,156,50,14
+    LTEXT           "Parent directory for the cache directory",IDC_STATIC,8,
+                    68,123,8
+    EDITTEXT        IDC_CACHEDIRECTORY,8,79,202,12,ES_AUTOHSCROLL
+    CONTROL         "Enable cache",IDC_ENABLECACHE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,8,13,66,8
+    CONTROL         "Cache protected documents",IDC_CACHEPROTECTEDDOCS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,25,105,10
+    CONTROL         "Disconnected mode",IDC_CACHEDISCONNECTEDMODE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,8,39,79,10
+    CONTROL         "Ignore Expires: header",IDC_CACHEEXPIREIGNORE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,8,53,87,10
+    LTEXT           "Cache size (Mb)",IDC_STATIC,8,94,52,8
+    EDITTEXT        IDC_CACHESIZE,8,105,42,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Cache entry size limit (Mb)",IDC_STATIC,8,120,82,8,
+                    WS_TABSTOP
+    EDITTEXT        IDC_MAXCACHEFILE,8,131,42,12,ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "Flush Cache",ID_FLUSHCACHE,126,156,49,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3970,14 +4204,6 @@ BEGIN
         HORZGUIDE, 207
     END
 
-    FR_GENERALMENU, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 212
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 178
-    END
-
     FR_INITCONFIRMDIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -4054,6 +4280,38 @@ BEGIN
     FR_TABLEDIALOG, DIALOG
     BEGIN
         TOPMARGIN, 4
+    END
+
+    FR_PUBLISHMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 172
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 94
+    END
+
+    FR_PROXYMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 183
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 107
+    END
+
+    FR_GENERALMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 195
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 223
+    END
+
+    FR_CACHEMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 236
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 171
     END
 END
 #endif    // APSTUDIO_INVOKED
