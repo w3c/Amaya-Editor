@@ -106,7 +106,9 @@ static ElemMapping    XHTMLElemMappingTable[] =
 #ifndef XHTML_BASIC
    {TEXT("listing"), SPACE, HTML_EL_Preformatted}, /*converted to PRE */
    {TEXT("map"), SPACE, HTML_EL_MAP},
+#endif /* XHTML_BASIC */
    {TEXT("math"), SPACE, HTML_EL_Math},
+#ifndef XHTML_BASIC
    {TEXT("menu"), SPACE, HTML_EL_Menu},
 #endif /* XHTML_BASIC */
    {TEXT("meta"), 'E', HTML_EL_META},

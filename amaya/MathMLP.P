@@ -21,7 +21,7 @@ VIEWS
 #define TAG_Visibility 7
 #define ATTR_Style Roman
 #define ATTR_Weight Normal
-#define ATTR_Visibility 7
+#define ATTR_Visibility 6
 
 #ifdef BLACK_WHITE
 #define TAG_Color Black
@@ -2104,7 +2104,7 @@ BOXES
 		HorizPos: Left = Enclosing . Left;
 		Height: Creator . Height;
 		Width: 1.1;
-		LineWeight: 2 pt;
+		LineWeight: 1 px;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;

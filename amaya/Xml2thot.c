@@ -173,8 +173,6 @@ static AttributeMapping* lastMappedAttr = NULL;
 static ThotBool    UnknownAttr = FALSE;
 static ThotBool    ReadingAnAttrValue = FALSE;
 
-                /* TEXT element of the current Comment element */
-static Element     CommentText = NULL;
                 /* character data should be catenated
 		   with the last Text element */
 static ThotBool    MergeText = FALSE;
@@ -441,23 +439,9 @@ Document         doc;
 			     elType, mappedName, content, doc);
       }
   
-  /* if not found, look at other contexts */
+  /* not found */
   if (elType->ElTypeNum == 0)
-    {
       elType->ElSSchema = NULL;
-      ctxt = firstParserCtxt;
-      while (ctxt != NULL && elType->ElSSchema == NULL)
-	{
-	  if (ctxt != currentParserCtxt)
-	    {
-	      MapXMLElementType (ctxt->XMLtype, XMLname,
-				 elType, mappedName, content, doc);
-	      if (elType->ElSSchema != NULL)
-		  ctxt->XMLSSchema = elType->ElSSchema;
-	    }
-	  ctxt = ctxt->NextParserCtxt;
-	}
-    }
 }
 
 /*----------------------------------------------------------------------
@@ -982,13 +966,10 @@ Element el;
    Terminate all corresponding Thot elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     CloseElement (USTRING mappedName,
-				  ThotBool onStartTag)
+static ThotBool     CloseElement (USTRING mappedName)
 #else
-static ThotBool     CloseElement (mappedName,
-				  onStartTag)
+static ThotBool     CloseElement (mappedName)
 USTRING          mappedName;
-ThotBool         onStartTag;
 #endif
 {
    int                 i, error;
@@ -997,10 +978,6 @@ ThotBool         onStartTag;
    ThotBool            ret, stop, spacesDeleted;
 
    ret = FALSE;
-   /* the closed HTML element corresponds to a Thot element. */
-   stop = FALSE;
-   /* type of the element to be closed */
-   
 #ifdef LC
    printf ("\nCloseElement %s \n", mappedName);
 #endif /* LC */
@@ -1012,35 +989,6 @@ ThotBool         onStartTag;
 	  el = TtaGetParent (el);
        i = stackLevel - 1;
 
-       /* If we meet the end tag of a form, font or center
-	  looks for that element in the stack, but not at
-	  a higher level as a table element */
-       if (!onStartTag &&
-	   (!ustrcmp (mappedName, TEXT("form")) ||
-            !ustrcmp (mappedName, TEXT("font")) ||
-            !ustrcmp (mappedName, TEXT("center"))))
-	 {
-	   while (i > 0 &&
-		  mappedName != nameElementStack[i] &&
-		  !stop)
-	     if (!ustrcmp (nameElementStack[i], TEXT("tbody")) ||
-		 !ustrcmp (nameElementStack[i], TEXT("tr"))    ||
-		 !ustrcmp (nameElementStack[i], TEXT("th"))    ||
-		 !ustrcmp (nameElementStack[i], TEXT("td")))
-	       {
-		 /* ignore this end tag */
-		 ret = FALSE;
-		 stop = TRUE;
-		 i = -1;
-	       }
-	     else
-	       i--;
-	 }
-       else
-	 /* looks in the stack for the element to be closed */
-	 while (i >= 0 && mappedName != nameElementStack[i])
-	   i--;
-       
        if (i >= 0 && mappedName == nameElementStack[i])
 	 /* element found in the stack */
 	 {
@@ -1400,22 +1348,16 @@ CHAR_T*             GIname;
 		  InsertElement (&newElement);
 		  if (newElement != NULL)
 		    {
-		      if (currentElementContent == 'E')
-			lastElementClosed = TRUE;
-		      
 		      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 			/* an empty Text element has been created. The */
 			/* following character data must go to that elem. */
 			MergeText = TRUE;
 		    }
 		}
-	      
-	      if (currentElementContent != 'E')
-		{
-		  elementStack[stackLevel] = newElement;
-		  nameElementStack[stackLevel] = mappedName;
-		  elInStack = TRUE;
-		}
+             
+	      elementStack[stackLevel] = newElement;
+	      nameElementStack[stackLevel] = mappedName;
+	      elInStack = TRUE;
 	    }
 	}
       
@@ -1464,23 +1406,25 @@ CHAR_T     *GIname;
    
    /* search the XML tag in the mapping table */
    /* For <math> and <svg> tags, research is made with Xhtml Context */
-   elementParserCtxt = currentParserCtxt;
+   /**** elementParserCtxt = currentParserCtxt; ****/
    if (ustrcmp (GIname, TEXT("math")) == 0 ||
        ustrcmp (GIname, TEXT("svg")) == 0)
-     currentParserCtxt = xhtmlParserCtxt;	 
+     currentParserCtxt = xhtmlParserCtxt;
+   /**** il faut le bon contexte pour CloseElement qui doit appeller la
+         bonne procedure ElementComplete ****/ 
+   elementParserCtxt = currentParserCtxt;  /*******/
    
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
    GetXmlElType (GIname, &elType, &mappedName,
 		 &currentElementContent, currentDocument);
-#ifdef XHTML_BASIC
-      if (mappedName == NULL)
-	  /* doesn't process that element */
-	  return;
-#endif /* XHTML_BASIC */
-
    /* restore Context */
    currentParserCtxt = elementParserCtxt;
+#ifdef XHTML_BASIC
+   if (mappedName == NULL)
+      /* doesn't process that element */
+      return;
+#endif /* XHTML_BASIC */
    
    if (elType.ElTypeNum <= 0)
      /* not found in the corresponding DTD */
@@ -1493,22 +1437,13 @@ CHAR_T     *GIname;
      }
    else
      {
-       if (currentElementContent == 'E')
-	 /* this is anMapGI empty element */
+       if (!CloseElement (mappedName))
+	 /* the end tag does not close any current element */
 	 {
-	   CloseElement (mappedName, TRUE);
-	   (*(currentParserCtxt->ElementComplete)) (lastElement,
-						    currentDocument,
-						    &error);
+	   usprintf (msgBuffer,
+		     TEXT("Unexpected end tag </%s>"), GIname);
+	   XmlParseError (currentDocument, msgBuffer, 0);
 	 }
-       else
-	 if (!CloseElement (mappedName, FALSE))
-	   /* the end tag does not close any current element */
-	   {
-	     usprintf (msgBuffer,
-		       TEXT("Unexpected end tag </%s>"), GIname);
-	     XmlParseError (currentDocument, msgBuffer, 0);
-	   }
      }
 
    /* is it the end of the current HTML fragment ? */
@@ -1518,8 +1453,6 @@ CHAR_T     *GIname;
        XMLrootClosed = TRUE;
        DisableExpatParser ();
      }
-
-   
    AfterTagPRE = FALSE;
 }
 /*---------------------  EndElement  (end)  --------------------------*/
@@ -1952,13 +1885,13 @@ CHAR_T         *attrName;
    /* look for a NS_SEP in the tag name (namespaces) and ignore the
       prefix if there is one */
    
-   buffer = TtaGetMemory ((strlen (attrName) + 1));
+   buffer = TtaGetMemory (strlen (attrName) + 1);
    ustrcpy (buffer, (CHAR_T*) attrName);
    if (ptr = ustrrchr (buffer, NS_SEP))
      {
        *ptr = WC_EOS;
        ptr++;
-       bufName = TtaGetMemory ((strlen (ptr) + 1));
+       bufName = TtaGetMemory (strlen (ptr) + 1);
        ustrcpy (bufName, ptr);
        
        if (currentParserCtxt != NULL &&
@@ -1967,7 +1900,7 @@ CHAR_T         *attrName;
      }
    else
      {
-       bufName = TtaGetMemory (strlen (buffer));
+       bufName = TtaGetMemory (strlen (buffer) + 1);
        ustrcpy (bufName, buffer);
      }
    
@@ -2747,11 +2680,12 @@ CHAR_T     *commentValue;
 
 #endif
 {
-   ElementType   elType;
-   Element  	 commentEl, commentLineEl;
+   ElementType   elType, elTypeTxt;
+   Element  	 commentEl, commentLineEl, commentText;
    STRING        mappedName;
    CHAR_T        cont;
    UCHAR_T       msgBuffer[MaxMsgLength];
+   int           start, i, error;
 
    /* create a Thot element for the comment */
    elType.ElSSchema = NULL;
@@ -2770,7 +2704,6 @@ CHAR_T     *commentValue;
        commentEl = TtaNewElement (currentDocument, elType);
        XmlSetElemLineNumber (commentEl);
        InsertElement (&commentEl);
-       lastElementClosed = TRUE;
 
        /* create a XMLcomment_line element as the first child of */
        /* element XMLcomment */
@@ -2782,13 +2715,53 @@ CHAR_T     *commentValue;
        XmlSetElemLineNumber (commentLineEl);
        TtaInsertFirstChild (&commentLineEl, commentEl, currentDocument);
 
-       /* create a TEXT element as the first child of element XMLcomment_line */
-       elType.ElTypeNum = 1;
-       CommentText = TtaNewElement (currentDocument, elType);
-       XmlSetElemLineNumber (CommentText);
-       TtaInsertFirstChild (&CommentText, commentLineEl, currentDocument);
-       TtaSetTextContent (CommentText, commentValue,
-			  currentLanguage, currentDocument);
+       /* create a TEXT element as the first child of element XMLcomment_line*/
+       elTypeTxt.ElSSchema = elType.ElSSchema;
+       elTypeTxt.ElTypeNum = 1;
+       commentText = TtaNewElement (currentDocument, elTypeTxt);
+       XmlSetElemLineNumber (commentText);
+       TtaInsertFirstChild (&commentText, commentLineEl, currentDocument);
+       TtaSetTextContent (commentText, TEXT(""), currentLanguage,
+			  currentDocument);
+       /* look for line break in the comment and create as many XMLcomment_line
+	  elements as needed */
+       i = 0; start = 0;
+       do
+	 {
+	   if ((int)commentValue[i] == EOL || (int)commentValue[i] == __CR__)
+	     /* new line */
+	     {
+	       commentValue[i] = EOS;
+	       TtaAppendTextContent (commentText, &commentValue[start],
+				     currentDocument);
+	       /* create a new XMLcomment_line element */
+	       commentLineEl = TtaNewElement (currentDocument, elType);
+	       SetElemLineNumber (commentLineEl);
+	       /* inserts the new XMLcomment_line after the previous one */
+	       TtaInsertSibling (commentLineEl, TtaGetParent (commentText),
+				 FALSE, currentDocument);
+	       /* create a TEXT element as the first child of new element
+		  XMLcomment_line */
+	       commentText = TtaNewElement (currentDocument, elTypeTxt);
+	       SetElemLineNumber (commentText);
+	       TtaInsertFirstChild (&commentText, commentLineEl,
+				    currentDocument);
+	       TtaSetTextContent (commentText, TEXT(""), currentLanguage,
+				  currentDocument);
+	       i++;
+	       start = i;   /* start of next comment line */
+	     }
+	   else if (commentValue[i] != EOS)
+	     i++;
+	 }
+       while (commentValue[i] != EOS);
+       /* process last line */
+       if (i > start + 1)
+	 TtaAppendTextContent (commentText, &commentValue[start],
+			       currentDocument);
+       (*(currentParserCtxt->ElementComplete)) (commentEl, currentDocument,
+						&error);
+       lastElementClosed = TRUE;
      }
 }
 /*--------------------  Comments  (end)  ---------------------*/
@@ -3432,6 +3405,7 @@ char        *HTMLbuf;
 
    if (infile != NULL)
        endOfFile = FALSE;
+   XMLabort = FALSE;
 
    /* read the XML file */
    
@@ -3447,6 +3421,7 @@ char        *HTMLbuf;
 	   XmlParseError (currentDocument,
 			  XML_ErrorString (XML_GetErrorCode (parser)), 0);
 	   endOfFile = TRUE;
+	   XMLabort = TRUE;
 	 }
      }
    
@@ -3760,7 +3735,6 @@ int       *buflen;
   lastMappedAttr = NULL;
   UnknownAttr = FALSE;
   ReadingAnAttrValue = FALSE;
-  CommentText = NULL;
   UnknownTag = FALSE;
   DocumentSSchema = TtaGetDocumentSSchema (doc);
   rootElement = TtaGetMainRoot (doc);
@@ -3781,6 +3755,8 @@ int       *buflen;
   /* Specific initialization for expat */
   InitializeExpatParser ();
 	
+  XMLabort = FALSE;
+
   /* parse the input file and build the Thot document */
   while (!endOfFile && !XMLrootClosed)
     {
@@ -3797,6 +3773,7 @@ int       *buflen;
 		 XML_GetCurrentColumnNumber (parser),
 		 XML_ErrorString (XML_GetErrorCode (parser)));
 	  endOfFile = TRUE;
+	  XMLabort = TRUE;
 	}
     }
 
@@ -3860,7 +3837,6 @@ ThotBool    plainText;
   lastMappedAttr = NULL;
   UnknownAttr = FALSE;
   ReadingAnAttrValue = FALSE;
-  CommentText = NULL;
   UnknownTag = FALSE;
 
   XMLrootClosed = FALSE;

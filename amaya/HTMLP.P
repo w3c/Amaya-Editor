@@ -17,9 +17,9 @@ PRINT
 #endif
 
 #define STRUCT_INDENT 1.5
-#define TAG_FONTSIZE 10 pt
+#define TAG_FONTSIZE 12 pt
 #define DOC_FONTSIZE 12 pt
-#define TAG_Weight Bold
+#define TAG_Weight Normal
 #define TAG_Visibility 7
 
 #ifdef BLACK_WHITE
@@ -40,7 +40,7 @@ PRINT
 
 #define TAG_Font Helvetica
 #define ATTR_Style Roman
-#define ATTR_Weight Bold
+#define ATTR_Weight Normal
 #define ATTR_Style_Links_view Italics
 #define ATTR_Visibility 6
 #define INPUT_Font Courier
@@ -311,7 +311,7 @@ BOXES
 	END;
 
  HTML_S: BEGIN
-	Content: Text 'HTML';
+	Content: Text 'html';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		VertPos: Top = Enclosing . Top + 0.5;
@@ -329,13 +329,13 @@ BOXES
 		VertPos: Top = Creator . Top;
 		Height: Creator . Height;
 		Width: 1.1;
-		LineWeight: 2 px;
+		LineWeight: 1 px;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
 
  HEAD_S: BEGIN
-	Content: Text 'HEAD';
+	Content: Text 'head';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -345,7 +345,7 @@ BOXES
 	END;
 
  SCRIPT_S: BEGIN
-	Content: Text 'SCRIPT';
+	Content: Text 'script';
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
 		Weight: TAG_Weight;
@@ -354,7 +354,7 @@ BOXES
 	END;
 
  META_S: BEGIN
-	Content: Text 'META';
+	Content: Text 'meta';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -364,7 +364,7 @@ BOXES
 	END;
 
  LINK_S: BEGIN
-	Content: Text 'LINK';
+	Content: Text 'link';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -458,7 +458,7 @@ BOXES
 	END;
 
  BASE_S: BEGIN
-	Content: Text 'BASE';
+	Content: Text 'base';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -468,7 +468,7 @@ BOXES
 	END;
 
  BODY_S: BEGIN
-	Content: Text 'BODY';
+	Content: Text 'body';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -478,7 +478,7 @@ BOXES
 	END;
 
  TITLE_S: BEGIN
-	Content: Text 'TITLE';
+	Content: Text 'title';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -488,7 +488,7 @@ BOXES
 	END;
 
  INDEX_S: BEGIN
-	Content: Text 'ISINDEX';
+	Content: Text 'isindex';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -498,7 +498,7 @@ BOXES
 	END;
 
   STYLE_S: BEGIN
-	Content: Text 'STYLE';
+	Content: Text 'style';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1620,7 +1620,7 @@ BOXES
         END;
 
  APPLET_S: BEGIN
-	Content: Text 'APPLET';
+	Content: Text 'applet';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1630,7 +1630,7 @@ BOXES
 	END;
 
  PARAM_S: BEGIN
-	Content: Text 'PARAM';
+	Content: Text 'param';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1640,7 +1640,7 @@ BOXES
 	END;
 
  OBJECT_S: BEGIN
-	Content: Text 'OBJECT';
+	Content: Text 'object';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1650,7 +1650,7 @@ BOXES
 	END;
 
  Math_S: BEGIN
-	Content: Text 'MATH';
+	Content: Text 'math';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1659,7 +1659,7 @@ BOXES
 		END;
 	END;
  Graph_S: BEGIN
-	Content: Text 'SVG';
+	Content: Text 'svg';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1669,7 +1669,7 @@ BOXES
 	END;
 
  P_S: BEGIN
-	Content: Text 'P';
+	Content: Text 'p';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1679,7 +1679,7 @@ BOXES
 	END;
 
  H1_S: BEGIN
-	Content: Text 'H1';
+	Content: Text 'h1';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1689,7 +1689,7 @@ BOXES
 	END;
 
  H2_S: BEGIN
-	Content: Text 'H2';
+	Content: Text 'h2';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1699,7 +1699,7 @@ BOXES
 	END;
 
  H3_S: BEGIN
-	Content: Text 'H3';
+	Content: Text 'h3';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1709,7 +1709,7 @@ BOXES
 	END;
 
  H4_S: BEGIN
-	Content: Text 'H4';
+	Content: Text 'h4';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1719,7 +1719,7 @@ BOXES
 	END;
 
  H5_S: BEGIN
-	Content: Text 'H5';
+	Content: Text 'h5';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1729,7 +1729,7 @@ BOXES
 	END;
 
  H6_S: BEGIN
-	Content: Text 'H6';
+	Content: Text 'h6';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1739,7 +1739,7 @@ BOXES
 	END;
 
  BASEFONT_S: BEGIN
-	Content: Text 'BASEFONT';
+	Content: Text 'basefont';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1749,7 +1749,7 @@ BOXES
 	END;
 
  UL_S: BEGIN
-	Content: Text 'UL';
+	Content: Text 'ul';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1759,7 +1759,7 @@ BOXES
 	END;
 
  OL_S: BEGIN
-	Content: Text 'OL';
+	Content: Text 'ol';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1769,7 +1769,7 @@ BOXES
 	END;
 
  DIR_S: BEGIN
-	Content: Text 'DIR';
+	Content: Text 'dir';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1779,7 +1779,7 @@ BOXES
 	END;
 
  MENU_S: BEGIN
-	Content: Text 'MENU';
+	Content: Text 'menu';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1789,7 +1789,7 @@ BOXES
 	END;
 
  DL_S: BEGIN
-	Content: Text 'DL';
+	Content: Text 'dl';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1799,7 +1799,7 @@ BOXES
 	END;
 
  DT_S: BEGIN
-	Content: Text 'DT';
+	Content: Text 'dt';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1808,7 +1808,7 @@ BOXES
 		END;
 	END;
  DD_S: BEGIN
-	Content: Text 'DD';
+	Content: Text 'dd';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1818,7 +1818,7 @@ BOXES
 	END;
 
  ADDRESS_S: BEGIN
-	Content: Text 'ADDRESS';
+	Content: Text 'address';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1828,7 +1828,7 @@ BOXES
 	END;
 
  PRE_S: BEGIN
-	Content: Text 'PRE';
+	Content: Text 'pre';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1838,7 +1838,7 @@ BOXES
 	END;
 
  BLOCKQUOTE_S: BEGIN
-	Content: Text 'BLOCKQUOTE';
+	Content: Text 'blockquote';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1848,7 +1848,7 @@ BOXES
 	END;
 
   FORM_S: BEGIN
-	Content: Text 'FORM';
+	Content: Text 'form';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1858,7 +1858,7 @@ BOXES
 	END;
 
  SELECT_S: BEGIN
-	Content: Text 'SELECT';
+	Content: Text 'select';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1868,7 +1868,7 @@ BOXES
 	END;
 
  OPTION_S: BEGIN
-	Content: Text 'OPTION';
+	Content: Text 'option';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1878,7 +1878,7 @@ BOXES
 	END;
 
  OPTGROUP_S: BEGIN
-	Content: Text 'OPTGROUP';
+	Content: Text 'optgroup';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1888,7 +1888,7 @@ BOXES
 	END;
 
  TEXTAREA_S: BEGIN
-	Content: Text 'TEXTAREA';
+	Content: Text 'textarea';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1898,7 +1898,7 @@ BOXES
 	END;
 
  FIELDSET_S: BEGIN
-	Content: Text 'FIELDSET';
+	Content: Text 'fieldset';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1908,7 +1908,7 @@ BOXES
 	END;
 
  LEGEND_S: BEGIN
-	Content: Text 'LEGEND';
+	Content: Text 'legend';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -1918,7 +1918,7 @@ BOXES
 	END;
 
  ATTR_Checkbox: BEGIN
-	Content: Text ' type=CHECKBOX';
+	Content: Text ' type=checkbox';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -1930,7 +1930,7 @@ BOXES
 	END;
 
  ATTR_Radio: BEGIN
-	Content: Text ' type=RADIO';
+	Content: Text ' type=radio';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -1942,7 +1942,7 @@ BOXES
 	END;
 
  ATTR_Text: BEGIN
-	Content: Text ' type=TEXT';
+	Content: Text ' type=text';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -2078,7 +2078,7 @@ BOXES
 
 
  IMG_S: BEGIN
-        Content: Text 'IMG';
+        Content: Text 'img';
         Visibility: 0;
         IN Structure_view BEGIN
                 Size: TAG_FONTSIZE;
@@ -2088,7 +2088,7 @@ BOXES
         END;
 
  IMG_in_S: BEGIN
-	Content: Text 'INPUT type=IMAGE ';
+	Content: Text 'input type=image ';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -2491,7 +2491,7 @@ BOXES
 	END;
 
  INPUT_S: BEGIN
-	Content: Text 'INPUT';
+	Content: Text 'input';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left;
@@ -2503,7 +2503,7 @@ BOXES
 	END;
 
  LABEL_S: BEGIN
-	Content: Text 'LABEL';
+	Content: Text 'label';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left;
@@ -2515,7 +2515,7 @@ BOXES
 	END;
 
  BUTTON_S: BEGIN
-	Content: Text 'BUTTON';
+	Content: Text 'button';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left;
@@ -2527,7 +2527,7 @@ BOXES
 	END;
 
  ATTR_Hidden: BEGIN
-	Content: Text ' type=HIDDEN';
+	Content: Text ' type=hidden';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -2539,7 +2539,7 @@ BOXES
 	END;
 
  ATTR_File: BEGIN
-	Content: Text ' type=FILE';
+	Content: Text ' type=file';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -2551,7 +2551,7 @@ BOXES
 	END;
 
  ATTR_Password: BEGIN
-	Content: Text ' type=PASSWORD';
+	Content: Text ' type=password';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -2563,7 +2563,7 @@ BOXES
 	END;
 
  ATTR_Reset: BEGIN
-	Content: Text ' type=RESET';
+	Content: Text ' type=reset';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -2575,7 +2575,7 @@ BOXES
 	END;
 
  ATTR_Submit: BEGIN
-	Content: Text ' type=SUBMIT';
+	Content: Text ' type=submit';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -2587,7 +2587,7 @@ BOXES
 	END;
 
  ATTR_Button: BEGIN
-	Content: Text ' type=BUTTON';
+	Content: Text ' type=button';
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	Visibility: 0;
@@ -2973,7 +2973,7 @@ BOXES
 	END;
 
  BR_S: BEGIN
-	Content: Text 'BR';
+	Content: Text 'br';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -2983,7 +2983,7 @@ BOXES
 	END;
 
  I_S: BEGIN
-	Content: Text 'I';
+	Content: Text 'i';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -2993,7 +2993,7 @@ BOXES
 	END;
 
  B_S: BEGIN
-	Content: Text 'B';
+	Content: Text 'b';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3003,7 +3003,7 @@ BOXES
 	END;
 
  TT_S: BEGIN
-	Content: Text 'TT';
+	Content: Text 'tt';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3013,7 +3013,7 @@ BOXES
 	END;
 
  U_S: BEGIN
-	Content: Text 'U';
+	Content: Text 'u';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3023,7 +3023,7 @@ BOXES
 	END;
 
  STRIKE_S: BEGIN
-	Content: Text 'STRIKE';
+	Content: Text 'strike';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3033,7 +3033,7 @@ BOXES
 	END;
 
  BIG_S: BEGIN
-	Content: Text 'BIG';
+	Content: Text 'big';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3043,7 +3043,7 @@ BOXES
 	END;
 
  SMALL_S: BEGIN
-	Content: Text 'SMALL';
+	Content: Text 'small';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3053,7 +3053,7 @@ BOXES
 	END;
 
  SUB_S: BEGIN
-	Content: Text 'SUB';
+	Content: Text 'sub';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3063,7 +3063,7 @@ BOXES
 	END;
 
  SUP_S: BEGIN
-	Content: Text 'SUP';
+	Content: Text 'sup';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3073,7 +3073,7 @@ BOXES
 	END;
 
  EM_S: BEGIN
-	Content: Text 'EM';
+	Content: Text 'em';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3083,7 +3083,7 @@ BOXES
 	END;
 
  STRONG_S: BEGIN
-	Content: Text 'STRONG';
+	Content: Text 'strong';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3093,7 +3093,7 @@ BOXES
 	END;
 
  DFN_S: BEGIN
-	Content: Text 'DFN';
+	Content: Text 'dfn';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3103,7 +3103,7 @@ BOXES
 	END;
 
  CODE_S: BEGIN
-	Content: Text 'CODE';
+	Content: Text 'code';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3113,7 +3113,7 @@ BOXES
 	END;
 
  SAMP_S: BEGIN
-	Content: Text 'SAMP';
+	Content: Text 'samp';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3123,7 +3123,7 @@ BOXES
 	END;
 
  KBD_S: BEGIN
-	Content: Text 'KBD';
+	Content: Text 'kbd';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3133,7 +3133,7 @@ BOXES
 	END;
 
  VAR_S: BEGIN
-	Content: Text 'VAR';
+	Content: Text 'var';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3143,7 +3143,7 @@ BOXES
 	END;
 
  CITE_S: BEGIN
-	Content: Text 'CITE';
+	Content: Text 'cite';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3153,7 +3153,7 @@ BOXES
 	END;
 
  ABBR_S: BEGIN
-	Content: Text 'ABBR';
+	Content: Text 'abbr';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3163,7 +3163,7 @@ BOXES
 	END;
 
  ACRONYM_S: BEGIN
-	Content: Text 'ACRONYM';
+	Content: Text 'acronym';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3173,7 +3173,7 @@ BOXES
 	END;
 
  FONT_S: BEGIN
-	Content: Text 'FONT';
+	Content: Text 'font';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3183,7 +3183,7 @@ BOXES
 	END;
 
  Q_S: BEGIN
-	Content: (Text 'Q');
+	Content: Text 'q';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3209,7 +3209,7 @@ BOXES
 	END;
 
  INS_S: BEGIN
-	Content: (Text 'INS');
+	Content: Text 'ins';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3219,7 +3219,7 @@ BOXES
 	END;
 
  DEL_S: BEGIN
-	Content: (Text 'DEL');
+	Content: Text 'del';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3229,7 +3229,7 @@ BOXES
 	END;
 
  SPAN_S: BEGIN
-	Content: (Text 'SPAN');
+	Content: Text 'span';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3239,7 +3239,7 @@ BOXES
 	END;
 
  BDO_S: BEGIN
-	Content: (Text 'BDO');
+	Content: Text 'bdo';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3249,7 +3249,7 @@ BOXES
 	END;
 
  FRAMESET_S: BEGIN
-	Content: (Text 'FRAMESET');
+	Content: Text 'frameset';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3260,7 +3260,7 @@ BOXES
 
 #ifndef PAGE
  FRAME_Label: BEGIN
-	Content: (Text 'FRAME');
+	Content: Text 'frame';
 	Style: Bold;
 	IN Structure_view
 		Visibility: 0;
@@ -3292,7 +3292,7 @@ BOXES
 #endif
 
  NOFRAMES_S: BEGIN
-	Content: (Text 'NOFRAMES');
+	Content: Text 'noframes';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3302,7 +3302,7 @@ BOXES
 	END;
 
  FRAME_S: BEGIN
-	Content: (Text 'FRAME');
+	Content: Text 'frame';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3312,7 +3312,7 @@ BOXES
 	END;
 
  IFRAME_S: BEGIN
-	Content: (Text 'IFRAME');
+	Content: Text 'iframe';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3322,7 +3322,7 @@ BOXES
 	END;
 
  A_S: BEGIN
-	Content: Text 'A ';
+	Content: Text 'a';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3723,7 +3723,7 @@ BOXES
 	END;
 
  MethodGet_S: BEGIN
-	Content: Text ' method=Get';
+	Content: Text ' method=get';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -3735,7 +3735,7 @@ BOXES
 	END;
 
  MethodPost_S: BEGIN
-	Content: Text ' method=Post';
+	Content: Text ' method=post';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -3819,7 +3819,7 @@ BOXES
 	END;
 
  LI_S: BEGIN
-	Content: Text 'LI';
+	Content: Text 'li';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -3921,7 +3921,7 @@ BOXES
 	END;
 
  HR_S: BEGIN
-	Content: Text 'HR';
+	Content: Text 'hr';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -4775,7 +4775,7 @@ BOXES
 { ---- Table ---- }
 
  TABLE_S: BEGIN
-	Content: Text 'TABLE';
+	Content: Text 'table';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5085,7 +5085,7 @@ BOXES
 	END;
 
  CAPTION_S: BEGIN
-	Content: Text 'CAPTION';
+	Content: Text 'caption';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5095,7 +5095,7 @@ BOXES
 	END;
 
  COLGROUP_S: BEGIN
-	Content: Text 'COLGROUP';
+	Content: Text 'colgroup';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5105,7 +5105,7 @@ BOXES
 	END;
 
  COL_S: BEGIN
-	Content: Text 'COL';
+	Content: Text 'col';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5295,7 +5295,7 @@ BOXES
 	END;
 
  TR_S: BEGIN
-	Content: Text 'TR';
+	Content: Text 'tr';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5305,7 +5305,7 @@ BOXES
 	END;
 
  THEAD_S: BEGIN
-	Content: Text 'THEAD';
+	Content: Text 'thead';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5315,7 +5315,7 @@ BOXES
 	END;
 
  TFOOT_S: BEGIN
-	Content: Text 'TFOOT';
+	Content: Text 'tfoot';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5325,7 +5325,7 @@ BOXES
 	END;
 
  TBODY_S: BEGIN
-	Content: Text 'TBODY';
+	Content: Text 'tbody';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5335,7 +5335,7 @@ BOXES
 	END;
 
  TH_S: BEGIN
-	Content: Text 'TH';
+	Content: Text 'th';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5345,7 +5345,7 @@ BOXES
 	END;
 
  TD_S: BEGIN
-	Content: Text 'TD';
+	Content: Text 'td';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5414,7 +5414,7 @@ BOXES
 	END;
 
  MAP_S: BEGIN
-	Content: Text 'MAP';
+	Content: Text 'map';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5436,7 +5436,7 @@ BOXES
 	END;
 
  AREA_S: BEGIN
-	Content: Text 'AREA';
+	Content: Text 'area';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5518,7 +5518,7 @@ BOXES
 	END;
 
  DIV_S: BEGIN
-	Content: Text 'DIV';
+	Content: Text 'div';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5528,7 +5528,7 @@ BOXES
 	END;
 
  CENTER_S: BEGIN
-	Content: Text 'CENTER';
+	Content: Text 'center';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -5538,7 +5538,7 @@ BOXES
 	END;
 
  NOSCRIPT_S: BEGIN
-	Content: Text 'NOSCRIPT';
+	Content: Text 'noscript';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;

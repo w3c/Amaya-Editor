@@ -14,7 +14,7 @@ VIEWS
 #define TAG_FONTSIZE 12 pt
 #define ATTR_Style Roman
 #define ATTR_Weight Normal
-#define ATTR_Visibility 7
+#define ATTR_Visibility 6
 #ifdef BLACK_WHITE
 #define ATTR_Color Black
 #define ATTRVALUE_Color Black

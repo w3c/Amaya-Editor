@@ -6326,14 +6326,17 @@ Document            doc;
       nextEl = el;
       TtaNextSibling (&nextEl);
       elType = TtaGetElementType (el);
-      if (elType.ElTypeNum == HTML_EL_BODY && *elBody == NULL)
+      if (elType.ElTypeNum == HTML_EL_BODY &&
+	  elType.ElSSchema == DocumentSSchema &&
+	  *elBody == NULL)
 	*elBody = el;
-      else if (elType.ElTypeNum == HTML_EL_TITLE ||
-	       elType.ElTypeNum == HTML_EL_ISINDEX ||
-	       elType.ElTypeNum == HTML_EL_BASE ||
-	       elType.ElTypeNum == HTML_EL_STYLE_ ||
-	       elType.ElTypeNum == HTML_EL_META ||
-	       elType.ElTypeNum == HTML_EL_LINK)
+      else if ((elType.ElTypeNum == HTML_EL_TITLE ||
+		elType.ElTypeNum == HTML_EL_ISINDEX ||
+		elType.ElTypeNum == HTML_EL_BASE ||
+		elType.ElTypeNum == HTML_EL_STYLE_ ||
+		elType.ElTypeNum == HTML_EL_META ||
+		elType.ElTypeNum == HTML_EL_LINK) &&
+	       elType.ElSSchema == DocumentSSchema)
 	/* this element should be a child of HEAD */
 	{
 	  /* create the HEAD element if it does not exist */
@@ -6353,10 +6356,13 @@ Document            doc;
 	      elType.ElTypeNum = HTML_EL_TITLE;
 	      lastChild = TtaSearchTypedElement (elType, SearchForward, *elHead);
 	    }
-	  /* move the element as the last child of the HEAD element */
-	  TtaRemoveTree (el, doc);
-	  TtaInsertSibling (el, lastChild, FALSE, doc);
-	  lastChild = el;
+	  if (lastChild)
+	    {
+	      /* move the element as the last child of the HEAD element */
+	      TtaRemoveTree (el, doc);
+	      TtaInsertSibling (el, lastChild, FALSE, doc);
+	      lastChild = el;
+	    }
 	}
       /* get next child of the root */
       el = nextEl;

@@ -2434,11 +2434,6 @@ int             *error;
 	  CheckFence (el, doc);
 	  break;
        case MathML_EL_MSPACE:
-	  /* create a C_Space element within the MSPACE */
-	  childType.ElSSchema = elType.ElSSchema;
-	  childType.ElTypeNum = MathML_EL_C_Space;
-	  child = TtaNewElement (doc, childType);
-	  TtaInsertFirstChild (&child, el, doc);
 	  break;
        case MathML_EL_MROW:
 	  /* Create placeholders within the MROW */
