@@ -914,7 +914,7 @@ char               *name;
 #endif /* __STDC__ */
 {
    int                 frame;
-   char                s[200];
+   char                s[1024];
 
 #ifndef _WINDOWS
    Arg                 args[MAX_ARGS];

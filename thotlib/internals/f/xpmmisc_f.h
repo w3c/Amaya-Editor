@@ -31,12 +31,12 @@ extern int XpmReadFileToBuffer ( char *filename,
                                  char **buffer_return );
 extern int XpmWriteFileFromBuffer ( char *filename,
                                     char *buffer );
-extern char * XpmGetErrorString ( int errcode );
+extern char* XpmGetErrorString ( int errcode );
 extern int XpmLibraryVersion ( void );
-extern void xpmCreatePixmapFromImage ( Display * display,
+extern void xpmCreatePixmapFromImage ( Display* display,
                                        Drawable d,
-                                       XImage * ximage,
-                                       Pixmap * pixmap_return );
+                                       XImage* ximage,
+                                       Pixmap* pixmap_return );
 extern void xpmCreateImageFromPixmap ( Display * display,
                                        Pixmap pixmap,
                                        XImage ** ximage_return,
@@ -70,12 +70,12 @@ extern int XpmReadFileToBuffer (/* char *filename,
                                    char **buffer_return */);
 extern int XpmWriteFileFromBuffer (/* char *filename,
                                       char *buffer */);
-extern char * XpmGetErrorString (/* int errcode */);
+extern char* XpmGetErrorString (/* int errcode */);
 extern int XpmLibraryVersion (/* void */);
-extern void xpmCreatePixmapFromImage (/* Display * display,
+extern void xpmCreatePixmapFromImage (/* Display* display,
                                          Drawable d,
-                                         XImage * ximage,
-                                         Pixmap * pixmap_return */);
+                                         XImage* ximage,
+                                         Pixmap* pixmap_return */);
 extern void xpmCreateImageFromPixmap (/* Display * display,
                                          Pixmap pixmap,
                                          XImage ** ximage_return,

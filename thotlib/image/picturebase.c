@@ -33,19 +33,79 @@
 
 #include "fileaccess_f.h"
 #include "picture_f.h"
-
-typedef struct PixmapBaseEntry {
-    char *name;
-    Pixmap pix;
-} PixmapBaseEntry, *PixmapBaseEntryPtr;
+#include "memory_f.h"
 
 /* defined in picture.c and not exported ... */
 extern PictureHandler  PictureHandlerTable[MAX_PICT_FORMATS];
 extern int             InlineHandlers;
 
-#define MAX_PIXMAP 100
-static PixmapBaseEntry PixmapBase[MAX_PIXMAP];
-static int NbPixmapEntry = 0;
+/*
+ * All the registred images are stored in a small base
+ * made of an hash table.
+ */
+
+typedef struct ImageBaseEntry {
+    struct ImageBaseEntry *next;
+    char *name;
+    Pixmap pix;
+} ImageBaseEntry, *ImageBaseEntryPtr;
+
+static ImageBaseEntryPtr ImageBaseHash[256];
+static int NbImageEntry = 0;
+static int ImageBaseHashInitialized = 0;
+
+/*----------------------------------------------------------------------
+   GetHash
+
+   Get the hash table entry for an image name.
+
+   Parameters:
+   name : the name of the image.
+
+   Return value:
+   the index [0..255]
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int          GetHash (const char *name)
+#else  /* __STDC__ */
+static int          GetHash (name)
+const char         *name;
+
+#endif /* __STDC__ */
+{
+    unsigned char idx = 0;
+
+    while (*name != '\0') idx += (unsigned char) *name++;
+    return((int) idx);
+}
+
+/*----------------------------------------------------------------------
+   InitImageBase
+
+   Initialize the image base.
+
+   Parameters:
+   none
+
+   Return value:
+   none
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void          InitImageBase (void)
+#else  /* __STDC__ */
+static void          InitImageBase ()
+
+#endif /* __STDC__ */
+{
+    int i;
+
+    if (ImageBaseHashInitialized) return;
+    for (i = 0;i < 256;i++) ImageBaseHash[i] = NULL;
+    NbImageEntry = 0;
+    ImageBaseHashInitialized = 1;
+}
 
 /*----------------------------------------------------------------------
    TtaRegisterPixmap
@@ -70,14 +130,54 @@ Pixmap              pix;
 #endif /* __STDC__ */
 
 {
-   if (name == NULL) return;
-   if (pix == 0) return;
+    ImageBaseEntryPtr prev = NULL, cour;
+    int hash;
+    int res;
 
-   if (name[0] == '\0') return;
+    if (name == NULL) return;
+    if (pix == 0) return;
 
-    PixmapBase[NbPixmapEntry].name = name;
-    PixmapBase[NbPixmapEntry].pix = pix;
-    NbPixmapEntry++;
+    if (name[0] == '\0') return;
+    if (!ImageBaseHashInitialized) InitImageBase();
+
+    hash = GetHash(name);
+    cour = ImageBaseHash[hash];
+
+    /*
+     * go through the list looking for the right
+     * place to insert it.
+     */
+    while (cour != NULL) {
+        res = strcmp(cour->name, name);
+        if (res <= 0) break;
+        prev = cour;
+        cour = cour->next;
+    }
+
+    /*
+     * allocate and fill a new structure.
+     */
+    NbImageEntry++;
+    cour = (ImageBaseEntryPtr) TtaGetMemory(sizeof(struct ImageBaseEntry));
+    cour->name = strdup(name);
+    cour->pix = pix;
+
+    /*
+     * insert it in the hash table.
+     */
+    if (prev == NULL) {
+        /*
+         * add at the head of the hash list.
+         */
+        cour->next = ImageBaseHash[hash];
+        ImageBaseHash[hash] = cour;
+    } else {
+        /*
+         * add if after prev.
+         */
+        cour->next = prev->next;
+        prev->next = cour;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -137,9 +237,7 @@ char               *path;
 	    return(0);
 	    break;
     }
-    PixmapBase[NbPixmapEntry].name = name;
-    PixmapBase[NbPixmapEntry].pix = (Pixmap) myDrawable;
-    NbPixmapEntry++;
+    TtaRegisterPixmap (name, (Pixmap) myDrawable);
     return((Pixmap) myDrawable);
 #endif /* _WINDOWS */
     return(0);
@@ -166,11 +264,30 @@ char               *name;
 #endif /* __STDC__ */
 
 {
-    int i;
+    ImageBaseEntryPtr cour;
+    int hash;
+    int res;
 
-    for (i = 0; i < NbPixmapEntry;i++) 
-        if (!strcmp(name, PixmapBase[i].name))
-	    return(PixmapBase[i].pix);
+    if (name == NULL) return(0);
+    if (name[0] == '\0') return(0);
+
+    if (!ImageBaseHashInitialized) InitImageBase();
+
+    hash = GetHash(name);
+    cour = ImageBaseHash[hash];
+
+    /*
+     * go through the list looking for the right
+     * place to insert it.
+     */
+    while (cour != NULL) {
+        res = strcmp(cour->name, name);
+        if (res == 0) {
+	    return(cour->pix);
+	}
+        if (res <= 0) break;
+        cour = cour->next;
+    }
     return(0);
 }
 

@@ -47,6 +47,18 @@ thotlib_Extra_JavaPollLoop(struct Hthotlib_Extra* none)
 }
 
 /*
+ * Flush the X-Windows stream.
+ */
+void
+thotlib_Extra_JavaXFlush(struct Hthotlib_Extra* none)
+{
+#ifndef _WINDOWS
+    XFlush(TtaGetCurrentDisplay());
+#endif
+    TtaHandlePendingEvents();
+}
+
+/*
  * Java to C function Ttaxxx stub.
 xxx
 thotlib_Extra_Ttaxxx(struct Hthotlib_Extra* none, xxx)
@@ -65,6 +77,8 @@ void register_thotlib_Extra_stubs(void)
 	                thotlib_Extra_Java2CCallback);
 	addNativeMethod("thotlib_Extra_JavaPollLoop",
 	                thotlib_Extra_JavaPollLoop);
+	addNativeMethod("thotlib_Extra_JavaXFlush",
+	                thotlib_Extra_JavaXFlush);
 /*
 	addNativeMethod("thotlib_Extra_Ttaxxx", thotlib_Extra_Ttaxxx);
  */

@@ -5,9 +5,10 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-extern void SetPositionConstraint (BoxEdge localEdge,
-				   PtrBox pBox,
-				   int *val);
+
+extern void SetPositionConstraint ( BoxEdge localEdge,
+                                    PtrBox pBox,
+                                    int *val );
 extern void ComputePosRelation ( AbPosition rule,
                                  PtrBox pBox,
                                  int frame,
@@ -34,9 +35,10 @@ extern void ClearDimRelation ( PtrBox pOrginBox,
                                int frame );
 
 #else /* __STDC__ */
-extern void SetPositionConstraint (/*BoxEdge localEdge,
-				   PtrBox pBox,
-				   int *val*/);
+
+extern void SetPositionConstraint (/* BoxEdge localEdge,
+                                      PtrBox pBox,
+                                      int *val */);
 extern void ComputePosRelation (/* AbPosition rule,
                                    PtrBox pBox,
                                    int frame,

@@ -42,10 +42,6 @@ extern void ShowToC ( Document document,
                       View view );
 extern boolean ViewToOpen ( NotifyDialog * event );
 extern boolean ViewToClose ( NotifyDialog * event );
-extern void ChangeAttrOnRoot ( Document document,
-			       int attrNum);
-extern void ShowMapAreas ( Document document,
-                           View view );
 extern Document GetHTMLDocument ( char *documentPath,
                                   char *form_data,
                                   Document doc,
@@ -57,6 +53,10 @@ extern void CallbackDialogue ( int ref,
                                int typedata,
                                char *data );
 extern void InitAmaya ( NotifyEvent * event );
+extern void ChangeAttrOnRoot ( Document document,
+                               int attrNum );
+extern void ShowMapAreas ( Document document,
+                           View view );
 extern void HelpAmaya ( Document document,
                         View view );
 extern void AmayaClose ( Document document,
@@ -100,10 +100,6 @@ extern void ShowToC (/* Document document,
                         View view */);
 extern boolean ViewToOpen (/* NotifyDialog * event */);
 extern boolean ViewToClose (/* NotifyDialog * event */);
-extern void ChangeAttrOnRoot (/* Document document,
-			      int attrNum */);
-extern void ShowMapAreas (/* Document document,
-                             View view */);
 extern Document GetHTMLDocument (/* char *documentPath,
                                     char *form_data,
                                     Document doc,
@@ -115,6 +111,10 @@ extern void CallbackDialogue (/* int ref,
                                  int typedata,
                                  char *data */);
 extern void InitAmaya (/* NotifyEvent * event */);
+extern void ChangeAttrOnRoot (/* Document document,
+                                 int attrNum */);
+extern void ShowMapAreas (/* Document document,
+                             View view */);
 extern void HelpAmaya (/* Document document,
                           View view */);
 extern void AmayaClose (/* Document document,

@@ -50,6 +50,7 @@ int main(int argc, char **argv)
 		if (buffer[i] == '\0') break;
 	    }
 	    handle_request(buffer);
+	    fflush(stdout);
 	}
     }
     return(0);

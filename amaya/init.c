@@ -84,7 +84,9 @@ static Pixmap       iconPlugin;
 #include "HTMLhistory_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
+#ifndef AMAYA_JAVA
 #include "query_f.h"
+#endif
 #include "trans_f.h"
 #include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"

@@ -312,8 +312,7 @@ restart_select:
     }
 
     /*
-     * the tricky part : analyze which external channels need attention
-     * decrement res accordingly.
+     * If there was a Poll in progress register that we need to interrupt.
      */
 
     if (DoJavaSelectPoll) {
@@ -332,16 +331,20 @@ restart_select:
     return(res);
 }
 
+
 /************************************************************************
  *									*
  *	Locks Handling : One for the X-Windows Events, One for the	*
- *	Thotlib Access.							*
+ *	Thotlib Access and one for the DNS server.			*
  *									*
  ************************************************************************/
 
 static int ThotlibLockValue = 0;
 static int XWindowSocketLockValue = 0;
 static int XWindowSocketWaitValue = 0;
+#ifndef SYNC_DNS
+static int DNSLockValue = 0;
+#endif
 
 
 void JavaThotlibLock()
@@ -443,6 +446,209 @@ void JavaXWindowSocketRelease()
             ThotlibLockValue, XWindowSocketLockValue);
 #endif
 }
+
+#ifndef SYNC_DNS
+void DNSserverLock()
+{
+    while (1) {
+        /*
+	 * block on the entry.
+	 */
+        while (DNSLockValue > 0) {
+#ifdef DEBUG_LOCK
+	    TIMER
+#endif
+            fprintf(stderr,"DNSserverLock(%d) : block\n", DNSLockValue);
+	    sleepThread(5);
+        }
+
+        /*
+	 * try.
+	 */
+        DNSLockValue++;
+
+	/*
+	 * if not alone back ..
+	 */
+	if (DNSLockValue > 1) {
+	   DNSLockValue--;
+	   continue;
+	}
+#ifdef DEBUG_LOCK
+	TIMER
+        fprintf(stderr,"JavaXWindowSocketLock(%d,%d) : Ok\n",
+                DNSLockValue);
+#endif
+	break;
+    }
+}
+
+void DNSserverRelease()
+{
+    DNSLockValue--;
+#ifdef DEBUG_LOCK
+    TIMER
+    fprintf(stderr,"DNSserverRelease(%d)\n", DNSLockValue);
+#endif
+}
+#endif /* !SYNC_DNS */
+
+
+#ifndef SYNC_DNS
+/************************************************************************
+ *									*
+ *			Non-blocking DNS lookups.			*
+ *									*
+ ************************************************************************/
+
+int dns_daemonRequestChannel[2];
+int dns_daemonResultChannel[2];
+FILE *dns_daemonRequest;
+FILE *dns_daemonResult;
+int dns_daemon_pid;
+int JavaDnsInitialized = 0;
+extern char BinariesDirectory[];
+
+static void JavaInitDns(void) {
+    /*
+     * create a pipe to exchange data with the dns_daemon.
+     */
+    if (pipe(dns_daemonRequestChannel) < 0) {
+	perror("JavaInitDns : pipe(dns_daemonRequestChannel) failed");
+	exit(1);
+    }
+    if (pipe(dns_daemonResultChannel) < 0) {
+	perror("JavaInitDns : pipe(dns_daemonResultChannel) failed");
+	exit(1);
+    }
+
+    /*
+     * fork : the subprocess will launch dns_daemon after having
+     *        resets its stdin and stdout channels.
+     */
+    if ((dns_daemon_pid = fork()) == 0) {
+        char path[1024];
+
+        /*
+	 * reaffect the stdin to the read part of the RequestChannel pipe.
+	 */
+        close(0);
+	dup(dns_daemonRequestChannel[0]);
+	close(dns_daemonRequestChannel[0]);
+	close(dns_daemonRequestChannel[1]);
+
+        /*
+	 * reaffect the stdout to the write part of the ResultChannel pipe.
+	 */
+        close(1);
+	dup(dns_daemonResultChannel[1]);
+	close(dns_daemonResultChannel[0]);
+	close(dns_daemonResultChannel[1]);
+
+	/*
+	 * Now exec the dns_daemon.
+	 */
+	sprintf(path, "%s/dns_daemon", BinariesDirectory);
+	execlp(path, path, NULL);
+	perror("JavaInitDns : cannot execve dns_daemon");
+	fprintf(stderr,"Check that %s binary is in place\n", path);
+	exit(1);
+    }
+    if (dns_daemon_pid < 0) {
+	perror("JavaInitDns : fork() failed");
+	exit(1);
+    }
+    /*
+     * Close the two file descriptor not used on the client side.
+     */
+    close(dns_daemonRequestChannel[0]);
+    close(dns_daemonResultChannel[1]);
+
+    /*
+     * and register the two others as Input/Output channels.
+     */
+    threadedFileDescriptor(dns_daemonRequestChannel[1]);
+    threadedFileDescriptor(dns_daemonResultChannel[0]);
+
+    /*
+     * and register the two others as Input/Output channels.
+     */
+    dns_daemonRequest = fdopen(dns_daemonRequestChannel[1], "w");
+    dns_daemonResult = fdopen(dns_daemonResultChannel[0], "r");
+}
+
+static struct hostent gethostbyname_result;
+static char hostname_result[256];
+static char *ip_addr_list[2];
+static unsigned char ip_addr_result[20];
+
+struct hostent *gethostbyname(const char *name) {
+    char msg[1000];
+    char host[256];
+    char address[50];
+    int addrtype;
+    int addrlength;
+    int res;
+    int ip[4];
+
+    /*
+     * Send request to the DNS server.
+     */
+    if (name == NULL) name = "";
+    if (fprintf(dns_daemonRequest, "%s\n", name) < 0) {
+	perror("JavaDns : gethostbyname() write to RequestChannel failed");
+	goto dns_failed;
+    }
+    fflush(dns_daemonRequest); /* needed !!! */
+
+    /*
+     * The key point of all this DNS thing : replace a blocking system
+     * call to a polled one !!!
+     */
+    do {
+	res = blockOnFile(dns_daemonResultChannel[0], 0);
+    } while (res < 0);
+
+    /*
+     * Process the result from the server.
+     */
+    if (!fgets(msg, sizeof(msg), dns_daemonResult)) {
+	perror("JavaDns : gethostbyname() read from ResultChannel failed");
+	goto dns_failed;
+    }
+    res = sscanf(msg, "%s %d %d %s", host, &addrtype, &addrlength, address);
+    if (res < 4) goto dns_failed;
+
+    /* set up h_name in answer */
+    strncpy(hostname_result, name, sizeof(hostname_result));
+    gethostbyname_result.h_name = hostname_result;
+    
+    /* ignore h_aliases in answer */
+    gethostbyname_result.h_aliases = NULL;
+
+    /* set up h_addrtype in answer */
+    gethostbyname_result.h_addrtype = addrtype;
+    
+    /* set up h_length in answer */
+    gethostbyname_result.h_length = addrlength;
+
+    /* parse the IP addresses and return the first one in the list */
+    sscanf(address, "%d.%d.%d.%d", &ip[0],&ip[1],&ip[2],&ip[3]);
+    ip_addr_result[0] = (unsigned char) ip[0];
+    ip_addr_result[1] = (unsigned char) ip[1];
+    ip_addr_result[2] = (unsigned char) ip[2];
+    ip_addr_result[3] = (unsigned char) ip[3];
+    ip_addr_list[0] = ip_addr_result;
+    ip_addr_list[1] = NULL;
+    gethostbyname_result.h_addr_list = &ip_addr_list[0];
+    return(&gethostbyname_result);
+
+dns_failed:
+    
+    return(NULL);
+}
+
+#endif /* !SYNC_DNS */
 
 /************************************************************************
  *									*
@@ -590,6 +796,10 @@ void                InitJava ()
     char initClass[MAX_PATH];
 
     char *app_name = TtaGetEnvString ("appname");
+
+#ifndef SYNC_DNS
+    JavaInitDns();
+#endif
 
     /* fprintf(stderr, "Initialize Java Runtime\n"); */
 

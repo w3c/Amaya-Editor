@@ -49,7 +49,12 @@ int msg;
 
 #endif
 {
-    return(TtaGetMessage(AMAYA, msg));
+    char *str = TtaGetMessage(AMAYA, msg);
+    if (str == NULL) {
+        fprintf(stderr,"AmayaGetMessage(%d) failed\n", msg);
+	return("");
+    }
+    return(str);
 }
 
 /*----------------------------------------------------------------------
