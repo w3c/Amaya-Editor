@@ -1159,8 +1159,9 @@ int                 status;
    if (status == HT_LOADED
        || status == HT_CREATED
        || status == HT_NO_DATA
+       /* JK: removed it as the kludge doesn't seem useful anymore */
        /* kludge for work around libwww problem */
-       || (status == HT_INTERRUPTED && me->method == METHOD_PUT)
+       /* || (status == HT_INTERRUPTED && me->method == METHOD_PUT) */
 #ifdef AMAYA_WWW_CACHE
        /* what status to use to know we're downloading from a cache? */
        || status ==  HT_NOT_MODIFIED
@@ -2351,6 +2352,7 @@ static void         AHTProfile_delete ()
   HTAA_deleteAllModules ();
   HTAlertCall_deleteAll (HTAlert_global () );
   HTAlert_setGlobal ((HTList *) NULL);
+  HTEventList_unregisterAll ();
   /* these two functions are broken, so we can't call them right now 
   HTHeader_deleteAll ();
   HTTimer_deleteAll ();
