@@ -2770,8 +2770,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #endif /*_GTK*/
 #ifdef _WIN_PRINT
   if (releaseDC)
-	  /* release the device context into TtDisplay */
-	  WIN_ReleaseDeviceContext ();
+    /* release the device context into TtDisplay */
+    WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
 }
 #endif /*_GL*/
@@ -2890,7 +2890,7 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   unsigned char   *pixel;
   int              widthb, heightb;
 #ifdef _GTK
-  int              k, line, 
+  int              k, line;  
   GdkImage        *View;
   int              cpt1, cpt2, line2, mi_h, NbOctetsPerLine;
   unsigned char    inter;
@@ -2903,8 +2903,8 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   LPBITMAPINFO     lpbi = NULL;
   LPVOID           lpvBits = NULL; 
   RECT             rect;
-	int x,y;
-	DWORD RGBcolor;
+  int              x,y;
+  DWORD            RGBcolor;
 #endif /* _WINDOWS */
 #endif /* _GTK */
   TtaHandlePendingEvents ();
