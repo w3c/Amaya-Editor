@@ -6,20 +6,20 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int XLookupString ( XKeyEvent * event,
+extern int XLookupString ( ThotKeyEvent * event,
                            char *buffer,
                            int nbytes,
                            KeySym * keysym,
-                           XComposeStatus * status );
+                           ThotComposeStatus * status );
 extern void LookupLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern int XLookupString (/* XKeyEvent * event,
+extern int XLookupString (/* ThotKeyEvent * event,
                              char *buffer,
                              int nbytes,
                              KeySym * keysym,
-                             XComposeStatus * status */);
+                             ThotComposeStatus * status */);
 extern void LookupLoadResources (/* void */);
 
 #endif /* __STDC__ */

@@ -58,6 +58,9 @@ typedef char       *Pixmap;
 typedef HCURSOR     ThotCursor;
 typedef HBITMAP     Drawable;
 typedef POINT       ThotPoint;
+typedef MSG         ThotEvent;
+typedef MSG         ThotKeyEvent;
+typedef UINT        ThotComposeStatus;
 
 #define ThotColorNone ((COLORREF)~1)	/* anything in high byte is bad COLORREF */
 #define ThotBitmapNone ((ThotBitmap)NULL)
@@ -118,6 +121,9 @@ typedef char       *Pixmap;
 typedef HCURSOR     ThotCursor;
 typedef HBITMAP     Drawable;
 typedef POINT       ThotPoint;
+typedef MSG         ThotEvent;
+typedef MSG         ThotKeyEvent;
+typedef UINT        ThotComposeStatus;
 
 #define ThotColorNone ((COLORREF)~1)	/* anything in high byte is bad COLORREF */
 #define ThotBitmapNone ((ThotBitmap)NULL)
@@ -194,6 +200,9 @@ typedef XColor      ThotColorStruct;
 typedef int        *ptrfont;
 typedef Cursor      ThotCursor;
 typedef XPoint      ThotPoint;
+typedef XEvent      ThotEvent;
+typedef XKeyEvent   ThotKeyEvent;
+typedef XComposeStatus ThotComposeStatus;
 
 #define ThotColorNone ((Pixel)-1)
 #define ThotBitmapNone ((ThotBitmap)-1)

@@ -6,16 +6,16 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int TtaXLookupString ( XKeyEvent *event,
+extern int TtaXLookupString ( ThotKeyEvent *event,
                               char *buffer,
                               int nbytes,
                               KeySym *keysym,
-                              XComposeStatus *status );
+                              ThotComposeStatus *status );
 extern void TtaInstallMultiKey ( void );
-extern int TtaGetIsoKeysym ( XEvent * event,
+extern int TtaGetIsoKeysym ( ThotEvent * event,
                              KeySym keysym );
-extern int TtaHandleMultiKeyEvent ( XEvent * event );
-extern void TtaHandleOneEvent ( XEvent * ev );
+extern int TtaHandleMultiKeyEvent ( ThotEvent * event );
+extern void TtaHandleOneEvent ( ThotEvent * ev );
 extern void TtaHandlePendingEvents ( void );
 extern void TtaMainLoop ( void );
 extern Pixel TtaGetMenuColor ( void );
@@ -32,16 +32,16 @@ extern void TtaGiveSelectPosition ( Document document,
 
 #else /* __STDC__ */
 
-extern int TtaXLookupString (/* XKeyEvent *event,
+extern int TtaXLookupString (/* ThotKeyEvent *event,
                                 char *buffer,
                                 int nbytes,
                                 KeySym *keysym,
-                                XComposeStatus *status */);
+                                ThotComposeStatus *status */);
 extern void TtaInstallMultiKey (/* void */);
-extern int TtaGetIsoKeysym (/* XEvent * event,
+extern int TtaGetIsoKeysym (/* ThotEvent * event,
                                KeySym keysym */);
-extern int TtaHandleMultiKeyEvent (/* XEvent * event */);
-extern void TtaHandleOneEvent (/* XEvent * ev */);
+extern int TtaHandleMultiKeyEvent (/* ThotEvent * event */);
+extern void TtaHandleOneEvent (/* ThotEvent * ev */);
 extern void TtaHandlePendingEvents (/* void */);
 extern void TtaMainLoop (/* void */);
 extern Pixel TtaGetMenuColor (/* void */);

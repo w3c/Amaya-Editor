@@ -366,11 +366,11 @@ int                 TtaUseOwnXLookupString = 0;
 /*ARGSUSED */
 int
                     TtaXLookupString (event, buffer, nbytes, keysym, status)
-register XKeyEvent *event;
+register ThotKeyEvent *event;
 char               *buffer;	/* buffer */
 int                 nbytes;	/* space in buffer for characters */
 KeySym             *keysym;
-XComposeStatus     *status;	/* not implemented */
+ThotComposeStatus     *status;	/* not implemented */
 {
    KeySym              sym = NoSymbol;
    int                 keycode;
@@ -761,13 +761,13 @@ void                TtaInstallMultiKey ()
 /*----------------------------------------------------------------------
    TtaGetIsoKeysym
 
-   Modify the XEvent given as the argument to reference a given KeySym.
+   Modify the ThotEvent given as the argument to reference a given KeySym.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaGetIsoKeysym (XEvent * event, KeySym keysym)
+int                 TtaGetIsoKeysym (ThotEvent * event, KeySym keysym)
 #else  /* __STDC__ */
 int                 TtaGetIsoKeysym (event, keysym)
-XEvent             *event;
+ThotEvent             *event;
 KeySym              keysym;
 
 #endif /* __STDC__ */
@@ -775,7 +775,7 @@ KeySym              keysym;
    KeyCode             keycode;
    int                 codeline;
    int                 index;
-   XKeyEvent          *ev = (XKeyEvent *) event;
+   ThotKeyEvent          *ev = (ThotKeyEvent *) event;
 
    /*
     * look for the index in the key corresponding to this keycode
@@ -835,10 +835,10 @@ KeySym              keysym;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-int                 TtaHandleMultiKeyEvent (XEvent * event)
+int                 TtaHandleMultiKeyEvent (ThotEvent * event)
 #else  /* __STDC__ */
 int                 TtaHandleMultiKeyEvent (event)
-XEvent             *event;
+ThotEvent             *event;
 
 #endif /* __STDC__ */
 {
@@ -856,7 +856,7 @@ XEvent             *event;
    KeySym              KS;
    int                 ret;
    char                buf[2];
-   XComposeStatus      status;
+   ThotComposeStatus      status;
    unsigned int        state2;
 
    /*
@@ -1025,10 +1025,10 @@ XEvent             *event;
    Processes one given event in the application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaHandleOneEvent (XEvent * ev)
+void                TtaHandleOneEvent (ThotEvent * ev)
 #else  /* __STDC__ */
 void                TtaHandleOneEvent (ev)
-XEvent             *ev;
+ThotEvent             *ev;
 
 #endif /* __STDC__ */
 {
@@ -1138,7 +1138,7 @@ void                TtaHandlePendingEvents ()
 {
 #ifndef _WINDOWS
    XtInputMask         status;
-   XEvent              ev;
+   ThotEvent              ev;
 
    /* loop: wainting for the penging events */
    status = XtAppPending (app_cont);
@@ -1171,7 +1171,7 @@ void                TtaMainLoop ()
    NotifyEvent         notifyEvt;
 
 #ifndef _WINDOWS
-   XEvent              ev;
+   ThotEvent              ev;
    XtInputMask         status;
 
 #endif /* _WINDOWS */

@@ -1034,13 +1034,14 @@ caddr_t             call_d;
    Returns index
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaAddButton (Document document, View view, Pixmap picture, void (*procedure) ())
+int                 TtaAddButton (Document document, View view, Pixmap picture, void (*procedure) (), char *info)
 #else  /* __STDC__ */
-int                 TtaAddButton (document, view, picture, procedure)
+int                 TtaAddButton (document, view, picture, procedure, info)
 Document            document;
 View                view;
 Pixmap              picture;
 void                (*procedure) ();
+char               *info;
 
 #endif /* __STDC__ */
 {
@@ -1122,6 +1123,12 @@ void                (*procedure) ();
 		  /* force la mise a jour de la fenetre */
 		  XtManageChild (row);
 #endif /* _WINDOWS */
+                  if (info != NULL) {
+                      /*
+                       * Add tooltip to the icon.
+                       */
+                      fprintf(stderr,"Tooltip on window %X : %s", w, info);
+                  }
 	       }
 	  }
      }

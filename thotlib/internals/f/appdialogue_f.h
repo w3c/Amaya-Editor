@@ -38,7 +38,8 @@ extern void TteOpenMainWindow ( char *name,
 extern int TtaAddButton ( Document document,
                           View view,
                           Pixmap picture,
-                          void (*procedure) () );
+                          void (*procedure) (),
+                          char *info );
 extern void TtaSwitchButton ( Document document,
                               View view,
                               int index );
@@ -134,7 +135,8 @@ extern void TteOpenMainWindow (/* char *name,
 extern int TtaAddButton (/* Document document,
                             View view,
                             Pixmap picture,
-                            void (*procedure) () */);
+                            void (*procedure) (),
+                            char *info */);
 extern void TtaSwitchButton (/* Document document,
                                 View view,
                                 int index */);

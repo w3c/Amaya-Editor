@@ -6712,7 +6712,7 @@ boolean             remanent;
 void                TtaWaitShowDialogue ()
 {
 #ifndef _WINDOWS
-   XEvent              event;
+   ThotEvent              event;
 
    /* Un TtaWaitShowDialogue en cours */
    CurrentWait = 1;

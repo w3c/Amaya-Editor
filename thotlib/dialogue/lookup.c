@@ -24,15 +24,15 @@
   there is no correct Locale support.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 XLookupString (XKeyEvent * event, char *buffer, int nbytes,
-				   KeySym * keysym, XComposeStatus * status)
+int                 XLookupString (ThotKeyEvent * event, char *buffer, int nbytes,
+				   KeySym * keysym, ThotComposeStatus * status)
 #else  /* __STDC__ */
 int                 XLookupString (event, buffer, nbytes, keysym, status)
-XKeyEvent          *event;
+ThotKeyEvent          *event;
 char               *buffer;
 int                 nbytes;
 KeySym             *keysym;
-XComposeStatus     *status;
+ThotComposeStatus     *status;
 
 #endif /* __STDC__ */
 {

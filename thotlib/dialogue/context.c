@@ -824,7 +824,7 @@ void               *ev;
 			 /* selection is empty, so empty the cut buffer */
 			 XStoreBuffer (request->display, NULL, 0, 0);
 			 notify.property = None;
-			 XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (XEvent *) & notify);
+			 XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (ThotEvent *) & notify);
 		      }
 		    else if (request->property == None)
 		      {
@@ -838,7 +838,7 @@ void               *ev;
 					  XA_STRING, 8, PropModeReplace, Xbuffer, ClipboardLength);
 			 /* signal the completion of the action */
 			 notify.property = request->property;
-			 XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (XEvent *) & notify);
+			 XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (ThotEvent *) & notify);
 		      }
 		 }
 	       break;

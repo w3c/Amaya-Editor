@@ -469,10 +469,10 @@ void                MSCharTranslation (HWND hWnd, int frame, UINT msg,
    handling function.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                XCharTranslation (XEvent * event)
+void                XCharTranslation (ThotEvent * event)
 #else  /* __STDC__ */
 void                XCharTranslation (event)
-XEvent             *event;
+ThotEvent             *event;
 
 #endif /* __STDC__ */
 {
@@ -480,7 +480,7 @@ XEvent             *event;
    int                 PicMask;
    int                 frame;
    unsigned char       string[2];
-   XComposeStatus      ComS;
+   ThotComposeStatus      ComS;
    KeySym              KS, KS1;
 
    frame = GetWindowFrame (event->xany.window);
@@ -490,11 +490,11 @@ XEvent             *event;
    i = event->xkey.state;
    if (Automata_current == NULL)
      {
-	status = XLookupString ((XKeyEvent *) event, string, 2, &KS, &ComS);
+	status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS);
 	if (!status)
 	  {
 	     event->xkey.state = i & (ShiftMask);
-	     status = XLookupString ((XKeyEvent *) event, string, 2, &KS1, &ComS);
+	     status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS1, &ComS);
 	     if (status)
 		KS = KS1;
 	  }
@@ -503,7 +503,7 @@ XEvent             *event;
      {
 	/* On est entre dans l'automate, pas d'interpretation des modifieurs */
 	event->xkey.state = i & ShiftMask;
-	status = XLookupString ((XKeyEvent *) event, string, 2, &KS, &ComS);
+	status = XLookupString ((ThotKeyEvent *) event, string, 2, &KS, &ComS);
      }
 
    PicMask = 0;

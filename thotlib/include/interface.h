@@ -31,7 +31,7 @@ extern int          TtaUseOwnXLookupString;
 #ifdef __STDC__
 
 
-extern int          TtaAddButton (Document document, View view, Pixmap icon, void (*procedure) ());
+extern int          TtaAddButton (Document document, View view, Pixmap icon, void (*procedure) (), char *info);
 extern void         TtaSwitchButton (Document document, View view, int index);
 extern void         TtaChangeButton (Document document, View view, int index, Pixmap picture);
 extern int          TtaAddTextZone (Document document, View view, char *label, boolean editable, void (*procedure) ());
@@ -46,9 +46,9 @@ extern void         TtaSetStatus (Document document, View view, char *text, char
 extern ThotWidget   TtaGetViewFrame (Document document, View view);
 
 #ifdef WWW_XWINDOWS
-extern void         TtaHandleOneEvent (XEvent * ev);
-extern int          TtaXLookupString (XKeyEvent * event, char *buffer, int nbytes,
-				  KeySym * keysym, XComposeStatus * status);
+extern void         TtaHandleOneEvent (ThotEvent * ev);
+extern int          TtaXLookupString (ThotKeyEvent * event, char *buffer, int nbytes,
+				  KeySym * keysym, ThotComposeStatus * status);
 
 #endif /* WWW_XWINDOWS */
 extern void         TtaMainLoop (void);
@@ -71,7 +71,7 @@ extern void         TtaGiveSelectPosition (Document document, Element element, V
 #else  /* __STDC__ */
 
 
-extern int          TtaAddButton ( /*Document document, View view, Pixmap icon, void (*procedure) () */ );
+extern int          TtaAddButton ( /*Document document, View view, Pixmap icon, void (*procedure) (), char *info */ );
 extern void         TtaSwitchButton ( /*Document document, View view, int index */ );
 extern void         TtaChangeButton ( /*Document document, View view, int index, Pixmap picture */ );
 extern int          TtaAddTextZone ( /*Document document, View view, char *label, boolean editable, void (*procedure) () */ );
@@ -85,9 +85,9 @@ extern int          TtaSetCallback ( /*void (*callbakProcedure) (), int set */ )
 extern void         TtaSetStatus ( /*Document document, View view, char *text, char *name */ );
 
 #ifndef WWW_XWINDOWS
-extern void         TtaHandleOneEvent ( /*XEvent *ev */ );
-extern int          TtaXLookupString (	/* XKeyEvent *event, char *buffer, int nbytes,
-					   KeySym *keysym, XComposeStatus *status */ );
+extern void         TtaHandleOneEvent ( /*ThotEvent *ev */ );
+extern int          TtaXLookupString (	/* ThotKeyEvent *event, char *buffer, int nbytes,
+					   KeySym *keysym, ThotComposeStatus *status */ );
 
 #endif /* WWW_XWINDOWS */
 extern void         TtaMainLoop ( /* void */ );

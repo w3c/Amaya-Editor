@@ -326,10 +326,10 @@ int                 y;
    handles the X events of the palette.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ColorsEvent (XEvent * event)
+void                ColorsEvent (ThotEvent * event)
 #else  /* __STDC__ */
 void                ColorsEvent (event)
-XEvent             *event;
+ThotEvent             *event;
 
 #endif /* __STDC__ */
 {

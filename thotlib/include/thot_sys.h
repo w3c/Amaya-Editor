@@ -96,9 +96,20 @@ int                 _getpid (void);
 #define fstat(fileno, buf) _fstat(fileno, buf)
 #define getcwd(buffer, len) _getcwd(buffer, len)
 #define strcasecmp(a, b) _stricmp(a, b)
+#define access(f,m) _access((f),(m))
+#define unlink(f) _unlink((f))
 
 #endif /* ! __GNUC__ */
 
+#ifndef R_OK
+#define R_OK 4
+#endif
+#ifndef W_OK
+#define W_OK 2
+#endif
+#ifndef X_OK
+#define X_OK 0
+#endif
 
 /* added functions */
 #define ThotPid_get()	_getpid()

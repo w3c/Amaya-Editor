@@ -1086,11 +1086,11 @@ void               *event;
 {
    int                 comm, dx, dy;
    PtrDocument         docsel;
-   XEvent              event;
+   ThotEvent              event;
    PtrElement          firstSel, lastSel;
    int                 firstCar, lastCar;
    boolean             ok;
-   XEvent             *ev = (XEvent *) evnt;
+   ThotEvent             *ev = (ThotEvent *) evnt;
 
    /* ne pas traiter si le document est en mode NoComputedDisplay */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
@@ -1451,7 +1451,7 @@ int                *pave;
 
 {
 #ifndef _WINDOWS
-   XEvent              event;
+   ThotEvent              event;
 
 #endif /* !_WINDOWS */
    int                 i;

@@ -212,7 +212,7 @@ PtrTextBuffer       Bbuffer;
    int                 newx, newy, lastx, lasty;
    int                 x1, y1, nbpoints;
    ThotWindow          w, wdum;
-   XEvent              event;
+   ThotEvent              event;
 
    /* box size */
    width = Bbuffer->BuPoints[0].XCoord;
@@ -414,7 +414,7 @@ boolean             close;
    int                 newx, newy, lastx, lasty;
    int                 x1, y1, x3, y3;
    ThotWindow          w;
-   XEvent              event;
+   ThotEvent              event;
    boolean             wrap;
 
    /* box size */
@@ -585,7 +585,7 @@ boolean             close;
    int                 newx, newy, lastx, lasty;
    int                 x1, y1, x3, y3;
    ThotWindow          w, wdum;
-   XEvent              event;
+   ThotEvent              event;
    boolean             wrap;
 
    /* the box size */
@@ -809,7 +809,7 @@ int                 DimY;
    int                 xm, ym;
    int                 ret, e, dx, dy;
    int                 nx, ny, f;
-   XEvent              event;
+   ThotEvent              event;
    ThotWindow          w, wdum;
    int                 RightOrLeft, BottomOrTop;
    int                 warpx, warpy;
@@ -1183,7 +1183,7 @@ int                 ym;
 {
 #ifndef _WINDOWS
    int                 ret, e, dx, dy, nx, ny;
-   XEvent              event;
+   ThotEvent              event;
    ThotWindow          w;
    int                 warpx, warpy;
 
@@ -1383,7 +1383,7 @@ int                 ym;
 
    int                 ret, e, dx, dy, dl, dh;
    int                 ref_h, ref_v, HorizontalDirection, VerticalDirection;
-   XEvent              event;
+   ThotEvent              event;
    ThotWindow          w;
    int                 warpx, warpy;
 
