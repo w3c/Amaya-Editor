@@ -21,6 +21,7 @@
   #include "wxdialog/HRefDlgWX.h"
   #include "wxdialog/PreferenceDlgWX.h"
   #include "wxdialog/CreateTableDlgWX.h"
+  #include "wxdialog/SpellCheckDlgWX.h"
 #endif /* _WX */
 
 
@@ -531,6 +532,34 @@ ThotBool CreatePreferenceDlgWX ( int ref, ThotWindow parent,
   PreferenceDlgWX * p_dlg = new PreferenceDlgWX( ref,
 						 parent,
 						 wx_items );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+    {
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+    }
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*-----------------------------------------------------------------------
+ CreateSpellCheckDlgWX
+ Used to :
+  - Create the Spell Checker Amaya dialog
+ ------------------------------------------------------------------------*/
+ThotBool CreateSpellCheckDlgWX ( int ref, ThotWindow parent)
+{
+#ifdef _WX
+  wxLogDebug( _T("CreateSpellCheckDlgWX") );
+
+  SpellCheckDlgWX * p_dlg = new SpellCheckDlgWX( ref, parent);
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {

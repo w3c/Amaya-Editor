@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="SpellCheckDlgWX">
+    <title></title>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxGridSizer">
+              <cols>2</cols>
+              <rows>1</rows>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxButton" name="wxID_SELECTED_TXT">
+                      <label>Selected text                   </label>
+                      <size>250,-1</size>
+                    </object>
+                    <flag>wxLEFT|wxRIGHT</flag>
+                    <border>5</border>
+                  </object>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxStaticText" name="wxID_SPELL_LANGUAGE_TXT">
+                      <label>Language : english</label>
+                      <size>250,-1</size>
+                    </object>
+                    <flag>wxBOTTOM|wxLEFT|wxRIGHT</flag>
+                    <border>5</border>
+                  </object>
+                </object>
+              </object>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxGridSizer">
+              <cols>2</cols>
+              <rows>1</rows>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxListBox" name="wxID_PROPOSALS_LIST">
+                      <content>
+                        <item/>
+                        <item/>
+                        <item/>
+                        <item/>
+                        <item/></content>
+                      <selection>0</selection>
+                      <size>250,-1</size>
+                      <style>wxLB_NEEDED_SB</style>
+                    </object>
+                    <flag>wxLEFT|wxRIGHT</flag>
+                    <border>5</border>
+                  </object>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxStaticText" name="wxID_NB_PROPOSALS_TXT">
+                      <label>Number of proposals    </label>
+                    </object>
+                    <flag>wxLEFT|wxRIGHT</flag>
+                    <border>5</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxSpinCtrl" name="wxID_NB_PROPOSAL">
+                      <value>3</value>
+                      <min>1</min>
+                      <max>6</max>
+                    </object>
+                    <flag>wxLEFT|wxRIGHT</flag>
+                    <border>5</border>
+                  </object>
+                </object>
+              </object>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxGridSizer">
+              <cols>2</cols>
+              <rows>2</rows>
+              <object class="sizeritem">
+                <object class="wxTextCtrl" name="wxID_FIRST_PROPOSAL">
+                  <value></value>
+                  <size>250,-1</size>
+                </object>
+                <flag>wxLEFT|wxRIGHT</flag>
+                <border>5</border>
+              </object>
+              <object class="spacer">
+                <size>0,0</size>
+                <flag>wxLEFT|wxRIGHT</flag>
+                <border>5</border>
+              </object>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <object class="wxGridSizer">
+              <cols>2</cols>
+              <rows>1</rows>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxRadioBox" name="wxID_CHECKING_AREA">
+                      <label>Checking</label>
+                      <content>
+                        <item>Before Selection</item>
+                        <item>Within Selection</item>
+                        <item>After Selection</item>
+                        <item>In the whole document </item>
+                      </content>
+                      <size>250,-1</size>
+                      <style>wxRA_SPECIFY_COLS</style>
+                    </object>
+                    <flag>wxTOP|wxLEFT|wxRIGHT</flag>
+                    <border>5</border>
+                  </object>
+                </object>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>5</border>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxVERTICAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxStaticText" name="wxID_IGNORE_TXT">
+                      <label>Ignore        </label>
+                      <size>250,-1</size>
+                    </object>
+                    <flag>wxLEFT|wxRIGHT</flag>
+                    <border>5</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxStaticLine">
+                      <size>250,-1</size>
+                    </object>
+                    <flag>wxLEFT|wxRIGHT</flag>
+                    <border>5</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxCheckBox" name="wxID_IGNORE1_CHK">
+                      <label>words that are all caps         </label>
+                    </object>
+                    <flag>wxLEFT|wxRIGHT</flag>
+                    <border>2</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxCheckBox" name="wxID_IGNORE2_CHK">
+                      <label>words with digits</label>
+                    </object>
+                    <flag>wxLEFT|wxRIGHT</flag>
+                    <border>2</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxCheckBox" name="wxID_IGNORE3_CHK">
+                      <label>Roman numerals</label>
+                    </object>
+                    <flag>wxLEFT|wxRIGHT</flag>
+                    <border>2</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxCheckBox" name="wxID_IGNORE4_CHK">
+                      <label>words containing:     </label>
+                    </object>
+                    <flag>wxLEFT|wxRIGHT</flag>
+                    <border>2</border>
+                  </object>
+                  <object class="sizeritem">
+                    <object class="wxTextCtrl" name="wxID_IGNORE_CHAR">
+                      <value>@#$&amp;+~</value>
+                      <size>250,-1</size>
+                    </object>
+                    <flag>wxLEFT|wxRIGHT</flag>
+                    <border>5</border>
+                  </object>
+                </object>
+                <flag>wxALL|wxEXPAND</flag>
+                <border>5</border>
+              </object>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <option>0</option>
+        <flag>wxALL|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL|wxADJUST_MINSIZE</flag>
+        <border>7</border>
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxButton" name="wxID_SEARCH_SKIP_BUTTON">
+              <label>  Search / Skip  </label>
+              <default>1</default>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_SKIP_DIC_BUTTON">
+              <label>  Skip (+dic)  </label>
+            </object>
+            <flag>wxALL</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_REPLACE_NEXT_BUTTON">
+              <label>  Replace and Next  </label>
+            </object>
+            <flag>wxALL</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_REPLACE_DIC_BUTTON">
+              <label>  Replace (+dic)  </label>
+            </object>
+            <flag>wxALL</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxButton" name="wxID_CANCEL_BUTTON">
+              <label>  Cancel  </label>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>

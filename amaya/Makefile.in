@@ -238,6 +238,7 @@ AMAYA_OBJ = \
 	wxdialog/HRefDlgWX.o \
 	wxdialog/CreateTableDlgWX.o \
 	wxdialog/PreferenceDlgWX.o \
+	wxdialog/SpellCheckDlgWX.o \
 	wxdialogapi.o \
 	EDITORAPP.o \
 	HTMLAPP.o \

@@ -12,6 +12,9 @@
  *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -28,10 +31,17 @@
 #include "corrmenu.h"
 #include "appdialogue.h"
 #include "frame.h"
+
 #ifdef _WINGUI
 #include "wininclude.h"
 #include "resource.h"
 #endif /* _WINGUI */
+
+#ifdef _WX
+#include "wxinclude.h"
+#include "wx/msgdlg.h" // wxMessageDialog
+#include "message_wx.h"
+#endif /* _WX */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -77,6 +87,9 @@ static int          iLocation;
 static int          iIgnore;
 #endif /* _WINGUI */
 
+#ifdef _WX
+#include "appdialogue_wx.h"
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
    RemoveSpellForm fait disparaitre les formulaires correction    
@@ -386,13 +399,13 @@ void TtcSpellCheck (Document doc, View view)
 {
    PtrDocument         document;
    int                 i;
-#ifndef _WINGUI
+#ifdef _GTK
    PtrElement          pEl1, pElN;
    int                 c1, cN;
    int                 indx;
    char                BufMenu[MAX_TXT_LEN];
    ThotBool            ok;
-#endif /* !_WINGUI */
+#endif /* _GTK */
 
    /* SpecialChars = "@#$&+~"; */
 
@@ -402,7 +415,7 @@ void TtcSpellCheck (Document doc, View view)
       return;
    SpellCheckLoadResources ();
 
-#ifndef _WINGUI 
+#ifdef _GTK
    if (ChkrRange != NULL)
       RemoveSpellForm ();
    TtaDestroyDialogue (SpellingBase + ChkrFormCorrect);
@@ -424,16 +437,15 @@ void TtcSpellCheck (Document doc, View view)
    /* initialise le champ langue de correction courante */
    TtaNewLabel (SpellingBase + ChkrLabelLanguage,
 		SpellingBase + ChkrFormCorrect, " ");
-#endif /* !_WINGUI */
+#endif /* _GTK */
 
    /* Afficher une liste de mots EMPTY */
    strcpy (ChkrCorrection[0], " ");
    for (i = 1; i <= NC; i++)
       strcpy (ChkrCorrection[i], "$");
 
-#ifndef _WINGUI 
+#ifdef _GTK
    DisplayWords ();
-
    /* creer le sous-menu OU dans la feuille OPTIONS */
    indx = 0;			/* Ou commencer la correction ? */
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_BEFORE_SEL));
@@ -491,7 +503,7 @@ void TtcSpellCheck (Document doc, View view)
    TtaNewTextForm (SpellingBase + ChkrSpecial, SpellingBase + ChkrFormCorrect,
 		   NULL, 20, 1, TRUE);
    TtaSetTextForm (SpellingBase + ChkrSpecial, "@#$&+~");
-#endif /* _WINGUI */
+#endif /* _GTK */
 
    /* ne pas ignorer les mots en capitale, chiffres romains */
    /* ou contenant des chiffres arabes,  certains car. speciaux */
@@ -503,7 +515,7 @@ void TtcSpellCheck (Document doc, View view)
    IgnoreRoman = TRUE;
    IgnoreSpecial = TRUE;
 
-#ifndef _WINGUI 
+#ifdef _GTK 
    /* Selectionne les types de mots a ne ignorer par defaut */
    TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 0, IgnoreUppercase);
    TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 1, IgnoreArabic);
@@ -515,7 +527,7 @@ void TtcSpellCheck (Document doc, View view)
 
    /* Et enfin, afficher le formulaire de CORRECTION */
    TtaShowDialogue (SpellingBase + ChkrFormCorrect, TRUE);
-#endif /* _WINGUI */
+#endif /* _GTK */
 
    /* Indique que c'est une nouvelle correction qui debute */
    FirstStep = TRUE;
@@ -538,8 +550,17 @@ void TtcSpellCheck (Document doc, View view)
     }
   DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
 #endif /* _WINGUI */
+#ifdef _WX
+  {
+    ThotBool created;
+    created = CreateSpellCheckDlgWX (SpellingBase + ChkrFormCorrect, TtaGetViewFrame (doc, view));
+    if (created)
+      {
+	TtaShowDialogue (SpellingBase + ChkrFormCorrect, FALSE);
+      }
+  }
+ #endif /* _WX */
 }
-
 
 /*----------------------------------------------------------------------
   ResetCheckInDocument

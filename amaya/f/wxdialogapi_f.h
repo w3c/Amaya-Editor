@@ -57,6 +57,8 @@ extern ThotBool CreateCreateTableDlgWX ( int ref,
 extern ThotBool CreatePreferenceDlgWX ( int ref,
                                         ThotWindow parent,
                                         const char *url_list );
+extern ThotBool CreateSpellCheckDlgWX ( int ref,
+                                        ThotWindow parent );
 
 #else /* __STDC__ */
 
@@ -111,6 +113,8 @@ extern ThotBool CreateCreateTableDlgWX ( int ref,
 extern ThotBool CreatePreferenceDlgWX ( int ref,
                                           ThotWindow parent,
                                           const char *url_list );
+extern ThotBool CreateSpellCheckDlgWX ( int ref,
+                                          ThotWindow parent );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
