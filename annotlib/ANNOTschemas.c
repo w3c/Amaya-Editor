@@ -55,7 +55,7 @@ static RDFResourceP _ListSearchResource( List* list, char* name)
   while (item)
     {
       resource = (RDFResourceP) item->object;
-      if (!ustrcmp (resource->name, name))
+      if (resource && ustrcmp (resource->name, name))
 	{
 	  found = TRUE;
 	  break;
