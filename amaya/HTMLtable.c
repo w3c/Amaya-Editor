@@ -922,7 +922,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 {
   Element            *colElement, *delayedColExt;
   Element             row, nextRow, firstrow, colhead, prevColhead;
-  Element             cell, nextCell, group, prevGroup, new_, prev;
+  Element             cell, nextCell, group, prevGroup, new_, prev, el, next;
   ElementType         elType;
   AttributeType       attrTypeHSpan, attrTypeVSpan, attrType;
   Attribute           attr;
@@ -934,10 +934,10 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 
   if (table == NULL)
     return;
+  /* get some memory to store the list of colheads */
   colElement = (Element*)TtaGetMemory (sizeof (Element) * MAX_COLS);
   delayedColExt = (Element*)TtaGetMemory (sizeof (Element) * MAX_COLS);
   colVSpan = (int *)TtaGetMemory (sizeof (int) * MAX_COLS);
-  /* store the list of colheads */
   elType = TtaGetElementType (table);
   tableSS = elType.ElSSchema;
   attrType.AttrSSchema = tableSS;
@@ -970,6 +970,16 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
       colVSpan[cNumber] = 0;
       TtaNextSibling (&colhead);
       cNumber++;
+    }
+
+  /* remove text elements at the first level */
+  el = TtaGetFirstChild (table);
+  while (el)
+    {
+      next = el; TtaNextSibling (&next);
+      if (TtaGetElementType (el).ElTypeNum == HTML_EL_TEXT_UNIT)
+	TtaDeleteTree (el, doc);
+      el = next;
     }
 
   cell = NULL;
@@ -1179,7 +1189,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 	  TtaNextSibling (&row); /* next sibling of the current tbody */
 	  if (row != NULL)
 	    {
-	    /* skip comments and other insignificant elements, until we get
+	    /* skip comments and other unsignificant elements, until we get
 	       a sibling tbody */
 	    elType = TtaGetElementType (row);
 	    while (row && (elType.ElSSchema != tableSS ||

@@ -7435,8 +7435,8 @@ void ChangeAttrOnRoot (Document doc, int attrNum)
     /* the root element does not have that attribute. Create it */
     {
       attr = TtaNewAttribute (attrType);
+      TtaSetAttributeValue (attr, 1, NULL, doc);
       TtaAttachAttribute (root, attr, doc);
-      TtaSetAttributeValue (attr, 1, root, doc);
     }
   if (!docModified)
     {
