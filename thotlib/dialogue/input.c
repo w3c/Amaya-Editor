@@ -534,7 +534,6 @@ LPARAM lParam;
 	  string[0] = (char) wParam;
 	  ThotInput (frame, &string[0], len, keyboard_mask, wParam);
    }
-
 }
 #endif /* _WINDOWS */
 
@@ -624,106 +623,120 @@ int                 key;
    boolean             found;
    Document            document;
    View                view;
-
+#  ifdef _WINDOWS
+   BOOL                endOfSearch = FALSE;
+#  endif /* _WINDOWS */
    if (frame > MAX_FRAME)
-     frame = 0;
+      frame = 0;
+
+#  ifdef _WINDOWS
+   if (key == 13 && nb == 1)
+      specialKey = FALSE;
+   else if (key >= 1 && key <= 26 && nb == 1)
+        specialKey = TRUE;
+#  endif /* _WINDOWS */
 
    value = string[0];
    found = FALSE;
-   if (nb == 2)
-     {
-       /* C'est l'appel d'une action Thot */
-       command = (int) string[1];
-       found = TRUE;
-     }
-   else
-     {
-       command = 0;
-       /* Est-on entre dans un automate ? */
-       if (Automata_current != NULL)
-	 {
-	   /* Recheche l'entree de 2eme niveau */
-	   ptr = Automata_current;
+   if (nb == 2) {
+      /* C'est l'appel d'une action Thot */
+      command = (int) string[1];
+      found = TRUE;
+   } else {
+        command = 0;
+        /* Est-on entre dans un automate ? */
+        if (Automata_current != NULL) {
+           /* Recheche l'entree de 2eme niveau */
+           ptr = Automata_current;
            Automata_current = NULL;
 	   
            /* Teste s'il y a un modifieur en jeu */
            if (PicMask & THOT_MOD_CTRL)
-	     if (PicMask & THOT_MOD_SHIFT)
-	       modtype = THOT_MOD_S_CTRL;
-	     else
-	       modtype = THOT_MOD_CTRL;
+              if (PicMask & THOT_MOD_SHIFT)
+                 modtype = THOT_MOD_S_CTRL;
+              else
+                 modtype = THOT_MOD_CTRL;
            else if (PicMask & THOT_MOD_META)
-	     if (PicMask & THOT_MOD_SHIFT)
-	       modtype = THOT_MOD_S_META;
-	     else
-	       modtype = THOT_MOD_META;
+                if (PicMask & THOT_MOD_SHIFT)
+                   modtype = THOT_MOD_S_META;
+                else
+                   modtype = THOT_MOD_META;
            else if (PicMask & THOT_MOD_ALT)
-	     if (PicMask & THOT_MOD_SHIFT)
-	       modtype = THOT_MOD_S_ALT;
-	     else
-	       modtype = THOT_MOD_ALT;
+                if (PicMask & THOT_MOD_SHIFT)
+                   modtype = THOT_MOD_S_ALT;
+                else
+                   modtype = THOT_MOD_ALT;
            else if (PicMask & THOT_MOD_SHIFT)
-	     modtype = THOT_MOD_SHIFT;
-	   else
-	     modtype = THOT_NO_MOD;
+                modtype = THOT_MOD_SHIFT;
+           else
+               modtype = THOT_NO_MOD;
 
            /* Recherche l'entree de 1er niveau */
            while (!found && ptr != NULL)
-	     if (ptr->K_EntryCode == key && modtype == ptr->K_Modifier)
-	       found = TRUE;
-	     else
-	       ptr = ptr->K_Other;
+                 if (ptr->K_EntryCode == key && modtype == ptr->K_Modifier)
+                    found = TRUE;
+                 else
+                    ptr = ptr->K_Other;
 
-           if (found)
-	     {
-	       value = (unsigned char) ptr->K_Value;
-	       command = ptr->K_Command;
-	     }
-	 }
-       else
-	 {
-	   /* Faut-il parcourir un automate de 1er niveau ? */
-	   /* Teste s'il y a un modifieur en jeu */
-	   if (PicMask & THOT_MOD_CTRL)
-	     if (PicMask & THOT_MOD_SHIFT)
-	       ptr = Automata_CTRL;
-	     else
-	       ptr = Automata_ctrl;
-	   else if (PicMask & THOT_MOD_META)
-	     if (PicMask & THOT_MOD_SHIFT)
-	       ptr = Automata_META;
-	     else
-	       ptr = Automata_meta;
-	   else if (PicMask & THOT_MOD_ALT)
-	     if (PicMask & THOT_MOD_SHIFT)
-	       ptr = Automata_ALT;
-	     else
-	       ptr = Automata_alt;
-	   else
-	     ptr = Automata_normal;
-	   
-	   /* Recherche l'entree de 1er niveau */
-	   while (!found && ptr != NULL)
-#ifdef _WINDOWS
-	     if (ptr->K_EntryCode == key && !(specialKey == FALSE && key == 27))
-#else  /* _WINDOWS */
-	     if (ptr->K_EntryCode == key)
-#endif /* _WINDOWS */
-	       {
-		 /* On entre dans un automate */
-		 found = TRUE;
-		 Automata_current = ptr->K_Next;
-		 if (Automata_current == NULL)
-		   {
-		     /* il s'agit d'une valeur definie a premier niveau */
-		     value = (unsigned char) ptr->K_Value;
-		     command = ptr->K_Command;
-		   }
-	       }
-	     else
-	       ptr = ptr->K_Other;
-	 }
-     }
+           if (found) {
+              value = (unsigned char) ptr->K_Value;
+              command = ptr->K_Command;
+           }
+        } else {
+             /* Faut-il parcourir un automate de 1er niveau ? */
+             /* Teste s'il y a un modifieur en jeu */
+             if (PicMask & THOT_MOD_CTRL)
+                if (PicMask & THOT_MOD_SHIFT)
+                   ptr = Automata_CTRL;
+                else
+                   ptr = Automata_ctrl;
+             else if (PicMask & THOT_MOD_META)
+                  if (PicMask & THOT_MOD_SHIFT)
+                     ptr = Automata_META;
+                  else
+                     ptr = Automata_meta;
+             else if (PicMask & THOT_MOD_ALT)
+                  if (PicMask & THOT_MOD_SHIFT)
+                     ptr = Automata_ALT;
+                  else
+                     ptr = Automata_alt;
+             else
+                 ptr = Automata_normal;
+
+             /* Recherche l'entree de 1er niveau */
+#            ifdef _WINDOWS
+             endOfSearch = FALSE;
+             while (!endOfSearch && ptr != NULL) {
+                   if (ptr->K_EntryCode == key) {
+                      endOfSearch = TRUE;
+                      if (specialKey) {
+                         found = TRUE;
+                         Automata_current = ptr->K_Next;
+                         if (Automata_current == NULL) {
+                            /* il s'agit d'une valeur definie a premier niveau */
+                            value = (unsigned char) ptr->K_Value;
+                            command = ptr->K_Command;
+                         }
+                      }
+                   } else
+                         ptr = ptr->K_Other;
+             }
+#            else  /* !_WINDOWS */
+             while (!found && ptr != NULL)
+                   if (ptr->K_EntryCode == key) {
+                      /* On entre dans un automate */
+                      found = TRUE;
+                      Automata_current = ptr->K_Next;
+                      if (Automata_current == NULL) {
+                         /* il s'agit d'une valeur definie a premier niveau */
+                         value = (unsigned char) ptr->K_Value;
+                         command = ptr->K_Command;
+                      }
+                   } else
+                         ptr = ptr->K_Other;
+#            endif /* _WINDOWS */
+        }
+   }
 
 #ifdef _WINDOWS
    if (specialKey && !found)
