@@ -605,11 +605,12 @@ static void CallbackCSS (int ref, int typedata, char *data)
   Element         firstSel, lastSel;
   char           *ptr = NULL, *localname = NULL;
   int             j, firstChar, lastChar;
-  int             val, category, sty;
+  int             val, sty;
+  CSSCategory     category;
   ThotBool        found;
 
   val = (int) data;
-  category = 0;
+  category = CSS_Unknown;
   sty = 0; /* document style order */
   switch (ref - BaseCSS)
     {
@@ -642,7 +643,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
 		category++;
 	    }
 	  if (category == DisplayCategory_length)
-	    category = 0;
+	    category = CSS_Unknown;
 
 	  switch (CSScase)
 	    {

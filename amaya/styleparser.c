@@ -210,11 +210,11 @@ static void CSSPrintError (char *msg, char *value)
 /*----------------------------------------------------------------------
    CSSParseError
    print the error message msg on stderr.
-   When the line is 0 ask to expat the current line number
+   When the line is 0 ask expat about the current line number
   ----------------------------------------------------------------------*/
 static void CSSParseError (char *msg, char *value, char *endvalue)
 {
-  char        c;
+  char        c = EOS;
 
   if (endvalue)
     {
