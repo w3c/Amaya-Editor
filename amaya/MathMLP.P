@@ -454,7 +454,7 @@ BOXES
 	Content: Graphics 'h';	{ horizontal bar }
 	LineStyle: Solid;
 	Background: Creator =;
-	Foreground: Enclosing =;
+	Foreground: GrandFather =;	{ same color as the MTABLE element }
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -469,7 +469,7 @@ BOXES
 	Content: Graphics 'h';	{ horizontal bar }
 	LineStyle: Dotted;
 	Background: Creator =;
-	Foreground: Enclosing =;
+	Foreground: GrandFather =;	{ same color as the MTABLE element }
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -484,7 +484,7 @@ BOXES
 	Content: Graphics 'v';	{ vertical bar }
 	LineStyle: Solid;
 	Background: Creator =;
-	Foreground: Enclosing =;
+	Foreground: GrandFather =;	{ same color as the MTABLE element }
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -499,7 +499,7 @@ BOXES
 	Content: Graphics 'v';	{ vertical bar }
 	LineStyle: Dotted;
 	Background: Creator =;
-	Foreground: Enclosing =;
+	Foreground: GrandFather =;	{ same color as the MTABLE element }
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -514,7 +514,7 @@ BOXES
 	Content: Graphics 'h';	{ horizontal bar }
 	LineStyle: Solid;
 	Background: Creator =;
-	Foreground: Enclosing =;
+	Foreground: GrandFather =;	{ same color as the MTABLE element }
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -529,7 +529,7 @@ BOXES
 	Content: Graphics 'h';	{ horizontal bar }
 	LineStyle: Dotted;
 	Background: Creator =;
-	Foreground: Enclosing =;
+	Foreground: GrandFather =;	{ same color as the MTABLE element }
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -544,7 +544,7 @@ BOXES
 	Content: Graphics 'v';	{ vertical bar }
 	LineStyle: Solid;
 	Background: Creator =;
-	Foreground: Enclosing =;
+	Foreground: GrandFather =;	{ same color as the MTABLE element }
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -559,7 +559,7 @@ BOXES
 	Content: Graphics 'v';	{ vertical bar }
 	LineStyle: Dotted;
 	Background: Creator =;
-	Foreground: Enclosing =;
+	Foreground: GrandFather =;	{ same color as the MTABLE element }
 	IN Structure_view
 		Visibility: 0;
 	END;
