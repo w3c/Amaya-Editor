@@ -186,6 +186,14 @@ extern void TtaCancelLastRegisteredOperation (Document document);
 extern Element TtaGetLastCreatedElemInHistory (Document document);
 
 /* ----------------------------------------------------------------------
+   TtaChangeInfoLastRegisteredElem
+
+   Change the info field associated with the latest operation registered in
+   the editing history of document
+  ----------------------------------------------------------------------*/
+extern void TtaChangeInfoLastRegisteredElem (Document document, int newInfo);
+
+/* ----------------------------------------------------------------------
    TtaUndoNoRedo
  
    Undo the latest sequence of editing operations recorded in the history

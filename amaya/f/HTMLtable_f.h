@@ -18,7 +18,8 @@ extern void CheckTable ( Element table,
                          Document doc );
 extern void NewCell ( Element cell,
                       Document doc,
-                      ThotBool genrateColumn );
+                      ThotBool generateColumn,
+		      ThotBool generateEmptyCells );
 extern void CellCreated ( NotifyElement * event );
 extern void CellPasted ( NotifyElement * event );
 extern ThotBool DeleteRow ( NotifyElement * event );
@@ -52,7 +53,8 @@ extern void CheckTable (/* Element table,
                            Document doc */);
 extern void NewCell (/* Element cell,
                         Document doc,
-                        ThotBool genrateColumn */);
+                        ThotBool generateColumn,
+		        ThotBool generateEmptyCells */);
 extern void CellCreated (/* NotifyElement * event */);
 extern void CellPasted (/* NotifyElement * event */);
 extern ThotBool DeleteRow (/* NotifyElement * event */);

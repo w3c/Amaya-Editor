@@ -386,6 +386,22 @@ Element TtaGetLastCreatedElemInHistory (Document document)
 }
 
 /* ----------------------------------------------------------------------
+   TtaChangeInfoLastRegisteredElem
+
+   Change the info field associated with the latest operation registered in
+   the editing history of document
+  ----------------------------------------------------------------------*/
+void TtaChangeInfoLastRegisteredElem (Document document, int newInfo)
+{
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    ChangeInfoLastRegisteredElem (LoadedDocument [document - 1], newInfo);
+}
+
+/* ----------------------------------------------------------------------
    TtaUndoNoRedo
 
    Undo the latest sequence of editing operations recorded in the history

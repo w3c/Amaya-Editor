@@ -197,14 +197,15 @@ static Element AddEmptyCellInRow (Element row, Element colhead,
 
 /*----------------------------------------------------------------------
   NewColumnHead creates a new Column_head and returns it.   
-  Creates an additional empty cell in all rows, except the row indicated.
+  If generateEmptyCells == TRUE, create an additional empty cell in all rows,
+  except the row indicated.
   If last == TRUE when lastcolhead is the last current column.
   The parameter before indicates if the lastcolhead precedes or follows
   the new created Column_head. It should be FALSE when last is TRUE.
   ----------------------------------------------------------------------*/
 static Element NewColumnHead (Element lastcolhead, ThotBool before,
 			      ThotBool last, Element row, Document doc,
-			      ThotBool inMath)
+			      ThotBool inMath, ThotBool generateEmptyCells)
 {
    Element             colhead, currentrow;
    Element             group, groupdone;
@@ -218,29 +219,13 @@ static Element NewColumnHead (Element lastcolhead, ThotBool before,
    if (colhead != NULL)
      {
 	TtaInsertSibling (colhead, lastcolhead, before, doc);
-	/* add empty cells to all other rows */
-	/* process the row group that contains the row which doesn't */
-	/* need to be processed */
-	currentrow = row;
-	TtaPreviousSibling (&currentrow);
-	while (currentrow != NULL)
+	if (generateEmptyCells)
+	  /* add empty cells to all other rows */
 	  {
-	    /* get the sibling cell */
-	    if (last)
-	      child = TtaGetLastChild (currentrow);
-	    else
-	      child = GetCloseCellFromColumnHead (currentrow, lastcolhead,
-						  before, inMath);
-	    AddEmptyCellInRow (currentrow, colhead, child, before, doc,
-			       inMath, FALSE);
-	    TtaPreviousSibling (&currentrow);
-	  }
-
-	if (!last)
-	  {
-	    /* we have to manage following rows too */
+	    /* process the row group that contains the row which doesn't */
+	    /* need to be processed */
 	    currentrow = row;
-	    TtaNextSibling (&currentrow);
+	    TtaPreviousSibling (&currentrow);
 	    while (currentrow != NULL)
 	      {
 		/* get the sibling cell */
@@ -251,84 +236,103 @@ static Element NewColumnHead (Element lastcolhead, ThotBool before,
 						      before, inMath);
 		AddEmptyCellInRow (currentrow, colhead, child, before, doc,
 				   inMath, FALSE);
-		TtaNextSibling (&currentrow);
+		TtaPreviousSibling (&currentrow);
 	      }
-	  }
-	if (!inMath)
-	  {
-	    groupdone = TtaGetParent (row);	/* done with this group */
-	    /* process the other row groups */
-	    if (inMath)
-	      elType.ElTypeNum = MathML_EL_MTABLE;
-	    else
-	      elType.ElTypeNum = HTML_EL_Table;
-	    table = TtaGetTypedAncestor (groupdone, elType);
-	    /* visit all children of the Table element */
-	    child = TtaGetFirstChild (table);
-	    while (child != NULL)
+
+	    if (!last)
 	      {
-		elType = TtaGetElementType (child);
-		if ((!inMath && (elType.ElTypeNum == HTML_EL_thead ||
-				 elType.ElTypeNum == HTML_EL_tfoot)) ||
-		    (inMath && elType.ElTypeNum == MathML_EL_MTable_body))
+		/* we have to manage following rows too */
+		currentrow = row;
+		TtaNextSibling (&currentrow);
+		while (currentrow != NULL)
 		  {
-		    /* this child is a thead or tfoot element */
-		    group = child;
-		    if (group != groupdone)
-		      {
-			currentrow = TtaGetFirstChild (group);
-			while (currentrow != NULL)
-			  {
-			    /* get the sibling cell */
-			    if (last)
-			      child = TtaGetLastChild (currentrow);
-			    else
-			      child = GetCloseCellFromColumnHead (currentrow,
-					         lastcolhead, before, inMath);
-			    AddEmptyCellInRow (currentrow, colhead, child,
-					       before, doc, inMath, FALSE);
-			    TtaNextSibling (&currentrow);
-			  }
-		      }
-		    else if (last)
-		      child = NULL;
+		    /* get the sibling cell */
+		    if (last)
+		      child = TtaGetLastChild (currentrow);
+		    else
+		      child = GetCloseCellFromColumnHead (currentrow,
+					        lastcolhead, before, inMath);
+		    AddEmptyCellInRow (currentrow, colhead, child, before, doc,
+				       inMath, FALSE);
+		    TtaNextSibling (&currentrow);
 		  }
-		else if (elType.ElTypeNum == HTML_EL_Table_body)
+	      }
+	    if (!inMath)
+	      {
+		groupdone = TtaGetParent (row);	/* done with this group */
+		/* process the other row groups */
+		if (inMath)
+		  elType.ElTypeNum = MathML_EL_MTABLE;
+		else
+		  elType.ElTypeNum = HTML_EL_Table;
+		table = TtaGetTypedAncestor (groupdone, elType);
+		/* visit all children of the Table element */
+		child = TtaGetFirstChild (table);
+		while (child != NULL)
 		  {
-		    /* this child is the Table_body element */
-		    /* get the first tbody element */
-		    group = TtaGetFirstChild (child);
-		    /* process all tbody elements */
-		    while (group != NULL)
+		    elType = TtaGetElementType (child);
+		    if ((!inMath && (elType.ElTypeNum == HTML_EL_thead ||
+				     elType.ElTypeNum == HTML_EL_tfoot)) ||
+			(inMath && elType.ElTypeNum == MathML_EL_MTable_body))
 		      {
+			/* this child is a thead or tfoot element */
+			group = child;
 			if (group != groupdone)
 			  {
-			  currentrow = TtaGetFirstChild (group);
-			  while (currentrow != NULL)
-			    {
-			    /* get the sibling cell */
-			    if (last)
-			      child = TtaGetLastChild (currentrow);
-			    else
-			      child = GetCloseCellFromColumnHead (currentrow, 
-						 lastcolhead, before, inMath);
-			    AddEmptyCellInRow (currentrow, colhead, child,
-					       before, doc, inMath, FALSE);
-			    TtaNextSibling (&currentrow);
-			    }
+			    currentrow = TtaGetFirstChild (group);
+			    while (currentrow != NULL)
+			      {
+				/* get the sibling cell */
+				if (last)
+				  child = TtaGetLastChild (currentrow);
+				else
+				  child = GetCloseCellFromColumnHead (currentrow,
+						  lastcolhead, before, inMath);
+				AddEmptyCellInRow (currentrow, colhead, child,
+						   before, doc, inMath, FALSE);
+				TtaNextSibling (&currentrow);
+			      }
 			  }
-			
-			if (last)
-			  {
-			    group = NULL;
-			    child = NULL;
-			  }
-			else
-			  TtaNextSibling (&group);
+			else if (last)
+			  child = NULL;
 		      }
+		    else if (elType.ElTypeNum == HTML_EL_Table_body)
+		      {
+			/* this child is the Table_body element */
+			/* get the first tbody element */
+			group = TtaGetFirstChild (child);
+			/* process all tbody elements */
+			while (group != NULL)
+			  {
+			    if (group != groupdone)
+			      {
+				currentrow = TtaGetFirstChild (group);
+				while (currentrow != NULL)
+				  {
+				    /* get the sibling cell */
+				    if (last)
+				      child = TtaGetLastChild (currentrow);
+				    else
+				      child = GetCloseCellFromColumnHead (currentrow, 
+						  lastcolhead, before, inMath);
+				    AddEmptyCellInRow (currentrow, colhead,
+					    child, before, doc, inMath, FALSE);
+				    TtaNextSibling (&currentrow);
+				  }
+			      }
+			    
+			    if (last)
+			      {
+				group = NULL;
+				child = NULL;
+			      }
+			    else
+			      TtaNextSibling (&group);
+			  }
+		      }
+		    if (child != NULL)
+		      TtaNextSibling (&child);
 		  }
-		if (child != NULL)
-		  TtaNextSibling (&child);
 	      }
 	  }
      }
@@ -550,7 +554,14 @@ ThotBool RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty,
 		     deleted explicitely by the user */
 		  if (!ifEmpty)
 		    if (TtaPrepareUndo (doc))
-		      TtaRegisterElementDelete (cell, doc);
+		      {
+		        TtaRegisterElementDelete (cell, doc);
+                        /* change the value of "info" in the latest cell
+			   deletion recorded in the Undo queue. The goal is to
+			   allow procedure CellPasted to regenerate only one
+			   column head when undoing the operation */
+			TtaChangeInfoLastRegisteredElem (doc, 3);
+		      }
 		  TtaDeleteTree (cell, doc);
 		}
 	      TtaNextSibling (&row);
@@ -585,6 +596,13 @@ ThotBool RemoveColumn (Element colhead, Document doc, ThotBool ifEmpty,
 		}
 	    }
 	  TtaDeleteTree (colhead, doc);
+	  if (!ifEmpty)
+	    if (TtaPrepareUndo (doc))
+	      /* The value of "info" in the latest cell deletion recorded in
+		 the Undo queue should be 4 to allow procedure CellPasted to
+		 regenerate a column head for the last cell when undoing
+		 the operation */
+		TtaChangeInfoLastRegisteredElem (doc, 4);
 	  if (span)
 	     CheckAllRows (table, doc, FALSE, FALSE);
 	}
@@ -721,7 +739,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 	      /* there is no Column_head for that cell */
 	      /* Create an additional Column_head */
 	      colElement[cRef] = NewColumnHead (colElement[cRef - 1], FALSE,
-						TRUE, row, doc, inMath);
+						TRUE, row, doc, inMath, TRUE);
 	      colVSpan[cRef] = 0;
 	      cNumber++;
 	      }
@@ -766,7 +784,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 			{
 			cRef++;
 			colElement[cRef] = NewColumnHead (colElement[cRef-1],
-						FALSE, TRUE, row, doc, inMath);
+					  FALSE, TRUE, row, doc, inMath, TRUE);
 			cNumber++;
 			}
 		      colVSpan[cRef] = colVSpan[cRef-1];
@@ -1110,9 +1128,12 @@ void                CheckTable (Element table, Document doc)
 
 /*----------------------------------------------------------------------
   NewCell  a new cell has been created in a HTML table.
-  If genrateColumn is TRUE, the new cell generates a new column.
+  If generateColumn is TRUE, the new cell generates a new column head.
+  If generateEmptyCells is TRUE, generate empty cells for the same column
+  in other rows.
   ----------------------------------------------------------------------*/
-void NewCell (Element cell, Document doc, ThotBool genrateColumn)
+void NewCell (Element cell, Document doc, ThotBool generateColumn,
+	      ThotBool generateEmptyCells)
 {
   Element             newcell, row;
   Element             colhead;
@@ -1130,8 +1151,7 @@ void NewCell (Element cell, Document doc, ThotBool genrateColumn)
     TtaSetDisplayMode (doc, DeferredDisplay);
 
   elType = TtaGetElementType (cell);
-  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML",
-							      doc));
+  inMath = !TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", doc));
 
   if (!inMath && elType.ElTypeNum == HTML_EL_Table_cell)
     /* change the cell into a Data_cell */
@@ -1201,9 +1221,10 @@ void NewCell (Element cell, Document doc, ThotBool genrateColumn)
 	}
       if (colhead != NULL)
 	{
-	  if (genrateColumn)
+	  if (generateColumn)
 	    /* generate the new column */
-	    colhead = NewColumnHead (colhead, before, FALSE, row, doc, inMath);
+	    colhead = NewColumnHead (colhead, before, FALSE, row, doc, inMath,
+				     generateEmptyCells);
 	  else if (before)
 	    /* select the previous column */
 	    TtaPreviousSibling (&colhead);
@@ -1221,7 +1242,6 @@ void NewCell (Element cell, Document doc, ThotBool genrateColumn)
 
 /*----------------------------------------------------------------------
    CellCreated
-
    a new cell has been created in a table
   ----------------------------------------------------------------------*/
 void CellCreated (NotifyElement * event)
@@ -1245,7 +1265,7 @@ void CellCreated (NotifyElement * event)
    else
      /* a new cell in an existing row */
      {
-     NewCell (cell, doc, TRUE);
+     NewCell (cell, doc, TRUE, TRUE);
      HandleColAndRowAlignAttributes (row, doc);
      }
 }
@@ -1274,15 +1294,24 @@ void CellPasted (NotifyElement * event)
      }
    else
      {
-       if (event->info == 1)
-	 /* called by Undo command */
-	 {
-	   /* Someting has to be done here, if we are undoing a "delete column"
-	      command */
-	   ;
-	 }
-       /* a single cell has been pasted */
-       NewCell (cell, doc, TRUE);
+       /* regenerate the corresponding ColumnHead except if it's called by
+	  undo for reinserting the cells deleted by a "Delete Column"
+	  command (only the first reinserted cell has to create a ColumnHead)
+          See function RemoveColumn above */
+       if (event->info == 4)
+	 /* undoing the deletion of the last cell in a "delete column"
+	    command. Regenerate the corresponding ColumnHead and link the
+	    restored cell with that ColumnHead, but do not generate empty
+	    cells in other rows */
+	 NewCell (cell, doc, TRUE, FALSE);
+       else if (event->info == 3)
+	 /* undoing the deletion of any other cell in a "delete column"
+	    command. Link the restored cell with the corresponding ColumnHead*/
+	 NewCell (cell, doc, FALSE, FALSE);
+       else
+	 /* usual case : regenerate the corresponding ColumnHead as well as
+	    empty cells in other rows */
+	 NewCell (cell, doc, TRUE, TRUE);
        HandleColAndRowAlignAttributes (row, doc);
        CurrentPastedRow = NULL;
      }

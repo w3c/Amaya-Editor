@@ -124,7 +124,7 @@ void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
     {
       /* called by Undo */
       notifyEl.position = 0;
-      notifyEl.info = 1; /* sent by undo */
+      notifyEl.info = -origDoc; /* sent by undo */
     }
   else
     {

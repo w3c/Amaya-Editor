@@ -348,6 +348,7 @@ void AddEditOpInHistory (PtrElement pEl, PtrDocument pDoc, ThotBool save,
    pDoc->DocLastEdit = editOp;
    editOp->EoNextOp = NULL;
    editOp->EoType = EtElement;
+   editOp->EoInfo = 1;
    /* record the location in the abstract tree concerned by the operation */
    editOp->EoParent = pEl->ElParent;
    editOp->EoPreviousSibling = pEl->ElPrevious;
@@ -595,6 +596,19 @@ void ReplaceLastRegisteredAttr (PtrDocument pDoc)
         if (pDoc->DocLastEdit->EoSavedAttribute)
            if (pDoc->DocLastEdit->EoCreatedAttribute)
 	      pDoc->DocLastEdit->EoCreatedAttribute = NULL;
+}
+
+/*----------------------------------------------------------------------
+   ChangeInfoLastRegisteredElem
+
+   If the latest operation registered for element pDoc is for an element
+   set the info field of this operation the the new value provided.
+  ----------------------------------------------------------------------*/
+void ChangeInfoLastRegisteredElem (PtrDocument pDoc, int newInfo)
+{
+   if (pDoc->DocLastEdit)
+     if (pDoc->DocLastEdit->EoType == EtElement)
+       pDoc->DocLastEdit->EoInfo = newInfo;
 }
 
 /*----------------------------------------------------------------------
@@ -1074,7 +1088,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 				 (Element)(editOp->EoParent), doc);
          /* send event ElemPaste.Post to the application. -1 means that this
 	    is not really a Paste operation but an Undo operation. */
-         NotifySubTree (TteElemPaste, pDoc, pEl, -1);
+         NotifySubTree (TteElemPaste, pDoc, pEl, -editOp->EoInfo);
 /******/
 	 if (replacePoly)
 	   {

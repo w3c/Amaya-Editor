@@ -741,6 +741,16 @@ typedef struct _EditOperation
 					    operation */
       PtrElement    _EoSavedElement_;    /* copy of the element to be inserted
 					    to undo the operation */
+      int           _EoInfo_;            /* value of the info to be passed to
+					    the application with the event
+					    ElemPaste.Post when undoing a
+					    deletion. Values:
+                                            0: not from undo
+                                            1: normal undo
+                                            2: see BreakElement (structmodif.c)
+					    3, 4: undo of command Delete column
+					          see CellPasted (HTMLtable.c)
+					 */
     } s1;
     struct      /* EoType = EtAttribute */
     {
@@ -787,6 +797,7 @@ typedef struct _NsUriDescr
 #define EoPreviousSibling u.s1._EoPreviousSibling_
 #define EoCreatedElement u.s1._EoCreatedElement_
 #define EoSavedElement u.s1._EoSavedElement_
+#define EoInfo u.s1._EoInfo_
 #define EoElement u.s2._EoElement_
 #define EoCreatedAttribute u.s2._EoCreatedAttribute_
 #define EoSavedAttribute u.s2._EoSavedAttribute_
