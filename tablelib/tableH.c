@@ -464,11 +464,10 @@ int             frame;
   int                 i, j, k;
   int                 sum, height, val;
   int                 attrHeight, org;
-  boolean             found, modified;
+  boolean             found;
 
   /* manage spanned columns */
   pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
-  modified = pDoc->DocModified;
   if (number > 0)
     {
       pSS = table->AbElement->ElStructSchema;
@@ -558,7 +557,6 @@ int             frame;
 	    }
 	}
     }
-  pDoc->DocModified = modified;
 }
 
 
@@ -983,6 +981,7 @@ int             frame;
 {
   PtrAttribute        pAttr;
   PtrSSchema          pSS;
+  PtrDocument         pDoc;
   PtrTabRelations     pTabRel;
   PtrAbstractBox     *colBox, rowSpanCell[MAX_COLROW];
   PtrAbstractBox      pAb, row, cell;
@@ -1001,11 +1000,14 @@ int             frame;
   int                 tabWidth, tabPercent, minsize;
   boolean             skip;
   boolean             foundH, foundV;
+  boolean             modified;
 
   if (col != NULL)
     if (col->AbBox == NULL)
       return;
 
+  pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
+  modified = pDoc->DocModified;
   pSS = table->AbElement->ElStructSchema;
   /* how many columns */
   pTabRel = table->AbBox->BxColumns;
@@ -1078,7 +1080,7 @@ int             frame;
 	  pAttr->AeAttrSSchema = pSS;
 	  pAttr->AeAttrNum = attrHeight;
 	  pAttr->AeAttrType = AtNumAttr;
-	  pAttr->AeAttrValue = 0;
+	  pAttr->AeAttrValue = MAX_INT_ATTR_VAL + 1;
 	  AttachAttrWithValue (row->AbElement, LoadedDocument[FrameTable[frame].FrDoc - 1], pAttr);
 	  DeleteAttribute (NULL, pAttr);
 
@@ -1427,6 +1429,7 @@ int             frame;
   TtaFreeMemory (colPercent);
   /* Now check row heights */
   CheckRowHeihgts (table, rspanNumber, rowSpanCell, rowSpans, frame);
+  pDoc->DocModified = modified;
 }
 
 /*----------------------------------------------------------------------

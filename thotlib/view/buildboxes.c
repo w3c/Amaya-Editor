@@ -63,11 +63,6 @@
 #include "units_f.h"
 #include "windowdisplay_f.h"
 
-#ifdef WWW_MSWINDOWS		/* map to MSVC library system calls */
-#include <math.h>
-#define M_PI        3.14159265358979323846	/* pi from linux math.h */
-#define M_PI_2      1.57079632679489661923	/* pi/2h */
-#endif /* WWW_MSWINDOWS */
 #define		_2xPI		6.2832
 #define		_1dSQR2		0.7071
 #define		_SQR2		1.4142

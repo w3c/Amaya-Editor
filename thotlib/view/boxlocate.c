@@ -57,10 +57,6 @@
 #include "units_f.h"
 #include "views_f.h"
 
-#ifdef WWW_MSWINDOWS		/* map to MSVC library system calls */
-#include <math.h>
-#endif /* WWW_MSWINDOWS */
-
 #define Y_RATIO 200		/* penalisation en Y */
 #define ANCHOR_SIZE 3		/* taille des ancres */
 

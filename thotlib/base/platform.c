@@ -51,15 +51,15 @@ CONST char         *filename;
       status = 0;
    else
       status = 1;
-#else  /* WWW_MSWINDOWS */
+#else /* _WINDOWS && !__GNUC__ */
    int                 filedes;
    struct stat         statinfo;
 
 #ifdef _WINDOWS
    filedes = open (filename, _O_RDONLY | O_BINARY);
-#else
+#else /* _WINDOWS */
    filedes = open (filename, O_RDONLY);
-#endif
+#endif /* _WINDOWS */
    if (filedes < 0)
       status = 0;
    else
@@ -74,7 +74,7 @@ CONST char         *filename;
 	  }
 	close (filedes);
      }
-#endif /* !WWW_MSWINDOWS */
+#endif /* _WINDOWS && !__GNUC__ */
    return status;
 }
 
@@ -91,9 +91,9 @@ CONST char         *filename;
 {
 #if defined(_WINDOWS) && !defined(__GNUC__)
    return (remove (filename));
-#else
+#else /* _WINDOWS && !__GNUC__ */
    return (unlink (filename));
-#endif
+#endif /* _WINDOWS && !__GNUC__ */
 }
 
 /*----------------------------------------------------------------------
@@ -121,7 +121,7 @@ ThotDirBrowse      *me;
    if (attr & FILE_ATTRIBUTE_NORMAL && !(me->PicMask & ThotDirBrowse_FILES))
       return 0;
    return 1;
-#else  /* WWW_MSWINDOWS */
+#else  /* _WINDOWS && !__GNUC__ */
    int                 i;
    int                 ls_car;
    boolean             notEof;
@@ -165,7 +165,7 @@ ThotDirBrowse      *me;
 	   continue;
 	return 1;
      }
-#endif /* !WWW_MSWINDOWS */
+#endif /* _WINDOWS && !__GNUC__ */
 }
 
 /*----------------------------------------------------------------------
@@ -202,7 +202,7 @@ char               *ext;
    if (ret == -1)
       FindClose (me->handle);
    return ret;
-#else  /* WWW_MSWINDOWS */
+#else  /* _WINDOWS && !__GNUC__ */
    /* sprintf (space, "/bin/ls%s %s/%s%s 2>/dev/null", 
       ext && *ext ? "" : " -d", dir ? dir : "", 
       name ? name : "", ext ? ext : ""); - EGP */
@@ -215,7 +215,7 @@ char               *ext;
       return 1;
    pclose (me->ls_stream);
    me->ls_stream = NULL;
-#endif /* !WWW_MSWINDOWS */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
@@ -240,9 +240,9 @@ ThotDirBrowse      *me;
      }
    while ((ret = ThotDirBrowse_copyFile (me)) == 0);
    return ret;
-#else  /* WWW_MSWINDOWS */
+#else  /* _WINDOWS && !__GNUC__ */
    return ThotDirBrowse_copyFile (me);
-#endif /* !WWW_MSWINDOWS */
+#endif /* _WINDOWS && !__GNUC__ */
 }
 
 /*----------------------------------------------------------------------
@@ -263,12 +263,12 @@ ThotDirBrowse      *me;
       return 0;
    ret = (FindClose (me->handle) == 1 ? 1 : -1);
    me->handle = INVALID_HANDLE_VALUE;
-#else  /* WWW_MSWINDOWS */
+#else  /* _WINDOWS && !__GNUC__ */
    if (me->ls_stream == NULL)
       return 0;
    ret = (pclose (me->ls_stream) == -1 ? -1 : 1);
    me->ls_stream = NULL;
-#endif /* !WWW_MSWINDOWS */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
@@ -407,13 +407,13 @@ ThotFileMode        mode;
    else
       creation = OPEN_EXISTING;
    ret = CreateFile (name, access, FILE_SHARE_READ, &secAttribs, creation, FILE_ATTRIBUTE_NORMAL, NULL);
-#else  /* WWW_MSWINDOWS */
+#else  /* _WINDOWS && !__GNUC__ */
 #ifdef _WINDOWS_
    ret = open (name, mode | _O_BINARY, 0777);
 #else
    ret = open (name, mode, 0777);
 #endif
-#endif /* !WWW_MSWINDOWS */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
@@ -432,9 +432,9 @@ ThotFileHandle      handle;
 
 #if defined(_WINDOWS) && !defined(__GNUC__)
    ret = CloseHandle (handle);
-#else  /* WWW_MSWINDOWS */
+#else  /* _WINDOWS && !__GNUC__ */
    ret = close (handle) == 0;
-#endif /* !WWW_MSWINDOWS */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
@@ -461,9 +461,9 @@ unsigned int        count;
       ret = (int) red;
    else
       ret = -1;
-#else  /* WWW_MSWINDOWS */
+#else  /* _WINDOWS && !__GNUC__ */
    ret = read (handle, buffer, count);
-#endif /* !WWW_MSWINDOWS */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
@@ -491,9 +491,9 @@ unsigned int        count;
       ret = (int) writ;
    else
       ret = -1;
-#else  /* WWW_MSWINDOWS */
+#else  /* _WINDOWS && !__GNUC__ */
    ret = write (handle, buffer, count);
-#endif /* !WWW_MSWINDOWS */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
@@ -514,9 +514,9 @@ ThotFileOrigin      origin;
 
 #if defined(_WINDOWS) && !defined(__GNUC__)
    ret = SetFilePointer (handle, offset, 0, origin);
-#else  /* WWW_MSWINDOWS */
+#else  /* _WINDOWS && !__GNUC__ */
    ret = lseek (handle, offset, origin);
-#endif /* !WWW_MSWINDOWS */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
@@ -543,7 +543,7 @@ ThotFileInfo       *pInfo;
 	pInfo->atime = info.ftLastAccessTime;
 	pInfo->size = info.nFileSizeLow;
      }
-#else  /* WWW_MSWINDOWS */
+#else  /* _WINDOWS && !__GNUC__ */
    struct stat         buf;
 
    ret = fstat (handle, &buf) == 0;
@@ -552,7 +552,7 @@ ThotFileInfo       *pInfo;
 	pInfo->atime = buf.st_atime;
 	pInfo->size = buf.st_size;
      }
-#endif /* !WWW_MSWINDOWS */
+#endif /* _WINDOWS && !__GNUC__ */
    return ret;
 }
 
@@ -576,18 +576,18 @@ CONST char         *targetFileName;
    if (strcmp (sourceFileName, targetFileName) != 0)
      {
 #ifdef _WINDOWS
-	if ((targetf = fopen (targetFileName, "wb")) == NULL)
+	if (targetf = fopen (targetFileName, "wb") == NULL)
 #else
-	if ((targetf = fopen (targetFileName, "w")) == NULL)
+	if (targetf = fopen (targetFileName, "w") == NULL)
 #endif
 	   /* cannot write into the target file */
 	   return;
 	else
 	  {
 #ifdef _WINDOWS
-	     if ((sourcef = fopen (sourceFileName, "rb")) == NULL)
+	     if (sourcef = fopen (sourceFileName, "rb") == NULL)
 #else
-	     if ((sourcef = fopen (sourceFileName, "r")) == NULL)
+	     if (sourcef = fopen (sourceFileName, "r") == NULL)
 #endif
 	       {
 		  /* cannot read the source file */

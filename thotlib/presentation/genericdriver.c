@@ -1712,7 +1712,7 @@ void               *param;
  *									*
  ************************************************************************/
 
-#if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP) || defined(WWW_MSWINDOWS)
+#if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
 
 #define GENERIC_FUNCS(genre,name)					\
 									\
