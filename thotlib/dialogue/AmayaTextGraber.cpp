@@ -42,10 +42,10 @@ int AmayaTextGraber::m_ThotMask = 0;
 
 void AmayaTextGraber::OnText(wxCommandEvent& event)
 {
-  wxLogDebug( _T("AmayaTextGraber::OnText") );
-
   wxString s = GetValue();
   SetValue( _T("") );
+
+  wxLogDebug( _T("AmayaTextGraber::OnText s=")+s );
 
   // wxkeycodes are directly mapped to thot keysyms :
   // no need to convert the wxwindows keycodes

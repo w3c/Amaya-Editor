@@ -12,12 +12,17 @@
  *          D. Veillard (INRIA) - new functions for MS-Windows
  *
  */
+#ifdef _WX
+  #include "wx/dir.h"
+  #include "wx/utils.h"
+#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
 #include "fileaccess.h"
+#include "message_wx.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -1078,6 +1083,9 @@ ThotBool TtaMakeDirectory (char *directory)
 
   if (TtaCheckDirectory (directory))
     return TRUE;
+#ifdef _WX
+  return wxMkdir(TtaConvMessageToWX(directory));
+#endif /* _WX */
 
 #ifdef _WINDOWS
   i = _mkdir (directory);
@@ -1114,7 +1122,8 @@ ThotBool TtaCheckDirectory (char *directory)
    if (!(attribs & FILE_ATTRIBUTE_DIRECTORY))
       return FALSE;
    return TRUE;
-#else  /* _WINGUI */
+#endif  /* _WINGUI */
+#ifdef _GTK
    struct stat         fileStat;
 
    /* does the directory exist ? */
@@ -1122,15 +1131,18 @@ ThotBool TtaCheckDirectory (char *directory)
       return (FALSE);
    else if (stat (directory, &fileStat) != 0)
       return (FALSE);
-#ifdef _WINDOWS /* SG : only used into wxWindows version (TODO: a valider)*/
-   else if (((fileStat.st_mode)&S_IFMT) == S_IFDIR)
-#else /* _WINDOWS */
+//#ifdef _WINDOWS /* SG : only used into wxWindows version (TODO: a valider)*/
+//   else if (((fileStat.st_mode)&S_IFMT) == S_IFDIR)
+//#else /* _WINDOWS */
    else if (S_ISDIR (fileStat.st_mode))
-#endif /* _WINDOWS */
+//#endif /* _WINDOWS */
       return (TRUE);
    else
       return (FALSE);
-#endif /* _WINGUI */
+#endif /* _GTK */
+#ifdef _WX
+   return wxDir::Exists( TtaConvMessageToWX(directory) ); 
+#endif /* _WX */
 }
 
 
