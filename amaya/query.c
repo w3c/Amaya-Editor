@@ -410,7 +410,6 @@ AHTReqContext      *me;
 
    if (me)
      {
-
 #ifdef DEBUG_LIBWWW
        fprintf (stderr, "AHTReqContext_delete: Deleting object %p\n", me);
 #endif   
@@ -2694,6 +2693,7 @@ int                 docid;
    HTList             *cur;
    AHTReqContext      *me;
    static boolean      lock_stop = 0;
+   boolean             async_flag;
 
    /* only do the stop if we're not being called while processing a 
       request, and if we're not already dealing with a stop */
@@ -2705,28 +2705,34 @@ int                 docid;
 #endif /* DEBUG_LIBWWW */
        /* enter the critical section */
        lock_stop = TRUE; 
-       /* HTHost_killPipe (me->request->net->host); */
        /* HTNet_killAll (); */
        cur = Amaya->reqlist;
        while ((me = (AHTReqContext *) HTList_nextObject (cur))) 
 	 {
 	   if (AmayaIsAlive ())
 	     {
-	       if (me->request->net)
-		 HTNet_killPipe (me->request->net);
-	       else
-		 {
 		   if (me->reqStatus != HT_END)
 		     {
+ 	               if (me->request->net)
+	                 {
+                 	   HTNet_killPipe (me->request->net);
+                           cur = Amaya->reqlist;
+                         }
+  
+		       if ((me->mode & AMAYA_ASYNC)
+			   || (me->mode & AMAYA_IASYNC))
+			 async_flag = TRUE;
+#ifdef DEBUG_LIBWWW
+                       fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
+#endif /* DEBUG_LIBWWW */
+
 		       if (me->terminate_cbf)
 			 (*me->terminate_cbf) (me->docid, -1, me->urlName,
 					       me->outputfile,
 					       me->content_type, 
 					       me->context_tcbf);
-#ifdef DEBUG_LIBWWW
-		       fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
-#endif /* DEBUG_LIBWWW */
-		       AHTReqContext_delete (me);
+	 	       if (!async_flag)
+		          AHTReqContext_delete (me);
 		       cur = Amaya->reqlist;
 		     }
 #ifndef _WINDOWS
@@ -2736,7 +2742,6 @@ int                 docid;
 		     RequestKillAllXtevents (me);
 #endif /* WWW_XWINDOWS */
 #endif /* !_WINDOWS */
-		 }
 	     }
 	 }
        /* expire all outstanding timers */
