@@ -40,7 +40,6 @@
 /* Store the list of frames that use each font */
 static unsigned int TtFontMask[MAX_FONT];
 /* that table for the charSThotLoacter glyphs */
-static int          FirstRemovableFont;
 static int          FirstFreeFont = 0;
 static char         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
 
@@ -2426,7 +2425,6 @@ void InitDialogueFonts (char *name)
   if (DefaultGLFont == NULL)
     printf ("Cannot load any GL fonts\n");
 #endif /* _GL */
-  FirstRemovableFont = FirstFreeFont;
 }
 
 /*----------------------------------------------------------------------
@@ -2540,7 +2538,7 @@ void ThotFreeFont (int frame)
 	}
 #endif /* _I18N_ */
       /* keep default fonts */
-      i = FirstRemovableFont;
+      i = 0;
       /* free all attached fonts */
       while (i < FirstFreeFont)
 	{
