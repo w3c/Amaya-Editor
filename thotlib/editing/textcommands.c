@@ -920,23 +920,20 @@ static void MovingCommands (int code, Document doc, View view,
 	      pEl = firstEl;
 	    }
 	  done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
-	  if ((RightExtended && last >= lastC) ||
-	      (LeftExtended && first == firstC - 1))
+	  if ((RightExtended && last >= lastC && pEl == lastEl) ||
+	      (LeftExtended && first == firstC - 1 &&  pEl == firstEl))
 	    /* It was not the beginning of the next word */
 	    done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
 	  if (extendSel)
 	    {
-	      if (!LeftExtended && firstEl == FixedElement &&
+	      if (!LeftExtended && firstEl == FixedElement && pEl == FixedElement &&
 		  last <= FixedChar)
 		{
 		  /* change the extension direction */
 		  RightExtended = FALSE;
 		  LeftExtended = TRUE;
 		}
-	      if (LeftExtended)
-		i = first;
-	      else
-		i = last;
+	      i = first;
 	      if (pEl->ElAbstractBox[view - 1])
 		ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i,
 				 TRUE, LeftExtended, FALSE, FALSE);
@@ -961,12 +958,18 @@ static void MovingCommands (int code, Document doc, View view,
 	   else
 	     {
 	       /* extend the current selection */
+	       if (lastEl && lastC > lastEl->ElVolume)
+		 {
+		   /* start from the next character string */
+		   lastEl = FwdSearchTypedElem (lastEl, CharString + 1, NULL, NULL);
+		   lastC = 1;
+		 }
 	       last = lastC;
 	       pEl = lastEl;
 	     }
 	   done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
-	   if ((!LeftExtended && first == lastC) ||
-	       (!RightExtended && first >= firstC))
+	   if ((!LeftExtended && first == lastC && pEl == lastEl) ||
+	       (!RightExtended && first >= firstC && pEl == firstEl))
 	     {
 	     /* It was not the beginning of the next word */
 	       if (RightExtended)
@@ -982,10 +985,7 @@ static void MovingCommands (int code, Document doc, View view,
 		   RightExtended = TRUE;
 		   LeftExtended = FALSE;
 		 }
-	       if (LeftExtended)
 		 i = first;
-	       else
-		 i = last;
 	       if (pEl->ElAbstractBox[view - 1])
 		 ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i,
 				  TRUE, LeftExtended, FALSE, FALSE);
