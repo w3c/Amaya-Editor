@@ -443,7 +443,7 @@ FunctionEnd
   ;Assign descriptions to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${SecAmaya} "Amaya."
-    !insertmacro MUI_DESCRIPTION_TEXT ${SecFileAss} "Amaya files associations."
+    !insertmacro MUI_DESCRIPTION_TEXT ${SecFileAss} "Selects Amaya as the default application for files of these types."
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
  
 ;--------------------------------
