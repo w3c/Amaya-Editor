@@ -41,7 +41,7 @@ ListDlgWX::ListDlgWX( int ref,
 
   // update dialog labels with given ones
   SetTitle( title );
-  XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_CSS_FILE)) );
+  XRCCTRL(*this, "wxID_LABEL", wxStaticText)->SetLabel( title );
   XRCCTRL(*this, "wxID_OK", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM)) );
   XRCCTRL(*this, "wxID_CANCEL", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CANCEL)) );
   XRCCTRL(*this, "wxID_LIST", wxListBox)->Append( items );
@@ -93,5 +93,6 @@ void ListDlgWX::OnCancelButton( wxCommandEvent& event )
 }
 
 #endif /* _WX */
+
 
 
