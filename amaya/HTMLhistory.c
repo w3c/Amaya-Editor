@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -56,13 +56,7 @@ static int          DocHistoryIndex[DocumentTableLength];
    InitDocHistory
    Reset history for document doc
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InitDocHistory (Document doc)
-#else
-void                InitDocHistory (doc)
-Document            document;
-
-#endif
 {
    DocHistoryIndex[doc] = -1;
 }
@@ -89,13 +83,7 @@ void                FreeDocHistory ()
   ElementAtPosition
   Returns the element that is at position pos in document doc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Element       	ElementAtPosition (Document doc, int pos)
-#else  /* __STDC__ */
-Element       	ElementAtPosition (doc, pos)
-   Document	doc;
-   int		pos;
-#endif /* __STDC__ */
 {
    Element	el, result, child, next;
    int		sum, vol;
@@ -158,13 +146,7 @@ Element       	ElementAtPosition (doc, pos)
   Returns the position of the first visible element in the main view of
   document doc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int             RelativePosition (Document doc, int *distance)
-#else  /* __STDC__ */
-int             RelativePosition (doc, distance)
-   Document	doc;
-   int		*distance;
-#endif /* __STDC__ */
 {
    int		sum;
    Element	el, sibling, ancestor;
@@ -192,14 +174,8 @@ int             RelativePosition (doc, distance)
   A IsDocumentLoaded frontend which returns TRUE if a given URL is already
   being displayed in another window. 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool IsNextDocLoaded (const Document baseDoc, const STRING url, const STRING form_data, const ClickEvent CE_event)
-#else
-static ThotBool IsNextDocLoaded (Document baseDoc, url, form_data, CE_event)
-STRING url;
-STRING form_data;
-ClickEvent  CE_event;
-#endif
+static ThotBool IsNextDocLoaded (const Document baseDoc, const STRING url,
+				 const STRING form_data, const ClickEvent CE_event)
 {
   STRING              tempdocument;
   STRING              target;
@@ -260,23 +236,9 @@ ClickEvent  CE_event;
    GotoPreviousHTML_callback
    This function is called when the document is loaded
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void               GotoPreviousHTML_callback (int newdoc, int status, 
-					      STRING urlName,
-					      STRING outputfile, 
-					      AHTHeaders *http_headers,
-					      void * context)
-#else  /* __STDC__ */
-void               GotoPreviousHTML_callback (newdoc, status, urlName,
-                                             outputfile, http_headers,
-                                             context)
-int newdoc;
-int status;
-STRING urlName;
-STRING outputfile;
-AHTHeaders *http_headers;
-void *context;
-#endif
+void GotoPreviousHTML_callback (int newdoc, int status, STRING urlName,
+				STRING outputfile, AHTHeaders *http_headers,
+				void * context)
 {
   Document             doc;
   Element	       el;
@@ -310,13 +272,7 @@ void *context;
    GotoPreviousHTML
    This function is called when the user presses the Previous button
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GotoPreviousHTML (Document doc, View view)
-#else
-void                GotoPreviousHTML (doc, view)
-Document            document;
-View                view;
-#endif
+void  GotoPreviousHTML (Document doc, View view)
 {
    GotoHistory_context *ctx;
    STRING              url = NULL;
@@ -362,16 +318,13 @@ View                view;
 
    /* if the document has been edited, ask the user to confirm, except
       if it's simply a jump in the same document */
-   if (DocumentURLs[doc] != NULL)
+   if (DocumentURLs[doc] != NULL &&
+       (ustrcmp(DocumentURLs[doc], url) || !same_form_data))
      {
-       if (ustrcmp(DocumentURLs[doc], url)
-	   || !same_form_data)
-	 {
-	   /* is the next document already loaded? */
-	   next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
-	   if (!next_doc_loaded && !CanReplaceCurrentDocument (doc, view))
-	     return;
-	 }
+       /* is the next document already loaded? */
+       next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
+       if (!next_doc_loaded && !CanReplaceCurrentDocument (doc, view))
+	 return;
      }
 
 
@@ -442,23 +395,9 @@ View                view;
    GotoNextHTML_callback
    This function is called when the document is loaded
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void               GotoNextHTML_callback (int newdoc, int status, 
-					      STRING urlName,
-					      STRING outputfile, 
-					      AHTHeaders *http_headers,
-					      void * context)
-#else  /* __STDC__ */
-void               GotoNextHTML_callback (newdoc, status, urlName,
-                                             outputfile, http_headers,
-                                             context)
-int newdoc;
-int status;
-STRING urlName;
-STRING outputfile;
-AHTHeaders *http_headers;
-void *context;
-#endif
+void GotoNextHTML_callback (int newdoc, int status, STRING urlName,
+			    STRING outputfile, AHTHeaders *http_headers,
+			    void * context)
 {
   Element	       el;
   Document             doc;
@@ -490,13 +429,7 @@ void *context;
    GotoNextHTML
    This function is called when the user presses the Next button
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                GotoNextHTML (Document doc, View view)
-#else
-void                GotoNextHTML (doc, view)
-Document            document;
-View                view;
-#endif
 {
    GotoHistory_context  *ctx;
    STRING        url = NULL;
@@ -539,16 +472,14 @@ View                view;
 
    /* if the document has been edited, ask the user to confirm, except
       if it's simply a jump in the same document */
-   if (DocumentURLs[doc] != NULL)
+   if (DocumentURLs[doc] != NULL &&
+       (ustrcmp (DocumentURLs[doc], DocHistory[doc][next].HistUrl) ||
+	!same_form_data))
      {
-       if (ustrcmp (DocumentURLs[doc], DocHistory[doc][next].HistUrl)
-	   || !same_form_data)
-	 {
-	   /* is the next document already loaded? */
-	   next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
-	   if (!CanReplaceCurrentDocument (doc, view))
-	     return;
-	 }
+       /* is the next document already loaded? */
+       next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
+       if (!CanReplaceCurrentDocument (doc, view))
+	 return;
      }
 
    if (!next_doc_loaded)
@@ -602,26 +533,18 @@ View                view;
    AddDocHistory
    Add a new URL in the history associated with the window of document doc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AddDocHistory (Document doc, STRING url, STRING initial_url, STRING form_data, ClickEvent method)
-#else  /* __STDC__ */
-void                AddDocHistory (doc, url, initial_url, form_data, method)
-Document	    doc;
-STRING              url;
-STRING              initial_url;
-STRING              form_data;
-ClickEvent          method;
-
-#endif /* __STDC__ */
+void AddDocHistory (Document doc, STRING url, STRING initial_url,
+		    STRING form_data, ClickEvent method)
 {
    int                 i, position, distance;
 
-   if (!url)
-      return;
-   if (*url == EOS)
+   if (!url || *url == EOS)
       return;
    /* avoid storing POST forms */
    if (method == CE_FORM_POST)
+     return;
+   /* don't register a new document not saved */
+   if (!IsW3Path (url) && !TtaFileExist (url))
      return;
    else if (method == CE_RELATIVE)
      /* All registered URLs are absolute */

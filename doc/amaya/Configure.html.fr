@@ -250,6 +250,13 @@ alt="General Preferences Menu" /></p>
       afin que les autres développeurs puissent nous aider à le débuguer
       rapidement. Par défaut, cette option est inactive.<br />
     </dd>
+  <dt><strong>Accès rapides</strong></dt>
+    <dd>Spécifie la touche <strong>Alt</strong> ou <strong>Control</strong>
+      utilisée pour mettre en oeuvre les <a href="Browsing.html.fr#L294">accès
+      rapides</a> du document ou indique que les accès rapides définis les
+      documents sont ignorés.
+      <p></p>
+    </dd>
   <dt><strong>Menu de la taille de la police de caractère</strong> (stations
   Unix uniquement)</dt>
     <dd>Spécifie la taille de la police de caractère dans tous les menus
@@ -461,7 +468,7 @@ alt="Language negotiation menu" /></p>
 <p>Si un document existe en différentes langues et que votre serveur est
 configuré pour faire une négociation de langue, vous pouvez utiliser ce menu
 pour entrer vos préférences de langue (La première a la plus grande priorité).
-Essayez de naviguer ce<a
+Essayez de naviguer ce <a
 href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">communiqué</a>, qui
 existe en versions Française, Anglaise et Japonaise. En changeant la
 négociation de la langue en code ISO pour les langues ci dessus

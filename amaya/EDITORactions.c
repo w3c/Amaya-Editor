@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -37,6 +37,7 @@
 #include "EDITimage_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
+#include "HTMLhistory_f.h"
 #include "HTMLtable_f.h"
 #include "MENUconf_f.h"
 #include "styleparser_f.h"
@@ -45,13 +46,7 @@
 /*----------------------------------------------------------------------
   NewXHTML: Create a new XHTML document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                NewXHTML (Document document, View view)
-#else  /* __STDC__ */
-void                NewXHTML (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
   OpenNew (document, view, docHTML);
 }
@@ -59,13 +54,7 @@ View                view;
 /*----------------------------------------------------------------------
   NewMathML: Create a new MathML document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                NewMathML (Document document, View view)
-#else  /* __STDC__ */
-void                NewMathML (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
   OpenNew (document, view, docMath);
 }
@@ -73,13 +62,7 @@ View                view;
 /*----------------------------------------------------------------------
   NewSVG: Create a new XHTML document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                NewSVG (Document document, View view)
-#else  /* __STDC__ */
-void                NewSVG (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
   OpenNew (document, view, docSVG);
 }
@@ -87,13 +70,7 @@ View                view;
 /*----------------------------------------------------------------------
    NewCss: Create a new CSS stylesheet
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void               NewCss (Document document, View view)
-#else  /* __STDC__ */
-void               NewCss (document, view)
-Document           document; 
-View               view;
-#endif /* __STDC__ */
 {
   OpenNew (document, view, docCSS);
 }
@@ -101,14 +78,9 @@ View               view;
 
 /*----------------------------------------------------------------------
   InitializeNewDoc builds the initial contents of a new document
+  When the parameter doc is 0 the function creates a new document window.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InitializeNewDoc (STRING url, int docType)
-#else  /* __STDC__ */
-void                InitializeNewDoc (url, docType)
-STRING       url;
-int          docType;
-#endif /* __STDC__ */
+void InitializeNewDoc (STRING url, int docType, Document doc)
 {
   ElementType          elType;
   Element              root, title, text, el, head, child, meta, body;
@@ -120,12 +92,24 @@ int          docType;
   STRING               s;
   CHAR_T               tempfile[MAX_LENGTH];
   STRING               profile;
-  int                  doc;
 
   pathname = TtaAllocString (MAX_LENGTH);
   documentname = TtaAllocString (MAX_LENGTH);
   NormalizeURL (url, 0, pathname, documentname, NULL);
-  doc = InitDocView (0, documentname, docType, 0, FALSE);
+  if (doc == 0)
+    {
+      doc = InitDocView (doc, documentname, docType, 0, FALSE);
+      InitDocHistory (doc);
+    }
+  else
+    {
+      /* record the current position in the history */
+      AddDocHistory (doc, DocumentURLs[doc], 
+		     DocumentMeta[doc]->initial_url,
+		     DocumentMeta[doc]->form_data,
+		     DocumentMeta[doc]->method);
+      doc = InitDocView (doc, documentname, docType, 0, FALSE);
+    }
   TtaFreeMemory (documentname);
   TtaFreeMemory (pathname);
 
@@ -302,18 +286,13 @@ int          docType;
       TtaSelectElement (doc, el);
       SelectionDoc = doc;
     }
+  /* the document should be saved */
+  TtaSetDocumentModified (doc);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SpellCheck (Document document, View view)
-#else  /* __STDC__ */
-void                SpellCheck (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    AttributeType       attrType;
    Attribute           attr;
@@ -358,14 +337,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateBreak
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateBreak (Document document, View view)
-#else  /* __STDC__ */
-void                CreateBreak (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             el, br, parent;
@@ -421,14 +393,7 @@ View                view;
   insert the element type.
   Return TRUE if it succeeds.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Element   InsertWithinHead (Document document, View view, int elementT)
-#else  /* __STDC__ */
-static Element   InsertWithinHead (document, view, elementT)
-Document         document;
-View             view;
-int              elementT;
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             el, firstSel, lastSel, head, parent, new, title;
@@ -515,14 +480,7 @@ int              elementT;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateBase (Document document, View view)
-#else  /* __STDC__ */
-void                CreateBase (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
   Element             el;
 
@@ -534,14 +492,7 @@ View                view;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateMeta (Document document, View view)
-#else  /* __STDC__ */
-void                CreateMeta (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
   Element             el;
 
@@ -554,17 +505,9 @@ View                view;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateLinkInHead (Document document, View view)
-#else  /* __STDC__ */
-void                CreateLinkInHead (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
   Element             el;
-
 
   el = InsertWithinHead (document, view, HTML_EL_LINK);
   if (el != NULL)
@@ -580,17 +523,9 @@ View                view;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateStyle (Document document, View view)
-#else  /* __STDC__ */
-void                CreateStyle (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
   Element             el;
-
 
   el = InsertWithinHead (document, view, HTML_EL_STYLE_);
   if (el != NULL)
@@ -600,14 +535,7 @@ View                view;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateComment (Document document, View view)
-#else  /* __STDC__ */
-void                CreateComment (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    ElementType         elType;
 
@@ -622,14 +550,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateScript
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateScript (Document document, View view)
-#else  /* __STDC__ */
-void                CreateScript (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    SSchema             docSchema;
    ElementType         elType;
@@ -676,13 +597,7 @@ View                view;
 /*----------------------------------------------------------------------
   HTMLelementAllowed
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     HTMLelementAllowed (Document document)
-#else  /* __STDC__ */
-static ThotBool     HTMLelementAllowed (document)
-Document            document;
-
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             el, ancestor, sibling;
@@ -761,14 +676,7 @@ Document            document;
 /*----------------------------------------------------------------------
   CreateHTMLelement
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CreateHTMLelement (int typeNum, Document document)
-#else  /* __STDC__ */
-static void         CreateHTMLelement (typeNum, document)
-int                 typeNum
-Document            document;
-
-#endif /* __STDC__ */
 {
    ElementType         elType;
 
@@ -785,14 +693,7 @@ Document            document;
 /*----------------------------------------------------------------------
   CreateParagraph
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateParagraph (Document document, View view)
-#else  /* __STDC__ */
-void                CreateParagraph (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Paragraph, document);
 }
@@ -800,14 +701,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateHeading1
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateHeading1 (Document document, View view)
-#else  /* __STDC__ */
-void                CreateHeading1 (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_H1, document);
 }
@@ -815,14 +709,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateHeading2
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateHeading2 (Document document, View view)
-#else  /* __STDC__ */
-void                CreateHeading2 (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_H2, document);
 }
@@ -830,14 +717,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateHeading3
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateHeading3 (Document document, View view)
-#else  /* __STDC__ */
-void                CreateHeading3 (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_H3, document);
 }
@@ -845,14 +725,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateHeading4
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateHeading4 (Document document, View view)
-#else  /* __STDC__ */
-void                CreateHeading4 (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_H4, document);
 }
@@ -860,14 +733,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateHeading5
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateHeading5 (Document document, View view)
-#else  /* __STDC__ */
-void                CreateHeading5 (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_H5, document);
 }
@@ -876,14 +742,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateHeading6
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateHeading6 (Document document, View view)
-#else  /* __STDC__ */
-void                CreateHeading6 (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_H6, document);
 }
@@ -892,14 +751,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateList
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateList (Document document, View view)
-#else  /* __STDC__ */
-void                CreateList (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Unnumbered_List, document);
 }
@@ -907,14 +759,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateNumberedList
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateNumberedList (Document document, View view)
-#else  /* __STDC__ */
-void                CreateNumberedList (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Numbered_List, document);
 }
@@ -922,14 +767,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateDefinitionList
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateDefinitionList (Document document, View view)
-#else  /* __STDC__ */
-void                CreateDefinitionList (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Definition_List, document);
 }
@@ -937,14 +775,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateDefinitionTerm
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateDefinitionTerm (Document document, View view)
-#else  /* __STDC__ */
-void                CreateDefinitionTerm (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Term, document);
 }
@@ -952,14 +783,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateDefinitionDef
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateDefinitionDef (Document document, View view)
-#else  /* __STDC__ */
-void                CreateDefinitionDef (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Definition, document);
 }
@@ -967,14 +791,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateHorizontalRule
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateHorizontalRule (Document document, View view)
-#else  /* __STDC__ */
-void                CreateHorizontalRule (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Horizontal_Rule, document);
 }
@@ -982,14 +799,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateBlockQuote
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateBlockQuote (Document document, View view)
-#else  /* __STDC__ */
-void                CreateBlockQuote (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Block_Quote, document);
 }
@@ -997,14 +807,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreatePreformatted
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreatePreformatted (Document document, View view)
-#else  /* __STDC__ */
-void                CreatePreformatted (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Preformatted, document);
 }
@@ -1012,14 +815,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateAddress
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateAddress (Document document, View view)
-#else  /* __STDC__ */
-void                CreateAddress (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Address, document);
 }
@@ -1027,14 +823,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateTable
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateTable (Document document, View view)
-#else  /* __STDC__ */
-void                CreateTable (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             el, new, cell, row;
@@ -1171,14 +960,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateCaption
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateCaption (Document document, View view)
-#else  /* __STDC__ */
-void                CreateCaption (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             el;
@@ -1214,14 +996,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateColgroup
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateColgroup (Document document, View view)
-#else  /* __STDC__ */
-void                CreateColgroup (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             el, child;
@@ -1293,14 +1068,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateCol
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateCol (Document document, View view)
-#else  /* __STDC__ */
-void                CreateCol (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             el, child;
@@ -1375,14 +1143,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateTHead
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateTHead (Document document, View view)
-#else  /* __STDC__ */
-void                CreateTHead (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_thead, document);
 }
@@ -1390,14 +1151,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateTBody
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateTBody (Document document, View view)
-#else  /* __STDC__ */
-void                CreateTBody (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_tbody, document);
 }
@@ -1405,14 +1159,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateTFoot
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateTFoot (Document document, View view)
-#else  /* __STDC__ */
-void                CreateTFoot (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_tfoot, document);
 }
@@ -1420,14 +1167,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateRow
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateRow (Document document, View view)
-#else  /* __STDC__ */
-void                CreateRow (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Table_row, document);
 }
@@ -1435,28 +1175,14 @@ View                view;
 /*----------------------------------------------------------------------
   CreateDataCell
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateDataCell (Document document, View view)
-#else  /* __STDC__ */
-void                CreateDataCell (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Data_cell, document);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateHeadingCell (Document document, View view)
-#else  /* __STDC__ */
-void                CreateHeadingCell (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Heading_cell, document);
 }
@@ -1465,14 +1191,7 @@ View                view;
   DeleteColumn
   Delete a column in a table.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DeleteColumn (Document document, View view)
-#else  /* __STDC__ */
-void                DeleteColumn (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
   Element             el, cell, colHead, selCell, leaf;
   ElementType         elType;
@@ -1554,14 +1273,7 @@ View                view;
    	GetEnclosingForm creates if necessary and returns the	
    		enclosing form element.				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Element             GetEnclosingForm (Document document, View view)
-#else  /* __STDC__ */
-Element             GetEnclosingForm (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    Element             el;
    ElementType         elType;
@@ -1604,14 +1316,7 @@ View                view;
 
    withinP is TRUE if the current selection is within a paragraph in a form.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static Element      InsertForm (Document doc, View view, ThotBool *withinP)
-#else  /* __STDC__ */
-static Element      InsertForm (doc, view, withinP)
-Document            doc;
-View                view;
-ThotBool           *withinP;
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             el, parent, form;
@@ -1688,14 +1393,7 @@ ThotBool           *withinP;
 /*----------------------------------------------------------------------
   CreateForm
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateForm (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateForm (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
   Element           el;
   ThotBool          withinP;
@@ -1709,14 +1407,7 @@ View                view;
   - within an existing paragraph generates input + text
   - in other case generates a paragraph including text + input + text
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         CreateInputElement (Document doc, View view, int elInput)
-#else  /* __STDC__ */
-static void         CreateInputElement (doc, view, elInput)
-Document            doc;
-View                view;
-int                 elInput;
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             el, input, parent;
@@ -1790,14 +1481,7 @@ int                 elInput;
 /*----------------------------------------------------------------------
   CreateFieldset
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateFieldset (Document document, View view)
-#else  /* __STDC__ */
-void                CreateFieldset (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_FIELDSET, document);
 }
@@ -1805,14 +1489,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateToggle
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateToggle (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateToggle (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
   CreateInputElement (doc, view, HTML_EL_Checkbox_Input);
 }
@@ -1820,14 +1497,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateRadio
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateRadio (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateRadio (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
   CreateInputElement (doc, view, HTML_EL_Radio_Input);
 }
@@ -1835,13 +1505,7 @@ View                view;
 /*----------------------------------------------------------------------
   UpdateAttrSelected
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UpdateAttrSelected (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                UpdateAttrSelected (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    OnlyOneOptionSelected (event->element, event->document, FALSE);
 }
@@ -1849,13 +1513,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
   AttrSelectedDeleted
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AttrSelectedDeleted (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                AttrSelectedDeleted (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    Element	menu;
 
@@ -1866,13 +1524,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
   DeleteAttrSelected
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            DeleteAttrSelected (NotifyAttribute * event)
-#else  /* __STDC__ */
-ThotBool            DeleteAttrSelected (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
    return TRUE;			/* refuse to delete this attribute */
 }
@@ -1880,14 +1532,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
   CreateOption
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateOption (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateOption (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             el, new;
@@ -1914,14 +1559,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateOptGroup
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateOptGroup (Document document, View view)
-#else  /* __STDC__ */
-void                CreateOptGroup (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_OptGroup, document);
 }
@@ -1929,14 +1567,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateTextInput
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateTextInput (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateTextInput (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
   CreateInputElement (doc, view, HTML_EL_Text_Input);
 }
@@ -1944,14 +1575,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreatePasswordInput
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreatePasswordInput (Document doc, View view)
-#else  /* __STDC__ */
-void                CreatePasswordInput (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
   CreateInputElement (doc, view, HTML_EL_Password_Input);
 }
@@ -1959,14 +1583,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateTextArea
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateTextArea (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateTextArea (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateInputElement (doc, view, HTML_EL_Text_Input);
 }
@@ -1975,14 +1592,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateImageInput
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateImageInput (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateImageInput (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
   AttributeType       attrType;
   Attribute           attr;
@@ -2065,14 +1675,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateFileInput
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateFileInput (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateFileInput (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
   CreateInputElement (doc, view, HTML_EL_File_Input);
 }
@@ -2080,14 +1683,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateHiddenInput
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateHiddenInput (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateHiddenInput (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
   CreateInputElement (doc, view, HTML_EL_Hidden_Input);
 }
@@ -2095,14 +1691,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateLabel
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateLabel (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateLabel (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
   CreateHTMLelement (HTML_EL_LABEL, doc);
 }
@@ -2110,14 +1699,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreatePushButton
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreatePushButton (Document doc, View view)
-#else  /* __STDC__ */
-void                CreatePushButton (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
   CreateInputElement (doc, view, HTML_EL_BUTTON);
 }
@@ -2125,14 +1707,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateSubmit
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateSubmit (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateSubmit (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
   CreateInputElement (doc, view, HTML_EL_Submit_Input);
 }
@@ -2140,14 +1715,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateReset
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateReset (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateReset (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateInputElement (doc, view, HTML_EL_Reset_Input);
 }
@@ -2155,14 +1723,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateDivision
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateDivision (Document document, View view)
-#else  /* __STDC__ */
-void                CreateDivision (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Division, document);
 }
@@ -2170,14 +1731,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateNOSCRIPT
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateNOSCRIPT (Document document, View view)
-#else  /* __STDC__ */
-void                CreateNOSCRIPT (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_NOSCRIPT, document);
 }
@@ -2185,14 +1739,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateObject
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateObject (Document document, View view)
-#else  /* __STDC__ */
-void                CreateObject (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    ElementType         elType;
    Element             child, el;
@@ -2238,14 +1785,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateParameter
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateParameter (Document document, View view)
-#else  /* __STDC__ */
-void                CreateParameter (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_Parameter, document);
 }
@@ -2253,14 +1793,7 @@ View                view;
 /*----------------------------------------------------------------------
   CreateIFrame
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateIFrame (Document document, View view)
-#else  /* __STDC__ */
-void                CreateIFrame (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    CreateHTMLelement (HTML_EL_IFRAME, document);
 }
@@ -2270,14 +1803,7 @@ View                view;
    If current selection is within an anchor, change that link, otherwise
    create a link.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateOrChangeLink (Document doc, View view)
-#else  /* __STDC__ */
-void                CreateOrChangeLink (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
    Element             el;
    int                 firstSelectedChar, i;
@@ -2313,14 +1839,7 @@ View                view;
    DeleteAnchor
    Delete the surrounding anchor.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DeleteAnchor (Document doc, View view)
-#else  /* __STDC__ */
-void                DeleteAnchor (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
    Element             firstSelectedElement, lastSelectedElement, anchor,
                        child, next, previous;
@@ -2429,13 +1948,7 @@ View                view;
   CleanCache
   A frontend to the CleanCache function, called thru an Amaya menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void FlushCache (Document doc, View view)
-#else 
-void FlushCache (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
   StopAllRequests (doc);
   libwww_CleanCache ();
@@ -2445,13 +1958,7 @@ View view;
   ConfigColor
   A frontend to the Color configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ConfigColor (Document doc, View view)
-#else 
-void ConfigColor (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
    ColorConfMenu (doc, view);
 }
@@ -2460,13 +1967,7 @@ View view;
   ConfigGeometry
   A frontend to the Geometry configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ConfigGeometry (Document doc, View view)
-#else 
-void ConfigGeometry (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
    GeometryConfMenu (doc, view);
 }
@@ -2475,13 +1976,7 @@ View view;
   ConfigGeneral
   A frontend to the Browsing Editing configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ConfigGeneral (Document doc, View view)
-#else 
-void ConfigGeneral (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
    GeneralConfMenu (doc, view);
 }
@@ -2490,13 +1985,7 @@ View view;
   ConfigPublish
   A frontend to the Browsing Editing configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ConfigPublish (Document doc, View view)
-#else 
-void ConfigPublish (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
    PublishConfMenu (doc, view);
 }
@@ -2505,13 +1994,7 @@ View view;
   ConfigCache
   A frontend to the cache configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ConfigCache (Document doc, View view)
-#else 
-void ConfigCache (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
   CacheConfMenu (doc, view);
 }
@@ -2520,13 +2003,7 @@ View view;
   ConfigProxy
   A frontend to the proxy configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ConfigProxy (Document doc, View view)
-#else 
-void ConfigProxy (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
   ProxyConfMenu (doc, view);
 }
@@ -2535,13 +2012,7 @@ View view;
   ConfigLanNeg
   A frontend to the LanNeg configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ConfigLanNeg (Document doc, View view)
-#else 
-void ConfigLanNeg (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
    LanNegConfMenu (doc, view);
 }
@@ -2550,13 +2021,7 @@ View view;
   ConfigProfile
   A frontend to the profile configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ConfigProfile (Document doc, View view)
-#else
-void ConfigProfile (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
   ProfileConfMenu (doc, view);
 }
@@ -2565,13 +2030,7 @@ View view;
   ConfigTemplates
   A frontend to the Templates configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ConfigTemplates (Document doc, View view)
-#else 
-void ConfigTemplates (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
    TemplatesConfMenu (doc, view);
 }
@@ -2580,13 +2039,7 @@ View view;
   SaveOptions
   Saves the user modified configuration options
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void SaveOptions (Document doc, View view)
-#else 
-void SaveOptions (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
   TtaSaveAppRegistry ();
 }
@@ -2595,13 +2048,7 @@ View view;
   ConfigAnnot
   A frontend to the Templates configuration menu
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ConfigAnnot (Document doc, View view)
-#else 
-void ConfigAnnot (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
 #ifdef ANNOTATIONS
    AnnotConfMenu (doc, view);
@@ -2612,13 +2059,7 @@ View view;
   AnnotateDocument
   Frontend to the function that creates an annotation
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AnnotateDocument (Document doc, View view)
-#else 
-void AnnotateDocument (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
 #ifdef ANNOTATIONS
   ANNOT_Create (doc, view, TRUE);
@@ -2629,13 +2070,7 @@ View view;
   AnnotateDocument
   Frontend to the function that creates an annotation
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AnnotateSelection (Document doc, View view)
-#else 
-void AnnotateSelection (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
 #ifdef ANNOTATIONS
   ANNOT_Create (doc, view, FALSE);
@@ -2646,13 +2081,7 @@ View view;
   LoadAnnotations
   Frontend to the function that loads the annotations related to a document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void LoadAnnotations (Document doc, View view)
-#else 
-void LoadAnnotations (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
 #ifdef ANNOTATIONS
   ANNOT_Load (doc, view);
@@ -2663,13 +2092,7 @@ View view;
   PostAnnotation
   Frontend to the function that posts an annotation to the server
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void PostAnnotation (Document doc, View view)
-#else 
-void PostAnnotation (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
 #ifdef ANNOTATIONS
   ANNOT_Post (doc, view);
@@ -2680,13 +2103,7 @@ View view;
   DeleteAnnotation
   Frontend to the function that posts an annotation to the server
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void DeleteAnnotation (Document doc, View view)
-#else 
-void DeleteAnnotation (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__ */
 {
 #ifdef ANNOTATIONS
   ANNOT_Delete (doc, view);
@@ -2697,29 +2114,17 @@ View view;
    FilterAnnot
    Show/Hide the annotations
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FilterAnnot (Document document, View view)
-#else
-void                FilterAnnot (document, view)
-Document            doc;
-View                view;
-#endif
+void FilterAnnot (Document document, View view)
 {
 #ifdef ANNOTATIONS
-AnnotFilter (document, view);
+  AnnotFilter (document, view);
 #endif /* ANNOTATIONS */
 }
 
 /*----------------------------------------------------------------------
    Show/Hide the annotations
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CustomQuery (Document document, View view)
-#else
-void                CustomQuery (document, view)
-Document            doc;
-View                view;
-#endif
 {
 #ifdef ANNOTATIONS
 #if 0

@@ -12,7 +12,7 @@ extern void DocumentInfo ( Document document,
                            View view );
 extern Document IsDocumentLoaded ( char *documentURL,
                                    char *form_data );
-extern ThotBool CanReplaceCurrentDocument ( Document document,
+extern ThotBool CanReplaceCurrentDocument ( Document doc,
                                             View view );
 extern void ExtractParameters ( char *aName,
                                 char *parameters );
@@ -48,7 +48,7 @@ extern void InitConfirm3L ( Document document,
 extern void InitConfirm ( Document document,
                           View view,
                           char *label );
-extern void OpenDoc ( Document document,
+extern void OpenDoc ( Document doc,
                       View view );
 extern void OpenDocInNewWindow ( Document document,
                                  View view );
@@ -178,7 +178,7 @@ extern void DocumentInfo (/* Document document,
                              View view */);
 extern Document IsDocumentLoaded (/* char *documentURL,
                                      char *form_data */);
-extern ThotBool CanReplaceCurrentDocument (/* Document document,
+extern ThotBool CanReplaceCurrentDocument (/* Document doc,
                                               View view */);
 extern void ExtractParameters (/* char *aName,
                                   char *parameters */);
@@ -214,7 +214,7 @@ extern void InitConfirm3L (/* Document document,
 extern void InitConfirm (/* Document document,
                             View view,
                             char *label */);
-extern void OpenDoc (/* Document document,
+extern void OpenDoc (/* Document doc,
                         View view */);
 extern void OpenDocInNewWindow (/* Document document,
                                    View view */);

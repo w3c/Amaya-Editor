@@ -130,14 +130,16 @@ permet de <a href="Links.html.fr#L245">créer des liens</a> plus vite.</p>
       partir de l'option <strong>Butiner</strong> qui vous propose un
       sélecteur de fichiers locaux. 
       <p>Quand le document est correctement spécifié, cliquez sur le bouton
-      <strong>Confirmer</strong>.</p>
+      <strong>Confirmer</strong>. Cette commande peut aussi être utilisée pour
+      créer un nouveau document local.</p>
     </dd>
-  <dt>Zone "Adresse"</dt>
+  <dt>Ligne de commande "Ouvrir"</dt>
     <dd>Cette zone affiche le nom du fichier ou l'URI du document courant.
       Vous pouvez saisir le nom d'un autre document spécifié (local ou
       distant) qui va être affiché dans la même fenêtre. Tapez sur la touche
       Enter quand le curseur se trouve dans cette zone pour rendre le
-      chargement du document effectif.</dd>
+      chargement du document effectif. Cette commande peut aussi être utilisée
+      pour créer un nouveau document local.</dd>
   <dt>Liens suivants</dt>
     <dd><a href="#L311">Activer un lien</a> pour obtenir le document
       correspondant.</dd>

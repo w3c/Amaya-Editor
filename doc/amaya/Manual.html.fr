@@ -19,7 +19,7 @@ alt="Doc" /></a></p>
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 <hr />
 
-<p><strong>Version :</strong> 4.2 - janvier 2001</p>
+<p><strong>Version :</strong> 4.3 - février 2001</p>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
@@ -325,7 +325,8 @@ spécifique d'Amaya :</p>
   tables</a></li>
   <li><a href="Math.html.fr#Math" rel="Chapter">Éditer des
   mathématiques</a></li>
-  <li><a href="SVG.html.fr" rel="Chapter">Édition des graphiques</a></li>
+  <li><a href="SVG.html.fr#Edition" rel="Chapter">Édition des
+  graphiques</a></li>
   <li><a rel="Chapter" href="ImageMaps.html.fr#Client-sid">Créer et utiliser
     des zones actives</a></li>
   <li><a rel="Chapter" href="StyleSheets.html.fr#Style">Les feuilles de

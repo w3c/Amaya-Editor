@@ -233,11 +233,11 @@
 	<message xml:lang="es">Sinchronizar</message>
 </label>
 <label define="BDocInfo">
-	<message xml:lang="en">File Information</message>
-	<message xml:lang="fr">Informations sur le fichier</message>
+	<message xml:lang="en">Document Information</message>
+	<message xml:lang="fr">Informations sur le document</message>
 	<message xml:lang="de">Dateiinformationen</message>
-	<message xml:lang="it">Informazioni sul file</message>
-	<message xml:lang="es">Información de fichero</message>
+	<message xml:lang="it">Informazioni sul documento</message>
+	<message xml:lang="es">Información de documento</message>
 </label>
 <label define="BSetUpandPrint">
 	<message xml:lang="en">Setup and Print...</message>

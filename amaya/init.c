@@ -458,25 +458,24 @@ Document            IsDocumentLoaded (char *documentURL, char *form_data)
   Return TRUE if the document has not been modified of if the user
   agrees to loose the changes he/she has made.
   ----------------------------------------------------------------------*/
-ThotBool       CanReplaceCurrentDocument (Document document, View view)
+ThotBool       CanReplaceCurrentDocument (Document doc, View view)
 {
    ThotBool	ret;
 
    ret = TRUE;
-   if (TtaIsDocumentModified (document) ||
-       (DocumentTypes[document] != docLog &&
-	DocumentSource[document] &&
-	TtaIsDocumentModified (DocumentSource[document])))
+   if (TtaIsDocumentModified (doc) ||
+       (DocumentTypes[doc] != docLog && DocumentSource[doc] &&
+	TtaIsDocumentModified (DocumentSource[doc])))
      {
-	InitConfirm (document, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
-	if (UserAnswer)
-	  {
-	    TtaSetDocumentUnmodified (document);
-	    if (DocumentSource[document])
-	      TtaSetDocumentUnmodified (DocumentSource[document]);
-	  }
-	else
-	   ret = FALSE;
+       InitConfirm (doc, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED));
+       if (UserAnswer)
+	 {
+	   TtaSetDocumentUnmodified (doc);
+	   if (DocumentSource[doc])
+	     TtaSetDocumentUnmodified (DocumentSource[doc]);
+	 }
+       else
+	 ret = FALSE;
      }
    return ret;
 }
@@ -1081,7 +1080,7 @@ void                StopTransfer (Document document, View view)
    The Address text field in a document window has been modified by the user
    Load the corresponding document in that window.
   ----------------------------------------------------------------------*/
-static void         TextURL (Document document, View view, char *text)
+static void         TextURL (Document doc, View view, char *text)
 {
   char             *s = NULL;
   char             *url;
@@ -1094,28 +1093,21 @@ static void         TextURL (Document document, View view, char *text)
 	 after a cut and pase */
       change = RemoveNewLines (text);
 
-      if (!IsW3Path (text))
+      if (IsW3Path (text))
+	url = text;
+      else
 	{
 	  s = TtaGetMemory (MAX_LENGTH);
 	  change = NormalizeFile (text, s, AM_CONV_NONE);
-	  if (!TtaFileExist (s))
-	    {
-	      /* It is not a valid URL */
-	      /* TtaSetTextZone (document, view, 1, DocumentURLs[document]); */
-	      TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			    text);
-	      TtaFreeMemory (s);
-	      return;
-	    }
 	  url = s;
 	}
-      else
-	url = text;
  
-      if (!CanReplaceCurrentDocument (document, view))
+      if (!CanReplaceCurrentDocument (doc, view))
 	{
 	  /* restore the previous value @@ */
-	  TtaSetTextZone (document, view, 1, DocumentURLs[document]);
+	  TtaSetTextZone (doc, view, 1, DocumentURLs[doc]);
+	  /* cannot load the new document */
+	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
 	  /* abort the command */
 	  return;
 	}
@@ -1124,7 +1116,7 @@ static void         TextURL (Document document, View view, char *text)
       if (change)
 	{
 	  /* change the text value */
-	  TtaSetTextZone (document, view, 1, url);
+	  TtaSetTextZone (doc, view, 1, url);
 	  CallbackDialogue (BaseDialog + URLName, STRING_DATA, url);
 	}
       else
@@ -1134,7 +1126,7 @@ static void         TextURL (Document document, View view, char *text)
 	TtaFreeMemory (s);
 
       InNewWindow = FALSE;
-      CurrentDocument = document;
+      CurrentDocument = doc;
       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
     }
 }
@@ -1182,7 +1174,7 @@ void         SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
   InitFormAnswer
   Dialogue form for answering text, user name and password
   ----------------------------------------------------------------------*/
-void                InitFormAnswer (Document document, View view, const char *auth_realm, char *server)
+void InitFormAnswer (Document document, View view, const char *auth_realm, char *server)
 {
 #ifndef _WINDOWS
    char *label;
@@ -1397,65 +1389,69 @@ static void   BrowserForm (Document doc, View view, char *urlname)
   InitOpenDocForm initializes a form that ask the URI of the opened or
   new created document.
   ----------------------------------------------------------------------*/
-static void        InitOpenDocForm (Document document, View view, char *title)
+static void        InitOpenDocForm (Document doc, View view, char *title)
 {
-   char              s[MAX_LENGTH];
+  char              s[MAX_LENGTH];
 #ifndef _WINDOWS
 #ifdef _GTK
-   ThotWidget        dialog_new;
+  ThotWidget        dialog_new;
 #endif /* _GTK */
-   int               i;
+  int               i;
 
-   CurrentDocument = document;
-   /* Dialogue form for open URL or local */
-   i = 0;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_OPEN_URL));
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
+  CurrentDocument = doc;
+  /* Dialogue form for open URL or local */
+  i = 0;
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_OPEN_URL));
+  i += strlen (&s[i]) + 1;
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
+  i += strlen (&s[i]) + 1;
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
 
 #ifdef _GTK
-   dialog_new = create_dialog_new (title);
-   gtk_widget_show (dialog_new);
+  dialog_new = create_dialog_new (title);
+  gtk_widget_show (dialog_new);
 #else /* _GTK */
-   TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (document, view),
-		title, 3, s, TRUE, 2, 'L', D_CANCEL);
-   TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
-		   TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
-   TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
-   if (LastURLName[0] != EOS)
+  TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (doc, view),
+	       title, 3, s, TRUE, 2, 'L', D_CANCEL);
+  TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
+		  TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
+  TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
+  if (!IsW3Path (DocumentURLs[doc]))
+    {
+      strcpy (LastURLName, DocumentURLs[doc]);
       TtaSetTextForm (BaseDialog + URLName, LastURLName);
-   else
-     {
-	strcpy (s, DirectoryName);
-	strcat (s, DIR_STR);
-	strcat (s, DocumentName);
-	TtaSetTextForm (BaseDialog + URLName, s);
-     }
-   TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + OpenForm, TRUE);
+    }
+  else
+    {
+      TtaExtractName (DocumentURLs[doc], DirectoryName, DocumentName);
+      TtaSetTextForm (BaseDialog + URLName, DocumentURLs[doc]);
+    }
+  TtaSetDialoguePosition ();
+  TtaShowDialogue (BaseDialog + OpenForm, TRUE);
 #endif /* _GTK */
 #else /* _WINDOWS */
 
-   CurrentDocument = document;
-   if (LastURLName[0] != EOS)
-      sprintf (s, "%s", LastURLName);
-   else
-     sprintf (s, "%s%c%s", DirectoryName, DIR_SEP, DocumentName);
-   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s, DocSelect, DirSelect, 2);
+  CurrentDocument = doc;
+  if (LastURLName[0] != EOS)
+    sprintf (s, "%s", LastURLName);
+  else
+    {
+      TtaExtractName (DocumentURLs[doc], DirectoryName, DocumentName);
+      sprintf (s, "%s%c%s", DirectoryName, DIR_SEP, DocumentName);
+    }
+  CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, DocSelect, DirSelect, 2);
 #endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                OpenDoc (Document document, View view)
+void                OpenDoc (Document doc, View view)
 {
-   if (CanReplaceCurrentDocument (document, view))
+   if (CanReplaceCurrentDocument (doc, view))
      {
        /* load the new document */
        InNewWindow = FALSE;
-       InitOpenDocForm (document, view, TtaGetMessage (1, BOpenDoc));
+       InitOpenDocForm (doc, view, TtaGetMessage (1, BOpenDoc));
      }
 }
 
@@ -3242,7 +3238,9 @@ ThotBool            ViewToClose (NotifyDialog * event)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void GetHTMLDocument_callback (int newdoc, int status, char *urlName, char *outputfile, AHTHeaders *http_headers, void * context)
+void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
+			       char *outputfile, AHTHeaders *http_headers,
+			       void * context)
 {
    Element             elFound;
    Document            doc;
@@ -3410,7 +3408,9 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName, char *outp
       click.
     - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
-Document            GetHTMLDocument (const char *documentPath, char *form_data, Document doc, Document baseDoc, ClickEvent CE_event, ThotBool history, TTcbf *cbf, void *ctx_cbf)
+Document GetHTMLDocument (const char *documentPath, char *form_data,
+			  Document doc, Document baseDoc, ClickEvent CE_event,
+			  ThotBool history, TTcbf *cbf, void *ctx_cbf)
 {
    Document            newdoc;
    CSSInfoPtr          css;
@@ -3533,8 +3533,8 @@ Document            GetHTMLDocument (const char *documentPath, char *form_data, 
 	     /* record the current position in the history */
 	     AddDocHistory (newdoc, DocumentURLs[newdoc], 
 			    DocumentMeta[doc]->initial_url,
-			    DocumentMeta[newdoc]->form_data,
-			    DocumentMeta[newdoc]->method);
+			    DocumentMeta[doc]->form_data,
+			    DocumentMeta[doc]->method);
 	 }
        else
 	 /* following the link to another open window */
@@ -3849,7 +3849,7 @@ void                CallbackDialogue (int ref, int typedata, char *data)
 	   if (LastURLName[0] != EOS)
 	     {
 	       if (NewFile)
-		 InitializeNewDoc (LastURLName, NewDocType);
+		 InitializeNewDoc (LastURLName, NewDocType, 0);
 	       /* load an URL */
 	       else if (InNewWindow)
 		 GetHTMLDocument (LastURLName, NULL, 0, 0, Loading_method,
@@ -3859,8 +3859,7 @@ void                CallbackDialogue (int ref, int typedata, char *data)
 				  CurrentDocument, Loading_method, TRUE,
 				  NULL, NULL);
 	     }
-	   else if (DirectoryName[0] != EOS &&
-		    DocumentName[0] != EOS)
+	   else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
 	     {
 	       /* load a local file */
 	       tempfile = TtaGetMemory (MAX_LENGTH);
@@ -3879,28 +3878,38 @@ void                CallbackDialogue (int ref, int typedata, char *data)
 				      TRUE, NULL, NULL);
 		 }
 	       else if (NewFile)
-		 InitializeNewDoc (tempfile, NewDocType);
+		 InitializeNewDoc (tempfile, NewDocType, 0);
 	       else
-		 TtaSetStatus (CurrentDocument, 1,
-			       TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			       tempfile);
+		 {
+		   if (IsMathMLName (tempfile))
+		     NewDocType = docMath;
+		   else if (IsSVGName (tempfile))
+		     NewDocType = docSVG;
+		   else if (IsCSSName (tempfile))
+		     NewDocType = docCSS;
+#ifdef XML_GEN
+		   else if (IsXMLName (tempfile))
+		     NewDocType = docXml;
+#endif /* XML_GEN */
+		   else
+		     NewDocType = docHTML;
+		   NewDocType = docHTML;
+		   InitializeNewDoc (tempfile, NewDocType, CurrentDocument);
+		 }
 	       TtaFreeMemory (tempfile);
 	     }
+	   else if (DocumentName[0] != EOS)
+	     TtaSetStatus (CurrentDocument, 1,
+			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			   DocumentName);
+	   else if (DirectoryName[0] != EOS)
+	     TtaSetStatus (CurrentDocument, 1,
+			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			   DirectoryName);
 	   else
-	     {
-	       if (DocumentName[0] != EOS)
-		 TtaSetStatus (CurrentDocument, 1,
-			       TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			       DocumentName);
-	       else if (DirectoryName[0] != EOS)
-		 TtaSetStatus (CurrentDocument, 1,
-			       TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			       DirectoryName);
-	       else
-		 TtaSetStatus (CurrentDocument, 1,
-			       TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			       "");
-	     }
+	     TtaSetStatus (CurrentDocument, 1,
+			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			   "");
 	   NewFile = FALSE;
 	   CurrentDocument = 0;
 	 }
@@ -5087,7 +5096,6 @@ void                InitAmaya (NotifyEvent * event)
    else
      {
        NormalizeFile (s, LastURLName, AM_CONV_NONE);
-       if (FileExistTarget (LastURLName)) {
          /* check if it is an absolute or a relative name */
 #ifdef _WINDOWS
 	 if ((LastURLName[0] == DIR_SEP) || (LastURLName[1] == ':'))
@@ -5102,11 +5110,7 @@ void                InitAmaya (NotifyEvent * event)
 	   /* start with the local document */
 	   LastURLName[0] = EOS;
 	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-	 }
-    else
-        /* Create a new document */
-        NewXHTML (0, 0);
-    }
+     }
    Loading_method = CE_ABSOLUTE;
 }
 
