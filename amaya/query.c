@@ -410,7 +410,7 @@ void HTTP_headers_set (HTRequest *request, HTResponse *response,
       if (HTURL_isAbsolute (tmp_char))
 	me->http_headers.full_content_location = TtaStrdup (tmp_char);
       else
-	me->http_headers.full_content_location = AmayaParseUrl (me->urlName, tmp_char, 
+	me->http_headers.full_content_location = AmayaParseUrl (tmp_char, me->urlName,
 								AMAYA_PARSE_ALL);
       tmp_char = me->http_headers.full_content_location;
       /* only include the filename. We suppose we have either a 
@@ -418,7 +418,7 @@ void HTTP_headers_set (HTRequest *request, HTResponse *response,
       slash is the doc name + ext */
       if (HTURL_isAbsolute (tmp_char))
 	{
-	  tmp_char2 = tmp_char + strlen (tmp_char) -1;
+	  tmp_char2 = tmp_char + strlen (tmp_char) - 1;
 	  while (*tmp_char2 != URL_SEP && tmp_char2 != tmp_char)
 	    tmp_char2--;
 	  if (tmp_char2 != tmp_char && *(tmp_char2 + 1))
