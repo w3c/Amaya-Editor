@@ -1799,7 +1799,7 @@
 </label>
 <label define="AM_PASTE_LINE_BY_LINE">
 	<message xml:lang="en">Enable line-by-line paste</message>
-	<message xml:lang="fr">Activer le coller ligne � ligne</message>
+	<message xml:lang="fr">Activer le coller ligne  à ligne</message>
 	<message xml:lang="it">Incolla mantenendo le righe originali</message>
 	<message xml:lang="de">Zeilenweises Einfügen aktivieren</message>
 	<message xml:lang="es">Activar pegado línea a línea</message>
@@ -2233,7 +2233,7 @@
 	<message xml:lang="tr">Not ayarları</message>
 </label>
 <label define="AM_ANNOT_USER">
-	<message xml:lang="en">Annotation user</message>
+	<message xml:lang="en">Annotation and bookmark user</message>
 	<message xml:lang="fr">Nom de l'utilisateur</message>
 	<message xml:lang="de">Autor</message>
 	<message xml:lang="it">Nome utente</message>
@@ -2984,7 +2984,7 @@
 </label>
 <label define="AM_UNLOCK_FAILED">
 	<message xml:lang="en">Unlock failed!</message>
-	<message xml:lang="fr">Dérrouillage a échué!</message>
+	<message xml:lang="fr">Dérrouillage a échoué!</message>
 	<message xml:lang="pt">Documento não pode ser destravado com sucesso!</message>
 	<message xml:lang="de">Entsperrung fehlgeschlagen</message>
 	<message xml:lang="fi">Lukituksen poisto epäonnistui!</message>
@@ -3507,6 +3507,57 @@
 <label define="AM_SCREEN_TYPE">
 	<message xml:lang="en">Current screen type</message>
 	<message xml:lang="fr">Type d'écran courant</message>
+</label>
+<label define="AM_NEW_TOPIC">
+	<message xml:lang="en">New Topic</message>
+	<message xml:lang="fr">Nouvelle Rubrique</message>
+</label>
+<label define="AM_BM_BPROPERTIES">
+	<message xml:lang="en">Bookmark Properties</message>
+	<message xml:lang="fr">Propriétés du marque-feuille</message>
+</label>
+<label define="AM_BM_TPROPERTIES">
+	<message xml:lang="en">Topic Properties</message>
+	<message xml:lang="fr">Propriétés de la rubrique</message>
+</label>
+<label define="AM_BM_TOPIC_HIERARCHY">
+	<message xml:lang="en">Topic hierarchy:</message>
+	<message xml:lang="fr">Hiérarchie des rubriques:</message>
+</label>
+<label define="AM_BM_TITLE">
+	<message xml:lang="en">Title:</message>
+	<message xml:lang="fr">Titre:</message>
+	<message xml:lang="de">Titel:</message>
+	<message xml:lang="it">Titolo:</message>
+	<message xml:lang="tr">Başlık:</message>
+	<message xml:lang="es">Título:</message>
+	<message xml:lang="pt">Título:</message>
+	<message xml:lang="fi">Otsikko:</message>
+</label>
+<label define="AM_BM_RECALLS">
+	<message xml:lang="en">Recalls:</message>
+	<message xml:lang="fr">Rappele:</message>
+</label>
+<label define="AM_BM_AUTHOR">
+	<message xml:lang="en">Author:</message>
+	<message xml:lang="de">Auto:r</message>
+	<message xml:lang="fr">Auteur:</message>
+	<message xml:lang="es">Autor:</message>
+	<message xml:lang="it">Autore:</message>
+	<message xml:lang="pt">Autor:</message>
+	<message xml:lang="tr">Sahip:</message>
+</label>
+<label define="AM_BM_CREATED">
+	<message xml:lang="en">Created:</message>
+	<message xml:lang="fr">Crée:</message>
+</label>
+<label define="AM_BM_MODIFIED">
+	<message xml:lang="en">Last modified:</message>
+	<message xml:lang="fr">Dernière modification:</message>
+</label>
+<label define="AM_BM_DESCRIPTION">
+	<message xml:lang="en">Description:</message>
+	<message xml:lang="fr">Description:</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

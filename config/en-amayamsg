@@ -222,7 +222,7 @@
 220 Use palette
 221 Language Negotiation
 222 Configuration for annotations
-223 Annotation user
+223 Annotation and bookmark user
 224 Annotation post server
 225 Annotation servers
 226 Autoload local annotations
@@ -356,3 +356,13 @@
 354 Enter an element name
 355 Apply CSS
 356 Current screen type
+357 New Topic
+358 Bookmark Properties
+359 Topic Properties
+360 Topic hierarchy:
+361 Title:
+362 Recalls:
+363 Author:
+364 Created:
+365 Last modified:
+366 Description:

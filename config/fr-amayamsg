@@ -178,7 +178,7 @@
 176 Taille de la police dialogue
 177 Zoom caractères
 178 Langue des dialogues
-179 Activer le coller ligne  ligne
+179 Activer le coller ligne  à ligne
 180 Montrer les images de fond
 181 Montrer boutons
 182 Montrer adresse
@@ -297,7 +297,7 @@
 295 Copier les informations du verrou??
 296 Essayez déverrouillé le document...
 297 Déverrouillage a réussit!
-298 Dérrouillage a échué!
+298 Dérrouillage a échoué!
 299 En attente d'une libération du verrou...
 300 Document %s est déverrouillé!
 301 Déverrouillé le document?
@@ -356,3 +356,13 @@
 354 Entrer le nom d'un élément
 355 Appliquer CSS
 356 Type d'écran courant
+357 Nouvelle Rubrique
+358 Propriétés du marque-feuille
+359 Propriétés de la rubrique
+360 Hiérarchie des rubriques:
+361 Titre:
+362 Rappele:
+363 Auteur:
+364 Crée:
+365 Dernière modification:
+366 Description:
