@@ -706,6 +706,7 @@ ThotBool AnnotList_delAnnot (List **list, char *url, ThotBool useAnnotUrl)
    ------------------------------------------------------------*/
 AnnotThreadList *AnnotThread_searchRoot (char *root)
 {
+#ifdef ANNOT_ON_ANNOT
   int i;
 
   for (i = 0; i < DocumentTableLength; i++)
@@ -718,6 +719,9 @@ AnnotThreadList *AnnotThread_searchRoot (char *root)
     }
 
   return (i == DocumentTableLength) ? NULL : &AnnotThread[i];
+#else
+  return NULL;
+#endif ANNOT_ON_ANNOT
 }
 
 /* ------------------------------------------------------------
