@@ -41,6 +41,7 @@
 /* How are Network accesses provided ? */
 
 #ifdef AMAYA_JAVA
+#include "content.h"
 #include "libjava.h"
 #else
 #include "libwww.h"
@@ -329,6 +330,7 @@ int   status;
 int   status;
 #endif /* __STDC__ */
 {
+#ifndef AMAYA_JAVA
     AHTReqContext* context = (AHTReqContext*) ctxt;
     struct stat    sbuf;
     static FILE*   fptr = NULL;
@@ -388,6 +390,7 @@ int   status;
 	  /*(*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(instance), stream, file); */
        }
     }
+#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -401,6 +404,7 @@ void        *ctxt;
 int          status;
 #endif /* __STDC__ */
 {
+#ifndef AMAYA_JAVA
     AHTReqContext      *context = (AHTReqContext *) ctxt;
     char* file;
     struct stat sbuf;
@@ -432,7 +436,7 @@ int          status;
        Ap_Normal ((NPP) (instance), stream, file); 
 /*(*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(instance), stream, url);*/
     }
-
+#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -464,7 +468,7 @@ uint32 size;
 #   ifdef PLUGIN_DEBUG
     printf ("***** Ap_MemFlush *****\n"); 
 #   endif
-    return (0);
+    return malloc (size);
 }
 
 /*----------------------------------------------------------------------
@@ -569,16 +573,18 @@ NPP instance;
   Ap_URLNotify
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void Ap_URLNotify(NPP instance, const char* url, NPReason reason, void* notifyData)
+void Ap_URLNotify (NPP instance, const char* url, NPReason reason, void* notifyData)
 #else  /* __STDC__ */
-void Ap_URLNotify(instance, url, reason, notifyData)
+void Ap_URLNotify (instance, url, reason, notifyData)
 NPP         instance; 
 const char* url; 
 NPReason    reason; 
 void*       notifyData;
 #endif /* __STDC__ */
 {
+#   ifdef PLUGIN_DEBUG
     printf ("*** Ap_URLNotify ***\n") ;
+#   endif
 }
 
 /*----------------------------------------------------------------------
@@ -639,7 +645,9 @@ const char* target;
 void*       notifyData;
 #endif /* __STDC__ */
 {
+#   ifdef PLUGIN_DEBUG
     printf ("*** Ap_GetURLNotify ***\n") ;
+#   endif
     Ap_GetURL (instance, url, target);
     Ap_URLNotify (instance, url, NPRES_DONE, notifyData);
     return NPERR_NO_ERROR;
@@ -1066,11 +1074,12 @@ int   indexHandler;
   CreateInstance
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void Ap_CreatePluginInstance (PictInfo *imageDesc, Display *display) 
+void Ap_CreatePluginInstance (PictInfo *imageDesc, Display *display, int type) 
 #else  /* __STDC__ */
-void Ap_CreatePluginInstance (imageDesc, display)
-PictInfo *imageDesc;
-Display* display; 
+void Ap_CreatePluginInstance (imageDesc, display, type)
+PictInfo* imageDesc;
+Display*  display; 
+int       type;
 #endif /* __STDC__ */
 {
     NPStream*   stream;
@@ -1080,7 +1089,7 @@ Display* display;
     char*       url;
     uint16      stype;
     int         ret;
-    int16       argc  = 5; /* to parametrize */
+    int16       argc  = 6; /* to parametrize */
     /* int16       argc  = 3; */ /* to parametrize */
     struct stat sbuf;
      
@@ -1092,10 +1101,9 @@ Display* display;
     argn[1] = "WIDTH";
     argn[2] = "HEIGHT";
     
-    argn[3] = "DATASOURCE";
-    argn[4] = "INFINITE"; 
-    /* argn[4] = "AUTOSTART"; */
-    /* argn[5] = "STATUSBAR"; */
+    argn[3] = "CONTROLS";
+    argn[4] = "AUTOSTART";
+    argn[5] = "STATUSBAR";
     
     sprintf (widthText, "%d", imageDesc->PicWArea);
     sprintf (heightText, "%d", imageDesc->PicHArea);
@@ -1103,10 +1111,9 @@ Display* display;
     argv[1] = widthText;
     argv[2] = heightText;
     
-    argv[3] = "http://www.dvcorp.com/cgi-bin/wx/satellite.x";
-    /* argv[3] = "TRUE"; */
+    argv[3] = "TRUE";
     argv[4] = "TRUE";
-    /* argv[5] = "TRUE"; */
+    argv[5] = "TRUE";
     
     currentExtraHandler  = imageDesc->PicType - InlineHandlers;
 
@@ -1123,7 +1130,9 @@ Display* display;
     pwindow->clipRect.bottom = imageDesc->PicWArea;
     pwindow->clipRect.right  = imageDesc->PicHArea;
 
+#ifdef XP_UNIX
     pwindow->ws_info = (NPSetWindowCallbackStruct*) malloc (sizeof (NPSetWindowCallbackStruct));
+#endif /* XP_UNIX */
     
     ((NPSetWindowCallbackStruct*) (pwindow->ws_info))->display  = display;
     ((NPSetWindowCallbackStruct*) (pwindow->ws_info))->visual   = DefaultVisual(display, DefaultScreen (display));
@@ -1137,7 +1146,7 @@ Display* display;
     (NPP) (imageDesc->pluginInstance) = (NPP) malloc (sizeof (NPP_t)); 
     (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->newp)) (pluginTable [currentExtraHandler]->pluginMimeType, 
                                                              (NPP)(imageDesc->pluginInstance), 
-                                                             NP_EMBED, 
+                                                             type, 
                                                              argc, 
                                                              argn, 
                                                              argv,  
