@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Les feuilles de style</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -36,8 +36,8 @@ documents de deux façons différentes :</p>
   <li>en utilisant les éléments et les attributs HTML.</li>
 </ul>
 
-<p>Les premières entrées du menu <strong>Style</strong> sont consacrées aux
-CSS et les deux dernières entrées aux <a href="#L1371">éléments HTML</a>.</p>
+<p>Les entrées du menu <strong>Style</strong> sont consacrées à la création
+et la gestion des propriétés et des feuilles de style CSS.</p>
 
 <h3><a name="Creating">Créer et mettre à jour un attribut de style</a></h3>
 
@@ -74,19 +74,6 @@ permettent de supprimer l'information de style correspondant pour les
 vues immédiatement dans la vue formatée et également dans la vue
 structure.</p>
 
-<h4>Changer la largeur et la hauteur des éléments</h4>
-
-<p>La largeur et la hauteur de n'importe quel élément dans un document
-peuvent être changées de façon interactive, de la même façon que les <a
-href="ImageMaps.html.fr#L1171">zones actives</a>. En tapant sur la touche
-Control sur le clavier et en cliquant sur le bouton du milieu de la souris,
-vous pouvez redimensionner la boîte associée à l'élément situé sous le
-curseur. Quand vous lâchez le bouton de la souris, la taille de l'élément est
-changée et un attribut <code>style</code> est associé à l'élément.</p>
-
-<p>Quand l'élément redimensionné est une image, cette image est retaillée
-pour remplir sa nouvelle boîte.</p>
-
 <h3><a name="Creating,">Créer un style générique pour un élément ou une
 classe</a></h3>
 
@@ -99,8 +86,8 @@ de style&nbsp;:</p>
   <li>Choisissez <strong>Créer une règle</strong> depuis le menu
     <strong>Style</strong>. Une boîte de dialogue surgit et visualise une
     liste de sélecteurs CSS. Cette liste inclus toutes les classes qui sont
-    définies pour le document courant (y compris les classes de'finies par
-    les feuilles de style liées au document), ainsi que les types d'élément
+    définies pour le document courant (y compris les classes définies par les
+    feuilles de style liées au document), ainsi que les types d'élément
     auquel le style est associé.</li>
   <li>Choisissez un sélecteur dans cette liste ou entrez un nouveau nom de
     classe et cliquer sur le bouton <strong>Confirmer</strong>. Le style de
@@ -138,13 +125,12 @@ instance de la feuille de style.</p>
 
 <p>L'utilisateur peut définir une feuille de style spécifique qui s'applique
 à tous les documents chargés. Cette feuille de style est appelée
-<strong>Feuille de Style Utilisateur</strong> et est le fichier
-local<strong>amaya.css</strong> conservé dans l'environnement de
-l'utilisateur (Le <a href="Configure.html.fr#AmayaHome">répertoire
-d'AmayaHome</a>). Par exemple si vous préférez afficher les document en
-Helvetica et imprimer avec une police de caractères de petite taille, vous
-pouvez créer votre feuille de style utilisateur avec les règles CSS
-suivantes&nbsp;:</p>
+<strong>Feuille de Style Utilisateur</strong> et est le fichier local
+<strong>amaya.css</strong> conservé dans l'environnement de l'utilisateur (le
+<a href="Configure.html.fr#AmayaHome">répertoire d'AmayaHome</a>). Par
+exemple si vous préférez afficher les document en Helvetica et imprimer avec
+une police de caractères de petite taille, vous pouvez créer votre feuille de
+style utilisateur avec les règles CSS suivantes&nbsp;:</p>
 <pre>@media print {
  BODY {font-size: 10pt}
 }
@@ -224,7 +210,7 @@ ces styles sont également disponibles par l'intermédiaire des boutons :
 />) and <code>code</code> (<img src="../images/code.gif" alt="Code button"
 />).</p>
 
-<p>La commande<strong>Éléments caractères</strong> du menu
+<p>La commande <strong>Éléments caractères</strong> du menu
 <strong>Xhtml</strong> offre un autre menu changeant le style du texte. Les
 premières entrées de ce menu peuvent être remplacées par CSS et ne devraient
 pas être utilisées. Elles sont là uniquement pour se conformer à

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Formatelemente erzeugen</title>
   <style type="text/css">
  </style>
@@ -41,7 +40,7 @@ man einem Dokument Formatelemente hinzufügen.</p>
 <p>Das Untermenü <strong>Inhaltsorientiert</strong> listet Elemente, welche
 abstrakte Formate definieren. Drei dieser Formate sind auch über die Knöpfe
 <img src="../../images/Em.gif" alt="Knopf Betonung" /> für Betonung
-(<code>em</code>), <img src="../../images/strong.gif"
+(<code>em</code>), <img src="../../images/Strong.gif"
 alt="Kopf starke Betonung" /> für Hervorhebung (<code>strong</code>) und <img
 src="../../images/code.gif" alt="Knopf feste Schriftbreite" /> für
 Programmcode (<code>code</code>) erreichbar.</p>

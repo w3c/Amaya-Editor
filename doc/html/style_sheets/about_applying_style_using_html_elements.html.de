@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <title>Zeichenketten formatieren</title>
   <style type="text/css">
   </style>
@@ -65,7 +64,7 @@ Knopfleiste.</p>
     <tr>
       <td valign="top"><p class="TableText">Betont (<code>em</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><kbd>Umsch Strg I</kbd></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl e</kbd></p>
       </td>
       <td valign="top"><p><img src="../../images/Em.gif"
         alt="Emphasis button" /></p>
@@ -75,7 +74,7 @@ Knopfleiste.</p>
       <td valign="top"><p class="TableText">Hervorgehoben
         (<code>strong</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><kbd>Umsch Strg B</kbd></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl s</kbd></p>
       </td>
       <td valign="top"><p><img src="../../images/Strong.gif"
         alt="Strong button" /></p>
@@ -85,14 +84,14 @@ Knopfleiste.</p>
       <td valign="top"><p class="TableText">Zitatquelle
         (<code>cite</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><kbd>Alt t Alt w</kbd></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl w</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td valign="top"><p class="TableText">Definition (dfn)</p>
       </td>
-      <td valign="top"><p class="TableText"><kbd>Alt t Alt d</kbd></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl x</kbd></p>
       </td>
       <td></td>
     </tr>
@@ -100,7 +99,7 @@ Knopfleiste.</p>
       <td valign="top"><p class="TableText">Programmcode
         (<code>code</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><kbd>Alt t Alt c</kbd></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl t</kbd></p>
       </td>
       <td valign="top"><p><img src="../../images/code.gif" alt="Code button"
         /></p>
@@ -109,14 +108,14 @@ Knopfleiste.</p>
     <tr>
       <td valign="top"><p class="TableText">Variable (<code>var</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><kbd>Alt t Alt v</kbd></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl v</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td valign="top"><p class="TableText">Beispiel (<code>samp</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><kbd>Alt t Alt s</kbd></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl m</kbd></p>
       </td>
       <td><code></code></td>
     </tr>
@@ -124,21 +123,21 @@ Knopfleiste.</p>
       <td valign="top"><p class="TableText">Tastatureingabe
         (<code>kbd</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><kbd>Alt t Alt k</kbd></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl k</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td valign="top"><p class="TableText">Abkürzung (<code>abbr</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><kbd>Alt t Alt a</kbd></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl u</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td valign="top"><p class="TableText">Akronym (<code>acronym</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><kbd>Alt t Alt z</kbd></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl y</kbd></p>
       </td>
       <td></td>
     </tr>
@@ -146,7 +145,7 @@ Knopfleiste.</p>
       <td valign="top"><p class="TableText">Eingefügter Text
         (<code>ins</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><kbd>Alt t Alt i</kbd></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl i</kbd></p>
       </td>
       <td></td>
     </tr>
@@ -154,7 +153,7 @@ Knopfleiste.</p>
       <td valign="top"><p class="TableText">Gelöschter Text
         (<code>del</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><kbd>Alt t Alt Entf</kbd></p>
+      <td valign="top"><p class="TableText"><kbd>Ctrl i Ctrl d</kbd></p>
       </td>
       <td></td>
     </tr>

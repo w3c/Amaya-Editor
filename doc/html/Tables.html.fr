@@ -92,7 +92,7 @@ colonne correspondante.</p>
 <h3>Détruire une colonne</h3>
 
 <p>Pour détruire une colonne de table, il faut sélectionner la colonne et
-utilser la commande <code>Delete</code>. Il y a deux méthodes pour
+utiliser la commande <code>Delete</code>. Il y a deux méthodes pour
 sélectionner une colonne :</p>
 <ol>
   <li>Soit l'entrée <strong>Sélectionner la colonne</strong> dans le
@@ -167,9 +167,9 @@ ligne&nbsp;:</p>
 
 <h3>Détruire une ligne</h3>
 
-<p>Pour détruire une ligne de table, il faut sélectionner la ligne et utilser
-la commande <code>Delete</code>. Il y a deux méthodes pour sélectionner une
-ligne :</p>
+<p>Pour détruire une ligne de table, il faut sélectionner la ligne et
+utiliser la commande <code>Delete</code>. Il y a deux méthodes pour
+sélectionner une ligne :</p>
 <ol>
   <li>Soit l'entrée <strong>Sélectionner la ligne</strong> dans le sous-menu
     <strong>Table</strong> (<code>Ctrl t Ctrl r</code>).</li>

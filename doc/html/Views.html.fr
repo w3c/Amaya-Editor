@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Vues</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -88,6 +88,75 @@ correspondante; commande du menu <strong>Vues</strong> (disponible uniquement
 à partir de la vue formatée). Les commandes <strong>Montrer ...</strong> du
 menu <strong>Vues</strong> peuvent être également utilisées pour remonter au
 premier plan la fenêtre correspondante quand elle est en arrière plan.</p>
+
+<table border="0" cellspacing="0" cellpadding="0" style="margin-left:.5in">
+  <tbody>
+    <tr>
+      <td
+      style="border-top:solid 1.5pt; border-left:none;border-bottom:solid 1.5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableTitle"><strong>Entrée du menu</strong></p>
+      </td>
+      <td
+      style="border-top:solid 1.5pt; border-left:none;border-bottom:solid 1.5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableTitle"><strong>Raccourci clavier</strong></p>
+      </td>
+    </tr>
+    <tr>
+      <td
+      style="border-top:none; border-left:none; border-bottom:solid .5pt; border-right: none; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Montrer la structure</p>
+      </td>
+      <td
+      style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>Ctrl v&nbsp;Ctrl s</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td
+      style="border-top:none; border-left:none; border-bottom:solid .5pt; border-right: none; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Montrer la vue Alternée</p>
+      </td>
+      <td
+      style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>Ctrl v Ctrl i</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td
+      style="border-top:none; border-left:none; border-bottom:solid .5pt;border-right:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Montrer les liens</p>
+      </td>
+      <td
+      style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>Ctrl v Ctrl l</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td
+      style="border-top:none; border-left:none; border-bottom:solid .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Montrer la table des matières</p>
+      </td>
+      <td
+      style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>Ctrl v Ctrl c</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td
+      style="border-top:none; border-left:none; border-bottom:solid 1.5pt; border-right: none; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Montrer le source</p>
+      </td>
+      <td
+      style="border:none; border-bottom:solid 1.5pt; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>Ctrl v Ctrl h</code></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Note&nbsp;:</strong> <code>Ctrl v</code> est remplacé par
+<code>Ctrl u</code> sous Windows parce que <code>Ctrl v</code> est utilisé
+pour la commande <strong>Copier</strong>.</p>
 
 <h3><a name="Closing">Fermer une vue</a></h3>
 

@@ -55,31 +55,31 @@ disponibles desde la vista de navegador normal (vista Formateada).</p>
         <tr>
           <td><p class="TableText">Mostrar estructura</p>
           </td>
-          <td><p class="TableText"><code>Alt+v&nbsp;Alt+s</code></p>
+          <td><p class="TableText"><code>Ctrl&nbsp;v Ctrl&nbsp;s</code></p>
           </td>
         </tr>
         <tr>
           <td><p class="TableText">Mostrar alternativo</p>
           </td>
-          <td><p class="TableText"><code>Alt+v Alt+I</code></p>
+          <td><p class="TableText"><code>Ctrl&nbsp;v Ctrl&nbsp;i</code></p>
           </td>
         </tr>
         <tr>
           <td><p class="TableText">Mostrar enlaces</p>
           </td>
-          <td><p class="TableText"><code>Alt+v Alt+l</code></p>
+          <td><p class="TableText"><code>Ctrl&nbsp;v Ctrl&nbsp;l</code></p>
           </td>
         </tr>
         <tr>
           <td><p class="TableText">Mostrar tabla de contenidos</p>
           </td>
-          <td><p class="TableText"><code>Alt+v Alt+c</code></p>
+          <td><p class="TableText"><code>Ctrl&nbsp;v Ctrl&nbsp;c</code></p>
           </td>
         </tr>
         <tr>
           <td><p class="TableText">Mostrar fuente</p>
           </td>
-          <td><p class="TableText"><code>Alt+v Alt+h</code></p>
+          <td><p class="TableText"><code>Ctrl&nbsp;v Ctrl&nbsp;h</code></p>
           </td>
         </tr>
       </tbody>

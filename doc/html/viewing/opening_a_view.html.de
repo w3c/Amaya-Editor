@@ -45,11 +45,11 @@ können nur aus der Browseransicht heraus aktiviert werden.</p>
   <li>Im Menü <strong>Ansicht</strong> die gewünschte Ansicht auswählen.</li>
   <li>Das entsprechende Tastenkürzel benutzen:
     <ul>
-      <li><strong>Struktur</strong>: <kbd>Alt v Alt s</kbd></li>
-      <li><strong>Textbrowser</strong>: <kbd>Alt v Alt i</kbd></li>
-      <li><strong>Verweise</strong>: <kbd>Alt v Alt l</kbd></li>
-      <li><strong>Inhaltsverzeichnis</strong>: <kbd>Alt v Alt c</kbd></li>
-      <li><strong>Quelltext</strong>: <kbd>Alt v Alt h</kbd></li>
+      <li><strong>Struktur</strong>: <kbd>Ctrl v Ctrl s</kbd></li>
+      <li><strong>Textbrowser</strong>: <kbd>Ctrl v Ctrl i</kbd></li>
+      <li><strong>Verweise</strong>: <kbd>Ctrl v Ctrl l</kbd></li>
+      <li><strong>Inhaltsverzeichnis</strong>: <kbd>Ctrl v Ctrl c</kbd></li>
+      <li><strong>Quelltext</strong>: <kbd>Ctrl v Ctrl h</kbd></li>
     </ul>
     <p class="ProcedureNote"><strong>Anmerkung:</strong>&nbsp;Diese Befehle
     können auch dazu benutzt werden um ein verstecktes Fenster einer Ansicht

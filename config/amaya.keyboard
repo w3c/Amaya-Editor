@@ -128,10 +128,10 @@ Ctrl <Key>h , Ctrl <Key>v:         CreateDivision()
 Ctrl <Key>h , Ctrl <Key>w:         CreateParameter() 
 
 #Style menu and Information types
-Ctrl <Key>i , Ctrl <Key>-:                 SetOnOffDEL() 
 Ctrl <Key>i , Ctrl <Key>a:         ApplyClass() 
 Ctrl <Key>i , Ctrl <Key>b:         ChangeBackgroundImage() 
 Ctrl <Key>i , Ctrl <Key>c:         CreateClass() 
+Ctrl <Key>i , Ctrl <Key>d:                 SetOnOffDEL()
 #Ctrl <Key>i , Ctrl <Key>d:         DisableCSS()
 #Ctrl <Key>i , Ctrl <Key>e:         EnableCSS()
 Ctrl <Key>i , Ctrl <Key>e:                 SetOnOffEmphasis() 
