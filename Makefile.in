@@ -9,7 +9,7 @@ THOTDIR = @top_srcdir@
 
 include Options
 
-LIBWWW	= w3c-libwww-$(LIBWWW_VER)
+LIBWWW	= libwww
 KAFFE	= kaffe-$(KAFFE_VER)
 LIBJPEG	= libjpeg
 LIBPNG	= libpng

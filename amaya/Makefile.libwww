@@ -17,7 +17,7 @@ AMAYA_LIBWWW_LIBS= ../libwww.a
 
 AMAYA_LIBWWW_EXTRA_LIBS=
 
-AMAYA_LIBWWW_INCLUDES= -I$(THOTDIR)/w3c-libwww-$(LIBWWW_VER)/Library/src
+AMAYA_LIBWWW_INCLUDES= -I$(THOTDIR)/libwww/Library/src
 
 ../libwww.a :
 	@(cd .. ; $(MAKE) libwww.a)

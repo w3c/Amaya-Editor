@@ -319,7 +319,6 @@ dnl  ***************************************************************
 THOT_VER="2.2"
 AMAYA_VER="1.3"
 KAFFE_VER="snap"
-LIBWWW_VER="5.1m"
 
 dnl
 dnl We use a special versoin of cextract patched for alignment
@@ -595,9 +594,9 @@ if test "$build_amaya" = "yes" ; then
 	fi
     fi
 
-    if test ! -f $srcdir/w3c-libwww-$LIBWWW_VER/Makefile.in ; then
+    if test ! -f $srcdir/libwww/Makefile.in ; then
 	if test "$with_java" = "no" -a "$with_ilu" = "no" ; then
-	    AC_MSG_WARN(w3c-libwww-$LIBWWW_VER sources not found !!)
+	    AC_MSG_WARN(libwww sources not found !!)
 	    AC_MSG_WARN(Disabling Amaya build !)
 	    build_amaya="no"
 	fi
@@ -673,7 +672,6 @@ dnl
 
 AC_SUBST(THOT_VER)
 AC_SUBST(AMAYA_VER)
-AC_SUBST(LIBWWW_VER)
 AC_SUBST(KAFFE_VER)
 AC_SUBST(CEXTRACT_VER)
 AC_SUBST(CEXTRACT_FLAGS)
