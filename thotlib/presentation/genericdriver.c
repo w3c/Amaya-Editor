@@ -45,12 +45,16 @@
 #include "libmsg.h"
 #include "message.h"
 #include "conststr.h"
-#include "typestr.h"
 #include "constprs.h"
+#include "constint.h"
+#include "constmedia.h"
+#include "typeint.h"
 #include "typeprs.h"
+#include "typemedia.h"
 #include "application.h"
 
 #include "genericdriver.h"
+#include "changepresent_f.h"
 
 #ifdef __STDC__
 extern void         GetPresentRule (PtrPRule * pRP);

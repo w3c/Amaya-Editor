@@ -913,8 +913,14 @@ char                c;
 	      if (pViewSel->VsBox->BxAbstractBox->AbLeafType == LtPicture
 		  ||  pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText)
 		{
-		  if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
-		    (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
+		  if (MenuActionList[CMD_DeleteSelection].User_Action != NULL) {
+		      if (((*MenuActionList[CMD_DeleteSelection].User_Action) (
+			     MenuActionList[CMD_DeleteSelection].User_Arg, document, view)) &&
+                          (MenuActionList[CMD_DeleteSelection].Call_Action != NULL))
+		          (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
+		  } else
+		     if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
+		        (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
 		}
 	      else
 		TtcPreviousChar (document, view);
@@ -973,8 +979,14 @@ View                view;
 	      if (pViewSel->VsBox->BxAbstractBox->AbLeafType == LtPicture
 		    ||  pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText)
 		{
-		  if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
-		    (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
+		  if (MenuActionList[CMD_DeleteSelection].User_Action != NULL) {
+		      if (((*MenuActionList[CMD_DeleteSelection].User_Action) (
+		             MenuActionList[CMD_DeleteSelection].User_Arg, document, view)) &&
+                          (MenuActionList[CMD_DeleteSelection].Call_Action != NULL))
+		          (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
+		  } else
+		     if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
+		        (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
 		}
 	      else
 		TtcPreviousChar (document, view);
@@ -3344,14 +3356,19 @@ void                EditingLoadResources ()
 	TteConnectAction (T_insertchar, (Proc) InsertChar);
 
 	MenuActionList[0].Call_Action = (Proc) TtcInsertChar;
+	MenuActionList[0].User_Action = (UserProc) NULL;
 	MenuActionList[CMD_DeletePrevChar].Call_Action = (Proc) TtcDeletePreviousChar;
+	MenuActionList[CMD_DeletePrevChar].User_Action = (UserProc) NULL;
 	MenuActionList[CMD_DeleteSelection].Call_Action = (Proc) TtcDeleteSelection;
+	MenuActionList[CMD_DeleteSelection].User_Action = (UserProc) NULL;
 
 	if (ThotLocalActions[T_enter] != NULL)
 	   MenuActionList[CMD_CreateElement].Call_Action = ThotLocalActions[T_enter];
 	else
 	   MenuActionList[CMD_CreateElement].Call_Action = (Proc) TtcCreateElement;
+	MenuActionList[CMD_CreateElement].User_Action = (UserProc) NULL;
 	MenuActionList[CMD_PasteFromClipboard].Call_Action = (Proc) TtcPasteFromClipboard;
+	MenuActionList[CMD_PasteFromClipboard].User_Action = (UserProc) NULL;
 	LastInsertParagraph = NULL;
 	LastInsertElText = NULL;
 	LastInsertAttr = NULL;

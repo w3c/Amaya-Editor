@@ -5,6 +5,8 @@
  *
  */
  
+#ifndef _THOTLIB_CONSTPIV_H_
+#define _THOTLIB_CONSTPIV_H_
 
 /*
  * marks structuring the pivot representation
@@ -110,3 +112,4 @@
 #define MOldRefExterne 'y'
 #define MOldRefInclusion 'z'
 
+#endif /* _THOTLIB_CONSTPIV_H_ */

@@ -5,6 +5,9 @@
  *
  */
  
+#ifndef _THOTLIB_TYPEGRM_H_
+#define _THOTLIB_TYPEGRM_H_
+
 /*
  * Type definitions for syntactic analysis and compilation.
  *
@@ -56,3 +59,5 @@ typedef SyntacticCode 	SyntacticRule[RULE_LENGTH + 1];
 
 /* the number of a syntactical rule */
 typedef int 		SyntRuleNum;
+
+#endif /* _THOTLIB_TYPEGRM_H_ */

@@ -5,6 +5,9 @@
  *
  */
  
+#ifndef _THOTLIB_CONSTMOT_H_
+#define _THOTLIB_CONSTMOT_H_
+
 /* Constants for 8 bits words (Eric Picheral)  */
 
 /* character types (8 bits) :
@@ -64,3 +67,5 @@
 
 #define isimaj(c)       ((_cType_+1)[(unsigned char)c]&(_H|_U))
 #define isalphiso(c)    ((_cType_+1)[(unsigned char)c]&(_H|_I|_U|_L))
+
+#endif /* _THOTLIB_CONSTMOT_H_ */

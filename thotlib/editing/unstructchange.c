@@ -1623,8 +1623,10 @@ void                NoStructSelectLoadResources ()
 	TteConnectAction (T_deletenextchar, (Proc) DeleteNextChar);
 	TteConnectAction (T_cmdpaste, (Proc) PasteCommand);
 	TteConnectAction (T_enter, (Proc) TtcCreateElement);
-	if (MenuActionList[CMD_CreateElement].Call_Action != NULL)
+	if (MenuActionList[CMD_CreateElement].Call_Action != NULL) {
 	   MenuActionList[CMD_CreateElement].Call_Action = (Proc) TtcCreateElement;
+	   MenuActionList[CMD_CreateElement].User_Action = (UserProc) NULL;
+	}
 	StructSelectionMode = FALSE;
      }
 }

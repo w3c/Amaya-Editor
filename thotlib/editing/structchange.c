@@ -1213,8 +1213,10 @@ void                StructSelectLoadResources ()
 	TteConnectAction (T_cancopyorcut, (Proc) CanCopyOrCut);
 	TteConnectAction (T_cmdpaste, (Proc) StructPasteCommand);
 	TteConnectAction (T_enter, (Proc) StructReturnKey);
-	if (MenuActionList[CMD_CreateElement].Call_Action != NULL)
+	if (MenuActionList[CMD_CreateElement].Call_Action != NULL) {
 	   MenuActionList[CMD_CreateElement].Call_Action = (Proc) StructReturnKey;
+	   MenuActionList[CMD_CreateElement].User_Action = (UserProc) NULL;
+	}
 	StructSelectionMode = TRUE;
      }
 }

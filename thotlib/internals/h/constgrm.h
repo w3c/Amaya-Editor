@@ -5,6 +5,8 @@
  *
  */
  
+#ifndef _THOTLIB_CONSTGRM_H_
+#define _THOTLIB_CONSTGRM_H_
 /*
  * Constants for parsing and compiling languages S, P, T, and A
  */
@@ -18,3 +20,6 @@
 #define MAX_IDENTIFIERS1 1601		/* MAX_IDENTIFIERS +1 */
 #define MAX_RULES 180		/* max. number of syntactic rules in a grammar */
 #define RULE_LENGTH 120		/* max. length of a syntactic rule */
+
+#endif /* _THOTLIB_CONSTGRM_H_ */
+

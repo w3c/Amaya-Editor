@@ -24,7 +24,9 @@
 typedef struct _Action_Ctl
 {
   char 		*ActionName;	/* Nom externe de l'action		*/
-  Proc 		Call_Action;	/* Adresse de la procedure		*/
+  UserProc 	User_Action;	/* Adresse de la procedure utilisateur	*/
+  void 		*User_Arg;	/* Argument de la procedure utilisateur	*/
+  Proc 		Call_Action;	/* Adresse de la procedure standard	*/
   char 		*ActionEquiv;	/* Equivalent clavier de l'action	*/
   boolean	ActionActive[MAX_FRAME];
 }Action_Ctl;

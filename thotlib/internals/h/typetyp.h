@@ -5,6 +5,8 @@
  *
  */
  
+#ifndef _THOTLIB_TYPETYP_H_
+#define _THOTLIB_TYPETYP_H_
 /*
  * Structures de donnees pour le correcteur typographique.
  *
@@ -207,3 +209,4 @@ typedef struct _SchTypo
 					des attributs logiques, dans l'ordre
 					de la table StructSchema.SsAttribute */
 } SchTypo;
+#endif /* _THOTLIB_TYPETYP_H_ */

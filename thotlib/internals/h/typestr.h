@@ -5,6 +5,8 @@
  *
  */
  
+#ifndef _THOTLIB_TYPESTR_H_
+#define _THOTLIB_TYPESTR_H_
 
 /*
  * Type declarations for the Editor structure schemas
@@ -336,3 +338,4 @@ typedef struct _StructSchema
 } StructSchema;
 
 
+#endif /* _THOTLIB_TYPESTR_H_ */

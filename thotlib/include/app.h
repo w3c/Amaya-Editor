@@ -20,6 +20,7 @@
 #include "appaction.h"
 
 typedef void        (*Proc) ();
+typedef int         (*UserProc) ();
 typedef             boolean (*Func) ();
 
 /* Type definition for windows */
@@ -78,6 +79,7 @@ extern void         TteZeroMenu (WindowType windowtype, char *schemaName);
 extern void         TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon);
 extern void         TteInitMenus (char *name, int number);
 extern void         TteAddMenuAction (char *actionName, Proc procedure);
+extern void         TteAddUserAction (char *actionName, UserProc procedure, void *arg);
 extern void         TteAddMenu (WindowType windowtype, char *schemaName, int view, int menuID, int itemsNumber, char *menuName);
 extern void         TteAddSubMenu (WindowType windowtype, char *schemaName, int menuID, int itemID, int itemsNumber);
 extern void         TteAddMenuItem (WindowType windowtype, char *schemaName, int menuID, int subMenuID, int itemID, char *actionName, char itemType);
@@ -161,6 +163,7 @@ extern void         TteZeroMenu ( /*WindowType windowtype, char *schemaName */ )
 extern void         TteOpenMainWindow ( /*char *name, Pixmap logo, Pixmap icon */ );
 extern void         TteInitMenus ( /*char *name,int number */ );
 extern void         TteAddMenuAction ( /*char *actionName, Proc procedure */ );
+extern void         TteAddUserAction ( /*char *actionName, UserProc procedure, void *arg*/ );
 extern void         TteAddMenu ( /*WindowType windowtype, char *schemaName, int view, int menuID, int itemsNumber, char *menuName */ );
 extern void         TteAddSubMenu ( /*WindowType windowtype, char *schemaName, int menuID, int itemID, int itemsNumber */ );
 extern void         TteAddMenuItem ( /*WindowType windowtype, char *schemaName, int menuID, int subMenuID, int itemID, char *actionName, char itemType */ );

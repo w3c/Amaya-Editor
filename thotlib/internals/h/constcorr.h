@@ -5,6 +5,9 @@
  *
  */
  
+#ifndef _THOTLIB_CONSTCORR_H_
+#define _THOTLIB_CONSTCORR_H_
+
 /*
  *	Constants for spelling checker
  */
@@ -13,3 +16,6 @@
 #define CHKR_LIMIT		15	/* Maximum value of ki, ko, kp */
 #define CHKR_THRESHOLD	200	/* Maximum threshold */
 #define MAX_REJECTED_CHARS	15	/* Max. number of special characters */
+
+#endif /* _THOTLIB_CONSTCORR_H_ */
+

@@ -5,6 +5,8 @@
  *
  */
  
+#ifndef _THOTLIB_CONSTMEDIA_H_
+#define _THOTLIB_CONSTMEDIA_H_
 
 /*
  * Constant declaration for document images
@@ -66,3 +68,4 @@
 #define TEXT_DEL 9
 #define TEXT_X_PASTE 10
 
+#endif /* _THOTLIB_CONSTMEDIA_H_ */

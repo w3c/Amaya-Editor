@@ -5,6 +5,8 @@
  *
  */
  
+#ifndef _THOTLIB_TYPEPRS_H_
+#define _THOTLIB_TYPEPRS_H_
 
 /*
  * Type declaration for the presentation of documents
@@ -812,3 +814,5 @@ element
 					  the element values to attributes of
 					  included documents */
 } PresentSchema;
+
+#endif /* _THOTLIB_TYPEPRS_H_ */

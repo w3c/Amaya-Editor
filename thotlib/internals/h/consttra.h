@@ -5,6 +5,8 @@
  *
  */
  
+#ifndef _THOTLIB_CONSTTRA_H_
+#define _THOTLIB_CONSTTRA_H_
 
 /*
  * Constants for documents translation
@@ -145,3 +147,4 @@
 #define C_WITHIN_LT 'I'
 #define C_WITHIN_EQ 'E'
 
+#endif /* _THOTLIB_CONSTTRA_H_ */

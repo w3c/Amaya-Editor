@@ -11,10 +11,10 @@
  *
  */
 
-#include "thot_sys.h"
-
 #ifndef __CONST_INT_H__
 #define __CONST_INT_H__
+
+#include "thot_sys.h"
 
 #define MAX_ASSOC_DOC 8  	/* max. number of associated element types for
 				   a document */

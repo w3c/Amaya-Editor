@@ -29,6 +29,8 @@
 #include "message.h"
 #include "constint.h"
 #include "typeint.h"
+#include "constmedia.h"
+#include "typemedia.h"
 #include "pschema.h"
 #include "application.h"
 
@@ -38,6 +40,7 @@
 #include "specificdriver.h"
 
 #include "presentationapi_f.h"
+#include "changepresent_f.h"
 
 /*
  * GetSpecificContext : user level function needed to allocate and
@@ -150,6 +153,32 @@ PresentationValue   v;
 
 #endif
 {
+   SpecificTarget  elem = (SpecificTarget) t;
+   SpecificContext ctxt = (SpecificContext) c;
+   ElementType type;
+   Document doc;
+   PtrSSchema pSS;
+   int elType = 0;
+   int attrType = 0;
+   int presBox = 0;
+   PtrPRule pRule;
+
+   if (ctxt == NULL) return(-1);
+
+   doc = ctxt->doc;
+   pSS = (PtrSSchema) TtaGetDocumentSSchema (doc);
+
+   /*
+    * The PRule list is directly associated to the element.
+    */
+   type = TtaGetElementType(elem);
+   elType = type.ElTypeNum;
+   pRule = ((PtrElement) elem)->ElFirstPRule;
+
+   if (pRule == NULL)
+      return (-1);
+
+   ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, FALSE);
 }
 
 /*----------------------------------------------------------------------

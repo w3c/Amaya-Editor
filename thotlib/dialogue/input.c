@@ -755,8 +755,14 @@ int                 key;
 	       {
 		  /* l'action est active pour la fenetre courante */
 		  /* prepare les parametres */
-		  if (MenuActionList[command].Call_Action != NULL)
-		     (*MenuActionList[command].Call_Action) (document, view);
+		  if (MenuActionList[command].User_Action != NULL) {
+		      if (((*MenuActionList[command].User_Action) (
+			     MenuActionList[command].User_Arg, document, view)) &&
+                          (MenuActionList[command].Call_Action != NULL))
+		          (*MenuActionList[command].Call_Action) (document, view);
+		  } else
+		     if (MenuActionList[command].Call_Action != NULL)
+		        (*MenuActionList[command].Call_Action) (document, view);
 	       }
 	  }
 	/* Rien a inserer */
@@ -769,8 +775,14 @@ int                 key;
 	       {
 		  /* Par defaut BackSpace detruit le caractere precedent */
 		  /* sans se soucier de la langue courante */
-		  if (MenuActionList[CMD_DeletePrevChar].Call_Action != NULL)
-		     (*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, view);
+		  if (MenuActionList[CMD_DeletePrevChar].User_Action != NULL) {
+		      if (((*MenuActionList[CMD_DeletePrevChar].User_Action) (
+			     MenuActionList[CMD_DeletePrevChar].User_Arg, document, view)) &&
+                          (MenuActionList[CMD_DeletePrevChar].Call_Action != NULL))
+		          (*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, view);
+		  } else
+		     if (MenuActionList[CMD_DeletePrevChar].Call_Action != NULL)
+		        (*MenuActionList[CMD_DeletePrevChar].Call_Action) (document, view);
 		  return;
 	       }
 
