@@ -305,19 +305,19 @@
 #define IDC_LEFT                        1100
 #define IDC_RIGHT                       1101
 #define IDC_CENTER                      1102
-#define IDC_DEFAULTALIGN                1103
+#define IDC_JUSTIFY                     1103
 #define IDC_BLEFT                       1104
 #define IDC_BCENTER                     1106
 #define IDC_BRIGHT                      1107
 #define IDC_INDENTPT                    1108
 #define IDC_INDENTPTVALUE               1109
-#define IDC_INDENTPTEDIT                1110
+#define IDC_DEFAULTALIGN                1110
+#define IDC_INDENTPTEDIT                1111
 #define IDC_INDENT1                     1113
 #define IDC_INDENT2                     1114
 #define IDC_INDENTDEFAULT               1115
 #define IDC_BINDENT1                    1116
 #define IDC_BINDENT2                    1118
-#define IDC_JUSTIFY                     1119
 #define IDC_BJUSTIFY                    1120
 #define IDC_LINESPACINGPT               1123
 #define IDC_LINESPACINGPTVALUE          1124
@@ -677,6 +677,10 @@
 #define IDC_TAUTHINFO                   1544
 #define IDC_TPASSWDEDIT                 1545
 #define IDC_TNAMEEDIT                   1546
+#define IDC_AALT                        1547
+#define IDC_ACTRL                       1548
+#define IDC_ANONE                       1549
+#define IDC_ACCESSKEY                   1550
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -723,7 +727,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        547
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1547
+#define _APS_NEXT_CONTROL_VALUE         1551
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

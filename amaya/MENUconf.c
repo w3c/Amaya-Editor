@@ -141,6 +141,8 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 	{IDC_THOMEPAGE, AM_HOME_PAGE},
 	{IDC_TZOOM , AM_ZOOM},
 	{IDC_TDIALOGUELANG,AM_DIALOGUE_LANGUAGE},
+	{IDC_ACCESSKEY, AM_ACCESSKEY},
+	{IDC_ANONE, AM_NONE},
 	{IDC_MULTIKEY, AM_ENABLE_MULTIKEY},
 	{IDC_BGIMAGES, AM_SHOW_BG_IMAGES},
 	{IDC_DOUBLECLICK, AM_ENABLE_DOUBLECLICK},
@@ -1788,6 +1790,18 @@ void WIN_RefreshGeneralMenu (HWND hwnDlg)
   CheckDlgButton (hwnDlg, IDC_ENABLEFTP, (EnableFTP) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
+  switch (AccesskeyMod)
+  {
+  case 0:
+	  CheckRadioButton (hwnDlg, IDC_AALT, IDC_ANONE, IDC_AALT);
+	  break;
+   case 1:
+   	  CheckRadioButton (hwnDlg, IDC_AALT, IDC_ANONE, IDC_ACTRL);
+	   break;
+   case 2:
+	  CheckRadioButton (hwnDlg, IDC_AALT, IDC_ANONE, IDC_ANONE);
+       break;
+  }
   SetDlgItemInt (hwnDlg, IDC_ZOOM, Zoom, TRUE);
   SetDlgItemText (hwnDlg, IDC_TMPDIR, AppTmpDir);
   SetDlgItemText (hwnDlg, IDC_APPHOME, AppHome);
@@ -1857,7 +1871,7 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	    case IDC_DIALOGUELANG:
 	      GetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang,
 			      sizeof (DialogueLang) - 1);
-	      break;
+		  break;
 	    case IDC_ZOOM:
 	      Zoom = GetDlgItemInt (hwnDlg, IDC_ZOOM, FALSE, TRUE);
 	      break;	
@@ -1865,6 +1879,15 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	}
       switch (LOWORD (wParam))
 	{
+	 case IDC_AALT:
+	   AccesskeyMod = 0;
+	   break;
+  	 case IDC_ACTRL:
+	   AccesskeyMod = 1;
+	   break;
+   	 case IDC_ANONE:
+	   AccesskeyMod = 2;
+	   break;
 	case IDC_MULTIKEY:
 	  Multikey = !Multikey;
 	  break;
