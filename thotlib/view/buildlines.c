@@ -2208,12 +2208,12 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  }
     }
 
+  /* compute the line spacing */
+  lineSpacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
+			    pAb, ViewFrameTable[frame - 1].FrMagnification);
   width = pBox->BxW;
   if (width > BoxCharacterWidth (119, pBox->BxFont)/*'w' */ || extensibleBox)
     {
-      /* compute the line spacing */
-      lineSpacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
-				pAb, ViewFrameTable[frame - 1].FrMagnification);
       /* compute the indent */
       if (extensibleBox)
 	{
@@ -2239,10 +2239,10 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  
 	  pBoxToBreak = NULL;
 	  pPreviousLine = NULL;
-	  /* height of the block box */
-	  *height = 0;
 	  /* origin of the next line */
-	  org = top;
+	  org = top + ((lineSpacing + 1) / 2);
+	  /* height of the block box */
+	  *height = org - top;
 	  toLineSpace = FALSE;
 	}
       else
@@ -2526,7 +2526,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
     }
   else
     {
-      *height = BoxFontHeight (pBox->BxFont);
+      *height = BoxFontHeight (pBox->BxFont) + ((lineSpacing + 1) / 2);
       if (pNextBox && !pNextBox->BxAbstractBox->AbHorizEnclosing)
 	do
 	  if (pNextBox->BxType == BoScript && pNextBox->BxNexChild)
@@ -2580,6 +2580,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   /* now add margins, borders and paddings to min and max widths */
   pBox->BxMinWidth += left + rigth;
   pBox->BxMaxWidth += left + rigth;
+  *height = *height + ((lineSpacing + 1) / 2);
 }
 
 
