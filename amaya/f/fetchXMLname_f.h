@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern SSchema GetXHTMLSSchema ( Document doc );
 extern SSchema GetMathMLSSchema ( Document doc );
 extern SSchema GetGraphMLSSchema ( Document doc );
 extern SSchema GetXLinkSSchema ( Document doc );
@@ -22,6 +23,7 @@ extern void GetXMLElementName ( ElementType elType,
 
 #else /* __STDC__ */
 
+extern SSchema GetXHTMLSSchema (/* Document doc */);
 extern SSchema GetMathMLSSchema (/* Document doc */);
 extern SSchema GetGraphMLSSchema (/* Document doc */);
 extern SSchema GetXLinkSSchema (/* Document doc */);

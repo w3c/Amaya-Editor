@@ -16,6 +16,113 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "parser.h"
+
+/* mapping table of XHTML elements */
+static ElemMapping    XHTMLElemMappingTable[] =
+{
+   /* This table MUST be in alphabetical order */
+   {TEXT("XMLcomment"), SPACE, HTML_EL_Comment_},
+   {TEXT("XMLcomment_line"), SPACE, HTML_EL_Comment_line},
+   {TEXT("a"), SPACE, HTML_EL_Anchor},
+   {TEXT("abbr"), SPACE, HTML_EL_ABBR},
+   {TEXT("acronym"), SPACE, HTML_EL_ACRONYM},
+   {TEXT("address"), SPACE, HTML_EL_Address},
+   {TEXT("applet"), SPACE, HTML_EL_Applet},
+   {TEXT("area"), 'E', HTML_EL_AREA},
+   {TEXT("b"), SPACE, HTML_EL_Bold_text},
+   {TEXT("base"), 'E', HTML_EL_BASE},
+   {TEXT("basefont"), 'E', HTML_EL_BaseFont},
+   {TEXT("bdo"), SPACE, HTML_EL_BDO},
+   {TEXT("big"), SPACE, HTML_EL_Big_text},
+   {TEXT("blockquote"), SPACE, HTML_EL_Block_Quote},
+   {TEXT("body"), SPACE, HTML_EL_BODY},
+   {TEXT("br"), 'E', HTML_EL_BR},
+   {TEXT("button"), SPACE, HTML_EL_BUTTON},
+   {TEXT("c"), SPACE, HTML_EL_TEXT_UNIT},
+   {TEXT("caption"), SPACE, HTML_EL_CAPTION},
+   {TEXT("center"), SPACE, HTML_EL_Center},
+   {TEXT("cite"), SPACE, HTML_EL_Cite},
+   {TEXT("code"), SPACE, HTML_EL_Code},
+   {TEXT("colgroup"), SPACE, HTML_EL_COLGROUP},
+   {TEXT("col"), SPACE, HTML_EL_COL},
+   {TEXT("dd"), SPACE, HTML_EL_Definition},
+   {TEXT("del"), SPACE, HTML_EL_DEL},
+   {TEXT("dfn"), SPACE, HTML_EL_Def},
+   {TEXT("dir"), SPACE, HTML_EL_Directory},
+   {TEXT("div"), SPACE, HTML_EL_Division},
+   {TEXT("dl"), SPACE, HTML_EL_Definition_List},
+   {TEXT("dt"), SPACE, HTML_EL_Term},
+   {TEXT("em"), SPACE, HTML_EL_Emphasis},
+   {TEXT("fieldset"), SPACE, HTML_EL_FIELDSET},
+   {TEXT("font"), SPACE, HTML_EL_Font_},
+   {TEXT("form"), SPACE, HTML_EL_Form},
+   {TEXT("frame"), 'E', HTML_EL_FRAME},
+   {TEXT("frameset"), SPACE, HTML_EL_FRAMESET},
+   {TEXT("h1"), SPACE, HTML_EL_H1},
+   {TEXT("h2"), SPACE, HTML_EL_H2},
+   {TEXT("h3"), SPACE, HTML_EL_H3},
+   {TEXT("h4"), SPACE, HTML_EL_H4},
+   {TEXT("h5"), SPACE, HTML_EL_H5},
+   {TEXT("h6"), SPACE, HTML_EL_H6},
+   {TEXT("head"), SPACE, HTML_EL_HEAD},
+   {TEXT("hr"), 'E', HTML_EL_Horizontal_Rule},
+   {TEXT("html"), SPACE, HTML_EL_HTML},
+   {TEXT("i"), SPACE, HTML_EL_Italic_text},
+   {TEXT("iframe"), SPACE, HTML_EL_IFRAME},
+   {TEXT("image"), 'E', HTML_EL_PICTURE_UNIT},
+   {TEXT("img"), 'E', HTML_EL_PICTURE_UNIT},
+   {TEXT("input"), 'E', HTML_EL_Input},
+   {TEXT("ins"), SPACE, HTML_EL_INS},
+   {TEXT("isindex"), 'E', HTML_EL_ISINDEX},
+   {TEXT("kbd"), SPACE, HTML_EL_Keyboard},
+   {TEXT("label"), SPACE, HTML_EL_LABEL},
+   {TEXT("legend"), SPACE, HTML_EL_LEGEND},
+   {TEXT("li"), SPACE, HTML_EL_List_Item},
+   {TEXT("link"), 'E', HTML_EL_LINK},
+   {TEXT("listing"), SPACE, HTML_EL_Preformatted}, /*converted to PRE */
+   {TEXT("map"), SPACE, HTML_EL_MAP},
+   {TEXT("math"), SPACE, HTML_EL_Math},
+   {TEXT("menu"), SPACE, HTML_EL_Menu},
+   {TEXT("meta"), 'E', HTML_EL_META},
+   {TEXT("noframes"), SPACE, HTML_EL_NOFRAMES},
+   {TEXT("noscript"), SPACE, HTML_EL_NOSCRIPT},
+   {TEXT("object"), SPACE, HTML_EL_Object},
+   {TEXT("ol"), SPACE, HTML_EL_Numbered_List},
+   {TEXT("optgroup"), SPACE, HTML_EL_OptGroup},
+   {TEXT("option"), SPACE, HTML_EL_Option},
+   {TEXT("p"), SPACE, HTML_EL_Paragraph},
+   {TEXT("p*"), SPACE, HTML_EL_Pseudo_paragraph},
+   {TEXT("param"), 'E', HTML_EL_Parameter},
+   {TEXT("plaintext"), SPACE, HTML_EL_Preformatted},/* converted to PRE */
+   {TEXT("pre"), SPACE, HTML_EL_Preformatted},
+   {TEXT("q"), SPACE, HTML_EL_Quotation},
+   {TEXT("s"), SPACE, HTML_EL_Struck_text},
+   {TEXT("samp"), SPACE, HTML_EL_Sample},
+   {TEXT("script"), SPACE, HTML_EL_SCRIPT},
+   {TEXT("select"), SPACE, HTML_EL_Option_Menu},
+   {TEXT("small"), SPACE, HTML_EL_Small_text},
+   {TEXT("span"), SPACE, HTML_EL_Span},
+   {TEXT("strike"), SPACE, HTML_EL_Struck_text},
+   {TEXT("strong"), SPACE, HTML_EL_Strong},
+   {TEXT("style"), SPACE, HTML_EL_STYLE_},
+   {TEXT("sub"), SPACE, HTML_EL_Subscript},
+   {TEXT("sup"), SPACE, HTML_EL_Superscript},
+   {TEXT("table"), SPACE, HTML_EL_Table},
+   {TEXT("tbody"), SPACE, HTML_EL_tbody},
+   {TEXT("td"), SPACE, HTML_EL_Data_cell},
+   {TEXT("textarea"), SPACE, HTML_EL_Text_Area},
+   {TEXT("tfoot"), SPACE, HTML_EL_tfoot},
+   {TEXT("th"), SPACE, HTML_EL_Heading_cell},
+   {TEXT("thead"), SPACE, HTML_EL_thead},
+   {TEXT("title"), SPACE, HTML_EL_TITLE},
+   {TEXT("tr"), SPACE, HTML_EL_Table_row},
+   {TEXT("tt"), SPACE, HTML_EL_Teletype_text},
+   {TEXT("u"), SPACE, HTML_EL_Underlined_text},
+   {TEXT("ul"), SPACE, HTML_EL_Unnumbered_List},
+   {TEXT("var"), SPACE, HTML_EL_Variable},
+   {TEXT("xmp"), SPACE, HTML_EL_Preformatted},  /* converted to PRE */
+   {TEXT(""), SPACE, 0}	/* Last entry. Mandatory */
+};
  
 /* mapping table of MathML elements */
 #include "MathML.h"
@@ -95,6 +202,26 @@ static ElemMapping *GraphMLElemMappingTable = NULL;
 #include "fetchXMLname_f.h"
 
 /*----------------------------------------------------------------------
+   GetXHTMLSSchema returns the XHTML Thot schema for document doc.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+SSchema            GetXHTMLSSchema (Document doc)
+#else
+SSchema            GetXHTMLSSchema (doc)
+Document	   doc;
+
+#endif
+{
+  SSchema	XHTMLSSchema;
+
+   XHTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+   if (XHTMLSSchema == NULL)
+       XHTMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc),
+				    TEXT("HTML"), TEXT("HTMLP"));
+   return (XHTMLSSchema);
+}
+
+/*----------------------------------------------------------------------
    GetMathMLSSchema returns the MathML Thot schema for document doc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -165,7 +292,9 @@ Document	   doc;
 int                XMLtype;
 #endif
 {
-  if (XMLtype == MATH_TYPE)
+  if (XMLtype == XHTML_TYPE)
+    return GetXHTMLSSchema (doc);
+  else if (XMLtype == MATH_TYPE)
     return GetMathMLSSchema (doc);
   else if (XMLtype == GRAPH_TYPE)
     return GetGraphMLSSchema (doc);
@@ -185,9 +314,19 @@ int                XMLtype;
     - content 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               MapXMLElementType (int XMLtype, STRING XMLname, ElementType *elType, STRING *mappedName, CHAR_T *content, Document doc)
+void               MapXMLElementType (int XMLtype,
+				      STRING XMLname,
+				      ElementType *elType,
+				      STRING *mappedName,
+				      CHAR_T *content,
+				      Document doc)
 #else
-void               MapXMLElementType (XMLtype, XMLname, elType, mappedName, content, doc)
+void               MapXMLElementType (XMLtype,
+				      XMLname,
+				      elType,
+				      mappedName,
+				      content,
+				      doc)
 int                XMLtype;
 STRING             XMLname;
 ElementType       *elType;
@@ -200,7 +339,9 @@ Document           doc;
    ElemMapping        *ptr;
 
    /* Select the right table */
-   if (XMLtype == MATH_TYPE)
+   if (XMLtype == XHTML_TYPE)
+     ptr = XHTMLElemMappingTable;
+   else if (XMLtype == MATH_TYPE)
      ptr = MathMLElemMappingTable;
    else if (XMLtype == GRAPH_TYPE)
      ptr = GraphMLElemMappingTable;
