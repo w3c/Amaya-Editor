@@ -1203,6 +1203,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  strcpy (&TtFontName[deb], text);
 	  strcpy (&TtPsFontName[i * 8], PsName);
 	  TtFonts[i] = ptfont;
+	  TtFontMask[i] = 0;
 #ifndef _WINDOWS
           val = LogicalPointsSizes[size];
 	  if (script == 'G' &&
@@ -1447,35 +1448,31 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	      encoding = UNICODE_1_1;
 	    }
 	  if (pfont)
-	  {
-	    if (*pfont == NULL)
-	      {
-		/* load that font */
-		for (frame = 1; frame <= MAX_FRAME; frame++)
-		  {
-		    mask = 1 << (frame - 1);
-		    if (fontset->FontMask & mask)
-		      lfont = LoadNearestFont (code, fontset->FontFamily,
-					       fontset->FontHighlight,
-					       fontset->FontSize, fontset->FontSize,
-					       frame, TRUE, TRUE);
-		    if (code == '7' && GreekFontScript == 'G')
-		      /* use the font Symbol instead of a greek font */
-		      encoding = ISO_SYMBOL;
-		  }
-		if (lfont == NULL)
-		  /* font not found: avoid to retry later */
-		  lfont = (void *) -1;
-		*pfont = lfont;
-	      }
-	    else
-	      lfont = *pfont;
-	  }
+	    {
+	      /* attach that font to the current frame */
+	      for (frame = 1; frame <= MAX_FRAME; frame++)
+		{
+		  mask = 1 << (frame - 1);
+		  if (fontset->FontMask & mask)
+		    lfont = LoadNearestFont (code, fontset->FontFamily,
+					     fontset->FontHighlight,
+					     fontset->FontSize, fontset->FontSize,
+					     frame, TRUE, TRUE);
+		  if (code == '7' && GreekFontScript == 'G')
+		    /* use the font Symbol instead of a greek font */
+		    encoding = ISO_SYMBOL;
+		}
+	      if (lfont == NULL)
+		/* font not found: avoid to retry later */
+		lfont = (void *) -1;
+	      *pfont = lfont;
+	    }
 	  else
 	    lfont = (void *) -1;
 	  if (code == 'Z')
 	    car = c;
-	  car = (int)TtaGetCharFromWC (c, encoding);
+	  else
+	    car = (int)TtaGetCharFromWC (c, encoding);
 	}
     }
   /* when any font is available */
@@ -1564,8 +1561,13 @@ static SpecFont LoadFontSet (char script, int family, int highlight,
 	fontset = FirstFontSel;
     }
   else
-    /* add the window frame number */
-    fontset->FontMask = fontset->FontMask | mask;
+    {
+      /* add the window frame number */
+      fontset->FontMask = fontset->FontMask | mask;
+      /* attach that font to the frame */
+      fontset->FontIso_1 = LoadNearestFont (script, family, highlight,
+					    index, index, frame, TRUE, TRUE);
+    }
   return (fontset);
 #else /* _I18N_ */
   return LoadNearestFont (script, family, highlight, index, index,
@@ -1847,7 +1849,6 @@ static void FreeAFont (int i)
 	  /* move this entry to the freed position */
 	  TtFonts[i] = TtFonts[j];
 	  TtFontMask[i] = TtFontMask[j];
-
 #if !defined(_WINDOWS) && !defined(_GL)
 	  TtPatchedFont[i] = TtPatchedFont[j];
 #endif /* _WINDOWS && _GL*/
