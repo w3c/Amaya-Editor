@@ -2497,12 +2497,17 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
    Arg                 args[MAX_ARGS];
    XmString            title_string;
 #else /* _GTK */
+   char              menu_item [1024];
+   char              equiv_item [255];
    ThotWidget          tmpw;
    ThotWidget          accelw = NULL;
 #endif /* !_GTK */
 #endif
 
 #ifdef _WINDOWS
+   equiv_item[0] = 0;
+#endif /* _WINDOWS */
+#ifdef _GTK
    equiv_item[0] = 0;
 #endif /* _WINDOWS */
 
@@ -2722,6 +2727,9 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			 XtSetArg (args[n - 1], XmNacceleratorText, title_string);
 #else /* _GTK */
 			 if (&equiv[eindex] != EOS)
+			   strcpy (equiv_item, &equiv[eindex]); 
+
+			 if (&equiv[eindex] != EOS)
 			   {
 			     accelw = gtk_accel_label_new (&equiv[eindex]);
 			     gtk_widget_show_all (accelw);
@@ -2743,7 +2751,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		     if (text[index] == 'B')
 		       /*__________________________________________ Creation d'un bouton __*/
 		       {
-#ifdef _WINDOWS
+#ifdef _WINDOWS 
 			 if (equiv_item && equiv_item[0] != EOS)
 			   {
 			     sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item); 
@@ -2757,7 +2765,15 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			 /*WIN_AddFrameCatalogue (parent, catalogue);*/
 #else  /* _WINDOWS */
 #ifdef _GTK
-                         w = gtk_menu_item_new_with_label (&text[index + 1]);
+			 if (equiv_item && equiv_item [0] != 0)
+			   {
+			     sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
+			     equiv_item [0] = 0;
+			   }
+			 else
+			   sprintf (menu_item, "%s", &text[index + 1]);
+			 w = gtk_menu_item_new_with_label (menu_item);
+
                          gtk_widget_show (w);
 			 if (accelw != NULL)
 			   {
@@ -2795,17 +2811,20 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			 /* WIN_AddFrameCatalogue (parent, catalogue); */
 #else  /* _WINDOWS */
 #ifdef _GTK
-			 /* tmpw = gtk_check_button_new_with_label (&text[index + 1]);
-			    gtk_widget_show (tmpw);*/
-			 w = gtk_check_menu_item_new_with_label (&text[index + 1]);
+			 if (equiv_item && equiv_item [0] != 0)
+			   {
+			     sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
+			     equiv_item [0] = 0;
+			   }
+			 else
+			   sprintf (menu_item, "%s", &text[index + 1]);
+			 w = gtk_check_menu_item_new_with_label (menu_item);
+
 			 gtk_widget_show (w);
 			 if (accelw != NULL)
 			   {
 			     gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
 			   }
-			 /* gtk_container_add (GTK_CONTAINER (w), tmpw);*/
-			 /*			 gtk_container_set_border_width (GTK_CONTAINER (w), -2);*/
-			 /*			 gtk_object_set_data (GTK_OBJECT (w), "check_button", (gpointer)tmpw);*/
 			 gtk_menu_append (GTK_MENU (menu),w);
 			 gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (w), FALSE);
 			 gtk_check_menu_item_set_show_toggle (GTK_CHECK_MENU_ITEM (w), TRUE);
@@ -2843,7 +2862,14 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			 /* WIN_AddFrameCatalogue (parent, catalogue); */
 #else  /* _WINDOWS */
 #ifdef _GTK
-			 w =  gtk_menu_item_new_with_label (&text[index + 1]);
+			 if (equiv_item && equiv_item [0] != 0)
+			   {
+			     sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
+			     equiv_item [0] = 0;
+			   }
+			 else
+			   sprintf (menu_item, "%s", &text[index + 1]);
+			 w = gtk_menu_item_new_with_label (menu_item);
 			 gtk_widget_show (w);
 			 if (accelw != NULL)
 			   {
@@ -2869,15 +2895,9 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			 adbloc->E_ThotWidget[ent] = (ThotWidget) w;
 #else  /* _WINDOWS */
 #ifdef _GTK
-			 w = gtk_menu_item_new_with_label ( &text[index + 1]);
+			 w = gtk_menu_item_new_with_label (heading);
 			 gtk_widget_show (w);
-			 if (accelw != NULL)
-			   {
-			     gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
-			   }
 			 gtk_menu_append (GTK_MENU (menu),w);
-			 /*			 gtk_signal_connect (GTK_OBJECT (w), "activate",
-						 GTK_SIGNAL_FUNC (CallMenuGTK), catalogue);*/
 			 adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
 			 w = XmCreatePushButton (menu, heading, args, n);
@@ -2897,10 +2917,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifdef _GTK
                          w = gtk_menu_item_new ();
                          gtk_widget_show (w);
-			 if (accelw != NULL)
-			   {
-			     gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
-			   }
                          gtk_menu_append (GTK_MENU (menu),w); 
 			 adbloc->E_ThotWidget[ent] = w;		 
 #else /* _GTK */
@@ -3766,6 +3782,8 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
   GtkStyle *          styletmp;
   ThotWidget          tmpw;
   ThotWidget          accelw = NULL;
+  char                equiv_item [255];
+  char                menu_item [1024];
 #endif /* _GTK */
   ThotWidget          menu;
   char                heading[200];
@@ -3780,7 +3798,9 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
   button = 'L';
   menu = NULL;
 #endif /* !_WINDOWS */
-
+#ifdef _GTK
+  equiv_item[0] = 0;
+#endif /* _GTK */
   if (ref == 0)
     {
       TtaError (ERR_invalid_reference);
