@@ -332,8 +332,7 @@ HTAlertPar         *reply;
 {
    AHTReqContext      *me = HTRequest_context (request);
    const STRING       realm = ISO2WideChar (HTRequest_realm (request));
-   STRING             label;
-   STRING             host;
+   STRING             server;
 
    if (reply && msgnum >= 0)
      {
@@ -343,21 +342,12 @@ HTAlertPar         *reply;
        Answer_password[0] = EOS;
 
        /* prepare the authentication realm message */
-       host = AmayaParseUrl (ISO2WideChar (me->urlName), _EMPTYSTR_, AMAYA_PARSE_HOST);
-       label = TtaAllocString (((host) ? ustrlen (host) : 0)
-			       + ustrlen (TtaGetMessage (AMAYA, 
-						   AM_AUTHENTICATION_REALM))
-			       + ((realm) ? ustrlen (realm) : 0)
-			       + 20); /*a bit more than enough memory */
-       usprintf (label, TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM),
-		 ((realm) ? realm : _EMPTYSTR_), 
-		 ((host) ? host : _EMPTYSTR_));
+       server = AmayaParseUrl (ISO2WideChar (me->urlName), _EMPTYSTR_, AMAYA_PARSE_HOST);
        /* show the popup */
-       InitFormAnswer (me->docid, 1, label);
+       InitFormAnswer (me->docid, 1, realm, server);
        /* free allocated memory */
-       if (host)
-	 TtaFreeMemory (host);
-       TtaFreeMemory (label);
+       if (server)
+	 TtaFreeMemory (server);
 
        /* handle the user's answers back to the library */
        if (Answer_name[0] != EOS)

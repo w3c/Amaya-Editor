@@ -85,7 +85,7 @@ int doc;
     Answer_name[0] = EOS;
     Answer_password[0] = EOS;
     Lg_password = 0;
-    InitFormAnswer (doc, 1);
+    InitFormAnswer (doc, 1, TEXT(""), TEXT(""));
     if ((Answer_name[0] == EOS) && (Answer_password[0] == EOS))
       return (-1);
     else

@@ -36,6 +36,6 @@ extern void CreateSpellCheckDlgWindow (HWND, STRING, STRING, int, int, int, int,
 extern void CreateInitConfirmDlgWindow (HWND, int, STRING, STRING);
 extern void CreateChangeFormatDlgWindow (HWND);
 extern void CreateGreekKeyboardDlgWindow (HWND);
-extern void CreateAuthenticationDlgWindow (HWND);
+extern void CreateAuthenticationDlgWindow (HWND, STRING, STRING);
 extern void CreateBackgroundImageDlgWindow (HWND, int, int, int, int, int, int, int, STRING);
 #endif /* _WINDOWS */

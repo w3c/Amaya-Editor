@@ -66,7 +66,7 @@ extern void       CreateMathAttribDlgWindow (int);
 extern void       CreateInitConfirmDlgWindow (HWND, int, STRING, STRING);
 extern void       CreateChangeFormatDlgWindow (int, int, int, int, int, int, int, int);
 extern void       CreateGreekKeyboardDlgWindow (HWND);
-extern void       CreateAuthenticationDlgWindow (HWND);
+extern void       CreateAuthenticationDlgWindow (HWND, STRING, STRING);
 extern void       CreateBackgroundImageDlgWindow (HWND, int, int, int, int, int, int, int, STRING);
 extern void       TtaHandleOneEvent (ThotEvent*);
 extern ThotWindow TtaGetThotWindow (int);

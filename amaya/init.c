@@ -1164,24 +1164,40 @@ STRING              text;
 }
 
 /*----------------------------------------------------------------------
+  InitFormAnswer
+  Dialogue form for answering text, user name and password
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitFormAnswer (Document document, View view, STRING auth_realm)
+void                InitFormAnswer (Document document, View view, STRING auth_realm, 
+				    STRING server)
 #else
-void                InitFormAnswer (document, view, auth_realm)
+void                InitFormAnswer (document, view, auth_realm, server)
 Document            document;
 View                view;
 STRING              auth_realm;
+STRING              server;
 
 #endif
 {
-   /* Dialogue form for answering text, user name and password */
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
+   STRING label;
+
    TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (document, view), 
-		TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION),
-		TRUE, 1, 'L', D_CANCEL);
+	       TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION),
+	       TRUE, 1, 'L', D_CANCEL);
+
+   label = TtaAllocString (((server) ? ustrlen (server) : 0)
+			   + ustrlen (TtaGetMessage (AMAYA, 
+						     AM_AUTHENTICATION_REALM))
+			   + ((auth_realm) ? ustrlen (auth_realm) : 0)
+			   + 20); /*a bit more than enough memory */
+   usprintf (label, TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM),
+	     ((auth_realm) ? auth_realm : _EMPTYSTR_), 
+	     ((server) ? server : _EMPTYSTR_));
    TtaNewLabel (BaseDialog + RealmText, BaseDialog + FormAnswer,
-		auth_realm);
+		label);
+   TtaFreeMemory (label);
+   
    TtaNewTextForm (BaseDialog + NameText, BaseDialog + FormAnswer,
 		   TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
    TtaNewTextForm (BaseDialog + PasswordText, BaseDialog + FormAnswer,
@@ -1200,7 +1216,7 @@ STRING              auth_realm;
        TtaWaitShowDialogue ();
      }
 #  else /* _WINDOWS */
-   CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view));
+   CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view), auth_realm, server);
 #  endif /* _WINDOWS */
 }
 

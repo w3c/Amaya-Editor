@@ -27,7 +27,8 @@ extern void StopTransfer ( Document document,
                            View view );
 extern void InitFormAnswer ( Document document,
                              View view,
-                             STRING auth_realm );     
+                             STRING auth_realm,
+			     STRING server );     
 extern void InitInfo ( STRING label,
 		       STRING info );
 extern void InitConfirm ( Document document,
@@ -167,7 +168,8 @@ extern void StopTransfer (/* Document document,
                              View view */);
 extern void InitFormAnswer (/* Document document,
                                View view,
-                               STRING auth_realm */);     
+                               STRING auth_realm,
+			       STRING server */);     
 extern void InitInfo (/*  STRING label,
 			  STRING info */);
 extern void InitConfirm (/* Document document,

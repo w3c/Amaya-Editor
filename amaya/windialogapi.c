@@ -180,6 +180,9 @@ static HWND         currentDlg;
 static UINT         nbClass;
 static UINT         nbItem;
 
+const STRING string_par1;
+const STRING string_par2;
+
 HWND wordButton;
 HWND hwnListWords;
 HWND hwndCurrentWord;
@@ -1205,12 +1208,17 @@ HWND  parent;
  CreateAuthentificationDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateAuthenticationDlgWindow (HWND parent)
+void CreateAuthenticationDlgWindow (HWND parent, STRING realm, STRING server)
 #else  /* !__STDC__ */
-void CreateAuthenticationDlgWindow (parent)
+void CreateAuthenticationDlgWindow (parent, realm, server)
 HWND  parent;
+STRING realm;
+STRING server;
 #endif /* __STDC__ */
 {  
+        string_par1 = realm;
+        string_par2 = server;
+
 	switch (app_lang) {
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);

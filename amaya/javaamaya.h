@@ -28,7 +28,9 @@ extern void SetCharStrong ( Document document,
 extern void SetCharCode ( Document document,
                           View view );
 extern void InitFormAnswer ( Document document,
-                             View view );
+                             View view,
+                             STRING realm,
+			     STRING server );
 extern void InitConfirm ( Document document,
                           View view,
                           STRING label );
@@ -78,7 +80,9 @@ extern void SetCharStrong (/* Document document,
 extern void SetCharCode (/* Document document,
                             View view */);
 extern void InitFormAnswer (/* Document document,
-                               View view */);
+                               View view,
+                               STRING realm,
+			       STRING server */);
 extern void InitConfirm (/* Document document,
                             View view,
                             char *label */);
