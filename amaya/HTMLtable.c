@@ -1803,9 +1803,25 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
 	      if (attr)
 		{
 		  span = TtaGetAttributeValue (attr);
-		  /* ignore colspan if zero: the new cell would be after this
-		     supposed infinite cell. Strange */
-		  if (span > 1)
+		  if (span == 0)
+		    /* colspan is zero: the new cell would be after this
+		       supposed infinite cell */
+		    {
+		      span = 1;
+		      do
+			{
+			  lastColhead = colhead;
+			  TtaNextSibling (&colhead);
+			  if (colhead)
+			    span++;
+			}
+		      while (colhead);
+		      colhead = lastColhead;
+		      /* Change colspan to its actual value */
+		      TtaRegisterAttributeReplace (attr, cell, doc);
+		      TtaSetAttributeValue (attr, span, cell, doc);
+		    }
+		  else
 		    {
 		      for (i = 1; i < span && colhead; i++)
 			{
@@ -1915,46 +1931,6 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
 	}
     }
    TtaSetDisplayMode (doc, dispMode);
-}
-
-/*----------------------------------------------------------------------
- CreateCell
- The user wants to create a new cell (i.e. a new column). If the new cell
- is supposed to be right after a cell that has attribute colspan = 0,
- the creation id refused.
- -----------------------------------------------------------------------*/
-ThotBool CreateCell (NotifyElement *event)
-{
-  Element        row, cell;
-  ElementType    elType;
-  Attribute      attr;
-  AttributeType  attrType;
-  int            i;
-  ThotBool       forbidden;
-
-  forbidden = FALSE;
-  row = event->element;
-  if (event->position > 0)
-    {
-      cell = TtaGetFirstChild (row);
-      for (i = 1; i < event->position && cell; i++)
-	TtaNextSibling (&cell);
-      if (cell)
-	{
-	  elType = TtaGetElementType(row);
-	  attrType.AttrSSchema = elType.ElSSchema;
-          if (TtaSameSSchemas (elType.ElSSchema,
-			       TtaGetSSchema ("MathML", event->document)))
-	    attrType.AttrTypeNum = MathML_ATTR_columnspan;
-	  else
-	    attrType.AttrTypeNum = HTML_ATTR_colspan_;
-	  attr = TtaGetAttribute (cell, attrType);
-	  if (attr)
-	    if (TtaGetAttributeValue (attr) == 0)
-	      forbidden = TRUE;
-	}
-    }
-  return forbidden;
 }
 
 /*----------------------------------------------------------------------

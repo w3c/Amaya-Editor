@@ -91,14 +91,12 @@ ELEMENTS
 
    Data_cell:
 	BEGIN
-	ElemNew.Pre -> CreateCell;
 	ElemNew.Post -> CellCreated;
 	ElemPaste.Post -> CellPasted;
 	END;
 
    Heading_cell:
 	BEGIN
-	ElemNew.Pre -> CreateCell;
 	ElemNew.Post -> CellCreated;
 	ElemPaste.Post -> CellPasted;
 	END;

@@ -39,7 +39,6 @@ ELEMENTS
 	ElemTextModify.Post -> MathStringModified;
    MTD:
 	BEGIN
-	ElemNew.Pre -> CreateCell;
 	ElemNew.Post -> CellCreated;
 	ElemPaste.Post -> CellPasted;
 	END;

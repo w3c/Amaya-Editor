@@ -64,6 +64,8 @@
 &CreateRuby
 +bookmarks
 +davbase
+&InsertBefore
+&InsertAfter
 
 ################# AMAYA BROWSER
 <Browser>

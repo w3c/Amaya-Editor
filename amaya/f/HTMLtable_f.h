@@ -43,7 +43,6 @@ extern void NewCell ( Element cell,
                       ThotBool generateColumn,
                       ThotBool generateEmptyCells,
                       ThotBool check );
-extern ThotBool CreateCell ( NotifyElement *event );
 extern void CellCreated ( NotifyElement * event );
 extern void CellPasted ( NotifyElement * event );
 extern ThotBool DeleteRow ( NotifyElement *event );
@@ -126,7 +125,6 @@ extern void NewCell ( Element cell,
                         ThotBool generateColumn,
                         ThotBool generateEmptyCells,
                         ThotBool check );
-extern ThotBool CreateCell ( NotifyElement *event );
 extern void CellCreated ( NotifyElement * event );
 extern void CellPasted ( NotifyElement * event );
 extern ThotBool DeleteRow ( NotifyElement *event );
