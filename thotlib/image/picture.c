@@ -3304,4 +3304,6 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
 	   (unsigned int) heightb);
 #endif /*_WINDOWS*/
   return screenshot;
+#endif /*_GL*/
 }
+
