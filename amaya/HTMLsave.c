@@ -982,7 +982,7 @@ void SetNamespacesAndDTD (Document doc)
        if (head)
 	 {
 	   /* indicate the MIME type and the charset in a meta element with
-	      an http-equiv attr */
+	      an http-equiv attr as requested in the XHTML specification */
 	   /* look for a meta/http-equiv element */
 	   el = TtaGetFirstChild (head);
 	   meta = NULL;
@@ -1002,46 +1002,35 @@ void SetNamespacesAndDTD (Document doc)
 		 TtaNextSibling (&el);
 	     }
 
-	   /* Amaya no longer generates a meta/http-equiv element  */
-	   /* for a XHTML document (and remove it if it exists) */
-	   if (DocumentMeta[doc]->xmlformat)
+	   if (!meta)
 	     {
-	       if (meta)
-		 /* Remove the meta element */
-		 TtaDeleteTree (meta, doc);
+	       /* there is no meta element with a http-equiv attribute */
+	       /* create one at the begginning of the head */
+	       elType.ElSSchema = attrType.AttrSSchema;
+	       elType.ElTypeNum = HTML_EL_META;
+	       meta = TtaNewElement (doc, elType);
+	       TtaInsertFirstChild (&meta, head, doc);
 	     }
+	   if (!attr)
+	     {
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (meta, attr, doc);
+	     }
+	   TtaSetAttributeText (attr, "Content-Type", meta, doc);
+	   attrType.AttrTypeNum = HTML_ATTR_meta_content;
+	   attr = TtaGetAttribute (meta, attrType);
+	   if (!attr)
+	     {
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (meta, attr, doc);
+	     }
+	   if (Charset[0] == EOS)
+	     TtaSetAttributeText (attr, "text/html", meta, doc);
 	   else
 	     {
-	       if (!meta)
-		 {
-		   /* there is no meta element with a http-equiv attribute */
-		   /* create one at the begginning of the head */
-		   elType.ElSSchema = attrType.AttrSSchema;
-		   elType.ElTypeNum = HTML_EL_META;
-		   meta = TtaNewElement (doc, elType);
-		   TtaInsertFirstChild (&meta, head, doc);
-		 }
-	       if (!attr)
-		 {
-		   attr = TtaNewAttribute (attrType);
-		   TtaAttachAttribute (meta, attr, doc);
-		 }
-	       TtaSetAttributeText (attr, "Content-Type", meta, doc);
-	       attrType.AttrTypeNum = HTML_ATTR_meta_content;
-	       attr = TtaGetAttribute (meta, attrType);
-	       if (!attr)
-		 {
-		   attr = TtaNewAttribute (attrType);
-		   TtaAttachAttribute (meta, attr, doc);
-		 }
-	       if (Charset[0] == EOS)
-		 TtaSetAttributeText (attr, "text/html", meta, doc);
-	       else
-		 {
-		   strcpy (buffer, "text/html; charset=");
-		   strcat (buffer, Charset);
-		   TtaSetAttributeText (attr, buffer, meta, doc);
-		 }
+	       strcpy (buffer, "text/html; charset=");
+	       strcat (buffer, Charset);
+	       TtaSetAttributeText (attr, buffer, meta, doc);
 	     }
 	 } 
      }
