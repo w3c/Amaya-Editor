@@ -784,7 +784,7 @@ static void InitCSSDialog (Document doc, char *s)
 	       (CSScase == 4 && pInfo->PiCategory == CSS_EXTERNAL_STYLE)))
 	    {
 	      nb++;
-	      if (pInfo->PiCategory != CSS_DOCUMENT_STYLE)
+	      if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
 		/* count the number of style element */ 
 		sty++;
 	    }
