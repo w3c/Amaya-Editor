@@ -323,6 +323,13 @@ ATTRIBUTES
         AttrDelete.Post -> AttrColumnlinesDeleted;
         END;
 
+   framespacing:
+	BEGIN
+	AttrCreate.Post -> AttrFramespacingCreated;
+	AttrModify.Post -> AttrFramespacingCreated;
+	AttrDelete.Post -> AttrFramespacingDeleted;
+	END;
+
    columnspan:
 	BEGIN
 	AttrCreate.Post -> ColspanCreated;

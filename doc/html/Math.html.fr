@@ -426,8 +426,8 @@ fontsize, fontweight</code>, <code>fontstyle</code>, <code>fontfamily</code>,
 (<code>mspace</code> only), <code>height</code> (<code>mspace</code> only),
 <code>depth</code> (<code>mspace</code> only), <code>align</code>,
 <code>rowalign</code>, <code>columnalign</code>, <code>frame</code>,
-<code>side</code>, <code>rowspan</code>, <code>columnspan, rowspacing,
-columnspacing, rowlines, columnlines</code>.</p>
+<code>framespacing</code>, <code>side</code>, <code>rowspan</code>,
+<code>columnspan, rowspacing, columnspacing, rowlines, columnlines</code>.</p>
 
 <p>Les attributs <code>class</code>, <code>id</code> et <code>style</code>
 sont utilisables, avec la même sémantique que dans HTML : vous pouvez <a

@@ -2910,7 +2910,7 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
   PresentationContext ctxt;
   Element             row, cell, nextCell;
   ThotBool            stop, firstCell;
-  Attribute          spanAttr;
+  Attribute           spanAttr;
   AttributeType       colspanType;
 
   elType = TtaGetElementType (el);
@@ -2950,7 +2950,6 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
 	  strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
 	/* that's a table row. check all its cells */
 	{
-	  ptr = value;
 	  firstCell = TRUE;
 	  rightVal = 0;
           val = 0;
@@ -3437,6 +3436,125 @@ void HandleColumnlinesAttribute (Attribute attr, Element el, Document doc,
 	}
       TtaNextSibling (&row);
     }
+  if (value)
+    TtaFreeMemory (value);
+}
+
+/*----------------------------------------------------------------------
+   HandleFramespacingAttribute
+   An attribute framespacing has been created, updated or deleted (if delete
+   is TRUE) for element el in document doc. Update attribute the padding
+   properties of the concerned table(s).
+  ----------------------------------------------------------------------*/
+void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
+				  ThotBool delete)
+{
+  ElementType         elType;
+  char                *value, *ptr, valueOfNamedSpace[20];
+  int                 length, vertPadding, horizPadding, vertPaddingUnit,
+                      horizPaddingUnit;
+  Attribute           attrFrame;
+  AttributeType       attrType;
+  PresentationValue   pval;
+  PresentationContext ctxt;
+  ThotBool            vertPaddingReal, horizPaddingReal;
+
+  if ((!delete && !attr) || !el)
+    return;
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum != MathML_EL_MTABLE ||
+      strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+    /* ignore framespacing attribute on mstyle elements */
+    /* process it only on mtable elements */
+    return;
+
+  value = NULL;
+  if (!delete)
+    {
+      length = TtaGetTextAttributeLength (attr);
+      if (length > 0)
+	{
+	  value = TtaGetMemory (length+1);
+	  value[0] = EOS;
+	  TtaGiveTextAttributeValue (attr, value, &length);
+	}
+    }
+  ctxt = TtaGetSpecificStyleContext (doc);
+  /* the specific presentation to be created is not a CSS rule */
+  ctxt->cssSpecificity = 0;
+  vertPadding = 0;
+  horizPadding = 0;
+  vertPaddingUnit = STYLE_UNIT_PT;
+  horizPaddingUnit = STYLE_UNIT_PT;
+  vertPaddingReal = FALSE;
+  horizPaddingReal = FALSE;
+  /* is there a frame attribute? */
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = MathML_ATTR_frame;
+  attrFrame = TtaGetAttribute (el, attrType);
+  if (!delete && value && attrFrame)
+    {
+      ptr = value;
+      /* parse the first part: horizontal spacing */
+      ptr = TtaSkipBlanks (ptr);
+      if (*ptr != EOS)
+	{
+	  ptr = ConvertNamedSpace (ptr, valueOfNamedSpace);
+	  if (valueOfNamedSpace[0] != EOS)
+	    /* it's a named space */
+	    ptr = ParseCSSUnit (valueOfNamedSpace, &pval);
+	  else
+	    ptr = ParseCSSUnit (ptr, &pval);
+	  if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+	    {
+	      horizPadding = pval.typed_data.value;
+	      horizPaddingUnit = pval.typed_data.unit;
+	      horizPaddingReal = pval.typed_data.real;
+	      /* if there is no second part, the vertical spacing is the same
+		 as the horizontal spacing */
+	      vertPadding = horizPadding;
+	      vertPaddingUnit = horizPaddingUnit;
+	      vertPaddingReal = horizPaddingReal;
+	      /* parse the second part, if any */
+	      ptr = TtaSkipBlanks (ptr);
+	      if (*ptr != EOS)
+		{
+		  ptr = ConvertNamedSpace (ptr, valueOfNamedSpace);
+		  if (valueOfNamedSpace[0] != EOS)
+		    /* it's a named space */
+		    ptr = ParseCSSUnit (valueOfNamedSpace, &pval);
+		  else
+		    ptr = ParseCSSUnit (ptr, &pval);
+		  if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+		    {
+		      vertPadding = pval.typed_data.value;
+		      vertPaddingUnit = pval.typed_data.unit;
+		      vertPaddingReal = pval.typed_data.real;
+		    }
+		}
+	    }
+	}
+    }
+  if (delete)
+    ctxt->destroy = TRUE;
+  else
+    {
+      ctxt->destroy = FALSE;
+      pval.typed_data.value = horizPadding;
+      pval.typed_data.unit = horizPaddingUnit;
+      pval.typed_data.real = horizPaddingReal;
+    }
+  TtaSetStylePresentation (PRPaddingLeft, el, NULL, ctxt, pval);
+  TtaSetStylePresentation (PRPaddingRight, el, NULL, ctxt, pval);
+  if (!delete)
+    {
+      pval.typed_data.value = vertPadding;
+      pval.typed_data.unit = vertPaddingUnit;
+      pval.typed_data.real = vertPaddingReal;
+    }
+  TtaSetStylePresentation (PRPaddingTop, el, NULL, ctxt, pval);
+  TtaSetStylePresentation (PRPaddingBottom, el, NULL, ctxt, pval);
+
   if (value)
     TtaFreeMemory (value);
 }
@@ -4001,6 +4119,10 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
      /* it's a display attribute */
      MathMLSetDisplayAttr (el, attr, doc, FALSE);
 
+   else if (attrType.AttrTypeNum == MathML_ATTR_framespacing)
+     /* it's a framespacing attribute */
+     HandleFramespacingAttribute (attr, el, doc, FALSE);
+
    else if (attrType.AttrTypeNum == MathML_ATTR_Language)
      {
        if (el == TtaGetRootElement (doc))
@@ -4033,7 +4155,7 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
 	    attrType.AttrTypeNum == MathML_ATTR_scriptlevel ||
 	    attrType.AttrTypeNum == MathML_ATTR_width_ ||
 	    attrType.AttrTypeNum == MathML_ATTR_height_ ||
-	    attrType.AttrTypeNum == MathML_ATTR_depth_ )
+	    attrType.AttrTypeNum == MathML_ATTR_depth_)
      {
       length = TtaGetTextAttributeLength (attr);
       if (length >= buflen)

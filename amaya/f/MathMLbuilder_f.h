@@ -68,6 +68,10 @@ extern void HandleColumnlinesAttribute ( Attribute attr,
                                          Element el,
                                          Document doc,
                                          ThotBool delete );
+extern void HandleFramespacingAttribute ( Attribute attr,
+                                          Element el,
+                                          Document doc,
+                                          ThotBool delete );
 extern void MathMLElementComplete ( ParserData *context,
                                     Element el,
                                     int *error );
@@ -165,6 +169,10 @@ extern void HandleColumnlinesAttribute (/* Attribute attr,
                                            Element el,
                                            Document doc,
                                            ThotBool delete */);
+extern void HandleFramespacingAttribute (/* Attribute attr,
+                                            Element el,
+                                            Document doc,
+                                            ThotBool delete */);
 extern void MathMLElementComplete (/* ParserData *context,
                                       Element el,
                                       int *error */);

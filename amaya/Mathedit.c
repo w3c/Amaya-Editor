@@ -5147,6 +5147,28 @@ void AttrColumnlinesDeleted (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
+ AttrFramespacingCreated
+ An attribute framespacing has been created or updated by the user on a mstyle
+ or mtable element. Create or update the corresponding style for the table(s).
+ -----------------------------------------------------------------------*/
+void AttrFramespacingCreated (NotifyAttribute *event)
+{
+  HandleFramespacingAttribute (event->attribute, event->element,
+			       event->document, FALSE);
+}
+
+/*----------------------------------------------------------------------
+ AttrFramespacingDeleted
+ The user has deleted an attribute framespacing from a mstyle or mtable
+ element.
+ Remove the corresponding style from the concerned table(s).
+ -----------------------------------------------------------------------*/
+void AttrFramespacingDeleted (NotifyAttribute *event)
+{
+  HandleFramespacingAttribute (NULL, event->element, event->document, TRUE);
+}
+
+/*----------------------------------------------------------------------
    HandleColAndRowAlignAttributes
    If element row is a MathML mtr element, check the rowalign and columnalign
    attributes on the enclosing mtable element and on the row itself. Check
