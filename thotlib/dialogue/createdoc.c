@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
-
+#ifdef IV
 /* 
  * Creation commands
  *
@@ -291,14 +291,4 @@ void TtcCreateDocument (Document document, View view)
    TtaShowDialogue (NumFormCreateDoc, FALSE);
 }
 #endif /* !_WINDOWS */
-
-
-
-
-
-
-
-
-
-
-
+#endif /* IV */

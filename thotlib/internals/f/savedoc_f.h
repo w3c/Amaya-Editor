@@ -6,29 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void UnsetEntryMenu ( int ref,
-                             int ent );
-extern void CallbackSaveDocMenu ( int ref,
-                                  int typedata,
-                                  char *txt );
-extern void BuildSaveDocMenu ( void );
-extern void TtcSaveDocumentAs ( Document document,
-                                View view );
-extern void TtcSaveDocument ( Document document,
-                              View view );
-
 #else /* __STDC__ */
-
-extern void UnsetEntryMenu (/* int ref,
-                               int ent */);
-extern void CallbackSaveDocMenu (/* int ref,
-                                    int typedata,
-                                    char *txt */);
-extern void BuildSaveDocMenu (/* void */);
-extern void TtcSaveDocumentAs (/* Document document,
-                                  View view */);
-extern void TtcSaveDocument (/* Document document,
-                                View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

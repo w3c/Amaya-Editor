@@ -74,7 +74,6 @@ static ThotBool     UpperLower = TRUE;
 static ThotBool     WithReplace;
 /* pointer to the external document containing the current reference */
 static PtrExternalDoc pExtCurrDoc;
-static ThotBool     SearchReferenceEnd;
 static ThotBool     AutoReplace;
 static ThotBool     StartSearch;
 static ThotBool     ReplaceDone;
@@ -83,7 +82,6 @@ static ThotBool     TextOK = FALSE;
 static ThotBool     SearchAfter;
 static int          FirstCharTextOK;
 static int          LastCharTextOK;
-static int          ReturnValueSelectReferMenu;
 
 #include "absboxes_f.h"
 #include "actions_f.h"
@@ -115,9 +113,9 @@ static int          ReturnValueSelectReferMenu;
 static int          iLocation;
 static int          iMode;
 static ThotWindow   SearchW = NULL;
-static char         textToSearch [255];
-static char         newText [255];
-static char         msgCaption [200];
+static char         textToSearch[255];
+static char         newText[255];
+static char         msgCaption[200];
 static ThotBool     searchEnd;
 
 /*-----------------------------------------------------------------------
@@ -314,12 +312,13 @@ LRESULT CALLBACK SearchDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 /*-----------------------------------------------------------------------
  CreateSearchDlgWindow
  ------------------------------------------------------------------------*/
-void        CreateSearchDlgWindow (ThotWindow parent)
+void CreateSearchDlgWindow (ThotWindow parent)
 {  
   if (SearchW)
     SetFocus (SearchW);
   else
-    DialogBox (hInstance, MAKEINTRESOURCE (SEARCHDIALOG), NULL, (DLGPROC) SearchDlgProc);
+    DialogBox (hInstance, MAKEINTRESOURCE (SEARCHDIALOG), NULL,
+	       (DLGPROC) SearchDlgProc);
 }
 #else /* _WINDOWS */
 /*----------------------------------------------------------------------
@@ -344,18 +343,6 @@ static void         InitMenuWhereToSearch (int ref)
 		 TtaGetMessage (LIB, TMSG_SEARCH_WHERE), 4, string,
 		 NULL, FALSE);
   TtaSetMenuForm (NumMenuOrSearchText, 2);
-}
-
-
-/*----------------------------------------------------------------------
-  ActivateMenuWhereToSearch
-  activates the "Where to search" submenu.
-  ----------------------------------------------------------------------*/
-static void         ActivateMenuWhereToSearch ()
-{
-   TtaRedrawMenuEntry (NumMenuOrSearchText, 0, NULL, -1, 1);
-   TtaRedrawMenuEntry (NumMenuOrSearchText, 1, NULL, -1, 1);
-   TtaRedrawMenuEntry (NumMenuOrSearchText, 2, NULL, -1, 1);
 }
 #endif /* !_WINDOWS */
 
@@ -409,6 +396,21 @@ void                CallbackWhereToSearch (int ref, int val)
       InitSearchDomain (val, SearchingD);
 }
 
+#ifdef IV
+static ThotBool     SearchReferenceEnd;
+static int          ReturnValueSelectReferMenu;
+
+
+/*----------------------------------------------------------------------
+  ActivateMenuWhereToSearch
+  activates the "Where to search" submenu.
+  ----------------------------------------------------------------------*/
+static void         ActivateMenuWhereToSearch ()
+{
+   TtaRedrawMenuEntry (NumMenuOrSearchText, 0, NULL, -1, 1);
+   TtaRedrawMenuEntry (NumMenuOrSearchText, 1, NULL, -1, 1);
+   TtaRedrawMenuEntry (NumMenuOrSearchText, 2, NULL, -1, 1);
+}
 
 /*----------------------------------------------------------------------
   SearchEmptyElem
@@ -901,7 +903,7 @@ void                TtcSearchEmptyReference (Document document, View view)
 /*----------------------------------------------------------------------
   CallbackReferenceMenu
   ----------------------------------------------------------------------*/
-void                CallbackReferenceMenu (int val)
+void CallbackReferenceMenu (int val)
 {
    ReturnValueSelectReferMenu = val;
 }
@@ -1115,7 +1117,7 @@ void                CallbackReferenceTo (int ref, int data)
 		  break;
 	    }
 }
-
+#endif /* IV */
 
 /*----------------------------------------------------------------------
   TtcSearchText
@@ -1712,9 +1714,9 @@ void                SearchLoadResources (void)
 	TteConnectAction (T_searchtext, (Proc) CallbackTextReplace);
 	TteConnectAction (T_locatesearch, (Proc) CallbackWhereToSearch);
         
-	TteConnectAction (T_searchemptyref, (Proc) CallbackSearchEmptyref);
-	TteConnectAction (T_searchemptyelt, (Proc) CallbackSearchEmptyEl);
-	TteConnectAction (T_searchrefto, (Proc) CallbackReferenceTo);
+	/*TteConnectAction (T_searchemptyref, (Proc) CallbackSearchEmptyref);
+	  TteConnectAction (T_searchemptyelt, (Proc) CallbackSearchEmptyEl);
+	  TteConnectAction (T_searchrefto, (Proc) CallbackReferenceTo);*/
 	CurrRef = NULL;
 	CurrRefDoc = NULL;
 	CurrRefElem = NULL;

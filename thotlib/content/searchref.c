@@ -286,12 +286,10 @@ void                FindReferredEl ()
    PtrAttribute        pAttr;
    PtrReference        pRef;
    DocumentIdentifier  docIdent;
-   PtrDocument         pDoc;
    int                 nMenuItems;
-   CHAR_T              menuBuf[MAX_TXT_LEN];
+   char                menuBuf[MAX_TXT_LEN];
    int                 menuBufLen;
    PtrReference        pRefTable[MAX_ITEM_MENU_REF];
-   int                 chosenItem;
 
    /* y-a-t'il une selection au niveau editeur ou mediateur ? */
    if (GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
@@ -340,10 +338,11 @@ void                FindReferredEl ()
 	   pRef = NULL;
 	else if (nMenuItems == 1)
 	   pRef = pRefTable[0];
+#ifdef IV
 	else
 	  {
-	     BuildReferenceMenu (menuBuf, nMenuItems, &chosenItem);
-	     pRef = pRefTable[chosenItem];
+	    BuildReferenceMenu (menuBuf, nMenuItems, &chosenItem);
+	    pRef = pRefTable[chosenItem];
 	  }
 	if (pRef != NULL)
 	   /* c'est bien une reference qui est selectionnee */
@@ -374,6 +373,7 @@ void                FindReferredEl ()
 	       /* l'element reference est-il dans le buffer de sauvegarde ? */
 	       pEl = NULL;
 	  }
+#endif /* IV */
 
 	if (pEl != NULL)
 	  {

@@ -6,33 +6,33 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TteInitMenus ( CHAR_T* name,
+extern void TteInitMenus ( char *name,
                            int number );
 extern void FreeMenus ( void );
-extern void TteAddMenuAction ( char* actionName,
+extern void TteAddMenuAction ( char *actionName,
                                Proc procedure,
                                ThotBool state );
 extern void TteZeroMenu ( WindowType windowtype,
-                          CHAR_T* schemaName );
+                          char *schemaName );
 extern void TteAddMenu ( WindowType windowtype,
-                         CHAR_T* schemaName,
+                         char *schemaName,
                          int view,
                          int menuID,
                          int itemsNumber,
-                         char* menuName );
+                         char *menuName );
 extern void TteAddSubMenu ( WindowType windowtype,
-                            CHAR_T* schemaName,
+                            char *schemaName,
                             int menuID,
                             int itemID,
                             int itemsNumber );
 extern void TteAddMenuItem ( WindowType windowtype,
-                             CHAR_T* schemaName,
+                             char *schemaName,
                              int menuID,
                              int subMenu,
                              int itemID,
-                             char* actionName,
+                             char *actionName,
                              char itemType );
-extern void TteOpenMainWindow ( CHAR_T* name,
+extern void TteOpenMainWindow ( char *name,
                                 Pixmap logo,
                                 Pixmap icon );
 extern void APP_ButtonCallback ( ThotButton w,
@@ -43,8 +43,8 @@ extern int TtaAddButton ( Document document,
                           View view,
                           ThotIcon picture,
                           void (*procedure) (),
-                          char* functionName,
-                          STRING info,
+                          char *functionName,
+                          char *info,
                           BYTE type,
                           ThotBool state );
 extern void *TtaGetButtonCallback ( Document document,
@@ -65,21 +65,21 @@ extern void APP_TextCallback ( ThotWidget w,
                                void *call_d );
 extern int TtaAddTextZone ( Document document,
                             View view,
-                            STRING label,
+                            char *label,
                             ThotBool editable,
                             void (*procedure) () );
 extern void TtaSetTextZone ( Document document,
                              View view,
                              int index,
-                             STRING text );
+                             char *text );
 extern void TtcSwitchCommands ( Document document,
                                 View view );
 extern void DrawingInput ( int *w,
                            int frame,
                            int *infos );
-extern int MakeFrame ( CHAR_T* schema,
+extern int MakeFrame ( char *schema,
                        int view,
-                       STRING name,
+                       char *name,
                        int X,
                        int Y,
                        int width,
@@ -119,37 +119,37 @@ extern int TtaSetCallback ( void (*callbakProcedure) (),
                             int set );
 extern void ThotCallback ( int ref,
                            int typedata,
-                           STRING data );
+                           char *data );
 
 #else /* __STDC__ */
 
-extern void TteInitMenus (/* CHAR_T* name,
+extern void TteInitMenus (/* char *name,
                              int number */);
 extern void FreeMenus (/* void */);
-extern void TteAddMenuAction (/* char* actionName,
+extern void TteAddMenuAction (/* char *actionName,
                                  Proc procedure,
                                  ThotBool state */);
 extern void TteZeroMenu (/* WindowType windowtype,
-                            CHAR_T* schemaName */);
+                            char *schemaName */);
 extern void TteAddMenu (/* WindowType windowtype,
-                           CHAR_T* schemaName,
+                           char *schemaName,
                            int view,
                            int menuID,
                            int itemsNumber,
-                           char* menuName */);
+                           char *menuName */);
 extern void TteAddSubMenu (/* WindowType windowtype,
-                              CHAR_T* schemaName,
+                              char *schemaName,
                               int menuID,
                               int itemID,
                               int itemsNumber */);
 extern void TteAddMenuItem (/* WindowType windowtype,
-                               CHAR_T* schemaName,
+                               char *schemaName,
                                int menuID,
                                int subMenu,
                                int itemID,
-                               char* actionName,
+                               char *actionName,
                                char itemType */);
-extern void TteOpenMainWindow (/* CHAR_T* name,
+extern void TteOpenMainWindow (/* char *name,
                                   Pixmap logo,
                                   Pixmap icon */);
 extern void APP_ButtonCallback (/* ThotButton w,
@@ -160,8 +160,8 @@ extern int TtaAddButton (/* Document document,
                             View view,
                             ThotIcon picture,
                             void (*procedure) (),
-                            char* functionName,
-                            STRING info,
+                            char *functionName,
+                            char *info,
                             BYTE type,
                             ThotBool state */);
 extern void *TtaGetButtonCallback (/* Document document,
@@ -182,21 +182,21 @@ extern void APP_TextCallback (/* ThotWidget w,
                                  void *call_d */);
 extern int TtaAddTextZone (/* Document document,
                               View view,
-                              STRING label,
+                              char *label,
                               ThotBool editable,
                               void (*procedure) () */);
 extern void TtaSetTextZone (/* Document document,
                                View view,
                                int index,
-                               STRING text */);
+                               char *text */);
 extern void TtcSwitchCommands (/* Document document,
                                   View view */);
 extern void DrawingInput (/* int *w,
                              int frame,
                              int *infos */);
-extern int MakeFrame (/* CHAR_T* schema,
+extern int MakeFrame (/* char *schema,
                          int view,
-                         STRING name,
+                         char *name,
                          int X,
                          int Y,
                          int width,
@@ -236,7 +236,7 @@ extern int TtaSetCallback (/* void (*callbakProcedure) (),
                               int set */);
 extern void ThotCallback (/* int ref,
                              int typedata,
-                             STRING data */);
+                             char *data */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

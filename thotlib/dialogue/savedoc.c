@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
-
+#ifdef IV
 /*
  *
  * Author: I. Vatton (INRIA)
@@ -61,24 +61,6 @@ static PtrDocument  DocumentToSave;
 static int          PivotEntryNum;
 
 #ifndef _WINDOWS
-/*----------------------------------------------------------------------
-  UnsetEntryMenu
-  displays as non active the "ent" entry of the menu referenced by "ref".
-  ----------------------------------------------------------------------*/
-void UnsetEntryMenu (int ref, int ent)
-{
-   char                fontname[100];
-   char                text[20];
-
-   if (TtWDepth > 1)
-      TtaRedrawMenuEntry (ref, ent, NULL, InactiveB_Color, 0);
-   else
-     {
-	FontIdentifier ('L', 'T', 2, 11, 1, text, fontname);
-	TtaRedrawMenuEntry (ref, ent, fontname, -1, 0);
-     }
-}
-
 /*----------------------------------------------------------------------
   CallbackSaveDocMenu
   callback handler for the Save File menu.
@@ -517,7 +499,7 @@ void TtcSaveDocument (Document document, View view)
 	}
     }
 }
-
+#endif /* IV */
 
 
 

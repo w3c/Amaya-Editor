@@ -187,7 +187,8 @@ void GetDocAndView (int frame, PtrDocument *pDoc, int *viewNum, ThotBool *assoc)
    Construit la liste des vues possibles d'un document.		
   ----------------------------------------------------------------------*/
 static void BuildSSchemaViewList (PtrDocument pDoc, PtrSSchema pSS,
-                                  AvailableView viewList, int *nViews, ThotBool nature)
+                                  AvailableView viewList, int *nViews,
+				  ThotBool nature)
 {
    PtrPSchema          pPSchema;
    DocViewDescr       *pView;
@@ -514,6 +515,7 @@ void OpenDefaultViews (PtrDocument pDoc)
 {
   Document          document;
   PtrPSchema        pPSchema;
+  PtrSSchema        pSS;
   NotifyDialog      notifyDoc;
   int               view, i, X, Y, width, height, schView;
   ThotBool          bool, skeleton;
@@ -521,9 +523,10 @@ void OpenDefaultViews (PtrDocument pDoc)
   /* si le document a ete charge' sous le forme de ses seuls elements 
      exporte's, on ouvre la vue export sinon, on ouvre la premiere vue. */
   skeleton = FALSE;
+  pSS = pDoc->DocSSchema;
   if (pDoc->DocExportStructure)
      {
-     pPSchema = pDoc->DocSSchema->SsPSchema;
+     pPSchema = pSS->SsPSchema;
      view = 0;
      do
         view++;
@@ -537,7 +540,7 @@ void OpenDefaultViews (PtrDocument pDoc)
      view = 1;
   /* demande la creation d'une fenetre pour la vue a ouvrir */
   /* chercher la geometrie de la fenetre dans le fichier .conf */
-  ConfigGetViewGeometry (pDoc, pDoc->DocSSchema->SsPSchema->PsView[view - 1],
+  ConfigGetViewGeometry (pDoc, pSS->SsPSchema->PsView[view - 1],
 			 &X, &Y, &width, &height);
   document = (Document) IdentDocument (pDoc);
   notifyDoc.event = TteViewOpen;
@@ -546,9 +549,12 @@ void OpenDefaultViews (PtrDocument pDoc)
   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
      {
      schView = pDoc->DocView[view - 1].DvPSchemaView;
-     pDoc->DocViewFrame[0] = CreateWindowWithTitle (pDoc, schView,
-				 pDoc->DocSSchema->SsPSchema->PsView[view - 1],
-				 &pDoc->DocViewVolume[0], X, Y, width, height);
+     pDoc->DocViewFrame[0] = MakeFrame (pSS->SsName, schView,
+					pDoc->DocDName,
+					X, Y,
+					width, height,
+					&pDoc->DocViewVolume[0],
+					IdentDocument (pDoc));
      }
   if (pDoc->DocViewFrame[0] == 0)
      /* echec creation fenetre */
@@ -558,7 +564,7 @@ void OpenDefaultViews (PtrDocument pDoc)
      }
   else
      {
-     pDoc->DocView[0].DvSSchema = pDoc->DocSSchema;
+     pDoc->DocView[0].DvSSchema = pSS;
      pDoc->DocView[0].DvPSchemaView = view;
      pDoc->DocView[0].DvSync = TRUE;
      pDoc->DocView[0].DvFirstGuestView = NULL;
@@ -703,7 +709,7 @@ int CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS,
 		  /* traitement des attributs requis */
 		  AttachMandatoryAttributes (pDoc->DocAssocRoot[assoc - 1],
 					     pDoc);
-		  if (pDoc->DocSSchema != NULL)
+		  if (pSS != NULL)
 		     /* Ajoute un saut de page a la fin si necessaire */
 		     AddLastPageBreak (pDoc->DocAssocRoot[assoc - 1], 1, pDoc,
 				       TRUE);
@@ -715,7 +721,7 @@ int CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS,
 	    }
 	 }
       if ((pDoc->DocAssocRoot[assoc - 1] != NULL) &&
-	  (assoc <= MAX_ASSOC_DOC) && pDoc->DocSSchema != NULL)
+	  (assoc <= MAX_ASSOC_DOC) && pSS != NULL)
 	 /* on construit l'image abstraite des elements associes */
 	 {
 	 pDoc->DocAssocFrame[assoc - 1] = 0;
@@ -851,32 +857,21 @@ int CreateAbstractImage (PtrDocument pDoc, int v, int r, PtrSSchema pSS,
 void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X,
                       int Y, int width, int height)
 {
-  PtrElement          pEl;
+  PtrSSchema          pSS;
   int                 volume = 0;
   int                 frame;
   int                 h;
-  Name                viewName;
   int                 schView;
 
   frame = 0;
   if (view > 0)
     {
       /* prepare le nom de la vue */
-      if (assoc)
-	{
-	  schView = 1;
-	  pEl = pDoc->DocAssocRoot[view - 1];
-	  strncpy (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName, MAX_NAME_LENGTH);
-	}
-      else
-	{
-	  schView = pDoc->DocView[view - 1].DvPSchemaView;
-	  strncpy (viewName, pDoc->DocView[view - 1].DvSSchema->SsPSchema->
-		    PsView[schView - 1], MAX_NAME_LENGTH);
-	} 
+      schView = pDoc->DocView[view - 1].DvPSchemaView;
       /* creation d'une fenetre pour la vue */
-      frame = CreateWindowWithTitle (pDoc, schView, viewName, &volume, X, Y,
-				     width, height);
+      pSS = pDoc->DocSSchema;
+      frame = MakeFrame (pSS->SsName, schView,  pDoc->DocDName, X, Y,
+			     width, height, &volume, IdentDocument (pDoc));
     } 
   if (frame == 0)
     {
@@ -890,25 +885,12 @@ void OpenCreatedView (PtrDocument pDoc, int view, ThotBool assoc, int X,
       /* deja prete */
       /* on ne s'occupe pas de la hauteur de page */
       h = 0;
-      if (assoc)
-	{
-	  /* vue d'elements associes */
-	  pDoc->DocAssocFrame[view - 1] = frame;
-	  pDoc->DocAssocVolume[view - 1] = volume;
-	  ChangeConcreteImage (frame, &h,
-			       pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0]);
-	  DisplayFrame (frame);
-	  ShowSelection (pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0], TRUE);
-	}
-      else
-	{
-	  /* vue de l'arbre principal */
-	  pDoc->DocViewFrame[view - 1] = frame;
-	  pDoc->DocViewVolume[view - 1] = volume;
-	  ChangeConcreteImage (frame, &h, pDoc->DocViewRootAb[view - 1]);
-	  ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
-	  DisplayFrame (frame);
-	}
+      /* vue de l'arbre principal */
+      pDoc->DocViewFrame[view - 1] = frame;
+      pDoc->DocViewVolume[view - 1] = volume;
+      ChangeConcreteImage (frame, &h, pDoc->DocViewRootAb[view - 1]);
+      ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
+      DisplayFrame (frame);
       /* Update Paste entry in menu */
       if ((FirstSavedElement == NULL && ClipboardThot.BuLength == 0) ||
 	  pDoc->DocReadOnly)

@@ -6,27 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CallbackPictureMenu ( int ref,
-                                  int typeData,
-                                  STRING txt );
-extern void BuildPictureMenu ( STRING name,
-                               ThotBool * result,
-                               int *typim,
-                               int *pres,
-                               PtrBox pBox );
-extern void ImageMenuLoadResources ( void );
-
 #else /* __STDC__ */
-
-extern void CallbackPictureMenu (/* int ref,
-                                    int typeData,
-                                    STRING txt */);
-extern void BuildPictureMenu (/* STRING name,
-                                 ThotBool * result,
-                                 int *typim,
-                                 int *pres,
-                                 PtrBox pBox */);
-extern void ImageMenuLoadResources (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
+#ifdef IV
 /*
    Edition functions == file, view, import, and export menus
  *
@@ -370,3 +370,4 @@ void                ImageMenuLoadResources ()
    if (BaseDlgImage != 0)
       TteConnectAction (T_imagemenu, (Proc) BuildPictureMenu);
 }
+#endif /* IV */

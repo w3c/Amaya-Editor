@@ -6,25 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CallbackConfirmMenu ( int ref,
-                                  int typeData,
-                                  char *data );
-extern void CallbackNewDocMenu ( int ref,
-                                 int typeData,
-                                 char *data );
-extern void TtcCreateDocument ( Document document,
-                                View view );
-
 #else /* __STDC__ */
-
-extern void CallbackConfirmMenu (/* int ref,
-                                    int typeData,
-                                    char *data */);
-extern void CallbackNewDocMenu (/* int ref,
-                                   int typeData,
-                                   char *data */);
-extern void TtcCreateDocument (/* Document document,
-                                  View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

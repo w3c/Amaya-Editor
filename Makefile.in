@@ -29,8 +29,6 @@ srcdir	= $(THOTDIR)
 
 default : tools thotlib tablelib batch amaya_prog thot_prog print_prog
 
-thot : tools thotlib tablelib thot_prog
-
 amaya : tools thotlib tablelib amaya_prog
 
 print : tools thotlib tablelib print_prog
@@ -51,10 +49,6 @@ tools: rebuild force
 thotlib: rebuild force
 	@(if test -d thotlib ; then cd thotlib ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all ; fi)
-
-thot_prog: rebuild force
-	@(if test -d thot ; then cd thot ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" thot ; fi)
 
 amaya_prog: rebuild force bin/str
 	@(if test -d amaya ; then cd amaya ; \

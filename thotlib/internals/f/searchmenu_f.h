@@ -9,23 +9,6 @@
 extern void ResetSearchInDocument ( PtrDocument pDoc );
 extern void CallbackWhereToSearch ( int ref,
                                     int val );
-extern void CallbackSearchEmptyEl ( int ref,
-                                    int val );
-extern void TtcSearchEmptyElement ( Document document,
-                                    View view );
-extern void CallbackSearchEmptyref ( int ref,
-                                     int val );
-extern void TtcSearchEmptyReference ( Document document,
-                                      View view );
-extern void CallbackReferenceMenu ( int val );
-extern void BuildReferenceMenu ( char *bufMenu,
-                                 int nbEntries,
-                                 int *selEntry );
-extern void BuildSearchReferences ( PtrDocument pDoc );
-extern void TtcSearchReference ( Document document,
-                                 View view );
-extern void CallbackReferenceTo ( int ref,
-                                  int data );
 extern void TtcSearchText ( Document document,
                             View view );
 extern void CallbackTextReplace ( int ref,
@@ -44,23 +27,6 @@ extern void SearchLoadResources ( void );
 extern void ResetSearchInDocument (/* PtrDocument pDoc */);
 extern void CallbackWhereToSearch (/* int ref,
                                       int val */);
-extern void CallbackSearchEmptyEl (/* int ref,
-                                      int val */);
-extern void TtcSearchEmptyElement (/* Document document,
-                                      View view */);
-extern void CallbackSearchEmptyref (/* int ref,
-                                       int val */);
-extern void TtcSearchEmptyReference (/* Document document,
-                                        View view */);
-extern void CallbackReferenceMenu (/* int val */);
-extern void BuildReferenceMenu (/* char *bufMenu,
-                                   int nbEntries,
-                                   int *selEntry */);
-extern void BuildSearchReferences (/* PtrDocument pDoc */);
-extern void TtcSearchReference (/* Document document,
-                                   View view */);
-extern void CallbackReferenceTo (/* int ref,
-                                    int data */);
 extern void TtcSearchText (/* Document document,
                               View view */);
 extern void CallbackTextReplace (/* int ref,

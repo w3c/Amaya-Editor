@@ -11,8 +11,6 @@ extern Document TtaInitDocument ( char *structureSchema,
                                   Document document );
 extern Document TtaNewDocument ( char *structureSchema,
                                  char *documentName );
-extern void LoadDocument ( PtrDocument *pDoc,
-                           char *fileName );
 extern void NewDocument ( PtrDocument *pDoc,
                           char *SSchemaName,
                           char *docName,
@@ -35,8 +33,6 @@ extern Document TtaInitDocument (/* char *structureSchema,
                                     Document document */);
 extern Document TtaNewDocument (/* char *structureSchema,
                                    char *documentName */);
-extern void LoadDocument (/* PtrDocument *pDoc,
-                             char *fileName */);
 extern void NewDocument (/* PtrDocument *pDoc,
                             char *SSchemaName,
                             char *docName,

@@ -4,6 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
+#ifdef IV
 
 /*
  * This module handles document views
@@ -45,6 +46,7 @@
 #include "buildboxes_f.h"
 #include "callback_f.h"
 #include "changeabsbox_f.h"
+#include "checkermenu_f.h"
 #include "config_f.h"
 #include "content_f.h"
 #include "createabsbox_f.h"
@@ -56,7 +58,6 @@
 #include "fileaccess_f.h"
 #include "frame_f.h"
 #include "memory_f.h"
-#include "savedoc_f.h"
 #include "search_f.h"
 #include "schemas_f.h"
 #include "structcreation_f.h"
@@ -82,20 +83,20 @@ static int              nbNatures;
    Returns the frame number of ) if the creation failed and the available
    volume in *vol.
   ----------------------------------------------------------------------*/
-int CreateWindowWithTitle (PtrDocument pDoc, int view, Name viewName,
-			   int *vol, int X, int Y, int width, int height)
+static int CreateWindowWithTitle (PtrDocument pDoc, int view, Name viewName,
+				  int *vol, int X, int Y, int width, int height)
 {
    int    createdFrame;
-   CHAR_T buf[MAX_TXT_LEN];
+   char   buf[MAX_TXT_LEN];
 
    /* met dans le buffer le nom du document... */
-   ustrncpy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
-   ustrcat (buf, "  ");
+   strncpy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
+   strcat (buf, "  ");
    /* ...suivi eventuellement de la mention 'Read only' */
    if (pDoc->DocReadOnly)
      {
-	ustrcat (buf, " ");
-	ustrcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
+	strcat (buf, " ");
+	strcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
      }
    /* creation d'une frame pour la vue */
    createdFrame = MakeFrame (pDoc->DocSSchema->SsName, view, buf, X, Y,
@@ -1106,3 +1107,4 @@ void                TtcChangePresentation (Document document, View view)
 #endif /* !_WINDOWS */
      }
 }
+#endif /* IV */
