@@ -1322,8 +1322,9 @@ int                *max;
 
 #endif /* __STDC__ */
 {
+#ifdef IV
    PtrAbstractBox      pParentAb;
-
+#endif /* IV */
    /* Valeurs par defaut */
    *min = 0;
    *max = 100000;

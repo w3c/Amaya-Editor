@@ -21,8 +21,10 @@
 #include "html2thot_f.h"
 #include "transparse_f.h"
 #include "XMLparser_f.h"
+#ifdef MATHML
+#include "MathML.h"
+#endif
 
- 
 /*
  * pattern matching stack associates a node of source structure tree to a 
  * list of pat.
@@ -937,11 +939,32 @@ Document doc;
 #endif
 {
   Element parent;
+  SSchema parSch, elSch;
   
+  elSch = (TtaGetElementType (elem)).ElSSchema;
   parent = TtaGetParent (elem);
-  if (parent != NULL && (strcmp (GITagName (parent), "???") == 0))
-    if (TtaGetFirstChild (parent) == TtaGetLastChild (parent))
-      elem = parent;
+  if (parent !=NULL)
+    {
+      if (TtaGetParent(parent)!=NULL)
+	parSch = (TtaGetElementType (TtaGetParent(parent))).ElSSchema;
+      else
+	parSch = (TtaGetElementType (parent)).ElSSchema;
+      
+      while (parent != NULL && 
+	     TtaSameSSchemas (parSch, elSch) &&
+	     (strcmp (GITagName (parent), "???") == 0) &&
+	     TtaGetFirstChild (parent) == TtaGetLastChild (parent))
+	{
+	  elem = parent;
+	  parent = TtaGetParent (parent);
+	  if (parent !=NULL)
+	    if (TtaGetParent(parent)!=NULL)
+	      parSch = (TtaGetElementType (TtaGetParent(parent))).ElSSchema;
+	    else
+	      parSch = (TtaGetElementType (parent)).ElSSchema;
+	}
+    }
+      
   TtaRemoveTree (elem, doc);
 }
 
@@ -959,14 +982,16 @@ Document            doc;
 #endif
 {
    strMatchChildren   *prevMatch, *DMatch;
-   Element             lastEl, courEl, invEl;
+   Element             lastEl, courEl, invEl, parentEl;
    ElementType         typeEl;
    boolean             res;
+   SSchema             selSch, courSch;
  
  res = TRUE;
    prevMatch = NULL;
    DMatch = sMatch;
    myFirstSelect = DMatch->MatchNode->Elem;
+   selSch = (TtaGetElementType (myFirstSelect)).ElSSchema;
    courEl = myFirstSelect;
    /* PreviousHTMLSibling (&myFirstSelect);*/
    TtaPreviousSibling (&myFirstSelect);
@@ -974,7 +999,12 @@ Document            doc;
    while (myFirstSelect == NULL)
      {
        courEl = TtaGetParent (courEl);
-       if (strcmp (GITagName (courEl), "???") == 0)
+       if (TtaGetParent (courEl) != NULL)
+	 courSch = (TtaGetElementType (TtaGetParent (courEl))).ElSSchema;
+       else
+	 courSch = (TtaGetElementType (courEl)).ElSSchema;
+       if (strcmp (GITagName (courEl), "???") == 0 && 
+	   TtaSameSSchemas (courSch,selSch))
 	 {
 	   myFirstSelect = courEl;
 	   TtaPreviousSibling (&myFirstSelect);
@@ -1043,9 +1073,15 @@ Document            doc;
 		       lastEl = myFirstSelect;
 		       while (DMatch != NULL)
 			 {	/* restoring the source elements */
-			    TtaInsertSibling (DMatch->MatchNode->Elem, lastEl, FALSE, doc);
-			    lastEl = DMatch->MatchNode->Elem;
-			    DMatch = DMatch->Next;
+			   parentEl = DMatch->MatchNode->Elem;
+			   while (TtaGetParent (parentEl) != NULL)
+			     parentEl = TtaGetParent (parentEl);
+			   if (parentEl != lastEl)
+			     {
+			       TtaInsertSibling (parentEl, lastEl, FALSE, doc);
+			       lastEl = parentEl;
+			     }
+			   DMatch = DMatch->Next;
 			 }
 		    }
 	       }
@@ -1067,13 +1103,22 @@ Document            doc;
 			 }
 		       /* restoring the source elements */
 		       DMatch = sMatch;
-		       TtaInsertFirstChild (&(DMatch->MatchNode->Elem), myFirstSelect, doc);
-		       lastEl = DMatch->MatchNode->Elem;
+		       parentEl = DMatch->MatchNode->Elem;
+		       while (TtaGetParent (parentEl) != NULL)
+			 parentEl = TtaGetParent (parentEl);
+		       TtaInsertFirstChild (&(parentEl), myFirstSelect, doc);
+		       lastEl = parentEl;
 		       DMatch = DMatch->Next;
 		       while (DMatch != NULL)
 			 {
-			    TtaInsertSibling (DMatch->MatchNode->Elem, lastEl, FALSE, doc);
-			    lastEl = DMatch->MatchNode->Elem;
+			   parentEl = DMatch->MatchNode->Elem;
+			   while (TtaGetParent (parentEl) != NULL)
+			     parentEl = TtaGetParent (parentEl);
+			   if (parentEl != lastEl)
+			     {
+			       TtaInsertSibling (parentEl, lastEl, FALSE, doc);
+			       lastEl = parentEl;
+			     }
 			    DMatch = DMatch->Next;
 			 }
 		    }
@@ -2154,7 +2199,8 @@ char               *prevtag;
   TtaGiveConstructorsOfType (&subTypes, &cardinal, elemType);
   constOfType = TtaGetConstructOfType (elemType);
   GIType (tag, &tagElType, TransDoc);
-  if (tagElType.ElTypeNum == 0)
+  if (!TtaSameSSchemas(elemType.ElSSchema, tagElType.ElSSchema) ||
+      tagElType.ElTypeNum == 0)
     return FALSE;
   switch (constOfType)
     {
@@ -2194,7 +2240,7 @@ char               *prevtag;
 
     case ConstructOrderedAggregate:
       found = (!strcmp (prevtag, ""));
-      GIType (prevtag, &prevElType, (Document)0);
+      GIType (prevtag, &prevElType, (Document)TransDoc);
       found = (prevElType.ElTypeNum == 0);
       /* searches the rule of previous sibling */
       for (i = 0; !found && i < cardinal; i++)
@@ -2466,8 +2512,13 @@ char               *data;
 	    }
 	  /* selecting the new elements */
 	  /* or setting the selction to the specified node */
-	  attrType.AttrSSchema = TtaGetDocumentSSchema(TransDoc);
-	  attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
+	  attrType.AttrSSchema = TtaGetElementType (myFirstSelect).ElSSchema;
+	  if (!strcmp (TtaGetSSchemaName (attrType.AttrSSchema), "HTML"))
+	    attrType.AttrTypeNum = HTML_ATTR_Ghost_restruct;
+#ifdef MATHML
+	  else if (!strcmp (TtaGetSSchemaName (attrType.AttrSSchema), "MathML"))
+	    attrType.AttrTypeNum = MathML_ATTR_Ghost_restruct;
+#endif
 	  found = FALSE;
 	  elFound = NULL;
 	  attr = NULL;
@@ -2479,6 +2530,7 @@ char               *data;
 	      domain = SearchForward;
 	      if (elFound != NULL)
 		{
+		  length = MAX_LENGTH;
 		  TtaGiveTextAttributeValue (attr, buf, &length);
 		  found = !strcmp (buf, "Select");
 		}
@@ -2616,13 +2668,17 @@ View                view;
       tag = TtaGetMemory (NAME_LENGTH);
       do
 	{			/* for each node above the first selected */
+#ifdef AMAYA_DEBUG
+	  printf ("Matches for %s element :\n",node->Tag);
+#endif
 	  sm = node->Matches;
 	  while (sm != NULL)
 	    {		/* for each matching of the node */
 	      if (!strcmp (sm->MatchSymb->Tag, "pattern_root"))
 		{ /* if it is matching a pattern root : */
 		  /* insert the transformation name in the menu buffer */
-		  
+	
+	  
 		  elemSelect = sm->MatchChildren->MatchNode->Elem;
 		  TtaPreviousSibling (&elemSelect);
 		  if (elemSelect != NULL)
@@ -2639,7 +2695,14 @@ View                view;
 					   TtaGetElementType (sm->MatchNode->Elem),
 					   tag))
 		    {
-		      for (k = 0; k < i && strcmp (menuTrans[k]->MatchSymb->SymbolName, sm->MatchSymb->SymbolName); k++) ;
+#ifdef AMAYA_DEBUG
+		      printf ("   %s\n",sm->MatchSymb->SymbolName);
+#endif
+		      for (k = 0; 
+			   k < i && 
+			     strcmp (menuTrans[k]->MatchSymb->SymbolName, 
+				     sm->MatchSymb->SymbolName); 
+			   k++);
 		      if (k == i)
 			{
 			   sprintf (&menuBuf[j], "%s%s", "B", sm->MatchSymb->SymbolName);

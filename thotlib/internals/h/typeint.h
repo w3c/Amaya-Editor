@@ -24,7 +24,7 @@
 typedef char	DocumentIdentifier[MAX_DOC_IDENT_LEN];
 
 /* document external identifier: document name for the user */
-typedef char	ADocumentName[MAX_DOC_NAME_LEN];
+typedef char	ADocumentName[MAX_NAME_LENGTH];
 
 /* element access mode */
 typedef enum {
