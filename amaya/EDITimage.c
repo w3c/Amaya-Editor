@@ -296,7 +296,7 @@ STRING              data;
 		} 
 	      else 
 		{
-		  change = NormalizeFile (data, LastURLImage, AM_CONV_URL_SEP);
+		  change = NormalizeFile (data, LastURLImage, AM_CONV_NONE);
 		  if (TtaCheckDirectory (LastURLImage)) 
 		    {
 		      ustrcpy (DirectoryImage, LastURLImage);
