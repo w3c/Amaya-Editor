@@ -126,6 +126,44 @@ PtrAbstractBox      pAbb2;
 }
 
 
+/*----------------------------------------------------------------------
+   UpdateAbsBoxVolume
+   update the volume of the abstract box of element pEl in view view.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                UpdateAbsBoxVolume (PtrElement pEl, int view, PtrDocument pDoc)
+#else
+void                UpdateAbsBoxVolume (pEl, view, pDoc)
+   PtrElement pEl;
+   int view;
+   PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   int		       dVol;
+   PtrAbstractBox      pAb;
+
+   pAb = pEl->ElAbstractBox[view];
+   if (pAb != NULL)
+      {
+	pAb->AbChange = TRUE;
+	if (!AssocView (pEl))
+	   if (pDoc->DocView[view].DvPSchemaView > 0)
+	      pDoc->DocViewModifiedAb[view] =
+		Enclosing (pAb, pDoc->DocViewModifiedAb[view]);
+	   else
+	      pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
+		Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
+	dVol = pAb->AbVolume - pEl->ElTextLength;
+	do
+	   {
+	   pAb->AbVolume -= dVol;
+	   pAb = pAb->AbEnclosing;
+	   }
+	while (pAb != NULL);
+      }
+}
+
 
 /*----------------------------------------------------------------------
    SimpleSearchRulepEl cherche dans la chaine pRule la regle du       

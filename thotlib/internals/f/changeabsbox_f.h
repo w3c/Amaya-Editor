@@ -8,6 +8,9 @@
 
 extern PtrAbstractBox Enclosing ( PtrAbstractBox pAbb1,
                                   PtrAbstractBox pAbb2 );
+extern void UpdateAbsBoxVolume ( PtrElement pEl,
+                                 int view,
+				 PtrDocument pDoc );
 extern void SimpleSearchRulepEl ( PtrPRule * pRuleView1,
                                   PtrElement pEl,
                                   int view,
@@ -106,6 +109,9 @@ extern boolean IsIdenticalTextType ( PtrElement pEl,
 
 extern PtrAbstractBox Enclosing (/* PtrAbstractBox pAbb1,
                                     PtrAbstractBox pAbb2 */);
+extern void UpdateAbsBoxVolume (/* PtrElement pEl,
+                                   int view,
+				   PtrDocument pDoc */);
 extern void SimpleSearchRulepEl (/* PtrPRule * pRuleView1,
                                     PtrElement pEl,
                                     int view,

@@ -20,9 +20,6 @@ extern void CreationExceptions ( PtrElement pEl,
 extern void GetExternalTypeName ( PtrSSchema pSS,
                                   int typeNum,
                                   Name typeName );
-extern void UpdateAbsBoxVolume ( PtrElement pEl,
-                                 int view,
-				 PtrDocument pDoc );
 extern void BuildAbsBoxSpliText ( PtrElement pEl,
                                   PtrElement pNewEl,
                                   PtrElement pNextEl,
@@ -100,9 +97,6 @@ extern void CreationExceptions (/* PtrElement pEl,
 extern void GetExternalTypeName (/* PtrSSchema pSS,
                                     int typeNum,
                                     Name typeName */);
-extern void UpdateAbsBoxVolume (/* PtrElement pEl,
-                                   int view,
-				   PtrDocument pDoc */);
 extern void BuildAbsBoxSpliText (/* PtrElement pEl,
                                     PtrElement pNewEl,
                                     PtrElement pNextEl,

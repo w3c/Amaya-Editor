@@ -736,7 +736,7 @@ int                 nbitem;
 	     XtManageChild (w);
 	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) KbdCallbackHandler, (XtPointer) (param + (int) (it->value)));
 	     XtAddCallback (w, XmNexposeCallback, (XtCallbackProc) ExposeKbd, (XtPointer) (param + i));
-	  }			/*for */
+	  }
      }
 }
 
