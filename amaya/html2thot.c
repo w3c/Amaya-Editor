@@ -2779,6 +2779,7 @@ static void           ProcessStartGI (char* GIname)
 		    }
 		}
 	      if (pHTMLGIMapping[entry].XMLcontents != 'E')
+		{
 		if (StackLevel >= MaxStack - 1)
 	          HTMLParseError (HTMLcontext.doc, "Too many nested elements");
 		else
@@ -2791,6 +2792,7 @@ static void           ProcessStartGI (char* GIname)
 		    LanguageStack[StackLevel] = HTMLcontext.language;
 		    GINumberStack[StackLevel++] = entry;
 		  }
+		}
 	    }
 	}
     }
