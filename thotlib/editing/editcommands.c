@@ -3794,7 +3794,8 @@ void TtcPaste (Document doc, View view)
 		  else if (!draw && (pAb->AbLeafType == LtPicture ||
 				     pAb->AbLeafType == LtGraphics))
 		    ContentEditing (TEXT_SUP);
-		  else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
+		  else if (!draw &&
+			   (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0))
 		    TtcPreviousChar (doc, view);
 		}
 	    }
