@@ -14,7 +14,7 @@
 12 >&Extras
 13 &Attribute
 14 A&nmerkungen
-15 **&Bookmarks
+15 &Lesezeichen
 16 &Kooperation
 17 &Hilfe
 18 Neu
@@ -232,9 +232,9 @@
 230 Abfrage bearbeiten...
 231 Filter...
 232 Konfigurieren...
-233 **Bookmark File
-234 **Edit Topics
-235 **View Bookmarks
+233 Lesezeichendatei
+234 Themen bearbeiten
+235 Lesezeichen ansehen
 236 Resource sperren...
 237 Resource entsperren...
 238 Resourceeigenschaften anzeigen...
