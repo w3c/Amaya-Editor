@@ -1274,6 +1274,8 @@ char *GetLocalPath (Document doc, char  *url)
 	{
 	  if (*n == '*' || *n == ',')
 	    *n = '_';
+	  if ((unsigned char)*n >= 0x80) /* avoid non-ASCII */
+		  *n = 'A' + ((unsigned char)*n % 26);
 	  n++;
 	}
       /* restore the url */
