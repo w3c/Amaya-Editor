@@ -2509,7 +2509,6 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
   Menu_Ctl           *ptrmenu;
   int                 frame;
   int                 ref, i;
-  ThotBool            skip = TRUE;
 
   if (doc)
     {
@@ -2524,15 +2523,9 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
 		   Prof_ShowMenu (ptrmenu))
 	    {
 	      if (!ptrmenu->MenuAttr)
-		{
-		  /* an horrible patch that skip the menu file */
-		  if (skip)
-		    skip = FALSE;
-		  else
-		    BuildPopdown (ptrmenu, ref,
-				  FrameTable[frame].WdMenus[i], frame, doc,
-				  TRUE, RO);
-		}
+		BuildPopdown (ptrmenu, ref,
+			      FrameTable[frame].WdMenus[i], frame, doc,
+			      TRUE, RO);
 	    }
 	  ptrmenu = ptrmenu->NextMenu;
 	  ref += MAX_ITEM;
@@ -4384,9 +4377,6 @@ void ThotCallback (int ref, int typedata, char *data)
 		      if (ptrmenu->ItemsList[i].ItemType == 'M' &&
 			  ptrmenu->ItemsList[i].SubMenu->ItemsNb == 0)
 			item++;
-		      else if (ptrmenu->ItemsList[i].ItemType != 'M' &&
-			       action > 0)
-			item++;
 		    }
 		  ptrmenu = ptrmenu->ItemsList[item].SubMenu;
 		}
@@ -4403,9 +4393,6 @@ void ThotCallback (int ref, int typedata, char *data)
 		  action = ptrmenu->ItemsList[i].ItemAction;
 		  if (ptrmenu->ItemsList[i].ItemType == 'M' &&
 		      ptrmenu->ItemsList[i].SubMenu->ItemsNb == 0)
-		    item++;
-		  else if (ptrmenu->ItemsList[i].ItemType != 'M' &&
-			   action > 0)
 		    item++;
 		}
 	    }
