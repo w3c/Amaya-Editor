@@ -101,9 +101,8 @@ STRUCT
 	END;
 
   Paragraph (ATTR Align) = Basic_Set;
-  Preformatted (ATTR WidthElement = integer) = LIST OF (Pre_Line)
+  Preformatted (ATTR WidthElement = integer) = Basic_Set
 	     - (PICTURE, Big_text, Small_text, Subscript, Superscript, Font_);
-  Pre_Line = Basic_Set;
 
   Anchor (ATTR HREF_; NAME = Text; REL; REV; Title;
 	       InternalLink = Reference(Anchor))
@@ -283,7 +282,6 @@ STRUCT
 	Submit_Input;
 	END;
 
-
   Text_With_Frame = BEGIN
 	Inserted_Text = TEXT;
 	Frame = CONSTANT C_Empty;
@@ -361,6 +359,7 @@ EXCEPT
 	Term:		ParagraphBreak;
 	MAP:		IsDraw;
 	AREA:		MoveResize;
+	Preformatted:	ReturnCreateNL;
 
 	Langue:		Invisible;
 	Style\240:	Invisible;

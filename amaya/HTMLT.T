@@ -11,14 +11,14 @@ CONST
 RULES
 
  HTML : BEGIN
-	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">\12';
-	Create '<HTML>\12';
-	Create '</HTML>\12' After;
+	Create '<!doctype html public "-//w3c//dtd html 3.2 final//en">\12';
+	Create '<html>\12';
+	Create '</html>\12' After;
 	END;
 
  HEAD:	BEGIN
-	Create '<HEAD>\12';
-	Create '</HEAD>\12' After;
+	Create '<head>\12';
+	Create '</head>\12' After;
 	END;
 
  Document_URL:
@@ -27,12 +27,12 @@ RULES
 	END;
 
  TITLE:	BEGIN
-	Create '<TITLE>';
-	Create '</TITLE>\12' After;
+	Create '<title>';
+	Create '</title>\12' After;
 	END;
 
  ISINDEX: BEGIN
-	Create '<ISINDEX';
+	Create '<isindex';
 	IF Prompt
 	   BEGIN
 	   Create ' prompt="';
@@ -45,14 +45,14 @@ RULES
 	END;
 
  BASE:	BEGIN
-	Create '<BASE ';
+	Create '<base ';
 	Create Attributes;
 	Remove;
 	Create '>\12';
 	END;
 
  Styles:BEGIN
-	Create '<STYLE';
+	Create '<style';
 	IF Notation
 	   BEGIN
 	   Create ' type=';
@@ -60,7 +60,7 @@ RULES
 	   END;
 	Create Attributes;
 	Create '>\12';
-	Create '</STYLE>\12' After;
+	Create '</style>\12' After;
 	END;
 
  StyleRule:
@@ -74,225 +74,231 @@ RULES
 	END;
 
  SCRIPT: BEGIN
-	Create '<SCRIPT';
+	Create '<script';
 	Create Attributes;
 	Create '>\12' After;
 	END;
 
  META: BEGIN
-	Create '<META';
+	Create '<meta';
 	Remove;
 	Create Attributes;
 	Create '>\12' After;
 	END;
 
  LINK:	BEGIN
-	Create '<LINK';
+	Create '<link';
 	Remove;
 	Create Attributes;
 	Create '>\12' After;
 	END;
 
  BODY:	BEGIN
-	Create '<BODY';
+	Create '<body';
 	Create Attributes;
 	Create '>\12';
-	Create '</BODY>\12' After;
+	Create '</body>\12' After;
 	END;
 
  H1:	BEGIN
-	Create '<H1';
+	Create '<h1';
 	Create Attributes;
 	Create '>';
-	Create '</H1>\12\12' After;
+	Create '</h1>' After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H2:	BEGIN
-	Create '<H2';
+	Create '<h2';
 	Create Attributes;
 	Create '>';
-	Create '</H2>\12\12' After;
+	Create '</h2>' After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H3:	BEGIN
-	Create '<H3';
+	Create '<h3';
 	Create Attributes;
 	Create '>';
-	Create '</H3>\12\12' After;
+	Create '</h3>' After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H4:	BEGIN
-	Create '<H4';
+	Create '<h4';
 	Create Attributes;
 	Create '>';
-	Create '</H4>\12\12' After;
+	Create '</h4>' After;
+	if not within Preformatted Create '\12\12' After;
 	END;
 
  H5:	BEGIN
-	Create '<H5';
+	Create '<h5';
 	Create Attributes;
 	Create '>';
-	Create '</H5>\12' After;
+	Create '</h5>' After;
+	if not within Preformatted Create '\12' After;
 	END;
 
  H6:	BEGIN
-	Create '<H6';
+	Create '<h6';
 	Create Attributes;
 	Create '>';
-	Create '</H6>\12' After;
+	Create '</h6>' After;
+	if not within Preformatted Create '\12' After;
 	END;
 
  BaseFont:
 	BEGIN
-	Create '<BASEFONT';
+	Create '<basefont';
 	Remove;
 	Create Attributes;
 	Create '>\12';
 	END;
 
  BR:	BEGIN
-	Create '<BR';
+	Create '<br';
 	Create Attributes;
 	Create '>\12';
 	Remove;
 	END;
  Italic_text:
 	BEGIN
-	Create '<I';
+	Create '<i';
 	Create Attributes;
 	Create '>';
-	Create '</I>' After;
+	Create '</i>' After;
 	END;
  Bold_text:
 	BEGIN
-	Create '<B';
+	Create '<b';
 	Create Attributes;
 	Create '>';
-	Create '</B>' After;
+	Create '</b>' After;
 	END;
  Teletype_text:
 	BEGIN
-	Create '<TT';
+	Create '<tt';
 	Create Attributes;
 	Create '>';
-	Create '</TT>' After;
+	Create '</tt>' After;
 	END;
  Underlined_text:
 	BEGIN
-	Create '<U';
+	Create '<u';
 	Create Attributes;
 	Create '>';
-	Create '</U>' After;
+	Create '</u>' After;
 	END;
  Struck_text:
 	BEGIN
-	Create '<STRIKE';
+	Create '<strike';
 	Create Attributes;
 	Create '>';
-	Create '</STRIKE>' After;
+	Create '</strike>' After;
 	END;
  Big_text:
 	BEGIN
-	Create '<BIG';
+	Create '<big';
 	Create Attributes;
 	Create '>';
-	Create '</BIG>' After;
+	Create '</big>' After;
 	END;
  Small_text:
 	BEGIN
-	Create '<SMALL';
+	Create '<small';
 	Create Attributes;
 	Create '>';
-	Create '</SMALL>' After;
+	Create '</small>' After;
 	END;
  Subscript:
 	BEGIN
-	Create '<SUB';
+	Create '<sub';
 	Create Attributes;
 	Create '>';
-	Create '</SUB>' After;
+	Create '</sub>' After;
 	END;
  Superscript:
 	BEGIN
-	Create '<SUP';
+	Create '<sup';
 	Create Attributes;
 	Create '>';
-	Create '</SUP>' After;
+	Create '</sup>' After;
 	END;
 
  Emphasis:
 	BEGIN
-	Create '<EM';
+	Create '<em';
 	Create Attributes;
 	Create '>';
-	Create '</EM>' After;
+	Create '</em>' After;
 	END;
  Strong:
 	BEGIN
-	Create '<STRONG';
+	Create '<strong';
 	Create Attributes;
 	Create '>';
-	Create '</STRONG>' After;
+	Create '</strong>' After;
 	END;
  Def:
 	BEGIN
-	Create '<DFN';
+	Create '<dfn';
 	Create Attributes;
 	Create '>';
-	Create '</DFN>' After;
+	Create '</dfn>' After;
 	END;
  Code:
 	BEGIN
-	Create '<CODE';
+	Create '<code';
 	Create Attributes;
 	Create '>';
-	Create '</CODE>' After;
+	Create '</code>' After;
 	END;
  Sample:
 	BEGIN
-	Create '<SAMP';
+	Create '<samp';
 	Create Attributes;
 	Create '>';
-	Create '</SAMP>' After;
+	Create '</samp>' After;
 	END;
  Keyboard:
 	BEGIN
-	Create '<KBD';
+	Create '<kbd';
 	Create Attributes;
 	Create '>';
-	Create '</KBD>' After;
+	Create '</kbd>' After;
 	END;
  Variable:
 	BEGIN
-	Create '<VAR';
+	Create '<var';
 	Create Attributes;
 	Create '>';
-	Create '</VAR>' After;
+	Create '</var>' After;
 	END;
  Cite:
 	BEGIN
-	Create '<CITE';
+	Create '<cite';
 	Create Attributes;
 	Create '>';
-	Create '</CITE>' After;
+	Create '</cite>' After;
 	END;
 
  Font_: BEGIN
-	Create '<FONT';
+	Create '<font';
 	Create Attributes;
 	Create '>';
-	Create '</FONT>' After;
+	Create '</font>' After;
 	END;
 
  Applet: BEGIN
-	Create '<APPLET';
+	Create '<applet';
 	Create Attributes;
 	Create '>\12';
-	Create '</APPLET>\12' After;	
+	Create '</applet>\12' After;	
 	END;
 
  Parameter: BEGIN
-	Create '<PARAM';
+	Create '<param';
 	Create Attributes;
 	Remove;
 	Create '>\12';
@@ -300,20 +306,20 @@ RULES
 
 #ifdef COUGAR
  Object: BEGIN
-	Create '<OBJECT';
+	Create '<object';
 	Create Attributes;
 	Create '>\12';
-	Create '</OBJECT>\12' After;	
+	Create '</object>\12' After;	
 	END;
 #endif
  Paragraph: BEGIN
 	if not firstwithin List_Item    and not firstwithin Definition   and
 	   not firstwithin Heading_cell and not firstwithin Data_cell
 	   BEGIN
-	   Create '<P';
+	   Create '<p';
 	   Create Attributes;
 	   Create '>\12';
-	   Create '</P>' After;
+	   Create '</p>' After;
 	   END;
 	Create '\12' After;
 	END;
@@ -321,17 +327,17 @@ RULES
  TEXT_UNIT: BEGIN
 	IF *Style\240 and not Within HEAD
 	    BEGIN
-	    Create '<SPAN';
+	    Create '<span';
 	    Create Attributes;
 	    Create '>';
-	    Create '</SPAN>' After;
+	    Create '</span>' After;
 	    END;
 	IF *Class and not Within HEAD
 	    BEGIN
-	    Create '<SPAN';
+	    Create '<span';
 	    Create Attributes;
 	    Create '>';
-	    Create '</SPAN>' After;
+	    Create '</span>' After;
 	    END;
 	IF Within Text_Area
 		Remove;
@@ -340,109 +346,106 @@ RULES
 	END;
 
  Definition_List: BEGIN
-	Create '<DL';
+	Create '<dl';
 	Create Attributes;
 	Create '>\12';
-	Create '</DL>\12' After;
+	Create '</dl>\12' After;
 	END;
 
  Term:	BEGIN
-	Create '<DT';
+	Create '<dt';
 	Create Attributes;
 	Create '>';
-	Create '</DT>\12' After;
+	Create '</dt>\12' After;
 	END;
 
  Definition: BEGIN
-	Create '<DD';
+	Create '<dd';
 	Create Attributes;
 	Create '>';
-	Create '</DD>\12' After;
+	Create '</dd>\12' After;
 	END;
 
  Unnumbered_List: BEGIN
-	Create '<UL';
+	Create '<ul';
 	Create Attributes;
 	Create '>\12';
-	Create '</UL>\12' After;
+	Create '</ul>\12' After;
 	END;
 
  Numbered_List:	BEGIN
-	Create '<OL';
+	Create '<ol';
 	Create Attributes;
 	Create '>\12';
-	Create '</OL>\12' After;
+	Create '</ol>\12' After;
 	END;
 
  Address: BEGIN
-	Create '<ADDRESS';
+	Create '<address';
 	Create Attributes;
 	Create '>\12';
-	Create '</ADDRESS>\12' After;
+	Create '</address>\12' After;
 	END;
 
  Menu:	BEGIN
-	Create '<MENU';
+	Create '<menu';
 	Create Attributes;
 	Create '>\12';
-	Create '</MENU>\12' After;
+	Create '</menu>\12' After;
 	END;
 
  Directory: BEGIN
-	Create '<DIR';
+	Create '<dir';
 	Create Attributes;
 	Create '>\12';
-	Create '</DIR>\12' After;
+	Create '</dir>\12' After;
 	END;
 
  List_Item: BEGIN
-	Create '<LI';
+	Create '<li';
 	Create Attributes;
 	Create '>';
 	END;
 
  Preformatted: BEGIN
 	NoLineBreak;
-	Create '<PRE';
+	Create '<pre';
 	Create Attributes;
 	Create '>';
-	Create '\12</PRE>\12' After;
-	END;
-
- Pre_Line : BEGIN
-	Create '\12';
+	Create '</pre>\12' After;
 	END;
 
  Horizontal_Rule: BEGIN
-	Create '<HR';
+	Create '<hr';
 	Create Attributes;
 	Remove;
-	Create '>\12';
+	Create '>';
+	if not within Preformatted Create '>\12';
 	END;
 
  Form: BEGIN
-	Create '<FORM';
+	Create '<form';
 	Create Attributes;
 	Create '>\12';
-	Create '</FORM>\12' After;
+	Create '</form>\12' After;
 	END;
 
  Option_Menu: BEGIN
-	Create '\12<SELECT';
+	Create '\12<select';
 	Create Attributes;
 	Create '>';
-	Create '\12</SELECT>\12' After;
+	Create '\12</select>\12' After;
 	END;
 
  Option: BEGIN
-	Create '\12<OPTION';
+	Create '\12<option';
 	Create Attributes;
 	Create '>';
 	END;
 
  Toggle_Menu: BEGIN
-	Create '<!--Toggle_Menu-->\12<PRE>\12';
-	Create '</PRE>\12' After;
+	Create '<!--toggle_menu-->\12<pre>\12';
+	Create '</pre>\12' After;
 	END;
 
  Toggle_Item: BEGIN
@@ -450,8 +453,8 @@ RULES
 	END;
 
  Radio_Menu: BEGIN
-	Create '<!--Radio_Menu-->\12<PRE>\12';
-	Create '</PRE>\12' After;
+	Create '<!--radio_menu-->\12<pre>\12';
+	Create '</pre>\12' After;
 	END;
 
  Radio_Item: BEGIN
@@ -459,83 +462,83 @@ RULES
 	END;
 
  Text_Input_Line: BEGIN
-	Create '<!--Text_Input_Line-->\12<P>\12';
-	Create '</P>\12' After;
+	Create '<!--text_input_line-->\12<p>\12';
+	Create '</p>\12' After;
 	END;
 
  Command_Line: BEGIN
-	Create '<!--Command_Line-->\12<P>\12';
-	Create '</P>\12' After;
+	Create '<!--command_line-->\12<p>\12';
+	Create '</p>\12' After;
 	END;
 
  Text_Area: BEGIN
-	Create '<TEXTAREA';
+	Create '<textarea';
 	Create Attributes;
 	Create '>';
-	Create '</TEXTAREA>';
+	Create '</textarea>';
 	END;
 
  Checkbox_Input: BEGIN
-	Create '<INPUT type=CHECKBOX';
+	Create '<input type=checkbox';
 	Create Attributes;
 	Create '>';
 	Remove;
 	END;
 
  Radio_Input: BEGIN
-	Create '<INPUT type=RADIO';
+	Create '<input type=radio';
 	Create Attributes;
 	Create '>';
 	Remove;
 	END;
 
  Text_Input: BEGIN
-	Create '<INPUT type=TEXT';
+	Create '<input type=text';
 	Create Attributes;
 	Create '>';
 	Remove;
 	END;
 
  Hidden_Input: BEGIN
-	Create '<INPUT type=HIDDEN';
+	Create '<input type=hidden';
 	Create Attributes;
 	Create '>';
 	Remove;
 	END;
 
  Password_Input: BEGIN
-	Create '<INPUT type=PASSWORD';
+	Create '<input type=password';
 	Create Attributes;
 	Create '>';
 	Remove;
 	END;
 
  File_Input: BEGIN
-	Create '<INPUT type=FILE';
+	Create '<input type=file';
 	Create Attributes;
 	Create '>';
 	Remove;
 	END;
 
  Reset_Input: BEGIN
-	Create '\12<INPUT type=RESET';
+	Create '\12<input type=reset';
 	Create Attributes;
 	Create '>';
 	Remove;
 	END;
 
  Submit_Input: BEGIN
-	Create '\12<INPUT type=SUBMIT';
+	Create '\12<input type=submit';
 	Create Attributes;
 	Create '>';
 	Remove;
 	END;
 
  Block_Quote: BEGIN
-	Create '<BLOCKQUOTE';
+	Create '<blockquote';
 	Create Attributes;
 	Create '>\12';
-	Create '</BLOCKQUOTE>\12' After;
+	Create '</blockquote>\12' After;
 	END;
 
  PICTURE_UNIT: BEGIN
@@ -543,14 +546,14 @@ RULES
 	if Immediately within Object
 		Remove;
 	if NOT Immediately within Object BEGIN
-		Create '<IMG';
+		Create '<img';
 		Create Attributes;
 		Create '>' After;
 		END;
 	if NOT within Paragraph AND NOT Immediately within Object
 		Create '\12' After;
 #else
-	Create '<IMG';
+	Create '<img';
 	Create Attributes;
 	Create '>' After;
 	if NOT within Paragraph
@@ -559,23 +562,23 @@ RULES
 	END;
 
  Anchor: BEGIN
-	Create '<A';
+	Create '<a';
 	Create Attributes;
 	Create '>';
-	Create '</A>' After;
+	Create '</a>' After;
 	END;
 
  MAP:
 	BEGIN
-	Create '<MAP';
+	Create '<map';
 	Create Attributes;
 	Create '>\12';
-	Create '</MAP>\12' after;
+	Create '</map>\12' after;
 	END;
 
  AREA:
 	BEGIN
-	Create '<AREA';
+	Create '<area';
 	Create Attributes;
 	Remove;
 	Create '>\12';
@@ -585,18 +588,18 @@ RULES
 
  Table:
 	BEGIN
-	Create '\12<TABLE';
+	Create '\12<table';
 	Create Attributes;
 	Create '>\12';
-	Create '</TABLE>\12' after;
+	Create '</table>\12' after;
 	END;
 
  CAPTION:
 	BEGIN
-	Create '<CAPTION';
+	Create '<caption';
 	Create Attributes;
 	Create '>';
-	Create '</CAPTION>\12' after;
+	Create '</caption>\12' after;
 	END;
 
  Table_head:
@@ -605,25 +608,25 @@ RULES
 #ifdef COUGAR
  thead:
 	BEGIN
-	Create '<THEAD';
+	Create '<thead';
 	Create Attributes;
 	Create '>\12';
-	Create '</THEAD>\12' after;
+	Create '</thead>\12' after;
 	END;
 
  tfoot:
 	BEGIN
-	Create '<TFOOT';
+	Create '<tfoot';
 	Create Attributes;
 	Create '>\12';
-	Create '</TFOOT>\12' after;
+	Create '</tfoot>\12' after;
 	END;
  tbody:
 	BEGIN
-	Create '<TBODY';
+	Create '<tbody';
 	Create Attributes;
 	Create '>\12';
-	Create '</TBODY>\12' after;
+	Create '</tbody>\12' after;
 	END;
 #endif
 
@@ -632,22 +635,22 @@ RULES
 
  Table_row:
 	BEGIN
-	Create '  <TR';
+	Create '<tr';
 	Create Attributes;
 	Create '>\12';
-	Create '  </TR>\12' after;
+	Create '</tr>\12' after;
 	END;
 
  Data_cell:
 	BEGIN
-	Create '<TD';
+	Create '<td';
 	Create Attributes;
 	Create '>';
 	END;
 
  Heading_cell:
 	BEGIN
-	Create '<TH';
+	Create '<th';
 	Create Attributes;
 	Create '>';
 	END;
@@ -658,17 +661,17 @@ RULES
 	END;
 
  Division: BEGIN
-	Create '\12<DIV';
+	Create '\12<div';
 	Create Attributes;
 	Create '>\12';
-	Create '</DIV>\12' After;
+	Create '</div>\12' After;
 	END;
 
  Center: BEGIN
-	Create '\12<CENTER';
+	Create '\12<center';
 	Create Attributes;
 	Create '>\12';
-	Create '</CENTER>\12' After;
+	Create '</center>\12' After;
 	END;
 
  Invalid_element:
@@ -894,10 +897,10 @@ ATTRIBUTES
  Class: BEGIN
 	IF Within TEXT_UNIT
 	    BEGIN
-	    Create '<SPAN class="';
+	    Create '<span class="';
 	    Create Class;
 	    Create '">';
-	    Create '</SPAN>' After;
+	    Create '</span>' After;
 	    END;
 	IF NOT Within TEXT_UNIT
 	    BEGIN
@@ -911,12 +914,12 @@ ATTRIBUTES
 	BEGIN
 	IF Within TEXT_UNIT and not Within HEAD 
 	    BEGIN
-	    Create '<SPAN ';
+	    Create '<span ';
 	    Create C_Style;
 	    Create Style\240;
 	    Create DoubleQuote;
 	    Create '>';
-	    Create '</SPAN>' After;
+	    Create '</span>' After;
 	    END;
 	IF not Within TEXT_UNIT and not Within HEAD
 	    BEGIN
@@ -989,10 +992,10 @@ ATTRIBUTES
 	END;
 
  METHOD=Post_:
-	Create ' method="Post"';
+	Create ' method="post"';
 
  METHOD=Get_:
-	Create ' method="Get"';
+	Create ' method="get"';
 
  ENCTYPE: BEGIN
 	Create ' enctype="';

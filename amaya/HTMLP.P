@@ -3863,10 +3863,7 @@ RULES
 	CreateBefore(H1_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
-		if within Pre_Line
-		   Width: Enclosed . Width;
-		if NOT within Pre_Line
-		   Width: Enclosing . Width - STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Height: Enclosed . Height;
@@ -3911,10 +3908,7 @@ RULES
 	CreateWith(VerticalLine);
 	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH2;
 	IN Structure_view BEGIN
-		if within Pre_Line
-		   Width: Enclosed . Width;
-		if NOT within Pre_Line
-		   Width: Enclosing . Width - STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
@@ -3957,10 +3951,7 @@ RULES
 	CreateBefore(H3_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
-		if within Pre_Line
-		   Width: Enclosed . Width;
-		if NOT within Pre_Line
-		   Width: Enclosing . Width - STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
@@ -4003,10 +3994,7 @@ RULES
 	CreateBefore(H4_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
-		if within Pre_Line
-		   Width: Enclosed . Width;
-		if NOT within Pre_Line
-		   Width: Enclosing . Width - STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
@@ -4048,10 +4036,7 @@ RULES
 	CreateBefore(H5_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
-		if within Pre_Line
-		   Width: Enclosed . Width;
-		if NOT within Pre_Line
-		   Width: Enclosing . Width - STRUCT_INDENT;
+		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
@@ -4124,7 +4109,6 @@ RULES
 		Foreground: Enclosing =;
 		Visibility: Enclosing =;
 		END;		
-	{********}
 	END;
  BR:
 	BEGIN
@@ -4701,10 +4685,12 @@ RULES
 	CreateBefore(PRE_S);
 	CreateWith(VerticalLine);
 	Font: Courier;
+	Line;
 #ifdef PAGE
 	Size: Enclosing - 1;
 #endif
 	IN Structure_view BEGIN
+		NoLine;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -4714,18 +4700,12 @@ RULES
 		Visibility: 0;
 	END;
 
-  Pre_Line: BEGIN
-	Line;
-	Width: Enclosed . Width;
-	IN Structure_view
-		NoLine;
-	END;
-
  Horizontal_Rule: BEGIN
 	CreateBefore(HR_S);
 	CreateLast(HR_Graph1);
 #ifndef PAGE
-	CreateLast(HR_Graph2);
+	if not within Preformatted
+	   CreateLast(HR_Graph2);
 #endif
 	Width: Enclosing . Width;
 	HorizPos: VMiddle = Enclosing . VMiddle;
@@ -4932,6 +4912,7 @@ RULES
 	Font: INPUT_Font;
 	Depth: 4;
 	LineBreak: No;
+	Adjust: Left;
 #ifndef BLACK_WHITE
 	Background : LightRed4;
 #endif
@@ -5996,6 +5977,8 @@ dans des paragraphes s affichent a cote de leur cadre...
 	Adjust: Left;
 	If Horizontal_Rule
 	   HorizPos: Left = Enclosing . Left;
+	If Text_Input
+	   HorizPos: Left = Enclosing . Left;
 	END;
 
  Align = center_:
@@ -6003,6 +5986,8 @@ dans des paragraphes s affichent a cote de leur cadre...
 	CreateBefore(ALIGN_CENTER);
 	Adjust: VMiddle;	
 	If Horizontal_Rule
+	   HorizPos: VMiddle = Enclosing . VMiddle;
+	If Text_Input
 	   HorizPos: VMiddle = Enclosing . VMiddle;
 	In Structure_view
 	   Adjust: Left;
@@ -6013,7 +5998,9 @@ dans des paragraphes s affichent a cote de leur cadre...
 	CreateBefore(ALIGN_RIGHT);
 	Adjust: Right;
 	If Horizontal_Rule
-	   HorizPos: Right = Enclosing . Right;
+	   HorizPos: Left = Enclosing . Left;
+	If Text_Input
+	   HorizPos: Left = Enclosing . Left;
 	In Structure_view
 	   Adjust: Left;
 	END;
@@ -6621,8 +6608,22 @@ dans des paragraphes s affichent a cote de leur cadre...
 
   Class:
 	BEGIN
+	if TEXT_UNIT
+	   BEGIN
+	   CreateBefore(SPAN_S);
+	   CreateWith(VerticalLine);
+	   END;
 	CreateBefore(ATTR_CLASS);
 	CreateBefore(VALUE_CLASS);
+	IN Structure_view
+		BEGIN
+		if TEXT_UNIT and NOT within Comment_line
+		   BEGIN
+		   Width: Enclosing . Width - STRUCT_INDENT;
+		   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		   VertPos: Top = Previous SPAN_S . Bottom;
+		   END;
+		END;
 	END;
 
   Invalid_attribute:

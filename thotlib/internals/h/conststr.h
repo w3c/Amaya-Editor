@@ -67,6 +67,7 @@
 #define ExcImportLine 34
 #define ExcImportParagraph 35
 #define ExcParagraphBreak 36
+#define ExcReturnCreateNL 37
 /* Draw exceptions */
 #define ExcHighlightChildren 311
 #define ExcExtendedSelection 312

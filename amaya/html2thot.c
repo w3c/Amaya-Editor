@@ -1648,18 +1648,12 @@ Element             parent;
       /* it is a character level element */
      {
 	parentType = TtaGetElementType (parent);
-	newElType.ElTypeNum = 0;
-	if (parentType.ElTypeNum == HTML_EL_Preformatted)
-	   /* A basic element cannot be a child of a Preformatted */
-	   /* create a Pre_Line element as a child of Preformatted */
-	   newElType.ElTypeNum = HTML_EL_Pre_Line;
-	else if (parentType.ElTypeNum == HTML_EL_Text_Area)
+	if (parentType.ElTypeNum == HTML_EL_Text_Area)
 	   /* A basic element cannot be a child of a Text_Area */
 	   /* create a Inserted_Text element as a child of Text_Area */
-	   newElType.ElTypeNum = HTML_EL_Inserted_Text;
-	if (newElType.ElTypeNum != 0)
 	  {
 	     newElType.ElSSchema = structSchema;
+	     newElType.ElTypeNum = HTML_EL_Inserted_Text;
 	     newEl = TtaNewElement (theDocument, newElType);
 	     InsertElement (&newEl);
 	     if (newEl != NULL)
@@ -1714,58 +1708,6 @@ Element            *el;
      {
 	lastElement = *el;
 	lastElementClosed = FALSE;
-     }
-   return ret;
-}
-
-/*----------------------------------------------------------------------
-   InsertHR        inserts the HR element el in the abstract tree
-   of the Thot document, at the current position.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static boolean      InsertHR (Element * el)
-#else
-static boolean      InsertHR (el)
-Element            *el;
-
-#endif
-{
-   boolean             ret;
-   Element             preLine, Pre;
-   ElementType         elType;
-
-   if (!Within (HTML_EL_Preformatted))
-      ret = InsertElement (el);
-   else
-     {
-	Pre = NULL;
-	elType.ElSSchema = structSchema;
-	elType.ElTypeNum = HTML_EL_Pre_Line;
-	preLine = TtaGetTypedAncestor (lastElement, elType);
-	if (preLine == NULL)
-	  {
-	     elType = TtaGetElementType (lastElement);
-	     if (elType.ElTypeNum == HTML_EL_Pre_Line)
-		preLine = lastElement;
-	     else
-	       {
-		  if (elType.ElTypeNum == HTML_EL_Preformatted)
-		     Pre = lastElement;
-		  else
-		    {
-		       elType.ElTypeNum = HTML_EL_Preformatted;
-		       Pre = TtaGetTypedAncestor (lastElement, elType);
-		    }
-		  preLine = TtaGetLastChild (Pre);
-	       }
-	  }
-	if (preLine != NULL)
-	   TtaInsertSibling (*el, preLine, FALSE, theDocument);
-	else
-	   TtaInsertFirstChild (el, Pre, theDocument);
-	lastElement = *el;
-	ret = TRUE;
-	lastElementClosed = TRUE;
      }
    return ret;
 }
@@ -1974,11 +1916,10 @@ Element             el;
 #endif
 {
    ElementType         elType, newElType, childType;
-   Element             constElem, child, grandChild, desc, leaf;
+   Element             constElem, child, desc, leaf;
    Attribute           attr;
    AttributeType       attrType;
    int                 length;
-   boolean             empty;
    char               *text;
    Language            lang;
 
@@ -2088,37 +2029,6 @@ Element             el;
 		     }
 		   TtaFreeMemory (text);
 		   }
-	       break;
-
-	    case HTML_EL_Preformatted:		/* it's a preformatted */
-	       /* if the last line of the Preformatted is empty, remove it */
-	       /* get the last Pre_Line element within the Preformatted */
-	       child = TtaGetLastChild (el);
-	       if (child != NULL)
-		 {		/* last Pre_Line */
-		    grandChild = TtaGetFirstChild (child);
-		    if (grandChild == NULL)
-		       /* the last Pre_Line is empty */
-		       empty = TRUE;
-		    else
-		      {
-			 empty = FALSE;
-			 childType = TtaGetElementType (grandChild);
-			 if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
-			    /* the first child of the last Pre_Line is a Text element */
-			    if (TtaGetTextLength (grandChild) == 0)
-			       /* this Text element is empty */
-			      {
-				 TtaNextSibling (&grandChild);
-				 if (grandChild == NULL)
-				    /* this Text element has no next sibling */
-				    empty = TRUE;
-			      }
-		      }
-		    if (empty)
-		       /* remove the last Pre_Line */
-		       TtaDeleteTree (child, theDocument);
-		 }
 	       break;
 
 	    case HTML_EL_Text_Area:	/* it's a Text_Area */
@@ -2878,42 +2788,6 @@ boolean		    position;
 }
 
 /*----------------------------------------------------------------------
-   CreatePreLine creates a PRE_LINE element.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CreatePreLine ()
-#else
-static void         CreatePreLine ()
-#endif
-{
-   ElementType         elType;
-   Element             el, preLine;
-
-  /* create pre-line */
-  elType.ElSSchema = structSchema;
-  elType.ElTypeNum = HTML_EL_Pre_Line;
-  el = TtaNewElement (theDocument, elType);
-  elType = TtaGetElementType (lastElement);
-  if (elType.ElTypeNum == HTML_EL_Preformatted)
-    TtaInsertFirstChild (&el, lastElement, theDocument);
-  else
-    {
-      if (elType.ElTypeNum == HTML_EL_Pre_Line)
-	preLine = lastElement;
-      else
-	{
-	  elType.ElTypeNum = HTML_EL_Pre_Line;
-	  preLine = TtaGetTypedAncestor (lastElement, elType);
-	  if (preLine == NULL)
-	    preLine = lastElement;
-	}
-      TtaInsertSibling (el, preLine, FALSE, theDocument);
-    }
-  lastElement = el;
-  lastElementClosed = FALSE;
-}
-
-/*----------------------------------------------------------------------
    ProcessStartGI  An HTML GI has been read in a start tag.
    Create the corresponding Thot thing (element, attribute,
    or character), according to the mapping table.
@@ -2994,10 +2868,7 @@ char               *GIname;
 		      /* the HTML element may have children. Create only */
 		      /* the corresponding Thot element, without any child */
 		      el = TtaNewElement (theDocument, elType);
-		    if (GIMappingTable[entry].ThotType == HTML_EL_Horizontal_Rule)
-		      sameLevel = InsertHR (&el);
-		    else
-		      sameLevel = InsertElement (&el);
+		    sameLevel = InsertElement (&el);
 		    if (el != NULL)
 		      {
 			if (GIMappingTable[entry].htmlContents == 'E')
@@ -3018,11 +2889,6 @@ char               *GIname;
 		  ThotLevel[StackLevel] = ThotLevel[StackLevel - 1] + 1;
 		GINumberStack[StackLevel++] = entry;
 	      }
-
-	    if (strcmp (GIMappingTable[entry].htmlGI, "BR") == 0)
-		if (Within (HTML_EL_Preformatted))
-		  /* new line within a PRE. Create a Thot element Pre_Line */
-		  CreatePreLine();
 	  }
      }
 }
@@ -4298,20 +4164,21 @@ char               *HTMLbuf;
 			   /* consider new line as an empty char*/
 			   charRead = EOS;
 		      if (charRead != EOS)
-		         /* Replace new line by a space */
-		         charRead = SPACE;
+		         /* Replace new line by a space, except if an entity is
+			    being read */
+			 if (currentState == 20 &&
+			     Within (HTML_EL_Preformatted) &&
+                             !Within (HTML_EL_Option_Menu))
+			   charRead = (unsigned char) 138; /* Thot new line */
+			 else
+		           charRead = SPACE;
 		      }
 		   else
 		      /* new line in a text element */
-		      if (Within (HTML_EL_Preformatted) && !Within (HTML_EL_Option_Menu))
+		      if (Within (HTML_EL_Preformatted) &&
+			  !Within (HTML_EL_Option_Menu))
 			/* within preformatted text */
-			/* create a PreLine element */
-		        {
-			  StartOfTag (SPACE);
-			  CreatePreLine ();
-			  /* ignore character */
-			  charRead = EOS;
-		        }
+			charRead = (unsigned char) 138; /* new line for Thot */
 		      else
 			/* new line in ordinary text */
 		        {
@@ -4365,7 +4232,7 @@ char               *HTMLbuf;
 		    }
 		  else if ((charRead < SPACE || (int) charRead >= 254 ||
 			    ((int) charRead >= 127 && (int) charRead <= 159))
-			   && (int) charRead != 9)
+			   && (int) charRead != 9 && (int) charRead != 138)
 		     /* it's not a printable character, ignore it */
 		     charRead = EOS;
 		  else

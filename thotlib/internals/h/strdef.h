@@ -1,10 +1,3 @@
-/*
- *
- *  (c) COPYRIGHT INRIA, 1996.
- *  Please first read the full copyright statement in file COPYRIGHT.
- *
- */
- 
 /* Definitions for compiler of language STRUCT */
 
 /*  SHORT KEY-WORDS  */
@@ -92,7 +85,8 @@
 #define KWD_ParagraphBreak 	1164
 #define KWD_HighlightChildren 	1165
 #define KWD_ExtendedSelection 	1166
-#define KWD_Root 	1167
+#define KWD_ReturnCreateNL 	1167
+#define KWD_Root 	1168
 
 /*  RULES  */
 

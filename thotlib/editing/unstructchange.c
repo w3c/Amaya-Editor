@@ -59,6 +59,7 @@
 #include "structcreation_f.h"
 #include "createabsbox_f.h"
 #include "views_f.h"
+#include "viewapi_f.h"
 #include "callback_f.h"
 #include "exceptions_f.h"
 #include "absboxes_f.h"
@@ -784,6 +785,37 @@ PtrSSchema         *pSS;
 }
 
 /*----------------------------------------------------------------------
+   AscentReturnCreateNL
+   return the ancestor of element pEl (or pEl itself) which has an
+   exception ExcReturnCreateNL.                                      
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static PtrElement   AscentReturnCreateNL (PtrElement pEl)
+#else
+static PtrElement   AscentReturnCreateNL (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+{
+   PtrElement          pAncest;
+   boolean             stop;
+
+   stop = FALSE;
+   pAncest = pEl;
+   while (!stop && pAncest != NULL)
+     {
+	if (TypeHasException (ExcReturnCreateNL, pAncest->ElTypeNumber,
+			      pAncest->ElStructSchema))
+	   stop = TRUE;
+	else
+	   pAncest = pAncest->ElParent;
+     }
+   return pAncest;
+}
+
+
+/*----------------------------------------------------------------------
    L'utilisateur a frappe' la touche "Return".
    Traitement en mode non structure'.
   ----------------------------------------------------------------------*/
@@ -806,11 +838,16 @@ void                TtcCreateElement (doc, view)
                        empty, list, optional;
 
    if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+      /* there is no selection */
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
    else if (pDoc->DocReadOnly)
+      /* Read-only document */
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
+   else if (AscentReturnCreateNL (firstSel) != NULL)
+      /* one of the ancestors of the first selected element says that the
+	 Return key should generate a "new line" character */
+      InsertChar (GetWindowNumber (doc, view), (unsigned char) BREAK_LINE, -1);
    else
-      /* il y a bien une selection et le document est modifiable */
      {
 	pListEl = NULL;
 	pAggregEl = NULL;

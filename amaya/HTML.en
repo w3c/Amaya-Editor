@@ -27,7 +27,6 @@ Horizontal_Rule: HR
 Basic_Set: element
 Paragraph: P
 Preformatted: PRE
-Pre_Line: line
 Anchor: A
 Basic_Elem: element
 Italic_text: I

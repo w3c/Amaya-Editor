@@ -12,7 +12,7 @@
 
 <H4>Translated from French by Ethan Munson</H4>
 
-<H4>Version of December 14, 1996</H4>
+<H4>Version of March 8, 1997</H4>
 
 <P>&copy; 1996 INRIA
 
@@ -1983,7 +1983,8 @@ exceptions are indicated by a name.  They are separated by semicolons.</P>
                     'Hidden' / 'ActiveRef' /
                     'ImportLine' / 'ImportParagraph' /
                     'NoPaginate' / 'ParagraphBreak' /
-                    'HighlightChildren' / 'ExtendedSelection' .
+                    'HighlightChildren' / 'ExtendedSelection' /
+                    'ReturnCreateNL' .
 </PRE>
 <P>
 The following are the available exceptions:</P>
@@ -2093,6 +2094,13 @@ documents of that type.
 <DD>This exception can only be applied to element types.  When the caret is
 within an element of a type to which this exception is applied, it is that
 element that will be split when the user hits the Return key.
+</DD>
+<DT><TT>ReturnCreateNL</TT></DT>
+<DD>This exception can only be applied to element types.  When the caret is
+within an element of a type to which this exception is applied, the Return
+key simply inserts a New line character (code \212) at the current position.
+The Return key does not create a new element; it does not split the current
+element either.
 </DD>
 <DT><TT>HighlightChildren</TT></DT>
 <DD>This exception can only be applied to element types.  Elements of a type to
@@ -8145,8 +8153,9 @@ ExcValue       = 'NoCut' / 'NoCreate' /
                  'Invisible' / 'NoSelect' /
                  'Hidden' / 'ActiveRef' /
                  'ImportLine' / 'ImportParagraph' /
-                 'NoPaginate' / 'HighlightChildren' /
-                 'ExtendedSelection' .
+                 'NoPaginate' / 'ParagraphBreak' /
+                 'HighlightChildren' / 'ExtendedSelection' /
+                 'ReturnCreateNL' .
 
 ExtensRuleSeq  = ExtensRule ';' &lt; ExtensRule ';' > .
 ExtensRule     = RootOrElem [ LocAttrSeq ]
