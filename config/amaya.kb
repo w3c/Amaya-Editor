@@ -253,6 +253,7 @@ Ctrl <Key>t , Ctrl <Key>v:         PasteAfter()
 Ctrl <Key>t , Ctrl <Key>x:         TransformType()
 
 #View Menu
+<Key>F11:                          FullScreen()
 Ctrl <Key>u , Ctrl <Key>a:         ShowAlternate()
 Ctrl <Key>u , Ctrl <Key>b:         ShowButtons() 
 Ctrl <Key>u , Ctrl <Key>d:         ShowAddress()
