@@ -1200,14 +1200,14 @@ ATTRIBUTES
  target_ :
 	BEGIN
 	Create ' target="';
-	Create target_;
+	Create Translated target_;
 	Create DoubleQuote;
 	END;
 
  cite:
 	BEGIN
 	Create ' cite="';
-	Create cite;
+	Create Translated cite;
 	Create DoubleQuote;
 	END;
 
@@ -1221,7 +1221,7 @@ ATTRIBUTES
  background_ :
 	BEGIN
 	Create ' background="';
-	Create background_;
+	Create Translated background_;
 	Create DoubleQuote;
 	END;
 
@@ -1769,7 +1769,7 @@ ATTRIBUTES
 	if not Immediately within Object
 	   BEGIN
 	   Create ' src="';
-	   Create SRC;
+	   Create Translated SRC;
 	   Create DoubleQuote;
 	   END;
 	END;
