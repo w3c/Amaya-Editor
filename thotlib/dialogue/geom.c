@@ -1781,6 +1781,7 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
   int                 warpx, warpy;
 
 #ifdef _WINDOWS
+  ThotEvent			  event;
   POINT               cursorPos;
 #endif /* _WINDOWS */
 

@@ -546,7 +546,9 @@ void FrameToRedisplay (ThotWindow w, int frame, void *ev)
 {
 #if !defined(_MOTIF) && !defined(_GTK)
   return;
-#endif /* #if defined(_MOTIF) || defined(_GTK) */  
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#if defined(_MOTIF) || defined(_GTK)
   XExposeEvent       *event = (XExposeEvent *) ev;
   ViewFrame          *pFrame;
   int                 xmin, xmax, ymin, ymax;
@@ -579,6 +581,7 @@ void FrameToRedisplay (ThotWindow w, int frame, void *ev)
       pFrame->FrClipYBegin = ymin;
       pFrame->FrClipYEnd = ymax;
     }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 
@@ -590,6 +593,8 @@ static void FrameRedraw (int frame, Dimension width, Dimension height)
 #if !defined(_MOTIF) && !defined(_GTK)
   return;
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+#if defined(_MOTIF) || defined(_GTK)
   int                 dx, dy, view;
   NotifyWindow        notifyDoc;
   Document            doc;
@@ -625,6 +630,7 @@ static void FrameRedraw (int frame, Dimension width, Dimension height)
 	  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 	}
     }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 

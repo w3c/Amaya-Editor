@@ -1608,16 +1608,20 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		  unsigned char type, ThotBool state)
 {
   int                 frame, i, index;
-  ThotWidget          w, row;
+
 #ifdef _MOTIF
+  ThotWidget          w, row;
   int                 n;
   XmString            title_string;
   Arg                 args[MAX_ARGS];
 #endif /* _MOTIF */
+
 #ifdef _GTK
+  ThotWidget          w, row;
   ThotWidget          toolbar;
   GtkTooltips        *tooltipstmp;
 #endif /* _GTK */
+
 #ifdef _WINDOWS
   ThotButton          w;
 #endif /* _WINDOWS */

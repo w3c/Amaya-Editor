@@ -4156,6 +4156,8 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 #if !defined(_MOTIF) && !defined(_GTK)
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
    int                 i;
    int                 ent;
    struct Cat_Context *catalogue;
@@ -4372,6 +4374,7 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     ent++;
 	  }
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -5126,6 +5129,8 @@ void TtaSetMenuForm (int ref, int val)
 #if !defined(_MOTIF) && !defined(_GTK)
   return;
 #endif /* #if !defined(_MOTIF) && !defined(_GTK) */
+
+#if defined(_MOTIF) || defined(_GTK)
    register int        i;
    register int        ent;
    ThotBool            visible;
@@ -5268,6 +5273,7 @@ void TtaSetMenuForm (int ref, int val)
 	/* La selection de l'utilisateur est desactivee */
 	catalogue->Cat_Data = val;
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -5290,6 +5296,8 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 #if !defined(_MOTIF) && !defined(_GTK)
   return;
 #endif /* #if !defined(_MOTIF) && !defined(_GTK) */
+   
+#if defined(_MOTIF) || defined(_GTK)
    register int        count;
    register int        index;
    int                 eindex;
@@ -5605,6 +5613,7 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 	else
 	   TtaError (ERR_invalid_parameter);
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6453,6 +6462,8 @@ void TtaChangeFormTitle (int ref, char *title)
   return;
 #endif
   
+#if defined(_MOTIF) || defined(_GTK)
+
   struct Cat_Context *catalogue;
 
 #ifdef _MOTIF
@@ -6490,6 +6501,7 @@ void TtaChangeFormTitle (int ref, char *title)
 #endif /* _GTK */
        
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6501,6 +6513,8 @@ void TtaSetDefaultButton (int ref, int button)
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
    struct Cat_Context *catalogue;
 
    if (ref)
@@ -6509,6 +6523,7 @@ void TtaSetDefaultButton (int ref, int button)
        if (catalogue)
 	 catalogue->Cat_Default = (unsigned char) button;
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6521,6 +6536,8 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
    int                 ent;
    int                 index;
    int                 count;
@@ -6930,6 +6947,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	/* Range le bouton dans le 1er bloc de widgets */
 	adbloc->E_ThotWidget[0] = w;
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6950,8 +6968,10 @@ void TtaNewForm (int ref, ThotWidget parent, char *title,
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+#if defined(_MOTIF) || defined(_GTK)
    NewSheet (ref, parent, title, 0, NULL, horizontal, package,
 	     button, dbutton, CAT_FORM);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -6978,8 +6998,10 @@ void TtaNewSheet (int ref, ThotWidget parent, char *title, int number,
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+#if defined(_MOTIF) || defined(_GTK)
    NewSheet (ref, parent, title, number, text, horizontal, package,
 	     button, dbutton, CAT_SHEET);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 
@@ -7007,8 +7029,10 @@ void TtaNewDialogSheet (int ref, ThotWidget parent, char *title,
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+#if defined(_MOTIF) || defined(_GTK)
    NewSheet (ref, parent, title, number - 1, text, horizontal, package,
 	     button, D_DONE, CAT_DIALOG);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -7020,6 +7044,8 @@ void TtaAttachForm (int ref)
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
    int                 entry;
    struct E_List      *adbloc;
    struct Cat_Context *catalogue;
@@ -7087,6 +7113,7 @@ void TtaAttachForm (int ref)
 #endif /* _GTK */ 
 	  }
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -7098,6 +7125,8 @@ void TtaDetachForm (int ref)
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
    int                 entry;
    struct E_List      *adbloc;
    struct Cat_Context *catalogue;
@@ -7162,6 +7191,7 @@ void TtaDetachForm (int ref)
 #endif /* _GTK */
 	  }
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -7186,6 +7216,8 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
    struct Cat_Context *catalogue;
    struct Cat_Context *parentCatalogue;
 
@@ -7716,6 +7748,8 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
      }
    TtaFreeMemory ( item);
 #endif
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -7740,8 +7774,11 @@ void TtaNewSelector (int ref, int ref_parent, char *title, int number,
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
   TtaNewSizedSelector (ref, ref_parent, title, number, text, 0, height,
 		       label, withText, react);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -7752,6 +7789,8 @@ void TtaActiveSelector (int ref)
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
    ThotWidget          w;
    struct Cat_Context *catalogue;
 #ifdef _MOTIF
@@ -7782,6 +7821,7 @@ void TtaActiveSelector (int ref)
 	gtk_widget_show (GTK_WIDGET(w));
 #endif /* _GTK */
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -7792,6 +7832,8 @@ void TtaDesactiveSelector (int ref)
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
   ThotWidget          w;
    struct Cat_Context *catalogue;
 #ifdef _MOTIF
@@ -7823,6 +7865,7 @@ void TtaDesactiveSelector (int ref)
 #endif /* _GTK */
   
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -7837,6 +7880,9 @@ void TtaSetSelector (int ref, int entry, char *text)
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
+
 #ifdef _MOTIF
    ThotWidget          w;
 #endif /* #ifdef _MOTIF */
@@ -7967,6 +8013,7 @@ void TtaSetSelector (int ref, int entry, char *text)
      
 	  }
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -7978,6 +8025,9 @@ static void NewLabel (int ref, int ref_parent, char *text, int padding)
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
+
 #ifdef _MOTIF
    Arg                 args[MAX_ARGS];
    XmString            title_string;
@@ -8121,6 +8171,8 @@ static void NewLabel (int ref, int ref_parent, char *text, int padding)
 #ifdef _MOTIF
    XmStringFree (title_string);
 #endif /* #ifdef _MOTIF */
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -8133,7 +8185,10 @@ void TtaNewLabel (int ref, int ref_parent, char *text)
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
   NewLabel (ref, ref_parent, text, 0);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -8148,7 +8203,10 @@ void TtaNewPaddedLabel (int ref, int ref_parent, char *text, int padding)
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
   NewLabel (ref, ref_parent, text, padding);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -8177,6 +8235,8 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
    int                 ent;
    int                 i;
    struct Cat_Context *catalogue;
@@ -8378,6 +8438,7 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 	     catalogue->Cat_EntryParent = i;
 	  }
      }
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -8412,6 +8473,9 @@ void TtaSetTextForm (int ref, char *text)
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
+
 #ifdef _MOTIF
    int                 lg;
 #endif /* #ifdef _MOTIF */
@@ -8459,6 +8523,8 @@ void TtaSetTextForm (int ref, char *text)
 			    GTK_SIGNAL_FUNC(CallTextChangeGTK), (gpointer)catalogue);
 #endif /* _GTK */
      }
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -8476,6 +8542,8 @@ void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
    int                 ent;
    int                 i;
    struct Cat_Context *catalogue;
@@ -8707,6 +8775,8 @@ void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 	     catalogue->Cat_Entries->E_ThotWidget[1] = w;
 	  }
      }
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -8719,6 +8789,8 @@ void TtaSetNumberForm (int ref, int val)
 #if !defined(_MOTIF) && !defined(_GTK)  
   return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
    char              text[10];
    int                 lg;
    ThotWidget          wtext;
@@ -8770,6 +8842,8 @@ void TtaSetNumberForm (int ref, int val)
 #endif /* _GTK */
 
      }
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 
@@ -8910,6 +8984,8 @@ ThotWidget TtaClearTree (ThotWidget tree)
 #if !defined(_MOTIF) && !defined(_GTK)  
   return NULL;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
   ThotWidget tree_widget = NULL;
 
 #ifdef _GTK
@@ -8934,6 +9010,8 @@ ThotWidget TtaClearTree (ThotWidget tree)
 #endif /* _GTK */
 
   return (tree_widget);
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -8955,6 +9033,8 @@ ThotWidget TtaAddTreeItem (ThotWidget tree, ThotWidget parent,
 #if !defined(_MOTIF) && !defined(_GTK)  
   return NULL;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
   ThotWidget tree_item = NULL;
 
 #ifdef _GTK
@@ -8989,6 +9069,8 @@ ThotWidget TtaAddTreeItem (ThotWidget tree, ThotWidget parent,
 #endif /* _GTK */
   
   return (tree_item);
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 
@@ -9008,6 +9090,8 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label,
 #if !defined(_MOTIF) && !defined(_GTK)  
   return NULL;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
   ThotWidget          tree = NULL;
 
 #ifdef _GTK
@@ -9159,6 +9243,8 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label,
      }
 #endif /* GTK */
    return tree;
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -9167,8 +9253,10 @@ ThotWidget TtaNewTreeForm (int ref, int ref_parent, char *label,
 void TtaAbortShowDialogue ()
 {
 #if !defined(_MOTIF) && !defined(_GTK)  
-  return NULL;
+  return;
 #endif
+
+#if defined(_MOTIF) || defined(_GTK)
   if (ShowReturn == 1)
     {
       /* Debloque l'attente courante */
@@ -9212,6 +9300,8 @@ void TtaAbortShowDialogue ()
     
 	}
      }
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
