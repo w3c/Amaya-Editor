@@ -2613,27 +2613,42 @@ void *context;
        initial_url = DocumentMeta[doc]->initial_url;
        DocumentMeta[doc]->initial_url = NULL;
 
-       /* parse and display the document */
+       /* parse and display the document, res contains the new document
+	identifier, as given by the thotlib */
        res = LoadHTMLDocument (newdoc, pathname, form_data, NULL, method,
 			       tempfile, documentname, http_headers, FALSE);
 
-       /* restore the initial_url */
-       DocumentMeta[newdoc]->initial_url = initial_url;
-
-	W3Loading = 0;		/* loading is complete now */
-	TtaHandlePendingEvents ();
-	/* fetch and display all images referred by the document */
-	if (res != 0)
-	  stopped_flag = FetchAndDisplayImages (res, AMAYA_NOCACHE | AMAYA_LOAD_IMAGE);
-	if (stopped_flag == FALSE) 
-	  {
-	    TtaResetCursor (0, 0);
-	    /* show the document at the same position as before Reload */
-	    el = ElementAtPosition (newdoc, ctx->position);
-	    TtaShowElement (newdoc, 1, el, ctx->distance);
-	  }
+       if (res == 0)
+	 {
+	   /* cannot load the document */
+	   ResetStop(newdoc);
+	   newdoc = 0;
+	   TtaFreeMemory (initial_url);
+	 }
+       else if (newdoc != res)
+	 {
+	   newdoc = res;
+	   /* restore the initial_url */
+	   DocumentMeta[newdoc]->initial_url = initial_url;
+	 }
+       
+       if (newdoc)
+	 {
+	   W3Loading = 0;		/* loading is complete now */
+	   TtaHandlePendingEvents ();
+	   /* fetch and display all images referred by the document */
+	   stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_NOCACHE | AMAYA_LOAD_IMAGE);
+	   if (stopped_flag == FALSE) 
+	     {
+	       TtaResetCursor (0, 0);
+	       /* show the document at the same position as before Reload */
+	       el = ElementAtPosition (newdoc, ctx->position);
+	       TtaShowElement (newdoc, 1, el, ctx->distance);
+	     }
+	 }
      }
-  if (stopped_flag == FALSE)
+
+  if (stopped_flag == FALSE && newdoc)
     ResetStop(newdoc);
   TtaFreeMemory (pathname);
   TtaFreeMemory (documentname);
