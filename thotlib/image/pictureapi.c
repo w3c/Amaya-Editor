@@ -22,6 +22,7 @@
 #include "typemedia.h"
 #include "frame.h"
 #include "picture.h"
+#include "content.h"
 
 #include "xpm.h"
 
@@ -40,42 +41,38 @@
    TtaCreateBitmap
    create a bitmap from a file
    const char * filename : the picture filename
-   ThotPictFormat type   : the picture type (picture.h)
-	XBM_FORMAT =      	0,      X11 BitmapFile format 
-	XPM_FORMAT =     	2,      Xpm XReadFileToPixmap format 
-	GIF_FORMAT =       	3,      gif 
-	PNG_FORMAT =            4,      Png 
-	JPEG_FORMAT =           5,      Jpeg 
+   int type   : the picture type (content.h)
+   xbm_type, eps_type, xpm_type, gif_type, png_type, jpeg_type
   ----------------------------------------------------------------------*/
 ThotPixmap TtaCreateBitmap( const char * filename, int type )
 {
 #ifdef _WX
-   ThotPixmap pixmap = NULL;
-
-   /* convert thot picture type to wxwindows picture type */
-   wxBitmapType wx_type = wxBITMAP_TYPE_INVALID;
-   switch ( type )
+  ThotPixmap pixmap = NULL;
+  
+  /* convert thot picture type to wxwindows picture type */
+  wxBitmapType wx_type = wxBITMAP_TYPE_INVALID;
+  switch ( type )
     {
-		case XBM_FORMAT:	/* X11 BitmapFile format */
-		  wx_type = wxBITMAP_TYPE_XBM;
-		case XPM_FORMAT:	/* Xpm XReadFileToPixmap format */
-		  wx_type = wxBITMAP_TYPE_XPM;
-		case GIF_FORMAT:	/* gif */
-		  wx_type = wxBITMAP_TYPE_GIF;
-		case PNG_FORMAT:	/* Png */
-		  wx_type = wxBITMAP_TYPE_PNG;
-		case JPEG_FORMAT:	/* Jpeg */
-		  wx_type = wxBITMAP_TYPE_JPEG;
-		default :
-		  return NULL;
+    case xbm_type:	/* X11 BitmapFile format */
+      wx_type = wxBITMAP_TYPE_XBM;
+    case xpm_type:	/* Xpm XReadFileToPixmap format */
+      wx_type = wxBITMAP_TYPE_XPM;
+    case gif_type:	/* gif */
+      wx_type = wxBITMAP_TYPE_GIF;
+    case png_type:	/* Png */
+      wx_type = wxBITMAP_TYPE_PNG;
+    case jpeg_type:	/* Jpeg */
+      wx_type = wxBITMAP_TYPE_JPEG;
+    default :
+      return NULL;
     }
-
-   /* create the picture form file */
-   pixmap = new wxBitmap( wxString( filename,AmayaWindow::conv_ascii ), wx_type );
-   return pixmap;
+  
+  /* create the picture form file */
+  pixmap = new wxBitmap( wxString( filename,AmayaWindow::conv_ascii ), wx_type );
+  return pixmap;
 #endif /* _WX */
 
-   return NULL;
+  return NULL;
 }
 
 /*----------------------------------------------------------------------

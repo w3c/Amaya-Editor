@@ -262,12 +262,8 @@ extern void TtaClickElement (/*OUT*/ Document *document, /*OUT*/ Element *elemen
    TtaCreateBitmap
    create a bitmap from a file
    const char * filename : the picture filename
-   ThotPictFormat type   : the picture type (picture.h)
-	XBM_FORMAT =      	0,      X11 BitmapFile format 
-	XPM_FORMAT =     	2,      Xpm XReadFileToPixmap format 
-	GIF_FORMAT =       	3,      gif 
-	PNG_FORMAT =            4,      Png 
-	JPEG_FORMAT =           5,      Jpeg 
+   int type   : the picture type (content.h)
+   xbm_type, eps_type, xpm_type, gif_type, png_type, jpeg_type
   ----------------------------------------------------------------------*/
 extern ThotPixmap TtaCreateBitmap( const char * filename, int type );
 
