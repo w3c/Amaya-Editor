@@ -802,6 +802,64 @@ static void InitializeNewConstruct (Element el, int NumberRows, int NumberCols,
 }
 
 /*----------------------------------------------------------------------
+  AppendEmptyText
+  a new <math> element has just been created. If it's within a block
+  element and there is no sibling, append an empty text element to
+  make addition of new text easier.
+  ----------------------------------------------------------------------*/
+static Element AppendEmptyText (Element el, Document doc)
+{
+  Element      parent, emptyLeaf, sibling;
+  ElementType  elType, parentType;
+
+  emptyLeaf = NULL;
+  elType = TtaGetElementType (el);
+  parent = TtaGetParent (el);
+  parentType = TtaGetElementType (parent);
+  if (elType.ElSSchema == parentType.ElSSchema)
+    /* it's the only <math> element in a MathML document */
+    return (NULL);
+  else
+    /* it's a MathML expression within another vocabulary */
+    {
+      if (!strcmp (TtaGetSSchemaName (parentType.ElSSchema), "HTML"))
+	/* a <math> element in a HTML element */
+	{
+	  if (parentType.ElTypeNum == HTML_EL_Pseudo_paragraph ||
+	      parentType.ElTypeNum == HTML_EL_Paragraph ||
+              parentType.ElTypeNum == HTML_EL_H1 ||
+              parentType.ElTypeNum == HTML_EL_H2 ||
+              parentType.ElTypeNum == HTML_EL_H3 ||
+              parentType.ElTypeNum == HTML_EL_H4 ||
+              parentType.ElTypeNum == HTML_EL_H5 ||
+              parentType.ElTypeNum == HTML_EL_H6 ||
+              parentType.ElTypeNum == HTML_EL_Address ||
+	      parentType.ElTypeNum == HTML_EL_Term ||
+	      parentType.ElTypeNum == HTML_EL_CAPTION)
+	    {
+	      sibling = el;
+	      TtaPreviousSibling (&sibling);
+	      if (!sibling)
+		{
+		  elType.ElTypeNum = MathML_EL_TEXT_UNIT;
+		  emptyLeaf = TtaNewElement (doc, elType);
+		  TtaInsertSibling (emptyLeaf, el, TRUE, doc);
+		}
+	      sibling = el;
+	      TtaNextSibling (&sibling);
+	      if (!sibling)
+		{
+		  elType.ElTypeNum = MathML_EL_TEXT_UNIT;
+		  emptyLeaf = TtaNewElement (doc, elType);
+		  TtaInsertSibling (emptyLeaf, el, FALSE, doc);
+		}
+	    }
+	}
+    }
+  return (emptyLeaf);
+}
+
+/*----------------------------------------------------------------------
    CreateMathConstruct
    Create a MathML construct at the current position
   ----------------------------------------------------------------------*/
@@ -874,6 +932,9 @@ static void         CreateMathConstruct (int construct)
 		  TtaInsertFirstChild (&new_, child, doc);
 		  SetDisplaystyleMathElement (new_, doc);
 		  TtaRegisterElementCreate (child, doc);
+		  leaf = AppendEmptyText (new_, doc);
+		  if (leaf)
+		    TtaRegisterElementCreate (leaf, doc);
 		  TtaSetDocumentModified (doc);
 		  TtaSetDisplayMode (doc, dispMode);
 		  TtaSelectElement (doc, new_);
@@ -895,6 +956,7 @@ static void         CreateMathConstruct (int construct)
 	      /* associate an attribute IntDisplaystyle with the new
 		 <math> element */
 	      SetDisplaystyleMathElement (el, doc);
+	      AppendEmptyText (el, doc);
 	      /* Set the MathML namespace declaration */
 	      elType = TtaGetElementType (el);
 	      TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
@@ -1188,8 +1250,12 @@ static void         CreateMathConstruct (int construct)
 	      else
 		/* insert the new Math element as a child element */
 		TtaInsertFirstChild (&el, sibling, doc);
+	      leaf = NULL;
 	      if (elType.ElTypeNum == MathML_EL_MathML)
-		SetDisplaystyleMathElement (el, doc);
+		{
+		  SetDisplaystyleMathElement (el, doc);
+		  leaf = AppendEmptyText (el, doc);
+		}
 	      /* Set the MathML namespace declaration */
 	      TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
 	      TtaSetANamespaceDeclaration (doc, el, NULL, MathML_URI);
@@ -1198,7 +1264,11 @@ static void         CreateMathConstruct (int construct)
 	      sibling = TtaGetFirstChild (el);
 	      /* register the new Math element in the Undo queue */
 	      if (!registered)
-		TtaRegisterElementCreate (el, doc);
+		{
+		  TtaRegisterElementCreate (el, doc);
+		  if (leaf)
+		    TtaRegisterElementCreate (leaf, doc);
+		}
 	      if (construct == 1)
 		/* The <math> element requested is created. Return */
 		{
@@ -4041,7 +4111,7 @@ void NewMathString (NotifyElement *event)
  -----------------------------------------------------------------------*/
 void MathElementPasted (NotifyElement *event)
 {
-  Element	 placeholderEl, parent, prev;
+  Element	 placeholderEl, parent, prev, leaf;
   ElementType	 elType, elTypeParent;
   Attribute     attr;
   AttributeType attrType;
@@ -4056,6 +4126,9 @@ void MathElementPasted (NotifyElement *event)
       /* It is the <math> element */
       /* Set the IntDisplaystyle attribute according to the context */     
       SetDisplaystyleMathElement (event->element, event->document);
+      leaf = AppendEmptyText (event->element, event->document);
+      if (leaf)
+	TtaRegisterElementCreate (leaf, event->document);
       /* Set the MathML namespace declaration */
       TtaSetUriSSchema (elType.ElSSchema, MathML_URI);
       TtaSetANamespaceDeclaration (event->document, event->element, NULL, MathML_URI);
