@@ -8,9 +8,9 @@
 /*
  *
  * Authors: V. Quint, I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA): Adaptation for Windows NT/95
+ *          R. Guetari (W3C/INRIA): Adaptation for Windows NT/95 
  *
- */
+ */	
  
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -190,8 +190,10 @@ void                TtaQuit ()
 {
    TtaSaveAppRegistry ();
 
-#  ifdef _WINDOWS 
+#  ifdef _WINDOWS
+#  ifndef NODISPLAY
    DeleteObject (TtCmap);
+#  endif /* NODISPLAY */
 #  endif /* _WINDOWS */
 
    exit (0);

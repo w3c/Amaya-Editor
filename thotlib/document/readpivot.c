@@ -246,7 +246,7 @@ PtrSSchema          pSS;
 boolean             withAppEvent;
 boolean		    removeExclusions
 #endif /* __STDC__ */
-{
+{  
    boolean             ret;
    int                 i;
    PathBuffer          directoryName;
