@@ -577,7 +577,7 @@ void SetElSchemasExtens (PtrElement pEl, PtrDocSchemasDescr pPfS)
 	  pChild = pEl->ElFirstChild;
 	  while (pChild)
 	    {
-	      SetElSchemasExtens (pEl, pPfS);
+	      SetElSchemasExtens (pChild, pPfS);
 	      pChild = pChild->ElNext;
 	    }
 	}
