@@ -1114,7 +1114,6 @@ static void BuildPopdown (Menu_Ctl *ptrmenu, int ref, ThotMenu button,
 		      /* desactivate the entry */
 		      TtaRedrawMenuEntry (ref, entries, NULL, InactiveB_Color, 0);
 		      MenuActionList[action].ActionActive[frame] = FALSE;
-		      hidden = TRUE;
 		      action = -1;
 		    }
 		  else if (state == 1)
