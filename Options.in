@@ -3,7 +3,7 @@
 # Generated from Options.in
 #
 # Increase the Version number each time one entry is added
-# Version : 1.10
+# Version : 1.11
 #
 
 SHELL	= /bin/sh
@@ -59,6 +59,7 @@ WX_SRCDIR=@WX_SRCDIR@
 WX_BUILDDIR=@WX_BUILDDIR@
 WX_INCLUDES=@WX_INCLUDES@
 WX_LIBRARIES=@WX_LIBRARIES@
+WX_LINKDEPS=@WX_LINKDEPS@
 
 GUI_INCLUDES=$(GTK_INCLUDES) $(WX_INCLUDES)
 

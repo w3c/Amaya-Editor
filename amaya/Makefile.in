@@ -186,7 +186,7 @@ AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ \
 
 AMAYA_LIBS= ../thotlib/libThotEditor.a \
             libCSS.a $(AMAYA_OPTION_LIBS) \
-             $(LIBZ)
+             $(LIBZ) $(WX_LINKDEPS)
 
 HTML2THOT_LIBS= -L../thotlib/ -lThotKernel -L.. -lz
 

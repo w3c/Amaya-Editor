@@ -523,6 +523,9 @@ if test "$with_wx" = "yes" ; then
   fi
   WX_LIBRARIES="`$WXCONFIG --libs $WXCONFIG_LIBS_PARAM` ${WX_LIBRARIES_EXTRA_PARAM}"
   AC_SUBST(WX_LIBRARIES)
+  
+  WX_LINKDEPS="`$WXCONFIG --linkdeps`"
+  AC_SUBST(WX_LINKDEPS)
 
   WX_OPTIONS="-D_WX"
   # --------- configuring wxWidgets paths - DONE --------------- #
