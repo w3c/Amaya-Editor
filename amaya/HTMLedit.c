@@ -14,6 +14,12 @@
  */
  
 /* Included headerfiles */
+
+#ifdef _WX
+  #include "wx/wx.h"
+  #include "AmayaApp.h"
+#endif /* _WX */
+
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
@@ -54,7 +60,9 @@ static int          OldHeight;
 #ifdef _WINGUI
   #include "wininclude.h"
 #endif /* _WINGUI */
-
+#ifdef _WX
+  #include "wxdialogapi_f.h"
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
   InsertBefore inserts an empty element before the selection
@@ -614,6 +622,9 @@ void ChangeTitle (Document doc, View view)
        CreateTitleDlgWindow (TtaGetViewFrame (doc, view), Answer_text);
 #endif /* _WINGUI */
        
+#ifdef _WX
+       CreateTitleDlgWX (TtaGetViewFrame (doc, view), Answer_text);
+#endif /* _WX */
      }
 }
 

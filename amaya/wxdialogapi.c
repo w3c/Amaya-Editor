@@ -5,6 +5,7 @@
 #ifdef _WX
   #include "wxdialog/InitConfirmDlgWX.h"
   #include "wxdialog/OpenDocDlgWX.h"
+  #include "wxdialog/TitleDlgWX.h"
   #include "AmayaApp.h"
 #endif /* _WX */
 
@@ -35,7 +36,7 @@ void CreateInitConfirmDlgWX ( ThotWindow parent,
 
   if (extrabutton && extrabutton[0] != EOS)
   {
-    /* a meesage with 3 buttons */
+    /* a message with 3 buttons */
     wx_extrabutton = wxString(extrabutton, AmayaApp::conv_ascii);
     if (confirmbutton && confirmbutton[0] != EOS)
       wx_confirmbutton = wxString(confirmbutton, AmayaApp::conv_ascii);
@@ -119,5 +120,32 @@ void CreateOpenDocDlgWX ( ThotWindow parent,
   p_dlg->ShowModal();
   p_dlg->Destroy();
 
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  CreateTitleDlgWX create the dialog to change the document title
+  params:
+    + doc_title : the current document title
+  returns:
+  ----------------------------------------------------------------------*/
+void CreateTitleDlgWX ( ThotWindow parent,
+			char *doc_title )
+{
+#ifdef _WX
+  wxString wx_title(TtaGetMessage (AMAYA, AM_CHANGE_TITLE),
+		    AmayaApp::conv_ascii);
+  wxString wx_doc_title(doc_title, AmayaApp::conv_ascii);
+
+  wxLogDebug( _T("TitlelgWX - title=")+wx_title+
+	      _T("\tdoc_title=")+wx_doc_title );
+
+  TitleDlgWX * p_dlg = new TitleDlgWX(
+      parent,
+      wx_title,
+      wx_doc_title );
+
+  p_dlg->ShowModal();
+  p_dlg->Destroy();
 #endif /* _WX */
 }

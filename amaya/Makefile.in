@@ -226,6 +226,7 @@ libCSS.a : $(CSS_OBJ)
 	$(RANLIB) libCSS.a
 
 AMAYA_OBJ = \
+	wxdialog/TitleDlgWX.o \
 	wxdialog/InitConfirmDlgWX.o \
 	wxdialog/OpenDocDlgWX.o \
 	wxdialogapi.o \
