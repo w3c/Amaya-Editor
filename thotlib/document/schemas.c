@@ -2410,8 +2410,10 @@ void GetXmlElementType (char *xmlName, ElementType *elType,
        for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 	 {
  	   if (pSS->SsRule->SrElem[rule]->SrConstruct != CsNatureSchema &&
-	       pSS->SsRule->SrElem[rule]->SrOrigName != NULL &&
-	       strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName) == 0)
+	       ((pSS->SsRule->SrElem[rule]->SrName &&
+		 strcmp (pSS->SsRule->SrElem[rule]->SrName, xmlName) == 0) ||
+	       (pSS->SsRule->SrElem[rule]->SrOrigName &&
+		strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName) == 0)))
 	     {
 	       elType->ElTypeNum = rule + 1;
 	       if (mappedName)
@@ -2433,8 +2435,10 @@ void GetXmlElementType (char *xmlName, ElementType *elType,
 	       for (rule = 0; !found && rule < pSS->SsNRules; rule++)
 		 {
 		   if (pSS->SsRule->SrElem[rule]->SrConstruct != CsNatureSchema &&
-		       pSS->SsRule->SrElem[rule]->SrOrigName != NULL &&
-		       strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName) == 0)
+		       ((pSS->SsRule->SrElem[rule]->SrName &&
+			 strcmp (pSS->SsRule->SrElem[rule]->SrName, xmlName) == 0) ||
+			(pSS->SsRule->SrElem[rule]->SrOrigName &&
+			 strcmp (pSS->SsRule->SrElem[rule]->SrOrigName, xmlName) == 0)))
 		     {
 		       elType->ElTypeNum = rule + 1;
 		       if (mappedName)

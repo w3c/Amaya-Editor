@@ -4110,7 +4110,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 			   CSSInfoPtr css, ThotBool isHTML)
 {
   DisplayMode         dispMode;
-  char               *p = NULL;
+  char               *p = NULL, *next;
   char               *valueStart;
   int                 lg;
   unsigned int        i;
@@ -4205,7 +4205,10 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 			    }
 			}
 		      /* update index and skip the ";" separator if present */
-		      cssRule = p;
+		      next = SkipBlanksAndComments (p);
+		      if (*next != EOS && *next != ';')
+			CSSParseError ("Missing ';' at the end: ", cssRule, p);
+		      cssRule = next;
 		    }
 		}
 	      else
@@ -4309,7 +4312,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   char              *attrs[MAX_ANCESTORS];
   char              *attrvals[MAX_ANCESTORS];
   AttrMatch          attrmatch[MAX_ANCESTORS];
-  ThotBool           immediat[MAX_ANCESTORS];
+  ThotBool           rel[MAX_ANCESTORS];
   int                i, j, k, max;
   int                att, maxAttr, kind;
   int                specificity, xmlType;
@@ -4329,7 +4332,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       attrs[i] = NULL;
       attrvals[i] = NULL;
       attrmatch[i] = Txtmatch;
-      immediat[i] = FALSE;
+      rel[i] = 0;
       ctxt->name[i] = 0;
       ctxt->names_nb[i] = 0;
       ctxt->attrType[i] = 0;
@@ -4357,7 +4360,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       while (*selector != EOS && *selector != ',' &&
              *selector != '.' && *selector != ':' &&
              *selector != '#' && *selector != '[' &&
-             *selector != '>' &&
+             *selector != '>' && *selector != '+' &&
 	     !TtaIsBlank (selector))
             *cur++ = *selector++;
       *cur++ = EOS; /* close the first string  in sel[] */
@@ -4655,7 +4658,14 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      /* handle immediat parent as a simple parent */
 	      selector++;
 	      selector = SkipBlanksAndComments (selector);
-	      immediat[0] = TRUE;
+	      rel[0] = 1;
+	    }
+	  else if (*selector == '+')
+	    {
+	      /* handle immediat parent as a simple parent */
+	      selector++;
+	      selector = SkipBlanksAndComments (selector);
+	      rel[0] = 2;
 	    }
 	  /* shifts the list to make room for the new name */
 	  max++; /* a new level in ancestor tables */
@@ -4671,7 +4681,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      attrs[i] = attrs[i - 1];
 	      attrvals[i] = attrvals[i - 1];
 	      attrmatch[i] = attrmatch[i - 1];
-	      immediat[i] = immediat[i - 1];
+	      rel[i] = rel[i - 1];
 	    }
 	}
     }
@@ -4792,6 +4802,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		  ctxt->type = elType.ElTypeNum;
 		  ctxt->name[0] = elType.ElTypeNum;
 		  ctxt->names_nb[0] = 0;
+		  ctxt->rel[0] = 0;
 		  ctxt->schema = elType.ElSSchema;
 		}
 	    }
@@ -4800,7 +4811,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      /* look at the current context to see if the type is already
 		 stored */
 	      j = 1;
-	      while (j < k && ctxt->name[j] != elType.ElTypeNum)
+	      while (j < k &&
+		     (ctxt->name[j] != elType.ElTypeNum || ctxt->rel[j] != 0))
 		j++;
 	      if (j == k)
 		{
@@ -4827,13 +4839,19 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		  /* look at the current context to see if the type is already
 		     stored */
 		  j = 1;
-		  while (j < k && ctxt->name[j] != elType.ElTypeNum)
+		  while (j < k &&
+			 (ctxt->name[j] != elType.ElTypeNum || ctxt->rel[j] != 0))
 		    j++;
 		  if (j == k)
 		    {
 		      ctxt->name[j] = elType.ElTypeNum;
 		      if (j != 0)
-			ctxt->names_nb[j] = 1;
+			{
+			  ctxt->names_nb[j] = 1;
+			  ctxt->rel[j] = rel[i];
+			}
+		      else
+			ctxt->rel[j] = 0;
 		    }
 		  else
 		    /* increment the number of ancestor levels */
@@ -5003,30 +5021,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
     }
   /* set the selector specificity */
   ctxt->cssSpecificity = specificity;
-  /* sort the list of ancestors by name order */
-  max = k;
-  i = 1;
-  while (i < max)
-    {
-      for (k = i + 1; k < max; k++)
-	if (ctxt->name[i] > ctxt->name[k])
-	  {
-	    j = ctxt->name[i];
-	    ctxt->name[i] = ctxt->name[k];
-	    ctxt->name[k] = j;
-	    j = ctxt->names_nb[i];
-	    ctxt->names_nb[i] = ctxt->names_nb[k];
-	    ctxt->names_nb[k] = j;
-	    j = ctxt->attrType[i];
-	    ctxt->attrType[i] = ctxt->attrType[k];
-	    ctxt->attrType[k] = j;
-	    cur = ctxt->attrText[i];
-	    ctxt->attrText[i] = ctxt->attrText[k];
-	    ctxt->attrText[k] = cur;
-	  }
-      i++;
-    }
-
   /* Get the schema name of the main element */
   schemaName = TtaGetSSchemaName (ctxt->schema);
   isHTML = (strcmp (schemaName, "HTML") == 0);

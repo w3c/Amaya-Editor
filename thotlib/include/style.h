@@ -53,12 +53,15 @@ typedef struct struct_GenericContext
      */
     int           box;	                 /* specific presentation box if any */
     int           name[MAX_ANCESTORS];      /* ancestors type */
-    int           names_nb[MAX_ANCESTORS];  /* number of occurences */
-    int           attrType[MAX_ANCESTORS];  /* type of the attribute */
-    int           attrLevel[MAX_ANCESTORS]; /* level of the attribute */
-    char         *attrText[MAX_ANCESTORS];  /* attr. or box name */
-    AttrMatch     attrMatch[MAX_ANCESTORS]; /* how attr. values match */
+    int           names_nb[MAX_ANCESTORS];  /* number of occurences    */
+    int           attrType[MAX_ANCESTORS];  /* type of the attribute   */
+    int           attrLevel[MAX_ANCESTORS]; /* level of the attribute  */
+    char         *attrText[MAX_ANCESTORS];  /* attr. or box name       */
+    AttrMatch     attrMatch[MAX_ANCESTORS]; /* how attr. values match  */
     char          sel[MAX_ANCESTORS * 50];  /* include selected values */
+    char          rel[MAX_ANCESTORS];       /* 0 = ancestor
+					       1 = immediat ancestor
+					       2 = precedent           */
   }
 GenericContextBlock, *GenericContext;
 
