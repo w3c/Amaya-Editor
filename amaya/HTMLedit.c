@@ -699,7 +699,6 @@ Element             selectedElement;
 }
 
 
-
 /*----------------------------------------------------------------------
    CreateTargetAnchor creates a NAME or ID attribute with a default    
    value for element el.                           
@@ -711,7 +710,6 @@ void                CreateTargetAnchor (doc, el, withUndo)
 Document            doc;
 Element             el;
 Boolean		    withUndo;
-
 #endif /* __STDC__ */
 {
    AttributeType       attrType;
@@ -721,7 +719,7 @@ Boolean		    withUndo;
    SSchema	       HTMLSSchema;
    Language            lang;
    STRING              text;
-   STRING               url = TtaAllocString (MAX_LENGTH);
+   STRING              url = TtaAllocString (MAX_LENGTH);
    int                 length, i, space;
    ThotBool            found;
    ThotBool            withinHTML, new;
@@ -755,7 +753,7 @@ Boolean		    withUndo;
      }
    attr = TtaGetAttribute (el, attrType);
 
-   if (attr == 0)
+   if (attr == NULL)
      {
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (el, attr, doc);
@@ -795,9 +793,9 @@ Boolean		    withUndo;
 	    url[length++] = EOS;
 	    while (!found && i < length)
 	      {
-		if (url[i] == ' ' || url[i] == EOS)
+		if (url[i] == TEXT(' ') || url[i] == WC_EOS)
 		  {
-		    found = (i - space > 3 || (i != space && url[i] == EOS));
+		    found = (i - space > 3 || (i != space && url[i] == WC_EOS));
 		    if (found)
 		      {
 			/* url = the word */
@@ -811,8 +809,16 @@ Boolean		    withUndo;
 		    i++;
 		    space = i;
 		  }
-		else
+		else if (url[i] == TEXT('_') ||
+			 url[i] == TEXT(':') ||
+			 ((int) url[i] >= 65 && (int) url[i] <= 90) ||
+			 ((int) url[i] >= 81 && (int) url[i] <= 127) ||
+			 (i > 0 && (int) url[i] >= 48 && (int) url[i] <= 57))
+		  /* valid character for an ID */
 		  i++;
+		else
+		  /* invalid name for an ID */
+		  i = length;
 	      }
 
 	    if (!found)
