@@ -62,6 +62,7 @@ PRINT
 #define H4Margin 1.12 em
 #define H5Margin 1.5 em
 #define H6Margin 1.67 em
+#define PMargin 0.60 em
 #define VSpaceInToC 0.2
 #define LIST_INDENT 40 px
 #define DEFINITION_INDENT 2.3
@@ -2741,8 +2742,8 @@ RULES
 #endif
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginTop: H4Margin;
-	MarginBottom: H4Margin;
+	MarginTop: PMargin;
+	MarginBottom: PMargin;
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		MarginBottom: 0;

@@ -8,33 +8,33 @@
 
 
 1;#Latin1 (West European)
-1;1=-*-times-medium-r-*-*-12-*-*-*-*-*-iso8859-1;2=-*-times-r-*-*-12-*-*-*-*-*-iso8859-1;3=-*-times-i-*-*-12-*-*-*-*-*-iso8859-1;4=-*-times-i-*-*-12-*-*-*-*-*-iso8859-1;
-2;1=-*-helvetica-medium-r-*-*-12-*-*-*-*-*-iso8859-1;2=-*-helvetica-bold-r-*-*-12-*-*-*-*-*-iso8859-1;3=-*-helvetica-medium-i-*-*-12-*-*-*-*-*-iso8859-1;4=-*-helvetica-bold-i-*-*-12-*-*-*-*-*-iso8859-1;
-3;1=-*-courier new-medium-r-*-*-12-*-*-*-*-*-iso8859-1;2=-*-courier new--bold-r-*-*-12-*-*-*-*-*-iso8859-1;3=-*-courier new-medium-i-*-*-12-*-*-*-*-*-iso8859-1;4=-*-courier new-bold-i-*-*-12-*-*-*-*-*-iso8859-1;
+1;1=-*-times-medium-r-*-*-*-120-*-*-*-*-iso8859-1;2=-*-times-r-*-*-*-120-*-*-*-*-iso8859-1;3=-*-times-i-*-*-*-120-*-*-*-*-iso8859-1;4=-*-times-i-*-*-*-120-*-*-*-*-iso8859-1;
+2;1=-*-helvetica-medium-r-*-*-*-120-*-*-*-*-iso8859-1;2=-*-helvetica-bold-r-*-*-*-120-*-*-*-*-iso8859-1;3=-*-helvetica-medium-i-*-*-*-120-*-*-*-*-iso8859-1;4=-*-helvetica-bold-i-*-*-*-120-*-*-*-*-iso8859-1;
+3;1=-*-courier new-medium-r-*-*-*-120-*-*-*-*-iso8859-1;2=-*-courier new--bold-r-*-*-*-120-*-*-*-*-iso8859-1;3=-*-courier new-medium-i-*-*-*-120-*-*-*-*-iso8859-1;4=-*-courier new-bold-i-*-*-*-120-*-*-*-*-iso8859-1;
 
 
 2;#Latin2 (East European)
-1;1=-*-times new roman-medium-r-*-*-12-*-*-*-*-*-iso8859-2;2=-*-times new roman-bold-*-*-*-12-*-*-*-*-*-iso8859-2;3=-*-times new roman-medium-i-*-*-12-*-*-*-*-*-iso8859-2;
-2;1=-*-arial-medium-r-*-*-12-*-*-*-*-*-iso8859-2;2=-*-arial-bold-*-*-*-12-*-*-*-*-*-iso8859-2;3=-*-arial-medium-i-*-*-12-*-*-*-*-*-iso8859-2;
-3;1=-*-courier new-medium-r-*-*-12-*-*-*-*-*-iso8859-2;2=-*-courier new-bold-*-*-*-12-*-*-*-*-*-iso8859-2;3=-*-courier new-medium-i-*-*-12-*-*-*-*-*-iso8859-2;
+1;1=-*-times new roman-medium-r-*-*-*-120-*-*-*-*-iso8859-2;2=-*-times new roman-bold-*-*-*-*-120-*-*-*-*-iso8859-2;3=-*-times new roman-medium-i-*-*-*-120-*-*-*-*-iso8859-2;
+2;1=-*-arial-medium-r-*-*-*-120-*-*-*-*-iso8859-2;2=-*-arial-bold-*-*-*-*-120-*-*-*-*-iso8859-2;3=-*-arial-medium-i-*-*-*-120-*-*-*-*-iso8859-2;
+3;1=-*-courier new-medium-r-*-*-*-120-*-*-*-*-iso8859-2;2=-*-courier new-bold-*-*-*-*-120-*-*-*-*-iso8859-2;3=-*-courier new-medium-i-*-*-*-120-*-*-*-*-iso8859-2;
 
 
 2;#Latin3 (South European)
-1;1=-*-times new roman-medium-r-*-*-12-*-*-*-*-*-iso8859-3;2=-*-times new roman-bold-*-*-*-12-*-*-*-*-*-iso8859-3;3=-*-times new roman-medium-i-*-*-12-*-*-*-*-*-iso8859-3;
-2;1=-*-arial-medium-r-*-*-12-*-*-*-*-*-iso8859-3;2=-*-arial-bold-*-*-*-12-*-*-*-*-*-iso8859-3;3=-*-arial-medium-i-*-*-12-*-*-*-*-*-iso8859-3;
-3;1=-*-courier new-medium-r-*-*-12-*-*-*-*-*-iso8859-3;2=-*-courier new-bold-*-*-*-12-*-*-*-*-*-iso8859-3;3=-*-courier new-medium-i-*-*-12-*-*-*-*-*-iso8859-3;
+1;1=-*-times new roman-medium-r-*-*-*-120-*-*-*-*-iso8859-3;2=-*-times new roman-bold-*-*-*-*-120-*-*-*-*-iso8859-3;3=-*-times new roman-medium-i-*-*-*-120-*-*-*-*-iso8859-3;
+2;1=-*-arial-medium-r-*-*-*-120-*-*-*-*-iso8859-3;2=-*-arial-bold-*-*-*-*-120-*-*-*-*-iso8859-3;3=-*-arial-medium-i-*-*-*-120-*-*-*-*-iso8859-3;
+3;1=-*-courier new-medium-r-*-*-*-120-*-*-*-*-iso8859-3;2=-*-courier new-bold-*-*-*-*-120-*-*-*-*-iso8859-3;3=-*-courier new-medium-i-*-*-*-120-*-*-*-*-iso8859-3;
 
 
 4;#Latin4 (North European)
-1;1=-*-times new roman-medium-r-*-*-12-*-*-*-*-*-iso8859-4;2=-*-times new roman-bold-*-*-*-12-*-*-*-*-*-iso8859-4;3=-*-times new roman-medium-i-*-*-12-*-*-*-*-*-iso8859-4;
-2;1=-*-arial-medium-r-*-*-12-*-*-*-*-*-iso8859-4;2=-*-arial-bold-*-*-*-12-*-*-*-*-*-iso8859-4;3=-*-arial-medium-i-*-*-12-*-*-*-*-*-iso8859-4;
-3;1=-*-courier new-medium-r-*-*-12-*-*-*-*-*-iso8859-4;2=-*-courier new-bold-*-*-*-12-*-*-*-*-*-iso8859-4;3=-*-courier new-medium-i-*-*-12-*-*-*-*-*-iso8859-4;
+1;1=-*-times new roman-medium-r-*-*-*-120-*-*-*-*-iso8859-4;2=-*-times new roman-bold-*-*-*-*-120-*-*-*-*-iso8859-4;3=-*-times new roman-medium-i-*-*-*-120-*-*-*-*-iso8859-4;
+2;1=-*-arial-medium-r-*-*-*-120-*-*-*-*-iso8859-4;2=-*-arial-bold-*-*-*-*-120-*-*-*-*-iso8859-4;3=-*-arial-medium-i-*-*-*-120-*-*-*-*-iso8859-4;
+3;1=-*-courier new-medium-r-*-*-*-120-*-*-*-*-iso8859-4;2=-*-courier new-bold-*-*-*-*-120-*-*-*-*-iso8859-4;3=-*-courier new-medium-i-*-*-*-120-*-*-*-*-iso8859-4;
 
 
 5;#Cyrillic
-1;1=-*-times new roman-medium-r-*-*-12-*-*-*-*-*-iso8859-5;2=-*-times new roman-bold-*-*-*-12-*-*-*-*-*-iso8859-5;3=-*-times new roman-medium-i-*-*-12-*-*-*-*-*-iso8859-5;
-2;1=-*-arial-medium-r-*-*-12-*-*-*-*-*-iso8859-5;2=-*-arial-bold-*-*-*-12-*-*-*-*-*-iso8859-5;3=-*-arial-medium-i-*-*-12-*-*-*-*-*-iso8859-5;
-3;1=-*-courier new-medium-r-*-*-12-*-*-*-*-*-iso8859-5;2=-*-courier new-bold-*-*-*-12-*-*-*-*-*-iso8859-5;3=-*-courier new-medium-i-*-*-12-*-*-*-*-*-iso8859-5;
+1;1=-*-times new roman-medium-r-*-*-*-120-*-*-*-*-iso8859-5;2=-*-times new roman-bold-*-*-*-*-120-*-*-*-*-iso8859-5;3=-*-times new roman-medium-i-*-*-*-120-*-*-*-*-iso8859-5;
+2;1=-*-arial-medium-r-*-*-*-120-*-*-*-*-iso8859-5;2=-*-arial-bold-*-*-*-*-120-*-*-*-*-iso8859-5;3=-*-arial-medium-i-*-*-*-120-*-*-*-*-iso8859-5;
+3;1=-*-courier new-medium-r-*-*-*-120-*-*-*-*-iso8859-5;2=-*-courier new-bold-*-*-*-*-120-*-*-*-*-iso8859-5;3=-*-courier new-medium-i-*-*-*-120-*-*-*-*-iso8859-5;
 
 
 6;#Arabic
@@ -44,27 +44,27 @@
 
 
 7;#Greek
-1;1=-*-times new roman-medium-r-*-*-12-*-*-*-*-*-iso8859-7;2=-*-times new roman-bold-*-*-*-12-*-*-*-*-*-iso8859-7;3=-*-times new roman-medium-i-*-*-12-*-*-*-*-*-iso8859-7;
-2;1=-*-arial-medium-r-*-*-12-*-*-*-*-*-iso8859-7;2=-*-arial-bold-*-*-*-12-*-*-*-*-*-iso8859-7;3=-*-arial-medium-i-*-*-12-*-*-*-*-*-iso8859-7;
-3;1=-*-courier new-medium-r-*-*-12-*-*-*-*-*-iso8859-7;2=-*-courier new-bold-*-*-*-12-*-*-*-*-*-iso8859-7;3=-*-courier new-medium-i-*-*-12-*-*-*-*-*-iso8859-7;
+1;1=-*-times new roman-medium-r-*-*-*-120-*-*-*-*-iso8859-7;2=-*-times new roman-bold-*-*-*-*-120-*-*-*-*-iso8859-7;3=-*-times new roman-medium-i-*-*-*-120-*-*-*-*-iso8859-7;
+2;1=-*-arial-medium-r-*-*-*-120-*-*-*-*-iso8859-7;2=-*-arial-bold-*-*-*-*-120-*-*-*-*-iso8859-7;3=-*-arial-medium-i-*-*-*-120-*-*-*-*-iso8859-7;
+3;1=-*-courier new-medium-r-*-*-*-120-*-*-*-*-iso8859-7;2=-*-courier new-bold-*-*-*-*-120-*-*-*-*-iso8859-7;3=-*-courier new-medium-i-*-*-*-120-*-*-*-*-iso8859-7;
 
 
 8;#Hebrew
-1;1=-*-times new roman-medium-r-*-*-12-*-*-*-*-*-iso8859-8;2=-*-times new roman-bold-*-*-*-12-*-*-*-*-*-iso8859-8;3=-*-times new roman-medium-i-*-*-12-*-*-*-*-*-iso8859-8;
-2;1=-*-arial-medium-r-*-*-12-*-*-*-*-*-iso8859-8;2=-*-arial-bold-*-*-*-12-*-*-*-*-*-iso8859-8;3=-*-arial-medium-i-*-*-12-*-*-*-*-*-iso8859-8;
-3;1=-*-courier new-medium-r-*-*-12-*-*-*-*-*-iso8859-8;2=-*-courier new-bold-*-*-*-12-*-*-*-*-*-iso8859-8;3=-*-courier new-medium-i-*-*-12-*-*-*-*-*-iso8859-8;
+1;1=-*-times new roman-medium-r-*-*-*-120-*-*-*-*-iso8859-8;2=-*-times new roman-bold-*-*-*-*-120-*-*-*-*-iso8859-8;3=-*-times new roman-medium-i-*-*-*-120-*-*-*-*-iso8859-8;
+2;1=-*-arial-medium-r-*-*-*-120-*-*-*-*-iso8859-8;2=-*-arial-bold-*-*-*-*-120-*-*-*-*-iso8859-8;3=-*-arial-medium-i-*-*-*-120-*-*-*-*-iso8859-8;
+3;1=-*-courier new-medium-r-*-*-*-120-*-*-*-*-iso8859-8;2=-*-courier new-bold-*-*-*-*-120-*-*-*-*-iso8859-8;3=-*-courier new-medium-i-*-*-*-120-*-*-*-*-iso8859-8;
 
 
 9;#Latin9 (Turkish)
-1;1=-*-times new roman-medium-r-*-*-12-*-*-*-*-*-iso8859-9;2=-*-times new roman-bold-*-*-*-12-*-*-*-*-*-iso8859-9;3=-*-times new roman-medium-i-*-*-12-*-*-*-*-*-iso8859-9;
-2;1=-*-arial-medium-r-*-*-12-*-*-*-*-*-iso8859-9;2=-*-arial-bold-*-*-*-12-*-*-*-*-*-iso8859-9;3=-*-arial-medium-i-*-*-12-*-*-*-*-*-iso8859-9;
-3;1=-*-courier new-medium-r-*-*-12-*-*-*-*-*-iso8859-9;2=-*-courier new-bold-*-*-*-12-*-*-*-*-*-iso8859-9;3=-*-courier new-medium-i-*-*-12-*-*-*-*-*-iso8859-9;
+1;1=-*-times new roman-medium-r-*-*-*-120-*-*-*-*-iso8859-9;2=-*-times new roman-bold-*-*-*-*-120-*-*-*-*-iso8859-9;3=-*-times new roman-medium-i-*-*-*-120-*-*-*-*-iso8859-9;
+2;1=-*-arial-medium-r-*-*-*-120-*-*-*-*-iso8859-9;2=-*-arial-bold-*-*-*-*-120-*-*-*-*-iso8859-9;3=-*-arial-medium-i-*-*-*-120-*-*-*-*-iso8859-9;
+3;1=-*-courier new-medium-r-*-*-*-120-*-*-*-*-iso8859-9;2=-*-courier new-bold-*-*-*-*-120-*-*-*-*-iso8859-9;3=-*-courier new-medium-i-*-*-*-120-*-*-*-*-iso8859-9;
 
 
 10;#Latin6 (Nordic)
-1;1=-*-times new roman-medium-r-*-*-12-*-*-*-*-*-iso8859-10;2=-*-times new roman-bold-*-*-*-12-*-*-*-*-*-iso8859-10;3=-*-times new roman-medium-i-*-*-12-*-*-*-*-*-iso8859-10;
-2;1=-*-arial-medium-r-*-*-12-*-*-*-*-*-iso8859-10;2=-*-arial-bold-*-*-*-12-*-*-*-*-*-iso8859-10;3=-*-arial-medium-i-*-*-12-*-*-*-*-*-iso8859-10;
-3;1=-*-courier new-medium-r-*-*-12-*-*-*-*-*-iso8859-10;2=-*-courier new-bold-*-*-*-12-*-*-*-*-*-iso8859-10;3=-*-courier new-medium-i-*-*-12-*-*-*-*-*-iso8859-10;
+1;1=-*-times new roman-medium-r-*-*-*-120-*-*-*-*-iso8859-10;2=-*-times new roman-bold-*-*-*-*-120-*-*-*-*-iso8859-10;3=-*-times new roman-medium-i-*-*-*-120-*-*-*-*-iso8859-10;
+2;1=-*-arial-medium-r-*-*-*-120-*-*-*-*-iso8859-10;2=-*-arial-bold-*-*-*-*-120-*-*-*-*-iso8859-10;3=-*-arial-medium-i-*-*-*-120-*-*-*-*-iso8859-10;
+3;1=-*-courier new-medium-r-*-*-*-120-*-*-*-*-iso8859-10;2=-*-courier new-bold-*-*-*-*-120-*-*-*-*-iso8859-10;3=-*-courier new-medium-i-*-*-*-120-*-*-*-*-iso8859-10;
 
 
 20;#Symbols (...)
@@ -78,9 +78,9 @@
 
 
 0;#Unicode (.or ... JAPANESe)
-1;1=-daewoo-mincho-medium-r-*-*-12-*-*-*-*-*-*-*;2=-daewoo-mincho-bold-*-*-*-12-*-*-*-*-*-*-*;3=-daewoo-mincho-medium-i-*-*-12-*-*-*-*-*-*-*;
-2;1=-daewoo-mincho-medium-r-*-*-12-*-*-*-*-*-*-*;2=-daewoo-mincho-bold-*-*-*-12-*-*-*-*-*-*-*;3=-daewoo-mincho-medium-i-*-*-12-*-*-*-*-*-*-*;
-3;1=-daewoo-mincho-medium-r-*-*-12-*-*-*-*-*-*-*;2=-daewoo-mincho-bold-*-*-*-12-*-*-*-*-*-*-*;3=-daewoo-mincho-medium-i-*-*-12-*-*-*-*-*-*-*;
+1;1=-daewoo-mincho-medium-r-*-*-*-120-*-*-*-*-*-*;2=-daewoo-mincho-bold-*-*-*-*-120-*-*-*-*-*-*;3=-daewoo-mincho-medium-i-*-*-*-120-*-*-*-*-*-*;
+2;1=-daewoo-mincho-medium-r-*-*-*-120-*-*-*-*-*-*;2=-daewoo-mincho-bold-*-*-*-*-120-*-*-*-*-*-*;3=-daewoo-mincho-medium-i-*-*-*-120-*-*-*-*-*-*;
+3;1=-daewoo-mincho-medium-r-*-*-*-120-*-*-*-*-*-*;2=-daewoo-mincho-bold-*-*-*-*-120-*-*-*-*-*-*;3=-daewoo-mincho-medium-i-*-*-*-120-*-*-*-*-*-*;
 
 
 

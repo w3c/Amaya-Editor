@@ -3656,6 +3656,15 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 		      i = y + pChildBox->BxHeight;
 		    else
 		      i = pChildBox->BxYOrg + pChildBox->BxHeight;
+		    if (pChildAb->AbNext == NULL &&
+			pBox->BxBBorder + pBox->BxBPadding == 0)
+		      {
+			/* collapsing margins */
+			if (pChildBox->BxBMargin > pBox->BxBMargin)
+			  i -= pBox->BxBMargin;
+			else
+			  i -= pChildBox->BxBMargin;
+		      }
 		    if (i > height)
 		      height = i;
 		  }

@@ -2124,44 +2124,44 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
      }
    else if (!strncasecmp (cssRule, "xx-small", 8))
      {
-	pval.typed_data.unit = UNIT_REL;
-	pval.typed_data.value = 1;
+	pval.typed_data.unit = UNIT_PT;
+	pval.typed_data.value = 8;
 	cssRule = SkipWord (cssRule);
      }
    else if (!strncasecmp (cssRule, "x-small", 7))
      {
-	pval.typed_data.unit = UNIT_REL;
-	pval.typed_data.value = 2;
+	pval.typed_data.unit = UNIT_PT;
+	pval.typed_data.value = 10;
 	cssRule = SkipWord (cssRule);
      }
    else if (!strncasecmp (cssRule, "small", 5))
      {
-	pval.typed_data.unit = UNIT_REL;
-	pval.typed_data.value = 3;
+	pval.typed_data.unit = UNIT_PT;
+	pval.typed_data.value = 11;
 	cssRule = SkipWord (cssRule);
      }
    else if (!strncasecmp (cssRule, "medium", 6))
      {
-	pval.typed_data.unit = UNIT_REL;
-	pval.typed_data.value = 4;
+	pval.typed_data.unit = UNIT_PT;
+	pval.typed_data.value = 12;
 	cssRule = SkipWord (cssRule);
      }
    else if (!strncasecmp (cssRule, "large", 5))
      {
-	pval.typed_data.unit = UNIT_REL;
-	pval.typed_data.value = 5;
+	pval.typed_data.unit = UNIT_PT;
+	pval.typed_data.value = 13;
 	cssRule = SkipWord (cssRule);
      }
    else if (!strncasecmp (cssRule, "x-large", 7))
      {
-	pval.typed_data.unit = UNIT_REL;
-	pval.typed_data.value = 6;
+	pval.typed_data.unit = UNIT_PT;
+	pval.typed_data.value = 14;
 	cssRule = SkipWord (cssRule);
      }
    else if (!strncasecmp (cssRule, "xx-large", 8))
      {
-	pval.typed_data.unit = UNIT_REL;
-	pval.typed_data.value = 7;
+	pval.typed_data.unit = UNIT_PT;
+	pval.typed_data.value = 16;
 	cssRule = SkipWord (cssRule);
      }
    else if (!isdigit (*cssRule) && *cssRule != '.')

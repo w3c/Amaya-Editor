@@ -1117,10 +1117,14 @@ static void UpdateClass (Document doc)
 	  title = TtaSearchTypedElementInTree (elType, SearchForward, head,
 					       head);
 	}
+
+      /* do not check mandatory attributes */
+      TtaSetStructureChecking (0, doc);
       if (title)
 	TtaInsertSibling (el, title, FALSE, doc);
       else
 	TtaInsertFirstChild (&el, head, doc);
+      TtaSetStructureChecking (1, doc);
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
       TtaSetAttributeText (attr, "text/css", el, doc);
