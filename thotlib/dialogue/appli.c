@@ -2822,8 +2822,8 @@ ThotBool FrameMouseWheelCallback(
     FrameToView (frame, &document, &view);
     if (thot_mod_mask & THOT_MOD_CTRL)
     {
-      /* if CTRL is down then zoom in */
-      ZoomIn (document, view);
+      /* if CTRL is down then zoom */
+      ZoomOut (document, view);	   
     }
     else
     { 
@@ -2836,7 +2836,8 @@ ThotBool FrameMouseWheelCallback(
     FrameToView (frame, &document, &view); 
     if (thot_mod_mask & THOT_MOD_CTRL)
     {
-      ZoomOut (document, view);	   
+      /* if CTRL is down then zoom */
+      ZoomIn (document, view);
     }
     else
     {
