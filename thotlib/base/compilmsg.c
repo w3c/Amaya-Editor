@@ -38,29 +38,22 @@ STRING              text;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
-   TEXTMETRIC  textMetric;
-   HFONT       hFont, hOldFont;
-   int         cxChar, cyChar;
+	if ( COMPWnd )
+	{		
+		LPSTR pText = (LPSTR)malloc( strlen(text) + 3 );
+		if ( pText )
+		{
+			// Set caret to end of current text
+			int ndx = GetWindowTextLength (COMPWnd);
+			SetFocus (COMPWnd);   
+			SendMessage (COMPWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
+			// Append text
+			sprintf( pText, "%s\r\n", text );
+			SendMessage (COMPWnd, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) pText));
 
-   if (compilersDC) {
-      hFont = CreateFont (16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET, 
-                          OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, 
-                          DEFAULT_PITCH | FF_DONTCARE, TEXT("Small Font"));
-
-      hOldFont = SelectObject (compilersDC, hFont);
-
-      GetTextMetrics (compilersDC, &textMetric);
-      cxChar = textMetric.tmAveCharWidth;
-      cyChar = textMetric.tmHeight + textMetric.tmExternalLeading + 1;
-
-      _CY_ += cyChar;
-
-      if (!TextOut (compilersDC, 5, _CY_, text, ustrlen (text)))
-         MessageBox (NULL, TEXT("Error Writing text"), TEXT("Thot Compilers"), MB_OK);
-
-      SelectObject (compilersDC, hOldFont);
-	  DeleteObject (hFont);
-   } 
+			free( pText );
+		}
+	}
 #  else  /* _WINDOWS */
    fprintf (stderr, text);
 #  endif /* _WINDOWS */
@@ -81,36 +74,23 @@ int                 msgType;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
-   TEXTMETRIC  textMetric;
-   HFONT       hFont, hOldFont;
-   int         cxChar, cyChar;
+	if ( COMPWnd )
+	{
+		LPSTR pText = (LPSTR)malloc( strlen(text) + 3 );
+		if ( pText )
+		{
+			// Set caret to end of current text
+			int ndx = GetWindowTextLength (COMPWnd);
+			SetFocus (COMPWnd);   
+			SendMessage (COMPWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
+			// Append text
+			sprintf( pText, "%s\r\n", text );
+			SendMessage (COMPWnd, EM_REPLACESEL, 0, (LPARAM) ((LPSTR) pText));
 
-   if (compilersDC) {
-      /* hFont = CreateFont (16, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, ANSI_CHARSET, 
-                          OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, 
-                          DEFAULT_PITCH | FF_DONTCARE, "Times New Roman"); */
-      hFont = CreateFont (16, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE, ANSI_CHARSET, 
-                          OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, 
-                          DEFAULT_PITCH | FF_DONTCARE, TEXT("Arial"));
-
-      hOldFont = SelectObject (compilersDC, hFont);
-
-      GetTextMetrics (compilersDC, &textMetric);
-      cxChar = textMetric.tmAveCharWidth;
-      cyChar = textMetric.tmHeight + textMetric.tmExternalLeading + 1;
-
-	  if (_CY_ >= 550) {
-         ScrollWindow (COMPWnd, 0, -cyChar, NULL, NULL);
-         UpdateWindow (COMPWnd);
-	  } else
-           _CY_ += cyChar;
-
-      if (!TextOut (compilersDC, 5, _CY_, text, ustrlen (text)))
-         MessageBox (NULL, TEXT("Error Writing text"), TEXT("Thot Compilers"), MB_OK);
-
-      SelectObject (compilersDC, hOldFont);
-	  DeleteObject (hFont);
-   } 
+			free( pText );
+		}
+	}
+	
 #  else  /* _WINDOWS */
    fprintf (stderr, text);
 #  endif /* _WINDOWS */
@@ -163,8 +143,8 @@ int                 lineNum;
    TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, ERR_LINE), lineNum);
    if (index != 0)
      {
-	for (i = 0; i < index - 1; buffer[i++] = SPACE) ;
-	buffer[index - 1] = TEXT('*');
+	for (i = 0; i < index - 1; buffer[i++] = ' ') ;
+	buffer[index - 1] = '*';
 	buffer[index] = EOS;
 	TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, COMPIL_STRING), inputline, buffer);
      }
@@ -206,8 +186,8 @@ STRING              string;
    TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, ERR_LINE), lineNum);
    if (index != 0)
      {
-	for (i = 0; i < index - 1; buffer[i++] = SPACE) ;
-	buffer[index - 1] = TEXT('*');
+	for (i = 0; i < index - 1; buffer[i++] = ' ') ;
+	buffer[index - 1] = '*';
 	buffer[index] = EOS;
 	TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, COMPIL_STRING), inputline, buffer);
      }
