@@ -163,6 +163,7 @@ typedef struct _AHTReqContext
      *      libwww.h and davlib.h */
     void      *dav_context;
 #endif /* DAV */    
+    char               *refdocUrl;        /* the doc number for the reference document */
   }
 AHTReqContext;
 
