@@ -1727,6 +1727,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
       UpdateWindow (hwndClient);
       SetWindowText (hwnd, wTitle);
       DragAcceptFiles (hwnd, TRUE);
+
       return 0L;
 
     case WM_PALETTECHANGED: 
@@ -1818,7 +1819,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case CBN_SELENDOK:
 	case CBN_SELENDCANCEL:
-	case CBN_KILLFOCUS:
+	/*case CBN_KILLFOCUS:*/
 	case CBN_CLOSEUP:
 	case CBN_DROPDOWN:
 	  SendMessage (FrameTable[frame].Text_Zone, mMsg, wParam, lParam);
@@ -2008,7 +2009,10 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       WIN_HandleExpose (hwnd, frame, wParam, lParam);	   
       return 0;
 
-    case WM_SIZE:
+    case WM_SIZE:	
+		/*disable focus selection on text zon */
+		SendMessage (GetWindow(FrameTable[frame].Text_Zone, GW_CHILD),  
+					EM_SETSEL,     1,      1);  
       cx         = LOWORD (lParam);
       cy         = HIWORD (lParam);
       WIN_ChangeViewSize (frame, cx, cy, 0, 0);
