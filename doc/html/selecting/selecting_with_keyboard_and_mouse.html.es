@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.7, see http://www.w3.org/Amaya/" />
   <title>Seleccionar con el Teclado y el Ratón</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -48,7 +47,7 @@ contenido en el elemento body etc.).</p>
 
 <p>Al seleccionar <strong>este elemento de estructura</strong> (por ejemplo,
 haciendo clic en la palabra estructura y a continuación pulsando
-<kbd>Escape</kbd> o <kbd>F2</kbd>), en la barra de estado se mostrará</p>
+<kbd>F2</kbd>), en la barra de estado se mostrará</p>
 
 <p><samp>strong \ p \ div \ body \ html</samp></p>
 
@@ -74,11 +73,10 @@ haciendo clic en la palabra estructura y a continuación pulsando
 <ul>
   <li>Para seleccionar elementos de estructura utilizando el teclado
     <ul>
-      <li>Pulsa la tecla <kbd>Escape</kbd> en Unix/Mac o la tecla
-        <kbd>F2</kbd> en Windows para seleccionar el elemento padre en la
-        estructura del documento. Pulsa la tecla varias veces para ir
-        seleccionando los elementos de nivel superior (y todo su contenido)
-        hasta llegar a la raíz.</li>
+      <li>Pulsa la tecla <kbd>F2</kbd> en Windows para seleccionar el
+        elemento padre en la estructura del documento. Pulsa la tecla varias
+        veces para ir seleccionando los elementos de nivel superior (y todo
+        su contenido) hasta llegar a la raíz.</li>
       <li>Pulsa <kbd>Control -</kbd> (tecla menos) para seleccionar un
         elemento hijo.</li>
       <li>Pulsa <kbd>Control k</kbd> para seleccionar el siguiente elemento

@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Marcado en línea</title>
-  <meta name="GENERATOR" content="amaya 8.3-, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.7, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -53,9 +52,9 @@ modificar el formato de los elementos en línea.</p>
 <p>Puedes marcar las citas insertadas en el texto con el elemento <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-Q"><code>q</code></a>.
 Este elemento se encuentra en el comando de menú <strong>XHTML &gt; Elemento
-carácter &gt; Remarcado (Quotation q)</strong> y también puedes utilizar el
-atajo de teclado <kbd>Ctrl i Ctrl q</kbd>. Puedes hacer referencia a la
-fuente dando el URI en el atributo <code>cite</code>.</p>
+carácter &gt; Cita (q)</strong> y también puedes utilizar el atajo de teclado
+<kbd>Ctrl i Ctrl q</kbd>. Puedes hacer referencia a la fuente dando el URI en
+el atributo <code>cite</code>.</p>
 
 <p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
 modificar el formato de las citas en línea. La recomendación HTML establece
@@ -95,16 +94,16 @@ elementos <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ABBR"><code>abbr</code></a>
 y <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM"><code>acronym</code></a>
-que se encuentran en el submenú <strong>XHTML&gt; Tipo de
+que se encuentran en el submenú <strong>XHTML &gt; Tipo de
 información</strong>. El atajo de teclado para Acronym es <kbd>Ctrl i Ctrl
 y</kbd>. Estos elementos pueden ser reconocidos por diferentes tipos de
 sistemas. Puedes utilizar el atributo <code>title</code> para indicar el
 significado de un acrónimo. Selecciona el texto a marcar (por ejemplo, W3C) y
 selecciona el comando de menú <strong>XHTML&gt; Tipo de información &gt;
-Acrónimo</strong>. A continuación selecciona el elemento completo (con
-<kbd>Escape</kbd> en Unix y con <kbd>F2</kbd> en Windows), elige el comando
-de menú <strong>Atributos &gt; Título</strong>, escribe <kbd>World Wide Web
-Consortium</kbd> y finalmente pulsa Aplicar.</p>
+Acrónimo</strong>. A continuación selecciona el elemento completo con
+<kbd>F2</kbd>, elige el comando de menú <strong>Atributos &gt;
+Título</strong>, escribe <kbd>World Wide Web Consortium</kbd> y finalmente
+pulsa Aplicar.</p>
 
 <p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
 modificar el formato de acrónimos y abreviaturas.</p>
@@ -117,7 +116,7 @@ modificar el formato de acrónimos y abreviaturas.</p>
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-del"
 name="DEL"><code>del</code></a> e <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins"><code>INS</code></a>
-se encuentran en el submenú <strong>XHTML&gt; Tipo de información</strong>
+se encuentran en el submenú <strong>XHTML &gt; Tipo de información</strong>
 para marcar el texto <del>que será eliminado</del> o que <ins>ya ha sido
 añadido.</ins></p>
 
@@ -140,7 +139,7 @@ modificar el formato de añadidos y eliminaciones.</p>
 <p>Puedes aplicar ambos tipos de énfasis mediante los botones <img
 src="../../images/Em.gif" alt="Emphasis" /> y <img
 src="../../images/Strong.gif" alt="Strong" /> de la barra de botones, o
-mediante el submenú <strong>XHTML&gt; Tipo de información</strong>. Los
+mediante el submenú <strong>XHTML &gt; Tipo de información</strong>. Los
 atajos de teclado correspondientes son <kbd>Ctrl i Ctrl e</kbd> para el
 énfasis normal (el énfasis se suele mostrar a menudo mediante itálicas) y
 <kbd>Ctrl i Ctrl s</kbd> para el énfasis fuerte (el énfasis fuerte se suele
@@ -151,10 +150,10 @@ actual.</p>
 <p>Los elementos de énfasis conmutan, es decir, puedes eliminar el énfasis de
 un elemento seleccionando el elemento y aplicando el énfasis correspondiente.
 Por ejemplo, sitúa el cursor en el interior de un elemento
-<code>strong</code>, pulsa <kbd>F2</kbd> (Windows) o <kbd>Escape</kbd> (Unix)
-para seleccionar el elemento y utiliza el atajo de teclado, la opción del
-menú o el botón <img src="../../images/Strong.gif" alt="Strong" /> para
-eliminar el elemento <code>strong</code>.</p>
+<code>strong</code>, pulsa <kbd>F2</kbd> para seleccionar el elemento y
+utiliza el atajo de teclado, la opción del menú o el botón <img
+src="../../images/Strong.gif" alt="Strong" /> para eliminar el elemento
+<code>strong</code>.</p>
 
 <p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
 modificar el formato de ambos tipos de énfasis.</p>

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -6,8 +5,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Soporte de marcadores</title>
   <style type="text/css">
+
   </style>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.7, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -154,8 +154,6 @@ ventana que muestra tus marcadores y temas:</p>
 alt="Ventana Propiedades de tema" border="2" /></p>
 </div>
 
-
-
 <p>En esta ventana de marcadores, los temas están precedidos con el icono
 <img alt="collapsed topic" src="../images/closed.png" /> o <img
 alt="expanded topic" src="../images/open.png" />. El resto de items son
@@ -172,7 +170,7 @@ plegado, y el icono <img alt="expanded topic" src="../images/open.png" />
 representa un tema desplegado.</p>
 
 <p>Para borrar un item, coloca el cursor sobre él y selecciónalo pulsando la
-tecla <em>Escape</em> (Linux) o <em>F2</em> (WIN32):</p>
+tecla <kbd>F2</kbd>:</p>
 
 <p style="text-align: center"><img src="../images/bmview2.png"
 alt="Tema e items seleccionados" border="2" /></p>

@@ -63,7 +63,7 @@
 61 Japonés (ISO-2022-JP)
 62 Japonés (EUC-JP)
 63 Japonés (Shift-JIS)
-64 Errores &sintácticos
+64 Mostrar errores &sintácticos
 65 &Propiedades
 66 Configurar e imprimir...
 67 &Imprimir
@@ -101,8 +101,8 @@
 99 h5
 100 h6
 101 Lista
-102 Lista no numerada (ul)
-103 Lista numerada (ol)
+102 Lista no ordenada (ul)
+103 Lista ordenada (ol)
 104 Lista de definición (dl)
 105 Término (dt)
 106 Definición (dd)
@@ -141,11 +141,11 @@
 139 Reducir extensión horizontal
 140 Reducir extensión vertical
 141 Seleccionar fila
-142 Insertar fila
-143 Añadir fila
+142 Insertar fila delante
+143 Añadir fila detrás
 144 Seleccionar columna
-145 Insertar columna
-146 Añadir columna
+145 Insertar columna delante
+146 Añadir columna detrás
 147 Pegar delante
 148 Pegar detrás
 149 Área de mapa
@@ -228,11 +228,11 @@
 226 Reducir extensión horizontal
 227 Reducir extensión vertical
 228 Seleccionar fila
-229 Insertar fila
-230 Añadir fila
+229 Insertar fila delante
+230 Añadir fila detrás
 231 Seleccionar columna
-232 Insertar columna
-233 Añadir columna
+232 Insertar columna delante
+233 Añadir columna detrás
 234 Pegar delante
 235 Pegar detrás
 236 &Ver Biblioteca SVG

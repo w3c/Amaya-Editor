@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 8.7, see http://www.w3.org/Amaya/" />
   <title>Crear un Elemento Destino</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -37,11 +36,8 @@ convertirlo en elemento destino.</p>
 
 <p class="ProcedureCaption">Para crear un elemento destino:</p>
 <ol>
-  <li>Selecciona una cadena de caracteres en el elemento o pulsa
-    <kbd>Escape</kbd> (Unix) o <kbd>F2</kbd> (Windows) para
-    seleccionar el elemento completo.
-    
-  </li>
+  <li>Selecciona una cadena de caracteres en el elemento o pulsa 
+    <kbd>F2</kbd> para seleccionar el elemento completo.</li>
   <li>Elige el comando de menú <strong>Enlaces &gt; Crear
     destino</strong><strong>.</strong> El elemento seleccionado tiene ahora
     un atributo <code>ID</code> que lo identifica como elemento destino.
@@ -49,7 +45,6 @@ convertirlo en elemento destino.</p>
     Formateada, si <strong>Mostrar destinos</strong> está activada, el
     elemento destino estará precedido por un icono. En la vista Enlaces, los
     iconos que identifican los destinos se muestran siempre.
-    
     <p class="ProcedureNote"><strong>Nota:</strong> También puedes crear
     directamente el atributo <code>ID</code> seleccionado el elemento y
     utilizando el menú <strong>Atributos</strong>. Cuando escribe el valor

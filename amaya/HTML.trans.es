@@ -90,24 +90,24 @@ Lista de definición:*{(li{(list:*{(li2:li)+}|other:*)+})+};
 	li2 > dl.dd:;
 	}
 
-Lista no numerada:(dl{(dt|dd{(*)+})+})+;
+Lista no ordenada:(dl{(dt|dd{(*)+})+})+;
 	{
 	dt > ul:li;
 	* > ul.li.ul:li.*;
 	}
 
-Lista numerada:(dl{(dt|dd{(*)+})+})+;
+Lista ordenada:(dl{(dt|dd{(*)+})+})+;
 	{
 	dt > ol:li;
 	* > ol.li.ol:li.*;
 	}
 
-Lista no numerada:(ol{(li{(*)+})+})+;
+Lista no ordenada:(ol{(li{(*)+})+})+;
         {
         * > ul:li.*;
         }
 
-Lista numerada:(ul{(li{(*)+})+})+;
+Lista ordenada:(ul{(li{(*)+})+})+;
         {
 	* > ol:li.*;
         }
@@ -358,7 +358,7 @@ Eliminar el submenú: (optgroup{*+})+;
 ! Listas en/desde elementos
 !!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-Lista no numerada: (p|ol|menu|dir|pre|form)+;
+Lista no ordenada: (p|ol|menu|dir|pre|form)+;
    	{
         p > ul:<li style=p.style>;
         ol > ul;
@@ -366,7 +366,7 @@ Lista no numerada: (p|ol|menu|dir|pre|form)+;
         form > ul:li.form;
         }
 
-Lista numerada:(p|ul|menu|dir|pre|form)+;
+Lista ordenada:(p|ul|menu|dir|pre|form)+;
 	   {
         p > ol:li;
         ul > ol;
@@ -442,7 +442,7 @@ Tabla: dl{(dt|dd)+};
 	dd > table.tbody.tr:td;
 	}
 
-Lista numerada:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+Lista ordenada:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
   	{
 	caption > :ol.li.strong;
 	block > :ol;
@@ -453,7 +453,7 @@ Lista numerada:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
 	th2 > ol.li.ul:li;
 	}
 
-Lista no numerada:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
+Lista no ordenada:table{?caption,(block:*{(tr{(td|th),?(td2:td|th2:th)+})+})+};
 	{
 	caption > :ul.li.strong;
 	block > :ul;

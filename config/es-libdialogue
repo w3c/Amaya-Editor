@@ -17,7 +17,7 @@
 15 2 páginas/hoja
 16 4 páginas/hoja
 17 %s
-18 No hay suficiente memoria
+18 Memoria insuficiente
 19 *** Amaya: Error Irrecuperable ***
 20 si hay documentos modificados, se guardarán
 21 Archivo .TRA incorrecto: %s
@@ -71,7 +71,7 @@
 69 Archivo PostScript
 70 Impresora
 71 Buscar:
-72 No haga caso del caso
+72 Ignorar mayúsculas/minúsculas
 73 Reemplazar por:
 74 Reemplazar
 75 No reemplazar
@@ -136,14 +136,14 @@
 134 Formato de documento
 135 Eventos
 136 Eliminar atributo
-137 El botón izquierdo fija el color de texto de la selección
-138 El botón central o derecho fija el color de fondo de la selección
+137 El botón izquierdo fija el color del texto de la selección
+138 El botón derecho o el central fijan el color del fondo de la selección
 139 Más ...
 140 Obtener
 141 Color
-142 **Background color
-143 **Foreground color
-144 **Switch colors
+142 Color del fondo
+143 Color del texto
+144 Intercambiar colores
 145 No se puede insertar ningún elemento
 146 Comprobar
 147 Buscar/Saltar
@@ -169,12 +169,12 @@
 167 No disponible en esta versión
 168 Activar/Desactivar paleta
 169 Herramientas
-170 **Mandatory attribute, it can't be removed
+170 Atributo obligatorio, no puede eliminarse
 171 Actualizar
-172 **Left
-173 **Right
-174 **Center
-175 **Justify
+172 Izquierda
+173 Derecha
+174 Centrado
+175 Justificado
 176 Aplicar clase
 177 Seleccionar una clase o seudo-clase
-178 **Use F2 key to select the parent element
+178 Utilice la tecla F2 para seleccionar el elemento padre
