@@ -1066,7 +1066,12 @@ int                 status;
 
    if (!AmayaIsAlive ())           
       me->reqStatus = HT_ABORT; 
-   
+
+   /* trying to protect against this problem... hard to place
+      the detection elsewhere :-/ */
+   if (IsHTTP09Error (request))
+     status = -1;
+
    if (status == HT_LOADED || 
        status == HT_CREATED || 
        status == HT_NO_DATA ||
@@ -1078,7 +1083,7 @@ int                 status;
 #endif /* AMAYA_WWW_CACHE */
        me->reqStatus == HT_ABORT)
      error_flag = FALSE;
-   else
+     else
      error_flag = TRUE;
 
    /* output any errors from the server */

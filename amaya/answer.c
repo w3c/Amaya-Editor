@@ -371,6 +371,46 @@ HTAlertPar         *reply;
 }
 
 /*----------------------------------------------------------------------
+   IsHTTP09Error
+   Returns TRUE if libwww forced a downgrade to 0.9 while fulfilling
+   the request. FALSE, otherwise.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool IsHTTP09Error (HTRequest * request)
+#else
+ThotBool IsHTTP09Error (request)
+HTRequest * request;
+#endif
+{
+   HTList             *cur;
+   HTError            *pres;
+   ThotBool           found = FALSE;
+   int                 index;
+
+   cur = HTRequest_error (request);
+
+   while ((pres = (HTError *) HTList_nextObject (cur)))
+     {
+       index = HTError_index (pres);
+       if (index == HTERR_HTTP09) 
+	 {
+	   found = TRUE;
+	   if (WWWTRACE)
+	     HTTrace ("IsHTTP09Error..... Detected 0.9 backward compatibility\n");
+	   /* we set up a more explicit message, as I don't know what may be
+	      before this error */
+	   HTRequest_addError (request, ERR_FATAL, NO, HTERR_HTTP09,
+			       "Error: Server or network forced libwww to downgrade to HTTP/0.9 for this host.\nPlease quite Amaya.", 0, NULL);
+	   /* how do we switch back to 1.x? */
+	   /* HTNet_setHost ??? */
+	   break;
+	 }
+     }
+   return (found);
+}
+
+
+/*----------------------------------------------------------------------
    AHTError_print (hacked from HTError_print)
    default function that creates an error message using
    HTAlert() to put out the contents of the error_stack messages.
@@ -725,11 +765,20 @@ int status;
 	    }
 	  status = -500; 
 	}
+      else if (errorElement == HTERR_HTTP09)
+	{
+	  TtaSetStatus (me->docid, 1,
+			TEXT("Server or network forced libwww to downgrade to HTTP/0.9."),
+			(STRING) NULL);
+	  usprintf (AmayaLastHTTPErrorMsg,
+		    TEXT("Server or network forced libwww to downgrade to HTTP/0.9 for this host. Please quit."));
+	}
       else
 	{
 	  usprintf (msg_status, TEXT("%d"), status); 
 	  TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
-	  usprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
+	  usprintf (AmayaLastHTTPErrorMsg, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), 
+		    msg_status);
 	}
     }
 }
