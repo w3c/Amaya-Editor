@@ -750,6 +750,8 @@ static ThotBool ExportSubTree (Element subTree, Document doc)
     TtaExportTree (subTree, doc, tmpfilename, "MathMLT");     
   else if (strcmp (TtaGetSSchemaName (sch), "SVG") == 0)
     TtaExportTree (subTree, doc, tmpfilename, "SVGT");     
+  else if (strcmp (TtaGetSSchemaName (sch), "Annot") == 0)
+    TtaExportTree (subTree, doc, tmpfilename, "AnnotT");     
   else
     if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
       TtaExportTree (subTree, doc, tmpfilename, "HTMLTX");     
