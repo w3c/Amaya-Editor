@@ -3504,11 +3504,13 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
   FunctionType        func;
   PtrAbstractBox      pAb, pReaff, pPR;
   PtrAbstractBox      pAbNext, pAbChild, pAbSibling;
-  PtrPSchema          pSchP, pSPR;
+  PtrPSchema          pSchP, pSPR, elPSch;
+  PtrSSchema          elSSch;
+  PtrCondition        cond;
   PtrAttribute        pAttrib;
   PtrHandlePSchema    pHd;
   TypeUnit            unit;
-  int                 view, viewSch, val, valNum;
+  int                 view, viewSch, val, valNum, index;
   PtrAttributePres    attrBlock;
   ThotBool            appl, stop, sameType, found;
   ThotBool            existingView;
@@ -3883,7 +3885,82 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 	  firstOfType = pR;
 	}
       }
-     while (valNum > 0);  /* fin de la boucle sut les valeurs de l'attribut */
+    while (valNum > 0);  /* fin de la boucle sur les valeurs de l'attribut */
+
+    /* if we are removing an attribute, check whether there are some rules
+       attached to the element type of the form "if not attr" */
+    if (remove && pAttr->AeAttrSSchema == pEl->ElStructSchema)
+      {
+	SearchPresSchema (pEl, &elPSch, &index, &elSSch, pDoc);
+	if (elSSch == pAttr->AeAttrSSchema)
+	  {
+	    pR = elPSch->PsElemPRule->ElemPres[index - 1];
+	    while (pR)
+	      {
+		if (pR->PrType == PtFunction)
+		  {
+		    cond = pR->PrCond;
+		    while (cond)
+		      {
+			if (cond && !cond->CoNotNegative &&
+			    cond->CoCondition == PcAttribute &&
+			    cond->CoTypeAttr == pAttr->AeAttrNum &&
+			    !cond->CoTestAttrValue)
+			  {
+			    for (view = 1; view <= MAX_VIEW_DOC; view++)
+			      {
+				existingView = pDoc->DocView[view - 1].DvPSchemaView > 0;
+				if (existingView)
+				  {
+				    viewSch = AppliedView (pEl, pAttr, pDoc, view);
+				    /* look at additional presentation schemas only for view 1 */
+				    existingView = (pHd == NULL || viewSch == 1);
+				  }
+				if (existingView &&
+				    CondPresentation (pR->PrCond, pEl, pAttr,
+						   pEl, viewSch, elSSch, pDoc))
+				  {
+				    func = pR->PrPresFunction;
+				    if (pEl->ElAbstractBox[view - 1] &&
+					(func == FnCreateBefore ||
+					 func == FnCreateAfter ||
+					 func == FnCreateWith ||
+					 func == FnCreateFirst ||
+					 func == FnCreateLast))
+				      {
+				        pAb = AbsBoxPresType (pEl->ElAbstractBox[view - 1], pR, elPSch);
+				        if (!pAb)
+					  {
+					    pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
+					    pAb = CrAbsBoxesPres (pEl, pDoc,
+					        pR, pEl->ElStructSchema, pAttr,
+					        view, elPSch, TRUE);
+					    if (pAb)
+					      {
+						ApplyRefAbsBoxNew (pAb, pAb,
+							        &pReaff, pDoc);
+						if (pReaff)
+						  {
+						  pReaff = Enclosing (pAb, pReaff);
+						  pDoc->DocViewModifiedAb[view-1] =
+						        Enclosing (pReaff, pDoc->DocViewModifiedAb[view-1]);
+						  }
+					      }
+					  }
+				      }
+				  }
+			      }
+			  }
+			cond = cond->CoNextCondition;
+		      }
+		  }
+		if (pR->PrType <= PtFunction)
+                  pR = pR->PrNextPRule;
+		else
+		  pR = NULL;
+	      }
+	  } 
+      } 
 
     /* on traite les schemas de presentation de plus forte priorite' */
     if (pHd)
