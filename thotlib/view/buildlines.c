@@ -1928,7 +1928,8 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		  (lastbox->BxAbstractBox->AbFloat == 'R' &&
 		   !IsFloatSet (lastbox, *floatR, pBlock)))
 		{
-		  if (pBlock->BxType == BoFloatBlock &&
+		  if ((pBlock->BxType == BoFloatBlock ||
+		       lastbox->BxAbstractBox->AbClear != 'N') &&
 		      pLine->LiFirstBox != pNextBox)
 		    {
 		      /* report the floating box to the next line */
@@ -2446,14 +2447,16 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	      ThotBool *breakLine, int frame, int indent, PtrBox *floatL,
 	      PtrBox *floatR)
 {
-  PtrBox              boxPrev;
+  PtrBox              boxPrev = NULL;
   int                 x, y;
 
   /* look for the box in the right float list */
   if (box->BxAbstractBox->AbFloat == 'L')
     {
       /* left float */
-      boxPrev = *floatL;
+      if (box->BxAbstractBox->AbClear != 'L' &&
+	  box->BxAbstractBox->AbClear != 'B')
+	boxPrev = *floatL;
       if (boxPrev &&
 	  boxPrev->BxYOrg + boxPrev->BxHeight >= pLine->LiYOrg &&
 	  box->BxWidth <= pLine->LiXMax)
@@ -2469,7 +2472,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	  if (boxPrev)
 	    /* the box is set at the bottom of the previous box */
 	    y = boxPrev->BxYOrg + boxPrev->BxHeight;
-	  else if (pLine && pLine->LiPrevious)
+	  else if (pLine /*&& pLine->LiPrevious*/)
 	    /* the box is set at the top of the parent box */
 	    /*y = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHeight;*/
 	    y = pLine->LiYOrg;
@@ -2489,7 +2492,9 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   else
     {
       /* right float */
-      boxPrev = *floatR;
+      if (box->BxAbstractBox->AbClear != 'R' &&
+	  box->BxAbstractBox->AbClear != 'B')
+	boxPrev = *floatR;
      if (boxPrev &&
 	  boxPrev->BxYOrg + boxPrev->BxHeight >= pLine->LiYOrg &&
 	  box->BxWidth <= pLine->LiXMax - pLine->LiXOrg)
@@ -2505,7 +2510,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	  if (boxPrev)
 	    /* the box is set at the bottom of the previous box */
 	    y = boxPrev->BxYOrg + boxPrev->BxHeight;
-	  else if (pLine && pLine->LiPrevious)
+	  else if (pLine /*&& pLine->LiPrevious*/)
 	    /* the box is set at the top of the parent box */
 	    /*y = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHeight;*/
 	    y = pLine->LiYOrg;

@@ -3278,7 +3278,6 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		    }
 		}
 	    }
-
 	  /* Check the validity of dependency rules */
 	  checkParent = TRUE;
 	  if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)
