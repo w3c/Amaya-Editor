@@ -2690,7 +2690,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		   gtk_widget_show (menu_item);
 		   GTK_WIDGET_SET_FLAGS (menu_item, GTK_SENSITIVE);
 		   if (ptrmenu->MenuHelp == TRUE)
-		     gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
+		       gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
 		   gtk_container_add (GTK_CONTAINER (menu_bar), menu_item);
 		   gtk_object_set_data (GTK_OBJECT(menu_item), "AccelGroup", (gpointer)accel_group);
 		   w = menu_item;

@@ -1695,7 +1695,7 @@ void TtaInitDialogueTranslations (ThotTranslations translations)
    TtaChangeDialogueFonts change les polices de caracteres du dialogue.
   ----------------------------------------------------------------------*/
 void TtaChangeDialogueFonts (char *menufont, char *formfont)
-{
+{ 
 #ifdef _WINDOWS
    /* see code/chap04/ezfont.c */
 #endif
@@ -1714,14 +1714,15 @@ void TtaChangeDialogueFonts (char *menufont, char *formfont)
        formFONT = XmFontListCreate (XLoadQueryFont (GDp, formfont), XmSTRING_DEFAULT_CHARSET);
      }
 #else
-   if (menufont != NULL)
-     {
+   
+   if (menufont != NULL)   {
        DefaultFont = gdk_font_load(menufont);
-     }
-   if (formfont != NULL)
-     {
+   }
+   
+   if (formfont != NULL){
        formFONT = gdk_font_load(formfont);
-     }
+   }
+   
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 }
@@ -2560,6 +2561,10 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	     menu = XmCreatePulldownMenu (XtParent (parent), "Dialogue", args, n);
 #else /* _GTK */
 	     menu = gtk_menu_new ();
+	     /* 
+		peut -être rajouter une bouton pour détacher le menu ?
+		se fait avec gtk_menu_set_tearoff_state;
+	     */
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 	  }
@@ -2725,16 +2730,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #else /* _GTK */
 			 if (&equiv[eindex] != EOS)
 			   strcpy (equiv_item, &equiv[eindex]); 
-			 /*
-			 if (&equiv[eindex] != EOS)
-			   {
-			     accelw = gtk_accel_label_new (&equiv[eindex]);
-			     gtk_widget_show_all (accelw);
-			   }
-			 else
-			   {
-			     accelw = NULL;
-			     }*/
 			 accelw = NULL;
 #endif /* !_GTK */
 #endif /* _WINDOWS */
@@ -2763,30 +2758,43 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			 /*WIN_AddFrameCatalogue (parent, catalogue);*/
 #else  /* _WINDOWS */
 #ifdef _GTK
-			 if (equiv_item && equiv_item [0] != 0)
-			   {
-			     sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
-			     equiv_item [0] = 0;
-			   }
+			
+			sprintf (menu_item, "%s", &text[index + 1]);
+			/* \t doesn't mean anything to gtk... to we align ourself*/
+			 if (equiv_item && equiv_item[0] != EOS){
+			     GtkWidget           *table;
+			     ThotWidget          wlabel;
+			     
+			     w = gtk_menu_item_new ();
+			     
+			     table = gtk_table_new (1, 3, FALSE);    
+			     gtk_container_add (GTK_CONTAINER (w), table);  
+			     
+			     wlabel = gtk_label_new(menu_item);
+			     /*(that's left-justified, right is 1.0, center is 0.5).*/
+			     /*gtk_label don't seem to like table cell...so*/
+			     gtk_misc_set_alignment(GTK_MISC(wlabel), 0.0 , 0); 
+			     gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 0, 1, 0, 1);   
+			     gtk_widget_show (wlabel);
+			     gtk_label_set_justify(GTK_LABEL(wlabel), GTK_JUSTIFY_LEFT);
+			     
+			     wlabel = gtk_label_new(equiv_item);
+			     gtk_misc_set_alignment(GTK_MISC(wlabel), 1.0, 0); 
+			     gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 2, 3, 0, 1);   
+			     gtk_widget_show (wlabel);
+			     gtk_widget_show (table);
+			     
+			 }
 			 else
-			   sprintf (menu_item, "%s", &text[index + 1]);
-      
-			 w = gtk_menu_item_new_with_label (menu_item);
+			     w = gtk_menu_item_new_with_label (menu_item);
+			 gtk_signal_connect (GTK_OBJECT(w), 
+			     "activate",
+			     GTK_SIGNAL_FUNC (CallMenuGTK), 
+			     (gpointer)catalogue);	
+			 gtk_widget_show (w);
+			 gtk_menu_append (GTK_MENU (menu), w);
+			 adbloc->E_ThotWidget[ent] = w;
 
-			 /*			 GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_ACCEL_VISIBLE);*/
-			 /*
-			 if (accelw != NULL)
-			   {
-			     gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
-			   }
-			 gtk_widget_unlock_accelerators (w);
-			 */
-
-                         gtk_widget_show_all (w);
-                         gtk_menu_append (GTK_MENU (menu), w);
-                         ConnectSignalGTK (GTK_OBJECT(w), "activate",
-					   GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
-                         adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
 			 w = XmCreatePushButton (menu, &text[index + 1], args, n);
 			 XtManageChild (w);
@@ -2815,22 +2823,36 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			 /* WIN_AddFrameCatalogue (parent, catalogue); */
 #else  /* _WINDOWS */
 #ifdef _GTK
-			 if (equiv_item && equiv_item [0] != 0)
-			   {
-			     sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
-			     equiv_item [0] = 0;
-			   }
+			 /* \t doesn't mean anything to gtk... to we align ourself*/
+			 sprintf (menu_item, "%s", &text[index + 1]);
+			 if (equiv_item && equiv_item[0] != 0){
+			     GtkWidget           *table;
+			     ThotWidget          wlabel;
+			     
+			     w = gtk_check_menu_item_new ();
+			     
+			     table = gtk_table_new (1, 3, FALSE);    
+			     gtk_container_add (GTK_CONTAINER (w), table);  
+			     
+			     wlabel = gtk_label_new(menu_item);
+			     /*(that's left-justified, right is 1.0, center is 0.5).*/
+			     /*gtk_label don't seem to like table cell...so*/
+			     gtk_misc_set_alignment(GTK_MISC(wlabel), 0.0 , 0); 
+			     gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 0, 1, 0, 1);   
+			     gtk_widget_show (wlabel);
+			     gtk_label_set_justify(GTK_LABEL(wlabel), GTK_JUSTIFY_LEFT);
+			     
+			     wlabel = gtk_label_new(equiv_item);
+			     gtk_misc_set_alignment(GTK_MISC(wlabel), 1.0, 0); 
+			     gtk_table_attach_defaults (GTK_TABLE(table), wlabel, 2, 3, 0, 1);   
+			     gtk_widget_show (wlabel);
+			     gtk_widget_show (table);
+			     
+			 }
 			 else
-			   sprintf (menu_item, "%s", &text[index + 1]);
-			 w = gtk_check_menu_item_new_with_label (menu_item);
+			     w = gtk_check_menu_item_new_with_label (menu_item);
 
 			 gtk_widget_show_all (w);
-			 /*
-			 if (accelw != NULL)
-			   {
-			     gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
-			   }
-			 */
 			 gtk_menu_append (GTK_MENU (menu),w);
 			 gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (w), FALSE);
 			 gtk_check_menu_item_set_show_toggle (GTK_CHECK_MENU_ITEM (w), TRUE);
@@ -2878,12 +2900,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			     sprintf (menu_item, "%s", &text[index + 1]);
 			 
 			 w = gtk_menu_item_new_with_label (menu_item);
-			 /*			 GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_ACCEL_VISIBLE);*/
 			 gtk_widget_show_all (w);
-			 /* if (accelw != NULL)
-			   {
-			     gtk_accel_label_set_accel_widget(accelw, GTK_WIDGET(w)); 
-			     }*/
 			 gtk_menu_append (GTK_MENU (menu),w);
 			 adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
@@ -2905,7 +2922,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #else  /* _WINDOWS */
 #ifdef _GTK
 			 w = gtk_menu_item_new_with_label (heading);
-			 /*			 GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_ACCEL_VISIBLE);*/
 			 gtk_widget_show_all (w);
 			 gtk_menu_append (GTK_MENU (menu),w);
 			 adbloc->E_ThotWidget[ent] = w;
@@ -2926,7 +2942,6 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #else  /* _WINDOWS */
 #ifdef _GTK
                          w = gtk_menu_item_new ();
-			 /*			 GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_ACCEL_VISIBLE);*/
                          gtk_widget_show_all (w);
                          gtk_menu_append (GTK_MENU (menu),w); 
 			 adbloc->E_ThotWidget[ent] = w;		 
