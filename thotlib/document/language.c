@@ -43,148 +43,148 @@ ISO639entry;
 
 static ISO639entry	ISO639table[] =
 {
-	{"abkhazian",      "ab"},
-	{"afan (oromo)",   "om"},
-	{"afar",           "aa"},
-	{"afrikaans",      "af"},
-	{"albanian",       "sq"},
-	{"amharic",        "am"},
-	{"arabic",         "ar"},
-	{"armenian",       "hy"},
-	{"assamese",       "as"},
-	{"aymara",         "ay"},
-	{"azerbaijani",    "az"},
-	{"bashkir",        "ba"},
-	{"basque",         "eu"},
-	{"bengali",        "bn"},
-	{"bangla",         "bn"},
-	{"bhutani",        "dz"},
-	{"bihari",         "bh"},
-	{"bislama",        "bi"},
-	{"breton",         "br"},
-	{"bulgarian",      "bg"},
-	{"burmese",        "my"},
-	{"byelorussian",   "be"},
-	{"cambodian",      "km"},
-	{"catalan",        "ca"},
-	{"chinese",        "zh"},
-	{"corsican",       "co"},
-	{"croatian",       "hr"},
-	{"czech",          "cs"},
-	{"danish",         "da"},
-	{"dutch",          "nl"},
-	{"english",        "en"},
-	{"esperanto",      "eo"},
-	{"estonian",       "et"},
-	{"faroese",        "fo"},
-	{"fiji",           "fj"},
-	{"finnish",        "fi"},
-	{"french",         "fr"},
-	{"frisian",        "fy"},
-	{"galician",       "gl"},
-	{"georgian",       "ka"},
-	{"german",         "de"},
-	{"greek",          "el"},
-	{"greenlandic",    "kl"},
-	{"guarani",        "gn"},
-	{"gujarati",       "gu"},
-	{"hausa",          "ha"},
-	{"hebrew",         "he"},
-	{"hindi",          "hi"},
-	{"hungarian",      "hu"},
-	{"icelandic",      "is"},
-	{"indonesian",     "id"},
-	{"interlingua",    "ia"},
-	{"interlingue",    "ie"},
-	{"inuktitut",      "iu"},
-	{"inupiak",        "ik"},
-	{"irish",          "ga"},
-	{"italian",        "it"},
-	{"japanese",       "ja"},
-	{"javanese",       "jv"},
-	{"kannada",        "kn"},
-	{"kashmiri",       "ks"},
-	{"kazakh",         "kk"},
-	{"kinyarwanda",    "rw"},
-	{"kirghiz",        "ky"},
-	{"kurundi",        "rn"},
-	{"korean",         "ko"},
-	{"kurdish",        "ku"},
-	{"laothian",       "lo"},
-	{"latin",          "la"},
-	{"latvian",        "lv"},
-	{"lettish",        "lv"},
-	{"lingala",        "ln"},
-	{"lithuanian",     "lt"},
-	{"macedonian",     "mk"},
-	{"malagasy",       "mg"},
-	{"malay",          "ms"},
-	{"malayalam",      "ml"},
-	{"maltese",        "mt"},
-	{"maori",          "mi"},
-	{"marathi",        "mr"},
-	{"moldavian",      "mo"},
-	{"mongolian",      "mn"},
-	{"nauru",          "na"},
-	{"nepali",         "ne"},
-	{"norwegian",      "no"},
-	{"occitan",        "oc"},
-	{"oriya",          "or"},
-	{"pashto",         "ps"},
-	{"pushto",         "ps"},
-	{"persian",        "fa"},
-	{"polish",         "pl"},
-	{"portuguese",     "pt"},
-	{"punjabi",        "pa"},
-	{"quechua",        "qu"},
-	{"rhaeto-romance", "rm"},
-	{"romanian",       "ro"},
-	{"russian",        "ru"},
-	{"samoan",         "sm"},
-	{"sangho",         "sg"},
-	{"sanskrit",       "sa"},
-	{"scots gaelic",   "gd"},
-	{"serbian",        "sr"},
-	{"serbo-croatian", "sh"},
-	{"sesotho",        "st"},
-	{"setswana",       "tn"},
-	{"shona",          "sn"},
-	{"sindhi",         "sd"},
-	{"singhalese",     "si"},
-	{"siswati",        "ss"},
-	{"slovak",         "sk"},
-	{"slovenian",      "sl"},
-	{"somali",         "so"},
-	{"spanish",        "es"},
-	{"sundanese",      "su"},
-	{"swahili",        "sw"},
-	{"swedish",        "sv"},
-	{"tagalog",        "tl"},
-	{"tajik",          "tg"},
-	{"tamil",          "ta"},
-	{"tatar",          "tt"},
-	{"telugu",         "te"},
-	{"thai",           "th"},
-	{"tibetan",        "bo"},
-	{"tigrinya",       "ti"},
-	{"tonga",          "to"},
-	{"tsonga",         "ts"},
-	{"turkish",        "tr"},
-	{"turkmen",        "tk"},
-	{"twi",            "tw"},
-	{"uigur",          "ug"},
-	{"ukrainian",      "uk"},
-	{"urdu",           "ur"},
-	{"uzbek",          "uz"},
-	{"vietnamese",     "vi"},
-	{"volapuk",        "vo"},
-	{"welsh",          "cy"},
-	{"wolof",          "wo"},
-	{"xhosa",          "xh"},
-	{"yiddish",        "yi"},
-	{"yoruba",         "yo"},
-	{"zhuang",         "za"},
-	{"zulu",           "zu"},
+	{"Abkhazian",      "ab"},
+	{"Afan",           "om"},
+	{"Afar",           "aa"},
+	{"Afrikaans",      "af"},
+	{"Albanian",       "sq"},
+	{"Amharic",        "am"},
+	{"Arabic",         "ar"},
+	{"Armenian",       "hy"},
+	{"Assamese",       "as"},
+	{"Aymara",         "ay"},
+	{"Azerbaijani",    "az"},
+	{"Bashkir",        "ba"},
+	{"Basque",         "eu"},
+	{"Bengali",        "bn"},
+	{"Bangla",         "bn"},
+	{"Bhutani",        "dz"},
+	{"Bihari",         "bh"},
+	{"Bislama",        "bi"},
+	{"Breton",         "br"},
+	{"Bulgarian",      "bg"},
+	{"Burmese",        "my"},
+	{"Byelorussian",   "be"},
+	{"Cambodian",      "km"},
+	{"Catalan",        "ca"},
+	{"Chinese",        "zh"},
+	{"Corsican",       "co"},
+	{"Croatian",       "hr"},
+	{"Czech",          "cs"},
+	{"Danish",         "da"},
+	{"Dutch",          "nl"},
+	{"English",        "en"},
+	{"Esperanto",      "eo"},
+	{"Estonian",       "et"},
+	{"Faroese",        "fo"},
+	{"Fiji",           "fj"},
+	{"Finnish",        "fi"},
+	{"French",         "fr"},
+	{"Frisian",        "fy"},
+	{"Galician",       "gl"},
+	{"Georgian",       "ka"},
+	{"German",         "de"},
+	{"Greek",          "el"},
+	{"Greenlandic",    "kl"},
+	{"Guarani",        "gn"},
+	{"Gujarati",       "gu"},
+	{"Hausa",          "ha"},
+	{"Hebrew",         "he"},
+	{"Hindi",          "hi"},
+	{"Hungarian",      "hu"},
+	{"Icelandic",      "is"},
+	{"Indonesian",     "id"},
+	{"Interlingua",    "ia"},
+	{"Interlingue",    "ie"},
+	{"Inuktitut",      "iu"},
+	{"Inupiak",        "ik"},
+	{"Irish",          "ga"},
+	{"Italian",        "it"},
+	{"Japanese",       "ja"},
+	{"Javanese",       "jv"},
+	{"Kannada",        "kn"},
+	{"Kashmiri",       "ks"},
+	{"Kazakh",         "kk"},
+	{"Kinyarwanda",    "rw"},
+	{"Kirghiz",        "ky"},
+	{"Kurundi",        "rn"},
+	{"Korean",         "ko"},
+	{"Kurdish",        "ku"},
+	{"Laothian",       "lo"},
+	{"Latin",          "la"},
+	{"Latvian",        "lv"},
+	{"Lettish",        "lv"},
+	{"Lingala",        "ln"},
+	{"Lithuanian",     "lt"},
+	{"Macedonian",     "mk"},
+	{"Malagasy",       "mg"},
+	{"Malay",          "ms"},
+	{"Malayalam",      "ml"},
+	{"Maltese",        "mt"},
+	{"Maori",          "mi"},
+	{"Marathi",        "mr"},
+	{"Moldavian",      "mo"},
+	{"Mongolian",      "mn"},
+	{"Nauru",          "na"},
+	{"Nepali",         "ne"},
+	{"Norwegian",      "no"},
+	/*{"Occitan",        "oc"},*/
+	/*{"Oriya",          "or"},*/
+	/*{"Pashto",         "ps"},*/
+	/*{"Pushto",         "ps"},*/
+	{"Persian",        "fa"},
+	{"Polish",         "pl"},
+	{"Portuguese",     "pt"},
+	/*{"Punjabi",        "pa"},*/
+	/*{"Quechua",        "qu"},*/
+	/*{"Rhaeto-romance", "rm"},*/
+	{"Romanian",       "ro"},
+	{"Russian",        "ru"},
+	{"Samoan",         "sm"},
+	{"Sangho",         "sg"},
+	{"Sanskrit",       "sa"},
+	/*{"Scots gaelic",   "gd"},*/
+	{"Serbian",        "sr"},
+	/*{"Serbo-croatian", "sh"},*/
+	/*{"Sesotho",        "st"},*/
+	{"Setswana",       "tn"},
+	{"Shona",          "sn"},
+	{"Sindhi",         "sd"},
+	{"Singhalese",     "si"},
+	{"Siswati",        "ss"},
+	{"Slovak",         "sk"},
+	{"Slovenian",      "sl"},
+	{"Somali",         "so"},
+	{"Spanish",        "es"},
+	{"Sundanese",      "su"},
+	{"Swahili",        "sw"},
+	{"Swedish",        "sv"},
+	{"Tagalog",        "tl"},
+	{"Tajik",          "tg"},
+	{"Tamil",          "ta"},
+	{"Tatar",          "tt"},
+	{"Telugu",         "te"},
+	{"Thai",           "th"},
+	{"Tibetan",        "bo"},
+	{"Tigrinya",       "ti"},
+	{"Tonga",          "to"},
+	{"Tsonga",         "ts"},
+	{"Turkish",        "tr"},
+	{"Turkmen",        "tk"},
+	{"Twi",            "tw"},
+	{"Uigur",          "ug"},
+	{"Ukrainian",      "uk"},
+	{"Urdu",           "ur"},
+	{"Uzbek",          "uz"},
+	{"Vietnamese",     "vi"},
+	{"Volapuk",        "vo"},
+	{"Welsh",          "cy"},
+	{"Wolof",          "wo"},
+	{"Xhosa",          "xh"},
+	{"Yiddish",        "yi"},
+	{"Yoruba",         "yo"},
+	{"Zhuang",         "za"},
+	{"Zulu",           "zu"},
 	{"",               ""}
 };
 
@@ -227,6 +227,45 @@ char *TtaGetLanguageNameFromCode (char *code)
   return Langbuffer;
 }
 
+
+/*----------------------------------------------------------------------
+   GetListOfLanguages
+   Stores in the buffer the maximum entries of the languages declared in
+   RFC-1766 and returns into nbItem the number of languages stored.
+   The parameter length gives the size of the buffer.
+   The parameter languageCode gives the code of the requested language.
+   The parameter defItem returns the entry of the requested language.
+   If defItem is positif the function returns the full name of the Language.
+  ----------------------------------------------------------------------*/
+char *GetListOfLanguages (char *buffer, int length, char *languageCode,
+			 int *nbItem, int *defItem)
+{
+  int                 i, l;
+
+  *nbItem = 0;
+  *defItem = -1;
+   for (i = 0; ISO639table[i].code[0] != EOS; i++)
+     {
+       l = strlen (ISO639table[i].fullName) + 1;
+       if (l > 1 && l < length)
+	 {
+	   if (*defItem < 0 && languageCode && languageCode[0] != EOS &&
+	       strcasecmp (ISO639table[i].code, languageCode) == 0)
+	     /* position of the selected language in the list */
+	       *defItem = i;
+	   (*nbItem)++;
+	   strcpy (buffer, ISO639table[i].fullName);
+	   buffer = buffer + l;
+	   length -= l;
+	 }
+       else
+	 break;
+     }
+   if (*defItem >= 0)
+     return ISO639table[*defItem].fullName;
+   else
+     return NULL;
+}
 
 /*----------------------------------------------------------------------
    TtaGetLanguageCodeFromName
@@ -787,8 +826,6 @@ char *TtaGetLanguageCode (Language languageId)
 
 /*----------------------------------------------------------------------
    TtaGetNumberOfLanguages
-
-   Not available for TYPO languages.
    Returns the current number of languages known by Thot.
    Return value:
    the current number of languages.

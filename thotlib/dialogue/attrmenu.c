@@ -69,14 +69,11 @@ static PtrDocument  PtrDocOfReqAttr;
 #define ID_EDITVALUE 1004
 
 
-#ifdef _WINDOWS
 extern WNDPROC      lpfnTextZoneWndProc ;
-char              WIN_buffMenu[MAX_TXT_LEN];
-#endif /* _WINDOWS */
-
-static char       WIN_Lab[1024];
-static char       formRange[100];
-static char      *szAppName;
+char                WIN_buffMenu[MAX_TXT_LEN];
+static char         WIN_Lab[1024];
+static char         formRange[100];
+static char        *szAppName;
 static ThotWindow   hwnEdit;
 static TtAttribute *WIN_pAttr1;
 static ThotBool     wndRegistered;
@@ -130,24 +127,23 @@ static void InitFormLanguage (Document doc, View view,
    Language            language;
    PtrAttribute        pHeritAttr;
    PtrElement          pElAttr;
-   char               *s, *ptr;
-   char                languageValue[MAX_TXT_LEN];
+   char               *ptr;
+   char                languageCode[MAX_TXT_LEN];
    char                label[200];
-   int                 defItem, nbItem, nbLanguages, firstLanguage, length;
+   int                 defItem, nbItem, length;
 #ifndef _WINDOWS
    char                bufMenu[MAX_TXT_LEN];
    int                 i;
 #endif /* _WINDOWS */
 
-   /* c'est l'attribut Langue, on initialise le formulaire Langue */
-   languageValue[0] = EOS;
+   /* Initialize the language selector */
+   languageCode[0] = EOS;
    if (currAttr && currAttr->AeAttrText)
-     CopyBuffer2MBs (currAttr->AeAttrText, 0, languageValue, MAX_TXT_LEN);
-
-   /* cree le formulaire avec les deux boutons Appliquer et Supprimer */
+     CopyBuffer2MBs (currAttr->AeAttrText, 0, languageCode, MAX_TXT_LEN);
 #ifdef _WINDOWS
-   ptr = &WIN_buffMenu[0];
+   ptr = GetListOfLanguages (WIN_buffMenu, MAX_TXT_LEN, languageCode, &nbItem, &defItem);
 #else  /* _WINDOWS */
+   /* generate the form with two buttons Apply Cancel */
    strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    i = strlen (bufMenu) + 1;
    strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL_ATTR));
@@ -155,34 +151,9 @@ static void InitFormLanguage (Document doc, View view,
 		TtaGetMessage (LIB, TMSG_LANGUAGE), 2, 
 		bufMenu, FALSE, 2, 'L', D_DONE);
    /* construit le selecteur des Langues */
-   ptr = &bufMenu[0];
-#endif /* _WINDOWS */
-
-   nbItem = 0;
-   defItem = -1;
-   nbLanguages = TtaGetNumberOfLanguages ();
-   firstLanguage = TtaGetFirstUserLanguage ();
-   for (language = firstLanguage; language < nbLanguages; language++)
-     {
-       s = TtaGetLanguageName (language);
-       length = strlen (s);
-       if (length > 0)
-	 {
-	   if (defItem < 0 && languageValue[0] != EOS &&
-	       strcasecmp (TtaGetLanguageCode(language), languageValue) == 0)
-	     {
-	       defItem = nbItem;
-	       strcpy (languageValue, s);
-	     }
-	   nbItem++;
-	   strcpy (ptr, s);
-	   ptr += length + 1;
-	 }
-     }
-
+   ptr = GetListOfLanguages (bufMenu, MAX_TXT_LEN, languageCode, &nbItem, &defItem);
    if (nbItem > 0)
      {
-#ifndef _WINDOWS 
        /* on cree un selecteur */
        if (nbItem >= 6)
 	 length = 6;
@@ -191,32 +162,29 @@ static void InitFormLanguage (Document doc, View view,
        TtaNewSelector (NumSelectLanguage, NumFormLanguage,
 		       TtaGetMessage (LIB, TMSG_LANG_OF_EL), nbItem, bufMenu,
 		       length, NULL, TRUE, TRUE);
-#endif /* !_WINDOWS */
-       if (languageValue[0] == EOS || defItem < 0)
+     }
+   if (defItem < 0)
+     TtaSetSelector (NumSelectLanguage, -1, NULL);
+#endif /* _WINDOWS */
+   if (languageCode[0] == EOS)
+     {
+       /* look for the inherited attribute value Language */
+       strcpy (label, TtaGetMessage (LIB, TMSG_INHERITED_LANG));
+       pHeritAttr = GetTypedAttrAncestor (firstSel, 1, NULL, &pElAttr);
+       if (pHeritAttr && pHeritAttr->AeAttrText)
 	 {
-#ifndef _WINDOWS
-	   TtaSetSelector (NumSelectLanguage, -1, NULL);
-#endif /* !_WINDOWS */
-	   /* cherche la valeur heritee de l'attribut Langue */
-	   strcpy (label, TtaGetMessage (LIB, TMSG_INHERITED_LANG));
-	   pHeritAttr = GetTypedAttrAncestor (firstSel, 1, NULL, &pElAttr);
-	   if (pHeritAttr && pHeritAttr->AeAttrText)
-	     {
-	       /* the attribute value is a RFC-1766 code. Convert it into */
-	       /* a language name */
-	       CopyBuffer2MBs (pHeritAttr->AeAttrText, 0, languageValue, MAX_TXT_LEN);
-	       language = TtaGetLanguageIdFromName (languageValue);
-	       strcat (label, TtaGetLanguageName(language));
-	     }
-	 }
-       else
-	 /* initialise le selecteur sur l'entree correspondante a la valeur */
-	 /* courante de l'attribut langue. */
-	 {
-	 label[0] = EOS;
-         strcat (label, languageValue);
+	   /* the attribute value is a RFC-1766 code. Convert it into */
+	   /* a language name */
+	   CopyBuffer2MBs (pHeritAttr->AeAttrText, 0, languageCode, MAX_TXT_LEN);
+	   language = TtaGetLanguageIdFromName (languageCode);
+	   strcat (label, TtaGetLanguageName(language));
 	 }
      }
+   else if (ptr)
+     /* display the current language */
+       strcpy (label, ptr);
+   else
+     label[0] = EOS;
 
 #ifndef _WINDOWS 
    TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, label);
