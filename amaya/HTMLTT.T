@@ -717,9 +717,7 @@ ATTRIBUTES
 	END;
 
  ALT:	BEGIN
-	Create '[';
 	Create ALT;
-	Create ']' After;
 	END;
 
  Alignment = Top_:
