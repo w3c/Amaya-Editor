@@ -37,8 +37,11 @@ typedef struct _HTURI
 #define stat _stat
 #define uint64_t unsigned __int64
 #define getpid _getpid
-#else
+#else /* _WINDOWS */
 #define TMPDIR "TMPDIR"
+#if HAVE_STDINT_H
+#include <stdint.h>
+#endif /* HAVE_STDINT_H */
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -2445,7 +2448,7 @@ char *GetTempName (const char *dir, const char *prefix)
 	len++;
   }
 
-  /* copy the prefix (no more than L_tmpnam chars, to respect posix). Save
+  /* copy the prefix (no more than L_tmpnam chars, to respect POSIX). Save
      space for the 6 X and EOS chars that will become the random bits */
   if (prefix)
   { 

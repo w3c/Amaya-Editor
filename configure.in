@@ -176,6 +176,7 @@ AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_HEADER_TIME
 AC_HEADER_STAT
+AC_CHECK_HEADERS(stdint.h)
 
 dnl
 dnl Checks for typedefs, structures, and compiler characteristics.

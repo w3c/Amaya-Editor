@@ -321,6 +321,9 @@
 /* Define if you have the <unixlib.h> header file.  */
 #undef HAVE_UNIXLIB_H
 
+/* Define if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
 /* Define if you have the dl library (-ldl).  */
 #undef HAVE_LIBDL
 
