@@ -1682,6 +1682,8 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	  }
 	pAb->AbVolume = 0;
 	pAb->AbShape = EOS;
+	APPgraphicModify (pBox->BxAbstractBox->AbElement,
+			  (int) pAb->AbShape, frame, FALSE);
 	break;
 	
       default:

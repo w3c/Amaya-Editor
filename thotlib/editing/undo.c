@@ -816,8 +816,10 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
    PtrDocument		pDoc;
    PtrEditOperation	queue;
    NotifyElement	notifyEl;
+   NotifyOnValue        notifyGraph;
    NotifyAttribute	notifyAttr;
    int			i, nSiblings;
+   ThotBool             replacePoly;
 
    newParent = NULL;
    newPreviousSibling = NULL;
@@ -983,9 +985,15 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
          newCreatedElement = NULL;
          newSavedElement = NULL;
 	 }
+      replacePoly = FALSE;
       if (editOp->EoCreatedElement)
          {
          pEl = editOp->EoCreatedElement;
+	 if (editOp->EoSavedElement &&
+	     pEl->ElTerminal && pEl->ElLeafType == LtPolyLine &&
+	     editOp->EoSavedElement->ElTerminal &&
+	     editOp->EoSavedElement->ElLeafType == LtPolyLine)
+	   replacePoly = TRUE;
          /* tell the application that an element will be removed from the
             abstract tree */
          SendEventSubTree (TteElemDelete, pDoc, pEl,
@@ -1024,17 +1032,29 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
       /* insert the saved element in the abstract tree */
       if (editOp->EoSavedElement)
          {
+	 pEl = editOp->EoSavedElement;
          if (editOp->EoPreviousSibling)
-            TtaInsertSibling ((Element)(editOp->EoSavedElement),
+            TtaInsertSibling ((Element)(pEl),
 			      (Element)(editOp->EoPreviousSibling),FALSE, doc);
          else
-            TtaInsertFirstChild ((Element *)&(editOp->EoSavedElement),
+            TtaInsertFirstChild ((Element *)&(pEl),
 				 (Element)(editOp->EoParent), doc);
          /* send event ElemPaste.Post to the application. -1 means that this
 	    is not really a Paste operation but an Undo operation. */
-         NotifySubTree (TteElemPaste, pDoc, editOp->EoSavedElement, -1);
+         NotifySubTree (TteElemPaste, pDoc, pEl, -1);
+/******/
+	 if (replacePoly)
+	   {
+	   notifyGraph.event = TteElemGraphModify;
+	   notifyGraph.document = doc;
+	   notifyGraph.element = (Element)(pEl->ElParent); /***** all ascendants ***/
+	   notifyGraph.target = (Element) pEl;
+	   notifyGraph.value = 0;   /******/
+	   CallEventType ((NotifyEvent *) & notifyGraph, FALSE);
+	   }
+/******/
 	 if (reverse)
-	    newCreatedElement = editOp->EoSavedElement;
+	    newCreatedElement = pEl;
          editOp->EoSavedElement = NULL;
          }
       if (reverse)

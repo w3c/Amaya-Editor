@@ -2348,10 +2348,13 @@ ThotBool          APPgraphicModify (PtrElement pEl, int value, int frame, ThotBo
 	    (*ThotLocalActions[T_openhistory]) (pDoc, pEl, pEl, 0, 0);
 	  if (ThotLocalActions[T_addhistory] != NULL)
 	    (*ThotLocalActions[T_addhistory]) (pEl, pDoc, TRUE, TRUE);
-	  if (ThotLocalActions[T_closehistory] != NULL)
-	    (*ThotLocalActions[T_closehistory]) (pDoc);
 	}
     }
+  if (!pre)
+      if (pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtSymbol ||
+	  pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtPath)
+	if (ThotLocalActions[T_closehistory] != NULL)
+	  (*ThotLocalActions[T_closehistory]) (pDoc);
   return result;
 }
 
