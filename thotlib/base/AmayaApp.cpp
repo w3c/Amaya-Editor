@@ -471,7 +471,7 @@ void AmayaApp::OnKeyDown(wxKeyEvent& event)
   {
     if(!TtaHandleSpecialKey(event))
       if (!TtaHandleShortcutKey(event))
-	event.Skip();
+        event.Skip();
   }
   else
     event.Skip();

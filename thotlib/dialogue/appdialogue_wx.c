@@ -1921,7 +1921,7 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
       wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
       wxSplitterWindow * p_splitter        = wxDynamicCast(p_win_focus, wxSplitterWindow);
       wxNotebook *     p_notebook          = wxDynamicCast(p_win_focus, wxNotebook);
-      
+      wxScrollBar *    p_scrollbar         = wxDynamicCast(p_win_focus, wxScrollBar);
 #if 0
       /* allow other widgets to handel special keys only when the key is not F2 */
       if ((p_combo_box || p_text_ctrl || p_spinctrl) && proceed_key && thot_keysym != WXK_F2)
@@ -1932,7 +1932,7 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 #endif /* 0 */
       
       /* do not allow special key outside the canvas */
-      if (!p_gl_canvas && !p_splitter && !p_notebook && proceed_key )
+      if (!p_gl_canvas && !p_splitter && !p_notebook && !p_scrollbar && proceed_key )
 	{
 	  event.Skip();
 	  return true;      
