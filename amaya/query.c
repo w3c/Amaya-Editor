@@ -2454,6 +2454,9 @@ void                QueryInit ()
 	 case 10 :
 	   WWW_TraceFlag = SHOW_CORE_TRACE; 
 	   break;
+	 case 11 :
+	   WWW_TraceFlag = SHOW_CORE_TRACE | SHOW_ANCHOR_TRACE | SHOW_AUTH_TRACE | SHOW_URI_TRACE | SHOW_THREAD_TRACE | SHOW_STREAM_TRACE;
+	   break;
 	 case 99 :
 	   WWW_TraceFlag = SHOW_ALL_TRACE;
 	   break;
@@ -3119,7 +3122,7 @@ CHAR_T*       content_type;
        status = posted ? YES : NO; 
      }
 #ifdef ANNOTATIONS
-   if (mode & AMAYA_FILE_POST)
+   else if (mode & AMAYA_FILE_POST)
      {
        unsigned long filesize;
        char *fileURL;
