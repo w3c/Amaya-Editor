@@ -577,7 +577,7 @@ static int FontFaceSize (GL_font *font, const unsigned int size, const unsigned 
 {
   unsigned int err;
   
-  err = FT_Set_Char_Size (*(font->face), 0, size * 64, 96, 96);
+  err = FT_Set_Char_Size (*(font->face), 0, size * 64, 0, 0);
   /*res x_resolution, res, y_resolution*/
   if (err)
     return err;
