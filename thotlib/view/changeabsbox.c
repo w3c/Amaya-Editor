@@ -304,14 +304,14 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	      /* presentation box do not inherit any rule from attributes */
 	      if (presNum == 0)
 		{
-		  if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
+		  if (pSchP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
 		    {
 		      /* this element type inherit from some attributes */
-		      if ((inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
+		      if ((inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
 			{
 			  /* inheritance table does not exist. Create it */
 			  CreateInheritedAttrTable (pEl, pDoc);
-			  inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+			  inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 			}
 		      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 			if ((*inheritTable)[l - 1] &&
