@@ -935,8 +935,9 @@ void SetNamespacesAndDTD (Document doc)
    char                *attrText;
    int                  length, profile;
    ThotBool		useMathML, useSVG, useHTML, useXML, mathPI;
-   ThotBool             xmlDecl, xhtml_mimetype;
+   ThotBool             xmlDecl, xhtml_mimetype, insertMeta;
 
+   insertMeta = FALSE;
    useMathML = FALSE;
    useHTML = FALSE;
    useSVG = FALSE;
@@ -1170,7 +1171,10 @@ void SetNamespacesAndDTD (Document doc)
 		   elType.ElSSchema = attrType.AttrSSchema;
 		   elType.ElTypeNum = HTML_EL_META;
 		   meta = TtaNewElement (doc, elType);
-		   TtaInsertFirstChild (&meta, head, doc);
+		   /* do not insert the meta element yet. Wait for its
+		      attribute to be created, otherwise mandatory attributes
+		      will prompt the user with no reason */
+		   insertMeta = TRUE;
 		 }
 	       if (!attr)
 		 {
@@ -1206,6 +1210,10 @@ void SetNamespacesAndDTD (Document doc)
 		   attr = TtaNewAttribute (attrType);
 		   TtaAttachAttribute (meta, attr, doc);
 		 }
+	       /* all attributes have been attached to the element.
+		  We can insert it in the tree now */
+	       if (insertMeta)
+		 TtaInsertFirstChild (&meta, head, doc);
 	       if (DocumentMeta[doc] && DocumentMeta[doc]->content_type)
 		 strcpy (buffer, DocumentMeta[doc]->content_type);
 	       else if (xhtml_mimetype)
