@@ -72,16 +72,7 @@ static GdkVisual    *visual = NULL;
 
 #endif /* _GTK */
 
-#ifdef _WINDOWS
-
-/* Win32 opengl context based on frame number*/
-static HDC   GL_Windows[MAX_FRAME];	
-static HGLRC GL_Context[MAX_FRAME];
-
-#endif /*_WINDOWS*/
-
 #include "GL/gl.h"
-
 #include "ustring.h"
 #include "math.h"
 #include "thot_sys.h"

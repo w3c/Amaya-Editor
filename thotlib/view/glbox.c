@@ -107,19 +107,8 @@
 #define	MAX_STACK	50
 #define	MIDDLE_OF(v1, v2) (((v1)+(v2))/2.0)
 #define ALLOC_POINTS    300
-
-
 #define MESA
-
-#ifdef _WINDOWS
-#include <windows.h>
-/* Win32 opengl context based on frame number*/
-static HDC   GL_Windows[MAX_FRAME];	
-static HGLRC GL_Context[MAX_FRAME];
-#endif /*_WINDOWS*/
-
 #define FEEDBUFFERSIZE 32768
-
 
 /*if just computing bounding box*/
 static ThotBool NotFeedBackMode = TRUE;
@@ -546,7 +535,7 @@ PFD_GENERIC_ACCELERATED))
   no accum (special effect like multisampling, antialiasing), no aux (all purpose buffers),
   no pbuffers (?) buffers...
   ----------------------------------------------------------------------*/
-static void GL_SetupPixelFormat (HDC hDC)
+void GL_SetupPixelFormat (HDC hDC)
 {
   static PIXELFORMATDESCRIPTOR pfd = 
     {

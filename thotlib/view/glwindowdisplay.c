@@ -13,7 +13,6 @@
  *
  */
 #ifdef _GL
-
 #include "ustring.h"
 #include "math.h"
 #include "thot_sys.h"
@@ -22,6 +21,9 @@
 #include "frame.h"
 #include "appdialogue.h"
 #include "picture.h"
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -60,13 +62,6 @@
   #include <unistd.h>
   #include <sys/timeb.h>
 #endif /*_GTK*/
-
-#ifdef _WINDOWS
-  #include <wininclude.h>
-  /* Win32 opengl context based on frame number*/
-  static HDC   GL_Windows[MAX_FRAME];	
-  static HGLRC GL_Context[MAX_FRAME];
-#endif /* _WINDOWS */
 
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -1268,9 +1263,6 @@ void getboundingbox (GLint size, GLfloat *buffer, int frame,
   *worig = (int) (w - x) + 1;
   *horig = (int) (h - y) + 1;
 }
-
-
-
 
 
 /*----------------------------------------------------------------------

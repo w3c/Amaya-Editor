@@ -123,6 +123,11 @@ THOT_EXPORT HMENU      WinMenus[MAX_FRAME + 1 + 1];
 
 extern HBITMAP	  WIN_LastBitmap;
 extern HINSTANCE  hInstance;
+#ifdef _GL
+/* Win32 opengl context based on frame number*/
+THOT_EXPORT HDC   GL_Windows[MAX_FRAME];	
+THOT_EXPORT HGLRC GL_Context[MAX_FRAME];
+#endif /* _GL */
 
 #endif /* _WINDOWS */
 #endif /* !NODISPLAY */

@@ -30,6 +30,7 @@ typedef struct _XArc {
 void SetupPixelFormatPrintGL (HDC hDC, int frame);
 void initwgl (HDC hDC, int frame);
 void closewgl (HDC hDC, int frame);
+void GL_SetupPixelFormat (HDC hDC);
 
 #endif /*_WINDOWS*/
 
@@ -156,7 +157,6 @@ void ResetMainWindowBackgroundColor (int frame);
 void FreeGlTexture (void *Image);
 void FreeGlTextureNoCache (void *Image);
 unsigned char *test_gradien_linear (); 
-
 ThotBool GL_TransText ();
 void GL_SetTransText (ThotBool value);
 
