@@ -367,7 +367,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
   WDrawString draw a char string of lg chars beginning in buff.
   Drawing starts at (x, y) in frame and using font.
   boxWidth gives the width of the final box or zero,
-  this is used only by the thot formmating engine.
+  this is used only by the thot formatting engine.
   bl indicates that there are one or more spaces before the string
   hyphen indicates whether an hyphen char has to be added.
   startABlock is 1 if the text is at a paragraph beginning
@@ -382,6 +382,7 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
   HDC                 display;
   HFONT               hOldFont;
   int                 j, width;
+  SIZE                wsize;
 
   if (lg <= 0)
     return 0;
@@ -415,12 +416,9 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
       buff[lg] = EOS;
       /* TranslateChars (buff); */
       j = 0;
-      while (j < lg)
-	width += CharacterWidth (buff[j++], font);
+      GetTextExtentPointW (display, buff, lg, (LPSIZE) (&wsize)); /* works from Win9x up */
+      width = wsize.cx;
     }
-  /* get the string size
-     GetTextExtentPoint (display, buff, lg, &size);
-     width = size.cx;*/
   if (fg >= 0)
     {
       /* not transparent -> draw charaters */
