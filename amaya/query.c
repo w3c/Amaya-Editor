@@ -97,11 +97,11 @@ static  boolean     AmayaAlive; /* set to 1 if the application is active;
 /* prototypes */
 
 #ifdef __STDC__
-#ifdef _WINDOWS
+#ifdef __WINDOWS
 int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar*);
 #endif /* _WINDOWS */
 #else
-#ifdef _WINDOWS
+#ifdef __WINDOWS
 int WIN_Activate_Request ();
 #endif /* _WINDOWS */
 #endif /* __STDC__ */
@@ -1073,7 +1073,7 @@ static void         AHTAlertInit ()
 #endif
 {
    HTAlert_add (AHTProgress, HT_A_PROGRESS);
-#ifdef _WINDOWS
+#ifdef __WINDOWS
    HTAlert_add ((HTAlertCallback *) WIN_Activate_Request, HT_PROG_CONNECT);
 #endif /* _WINDOWS */
    HTAlert_add (AHTError_print, HT_A_MESSAGE);
@@ -1089,6 +1089,8 @@ static void         AHTAlertInit ()
 #endif /* AMAYA_WWW_CACHE */
 }
 
+#ifndef _WINDOWS
+/* @@@ needs specific win functions */
 #ifdef AMAYA_WWW_CACHE
 /*----------------------------------------------------------------------
   CleanCache
@@ -1156,6 +1158,7 @@ char *dirname;
   rmdir (dirname);
 }
 #endif /* AMAYA_WWW_CACHE */
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   CacheInit
@@ -1226,7 +1229,9 @@ static void Cacheinit ()
 	  strcpy (strptr, cache_dir);
 	  /* @@@ add DIRSEP */
 	  strcat (strptr, "/");
+#ifndef _WINDOWS
 	  CleanCache (strptr); 
+#endif /* !_WINDOWS */
 	}
       TtaFreeMemory (strptr);
 
@@ -1377,9 +1382,9 @@ static void         AHTProfile_delete ()
 
     if (HTLib_isInitialized ())
       
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
       HTEventTerminate ();
-#  endif _WINDOWS;		
+#endif _WINDOWS;		
     
     /* Clean up the persistent cache (if any) */
 #ifdef AMAYA_WWW_CACHE
@@ -1431,15 +1436,16 @@ void                QueryInit ()
    /* New AHTBridge stuff */
 
 #ifdef _WINDOWS
-   AHTEventInit ();
+   /*** AHTEventInit (); this was the call to my AHTEvent module HTEvtLst today***/
+   HTEventInit;
 #endif /* _WINDOWS */
 
    HTEvent_setRegisterCallback ((void *) AHTEvent_register);
    HTEvent_setUnregisterCallback ((void *) AHTEvent_unregister);
 
 #ifndef _WINDOWS
-   HTTimer_registerSetTimerCallback ((void *) SetTimer);
-   HTTimer_registerDeleteTimerCallback ((void *) DeleteTimer);
+   HTTimer_registerSetTimerCallback ((void *) AMAYA_SetTimer);
+   HTTimer_registerDeleteTimerCallback ((void *) AMAYA_DeleteTimer);
 #endif /* !_WINDOWS */
 
 #ifdef AMAYA_WWW_CACHE
@@ -1478,7 +1484,7 @@ void                QueryInit ()
    HTNet_setMaxSocket (8);
    /* different network services timeouts */
    HTDNS_setTimeout (60);
-#ifdef _WINDOWS
+#ifdef __WINDOWS
    /* under windows, the libwww persistent socket handling has
    ** some bugs. The following line inhibits idle socket reusal.
    ** this is a bit slower, but avoids crashes and gives us time
@@ -1997,19 +2003,18 @@ char 	     *content_type;
      }
    else
    /* end treatment for SYNC requests */
-
-   if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
-     {
+     if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
+       {
 #ifndef _WINDOWS
-       /* part of the UNIX stop button handler */
-       if (status != HT_ERROR)
-	 status = LoopForStop (me);
+	 /* part of the UNIX stop button handler */
+	 if (status != HT_ERROR)
+	   status = LoopForStop (me);
 #endif /* _!WINDOWS */
-       
-       if (!HTRequest_kill (me->request))
-	 AHTReqContext_delete (me);
-     }
-    return (status);
+	 /* @@@ this doesn't seem correct ... me->request may not exist ... */
+	 if (!HTRequest_kill (me->request))
+	   AHTReqContext_delete (me);
+       }
+   return (status);
 }
 
 /*----------------------------------------------------------------------
@@ -2173,7 +2178,11 @@ void               *context_tcbf;
 	/* part of the stop button handler */
 	if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
 	  {
+#ifndef _WINDOWS
 	     status = LoopForStop (me);
+#endif /* _WINDOWS */
+	     if (!HTRequest_kill (me->request))
+	       AHTReqContext_delete (me);
 	  }
      }
    else

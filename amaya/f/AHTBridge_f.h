@@ -26,8 +26,8 @@ extern int AHTEvent_register ( SOCKET sock,
 extern int AHTEvent_unregister ( SOCKET sock,
 				 HTEventType type);
 extern void RequestKillAllXtevents ( AHTReqContext * me );
-void SetTimer ( HTTimer *libwww_timer );
-void DeleteTimer ( HTTimer *timer );
+void AMAYA_SetTimer ( HTTimer *libwww_timer );
+void AMAYA_DeleteTimer ( HTTimer *timer );
 #else /* __STDC__ */
 
 extern void *AHTCallback_bridge (/* caddr_t cd,
@@ -49,8 +49,8 @@ extern int AHTEvent_register (/* SOCKET sock,
 extern int AHTEvent_unregister (/* SOCKET sock,
 				   HTEventType type */);
 extern void RequestKillAllXtevents (/* AHTReqContext * me */);
-void SetTimer (/* HTTimer *libwww_timer */);
-void DeleteTimer (/* HTTimer *timer */);
+void AMAYA_SetTimer (/* HTTimer *libwww_timer */);
+void AMAYA_DeleteTimer (/* HTTimer *timer */);
 #endif /* __STDC__ */
 
 extern boolean libDoStop;

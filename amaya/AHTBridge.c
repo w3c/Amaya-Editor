@@ -51,7 +51,7 @@ static void         RequestRegisterExceptXtevent ();
 static void         RequestKillExceptXtevent ();
 #endif /* __STDC__ */
 
-#endif /* _WINDOWS */
+#endif /* !_WINDOWS */
 
 /* Private variables */
 
@@ -657,8 +657,13 @@ void *TimerCallback (XtPointer cdata, XtIntervalId *id)
 }
 
 /*----------------------------------------------------------------------
+  KillAllTimers
   ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void KillAllTimers (void)
+#else
 void KillAllTimers ()
+#endif /* __STDC__ */
 {
   /* @@@ maybe add something else to kill the Xt things */
   if (Timers)
@@ -667,8 +672,14 @@ void KillAllTimers ()
 }
 
 /*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-void SetTimer (HTTimer *libwww_timer)
+ AMAYA_SetTimer
+ ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AMAYA_SetTimer (HTTimer *libwww_timer)
+#else
+void AMAYA_SetTimer (libwww_timer)
+HTTimer *libwww_timer;
+#endif /* __STDC__ */
 {
   HTList *cur, *last;
   AmayaTimer *me;
@@ -696,7 +707,7 @@ void SetTimer (HTTimer *libwww_timer)
       if (me->xt_timer) 
 	{
 	  XtRemoveTimeOut (me->xt_timer);
-	  me->xt_timer = NULL;
+	  me->xt_timer = (XtIntervalId) NULL;
 	}
     }
   else
@@ -717,20 +728,26 @@ void SetTimer (HTTimer *libwww_timer)
 }
 
 /*----------------------------------------------------------------------
+  AMAYA_DeleteTimer
   ----------------------------------------------------------------------*/
-void DeleteTimer (HTTimer *timer)
+#ifdef __STDC__
+void AMAYA_DeleteTimer (HTTimer *libwww_timer)
+#else
+void AMAYA_DeleteTimer (libwww_timer)
+HTTimer *libwww_timer;
+#endif /* __STDC__ */
 {
   HTList *cur, *last;
   AmayaTimer *me;
 
-  if (Timers == NULL || timer == NULL)
+  if (Timers == NULL || libwww_timer == NULL)
     return;
 
   /* find the id */
   last = cur = Timers;
   while ((me = (AmayaTimer * ) HTList_nextObject (cur)))
     {
-      if (me->libwww_timer == timer)
+      if (me->libwww_timer == libwww_timer)
 	break;
       last = cur;
     }
@@ -744,7 +761,6 @@ void DeleteTimer (HTTimer *timer)
       TtaFreeMemory (me);
     }
 }
-
 
 #endif /* !_WINDOWS */
 
