@@ -684,6 +684,8 @@ RULES
 		END;	
 	END;
 
+   SpanElement:
+	HorizRef: Enclosed . HRef;
    a:
 	BEGIN
 	CreateBefore (ElementName);

@@ -27,6 +27,7 @@ symbol_: symbol
 target_: target
 style__: style
 title_: title
+SpanElement: \240
 
 Language: xml:lang
 font_family: font-family

@@ -2196,7 +2196,7 @@ void SVGCreated (NotifyElement * event)
 /*----------------------------------------------------------------------
    TspanCreated
    A tspan element has been created by the user hitting a Enter key
-   witihn a text element. Create attributes x and dy.
+   within a text element. Create attributes x and dy.
   ----------------------------------------------------------------------*/
 void TspanCreated (NotifyElement * event)
 {
