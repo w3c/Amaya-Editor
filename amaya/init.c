@@ -7237,8 +7237,8 @@ void HelpAmaya (Document document, View view)
    n = TtaListStyleOfCurrentElement (document, list);
    if (n == 0)
      {
-       fprintf (list, "\n     ");
        fprintf (list, TtaGetMessage (AMAYA, AM_NO_STYLE_FOR_ELEM));
+       fprintf (list, "\n");
      }
    fclose (list);
 #endif /* AMAYA_DEBUG */

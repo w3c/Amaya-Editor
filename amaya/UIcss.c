@@ -758,7 +758,14 @@ void ShowAppliedStyle (Document doc, View view)
 	{
 	  /* there is no style on terminal elements */
 	  el = TtaGetParent (el);
-	  elType = TtaGetElementType (el);	  
+	  if (el)
+	    elType = TtaGetElementType (el);	  
+	}
+      while (el && TtaHasHiddenException (elType))
+	{
+	  el = TtaGetParent (el);
+	  if (el)
+	    elType = TtaGetElementType (el);
 	}
       /* list CSS rules applied to the current selection */
       sprintf (fileName, "%s%c%d%cSTYLE.LST",
@@ -815,7 +822,14 @@ void SynchronizeAppliedStyle (NotifyElement *event)
 	  {
 	  /* there is no style on terminal elements */
 	    el = TtaGetParent (el);
-	    elType = TtaGetElementType (el);	  
+	    if (el)
+	      elType = TtaGetElementType (el);	  
+	  }
+	while (el && TtaHasHiddenException (elType))
+	  {
+	    el = TtaGetParent (el);
+	    if (el)
+	      elType = TtaGetElementType (el);
 	  }
 	/* list CSS rules applied to the current selection */
 	sprintf (dirName, "%s%c%d",
@@ -823,7 +837,7 @@ void SynchronizeAppliedStyle (NotifyElement *event)
 	sprintf (fileName, "%s%c%d%cSTYLE.LST",
 		 TempFileDirectory, DIR_SEP, doc, DIR_SEP);
 	if (TtaFileExist (fileName))
-	TtaFileUnlink (fileName);
+	  TtaFileUnlink (fileName);
 	list = fopen (fileName, "w");
 	fprintf (list, "\n\n");      
 	fprintf (list, TtaGetMessage (AMAYA, AM_STYLE_APPLIED),

@@ -3811,6 +3811,9 @@ int TtaListStyleOfCurrentElement (Document document, FILE *fileDescriptor)
       pEl = (PtrElement) El;
       if (pEl && pEl->ElTerminal)
 	pEl = pEl->ElParent;
+      while (pEl && TypeHasException (ExcHidden, pEl->ElTypeNumber,
+				      pEl->ElStructSchema))
+	pEl = pEl->ElParent;
       if (pEl)
 	{
 	  SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
