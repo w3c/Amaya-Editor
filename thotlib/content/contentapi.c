@@ -1732,8 +1732,8 @@ int                *y;
 	     /* Convert values to millipoints */
 	     if (unit == UnPixel)
 	       {
-		  *x = PixelToPoint (*x);
-		  *y = PixelToPoint (*y);
+		  *x = PointToPixel (*x);
+		  *y = PointToPixel (*y);
 	       }
 	     *x = *x / 1000;
 	     *y = *y / 1000;
