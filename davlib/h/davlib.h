@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.6  2002-07-01 10:34:16  kahan
+ ** Revision 1.7  2003-05-19 11:39:47  vatton
+ ** Moving the variable DAVLibEnable.
+ ** Irene
+ **
+ ** Revision 1.6  2002/07/01 10:34:16  kahan
  ** JK: Enabling/Disabling DAV support by means of the new DAV_Enable
  ** registry entry.
  ** Removed the DAV menu from the standard profile.
@@ -128,8 +132,6 @@ char DAVFullHostName[DAV_LINE_MAX];
  */
 BOOL DAVLockIndicatorState;
 
-/* Runtime registry variable for enabling/disabling DAVLib */
-BOOL DAVLibEnable;
 
 /*----------------------------------------------------------------------
    Types and Structures used in WebDAV functions

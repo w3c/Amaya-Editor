@@ -429,6 +429,8 @@ THOT_EXPORT ThotBool   XMLErrorsFoundInProfile;
 THOT_EXPORT ThotBool   XMLNotWellFormed;
 THOT_EXPORT ThotBool   XMLCharacterNotSupported;
 THOT_EXPORT ThotBool   XMLUnknownEncoding;
+/*  enabling/disabling DAVLib */
+THOT_EXPORT ThotBool   DAVLibEnable;
 
 THOT_EXPORT ThotBool   IdApplyToSelection; /* used in the Make ID menu */
 THOT_EXPORT FILE      *ErrFile;
