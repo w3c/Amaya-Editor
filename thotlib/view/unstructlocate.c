@@ -193,7 +193,7 @@ void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
 		    }
 		  else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
 		    /* glitch for the root symbol */
-		    d = GetShapeDistance (x, y, pBox, 1);
+		    d = GetShapeDistance (x, y, pBox, 1, frame);
 		  else if (pAb->AbLeafType == LtText ||
 			   pAb->AbLeafType == LtSymbol ||
 			   pAb->AbLeafType == LtPicture ||

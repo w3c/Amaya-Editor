@@ -1486,6 +1486,7 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
   PtrBox              pBox, pLimitBox;
   PtrBox              box, lastBox;
   PtrLine             pLine;
+  ViewFrame          *pFrame;
   int                 max;
   int                 h, lastY;
   ThotBool            found;
@@ -1493,10 +1494,12 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
   found = FALSE;
   lastBox = NULL;
   lastY = *y;
+  pFrame = &ViewFrameTable[frame - 1];
+
   while (!found)
     {
       pBox = pSourceBox;
-      max = ViewFrameTable[frame - 1].FrAbstractBox->AbBox->BxWidth;
+      max = pFrame->FrAbstractBox->AbBox->BxWidth;
       /* locate the last box in the line */
       if (xDelta > 0)
 	{
@@ -1554,7 +1557,10 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
 		  /* move one line down */
 		  *x = 0;
 #ifdef _GL
-		  *y = pBox->BxClipY + pBox->BxClipH;
+		  if (pBox->BxBoundinBoxComputed)
+		    *y = pBox->BxClipY + pBox->BxClipH;
+		  else
+		    *y = pBox->BxYOrg + pBox->BxHeight - pFrame->FrYOrg;
 #else /* _GL */
 		  *y = pBox->BxYOrg + pBox->BxHeight;
 #endif /* _GL */
@@ -1571,7 +1577,11 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
 		      while (box->BxType == BoGhost || box->BxType == BoFloatGhost)
 			box = box->BxAbstractBox->AbEnclosing->AbBox;
 #ifdef _GL
-                      *x = box->BxClipX + pLine->LiXOrg + pLine->LiPrevious->LiRealLength;
+		      if (pBox->BxBoundinBoxComputed)
+			*x = box->BxClipX;
+		      else
+			*x = box->BxXOrg - pFrame->FrXOrg;
+		      *x += pLine->LiXOrg + pLine->LiPrevious->LiRealLength;
 #else /* _GL */
 		      *x = box->BxXOrg + pLine->LiXOrg + pLine->LiPrevious->LiRealLength;
 #endif /* _GL */
@@ -1583,7 +1593,10 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
 		    yDelta = -h;
 		    }
 #ifdef _GL
-		  *y = pBox->BxClipY;
+		  if (pBox->BxBoundinBoxComputed)
+		    *y = pBox->BxClipY;
+		  else
+		    *y = pBox->BxYOrg - pFrame->FrYOrg;
 #else /* _GL */
 		  *y = pBox->BxYOrg;
 #endif /* _GL */
@@ -1595,31 +1608,40 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
 		   pBox->BxNChars != 0)
 	    {
 	      /* the box doesn't match, skip it */
+#ifdef _GL
+	      if (pBox->BxBoundinBoxComputed)
+		{
+		  if (xDelta > 0)
+		    *x = pBox->BxClipX + pBox->BxClipW;
+		  else if (xDelta < 0)
+		    *x = pBox->BxClipX;
+		  if (yDelta > 0)
+		    *y = pBox->BxClipY + pBox->BxClipH;
+		  else if (yDelta < 0)
+		    *y = pBox->BxClipY;
+		}
+	      else
+		{
+		  if (xDelta > 0)
+		    *x = pBox->BxXOrg - pFrame->FrXOrg + pBox->BxWidth;
+		  else if (xDelta < 0)
+		    *x = pBox->BxXOrg - pFrame->FrXOrg;
+		  if (yDelta > 0)
+		    *y = pBox->BxYOrg - pFrame->FrYOrg + pBox->BxHeight;
+		  else if (yDelta < 0)
+		    *y = pBox->BxYOrg - pFrame->FrYOrg;
+		}
+#else /* _GL */
 	      if (xDelta > 0)
-#ifdef _GL
-		*x = pBox->BxClipX + pBox->BxClipW;
-#else /* _GL */
 		*x = pBox->BxXOrg + pBox->BxWidth;
-#endif /* _GL */
 	      else if (xDelta < 0)
-#ifdef _GL
-		*x = pBox->BxClipX;
-#else /* _GL */
 		*x = pBox->BxXOrg;
-#endif /* _GL */
-	      
 	      if (yDelta > 0)
-#ifdef _GL
-	        *y = pBox->BxClipY + pBox->BxClipH;
-#else /* _GL */
 	        *y = pBox->BxYOrg + pBox->BxHeight;
-#endif /* _GL */
 	      else if (yDelta < 0)
-#ifdef _GL
-	        *y = pBox->BxClipY;
-#else /* _GL */
 	        *y = pBox->BxYOrg;
 #endif /* _GL */
+	      
 	      pBox = pSourceBox;
 	    }
 	}
@@ -1633,8 +1655,7 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
   We apply a ratio to vertical distances to give a preference to the
   horizontal proximity.
   ----------------------------------------------------------------------*/
-static int          GetGetMinimumDistance (int xRef, int yRef, int x, int y,
-					   int dist)
+static int GetGetMinimumDistance (int xRef, int yRef, int x, int y, int dist)
 {
   int                 value;
 
@@ -1653,23 +1674,33 @@ static int          GetGetMinimumDistance (int xRef, int yRef, int x, int y,
   This selection takes only laf boxes into account.
   Returns the distance.
   ----------------------------------------------------------------------*/
-int GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value)
+int GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value, int frame)
 {
   int                 distance;
   int                 x, y, width, height;
 
   /* centrer la boite */
-#ifndef _GL
+#ifdef _GL
+  if (pBox->BxBoundinBoxComputed)
+    {
+      width = pBox->BxClipW / 2;
+      x = pBox->BxClipX + width;
+      height = pBox->BxClipH / 2;
+      y = pBox->BxClipY + height;
+    }
+  else
+    {
+      width = pBox->BxWidth / 2;
+      x = pBox->BxXOrg - ViewFrameTable[frame -1].FrXOrg + width;
+      height = pBox->BxHeight / 2;
+      y = pBox->BxYOrg - ViewFrameTable[frame -1].FrYOrg + height;
+    }
+#else /* _GL */
   width = pBox->BxWidth / 2;
   x = pBox->BxXOrg + width;
   height = pBox->BxHeight / 2;
   y = pBox->BxYOrg + height;
-#else /* _GL */
-  width = pBox->BxClipW / 2;
-  x = pBox->BxClipX + width;
-  height = pBox->BxClipH / 2;
-  y = pBox->BxClipY + height;
-#endif/* _GL */
+#endif /* _GL */
   distance = 1000;
 
   switch (value)
@@ -1839,7 +1870,7 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef)
 		}
 	      else if (pAb->AbLeafType == LtSymbol && pAb->AbShape == 'r')
 		/* glitch for the root symbol */
-		d = GetShapeDistance (xRef, yRef, pBox, 1);
+		d = GetShapeDistance (xRef, yRef, pBox, 1, frame);
 	      else if ((pAb->AbLeafType == LtText ||
 		       pAb->AbLeafType == LtSymbol ||
 		       pAb->AbLeafType == LtPicture ||

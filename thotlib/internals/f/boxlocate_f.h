@@ -37,7 +37,8 @@ extern PtrBox GetLeafBox ( PtrBox pSourceBox,
 extern int GetShapeDistance ( int xRef,
                               int yRef,
                               PtrBox pBox,
-                              int value );
+                              int value,
+                              int frame );
 extern PtrBox GetClickedLeafBox ( int frame,
                                   int xRef,
                                   int yRef );
@@ -90,7 +91,8 @@ extern PtrBox GetLeafBox ( PtrBox pSourceBox,
 extern int GetShapeDistance ( int xRef,
                                 int yRef,
                                 PtrBox pBox,
-                                int value );
+                                int value,
+                                int frame );
 extern PtrBox GetClickedLeafBox ( int frame,
                                     int xRef,
                                     int yRef );

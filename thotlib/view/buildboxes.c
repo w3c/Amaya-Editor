@@ -1094,6 +1094,35 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
 }
 
 /*----------------------------------------------------------------------
+  UnsplitBox removes all child pieces and scripts.
+  ----------------------------------------------------------------------*/
+static void UnsplitBox (PtrBox pBox)
+{
+  PtrBox              box;
+
+  if (pBox->BxType == BoComplete)
+    return;
+  box = pBox->BxNexChild;
+  pBox->BxNexChild = NULL;
+  pBox->BxType = BoComplete;
+  while (box && (box->BxType == BoScript || box->BxType == BoPiece))
+    {
+#ifdef _GL
+#ifdef _TRACE_GL_BUGS_GLISLIST
+      if (box->DisplayList)
+	printf ( "GLBUG - RemoveBoxes : glIsList=%s\n", glIsList (pPieceBox->DisplayList) ? "yes" : "no" );
+#endif /* _TRACE_GL_BUGS_GLISLIST */
+      if (glIsList (box->DisplayList))
+	{
+	  glDeleteLists (box->DisplayList, 1);
+	  box->DisplayList = 0;
+	}
+#endif /* _GL */
+      box = FreeBox (box);
+    }
+}
+
+/*----------------------------------------------------------------------
   GiveTextSize gives the internal width and height of a text box.
   ----------------------------------------------------------------------*/
 static void GiveTextSize (PtrAbstractBox pAb, int frame, int *width,
@@ -1131,6 +1160,10 @@ static void GiveTextSize (PtrAbstractBox pAb, int frame, int *width,
       *width = 0;
       pos = 1;
       dir = pAb->AbDirection;
+      if (box->BxType == BoMulScript)
+	/* remove multi script boxes */
+	UnsplitBox (box);
+
       while (nChars > 0)
 	{
 	  bwidth = 0;
@@ -2660,7 +2693,7 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
 void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 {
   PtrAbstractBox      pChildAb;
-  PtrBox              pBox, pPieceBox;
+  PtrBox              pBox;
   ThotBool            changeSelectBegin;
   ThotBool            changeSelectEnd;
 
@@ -2697,27 +2730,8 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	  else if (pAb->AbLeafType == LtPicture)
 	    CleanPictInfo ((ThotPictInfo *)pBox->BxPictInfo);
 	  else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
-	    {
-	      /* libere les boites generees pour la mise en lignes */
-	      pPieceBox = pBox->BxNexChild;
-	      pBox->BxNexChild = NULL;
-	      while (pPieceBox &&
-		     (pPieceBox->BxType == BoScript || pPieceBox->BxType == BoPiece))
-		{
-#ifdef _GL
-#ifdef _TRACE_GL_BUGS_GLISLIST
-  if (pPieceBox->DisplayList)
-    printf ( "GLBUG - RemoveBoxes : glIsList=%s\n", glIsList (pPieceBox->DisplayList) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISLIST */
-		  if (glIsList (pPieceBox->DisplayList))
-		    {
-		      glDeleteLists (pPieceBox->DisplayList, 1);
-		      pPieceBox->DisplayList = 0;
-		    }
-#endif /* _GL */
-		  pPieceBox = FreeBox (pPieceBox);
-		}
-	    }
+	    /* free child boxes */
+	    UnsplitBox (pBox);
 
 	  if (pAb->AbDead)
 	    pAb->AbNew = FALSE;
@@ -3798,13 +3812,15 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      pLine = NULL;
 	      /* the picture box width changed but not the
 		 block of lines */
-	      if (pAb->AbLeafType == LtPicture || width || height)
+	      if (pAb->AbLeafType == LtPicture || width || height ||
+		  pBox->BxType == BoMulScript)
 		{
 		  BoxUpdate (pBox, pLine, charDelta, nSpaces, width,
 			     adjustDelta, height, frame, FALSE);
+		  ComputeABoundingBox (pAb, frame);
 		  if (pAb->AbLeafType == LtPicture)
 		    {
-		      ComputeABoundingBox (pAb, frame);
+		      //ComputeABoundingBox (pAb, frame);
 		      DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 		      if (pBlock)
 			{
