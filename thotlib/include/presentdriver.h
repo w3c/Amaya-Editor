@@ -130,7 +130,7 @@ typedef enum
      DRIVERP_BOX,
      DRIVERP_SHOWBOX,
      DRIVERP_BGIMAGE,
-     DRIVERP_PICTUREMODE,
+     DRIVERP_PICTUREMODE
   }
 PresentationType;
 
