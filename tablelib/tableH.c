@@ -537,6 +537,7 @@ int             frame;
   PtrDocument         pDoc;
   PtrAbstractBox      cell, row , firstRow, pAb;
   PtrAbstractBox      rowList[MAX_COLROW];
+  PtrBox              box;
   PtrTabRelations     pTabRel;
   int                 i, j, k, org, val;
   int                 sum, height;
@@ -554,6 +555,8 @@ int             frame;
     {
       pSS = table->AbElement->ElStructSchema;
       attrHeight = GetAttrWithException (ExcNewHeight, pSS);
+      /* first manage diferred enclosing rules */
+      ComputeEnclosing (frame);
     }
   for (i = 0; i < number; i++)
     {
@@ -587,8 +590,7 @@ int             frame;
 		  rowList[k] = row;
 		  if (row != NULL && row->AbBox != NULL)
 		    {
-		      HeightPack (row, NULL, frame);
-		      /* add padding and borders space */
+		      /* add spacing */
 		      if (pAb != NULL)
 			remainder = row->AbBox->BxYOrg - pAb->AbBox->BxYOrg - pAb->AbBox->BxHeight;
 		      else
@@ -613,10 +615,12 @@ int             frame;
 	      /* update rowSpans[i] if necessary */
 	      if (k < rowSpans[i])
 		rowSpans[i] = k;
-
+	      box = cell->AbBox;
+	      org = box->BxYOrg;
+	      height = box->BxHeight;
+#ifdef IV
 	      /* get the real cell height */
 	      pAb = cell->AbFirstEnclosed;
-	      org = cell->AbBox->BxYOrg;
 	      height = 0;
 	      while (pAb != NULL)
 		{
@@ -636,6 +640,9 @@ int             frame;
 		  else
 		    pAb = NextSiblingAbsBox (pAb, cell);
 		}
+	      /* add bottom margin, border and padding */
+	      height += box->BxBMargin + box->BxBBorder + box->BxBPadding;
+#endif
 	      /* add space between the the cell and its parent row */
 	      if (firstRow != NULL)
 		height += org - firstRow->AbBox->BxYOrg;
@@ -651,19 +658,21 @@ printf("<<<check cell_height=%d over %d rows_height=%d\n", height, rowSpans[i], 
 		  height = height / rowSpans[i];
 		  for (k = 0; k < rowSpans[i]; k++)
 		    if (rowList[k] != NULL &&
-			rowList[k]->AbBox->BxHeight + height > 0)
+			rowList[k]->AbBox->BxH + height > 0)
 		      {
 			/* create the attribute for this element */
 			GetAttribute (&pAttr);
 			pAttr->AeAttrSSchema = pSS;
 			pAttr->AeAttrNum = attrHeight;
 			pAttr->AeAttrType = AtNumAttr;
-			pAttr->AeAttrValue = rowList[k]->AbBox->BxHeight + height;
+			pAttr->AeAttrValue = rowList[k]->AbBox->BxH + height;
 			AttachAttrWithValue (rowList[k]->AbElement, pDoc, pAttr);
 			DeleteAttribute (NULL, pAttr);
 			/* update the row box */
 			ComputeUpdates (rowList[k], frame);
 		      }
+		  if (firstRow != NULL)
+		    HeightPack (firstRow->AbEnclosing, firstRow->AbBox, frame);
 		  /* Redisplay views */
 		  if (ThotLocalActions[T_redisplay] != NULL)
 		    (*ThotLocalActions[T_redisplay]) (pDoc);
