@@ -59,26 +59,14 @@
    deleted and replaced by the new one.
    This function can also be used for changing the content (the file name)
    of a Picture basic element.
-
    Parameters:
    element: the Text element to be modified.
    content: new content for that element.
    language: language of that Text element.
    document: the document containing that element.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetTextContent (Element element, CHAR_T* content, Language language, Document document)
-
-#else  /* __STDC__ */
-void                TtaSetTextContent (element, content, language, document)
-Element             element;
-CHAR_T*             content;
-Language            language;
-Document            document;
-
-#endif /* __STDC__ */
-
+void TtaSetTextContent (Element element, CHAR_T* content, Language language,
+			Document document)
 {
    PtrTextBuffer       pBuf, pPreviousBuff, pNextBuff;
    CHAR_T*             ptr;
@@ -239,16 +227,7 @@ Document            document;
    "position". If "document" is null, we have not to consider
    the selction nor the displaying
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InsertText (PtrElement pEl, int position, STRING content, Document document)
-#else  /* __STDC__ */
-void                InsertText (pEl, position, content, document)
-PtrElement          pEl;
-int                 position;
-STRING              content;
-Document            document;
-#endif /* __STDC__ */
-
+void InsertText (PtrElement pEl, int position, STRING content, Document document)
 {
    PtrTextBuffer       pBuf, pPreviousBuff, newBuf;
    STRING              ptr;
@@ -405,25 +384,12 @@ Document            document;
    TtaAppendTextContent
 
    Appends a character string at the end of a Text basic element.
-
    Parameters:
    element: the Text element to be modified.
    content: the character string to be appended.
    document: the document containing that element.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaAppendTextContent (Element element, CHAR_T* content, Document document)
-
-#else  /* __STDC__ */
-void                TtaAppendTextContent (element, content, document)
-Element             element;
-CHAR_T*             content;
-Document            document;
-
-#endif /* __STDC__ */
-
+void TtaAppendTextContent (Element element, CHAR_T* content, Document document)
 {
    UserErrorCode = 0;
    if (element == NULL)
@@ -450,28 +416,15 @@ Document            document;
    TtaInsertTextContent
 
    Inserts a character string in a text basic element.
-
    Parameters:
    element: the Text element to be modified.
    position: rank of the character after which the new string must
    be inserted. 0 for inserting before the first character.
    content: the character string to be inserted.
    document: the document containing the text element.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaInsertTextContent (Element element, int position, STRING content, Document document)
-
-#else  /* __STDC__ */
-void                TtaInsertTextContent (element, position, content, document)
-Element             element;
-int                 position;
-STRING              content;
-Document            document;
-
-#endif /* __STDC__ */
-
+void TtaInsertTextContent (Element element, int position, STRING content,
+			   Document document)
 {
    UserErrorCode = 0;
    if (element == NULL)
@@ -496,27 +449,14 @@ Document            document;
    TtaDeleteTextContent
 
    Deletes a character string in a text basic element.
-
    Parameters:
    element: the Text element to be modified.
    position: rank of the first character to be deleted.
    length: length of the character string to be deleted.
    document: the document containing the text element.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaDeleteTextContent (Element element, int position, int length, Document document)
-
-#else  /* __STDC__ */
-void                TtaDeleteTextContent (element, position, length, document)
-Element             element;
-int                 position;
-int                 length;
-Document            document;
-
-#endif /* __STDC__ */
-
+void TtaDeleteTextContent (Element element, int position, int length,
+			   Document document)
 {
    PtrTextBuffer       pBufFirst, pBufLast, pBufNext;
    STRING              dest, source;
@@ -744,14 +684,7 @@ Document            document;
    position: rank of the character after which the element must be cut.
    document: the document to which the element belongs.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSplitText (Element element, int position, Document document)
-#else  /* __STDC__ */
-void                TtaSplitText (element, position, document)
-Element             element;
-int                 position;
-Document            document;
-#endif /* __STDC__ */
+void TtaSplitText (Element element, int position, Document document)
 {
    PtrElement	secondPart, pNextEl;
 
@@ -787,26 +720,14 @@ Document            document;
    TtaMergeText
 
    Merges two text elements.
-
    Parameters:
    element: the first text element. Merging occurs only if
    the next sibling is a text element with the same attributes.
    document: the document to which the text element belongs.
-
    Return value:
    TRUE if merging has been done.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            TtaMergeText (Element element, Document document)
-
-#else  /* __STDC__ */
-ThotBool            TtaMergeText (element, document)
-Element             element;
-Document            document;
-
-#endif /* __STDC__ */
-
+ThotBool TtaMergeText (Element element, Document document)
 {
    ThotBool            ok = FALSE;
 #ifndef NODISPLAY
@@ -865,14 +786,7 @@ Document            document;
    shape: new shape for that element.
    document: the document containing that element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetGraphicsShape (Element element, char shape, Document document)
-#else  /* __STDC__ */
-void                TtaSetGraphicsShape (element, shape, document)
-Element             element;
-char                shape;
-Document            document;
-#endif /* __STDC__ */
+void TtaSetGraphicsShape (Element element, char shape, Document document)
 {
    int                 delta;
    ThotBool            polyline;
@@ -978,14 +892,7 @@ Document            document;
    code: wide char code
    document: the document containing that element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetSymbolCode (Element element, wchar_t code, Document document)
-#else  /* __STDC__ */
-void                TtaSetSymbolCode (element, code, document)
-Element             element;
-wchar_t             code;
-Document            document;
-#endif /* __STDC__ */
+void TtaSetSymbolCode (Element element, wchar_t code, Document document)
 {
    UserErrorCode = 0;
    if (element == NULL)
@@ -1009,13 +916,7 @@ Document            document;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     PolylineOK (Element element, Document document)
-#else  /* __STDC__ */
-static ThotBool     PolylineOK (element, document)
-Element             element;
-Document            document;
-#endif /* __STDC__ */
 {
    ThotBool            ok;
 
@@ -1044,7 +945,6 @@ Document            document;
    TtaAddPointInPolyline
 
    Adds a new point in a Polyline basic element.
-
    Parameters:
    element: the element to be changed. This element must
    be a basic element of type Polyline.
@@ -1056,20 +956,9 @@ Document            document;
    the upper left corner of the box. x and y
    must be positive or null.
    unit: UnPixel or UnPoint.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaAddPointInPolyline (Element element, int rank, TypeUnit unit, int x, int y, Document document)
-#else  /* __STDC__ */
-void                TtaAddPointInPolyline (element, rank, unit, x, y, document)
-Element             element;
-int                 rank;
-TypeUnit            unit;
-int                 x;
-int                 y;
-Document            document;
-
-#endif /* __STDC__ */
+void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
+			    int x, int y, Document document)
 {
    PtrTextBuffer       firstBuffer;
    PtrElement          pEl;
@@ -1104,7 +993,6 @@ Document            document;
    TtaDeletePointInPolyline
 
    Deletes a point in a Polyline basic element.
-
    Parameters:
    element: the element to be changed. This element must
    be a basic element of type Polyline.
@@ -1112,17 +1000,8 @@ Document            document;
    than the actual number of points, the last point is deleted.
    rank must be strictly positive.
    document: the document containing the polyline element.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaDeletePointInPolyline (Element element, int rank, Document document)
-#else  /* __STDC__ */
-void                TtaDeletePointInPolyline (element, rank, document)
-Element             element;
-int                 rank;
-Document            document;
-
-#endif /* __STDC__ */
+void TtaDeletePointInPolyline (Element element, int rank, Document document)
 {
    PtrElement          pEl;
 
@@ -1156,7 +1035,6 @@ Document            document;
    TtaModifyPointInPolyline
 
    Changes the coordinates of a point in a Polyline basic element.
-
    Parameters:
    element: the element to be changed. This element must
    be a basic element of type Polyline.
@@ -1168,23 +1046,9 @@ Document            document;
    must be positive or null.
    document: the document containing the polyline element.
    unit: UnPixel or UnPoint.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaModifyPointInPolyline (Element element, int rank, TypeUnit unit, int x, int y, Document document)
-
-#else  /* __STDC__ */
-void                TtaModifyPointInPolyline (element, rank, unit, x, y, document)
-Element             element;
-int                 rank;
-TypeUnit            unit;
-int                 x;
-int                 y;
-Document            document;
-
-#endif /* __STDC__ */
-
+void TtaModifyPointInPolyline (Element element, int rank, TypeUnit unit,
+			       int x, int y, Document document)
 {
    if (PolylineOK (element, document))
      {
@@ -1209,7 +1073,6 @@ Document            document;
 
    Changes the coordinates of the lower left corner of the box containing
    a Polyline basic element.
-
    Parameters:
    element: the element to be changed. This element must
    be a basic element of type Polyline.
@@ -1219,19 +1082,9 @@ Document            document;
    must be positive or null and the box must contain all
    points of the polyline.
    document: the document containing the polyline element.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y, Document document)
-#else  /* __STDC__ */
-void                TtaChangeLimitOfPolyline (element, unit, x, y, document)
-Element             element;
-TypeUnit            unit;
-int                 x;
-int                 y;
-Document            document;
-
-#endif /* __STDC__ */
+void TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y,
+			       Document document)
 {
    PtrTextBuffer       firstBuffer;
    PtrTextBuffer       pBuff;
@@ -1277,20 +1130,17 @@ Document            document;
    TtaNewPathSegLine
 
    Creates a new path segment of type line.
-
    Parameters:
    xstart: absolute X coordinate for the start point of the path segment
    ystart: absolute X coordinate for the start point of the path segment
    xend:   absolute Y coordinate for the end point of the path segment
    yend:   absolute Y coordinate for the end point of the path segment
    newSubpath: this segment starts a new subpath
-
    Return value:
    the created path segment.
-
    ---------------------------------------------------------------------- */
-PathSegment   TtaNewPathSegLine (int xstart, int ystart, int xend, int yend,
-				 ThotBool newSubpath)
+PathSegment  TtaNewPathSegLine (int xstart, int ystart, int xend, int yend,
+				ThotBool newSubpath)
 
 {
    PtrPathSeg       pPa;
@@ -1310,7 +1160,6 @@ PathSegment   TtaNewPathSegLine (int xstart, int ystart, int xend, int yend,
    TtaNewPathSegCubic
 
    Creates a new path segment of type cubic Bezier curve.
-
    Parameters:
    xstart: absolute X coordinate for the start point of the path segment
    ystart: absolute X coordinate for the start point of the path segment
@@ -1321,14 +1170,12 @@ PathSegment   TtaNewPathSegLine (int xstart, int ystart, int xend, int yend,
    xctrl2: absolute X coordinate for the second control point
    yctrl2: absolute Y coordinate for the second control point
    newSubpath: this segment starts a new subpath
-
    Return value:
    the created path segment.
-
    ---------------------------------------------------------------------- */
-PathSegment   TtaNewPathSegCubic (int xstart, int ystart, int xend, int yend,
+PathSegment  TtaNewPathSegCubic (int xstart, int ystart, int xend, int yend,
 				int xctrl1, int yctrl1, int xctrl2, int yctrl2,
-				  ThotBool newSubpath)
+				 ThotBool newSubpath)
 {
    PtrPathSeg       pPa;
 
@@ -1351,7 +1198,6 @@ PathSegment   TtaNewPathSegCubic (int xstart, int ystart, int xend, int yend,
    TtaNewPathSegQuadratic
 
    Creates a new path segment of type quadratic Bezier curve.
-
    Parameters:
    xstart: absolute X coordinate for the start point of the path segment
    ystart: absolute X coordinate for the start point of the path segment
@@ -1360,10 +1206,8 @@ PathSegment   TtaNewPathSegCubic (int xstart, int ystart, int xend, int yend,
    xctrl:  absolute X coordinate for the control point
    yctrl:  absolute Y coordinate for the control point
    newSubpath: this segment starts a new subpath
-
    Return value:
    the created path segment.
-
    ---------------------------------------------------------------------- */
 PathSegment   TtaNewPathSegQuadratic (int xstart, int ystart, int xend, int yend,
 				    int xctrl, int yctrl, ThotBool newSubpath)
@@ -1389,7 +1233,6 @@ PathSegment   TtaNewPathSegQuadratic (int xstart, int ystart, int xend, int yend
    TtaNewPathSegArc
 
    Creates a new path segment of type elliptical arc.
-
    Parameters:
    xstart:  absolute X coordinate for the start point of the path segment
    ystart:  absolute X coordinate for the start point of the path segment
@@ -1402,15 +1245,13 @@ PathSegment   TtaNewPathSegQuadratic (int xstart, int ystart, int xend, int yend
    largearc:value for the large-arc-flag parameter
    sweep:   value for the sweep-flag parameter
    newSubpath: this segment starts a new subpath
-
    Return value:
    the created path segment.
-
    ---------------------------------------------------------------------- */
-PathSegment   TtaNewPathSegArc (int xstart, int ystart, int xend, int yend,
-		                int xradius, int yradius, int angle,
-				ThotBool largearc, ThotBool sweep,
-				ThotBool newSubpath)
+PathSegment TtaNewPathSegArc (int xstart, int ystart, int xend, int yend,
+			      int xradius, int yradius, int angle,
+			      ThotBool largearc, ThotBool sweep,
+			      ThotBool newSubpath)
 {
    PtrPathSeg       pPa;
 
@@ -1439,9 +1280,8 @@ PathSegment   TtaNewPathSegArc (int xstart, int ystart, int xend, int yend,
    element: the Graphics element to be modified.
    segment: the path segment to be appended.
    document: the document containing the element.
-
   ----------------------------------------------------------------------*/
-void                TtaAppendPathSeg (Element element, PathSegment segment, Document document)
+void TtaAppendPathSeg (Element element, PathSegment segment, Document document)
 {
    PtrPathSeg       pPa, pPrevPa;
    PtrElement       pElAsc;
@@ -1511,22 +1351,11 @@ void                TtaAppendPathSeg (Element element, PathSegment segment, Docu
 
    Copies the page element source into the page element destination.
    Both page elements must be in an abstract tree.
-
    Parameters:
    destination: identifier of the page element to be modified.
    source : identifier of the source page element.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaCopyPage (Element destination, Element source)
-
-#else  /* __STDC__ */
-void                TtaCopyPage (destination, source)
-Element             destination;
-Element             source;
-
-#endif /* __STDC__ */
-
+void TtaCopyPage (Element destination, Element source)
 {
    UserErrorCode = 0;
    if (destination == NULL || source == NULL)
@@ -1559,20 +1388,12 @@ Element             source;
    TtaGetVolume
 
    Returns the current volume of the current element.
-
    Parameter:
    element: the element of interest.
-
    Return value:
    volume contained in the element.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaGetVolume (Element element)
-#else  /* __STDC__ */
-int                 TtaGetVolume (element)
-Element             element;
-#endif /* __STDC__ */
+int TtaGetVolume (Element element)
 {
    int              volume;
 
@@ -1590,20 +1411,13 @@ Element             element;
    TtaGetPictureType
 
    Returns the type of Picture element.
-
    Parameter:
    element: the element of interest. This element must be a Picture or have
    a bacground image.
-
    Return value:
    PicType: type of the element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PicType             TtaGetPictureType (Element element)
-#else  /* __STDC__ */
-PicType             TtaGetPictureType (element)
-Element             element;
-#endif /* __STDC__ */
+PicType TtaGetPictureType (Element element)
 {
    PtrAbstractBox   pAb;
    PicType          pictType;
@@ -1666,7 +1480,6 @@ Element             element;
    TtaGiveSubString
 
    Returns a substring from a Text basic element.
-
    Parameters:
    element: the element of interest. This element must be a basic
    element of type Text.
@@ -1675,24 +1488,10 @@ Element             element;
    position: the rank of the first character of the substring.
    rank must be strictly positive.
    length: the length of the substring. Must be strictly positive.
-
    Return parameter:
    buffer: (the buffer contains the substring).
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaGiveSubString (Element element, STRING buffer, int position, int length)
-
-#else  /* __STDC__ */
-void                TtaGiveSubString (element, buffer, position, length)
-Element             element;
-STRING              buffer;
-int                 position;
-int                 length;
-
-#endif /* __STDC__ */
-
+void TtaGiveSubString (Element element, STRING buffer, int position, int length)
 {
    PtrTextBuffer       pBuf;
    STRING              ptr;
@@ -1752,21 +1551,14 @@ int                 length;
    TtaGetGraphicsShape
 
    Returns the content of a Graphics or Symbol basic element.
-
    Parameter:
    element: the element of interest. This element must be a basic
    element of type Graphics or Symbol.
-
    Return value:
    a single character representing the shape of the graphics element or
    symbol contained in the element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-char                TtaGetGraphicsShape (Element element)
-#else  /* __STDC__ */
-char                TtaGetGraphicsShape (element)
-Element             element;
-#endif /* __STDC__ */
+char TtaGetGraphicsShape (Element element)
 {
    char                content;
 
@@ -1791,17 +1583,11 @@ Element             element;
    TtaGetPolylineLength
 
    Returns the number of points in a Polyline basic element.
-
    Parameter:
    element: the Polyline element. This element must
    be a basic element of type Polyline.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaGetPolylineLength (Element element)
-#else  /* __STDC__ */
-int                 TtaGetPolylineLength (element)
-Element             element;
-#endif /* __STDC__ */
+int TtaGetPolylineLength (Element element)
 {
    UserErrorCode = 0;
    if (element == NULL)
@@ -1834,16 +1620,8 @@ Element             element;
    the upper left corner of the enclosing rectangle.
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void         TtaGivePolylinePoint (Element element, int rank, TypeUnit unit, int *x, int *y)
-#else  /* __STDC__ */
-void         TtaGivePolylinePoint (element, rank, unit, x, y)
-Element      element;
-int          rank;
-TypeUnit     unit;
-int         *x;
-int         *y;
-#endif /* __STDC__ */
+void TtaGivePolylinePoint (Element element, int rank, TypeUnit unit,
+			   int *x, int *y)
 {
    PtrTextBuffer       pBuff;
 
@@ -1882,19 +1660,12 @@ int         *y;
    TtaGetPageNumber
 
    Returns the page number of a Page basic element.
-
    Parameter:
    pageElement: the page element.
-
    Return value:
    page number of that page element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaGetPageNumber (Element pageElement)
-#else  /* __STDC__ */
-int                 TtaGetPageNumber (pageElement)
-Element             pageElement;
-#endif /* __STDC__ */
 {
    int                 pageNumber;
 
@@ -1915,21 +1686,12 @@ Element             pageElement;
    TtaGetPageView
 
    Returns the view corresponding to a Page basic element.
-
    Parameter:
    pageElement: the page element.
-
    Return value:
    view of that page.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaGetPageView (Element pageElement)
-#else  /* __STDC__ */
-int                 TtaGetPageView (pageElement)
-Element             pageElement;
-#endif /* __STDC__ */
-
 {
    int                 pageView;
 
@@ -1945,5 +1707,3 @@ Element             pageElement;
       pageView = ((PtrElement) pageElement)->ElViewPSchema;
    return pageView;
 }
-
-/* End of the module */

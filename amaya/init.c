@@ -200,18 +200,12 @@ static ThotBool  itemChecked = FALSE;
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
-#include "css_f.h"
-#include "HTMLhistory_f.h"
-#include "html2thot_f.h"
-#include "init_f.h"
-#include "query_f.h"
-#include "trans_f.h"
 #include "AHTURLTools_f.h"
+#include "css_f.h"
 #include "EDITORactions_f.h"
 #include "EDITimage_f.h"
 #include "EDITstyle_f.h"
 #include "fetchXMLname_f.h"
-#include "Mathedit_f.h"
 #ifdef GRAPHML
 #include "Graphedit_f.h"
 #endif /* GRAPHML */
@@ -221,11 +215,16 @@ static ThotBool  itemChecked = FALSE;
 #include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
+#include "html2thot_f.h"
+#include "Mathedit_f.h"
 #include "MENUconf_f.h"
-#include "UIcss_f.h"
+#include "init_f.h"
+#include "query_f.h"
 #include "styleparser_f.h"
 #include "templates_f.h"
+#include "trans_f.h"
 #include "transparse_f.h"
+#include "UIcss_f.h"
 #include "ustring.h"
 #include "XMLparser_f.h"
 #include "Xml2thot_f.h"
@@ -1150,13 +1149,10 @@ static void         TextURL (Document doc, View view, char *text)
    The new title is the content of the TITLE element of document sourceDoc.
    If document sourceDoc does not have any TITLE element, nothing happen.
   ----------------------------------------------------------------------*/
-void         SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
+void SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
 {
    ElementType         elType;
-   Element             el, child;
-   Language            lang;
-   char *             text;
-   int                 length;
+   Element             el;
 
    el = TtaGetMainRoot (sourceDoc);
    elType.ElSSchema = TtaGetDocumentSSchema (sourceDoc);
@@ -1167,17 +1163,7 @@ void         SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
        elType.ElTypeNum = HTML_EL_TITLE;
        el = TtaSearchTypedElement (elType, SearchForward, el);
        if (el)
-	 {
-	   child = TtaGetFirstChild (el);
-	   if (child)
-	     {
-	       length = TtaGetTextLength (child) + 1;
-	       text = TtaGetMemory (length);
-	       TtaGiveTextContent (child, text, &length, &lang);
-               TtaChangeWindowTitle (targetDoc, view, text);
-	       TtaFreeMemory (text);
-	     }
-	 }
+	 UpdateTitle (el, sourceDoc);
      }
 }
 

@@ -1224,10 +1224,11 @@ ThotBool            AnnotSimpleClick (NotifyElement *event)
 void                UpdateTitle (Element el, Document doc)
 {
 #ifndef _GTK
-   Element             textElem;
-   int                 length;
+   Element             textElem, next;
+   ElementType         elType;
    Language            lang;
-   STRING              text;
+   char               *text;
+   int                 length, i, l;
 
    if (TtaGetViewFrame (doc, 1) == 0)
       /* this document is not displayed */
@@ -1235,9 +1236,32 @@ void                UpdateTitle (Element el, Document doc)
    textElem = TtaGetFirstChild (el);
    if (textElem != NULL)
      {
-	length = TtaGetTextLength (textElem) + 1;
-	text = TtaAllocString (length);
-	TtaGiveTextContent (textElem, text, &length, &lang);
+       /* what is the length of the title? */
+       length = 0;
+       next = textElem;
+       while (next)
+	 {
+	   elType = TtaGetElementType (next);
+	   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	     length += TtaGetTextLength (next);
+	   TtaNextSibling (&next);
+	 }
+       /* get the text of the title */
+       length++;
+       text = TtaAllocString (length);
+       next = textElem;
+       i = 0;
+       while (next)
+	 {
+	   l = length - i;
+	   elType = TtaGetElementType (next);
+	   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	     {
+	       TtaGiveTextContent (next, &text[i], &l, &lang);
+	       i += l;
+	     }
+	   TtaNextSibling (&next);
+	 }
 	UpdateAtom (doc, DocumentURLs[doc], text);
         TtaChangeWindowTitle (doc, 0, text);
     	if (DocumentSource[doc])
