@@ -676,7 +676,7 @@ void KillAllTimers ()
   /* @@@ maybe add something else to kill the Xt things */
   if (Timers)
     HTList_delete (Timers);
-
+  Timers = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -765,7 +765,7 @@ HTTimer *libwww_timer;
       /* remove the Xt timer */
       XtRemoveTimeOut (me->xt_timer);
       /* and the element from the list */
-      HTList_quickRemoveElement(cur, last);
+      HTList_removeObject (Timers, me);
       TtaFreeMemory (me);
     }
 }

@@ -1263,7 +1263,7 @@ View view;
 
   RecCleanCache (strptr);
 
-  HTCacheMode_setExpires(HT_EXPIRES_AUTO);
+  HTCacheMode_setExpires (HT_EXPIRES_AUTO);
   HTCacheInit (cache_dir, cache_size);
   /* set a new concurrent cache lock */
   strcat (strptr, ".lock");
@@ -1487,7 +1487,7 @@ static void Cacheinit ()
 	  /* initialize the cache if there's no other amaya
 	     instance running */
 	  HTCacheInit (cache_dir, cache_size);
-	  HTCacheMode_setExpires(HT_EXPIRES_AUTO);
+	  HTCacheMode_setExpires (HT_EXPIRES_AUTO);
 	  if (set_cachelock (cache_lockfile) == -1)
 	    /* couldn't open the .lock file, so, we close the cache to
 	       be in the safe side */
@@ -1719,7 +1719,7 @@ void                QueryInit ()
    HTTimer_registerSetTimerCallback ((void *) AMAYA_SetTimer);
    HTTimer_registerDeleteTimerCallback ((void *) AMAYA_DeleteTimer);
 #endif /* !_WINDOWS */
-
+   
 #ifdef DEBUG_LIBWWW
   /* forwards error messages to our own function */
    WWW_TraceFlag = THD_TRACE;
@@ -1727,24 +1727,22 @@ void                QueryInit ()
 #endif
 
    /* Trace activation (for debugging) */
-  /***
+   /***
     WWW_TraceFlag = SHOW_CORE_TRACE | SHOW_THREAD_TRACE | SHOW_PROTOCOL_TRACE;
     WWW_TraceFlag |= 0xFFFFFFFFl;
     ***/
   
-  /* Setting up other user interfaces */
-  
-  /* Setting up different network parameters */
-  /* Maximum number of simultaneous open sockets */
-  HTNet_setMaxSocket (8);
-  /* different network services timeouts */
-  HTDNS_setTimeout (60);
-  HTHost_setPersistTimeout (60L);
-  /* default timeout in ms */
-  HTHost_setEventTimeout (20000);
-  
+   /* Setting up different network parameters */
+   /* Maximum number of simultaneous open sockets */
+   HTNet_setMaxSocket (8);
+   /* different network services timeouts */
+   HTDNS_setTimeout (60);
+   HTHost_setPersistTimeout (60L);
+   /* default timeout in ms */
+   HTHost_setEventTimeout (20000);
+   
 #ifdef CATCH_SIG
-  signal (SIGPIPE, SIG_IGN);
+   signal (SIGPIPE, SIG_IGN);
 #endif
 }
 
@@ -2502,12 +2500,11 @@ int                 docid;
 #endif /* DEBUG_LIBWWW */
 	   /* avoid being called twice while doing a stop */
        lock_stop = TRUE; 
-       /* delete the libwww request status */
-       /*HTTimer_deleteAll ();*/
-       EventOrder_deleteAll ();
+       /* is this necessary ? */
+       /* EventOrder_deleteAll (); */
        HTNet_killAll ();
        /* Delete remaining channels */
-	 HTChannel_deleteAll();
+       HTChannel_deleteAll();
 
        cur = Amaya->reqlist;
        while ((me = (AHTReqContext *) HTList_nextObject (cur))) 
@@ -2519,22 +2516,23 @@ int                 docid;
 		   (*me->terminate_cbf) (me->docid, -1, me->urlName,
 					 me->outputfile,
 					 me->content_type, me->context_tcbf);
+#ifdef DEBUG_LIBWWW
 		 fprintf (stderr,"StopRequest: killing req %p, url %s, status %d\n", me, me->urlName, me->reqStatus);
+#endif /* DEBUG_LIBWWW */
 		 AHTReqContext_delete (me);
 	       }
 #ifndef _WINDOWS
 #ifdef WWW_XWINDOWS
 	   /* to be on the safe side, remove all outstanding X events */
 	   else 
-                 RequestKillAllXtevents (me);
+	     RequestKillAllXtevents (me);
 #endif /* WWW_XWINDOWS */
 #endif /* !_WINDOWS */
 	 }
-       /* again delete all the timers which the above operations may have
-	set up */
-       HTTimer_deleteAll ();
+       /* expire all outstanding timers */
+       HTTimer_expireAll ();
        /* free the stop routine */
-       lock_stop =FALSE; 
+       lock_stop = FALSE; 
 #ifdef DEBUG_LIBWWW
        fprintf (stderr, "StopRequest: number of Amaya requests "
 		"after kill: %d\n", Amaya->open_requests);
