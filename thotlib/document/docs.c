@@ -34,6 +34,7 @@
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "platform_tv.h"
+#include "print_tv.h"
 #include "modif_tv.h"
 #include "page_tv.h"
 #include "select_tv.h"
@@ -539,6 +540,9 @@ PtrDocument        *pDoc;
 	     FreeDocumentSchemas (*pDoc);
 	     FreeDocument (LoadedDocument[d]);
 	     LoadedDocument[d] = NULL;
+             /* annuler le pointeur sur le doc a imprimer */
+             if(pDocPrint==(*pDoc))
+               pDocPrint=NULL;
 	     *pDoc = NULL;
 	  }
      }

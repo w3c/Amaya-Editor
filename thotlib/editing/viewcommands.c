@@ -29,6 +29,7 @@
 #include "message.h"
 #include "fileaccess.h"
 #include "appdialogue.h"
+#include "application.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -141,9 +142,11 @@ int                 height;
 {
    int                 createdFrame;
    char                buf[MAX_TXT_LEN];
+   char                *debugstr;
 
-   if (width == 0 || height == 0)
-      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_CREATE_FRAME_FOR_VIEW), &viewName);
+   debugstr = TtaGetEnvString ("DEBUG");
+   if ((width == 0 || height == 0) && (debugstr!=NULL) && (!strcasecmp(debugstr,"YES")))
+      fprintf (stderr, TtaGetMessage (LIB, TMSG_CREATE_FRAME_FOR_VIEW), viewName);
    /* met dans le buffer le nom du document... */
    strncpy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
    strcat (buf, "  ");

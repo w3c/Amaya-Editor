@@ -1856,7 +1856,7 @@ int                 doc;
 	     FrameTable[frame].FrTopMargin = 0;
 	     /* Verification des dimensions */
 	     if (large == 0)
-		large = 170;	/* largeur en mm */
+		large = 180;	/* largeur en mm */
 	     large = mmtopixel (large, 1) + FrameTable[frame].FrLeftMargin;
 	     if (haut == 0)
 		haut = 240;	/* hauteur en mm */
