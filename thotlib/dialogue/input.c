@@ -27,6 +27,7 @@
 #include "message.h"
 #include "appdialogue.h"
 #include "fileaccess.h"
+#include "logdebug.h"
 #define MAX_EQUIV 25
 #define MAX_AUTOMATA	80
 /* automata structure for the keys */
@@ -968,12 +969,12 @@ int ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
   ThotBool            found, done;
 
 #ifdef _WX
-  wxLogDebug( _T("ThotInput: frame=%d\tvalue=%d\tcommand=%d\tPicMask=%d\tkey=%d"),
-	      frame,
-	      value,
-	      command,
-	      PicMask,
-	      key );
+  TTALOGDEBUG_5( TTA_LOG_KEYINPUT, _T("ThotInput: frame=%d\tvalue=%d\tcommand=%d\tPicMask=%d\tkey=%d"),
+		 frame,
+		 value,
+		 command,
+		 PicMask,
+		 key  );
 #endif /* _WX */
   
   modtype = THOT_NO_MOD;

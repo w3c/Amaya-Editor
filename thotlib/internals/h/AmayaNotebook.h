@@ -75,7 +75,6 @@ class AmayaNotebook : public wxNotebook
   DECLARE_EVENT_TABLE()
   void OnPageChanged(wxNotebookEvent& event);
   void OnPageChanging(wxNotebookEvent& event);
-  void OnChar( wxKeyEvent& event );
   void OnContextMenu( wxContextMenuEvent & event );
   void OnContextMenuItem( wxCommandEvent& event );
 

@@ -92,6 +92,7 @@ THOTK_OBJ = \
 	base/message_wx.o \
 	base/actions.o \
 	base/units.o \
+	base/logdebug.o \
 	document/externalref.o \
 	document/language.o \
 	document/readprs.o \

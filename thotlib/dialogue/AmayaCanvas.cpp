@@ -25,6 +25,7 @@
 #include "thot_key.h"
 #include "frame.h"
 #include "appdialogue_wx.h"
+#include "logdebug.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -98,9 +99,7 @@ AmayaCanvas::AmayaCanvas( wxWindow * p_parent_window,
 AmayaCanvas::~AmayaCanvas( )
 {
   //  SetEventHandler( new wxEvtHandler() );
-  wxLogDebug( _T("AmayaCanvas::~AmayaCanvas(): frame=%d"),
-	      m_pAmayaFrame->GetFrameId() );
-
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaCanvas::~AmayaCanvas(): frame=%d"), m_pAmayaFrame->GetFrameId() );
   m_pAmayaFrame = NULL;
 }
 
@@ -122,7 +121,7 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentFrameActive())
   {
-    wxLogDebug(_T("AmayaCanvas::OnSize: frame=%d w=%d h=%d (skip)"),
+    TTALOGDEBUG_3( TTA_LOG_DIALOG, _T("AmayaCanvas::OnSize: frame=%d w=%d h=%d (skip)"),
 	       m_pAmayaFrame->GetFrameId(),
 	       event.GetSize().GetWidth(),
 	       event.GetSize().GetHeight() );
@@ -133,7 +132,7 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
   // do not resize while opengl is not initialized
   if (!m_Init)
   {
-    wxLogDebug(_T("AmayaCanvas::OnSize: frame=%d w=%d h=%d (skip)"),
+    TTALOGDEBUG_3( TTA_LOG_DIALOG, _T("AmayaCanvas::OnSize: frame=%d w=%d h=%d (skip)"),
 	       m_pAmayaFrame->GetFrameId(),
 	       event.GetSize().GetWidth(),
 	       event.GetSize().GetHeight() );
@@ -171,7 +170,7 @@ void AmayaCanvas::OnPaint( wxPaintEvent& event )
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentFrameActive())
   {
-    wxLogDebug( _T("AmayaCanvas::OnPaint : frame=%d (skip)"),
+    TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaCanvas::OnPaint : frame=%d (skip)"),
 		m_pAmayaFrame->GetFrameId() );
     event.Skip();
     return;
@@ -202,7 +201,7 @@ void AmayaCanvas::OnPaint( wxPaintEvent& event )
     
     // call the generic callback to really display the frame
     FrameExposeCallback ( frame, x, y, w, h );
-    wxLogDebug( _T("AmayaCanvas::OnPaint : frame=%d [x=%d, y=%d, w=%d, h=%d]"), m_pAmayaFrame->GetFrameId(), x, y, w, h );
+    TTALOGDEBUG_5( TTA_LOG_DRAW, _T("AmayaCanvas::OnPaint : frame=%d [x=%d, y=%d, w=%d, h=%d]"), m_pAmayaFrame->GetFrameId(), x, y, w, h );
     
     upd ++ ;
   }
@@ -224,7 +223,7 @@ void AmayaCanvas::OnMouseDbClick( wxMouseEvent& event )
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentFrameActive())
   {
-    wxLogDebug( _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
+    TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
 		m_pAmayaFrame->GetFrameId() );
     event.Skip();
     return;
@@ -240,7 +239,7 @@ void AmayaCanvas::OnMouseDbClick( wxMouseEvent& event )
   if (event.ShiftDown())
     thot_mod_mask |= THOT_MOD_SHIFT;
 
-  wxLogDebug( _T("AmayaCanvas - wxEVT_LEFT_DCLICK || wxEVT_MIDDLE_DCLICK || wxEVT_RIGHT_DCLICK") );
+  TTALOGDEBUG_0( TTA_LOG_DRAW, _T("AmayaCanvas - wxEVT_LEFT_DCLICK || wxEVT_MIDDLE_DCLICK || wxEVT_RIGHT_DCLICK") );
   FrameButtonDClickCallback( frame,
 			     event.GetButton(),
 			     thot_mod_mask,
@@ -289,7 +288,7 @@ void AmayaCanvas::OnMouseMove( wxMouseEvent& event )
  */
 void AmayaCanvas::OnTimerMouseMove( wxTimerEvent& event )
 {
-  wxLogDebug( _T("AmayaCanvas::OnTimerMouseMove: x=%d y=%d"), m_LastMouseMoveX, m_LastMouseMoveY );
+  TTALOGDEBUG_2( TTA_LOG_DRAW, _T("AmayaCanvas::OnTimerMouseMove: x=%d y=%d"), m_LastMouseMoveX, m_LastMouseMoveY );
 
   int frame = m_pAmayaFrame->GetFrameId();
   FrameMotionCallback( frame,
@@ -310,7 +309,7 @@ void AmayaCanvas::OnMouseWheel( wxMouseEvent& event )
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentFrameActive())
   {
-    wxLogDebug( _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
+    TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
 		m_pAmayaFrame->GetFrameId() );
     event.Skip();
     return;
@@ -329,7 +328,7 @@ void AmayaCanvas::OnMouseWheel( wxMouseEvent& event )
   int direction = event.GetWheelRotation();
   int delta     = event.GetWheelDelta();
   
-  wxLogDebug( _T("AmayaCanvas - wxEVT_MOUSEWHEEL: frame=%d direction=%s delta=%d"),
+  TTALOGDEBUG_3( TTA_LOG_DRAW, _T("AmayaCanvas - wxEVT_MOUSEWHEEL: frame=%d direction=%s delta=%d"),
 	      m_pAmayaFrame->GetFrameId(),
 	      direction > 0 ? _T("up") : _T("down"),
 	      delta );
@@ -353,7 +352,7 @@ void AmayaCanvas::OnMouseUp( wxMouseEvent& event )
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentFrameActive())
   {
-    wxLogDebug( _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
+    TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
 		m_pAmayaFrame->GetFrameId() );
     event.Skip();
     return;
@@ -369,7 +368,7 @@ void AmayaCanvas::OnMouseUp( wxMouseEvent& event )
   if (event.ShiftDown())
     thot_mod_mask |= THOT_MOD_SHIFT;
 
-  wxLogDebug( _T("AmayaCanvas - wxEVT_LEFT_UP || wxEVT_MIDDLE_UP || wxEVT_RIGHT_UP") );
+  TTALOGDEBUG_0( TTA_LOG_DRAW, _T("AmayaCanvas - wxEVT_LEFT_UP || wxEVT_MIDDLE_UP || wxEVT_RIGHT_UP") );
 
   m_IsMouseSelecting = false;
   m_MouseMoveTimer.Stop();
@@ -400,8 +399,8 @@ void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
   // Do not treat this event if the canvas is not active (hiden)
   if (!IsParentFrameActive())
   {
-    wxLogDebug( _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
-		m_pAmayaFrame->GetFrameId() );
+    TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
+		   m_pAmayaFrame->GetFrameId() );
     event.Skip();
     return;
   }
@@ -475,9 +474,8 @@ void AmayaCanvas::Init()
     return;
   m_Init = true;
 
-  wxLogDebug( _T("AmayaCanvas::Init (init opengl canvas) : frame=%d"),
-      m_pAmayaFrame->GetFrameId() );
-  wxLogDebug(_T("AmayaCanvas::Init - frame=%d w=%d h=%d"),
+  TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaCanvas::Init (init opengl canvas) : frame=%d"), m_pAmayaFrame->GetFrameId() );
+  TTALOGDEBUG_3( TTA_LOG_DRAW, _T("AmayaCanvas::Init - frame=%d w=%d h=%d"),
 	     m_pAmayaFrame->GetFrameId(),
 	     GetSize().GetWidth(),
 	     GetSize().GetHeight() );

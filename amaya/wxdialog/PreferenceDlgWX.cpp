@@ -271,7 +271,7 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   strcpy( prop.HomePage, (const char*)value.mb_str(wxConvUTF8) );
 
   prop.Zoom = XRCCTRL(*this, "wxID_CHARZOOM_VALUE",     wxSpinCtrl)->GetValue();
-#ifdef 0
+#if 0
   prop.FontMenuSize = 0 /* TODO ? */;
 #endif
 

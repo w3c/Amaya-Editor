@@ -49,8 +49,6 @@ AmayaApplyClassPanel::AmayaApplyClassPanel( wxWindow * p_parent_window, AmayaNor
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_APPLYCLASS") )
     ,m_ApplyClassRef(0)
 {
-  wxLogDebug( _T("AmayaApplyClassPanel::AmayaApplyClassPanel") );
-
   // setup labels
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY_CLASS)));
@@ -163,7 +161,6 @@ void AmayaApplyClassPanel::SendDataToPanel( AmayaParams& p )
  */
 void AmayaApplyClassPanel::DoUpdate()
 {
-  wxLogDebug( _T("AmayaApplyClassPanel::DoUpdate") );
   AmayaSubPanel::DoUpdate();
 }
 
@@ -188,7 +185,6 @@ bool AmayaApplyClassPanel::IsActive()
  */
 void AmayaApplyClassPanel::OnApply( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaApplyClassPanel::OnApply") );
   ThotCallback(m_ApplyClassRef, INTEGER_DATA, (char*) 1);
 }
 
@@ -201,7 +197,6 @@ void AmayaApplyClassPanel::OnApply( wxCommandEvent& event )
  */
 void AmayaApplyClassPanel::OnSelected( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaApplyClassPanel::OnSelected") );
   wxString s_selected = XRCCTRL(*this, "wxID_LIST_APPLYCLASS", wxListBox)->GetStringSelection();
   
   // allocate a temporary buffer
@@ -224,7 +219,6 @@ void AmayaApplyClassPanel::OnSelected( wxCommandEvent& event )
  */
 void AmayaApplyClassPanel::OnRefresh( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaApplyClassPanel::OnRefresh") );
   RefreshApplyClassPanel();
 }
 

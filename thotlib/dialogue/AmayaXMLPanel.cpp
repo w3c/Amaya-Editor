@@ -49,8 +49,6 @@ AmayaXMLPanel::AmayaXMLPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_XML") )
     ,m_XMLRef(0)
 {
-  wxLogDebug( _T("AmayaXMLPanel::AmayaXMLPanel") );
-
   // setup labels
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_EL_TYPE)));
@@ -153,7 +151,6 @@ void AmayaXMLPanel::SendDataToPanel( AmayaParams& p )
  */
 void AmayaXMLPanel::DoUpdate()
 {
-  wxLogDebug( _T("AmayaXMLPanel::DoUpdate") );
   AmayaSubPanel::DoUpdate();
 
   // refresh the liste when the panel is expanded or detached.
@@ -184,7 +181,6 @@ bool AmayaXMLPanel::IsActive()
  */
 void AmayaXMLPanel::OnApply( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaXMLPanel::OnApply") );
   ThotCallback(m_XMLRef, INTEGER_DATA, (char*) 1);
 }
 
@@ -197,7 +193,6 @@ void AmayaXMLPanel::OnApply( wxCommandEvent& event )
  */
 void AmayaXMLPanel::OnSelected( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaXMLPanel::OnSelected") );
   wxString s_selected = XRCCTRL(*this, "wxID_LIST_XML", wxListBox)->GetStringSelection();
   
   // allocate a temporary buffer
@@ -220,7 +215,6 @@ void AmayaXMLPanel::OnSelected( wxCommandEvent& event )
  */
 void AmayaXMLPanel::OnRefresh( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaXMLPanel::OnRefresh") );
   RefreshXMLPanel();
 }
 

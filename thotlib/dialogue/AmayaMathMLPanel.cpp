@@ -45,8 +45,6 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaMathMLPanel, AmayaSubPanel)
 AmayaMathMLPanel::AmayaMathMLPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_MATHML") )
 {
-  wxLogDebug( _T("AmayaMathMLPanel::AmayaMathMLPanel") );
-
   // setup labels
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_MATHML)));
@@ -101,8 +99,6 @@ void AmayaMathMLPanel::RefreshToolTips()
  */
 void AmayaMathMLPanel::OnButton( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaMathMLPanel::OnButton") );
-
   Document doc;
   View view;
   TtaGetActiveView( &doc, &view );
@@ -165,7 +161,6 @@ void AmayaMathMLPanel::SendDataToPanel( AmayaParams& p )
  */
 void AmayaMathMLPanel::DoUpdate()
 {
-  wxLogDebug( _T("AmayaMathMLPanel::DoUpdate") );
   AmayaSubPanel::DoUpdate();
 }
 

@@ -32,6 +32,8 @@
 #include "appdialogue.h"
 #include "thotcolor.h"
 #include "picture.h"
+#include "logdebug.h"
+
 #ifdef _GTK
   #include <gdk/gdkx.h>
 #endif /*_GTK*/
@@ -1074,8 +1076,8 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
 #endif /* _WX */
 
 #ifdef _WX
-  wxLogDebug( _T("FrameResizedCallback: new_width=%d new_height=%d (ComputeScrollBar=%s)"),
-	      new_width, new_height, ComputeScrollBar ? _T("TRUE") : _T("FALSE") );
+  TTALOGDEBUG_3( TTA_LOG_DIALOG, _T("FrameResizedCallback: new_width=%d new_height=%d (ComputeScrollBar=%s)"),
+		 new_width, new_height, ComputeScrollBar ? _T("TRUE") : _T("FALSE"));
 #endif /* _WX */
 
 #ifdef _GL
@@ -3661,7 +3663,7 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
 #ifdef _GL_COLOR_DEBUG
 	  float tmp[4];
 	  glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
-	  wxLogDebug( _T("glClear CLEAR_VALUE(%f,%f,%f,%f) - frame=%d"),tmp[0],tmp[1],tmp[2],tmp[3], frame );
+	  TTALOGDEBUG_5( TTA_LOG_DRAW, _T("glClear CLEAR_VALUE(%f,%f,%f,%f) - frame=%d"),tmp[0],tmp[1],tmp[2],tmp[3], frame);
 #endif /* _GL_COLOR_DEBUG */
 	  glClear( GL_COLOR_BUFFER_BIT );
 	}

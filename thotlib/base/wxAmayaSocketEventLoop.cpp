@@ -1,6 +1,7 @@
 #ifdef _WX
 
 #include "wx/log.h"
+#include "logdebug.h"
 
 #include "wxAmayaSocketEventLoop.h"
 #include "wxAmayaSocketEvent.h"
@@ -30,24 +31,24 @@ wxAmayaSocketEventLoop::~wxAmayaSocketEventLoop()
 void wxAmayaSocketEventLoop::InitSocketLib()
 {
 #ifdef _WINDOWS
-   /*
-    ** Initialise WinSock DLL. This must also be shut down! PMH
-    */
-    {
-        WSADATA wsadata;
-		if (WSAStartup(DESIRED_WINSOCK_VERSION, &wsadata))
-		{
-			wxLogDebug( _T("wxAmayaSocketEventLoop: Can't initialize WinSoc"));
-			WSACleanup();
-		}
-        if (wsadata.wVersion < MINIMUM_WINSOCK_VERSION)
-		{
-			wxLogDebug( _T("wxAmayaSocketEventLoop: Bad version of WinSoc"));
-            WSACleanup();
-        }
-		wxLogDebug( _T("wxAmayaSocketEventLoop: Using WinSoc version \"%x\""),
-					wsadata.wVersion );
-    }
+  /*
+  ** Initialise WinSock DLL. This must also be shut down!
+  */
+  {
+    WSADATA wsadata;
+    if (WSAStartup(DESIRED_WINSOCK_VERSION, &wsadata))
+      {
+	TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("wxAmayaSocketEventLoop: Can't initialize WinSoc") );
+	WSACleanup();
+      }
+    if (wsadata.wVersion < MINIMUM_WINSOCK_VERSION)
+      {
+	TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("wxAmayaSocketEventLoop: Bad version of WinSoc") );
+	WSACleanup();
+      }
+    TTALOGDEBUG_1( TTA_LOG_SOCKET, _T("wxAmayaSocketEventLoop: Using WinSoc version \"%x\""),
+		   wsadata.wVersion );
+  }
 #endif /* _WINDOWS */
 }
 

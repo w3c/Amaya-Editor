@@ -48,8 +48,6 @@ AmayaQuickSplitButton::~AmayaQuickSplitButton()
  */
 void AmayaQuickSplitButton::OnEnterWindow( wxMouseEvent& event )
 {
-  wxLogDebug( _T("AmayaQuickSplitButton::OnEnterWindow") );
-
   m_OldColour = GetBackgroundColour();
   SetBackgroundColour(wxColour(255,50,50));
   Refresh();
@@ -66,8 +64,6 @@ void AmayaQuickSplitButton::OnEnterWindow( wxMouseEvent& event )
  */
 void AmayaQuickSplitButton::OnLeaveWindow( wxMouseEvent& event )
 {
-  wxLogDebug( _T("AmayaQuickSplitButton::OnLeaveWindow") );
-
   SetBackgroundColour(m_OldColour);
   Refresh();
 
@@ -84,8 +80,6 @@ void AmayaQuickSplitButton::OnLeaveWindow( wxMouseEvent& event )
  */
 void AmayaQuickSplitButton::OnActivate( wxMouseEvent& event )
 {
-  wxLogDebug( _T("AmayaQuickSplitButton::OnActivate") );
-  
   // now just simulate a wxButton event : this event will be catch by its parent.
   wxCommandEvent cmd_event( wxEVT_COMMAND_BUTTON_CLICKED, GetId() );
   // Do not use  wxPostEvent( this, cmd_event ); because on unix there is a layout bug ... but on windows it works fine

@@ -35,8 +35,6 @@ AmayaPrintNotify::AmayaPrintNotify() :
 	    wxSize(500,500),
 	    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxCAPTION )
 {
-  wxLogDebug( _T("AmayaPrintNotify::AmayaPrintNotify") );
-
   // setup the title
   SetTitle( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_PRINT)) );
 
@@ -69,7 +67,6 @@ AmayaPrintNotify::AmayaPrintNotify() :
  */
 AmayaPrintNotify::~AmayaPrintNotify()
 {
-  wxLogDebug( _T("AmayaPrintNotify::~AmayaPrintNotify") );
 }
 
 /*
@@ -81,7 +78,6 @@ AmayaPrintNotify::~AmayaPrintNotify()
  */
 void AmayaPrintNotify::OnButton(wxCommandEvent & event)
 {
-  wxLogDebug( _T("AmayaPrintNotify::OnButton") );
   Close();
   event.Skip();
 }
@@ -95,7 +91,6 @@ void AmayaPrintNotify::OnButton(wxCommandEvent & event)
  */
 void AmayaPrintNotify::SetMessage( const char * p_message )
 {
-  wxLogDebug( _T("AmayaPrintNotify::SetMessage - message=")+TtaConvMessageToWX(p_message) );
   m_pLabel->SetLabel( TtaConvMessageToWX(p_message) );
   m_pTopSizer->Fit(this);
   m_pTopSizer->Layout();
@@ -111,7 +106,6 @@ void AmayaPrintNotify::SetMessage( const char * p_message )
  */
 void AmayaPrintNotify::OnClose(wxCloseEvent & event)
 {
-  wxLogDebug( _T("AmayaPrintNotify::OnClose") );
   wx_print_cancel();
   event.Skip();
 }

@@ -19,6 +19,7 @@
 #include "frame.h"
 #include "appdialogue_wx.h"
 #include "registry_wx.h"
+#include "logdebug.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -357,8 +358,6 @@ void AmayaPage::OnSplitButton( wxCommandEvent& event )
       return;
     }
 
-  wxLogDebug( _T("AmayaPage::OnSplitButton") );
-
   DoSplitUnsplit();
 
   //  event.Skip();
@@ -421,7 +420,6 @@ void AmayaPage::DoSplitUnsplit()
  */
 void AmayaPage::OnSplitterPosChanging( wxSplitterEvent& event )
 {
-  wxLogDebug( _T("AmayaPage::OnSplitterPosChanging pos=%d"), event.GetSashPosition() );
   event.Skip();
 }
 
@@ -435,8 +433,6 @@ void AmayaPage::OnSplitterPosChanging( wxSplitterEvent& event )
  */
 void AmayaPage::OnSplitterPosChanged( wxSplitterEvent& event )
 {
-    wxLogDebug( _T("AmayaPage::OnSplitterPosChanged pos=%d"), event.GetSashPosition() );
-
     // calculate the new ratio (depending of window size)
     float new_slash_pos = event.GetSashPosition();
     float height = GetSize().GetHeight();
@@ -463,7 +459,6 @@ void AmayaPage::OnSplitterPosChanged( wxSplitterEvent& event )
  */
 void AmayaPage::OnSplitterDClick( wxSplitterEvent& event )
 {
-  wxLogDebug( _T("AmayaPage::OnSplitterDClick") );
   DetachFrame(2);
   // dont forward this event because childs slitterwindows dont must catch this event (AmayaPanel for exemple)
   //  event.Skip();  
@@ -479,8 +474,6 @@ void AmayaPage::OnSplitterDClick( wxSplitterEvent& event )
  */
 void AmayaPage::OnSplitterUnsplit( wxSplitterEvent& event )
 {
-  wxLogDebug( _T("AmayaPage::OnSplitterUnsplit") );
-
   // the frame has been maybe unsplited manualy
   // maybe an update is needed
   int pos = GetFramePosition( wxDynamicCast(event.GetWindowBeingRemoved(), AmayaFrame) );
@@ -514,17 +507,10 @@ void AmayaPage::OnSize( wxSizeEvent& event )
   // do not update the size if the page is not selected
   if ( !IsSelected() )
   {
-    wxLogDebug( _T("AmayaPage::OnSize w=%d h=%d (skip)"),
-		event.GetSize().GetWidth(),
-		event.GetSize().GetHeight() );
     event.Skip();
     return;
   }
   
-  wxLogDebug( _T("AmayaPage::OnSize w=%d h=%d"),
-		event.GetSize().GetWidth(),
-		event.GetSize().GetHeight() );
-
   AdjustSplitterPos();
 
   event.Skip();
@@ -576,7 +562,7 @@ void AmayaPage::AdjustSplitterPos( int height, int width )
  */
 void AmayaPage::OnClose(wxCloseEvent& event)
 {
-  wxLogDebug( _T("AmayaPage::OnClose topframe=%d bottomframe=%d"),
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaPage::OnClose topframe=%d bottomframe=%d"),
 		m_pTopFrame ? m_pTopFrame->GetFrameId() : -1,
 		m_pBottomFrame ? m_pBottomFrame->GetFrameId() : -1 );
 
@@ -632,7 +618,6 @@ void AmayaPage::OnClose(wxCloseEvent& event)
  */
 void AmayaPage::OnPaint( wxPaintEvent& event )
 {
-  wxLogDebug( _T("AmayaPage::OnPaint") );
   event.Skip(FALSE);
 }
 
@@ -915,9 +900,6 @@ void AmayaPage::RaisePage()
  */
 void AmayaPage::OnContextMenu( wxContextMenuEvent & event )
 {
-  wxLogDebug( _T("AmayaPage::OnContextMenu - (x,y)=(%d,%d)"),
-	      event.GetPosition().x,
-	      event.GetPosition().y );
   event.Skip();
 }
 
@@ -932,8 +914,6 @@ void AmayaPage::OnContextMenu( wxContextMenuEvent & event )
  */
 void AmayaPage::RefreshSplitToggleMenu()
 {
-  wxLogDebug( _T("AmayaPage::RefreshSplitToggleMenu") );
-  
   int window_id = GetWindowParent()->GetWindowId();
   int page_id   = GetPageId();
 

@@ -3,6 +3,8 @@
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
 
+#include "logdebug.h"
+
 #include "AmayaFloatingPanel.h"
 #include "AmayaSubPanel.h"
 #include "AmayaSubPanelManager.h"
@@ -40,39 +42,39 @@ AmayaFloatingPanel::AmayaFloatingPanel( wxWindow * p_parent
   switch (m_pParentSubPanel->GetPanelType())
     {
     case WXAMAYA_PANEL_XHTML:
-      wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_XHTML"));
+      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_XHTML"));
       m_pPanel = new AmayaXHTMLPanel( this );
       break;
     case WXAMAYA_PANEL_ATTRIBUTE:
-      wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_ATTRIBUTE"));
+      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_ATTRIBUTE"));
       m_pPanel = new AmayaAttributePanel( this );
       break;
     case WXAMAYA_PANEL_COLORS:
-      wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_COLORS"));
+      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_COLORS"));
       m_pPanel = new AmayaColorsPanel( this );
       break;
     case WXAMAYA_PANEL_CHARSTYLE:
-      wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_CHARSTYLE"));
+      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_CHARSTYLE"));
       m_pPanel = new AmayaCharStylePanel( this );
       break;
     case WXAMAYA_PANEL_FORMAT:
-      wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_FORMAT"));
+      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_FORMAT"));
       m_pPanel = new AmayaFormatPanel( this );
       break;
     case WXAMAYA_PANEL_APPLYCLASS:
-      wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_APPLYCLASS"));
+      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_APPLYCLASS"));
       m_pPanel = new AmayaApplyClassPanel( this );
       break;
     case WXAMAYA_PANEL_MATHML:
-      wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_MATHML"));
+      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_MATHML"));
       m_pPanel = new AmayaMathMLPanel( this );
       break;
     case WXAMAYA_PANEL_XML:
-      wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_XML"));
+      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_XML"));
       m_pPanel = new AmayaXMLPanel( this );
       break;
     case WXAMAYA_PANEL_SPECHAR:
-      wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_SPECHAR"));
+      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_SPECHAR"));
       m_pPanel = new AmayaSpeCharPanel( this );
       break;
     }
@@ -122,8 +124,6 @@ AmayaFloatingPanel::~AmayaFloatingPanel()
  */
 void AmayaFloatingPanel::OnClose( wxCloseEvent& event )
 {
-  wxLogDebug(_T("AmayaFloatingPanel - OnClose") );
-
   AmayaSubPanelManager::GetInstance()->DoUnfloat( m_pParentSubPanel );
 
   event.Skip();

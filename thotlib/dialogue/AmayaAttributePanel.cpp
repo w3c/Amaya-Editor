@@ -52,9 +52,6 @@ AmayaAttributePanel::AmayaAttributePanel( wxWindow * p_parent_window, AmayaNorma
   ,m_NbAttr_evt(0)
   ,m_pRBEnum(NULL)
 {
-  wxLogDebug( _T("AmayaAttributePanel::AmayaAttributePanel") );
-
-  //  m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
   m_pVPanelParent       = XRCCTRL(*m_pPanel, "wxID_PANEL_ATTRVALUE", wxPanel);
   m_pVPanelSizer  = m_pVPanelParent->GetSizer();
 
@@ -128,8 +125,6 @@ bool AmayaAttributePanel::IsFreezed()
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::SendDataToPanel( AmayaParams& p )
 {
-  wxLogDebug(_T("AmayaAttributePanel::SendDataToPanel") );
-
   int action_id = (int)p.param1;
   switch ( action_id )
     {
@@ -169,11 +164,6 @@ void AmayaAttributePanel::SendDataToPanel( AmayaParams& p )
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::OnListSelectItem( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaAttributePanel - OnListSelectItem: isck=%s, issel=%s, sel=%d"),
-	      event.IsChecked() ? _T("yes") : _T("no"),
-	      event.IsSelection() ? _T("yes") : _T("no"),
-	      event.GetSelection() );
-  
   SelectAttribute( event.GetSelection() );
 }
 
@@ -216,11 +206,6 @@ void AmayaAttributePanel::SelectAttribute( int position )
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::OnListCheckItem( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaAttributePanel - OnListCheckItem: isck=%s, issel=%s, sel=%d"),
-	      event.IsChecked() ? _T("yes") : _T("no"),
-	      event.IsSelection() ? _T("yes") : _T("no"),
-	      event.GetSelection() );
-
   if (!m_pAttrList->IsChecked(event.GetSelection()))
     {
       /* before to check an item force the selection */
@@ -273,8 +258,6 @@ void AmayaAttributePanel::RemoveCurrentAttribut()
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
 {
-  wxLogDebug(_T("AmayaAttributePanel - ShowAttributValue type=%d"), type );
-
   if(IsFreezed())
     return;
 
@@ -337,8 +320,6 @@ void AmayaAttributePanel::ShowAttributValue( wxATTR_TYPE type )
 void AmayaAttributePanel::SetupListValue( const char * p_attr_list, int nb_attr, const int * p_active_attr,
 					  const char * p_attr_evt_list, int nb_attr_evt, const int * p_active_attr_evt )
 {
-  wxLogDebug(_T("AmayaAttributePanel::SetupListValue") );
-
   /* remember the selected entry */
   wxString last_entry = m_pAttrList->GetStringSelection();
 
@@ -522,7 +503,6 @@ void AmayaAttributePanel::SetupNumValue( int num )
   ----------------------------------------------------------------------*/
 void AmayaAttributePanel::OnDelAttr( wxCommandEvent& event )
 {
-  wxLogDebug(_T("AmayaAttributePanel::OnDelAttr") );
   RemoveCurrentAttribut();    
 }
 
@@ -537,13 +517,10 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
     if (m_pAttrList->GetSelection() < 0 || !m_pAttrList->IsChecked(m_pAttrList->GetSelection()))
       return;
 
-  wxLogDebug(_T("AmayaAttributePanel::OnApply") );
-
   switch (m_CurrentAttType)
     {
     case wxATTR_TYPE_TEXT:
       {
-	wxLogDebug(_T("AmayaAttributePanel::OnApply - wxATTR_TYPE_TEXT") );
 	wxTextCtrl * p_text_ctrl = XRCCTRL(*m_pPanel_Text, "wxID_ATTR_TEXT_VALUE", wxTextCtrl);
 	wxString value = p_text_ctrl->GetValue();
 	char buffer[MAX_LENGTH];
@@ -558,7 +535,6 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
       break;
     case wxATTR_TYPE_ENUM:
       {
-	wxLogDebug(_T("AmayaAttributePanel::OnApply - wxATTR_TYPE_ENUM") );
 	CallbackValAttrMenu (NumMenuAttrEnum, m_pRBEnum->GetSelection(), NULL);
 	/* create/modify attribute */
 	CallbackValAttrMenu (NumMenuAttr, 1, NULL);
@@ -569,7 +545,6 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
       break;
     case wxATTR_TYPE_NUM:
       {
-	wxLogDebug(_T("AmayaAttributePanel::OnApply - wxATTR_TYPE_NUM") );
 	wxSpinCtrl * p_spin_ctrl = XRCCTRL(*m_pPanel_Num, "wxID_ATTR_NUM_VALUE", wxSpinCtrl);
 	int value = p_spin_ctrl->GetValue();
 	CallbackValAttrMenu (NumMenuAttrNumber, value, NULL);
@@ -582,7 +557,6 @@ void AmayaAttributePanel::OnApply( wxCommandEvent& event )
       break;
     case wxATTR_TYPE_LANG:
       {
-	wxLogDebug(_T("AmayaAttributePanel::OnApply - wxATTR_TYPE_LANG") );
 	wxComboBox * p_cb = XRCCTRL(*m_pPanel_Lang, "wxID_ATTR_COMBO_LANG_LIST", wxComboBox);
 	wxString value = p_cb->GetValue();
 	char buffer[MAX_LENGTH];
@@ -642,7 +616,6 @@ void AmayaAttributePanel::ForceAttributeUpdate()
  */
 void AmayaAttributePanel::DoUpdate()
 {
-  wxLogDebug( _T("AmayaAttributePanel::DoUpdate") );
   AmayaSubPanel::DoUpdate();
   ForceAttributeUpdate();  
 }

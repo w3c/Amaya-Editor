@@ -17,6 +17,7 @@
 #include "libmsg.h"
 #include "frame.h"
 #include "view.h"
+#include "logdebug.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -63,7 +64,7 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
 	      id, pos, size, style )
      ,m_pParentNWindow(p_parent_nwindow)
 {
-  wxLogDebug( _T("AmayaPanel::AmayaPanel") );
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaPanel::AmayaPanel") );
 
   // init the panel list
   memset( m_aPanelList, 0, WXAMAYA_PANEL_TYPE_NB * sizeof(AmayaSubPanel *));
@@ -132,7 +133,7 @@ AmayaPanel::~AmayaPanel()
  */
 void AmayaPanel::ShowWhenUnsplit( bool show )
 {
-  wxLogDebug( _T("AmayaPanel::ShowWhenUnsplit") );
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaPanel::ShowWhenUnsplit"));
   if (!show)
     {
       Hide();

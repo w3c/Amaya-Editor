@@ -49,8 +49,6 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaCharStylePanel, AmayaSubPanel)
 AmayaCharStylePanel::AmayaCharStylePanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_CHARSTYLE") )
 {
-  wxLogDebug( _T("AmayaCharStylePanel::AmayaCharStylePanel") );
-
  // setup labels
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_CHAR)));
@@ -184,7 +182,6 @@ void AmayaCharStylePanel::SendDataToPanel( AmayaParams& p )
  */
 void AmayaCharStylePanel::DoUpdate()
 {
-  wxLogDebug( _T("AmayaCharStylePanel::DoUpdate") );
   AmayaSubPanel::DoUpdate();
 
   // do not refresh the panel from the current selection because the user must ask for that
@@ -211,8 +208,6 @@ bool AmayaCharStylePanel::IsActive()
  */
 void AmayaCharStylePanel::OnApply( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaCharStylePanel::OnApply") );
-
   int font_family    = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_FONTFAMILY",wxChoice)->GetSelection();
   int font_style     = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_CHARSTYLE",wxChoice)->GetSelection();
   int font_weight    = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_BOLDNESS",wxChoice)->GetSelection();
@@ -307,7 +302,6 @@ void AmayaCharStylePanel::OnApplyBoldness( wxCommandEvent& event )
  */
 void AmayaCharStylePanel::OnRefresh( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaCharStylePanel::OnRefresh") );
   RefreshCharStylePanel();
 }
 

@@ -15,6 +15,7 @@
 #include "appdialogue_wx.h"
 #include "windowtypes_wx.h"
 #include "registry_wx.h"
+#include "logdebug.h"
 
 #include "appdialogue_wx_f.h"
 
@@ -58,8 +59,6 @@ AmayaNotebook::~AmayaNotebook()
  */
 void AmayaNotebook::OnClose(wxCloseEvent& event)
 {
-  wxLogDebug( _T("AmayaNotebook::OnClose") );
-
   /* if this boolean is set to false, the window must not be closed */
   bool close_window = true; 
 
@@ -118,7 +117,7 @@ void AmayaNotebook::UpdatePageId()
 	}
       else
 	{
-	  wxLogDebug( _T("y a un problem, on essaye de mettre a jour une page qui est deja fermee") );
+	  wxASSERT_MSG(FALSE, _T("y a un problem, on essaye de mettre a jour une page qui est deja fermee") );
 	}
       page_id++;
     }
@@ -135,9 +134,6 @@ void AmayaNotebook::UpdatePageId()
  */
 void AmayaNotebook::OnPageChanging(wxNotebookEvent& event)
 {
-  wxLogDebug( _T("AmayaNotebook::OnPageChanging : old=%d, new=%d"),
-              event.GetOldSelection(),
-              event.GetSelection() );
   event.Skip();
 }
 
@@ -150,9 +146,9 @@ void AmayaNotebook::OnPageChanging(wxNotebookEvent& event)
  */
 void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
 {
-  wxLogDebug( _T("AmayaNotebook::OnPageChanged : old=%d, new=%d"),
-              event.GetOldSelection(),
-              event.GetSelection() );
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnPageChanged : old=%d, new=%d"),
+		 event.GetOldSelection(),
+		 event.GetSelection() );
 
   // do not change the page if this is the same as old one
   // this case can occure when notebook's pages are deleted ...
@@ -211,13 +207,13 @@ int AmayaNotebook::GetPageId( const AmayaPage * p_page )
 
 void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
 {
-  wxLogDebug( _T("AmayaNotebook::OnContextMenu - (x,y)=(%d,%d)"),
-	      event.GetPosition().x,
-	      event.GetPosition().y );
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnContextMenu - (x,y)=(%d,%d)"),
+		 event.GetPosition().x,
+		 event.GetPosition().y );
 
   long flags  = 0;
   int tab_pos = HitTest(ScreenToClient(event.GetPosition()), &flags);
-  wxLogDebug( _T("AmayaNotebook::OnContextMenu - tab_pos=%d, flags=%d"), tab_pos, flags);
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnContextMenu - tab_pos=%d, flags=%d"), tab_pos, flags );
 
   wxMenu * p_menu = TtaGetContextMenu( m_pAmayaWindow->GetWindowId() );
   PopupMenu(p_menu, ScreenToClient(event.GetPosition()));
@@ -225,6 +221,7 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
 //  event.Skip();
 }
 
+#if 0
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaNotebook
@@ -234,16 +231,15 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
  */
 void AmayaNotebook::OnChar(wxKeyEvent& event)
 {
-  wxLogDebug( _T("AmayaNotebook::OnChar key=")+wxString(event.GetUnicodeKey()) );
   event.Skip();
 }
+#endif /* 0 */
 
 BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
   EVT_CLOSE(	                  AmayaNotebook::OnClose )
   EVT_NOTEBOOK_PAGE_CHANGED(  -1, AmayaNotebook::OnPageChanged )
   EVT_NOTEBOOK_PAGE_CHANGING( -1, AmayaNotebook::OnPageChanging )
   EVT_CONTEXT_MENU(               AmayaNotebook::OnContextMenu )
-  //  EVT_CHAR( AmayaNotebook::OnChar )
 END_EVENT_TABLE()
   
 #endif /* #ifdef _WX */

@@ -1,5 +1,7 @@
 #ifdef _WX
 
+#include "logdebug.h"
+
 #include "AmayaAppInstance.h"
 #include "message_wx.h"
 
@@ -21,7 +23,7 @@ AmayaAppInstance::AmayaAppInstance( AmayaApp * p_amaya_app ) :
   m_ServiceHostname   = _T("localhost");
   m_pURLGrabberServer = NULL;
 
-  wxLogDebug(_T("AppInstanceName=") + m_InstanceName);
+  TTALOGDEBUG_0( TTA_LOG_INIT, _T("AppInstanceName=") + m_InstanceName );
 }
 
 /*

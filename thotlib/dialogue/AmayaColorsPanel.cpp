@@ -52,8 +52,6 @@ AmayaColorsPanel::AmayaColorsPanel( wxWindow * p_parent_window, AmayaNormalWindo
     ,m_ThotBGColor(-1)
     ,m_ThotFGColor(-1)
 {
-  wxLogDebug( _T("AmayaColorsPanel::AmayaColorsPanel") );
-
   // setup labels
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_COLORS)));
@@ -126,7 +124,6 @@ void AmayaColorsPanel::RefreshToolTips()
  */
 void AmayaColorsPanel::OnModifyColor( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaColorsPanel::OnModifyColor") );
   ModifyColor (m_ThotFGColor, FALSE);
   ModifyColor (m_ThotBGColor, TRUE);
 
@@ -143,7 +140,6 @@ void AmayaColorsPanel::OnModifyColor( wxCommandEvent& event )
  */
 void AmayaColorsPanel::OnGetColor( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaColorsPanel::OnGetColor") );
   ThotGetSelectedElementColor();
 }
 
@@ -156,7 +152,6 @@ void AmayaColorsPanel::OnGetColor( wxCommandEvent& event )
  */
 void AmayaColorsPanel::OnDefaultColors( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaColorsPanel::OnDefaultColors") );
   ThotSelectPalette (-1, -1);
 }
 
@@ -169,7 +164,6 @@ void AmayaColorsPanel::OnDefaultColors( wxCommandEvent& event )
  */
 void AmayaColorsPanel::OnSwitchColors( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaColorsPanel::OnSwitchColors") );
   ThotSelectPalette (m_ThotFGColor, m_ThotBGColor);
 }
 
@@ -229,7 +223,6 @@ void AmayaColorsPanel::SendDataToPanel( AmayaParams& p )
  */
 void AmayaColorsPanel::DoUpdate()
 {
-  wxLogDebug( _T("AmayaColorsPanel::DoUpdate") );
   AmayaSubPanel::DoUpdate();
   ThotUpdatePalette();
 }
@@ -255,8 +248,6 @@ bool AmayaColorsPanel::IsActive()
  */
 void AmayaColorsPanel::OnChooseFGColor( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaColorsPanel::OnChooseFGColor") );
-
   wxColour * p_fg_colour   = ColorPixel(m_ThotFGColor);
   wxColour   start_colour  = p_fg_colour ? *p_fg_colour : wxColour();
   int thot_col = ChooseCustomColor( start_colour );
@@ -273,8 +264,6 @@ void AmayaColorsPanel::OnChooseFGColor( wxCommandEvent& event )
  */
 void AmayaColorsPanel::OnChooseBGColor( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaColorsPanel::OnChooseBGColor") );
-  
   wxColour * p_bg_colour = ColorPixel(m_ThotBGColor);
   wxColour start_colour  = p_bg_colour ? *p_bg_colour : wxColour();
   int thot_col = ChooseCustomColor( start_colour );
@@ -291,7 +280,6 @@ void AmayaColorsPanel::OnChooseBGColor( wxCommandEvent& event )
  */
 int AmayaColorsPanel::ChooseCustomColor( const wxColour & start_colour )
 {
-  wxLogDebug( _T("AmayaColorsPanel::ChooseCustomColor") );
   m_ColourData.SetColour( start_colour );
 
   // open the color dialog and ask user to select a color.

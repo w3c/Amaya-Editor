@@ -17,6 +17,7 @@
 #include "message.h"
 #include "libmsg.h"
 #include "frame.h"
+#include "logdebug.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -194,9 +195,9 @@ bool AmayaNormalWindow::AttachPage( int position, AmayaPage * p_page )
 
     // the inserted page should be forced to notebook size
     m_pNotebook->Layout();
-    wxLogDebug( _T("AmayaNormalWindow::AttachPage - pagesize: w=%d h=%d"),
+    TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNormalWindow::AttachPage - pagesize: w=%d h=%d"),
 		p_page->GetSize().GetWidth(),
-		p_page->GetSize().GetHeight() );
+		p_page->GetSize().GetHeight());
 
     SetAutoLayout(TRUE);
   }
@@ -273,7 +274,7 @@ bool AmayaNormalWindow::ClosePage( int page_id )
  */
 AmayaPage * AmayaNormalWindow::GetPage( int position ) const
 {
-  wxLogDebug( _T("AmayaNormalWindow::GetPage") );
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::GetPage") );
   if (!m_pNotebook)
     return NULL;
   if (GetPageCount() <= position)
@@ -336,7 +337,7 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
 
   action_id = FindMenuActionFromMenuItemID (DocumentMenuList, id);
 
-  wxLogDebug(_T("AmayaNormalWindow::OnMenuItem id=%d action_id=%d"), id, action_id);
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnMenuItem id=%d action_id=%d"), id, action_id );
 
   /* ok now execute the callback */
   Document            doc;
@@ -354,7 +355,7 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
  */
 AmayaPage * AmayaNormalWindow::GetActivePage() const
 {
-  wxLogDebug( _T("AmayaNormalWindow::GetActivePage") );
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::GetActivePage") );
   if (!m_pNotebook)
     return NULL;
   return (m_pNotebook->GetSelection() >= 0) ? GetPage(m_pNotebook->GetSelection()) : NULL;
@@ -369,7 +370,7 @@ AmayaPage * AmayaNormalWindow::GetActivePage() const
  */
 AmayaFrame * AmayaNormalWindow::GetActiveFrame() const
 {
-  wxLogDebug( _T("AmayaNormalWindow::GetActiveFrame") );
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::GetActiveFrame") );
 
   AmayaPage * p_page = GetActivePage();
   if (p_page)
@@ -485,7 +486,7 @@ void AmayaNormalWindow::CleanUp()
  */
 void AmayaNormalWindow::OnMenuOpen( wxMenuEvent& event )
 {
-  wxLogDebug( _T("AmayaNormalWindow::OnMenuOpen - menu_id=%d"), event.GetMenuId() );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnMenuOpen - menu_id=%d"), event.GetMenuId() );
   event.Skip();
 }
 
@@ -498,7 +499,7 @@ void AmayaNormalWindow::OnMenuOpen( wxMenuEvent& event )
  */
 void AmayaNormalWindow::OnMenuClose( wxMenuEvent& event )
 {
-  wxLogDebug( _T("AmayaNormalWindow::OnMenuClose - menu_id=%d"), event.GetMenuId() );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnMenuClose - menu_id=%d"), event.GetMenuId() );
   event.Skip();
 }
 
@@ -511,7 +512,7 @@ void AmayaNormalWindow::OnMenuClose( wxMenuEvent& event )
  */
 void AmayaNormalWindow::OnSplitterPosChanged( wxSplitterEvent& event )
 {
-  wxLogDebug( _T("AmayaNormalWindow::OnSplitterPosChanged now = %d"), event.GetSashPosition() );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnSplitterPosChanged now = %d"), event.GetSashPosition() );
   m_SlashPos = event.GetSashPosition();
   //  event.Skip();
 }
@@ -526,7 +527,7 @@ void AmayaNormalWindow::OnSplitterPosChanged( wxSplitterEvent& event )
  */
 void AmayaNormalWindow::OnSplitterDClick( wxSplitterEvent& event )
 {
-  wxLogDebug( _T("AmayaNormalWindow::OnSplitterDClick") );
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnSplitterDClick") );
   m_pSplitterWindow->Unsplit( m_pPanel );
   m_pPanel->ShowWhenUnsplit( false );
   //  event.Skip();  
@@ -547,7 +548,7 @@ void AmayaNormalWindow::OnSplitPanelButton( wxCommandEvent& event )
       return;
     }
 
-  wxLogDebug( _T("AmayaNormalWindow::OnSplitPanelButton") );
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnSplitPanelButton") );
 
   if (!m_pSplitterWindow->IsSplit())
     OpenPanel();
@@ -567,7 +568,7 @@ void AmayaNormalWindow::OnSplitPanelButton( wxCommandEvent& event )
  */
 void AmayaNormalWindow::ClosePanel()
 {
-  wxLogDebug( _T("AmayaNormalWindow::ClosePanel") );
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaNormalWindow::ClosePanel") );
 
   if (IsPanelOpened())
     {
@@ -590,7 +591,7 @@ void AmayaNormalWindow::ClosePanel()
  */
 void AmayaNormalWindow::OpenPanel()
 {
-  wxLogDebug( _T("AmayaNormalWindow::OpenPanel") );
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaNormalWindow::OpenPanel") );
   
   if (!IsPanelOpened())
     {
@@ -644,7 +645,7 @@ AmayaPanel * AmayaNormalWindow::GetAmayaPanel() const
  */
 void AmayaNormalWindow::RefreshShowPanelToggleMenu()
 {
-  wxLogDebug( _T("AmayaNormalWindow::RefreshShowPanelToggleMenu") );
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::RefreshShowPanelToggleMenu") );
 
   // update menu items of each documents
   int doc_id    = 1;
@@ -680,7 +681,7 @@ void AmayaNormalWindow::RefreshShowPanelToggleMenu()
  */
 void AmayaNormalWindow::RefreshFullScreenToggleMenu()
 {
-  wxLogDebug( _T("AmayaNormalWindow::RefreshFullScreenToggleMenu") );
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaNormalWindow::RefreshFullScreenToggleMenu"));
 
   // update menu items of each documents
   int doc_id    = 1;

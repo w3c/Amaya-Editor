@@ -21,6 +21,7 @@
 #include "frame.h"
 #include "thot_key.h"
 #include "appdialogue_wx.h"
+#include "logdebug.h"
 
 #ifdef _GL
   #include "glwindowdisplay.h"
@@ -74,7 +75,7 @@ AmayaFrame::AmayaFrame(
      ,m_VOldPosition( 0 )
      ,m_ToDestroy( FALSE )
 {
-  wxLogDebug( _T("AmayaFrame::AmayaFrame() - frame_id=%d"), m_FrameId );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::AmayaFrame() - frame_id=%d"), m_FrameId );
 
   // Create the drawing area
   m_pCanvas = CreateDrawingArea();
@@ -128,7 +129,7 @@ AmayaFrame::AmayaFrame(
  */
 AmayaFrame::~AmayaFrame()
 {
-  wxLogDebug( _T("AmayaFrame::~AmayaFrame() - frame_id=%d"), m_FrameId );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::~AmayaFrame() - frame_id=%d"), m_FrameId );
 
   // notifie the page that this frame has die
   //  if ( GetPageParent() )
@@ -240,7 +241,7 @@ AmayaCanvas * AmayaFrame::GetCanvas()
  */
 void AmayaFrame::HideScrollbar( int scrollbar_id )
 {
-  wxLogDebug( _T("AmayaFrame::HideScrollbar = %d"), scrollbar_id );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::HideScrollbar = %d"), scrollbar_id );
   switch( scrollbar_id )
    {
     case 1:
@@ -276,7 +277,7 @@ void AmayaFrame::HideScrollbar( int scrollbar_id )
  */
 void AmayaFrame::ShowScrollbar( int scrollbar_id )
 {
-  wxLogDebug( _T("AmayaFrame::ShowScrollbar = %d"), scrollbar_id );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::ShowScrollbar = %d"), scrollbar_id );
   switch( scrollbar_id )
    {
     case 1:
@@ -330,16 +331,12 @@ void AmayaFrame::SetCurrent()
 {
   if ( DisplayIsReady() )
   {
-#ifdef _GL_DEBUG
-    wxLogDebug( _T("AmayaFrame::SetCurrent()[OK] - frame_id=%d"), m_FrameId );
-#endif /* _GL_DEBUG */
+    TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaFrame::SetCurrent()[OK] - frame_id=%d"), m_FrameId );
     m_pCanvas->SetCurrent();
   }
   else
   {
-#ifdef _GL_DEBUG
-    wxLogDebug( _T("AmayaFrame::SetCurrent()[!OK] - frame_id=%d"), m_FrameId );
-#endif /* _GL_DEBUG */
+    TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaFrame::SetCurrent()[!OK] - frame_id=%d"), m_FrameId );
   }
 }
 
@@ -381,12 +378,12 @@ void AmayaFrame::SwapBuffers()
  */
 void AmayaFrame::OnSize( wxSizeEvent& event )
 {
-  wxLogDebug(_T("AmayaFrame::OnSize: frame=%d w=%d h=%d wc=%d, hc=%d"),
-        m_FrameId,
-	event.GetSize().GetWidth(),
-	event.GetSize().GetHeight(),
-	m_pHSizer->GetSize().GetWidth(),
-	m_pHSizer->GetSize().GetHeight() );
+  TTALOGDEBUG_5( TTA_LOG_DIALOG, _T("AmayaFrame::OnSize: frame=%d w=%d h=%d wc=%d, hc=%d"),
+		 m_FrameId,
+		 event.GetSize().GetWidth(),
+		 event.GetSize().GetHeight(),
+		 m_pHSizer->GetSize().GetWidth(),
+		 m_pHSizer->GetSize().GetHeight() );
  
   // forward current event to parent widgets
   event.Skip();
@@ -527,8 +524,8 @@ void AmayaFrame::UpdateFrameURL( const wxString & new_url )
  */
 void AmayaFrame::SetFrameURL( const wxString & new_url )
 {
-  wxLogDebug( _T("AmayaFrame::SetFrameURL - frame=%d")+
-	      wxString(_T(" url="))+new_url, GetFrameId() );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::SetFrameURL - frame=%d")+
+		 wxString(_T(" url="))+new_url, GetFrameId() );
   m_FrameUrl = new_url;
   
   // update the window url if the frame is active
@@ -545,7 +542,7 @@ void AmayaFrame::SetFrameURL( const wxString & new_url )
  */
 wxString AmayaFrame::GetFrameURL()
 {
-  wxLogDebug(_T("AmayaFrame::GetFrameURL - frameid=%d url=")+m_FrameUrl, GetFrameId());
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::GetFrameURL - frameid=%d url=")+m_FrameUrl, GetFrameId() );
   if (GetMasterFrameId() == GetFrameId())
     return m_FrameUrl;
   else
@@ -629,7 +626,7 @@ AmayaWindow * AmayaFrame::GetWindowParent()
 
 void AmayaFrame::OnClose(wxCloseEvent& event)
 {
-  wxLogDebug( _T("AmayaFrame::OnClose: frame=%d"), m_FrameId );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::OnClose: frame=%d"), m_FrameId);
 
   // activate the frame just before closing it
   // so the user can see what it's beeing closed 
@@ -737,7 +734,7 @@ void AmayaFrame::RaiseFrame()
  */
 void AmayaFrame::SetStatusBarText( const wxString & text )
 {
-  wxLogDebug( _T("AmayaFrame::SetStatusBarText - len=%d"), text.Length() );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaFrame::SetStatusBarText - len=%d"), text.Length() );
 
   // the new text is assigned
   m_StatusBarText = text;
@@ -804,7 +801,7 @@ void AmayaFrame::OnIdle( wxIdleEvent& event )
  */
 void AmayaFrame::OnContextMenu( wxContextMenuEvent & event )
 {
-  wxLogDebug( _T("AmayaFrame::OnContextMenu - (x,y)=(%d,%d)"),
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaFrame::OnContextMenu - (x,y)=(%d,%d)"),
 	      event.GetPosition().x,
 	      event.GetPosition().y );
 

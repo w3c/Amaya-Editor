@@ -21,6 +21,7 @@
 #include "frame.h"
 #include "registry_wx.h"
 #include "thot_key.h"
+#include "logdebug.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -78,7 +79,7 @@ AmayaWindow::AmayaWindow (  int            window_id
   m_ActiveFrameId( 0 ),
   m_MustCheckFocusIsNotLost( false )
 {
-  wxLogDebug( _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG,  _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
   SetIcon( AmayaApp::GetAppIcon() );
 }
 
@@ -91,7 +92,7 @@ AmayaWindow::AmayaWindow (  int            window_id
  */
 AmayaWindow::~AmayaWindow()
 {
-  wxLogDebug( _T("AmayaWindow::~AmayaWindow: window_id=%d"), m_WindowId );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaWindow::~AmayaWindow: window_id=%d"), m_WindowId );
   // empty the current window entry
   memset(&WindowTable[m_WindowId], 0, sizeof(Window_Ctl));
 }
@@ -190,7 +191,7 @@ AmayaWindow * AmayaWindow::GetActiveWindow()
  */
 AmayaPage * AmayaWindow::GetActivePage() const
 {
-  wxLogDebug( _T("AmayaWindow::GetActivePage") );
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaWindow::GetActivePage") );
   return NULL;
 }
 
@@ -203,7 +204,7 @@ AmayaPage * AmayaWindow::GetActivePage() const
  */
 AmayaFrame * AmayaWindow::GetActiveFrame() const
 {
-  wxLogDebug( _T("AmayaWindow::GetActiveFrame") );
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaWindow::GetActiveFrame") );
   return NULL;
 }
 
@@ -291,10 +292,10 @@ void AmayaWindow::SetMenuBar( wxMenuBar * p_menu_bar )
  */
 void AmayaWindow::OnSize( wxSizeEvent& event )
 {
-  wxLogDebug( _T("AmayaWindow::OnSize - ")+
-	      wxString(_T(" w=%d h=%d")),
-	      event.GetSize().GetWidth(),
-	      event.GetSize().GetHeight() );
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaWindow::OnSize - ")+
+		 wxString(_T(" w=%d h=%d")),
+		 event.GetSize().GetWidth(),
+		 event.GetSize().GetHeight() );
 
   // save the new window size
   WindowTable[GetWindowId()].FrWidth  = event.GetSize().GetWidth();
@@ -372,10 +373,10 @@ void AmayaWindow::OnIdle( wxIdleEvent& event )
     {
       wxWindow *       p_win_focus         = wxWindow::FindFocus();
       if (p_win_focus)
-	wxLogDebug(_T("AmayaWindow::OnIdle - focus = %s"), p_win_focus->GetClassInfo()->GetClassName());
+	TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("AmayaWindow::OnIdle - focus = %s"), p_win_focus->GetClassInfo()->GetClassName())
       else
 	{
-	  wxLogDebug(_T("AmayaWindow::OnIdle - no focus"));
+	  TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("AmayaWindow::OnIdle - no focus"));
 	  TtaRedirectFocus();
 	}
       m_MustCheckFocusIsNotLost = false;
@@ -398,7 +399,7 @@ void AmayaWindow::OnActivate( wxActivateEvent & event )
 {  
   if (event.GetActive())
     {
-      wxLogDebug( _T("AmayaWindow::OnActivate - window_id=%d"), m_WindowId );
+      TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("AmayaWindow::OnActivate - window_id=%d"), m_WindowId );
 
       // update the active-window indicator to be able to know the last active window everytime
       m_ActiveWindowId = GetWindowId();
@@ -511,7 +512,7 @@ void AmayaWindow::RefreshFullScreenToggleMenu()
  */
 void AmayaWindow::OnChar(wxKeyEvent& event)
 {
-  wxLogDebug( _T("AmayaWindow::OnChar key=")+wxString(event.GetUnicodeKey()) );
+  TTALOGDEBUG_0( TTA_LOG_KEYINPUT, _T("AmayaWindow::OnChar key=")+wxString(event.GetUnicodeKey()) );
 
   if(!TtaHandleUnicodeKey(event))
     if(!TtaHandleSpecialKey(event))
@@ -636,7 +637,7 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
 	thotMask |= THOT_MOD_ALT;
       if (event.ShiftDown())
 	thotMask |= THOT_MOD_SHIFT;
-      wxLogDebug( _T("AmayaWindow::SpecialKey thot_keysym=%x"), thot_keysym );
+      TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("AmayaWindow::SpecialKey thot_keysym=%x"), thot_keysym );
       ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
       return true;
     }
@@ -691,7 +692,7 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 	  wxString s(thot_keysym);
 	  if (s.IsAscii())
 	    {
-	      wxLogDebug( _T("AmayaWindow::CheckShortcutKey : thot_keysym=%x s=")+s, thot_keysym );
+	      TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("AmayaWindow::CheckShortcutKey : thot_keysym=%x s=")+s, thot_keysym );
 	      s.MakeLower();
 	      thot_keysym = s.GetChar(0);
 	    }
@@ -706,8 +707,8 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 		    thot_keysym == WXK_LEFT ||
 			thot_keysym == WXK_RETURN))
   {
-    wxLogDebug( _T("AmayaWindow::CheckShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
-	ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+    TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("AmayaWindow::CheckShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
+    ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
   }
   else
     return false;

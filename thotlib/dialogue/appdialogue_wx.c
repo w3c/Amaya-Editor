@@ -21,6 +21,7 @@
 #include "registry_wx.h"
 #include "panel.h"
 #include "thot_key.h"
+#include "logdebug.h"
 
 #include "appdialogue_f.h"
 #include "appdialogue_wx_f.h"
@@ -1007,7 +1008,7 @@ ThotBool TtaDetachFrame( int frame_id )
 ThotBool TtaDestroyFrame( int frame_id )
 {
 #ifdef _WX
-  wxLogDebug(_T("TtaDestroyFrame: frame_id=%d"), frame_id);
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("TtaDestroyFrame: frame_id=%d"), frame_id );
 
   int          window_id = FrameTable[frame_id].FrWindowId;
   AmayaFrame * p_frame   = FrameTable[frame_id].WdFrame;
@@ -2112,11 +2113,11 @@ void TtaSendDataToPanel( int panel_type, AmayaParams& params )
 void TtaRedirectFocus()
 {
 #ifdef _WX
-  wxLogDebug( _T("TtaRedirectFocus") );
   int active_frame_id = TtaGiveActiveFrame();
   AmayaFrame * p_frame = TtaGetFrameFromId( active_frame_id );
   if (p_frame)
     p_frame->GetCanvas()->SetFocus();
+  TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("TtaRedirectFocus activeframe=%d"), active_frame_id );
 #endif /* _WX */
 }
 
@@ -2229,7 +2230,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
 	  wxString s(thot_keysym);
 	  if (s.IsAscii())
 	    {
-	      wxLogDebug( _T("TtaHandleShortcutKey : thot_keysym=%x s=")+s, thot_keysym );
+	      TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleShortcutKey : thot_keysym=%x s=")+s, thot_keysym );
 	      s.MakeLower();
 	      thot_keysym = s.GetChar(0);
 	    }
@@ -2248,7 +2249,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
 	    thot_keysym == WXK_HOME ||
 	    thot_keysym == WXK_END))
     {
-      wxLogDebug( _T("TtaHandleShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
+      TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
       ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
       return true;
     }
@@ -2323,9 +2324,9 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 #endif /* 0 */
 
       if (p_win_focus)
-	wxLogDebug(_T("focus = %s"), p_win_focus->GetClassInfo()->GetClassName());
+	TTALOGDEBUG_1( TTA_LOG_FOCUS, _T("focus = %s"), p_win_focus->GetClassInfo()->GetClassName())
       else
-	wxLogDebug(_T("no focus"));
+	TTALOGDEBUG_0( TTA_LOG_FOCUS, _T("no focus"))
 
       /* do not allow special key outside the canvas */
       if (!p_gl_canvas && !p_splitter && !p_notebook && !p_scrollbar && proceed_key )
@@ -2358,7 +2359,7 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 	    thotMask |= THOT_MOD_ALT;
 	  if (event.ShiftDown())
 	    thotMask |= THOT_MOD_SHIFT;
-	  wxLogDebug( _T("TtaHandleSpecialKey: thot_keysym=%x"), thot_keysym );
+	  TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("TtaHandleSpecialKey: thot_keysym=%x"), thot_keysym);
 	  ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
 	  return true;
 	}

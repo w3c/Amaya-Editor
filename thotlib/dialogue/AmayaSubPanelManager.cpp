@@ -16,6 +16,7 @@
 #include "libmsg.h"
 #include "frame.h"
 #include "view.h"
+#include "logdebug.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -74,7 +75,7 @@ AmayaSubPanelManager * AmayaSubPanelManager::GetInstance()
  */
 bool AmayaSubPanelManager::RegisterSubPanel( AmayaSubPanel * p_panel )
 {
-  wxLogDebug( _T("AmayaSubPanelManager::RegisterSubPanel") );
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanelManager::RegisterSubPanel"));
 
   // take care to not register twice
   bool ret = false;
@@ -105,9 +106,9 @@ bool AmayaSubPanelManager::RegisterSubPanel( AmayaSubPanel * p_panel )
   DebugSubPanelList();
 
   if (ret)
-    wxLogDebug( _T("AmayaSubPanelManager::RegisterSubPanel : OK") );
+    TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanelManager::RegisterSubPanel : OK"))
   else
-    wxLogDebug( _T("AmayaSubPanelManager::RegisterSubPanel : !OK") );   
+    TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanelManager::RegisterSubPanel : !OK"))
 
   return ret;
 }
@@ -135,9 +136,9 @@ bool AmayaSubPanelManager::UnregisterSubPanel( AmayaSubPanel * p_panel )
   DebugSubPanelList();
   
   if (ret)
-    wxLogDebug( _T("AmayaSubPanelManager::UnregisterSubPanel [%d] OK"), p_panel->GetPanelType() );
+    TTALOGDEBUG_1( TTA_LOG_PANELS, _T("AmayaSubPanelManager::UnregisterSubPanel [%d] OK"), p_panel->GetPanelType())
   else
-    wxLogDebug( _T("AmayaSubPanelManager::UnregisterSubPanel [%d] !OK"), p_panel->GetPanelType() );   
+    TTALOGDEBUG_1( TTA_LOG_PANELS, _T("AmayaSubPanelManager::UnregisterSubPanel [%d] !OK"), p_panel->GetPanelType())
 
   return ret;
 }
@@ -164,7 +165,7 @@ bool AmayaSubPanelManager::CanChangeState( AmayaSubPanel * p_panel, unsigned int
 	  // the panel was floating, it wants now to be attached
 	  
 	  // no probleme, a panel can be attached without constraint
-	  wxLogDebug( _T("AmayaSubPanelManager::CanChangeState - was floating, you can attach") );
+	  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanelManager::CanChangeState - was floating, you can attach"));
 	  return true;
 	}
       else
@@ -186,12 +187,12 @@ bool AmayaSubPanelManager::CanChangeState( AmayaSubPanel * p_panel, unsigned int
 	  if (floating_panel)
 	    {
 	      floating_panel->Raise();
-	      wxLogDebug( _T("AmayaSubPanelManager::CanChangeState - want float, you can't float, another is already floating") );
+	      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanelManager::CanChangeState - want float, you can't float, another is already floating"));
 	      return false; // do not allow to create a new floating panel
 	    }
 	  else
 	    {
-	      wxLogDebug( _T("AmayaSubPanelManager::CanChangeState - want float, you can float") );
+	      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanelManager::CanChangeState - want float, you can float") );
 	      return true; // nothing so ok, the request is accept, it cans create a new floating panel
 	    }
 	}
@@ -203,13 +204,13 @@ bool AmayaSubPanelManager::CanChangeState( AmayaSubPanel * p_panel, unsigned int
       if (old_state & AmayaSubPanel::wxAMAYA_SPANEL_EXPANDED)
 	{
 	  // the panel was expanded, it wants now to be unexpanded
-	  wxLogDebug( _T("AmayaSubPanelManager::CanChangeState - was expanded, you can unexpand") );
+	  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanelManager::CanChangeState - was expanded, you can unexpand") );  
 	  return true;
 	}
       else
 	{
 	  // the panel was unexpanded, it wants now to be expanded
-	  wxLogDebug( _T("AmayaSubPanelManager::CanChangeState - was unexpanded, you can expand") );
+	  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanelManager::CanChangeState - was unexpanded, you can expand") );  
 	  return true;
 	}
     }
@@ -234,7 +235,7 @@ void AmayaSubPanelManager::DebugSubPanelList()
       AmayaSubPanel * current = node->GetData();
       sp_list += wxString::Format(_T("%x "), current);
     }
-  wxLogDebug( _T("AmayaSubPanelManager::DebugSubPanelList - @registred_panel_list=[")+sp_list+_T("]") );
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanelManager::DebugSubPanelList - @registred_panel_list=[")+sp_list+_T("]") );  
 }
 
 
@@ -247,7 +248,7 @@ void AmayaSubPanelManager::DebugSubPanelList()
  */
 void AmayaSubPanelManager::UnExpand( AmayaSubPanel * p_panel )
 {
-  wxLogDebug( _T("AmayaSubPanelManager::UnExpand [%x]"), p_panel );
+  TTALOGDEBUG_1( TTA_LOG_PANELS, _T("AmayaSubPanelManager::UnExpand [%x]"), p_panel );  
 
   // do nothing if the content is already unexpanded or if it is floating
   if ( !CanChangeState(p_panel, p_panel->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_EXPANDED) )
@@ -270,7 +271,7 @@ void AmayaSubPanelManager::UnExpand( AmayaSubPanel * p_panel )
  */
 void AmayaSubPanelManager::Expand( AmayaSubPanel * p_panel )
 {
-  wxLogDebug( _T("AmayaSubPanelManager::Expand [%x]"), p_panel );
+  TTALOGDEBUG_1( TTA_LOG_PANELS, _T("AmayaSubPanelManager::Expand [%x]"), p_panel );  
 
   // do nothing if the content is already expanded or if it is floating
   if ( !CanChangeState(p_panel, p_panel->GetState()|AmayaSubPanel::wxAMAYA_SPANEL_EXPANDED) )
@@ -293,7 +294,7 @@ void AmayaSubPanelManager::Expand( AmayaSubPanel * p_panel )
  */
 void AmayaSubPanelManager::DoFloat( AmayaSubPanel * p_panel )
 {
-  wxLogDebug( _T("AmayaSubPanelManager::DoFloat [%x]"), p_panel );
+  TTALOGDEBUG_1( TTA_LOG_PANELS, _T("AmayaSubPanelManager::DoFloat [%x]"), p_panel );  
 
   // can float ?
   if ( !CanChangeState(p_panel, p_panel->GetState()|AmayaSubPanel::wxAMAYA_SPANEL_FLOATING) )
@@ -329,7 +330,7 @@ void AmayaSubPanelManager::DoFloat( AmayaSubPanel * p_panel )
  */
 void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
 {
-  wxLogDebug( _T("AmayaSubPanelManager::DoUnfloat [%x][%d]"), p_panel, p_panel->GetPanelType() );
+  TTALOGDEBUG_2( TTA_LOG_PANELS, _T("AmayaSubPanelManager::DoUnfloat [%x][%d]"), p_panel, p_panel->GetPanelType() );  
 
   // can unfloat ?
   if ( !CanChangeState(p_panel, p_panel->GetState()&~AmayaSubPanel::wxAMAYA_SPANEL_FLOATING) )

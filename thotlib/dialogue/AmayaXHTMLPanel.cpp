@@ -46,8 +46,6 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaXHTMLPanel, AmayaSubPanel)
 AmayaXHTMLPanel::AmayaXHTMLPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_XHTML") )
 {
-  wxLogDebug( _T("AmayaXHTMLPanel::AmayaXHTMLPanel") );
-
   // setup labels
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_XHTML)));
@@ -117,8 +115,6 @@ void AmayaXHTMLPanel::RefreshToolTips()
  */
 void AmayaXHTMLPanel::OnButton( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaXHTMLPanel::OnButton") );
-
   int id = event.GetId();
 
   Document doc;
@@ -162,8 +158,6 @@ void AmayaXHTMLPanel::SendDataToPanel( AmayaParams& p )
 {
   bool * p_checked_array = (bool *)p.param1;
 
-  wxLogDebug(_T("AmayaXHTMLPanel::SendDataToPanel") );
-
   if (p_checked_array[WXAMAYA_PANEL_XHTML_STRONG])
     XRCCTRL(*this, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   else
@@ -192,7 +186,6 @@ void AmayaXHTMLPanel::SendDataToPanel( AmayaParams& p )
  */
 void AmayaXHTMLPanel::DoUpdate()
 {
-  wxLogDebug( _T("AmayaXHTMLPanel::DoUpdate") );
   AmayaSubPanel::DoUpdate();
   
   // force to refresh the strong, emphasis... button states

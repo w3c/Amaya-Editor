@@ -17,6 +17,7 @@
 #include "libmsg.h"
 #include "frame.h"
 #include "view.h"
+#include "logdebug.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -59,7 +60,7 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
      ,m_DoUnfloat_Lock(false)
      ,m_pParentNWindow(p_parent_nwindow)
 {
-  wxLogDebug( _T("AmayaSubPanel::AmayaSubPanel: ")+panel_xrcid);
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanel::AmayaSubPanel"));
 
   // keep a reference on my manager
   m_pManager = AmayaSubPanelManager::GetInstance();
@@ -108,7 +109,7 @@ AmayaSubPanel::~AmayaSubPanel()
   ----------------------------------------------------------------------*/
 void AmayaSubPanel::UnExpand()
 {
-  wxLogDebug( _T("AmayaSubPanel::UnExpand") );
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanel::UnExpand"));
 
   // setup content panel size
   wxSizer * p_sizer = m_pPanelContent->GetContainingSizer();
@@ -123,7 +124,7 @@ void AmayaSubPanel::UnExpand()
   ----------------------------------------------------------------------*/
 void AmayaSubPanel::Expand()
 {
-  wxLogDebug( _T("AmayaSubPanel::Expand") );
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanel::Expand"));
 
   // setup content panel size
   wxSizer * p_sizer = m_pPanelContent->GetContainingSizer();
@@ -138,7 +139,7 @@ void AmayaSubPanel::Expand()
   ----------------------------------------------------------------------*/
 void AmayaSubPanel::DoFloat()
 {
-  wxLogDebug( _T("AmayaSubPanel::DoFloat") );
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanel::DoFloat"));
 
   // open the floating panel
   if (!m_pFloatingPanel)
@@ -157,7 +158,7 @@ void AmayaSubPanel::DoFloat()
   ----------------------------------------------------------------------*/
 void AmayaSubPanel::DoUnfloat()
 {
-  wxLogDebug( _T("AmayaSubPanel::DoUnfloat") );
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanel::DoUnfloat"));
 
   // close the floating window
   if (m_pFloatingPanel)
@@ -175,7 +176,7 @@ void AmayaSubPanel::DoUnfloat()
   ----------------------------------------------------------------------*/
 void AmayaSubPanel::OnExpand( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaSubPanel::OnExpand") );
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanel::OnExpand"));
 
   // switch the expand state
   if (IsExpanded())
@@ -191,7 +192,7 @@ void AmayaSubPanel::OnExpand( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void AmayaSubPanel::OnDetach( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaSubPanel::OnDetach") );
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanel::OnDetach"));
 
   if (IsFloating())
     {
@@ -380,7 +381,7 @@ void AmayaSubPanel::DoUpdate()
 {
   if (m_ShouldBeUpdated)
     {
-      wxLogDebug( _T("AmayaSubPanel::DoUpdate") );
+      TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanel::DoUpdate"));
       m_ShouldBeUpdated = false;
     }
 }
@@ -422,7 +423,7 @@ wxPanel * AmayaSubPanel::GetPanelContentDetach()
  */
 void AmayaSubPanel::SendDataToPanel( AmayaParams& p )
 {
-  wxLogDebug( _T("AmayaSubPanel::SendDataToPanel") );
+  TTALOGDEBUG_0( TTA_LOG_PANELS, _T("AmayaSubPanel::SendDataToPanel"));
 }
 
 /*

@@ -2,6 +2,8 @@
 
 #include "wx/wx.h"
 
+#include "logdebug.h"
+
 #include "wxAmayaSocketEvent.h"
 #include "wxAmayaSocketEventLoop.h"
 
@@ -43,7 +45,7 @@ wxAmayaSocketEventLoop * wxAmayaSocketEvent::m_pEventLoop = NULL;
  */
 void wxAmayaSocketEvent::InitSocketEvent( wxAmayaSocketEventLoop * p_eventloop )
 {
-  wxLogDebug( _T("wxAmayaSocketEvent::InitSocketEvent") );
+  TTALOGDEBUG_0( TTA_LOG_SOCKET | TTA_LOG_INIT, _T("wxAmayaSocketEvent::InitSocketEvent") );
   m_pEventLoop = p_eventloop;
   /* if there is a socket, start the pulling */
   if (m_SocketFDMax > 0)
@@ -62,7 +64,7 @@ int wxAmayaSocketEvent::RegisterSocket( int socket,
 					wxAmayaSocketCondition condition,
 					wxAmayaSocketCallback  callback )
 {
-  wxLogDebug( _T("wxAmayaSocketEvent::RegisterSocket %d %d"), socket, condition );
+  TTALOGDEBUG_2( TTA_LOG_SOCKET, _T("wxAmayaSocketEvent::RegisterSocket %d %d"), socket, condition );
 
   /* the socket array must be initialized before do something */
   Initialize();
@@ -111,7 +113,7 @@ bool wxAmayaSocketEvent::UnregisterSocket( int register_id )
   /* but internaly, it's a valide entry */
   int socket = m_RegistredSocket[register_id-1].socket;
 
-  wxLogDebug( _T("wxAmayaSocketEvent::UnregisterSocket %d, socket=%d"), register_id, socket );
+  TTALOGDEBUG_2( TTA_LOG_SOCKET, _T("wxAmayaSocketEvent::UnregisterSocket %d, socket=%d"), register_id, socket );
 
   bool removed = RemoveSocketEntry( register_id );
 
@@ -181,7 +183,7 @@ bool wxAmayaSocketEvent::CheckSocketStatus( int bloking_time )
 		       &tv );
   if (status == -1)
     {
-      wxLogDebug( _T("wxAmayaSocketEvent: Select failed") );
+      TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("wxAmayaSocketEvent: Select failed") );
       return false;
     }
 
@@ -196,7 +198,7 @@ bool wxAmayaSocketEvent::CheckSocketStatus( int bloking_time )
 	case WXAMAYASOCKET_READ:
 	  if (FD_ISSET(m_RegistredSocket[entry].socket, &read_fds))
 	    {
-	      wxLogDebug( _T("wxAmayaSocketEvent::WXAMAYASOCKET_READ %d"), m_RegistredSocket[entry].socket );
+	      TTALOGDEBUG_1( TTA_LOG_SOCKET, _T("wxAmayaSocketEvent::WXAMAYASOCKET_READ %d"), m_RegistredSocket[entry].socket );
 	      (*m_RegistredSocket[entry].callback)(entry,
 						   m_RegistredSocket[entry].socket,
 						   m_RegistredSocket[entry].condition);
@@ -206,7 +208,7 @@ bool wxAmayaSocketEvent::CheckSocketStatus( int bloking_time )
 	case WXAMAYASOCKET_WRITE:
 	  if (FD_ISSET(m_RegistredSocket[entry].socket, &write_fds))
 	    {
-	      wxLogDebug( _T("wxAmayaSocketEvent::WXAMAYASOCKET_WRITE %d"), m_RegistredSocket[entry].socket );
+	      TTALOGDEBUG_1( TTA_LOG_SOCKET, _T("wxAmayaSocketEvent::WXAMAYASOCKET_WRITE %d"), m_RegistredSocket[entry].socket );
 	      (*m_RegistredSocket[entry].callback)(entry,
 						   m_RegistredSocket[entry].socket,
 						   m_RegistredSocket[entry].condition);
@@ -216,7 +218,7 @@ bool wxAmayaSocketEvent::CheckSocketStatus( int bloking_time )
 	case WXAMAYASOCKET_EXCEPTION:
 	  if (FD_ISSET(m_RegistredSocket[entry].socket, &except_fds))
 	    {
-	      wxLogDebug( _T("wxAmayaSocketEvent::WXAMAYASOCKET_EXCEPTION %d"), m_RegistredSocket[entry].socket );
+	      TTALOGDEBUG_1( TTA_LOG_SOCKET, _T("wxAmayaSocketEvent::WXAMAYASOCKET_EXCEPTION %d"), m_RegistredSocket[entry].socket );
 	      (*m_RegistredSocket[entry].callback)(entry,
 						   m_RegistredSocket[entry].socket,
 						   m_RegistredSocket[entry].condition);

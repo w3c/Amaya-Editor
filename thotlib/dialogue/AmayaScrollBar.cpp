@@ -50,7 +50,6 @@ AmayaScrollBar::AmayaScrollBar( wxWindow* p_parent_window,
   :  wxScrollBar( p_parent_window, -1, wxDefaultPosition, wxDefaultSize, style )
      ,m_ParentFrameID(parent_frame_id)
 {
-  wxLogDebug( _T("AmayaScrollBar::AmayaScrollBar()") );
 }
 
 /*
@@ -62,7 +61,6 @@ AmayaScrollBar::AmayaScrollBar( wxWindow* p_parent_window,
  */
 AmayaScrollBar::~AmayaScrollBar()
 {
-  wxLogDebug( _T("AmayaScrollBar::~AmayaScrollBar()") );
 }
 
 /*
@@ -74,7 +72,6 @@ AmayaScrollBar::~AmayaScrollBar()
  */
 void AmayaScrollBar::OnSetFocus( wxFocusEvent & event )
 {
-  wxLogDebug( _T("AmayaScrollBar::OnSetFocus") );
   TtaRedirectFocus();
   // do not skip this event because we want stop focus
   //event.Skip();
@@ -89,7 +86,6 @@ void AmayaScrollBar::OnSetFocus( wxFocusEvent & event )
  */
 void AmayaScrollBar::OnKillFocus( wxFocusEvent & event )
 {
-  wxLogDebug( _T("AmayaScrollBar::OnKillFocus") );
   // do not skip this event because we want stop focus
   event.Skip();
 }
@@ -103,8 +99,6 @@ void AmayaScrollBar::OnKillFocus( wxFocusEvent & event )
  */
 void AmayaScrollBar::OnTop( wxScrollEvent& event )
 {
-  wxLogDebug( _T("AmayaScrollBar::OnTop") );
-
   if (event.GetOrientation() == wxVERTICAL)
     {
       JumpIntoView (m_ParentFrameID, 0);
@@ -124,8 +118,6 @@ void AmayaScrollBar::OnTop( wxScrollEvent& event )
  */
 void AmayaScrollBar::OnBottom( wxScrollEvent& event )
 {
-  wxLogDebug( _T("AmayaScrollBar::OnBottom") );
-
   if (event.GetOrientation() == wxVERTICAL)
     {
       JumpIntoView (m_ParentFrameID, 100);
@@ -145,8 +137,6 @@ void AmayaScrollBar::OnBottom( wxScrollEvent& event )
  */
 void AmayaScrollBar::OnLineUp( wxScrollEvent& event )
 {
-  wxLogDebug( _T("AmayaScrollBar::OnLineUp") );
-
   Document doc; 
   View     view;
   FrameToView( m_ParentFrameID, &doc, &view );
@@ -169,8 +159,6 @@ void AmayaScrollBar::OnLineUp( wxScrollEvent& event )
  */
 void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
 {
-  wxLogDebug( _T("AmayaScrollBar::OnLineDown") );
-
   Document doc; 
   View     view;
   FrameToView( m_ParentFrameID, &doc, &view );
@@ -193,8 +181,6 @@ void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
  */
 void AmayaScrollBar::OnScroll( wxScrollEvent& event )
 {
-  wxLogDebug( _T("AmayaScrollBar::OnScroll") );
-
   if (event.GetOrientation() == wxHORIZONTAL)
    {
      FrameHScrolledCallback(

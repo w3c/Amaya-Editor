@@ -55,8 +55,6 @@ int * AmayaSpeCharPanel::m_pActiveFiltre = NULL;
 AmayaSpeCharPanel::AmayaSpeCharPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_SPECHAR") )
 {
-  wxLogDebug( _T("AmayaSpeCharPanel::AmayaSpeCharPanel") );
-
   // setup labels
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_SPECHAR)));
@@ -131,7 +129,6 @@ void AmayaSpeCharPanel::RefreshToolTips()
  */
 void AmayaSpeCharPanel::OnButtonFiltre1( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaSpeCharPanel::OnButtonFiltre1") );
   m_pActiveFiltre = filtre_greek;
   DoFilter( filtre_greek );
 
@@ -149,7 +146,6 @@ void AmayaSpeCharPanel::OnButtonFiltre1( wxCommandEvent& event )
  */
 void AmayaSpeCharPanel::OnButtonFiltre2( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaSpeCharPanel::OnButtonFiltre2") );
   m_pActiveFiltre = filtre_greek_maj;
   DoFilter( filtre_greek_maj );
 
@@ -167,7 +163,6 @@ void AmayaSpeCharPanel::OnButtonFiltre2( wxCommandEvent& event )
  */
 void AmayaSpeCharPanel::OnButtonFiltre3( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaSpeCharPanel::OnButtonFiltre3") );
   m_pActiveFiltre = filtre_maths;
   DoFilter( filtre_maths );
 
@@ -185,7 +180,6 @@ void AmayaSpeCharPanel::OnButtonFiltre3( wxCommandEvent& event )
  */
 void AmayaSpeCharPanel::OnButtonFiltre4( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaSpeCharPanel::OnButtonFiltre4") );
   m_pActiveFiltre = filtre_operateurs;
   DoFilter( filtre_operateurs );
 
@@ -203,7 +197,6 @@ void AmayaSpeCharPanel::OnButtonFiltre4( wxCommandEvent& event )
  */
 void AmayaSpeCharPanel::OnButtonFiltre5( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaSpeCharPanel::OnButtonFiltre5") );
   m_pActiveFiltre = filtre_relations_binaires;
   DoFilter( filtre_relations_binaires );
 
@@ -221,7 +214,6 @@ void AmayaSpeCharPanel::OnButtonFiltre5( wxCommandEvent& event )
  */
 void AmayaSpeCharPanel::OnButtonFiltre6( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaSpeCharPanel::OnButtonFiltre6") );
   m_pActiveFiltre = filtre_relations_binaires_negation;
   DoFilter( filtre_relations_binaires_negation );
 
@@ -239,7 +231,6 @@ void AmayaSpeCharPanel::OnButtonFiltre6( wxCommandEvent& event )
  */
 void AmayaSpeCharPanel::OnButtonFiltre7( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaSpeCharPanel::OnButtonFiltre7") );
   m_pActiveFiltre = filtre_divers;
   DoFilter( filtre_divers );
   
@@ -257,7 +248,6 @@ void AmayaSpeCharPanel::OnButtonFiltre7( wxCommandEvent& event )
  */
 void AmayaSpeCharPanel::OnButtonFiltre8( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaSpeCharPanel::OnButtonFiltre8") );
   m_pActiveFiltre = filtre_fleches;
   DoFilter( filtre_fleches );
   
@@ -401,7 +391,6 @@ void AmayaSpeCharPanel::SendDataToPanel( AmayaParams& p )
  */
 void AmayaSpeCharPanel::DoUpdate()
 {
-  wxLogDebug( _T("AmayaSpeCharPanel::DoUpdate") );
   AmayaSubPanel::DoUpdate();
   DoFilter( m_pActiveFiltre );
 }

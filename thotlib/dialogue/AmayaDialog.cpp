@@ -17,6 +17,7 @@
 #include "libmsg.h"
 #include "frame.h"
 #include "registry_wx.h"
+#include "logdebug.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -51,7 +52,7 @@ AmayaDialog::AmayaDialog( wxWindow * p_parent, int ref ) :
   wxDialog(),
   m_Ref(ref)
 {
-  wxLogDebug( _T("AmayaDialog::AmayaDialog - ref=%d"), ref );
+  TTALOGDEBUG_1( TTA_LOG_DIALOG, _T("AmayaDialog::AmayaDialog - ref=%d"), ref);
  
   // SetIcon provoque un warning, on ne l'utilise pas pr le moment.
   //SetIcon( AmayaApp::GetAppIcon() );
@@ -62,7 +63,7 @@ AmayaDialog::AmayaDialog( wxWindow * p_parent, int ref ) :
   ----------------------------------------------------------------------*/
 AmayaDialog::~AmayaDialog()
 {
-  wxLogDebug( _T("AmayaDialog::~AmayaDialog") );
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaDialog::~AmayaDialog"));
   
   /* then give focus to canvas */
   //  TtaRedirectFocus();
@@ -73,8 +74,7 @@ AmayaDialog::~AmayaDialog()
   ----------------------------------------------------------------------*/
 void AmayaDialog::OnClose( wxCloseEvent& event )
 {
-  wxLogDebug(_T("AmayaDialog - OnClose") );
-
+  TTALOGDEBUG_0( TTA_LOG_DIALOG, _T("AmayaDialog::OnClose"));
 
   // maybe it's better to use :
   // this callback is usefull for :

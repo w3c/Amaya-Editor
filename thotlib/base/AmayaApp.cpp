@@ -21,6 +21,7 @@
 #include "message.h"
 #include "libmsg.h"
 #include "frame.h"
+#include "logdebug.h"
 
 #include "AmayaApp.h"
 
@@ -111,10 +112,10 @@ bool AmayaApp::OnInit()
 
 #ifdef _GL
   // try to find a good configuration for opengl
-  wxLogDebug( _T("AmayaApp - Try to find a valide opengl configuration.") );
+  TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp - Try to find a valide opengl configuration."));
   if ( !InitGLVisual(AttrList) )
     {
-      wxLogDebug( _T("AmayaApp - ERROR -> Try to find another valide opengl configuration (simplier: without ALPHA channel).") );
+      TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp - ERROR -> Try to find another valide opengl configuration (simplier: without ALPHA channel)."));
       // error : try another configuration
       AttrList[8] = 0; /* remove the alpha channel: entry  (8)*/
       if ( !InitGLVisual(AttrList) )
@@ -124,7 +125,7 @@ bool AmayaApp::OnInit()
 	  wxExit();
 	}
     }
-  wxLogDebug( _T("AmayaApp - A valide opengl configuration has been found.") );
+  TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp - A valide opengl configuration has been found."));
 #endif /* _GL */
   
   // just convert arguments format (unicode to iso-8859-1) before passing it to amaya_main
@@ -363,7 +364,7 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
                 , (unsigned int) s_windowFocus->GetHWND()
 #endif
 		);
-      wxLogDebug( msg );
+      TTALOGDEBUG_0( TTA_LOG_FOCUS, msg );
     }
 #endif /* DEBUG_FOCUS */
 
@@ -442,7 +443,7 @@ void AmayaApp::CallOpenURLCallback( char * url )
  */
 void AmayaApp::OnChar(wxKeyEvent& event)
 {
-  wxLogDebug( _T("AmayaApp::OnChar key=")+wxString(event.GetUnicodeKey()) );
+  TTALOGDEBUG_0( TTA_LOG_KEYINPUT, _T("AmayaApp::OnChar key=")+wxString(event.GetUnicodeKey()));
 
   // forward the key event to active window.
   // this code is only usfull on windows because on gtk,
@@ -467,7 +468,7 @@ void AmayaApp::OnChar(wxKeyEvent& event)
  */
 void AmayaApp::OnKeyDown(wxKeyEvent& event)
 {
-  wxLogDebug( _T("AmayaApp::OnKeyDown key=%d"),event.GetKeyCode());
+  TTALOGDEBUG_1( TTA_LOG_KEYINPUT, _T("AmayaApp::OnKeyDown key=%d"), event.GetKeyCode());
   // forward the key event to active window.
   // this code is only usfull on windows because on gtk,
   // the events are directly proceed in AmayaWindow class
