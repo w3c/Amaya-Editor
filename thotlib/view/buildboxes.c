@@ -82,10 +82,12 @@ static int             BiwIndex = 0;
 #define		_1dSQR2		0.7071
 #define		_SQR2		1.4142
 
-#ifdef _WINGUI
+#if defined(_WINGUI)
 #define M_PI   3.14159265358979323846
-#define M_PI_2 1.57079632679489661923
 #endif /* _WINGUI */
+#if defined(_WINGUI) || defined(_WX)
+#define M_PI_2 1.57079632679489661923
+#endif /* _WINGUI  || _WX */
 static ThotBool EmbeddedScript = FALSE;
 
 
