@@ -77,6 +77,7 @@ static PtrDocument  OldDocMsgSelect;
 #include "boxes_tv.h"
 #include "font_tv.h"
 #include "edit_tv.h"
+#include "displayview_f.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 #include "platform_tv.h"
