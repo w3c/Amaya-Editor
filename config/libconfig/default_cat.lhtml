@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Default catalogue (thotdir)</title>
   <link href="catalogue.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
   <!--
      TD { vertical-align:middle }
   -->
+
+
   </style>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.2, see http://www.w3.org/Amaya/" />
   <meta name="document" content="svglib_file" />
 </head>
 
@@ -18,46 +19,52 @@
 <table border="1" title="exemple de fleche">
   <tbody>
     <tr>
-      <td><a href="./arrow1.svg#Arrow1">
-           <img class="image" src="./arrow1.png" alt="fleche de type 1" /></a></td>
-      <td class="titre-graph" valign="middle">type de fleche 1</td>
-      <td class="commentaire" valign="middle">fleche ordinaire</td>
+      <td><a href="./trash.svg#trash1"><img class="image" src="./trash.png"
+        alt="fleche de type 1" /></a></td>
+      <td class="titre-graph" valign="middle">trash</td>
+      <td class="commentaire" valign="middle">It's a full trash</td>
     </tr>
     <tr>
-      <td><a href="./arrow2.svg#Arrow2">
-            <img class="image" src="./arrow2.png" alt="fleche de type 2" /></a></td>
-      <td class="titre-graph" valign="middle">type de fleche 2</td>
-      <td class="commentaire" valign="middle">fleche ordinaire</td>
-    </tr>
-    <tr>
-      <td><a href="./arrow3.svg#Arrow3">
-            <img class="image" src="./arrow3.png" alt="fleche de type 3" /></a></td>
-      <td class="titre-graph" valign="middle">type de fleche 3</td>
-      <td class="commentaire" valign="middle">fleche logarithmique</td>
-    </tr>
-    <tr>
-      <td><a href="./arrow4.svg#Arrow4">
-            <img class="image" src="./arrow4.png" alt="fleche de type 4" /></a></td>
-      <td class="titre-graph" valign="middle">type de fleche 4</td>
-      <td class="commentaire" valign="middle">fleche arrondi</td>
-    </tr>
-    <tr>
-      <td><a href="./arrow5.svg#Arrow5">
-            <img class="image" src="./arrow5.png" alt="fleche de type 5" /></a></td>
-      <td class="titre-graph" valign="middle">type de fleche 5</td>
+      <td><a href="./audio.svg#audio"><img class="image" src="./audio.png"
+        alt="fleche de type 2" /></a></td>
+      <td class="titre-graph" valign="middle">audio</td>
       <td class="commentaire" valign="middle"></td>
     </tr>
     <tr>
-      <td><a href="./arrow6.svg#Arrow6">
-            <img class="image" src="./arrow6.png" alt="fleche de type 6" /></a></td>
-      <td class="titre-graph" valign="middle">type de fleche 6</td>
+      <td><a href="./colorbox.svg#colorbox"><img class="image"
+        src="./colorbox.png" alt="Colored cube" /></a></td>
+      <td class="titre-graph" valign="middle">Color boxe</td>
+      <td class="commentaire" valign="middle">It's a cube with color</td>
+    </tr>
+    <tr>
+      <td><a href="./Forward.svg#forward"><img class="image"
+        src="./Forward.png" alt="fleche de type 4" /></a></td>
+      <td class="titre-graph" valign="middle">arrow 1</td>
       <td class="commentaire" valign="middle"></td>
     </tr>
     <tr>
-      <td><a href="./arrow7.svg#Arrow7">
-            <img class="image" src="./arrow7.png" alt="fleche de type 7" /></a></td>
-      <td class="titre-graph" valign="middle">type de fleche 7</td>
-      <td class="commentaire" valign="middle">fleche simple</td>
+      <td><a href="./arrow4.svg#Arrow4"><img class="image" src="./arrow4.png"
+        alt="fleche de type 4" /></a></td>
+      <td class="titre-graph" valign="middle">arrow 2</td>
+      <td class="commentaire" valign="middle">rounded arrow</td>
+    </tr>
+    <tr>
+      <td><a href="./arrow5.svg#Arrow5"><img class="image" src="./arrow5.png"
+        alt="fleche de type 5" /></a></td>
+      <td class="titre-graph" valign="middle">arrow 3</td>
+      <td class="commentaire" valign="middle"></td>
+    </tr>
+    <tr>
+      <td><a href="./arrow6.svg#Arrow6"><img class="image" src="./arrow6.png"
+        alt="fleche de type 6" /></a></td>
+      <td class="titre-graph" valign="middle">arrow 4</td>
+      <td class="commentaire" valign="middle"></td>
+    </tr>
+    <tr>
+      <td><a href="./arrow7.svg#Arrow7"><img class="image" src="./arrow7.png"
+        alt="fleche de type 7" /></a></td>
+      <td class="titre-graph" valign="middle">arrow 5</td>
+      <td class="commentaire" valign="middle">Simple arrow</td>
     </tr>
   </tbody>
 </table>

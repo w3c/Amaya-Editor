@@ -3,10 +3,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="500" height="250">
   <g id="Arrow6">
     <polygon points="168,0 216,40 88,79 103,64 0,64 49,15 153,15"
-             transform="translate(1,30)"/>
+             transform="translate(1,30)" fill="#00007f"/>
     <polygon style="fill:#000000"
              points="0,24 103,24 88,39 216,0 216,29 88,64 88,54 0,54"
-             transform="translate(2,69)"/>
+             transform="translate(2,69)" fill="#c1ffc1"/>
     <desc>un autre type de fleche</desc>
   </g>
 </svg>
