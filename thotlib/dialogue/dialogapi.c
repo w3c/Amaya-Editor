@@ -1631,7 +1631,7 @@ char               *textmenu;
 	n++;
 	w = XmCreateFrame (Main_Wd, "Frame", args, n);
 	XtManageChild (w);
-	FrameTable[0].WdFrame = w;	/* widget frame */
+	FrameTable[0].WdFrame = Main_Wd;	/* widget frame */
 
 	/*** Realisation de la fenetre de dialogue ***/
 	if (menu_bar != 0 || frame != 0)

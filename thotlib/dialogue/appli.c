@@ -797,10 +797,7 @@ View                view;
 {
    int                 frame;
 
-   if (document == 0 && view == 0)
-      return(0);
-   else
-      frame = GetWindowNumber (document, view);
+   frame = GetWindowNumber (document, view);
 
    /* Si les parametres sont invalides */
    if (frame > MAX_FRAME)
