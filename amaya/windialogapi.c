@@ -3517,49 +3517,6 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
 }
 
 /*-----------------------------------------------------------------------
- PasteLibraryModelDlgProc
- ------------------------------------------------------------------------*/
-LRESULT CALLBACK PasteLibraryModelDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-									  LPARAM lParam)
-{
-#ifdef _SVGLIB
-    switch (msg)
-      {
-      case WM_INITDIALOG:
-	SVGLibHwnd = hwnDlg;
-	SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SVGLIB_DIALOG1));
-	SetWindowText (GetDlgItem (hwnDlg, ID_COPYSVGLIB),
-		TtaGetMessage (AMAYA, AM_SVGLIB_COPY_SELECTION));
-	SetWindowText (GetDlgItem (hwnDlg, ID_REFERSVGLIB), 
-		TtaGetMessage (AMAYA, AM_SVGLIB_REF_SELECTION));
-	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
-	break;
-      case WM_COMMAND:
-	switch (LOWORD (wParam))
-	  {
-	  case ID_COPYSVGLIB:
-	    EndDialog (hwnDlg, IDC_COPYSVGLIB);
-	    ThotCallback (BaseLibrary + FormLibrary, INTEGER_DATA, (char*) 1);
-	    break;
-	  case ID_REFERSVGLIB:
-	    EndDialog (hwnDlg, IDC_REFERSVGLIB);
-	    ThotCallback (BaseLibrary + FormLibrary, INTEGER_DATA, (char*) 2);
-	    break;
-
-	  case IDCANCEL:
-	    ThotCallback (BaseLibrary + FormLibrary, INTEGER_DATA, (char*) 0);
-	    EndDialog (hwnDlg, IDCANCEL);
-	    break;
-	  }
-	break;
-      default:
-	return FALSE;
-      }
-#endif /* _SVGLIB */
-    return TRUE;
-}
-
-/*-----------------------------------------------------------------------
  CreateAltDlgWindow
  ------------------------------------------------------------------------*/
 void CreateAltDlgWindow ()
@@ -3584,7 +3541,6 @@ void CreateCSSDlgWindow (ThotWindow parent, int nb_item, char *buffer,
     DialogBox (hInstance, MAKEINTRESOURCE (CSSDIALOG), parent,
 	       (DLGPROC) CSSDlgProc);
 }
-
 
 /*-----------------------------------------------------------------------
  CreateTitleDlgWindow
@@ -3756,6 +3712,8 @@ void  CreateOpenDocDlgWindow (ThotWindow parent, char *title, char *url,
     szFilter = APPIMAGENAMEFILTER;
   else if (doc_type == docImage)
     szFilter = APPIMAGENAMEFILTER;
+  else if (doc_type == docLibrary)
+	szFilter = APPLIBRARYNAMEFILTER;
   else 
     szFilter = APPFILENAMEFILTER;
 
@@ -4067,16 +4025,5 @@ void CreateDocumentInfoDlgWindow (ThotWindow parent, const Document doc)
       TmpDoc = doc;
       DialogBox (hInstance, MAKEINTRESOURCE (DOCINFOMENU), NULL, (DLGPROC) DocumentInfoDlgProc);
     }
-}
-
-/*-----------------------------------------------------------------------
- CreatePasteLibraryModelDlgWindow
- ------------------------------------------------------------------------*/
-void CreatePasteLibraryModelDlgWindow (ThotWindow parent)
-{
-#ifdef _SVGLIB
-  DialogBox (hInstance, MAKEINTRESOURCE (PASTELIBRARYDIALOG), parent,
-	     (DLGPROC) PasteLibraryModelDlgProc);
-#endif _SVGLIB
 }
 #endif /* _WINDOWS */

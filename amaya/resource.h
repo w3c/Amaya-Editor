@@ -258,6 +258,9 @@
 #define SAVEASDIALOG2                   554
 #define INITCONFIRMDIALOG1              555
 #define BROWSEMENU                      556
+#define PASTELIBRARYDIALOG              557
+#define ADDNEWMODELINTOLIBRARYDIALOG    558
+#define CREATELIBRARYDIALOG             559
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -721,6 +724,16 @@
 #define IDC_LOADIMG                     1572
 #define IDC_SHOWBUTTONS                 1573
 #define IDC_NUMBER                      1574
+#define ID_COPYSVGLIB                   1575
+#define ID_REFERSVGLIB                  1576
+#define ID_CREATELIBRARY                1577
+#define IDC_LIBRARYTITLE                1579
+#define ID_BROWSELIBRARY                1580
+#define ID_GETLIBRARYURL                1582
+#define ID_GETLIBRARYTITLE              1583
+#define ID_LIBRARYURL                   1584
+#define ID_LIBRARYTITLE                 1585
+#define IDC_LIBRARYLIST                 1586
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -765,9 +778,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        554
+#define _APS_NEXT_RESOURCE_VALUE        560
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1575
+#define _APS_NEXT_CONTROL_VALUE         1587
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

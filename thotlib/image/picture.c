@@ -2577,6 +2577,133 @@ void LittleXBigEndian (register unsigned char *b, register long n)
      }
    while (--n > 0);
 }
+#ifdef _WINDOWS
+/*
+This function turns a 16-bit pixel
+into an RGBQUAD value.
+*/
+RGBQUAD QuadFromWord(WORD b16)
+{
+   BYTE bytVals[] =
+   {
+     0,  16, 24, 32,  40, 48, 56, 64,
+     72, 80, 88, 96, 104,112,120,128,
+     136,144,152,160,168,176,184,192,
+     200,208,216,224,232,240,248,255
+   };
+   WORD wR = b16;
+   WORD wG = b16;
+   WORD wB = b16;
+   RGBQUAD rgb;
+
+   wR <<= 1; wR >>= 11;
+   wG <<= 6; wG >>= 11;
+   wB <<= 11; wB >>= 11;
+
+
+   rgb.rgbReserved = 0;
+   rgb.rgbBlue     = bytVals[wB];
+   rgb.rgbGreen    = bytVals[wG];
+   rgb.rgbRed      = bytVals[wR];
+
+   return rgb;
+}
+
+
+DIB2RGBA (LPBITMAPINFOHEADER hDib, unsigned char *jsmpPixels)
+{
+
+int r=0, p=0, q=0, b=0, n=0, 
+       nUnused=0, nBytesWide=0, nUsed=0, nLastBits=0, nLastNibs=0, nCTEntries=0,
+       nRow=0, nByte=0, nPixel=0;
+BYTE bytCTEnt = 0;
+LPBITMAPINFOHEADER pbBmHdr = (LPBITMAPINFOHEADER)hDib; 
+
+   /*Point to the color table and pixels*/
+   DWORD     dwCTab = (DWORD)pbBmHdr + pbBmHdr->biSize;
+   LPRGBQUAD pCTab  = (LPRGBQUAD)(dwCTab);
+   LPSTR     lpBits = (LPSTR)pbBmHdr +
+                      (WORD)pbBmHdr->biSize;
+
+   /*Different formats for the image bits*/
+   LPBYTE   lpPixels = (LPBYTE)  lpBits;
+   RGBQUAD* pRgbQs   = (RGBQUAD*)lpBits;
+   WORD*    wPixels  = (WORD*)   lpBits;
+RGBQUAD quad;
+
+
+switch (pbBmHdr->biBitCount)
+   {
+
+      case 16: 
+		  nPixel = 0;
+		  while (nPixel < pbBmHdr->biWidth*pbBmHdr->biHeight)
+		  {
+				quad = QuadFromWord (wPixels[nPixel]);
+
+               jsmpPixels[nPixel*3+0] = quad.rgbRed;
+               jsmpPixels[nPixel*3+1] = quad.rgbGreen;
+               jsmpPixels[nPixel*3+2] = quad.rgbBlue;
+			   nPixel++;
+		  }
+		  /*
+         for (r=0;r < pbBmHdr->biHeight; r++)
+         {
+            for (p=0,q=0; p < pbBmHdr->biWidth; p++,q+=3)
+            {
+               nRow    = (pbBmHdr->biHeight-r-1) * pbBmHdr->biWidth;
+               nPixel  = nRow + p;
+
+               quad = QuadFromWord (wPixels[nPixel]);
+
+               jsmpPixels[r*q+0] = quad.rgbRed;
+               jsmpPixels[r*q+1] = quad.rgbGreen;
+               jsmpPixels[r*q+2] = quad.rgbBlue;
+            }
+         }*/
+         break;
+
+      case 24:
+         nBytesWide =  (pbBmHdr->biWidth*3);
+         nUnused    =  (((nBytesWide + 3) / 4) * 4) -
+                       nBytesWide;
+         nBytesWide += nUnused;
+
+         for (r=0;r < pbBmHdr->biHeight;r++)
+         {
+            for (p=0,q=0;p < (nBytesWide-nUnused); p+=3,q+=3)
+            { 
+               nRow = (pbBmHdr->biHeight-r-1) * nBytesWide;
+               nPixel  = nRow + p;
+
+               jsmpPixels[r*q+0] = lpPixels[nPixel+2]; //Red
+               jsmpPixels[r*q+1] = lpPixels[nPixel+1]; //Green
+               jsmpPixels[r*q+2] = lpPixels[nPixel+0]; //Blue
+            }
+         }
+         break;
+
+      case 32:
+         for (r=0; r < pbBmHdr->biHeight; r++)
+         {
+            for (p=0,q=0; p < pbBmHdr->biWidth; p++,q+=3)
+            {
+               nRow    = (pbBmHdr->biHeight-r-1) *
+                          pbBmHdr->biWidth;
+               nPixel  = nRow + p;
+
+               jsmpPixels[r*q+0] = pRgbQs[nPixel].rgbRed;
+               jsmpPixels[r*q+1] = pRgbQs[nPixel].rgbGreen;
+               jsmpPixels[r*q+2] = pRgbQs[nPixel].rgbBlue;
+            }
+         }
+         break;
+   }   
+}
+
+#endif /*_WINDOWS*/
+
+
 
 /*----------------------------------------------------------------------
   GetScreenshot makes a screenshot of Amaya drawing area
@@ -2585,15 +2712,33 @@ void LittleXBigEndian (register unsigned char *b, register long n)
 unsigned char *GetScreenshot (int frame, char *pngurl)
 {
   unsigned char   *screenshot = NULL;
+  int              widthb, heightb;
+  int              k, line, i = 0;
+  unsigned char   *pixel;
 #ifdef _GTK
   GdkImage        *View;
-  unsigned char   *pixel, inter;
-  int              k, cpt1, cpt2, line, line2, mi_h, NbOctetsPerLine, i = 0;
-  int              widthb, heightb;
-
+  int              cpt1, cpt2, line2, mi_h, NbOctetsPerLine;
+  unsigned char    inter;
+#else /* !_GTK */
+#ifdef _WINDOWS
+  HWND             FrameWd;
+  HDC              SurfDC;
+  /*HDC			   lpDDS;*/
+  HDC              OffscrDC; 
+  HBITMAP          OffscrBmp;
+  HBITMAP          OldBmp;
+  /*BITMAP           bm;*/
+  LPBITMAPINFO     lpbi;
+  LPVOID           lpvBits; 
+  RECT             rect;
+  unsigned char   *internal;
+#endif /* _WINDOWS */
+#endif /* _GTK */
   TtaHandlePendingEvents ();
+#ifdef _GTK
   widthb = (FrameTable[frame].WdFrame)->allocation.width;
   heightb = (FrameTable[frame].WdFrame)->allocation.height;
+
   View = gdk_image_get (FrRef[frame], 0, 0, widthb, heightb);
 
   pixel = (unsigned char *) View->mem;
@@ -2632,12 +2777,62 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   screenshot = (unsigned char *) TtaGetMemory (k + 4);
   memcpy (screenshot, View->mem, k + 4);
   gdk_image_destroy (View);
+#else /* !_GTK */
+#ifdef _WINDOWS
+    FrameWd = FrMainRef[frame];
+	/*FrameWd = FrameTable[frame].WdFrame;*/
+	GetClientRect (FrameWd, &rect);
+	widthb = rect.right;
+	heightb = rect.bottom;
+	SurfDC = GetDC (FrameWd);
+	OffscrDC = CreateCompatibleDC (SurfDC);
+	OffscrBmp = CreateCompatibleBitmap (SurfDC, rect.right, rect.bottom);
+	OldBmp = (HBITMAP) SelectObject (OffscrDC, OffscrBmp); 
+	if (OldBmp) 
+	{
 
+	/*GetObject (OldBmp, sizeof (OldBmp), &bm);*/
+	if (BitBlt (OffscrDC, 0, 0, rect.right, rect.bottom, SurfDC, 0, 0, SRCCOPY))
+	{
+		lpbi = (LPBITMAPINFO) TtaGetMemory (sizeof(BITMAPINFOHEADER) + 256 * sizeof(RGBQUAD));
+		lpbi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+		lpbi->bmiHeader.biBitCount = 0;
+		if (SelectObject(OffscrDC, OldBmp)) 
+		{
+			GetDIBits (OffscrDC, OffscrBmp, 0, heightb, NULL, lpbi, DIB_RGB_COLORS);
+			lpvBits = TtaGetMemory (lpbi->bmiHeader.biSizeImage);
+			GetDIBits (OffscrDC, OffscrBmp, 0, heightb, lpvBits, lpbi, DIB_RGB_COLORS);
+
+
+			screenshot = TtaGetMemory (heightb*widthb*3);
+			internal = lpvBits;
+			pixel = screenshot;
+			k = 0;
+			line = 0;
+            DIB2RGBA (&lpbi->bmiHeader, screenshot);
+			pixel= TtaGetMemory (heightb*widthb*4);
+			internal = screenshot;
+			for (i = 0; i < heightb*widthb; i++)
+			{
+				*(pixel + k) = *(internal + line); 
+				*(pixel + k + 1) = *(internal + line + 1); 
+				*(pixel + k + 2) = *(internal + line + 2); 
+				*(pixel + k + 3) = 255;
+				k += 4;line +=3;
+				i++;	
+			}
+			TtaFreeMemory (lpvBits);
+			TtaFreeMemory (screenshot);
+			screenshot = pixel;
+			}
+	}
+	}
+#endif /* _WINDOWS */
+#endif /* _GTK */
   SavePng (pngurl,
 	   screenshot,
 	   (unsigned int) widthb,
 	   (unsigned int) heightb);
 
-#endif /* _GTK */
   return screenshot;
 }

@@ -62,6 +62,7 @@ Shift Ctrl <Key>E:  TtcSelEndOfLine()
 Ctrl <Key>Home:     TtcPageTop() 
 Ctrl <Key>End:      TtcPageEnd() 
 Alt <Key>Return:    DoAction() 
+Alt <Key>l:         AddNewModelIntoLibrary ()
 Alt <Key>Home:      GoToHome()
 Ctrl <Key><:                                TtcInsertChar("\253")
 Shift Ctrl <Key><:                          TtcInsertChar("\253")
@@ -251,3 +252,9 @@ Ctrl <Key>n , Ctrl <Key>o:	   ConfigAnnot()
 #Try to override bizzare behaviour
 Shift <Key>End:     TtcSelEndOfLine()
 Shift <Key>Home:    TtcSelStartOfLine()
+
+#SvgLibrary
+Ctrl <Key>l , Ctrl <Key>s:	   ShowLibrary()
+Ctrl <Key>l , Ctrl <Key>a:	   AddNewModelIntoLibraryForm()
+
+

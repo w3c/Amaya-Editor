@@ -453,6 +453,7 @@ HelpMath
 ShowGraphicsPalette
 ShowTimeLineWindow
 ShowLibrary
+AddNewModelIntoLibraryForm
 HelpSVG
 
 ########### STYLE

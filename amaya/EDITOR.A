@@ -334,5 +334,5 @@ FUNCTIONS
   StopTransfer,
   GoToHome,
   ShowLibrary,
-  CopySvgInformationTree;
+  AddNewModelIntoLibraryForm;
 END

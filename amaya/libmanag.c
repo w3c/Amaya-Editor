@@ -43,6 +43,7 @@
 #include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
 #include "HTMLpresentation_f.h"
+#include "HTMLtable_f.h"
 #include "html2thot_f.h"
 #include "Mathedit_f.h"
 #include "SVGedit_f.h"
@@ -59,10 +60,6 @@
 /* fichiers d'entêtes utilent */
 #include "libmanag.h" 
 #include "libmanag_f.h"
-
-#ifdef _WINDOWS
-#include "wininclude.h"
-#endif /* _WINDOWS */
 
 #ifdef _SVGLIB
 /* common local variables */
@@ -111,13 +108,274 @@ static int      LibSVGButton;
 
 #ifdef _WINDOWS
 #include "wininclude.h"
+#include "resource.h"
+extern HINSTANCE    hInstance;
+
+#define MAX_BUFF 4096
+
 #define iconLibsvg   28
 #define iconLibsvgNo 28
 
-static HWND     SVGLibHwnd = NULL;
-#endif /* _WINDOWS */
+static HWND       SVGLibHwnd = NULL;
+static HWND       AddNewModelHwnd = NULL;
+static char       UrlToOpen [MAX_LENGTH];
 
+static OPENFILENAME OpenFileName;
+static char        *szFilter;
+static char         szFileName[256];
+static char         szBuffer [MAX_BUFF];
+
+static int          nbTitle;
+static char         listTitle [MAX_BUFF];
+#endif /* _WINDOWS */
 #endif /* _SVGLIB */
+
+#ifdef _WINDOWS
+/*-----------------------------------------------------------------------
+ PasteLibraryModelDlgProc
+ ------------------------------------------------------------------------*/
+LRESULT CALLBACK PasteLibraryModelDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
+									  LPARAM lParam)
+{
+#ifdef _SVGLIB
+    switch (msg)
+      {
+      case WM_INITDIALOG:
+	/*SVGLibHwnd = hwnDlg;*/
+	SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SVGLIB_DIALOG1));
+	SetWindowText (GetDlgItem (hwnDlg, ID_COPYSVGLIB),
+		TtaGetMessage (AMAYA, AM_SVGLIB_COPY_SELECTION));
+	SetWindowText (GetDlgItem (hwnDlg, ID_REFERSVGLIB), 
+		TtaGetMessage (AMAYA, AM_SVGLIB_REF_SELECTION));
+	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+	break;
+      case WM_COMMAND:
+	switch (LOWORD (wParam))
+	  {
+	  case ID_COPYSVGLIB:
+	    EndDialog (hwnDlg, ID_COPYSVGLIB);
+	    ThotCallback (BaseLibrary + FormLibrary, INTEGER_DATA, (char*) 1);
+	    break;
+	  case ID_REFERSVGLIB:
+	    EndDialog (hwnDlg, ID_REFERSVGLIB);
+	    ThotCallback (BaseLibrary + FormLibrary, INTEGER_DATA, (char*) 2);
+	    break;
+
+	  case IDCANCEL:
+	    ThotCallback (BaseLibrary + FormLibrary, INTEGER_DATA, (char*) 0);
+	    EndDialog (hwnDlg, IDCANCEL);
+	    break;
+	  }
+	break;
+      default:
+	return FALSE;
+      }
+#endif /* _SVGLIB */
+    return TRUE;
+}
+
+/*-----------------------------------------------------------------------
+ AddNewModelIntoLibraryDlgProc
+ ------------------------------------------------------------------------*/
+LRESULT CALLBACK AddNewModelIntoLibraryDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
+									  LPARAM lParam)
+{
+#ifdef _SVGLIB
+int    iListIndex = 0;
+int    iCurrItem = -1;
+int    length = 0;
+HWND   hwndLibraryListCtrl; /* handle the library title list */
+
+hwndLibraryListCtrl = GetDlgItem (hwnDlg, IDC_LIBRARYLIST);
+
+    switch (msg)
+      {
+      case WM_INITDIALOG:
+	SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SVGLIB_ADD_SVG_MODEL_DIALOG));
+	SetWindowText (GetDlgItem (hwnDlg, IDC_LIBRARYTITLE),
+		TtaGetMessage (AMAYA, AM_SVGLIB_CATALOGUE_TITLE));
+    SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
+		TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	SetWindowText (GetDlgItem (hwnDlg, ID_CREATELIBRARY), 
+		TtaGetMessage (AMAYA, AM_SVGLIB_CREATE_NEW_CATALOGUE));
+	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+
+	/* Reset library list content */
+	SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_RESETCONTENT, 0, 0);
+	/* Set library list variable to handle text */
+	SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LBS_HASSTRINGS, 0, 0);
+
+	/*SendMessage (hwndLibraryListCtrl, LBS_HASSTRING, 0, 0);*/
+	for (iListIndex = 0; iListIndex < nbTitle; ++iListIndex)
+      {
+        /* Insert code here to retrieve the name of each library title, and then 
+         put the library title in Title. */
+        /* Add the title string to the list control. */
+        SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_INSERTSTRING/*LB_ADDSTRING*/, iListIndex, 
+                                 (LPARAM) &listTitle[length]);
+		length += strlen (&listTitle[length]) + 1;
+         /*Set a 32-bit value, (LPARAM) iListIndex, that is associated
+           with the newly added item in the list control.*/
+        /*SendMessage (hwndLibraryListCtrl, LB_SETITEMDATA,      
+                     (WPARAM) iCurrItem, (LPARAM) iListIndex);*/
+      }
+
+      /* Select the first library title in the list control. */
+      SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_SETCURSEL, 0, 0);
+	  return TRUE;
+	break;
+      case WM_COMMAND:
+	switch (LOWORD (wParam))
+	  {
+	case ID_CONFIRM:
+          /* Retrieve the index of the currently selected library.*/
+          if ((iCurrItem = SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_GETCURSEL, 
+                                               0, 0)) != LB_ERR)
+          {
+            /*length = SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_GETTEXTLEN, 
+                                         iCurrItem, 0);*/
+			length = SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_GETTEXT,
+										 iCurrItem, (LPARAM) szBuffer);
+			ThotCallback (BaseLibrary + SVGLibCatalogueTitle, STRING_DATA, (char *) szBuffer);
+			ThotCallback (BaseLibrary + AddSVGModel, INTEGER_DATA, (char *) 1);
+            EndDialog (hwnDlg, 0);
+          }
+		break;
+
+	case ID_CREATELIBRARY:
+	  ThotCallback (BaseLibrary + AddSVGModel, INTEGER_DATA, (char *) 2);
+	  break;
+
+	case IDCANCEL:
+	    ThotCallback (BaseLibrary + FormLibrary, INTEGER_DATA, (char*) 0);
+	    EndDialog (hwnDlg, IDCANCEL);
+	    break;
+	}	
+	break;
+      default:
+	return FALSE;
+      }
+#endif /* _SVGLIB */
+    return TRUE;
+}
+/*-----------------------------------------------------------------------
+ NewLibraryDlgProc
+ ------------------------------------------------------------------------*/
+LRESULT CALLBACK NewLibraryDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
+									  LPARAM lParam)
+{
+#ifdef _SVGLIB
+   AddNewModelHwnd = hwnDlg;
+   switch (msg)
+      {
+      case WM_INITDIALOG:
+	SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SVGLIB_CREATE_NEW_CATALOGUE_DIALOG));
+	SetWindowText (GetDlgItem (hwnDlg, ID_LIBRARYURL),
+		TtaGetMessage (AMAYA, AM_SVGLIB_CATALOGUE_URL));
+	SetWindowText (GetDlgItem (hwnDlg, ID_LIBRARYTITLE), 
+		TtaGetMessage (AMAYA, AM_SVGLIB_CATALOGUE_TITLE));
+	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), 
+		TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	SetWindowText (GetDlgItem (hwnDlg, ID_CLEAR), 
+		TtaGetMessage (AMAYA, AM_CLEAR));
+	SetWindowText (GetDlgItem (hwnDlg, ID_BROWSELIBRARY), 
+		TtaGetMessage (AMAYA, AM_SVGLIB_ADD_NEW_CATALOGUE));
+	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+	return TRUE;
+	break;
+      case WM_COMMAND:
+	switch (LOWORD (wParam))
+	  {
+	  case ID_CONFIRM:
+		EndDialog (hwnDlg, ID_CONFIRM);
+		break;
+
+	case ID_BROWSELIBRARY:
+	  OpenFileName.lStructSize       = sizeof (OPENFILENAME);
+	  OpenFileName.hwndOwner         = hwnDlg;
+	  OpenFileName.hInstance         = hInstance;
+	  OpenFileName.lpstrFilter       = (LPTSTR) szFilter;
+	  OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
+	  OpenFileName.nMaxCustFilter    = 0L;
+	  OpenFileName.nFilterIndex      = 1L;
+	  OpenFileName.lpstrFile         = (LPTSTR) szFileName;
+	  OpenFileName.nMaxFile          = 256;
+	  OpenFileName.lpstrInitialDir   = NULL;
+	  OpenFileName.lpstrTitle        = "Select";
+	  OpenFileName.nFileOffset       = 0;
+	  OpenFileName.nFileExtension    = 0;
+	  OpenFileName.lpstrDefExt       = "*.lhtml";
+	  OpenFileName.lCustData         = 0;
+	  OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
+
+	  if (GetOpenFileName (&OpenFileName))
+		  strcpy (UrlToOpen, OpenFileName.lpstrFile);
+
+	  SetDlgItemText (hwnDlg, ID_GETLIBRARYURL, UrlToOpen);
+
+	  if (UrlToOpen[0] != 0)
+	    {
+	      ThotCallback (BaseLibrary + SVGLibFileBrowserText, STRING_DATA, UrlToOpen);
+	      ThotCallback (BaseLibrary + SVGLibFileBrowser, INTEGER_DATA, (char*) 1);
+	    }
+	  break;
+
+	  case IDCANCEL:
+	    EndDialog (hwnDlg, IDCANCEL);
+	    break;
+	  }
+	break;
+      default:
+	return FALSE;
+      }
+#endif /* _SVGLIB */
+   return TRUE;
+}
+
+/*-----------------------------------------------------------------------
+ CreatePasteLibraryModelDlgWindow
+ ------------------------------------------------------------------------*/
+void CreatePasteLibraryModelDlgWindow (ThotWindow parent)
+{
+#ifdef _SVGLIB
+  DialogBox (hInstance, MAKEINTRESOURCE (PASTELIBRARYDIALOG), parent,
+	     (DLGPROC) PasteLibraryModelDlgProc);
+#endif _SVGLIB
+}
+
+/*-----------------------------------------------------------------------
+ CreateAddNewModelIntoLibraryDlgWindow
+ ------------------------------------------------------------------------*/
+void CreateAddNewModelIntoLibraryDlgWindow (ThotWindow parent, int nbr_Title, char *list_Title)
+{
+#ifdef _SVGLIB
+  nbTitle = nbr_Title;
+  memcpy (listTitle, list_Title, MAX_LENGTH);
+
+  DialogBox (hInstance, MAKEINTRESOURCE (ADDNEWMODELINTOLIBRARYDIALOG), parent,
+	     (DLGPROC) AddNewModelIntoLibraryDlgProc);
+#endif _SVGLIB
+}
+
+/*-----------------------------------------------------------------------
+ CreateNewLibraryDlgWindow
+ ------------------------------------------------------------------------*/
+void CreateNewLibraryDlgWindow (ThotWindow parent, int doc_type)
+{
+#ifdef _SVGLIB
+  UrlToOpen[0] = EOS;
+
+  if (doc_type == docLibrary)
+    szFilter = APPLIBRARYNAMEFILTER;
+  else 
+    szFilter = APPALLFILESFILTER;
+
+	DialogBox (hInstance, MAKEINTRESOURCE (CREATELIBRARYDIALOG), parent,
+	     (DLGPROC) NewLibraryDlgProc);
+#endif /* _SVGLIB */
+}
+
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   IsCurrentSelectionSVG
@@ -197,6 +455,7 @@ ThotBool IsCurrentSelectionContainsUseElement()
   int           firstChar, lastChar, i;
   int           stop = 0;
 
+  selDoc = TtaGetSelectedDocument ();
   /* get the current selection */
   TtaGiveFirstSelectedElement (selDoc, &firstSelEl, &firstChar, &i);
   TtaGiveLastSelectedElement (selDoc, &lastSelEl, &i, &lastChar);
@@ -223,27 +482,28 @@ ThotBool IsCurrentSelectionContainsUseElement()
 }
 
 /*----------------------------------------------------------------------
-  CopySvgInformationTree
+  AddNewModelIntoLibraryForm
   Checks if the selection is a SVG element        
   and initializes add svg model form (dialog)
   ----------------------------------------------------------------------*/
-void CopySvgInformationTree (Document doc, View view)
+void AddNewModelIntoLibraryForm (Document doc, View view)
 {
 #ifdef _SVGLIB
+  char          *buffer_list;
+  int            nbr;
 #ifndef _WINDOWS
   char           bufButton[MAX_LENGTH];
-  char          *buffer_list;
-  int            i, nbr;
+  int            i;
 #endif /* _WINDOWS */
 
   /* Initialize Structure if it's not yet done */
   InitSVGLibraryManagerStructure();
-
-#ifndef _WINDOWS
   SaveLibraryTitleSelection[0] = EOS;
+
   /* Check the current selection */
   if (IsCurrentSelectionSVG ())
     {
+#ifndef _WINDOWS
       i = 0;
       strcpy (&bufButton[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       i += strlen (&bufButton[i]) + 1;
@@ -266,6 +526,11 @@ void CopySvgInformationTree (Document doc, View view)
       TtaSetDialoguePosition ();
       TtaShowDialogue (BaseLibrary + AddSVGModel, TRUE);
       TtaWaitShowDialogue ();
+#else /* _WINDOWS */
+      buffer_list = InitSVGBufferForComboBox ();
+      nbr = SVGLibraryListItemNumber (buffer_list);
+      CreateAddNewModelIntoLibraryDlgWindow (TtaGetViewFrame (doc, view), nbr, buffer_list);
+#endif /* _WINDOWS */
     }
   else
     {
@@ -273,9 +538,7 @@ void CopySvgInformationTree (Document doc, View view)
       InitInfo (TtaGetMessage (AMAYA, AM_ERROR),
 		TtaGetMessage (AMAYA, AM_SVGLIB_NO_SVG_SELECTION));
     }
-#else /* _WINDOWS */
-  CreatePasteLibraryModelDlgWindow (TtaGetViewFrame (document, view));
-#endif /* _WINDOWS */
+
 #endif /* _SVGLIB */
 }
 
@@ -509,7 +772,7 @@ void CallbackLibrary (int ref, int typedata, char *data)
     case SVGLibFileBrowser:
       switch (val)
 	{
-	case 2: /* Confirm button set NewSVGLibFileURL Text Zone */
+	case 2: /* Confirm button set NewSVGLibFileURL and NewSVGLibFileTitle Text Zone */
 #ifndef _WINDOWS
 	  TtaSetTextForm (BaseLibrary + SVGLibraryURL, LastURLCatalogue);
 #endif /* WINDOWS */
@@ -527,10 +790,13 @@ void CallbackLibrary (int ref, int typedata, char *data)
                     }
                   else
 		    {
-		      /* The current library file is corrupted */
+		      /* The current library file is corrupted (doesn't contain title) */
 		    }
 #ifndef _WINDOWS
 		  TtaSetTextForm (BaseLibrary + NewSVGLibraryTitle, NewLibraryTitle);
+#else /* _WINDOWS */
+		  if (AddNewModelHwnd)
+			  SetDlgItemText (AddNewModelHwnd, ID_GETLIBRARYTITLE, NewLibraryTitle);
 #endif /* WINDOWS */
 		}
 	    }
@@ -613,6 +879,8 @@ void CreateNewLibraryDialog (Document doc, View view)
   filename =  (char *) TtaGetMemory (MAX_LENGTH);
   TtaExtractName (DocumentURLs[doc], baseDirectory, filename);
 */
+#else /* _WINDOWS */
+  CreateNewLibraryDlgWindow (TtaGetViewFrame (doc, view), docLibrary);
 #endif /* _WINDOWS */
 #endif /* _SVGLIB */
 }
@@ -624,6 +892,7 @@ void ShowLibraryBrowser ()
 {
 #ifdef _SVGLIB
   Document       doc;
+  doc = TtaGetSelectedDocument ();
 #ifndef _WINDOWS
   char           bufButton[MAX_LENGTH];
   char          *filename;
@@ -666,6 +935,8 @@ void ShowLibraryBrowser ()
   TtaWaitShowDialogue ();
   
   TtaFreeMemory (filename);
+#else /* _WINDOWS */
+
 #endif /* _WINDOWS */
 #endif /* _SVGLIB */
 }
@@ -745,7 +1016,7 @@ char *IsSVGCatalogueExist (char *data)
 void AddGraphicalObjectIntoCatalogue (Document doc, View view)
 {
 #ifdef _SVGLIB
-  CopySvgInformationTree (doc, view);
+  AddNewModelIntoLibraryForm (doc, view);
 #endif /* _SVGLIB */
 }
 
@@ -2860,7 +3131,6 @@ void SearchGraphicalObjectByTitle (char *GraphicalObjectTitle)
 void RemoveLibraryModel (Document deletedDoc, Element deletedEl)
 {
 #ifdef _SVGLIB
-  Element        rowEl;
   ElementType    elType;
 
   elType = TtaGetElementType (deletedEl);

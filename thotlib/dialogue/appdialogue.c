@@ -118,6 +118,7 @@ static SchemaMenu_Ctl *SchemasMenuList;
 #define WM_ENTER (WM_USER)
 extern TBADDBITMAP ThotTBBitmap;
 WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
+WNDPROC lpfnComboBoxWndProc = (WNDPROC) 0;
 
 typedef struct struct_winerror
 {
@@ -218,6 +219,128 @@ LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
   /* Call the original window procedure for default processing */ 
   return CallWindowProc (lpfnTextZoneWndProc, hwnd, msg, wParam, lParam); 
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+LRESULT CALLBACK ComboBoxProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+  switch (msg)
+    {
+    case WM_KEYDOWN:
+		switch (wParam)
+		{
+		case VK_RETURN:
+			SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+			return 0;
+		}
+		break;
+	case WM_ENTER:
+		SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+		return 0;
+
+	case CB_GETDROPPEDSTATE:
+			switch (wParam)
+			{
+			case WM_ENTER:
+				SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+				return 0;
+			case VK_RETURN:
+				SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+				return 0;
+			}
+			switch (lParam)
+			{
+			case TRUE:
+				SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+				return 0;
+			case FALSE:
+				SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+				return 0;
+			}
+			
+		break;
+
+	case WM_COMMAND:
+
+		switch (wParam)
+		{
+
+		case CBN_SELENDOK:
+				SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+				return 0;
+
+		case WM_KEYDOWN:
+			switch (wParam)
+			{
+			case VK_RETURN:
+				SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+				return 0;
+			}
+			break;
+
+		    case WM_CHAR: 
+			switch (wParam)
+			{ 
+			case VK_RETURN: 
+			SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+			return 0; 
+			}
+ 
+
+			
+		case BN_CLICKED:
+			return 0;
+		case CBN_CLOSEUP:
+			return 0;
+		case CBN_DROPDOWN:
+			SendMessage (hwnd, CB_SHOWDROPDOWN, 0, 0);
+			break;
+		case CBN_EDITCHANGE:
+			SendMessage (hwnd, CB_GETEDITSEL, 0, 0);
+			break;
+		case VK_RETURN:
+			SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+			return 0;
+		}
+		break;
+ 
+	case BN_CLICKED:
+		return 0;
+	case CBN_CLOSEUP:
+		break;
+	case CBN_DROPDOWN:
+		/*SendMessage (hwnd, CB_SHOWDROPDOWN, 1, 0);*/
+		break;
+	case CBN_EDITCHANGE:
+		SendMessage (hwnd, CB_GETEDITSEL, 0, 0);
+		break;
+	case CBN_EDITUPDATE:
+		SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+		break;
+
+	case CBN_SELCHANGE:
+		SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+		break;
+
+	case VK_RETURN: 
+		SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+		break; 
+
+    case WM_KEYUP: 
+    case WM_CHAR: 
+      switch (wParam)
+	{ 
+	case VK_RETURN: 
+		SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+	  return 0; 
+	}
+    }
+	 
+ 
+  /* Call the original window procedure for default processing */ 
+  return CallWindowProc (lpfnComboBoxWndProc, hwnd, msg, wParam, lParam); 
+}
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1947,6 +2070,8 @@ void APP_TextCallback (ThotWidget w, int frame, void *call_d)
    char               *text;
 #else  /* _WINDOWS */
    char                text[1024];
+
+   w = GetParent (w);
 #endif /* _WINDOWS */
 
    CloseInsertion ();
@@ -1958,6 +2083,7 @@ void APP_TextCallback (ThotWidget w, int frame, void *call_d)
 	FrameToView (frame, &doc, &view);
 
 #ifdef _WINDOWS
+	w = GetWindow (w, GW_CHILD);
 	GetWindowText (w, text, sizeof (text) + 1);
 #else /* _WINDOWS */
 	text = XmTextGetString (w);
@@ -2032,6 +2158,13 @@ gboolean APP_TextEnterGTK (GtkWidget *w, int frame)
 GList *InitComboBoxList (char * buffer)
 {
   GList       *list_items = NULL;
+#else /* !_GTK*/
+#ifdef _WINDOWS
+void InitWdComboBoxList (ThotWindow hwnCB, char *buffer)
+{
+  int          cpt = 0;
+#endif /* _WINDOWS */
+#endif /* _GTK */
   char        *ptrStr, *ptrStr1;
   int          end = 0;
 
@@ -2051,18 +2184,39 @@ GList *InitComboBoxList (char * buffer)
 	  if (*ptrStr1 == NEW_LINE)
 	    {
 	      *ptrStr1 = EOS;
+#ifdef _GTK
 	      list_items = g_list_append (list_items, (gpointer) ptrStr);
+#else /* _GTK */
+#ifdef _WINDOWS
+		  SendMessage (hwnCB, CB_INSERTSTRING/*CB_ADDSTRING*/, cpt,
+                             (LPARAM) ptrStr);
+		  cpt++;
+#endif /* _WINDOWS */
+#endif /* _GTK */
 	      ptrStr = ++ptrStr1;
 	    }
 	  else
 	    {
-	      list_items =  g_list_append (list_items, (gpointer) ptrStr);
+#ifdef _GTK
+	      list_items = g_list_append (list_items, (gpointer) ptrStr);
+#else /* _GTK */
+#ifdef _WINDOWS
+		  SendMessage (hwnCB, CB_INSERTSTRING, cpt,
+                             (LPARAM) ptrStr);
+		  cpt++;
+#endif /* _WINDOWS */
+#endif /* _GTK */
 	      end = 1;
 	    }
 	}
     }
+#ifdef _GTK
   return list_items;
 }
+#else /* _GTK */
+#ifdef _WINDOWS
+}
+#endif /* _WINDOWS */
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
@@ -2315,30 +2469,56 @@ int TtaAddTextZone (Document doc, View view, char *label,
 #else  /* _WINDOWS */
 	      currentFrame = frame;
 	      GetClientRect (FrMainRef [frame], &rect);
-	      w = CreateWindow ("EDIT", "",
-				WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
-				0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL);
-	      /* get the default GUI font */
+
+		  if (editable == TRUE)
+		  {
+/* IDC_COMBO1,26,36,48,30,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP */
+
+			w = CreateWindow ("COMBOBOX", "",
+					WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_VSCROLL |
+					CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS ,
+					0, 0, 0, 100, FrMainRef[frame], (HMENU) i, hInstance, NULL);
+		  }
+		  else
+		  {
+			w = CreateWindow ("COMBOBOX", "",
+					WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL |
+					CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS | WS_TABSTOP,
+					0, 0, 0, 100, FrMainRef[frame], (HMENU) i, hInstance, NULL);
+			w = GetWindow (w, GW_CHILD);
+			EnableWindow (w, TRUE);
+			w = GetParent (w);
+		  }
+		  /* get the default GUI font */
 	      newFont = GetStockObject (DEFAULT_GUI_FONT); 
 	      /* set the font of the window */
 	      if(newFont)
-		SendMessage (w, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+			  SendMessage (w, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 	      FrameTable[frame].Text_Zone[i] = w;
 	      FrameTable[frame].Call_Text[i] = (Proc) procedure;
 
 	      if (lpfnTextZoneWndProc == (WNDPROC) 0)
-		lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (FrameTable[frame].Text_Zone[i],
+		lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (GetWindow (w, GW_CHILD),
                               GWL_WNDPROC, (DWORD) TextZoneProc);
 	      else
-		SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, 
+		SetWindowLong (GetWindow (w, GW_CHILD), GWL_WNDPROC, 
                       (DWORD) TextZoneProc);
-	      wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
+	      if (lpfnComboBoxWndProc == (WNDPROC) 0)
+			  lpfnComboBoxWndProc = (WNDPROC) SetWindowLong (w,
+									GWL_WNDPROC, (DWORD) ComboBoxProc);
+	      else
+			  SetWindowLong (w, GWL_WNDPROC, 
+							(DWORD) ComboBoxProc);
+		  		  /* Initialize listbox linked to combobox */
+		  InitWdComboBoxList (w, listUrl);
+		   wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
 				     5, 8, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE),
 					 hInstance, NULL);
 	      if(newFont)
 		SendMessage (wLabel, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 	      FrameTable[frame].Label[i] = wLabel;
-	      /* FrameTable[frame].showLogo = TRUE; */
+		  /*FrameTable[frame].showLogo = TRUE;*/
 	      PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
 #endif /* _WINDOWS */
 	    }

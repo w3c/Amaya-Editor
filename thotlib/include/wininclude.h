@@ -8,6 +8,7 @@
 #define APPMATHNAMEFILTER "MathML files (*.mml)\0*.mml\0All files (*.*)\0*.*\0"
 #define APPHTMLNAMEFILTER "HTML files (*.*htm[l])\0*.*htm*\0All files (*.*)\0*.*\0"
 #define APPIMAGENAMEFILTER "Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
+#define APPLIBRARYNAMEFILTER "Library files (*.lhtml)\0*.lhtml\0All files (*.*)\0*.*\0"
 #define APPALLFILESFILTER "All files (*.*)\0*.*\0"
 
 extern ThotBool   RegisterWin95 (CONST WNDCLASS *lpwc);
