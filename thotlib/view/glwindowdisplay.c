@@ -101,6 +101,8 @@ static HGLRC GL_Context[MAX_FRAME];
 #define DEG_TO_RAD(A)   ((PRECISION)A)/57.29577957795135
 #define RAD_TO_DEG(A)   ((PRECISION)A)*57.29577957795135
 
+#define GL_EPSILON                 5.e-3
+#define IS_ZERO(arg)                    (fabs(arg)<1.e-20)
 
 /*If we should use a static table instead for
   performance bottleneck...*/
@@ -1069,22 +1071,11 @@ void  GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height)
 { 
   Fill_style = FALSE;	
   GL_SetForeground (fg);
-  if (S_thick > 1 && 0)
-    {
-      glBegin (GL_POINTS);/*joining angles*/
-      glVertex2i (x, y );
-      glVertex2i (x, y + height);
-      glVertex2i (x + width, y + height);
-      glVertex2i (x + width, y);
-      glVertex2i (x, y );
-      glEnd ();
-    }  
   glBegin (GL_LINE_LOOP);
   glVertex2i (x, y );
   glVertex2i (x + width, y);
   glVertex2i (x +  width, y + height);
   glVertex2i (x, y + height);
-  /* glVertex2i (x, y ); */
   glEnd (); 
   
 }
@@ -1095,38 +1086,45 @@ void  GL_DrawEmptyRectanglef (int fg, float x,
 			      float y, float width, float height,
 			      float thick)
 { 
-  Fill_style = FALSE;	
   GL_SetForeground (fg);
-  if (S_thick > 1 && 0)
+
+  if (IS_ZERO(thick - 1))
+    {      
+      glBegin (GL_LINE_LOOP);
+      glVertex2i (x, y );
+      glVertex2i (x + width, y);
+      glVertex2i (x +  width, y + height);
+      glVertex2i (x, y + height);
+    }
+  else
     {
-      glBegin (GL_POINTS);/*joining angles*/
-      glVertex2f (x, y );
-      glVertex2f (x, y + height);
-      glVertex2f (x + width, y + height);
-      glVertex2f (x + width, y);
-      glVertex2f (x, y );
-      glEnd ();
-    }  
+      thick = thick / 2;
 
-  thick = thick / 2;
+      glBegin (GL_QUADS);
 
-  glBegin (GL_LINE_LOOP);
-  glVertex2i (x + width, y + height);
-  glVertex2i (x + width, y);
-  glVertex2i (x, y);
-  glVertex2i (x, y + height);
+      glVertex2f (x - thick, y - thick);
+      glVertex2f (x + thick + width, y - thick);
+      glVertex2f (x + thick + width, y + thick);
+      glVertex2f (x - thick, y + thick);
 
- /*  glBegin (GL_LINES); */
-/*   glVertex2f (x - thick, y); */
-/*   glVertex2f (x + width + thick, y); */
-/*   glVertex2f (x + width, y - thick); */
-/*   glVertex2f (x + width, y + height + thick); */
-/*   glVertex2f (x + width + thick, y + height); */
-/*   glVertex2f (x - thick, y + height); */
-/*   glVertex2f (x, y + height - thick); */
-/*   glVertex2f (x, y + thick );  */
+      glVertex2f (x - thick, y - thick + height);
+      glVertex2f (x + thick + width, y - thick + height);
+      glVertex2f (x + thick + width, y + thick + height);
+      glVertex2i (x - thick, y + thick + height);
 
-  glEnd ();   
+      glVertex2f (x - thick, y - thick);
+      glVertex2f (x + thick, y - thick);
+      glVertex2f (x + thick, y + thick + height);
+      glVertex2f (x - thick, y + thick + height);
+
+      glVertex2f (x - thick + width, y - thick);
+      glVertex2f (x + thick + width, y - thick);
+      glVertex2f (x + thick + width, y + thick + height);
+      glVertex2f (x - thick + width, y + thick + height);
+    }
+
+  glEnd (); 
+
 }
 /*----------------------------------------------------------------------
   GL_DrawRectangle
@@ -1756,7 +1754,7 @@ static float ZoomedValue (float val, int zoom)
 if (zoom != 0)
     {
       dist = val + (val * zoom / 10);
-      if (dist == 0 && val > 0)
+      if (IS_ZERO(dist) && val > 0)
 	dist = 1;
     }
   else
@@ -2048,8 +2046,9 @@ static void getboundingbox (GLint size, GLfloat *buffer, int frame,
 	      }
 	  }
 	  break;
-	default:
-	  break;
+
+/* 	default: */
+/* 	  break; */
 	}
     }
   *xorig = (int) x;
@@ -2642,7 +2641,7 @@ ThotBool GL_DrawAll ()
 			      if (was_animation)
 				{
 				  lastime = current_time - lastime;
-				  if (lastime != 0)
+				  if (IS_ZERO(lastime))
 				    {
 				      sprintf (out, "t: %2.3f s - %2.0f fps", 
 					       current_time, 
@@ -3127,7 +3126,7 @@ void PickObject (int frame, int x, int y)
 
 
 
-#ifdef _PCLDEBUG
+#ifdef _PCLDEBUG_GARBAGE
 
 /*****************************************************/
 /* TESTING NOT REALLY USED (FOR DEBUGGING)*/

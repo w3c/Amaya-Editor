@@ -410,8 +410,12 @@ Element TtaGetFirstElementShown (Document document, View view, int *position)
   if (frame != 0)
     {
       pFrame = &ViewFrameTable[frame - 1];
+#ifndef _GL
       x = pFrame->FrXOrg;
       y = pFrame->FrYOrg;
+#else /* _GL */
+      x = y = 0;
+#endif /* _GL */
       pRootAb = pFrame->FrAbstractBox;
       if (pRootAb != NULL && pRootAb->AbBox != NULL)
 	{

@@ -71,6 +71,8 @@
 #define DEG_TO_RAD(A)   ((float)A)/57.29577957795135
 #define RAD_TO_DEG(A)   ((float)A)*57.29577957795135
 
+#define IS_ZERO(arg)                    (fabs(arg)<1.e-20)
+
 /*If we should use a static table instead for
   performance bottleneck...*/
 #define DCOS(A) ((float)cos (A))
@@ -426,35 +428,10 @@ void DrawPi (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
 		       int fg)
 {
-   int                 arc, fh;
-
    if (fg < 0)
      return;
    
-   
    DrawStixChar (font, 88, x, y, l, h, fg, frame);
-   return;
-   
-   fh = FontHeight (font);
-   if (0 && h < fh * 2 && l <= CharacterWidth (199, font))
-     {
-	/* Only one glyph needed */
-	DrawMonoSymb ('\307', frame, x, y, l, h, font, fg);
-     }
-   else
-     {
-        y += FrameTable[frame].FrTopMargin;
-	/* radius of arcs is 6mm */
-	arc = h / 4;
-	InitDrawing (5, 2, fg);
-	/* vertical part */
-	DoDrawOneLine (frame, x + 1, y + arc, x + 1, y + h);
-	DoDrawOneLine (frame, x + l - 2, y + arc, x + l - 2, y + h);
-
-	/* Upper part */
-	GL_DrawArc(x + 1, y + 1, l - 3, 
-		   arc * 2, 0, 180, FALSE);
-     }
 }
 
 /*----------------------------------------------------------------------
@@ -463,36 +440,10 @@ void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
   ----------------------------------------------------------------------*/
 void DrawUnion (int frame, int x, int y, int l, int h, PtrFont font, int fg)
 {
-   int                 arc, fh;
-
    if (fg < 0)
      return;
 
    DrawStixChar (font, 87, x, y,  l, h, fg, frame);
-   return;
-
-   fh = FontHeight (font);
-   if (0 && h < fh * 2 && l <= CharacterWidth (200, font))
-     {
-	/* Only one glyph needed */
-	DrawMonoSymb ('\310', frame, x, y, l, h, font, fg);
-     }
-   else
-     {
-        y += FrameTable[frame].FrTopMargin;
-	/* radius of arcs is 3mm */
-	arc = h / 4;
-	InitDrawing (5, 2, fg);
-	/* two vertical lines */
-	DoDrawOneLine (frame, x + 1, y, x + 1, y + h - arc);
-	DoDrawOneLine (frame, x + l - 2, y, x + l - 2, y + h - arc);
-
-	/* Lower part */
-	GL_DrawArc (x + 1, y + h - arc * 2 - 2,
-		    l - 3, arc * 2,
-		    -0, -180,
-		    FALSE);
-     }
 }
 
 /*----------------------------------------------------------------------
@@ -511,7 +462,7 @@ static void ArrowDrawing (int frame, int x1, int y1, int x2, int y2,
    dx = (float) (x2 - x1);
    dy = (float) (y1 - y2);
    l = (float) sqrt ((double) (dx * dx + dy * dy));
-   if (l == 0) 
+   if (IS_ZERO(l)) 
       return;
    sina = dy / l;
    cosa = dx / l;
@@ -1733,12 +1684,13 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
 
       GL_SetForeground (bg);
       GL_DrawPolygon (point, 13);
-      for (i=0;i<4;i++){
-	GL_DrawArc (xarc[i].x, xarc[i].y, 
-		    xarc[i].width - thick/2, xarc[i].height-thick/2, 
-		    xarc[i].angle1, xarc[i].angle2,
-		    TRUE); 
-      }
+      for (i=0;i<4;i++)
+	{
+	  GL_DrawArc (xarc[i].x + thick/4, xarc[i].y + thick/4, 
+		      xarc[i].width - thick/4, xarc[i].height-thick/4, 
+		      xarc[i].angle1, xarc[i].angle2,
+		      TRUE); 
+	}
     }
 
   /* Draw the border */
@@ -1769,11 +1721,13 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
   if (pattern != 2 && thick <= 0 && pattern != fg)
     return;
 
-  if (pattern == fg && pattern != 0)
+  if (pattern == fg)
     bg = fg;
+ 
+
   y = y + FrameTable[frame].FrTopMargin;
 
-  if (pattern == 2 || bg == fg)
+  if (pattern == 2 || (bg == fg && bg == pattern))
     {
 
       /* InitDrawing (style, thick, bg); */

@@ -1870,8 +1870,13 @@ PtrAbstractBox      GetClickedAbsBox (int frame, int xRef, int yRef)
   pFrame = &ViewFrameTable[frame - 1];
   pBox = NULL;
   if (pFrame->FrAbstractBox != NULL)
+#ifndef _GL
     GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, xRef + pFrame->FrXOrg,
 		   yRef + pFrame->FrYOrg, Y_RATIO, &pointselect);
+#else /* _GL */
+  GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, xRef,
+		   yRef, Y_RATIO, &pointselect);
+#endif /* _GL */
 
   if (pBox == NULL)
     return (NULL);
@@ -2711,9 +2716,13 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
   if (pFrame->FrAbstractBox != NULL)
     {
       /* Get positions in the window */
+#ifndef _GL
       x = xm + pFrame->FrXOrg;
       y = ym + pFrame->FrYOrg;
-
+#else /*_GL*/
+      x = xm;
+      y = ym;
+#endif /* _GL */
       /* Look for the box displayed at that point */
       GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, x, y, Y_RATIO, &pointselect);
       if (pBox)
@@ -3018,9 +3027,13 @@ void ApplyDirectResize (int frame, int xm, int ym)
   if (pFrame->FrAbstractBox != NULL)
     {
       /* On note les coordonnees par rapport a l'image concrete */
+#ifndef _GL
       x = xm + pFrame->FrXOrg;
       y = ym + pFrame->FrYOrg;
-
+#else /* _GL */
+      x = xm;
+      y = ym;
+#endif /* _GL */
       /* On recherche la boite englobant le point designe */
       /* designation style Grenoble */
       GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, x, y, Y_RATIO, &pointselect);
