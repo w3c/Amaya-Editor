@@ -42,6 +42,8 @@
 #ifdef _WINDOWS
 #include <direct.h>
 #include <winbase.h>
+#include "winsys.h"
+
 #define WIN_DEF_USERNAME       "default"
 #define THOT_INI_FILENAME      "win-thot.rc"
 #define WIN_USERS_HOME_DIR     "users"
@@ -1330,7 +1332,8 @@ char* appArgv0;
 #  ifdef _WINDOWS
   /* name in Windows NT 4 is 20 chars */
   TCHAR username[21];
-  DWORD dwSize = sizeof (username);
+  TCHAR windir[MAX_PATH];
+  DWORD dwSize;
 #  ifndef __CYGWIN32__
   extern int _fmode;
 #  endif
@@ -1595,19 +1598,23 @@ char* appArgv0;
    /* No this should NOT be a call to TtaGetEnvString */
 # ifdef _WINDOWS
    /* compute the default app_home value from the username and thotdir */
+   dwSize = sizeof (username);
    status = GetUserName (username, &dwSize);
    if (status)
      ptr = (CHAR_T *) username;
    else
      /* under win95, there may be no user name */
      ptr = WIN_DEF_USERNAME;
-#if IS_WINNT
-   /* winnt: apphome is profiles\username\appname */
-   usprintf (app_home, "c:\\winnt\\profiles\\%s\\%s", ptr, AppRegistryEntryAppli);
-#else
-   /* win95: apphome is  thotdir\users\username */
-   usprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);
-#endif /* IS_WINNT */   
+   if (IS_NT)
+      /* winnt: apphome is windowsdir\profiles\username\appname */
+   {
+	  dwSize = MAX_PATH;
+	  GetWindowsDirectory (windir, dwSize);
+      usprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, AppRegistryEntryAppli);
+   }
+   else
+      /* win95: apphome is  thotdir\users\username */
+      usprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);   
 # else /* !_WINDOWS */
    ptr = getenv ("HOME");
    usprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppRegistryEntryAppli); 
