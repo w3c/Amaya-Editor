@@ -1953,8 +1953,8 @@
 </label>
 <label define="BHelpSVG">
 	<message xml:lang="en">Graphics</message>
-	<message xml:lang="fr">Graphics</message>
-	<message xml:lang="es">Graphics</message>
+	<message xml:lang="fr">Graphiques</message>
+	<message xml:lang="es">Graficas</message>
 	<message xml:lang="de">Graphics</message>
 	<message xml:lang="it">Graphics</message>
 	<message xml:lang="pt">Gráficos</message>
