@@ -104,7 +104,7 @@
 #define ALLOC_POINTS    300
 
 
-
+#define MESA
 
 /*----------------------------------------------------------------------
   FontOrig update and (x, y) location before DrawString
@@ -1027,7 +1027,6 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
     {
       GL_DrawRectangle(bg, x, y, width, height);
     }
-
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {
@@ -2233,7 +2232,7 @@ void SetMainWindowBackgroundColor (int frame, int color)
 void Clear (int frame, int width, int height, int x, int y)
 {
   
-   GL_ClearArea(x, y + FrameTable[frame].FrTopMargin, width, height);
+   GL_ClearArea (x, y + FrameTable[frame].FrTopMargin, width, height);
 
 }
 
@@ -2264,18 +2263,10 @@ void VideoInvert (int frame, int width, int height, int x, int y)
   ----------------------------------------------------------------------*/
 void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 {
-	return;
-#ifdef PCL
-  if (FrRef[frame] != None)
-    {
-      GL_window_copy_area (xf, 
-			   yf + FrameTable[frame].FrTopMargin+height,
-			   xd, 
-			   FrameTable[frame].WdFrame->allocation.height + FrameTable[frame].FrTopMargin - yd - height,
-			   width, 
-			   height);
-    }
-#endif
+  GL_window_copy_area (frame,
+		       xf, yf,
+		       xd, yd,
+		       width, height);
 }
 
 

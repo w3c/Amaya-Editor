@@ -1621,21 +1621,6 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   int                x, y;
   int                xd, yd, width, height;
   ThotBool           selected;
-#ifdef _GL
-  ThotBool           AbstractBoxModified;
-
- AbstractBoxModified = ComputeUpdates (box->BxAbstractBox, frame);
-  /* No modification and no drawing
-   so there is no need to compute anything !!*/
-  /*are we drawing ?*/
-  if (!GL_Drawing) 
-    { 
-      /*does box need to be recomputed 
-	in a new display list*/
-      if (!AbstractBoxModified)  
-	return; 
-    }  
-#endif /* _GL */
 
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;

@@ -573,8 +573,6 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
   return topBox;
 }
 
-extern ThotBool GL_Drawing;
-
 /*----------------------------------------------------------------------
    RedrawFrameTop redraw from bottom to top a frame.
    The scroll parameter indicates the height of a scroll
@@ -617,10 +615,7 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
 	   pFrame->FrXOrg + l > xmin &&
 	   pFrame->FrYOrg - scroll + h > ymin)
     {
-#ifdef _GL      
-      if (GL_prepare(FrameTable[frame].WdFrame))
-	{
-#endif /* _GL */
+
 	  pFrame->FrYOrg -= scroll;
 	  top = pFrame->FrYOrg;
 	  bottom = top + h;
@@ -630,9 +625,14 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
 #if defined(_WINDOWS) && !defined(_WIN_PRINT)
 	  WIN_GetDeviceContext (frame);
 #endif /* __WINDOWS && !_WINT_PRINT */
+#ifdef _GL      
+	      if (GL_prepare(FrameTable[frame].WdFrame))
+		{
+#endif /* _GL */
+
 	  DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
 			  &xmin, &ymin, &xmax, &ymax, 1);
-	  
+
 	  /* Is there a need to redisplay part of the frame ? */
 	  if (xmin < xmax && ymin < ymax)
 	    topBox = DisplayAllBoxes (frame, xmin, xmax, ymin, ymax, &create, &tVol, &bVol);
@@ -648,6 +648,7 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
 	  pRootBox = pFrame->FrAbstractBox->AbBox;
 	  if (!FrameUpdating && !TextInserting)
 	    {
+
 	      /* The concrete image is being updated */
 	      FrameUpdating = TRUE;
 	      y = top - pRootBox->BxYOrg;
@@ -732,12 +733,13 @@ ThotBool            RedrawFrameTop (int frame, int scroll)
 		pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
 	      
 	      /* update of image is finished */
+
 	      FrameUpdating = FALSE;
-	    }
+	    }	
 #ifdef _GL
 	  GL_realize (FrameTable[frame].WdFrame);
-	}
-#endif /* _GL */
+		}
+#endif /* _GL */ 
     }
   else
     /* The modified area is not visible */
@@ -805,8 +807,6 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 #if defined(_WINDOWS) && !defined(_WIN_PRINT)
       WIN_GetDeviceContext (frame);
 #endif /* __WINDOWS && !_WINT_PRINT */
-      DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
-		      &xmin, &ymin, &xmax, &ymax, 1);
       /* Is there a need to redisplay part of the frame ? */
       if (xmin < xmax && ymin < ymax)
 	{ 
@@ -814,6 +814,10 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 	  if (GL_prepare(FrameTable[frame].WdFrame))
 	    {
 #endif /*_GL*/
+	      
+	      DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
+			      &xmin, &ymin, &xmax, &ymax, 1);
+
 	      topBox = DisplayAllBoxes (frame, xmin, xmax, ymin,
 					ymax, &create, &tVol, &bVol);
 	      /* The updated area is redrawn */
@@ -827,6 +831,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 	      pRootBox = pFrame->FrAbstractBox->AbBox;
 	      if (!FrameUpdating && (!TextInserting || scroll > 0))
 		{
+
 		  /* The concrete image is being updated */
 		  FrameUpdating = TRUE;
 		  y = top - pRootBox->BxYOrg;
@@ -916,10 +921,11 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 		  
 		  /* update of image is finished */
 		  FrameUpdating = FALSE;
+
 		}
 #ifdef _GL 
-	      GL_realize (FrameTable[frame].WdFrame);
-	    }
+		  GL_realize (FrameTable[frame].WdFrame);
+		    }
 #endif /* _GL */
 	  /* Interactive creation of boxes */
 	  if (create)

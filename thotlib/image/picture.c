@@ -77,7 +77,9 @@
 #ifdef GL_MESA_window_pos
 #define MESA
 #endif
-
+/* For now not software optimised but quality optimized...
+ if too sloooooow we'll revert*/
+#undef MESA
 
 /*----------------------------------------------------------------------
  Free video card memory from this texture.
@@ -233,75 +235,72 @@ static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w, int h
   int       p2_w, p2_h;
   GLfloat   GL_w, GL_h;   
   GLint		Mode;
-
-	/* Another way is to split texture in 256x256 
-	   pieces and render them on different quads
-	   Declared to be the faster  */
-	p2_w = p2 (Image->PicWidth);
-	p2_h = p2 (Image->PicHeight);
-
-	glEnable (GL_TEXTURE_2D); 
-	/* Put texture in 3d card memory */
-	if (!glIsTexture (Image->TextureBind))
-	  {
-		
-	    glGenTextures (1, &(Image->TextureBind));
-	    glBindTexture (GL_TEXTURE_2D, Image->TextureBind);
-	    
-	    /*TEXTURE ZOOM : GL_NEAREST is fastest and GL_LINEAR is second fastest*/
-	    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	    /* How texture is mapped... initially GL_REPEAT
-	       GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE are another option.. Bench !!*/	    
-	    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); 
-	    /* does current Color modify texture no = GL_REPLACE, 
-	       else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
-	    glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-	    /* We give te texture to opengl Pipeline system */	    
-	    Mode = (Image->RGBA)?GL_RGBA:GL_RGB;		
-		GL_MakeTextureSize(Image, p2_w, p2_h);	
-		glTexImage2D (GL_TEXTURE_2D, 
-						0, 
-						Mode, 
-						p2_w, 
-						p2_h, 
-						0,
-						Mode, 
-						GL_UNSIGNED_BYTE, 
-						(GLvoid *) Image->PicPixmap);
-	    TtaFreeMemory (Image->PicPixmap);
-	    Image->PicPixmap = None;
-	  }
-	else
-	  {
-	    glBindTexture(GL_TEXTURE_2D, Image->TextureBind);
-	  }
-	/* We have resized the picture to match a power of 2
-	   We don't want to see all the picture, just the w and h 
-	   portion*/
-	GL_w = (GLfloat) Image->PicWidth/p2_w;
-	GL_h = (GLfloat) Image->PicHeight/p2_h;   	
-	/* Not sure of the vertex order 
-	   (not the faster one, I think) */
-	glBegin (GL_QUADS);
-	/* Texture coordinates are unrelative 
-	   to the size of the square */      
-	/* lower left */
-	glTexCoord2i (0,    0); 
-	glVertex2i (xFrame,     yFrame + h);
-	/* upper right*/
-	glTexCoord2f (GL_w, 0.0); 
-	glVertex2i (xFrame + w, yFrame + h);
-	/* lower right */
-	glTexCoord2f (GL_w, GL_h); 
-	glVertex2i (xFrame + w, yFrame); 
-	   /* upper left */
-	glTexCoord2f (0.0,  GL_h); 
-	glVertex2i (xFrame,     yFrame);      
-	glEnd ();	
-	/* State disabling */
-	glDisable (GL_TEXTURE_2D); 
+  
+  /* Another way is to split texture in 256x256 
+     pieces and render them on different quads
+     Declared to be the faster  */
+  p2_w = p2 (Image->PicWidth);
+  p2_h = p2 (Image->PicHeight);
+  glEnable (GL_TEXTURE_2D); 
+  /* Put texture in 3d card memory */
+  if (!glIsTexture (Image->TextureBind))
+    {      
+      glGenTextures (1, &(Image->TextureBind));
+      glBindTexture (GL_TEXTURE_2D, Image->TextureBind);
+      /*TEXTURE ZOOM : GL_NEAREST is fastest and GL_LINEAR is second fastest*/
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      /* How texture is mapped... initially GL_REPEAT
+	 GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE are another option.. Bench !!*/	    
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); 
+      /* does current Color modify texture no = GL_REPLACE, 
+	 else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
+      glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+      /* We give te texture to opengl Pipeline system */	    
+      Mode = (Image->RGBA)?GL_RGBA:GL_RGB;		
+      GL_MakeTextureSize(Image, p2_w, p2_h);	
+      glTexImage2D (GL_TEXTURE_2D, 
+		    0, 
+		    Mode, 
+		    p2_w, 
+		    p2_h, 
+		    0,
+		    Mode, 
+		    GL_UNSIGNED_BYTE, 
+		    (GLvoid *) Image->PicPixmap);
+      TtaFreeMemory (Image->PicPixmap);
+      Image->PicPixmap = None;
+    }
+  else
+    {
+      glBindTexture(GL_TEXTURE_2D, Image->TextureBind);
+    }
+  /* We have resized the picture to match a power of 2
+     We don't want to see all the picture, just the w and h 
+     portion*/
+  GL_w = (GLfloat) Image->PicWidth/p2_w;
+  GL_h = (GLfloat) Image->PicHeight/p2_h;   	
+  /* Not sure of the vertex order 
+     (not the faster one, I think) */
+  glBegin (GL_QUADS);
+  /* Texture coordinates are unrelative 
+     to the size of the square */      
+  /* lower left */
+  glTexCoord2i (0,    0); 
+  glVertex2i (xFrame,     yFrame + h);
+  /* upper right*/
+  glTexCoord2f (GL_w, 0.0); 
+  glVertex2i (xFrame + w, yFrame + h);
+  /* lower right */
+  glTexCoord2f (GL_w, GL_h); 
+  glVertex2i (xFrame + w, yFrame); 
+  /* upper left */
+  glTexCoord2f (0.0,  GL_h); 
+  glVertex2i (xFrame,     yFrame);      
+  glEnd ();	
+  /* State disabling */
+  glDisable (GL_TEXTURE_2D); 
 #endif /*MESA*/
 }
 #endif /* _GL */

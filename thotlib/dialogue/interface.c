@@ -1382,13 +1382,16 @@ void TtaHandlePendingEvents ()
    while (TtaFetchOneAvailableEvent(&ev))
      TtaHandleOneEvent (&ev);
 #else /* _GTK */
-     while (gtk_events_pending ()) 
-       gtk_main_iteration ();
+   while (gtk_events_pending ()) 
+     gtk_main_iteration ();
 #endif /* !_GTK */
    crit_section = FALSE;
 #endif /* _WINDOWS */
 }
 
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /*_GL*/
 /*----------------------------------------------------------------------
    TtaMainLoop
    Starts the main loop for processing all events in an application. This
@@ -1398,7 +1401,6 @@ void TtaMainLoop ()
 {
   NotifyEvent         notifyEvt;
   ThotEvent           ev;
-	static int init;
 
   TtaInstallMultiKey ();
   UserErrorCode = 0;
@@ -1415,11 +1417,17 @@ void TtaMainLoop ()
   /* Sends the message Init.Post */
   notifyEvt.event = TteInit;
   CallEventType (&notifyEvt, FALSE);
-  
+#ifdef _GTK
+#ifdef _GL
+  /* First Time drawing (if we don't have focus)  */
+  while (gtk_events_pending ()) 
+    gtk_main_iteration ();    
+  GL_DrawAll (NULL, ActiveFrame);
+#endif /*_GL*/
+#endif /*_GTK*/
   /* Loop wainting for the events */
   while (1)
     {
-
 #ifdef _WINDOWS
       if (GetMessage (&ev, NULL, 0, 0))
 #else  /* !_WINDOWS */
@@ -1427,11 +1435,8 @@ void TtaMainLoop ()
 #endif /* _WINDOWS */
       TtaHandleOneEvent (&ev);
 #ifdef _GL
-#ifdef _GTK
-      Idle_draw_GTK (FrameTable[ActiveFrame].WdFrame);
-#else /*_GTK*/
+      /* buffer swapping, when needed*/
       GL_DrawAll (NULL, ActiveFrame);
-#endif /*_GTK*/
 #endif/*  _GL */
     }
 #ifdef _GTK

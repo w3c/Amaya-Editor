@@ -28,7 +28,7 @@ void GLResize (int width, int height, int x, int y);
 void GL_SetForeground (int fg);
 void GL_SetBackground (int bg, int frame);
 void GL_ClearArea (int x, int y, int width, int height);
-void GL_window_copy_area (int xf, int yf, int xd, int yd,
+void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 			  int width, int height);
 void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Totalheight);
 

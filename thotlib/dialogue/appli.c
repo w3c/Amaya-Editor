@@ -27,6 +27,16 @@
 #include "view.h"
 #include "appdialogue.h"
 #include "thotcolor.h"
+
+
+#ifdef _GL
+#ifdef _GTK
+#include <gtkgl/gtkglarea.h>
+#endif /*_GTK*/
+#include <GL/gl.h>
+#include "glwindowdisplay.h"
+#endif /*_GL*/
+
 #ifdef _WINDOWS
 #include "winsys.h"
 #include "wininclude.h"
@@ -44,14 +54,6 @@ static Time         T1, T2, T3;
 static XmString     null_string;
 #else /* _GTK */
 
-#ifdef _GL
-#include <gtkgl/gtkglarea.h>
-#include <GL/gl.h>
-#ifdef GL_MESA_window_pos
-#define MESA
-#endif
-#include "glwindowdisplay.h"
-#endif /*_GL*/
 
 static gchar *null_string;
 #endif /*_GTK*/
@@ -409,8 +411,8 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    /* recompute the scroll bars */
     UpdateScrollbars (frame);
 #ifdef _GL
-	ActiveFrame = frame;
-	GLResize (width, height);
+    ActiveFrame = frame;
+    GLResize (width, height);
 #endif/*_GL*/
 }
 #else /* _WINDOWS */
@@ -509,9 +511,8 @@ void FrameRedraw (int frame, Dimension width, Dimension height)
 
 
 #ifdef _GTK
-
 #ifdef _GL
-
+#ifdef GL_ANIM
 /*---------------------------------------------------------------------
  Idle_draw_GTK :
  Animation handling : 
@@ -531,6 +532,23 @@ gboolean Idle_draw_GTK (GtkWidget *widget)
   return TRUE;
 }
 /*----------------------------------------------------------------------
+  DrawGL :
+  After all transformation Draw all canvas
+  TODO : Use of display lists in 
+  the pbox tree rendering by redrawframebottom with another function
+  (use of pAb->change ...)
+  ----------------------------------------------------------------------*/
+gboolean GL_DrawCallback (ThotWidget widget, GdkEventExpose *event, gpointer data)
+{
+  int nframe;
+
+  nframe = (int ) gtk_object_get_data (GTK_OBJECT (widget), "frame");
+  if (nframe > 0 && nframe <= MAX_FRAME)
+     GL_DrawAll (widget, nframe); 
+  return TRUE;
+}
+#endif /*GL_ANIM*/
+/*----------------------------------------------------------------------
   GL_FocusIn :
   Manage Drawing Timer upon Frame focus by user
   ----------------------------------------------------------------------*/
@@ -541,6 +559,7 @@ gboolean GL_FocusIn (ThotWidget widget,
   int      frame;
  
   frame = (int) data;
+  ActiveFrame = frame;
   /*Start animation*/
   return TRUE;
 }  
@@ -560,22 +579,6 @@ gboolean GL_FocusOut (ThotWidget widget,
 }
 
 /*----------------------------------------------------------------------
-  DrawGL :
-  After all transformation Draw all canvas
-  TODO : Use of display lists in 
-  the pbox tree rendering by redrawframebottom with another function
-  (use of pAb->change ...)
-  ----------------------------------------------------------------------*/
-gboolean GL_DrawCallback (ThotWidget widget, GdkEventExpose *event, gpointer data)
-{
-  int nframe;
-
-  nframe = (int ) gtk_object_get_data (GTK_OBJECT (widget), "frame");
-  if (nframe > 0 && nframe <= MAX_FRAME)
-     GL_DrawAll (widget, nframe); 
-  return TRUE;
-}
-/*----------------------------------------------------------------------
  GL_Destroy :
  Close Opengl pipeline
  ----------------------------------------------------------------------*/
@@ -585,8 +588,7 @@ gboolean  GL_Destroy (ThotWidget widget,
 {
   int      frame;
  
-  frame = (int) data;
- 
+  frame = (int) data; 
   return TRUE ;
 }
 
@@ -598,13 +600,10 @@ gboolean  GL_Init (ThotWidget widget,
 		   GdkEventExpose *event, 
 		   gpointer data)
 {
-  int      frame;
   static ThotBool dialogfont_enabled = FALSE;
 
-  frame = (int) data;
   if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-    { 
-      
+    {       
       SetGlPipelineState ();
       if (!dialogfont_enabled)
 	  {
@@ -614,7 +613,7 @@ gboolean  GL_Init (ThotWidget widget,
       return TRUE;
     }
   else
-    return FALSE;   
+    return TRUE;   
 }
 /*----------------------------------------------------------------------
   ExposeCallbackGTK : 
@@ -628,45 +627,31 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
   int                 y;
   int                 width;
   int                 height;
-
+  
+  if (event->count > 0)
+    return TRUE;
   frame = (int )data;
   x = event->area.x;
   y = event->area.y;
   width = event->area.width;
   height = event->area.height;  
   if ((width <= 0) || (height <= 0))
-    return;
+    return TRUE;
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-    return; 
+    return TRUE; 
   if (frame > 0 && frame <= MAX_FRAME 
-      /* && event->count == 0 */
       && gtk_gl_area_make_current (GTK_GL_AREA(widget)))
     {
-#ifdef MESA
-      if (height < (widget->allocation.height - 50))
-	{
-	  GL_BackBufferRegionSwapping (x, y, 
-				    width, height,
-				    widget->allocation.height);
-	}
-      else
-	{
-	  GL_ActivateDrawing();
-	  GL_DrawAll (widget, frame);
-	}	
-#else /*MESA*/
       gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
-#endif /*MESA*/
-
     }
-  return FALSE;
+  return TRUE;
 }
 /*----------------------------------------------------------------------
    FrameResizedGTK When user resize window
   ----------------------------------------------------------------------*/
-void FrameResizedGTK (GtkWidget *widget, 
-		      GdkEventConfigure *event, 
-		      gpointer data)
+gboolean FrameResizedGTK (GtkWidget *widget, 
+			  GdkEventConfigure *event, 
+			  gpointer data)
 {
   int                 frame;
   Dimension           width, height, x ,y;
@@ -676,23 +661,25 @@ void FrameResizedGTK (GtkWidget *widget,
   height = event->height;
   x = event->x;
   y = event->y;
-  if ((width <= 0) || (height <= 0))
-    return;
+  if ((width <= 0) || (height <= 0) || !(frame > 0 && frame <= MAX_FRAME))
+    return TRUE;
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-    return; 
+    return TRUE; 
   if (widget)
     if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
       {
-	FrameRedraw (frame, width, height);
 	GLResize (width, height, x ,y);
+	GL_ActivateDrawing ();
+	FrameRedraw (frame, width, height);
 	GL_DrawAll (widget, frame);
       }
+  return TRUE;  
 }
 #else /* _GL*/
 /*----------------------------------------------------------------------
    FrameResizedGTK When user resize window
   ----------------------------------------------------------------------*/
-void FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
+gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 {
   int frame;
   Dimension           width, height;
@@ -701,6 +688,7 @@ void FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   width = event->width;
   height = event->height;
   FrameRedraw (frame, width, height);
+  return TRUE;  
 }
 
 /*----------------------------------------------------------------------
@@ -2599,7 +2587,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
     default:
       break;
     }
-  return FALSE;
+  return TRUE;
 #endif /* _GTK */
 }
 #endif /* _WINDOWS */
@@ -3177,6 +3165,14 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 #endif /* _GTK */
 #endif /* _WINDOWS */	
+#else /* _GL */
+	glEnable (GL_SCISSOR_TEST);
+	glScissor ( clipx,
+		    FrameTable[frame].FrHeight
+		    + FrameTable[frame].FrTopMargin
+		    - (clipy + clipheight),
+		    clipwidth,
+		    clipheight);
 #endif /*_GL*/
 	if (raz > 0)
 	   Clear (frame, clipwidth, clipheight, clipx, clipy);
@@ -3221,6 +3217,12 @@ void RemoveClipping (int frame)
       WinErrorBox (NULL, "RemoveClipping");
    clipRgn = (HRGN) 0;
 #endif /* _WINDOWS */
+#else /* _GL */
+   glDisable (GL_SCISSOR_TEST);
+   glScissor ( 0,
+	       0,
+	       FrameTable[frame].FrWidth,
+	       FrameTable[frame].FrHeight);
 #endif /*_GL*/
 }
 

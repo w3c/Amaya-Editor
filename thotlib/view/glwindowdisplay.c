@@ -44,6 +44,7 @@
 #include "memory_f.h"
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
+#include "frame_f.h"
 
 #define ALLOC_POINTS    300
 
@@ -102,8 +103,7 @@
 /* Unix timer */
 #include <unistd.h>
 #include <sys/timeb.h>
-#endif _PCLDEBUG
-
+#endif /*_PCLDEBUG*/
 
 /*#define GLU_CALLBACK_CAST (void (*)())*/
 
@@ -1397,8 +1397,12 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   ----------------------------------------------------------------------*/
 ThotBool GL_prepare (ThotWidget *widget)
 {  
-  GL_Modif = TRUE; 
-  return TRUE;
+
+  GL_Modif = TRUE;
+  if (GL_Drawing == TRUE)
+    return TRUE;
+  else 
+    return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -1408,7 +1412,6 @@ void GL_realize (ThotWidget *widget)
 {
   return;
 }
-
 /*----------------------------------------------------------------------
    GL_ActivateDrawing : Force Recalculation of the frame and redisplay
   ----------------------------------------------------------------------*/
@@ -1416,9 +1419,6 @@ void GL_ActivateDrawing()
 {
   GL_Modif = TRUE;
 }
-
-
-
 /*----------------------------------------------------------------------
  GL_DrawAll : Only function that Really Draw opengl !!
   ----------------------------------------------------------------------*/
@@ -1426,57 +1426,35 @@ void GL_DrawAll (ThotWidget widget, int frame)
 {  
 #ifdef _GTK
 #ifdef _PCLDEBUG
+
+  /* draw and calculate draw time 
+     bench that helps finding bottlenecks...*/
   struct timeb	before;
   struct timeb	after;
   int	dsec, dms; 
 #endif /*_PCLDEBUG*/
 
-  /* draw and calculate draw time 
-     bench that helps finding bottlenecks...*/
+  /* if (GL_ANIM)
+        RefreshAnimation (frame); */
 
-  /*      for animation GL_modif always true */
-  /* GL_Modif=TRUE;  */
    if (GL_Modif && !GL_Drawing && !FrameUpdating)	
      { 
 #ifdef _PCLDEBUG
        ftime(&before);
 #endif /*_PCLDEBUG*/
-       
-       ActiveFrame = frame;
-       if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-	 { 	  
-	   /* prevent other computation at 
-	      the same time*/
-	   GL_Drawing = TRUE;  
-	   
-	   /* Redraw ALL THE CANVAS (Animation testing)
-	      usually only modified buffer will be copied 
-	      into the frame buffer */      
-	   
-	   /*  DrawGrid (FrameTable[frame].WdFrame->allocation.width,  */
-	   /* 		FrameTable[frame].WdFrame->allocation.height); */
-	   
-	   DefClip (frame, -1, -1, -1, -1); 
-	   RedrawFrameBottom (frame, 0, NULL);      
-	   /*a resfresh indicator*/
-	   /*  make_carre();	  */  
-	   
-	   /* Double Buffering */
-	   gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
-	   glFlush ();
-	   /* Paints a background color 
-	      Have to discard it if 
-	      background image exist in document
-	      Clear is after buffer swapping as it take 
-	      times and is asynchronous with Amaya computation*/     
-	   /* glClear(GL_COLOR_BUFFER_BIT); */          
-	   
-	   
-		if (GL_Err())
-	     g_print ("Bad drawing\n"); 
-	   GL_Drawing = FALSE;
-	 }
-       
+       widget = FrameTable[frame].WdFrame;
+       if (widget)
+	 if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
+	   { 	  
+	     ActiveFrame = frame;
+	     GL_Drawing = TRUE;  	   
+	     RedrawFrameBottom (frame, 0, NULL);
+	     glFinish ();
+	     gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
+	     if (GL_Err())
+	       g_print ("Bad drawing\n"); 
+	     GL_Drawing = FALSE;
+	   }       
        GL_Modif = FALSE;
 #ifdef _PCLDEBUG
        ftime(&after);	
@@ -1493,62 +1471,31 @@ void GL_DrawAll (ThotWidget widget, int frame)
 #else /*_GTK*/
  if (GL_Modif && !GL_Drawing && !FrameUpdating)	
      { 
-	   frame = ActiveFrame;
+       frame = ActiveFrame;
        if (wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
 	   { 	  
-	       /* prevent other computation at 
-	      the same time*/
 	      GL_Drawing = TRUE;  
-	   
-	      /* Redraw ALL THE CANVAS (Animation testing)
-	      usually only modified buffer will be copied 
-	      into the frame buffer */      
-	   
-	      /*  DrawGrid (FrameTable[frame].WdFrame->allocation.width,  */
-	      /* 		FrameTable[frame].WdFrame->allocation.height); */
-
-	      DefClip (frame, -1, -1, -1, -1); 
-	      RedrawFrameBottom (frame, 0, NULL);      
-	      /*a resfresh indicator*/
-	      /*  make_carre();	  */  
-	    
-	      /* Double Buffering */
-		  /*make_carre();*/
-		  glFlush ();
+	      RedrawFrameBottom (frame, 0, NULL); 
 	      SwapBuffers (GL_Windows[frame]);
-	      /* Paints a background color 
-	      Have to discard it if 
-	      background image exist in document
-	      Clear is after buffer swapping as it take 
-	      times and is asynchronous with Amaya computation*/     
-	      /* glClear(GL_COLOR_BUFFER_BIT); */	    
-	   
-		if (GL_Err())
-			WinErrorBox (NULL, "Bad drawing\n");
+	      if (GL_Err())
+		WinErrorBox (NULL, "Bad drawing\n");
 	      GL_Drawing = FALSE;
 	   }        
 	   GL_Modif = FALSE;
 	}
-#endif /*_GTK*/
- 
+#endif /*_GTK*/ 
 }
 
 void SetGlPipelineState ()
 {
       /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
-      /*g_print("%s, %s, %s", (char *)glGetString(GL_VENDOR), 
-	      (char *)glGetString(GL_VERSION), 
-	      (char *)glGetString(GL_RENDERER));   */
-      /* g_print("%s\n", (char *)glGetString(GL_EXTENSIONS));  */   
-
-
+#ifdef _PCLDEBUG
+      g_print ("%s, %s, %s", (char *)glGetString(GL_VENDOR), 
+	       (char *)glGetString(GL_VERSION), 
+	       (char *)glGetString(GL_RENDERER));
+      /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */   
+#endif /*_PCLDEBUG*/
       glClearColor (1, 1, 1, 0);
-      /* only enable it when needed 
-	 (color mix and better antialiasing)*/
-      glDisable (GL_BLEND);
-      /* Fast Transparency*/
-      //glAlphaFunc (GL_LESS, 0.950);
-      glDisable (GL_ALPHA_TEST); 
       /* no fog*/
       glDisable (GL_FOG);
       /* No lights */
@@ -1559,52 +1506,19 @@ void SetGlPipelineState ()
       glDisable (GL_COLOR_MATERIAL);
       /* No z axis (SVG is 2d) until X3D */
       glDisable (GL_DEPTH_TEST);
+      glDepthMask (FALSE);
       /* No stencil buffer (one day perhaps, for background)*/
       glDisable (GL_STENCIL_TEST);
-
-      /* svg viewports will use it, one day*/
-      glDisable (GL_SCISSOR_TEST);	 
-
+      /* At the beginning, there was no clipping*/
+      glDisable (GL_SCISSOR_TEST);
+      /* Modulated Transparency*/
+      glDisable (GL_ALPHA_TEST); 	 
       /* Polygon are alway filled (until now)
 	 Because Thot draws outlined polygons with lines
 	 so...  if blending svg => GL_FRONT_AND_BACK*/
-      glPolygonMode( GL_FRONT, GL_FILL );
-     
-      /* Doesn't compute hidden drawing 
-	 Doesn't work for our tesselated
-	 polygons   not CGW oriented...*/
-      /* glEnable (GL_CULL_FACE); */
-      /* glCullFace (GL_FRONT_AND_BACK.,GL_BACK, GL_FRONT); */
-
-      /*(needed for gradients)*/
-      glShadeModel (GL_SMOOTH);
-#ifdef MESA
-      /* No Texture and pixel drawing enhancement*/
-      glDisable (GL_DITHER); 
-      if (1)
-	{
-	  glEnable (GL_POINT_SMOOTH); 
-	  glEnable (GL_LINE_SMOOTH);    
-	  /* glEnable (GL_POLYGON_SMOOTH); */  
-	  
-	  /* glHint(GL_POINT_SMOOTH_HINT, GL_NICEST); */
-	  /* 	  glHint(GL_LINE_SMOOTH_HINT, GL_NICEST); */
-	  /* 	  glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);  */
-	  
-	  glEnable (GL_BLEND);  
-	  glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
-	}
-      else
-	{
-	  /* No AntiAliasing*/ 
-	  glDisable (GL_LINE_SMOOTH); 
-	  glDisable (GL_POINT_SMOOTH);
-	  glDisable (GL_POLYGON_SMOOTH); 
-	}
-      glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST ); 
-#else /*!MESA*/
+      glPolygonMode (GL_FRONT, GL_FILL);
       /*Hardware opengl may support better rendering*/
-      glEnable (GL_DITHER);glDisable (GL_DITHER); 
+      glEnable (GL_DITHER);
       /*  Antialiasing 
 	  Those Options give better 
 	  quality image upon performance loss
@@ -1612,7 +1526,22 @@ void SetGlPipelineState ()
       glEnable (GL_LINE_SMOOTH); 
       glEnable (GL_POINT_SMOOTH); 
       glHint (GL_POINT_SMOOTH_HINT, GL_NICEST);
-      glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
+      glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);      
+      /* For transparency and beautiful antialiasing*/
+      glEnable (GL_BLEND); 
+      glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+      /* Fastest Texture Mapping*/
+      glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST );    
+      /* Bitmap font Text writing (even in texture font)*/
+      glPixelStorei (GL_UNPACK_ALIGNMENT, 1); 
+      /* Needs to clear buffer after allocating it before drawing*/
+      glClear (GL_COLOR_BUFFER_BIT);
+
+      /*(needed for gradients)*/
+      /*glShadeModel (GL_SMOOTH);*/
+      /* no gradients for now => */
+      glShadeModel (GL_FLAT);
+
 
       /* Not recommended for hardware cards... 
 	 Global Antialiasing is done elsewhere...*/
@@ -1620,20 +1549,21 @@ void SetGlPipelineState ()
       /* smooth polygon antialiasing */
       /* glBlendFunc (GL_SRC_ALPHA_SATURATE, GL_ONE); */
       /* glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST); */
+  
+   
+      /* Doesn't compute hidden drawing 
+	 Doesn't work for our tesselated
+	 polygons   not CGW oriented...
+      50 % performance on geometry drawing...*/
+      /* glEnable (GL_CULL_FACE); */
+      /* glCullFace (GL_FRONT_AND_BACK.,GL_BACK, GL_FRONT); */
 
-      /* For transparency and beautiful antialiasing*/
-       glEnable (GL_BLEND); 
-       glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
-#endif /*MESA*/    
-      /* Bitmap font Text writing (even in texture font)*/
-      glPixelStorei( GL_UNPACK_ALIGNMENT, 1); 
-	  /* Needs to clear buffer after allocating it before drawing*/
-	  glClear(GL_COLOR_BUFFER_BIT);
+
       if (GL_Err())
 #ifdef _GTK
-	     g_print ("Bad INIT\n"); 
+	g_print ("Bad INIT\n"); 
 #else  /*_GTK*/
-	     WinErrorBox (NULL, "Bad INIT\n");
+      WinErrorBox (NULL, "Bad INIT\n");
 #endif  /*_GTK*/
 }
 
@@ -1651,8 +1581,7 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Total
   invert y */
   y = y + height;
   glRasterPos2i (x, y);
-  glDrawBuffer (GL_FRONT);       
-  glReadBuffer (GL_BACK);
+  glDrawBuffer (GL_FRONT); 
   y =  Totalheight - y;
   glCopyPixels (x, y, width, height, GL_COLOR);  
   glDrawBuffer (GL_BACK);
@@ -1673,16 +1602,31 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Total
 	    on the exposed region 
 	    => opengl region buffer swapping 
 --------------------------------------------*/
-void GL_window_copy_area (int xf, int yf, int xd, int yd,
+void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 			  int width, int height)
 {
-#if defined (_WINDOWS) || !defined (MESA)
-	GL_DrawAll (0, NULL);
+
+  DefRegion (frame, 
+	     xd, yd+FrameTable[frame].FrTopMargin, 
+	     width+xd, yd+height+FrameTable[frame].FrTopMargin);
+  GL_DrawAll (0, frame);
+
+#ifdef PCL
+#ifdef _WINDOWS
+  if (! wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
+    return;
 #else /*_WINDOWS*/
-	glRasterPos2i (xf, yf);
-	glCopyPixels(xd, yd, width, height, GL_COLOR);
-	glFlush ();
+  if (!gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
+    return;
 #endif /*_WINDOWS*/
+  /* Copy from backbuffer to backbuffer */
+  glRasterPos2i (xf, yf + height);
+  glCopyPixels (xd,  FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin - (yd + height), width, height, GL_COLOR);
+  glDrawBuffer (GL_FRONT);
+  /*copy from back to front */
+  glCopyPixels (xd, FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin - (yd + height), width, height, GL_COLOR);
+  glDrawBuffer (GL_BACK);
+#endif /*P_CL*/
 }
 
 
@@ -1695,10 +1639,9 @@ void GL_window_copy_area (int xf, int yf, int xd, int yd,
 void GLResize (int width, int height, int x, int y)
 {	
 #ifdef _WINDOWS
-	if (! wglMakeCurrent (GL_Windows[ActiveFrame], GL_Context[ActiveFrame]))
-			return;
+  if (! wglMakeCurrent (GL_Windows[ActiveFrame], GL_Context[ActiveFrame]))
+    return;
 #endif /*_WINDOWS*/
-
   glViewport (0, 0, width, height);
   glMatrixMode (GL_PROJECTION);      
   glLoadIdentity (); 
@@ -1718,7 +1661,7 @@ void GLResize (int width, int height, int x, int y)
 /* TESTING */
 
 
-
+#ifdef _PCLDEBUG
 
 /* Testing purpose function 
    Drawing grid (for canvas geometry tests)*/
@@ -1845,6 +1788,6 @@ int saveBuffer (int width, int height)
   fclose(screenFile);
   free(Data);
 }
-
+#endif /*_PCLDEBUG*/
 
 #endif /* _GL */

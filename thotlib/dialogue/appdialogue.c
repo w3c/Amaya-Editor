@@ -2466,7 +2466,7 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
   get_targets
   Signal handler invoked when user focus on drawing area 
 -------------------------------------------------------------------------*/
-void get_targets( GtkWidget *widget,  gpointer data )
+void get_targets ( GtkWidget *widget,  gpointer data )
 {
   static GdkAtom targets_atom = GDK_NONE;
 	  
@@ -2488,7 +2488,7 @@ void get_targets( GtkWidget *widget,  gpointer data )
  selection_clear
  Called when another application claims the selection 
 -------------------------------------------------------------------------*/
-gint selection_clear( GtkWidget         *widget,
+gint selection_clear ( GtkWidget         *widget,
     GdkEventSelection *event,
     gpointer data )
 {
@@ -3095,12 +3095,14 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     GTK_SIGNAL_FUNC (ExposeCallbackGTK),
 			     (gpointer)frame); 
 #ifdef _GL
+#ifdef _GLANIM
 	   /* whenever a draw event is send, 
 	      we draw all the opengl canvas*/
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "draw",
 			     GTK_SIGNAL_FUNC (GL_DrawCallback),
 			     (gpointer)frame);
+#endif /*_GLANIM*/
 	   /* when widget is initialized, 
 	      we define opengl pipeline state */
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),

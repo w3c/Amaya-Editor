@@ -17,7 +17,7 @@ extern void FrameRedraw ( int frame,
                           Dimension width,
                           Dimension height );
 
-extern void FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data);
+extern gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data);
 
 extern void FrameHScrolledGTK ( GtkAdjustment *w,
                              int frame );

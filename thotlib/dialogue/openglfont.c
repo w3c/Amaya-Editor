@@ -21,6 +21,8 @@
 
 #include "openglfonts.h"
 
+#define MESA
+
 /* Memory state Var needed often*/
 static FT_Library FTlib = NULL;
 static int init_done = 0;
