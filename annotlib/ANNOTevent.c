@@ -1222,10 +1222,10 @@ void ANNOT_Post (Document doc, View view)
       annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
 				     DocumentURLs[doc], AM_BODY_URL);
 
-#ifdef ANNOT__ON_ANNOT
+#ifdef ANNOT_ON_ANNOT
       if (!annot && AnnotMetaData[source_doc].thread)
 	annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].thread->annotations,
-				       annot_url, AM_BODY_URL);
+				       DocumentURLs[doc], AM_BODY_URL);
 #endif /* ANNOT_ANNOT */
       
       if (!annot)
