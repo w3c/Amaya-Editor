@@ -696,7 +696,7 @@ STRING server;
    InitDocColors (TEXT("thot"));
    /* Initialisation des polices de caracteres */
 #  ifdef _WINDOWS 
-   WIN_InitDialogueFonts (TtPrinterDC, _THOTElement_);
+   WIN_InitDialogueFonts (TtPrinterDC, TEXT("thot"));
 #  else  /* _WINDOWS */
    InitDialogueFonts ("thot");
 #  endif /* _WINDOWS */
@@ -2960,7 +2960,6 @@ char              **argv;
    if (removeDirectory)
     {
 #ifdef _WINDOWS
-      int i;
       if (!ustrcmp (destination, TEXT("PSFILE")) && !DeleteFile (cmd))
          WinErrorBox (NULL, "PrintDoc (1)");
       else {

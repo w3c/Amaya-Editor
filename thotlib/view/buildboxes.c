@@ -2946,6 +2946,7 @@ int                 frame;
    pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrAbstractBox != NULL)
      {
+       AnyWidthUpdate = TRUE;
        pAb = pFrame->FrAbstractBox;
        if (pAb->AbBox != NULL)
 	 {
