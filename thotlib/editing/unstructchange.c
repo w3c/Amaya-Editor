@@ -1818,10 +1818,10 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 	       if (pSibling->ElFirstChild == NULL)
 		 /* pSibling is empty. Delete it */
 		 {
-		   OpenHistorySequence (pDoc, pEl, pEl, firstChar, lastChar);
 		   /* record the element to be deleted in the history */
-		   AddEditOpInHistory (pSibling, pDoc, TRUE, FALSE);
-		   TtaDeleteTree ((Element)pSibling, doc);
+		   OpenHistorySequence (pDoc, pEl, pEl, firstChar, lastChar);
+		   AddEditOpInHistory (FirstSelectedElement, pDoc, TRUE,FALSE);
+		   TtaDeleteTree ((Element)FirstSelectedElement, doc);
 		   CloseHistorySequence (pDoc);
 		 }
 	     }
@@ -1848,14 +1848,14 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		     else
 		       SelectString (pDoc, pSibling, 1, 0);
 		     /* simulate a delete */
-		     TtcDeleteSelection (0, 0);
+		     TtcDeleteSelection (IdentDocument (pDoc), 0);
 		   }
-	       else /* if (pSibling->ElLeafType == LtPicture) */
+	       else
 		 {
 		   /* set selection before the first character of the string */
 		   SelectElement (pDoc, pSibling, FALSE, FALSE);
-		   /* simulate a delete */
-		   TtcDeleteSelection (0, 0);
+		   /* and delete the selected element */
+		   CutCommand (TRUE);
 		 }
 	     }
 	   /* done */

@@ -1533,15 +1533,21 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
 		  }
 	  }
 	/* If the element to be selected is a protected copy, select the */
-	/* highest level protected ancestor */
-	if (pEl->ElIsCopy)
+	/* highest level protected ancestor. */
+	/* If it has exception SelectParent, select the first ancestor that */
+	/* do not have that exception */
+	if (pEl->ElIsCopy ||
+	    TypeHasException (ExcSelectParent, pEl->ElTypeNumber,
+			      pEl->ElStructSchema))
 	  {
 	     pAncest = pEl->ElParent;
 	     stop = FALSE;
 	     while (!stop)
 		if (pAncest == NULL)
 		   stop = TRUE;
-		else if (!pAncest->ElIsCopy)
+		else if (!pAncest->ElIsCopy &&
+			 !TypeHasException (ExcSelectParent, pEl->ElTypeNumber,
+					    pEl->ElStructSchema))
 		   stop = TRUE;
 		else
 		  {

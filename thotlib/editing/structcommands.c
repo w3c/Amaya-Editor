@@ -1401,7 +1401,7 @@ void                CutCommand (ThotBool save)
 			      /* envoie l'evenement ElemDelete.Pre et
 				 demande a l'application si elle est
 				 d'accord pour detruire l'element */
-			      if (NextElemToBeCut (pEl, lastSel, pSelDoc, pSave) == NULL)
+			      if (NextElemToBeCut (pE, lastSel, pSelDoc, pSave) == NULL)
 				last = TTE_STANDARD_DELETE_LAST_ITEM;
 			      else
 				last = TTE_STANDARD_DELETE_FIRST_ITEMS;

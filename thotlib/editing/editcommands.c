@@ -1988,7 +1988,38 @@ static void         ContentEditing (int editType)
 	    pAb = pBox->BxAbstractBox;
 	  if (pAb->AbReadOnly &&
 	      (editType == TEXT_INSERT || editType == TEXT_PASTE))
+	    /* the box to be edited is read-only */
+	    /* can't insert or paste within a read-only char string */
 	    return;
+	  if (editType == TEXT_DEL || editType == TEXT_CUT)
+	    {
+	      if (AbsBoxSelectedAttr)
+		{
+		  if (AbsBoxSelectedAttr->AbReadOnly)
+		    /* selection within a read-only attribute value */
+		    return;
+		}
+	      else
+		{
+		  if (ElementIsReadOnly (FirstSelectedElement->ElParent))
+		    /* the parent element is read-only.
+		       Don't delete anything*/
+		    return;
+		  else
+		    /* the parent is not read-only */
+		    if (ElementIsReadOnly (FirstSelectedElement))
+		      /* the selected element itself is read-only */
+		      if (FirstSelectedElement == LastSelectedElement &&
+			  FirstSelectedElement->ElTerminal &&
+			  FirstSelectedElement->ElLeafType == LtText)
+			/* selection is within a single text element */
+			if (FirstSelectedChar > 1 ||
+			    (LastSelectedChar > 0 &&
+			     LastSelectedChar < LastSelectedElement->ElVolume))
+			  /* the text element is not completely selected */
+			  return;
+		}
+	    }
 	}
       /*-- La commande coller concerne le mediateur --*/
       if (editType == TEXT_PASTE && !FromKeyboard)
