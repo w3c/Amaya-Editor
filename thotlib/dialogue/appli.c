@@ -87,12 +87,12 @@ extern PtrAbstractBox      DesPave ();
 /* |            qui correspondent a une frame donnee.                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                VueDeFenetre (int frame, int *doc, int *vue)
+void                VueDeFenetre (int frame, int *doc, int *view)
 #else  /* __STDC__ */
-void                VueDeFenetre (frame, doc, vue)
+void                VueDeFenetre (frame, doc, view)
 int                 frame;
 int                *doc;
-int                *vue;
+int                *view;
 
 #endif /* __STDC__ */
 {
@@ -101,20 +101,20 @@ int                *vue;
    boolean             assoc;
 
    *doc = FrameTable[frame].FrDoc;
-   *vue = 0;
+   *view = 0;
    if (doc == 0)
       return;
    else
      {
 	pDoc = LoadedDocument[*doc - 1];
-	*vue = 0;
+	*view = 0;
 	if (pDoc != NULL)
 	  {
 	     VueFen (frame, pDoc, &i, &assoc);
 	     if (assoc)
-		*vue = i + 100;
+		*view = i + 100;
 	     else
-		*vue = i;
+		*view = i;
 	  }
      }
 }
@@ -124,13 +124,13 @@ int                *vue;
 /* | Evenement sur une frame document.                              | */
 /* -------------------------------------------------------------------- */
 #ifdef __STDC__
-void                RetourKill (int *w, int frame, int *infos)
+void                RetourKill (int *w, int frame, int *info)
 
 #else  /* __STDC__ */
-void                RetourKill (w, frame, infos)
+void                RetourKill (w, frame, info)
 int                *w;
 int                 frame;
-int                *infos;
+int                *info;
 
 #endif /* __STDC__ */
 
@@ -214,22 +214,22 @@ XExposeEvent       *event;
 /* | MSChangeTaille : function called when a view is resized under    | */
 /* |    MS-Windows.                                                   | */
 /* -------------------------------------------------------------------- */
-void                MSChangeTaille (int frame, int larg, int haut, int top_delta, int bottom_delta)
+void                MSChangeTaille (int frame, int width, int height, int top_delta, int bottom_delta)
 {
-   int                 n, dx, dy, vue;
+   int                 n, dx, dy, view;
    Document            doc;
 
-   if ((larg <= 0) || (haut <= 0))
+   if ((width <= 0) || (height <= 0))
       return;
 
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
 
-   VueDeFenetre (frame, &doc, &vue);
+   VueDeFenetre (frame, &doc, &vview);
    FrameTable[frame].TopMargin = top_delta;
    FrameTable[frame].LeftMargin = 0;
-   FrameTable[frame].FrWidth = (int) larg - bottom_delta;
-   FrameTable[frame].FrHeight = (int) haut;
+   FrameTable[frame].FrWidth = (int) width - bottom_delta;
+   FrameTable[frame].FrHeight = (int) height;
 
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);
@@ -245,44 +245,44 @@ void                MSChangeTaille (int frame, int larg, int haut, int top_delta
 /* | Evenement sur une frame document.                              | */
 /* -------------------------------------------------------------------- */
 #ifdef __STDC__
-void                XChangeTaille (int *w, int frame, int *infos)
+void                XChangeTaille (int *w, int frame, int *info)
 #else  /* __STDC__ */
-void                XChangeTaille (w, frame, infos)
+void                XChangeTaille (w, frame, info)
 int                *w;
 int                 frame;
-int                *infos;
+int                *info;
 
 #endif /* __STDC__ */
 {
-   int                 n, dx, dy, vue;
-   Dimension           larg, haut;
+   int                 n, dx, dy, view;
+   Dimension           width, height;
    Arg                 args[MAX_ARGS];
    NotifyWindow        notifyDoc;
    Document            doc;
 
    n = 0;
-   XtSetArg (args[n], XmNwidth, &larg);
+   XtSetArg (args[n], XmNwidth, &width);
    n++;
-   XtSetArg (args[n], XmNheight, &haut);
+   XtSetArg (args[n], XmNheight, &height);
    n++;
    XtGetValues ((ThotWidget) w, args, n);
 
-   if ((larg > 0) && (haut > 0)
+   if ((width > 0) && (height > 0)
    /* ne pas traiter si le document est en mode NoComputedDisplay */
    && documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
      {
 	notifyDoc.event = TteViewResize;
-	VueDeFenetre (frame, &doc, &vue);
+	VueDeFenetre (frame, &doc, &view);
 	notifyDoc.document = doc;
-	notifyDoc.view = vue;
-	dx = larg - FrameTable[frame].FrWidth;
-	dy = haut - FrameTable[frame].FrHeight;
+	notifyDoc.view = view;
+	dx = width - FrameTable[frame].FrWidth;
+	dy = height - FrameTable[frame].FrHeight;
 	notifyDoc.verticalValue = dy;
 	notifyDoc.horizontalValue = dx;
 	if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	  {
-	     FrameTable[frame].FrWidth = (int) larg;
-	     FrameTable[frame].FrHeight = (int) haut;
+	     FrameTable[frame].FrWidth = (int) width;
+	     FrameTable[frame].FrHeight = (int) height;
 
 	     /* Il faut reevaluer le contenu de la fenetre */
 	     RebuildConcreteImage (frame);
@@ -291,7 +291,7 @@ int                *infos;
 	     MajScrolls (frame);
 	     notifyDoc.event = TteViewResize;
 	     notifyDoc.document = doc;
-	     notifyDoc.view = vue;
+	     notifyDoc.view = view;
 	     notifyDoc.verticalValue = dy;
 	     notifyDoc.horizontalValue = dx;
 	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
@@ -300,7 +300,7 @@ int                *infos;
 	     i = 1;
 	     n = 0;
 	     /*XtSetArg(args[n], XmNeditable, TRUE); n++; */
-	     XtSetArg (args[n], XmNwidth, (Dimension) (larg - 100));
+	     XtSetArg (args[n], XmNwidth, (Dimension) (width - 100));
 	     n++;
 	     while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != 0)
 	       {
@@ -341,10 +341,10 @@ int                 value;
 
 {
    int                 delta;
-   int                 n, vue;
+   int                 n;
    int                 h, y;
-   int                 debut, fin, total;
-   float               carparpix;
+   int                 start, end, total;
+   float               charperpix;
    Document            doc;
 
    /* do not redraw it if in NoComputedDisplay mode */
@@ -393,7 +393,7 @@ int                 value;
     * for this document.
     */
 
-   n = ZoneImageAbs (frame, &debut, &fin, &total);
+   n = ZoneImageAbs (frame, &start, &end, &total);
    switch (n)
 	 {
 	    case -1:
@@ -412,7 +412,7 @@ int                 value;
 	       break;
 	    case 3:
 	       /* Abstract Picture at the end */
-	       SetScrollPos (WIN_curHdc, SB_VERT, (100 * total) / debut, TRUE);
+	       SetScrollPos (WIN_curHdc, SB_VERT, (100 * total) / start, TRUE);
 	       break;
 	 }
 }
@@ -433,41 +433,41 @@ int                *param;
 #endif /* __STDC__ */
 {
    int                 delta, l;
-   int                 n, vue;
+   int                 n, view;
    Arg                 args[MAX_ARGS];
    NotifyWindow        notifyDoc;
    Document            doc;
-   XmScrollBarCallbackStruct *infos;
+   XmScrollBarCallbackStruct *info;
 
-   infos = (XmScrollBarCallbackStruct *) param;
+   info = (XmScrollBarCallbackStruct *) param;
    /* ne pas traiter si le document est en mode NoComputedDisplay */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
 
-   if (infos->reason == XmCR_DECREMENT)
+   if (info->reason == XmCR_DECREMENT)
       /* Deplacement en arriere d'un caractere de la fenetre */
       delta = -13;
-   else if (infos->reason == XmCR_INCREMENT)
+   else if (info->reason == XmCR_INCREMENT)
       /* Deplacement en avant d'un caractere de la fenetre */
       delta = 13;
-   else if (infos->reason == XmCR_PAGE_DECREMENT)
+   else if (info->reason == XmCR_PAGE_DECREMENT)
       /* Deplacement en arriere du volume de la fenetre */
       delta = -FrameTable[frame].FrWidth;
-   else if (infos->reason == XmCR_PAGE_INCREMENT)
+   else if (info->reason == XmCR_PAGE_INCREMENT)
       /* Deplacement en avant du volume de la fenetre */
       delta = FrameTable[frame].FrWidth;
    else
       delta = MAX_SIZE;		/* indeterminee */
 
    notifyDoc.event = TteViewScroll;
-   VueDeFenetre (frame, &doc, &vue);
+   VueDeFenetre (frame, &doc, &view);
    notifyDoc.document = doc;
-   notifyDoc.view = vue;
+   notifyDoc.view = view;
    notifyDoc.verticalValue = 0;
    notifyDoc.horizontalValue = delta;
    if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
      {
-	if (infos->reason == XmCR_VALUE_CHANGED || infos->reason == XmCR_DRAG)
+	if (info->reason == XmCR_VALUE_CHANGED || info->reason == XmCR_DRAG)
 	  {
 	     /* On recupere la largeur de l'ascenseur */
 	     n = 0;
@@ -475,24 +475,24 @@ int                *param;
 	     n++;
 	     XtGetValues (FrameTable[frame].WdScrollH, args, n);
 	     /* On regarde si le deplacement bute sur le bord droit */
-	     if (infos->value + l >= FrameTable[frame].FrWidth)
+	     if (info->value + l >= FrameTable[frame].FrWidth)
 		delta = FrameTable[frame].FrWidth;
 	     else
-		delta = infos->value;
+		delta = info->value;
 	     /* Cadre a la position demandee */
 	     CadrerVueEnX (frame, delta, FrameTable[frame].FrWidth);
 	  }
-	else if (infos->reason == XmCR_TO_TOP)
+	else if (info->reason == XmCR_TO_TOP)
 	   /* Cadre a gauche */
 	   CadrerVueEnX (frame, 0, FrameTable[frame].FrWidth);
-	else if (infos->reason == XmCR_TO_BOTTOM)
+	else if (info->reason == XmCR_TO_BOTTOM)
 	   /* Cadre a droite */
 	   CadrerVueEnX (frame, FrameTable[frame].FrWidth, FrameTable[frame].FrWidth);
 	else
 	   DefFenH (frame, delta, 1);
 
 	notifyDoc.document = doc;
-	notifyDoc.view = vue;
+	notifyDoc.view = view;
 	notifyDoc.verticalValue = 0;
 	notifyDoc.horizontalValue = delta;
 	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
@@ -514,9 +514,9 @@ int                *param;
 
 {
    int                 delta;
-   int                 n, vue;
+   int                 n, view;
    int                 h, y;
-   int                 debut, fin, total;
+   int                 start, end, total;
    Arg                 args[MAX_ARGS];
    float               carparpix;
    NotifyWindow        notifyDoc;
@@ -545,9 +545,9 @@ int                *param;
       delta = MAX_SIZE;		/* indeterminee */
 
    notifyDoc.event = TteViewScroll;
-   VueDeFenetre (frame, &doc, &vue);
+   VueDeFenetre (frame, &doc, &view);
    notifyDoc.document = doc;
-   notifyDoc.view = vue;
+   notifyDoc.view = view;
    notifyDoc.verticalValue = delta;
    notifyDoc.horizontalValue = 0;
    if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
@@ -563,25 +563,25 @@ int                *param;
 	     XtGetValues (FrameTable[frame].WdScrollV, args, n);
 
 	     /* Regarde ou se situe l'image abstraite dans le document */
-	     n = ZoneImageAbs (frame, &debut, &fin, &total);
+	     n = ZoneImageAbs (frame, &start, &end, &total);
 	     /* au retour n = 0 si l'Picture est complete */
 	     /* Calcule le nombre de caracteres represente par un pixel */
 	     carparpix = (float) total / (float) FrameTable[frame].FrHeight;
 	     y = (int) ((float) infos->value * carparpix);
 
-	     if (n == 0 || (y >= debut && y <= total - fin))
+	     if (n == 0 || (y >= start && y <= total - end))
 	       {
 		  /* On se deplace a l'interieur de l'Picture Concrete */
 		  /* Calcule la portion de scroll qui represente l'Picture Concrete */
-		  debut = (int) ((float) debut / carparpix);
-		  fin = (int) ((float) fin / carparpix);
-		  delta = FrameTable[frame].FrHeight - debut - fin;
+		  start = (int) ((float) start / carparpix);
+		  end = (int) ((float) end / carparpix);
+		  delta = FrameTable[frame].FrHeight - start - end;
 		  /* Calcule la position demandee dans cette portion de scroll */
 		  /* On detecte quand le deplacement bute en bas du document */
 		  if (infos->value + h >= FrameTable[frame].FrHeight)
 		     y = delta;
 		  else
-		     y = infos->value - debut;
+		     y = infos->value - start;
 		  CadrerVueEnY (frame, y, delta);
 	       }
 	     else
@@ -619,7 +619,7 @@ int                *param;
 	   DefFenV (frame, delta, 1);
 
 	notifyDoc.document = doc;
-	notifyDoc.view = vue;
+	notifyDoc.view = view;
 	notifyDoc.verticalValue = delta;
 	notifyDoc.horizontalValue = 0;
 	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
@@ -815,26 +815,26 @@ View                view;
 /* | la fenetree^tre active.                                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                MsgSelect (char *texte)
+void                MsgSelect (char *text)
 
 #else  /* __STDC__ */
-void                MsgSelect (texte)
-char               *texte;
+void                MsgSelect (text)
+char               *text;
 
 #endif /* __STDC__ */
 
 {
    int                 doc;
-   int                 vue;
+   int                 view;
 
    if (ActifFen != 0)
      {
 	doc = FrameTable[ActifFen].FrDoc;	/* recupere le document concerne */
-	for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
+	for (view = 1; view <= MAX_VIEW_DOC; view++)
 	  {
-	  /****frame = LoadedDocument[doc-1]->DocView[vue - 1].DvPSchemaView;
+	  /****frame = LoadedDocument[doc-1]->DocView[view - 1].DvPSchemaView;
 	  if (frame != 0)****/
-	     TtaSetStatus ((Document) doc, vue, texte, NULL);
+	     TtaSetStatus ((Document) doc, view, text, NULL);
 	  }
      }
 }				/*MsgSelect */
@@ -1096,8 +1096,8 @@ XEvent             *ev;
    int                 comm, dx, dy;
    PtrDocument         docsel;
    XEvent              event;
-   PtrElement          premsel, dersel;
-   int                 premcar, dercar;
+   PtrElement          firstSel, lastSel;
+   int                 firstCar, lastCar;
    boolean             ok;
 
    /* ne pas traiter si le document est en mode NoComputedDisplay */
@@ -1212,14 +1212,14 @@ XEvent             *ev;
 			   /* Termine l'insertion courante s'il y en a une */
 			   EndInsert ();
 			   TtaSetDialoguePosition ();
-			   if (!SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar))
+			   if (!SelEditeur (&docsel, &firstSel, &lastSel, &firstCar, &lastCar))
 			      TtaDisplaySimpleMessage (INFO, LIB, SEL_EL);
 			   /* non, message 'Selectionnez' */
 			   else if (docsel->DocReadOnly)
 			      /* on ne peut inserer ou coller dans un document en lecture seule */
 			      TtaDisplaySimpleMessage (INFO, LIB, RO_DOC_FORBIDDEN);
 			   /* Message 'Document en lecture seule' */
-			   else if (premcar != 0 && premsel->ElTerminal && premsel->ElLeafType == LtPlyLine)
+			   else if (firstCar != 0 && firstSel->ElTerminal && firstSel->ElLeafType == LtPlyLine)
 			     {
 				/* selection a l'interieur d'une polyline */
 				if (ThotLocalActions[T_editfunc] != NULL)
@@ -1511,12 +1511,12 @@ int                *pave;
 /* | Modifie le titre de la fenetre d'indice frame.                     | */
 /* -------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ChangeTitre (int frame, char *texte)
+void                ChangeTitre (int frame, char *text)
 
 #else  /* __STDC__ */
-void                ChangeTitre (frame, texte)
+void                ChangeTitre (frame, text)
 int                 frame;
-char               *texte;
+char               *text;
 
 #endif /* __STDC__ */
 {
@@ -1530,9 +1530,9 @@ char               *texte;
      {
 	w = XtParent (XtParent (XtParent (w)));
 	n = 0;
-	XtSetArg (args[n], XmNtitle, texte);
+	XtSetArg (args[n], XmNtitle, text);
 	n++;
-	XtSetArg (args[n], XmNiconName, texte);
+	XtSetArg (args[n], XmNiconName, text);
 	n++;
 	XtSetValues (w, args, n);
      }
@@ -1596,19 +1596,19 @@ ThotWindow          w;
 /* |    DimFenetre retourne les dimensions de la fenetre d'indice frame.        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DimFenetre (int frame, int *larg, int *haut)
+void                DimFenetre (int frame, int *width, int *height)
 
 #else  /* __STDC__ */
-void                DimFenetre (frame, larg, haut)
+void                DimFenetre (frame, width, height)
 int                 frame;
-int                *larg;
-int                *haut;
+int                *width;
+int                *height;
 
 #endif /* __STDC__ */
 
 {
-   *larg = FrameTable[frame].FrWidth;
-   *haut = FrameTable[frame].FrHeight;
+   *width = FrameTable[frame].FrWidth;
+   *height = FrameTable[frame].FrHeight;
 }
 
 
@@ -1722,7 +1722,7 @@ int                 frame;
 
 {
    int                 Xpos, Ypos;
-   int                 largeur, hauteur;
+   int                 width, height;
    int                 l, h;
    ThotWidget          hscroll, vscroll;
    int                 n;
@@ -1733,7 +1733,7 @@ int                 frame;
 #endif /* NEW_WILLOWS */
 
    /* Demande le volume affiche dans la fenetre */
-   VolumeAffiche (frame, &Xpos, &Ypos, &largeur, &hauteur);
+   VolumeAffiche (frame, &Xpos, &Ypos, &width, &height);
    hscroll = FrameTable[frame].WdScrollH;
    vscroll = FrameTable[frame].WdScrollV;
    l = FrameTable[frame].FrWidth;
@@ -1741,7 +1741,7 @@ int                 frame;
 
 #ifndef NEW_WILLOWS
    n = 0;
-   if (largeur + Xpos <= l)
+   if (width + Xpos <= l)
      {
 	XtSetArg (args[n], XmNminimum, 0);
 	n++;
@@ -1749,13 +1749,13 @@ int                 frame;
 	n++;
 	XtSetArg (args[n], XmNvalue, Xpos);
 	n++;
-	XtSetArg (args[n], XmNsliderSize, largeur);
+	XtSetArg (args[n], XmNsliderSize, width);
 	n++;
 	XtSetValues (hscroll, args, n);
      }
 
    n = 0;
-   if (hauteur + Ypos <= h)
+   if (height + Ypos <= h)
      {
 	XtSetArg (args[n], XmNminimum, 0);
 	n++;
@@ -1763,7 +1763,7 @@ int                 frame;
 	n++;
 	XtSetArg (args[n], XmNvalue, Ypos);
 	n++;
-	XtSetArg (args[n], XmNsliderSize, hauteur);
+	XtSetArg (args[n], XmNsliderSize, height);
 	n++;
 	XtSetValues (vscroll, args, n);
      }
