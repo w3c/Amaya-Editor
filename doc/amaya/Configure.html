@@ -32,10 +32,11 @@ or <strong>Thot/config/thot.ini</strong> (Windows)
 This file  is used to define global parameters of Thot applications (Amaya is
 a Thot application). Inside this file, there's a section called
 <code>[amaya]</code> where are specified the configuration options concerning:
-<a href="#L138">the default home page</a>,<a href="#L139"> default
-colors</a>,<a href="#L140"> the colors palette</a>, <a href="#L141">the
-dialogue language</a>, the path to the personall dictionary, and<a
-href="#L242"> the default printer command</a>.</p>
+<a href="#L138">the default home page</a>, <a
+href="#Specifying">proxies</a>,<a href="#L139"> default colors</a>,<a
+href="#L140"> the colors palette</a>, <a href="#L141">the dialogue
+language</a>, the path to the personall dictionary, and<a href="#L242"> the
+default printer command</a>.</p>
 <li>
 The keyboard file <strong>$HOME/amaya.keyboard</strong> (Unix) or
 <strong>Thot/config/amaya.keyboard</strong> (Windows). This file defines <a
@@ -52,6 +53,18 @@ document windows.
 You can change the default home page of <strong>Amaya</strong> by editing the
 <code>HOME_PAGE</code> variable in the <a href="#registry">registry
 file</a>.</p>
+
+<h3><a name="Specifying">Specifying the proxies</a></h3>
+<p>
+You can set up the proxy variables by using either <code>thot.ini</code>
+configuration file.</p>
+<p>
+In the <code>[amaya]</code>, section, specify the proxy variables as in the
+example here below:</p>
+<blockquote>
+<pre>HTTP_PROXY=http://groucho.marx.edu:1028
+NO_PROXY=harpo.marx.edu zeppo.marx.edu chico.marx.edu</pre>
+</blockquote>
 
 <h3><a name="HTML">Document Windows</a></h3>
 <p>
@@ -71,7 +84,7 @@ The keyword <strong>geometry</strong> declares other available views.
 </ul>
 <p>
 For each view, in both the <strong>open</strong> and <strong>geometry</strong>
-sections, there is a list of four parameters specifying the 
+sections, there is a list of four parameters specifying the
 <code>x_position</code>, the <code>y_position</code>, the <code>width</code>,
 and the <code>height </code>of that view. The value of the
 <code>x_position</code> and the <code>y_position</code> are automatically
