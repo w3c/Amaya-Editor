@@ -129,6 +129,46 @@ static int          NoEmpyBox;
 static int          Repaginate;
 static int          firstPage;
 static int          lastPage;
+#ifndef _WINDOWS
+/*----------------------------------------------------------------------
+ * XWindowError is the X-Windows non-fatal errors handler.
+ ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int          XWindowError (Display * dpy, XErrorEvent * err)
+#else  /* __STDC__ */
+static int          XWindowError (dpy, err)
+Display            *dpy;
+XErrorEvent        *err;
+
+#endif /* __STDC__ */
+{
+   char                msg[200];
+
+   XGetErrorText (dpy, err->error_code, msg, 200);
+   return (0);
+}
+
+/*----------------------------------------------------------------------
+ * XWindowFatalError is the X-Windows fatal errors handler.
+ ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int          XWindowFatalError (Display * dpy)
+#else  /* __STDC__ */
+static int          XWindowFatalError (dpy)
+Display            *dpy;
+#endif /* __STDC__ */
+{
+   extern int          errno;
+
+   perror ("*** Fatal Error");
+   if (errno != EPIPE)
+      TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
+   else
+      TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
+   return (0);
+}
+#endif /* _WINDOWS */
+
 
 #ifdef __STDC__
 static void usage (char* processName) 
@@ -288,6 +328,8 @@ char* server;
    TtDisplay = XOpenDisplay (server);
    if (!TtDisplay)
       TtaDisplaySimpleMessage (FATAL, LIB, TMSG_UNABLE_TO_CONNECT_TO_X);
+   XSetErrorHandler (XWindowError);
+   XSetIOErrorHandler (XWindowFatalError);
    TtScreen = DefaultScreen (TtDisplay);
    TtRootWindow = RootWindow (TtDisplay, TtScreen);
    TtWDepth = DefaultDepth (TtDisplay, TtScreen);
