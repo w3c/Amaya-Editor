@@ -81,7 +81,7 @@ static CHAR_T NoProxy [MAX_LENGTH+1];
 /* General menu options */
 #ifdef _WINDOWS
 static CHAR_T AppHome [MAX_LENGTH+1];
-static CHAR_T TmpDir [MAX_LENGTH+1];
+static CHAR_T AppTmpDir [MAX_LENGTH+1];
 static HWND GeneralHwnd = NULL;
 #endif _WINDOWS
 static int GeneralBase;
@@ -150,7 +150,6 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshColorMenu (HWND hwnDlg);
 LRESULT CALLBACK WIN_LanNegDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshLanNegMenu (HWND hwnDlg);
-static ThotBool CreateDir (const STRING dirname);
 #else
 LRESULT CALLBACK WIN_GeneralDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshGeneralMenu (/* HWND hwnDlg */);
@@ -165,7 +164,6 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshColorMenu (/* HWND hwnDlg */);
 LRESULT CALLBACK WIN_LanNegDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshLanNegMenu (/* HWND hwnDlg */);
-static ThotBool     CreateDir (const STRING dirname);
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
 
@@ -501,32 +499,6 @@ const STRING end_path;
 }
 
 #ifdef _WINDOWS
-/*----------------------------------------------------------------------
-  CreateDir
-  verifies if dirname finishes with end_path. If this is so, it returns FALSE
-  Otherwise, adds end_path to dirname and returns TRUE.
-  end_path should begin with a DIR_SEP char 
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool CreateDir (const STRING dirname)
-#else
-static ThotBool CreateDir (dirname)
-STRING dirname;
-const STRING end_path;
-#endif /* __STDC__ */
-{
- int i;
-#ifdef _WINDOWS
-       i = umkdir (dirname);
-#else /* _WINDOWS */
-       i = umkdir (dirname, S_IRWXU);
-#endif /* _WINDOWS */
-       if (i != 0 && errno != EEXIST)
-		   return FALSE;
-	   else
-		   return TRUE;
-}
-
 /*----------------------------------------------------------------------
   AmCopyFile
   Copies a file from one dir to another dir. If the file doesn't exist,
@@ -1504,8 +1476,8 @@ LPARAM lParam;
 			      sizeof (AppHome) - 1);
 	      break;
 	    case IDC_TMPDIR:
-	      GetDlgItemText (hwnDlg, IDC_TMPDIR, TmpDir,
-			      sizeof (TmpDir) - 1);
+	      GetDlgItemText (hwnDlg, IDC_TMPDIR, AppTmpDir,
+			      sizeof (AppTmpDir) - 1);
 	      break;
 	    case IDC_DIALOGUELANG:
 	      GetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang,
@@ -1662,7 +1634,7 @@ static void GetGeneralConf ()
   GetEnvString ("LANG", DialogueLang);
   TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
 #ifdef _WINDOWS
-  GetEnvString ("TMPDIR", TmpDir);
+  GetEnvString ("APP_TMPDIR", AppTmpDir);
   GetEnvString ("APP_HOME", AppHome);
 #endif /* _WINDOWS */
 }
@@ -1684,7 +1656,7 @@ static void ValidateGeneralConf ()
   CHAR_T lang[3];
   STRING ptr;
 #ifdef _WINDOWS
-  CHAR_T old_AppHome [MAX_LENGTH+1];
+  CHAR_T old_AppTmpDir [MAX_LENGTH+1];
   int i;
 
   /* normalize and validate the zoom factor */
@@ -1701,95 +1673,58 @@ static void ValidateGeneralConf ()
   **validate the tmp dir
   */
   change = 0;
-  change += CleanSpace (TmpDir);
-  change += CleanDirSep (TmpDir);
+  change += CleanSpace (AppTmpDir);
+  change += CleanDirSep (AppTmpDir);
   /* remove the last DIR_SEP, if we have it */
-  change += RemoveLastDirSep (TmpDir);
-  if (TmpDir[0] == EOS)
+  change += RemoveLastDirSep (AppTmpDir);
+  if (AppTmpDir[0] == EOS)
   {
-    GetDefEnvString ("TMPDIR", TmpDir);
+    GetDefEnvString ("APP_TMPDIR", AppTmpDir);
     change = 1;
   }
   /* remove the last DIR_SEP, if we have it, twice to
      protect against user "default values" */
-  change += RemoveLastDirSep (TmpDir);
+  change += RemoveLastDirSep (AppTmpDir);
 
   /* try to create the directory. If it doesn't work, then
  	 restore the default value */
-  if (!TtaCheckDirectory (TmpDir) && !CreateDir (TmpDir)) 
+  if (!TtaMakeDirectory (AppTmpDir))
     { 
-      GetDefEnvString ("TMPDIR", TmpDir);
-      if (!CreateDir (TmpDir))
+      GetDefEnvString ("APP_TMPDIR", AppTmpDir);
+      if (!TtaMakeDirectory (AppTmpDir))
 	{
-	  usprintf (s, "Error creating directory %s", TmpDir);
+	  usprintf (s, "Error creating directory %s", AppTmpDir);
 	  MessageBox (GeneralHwnd, s, "MenuConf:VerifyGeneralConf", MB_OK);
 	  exit (1);
 	} 
-	  else
-		  change++;
+      else
+	change++;
     }
   if (change)
-	  SetDlgItemText (GeneralHwnd, IDC_TMPDIR, TmpDir);
+    SetDlgItemText (GeneralHwnd, IDC_TMPDIR, AppTmpDir);
 
-  /* normalize and validate the user's preferences dir */
-  /* what we do is add a \\amaya if it's missing */
-  change = 0;
-  change += CleanSpace (AppHome);	  ;
-  change += CleanDirSep (AppHome);
-  /* remove the last DIR_SEP, if we have it */
-  change += RemoveLastDirSep (AppHome);
-
-  GetEnvString ("APP_HOME", old_AppHome);
-  if (AppHome[0] == EOS)
-    /* empty variable, we restore the last known value */
+  /* copy the cache if it was under APP_TMPDIR */
+  GetEnvString ("APP_TMPDIR", old_AppTmpDir);
+  usprintf (s, "%s%clibwww-cache", old_AppTmpDir, DIR_SEP); 
+  ptr = TtaGetEnvString ("CACHE_DIR");
+  /* if the cache was in AppTmpDir and AppTmpDir changed, change
+     the cache */
+  if (!ustrcasecmp (s, ptr) && ustrcasecmp (AppTmpDir, old_AppTmpDir))
     {
-      GetEnvString ("APP_HOME", AppHome);
-      change++;
+      usprintf (s, "%s%clibwww-cache", AppTmpDir, DIR_SEP);		  
+      TtaSetEnvString ("CACHE_DIR", s, YES);
+      libwww_updateNetworkConf (AMAYA_CACHE_RESTART);
     }
-  else
-#ifdef _WINDOWS
-    change += NormalizeDirName (AppHome, "\\amaya");
-#else
-    change += NormalizeDirName (AppHome, "/amaya");
-#endif /* _WINDOWS */
-  /* try to create the APP_HOME dir */
-  if (!TtaCheckDirectory (AppHome) && !CreateDir (AppHome))
-    {
-      GetDefEnvString ("APP_HOME", AppHome);
-      change++;      
-      if (!CreateDir (AppHome))
-	{
-	  usprintf (s, "Error creating directory %s", AppHome);
-	  MessageBox (GeneralHwnd, s, "MenuConf:VerifyGeneralConf", MB_OK);
-	  exit (1);
-	}
-    } 
-  
-  /* create the temporary subdirectories that go inside APP_HOME */
+  /*
+  **  add here other files that you'd like to copy to the new APP_TMPDIR
+  */
+
+  /* create the temporary subdirectories that go inside APP_TMPDIR */
   for (i = 0; i < DocumentTableLength; i++)
     {
-      usprintf (s, "%s%c%d", AppHome, DIR_SEP, i);
-      CreateDir (s);
+      usprintf (s, "%s%c%d", AppTmpDir, DIR_SEP, i);
+      TtaMakeDirectory (s);
     }
-  /* move the amaya.css, amaya.kbd and whatever else we find to this
-     new directory! */
-  if (ustrcasecmp (old_AppHome, AppHome))
-    {
-      AmCopyFile (old_AppHome, AppHome, "amaya.css");
-      AmCopyFile (old_AppHome, AppHome, "amaya.kbd");
-      AmCopyFile (old_AppHome, AppHome, "dictionary.DCT");
-	  /* copy the cache if it was under apphome */
-	  usprintf (s, "%s%clibwww-cache", old_AppHome, DIR_SEP); 
-	  if (TtaCheckDirectory (s))
-	  {
-          usprintf (s, "%s%clibwww-cache", AppHome, DIR_SEP);		  
-		  TtaSetEnvString ("CACHE_DIR", s, YES);
-		  libwww_updateNetworkConf (AMAYA_CACHE_RESTART);
-	  }
-      /* add here other files that you'd like to copy to the new app_home */
-    }
-  if (change)
-    SetDlgItemText (GeneralHwnd, IDC_APPHOME, AppHome);
 #endif /* _WINDOWS */
   
   /* validate the dialogue language */
@@ -1848,9 +1783,8 @@ static void SetGeneralConf ()
   TtaSetEnvString ("LANG", DialogueLang, TRUE);
   TtaSetEnvInt ("FontMenuSize", FontMenuSize, TRUE);
 #ifdef _WINDOWS
-  TtaSetEnvString ("TMPDIR", TmpDir, TRUE);
-  TtaSetEnvString ("APP_HOME", AppHome, TRUE);
-  ustrcpy (TempFileDirectory, AppHome);
+  TtaSetEnvString ("APP_TMPDIR", AppTmpDir, TRUE);
+  ustrcpy (TempFileDirectory, AppTmpDir);
   TtaAppendDocumentPath (TempFileDirectory);
 #endif /* _WINDOWS */
 
@@ -1879,7 +1813,7 @@ static void GetDefaultGeneralConf ()
   GetDefEnvString ("LANG", DialogueLang);
   TtaGetDefEnvInt ("FontMenuSize", &FontMenuSize);
 #ifdef _WINDOWS
-  GetDefEnvString ("TMPDIR", TmpDir);
+  GetDefEnvString ("APP_TMPDIR", AppTmpDir);
   GetDefEnvString ("APP_HOME", AppHome);
 #endif /* _WINDOWS */
 }
@@ -1906,7 +1840,7 @@ HWND hwnDlg;
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
   SetDlgItemInt (hwnDlg, IDC_ZOOM, Zoom, TRUE);
-  SetDlgItemText (hwnDlg, IDC_TMPDIR, TmpDir);
+  SetDlgItemText (hwnDlg, IDC_TMPDIR, AppTmpDir);
   SetDlgItemText (hwnDlg, IDC_APPHOME, AppHome);
 }
 #endif _WINDOWS

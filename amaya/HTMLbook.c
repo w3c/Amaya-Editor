@@ -387,11 +387,11 @@ Document            document;
        docPrint = document;
 
        /* define the new default PS file */
-       ptr = TtaGetEnvString ("TMPDIR");
+       ptr = TtaGetEnvString ("APP_TMPDIR");
        if (ptr != NULL && TtaCheckDirectory (ptr))
 	     ustrcpy(PSdir,ptr);
        else
-	     ustrcpy (PSdir, TtaGetDefEnvString ("TMPDIR"));
+	     ustrcpy (PSdir, TtaGetDefEnvString ("APP_TMPDIR"));
 	   lg = ustrlen(PSdir);
 	   if (PSdir[lg - 1] == DIR_SEP)
 	     PSdir[--lg] = EOS;

@@ -4084,6 +4084,69 @@ static ThotBool       RestoreAmayaDocs ()
 }
 
 /*----------------------------------------------------------------------
+  CheckMakeDirectory verifies if a directory name exists. If it doesn't
+  exist, it tries to create it. If recusive == TRUE, it tries to create
+  all the intermediary directories.
+  Returns TRUE if the operation succeeds, FALSE otherwise.
+  ----------------------------------------------------------------------*/
+ThotBool CheckMakeDirectory (char *name, ThotBool recursive)
+{
+  ThotBool i;
+  STRING tmp_name;
+  CHAR_T *ptr;
+  CHAR_T tmp_char;
+
+  /* protection against bad calls */
+  if (!name || *name == EOS)
+    return FALSE;
+
+  /* does the directory exist? */
+  if (TtaMakeDirectory (name))
+    return TRUE;
+
+  /* no, try to create it then */
+  i = TtaMakeDirectory (name);
+
+  /* were be able to create the directory (or found it already?) */
+  if (!i)
+    {
+      /* don't do anything else */
+      if (!recursive)
+	return FALSE;
+      
+      /* try to create all the missing directories up to name */
+      tmp_name = TtaStrdup (name);
+      ptr = tmp_name;
+      /* create all the intermediary directories */
+      while (*ptr != EOS)
+	{
+	  if (*ptr != DIR_SEP)
+	    ptr++;
+	  else
+	    {
+	      tmp_char = *ptr;
+	      *ptr = EOS;
+	      i = TtaMakeDirectory (tmp_name);
+	      if (!i)
+		{
+		  TtaFreeMemory (tmp_name);
+		  return FALSE;
+		}
+	      *ptr = tmp_char;
+	      ptr++;
+	    }
+	}
+      /* create the last dir */
+      i = TtaMakeDirectory (tmp_name);
+      TtaFreeMemory (tmp_name);
+      if (!i)
+	return FALSE;
+    }
+  return TRUE;
+}
+
+
+/*----------------------------------------------------------------------
   InitAmaya intializes Amaya variables and opent the first document
   window.
   ----------------------------------------------------------------------*/
@@ -4215,43 +4278,24 @@ NotifyEvent        *event;
    TargetName = NULL;
 
    /*
-    * Initialize the Amaya temporary directory:
-    * $HOME/.amaya on Unix platforms
-    * $HOME\amaya on Windows platforms where $HOME is usually C:\\TEMP
+    * Initialize the Amaya user and tmp directories
     */
-   i = 0;
-   s = TtaGetEnvString ("APP_HOME");
-   if (!TtaCheckDirectory (s))
-     {
-#ifdef _WINDOWS
-       i = _mkdir (s);
-#else /* _WINDOWS */
-       i = mkdir (s, S_IRWXU);
-#endif /* _WINDOWS */
-     }
-   if (i != 0 && errno != EEXIST)
-	 /* try to use the default directory then */
-   {
-     s = TtaGetDefEnvString ("APP_HOME");
-     if (!TtaCheckDirectory (s))
-       {
-#ifdef _WINDOWS
-	 i = _mkdir (s);
-#else /* _WINDOWS */
-	 i = mkdir (s, S_IRWXU);
-#endif /* _WINDOWS */
-	 if (i != 0 && errno != EEXIST)
-	   exit (1);
-       }
-     /* if the default entry works, we'll update the user's
-	registry and save it, to avoid doing this work over again */
-     TtaSetEnvString ("APP_HOME", s, TRUE);
-     TtaSaveAppRegistry ();	 
-   }
 
+   s = TtaGetEnvString ("APP_TMPDIR");
+   if (!CheckMakeDirectory (s, TRUE))
+     /* @@ add an error message */
+     exit (1);
+   
    /* add the temporary directory in document path */
    ustrcpy (TempFileDirectory, s);
    TtaAppendDocumentPath (TempFileDirectory);
+   
+#ifdef _WINDOWS
+   s = TtaGetEnvString ("APP_HOME");
+   if (!CheckMakeDirectory (s, TRUE))
+     /* @@ add an error message */
+     exit (1);
+#endif /* _WINDOWS */
 
    /*
     * Build the User preferences file name:
@@ -4277,13 +4321,8 @@ NotifyEvent        *event;
        /* initialize history */
        InitDocHistory (i);
        /* Create a temporary sub-directory for storing the HTML and image files */
-       sprintf (tempname, "%s%c%d", s, DIR_SEP, i);
-       if (!TtaCheckDirectory (tempname))
-#ifdef _WINDOWS
-          _mkdir (tempname);
-#else  /* !_WINDOWS */
-          mkdir (tempname, S_IRWXU);
-#endif /* !_WINDOWS */
+       sprintf (tempname, "%s%c%d", TempFileDirectory, DIR_SEP, i);
+       TtaMakeDirectory (tempname);
      }
 
    /* allocate working buffers */

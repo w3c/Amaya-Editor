@@ -17,6 +17,7 @@
 #include "browser.h"
 #include "content.h"
 #include "dialog.h"
+#include "fileaccess.h"
 #include "interface.h"
 #include "libmsg.h"
 #include "message.h"
