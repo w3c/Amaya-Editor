@@ -595,20 +595,24 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
     PicMask |= THOT_MOD_ALT;
   if (event->keyval == GDK_space)
     event->length = 1;
-  ThotInput (frame, &string[0], event->length, PicMask, KS);
+#ifdef _I18N_
+  if(event->keyval == GDK_VoidSymbol)
+    ThotInput (frame, event->string, event->length, PicMask, KS);
+  else
+#endif /* _I18N_ */
+    ThotInput (frame, &string[0], event->length, PicMask, KS);
   gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
   return TRUE;
 }
 
 /*----------------------------------------------------------------------
-   GtkLining
-   When user hold clicked a button or pressed a key
-   those functions are called by a timer each 100 ms
-   in order to repeat user action until he released the button
-   or move away from the widget.
+  GtkLining
+  When user hold clicked a button or pressed a key
+  those functions are called by a timer each 100 ms
+  in order to repeat user action until he released the button
+  or move away from the widget.
 ----------------------------------------------------------------------*/
-
-gboolean GtkLiningDown(gpointer data)
+gboolean GtkLiningDown (gpointer data)
 {
   int       frame;
   Document  doc; 
@@ -621,7 +625,10 @@ gboolean GtkLiningDown(gpointer data)
      continues to get called */
    return TRUE;
 }
-gboolean GtkLiningUp(gpointer data)
+
+/*----------------------------------------------------------------------
+----------------------------------------------------------------------*/
+gboolean GtkLiningUp (gpointer data)
 {
   int       frame;
   Document  doc; 
@@ -634,6 +641,7 @@ gboolean GtkLiningUp(gpointer data)
      continues to get called */
   return TRUE;
 }
+
 /*----------------------------------------------------------------------
    KeyScrolledGTK
    Capture click on the scrollbar in order to enable
@@ -805,6 +813,10 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
   KEY                *ptr;
   Document            document;
   View                view;
+#ifdef _I18N_
+  CHARSET             charset;
+  wchar_t            *str, *p;
+#endif /* _I18N_ */
   int                 value;
   int                 modtype;
   int                 command;
@@ -815,6 +827,25 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
   if (frame > MAX_FRAME)
     frame = 0;
   FrameToView (frame, &document, &view);
+#ifdef _I18N_
+  if (key == GDK_VoidSymbol)
+    {
+      charset = TtaGetCharset (TtaGetEnvString ("Default_Charset"));
+      if (charset != UNDEFINED_CHARSET)
+      {
+      str = TtaConvertByteToWC (string, charset);
+      p = str;
+      while (*p)
+	{
+	  if (MenuActionList[0].Call_Action)
+	    (*MenuActionList[0].Call_Action) (document, view, *p);
+	  p++;
+	}
+      TtaFreeMemory(str);
+      return;
+    }
+  }
+#endif /* _I18N_ */
   value = string[0];
   found = FALSE;
   if (nb == 2)
