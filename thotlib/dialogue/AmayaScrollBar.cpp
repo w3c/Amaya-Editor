@@ -51,6 +51,7 @@ AmayaScrollBar::AmayaScrollBar( wxWindow* p_parent_window,
 				long style )
   :  wxScrollBar( p_parent_window, -1, wxDefaultPosition, wxDefaultSize, style )
      ,m_ParentFrameID(parent_frame_id)
+     ,m_IgnoreNextScrollEvent(FALSE)
 {
 }
 
@@ -157,6 +158,12 @@ void AmayaScrollBar::OnLineUp( wxScrollEvent& event )
       TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnLineUp - TtcScrollLeft(%d, %d)"), doc, view );
     }
 
+  // set this flag to ignore the next generated OnScroll event
+  // this is necessary because 2 events occure when up/down button is pressed (it's an optimisation)
+  // this hack works because OnLineDown is called before OnScroll,
+  // but becareful the events orders could change in future wxWidgets releases or can be platform specific
+  m_IgnoreNextScrollEvent = TRUE;
+
   GL_DrawAll();
 
   event.Skip();
@@ -185,6 +192,12 @@ void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
       TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnLineDown [TtcScrollRight(%d, %d)]"), doc, view );
     }
   
+  // set this flag to ignore the next generated OnScroll event
+  // this is necessary because 2 events occure when up/down button is pressed (it's an optimisation)
+  // this hack works because OnLineDown is called before OnScroll,
+  // but becareful the events orders could change in future wxWidgets releases or can be platform specific
+  m_IgnoreNextScrollEvent = TRUE;
+
   GL_DrawAll();
 
   event.Skip();
@@ -199,6 +212,16 @@ void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
  */
 void AmayaScrollBar::OnScroll( wxScrollEvent& event )
 {
+  // this flag is necessary because 2 events occure when up/down button is pressed (it's an optimisation)
+  // this hack works because OnLineDown is called before OnScroll,
+  // but becareful the events orders could change in future wxWidgets releases or can be platform specific
+  if (m_IgnoreNextScrollEvent)
+    {
+      m_IgnoreNextScrollEvent = FALSE;
+      event.Skip();
+      return;
+    }
+
   if (event.GetOrientation() == wxHORIZONTAL)
    {
      TTALOGDEBUG_3( TTA_LOG_DIALOG, _T("AmayaScrollBar::OnScroll [wxHORIZONTAL][frameid=%d][pos=%d][pagesize=%d]"), m_ParentFrameID, event.GetPosition(), GetPageSize() );

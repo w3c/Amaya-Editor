@@ -27,7 +27,8 @@ protected:
   void OnTop( wxScrollEvent& event );
 
  protected:
-  int m_ParentFrameID;
+  int  m_ParentFrameID;
+  bool m_IgnoreNextScrollEvent;
 };
 
 #endif // __AMAYASCROLLBAR_H__
