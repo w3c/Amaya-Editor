@@ -1,5 +1,5 @@
 [thot_lib]
-THOTSYSSCH=$(THOTDIR)\amaya:$(THOTDIR)\annotlib
+THOTSYSSCH=$(THOTDIR)\amaya;$(THOTDIR)\annotlib
 DICOPAR=$(THOTDIR)\dicopar
 
 [amaya]

@@ -1438,7 +1438,7 @@ ThotBool   state;
   ThotWidget          w, row;
 #else  /* _WINDOWS */
   ThotButton          w;
-#endif
+#endif /* _WINDOWS */
 
   UserErrorCode = 0;
   index = 0;
@@ -1641,56 +1641,52 @@ int                 index;
 
 #endif /* __STDC__ */
 {
-   int                 frame;
+  int                 frame;
+#ifndef _WINDOWS
+  int                 n;
+  Pixel               top, bottom;
+  Arg                 args[MAX_ARGS];
+#endif
 
-#  ifndef _WINDOWS
-   int                 n;
-   Pixel               top, bottom;
-   Arg                 args[MAX_ARGS];
-
-#  endif
-
-   UserErrorCode = 0;
-   /* verifie le parametre document */
-   if (document == 0 && view == 0)
-      TtaError (ERR_invalid_parameter);
-   else
-     {
-	frame = GetWindowNumber (document, view);
-	if (frame == 0 || frame > MAX_FRAME)
-	   TtaError (ERR_invalid_parameter);
-	else if (FrameTable[frame].WdFrame != 0)
-	  {
-	     if (index >= MAX_BUTTON || index <= 0
-		 || FrameTable[frame].Button[index] == 0)
-		TtaError (ERR_invalid_parameter);
-	     else
-	       {
-		  /* Change l'etat du bouton */
-#                 ifdef _WINDOWS
-		  if (doSwitchButton) {
-             if (!SendMessage (WinToolBar[frame], TB_ISBUTTONCHECKED, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) 0))
-                SendMessage (WinToolBar[frame], TB_CHECKBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (TRUE, 0));
-		     else
-                SendMessage (WinToolBar[frame], TB_CHECKBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (FALSE, 0));
-		  }
-#                 else  /* !_WINDOWS */
-		  n = 0;
-		  XtSetArg (args[n], XmNtopShadowColor, &top);
-		  n++;
-		  XtSetArg (args[n], XmNbottomShadowColor, &bottom);
-		  n++;
-		  XtGetValues (FrameTable[frame].Button[index], args, n);
-		  n = 0;
-		  XtSetArg (args[n], XmNtopShadowColor, bottom);
-		  n++;
-		  XtSetArg (args[n], XmNbottomShadowColor, top);
-		  n++;
-		  XtSetValues (FrameTable[frame].Button[index], args, n);
-#                 endif /* _WINDOWS */
-	       }
-	  }
-     }
+  UserErrorCode = 0;
+  /* verifie le parametre document */
+  if (document == 0 && view == 0)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      frame = GetWindowNumber (document, view);
+      if (frame == 0 || frame > MAX_FRAME)
+	TtaError (ERR_invalid_parameter);
+      else if (FrameTable[frame].WdFrame != 0)
+	{
+	  if (index < MAX_BUTTON && index > 0 && FrameTable[frame].Button[index] != 0)
+	    {
+	      /* Change l'etat du bouton */
+#ifdef _WINDOWS
+	      if (doSwitchButton)
+		{
+		  if (!SendMessage (WinToolBar[frame], TB_ISBUTTONCHECKED, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) 0))
+		    SendMessage (WinToolBar[frame], TB_CHECKBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (TRUE, 0));
+		  else
+		    SendMessage (WinToolBar[frame], TB_CHECKBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (FALSE, 0));
+		}
+#else  /* !_WINDOWS */
+	      n = 0;
+	      XtSetArg (args[n], XmNtopShadowColor, &top);
+	      n++;
+	      XtSetArg (args[n], XmNbottomShadowColor, &bottom);
+	      n++;
+	      XtGetValues (FrameTable[frame].Button[index], args, n);
+	      n = 0;
+	      XtSetArg (args[n], XmNtopShadowColor, bottom);
+	      n++;
+	      XtSetArg (args[n], XmNbottomShadowColor, top);
+	      n++;
+	      XtSetValues (FrameTable[frame].Button[index], args, n);
+#endif /* _WINDOWS */
+	    }
+	}
+    }
 }
 
 
@@ -1739,9 +1735,7 @@ ThotBool            state;
 	TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame != 0)
 	{
-	  if (index >= MAX_BUTTON || index <= 0 || FrameTable[frame].Button[index] == 0)
-	    TtaError (ERR_invalid_parameter);
-	  else
+	  if (index < MAX_BUTTON && index > 0 && FrameTable[frame].Button[index] != 0)
 	    {
 	      /* Insere le nouvel icone */
 #ifdef _WINDOWS
@@ -1865,7 +1859,6 @@ int                 index;
      }
 }
 #endif /* _WINDOWS */
-
 /*----------------------------------------------------------------------
    TtcSwitchButtonBar
 
@@ -1883,7 +1876,6 @@ void                TtcSwitchButtonBar (Document document, View view)
 void                TtcSwitchButtonBar (document, view)
 Document            document;
 View                view;
-
 #endif /* __STDC__ */
 {
    int                 frame;
