@@ -3715,14 +3715,16 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		      if (pAb->AbWidth.DimAbRef == NULL &&  pAb->AbWidth.DimValue == -1)
 			{
 			  /* use the content width */
-			  pBox->BxWidth = 0;
+			  pBox->BxWidth -= pBox->BxW;
 			  pBox->BxW = 0;
+			  pBox->BxVertRef = 0;
 			}
 		      if (pAb->AbHeight.DimAbRef == NULL &&  pAb->AbHeight.DimValue == -1)
 			{
 			  /* use the content height */
-			  pBox->BxHeight = 0;
+			  pBox->BxHeight -= pBox->BxH;
 			  pBox->BxH = 0;
+			  pBox->BxHorizRef = 0;
 			}
 		      SetCursorWatch (frame);
 		      LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
