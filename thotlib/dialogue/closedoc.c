@@ -1,7 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-/* I. Vatton    Mai 1994 */
-
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmenu.h"
@@ -19,8 +15,8 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
-static boolean      AbandonFermer;
-static boolean      SauverAvantFermer;
+static boolean      CloseDontSave;
+static boolean      SaveBeforeClosing;
 
 #include "views_f.h"
 #include "appdialogue_f.h"
@@ -53,12 +49,12 @@ char               *data;
 	       break;
 	    case 1:
 	       /* sauver avant de fermer */
-	       AbandonFermer = FALSE;
-	       SauverAvantFermer = TRUE;
+	       CloseDontSave = FALSE;
+	       SaveBeforeClosing = TRUE;
 	       break;
 	    case 2:
 	       /* fermer sans sauver */
-	       AbandonFermer = FALSE;
+	       CloseDontSave = FALSE;
 	       break;
 	 }
    TtaDestroyDialogue (NumFormClose);
@@ -73,14 +69,14 @@ char               *data;
 /* |            Au retour, Sauver indique si la sauvegarde est demandee.| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ConfirmeFerme (PtrDocument pDoc, Document document, View view, boolean * confirme, boolean * sauver)
+void                ConfirmeFerme (PtrDocument pDoc, Document document, View view, boolean * confirmation, boolean * save)
 #else  /* __STDC__ */
-void                ConfirmeFerme (pDoc, document, view, confirme, sauver)
+void                ConfirmeFerme (pDoc, document, view, confirmation, save)
 PtrDocument         pDoc;
 Document            document;
 View                view;
-boolean            *confirme;
-boolean            *sauver;
+boolean            *confirmation;
+boolean            *save;
 
 #endif /* __STDC__ */
 {
@@ -88,8 +84,8 @@ boolean            *sauver;
    char                bufbutton[300];
    int                 i;
 
-   AbandonFermer = TRUE;
-   SauverAvantFermer = FALSE;
+   CloseDontSave = TRUE;
+   SaveBeforeClosing = FALSE;
    /* le document a ete modifie', on propose de le sauver */
    /* initialise le label du formulaire "Fermer" en y mettant le nom */
    /* du document */
@@ -112,8 +108,8 @@ boolean            *sauver;
    TtaShowDialogue (NumFormClose, FALSE);
    /* attend le retour de ce formulaire (traite' par RetMenuFermer) */
    TtaWaitShowDialogue ();
-   *sauver = SauverAvantFermer;
-   *confirme = !AbandonFermer;
+   *save = SaveBeforeClosing;
+   *confirmation = !CloseDontSave;
 }
 
 
@@ -130,7 +126,7 @@ View                view;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
-   boolean             sauver, ok;
+   boolean             save, ok;
 
    ok = TRUE;
    if (document != 0)
@@ -150,11 +146,11 @@ View                view;
 		       TteConnectAction (T_confirmclose, (Proc) ConfirmeFerme);
 		       TteConnectAction (T_rconfirmclose, (Proc) RetMenuFermer);
 		    }
-		  ConfirmeFerme (pDoc, docform, viewform, &ok, &sauver);
+		  ConfirmeFerme (pDoc, docform, viewform, &ok, &save);
 		  if (ok)
 		     /* pas d'annulation */
 		    {
-		       if (sauver)
+		       if (save)
 			  /* l'utilisateur demande a sauver le document */
 			  ok = SauveDocument (pDoc, 4);
 		       if (ok)
