@@ -1027,7 +1027,9 @@ boolean             horizRef;
 	/* indique que le traitement est termine */
 	pBox->BxPacking = 0;
 	/* retablit le chainage des deplacements */
-	if (pSourceBox->BxMoved != pBox)
+	if (pSourceBox == NULL)
+	  pBox->BxMoved = pSourceBox;
+	else if (pSourceBox->BxMoved != pBox)
 	  pBox->BxMoved = pSourceBox;
      }
 }

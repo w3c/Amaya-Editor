@@ -1231,6 +1231,8 @@ NotifyElement      *event;
 #endif
 {
   Element             colhead;
+  Element             table;
+  ElementType         elType;
   Document            doc;
   int                 span;
   boolean             removed;
@@ -1242,6 +1244,14 @@ NotifyElement      *event;
   removed = RemoveEmptyColumn (colhead, doc);
   if (removed)
     span--;
+  else
+    {
+      /* restore the current cell */
+      elType = TtaGetElementType (event->element);
+      elType.ElTypeNum = HTML_EL_Table;
+      table = TtaGetTypedAncestor (event->element, elType);
+      CheckAllRows (table, doc);      
+    }
   if (span > 0)
     {
       /* remove extra columns if needed */
