@@ -504,7 +504,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   if (horizRef)
     {
       /* reference for computing percent rules */
-      if (pAb->AbEnclosing)
+      if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
 	{
 	  pBox = pAb->AbEnclosing->AbBox;
 	  dim = pBox->BxW;
@@ -560,7 +560,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   else
     {
       /* reference for computing percent rules */
-      if (pAb->AbEnclosing)
+      if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
 	{
 	  pBox = pAb->AbEnclosing->AbBox;
 	  dim = pBox->BxH;

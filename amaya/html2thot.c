@@ -3485,6 +3485,7 @@ static void EndOfEntity (unsigned char c)
 {
 #ifdef _I18N_
   unsigned char fallback[7], *ptr;
+  int           len;
 #endif /* _I18N_ */
   int           i;
   unsigned char msgBuffer[MaxMsgLength];
@@ -3498,8 +3499,8 @@ static void EndOfEntity (unsigned char c)
 	{
 	  /* generate the UTF-8 string */
 	  ptr = fallback;
-	  TtaWCToMBstring ((wchar_t) (XhtmlEntityTable[EntityTableEntry].charCode), &ptr);
-	  for (i = 0; i < 7 && fallback[i] != EOS; i++)
+	  len = TtaWCToMBstring ((wchar_t) (XhtmlEntityTable[EntityTableEntry].charCode), &ptr);
+	  for (i = 0; i < len; i++)
 	    PutInBuffer (fallback[i]);
 	}
 #else /* _I18N_ */
@@ -3541,6 +3542,7 @@ static void EntityChar (unsigned char c)
 {
 #ifdef _I18N_
   unsigned char fallback[7], *ptr;
+  int           len;
 #endif /* _I18N_ */
   unsigned char msgBuffer[MaxMsgLength];
   int           i;
@@ -3580,8 +3582,8 @@ static void EntityChar (unsigned char c)
 	    {
 	      /* generate the UTF-8 string */
 	      ptr = fallback;
-	      TtaWCToMBstring (c, &ptr);
-	      for (i = 0; i < 7 && fallback[i] != EOS; i++)
+	      len = TtaWCToMBstring ((wchar_t) (XhtmlEntityTable[EntityTableEntry].charCode), &ptr);
+	      for (i = 0; i < len; i++)
 		PutInBuffer (fallback[i]);
 	    }
 #else /* _I18N_ */
@@ -3675,6 +3677,7 @@ static void EndOfDecEntity (unsigned char c)
 {
 #ifdef _I18N_
   unsigned char fallback[7], *ptr;
+  int           len;
 #endif /* _I18N_ */
   int           code;
   int           i;
@@ -3686,8 +3689,8 @@ static void EndOfDecEntity (unsigned char c)
     {
       /* generate the UTF-8 string */
       ptr = fallback;
-      TtaWCToMBstring ((wchar_t) code, &ptr);
-      for (i = 0; i < 7 && fallback[i] != EOS; i++)
+      len = TtaWCToMBstring ((wchar_t) code, &ptr);
+      for (i = 0; i < len; i++)
 	PutInBuffer (fallback[i]);
     }
 #else /* _I18N_ */
@@ -3757,9 +3760,10 @@ static void EndOfHexEntity (unsigned char c)
 {
 #ifdef _I18N_
   unsigned char fallback[7], *ptr;
+  int           len;
 #endif /* _I18N_ */
-  int              code;
-  int              i;
+  int           code;
+  int           i;
 
   EntityName[LgEntityName] = EOS;
   sscanf (EntityName, "%x", &code);
@@ -3768,8 +3772,8 @@ static void EndOfHexEntity (unsigned char c)
     {
       /* generate the UTF-8 string */
       ptr = fallback;
-      TtaWCToMBstring ((wchar_t) code, &ptr);
-      for (i = 0; i < 7 && fallback[i] != EOS; i++)
+      len = TtaWCToMBstring ((wchar_t) code, &ptr);
+      for (i = 0; i < len; i++)
 	PutInBuffer (fallback[i]);
     }
 #else /* _I18N_ */
