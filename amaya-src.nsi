@@ -7,7 +7,7 @@
 ;General
 
   ;Name and file
-  !define VERSION "9.0.1-src"
+  !define VERSION "9.1-src"
   Name "Amaya ${VERSION}"
   OutFile "Amaya-${VERSION}.exe"
   
