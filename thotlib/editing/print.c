@@ -76,7 +76,7 @@ static ThotBool     removeDirectory;
 #define MAX_PRINTED_VIEWS MAX_VIEW_DOC
 #define MAX_CSS           10
 static Name         PrintViewName[MAX_PRINTED_VIEWS];
-static Name         CSSName[MAX_CSS];
+static char        *CSSName[MAX_CSS];
 static char         CSSOrigin[MAX_CSS];
 static int          TopMargin;
 static int          LeftMargin;
@@ -2478,14 +2478,14 @@ int main (int argc, char **argv)
 	      /* CSS files given in the command line */
 	      argCounter++;
 	      CSSOrigin[cssCounter] = 'a';
-	      strcpy (CSSName[cssCounter++], argv[argCounter++]);
+	      CSSName[cssCounter++] = TtaStrdup (argv[argCounter++]);
 	    }
 	  else if (!strcmp (argv[argCounter], "-cssu"))
 	    {
 	      /* CSS files given in the command line */
 	      argCounter++;
 	      CSSOrigin[cssCounter] = 'u';
-	      strcpy (CSSName[cssCounter++], argv[argCounter++]);
+	      CSSName[cssCounter++] = TtaStrdup (argv[argCounter++]);
 	    }
 	  else if (!strcmp (argv[argCounter], "-npps"))
 	    {
@@ -2748,9 +2748,13 @@ int main (int argc, char **argv)
 	  length = strlen (tmpDir);
 	  /* remove CSS files in the temporary directory */
 	  for (i = 0; i < cssCounter; i++)
-	    if (CSSName[i] && TtaFileExist (CSSName[i]) &&
-		strncmp(CSSName[i], tmpDir, length) == 0)
-	      DeleteFile (CSSName[i]);
+	    {
+	      if (CSSName[i] && TtaFileExist (CSSName[i]) &&
+		  strncmp(CSSName[i], tmpDir, length) == 0)
+		DeleteFile (CSSName[i]);
+	      TtaFreeMemory (CSSName[i]);
+	      CSSName[i] = NULL;
+	    }
 	  if (rmdir (tempDir))
 	    WinErrorBox (NULL, "PrintDoc (4)");
       }
