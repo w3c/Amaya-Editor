@@ -8,7 +8,6 @@ AMAYA_MATH_OPTIONS=-DMATHML
 
 AMAYA_MATH_OBJ= \
 	MathMLAPP.o \
-	XMLparser.o \
 	MathMLbuilder.o \
 	Mathedit.o
 
