@@ -729,8 +729,10 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
   // on windows, CTRL+ALT is equivalent to ALTGR key
   if ( ((event.ControlDown() && !event.AltDown()) || (event.AltDown() && !event.ControlDown()))
 	    && !IsSpecialKey(thot_keysym)
-		&& !(thot_keysym >= 'A' && thot_keysym <= 'Z') // this is for the Windows menu shortcuts, 
-		                                               // ALT+F => should open File menu
+		// this is for the Windows menu shortcuts, 
+		// ALT+F => should open File menu
+		&& !(thot_keysym >= 'A' && thot_keysym <= 'Z' && event.AltDown() && !event.ControlDown()) 
+		                                               
 	 )
     {
       // le code suivant permet de convertire les majuscules
