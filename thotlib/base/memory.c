@@ -183,7 +183,7 @@ unsigned int        n;
    TtaGetMemory.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaFreeMemory (void *ptr)
+void                TtaFreeMemory (char *ptr)
 #else  /* __STDC__ */
 void                TtaFreeMemory (ptr)
 void               *ptr;
@@ -193,7 +193,7 @@ void               *ptr;
 {
    if (ptr)	{
       free (ptr);
-	  ptr = (void*) NULL;
+	  ptr = (char*) 0;
    }
 }
 
