@@ -164,7 +164,7 @@ void AnnotFilter_add (AnnotMetaDataList *annotMeta, SelType type, void *object, 
 {
   List **me;
   List *new;
-  ThotBool dup;
+  ThotBool isString = TRUE;
   AnnotFilterData *filter;
 
   if (!object || !annot)
@@ -174,27 +174,27 @@ void AnnotFilter_add (AnnotMetaDataList *annotMeta, SelType type, void *object, 
     {
     case BY_AUTHOR:
       me = &annotMeta->authors;
-      dup = TRUE;
+      isString = TRUE;
       break;
 
     case BY_TYPE:
       me = &annotMeta->types;
-      dup = FALSE;
+      isString = FALSE;
       break;
 
     case BY_SERVER:
       me = &annotMeta->servers;
-      dup = TRUE;
+      isString = TRUE;
       break;
     }
 
   /* object already in the filter */
-  if (*me && AnnotFilter_search (*me, object))
+  if (*me && AnnotFilter_search (*me, object, isString))
     return;
 
   /* initialize the filter */
   filter = TtaGetMemory (sizeof (AnnotFilterData));
-  filter->object = dup ? TtaStrdup ((CHAR_T*)object) : object;
+  filter->object = isString ? TtaStrdup ((CHAR_T*)object) : object;
   filter->show = TRUE;
   filter->annot = annot;
 
@@ -256,15 +256,24 @@ ThotBool AnnotFilter_delete (List **list, AnnotMeta *annot)
    AnnotFilter_search
    Returns list item that contains the object
    ------------------------------------------------------------*/
-List *AnnotFilter_search (List *list, CHAR_T *object)
+List *AnnotFilter_search (List *list, void *object, ThotBool isString)
 {
   List *list_item = list;
   AnnotFilterData *filter;
   while (list_item)
     {
       filter = (AnnotFilterData *) list_item->object;
-      if (!ustrcasecmp (filter->object, object))
-	break;
+      if (isString)
+	{
+	  if (!ustrcasecmp (filter->object, (CHAR_T*)object))
+	    break;
+	}
+      else
+	{
+	  if (filter->object == object)
+	    break;
+	}
+
       list_item = list_item->next;
     }
 
@@ -285,7 +294,7 @@ ThotBool AnnotFilter_show (List *list, void *object)
   if (!object)
     return TRUE;
 
-  list_item = AnnotFilter_search (list, object);
+  list_item = AnnotFilter_search (list, object, FALSE);
   if (!list_item)
     return TRUE;
   filter = (AnnotFilterData *) list_item->object;
@@ -310,7 +319,7 @@ ThotBool AnnotFilter_showServer (List *list, CHAR_T *url)
   /* we first normalize the url name to get the server */
   GetServerName (url, server);
 
-  list_item = AnnotFilter_search (list, server);
+  list_item = AnnotFilter_search (list, server, TRUE);
   if (!list_item)
     return TRUE;
   filter = (AnnotFilterData *) list_item->object;
@@ -343,7 +352,7 @@ ThotBool AnnotFilter_showAuthor (List *list, CHAR_T *author, CHAR_T *url)
   tmp = TtaGetMemory (ustrlen (author) + ustrlen (server) + 4);
   usprintf (tmp, "%s@%s", author, server);
 
-  list_item = AnnotFilter_search (list, tmp);
+  list_item = AnnotFilter_search (list, tmp, TRUE);
   if (!list_item)
     result = TRUE;
   else 
@@ -755,7 +764,7 @@ Document doc;
 	  if (annot->type)
 	    fprintf (fp, 
 		     "<r:type resource=\"%s\" />\n",
-		     annot->type);
+		     annot->type->name);
 
 	  fprintf (fp, 
 		   "<a:annotates r:resource=\"%s\" />\n",
