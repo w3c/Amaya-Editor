@@ -221,13 +221,13 @@ static void animate_box_animate (PtrElement El,
 }
 
 static PtrTransform GetTransformation (PtrTransform Trans, 
-				       TransformType type)
+				       TransformType _trans_type)
 {
   ThotBool not_found;
   
   while (not_found && Trans)
     {
-      if (Trans->Type != type)
+      if (Trans->TransType != _trans_type)
 	Trans = Trans->Next;
       else
 	not_found = FALSE;      
@@ -455,7 +455,7 @@ static void animate_box (PtrElement El,
 	      
 	      if (is_animated_now(animated, current_time))
 		{
-		  switch (animated->Type)
+		  switch (animated->AnimType)
 		    {
 		    case Color:
 		      animate_box_color ();

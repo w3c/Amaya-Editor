@@ -1215,7 +1215,7 @@ static void DisplayBoxTransformation (PtrTransform Trans)
   
   while (Trans)
     {
-      switch (Trans->Type)
+      switch (Trans->TransType)
 	{
 	case  PtElBoxTranslate:
 	  glTranslatef (Trans->XScale, 
@@ -1236,7 +1236,7 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
   
   while (Trans)
     {
-      switch (Trans->Type)
+      switch (Trans->TransType)
 	{
 	case  PtElviewboxScale:
 	  glScaled ((double) (Width / Trans->XScale), 
@@ -1278,7 +1278,7 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
   DisplayViewBoxTransformation (Trans, Width, Height);
   while (Trans)
     {
-      switch (Trans->Type)
+      switch (Trans->TransType)
 	{
 	case  PtElScale:
 	  glScalef (Trans->XScale, 

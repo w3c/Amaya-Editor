@@ -1790,7 +1790,7 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 {
   while (Trans)
     {
-      switch (Trans->Type)
+      switch (Trans->TransType)
 	{
 	case PtElScale:
 	  break;

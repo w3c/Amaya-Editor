@@ -1675,9 +1675,9 @@ void *TtaNewTransformScale (float x_scale, float y_scale, ThotBool viewbox)
    pPa = TtaGetMemory (sizeof (Transform));
    pPa->Next = NULL;
    if (viewbox)
-     pPa->Type = PtElviewboxScale;
+     pPa->TransType = PtElviewboxScale;
    else
-     pPa->Type = PtElScale;   
+     pPa->TransType = PtElScale;   
    pPa->XScale = x_scale;
    pPa->YScale = y_scale;
    return (pPa);
@@ -1691,7 +1691,7 @@ void *TtaNewBoxTransformTranslate (float x, float y)
 
    pPa = TtaGetMemory (sizeof (Transform));
    pPa->Next = NULL;
-   pPa->Type = PtElBoxTranslate;
+   pPa->TransType = PtElBoxTranslate;
    pPa->XScale = x;
    pPa->YScale = y;
    return (pPa);
@@ -1706,9 +1706,9 @@ void *TtaNewTransformTranslate (float x, float y, ThotBool viewbox)
    pPa = TtaGetMemory (sizeof (Transform));
    pPa->Next = NULL;
    if (viewbox)
-     pPa->Type = PtElviewboxTranslate;
+     pPa->TransType = PtElviewboxTranslate;
    else
-     pPa->Type = PtElTranslate;
+     pPa->TransType = PtElTranslate;
    pPa->XScale = x;
    pPa->YScale = y;
    return (pPa);
@@ -1723,7 +1723,7 @@ void *TtaNewTransformRotate (float angle, float x_scale,
 
    pPa = TtaGetMemory (sizeof (Transform));
    pPa->Next = NULL;
-   pPa->Type = PtElRotate;
+   pPa->TransType = PtElRotate;
    pPa->Angle = angle;
    pPa->XRotate = x_scale;
    pPa->YRotate = y_scale;
@@ -1740,7 +1740,7 @@ void *TtaNewTransformSkewX (float factor)
 
    pPa = TtaGetMemory (sizeof (Transform));
    pPa->Next = NULL;
-   pPa->Type = PtElSkewX;
+   pPa->TransType = PtElSkewX;
    pPa->Factor = factor;
    return (pPa);
 }
@@ -1753,7 +1753,7 @@ void *TtaNewTransformSkewY (float factor)
 
    pPa = TtaGetMemory (sizeof (Transform));
    pPa->Next = NULL;
-   pPa->Type = PtElSkewY;
+   pPa->TransType = PtElSkewY;
    pPa->Factor = factor;
    return (pPa);
 }
@@ -1767,7 +1767,7 @@ void *TtaNewTransformMatrix (float a, float b, float c,
 
    pPa = TtaGetMemory (sizeof (Transform));   
    pPa->Next = NULL;
-   pPa->Type = PtElMatrix;
+   pPa->TransType = PtElMatrix;
    pPa->AMatrix = a;
    pPa->BMatrix = b;
    pPa->CMatrix = c;
@@ -1858,7 +1858,7 @@ void TtaReplaceTransform (Element element, void *transform,
 	   pPrevPa = NULL;
 	   while (pPa)
 	     {
-	       if (pPa->Type == ((PtrTransform)transform)->Type)
+	       if (pPa->TransType == ((PtrTransform)transform)->TransType)
 		 {
 		   if (pPrevPa == NULL)
 		     ((PtrElement) element)->ElTransform = (PtrTransform) transform;
@@ -2001,35 +2001,35 @@ void *TtaNewAnimInfo ()
   ----------------------------------------------------------------------*/
 void TtaSetAnimTypetoMotion (void *anim)
 {
-  ((Animated_Element *) anim)->Type = Motion;
+  ((Animated_Element *) anim)->AnimType = Motion;
 }
 /*----------------------------------------------------------------------
    TtaSetAnimTypetoTransform
   ----------------------------------------------------------------------*/
 void TtaSetAnimTypetoTransform (void *anim)
 {
-  ((Animated_Element *) anim)->Type = Transformation;
+  ((Animated_Element *) anim)->AnimType = Transformation;
 }
 /*----------------------------------------------------------------------
    TtaSetAnimTypetoAnimate
   ----------------------------------------------------------------------*/
 void TtaSetAnimTypetoAnimate (void *anim)
 {
-  ((Animated_Element *) anim)->Type = Animate;
+  ((Animated_Element *) anim)->AnimType = Animate;
 }
 /*----------------------------------------------------------------------
    TtaSetAnimTypetoColor
   ----------------------------------------------------------------------*/
 void TtaSetAnimTypetoColor (void *anim)
 {
-  ((Animated_Element *) anim)->Type = Color;
+  ((Animated_Element *) anim)->AnimType = Color;
 }
 /*----------------------------------------------------------------------
    TtaSetAnimTypetoSet
   ----------------------------------------------------------------------*/
 void TtaSetAnimTypetoSet (void *anim)
 {
-  ((Animated_Element *) anim)->Type = Set;
+  ((Animated_Element *) anim)->AnimType = Set;
 }
 /*----------------------------------------------------------------------
    TtaAddAnimFrom

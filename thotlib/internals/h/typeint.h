@@ -325,13 +325,13 @@ typedef struct _Transform *PtrTransform;
 typedef struct _Transform
 {
   PtrTransform      Next;
-  TransformType     Type;
+  TransformType     TransType;
   union
   {
     struct /* Scale, Translate*/
     {
-      float _X;
-      float _Y
+      float _XS;
+      float _YS;
     } s0;
     struct /*SkewX, SkewY*/
     {
@@ -339,19 +339,19 @@ typedef struct _Transform
     } s1;
     struct /* Matrix */
     {
-      float M[6]
+      float M[6];
     } s2;
     struct /* Rotate */
     {
       float _Angle;
-      float _X;
-      float _Y
+      float _XA;
+      float _YA;
     } s3;    
   } u;
 } Transform;
 
-#define XScale u.s0._X
-#define YScale u.s0._Y
+#define XScale u.s0._XS
+#define YScale u.s0._YS
 #define Factor u.s1._Factor
 #define Matrix u.s2.M
 #define AMatrix u.s2.M[0]
@@ -360,8 +360,8 @@ typedef struct _Transform
 #define DMatrix u.s2.M[3]
 #define EMatrix u.s2.M[4]
 #define FMatrix u.s2.M[5]
-#define XRotate u.s3._X
-#define YRotate u.s3._Y
+#define XRotate u.s3._XA
+#define YRotate u.s3._YA
 #define Angle u.s3._Angle
 
 /* Animation structures */
@@ -399,7 +399,7 @@ typedef struct _Animated_Element
   AnimTime                  action_time;/*Time of last render*/
   void                      *from;/*Initial Value*/
   void                      *to;/*final value*/
-  Type_anim                 Type;/*Color, Transform....*/
+  Type_anim                 AnimType;/*Color, Transform....*/
   Type_fill                 Fill;/*if anim continues forever... or not*/
   Type_Attribute             Attr;/*class of Attr*/
   char                      *AttrName;/*permits to select attr ie opacity*/
