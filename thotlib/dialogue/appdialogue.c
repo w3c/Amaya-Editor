@@ -126,22 +126,6 @@ extern TBADDBITMAP ThotTBBitmap;
 WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
 WNDPROC lpfnComboBoxWndProc = (WNDPROC) 0;
 
-typedef struct struct_winerror
-{
-   WORD   errNo;
-   char  *errstr;
-};
-
-struct struct_winerror Win_errtab[] = {
-#include "winerrdata.c"
-};
-
-#define NB_WIN_ERROR (sizeof(Win_errtab) / sizeof(struct struct_winerror))
-
-static DWORD   WinLastError;
-static HWND    hwndTB;
-static int     FormattedViewXPos = 0;
-static int     FormattedViewYPos = 0;
 HWND           hwndClient;
 HWND           ToolBar;
 HWND           StatusBar;
@@ -155,20 +139,14 @@ int            menu_item;
 void WinErrorBox (HWND hWnd, char *source)
 {
 #ifndef _AMAYA_RELEASE_
+  DWORD              WinLastError;
   int                msg;
   char               str[200];
 
   WinLastError = GetLastError ();
   if (WinLastError == 0)
     return;
-  for (msg = 0; msg < NB_WIN_ERROR; msg++)
-    if (Win_errtab[msg].errNo == WinLastError)
-      break;
-  if (msg >= NB_WIN_ERROR)
-    sprintf (str, "Error %d : not registered\n", WinLastError);
-  else
-    sprintf (str, "(source: %s Error %d : %s\n)", source, WinLastError,
-	     Win_errtab[msg].errstr);
+  sprintf (str, "(source: %s Error %d\n)", source, WinLastError);
   MessageBox (hWnd, str, "Amaya", MB_OK);
 #endif /* _AMAYA_RELEASE_ */
 }
