@@ -1694,13 +1694,18 @@ void ApplyClass (Document doc, View view)
     return;
   TtaGiveFirstSelectedElement (doc, &firstSelectedEl,
 			       &firstSelectedChar, &lastSelectedChar);
-  if (firstSelectedEl == NULL)
-     return;
-  /* if the selected element is read-only, do nothing */
-  if (TtaIsReadOnly (firstSelectedEl))
-    return;
+  if (firstSelectedEl)
+    {
+      /* if the selected element is read-only, do nothing */
+      if (TtaIsReadOnly (firstSelectedEl))
+	return;
+      elType = TtaGetElementType (firstSelectedEl);
+    }
+  else
+    {
+      elType.ElTypeNum = 0;
+    }
 
-  elType = TtaGetElementType (firstSelectedEl);
   CurrentClass[0] = EOS;
   ApplyClassDoc = doc;
   /* updating the class name selector. */
@@ -1717,56 +1722,59 @@ void ApplyClass (Document doc, View view)
 		  NbClass, ListBuffer, 5, NULL, FALSE, TRUE);
 #endif /* _GTK */
 
-  /* preselect the entry corresponding to the class of the first selected
-     element. */
-  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+  if (firstSelectedEl)
     {
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = MathML_ATTR_class;
-    }
+      /* preselect the entry corresponding to the class of the first selected
+	 element. */
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+	{
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = MathML_ATTR_class;
+	}
 #ifdef _SVG
-  else if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
-    {
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = SVG_ATTR_class;
-    }
+      else if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+	{
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = SVG_ATTR_class;
+	}
 #endif /* _SVG */
-  else
-    {
-      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-      attrType.AttrTypeNum = HTML_ATTR_Class;
-    }
-  ancestor = firstSelectedEl;
-  do
-    {
-      attr = TtaGetAttribute (ancestor, attrType);
-      if (!attr)
-	ancestor = TtaGetParent (ancestor);
-    }
-  while (!attr && ancestor);
+      else
+	{
+	  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+	  attrType.AttrTypeNum = HTML_ATTR_Class;
+	}
+      ancestor = firstSelectedEl;
+      do
+	{
+	  attr = TtaGetAttribute (ancestor, attrType);
+	  if (!attr)
+	    ancestor = TtaGetParent (ancestor);
+	}
+      while (!attr && ancestor);
 
-  if (attr)
-    {
-      len = 50;
-      TtaGiveTextAttributeValue (attr, a_class, &len);
+      if (attr)
+	{
+	  len = 50;
+	  TtaGiveTextAttributeValue (attr, a_class, &len);
 #ifdef _GTK
-      TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
+	  TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
 #endif /* _GTK */
 #ifdef _WX
-      a_class_with_dot[0] = EOS;
-      strcat(a_class_with_dot, ".");
-      strcat(a_class_with_dot, a_class);      
-      strcpy (CurrentClass, a_class_with_dot);
+	  a_class_with_dot[0] = EOS;
+	  strcat(a_class_with_dot, ".");
+	  strcat(a_class_with_dot, a_class);      
+	  strcpy (CurrentClass, a_class_with_dot);
 #else /* _WX */
-      strcpy (CurrentClass, a_class);
+	  strcpy (CurrentClass, a_class);
 #endif /* _WX */
-    }
-  else
-    {
+	}
+      else
+	{
 #ifdef _GTK
-      TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
+	  TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
 #endif /* _GTK */
-      strcpy (CurrentClass, "default");
+	  strcpy (CurrentClass, "default");
+	}
     }
 
   /* pop-up the dialogue box. */

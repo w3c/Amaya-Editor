@@ -322,8 +322,10 @@ void AmayaCharStylePanel::RefreshCharStylePanel()
 {
   Document doc;
   View view;
+
   TtaGetActiveView( &doc, &view );
-  TtaExecuteMenuAction ("TtcChangeCharacters", doc, view);
+  /* force the refresh */
+  TtaExecuteMenuAction ("TtcChangeCharacters", doc, view, TRUE);
 }
 
 /*----------------------------------------------------------------------

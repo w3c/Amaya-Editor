@@ -2384,7 +2384,7 @@ void TransCallbackDialog (int ref, int typedata, char* data)
 	trans = (strTransDesc *)(menuTrans[val]->MatchSymb->Rule);
       if (trans && trans->IsAction)
 	/* call the defined action */
-	TtaExecuteMenuAction ((char *)trans->DestinationTag, TransDoc, 1);
+	TtaExecuteMenuAction ((char *)trans->DestinationTag, TransDoc, 1, FALSE);
       else
 	ApplyTransformation (menuTrans[val], TransDoc);
       FreeMatchEnv ();
@@ -2396,7 +2396,7 @@ void TransCallbackDialog (int ref, int typedata, char* data)
 	    trans = (strTransDesc *)(menuTrans[FormVal]->MatchSymb->Rule);
 	  if (trans && trans->IsAction)
 	    /* call the defined action */
-	    TtaExecuteMenuAction ((char *)trans->DestinationTag, TransDoc, 1);
+	    TtaExecuteMenuAction ((char *)trans->DestinationTag, TransDoc, 1, FALSE);
 	  else
 	    ApplyTransformation (menuTrans[FormVal], TransDoc);
 	}

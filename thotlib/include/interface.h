@@ -82,7 +82,8 @@ extern void TtaRemoveAccessKey (Document doc, unsigned int key);
 /*----------------------------------------------------------------------
   TtaExecuteMenuAction execute the corresponding menu action.
   ----------------------------------------------------------------------*/
-extern void TtaExecuteMenuAction (char *actionName, Document doc, View view);
+extern void TtaExecuteMenuAction (char *actionName, Document doc, View view,
+				  ThotBool force);
 
 /*----------------------------------------------------------------------
    TtaAddButton

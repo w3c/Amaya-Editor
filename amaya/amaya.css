@@ -65,3 +65,26 @@ a:visited {
  color: #9820c8;
  font-weight: bold;
 }
+
+div.body {
+  margin-top: 0;
+  margin-left: 220px;
+}
+dl {
+  margin: 0;
+}
+dt {
+  color: #488B9B;
+  clear: left;
+  margin-top: 20px;
+  text-align: left;
+}
+dd {
+  margin-top: 0;
+  padding-left: 40px;
+  font-size: 80%;
+}
+.bottom {
+  font-size: 80%;
+  clear: both:
+}

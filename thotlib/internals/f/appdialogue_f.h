@@ -14,7 +14,8 @@ extern void TteAddMenuAction ( char *actionName,
                                ThotBool state );
 extern void TtaExecuteMenuAction ( char *actionName,
                                    Document doc,
-                                   View view );
+                                   View view,
+                                   ThotBool force );
 extern void TteZeroMenu ( WindowType windowtype,
                           char *schemaName );
 extern void TteAddMenu ( WindowType windowtype,
@@ -144,7 +145,8 @@ extern void TteAddMenuAction ( char *actionName,
                                  ThotBool state );
 extern void TtaExecuteMenuAction ( char *actionName,
                                      Document doc,
-                                     View view );
+                                     View view,
+                                     ThotBool force );
 extern void TteZeroMenu ( WindowType windowtype,
                             char *schemaName );
 extern void TteAddMenu ( WindowType windowtype,

@@ -660,9 +660,9 @@ void TteAddMenuAction (char *actionName, Proc procedure, ThotBool state)
   int                 lg;
   int                 i;
 
-  if (actionName == NULL || !Prof_BelongTable (actionName))
+  if (actionName == NULL/* || !Prof_BelongTable (actionName)*/)
     return;			/* pas de nom d'action declare */
-  
+
   lg = strlen (actionName);
   if (FreeMenuAction < MaxMenuAction && lg != 0)
     {
@@ -698,7 +698,7 @@ static int FindMenuAction (char *actionName)
 /*----------------------------------------------------------------------
   TtaExecuteMenuAction execute the corresponding menu action.
   ----------------------------------------------------------------------*/
-void TtaExecuteMenuAction (char *actionName, Document doc, View view)
+void TtaExecuteMenuAction (char *actionName, Document doc, View view, ThotBool force)
 {
    int                 i, frame;
 
@@ -712,7 +712,7 @@ void TtaExecuteMenuAction (char *actionName, Document doc, View view)
       i = FindMenuAction (actionName);
       frame = GetWindowNumber (doc, view);
       if (i > 0 && i < MaxMenuAction &&
-	  MenuActionList[i].ActionActive[frame] &&
+	  (MenuActionList[i].ActionActive[frame] || force)&&
 	  MenuActionList[i].Call_Action)
 	(*(Proc2)MenuActionList[i].Call_Action) ((void *)doc, (void *)view);
     }
@@ -1162,7 +1162,7 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 	}
       
       /* traite le contenu de l'item de menu */
-      if (!update && action != -1)
+      if (!update && action != -1 && action < MaxMenuAction)
 	{
 	  /* a new entry is generated */
 	  if (MenuActionList[action].ActionEquiv != NULL)
@@ -1314,7 +1314,7 @@ void BuildPopdown ( Menu_Ctl *ptrmenu, int ref, ThotMenu button,
 	  action = -1;
 	}
       
-      if (!update && action != -1)
+      if (!update && action != -1 && action < MaxMenuAction)
 	{
 	  /* a new entry is generated */
 	  if (ptritem[item].ItemType == 'B' || ptritem[item].ItemType == 'T')
@@ -3541,8 +3541,8 @@ void DestroyFrame (int frame)
 	      while (item < ptrmenu->ItemsNb)
 		{
 		  action = ptr[item].ItemAction;
-		  if (action != -1
-		      && (ptr[item].ItemType == 'B' || ptr[item].ItemType == 'T'))
+		  if (action != -1 && action < MaxMenuAction &&
+		      (ptr[item].ItemType == 'B' || ptr[item].ItemType == 'T'))
 		    /* Desactive l'action correspondante pour cette fenetre */
 		    MenuActionList[action].ActionActive[frame] = FALSE;
 		  item++;
@@ -4071,7 +4071,8 @@ void  TtaSetItemOff (Document document, View view, int menuID, int itemID)
      return;
    /* Search the menu, submenu and item */
    FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
-   if (action > 0 && MenuActionList[action].ActionActive[frame])
+   if (action > 0 && action < MaxMenuAction &&
+       MenuActionList[action].ActionActive[frame])
      /* the entry is found and is active */
      MenuActionList[action].ActionActive[frame] = FALSE;
    if (menu > 0)
@@ -4109,7 +4110,8 @@ void  TtaSetItemOn (Document document, View view, int menuID, int itemID)
       return;
    /* Recherche les bons indices de menu, sous-menu et item */
    FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
-   if (action > 0 && !MenuActionList[action].ActionActive[frame])
+   if (action > 0 && action < MaxMenuAction &&
+       !MenuActionList[action].ActionActive[frame])
      /* the entry is found and is not active */
      MenuActionList[action].ActionActive[frame] = TRUE;
    if (menu > 0)
@@ -4471,7 +4473,7 @@ void ThotCallback (int ref, int typedata, char *data)
 		}
 	    }
 	  /*action = GetActionItem(frame, menu, (int)data); */
-	  if (action > 0)
+	  if (action > 0 && action < MaxMenuAction)
 	    /* l'action existe et le menu est actif */
 	    if (MenuActionList[action].ActionActive[frame])
 	      {

@@ -382,6 +382,7 @@ TtcSearchText
 +spell
 +svg
 +tables
+&ApplyClass
 &CreateBase
 &CreateMath
 &CreateXMLElementMenu
@@ -704,6 +705,7 @@ HelpSVG
 
 [attr-style_WX]
 &CreateStyle
+&CreateClass
 &ChangeBackgroundImage
 
 [css-browsing]
@@ -715,7 +717,6 @@ HelpStyleSheets
 
 [css-style]
 +css-browsing
-&ApplyClass
 &LinkCSS
 &RemoveCSS
 

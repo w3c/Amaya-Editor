@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern ThotBool OpenDocument ( char *docName,
                                PtrDocument pDoc,
                                ThotBool withEvent );
@@ -60,6 +61,7 @@ extern void LoadDocumentPiv ( BinFile file,
                               ThotBool withEvent );
 
 #else /* __STDC__ */
+
 extern ThotBool OpenDocument ( char *docName,
                                  PtrDocument pDoc,
                                  ThotBool withEvent );
