@@ -23,14 +23,15 @@ the <a href="http://www.w3.org/TR/WD-math/">Mathematical Markup Language</a>
 (MathML) specification. Mathematical expressions are handled as structured
 components, exactly in the same way as HTML structures. Therefore, you can
 manipulate math expressions in the same way you manipulate the rest of HTML
-documents. All editing commands are available for math, and there are some
-additional controls to enter mathematical constructs.</p>
+documents. All editing commands provided by Amaya for handling text are also
+available for math, and there are some additional controls to enter
+mathematical constructs.</p>
 <p>
-In the current version of Amaya only a part of MathML is implemented, i.e. a
-large subset of the <em>Presentation Markup</em>. The purpose of this version
-is to show how MathML may improve scientific communication over the Web. A
-more complete and more robust  implementation is planed for future
-releases.</p>
+<strong>Warning:</strong> In the current version of Amaya only <a
+href="#Limitations">a part of MathML is implemented</a>. The purpose of this
+alpha version of the math extension is to show how MathML may improve
+scientific communication over the Web. A more complete and more robust
+implementation is planed for future releases.</p>
 
 <h3>Creating a math expression</h3>
 <p>
@@ -41,7 +42,7 @@ allows you to choose the mathematical construct to be inserted.</p>
 <p>
 The first two items of this menu (Math and MathDisp) allow you to create a new
 formula, when the caret is in some HTML element (but the caret should not be
-within an existing MathML element):</p>
+within a MathML element):</p>
 <ul>
 <li>
 The <strong>Math</strong> button creates an inline formula. 
@@ -51,13 +52,13 @@ If the caret is in a block element, such as a paragraph or a heading, this
 block element is split and the new formula is created between the two parts. 
 </ul>
 <p>
-The next items of the Math menu allow you to create new constructs within a
-formula. If the caret is not within a formula, a Math element is created to
-accept the new construct. In this version of Amaya, the available constructs
-are, from top to bottom:</p>
+The next items of the <strong>Math</strong> menu allow you to create new
+constructs within a formula. If the caret is not in a formula, a
+<code>Math</code> element is created to accept the new construct. In this
+version of Amaya, the available constructs are, from top to bottom:</p>
 <ul>
 <li>
-Root with index, MROOT in MathML:  <math>
+Root with index, <code>MROOT</code> in MathML:  <math>
   <mroot>
     <mrow>
       <mi>x</mi>
@@ -69,7 +70,7 @@ Root with index, MROOT in MathML:  <math>
 </math>
 
 <li>
-Square root, MSQRT: <math>
+Square root, <code>MSQRT</code>: <math>
   <msqrt>
     <mrow>
       <mi>x</mi>
@@ -80,7 +81,7 @@ Square root, MSQRT: <math>
 </math>
 
 <li>
-Fraction, MFRAC: <math>
+Fraction, <code>MFRAC</code>: <math>
   <mfrac>
     <mn>1</mn>
     <mrow>
@@ -92,7 +93,7 @@ Fraction, MFRAC: <math>
 </math>
 
 <li>
-Expression with subscript and superscript, MSUBSUP: <math>
+Expression with subscript and superscript, <code>MSUBSUP</code>: <math>
   <msubsup>
     <mi>x</mi>
     <mrow>
@@ -103,9 +104,16 @@ Expression with subscript and superscript, MSUBSUP: <math>
     <mi>n</mi>
   </msubsup>
 </math>
+or <math>
+  <msubsup>
+    <mo>&int;</mo>
+    <mn>0</mn>
+    <mo>&infin;</mo>
+  </msubsup>
+</math>
 
 <li>
-Expression with a superscript, MSUP: <math>
+Expression with a superscript, <code>MSUP</code>: <math>
   <msup>
     <mi>x</mi>
     <mi>n</mi>
@@ -113,7 +121,7 @@ Expression with a superscript, MSUP: <math>
 </math>
 
 <li>
-Expression with a subscript, MSUB: <math>
+Expression with a subscript, <code>MSUB</code>: <math>
   <msub>
     <mi>x</mi>
     <mi>i</mi>
@@ -121,7 +129,7 @@ Expression with a subscript, MSUB: <math>
 </math>
 
 <li>
-Expression with under- and overscript, MUNDEROVER: <math>
+Expression with under- and overscript, <code>MUNDEROVER</code>: <math>
   <munderover>
     <mo>&sum;</mo>
     <mrow>
@@ -134,7 +142,7 @@ Expression with under- and overscript, MUNDEROVER: <math>
 </math>
 
 <li>
-Expression with overscript, MOVER: <math>
+Expression with overscript, <code>MOVER</code>: <math>
   <mrow>
     <mi>x</mi>
     <mover>
@@ -146,7 +154,7 @@ Expression with overscript, MOVER: <math>
 </math>
 
 <li>
-Expression with underscript, MUNDER: <math>
+Expression with underscript, <code>MUNDER</code>: <math>
   <munder>
     <mi>x</mi>
     <mo>-</mo>
@@ -154,7 +162,7 @@ Expression with underscript, MUNDER: <math>
 </math>
 
 <li>
-Expression within parentheses, MF: <math>
+Expression within parentheses, <code>MF</code>: <math>
   <mrow>
     <mf>(</mf>
     <mrow>
@@ -167,7 +175,8 @@ Expression within parentheses, MF: <math>
 </math>
 
 <li>
-Expression with prescripts and tensor indices, MMULTISCRIPTS: <math>
+Expression with prescripts and tensor indices, <code>MMULTISCRIPTS</code>:
+<math>
   <mmultiscripts>
     <mi>X</mi>
     <mi>i</mi>
@@ -180,37 +189,61 @@ Expression with prescripts and tensor indices, MMULTISCRIPTS: <math>
 
 </ul>
 <p>
-The last item of the Math menu displays a palette from which you can insert
-greek characters and symbols in mathematical expressions.</p>
+The last item of the <strong>Math</strong> menu (<math>
+  <mi>&alpha;&beta;&gamma;</mi>
+</math>
+) displays a palette from which you can insert symbols and greek characters in
+mathematical expressions.</p>
 
 <h3>Math_Structure view</h3>
 <p>
 Whenever a document contains some MathML elements, choosing the <a
 href="Views.html#Structure">Show Structure</a> item from the
-<strong>Views</strong> menu actually opens two views:</p>
+<strong>Views</strong> menu actually opens <em>two</em> views:</p>
 <ul>
 <li>
-the Structure view shows the main structure of the HTML document. Concerning
-math elements, only the <code>MATH</code> or <code>MATHDISP</code> elements
-are shown, not their contents. 
+the Structure view shows the main structure of the HTML document. In this
+view, MathML elements are only represented by a <code>MATH</code> or
+<code>MATHDISP</code> tag; their actual contents is not shown. 
 <li>
-the Math_Structure view shows only MathML elements, but it shows all their
-components. 
+the Math_Structure view shows only MathML elements, but here, all their
+components are visible. 
 </ul>
 <p>
 You can edit math expressions either in the main view or in the Math_Structure
-view.</p>
+view. The Math_Structure view is specially helpful to avoid ambiguity.
+Consider the following example:</p>
+<mathdisp>
+  <mrow>
+    <mi>x</mi>
+    <mo>=</mo>
+    <msqrt>
+      <mrow>
+        <mi>a</mi>
+        <mo>+</mo>
+        <mi>b</mi>
+      </mrow>
+    </msqrt>
+    <mo>+</mo>
+    <mn>1</mn>
+  </mrow>
+</mathdisp>
+<p>
+When moving the caret after character <em>b</em>, it is not clear whether you
+want to add something <em>within</em> the square root or <em>after</em> it.
+Selecting (or checking) in the Math_Structure view avoids any ambiguity.</p>
 
 <h3>Editing math elements</h3>
 <p>
 To edit math elements, just <a href="Selecting.html#Selecting">move the
-insertion point</a> to the desired position, with the mouse or with the arrow
-keys, and type some characters or select a construct from the
+insertion point</a> (the caret) to the desired position, with the mouse or
+with the arrow keys, and type some characters or select a construct from the
 <strong>Math</strong> menu.</p>
 <p>
 When you type a character string in a MathML element, Amaya parses that string
-and generates the MO (operator), MN (number), MI (identifier), MTEXT elements
-automatically. For instance, to enter</p>
+and generates the <code>MO</code> (operator), <code>MN</code> (number),
+<code>MI</code> (identifier), <code>MTEXT</code> elements automatically. For
+instance, to enter</p>
 <p>
 <math>
   <mrow>
@@ -225,16 +258,21 @@ automatically. For instance, to enter</p>
 </p>
 <p>
 just type <code>x=2a+b</code>, (don't forget to first click on the Math or
-MathDisp item of the Math menu, if you are not in a mathematical expression)
-and you will get the following structure:</p>
+MathDisp item of the <strong>Math</strong> menu, if you are not in a
+mathematical expression) and you will get the following structure (you can
+check in the Math_Structure view):</p>
 <pre>&lt;MI>x&lt;/MI>&lt;MO>=&lt;/MO>&lt;MN>2&lt;/MN>&lt;MI>a&lt;/MI>&lt;MO>+&lt;/MO>&lt;MI>b&lt;/MI></pre>
 
-<h3>Current limitations</h3>
+<h3 id="Limitations">Current limitations</h3>
 <p>
 The current version of Amaya only implements the <em>Presentation Tags</em>
 from MathML, not the <em>Content Markup</em>. All presentation elements are
-available, except tables and matrices (MTABLE, MTR, MTD). Attributes are not
-implemented.</p>
+available, except tables and matrices (<code>MTABLE</code>, <code>MTR</code>,
+<code>MTD</code>). MathML attributes are not implemented (except
+<code>fontslant</code> which is available in the <strong>Attributes</strong>
+menu when a <code>MI</code> element is selected), but the <code>class</code>
+and <code>style</code> attributes from HTML are available: you can <a
+href="StyleSheets.html">associate CSS style</a> to MathML elements.</p>
 <p>
 </p>
 <hr>
