@@ -1041,12 +1041,14 @@ static void         TextToDocument ()
 	   else
 	     {
 	       lastType = TtaGetElementType (HTMLcontext.lastElement);
-	       if ((strcmp (TtaGetSSchemaName (lastType.ElSSchema), "HTML") == 0) &&
+	       if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
+		   (elType.ElTypeNum != HTML_EL_HEAD) &&
+		   (strcmp (TtaGetSSchemaName (lastType.ElSSchema), "HTML") == 0) &&
 		   ((lastType.ElTypeNum == HTML_EL_Comment_) ||
 		    (lastType.ElTypeNum == HTML_EL_XMLPI)))
 		 {
-		   /* Search lhe last significant sibling */
-		   /* (except comments and PI */
+		   /* Search the last significant sibling prior to a comment or a Pi */
+		   /* except for a comment or a Pi within the HEAD section */
 		   last = HTMLcontext.lastElement;
 		   TtaPreviousSibling (&last);
 		   while (last != NULL && ignoreLeadingSpaces)
