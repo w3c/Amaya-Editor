@@ -24,11 +24,9 @@
 /*** for windows? ***/
 
 #ifndef _WINDOWS
-#define DEFAULT_CACHE_DIR "/tmp"
-#define CACHE_DIR_NAME "/amaya-cache"
+#define CACHE_DIR_NAME "/libwww-cache"
 #else 
-#define DEFAULT_CACHE_DIR "c:\tmp"
-#define CACHE_DIR_NAME "\amaya-cache"
+#define CACHE_DIR_NAME "\libwww-cache"
 #endif /* !_WINDOWS */
 
 
@@ -1196,9 +1194,9 @@ static void Cacheinit ()
     }
   else
     {
-      cache_dir = TtaGetMemory (strlen (DEFAULT_CACHE_DIR) 
+      cache_dir = TtaGetMemory (strlen (TempFileDirectory) 
 				+ strlen (CACHE_DIR_NAME) + 1);
-      strcpy (cache_dir, DEFAULT_CACHE_DIR);
+      strcpy (cache_dir, TempFileDirectory);
     }
   strcat (cache_dir, CACHE_DIR_NAME);
 
