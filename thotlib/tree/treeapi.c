@@ -1939,6 +1939,38 @@ int TtaGetElementLineNumber (Element element)
 }
 
 /* ----------------------------------------------------------------------
+   TtaGetElementLevel
+
+   Returns the level of an element in the abstract tree. The root has
+   level 0, its children have level 1, its grandchildren have level 2,
+   and so on
+   Parameter:
+   element: the element.
+   Return value:
+   level of the element.
+   ---------------------------------------------------------------------- */
+int TtaGetElementLevel (Element element)
+{
+  int	      level;
+  PtrElement  ancestor;
+
+  UserErrorCode = 0;
+  level = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      ancestor = ((PtrElement) element)->ElParent;
+      while (ancestor)
+	{
+	  level++;
+	  ancestor = ancestor->ElParent;
+	}
+    }
+  return level;
+}
+
+/* ----------------------------------------------------------------------
    TtaIsConstant
 
    Indicates whether an element type is a constant.

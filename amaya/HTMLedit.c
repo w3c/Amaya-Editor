@@ -821,13 +821,13 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
 void                CreateAnchor (Document doc, View view, ThotBool createLink)
 {
   Element             first, last, el, next, parent;
-  Element             parag, prev, child, anchor, ancestor;
+  Element             parag, prev, child, anchor, ancestor, duplicate;
   SSchema             HTMLSSchema;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
   DisplayMode         dispMode;
-  int                 c1, cN, lg, i;
+  int                 firstChar, lastChar, lg, i, levelFirst, levelLast;
   ThotBool            noAnchor, ok;
 
   if (!TtaGetDocumentAccessMode (doc))
@@ -839,11 +839,11 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
   dispMode = TtaGetDisplayMode (doc);
 
   /* get the first and last selected element */
-  TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
+  TtaGiveFirstSelectedElement (doc, &first, &firstChar, &i);
   if (TtaIsReadOnly (first))
     /* the selected element is read-only */
     return;
-  TtaGiveLastSelectedElement (doc, &last, &i, &cN);
+  TtaGiveLastSelectedElement (doc, &last, &i, &lastChar);
 
   /* Check whether the selected elements are a valid content for an anchor */
   elType = TtaGetElementType (first);
@@ -918,7 +918,8 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
 	      if (createLink || el != NULL)
 		{
 		elType = TtaGetElementType (first);
-		if (first == last && c1 == 0 && cN == 0 && createLink &&
+		if (first == last && firstChar == 0 && lastChar == 0 &&
+		    createLink &&
 		    !TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
 		   /* a single element is selected and it's not a HTML elem
 		      nor a character string */
@@ -940,7 +941,7 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
 	      else
 		  /* create an ID for target element */
 		{
-		  TtaOpenUndoSequence (doc, first, last, c1, cN);
+		  TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
 		  CreateTargetAnchor (doc, first, FALSE, TRUE);
 		  TtaCloseUndoSequence (doc);
 		}
@@ -984,38 +985,128 @@ void                CreateAnchor (Document doc, View view, ThotBool createLink)
 	  /* remove selection before modifications */
 	  TtaUnselect (doc);
 
-	  TtaOpenUndoSequence (doc, first, last, c1, cN);
+	  TtaOpenUndoSequence (doc, first, last, firstChar, lastChar);
 
 	  /* process the last selected element */
 	  elType = TtaGetElementType (last);
-	  if (cN > 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	  /* if its a text leaf which is partly selected, split it */
+	  if (lastChar >= 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 	    {
 	      lg = TtaGetTextLength (last);
-	      if (cN < lg)
+	      if (lastChar < lg)
 		/* split the last text */
 		{
-		TtaRegisterElementReplace (last, doc);
-		TtaSplitText (last, cN, doc);
-		next = last;
-		TtaNextSibling (&next);
-		TtaRegisterElementCreate (next, doc);
+		  TtaRegisterElementReplace (last, doc);
+		  TtaSplitText (last, lastChar, doc);
+		  next = last;
+		  TtaNextSibling (&next);
+		  TtaRegisterElementCreate (next, doc);
 		}
 	    }
+	  if (last != first)
+	    {
+	      levelFirst = TtaGetElementLevel (first);
+	      levelLast = TtaGetElementLevel (last);
+	      if (levelLast > levelFirst)
+		/* the last selected element is deeper in the tree than the
+		   first one. Split the ancestor of the last element up
+		   to the level of the first selected element */
+		{
+		  ancestor = TtaGetParent (last);
+		  while (ancestor)
+		    {
+		      levelLast = TtaGetElementLevel (ancestor);
+		      if (levelLast < levelFirst)
+			ancestor = NULL;
+		      else
+			{
+			  next = last;
+			  TtaNextSibling (&next);
+			  if (next)
+			    {
+			      TtaRegisterElementReplace (ancestor, doc);
+			      elType = TtaGetElementType (ancestor);
+			      duplicate = TtaNewElement (doc, elType);
+			      TtaInsertSibling (duplicate, ancestor,FALSE,doc);
+			      prev = NULL;
+			      while (next)
+				{
+				  child = next;
+				  TtaNextSibling (&next);
+				  TtaRemoveTree (child, doc);
+				  if (prev == NULL)
+				    TtaInsertFirstChild (&child,duplicate,doc);
+				  else
+				    TtaInsertSibling (child, prev, FALSE, doc);
+				  prev = child;
+				} 
+			      TtaRegisterElementCreate (duplicate, doc);
+			    }
+			  last = ancestor;
+			  ancestor = TtaGetParent (ancestor);
+			}
+		    }
+		}
+	    }
+
 	  /* process the first selected element */
 	  elType = TtaGetElementType (first);
-	  if (c1 > 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	  if (firstChar > 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 	    {
 	      /* split the first selected text element */
 	      el = first;
 	      TtaRegisterElementReplace (first, doc);
-	      TtaSplitText (first, c1 - 1, doc);
+	      TtaSplitText (first, firstChar - 1, doc);
 	      TtaNextSibling (&first);
 	      TtaRegisterElementCreate (first, doc);
 	      if (last == el)
+		/* we have to change last selection because the element
+		   was split */
+		last = first;
+	    }
+	  if (last != first)
+	    {
+	      levelFirst = TtaGetElementLevel (first);
+	      levelLast = TtaGetElementLevel (last);
+	      if (levelFirst > levelLast)
+		/* the first selected element is deeper in the tree than the
+		   last one. Split the ancestor of the first element up
+		   to the level of the last selected element */
 		{
-		  /* we have to change last selection because the element
-		     was split */
-		  last = first;
+		  ancestor = TtaGetParent (first);
+		  while (ancestor)
+		    {
+		      levelFirst = TtaGetElementLevel (ancestor);
+		      if (levelFirst < levelLast)
+			ancestor = NULL;
+		      else
+			{
+			  prev = first;
+			  TtaPreviousSibling (&prev);
+			  if (prev)
+			    {
+			      TtaRegisterElementReplace (ancestor, doc);
+			      elType = TtaGetElementType (ancestor);
+			      duplicate = TtaNewElement (doc, elType);
+			      TtaInsertSibling (duplicate, ancestor, TRUE,doc);
+			      next = NULL;
+			      while (prev)
+				{
+				  child = prev;
+				  TtaPreviousSibling (&prev);
+				  TtaRemoveTree (child, doc);
+				  if (next == NULL)
+				    TtaInsertFirstChild (&child,duplicate,doc);
+				  else
+				    TtaInsertSibling (child, next, TRUE, doc);
+				  next = child;
+				} 
+			      TtaRegisterElementCreate (duplicate, doc);
+			    }
+			  first = ancestor;
+			  ancestor = TtaGetParent (ancestor);
+			}
+		    }
 		}
 	    }
 

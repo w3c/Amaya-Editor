@@ -682,6 +682,19 @@ extern char *TtaGetElementLabel (Element element);
 extern int TtaGetElementLineNumber (Element element);
 
 /* ----------------------------------------------------------------------
+   TtaGetElementLevel
+
+   Returns the level of an element in the abstract tree. The root has
+   level 0, its children have level 1, its grandchildren have level 2,
+   and so on
+   Parameter:
+   element: the element.
+   Return value:
+   level of the element.
+   ---------------------------------------------------------------------- */
+extern int TtaGetElementLevel (Element element);
+
+/* ----------------------------------------------------------------------
    TtaGetElementVolume
 
    Returns the volume of a given element, i.e. the number of characters
