@@ -911,7 +911,6 @@ void NewContent (PtrAbstractBox pAb)
   PtrDocument         pDoc;
   PtrElement          pEl, pAncest;
   PtrAttribute        pAttr, pNewAttr;
-  PtrAbstractBox      pAbMain;
   unsigned char       text[10];
   int                 dVol, len, view;
   ThotBool            selInAttr;

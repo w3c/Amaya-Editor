@@ -49,6 +49,7 @@
 #include "memory_f.h"
 #include "structcommands_f.h"
 #include "structcreation_f.h"
+#include "structselect_f.h"
 #include "tree_f.h"
 #include "viewapi_f.h"
 
@@ -864,9 +865,9 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
         CallEventType ((NotifyEvent *) & notifyEl, TRUE);
         if (editOp->EoSelectedAttrSch)
 	  {
-	    attrType.AttrSSchema = editOp->EoSelectedAttrSch;
+	    attrType.AttrSSchema = (SSchema)(editOp->EoSelectedAttrSch);
 	    attrType.AttrTypeNum = editOp->EoSelectedAttr;
-	    pAttr = TtaGetAttribute (editOp->EoFirstSelectedEl,
+	    pAttr = (PtrAttribute) TtaGetAttribute ((Element)(editOp->EoFirstSelectedEl),
 				     attrType);
 	    HighlightAttrSelection (LoadedDocument[doc - 1],
 				    editOp->EoFirstSelectedEl,
