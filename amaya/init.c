@@ -89,6 +89,7 @@
 #include "annotlib.h"
 #include "ANNOTevent_f.h"
 #include "ANNOTfiles_f.h"
+#include "ANNOTtools_f.h"
 #endif /* ANNOTATIONS */
 
 #ifdef _WINDOWS
