@@ -55,15 +55,15 @@
 #include "fileaccess_f.h"
 
 static PictureHandler PictureHandlerTable[MAX_PICT_FORMATS];
-static int          PictureIdType[MAX_PICT_FORMATS];
-static int          PictureMenuType[MAX_PICT_FORMATS];
-static char        *PictureMenu;
-static int          HandlersCounter;
-static Pixmap       PictureLogo;
-Pixmap              EpsfPictureLogo;
-static boolean      Printing;
-ThotGC              GCpicture;
-THOT_VInfo          THOT_vInfo;
+static int            PictureIdType[MAX_PICT_FORMATS];
+static int            PictureMenuType[MAX_PICT_FORMATS];
+static char          *PictureMenu;
+static int            HandlersCounter;
+static Pixmap         PictureLogo;
+Pixmap                EpsfPictureLogo;
+static boolean        Printing;
+ThotGC                GCpicture;
+THOT_VInfo            THOT_vInfo;
 
 #ifndef _WINDOWS
 XVisualInfo        *vptr;
@@ -532,6 +532,10 @@ boolean             printing;
    THOT_vInfo.depth = vptr->depth;
    theVisual = DefaultVisual (TtDisplay, TtScreen);
 
+#ifdef AMAYA_PLUGIN
+   Ap_OpenPluginDriver (printing) ;
+#endif /* AMAYA_PLUGIN */
+
 #endif /* !_WINDOWS */
 
    Printing = printing;
@@ -903,6 +907,7 @@ PictInfo* imageDesc;
 #endif /* __STDC__ */
 {
 #ifndef NEW_WILLOWS
+    if (imageDesc == NULL) return;
     if ((imageDesc->mapped) && (imageDesc->created)) {	
 	XtUnmapWidget ((Widget) (imageDesc->wid));
  	imageDesc->mapped = FALSE ;
@@ -1109,8 +1114,7 @@ int                 PicType;
      {
 	if (PictureMenuType[i] == PicType)
 	   return i;
-	else
-	   i++;
+	i++;
      }
    return 0;
 }
