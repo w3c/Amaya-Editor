@@ -974,6 +974,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
   ret = FALSE;
   NSiblings = 0;
   CloseInsertion ();
+  pAncest = NULL;
   /* y-a-t'il une selection courante ? */
   if (!GetCurrentSelection (&pDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     return ret;
