@@ -261,7 +261,7 @@ $(AMAYA)/HTMLP.PRS : $(AMAYA)/HTMLP.P ../bin/prs
 # Traduction schemas compilation
 #
 compHTMLT: $(AMAYA)/HTMLT.TRA
-$(AMAYA)/HTMLT.TRA : $(AMAYA)/HTMLT.T ../bin/tra
+$(AMAYA)/HTMLT.TRA : $(AMAYA)/HTMLT.T $(AMAYA)/HTMLTT.T ../bin/tra
 	TRA=`pwd`/../bin/tra ; \
 	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR ;\
 	$$TRA $(ALL_AMAYA_OPTIONS) HTMLT ;\

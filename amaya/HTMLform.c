@@ -492,14 +492,14 @@ Document	   doc;
    function to each element with an attribute NAME                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ParseForm (Document doc, Element ancestor, Element el, int mode)
+static void         ParseForm (Document doc, Element ancestor, Element el, int mode, ThotBool withinForm)
 #else
-static void         ParseForm (doc, ancestor el, mode)
+static void         ParseForm (doc, ancestor el, mode, withinForm)
 Document            doc;
 Element             ancestor;
 Element             el;
 int                 mode;
-
+ThotBool            withinForm;
 #endif
 {
   ElementType         elType;
@@ -524,7 +524,7 @@ int                 mode;
       attrType.AttrTypeNum = HTML_ATTR_NAME;
       attrTypeS.AttrSSchema = attrType.AttrSSchema;
       TtaSearchAttribute (attrType, SearchForward, ancestor, &el, &attr);
-      while (el != NULL && TtaIsAncestor(el, ancestor))
+      while (el != NULL && (!withinForm || TtaIsAncestor(el, ancestor)))
 	{
 	  if (attr != NULL)
 	    {
@@ -806,10 +806,10 @@ Element             element;
    ElementType         elType;
    Attribute           attr;
    AttributeType       attrType;
-   int                 i, length, button_type;
    STRING              action, name, value, info;
+   int                 i, length, button_type;
    int                 method;
-   ThotBool	       found;
+   ThotBool	       found, withinForm;
 
    buffer = (STRING) NULL;
    action = (STRING) NULL;
@@ -930,9 +930,10 @@ Element             element;
    /* find the parent form node */
    elType.ElTypeNum = HTML_EL_Form;
    elForm = TtaGetTypedAncestor (element, elType);
-   if (!elForm)
+   withinForm = (elForm != NULL);
+   if (!withinForm)
      {
-       /* could not find a form ancestor */
+       /* could not find an ancestor form -> check a previous one */
        elForm = TtaSearchTypedElement (elType, SearchBackward, element);
        if (!elForm)
 	 {
@@ -941,8 +942,7 @@ Element             element;
 	   return;
 	 }
      }
-   else
-     ancestor = elForm;
+   ancestor = elForm;
 
 #ifdef FORM_DEBUG
 {
@@ -990,12 +990,12 @@ Element             element;
      {
        if (action)
 	 {
-	   ParseForm (doc, ancestor, elForm, button_type);   
+	   ParseForm (doc, ancestor, elForm, button_type, withinForm);   
 	   DoSubmit (doc, method, action);
 	 }
      }
    else
-     ParseForm (doc, ancestor, elForm, button_type);   
+     ParseForm (doc, ancestor, elForm, button_type, withinForm);   
    
    if (action)
      TtaFreeMemory (action);

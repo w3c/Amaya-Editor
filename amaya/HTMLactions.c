@@ -879,19 +879,13 @@ Document            document;
 	  DblClickOnButton (elFound, document);
 	  return (TRUE);
 	 }
-     }
-   if (isHTML && elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-     {
-       /* is it a double click on a graphic submit element? */
-       elType.ElTypeNum = HTML_EL_Form;
-       elFound = TtaGetTypedAncestor (element, elType);
-       if (elFound != NULL)
+       else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 	 {
 	   attrType.AttrSSchema = elType.ElSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_NAME;
+	   attrType.AttrTypeNum = HTML_ATTR_IsInput;
 	   attr = TtaGetAttribute (element, attrType);
 	   if (attr)
-	     /* it's a graphic submit element */
+	     /* it's a input image */
 	     {
 	       /* interrupt current transfer */
 	       StopTransfer (document, 1);	   
@@ -900,7 +894,8 @@ Document            document;
 	     }
 	 }
      }
-   else if (isHTML && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+
+   if (isHTML && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
      {
 	/* is it an option menu ? */
 	elFound = TtaGetParent (element);
