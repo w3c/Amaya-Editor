@@ -2,6 +2,7 @@
 #ifdef _WX
   #include "wx/wx.h"
   #include "wx/bmpbuttn.h"
+  #include "wx/spinctrl.h"
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -20,6 +21,7 @@
 #include "message_wx.h"
 #include "registry_wx.h"
 #include "panel.h"
+#include "thot_key.h"
 
 #include "appdialogue_f.h"
 #include "appdialogue_wx_f.h"
@@ -28,6 +30,7 @@
 #include "editcommands_f.h"
 #include "profiles_f.h"
 #include "displayview_f.h"
+#include "input_f.h"
 
 /* implement panel array */
 #define THOT_EXPORT
@@ -642,6 +645,7 @@ ThotBool TtaClosePage( int window_id, int page_id )
   return FALSE;
 #endif /* #ifdef _WX */
 }
+
 /*----------------------------------------------------------------------
   TtaGetActiveWindowId returns the last active window id
   params:
@@ -656,6 +660,19 @@ int TtaGetActiveWindowId()
   return -1;
 #endif /* #ifdef _WX */
 }
+
+/*----------------------------------------------------------------------
+  TtaGetActiveWindow returns the last active window
+  params:
+  returns:
+    + int : last active window_id
+  ----------------------------------------------------------------------*/
+#ifdef _WX 
+AmayaWindow * TtaGetActiveWindow()
+{
+  return AmayaWindow::GetActiveWindow();
+}
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
   TtaGetFreePageId returns a free page id for the given window
@@ -1688,3 +1705,233 @@ void TtaRedirectFocus()
     }
 #endif /* _WX */
 }
+
+
+/*----------------------------------------------------------------------
+  TtaHandleUnicodeKey
+  this function handle unicode characters
+  params:
+  returns:
+   - true if the charactere has been handled by the frame
+   - false if the event must be forwarded to parents (event.Skip())
+  ----------------------------------------------------------------------*/
+#ifdef _WX
+ThotBool TtaHandleUnicodeKey( wxKeyEvent& event )
+{
+  if ((event.GetUnicodeKey()!=0) && !TtaIsSpecialKey(event.GetKeyCode()) && !event.ControlDown() && !event.AltDown())
+    {
+      wxWindow *       p_win_focus         = wxWindow::FindFocus();
+      wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
+      wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+      wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
+      // do not proceed any characteres if the focused widget is a textctrl or a combobox or a spinctrl
+      if (!p_text_ctrl && !p_combo_box && !p_spinctrl)
+	{
+	  wxButton *       p_button            = wxDynamicCast(p_win_focus, wxButton);
+	  wxCheckListBox * p_check_listbox     = wxDynamicCast(p_win_focus, wxCheckListBox);
+	  // do not proceed "space" key if the focused widget is a button or a wxCheckListBox
+	  if ( !(event.GetKeyCode() == WXK_SPACE && (p_button || p_check_listbox)) )
+	    {
+	      int thot_keysym = event.GetUnicodeKey();  
+	      int thotMask = 0;
+	      if (event.ControlDown())
+		thotMask |= THOT_MOD_CTRL;
+	      if (event.AltDown())
+		thotMask |= THOT_MOD_ALT;
+	      if (event.ShiftDown())
+		thotMask |= THOT_MOD_SHIFT; 
+	      ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
+	      return true;
+	    }
+	  else
+	    event.Skip();	  
+	}
+      else
+	event.Skip();
+    }
+  return false;
+}
+#endif /* _WX */
+
+
+/*----------------------------------------------------------------------
+  TtaHandleShortcutKey
+  this function handle shortcuts
+  params:
+  returns:
+   - true if the charactere has been handled by the frame
+   - false if the event must be forwarded to parents (event.Skip())
+  ----------------------------------------------------------------------*/
+#ifdef _WX
+ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
+{
+  wxChar thot_keysym = event.GetKeyCode();  
+  
+  int thotMask = 0;
+  if (event.ControlDown())
+    thotMask |= THOT_MOD_CTRL;
+  if (event.AltDown())
+    thotMask |= THOT_MOD_ALT;
+  if (event.ShiftDown())
+    thotMask |= THOT_MOD_SHIFT;
+  
+#ifdef _WINDOWS
+  /* on windows, +/= key generate '+' key code, but is should generates '=' value */
+  if (thot_keysym == '+' && !event.ShiftDown())
+    thot_keysym = '=';
+#endif /* _WINDOWS */
+
+  // on windows, CTRL+ALT is equivalent to ALTGR key
+  if ( ((event.ControlDown() && !event.AltDown()) || (event.AltDown() && !event.ControlDown()))
+       && !TtaIsSpecialKey(thot_keysym)
+       // this is for the Windows menu shortcuts, 
+       // ALT+F => should open File menu
+       && !(thot_keysym >= 'A' && thot_keysym <= 'Z' && event.AltDown() && !event.ControlDown())  
+       )
+    {
+      // le code suivant permet de convertire les majuscules
+      // en minuscules pour les racourcis clavier specifiques a amaya.
+      // OnKeyDown recoit tout le temps des majuscule que Shift soit enfonce ou pas.
+      if (!event.ShiftDown())
+	{
+	  // shift key was not pressed
+	  // force the lowercase
+	  wxString s(thot_keysym);
+	  if (s.IsAscii())
+	    {
+	      wxLogDebug( _T("AmayaWindow::CheckShortcutKey : thot_keysym=%x s=")+s, thot_keysym );
+	      s.MakeLower();
+	      thot_keysym = s.GetChar(0);
+	    }
+	}
+      // Call the generic function for key events management
+      ThotInput (TtaGiveActiveFrame(), (int)thot_keysym, 0, thotMask, (int)thot_keysym);
+      return true;
+    }
+  /* it is now the turn of special key shortcuts : CTRL+RIGHT, CTRL+ENTER ...*/
+  else if ((event.ControlDown() || event.AltDown()) &&
+	   (thot_keysym == WXK_RIGHT ||
+	    thot_keysym == WXK_LEFT ||
+	    thot_keysym == WXK_RETURN ||
+	    thot_keysym == WXK_DOWN ||
+	    thot_keysym == WXK_UP ||
+	    thot_keysym == WXK_HOME ||
+	    thot_keysym == WXK_END))
+    {
+      wxLogDebug( _T("AmayaWindow::CheckShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
+      ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
+    }
+  else
+    return false;
+}
+#endif /* _WX */
+
+
+/*----------------------------------------------------------------------
+  TtaHandleSpecialKey
+  proceed the special charactere ( F2, TAB ...) if it is one
+  params:
+  returns:
+   - true if the charactere has been handled by the frame
+   - false if the event must be forwarded to parents (event.Skip())
+  ----------------------------------------------------------------------*/
+#ifdef _WX
+ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
+{
+  if ( !event.ControlDown() && !event.AltDown() && TtaIsSpecialKey(event.GetKeyCode()))
+    {
+      int thot_keysym = event.GetKeyCode();  
+      
+      bool proceed_key = (
+			  thot_keysym == WXK_F2     ||
+			  thot_keysym == WXK_INSERT ||
+			  thot_keysym == WXK_DELETE ||
+			  thot_keysym == WXK_HOME   ||
+			  thot_keysym == WXK_PRIOR  ||
+			  thot_keysym == WXK_NEXT   ||
+			  thot_keysym == WXK_END    ||
+			  thot_keysym == WXK_LEFT   ||
+			  thot_keysym == WXK_RIGHT  ||
+			  thot_keysym == WXK_UP     ||
+			  thot_keysym == WXK_DOWN   ||
+			  thot_keysym == WXK_ESCAPE ||
+			  thot_keysym == WXK_BACK   ||
+			  thot_keysym == WXK_RETURN ||
+			  thot_keysym == WXK_TAB );
+      
+      wxWindow *       p_win_focus         = wxWindow::FindFocus();
+      wxPanel *        p_panel             = wxDynamicCast(p_win_focus, wxPanel);
+      wxGLCanvas *     p_gl_canvas         = wxDynamicCast(p_win_focus, wxGLCanvas);
+      wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
+      wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+      wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
+      
+#if 0
+      /* allow other widgets to handel special keys only when the key is not F2 */
+      if ((p_combo_box || p_text_ctrl || p_spinctrl) && proceed_key && thot_keysym != WXK_F2)
+	{
+	  event.Skip();
+	  return true;
+	}
+#endif /* 0 */
+      
+      /* only allow the F2 special key outside canvas */
+      if (!p_gl_canvas && proceed_key && thot_keysym != WXK_F2)
+	{
+	  event.Skip();
+	  return true;      
+	}
+      
+#ifdef _WINDOWS
+      /* on windows, when the notebook is focused, the RIGHT and LEFT key are forwarded to wxWidgets,
+	 we must ignore it */
+      wxNotebook *     p_notebook          = wxDynamicCast(p_win_focus, wxNotebook);
+      if ( p_notebook && proceed_key )
+	{
+	  event.Skip();
+	  return true;
+	}
+#endif /* _WINDOWS */
+      
+      if ( proceed_key )
+	{
+	  int thotMask = 0;
+	  if (event.ControlDown())
+	    thotMask |= THOT_MOD_CTRL;
+	  if (event.AltDown())
+	    thotMask |= THOT_MOD_ALT;
+	  if (event.ShiftDown())
+	    thotMask |= THOT_MOD_SHIFT;
+	  wxLogDebug( _T("AmayaWindow::SpecialKey thot_keysym=%x"), thot_keysym );
+	  ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
+	  return true;
+	}
+      else
+	return false;
+    }
+  else
+    return false;
+}
+#endif /* _WX */
+
+
+/*----------------------------------------------------------------------
+  TtaIsSpecialKey
+  this function returns true if this key is special
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+#ifdef _WX
+ThotBool TtaIsSpecialKey( int wx_keycode )
+{
+  return ( wx_keycode == WXK_BACK ||
+	   wx_keycode == WXK_TAB  ||
+           wx_keycode == WXK_RETURN ||
+           wx_keycode == WXK_ESCAPE ||
+           /*wx_keycode == WXK_SPACE  ||*/
+           wx_keycode == WXK_DELETE ||
+	   (wx_keycode >= WXK_START && wx_keycode <= WXK_COMMAND)
+	   );
+}
+#endif /* _WX */
+

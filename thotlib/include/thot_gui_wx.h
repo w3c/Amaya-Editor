@@ -23,6 +23,7 @@ class wxFont;
 class wxEvent;
 class wxBitmap;
 class wxEvent;
+class wxKeyEvent;
 
 typedef wxWindow *	ThotWidget;
 typedef AmayaScrollBar * ThotScrollBar;

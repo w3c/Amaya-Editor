@@ -20,6 +20,7 @@ extern int           TtaGetFrameId( int window_id, int page_id, int position );
 extern int           TtaGetFrameDocumentId( int frame_id );
 extern ThotBool      TtaRegisterWidgetWX( int ref, void * p_widget );
 extern int           TtaGetActiveWindowId();
+extern AmayaWindow * TtaGetActiveWindow();
 extern wxMenu *      TtaGetContextMenu( int window_id, int page_id, int frame_id );
 extern void          TtaRefreshMenuStats( wxMenuBar * p_menu_bar );
 
@@ -57,6 +58,11 @@ extern void TtaRegisterOpenURLCallback( void (*callback) (void *) );
 
 #include "AmayaParams.h"
 extern void TtaSendDataToPanel( int panel_type, AmayaParams& params );
+
+extern ThotBool TtaHandleUnicodeKey( wxKeyEvent& event );
+extern ThotBool TtaHandleShortcutKey( wxKeyEvent& event );
+extern ThotBool TtaHandleSpecialKey( wxKeyEvent& event );
+extern ThotBool TtaIsSpecialKey( int wx_keycode );
 
 #endif /* #define __APPDIALOGUE_WX_H__ */
 

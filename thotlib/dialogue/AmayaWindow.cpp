@@ -550,6 +550,7 @@ void AmayaWindow::RefreshFullScreenToggleMenu()
 {
 }
 
+#if 0
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
@@ -785,6 +786,7 @@ bool AmayaWindow::IsSpecialKey( int wx_keycode )
 		   (wx_keycode >= WXK_START && wx_keycode <= WXK_COMMAND)
   );
 }
+#endif /* 0 */
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
@@ -794,11 +796,11 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
   EVT_SIZE(      AmayaWindow::OnSize )
   EVT_IDLE(      AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
   EVT_ACTIVATE(  AmayaWindow::OnActivate )
-#ifndef _WINDOWS
-  EVT_CHAR_HOOK( AmayaWindow::OnChar )
-#else /* _WINDOWS */
-  EVT_CHAR( AmayaWindow::OnChar )
-#endif /* _WINDOWS */
+  //#ifndef _WINDOWS
+  //EVT_CHAR_HOOK( AmayaWindow::OnChar )
+  //#else /* _WINDOWS */
+  //  EVT_CHAR( AmayaWindow::OnChar )
+  //#endif /* _WINDOWS */
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

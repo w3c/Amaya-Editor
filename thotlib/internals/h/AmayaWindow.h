@@ -142,13 +142,13 @@ class AmayaWindow : public wxFrame
   virtual AmayaFrame * DetachFrame();
 
  public:
-  bool CheckUnicodeKey( wxKeyEvent& event );
-  bool CheckSpecialKey( wxKeyEvent& event );
-  bool CheckShortcutKey( wxKeyEvent& event );
-  bool IsSpecialKey( int wx_keycode );
+  //  bool CheckUnicodeKey( wxKeyEvent& event );
+  //  bool CheckSpecialKey( wxKeyEvent& event );
+  //  bool CheckShortcutKey( wxKeyEvent& event );
+  //  bool IsSpecialKey( int wx_keycode );
 
  public:
-  void OnChar( wxKeyEvent& event );
+  //  void OnChar( wxKeyEvent& event );
   
  protected:
   DECLARE_EVENT_TABLE()

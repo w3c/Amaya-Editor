@@ -8,6 +8,10 @@
 /*
    nodialog : empty functions/globals variables for building the process print
  */
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -452,3 +456,30 @@ ThotBool OpenParsingErrors (Document document)
   return TRUE;
 }
 
+#ifdef _WX
+ThotBool TtaIsSpecialKey( int wx_keycode )
+{
+  return false;
+}
+
+ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
+{
+  return false;  
+}
+
+ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
+{
+  return false;  
+}
+
+ThotBool TtaHandleUnicodeKey( wxKeyEvent& event )
+{
+  return false;  
+}
+
+AmayaWindow * TtaGetActiveWindow()
+{
+  return NULL;
+}
+
+#endif /* _WX */
