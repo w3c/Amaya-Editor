@@ -1475,6 +1475,13 @@ static PtrBox       CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines, 
 	      /* register the box */
 	      pCurrentBox->BxDisplay = TRUE;
 	      pCurrentBox->BxFill = pAb->AbFillBox;
+	      if (pCurrentBox == pMainBox)
+		{
+		  if (pAb->AbFillBox)
+		    SetMainWindowBackgroundColor (frame, pAb->AbBackground);
+		  else
+		    SetMainWindowBackgroundColor (frame, DefaultBColor);
+		}
 	    }
 	  
 	  /* create enclosing boxes */
@@ -2464,6 +2471,9 @@ ThotBool            ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  pBox->BxFill = pAb->AbFillBox;
 		  if (pBox->BxType == BoGhost && pAb->AbFillBox)
 		    TransmitFill (pBox, TRUE);
+		  if (pAb->AbEnclosing == NULL)
+		    /* root abstractbox */
+		    SetMainWindowBackgroundColor (frame, pAb->AbBackground);
 		}
 	      else
 		{
@@ -2472,6 +2482,9 @@ ThotBool            ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  pBox->BxFill = FALSE;
 		  if (pBox->BxType == BoGhost)
 		    TransmitFill (pBox, FALSE);
+		  if (pAb->AbEnclosing == NULL)
+		    /* root abstractbox */
+		    SetMainWindowBackgroundColor (frame, DefaultBColor);
 		}
 	    }
 	}
@@ -3107,20 +3120,19 @@ void                RebuildConcreteImage (int frame)
    ThotBool            status;
 
    pFrame = &ViewFrameTable[frame - 1];
-   if (pFrame->FrAbstractBox != NULL)
+   if (pFrame->FrAbstractBox)
      {
        /* Box widths may change and the scroll must be recomputed */
        AnyWidthUpdate = TRUE;
        pAb = pFrame->FrAbstractBox;
-       if (pAb->AbBox != NULL)
+       if (pAb->AbBox)
 	 {
-	   /* get the first visible abstract box and its current postion */
+	   /* get the first visible abstract box and its current position */
 	   GetSizesFrame (frame, &width, &height);
 	   pBox = pAb->AbBox;
-	   while (pBox != NULL && pBox->BxYOrg < pFrame->FrYOrg &&
-		  pBox->BxNext != NULL)
+	   while (pBox->BxYOrg < pFrame->FrYOrg && pBox->BxNext != NULL)
 	     pBox = pBox->BxNext;
-	   if (pBox != NULL)
+	   if (pBox)
 	     {
 	       /* position of the box top in the frame given in % */
 	       position = (pBox->BxYOrg - pFrame->FrYOrg) * 100 / height;
@@ -3190,12 +3202,14 @@ void                RebuildConcreteImage (int frame)
 	     }
 	   else
 	     RedrawFrameBottom (frame, 0, NULL);
+	   /* if necessary show the selection */
+	   ShowSelection (pFrame->FrAbstractBox, TRUE);
+	   
 	   /* recompute scrolls */
 	   CheckScrollingWidth (frame);
 	   UpdateScrollbars (frame);
-
 	   /* Restaure la selection */
-	   ShowSelection (pAb, FALSE);
+	   /*ShowSelection (pAb, FALSE);*/
 	 }
      }
 }

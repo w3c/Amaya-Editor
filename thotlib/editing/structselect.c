@@ -1406,8 +1406,7 @@ static void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstC
 		       InsertViewSelMarks (frame, pAbView, firstChar,
 					   lastChar, TRUE, TRUE, TRUE);
 		       ShowSelectedBox (frame, TRUE);
-		       /*if (ThotLocalActions[T_switchsel])
-			 (*ThotLocalActions[T_switchsel]) (frame, TRUE);*/
+		       DisplayFrame (frame); 
 		    }
 	       }
 	  }
@@ -2501,7 +2500,8 @@ void ChangeSelection (int frame, PtrAbstractBox pAb, int rank, ThotBool extensio
    else
      {
 	/* new selection */
-	if (pDoc != SelectedDocument)
+	if (pDoc != SelectedDocument &&
+	    pDoc != DocSelectedAttr)
 	   /* in another document */
 	   TtaClearViewSelections ();
 	else if (!doubleClickRef &&
