@@ -185,7 +185,6 @@ RULES
 	END;
 
  Font_: BEGIN
-	Remove;
 	END;
 
  Applet: BEGIN
@@ -295,10 +294,10 @@ RULES
 	END;
 
  Option_Menu: BEGIN
-	Remove;
 	END;
 
  Option: BEGIN
+	If NOT Selected
 	Remove;
 	END;
 
