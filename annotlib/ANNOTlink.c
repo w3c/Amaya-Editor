@@ -115,66 +115,18 @@ char *index_file;
 }
 
 /*-----------------------------------------------------------------------
-   Procedure LINK_New (doc, annotFile, labf, c1, labl, cN)
-  -----------------------------------------------------------------------
-  Adds a link from the source document pointing to the annotation document
-  -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void LINK_New (Document source_doc, Document annot_doc, CHAR_T *labf, int c1, CHAR_T *labl, int cN)
-#else /* __STDC__*/
-void LINK_New (source_doc, annot_doc, labf, c1, labl, cN)
-Document source_doc; 
-Document annot_doc; 
-CHAR_T *labf;
-int c1;
-CHAR_T *labl;
-int cN;
-#endif /* __STDC__*/
-{
-  LINK_AddLinkToSource (source_doc, DocumentURLs[annot_doc], 
-			labf, c1, labl, cN);
-  LINK_SaveLink (source_doc, annot_doc, labf, c1, labl, cN);
-
-#if 0
-  View     view;
-  CHAR_T *  annotName;
-  Element  element;
-
-  annotName = TtaGetMemory (20);
-  strcpy (annotName, TtaGetDocumentName (docAnnot));
-  document = AnnotationTargetDocument (docAnnot);
-  view = TtaGetViewFromName (document, "Formatted_view");
-  element = TtaSearchElementByLabel(tabRefAnnot[docAnnot].labf, TtaGetMainRoot (source_doc));
-
-  /* Si le lien d'annotation n'existe, on le rajoute dans le document et 
-     dans le fichier de liens */
-  if (!SearchAnnotation (source_doc, annotName))
-    {
-      LINK_AddLinkToSource (source_doc, DocumentURLs[annot_doc], labf, c1, labl, cN);
-      LINK_SaveLink (source_doc, annot_doc, labf, c1, labl, cN);
-    }
-#endif
-}
-
-/*-----------------------------------------------------------------------
-   Procedure LINK_AddLinkToSource (source_doc, annot_doc, labf, c1, labl, cN)
-  -----------------------------------------------------------------------
+  LINK_AddLinkToSource
    Ajoute un lien de type annotation dans un document donne vers le
    document de nom annotName. Le lien est cree juste avant l'element
    target
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_AddLinkToSource (Document source_doc, CHAR_T *annot_file, CHAR_T *labf, int c1, CHAR_T *labl, int cN)
+void LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 #else /* __STDC__*/
-void LINK_AddLinkToSource (source_doc, annot_file, labf, c1, labl, cN)
+void LINK_AddLinkToSource (source_doc, annot)
 Document source_doc; 
-CHAR_T *annot_file;
-CHAR_T *labf;
-int c1;
-CHAR_T *labl;
-int cN;
+AnnotMeta *annot;
 #endif /* __STDC__*/
 {
   ElementType   elType;
@@ -182,10 +134,11 @@ int cN;
   AttributeType attrType;
   Attribute     attr;
   CHAR_T       *annotName;
-  char         *annot_user;
+  CHAR_T       *annot_user;
 
   annot_user = GetAnnotUser ();
-  first   = TtaSearchElementByLabel(labf, TtaGetMainRoot (source_doc));
+  
+  first   = TtaSearchElementByLabel(annot->labf, TtaGetMainRoot (source_doc));
   elType = TtaGetElementType (first);
   elType.ElTypeNum = HTML_EL_Anchor;
   anchor = TtaNewElement (source_doc, elType);
@@ -213,7 +166,7 @@ int cN;
   attrType.AttrTypeNum = HTML_ATTR_HREF_;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (anchor, attr, source_doc);
-  TtaSetAttributeText (attr, annot_file, anchor, source_doc);
+  TtaSetAttributeText (attr, annot->body_url, anchor, source_doc);
 
   /* add a NAME attribute so that the annotation doc can point
      back to the source of the annotation link */
@@ -221,8 +174,8 @@ int cN;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (anchor, attr, source_doc);
   annotName = TtaGetMemory (strlen (ANNOT_ANAME) + strlen (annot_user)
-			    + strlen (annot_file) + 20);
-  sprintf (annotName, "%s_%s_%s", ANNOT_ANAME, annot_user, annot_file);
+			    + strlen (annot->body_url) + 20);
+  sprintf (annotName, "%s_%s_%s", ANNOT_ANAME, annot_user, annot->body_url);
   TtaSetAttributeText (attr, annotName, anchor, source_doc);
   TtaFreeMemory (annotName);
   TtaUnselect (source_doc);
@@ -238,16 +191,10 @@ int cN;
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_SaveLink (Document source_doc, Document annot_doc, CHAR_T *labf, int c1, CHAR_T *labl, int cl)
+void LINK_SaveLink (Document source_doc)
 #else /* __STDC__*/
-void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cl)
+void LINK_SaveLink (source_doc)
      Document source_doc;
-     Document annot_doc;
-     CHAR_T *  annotName;
-     CHAR_T *  labf;
-     int      c1;
-     CHAR_T *  labl;
-     int      cl;
 #endif /* __STDC__*/
 {
   char   *annot_user;
@@ -263,8 +210,37 @@ void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cl)
       AddAnnotationIndexFile (DocumentURLs[source_doc], indexName);
     }
 
+  annot_list = AnnotMetaDataList[source_doc];  
+  /* write the update annotation list */
+  AnnotList_writeIndex (indexName, annot_list);
+  TtaFreeMemory (indexName);
+  return;
+}
+
+/*-----------------------------------------------------------------------
+  LINK_CreateMeta
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+AnnotMeta* LINK_CreateMeta (Document source_doc, Document annot_doc, CHAR_T *labf, int c1, CHAR_T *labl, int cl)
+#else /* __STDC__*/
+AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
+     Document source_doc;
+     Document annot_doc;
+     CHAR_T *  labf;
+     int      c1;
+     CHAR_T *  labl;
+     int      cl;
+#endif /* __STDC__*/
+{
+  AnnotMeta   *annot;
+  time_t      curDate;
+  struct tm   *localDate;
+  List        *annot_list;
+  CHAR_T      *annot_user;
+
   /*
-  **  Make a new annotation entry, add it to annotlist,  and initialize g271it.
+  **  Make a new annotation entry, add it to annotlist, and initialize it.
   */
   annot =  AnnotMeta_new ();
   annot_list = AnnotMetaDataList[source_doc];
@@ -273,41 +249,28 @@ void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cl)
     AnnotMetaDataList[source_doc] = annot_list;
 
   annot->source_url = TtaStrdup (DocumentURLs[source_doc]);
+
   ustrcpy (annot->labf, labf);
   annot->c1 = c1;
   ustrcpy (annot->labl, labl);
   annot->cl = cl;
-  /* @ */
-  annot->date = TtaStrdup ("date");
+
+  curDate = time (&curDate);
+  localDate = localtime (&curDate);
+  /* @@ memory bug */
+  annot->date = TtaGetMemory (25);
+  sprintf (annot->date, "%02d/%02d/%04d %02d:%02d", localDate->tm_mday, 
+	   localDate->tm_mon+1, localDate->tm_year+1900, localDate->tm_hour,
+	   localDate->tm_min);
+
+  /* Annotation type */
+  annot->type = TEXT("Proto-Annotation");
+
   annot_user = GetAnnotUser ();
   annot->author = TtaStrdup (annot_user);
   annot->content_type = TtaStrdup ("text/html");
-  /* @ some parameters, I don't know what to do! */
-  annot->content_length = TtaStrdup ("120?");
   annot->body_url = TtaStrdup (DocumentURLs[annot_doc]); 
-
-  /* write the update annotation list */
-  AnnotList_writeIndex (indexName, annot_list);
-  TtaFreeMemory (indexName);
-  return;
-
-#if 0
-  indexFile = fopen (indexName, "a");
-  TtaFreeMemory (indexName);
-
-  /* Add the new link */
-  annot_user = GetAnnotUser ();
-  /* @@@ change this to add a new entry to annot_list then
-     output index file to indexFile */
-  ufprintf (indexFile, TEXT("%s|%s|%s|%d|%s|%d\n"), 
-	    annot_user, 
-	    DocumentURLs[annot_doc], 
-	    labf, c1, 
-	    labl, cN);
- 
-  /* clean up and quit */
-  fclose (indexFile);
-#endif
+  return annot;
 }
 
 /*-----------------------------------------------------------------------
@@ -325,16 +288,16 @@ void LINK_DelMetaFromMemory (Document doc)
 }
 
 /*-----------------------------------------------------------------------
-   Procedure LINK_LoadAnnotations (doc, char *annotIndex)
+   Procedure LINK_LoadAnnotationIndex (doc, char *annotIndex)
   -----------------------------------------------------------------------
    Searches for an annotation index related to the document. If it exists,
    it parses it and then displays all of its annotations
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_LoadAnnotations (Document doc, CHAR_T *annotIndex)
+void LINK_LoadAnnotationIndex (Document doc, CHAR_T *annotIndex)
 #else /* __STDC__*/
-void LINK_LoadAnnotations (doc, annotIndex)
+void LINK_LoadAnnotationIndex (doc, annotIndex)
      Document doc;
      CHAR_T *annotIndex;
 #endif /* __STDC__*/
@@ -369,8 +332,7 @@ void LINK_LoadAnnotations (doc, annotIndex)
       fprintf (stderr, "This annotation has lost its parent!\n");
     else 
       {
-	LINK_AddLinkToSource (doc, annot->body_url, annot->labf, annot->c1,
-			      annot->labl, annot->cl);
+	LINK_AddLinkToSource (doc, annot);
 	AnnotMetaDataList[doc] = annot_list;
       }
     /* @@@ */

@@ -197,7 +197,7 @@ void *context;
    remoteAnnotIndex = ctx->remoteAnnotIndex;
    TtaFreeMemory (ctx);
    if (status == 0)
-     LINK_LoadAnnotations (doc, remoteAnnotIndex);
+     LINK_LoadAnnotationIndex (doc, remoteAnnotIndex);
    /* TtaFileUnlink (remoteAnnotIndex);*/
    TtaFreeMemory (remoteAnnotIndex);
 }
@@ -236,9 +236,9 @@ View view;
    */
   annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[doc]);
 #if 1
-  LINK_LoadAnnotations (doc, annotIndex);
+  LINK_LoadAnnotationIndex (doc, annotIndex);
 #else
-  LINK_LoadAnnotations (doc, "/tmp/rdfquery.xml");
+  LINK_LoadAnnotationIndex (doc, "/tmp/rdfquery.xml");
 #endif
   TtaFreeMemory (annotIndex);
 
@@ -301,40 +301,46 @@ void ANNOT_Create (doc, view)
   ElementType elType;
   Element     first, last;
   CHAR_T     *labf, *labl;
-  int         c1, cN, i;
-  Document    docAnnot;
+  int         c1, cl, i;
+  Document    doc_annot;
+  AnnotMeta  *annot;
 
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
     return;
 
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
-  TtaGiveLastSelectedElement (doc, &last, &i, &cN);
+  TtaGiveLastSelectedElement (doc, &last, &i, &cl);
 
   if (first == NULL)
     return;  /* Error: there's no selected zone */
 
   /* create the document that will store the annotation */
-  if ((docAnnot = ANNOT_NewDocument (doc)) == 0)
+  if ((doc_annot = ANNOT_NewDocument (doc)) == 0)
     return;
 
   /* Link the source document to the annotation */
   labf = TtaWCSdup (TtaGetElementLabel (first));
   labl = TtaWCSdup (TtaGetElementLabel (last));
-  LINK_New (doc, docAnnot, labf, c1, labl, cN);
+  annot = LINK_CreateMeta (doc, doc_annot, labf, c1, labl, cl);
   TtaFreeMemory (labf);
   TtaFreeMemory (labl);
+
+  ANNOT_InitDocumentStructure (doc, doc_annot, annot);
+
+  LINK_AddLinkToSource (doc, annot);
+  LINK_SaveLink (doc);
 
 #if 0
   /* @@@ this should be added later on, when saving the annot document */
   /* create the annotation anchor */
 
   /* Saves the selection data */
-  strcpy (tabRefAnnot[docAnnot].labf, TtaGetElementLabel (first));
-  tabRefAnnot[docAnnot].c1 = c1;
-  strcpy (tabRefAnnot[docAnnot].labl, TtaGetElementLabel (last));
-  tabRefAnnot[docAnnot].cN = cN;
-  tabRefAnnot[docAnnot].docName = TtaWCSdup (TtaGetDocumentName (docAnnot));
+  strcpy (tabRefAnnot[doc_annot].labf, TtaGetElementLabel (first));
+  tabRefAnnot[doc_annot].c1 = c1;
+  strcpy (tabRefAnnot[doc_annot].labl, TtaGetElementLabel (last));
+  tabRefAnnot[doc_annot].cN = cN;
+  tabRefAnnot[doc_annot].docName = TtaWCSdup (TtaGetDocumentName (doc_annot));
 #endif
 }
 
@@ -379,7 +385,7 @@ void *context;
    TtaFreeMemory (ctx);
 #if 0
    if (status == 0)
-     LINK_LoadAnnotations (doc, remoteAnnotIndex);
+     LINK_LoadAnnotationIndex (doc, remoteAnnotIndex);
    /* TtaFileUnlink (remoteAnnotIndex);*/
 #endif
    TtaFreeMemory (remoteAnnotIndex);
@@ -537,9 +543,6 @@ void ANNOT_Save (docAnnot, viewAnnot)
   if (!SearchAnnotation (document, annotName))
   {
     /* Creation d'un nouveau lien d'annotation */
-#if 0
-    LINK_New (docAnnot);
-#endif
     printf ("1\n");
     /* Gestion du cas ou une annotation a ete creee sur un document non sauvegarde */
     if (TtaIsDocumentModified (document))

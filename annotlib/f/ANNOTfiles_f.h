@@ -9,13 +9,16 @@
 extern void ANNOT_SetPath ( Document document );
 extern Document ANNOT_NewDocument ( Document doc );
 extern AnnotMeta *GetMetaData ( Document doc,
-                                Document annotDoc );
-extern void ANNOT_InitDocumentMeta ( Document docAnnot,
-                                     Document document );
-extern void ANNOT_InitDocumentBody ( Document docAnnot,
-                                     Document document );
-extern void ANNOT_InitDocumentStructure ( Document docAnnot,
-                                          Document document );
+                                Document doc_annot );
+extern void ANNOT_LoadAnnotation ( Document doc,
+                                   Document docAnnot );
+extern void ANNOT_InitDocumentMeta ( Document doc,
+                                     Document docAnnot,
+                                     AnnotMeta *annot );
+extern void ANNOT_InitDocumentBody ( Document docAnnot );
+extern void ANNOT_InitDocumentStructure ( Document doc,
+                                          Document docAnnot,
+                                          AnnotMeta *annot );
 extern void ANNOT_PrepareAnnotView ( Document document );
 extern void ANNOT_CheckEmptyDoc ( Document docAnnot );
 extern ThotBool ANNOT_SaveDocument ( Document doc );
@@ -25,13 +28,16 @@ extern ThotBool ANNOT_SaveDocument ( Document doc );
 extern void ANNOT_SetPath (/* Document document */);
 extern Document ANNOT_NewDocument (/* Document doc */);
 extern AnnotMeta *GetMetaData (/* Document doc,
-                                  Document annotDoc */);
-extern void ANNOT_InitDocumentMeta (/* Document docAnnot,
-                                       Document document */);
-extern void ANNOT_InitDocumentBody (/* Document docAnnot,
-                                       Document document */);
-extern void ANNOT_InitDocumentStructure (/* Document docAnnot,
-                                            Document document */);
+                                  Document doc_annot */);
+extern void ANNOT_LoadAnnotation (/* Document doc,
+                                     Document docAnnot */);
+extern void ANNOT_InitDocumentMeta (/* Document doc,
+                                       Document docAnnot,
+                                       AnnotMeta *annot */);
+extern void ANNOT_InitDocumentBody (/* Document docAnnot */);
+extern void ANNOT_InitDocumentStructure (/* Document doc,
+                                            Document docAnnot,
+                                            AnnotMeta *annot */);
 extern void ANNOT_PrepareAnnotView (/* Document document */);
 extern void ANNOT_CheckEmptyDoc (/* Document docAnnot */);
 extern ThotBool ANNOT_SaveDocument (/* Document doc */);
