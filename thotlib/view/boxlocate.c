@@ -130,10 +130,11 @@ ThotBool APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
   NotifyOnValue       notifyEl;
   PtrDocument         pDoc;
   int                 view;
-  ThotBool            ok = FALSE, isGraph;
+  ThotBool            ok, isGraph, loop;
 
   GetDocAndView (frame, &pDoc, &view);
   result = FALSE;
+  ok = FALSE;
   pAsc = pEl;
   notifyEl.event = TteElemGraphModify;
   notifyEl.document = (Document) IdentDocument (pDoc);
@@ -144,12 +145,20 @@ ThotBool APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
 	      pEl->ElLeafType == LtSymbol ||
 	      pEl->ElLeafType == LtPolyLine ||
 	      pEl->ElLeafType == LtPath));
+  loop = isGraph;
   while (pAsc)
     {
       notifyEl.element = (Element) pAsc;
       ok = CallEventType ((NotifyEvent *) &notifyEl, pre);
       result = result || ok;
-      pAsc = pAsc->ElParent;
+      if (loop)
+	{
+	  /* generates a callback for the encolsing element too */
+	  pAsc = pAsc->ElParent;
+	  loop = FALSE;
+	}
+      else
+	pAsc = NULL;
     }
   /* if it's before the actual change is made and if the application accepts
      the change, register the operation in the Undo queue (only if it's
@@ -203,7 +212,11 @@ static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
       ok = CallEventType ((NotifyEvent *) &notifyEl, pre);
       result = result || ok;
       if (isGraph)
-	pAsc = pAsc->ElParent;
+	{
+	  /* generates a callback for the encolsing element too */
+	  pAsc = pAsc->ElParent;
+	  isGraph = FALSE;
+	}
       else
 	pAsc = NULL;
     }
