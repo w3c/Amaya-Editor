@@ -316,7 +316,7 @@ PtrBox              pBox;
    DirectoryImage[0] = '\0';
    RedisplayPicture = FALSE;
 
-   TtaNewForm (BaseDlgImage + MY_NUM_IMAGE_FORM, 0, 0, 0, "Picture", TRUE, 2, 'L', D_DONE);
+   TtaNewForm (BaseDlgImage + MY_NUM_IMAGE_FORM, 0, 0, 0, "Picture", TRUE, 2, 'L', D_CANCEL);
    InitPathImage ();
 
    /* liste des fichiers existants */

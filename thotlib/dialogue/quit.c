@@ -55,7 +55,8 @@ View                view;
 	      /* traite d'abord tous les autres documents */
 	      ok = CloseADocument (doc, document, view);
 	/* Traite le document */
-	ok = CloseADocument (document, document, view);
+	if((int)document != 0)
+	  ok = CloseADocument (document, document, view);
 	/* si la commande n'a pas ete annulee, on quitte Thot a regrets */
 	if (ok)
 	  {

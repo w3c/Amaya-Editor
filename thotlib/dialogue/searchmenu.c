@@ -1426,7 +1426,7 @@ boolean             assoc;
    strcat (buffTitle, pDoc->DocDName);
    /* cree formulaire de saisie du numero de la page cherchee */
    TtaNewSheet (NumFormSearchPage, 0, 0, 0,
-		buffTitle, 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_DONE);
+		buffTitle, 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
 
    /* cree zone de saisie du numero de la page cherchee */
    TtaNewNumberForm (NumZoneSearchPage, NumFormSearchPage,
@@ -1562,6 +1562,10 @@ void                SearchLoadResources ()
 	/* Connecte les actions liees au traitement du search */
 	TteConnectAction (T_searchtext, (Proc) CallbackTextReplace);
 	TteConnectAction (T_locatesearch, (Proc) CallbackWhereToSearch);
+        
+	TteConnectAction (T_searchemptyref, (Proc) CallbackSearchEmptyref);
+	TteConnectAction (T_searchemptyelt, (Proc) CallbackSearchEmptyEl);
+	TteConnectAction (T_searchrefto, (Proc) CallbackReferenceTo);
 	CurrRef = NULL;
 	CurrRefDoc = NULL;
 	CurrRefElem = NULL;

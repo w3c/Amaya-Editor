@@ -465,10 +465,12 @@ int                 val;
 		     }
 	       break;
 	    case NumFormPresentStandard:
-	       TtaDestroyDialogue (NumFormPresentStandard);
 	       if (val == 1)
 		  /* retour "Appliquer" du formulaire Presentation standard */
 		  ApplyPresentMod ();
+               else
+                  /* retour "Terminer" */
+                  TtaDestroyDialogue(NumFormPresentStandard);
 	       break;
 	 }
 

@@ -225,7 +225,7 @@ View                view;
    /* Creation du formulaire Creer document */
    /* +++++++++++++++++++++++++++++++++++++ */
    TtaNewForm (NumFormCreateDoc, 0, 0, 0,
-	       TtaGetMessage (LIB, TMSG_CREATE_DOC), TRUE, 2, 'L', D_DONE);
+	       TtaGetMessage (LIB, TMSG_CREATE_DOC), TRUE, 2, 'L', D_CANCEL);
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (BufDir, '\0', &nbitem);
    TtaNewSelector (NumZoneDocDirToCreate, NumFormCreateDoc,

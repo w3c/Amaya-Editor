@@ -471,7 +471,7 @@ View                view;
    ConnectPrint ();
    TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), 0, 0,
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
-	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_DONE);
+	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_CANCEL);
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
    TtaNewToggleMenu (NumMenuOptions, NumFormPrint,

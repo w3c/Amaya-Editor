@@ -95,11 +95,12 @@ boolean            *save;
    strcpy (bufbutton, TtaGetMessage (LIB, TMSG_SAVE_DOC));
    i = strlen (TtaGetMessage (LIB, TMSG_SAVE_DOC)) + 1;
    strcpy (bufbutton + i, TtaGetMessage (LIB, TMSG_CLOSE_DON_T_SAVE));
-   TtaNewSheet (NumFormClose, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewSheet (NumFormClose, TtaGetViewFrame(document,view), 0, 0,
 		TtaGetMessage (LIB, TMSG_CLOSE_DOC), 2, bufbutton, TRUE, 1, 'L', D_CANCEL);
    /* label indiquant le nom du document a sauver avant de fermer */
    TtaNewLabel (NumLabelSaveBeforeClosing, NumFormClose, buftext);
    /* active le formulaire "Fermer" */
+   TtaSetDialoguePosition();
    TtaShowDialogue (NumFormClose, FALSE);
    /* attend le retour de ce formulaire (traite' par CallbackCloseDocMenu) */
    TtaWaitShowDialogue ();
@@ -125,7 +126,9 @@ View                view;
    boolean             save, ok;
 
    ok = TRUE;
-   if (document != 0)
+   if (document == 0)
+     return FALSE;
+   else
      {
 	pDoc = LoadedDocument[document - 1];
 	if (pDoc != NULL)
@@ -142,7 +145,7 @@ View                view;
 		       TteConnectAction (T_confirmclose, (Proc) AskToConfirm);
 		       TteConnectAction (T_rconfirmclose, (Proc) CallbackCloseDocMenu);
 		    }
-		  AskToConfirm (pDoc, docform, viewform, &ok, &save);
+		  (*ThotLocalActions[T_confirmclose])(pDoc, docform, viewform, &ok, &save);
 		  if (ok)
 		     /* pas d'annulation */
 		    {

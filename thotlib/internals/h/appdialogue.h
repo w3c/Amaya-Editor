@@ -147,7 +147,10 @@ typedef struct _SchemaMenu_Ctl
 #define T_deletepage 85
 #define T_deletepageab 86
 
-#define MAX_LOCAL_ACTIONS 87
+#define T_searchemptyelt 87
+#define T_searchemptyref 88
+#define T_searchrefto 89
+#define MAX_LOCAL_ACTIONS 90
 
 /* Indices des actions internes accessibles au clavier et
    non presentees dans les menus */

@@ -3087,6 +3087,15 @@ char               *data;
 	       case NumFormSearchPage:
 		  (*ThotLocalActions[T_searchpage]) (ref, (int) data);
 		  break;
+               case NumFormSearchEmptyElement:
+                  (*ThotLocalActions[T_searchemptyelt]) (ref, (int) data);
+                  break;
+               case NumFormSearchReference:
+                  (*ThotLocalActions[T_searchrefto]) (ref, (int) data);
+                  break;
+               case NumFormSearchEmptyReference:
+                  (*ThotLocalActions[T_searchemptyref]) (ref, (int) data);
+                  break;
 	       case NumFormSearchText:
 	       case NumMenuReplaceMode:
 	       case NumToggleUpperEqualLower:

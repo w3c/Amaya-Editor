@@ -1312,6 +1312,8 @@ boolean             inTree;
 	   /* OK si c'est une inclusion pour l'un des ascendants */
 	   else if (AllowedIncludedElem (pEl->ElParent, typeNum, pSS))
 	      ok = TRUE;
+           else if (AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
+              ok = TRUE;
 	   if (ok)
 	      /* dans le cas d'une inclusion ou d'une marque de page */
 	      /* on ne peut quand meme pas inserer comme descendant direct */
