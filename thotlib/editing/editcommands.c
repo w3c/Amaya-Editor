@@ -3130,8 +3130,8 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 
 
 /*----------------------------------------------------------------------
-   PasteXClipboard lit les nbytes du buffer et appelle autant de   
-   fois que necessaire Paste_X sur les caracteres lus.     
+   PasteXClipboard reads nbytes from the buffer and calls Paste_X as
+   many times as necessary with the characters read.     
   ----------------------------------------------------------------------*/
 static void PasteXClipboard (unsigned char *src, int nbytes)
 {
@@ -3211,6 +3211,96 @@ static void PasteXClipboard (unsigned char *src, int nbytes)
 #ifdef _I18N_
       TtaFreeMemory (buffer);
 #endif /* _I18N_ */
+      /* Paste the last X clipboard buffer */
+      if (j > 0)
+	{
+	  clipboard->BuLength = j;
+	  ContentEditing (TEXT_X_PASTE);
+	}
+      if (!lock)
+	/* unlock table formatting */
+	(*ThotLocalActions[T_unlock]) ();
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, dispMode);
+    }
+}
+
+
+/*----------------------------------------------------------------------
+   PasteXClipboardW reads nchars from the buffer and calls Paste_X as
+   many times as necessary with the characters read.     
+  ----------------------------------------------------------------------*/
+/* MJD: Not sure we need double functions here (PasteXClipboard and PasteXClipboardW);
+   better to use only one (PasteXClipboard, with signature of current PasteXClipboardW). */
+static void PasteXClipboardW (wchar_t* src, int nchars)
+{
+  PtrTextBuffer       clipboard;
+  PtrAbstractBox      pAb;
+  PtrDocument         pDoc;
+  PtrElement          pEl;
+  DisplayMode         dispMode;
+  Document            doc;
+  CHAR_T             *buffer, b;
+  int                 i, j;
+  int                 frame, lg;
+  ThotBool            lock = TRUE;
+
+  /* check the current selection */
+  if (!GetCurrentSelection (&pDoc, &pEl, &pEl, &i, &i))
+    /* cannot insert */
+    return;
+  frame = ActiveFrame;
+  SetInsert (&pAb, &frame, LtText, FALSE);
+  if (pAb == NULL)
+    /* invalid selection */
+    return;
+  /* clean up the X clipboard */
+  clipboard = &XClipboard;
+  ClearClipboard (clipboard);
+  /* number of characters in the last buffer of the clipboard X */
+  j = 0;
+  /* number of characters in the whole X clipboard */
+  lg = 0;
+  if (src)
+    {
+      buffer = src;
+      doc = IdentDocument (pDoc);
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, DeferredDisplay);
+      /* lock tables formatting */
+      if (ThotLocalActions[T_islock])
+	{
+	  (*ThotLocalActions[T_islock]) (&lock);
+	  if (!lock)
+	    /* table formatting is not loked, lock it now */
+	    (*ThotLocalActions[T_lock]) ();
+	}
+
+      i = 0;
+      while (i < nchars)
+	{
+	  if (j == FULL_BUFFER)
+	    {
+	      /* Allocate a new buffer */
+	      clipboard->BuLength = j;
+	      clipboard = GetNewBuffer (clipboard, ActiveFrame);
+	      j = 0;
+	    }
+	  
+	  b = buffer[i++];
+	  if (b == 8 || b == 12 || b == 160)
+	    /* BS, FF, nbsp becomes a space */
+	    clipboard->BuContent[j++] = SPACE;
+	  else if (b == EOL)
+	    {
+	      clipboard->BuContent[j++] = b;
+	      /* should we generate a break-line ???? */
+	    }
+	  else if (b >= 32)
+	    clipboard->BuContent[j++] = b;
+	}
+
       /* Paste the last X clipboard buffer */
       if (j > 0)
 	{
@@ -3415,6 +3505,7 @@ void TtcCutSelection (Document doc, View view)
 
        GlobalUnlock (hMem);
        SetClipboardData (CF_TEXT, hMem);
+       /* add Unicode clipboard here (CF_UNICODETEXT) */
        CloseClipboard ();
      }
 #endif /* _WINDOWS */
@@ -3776,7 +3867,19 @@ void TtcPaste (Document doc, View view)
 	    }
 #ifdef _WINDOWS
 	  OpenClipboard (FrRef [frame]);
-	  if (hMem = GetClipboardData (CF_TEXT))
+	  if (hMem = GetClipboardData (CF_UNICODETEXT)) {
+	      wchar_t* lpData = (wchar_t*) GlobalLock (hMem);
+	      lpDatalength = wcslen (lpData);
+	      if (Xbuffer == NULL /*|| wcscmp (@@@@Xbuffer, lpData)*/) /* MJD: trial-and-error hacking */
+		PasteXClipboardW (lpData, lpDatalength);
+	      else  
+		ContentEditing (TEXT_PASTE);
+	      GlobalUnlock (hMem);
+	  }
+	  /* the CF_TEXT part is probably not necessary, because
+	     CF_UNICODETEXT is supported from Win9x up, by the system,
+	     even for non-Unicode applications */
+	  else if (hMem = GetClipboardData (CF_TEXT))
 	    {
 	      lpData = GlobalLock (hMem);
 	      lpDatalength = strlen (lpData);
