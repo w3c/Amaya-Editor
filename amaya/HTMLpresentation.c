@@ -716,8 +716,11 @@ static void MoveAttrLang (oldAttr, el, doc)
   ThotBool	sameLang;
 
   /* if all siblings have the same LANG attribute, move that attibute to
-     the parent element */
+     the parent element, unless the parent element has exception Hidden */
   parent = TtaGetParent (*el);
+  if (parent)
+     if (HiddenType (parent))
+        parent = NULL;
   if (parent != NULL)
      {
      TtaGiveAttributeType (oldAttr, &attrType, &kind);
@@ -758,7 +761,7 @@ static void MoveAttrLang (oldAttr, el, doc)
 	   DeleteSpanIfNoAttr (sibling, doc, &firstChild, &lastChild);
 	   sibling = next;
 	   }
-	/* associate a LANG attribute to the parent element */
+	/* associate a LANG attribute with the parent element */
 	newAttr = TtaGetAttribute (parent, attrType);
 	if (newAttr == NULL)
 	  {
