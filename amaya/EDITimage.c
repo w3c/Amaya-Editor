@@ -359,11 +359,10 @@ void InitImage (void)
    BaseImage = TtaSetCallback ((Proc)CallbackImage, IMAGE_MAX_REF);
    RepeatValue = 0;
    LastURLImage[0] = EOS;
-   strcpy (ImgFilter, "*.png");
+   strcpy (ImgFilter, "*.*");
    /* set path on current directory */
    getcwd (DirectoryImage, MAX_LENGTH);
 }
-
 
 /*----------------------------------------------------------------------
    GetAlt gets the Alt value for an Area                            
