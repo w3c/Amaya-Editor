@@ -47,8 +47,8 @@
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <flag>wxALL</flag>
-            <object class="wxButton" name="wxID_EXTRABUTTON">
-              <label>EXTRABUTTON</label>
+            <object class="wxButton" name="wxID_CONFIRMBUTTON">
+              <label>CONFIRMBUTTON</label>
               <default>1</default>
               <focused>1</focused>
             </object>
@@ -58,8 +58,8 @@
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
-            <object class="wxButton" name="wxID_CONFIRMBUTTON">
-              <label>CONFIRMBUTTON</label>
+            <object class="wxButton" name="wxID_EXTRABUTTON">
+              <label>EXTRABUTTON</label>
             </object>
           </object>
           <object class="spacer">

@@ -2505,7 +2505,7 @@ LRESULT CALLBACK InitConfirm3LDlgProc (ThotWindow hwnDlg, UINT msg,
 	    EndDialog (hwnDlg, ID_CONFIRM);
 	    if (WithCancel)
 	      ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 1);
-		else
+	    else
 	      ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 0);
 	    break;
 	    

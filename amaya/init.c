@@ -1325,8 +1325,8 @@ void CheckParsingErrors (Document doc)
 	    ptr = TtaGetMessage (AMAYA, AM_XML_RETRY);
 	  else
 	    ptr = TtaGetMessage (AMAYA, AM_XML_ERROR);
-	  ConfirmError (doc, 1, ptr, reload,
-			TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
+	  ConfirmError (doc, 1, ptr,
+			TtaGetMessage (AMAYA, AM_AFILTER_SHOW), reload);
 	  CleanUpParsingErrors ();
 	  if (UserAnswer && reload)
 	    ParseAsHTML (doc, 1);
@@ -1660,14 +1660,14 @@ void ConfirmError (Document document, View view, char *label,
 
    i = 0;
    n = 1;
+   strcpy (&s[i], confirmbutton);
    if (extrabutton)
      {
        /* display 3 buttons: extrabutton - show - cancel */
+       i += strlen (&s[i]) + 1;
        strcpy (&s[i], extrabutton);
        n++;
-       i += strlen (&s[i]) + 1;
      }
-   strcpy (&s[i], confirmbutton);
    TtaNewSheet (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),
 		TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
 		n, s, TRUE, 2, 'L', D_CANCEL);
@@ -1741,9 +1741,14 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
   TtaWaitShowDialogue ();
 #endif /* _GTK */
 #ifdef _WX
+  char *confirm = NULL;
+  if (withCancel)
+    confirm = TtaGetMessage (LIB, TMSG_LIB_CONFIRM);
   ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm,
 					     TtaGetViewFrame (document, view),
-					     NULL /* title */, NULL, NULL,
+					     NULL /* title */,
+					     NULL /* extra */,
+					     confirm,
 					     label1, label2, label3);
   if (created)
     {
@@ -1787,7 +1792,9 @@ void InitConfirm (Document document, View view, char *label)
 #ifdef _WX
   ThotBool created = CreateInitConfirmDlgWX (BaseDialog + ConfirmForm,
 					     TtaGetViewFrame (document, view),
-					     NULL /* title */, NULL, NULL,
+					     NULL /* title */,
+					     NULL /* extra */,
+					      TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
 					     label, NULL, NULL);
   if (created)
     {

@@ -2554,8 +2554,8 @@ ThotBool CanReplaceCurrentDocument (Document doc, View view)
        else
 	 /* ask if the user wants to save, quit or cancel */
 	 ConfirmError (doc, view, TtaGetMessage (AMAYA, AM_DOC_MODIFIED),
-		       TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
-		       TtaGetMessage (AMAYA, AM_DONT_SAVE));
+		       TtaGetMessage (AMAYA, AM_DONT_SAVE),
+		       TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
        if (UserAnswer)
 	   SaveDocument (doc, view);
        else if (ExtraChoice)

@@ -117,7 +117,7 @@ InitConfirmDlgWX::~InitConfirmDlgWX()
   ----------------------------------------------------------------------*/
 void InitConfirmDlgWX::OnExtraButton( wxCommandEvent& event )
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 2);
 }
 
 /*----------------------------------------------------------------------
@@ -125,7 +125,7 @@ void InitConfirmDlgWX::OnExtraButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void InitConfirmDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
-  ThotCallback (m_Ref, INTEGER_DATA, (char*) 2);
+  ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
 }
 
 /*----------------------------------------------------------------------
