@@ -4149,14 +4149,62 @@ void TtcPaste (Document doc, View view)
 	    ContentEditing (TEXT_PASTE);
 	  CloseClipboard ();
 #endif /* _WINGUI */
-#if defined(_GTK) || defined(_WX)
+
+#ifdef _WX
+  if (wxTheClipboard->Open())
+    {
+  wxTextDataObject data;
+  
+  if (wxTheClipboard->IsSupported( data.GetFormat() ))
+    {
+      wxLogDebug( _T("Clipboard supports requested format.") );
+      
+      if (wxTheClipboard->GetData( data ))
+        {
+	  wxString text = data.GetText();
+	  wxLogDebug( _T("Successfully retrieved data from the clipboard.") );
+	  wxLogDebug( _T("Text pasted from the clipboard : ") + text);
+
+	      int buff_tmp_len = strlen(text.mb_str(wxConvUTF8));
+	      char * buff_tmp = (char*)TtaGetMemory ((buff_tmp_len + 1) * sizeof(char));
+	      strncpy ((char *)buff_tmp, text.mb_str(wxConvUTF8), buff_tmp_len);
+	      buff_tmp[buff_tmp_len] = EOS;
+
+	      if (Xbuffer == NULL || strncmp ((const char *)Xbuffer, buff_tmp, 100))
+  	        PasteXClipboard((unsigned char *)buff_tmp, strlen(buff_tmp), UTF_8);
+	      else 
+	        ContentEditing (TEXT_PASTE);
+        }
+      else
+        {
+	  wxLogDebug( _T("Error getting data from the clipboard.") );
+	  ContentEditing (TEXT_PASTE);
+        }
+    }
+  else
+    {
+      wxLogDebug( _T("Clipboard doesn't support requested format.") );
+	  ContentEditing (TEXT_PASTE);
+    }
+  
+  wxTheClipboard->Close();
+  wxLogDebug( _T("Clipboard closed.") );
+  }
+  else
+  {
+      wxLogDebug(_T("Can't open clipboard."));
+	  ContentEditing (TEXT_PASTE);
+  }
+#endif /* _WX */
+
+#ifdef _GTK
 	  if (FirstSelectedElement == NULL && FirstSavedElement)
 	    {
 	      /* TODO: paste only the text */
 	    }
 	  else
 	    ContentEditing (TEXT_PASTE);
-#endif /* _GTK || _WX */
+#endif /* _GTK */
     
 	  if (!lock)
 	    /* unlock table formatting */
