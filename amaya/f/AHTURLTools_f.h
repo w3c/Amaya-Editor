@@ -18,7 +18,6 @@ extern boolean IsHTTPPath ( char *path );
 extern boolean IsWithParameters ( char *url );
 extern boolean IsW3Path ( char *path );
 extern boolean IsValidProtocol ( char *url );
-extern boolean IsValidNormalizeURL ( char *path );
 extern void NormalizeURL ( char *orgName,
                            Document doc,
                            char *newName,
@@ -42,7 +41,6 @@ extern boolean IsHTTPPath (/* char *path */);
 extern boolean IsWithParameters (/* char *url */);
 extern boolean IsW3Path (/* char *path */);
 extern boolean IsValidProtocol (/* char *url */);
-extern boolean IsValidNormalizeURL (/* char *path */);
 extern void NormalizeURL (/* char *orgName,
                              Document doc,
                              char *newName,

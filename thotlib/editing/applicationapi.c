@@ -170,6 +170,9 @@ char               *applicationName;
    InputSpace = 0;
    InitSelection ();
 #endif
+
+   CheckAccessLoadResources ();
+
 }
 
 /*----------------------------------------------------------------------

@@ -23,7 +23,7 @@ extern void ParseHTMLError ( Document doc,
 extern boolean IsCharacterLevelElement ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
-                                    boolean parsed );
+                                    boolean parsing );
 extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
 extern void CreateAttrWidthPercentPxl ( char *buffer,
@@ -65,7 +65,7 @@ extern void ParseHTMLError (/* Document doc,
 extern boolean IsCharacterLevelElement (/* Element el */);
 extern void OnlyOneOptionSelected (/* Element el,
                                       Document doc,
-                                      boolean parsed */);
+                                      boolean parsing */);
 extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
 extern void CreateAttrWidthPercentPxl (/* char *buffer,

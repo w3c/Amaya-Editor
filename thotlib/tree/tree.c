@@ -20,10 +20,12 @@
 #include "fileaccess.h"
 #include "res.h"
 #include "labelAllocator.h"
+#include "appdialogue.h"
 
 #define EXPORT extern
 #include "select_tv.h"
 #include "edit_tv.h"
+#include "appdialogue_tv.h"
 
 #include "memory_f.h"
 #include "schemas_f.h"
@@ -204,27 +206,18 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 
 {
-   PtrElement          pAsc;
-   boolean             ret;
-   boolean             testRO;
+register Proc Rofunction;
 
-   ret = FALSE;
-   testRO = TRUE;
-   pAsc = pEl;
-   while (pAsc != NULL)
-      if (pAsc->ElAccess == AccessHidden ||
-	  (testRO && pAsc->ElAccess == AccessReadOnly))
-	{
-	   ret = TRUE;
-	   pAsc = NULL;
-	}
-      else
-	{
-	   if (pAsc->ElAccess == AccessReadWrite)
-	      testRO = FALSE;
-	   pAsc = pAsc->ElParent;
-	}
-   return ret;
+   if ((Rofunction = ThotLocalActions[T_checkReadOnlyElement]) == NULL)
+     return FALSE; /* No function => Element not protected! */
+   else
+     {
+boolean isRO;
+
+       (*Rofunction) (pEl, &isRO);
+       return isRO;
+     }
+
 }
 
 /*----------------------------------------------------------------------
@@ -243,17 +236,18 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 
 {
-   PtrElement          pAsc;
-   boolean             ret;
+register Proc HiFunction;
 
-   ret = FALSE;
-   pAsc = pEl;
-   while (pAsc != NULL && !ret)
-      if (pAsc->ElAccess == AccessHidden)
-	 ret = TRUE;
-      else
-	 pAsc = pAsc->ElParent;
-   return ret;
+   if ((HiFunction = ThotLocalActions[T_checkHiddenElement]) == NULL)
+     return FALSE; /* No function => Element not hidden! */
+   else
+     {
+boolean isHI;
+
+       (*HiFunction) (pEl, &isHI);
+       return isHI;
+     }
+
 }
 
 /*----------------------------------------------------------------------
