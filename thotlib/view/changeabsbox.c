@@ -270,7 +270,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	  if (view == 1 || pHd == NULL)
 	    {
 	      if (presNum == 0 &&
-		  index > pSchS->SsRootElem &&
+		  index >= pSchS->SsRootElem &&
 		  !TypeHasException (ExcHidden, index, pSchS))
 		/* it's not a presentation box, it's not a basic type and
 		   it's not a hidden element */

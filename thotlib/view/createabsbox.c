@@ -3490,7 +3490,7 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	  /* we are interested in the main view and it's not the default
 	     style sheet */
 	{
-	  if (pEl->ElTypeNumber > pEl->ElStructSchema->SsRootElem &&
+	  if (pEl->ElTypeNumber >= pEl->ElStructSchema->SsRootElem &&
 	      !TypeHasException (ExcHidden, pEl->ElTypeNumber,
 				 pEl->ElStructSchema))
 	    /* it's not a basic type and it's not a hidden element */
