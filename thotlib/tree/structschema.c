@@ -241,7 +241,7 @@ PtrElement          pEl;
 	pSRule = &pSS1->SsRule[typeNum1 - 1];
 	if (pSRule->SrAssocElem)
 	   test = FALSE;
-	if (pSRule->SrRecursive)
+	else if (pSRule->SrRecursive)
 	   if (pSRule->SrRecursDone)
 	      test = FALSE;
 	   else
