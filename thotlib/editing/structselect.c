@@ -2271,22 +2271,12 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 		  if (rank == 1)
 		    {
 		      pElP = pEl;
-		      while (rank == 1 && pEl)
-			{
-			  /* move the end of the selection to the end of the 
-			     previous element */
-			  pEl = PreviousLeafInSelection (pEl);
-			  if (pEl && pEl->ElTerminal &&
-			      pEl->ElLeafType == LtText)
-			    rank =  pEl->ElVolume + 1;
-			}
-		      if (pEl == oldLastEl && rank == oldLastChar)
-			{
-			  /* probably the user wants to move to the next
-			     element */
-			  pEl = pElP;
-			  rank = 1;
-			}
+		      /* move the end of the selection to the end of the 
+			 previous element */
+		      pEl = PreviousLeafInSelection (pEl);
+		      if (pEl && pEl->ElTerminal &&
+			  pEl->ElLeafType == LtText)
+			rank =  pEl->ElVolume + 1;
 		    }
 		  LastSelectedElement = pEl;
 		  LastSelectedChar = rank;
