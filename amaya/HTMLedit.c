@@ -1573,8 +1573,12 @@ void ChangeURI (Element el, Attribute attr, Document originDocument,
 	  /* convert the internal link into an external link */
 	{
 	  if (originDocument == 0)
-	    /* origin document has been unloaded. Get the saved URL */
-	    strcpy (tempURI, SavedDocumentURL);
+	    {
+	      /* origin document has been unloaded. Get the saved URL */
+	      if (SavedDocumentURL == NULL)
+		RegisterURLSavedElements (doc);
+	      strcpy (tempURI, SavedDocumentURL);
+	    }
 	  else
 	    strcpy (tempURI, DocumentURLs[originDocument]);
 	}
