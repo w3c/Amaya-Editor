@@ -1924,11 +1924,16 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc,
 	  imageDesc->PicPixmap == PictureLogo))
     return;
 #else /*_GL*/
-  if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS || 
-      (box->BxAbstractBox->AbLeafType == LtCompound &&
-       (strcmp (imageDesc->PicFileName, LostPicturePath) == 0)))
+  if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS
+       ||
+            (box->BxAbstractBox->AbLeafType == LtCompound
+      &&
+             (strcmp (imageDesc->PicFileName, LostPicturePath) == 0)
+      )
+      )
     return;
 #endif /* _GL */
+
   drawable = (Drawable)TtaGetThotWindow (frame);
   GetXYOrg (frame, &xFrame, &yFrame);
   typeImage = imageDesc->PicType;

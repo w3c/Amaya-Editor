@@ -850,6 +850,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
   ThotBool            reenglobx;
   ThotBool            reengloby;
 
+
   /* Origine de la boite du pave le plus englobant */
   pBox = pAb->AbBox;
   x = pBox->BxXOrg;

@@ -111,8 +111,11 @@ ThotBool SavePng (const char *filename,
 void saveBuffer (char *filename, int width, int height);
 void  GL_DestroyFrame (int frame);
 
-void GL_UnsetClipping (ThotBool Restore);
-void GL_SetCLipping (int x, int y, int width, int height);
+void GL_UnsetClipping (int x, int y, int width, int height);
+void GL_UnsetClippingRestore (ThotBool Restore);
+void GL_SetClipping (int x, int y, int width, int height);
+void GL_GetCurrentClipping (int *x, int *y, int *width, int *height);
+
 
 void gl_synchronize ();
 

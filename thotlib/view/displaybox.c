@@ -1973,7 +1973,7 @@ static ThotBool GetAbsoluteBoundingBox (PtrAbstractBox pAb,
 	{
 	  *height += *y - ymin; 
 	  *y = ymin;
-/* 	  *height = ymax; */
+	  /* 	  *height = ymax; */
 	}
 
       if ((*x + *width) > xmax)
@@ -2009,7 +2009,7 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
       GL_TextureMap (pAb->AbBox->Pre_computed_Pic, 
 		     x, y, width, height);
       GL_SetFillOpacity (1000);
-      GL_SetOpacity (1000); 
+      GL_SetOpacity (1000);
 
     }
 }
@@ -2036,7 +2036,8 @@ void ClearOpaqueGroup (PtrAbstractBox pAb, int frame,
 		       int xmin, int xmax, int ymin, int ymax)
 {
   int x, y, width, height;
-  
+  int xprevclip, yprevclip, heightprevclip, widthprevclip;  
+ 
   if (GetAbsoluteBoundingBox (pAb->AbFirstEnclosed, 
 			      &x, &y, &width, &height, frame,
 			      xmin, xmax, ymin, ymax))
@@ -2045,10 +2046,13 @@ void ClearOpaqueGroup (PtrAbstractBox pAb, int frame,
 	+ FrameTable[frame].FrTopMargin
 	- (y + height);
 
-      GL_SetCLipping (x, y, width, height);  
+      GL_GetCurrentClipping (&xprevclip, &yprevclip, 
+			     &heightprevclip, &widthprevclip);
+      GL_SetClipping (x, y, width, height);  
       glClearColor (1, 1, 1, 0);
       glClear (GL_COLOR_BUFFER_BIT); 
-      GL_UnsetClipping (TRUE);
+      GL_UnsetClipping (xprevclip, yprevclip, 
+			heightprevclip, widthprevclip);
     }
 }
 /*----------------------------------------------------------------------
@@ -2059,7 +2063,9 @@ void OpaqueGroupTexturize (PtrAbstractBox     pAb, int frame,
 {
   int x, y, width, height;
   int t, b;
-   
+  int xprevclip, yprevclip, heightprevclip, widthprevclip;  
+  ViewFrame          *pFrame;
+
   if (GetAbsoluteBoundingBox (pAb->AbFirstEnclosed, 
 			      &x, &y, &width, &height, frame,
 			      xmin, xmax, ymin, ymax))
@@ -2072,14 +2078,25 @@ void OpaqueGroupTexturize (PtrAbstractBox     pAb, int frame,
 						 width,
 						 height,
 						 frame);
-        
-      GL_SetCLipping (x, y, width, height);
-      ResetMainWindowBackgroundColor (frame);      
-      glClear (GL_COLOR_BUFFER_BIT); 
-      GL_UnsetClipping (TRUE);
-      DisplayAllBoxes (frame, xmin, xmax, ymin, ymax,
+      GL_GetCurrentClipping (&xprevclip, &yprevclip, 
+			     &heightprevclip, &widthprevclip);
+      GL_SetClipping (x, y, width, height); 
+ 
+      ResetMainWindowBackgroundColor (frame);     
+      glClear (GL_COLOR_BUFFER_BIT);
+
+      pFrame = &ViewFrameTable[frame - 1];
+      DisplayAllBoxes (frame,
+		       x + pFrame->FrXOrg,
+		       x + width + pFrame->FrXOrg ,
+		       FrameTable[frame].FrHeight
+		       + FrameTable[frame].FrTopMargin - (y + height + pFrame->FrYOrg ),
+		       FrameTable[frame].FrHeight
+		       + FrameTable[frame].FrTopMargin - (y + pFrame->FrYOrg),
 		       NULL, &t, &b);
 
+      GL_UnsetClipping (xprevclip, yprevclip, 
+			heightprevclip, widthprevclip);
       OpaqueGroupTextureFree (pAb, frame);  
       FrameTable[frame].DblBuffNeedSwap = TRUE; 
     }

@@ -3380,7 +3380,7 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 	  Clear (frame, clipwidth, clipheight, clipx, clipy);
 #else /* _GL */
 
-	GL_SetCLipping (clipx,
+	GL_SetClipping (clipx,
 			FrameTable[frame].FrHeight
 			+ FrameTable[frame].FrTopMargin
 			- (clipy + clipheight),
@@ -3434,7 +3434,7 @@ void RemoveClipping (int frame)
    clipRgn = (HRGN) 0;
 #endif /* _WINDOWS */
 #else /* _GL */
-   GL_UnsetClipping (FALSE);
+   GL_UnsetClippingRestore (FALSE);
 #endif /*_GL*/
 }
 

@@ -541,11 +541,11 @@ static int width_previous_clip = 0;
 static int height_previous_clip = 0;
 
 
-void GL_SetCLipping (int x, int y, int width, int height)
+void GL_SetClipping (int x, int y, int width, int height)
 {
   glEnable (GL_SCISSOR_TEST);
   glScissor (x, y, width, height);
-  if (width_previous_clip == 0 && height_previous_clip == 0)
+if (width_previous_clip == 0 && height_previous_clip == 0)
     {
       x_previous_clip = x;
       y_previous_clip = y;
@@ -554,14 +554,18 @@ void GL_SetCLipping (int x, int y, int width, int height)
     }
 }
 
-void GL_UnsetClipping (ThotBool Restore)
+void GL_UnsetClippingRestore (ThotBool Restore)
 {  
    glDisable (GL_SCISSOR_TEST);
    if (Restore)
      {
        if (width_previous_clip != 0 && height_previous_clip != 0)
-	 GL_SetCLipping (x_previous_clip, y_previous_clip, 
+	 {
+	 GL_SetClipping (x_previous_clip, y_previous_clip, 
 			 width_previous_clip, height_previous_clip);
+	 width_previous_clip = 0;
+	 height_previous_clip = 0;
+	 }
      }
    else
      {
@@ -569,7 +573,29 @@ void GL_UnsetClipping (ThotBool Restore)
        height_previous_clip = 0;
      }
 }
-
+void GL_UnsetClipping  (int x, int y, int width, int height)
+{  
+   glDisable (GL_SCISSOR_TEST);
+   if (width && height)
+     {       
+       GL_SetClipping (x, y, 
+		       width, height);
+     }
+   else
+     { 
+       x_previous_clip = 0;
+       y_previous_clip = 0;
+       width_previous_clip = 0;
+       height_previous_clip = 0;
+     }
+}
+void GL_GetCurrentClipping (int *x, int *y, int *width, int *height)
+{  
+  *x = x_previous_clip;
+  *y = y_previous_clip;
+  *width = width_previous_clip;
+  *height= height_previous_clip;
+}
 /*----------------------------------------------------------------------
   GL_DestroyFrame :
   Close Opengl pipeline
@@ -1664,7 +1690,7 @@ void GL_Swap (int frame)
 {
   if (frame < MAX_FRAME)
     {
-      gl_synchronize ();
+      gl_synchronize (); 
       glFinish ();
       glFlush ();
 #ifdef _WINDOWS
@@ -1707,8 +1733,6 @@ ThotBool GL_prepare (int frame)
   ----------------------------------------------------------------------*/
 void GL_realize (int frame)
 {
-
-  
 #ifdef _TESTSWAP
   GL_Swap (frame);
   FrameTable[frame].DblBuffNeedSwap = FALSE;
@@ -2333,3 +2357,4 @@ int  savetga (const char *filename,
 #endif /*_PCLDEBUG*/
 
 #endif /* _GL */
+
