@@ -2689,7 +2689,8 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   SSchema	MathMLSchema;
   int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j,
 		start;
-  char	        script, c;
+  char	        script;
+  CHAR_T        c;
   Language	lang;
 #define TXTBUFLEN 100
   CHAR_T        text[TXTBUFLEN];
