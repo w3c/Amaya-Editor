@@ -1471,7 +1471,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-  CreateInputElement (doc, view, HTML_EL_LABEL);
+  ElementType	elType;
+
+  elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  elType.ElTypeNum = HTML_EL_LABEL;
+  TtaCreateElement (elType, doc);
 }
 
 

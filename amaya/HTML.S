@@ -586,7 +586,7 @@ STRUCT
 		{ for }
 		  accesskey; onfocus; onblur) =
 		{ accesskey  onfocus  onblur }
-		Basic_Set - (Input);
+		Basic_Set;
 	Hidden_Input					{ INPUT / HIDDEN }
 	   (ATTR !NAME; Value_; disabled;
 		{ name  value   disabled }
@@ -613,8 +613,8 @@ STRUCT
 	 { char	        charoff }
 	   Row_valign = Row_top, Row_middle, Row_bottom, Row_baseline;
 	 { valign       top      middle      bottom      baseline }
-	   BackgroundColor) =
-	 { bgcolor }
+	   BackgroundColor; height\240 = Integer) =
+	 { bgcolor          Special attribute to control row span }
 	LIST OF (Table_cell);
 
   Table								{ TABLE }
@@ -711,7 +711,7 @@ STRUCT
 	   tabindex; accesskey; onfocus; onblur;
 	 { tabindex  accesskey  onfocus  onblur }
 	   x_coord = Integer; y_coord = Integer; IntWidthPxl;
-           height\240 = Integer; AreaRef_IMG = REFERENCE(Any)) =
+           height\240; AreaRef_IMG = REFERENCE(Any)) =
 	GRAPHICS with x_coord ?= 0, y_coord ?= 0,
 		      IntWidthPxl ?= 25, height\240 ?= 10;
 

@@ -391,6 +391,11 @@ Remove Div: (DIV{*+})+;
         * > :*;
 	}
 
+Remove Center: (CENTER{*+})+;
+	{
+        * > :*;
+	}
+
 Remove P level: P{IMG};
 	{
         IMG > :*;
