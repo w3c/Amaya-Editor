@@ -1535,21 +1535,21 @@
 	<message xml:lang="fr">Nom de l'utilisateur</message>
 	<message xml:lang="de">Anmerkungsbenutzer</message>
 	<message xml:lang="it">Nome utente</message>
-	<message xml:lang="es">Anotacion de usuario</message>
+	<message xml:lang="es">Anotación de usuario</message>
 </label>
 <label define="AM_ANNOT_POST_SERVER">
 	<message xml:lang="en">Annotation post server</message>
 	<message xml:lang="fr">Serveur de publication</message>
 	<message xml:lang="de">Anmerkungs-Veröffentlichungs-Server</message>
 	<message xml:lang="it">Server per la pubblicazione</message>
-	<message xml:lang="es">Anotacion post server</message>
+	<message xml:lang="es">Servidor de publicación</message>
 </label>
 <label define="AM_ANNOT_SERVERS">
 	<message xml:lang="en">Annotation servers</message>
 	<message xml:lang="fr">Serveur d'annotations</message>
 	<message xml:lang="de">Anmerkungsserver</message>
 	<message xml:lang="it">Server per le annotazioni</message>
-	<message xml:lang="es">Annotation servers</message>
+	<message xml:lang="es">Servidores de annotaciones</message>
 </label>
 <label define="AM_ANNOT_LAUTOLOAD">
 	<message xml:lang="en">Autoload local annotations</message>
@@ -1648,7 +1648,7 @@
 	<message xml:lang="en">This document has no encoding declaration</message>
 	<message xml:lang="fr">Aucun codage n'est déclaré pour ce document</message>
 	<message xml:lang="de">Dieses Dokument enthält keine Kodierungsdeklaration</message>
-	<message xml:lang="es">El documento no tiene una declaracion de codage</message>
+	<message xml:lang="es">El documento no tiene una declaración de codage</message>
 	<message xml:lang="it">Questo documento non ha una dichiarazione di codifica</message>
 </label>
 <label define="AM_UNDEFINED_ENCODING_CONFIRM">
@@ -1784,6 +1784,21 @@
 	<message xml:lang="de">Kann keinen XPointer erzeugen</message>
 	<message xml:lang="it">No posso create un XPointer</message>
 </label>
+<label define="AM_NO_ANNOT_MOVE">
+	<message xml:lang="en">Cannot find where to move the annotation</message>
+	<message xml:lang="fr">Je ne peux pas deplacer l'annotation là</message>
+	<message xml:lang="es">No se a donde mover la annotación</message>
+	<message xml:lang="de">Kein Ziel zum Verschieben der Anmerkung [gefunden]</message>
+	<message xml:lang="it">Non trovo dove muovere l'annotazione</message>
+</label>
+<label define="AM_NO_ANNOT_MOVE_OTHER">
+	<message xml:lang="en">Cannot move the annotation to a different document</message>
+	<message xml:lang="fr">Je ne peux pas bouger l'annotation vers un autre document</message>
+	<message xml:lang="es">No puedo mover la annotación a un otro documento</message>
+	<message xml:lang="de">Die Anmerkung kann nicht in ein anderes Dokument verschoben werden</message>
+	<message xml:lang="it">Non posso muovere l'annotazione su un diverso documento</message>
+</label>
+
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>
