@@ -673,8 +673,9 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			}
 		      /* intermediate boxes */
 		      pBox = pViewSel->VsBox->BxNexChild;
-		      while (pBox != pViewSelEnd->VsBox ||
-			     pViewSelEnd->VsIndBox == 0)
+		      while (pBox &&
+			     (pBox != pViewSelEnd->VsBox ||
+			      pViewSelEnd->VsIndBox == 0))
 			{
 			  DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 			  pBox = pBox->BxNexChild;
