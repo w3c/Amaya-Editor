@@ -17,18 +17,26 @@ alt="Doc"></a></p>
 This file indicates the new features you can find in the latest versions of
 Amaya.</p>
 
-<h1>Amaya 1.4</h1>
+<h1>Amaya 1.4 and 1.4a</h1>
 <p>
-December 21, 1998</p>
+12 January 1999</p>
 
 <h2>New Features:</h2>
 <ul>
 <li>
+Update of the German dialogue files (voluntary work done by Erich Koerting)
+</li>
+<li>
+On Unix platforms only, the variable DOUBLECLICKDELAY of the registry
+$HOME/.thotrc allows one to control the delay (in millisecond) under which two
+mouse clicks are classed as a double-click. The default value is 500.
+</li>
+<li><p>
 OPTGROUP elements are accepted within SELECT elements. The corresponding
 cascade menus are built by Amaya and the right string is sent to the server
 when submitting a form that contains OPTGROUPs. An item in the Types/Form menu
 allows the user to create OPTGROUP elements or to wrap OPTION elements into an
-OPTGROUP element.
+OPTGROUP element.</p>
 </li>
 <li>
 Elements FIELDSET and LEGEND from HTML 4.0 are implemented.
@@ -97,8 +105,25 @@ A FAQ is available at http://www.w3.org/Amaya/User/FAQ.html
 <h2>Fixed bugs:</h2>
 <ul>
 <li>
+There was a memory leak when following an internal link pointing to an
+inexistent anchor.
+</li>
+<li>
+Links which point to non-existent documents or invalid URLs are now left in
+the "active" state, instead of being set to the "visited" state.
+</li>
+<li>
+Browsing an image from an edited document (and thus requiring the opening of a
+new document window), didn't show the image.
+</li>
+<li>
+When one created a table while the current selection pointed to an empty
+paragraph, Amaya tried to replace the empty paragraph by the table, but there
+was a bug which corrupted the Amaya internal structure.
+</li>
+<li><p>
 In the menu associated with a &lt;SELECT multiple> element it's now possible
-to deselect selected OPTIONs
+to deselect selected OPTIONs</p>
 </li>
 <li>
 Table formatting: - Amaya wasn't able to find the correct cell width when the
@@ -134,7 +159,8 @@ attributes), it was saved as is in the HTML file. It's now saved as
 '&amp;amp;'
 </li>
 <li>
-The use of autoconf has been improved to make the Amaya building easier.
+The use of autoconf has been improved to make the Amaya building easier
+(suggestions from Sam and Adam).
 </li>
 </ul>
 
