@@ -2517,7 +2517,7 @@ int                 doc;
 	  }
 	visiStr = TtaGetEnvString ("VISIBILITY");
 	if (visiStr == NULL)
-	  visiVal = 0;
+	  visiVal = 5;
 	else
 	  {
 	    visiVal = atoi (visiStr);
