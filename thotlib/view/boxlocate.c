@@ -2843,7 +2843,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 		charWidth = BoxCharacterWidth (c, font);
 	    }
 	  if (extend)
-	    notfound = (dx + charWidth < *x);
+	    notfound = (dx + (charWidth / 2) < *x);
 	  else
 	    {
 	      notfound = (dx + (charWidth / 2) < *x);
