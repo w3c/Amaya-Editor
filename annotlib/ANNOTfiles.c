@@ -340,7 +340,7 @@ void  ANNOT_InitDocumentBody (docAnnot, document)
   body = TtaSearchTypedElement (elType, SearchInTree, root);
   if (!body)
     {
-      body = TtaNewTree (docAnnot, elType, _EMPTYSTR_);
+      body = TtaNewTree (docAnnot, elType, "");
       TtaInsertSibling (body, head, FALSE, docAnnot);
     }
 }
@@ -449,7 +449,7 @@ void  ANNOT_InitDocumentStructure (docAnnot, document)
   body = TtaSearchTypedElement (elType, SearchInTree, root);
   if (!body)
     {
-      body = TtaNewTree (docAnnot, elType, _EMPTYSTR_);
+      body = TtaNewTree (docAnnot, elType, "");
       TtaInsertSibling (body, head, FALSE, docAnnot);
     }
 
