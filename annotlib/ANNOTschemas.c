@@ -32,8 +32,7 @@ static const char * DC_NS = "http://purl.org/dc/elements/1.0/";
 static const char * ANNOT_NS = "http://www.w3.org/1999/xx/annotation-ns#";
 static const char * RDFMS_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 
-#define RDF_TYPE  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-#define RDFS_SUBCLASSOF "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+static RDFResourceP subclassOfP = NULL;
 
 /********************** global variables ***********************/
 
@@ -44,6 +43,9 @@ typedef struct _ReadCallbackContext
   char filename[MAX_LENGTH];
 } ReadCallbackContext;
 
+/*------------------------------------------------------------
+   _ListSearchResource
+  ------------------------------------------------------------*/
 static RDFResourceP _ListSearchResource( List* list, char* name)
 {
   List *item = list;
@@ -53,7 +55,7 @@ static RDFResourceP _ListSearchResource( List* list, char* name)
   while (item)
     {
       resource = (RDFResourceP) item->object;
-      if (!ustrcasecmp (resource->name, name))
+      if (!ustrcmp (resource->name, name))
 	{
 	  found = TRUE;
 	  break;
@@ -64,7 +66,9 @@ static RDFResourceP _ListSearchResource( List* list, char* name)
   return found ? resource : NULL;
 }
 
-
+/*------------------------------------------------------------
+   _AddStatement
+  ------------------------------------------------------------*/
 static void _AddStatement( RDFResourceP s, RDFPropertyP p, RDFResourceP o )
 {
   RDFStatement *statement = (RDFStatement*)TtaGetMemory (sizeof(RDFStatement));
@@ -74,11 +78,31 @@ static void _AddStatement( RDFResourceP s, RDFPropertyP p, RDFResourceP o )
   List_add (&s->statements, (void*)statement);
 }
 
-static void _AddInstance( RDFResourceP class, RDFResourceP instance )
+/*------------------------------------------------------------
+   _AddInstance
+  ------------------------------------------------------------*/
+static void _AddInstance( RDFClassP class, RDFResourceP instance )
 {
-  List_add (&class->instances, (void*)instance);
+  if (!class->class)
+      class->class = (RDFClassExtP)TtaGetMemory (sizeof(RDFClassExt));
+
+  List_add (&class->class->instances, (void*)instance);
 }
 
+/*------------------------------------------------------------
+   _AddSubClass
+  ------------------------------------------------------------*/
+static void _AddSubClass( RDFClassP class, RDFClassP sub )
+{
+  if (!class->class)
+    {
+      class->class = (RDFClassExtP)TtaGetMemory (sizeof(RDFClassExt));
+      class->class->instances = NULL;
+      class->class->subClasses = NULL;
+    }
+
+  List_add (&class->class->subClasses, (void*)sub);
+}
 
 /* ------------------------------------------------------------
    triple_handler
@@ -96,8 +120,7 @@ static void _AddInstance( RDFResourceP class, RDFResourceP instance )
 static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 {
   List **listP = (List**)context;
-  static RDFResourceP typeP;
-  static RDFResourceP subclassOfP;
+  static RDFResourceP typeP = NULL;
 
   if (rdfp && triple) 
     {
@@ -118,18 +141,15 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
       if (!subclassOfP)
 	subclassOfP = ANNOT_FindRDFResource (listP, RDFS_SUBCLASSOF, TRUE);
 
-#ifdef notyet
-      switch (predicateP)
+      if (predicateP == typeP)
+	_AddInstance( objectP, subjectP );
+      else if (predicateP == subclassOfP)
 	{
-	case typeP:
-	  _AddInstance( objectP, subjectP );
-          break;
-
-        case subclassOfP:
-	  _AddType( );
-	  _AddInstance( objectP, subjectP );
+	  _AddSubClass( objectP, subjectP );
+	  subjectP->class = (RDFClassExtP)TtaGetMemory (sizeof(RDFClassExt));
+	  subjectP->class->instances = NULL;
+	  subjectP->class->subClasses = NULL;
 	}
-#endif /* notyet */
     }
 }
 
@@ -179,7 +199,6 @@ void *context;
 
 /*------------------------------------------------------------
    ANNOT_FindRDFResource
-  ------------------------------------------------------------
   ------------------------------------------------------------*/
 #ifdef __STDC__
 RDFResourceP ANNOT_FindRDFResource( List** listP, char* name, ThotBool create )
@@ -203,8 +222,7 @@ RDFResourceP ANNOT_FindRDFResource( listP, name, create )
 
 	resource->name = TtaStrdup (name);
 	resource->statements = NULL;
-	resource->types = NULL;
-	resource->instances = NULL;
+	resource->class = NULL;
 	List_add (listP, (void*) resource);
       }
     if (last_length < ustrlen(name))
@@ -224,7 +242,6 @@ RDFResourceP ANNOT_FindRDFResource( listP, name, create )
 
 /*------------------------------------------------------------
    ANNOT_FindRDFStatement
-  ------------------------------------------------------------
   ------------------------------------------------------------*/
 #ifdef __STDC__
 RDFStatementP ANNOT_FindRDFStatement( List* list, RDFPropertyP p )
@@ -247,6 +264,58 @@ RDFStatementP ANNOT_FindRDFStatement( listP, p )
 
   return NULL;
 }
+
+
+/*------------------------------------------------------------
+   ANNOT_GetLabel
+  ------------------------------------------------------------*/
+#ifdef __STDC__
+char *ANNOT_GetLabel (List **listP, RDFResourceP r)
+#else /*  __STDC__ */
+char *ANNOT_GetLabel (listP, r)
+     ListP **listP;
+     RDFResourceP r;
+#endif /*  __STDC__ */
+{
+  static RDFPropertyP labelP = NULL;
+  RDFStatementP labelS = NULL;
+
+  if (!labelP)
+    labelP = ANNOT_FindRDFResource (listP, RDFS_LABEL, FALSE);
+
+  if (!labelP)
+    return NULL;
+
+  while (!labelS)
+    {
+      labelS = ANNOT_FindRDFStatement (r->statements, labelP);
+
+      if (labelS)
+	{
+	  /* RRS @@ assume object is a literal */
+	  return labelS->object->name;
+	}
+
+      if (r->class)
+	{
+	  /* search superclass(es) for a label */
+	  /* RRS @@ only does one superclass for now */
+	  RDFStatementP s;
+
+	  if (!subclassOfP)
+	    subclassOfP = ANNOT_FindRDFResource (listP, RDFS_SUBCLASSOF, TRUE);
+
+	  s = ANNOT_FindRDFStatement (r->statements, subclassOfP);
+
+	  if (!s)
+	    return NULL;	/* unknown parent class */
+
+	  r = s->object;
+	}
+    }
+  return NULL;
+}
+
 
 
 /*------------------------------------------------------------

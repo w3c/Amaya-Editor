@@ -7,8 +7,9 @@
 #ifdef __STDC__
 
 extern RDFResourceP ANNOT_FindRDFResource( List**, char*, ThotBool );
-RDFStatementP ANNOT_FindRDFStatement( List*, RDFPropertyP );
-void ANNOT_ReadSchema (Document, char* );
+extern RDFStatementP ANNOT_FindRDFStatement( List*, RDFPropertyP );
+extern CHAR_T *ANNOT_GetLabel( List**, RDFResourceP );
+extern void ANNOT_ReadSchema (Document, char* );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -46,8 +46,6 @@ static const char * HTTP_CONTENT_TYPE   = "ContentType";
 static const char * RDFMS_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 static const char * RDFMS_TYPE = "type";
 
-static const char * RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label";
-
 /********************** global variables ***********************/
 
 List *annot_list;  /* a list of annotations */
@@ -214,20 +212,8 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 		  ANNOT_FindRDFResource (&annot_schema_list, object, FALSE);
 
 		if (annotType)
-		  {
-		    RDFPropertyP labelP =
-		      ANNOT_FindRDFResource (&annot_schema_list,
-					     RDFS_LABEL,
-					     FALSE);
-		    RDFStatementP labelS =
-		      ANNOT_FindRDFStatement (annotType->statements, labelP);
-
-		    if (labelS)
-		      {
-			/* @@ assume object is a literal */
-			annot->type = TtaStrdup (labelS->object->name);
-		      }
-		  }
+		  annot->type = TtaStrdup (ANNOT_GetLabel(&annot_schema_list,
+							  annotType));
 		else
 		  {
 		    int len = strlen (ANNOT_NS) - 1;

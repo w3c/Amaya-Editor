@@ -35,6 +35,13 @@
 #include "HTMLedit_f.h"
 #include "HTMLtable_f.h"
 #
+
+/* RDF Property names */
+#define RDF_TYPE  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+#define RDFS_LABEL "http://www.w3.org/2000/01/rdf-schema#label"
+#define RDFS_SUBCLASSOF "http://www.w3.org/2000/01/rdf-schema#subClassOf"
+#define ANNOTATION_PROP "http://www.w3.org/1999/xx/annotation-ns#Annotation"
+
 /* Structures and global variables */
 
 /* the info we're interested in in an annotation */
@@ -124,17 +131,22 @@ AnnotMetaDataList AnnotMetaData[DocumentTableLength];
 
 extern List *annot_schema_list;  /* a list of schemas */
 
+typedef struct _RDFClassExt
+{
+  List *instances;		/* each item is an RDFResourceP */
+  List *subClasses;		/* each item is an RDFResourceP */
+} RDFClassExt, *RDFClassExtP;
+
 typedef struct _RDFResource
 {
   char *name;
   List *statements;		/* each item is an RDFStatementP */
-  List *types;			/* each item is an RDFResourceP */
-  List *instances;		/* for Classes, each item is an RDFResourceP */
+  RDFClassExtP class;		/* if type->Class, points to more data */
 #if 0
   ThotBool isLiteral;		/* mostly a guess */
 #endif
 } RDFResource, *RDFResourceP,
-  RDFClass, RDFClassP,
+  RDFClass, *RDFClassP,
   RDFProperty, *RDFPropertyP;
 
 typedef struct _RDFStatement

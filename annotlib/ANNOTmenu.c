@@ -772,32 +772,29 @@ static void BuildAnnotTypesSelector ()
 {
   int                   nb_entries;
   int                   i;
-  FILE                  *fp;
-  CHAR_T                *annotdir;
-  CHAR_T                type[MAX_LENGTH + 1];
+  RDFClassP		annotClass;
 
   nb_entries = 0;
   ustrcpy (s, TEXT(""));
   i = 0;
 
-  annotdir = TtaGetEnvString ("ANNOT_DIR");
-  usprintf (s, "%s%c%s", annotdir, DIR_SEP, TEXT("annot.types"));
+  annotClass = ANNOT_FindRDFResource (&annot_schema_list,
+				      ANNOTATION_PROP,
+				      FALSE);
 
-  fp = fopen (s, "r");
-
-  if (fp)
+  if (annotClass)
     {
-      /* read the preferences from the file */
-      fgets (type, MAX_LENGTH, fp);
-      while (!feof (fp))
+      List *item;
+
+      for (item=annotClass->class->subClasses; item; item=item->next)
 	{
-	  ustrcpy (&s[i], type);
-	  /* get the length and "chomp" the \n */
-	  i += ustrlen (&s[i]) - 1;
+	  RDFClassP subType = (RDFClassP)item->object;
+
+	  ustrcpy (&s[i], ANNOT_GetLabel(&annot_schema_list, subType));
+	  i += ustrlen (&s[i]);
 	  s[i] = WC_EOS;
 	  i++;
 	  nb_entries++;
-	  fgets (type, MAX_LENGTH, fp);
 	}
     }
   else
@@ -809,6 +806,7 @@ static void BuildAnnotTypesSelector ()
       nb_entries = 2;
     }
 
+#ifndef _WINDOWS
    /* Fill in the form  */
   TtaNewSelector (AnnotTypesBase + mAnnotTypesSel,
 		  AnnotTypesBase + AnnotTypesMenu,
@@ -819,6 +817,7 @@ static void BuildAnnotTypesSelector ()
 		  NULL,
 		  TRUE,
 		  TRUE);
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
