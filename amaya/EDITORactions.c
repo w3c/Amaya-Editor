@@ -2588,6 +2588,10 @@ View                view;
 #endif
 {
 #ifdef ANNOTATIONS
+  /* temporary change for testing the xpointer generation */
+  XPointer_Thot2Xptr (document, view);
+  /*
   CustomQueryMenuInit (document, view);
+  */
 #endif /* ANNOTATIONS */
 }
