@@ -6088,12 +6088,20 @@ if test "$with_insure" = "yes" ; then
 fi
 
 
+default_www_access="libwww"
+
 KAFFE_ENGINE=""
 if test "${CC}" = "gcc" ; then
   CFLAGS="${CFLAGS} -Wall "
   case "${host}" in
       *-*-irix5* | *-*irix6* )
          CFLAGS="${CFLAGS} -fsigned-char"
+      ;;
+      *linux* )
+         default_www_access="java"
+      ;;
+      *solaris* )
+         default_www_access="java"
       ;;
   esac
 fi
@@ -6191,6 +6199,8 @@ if test "${enable_math+set}" = set; then
 fi
 
 
+
+with_java=""
 if test "$enable_intr" = "yes" ; then
     with_java="yes"
     KAFFE_ENGINE="--with-engine=intrp"
@@ -6209,30 +6219,46 @@ if test "$enable_jit" = "no" ; then
 fi
 
 
-if test "$enable_java" = "no" ; then
-    with_java="no"
-else
-    with_java="yes"
+
+if test "$with_java" = "" ; then
+    if test "default_www_access" = "libwww" ; then
+	if test "$enable_java" = "yes" ; then
+	    with_java="yes"
+	else
+	    with_java="no"
+	fi
+    else
+	if test "$enable_java" = "no" ; then
+	    with_java="no"
+	else
+	    with_java="yes"
+	fi
+    fi
 fi
 
-if test "$with_java" = "yes" ; then
-  if test "$enable_plugin" = "yes" ; then
-    with_plugin="yes"
-  else
-    with_plugin="no"
-  fi
-else
-  if test "$enable_plugin" = "no" ; then
-    with_plugin="no"
-  else
-    with_plugin="yes"
-  fi
+
+if test "$with_plugin" = "" ; then
+    if test "$with_java" = "yes" ; then
+      if test "$enable_plugin" = "yes" ; then
+	with_plugin="yes"
+      else
+	with_plugin="no"
+      fi
+    else
+      if test "$enable_plugin" = "no" ; then
+	with_plugin="no"
+      else
+	with_plugin="yes"
+      fi
+    fi  
 fi  
 
-if test "$enable_math" = "no" ; then
-    with_math="no"
-else
-    with_math="yes"
+if test "$with_math" = "" ; then
+    if test "$enable_math" = "no" ; then
+	with_math="no"
+    else
+	with_math="yes"
+    fi
 fi
 
 if test "$build_amaya" = "yes" ; then 
