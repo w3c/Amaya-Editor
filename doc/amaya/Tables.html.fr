@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-  <title>Editing Tables</title>
+  <title>Editer des tables</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
@@ -27,23 +27,24 @@
 </table>
 
 <div id="Editing">
-<h2>Editing tables</h2>
+<h2>Editer des tables</h2>
 
-<p>There is no separate table editor in <strong>Amaya</strong>. A table is
-simply a structure described by the HTML DTD and it is edited as such. The
-same commands apply to tables as to other HTML structures, with a few
-additional ones.</p>
+<p>Il n'existe pas d'éditeur de tables indépendant dans
+<strong>Amaya</strong>. Une table est une simple structure décrite par le HTML
+DTD et il est édité comme tel. Les commandes pour les tables sont les mêmes
+que pour les autres structures HTML, avec quelques suppléments.</p>
 
-<h3><a name="Creating">Creating a new table</a></h3>
+<h3><a name="Creating">Créer un nouveau tableau</a></h3>
 
-<p>When activating the table button <img src="../Icons/table.gif"
-alt="Table button" /> or selecting the <strong>Table</strong> entry from the
-<strong>Types</strong> menu, Amaya displays a dialog box which allows you to
-specify the initial number of rows and columns for the new table, as well as
-its border. If you have done that by mistake, just click the
-<strong>Cancel</strong> button. To create a new table at the current position,
-click the <strong>Confirm</strong> button. Amaya will then generate something
-like the following table (3 columns and 2 rows in that case):</p>
+<p>Quand on active le bouton table <img src="../Icons/table.gif"
+alt="Table button" /> ou quand on sélectionne l'entrée <strong>Table
+</strong>depuis le menu <strong>Éléments</strong>, Amaya visualise une boîte
+de dialogue qui vous permet de spécifier le nombre initial de lignes et de
+colonnes pour la nouvelle table, ainsi que sa bordure. Si vous avez fait ça
+par erreur, cliquez simplement sur le bouton <strong>Annuler</strong>. Pour
+créer une nouvelle table à la position courante, cliquez sur le bouton
+<strong>Confirmer</strong>. Amaya génèrera ainsi quelque chose comme la table
+suivante (3 colonnes and 2 lignes dans ce cas):</p>
 
 <table border="1" summary="table">
   <caption>I</caption>
@@ -61,25 +62,28 @@ like the following table (3 columns and 2 rows in that case):</p>
   </tbody>
 </table>
 
-<p>The space above the table is reserved for the caption. The caret is
-automatically put in this caption, so that you can enter its contents
-immediately.  You can also delete it if you don't need a caption.</p>
+<p>L'espace au dessus de la table est réservé pour la légende. Le point
+d'insertion est automatiquement placé dans cette légende, de telle manière que
+vous puissiez rentrer son contenu immédiatement. Vous pouvez également
+l'effacer si vous n'avez pas besoin d'une légende.</p>
 
-<p>The new table contains empty cells. You can click on any of them and insert
-text, images, and so on. You can also move the caret from cell to cell with
-the arrow keys.</p>
+<p>La nouvelle table contient des cellules vides. Vous pouvez cliquer sur
+l'une d'entre elles au hasard et y insérer du texte, des images et autre. Vous
+pouvez également faire glisser le point d'insertion de cellule en cellule par
+l'intermédiaire des flèches du clavier.</p>
 
-<h3><a name="Adding">Adding a new column</a></h3>
+<h3><a name="Adding">Ajouter une nouvelle colonne</a></h3>
 
-<p>New columns can be created very efficiently with the <a
-href="Creating.html#L906">Enter key</a>.  Move the insertion point to the end
-or the beginning of a cell (for example at the end of Cell 1.1 in the table
-below).  By pressing the Enter key twice (the first keystroke creates a
-paragraph in the current cell) you create a new cell and its corresponding
-column, as shown below:</p>
+<p>De nouvelles colonnes peuvent être créées efficacement avec la touche <a
+href="Creating.html#L906">Entrer</a>.  Déplacez le point d'insertion à la fin
+ou au début de la cellule (par exemple à la fin de la cellule 1.1 dans la
+table ci dessous). En tapant deux fois sur la touche Entrer (la première
+pression de la touche crée un paragraphe dans la cellule courante) vous créez
+une nouvelle cellule et sa colonne correspondante, comme montré si
+dessous:</p>
 
 <table border="1" summary="table">
-  <caption>Caption</caption>
+  <caption>Légende</caption>
   <tbody>
     <tr>
       <td>Cell 1.1</td>
@@ -96,43 +100,48 @@ column, as shown below:</p>
   </tbody>
 </table>
 
-<h3><a name="Adding1">Adding a new row, a new tbody</a></h3>
+<h3><a name="Adding1">Ajouter une nouvelle ligne, un nouveau
+<code>tbody</code></a></h3>
 
-<p>To create a new row, press Enter three times when the insertion point is at
-the end of the last cell in a row (in Cell 1.3, for instance).  You can also
-select the row by <a href="Selecting.html#Selecting1">pressing the Esc key (on
-Unix platforms) or F2 key (on Windows platforms)</a> and pressing Enter only
-once.</p>
+<p>Pour créer une nouvelle ligne, taper sur Entrer trois fois quand le point
+d'insertion est à la fin de la dernière cellule d'une ligne (dans  Cell 1.3,
+par exemple). Vous pouvez également sélectionner la ligne en <a
+href="Selecting.html#Selecting1">tapant sur la touche Esc (pour les stations
+Unix) ou sur la touche F2 (pour les stations Windows)</a> et en tapant sur
+Entrer seulement une fois.</p>
 
-<p>To create a new <code>tbody</code>, press Enter four times (or three times
-if the cell is empty) and one time more to create a new paragraph after the
-table.</p>
+<p>Pour créer un nouveau <code>tbody</code>, taper sur Entrer quatre fois (ou
+trois fois si la cellule est vide) et une fois de plus pour créer un nouveau
+paragraphe après la table.</p>
 
-<h3><a name="Removing">Removing a column</a></h3>
+<h3><a name="Removing">Détruire une colonne</a></h3>
 
-<p>There is no specific command to create a new column. When you create a new
-cell, Amaya generates the corresponding new column. When you delete a cell in
-a column that becomes empty, Amaya deletes the column automatically. But there
-is a specific command (Delete table column) to delete a column, even if it's
-not empty. This command is located at the end of submenu
-<strong>Table</strong> of menu <strong>Types</strong>.</p>
+<p>Il n'existe pas de commande spécifique pour créer une nouvelle colonne.
+Quand vous créez une nouvelle cellule, Amaya génère la nouvelle colonne
+correspondante. Quand vous supprimez une cellule dans une colonne elle devient
+vide et Amaya détruit la colonne automatiquement.Mais il existe une commande
+spécifique (Détruire colonne de table) pour détruire une colonne, même si elle
+n'est pas vide. Cette commande se trouve à la fin du sous-menu
+<strong>Table</strong> du menu <strong>Éléments</strong>.</p>
 
-<h3><a name="Adding2">Adding something after a table</a></h3>
+<h3><a name="Adding2">Ajouter quelque chose après une table</a></h3>
 
-<p>Many element types can be included within table cells. For that reason,
-Amaya could misunderstand what you want to do when you select an element type
-(eg. clicking H1, H2, etc. or selecting an entry in the menu Type) while a
-table component is selected. When you want to create an element after the
-table, you have to select the whole table (check the current selection in the
-bottom line of the window) and press the Enter key. Amaya will generate a
-paragraph after the table. This new paragraph can be transformed if
-needed.</p>
+<p>De nombreux types d'éléments peuvent être inclus à l'intérieur des cellules
+de la table. Pour cette raison, Amaya pourrait mal comprendre vos intentions
+quand vous sélectionnez un type d'élément (par exemple cliquant H1, H2, etc.
+ou  sélectionnant une entrée dans le menu Éléments) pendant qu'un composant de
+la table est sélectionné. Quand vous voulez créer un élément après la table,
+vous devez sélectionner la table entière (contrôler la sélection courante dans
+la ligne du bas de la fenêtre) et taper sur la touche Entrer. Amaya génèrera
+un paragraphe après la table. Ce nouveau paragraphe peut être modifié si
+besoin est.</p>
 
-<p><em>Note that the table model implemented in
-</em><strong><em>Amaya</em></strong><em> is the </em><a
-href="../../TR/REC-html40"><em>HTML 4.0</em></a><em> model. This includes
-features such as multiple bodies (</em><code><em>tbody</em></code><em>),
-header (</em><code><em>thead</em></code><em>) and footer
+<p><em>Notez que le modèle de table implémenté dans
+</em><strong><em>Amaya</em></strong><em> est le modèle d'</em><a
+href="../../TR/REC-html40"><em>HTML 4.0</em></a><em>. Celui ci inclus des
+carastéristiques comme les corps multiples 
+(</em><code><em>tbody</em></code><em>), des entêtes de table 
+(</em><code><em>thead</em></code><em>) et des bas de table
 (</em><code><em>tfoot</em></code><em>).</em></p>
 </div>
 

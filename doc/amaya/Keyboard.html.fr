@@ -3,13 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Entering ISO-Latin-1 characters in Amaya</title>
+  <title>Entrer des caracteres ISO-Latin-1 dans Amaya</title>
   <style type="text/css">
 .name { background-color: #FFF6C1}</style>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 <p><a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"
 /></a> <a href="../"> <img border="0" src="../Icons/amaya.gif" alt="Amaya"
 /></a> <a href="Manual.html"></a></p>
@@ -22,9 +22,9 @@ vous devez taper la touche <code>Contrôle</code> avec la touche
 <code>Espace</code>.</p>
 
 <p>Pour les caractères ISO-latin qui ne sont pas directement disponibles
-depuis le clavier, Amaya fournit deux methodes d'entrée à multi-touches. Le
+depuis le clavier, Amaya fournit deux méthodes d'entrée à multi-touches. Le
 choix d'une méthode plutôt qu'une autre, se fait par l'utilisateur grâce à
-l'entrée de dialogue <strong>"Activer multi-key"</strong> in <a
+l'entrée de dialogue <strong>"Activer multi-key"</strong> dans <a
 href="Configure.html#Enable">Spécial/Préférences/Générales</a>. Quand c'est
 permis, le <a href="#Optional">support multi-touches optionnel</a> est activé
 et le support multi-touches standard est désactivé.</p>
@@ -77,7 +77,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">Acirc</td>
       <td>194</td>
       <td>&lt;Shift&gt; A</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>Â</td>
     </tr>
     <tr>
@@ -133,7 +133,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">Ecirc</td>
       <td>202</td>
       <td>&lt;Shift&gt; E</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>Ê</td>
     </tr>
     <tr>
@@ -161,7 +161,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">Icirc</td>
       <td>206</td>
       <td>&lt;Shift&gt; I</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>Î</td>
     </tr>
     <tr>
@@ -196,7 +196,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">Ocirc</td>
       <td>212</td>
       <td>&lt;Shift&gt; O</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>Ô</td>
     </tr>
     <tr>
@@ -245,7 +245,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">Ucirc</td>
       <td>206</td>
       <td>&lt;Shift&gt; U</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>Û</td>
     </tr>
     <tr>
@@ -287,7 +287,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">acirc</td>
       <td>226</td>
       <td>a</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>â</td>
     </tr>
     <tr>
@@ -309,7 +309,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td>227</td>
       <td>a</td>
       <td>tilde</td>
-      <td>ã</td>
+      <td>ã2</td>
     </tr>
     <tr>
       <td class="name">auml</td>
@@ -356,7 +356,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
     <tr>
       <td class="name">deg</td>
       <td>176</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>0 (zero)</td>
       <td>°</td>
     </tr>
@@ -371,7 +371,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">ecirc</td>
       <td>234</td>
       <td>e</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>ê</td>
     </tr>
     <tr>
@@ -434,7 +434,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">icirc</td>
       <td>238</td>
       <td>i</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>î</td>
     </tr>
     <tr>
@@ -469,7 +469,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">macr</td>
       <td>175</td>
       <td>- (moins)</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>¯</td>
     </tr>
     <tr>
@@ -483,7 +483,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">middot</td>
       <td>183</td>
       <td>.</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>·</td>
     </tr>
     <tr>
@@ -518,7 +518,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">ocirc</td>
       <td>244</td>
       <td>o</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>ô</td>
     </tr>
     <tr>
@@ -651,7 +651,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
       <td class="name">ucirc</td>
       <td>251</td>
       <td>u</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>û</td>
     </tr>
     <tr>
@@ -724,7 +724,7 @@ disponibles:</p>
     <tr>
       <td class="name">Acirc</td>
       <td>194</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>&lt;Shift&gt; A</td>
       <td>Â</td>
     </tr>
@@ -773,7 +773,7 @@ disponibles:</p>
     <tr>
       <td class="name">Ecirc</td>
       <td>202</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>&lt;Shift&gt; E</td>
       <td>Ê</td>
     </tr>
@@ -801,7 +801,7 @@ disponibles:</p>
     <tr>
       <td class="name">Icirc</td>
       <td>206</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>&lt;Shift&gt; I</td>
       <td>Î</td>
     </tr>
@@ -836,7 +836,7 @@ disponibles:</p>
     <tr>
       <td class="name">Ocirc</td>
       <td>212</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>&lt;Shift&gt; O</td>
       <td>Ô</td>
     </tr>
@@ -878,7 +878,7 @@ disponibles:</p>
     <tr>
       <td class="name">Ucirc</td>
       <td>206</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>&lt;Shift&gt; U</td>
       <td>Û</td>
     </tr>
@@ -913,7 +913,7 @@ disponibles:</p>
     <tr>
       <td class="name">acirc</td>
       <td>226</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>a</td>
       <td>â</td>
     </tr>
@@ -962,7 +962,7 @@ disponibles:</p>
     <tr>
       <td class="name">ecirc</td>
       <td>234</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>e</td>
       <td>ê</td>
     </tr>
@@ -990,7 +990,7 @@ disponibles:</p>
     <tr>
       <td class="name">icirc</td>
       <td>238</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>i</td>
       <td>î</td>
     </tr>
@@ -1018,7 +1018,7 @@ disponibles:</p>
     <tr>
       <td class="name">ocirc</td>
       <td>244</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>o</td>
       <td>ô</td>
     </tr>
@@ -1060,7 +1060,7 @@ disponibles:</p>
     <tr>
       <td class="name">ucirc</td>
       <td>251</td>
-      <td>accent circonflèxe</td>
+      <td>accent circonflexe</td>
       <td>u</td>
       <td>û</td>
     </tr>

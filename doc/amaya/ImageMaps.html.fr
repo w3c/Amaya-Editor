@@ -30,18 +30,19 @@
 <div id="Client-sid">
 <h2><a name="L1013">Images and Client-side image maps</a></h2>
 
-<h3><a name="Adding">Adding an image</a></h3>
+<h3><a name="Adding">Ajouter une image</a></h3>
 
-<p>To insert an image choose <strong>Image</strong> from the
-<strong>Types</strong> menu or click on the <img alt="Image " border="0"
-src="../Icons/Image.gif" align="middle" longdesc="longdesc.htm" /> button (or
-use the keyboard shortcut control-t, control-i in Unix). This brings up a
-dialog box that lets you enter the file name and <a
-href="#Alternative">alternative text</a> ('ALT' text) of the desired image. If
-you wish to provide a long description (for example if your image presents
-complex information) you should do so in a separate document and link it by
-giving the URI as a <strong>longdesc</strong>, also available in the
-<strong>Attributes</strong> menu. To help find an image file you can enter a
+<p>Pour insérer une image choisissez <strong>Image</strong> depuis le menu
+<strong>Éléments</strong> ou cliquez sur le bouton <img alt="Image "
+border="0" src="../Icons/Image.gif" align="middle" longdesc="longdesc.htm" />
+(ou encore utilisez le raccourci clavier control-t, control-i pour Unix). Ceci
+fait apparaître une boîte de dialogue qui vous permet de rentrer le nom du
+fichier et le <a href="#Alternative">texte de remplacement</a> ('ALT' text) de
+l'image désirée. Si vous souhaitez fournir une longue description (par exemple
+si votre image présente une information complexe) vous devriez le faire dans
+un document séparé et le relier en donnant l'URI comme une
+<strong>longdesc</strong>, également disponible dans le menu
+<strong>Attributs</strong>. To help find an image file you can enter a
 <strong>filter</strong> field, and use the <strong>filter</strong> button, so
 the dialog lists only the files which match your pattern.</p>
 

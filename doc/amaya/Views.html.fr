@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Views</title>
+  <title>Vues</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
@@ -26,7 +26,7 @@
   </tbody>
 </table>
 
-<div id="Views">
+<div id="Views" xml:lang="fr" lang="fr">
 <h2>Vues</h2>
 
 <p><strong>Amaya</strong> peut présenter différentes <em>vues</em> d'un
@@ -36,12 +36,12 @@ documents complexes. C'est également une aide pour se déplacer à travers un
 document. Six vues sont disponibles:</p>
 <dl>
   <dt>Vue formatée</dt>
-    <dd>Ici vous voyez une vue similaire d'un document qui fournit un autre
-      navigateur graphique populaire. C'est une vue dynamique à manipulation
-      directe, dans le sens que, à n'importe quel moment, il montre les
-      changements que vous êtes entrain d'effectuer sur le document. Cette
-      propriété diffère des autres éditeurs qui eux fournissent seulement des
-      séries de photos instantannées du document.</dd>
+    <dd>Ici vous voyez le document comme présenté dans les navigateurs
+      graphiques classiques. C'est une vue dynamique à manipulation directe,
+      dans le sens que, à n'importe quel moment, il montre les changements que
+      vous êtes en train d'effectuer sur le document. Cette propriété diffère
+      des autres éditeurs qui eux fournissent seulement des séries de photos
+      instantannées du document.</dd>
   <dt><a name="Structure">Vue structure</a></dt>
     <dd>Cette vue montre la structure actuelle du document qui est entrain
       d'être rédigé. Chaque élément est représenté par son nom  d'étiquette,
@@ -57,12 +57,12 @@ document. Six vues sont disponibles:</p>
       vérifier l'accessibilité de vos documents.</dd>
   <dt>Vue liens</dt>
     <dd>Cette vue montre tous les ancres d'un document (les ancres et leur
-      contenu). Vous pouvez vous focaliser dessus en travaillant en liens
+      contenu). Vous pouvez vous focaliser dessus pour travailler sur liens
       hypertextes.</dd>
   <dt>Vue table des matières</dt>
-    <dd>Cette vue visualise tous les titres (<code>Hn</code> éléments) et
+    <dd>Cette vue visualise tous les titres (éléments<code> Hn</code>) et
       uniquement ces éléments. Si le document est bien structuré, elle
-      visualise une vue d'ensemble du document.</dd>
+      visualise une vue synthétique du document.</dd>
   <dt>Vue source</dt>
     <dd>Ici vous voyez le code source actuel du document. Vous pouvez
       l'utiliser pour éditer la syntaxe de votre document.</dd>
@@ -76,8 +76,8 @@ moment.</p>
 <p>Pour ouvrir une vue, choisissez la commande <strong>Montrer ...</strong>
 correspondante; commande du menu <strong>Vues</strong> (disponible uniquement
 à partir de la vue formatée). Les commandes <strong>Montrer ...</strong> du
-menu <strong>Vues</strong> peuvent être également utilisées pour obtenir la
-fenêtre correspondante quand elle est en arrière plan.</p>
+menu <strong>Vues</strong> peuvent être également utilisées pour remonter au
+premier plan la fenêtre correspondante quand elle est en arrière plan.</p>
 
 <h3><a name="Closing">Fermer une vue</a></h3>
 
@@ -89,40 +89,42 @@ toutes les vues visualisant le même document.</p>
 
 <h3><a name="Using">Utiliser les vues</a></h3>
 
-<p>Toutes les vues (excepté la vue source) sont automatiquement
-<em>synchronisées</em>: chaque fois que vous sélectionnnez quelques caractères
+<p>Toutes les vues (exceptée la vue source) sont automatiquement
+<em>synchronisées</em>: chaque fois que vous sélectionnez quelques caractères
 ou éléments dans une vue, les autres vues du même document défilent
 automatiquement de telle sorte qu'on voit la même partie du document.</p>
 
 <p>Vous pouvez rédiger le document dans n'importe quelle vue. Pour une
-sensibilité otpimum quand vous tapez, les charactères entrés sont visualisés
+sensibilité optimum quand vous tapez, les caractères entrés sont visualisés
 uniquement dans la vue où vous avez cliqué. Dès que vous activez une commande
-ou cliquez quelque part, ces caractères sont également visualisés dans les
+ou cliques quelque part, ces caractères sont également visualisés dans les
 autres vues.</p>
 
 <p>La vue source se comporte différemment: vous devez demander la
 synchronisation explicitement, en utilisant la commande
 <strong>Synchroniser</strong> du menu <strong>Fichier</strong>. Quand vous
 avez effectué une série d'éditions dans la vue source, vous devez entrer la
-commande <strong>Synchroniser</strong>  depuis n'importe quelle vue pour
-mettre à jour toutes les autres vues du document. Inversement, quand vous avez
-effectué des changements dans une autre vue, entrer la commande
+commande <strong>Synchroniser</strong>  depuis cette vue pour mettre à jour
+toutes les autres vues du document. Inversement, quand vous avez effectué des
+changements dans une autre vue, entrer la commande
 <strong>Synchroniser</strong> pour mettre à jour la vue source.</p>
 
-<p>Synchroniser un document tentera Amaya de le revalider. Si des erreurs de
-balisage ont été introduites dans la vue source, Amaya tentera de les corriger
-du  mieux qu'il pourra. Vous devriez vérifier le document dans la vue
-structure ou bien dans la vue formatée après avoir édité dans le source pour
-s'assurer que la synchronisation a effectué ce que vous attendiez.</p>
+<p>Synchroniser un document depuis la source fera revalider le document par
+Amaya. Si des erreurs de balisage ont été introduites dans la vue source,
+Amaya tentera de les corriger du  mieux qu'il pourra. Vous devriez vérifier le
+document dans la vue structure ou bien dans la vue formatée après avoir édité
+dans le source pour s'assurer que la synchronisation a effectué ce que vous
+attendiez.</p>
 
 <p>Chaque fois que vous <a href="Publishing.html#L1104">sauvez</a> un
 document, localement ou à distance, depuis la vue source ou depuis la vue
 formatée, une synchronisation s'effectue automatiquement: toutes les vues
-refletent l'état du document au moment où il est sauvé.</p>
+reflètent l'état du document au moment où il est sauvé.</p>
 </div>
 
-<p align="right"><a href="Searching.html"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
+<p align="right"><a href="Searching.html" xml:lang="fr" lang="fr"><img
+alt="previous" border="0" src="../Icons/left.gif" /></a><span xml:lang="fr"
+lang="fr"> </span><a href="Manual.html"><img alt="top" border="0"
 src="../Icons/up.gif" /></a> <a href="Creating.html"><img alt="next"
 border="0" src="../Icons/right.gif" /></a></p>
 <hr />
