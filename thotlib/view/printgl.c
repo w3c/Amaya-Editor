@@ -574,14 +574,14 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 			       vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
 			       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]);
 		      vertices[1] = vertices[2];
-		  #else /*_WINDOWS*/
+#else /*_WINDOWS*/
 
-			  /* dessiner avec les fonctions win32 un triangle ABC avec les 3 points suivant
-			  (cf windowdisplay)
-			  A : vertices[2].xyz[0], GL_HEIGHT - vertices[2].xyz[1],
-			  B : vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
-			  C : vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]
-			  */
+		      /* dessiner avec les fonctions win32 un triangle ABC avec les 3 points suivant
+			 (cf windowdisplay)
+			 A : vertices[2].xyz[0], GL_HEIGHT - vertices[2].xyz[1],
+			 B : vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
+			 C : vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]
+		      */
 #endif/*_WINDOWS*/
 		    }
 		  else
@@ -634,6 +634,8 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 GLint GLText (const char *str,
 	      const int fg,
 	      const void *font,
@@ -697,6 +699,8 @@ static void Transcode (FILE *fout, int encoding, unsigned char car)
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 int GLString (unsigned char *buff, int lg, int frame, int x, int y,
 		PtrFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg, int shadow)
@@ -835,6 +839,8 @@ int GLString (unsigned char *buff, int lg, int frame, int x, int y,
 
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
 			    GLint xorig, GLint yorig,
 			    GLenum format, GLenum type, 
@@ -892,6 +898,8 @@ GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
   return 1;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 GLint GLEnable(GLint mode)
 {
   switch(mode)
@@ -906,6 +914,8 @@ GLint GLEnable(GLint mode)
   return 1;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 GLint GLDisable(GLint mode)
 { 
   switch(mode)
@@ -920,6 +930,8 @@ GLint GLDisable(GLint mode)
   return 1;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 GLint GLPointSize(GLfloat value)
 {
   if (!GL) 
@@ -931,6 +943,8 @@ GLint GLPointSize(GLfloat value)
   return 1;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 GLint GLLineWidth(GLfloat value)
 {
   if (!GL) 
@@ -941,10 +955,6 @@ GLint GLLineWidth(GLfloat value)
 
   return 1;
 }
-
-
-
-
 
 
 /*----------------------------------------------------------------------
