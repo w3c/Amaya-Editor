@@ -5939,8 +5939,8 @@ if test "${with_motif+set}" = set; then
 fi
 
 
-if test "GCC" = yes; then
-   CPP="$(CPP) -x c"
+if test "${CC}" = "gcc"; then
+   CPP="${CPP} -x c"
 fi
 if test "x$with_motif" = xno; then
   no_motif=yes
