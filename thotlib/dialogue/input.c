@@ -1105,7 +1105,7 @@ STRING              appliname;
    int                 mod1, mod2; /* 1er/ 2eme modifieurs : voir THOT_MOD_xx */
    int                 len, max;
    FILE               *file;
-   ThotTranslations    table;
+   ThotTranslations    table = 0;
 
    text = TtaGetEnvString ("APP_HOME");
    ustrcpy (name, appliname);

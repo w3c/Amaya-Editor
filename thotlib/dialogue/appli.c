@@ -2455,9 +2455,16 @@ int                *height;
 #else  /* _WINDOWS */
    RECT rWindow;
 
-   GetClientRect (FrRef[frame], &rWindow);
-   *height = rWindow.bottom - rWindow.top;
-   *width  = rWindow.right - rWindow.left;
+   if (GetClientRect (FrRef[frame], &rWindow) != 0)
+   {
+     *height = rWindow.bottom - rWindow.top;
+     *width  = rWindow.right - rWindow.left;
+   }
+   else
+   {
+	 *height = 0;
+     *width = 0;
+   }
 #endif /* _WINDOWS */
 }
 

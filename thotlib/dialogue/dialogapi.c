@@ -2594,7 +2594,7 @@ STRING              equiv;
    register int        ent;
    int                 eindex;
    register int        i;
-   int                 n;
+   int                 n = 0;
    ThotBool            rebuilded;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
