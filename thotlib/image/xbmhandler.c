@@ -13,8 +13,8 @@
 #include "font_f.h"
 
 /* ---------------------------------------------------------------------- */
-/* |    XbmCreate lit et retourne le bitmap lu dans le fichier          | */
-/* |            fn. Met a` jour xif, yif, wif, hif.                     | */
+/* |    XbmCreate reads and produces the bitmap read from the file          | */
+/* |            fn. updates the wif, hif, xif , yif                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 Drawable            XbmCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
@@ -94,7 +94,6 @@ unsigned int        BackGroundPixel;
    int                 wim, him;
    Pixmap              pix;
 
-   /* on va transformer le bitmap du fichier en un pixmap */
    i = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &PicWArea, &PicHArea, &pix, &xtmp, &ytmp);
    if (i != BitmapSuccess)
       return;
@@ -104,48 +103,26 @@ unsigned int        BackGroundPixel;
    switch (pres)
 	 {
 	    case RealSize:
-	       /* on centre l'image en x */
-	       /* quelle place a-t-on de chaque cote ? */
 	       delta = (wif - PicWArea) / 2;
 	       if (delta > 0)
 		 {
-		    /* on a de la place entre l'if et le cf */
-		    /* on a pas besoin de retailler dans le pixmap */
-		    /* on va afficher le pixmap dans une boite plus petite */
-		    /* decale'e de delta vers le centre */
 		    xif += delta;
-		    /* la largeur de la boite est celle du cf */
 		    wif = PicWArea;
 		 }
 	       else
 		 {
-		    /* on a pas de place entre l'if et le cf */
-		    /* on va retailler dans le pixmap pour que ca rentre */
-		    /* on sauve delta pour savoir ou couper */
 		    xtmp = -delta;
-		    /* on met a jour PicWArea pour etre coherent */
 		    PicWArea = wif;
 		 }
-	       /* on centre l'image en y */
 	       delta = (hif - PicHArea) / 2;
 	       if (delta > 0)
 		 {
-		    /* on a de la place entre l'if et le cf */
-		    /* on a pas besoin de retailler dans le pixmap */
-		    /* on va afficher le pixmap dans une boite plus petite */
-		    /* decale'e de delta vers le centre */
 		    yif += delta;
-		    /* la hauteur de la boite est celle du cf */
 		    hif = PicHArea;
 		 }
 	       else
 		 {
-		    /* on a pas de place entre l'if et le cf */
-		    /* on va retailler dans le pixmap pour que ca rentre */
-		    /* on sauve delta pour savoir ou couper */
-
 		    ytmp = -delta;
-		    /* on met a jour PicHArea pour etre coherent */
 		    PicHArea = hif;
 		 }
 	       break;
@@ -164,7 +141,6 @@ unsigned int        BackGroundPixel;
 		 }
 	       break;
 	    case FillFrame:
-	       /* DumpImage fait du plein cadre avec wif et hif */
 	       break;
 	    default:
 	       break;
@@ -172,9 +148,6 @@ unsigned int        BackGroundPixel;
 
    if (pix != None)
      {
-	/* on transforme le pixmap en Ximage */
-	/* si xtmp ou ytmp sont non nuls, ca veut dire qu'on retaille */
-	/* dans le pixmap (cas RealSize) */
 	Im = XGetImage (TtDisplay, pix, xtmp, ytmp,
 			(unsigned int) PicWArea, (unsigned int) PicHArea,
 			AllPlanes, XYPixmap);
@@ -201,7 +174,7 @@ unsigned int        BackGroundPixel;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    IsXbmFormat teste si un fichier contient un bitmap X11.         | */
+/* |    IsXbmFormat check if the file header is of an xbm format  by reading it !        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             IsXbmFormat (char *fn)
