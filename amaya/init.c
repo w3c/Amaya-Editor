@@ -1207,7 +1207,7 @@ void CheckParsingErrors (Document doc)
     {
       TtaSetItemOff (doc, 1, Views, BShowLogFile);
       /* Check the current parsing level */
-      if (CurrentParsingLevel != L_Other) 
+      if ((CurrentParsingLevel != L_Other) && TtaGetDocumentAccessMode (doc))
 	if ((CurrentParsingLevel == L_Basic &&
 	     (ParsingLevel[doc] == L_Strict ||
 	      ParsingLevel[doc] == L_Xhtml11 ||
