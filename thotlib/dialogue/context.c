@@ -305,13 +305,20 @@ STRING              name;
 {
    boolean             found;
 #ifndef _WINDOWS
+   XVisualInfo        *vptr;
+   XVisualInfo         vinfo;
    ThotColorStruct     col;
+   int                 i, j;
 
-   if (TtaGetScreenDepth () > 8)
-     TtIsTrueColor = TRUE;
+   vinfo.visualid = XVisualIDFromVisual (XDefaultVisual (TtDisplay, TtScreen));
+   vptr = XGetVisualInfo (TtDisplay, VisualIDMask, &vinfo, &i);
+   if (vptr)
+     {
+       TtIsTrueColor = (vptr->class == TrueColor || vptr->class == DirectColor);
+       XFree (vptr);
+     }
    else
      TtIsTrueColor = FALSE;
-
    /* Depending on the display Black and White order may be inverted */
    if (XWhitePixel (TtDisplay, TtScreen) == 0)
      {

@@ -152,13 +152,6 @@ typedef XColor    ThotColorStruct;
 #include <X11/Xlibint.h>
 #endif /* OWN_XLOOKUPSTRING */
 
-#define THOT_StaticGray		StaticGray
-#define THOT_GrayScale		GrayScale
-#define THOT_StaticColor       	StaticColor
-#define THOT_PseudoColor       	PseudoColor
-#define THOT_TrueColor		TrueColor
-#define THOT_DirectColor	DirectColor
-
 typedef Widget         ThotWidget;
 typedef Window         ThotWindow;
 typedef Drawable       ThotBitmap;
@@ -182,22 +175,5 @@ typedef Pixmap         ThotIcon;
 #define ThotBitmapNone ((ThotBitmap)-1)
 
 #endif /* ! _WINDOWS */
-
-/************************************************************************
- *									*
- * Common definition for all the GUIs					*
- *									*
- ************************************************************************/
-typedef struct
-{
-#ifdef __cplusplus
-  int                 v_depth;
-  int                 v_class;
-#else
-  int                 depth;
-  int                 class;
-#endif
-}
-THOT_VInfo;
 
 #endif /* THOT_GUI_H */

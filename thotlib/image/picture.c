@@ -81,18 +81,11 @@ int             InlineHandlers;
 int             HandlersCounter;
 int             currentExtraHandler;
 ThotGC          GCpicture;
-THOT_VInfo      THOT_vInfo;
 Pixmap          EpsfPictureLogo ;
 
 static STRING   PictureMenu;
 static Pixmap   PictureLogo;
 static ThotGC   tiledGC;
-#ifndef _WINDOWS
-XVisualInfo*    vptr;
-Visual*         theVisual;
-#else   /* _WINDOWS */
-CHAR LostPicturePath [512];
-#endif  /* _WINDOWS */
 
 STRING FileExtension[] = {
       ".xbm", ".eps", ".xpm", ".gif", ".jpg", ".png"
@@ -1186,25 +1179,7 @@ boolean             printing;
 
 #endif /* __STDC__ */
 {
-
-#  ifdef _WINDOWS
-#  if 0 
-   HDC                 hdc;
-
-   /* more magic needed - @@@ */
-   hdc = GetDC (WIN_Main_Wd);
-   THOT_vInfo.depth = GetDeviceCaps (hdc, PLANES);
-   if (THOT_vInfo.depth == 1)
-     {
-	THOT_vInfo.depth = GetDeviceCaps (hdc, BITSPIXEL);
-     }
-   /* THOT_vInfo.class = THOT_PseudoColor; */
-   DeleteDC (hdc);
-   EpsfPictureLogo = CreateBitmap (epsflogo_width, epsflogo_height, THOT_vInfo.depth, 16, epsflogo_bits);
-#  endif /* 0 */
-#  else  /* _WINDOWS */
-   XVisualInfo         vinfo;
-
+#  ifndef _WINDOWS
    /* initialize Graphic context to display pictures */
    TtGraphicGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
    XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
@@ -1236,10 +1211,6 @@ boolean             printing;
 						  Black_Color,
 						  White_Color,
 						  TtWDepth);
-   vinfo.visualid = XVisualIDFromVisual (XDefaultVisual (TtDisplay, TtScreen));
-   vptr = XGetVisualInfo (TtDisplay, VisualIDMask, &vinfo, &HandlersCounter);
-   THOT_vInfo.class = vptr->class;
-   THOT_vInfo.depth = vptr->depth;
    theVisual = DefaultVisual (TtDisplay, TtScreen);
 #  endif /* !_WINDOWS */
 

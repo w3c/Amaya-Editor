@@ -1208,7 +1208,6 @@ int               **thotColors;
 {
 
 #  ifndef _WINDOWS
-
    int                 i, size;
    int                 delta, not_right_col, not_last_row;
    Pixmap              Img;
@@ -1218,14 +1217,8 @@ int               **thotColors;
    unsigned char      *tmpdata;
    unsigned char      *ptr;
    unsigned char      *ptr2;
-   boolean             need_to_dither;
 
    /* find the visual class. */
-   if (THOT_vInfo.depth == 1)
-     need_to_dither = TRUE;
-   else
-     need_to_dither = FALSE;
-
    Mapping = (int*) TtaGetMemory (num_colors * sizeof (int));
    tcolors = NULL;
    for (i = 0; i < num_colors; i++)
@@ -1235,10 +1228,9 @@ int               **thotColors;
        tmpcolr.blue  = colrs[i].blue;
        tmpcolr.pixel = 0;
        tmpcolr.flags = DoRed | DoGreen | DoBlue;
-       if (THOT_vInfo.class == THOT_TrueColor ||
-	   THOT_vInfo.class == THOT_DirectColor)
+       if (TtIsTrueColor)
 	 Mapping[i] = i;
-       else if (need_to_dither == TRUE)
+       else if (TtWDepth == 1)
 	 {
 	   Mapping[i] = ((tmpcolr.red >> 5) * 11 +
 			 (tmpcolr.green >> 5) * 16 +
@@ -1263,7 +1255,7 @@ int               **thotColors;
     * of 2 dither patterns, we will always drop them to be
     * black on white.
     */
-   if (need_to_dither == TRUE && num_colors == 2)
+   if (TtWDepth == 1 && num_colors == 2)
      {
        if (Mapping[0] < Mapping[1]) {
 	 Mapping[0] = 0;
@@ -1292,7 +1284,7 @@ int               **thotColors;
        ptr = image_data;
        ptr2 = tmpdata;
 
-       if (need_to_dither == TRUE)
+       if (TtWDepth == 1)
 	 {
 	   int                 cx, cy;
 
@@ -1370,13 +1362,6 @@ int               **thotColors;
    return (Img);
 
 #  else /* _WINDOWS */
-   boolean           need_to_dither;
-
-   if (THOT_vInfo.depth == 1)
-      need_to_dither = TRUE;
-   else
-       need_to_dither = FALSE;
-
    if (TtIsTrueColor)
       return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs);
    else {
