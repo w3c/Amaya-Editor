@@ -10,7 +10,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"XMLPI_line", SPACE, HTML_EL_PI_line, L_OtherValue, FALSE},
    {"XMLcomment", SPACE, HTML_EL_Comment_, L_OtherValue, FALSE},
    {"XMLcomment_line", SPACE, HTML_EL_Comment_line, L_OtherValue, FALSE},
-   {"a", SPACE, HTML_EL_Anchor, L_Basic, TRUE},
+   {"a", SPACE, HTML_EL_Anchor, L_BasicValue, TRUE},
    {"abbr", SPACE, HTML_EL_ABBR, L_BasicValue, TRUE},
    {"acronym", SPACE, HTML_EL_ACRONYM, L_BasicValue, TRUE},
    {"address", SPACE, HTML_EL_Address, L_BasicValue, FALSE},
