@@ -35,6 +35,7 @@ typedef struct _Frame_Ctl {
   int        MenuSelect;                /* Selection menu ID or -1           */
   int        MenuPaste;                 /* Menu including the Paste command
 					   or -1 */
+  int        MenuContext;               /* Contextual menu ID or -1          */
   int        EntryPaste;                /* Entry number of the Paste command */
   int        MenuUndo;                  /* Menu including the Undo command
 					   or -1  */
@@ -99,8 +100,9 @@ typedef struct _Frame_Ctl {
   struct     _Menu_Ctl *FrMenus;        /* First menu context                */
   int        MenuAttr;                  /* Attributes menu ID or -1          */
   int        MenuSelect;                /* Selection menu ID or -1           */
-  int        MenuPaste;                 /* Menu including the Paste command
-					   or -1 */
+  int        MenuPaste;                 /* Menu including the Paste command or -1 */
+  int        MenuContext;               /* Contextual menu ID or -1          */
+
   int        EntryPaste;                /* Entry number of the Paste command */
   int        MenuUndo;                  /* Menu including the Undo command
 					   or -1  */

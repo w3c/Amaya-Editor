@@ -910,6 +910,14 @@ void AmayaPage::ShowQuickSplitButton( bool show )
   m_pSizerTop->Layout();
 }
 
+void AmayaPage::OnContextMenu( wxContextMenuEvent & event )
+{
+  wxLogDebug( _T("AmayaPage::OnContextMenu - (x,y)=(%d,%d)"),
+	      event.GetPosition().x,
+	      event.GetPosition().y );
+  event.Skip();
+}
+
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
@@ -927,6 +935,7 @@ BEGIN_EVENT_TABLE(AmayaPage, wxPanel)
   EVT_BUTTON( -1,                       AmayaPage::OnSplitButton)
 
   EVT_SET_FOCUS(                        AmayaPage::OnSetFocus )
+  //  EVT_CONTEXT_MENU(                     AmayaPage::OnContextMenu )
 
 END_EVENT_TABLE()
 

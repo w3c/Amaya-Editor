@@ -371,6 +371,7 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
   wxMenu * p_menu = (wxMenu *)event.GetEventObject();
   long     id     = event.GetId();
   
+#if 0
   wxMenuItem * p_menu_item = NULL;
   if (GetMenuBar())
     {
@@ -381,7 +382,15 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
 	  return;
 	}
     }
-  
+#endif /* 0 */
+
+  wxMenuItem * p_menu_item = p_menu->FindItem(id);
+  if (!p_menu_item)
+    {
+      wxASSERT_MSG(FALSE,_T("Menu item doesnt existe"));
+      return;
+    }
+
   AmayaContext * p_context = (AmayaContext *)p_menu_item->GetRefData();
   if (p_context)
     {

@@ -129,6 +129,7 @@ public:
   void OnSize( wxSizeEvent& event );
   void OnClose(wxCloseEvent& event);
   void OnIdle( wxIdleEvent& event );
+  void OnContextMenu( wxContextMenuEvent & event );
 
 #if 0
   void OnText( wxCommandEvent& event );

@@ -67,6 +67,10 @@
 	<message xml:lang="fi">&amp;Tiedosto</message>
 	<message xml:lang="ru">Ф&amp;айл</message>
 </label>
+<label define="Context_">
+	<message xml:lang="en">&amp;Context</message>
+	<message xml:lang="fr">&amp;Context</message>
+</label>
 <label define="Edit_">
 	<message xml:lang="en">&amp;Edit</message>
 	<message xml:lang="fr">&amp;Édition</message>

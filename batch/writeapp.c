@@ -244,6 +244,8 @@ static void         PrintMenus (PtrAppMenu firstMenu, WindowType winType, char *
 	    }
 	  else if (!strcmp (menu->AppMenuName, "Help_"))
 	    fprintf (AppFile, ", \"MenuHelp\");\n");
+	  else if (!strcmp (menu->AppMenuName, "Context_"))
+	    fprintf (AppFile, ", \"MenuContext\");\n");
 	  else
 	    fprintf (AppFile, ", \"\");\n");
 	  

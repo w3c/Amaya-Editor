@@ -109,6 +109,7 @@ public:
   void OnPaint( wxPaintEvent& event );
 
   void OnSetFocus( wxFocusEvent & event );
+  void OnContextMenu( wxContextMenuEvent & event );
 
  protected:
   void AdjustSplitterPos( int height = -1, int width = -1 );

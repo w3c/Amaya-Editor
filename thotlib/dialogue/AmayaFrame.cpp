@@ -952,6 +952,26 @@ void AmayaFrame::OnKeyUp( wxKeyEvent& event )
 }
 #endif /* 0 */
 
+
+void AmayaFrame::OnContextMenu( wxContextMenuEvent & event )
+{
+  wxLogDebug( _T("AmayaFrame::OnContextMenu - (x,y)=(%d,%d)"),
+	      event.GetPosition().x,
+	      event.GetPosition().y );
+
+  // no contextual menu into a frame
+
+  // this should be activated but becarfull because when contextual menu is shown,
+  // "mouse up" event is not proceded until the contextual menu is closed
+  // if you try to delete the current canvas with a command form the contextual
+  // menu this will crash amaya because a "mouse Up" will be generated just 
+  // when the menu is hidden, so when the command is proceded , so when the canvas is allready closed
+
+  // to activate the contextual menu into the frame just uncomment the following line
+  //  event.Skip();  
+}
+
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -973,6 +993,8 @@ BEGIN_EVENT_TABLE(AmayaFrame, wxPanel)
   //  EVT_KEY_DOWN(         AmayaFrame::OnKeyDown )
   //  EVT_KEY_UP(           AmayaFrame::OnKeyUp )
 
+  EVT_CONTEXT_MENU(     AmayaFrame::OnContextMenu )
+  
 END_EVENT_TABLE()
 
 #endif // #ifdef _WX

@@ -41,6 +41,7 @@
 #include "AmayaSimpleWindow.h"
 #include "AmayaPage.h"
 #include "AmayaToolBar.h"
+#include "AmayaNotebook.h"
 
 /* 
  * In this file there is a list of functions useful
@@ -190,6 +191,7 @@ static void TtaMakeMenuBar( int frame_id, const char * schema_name )
   FrameTable[frame_id].MenuPaste = -1;
   FrameTable[frame_id].MenuUndo = -1;
   FrameTable[frame_id].MenuRedo = -1;
+  FrameTable[frame_id].MenuContext = -1;
   
   while (p_menu_bar && ptrmenu)
     {
@@ -198,17 +200,30 @@ static void TtaMakeMenuBar( int frame_id, const char * schema_name )
 	   Prof_ShowMenu (ptrmenu))
 	{
 	  wxMenu * p_menu = new wxMenu;
-	  p_menu_bar->Append( p_menu,
-			      TtaConvMessageToWX( TtaGetMessage (THOT, ptrmenu->MenuID) ) );
+	  
+	  /* Le menu contextuel ne doit pas etre accroche a notre bar de menu */
+	  /* il sera affiche qd le boutton droit de la souris sera active */
+	  if (!ptrmenu->MenuContext)
+	    {
+	      p_menu_bar->Append( p_menu,
+				  TtaConvMessageToWX( TtaGetMessage (THOT, ptrmenu->MenuID) ) );
+	    }
 	  
 	  FrameTable[frame_id].WdMenus[i]      = p_menu;
 	  FrameTable[frame_id].EnabledMenus[i] = TRUE;
+	  
+	  /* On note l'id du menu contextuel pour notre frame courante,
+	   * c'est ce qui nous permettra de l'afficher plus tard */
+	  if (ptrmenu->MenuContext) 
+	    FrameTable[frame_id].MenuContext = ptrmenu->MenuID;
+
 	  /* Evite la construction des menus dynamiques */
 	  if (ptrmenu->MenuAttr)
 	    FrameTable[frame_id].MenuAttr = ptrmenu->MenuID;
 	  else if (ptrmenu->MenuSelect) 
 	    FrameTable[frame_id].MenuSelect = ptrmenu->MenuID;
 	  else 
+	    /* on termine par la construction des widgets que l'on accroche a notre p_menu */
 	    BuildPopdown (ptrmenu, ref, p_menu, frame_id, doc_id,
 			  FALSE, FALSE);	      
 	}
@@ -1209,3 +1224,30 @@ ThotBool TtaRegisterWidgetWX( int ref, void * p_widget )
   return FALSE;
 #endif /* _WX */
 }
+
+#ifdef _WX
+/*----------------------------------------------------------------------
+  TtaGetContextMenu - 
+  this function returns the contextual menu of the active frame into the given window
+  params:
+    + window_id : the parent window of the active frame
+  returns:
+    + wxMenu * : a pointer on a wxMenu, call PopupMenu to show it.
+  ----------------------------------------------------------------------*/
+wxMenu * TtaGetContextMenu( int window_id )
+{
+  AmayaWindow * p_window = TtaGetWindowFromId( window_id );
+  int frame_id = 0;
+  int menu_id = 0;
+  if ( p_window && p_window->GetActiveFrame() )
+    frame_id = p_window->GetActiveFrame()->GetFrameId();
+  if (frame_id)
+    menu_id = FrameTable[frame_id].MenuContext;
+
+  if (menu_id)
+    return FrameTable[frame_id].WdMenus[menu_id];
+  else
+    return NULL;
+}
+#endif /* _WX */
+

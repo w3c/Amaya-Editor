@@ -788,13 +788,16 @@ void TteAddMenu (WindowType windowtype, char *schemaName, int view,
    newmenu->MenuAttr = FALSE;
    newmenu->MenuSelect = FALSE;
    newmenu->MenuHelp = FALSE;
+   newmenu->MenuContext = FALSE;
    if (!strcmp (menuName, "MenuAttribute"))
       newmenu->MenuAttr = TRUE;
    else if (!strcmp (menuName, "MenuSelection"))
       newmenu->MenuSelect = TRUE;
    else if (!strcmp (menuName, "MenuHelp"))
       newmenu->MenuHelp = TRUE;
-
+   else if (!strcmp (menuName, "MenuContext"))
+      newmenu->MenuContext = TRUE;
+   
    /* creation et initialisation de la table des items */
    ptr = (Item_Ctl *)TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
    for (i = 0; i < itemsNumber; i++)
@@ -941,6 +944,7 @@ void TteAddSubMenu (WindowType windowtype, char *schemaName, int menuID,
 	     newmenu->MenuAttr = FALSE;
 	     newmenu->MenuSelect = FALSE;
 	     newmenu->MenuHelp = FALSE;
+	     newmenu->MenuContext = FALSE;
 
 	     /* creation et initialisation de la table des items */
 	     ptr = (Item_Ctl *) TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
@@ -2986,6 +2990,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].MenuPaste = -1;
 	   FrameTable[frame].MenuUndo = -1;
 	   FrameTable[frame].MenuRedo = -1;
+	   FrameTable[frame].MenuContext = -1;
 #ifdef _GL
 	   FrameTable[frame].DblBuffNeedSwap = TRUE;
 	   FrameTable[frame].BeginTime = 0;
@@ -3014,12 +3019,23 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		   GTK_WIDGET_SET_FLAGS (menu_item, GTK_SENSITIVE);
 		   if (ptrmenu->MenuHelp == TRUE)
 		       gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
-		   gtk_container_add (GTK_CONTAINER (menu_bar), menu_item);
+
+		   /* Le menu contextuel ne doit pas etre accroche a notre bar de menu */
+		   /* il sera affiche qd le boutton droit de la souris sera active */
+		   if (!ptrmenu->MenuContext)
+		     gtk_container_add (GTK_CONTAINER (menu_bar), menu_item);
+
 		   gtk_object_set_data (GTK_OBJECT(menu_item), "AccelGroup", (gpointer)accel_group);
 		   w = menu_item;
 #endif /* _GTK */
 		   FrameTable[frame].WdMenus[i] = w;
 		   FrameTable[frame].EnabledMenus[i] = TRUE;
+
+		   /* On note l'id du menu contextuel pour notre frame courante,
+		    * c'est ce qui nous permettra de l'afficher plus tard */
+		   if (ptrmenu->MenuContext) 
+		     FrameTable[frame].MenuContext = ptrmenu->MenuID;
+
 		   /* Evite la construction des menus dynamiques */
 		   if (ptrmenu->MenuAttr)
 		     FrameTable[frame].MenuAttr = ptrmenu->MenuID;

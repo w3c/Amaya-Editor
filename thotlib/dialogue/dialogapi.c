@@ -1308,11 +1308,11 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 		    /* En attendant le sous-menu on cree un bouton */
 #ifdef _WX
 		    sprintf (menu_item, "%s", &text[index + 1]);
-		    
+#if 0		    
 		    wxLogDebug( _T("new wxMenu(submenu): name=") +
 			        TtaConvMessageToWX( menu_item ) +
 				_T("\tref=%d\tparent=%x"), ref, menu );
-		    
+#endif /* 0 */
 		    w = (ThotWidget) AmayaFrame::AppendSubMenu( 
 			menu, /* parent */
 			ref + i,

@@ -81,12 +81,16 @@ class AmayaNotebook : public wxNotebook
 #endif /* 0 */
 
   void OnSetFocus( wxFocusEvent & event );
+  void OnIdle( wxIdleEvent& event );
+
+  void OnContextMenu( wxContextMenuEvent & event );
+  void OnContextMenuItem( wxCommandEvent& event );
+
+  DECLARE_EVENT_TABLE()
 
  protected:
-  DECLARE_EVENT_TABLE()
-//
   AmayaWindow *  m_pAmayaWindow; // amaya parent window
-
+  bool           m_ShouldLostFocus;
 };
 
 #endif // __AMAYANOTEBOOK_H__

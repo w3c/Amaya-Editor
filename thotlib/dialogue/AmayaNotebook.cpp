@@ -1,5 +1,20 @@
 #ifdef _WX
+#include "wx/wx.h"
 #include "wx/string.h"
+
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "frame.h"
+#include "registry.h"
+#include "appdialogue.h"
+#include "message.h"
+#include "dialogapi.h"
+#include "application.h"
+#include "appdialogue_wx.h"
+#include "windowtypes_wx.h"
+#include "appdialogue_wx_f.h"
 
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
@@ -15,12 +30,13 @@ AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
 		       -1,
 		       wxDefaultPosition, wxDefaultSize,
 		       wxNB_FIXEDWIDTH )
-          ,m_pAmayaWindow( p_amaya_window )
+	   ,m_pAmayaWindow( p_amaya_window )
+	   ,m_ShouldLostFocus( FALSE )
 {
 }
 
 AmayaNotebook::~AmayaNotebook()
-{ 
+{
 }
 
 /*
@@ -65,7 +81,10 @@ void AmayaNotebook::OnClose(wxCloseEvent& event)
   
   /* there is still open pages ? */
   if (close_window)
+    {
+      m_ShouldLostFocus = FALSE;
       event.Skip(); /* everything is closed => close the window */
+    }
   else
       event.Veto(); /* still an opened page => keep the window open */
 }
@@ -288,16 +307,37 @@ void AmayaNotebook::OnSetFocus( wxFocusEvent & event )
 {
   wxLogDebug( _T("AmayaNotebook::OnSetFocus") );
 
-  // when notebook receive focus, the page is warned and can redistribute focus to the right widgets
-  // in order to handle characteres.
-  AmayaPage * p_selected_page = (AmayaPage *)GetPage(GetSelection());
-  if (p_selected_page)
-    p_selected_page->SetSelected( TRUE );
+  m_ShouldLostFocus = TRUE;
 
   event.Skip();
 }
 
+void AmayaNotebook::OnIdle( wxIdleEvent& event )
+{
+  if ( m_ShouldLostFocus )
+    {
+      m_ShouldLostFocus = FALSE;
+      // when notebook receive focus, the page is warned and can redistribute focus to the right widgets
+      // in order to handle characteres.
+      AmayaPage * p_selected_page = (AmayaPage *)GetPage(GetSelection());
+      if (p_selected_page)
+	p_selected_page->SetSelected( TRUE );	
+    }
+  
+  event.Skip();
+}
 
+void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
+{
+  wxLogDebug( _T("AmayaNotebook::OnContextMenu - (x,y)=(%d,%d)"),
+	      event.GetPosition().x,
+	      event.GetPosition().y );
+  
+  wxMenu * p_menu = TtaGetContextMenu( m_pAmayaWindow->GetWindowId() );
+  PopupMenu(p_menu, ScreenToClient(event.GetPosition()));
+
+  event.Skip();
+}
 
 BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
   EVT_CLOSE(	                 AmayaNotebook::OnClose )
@@ -305,9 +345,12 @@ BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
   EVT_NOTEBOOK_PAGE_CHANGING( -1, AmayaNotebook::OnPageChanging )
 
   EVT_SET_FOCUS(        AmayaNotebook::OnSetFocus )
+  EVT_IDLE(             AmayaNotebook::OnIdle) // Process a wxEVT_IDLE event
 
   //  EVT_KEY_DOWN(		AmayaNotebook::OnKeyDown) // Process a wxEVT_KEY_DOWN event (any key has been pressed). 
   //  EVT_CHAR(		AmayaNotebook::OnChar) // Process a wxEVT_CHAR event. 
+
+  EVT_CONTEXT_MENU(              AmayaNotebook::OnContextMenu )
 
 END_EVENT_TABLE()
   
