@@ -67,6 +67,7 @@
 #include "thotmsg_f.h"
 #include "tree_f.h"
 
+static Proc         AppClosingFunction = NULL;
 #define VersionId TEXT ("V2.1")
 ThotBool            PrintErrorMessages = TRUE;
 
@@ -387,6 +388,22 @@ STRING              applicationName;
 }
 
 /*----------------------------------------------------------------------
+   TtaSetApplicationQuit register the procedure that must be called
+   just before the application will be closed.
+   That procedure has no parameters.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetApplicationQuit (Proc procedure)
+#else  /* __STDC__ */
+void                TtaSetApplicationQuit (procedure)
+Proc                procedure;
+#endif /* __STDC__ */
+{
+  AppClosingFunction = procedure;
+}
+
+
+/*----------------------------------------------------------------------
    TtaQuit
 
    Quits the Thot tool kit. No other function of the tool kit can then
@@ -406,6 +423,8 @@ void                TtaQuit ()
   FreeMenus ();
 #endif /* NODISPLAY */
   TtaFreeAppRegistry ();
+  if (*AppClosingFunction)
+    (*AppClosingFunction) ();
   exit (0);
 }
 

@@ -358,7 +358,10 @@ STRING              data;
 	      /* disable the CSS file in case it was applied yet */
 	      RemoveStyleSheet (CSSpath, CSSdocument, FALSE);
 	      /* enable the CSS file */
-	      LoadStyleSheet (CSSpath, CSSdocument, NULL, NULL);
+	      if (!strcmp (CSSpath, UserCSS))
+		LoadUserStyleSheet (CSSdocument);
+	      else
+		LoadStyleSheet (CSSpath, CSSdocument, NULL, NULL);
       	      break;
 	    case 4:
 	      /* remove the link to this file */
@@ -531,7 +534,7 @@ View                view;
   /* add a new link to a CSS file */
   LinkAsCSS = TRUE;
   CreateLinkInHead (doc, 1);
-  LinkAsCSS = FALSE;
+  /* LinkAsCSS will be cleared by SetREFattribute or by CallbackDialogue */
 }
 
 /*----------------------------------------------------------------------

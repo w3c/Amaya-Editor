@@ -4150,6 +4150,7 @@ STRING              data;
 	 SetREFattribute (AttrHREFelement, AttrHREFdocument, AttrHREFvalue, NULL);
        else if (IsNewAnchor)
 	 {
+	   LinkAsCSS = FALSE;
 	   /* remove the link if it was just created */
 	   TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
 	   DeleteAnchor (AttrHREFdocument, 1);
@@ -4377,6 +4378,40 @@ ThotBool CheckMakeDirectory (STRING name, ThotBool recursive)
 	return FALSE;
     }
   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+   FreeAmayaStructures cleans up memory ressources.
+  ----------------------------------------------------------------------*/
+void                FreeAmayaStructures ()
+{
+  if (LastURLName)
+    {
+      /* now exit the application */
+      TtaFreeMemory (LastURLName);
+      LastURLName = NULL;
+      TtaFreeMemory (DocumentName);
+      TtaFreeMemory (DirectoryName);
+      TtaFreeMemory (SavePath);
+      TtaFreeMemory (SaveName);
+      TtaFreeMemory (ObjectName);
+      TtaFreeMemory (SaveImgsURL);
+      TtaFreeMemory (SavingFile);
+      TtaFreeMemory (AttrHREFvalue);
+      TtaFreeMemory (UserCSS);
+      FreeHTMLParser ();
+      FreeXMLParser ();
+      FreeDocHistory ();
+      FreeTransform ();
+#ifdef AMAYA_JAVA
+      CloseJava ();
+#else
+      QueryClose ();
+#endif
+#ifdef ANNOTATIONS
+      ANNOT_Quit ();
+#endif /* ANNOTATIONS */
+    }
 }
 
 
@@ -4620,6 +4655,7 @@ NotifyEvent        *event;
 
    /* Define the backup function */
    TtaSetBackup (BackUpDocs);
+   TtaSetApplicationQuit (FreeAmayaStructures);
    TtaSetDocStatusUpdate ((Proc) DocStatusUpdate);
    AMAYA = TtaGetMessageTable (TEXT("amayamsg"), AMAYA_MSG_MAX);
    /* allocate callbacks for amaya */
@@ -5221,6 +5257,24 @@ View     view;
 
 
 /*----------------------------------------------------------------------
+   CheckAmayaClosed closes the application when there is any more
+   opened document
+  ----------------------------------------------------------------------*/
+void                CheckAmayaClosed ()
+{
+  int                i;
+
+  /* is it the last loaded document ? */
+  i = 1;
+  while (i < DocumentTableLength && DocumentURLs[i] == NULL)
+    i++;
+  
+  if (i == DocumentTableLength)
+    TtaQuit ();
+}
+
+
+/*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CloseDocument (Document doc, View view)
@@ -5238,7 +5292,6 @@ View                view;
       CheckAmayaClosed ();
     }
 }
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -5269,16 +5322,5 @@ View                view;
 	    /* the close has been aborted */
 	    return;
 	}
-   CheckAmayaClosed ();
+   TtaQuit ();
 }
-
-#ifdef _WINDOWS
-#ifdef __STDC__
-void DropFile (Document document, View view, STRING text)
-#else  /* !__STDC__ */
-void DropFile (document, view, text)
-#endif /* !__STDC__ */
-{
-   TextURL (document, view, text);
-}
-#endif /* _WINDOWS */

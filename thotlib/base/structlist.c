@@ -3071,6 +3071,7 @@ FILE               *fileDescriptor;
 	     pSc1 = pHd->HdPSchema;
 	     if (pSc1 != NULL)
 	       {
+		 fprintf (fileDescriptor, "{---------------------------------------------------------------}\n\n");
 		 fprintf (fileDescriptor, "PRESENTATION ");
 		 wrtext (pSchemaStr->SsName, fileDescriptor);
 		 fprintf (fileDescriptor, ";\n");

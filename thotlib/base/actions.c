@@ -52,9 +52,7 @@ Proc                procedure;
 void                TtaSetBackup (Proc procedure)
 #else  /* __STDC__ */
 void                TtaSetBackup (procedure)
-int                 id;
 Proc                procedure;
-
 #endif /* __STDC__ */
 {
   TteConnectAction (T_backuponfatal, procedure);
@@ -70,9 +68,7 @@ Proc                procedure;
 void                TtaSetDocStatusUpdate (Proc procedure)
 #else  /* __STDC__ */
 void                TtaSetDocStatusUpdate (procedure)
-int                 id;
 Proc                procedure;
-
 #endif /* __STDC__ */
 {
   TteConnectAction (T_docmodified, procedure);

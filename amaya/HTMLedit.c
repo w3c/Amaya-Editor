@@ -369,6 +369,7 @@ STRING              targetName;
        if (elType.ElTypeNum == HTML_EL_LINK &&
 	   (LinkAsCSS || IsCSSName (targetURL)))
 	 {
+	   LinkAsCSS = FALSE;
 	   LoadStyleSheet (targetURL, doc, element, NULL);
 	   attrType.AttrTypeNum = HTML_ATTR_REL;
 	   attr = TtaGetAttribute (element, attrType);

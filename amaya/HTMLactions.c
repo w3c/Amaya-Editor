@@ -1073,51 +1073,6 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   CheckAmayaClosed closes the application when there is any more
-   opened document
-  ----------------------------------------------------------------------*/
-void                CheckAmayaClosed ()
-{
-  int                i;
-
-  /* is it the last loaded document ? */
-  i = 1;
-  while (i < DocumentTableLength && DocumentURLs[i] == NULL)
-    i++;
-  
-  if (i == DocumentTableLength)
-    {
-      /* now exit the application */
-#ifdef AMAYA_JAVA
-      CloseJava ();
-#else
-#ifdef AMAYA_ILU
-#else
-      QueryClose ();
-#endif
-#endif
-#ifdef ANNOTATIONS
-      ANNOT_Quit ();
-#endif /* ANNOTATIONS */
-      TtaFreeMemory (LastURLName);
-      TtaFreeMemory (DocumentName);
-      TtaFreeMemory (DirectoryName);
-      TtaFreeMemory (SavePath);
-      TtaFreeMemory (SaveName);
-      TtaFreeMemory (ObjectName);
-      TtaFreeMemory (SaveImgsURL);
-      TtaFreeMemory (SavingFile);
-      TtaFreeMemory (AttrHREFvalue);
-      TtaFreeMemory (UserCSS);
-      FreeHTMLParser ();
-      FreeXMLParser ();
-      FreeDocHistory ();
-      FreeTransform ();
-      TtaQuit ();
-    }
-}
-
-/*----------------------------------------------------------------------
    FreeDocumentResource                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

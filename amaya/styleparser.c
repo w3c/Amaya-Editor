@@ -3138,7 +3138,7 @@ CSSInfoPtr      css;
   STRING              pseudoclasses[MAX_ANCESTORS];
   STRING              attrs[MAX_ANCESTORS];
   STRING              attrvals[MAX_ANCESTORS];
-  int                 i, j, k, max;
+  int                 i, j, k, max, maxAttr;
   ThotBool            isHTML;
 
   sel[0] = EOS;
@@ -3284,6 +3284,7 @@ CSSInfoPtr      css;
   i = 0;
   k = 0;
   j = 0;
+  maxAttr = 0;
   while (i <= max)
     {
       if (names[i])
@@ -3332,11 +3333,12 @@ CSSInfoPtr      css;
 	  k++;
 	}
 
-      if (i > 0 &&
-	  names[i] &&
-	  (classes[i] || pseudoclasses[i] || ids[i] || attrs[i]))
-	/* Thot is not able to manage this kind of selector -> abort */
-	return (selector);
+      if (classes[i] || pseudoclasses[i] || ids[i] || attrs[i])
+	if (maxAttr > 0)
+	  /* Thot is not able to manage this kind of selector -> abort */
+	  return (selector);
+	else
+	  maxAttr++;
 
       /* store attributes information */
       if (classes[i])

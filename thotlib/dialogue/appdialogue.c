@@ -2087,8 +2087,7 @@ void                (*procedure) ();
    ThotWidget         *brother;
    XmString            title_string;
    Arg                 args[MAX_ARGS];
-#  endif /* _WINDOWS */
-#  ifdef _WINDOWS
+#  else /* _WINDOWS */
    RECT       rect;
    ThotWidget wLabel;
 #  endif /* _WINDOWS */
@@ -2113,7 +2112,7 @@ void                (*procedure) ();
 	       {
 		  row = FrameTable[frame].Text_Zone[0];
 		  /*XtManageChild(row); */
-#                 ifndef _WINDOWS
+#ifndef _WINDOWS
 #ifndef _GTK
 		  XtUnmanageChild (XtParent (XtParent (row)));
 
@@ -2223,7 +2222,7 @@ void                (*procedure) ();
 		  XtManageChild (XtParent (XtParent (row)));
 		  XtManageChild (XtParent (XtParent (XtParent (row))));
 #endif /* _GTK */
-#                 else  /* _WINDOWS */
+#else  /* _WINDOWS */
 		          currentFrame = frame;
                   GetClientRect (FrMainRef [frame], &rect);
                   w = CreateWindow (TEXT("EDIT"), _EMPTYSTR_, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
@@ -2242,7 +2241,7 @@ void                (*procedure) ();
                   FrameTable[frame].Label[i] = wLabel;
 				  /* FrameTable[frame].showLogo = TRUE; */
                   PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
-#                 endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	       }
 	     else
 		i = 0;
