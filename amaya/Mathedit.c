@@ -1472,6 +1472,7 @@ static void MergeMathEl (el, el2, before, newSelEl, newSelChar, doc)
   int           len;
 
   TtaRegisterElementReplace (el, doc);
+  TtaRegisterElementDelete (el2, doc);
   textEl2 = TtaGetFirstChild (el2);
   if (before)
      prevEl = NULL;
@@ -1518,7 +1519,6 @@ static void MergeMathEl (el, el2, before, newSelEl, newSelChar, doc)
 	      }
 	}
      }
-  TtaRegisterElementDelete (el2, doc);
   TtaDeleteTree (el2, doc);
   MathSetAttributes (el, doc, NULL);
 }
@@ -2185,25 +2185,38 @@ void MathElementPasted(event)
 #endif /* __STDC__*/
 {
    Element	placeholderEl, parent;
-   ElementType	elType;
-  int           oldStructureChecking;
+   ElementType	elType, elTypeParent;
+   int          oldStructureChecking;
 
    elType = TtaGetElementType (event->element);
    oldStructureChecking = TtaGetStructureChecking (event->document);
    TtaSetStructureChecking (0, event->document);
 
-   /* if the new element is a child of a FencedExpression element,
+   /* if the pasted element is a child of a FencedExpression element,
       create the associated FencedSeparator elements */
    parent = TtaGetParent (event->element);
-   elType = TtaGetElementType (parent);
-   if (elType.ElTypeNum == MathML_EL_FencedExpression)
+   elTypeParent = TtaGetElementType (parent);
+   if (elTypeParent.ElTypeNum == MathML_EL_FencedExpression)
      RegenerateFencedSeparators (parent, event->document, FALSE/******/);
 
-   /* create placeholders before and/or after the new element */
-   placeholderEl = InsertPlaceholder (event->element, TRUE, event->document,
-				      FALSE/****/);
-   placeholderEl = InsertPlaceholder (event->element, FALSE, event->document,
-				      FALSE/****/);
+   /* if the pasted element is a character string within a MI, MN, or MO
+      element, parse the new content to isolate identifiers, numbers and
+      operators */
+   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+     {
+     if (elTypeParent.ElTypeNum == MathML_EL_MI ||
+         elTypeParent.ElTypeNum == MathML_EL_MO ||
+	 elTypeParent.ElTypeNum == MathML_EL_MN)
+	ParseMathString (event->element, parent, event->document);
+     }
+   else
+     {
+     /* create placeholders before and/or after the new element */
+     placeholderEl = InsertPlaceholder (event->element, TRUE, event->document,
+					FALSE/****/);
+     placeholderEl = InsertPlaceholder (event->element, FALSE, event->document,
+					FALSE/****/);
+     }
 
    TtaSetStructureChecking ((ThotBool)oldStructureChecking, event->document);
 }
@@ -2348,6 +2361,10 @@ void MathElementDeleted(event)
    int		i, newTypeNum;
    int          oldStructureChecking;
 
+   if (event->info == 1)
+      /* call from Undo. This element is not really deleted.  It will be
+         replaced by another element. Don't do anything */
+      return;
    parent = event->element; /* parent of the deleted element */
    parentType = TtaGetElementType (parent);
 

@@ -1964,7 +1964,7 @@ ThotBool            before;
           pSel = pSibling;
           before = !before;
           }
-       if (pSel != NULL)
+       if (pSel && pSel->ElStructSchema)
           {
           if (pSel->ElVolume > 0)
              /* the first element moved is not empty. Select its first

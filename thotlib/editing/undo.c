@@ -1015,6 +1015,8 @@ ThotBool reverse;
             pSibling = pSibling->ElPrevious;
             }
          notifyEl.position = nSiblings;
+	 /* tell the application that this element is deleted by the Undo
+	    command */
 	 notifyEl.info = 1;
          /* remove the element */
 	 if (!reverse)
