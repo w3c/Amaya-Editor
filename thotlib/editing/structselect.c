@@ -861,9 +861,14 @@ void ShowSelection (PtrAbstractBox pRootAb, ThotBool showBegin)
 		{
 		  pNextAb = pNextEl->ElAbstractBox[view - 1];
 		  pEl = pNextEl;
+		  selEnd = (pNextEl == LastSelectedElement &&
+			    (pNextAb == NULL || pNextAb->AbNext == NULL));
 		}
+	      else
+		selEnd = TRUE;
 	    }
-	  selEnd = pNextAb == NULL;
+	  else
+	    selEnd = TRUE;
 	  /* indicate that selected element to the display module */
 	  pAb->AbSelected = TRUE;
 	  if (selBegin || selEnd)

@@ -490,7 +490,8 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 	      /* it's a text */
 	      if (firstChar == 0 && lastChar == 0)
 		{
-		  if (!SelPosition && startSelection == endSelection)
+		  if (!SelPosition &&
+		      (startSelection || endSelection))
 		    {
 		      /* select the whole text */
 		      firstChar = 1;

@@ -384,6 +384,8 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
        pBox = pFrame->FrAbstractBox->AbBox;
        if (pBox == NULL)
 	 return;
+       if (pFrame->FrAbstractBox->AbElement == NULL)
+	 return;
      }
    else
       return;

@@ -1078,9 +1078,9 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  fprintf (PSfile, "/greater/question/at/A/B/C/D/E/F/G/H/I/J/K/L/M/N/O/P/Q/R/S\n");
 	  fprintf (PSfile, "/T/U/V/W/X/Y/Z/bracketleft/backslash/bracketright/asciicircum\n");
 	  fprintf (PSfile, "/underscore/quoteleft/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s\n");
-	  fprintf (PSfile, "/t/u/v/w/x/y/z/braceleft/bar/braceright/asciitilde/.notdef/.notdef\n");
+	  fprintf (PSfile, "/t/u/v/w/x/y/z/braceleft/bar/braceright/asciitilde/.notdef/epsilon\n");
 	  fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef\n");
-	  fprintf (PSfile, "/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/dotlessi/grave\n");
+	  fprintf (PSfile, "/.notdef/oe/OE/.notdef/.notdef/.notdef/.notdef/dotlessi/grave\n");
 	  fprintf (PSfile, "/acute/circumflex/tilde/macron/breve/dotaccent/dieresis/.notdef/ring\n");
 	  fprintf (PSfile, "/cedilla/.notdef/hungarumlaut/ogonek/caron/space/exclamdown/cent\n");
 	  fprintf (PSfile, "/sterling/currency/yen/brokenbar/section/dieresis/copyright/ordfeminine\n");
