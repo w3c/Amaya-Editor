@@ -216,6 +216,8 @@ RULES
 	Size: 12 pt;
 	Font: helvetica;
         Visibility: 10;
+	Width: Enclosing . Width;
+	Height: Enclosing . Height min;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width;
 		PaddingLeft: 0.4;
