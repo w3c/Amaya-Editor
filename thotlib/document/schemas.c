@@ -350,12 +350,16 @@ void FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
 	    FreeHandleSchPres (pHSP);
 	    pHSP = pNextHSP;
 	  }
+	pPfS->PfFirstPSchemaExtens = NULL;
 	/* unlink the block */
-	if (pPrevPfS)
-	  pPrevPfS = pPfS->PfNext;
-	else
-	  pDoc->DocFirstSchDescr = pPfS->PfNext;
-	FreeDocSchemasDescr (pPfS);
+	if (pPfS->PfSSchema == NULL)
+	  {
+	    if (pPrevPfS)
+	      pPrevPfS = pPfS->PfNext;
+	    else
+	      pDoc->DocFirstSchDescr = pPfS->PfNext;
+	    FreeDocSchemasDescr (pPfS);
+	  }
       }
 }
 
@@ -566,9 +570,12 @@ PtrSSchema          LoadStructureSchema (Name schemaName, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 ThotBool      ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
 {
-  AStructure *pStr;
-  int        i;
+  AStructure          *pStr;
+  PtrDocSchemasDescr  pPfS, pPrevPfS;
+  int                 i;
+  ThotBool            result;
 
+  result = FALSE;
   /* look for this schema in the table */
   for (i = 0; i < MAX_SSCHEMAS && LoadedSSchema[i].pStructSchema != pSS; i++);
   if (i >= MAX_SSCHEMAS)
@@ -579,9 +586,7 @@ ThotBool      ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
 #endif
   pStr = &LoadedSSchema[i];
   pStr->UsageCount--;
-  if (pStr->UsageCount > 0)
-    return FALSE;
-  else
+  if (pStr->UsageCount <= 0)
     /* This schema is no longer used by any document. Unload it */
     {
 #ifndef VQ
@@ -590,8 +595,22 @@ ThotBool      ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
       pStr->pStructSchema = NULL;
       pStr->StructSchemaName[0] = EOS;
       FreeSchStruc (pSS);
-      return TRUE;
+      result = TRUE;
     }
+  pPfS = PresForStructSchema (pDoc, pSS, &pPrevPfS);
+  if (pPfS)
+    {
+      pPfS->PfSSchema = NULL;
+      if (pPfS->PfPSchema == NULL)
+	{
+	  if (pPrevPfS)
+	    pPrevPfS = pPfS->PfNext;
+	  else
+	    pDoc->DocFirstSchDescr = pPfS->PfNext;
+	  FreeDocSchemasDescr (pPfS);
+	}
+    }
+  return result;
 }
 
 /*----------------------------------------------------------------------
@@ -1003,16 +1022,18 @@ ThotBool            FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS,
   ----------------------------------------------------------------------*/
 void             FreeDocumentSchemas (PtrDocument pDoc)
 {
-   PtrSSchema    pSS;
-   int           i;
+   PtrSSchema         pSS;
+  PtrDocSchemasDescr  pPfS;
+   int                i;
 
    while (pDoc->DocFirstSchDescr)
      {
-       pSS = pDoc->DocFirstSchDescr->PfSSchema;
+       pPfS = pDoc->DocFirstSchDescr;
+       pSS = pPfS->PfSSchema;
        if (pSS)
 	 {
 #ifndef NODISPLAY
-	   FreePresentationSchema (pDoc->DocFirstSchDescr->PfPSchema, pSS, pDoc);
+	   FreePresentationSchema (pPfS->PfPSchema, pSS, pDoc);
 #endif
 	   if (ReleaseStructureSchema (pSS, pDoc))
 	     /* this structure schema has been unloaded */

@@ -2824,18 +2824,12 @@ void                DeleteElement (PtrElement * pEl, PtrDocument pDoc)
    PtrElement          pChild, pNextChild;
    PtrTextBuffer       pBuf, pNextBuf;
    PtrPathSeg          pPa, pNextPa;
-   int                 c, n;
+   int                 c;
    PtrAttribute        pAttr, pNextAttr;
    PtrPRule            pRule, pNextRule;
    PtrElement          pEl1;
    PtrCopyDescr        pCD, pNextCD;
-   PtrElement          pAsc;
-   PtrSSchema          pSS;
-   ThotBool            ok, stop;
-#ifdef IV
-   PtrDocument         pDoc;
-   int                 d;
-#endif
+
    if (*pEl != NULL && (*pEl)->ElStructSchema != NULL)
      {
        pEl1 = *pEl;
@@ -2957,63 +2951,6 @@ void                DeleteElement (PtrElement * pEl, PtrDocument pDoc)
        /* frees the descriptor of the referenced element */
        DeleteReferredElDescr (pEl1->ElReferredDescr);
        pEl1->ElReferredDescr = NULL;
-       /* decrements the number of objets if it's an element built
-	  according to the root rule of its structure scheme */
-       if (pEl1->ElTypeNumber == pEl1->ElStructSchema->SsRootElem)
-	 /* l'element est construit selon la regle racine de son schema */
-	 {
-	   pEl1->ElStructSchema->SsNObjects--;
-	   if (pEl1->ElStructSchema->SsNObjects == 0)	  
-	     /* it's the last object */
-	     /* frees the nature */
-	     {
-	       pAsc = pEl1->ElParent;
-	       ok = FALSE;
-	       while ((!ok) && (pAsc != NULL))
-		 {
-		   pSS = pEl1->ElStructSchema;
-		   ok = FreeNature (pAsc->ElStructSchema, pSS, pDoc);
-		   if (ok)
-		     /* we freed the structure scheme. now we must delete
-			it from the document's table of natures */
-		     {
-		       stop = FALSE;
-		       for (n = 1; n <= pDoc->DocNNatures && !stop; n++)
-			 if (pDoc->DocNatureSSchema[n - 1] == pSS)
-			   {
-			     stop = TRUE;
-			     while (n < pDoc->DocNNatures)
-			       {
-				 ustrcpy (pDoc->DocNatureName[n - 1],
-					  pDoc->DocNatureName[n]);
-				 ustrcpy (pDoc->DocNaturePresName[n - 1],
-					  pDoc->DocNaturePresName[n]);
-				 pDoc->DocNatureSSchema[n - 1] = pDoc->DocNatureSSchema[n];
-				 n++;
-			       }
-			     pDoc->DocNNatures--;
-			   }
-		     }
-		   else
-		     /* this nature wasn't defined at the immediate superior
-			level, so we have to look for another enclosing 
-			structure scheme having this nature as a unit */
-		     {
-		       pSS = pAsc->ElStructSchema;
-		       stop = FALSE;
-		       do
-			 {
-			   pAsc = pAsc->ElParent;
-			   if (pAsc == NULL)
-			     stop = TRUE;
-			   else if (pAsc->ElStructSchema != pSS)
-			     stop = TRUE;
-			 }
-		       while (!stop);
-		     }
-		 }
-	     }
-	 }
        /* removes the element from the tree */
        RemoveElement (*pEl);
        /* frees all the Abstract boxes */
@@ -3147,18 +3084,7 @@ PtrElement CopyTree (PtrElement pSource, PtrDocument pDocSource,
 		    if (!sameSSchema)
 		      /* No ancestor has this structure scheme, so the unit is
 			 invalid */
-		      {
-#ifdef IV
-			if (ResdynCt.ElSour != NULL &&
-			    !pSource->ElStructSchema->SsExtension)
-			  /* if we are doing a restructuration, we search for a
-			     compatible unit */
-			  GDRCompatibleUnit ((Element) pSource, (Element) pParent,
-					     &copyType, (int **) &pSSchema);
-			else
-#endif
-			  copyType = 0;
-		      }
+		      copyType = 0;
 		  }
 	      }
 	    else
