@@ -1,3 +1,4 @@
+0 Erreur X11 : %s\n
 1 Vue non trouv\351e.
 2 Erreur au cours du chargement du dictionnaire: %s\n 
 3 Fichier inaccessible : %s\n
@@ -19,29 +20,34 @@
 19 Il n\'y a plus de place pour la police %s
 20 La structure du document %s est invalide
 21 Le document %s ne peut \352tre ni sauv\351 ni modifi\351
-27 Une erreur de position horizontale : %s
-28 Une erreur de position verticale : %s
-29 Table des r\350gles satur\351e.
-30 Le sch\351ma de structure %s a \351t\351 modifi\351
-31 Fichier incorrect : %s.STR
-32 Fichier incorrect : %s.PRS
-33 R\351pertoire inaccessible : %s
-34 Impression impossible
-35 Changement de pr\351sentation impossible
-36 Sauvegarde du PostScript impossible
-37 Importation du fichier impossible
-38 La vue est vide
-39 Commande interdite, \351l\351ment en lecture seule.
-40 Ne copiez pas des marques seules
-41 Une erreur de dimension horizontale : %s
-42 Une erreur de dimension verticale : %s
-43 Creation du dictionnaire du document : %s
-44 La bo\356te d\351borde horizontalement : %s
-45 La bo\356te d\351borde verticalement : %s
-46 Une erreur de position horizontale : %s. Voir le sch\351ma de pr\351sentation
-47 Une erreur de position verticale : %s. Voir le sch\351ma de pr\351sentation
-48 Une erreur de dimension horizontale :%s. Voir le sch\351ma de pr\351sentation
-49 Une erreur de dimension verticale :%s. Voir le sch\351ma de pr\351sentation
+22 Table des r\350gles satur\351e.
+23 Le sch\351ma de structure %s a \351t\351 modifi\351
+24 Fichier incorrect : %s.STR
+25 Fichier incorrect : %s.PRS
+26 R\351pertoire inaccessible : %s
+27 Impression impossible
+28 Changement de pr\351sentation impossible
+29 Sauvegarde du PostScript impossible
+30 Importation du fichier impossible
+31 La vue est vide
+32 Commande interdite, \351l\351ment en lecture seule.
+33 Ne copiez pas des marques seules
+34 Creation du dictionnaire du document : %s
+35 Type d'image
+36 Pr\351sentation
+37 Fichier image
+38 Impression termin\351e: %s
+39 Depuis la page...
+40 ...jusqu'\340 la page
+41 Nombre d'exemplaires
+42 Taux de reproduction (%)
+43 1 page/feuille
+44 2 pages/feuille
+45 4 pages/feuille
+46 Pages par feuille
+47 Repaginer
+48 Vues \340 imprimer
+49 Impression avec la pr\351sentation %s
 50 D\351signer l\'original, pas une copie.
 51 Chargement impossible de "%s"
 52 Variable d\'environnement %s non d\351finie
@@ -97,11 +103,11 @@
 102 Impossible d'ouvrir une nouvelle fen\352tre. Fermer une autre fen\352tre.
 103 *** Thot: erreur irr\351cup\351rable ***\n
 104 les documents modifi\351s vont \352tre sauv\351s sur des fichiers .SAV\n
-105 Erreur X11 : %s\n
-106 Pas de selection\n
-107 Impossible de lier le nouvel element\n
-108 procedure SuppRef (refelem.c)\n
-109 Label dupliqu\351 : %s\n
+105 Sans modification
+106 Zoom\351e
+107 R\351p\351t\351e
+108 R\351p\351t\351e en X
+109 R\351p\351t\351e en Y
 110 Fin de fichier pr\351matur\351e
 111 Pas de bounding-box dans le fichier ps %s
 112 Impossible d'ouvrir les motifs de c\351sure : %s
@@ -267,16 +273,4 @@
 273 Erreur dans la traduction en PostScript
 274 Refus du spooler sur la destination %s
 275 Creation impossible: %s
-276 Impression termin\351e: %s
-277 Depuis la page...
-278 ...jusqu'\340 la page
-279 Nombre d'exemplaires
-280 Taux de reproduction (%)
-281 1 page/feuille
-282 2 pages/feuille
-283 4 pages/feuille
-284 Pages par feuille
-285 Repaginer
-286 Vues \340 imprimer
-287 Impression avec la pr\351sentation %s
 

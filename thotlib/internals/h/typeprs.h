@@ -35,7 +35,9 @@ typedef enum
 {
         RealSize,
         ReScale,
-        FillFrame
+        FillFrame,
+	XRepeat,
+	YRepeat
 } PictureScaling;
 
 /* dimensions and axes of the boxes */

@@ -924,6 +924,12 @@ BinFile             file;
 	    case C_PIV_FILLFRAME:
 	       scaling = FillFrame;
 	       break;
+	    case C_PIV_XREPEAT:
+	       scaling = XRepeat;
+	       break;
+	    case C_PIV_YREPEAT:
+	       scaling = YRepeat;
+	       break;
 	    default:
 	       PivotError (file);
 	       DisplayPivotMessage ("PICT");

@@ -643,7 +643,7 @@ boolean             vertRef;
 			      && !pBox->BxHorizFlex)
 			    {
 			       if (HighlightBoxErrors)
-				  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_HORIZ_BOX_OVERFLOW), AbsBoxType (pChildAb));
+				  fprintf(stderr, "Box overflow %s/n", AbsBoxType (pChildAb));
 			    }
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */
@@ -733,7 +733,7 @@ boolean             vertRef;
 			      && !pBox->BxVertFlex)
 			    {
 			       if (HighlightBoxErrors)
-				  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_VERT_BOX_OVERFLOW), AbsBoxType (pChildAb));
+				  fprintf (stderr, "Box overflow %s\n", AbsBoxType (pChildAb));
 			    }
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */

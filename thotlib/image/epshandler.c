@@ -187,13 +187,16 @@ unsigned long       BackGroundPixel;
    switch (pres)
 	 {
 	    case RealSize:
+	    case XRepeat:
+	    case YRepeat:
+	    case FillFrame:
 	       x = xif - PicXArea + (wif - PicWArea) / 2;
 	       y = yif + PicYArea - (hif - PicHArea) / 2;
 	       /* translate the picture to the right position */
 	       fprintf (fd, "  %d %d translate\n", x, -y);
 	       break;
 	    case ReScale:
-	       /* the same sclale for x and y and center the picture */
+	       /* the same scale for x and y and center the picture */
 
 	       Scx = (float) wif / (float) PicWArea;
 	       Scy = (float) hif / (float) PicHArea;
@@ -214,15 +217,6 @@ unsigned long       BackGroundPixel;
 		    y = (int) ((float) yif + (Scy * (float) PicYArea) - ((float) (hif - (PicHArea * Scy)) / 2.));
 		 }
 	       /* we translate then we scale  */
-	       fprintf (fd, "  %d %d translate %.4f %.4f scale\n", x, -y, Scx, Scy);
-	       break;
-	    case FillFrame:
-	       /* eps frame filling */
-	       Scx = (float) wif / (float) PicWArea;
-	       Scy = (float) hif / (float) PicHArea;
-	       x = (int) ((float) xif - (Scx * (float) PicXArea));
-	       y = (int) ((float) yif + (Scy * (float) PicYArea));
-	       /* we perform a scale and the translate */
 	       fprintf (fd, "  %d %d translate %.4f %.4f scale\n", x, -y, Scx, Scy);
 	       break;
 	    default:

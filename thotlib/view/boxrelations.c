@@ -535,7 +535,7 @@ boolean             horizRef;
   /* Verifie que la position ne depend pas d'un pave mort */
   if (pAb != NULL && pAb->AbDead)
     {
-      fprintf (stderr, "Position relative to a dead box");
+      fprintf (stderr, "Position refers a dead box");
       pAb = NULL;
     }
   
@@ -1212,7 +1212,7 @@ boolean             horizRef;
 	       {
 		  /* Il y a une erreur de dimension */
 		  /* Erreur sur le schema de presentation */
-		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_BAD_HORIZ_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
+		  fprintf (stderr, "Bad Width rule on %s\n", AbsBoxType (pAb));
 		  pAb->AbWidth.DimIsPosition = FALSE;
 		  pAb->AbWidth.DimAbRef = NULL;
 		  pAb->AbWidth.DimValue = 20;	/* largeur fixe */
@@ -1223,7 +1223,7 @@ boolean             horizRef;
 	     /* verifie que la dimension ne depend pas d'un pave mort */
 	     else if (pAb->AbHorizPos.PosAbRef->AbDead)
 	       {
-		  fprintf (stderr, "Dimension relative to a dead box");
+		  fprintf (stderr, "Dimension refers a dead box");
 		  pAb->AbWidth.DimIsPosition = FALSE;
 		  pAb->AbWidth.DimAbRef = NULL;
 		  pAb->AbWidth.DimValue = 20;	/* largeur fixe */
@@ -1250,7 +1250,7 @@ boolean             horizRef;
 	       {
 		  /* Il y a une erreur de dimension */
 		  /* Erreur sur le schema de presentation */
-		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_BAD_VERT_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
+		  fprintf (stderr, "Bad Height rule on %s\n", AbsBoxType (pAb));
 		  pAb->AbHeight.DimIsPosition = FALSE;
 		  pAb->AbHeight.DimAbRef = NULL;
 		  pAb->AbHeight.DimValue = 20;	/* hauteur fixe */
@@ -1261,7 +1261,7 @@ boolean             horizRef;
 	     /* verifie que la dimension ne depend pas d'un pave mort */
 	     else if (pAb->AbVertPos.PosAbRef->AbDead)
 	       {
-		  fprintf (stderr, "Dimension relative to a dead box");
+		  fprintf (stderr, "Dimension refers a dead box");
 		  pAb->AbHeight.DimIsPosition = FALSE;
 		  pAb->AbHeight.DimAbRef = NULL;
 		  pAb->AbHeight.DimValue = 20;	/* hauteur fixe */
@@ -1282,7 +1282,7 @@ boolean             horizRef;
 	     /* verifie que la dimension ne depend pas d'un pave mort */
 	     if (pDimAb->DimAbRef != NULL && pDimAb->DimAbRef->AbDead)
 	       {
-		  fprintf (stderr, "Dimension relative to a dead box");
+		  fprintf (stderr, "Dimension refers a dead box");
 		  pDimAb->DimAbRef = NULL;
 		  pDimAb->DimValue = 0;
 	       }
@@ -1543,9 +1543,9 @@ boolean             horizRef;
 					   /* Il y a une erreur de dimension */
 					   /* Erreur sur le schema de presentation */
 					   if (horizRef)
-					      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_BAD_HORIZ_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
+					     fprintf (stderr, "Bad HorizPos rule on %s\n", AbsBoxType (pAb));
 					   else
-					      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_BAD_VERT_SIZING_SEE_PRS_SCH), AbsBoxType (pAb));
+					     fprintf (stderr, "Bad VertPos rule on %s\n", AbsBoxType (pAb));
 
 					}
 				      InsertDimRelation (pDimAb->DimAbRef->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
@@ -1824,7 +1824,7 @@ boolean             horizRef;
    /* Verifie que la position ne depend pas d'un pave mort */
    if (pAb != NULL && pAb->AbDead)
      {
-	fprintf (stderr, "Position relative to a dead box");
+	fprintf (stderr, "Position refers a dead box");
 	pAb = NULL;
      }
 

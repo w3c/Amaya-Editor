@@ -2046,11 +2046,9 @@ int                 raz;
 
 #endif /* __STDC__ */
 {
-   int                 clipx, clipy, clipwidth, clipheight;
-
+   int              clipx, clipy, clipwidth, clipheight;
 #ifndef _WINDOWS
-   XRectangle          rect;
-
+   XRectangle        rect;
 #endif /* _WINDOWS */
 
    if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf)

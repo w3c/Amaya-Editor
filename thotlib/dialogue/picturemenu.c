@@ -35,18 +35,16 @@
 #include "application.h"
 #include "document.h"
 
-
-/*  */
 #include "picture.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
-#define MY_NUM_MENU_IMAGE_FRAME		1
-#define MY_NUM_ZONE_DIR_IMAGE		2
-#define MY_NUM_IMAGE_FORM		3
-#define MY_NUM_ZONE_IMAGE_FILE		4
-#define MY_NUM_IMAGE_SEL		5
-#define MY_NUM_MENU_IMAGE_TYPE		6
-#define MAX_IMAGE_MENU			7
+#define _MENU_IMAGE_FRAME	1
+#define _ZONE_DIR_IMAGE		2
+#define _IMAGE_FORM		3
+#define _ZONE_IMAGE_FILE	4
+#define _IMAGE_SEL		5
+#define _MENU_IMAGE_TYPE	6
+#define MAX_IMAGE_MENU		7
 extern PathBuffer   DocumentPath;
 extern PathBuffer   SchemaPath;
 extern char        *FileExtension[];
@@ -77,33 +75,39 @@ static void         CheckPresImage (indexType)
 int                 indexType;
 #endif /* __STDC__ */
 {
-   if (indexType == 1)
-     {
-	/* Le strech est autorise pour les images EPSF */
-	TtaRedrawMenuEntry (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, 1, NULL, -1, 1);
-	TtaRedrawMenuEntry (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, 2, NULL, -1, 1);
-     }
-   else
-     {
-	/* Le strech n'est pas autorise pour les autres images */
-	UnsetEntryMenu (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, 1);
-	UnsetEntryMenu (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, 2);
-	IndexPresImage = 0;
-	TtaSetMenuForm (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, IndexPresImage);
-     }
+  if (indexType == XBM_FORMAT || indexType == XPM_FORMAT)
+    {
+      /* Strech not allowed */
+      UnsetEntryMenu (BaseDlgImage + _MENU_IMAGE_FRAME, (int)ReScale);
+      TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)FillFrame, NULL, -1, 1);
+      TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)XRepeat, NULL, -1, 1);
+      TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)YRepeat, NULL, -1, 1);
+    }
+  else if (indexType == EPS_FORMAT)
+    {
+      /* Any repeat not allowed */
+      TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)ReScale, NULL, -1, 1);
+      UnsetEntryMenu (BaseDlgImage + _MENU_IMAGE_FRAME, (int)FillFrame);
+      UnsetEntryMenu (BaseDlgImage + _MENU_IMAGE_FRAME, (int)XRepeat);
+      UnsetEntryMenu (BaseDlgImage + _MENU_IMAGE_FRAME, (int)YRepeat);
+    }
+  else
+    {
+      /* All presentation allowed */
+      TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)ReScale, NULL, -1, 1);
+      TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)FillFrame, NULL, -1, 1);
+      TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)XRepeat, NULL, -1, 1);
+      TtaRedrawMenuEntry (BaseDlgImage + _MENU_IMAGE_FRAME, (int)YRepeat, NULL, -1, 1);
+      IndexPresImage = 0;
+      TtaSetMenuForm (BaseDlgImage + _MENU_IMAGE_FRAME, IndexPresImage);
+    }
 }
 
 /*----------------------------------------------------------------------
    InitPathImage
    inits the images paths.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InitPathImage ()
-
-#else  /* __STDC__ */
-static void         InitPathImage ()
-#endif				/* __STDC__ */
-
 {
    char                bufDir[MAX_PATH * 2];
    int                 i, j;
@@ -150,7 +154,7 @@ static void         InitPathImage ()
       bufDir[j] = '\0';
    else
       bufDir[j - 1] = '\0';
-   TtaNewSelector (BaseDlgImage + MY_NUM_ZONE_DIR_IMAGE, BaseDlgImage + MY_NUM_IMAGE_FORM, "Dossiers documents",
+   TtaNewSelector (BaseDlgImage + _ZONE_DIR_IMAGE, BaseDlgImage + _IMAGE_FORM, "Dossiers documents",
 		   nb, bufDir, 9, NULL, FALSE, TRUE);
 }
 
@@ -177,7 +181,7 @@ char               *txt;
 
    switch (ref - BaseDlgImage)
 	 {
-	    case MY_NUM_ZONE_IMAGE_FILE:
+	    case _ZONE_IMAGE_FILE:
 	       if (TtaCheckDirectory (txt) && txt[strlen (txt) - 1] != DIR_SEP)
 		 {
 		    strcpy (DirectoryImage, txt);
@@ -208,13 +212,13 @@ char               *txt;
 				 strcat (DocumentPath, PATH_STR);
 				 strcat (DocumentPath, DirectoryImage);
 				 InitPathImage ();
-				 TtaListDirectory (DirectoryImage, BaseDlgImage + MY_NUM_IMAGE_FORM, NULL, -1,
-						   FileExtension[IndexTypeImage], "Files", BaseDlgImage + MY_NUM_IMAGE_SEL);
+				 TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
+						   FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
 			      }
 			 }
 		 }
 	       break;
-	    case MY_NUM_IMAGE_SEL:
+	    case _IMAGE_SEL:
 	       if (DirectoryImage[0] == '\0')
 		 {
 		    /* compose le path complet du fichier pivot */
@@ -231,9 +235,9 @@ char               *txt;
 		    strcat (completeName, txt);
 		    strcpy (ImageName, txt);
 		 }
-	       TtaSetTextForm (BaseDlgImage + MY_NUM_ZONE_IMAGE_FILE, completeName);
+	       TtaSetTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, completeName);
 	       break;
-	    case MY_NUM_MENU_IMAGE_TYPE:
+	    case _MENU_IMAGE_TYPE:
 	       if (val != IndexTypeImage)
 		 {
 		    IndexTypeImage = val;
@@ -253,32 +257,32 @@ char               *txt;
 				   }
 			      }
 		      }
-		    TtaListDirectory (DirectoryImage, BaseDlgImage + MY_NUM_IMAGE_FORM, NULL, -1,
-				      FileExtension[IndexTypeImage], "Files", BaseDlgImage + MY_NUM_IMAGE_SEL);
+		    TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
+				      FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
 		    CheckPresImage (val);
 		 }
 	       break;
-	    case MY_NUM_MENU_IMAGE_FRAME:
+	    case _MENU_IMAGE_FRAME:
 	       if (val != IndexPresImage)
 		 {
 		    IndexPresImage = val;
 		    /* Faut-il mettre a jour la liste des fichiers */
 		    if (DirectoryImage[0] != '\0')
-		       TtaListDirectory (DirectoryImage, BaseDlgImage + MY_NUM_IMAGE_FORM, NULL, -1,
-					 FileExtension[IndexTypeImage], "Files", BaseDlgImage + MY_NUM_IMAGE_SEL);
+		       TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
+					 FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
 		 }
 	       break;
-	    case MY_NUM_ZONE_DIR_IMAGE:
+	    case _ZONE_DIR_IMAGE:
 	       strcpy (DirectoryImage, txt);
-	       TtaSetTextForm (BaseDlgImage + MY_NUM_ZONE_IMAGE_FILE, DirectoryImage);
-	       TtaListDirectory (DirectoryImage, BaseDlgImage + MY_NUM_IMAGE_FORM, NULL, -1,
-				 FileExtension[IndexTypeImage], "Files", BaseDlgImage + MY_NUM_IMAGE_SEL);
+	       TtaSetTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, DirectoryImage);
+	       TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
+				 FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
 	       break;
-	    case MY_NUM_IMAGE_FORM:
+	    case _IMAGE_FORM:
 	       if (val == 1)
 		  /* Edition realisee */
 		  RedisplayPicture = TRUE;
-	       TtaDestroyDialogue (BaseDlgImage + MY_NUM_IMAGE_FORM);
+	       TtaDestroyDialogue (BaseDlgImage + _IMAGE_FORM);
 	       break;
 	    default:
 	       break;
@@ -292,7 +296,6 @@ char               *txt;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildPictureMenu (char *name, boolean * result, int *typim, int *pres, PtrBox pBox)
-
 #else  /* __STDC__ */
 void                BuildPictureMenu (name, result, typim, pres, pBox)
 char               *name;
@@ -301,7 +304,6 @@ int                *typim;
 int                *pres;
 int                *pres;
 PtrBox              pBox;
-
 #endif /* __STDC__ */
 {
    int                 i, indx;
@@ -311,18 +313,17 @@ PtrBox              pBox;
    char                bufMenu[MAX_TXT_LEN];
    PictInfo           *image;
 
-
    IndexTypeImage = GetPictTypeIndex (*typim);
    IndexPresImage = GetPictPresIndex (*pres);
    strcpy (ImageName, name);
    DirectoryImage[0] = '\0';
    RedisplayPicture = FALSE;
 
-   TtaNewForm (BaseDlgImage + MY_NUM_IMAGE_FORM,  0, "Picture", TRUE, 2, 'L', D_CANCEL);
+   TtaNewForm (BaseDlgImage + _IMAGE_FORM,  0, TtaGetMessage (LIB, TMSG_PICTURE), TRUE, 2, 'L', D_CANCEL);
    InitPathImage ();
 
    /* liste des fichiers existants */
-   TtaListDirectory ("", BaseDlgImage + MY_NUM_IMAGE_FORM, NULL, -1, "", "Files", BaseDlgImage + MY_NUM_IMAGE_SEL);
+   TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1, "", TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
 
    /* sous-menu des types d'image du formulaire Picture */
    indx = 0;
@@ -341,36 +342,34 @@ PtrBox              pBox;
 	  }
 	source += length;
      }
-   TtaNewSubmenu (BaseDlgImage + MY_NUM_MENU_IMAGE_TYPE, BaseDlgImage + MY_NUM_IMAGE_FORM, 0, "Type image",
-
-
-
-
+   TtaNewSubmenu (BaseDlgImage + _MENU_IMAGE_TYPE, BaseDlgImage + _IMAGE_FORM, 0, TtaGetMessage (LIB, TMSG_PICT_TYPE),
 		  imageTypeCount, bufMenu, NULL, TRUE);
 
    /* sous-menu cadrage du formulaire Picture */
    indx = 0;
-   sprintf (&bufMenu[indx], "%s%s", "B", "Sans Modification");
+   sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_REALSIZE));
    indx += strlen (&bufMenu[indx]) + 1;
-   sprintf (&bufMenu[indx], "%s%s", "B", "ReScale");
+   sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_RESCALE));
    indx += strlen (&bufMenu[indx]) + 1;
-   sprintf (&bufMenu[indx], "%s%s", "B", "Plein Cadre");
+   sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_FILLFRAME));
    indx += strlen (&bufMenu[indx]) + 1;
-
-   TtaNewSubmenu (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, BaseDlgImage + MY_NUM_IMAGE_FORM, 0,
-		  "Affichage", 3, bufMenu, NULL, FALSE);
+   sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_XREPEAT));
+   indx += strlen (&bufMenu[indx]) + 1;
+   sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_YREPEAT));
+   TtaNewSubmenu (BaseDlgImage + _MENU_IMAGE_FRAME, BaseDlgImage + _IMAGE_FORM, 0,
+		  TtaGetMessage (LIB, TMSG_PICT_PRES), 5, bufMenu, NULL, FALSE);
 
    /* zone de saisie du nom du fichier image */
-   TtaNewTextForm (BaseDlgImage + MY_NUM_ZONE_IMAGE_FILE, BaseDlgImage + MY_NUM_IMAGE_FORM,
-		   "Name du fichier", 50, 1, TRUE);
+   TtaNewTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, BaseDlgImage + _IMAGE_FORM,
+		   TtaGetMessage (LIB, TMSG_PICT_FILE), 50, 1, TRUE);
 
-   TtaSetSelector (BaseDlgImage + MY_NUM_ZONE_DIR_IMAGE, -1, "");
-   TtaSetTextForm (BaseDlgImage + MY_NUM_ZONE_IMAGE_FILE, name);
-   TtaSetMenuForm (BaseDlgImage + MY_NUM_MENU_IMAGE_TYPE, IndexTypeImage);
-   TtaSetMenuForm (BaseDlgImage + MY_NUM_MENU_IMAGE_FRAME, IndexPresImage);
+   TtaSetSelector (BaseDlgImage + _ZONE_DIR_IMAGE, -1, "");
+   TtaSetTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, name);
+   TtaSetMenuForm (BaseDlgImage + _MENU_IMAGE_TYPE, IndexTypeImage);
+   TtaSetMenuForm (BaseDlgImage + _MENU_IMAGE_FRAME, IndexPresImage);
    CheckPresImage (IndexTypeImage);
    /* active le formulaire */
-   TtaShowDialogue (BaseDlgImage + MY_NUM_IMAGE_FORM, FALSE);
+   TtaShowDialogue (BaseDlgImage + _IMAGE_FORM, FALSE);
    /* attend le retour du formulaire */
    TtaWaitShowDialogue ();
    if (ImageName[0] == '\0')

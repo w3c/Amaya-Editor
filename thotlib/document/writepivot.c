@@ -541,6 +541,12 @@ PictureScaling      PicPresent;
 	    case FillFrame:
 	       TtaWriteByte (pivFile, C_PIV_FILLFRAME);
 	       break;
+	    case XRepeat:
+	       TtaWriteByte (pivFile, C_PIV_XREPEAT);
+	       break;
+	    case YRepeat:
+	       TtaWriteByte (pivFile, C_PIV_YREPEAT);
+	       break;
 	 }
 }
 

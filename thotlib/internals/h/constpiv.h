@@ -64,6 +64,8 @@
 #define C_PIV_REALSIZE 'S'
 #define C_PIV_RESCALE 'M'
 #define C_PIV_FILLFRAME 'P'
+#define C_PIV_XREPEAT 'X'
+#define C_PIV_YREPEAT 'Y'
 
 /* line alignment codes */
 #define C_PIV_CENTERED 'C'

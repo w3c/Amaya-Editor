@@ -815,10 +815,7 @@ PtrDocument         pDoc;
    char                bufText[200];
    boolean             found;
 
-   if (!GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar))
-      /* message 'Pas de selection' */
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_DEBUG_NO_SEL);
-   else
+   if (GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar))
      {
 	/* initialise les variables de recherche des references */
 	CurrRef = NULL;

@@ -1433,7 +1433,9 @@ unsigned long       BackGroundPixel;
    switch (pres)
 	 {
 	    case RealSize:
-
+	    case FillFrame:
+	    case XRepeat:
+	    case YRepeat:
 	       delta = (wif - PicWArea) / 2;
 	       if (delta > 0)
 		 {
@@ -1471,8 +1473,6 @@ unsigned long       BackGroundPixel;
 		    xif += (wif - (PicWArea * Scy)) / 2;
 		    wif = PicWArea * Scy;
 		 }
-	       break;
-	    case FillFrame:
 	       break;
 	    default:
 	       break;

@@ -1444,11 +1444,9 @@ int                 frame;
 	       if (!APPtextModify (pAb->AbElement, frame, TRUE))
 		 {
 		    if (ThotLocalActions[T_imagemenu] != NULL)
-		      {
-			 (*ThotLocalActions[T_imagemenu]) (buffer, &ok, &type, &pres, pBox);
-		      }
+		      (*ThotLocalActions[T_imagemenu]) (buffer, &ok, &type, &pres, pBox);
 		    else
-		       ok = FALSE;
+		      ok = FALSE;
 		    if (ok)
 		      {
 			 i = strlen (buffer);

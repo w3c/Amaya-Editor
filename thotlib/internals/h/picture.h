@@ -46,8 +46,10 @@
 
 typedef struct 
 {
-  int PicXArea,  PicYArea;
-  int PicWArea,  PicHArea;
+  int            PicXArea;
+  int            PicYArea;
+  int            PicWArea;
+  int            PicHArea;
   PictureScaling PicPresent;
   int            PicType;
   char          *PicFileName; 

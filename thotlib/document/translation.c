@@ -2355,7 +2355,7 @@ boolean            *removeEl;
    BinFile             includedFile;
    PtrReference        pRef;
    int                 fileNum;
-   int                 i, j;
+   int                 i;
    char                secondaryFileName[MAX_PATH];
    char               *nameBuffer;
    char                fname[MAX_PATH];
@@ -2988,7 +2988,7 @@ boolean            *removeEl;
 		 }
 	       else if (pTRule->TrBufOrConst == ToBuffer)
 		  /* le nom du fichier est dans un buffer */
-		  strncpy (fname, &pTSch->TsBuffer[pTRule->TrInclFile - 1],
+		  strncpy (fname, pTSch->TsBuffer[pTRule->TrInclFile - 1],
 			   MAX_PATH - 1);
 	       if (fname[0] == '\0')
 		  /* pas de nom de fichier */

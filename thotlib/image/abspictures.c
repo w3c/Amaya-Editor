@@ -98,16 +98,14 @@ PtrElement          pEl;
      }
    return pRegle;
 
-}				/*FindPictInfo */
+}
 
 
 /*----------------------------------------------------------------------
    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                SetImageRule (PtrElement pEl, int x, int y, int w, int h, int typeimage, PictureScaling presimage)
-
 #else  /* __STDC__ */
 void                SetImageRule (pEl, x, y, w, h, typeimage, presimage)
 PtrElement          pEl;
@@ -117,7 +115,6 @@ int                 w;
 int                 h;
 PictureScaling      presimage;
 int                 typeimage;
-
 #endif /* __STDC__ */
 
 {

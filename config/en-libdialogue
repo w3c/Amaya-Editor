@@ -1,3 +1,4 @@
+0 X11 Error : %s\n
 1 View not found.
 2 Error while loading the dictionary: %s\n 
 3 Missing file: %s\n
@@ -19,29 +20,34 @@
 19 No more place for the font %s
 20 Structure of document %s invalid
 21 Document %s cannot be edited nor saved
-27 Horizontal positionning mistake: %s
-28 Vertical positionning mistake: %s
-29 Rules table full.
-30 Structure schema %s has been changed
-31 Incorrect file: %s.STR
-32 Incorrect file: %s.PRS
-33 Directory not found: %s
-34 Cannot print
-35 Cannot change presentation
-36 Cannot save in PostScript
-37 Cannot import file
-38 View is empty
-39 Not allowed, read only element
-40 Cannot copy paired components
-41 Horizontal sizing mistake: %s
-42 Vertical sizing mistake: %s
-43 Creating the dictionary for document: %s
-44 Horizontal box overflow: %s
-45 Vertical box overflow: %s
-46 Horizontal positionning mistake: %s. See your presentation schema
-47 Vertical positionning mistake: %s. See your presentation schema
-48 Horizontal sizing mistake: %s. See your presentation schema
-49 Vertical sizing mistake: %s. See your presentation schema
+22 Rules table full.
+23 Structure schema %s has been changed
+24 Incorrect file: %s.STR
+25 Incorrect file: %s.PRS
+26 Directory not found: %s
+27 Cannot print
+28 Cannot change presentation
+29 Cannot save in PostScript
+30 Cannot import file
+31 View is empty
+32 Not allowed, read only element
+33 Cannot copy paired components
+34 Creating the dictionary for document: %s
+35 Image Type
+36 Image Presentation
+37 Image File
+38 Document %s printed
+39 From page ...
+40 ... to page
+41 Number of copies
+42 Scale (%)
+43 1 page/sheet
+44 2 pages/sheet
+45 4 pages/sheet
+46 Pages per sheet
+47 Pagination
+48 Views to print
+49 Printing with %s presentation
 50 This is a copy
 51 Loading of "%s" failed
 52 Environment variable %s undefined
@@ -97,11 +103,11 @@
 102 Cannot open a new window. Close a window.
 103 *** Thot: Irrecoverable error ***
 104 modified documents, if any, will be saved on .SAV files
-105 X11 Error : %s\n
-106 No selection
-107 Unable to link the new element
-108 procedure SuppRef (refelem.c)
-109 Duplicated label : %s\n
+105 As it is
+106 Scaled
+107 Repeted
+108 X Repeted
+109 Y Repeat
 110 Premature EOF
 111 No bounding box in ps file %s
 112 Cannot open hyphen patterns file: %s
@@ -267,16 +273,4 @@
 273 Error in PostScript translation
 274 Destination refused by the spooler %s
 275 Cannot create %s
-276 Document %s printed
-277 From page ...
-278 ... to page
-279 Number of copies
-280 Scale (%)
-281 1 page/sheet
-282 2 pages/sheet
-283 4 pages/sheet
-284 Pages per sheet
-285 Pagination
-286 Views to print
-287 Printing with %s presentation
 
