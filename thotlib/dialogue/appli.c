@@ -688,7 +688,8 @@ View                view;
 
    if (document != 0)
       frame = GetWindowNumber (document, view);
-
+   else
+     frame = 0;
    infos.reason = XmCR_PAGE_DECREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
 #endif /* _WINDOWS */
@@ -712,7 +713,8 @@ View                view;
 
    if (document != 0)
       frame = GetWindowNumber (document, view);
-
+   else
+     frame = 0;
    infos.reason = XmCR_PAGE_INCREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
 #endif /* _WINDOWS */
@@ -737,7 +739,8 @@ View                view;
 
    if (document != 0)
       frame = GetWindowNumber (document, view);
-
+   else
+     frame = 0;
    infos.reason = XmCR_TO_TOP;
    FrameVScrolled (0, frame, (int *) &infos);
 #endif /* _WINDOWS */
@@ -761,7 +764,8 @@ View                view;
 
    if (document != 0)
       frame = GetWindowNumber (document, view);
-
+   else
+     frame = 0;
    infos.reason = XmCR_TO_BOTTOM;
    FrameVScrolled (0, frame, (int *) &infos);
 #endif /* _WINDOWS */
