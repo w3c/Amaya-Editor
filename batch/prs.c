@@ -63,8 +63,10 @@ static AttributePres *CurAttrPRule;
 static int           CurAttrVal;	/* numero de la valeur d'attr en cours*/
 static int           CurComparAttr;	/* numero de l'attribut de comparaison */
 static int           CurElemHeritAttr;	/* numero de l'element heritant de cet
-
 					   attribut */
+static ThotBool      CurElemHeritAttrSelf; /* la presentation s'applique meme
+					      si c'est l'element lui-meme qui
+					      porte l'attribut herite' */
 static int           CurAttrLowerBound;	/* borne inferieure de comparaison */
 static int           CurAttrUpperBound;	/* borne superieure de comparaison */
 static ThotBool      CurTextDefined;    /* une valeur d'attribut a ete definie
@@ -942,6 +944,7 @@ static void         GenerateRPresAttribute (indLine wi)
   CurAttrPRule = pPRuleA;
   /* maintenant on remplit les champs dans pPRuleA */
   pPRuleA->ApElemType = CurElemHeritAttr;
+  pPRuleA->ApElemInherits = CurElemHeritAttrSelf;
 
   switch (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType)
     {
@@ -1497,6 +1500,10 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 	 InclusionRefName = True;
        else if (gCode == RULE_Reference)
 	 SetLevel (RlSelf, wi);
+       else if (gCode == RULE_FSTypeName)
+	  /* c'est un heritage d'attribut des ascendants mais aussi de
+	     l'element meme */
+	 CurElemHeritAttrSelf = TRUE;
        break;
 
      case CHR_43:
@@ -4739,6 +4746,8 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	  /* a priori on ne compare pas  avec un attribut */
 	  CurElemHeritAttr = 0;
 	  /* a priori ce n'est pas de l'heritage */
+	  CurElemHeritAttrSelf = FALSE;
+	  /* a priori c'est un heritage des ascendants seulement */
 	  CurAttrLowerBound = -MAX_INT_ATTR_VAL - 1;
 	  /* - infini */
 	  CurAttrUpperBound = MAX_INT_ATTR_VAL + 1;

@@ -6954,21 +6954,21 @@ ATTRIBUTES
 	IN Structure_view
 	    Adjust: Left;
 	END;
-  dir (Embed_) = ltr_:
+  dir (Embed_*) = ltr_:
 	BEGIN
 	if not Immediately within Object
 	   HorizPos: Left = Enclosing . Left;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
-  dir (Embed_) = rtl_:
+  dir (Embed_*) = rtl_:
 	BEGIN
 	if not Immediately within Object
 	   HorizPos: Right = Enclosing . Right;
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
-  dir (Paragraph) = ltr_:
+  dir (Paragraph*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
@@ -6976,7 +6976,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
 	END;
-  dir (Paragraph) = rtl_:
+  dir (Paragraph *) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
@@ -6984,13 +6984,13 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
 	END;
-  dir (Pseudo_paragraph) = ltr_:
+  dir (Pseudo_paragraph*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
 	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
 	END;
-  dir (Pseudo_paragraph) = rtl_:
+  dir (Pseudo_paragraph*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
@@ -6998,7 +6998,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
 	END;
-  dir (H1) = ltr_:
+  dir (H1*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
@@ -7014,7 +7014,7 @@ ATTRIBUTES
 #endif
 		END;
 	END;
-  dir (H1) = rtl_:
+  dir (H1*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
@@ -7028,7 +7028,7 @@ ATTRIBUTES
 		HorizPos: Right = Enclosing . Right - 1;
 #endif
 	END;
-  dir (H2) = ltr_:
+  dir (H2*) = ltr_:
 	BEGIN
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberRight);
@@ -7048,7 +7048,7 @@ ATTRIBUTES
 		HorizPos: Left = Enclosing . Left + 1;
 		END;
 	END;
-  dir (H2) = rtl_:
+  dir (H2*) = rtl_:
 	BEGIN
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberLeft);
@@ -7067,7 +7067,7 @@ ATTRIBUTES
 		HorizPos: Right = Enclosing . Right - 1;
 		END;
 	END;
-  dir (H3) = ltr_:
+  dir (H3*) = ltr_:
 	BEGIN
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberRight);
@@ -7087,7 +7087,7 @@ ATTRIBUTES
 		HorizPos: Left = Enclosing . Left + 2;
 		END;
 	END;
-  dir (H3) = rtl_:
+  dir (H3*) = rtl_:
 	BEGIN
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberLeft);
@@ -7106,7 +7106,7 @@ ATTRIBUTES
 		HorizPos: Right = Enclosing . Right - 2;
 		END;
 	END;
-  dir (H4) = ltr_:
+  dir (H4*) = ltr_:
 	BEGIN
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberRight);
@@ -7126,7 +7126,7 @@ ATTRIBUTES
 		HorizPos: Left = Enclosing . Left + 3;
 		END;
 	END;
-  dir (H4) = rtl_:
+  dir (H4*) = rtl_:
 	BEGIN
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberLeft);
@@ -7145,7 +7145,7 @@ ATTRIBUTES
 		HorizPos: Right = Enclosing . Right - 3;
 		END;
 	END;
-  dir (H5) = ltr_:
+  dir (H5*) = ltr_:
 	BEGIN
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberRight);
@@ -7165,7 +7165,7 @@ ATTRIBUTES
 		HorizPos: Left = Enclosing . Left + 4;
 		END;
 	END;
-  dir (H5) = rtl_:
+  dir (H5*) = rtl_:
 	BEGIN
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberLeft);
@@ -7184,7 +7184,7 @@ ATTRIBUTES
 		HorizPos: Right = Enclosing . Right - 4;
 		END;
 	END;
-  dir (H6) = ltr_:
+  dir (H6*) = ltr_:
 	BEGIN
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberRight);
@@ -7204,7 +7204,7 @@ ATTRIBUTES
 		HorizPos: Left = Enclosing . Left + 5;
 		END;
 	END;
-  dir (H6) = rtl_:
+  dir (H6*) = rtl_:
 	BEGIN
 #ifdef PAGE
 	CreateAfter (HeadingPageNumberLeft);
@@ -7223,7 +7223,7 @@ ATTRIBUTES
 		HorizPos: Right = Enclosing . Right - 5;
 		END;
 	END;
-  dir (Preformatted) = ltr_:
+  dir (Preformatted*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
@@ -7231,7 +7231,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
 	END;
-  dir (Preformatted) = rtl_:
+  dir (Preformatted*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
@@ -7239,7 +7239,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
 	END;
-  dir (Object) = ltr_:
+  dir (Object*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
@@ -7247,7 +7247,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
 	END;
-  dir (Object) = rtl_:
+  dir (Object*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
@@ -7255,7 +7255,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
 	END;
-  dir (Unnumbered_List) = ltr_:
+  dir (Unnumbered_List*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
 	{PaddingLeft: 0.5 em;}
@@ -7267,7 +7267,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
 	END;
-  dir (Unnumbered_List) = rtl_:
+  dir (Unnumbered_List*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	PaddingLeft: 0;
@@ -7279,7 +7279,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
 	END;
-  dir (Numbered_List) = ltr_:
+  dir (Numbered_List*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
 	{PaddingLeft: 0.5 em;}
@@ -7291,7 +7291,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
 	END;
-  dir (Numbered_List) = rtl_:
+  dir (Numbered_List*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	PaddingLeft: 0;
@@ -7303,7 +7303,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
 	END;
-  dir (List_Item) = ltr_:
+  dir (List_Item*) = ltr_:
 	BEGIN
 	MarginLeft: LIST_INDENT;
 	HorizPos: Left = Enclosing . Left + LIST_SHIFT;
@@ -7332,7 +7332,7 @@ ATTRIBUTES
 		HorizPos: Left = Enclosing . Left + LIST_INDENT;
 		END;
 	END;
-  dir (List_Item) = rtl_:
+  dir (List_Item*) = rtl_:
 	BEGIN
 	MarginRight: LIST_INDENT;
 	VertRef: * . Right;
@@ -7364,7 +7364,7 @@ ATTRIBUTES
 		END;
 	END;
 
-  dir (Term) = ltr_:
+  dir (Term*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view BEGIN
@@ -7374,7 +7374,7 @@ ATTRIBUTES
 		HorizPos: Left = Enclosing . Left;
 		END;
 	END;
-  dir (Term) = rtl_:
+  dir (Term*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
@@ -7382,7 +7382,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
 	END;
-  dir (Definition) = ltr_:
+  dir (Definition*) = ltr_:
 	BEGIN
 	MarginLeft: DEFINITION_INDENT;
 	HorizPos: Left = Enclosing . Left;
@@ -7395,7 +7395,7 @@ ATTRIBUTES
 		HorizPos: Left = Enclosing . Left + DEFINITION_INDENT;
 		END;
 	END;
-  dir (Definition) = rtl_:
+  dir (Definition*) = rtl_:
 	BEGIN
 	MarginRight: DEFINITION_INDENT;
 	HorizPos: Right = Enclosing . Right;
@@ -7408,11 +7408,11 @@ ATTRIBUTES
 		HorizPos: Right = Enclosing . Right - DEFINITION_INDENT;
 		END;
 	END;
-  dir (Option_Menu) = ltr_:
+  dir (Option_Menu*) = ltr_:
 	CreateLast(Option_gif_left);
-  dir (Option_Menu) = rtl_:
+  dir (Option_Menu*) = rtl_:
 	CreateLast(Option_gif_right);
-  dir (Option) = ltr_:
+  dir (Option*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left + 20 px;	
 	IN Structure_view
@@ -7420,7 +7420,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Left = Enclosing . Left + 1;
 	END;
-  dir (Option) = rtl_:
+  dir (Option*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right - 20 px;	
 	IN Structure_view
@@ -7428,7 +7428,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right - 1;
 	END;
-  dir (Table) = ltr_:
+  dir (Table*) = ltr_:
 	BEGIN
 	if within Center
 		HorizPos: VMiddle = Enclosing . VMiddle;
@@ -7437,7 +7437,7 @@ ATTRIBUTES
 	IN Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
-  dir (Table) = rtl_:
+  dir (Table*) = rtl_:
 	BEGIN
 	if within Center
 		HorizPos: VMiddle = Enclosing . VMiddle;
@@ -7452,15 +7452,15 @@ ATTRIBUTES
 	        	HorizPos: Right = Enclosing . Right;
 		END;
 	END;
-  dir (Table_head) = ltr_:
+  dir (Table_head*) = ltr_:
 	HorizPos: Left = Enclosing . Left;
-  dir (Table_head) = rtl_:
+  dir (Table_head*) = rtl_:
 	HorizPos: Right = Enclosing . Right;
-  dir (Column_head) = ltr_:
+  dir (Column_head*) = ltr_:
 	HorizPos: Left = Previous . Right;
-  dir (Column_head) = rtl_:
+  dir (Column_head*) = rtl_:
 	HorizPos: Right = Previous . Left;
-  dir (thead) = ltr_:
+  dir (thead*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
@@ -7468,7 +7468,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
 	END;
-  dir (thead) = rtl_:
+  dir (thead*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
@@ -7476,7 +7476,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
 	END;
-  dir (Table_body) = ltr_:
+  dir (Table_body*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
@@ -7484,7 +7484,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
 	END;
-  dir (Table_body) = rtl_:
+  dir (Table_body*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
@@ -7492,7 +7492,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
 	END;
-  dir (tbody) = ltr_:
+  dir (tbody*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
@@ -7500,7 +7500,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
 	END;
-  dir (tbody) = rtl_:
+  dir (tbody*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
@@ -7508,7 +7508,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
 	END;
-  dir (Table_row) = ltr_:
+  dir (Table_row*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
@@ -7516,7 +7516,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
 	END;
-  dir (Table_row) = rtl_:
+  dir (Table_row*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
@@ -7524,7 +7524,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
 	END;
-  dir (tfoot) = ltr_:
+  dir (tfoot*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
@@ -7532,7 +7532,7 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Left = Enclosing . Left;
 	END;
-  dir (tfoot) = rtl_:
+  dir (tfoot*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
 	IN Structure_view
@@ -7540,21 +7540,21 @@ ATTRIBUTES
 	IN Alternate_view
 		HorizPos: Right = Enclosing . Right;
 	END;
-  dir (Data_cell) = ltr_:
+  dir (Data_cell*) = ltr_:
 	IN Alternate_view
 	   HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
-  dir (Data_cell) = rtl_:
+  dir (Data_cell*) = rtl_:
 	IN Alternate_view
 	   HorizPos: Right = Previous Table_cell . Right - STRUCT_INDENT;
-  dir (Heading_cell) = ltr_:
+  dir (Heading_cell*) = ltr_:
 	IN Alternate_view
 	   HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
-  dir (Heading_cell) = rtl_:
+  dir (Heading_cell*) = rtl_:
 	IN Alternate_view
 	   HorizPos: Right = Previous Table_cell . Right - STRUCT_INDENT;
-  dir (Table_foot) = ltr_:
+  dir (Table_foot*) = ltr_:
 	HorizPos: Left = Enclosing . Left;
-  dir (Table_foot) = rtl_:
+  dir (Table_foot*) = rtl_:
 	HorizPos: Right = Enclosing . Right;
 
   onclick:

@@ -3720,6 +3720,8 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				       {
 					 fprintf (fileDescriptor, "(");
 					 wrnomregle (pRP1->ApElemType, fileDescriptor);
+					 if (pRP1->ApElemInherits)
+					   fprintf (fileDescriptor, " *");
 					 fprintf (fileDescriptor, ")");
 				       }
 				     if (pCa1->CaLowerBound == pCa1->CaUpperBound)
@@ -3772,6 +3774,8 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				       {
 					 fprintf (fileDescriptor, "(");
 					 wrnomregle (pRP1->ApElemType, fileDescriptor);
+					 if (pRP1->ApElemInherits)
+					   fprintf (fileDescriptor, " *");
 					 fprintf (fileDescriptor, ")");
 				       }
 				     if (pRP1->ApString)
@@ -3802,6 +3806,8 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				       {
 					 fprintf (fileDescriptor, "(");
 					 wrnomregle (pRP1->ApElemType, fileDescriptor);
+					 if (pRP1->ApElemInherits)
+					   fprintf (fileDescriptor, " *");
 					 fprintf (fileDescriptor, ")");
 				       }
 				     fprintf (fileDescriptor, ":\n");
@@ -3822,6 +3828,8 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 					 {
 					   fprintf (fileDescriptor, "(");
 					   wrnomregle (pRP1->ApElemType, fileDescriptor);
+					 if (pRP1->ApElemInherits)
+					   fprintf (fileDescriptor, " *");
 					   fprintf (fileDescriptor, ")");
 					 }
 				       if (val > 0 && pAt1->AttrEnumValue[val-1])

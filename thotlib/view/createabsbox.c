@@ -2480,7 +2480,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
    PtrSSchema          pSchS;
    PtrAbstractBox      pAbbCreated;
    PtrAttribute        pAttr;
-   PtrElement          pEl, pElAttr;
+   PtrElement          pEl, pElAttr, pFirstAncest;
    int                 l, valNum;
    InheritAttrTable   *inheritTable;
    PtrHandlePSchema    pHd;
@@ -2585,9 +2585,14 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		       }
 		     for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 		       if ((*inheritTable)[l - 1])
-			 /* pEl herite de l'attribut l */
-			 /* cherche si l existe au dessus */
-			 if ((pAttr = GetTypedAttrAncestor (pEl->ElParent, l,
+			 /* pEl inherits attribute l */
+			 {
+			 /* is this attribute present on an ancestor? */
+			 if ((*inheritTable)[l - 1] == 'S')
+			   pFirstAncest = pEl;
+			 else
+			   pFirstAncest = pEl->ElParent;
+			 if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
 			               pEl->ElStructSchema, &pElAttr)) != NULL)
 			   {
 			     /* on cherchera d'abord dans le schema de */
@@ -2632,6 +2637,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 				   pSchP = pHd->HdPSchema;
 			       }
 			   }
+			 }
 		   }
 	       /* traite les regles de creation associees aux attributs de */
 	       /* l'element */
@@ -3109,7 +3115,8 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
 {
    int                 view, l;
    PtrPRule            pRule, pRegleV;
-   PtrElement          pPrevious, pNext, pElAssociatedPage, pAsc, pElAttr;
+   PtrElement          pPrevious, pNext, pElAssociatedPage, pAsc, pElAttr,
+                       pFirstAncest;
    PtrAttribute        pAttr;
    PtrPSchema          pSP;
    InheritAttrTable   *inheritTable;
@@ -3199,13 +3206,20 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
 	     inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 	  }
 	for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
-	   if ((*inheritTable)[l - 1])	/* pEl herite de l'attribut l */
-	      if ((pAttr = GetTypedAttrAncestor (pEl->ElParent, l,
-						 pEl->ElStructSchema,
-						 &pElAttr)) != NULL)
+	   if ((*inheritTable)[l - 1])
+	     /* pEl inherits attribute l */
+	     {
+	       if ((*inheritTable)[l - 1] == 'S')
+		 pFirstAncest = pEl;
+	       else
+		 pFirstAncest = pEl->ElParent;	       
+	       if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
+						  pEl->ElStructSchema,
+						  &pElAttr)) != NULL)
 		 /* cherche si l existe au dessus */
 		 ApplyVisibRuleAttr (pEl, pAttr, pElAttr, pDoc, vis, viewNb,
 				     &ok, TRUE);
+	     }
      }
 
    /* cherche si les attributs de l'element modifient la visibilite */
@@ -3414,7 +3428,7 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
   PtrHandlePSchema   pHd;
   PtrPSchema         pSchPres, pSchPattr, pSP;
   PtrAttribute       pAttr;
-  PtrElement         pElAttr;
+  PtrElement         pElAttr, pFirstAncest;
   PtrSSchema	     pSSattr;
   InheritAttrTable   *inheritTable;
   ThotBool           stop, apply;
@@ -3588,7 +3602,7 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
       if (viewSch == 1 || pHd == NULL)
 	{
 	  if (pSP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
-	    /* the element type inherit some attributes */
+	    /* the element type inherits some attributes */
 	    {
 	      inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 	      if (!inheritTable)
@@ -3597,17 +3611,24 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		  inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber-1];
 		}
 	      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
-		if ((*inheritTable)[l - 1]  /* pEl inherit attribute l */ &&
-		    /* is this attribute present on an ancestor? */
-		    (pAttr = GetTypedAttrAncestor (pEl->ElParent, l, pEl->ElStructSchema,
-						   &pElAttr)) != NULL)
+		if ((*inheritTable)[l - 1])
+		  /* pEl inherits attribute l */
 		  {
-		    apply = TRUE;
-		    /* exceptions for attributes related to tables */
-		    if (ThotLocalActions[T_ruleattr] != NULL)
-		      (*ThotLocalActions[T_ruleattr]) (pEl, pAttr, pDoc, &apply);
-		    if (apply)
+		    /* is this attribute present on an ancestor? */
+		    if ((*inheritTable)[l - 1] == 'S')
+		      pFirstAncest = pEl;
+		    else
+		      pFirstAncest = pEl->ElParent;
+		    if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
+						       pEl->ElStructSchema,
+						       &pElAttr)) != NULL)
 		      {
+		      apply = TRUE;
+		      /* exceptions for attributes related to tables */
+		      if (ThotLocalActions[T_ruleattr] != NULL)
+			(*ThotLocalActions[T_ruleattr]) (pEl, pAttr, pDoc, &apply);
+		      if (apply)
+		        {
 			view = AppliedView (pEl, pAttr, pDoc, viewNb);
 			pSSattr = pAttr->AeAttrSSchema;
 			if (pDoc->DocView[viewNb-1].DvPSchemaView == 1 && pHd &&
@@ -3676,6 +3697,7 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			      }
 			  }
 			while (valNum > 0);
+			}
 		      }
 		  }
 	    }

@@ -654,11 +654,12 @@ typedef struct _NumAttrCase
 /* presentation of a logical attribute, according to its type */
 typedef struct _AttributePres
 {
-  int     ApElemType;	/* type of element to which the presentation rules
-			   apply, 0 if the rules apply whatever the element
-			   type is */
-  struct _AttributePres *ApNextAttrPres; /* the packet of presentation rules
-					    for the next element */
+  int      ApElemType;	  /* type of element to which the presentation rules
+			     apply, 0 if the rules apply whatever the element*/
+  ThotBool ApElemInherits; /* the rules apply also to the element that has this
+			      attribute. Means nothing if ApElemType is 0 */
+  struct  _AttributePres *ApNextAttrPres; /* the packet of presentation rules
+					     for the next element */
   union
   {
     struct        /* numerical attribute */
@@ -730,9 +731,12 @@ typedef struct _TransmitElem
 				   is transmitted */
 } TransmitElem;
 
-typedef ThotBool InheritAttrTable[1];  /* this table is attached to an element
-					  and indicates what are the attributes
-					  that this element inherits */
+typedef char InheritAttrTable[1];  /* this table is attached to an element
+				   and indicates what are the attributes
+				   that this element inherits:
+                                     '\0': no inheritance for this attribute,
+                                     'S': inherit from ancestors or self,
+                                     'H'  inherit from ancestors only */
 typedef ThotBool ComparAttrTable[1];   /* this table is attached to an element
 					  and indicates what are the attributes
 					  comparing themselves to it for

@@ -1325,6 +1325,8 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
 	     pAttPres = pAttPres->ApNextAttrPres)
 	  {
 	     WriteShort (pAttPres->ApElemType);
+	     if (pAttPres->ApElemType)
+	       WriteBoolean (pAttPres->ApElemInherits);
 	     switch (pSS->SsAttribute->TtAttr[i]->AttrType)
 		   {
 		      case AtNumAttr:

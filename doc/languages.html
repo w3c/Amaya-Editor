@@ -15,7 +15,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of March 12, 2003</h4>
+<h4>Version of September 22, 2003</h4>
 
 <p>© 1996-2003 INRIA</p>
 <hr />
@@ -3363,10 +3363,10 @@ value specification and, as a result, can only appear once in the
 
 <p>To specify that the presentation rules apply to some of the descendants of
 the element having the attribute, the name of the affected element type is
-given, between parentheses, after the attribute name. This way, the
-presentation rules for the attribute will be applied to the element having
-the attribute, if it is of the given type, and to all of its descendants of
-the given type. In the case where this type is a <a href="#sectd3285">mark
+given, between parentheses, after the attribute name. If the element type
+name is followed by a '<tt>*</tt>', the rules also apply to the element
+itself (i.e. the element that has the specified type and has the specified
+attribute). In the case where the element type is a <a href="#sectd3285">mark
 pair</a>, but only in this case, the type name can be preceded by the
 keywords <tt>First</tt> or <tt>Second</tt>. These keywords indicate whether
 the rules that follow apply to the first or second mark of the pair. If the
@@ -3420,7 +3420,7 @@ effect of the attribute rules on the environment ( and especially on the
 terminal elements of the structure).</p>
 <pre>                    'ATTRIBUTES' PresAttrSeq
      PresAttrSeq  = PresAttr &lt; PresAttr &gt; .
-     PresAttr     = AttrID [ '(' [ FirstSec ] ElemID ')' ]
+     PresAttr     = AttrID [ '(' [ FirstSec ] ElemID [ '*' ] ')' ]
                     [ AttrRelation ] ':' ViewRuleSeq .
      AttrID       = NAME .
      AttrRelation ='=' AttrVal /
@@ -7997,7 +7997,7 @@ Present         = [ '*' ] [ FirstSec ] ElemID ':'
 FirstSec        = 'First' / 'Second' .
 
 PresAttrSeq     = PresAttr &lt; PresAttr &gt; .
-PresAttr        = AttrID [ '(' [ FirstSec ] ElemID ')' ] 
+PresAttr        = AttrID [ '(' [ FirstSec ] ElemID [ '*' ] ')' ] 
                   [ AttrRelation ] ':' ViewRuleSeq .
 AttrID          = NAME .
 AttrRelation    = '=' AttrVal /

@@ -1572,6 +1572,10 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 		       pAttrP = pAttrP->ApNextAttrPres)
 		    {
 		      error = !TtaReadShort (file, &pAttrP->ApElemType);
+		      if (pAttrP->ApElemType)
+			TtaReadBool (file, &pAttrP->ApElemInherits);
+		      else
+			pAttrP->ApElemInherits = FALSE;
 		      switch (pSS->SsAttribute->TtAttr[i]->AttrType)
 			{
 			case AtNumAttr:

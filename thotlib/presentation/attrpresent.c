@@ -52,14 +52,14 @@ void  CreateInheritedAttrTable (PtrElement pEl, PtrDocument pDoc)
   if (pSP != NULL)
     {
       /* table allocation and initialization */
-      if ((table = (InheritAttrTable*) TtaGetMemory (pEl->ElStructSchema->SsNAttributes * sizeof (ThotBool))) == NULL)
+      if ((table = (InheritAttrTable*) TtaGetMemory (pEl->ElStructSchema->SsNAttributes * sizeof (char))) == NULL)
         /* memory exhausted */
         return;
       pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1] = table;
       /* for all attributes defined in the structure schema */
       for (attr = 0; attr < pEl->ElStructSchema->SsNAttributes; attr++)
 	{
-	  (*table)[attr] = FALSE;
+	  (*table)[attr] = '\0';
 	  /* check the main presentation schema and all its extensions */
 	  pSchP = pSP;
 	  pHd = NULL;
@@ -71,7 +71,12 @@ void  CreateInheritedAttrTable (PtrElement pEl, PtrDocument pDoc)
 		for (rule = 0; rule < pSchP->PsNAttrPRule->Num[attr]; rule++)
 		  {
 		    if (pAttrPR->ApElemType == pEl->ElTypeNumber)
-		      (*table)[attr] = TRUE;
+		      {
+			if (pAttrPR->ApElemInherits)
+			  (*table)[attr] = 'S';
+			else
+			  (*table)[attr] = 'H';
+		      }
 		    pAttrPR = pAttrPR->ApNextAttrPres;
 		  }
 	      /* next P schema */

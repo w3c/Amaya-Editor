@@ -297,7 +297,7 @@ AttrList =	  Attr < Attr > .
 Attr =		  AttrName [ '(' FSTypeName ')' ] [ AttrRelat ] ':'
 		  ViewRuleList .
 AttrName =	  NAME .
-FSTypeName =	  [ FirstSec ] TypeName .
+FSTypeName =	  [ FirstSec ] TypeName [ '*' ] .
 AttrRelat =	  '=' AttrValue / '>' [ '-' ] MinVal / '<' [ '-' ] MaxVal /
 		  'IN' '[' ['-'] MinInterval '.' '.' ['-'] MaxInterval ']' /
 		  'GREATER' AttrName / 'LESS' AttrName / 'EQUAL' AttrName .

@@ -1710,6 +1710,7 @@ static void InsertXmlAttrRules (PtrPSchema pPS, int nAtRules)
 
   /* Create the new AttrPres and attach it to the attribute */
   pAtPres->ApElemType = 0;
+  pAtPres->ApElemInherits = FALSE;
   pAtPres->ApNextAttrPres = NULL;
   pAtPres->ApString = NULL;
 

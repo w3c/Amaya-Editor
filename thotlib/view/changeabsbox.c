@@ -209,7 +209,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
   PtrSSchema          pSchS;
   ThotBool            stop;
   PtrAttribute        pA;
-  PtrElement          pElAttr;
+  PtrElement          pElAttr, pFirstAncest;
   InheritAttrTable   *inheritTable;
   PtrPSchema          pSP, pSPattr;
   PtrHandlePSchema    pHd;
@@ -346,10 +346,17 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 			  inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 			}
 		      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
-			if ((*inheritTable)[l - 1] &&
-			    (pA = GetTypedAttrAncestor (pEl, l,
-							pEl->ElStructSchema,
-							&pElAttr)) != NULL)
+			if ((*inheritTable)[l - 1])
+			  /* the element inherits attribute l */
+			  {
+			  /* is this attribute present on an ancestor? */
+			  if ((*inheritTable)[l - 1] == 'S')
+			    pFirstAncest = pEl;
+			  else
+			    pFirstAncest = pEl->ElParent;
+			  if ((pA = GetTypedAttrAncestor (pFirstAncest, l,
+							  pEl->ElStructSchema,
+							  &pElAttr)) != NULL)
 			  /* pEl inherits from attribute l and an ancestor */
 			  /* has this attribute */
 			  {
@@ -388,6 +395,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 				  }
 			      }
 			    while (valNum > 0);
+			  }
 			  }
 		    }
 		}
@@ -1431,7 +1439,7 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
   PtrPRule            pRPres;
   PtrPSchema          pSchP, pSP;
   PtrAttribute        pAttr;
-  PtrElement          pElAttr;
+  PtrElement          pElAttr, pFirstAncest;
   int                 l, valNum;
   InheritAttrTable   *inheritTable;
 
@@ -1460,11 +1468,18 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
 		  inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 		}
 	      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
-		if ((*inheritTable)[l - 1])    /* pEl herite de l'attribut l */
-		  /* cherche si l existe au dessus */
-		  if ((pAttr = GetTypedAttrAncestor (pEl,l,pEl->ElStructSchema,
-						     &pElAttr)) != NULL)
-		    {
+		if ((*inheritTable)[l - 1])
+		  /* pEl inherits attribute l */
+		  {
+		    /* is this attribute present on an ancestor? */
+		    if ((*inheritTable)[l - 1] == 'S')
+		      pFirstAncest = pEl;
+		    else
+		      pFirstAncest = pEl->ElParent;
+		    if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
+						       pEl->ElStructSchema,
+						       &pElAttr)) != NULL)
+		      {
 		      pSchP = PresentationSchema (pAttr->AeAttrSSchema, pDoc);
 		      /* process all values of the attribute, in case of
 			 a text attribute with multiple values */
@@ -1479,7 +1494,8 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
 						 pEl, change, first);
 			}
 		      while (valNum > 0);
-		    }
+		      }
+		  }
 	    }
 
 	  /* l'element a-t-il des attributs qui ont des fonctions de */
