@@ -15,7 +15,7 @@
 #include "typemedia.h"
 #include "typegrm.h"
 #include "storage.h"
-#include "PRESEN.h"
+#include "prsdef.h"
 #include "thotpattern.h"
 #include "thotfile.h"
 #include "thotdir.h"

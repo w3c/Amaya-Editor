@@ -19,7 +19,7 @@
 
 
 #include "thot_sys.h"
-#include "TYP.h"
+#include "typdef.h"
 #include "constgrm.h"
 #include "constmedia.h"
 #include "typemedia.h"

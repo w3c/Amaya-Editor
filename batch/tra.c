@@ -8,7 +8,7 @@
  */
 
 #include "thot_sys.h"
-#include "TRANS.h"
+#include "tradef.h"
 #include "constgrm.h"
 #include "constmedia.h"
 #include "consttra.h"

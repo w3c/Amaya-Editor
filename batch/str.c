@@ -8,7 +8,7 @@
  */
 
 #include "thot_sys.h"
-#include "STRUCT.h"
+#include "strdef.h"
 #include "constmedia.h"
 #include "constgrm.h"
 #include "compilmsg.h"

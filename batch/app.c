@@ -7,7 +7,7 @@
 #include "compilmsg.h"
 #include "appmsg.h"
 #include "message.h"
-#include "APP.h"
+#include "appdef.h"
 #include "constgrm.h"
 #include "constmedia.h"
 #include "typemedia.h"

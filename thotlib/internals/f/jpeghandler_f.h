@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #if __STDC__
 
-extern void my_error_exit ( j_common_ptr cinfo );
 extern unsigned char *ReadJPEG ( FILE * infile,
                                  int *width,
                                  int *height,
@@ -40,7 +39,6 @@ extern boolean IsJpegFormat ( char *fn );
 
 #else /* __STDC__ */
 
-extern void my_error_exit (/* j_common_ptr cinfo */);
 extern unsigned char *ReadJPEG (/* FILE * infile,
                                    int *width,
                                    int *height,
