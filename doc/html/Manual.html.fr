@@ -215,27 +215,25 @@ décrits.</p>
             que textes</a></li>
         </ul>
       </li>
-      <li><a href="Printing.html.fr#Printing">Imprimer des documents</a> 
-        <ul>
-          <li><a href="Printing.html.fr#commande">La commande Paramétrer et
-            Imprimer</a> 
-            <ul>
-              <li><a href="Printing.html.fr#Stations">Plate-forme
-              Unix</a></li>
-              <li><a href="Printing.html.fr#L185">Plate-forme Windows</a></li>
-            </ul>
-          </li>
-          <li><a href="Printing.html.fr#commande1">La commande
-          imprimer</a></li>
-          <li><a href="Printing.html.fr#L224">Contrôler l'impression avec les
-            CSS</a></li>
-        </ul>
-      </li>
-      <li><a href="Numbering.html.fr#Section">Numéroter une section</a></li>
-      <li><a href="MakeBook.html.fr#Assembling">Assembler des collections de
-        document</a></li>
     </ul>
   </li>
+  <li><a href="Printing.html.fr#Printing">Imprimer des documents</a> 
+    <ul>
+      <li><a href="Printing.html.fr#commande">La commande Paramétrer et
+        Imprimer</a> 
+        <ul>
+          <li><a href="Printing.html.fr#Stations">Plate-forme Unix</a></li>
+          <li><a href="Printing.html.fr#L185">Plate-forme Windows</a></li>
+        </ul>
+      </li>
+      <li><a href="Printing.html.fr#commande1">La commande imprimer</a></li>
+      <li><a href="Printing.html.fr#L224">Contrôler l'impression avec les
+        CSS</a></li>
+    </ul>
+  </li>
+  <li><a href="Numbering.html.fr#Section">Numéroter une section</a></li>
+  <li><a href="MakeBook.html.fr#Assembling">Assembler des collections de
+    document</a></li>
   <li><a href="Annotations.html.fr#Assembling">Les annotations dans Amaya</a> 
     <ul>
       <li><a href="Annotations.html.fr#def">Définition</a></li>
