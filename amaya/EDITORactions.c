@@ -3889,7 +3889,9 @@ void EditTopics (Document document, View view)
 void AddSeparator (Document document, View view)
 {
 #ifdef BOOKMARKS
+#if 0
   BM_CreateSeparator (document, view);
+#endif
 #endif /* BOOKMARKS */
 }
 
