@@ -1096,7 +1096,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
   POINT             ptOrg, ptSize;
   int               x, y, clipWidth, clipHeight;
   int               nbPalColors;
-  int               i, j, iw, jh;
+  int               i, j, iw, jh, ix, jy;
   HRGN              hrgn;
 #else /* _WINDOWS */
   XRectangle        rect;
@@ -1423,26 +1423,29 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
           SelectClipRgn(TtDisplay, hrgn);
           bitmap = SelectObject (hOrigDC, pixmap);
           pBitmapTiled = SelectObject (hMemDC, bitmapTiled);
-          
           j = 0;
+		  /* initial shift */
+          jy = y - (y / imageDesc->PicHArea) * imageDesc->PicHArea;
 	  do
 	    {
 	      i = 0;
+		  /* initial shift */
+          ix = x - (x / imageDesc->PicWArea) * imageDesc->PicWArea;
 	      do
 		{
 		  /* check if the limits of the copied zone */
-		  if (i + imageDesc->PicWArea <= w)
-		    iw = imageDesc->PicWArea;
-		  else
+		  iw = imageDesc->PicWArea - ix;
+		  if (i + iw > w)
 		    iw = w - i;
-		  if (j + imageDesc->PicHArea <= h)
-		    jh = imageDesc->PicHArea;
-		  else
+		  jh = imageDesc->PicHArea - jy;
+		  if (j + jh > h)
 		    jh = h - j;
-		  BitBlt (hMemDC, i, j, iw, jh, hOrigDC, 0, 0, SRCCOPY);
-		  i += imageDesc->PicWArea;
+		  BitBlt (hMemDC, i, j, iw, jh, hOrigDC, ix, jy, SRCCOPY);
+		  i += iw;
+		  ix = 0;
 		} while (i < w);
-	      j += imageDesc->PicHArea;
+	      j += jh;
+		  jy = 0;
 	    } while (j < h);
 #ifndef IV
           BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
