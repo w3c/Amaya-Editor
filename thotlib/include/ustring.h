@@ -25,7 +25,8 @@ typedef enum {
    ISOLatin9, 
    UTF7, 
    UTF8, 
-   UTF16
+   UTF16,
+   WIN1256 /* Windows Arabic Code Page */
 } CHARSET;
 
 #ifdef _I18N_
@@ -49,6 +50,7 @@ typedef unsigned char*  USTRING;
 #endif /* _I18N_ */
 
 #ifdef __STDC__
+extern int          uputchar                              (int);
 extern int          ustrcasecmp                           (const CHAR_T*, const CHAR_T*);
 extern CHAR_T*      ustrcat                               (CHAR_T*, const CHAR_T*);
 extern CHAR_T*      ustrchr                               (const CHAR_T*, CHAR_T);
@@ -73,6 +75,7 @@ extern char*        wc2iso_strcpy                         (char*, const CHAR_T*)
 extern int          TtaGetNextWideCharFromMultibyteString (CHAR_T*, unsigned char**, CHARSET);
 
 #else  /* __STDC__ */
+extern int          uputchar                              ();
 extern int          ustrcasecmp                           ();
 extern int          cus2iso_strcasecmp                    ();
 extern int          iso2cus_strcasecmp                    ();

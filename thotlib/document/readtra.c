@@ -1277,12 +1277,12 @@ PtrSSchema          pSS;
 		/* lit la chaine source */
 		j = 0;
 		do
-		   TtaReadWideChar (file, &pStringTr->StSource[j++]);
+		   TtaReadWideChar (file, &pStringTr->StSource[j++], ISOLatin1);
 		while (pStringTr->StSource[j - 1] != WC_EOS);
 		/* lit la chaine cible */
 		j = 0;
 		do
-		   TtaReadWideChar (file, &pStringTr->StTarget[j++]);
+		   TtaReadWideChar (file, &pStringTr->StTarget[j++], ISOLatin1);
 		while (pStringTr->StTarget[j - 1] != WC_EOS);
 	     }
 	if (!error)
@@ -1291,7 +1291,7 @@ PtrSSchema          pSS;
 	     {
 		j = pTSch->TsConstBegin[i] - 1;
 		do
-		   TtaReadWideChar (file, &pTSch->TsConstant[j++]);
+		   TtaReadWideChar (file, &pTSch->TsConstant[j++], ISOLatin1);
 		while (pTSch->TsConstant[j - 1] != WC_EOS);
 	     }
 	/* lit les blocs de regles des elements */

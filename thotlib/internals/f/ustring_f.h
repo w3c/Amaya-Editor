@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern int uputchar (int);
 extern int ustrcasecmp ( const CHAR_T* str1,
                          const CHAR_T* str2 );
 extern CHAR_T* ustrcat ( CHAR_T* dest,
@@ -56,6 +57,8 @@ extern int TtaGetNextWideCharFromMultibyteString ( CHAR_T* car,
                                                    CHARSET encoding );
 
 #else /* __STDC__ */
+
+extern int uputchar (/* int */);
 
 extern int ustrcasecmp (/* const CHAR_T* str1,
                            const CHAR_T* str2 */);

@@ -3669,61 +3669,60 @@ static void	SetFileSuffix ()
 
 #endif
 {
-  CHAR_T	      suffix[6];
+  CHAR_T	       suffix[6];
   CHAR_T*          filename;
-  int		      i, len;
+  int		       i, len;
 
-  if (SavingDocument != 0 && SaveName[0] != EOS)
-    {
-      if (SaveAsHTML || SaveAsXHTML)
-#ifdef _WINDOWS
-	 ustrcpy (suffix, TEXT("html"));
-#else /* _WINDOWS */
-	 ustrcpy (suffix, TEXT("html"));
-#endif /* _WINDOWS */
-      else if (SaveAsText)
-	 ustrcpy (suffix, TEXT("txt"));
-      else
-	 return;
+  if (SavingDocument != 0 && SaveName[0] != WC_EOS) {
+     if (SaveAsHTML || SaveAsXHTML)
+        ustrcpy (suffix, TEXT("html"));
+     else if (SaveAsText)
+          ustrcpy (suffix, TEXT("txt"));
+     else
+          return;
 
-      /* looks for a suffix at the end of the document name */
-      len = ustrlen (SaveName);
-      for (i = len-1; i > 0 && SaveName[i] != TEXT('.'); i--);
-      if (SaveName[i] != TEXT('.'))
-	/* there is no suffix */
-	{
-	  i = len;
-	  SaveName[i++] = TEXT('.');
-	}
-      else
-	/* there is a suffix */
-	{
-	  i++;
-	  if (ustrncmp (suffix, &SaveName[i], 3) == 0)
-	    /* the requested suffix is already here. Do nothing */
-	    i = 0;
-	}
+     /* looks for a suffix at the end of the document name */
+     len = ustrlen (SaveName);
+     for (i = len-1; i > 0 && SaveName[i] != TEXT('.'); i--);
+     if (SaveName[i] != TEXT('.')) {
+        /* there is no suffix */
+        i = len;
+        SaveName[i++] = TEXT('.');
+	 } else {
+            /* there is a suffix */
+            i++;
+            if (ustrncmp (suffix, &SaveName[i], 3) == 0)
+               /* the requested suffix is already here. Do nothing */
+               i = 0;
+#           ifdef _WINDOWS
+            ustrcpy (DocToOpen, SavePath );
+            if (ustrchr (SavePath, TEXT('/')))
+               ustrcat (DocToOpen, WC_URL_STR);
+            else
+                ustrcat (DocToOpen, WC_DIR_STR);
+            ustrcat (DocToOpen, SaveName);
+#           endif /* _WINDOWS */
+	 }
       
-      if (i > 0)
-	/* change or append the suffix */
-	{
-	  ustrcpy (&SaveName[i], suffix);
-	  /* display the new filename in the dialog box */
-	  filename = TtaAllocString (MAX_LENGTH);
-	  ustrcpy (filename, SavePath );
-	  if (ustrchr (SavePath, TEXT('/')))
-	    ustrcat (filename, WC_URL_STR);
-	  else
-	    ustrcat (filename, WC_DIR_STR);
-	  ustrcat (filename, SaveName);
-#     ifdef _WINDOWS
-      usprintf (DocToOpen, filename);
-#     else /* _WINDOWS */
-	  TtaSetTextForm (BaseDialog + NameSave, filename);
-#     endif /* _WINDOWS */
-	  TtaFreeMemory (filename);
-	}
-    }
+     if (i > 0) {
+        /* change or append the suffix */
+        ustrcpy (&SaveName[i], suffix);
+        /* display the new filename in the dialog box */
+        filename = TtaAllocString (MAX_LENGTH);
+        ustrcpy (filename, SavePath );
+        if (ustrchr (SavePath, TEXT('/')))
+           ustrcat (filename, WC_URL_STR);
+        else
+            ustrcat (filename, WC_DIR_STR);
+        ustrcat (filename, SaveName);
+#       ifdef _WINDOWS
+        usprintf (DocToOpen, filename);
+#       else /* _WINDOWS */
+        TtaSetTextForm (BaseDialog + NameSave, filename);
+#       endif /* _WINDOWS */
+        TtaFreeMemory (filename);
+	 }
+  }
 }
 
 /*----------------------------------------------------------------------

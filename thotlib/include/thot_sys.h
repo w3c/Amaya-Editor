@@ -206,7 +206,7 @@ typedef unsigned char   ThotBool;
 
 #define NBSP      0xA0
 
-#define MAX_BYTES 3 
+#define MAX_BYTES 6 
 /* We suppose that a multibyte character is encoded on maximum 2 bytes 
    If this value is modified, we have to adapt the code of the following 
    proceduress:

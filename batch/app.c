@@ -18,6 +18,7 @@
  * Compiler of language A.
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari (W3C/INRIA): Windows & Unicode.
  *
  */
 
@@ -1799,7 +1800,7 @@ char              **argv;
                              i = 0;
                              do
                                 /* fileOK = TtaReadByte (filedesc, &inputLine[i++]); */
-                                fileOK = TtaReadWideChar (filedesc, &inputLine[i++]);
+                                fileOK = TtaReadWideChar (filedesc, &inputLine[i++], ISOLatin1);
                              while (i < LINE_LENGTH && inputLine[i - 1] != TEXT('\n') && fileOK);
                              /* marque la fin reelle de la ligne */
                              inputLine[i - 1] = TEXT('\0');

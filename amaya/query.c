@@ -2855,15 +2855,15 @@ CHAR_T*       content_type;
      {
        l = ustrlen (outputfile);
        if (l > MAX_LENGTH)
-	 me->outputfile = TtaGetMemory (l + 2);
+	 me->outputfile = TtaAllocString (l + 2);
        else
-	 me->outputfile = TtaGetMemory (MAX_LENGTH + 2);
+	 me->outputfile = TtaAllocString (MAX_LENGTH + 2);
        ustrcpy (me->outputfile, outputfile);
        l = ustrlen (urlName);
        if (l > MAX_LENGTH)
-	 me->urlName = TtaGetMemory (l + 2);
+	 me->urlName = TtaAllocString (l + 2);
        else
-	 me->urlName = TtaGetMemory (MAX_LENGTH + 2);
+	 me->urlName = TtaAllocString (MAX_LENGTH + 2);
        ustrcpy (me->urlName, urlName);
 #ifdef _WINDOWS
      /* force windows ASYNC requests to always be non preemptive */

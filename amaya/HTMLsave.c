@@ -620,7 +620,7 @@ View                view;
        if (IsW3Path (tempname))
 	 {
 	     TtaExtractName (tempname, SavePath, SaveName);
-	     if (SaveName[0] == EOS)
+	     if (SaveName[0] == WC_EOS)
 	       {
 		 DefaultName = TtaGetEnvString ("DEFAULTNAME");
 		 if (DefaultName == NULL || *DefaultName == EOS)
@@ -792,7 +792,7 @@ Document     doc;
 	       TtaNextSibling (&el);
 	    }
 	 }
-      ISOlatin = ' ';
+      ISOlatin = TEXT(' ');
       if (attr)
 	 /* there is a Language attribute on the root or body element */
 	 {
@@ -851,11 +851,11 @@ Document     doc;
 	 attr = TtaNewAttribute (attrType);
 	 TtaAttachAttribute (meta, attr, doc);
 	 }
-      if (ISOlatin == 'L')
+      if (ISOlatin == TEXT('L'))
          TtaSetAttributeText (attr, TEXT("text/html; charset=ISO-8859-1"), meta,doc);
-      else if (ISOlatin == '2')
+      else if (ISOlatin == TEXT('2'))
          TtaSetAttributeText (attr, TEXT("text/html; charset=ISO-8859-2"), meta,doc);
-      else if (ISOlatin == '9')
+      else if (ISOlatin == TEXT('9'))
          TtaSetAttributeText (attr, TEXT("text/html; charset=ISO-8859-9"), meta,doc);
       else
          TtaSetAttributeText (attr, TEXT("text/html"), meta, doc);
@@ -1879,7 +1879,7 @@ CHAR_T*                newURL;
    CHAR_T*             oldStyle;
    int                 buflen, max, index;
 
-   if (imgbase[0] != EOS)
+   if (imgbase[0] != WC_EOS)
      {
        /* add the separator if needed */
        buflen = ustrlen (imgbase) - 1;
@@ -1898,10 +1898,10 @@ CHAR_T*                newURL;
    /* save the old document path to locate existing images */
    ustrcpy (oldpath, DocumentURLs[doc]);
    buflen = ustrlen (oldpath) - 1;
-   if (oldpath[buflen] ==  '/')
-     oldpath[buflen] = EOS;
+   if (oldpath[buflen] ==  TEXT('/'))
+     oldpath[buflen] = WC_EOS;
    /* path to search image descriptors */
-   usprintf (localpath, TEXT("%s%s%d%s"), TempFileDirectory, DIR_STR, doc, DIR_STR);
+   usprintf (localpath, TEXT("%s%s%d%s"), TempFileDirectory, WC_DIR_STR, doc, WC_DIR_STR);
 
    if (CopyImages)
      {
@@ -1938,7 +1938,7 @@ CHAR_T*                newURL;
 	   TtaGiveTextContent (content, CSSbuffer, &buflen, &lang);
 	   CSSbuffer[MAX_CSS_LENGTH] = EOS;
 	   url[0] = EOS;
-	   tempname[0] = EOS;
+	   tempname[0] = WC_EOS;
 	   sStyle = UpdateCSSBackgroundImage (oldpath, newURL, imgbase, CSSbuffer);
 	   if (sStyle != NULL)
 	     {
@@ -1976,7 +1976,7 @@ CHAR_T*                newURL;
 			 - oldname gives the old image full name
 			 - imgname contains the image file name
 			 */
-		       if (url[0] != EOS && oldname[0] != EOS)
+		       if (url[0] != WC_EOS && oldname[0] != WC_EOS)
 			 {
 			   if ((src_is_local) && (!dst_is_local))
 			     /* add the existing localfile to images list to be saved */
@@ -1996,7 +1996,7 @@ CHAR_T*                newURL;
 				   ustrcat (oldname, imgname);
 				 }
 			       
-			       if (imgbase[0] != EOS)
+			       if (imgbase[0] != WC_EOS)
 				 {
 				   ustrcpy (tempfile, imgbase);
 				   ustrcat (tempfile, WC_DIR_STR);
@@ -2077,8 +2077,8 @@ CHAR_T*                newURL;
 		       if (attrType.AttrTypeNum == HTML_ATTR_Style_)
 			 {
 			   /* It's an attribute Style: look for url()*/
-			   url[0] = EOS;
-			   tempname[0] = EOS;
+			   url[0] = WC_EOS;
+			   tempname[0] = WC_EOS;
 			   ptr = UpdateCSSBackgroundImage (oldpath, newURL, imgbase, buf);
 			   if (ptr != NULL)
 			     {
@@ -2104,7 +2104,7 @@ CHAR_T*                newURL;
 				   TtaFreeMemory (ptr);
 				 }
 			       else
-				 buf[0] = EOS;
+				 buf[0] = WC_EOS;
 			     }
 			 }
 		       else
@@ -2113,7 +2113,7 @@ CHAR_T*                newURL;
 			   ustrcpy (url, buf);
 			   NormalizeURL (url, 0, buf, imgname, oldpath);
 			   /* save the new SRC attr value */
-			   if (imgbase[0] != EOS)
+			   if (imgbase[0] != WC_EOS)
 			     {
 			       /* compose the relative or absolute name */
 			       ustrcpy (url, imgbase);
@@ -2136,7 +2136,7 @@ CHAR_T*                newURL;
 			 - buf gives the old image full name
 			 - imgname contains the image file name
 			 */
-		       if (url[0] != EOS && buf[0] != EOS)
+		       if (url[0] != WC_EOS && buf[0] != WC_EOS)
 			 {
 #ifdef AMAYA_DEBUG
 			   fprintf(stderr, "     SRC from %s to %s\n", buf, url);
@@ -2159,7 +2159,7 @@ CHAR_T*                newURL;
 				   ustrcat (buf, imgname);
 				 }
 
-			       if (imgbase[0] != EOS)
+			       if (imgbase[0] != WC_EOS)
 				   ustrcpy (tempfile, tempname);
 			       else
 				 {
@@ -2237,7 +2237,7 @@ void                DoSaveAs ()
   int                 len;
   ThotBool            src_is_local;
   ThotBool            dst_is_local, ok;
-  ThotBool	      docModified, toUndo;
+  ThotBool	          docModified, toUndo;
   ThotBool            new_put_def_name;
   ThotBool            old_put_def_name;
 
@@ -2255,7 +2255,7 @@ void                DoSaveAs ()
   documentFile = TtaAllocString (MAX_LENGTH);
   ustrcpy (documentFile, SavePath);
   len = ustrlen (documentFile);
-  if (documentFile [len -1] != DIR_SEP && documentFile [len - 1] != '/')
+  if (documentFile [len -1] != WC_DIR_SEP && documentFile [len - 1] != TEXT('/'))
     {
      if (dst_is_local)
        {
@@ -2274,7 +2274,7 @@ void                DoSaveAs ()
     url_sep = WC_URL_SEP;
 
   new_put_def_name = FALSE;
-  if (SaveName[0] == EOS)
+  if (SaveName[0] == WC_EOS)
     {
       /* there is no document name */
       if (AddNoName (SavingDocument, 1, documentFile, &ok))

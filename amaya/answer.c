@@ -68,12 +68,19 @@ HTAlertPar         *reply;
    int                 pro;
    int                *raw_rw;
    HTParentAnchor     *anchor;
+   CHAR_T              text[MAX_LENGTH];
+   CHAR_T              Buff[11];
 
    if (request && HTRequest_internal (request))
       return NO;
 
    if (!me)
       return NO;
+
+   if (input) 
+      iso2wc_strcpy (text, (char*)input);
+   else 
+       text[0] = WC_EOS;
 
    switch (op)
 	 {
@@ -84,10 +91,10 @@ HTAlertPar         *reply;
 		*/
 	      break;
 	    case HT_PROG_DNS:
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOOKING_HOST), input);
+	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOOKING_HOST), text);
 	       break;
 	    case HT_PROG_CONNECT:
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CONTACTING_HOST), input);
+	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CONTACTING_HOST), text);
 	       break;
 	    case HT_PROG_ACCEPT:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_WAITING_FOR_CONNECTION), NULL);
@@ -107,7 +114,8 @@ HTAlertPar         *reply;
 		       if (pro > 100)		/* libwww reports > 100! */
 			 pro = 100;
 		       HTNumToStr ((unsigned long) cl, buf, 10);
-		       usprintf (tempbuf, TEXT("%s (%d%% of %s)\n"), me->status_urlName, (int) pro, buf);
+               iso2wc_strcpy (Buff, buf);
+		       usprintf (tempbuf, TEXT("%s (%d%% of %s)\n"), me->status_urlName, (int) pro, Buff);
 		     }
 		   else 
 		     {
@@ -115,13 +123,15 @@ HTAlertPar         *reply;
 		       raw_rw = input ? (int *) input : NULL;
 		       if (bytes_rw > 0)
 			 {
-			   HTNumToStr(bytes_rw, buf, 10);
-			   usprintf (tempbuf, TEXT("%s bytes"), buf);
+			   HTNumToStr(bytes_rw, buf, 10); 
+               iso2wc_strcpy (Buff, buf);
+			   usprintf (tempbuf, TEXT("%s bytes"), Buff);
 			 } 
 		       else if (raw_rw && *raw_rw>0) 
 			 {
 			   HTNumToStr(*raw_rw, buf, 10);
-			   usprintf (tempbuf, TEXT("%s bytes"), buf);
+               iso2wc_strcpy (Buff, buf);
+			   usprintf (tempbuf, TEXT("%s bytes"), Buff);
 			 } 
 		       else 
 			 buf[0] = EOS;
@@ -144,7 +154,8 @@ HTAlertPar         *reply;
 		      bytes_rw = HTRequest_bodyWritten (request);
 			pro = (int) ((bytes_rw * 100l) / cl);
 			HTNumToStr ((unsigned long) cl, buf, 10);
-			usprintf (tempbuf, TEXT("%s: Writing (%d%% of %s)\n"), me->urlName, pro, buf);
+            iso2wc_strcpy (Buff, buf);
+			usprintf (tempbuf, TEXT("%s: Writing (%d%% of %s)\n"), me->urlName, pro, Buff);
 			TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), tempbuf);
 		    }
 		  else  
@@ -154,12 +165,14 @@ HTAlertPar         *reply;
 		      if (bytes_rw > 0)
 			{
 			  HTNumToStr(bytes_rw, buf, 10);
-			  usprintf (tempbuf, TEXT("%s bytes "), buf);
+              iso2wc_strcpy (Buff, buf);
+			  usprintf (tempbuf, TEXT("%s bytes "), Buff);
 			} 
 		      else if (raw_rw && *raw_rw >0) 
 			{
 			  HTNumToStr(*raw_rw, buf, 10);
-			  usprintf (tempbuf, TEXT("%s bytes "), buf);
+              iso2wc_strcpy (Buff, buf);
+			  usprintf (tempbuf, TEXT("%s bytes "), Buff);
 			} 
 		      else 
 			buf[0] = EOS;
@@ -341,9 +354,14 @@ HTAlertPar         *reply;
 #endif /* __STDC */
 {
    AHTReqContext      *me = HTRequest_context (request);
-   const char*      realm = HTRequest_realm (request);
-   CHAR_T*            server;
-   AHTReqStatus       old_reqStatus;
+   const char*         realm = HTRequest_realm (request);
+   CHAR_T*             server;
+   AHTReqStatus        old_reqStatus;
+#  ifdef _I18N_
+   CHAR_T              RealM[MAX_LENGTH];
+#  else  /* !_I18N_ */
+   CHAR_T*             RealM = realm;
+#  endif /* !_I18N_ */
 
    if (reply && msgnum >= 0) 
      {
@@ -352,13 +370,16 @@ HTAlertPar         *reply;
        Lg_password = 0;
        Answer_password[0] = WC_EOS;
 
+#      ifdef _I18N_ 
+       iso2wc_strcpy (RealM, realm);
+#      endif /* _I18N_ */
        /* prepare the authentication realm message */
        server = AmayaParseUrl (me->urlName, TEXT(""), AMAYA_PARSE_HOST);
        /* protection against having a stop kill this thread */
        old_reqStatus = me->reqStatus;
        me->reqStatus = HT_BUSY;
        /* show the popup */
-       InitFormAnswer (me->docid, 1, realm, server);
+       InitFormAnswer (me->docid, 1, RealM, server);
        if (me->reqStatus != HT_ABORT)
 	 me->reqStatus = old_reqStatus;
        /* free allocated memory */

@@ -19,6 +19,7 @@
  * compile' en memoire.
  *
  * Author: V. Quint (INRIA)
+ *         R. Guetari (W3C/INRIA) : Unicode.
  *
  */
 
@@ -87,7 +88,7 @@ Name                n;
 
    i = 0;
    do
-      TtaWriteWideChar (outfile, n[i++]);
+      TtaWriteWideChar (outfile, n[i++], ISOLatin1);
    while (n[i - 1] != TEXT('\0'));
 }
 
@@ -1054,18 +1055,18 @@ PtrSSchema          pSS;
 	pStrnTr = &pTSch->TsCharTransl[i];
 	j = 0;
 	do
-	   TtaWriteWideChar (outfile, pStrnTr->StSource[j++]);
+	   TtaWriteWideChar (outfile, pStrnTr->StSource[j++], ISOLatin1);
 	while (pStrnTr->StSource[j - 1] != TEXT('\0'));
 	j = 0;
 	do
-	   TtaWriteWideChar (outfile, pStrnTr->StTarget[j++]);
+	   TtaWriteWideChar (outfile, pStrnTr->StTarget[j++], ISOLatin1);
 	while (pStrnTr->StTarget[j - 1] != TEXT('\0'));
      }
    for (i = 0; i < pTSch->TsNConstants; i++)
      {
 	j = pTSch->TsConstBegin[i] - 1;
 	do
-	   TtaWriteWideChar (outfile, pTSch->TsConstant[j++]);
+	   TtaWriteWideChar (outfile, pTSch->TsConstant[j++], ISOLatin1);
 	while (pTSch->TsConstant[j - 1] != TEXT('\0'));
      }
    for (i = 0; i < pSS->SsNRules; i++)

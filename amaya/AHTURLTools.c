@@ -11,7 +11,7 @@
  * URL parsing functions.
  *
  * Authors: J. Kahan, I. Vatton
- *          R. Guetari (Stuff related to Windows).
+ *          R. Guetari: Windows & Unicode.
  *
  */
  
@@ -48,7 +48,7 @@ STRING       string;
  if (!string)
    return;
 
- for (i = 0; string[i] != EOS; i++)
+ for (i = 0; string[i] != WC_EOS; i++)
    string[i] = utolower (string[i]);
 }
 
@@ -123,7 +123,7 @@ STRING url;
               else {
                 /* @@ maybe we should do some other behavior here, like
                    freeing the buffer and return a void thing */
-                buffer[buffer_len] = EOS;
+                buffer[buffer_len] = WC_EOS;
                 break;
               }
             }
@@ -142,7 +142,7 @@ STRING url;
           /* examine the next char */
           ptr++;
         }
-      buffer[buffer_len] = EOS;
+      buffer[buffer_len] = WC_EOS;
     }
   else
     buffer = NULL;
@@ -293,7 +293,7 @@ STRING              aSuffix;
      /* bad suffix */
      return;
 
-   aSuffix[0] = EOS;
+   aSuffix[0] = WC_EOS;
    lg = ustrlen (aName);
    if (lg)
      {
@@ -310,7 +310,7 @@ STRING              aSuffix;
 	i = (int) (oldptr) - (int) (aName);	/* name length */
 	if (i > 1)
 	  {
-	     aName[i - 1] = EOS;
+	     aName[i - 1] = WC_EOS;
 	     if (i != lg)
 		ustrcpy (aSuffix, oldptr);
 	  }
@@ -483,12 +483,12 @@ const STRING        path;
 
    /* Normalize the suffix */
    i = 0;
-   while (suffix[i] != EOS && i < MAX_LENGTH -1)
+   while (suffix[i] != WC_EOS && i < MAX_LENGTH -1)
      {
        nsuffix[i] = utolower (suffix[i]);
        i++;
      }
-   nsuffix[i] = EOS;
+   nsuffix[i] = WC_EOS;
    if ((!ustrcmp (nsuffix, TEXT("gif"))) || (!ustrcmp (nsuffix, TEXT("xbm"))) ||
        (!ustrcmp (nsuffix, TEXT("xpm"))) || (!ustrcmp (nsuffix, TEXT("jpg"))) ||
        (!ustrcmp (nsuffix, TEXT("png"))) || (!ustrcmp (nsuffix, TEXT("au"))))
@@ -516,7 +516,7 @@ const STRING     type;
    ustrcpy (temptype, type);
    /* Normalize the type */
    i = 0;
-   while (temptype[i] != EOS)
+   while (temptype[i] != WC_EOS)
      {
        temptype[i] = tolower (temptype[i]);
        i++;
@@ -552,12 +552,12 @@ const STRING        path;
 
    /* Normalize the suffix */
    i = 0;
-   while (suffix[i] != EOS && i < MAX_LENGTH -1)
+   while (suffix[i] != WC_EOS && i < MAX_LENGTH -1)
      {
 	nsuffix[i] = tolower (suffix[i]);
 	i++;
      }
-   nsuffix[i] = EOS;
+   nsuffix[i] = WC_EOS;
 
    if ((!ustrcmp (nsuffix, TEXT("txt"))) || (!ustrcmp (nsuffix, TEXT("dtd"))))
       return (TRUE);
@@ -567,12 +567,12 @@ const STRING        path;
        ExtractSuffix (temppath, suffix);       
        /* Normalize the suffix */
        i = 0;
-       while (suffix[i] != EOS && i < MAX_LENGTH -1)
+       while (suffix[i] != WC_EOS && i < MAX_LENGTH -1)
 	 {
 	   nsuffix[i] = tolower (suffix[i]);
 	   i++;
 	 }
-       nsuffix[i] = EOS;
+       nsuffix[i] = WC_EOS;
        if ((!ustrcmp (nsuffix, TEXT("txt"))) || (!ustrcmp (nsuffix, TEXT("dtd"))))
 	 return (TRUE);
        else
@@ -1109,7 +1109,7 @@ const STRING    path;
    CHAR_T      temppath[MAX_LENGTH];
    CHAR_T      suffix[MAX_LENGTH];
 
-   if (!path || path[0] == EOS || path[ustrlen(path)] == DIR_SEP)
+   if (!path || path[0] == WC_EOS || path[ustrlen(path)] == WC_DIR_SEP)
      return (FALSE);
 
    root = AmayaParseUrl(path, TEXT(""), AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
@@ -1121,7 +1121,7 @@ const STRING    path;
        /* Get the suffix */
        ExtractSuffix (temppath, suffix); 
 
-       if( suffix[0] == EOS)
+       if( suffix[0] == WC_EOS)
 	 /* no suffix */
 	 return (FALSE);
 
@@ -1132,7 +1132,7 @@ const STRING    path;
 	 /* skip the compressed suffix */
 	 {
 	 ExtractSuffix (temppath, suffix);
-	 if(suffix[0] == EOS)
+	 if(suffix[0] == WC_EOS)
 	   /* no suffix */
 	   return (FALSE);
          /* Normalize the suffix */
@@ -1272,7 +1272,7 @@ HTURI       *parts;
 	    p = ustrchr (parts->host, URL_SEP);
 	    if (p)
 	      {
-	        *p = EOS;			/* Terminate host */
+	        *p = WC_EOS;			/* Terminate host */
 	        parts->absolute = p+1;		/* Root has been found */
 	      }
 	  }
@@ -1720,7 +1720,7 @@ CHAR_T**     url;
     */
     if (*path == used_sep && *(path+1) == TEXT('.') && *(path+2) == TEXT('.') 
 	&& (!*(path+3) || *(path+3) == used_sep))
-	*(path+1) = EOS;
+	*(path+1) = WC_EOS;
 
   return;
 }
@@ -1806,12 +1806,12 @@ STRING           aName;
 STRING           relatedName;
 #endif  /* __STDC__ */
 {
-  STRING         return_value;
+  CHAR_T*        return_value;
   CHAR_T         result[MAX_LENGTH];
-  STRING         p;
-  STRING         q;
-  STRING         after_access;
-  STRING         last_slash = NULL;
+  CHAR_T*        p;
+  CHAR_T*        q;
+  CHAR_T*        after_access;
+  CHAR_T*        last_slash = NULL;
   int            slashes, levels, len;
 
 # ifdef _WINDOWS
@@ -1839,7 +1839,7 @@ STRING           relatedName;
     }
     
   /* q, p point to the first non-matching character or zero */
-  if (*q == EOS)
+  if (*q == WC_EOS)
     {
       /* New name is a subset of the related name */
       /* exactly the right length */
@@ -1869,7 +1869,7 @@ STRING           relatedName;
 	    if (*q == DIR_SEP)
 	      levels++;
 	  
-	  result[0] = EOS;
+	  result[0] = WC_EOS;
 	  for (;levels; levels--)
 	    ustrcat (result, TEXT("../"));
 	  ustrcat (result, last_slash+1);

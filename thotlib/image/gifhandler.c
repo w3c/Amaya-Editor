@@ -1442,11 +1442,11 @@ int               **thotColors;
    ReadGifToData decomresses the file and returns the picture data 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char      *ReadGifToData (char *datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256])
+unsigned char      *ReadGifToData (CHAR_T* datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256])
 
 #else  /* __STDC__ */
 unsigned char      *ReadGifToData (datafile, w, h, ncolors, cpp, colrs)
-char               *datafile;
+CHAR_T             *datafile;
 int                *w;
 int                *h;
 int                *ncolors;
@@ -1459,9 +1459,9 @@ ThotColorStruct     colrs[256];
    FILE               *fp;
 
 #  ifndef _WINDOWS
-   fp = fopen (datafile, "r");
+   fp = ufopen (datafile, TEXT("r"));
 #  else  /* _WINDOWS */
-   fp = fopen (datafile, "rb");
+   fp = ufopen (datafile, TEXT("rb"));
 #  endif /* _WINDOWS */
 
    if (fp != NULL)
@@ -1483,10 +1483,10 @@ ThotColorStruct     colrs[256];
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap          GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1, int *width, int *height, int zoom)
+ThotBitmap          GifCreate (CHAR_T* fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1, int *width, int *height, int zoom)
 #else  /* __STDC__ */
 ThotBitmap          GifCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
-char               *fn;
+CHAR_T*             fn;
 PictInfo           *imageDesc;
 int                *xif;
 int                *yif;
@@ -1607,10 +1607,10 @@ int                 zoom;
    GifPrint  : reads a gif file and produces PostScirpt      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned long BackGroundPixel)
+void                GifPrint (CHAR_T *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned long BackGroundPixel)
 #else  /* __STDC__ */
 void                GifPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
-char               *fn;
+CHAR_T             *fn;
 PictureScaling      pres;
 int                 xif;
 int                 yif;

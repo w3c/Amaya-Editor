@@ -17,6 +17,7 @@
 /*
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari (W3C/INRIA): Unicode.
  *
  */
 #include "thot_sys.h"

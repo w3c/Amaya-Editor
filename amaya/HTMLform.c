@@ -510,7 +510,7 @@ ThotBool            withinForm;
   Attribute           attr, attrS, def;
   AttributeType       attrType, attrTypeS;
   CHAR_T              name[MAX_LENGTH], *value = NULL;
-  STRING              text;
+  CHAR_T*             text;
   Language            lang;
   int                 length;
   int                 modified = FALSE;
@@ -654,7 +654,7 @@ ThotBool            withinForm;
 		      while (elForm)
 			{
 			  length = TtaGetTextLength (elForm) + 1;
-			  text = TtaGetMemory (length);
+			  text = TtaAllocString (length);
 			  TtaGiveTextContent (elForm, text, &length, &lang);
 			  AddElement (text);
 			  TtaFreeMemory (text);

@@ -10,6 +10,7 @@
  * be contained in this module.
  *
  * Author: I. Vatton
+ *         R. Guetari (W3C/INRIA): Unicode.
  *
  */
 

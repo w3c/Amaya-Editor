@@ -21,6 +21,7 @@
  * GramRule ou dans un fichier de type .GRM
  *
  * Author: V. Quint (INRIA)
+ *         R. Guetari (W3C / INRIA): Unicode.
  *
  */
 
@@ -89,24 +90,6 @@ size_t      n;
 }
 #endif /* _WINDOWS */
 #endif /* 000 */
-
-#ifdef __STDC__
-static ThotBool ValidCharacter (CHAR_T c) 
-#else  /* !__STDC__ */
-static ThotBool ValidCharacter (c) 
-CHAR_T c; 
-#endif /* __STDC__ */
-{
-       if (
-		   (c >= TEXT('A') && c <= TEXT('Z')) ||
-           (c >= TEXT('a') && c <= TEXT('z')) ||
-           (c >= TEXT('0') && c <= TEXT('9')) ||
-           ((int) c >= 192 && (int) c <= 255) ||
-           c == '\240' ||
-           c == TEXT('_'))
-          return TRUE;
-       return FALSE;
-}
 
 /*----------------------------------------------------------------------
    InitParser initialise les donnees de l'analyseur syntaxique.     
@@ -465,17 +448,20 @@ SyntacticType      *wn;
 							 }
                              break;
                         case SynIdentifier:
-                             if (!
-								    (
-									    (inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z')) || 
-                                        (inputLine[j] >= TEXT('a') && inputLine[j] <= TEXT('z')) || 
-                                        (inputLine[j] == NBSP)                          || /*nobreakspace */
-                                        (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9')) || 
-                                        ((int)inputLine[j] >= 192 && (int) inputLine[j] <= 255)  || /* lettre accentuee */
-                                        inputLine[j] == TEXT('_')
-									)
-										
-							    ) {
+                             /* @@@@@@@@@ Of course, this kind of test should be replaced by another
+                                          one if you want to handle Unicode indentifiers and text.
+                                          For instance the test (inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z')
+                                          or TEXT('a') && inputLine[j] <= TEXT('z') or
+                                          (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9') should be:
+                                          if (iswalnum (inputLine[j])) to see if inputLine[j] is alphabetical or numerical 
+										  value @@@@@@@@@@ */
+
+                             if (!((inputLine[j] >= TEXT('A') && inputLine[j] <= TEXT('Z')) || 
+                                   (inputLine[j] >= TEXT('a') && inputLine[j] <= TEXT('z')) || 
+                                   (inputLine[j] == NBSP)                          || /*nobreakspace */
+                                   (inputLine[j] >= TEXT('0') && inputLine[j] <= TEXT('9')) || 
+                                   ((int)inputLine[j] >= 192 && (int) inputLine[j] <= 255)  || /* lettre accentuee */
+                                   inputLine[j] == TEXT('_'))) {
                                 CompilerMessage (j + 1, COMPIL, FATAL, BAD_WORD, inputLine, LineNum);
                                 *wn = SynError;
                                 stop = True;
@@ -985,7 +971,7 @@ STRING              fileName;
 	     do
 	       {
 		  /* fileOK = TtaReadByte (grmFile, &inputLine[j]); */
-		  fileOK = TtaReadWideChar (grmFile, &inputLine[j]);
+		  fileOK = TtaReadWideChar (grmFile, &inputLine[j], ISOLatin1);
 		  j++;
 	       }
 #        ifdef _WINDOWS

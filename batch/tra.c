@@ -23,6 +23,7 @@
  * par le traducteur, pour guider sa traduction.
  *
  * Author: V. Quint (INRIA)
+ *         R. Guetari (W3C/INRIA): Windows & Unicode.
  *
  */
 
@@ -3402,7 +3403,7 @@ char              **argv;
 		do
 		  {
 		    /* fileOK = TtaReadByte (infile, &inputLine[i]); */
-		    fileOK = TtaReadWideChar (infile, &inputLine[i]);
+		    fileOK = TtaReadWideChar (infile, &inputLine[i], ISOLatin1);
 		    i++;
 		  }
 		while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);

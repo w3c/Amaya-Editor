@@ -59,6 +59,8 @@ static int          newColor[] =
  149, 149, 140, 130, 130, 131, 131, 133, 133, 133, 133, 123, 3, 1, 7,
  7, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 2};
 
+extern CHARSET CharEncoding;
+
 #define MAX_EXT_DOC 10
 
 #include "abspictures_f.h"
@@ -1511,7 +1513,7 @@ PtrAttribute       *pAttr;
 		       /* lit tout le texte de l'attribut */
 		       stop = FALSE;
 		       do
-			  if (!TtaReadWideChar (pivFile, &pBT->BuContent[pBT->BuLength++]))
+			  if (!TtaReadWideChar (pivFile, &pBT->BuContent[pBT->BuLength++], CharEncoding))
 			     /* erreur de lecture */
 			    {
 			       PivotError (pivFile);
@@ -3127,7 +3129,7 @@ void (*withThisPSchema) ();
    rank = 1;
    /* lit le type du document */
    do
-      if (!TtaReadWideChar (file, &SSName[i++]))
+      if (!TtaReadWideChar (file, &SSName[i++], ISOLatin1))
          PivotError (file);
    while (!error && SSName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH) ;
    if (SSName[i - 1] != WC_EOS)
@@ -3145,7 +3147,7 @@ void (*withThisPSchema) ();
             /* Lit le nom du schema de presentation associe' */
             i = 0;
             do
-              if (!TtaReadWideChar (file, &PSchemaName[i++]))
+              if (!TtaReadWideChar (file, &PSchemaName[i++], ISOLatin1))
                  PivotError (file);
             while (!error && PSchemaName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH) ;
 
@@ -3191,7 +3193,7 @@ void (*withThisPSchema) ();
 	i = 0;
 	rank++;
 	do
-	   if (!TtaReadWideChar (file, &SSName[i++]))
+	   if (!TtaReadWideChar (file, &SSName[i++], ISOLatin1))
 	      PivotError (file);
 	while (SSName[i - 1] != EOS && !error) ;
 	if (pDoc->DocPivotVersion >= 4)
@@ -3209,7 +3211,7 @@ void (*withThisPSchema) ();
 	     PSchemaName[0] = *tag;
 	     i = 1;
 	     do
-		if (!TtaReadWideChar (file, &PSchemaName[i++]))
+		if (!TtaReadWideChar (file, &PSchemaName[i++], ISOLatin1))
 		   PivotError (file);
 	     while (!error && PSchemaName[i - 1] != EOS && i != MAX_NAME_LENGTH) ;
 
@@ -3284,7 +3286,7 @@ char*               tag;
 	{
 	   i = 0;
 	   do
-	      if (!TtaReadWideChar (file, &languageName[i++]))
+	      if (!TtaReadWideChar (file, &languageName[i++], ISOLatin1))
 		 PivotError (file);
 	   while (!error && languageName[i - 1] != WC_EOS && i != MAX_NAME_LENGTH) ;
 	   if (languageName[i - 1] != WC_EOS)

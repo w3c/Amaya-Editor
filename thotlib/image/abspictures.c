@@ -137,7 +137,7 @@ int                 imagetype;
 	  if (ptr == NULL || len > (int) ustrlen (ptr) + 1)
 	    {
 	      TtaFreeMemory (ptr);
-	      ptr = TtaGetMemory (len);
+	      ptr = TtaAllocString (len);
 	    }
 	   ustrcpy (ptr, filename);
 	}

@@ -238,9 +238,14 @@ int                 msgNumber;
    PtrTabMsg           previoustable;
    CHAR_T              pBuffer[MAX_TXT_LEN];
    /* CHAR_T              string[MAX_TXT_LEN]; */
-   STRING              string;
+   CHAR_T*             string;
    CHAR_T              fileName[MAX_TXT_LEN];
-   char                pBuff[MAX_TXT_LEN];
+   unsigned char       pBuff[MAX_TXT_LEN];
+   unsigned char*      ptrBuff;
+#  ifdef _I18N_ 
+   unsigned char       txt[MAX_TXT_LEN];
+   CHARSET             encoding;
+#  endif /* _I18N_ */
 
    /* contruction du nom $THOTDIR/bin/$LANG-msgName */
    ustrcpy (fileName, TtaGetVarLANG ());
@@ -281,12 +286,32 @@ int                 msgNumber;
 	     previoustable->TabNext = currenttable;
 	  }
 
+#   ifdef _I18N_ 
+    fscanf (file, "%[^=]=%[^#\r\n]", pBuff, txt);
+    if (!strcasecmp (pBuff, "charset")) {
+       if (!strcasecmp (txt, "ISO Latin 1"))
+          encoding = ISOLatin1;
+       else if (!strcasecmp (txt, "ISO Latin 2"))
+            encoding = ISOLatin2;
+       else if (!strcasecmp (txt, "ISO Latin 6"))
+            encoding = ISOLatin6;
+       else if (!strcasecmp (txt, "Windows-1256"))
+            encoding = WIN1256;
+       else if (!strcasecmp (txt, "UTF8"))
+            encoding = UTF8;
+	} else {
+           rewind (file);
+           encoding = ISOLatin1;
+	}
+#   endif /* _I18N_ */
+
 	/* Charge les messages */
 	while (((fscanf (file, "%d %[^#\r\n]", &num, pBuff)) != EOF) && (num < msgNumber))
 	  {
 #        ifdef _I18N_
          string = TtaAllocString (MAX_TXT_LEN);
-         mbstowcs (string, pBuff, sizeof (pBuff));
+         ptrBuff = pBuff;
+         TtaMBS2WCS (&ptrBuff, &string, encoding);
 #        else /* !_I18N_ */
          string = pBuff;
 #        endif /* !_I18N_ */

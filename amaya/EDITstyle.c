@@ -412,7 +412,7 @@ NotifyAttribute    *event;
    Document            doc;
    Attribute           at;
    AttributeType       atType;
-   STRING              style = NULL;
+   CHAR_T*             style = NULL;
    int                 len;
 
    el = event->element;
@@ -475,7 +475,7 @@ NotifyAttribute    *event;
 	if (style == NULL)
 	   return;
 	TtaGiveTextAttributeValue (event->attribute, style, &len);
-	style[len] = EOS;
+	style[len] = WC_EOS;
 	/* create a Span element if it's a TEXT leaf */
 	oldParent = TtaGetParent (el);
 	AttrToSpan (el, event->attribute, doc);
@@ -506,7 +506,7 @@ Document            doc;
   ElementType	      elType;
   Attribute           attr;
   AttributeType       attrType;
-  STRING              a_class = CurrentClass;
+  CHAR_T*             a_class = CurrentClass;
   int		      firstSelectedChar, lastSelectedChar, i, lg;
   DisplayMode         dispMode;
   ThotBool	      setClassAttr;
@@ -515,9 +515,9 @@ Document            doc;
     return;
 
   /* remove any leading dot in a class definition. */
-  if (*a_class == '.')
+  if (*a_class == TEXT('.'))
     a_class++;
-  if (*a_class == EOS)
+  if (*a_class == WC_EOS)
     return;
 
   TtaGiveFirstSelectedElement (doc, &firstSelectedEl, &firstSelectedChar, &i);
@@ -720,11 +720,11 @@ void                *param;
 #endif
 {
   LoadedImageDesc    *imgInfo;
-  STRING              css_rules = param;
+  CHAR_T*             css_rules = param;
   CHAR_T              string[150];
   CHAR_T*             ptr;
 
-  string[0] = EOS;
+  string[0] = WC_EOS;
   if (settings->type == PRBackgroundPicture)
     {
       /* transform absolute URL into relative URL */
@@ -740,9 +740,9 @@ void                *param;
   else
     PToCss (settings, string, sizeof(string));
 
-  if (string[0] != EOS && *css_rules != EOS)
+  if (string[0] != WC_EOS && *css_rules != WC_EOS)
     ustrcat (css_rules, TEXT("; "));
-  if (string[0] != EOS)
+  if (string[0] != WC_EOS)
     ustrcat (css_rules, string);
 }
 
@@ -771,7 +771,7 @@ int        *len;
    * this will transform all the Specific Settings associated to
    * the element to one CSS string.
    */
-  buf[0] = EOS;
+  buf[0] = WC_EOS;
   TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS, &buf[0]);
   *len = ustrlen (buf);
 
@@ -1128,7 +1128,7 @@ STRING              first;
   int                 index;
 
   /* add the first element if specified */
-  buf[0] = EOS;
+  buf[0] = WC_EOS;
   nb = 0;
   index = 0;
   free = size;
@@ -1314,7 +1314,7 @@ View                view;
 			       &firstSelectedChar, &lastSelectedChar);
   if (!firstSelectedEl)
      return;
-  CurrentClass[0] = EOS;
+  CurrentClass[0] = WC_EOS;
   ApplyClassDoc = doc;
 
   /* updating the class name selector. */

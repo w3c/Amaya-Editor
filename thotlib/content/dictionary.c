@@ -32,7 +32,8 @@
 
 extern struct Langue_Ctl LangTable[MAX_LANGUAGES];
 extern struct Langue_Ctl TypoLangTable[MAX_LANGUAGES];
-extern int          FreeEntry;
+extern int               FreeEntry;
+extern CHARSET           CharEncoding;
 
 static CHAR_T*      dictPath;	/* environment variable DICOPAR */
 static PtrDict      dictTable[MaxDictionaries];
@@ -45,7 +46,6 @@ unsigned char       Code[256];	/* Alphabet characters */
 #include "thotmsg_f.h"
 #include "platform_f.h"
 #include "ustring_f.h"
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -309,7 +309,7 @@ PtrDict             dict;
       while (i < dict->DictNbChars)
 	{
 #     ifdef _I18N_
-      TtaReadWideChar (dictFile, &(dict->DictString[i]));
+      TtaReadWideChar (dictFile, &(dict->DictString[i]), CharEncoding);
 #     else  /* !_I18N_ */
 	  TtaReadByte (dictFile, &(dict->DictString[i]));
 #     endif /* !_I18N_ */

@@ -11,6 +11,7 @@
  * for a Thot document of type HTML.
  *
  * Author: V. Quint
+ *         R. Guetari (W3C/INRIA): Unicode version 
  */
 
 /* Compiling this module with -DSTANDALONE generates the main program of  */
@@ -874,6 +875,8 @@ static void         ProcessStartGI ();
 static FILE*   ErrFile = (FILE*) 0;
 static CHAR_T    ErrFileName [80];
 
+extern CHARSET CharEncoding;
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -884,7 +887,7 @@ STRING       SkipSep (ptr)
 STRING              ptr;
 #endif
 {
-  while (*ptr == SPACE || *ptr == ',')
+  while (*ptr == WC_SPACE || *ptr == TEXT(','))
     ptr++;
   return (ptr);
 }
@@ -898,7 +901,7 @@ STRING       SkipInt (ptr)
 STRING              ptr;
 #endif
 {
-  while (*ptr != EOS && *ptr != SPACE && *ptr != ',')
+  while (*ptr != WC_EOS && *ptr != WC_SPACE && *ptr != TEXT(','))
     ptr++;
   return (ptr);
 }
@@ -1371,13 +1374,15 @@ CHAR_T*             msg;
 #endif
 {
 #  ifdef _I18N_
-   char  mbcsMsg [MAX_TXT_LEN * 2];
+   unsigned char   mbcsMsg [MAX_TXT_LEN * 2];
+   unsigned char*  ptrMbcsMas = &mbcsMsg[0];
 #  else  /* !_I18N_ */
-   char* mbcsMsg = msg;
+   unsigned char*  mbcsMsg = msg;
 #  endif /* _I18N_ */
 
 #  ifdef _I18N_
-   wcstombs (mbcsMsg, msg, MAX_TXT_LEN * 2);
+   TtaWCS2MBS (&msg, &ptrMbcsMas, UTF8 /* ISOLatin1 */);
+   /* wcstombs (mbcsMsg, msg, MAX_TXT_LEN * 2); */
 #  endif /* _I18N_ */
 
    HTMLErrorsFound = TRUE;
@@ -5484,7 +5489,7 @@ ThotBool*       endOfFile;
     int           res;
 
 #   ifdef _I18N_
-    unsigned char mbcstr[MAX_BYTES];
+    unsigned char mbcstr[MAX_BYTES + 1] = "\0";
     int           nbBytes;
 #   endif /* _I18N_ */
 
@@ -5499,7 +5504,7 @@ ThotBool*       endOfFile;
           mbcstr[1] = buffer[(*index)++];
           nbBytes = 2;
        }
-       mbtowc (&charRead, mbcstr, nbBytes);
+       TtaMB2WC (mbcstr, &charRead, CharEncoding);
        *endOfFile = (charRead == WC_EOS);
     } else if (infile == NULL)
            *endOfFile = TRUE;
@@ -5517,7 +5522,7 @@ ThotBool*       endOfFile;
          }
          if (*endOfFile == FALSE) {
             char* mbsBuff = &FileBuffer[(*index)];
-            (*index) += TtaGetNextWideCharFromMultibyteString (&charRead, &mbsBuff, ISOLatin1);
+            (*index) += TtaGetNextWideCharFromMultibyteString (&charRead, &mbsBuff, CharEncoding);
             if (*index > LastCharInFileBuffer)
                *index = 0;
          }
@@ -5525,7 +5530,7 @@ ThotBool*       endOfFile;
 #   else  /* !_I18N_ */
     if (buffer != NULL) {
        charRead = buffer[(*index)++];
-       *endOfFile = (charRead == EOS);
+       *endOfFile = (charRead == WC_EOS);
     } else if (infile == NULL)
            *endOfFile = TRUE;
     else {
@@ -5534,7 +5539,7 @@ ThotBool*       endOfFile;
             if (res <= 0) {
                /* error or end of file */
                *endOfFile = TRUE;
-               charRead = EOS;
+               charRead = WC_EOS;
                LastCharInFileBuffer = 0;
             } else {
                    LastCharInFileBuffer = res - 1;
@@ -5651,7 +5656,7 @@ char*              HTMLbuf;
       InputText = HTMLbuf;
       endOfFile = FALSE;
       }
-   charRead = EOS;
+   charRead = WC_EOS;
    HTMLrootClosed = FALSE;
 
    /* read the HTML file sequentially */
@@ -5659,9 +5664,9 @@ char*              HTMLbuf;
      {
 	/* read one character from the source if the last character */
 	/* read has been processed */
-	if (charRead == EOS)
+	if (charRead == WC_EOS)
 	  charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfFile);
-	if (charRead != EOS)
+	if (charRead != WC_EOS)
 	  {
 	     /* Check the character read */
 	     /* Consider LF and FF as the end of an input line. */
@@ -5669,7 +5674,7 @@ char*              HTMLbuf;
 	     /* Replace HT by space, except in preformatted text. */
 	     /* Ignore spaces at the beginning and at the end of input lines */
 	     /* Ignore non printable characters except HT, LF, FF. */
-	     if ((int) charRead == EOL)
+	     if ((int) charRead == WC_EOL)
 		/* LF = end of input line */
 	       {
 		if (currentState != 12)
@@ -5683,16 +5688,16 @@ char*              HTMLbuf;
 			    !ustrcmp (lastAttrEntry->XMLattribute, TEXT("src")))
 			   /* value of an SRC attribute */
 			   /* consider new line as an empty char*/
-			   charRead = EOS;
-		      if (charRead != EOS)
+			   charRead = WC_EOS;
+		      if (charRead != WC_EOS)
 		         /* Replace new line by a space, except if an entity is
 			    being read */
 			 if (currentState == 30 &&
 			     Within (HTML_EL_Preformatted, DocumentSSchema) &&
 	                     !Within (HTML_EL_Option_Menu, DocumentSSchema))
-			   charRead = EOL; /* new line character */
+			   charRead = WC_EOL; /* new line character */
 			 else
-		           charRead = SPACE;
+		           charRead = WC_SPACE;
 		      }
 		   else
 		      /* new line in a text element */
@@ -5704,10 +5709,10 @@ char*              HTMLbuf;
 			/* within preformatted text */
 			if (AfterTagPRE)
 			   /* ignore NL after a <PRE> tag */
-			   charRead = EOS;
+			   charRead = WC_EOS;
 			else
 			   /* generate a new line character */
-			   charRead = EOL;
+			   charRead = WC_EOL;
 		      else
 			/* new line in ordinary text */
 		        {
@@ -5716,7 +5721,7 @@ char*              HTMLbuf;
 				 inputBuffer[LgBuffer - 1] == WC_SPACE)
 			     LgBuffer--;
 			  /* new line is equivalent to space */
-			  charRead = SPACE;
+			  charRead = WC_SPACE;
 			  if (LgBuffer > 0)
 			     TextToDocument ();
 		        }
@@ -5726,21 +5731,21 @@ char*              HTMLbuf;
 	     else
 		/* it's not an end of line */
 	       {
-		  if ((int) charRead == TAB)
+		  if ((int) charRead == WC_TAB)
 		     /* HT = Horizontal tabulation */
 		    {
 		       if (currentState != 0)
 			  /* not in a text element. Replace HT by space */
-			  charRead = SPACE;
+			  charRead = WC_SPACE;
 		       else
 			  /* in a text element. Replace HT by space except in */
 			  /* preformatted text */
 		          if (!Within (HTML_EL_Preformatted, DocumentSSchema) &&
 			      !Within (HTML_EL_STYLE_, DocumentSSchema) &&
 			      !Within (HTML_EL_SCRIPT, DocumentSSchema))
-			     charRead = SPACE;
+			     charRead = WC_SPACE;
 		    }
-		  if (charRead == SPACE)
+		  if (charRead == WC_SPACE)
 		     /* space character */
 		    {
 		       if (currentState == 12 ||
@@ -5752,15 +5757,18 @@ char*              HTMLbuf;
 			     that is not preformatted text */
 			  /* ignore spaces at the beginning of an input line */
 			  if (EmptyLine)
-			     charRead = EOS;
+			     charRead = WC_EOS;
 		    }
-#         ifndef _I18N_
-		  else if ((charRead < SPACE || (int) charRead >= 254 ||
+#         ifdef _I18N_
+          else if (!iswprint ((int) charRead))
+               /* Compatibility of iswprint: ANSI, WIN NT and WIN 9x */
+#         else  /* !_I18N_ */
+		  else if ((charRead < WC_SPACE || (int) charRead >= 254 ||
 			    ((int) charRead >= 127 && (int) charRead <= 159))
-			   && (int) charRead != TAB)
+			   && (int) charRead != WC_TAB)
 		     /* it's not a printable character, ignore it */
-		     charRead = EOS;
-#         endif /* _I18N_ */
+#         endif /* !_I18N_ */
+               charRead = WC_EOS;
 		  else
 		     /* it's a printable character. Keep it as it is and */
 		     /* stop ignoring spaces */
@@ -5771,7 +5779,7 @@ char*              HTMLbuf;
 	       }
 	     AfterTagPRE = FALSE;
 
-	     if (charRead != EOS)
+	     if (charRead != WC_EOS)
 		/* a valid character has been read */
 	       {
 		  /* first transition of the automaton for the current state */
@@ -5788,7 +5796,7 @@ char*              HTMLbuf;
 			  match = TRUE;
 		       else if (trans->trigger == SPACE)
 			  /* any space is a trigger */
-			  if ((int) charRead == TAB || (int) charRead == EOL ||
+			  if ((int) charRead == WC_TAB || (int) charRead == WC_EOL ||
 			      (int) charRead == 12)
 			     /* a delimiter has been read */
 			     match = TRUE;
@@ -5810,7 +5818,7 @@ char*              HTMLbuf;
 					text buffer */
 				     PutInBuffer ('<');
 				     PutInBuffer (charRead);
-				     charRead = EOS;
+				     charRead = WC_EOS;
 				     /* and return to state 0: reading text */
 				     currentState = 0;
 				     NormalTransition = FALSE;
@@ -5822,7 +5830,7 @@ char*              HTMLbuf;
 			    if (NormalTransition)
 			      {
 				 /* the input character has been processed */
-				 charRead = EOS;
+				 charRead = WC_EOS;
 				 /* the procedure associated with the transition has not */
 				 /* changed state explicitely */
 				 /* change current automaton state */
@@ -5848,7 +5856,7 @@ char*              HTMLbuf;
 			    /* an exception: when reading the value of an HREF attribute,
 			       SGML entities (&xxx;) should not be interpreted */
 			    if (trans == NULL)
-			       charRead = EOS;
+			       charRead = WC_EOS;
 			 }
 		    }
 	       }
@@ -5946,7 +5954,7 @@ STRING	           pathURL;
 
       /* Check the character read */
       /* Consider LF and FF as the end of an input line. */
-      if ((int) charRead == EOL || (int) charRead == 0)
+      if ((int) charRead == WC_EOL || (int) charRead == 0)
 	{
 	  /* LF = end of line */
 	  inputBuffer[LgBuffer] = WC_EOS;
@@ -5954,16 +5962,20 @@ STRING	           pathURL;
 	    TtaAppendTextContent (el, inputBuffer, doc);
 	  LgBuffer = 0;
 	  el = NULL;
-	  charRead = EOS;
+	  charRead = WC_EOS;
 	}
-      else if ((charRead < SPACE || (int) charRead >= 254 ||
+#     ifdef _I18N_
+      else if (!iswprint ((int)charRead) && charRead != WC_TAB)
+#     else  /* !_I18N_ */
+      else if ((charRead < WC_SPACE || (int) charRead >= 254 ||
 		((int) charRead >= 127 && (int) charRead <= 159))
-	       && (int) charRead != TAB)
+	       && (int) charRead != WC_TAB)
+#     endif /* !_I18N_ */
 	/* it's not an end of line */
 	/* Ignore non printable characters except HT, LF, FF. */
 	/* it's not a printable character, ignore it */
-	charRead = EOS;
-      if (charRead != EOS)
+	charRead = WC_EOS;
+      if (charRead != WC_EOS)
 	{
 	  /* a valid character has been read */
 	  if (LgBuffer + 1 >= AllmostFullBuffer)

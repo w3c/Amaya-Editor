@@ -9,7 +9,8 @@
 extern ThotBool TtaReadByte ( BinFile file,
                               char* bval );
 extern ThotBool TtaReadWideChar ( BinFile file,
-                                  CHAR_T* bval );
+                                  CHAR_T* bval,
+								  CHARSET );
 extern ThotBool TtaReadBool ( BinFile file,
                               ThotBool * bval );
 extern ThotBool TtaReadShort ( BinFile file,
@@ -27,7 +28,8 @@ extern void TtaWriteClose ( BinFile file );
 extern ThotBool TtaWriteByte ( BinFile file,
                                char bval );
 extern ThotBool TtaWriteWideChar ( BinFile file,
-                                   CHAR_T val );
+                                   CHAR_T val,
+								   CHARSET encoding);
 extern ThotBool TtaWriteShort ( BinFile file,
                                 int sval );
 extern ThotBool TtaWriteInteger ( BinFile file,
@@ -92,7 +94,8 @@ extern void TtaWriteClose (/* BinFile file */);
 extern ThotBool TtaWriteByte (/* BinFile file,
                                  char bval */);
 extern ThotBool TtaWriteWideChar (/* BinFile file,
-                                     CHAR_T val */);
+                                     CHAR_T val,
+									 CHARSET encoding */);
 extern ThotBool TtaWriteShort (/* BinFile file,
                                   int sval */);
 extern ThotBool TtaWriteInteger (/* BinFile file,

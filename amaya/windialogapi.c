@@ -6,7 +6,7 @@
  */
 
 /*
- * WIndows Dialogue API routines for Amaya
+ * Windows Dialogue API routines for Amaya
  *
  * Author: R. Guetari (W3C/INRIA)
  *
@@ -96,7 +96,7 @@ static CHAR_T       attDlgTitle [100];
 static CHAR_T       BM_Entity[MAX_TXT_LEN];
 static CHAR_T       entityName[MAX_TXT_LEN];
 static CHAR_T       mathEntityName[MAX_TXT_LEN];
-static STRING       lpPrintTemplateName = (STRING) 0;
+static CHAR_T*      lpPrintTemplateName = (CHAR_T*) 0;
 static int          numFormClose;
 static int          currentDoc;
 static int          currentView;
@@ -169,10 +169,10 @@ static int          imgeAlt;
 static int          imageLabel;
 static int          mathForm;
 static int          mathText;
-static STRING       classList;
-static STRING       langList;
-static STRING       saveList;
-static STRING       cssList;
+static CHAR_T*      classList;
+static CHAR_T*      langList;
+static CHAR_T*      saveList;
+static CHAR_T*      cssList;
 static HDC          hDC;
 static HDC          hMemDC;
 static HFONT        hFont;
@@ -181,23 +181,23 @@ static ThotBool	    saveBeforeClose;
 static ThotBool     closeDontSave;
 static ThotBool     selectionFound;
 static OPENFILENAME OpenFileName;
-static STRING       szFilter;
+static CHAR_T*       szFilter;
 static CHAR_T       szFileName[256];
 static HWND         currentDlg;
 static UINT         nbClass;
 static UINT         nbItem;
 
-static STRING string_par1;
-static STRING string_par2;
+static CHAR_T*      string_par1;
+static CHAR_T*      string_par2;
 
-HWND wordButton;
-HWND hwnListWords;
-HWND hwndCurrentWord;
-HWND hwndLanguage;
-HWND ghwndAbort;
-HWND ghwndMain;
-CHAR_T currentWord [MAX_WORD_LEN];
-ThotBool gbAbort;
+HWND                wordButton;
+HWND                hwnListWords;
+HWND                hwndCurrentWord;
+HWND                hwndLanguage;
+HWND                ghwndAbort;
+HWND                ghwndMain;
+CHAR_T              currentWord [MAX_WORD_LEN];
+ThotBool            gbAbort;
 
 #ifdef __STDC__
 LRESULT CALLBACK AltDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -291,7 +291,7 @@ HDC PASCAL GetPrinterDC () {
     if (PrintDlg (&printDlg) == TRUE) {
        if (lpPrintTemplateName) {
           TtaFreeMemory (lpPrintTemplateName);
-		  lpPrintTemplateName = (STRING) 0;
+		  lpPrintTemplateName = (CHAR_T*) 0;
 	   }
 
        return (printDlg.hDC);       
@@ -1415,12 +1415,12 @@ LPARAM lParam;
 
 			    switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
-							ThotCallback (baseDlg + formCss, INTEGER_DATA, (STRING) 1);
+							ThotCallback (baseDlg + formCss, INTEGER_DATA, (CHAR_T*) 1);
 					        EndDialog (hwnDlg, ID_CONFIRM);
 							break;
 
 				       case ID_DONE:
-							ThotCallback (baseDlg + formCss, INTEGER_DATA, (STRING) 0);
+							ThotCallback (baseDlg + formCss, INTEGER_DATA, (CHAR_T*) 0);
 					        EndDialog (hwnDlg, ID_DONE);
 							break;
 
@@ -1460,12 +1460,12 @@ LPARAM lParam;
 							AttrHREFvalue = TtaAllocString (ustrlen (urlToOpen) + 1);
 							ustrcpy (AttrHREFvalue, urlToOpen);
 							ThotCallback (baseDlg + attrHRefTxt, STRING_DATA, urlToOpen);
-							ThotCallback (baseDlg + attrHRefForm, INTEGER_DATA, (STRING) 1);
+							ThotCallback (baseDlg + attrHRefForm, INTEGER_DATA, (CHAR_T*) 1);
 							EndDialog (hwnDlg, ID_CONFIRM);
 					        break;
 
 				       case ID_DONE:
-							ThotCallback (baseDlg + attrHRefForm, INTEGER_DATA, (STRING) 0);
+							ThotCallback (baseDlg + attrHRefForm, INTEGER_DATA, (CHAR_T*) 0);
 					        EndDialog (hwnDlg, ID_DONE);
 					        break;
 
@@ -1547,59 +1547,59 @@ LPARAM lParam;
 					        break;
 
                        case IDC_MATH:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)0);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)0);
                             break;
 
                        case IDC_ROOT:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)1);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)1);
                             break;
 
                        case IDC_SROOT:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)2);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)2);
                             break;
 
                        case IDC_DIV:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)3);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)3);
                             break;
 
                        case IDC_POWIND:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)4);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)4);
                             break;
 
                        case IDC_IND:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)5);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)5);
                             break;
 
                        case IDC_POW:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)6);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)6);
                             break;
 
                        case IDC_UPDN:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)7);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)7);
                             break;
 
                        case IDC_UP:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)8);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)8);
                             break;
 
                        case IDC_DOWN:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)9);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)9);
                             break;
 
                        case IDC_PAREXP:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)10);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)10);
                             break;
 
                        case IDC_UDLR:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)11);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)11);
                             break;
 
                        case IDC_MATRIX:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)12);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)12);
                             break;
 
                        case IDC_SYM:
-						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (STRING)13);
+						    ThotCallback (baseDlg + MenuMaths, INTEGER_DATA, (CHAR_T*)13);
                             break;
 				}
 				SetFocus (FrRef[currentFrame]);
@@ -1634,23 +1634,23 @@ LPARAM lParam;
          case WM_COMMAND:
               switch (LOWORD (wParam)) {
                      case IDC_TABOFCONTENTS:
-                          ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (STRING)1);
+                          ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (CHAR_T*)1);
                           break;
       
                      case IDC_LINKS:
-                          ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (STRING)2);
+                          ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (CHAR_T*)2);
                           break;
       
                      case IDC_PRINTURL:
-                          ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (STRING)3);
+                          ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (CHAR_T*)3);
                           break;
       
                      case IDC_IGNORE_CSS:
-                          ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (STRING)4);
+                          ThotCallback (numMenuOptions + baseDlg, INTEGER_DATA, (CHAR_T*)4);
                           break;
       
                      case ID_PRINT:
-                          ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (STRING)0);
+                          ThotCallback (numMenuSupport + baseDlg, INTEGER_DATA, (CHAR_T*)0);
                           EndDialog (hwnDlg, ID_PRINT);
                           if (TtPrinterDC)
                              DeleteDC (TtPrinterDC);
@@ -1660,9 +1660,9 @@ LPARAM lParam;
                              WinInitPrinterColors ();
 	
                              EnableWindow (ghwndMain, FALSE);
-                             ThotCallback (numMenuPaperFormat + baseDlg, INTEGER_DATA, (STRING)0);
+                             ThotCallback (numMenuPaperFormat + baseDlg, INTEGER_DATA, (CHAR_T*)0);
                              ThotCallback (numZonePrinterName + baseDlg, STRING_DATA, currentFileToPrint);
-                             ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (STRING)1);
+                             ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (CHAR_T*)1);
                              if (TtPrinterDC) {
                                 DeleteDC (TtPrinterDC);
                                 TtPrinterDC = NULL;
@@ -1675,7 +1675,7 @@ LPARAM lParam;
                              DeleteDC (TtPrinterDC);
                              TtPrinterDC = NULL;
 						  }
-                          ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (STRING)0);
+                          ThotCallback (numFormPrint + baseDlg, INTEGER_DATA, (CHAR_T*)0);
                           EndDialog (hwnDlg, IDCANCEL);
                           break;
 			  }
@@ -1713,27 +1713,27 @@ LPARAM lParam;
 				   if (LOWORD (wParam) == IDC_NUMCOLEDIT) {
 					  val = GetDlgItemInt (hwnDlg, IDC_NUMCOLEDIT, &ok, TRUE);
                       if (ok)
-                         ThotCallback (baseDlg + tabCols, INTEGER_DATA, (STRING) val);
+                         ThotCallback (baseDlg + tabCols, INTEGER_DATA, (CHAR_T*) val);
 				   } else if (LOWORD (wParam) == IDC_NUMROWSEDIT) {
                           val = GetDlgItemInt (hwnDlg, IDC_NUMROWSEDIT, &ok, TRUE);
                           if (ok)
-                             ThotCallback (baseDlg + tabRows, INTEGER_DATA, (STRING) val);
+                             ThotCallback (baseDlg + tabRows, INTEGER_DATA, (CHAR_T*) val);
 				   } else if (LOWORD (wParam) == IDC_BORDEREDIT) {
                           val = GetDlgItemInt (hwnDlg, IDC_BORDEREDIT, &ok, TRUE);
                           if (ok)
-                             ThotCallback (baseDlg + tBorder, INTEGER_DATA, (STRING) val);
+                             ThotCallback (baseDlg + tBorder, INTEGER_DATA, (CHAR_T*) val);
 				   }
 				}
 
                 switch (LOWORD (wParam)) {
                        case ID_CONFIRM:
-                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (STRING) 1);
+                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (CHAR_T*) 1);
 					 	    EndDialog (hwnDlg, ID_CONFIRM);
                             break;
 
                        case IDCANCEL:
 					 	    EndDialog (hwnDlg, IDCANCEL);
-                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (STRING) 0);
+                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (CHAR_T*) 0);
                             break;
 				}
                 break;
@@ -1769,22 +1769,22 @@ LPARAM lParam;
 				   if (LOWORD (wParam) == IDC_NUMCOLEDIT) {
 					  val = GetDlgItemInt (hwnDlg, IDC_NUMCOLEDIT, &ok, TRUE);
                       if (ok)
-                         ThotCallback (baseDlg + tabCols, INTEGER_DATA, (STRING) val);
+                         ThotCallback (baseDlg + tabCols, INTEGER_DATA, (CHAR_T*) val);
 				   } else if (LOWORD (wParam) == IDC_NUMROWSEDIT) {
                           val = GetDlgItemInt (hwnDlg, IDC_NUMROWSEDIT, &ok, TRUE);
                           if (ok)
-                             ThotCallback (baseDlg + tabRows, INTEGER_DATA, (STRING) val);
+                             ThotCallback (baseDlg + tabRows, INTEGER_DATA, (CHAR_T*) val);
 				   } 
 				}
 
                 switch (LOWORD (wParam)) {
                        case ID_CONFIRM:
-                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (STRING) 1);
+                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (CHAR_T*) 1);
 					 	    EndDialog (hwnDlg, ID_CONFIRM);
                             break;
 
                        case IDCANCEL:
-                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (STRING) 0);
+                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (CHAR_T*) 0);
 					 	    EndDialog (hwnDlg, IDCANCEL);
                             break;
 				}
@@ -1850,26 +1850,26 @@ LPARAM lParam;
 			    switch (LOWORD (wParam)) {
 					   case OPT1:
                             iLocation = 0;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 					   case OPT2:
                             iLocation = 1;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 				       case ID_APPLY:
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 1);
 							break;
 
 					   case ID_DELETE:
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 2);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 2);
 					 	    EndDialog (hwnDlg, ID_DELETE);
 							break;
 
 					   case ID_DONE:
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 0);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 0);
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
 
@@ -1947,31 +1947,31 @@ LPARAM lParam;
 			    switch (LOWORD (wParam)) {
 					   case OPT1:
                             iLocation = 0;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 					   case OPT2:
                             iLocation = 1;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 					   case OPT3:
                             iLocation = 2;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 				       case ID_APPLY:
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 1);
 							break;
 
 					   case ID_DELETE:
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 2);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 2);
 					 	    EndDialog (hwnDlg, ID_DELETE);
 							break;
 
 					   case ID_DONE:
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 0);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 0);
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
 
@@ -2056,36 +2056,36 @@ LPARAM lParam;
 			    switch (LOWORD (wParam)) {
 					   case OPT1:
                             iLocation = 0;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 					   case OPT2:
                             iLocation = 1;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 					   case OPT3:
                             iLocation = 2;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 					   case OPT4:
                             iLocation = 3;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 				       case ID_APPLY:
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 1);
 							break;
 
 					   case ID_DELETE:
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 2);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 2);
 					 	    EndDialog (hwnDlg, ID_DELETE);
 							break;
 
 					   case ID_DONE:
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 0);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 0);
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
 
@@ -2178,41 +2178,41 @@ LPARAM lParam;
 			    switch (LOWORD (wParam)) {
 					   case OPT1:
                             iLocation = 0;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 					   case OPT2:
                             iLocation = 1;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 					   case OPT3:
                             iLocation = 2;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 					   case OPT4:
                             iLocation = 3;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 					   case OPT5:
                             iLocation = 4;
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
 							break;
 
 				       case ID_APPLY:
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 1);
 							break;
 
 					   case ID_DELETE:
-						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (STRING) iLocation);
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 2);
+						    ThotCallback (NumMenuAttrEnum, INTEGER_DATA, (CHAR_T*) iLocation);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 2);
 					 	    EndDialog (hwnDlg, ID_DELETE);
 							break;
 
 					   case ID_DONE:
-							ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 0);
+							ThotCallback (NumMenuAttr, INTEGER_DATA, (CHAR_T*) 0);
 					 	    EndDialog (hwnDlg, IDCANCEL);
 							break;
 
@@ -2280,9 +2280,9 @@ LPARAM lParam;
 							   ThotCallback (NumZoneTextReplace, STRING_DATA, newText);
 							
 						    ThotCallback (NumZoneTextSearch, STRING_DATA, textToSearch);
-						    ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (STRING) iMode);
-						    ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (STRING) iLocation);
-						    ThotCallback (NumFormSearchText, INTEGER_DATA, (STRING) 1);
+						    ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (CHAR_T*) iMode);
+						    ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (CHAR_T*) iLocation);
+						    ThotCallback (NumFormSearchText, INTEGER_DATA, (CHAR_T*) 1);
 							if (!searchEnd && iLocation == 3) {
 				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
 							   iLocation = 2;
@@ -2291,9 +2291,9 @@ LPARAM lParam;
 
 					   case ID_NOREPLACE:
 						    ThotCallback (NumZoneTextSearch, STRING_DATA, textToSearch);
-						    ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (STRING) 0);
-						    ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (STRING) iLocation);
-						    ThotCallback (NumFormSearchText, INTEGER_DATA, (STRING) 1);
+						    ThotCallback (NumMenuReplaceMode, INTEGER_DATA, (CHAR_T*) 0);
+						    ThotCallback (NumMenuOrSearchText, INTEGER_DATA, (CHAR_T*) iLocation);
+						    ThotCallback (NumFormSearchText, INTEGER_DATA, (CHAR_T*) 1);
 							if (iLocation == 3) {
 				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
 							   iLocation = 2;
@@ -2346,7 +2346,7 @@ LPARAM lParam;
 							break;
 
 					   case	IDC_UPPERLOWER:
-						    ThotCallback (NumToggleUpperEqualLower, INTEGER_DATA, (STRING) 0);
+						    ThotCallback (NumToggleUpperEqualLower, INTEGER_DATA, (CHAR_T*) 0);
 							break;
 				}
 				break;
@@ -2368,109 +2368,110 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-  CHAR_T      txt [500];
-  static HWND transURLWnd;
-  static HWND copyImgWnd;
+   CHAR_T      txt [500];
+   static HWND transURLWnd;
+   static HWND copyImgWnd;
 
-  txt [0] = 0;
-  switch (msg) {
-  case WM_INITDIALOG:
-    currentDlg = hwnDlg;
-    /* SetWindowPos (currentDlg, HWND_TOP, ClickX, ClickY, 294, 97, SWP_DRAWFRAME);*/
-    transURLWnd = GetDlgItem (hwnDlg, IDC_COPYIMG);
-    copyImgWnd = GetDlgItem (hwnDlg, IDC_TRANSFORMURL);
-    SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
-    if (SaveAsHTML) {
-      CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_HTML);
-      EnableWindow (transURLWnd, TRUE);
-      EnableWindow (copyImgWnd, TRUE);
-    } else if (SaveAsXHTML) {
-      CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_XML);
-      EnableWindow (transURLWnd, TRUE);
-      EnableWindow (copyImgWnd, TRUE);
-    } else if (SaveAsText) {
-      CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_TEXT);
-      EnableWindow (transURLWnd, FALSE);
-      EnableWindow (copyImgWnd, FALSE);
-    }
+   txt [0] = 0;
+   switch (msg) {
+          case WM_INITDIALOG:
+               currentDlg = hwnDlg;
+               /* SetWindowPos (currentDlg, HWND_TOP, ClickX, ClickY, 294, 97, SWP_DRAWFRAME);*/
+               transURLWnd = GetDlgItem (hwnDlg, IDC_COPYIMG);
+               copyImgWnd = GetDlgItem (hwnDlg, IDC_TRANSFORMURL);
+               SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
+               if (SaveAsHTML) {
+                  CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_HTML);
+                  EnableWindow (transURLWnd, TRUE);
+                  EnableWindow (copyImgWnd, TRUE);
+			   } else if (SaveAsXHTML) {
+                      CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_XML);
+                      EnableWindow (transURLWnd, TRUE);
+                      EnableWindow (copyImgWnd, TRUE);
+			   } else if (SaveAsText) {
+                      CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_TEXT);
+                      EnableWindow (transURLWnd, FALSE);
+                      EnableWindow (copyImgWnd, FALSE);
+			   }
     
-    if (CopyImages)
-      CheckRadioButton (hwnDlg, IDC_COPYIMG, IDC_COPYIMG, IDC_COPYIMG);
+               if (CopyImages)
+                  CheckRadioButton (hwnDlg, IDC_COPYIMG, IDC_COPYIMG, IDC_COPYIMG);
     
-    if (UpdateURLs)
-      CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
-    break;
+               if (UpdateURLs)
+                  CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
+               break;
     
-  case WM_COMMAND:
-    if (HIWORD (wParam) == EN_UPDATE) {
-      if (LOWORD (wParam) == IDC_EDITDOCSAVE) {
-	GetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, urlToOpen, sizeof (urlToOpen) - 1);
-	ThotCallback (baseDlg + nameSave, STRING_DATA, urlToOpen);
-      } else if (LOWORD (wParam) == IDC_EDITIMGSAVE) {
-	GetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, urlToOpen, sizeof (urlToOpen) - 1);
-	ThotCallback (baseDlg + imgSave, STRING_DATA, urlToOpen);
-      }
-    }
-    switch (LOWORD (wParam)) {
-    case IDC_HTML:
-      EnableWindow (transURLWnd, TRUE);
-      EnableWindow (copyImgWnd, TRUE);
-      ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (STRING) 0);
-      SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, DocToOpen);
-      return 0;
+          case WM_COMMAND:
+               if (HIWORD (wParam) == EN_UPDATE) {
+                  if (LOWORD (wParam) == IDC_EDITDOCSAVE) {
+                     GetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, urlToOpen, sizeof (urlToOpen) - 1);
+                     ThotCallback (baseDlg + nameSave, STRING_DATA, urlToOpen);
+				  } else if (LOWORD (wParam) == IDC_EDITIMGSAVE) {
+                         GetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, urlToOpen, sizeof (urlToOpen) - 1);
+                         ThotCallback (baseDlg + imgSave, STRING_DATA, urlToOpen);
+				  }
+			   }
+
+               switch (LOWORD (wParam)) {
+                      case IDC_HTML:
+                           EnableWindow (transURLWnd, TRUE);
+                           EnableWindow (copyImgWnd, TRUE);
+                           ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (CHAR_T*) 0);
+                           SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, DocToOpen);
+                           return 0;
       
-    case IDC_XML:
-      EnableWindow (transURLWnd, TRUE);
-      EnableWindow (copyImgWnd, TRUE);
-      ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (STRING) 1);
-      SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, DocToOpen);
-      return 0;
+                      case IDC_XML:
+                           EnableWindow (transURLWnd, TRUE);
+                           EnableWindow (copyImgWnd, TRUE);
+                           ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (CHAR_T*) 1);
+                           SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, DocToOpen);
+                           return 0;
       
-    case IDC_TEXT:
-      EnableWindow (transURLWnd, FALSE);
-      EnableWindow (copyImgWnd, FALSE);
+                      case IDC_TEXT:
+                           EnableWindow (transURLWnd, FALSE);
+                           EnableWindow (copyImgWnd, FALSE);
       
-      ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (STRING) 2);
-      SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, DocToOpen);
-      return 0;
+                           ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (CHAR_T*) 2);
+                           SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, DocToOpen);
+                           return 0;
       
-    case IDC_COPYIMG:
-      ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (STRING) 4);
-      break;
+                      case IDC_COPYIMG:
+                           ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (CHAR_T*) 4);
+                           break;
       
-    case IDC_TRANSFORMURL:
-      ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (STRING) 5);
-      break;
+                      case IDC_TRANSFORMURL:
+                           ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (CHAR_T*) 5);
+                           break;
       
-    case ID_CLEAR:
-      SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, TEXT(""));
-      SetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, TEXT(""));
-      ThotCallback (baseDlg + saveForm, INTEGER_DATA, (STRING) 2);
-      break;
+                      case ID_CLEAR:
+                           SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, TEXT(""));
+                           SetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, TEXT(""));
+                           ThotCallback (baseDlg + saveForm, INTEGER_DATA, (CHAR_T*) 2);
+                           break;
       
-    case IDC_BROWSE:
-      WIN_ListSaveDirectory (currentParentRef, TtaGetMessage (AMAYA, AM_SAVE_AS), urlToOpen);
-      SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, urlToOpen);
-      ThotCallback (baseDlg + nameSave, STRING_DATA, urlToOpen);
-      break;
+                      case IDC_BROWSE:
+                           WIN_ListSaveDirectory (currentParentRef, TtaGetMessage (AMAYA, AM_SAVE_AS), urlToOpen);
+                           SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, urlToOpen);
+                           ThotCallback (baseDlg + nameSave, STRING_DATA, urlToOpen);
+                           break;
       
-    case IDCANCEL:
-      EndDialog (hwnDlg, IDCANCEL);
-      ThotCallback (baseDlg + saveForm, INTEGER_DATA, (STRING) 0);
-      currentDlg = (HWND) 0;
-      break;
+                      case IDCANCEL:
+                           EndDialog (hwnDlg, IDCANCEL);
+                           ThotCallback (baseDlg + saveForm, INTEGER_DATA, (CHAR_T*) 0);
+                           currentDlg = (HWND) 0;
+                           break;
       
-    case ID_CONFIRM:
-      EndDialog (hwnDlg, ID_CONFIRM);
-      ThotCallback (baseDlg + saveForm, INTEGER_DATA, (STRING) 1);
-      currentDlg = (HWND) 0;
-      break;
-    }
-    break;
+                      case ID_CONFIRM:
+                           EndDialog (hwnDlg, ID_CONFIRM);
+                           ThotCallback (baseDlg + saveForm, INTEGER_DATA, (CHAR_T*) 1);
+                           currentDlg = (HWND) 0;
+                           break;
+			   }
+               break;
     
-  default: return FALSE;
-  }
-  return TRUE;
+          default: return FALSE;
+   }
+   return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -2507,7 +2508,7 @@ LPARAM lParam;
 
     switch (LOWORD (wParam)) {
     case ID_CONFIRM:
-      ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING)1);
+      ThotCallback (baseDoc + formDoc, INTEGER_DATA, (CHAR_T*)1);
       EndDialog (hwnDlg, ID_CONFIRM);
       break;
 
@@ -2538,12 +2539,12 @@ LPARAM lParam;
 	{
 	  ThotCallback (baseDoc + urlName, STRING_DATA, urlToOpen);
 	  EndDialog (hwnDlg, ID_CONFIRM);
-	  ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING)1);
+	  ThotCallback (baseDoc + formDoc, INTEGER_DATA, (CHAR_T*)1);
 	}
       break;
       
     case IDCANCEL:
-      ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING) 0);
+      ThotCallback (baseDoc + formDoc, INTEGER_DATA, (CHAR_T*) 0);
       urlToOpen [0] = 0;
       EndDialog (hwnDlg, IDCANCEL);
       break;      
@@ -2618,7 +2619,7 @@ LPARAM lParam;
 							break;
 
 				       case IDCANCEL:
-                            ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING) 0);
+                            ThotCallback (baseDoc + formDoc, INTEGER_DATA, (CHAR_T*) 0);
                             urlToOpen [0] = 0;
 					        EndDialog (hwnDlg, IDCANCEL);
 							break;
@@ -2656,51 +2657,51 @@ LPARAM lParam;
 					        break;
 
                        case IDC_GLINE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (STRING)0);
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)0);
                             break;
 
                        case IDC_GRECT:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (STRING)1);
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)1);
                             break;
 
                        case IDC_GRRECT:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (STRING)2);
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)2);
                             break;
 
                        case IDC_GCIRCLE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (STRING)3);
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)3);
                             break;
 
                        case IDC_GELLIPSE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (STRING)4);
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)4);
                             break;
 
                        case IDC_GPOLYLINE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (STRING)5);
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)5);
                             break;
 
                        case IDC_GCPOLYLINE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (STRING)6);
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)6);
                             break;
 
                        case IDC_GCURVE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (STRING)7);
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)7);
                             break;
 
                        case IDC_GCCURVE:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (STRING)8);
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)8);
                             break;
 
                        case IDC_GALPHA1:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (STRING)9);
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)9);
                             break;
 
                        case IDC_GALPHA2:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (STRING)10);
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)10);
                             break;
 
                        case IDC_GGROUP:
-						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (STRING)11);
+						    ThotCallback (graphDialog + menuGraph, INTEGER_DATA, (CHAR_T*)11);
                             break;
 				}
 				break;
@@ -2753,13 +2754,13 @@ LPARAM lParam;
 				}
                 switch (LOWORD (wParam)) {
                        case ID_CONFIRM:
-                            ThotCallback (baseDlg + confirmSave ,INTEGER_DATA, (STRING)1);
+                            ThotCallback (baseDlg + confirmSave ,INTEGER_DATA, (CHAR_T*)1);
                             EndDialog (hwnDlg, ID_CONFIRM);
 						    SendMessage (currentDlg, WM_DESTROY, 0, 0);
 							break;
                             
 				       case IDCANCEL:
-                            ThotCallback (baseDlg + confirmSave ,INTEGER_DATA, (STRING)0);
+                            ThotCallback (baseDlg + confirmSave ,INTEGER_DATA, (CHAR_T*)0);
 					        EndDialog (hwnDlg, IDCANCEL);
 							break;
                 }
@@ -2794,21 +2795,21 @@ LPARAM lParam;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
 				       case IDCANCEL:
-                            ThotCallback (numFormClose, INTEGER_DATA, (STRING)0);
+                            ThotCallback (numFormClose, INTEGER_DATA, (CHAR_T*)0);
 			                closeDontSave = TRUE;
                             saveBeforeClose = FALSE;
 					        EndDialog (hwnDlg, IDCANCEL);
 							break;
 
 				       case ID_SAVEDOC:
-                            ThotCallback (numFormClose, INTEGER_DATA, (STRING)1);
+                            ThotCallback (numFormClose, INTEGER_DATA, (CHAR_T*)1);
 			                closeDontSave   = FALSE;
 	                        saveBeforeClose = TRUE;
 							EndDialog (hwnDlg, ID_SAVEDOC);
 							break;
 
 				       case IDC_DONTSAVE:
-                            ThotCallback (numFormClose, INTEGER_DATA, (STRING)2);
+                            ThotCallback (numFormClose, INTEGER_DATA, (CHAR_T*)2);
 			                closeDontSave   = FALSE;
                             saveBeforeClose = FALSE;
 					        EndDialog (hwnDlg, IDC_DONTSAVE);
@@ -2890,7 +2891,7 @@ LPARAM lParam;
 	  ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);
 	  if (HIWORD (wParam) == LBN_DBLCLK)
 	    {
-	      ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 1);
+	      ThotCallback (NumFormLanguage, INTEGER_DATA, (CHAR_T*) 1);
 	      EndDialog (hwnDlg, ID_APPLY);
 	      return 0;
 	    }
@@ -2899,17 +2900,17 @@ LPARAM lParam;
       switch (LOWORD (wParam))
 	{
 	case ID_APPLY:
-	  ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 1);
+	  ThotCallback (NumFormLanguage, INTEGER_DATA, (CHAR_T*) 1);
 	  EndDialog (hwnDlg, ID_APPLY);
 	  break;
 	  
 	case ID_DELETE:
-	  ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 2);
+	  ThotCallback (NumFormLanguage, INTEGER_DATA, (CHAR_T*) 2);
 	  EndDialog (hwnDlg, ID_DELETE);
 	  break;
 	  
 	case ID_DONE:
-	  ThotCallback (NumFormLanguage, INTEGER_DATA, (STRING) 0);
+	  ThotCallback (NumFormLanguage, INTEGER_DATA, (CHAR_T*) 0);
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	  
@@ -3013,7 +3014,7 @@ LPARAM lParam;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
 				       case ID_DONE:
-						    ThotCallback (NumFormPresChar, INTEGER_DATA, (STRING) 0);
+						    ThotCallback (NumFormPresChar, INTEGER_DATA, (CHAR_T*) 0);
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
 
@@ -3023,119 +3024,119 @@ LPARAM lParam;
 							break;
 
 					   case ID_APPLY:
-						    ThotCallback (NumFormPresChar, INTEGER_DATA, (STRING) 1);
+						    ThotCallback (NumFormPresChar, INTEGER_DATA, (CHAR_T*) 1);
 							break;
 
 					   case IDC_TIMES:
-						    ThotCallback (NumMenuCharFamily, INTEGER_DATA, (STRING) 0);
+						    ThotCallback (NumMenuCharFamily, INTEGER_DATA, (CHAR_T*) 0);
 							break;
 
 					   case IDC_HELVETICA:
-						    ThotCallback (NumMenuCharFamily, INTEGER_DATA, (STRING) 1);
+						    ThotCallback (NumMenuCharFamily, INTEGER_DATA, (CHAR_T*) 1);
 							break;
 
 					   case IDC_COURIER:
-						    ThotCallback (NumMenuCharFamily, INTEGER_DATA, (STRING) 2);
+						    ThotCallback (NumMenuCharFamily, INTEGER_DATA, (CHAR_T*) 2);
 							break;
 
 					   case IDC_DEFAULTFAMILY:
-						    ThotCallback (NumMenuCharFamily, INTEGER_DATA, (STRING) 3);
+						    ThotCallback (NumMenuCharFamily, INTEGER_DATA, (CHAR_T*) 3);
 							break;
 
 					   case IDC_ROMAN:
-						    ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (STRING) 0);
+						    ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (CHAR_T*) 0);
 							break;
 
 					   case IDC_ITALIC:
-						    ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (STRING) 1);
+						    ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (CHAR_T*) 1);
 							break;
 
 					   case IDC_OBLIQUE:
-						    ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (STRING) 2);
+						    ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (CHAR_T*) 2);
 							break;
 
 					   case IDC_DEFAULTSTYLE:
-						    ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (STRING) 3);
+						    ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (CHAR_T*) 3);
 							break;
 
 					   case IDC_NORMALBOLD:
-						    ThotCallback (NumMenuCharFontWeight, INTEGER_DATA, (STRING) 0);
+						    ThotCallback (NumMenuCharFontWeight, INTEGER_DATA, (CHAR_T*) 0);
 							break;
 
 					   case IDC_BOLD:
-						    ThotCallback (NumMenuCharFontWeight, INTEGER_DATA, (STRING) 1);
+						    ThotCallback (NumMenuCharFontWeight, INTEGER_DATA, (CHAR_T*) 1);
 							break;
 
 					   case IDC_DEFAULTBOLD:
-						    ThotCallback (NumMenuCharFontWeight, INTEGER_DATA, (STRING) 2);
+						    ThotCallback (NumMenuCharFontWeight, INTEGER_DATA, (CHAR_T*) 2);
 							break;
 
 					   case IDC_NORMAL:
-						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (STRING) 0);
+						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (CHAR_T*) 0);
 							break;
 
 					   case IDC_UNDERLINE:
-						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (STRING) 1);
+						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (CHAR_T*) 1);
 							break;
 
 					   case IDC_OVERLINE:
-						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (STRING) 2);
+						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (CHAR_T*) 2);
 							break;
 
 					   case IDC_CROSSOUT:
-						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (STRING) 3);
+						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (CHAR_T*) 3);
 							break;
 
 					   case IDC_DEFAULTUNDERLINE:
-						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (STRING) 4);
+						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (CHAR_T*) 4);
 							break;
 
 					   case IDC_06PT:
-						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (STRING) 0);
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (CHAR_T*) 0);
 							break;
 
 					   case IDC_08PT:
-						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (STRING) 1);
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (CHAR_T*) 1);
 							break;
 
 					   case IDC_10PT:
-						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (STRING) 2);
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (CHAR_T*) 2);
 							break;
 
 					   case IDC_12PT:
-						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (STRING) 3);
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (CHAR_T*) 3);
 							break;
 
 					   case IDC_14PT:
-						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (STRING) 4);
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (CHAR_T*) 4);
 							break;
 
 					   case IDC_16PT:
-						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (STRING) 5);
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (CHAR_T*) 5);
 							break;
 
 					   case IDC_20PT:
-						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (STRING) 6);
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (CHAR_T*) 6);
 							break;
 
 					   case IDC_24PT:
-						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (STRING) 7);
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (CHAR_T*) 7);
 							break;
 
 					   case IDC_30PT:
-						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (STRING) 8);
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (CHAR_T*) 8);
 							break;
 
 					   case IDC_40PT:
-						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (STRING) 9);
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (CHAR_T*) 9);
 							break;
 
 					   case IDC_60PT:
-						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (STRING) 10);
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (CHAR_T*) 10);
 							break;
 
 					   case IDC_DEFAULTSIZE:
-						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (STRING) 11);
+						    ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (CHAR_T*) 11);
 							break;
 				}
 				break;
@@ -3198,12 +3199,12 @@ LPARAM lParam;
 			    switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
                             ThotCallback (baseDlg + classSelect, STRING_DATA, szBuffer);
-						    ThotCallback (baseDlg + classForm, INTEGER_DATA, (STRING) 1);
+						    ThotCallback (baseDlg + classForm, INTEGER_DATA, (CHAR_T*) 1);
 						    EndDialog (hwnDlg, ID_CONFIRM);
 							break;
 
 				       case ID_DONE:
-						    ThotCallback (baseDlg + classForm, INTEGER_DATA, (STRING) 0);
+						    ThotCallback (baseDlg + classForm, INTEGER_DATA, (CHAR_T*) 0);
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
 
@@ -3243,13 +3244,13 @@ LPARAM lParam;
 				       case ID_CONFIRM:
                             GetDlgItemText (hwnDlg, IDC_EDIT_NAME, mathEntityName, sizeof (mathEntityName) - 1);
                             ThotCallback (baseDlg + mathText, STRING_DATA, mathEntityName);
-                            ThotCallback (baseDlg + mathForm, INTEGER_DATA, (STRING) 1);
+                            ThotCallback (baseDlg + mathForm, INTEGER_DATA, (CHAR_T*) 1);
 						    EndDialog (hwnDlg, ID_CONFIRM);
 							break;
 
                        case IDCANCEL:
                             EndDialog (hwnDlg, IDCANCEL);
-                            ThotCallback (baseDlg + mathForm, INTEGER_DATA, (STRING) 0);
+                            ThotCallback (baseDlg + mathForm, INTEGER_DATA, (CHAR_T*) 0);
 				}
            default: return FALSE; 
 	}
@@ -3302,19 +3303,19 @@ LPARAM lParam;
                        itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
                        SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
                        ThotCallback (baseDlg + classSelect, STRING_DATA, szBuffer);
-                       ThotCallback (baseDlg + classForm, INTEGER_DATA, (STRING) 1);
+                       ThotCallback (baseDlg + classForm, INTEGER_DATA, (CHAR_T*) 1);
                        EndDialog (hwnDlg, ID_CONFIRM);
                        return 0;
 				}
 
 			    switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
-						    ThotCallback (baseDlg + classForm, INTEGER_DATA, (STRING) 1);
+						    ThotCallback (baseDlg + classForm, INTEGER_DATA, (CHAR_T*) 1);
 						    EndDialog (hwnDlg, ID_CONFIRM);
 							break;
 
 				       case ID_DONE:
-						    ThotCallback (baseDlg + classForm, INTEGER_DATA, (STRING) 0);
+						    ThotCallback (baseDlg + classForm, INTEGER_DATA, (CHAR_T*) 0);
 						    EndDialog (hwnDlg, ID_DONE);
 							break;
 
@@ -3392,8 +3393,8 @@ LPARAM lParam;
                        itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
                        SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
                        ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-                       ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (STRING) iLocation);
-                       ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (STRING) 3);
+                       ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
+                       ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 3);
                        if (iLocation == 3) {
                           CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
                           iLocation = 2;
@@ -3404,7 +3405,7 @@ LPARAM lParam;
 				   if (LOWORD (wParam) == IDC_EDITPROPOSALS) {
 					  val = GetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, &ok, TRUE);
                       if (ok)
-                         ThotCallback (SpellingBase + ChkrCaptureNC, INTEGER_DATA, (STRING) val);
+                         ThotCallback (SpellingBase + ChkrCaptureNC, INTEGER_DATA, (CHAR_T*) val);
 				   } else if (LOWORD (wParam) == IDC_EDITIGNORE) {
                           GetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars, sizeof (currentRejectedchars) + 1);
                           ThotCallback (SpellingBase + ChkrSpecial, STRING_DATA, currentRejectedchars);
@@ -3430,25 +3431,25 @@ LPARAM lParam;
 						    break;
 
 					   case IDC_IGNORE1:
-                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (STRING) 0);
+                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 0);
 						    break;
 
 					   case IDC_IGNORE2:
-                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (STRING) 1);
+                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 1);
 						    break;
 
 					   case IDC_IGNORE3: 
-                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (STRING) 2);
+                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 2);
 						    break;
 
 					   case IDC_IGNORE4:
-                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (STRING) 3);
+                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 3);
 						    break;
 
 					   case ID_SKIPNEXT:
                             ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (STRING) iLocation);
-							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (STRING) 1);
+							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
+							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 1);
 							if (iLocation == 3) {
 				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
 							   iLocation = 2;
@@ -3457,8 +3458,8 @@ LPARAM lParam;
 
 					   case ID_SKIPDIC:
                             ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (STRING) iLocation);
-							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (STRING) 2);
+							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
+							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 2);
 							if (iLocation == 3) {
 				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
 							   iLocation = 2;
@@ -3467,8 +3468,8 @@ LPARAM lParam;
 
 					   case ID_REPLACENEXT:
                             ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (STRING) iLocation);
-							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (STRING) 3);
+							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
+							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 3);
 							if (iLocation == 3) {
 				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
 							   iLocation = 2;
@@ -3477,8 +3478,8 @@ LPARAM lParam;
 
 					   case ID_REPLACEDIC:
                             ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (STRING) iLocation);
-							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (STRING) 4);
+							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
+							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 4);
 							if (iLocation == 3) {
 				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
 							   iLocation = 2;
@@ -3531,12 +3532,12 @@ LPARAM lParam;
 			    switch (LOWORD (wParam)) {
 		               case ID_CONFIRM:
 			                EndDialog (hwnDlg, ID_CONFIRM);
-				            ThotCallback (currentRef, INTEGER_DATA, (STRING) 1);
+				            ThotCallback (currentRef, INTEGER_DATA, (CHAR_T*) 1);
 			                break;
 
 		               case IDCANCEL:
 			                EndDialog (hwnDlg, IDCANCEL);
-				            ThotCallback (currentRef, INTEGER_DATA, (STRING) 0);
+				            ThotCallback (currentRef, INTEGER_DATA, (CHAR_T*) 0);
 				            break;
 				}
 				break;
@@ -3597,17 +3598,17 @@ LPARAM lParam;
       if (LOWORD (wParam) == IDC_INDENTPTEDIT) {
 	val = GetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, &ok, TRUE);
 	if (ok)
-	  ThotCallback (Num_zoneRecess, INTEGER_DATA, (STRING) val);
+	  ThotCallback (Num_zoneRecess, INTEGER_DATA, (CHAR_T*) val);
       } else if (LOWORD (wParam) == IDC_LINESPACINGEDIT) {
 	val = GetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, &ok, TRUE);
 	if (ok)
-	  ThotCallback (Num_zoneLineSpacing, INTEGER_DATA, (STRING) val);
+	  ThotCallback (Num_zoneLineSpacing, INTEGER_DATA, (CHAR_T*) val);
       }
     }
     switch (LOWORD (wParam)) {
       /* Alignement menu */
     case ID_APPLY:
-      ThotCallback (NumFormPresFormat, INTEGER_DATA, (STRING) 1);
+      ThotCallback (NumFormPresFormat, INTEGER_DATA, (CHAR_T*) 1);
       break;
       
     case WM_CLOSE:
@@ -3616,118 +3617,118 @@ LPARAM lParam;
       break;
       
     case ID_DONE:
-      ThotCallback (NumFormPresFormat, INTEGER_DATA, (STRING) 0);
+      ThotCallback (NumFormPresFormat, INTEGER_DATA, (CHAR_T*) 0);
       EndDialog (hwnDlg, ID_DONE);
       break;
       
     case IDC_BLEFT:
-      ThotCallback (NumMenuAlignment, INTEGER_DATA, (STRING) 0);
+      ThotCallback (NumMenuAlignment, INTEGER_DATA, (CHAR_T*) 0);
       CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_LEFT);
       break;
       
     case IDC_LEFT:
-      ThotCallback (NumMenuAlignment, INTEGER_DATA, (STRING) 0);
+      ThotCallback (NumMenuAlignment, INTEGER_DATA, (CHAR_T*) 0);
       break;
       
     case IDC_BRIGHT:
       CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_RIGHT);
-      ThotCallback (NumMenuAlignment, INTEGER_DATA, (STRING) 1);
+      ThotCallback (NumMenuAlignment, INTEGER_DATA, (CHAR_T*) 1);
       break;
       
     case IDC_RIGHT:
-      ThotCallback (NumMenuAlignment, INTEGER_DATA, (STRING) 1);
+      ThotCallback (NumMenuAlignment, INTEGER_DATA, (CHAR_T*) 1);
       break;
       
     case IDC_BCENTER:
       CheckRadioButton (hwnDlg, IDC_LEFT, IDC_DEFAULTALIGN, IDC_CENTER);
-      ThotCallback (NumMenuAlignment, INTEGER_DATA, (STRING) 2);
+      ThotCallback (NumMenuAlignment, INTEGER_DATA, (CHAR_T*) 2);
       break;
       
     case IDC_CENTER:
-      ThotCallback (NumMenuAlignment, INTEGER_DATA, (STRING) 2);
+      ThotCallback (NumMenuAlignment, INTEGER_DATA, (CHAR_T*) 2);
       break;
       
     case IDC_DEFAULTALIGN:
-      ThotCallback (NumMenuAlignment, INTEGER_DATA, (STRING) 3);
+      ThotCallback (NumMenuAlignment, INTEGER_DATA, (CHAR_T*) 3);
       break;
       
       /* Jusitification menu */
     case IDC_JUSTIFYES:
-      ThotCallback (NumMenuJustification, INTEGER_DATA, (STRING) 0);
+      ThotCallback (NumMenuJustification, INTEGER_DATA, (CHAR_T*) 0);
       break;
       
     case IDC_JUSTIFNO:
-      ThotCallback (NumMenuJustification, INTEGER_DATA, (STRING) 1);
+      ThotCallback (NumMenuJustification, INTEGER_DATA, (CHAR_T*) 1);
       break;
       
     case IDC_JUSTIFDEFAULT:
-      ThotCallback (NumMenuJustification, INTEGER_DATA, (STRING) 2);
+      ThotCallback (NumMenuJustification, INTEGER_DATA, (CHAR_T*) 2);
       break;
       
       /* Indent Menu */ 
     case IDC_INDENT1:
-      ThotCallback (NumMenuRecessSense, INTEGER_DATA, (STRING) 0);
+      ThotCallback (NumMenuRecessSense, INTEGER_DATA, (CHAR_T*) 0);
       SetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, WIN_IndentValue, FALSE);
       break;
       
     case IDC_BINDENT1:
       CheckRadioButton (hwnDlg, IDC_INDENT1, IDC_INDENTDEFAULT, IDC_INDENT1);
-      ThotCallback (NumMenuRecessSense, INTEGER_DATA, (STRING) 0);
+      ThotCallback (NumMenuRecessSense, INTEGER_DATA, (CHAR_T*) 0);
       SetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, WIN_IndentValue, FALSE);
       break;
       
     case IDC_INDENT2:
-      ThotCallback (NumMenuRecessSense, INTEGER_DATA, (STRING) 1);
+      ThotCallback (NumMenuRecessSense, INTEGER_DATA, (CHAR_T*) 1);
       SetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, WIN_IndentValue, FALSE);
       break;
       
     case IDC_BINDENT2:
       CheckRadioButton (hwnDlg, IDC_INDENT1, IDC_INDENTDEFAULT, IDC_INDENT2);
-      ThotCallback (NumMenuRecessSense, INTEGER_DATA, (STRING) 1);
+      ThotCallback (NumMenuRecessSense, INTEGER_DATA, (CHAR_T*) 1);
       SetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, WIN_IndentValue, FALSE);
       break;
       
     case IDC_INDENTDEFAULT:
-      ThotCallback (NumMenuRecessSense, INTEGER_DATA, (STRING) 2);
+      ThotCallback (NumMenuRecessSense, INTEGER_DATA, (CHAR_T*) 2);
       SetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, 0, FALSE);
       break;
       
       /* Line spacing menu */
     case IDC_SSMALL:
-      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (STRING) 0);
+      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (CHAR_T*) 0);
       SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_OldLineSp, FALSE);
       break;
       
     case IDC_BSSMALL:
       CheckRadioButton (hwnDlg, IDC_SSMALL, IDC_SPACINGDEFAULT, IDC_SSMALL);
-      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (STRING) 0);
+      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (CHAR_T*) 0);
       SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_OldLineSp, FALSE);
       break;
       
     case IDC_SMEDIUM:
-      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (STRING) 1);
+      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (CHAR_T*) 1);
       SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_OldLineSp, FALSE);
       break;
       
     case IDC_BSMEDIUM:
       CheckRadioButton (hwnDlg, IDC_SSMALL, IDC_SPACINGDEFAULT, IDC_SMEDIUM);
-      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (STRING) 1);
+      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (CHAR_T*) 1);
       SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_OldLineSp, FALSE);
       break;
       
     case IDC_SLARGE:
-      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (STRING) 2);
+      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (CHAR_T*) 2);
       SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_OldLineSp, FALSE);
       break;
       
     case IDC_BSLARGE:
       CheckRadioButton (hwnDlg, IDC_SSMALL, IDC_SPACINGDEFAULT, IDC_SLARGE);
-      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (STRING) 2);
+      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (CHAR_T*) 2);
       SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_OldLineSp, FALSE);
       break;
       
     case IDC_SPACINGDEFAULT:
-      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (STRING) 3);
+      ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (CHAR_T*) 3);
       SetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, WIN_NormalLineSpacing, FALSE);
       break;
     }
@@ -4522,15 +4523,15 @@ LPARAM lParam;
                             break;
 
 		               case ID_CONFIRM:
-                            ThotCallback (baseDlg + repeatImage, INTEGER_DATA, (STRING)repeatMode);
-                            ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (STRING)1);
+                            ThotCallback (baseDlg + repeatImage, INTEGER_DATA, (CHAR_T*)repeatMode);
+                            ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (CHAR_T*)1);
 			                EndDialog (hwnDlg, ID_CONFIRM);
 			                break;
 
                        case ID_CLEAR:
 							SetDlgItemText (hwnDlg, IDC_BGLOCATION, TEXT(""));
-                            ThotCallback (baseDlg + repeatImage, INTEGER_DATA, (STRING)repeatMode);
-                            ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (STRING)2);
+                            ThotCallback (baseDlg + repeatImage, INTEGER_DATA, (CHAR_T*)repeatMode);
+                            ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (CHAR_T*)2);
 							break;
 
 					   case IDC_BROWSE:
@@ -4557,12 +4558,12 @@ LPARAM lParam;
 
 							SetDlgItemText (hwnDlg, IDC_BGLOCATION, urlToOpen);
 			                EndDialog (hwnDlg, ID_CONFIRM);
-                            ThotCallback (baseDlg + repeatImage, INTEGER_DATA, (STRING)repeatMode);
-                            ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (STRING)1);
+                            ThotCallback (baseDlg + repeatImage, INTEGER_DATA, (CHAR_T*)repeatMode);
+                            ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (CHAR_T*)1);
 							break;
 
 		               case IDCANCEL:
-                            ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (STRING)0);
+                            ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (CHAR_T*)0);
 			                EndDialog (hwnDlg, IDCANCEL);
 				            break;
 				}

@@ -29,7 +29,7 @@ FILE*  stream;
 #   if 0
     unsigned char byte;
     CHAR_T        wChar;
-    char          mbcstr[MAX_BYTES];
+    char          mbcstr[MAX_BYTES] = "\0";
     int           nbWChar = 0;
     int           nbBytes;
     ThotBool      done = FALSE;

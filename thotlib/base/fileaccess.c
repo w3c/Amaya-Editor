@@ -34,6 +34,17 @@
 #include "winsys.h"
 #endif /* _WINDOWS */
 
+unsigned long Offset[6] = {
+         0x00000000UL,
+         0x00003080UL,
+         0x000E2080UL,
+         0x03C82080UL,
+         0xFA082080UL,
+         0x82082080UL
+};
+
+extern CHARSET CharEncoding;
+
 /* ---------------------------------------------- */
 /* |  Constants for read and write operations   | */
 /* ---------------------------------------------- */
@@ -71,38 +82,93 @@ char*               bval;
    TtaReadWideChar reads a wide character value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaReadWideChar (BinFile file, CHAR_T* bval)
+ThotBool            TtaReadWideChar (BinFile file, CHAR_T* bval, CHARSET encoding)
 #else  /* __STDC__ */
-ThotBool            TtaReadWideChar (file, bval)
+ThotBool            TtaReadWideChar (file, bval, encoding)
 BinFile             file;
 CHAR_T*             bval;
-
+CHARSET             encoding;
 #endif /* __STDC__ */
 {
-#  ifdef _I18N_
-   char          mbcstr[MAX_BYTES] = "\0";
-   int           nbBytes;
-   unsigned char car;
+#   ifdef _I18N_
+    int           nbBytesToRead;
+    unsigned char car;
+    CHAR_T        res;
 
-   if (TtaReadByte (file, &car) == 0) {
-      *bval = (CHAR_T) 0;
-      return (FALSE);
-   } 
-   mbcstr[0] = car;
-   nbBytes = 1;
-   if (isleadbyte (car)) {
-      if (TtaReadByte (file, &car) == 0) {
-         *bval = (CHAR_T)0;
-         return FALSE;
-      }
-      mbcstr [1] = car;
-      nbBytes = 2;
-   }
-   mbtowc (bval, mbcstr, nbBytes);
-   return (TRUE);
-#  else  /* !_I18N_ */
-   return TtaReadByte (file, bval);
-#  endif /* !_I18N_ */ 
+    if (TtaReadByte (file, &car) == 0) {
+       *bval = (CHAR_T) 0;
+       return (FALSE);
+    } 
+
+    switch (encoding) {
+           case ISOLatin1: 
+                *bval = (CHAR_T)car;
+                break;
+
+           case ISOLatin2:
+                *bval = TtaGetUnicodeValueFromISOLatin2Code (car);
+                break;
+
+           case ISOLatin6:
+                *bval = TtaGetUnicodeValueFromISOLatin6Code (car);
+                break;
+
+           case WIN1256:
+                *bval = TtaGetUnicodeValueFromWindows1256CP (car);
+                break;
+
+           case UTF8:
+                if (car < 0xC0)
+                   nbBytesToRead = 1;
+                else if (car < 0xE0)
+                     nbBytesToRead = 2;
+                else if (car < 0xF0)
+                     nbBytesToRead = 3;
+                else if (car < 0xF8)
+                     nbBytesToRead = 4;
+                else if (car < 0xFC)
+                     nbBytesToRead = 5;
+                else if (car <= 0xFF)
+                     nbBytesToRead = 6;
+            
+                res = 0;
+
+                /* See how many bytes to read to build a wide character */
+                switch (nbBytesToRead) {        /** WEARNING: There is not break statement between cases */
+                       case 6: res += car;
+                               res <<= 6;
+                               TtaReadByte (file, &car);
+
+                       case 5: res += car;
+                               res <<= 6;
+                               TtaReadByte (file, &car);
+            
+                       case 4: res += car;
+                               res <<= 6;
+                               TtaReadByte (file, &car);
+
+                       case 3: res += car;
+                               res <<= 6;
+                               TtaReadByte (file, &car);
+
+                       case 2: res += car;
+                               res <<= 6;
+                               TtaReadByte (file, &car);
+            
+                       case 1: res += car;
+				}
+                res -= Offset[nbBytesToRead - 1];
+
+                if (res <= 0xFFFF)
+                   *bval = res;
+                else 
+                    *bval = TEXT('?');    
+                break;
+	}
+    return (TRUE);
+#   else  /* !_I18N_ */
+    return TtaReadByte (file, bval);
+#   endif /* !_I18N_ */ 
 }
 
 
@@ -270,7 +336,7 @@ CHAR_T*             name;
 
    for (i = 0; i < MAX_NAME_LENGTH; i++)
      {
-        if (!TtaReadWideChar (file, &name[i]))
+        if (!TtaReadWideChar (file, &name[i], ISOLatin1))
            {
               name[i] = WC_EOS;
               return FALSE;
@@ -409,24 +475,24 @@ char                bval;
    TtaWriteWideChar writes a wide character value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaWriteWideChar (BinFile file, CHAR_T val)
+ThotBool            TtaWriteWideChar (BinFile file, CHAR_T val, CHARSET encoding)
 #else  /* __STDC__ */
-ThotBool            TtaWriteWideChar (file, bval)
+ThotBool            TtaWriteWideChar (file, bval, encoding)
 BinFile             file;
 CHAR_T              val;
-
+CHARSET             encoding;
 #endif /* __STDC__ */
 {
 #  ifdef _I18N_
-   char     mbcstr[MAX_BYTES];
-   int      nbBytes;
-   int      i;
+   unsigned char mbc[MAX_BYTES + 1] = "\0";
+   int           nbBytes;
+   int           i;
 
-   nbBytes = wctomb (mbcstr, val);
+   nbBytes = TtaWC2MB (val, mbc, encoding);
    if (nbBytes == -1)
       return FALSE;
    for (i = 0; i < nbBytes; i++)
-       if (fwrite ((char*) &mbcstr[i], sizeof (char), 1, file) == 0)
+       if (fwrite ((char*) &mbc[i], sizeof (char), 1, file) == 0)
           return FALSE;
    return TRUE;
    
@@ -550,7 +616,7 @@ DocumentIdentifier *Ident;
    
    do
 #     ifdef _I18N_
-      if (!TtaReadWideChar (file, &((*Ident)[j++])))
+      if (!TtaReadWideChar (file, &((*Ident)[j++]), ISOLatin1))
          (*Ident)[j - 1] = WC_EOS;
 #     else /* !_I18N_ */
       if (!TtaReadByte (file, &((*Ident)[j++])))

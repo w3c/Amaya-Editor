@@ -371,10 +371,10 @@ PtrSSchema          pSS;
    i = 0;
    do {
       do {
-         TtaReadWideChar (file, &c);
+         TtaReadWideChar (file, &c, ISOLatin1);
          pSS->SsConstBuffer[i++] = c;
 	  } while (c != WC_EOS && i < MAX_LEN_ALL_CONST);
-      TtaReadWideChar (file, &c);
+      TtaReadWideChar (file, &c, ISOLatin1);
       pSS->SsConstBuffer[i++] = c;
    } while (c != WC_EOS && i < MAX_LEN_ALL_CONST);
    if (i >= MAX_LEN_ALL_CONST)

@@ -147,7 +147,7 @@ STRING              data;
 	     BgDocument = 0;
 	     /* Confirm button */
 	   }
-	   else if (ref - BaseImage == FormImage && ImgAlt[0] == EOS) { /* IMG element without ALT attribute: error message */
+	   else if (ref - BaseImage == FormImage && ImgAlt[0] == WC_EOS) { /* IMG element without ALT attribute: error message */
 #                    ifndef _WINDOWS
 	     TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormImage, TtaGetMessage (AMAYA, AM_ALT_MISSING))
 #                    endif /* !_WINDOWS */
@@ -304,7 +304,7 @@ STRING              data;
               break;
          case ImageAlt:
               ustrncpy (ImgAlt, data, NAME_LENGTH-1);
-              ImgAlt[NAME_LENGTH-1] = EOS;
+              ImgAlt[NAME_LENGTH-1] = WC_EOS;
               break;
          case ImageDir:
               if (!ustrcmp (data, TEXT(".."))) {
@@ -373,7 +373,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-  ImgAlt[0] = EOS;
+  ImgAlt[0] = WC_EOS;
 #ifndef _WINDOWS
   TtaNewForm (BaseImage + FormAlt, TtaGetViewFrame (document, view),
 	       TtaGetMessage (AMAYA, AM_ALT),
@@ -384,7 +384,7 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseImage + FormAlt, FALSE);
    TtaWaitShowDialogue ();
-   while (ImgAlt[0] == EOS)
+   while (ImgAlt[0] == WC_EOS)
      {
        TtaNewLabel (BaseImage + ImageLabel4, BaseImage + FormAlt,
 			   TtaGetMessage (AMAYA, AM_ALT_MISSING));
@@ -608,7 +608,7 @@ char*               shape;
 	TtaAttachAttribute (el, attr, doc);
 	GetAlt (doc, view);
 	TtaSetAttributeText (attr, ImgAlt, el, doc);
-	ImgAlt[0] = EOS;
+	ImgAlt[0] = WC_EOS;
 	/* The link element is a new created one */
 	IsNewAnchor = TRUE;
 	/* FrameUpdating creation of Area and selection of destination */
@@ -714,7 +714,7 @@ View                view;
 	ustrcat (LastURLImage, ImageName);
 	TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
      }
-   ImgAlt[0] = EOS;
+   ImgAlt[0] = WC_EOS;
    TtaSetTextForm (BaseImage + ImageAlt, ImgAlt);
    TtaNewTextForm (BaseImage + ImageFilter, BaseImage + FormImage,
 		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
@@ -932,15 +932,15 @@ NotifyElement      *event;
   Attribute          attr;
   Element            elSRC, el;
   Document           doc;
-  STRING             text;
-  STRING             pathimage;
-  STRING             imagename;
+  CHAR_T*            text;
+  CHAR_T*            pathimage;
+  CHAR_T*            imagename;
 
    /* Select an image name */
    el = event->element;
    doc = event->document;
    text = GetImageURL (doc, 1);
-   if (text == NULL || text[0] == EOS)
+   if (text == NULL || text[0] == WC_EOS)
      {
 	/* delete the empty SRC element */
 	TtaDeleteTree (el, doc);
@@ -968,7 +968,7 @@ NotifyElement      *event;
 	TtaAttachAttribute (elSRC, attr, doc);
      }
    /* copy image name in ALT attribute */
-   if (ImgAlt[0] == EOS)
+   if (ImgAlt[0] == WC_EOS)
      {
        imagename = TtaAllocString (MAX_LENGTH);
        pathimage = TtaAllocString (MAX_LENGTH);
@@ -982,7 +982,7 @@ NotifyElement      *event;
    else
      {
        TtaSetAttributeText (attr, ImgAlt, elSRC, doc);
-       ImgAlt[0] = EOS;
+       ImgAlt[0] = WC_EOS;
      }
 }
 

@@ -19,6 +19,7 @@
  * en memoire.
  *
  * Author: V. Quint (INRIA)
+ *         R. Guetari (W3C/INRIA): Unciode.
  *
  */
 
@@ -109,7 +110,7 @@ Name                name;
 
    i = 0;
    do
-      TtaWriteWideChar (outfile, name[i++]);
+      TtaWriteWideChar (outfile, name[i++], ISOLatin1 /* UTF8 */);
    while (name[i - 1] != TEXT('\0'));
 }
 
@@ -402,7 +403,7 @@ int                 code;
    /* ecrit le texte des constantes */
    i = 0;
    do
-      TtaWriteWideChar (outfile, pSS->SsConstBuffer[i++]);
+      TtaWriteWideChar (outfile, pSS->SsConstBuffer[i++], ISOLatin1 /* UTF8 */);
    while (pSS->SsConstBuffer[i - 1] != '\0' || pSS->SsConstBuffer[i] != '\0');
 
    /* SsFirstDynNature */

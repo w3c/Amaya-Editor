@@ -197,10 +197,10 @@ ThotColorStruct colrs[256];
    ReadJpegToData  Just open the file and pass it to the ReadJpeg     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char      *ReadJpegToData (char* datafile, int* w, int* h, ThotColorStruct colrs[256])
+unsigned char      *ReadJpegToData (CHAR_T* datafile, int* w, int* h, ThotColorStruct colrs[256])
 #else  /* __STDC__ */
 unsigned char      *ReadJpegToData (datafile, w, h, colrs)
-char               *datafile;
+CHAR_T             *datafile;
 int                *w;
 int                *h;
 ThotColorStruct     colrs[256];
@@ -211,7 +211,7 @@ ThotColorStruct     colrs[256];
    FILE               *fp;
 
 
-   fp = fopen (datafile, "rb");
+   fp = ufopen (datafile, TEXT("rb"));
 
    if (fp != NULL)
      {
@@ -244,10 +244,10 @@ int                 ErrorNumber;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap          JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
+ThotBitmap          JpegCreate (CHAR_T *fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
 #else  /* __STDC__ */
 ThotBitmap          JpegCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
-char               *fn;
+CHAR_T             *fn;
 PictInfo           *imageDesc;
 int                *xif;
 int                *yif;
@@ -339,10 +339,10 @@ int                 zoom;
    JpegPrint produces postscript from a jpeg picture file          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned long BackGroundPixel)
+void                JpegPrint (CHAR_T *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned long BackGroundPixel)
 #else  /* __STDC__ */
 void                JpegPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
-char               *fn;
+CHAR_T             *fn;
 PictureScaling      pres;
 int                 xif;
 int                 yif;

@@ -14,6 +14,7 @@
  * Thot library.
  *
  * Author: V. Quint (INRIA)
+ *         R. Guetari (W3C/INRIA): Windows routines.
  *
  */
 
@@ -2845,6 +2846,7 @@ char              **argv;
    ThotBool            fileOK;
    int                 nb;	/* identifier index of found word if it is
 				   an indentifier */
+   int                 LIBDLG;
    int                 param;
    unsigned char       car;
 #  ifdef _WINDOWS 
@@ -2874,7 +2876,7 @@ char              **argv;
 #  endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
-   (void *) TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
+   (void) TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
    COMPIL = TtaGetMessageTable (TEXT("compildialogue"), COMP_MSG_MAX);
    STR = TtaGetMessageTable (TEXT("strdialogue"), STR_MSG_MAX);
    error = False;

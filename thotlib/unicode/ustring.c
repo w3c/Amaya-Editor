@@ -14,7 +14,7 @@
 #include "thot_sys.h"
 
 #include "ustring_f.h"
-
+ 
 unsigned long offset[6] = {
          0x00000000UL,
          0x00003080UL,
@@ -24,6 +24,25 @@ unsigned long offset[6] = {
          0x82082080UL
 };
 
+CHARSET CharEncoding = UTF8;
+
+/*-------------------------------------------------------------
+  uputchar
+  -------------------------------------------------------------*/
+#ifdef __STDC__
+int uputchar (int c)
+#else  /* !__STDC__ */
+int uputchar (c)
+int c;
+#endif /* !__STDC__ */
+{
+#   ifdef _I18N_
+    /* Compatibility of putwchar: ANSI, WIN NT and WIN 9x */
+    return putwchar (c);
+#   else  /* !_I18N_ */
+    return putchar (c);
+#   endif /* !_I18N_ */
+}
 
 /*-------------------------------------------------------------
   ustrcasecmp: compare two strings without regard to case.
@@ -537,6 +556,7 @@ const char*   str2;
 }
 
 
+#ifdef _I18N_
 /*----------------------------------------------------------------------
   TtaGetNextWideCharFromMultibyteString: Looks for the next Wide character 
   value in a multibyte character string.
@@ -573,6 +593,12 @@ CHARSET        encoding;
                 start++;
                 break;
 
+           case WIN1256:
+                nbBytesToRead = 1;
+                *car = TtaGetUnicodeValueFromWindows1256CP (*start);
+                start++;
+                break;
+
            case UTF8:
                 if (*start < 0xC0)
                    nbBytesToRead = 1;
@@ -590,7 +616,7 @@ CHARSET        encoding;
                 res = 0;
 
                 /* See how many bytes to read to build a wide character */
-                switch (nbBytesToRead) {        /** WEARNING: There is not break statement between cases */
+                switch (nbBytesToRead) {        /** WARNING: There is not break statement between cases */
                        case 6: res += *start++;
                                res <<= 6;
 
@@ -619,6 +645,7 @@ CHARSET        encoding;
 
     return nbBytesToRead;
 }
+#endif /* _I18N_ */
 
 
 

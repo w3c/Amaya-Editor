@@ -9,6 +9,7 @@
  * This module handles messages displayed by Thot compilers.
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari (W3C/INRIA): Windows & Unicode.
  *
  */
 

@@ -19,6 +19,7 @@
  * registry mechanism.
  *
  * Author: D. Veillard (INRIA)
+ *         R. Guetari (W3C/INRIA): Unicode.
  * Extensions: J. KAHAN (INRIA/W3C)
  *
  */

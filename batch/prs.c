@@ -23,6 +23,7 @@
  *
  * Authors: V. Quint (INRIA)
  *          C. Roisin (INRIA) - Columns and pages
+ *          R. Guetari (W3C/INRIA): Windows routines.
  *
  */
 
@@ -6874,7 +6875,7 @@ char              **argv;
                  i = 0;
                  do {
                     /* fileOK = TtaReadByte (infile, &inputLine[i]); */
-                    fileOK = TtaReadWideChar (infile, &inputLine[i]);
+                    fileOK = TtaReadWideChar (infile, &inputLine[i], ISOLatin1);
                    i++;
 				 } while (i < LINE_LENGTH && inputLine[i - 1] != TEXT('\n') && fileOK);
                  /* marque la fin reelle de la ligne */

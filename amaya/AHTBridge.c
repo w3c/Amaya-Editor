@@ -252,10 +252,10 @@ int status;
     {
       if (AmayaIsAlive () && me->terminate_cbf)
 	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile, me->content_type, me->context_tcbf);
-      if (me->outputfile && me->outputfile[0] != EOS)
+      if (me->outputfile && me->outputfile[0] != WC_EOS)
 	{
 	  TtaFileUnlink (me->outputfile);
-	  me->outputfile[0] = EOS; 
+	  me->outputfile[0] = WC_EOS; 
 	} 
     }
   else if (me->reqStatus == HT_ERR)
@@ -319,7 +319,7 @@ HTAlertPar         *reply;
 	   && me->outputfile
 	   &&  (me->output = ufopen (me->outputfile, TEXT("wb"))) == NULL) {
 	 /* the request is associated with a file */
-	 me->outputfile[0] = EOS;	/* file could not be opened */
+	 me->outputfile[0] = WC_EOS;	/* file could not be opened */
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
 	 me->reqStatus = HT_ERR;
 

@@ -3389,8 +3389,12 @@ int                 nbytes;
 	  if (b == EOL)
 	    clipboard->BuContent[j++] = EOL;
 	  /* Sinon on filtre que les caracteres imprimables */
+#     ifdef _I18N_
+      else if (iswprint ((CHAR_T)b))
+#     else  /* !_I18N_ */
 	  else if ((b >= 32 && b < 127)
 		   || (b >= 177 && b < 254))
+#     endif /* !_I18N_ */
 	    clipboard->BuContent[j++] = Xbuffer[i];
 	}
       /* Paste the last X clipboard buffer */
@@ -3681,8 +3685,8 @@ View                view;
 {
 #  ifdef _WINDOWS
    HANDLE hMem   = 0;
-   LPSTR lpData = 0;
-   LPSTR pBuff;
+   LPWSTR lpData = 0;
+   LPWSTR pBuff;
    int    ndx;
    int    frame;
 
@@ -3715,14 +3719,15 @@ View                view;
                EmptyClipboard ();
 
                hMem   = GlobalAlloc (GHND, ClipboardLength + 1);
-               lpData = (LPSTR) GlobalLock (hMem);
-               pBuff  = (LPSTR) Xbuffer;
+               lpData = (LPWSTR) GlobalLock (hMem);
+               pBuff  = (LPWSTR) Xbuffer;
                for (ndx = 0; ndx < ClipboardLength; ndx++)
                    *lpData++ = *pBuff++;
 
                GlobalUnlock (hMem);
 
-               SetClipboardData (CF_TEXT, hMem);
+               if (!SetClipboardData (CF_TEXT, hMem))
+                  WinErrorBox (NULL, TEXT(""));
                CloseClipboard ();
 		  } 
    }
