@@ -635,9 +635,17 @@ LPARAM lParam;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
-				CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_HTML);
-				CheckRadioButton (hwnDlg, IDC_COPYIMG, IDC_COPYIMG, IDC_COPYIMG);
-				chkButton = FindWindow (NULL, "Copy images");
+				if (SaveAsHTML)
+				   CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_HTML);
+
+				if (SaveAsText)
+				   CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_TEXT);
+
+				if (CopyImages)
+				   CheckRadioButton (hwnDlg, IDC_COPYIMG, IDC_COPYIMG, IDC_COPYIMG);
+
+				if (UpdateURLs)
+				   CheckRadioButton (hwnDlg, IDC_TRANSFORMURL, IDC_TRANSFORMURL, IDC_TRANSFORMURL);
 				break;
 
 		   case WM_COMMAND:
@@ -1053,6 +1061,10 @@ LPARAM lParam;
 				   itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
 			       SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
 				   ThotCallback (baseDlg + classSelect, STRING_DATA, szBuffer);
+				} else if (HIWORD (wParam) == EN_UPDATE) {
+					   char text [100];
+                       GetDlgItemText (hwnDlg, IDC_EDITRULE, text, sizeof (text) - 1);
+					   ThotCallback (baseDlg + classForm, STRING_DATA, text);
 				}
 
 			    switch (LOWORD (wParam)) {

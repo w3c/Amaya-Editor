@@ -11,7 +11,7 @@
  * (redirection, authentication needed, not found, etc.)
  *
  * Author: J. Kahan
- *         R. Guetari (W3C/INRIA) Windows 95/NT routines
+ *         R. Guetari/J. Kahan  Windows 95/NT routines
  */
 
 #ifndef AMAYA_JAVA
@@ -536,13 +536,6 @@ int                 status;
 	      me->output = NULL;
 	    }
 	}
-
-# ifdef _WINDOWS
-	/* if ((me->mode & AMAYA_ASYNC) ||      (me->mode & AMAYA_IASYNC)) {
-	   me->reqStatus = HT_END; */
-	/* HTEventrg_unregister (me->read_sock, 0); */
-	/* }  */
-# endif /* _WINDOWS */
 
 	me->reqStatus = HT_NEW; /* reset the status */
 	if (me->method == METHOD_PUT || me->method == METHOD_POST)	/* PUT, POST etc. */
@@ -1242,7 +1235,7 @@ void                QueryInit ()
    /* New AHTBridge stuff */
 
 #  ifdef _WINDOWS
-   HTEventInit ();
+   AHTEventInit ();
 #  endif _WINDOWS;
 
    HTEvent_setRegisterCallback (AHTEvent_register);
@@ -1275,7 +1268,19 @@ void                QueryInit ()
    /* Setting up different network parameters */
    /* Maximum number of simultaneous open sockets */
    HTNet_setMaxSocket (8);
+   /* different network services timeouts */
    HTDNS_setTimeout (3600);
+#ifdef _WINDOWS
+   /* under windows, the libwww persistent socket handling has
+   ** some bugs. The following line inhibits idle socket reusal.
+   ** this is a bit slower, but avoids crashes and gives us time
+   ** to distribute Amaya before having to patch up libwww.
+   */
+   HTHost_setPersistTimeout (-1l);
+#else
+   HTHost_setPersistTimeout (60l);
+#endif /* _WINDOWS */
+
    /* Cache is disabled in this version */
    HTCacheMode_setEnabled (0);
 
@@ -1966,8 +1971,7 @@ int                 docid;
 
 				   AHTReqContext_delete (me);
 				}
-			      AHTReqContext_delete (me);
-			      
+				  
 			      cur = Amaya->reqlist;
 			      
 			      open_requests--;

@@ -81,15 +81,7 @@ static XtInputId sockets[200];
   the state of the request and, if it's an asynchronous request, deletes
   the memory allocated to it.
   -------------------------------------------------------------------*/
-#ifdef _WINDOWS
-#ifdef __STDC__
-static void* WIN_AHTCallback_bridge (SockOps _ops, int *s)
-#else  /* __STDC__ */
-static void* WIN_AHTCallback_bridge (_ops, s)
-SockOps _ops; 
-int*    s;
-#endif /* __STDC__ */
-#else  /* _WINDOWS */
+#ifndef _WINDOWS
 #ifdef __STDC__
 void *AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
 #else  /* __STDC__ */
@@ -98,7 +90,6 @@ caddr_t             cd;
 int                *s;
 XtInputId          *id;
 #endif /* __STDC__ */
-#endif /* _WINDOWS */
 {
    int                 status;  /* the status result of the libwwww call */
    HTRequest          *rqp = NULL;
@@ -147,9 +138,6 @@ XtInputId          *id;
       return (0);
    }
 
-#  ifdef _WINDOWS
-   ops = _ops;
-#  else
    switch ((XtInputId) cd) {
           case XtInputReadMask:
 	       ops = me->read_ops;
@@ -166,7 +154,6 @@ XtInputId          *id;
 	  default:
 	       break;
    } /* switch */
-#  endif /* _WINDOWS */
 
    /* Invokes the callback associated to the requests */
    
@@ -233,11 +220,9 @@ XtInputId          *id;
    if ((me->reqStatus == HT_END) ||
        (me->reqStatus == HT_ERR)) {
         /* request has ended */
-#ifndef _WINDOWS
 #ifdef DEBUG_LIBWWW
        fprintf (stderr, "(BF) removing Xtinput %lu !RWE, sock %d (Request has ended)\n", *id, *s);
 #endif
-#endif	 /* !_WINDOWS */
      if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC)) {
 
 	 AHTPrintPendingRequestStatus (me->docid, YES);
@@ -253,6 +238,7 @@ XtInputId          *id;
    me->reqStatus = HT_WAITING;
    return (0);
 }
+#endif /* !_WINDOWS */
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------
@@ -421,25 +407,12 @@ HTPriority          p;
 
    /* get the request associated to the socket number */
 
-/*
-#ifdef _WINDOWS
-     if (me->reqStatus == HT_NEW) {
-			HTEventrg_unregister (sock, ops);
-	 }
-#endif
-*/
 
-
-   if ((status = HTEventrg_register (sock, rqp, ops,
-				     cbf, p)) != HT_OK)
-      return (status);
-
-#ifndef _WINDOWS
-
+#ifndef _WINDOWS 
    if (rqp == NULL && ops == FD_CLOSE) {
 #ifdef DEBUG_LIBWWW
 	fprintf(stderr, "HTEvent_register: ***** RQP is NULL @@@@@\n");
-#endif
+#endif /* DEBUG_LIBWWW */
 	if (sockets[sock] != 0) {
 	  XtRemoveInput (sockets[sock]);
 	}
@@ -451,7 +424,7 @@ HTPriority          p;
 				       (XtPointer) XtInputReadMask);
 	return (status);
    }
-#endif /* _WINDOWS */
+#endif /* !_WINDOWS */
 
    if (rqp)
      {
@@ -461,18 +434,23 @@ HTPriority          p;
 	if (sockets[sock] != 0) {
 	  XtRemoveInput (sockets[sock]);
 	  sockets[sock] = 0;
-#endif /* _WINDOWS */
 	}	  
+#endif /* _WINDOWS */
 
     /*** VERY EXPERIMENTAL ***/
     me->read_sock = sock;
     me->write_sock = FD_CLOSE;
     /*** END OF VERY EXPERIMENTAL ***/
 
-	/* verify if we need to open the fd */
+	/* verify if we need to open the fd */ 
 	if (me->reqStatus == HT_NEW)
 	  {
-	     /* we are opening a pending request */
+
+#ifdef _WINDOWS
+		HTEventrg_unregister (sock, FD_ALL);
+#endif
+	
+		/* we are opening a pending request */
 	     if ((me->output != stdout) && 
 		 (me->output = fopen (me->outputfile, "w")) == NULL)
 	       {
@@ -517,7 +495,11 @@ HTPriority          p;
 	     RequestRegisterExceptXtevent (me, sock);
 	  }
 #endif	 /* !_WINDOWS */
-   }
+     }
+
+
+   status = HTEventrg_register (sock, rqp, ops,
+					     cbf, p);
    return (status);
 }
 

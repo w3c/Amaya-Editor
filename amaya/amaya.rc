@@ -328,14 +328,14 @@ BEGIN
     PUSHBUTTON      "Clear",ID_CLEAR,118,102,50,14
     PUSHBUTTON      "Browse",IDC_BROWSE,189,102,55,13
     PUSHBUTTON      "Cancel",IDCANCEL,263,101,51,14
-    GROUPBOX        "Output format",-1,7,7,62,46, WS_GROUP
+    GROUPBOX        "Output format",-1,7,7,62,46,WS_GROUP
     CONTROL         "HTML",IDC_HTML,"Button",BS_AUTORADIOBUTTON,16,20,44,15
     CONTROL         "Text",IDC_TEXT,"Button",BS_AUTORADIOBUTTON,16,35,40,15
     CONTROL         "Copy images",IDC_COPYIMG,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,18,61,59,16
     CONTROL         "Transform URLs",IDC_TRANSFORMURL,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,17,78,65,16
-    LTEXT           "Document location (or push document directory button for a local directory)",
+    LTEXT           "Document location (or push browse button for a local directory)",
                     IDC_DOCLOCATION,91,7,238,12
     EDITTEXT        IDC_EDITDOCSAVE,91,21,255,17,ES_AUTOHSCROLL
     LTEXT           "Images location",IDC_IMGLOCATION,91,57,255,12

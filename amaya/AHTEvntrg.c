@@ -14,9 +14,6 @@
 #include <assert.h>			/* @@@ Should be in sysdep.h @@@ */
 #include <fcntl.h>
 
-extern LRESULT CALLBACK AsyncWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
-);
-
 static HWND HTSocketWin;
 static unsigned long HTwinMsg;
 
@@ -87,8 +84,13 @@ PUBLIC LRESULT CALLBACK AmayaAsyncWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam
 	    return 0;
 	}
     if (event & FD_CLOSE) {
-	  	WSAAsyncSelect(sock, HTSocketWin, 0, 0);
+		/* close the socket and unregister it from the Windows environment */
+    	if (HTEventrg_dispatch((int)sock, FD_READ) != HT_OK)
+	        HTEndLoop = -1;
+	    WSAAsyncSelect(sock, HTSocketWin, 0, 0);
+		return 0;
 	}
+	  	
     return (0);
 }
 

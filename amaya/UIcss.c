@@ -68,6 +68,7 @@ View                view;
 
 #endif
 {
+#  ifndef _WINDOWS
    static Pixmap       opIcons[5] = {0, 0, 0, 0, 0};
    char                menu[3000];
 
@@ -114,6 +115,9 @@ View                view;
    RedrawRRPI (NULL);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseCSSDialog + FormCSS, TRUE);
+#  else  /* _WINDOWS */
+   MessageBox (TtaGetViewFrame (doc, 1), "Not implemented yet", "CSS", MB_OK);
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

@@ -64,7 +64,7 @@
 char docToOpen [256];
 #endif /* _WINDOWS */
 
-#define AMAYA_PAGE "http://www.w3.org/Amaya/User"
+#define AMAYA_PAGE "http://www.w3.org/Amaya/"
 
 static int          AmayaInitialized = 0;
 
@@ -120,6 +120,9 @@ static Pixmap       iconJava;
 #define	iconDL      17
 #define iconLink    18
 #define iconTable   19
+#ifdef AMAYA_PLUGIN
+#define iconPlugin  20
+#endif AMAYA_PLUGIN
 #endif /* _WINDOWS */
 
 #include "css_f.h"
