@@ -29,6 +29,7 @@
 #include "constmedia.h"
 #include "typeint.h"
 #include "application.h"
+#include "dialogapi_f.h"
 
 #ifdef _GTK
 #include <stdio.h>
@@ -188,6 +189,7 @@ int                 fileRef;
    int                 ls_currentfile;
    int                 length;
    ThotBool            stop;
+#define SELECTOR_WIDTH 150
 
    if (dirTitle == NULL)
       dirTitle = TEXT("");
@@ -235,11 +237,13 @@ int                 fileRef;
 		  ThotDirBrowse_close (&thotDir);
 	       }
 	     if (strlen (aDirectory) == 0)
-		TtaNewSelector (dirRef, formRef,
-				dirTitle, ls_fileNbr, ls_unixFiles, SELECTOR_NB_ITEMS, "", FALSE, TRUE);
+	       TtaNewSizedSelector (dirRef, formRef, dirTitle,
+				    ls_fileNbr, ls_unixFiles, SELECTOR_WIDTH,
+				    SELECTOR_NB_ITEMS, "", FALSE, TRUE);
 	     else
-		TtaNewSelector (dirRef, formRef,
-				dirTitle, ls_fileNbr, ls_unixFiles, SELECTOR_NB_ITEMS, "..", FALSE, TRUE);
+		TtaNewSizedSelector (dirRef, formRef, dirTitle,
+				     ls_fileNbr, ls_unixFiles, SELECTOR_WIDTH,
+				     SELECTOR_NB_ITEMS, "..", FALSE, TRUE);
 	     TtaSetSelector (dirRef, -1, "");
 	  }
 	/* CsList les fichiers du directory */
@@ -279,8 +283,9 @@ int                 fileRef;
 		while (ThotDirBrowse_next (&thotDir) == 1);
 	     ThotDirBrowse_close (&thotDir);
 	     /* initialisation des menus */
-	     TtaNewSelector (fileRef, formRef,
-			     fileTitle, ls_fileNbr, ls_unixFiles, SELECTOR_NB_ITEMS + 1, NULL, FALSE, TRUE);
+	     TtaNewSizedSelector (fileRef, formRef, fileTitle,
+				  ls_fileNbr, ls_unixFiles, SELECTOR_WIDTH,
+				  SELECTOR_NB_ITEMS + 1, NULL, FALSE, TRUE);
 	     TtaSetSelector (fileRef, -1, "");
 	  }
      }

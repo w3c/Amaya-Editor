@@ -6271,6 +6271,7 @@ int                 ref_parent;
 STRING              title;
 int                 number;
 STRING              text;
+int                 width;
 int                 height;
 STRING              label;
 ThotBool            withText;
@@ -6447,6 +6448,13 @@ ThotBool            react;
 	n = 0;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
+	if (width != 0)
+	  {
+	    XtSetArg (args[n], XmNwidth, (Dimension) width);
+	    n++;
+	    XtSetArg (args[n], XmNresizeWidth, FALSE);
+	    n++;
+	  }
 	XtSetArg (args[n], XmNmarginWidth, 0);
 	n++;
 	XtSetArg (args[n], XmNmarginHeight, 0);
@@ -6529,8 +6537,6 @@ ThotBool            react;
 	     else
 	       {
 		 XtSetArg (args[n], XmNlistSizePolicy, XmCONSTANT);
-		 n++;
-		 XtSetArg (args[n], XmNwidth, (Dimension) width);
 		 n++;
 	       }
 	     XtSetArg (args[n], XmNitems, item);
