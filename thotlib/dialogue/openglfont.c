@@ -788,19 +788,17 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
   ----------------------------------------------------------------------*/
 static void BitmapAppend (unsigned char *data, unsigned char *append_data,
 			  int x, int y, unsigned int width, 
-			  register unsigned int height, unsigned int Width)
-{   
+			  unsigned int height, unsigned int Width)
+{
   register unsigned int i = 0;
 
-  /* We position origin in the big bitmap*/
+  /* Origin position within the big bitmap */
   data += y*Width + x;
   append_data += height*width;
-  if (data &&
-      append_data)
+  if (data && append_data)
     while (height)
       {      
 	append_data -= width;
-
 	while (i < width)
 	  {
 	    if (*(append_data + i) > ANTIALIASINGDEPTH)
@@ -952,8 +950,8 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   GL_font            *font;
   GL_glyph           *glyph;
   Char_Cache_index   *cache;
-  unsigned char       m_data[MAX_BITMAP_ALLOC];
   unsigned char      *data;
+  unsigned char       m_data[MAX_BITMAP_ALLOC];
   float		      maxy, miny, shift;
   int                 Width, Height, width, bitmap_alloc;
   register int        pen_x, n;
@@ -1013,9 +1011,9 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
       pen_x += glyph->advance;
     }
   
-  maxy = maxy - miny;  
+  maxy = maxy - miny;
   Height = (p2 ((int) maxy));
-  Width = 0;  
+  Width = 0;
   
   /*shift if the first pos is neg */
   if (bitmap_pos[0].x < 0)
@@ -1037,7 +1035,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   if (Height <= 0 || Width <= 0 || fabs (miny - 10000) < 0.0001)
     return 0;
   
-  bitmap_alloc = sizeof (unsigned char) * Height * Width;
+  bitmap_alloc = (sizeof (unsigned char) * Height * Width) + 4;
   if (bitmap_alloc >= MAX_BITMAP_ALLOC)
     {
       data = (unsigned char *)TtaGetMemory (bitmap_alloc); 
@@ -1057,7 +1055,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
 		      (int) bitmaps[n]->dimension.x, 
 		      (int) bitmaps[n]->dimension.y, 
 		      Width);
-    }
+     }
   
   /* SG: I think there is an optimisation to to here because 
    * for each characteres a new OpenGL texture is created with GL_TextureInit
