@@ -26,15 +26,15 @@ commands apply to tables as to other HTML structures.</p>
 Tables can be created very efficiently with the <a
 href="Creating.html#L906">Return key</a>. Create a one-cell table with the
 table button or the <strong>Table</strong> entry from the
-<strong>Types</strong> menu. The insertion point is then moved to the caption
-of that table. Enter the caption and/or move to the first cell. Type in the
-content of that cell (Cell 1.1 for example). Create a second cell by hitting
-the Return key twice (the first hit creates a paragraph in the first cell). To
-create a new row, press Return three times. To create a new tbody, press
-Return four times, etc.</p>
+<strong>Types</strong> menu. The space above the table is reserved for the
+caption. Move the insertion point to the new cell. Type in the content of that
+cell ("Cell 1.1" in the example below). Create a second cell by hitting the
+Return key twice (the first hit creates a paragraph in the first cell). To
+create a new row, press Return three times. To create a new
+<code>tbody</code>, press Return four times, etc.</p>
 
 <table border="1">
-<caption>Captiion</caption>
+<caption>Caption</caption>
 <tbody>
 <tr>
 <td>
@@ -61,18 +61,14 @@ and insert text. You can also move to this empty cell by using arrow keys.
 When the selection is at the end of the text "Cell 2.1", you can create a new
 column between Cell 2.1 and the empty cell by pressing Return key twice.</p>
 <p>
-There is no specific command to create and destroy a column. When you create
-new cell, Amaya generates a new column and when you destroy a cell in a column
-that becomes empty, Amaya destroys the column.</p>
+There is no specific command to create or delete a column. When you create a
+new cell, Amaya generates a new column and when you delete a cell in a column
+that becomes empty, Amaya deletes the column.</p>
 <p>
-Note that the table model implemented in <strong>Amaya</strong>, while being
-fully compatible with that defined in <a
-href="../../TR/REC-html32">HTML&nbsp;3.2</a>, is extended to implement the W3C
-Working Draft <a href="../../TR/WD-tables">The HTML3 Table Model</a>, which
-has been accepted by the IETF as a proposed standard,<a
-href="ftp://ds.internic.net/rfc/rfc1942.txt"> RFC1942</a>.  This includes
-features such as multiple bodies (<code>tbody</code>), header
-(<code>thead</code>) and footer (<code>tfoot</code>).</p>
+Note that the table model implemented in <strong>Amaya</strong> is the <a
+href="../../TR/REC-html40">HTML&nbsp;4.0</a> model. This includes features
+such as multiple bodies (<code>tbody</code>), header (<code>thead</code>) and
+footer (<code>tfoot</code>).</p>
 <hr>
 </div>
 </body>
