@@ -1799,11 +1799,10 @@ void ElementCreated (NotifyElement *event)
   CheckPseudoParagraph (event->element, event->document);
 }
 
-#ifdef LC
 /*----------------------------------------------------------------------
    ElementWillBeDeleted
-   Anhtml element will be deleted.
-   Update the namespace declarations linked to that element
+   An HTML element will be deleted.
+   Update the namespace declarations associated with that element
   ----------------------------------------------------------------------*/
 ThotBool ElementWillBeDeleted (NotifyElement *event)
 {
@@ -1814,7 +1813,6 @@ ThotBool ElementWillBeDeleted (NotifyElement *event)
     TtaFreeElemNamespaceDeclarations (event->document, event->element);
   return FALSE; /* let Thot perform normal operation */
 }
-#endif /* LC */
  
 /*----------------------------------------------------------------------
    ElementDeleted

@@ -9,6 +9,7 @@ DEFAULT
 	ElemPaste.Post -> ElementPasted;
 	ElemNew.Post -> ElementCreated;
 	ElemDelete.Post -> ElementDeleted;
+	ElemDelete.Pre -> ElementWillBeDeleted;
 	ElemSelect.Post -> SelectionChanged;
 	ElemExtendSelect.Post -> SelectionChanged;
 	AttrMenu.Pre ->    GlobalAttrInMenu;
