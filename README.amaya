@@ -1,0 +1,126 @@
+
+                       Amaya 0.9 Alpha Release
+
+
+About this release
+==================
+
+Amaya is intended to be a comprehensive environment for testing and
+evaluating new proposals for Web standards and formats. The first version of
+this testbed should be available by the end of 1996, but in order to allow
+the Web community to evaluate this software and to send feedback to the
+development team, an early release is provided now.
+
+This should be considered as a snapshot of a work in progress. A large part
+of the intended features of Amaya are implemented, but some of them are not
+complete yet and the software is not supposed to be very robust. The user
+interface may change and can be improved.
+
+
+Feedback
+--------
+
+As the main objective of this early release is to get feedback from future
+users, comments, questions, and bug reports are welcome.
+
+For communicating with the Amaya team, please use the mailing list:
+
+www-amaya@w3.org
+
+For subscribing to the mailing list, send a message to:
+
+www-amaya-request@w3.org
+
+with a body containing the line:
+
+subscribe www-amaya
+
+A history is maintained at the following URL:
+
+http://opera.inrialpes.fr/amaya/messages/
+
+
+Copyright
+---------
+
+Amaya is covered by the MIT and INRIA Copyright Statement. Please read the
+file COPYRIGHT carefully before installing Amaya.
+
+How to Install Amaya Binary Release
+===================================
+
+Choose a place for Amaya
+------------------------
+
+Supposing the binary distribution was loaded fine, one must choose a place
+to install it. We suggest
+
+   * /usr/local for a system wide installation
+   * the user home directory for a personnal installation
+
+Extract the distribution
+------------------------
+
+Move the distribution to this directory, verify the rights on this directory
+allows you to create a directory and extract the distribution.
+
+On a Linux ELF platform one must invoke:
+tar xvzf amaya-linux-elf.tar.gz
+
+More generally if the distribution is a tar.gz file:
+gunzip -c amaya-system.tar.gz | tar xvf -
+
+If this is a tar.Z file:
+uncompress -c amaya-system.tar.gz | tar xvf -
+
+Whatever the method used, this should print around 40 lines of output and
+create a new directory called Amaya populated with a few files and
+directories. If not, your distribution file was probably corrupted during
+the transfer, please get a new one. Read carefully the COPYRIGHT file.
+
+
+Set up the environment and start Amaya
+--------------------------------------
+
+The file Amaya/bin/$platform/amaya is executable file Amaya, the
+best thing is to add the path to the Amaya/bin/$platform directory to your PATH
+environment variable:
+ 
+On a Linux ELF platform 
+for a csh or tcsh shell. When using sh, bash or another variant of the
+Bourne shell
+PATH=$PATH:/usr/local/Amaya/bin/LINUX-ELF ; export $PATH
+
+Maybe this command should be added to the .login startup script. Once done
+one can lauch amaya simply by typing "amaya" to the shell prompt. The Amaya
+main window should open and display the first page of the Amaya
+documentation.
+
+
+If something goes wrong and advice
+----------------------------------
+
+* If Amaya doesn't seems to work, ckeck the following:
+
+   1. the DISPLAY variable is correctly set.
+   2. The binary just installed is the correct one, i.e. it is the
+      correct binaries for the current machine (don't try to start the
+      Linux-ELF version on a Solaris machine or an old Linux a.out
+      installation).
+   3. If the binary version is ok, check the availability of the dynamic
+      libraries needed by the executable file Amaya.
+
+      For example on a Linux-ELF platform
+      ldd Amaya/bin/LINUX-ELF/amayamain
+
+      and check that there is no missing libraries.
+
+* One can install packages for different platform under the same
+ directory (for example on a server filesystem exported via NFS to an
+ heterogenous set of machines).
+
+* The Amaya mailing-list is archived:
+      http://opera.inrialpes.fr/amaya/messages/
+
+ Please have a look at it before sending mail if something goes wrong.
+ Remember, it's an Alpha release.
