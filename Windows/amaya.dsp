@@ -408,6 +408,10 @@ SOURCE=..\amaya\Xml2thot.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\Xmlbuilder.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\XMLparser.c
 # End Source File
 # Begin Source File

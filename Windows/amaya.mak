@@ -105,6 +105,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XLinkbuilder.obj"
 	-@erase "$(INTDIR)\XLinkedit.obj"
 	-@erase "$(INTDIR)\Xml2thot.obj"
+	-@erase "$(INTDIR)\Xmlbuilder.obj"
 	-@erase "$(INTDIR)\XMLparser.obj"
 	-@erase "$(INTDIR)\XPointer.obj"
 	-@erase "$(INTDIR)\XPointerparse.obj"
@@ -184,6 +185,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XLinkbuilder.obj" \
 	"$(INTDIR)\XLinkedit.obj" \
 	"$(INTDIR)\Xml2thot.obj" \
+	"$(INTDIR)\Xmlbuilder.obj" \
 	"$(INTDIR)\XMLparser.obj" \
 	"$(INTDIR)\XPointer.obj" \
 	"$(INTDIR)\XPointerparse.obj" \
@@ -275,6 +277,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XLinkbuilder.obj"
 	-@erase "$(INTDIR)\XLinkedit.obj"
 	-@erase "$(INTDIR)\Xml2thot.obj"
+	-@erase "$(INTDIR)\Xmlbuilder.obj"
 	-@erase "$(INTDIR)\XMLparser.obj"
 	-@erase "$(INTDIR)\XPointer.obj"
 	-@erase "$(INTDIR)\XPointerparse.obj"
@@ -357,6 +360,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XLinkbuilder.obj" \
 	"$(INTDIR)\XLinkedit.obj" \
 	"$(INTDIR)\Xml2thot.obj" \
+	"$(INTDIR)\Xmlbuilder.obj" \
 	"$(INTDIR)\XMLparser.obj" \
 	"$(INTDIR)\XPointer.obj" \
 	"$(INTDIR)\XPointerparse.obj" \
@@ -765,7 +769,6 @@ DEP_CPP_AHTBR=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -773,7 +776,9 @@ DEP_CPP_AHTBR=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -935,7 +940,6 @@ DEP_CPP_AHTBR=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -943,8 +947,13 @@ DEP_CPP_AHTBR=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_AHTBR=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\AHTBridge.obj" : $(SOURCE) $(DEP_CPP_AHTBR) "$(INTDIR)"
@@ -1105,7 +1114,6 @@ DEP_CPP_AHTFW=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -1113,7 +1121,9 @@ DEP_CPP_AHTFW=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -1271,7 +1281,6 @@ DEP_CPP_AHTFW=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -1279,8 +1288,13 @@ DEP_CPP_AHTFW=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_AHTFW=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\AHTFWrite.obj" : $(SOURCE) $(DEP_CPP_AHTFW) "$(INTDIR)"
@@ -1442,7 +1456,6 @@ DEP_CPP_AHTME=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -1450,7 +1463,9 @@ DEP_CPP_AHTME=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -1609,7 +1624,6 @@ DEP_CPP_AHTME=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -1617,8 +1631,13 @@ DEP_CPP_AHTME=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_AHTME=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\AHTMemConv.obj" : $(SOURCE) $(DEP_CPP_AHTME) "$(INTDIR)"
@@ -1782,7 +1801,6 @@ DEP_CPP_AHTUR=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -1790,7 +1808,9 @@ DEP_CPP_AHTUR=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -1951,7 +1971,6 @@ DEP_CPP_AHTUR=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -1959,8 +1978,13 @@ DEP_CPP_AHTUR=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_AHTUR=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\AHTURLTools.obj" : $(SOURCE) $(DEP_CPP_AHTUR) "$(INTDIR)"
@@ -2176,7 +2200,7 @@ DEP_RSC_AMAYA=\
 
 
 "$(INTDIR)\amaya.res" : $(SOURCE) $(DEP_RSC_AMAYA) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "..\amaya" /d "NDEBUG"\
+	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\Amaya\amaya" /d "NDEBUG"\
  $(SOURCE)
 
 
@@ -2184,7 +2208,7 @@ DEP_RSC_AMAYA=\
 
 
 "$(INTDIR)\amaya.res" : $(SOURCE) $(DEP_RSC_AMAYA) "$(INTDIR)"
-	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "..\amaya" /d "_DEBUG"\
+	$(RSC) /l 0x409 /fo"$(INTDIR)\amaya.res" /i "\Amaya\amaya" /d "_DEBUG"\
  $(SOURCE)
 
 
@@ -2345,7 +2369,6 @@ DEP_CPP_ANSWE=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -2353,7 +2376,9 @@ DEP_CPP_ANSWE=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -2514,7 +2539,6 @@ DEP_CPP_ANSWE=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -2522,8 +2546,13 @@ DEP_CPP_ANSWE=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_ANSWE=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\answer.obj" : $(SOURCE) $(DEP_CPP_ANSWE) "$(INTDIR)"
@@ -2692,7 +2721,6 @@ DEP_CPP_CSS_C=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -2700,7 +2728,9 @@ DEP_CPP_CSS_C=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -2866,7 +2896,6 @@ DEP_CPP_CSS_C=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -2874,8 +2903,13 @@ DEP_CPP_CSS_C=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_CSS_C=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\css.obj" : $(SOURCE) $(DEP_CPP_CSS_C) "$(INTDIR)"
@@ -3047,7 +3081,6 @@ DEP_CPP_EDITI=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -3058,6 +3091,7 @@ DEP_CPP_EDITI=\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -3226,7 +3260,6 @@ DEP_CPP_EDITI=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -3237,7 +3270,11 @@ DEP_CPP_EDITI=\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_EDITI=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\EDITimage.obj" : $(SOURCE) $(DEP_CPP_EDITI) "$(INTDIR)"
@@ -3382,6 +3419,7 @@ DEP_CPP_EDITO=\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmledit_f.h"\
+	"..\amaya\f\htmlhistory_f.h"\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\menuconf_f.h"\
@@ -3391,13 +3429,8 @@ DEP_CPP_EDITO=\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\annotlib\annotlib.h"\
-	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
-	"..\annotlib\f\annotfiles_f.h"\
-	"..\annotlib\f\annotlink_f.h"\
 	"..\annotlib\f\annotmenu_f.h"\
-	"..\annotlib\f\annotschemas_f.h"\
-	"..\annotlib\f\annottools_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -3421,7 +3454,6 @@ DEP_CPP_EDITO=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -3429,13 +3461,11 @@ DEP_CPP_EDITO=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
-	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
-	".\amaya\xlink.h"\
 	
 
 "$(INTDIR)\EDITORactions.obj" : $(SOURCE) $(DEP_CPP_EDITO) "$(INTDIR)"
@@ -3576,6 +3606,7 @@ DEP_CPP_EDITO=\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmledit_f.h"\
+	"..\amaya\f\htmlhistory_f.h"\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\menuconf_f.h"\
@@ -3585,13 +3616,8 @@ DEP_CPP_EDITO=\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\annotlib\annotlib.h"\
-	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
-	"..\annotlib\f\annotfiles_f.h"\
-	"..\annotlib\f\annotlink_f.h"\
 	"..\annotlib\f\annotmenu_f.h"\
-	"..\annotlib\f\annotschemas_f.h"\
-	"..\annotlib\f\annottools_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -3615,7 +3641,6 @@ DEP_CPP_EDITO=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -3623,13 +3648,14 @@ DEP_CPP_EDITO=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
-	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
-	".\amaya\xlink.h"\
+	
+NODEP_CPP_EDITO=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\EDITORactions.obj" : $(SOURCE) $(DEP_CPP_EDITO) "$(INTDIR)"
@@ -3659,7 +3685,6 @@ DEP_CPP_EDITOR=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -3694,7 +3719,6 @@ DEP_CPP_EDITOR=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -3704,6 +3728,9 @@ DEP_CPP_EDITOR=\
 	".\amaya\editor.h"\
 	".\amaya\logo.xbm"\
 	".\amaya\logo.xpm"\
+	
+NODEP_CPP_EDITOR=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\EDITORAPP.obj" : $(SOURCE) $(DEP_CPP_EDITOR) "$(INTDIR)"
@@ -3877,7 +3904,6 @@ DEP_CPP_EDITS=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -4059,7 +4085,6 @@ DEP_CPP_EDITS=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -4072,6 +4097,9 @@ DEP_CPP_EDITS=\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_EDITS=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\EDITstyle.obj" : $(SOURCE) $(DEP_CPP_EDITS) "$(INTDIR)"
@@ -4235,7 +4263,6 @@ DEP_CPP_FETCH=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -4243,7 +4270,9 @@ DEP_CPP_FETCH=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -4404,7 +4433,6 @@ DEP_CPP_FETCH=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -4412,8 +4440,13 @@ DEP_CPP_FETCH=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_FETCH=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\fetchHTMLname.obj" : $(SOURCE) $(DEP_CPP_FETCH) "$(INTDIR)"
@@ -4554,6 +4587,7 @@ DEP_CPP_FETCHX=\
 	"..\amaya\graphmlnames.h"\
 	"..\amaya\htmlnames.h"\
 	"..\amaya\libwww.h"\
+	"..\amaya\mathmlentities.h"\
 	"..\amaya\mathmlnames.h"\
 	"..\amaya\parser.h"\
 	"..\amaya\xlinknames.h"\
@@ -4579,7 +4613,6 @@ DEP_CPP_FETCHX=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -4728,6 +4761,7 @@ DEP_CPP_FETCHX=\
 	"..\amaya\graphmlnames.h"\
 	"..\amaya\htmlnames.h"\
 	"..\amaya\libwww.h"\
+	"..\amaya\mathmlentities.h"\
 	"..\amaya\mathmlnames.h"\
 	"..\amaya\parser.h"\
 	"..\amaya\xlinknames.h"\
@@ -4753,7 +4787,6 @@ DEP_CPP_FETCHX=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -4766,6 +4799,9 @@ DEP_CPP_FETCHX=\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
+	
+NODEP_CPP_FETCHX=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\fetchXMLname.obj" : $(SOURCE) $(DEP_CPP_FETCHX) "$(INTDIR)"
@@ -4937,7 +4973,6 @@ DEP_CPP_GRAPH=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -4948,6 +4983,7 @@ DEP_CPP_GRAPH=\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -5116,7 +5152,6 @@ DEP_CPP_GRAPH=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -5127,7 +5162,11 @@ DEP_CPP_GRAPH=\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_GRAPH=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\Graphedit.obj" : $(SOURCE) $(DEP_CPP_GRAPH) "$(INTDIR)"
@@ -5155,7 +5194,6 @@ DEP_CPP_GRAPHM=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -5185,13 +5223,15 @@ DEP_CPP_GRAPHM=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\graphml.h"\
+	
+NODEP_CPP_GRAPHM=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\GraphMLAPP.obj" : $(SOURCE) $(DEP_CPP_GRAPHM) "$(INTDIR)"
@@ -5359,7 +5399,6 @@ DEP_CPP_GRAPHML=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -5369,6 +5408,7 @@ DEP_CPP_GRAPHML=\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -5533,7 +5573,6 @@ DEP_CPP_GRAPHML=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -5543,7 +5582,11 @@ DEP_CPP_GRAPHML=\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_GRAPHML=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\GraphMLbuilder.obj" : $(SOURCE) $(DEP_CPP_GRAPHML) "$(INTDIR)"
@@ -5682,7 +5725,6 @@ DEP_CPP_HTML2=\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
 	"..\amaya\f\css_f.h"\
-	"..\amaya\f\editoractions_f.h"\
 	"..\amaya\f\fetchhtmlname_f.h"\
 	"..\amaya\f\fetchxmlname_f.h"\
 	"..\amaya\f\html2thot_f.h"\
@@ -5692,7 +5734,6 @@ DEP_CPP_HTML2=\
 	"..\amaya\f\htmlsave_f.h"\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
-	"..\amaya\f\query_f.h"\
 	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\templates_f.h"\
 	"..\amaya\f\uicss_f.h"\
@@ -5703,12 +5744,6 @@ DEP_CPP_HTML2=\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\annotlib\annotlib.h"\
-	"..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\annotlib\f\annotevent_f.h"\
-	"..\annotlib\f\annotfiles_f.h"\
-	"..\annotlib\f\annotlink_f.h"\
-	"..\annotlib\f\annotmenu_f.h"\
-	"..\annotlib\f\annotschemas_f.h"\
 	"..\annotlib\f\annottools_f.h"\
 	"..\libpng\zlib\zconf.h"\
 	"..\libpng\zlib\zlib.h"\
@@ -5735,21 +5770,17 @@ DEP_CPP_HTML2=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
-	"..\thotlib\include\wininclude.h"\
-	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
-	".\amaya\xlink.h"\
 	
 
 "$(INTDIR)\html2thot.obj" : $(SOURCE) $(DEP_CPP_HTML2) "$(INTDIR)"
@@ -5884,7 +5915,6 @@ DEP_CPP_HTML2=\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
 	"..\amaya\f\css_f.h"\
-	"..\amaya\f\editoractions_f.h"\
 	"..\amaya\f\fetchhtmlname_f.h"\
 	"..\amaya\f\fetchxmlname_f.h"\
 	"..\amaya\f\html2thot_f.h"\
@@ -5894,7 +5924,6 @@ DEP_CPP_HTML2=\
 	"..\amaya\f\htmlsave_f.h"\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
-	"..\amaya\f\query_f.h"\
 	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\templates_f.h"\
 	"..\amaya\f\uicss_f.h"\
@@ -5905,12 +5934,6 @@ DEP_CPP_HTML2=\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\annotlib\annotlib.h"\
-	"..\annotlib\f\ahtrdf2annot_f.h"\
-	"..\annotlib\f\annotevent_f.h"\
-	"..\annotlib\f\annotfiles_f.h"\
-	"..\annotlib\f\annotlink_f.h"\
-	"..\annotlib\f\annotmenu_f.h"\
-	"..\annotlib\f\annotschemas_f.h"\
 	"..\annotlib\f\annottools_f.h"\
 	"..\libpng\zlib\zconf.h"\
 	"..\libpng\zlib\zlib.h"\
@@ -5937,21 +5960,20 @@ DEP_CPP_HTML2=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
-	"..\thotlib\include\wininclude.h"\
-	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
-	".\amaya\xlink.h"\
+	
+NODEP_CPP_HTML2=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\html2thot.obj" : $(SOURCE) $(DEP_CPP_HTML2) "$(INTDIR)"
@@ -6092,16 +6114,13 @@ DEP_CPP_HTMLA=\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\css_f.h"\
 	"..\amaya\f\editimage_f.h"\
-	"..\amaya\f\editoractions_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\htmlform_f.h"\
 	"..\amaya\f\htmlhistory_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
-	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
-	"..\amaya\f\query_f.h"\
 	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\trans_f.h"\
 	"..\amaya\f\transparse_f.h"\
@@ -6110,13 +6129,7 @@ DEP_CPP_HTMLA=\
 	"..\amaya\parser.h"\
 	"..\amaya\trans.h"\
 	"..\annotlib\annotlib.h"\
-	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
-	"..\annotlib\f\annotfiles_f.h"\
-	"..\annotlib\f\annotlink_f.h"\
-	"..\annotlib\f\annotmenu_f.h"\
-	"..\annotlib\f\annotschemas_f.h"\
-	"..\annotlib\f\annottools_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -6140,7 +6153,6 @@ DEP_CPP_HTMLA=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -6148,7 +6160,6 @@ DEP_CPP_HTMLA=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
-	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
@@ -6291,16 +6302,13 @@ DEP_CPP_HTMLA=\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\css_f.h"\
 	"..\amaya\f\editimage_f.h"\
-	"..\amaya\f\editoractions_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\htmlform_f.h"\
 	"..\amaya\f\htmlhistory_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
-	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
-	"..\amaya\f\query_f.h"\
 	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\trans_f.h"\
 	"..\amaya\f\transparse_f.h"\
@@ -6309,13 +6317,7 @@ DEP_CPP_HTMLA=\
 	"..\amaya\parser.h"\
 	"..\amaya\trans.h"\
 	"..\annotlib\annotlib.h"\
-	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
-	"..\annotlib\f\annotfiles_f.h"\
-	"..\annotlib\f\annotlink_f.h"\
-	"..\annotlib\f\annotmenu_f.h"\
-	"..\annotlib\f\annotschemas_f.h"\
-	"..\annotlib\f\annottools_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -6339,7 +6341,6 @@ DEP_CPP_HTMLA=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -6347,13 +6348,15 @@ DEP_CPP_HTMLA=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
-	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
+	
+NODEP_CPP_HTMLA=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\HTMLactions.obj" : $(SOURCE) $(DEP_CPP_HTMLA) "$(INTDIR)"
@@ -6381,7 +6384,6 @@ DEP_CPP_HTMLAP=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -6411,13 +6413,15 @@ DEP_CPP_HTMLAP=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\html.h"\
+	
+NODEP_CPP_HTMLAP=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\HTMLAPP.obj" : $(SOURCE) $(DEP_CPP_HTMLAP) "$(INTDIR)"
@@ -6588,7 +6592,6 @@ DEP_CPP_HTMLB=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -6597,7 +6600,9 @@ DEP_CPP_HTMLB=\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -6765,7 +6770,6 @@ DEP_CPP_HTMLB=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -6774,8 +6778,13 @@ DEP_CPP_HTMLB=\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_HTMLB=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\HTMLbook.obj" : $(SOURCE) $(DEP_CPP_HTMLB) "$(INTDIR)"
@@ -6929,6 +6938,7 @@ DEP_CPP_HTMLE=\
 	"..\amaya\f\mathedit_f.h"\
 	"..\amaya\f\mathmlbuilder_f.h"\
 	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\xhtmlbuilder_f.h"\
 	"..\amaya\f\xlinkedit_f.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
@@ -6955,7 +6965,6 @@ DEP_CPP_HTMLE=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -7118,6 +7127,7 @@ DEP_CPP_HTMLE=\
 	"..\amaya\f\mathedit_f.h"\
 	"..\amaya\f\mathmlbuilder_f.h"\
 	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\xhtmlbuilder_f.h"\
 	"..\amaya\f\xlinkedit_f.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
@@ -7144,7 +7154,6 @@ DEP_CPP_HTMLE=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -7158,6 +7167,9 @@ DEP_CPP_HTMLE=\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
+	
+NODEP_CPP_HTMLE=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\HTMLedit.obj" : $(SOURCE) $(DEP_CPP_HTMLE) "$(INTDIR)"
@@ -7298,6 +7310,7 @@ DEP_CPP_HTMLF=\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmlform_f.h"\
+	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
@@ -7323,7 +7336,6 @@ DEP_CPP_HTMLF=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -7332,7 +7344,9 @@ DEP_CPP_HTMLF=\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -7470,6 +7484,7 @@ DEP_CPP_HTMLF=\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmlform_f.h"\
+	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
@@ -7495,7 +7510,6 @@ DEP_CPP_HTMLF=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -7504,8 +7518,13 @@ DEP_CPP_HTMLF=\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_HTMLF=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\HTMLform.obj" : $(SOURCE) $(DEP_CPP_HTMLF) "$(INTDIR)"
@@ -7669,7 +7688,6 @@ DEP_CPP_HTMLH=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -7677,7 +7695,9 @@ DEP_CPP_HTMLH=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -7838,7 +7858,6 @@ DEP_CPP_HTMLH=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -7846,8 +7865,13 @@ DEP_CPP_HTMLH=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_HTMLH=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\HTMLhistory.obj" : $(SOURCE) $(DEP_CPP_HTMLH) "$(INTDIR)"
@@ -7987,10 +8011,12 @@ DEP_CPP_HTMLI=\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\editimage_f.h"\
 	"..\amaya\f\editoractions_f.h"\
+	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\query_f.h"\
+	"..\amaya\f\xml2thot_f.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\thotlib\include\appaction.h"\
@@ -8015,7 +8041,6 @@ DEP_CPP_HTMLI=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -8025,6 +8050,7 @@ DEP_CPP_HTMLI=\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -8189,7 +8215,6 @@ DEP_CPP_HTMLI=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -8199,7 +8224,11 @@ DEP_CPP_HTMLI=\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_HTMLI=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\HTMLimage.obj" : $(SOURCE) $(DEP_CPP_HTMLI) "$(INTDIR)"
@@ -8341,6 +8370,7 @@ DEP_CPP_HTMLP=\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\xhtmlbuilder_f.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\thotlib\include\appaction.h"\
@@ -8366,7 +8396,6 @@ DEP_CPP_HTMLP=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -8515,6 +8544,7 @@ DEP_CPP_HTMLP=\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\xhtmlbuilder_f.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\thotlib\include\appaction.h"\
@@ -8540,7 +8570,6 @@ DEP_CPP_HTMLP=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -8552,6 +8581,9 @@ DEP_CPP_HTMLP=\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_HTMLP=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\HTMLpresentation.obj" : $(SOURCE) $(DEP_CPP_HTMLP) "$(INTDIR)"
@@ -8691,16 +8723,13 @@ DEP_CPP_HTMLS=\
 	"..\amaya\css.h"\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\editimage_f.h"\
-	"..\amaya\f\editoractions_f.h"\
 	"..\amaya\f\editstyle_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmlbook_f.h"\
-	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\htmlhistory_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\htmlsave_f.h"\
-	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\query_f.h"\
 	"..\amaya\f\styleparser_f.h"\
@@ -8708,13 +8737,7 @@ DEP_CPP_HTMLS=\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\annotlib\annotlib.h"\
-	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
-	"..\annotlib\f\annotfiles_f.h"\
-	"..\annotlib\f\annotlink_f.h"\
-	"..\annotlib\f\annotmenu_f.h"\
-	"..\annotlib\f\annotschemas_f.h"\
-	"..\annotlib\f\annottools_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -8738,7 +8761,6 @@ DEP_CPP_HTMLS=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -8746,13 +8768,11 @@ DEP_CPP_HTMLS=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
-	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
-	".\amaya\xlink.h"\
 	
 
 "$(INTDIR)\HTMLsave.obj" : $(SOURCE) $(DEP_CPP_HTMLS) "$(INTDIR)"
@@ -8888,16 +8908,13 @@ DEP_CPP_HTMLS=\
 	"..\amaya\css.h"\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\editimage_f.h"\
-	"..\amaya\f\editoractions_f.h"\
 	"..\amaya\f\editstyle_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmlbook_f.h"\
-	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\htmlhistory_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\htmlsave_f.h"\
-	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\query_f.h"\
 	"..\amaya\f\styleparser_f.h"\
@@ -8905,13 +8922,7 @@ DEP_CPP_HTMLS=\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\annotlib\annotlib.h"\
-	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
-	"..\annotlib\f\annotfiles_f.h"\
-	"..\annotlib\f\annotlink_f.h"\
-	"..\annotlib\f\annotmenu_f.h"\
-	"..\annotlib\f\annotschemas_f.h"\
-	"..\annotlib\f\annottools_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -8935,7 +8946,6 @@ DEP_CPP_HTMLS=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -8943,13 +8953,14 @@ DEP_CPP_HTMLS=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
-	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
-	".\amaya\xlink.h"\
+	
+NODEP_CPP_HTMLS=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\HTMLsave.obj" : $(SOURCE) $(DEP_CPP_HTMLS) "$(INTDIR)"
@@ -9113,7 +9124,6 @@ DEP_CPP_HTMLT=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -9121,6 +9131,7 @@ DEP_CPP_HTMLT=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
@@ -9256,6 +9267,7 @@ DEP_CPP_HTMLT=\
 	"..\amaya\ahtinit.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
+	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\mathedit_f.h"\
 	"..\amaya\f\mathmlbuilder_f.h"\
 	"..\amaya\libwww.h"\
@@ -9282,7 +9294,6 @@ DEP_CPP_HTMLT=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -9290,9 +9301,13 @@ DEP_CPP_HTMLT=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_HTMLT=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\HTMLtable.obj" : $(SOURCE) $(DEP_CPP_HTMLT) "$(INTDIR)"
@@ -9435,6 +9450,7 @@ DEP_CPP_INIT_=\
 	"..\amaya\f\editimage_f.h"\
 	"..\amaya\f\editoractions_f.h"\
 	"..\amaya\f\editstyle_f.h"\
+	"..\amaya\f\fetchxmlname_f.h"\
 	"..\amaya\f\graphedit_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
@@ -9443,7 +9459,6 @@ DEP_CPP_INIT_=\
 	"..\amaya\f\htmlhistory_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\htmlsave_f.h"\
-	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\mathedit_f.h"\
 	"..\amaya\f\menuconf_f.h"\
@@ -9455,17 +9470,14 @@ DEP_CPP_INIT_=\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\f\xml2thot_f.h"\
 	"..\amaya\f\xmlparser_f.h"\
+	"..\amaya\f\xpointer_f.h"\
 	"..\amaya\helpmenu.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\amaya\trans.h"\
 	"..\annotlib\annotlib.h"\
-	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
 	"..\annotlib\f\annotfiles_f.h"\
-	"..\annotlib\f\annotlink_f.h"\
-	"..\annotlib\f\annotmenu_f.h"\
-	"..\annotlib\f\annotschemas_f.h"\
 	"..\annotlib\f\annottools_f.h"\
 	"..\libpng\zlib\zconf.h"\
 	"..\libpng\zlib\zlib.h"\
@@ -9493,7 +9505,6 @@ DEP_CPP_INIT_=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -9501,13 +9512,11 @@ DEP_CPP_INIT_=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
-	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
-	".\amaya\xlink.h"\
 	
 
 "$(INTDIR)\init.obj" : $(SOURCE) $(DEP_CPP_INIT_) "$(INTDIR)"
@@ -9646,6 +9655,7 @@ DEP_CPP_INIT_=\
 	"..\amaya\f\editimage_f.h"\
 	"..\amaya\f\editoractions_f.h"\
 	"..\amaya\f\editstyle_f.h"\
+	"..\amaya\f\fetchxmlname_f.h"\
 	"..\amaya\f\graphedit_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
@@ -9654,7 +9664,6 @@ DEP_CPP_INIT_=\
 	"..\amaya\f\htmlhistory_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\htmlsave_f.h"\
-	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\mathedit_f.h"\
 	"..\amaya\f\menuconf_f.h"\
@@ -9666,18 +9675,14 @@ DEP_CPP_INIT_=\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\f\xml2thot_f.h"\
 	"..\amaya\f\xmlparser_f.h"\
+	"..\amaya\f\xpointer_f.h"\
 	"..\amaya\helpmenu.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\amaya\trans.h"\
 	"..\annotlib\annotlib.h"\
-	"..\annotlib\f\ahtrdf2annot_f.h"\
 	"..\annotlib\f\annotevent_f.h"\
 	"..\annotlib\f\annotfiles_f.h"\
-	"..\annotlib\f\annotlink_f.h"\
-	"..\annotlib\f\annotmenu_f.h"\
-	"..\annotlib\f\annotschemas_f.h"\
-	"..\annotlib\f\annottools_f.h"\
 	"..\libpng\zlib\zconf.h"\
 	"..\libpng\zlib\zlib.h"\
 	"..\thotlib\include\appaction.h"\
@@ -9704,7 +9709,6 @@ DEP_CPP_INIT_=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -9712,13 +9716,14 @@ DEP_CPP_INIT_=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
-	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
-	".\amaya\xlink.h"\
+	
+NODEP_CPP_INIT_=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\init.obj" : $(SOURCE) $(DEP_CPP_INIT_) "$(INTDIR)"
@@ -9892,7 +9897,6 @@ DEP_CPP_MATHE=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -10074,7 +10078,6 @@ DEP_CPP_MATHE=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -10087,6 +10090,9 @@ DEP_CPP_MATHE=\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_MATHE=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\Mathedit.obj" : $(SOURCE) $(DEP_CPP_MATHE) "$(INTDIR)"
@@ -10114,7 +10120,6 @@ DEP_CPP_MATHM=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -10144,13 +10149,15 @@ DEP_CPP_MATHM=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\mathml.h"\
+	
+NODEP_CPP_MATHM=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\MathMLAPP.obj" : $(SOURCE) $(DEP_CPP_MATHM) "$(INTDIR)"
@@ -10320,7 +10327,6 @@ DEP_CPP_MATHML=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -10328,6 +10334,7 @@ DEP_CPP_MATHML=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
@@ -10496,7 +10503,6 @@ DEP_CPP_MATHML=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -10504,9 +10510,13 @@ DEP_CPP_MATHML=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_MATHML=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\MathMLbuilder.obj" : $(SOURCE) $(DEP_CPP_MATHML) "$(INTDIR)"
@@ -10648,6 +10658,8 @@ DEP_CPP_MENUC=\
 	"..\amaya\libwww.h"\
 	"..\amaya\menuconf.h"\
 	"..\amaya\parser.h"\
+	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\annotevent_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -10672,7 +10684,6 @@ DEP_CPP_MENUC=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -10689,7 +10700,9 @@ DEP_CPP_MENUC=\
 	"..\thotlib\internals\h\frame.h"\
 	"..\thotlib\internals\h\thotkey.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -10828,6 +10841,8 @@ DEP_CPP_MENUC=\
 	"..\amaya\libwww.h"\
 	"..\amaya\menuconf.h"\
 	"..\amaya\parser.h"\
+	"..\annotlib\annotlib.h"\
+	"..\annotlib\f\annotevent_f.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -10852,7 +10867,6 @@ DEP_CPP_MENUC=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -10869,8 +10883,13 @@ DEP_CPP_MENUC=\
 	"..\thotlib\internals\h\frame.h"\
 	"..\thotlib\internals\h\thotkey.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_MENUC=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\MENUconf.obj" : $(SOURCE) $(DEP_CPP_MENUC) "$(INTDIR)"
@@ -11038,7 +11057,6 @@ DEP_CPP_QUERY=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -11046,7 +11064,9 @@ DEP_CPP_QUERY=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -11211,7 +11231,6 @@ DEP_CPP_QUERY=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -11219,8 +11238,13 @@ DEP_CPP_QUERY=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_QUERY=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\query.obj" : $(SOURCE) $(DEP_CPP_QUERY) "$(INTDIR)"
@@ -11392,10 +11416,8 @@ DEP_CPP_STYLE=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
-	"..\thotlib\include\uaccess.h"\
 	"..\thotlib\include\uconvert.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
@@ -11403,6 +11425,7 @@ DEP_CPP_STYLE=\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -11571,10 +11594,8 @@ DEP_CPP_STYLE=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
-	"..\thotlib\include\uaccess.h"\
 	"..\thotlib\include\uconvert.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
@@ -11582,7 +11603,11 @@ DEP_CPP_STYLE=\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_STYLE=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\styleparser.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
@@ -11608,7 +11633,6 @@ DEP_CPP_TABLE=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -11621,6 +11645,7 @@ DEP_CPP_TABLE=\
 	"..\thotlib\internals\f\buildlines_f.h"\
 	"..\thotlib\internals\f\createabsbox_f.h"\
 	"..\thotlib\internals\f\exceptions_f.h"\
+	"..\thotlib\internals\f\font_f.h"\
 	"..\thotlib\internals\f\frame_f.h"\
 	"..\thotlib\internals\f\memory_f.h"\
 	"..\thotlib\internals\f\tree_f.h"\
@@ -11664,7 +11689,6 @@ DEP_CPP_TABLE=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -11677,6 +11701,7 @@ DEP_CPP_TABLE=\
 	"..\thotlib\internals\f\buildlines_f.h"\
 	"..\thotlib\internals\f\createabsbox_f.h"\
 	"..\thotlib\internals\f\exceptions_f.h"\
+	"..\thotlib\internals\f\font_f.h"\
 	"..\thotlib\internals\f\frame_f.h"\
 	"..\thotlib\internals\f\memory_f.h"\
 	"..\thotlib\internals\f\tree_f.h"\
@@ -11699,6 +11724,9 @@ DEP_CPP_TABLE=\
 	"..\thotlib\internals\var\boxes_tv.h"\
 	"..\thotlib\internals\var\edit_tv.h"\
 	"..\thotlib\internals\var\frame_tv.h"\
+	
+NODEP_CPP_TABLE=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\tableH.obj" : $(SOURCE) $(DEP_CPP_TABLE) "$(INTDIR)"
@@ -11862,7 +11890,6 @@ DEP_CPP_TEMPL=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -11870,7 +11897,9 @@ DEP_CPP_TEMPL=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -12031,7 +12060,6 @@ DEP_CPP_TEMPL=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -12039,8 +12067,13 @@ DEP_CPP_TEMPL=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_TEMPL=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\templates.obj" : $(SOURCE) $(DEP_CPP_TEMPL) "$(INTDIR)"
@@ -12068,7 +12101,6 @@ DEP_CPP_TEXTF=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -12098,13 +12130,15 @@ DEP_CPP_TEXTF=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_TEXTF=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\TextFileAPP.obj" : $(SOURCE) $(DEP_CPP_TEXTF) "$(INTDIR)"
@@ -12275,7 +12309,6 @@ DEP_CPP_TRANS=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -12284,6 +12317,7 @@ DEP_CPP_TRANS=\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
@@ -12453,7 +12487,6 @@ DEP_CPP_TRANS=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -12462,9 +12495,13 @@ DEP_CPP_TRANS=\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_TRANS=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\trans.obj" : $(SOURCE) $(DEP_CPP_TRANS) "$(INTDIR)"
@@ -12631,7 +12668,6 @@ DEP_CPP_TRANSP=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -12640,7 +12676,9 @@ DEP_CPP_TRANSP=\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -12804,7 +12842,6 @@ DEP_CPP_TRANSP=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -12813,8 +12850,13 @@ DEP_CPP_TRANSP=\
 	"..\thotlib\include\view.h"\
 	"..\thotlib\include\wininclude.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_TRANSP=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\transparse.obj" : $(SOURCE) $(DEP_CPP_TRANSP) "$(INTDIR)"
@@ -12955,6 +12997,7 @@ DEP_CPP_UICSS=\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\css_f.h"\
 	"..\amaya\f\editoractions_f.h"\
+	"..\amaya\f\editstyle_f.h"\
 	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\query_f.h"\
@@ -12985,7 +13028,6 @@ DEP_CPP_UICSS=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -12996,6 +13038,7 @@ DEP_CPP_UICSS=\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -13133,6 +13176,7 @@ DEP_CPP_UICSS=\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\css_f.h"\
 	"..\amaya\f\editoractions_f.h"\
+	"..\amaya\f\editstyle_f.h"\
 	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\query_f.h"\
@@ -13163,7 +13207,6 @@ DEP_CPP_UICSS=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -13174,7 +13217,11 @@ DEP_CPP_UICSS=\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_UICSS=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\UIcss.obj" : $(SOURCE) $(DEP_CPP_UICSS) "$(INTDIR)"
@@ -13335,7 +13382,6 @@ DEP_CPP_WINDI=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -13351,7 +13397,9 @@ DEP_CPP_WINDI=\
 	"..\thotlib\internals\h\corrmsg.h"\
 	"..\thotlib\internals\h\thotkey.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -13509,7 +13557,6 @@ DEP_CPP_WINDI=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -13525,8 +13572,13 @@ DEP_CPP_WINDI=\
 	"..\thotlib\internals\h\corrmsg.h"\
 	"..\thotlib\internals\h\thotkey.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_WINDI=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\windialogapi.obj" : $(SOURCE) $(DEP_CPP_WINDI) "$(INTDIR)"
@@ -13665,6 +13717,7 @@ DEP_CPP_XHTML=\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
 	"..\amaya\f\css_f.h"\
+	"..\amaya\f\fetchhtmlname_f.h"\
 	"..\amaya\f\fetchxmlname_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
@@ -13676,6 +13729,7 @@ DEP_CPP_XHTML=\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\f\xhtmlbuilder_f.h"\
 	"..\amaya\f\xml2thot_f.h"\
+	"..\amaya\fetchhtmlname.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\thotlib\include\appaction.h"\
@@ -13701,7 +13755,6 @@ DEP_CPP_XHTML=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -13709,7 +13762,9 @@ DEP_CPP_XHTML=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -13845,6 +13900,7 @@ DEP_CPP_XHTML=\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
 	"..\amaya\f\css_f.h"\
+	"..\amaya\f\fetchhtmlname_f.h"\
 	"..\amaya\f\fetchxmlname_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
@@ -13856,6 +13912,7 @@ DEP_CPP_XHTML=\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\f\xhtmlbuilder_f.h"\
 	"..\amaya\f\xml2thot_f.h"\
+	"..\amaya\fetchhtmlname.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
 	"..\thotlib\include\appaction.h"\
@@ -13881,7 +13938,6 @@ DEP_CPP_XHTML=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -13889,8 +13945,13 @@ DEP_CPP_XHTML=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_XHTML=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\XHTMLbuilder.obj" : $(SOURCE) $(DEP_CPP_XHTML) "$(INTDIR)"
@@ -13918,7 +13979,6 @@ DEP_CPP_XLINK=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -13948,13 +14008,15 @@ DEP_CPP_XLINK=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\xlink.h"\
+	
+NODEP_CPP_XLINK=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\XLinkAPP.obj" : $(SOURCE) $(DEP_CPP_XLINK) "$(INTDIR)"
@@ -14116,7 +14178,6 @@ DEP_CPP_XLINKB=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -14124,7 +14185,9 @@ DEP_CPP_XLINKB=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
 	
@@ -14284,7 +14347,6 @@ DEP_CPP_XLINKB=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -14292,9 +14354,14 @@ DEP_CPP_XLINKB=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
+	
+NODEP_CPP_XLINKB=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\XLinkbuilder.obj" : $(SOURCE) $(DEP_CPP_XLINKB) "$(INTDIR)"
@@ -14456,7 +14523,6 @@ DEP_CPP_XLINKE=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -14464,7 +14530,9 @@ DEP_CPP_XLINKE=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
 	
@@ -14624,7 +14692,6 @@ DEP_CPP_XLINKE=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -14632,9 +14699,14 @@ DEP_CPP_XLINKE=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
+	
+NODEP_CPP_XLINKE=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\XLinkedit.obj" : $(SOURCE) $(DEP_CPP_XLINKE) "$(INTDIR)"
@@ -14817,7 +14889,6 @@ DEP_CPP_XML2T=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -14825,6 +14896,7 @@ DEP_CPP_XML2T=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
@@ -15006,7 +15078,6 @@ DEP_CPP_XML2T=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -15014,12 +15085,386 @@ DEP_CPP_XML2T=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
+NODEP_CPP_XML2T=\
+	"..\thotlib\include\thot_uio.h"\
+	
 
 "$(INTDIR)\Xml2thot.obj" : $(SOURCE) $(DEP_CPP_XML2T) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\amaya\Xmlbuilder.c
+
+!IF  "$(CFG)" == "amaya - Win32 Release"
+
+DEP_CPP_XMLBU=\
+	"..\..\libwww\library\src\htaabrow.h"\
+	"..\..\libwww\library\src\htaautil.h"\
+	"..\..\libwww\library\src\htaccess.h"\
+	"..\..\libwww\library\src\htalert.h"\
+	"..\..\libwww\library\src\htanchor.h"\
+	"..\..\libwww\library\src\htancman.h"\
+	"..\..\libwww\library\src\htansi.h"\
+	"..\..\libwww\library\src\htarray.h"\
+	"..\..\libwww\library\src\htassoc.h"\
+	"..\..\libwww\library\src\htatom.h"\
+	"..\..\libwww\library\src\htbind.h"\
+	"..\..\libwww\library\src\htbinit.h"\
+	"..\..\libwww\library\src\htbound.h"\
+	"..\..\libwww\library\src\htbufwrt.h"\
+	"..\..\libwww\library\src\htcache.h"\
+	"..\..\libwww\library\src\htchannl.h"\
+	"..\..\libwww\library\src\htchunk.h"\
+	"..\..\libwww\library\src\htconlen.h"\
+	"..\..\libwww\library\src\htcookie.h"\
+	"..\..\libwww\library\src\htdescpt.h"\
+	"..\..\libwww\library\src\htdialog.h"\
+	"..\..\libwww\library\src\htdir.h"\
+	"..\..\libwww\library\src\htdns.h"\
+	"..\..\libwww\library\src\hteptocl.h"\
+	"..\..\libwww\library\src\hterror.h"\
+	"..\..\libwww\library\src\htescape.h"\
+	"..\..\libwww\library\src\htevent.h"\
+	"..\..\libwww\library\src\htevtlst.h"\
+	"..\..\libwww\library\src\htext.h"\
+	"..\..\libwww\library\src\htfile.h"\
+	"..\..\libwww\library\src\htfilter.h"\
+	"..\..\libwww\library\src\htformat.h"\
+	"..\..\libwww\library\src\htfsave.h"\
+	"..\..\libwww\library\src\htftp.h"\
+	"..\..\libwww\library\src\htftpdir.h"\
+	"..\..\libwww\library\src\htfwrite.h"\
+	"..\..\libwww\library\src\htguess.h"\
+	"..\..\libwww\library\src\htheader.h"\
+	"..\..\libwww\library\src\hthinit.h"\
+	"..\..\libwww\library\src\hthist.h"\
+	"..\..\libwww\library\src\hthome.h"\
+	"..\..\libwww\library\src\hthost.h"\
+	"..\..\libwww\library\src\hthstman.h"\
+	"..\..\libwww\library\src\hticons.h"\
+	"..\..\libwww\library\src\htinet.h"\
+	"..\..\libwww\library\src\htiostream.h"\
+	"..\..\libwww\library\src\htlib.h"\
+	"..\..\libwww\library\src\htlink.h"\
+	"..\..\libwww\library\src\htlist.h"\
+	"..\..\libwww\library\src\htlocal.h"\
+	"..\..\libwww\library\src\htlog.h"\
+	"..\..\libwww\library\src\htmemlog.h"\
+	"..\..\libwww\library\src\htmemory.h"\
+	"..\..\libwww\library\src\htmerge.h"\
+	"..\..\libwww\library\src\htmethod.h"\
+	"..\..\libwww\library\src\htmime.h"\
+	"..\..\libwww\library\src\htmimerq.h"\
+	"..\..\libwww\library\src\htmimimp.h"\
+	"..\..\libwww\library\src\htmimprs.h"\
+	"..\..\libwww\library\src\html.h"\
+	"..\..\libwww\library\src\htmlgen.h"\
+	"..\..\libwww\library\src\htmlpdtd.h"\
+	"..\..\libwww\library\src\htmulpar.h"\
+	"..\..\libwww\library\src\htmulti.h"\
+	"..\..\libwww\library\src\htnet.h"\
+	"..\..\libwww\library\src\htnetman.h"\
+	"..\..\libwww\library\src\htnettxt.h"\
+	"..\..\libwww\library\src\htnofree.h"\
+	"..\..\libwww\library\src\htparse.h"\
+	"..\..\libwww\library\src\htpep.h"\
+	"..\..\libwww\library\src\htplain.h"\
+	"..\..\libwww\library\src\htprot.h"\
+	"..\..\libwww\library\src\htproxy.h"\
+	"..\..\libwww\library\src\htreader.h"\
+	"..\..\libwww\library\src\htreq.h"\
+	"..\..\libwww\library\src\htreqman.h"\
+	"..\..\libwww\library\src\htresponse.h"\
+	"..\..\libwww\library\src\htrules.h"\
+	"..\..\libwww\library\src\htschunk.h"\
+	"..\..\libwww\library\src\htsocket.h"\
+	"..\..\libwww\library\src\htstream.h"\
+	"..\..\libwww\library\src\htstring.h"\
+	"..\..\libwww\library\src\htstruct.h"\
+	"..\..\libwww\library\src\htstyle.h"\
+	"..\..\libwww\library\src\httchunk.h"\
+	"..\..\libwww\library\src\httcp.h"\
+	"..\..\libwww\library\src\httee.h"\
+	"..\..\libwww\library\src\httexgen.h"\
+	"..\..\libwww\library\src\httimer.h"\
+	"..\..\libwww\library\src\http.h"\
+	"..\..\libwww\library\src\httpgen.h"\
+	"..\..\libwww\library\src\httpreq.h"\
+	"..\..\libwww\library\src\httpres.h"\
+	"..\..\libwww\library\src\httpserv.h"\
+	"..\..\libwww\library\src\httputil.h"\
+	"..\..\libwww\library\src\httrans.h"\
+	"..\..\libwww\library\src\htuser.h"\
+	"..\..\libwww\library\src\htutils.h"\
+	"..\..\libwww\library\src\htutree.h"\
+	"..\..\libwww\library\src\htuu.h"\
+	"..\..\libwww\library\src\htwriter.h"\
+	"..\..\libwww\library\src\htwwwstr.h"\
+	"..\..\libwww\library\src\htxparse.h"\
+	"..\..\libwww\library\src\htzip.h"\
+	"..\..\libwww\library\src\sgml.h"\
+	"..\..\libwww\library\src\wwwapp.h"\
+	"..\..\libwww\library\src\wwwcache.h"\
+	"..\..\libwww\library\src\wwwcore.h"\
+	"..\..\libwww\library\src\wwwdir.h"\
+	"..\..\libwww\library\src\wwwfile.h"\
+	"..\..\libwww\library\src\wwwftp.h"\
+	"..\..\libwww\library\src\wwwhtml.h"\
+	"..\..\libwww\library\src\wwwhttp.h"\
+	"..\..\libwww\library\src\wwwlib.h"\
+	"..\..\libwww\library\src\wwwmime.h"\
+	"..\..\libwww\library\src\wwwstream.h"\
+	"..\..\libwww\library\src\wwwsys.h"\
+	"..\..\libwww\library\src\wwwtrans.h"\
+	"..\..\libwww\library\src\wwwutil.h"\
+	"..\..\libwww\library\src\wwwzip.h"\
+	"..\amaya\ahtinit.h"\
+	"..\amaya\amaya.h"\
+	"..\amaya\amayamsg.h"\
+	"..\amaya\css.h"\
+	"..\amaya\f\css_f.h"\
+	"..\amaya\f\fetchhtmlname_f.h"\
+	"..\amaya\f\fetchxmlname_f.h"\
+	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\uicss_f.h"\
+	"..\amaya\f\xml2thot_f.h"\
+	"..\amaya\fetchhtmlname.h"\
+	"..\amaya\libwww.h"\
+	"..\amaya\parser.h"\
+	"..\thotlib\include\appaction.h"\
+	"..\thotlib\include\application.h"\
+	"..\thotlib\include\appstruct.h"\
+	"..\thotlib\include\attribute.h"\
+	"..\thotlib\include\browser.h"\
+	"..\thotlib\include\content.h"\
+	"..\thotlib\include\dialog.h"\
+	"..\thotlib\include\document.h"\
+	"..\thotlib\include\fileaccess.h"\
+	"..\thotlib\include\interface.h"\
+	"..\thotlib\include\language.h"\
+	"..\thotlib\include\libmsg.h"\
+	"..\thotlib\include\message.h"\
+	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\pschema.h"\
+	"..\thotlib\include\reference.h"\
+	"..\thotlib\include\registry.h"\
+	"..\thotlib\include\selection.h"\
+	"..\thotlib\include\simx.h"\
+	"..\thotlib\include\style.h"\
+	"..\thotlib\include\sysdep.h"\
+	"..\thotlib\include\thot_gui.h"\
+	"..\thotlib\include\thot_sys.h"\
+	"..\thotlib\include\tree.h"\
+	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\undo.h"\
+	"..\thotlib\include\ustring.h"\
+	"..\thotlib\include\view.h"\
+	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
+	".\amaya\html.h"\
+	".\amaya\mathml.h"\
+	".\amaya\textfile.h"\
+	".\amaya\xml.h"\
+	
+
+"$(INTDIR)\Xmlbuilder.obj" : $(SOURCE) $(DEP_CPP_XMLBU) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
+
+DEP_CPP_XMLBU=\
+	"..\..\libwww\library\src\htaabrow.h"\
+	"..\..\libwww\library\src\htaautil.h"\
+	"..\..\libwww\library\src\htaccess.h"\
+	"..\..\libwww\library\src\htalert.h"\
+	"..\..\libwww\library\src\htanchor.h"\
+	"..\..\libwww\library\src\htancman.h"\
+	"..\..\libwww\library\src\htansi.h"\
+	"..\..\libwww\library\src\htarray.h"\
+	"..\..\libwww\library\src\htassoc.h"\
+	"..\..\libwww\library\src\htatom.h"\
+	"..\..\libwww\library\src\htbind.h"\
+	"..\..\libwww\library\src\htbinit.h"\
+	"..\..\libwww\library\src\htbound.h"\
+	"..\..\libwww\library\src\htbufwrt.h"\
+	"..\..\libwww\library\src\htcache.h"\
+	"..\..\libwww\library\src\htchannl.h"\
+	"..\..\libwww\library\src\htchunk.h"\
+	"..\..\libwww\library\src\htconlen.h"\
+	"..\..\libwww\library\src\htcookie.h"\
+	"..\..\libwww\library\src\htdescpt.h"\
+	"..\..\libwww\library\src\htdialog.h"\
+	"..\..\libwww\library\src\htdir.h"\
+	"..\..\libwww\library\src\htdns.h"\
+	"..\..\libwww\library\src\hteptocl.h"\
+	"..\..\libwww\library\src\hterror.h"\
+	"..\..\libwww\library\src\htescape.h"\
+	"..\..\libwww\library\src\htevent.h"\
+	"..\..\libwww\library\src\htevtlst.h"\
+	"..\..\libwww\library\src\htext.h"\
+	"..\..\libwww\library\src\htfile.h"\
+	"..\..\libwww\library\src\htfilter.h"\
+	"..\..\libwww\library\src\htformat.h"\
+	"..\..\libwww\library\src\htfsave.h"\
+	"..\..\libwww\library\src\htftp.h"\
+	"..\..\libwww\library\src\htftpdir.h"\
+	"..\..\libwww\library\src\htfwrite.h"\
+	"..\..\libwww\library\src\htguess.h"\
+	"..\..\libwww\library\src\hthash.h"\
+	"..\..\libwww\library\src\htheader.h"\
+	"..\..\libwww\library\src\hthinit.h"\
+	"..\..\libwww\library\src\hthist.h"\
+	"..\..\libwww\library\src\hthome.h"\
+	"..\..\libwww\library\src\hthost.h"\
+	"..\..\libwww\library\src\hthstman.h"\
+	"..\..\libwww\library\src\hticons.h"\
+	"..\..\libwww\library\src\htinet.h"\
+	"..\..\libwww\library\src\htiostream.h"\
+	"..\..\libwww\library\src\htlib.h"\
+	"..\..\libwww\library\src\htlink.h"\
+	"..\..\libwww\library\src\htlist.h"\
+	"..\..\libwww\library\src\htlocal.h"\
+	"..\..\libwww\library\src\htlog.h"\
+	"..\..\libwww\library\src\htmemlog.h"\
+	"..\..\libwww\library\src\htmemory.h"\
+	"..\..\libwww\library\src\htmerge.h"\
+	"..\..\libwww\library\src\htmethod.h"\
+	"..\..\libwww\library\src\htmime.h"\
+	"..\..\libwww\library\src\htmimerq.h"\
+	"..\..\libwww\library\src\htmimimp.h"\
+	"..\..\libwww\library\src\htmimprs.h"\
+	"..\..\libwww\library\src\html.h"\
+	"..\..\libwww\library\src\htmlgen.h"\
+	"..\..\libwww\library\src\htmlpdtd.h"\
+	"..\..\libwww\library\src\htmulpar.h"\
+	"..\..\libwww\library\src\htmulti.h"\
+	"..\..\libwww\library\src\htnet.h"\
+	"..\..\libwww\library\src\htnetman.h"\
+	"..\..\libwww\library\src\htnettxt.h"\
+	"..\..\libwww\library\src\htnofree.h"\
+	"..\..\libwww\library\src\htparse.h"\
+	"..\..\libwww\library\src\htpep.h"\
+	"..\..\libwww\library\src\htplain.h"\
+	"..\..\libwww\library\src\htprot.h"\
+	"..\..\libwww\library\src\htproxy.h"\
+	"..\..\libwww\library\src\htrdf.h"\
+	"..\..\libwww\library\src\htreader.h"\
+	"..\..\libwww\library\src\htreq.h"\
+	"..\..\libwww\library\src\htreqman.h"\
+	"..\..\libwww\library\src\htresponse.h"\
+	"..\..\libwww\library\src\htrules.h"\
+	"..\..\libwww\library\src\htschunk.h"\
+	"..\..\libwww\library\src\htsocket.h"\
+	"..\..\libwww\library\src\htstream.h"\
+	"..\..\libwww\library\src\htstring.h"\
+	"..\..\libwww\library\src\htstruct.h"\
+	"..\..\libwww\library\src\htstyle.h"\
+	"..\..\libwww\library\src\httchunk.h"\
+	"..\..\libwww\library\src\httcp.h"\
+	"..\..\libwww\library\src\httee.h"\
+	"..\..\libwww\library\src\httexgen.h"\
+	"..\..\libwww\library\src\httimer.h"\
+	"..\..\libwww\library\src\http.h"\
+	"..\..\libwww\library\src\httpgen.h"\
+	"..\..\libwww\library\src\httpreq.h"\
+	"..\..\libwww\library\src\httpres.h"\
+	"..\..\libwww\library\src\httpserv.h"\
+	"..\..\libwww\library\src\httputil.h"\
+	"..\..\libwww\library\src\httrans.h"\
+	"..\..\libwww\library\src\htuser.h"\
+	"..\..\libwww\library\src\htutils.h"\
+	"..\..\libwww\library\src\htutree.h"\
+	"..\..\libwww\library\src\htuu.h"\
+	"..\..\libwww\library\src\htwriter.h"\
+	"..\..\libwww\library\src\htwwwstr.h"\
+	"..\..\libwww\library\src\htxml.h"\
+	"..\..\libwww\library\src\htxparse.h"\
+	"..\..\libwww\library\src\htzip.h"\
+	"..\..\libwww\library\src\sgml.h"\
+	"..\..\libwww\library\src\windows\config.h"\
+	"..\..\libwww\library\src\wwwapp.h"\
+	"..\..\libwww\library\src\wwwcache.h"\
+	"..\..\libwww\library\src\wwwcore.h"\
+	"..\..\libwww\library\src\wwwdir.h"\
+	"..\..\libwww\library\src\wwwfile.h"\
+	"..\..\libwww\library\src\wwwftp.h"\
+	"..\..\libwww\library\src\wwwhtml.h"\
+	"..\..\libwww\library\src\wwwhttp.h"\
+	"..\..\libwww\library\src\wwwlib.h"\
+	"..\..\libwww\library\src\wwwmime.h"\
+	"..\..\libwww\library\src\wwwstream.h"\
+	"..\..\libwww\library\src\wwwsys.h"\
+	"..\..\libwww\library\src\wwwtrans.h"\
+	"..\..\libwww\library\src\wwwutil.h"\
+	"..\..\libwww\library\src\wwwxml.h"\
+	"..\..\libwww\library\src\wwwzip.h"\
+	"..\..\libwww\modules\expat\xmlparse\xmlparse.h"\
+	"..\amaya\ahtinit.h"\
+	"..\amaya\amaya.h"\
+	"..\amaya\amayamsg.h"\
+	"..\amaya\css.h"\
+	"..\amaya\f\css_f.h"\
+	"..\amaya\f\fetchhtmlname_f.h"\
+	"..\amaya\f\fetchxmlname_f.h"\
+	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\uicss_f.h"\
+	"..\amaya\f\xml2thot_f.h"\
+	"..\amaya\fetchhtmlname.h"\
+	"..\amaya\libwww.h"\
+	"..\amaya\parser.h"\
+	"..\thotlib\include\appaction.h"\
+	"..\thotlib\include\application.h"\
+	"..\thotlib\include\appstruct.h"\
+	"..\thotlib\include\attribute.h"\
+	"..\thotlib\include\browser.h"\
+	"..\thotlib\include\content.h"\
+	"..\thotlib\include\dialog.h"\
+	"..\thotlib\include\document.h"\
+	"..\thotlib\include\fileaccess.h"\
+	"..\thotlib\include\interface.h"\
+	"..\thotlib\include\language.h"\
+	"..\thotlib\include\libmsg.h"\
+	"..\thotlib\include\message.h"\
+	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\pschema.h"\
+	"..\thotlib\include\reference.h"\
+	"..\thotlib\include\registry.h"\
+	"..\thotlib\include\selection.h"\
+	"..\thotlib\include\simx.h"\
+	"..\thotlib\include\style.h"\
+	"..\thotlib\include\sysdep.h"\
+	"..\thotlib\include\thot_gui.h"\
+	"..\thotlib\include\thot_sys.h"\
+	"..\thotlib\include\tree.h"\
+	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\uconvert.h"\
+	"..\thotlib\include\undo.h"\
+	"..\thotlib\include\ustring.h"\
+	"..\thotlib\include\view.h"\
+	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
+	".\amaya\html.h"\
+	".\amaya\mathml.h"\
+	".\amaya\textfile.h"\
+	".\amaya\xml.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_XMLBU=\
+	"..\..\libwww\library\src\HTVMSUtils.h"\
+	"..\thotlib\include\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\Xmlbuilder.obj" : $(SOURCE) $(DEP_CPP_XMLBU) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -15186,7 +15631,6 @@ DEP_CPP_XMLPA=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -15194,7 +15638,9 @@ DEP_CPP_XMLPA=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -15361,7 +15807,6 @@ DEP_CPP_XMLPA=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -15369,8 +15814,13 @@ DEP_CPP_XMLPA=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_XMLPA=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\XMLparser.obj" : $(SOURCE) $(DEP_CPP_XMLPA) "$(INTDIR)"
@@ -15534,13 +15984,13 @@ DEP_CPP_XPOIN=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
+	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
@@ -15706,19 +16156,22 @@ DEP_CPP_XPOIN=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
 	"..\thotlib\include\undo.h"\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
+	".\amaya\annot.h"\
 	".\amaya\editor.h"\
 	".\amaya\graphml.h"\
 	".\amaya\html.h"\
 	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	".\amaya\xlink.h"\
+	
+NODEP_CPP_XPOIN=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\XPointer.obj" : $(SOURCE) $(DEP_CPP_XPOIN) "$(INTDIR)"
@@ -15882,7 +16335,6 @@ DEP_CPP_XPOINT=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -15890,7 +16342,9 @@ DEP_CPP_XPOINT=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
 	
 
@@ -16051,7 +16505,6 @@ DEP_CPP_XPOINT=\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\thot_uio.h"\
 	"..\thotlib\include\tree.h"\
 	"..\thotlib\include\typebase.h"\
 	"..\thotlib\include\uconvert.h"\
@@ -16059,8 +16512,13 @@ DEP_CPP_XPOINT=\
 	"..\thotlib\include\ustring.h"\
 	"..\thotlib\include\view.h"\
 	".\amaya\editor.h"\
+	".\amaya\graphml.h"\
 	".\amaya\html.h"\
+	".\amaya\mathml.h"\
 	".\amaya\textfile.h"\
+	
+NODEP_CPP_XPOINT=\
+	"..\thotlib\include\thot_uio.h"\
 	
 
 "$(INTDIR)\XPointerparse.obj" : $(SOURCE) $(DEP_CPP_XPOINT) "$(INTDIR)"
