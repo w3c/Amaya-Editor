@@ -778,9 +778,73 @@ int                *param;
 	notifyDoc.horizontalValue = 0;
 	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
      }
-}				/*FrameVScrolled */
-
+}/*FrameVScrolled */
 #endif /* !_WINDOWS */
+
+/*----------------------------------------------------------------------
+   LineUp scrolls one line up.                                    
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtcLineUp (Document document, View view)
+#else  /* __STDC__ */
+void                TtcLineUp (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   int                 frame;
+#  ifndef _WINDOWS
+   XmScrollBarCallbackStruct infos;
+#  else   /* _WINDOWS */
+   int delta;
+#  endif  /* _WINDOWS */
+
+   if (document != 0)
+      frame = GetWindowNumber (document, view);
+   else
+     frame = 0;
+#  ifndef _WINDOWS
+   infos.reason = XmCR_DECREMENT;
+   FrameVScrolled (0, frame, (int *) &infos);
+#  else  /* _WINDOWS */
+   delta = -FrameTable[frame].FrHeight;
+   VerticalScroll (frame, delta, TRUE);
+#  endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+   LineDown scrolls one line down.                                
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtcLineDown (Document document, View view)
+#else  /* __STDC__ */
+void                TtcLineDown (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   int                 frame;
+
+#  ifndef _WINDOWS
+   XmScrollBarCallbackStruct infos;
+#  else   /* _WINDOWS */
+   int delta;
+#  endif  /* !_WINDOWS */
+
+   if (document != 0)
+      frame = GetWindowNumber (document, view);
+   else
+     frame = 0;
+#  ifndef _WINDOWS
+   infos.reason = XmCR_INCREMENT;
+   FrameVScrolled (0, frame, (int *) &infos);
+#  else  /* _WINDOWS */
+   delta = FrameTable[frame].FrHeight;
+   VerticalScroll (frame, delta, TRUE);
+#  endif /* _WINDOWS */
+}
 
 /*----------------------------------------------------------------------
    PageUp scrolls one screen up.                                    
@@ -1543,8 +1607,10 @@ void               *event;
    PtrElement          firstSel, lastSel;
    ThotEvent           event;
    ThotEvent          *ev = (ThotEvent *) evnt;
+   Document            document;
+   View                view;
    int                 firstCar, lastCar;
-   int                 comm, dx, dy, sel;
+   int                 comm, dx, dy, sel, h;
    boolean             ok;
 
    /* ne pas traiter si le document est en mode NoComputedDisplay */
@@ -1586,6 +1652,14 @@ void               *event;
 	       /* On change la position d'une boite */
 	       ApplyDirectTranslate (frame, ev->xbutton.x, ev->xbutton.y);
 	     }
+	   /* Est-ce que la touche modifieur d'extension est active ? */
+	   if ((ev->xbutton.state & THOT_KEY_ShiftMask) != 0)
+	     {
+	       TtaAbortShowDialogue ();
+	       LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 0);
+	       FrameToView (frame, &document, &view);
+	       TtcCopyToClipboard (document, view);
+	     }
 	   /* Est-ce un double clic */
 	   else if (t1 + (Time) 500 > ev->xbutton.time)
 	     {
@@ -1622,6 +1696,8 @@ void               *event;
 	       /* Regarde s'il s'agit d'un drag ou d'une simple marque d'insertion */
 	       comm = 0;	/* il n'y a pas de drag */
 	       TtaFetchOneEvent (&event);
+	       FrameToView (frame, &document, &view);
+	       h = FrameTable[frame].FrHeight;
 	       while (event.type != ButtonRelease)
 		 {
 		   if (event.type == MotionNotify)
@@ -1632,16 +1708,36 @@ void               *event;
 			 {
 			   LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
 			   comm = 1;	/* il y a un drag */
+			   if (event.xmotion.y > h - 4)
+			     {
+			       TtcLineDown (document, view);
+			       XWarpPointer (TtDisplay, None, FrRef[frame], 0, 0, 0, 0,
+					     event.xmotion.x, h - 4);
+			     }
+			   else if (event.xmotion.y < 4)
+			     {
+			       TtcLineUp (document, view);
+			       XWarpPointer (TtDisplay, None, FrRef[frame], 0, 0, 0, 0,
+					     event.xmotion.x, 4);
+			     }
 			 }
 		     }
 		   TtaHandleOneEvent (&event);
 		   TtaFetchOneEvent (&event);
-		 }	/*while */
+		 }
 	       TtaHandleOneEvent (&event);
 	       
 	       /* S'il y a un drag on termine la selection */
 	       if (comm == 1)
-		 LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 0);
+		 {
+		   FrameToView (frame, &document, &view);
+		   LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 0);
+		 }
+	       else if (comm != 0)
+		 FrameToView (frame, &document, &view);
+
+	       if (comm != 0)
+		 TtcCopyToClipboard (document, view);
 	     }
 	   break;
 	   
@@ -1658,8 +1754,9 @@ void               *event;
 	     }
 	   else
 	     {
-	       TtaAbortShowDialogue ();
-	       LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 0);
+	       FrameToView (frame, &document, &view);
+	       if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
+		 (*MenuActionList[CMD_PasteFromClipboard].Call_Action) (document, view);
 	     }
 	   break;
 	   

@@ -196,19 +196,22 @@ int                 yDelta;
    Commandes de deplacement                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MovingCommands (int code)
+static void         MovingCommands (int code, Document document, View view)
 #else  /* __STDC__ */
-void                MovingCommands (code)
+static void         MovingCommands (code, document, view)
 int                 code;
+Document            document;
+View                view;
 
 #endif /* __STDC__ */
 {
-   int                 frame, x, y;
-   int                 xDelta, yDelta;
-   boolean             ok;
    PtrBox              pBox;
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
+   int                 frame, x, y;
+   int                 xDelta, yDelta;
+   int                 h, w;
+   boolean             ok;
 
    if (code == 9)
      {
@@ -218,7 +221,7 @@ int                 code;
    else
      {
 	CloseInsertion ();
-	frame = ActiveFrame;
+	frame = GetWindowNumber (document, view);
 	if (frame > 0)
 	  {
 	     pFrame = &ViewFrameTable[frame - 1];
@@ -231,61 +234,90 @@ int                 code;
 			 pBox->BxAbstractBox != NULL &&
 			 pBox->BxAbstractBox->AbFirstEnclosed != NULL)
 		    pBox = pBox->BxAbstractBox->AbFirstEnclosed->AbBox;
-		  switch (code)
-			{
-			   case 1:	/* En arriere d'un car (^B) */
-			      x = pViewSel->VsIndBox + pBox->BxIndChar;
-			      if (x > 0)
-				 ChangeSelection (frame, pBox->BxAbstractBox, x, FALSE, TRUE, FALSE, FALSE);
-			      else
-				{
-				   x = pBox->BxXOrg + pViewSel->VsXPos;
-				   y = pBox->BxYOrg + (pBox->BxHeight / 2);
-				   xDelta = -2;
-				   LocateLeafBox (frame, x, y, xDelta, 0);
-				}
-			      break;
-
-			   case 2:	/* En avant d'un car (^F) */
-			      x = pViewSel->VsIndBox + pBox->BxIndChar;
-			      if (x < pBox->BxAbstractBox->AbBox->BxNChars)
-				 ChangeSelection (frame, pBox->BxAbstractBox, x + 2, FALSE, TRUE, FALSE, FALSE);
-			      else
-				{
-				   x = pBox->BxXOrg + pBox->BxWidth;
-				   y = pBox->BxYOrg + (pBox->BxHeight / 2);
-				   xDelta = 2;
-				   LocateLeafBox (frame, x, y, xDelta, 0);
-				}
-			      break;
-
-			   case 3:	/* Fin de ligne (^E) */
-			      MoveInLine (frame, TRUE);
-			      break;
-
-			   case 4:	/* Debut de ligne (^A) */
-			      MoveInLine (frame, FALSE);
-			      break;
-
-			   case 7:	/* Line suivante (^N) */
-			      y = pBox->BxYOrg + pBox->BxHeight;
-			      yDelta = 10;
-			      LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta);
-			      ok = FALSE;
-			      break;
-
-			   case 8:	/* Line precedente (^P) */
-			      y = pBox->BxYOrg;
-			      yDelta = -10;
-			      LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta);
-			      ok = FALSE;
-			      break;
-			}
-
-		  /* Nouvelle position de reference du curseur */
-		  if (ok)
-		     ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+		  GetSizesFrame (frame, &w, &h);
+		  if (pBox->BxYOrg + pBox->BxHeight <= pFrame->FrYOrg ||
+		      pBox->BxYOrg >= pFrame->FrYOrg + h)
+		    /* l'element n'est pas visible */
+		    pBox = NULL;
 	       }
+	     else
+	       {
+		 ok = FALSE;
+		 pBox = NULL;
+	       }
+
+	     switch (code)
+	       {
+	       case 1:	/* En arriere d'un car (^B) */
+		 if (pBox != NULL)
+		   {
+		     x = pViewSel->VsIndBox + pBox->BxIndChar;
+		     if (x > 0)
+		       ChangeSelection (frame, pBox->BxAbstractBox, x, FALSE, TRUE, FALSE, FALSE);
+		     else
+		       {
+			 x = pBox->BxXOrg + pViewSel->VsXPos;
+			 y = pBox->BxYOrg + (pBox->BxHeight / 2);
+			 xDelta = -2;
+			 LocateLeafBox (frame, x, y, xDelta, 0);
+		       }
+		   }
+		 break;
+		 
+	       case 2:	/* En avant d'un car (^F) */
+		 if (pBox != NULL)
+		   {
+		     x = pViewSel->VsIndBox + pBox->BxIndChar;
+		     if (x < pBox->BxAbstractBox->AbBox->BxNChars)
+		       ChangeSelection (frame, pBox->BxAbstractBox, x + 2, FALSE, TRUE, FALSE, FALSE);
+		     else
+		       {
+			 x = pBox->BxXOrg + pBox->BxWidth;
+			 y = pBox->BxYOrg + (pBox->BxHeight / 2);
+			 xDelta = 2;
+			 LocateLeafBox (frame, x, y, xDelta, 0);
+		       }
+		   }
+		 break;
+		 
+	       case 3:	/* Fin de ligne (^E) */
+		 if (pBox != NULL)
+		   MoveInLine (frame, TRUE);
+		 break;
+
+	       case 4:	/* Debut de ligne (^A) */
+		 if (pBox != NULL)
+		   MoveInLine (frame, FALSE);
+		 break;
+		 
+	       case 7:	/* Line suivante (^N) */
+		 if (pBox != NULL)
+		   {
+		     y = pBox->BxYOrg + pBox->BxHeight;
+		     yDelta = 10;
+		     LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta);
+		     ok = FALSE;
+		   }
+		 else
+		   TtcLineDown (document, view);
+		 break;
+		 
+	       case 8:	/* Line precedente (^P) */
+		 if (pBox != NULL)
+		   {
+		     y = pBox->BxYOrg;
+		     yDelta = -10;
+		     LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta);
+		     ok = FALSE;
+		   }
+		 else
+		   TtcLineUp (document, view);
+		 break;
+	       }
+	     
+	     /* Nouvelle position de reference du curseur */
+	     if (ok)
+	       ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 	  }
      }
 }
@@ -301,7 +333,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   MovingCommands (1);
+   MovingCommands (1, document, view);
 }
 
 /*----------------------------------------------------------------------
@@ -315,7 +347,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   MovingCommands (2);
+   MovingCommands (2, document, view);
 }
 
 /*----------------------------------------------------------------------
@@ -329,7 +361,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   MovingCommands (8);
+   MovingCommands (8, document, view);
 }
 
 /*----------------------------------------------------------------------
@@ -343,7 +375,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   MovingCommands (7);
+   MovingCommands (7, document, view);
 }
 
 /*----------------------------------------------------------------------
@@ -357,9 +389,11 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   MovingCommands (4);
+   MovingCommands (4, document, view);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcEndOfLine (Document document, View view)
 #else  /* __STDC__ */
@@ -369,7 +403,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   MovingCommands (3);
+   MovingCommands (3, document, view);
 }
 
 #ifndef _WIN_PRINT
@@ -516,7 +550,7 @@ View                view;
                   pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock);
 		  if (i != 0 && pBlock != pOldBlock && pOldBlock != NULL)
 		     /* Ajoute un \n en fin d'element */
-		     strcpy (&Xbuffer[i++], "\n");
+		     strcpy (&Xbuffer[i++], "\n\n");
 
 		  /* Recopie le texte de l'element */
 		  pOldBlock = pBlock;

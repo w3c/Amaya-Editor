@@ -12,10 +12,10 @@
 #define THOT_KEY_UNKNOWN	0x00	/* keys not supported by system */
 
 #ifdef _WINDOWS /* -- MSWindows Key names -- */
-
 /* see winuser.h for these defs */
 
 #define THOT_KEY_ControlMask	FCONTROL
+#define THOT_KEY_ShiftMask	FSHIFT
 
 #define THOT_KEY_Return		VK_RETURN
 #define THOT_KEY_BackSpace	VK_BACK
@@ -70,6 +70,7 @@
 #else /* -----------------------X11 key names-- */
 
 #define THOT_KEY_ControlMask	ControlMask
+#define THOT_KEY_ShiftMask	ShiftMask
 
 #define THOT_KEY_Return		XK_Return
 #define THOT_KEY_BackSpace	XK_BackSpace

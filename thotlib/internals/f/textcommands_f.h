@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void MovingCommands ( int code );
 extern void TtcPreviousChar ( Document document,
                               View view );
 extern void TtcNextChar ( Document document,
@@ -24,7 +23,6 @@ extern void TtcCopyToClipboard ( Document document,
 
 #else /* __STDC__ */
 
-extern void MovingCommands (/* int code */);
 extern void TtcPreviousChar (/* Document document,
                                 View view */);
 extern void TtcNextChar (/* Document document,

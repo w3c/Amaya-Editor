@@ -116,6 +116,7 @@ Thot/amaya/*.xpm \
 Thot/amaya/*.bmp \
 Thot/amaya/*.gif \
 Thot/config/amaya.keyboard \
+Thot/config/amaya.kb \
 Thot/config/en-amayadialogue \
 Thot/config/en-amayamsg \
 Thot/config/en-libdialogue \
@@ -137,6 +138,7 @@ Thot/config/tr-libdialogue \
 Thot/config/tr-transdialogue \
 Thot/config/tr-corrdialogue \
 Thot/config/thot.ini \
+Thot/config/thot.rc \
 Thot/dicopar/*.ptn \
 Thot/dicopar/alphabet \
 Thot/dicopar/clavier \

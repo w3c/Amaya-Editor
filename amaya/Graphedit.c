@@ -150,7 +150,8 @@ boolean ExtendSelectGraphMLElement(event)
       do
 	{
 	parent = TtaGetParent (parent);
-        parentType = TtaGetElementType (parent);
+	if (parent != NULL)
+	  parentType = TtaGetElementType (parent);
 	}
       while (parent != NULL && parentType.ElSSchema != graphSSchema);
       if (parent)

@@ -703,8 +703,11 @@ int                 percent;
 
    if (pBox == NULL)
       return;
-   else if (pBox->BxType == BoSplit)
-      pBox = pBox->BxNexChild;
+   while (pBox->BxType == BoGhost)
+     pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+
+   if (pBox->BxType == BoSplit)
+     pBox = pBox->BxNexChild;
 
    pFrame = &ViewFrameTable[frame - 1];
    y = pBox->BxYOrg;
