@@ -31,13 +31,14 @@
 #include "winsys.h"
 #include "wininclude.h"
 #else /* _WINDOWS */
+#ifndef _GTK
 #define MAX_ARGS 20
 static Time         T1, T2, T3;
-#ifndef _GTK
-static XmString  null_string;
+static XmString     null_string;
 #else /* _GTK */
-static gchar * null_string;
-#endif /* !_GTK */
+static gchar       *null_string;
+static ThotBool     drag = FALSE;
+#endif /* _GTK */
 #endif /* _WINDOWS */
 
 static char         OldMsgSelect[MAX_TXT_LEN];
@@ -1926,41 +1927,30 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   int                 l;*/
   int                 frame;
   GtkEntry           *textzone;
-
-  /*PtrDocument         docsel;*/
-  /*  PtrElement          firstSel, lastSel;*/
-  /*  int                 firstCar, lastCar;*/
-#endif /* !_GTK */
+#endif /* _GTK */
   Document            document;
   View                view;
 
-#ifdef _GTK
-  frame = (int )data;
-#endif /* _GTK */
-
+#ifndef _GTK
   /* ne pas traiter si le document est en mode NoComputedDisplay */
   if (FrameTable[frame].FrDoc == 0 ||
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-#ifndef _GTK
     return;
-#else /* _GTK */
-  return FALSE;
-#endif /* !_GTK */
-  /*_______> S'il n'y a pas d'evenement associe */
-#ifndef _GTK
   else if (ev == NULL)
     return;
-#else /* _GTK */
-  else if (event == NULL)
-    return FALSE;
-#endif /* !_GTK */
-  /*_______> Si une designation de pave est attendue*/
-#ifndef _GTK
   else if (ClickIsDone == 1 &&
 	   (ev->type == ButtonPress || ev->type == KeyPress))
 #else /* _GTK */
-    else if (ClickIsDone == 1 && event->type == GDK_BUTTON_PRESS)
+  frame = (int )data;
+  /* ne pas traiter si le document est en mode NoComputedDisplay */
+  if (FrameTable[frame].FrDoc == 0 ||
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    return FALSE;
+  else if (event == NULL)
+    return FALSE;
+  else if (ClickIsDone == 1 && event->type == GDK_BUTTON_PRESS)
 #endif /* !_GTK */
+    /* Amaya is waiting for a selection */
       {
 	ClickIsDone = 0;
 	ClickFrame = frame;
@@ -1972,7 +1962,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	ClickX = event->x;
         ClickY = event->y;
         return FALSE;
-#endif /* !_GTK */
+#endif /* _GTK */
       }
 
   /* S'il y a un TtaWaitShowDialogue en cours on n'autorise pas de changer */
@@ -1996,7 +1986,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   */
   textzone = gtk_object_get_data (GTK_OBJECT (widget), "Text_catcher");
   gtk_widget_grab_focus (GTK_WIDGET(textzone));  
-#endif /* !_GTK */
+#endif /* _GTK */
 
 #ifndef _GTK
   switch (ev->type)
@@ -2006,7 +1996,9 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   switch (event->type)
      {
      case GDK_BUTTON_PRESS:
-#endif /* !_GTK */
+       /* drag is finished */
+       drag = FALSE;
+#endif /* _GTK */
 
       /*_____________________________________________________*/
       /* Termine l'insertion courante s'il y en a une */
@@ -2019,7 +2011,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  switch (event->button)
 	    {
 	    case 1:
-#endif /* !_GTK */
+#endif /* _GTK */
 	  /* ==========LEFT BUTTON========== */	  
 #ifndef _GTK
 	  /* Est-ce que la touche modifieur de geometrie est active ? */	  
@@ -2119,11 +2111,8 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 #else /* _GTK */
 	  /* Est-ce que la touche modifieur de geometrie est active ? */	  
 	  if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
-	    {
-	      /* moving a box */     
-	      	      ApplyDirectTranslate (frame, event->x, event->y);
-	      T1 = T2 = T3 = 0;
-	    }
+	    /* moving a box */     
+	    ApplyDirectTranslate (frame, event->x, event->y);
 	  else if ((event->state & GDK_SHIFT_MASK ) == GDK_SHIFT_MASK)
 	    {
 	      /* a selection extension */
@@ -2133,19 +2122,17 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 
 	      /* IL FAUT TRADUIRE CETTE FONCTION EN GTK */
 	      TtcCopyToClipboard (document, view);
-	      T1 = T2 = T3 = 0;
 	    }
 	  else
 	    {
 	      /* a simple selection */
-	      T1 = event->time;
 	      ClickFrame = frame;
 	      ClickX = event->x;
 	      ClickY = event->y;
 	      LocateSelectionInView (frame, ClickX, ClickY, 2);
 	    }
 	  break;
-#endif /* !_GTK */
+#endif /* _GTK */
 
 #ifndef _GTK
 	case Button2:
@@ -2188,14 +2175,10 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	case 2:
 	  /* ==========MIDDLE BUTTON========== */
 	  if ((event->state & GDK_CONTROL_MASK) != 0)
-	    {
-	      /* resizing a box */
-	      /*    ApplyDirectResize (frame, event->x, event->y);*/
-	      T1 = T2 = T3 = 0;
-	    }
+	    /* resizing a box */
+	    /* ApplyDirectResize (frame, event->x, event->y) */;
 	  else
 	    {
-	      T2 = event->time;
 	      ClickFrame = frame;
 	      ClickX = event->x;
 	      ClickY = event->y;
@@ -2206,7 +2189,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 #ifndef _GTK
 	case Button3:
 	  /* ==========RIGHT BUTTON========== */
-	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
+	  if ((ev->xbutton.state & THOT_KEY_ControlMask) == 0)
 	    {
 	      /* resize a box */
 	      ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
@@ -2244,14 +2227,10 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	case 3:
 	  /* ==========RIGHT BUTTON========== */
 	  if ((event->state & GDK_CONTROL_MASK) != 0)
-	    {
-	      /* resize a box */
-	      /*	      ApplyDirectResize (frame, event->x, event->y);*/
-	      T1 = T2 = T3 = 0;
-	    }
+	    /* resize a box */
+	    /* ApplyDirectResize (frame, event->x, event->y) */;
 	  else
 	    {
-	      T3 = event->time;
 	      ClickFrame = frame;
 	      ClickX = event->x;
 	      ClickY = event->y;
@@ -2280,7 +2259,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	    {
 	    case 1:
 	      /* LEFT BUTTON */
-	      T1 = event->time;
 	      ClickFrame = frame;
 	      ClickX = event->x;
 	      ClickY = event->y;
@@ -2289,7 +2267,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	    case 2:
 	      /* MIDDLE BUTTON */
 	      /* handle a simple selection */
-	      T2 = event->time;
 	      ClickFrame = frame;
 	      ClickX = event->x;
 	      ClickY = event->y;
@@ -2298,7 +2275,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	    case 3:
 	      /* RIGHT BUTTON */
 	      /* handle a simple selection */
-	      T3 = event->time;
 	      ClickFrame = frame;
 	      ClickX = event->x;
 	      ClickY = event->y;
@@ -2308,7 +2284,9 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  break;
       	case GDK_MOTION_NOTIFY:
 	  /* extend the current selection */
-	  while (event->type != GDK_BUTTON_RELEASE)
+	  drag = TRUE;
+	  /* events GDK_BUTTON_RELEASE and GDK_BUTTON_PRESS stop the drag */
+	  while (drag)
 	    {
 	      if (event->y > FrameTable[frame].FrHeight)
 		TtcLineDown (document, view);
@@ -2318,13 +2296,14 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	      FrameToView (frame, &document, &view);
 	      TtcCopyToClipboard (document, view);
 	      TtaFetchOrWaitEvent ((ThotEvent *)event);
-	      event = gtk_get_current_event ();
+	      event = (ThotEvent *)gtk_get_current_event ();
 	      gtk_main_iteration_do (TRUE);
 	    }
 	  break;
       	case GDK_BUTTON_RELEASE:
 	  /* if a button release, we save the selection in the clipboard */
-          /* a selection extension */
+          /* drag is finished */
+	  drag = FALSE;
 	  if (event->button == 1)
 	    {
 	      ClickFrame = frame;
@@ -2335,7 +2314,6 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  TtaAbortShowDialogue ();
 	  break;
 	case GDK_KEY_PRESS: 
-	    T1 = T2 = T3 = 0;
 	    TtaAbortShowDialogue ();
 	    CharTranslationGTK (widget, (GdkEventKey*)event, data);
 	  break;
