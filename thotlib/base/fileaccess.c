@@ -13,6 +13,7 @@
  *
  */
 #ifdef _WX
+  #include "wx/wx.h"
   #include "wx/dir.h"
   #include "wx/utils.h"
 #endif /* _WX */

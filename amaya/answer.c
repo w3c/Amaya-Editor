@@ -54,7 +54,7 @@ BOOL AHTProgress (HTRequest *request, HTAlertOpcode op,
    char                tempbuf[MAX_LENGTH];
    char                buf[11];
    long                cl, bytes_rw;
-   int                 pro;
+   float               pro;
    int                *raw_rw;
 
    if (request && HTRequest_internal (request))
@@ -92,10 +92,10 @@ BOOL AHTProgress (HTRequest *request, HTAlertOpcode op,
 	   if (cl > 0)
 	     {
 	       bytes_rw = HTRequest_bodyRead (request);
-	       pro = (int) ((bytes_rw * 100l) / cl);
+	       pro = (float)(bytes_rw * 100.) / (float)cl;
 	       
-	       if (pro > 100)		/* libwww reports > 100! */
-		 pro = 100;
+	       if (pro > 100.)		/* libwww reports > 100! */
+		 pro = 100.;
 	       HTNumToStr ((unsigned long) cl, buf, 10);
 	       sprintf (tempbuf, "%s (%d%% of %s)", me->status_urlName, (int) pro, buf);
 	     }

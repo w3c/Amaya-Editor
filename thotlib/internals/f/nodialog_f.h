@@ -10,6 +10,7 @@ extern void DisplayPRule ( PtrPRule RP,
                            FILE *fileDescriptor,
                            PtrElement pEl,
                            PtrPSchema pSchP );
+extern void NewInitialSequence ( PtrDocument pDoc );
 extern void ShowBox ( int frame,
                       PtrBox pBox,
                       int position,
@@ -158,6 +159,7 @@ extern void DisplayPRule ( PtrPRule RP,
                              FILE *fileDescriptor,
                              PtrElement pEl,
                              PtrPSchema pSchP );
+extern void NewInitialSequence ( PtrDocument pDoc );
 extern void ShowBox ( int frame,
                         PtrBox pBox,
                         int position,

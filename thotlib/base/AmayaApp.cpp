@@ -187,7 +187,7 @@ bool AmayaApp::OnInit()
 
   /* setup the socket event loop */
   /* when a socket is active, check every 100 ms if something happend on the socket */
-  m_SocketEventLoop = new wxAmayaSocketEventLoop( 100 );
+  m_SocketEventLoop = new wxAmayaSocketEventLoop( 10 );
   wxAmayaSocketEvent::InitSocketEvent( m_SocketEventLoop );
 
   /* setup the documents image list
