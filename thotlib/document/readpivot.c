@@ -2182,7 +2182,8 @@ static  LabelString         label;
   CHAR_T              alphabet;
   char                c, ch;
   ThotBool            create, inclusion, modif, b1, b2;
-  ThotBool            findtype, refExt, found, withReferences;
+  ThotBool            findtype, refExt, found, withReferences, sign,
+                      newSubPath;
   
   pSRule = NULL;
   pEl = NULL;
@@ -2764,10 +2765,19 @@ static  LabelString         label;
 				{
 				while (*tag != C_PIV_END)
 				  {
+				  newSubPath = ReadBoolean (pivFile);
+				  sign = ReadSign (pivFile);
 				  TtaReadInteger (pivFile, &n1);
+				  if (!sign) n1 = -n1;
+				  sign = ReadSign (pivFile);
 				  TtaReadInteger (pivFile, &n2);
+				  if (!sign) n2 = -n2;
+				  sign = ReadSign (pivFile);
 				  TtaReadInteger (pivFile, &n3);
+				  if (!sign) n3 = -n3;
+				  sign = ReadSign (pivFile);
 				  TtaReadInteger (pivFile, &n4);
+				  if (!sign) n4 = -n4;
 				  if (create)
 				    {
 				    GetPathSeg (&pPa);
@@ -2779,6 +2789,7 @@ static  LabelString         label;
 				    pPa->PaNext = NULL;
 				    pPaPrev = pPa;
 				    n++;
+				    pPa->PaNewSubpath = newSubPath;
 				    pPa->XStart = n1;
 				    pPa->YStart = n2;
 				    pPa->XEnd = n3;
@@ -2791,10 +2802,18 @@ static  LabelString         label;
 				        pPa->PaShape = PtLine;
 				      break;
 				    case 'C':
+				      sign = ReadSign (pivFile);
 				      TtaReadInteger (pivFile, &n1);
+				      if (!sign) n1 = -n1;
+				      sign = ReadSign (pivFile);
 				      TtaReadInteger (pivFile, &n2);
+				      if (!sign) n2 = -n2;
+				      sign = ReadSign (pivFile);
 				      TtaReadInteger (pivFile, &n3);
+				      if (!sign) n3 = -n3;
+				      sign = ReadSign (pivFile);
 				      TtaReadInteger (pivFile, &n4);
+				      if (!sign) n4 = -n4;
 				      if (create)
 					{
 					pPa->PaShape = PtCubicBezier;
@@ -2805,8 +2824,12 @@ static  LabelString         label;
 					}
 				      break;
 				    case 'Q':
+				      sign = ReadSign (pivFile);
 				      TtaReadInteger (pivFile, &n1);
+				      if (!sign) n1 = -n1;
+				      sign = ReadSign (pivFile);
 				      TtaReadInteger (pivFile, &n2);
+				      if (!sign) n2 = -n2;
 				      if (create)
 					{
 					pPa->PaShape = PtQuadraticBezier;
@@ -2817,7 +2840,9 @@ static  LabelString         label;
 				    case 'A':
 				      TtaReadInteger (pivFile, &n1);
 				      TtaReadInteger (pivFile, &n2);
+				      sign = ReadSign (pivFile);
 				      TtaReadShort (pivFile, &n3);
+				      if (!sign) n3 = -n3;
 				      b1 = ReadBoolean (pivFile);
 				      b2 = ReadBoolean (pivFile);
 				      if (create)

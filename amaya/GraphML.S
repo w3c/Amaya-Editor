@@ -334,6 +334,7 @@ EXCEPT
    line_:               MoveResize, HighlightChildren, NoShowBox, NoCreate;
    polyline:            MoveResize, HighlightChildren, NoShowBox, NoCreate;
    polygon:             MoveResize, HighlightChildren, NoShowBox, NoCreate;
+   path:	        MoveResize, HighlightChildren, NoShowBox, NoCreate;
    text_:               MoveResize, NoResize, NoShowBox, ReturnCreateWithin,
 	                NoCreate;
    tspan:	        NoShowBox; 

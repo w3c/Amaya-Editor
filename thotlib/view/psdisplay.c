@@ -175,7 +175,7 @@ void          DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int 
        w = CharacterWidth (car, font);
        /* Do we need to change the current font ? */
        CurrentFont (fout, font);
-       fprintf (fout, "(%c) %d %d -%d s\n", car, PixelToPoint (w), x, y);
+       fprintf (fout, "(%c) %d %d %d s\n", car, PixelToPoint (w), x, -y);
      }
 }
 
@@ -360,9 +360,9 @@ int   DrawString (STRING buff, int i, int lg, int frame, int x, int y, ptrfont f
        if (fg >= 0)
 	 {
 	 if (NbWhiteSp == 0)
-	   fprintf (fout, ") %d %d -%d s\n", lgboite, X, Y);
+	   fprintf (fout, ") %d %d %d s\n", lgboite, X, -Y);
 	 else
-	   fprintf (fout, ") %d %d %d -%d j\n", NbWhiteSp, lgboite, X, Y);
+	   fprintf (fout, ") %d %d %d %d j\n", NbWhiteSp, lgboite, X, -Y);
 	 }
        SameBox = 0;
      }
@@ -423,18 +423,21 @@ void   DisplayUnderline (int frame, int x, int y, ptrfont font, int type, int lg
 	  break;
 	  
 	case 1:	/* underlined */
-	  fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
-		   l_end, PixelToPoint (bottom), l_start, PixelToPoint (bottom), 5, thickness, 2);
+	  fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+		   l_end, -(PixelToPoint (bottom)), l_start,
+		   -(PixelToPoint (bottom)), 5, thickness, 2);
 	  break;
 	  
 	case 2:	/* overlined */
-	  fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
-		   l_end, PixelToPoint (y), l_start, PixelToPoint (y), 5, thickness, 2);
+	  fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+		   l_end, -(PixelToPoint (y)), l_start, -(PixelToPoint (y)),
+		   5, thickness, 2);
 	  break;
 	  
 	case 3:	/* cross-over */
-	  fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
-		   l_end, PixelToPoint (middle), l_start, PixelToPoint (middle), 5, thickness, 2);
+	  fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+		   l_end, -(PixelToPoint (middle)), l_start,
+		   -(PixelToPoint (middle)), 5, thickness, 2);
 	  break;
 	}
     }
@@ -464,17 +467,17 @@ void    DrawRadical (int frame, int thick, int x, int y, int l, int h, ptrfont f
      ex = 6;
 
    if (h <= (3 * fh))
-     fprintf (fout, "%d -%d %d -%d %d -%d %d -%d r\n",
-	      PixelToPoint (x + l), PixelToPoint (y), 
-	      PixelToPoint (x + (fh / 2)), PixelToPoint (y),
-	      PixelToPoint (x + (fh / 4)), PixelToPoint (y + h),
-	      PixelToPoint (x), PixelToPoint (y + (2 * (h / 3))));
+     fprintf (fout, "%d %d %d %d %d %d %d %d r\n",
+	      PixelToPoint (x + l), -(PixelToPoint (y)), 
+	      PixelToPoint (x + (fh / 2)), -(PixelToPoint (y)),
+	      PixelToPoint (x + (fh / 4)), -(PixelToPoint (y + h)),
+	      PixelToPoint (x), -(PixelToPoint (y + (2 * (h / 3)))));
    else
-     fprintf (fout, "%d -%d %d -%d %d -%d %d -%d r\n",
-	      PixelToPoint (x + l), PixelToPoint (y),
-	      PixelToPoint (x + (fh / 2)), PixelToPoint (y),
-	      PixelToPoint (x + (fh / 2)), PixelToPoint (y + h),
-	      PixelToPoint (x), PixelToPoint (y + (2 * (h / 3))));
+     fprintf (fout, "%d %d %d %d %d %d %d %d r\n",
+	      PixelToPoint (x + l), -(PixelToPoint (y)),
+	      PixelToPoint (x + (fh / 2)), -(PixelToPoint (y)),
+	      PixelToPoint (x + (fh / 2)), -(PixelToPoint (y + h)),
+	      PixelToPoint (x), -(PixelToPoint (y + (2 * (h / 3)))));
 }
 
 
@@ -516,14 +519,16 @@ void    DrawIntegral (int frame, int thick, int x, int y, int l, int h, int type
        if (type == 2)
 	 {
 	   /* double integral */
-	   fprintf (fout, "-%d %d (\\362) c\n", ym, x - PixelToPoint (CharacterWidth ('\362', font) / 4));
-	   fprintf (fout, "-%d %d (\\362) c\n", ym, x + PixelToPoint (CharacterWidth ('\362', font) / 4));
+	   fprintf (fout, "%d %d (\\362) c\n", -ym,
+		    x - PixelToPoint (CharacterWidth ('\362', font) / 4));
+	   fprintf (fout, "%d %d (\\362) c\n", -ym,
+		    x + PixelToPoint (CharacterWidth ('\362', font) / 4));
 	 }
        else
 	 {
-	   fprintf (fout, "-%d %d (\\362) c\n", ym, x);
+	   fprintf (fout, "%d %d (\\362) c\n", -ym, x);
 	   if (type == 1)	/* contour integral */
-	     fprintf (fout, "-%d %d (o) c\n", ym, x);
+	     fprintf (fout, "%d %d (o) c\n", -ym, x);
 	 }
      }
    else
@@ -532,16 +537,19 @@ void    DrawIntegral (int frame, int thick, int x, int y, int l, int h, int type
        if (type == 2)
 	 {
 	   /* double integral */
-	   fprintf (fout, "%d -%d -%d %s (\\363) (\\364) (\\365) s3\n",
-		    x - PixelToPoint (CharacterWidth ('\364', font) / 4), yf, y, Scale);
-	   fprintf (fout, "%d -%d -%d %s (\\363) (\\364) (\\365) s3\n",
-		    x + PixelToPoint (CharacterWidth ('\364', font) / 4), yf, y, Scale);
+	   fprintf (fout, "%d %d %d %s (\\363) (\\364) (\\365) s3\n",
+		    x - PixelToPoint (CharacterWidth ('\364', font) / 4),
+		    -yf, -y, Scale);
+	   fprintf (fout, "%d %d %d %s (\\363) (\\364) (\\365) s3\n",
+		    x + PixelToPoint (CharacterWidth ('\364', font) / 4),
+		    -yf, -y, Scale);
 	 }
        else
 	 {
-	   fprintf (fout, "%d -%d -%d %s (\\363) (\\364) (\\365) s3\n", x, yf, y, Scale);
+	   fprintf (fout, "%d %d %d %s (\\363) (\\364) (\\365) s3\n",
+		    x, -yf, -y, Scale);
 	   if (type == 1)	/* contour integral */
-	     fprintf (fout, "-%d %d (o) c\n", ym, x);
+	     fprintf (fout, "%d %d (o) c\n", -ym, x);
 	 }
      }
 }
@@ -567,7 +575,7 @@ void    DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int fg)
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
    x = PixelToPoint (x + (l / 2));
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
-   fprintf (fout, "-%d %d (\\345) c\n", y, x);
+   fprintf (fout, "%d %d (\\345) c\n", -y, x);
 }
 
 
@@ -591,7 +599,7 @@ void  DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int fg)
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
    x = PixelToPoint (x + (l / 2));
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
-   fprintf (fout, "-%d %d (\\325) c\n", y, x);
+   fprintf (fout, "%d %d (\\325) c\n", -y, x);
 }
 
 
@@ -615,7 +623,7 @@ void   DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int fg)
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
    x = PixelToPoint (x + (l / 2));
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
-   fprintf (fout, "-%d %d (\\310) c\n", y, x);
+   fprintf (fout, "%d %d (\\310) c\n", -y, x);
 }
 
 
@@ -638,7 +646,7 @@ void   DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font, in
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
    x = PixelToPoint (x + (l / 2));
    y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
-   fprintf (fout, "-%d %d (\\307) c\n", y, x);
+   fprintf (fout, "%d %d (\\307) c\n", -y, x);
 }
 
 
@@ -679,49 +687,64 @@ void    DrawArrow (int frame, int thick, int style, int x, int y, int l, int h, 
    if (direction == 0)
      {
 	/* draw a right arrow */
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, ym, xf, ym, style, thick, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, ym, xf, ym, thick, lg, lg);
+	fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+		 x, -ym, xf, -ym, style, thick, 2);
+	fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+		 style, x, -ym, xf, -ym, thick, lg, lg);
      }
    else if (direction == 45)
      {
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, xf, y, style, thick, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, yf, xf, y, thick, lg, lg);
+	fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+		 x, -yf, xf, -y, style, thick, 2);
+	fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+		 style, x, -yf, xf, -y, thick, lg, lg);
      }
    else if (direction == 90)
      {
 	/* draw a bottom-up arrow */
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, yf, xm, y, style, thick, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xm, yf, xm, y, thick, lg, lg);
+	fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+		 xm, -yf, xm, -y, style, thick, 2);
+	fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+		 style, xm, -yf, xm, -y, thick, lg, lg);
      }
    else if (direction == 135)
      {
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, x, y, style, thick, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xf, yf, x, y, thick, lg, lg);
+	fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+		 xf, -yf, x, -y, style, thick, 2);
+	fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+		 style, xf, -yf, x, -y, thick, lg, lg);
      }
    else if (direction == 180)
      {
 	/* draw a left arrow */
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, ym, x, ym, style, thick, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xf, ym, x, ym, thick, lg, lg);
+	fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+		 xf, -ym, x, -ym, style, thick, 2);
+	fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+		 style, xf, -ym, x, -ym, thick, lg, lg);
      }
    else if (direction == 225)
      {
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, y, x, yf, style, thick, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xf, y, x, yf, thick, lg, lg);
+	fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+		 xf, -y, x, -yf, style, thick, 2);
+	fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+		 style, xf, -y, x, -yf, thick, lg, lg);
      }
    else if (direction == 270)
      {
 	/* draw a top-down arrow */
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xm, y, xm, yf, style, thick, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, xm, y, xm, yf, thick, lg, lg);
+	fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+		 xm, -y, xm, -yf, style, thick, 2);
+	fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+		 style, xm, -y, xm, -yf, thick, lg, lg);
      }
    else if (direction == 315)
      {
-	fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, thick, 2);
-	fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, x, y, xf, yf, thick, lg, lg);
+	fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+		 x, -y, xf, -yf, style, thick, 2);
+	fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+		 style, x, -y, xf, -yf, thick, lg, lg);
      }
 }
-
 
 /*----------------------------------------------------------------------
    DrawBracket draw an opening or closing bracket (depending on direction)
@@ -755,17 +778,19 @@ void   DrawBracket (int frame, int thick, int x, int y, int l, int h, int direct
      {
 	/* Made of only one glyph */
 	if (direction == 0)
-	   fprintf (fout, "-%d %d ([) c\n", yf, x);
+	   fprintf (fout, "%d %d ([) c\n", -yf, x);
 	else
-	   fprintf (fout, "-%d %d (])c\n", yf, x);
+	   fprintf (fout, "%d %d (])c\n", -yf, x);
      }
    else
      {
 	/* Drawn with more than one glyph */
 	if (direction == 0)	/* Trace un crochet ouvrant */
-	   fprintf (fout, "%d -%d -%d %s (\\351) (\\352) (\\353) s3\n", x + 1, yf, y, Scale);
+	   fprintf (fout, "%d %d %d %s (\\351) (\\352) (\\353) s3\n",
+		    x + 1, -yf, -y, Scale);
 	else
-	   fprintf (fout, "%d -%d -%d %s (\\371) (\\372) (\\373) s3\n", x, yf, y, Scale);
+	   fprintf (fout, "%d %d %d %s (\\371) (\\372) (\\373) s3\n",
+		    x, -yf, -y, Scale);
      }
 }
 
@@ -803,24 +828,26 @@ void   DrawPointyBracket (int frame, int thick, int x, int y, int l, int h, int 
        y = PixelToPoint (y) + 1;
 	/* Made of only one glyph */
 	if (direction == 0)
-	   fprintf (fout, "-%d %d (\341) c\n", yf, x);
+	   fprintf (fout, "%d %d (\341) c\n", -yf, x);
 	else
-	   fprintf (fout, "-%d %d (\361)c\n", yf, x);
+	   fprintf (fout, "%d %d (\361)c\n", -yf, x);
      }
    else
      {
 	/* Drawn with more than one glyph */
 	if (direction == 0)
 	  /* Trace un crochet ouvrant */
-	  fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n",
-		   PixelToPoint (x + l), PixelToPoint (y),
-		   PixelToPoint (x), PixelToPoint (y + (h / 2)),
-		   PixelToPoint (x + l), PixelToPoint (y + h), 5, 1, 3);
+	  fprintf (fout, "%d %d %d %d %d %d %d %d %d Seg\n",
+		   PixelToPoint (x + l), -(PixelToPoint (y)),
+		   PixelToPoint (x), -(PixelToPoint (y + (h / 2))),
+		   PixelToPoint (x + l), -(PixelToPoint (y + h)),
+		   5, 1, 3);
 	else
-	  fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n",
-		   PixelToPoint (x), PixelToPoint (y),
-		   PixelToPoint (x + l), PixelToPoint (y + (h / 2)),
-		   PixelToPoint (x), PixelToPoint (y + h), 5, 1, 3);
+	  fprintf (fout, "%d %d %d %d %d %d %d %d %d Seg\n",
+		   PixelToPoint (x), -(PixelToPoint (y)),
+		   PixelToPoint (x + l), -(PixelToPoint (y + (h / 2))),
+		   PixelToPoint (x), -(PixelToPoint (y + h)),
+		   5, 1, 3);
      }
 }
 
@@ -861,17 +888,19 @@ void    DrawParenthesis (int frame, int thick, int x, int y, int l, int h, int d
 	/* Made of only one glyph */
 	if (direction == 0)
 	   /* draw an opening parenthesis */
-	   fprintf (fout, "-%d %d (\\() c\n", yf, x);
+	   fprintf (fout, "%d %d (\\() c\n", -yf, x);
 	else
-	   fprintf (fout, "-%d %d (\\)) c\n", yf, x);
+	   fprintf (fout, "%d %d (\\)) c\n", -yf, x);
      }
    else
      {
 	/* Drawn with more than one glyph */
 	if (direction == 0)
-	   fprintf (fout, "%d -%d -%d %s (\\346) (\\347) (\\350) s3\n", x+1, yf, y, Scale);
+	   fprintf (fout, "%d %d %d %s (\\346) (\\347) (\\350) s3\n",
+		    x+1, -yf, -y, Scale);
 	else
-	   fprintf (fout, "%d -%d -%d %s (\\366) (\\367) (\\370) s3\n", x, yf, y, Scale);
+	   fprintf (fout, "%d %d %d %s (\\366) (\\367) (\\370) s3\n",
+		    x, -yf, -y, Scale);
      }
 }
 
@@ -908,17 +937,19 @@ void                DrawBrace (int frame, int thick, int x, int y, int l, int h,
      {
 	/* Made of only one glyph */
 	if (direction == 0)
-	   fprintf (fout, "-%d %d ({) c\n", yf, x);
+	   fprintf (fout, "%d %d ({) c\n", -yf, x);
 	else
-	   fprintf (fout, "-%d %d (}) c\n", yf, x);
+	   fprintf (fout, "%d %d (}) c\n", -yf, x);
      }
    else
      {
 	/* Drawn with more than one glyph */
 	if (direction == 0)
-	   fprintf (fout, "%d -%d -%d %s (\\354) (\\355) (\\356) (\\357) s4\n", x, yf, y, Scale);
+	   fprintf (fout, "%d %d %d %s (\\354) (\\355) (\\356) (\\357) s4\n",
+		    x, -yf, -y, Scale);
 	else
-	   fprintf (fout, "%d -%d -%d %s (\\374) (\\375) (\\376) (\\357) s4\n", x, yf, y, Scale);
+	   fprintf (fout, "%d %d %d %s (\\374) (\\375) (\\376) (\\357) s4\n",
+		    x, -yf, -y, Scale);
      }
 }
 
@@ -952,7 +983,8 @@ void   DrawRectangle (int frame, int thick, int style, int x, int y, int width, 
       CurrentColor (fout, fg);
 
    FillWithPattern (fout, fg, bg, pattern);
-   fprintf (fout, "%d -%d %d -%d %d -%d  %d -%d %d %d %d Poly\n", x, y, x, yf, xf, yf, xf, y, style, thick, 4);
+   fprintf (fout, "%d %d %d %d %d %d  %d %d %d %d %d Poly\n",
+	    x, -y, x, -yf, xf, -yf, xf, -y, style, thick, 4);
 }
 
 
@@ -994,11 +1026,13 @@ void   DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffe
    adbuff = buffer;
    /* backward arrow  */
    if (arrow == 2 || arrow == 3)
-      fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style,
+      fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+	       style,
 	       PixelToPoint (buffer->BuPoints[2].XCoord + x),
-	       PixelToPoint (buffer->BuPoints[2].YCoord + y),
+	       -(PixelToPoint (buffer->BuPoints[2].YCoord + y)),
 	       PixelToPoint (buffer->BuPoints[1].XCoord + x),
-	       PixelToPoint (buffer->BuPoints[1].YCoord + y), thick, lg, lg);
+	       -(PixelToPoint (buffer->BuPoints[1].YCoord + y)),
+	       thick, lg, lg);
 
    j = 1;
    for (i = 1; i < nb; i++)
@@ -1021,7 +1055,7 @@ void   DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffe
 	/* Coordinate for next point */
 	xp = (float) PixelToPoint (adbuff->BuPoints[j].XCoord + x);
 	yp = (float) PixelToPoint (adbuff->BuPoints[j].YCoord + y);
-	fprintf (fout, "%f -%f\n", xp, yp);
+	fprintf (fout, "%f %f\n", xp, -yp);
 	j++;
      }
    /* Extra characteristics for drawing */
@@ -1030,8 +1064,9 @@ void   DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffe
    /* forward arrow  */
    j--;
    if (arrow == 1 || arrow == 3)
-      fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, prevx, prevy,
-	       FloatToInt (xp), FloatToInt (yp), thick, lg, lg);
+      fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+	       style, prevx, -prevy,
+	       FloatToInt (xp), -(FloatToInt (yp)), thick, lg, lg);
 }
 
 
@@ -1075,7 +1110,7 @@ void   DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuffer
 	/* Coordinate for next point */
 	xp = (float) PixelToPoint (adbuff->BuPoints[j].XCoord + x);
 	yp = (float) PixelToPoint (adbuff->BuPoints[j].YCoord + y);
-	fprintf (fout, "%f -%f\n", xp, yp);
+	fprintf (fout, "%f %f\n", xp, -yp);
 	j++;
      }
    /* Extra characteristics for drawing */
@@ -1134,12 +1169,14 @@ void    DrawCurve (int frame, int thick, int style, int x, int y, PtrTextBuffer 
 
    /* backward arrow  */
    if (arrow == 2 || arrow == 3)
-      fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, FloatToInt (x2), FloatToInt (y2), FloatToInt (x1), FloatToInt (y1), thick, lg, lg);
+      fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+	       style, FloatToInt (x2), -(FloatToInt (y2)), FloatToInt (x1),
+	       -(FloatToInt (y1)), thick, lg, lg);
 
    for (i = 2; i < nb; i++)
      {
 	/* 3 points needed to define the arc */
-	fprintf (fout, "%f -%f %f -%f %f -%f\n", x3, y3, x2, y2, x1, y1);
+	fprintf (fout, "%f %f %f %f %f %f\n", x3, -y3, x2, -y2, x1, -y1);
 	/* skip to next arc */
 	j++;
 	if (j >= adbuff->BuLength)
@@ -1172,11 +1209,13 @@ void    DrawCurve (int frame, int thick, int style, int x, int y, PtrTextBuffer 
 	     y3 = (float) PixelToPoint (((int) controls[i].ry * 3 + newy) / 4 + y);
 	  }
      }
-   fprintf (fout, "%f -%f %d %d %d Curv\n", x1, y1, style, thick, nb - 1);
+   fprintf (fout, "%f %f %d %d %d Curv\n", x1, -y1, style, thick, nb - 1);
 
    /* forward arrow */
    if (arrow == 1 || arrow == 3)
-      fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style, FloatToInt (x3), FloatToInt (y3), FloatToInt (x1), FloatToInt (y1), thick, lg, lg);
+      fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+	       style, FloatToInt (x3), -(FloatToInt (y3)), FloatToInt (x1),
+	       -(FloatToInt (y1)), thick, lg, lg);
 }
 
 
@@ -1197,8 +1236,8 @@ void   DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer 
    FILE               *fout;
 
    fout = (FILE *) FrRef[frame];
-  if (y < 0)
-    return;
+   if (y < 0)
+     return;
    y += FrameTable[frame].FrTopMargin;
 
    /* Do we need to change the current color ? */
@@ -1216,7 +1255,7 @@ void   DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer 
      {
 	x3 = (float) PixelToPoint ((int) controls[i].lx + x);
 	y3 = (float) PixelToPoint ((int) controls[i].ly + y);
-	fprintf (fout, "%f -%f %f -%f %f -%f\n", x3, y3, x2, y2, x1, y1);
+	fprintf (fout, "%f %f %f %f %f %f\n", x3, -y3, x2, -y2, x1, -y1);
 	j++;
 	if (j >= adbuff->BuLength)
 	  {
@@ -1236,8 +1275,8 @@ void   DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer 
    /* Close the stroke */
    x3 = (float) PixelToPoint ((int) (controls[1].lx)) + x;
    y3 = (float) PixelToPoint ((int) (controls[1].ly)) + y;
-   fprintf (fout, "%f -%f %f -%f %f -%f\n", x3, y3, x2, y2, x1, y1);
-   fprintf (fout, "%f -%f %d %d %d Splin\n", x0, y0, style, thick, nb);
+   fprintf (fout, "%f %f %f %f %f %f\n", x3, -y3, x2, -y2, x1, -y1);
+   fprintf (fout, "%f %f %d %d %d Splin\n", x0, -y0, style, thick, nb);
 }
 
 /*----------------------------------------------------------------------
@@ -1245,9 +1284,83 @@ void   DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer 
   Parameter path is a pointer to the list of path segments
   fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void   DrawPath (int frame, int thick, int style, int x, int y, PtrPathSeg path, int fg, int bg, int pattern)
+void   DrawPath (int frame, int thick, int style, int x, int y,
+		 PtrPathSeg path, int fg, int bg, int pattern)
 {
-  /****** to be written *******/
+  PtrPathSeg          pPa;
+  float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;
+  FILE               *fout;
+
+  if (thick > 0 || fg >= 0)
+    {
+      y += FrameTable[frame].FrTopMargin;
+      fout = (FILE *) FrRef[frame];
+      fprintf (fout, "newpath ");
+      pPa = path;
+      while (pPa)
+	{
+	  if (pPa->PaNewSubpath || !pPa->PaPrevious)
+	    /* this path segment starts a new subpath */
+	    {
+	      /* generate a moveto */
+	      x1 = (float) PixelToPoint (x + pPa->XStart);
+	      y1 = (float) PixelToPoint (y + pPa->YStart);
+	      fprintf (fout, "%f %f moveto ", x1, -y1);
+	    }
+
+	  switch (pPa->PaShape)
+	    {
+	    case PtLine:
+	      x2 = (float) PixelToPoint (x + pPa->XEnd);
+	      y2 = (float) PixelToPoint (y + pPa->YEnd);
+	      fprintf (fout, "%f %f lineto ", x2, -y2);
+	      break;
+
+	    case PtCubicBezier:
+	      cx1 = (float) PixelToPoint (x + pPa->XCtrlStart);
+	      cy1 = (float) PixelToPoint (y + pPa->YCtrlStart);
+	      cx2 = (float) PixelToPoint (x + pPa->XCtrlEnd);
+	      cy2 = (float) PixelToPoint (y + pPa->YCtrlEnd);
+	      x2 = (float) PixelToPoint (x + pPa->XEnd);
+	      y2 = (float) PixelToPoint (y + pPa->YEnd);
+	      fprintf (fout, "%f %f %f %f %f %f curveto ",
+		       cx1, -cy1, cx2, -cy2, x2, -y2);
+	      break;
+
+	    case PtQuadraticBezier:
+	      cx1 = (float) PixelToPoint (x + pPa->XCtrlStart);
+	      cy1 = (float) PixelToPoint (y + pPa->YCtrlStart);
+	      x2 = (float) PixelToPoint (x + pPa->XEnd);
+	      y2 = (float) PixelToPoint (y + pPa->YEnd);
+	      fprintf (fout, "%f %f %f %f %f %f curveto ",
+		       cx1, -cy1, cx1, -cy1, x2, -y2);
+	      break;
+
+	    case PtEllipticalArc:
+	      /**** to do ****/
+	      break;
+	    }
+	  pPa = pPa->PaNext;
+	}
+      if (bg >= 0 && pattern > 0)
+	{
+	  if (fg >= 0 && thick > 0)
+	     fprintf (fout, "gsave ");
+	  /* set background color */
+	  CurrentColor (fout, bg);
+	  fprintf (fout, "fill ");
+	  if (fg >= 0 && thick > 0)
+	     fprintf (fout, "grestore ");
+	  else
+	     fprintf (fout, "\n");
+	}
+      if (fg >= 0 && thick > 0)
+	{
+	  /* set stroke color */
+	  CurrentColor (fout, fg);
+          fprintf (fout, "%d setlinewidth stroke\n", thick);
+	}
+    }
   return;
 }
 
@@ -1276,7 +1389,8 @@ void    DrawDiamond (int frame, int thick, int style, int x, int y, int width, i
    y = PixelToPoint (y);
 
    FillWithPattern (fout, fg, bg, pattern);
-   fprintf (fout, "%d -%d %d -%d %d -%d %d -%d %d %d %d Poly\n", xm, y, x, ym, xm, yf, xf, ym, style, thick, 4);
+   fprintf (fout, "%d %d %d %d %d %d %d %d %d %d %d Poly\n",
+	    xm, -y, x, -ym, xm, -yf, xf, -ym, style, thick, 4);
 }
 
 
@@ -1318,8 +1432,8 @@ void   DrawOval (int frame, int thick, int style, int x, int y, int width, int h
    x = PixelToPoint (x);
    y = PixelToPoint (y);
    FillWithPattern (fout, fg, bg, pattern);
-   fprintf (fout, "%d %d %d -%d %d -%d %d %d oval\n", style, thick,
-	    x, y, xf, yf, PixelToPoint (rx), PixelToPoint (ry));
+   fprintf (fout, "%d %d %d %d %d %d %d %d oval\n", style, thick,
+	    x, -y, xf, -yf, PixelToPoint (rx), PixelToPoint (ry));
 }
 
 
@@ -1355,7 +1469,7 @@ void                DrawEllips (int frame, int thick, int style, int x, int y, i
    if (width == height)
      {
        /* Draw a circle */
-       fprintf (fout, "%d %d %d -%d %d cer\n", style, thick, xm, ym, width);
+       fprintf (fout, "%d %d %d %d %d cer\n", style, thick, xm, -ym, width);
      }
    else
      {
@@ -1390,16 +1504,20 @@ void   DrawCorner (int frame, int thick, int style, int x, int y, int l, int h, 
    switch (corner)
 	 {
 	    case 0:		/* Top Right */
-	       fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", x, y, xf, y, xf, yf, style, thick, 3);
+	       fprintf (fout, "%d %d %d %d %d %d %d %d %d Seg\n",
+			x, -y, xf, -y, xf, -yf, style, thick, 3);
 	       break;
 	    case 1:		/* Right Bottom */
-	       fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", xf, y, xf, yf, x, yf, style, thick, 3);
+	       fprintf (fout, "%d %d %d %d %d %d %d %d %d Seg\n",
+			xf, -y, xf, -yf, x, -yf, style, thick, 3);
 	       break;
 	    case 2:		/* Bottom Left */
-	       fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", xf, yf, x, yf, x, y, style, thick, 3);
+	       fprintf (fout, "%d %d %d %d %d %d %d %d %d Seg\n",
+			xf, -yf, x, -yf, x, -y, style, thick, 3);
 	       break;
 	    case 3:		/* Left Top */
-	       fprintf (fout, "%d -%d %d -%d %d -%d %d %d %d Seg\n", x, yf, x, y, xf, y, style, thick, 3);
+	       fprintf (fout, "%d %d %d %d %d %d %d %d %d Seg\n",
+			x, -yf, x, -y, xf, -y, style, thick, 3);
 	       break;
 	 }
 }
@@ -1433,11 +1551,13 @@ void    DrawRectangleFrame (int frame, int thick, int style, int x, int y, int w
    y = PixelToPoint (y);
 
    FillWithPattern (fout, fg, bg, pattern);
-   fprintf (fout, "%d %d %d -%d %d -%d %d -%d %d -%d %d -%d %d -%d %d ov\n",
-	  style, thick, x, y, x, yf, xf, yf, xf, y, x, y, x, yf - arc, arc);
+   fprintf (fout, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d ov\n",
+	    style, thick, x, -y, x, -yf, xf, -yf, xf, -y, x, -y, x,
+	    -(yf - arc), arc);
 
    y += 2 * arc;
-   fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, y, style, thick, 2);
+   fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+	    x, -y, xf, -y, style, thick, 2);
 }
 
 
@@ -1474,12 +1594,13 @@ void    DrawEllipsFrame (int frame, int thick, int style, int x, int y, int widt
    if (width == height)
      {
 	/* draw a circle */
-	fprintf (fout, "%d %d %d -%d %d cer\n", style, thick, xm, ym, width);
+	fprintf (fout, "%d %d %d %d %d cer\n", style, thick, xm, -ym, width);
      }
    else
      {
 	/* draw an ellipse */
-	fprintf (fout, "%d %d %d -%d %d %d ellipse\n", style, thick, xm, ym, width, height);
+	fprintf (fout, "%d %d %d %d %d %d ellipse\n",
+		 style, thick, xm, -ym, width, height);
      }
    px7mm = 7 * 72 / 25.4 + 0.5;
    if (height > px7mm)
@@ -1487,8 +1608,8 @@ void    DrawEllipsFrame (int frame, int thick, int style, int x, int y, int widt
 	y = (ym - height + px7mm);
 	A = ((double) height - px7mm) / height;
 	shiftX = width * sqrt (1 - A * A) + 0.5;
-	fprintf (fout, "%d -%d  %d -%d %d %d %d Seg\n",
-		 xm - shiftX, y, xm + shiftX, y, style, thick, 2);
+	fprintf (fout, "%d %d  %d %d %d %d %d Seg\n",
+		 xm - shiftX, -y, xm + shiftX, -y, style, thick, 2);
      }
 }
 
@@ -1522,7 +1643,8 @@ void   DrawHorizontalLine (int frame, int thick, int style, int x, int y, int l,
    x = PixelToPoint (x);
    Y = PixelToPoint (Y);
    thick = PixelToPoint (thick);
-   fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, Y, x, Y, style, thick, 2);
+   fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+	    xf, -Y, x, -Y, style, thick, 2);
 }
 
 
@@ -1551,26 +1673,24 @@ void     DrawHorizontalBrace (int frame, int thick, int style, int x, int y, int
   if (align == 0)
     /* Over brace */
     {
-      fprintf (fout, "%d -%d %d -%d %d -%d %d -%d %d %d %d Seg\n",
-	       x, PixelToPoint (y + h),
-	       x, Y,
-	       xf, Y,
-	       xf, PixelToPoint (y + h), style, thick, 4);
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
-	       xm, PixelToPoint (y),
-	       xm, Y, style, thick, 2);
+      fprintf (fout, "%d %d %d %d %d %d %d %d %d %d %d Seg\n",
+	       x, -(PixelToPoint (y + h)),
+	       x, -Y,
+	       xf, -Y,
+	       xf, -(PixelToPoint (y + h)), style, thick, 4);
+      fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+	       xm, -(PixelToPoint (y)), xm, -Y, style, thick, 2);
     }
   else
     /* Underbrace */
     {
-      fprintf (fout, "%d -%d %d -%d %d -%d %d -%d %d %d %d Seg\n",
-	       x, PixelToPoint (y),
-	       x, Y,
-	       xf, Y,
-	       xf, PixelToPoint (y), style, thick, 4);
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
-		xm, PixelToPoint (y + h),
-	       xm, Y, style, thick, 2);
+      fprintf (fout, "%d %d %d %d %d %d %d %d %d %d %d Seg\n",
+	       x, -(PixelToPoint (y)),
+	       x, -Y,
+	       xf, -Y,
+	       xf, -(PixelToPoint (y)), style, thick, 4);
+      fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+	       xm, -(PixelToPoint (y + h)), xm, -Y, style, thick, 2);
     }
 }
 
@@ -1604,7 +1724,8 @@ void    DrawVerticalLine (int frame, int thick, int style, int x, int y, int l, 
    y = PixelToPoint (y);
    X = PixelToPoint (X);
    thick = PixelToPoint (thick);
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", X, yf, X, y, style, thick, 2);
+      fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+	       X, -yf, X, -y, style, thick, 2);
 }
 
 
@@ -1637,7 +1758,8 @@ void   DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y, in
    y = PixelToPoint (y);
    X = PixelToPoint (X);
    thick = PixelToPoint (thick);
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", X, yf, X, y, style, thick, 2);
+      fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+	       X, -yf, X, -y, style, thick, 2);
 }
 
 
@@ -1660,7 +1782,7 @@ void    DrawPoints (int frame, int x, int y, int lgboite, int fg)
       fout = (FILE *) FrRef[frame];
       xcour = PixelToPoint (x);
       ycour = PixelToPoint (y);
-      fprintf (fout, "%d -%d %d Pes\n", xcour, ycour, PixelToPoint (lgboite));
+      fprintf (fout, "%d %d %d Pes\n", xcour, -ycour, PixelToPoint (lgboite));
     }
 }
 
@@ -1693,9 +1815,11 @@ void    DrawSlash (int frame, int thick, int style, int x, int y, int l, int h, 
    y = PixelToPoint (y);
 
    if (direction == 0)
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, xf, y, style, thick, 2);
+      fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+	       x, -yf, xf, -y, style, thick, 2);
    else
-      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, thick, 2);
+      fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
+	       x, -y, xf, -yf, style, thick, 2);
 }
 
 
@@ -1721,7 +1845,7 @@ void     psBoundingBox (int frame, int width, int height)
    fout = (FILE *) FrRef[frame];
    /* Since the origin of Postscript coordinates is the lower-left    */
    /* corner of the page, that an A4 page is 2970 mm (i.e 2970*72/254 */
-   /* = 841 pts) and that Thot add a 50 pts margin on top and height  */
+   /* = 841 pts) and that Thot adds a 50 pts margin on top and height */
    /* of the output image, here is the correct values :               */
 
    fprintf (fout, "%%%%BoundingBox: %d %d %d %d\n",
@@ -1755,7 +1879,8 @@ void  PaintWithPattern (int frame, int x, int y, int width, int height, ThotWind
 	yf = PixelToPoint (y + height - 1);
 	x = PixelToPoint (x);
 	y = PixelToPoint (y);
-	fprintf (fout, "%d %d -%d %d -%d %d -%d %d -%d trm\n", pattern, x, yf, xf, yf, xf, y, x, y);
+	fprintf (fout, "%d %d %d %d %d %d %d %d %d trm\n",
+		 pattern, x, -yf, xf, -yf, xf, -y, x, -y);
      }
 }
 #endif /* _WIN_PRINT */

@@ -806,7 +806,7 @@ PtrPRule      pPRule;
 	    }
 	  else
 	    {
-	      PutShort (pivFile, pPRule->PrInhDelta);
+	      PutShort (pivFile, abs (pPRule->PrInhDelta));
 	      PutUnit (pivFile, pPRule->PrInhUnit);
 	      PutSign (pivFile, (ThotBool)(pPRule->PrInhDelta >= 0));
 	    }
@@ -1139,28 +1139,40 @@ ThotBool            subTree;
 		           TtaWriteByte (pivFile, 'A');
 			   break;
 			}
-		      PutInteger (pivFile, pPa->XStart);
-		      PutInteger (pivFile, pPa->YStart);
-		      PutInteger (pivFile, pPa->XEnd);
-		      PutInteger (pivFile, pPa->YEnd);
+		      PutBoolean (pivFile, pPa->PaNewSubpath);
+		      PutSign (pivFile, (ThotBool)(pPa->XStart >= 0));
+		      PutInteger (pivFile, abs (pPa->XStart));
+		      PutSign (pivFile, (ThotBool)(pPa->YStart >= 0));
+		      PutInteger (pivFile, abs (pPa->YStart));
+		      PutSign (pivFile, (ThotBool)(pPa->XEnd >= 0));
+		      PutInteger (pivFile, abs (pPa->XEnd));
+		      PutSign (pivFile, (ThotBool)(pPa->YEnd >= 0));
+		      PutInteger (pivFile, abs (pPa->YEnd));
 		      switch (pPa->PaShape)
 			{
 			case PtLine:
 			   break;
 			case PtCubicBezier:
-			   PutInteger (pivFile, pPa->XCtrlStart);
-			   PutInteger (pivFile, pPa->YCtrlStart);
-			   PutInteger (pivFile, pPa->XCtrlEnd);
-			   PutInteger (pivFile, pPa->YCtrlEnd);
+			   PutSign (pivFile, (ThotBool)(pPa->XCtrlStart >= 0));
+			   PutInteger (pivFile, abs (pPa->XCtrlStart));
+			   PutSign (pivFile, (ThotBool)(pPa->YCtrlStart >= 0));
+			   PutInteger (pivFile, abs (pPa->YCtrlStart));
+			   PutSign (pivFile, (ThotBool)(pPa->XCtrlEnd >= 0));
+			   PutInteger (pivFile, abs (pPa->XCtrlEnd));
+			   PutSign (pivFile, (ThotBool)(pPa->YCtrlEnd >= 0));
+			   PutInteger (pivFile, abs (pPa->YCtrlEnd));
 			   break;
 			case PtQuadraticBezier:
-			   PutInteger (pivFile, pPa->XCtrlStart);
-			   PutInteger (pivFile, pPa->YCtrlStart);
+			   PutSign (pivFile, (ThotBool)(pPa->XCtrlStart >= 0));
+			   PutInteger (pivFile, abs (pPa->XCtrlStart));
+			   PutSign (pivFile, (ThotBool)(pPa->YCtrlStart >= 0));
+			   PutInteger (pivFile, abs (pPa->YCtrlStart));
 			   break;
 			case PtEllipticalArc:
 			   PutInteger (pivFile, pPa->XRadius);
 			   PutInteger (pivFile, pPa->YRadius);
-			   PutShort (pivFile, pPa->XAxisRotation);
+			   PutSign (pivFile, (ThotBool)(pPa->XAxisRotation >= 0));
+			   PutShort (pivFile, abs (pPa->XAxisRotation));
 			   PutBoolean (pivFile, pPa->LargeArc);
 			   PutBoolean (pivFile, pPa->Sweep);
 			   break;
