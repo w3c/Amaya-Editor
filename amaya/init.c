@@ -2651,10 +2651,11 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
    else
      {
 	/* open the new document in the same window but in a fresh page */
-       isOpen = FALSE;
+       isOpen = FALSE; /* maybe set this to TRUE but I dont know the consequence */
        requested_doc = 0;
 #ifdef _WX
        /* get the old document window */
+       isOpen = TRUE;
        window_id = TtaGetDocumentWindowId( doc, -1 );
        page_id   = TtaGetFreePageId( window_id );
        page_position = 1;
