@@ -165,88 +165,89 @@
 163 Ativar multitecla (`+a=à)
 164 Exibir imagens de fundo
 165 Duplo clique ativa enlace
-166 Preferências de publicação
-167 Usar ETAGS e pré-condições
-168 Verificar cada PUT com um GET
-169 Nome padrão para URLs terminadas em '/'
-170 Preferências de geometria
-171 Salvar geometria atual
-172 restaurar geometria padrão
-173 As mudanças serão efetivadas quando uma nova janela abrir.
-174 Preferências de cor
-175 Cor do plano frontal do documento
-176 Cor de fundo do documento
-177 Cor do plano frontal do menu
-178 Cor de fundo do menu
-179 Não foi possível inicializar o cache. Você pode ter especificado um diretório de cache inválido ou tem outro Amaya usando o cache.
-180 Home
-181 Lista de idiomas preferidos como "pt, en":
-182 Localização do arquivo de definição de perfís
-183 Seleção de perfil
-184 Estas modificações não serão modificadas até que se reinicialize Amaya.
-185 Preferências de perfís
-186 Introduzir a URL do servidor de gabaritos
-187 Preferências de gabaritos
-188 Permitir redirecionamentos PUT automáticos nestes domínios
-189 Ignorar folhas de estilo
-190 Tipo de transformação
-191 (separar cada entrada com um espaço)
-192 Não há proxy nestes domínios
-193 Somente com proxy estes domínios
-194 Nome de carácter
-195 Diretório de usuário Amaya
-196 Diretório temporário
-197 Usar paleta
-198 Negociação de idioma
-199 Configuração para anotações
-200 Usuário anotador
-201 Servidor de publicação de anotações
-202 Servidores de anotações
-203 Autocarregar anotações locais
-204 Autocarregar anotações remotas
-205 Desabilitar autocarga remota em cada partida (para trabalho off-line)
-206 Cor de seleção
-207 Cor do cursor de inserção
-208 Orientação
-209 Vertical
-210 Horizontal
-211 Habilitar FTP (experimental)
-212 **Invalid XML - Reload as HTML or show parsing errors?
-213 **Invalid XML - Show parsing errors?
-214 **Invalid characters - Reload as HTML or show parsing errors?
-215 **Invalid characters
-216 No perfil Amaya atual:
-217 Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)
-218 A codificação deste documento não é suportada por Amaya
-219 Indisponível
-220 Navegar
-221 Navegador de arquivos
-222 Seleção
-223 Menu filtro local de anotações
-224 Exibir
-225 Esconder
-226 Exibir tudo
-227 Esconder tudo
-228 * significa escondido, - significa parcialmente escondido
-229 Opções de filtragem
-230 Por autor
-231 Por tipo
-232 Por servidor
-233 Teclas de acesso
-234 Ignorar
-235 Elemento de estilo
-236 Não é possível criar um XPointer
-237 Não é possível achar para onde mover a anotação
-238 Não é possível mover a anotação para outro documento
-239 Selecionar um conjunto de caracteres (charset)
-240 Selecionar o tipo MIME
-241 Mudar conjunto de caracteres (Charset)
-242 Mudar o tipo MIME
-243 Modificar
-244 este tipo de documento não suporta conjuntos de caracteres (charsets)
-245 O destino deve ser uma URL HTTP para usar esta opção
-246 Erro: tipo MIME inválido
-247 Desconhecido
-248 Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)
-249 **This document is already loaded in another Window
-250 **Saving that instance may cause a lost update problem
+166 **Export CR/LF
+167 Preferências de publicação
+168 Usar ETAGS e pré-condições
+169 Verificar cada PUT com um GET
+170 Nome padrão para URLs terminadas em '/'
+171 Preferências de geometria
+172 Salvar geometria atual
+173 restaurar geometria padrão
+174 As mudanças serão efetivadas quando uma nova janela abrir.
+175 Preferências de cor
+176 Cor do plano frontal do documento
+177 Cor de fundo do documento
+178 Cor do plano frontal do menu
+179 Cor de fundo do menu
+180 Não foi possível inicializar o cache. Você pode ter especificado um diretório de cache inválido ou tem outro Amaya usando o cache.
+181 Home
+182 Lista de idiomas preferidos como "pt, en":
+183 Localização do arquivo de definição de perfís
+184 Seleção de perfil
+185 Estas modificações não serão modificadas até que se reinicialize Amaya.
+186 Preferências de perfís
+187 Introduzir a URL do servidor de gabaritos
+188 Preferências de gabaritos
+189 Permitir redirecionamentos PUT automáticos nestes domínios
+190 Ignorar folhas de estilo
+191 Tipo de transformação
+192 (separar cada entrada com um espaço)
+193 Não há proxy nestes domínios
+194 Somente com proxy estes domínios
+195 Nome de carácter
+196 Diretório de usuário Amaya
+197 Diretório temporário
+198 Usar paleta
+199 Negociação de idioma
+200 Configuração para anotações
+201 Usuário anotador
+202 Servidor de publicação de anotações
+203 Servidores de anotações
+204 Autocarregar anotações locais
+205 Autocarregar anotações remotas
+206 Desabilitar autocarga remota em cada partida (para trabalho off-line)
+207 Cor de seleção
+208 Cor do cursor de inserção
+209 Orientação
+210 Vertical
+211 Horizontal
+212 Habilitar FTP (experimental)
+213 **Invalid XML - Reload as HTML or show parsing errors?
+214 **Invalid XML - Show parsing errors?
+215 **Invalid characters - Reload as HTML or show parsing errors?
+216 **Invalid characters
+217 No perfil Amaya atual:
+218 Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)
+219 A codificação deste documento não é suportada por Amaya
+220 Indisponível
+221 Navegar
+222 Navegador de arquivos
+223 Seleção
+224 Menu filtro local de anotações
+225 Exibir
+226 Esconder
+227 Exibir tudo
+228 Esconder tudo
+229 * significa escondido, - significa parcialmente escondido
+230 Opções de filtragem
+231 Por autor
+232 Por tipo
+233 Por servidor
+234 Teclas de acesso
+235 Ignorar
+236 Elemento de estilo
+237 Não é possível criar um XPointer
+238 Não é possível achar para onde mover a anotação
+239 Não é possível mover a anotação para outro documento
+240 Selecionar um conjunto de caracteres (charset)
+241 Selecionar o tipo MIME
+242 Mudar conjunto de caracteres (Charset)
+243 Mudar o tipo MIME
+244 Modificar
+245 este tipo de documento não suporta conjuntos de caracteres (charsets)
+246 O destino deve ser uma URL HTTP para usar esta opção
+247 Erro: tipo MIME inválido
+248 Desconhecido
+249 Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)
+250 **This document is already loaded in another Window
+251 **Saving that instance may cause a lost update problem

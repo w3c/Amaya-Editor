@@ -165,88 +165,89 @@
 163 Activer multi-key (`+a=à)
 164 Montrer les images de fond
 165 Cliquer deux fois pour suivre un lien
-166 Configuration de la publication
-167 Utiliser les ETAGS et les pré-conditions
-168 Vérifier chaque PUT avec un GET
-169 Nom par défaut pour les URLs finissant par un '/'
-170 Configuration de la géométrie
-171 Sauver la géométrie courante
-172 Restaurer la géométrie défaut
-173 Ces changements seront effectifs lors de l'ouverture d'une fenêtre
-174 Configuration des couleurs
-175 Couleur d'avant-plan des documents
-176 Couleur d'arrière-plan des documents
-177 Couleur d'avant-plan des menus
-178 Couleur d'arrière-plan des menus
-179 Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en méme-temps.
-180 Page personelle
-181 Liste des langues préférées comme "fr, en" :
-182 Emplacement du fichier de définition de profils
-183 Sélection du profil
-184 Ces changements seront effectifs lors du prochain démarrage.
-185 Configuration du profil
-186 Entrez l'URL du serveur de modèles
-187 Configuration des modèles de pages
-188 Autoriser la redirection automatique du PUT dans ces domaines
-189 Sans feuilles de style
-190 Transformer en
-191 (séparer chaque entrée avec un espace)
-192 Ne pas utiliser le proxy dans ces domaines
-193 Utiliser le proxy uniquement dans ces domaines
-194 Nom du caractère
-195 Repertoire utilisateur
-196 Repertoire témporaire
-197 Par palette
-198 Négotiation de langues
-199 Configurer les annotations
-200 Nom de l'utilisateur
-201 Serveur de publication
-202 Serveur d'annotations
-203 Charger automatiquement les annotations locales
-204 Charger automatiquement les annotations distantes
-205 Désactiver le chargement automatique des annotations distantes au démarrage
-206 Couleur de sélection
-207 Couleur du curseur d'insertion
-208 Orientation
-209 Portrait
-210 Paysage
-211 Support FTP (experimental)
-212 XML invalide - Recharger pour corriger ou montrer les erreurs ?
-213 XML invalide - Montrer les erreurs ?
-214 Caractères invalides - Recharger en HTML ou	montrer les erreurs ?
-215 Caractères invalides
-216 Dans le profil Amaya courant :
-217 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
-218 Le codage de ce document n'est pas supporté par Amaya
-219 Non disponible
-220 Butiner
-221 Sélecteur de fichiers
-222 Sélection
-223 Filtre local des annotations
-224 Montrer
-225 Cacher
-226 Montrer tout
-227 Cacher tout
-228 * signifie caché, - signifie partiellement caché
-229 Options de filtrage
-230 Par auteur
-231 Par type
-232 Par serveur
-233 Accés rapides
-234 Ignorer
-235 Elément Style
-236 Impossible de créer un XPointer
-237 Je ne peux pas deplacer l'annotation là
-238 Je ne peux pas bouger l'annotation vers un autre document
-239 Sélectionner un Charset
-240 Sélectionner un type MIME
-241 Changer Charset
-242 Changer le type MIME
-243 Changer
-244 Ce type de document n'a pas de charset
-245 L'URL doit être de type HTTP pour utiliser
-246 Erreur: type MIME incorrect
-247 Inconnu
-248 Styles ignorés - voir Vues/Montrer les erreurs
-249 Ce document est déjà affiché dans une autre fenêtre.
-250 Sauver cette instance peut provoquer des problèmes de mise à jour.
+166 Exporter CR/LF
+167 Configuration de la publication
+168 Utiliser les ETAGS et les pré-conditions
+169 Vérifier chaque PUT avec un GET
+170 Nom par défaut pour les URLs finissant par un '/'
+171 Configuration de la géométrie
+172 Sauver la géométrie courante
+173 Restaurer la géométrie défaut
+174 Ces changements seront effectifs lors de l'ouverture d'une fenêtre
+175 Configuration des couleurs
+176 Couleur d'avant-plan des documents
+177 Couleur d'arrière-plan des documents
+178 Couleur d'avant-plan des menus
+179 Couleur d'arrière-plan des menus
+180 Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en méme-temps.
+181 Page personelle
+182 Liste des langues préférées comme "fr, en" :
+183 Emplacement du fichier de définition de profils
+184 Sélection du profil
+185 Ces changements seront effectifs lors du prochain démarrage.
+186 Configuration du profil
+187 Entrez l'URL du serveur de modèles
+188 Configuration des modèles de pages
+189 Autoriser la redirection automatique du PUT dans ces domaines
+190 Sans feuilles de style
+191 Transformer en
+192 (séparer chaque entrée avec un espace)
+193 Ne pas utiliser le proxy dans ces domaines
+194 Utiliser le proxy uniquement dans ces domaines
+195 Nom du caractère
+196 Repertoire utilisateur
+197 Repertoire témporaire
+198 Par palette
+199 Négotiation de langues
+200 Configurer les annotations
+201 Nom de l'utilisateur
+202 Serveur de publication
+203 Serveur d'annotations
+204 Charger automatiquement les annotations locales
+205 Charger automatiquement les annotations distantes
+206 Désactiver le chargement automatique des annotations distantes au démarrage
+207 Couleur de sélection
+208 Couleur du curseur d'insertion
+209 Orientation
+210 Portrait
+211 Paysage
+212 Support FTP (experimental)
+213 XML invalide - Recharger pour corriger ou montrer les erreurs ?
+214 XML invalide - Montrer les erreurs ?
+215 Caractères invalides - Recharger en HTML ou	montrer les erreurs ?
+216 Caractères invalides
+217 Dans le profil Amaya courant :
+218 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
+219 Le codage de ce document n'est pas supporté par Amaya
+220 Non disponible
+221 Butiner
+222 Sélecteur de fichiers
+223 Sélection
+224 Filtre local des annotations
+225 Montrer
+226 Cacher
+227 Montrer tout
+228 Cacher tout
+229 * signifie caché, - signifie partiellement caché
+230 Options de filtrage
+231 Par auteur
+232 Par type
+233 Par serveur
+234 Accés rapides
+235 Ignorer
+236 Elément Style
+237 Impossible de créer un XPointer
+238 Je ne peux pas deplacer l'annotation là
+239 Je ne peux pas bouger l'annotation vers un autre document
+240 Sélectionner un Charset
+241 Sélectionner un type MIME
+242 Changer Charset
+243 Changer le type MIME
+244 Changer
+245 Ce type de document n'a pas de charset
+246 L'URL doit être de type HTTP pour utiliser
+247 Erreur: type MIME incorrect
+248 Inconnu
+249 Styles ignorés - voir Vues/Montrer les erreurs
+250 Ce document est déjà affiché dans une autre fenêtre.
+251 Sauver cette instance peut provoquer des problèmes de mise à jour.

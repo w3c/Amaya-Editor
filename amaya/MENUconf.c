@@ -165,6 +165,7 @@ static ThotBool DoubleClick;
 static ThotBool S_Targets;
 static ThotBool S_Numbers;
 static ThotBool EnableFTP;
+static ThotBool ExportCRLF;
 
 /* Publish menu options */
 #ifdef _WINDOWS
@@ -1539,6 +1540,7 @@ static void GetGeneralConf (void)
   TtaGetEnvBoolean ("ENABLE_FTP", &EnableFTP);
   TtaGetEnvBoolean ("SHOW_TARGET", &S_Targets);
   TtaGetEnvBoolean ("SECTION_NUMBERING", &S_Numbers);
+  TtaGetEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
   GetEnvString ("HOME_PAGE", HomePage);
   GetEnvString ("LANG", DialogueLang);
   GetEnvString ("ACCESSKEY_MOD", ptr);
@@ -1778,6 +1780,7 @@ static void SetGeneralConf (void)
   TtaSetEnvBoolean ("SECTION_NUMBERING", S_Numbers, TRUE);
   if (old != S_Numbers)
     UpdateSectionNumbering ();
+  TtaSetEnvBoolean ("EXPORT_CRLF", ExportCRLF, TRUE);
   /* @@@ */
   TtaSetEnvBoolean ("ENABLE_FTP", EnableFTP, TRUE);
   AHTFTPURL_flag_set (EnableFTP);
@@ -1857,6 +1860,8 @@ void WIN_RefreshGeneralMenu (HWND hwnDlg)
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_NUMBERS, (S_Numbers) 
 		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_CRLF, (ExportCRLF) 
+		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
   switch (AccesskeyMod)
     {
@@ -1914,6 +1919,8 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 		     TtaGetMessage (1, TShowTargets));
       SetWindowText (GetDlgItem (hwnDlg, IDC_NUMBERS),
 		     TtaGetMessage (1, TSectionNumber));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_CRLF),
+		     TtaGetMessage (amaya, AM_EXPORT_CRLF));
       /* write the current values in the dialog entries */
       WIN_RefreshGeneralMenu (hwnDlg);
       break;
@@ -1976,6 +1983,9 @@ LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  break;
 	case IDC_NUMBERS:
 	  S_Numbers = !S_Numbers;
+	  break;
+	case IDC_CRLF:
+	  ExportCRLF = !ExportCRLF;
 	  break;
 	case IDC_ENABLEFTP:
 	  EnableFTP = !EnableFTP;

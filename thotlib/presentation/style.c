@@ -1472,7 +1472,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  rule->PrDimRule.DrSameDimens = TRUE;
 	  rule->PrDimRule.DrUnit = int_unit;
 	  rule->PrDimRule.DrAttr = FALSE;
-	  rule->PrDimRule.DrMin = FALSE;
+	  rule->PrDimRule.DrMin = TRUE;
 	  rule->PrDimRule.DrUserSpecified = FALSE;
 	  rule->PrDimRule.DrRelation = RlEnclosed;
 	  rule->PrDimRule.DrNotRelat = FALSE;
@@ -1508,7 +1508,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  rule->PrDimRule.DrSameDimens = TRUE;
 	  rule->PrDimRule.DrUnit = int_unit;
 	  rule->PrDimRule.DrAttr = FALSE;
-	  rule->PrDimRule.DrMin = FALSE;
+	  rule->PrDimRule.DrMin = TRUE;
 	  rule->PrDimRule.DrUserSpecified = FALSE;
 	  rule->PrDimRule.DrRelation = RlEnclosing;
 	  rule->PrDimRule.DrNotRelat = FALSE;

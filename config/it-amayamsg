@@ -165,88 +165,89 @@
 163 Abilita le sequenze multitasto
 164 Mostra le immagini di sfondo
 165 Il doppio click attiva il collegamento
-166 Preferenze per la pubblicazione
-167 Usa gli ETAGS e le precondizioni
-168 Verifica ogni PUT con un GET
-169 Nome di default per gli URL che terminano con '/'
-170 Preferenze della geometria
-171 Salva la geometria corrente
-172 Ripristina la geometria di default
-173 La modifica sarà effettiva quando aprirai una nuova finestra.
-174 Preferenze dei colori
-175 Colore in primo piano nei documenti
-176 Colore dello sfondo nei documenti
-177 Colore in primo piano nei menu
-178 Colore dello sfondo nei menu
-179 Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.
-180 Home
-181 Lista delle lingue preferite, come "it, en, fr":
-182 File di definizione dei profili
-183 Selezione dei profili
-184 Queste modifiche saranno effettive alla prossima esecuzione
-185 Preferenze dei profili
-186 Digita l'URL del server dei modelli
-187 Preferenze sui modelli
-188 Consenti la redirezione automatica dei PUT su questi domini
-189 Ignora gli stili CSS
-190 Trasforma tipo
-191 (separa ogni campo con uno spazio)
-192 Escludi l'utilizzo del proxy su questi domini
-193 Utilizza il proxy solo su questi domini
-194 Nome del carattere
-195 Directory dell'utente
-196 Directory temporanea
-197 Usa la palette
-198 Negoziazione della lingua
-199 Configurazione delle annotazioni
-200 Nome utente
-201 Server per la pubblicazione
-202 Server per le annotazioni
-203 Caricamento automatico delle annotazioni local
-204 Caricamento automatico delle annotazioni remote
-205 Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)
-206 Colore della selezione
-207 Colore del cursore
-208 Orientamento
-209 Ritratto
-210 Paesaggio
-211 Abilita FTP (sperimentale)
-212 **Invalid XML - Reload as HTML or show parsing errors?
-213 **Invalid XML - Show parsing errors?
-214 **Invalid characters - Reload as HTML or show parsing errors?
-215 **Invalid characters
-216 Nel profilo attuale di Amaya:
-217 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
-218 La codifica per questo documento non e` supportata da Amaya
-219 Non disponibile
-220 Scorri
-221 File Browser
-222 Selezione
-223 Menu per i filtri locali - annotazioni
-224 Mostra
-225 Nascondi
-226 Mostra tutto
-227 Nascondi tutto
-228 * significa nascosto, - significa parzialmente nascosto
-229 Opzioni per i filtri
-230 Per autore
-231 Per tipo
-232 Per server
-233 Chiavi di accesso
-234 Ignora
-235 Elemento si stile
-236 No posso create un XPointer
-237 Non trovo dove muovere l'annotazione
-238 Non posso muovere l'annotazione su un diverso documento
-239 Seleziona un charset
-240 Seleziona un tipo MIME
-241 Cambia charset
-242 Cambia tipo MIME
-243 Cambia
-244 Questo tipo di documento non supporta i charset
-245 Per usare questa opzione, il target deve essere un'URL HTTP
-246 Errore: MIME type non valido
-247 Sconosciuto
-248 I stili sono ignorati - vedi Viste/Mostra le errore
-249 **This document is already loaded in another Window
-250 **Saving that instance may cause a lost update problem
+166 **Export CR/LF
+167 Preferenze per la pubblicazione
+168 Usa gli ETAGS e le precondizioni
+169 Verifica ogni PUT con un GET
+170 Nome di default per gli URL che terminano con '/'
+171 Preferenze della geometria
+172 Salva la geometria corrente
+173 Ripristina la geometria di default
+174 La modifica sarà effettiva quando aprirai una nuova finestra.
+175 Preferenze dei colori
+176 Colore in primo piano nei documenti
+177 Colore dello sfondo nei documenti
+178 Colore in primo piano nei menu
+179 Colore dello sfondo nei menu
+180 Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.
+181 Home
+182 Lista delle lingue preferite, come "it, en, fr":
+183 File di definizione dei profili
+184 Selezione dei profili
+185 Queste modifiche saranno effettive alla prossima esecuzione
+186 Preferenze dei profili
+187 Digita l'URL del server dei modelli
+188 Preferenze sui modelli
+189 Consenti la redirezione automatica dei PUT su questi domini
+190 Ignora gli stili CSS
+191 Trasforma tipo
+192 (separa ogni campo con uno spazio)
+193 Escludi l'utilizzo del proxy su questi domini
+194 Utilizza il proxy solo su questi domini
+195 Nome del carattere
+196 Directory dell'utente
+197 Directory temporanea
+198 Usa la palette
+199 Negoziazione della lingua
+200 Configurazione delle annotazioni
+201 Nome utente
+202 Server per la pubblicazione
+203 Server per le annotazioni
+204 Caricamento automatico delle annotazioni local
+205 Caricamento automatico delle annotazioni remote
+206 Disabilita il caricamento remoto automatico alla partenza (per lavorare offline)
+207 Colore della selezione
+208 Colore del cursore
+209 Orientamento
+210 Ritratto
+211 Paesaggio
+212 Abilita FTP (sperimentale)
+213 **Invalid XML - Reload as HTML or show parsing errors?
+214 **Invalid XML - Show parsing errors?
+215 **Invalid characters - Reload as HTML or show parsing errors?
+216 **Invalid characters
+217 Nel profilo attuale di Amaya:
+218 I tag/attributi sono ignorati - vedi Viste/Mostra le errore
+219 La codifica per questo documento non e` supportata da Amaya
+220 Non disponibile
+221 Scorri
+222 File Browser
+223 Selezione
+224 Menu per i filtri locali - annotazioni
+225 Mostra
+226 Nascondi
+227 Mostra tutto
+228 Nascondi tutto
+229 * significa nascosto, - significa parzialmente nascosto
+230 Opzioni per i filtri
+231 Per autore
+232 Per tipo
+233 Per server
+234 Chiavi di accesso
+235 Ignora
+236 Elemento si stile
+237 No posso create un XPointer
+238 Non trovo dove muovere l'annotazione
+239 Non posso muovere l'annotazione su un diverso documento
+240 Seleziona un charset
+241 Seleziona un tipo MIME
+242 Cambia charset
+243 Cambia tipo MIME
+244 Cambia
+245 Questo tipo di documento non supporta i charset
+246 Per usare questa opzione, il target deve essere un'URL HTTP
+247 Errore: MIME type non valido
+248 Sconosciuto
+249 I stili sono ignorati - vedi Viste/Mostra le errore
+250 **This document is already loaded in another Window
+251 **Saving that instance may cause a lost update problem

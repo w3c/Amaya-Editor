@@ -165,88 +165,89 @@
 163 Activar multi-key (`+a=à)
 164 Mostrar imágenes de fondo
 165 Doble click activa enlaces
-166 Preferencias de publicación
-167 Usar ETAGS y precondiciones
-168 Verificar cada PUT con un GET
-169 El nombre por omisión de URL termina en '/'
-170 Preferencias de geometría
-171 Guardar geometria actual
-172 Restaurar la geometría por omisión
-173 Los cambios serán efectivos cuando abra unanueva ventana.
-174 Preferencias de color
-175 Color del documento
-176 Color del fondo del documento
-177 Menu color de documeto
-178 Menu color de fondo
-179 No pude iniciar el caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el cache.
-180 Home
-181 Lista de idiomas preferidos como "es, en, fr":
-182 Ubicación de fichero de definición de perfiles
-183 Seleccion de perfil
-184 Estos cambios no serán efectivos hasta que se reinicie Amaya
-185 Preferencias de perfiles
-186 Introduzca la URL del servidor de plantillas
-187 Preferencias de plantillas
-188 Permitir redirecciones PUT automáticas en estos dominios
-189 Ignorar hojas de estilo
-190 Tipo de transformación
-191 (separar cada entrada con un espacio)
-192 No hay proxy es estos dominios
-193 Sólo proxy en estos dominios
-194 Nombre de carácter
-195 Directorio de usuario de Amaya
-196 Directorio temporal
-197 Usar paleta
-198 Negociación de idioma
-199 Configuracion para anotaciones
-200 Anotación de usuario
-201 Servidor de publicación
-202 Servidores de annotaciones
-203 Autocargar anotaciones locales
-204 Autocargar anotaciones remotas
-205 Deshabilitar autorecarga remota en cada inicio (para trabajo off line)
-206 Seleccion de color
-207 Caret color
-208 Orientacion
-209 Vertical
-210 Apaisado
-211 Activar FTP (experimental)
-212 **Invalid XML - Reload as HTML or show parsing errors?
-213 **Invalid XML - Show parsing errors?
-214 **Invalid characters - Reload as HTML or show parsing errors?
-215 **Invalid characters
-216 En el perfil actual de Amaya:
-217 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
-218 La codificación de este documento no está soportada por Amaya
-219 No disponible
-220 Navegar
-221 Navegador de ficheros
-222 Selección
-223 Filtro local de annotaciones
-224 Mostrar
-225 Esconder
-226 Mostrar todo
-227 Esconder todo
-228 * significa escondido, - significa parcialmente escondido
-229 Opciones de filtrado
-230 Por autor
-231 Por typo
-232 Por servidor
-233 Access keys
-234 Ignorar
-235 Elemento de estilo
-236 No puedo crear un XPointer
-237 No se a donde mover la annotación
-238 No puedo mover la annotación a un otro documento
-239 Seleccionar un Charset
-240 Seleccionar un tipo MIME
-241 Cambiar Charset
-242 Cambiar tipo MIME
-243 Cambiar
-244 Este tipo de documento no soporta charsets
-245 Para usar esta opción el destino tiene que ser una URL HTTP
-246 Error: tipo MIME inválido
-247 Desconocido
-248 Se ignoran estili - vea Vistas/Mostrar fichero log
-249 Este documento esta abierto en una otra ventana
-250 Salvar esta instancia puede provar un problema de sincronización
+166 **Export CR/LF
+167 Preferencias de publicación
+168 Usar ETAGS y precondiciones
+169 Verificar cada PUT con un GET
+170 El nombre por omisión de URL termina en '/'
+171 Preferencias de geometría
+172 Guardar geometria actual
+173 Restaurar la geometría por omisión
+174 Los cambios serán efectivos cuando abra unanueva ventana.
+175 Preferencias de color
+176 Color del documento
+177 Color del fondo del documento
+178 Menu color de documeto
+179 Menu color de fondo
+180 No pude iniciar el caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el cache.
+181 Home
+182 Lista de idiomas preferidos como "es, en, fr":
+183 Ubicación de fichero de definición de perfiles
+184 Seleccion de perfil
+185 Estos cambios no serán efectivos hasta que se reinicie Amaya
+186 Preferencias de perfiles
+187 Introduzca la URL del servidor de plantillas
+188 Preferencias de plantillas
+189 Permitir redirecciones PUT automáticas en estos dominios
+190 Ignorar hojas de estilo
+191 Tipo de transformación
+192 (separar cada entrada con un espacio)
+193 No hay proxy es estos dominios
+194 Sólo proxy en estos dominios
+195 Nombre de carácter
+196 Directorio de usuario de Amaya
+197 Directorio temporal
+198 Usar paleta
+199 Negociación de idioma
+200 Configuracion para anotaciones
+201 Anotación de usuario
+202 Servidor de publicación
+203 Servidores de annotaciones
+204 Autocargar anotaciones locales
+205 Autocargar anotaciones remotas
+206 Deshabilitar autorecarga remota en cada inicio (para trabajo off line)
+207 Seleccion de color
+208 Caret color
+209 Orientacion
+210 Vertical
+211 Apaisado
+212 Activar FTP (experimental)
+213 **Invalid XML - Reload as HTML or show parsing errors?
+214 **Invalid XML - Show parsing errors?
+215 **Invalid characters - Reload as HTML or show parsing errors?
+216 **Invalid characters
+217 En el perfil actual de Amaya:
+218 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
+219 La codificación de este documento no está soportada por Amaya
+220 No disponible
+221 Navegar
+222 Navegador de ficheros
+223 Selección
+224 Filtro local de annotaciones
+225 Mostrar
+226 Esconder
+227 Mostrar todo
+228 Esconder todo
+229 * significa escondido, - significa parcialmente escondido
+230 Opciones de filtrado
+231 Por autor
+232 Por typo
+233 Por servidor
+234 Access keys
+235 Ignorar
+236 Elemento de estilo
+237 No puedo crear un XPointer
+238 No se a donde mover la annotación
+239 No puedo mover la annotación a un otro documento
+240 Seleccionar un Charset
+241 Seleccionar un tipo MIME
+242 Cambiar Charset
+243 Cambiar tipo MIME
+244 Cambiar
+245 Este tipo de documento no soporta charsets
+246 Para usar esta opción el destino tiene que ser una URL HTTP
+247 Error: tipo MIME inválido
+248 Desconocido
+249 Se ignoran estili - vea Vistas/Mostrar fichero log
+250 Este documento esta abierto en una otra ventana
+251 Salvar esta instancia puede provar un problema de sincronización

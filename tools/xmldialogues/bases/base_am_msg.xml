@@ -1458,6 +1458,10 @@
 	<message xml:lang="es">Doble click activa enlaces</message>
 	<message xml:lang="pt">Duplo clique ativa enlace</message>
 </label>
+<label define="AM_EXPORT_CRLF">
+	<message xml:lang="en">Export CR/LF</message>
+	<message xml:lang="fr">Exporter CR/LF</message>
+</label>
 <label define="AM_PUBLISH_MENU">
 	<message xml:lang="en">Publishing Preferences</message>
 	<message xml:lang="fr">Configuration de la publication</message>

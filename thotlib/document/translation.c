@@ -69,6 +69,7 @@ static char         fileName[MAX_PATH];
 /* file extension */
 static char         fileExtension[MAX_PATH];
 static Proc         GetEntityFunction = NULL;
+static ThotBool     ExportCRLF;
 
 #include "absboxes_f.h"
 #include "applicationapi_f.h"
@@ -173,6 +174,14 @@ static void PutChar (wchar_t c, int fnum, char *outBuf,
 	{
 	  mbc[0] = '&';
 	  nb_bytes2write = 1;
+	}
+      else if (c == EOL)
+	{
+	  nb_bytes2write = 0;
+	  if (ExportCRLF)
+	    mbc[nb_bytes2write++] = __CR__;
+	  mbc[nb_bytes2write++] = EOL;
+	  mbc[nb_bytes2write] = EOS;
 	}
       /* translate the input character */
       else if (GetEntityFunction && c > 127 && pDoc->DocCharset == US_ASCII)
@@ -298,8 +307,11 @@ static void PutChar (wchar_t c, int fnum, char *outBuf,
 		    {
 		      /* write the content of the buffer */
 		      for (j = 0; j < i; j++)
-			putc (OutFile[fnum].OfBuffer[j], fileDesc); 
-		      /* on ecrit un saut de ligne */
+			putc (OutFile[fnum].OfBuffer[j], fileDesc);
+		      if (ExportCRLF)
+			/* generate a CR */
+			putc (__CR__, fileDesc);
+		      /* generate a LF */
 		      fprintf (fileDesc, pTSch->TsTranslEOL);
 		      OutFile[fnum].OfLineLen = 0;
 		      OutFile[fnum].OfLineNumber++;
@@ -3422,26 +3434,27 @@ static void FlushOutputFiles (PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-   ExportDocument     exporte le document pointe' par pDoc, selon le  
-   schema de traduction de nom TSchemaName et produit le resultat  
-   dans le fichier de nom fName.
-   Retourne TRUE si export reussi.
+   ExportDocument outputs the document pDoc with the translation schema
+   tschema into the file fName.
+   Returns TRUE if sucessful.
   ----------------------------------------------------------------------*/
 ThotBool ExportDocument (PtrDocument pDoc, char *fName,
-			 char *TSchemaName, ThotBool recordLineNb)
+			 char *tschema, ThotBool recordLineNb)
 {
   FILE               *outputFile; /* fichier de sortie principal */
   int                 i;
   ThotBool            ok = TRUE;
 
-  /* cree le fichier de sortie principal */
+  /* does it have to generate simple LF or CRLF */
+  TtaGetEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
+  /* create the main output file */
   outputFile = fopen (fName, "w");
   if (outputFile == NULL)
+   /* not created */
     ok = FALSE;
   else
-    /* le fichier de sortie principal a ete cree' */
     {
-      /* separe nom de directory et nom de fichier */
+      /* split directory name and file name */
       strncpy (fileDirectory, fName, MAX_PATH);
       fileDirectory[MAX_PATH - 1] = EOS;
       i = strlen (fileDirectory);
@@ -3458,8 +3471,8 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
 	  fileDirectory[i] = EOS;
 	}
       /* charge le schema de traduction du document */
-      if ((TSchemaName != NULL) &&
-	  !LoadTranslationSchema (TSchemaName, pDoc->DocSSchema) != 0)
+      if ((tschema != NULL) &&
+	  !LoadTranslationSchema (tschema, pDoc->DocSSchema) != 0)
 	{
 	  /* echec au chargement du schema de traduction */
 	  fclose (outputFile);
@@ -3483,7 +3496,7 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
 	  /* du document */
 	  ResetTranslTags (pDoc->DocDocElement);
 	  /* traduit l'arbre principal du document */
-	  if (TSchemaName == NULL)
+	  if (tschema == NULL)
 	    /* Save of a Generic-Xml document */
 	    printf ("\nGRNERIC-XML\n");
 	  else
@@ -3502,11 +3515,11 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
 
 /*----------------------------------------------------------------------
   ExportTree   exporte le sous arbre pointe par pEl du document
-  pointe' par pDoc, selon le schema de traduction de nom TSchemaName 
+  pointe' par pDoc, selon le schema de traduction de nom tschema 
   et produit le resultat dans le fichier de nom fName ou dans le buffer.
   ----------------------------------------------------------------------*/
 void ExportTree (PtrElement pEl, PtrDocument pDoc, char *fName,
-		 char *TSchemaName)
+		 char *tschema)
 {
   int                 i;
   FILE               *outputFile; /* fichier de sortie principal */
@@ -3533,7 +3546,7 @@ void ExportTree (PtrElement pEl, PtrDocument pDoc, char *fName,
       fileDirectory[i] = EOS;
       }
     /* charge le schema de traduction du document */
-    if (!LoadTranslationSchema (TSchemaName, pDoc->DocSSchema) != 0 ||
+    if (!LoadTranslationSchema (tschema, pDoc->DocSSchema) != 0 ||
 	!GetTranslationSchema (pEl->ElStructSchema) != 0)
       /* echec au chargement du schema de traduction */
       fclose (outputFile);
@@ -3577,11 +3590,11 @@ void ExportTree (PtrElement pEl, PtrDocument pDoc, char *fName,
    document: the document to be exported.
    fileName: name of the file in which the document must be saved,
    including the directory name.
-   TSchemaName: name of the translation schema to be used. The directory
-   name must not be specified in parameter TSchemaName. See
+   tschema: name of the translation schema to be used. The directory
+   name must not be specified in parameter tschema. See
    function TtaSetSchemaPath.
   ----------------------------------------------------------------------*/
-ThotBool TtaExportDocument (Document document, char *fileName, char *TSchemaName)
+ThotBool TtaExportDocument (Document document, char *fileName, char *tschema)
 {
   ThotBool ok = FALSE;
 
@@ -3593,7 +3606,7 @@ ThotBool TtaExportDocument (Document document, char *fileName, char *TSchemaName
     TtaError (ERR_invalid_document_parameter);
   else
     /* parameter document is correct */
-    ok = ExportDocument (LoadedDocument[document - 1], fileName, TSchemaName,
+    ok = ExportDocument (LoadedDocument[document - 1], fileName, tschema,
 			 FALSE);
   return (ok);
 }
@@ -3612,13 +3625,13 @@ ThotBool TtaExportDocument (Document document, char *fileName, char *TSchemaName
    document: the document to be exported.
    fileName: name of the file in which the document must be saved,
    including the directory name.
-   TSchemaName: name of the translation schema to be used. The directory
-   name must not be specified in parameter TSchemaName. See
+   tschema: name of the translation schema to be used. The directory
+   name must not be specified in parameter tschema. See
    function TtaSetSchemaPath.
   ----------------------------------------------------------------------*/
 ThotBool TtaExportDocumentWithNewLineNumbers (Document document,
 					      char *fileName,
-					      char *TSchemaName)
+					      char *tschema)
 {
   ThotBool ok = FALSE;
 
@@ -3632,7 +3645,7 @@ ThotBool TtaExportDocumentWithNewLineNumbers (Document document,
     TtaError (ERR_invalid_parameter);
   else
     /* parameter document is correct */
-    ok = ExportDocument (LoadedDocument[document - 1], fileName, TSchemaName,
+    ok = ExportDocument (LoadedDocument[document - 1], fileName, tschema,
 			 TRUE);
   return (ok);
 }

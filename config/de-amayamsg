@@ -165,88 +165,89 @@
 163 Mehrfachtasten aktivieren (`+a=à)
 164 Hintergrundbilder anzeigen
 165 Doppelklick aktiviert Link
-166 Einstellungen veröffentlichen
-167 ETAGS und preconditions verwenden
-168 PUT durch GET verifizieren
-169 Dateiname, falls URL mit '/' endet
-170 Einstellungen Fenstergeometrie
-171 Aktuelle Geometrie speichern
-172 Standardgeometrie einstellen
-173 Die Änderungen werden beim öffnen eines neuen Fensters wirksam.
-174 Farbeinstellungen
-175 Schriftfarbe (Dokument)
-176 Hintergrundfarbe (Dokument)
-177 Schriftfarbe (Menüs)
-178 Hintergrundfarbe (Menüs)
-179 Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.
-180 Anfang
-181 Liste der bevorzugten Sprachen wie "en, fr":
-182 Verzeichnis der Profildefinitionen
-183 Profilauswahl
-184 Diese Änderungen werden erst bei einem Neustart von Amaya wirksam
-185 Profileinstellungen
-186 URL des Vorlagen-Servers angeben
-187 Vorlagen-Einstellungen
-188 Automatische PUT-Umleitung bei diesen Domänen erlauben
-189 Stilvorlagen ignorieren
-190 Umformatieren
-191 (Einträge durch Leerzeichen trennen)
-192 Keinen Proxy für folgende Domänen verwenden
-193 Proxy nur für folgende Domänen verwenden
-194 Zeichenname
-195 Amaya Benutzerverzeichnis
-196 Lokaler filter...
-197 Palette benutzen
-198 Sprachauswahl
-199 Konfiguration für Anmerkungen
-200 Anmerkungsbenutzer
-201 Anmerkungs-Veröffentlichungs-Server
-202 Anmerkungsserver
-203 Local Anmerkungen automatisch laden
-204 Remote Anmerkungen automatisch laden
-205 Kein automatisches Laden vom Remote Server beim Programmstart (Off-line Arbeitsmodus)
-206 Farbe Auswahl
-207 Farbe Cursor
-208 Ausrichtung
-209 Hochformat
-210 Querformat
-211 FTP zulassen (noch in der Erprobung)
-212 **Invalid XML - Reload as HTML or show parsing errors?
-213 **Invalid XML - Show parsing errors?
-214 **Invalid characters - Reload as HTML or show parsing errors?
-215 **Invalid characters
-216 Im gegenwärtigen Amaya Profil:
-217 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
-218 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
-219 Nicht verfügbar
-220 Browsen
-221 Datei-Browser
-222 Auswahl
-223 Menü für lokale Kommentierungsfilter
-224 Anzeigen
-225 Nicht anzeigen
-226 Alles anzeigen
-227 Nichts anzeigen
-228 * bedeutet verborgen, - bedeutet teilweise verborgen
-229 Filteroptionen
-230 Vom Autor
-231 Vom Typ
-232 Vom Server
-233 Zugriffstasten
-234 Ignorieren
-235 Stilelement
-236 Kann keinen XPointer erzeugen
-237 Kein Ziel zum Verschieben der Anmerkung [gefunden]
-238 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
-239 Charset auswählen
-240 MIME type auswählen
-241 Anderen Charset auswählen
-242 Anderen MIME type auswählen
-243 Wechseln
-244 Dieser Dokumenttyp unterstützt keine Charsets
-245 Diese Option kann nur mit einem HTTP URL Ziel verwendet werden
-246 Fehler: ungültiger MIME type
-247 Unbekannt
-248 Stilvorlagen sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
-249 **This document is already loaded in another Window
-250 **Saving that instance may cause a lost update problem
+166 **Export CR/LF
+167 Einstellungen veröffentlichen
+168 ETAGS und preconditions verwenden
+169 PUT durch GET verifizieren
+170 Dateiname, falls URL mit '/' endet
+171 Einstellungen Fenstergeometrie
+172 Aktuelle Geometrie speichern
+173 Standardgeometrie einstellen
+174 Die Änderungen werden beim öffnen eines neuen Fensters wirksam.
+175 Farbeinstellungen
+176 Schriftfarbe (Dokument)
+177 Hintergrundfarbe (Dokument)
+178 Schriftfarbe (Menüs)
+179 Hintergrundfarbe (Menüs)
+180 Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.
+181 Anfang
+182 Liste der bevorzugten Sprachen wie "en, fr":
+183 Verzeichnis der Profildefinitionen
+184 Profilauswahl
+185 Diese Änderungen werden erst bei einem Neustart von Amaya wirksam
+186 Profileinstellungen
+187 URL des Vorlagen-Servers angeben
+188 Vorlagen-Einstellungen
+189 Automatische PUT-Umleitung bei diesen Domänen erlauben
+190 Stilvorlagen ignorieren
+191 Umformatieren
+192 (Einträge durch Leerzeichen trennen)
+193 Keinen Proxy für folgende Domänen verwenden
+194 Proxy nur für folgende Domänen verwenden
+195 Zeichenname
+196 Amaya Benutzerverzeichnis
+197 Lokaler filter...
+198 Palette benutzen
+199 Sprachauswahl
+200 Konfiguration für Anmerkungen
+201 Anmerkungsbenutzer
+202 Anmerkungs-Veröffentlichungs-Server
+203 Anmerkungsserver
+204 Local Anmerkungen automatisch laden
+205 Remote Anmerkungen automatisch laden
+206 Kein automatisches Laden vom Remote Server beim Programmstart (Off-line Arbeitsmodus)
+207 Farbe Auswahl
+208 Farbe Cursor
+209 Ausrichtung
+210 Hochformat
+211 Querformat
+212 FTP zulassen (noch in der Erprobung)
+213 **Invalid XML - Reload as HTML or show parsing errors?
+214 **Invalid XML - Show parsing errors?
+215 **Invalid characters - Reload as HTML or show parsing errors?
+216 **Invalid characters
+217 Im gegenwärtigen Amaya Profil:
+218 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
+219 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
+220 Nicht verfügbar
+221 Browsen
+222 Datei-Browser
+223 Auswahl
+224 Menü für lokale Kommentierungsfilter
+225 Anzeigen
+226 Nicht anzeigen
+227 Alles anzeigen
+228 Nichts anzeigen
+229 * bedeutet verborgen, - bedeutet teilweise verborgen
+230 Filteroptionen
+231 Vom Autor
+232 Vom Typ
+233 Vom Server
+234 Zugriffstasten
+235 Ignorieren
+236 Stilelement
+237 Kann keinen XPointer erzeugen
+238 Kein Ziel zum Verschieben der Anmerkung [gefunden]
+239 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
+240 Charset auswählen
+241 MIME type auswählen
+242 Anderen Charset auswählen
+243 Anderen MIME type auswählen
+244 Wechseln
+245 Dieser Dokumenttyp unterstützt keine Charsets
+246 Diese Option kann nur mit einem HTTP URL Ziel verwendet werden
+247 Fehler: ungültiger MIME type
+248 Unbekannt
+249 Stilvorlagen sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
+250 **This document is already loaded in another Window
+251 **Saving that instance may cause a lost update problem

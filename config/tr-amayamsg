@@ -165,88 +165,89 @@
 163 **Enable multi-key (`+a=à)
 164 **Show background images
 165 **Double click activates link
-166 **Publishing Preferences
-167 **Use ETAGS and preconditions
-168 **Verify each PUT with a GET
-169 **Default name for URLs finishing in '/'
-170 **Geometry Preferences
-171 **Save current geometry
-172 **Restore default geometry
-173 **The change will be effective when you open a new window.
-174 **Color Preferences
-175 **Document foreground color
-176 **Document background color
-177 **Menu foreground color
-178 **Menu background color
-179 **Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
-180 **Home
-181 **List of preferred languages like "en, fr":
-182 **Location of profiles definition file
-183 **Profile Selection
-184 **These changes won't be effective until Amaya is restarted
-185 **Profiles Preferences
-186 **Enter the URL of the templates server
-187 **Templates Preferences
-188 **Allow automatic PUT redirections on these domains
-189 **Ignore style sheets
-190 Dönüþüm türü
-191 **(separate each entry with a space)
-192 **No proxy on these domains
-193 **Only proxy these domains
-194 **Character name
-195 **Amaya user directory
-196 **Temporary directory
-197 **Use palette
-198 **Language Negotiation
-199 **Configuration for annotations
-200 **Annotation user
-201 **Annotation post server
-202 **Annotation servers
-203 **Autoload local annotations
-204 **Autoload remote annotations
-205 **Disable remote autoload at each startup (for off-line work)
-206 **Selection color
-207 **Caret color
-208 **Orientation
-209 **Portrait
-210 **Landscape
-211 **Enable FTP (experimental)
-212 **Invalid XML - Reload as HTML or show parsing errors?
-213 **Invalid XML - Show parsing errors?
-214 **Invalid characters - Reload as HTML or show parsing errors?
-215 **Invalid characters
-216 **In the current Amaya profile:
-217 **Some tags/attributes are ignored - see Views/Show parsing errors
-218 **The encoding of this document is not supported by Amaya
-219 **Not available
-220 **Browse
-221 **File Browser
-222 **Selection
-223 **Annotation Local Filter Menu
-224 **Show
-225 **Hide
-226 **Show all
-227 **Hide all
-228 *** means hidden, - means partially hidden
-229 **Filter options
-230 **By author
-231 **By type
-232 **By server
-233 **Access keys
-234 **Ignore
-235 **Style element
-236 **Cannot create an XPointer
-237 **Cannot find where to move the annotation
-238 **Cannot move the annotation to a different document
-239 **Select a Charset
-240 **Select a MIME type
-241 **Change Charset
-242 **Change MIME type
-243 **Change
-244 **This type of document doesn't support charsets
-245 **The target must be an HTTP URL to use this option
-246 **Error: invalid MIME type
-247 **Unknown
-248 **Styles are ignored - see Views/Show parsing errors
-249 **This document is already loaded in another Window
-250 **Saving that instance may cause a lost update problem
+166 **Export CR/LF
+167 **Publishing Preferences
+168 **Use ETAGS and preconditions
+169 **Verify each PUT with a GET
+170 **Default name for URLs finishing in '/'
+171 **Geometry Preferences
+172 **Save current geometry
+173 **Restore default geometry
+174 **The change will be effective when you open a new window.
+175 **Color Preferences
+176 **Document foreground color
+177 **Document background color
+178 **Menu foreground color
+179 **Menu background color
+180 **Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
+181 **Home
+182 **List of preferred languages like "en, fr":
+183 **Location of profiles definition file
+184 **Profile Selection
+185 **These changes won't be effective until Amaya is restarted
+186 **Profiles Preferences
+187 **Enter the URL of the templates server
+188 **Templates Preferences
+189 **Allow automatic PUT redirections on these domains
+190 **Ignore style sheets
+191 Dönüþüm türü
+192 **(separate each entry with a space)
+193 **No proxy on these domains
+194 **Only proxy these domains
+195 **Character name
+196 **Amaya user directory
+197 **Temporary directory
+198 **Use palette
+199 **Language Negotiation
+200 **Configuration for annotations
+201 **Annotation user
+202 **Annotation post server
+203 **Annotation servers
+204 **Autoload local annotations
+205 **Autoload remote annotations
+206 **Disable remote autoload at each startup (for off-line work)
+207 **Selection color
+208 **Caret color
+209 **Orientation
+210 **Portrait
+211 **Landscape
+212 **Enable FTP (experimental)
+213 **Invalid XML - Reload as HTML or show parsing errors?
+214 **Invalid XML - Show parsing errors?
+215 **Invalid characters - Reload as HTML or show parsing errors?
+216 **Invalid characters
+217 **In the current Amaya profile:
+218 **Some tags/attributes are ignored - see Views/Show parsing errors
+219 **The encoding of this document is not supported by Amaya
+220 **Not available
+221 **Browse
+222 **File Browser
+223 **Selection
+224 **Annotation Local Filter Menu
+225 **Show
+226 **Hide
+227 **Show all
+228 **Hide all
+229 *** means hidden, - means partially hidden
+230 **Filter options
+231 **By author
+232 **By type
+233 **By server
+234 **Access keys
+235 **Ignore
+236 **Style element
+237 **Cannot create an XPointer
+238 **Cannot find where to move the annotation
+239 **Cannot move the annotation to a different document
+240 **Select a Charset
+241 **Select a MIME type
+242 **Change Charset
+243 **Change MIME type
+244 **Change
+245 **This type of document doesn't support charsets
+246 **The target must be an HTTP URL to use this option
+247 **Error: invalid MIME type
+248 **Unknown
+249 **Styles are ignored - see Views/Show parsing errors
+250 **This document is already loaded in another Window
+251 **Saving that instance may cause a lost update problem
