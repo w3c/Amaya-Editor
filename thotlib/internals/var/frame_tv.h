@@ -42,6 +42,7 @@ THOT_EXPORT ThotColor RO_Color;         /* Couleur du Read Only        */
 THOT_EXPORT ThotColor InactiveB_Color;  /* Couleur des boutons inactifs*/
 
 #ifdef _WINDOWS
+THOT_EXPORT HACCEL       hAccel[MAX_FRAME + 2];
 THOT_EXPORT WNDCLASS     RootShell;
 THOT_EXPORT HFONT        DefaultFont; /* default Font                */
 THOT_EXPORT HDC          TtDisplay;
