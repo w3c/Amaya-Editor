@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>
+Compiling Amaya on Windows NT</title>
+<meta name="GENERATOR" content="amaya V1.1 Beta">
+</head>
+<body lang="en">
+<p>
+<a href="http://www.w3.org"><img src="w3c_home" alt="image: w3c_home "></a> <a
+href="http://www.w3.org/Amaya"><img src="amaya.gif" alt="image: amaya.gif
+"></a><img src="guide48x" alt="image: guide48x "></p>
+<p>
+</p>
+
+<h1 align=center>Compiling Amaya On Windows NT</h1>
+<p style="text-align: justify">
+This is the first alpha release of Amaya running on Windows NT. We cannot
+guarantee that it runs correctly under Windows 95. It was developed with
+MSVC++. The project workspace is completely different than the Makefile
+delivered for Unix platforms. For example, we cannot run the compilers app,
+str, prs from the project workspace.</p>
+<p style="text-align: justify">
+At the present time, different components of Amaya project workspace are
+compiled independently . These components are: libwww, the Thot library and
+the Amaya application. Libwww and Thot library are not yet sub-projects of
+Amaya in this release. This version of Amaya does not include the compilers
+(this will be done in the next release).</p>
+<p style="text-align: justify">
+To compile Amaya, we have first to compile the libwww project which provides
+different dynamic (.DLL) and static (.LIB) libraries corresponding to
+different protocols (http, ftp, etc.). Then we have to compile Thot library.
+Finally we can compile Amaya application by including in its workspace project
+C files in the Thot/amaya directory, all the static libraries provided by the
+libwww and LibThotEditor.lib. This release includes make files for libwww,
+thot library and Amaya application.</p>
+<p style="text-align: justify">
+To execute Amaya, move all the dynamic libraries (www*.dll) provided after
+compiling libwww in the directory containing amaya.exe file</p>
+<p>
+Some of Amaya features are not yet supported under Windows:</p>
+<ul>
+<li>
+Printing, 
+<li>
+CSS dialogue (amaya supports of course CSS but the the item CSS in the menu
+styles is not connected). 
+<li>
+Spell checking (the dialogue already exists but it is not connected), 
+<li>
+Plugins, 
+<li>
+Client side image maps. 
+</ul>
+<p>
+All these features will be available in the next release.</p>
+<address>
+<a href="mailto:Ramzi.Guetari@w3.org">Ramzi Guetari</a><br>
+<a href="../../Help/Webmaster">Webmaster</a><br>
+$Date$</address>
+</body>
+</html>
