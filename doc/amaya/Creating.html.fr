@@ -16,9 +16,9 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Views.html"><img alt="previous" border="0"
-        src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top"
-        border="0" src="../Icons/up.gif" /></a> <a href="Links.html"><img
+      <td><p align="right"><a href="Views.html.fr"><img alt="previous" border="0"
+        src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
+        border="0" src="../Icons/up.gif" /></a> <a href="Links.html.fr"><img
         alt="next" border="0" src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -55,26 +55,26 @@ de créer l'en-tête demandé et de se conformer au HTML DTD.</p>
 <p>Quand vous créez de nouveaux éléments, il est important de sélectionner un
 <em> point d'insertion</em>, et non du texte ou un caractère unique: si la
 sélection courante  n'est pas vide,  <strong>Amaya</strong> tente de <a
-href="Changing.html#L631"><em>transformer</em></a> la partie sélectionnée dans
+href="Changing.html.fr#L631"><em>transformer</em></a> la partie sélectionnée dans
 le type de l'élément choisi.</p>
 
-<p>De la documentation sur <a href="HTML-elements/infoTypes.html">comment
+<p>De la documentation sur <a href="HTML-elements/infoTypes.html.fr">comment
 utiliser les types d'éléments </a> est disponible, ainsi que les brèves notes
-de la <a href="HTML.html">liste de tous les éléments HTML 4.0.</a></p>
+de la <a href="HTML.html.fr">liste de tous les éléments HTML 4.0.</a></p>
 
 <h3><a name="Structure">Menu Structure</a></h3>
 
 <p>Le <a href="#Types">menu Eléments </a>vous permet seulement de créer des
 éléments qui font partie du document BODY.  Pour créer des éléments dans la
 partie HEAD du document, utilisez le menu <strong>Structure</strong>  à partir
-de la  <a href="Views.html#Structure">vue structure</a>.  Ce menu fonctionne
+de la  <a href="Views.html.fr#Structure">vue structure</a>.  Ce menu fonctionne
 de la même manière que le menu  <strong>Eléments</strong>:  mettez le point
 d'insertion dans la position désirée et choisissez le type d'élément à partir
 du menu <strong>Structure.</strong></p>
 
 <p>Le menu <strong>Structure</strong> vous permet aussi de créer des
 commentaires, en utilisant son entrée "commentaires". Les commentaires sont
-seulement visibles dans la   <a href="Views.html#Structure">vue 
+seulement visibles dans la   <a href="Views.html.fr#Structure">vue 
 structure</a>, mais ils peuvent être insérés à n'importe quelle position dans
 le document.</p>
 
@@ -99,14 +99,14 @@ document, vous êtes souvent amenés à créer de nouveaux élément.  Pour  cela,
 il suffit de presser la touche Enter (ou Return). L'élément courant est clos
 et un nouveau est créé juste aprés.  Ceci s'applique évidemment aux
 paragraphes, mais aussi à d'autres types d'éléments, comme les en-têtes ou les
-<a href="Tables.html#Editing">cellules de table </a> par exemple.</p>
+<a href="Tables.html.fr#Editing">cellules de table </a> par exemple.</p>
 
 <p>Le plus souvent, le nouvel élément créé est simplement un paragraphe, quel
 que soit le type de l'élément précédent. Si vous avez besoin d'un autre type
 d'élément, vous pouvez changer immédiatement le type de cet élément, en
 sélectionnant le type désiré dans le menu "Eléments" ou en cliquant sur le
 bouton correspondant. Vous pouvez aussi continuer à taper et  <a
-href="Changing.html#L653">changer le type</a> plus tard.</p>
+href="Changing.html.fr#L653">changer le type</a> plus tard.</p>
 
 <h4>Plusieurs pressions sur la touche Entrée à la fin d'un élément</h4>
 
@@ -160,7 +160,7 @@ article avant le premier.</p>
 
 <p>Cette utilisation de la touche "Enter" ne s'applique pas seulement aux
 listes et aux paragraphes, mais à tous les éléments. Elle est par exemple
-particulièrement commode pour <a href="Manual.html">créer des tables.</a></p>
+particulièrement commode pour <a href="Manual.html.fr">créer des tables.</a></p>
 
 <h4>Sortir des ancres ou des chaînes d'éléments de style</h4>
 
@@ -209,12 +209,12 @@ nouveau terme.</p>
 menu  <strong>Eléments/changer le titre.</strong></p>
 
 <p>Vous pouvez aussi éditer le titre du document dans la  <a
-href="Views.html#Structure">vue structure</a>.</p>
+href="Views.html.fr#Structure">vue structure</a>.</p>
 </div>
 
-<p align="right"><a href="Views.html"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Links.html"><img alt="next" border="0"
+<p align="right"><a href="Views.html.fr"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Links.html.fr"><img alt="next" border="0"
 src="../Icons/right.gif" /></a></p>
 <hr />
 </body>

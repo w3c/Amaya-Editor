@@ -16,10 +16,10 @@
       <td><p><img border="0" alt="W3C" src="../../../Icons/WWW/w3c_home" />
         <img border="0" alt="Amaya" src="../../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="headings.html"><img alt="previous"
+      <td><p align="right"><a href="headings.html.fr"><img alt="previous"
         border="0" src="../../Icons/left.gif" /></a> <a
-        href="../Manual.html#There"><img alt="top" border="0"
-        src="../../Icons/up.gif" /></a> <a href="address.html"><img alt="next"
+        href="../Manual.html.fr#There"><img alt="top" border="0"
+        src="../../Icons/up.gif" /></a> <a href="address.html.fr"><img alt="next"
         border="0" src="../../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -86,10 +86,10 @@ utilisant une police de caractères différente  pour les termes de définition
 et pour les définitions effectives.</p>
 </div>
 
-<p align="right"><a href="headings.html"><img alt="previous" border="0"
-src="../../Icons/left.gif" /></a> <a href="../Manual.html#There"><img
+<p align="right"><a href="headings.html.fr"><img alt="previous" border="0"
+src="../../Icons/left.gif" /></a> <a href="../Manual.html.fr#There"><img
 alt="top" border="0" src="../../Icons/up.gif" /></a> <a
-href="address.html"><img alt="next" border="0" src="../../Icons/right.gif"
+href="address.html.fr"><img alt="next" border="0" src="../../Icons/right.gif"
 /></a></p>
 <hr />
 </body>

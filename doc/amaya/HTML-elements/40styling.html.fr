@@ -16,9 +16,9 @@
       <td><p><img border="0" alt="W3C" src="../../../Icons/WWW/w3c_home" />
         <img border="0" alt="Amaya" src="../../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="inline.html"><img alt="previous"
+      <td><p align="right"><a href="inline.html.fr"><img alt="previous"
         border="0" src="../../Icons/left.gif" /></a> <a
-        href="../Manual.html#There"><img alt="top" border="0"
+        href="../Manual.html.fr#There"><img alt="top" border="0"
         src="../../Icons/up.gif" /></a></p>
       </td>
     </tr>
@@ -39,36 +39,36 @@ sous menu Eléments caractères du menu <strong>Eléments</strong>:</p>
 <dl>
   <dt><code>B</code> et <code>I</code></dt>
     <dd>Ceux-ci devraient être remplacés par le <a
-      href="inline.html#Emphasis">STRONG and  EM elements</a>, où ils sont
+      href="inline.html.fr#Emphasis">STRONG and  EM elements</a>, où ils sont
       utilisés pour fournir des mises en évidences à un mot ou à une phrase.
-      Il y a des  <a href="infoTypes.html">éléments spéciaux</a> pour noter
+      Il y a des  <a href="infoTypes.html.fr">éléments spéciaux</a> pour noter
       des en-têtes, des termes à définir, ainsi que certains usages spéciaux,
       comme par exemple une citation, un fragment de computer code, etc. Si
       les éléments sont simplement utilisés pour obtenir une police de
-      caractère plus lourde, les  <a href="../StyleSheets.html">Feuilles de
+      caractère plus lourde, les  <a href="../StyleSheets.html.fr">Feuilles de
       style</a> devraient être utilisées à la place.</dd>
   <dt><code>BIG </code>et <code>SMALL</code></dt>
     <dd>En général, ces résultats devraient être obtenus avec les  <a
-      href="../StyleSheets.html">Feuilles de style</a>. Quand ils sont
+      href="../StyleSheets.html.fr">Feuilles de style</a>. Quand ils sont
       utilisés pour dénoter des types spécifiques d'information, comme la
       source d'une citation, un sample computer input ou  output, etc, les  <a
-      href="inline.html">éléments HTML appropriés</a> devraient être
+      href="inline.html.fr">éléments HTML appropriés</a> devraient être
     utilisés.</dd>
   <dt><code>SUB</code> et  <code>SUP</code></dt>
-    <dd><a href="../StyleSheets.html">Les Feuilles de style</a> doivent  être
+    <dd><a href="../StyleSheets.html.fr">Les Feuilles de style</a> doivent  être
       utilisées pour obtenir  la  présentation de ces éléments. Dans des cas
       comme les expressions mathématiques, un balisage de langage spécifique
-      comme le  <a href="../Math.html">MathML</a> doit être utilisé dès que
+      comme le  <a href="../Math.html.fr">MathML</a> doit être utilisé dès que
       possible.</dd>
   <dt><code>TT</code> et <code>PRE</code></dt>
     <dd>Les auteurs doivent utiliser  les <a
-      href="../StyleSheets.html">Feuilles de style</a> pour obtenir ces
+      href="../StyleSheets.html.fr">Feuilles de style</a> pour obtenir ces
       résultats.</dd>
 </dl>
 </div>
 
-<p align="right"><a href="inline.html"><img alt="previous" border="0"
-src="../../Icons/left.gif" /></a> <a href="../Manual.html#There"><img
+<p align="right"><a href="inline.html.fr"><img alt="previous" border="0"
+src="../../Icons/left.gif" /></a> <a href="../Manual.html.fr#There"><img
 alt="top" border="0" src="../../Icons/up.gif" /></a></p>
 <hr />
 

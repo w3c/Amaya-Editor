@@ -17,10 +17,10 @@
         src="http://www.w3.org/Icons/WWW/w3c_home" />             <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Math.html"><img alt="previous" border="0"
-        src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top"
+      <td><p align="right"><a href="Math.html.fr"><img alt="previous" border="0"
+        src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
         border="0" src="../Icons/up.gif" /></a> <a
-        href="StyleSheets.html"><img alt="next" border="0"
+        href="StyleSheets.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -78,7 +78,7 @@ image.</p>
 <p>Afin de donner une idée de comment une page sans les images doit être
 présentée, Amaya fournit une option <strong>Montrer la vue alternée</strong>
 dans le menu <strong>Vues</strong>. Dans le cas d'un navigateur oral, la <a
-href="Views.html#Alternate">vue alternée </a>pourrait être simplement lue à
+href="Views.html.fr#Alternate">vue alternée </a>pourrait être simplement lue à
 voix haute. Sans des textes de remplacement pour les images, de nombreuses
 pages deviendraient difficiles voire impossibles à naviguer, et les
 utilisateurs seraient condamnés à trouver "leur chemin dans le noir".</p>
@@ -123,7 +123,7 @@ une image.</p>
 texte de remplacement</a> dans la boîte de dialogue qui apparaît et entrer la
 cible du lien associée à cette zone. Sélectionnez uniquement la cible (ou
 entrer son URI si elle n'est pas visualisée), de la même manière que pour <a
-href="Links.html#L245">créer des liens</a>.</p>
+href="Links.html.fr#L245">créer des liens</a>.</p>
 
 <h3>Déplacer des zones actives<strong></strong></h3>
 
@@ -150,9 +150,9 @@ href="Links.html#L245">créer des liens</a>.</p>
 </ul>
 </div>
 
-<p align="right"><a href="Math.html"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="StyleSheets.html"><img alt="next"
+<p align="right"><a href="Math.html.fr"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="StyleSheets.html.fr"><img alt="next"
 border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>

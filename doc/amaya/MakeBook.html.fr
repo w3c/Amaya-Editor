@@ -16,10 +16,10 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Numbering.html"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+      <td><p align="right"><a href="Numbering.html.fr"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
         alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Configure.html"><img alt="next" border="0"
+        href="Configure.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -44,7 +44,7 @@ impriméee. <strong>Amaya</strong> règle ce problème à l'aide de la fonction
 chapitres: associez un attribut <code> rel="chapitre"</code> ou
 <code>rel="sous-document</code>" à l'ancre qui se réfère à un chapitre
 (sélectionnez l'élément <code>A</code> et utilisez le menu  <strong><a
-href="Attributes.html#L1073">Attributs</a></strong>).</p>
+href="Attributes.html.fr#L1073">Attributs</a></strong>).</p>
 
 <p>Chaque chapitre ou sous-document référé peut être:</p>
 <ul>
@@ -55,7 +55,7 @@ href="Attributes.html#L1073">Attributs</a></strong>).</p>
 <p>Pour se référer à une sous-partie d'un document, la méthode habituelle est
 de définir un élément DIV qui délimite la partie du document cible que vous
 voulez inclure et lier <span xml:lang="fr" lang="fr"></span>à cet  <a
-href="Links.html#target1">élément cible.</a></p>
+href="Links.html.fr#target1">élément cible.</a></p>
 
 <p>Ensuite, lorsque vous activez la fonction "construire un livre", tous les
 blocs (éléments <code>LI</code> dans l'exemple plus haut) contenant un lien
@@ -89,17 +89,17 @@ document entier externe, ce lien se réfèrera à l'élément incluant  DIV aprés
 l'opération. Ainsi, le nouveau document unique contenant la totalité de la
 collection reste cohérent.</p>
 
-<p>Ce gros document peut être  <a href="Numbering.html#L1064">numéroté</a> et
-<a href="Printing.html#L1062">imprimé </a>avec une  table complète des
+<p>Ce gros document peut être  <a href="Numbering.html.fr#L1064">numéroté</a> et
+<a href="Printing.html.fr#L1062">imprimé </a>avec une  table complète des
 contenus et une liste de tous les liens.</p>
 
 <p>Pour activer cet outil, choisissez l'item <strong>Construire un
 livre</strong> du menu  <strong>Spécial</strong>.</p>
 </div>
 
-<p align="right"><a href="Numbering.html"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Configure.html"><img alt="next"
+<p align="right"><a href="Numbering.html.fr"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Configure.html.fr"><img alt="next"
 border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>

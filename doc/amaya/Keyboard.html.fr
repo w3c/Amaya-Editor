@@ -12,7 +12,7 @@
 <body xml:lang="fr" lang="fr">
 <p><a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"
 /></a> <a href="../"> <img border="0" src="../Icons/amaya.gif" alt="Amaya"
-/></a> <a href="Manual.html"></a></p>
+/></a> <a href="Manual.html.fr"></a></p>
 
 <div id="Keyboard">
 <h3>Entrer des caractères ISO-Latin-1 dans Amaya</h3>
@@ -25,7 +25,7 @@ vous devez taper la touche <code>Control</code> avec la touche
 depuis le clavier, Amaya fournit deux méthodes d'entrée à multi-touches. Le
 choix d'une méthode plutôt qu'une autre, se fait par l'utilisateur grâce à
 l'entrée de dialogue <strong>"Activer multi-key"</strong> dans <a
-href="Configure.html#Enable">Spécial/Préférences/Générales</a>. Quand c'est
+href="Configure.html.fr#Enable">Spécial/Préférences/Générales</a>. Quand c'est
 permis, le <a href="#Optional">support multi-touches optionnel</a> est activé
 et le support multi-touches standard est désactivé.</p>
 

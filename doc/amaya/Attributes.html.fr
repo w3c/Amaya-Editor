@@ -16,10 +16,10 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="StyleSheets.html"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+      <td><p align="right"><a href="StyleSheets.html.fr"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
         alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="SpellChecking.html"><img alt="next" border="0"
+        href="SpellChecking.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -46,7 +46,7 @@ effacer un attribut.</p>
 <p>Pour éditer un attribut, sélectionnez d'abord l'élément approprié. Vous
 devez sélectionner l'élément entier et pas seulement un caractère à
 l'intérieur de l'élément. Pour cela, utilisez <a
-href="Selecting.html#Selecting1"> la touche ESC (sur les stations Unix) ou la
+href="Selecting.html.fr#Selecting1"> la touche ESC (sur les stations Unix) ou la
 touche F2  (sur  les stations Windows)</a> . Quand l'élément a été
 sélectionné, choisissez dans le menu  <strong>Attributs </strong>l'attribut à
 éditer.  <strong>Amaya</strong> agit alors en fonction de  l'attribut
@@ -94,9 +94,9 @@ l'aide du menu  <strong>Attributs</strong>. Ceci assure que seules des valeurs
 correctes soient choisies. </p>
 </div>
 
-<p align="right"><a href="StyleSheets.html"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="SpellChecking.html"><img alt="next"
+<p align="right"><a href="StyleSheets.html.fr"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="SpellChecking.html.fr"><img alt="next"
 border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>

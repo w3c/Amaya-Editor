@@ -16,10 +16,10 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Searching.html"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+      <td><p align="right"><a href="Searching.html.fr"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
         alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Creating.html"><img alt="next" border="0"
+        href="Creating.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -118,16 +118,16 @@ document dans la vue structure ou bien dans la vue formatée après avoir édité
 dans le source pour s'assurer que la synchronisation a effectué ce que vous
 attendiez.</p>
 
-<p>Chaque fois que vous <a href="Publishing.html#L1104">sauvez</a> un
+<p>Chaque fois que vous <a href="Publishing.html.fr#L1104">sauvez</a> un
 document, localement ou à distance, depuis la vue source ou depuis la vue
 formatée, une synchronisation s'effectue automatiquement: toutes les vues
 reflètent l'état du document au moment où il est sauvé.</p>
 </div>
 
-<p align="right"><a href="Searching.html" xml:lang="fr" lang="fr"><img
+<p align="right"><a href="Searching.html.fr" xml:lang="fr" lang="fr"><img
 alt="previous" border="0" src="../Icons/left.gif" /></a><span xml:lang="fr"
-lang="fr"> </span><a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Creating.html"><img alt="next"
+lang="fr"> </span><a href="Manual.html.fr"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Creating.html.fr"><img alt="next"
 border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>

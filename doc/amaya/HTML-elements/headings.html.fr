@@ -16,10 +16,10 @@
       <td><p><img border="0" alt="W3C" src="../../../Icons/WWW/w3c_home" />
         <img border="0" alt="Amaya" src="../../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="structure.html"><img alt="previous"
+      <td><p align="right"><a href="structure.html.fr"><img alt="previous"
         border="0" src="../../Icons/left.gif" /></a> <a
-        href="../Manual.html#There"><img alt="top" border="0"
-        src="../../Icons/up.gif" /></a> <a href="lists.html"><img alt="next"
+        href="../Manual.html.fr#There"><img alt="top" border="0"
+        src="../../Icons/up.gif" /></a> <a href="lists.html.fr"><img alt="next"
         border="0" src="../../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -52,10 +52,10 @@ utiliser les <a href="../StyleSheets.html">feuilles de style</a> pour fournir
 une autre présentation.</p>
 </div>
 
-<p align="right"><a href="infoTypes.html"><img alt="previous" border="0"
-src="../../Icons/left.gif" /></a> <a href="../Manual.html#There"><img
+<p align="right"><a href="infoTypes.html.fr"><img alt="previous" border="0"
+src="../../Icons/left.gif" /></a> <a href="../Manual.html.fr#There"><img
 alt="top" border="0" src="../../Icons/up.gif" /></a> <a
-href="structure.html"><img alt="next" border="0" src="../../Icons/right.gif"
+href="structure.html.fr"><img alt="next" border="0" src="../../Icons/right.gif"
 /></a></p>
 <hr />
 

@@ -16,10 +16,10 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="ImageMaps.html"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+      <td><p align="right"><a href="ImageMaps.html.fr"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
         alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Attributes.html"><img alt="next" border="0"
+        href="Attributes.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -77,7 +77,7 @@ structure.</p>
 
 <p>La largeur et la hauteur de n'importe quel élément dans un document peuvent
 être changées de façon intéractive, de la même façon que les <a
-href="ImageMaps.html#L1171">zones actives</a>. En tapant sur la touche Control
+href="ImageMaps.html.fr#L1171">zones actives</a>. En tapant sur la touche Control
 sur le clavier et en cliquant sur le bouton du milieu de la souris, vous
 pouvez redimensionner la boîte associée à l'élément situé sous le curseur.
 Quand vous lâchez le bouton de la souris, la taille de l'élément est changée
@@ -112,7 +112,7 @@ classes existantes. Choisissez une de ces classes. Les éléments sélectionnés
 sont désormais visualisés avec le style associé à la classe choisie.</p>
 
 <p>Pour associer une classe à un élément, vous pouvez également utiliser le <a
-href="Attributes.html#L1073">menu <strong>Attributs</strong></a>. Ce menu
+href="Attributes.html.fr#L1073">menu <strong>Attributs</strong></a>. Ce menu
 permet aussi d'effacer un attribut de classe pour un élément ou de le changer:
 l'attribut de classe se manipule comme un autre attribut.</p>
 
@@ -190,9 +190,9 @@ sous-menus<strong> Types</strong><strong> information </strong>et
 appliquées de nouveau.</p>
 </div>
 
-<p align="right"><a href="ImageMaps.html"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Attributes.html"><img alt="next"
+<p align="right"><a href="ImageMaps.html.fr"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Attributes.html.fr"><img alt="next"
 border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>

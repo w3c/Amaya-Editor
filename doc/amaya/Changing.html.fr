@@ -16,9 +16,9 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Links.html"><img alt="previous" border="0"
-        src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top"
-        border="0" src="../Icons/up.gif" /></a> <a href="Tables.html"><img
+      <td><p align="right"><a href="Links.html.fr"><img alt="previous" border="0"
+        src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
+        border="0" src="../Icons/up.gif" /></a> <a href="Tables.html.fr"><img
         alt="next" border="0" src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -35,14 +35,14 @@ le nouveau type soit dans le menu  <strong>Eléments </strong> soit en cliquant
 sur un bouton.  Vous pouvez ainsi  par exemple changer une liste numérotée en
 une liste d'articles, ou un paragraphe en une en-tête ou une liste. Pour
 supprimer un type sélectionné dans le menu <strong>Style </strong> (<a
-href="HTML-elements/inline.html"> types en ligne </a> - cela peut être une
+href="HTML-elements/inline.html.fr"> types en ligne </a> - cela peut être une
 phrase dans un paragraphe ou une liste), utilisez l'option appropriée comme
 bascule dans les sous-menus du menu <strong>Style.</strong> Beaucoup d'autres
 types peuvent être supprimés,  comme une transformation de l'élément lorsqu'il
 a été sélectionné ( voir plus loin).</p>
 
 <p>Pour sélectionner un élément entier, placez le point d'insertion n'importe
-où à l'intérieur et appuyez sur  <a href="Selecting.html#Selecting1">la touche
+où à l'intérieur et appuyez sur  <a href="Selecting.html.fr#Selecting1">la touche
 Esc (F2 sur Windows).</a></p>
 
 <p>Il est également possible d'effectuer des <a href="#L631">transformations
@@ -69,7 +69,7 @@ courante. Il suffit de choisir la transformation que vous désirez.</p>
 
 <p>Les transformations disponibles sont définies dans le fichier
 <code>Amaya/amaya/HTML.trans</code>.  Référez-vous au document  <a
-href="Transform.html">Utilisation du fichier  HTML.trans</a> pour une
+href="Transform.html.fr">Utilisation du fichier  HTML.trans</a> pour une
 description du langage dans lequel les règles de transformation sont
 écrites.</p>
 
@@ -96,9 +96,9 @@ fusionnent  des éléments séparés par une limite de structure.</p>
 effacent comme d'habitude le caractère suivant ou le caractère précédent.</p>
 </div>
 
-<p align="right"><a href="Links.html"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Tables.html"><img alt="next" border="0"
+<p align="right"><a href="Links.html.fr"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Tables.html.fr"><img alt="next" border="0"
 src="../Icons/right.gif" /></a></p>
 <hr />
 </body>

@@ -16,10 +16,10 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> c<img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Creating.html"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+      <td><p align="right"><a href="Creating.html.fr"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
         alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Changing.html"><img alt="next" border="0"
+        href="Changing.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -39,7 +39,7 @@ devez tout d'abord la transformer en ancre cible.</p>
 et de choisir <strong>Créer cible</strong> dans le menu
 <strong>Liens</strong>. Le texte ainsi sélectionné est désormais une cible. Si
 vous avez fixé le statut "Montrer les cibles" à votre vue formatée courante,
-le texte sera précédé d'une<a href="Browsing.html#target"> icône cible <img
+le texte sera précédé d'une<a href="Browsing.html.fr#target"> icône cible <img
 src="../Icons/target.gif" alt=" target " /></a>. Dans la vue liens, les icônes
 cibles qui identifient les ancres cibles sont toujours visualisées (il
 n'existe pas d'option pour montrer ou cacher les icônes cibles). Quand une
@@ -79,7 +79,7 @@ courante, le texte est précédé par une icône cible <img
 src="../Icons/target.gif" alt=" target " />.</p>
 
 <p>Il est également possible de créer directement l'attribut ID en utilisant
-le menu <strong><a href="Attributes.html#Attributes">Attributs</a></strong>
+le menu <strong><a href="Attributes.html.fr#Attributes">Attributs</a></strong>
 quand l'élément est sélectionné, soit dans la vue liens soit dans la vue
 structure. Quand la valeur a été entrée, Amaya vérifie la valeur et la change
 si elle est déjà utilisée pour un autre attribut NAME ou ID dans le même
@@ -91,7 +91,7 @@ document.</p>
 
 <p>Pour créér une ancre qui est un lien vers un autre document:</p>
 <ol>
-  <li><a href="Selecting.html#Selecting">Sélectionnez</a> le contenu de
+  <li><a href="Selecting.html.fr#Selecting">Sélectionnez</a> le contenu de
     l'ancre à créer</li>
   <li>Cliquez sur le bouton  <img alt="Link " src="../Icons/Link.gif"
     align="middle" /> , ou choisir <strong>Créer/changer lien</strong> du menu
@@ -132,7 +132,7 @@ cible particulier dans le même document ou dans un autre, remplacez l'étape 3
 par celle ci:</p>
 <ol>
   <li value="3">Dans ce cas, vous pouvez cliquer sur<span
-    style="color: #000000"><a href="Browsing.html#target"> l'icône
+    style="color: #000000"><a href="Browsing.html.fr#target"> l'icône
     cible</a></span>, dans n'importe quelle vue, qui devrait être visualisée
     dans la vue formatée ou dans la vue liens. Le lien est créé.</li>
 </ol>
@@ -159,12 +159,12 @@ href="#L245">création d'un lien</a>).</p>
 <p>Pour changer la cible d'un lien, vous pouvez également éditer l'attribut
 <code>href</code>, soit directement dans la vue structure soit dans la vue
 liens ou encore en utilisant le menu <a
-href="Attributes.html#Attributes"><strong>Attributs</strong></a>.</p>
+href="Attributes.html.fr#Attributes"><strong>Attributs</strong></a>.</p>
 </div>
 
-<p align="right"><a href="Creating.html"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Changing.html"><img alt="next"
+<p align="right"><a href="Creating.html.fr"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Changing.html.fr"><img alt="next"
 border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>

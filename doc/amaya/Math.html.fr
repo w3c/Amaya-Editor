@@ -14,10 +14,10 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Tables.html"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+      <td><p align="right"><a href="Tables.html.fr"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
         alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="ImageMaps.html"><img alt="next" border="0"
+        href="ImageMaps.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -43,7 +43,7 @@ constructions mathématiques.</p>
 <h4>La palette Math et le menu Eléments/Math</h4>
 
 <p>Pour créer une expression mathématique dans un document, il suffit de <a
-href="Selecting.html#Selecting">déplacer le point d'insertion</a> à l'endroit
+href="Selecting.html.fr#Selecting">déplacer le point d'insertion</a> à l'endroit
 où vous voulez insérer l'expression, puis de cliquer sur le bouton
 <strong>Math</strong> (le bouton à droite de la barre des boutons) ou de
 sélectionner l'entrée <strong>Math</strong> du menu
@@ -293,7 +293,7 @@ Opérateur (mo) du menu Eléments/Math.</p>
 <h3><a name="Structure">Editer la structure</a></h3>
 
 <p>Amaya prévoit la même méthode pour créer et éditer des matrices que pour <a
-href="Tables.html#Editing">éditer des tables HTML</a>. Comme pour les tables,
+href="Tables.html.fr#Editing">éditer des tables HTML</a>. Comme pour les tables,
 il y a une commande spécifique (Détruire une colonne de matrice) pour détruire
 une colonne dans une matrice, même si elle n'est pas vide. Cette commande est
 située à la fin du sous-menu <strong>Math</strong> du menu
@@ -312,7 +312,7 @@ possibles.</p>
 <h3><a name="Math_Struc">Vue Math_Structure</a></h3>
 
 <p>Toutes les fois qu'un document contient des éléments MathML, la sélection
-de l'article <a href="Views.html#Structure">Montrer la structure </a>du menu
+de l'article <a href="Views.html.fr#Structure">Montrer la structure </a>du menu
 <strong>Vues </strong> ouvre en fait <em>deux vues</em>:</p>
 <ul>
   <li>La Structure vue montre la structure principale du document HTML. Dans
@@ -411,7 +411,7 @@ attributs sont restitués à l'écran (<code>alttext</code>,
 
 <p>Les attributs <code>class</code>, <code>id</code> et <code>style</code>
 sont utilisables, avec la même sémantique que dans HTML: vous pouvez <a
-href="StyleSheets.html">associer le style CSS </a> aux éléments MathML
+href="StyleSheets.html.fr">associer le style CSS </a> aux éléments MathML
 (attribut<code> class</code> et <code>style</code>) et un élément MathML
 peut être la cible d'un lien (attribut<code> id</code>).</p>
 
@@ -429,9 +429,9 @@ ImaginaryI, ExponentialE, InvisibleComma, UnderBar, OverBar, ThinSpace,
 ThickSpace, Hat, OverBar, UnderBar, prime, Prime.</p>
 </div>
 
-<p align="right"><a href="Tables.html"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="ImageMaps.html"><img alt="next"
+<p align="right"><a href="Tables.html.fr"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="ImageMaps.html.fr"><img alt="next"
 border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>

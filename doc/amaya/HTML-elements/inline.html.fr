@@ -16,12 +16,12 @@
       <td><p><img border="0" alt="W3C" src="../../../Icons/WWW/w3c_home" />
         <img border="0" alt="Amaya" src="../../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="../Manual.html"></a></p>
+      <td><p align="right"><a href="../Manual.html.fr"></a></p>
 
-        <p align="right"><a href="address.html"><img alt="previous" border="0"
-        src="../../Icons/left.gif" /></a> <a href="../Manual.html#There"><img
+        <p align="right"><a href="address.html.fr"><img alt="previous" border="0"
+        src="../../Icons/left.gif" /></a> <a href="../Manual.html.fr#There"><img
         alt="top" border="0" src="../../Icons/up.gif" /></a> <a
-        href="40styling.html"><img alt="next" border="0"
+        href="40styling.html.fr"><img alt="next" border="0"
         src="../../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -166,10 +166,10 @@ utilisées pour changer la présentation des deux types de mise en évidence.</p>
 </div>
 </div>
 
-<p align="right"><a href="address.html"><img alt="previous" border="0"
-src="../../Icons/left.gif" /></a> <a href="../Manual.html#There"><img
+<p align="right"><a href="address.html.fr"><img alt="previous" border="0"
+src="../../Icons/left.gif" /></a> <a href="../Manual.html.fr#There"><img
 alt="top" border="0" src="../../Icons/up.gif" /></a> <a
-href="40styling.html"><img alt="next" border="0" src="../../Icons/right.gif"
+href="40styling.html.fr"><img alt="next" border="0" src="../../Icons/right.gif"
 /></a></p>
 <hr />
 </body>

@@ -16,8 +16,8 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Manual.html"><img alt="" border="0"
-        src="../Icons/up.gif" /></a> <a href="Selecting.html"><img alt="next"
+      <td><p align="right"><a href="Manual.html.fr"><img alt="" border="0"
+        src="../Icons/up.gif" /></a> <a href="Selecting.html.fr"><img alt="next"
         border="0" src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -79,7 +79,7 @@ un attribut <code>ID</code> , ou aux <em>ancres cibles</em>, i.e. ancres avec
 un attribut  <code>name</code>. Elles identifient les cibles possibles pour
 les liens. Ces icônes sont destinées à rendre la création de liens plus
 facile. En effet, le fait de pouvoir reconnaître rapidement la cible possible
-d'un lien, permet de <a href="Links.html#L245">créer des liens</a> plus
+d'un lien, permet de <a href="Links.html.fr#L245">créer des liens</a> plus
 vite.</p>
 
 <h3><a name="Opening">Ouverture de documents</a></h3>
@@ -138,11 +138,11 @@ src="../Icons/Reload.png" alt="reload" />  de la barre des boutons.</p>
 
 <p>Amaya fournit un contrôle clavier pour de nombreuses fonctions. Les
 commandes clavier par défaut sont fournies à leurs places appropriées dans la
-documentation. La section d'aide sur  <a href="Configure.html">Configurer
+documentation. La section d'aide sur  <a href="Configure.html.fr">Configurer
 Amaya</a> décrit comment changer les valeurs par défaut, et les raccourcis
 clavier sont affichés à côté des entrées auxquelles ils sont associés.</p>
 </div>
 
-<p align="right"><a href="Manual.html"><img alt="" /></a></p>
+<p align="right"><a href="Manual.html.fr"><img alt="" /></a></p>
 </body>
 </html>

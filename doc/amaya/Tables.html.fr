@@ -16,10 +16,10 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Changing.html"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+      <td><p align="right"><a href="Changing.html.fr"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
         alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Math.html"><img alt="next" border="0" src="../Icons/right.gif"
+        href="Math.html.fr"><img alt="next" border="0" src="../Icons/right.gif"
         /></a></p>
       </td>
     </tr>
@@ -75,7 +75,7 @@ l'intermédiaire des flèches du clavier.</p>
 <h3><a name="Adding">Ajouter une nouvelle colonne</a></h3>
 
 <p>De nouvelles colonnes peuvent être créées efficacement avec la touche <a
-href="Creating.html#L906">Enter</a>.  Déplacez le point d'insertion à la fin
+href="Creating.html.fr#L906">Enter</a>.  Déplacez le point d'insertion à la fin
 ou au début de la cellule (par exemple à la fin de la cellule 1.1 dans la
 table ci dessous). En tapant deux fois sur la touche Enter (la première
 pression de la touche crée un paragraphe dans la cellule courante) vous créez
@@ -106,7 +106,7 @@ dessous:</p>
 <p>Pour créer une nouvelle ligne, taper sur Enter trois fois quand le point
 d'insertion est à la fin de la dernière cellule d'une ligne (dans  Cell 1.3,
 par exemple). Vous pouvez également sélectionner la ligne en <a
-href="Selecting.html#Selecting1">tapant sur la touche Esc (pour les stations
+href="Selecting.html.fr#Selecting1">tapant sur la touche Esc (pour les stations
 Unix) ou sur la touche F2 (pour les stations Windows)</a> et en tapant sur
 Enter seulement une fois.</p>
 
@@ -145,9 +145,9 @@ carastéristiques comme les corps multiples
 (</em><code><em>tfoot</em></code><em>).</em></p>
 </div>
 
-<p align="right"><a href="Changing.html"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Math.html"><img alt="next" border="0"
+<p align="right"><a href="Changing.html.fr"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Math.html.fr"><img alt="next" border="0"
 src="../Icons/right.gif" /></a></p>
 <hr />
 </body>

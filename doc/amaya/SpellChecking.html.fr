@@ -16,10 +16,10 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="Attributes.html"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+      <td><p align="right"><a href="Attributes.html.fr"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
         alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Publishing.html"><img alt="next" border="0"
+        href="Publishing.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -35,14 +35,14 @@ invoqué par la commande <strong>Vérifier orthographe </strong>du menu
 le bon dictionnaire. Vous pouvez associer cet attribut à n'importe quel
 élément dans un document, même à un seul mot. Utilisez pour cela la commande
 <strong>Langue</strong> du menu  <strong><a
-href="Attributes.html#L1073">Attributs.</a></strong></p>
+href="Attributes.html.fr#L1073">Attributs.</a></strong></p>
 
 <p>Lorsque l'utilisateur veut enregistrer un nouveau mot, le vérificateur
 d'orthographe crée ou met à jour le " dictionnaire personnel de
 l'utilisateur". Par défaut, le "dictionnaire personnel de l'utilisateur" est
 $HOME/.thot.DIC, mais l'utilisateur peut définir un autre fichier. Avant de
 démarrer Amaya, l'utilisateur doit poser le  <code>paramètre <a
-href="Configure.html#Personnal">"EXTENDDICT="</a></code> dans le registre du
+href="Configure.html.fr#Personnal">"EXTENDDICT="</a></code> dans le registre du
 fichier ($HOME/.thotrc file) pour changer le nom manquant. Ainsi, le
 vérificateur sera utilisé, en plus du dictionnaire spécifique du langage. Ce
 dictionnaire (dans le mode lire-écrire) contrôle tous les documents. Ce
@@ -67,7 +67,7 @@ vérificateur:</p>
     liste peut être modifiée par l'utilisateur.</li>
   <li>Le sous-menu <strong>Vérifier orthographe</strong>, similaire en cela à
     la boîte de dialogue  <strong><a
-    href="Searching.html">Rechercher</a></strong>, vous permet de spécifier la
+    href="Searching.html.fr">Rechercher</a></strong>, vous permet de spécifier la
     partie du document sur laquelle le vérificateur va travailler.</li>
   <li>Le mot erroné est affiché dans l'espace <strong>Vérifier
     l'orthographe.</strong> La liste des propositions est affichée dans le
@@ -81,7 +81,7 @@ vérificateur:</p>
   <li>La langue dans laquelle se fait la correction est spécifiée dans le coin
     en haut à gauche de la boîte de dialogue. Pour modifier la langue, il
     suffit d'appliquer un attribut "Langue" au texte concerné en utilisant le
-    menu  <a href="Attributes.html#Attributes"><strong>Attributs</strong></a>,
+    menu  <a href="Attributes.html.fr#Attributes"><strong>Attributs</strong></a>,
     puis de redémarrer la procédure de correction.</li>
 </ul>
 
@@ -109,10 +109,10 @@ dialogue afin d'exécuter l'une des opérations suivantes:</p>
     plus loin) et le vérificateur cherche l'erreur suivante.</li>
   <li><p><strong>Remplacer (+dic)</strong>: c'est le même que "Remplacer et
     suivant", à la différence que le mot de remplacement est ajouté au
-    dictionnaire du document.  <a href="Attributes.html"> <img alt="previous"
-    border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+    dictionnaire du document.  <a href="Attributes.html.fr"> <img alt="previous"
+    border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
     alt="top" border="0" src="../Icons/up.gif" /></a> <a
-    href="Publishing.html"><img alt="next" border="0" src="../Icons/right.gif"
+    href="Publishing.html.fr"><img alt="next" border="0" src="../Icons/right.gif"
     /></a></p>
   </li>
 </ul>

@@ -13,7 +13,7 @@ BODY { background-color : #FFFFFF }
 <body xml:lang="en" lang="en">
 <p><a href="../../"><img border="0" src="../../Icons/WWW/w3c_home" alt="W3C"
 /></a> <a href="../"><img src="../Icons/amaya.gif" alt="Amaya" border="0"
-/></a> <a href="Manual.html"><img border="0" src="../Icons/doc48x.gif"
+/></a> <a href="Manual.html.fr"><img border="0" src="../Icons/doc48x.gif"
 alt="Doc" /></a></p>
 
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
@@ -32,7 +32,7 @@ L'utilisation interface de Windows peut être légèrement différente dans
 certains cas. Ce  manuel d'utilisation n'est pas complet. Son but est
 simplement d'aider les utilisateurs à découvrir les principales
 caractéristiques du software. Ce document est organisé comme un livre. Vous
-pouvez utiliser la commande "<a href="MakeBook.html#L1065">Construire un
+pouvez utiliser la commande "<a href="MakeBook.html.fr#L1065">Construire un
 livre</a>" pour construire et imprimer la totalité du manuel.</p>
 
 <p>Beaucoup de commandes  <strong>Amaya</strong> sont les mêmes que celles
@@ -46,70 +46,70 @@ décrits.</p>
   <li><a href="#L920">Démarrer Amaya</a></li>
   <li><a href="#L932">Editer des pages Web avec Amaya</a>
     <ul>
-      <li><a href="Browsing.html#Browsing">Naviguer avec Amaya</a>
+      <li><a href="Browsing.html.fr#Browsing">Naviguer avec Amaya</a>
         <ul>
-          <li><a href="Browsing.html#Activating">Activer un lien</a></li>
-          <li><a href="Browsing.html#Opening">Ancres cibles</a>
-            <p><a href="Browsing.html#Opening">Ouvrir des documents</a></p>
+          <li><a href="Browsing.html.fr#Activating">Activer un lien</a></li>
+          <li><a href="Browsing.html.fr#Opening">Ancres cibles</a>
+            <p><a href="Browsing.html.fr#Opening">Ouvrir des documents</a></p>
           </li>
-          <li><a href="Browsing.html#Moving">Reculer et avancer</a></li>
-          <li><a href="Browsing.html#Reloading">Recharger une page</a></li>
-          <li><a href="Browsing.html#Keyboard">Contrôle clavier</a></li>
+          <li><a href="Browsing.html.fr#Moving">Reculer et avancer</a></li>
+          <li><a href="Browsing.html.fr#Reloading">Recharger une page</a></li>
+          <li><a href="Browsing.html.fr#Keyboard">Contrôle clavier</a></li>
         </ul>
       </li>
-      <li><a href="Selecting.html#Selecting">Sélectionner</a>
+      <li><a href="Selecting.html.fr#Selecting">Sélectionner</a>
         <ul>
-          <li><a href="Selecting.html#Selecting1">Sélectionner par
+          <li><a href="Selecting.html.fr#Selecting1">Sélectionner par
             Structure</a></li>
-          <li><a href="Selecting.html#Selecting2">Sélectionner des
+          <li><a href="Selecting.html.fr#Selecting2">Sélectionner des
           images</a></li>
         </ul>
       </li>
-      <li><a href="Searching.html#Searching">Chercher et remplacer un
+      <li><a href="Searching.html.fr#Searching">Chercher et remplacer un
         texte</a></li>
-      <li><a href="Views.html#Views">Afficher des vues</a>
+      <li><a href="Views.html.fr#Views">Afficher des vues</a>
         <ul>
-          <li><a href="Views.html#Opening">Ouvrir une vue</a></li>
-          <li><a href="Views.html#Closing">Fermer une vue</a></li>
-          <li><a href="Views.html#Using">Utiliser des vues</a></li>
+          <li><a href="Views.html.fr#Opening">Ouvrir une vue</a></li>
+          <li><a href="Views.html.fr#Closing">Fermer une vue</a></li>
+          <li><a href="Views.html.fr#Using">Utiliser des vues</a></li>
         </ul>
       </li>
-      <li><a href="Creating.html#Creating">Créer de nouveaux éléments</a>
+      <li><a href="Creating.html.fr#Creating">Créer de nouveaux éléments</a>
         <ul>
-          <li><a href="Keyboard.html#Keyboard">Entrer des caractères
+          <li><a href="Keyboard.html.fr#Keyboard">Entrer des caractères
             ISO-Latin-1</a></li>
-          <li><a href="Keyboard.html#Standard">Support multi-touches
+          <li><a href="Keyboard.html.fr#Standard">Support multi-touches
             standard</a></li>
-          <li><a href="Keyboard.html#Optional">Support multi-touches
+          <li><a href="Keyboard.html.fr#Optional">Support multi-touches
             optionnel</a></li>
-          <li><a href="Creating.html#Types">Boutons et menu Eléments</a></li>
-          <li><a href="Creating.html#Structure">menu Structure</a></li>
-          <li><a href="Creating.html#L906">La touche Entrée (ou
+          <li><a href="Creating.html.fr#Types">Boutons et menu Eléments</a></li>
+          <li><a href="Creating.html.fr#Structure">menu Structure</a></li>
+          <li><a href="Creating.html.fr#L906">La touche Entrée (ou
             retour-charriot)</a></li>
-          <li><a href="Creating.html#Changing">Changer le titre d'un
+          <li><a href="Creating.html.fr#Changing">Changer le titre d'un
             document</a></li>
         </ul>
       </li>
-      <li><a href="Links.html#Creating">Créer et changer des liens et des
+      <li><a href="Links.html.fr#Creating">Créer et changer des liens et des
         ancres</a>
         <ul>
-          <li><a href="Links.html#L557">Créer une ancre cible</a></li>
-          <li><a href="Links.html#target1">Créer un élément cible</a></li>
-          <li><a href="Links.html#L245">Créer un lien</a></li>
-          <li><a href="Links.html#Removing">Supprimer un lien ou une ancre
+          <li><a href="Links.html.fr#L557">Créer une ancre cible</a></li>
+          <li><a href="Links.html.fr#target1">Créer un élément cible</a></li>
+          <li><a href="Links.html.fr#L245">Créer un lien</a></li>
+          <li><a href="Links.html.fr#Removing">Supprimer un lien ou une ancre
             cible</a></li>
-          <li><a href="Links.html#Changing">Changer un lien</a></li>
+          <li><a href="Links.html.fr#Changing">Changer un lien</a></li>
         </ul>
       </li>
-      <li><a href="Changing.html#Changing">Editer la structure du document</a>
+      <li><a href="Changing.html.fr#Changing">Editer la structure du document</a>
         <ul>
-          <li><a href="Changing.html#L653">Changer le type de
+          <li><a href="Changing.html.fr#L653">Changer le type de
           l'élément</a></li>
-          <li><a href="Changing.html#L631">Changer la structure du
+          <li><a href="Changing.html.fr#L631">Changer la structure du
             document</a></li>
-          <li><a href="Changing.html#L141">La commande Transformer</a></li>
-          <li><a href="Changing.html#Inserting">Insérer une Division</a></li>
-          <li><a href="Changing.html#Back">Les touches  Back Space et
+          <li><a href="Changing.html.fr#L141">La commande Transformer</a></li>
+          <li><a href="Changing.html.fr#Inserting">Insérer une Division</a></li>
+          <li><a href="Changing.html.fr#Back">Les touches  Back Space et
             Delete</a></li>
         </ul>
       </li>
@@ -117,93 +117,93 @@ décrits.</p>
         href="/local_home/diffusion/Amaya/doc/amaya/Tables.html#Editing">Editer
         des  tables</a>
         <ul>
-          <li><a href="Tables.html#Creating">Créer une nouvelle table</a></li>
-          <li><a href="Tables.html#Adding">Ajouter une nouvelle
+          <li><a href="Tables.html.fr#Creating">Créer une nouvelle table</a></li>
+          <li><a href="Tables.html.fr#Adding">Ajouter une nouvelle
           colonne</a></li>
-          <li><a href="Tables.html#Adding1">Ajouter un nouvelle ligne, un
+          <li><a href="Tables.html.fr#Adding1">Ajouter un nouvelle ligne, un
             nouveau  tbody</a></li>
-          <li><a href="Tables.html#Removing">Supprimer une colonne</a></li>
-          <li><a href="Tables.html#Adding2">Ajouter quelquechose aprés une
+          <li><a href="Tables.html.fr#Removing">Supprimer une colonne</a></li>
+          <li><a href="Tables.html.fr#Adding2">Ajouter quelquechose aprés une
             table</a></li>
         </ul>
       </li>
-      <li><a href="Math.html#Math">Editer des mathématiques</a>
+      <li><a href="Math.html.fr#Math">Editer des mathématiques</a>
         <ul>
-          <li><a href="Math.html#Creating">Créer une expression
+          <li><a href="Math.html.fr#Creating">Créer une expression
             mathématique</a></li>
-          <li><a href="Math.html#Entering1">Entrer des caractères</a></li>
-          <li><a href="Math.html#Structure">Editer la structure</a></li>
-          <li><a href="Math.html#Math_Struc">La vue Math_Structure</a></li>
-          <li><a href="Math.html#Links">Les liens dans MathML</a></li>
-          <li><a href="Math.html#Current">Limites courantes</a></li>
+          <li><a href="Math.html.fr#Entering1">Entrer des caractères</a></li>
+          <li><a href="Math.html.fr#Structure">Editer la structure</a></li>
+          <li><a href="Math.html.fr#Math_Struc">La vue Math_Structure</a></li>
+          <li><a href="Math.html.fr#Links">Les liens dans MathML</a></li>
+          <li><a href="Math.html.fr#Current">Limites courantes</a></li>
         </ul>
       </li>
-      <li><a href="ImageMaps.html#Client-sid">Créer et utiliser des zones
+      <li><a href="ImageMaps.html.fr#Client-sid">Créer et utiliser des zones
         actives</a>
         <ul>
-          <li><a href="ImageMaps.html#Adding">Ajouter une image</a></li>
-          <li><a href="ImageMaps.html#Using">Texte alternatif et Descriptions
+          <li><a href="ImageMaps.html.fr#Adding">Ajouter une image</a></li>
+          <li><a href="ImageMaps.html.fr#Using">Texte alternatif et Descriptions
             longues</a>
-            <p><a href="ImageMaps.html#Using">Utiliser des zones
+            <p><a href="ImageMaps.html.fr#Using">Utiliser des zones
             actives</a></p>
           </li>
-          <li><a href="ImageMaps.html#Creating">Créer des zones
+          <li><a href="ImageMaps.html.fr#Creating">Créer des zones
           actives</a></li>
-          <li><a href="ImageMaps.html#L11711">Déplacer des zones
+          <li><a href="ImageMaps.html.fr#L11711">Déplacer des zones
           actives</a></li>
-          <li><a href="ImageMaps.html#L1171">Redimensioner des zones
+          <li><a href="ImageMaps.html.fr#L1171">Redimensioner des zones
             actives</a></li>
         </ul>
       </li>
-      <li><a href="StyleSheets.html#Style">Feuilles de style</a>
+      <li><a href="StyleSheets.html.fr#Style">Feuilles de style</a>
         <ul>
-          <li><a href="StyleSheets.html#Creating">Créer et mettre à jour un
+          <li><a href="StyleSheets.html.fr#Creating">Créer et mettre à jour un
             attribut Style</a></li>
-          <li><a href="StyleSheets.html#Creating,">Créer un style générique
+          <li><a href="StyleSheets.html.fr#Creating,">Créer un style générique
             pour un élément ou une classe</a></li>
-          <li><a href="StyleSheets.html#Managing">Gérer des feuilles de style
+          <li><a href="StyleSheets.html.fr#Managing">Gérer des feuilles de style
             externes CSS</a></li>
-          <li><a href="StyleSheets.html#L1371">Mettre du style en utilisant 
+          <li><a href="StyleSheets.html.fr#L1371">Mettre du style en utilisant 
             des éléments HTML</a></li>
         </ul>
       </li>
-      <li><a href="Attributes.html#Attributes">Editer des attributs</a>
+      <li><a href="Attributes.html.fr#Attributes">Editer des attributs</a>
         <ul>
-          <li><a href="Attributes.html#L1073">Editer des attributs avec le
+          <li><a href="Attributes.html.fr#L1073">Editer des attributs avec le
             menu Attributs</a></li>
-          <li><a href="Attributes.html#Copying">Copier des attributs</a></li>
-          <li><a href="Attributes.html#Editing">Editer des attributs dans la
+          <li><a href="Attributes.html.fr#Copying">Copier des attributs</a></li>
+          <li><a href="Attributes.html.fr#Editing">Editer des attributs dans la
             Vue structure</a></li>
         </ul>
       </li>
-      <li><a href="SpellChecking.html#Spell">Vérifier l'orthographe</a></li>
-      <li><a href="Publishing.html#Saving">Sauver et publier des documents</a>
+      <li><a href="SpellChecking.html.fr#Spell">Vérifier l'orthographe</a></li>
+      <li><a href="Publishing.html.fr#Saving">Sauver et publier des documents</a>
         <ul>
-          <li><a href="Publishing.html#L1104">Sauver des documents en
+          <li><a href="Publishing.html.fr#L1104">Sauver des documents en
           HTML</a></li>
-          <li><a href="Publishing.html#L1105">Sauver un texte</a></li>
+          <li><a href="Publishing.html.fr#L1105">Sauver un texte</a></li>
         </ul>
       </li>
-      <li><a href="Printing.html#Printing">Imprimer des documents</a></li>
-      <li><a href="Numbering.html#Section">Numéroter des sections</a></li>
-      <li><a href="MakeBook.html#Assembling">Assembler des documents
+      <li><a href="Printing.html.fr#Printing">Imprimer des documents</a></li>
+      <li><a href="Numbering.html.fr#Section">Numéroter des sections</a></li>
+      <li><a href="MakeBook.html.fr#Assembling">Assembler des documents
       longs</a></li>
     </ul>
   </li>
-  <li><a href="Configure.html#Configuring">Configurer Amaya</a>
+  <li><a href="Configure.html.fr#Configuring">Configurer Amaya</a>
     <ul>
-      <li><a href="Configure.html#Conventions">Conventions</a>
+      <li><a href="Configure.html.fr#Conventions">Conventions</a>
         <ul>
-          <li><a href="Configure.html#L979">Le répertoire 
+          <li><a href="Configure.html.fr#L979">Le répertoire 
           d'Amaya/Config</a></li>
-          <li><a href="Configure.html#AmayaHome">Le répertoire 
+          <li><a href="Configure.html.fr#AmayaHome">Le répertoire 
             d'Amaya/Home</a></li>
-          <li><a href="Configure.html#AmayaTemp">Le répertoire d'
+          <li><a href="Configure.html.fr#AmayaTemp">Le répertoire d'
             Amaya/Temp</a></li>
         </ul>
       </li>
-      <li><a href="Configure.html#preferences">Les  Menus Préférences</a></li>
-      <li><a href="Configure.html#shortcuts">Raccourcis-clavier</a></li>
+      <li><a href="Configure.html.fr#preferences">Les  Menus Préférences</a></li>
+      <li><a href="Configure.html.fr#shortcuts">Raccourcis-clavier</a></li>
     </ul>
   </li>
 </ul>
@@ -222,14 +222,14 @@ Amaya affiche dans l'écran hôte local.</p>
 ou le URI du premier document qu' <strong>Amaya</strong> devrait afficher
 quand il démarre. Si aucun paramètre n'est donné, un document par défaut est
 présenté. Le document par défaut pourrait être votre  <em>home page</em> (voir
-<a href="Configure.html#L138">comment configurer votre Home Page</a>) ou la
+<a href="Configure.html.fr#L138">comment configurer votre Home Page</a>) ou la
 page de bienvenue d'Amaya.</p>
 
 <h2><a name="L932" id="L932">Editer des pages Web avec Amaya</a></h2>
 
 <p><strong>Amaya</strong> ne vous permet pas seulement de naviguer des
 documents sur le Web, il vous permet aussi de les éditer et de les <a
-href="Publishing.html#Saving">sauver</a> soit localement soit dans des
+href="Publishing.html.fr#Saving">sauver</a> soit localement soit dans des
 serveurs Web lointains. </p>
 
 <p>Nous tentons de faire Amaya aussi robuste que  possible. Une session
@@ -241,43 +241,43 @@ l'utilisateur redémarre une nouvelle session d'Amaya, la recharge des fichiers
 <p>Chaque section suivante décrit brièvement  comment utiliser une fonction
 spécifique d'Amaya:</p>
 <ul>
-  <li><a rel="Chapter" href="Browsing.html#Browsing">Naviguer avec
+  <li><a rel="Chapter" href="Browsing.html.fr#Browsing">Naviguer avec
   Amaya</a></li>
-  <li><a rel="Chapter" href="Selecting.html#Selecting">Sélectionner</a></li>
-  <li><a rel="Chapter" href="Searching.html#Searching">Chercher et remplacer
+  <li><a rel="Chapter" href="Selecting.html.fr#Selecting">Sélectionner</a></li>
+  <li><a rel="Chapter" href="Searching.html.fr#Searching">Chercher et remplacer
     un texte</a></li>
-  <li><a rel="Chapter" href="Views.html#Views">Afficher des vues</a></li>
-  <li><a rel="Chapter" href="Creating.html#Creating">Créer de nouveaux
+  <li><a rel="Chapter" href="Views.html.fr#Views">Afficher des vues</a></li>
+  <li><a rel="Chapter" href="Creating.html.fr#Creating">Créer de nouveaux
     éléments</a></li>
-  <li><a rel="Chapter" href="Links.html#Creating">Créer et changer des liens
+  <li><a rel="Chapter" href="Links.html.fr#Creating">Créer et changer des liens
     et des ancres</a></li>
-  <li><a rel="Chapter" href="Changing.html#Changing">Editer la structure du
+  <li><a rel="Chapter" href="Changing.html.fr#Changing">Editer la structure du
     document</a></li>
-  <li><a rel="Chapter" href="Tables.html#Editing">Editer des tables</a></li>
-  <li><a href="Math.html#Math" rel="Chapter">Editer des mathématiques</a></li>
-  <li><a rel="Chapter" href="ImageMaps.html#Client-sid">Créer et utiliser des
+  <li><a rel="Chapter" href="Tables.html.fr#Editing">Editer des tables</a></li>
+  <li><a href="Math.html.fr#Math" rel="Chapter">Editer des mathématiques</a></li>
+  <li><a rel="Chapter" href="ImageMaps.html.fr#Client-sid">Créer et utiliser des
     zones actives</a></li>
-  <li><a rel="Chapter" href="StyleSheets.html#Style">Feuilles de
+  <li><a rel="Chapter" href="StyleSheets.html.fr#Style">Feuilles de
   style</a></li>
-  <li><a rel="Chapter" href="Attributes.html#Attributes">Editer des
+  <li><a rel="Chapter" href="Attributes.html.fr#Attributes">Editer des
     attributs</a></li>
-  <li><a rel="Chapter" href="SpellChecking.html#Spell">Vérifier
+  <li><a rel="Chapter" href="SpellChecking.html.fr#Spell">Vérifier
     l'orthographe</a></li>
-  <li><a rel="Chapter" href="Publishing.html#Saving">Sauver et publier des
+  <li><a rel="Chapter" href="Publishing.html.fr#Saving">Sauver et publier des
     documents</a></li>
-  <li><a rel="Chapter" href="Printing.html#Printing">Imprimer des
+  <li><a rel="Chapter" href="Printing.html.fr#Printing">Imprimer des
     documents</a></li>
-  <li><a rel="Chapter" href="Numbering.html#Section">Numéroter une
+  <li><a rel="Chapter" href="Numbering.html.fr#Section">Numéroter une
   section</a></li>
-  <li><a rel="Chapter" href="MakeBook.html#Assembling">Assembler des documents
+  <li><a rel="Chapter" href="MakeBook.html.fr#Assembling">Assembler des documents
     longs</a></li>
 </ul>
 
 <p>Il est également possible de changer les options par défaut (reportez-vous
-à la section qui explique comment  <a href="Configure.html#Configuring"
+à la section qui explique comment  <a href="Configure.html.fr#Configuring"
 rel="Chapter">Configurer Amaya</a>).</p>
 
-<p>La page sur  <a href="Access.html#Access" rel="Chapter">Accessibilité dans
+<p>La page sur  <a href="Access.html.fr#Access" rel="Chapter">Accessibilité dans
 Amaya</a> décrit l'accessibilité d'Amaya, et explique comment l'utiliser pour
 produire des pages pouvant être utilisées aussi bien par les gens qui ont des
 incapacités que par ceux qui n'en ont pas. </p>
@@ -288,19 +288,19 @@ décrit quelques uns des différents types qui peuvent être utilisés dans Amaya
 (comme les en-têtes, les listes, les citations) et qui explique comment les
 utiliser.</a></p>
 <ul>
-  <li><a href="HTML-elements/infoTypes.html#Informatio" rel="Chapter">Types
+  <li><a href="HTML-elements/infoTypes.html.fr#Informatio" rel="Chapter">Types
     information  dans  HTML</a></li>
-  <li><a href="HTML-elements/structure.html#HTML" rel="Chapter">Structure du
+  <li><a href="HTML-elements/structure.html.fr#HTML" rel="Chapter">Structure du
     document HTML</a></li>
-  <li><a href="HTML-elements/headings.html#Heading"
+  <li><a href="HTML-elements/headings.html.fr#Heading"
   rel="Chapter">En-têtes</a></li>
-  <li><a href="HTML-elements/lists.html#List" rel="Chapter">Listes</a></li>
-  <li><a href="HTML-elements/address.html#About" rel="Chapter">A propos de
+  <li><a href="HTML-elements/lists.html.fr#List" rel="Chapter">Listes</a></li>
+  <li><a href="HTML-elements/address.html.fr#About" rel="Chapter">A propos de
     l'auteur</a></li>
-  <li><a href="HTML-elements/inline.html#Inline3" rel="Chapter">Définitions en
+  <li><a href="HTML-elements/inline.html.fr#Inline3" rel="Chapter">Définitions en
     ligne, citations, sample code, insertions et effacements, abréviations,
     etc</a></li>
-  <li><a href="HTML-elements/40styling.html#Character" rel="Chapter">Eléments
+  <li><a href="HTML-elements/40styling.html.fr#Character" rel="Chapter">Eléments
     Style ( ce qu'il ne faut pas faire et ce qui doit être fait...)</a></li>
 </ul>
 <hr />

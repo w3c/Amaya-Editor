@@ -16,10 +16,10 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="SpellChecking.html"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+      <td><p align="right"><a href="SpellChecking.html.fr"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img
         alt="top" border="0" src="../Icons/up.gif" /></a> <a
-        href="Printing.html"><img alt="next" border="0"
+        href="Printing.html.fr"><img alt="next" border="0"
         src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -37,7 +37,7 @@ accéder de deux façons, grâce aux commandes <strong>Sauver</strong> et
 
 <p>Cette section manuelle décrit les commandes du menu de publication. En
 plus, il existe un nombre d'options de configuration que vous pouvez changer
-par l'intermédiaire du <a href="Configure.html#Publishing">menu de
+par l'intermédiaire du <a href="Configure.html.fr#Publishing">menu de
 configuration</a>.</p>
 
 <h3><a name="L1104">Sauver des documents en HTML</a></h3>
@@ -188,9 +188,9 @@ texte, dans un fichier local. La liste de tous les URIs utilisés dans le
 document est listées dans ce fichier.</p>
 </div>
 
-<p align="right"><a href="SpellChecking.html"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Printing.html"><img alt="next"
+<p align="right"><a href="SpellChecking.html.fr"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html.fr"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Printing.html.fr"><img alt="next"
 border="0" src="../Icons/right.gif" /></a></p>
 <hr />
 </body>

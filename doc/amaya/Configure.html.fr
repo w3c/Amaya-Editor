@@ -18,10 +18,10 @@
       <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="MakeBook.html"><img alt="previous"
-        border="0" src="../Icons/left.gif" /></a><a href="Manual.html"><img
+      <td><p align="right"><a href="MakeBook.html.fr"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a><a href="Manual.html.fr"><img
         alt="top" border="0" src="../Icons/up.gif" /></a><a
-        href="Access.html"><img alt="next" border="0" src="../Icons/right.gif"
+        href="Access.html.fr"><img alt="next" border="0" src="../Icons/right.gif"
         /></a></p>
       </td>
     </tr>
@@ -223,7 +223,7 @@ alt="General Preferences Menu" /></p>
       'a'. Pour obtenir un '~' vous devez tapez '~' deux fois.</p>
       <p>Les séquences de caractères utilisées par les méthodes d'entrée
       multi-touches standard et optionnelle sont résumées dans <a
-      href="Keyboard.html#Keyboard">deux tables différentes</a>.</p>
+      href="Keyboard.html.fr#Keyboard">deux tables différentes</a>.</p>
       <p></p>
     </dd>
   <dt> <strong>Montrer les images en arrière plan</strong></dt>
@@ -647,9 +647,9 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
 </ul>
 </div>
 
-<p align="right"><a href="MakeBook.html"><img alt="previous" border="0"
-src="../Icons/left.gif" /></a><a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif" /></a> <a href="Access.html"><img alt="next" border="0"
+<p align="right"><a href="MakeBook.html.fr"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a><a href="Manual.html.fr"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Access.html.fr"><img alt="next" border="0"
 src="../Icons/right.gif" /></a></p>
 <hr />
 <address>

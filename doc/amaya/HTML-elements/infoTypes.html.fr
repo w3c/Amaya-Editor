@@ -16,9 +16,9 @@
       <td><p><img border="0" alt="W3C" src="../../../Icons/WWW/w3c_home" />
         <img border="0" alt="Amaya" src="../../Icons/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="../Manual.html#There"><img alt="top"
+      <td><p align="right"><a href="../Manual.html.fr#There"><img alt="top"
         border="0" src="../../Icons/up.gif" /></a> <a
-        href="structure.html"><img alt="next" border="0"
+        href="structure.html.fr"><img alt="next" border="0"
         src="../../Icons/right.gif" /></a></p>
       </td>
     </tr>
@@ -34,7 +34,7 @@ présenté,  il est possible d'utiliser  <a href="../StyleSheets.html">Feuilles
 de style</a> pour changer la présentation de n'importe quel élément. Les types
 information qui peuvent être représentés par les éléments HTML sont:</p>
 <dl>
-  <dt><a href="headings.html">En-têtes</a></dt>
+  <dt><a href="headings.html.fr">En-têtes</a></dt>
     <dd>Il y a six niveaux d'en-tête dans HTML, qui doivent être utilisés pour
       marquer  les en-têtes de  page ou  de sujet selon leur importance.</dd>
     <dd>HTML fournit deux types de listes simples:
@@ -42,39 +42,39 @@ information qui peuvent être représentés par les éléments HTML sont:</p>
         <li>Listes numérotées ( comme celle-ci)</li>
         <li>Listes non ordonnées.</li>
       </ol>
-      <p>Il fournit également  des  <a href="lists.html">listes de termes et
+      <p>Il fournit également  des  <a href="lists.html.fr">listes de termes et
       de définitions.</a></p>
     </dd>
-  <dt><a href="address.html">A propos de l'auteur</a></dt>
+  <dt><a href="address.html.fr">A propos de l'auteur</a></dt>
     <dd>Un élément spécial est fourni pour contacter l'information sur
       l'auteur d'une  page HTML.</dd>
   <dt>Définitions</dt>
     <dd>Celles-ci peuvent être marquées comme une  <a
-      href="inline.html#Definition" rel="glossary">définition en ligne </a>
+      href="inline.html.fr#Definition" rel="glossary">définition en ligne </a>
       (c'est-à-dire définie dans un paragraphe normal) ou dans une  <a
-      href="lists.html">liste de termes et de définitions</a>. Cette liste de
+      href="lists.html.fr">liste de termes et de définitions</a>. Cette liste de
       types information  est elle-même une liste de définitions. Il est
       également possible d'utiliser la valeur <code>glossary</code> dans
       l'attribut <code>rel</code> d'un lien, si ce lien pointe vers une
       définition. Dans Amaya, les Vues liens et structure  incluent  n'importe
       quel attribut <code>rel</code> aux  liens.</dd>
-  <dt><a href="inline.html#Inline">Citations</a></dt>
+  <dt><a href="inline.html.fr#Inline">Citations</a></dt>
     <dd>Celles-ci peuvent être marquées en ligne ou en blocs. Dans chaque cas,
       il est possible de noter la source de la citation en utilisant l'élément
       CITE ou l'attribut CITE.</dd>
-  <dt><a href="inline.html#Sample">Sample input, output, computer
+  <dt><a href="inline.html.fr#Sample">Sample input, output, computer
   code</a></dt>
     <dd>Les éléments sont pourvus d'exemples  de <code>computer code</code>,
       <var>variables</var>, <kbd>text to be entered</kbd> et <samp>sample
       output</samp>.</dd>
-  <dt><a href="inline.html#Inline">Abrévations et acronymes</a></dt>
+  <dt><a href="inline.html.fr#Inline">Abrévations et acronymes</a></dt>
     <dd>Les éléments peuvent être utilisés pour désigner les abréviations et
       les acronymes.</dd>
-  <dt><a href="inline.html#Inline2">Insertions et suppressions</a></dt>
+  <dt><a href="inline.html.fr#Inline2">Insertions et suppressions</a></dt>
     <dd>Il existe des éléments pour marquer le texte qui a été inséré, ou qui
       devrait être supprimé. <ins>(Cela est utile pour l'édition en
       collaboration  <del>sub-editing</del>)</ins></dd>
-  <dt><a href="inline.html#Emphasis">Mises en évidence</a></dt>
+  <dt><a href="inline.html.fr#Emphasis">Mises en évidence</a></dt>
   <dt>HTML fournit deux niveaux de mise en évidence:<em> mise en évidence
   ordinaire</em> et <strong>mise en évidence  forte.</strong></dt>
   <dt></dt>
