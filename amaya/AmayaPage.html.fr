@@ -141,10 +141,11 @@ supporte les recommendations HTML, XHTML, MathML, SVG, CSS, et  HTTP.</p>
 <p>Avec Amaya, vous pouvez manipuler des pages Web contenant des boîtes de
 dialogues, des tables et les caractéristiques les plus avancées de HTML. Vous
 pouvez créer et éditer des <a href="../doc/amaya/Math.html.fr">expressions
-mathématiques</a> complexes dans les pages Web. Vous pouvez styler vos
-documents en utilisant les cascades de feuilles de style. Vous pouvez publier
-des documents HTML et XHTML sur un serveur local ou distant à travers
-HTTP.</p>
+mathématiques</a> complexes et des <a
+href="../doc/amaya/SVG.html.fr">graphiques SVG</a> dans les pages Web. Vous
+pouvez styler vos documents en utilisant les cascades de feuilles de style.
+Vous pouvez publier des documents HTML et XHTML sur un serveur local ou
+distant à travers HTTP.</p>
 
 <p>La navigation et l'édition sont intimement intégrées. Vous pouvez naviguer
 et éditer des pages Web en même temps. Pour faire une édition de façon très
@@ -153,14 +154,15 @@ permettra de rentrer le texte; pour suivre un lien, vous devez double cliquer.
 Ce comportement peut être modifié ainsi que de nombreuses caractéristiques en
 utilisant le menu Spécial/Préférences.</p>
 
-<p>Amaya inclut une application d'<a
-href="../doc/amaya/Annotations.html.fr">annotations collaboratives</a> basée
-sur les technologies du W3C (RDF,, XLink et XPointer). Les annotations sont
-des commentaires, notes, remarques externes qui peuvent être attachées à
-n'importe quel document Web ou partie sélectionnée de ce document. Les
-annotations sont stockées soit dans la machine locale, soit dans des serveurs
-d'annotation. La création d'annotations sur un document ne modifie pas le
-document lui-même.</p>
+<p>Amaya inclut une application <a
+href="../doc/amaya/Annotations.html.fr"><img
+src="/local_home/vatton/Amaya/amaya/annot.gif" alt="Icone d'annotation"
+/>d'annotations collaboratives</a> basée sur les technologies du W3C (RDF,,
+XLink et XPointer). Les annotations sont des commentaires, notes, remarques
+externes qui peuvent être attachées à n'importe quel document Web ou partie
+sélectionnée de ce document. Les annotations sont stockées soit dans la
+machine locale, soit dans des serveurs d'annotation. La création d'annotations
+sur un document ne modifie pas le document lui-même.</p>
 
 <p>Une vue source montre le balisage courant produit par Amaya. En utilisant
 cette vue en parallèle avec la vue principale, vous pouvez travailler sur la
