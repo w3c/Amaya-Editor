@@ -810,7 +810,7 @@ void HelpAmaya (Document document, View view)
 
 #if defined(_GTK)
    TtaNewDialogSheet (BaseDialog + AboutForm, TtaGetViewFrame (document, view),
-		      HTAppName, 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
+		      (char *)TtaGetAppName(), 1, TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1,'L');
 #endif  /* #if defined(_GTK) */
    
    strcpy (localname, TtaGetAppName());
