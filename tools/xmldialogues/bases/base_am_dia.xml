@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Thu Mar  4 17:37:41 CET 2004" version="67">
+<base last_update="Tue Mar  9 18:05:08 CET 2004" version="72">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -386,12 +386,12 @@
 	<message xml:lang="fi">Aseta tyypiksi XHTML 1.1</message>
 	<message xml:lang="tr">XHTML 1.1 doctype</message>
 </label>
-<label define="BBDoctypeXhtmlTransitional">
+<label define="BDoctypeXhtmlTransitional">
 	<message xml:lang="en">Change to XHTML 1.0 &amp;Transitional</message>
 	<message xml:lang="fr">Changer pour XHTML 1.0 &amp;Transitional</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Transitional</message>
 	<message xml:lang="de">Dokumenttyp XHTML 1.0 Transitional zuweisen</message>
-	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.0 Transicional</message>
+	<message xml:lang="es">Cambiar a XHTML 1.0 &amp;Transitional</message>
 	<message xml:lang="pt">Modificar/Criar doctype XHTML 1.0</message>
 	<message xml:lang="tr">XHTML 1.0 Transitional doctype</message>
 </label>
@@ -415,12 +415,12 @@
 	<message xml:lang="fi">Aseta tyypiksi XHTML 1.0 Basic</message>
 	<message xml:lang="tr">XHTML 1.0 Basic doctype</message>
 </label>
-<label define="BBDoctypeHtmlTransitional">
+<label define="BDoctypeHtmlTransitional">
 	<message xml:lang="en">Change to &amp;HTML 4.01 Transitional</message>
 	<message xml:lang="fr">Changer pour &amp;HTML 4.01 Transitional</message>
 	<message xml:lang="it">Cambia/Crea doctype HTML 4.01 Transitional</message>
 	<message xml:lang="de">HTML 4.01 Transitional</message>
-	<message xml:lang="es">Cambiar doctype a HTML 4.01 Transicional</message>
+	<message xml:lang="es">Cambiar a HTML 4.01 T&amp;ransitional</message>
 	<message xml:lang="pt">Alterar doctype para HTML 4.01 Transitional</message>
 	<message xml:lang="fi">Aseta tyypiksi HTML 4.01 Transitional</message>
 	<message xml:lang="tr">HTML 4.01 Transitional doctype</message>
@@ -792,13 +792,15 @@
 	<message xml:lang="pt">Apagar</message>
 	<message xml:lang="fi">Poista</message>
 </label>
-<label define="">
+<label define="BInsertBefore">
 	<message xml:lang="en">&amp;Insert before</message>
 	<message xml:lang="fr">&amp;Insérer avant</message>
+	<message xml:lang="es">Insertar &amp;antes</message>
 </label>
-<label define="">
+<label define="BInsertAfter">
 	<message xml:lang="en">Insert &amp;after</message>
 	<message xml:lang="fr">Insérer &amp;après</message>
+	<message xml:lang="es">Insertar &amp;después</message>
 </label>
 <label define="TEditMode">
 	<message xml:lang="en">&amp;Editor Mode</message>
@@ -1295,12 +1297,12 @@
 	<message xml:lang="de">Verkleinern der Breite</message>
 	<message xml:lang="es">Reducir extensión horizontal</message>
 </label>
-<label define="BCellHShrink">
+<label define="BCellVShrink">
 	<message xml:lang="en">Shrink vertical extend</message>
 	<message xml:lang="fr">Réduire extension verticale</message>
-	<message xml:lang="it">Riduci l'estensione orizzontale</message>
+	<message xml:lang="it">Riduci l'estensione verticale</message>
 	<message xml:lang="de">Verkleinern der Breite</message>
-	<message xml:lang="es">Reducir extensión horizontal</message>
+	<message xml:lang="es">Reducir extensión vertical</message>
 </label>
 <label define="BSelectRow">
 	<message xml:lang="en">Select the row</message>
@@ -2039,6 +2041,7 @@
 <label define="MathMatrix">
 	<message xml:lang="en">&amp;Matrices</message>
 	<message xml:lang="fr">&amp;Matrices</message>
+	<message xml:lang="es">&amp;Matrices</message>
 </label>
 <label define="BMatrix">
 	<message xml:lang="en">New matrix (mtable)</message>
@@ -2050,84 +2053,84 @@
 	<message xml:lang="pt">Matriz (mtable)</message>
 	<message xml:lang="fi">Matriisi (mtable)</message>
 </label>
-<label define="BCellHExtend">
+<label define="BMCellHExtend">
 	<message xml:lang="en">Join with the cell at the right</message>
 	<message xml:lang="fr">Joindre avec la cellule de droite</message>
 	<message xml:lang="it">Unisci la cella a quella di destra</message>
 	<message xml:lang="de">Zusammenfügen mit rechter Zelle</message>
 	<message xml:lang="es">Unir con celda derecha</message>
 </label>
-<label define="BCellVExtend">
+<label define="BMCellVExtend">
 	<message xml:lang="en">Join with the cell below</message>
 	<message xml:lang="fr">Joindre avec la cellule au-dessous</message>
 	<message xml:lang="it">Unisci la cella a quella sotto</message>
 	<message xml:lang="de">Zusammenfügen mit der Zelle darunter</message>
 	<message xml:lang="es">Unir con celda inferior</message>
 </label>
-<label define="BCellHShrink">
+<label define="BMCellHShrink">
 	<message xml:lang="en">Shrink horizontal extend</message>
 	<message xml:lang="fr">Réduire extension horizontale</message>
 	<message xml:lang="it">Riduci l'estensione orizzontale</message>
 	<message xml:lang="de">Verkleinern der Breite</message>
 	<message xml:lang="es">Reducir extensión horizontal</message>
 </label>
-<label define="BCellHShrink">
+<label define="BMCellVShrink">
 	<message xml:lang="en">Shrink vertical extend</message>
 	<message xml:lang="fr">Réduire extension verticale</message>
-	<message xml:lang="it">Riduci l'estensione orizzontale</message>
+	<message xml:lang="it">Riduci l'estensione verticale</message>
 	<message xml:lang="de">Verkleinern der Breite</message>
-	<message xml:lang="es">Reducir extensión horizontal</message>
+	<message xml:lang="es">Reducir extensión vertical</message>
 </label>
-<label define="BSelectRow">
+<label define="BMSelectRow">
 	<message xml:lang="en">Select the row</message>
 	<message xml:lang="fr">Sélectionner la ligne</message>
 	<message xml:lang="it">Seleziona la riga</message>
 	<message xml:lang="de">Zeile auswählen</message>
 	<message xml:lang="es">Seleccionar fila</message>
 </label>
-<label define="BCreateRowB">
+<label define="BMCreateRowB">
 	<message xml:lang="en">Insert a row before</message>
 	<message xml:lang="fr">Insérer une ligne avant</message>
 	<message xml:lang="it">Inserisci una riga prima</message>
 	<message xml:lang="de">Zeile einfügen (darüber)</message>
 	<message xml:lang="es">Insertar fila delante</message>
 </label>
-<label define="BCreateRowA">
+<label define="BMCreateRowA">
 	<message xml:lang="en">Insert a row after</message>
 	<message xml:lang="fr">Insérer une ligne après</message>
 	<message xml:lang="it">Inserisci una riga dopo</message>
 	<message xml:lang="de">Zeile einfügen (dahinter)</message>
 	<message xml:lang="es">Insertar fila detrás</message>
 </label>
-<label define="BSelectColumn">
+<label define="BMSelectColumn">
 	<message xml:lang="en">Select the column</message>
 	<message xml:lang="fr">Sélectionner la colonne</message>
 	<message xml:lang="it">Seleziona la colonna</message>
 	<message xml:lang="de">Spalte auswählen</message>
 	<message xml:lang="es">Seleccionar columna</message>
 </label>
-<label define="BCreateColumnB">
+<label define="BMCreateColumnB">
 	<message xml:lang="en">Insert a column before</message>
 	<message xml:lang="fr">Insérer une colonne avant</message>
 	<message xml:lang="it">Inserisci una colonna prima</message>
 	<message xml:lang="de">Spalte einfügen (davor)</message>
 	<message xml:lang="es">Insertar columna delante</message>
 </label>
-<label define="BCreateColumnA">
+<label define="BMCreateColumnA">
 	<message xml:lang="en">Insert a column after</message>
 	<message xml:lang="fr">Insérer une colonne après</message>
 	<message xml:lang="it">Inserisci una colonna dopo</message>
 	<message xml:lang="de">Spalte einfügen (danach)</message>
 	<message xml:lang="es">Insertar columna detrás</message>
 </label>
-<label define="BPasteBefore">
+<label define="BMPasteBefore">
 	<message xml:lang="en">Paste before</message>
 	<message xml:lang="fr">Coller avant</message>
 	<message xml:lang="it">Incolla prima</message>
 	<message xml:lang="de">Einfügen (davor)</message>
 	<message xml:lang="es">Pegar delante</message>
 </label>
-<label define="BPasteAfter">
+<label define="BMPasteAfter">
 	<message xml:lang="en">Paste after</message>
 	<message xml:lang="fr">Coller après</message>
 	<message xml:lang="it">Incolla dopo</message>

@@ -113,14 +113,14 @@ sub import_a_language {
 			   Comment => \&comment_hndl,
 			   Default => \&default_hndl
 				);
-################first : read the two files
+################first: read the two files
 
 # to load the label and their references
 	my @list = ();
 	do {
-		$_ = @list = Read_label::init_label ($in_labelfile, $comment_at_the_begining);
+	    $_ = @list = Read_label::init_label ($in_labelfile, $comment_at_the_begining);
 	}while ($_ == 0);	
-	#to fill the hach %labels :
+	#to fill the hach %labels:
 	my $i = $list[0] + 1;
 	do {
 			$labels{ $list[$i] } = $list[$i + 1];
@@ -137,7 +137,7 @@ sub import_a_language {
 		($encodage, $total, %texts) = Read_text::init_text ("$in_textfile");
 	}	
 							
-############### then : parsing now	
+############### then: parsing now	
 	open (IN,"<$basefile") || die "can't read $basefile because: $!\n";
 	open (OUT,">$newbasefile") || die "can't create $newbasefile because: $!\n";
 	debug ("\n\tBegin of the parse");
@@ -154,7 +154,7 @@ sub import_a_language {
 	print "\tEnd Add/Update a language\n";
 	
 	if ($debug) {
-		print "\tThere is ",$_ = @list_of_lang_occur,"languages :\n\t" ;
+		print "\tThere is ",$_ = @list_of_lang_occur,"languages:\n\t" ;
 		foreach ( @list_of_lang_occur ) {
 			print $_ . " ";
 		}
@@ -185,7 +185,7 @@ sub start_hndl {
  	my $element = ""; 	# element is the name of the tag
 	my %attributes = ();
 	
-	($expat,$element,%attributes) = @_ ; #to store the parameters : element and attributes and their values	
+	($expat,$element,%attributes) = @_ ; #to store the parameters: element and attributes and their values	
 	 $current_tag = $element ;
 	 
 #unused
@@ -301,21 +301,21 @@ sub end_hndl { #	do the modification if necessary
 	if ($end_tag eq "label") {	
 		if ($found == 1) {
 			$found = 0;
-		}else { # there isn't yet a translate for this label into the base
-			if ( $texts{ $labels{$current_label}} ) {
+		}else { # there is no translation for this label within the base
+			if ($texts{ $labels{$current_label}}) {
 				print OUT "\t<message xml:lang=\"$language_code\">";
 				print OUT $texts{ $labels{$current_label}};
 				print OUT "</message>\n";
-			}else {
-				if ( $current_label  ne $end_label) { # This label is always empty
-					if ( $language_code eq "en") {
-						$warning = 1;
-					}
-					print '==> ' . "the label $current_label (ref ";
-					print $labels{$current_label} ;
-					print ")don't have a translate in the message file\n";
+			}
+			else {
+			    if ( $current_label ne $end_label) {# This label is always empty
+				if ( $language_code eq "en") {
+				    $warning = 1;
 				}
-			}	
+				print '==> ' . "No translation for the $current_label";
+				print " in the message file\n";
+			    }
+			}
 		}
 		$text = "";
 		$english_text = "";
@@ -326,27 +326,34 @@ sub end_hndl { #	do the modification if necessary
 		if ($current_language eq "en" ) {
 			$english_text = $text;
 		}
-		elsif ($current_language eq $language_code) {
-			
-			if (	defined ($texts{ $labels{$current_label}} )
-					&& $text ne $texts{ $labels{$current_label}}) {	
-				my $choice = 0 ;
-				do {
-						print "The old value is :$text\n";
-						if ($english_text ne "" && $english_text ne "OK") {
-							print "The english version gives :$english_text\n";
-						}
-						print "The new would be :" . $texts{ $labels{$current_label}} . "\n";
-						print "If you agree with this update, Type 1,\nElse 0\nOur choice [1] :\n"; 
-						$choice = <STDIN>; chomp $choice;
-						if ($choice eq "") {
-							$choice = 1;
-						}
-				} while ( $choice eq "" || $choice =~ /^\D/ || $choice < 0 || $choice >= 2 ) ;
-				if ( $choice == 1) {
-					$text = $texts{ $labels{$current_label}};
-				}
-			} else {} #no problem they are the same or their isn't a new translate	
+		elsif ($current_language eq $language_code) {			
+		    if (defined ($labels{$current_label} )
+			&& defined ($texts{$labels{$current_label}} )
+		        && ("$text" ne "$texts{$labels{$current_label}}")) {
+			my $choice = 0;
+			do {
+			    print "Replace: \"$text\"\n";
+#\\\\\				print "By:" . $texts{$labels{$current_label}} . "\n";
+			    print "By:      \"$texts{$labels{$current_label}}\"\n";
+			    if ($english_text ne "" && $english_text ne "OK") {
+				print "English version is: $english_text\n";
+			    }
+			    print "If you agree with this update, type 1, else 0\nOur choice [1]:\n"; 
+			    $choice = <STDIN>; chomp $choice;
+			    if ($choice eq "") {
+				$choice = 1;
+			    }
+			} while ( $choice eq "" || $choice =~ /^\D/ || $choice < 0 || $choice >= 2 ) ;
+			if ( $choice == 1) {
+			    $text = $texts{$labels{$current_label}};
+			}
+		    }
+		    else {
+			#no problem they are the same or it's a new translation
+#			print "label->$current_label val->$labels{$current_label}\n";
+#			print "Text:    \"$text\"\n";
+#			print "Current: \"$texts{$labels{$current_label}}\"\n";
+		    }
 		}
 		#always
 		recopy ( $text );
@@ -366,7 +373,7 @@ sub end_hndl { #	do the modification if necessary
 			print OUT "\t<language encoding=\"$encodage\">$language_code</language>\n" ;
 		}
 	}	
-####################### always do :
+####################### always do:
 	print OUT "</$end_tag>\n";
 
 }  # End endhndl
