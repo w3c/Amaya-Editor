@@ -1662,7 +1662,7 @@ static void       StartOfXmlStartElement (char *name)
 		{
 		  /* element not found in the corresponding DTD */
 		  /* don't process that element */
-		  sprintf (msgBuffer, "Invalid %s element <%s>",
+		  sprintf (msgBuffer, "Invalid or unsupported %s element <%s>",
 			   schemaName , elementName);
 		  XmlParseError (errorParsing, msgBuffer, 0);
 		  UnknownElement = TRUE;
@@ -2567,7 +2567,7 @@ static void EndOfXmlAttributeName (char *attrName, char *uriName,
      {
        /* This attribute is not in the corresponding mapping table */
        strcpy (schemaName, currentParserCtxt->SSchemaName);
-       sprintf (msgBuffer, "Invalid %s attribute \"%s\"",
+       sprintf (msgBuffer, "Invalid or unsupported %s attribute \"%s\"",
 		schemaName, attrName);
        XmlParseError (errorParsing, msgBuffer, 0);
        /* Attach an Invalid_attribute to the current element */
