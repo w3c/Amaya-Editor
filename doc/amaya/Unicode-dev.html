@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<title>Rules to write Unicode compatible code</title>
+<style type="text/css">
+P { text-align: center; text-align: justify}
+P { text-align: justify; text-align: left}
+UL { text-align: justify}
+</style>
+<meta name="GENERATOR" content="amaya V2.0a">
+</head>
+<body lang="en">
+
+<p style="font-size: 24pt; font-weight: bold; text-align: center; text-align:
+justify">Rules to write Unicode compatible code</p>
+
+<p lang="en">This document is intended to help writing Unicode compatible
+source code in Amaya. It concerns the handling of strings in terms of memory
+allocation, comparison, copying etc. This document will be updated if
+necessary.</p>
+
+<p></p>
+
+<h1>Declaration of characters and strings</h1>
+
+<p>Use the following typedefined types to declare characters:</p>
+<ul>
+<li>
+<code><strong>CHAR_T</strong></code> to declare a single character. This is
+equivalent to the standard C type <code><strong>char</strong></code>  when
+handling monobyte characters
+</li>
+<li>
+<code><strong>UCHAR_T</strong></code> to declare a single character.
+<strong><code>UCHAR_T</code></strong> and <code><strong>CHAR_T</strong></code>
+are the same when using the unicode version of Amaya. It was introduced to
+keep the compatibility with the monobyte version and it is equivalent to
+<code><strong>unsigned char</strong></code> type.
+</li>
+<li>
+<code><strong>STRING</strong></code> to declare a string and it is equivalent
+to <code><strong>char*</strong></code> type is used in monobyte characters
+mode.
+</li>
+<li>
+<code><strong>USTRING</strong></code> to declare a string.
+<code><strong>STRING</strong></code> and <code><strong>USTRING</strong></code>
+are the same when using unicode version. In monobyte mode,
+<code><strong>USTRING</strong></code> is equivalent to <code><strong>unsigned
+char*</strong></code>.
+</li>
+<li>
+<code><strong>PCHAR_T</strong></code> to declare a pointer to a single
+character (equivalent to <code><strong>char*</strong></code>). Do not use this
+type to declare a string. It may be used as follows:
+
+<p></p>
+
+<p><code>STRING str;</code></p>
+
+<p><code>PCHAR_T pstr;</code></p>
+
+<p><code>/*... */</code></p>
+
+<p><code>pstr = str;</code></p>
+
+<p><code>while (*pstr++)</code></p>
+
+<p><code>do_something ();</code></p>
+
+<p></p>
+
+<p></p>
+</li>
+<li>
+<code><strong>PUCHAR_T</strong></code> to declare a pointer to a single
+character (equivalent to <code><strong>unsigned char*</strong></code>).
+</li>
+</ul>
+
+<p></p>
+
+<p>In the near future, will use only <code><strong>CHAR_T</strong></code>,
+<code><strong>PCHAR_T</strong></code> and
+<code><strong>STRING</strong></code>.</p>
+
+<p></p>
+
+<h1>Handling character and strings</h1>
+
+<p>There is some macros <code><strong>#define</strong></code>d functions to
+use while manipulating characters and strings:</p>
+
+<p style="font-size: 10pt"><code>int    ustrcasecmp  (STRING, const STRING);
+/* Eq. to strcasecmp */</code></p>
+
+<p style="font-size: 10pt"><code>STRING ustrcat      (STRING, const STRING);
+/* Eq. strcat */</code></p>
+
+<p style="font-size: 10pt"><code>STRING ustrchr      (const STRING, CHAR_T);
+/* Eq. strchr */</code></p>
+
+<p style="font-size: 10pt"><code>int    ustrcmp      (const STRING, const
+STRING);               /* Eq. strcmp */</code></p>
+
+<p style="font-size: 10pt"><code>int    ustrcoll     (const STRING, const
+STRING);               /* Eq. strcoll */</code></p>
+
+<p style="font-size: 10pt"><code>STRING ustrcpy      (STRING, const STRING);
+/* Eq. strcpy */</code></p>
+
+<p style="font-size: 10pt"><code>STRING ustrdup      (const STRING); /* Eq.
+strdup */</code></p>
+
+<p style="font-size: 10pt"><code>int    ustrlen      (const STRING); /* Eq.
+strlen */</code></p>
+
+<p style="font-size: 10pt"><code>int    ustrncasecmp (STRING, const STRING,
+unsigned int);       /* Eq. strncasecmp */</code></p>
+
+<p style="font-size: 10pt"><code>STRING ustrncat     (STRING, const STRING,
+unsigned int);       /* Eq. strncat */</code></p>
+
+<p style="font-size: 10pt"><code>STRING ustrncmp     (const STRING, const
+STRING, unsigned int); /* Eq. strncmp */</code></p>
+
+<p style="font-size: 10pt"><code>STRING ustrncpy     (STRING, const STRING,
+unsigned int);       /* Eq. strncpy */</code></p>
+
+<p style="font-size: 10pt"><code>STRING ustrrchr     (const STRING, CHAR_T);
+/* Eq. strrchr */</code></p>
+
+<p style="font-size: 10pt"><code>STRING ustrstr      (const STRING, const
+STRING);               /* Eq. strstr */</code></p>
+
+<p style="font-size: 10pt"><code>STRING ustrtok      (STRING, const STRING);
+/* Eq. strtok */</code></p>
+
+<p style="font-size: 10pt"></p>
+
+<p style="font-size: 10pt"><code>int          uctoi (const STRING); /* Eq.
+atoi */</code></p>
+
+<p style="font-size: 10pt"><code>CHAR_T       utolower (CHAR_T); /* Eq.
+tolower */</code></p>
+
+<p style="font-size: 10pt"></p>
+
+<p style="font-size: 10pt"><code>ufprintf /* Eq. fprintf *</code></p>
+
+<p style="font-size: 10pt"><code>usprintf /* Eq. sprintf */</code></p>
+
+<p style="font-size: 10pt"><code>usscanf /* Eq. sscanf */</code></p>
+
+<p style="font-size: 10pt"><code>uaccess /* Eq. access */</code></p>
+
+<p style="font-size: 10pt"><code>ufgets /* Eq. fgets */</code></p>
+
+<p style="font-size: 10pt"><code>ufopen /* Eq. fopen */</code></p>
+
+<p style="font-size: 10pt"><code>uunlink /* Eq. unlink */</code></p>
+
+<p style="font-size: 10pt"><code>umkdir /* Eq. mkdir */</code></p>
+
+<p style="font-size: 10pt"><code>urmdir /* Eq. rmdir */</code></p>
+
+<p style="font-size: 10pt"><code>ugetenv /* Eq. getenv */</code></p>
+
+<p style="font-size: 10pt"><code>ugetcwd /* Eq. getcwd */</code></p>
+
+<p style="font-size: 10pt"><code>urename /* Eq. rename */</code></p>
+
+<p></p>
+
+<h1>Using hardcoded characters and string</h1>
+
+<p style="font-size: 12pt">When hardcoded strings or characters are needed use
+the following conventions:</p>
+
+<p style="font-size: 10pt"><code>#if defined(_I18N_) ||
+defined(__JIS__)</code></p>
+
+<p style="font-size: 10pt"><code>/* _I18N_ allows to use 16bits characters and
+strings encoding */</code></p>
+
+<p style="font-size: 10pt"><code>/* __JIS__ for 32 bits characters and strings
+encoding */</code></p>
+
+<p style="font-size: 10pt"><code>#define MACRO_MY_HARCODED_STRING L"this is an
+UCS2 coded string"</code></p>
+
+<p style="font-size: 10pt"><code>#define EOS L'\0'</code></p>
+
+<p style="font-size: 10pt"><code>STRING var_hardcoded_string = L"this is a
+UCS2 coded variable string;</code></p>
+
+<p style="font-size: 10pt"><code>#else /* defined(_I18N_) || defined(__JIS__)
+*/</code></p>
+
+<p style="font-size: 10pt"><code>#define MACRO_MY_HARCODED_STRING "this is not
+an UCS2 coded string"</code></p>
+
+<p style="font-size: 10pt"><code>STRING var_hardcoded_string = "this is not an
+UCS2 coded variable string;</code></p>
+
+<p style="font-size: 10pt"><code>#define EOS '\0'</code></p>
+
+<p style="font-size: 10pt"><code>#endif</code></p>
+
+<p></p>
+
+<h1>Memory management for strings</h1>
+
+<p>Please use the function dedicated to memory allocation for strings:
+<code><strong>TtaAllocString</strong></code>. See
+<code>Amaya/thotlib/base/memory.c</code></p>
+
+<p></p>
+
+<p><code><strong><span style="font-size: 10pt">STRING TtaAllocString (unsigned
+int size)</span></strong></code></p>
+
+<p style="font-size: 10pt"><code>int len = ustrlen (oldString);</code></p>
+
+<p style="font-size: 10pt"><code>STRING newString = TtaAllocString (len +
+1);</code></p>
+
+<address>
+  <a href="mailto:guetari@w3.org">Ramzi Guetari</a>
+</address>
+
+<p><small><a
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright">Copyright</a>
+&nbsp;&copy;&nbsp; 1997 <a href="http://www.w3.org/">W3C</a> (<a
+href="http://www.lcs.mit.edu/">MIT</a>, <a
+href="http://www.inria.fr/">INRIA</a>, <a
+href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal
+Disclaimer">liability,</a> <a
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C
+Trademarks">trademark</a>, <a
+href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
+use </a>and <a
+href="http://www.w3.org/Consortium/Legal/copyright-software.html">software
+licensing </a>rules apply. Your interactions with this site are in accordance
+with our <a
+href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Public">public</a>
+and <a
+href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Members">Member</a>
+privacy statements.</small></p>
+</body>
+</html>
