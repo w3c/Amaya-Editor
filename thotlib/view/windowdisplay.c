@@ -1602,8 +1602,9 @@ static void  DoDrawPolygon (int frame, int thick, int style,
        hOldPen = SelectObject (display, hPen);
        hOldBrush = SelectObject (display, hBrush);
        Polygon (display, points, npoints);
-       SelectObject (display, hOldBrush);
+       SelectObject (display, hOldPen);
        DeleteObject (hPen);
+       SelectObject (display, hOldBrush);
        DeleteObject (hBrush);
        DeleteObject ((HGDIOBJ) pat);
      }
@@ -1626,6 +1627,7 @@ static void  DoDrawPolygon (int frame, int thick, int style,
      /* draw the border */
      hOldPen = SelectObject (display, hPen);
      Polyline (display, points, npoints);
+	 SelectObject (display, hOldPen);
      DeleteObject (hPen);
     }
 #ifndef _WIN_PRINT
@@ -2243,6 +2245,7 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 	  SetPath (frame, display, x, y, path);
 	  EndPath (display);
 	  FillPath (display);
+      SelectObject (display, hOldBrush);
 	  DeleteObject (hBrush);
 	  DeleteObject ((HGDIOBJ) pat);
 	}
@@ -2263,6 +2266,7 @@ void            DrawPath (int frame, int thick, int style, int x, int y,
 	    }
 	  hOldPen = SelectObject (display, hPen);
 	  SetPath (frame, display, x, y, path);
+      SelectObject (display, hOldPen);
 	  DeleteObject (hPen);
 	}
 #ifndef _WIN_PRINT
