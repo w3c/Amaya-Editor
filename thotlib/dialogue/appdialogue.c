@@ -1393,7 +1393,7 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		    {
 		      row = gtk_vseparator_new ();
 		      gtk_widget_show (row);
-		      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 4);
+		      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 2);
 		    }
 		  else
 		    {
@@ -1405,7 +1405,7 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      /* insert the icon */
 		      w = gtk_pixmap_new (picture, NULL);
 		      gtk_container_add (GTK_CONTAINER (row), w);
-		      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 4);
+		      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 2);
 		      tooltipstmp = gtk_tooltips_new ();
 		      gtk_tooltips_set_tip (tooltipstmp, row, info, "private");
 		      gtk_tooltips_enable (tooltipstmp);
@@ -3336,14 +3336,7 @@ void DestroyFrame (int frame)
 
         XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #else /* _GTK */
-	/*
-	gtk_signal_disconnect_by_func(GTK_OBJECT(GTK_WIDGET(w)->parent->parent), GTK_SIGNAL_FUNC(FrameKilledGTK), frame); 
-	gtk_widget_destroy (GTK_WIDGET(w)->parent->parent->parent);
-	*/
-#endif /* !_GTK */
-#ifdef _GTK
-	/*	printf("Boom on detruit la frame\n");*/
-	gtk_widget_destroy (GTK_WIDGET(gtk_widget_get_toplevel(GTK_WIDGET(FrameTable[frame].WdFrame))));
+	gtk_widget_destroy (GTK_WIDGET (gtk_widget_get_toplevel (GTK_WIDGET (FrameTable[frame].WdFrame))));
 #endif /* _GTK */
 
         for (i = 0; i < MAX_BUTTON; i++)

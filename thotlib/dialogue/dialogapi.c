@@ -6033,7 +6033,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	     /* Il n'y a pas de menu parent */
 	     catalogue->Cat_PtParent = NULL;
 	     catalogue->Cat_EntryParent = 0;
-	  }			/*else */
+	  }
 
 	/* Cree la fenetre du formulaire */
 	if (parent != 0)

@@ -4928,6 +4928,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	       /* suppress last directory */
 	       strcpy (tempname, DirectoryName);
 	       TtaExtractName (tempname, DirectoryName, tempfile);
+	       if (DirectoryName[0] == EOS)
+		 strcpy (DirectoryName, DIR_STR);
 	     }
 	   else
 	     {
