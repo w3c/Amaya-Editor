@@ -395,23 +395,23 @@ STRUCT
 	      onrepeat = text;
 	      {animElementAttrs - see XLink.S}
               xlink_href;
-              attributeName = text;  {animAttributeAttrs}
+              attributeName_ = text;  {animAttributeAttrs}
 	      attributeType = text;
 	      begin_ = text;  {animTimingAttrs}
 	      dur = text;
 	      end_ = text;
-	      min = text;
-	      max = text;
+	      min_ = text;
+	      max_ = text;
 	      restart = always, never, whenNotActive;
 	      repeatCount = text;
 	      repeatDur = text;
-	      fill_ = remove, freeze;
+	      fill_ = remove_, freeze;
               calcMode = discrete, linear, paced, spline;  {animValueAttrs}
 	      values = text;
 	      keyTimes = text;
 	      keySplines = text;
 	      from = text;
-	      to = text;
+	      to_ = text;
 	      by = text;
               additive = replace, sum;  {animAdditionAttrs}
 	      accumulate = none_, sum;)
@@ -419,15 +419,15 @@ STRUCT
 	      desc; title; metadata;
 	  END;
 
-   set
+   set_
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage; {testAttrs}
 	      externalResourcesRequired;
 	      onbegin; onend; onrepeat; {animationEvents}
 	      xlink_href; {animElementAttrs - see XLink.S}
-              attributeName; attributeType; {animAttributeAttrs}
-	      begin_; dur; end_; min; max; restart; repeatCount; repeatDur; fill_;
+              attributeName_; attributeType; {animAttributeAttrs}
+	      begin_; dur; end_; min_; max_; restart; repeatCount; repeatDur; fill_;
 	                                                      {animTimingAttrs}
-	      to;)
+	      to_;)
 	= AGGREGATE
 	      desc; title; metadata;
 	  END;
@@ -437,10 +437,10 @@ STRUCT
 	      externalResourcesRequired;
 	      onbegin; onend; onrepeat; {animationEvents}
 	      xlink_href; {animElementAttrs - see XLink.S}
-              attributeName; attributeType; {animAttributeAttrs}
-	      begin_; dur; end_; min; max; restart; repeatCount; repeatDur; fill_;
+              attributeName_; attributeType; {animAttributeAttrs}
+	      begin_; dur; end_; min_; max_; restart; repeatCount; repeatDur; fill_;
 	                                                      {animTimingAttrs}
-	      calcMode; values; keyTimes; keySplines; from; to; by;
+	      calcMode; values; keyTimes; keySplines; from; to_; by;
               additive; accumulate; {animAdditionAttrs}
 	      path_ = text;
               keyPoints = text;
@@ -463,10 +463,10 @@ STRUCT
 	      externalResourcesRequired;
 	      onbegin; onend; onrepeat; {animationEvents}
 	      xlink_href; {animElementAttrs - see XLink.S}
-              attributeName; attributeType; {animAttributeAttrs}
-	      begin_; dur; end_; min; max; restart; repeatCount; repeatDur; fill_;
+              attributeName_; attributeType; {animAttributeAttrs}
+	      begin_; dur; end_; min_; max_; restart; repeatCount; repeatDur; fill_;
 	                                                      {animTimingAttrs}
-              calcMode; values; keyTimes; keySplines; from; to; by;
+              calcMode; values; keyTimes; keySplines; from; to_; by;
 	                                                       {animValueAttrs}
               additive; accumulate;) {animAdditionAttrs}
 	= AGGREGATE
@@ -478,10 +478,10 @@ STRUCT
 	      externalResourcesRequired;
 	      onbegin; onend; onrepeat; {animationEvents}
 	      xlink_href; {animElementAttrs - see XLink.S}
-              attributeName; attributeType; {animAttributeAttrs}
-	      begin_; dur; end_; min; max; restart; repeatCount; repeatDur; fill_;
+              attributeName_; attributeType; {animAttributeAttrs}
+	      begin_; dur; end_; min_; max_; restart; repeatCount; repeatDur; fill_;
 	                                                      {animTimingAttrs}
-              calcMode; values; keyTimes; keySplines; from; to; by;
+              calcMode; values; keyTimes; keySplines; from; to_; by;
 	                                                       {animValueAttrs}
               additive; accumulate;  {animAdditionAttrs}
 	      type_ = translate, scale, rotate_, skewX, skewY;)

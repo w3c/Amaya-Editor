@@ -716,38 +716,89 @@ RULES
 		END;
 	END;
 
-{@@@@@@@@
    animate:
 	BEGIN
-	
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
 	END;
 
-   set:
+   set_:
 	BEGIN
-	
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
 	END;
 
    animateMotion:
 	BEGIN
-	
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
 	END;
 
    mpath:
 	BEGIN
-	
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
 	END;
 
    animateColor:
 	BEGIN
-	
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
 	END;
 
    animateTransform:
 	BEGIN
-	
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
 	END;
-
-@@@@@@@@}
 
    metadata:
 	BEGIN
@@ -1442,36 +1493,155 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-{@@@@@@@@
   onbegin:
-  onend:
-  onrepeat:
-  attributeName:
-  attributeType:
-  begin_:
-  dur:
-  end_:
-  min:
-  max:
-  restart:
-  repeatCount:
-  repeatDur:
-  fill_:
-  calcMode:
-  values:
-  keyTimes:
-  keySplines:
-  from:
-  to:
-  by:
-  additive:
-  path_:
-  keyPoints:
-  rotate:
-  origin:
-  type_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
 
-@@@@@@@@}
+  onend:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  onrepeat:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  attributeName_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  attributeType:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  begin_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  dur:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  end_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  min_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  max_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  restart:
+	CreateBefore(AttrNameAndValue);
+
+  repeatCount:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  repeatDur:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  fill_:
+	CreateBefore(AttrNameAndValue);
+
+  calcMode:
+	CreateBefore(AttrNameAndValue);
+
+  values:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  keyTimes:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  keySplines:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  from:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  to_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  by:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  additive:
+	CreateBefore(AttrNameAndValue);
+
+  accumulate:
+	CreateBefore(AttrNameAndValue);
+
+  path_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  keyPoints:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  rotate:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  origin:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  type_:
+	CreateBefore(AttrNameAndValue);
 
   Unknown_attribute:
 	BEGIN

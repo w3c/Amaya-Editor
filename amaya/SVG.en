@@ -17,6 +17,7 @@ line_: line
 text_: text
 SpanElement: \240
 script_: script
+set_: set
 DOCTYPE: doctype
 XMLcomment: comment
 XMLPI: pi
@@ -60,9 +61,14 @@ height_: height
 xlink_href: xlink:href
 title_: title
 target_: target
+attributeName_: attributeName
 begin_: begin
 end_: end
+min_: min
+max_: max
 fill_: fill
+remove_: remove
+to_: to
 none_: none
 path_: path
 type_: type

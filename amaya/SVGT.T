@@ -44,9 +44,10 @@ RULES
         Use MathMLT for MathML;
         Use XLinkT for XLink;
 	Create '<svg xmlns="http://www.w3.org/2000/svg"';
+        indent +5;
 	Create Attributes;
-	Create '>\12';
-	indent +2;
+	Create CloseTagNL;
+	indent -3;
 	indent -2 after;
 	Create '</svg>\12' After;
 	END;
@@ -57,9 +58,9 @@ RULES
            Ignore;
 	create SOT;
 	create 'g';
+	indent +2;
 	create attributes;
 	create CloseTagNL;
-	indent +2;
 	indent -2 after;
 	create SCT after;
 	create 'g>\12' after;
@@ -69,9 +70,10 @@ RULES
 	BEGIN
 	create SOT;
 	create 'defs';
+	indent +6;
 	create attributes;
 	create CloseTagNL;
-	indent +2;
+	indent -4;
 	indent -2 after;
 	create SCT after;
 	create 'defs>\12' after;
@@ -81,9 +83,10 @@ RULES
 	BEGIN
 	create SOT;
 	create 'desc';
+	indent +6;
 	create attributes;
 	create '>';
-	indent +2;
+	indent -4;
 	indent -2 after;
 	create SCT after;
 	create 'desc>\12' after;
@@ -93,9 +96,10 @@ RULES
 	BEGIN
 	create SOT;
 	create 'title';
+	indent +7;
 	create attributes;
 	create '>';
-	indent +2;
+	indent -5;
 	indent -2 after;
 	create SCT after;
 	create 'title>\12' after;
@@ -107,9 +111,10 @@ RULES
            Ignore;
 	create SOT;
 	create 'symbol';
+	indent +8;
 	create attributes;
 	create CloseTagNL;
-	indent +2;
+	indent -6;
 	indent -2 after;
 	create SCT after;
 	create 'symbol>\12' after;
@@ -119,9 +124,11 @@ RULES
 	BEGIN
 	create SOT;
 	create 'use';
+	indent +5;
 	create attributes;
 	if IntEmptyShape
 		create CloseEmptyTagNL;
+	indent -5;
 	if not IntEmptyShape
 		BEGIN
 		create CloseTagNL;
@@ -155,9 +162,10 @@ RULES
 	BEGIN
 	create SOT;
 	create 'switch';
+	indent +8;
 	create attributes;
 	create CloseTagNL;
-	indent +2;
+	indent -6;
 	indent -2 after;
 	create SCT after;
 	create 'switch>\12' after;
@@ -167,9 +175,10 @@ RULES
 	BEGIN
 	create SOT;
 	create 'style';
+	indent +7;
 	create attributes;
 	create CloseTagNL;
-	indent +2;
+	indent -5;
 	indent -2 after;
 	create SCT after;
 	create 'style>\12' after;
@@ -338,9 +347,10 @@ RULES
 	BEGIN
 	create SOT;
 	create 'clipPath';
+	indent +10;
 	create attributes;
 	create CloseTagNL;
-	indent +2;
+	indent -8;
 	indent -2 after;
 	create SCT after;
 	create 'clipPath>\12' after;
@@ -350,9 +360,10 @@ RULES
 	BEGIN
 	create SOT;
 	create 'a';
+	indent +3;
 	create attributes;
 	create CloseTagNL;
-	indent +2;
+	indent -1;
 	indent -2 after;
 	create SCT after;
 	create 'a>\12' after;
@@ -362,54 +373,137 @@ RULES
 	BEGIN
 	create SOT;
 	create 'script';
+	indent +8;
 	create attributes;
 	create CloseTagNL;
-	indent +2;
+	indent -6;
 	indent -2 after;
 	create SCT after;
 	create 'script>\12' after;
 	END;
  
-{@@@@@@@@
    animate:
 	BEGIN
-	
+	create SOT;
+	create 'animate';
+ 	indent +9;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -9;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'animate>\12' after;
+		END;
 	END;
 
-   set:
+   set_:
 	BEGIN
-	
+	create SOT;
+	create 'set';
+	indent +5;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -5;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'set>\12' after;		
+		END;
 	END;
 
    animateMotion:
 	BEGIN
-	
+	create SOT;
+	create 'animateMotion';
+        indent +15;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -15;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'animateMotion>\12' after;
+		END;	
 	END;
 
    mpath:
 	BEGIN
-	
+	create SOT;
+	create 'mpath';
+	indent +7;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -7;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'mpath>\12' after;
+		END;	
 	END;
 
    animateColor:
 	BEGIN
-	
+	create SOT;
+	create 'animateColor';
+ 	indent +14;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -14;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'animateColor>\12' after;
+		END;	
 	END;
 
    animateTransform:
 	BEGIN
-	
+	create SOT;
+	create 'animateTransform';
+	indent +18;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -18;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'animateTransform>\12' after;
+		END;
 	END;
-
-@@@@@@@@}
 
    metadata:
 	BEGIN
 	create SOT;
 	create 'metadata';
+	indent +10;
 	create attributes;
 	create '>';
-	indent +2;
+	indent -8;
 	indent -2 after;
 	create SCT after;
 	create 'metadata>\12' after;
@@ -419,9 +513,10 @@ RULES
 	BEGIN
 	create SOT;
 	create 'foreignObject';
+	indent +15;
 	create attributes;
 	create CloseTagNL;
-	indent +2;
+	indent -13;
 	indent -2 after;
 	create SCT after;
 	create 'foreignObject>\12' after;
@@ -1066,49 +1161,277 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-{@@@@@@@@
   onbegin:
-  onend:
-  onrepeat:
-  attributeName:
-  attributeType:
-  begin_:
-  dur:
-  end_:
-  min:
-  max:
-  restart = always:
-  restart = never:
-  restart = whenNotActive:
-  repeatCount:
-  repeatDur:
-  fill_ = remove:
-  fill_ = freeze:
-  calcMode = discrete:
-  calcMode = linear:
-  calcMode = paced:
-  calcMode = spline:
-  values:
-  keyTimes:
-  keySplines:
-  from:
-  to:
-  by:
-  additive = replace:
-  additive = sum:
-  accumulate = none_:
-  accumulate = sum:
-  path_:
-  keyPoints:
-  rotate:
-  origin:
-  type_ = translate:
-  type_ = scale:
-  type_ = rotate_:
-  type_ = skewX:
-  type_ = skewY:
+	BEGIN
+	create SAN;
+	create 'onbegin="';
+	create onbegin;
+	create DoubleQuote;
+	END;
 
-@@@@@@@@}
+  onend:
+	BEGIN
+	create SAN;
+	create 'onend="';
+	create onend;
+	create DoubleQuote;
+	END;
+
+  onrepeat:
+	BEGIN
+	create SAN;
+	create 'onrepeat="';
+	create onrepeat;
+	create DoubleQuote;
+	END;
+
+  attributeName_:
+	BEGIN
+	create SAN;
+	create 'attributeName="';
+	create attributeName_;
+	create DoubleQuote;
+	END;
+
+  attributeType:
+	BEGIN
+	create SAN;
+	create 'attributeType="';
+	create attributeType;
+	create DoubleQuote;
+	END;
+
+  begin_:
+	BEGIN
+	create SAN;
+	create 'begin="';
+	create begin_;
+	create DoubleQuote;
+	END;
+
+  dur:
+	BEGIN
+	create SAN;
+	create 'dur="';
+	create dur;
+	create DoubleQuote;
+	END;
+
+  end_:
+	BEGIN
+	create SAN;
+	create 'end="';
+	create end_;
+	create DoubleQuote;
+	END;
+
+  min_:
+	BEGIN
+	create SAN;
+	create 'min="';
+	create min_;
+	create DoubleQuote;
+	END;
+
+  max_:
+	BEGIN
+	create SAN;
+	create 'max="';
+	create max_;
+	create DoubleQuote;
+	END;
+
+  restart = always:
+	BEGIN
+	create SAN;
+	create 'restart="always"';
+	END;
+  restart = never:
+	BEGIN
+	create SAN;
+	create 'restart="never"';
+	END;
+  restart = whenNotActive:
+	BEGIN
+	create SAN;
+	create 'restart="whenNotActive"';
+	END;
+
+  repeatCount:
+	BEGIN
+	create SAN;
+	create 'repeatCount="';
+	create repeatCount;
+	create DoubleQuote;
+	END;
+
+  repeatDur:
+	BEGIN
+	create SAN;
+	create 'repeatDur="';
+	create repeatDur;
+	create DoubleQuote;
+	END;
+
+  fill_ = remove_:
+	BEGIN
+	create SAN;
+	create 'fill="remove"';
+	END;
+  fill_ = freeze:
+	BEGIN
+	create SAN;
+	create 'fill="freeze"';
+	END;
+
+  calcMode = discrete:
+	BEGIN
+	create SAN;
+	create 'calcMode="discrete"';
+	END;
+  calcMode = linear:
+	BEGIN
+	create SAN;
+	create 'calcMode="linear"';
+	END;
+  calcMode = paced:
+	BEGIN
+	create SAN;
+	create 'calcMode="paced"';
+	END;
+  calcMode = spline:
+	BEGIN
+	create SAN;
+	create 'calcMode="spline"';
+	END;
+
+  values:
+	BEGIN
+	create SAN;
+	create 'values="';
+	create values;
+	create DoubleQuote;
+	END;
+
+  keyTimes:
+	BEGIN
+	create SAN;
+	create 'keyTimes="';
+	create keyTimes;
+	create DoubleQuote;
+	END;
+
+  keySplines:
+	BEGIN
+	create SAN;
+	create 'keySplines="';
+	create keySplines;
+	create DoubleQuote;
+	END;
+
+  from:
+	BEGIN
+	create SAN;
+	create 'from="';
+	create from;
+	create DoubleQuote;
+	END;
+
+  to_:
+	BEGIN
+	create SAN;
+	create 'to="';
+	create to_;
+	create DoubleQuote;
+	END;
+
+  by:
+	BEGIN
+	create SAN;
+	create 'by="';
+	create by;
+	create DoubleQuote;
+	END;
+
+  additive = replace:
+	BEGIN
+	create SAN;
+	create 'additive="replace"';
+	END;
+  additive = sum:
+	BEGIN
+	create SAN;
+	create 'additive="sum"';
+	END;
+
+  accumulate = none_:
+	BEGIN
+	create SAN;
+	create 'accumulate="none"';
+	END;
+  accumulate = sum:
+	BEGIN
+	create SAN;
+	create 'accumulate="sum"';
+	END;
+
+  path_:
+	BEGIN
+	create SAN;
+	create 'path="';
+	create path_;
+	create DoubleQuote;
+	END;
+
+  keyPoints:
+	BEGIN
+	create SAN;
+	create 'keyPoints="';
+	create keyPoints;
+	create DoubleQuote;
+	END;
+
+  rotate:
+	BEGIN
+	create SAN;
+	create 'rotate="';
+	create rotate;
+	create DoubleQuote;
+	END;
+
+  origin:
+	BEGIN
+	create SAN;
+	create 'origin="';
+	create origin;
+	create DoubleQuote;
+	END;
+
+  type_ = translate:
+	BEGIN
+	create SAN;
+	create 'type="translate"';
+	END;
+  type_ = scale:
+	BEGIN
+	create SAN;
+	create 'type="scale"';
+	END;
+  type_ = rotate_:
+	BEGIN
+	create SAN;
+	create 'type="rotate"';
+	END;
+  type_ = skewX:
+	BEGIN
+	create SAN;
+	create 'type="skewX"';
+	END;
+  type_ = skewY:
+	BEGIN
+	create SAN;
+	create 'type="skewY"';
+	END;
 
    Unknown_attribute:
 	BEGIN
