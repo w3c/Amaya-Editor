@@ -5,42 +5,42 @@
 
 <rdf:Description rdf:about="http://www.w3.org/2001/10/typeIcon#">
  <rdfs:comment>A namespace for describing associations between classes and graphical objects</rdfs:comment>
- <rdfs:comment>$Revision $ $Date $</rdfs:comment>
+ <rdfs:comment>$Revision$ $Date$</rdfs:comment>
  <rdfs:seeAlso rdf:resource="http://www.w3.org/Annotea"/>
 </rdf:Description>
 
 <rdf:Property rdf:about="http://www.w3.org/2001/10/typeIcon#usesIcon">
   <rdfs:label xml:lang="en">uses icon</rdfs:label>
-  <rdfs:comment>Relates an icon (graphical object) to a resource.</rdfs:comment>
+  <rdfs:comment>Relates an icon (graphical object) to a resource.  Frequently the resource will be a Class.</rdfs:comment>
   <rdf:isDefinedBy rdf:resource="http://www.w3.org/2001/10/typeIcon#"/>
 </rdf:Property>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#SeeAlso">
-  <i:usesIcon rdf:resource="/Projects/Amaya/doc/images/forward.gif" />
+  <i:usesIcon rdf:resource="$THOTDIR/config/seealso.png" />
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Question">
-  <i:usesIcon rdf:resource="/Projects/Amaya/doc/images/check.gif" />
+  <i:usesIcon rdf:resource="$THOTDIR/config/question.png" />
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Explanation">
-  <i:usesIcon rdf:resource="/Projects/Amaya/doc/images/find.gif" />
+  <i:usesIcon rdf:resource="$THOTDIR/config/explanation.png" />
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Example">
-  <i:usesIcon rdf:resource="/Projects/Amaya/doc/images/check.gif" />
+  <i:usesIcon rdf:resource="$THOTDIR/config/example.png" />
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Comment">
-  <i:usesIcon rdf:resource="/Projects/Amaya/amaya/annot.gif" />
+  <i:usesIcon rdf:resource="$THOTDIR/config/annot.png" />
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Change">
-  <i:usesIcon rdf:resource="/Projects/Amaya/doc/images/check.gif" />
+  <i:usesIcon rdf:resource="$THOTDIR/config/change.png" />
 </rdf:Description>
 
 <rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Advice">
-  <i:usesIcon rdf:resource="/Projects/Amaya/doc/images/target.gif" />
+  <i:usesIcon rdf:resource="$THOTDIR/config/advice.png" />
 </rdf:Description>
 
 </rdf:RDF>
