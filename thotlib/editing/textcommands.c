@@ -584,7 +584,7 @@ static void MovingCommands (int code, Document doc, View view,
 #ifndef _GL
 	  ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 #else /* _GL */
-	  ClickX = pBoxBegin->BxClipX + pViewSel->VsBox->BxClipX;
+	  ClickX = pBoxBegin->BxClipX + pViewSel->VsXPos;
 #endif /* _GL */
 	  break;
 	  
@@ -663,7 +663,7 @@ static void MovingCommands (int code, Document doc, View view,
 #ifndef _GL
 		      if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos > pFrame->FrXOrg + w)
 #else /* _GL */
-			if (pBoxEnd->BxClipX + pViewSelEnd->VsBox->BxClipX > w)
+			if (pBoxEnd->BxClipX + pViewSelEnd->VsXPos > w)
 #endif /* _GL */
 			{
 			  if (FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth > pFrame->FrXOrg + w)
@@ -674,7 +674,7 @@ static void MovingCommands (int code, Document doc, View view,
 			HorizontalScroll (frame, pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 - pFrame->FrXOrg, 0);
 #else /* _GL */
 			else if (pBoxEnd->BxClipX + pViewSelEnd->VsXPos - 4 < 0)
-			  HorizontalScroll (frame, pBoxEnd->BxClipX + pViewSelEnd->VsBox->BxClipX - 4, 0);
+			  HorizontalScroll (frame, pBoxEnd->BxClipX + pViewSelEnd->VsXPos - 4, 0);
 
 #endif /* _GL */
 		    }
@@ -768,9 +768,9 @@ static void MovingCommands (int code, Document doc, View view,
 		x = pViewSelEnd->VsXPos + pBox->BxXOrg;
 	      y = pBox->BxYOrg + pBox->BxHeight;
 #else /* _GL */
-	        x = pViewSel->VsBox->BxClipX + pBoxBegin->BxClipX + pFrame->FrXOrg;
+	        x = pViewSel->VsXPos + pBoxBegin->BxClipX + pFrame->FrXOrg;
 	      else
-		x = pViewSelEnd->VsBox->BxClipX + pBox->BxClipX + pFrame->FrXOrg;
+		x = pViewSelEnd->VsXPos + pBox->BxClipX + pFrame->FrXOrg;
 	      y = pBox->BxClipY + pBox->BxClipH + pFrame->FrYOrg;
 #endif /* _GL */
 	      yDelta = 10;
@@ -809,8 +809,11 @@ static void MovingCommands (int code, Document doc, View view,
 		    /* changing from an extension to a simple selection */
 		    ClickX = x - pFrame->FrXOrg;
 		  else
-		    /* take the original position into account */
+#ifndef _GL
 		    x = ClickX + pFrame->FrXOrg;
+#else /* _GL */
+		  x += pFrame->FrXOrg;
+#endif /* _GL */
 		}
 	      else
 		RightExtended = TRUE;
@@ -839,9 +842,9 @@ static void MovingCommands (int code, Document doc, View view,
 #else /* _GL */
 	      y = pBoxBegin->BxClipY + pFrame->FrYOrg;
 	      if (SelPosition || RightExtended)
-		x = pViewSel->VsBox->BxClipX + pBoxBegin->BxClipX + pFrame->FrYOrg;
+		x = pViewSel->VsXPos + pBoxBegin->BxClipX + pFrame->FrXOrg;
 	      else
-		x = pViewSelEnd->VsBox->BxClipX + pBoxEnd->BxClipX + pFrame->FrYOrg;
+		x = pViewSelEnd->VsXPos + pBoxEnd->BxClipX + pFrame->FrXOrg;
 #endif /* _GL */
 	      yDelta = -10;
 	      if (extendSel && RightExtended)
@@ -877,7 +880,11 @@ static void MovingCommands (int code, Document doc, View view,
 		    ClickX = x - pFrame->FrXOrg;
 		  else
 		    /* take the original position into account */
+#ifndef _GL
 		    x = ClickX + pFrame->FrXOrg;
+#else /* _GL */
+		  x += pFrame->FrXOrg;
+#endif /* _GL */
 		}
 	      else if (extendSel)
 		LeftExtended = TRUE;
