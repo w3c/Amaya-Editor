@@ -467,7 +467,8 @@ void        PolySplit (float a1, float b1, float a2, float b2,
   see http://www.w3.org/TR/SVG/implnote.html for implementations notes
   ----------------------------------------------------------------------*/
 void  EllipticSplit (int frame, int x, int y,
-		     double x1, double y1, double x2, double y2, 
+		     double x1, double y1, 
+		     double x2, double y2, 
 		     double xradius, double yradius, 
 		     int Phi, int large, int sweep, 
 		     ThotPoint **points, int *npoints, int *maxpoints)
@@ -515,11 +516,11 @@ void  EllipticSplit (int frame, int x, int y,
   translate = (double) P2 (xprim)/rx_p2 + P2 (yprim) / ry_p2;
   if ( translate > 1 )
     {
-      translate = sqrt (translate);
-      xradius = translate*xradius;
-      yradius = translate*yradius; 
-      rx_p2 = P2 (xradius);
-      ry_p2 = P2 (yradius);
+      translate = (double) sqrt (translate);
+      xradius = (double) translate*xradius;
+      yradius = (double) translate*yradius; 
+      rx_p2 = (double) P2 (xradius);
+      ry_p2 = (double) P2 (yradius);
     }
 
   /* Step 2: Compute (cX ', cY ') */ 
@@ -532,7 +533,13 @@ void  EllipticSplit (int frame, int x, int y,
        (mainly caus'of the radius correction))*/
       return;
     }
-  cprim =  (double) cprim * sqrt ((rx_p2*ry_p2 - translate) / translate);
+  /*   Original formulae :
+       cprim =  (double) cprim * sqrt ((rx_p2*ry_p2 - translate) / translate); 
+       But double precision is no sufficent so I've made a math simplification 
+       that works well */
+  translate = ((rx_p2*ry_p2 / translate) - 1);
+  translate = (translate > 0)?translate:-translate;
+  cprim = (double) cprim * sqrt (translate);
   cxprim = cprim * ((xradius*yprim)/yradius);
   cyprim = -cprim * ((yradius*xprim)/xradius);
   
