@@ -2840,7 +2840,7 @@ static Document LoadDocument (Document doc, char *pathname,
   else
     content_type = NULL;
 
-  /* check if there is an XML declaration with a charset declaration */
+  /* Check informations within the document */
   if (tempfile[0] != EOS)
     CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &xmlns,
 		    &parsingLevel, &charset, charsetname, &thotType);
@@ -2849,6 +2849,7 @@ static Document LoadDocument (Document doc, char *pathname,
 		    &parsingLevel, &charset, charsetname, &thotType);
 
   /* if (charset == UNDEFINED_CHARSET && isXML && thotType == docHTML) */
+  /* Check charset information in a meta */
   if (charset == UNDEFINED_CHARSET)
     {
       if (tempfile[0] != EOS)
@@ -2856,6 +2857,7 @@ static Document LoadDocument (Document doc, char *pathname,
       else
 	CheckCharsetInMeta (pathname, &metacharset, charsetname);
     }
+
   if (method == CE_CSS)
     {
       /* we're loading a CSS file */
@@ -2953,7 +2955,8 @@ static Document LoadDocument (Document doc, char *pathname,
 		     parsingLevel = L_Transitional;
 		   unknown = FALSE;
 		 }
-	       else if (!strncasecmp (&content_type[i+1], "xml", 3))
+	       else if ((!strncasecmp (&content_type[i+1], "xml", 3)) &&
+			(content_type[i+1+3] == EOS))
 		 {
 		   /* Served as an XML document */
 		   if (thotType == docHTML || thotType == docSVG || thotType == docMath)
@@ -3042,7 +3045,15 @@ static Document LoadDocument (Document doc, char *pathname,
 		     parsingLevel = L_Transitional;
 		   unknown = FALSE;
 		 }
-	       else if (!strncasecmp (&content_type[i+1], "xml", 3))
+	       else if (!strncasecmp (&content_type[i+1], "xml-dtd", 7))
+		 {
+		   /* it's an DTD document */
+		   docType = docText;
+		   parsingLevel = L_Other;
+		   unknown = FALSE;
+		 }
+	       else if ((!strncasecmp (&content_type[i+1], "xml", 3)) &&
+			(content_type[i+1+3] == EOS))
 		 {
 		   /* Served as an XML document */
 		   if (thotType == docHTML || thotType == docSVG || thotType == docMath)
@@ -3117,7 +3128,7 @@ static Document LoadDocument (Document doc, char *pathname,
   
   if (unknown && tempfile[0] != EOS)
     {
-      /* The document is not an HTML file and cannot be parsed */
+      /* The document is not a supported format and cannot be parsed */
       /* rename the temporary file */
       strcpy (SavingFile, tempfile);
       SavingDocument = 0;
@@ -3775,8 +3786,7 @@ void ShowSource (Document document, View view)
 						"MathMLT");
 #ifdef XML_GENERIC
 	 else if (DocumentTypes[document] == docXml)
-	   TtaExportDocumentWithNewLineNumbers (document, tempdocument,
-						"XMLT");
+	   TtaExportDocumentWithNewLineNumbers (document, tempdocument, NULL);
 #endif /* XML_GENERIC */
        }
      TtaExtractName (tempdocument, tempdir, documentname);
