@@ -248,6 +248,9 @@ ptrfont             font;
     return (0);
   else
     {
+      /* characters NEW_LINE and BREAK_LINE are equivalent */
+      if (c == NEW_LINE)
+	c = BREAK_LINE;
 #ifdef _WINDOWS
       l = font->FiWidths[c];
 #else  /* _WINDOWS */

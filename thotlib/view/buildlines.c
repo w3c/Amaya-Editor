@@ -1173,7 +1173,7 @@ int                *wordWidth;
 	if (character == BREAK_LINE || character ==  NEW_LINE)
 	  {
 	     found = TRUE;
-	     *breakWidth = CharacterWidth (character, font);
+	     *breakWidth = CharacterWidth (BREAK_LINE, font);
 	     /* Faut-il changer de buffer ? */
 	     if (i >= pBuffer->BuLength)
 	       {
