@@ -417,9 +417,9 @@ static FontScript **FontConfigLoad ()
     {
       /* try a second font file */
       strcpy (word1, word);
-      strcat (word1, ".deb");
+      strcat (word1, ".rd");
       strcpy (fname1, fname);
-      strcat (fname1, ".deb");
+      strcat (fname1, ".rd");
       if (!SearchFile (fname1, 0, name))
 	SearchFile (word1, 2, name);
       /* open the fonts definition file */
@@ -429,11 +429,11 @@ static FontScript **FontConfigLoad ()
     }
   if (!complete)
     {
-      /* try a third font file */
+      /* try a last font file */
       strcpy (word1, word);
-      strcat (word1, ".rd");
+      strcat (word1, ".deb");
       strcpy (fname1, fname);
-      strcat (fname1, ".rd");
+      strcat (fname1, ".deb");
       if (!SearchFile (fname1, 0, name))
 	SearchFile (word1, 2, name);
       /* open the fonts definition file */
