@@ -2816,8 +2816,7 @@ boolean             drag;
 		     do
 			if (pAb == NULL)
 			   stop = TRUE;
-			else if (FirstSelectedElement->ElAssocNum ==
-				 pAb->AbElement->ElAssocNum)
+			else if (FirstSelectedElement->ElAssocNum == pAb->AbElement->ElAssocNum)
 			   stop = TRUE;
 			else
 			   pAb = pAb->AbEnclosing;
@@ -2870,8 +2869,7 @@ boolean             drag;
 		       /* application accepts selection */
 		       {
 			  /* do select */
-			  ExtendSelection
-				  (pEl, rank, fixed, begin, drag);
+			  ExtendSelection (pEl, rank, fixed, begin, drag);
 			  /* send event TteElemExtendSelect.Pre to the */
 			  /* application */
 			  notifyEl.event = TteElemExtendSelect;

@@ -66,14 +66,14 @@ location, a remote Web server or the local file system. You can:</p>
 save the document to a local disk,
 </li>
 <li>
-save the document to a remote URL,
+save the document to a remote URI,
 </li>
 <li>
 save images embedded in the document in the document directory or a different
 location,
 </li>
 <li>
-transform embedded URLs,
+transform embedded URIs,
 </li>
 </ul>
 <p>
@@ -104,21 +104,21 @@ not sure that the corresponding images will be found when opening the document
 later. However switching it off is useful when you have only changed the text
 of the document and the document is stored on the same server. When images are
 copied, Amaya will automatically update all <strong>SRC</strong> attributes to
-point new image locations. New locations will be relative URLs.
+point new image locations. New locations will be relative URIs.
 </li>
 <li>
-The <strong>Transform URLs</strong> toggle transforms all current URLs into
-relative URLs when it's possible. Of course, if the document is saved in a
-local file and URLs point to remote files, URLs will be absolute ones. This
+The <strong>Transform URIs</strong> toggle transforms all current URIs into
+relative URIs when it's possible. Of course, if the document is saved in a
+local file and URIs point to remote files, URIs will be absolute ones. This
 ensures that all the links in the document remain correct after the copy.
-However if you have several document linked together with relative URLs and
-that you plan to move them to a remote location, disabling URL conversion is
+However if you have several document linked together with relative URIs and
+that you plan to move them to a remote location, disabling URI conversion is
 needed to avoid referencing the initial locations.
 </li>
 <li>
 The <strong>Document location</strong> field indicates the location where the
 HTML file has to be written. This can be a file in the local filesystem (e.g.
-"/pub/html/welcome.html") or the name of a remote URL (e.g.
+"/pub/html/welcome.html") or the name of a remote URI (e.g.
 "http://www.w3.org/pub/WWW/Welcome.html").
 <p>
 <strong>Note</strong> that this should be a complete path, there is no way
@@ -138,7 +138,7 @@ filesystem or a location in the remote server.
 using a relative path, the images is stored at a location relative to the
 document directory. For example, if the document location is
 "http://www.w3.org/pub/WWW/Welcome.html" and the images location is "Images",
-an image "W3C.png" contained in the document is stored at the URL
+an image "W3C.png" contained in the document is stored at the URI
 "http://www.w3.org/pub/WWW/Images/W3C.png" and the HTML file is modified to
 reference it as:
 <p>
@@ -163,7 +163,7 @@ Clicking on <strong>OK</strong> starts the process of transforming the
 document and a popup asks for confirmation in both cases:
 <ol>
 <li>
-the document has to be saved on a remote server, it shows all the URL to be
+the document has to be saved on a remote server, it shows all the URI to be
 written to.
 </li>
 <li>
@@ -192,7 +192,7 @@ The <strong>Save As</strong> command from the <strong>Edit</strong> menu
 displays a dialog box that allows you to save the current document in various
 formats. Clicking the <strong>Text</strong> button from the <strong>Output
 Format</strong> menu saves the document in text form, in a local file. A list
-of all URLs used in the document is appended to that file.</p>
+of all URIs used in the document is appended to that file.</p>
 <hr>
 
 </div>

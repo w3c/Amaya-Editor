@@ -1,9 +1,9 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+   "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>
-Current state of CSS implementation</title>
-<meta name="GENERATOR" content="amaya V1.0a Beta">
+<title>Current state of CSS implementation</title>
+<meta name="GENERATOR" content="amaya V2.0">
 </head>
 <body bgcolor="#FFFFFF">
 
@@ -44,8 +44,12 @@ yes
 <td>
 Ok
 </td>
-<td></td>
-<td></td>
+<td>
+
+</td>
+<td>
+
+</td>
 </tr>
 <tr>
 <td>
@@ -61,7 +65,9 @@ distinguished
 <td>
 Max 1 class per selector
 </td>
-<td></td>
+<td>
+
+</td>
 </tr>
 <tr>
 <td>
@@ -78,7 +84,9 @@ first-letter, non structured entities and will be a real pain to implement !
 <td>
 Max 1 pseudoclass per selector
 </td>
-<td></td>
+<td>
+
+</td>
 </tr>
 <tr>
 <td>
@@ -90,8 +98,8 @@ yes
 <td>
 nearly. Any order given in the selector is lost. We only pass to the driver an
 array of the ancestors and a repeat number.
-<p>
-LI UL LI &lt;=> UL LI LI &lt;=> UL(1) LI(2)</p>
+
+<p>LI UL LI &lt;=> UL LI LI &lt;=> UL(1) LI(2)</p>
 </td>
 <td>
 Max 10 different ancestors types.
@@ -118,8 +126,8 @@ all units should be parsed Ok
 <td>
 
 </td>
-<td><p>
-many drivers units maps to the same Thot unit.</p>
+<td>
+<p>many drivers units maps to the same Thot unit.</p>
 </td>
 </tr>
 <tr>
@@ -134,8 +142,8 @@ font-family
 <td>
 yes
 </td>
-<td><p>
-Reduction to Times, Helvetica or Courier</p>
+<td>
+<p>Reduction to Times, Helvetica or Courier</p>
 </td>
 <td>
 
@@ -189,8 +197,8 @@ font-weight
 </td>
 <td>
 Ok.
-<p>
-IProduce the same internal form, only Bold or Italic ...</p>
+
+<p>IProduce the same internal form, only Bold or Italic ...</p>
 </td>
 <td>
 
@@ -241,7 +249,7 @@ color
 yes
 </td>
 <td>
-Limitation with colors.
+Should be Ok.
 </td>
 <td>
 
@@ -274,8 +282,8 @@ background-image
 <td>
 yes
 </td>
-<td><p>
-Ok</p>
+<td>
+<p>Ok</p>
 </td>
 <td>
 
@@ -292,7 +300,7 @@ background-repeat
 yes
 </td>
 <td>
-
+Ok
 </td>
 <td>
 
@@ -496,7 +504,7 @@ margin-top
 yes
 </td>
 <td>
-No action
+Ok
 </td>
 <td>
 
@@ -547,7 +555,7 @@ margin-left
 yes
 </td>
 <td>
-No action
+Ok
 </td>
 <td>
 
@@ -564,7 +572,7 @@ margin
 yes
 </td>
 <td>
-No action
+Call margin properties
 </td>
 <td>
 
@@ -870,7 +878,7 @@ width
 yes
 </td>
 <td>
-does nothing !
+
 </td>
 <td>
 
@@ -887,7 +895,7 @@ height
 yes
 </td>
 <td>
-does nothing !
+
 </td>
 <td>
 
@@ -939,10 +947,10 @@ yes
 </td>
 <td>
 no list-item
-<p>
-mapping to InLine and</p>
-<p>
-Hide drivers functions</p>
+
+<p>mapping to InLine and</p>
+
+<p>Hide drivers functions</p>
 </td>
 <td>
 
@@ -1028,23 +1036,6 @@ no
 </td>
 <td>
 
-</td>
-<td>
-
-</td>
-<td>
-
-</td>
-</tr>
-<tr>
-<td>
-magnification
-</td>
-<td>
-yes
-</td>
-<td>
-not in CSS-1 spec
 </td>
 <td>
 

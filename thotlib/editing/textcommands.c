@@ -40,7 +40,11 @@
 #include "boxes_tv.h"
 #include "frame_tv.h"
 #include "edit_tv.h"
+#include "select_tv.h"
 #include "appdialogue_tv.h"
+
+static boolean RightExtended;
+static boolean LeftExtended;
 
 #include "applicationapi_f.h"
 #include "appli_f.h"
@@ -277,18 +281,53 @@ boolean             extendSel;
 		 pBox = NULL;
 	       }
 
+	     /* could we shrink the current extended selection */
+	     if (FirstSelectedChar == LastSelectedChar &&
+		 FirstSelectedElement == LastSelectedElement && SelPosition)
+	       {
+		 RightExtended = FALSE;
+		 LeftExtended = FALSE;
+	       }
+	     /* doesn't change the current Shrink value in other cases */
 	     switch (code)
 	       {
 	       case 1:	/* En arriere d'un car (^B) */
 		 if (pBox != NULL)
 		   {
-		     x = indpos + pBox->BxIndChar;
+		     if (extendSel && RightExtended)
+		       {
+			 pBox = pViewSelEnd->VsBox;
+			 x = pViewSelEnd->VsIndBox + pBox->BxIndChar;
+		       }
+		     else
+		       x = indpos + pBox->BxIndChar;
 		     if (x > 0)
-		       if (extendSel)
-			 /* extend the beginning of the current selection */
-			 ChangeSelection (frame, pBox->BxAbstractBox, x, TRUE, TRUE, FALSE, FALSE);
-		       else
-			 ChangeSelection (frame, pBox->BxAbstractBox, x, FALSE, TRUE, FALSE, FALSE);
+		       {
+			 if (extendSel)
+			   {
+			     if (RightExtended &&
+				 FirstSelectedChar == LastSelectedChar &&
+				 FirstSelectedElement == LastSelectedElement)
+			       {
+				 /* a single insert point */
+				 ChangeSelection (frame, pBox->BxAbstractBox, x, FALSE, TRUE, FALSE, FALSE);
+				 RightExtended = FALSE;
+			       }
+			     else if (SelPosition &&
+				      FirstSelectedChar == LastSelectedChar &&
+				      FirstSelectedElement == LastSelectedElement)
+			       {
+				 /* select one character */
+				 ChangeSelection (frame, pBox->BxAbstractBox, x, TRUE, TRUE, FALSE, FALSE);
+				 LeftExtended = TRUE;
+			       }
+			     else
+			       /* extend the selection */
+			       ChangeSelection (frame, pBox->BxAbstractBox, x, TRUE, TRUE, FALSE, FALSE);
+			   }
+			 else
+			   ChangeSelection (frame, pBox->BxAbstractBox, x - 1, FALSE, TRUE, FALSE, FALSE);
+		       }
 		     else
 		       {
 			 x = pBox->BxXOrg + xpos;
@@ -302,33 +341,46 @@ boolean             extendSel;
 	       case 2:	/* En avant d'un car (^F) */
 		 if (pBox != NULL)
 		   {
-		     if (extendSel)
+		     if (extendSel && !LeftExtended)
 		       {
 			 pBox = pViewSelEnd->VsBox;
 			 x = pViewSelEnd->VsIndBox + pBox->BxIndChar;
-			 if (x < pBox->BxAbstractBox->AbBox->BxNChars)
-			   /* extend the end of the current selection */
-			   ChangeSelection (frame, pBox->BxAbstractBox, x + 1, TRUE, TRUE, FALSE, FALSE);
-			 else
+		       }
+		     else
+		       x = indpos + pBox->BxIndChar;
+		     if (x < pBox->BxAbstractBox->AbBox->BxNChars)
+		       {
+			 if (extendSel)
 			   {
-			     x = pBox->BxXOrg + pBox->BxWidth;
-			     y = pBox->BxYOrg + (pBox->BxHeight / 2);
-			     xDelta = 2;
-			     LocateLeafBox (frame, x, y, xDelta, 0, pBox, extendSel);
+			     if (LeftExtended &&
+				 FirstSelectedChar == LastSelectedChar &&
+				 FirstSelectedElement == LastSelectedElement)
+			       {
+				 /* a single insert point */
+				 ChangeSelection (frame, pBox->BxAbstractBox, x + 1, FALSE, TRUE, FALSE, FALSE);
+				 LeftExtended = FALSE;
+			       }
+			     else if (SelPosition &&
+				      FirstSelectedChar == LastSelectedChar &&
+				      FirstSelectedElement == LastSelectedElement)
+			       {
+				 /* select one character */
+				 ChangeSelection (frame, pBox->BxAbstractBox, x + 1, TRUE, TRUE, FALSE, FALSE);
+				 RightExtended = TRUE;
+			       }
+			     else
+			       /* extend the end of the current selection */
+			       ChangeSelection (frame, pBox->BxAbstractBox, x + 2, TRUE, TRUE, FALSE, FALSE);
 			   }
+			 else
+			   ChangeSelection (frame, pBox->BxAbstractBox, x + 2, FALSE, TRUE, FALSE, FALSE);
 		       }
 		     else
 		       {
-			 x = indpos + pBox->BxIndChar;
-			 if (x < pBox->BxAbstractBox->AbBox->BxNChars)
-			   ChangeSelection (frame, pBox->BxAbstractBox, x + 2, FALSE, TRUE, FALSE, FALSE);
-			 else
-			   {
-			     x = pBox->BxXOrg + pBox->BxWidth;
-			     y = pBox->BxYOrg + (pBox->BxHeight / 2);
-			     xDelta = 2;
-			     LocateLeafBox (frame, x, y, xDelta, 0, pBox, extendSel);
-			   }
+			 x = pBox->BxXOrg + pBox->BxWidth;
+			 y = pBox->BxYOrg + (pBox->BxHeight / 2);
+			 xDelta = 2;
+			 LocateLeafBox (frame, x, y, xDelta, 0, pBox, extendSel);
 		       }
 		   }
 		 break;
@@ -348,17 +400,12 @@ boolean             extendSel;
 		   {
 		     if (extendSel)
 		       {
+			 RightExtended = TRUE;
 			 pBox = pViewSelEnd->VsBox;
-			 y = pBox->BxYOrg + pBox->BxHeight;
-			 yDelta = 10;
-			 LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL, extendSel);
 		       }
-		     else
-		       {
-			 y = pBox->BxYOrg + pBox->BxHeight;
-			 yDelta = 10;
-			 LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL, extendSel);
-		       }
+		     y = pBox->BxYOrg + pBox->BxHeight;
+		     yDelta = 10;
+		     LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL, extendSel);
 		     ok = FALSE;
 		   }
 		 else
@@ -368,6 +415,8 @@ boolean             extendSel;
 	       case 8:	/* Line precedente (^P) */
 		 if (pBox != NULL)
 		   {
+		     if (extendSel && RightExtended)
+		       pBox = pViewSelEnd->VsBox;
 		     y = pBox->BxYOrg;
 		     yDelta = -10;
 		     LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL, extendSel);
