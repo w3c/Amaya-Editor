@@ -88,7 +88,7 @@ static void InsertText (PtrElement pEl, int position, unsigned char *content,
 	     pBuf = pBuf->BuNext;
 	  }
 	/* Length of the remaining of the buffer */
-	lengthBefore = position - lengthBefore;
+	lengthBefore = - lengthBefore + position;
 	if (lengthBefore == 0)
 	   /* one insert before the first character of the element */
 	  {

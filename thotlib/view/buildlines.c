@@ -629,7 +629,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
   *nSpaces = 0;
   *wordWidth = 0;
   wWidth = 0;
-  j = 1;
+  j = 0;
   pBuffer = pBox->BxBuffer;
   nChars = pBox->BxNChars;
   font = pBox->BxFont;
@@ -644,7 +644,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
 	i = 0;
       }
 
-  while (j <= nChars && !found && pBuffer)
+  while (j < nChars && !found && pBuffer)
     {
       character = pBuffer->BuContent[i];
       if (character == BREAK_LINE || character ==  NEW_LINE)
@@ -672,7 +672,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
 	  
 	  *pNewBuff = pBuffer;
 	  *newIndex = i;
-	  *boxLength = j - 1;
+	  *boxLength = j;
 	}
       else
 	{
@@ -697,7 +697,7 @@ static ThotBool FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth,
       if (!found)
 	{
 	  /* next buffer ? */
-	  if (i >= pBuffer->BuLength)
+	  if (i >= pBuffer->BuLength - 1)
 	    {
 	      pBuffer = pBuffer->BuNext;
 	      if (pBuffer == NULL)

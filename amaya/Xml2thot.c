@@ -2177,7 +2177,7 @@ void PutInXmlElement (char *data, int length)
        if (bufferws[i] != EOS)
 	 {
 	   length = strlen (bufferws);
-	   buffer = TtaGetMemory (length+1);
+	   buffer = TtaGetMemory (length + 1);
 	   if (RemoveContiguousSpace)
 	     {
 	       for (i1 = i; i1 <= length; i1++)

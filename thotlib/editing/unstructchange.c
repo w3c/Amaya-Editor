@@ -1686,7 +1686,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 	 firstChar = 1;
        else
 	 firstChar = pEl->ElVolume + 1;
-       lastChar = firstChar -1;
+       lastChar = firstChar - 1;
      }
 
    doc = IdentDocument (pDoc);

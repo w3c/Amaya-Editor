@@ -739,7 +739,7 @@ int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int max)
     {
 #ifdef _I18N_
       l = 0;
-      while (pos < THOT_MAX_CHAR - 1 && max > l && src[0] != EOS)
+      while (pos < FULL_BUFFER && max > l && src[0] != EOS)
 	{
 	  l += TtaMBstringToWC (&src, &pBuf->BuContent[pos]);
 	  pos++;
@@ -749,7 +749,7 @@ int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int max)
 	max = 0;
 #else /* _I18N_ */
       /* length of copied text in that buffer */
-      l = THOT_MAX_CHAR - 1 - pos;
+      l = FULL_BUFFER - pos;
       if (max < l)
 	l = max;
       if (l > 0)
