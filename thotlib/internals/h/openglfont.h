@@ -21,5 +21,7 @@ int   GetFontFilename     (char script, int family,
 			   int highlight, int size, 
 			   char *filename);
 void  FTLibraryFree ();
+void SetTextureScale (ThotBool Scaled);
+void StopTextureScale ();
 
 #endif/*_OPENGLFONT_H_*/

@@ -1626,7 +1626,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 }
 
 /*----------------------------------------------------------------------
-  ReadFont Load a stix font
+  LoadStixFont : Load a stix font
   ----------------------------------------------------------------------*/
 void *LoadStixFont (int family, int size)
 {

@@ -3661,8 +3661,8 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
       /* set the widget size */
       /* (experience shows that GTK doesn't report a good font height ! Multiplying
 	 it by two fixes a bit the problem)  */
-      width = (width) * (CharacterWidth ((int) 'm',  FontDialogue));
-      height = height * 2 * (CharacterHeight ((int) 'M', FontDialogue));
+      width = (width) * (gdk_char_width (FontDialogue, 'm'));
+      height = height * 2 * (gdk_char_height (FontDialogue, 'M'));
       gtk_widget_set_usize (scr_window, width, height);
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->hscrollbar, GTK_CAN_FOCUS);
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->vscrollbar, GTK_CAN_FOCUS);

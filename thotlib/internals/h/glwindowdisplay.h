@@ -130,10 +130,18 @@ void GL_SetClipping (int x, int y, int width, int height);
 void GL_GetCurrentClipping (int *x, int *y, int *width, int *height);
 
 void DisplayBoxTransformation (void *v_trans, int x, int y);
+
 ThotBool IsTransformed (void *v_trans);
+ThotBool IsBoxTransformed (PtrBox box);
+
 ThotBool GetBoxTransformed (void *v_trans, int *x, int *y);
 
+ThotBool IsDeformed (void *v_trans);
+ThotBool IsBoxDeformed (PtrBox box);
+
 void gl_synchronize ();
+
+
 
 void GL_SwapStop (int frame);
 void GL_SwapEnable (int frame);

@@ -806,8 +806,45 @@ static int ceil_pow2_minus_1(unsigned int x)
 }
 #define p2(p) (is_pow2(p)?p:ceil_pow2_minus_1((unsigned int) p) + 1)
 
+static int FontBind;
 
-      
+void SetTextureScale (ThotBool Scaled)
+{   
+  if (GL_NotInFeedbackMode ())
+    {
+      glEnable (GL_TEXTURE_2D);
+
+      glGenTextures (1, &(FontBind));
+      glBindTexture (GL_TEXTURE_2D, 
+		     FontBind);
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_MIN_FILTER,
+		       GL_NEAREST);
+  
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_MAG_FILTER,
+		       ((Scaled)?GL_LINEAR:GL_NEAREST));
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_WRAP_S,
+		       GL_CLAMP);
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_WRAP_T,
+		       GL_CLAMP); 
+      /* does current Color modify texture no = GL_REPLACE, 
+	 else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
+      glTexEnvi (GL_TEXTURE_ENV,
+		 GL_TEXTURE_ENV_MODE,
+		 GL_MODULATE);
+    }
+}
+void StopTextureScale ()
+{   
+  if (GL_NotInFeedbackMode ())
+    {
+      glDeleteTextures (1, &(FontBind));
+      glDisable (GL_TEXTURE_2D);
+    }
+}
 /*----------------------------------------------------------------------
  GL_TextureInit : map texture on a Quad (sort of a rectangle)
  Drawpixel Method for software implementation, as it's much faster for those
@@ -818,24 +855,7 @@ static void GL_TextureInit (unsigned char *Image,
 			    int height)
 {  
 
-  glTexParameteri (GL_TEXTURE_2D,
-		   GL_TEXTURE_MIN_FILTER,
-		   GL_NEAREST);
-  glTexParameteri (GL_TEXTURE_2D,
-		   GL_TEXTURE_MAG_FILTER,
-		   /* GL_NEAREST);	  */
-		   GL_LINEAR);
-  glTexParameteri (GL_TEXTURE_2D,
-		   GL_TEXTURE_WRAP_S,
-		   GL_CLAMP);
-  glTexParameteri (GL_TEXTURE_2D,
-		   GL_TEXTURE_WRAP_T,
-		   GL_CLAMP); 
-  /* does current Color modify texture no = GL_REPLACE, 
-     else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
-  glTexEnvi (GL_TEXTURE_ENV,
-	     GL_TEXTURE_ENV_MODE,
-	     GL_MODULATE);
+ 
   /* We give te texture to opengl Pipeline system */	    
   
   glTexImage2D (GL_TEXTURE_2D, 
@@ -902,8 +922,7 @@ int UnicodeFontRender (void *gl_font,
   float		     maxy, miny, shift;
   int                Width, Height, width;
   register int       pen_x, n;
-  int FontBind;
-
+ 
   if (text == NULL) 
     return 0;
   
@@ -1016,14 +1035,9 @@ int UnicodeFontRender (void *gl_font,
 			Width);
 	}
     }
-  glEnable (GL_TEXTURE_2D);
   
   if (GL_NotInFeedbackMode ())
-    {
-      glGenTextures (1, &(FontBind));
-      glBindTexture (GL_TEXTURE_2D, 
-		     FontBind);
-    
+    {         
       GL_TextureInit (data,
 		      Width,
 		      Height);
@@ -1039,12 +1053,9 @@ int UnicodeFontRender (void *gl_font,
 		 Width, 
 		 Height);
   
-  if (GL_NotInFeedbackMode ())
-   glDeleteTextures (1, &(FontBind));
 
   /* If there is no cache we must free
      allocated glyphs   */
-  glDisable (GL_TEXTURE_2D);
   return (SUPERSAMPLING(pen_x));  
 }
 #endif /* _GL */

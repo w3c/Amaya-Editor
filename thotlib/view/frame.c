@@ -1691,8 +1691,8 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
   int                 l, h;
   ThotBool            FrameUpdatingStatus, FormattedFrame;
   int                 OldXOrg, OldYOrg, 
-                      ClipXOfFirstCoordSys, ClipYOfFirstCoordSys;
- 
+    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys;
+   
   FrameUpdatingStatus = FrameUpdating;
   FrameUpdating = TRUE;  
   pFrame = &ViewFrameTable[frame - 1];
@@ -1701,36 +1701,37 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
   pBox = pAb->AbBox;
   if (pBox == NULL)
     return;
-  /* Display planes in reverse order from biggest to lowest */
-  plane = 65536;
-  nextplane = plane - 1;
-  pAb = pFrame->FrAbstractBox;
   if (FrameTable[frame].FrView == 1)
     FormattedFrame = TRUE;
   else
     FormattedFrame = FALSE;
-  OldXOrg = 0;
-  OldYOrg = 0;
-  ClipXOfFirstCoordSys = ClipYOfFirstCoordSys = 0;
-  while (plane != nextplane)
-    /* there is a new plane to display */
+  if (FormattedFrame || 
+      IsBoxTransformed (pAbSeeked->AbBox))
     {
-      plane = nextplane;
-      /* Draw all the boxes not yet displayed */
-      pAb = pFrame->FrAbstractBox;
-      while (pAb)
+      /* Display planes in reverse order from biggest to lowest */
+      plane = 65536;
+      nextplane = plane - 1;
+      pAb = pFrame->FrAbstractBox;      
+      OldXOrg = 0;
+      OldYOrg = 0;
+      ClipXOfFirstCoordSys = ClipYOfFirstCoordSys = 0;
+      while (plane != nextplane)
+	/* there is a new plane to display */
 	{
-	  if (pAb->AbDepth == plane &&
-	      pAb != pFrame->FrAbstractBox &&
-	      pAb->AbBox)
+	  plane = nextplane;
+	  /* Draw all the boxes not yet displayed */
+	  pAb = pFrame->FrAbstractBox;
+	  while (pAb)
 	    {
-	      /* box in the current plane */
-	      pBox = pAb->AbBox;
-	      if (pAb->AbElement && 
-		  pAb->AbDepth == plane)
-		{ 
-		  if (FormattedFrame)
-		    {
+	      if (pAb->AbDepth == plane &&
+		  pAb != pFrame->FrAbstractBox &&
+		  pAb->AbBox)
+		{
+		  /* box in the current plane */
+		  pBox = pAb->AbBox;
+		  if (pAb->AbElement && 
+		      pAb->AbDepth == plane)
+		    { 		     
 		      /* If the coord sys origin is translated, 
 			 it must be before any other transfromation*/
 		      if (pAb->AbElement->ElSystemOrigin)
@@ -1752,96 +1753,86 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 			      ClipXOfFirstCoordSys = pBox->BxClipX;
 			      ClipYOfFirstCoordSys = pBox->BxClipY;
 			    }
-			}
-		    }
-		  if (pAb == pAbSeeked) 
-		    {
-		      if (pAb->AbLeafType == LtCompound)
+			}		
+		      if (pAb == pAbSeeked) 
 			{
-			  if (pAb->AbVisibility >= pFrame->FrVisibility &&
-			      (pBox->BxDisplay || pAb->AbSelected))
-			    ComputeFilledBox (pAb->AbBox, frame, 0, l, 0, h);
-			  ComputeBoundingBoxes (frame, 0, l, 0, h, pAb);
-			}
-		      else
-			{
-			  if (pBox->BxType == BoSplit || 
-			      pBox->BxType == BoMulScript)
+			  if (pAb->AbLeafType == LtCompound)
 			    {
-			      while (pBox->BxNexChild)
-				{
-				  pBox = pBox->BxNexChild;			
-				  ComputeBoundingBox (pBox, frame, 0, l, 0, h);
-				}
+			      if (pAb->AbVisibility >= pFrame->FrVisibility &&
+				  (pBox->BxDisplay || pAb->AbSelected))
+				ComputeFilledBox (pAb->AbBox, frame, 0, l, 0, h);
+			      ComputeBoundingBoxes (frame, 0, l, 0, h, pAb);
 			    }
 			  else
 			    {
-			      ComputeBoundingBox (pBox, frame,  0, l, 0, h);
+			      if (pBox->BxType == BoSplit || 
+				  pBox->BxType == BoMulScript)
+				{
+				  while (pBox->BxNexChild)
+				    {
+				      pBox = pBox->BxNexChild;			
+				      ComputeBoundingBox (pBox, frame, 0, l, 0, h);
+				    }
+				}
+			      else
+				{
+				  ComputeBoundingBox (pBox, frame,  0, l, 0, h);
+				}			  
 			    }
-			  
 			}
-		    }
 			      
-		}
-	    }	  
-	  else if (pAb->AbDepth < plane)
-	    {
-	      /* keep the lowest value for plane depth */
-	      if (plane == nextplane)
-		nextplane = pAb->AbDepth;
-	      else if (pAb->AbDepth > nextplane)
-		nextplane = pAb->AbDepth;
-	    }
-	  /* get next abstract box */
-	  if (pAb->AbLeafType == LtCompound && 
-	      pAb->AbFirstEnclosed)
-	    /* get the first child */
-	    pAb = pAb->AbFirstEnclosed;
-	  else if (pAb->AbNext)	    
-	    {	 
-	      if (FormattedFrame)
+		    }
+		}	  
+	      else if (pAb->AbDepth < plane)
 		{
+		  /* keep the lowest value for plane depth */
+		  if (plane == nextplane)
+		    nextplane = pAb->AbDepth;
+		  else if (pAb->AbDepth > nextplane)
+		    nextplane = pAb->AbDepth;
+		}
+	      /* get next abstract box */
+	      if (pAb->AbLeafType == LtCompound && 
+		  pAb->AbFirstEnclosed)
+		/* get the first child */
+		pAb = pAb->AbFirstEnclosed;
+	      else if (pAb->AbNext)	    
+		{	 		  
 		  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
 		  OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
-				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
+				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);		   
+		  /* get the next sibling */
+		  pAb = pAb->AbNext;
 		}
-	      /* get the next sibling */
-	      pAb = pAb->AbNext;
-	    }
-	  else
-	    {
-	      /* go up in the tree */
-	      while (pAb->AbEnclosing && 
-		     pAb->AbEnclosing->AbNext == NULL)
+	      else
 		{
-		  if (FormattedFrame)
-		    {
+		  /* go up in the tree */
+		  while (pAb->AbEnclosing && 
+			 pAb->AbEnclosing->AbNext == NULL)
+		    {		     
 		      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);		  	
 		      OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
+		      pAb = pAb->AbEnclosing;
 		    }
-		  pAb = pAb->AbEnclosing;
-		}
-	      if (FormattedFrame)
-		{	
+		  
 		  OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
 		  OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
-		}
-	      pAb = pAb->AbEnclosing;
-	      if (pAb)
-		{
-		  if (FormattedFrame)
+		  pAb = pAb->AbEnclosing;
+		  if (pAb)
 		    {
 		      OpacityAndTransformNext (pAb, plane, frame, 0, 0, 0, 0, FALSE);
 		      OriginSystemExit (pAb, pFrame, plane, OldXOrg, OldYOrg, 
 					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
+		      pAb = pAb->AbNext;
 		    }
-		  pAb = pAb->AbNext;
 		}
 	    }
-	}
-    } 
+	} 
+    }
+  else
+    ComputeBoundingBoxes (frame, 0, l, 0, h, pAbSeeked);
   FrameUpdating = FrameUpdatingStatus;
 #endif /* _GL */
 }

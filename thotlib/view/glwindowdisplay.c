@@ -1555,6 +1555,45 @@ ThotBool GetBoxTransformed (void *v_trans, int *x, int *y)
   *y = 0;
   return FALSE;
 }
+
+ThotBool IsDeformed (void *v_trans)
+{
+  PtrTransform Trans = (PtrTransform) v_trans;
+
+  while (Trans)
+    {
+      switch (Trans->TransType)
+	{
+	case  PtElTranslate:
+	case  PtElBoxTranslate:
+	case  PtElAnimTranslate:	
+          /*result = FALSE;*/	  
+	  break;
+	default:
+	  return TRUE;
+	  break;	  
+	}
+      Trans = Trans->Next;
+    }
+  return FALSE;
+}
+
+ThotBool IsBoxDeformed (PtrBox box)
+{
+  PtrAbstractBox pAb;
+
+  pAb = box->BxAbstractBox;  
+  while (pAb)
+    {
+      if (pAb->AbElement)
+	if (IsDeformed (pAb->AbElement->ElTransform))
+	  return TRUE;
+      pAb = pAb->AbEnclosing;
+    }
+  return FALSE;
+}
+
+
 ThotBool IsTransformed (void *v_trans)
 {
   PtrTransform Trans = (PtrTransform) v_trans;
@@ -1574,6 +1613,22 @@ ThotBool IsTransformed (void *v_trans)
     }
   return FALSE;
 }
+
+ThotBool IsBoxTransformed (PtrBox box)
+{
+  PtrAbstractBox pAb;
+
+  pAb = box->BxAbstractBox;  
+  while (pAb)
+    {
+      if (pAb->AbElement)
+	if (IsTransformed (pAb->AbElement->ElTransform))
+	  return TRUE;
+      pAb = pAb->AbEnclosing;
+    }
+  return FALSE;
+}
+
 
 #ifdef _GL
 /*---------------------------------------------------

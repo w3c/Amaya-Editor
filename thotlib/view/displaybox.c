@@ -37,6 +37,7 @@
 #ifdef _GL
 #include <GL/gl.h>
 #include "glwindowdisplay.h"
+#include "openglfont.h"
 #include "frame_f.h"
 #include "appli_f.h"
 #include "glgradient_f.h"
@@ -1341,7 +1342,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   ThotBool            hyphen, rtl;
   CHAR_T              prevChar, nextChar;
 
-
+#ifdef _GL
+  SetTextureScale (IsBoxDeformed(pBox));
+#endif /* _GL */
   indmax = 0;
   buffleft = 0;
   adbuff = NULL;
@@ -1851,7 +1854,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      nbcar = 0;
 	    }
 	} 
-      
+#ifdef _GL
+      StopTextureScale ();
+#endif /* _GL */
+
       /* Should the end of the line be filled with dots */
       if (pBox->BxEndOfBloc > 0)
 	{
