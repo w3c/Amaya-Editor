@@ -1762,7 +1762,7 @@ static void         ShowGraphicsPalette (Document doc, View view)
                    TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS),
                    0, NULL, TRUE, 1, 'L', D_DONE);
       TtaNewIconMenu (GraphDialogue + MenuGraph, GraphDialogue + FormGraph, 0,
-                   NULL, 12, mIcons, FALSE);
+		      NULL, 12, mIcons, FALSE);
       TtaSetMenuForm (GraphDialogue + MenuGraph, 0);
       TtaSetDialoguePosition ();
     }
