@@ -2623,13 +2623,13 @@ View view;
 }
 
 /*----------------------------------------------------------------------
-  ConfigAppearance
-  A frontend to the Appearance configuration menu
+  ConfigColor
+  A frontend to the Color configuration menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void ConfigAppearance (Document doc, View view)
+void ConfigColor (Document doc, View view)
 #else 
-void ConfigAppearance (doc, view);
+void ConfigColor (doc, view);
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2637,19 +2637,39 @@ View view;
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
 #ifndef _WINDOWS 
-   AppearanceConfMenu (doc, view);
+   ColorConfMenu (doc, view);
 #endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
-  ConfigBrEd
+  ConfigGeometry
+  A frontend to the Geometry configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ConfigGeometry (Document doc, View view)
+#else 
+void ConfigGeometry (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+#else
+#ifndef _WINDOWS 
+   GeometryConfMenu (doc, view);
+#endif /* _WINDOWS */
+#endif /* AMAYA_JAVA */
+}
+
+/*----------------------------------------------------------------------
+  ConfigGeneral
   A frontend to the Browsing Editing configuration menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void ConfigBrEd (Document doc, View view)
+void ConfigGeneral (Document doc, View view)
 #else 
-void ConfigBrEd (doc, view);
+void ConfigGeneral (doc, view);
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2657,19 +2677,19 @@ View view;
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
 #ifndef _WINDOWS 
-   BrEdConfMenu (doc, view);
+   GeneralConfMenu (doc, view);
 #endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
-  ConfigNetwork
-  A frontend to the network configuration menu
+  ConfigPublish
+  A frontend to the Browsing Editing configuration menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void ConfigNetwork (Document doc, View view)
+void ConfigPublish (Document doc, View view)
 #else 
-void ConfigNetwork (doc, view);
+void ConfigPublish (doc, view);
 Document doc;
 View view;
 #endif /* __STDC__ */
@@ -2677,11 +2697,55 @@ View view;
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 #else
 #ifndef _WINDOWS 
-  NetworkConfMenu (doc, view);
+   PublishConfMenu (doc, view);
 #endif /* _WINDOWS */
 #endif /* AMAYA_JAVA */
 }
 
+/*----------------------------------------------------------------------
+  ConfigCache
+  A frontend to the cache configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ConfigCache (Document doc, View view)
+#else 
+void ConfigCache (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+#else
+#ifndef _WINDOWS 
+  CacheConfMenu (doc, view);
+#endif /* _WINDOWS */
+#endif /* AMAYA_JAVA */
+}
+
+/*----------------------------------------------------------------------
+  ConfigProxy
+  A frontend to the proxy configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ConfigProxy (Document doc, View view)
+#else 
+void ConfigProxy (doc, view);
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
+#else
+#ifndef _WINDOWS 
+  ProxyConfMenu (doc, view);
+#endif /* _WINDOWS */
+#endif /* AMAYA_JAVA */
+}
+
+/*----------------------------------------------------------------------
+  SaveOptions
+  Saves the user modified configuration options
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void SaveOptions (Document doc, View view)
 #else 

@@ -202,12 +202,14 @@ MENUS
 	view:1 Special toggle:TSectionNumber -> SectionNumbering;
 	view:1 Special button:BMakeBook -> MakeBook;
 	view:1 Special Separator;
-    view:1 Special button:BShowLogFile -> ShowLogFile;
+	view:1 Special button:BShowLogFile -> ShowLogFile;
         view:1 Special Separator;
-	view:1 Special.Coptions button:BFlushCache -> FlushCache;
-	view:1 Special.Coptions button:BConfigappearance -> ConfigAppearance;
-	view:1 Special.Coptions button:BConfigBrEd -> ConfigBrEd;
-	view:1 Special.Coptions button:BConfigNetwork -> ConfigNetwork;
+	view:1 Special.Coptions button:BConfigGeneral -> ConfigGeneral;
+	view:1 Special.Coptions button:BConfigPublish -> ConfigPublish;
+	view:1 Special.Coptions button:BConfigCache -> ConfigCache;
+	view:1 Special.Coptions button:BConfigProxy -> ConfigProxy;
+	view:1 Special.Coptions button:BConfigColor -> ConfigColor;
+	view:1 Special.Coptions button:BConfigGeometry -> ConfigGeometry;
         view:1 Special.Coptions Separator;
 	view:1 Special.Coptions button:BSaveOptions -> SaveOptions;
 	
