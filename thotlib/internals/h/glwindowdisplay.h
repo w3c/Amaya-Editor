@@ -51,7 +51,7 @@ int glMatroxBUG (int frame, int x, int y, int width, int height);
 void InitDrawing (int style, int thick, int fg);
 
 void GL_Point (int fg, float width, float x, float y);
-void GL_DrawLine (int x1, int y1, int x2, int y2);
+void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool Round);
 void GL_DrawLines (ThotPoint *point, int npoints);
 
 
