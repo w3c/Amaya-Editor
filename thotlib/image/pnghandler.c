@@ -619,13 +619,23 @@ Drawable PngCreate(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
   int      w, h;
   Pixmap   pixmap;
   ThotColorStruct colrs[256];
-  unsigned char *buffer;
+  unsigned char *buffer, *buffer2;
   int ncolors, cpp, bg = -1;
 
 
   buffer = ReadPngToData(fn, &w, &h, &ncolors, &cpp, colrs, &bg );
 
-  if (buffer == NULL) return (Drawable) None;
+   if (((*xif != 0) && (*yif != 0)) && ((w != *xif) || (h != *yif))) {   
+
+       buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
+       free(buffer);
+       buffer = buffer2;
+       buffer2 = NULL;
+       w = *xif;
+       h = *yif;
+   }
+
+  if (buffer == NULL) return (Drawable) ThotBitmapNone;
 
   if ( bg >= 0)
     { 
@@ -640,7 +650,7 @@ Drawable PngCreate(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
  if (pixmap == None)
     { 
    
-      return (Drawable) None; 
+      return (ThotBitmap) ThotBitmapNone; 
     }
   else
     { 
@@ -651,7 +661,7 @@ Drawable PngCreate(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
       *xif = 0;
       *yif = 0;
 
-      return (Drawable) pixmap;
+      return (ThotBitmap) pixmap;
 	  	  
     }
 #endif /* !_WINDOWS */

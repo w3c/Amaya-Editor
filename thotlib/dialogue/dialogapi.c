@@ -106,11 +106,10 @@ boolean             WithMessages = TRUE;
 
 #ifdef _WINDOWS
 static HFONT        formFONT;
-
 #else  /* _WINDOWS */
 static XmFontList   formFONT;
-
 #endif /* !_WINDOWS */
+
 static char         Confirm_string[40];
 static char         Cancel_string[40];
 static char         Done_string[40];
@@ -133,6 +132,7 @@ static struct Cat_Context *ShowCat = NULL;
 static ThotAppContext Def_AppCont;
 static Display     *GDp;
 #endif
+
 static ThotTranslations TextTranslations;
 static ThotWidget   MainShell;
 
@@ -161,9 +161,12 @@ struct struct_winerror win_errtab[] =
  * MS-Windows Specific part.
  */
 
-char               *thotargv[] =
-{"amaya", "/users/guetari/opera/WINNT/test.html"};
+char* thotargv[] = {
+      "amaya", "/users/guetari/opera/WINNT/test.html"
+};
+
 int                 thotargc = 1;
+
 
 LRESULT CALLBACK WndProc       (HWND, UINT, WPARAM, LPARAM) ;
 LRESULT CALLBACK ClientWndProc (HWND, UINT, WPARAM, LPARAM) ;
@@ -204,6 +207,7 @@ int                 WIN_Lgbuffer;
 void                terminate__Fv (void)
 {
 }
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    GetFen :  returns the Thot window number associated to an         
@@ -248,12 +252,12 @@ ThotWindow win ;
    fprintf (stderr, "Could not get MS-Windows number for %X\n", win);
    return -1;
 }
-#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    WIN_GetDeviceContext :  select a Device Context for a given       
    thot window.                                                
   ----------------------------------------------------------------------*/
+
 HDC                 WIN_curHdc = 0;
 ThotWindow          WIN_curWin = -1;
 
@@ -454,7 +458,6 @@ int       nShow;
    thotmain (thotargc, thotargv);
    return (TRUE);
 }
-
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -1348,7 +1351,6 @@ Display           **Dp;
    FirstFreeRef = 0;
 }
 
-/* *** RAMZI *** RAMZI *** */
 /*----------------------------------------------------------------------
    TtaInitDialogueTranslations initialise les translations du         
    dialogue. Ce sont tous les racoursis claviers.                     
@@ -1363,7 +1365,6 @@ ThotTranslations      translations;
 {
    TextTranslations = translations;
 }
-/* *** RAMZI *** RAMZI *** */
 
 
 /*----------------------------------------------------------------------
@@ -1415,9 +1416,6 @@ int                 number;
    TtaInitDialogueWindow Cre'ation et initialisation de la fenetree^tre    
    principale d'une application.                           
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
-extern HINSTANCE    hInstance;
-#endif
 #ifdef __STDC__
 void                TtaInitDialogueWindow (char *name, char *geometry, Pixmap logo, Pixmap icon, int number, char *textmenu)
 #else  /* __STDC__ */
@@ -4823,6 +4821,7 @@ char               *title;
 
 
 /*----------------------------------------------------------------------
+  NewSheet
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         NewSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int package, char button, int dbutton, int cattype)
@@ -4845,18 +4844,20 @@ int                 cattype;
    int                 n;
    int                 index;
    int                 count;
-   struct Cat_Context *catalogue;
-   struct E_List      *adbloc;
+   int                 res;
+   struct Cat_Context* catalogue;
+   struct E_List*      adbloc;
+
+   ThotWidget          form;
+   ThotWidget          row;
+   ThotWidget          w;
+   char*               ptr = NULL;
+
 #ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    Arg                 argform[1];
    XmString            title_string;
-
 #endif /* _WINDOWS */
-   ThotWidget          form;
-   ThotWidget          row;
-   ThotWidget          w;
-   char               *ptr = NULL;
 
    if (ref == 0)
      {
@@ -4931,6 +4932,7 @@ int                 cattype;
 	catalogue->Cat_FormPack = package + 1;
 	catalogue->Cat_Widget = form;
 	XmStringFree (title_string);
+#endif /* !_WINDOWS */
 
 	/* Cree le contenu initial du feuillet */
 	adbloc = NewEList ();	/* Un bloc supplementaire pour les boutons */
@@ -4938,6 +4940,7 @@ int                 cattype;
 	adbloc->E_Next = NewEList ();
 	adbloc = adbloc->E_Next;
 
+#ifndef _WINDOWS
 	/*** Cree un Row-Column pour mettre les boutons QUIT/... ***/
 	/*** en dessous des sous-menus et sous-formulaires.    ***/
 	n = 0;

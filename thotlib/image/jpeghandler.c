@@ -239,11 +239,21 @@ ThotBitmap         *mask1;
    int                 w, h;
    Pixmap              pixmap;
    ThotColorStruct     colrs[256];
-   unsigned char      *buffer;
+   unsigned char      *buffer,*buffer2;
 
    /* effective load of the Picture from Jpeg Library */
 
    buffer = ReadJpegToData (fn, &w, &h, colrs);
+
+  if (((*xif != 0) && (*yif != 0)) && ((w != *xif) || (h != *yif))) {   
+
+       buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
+       free(buffer);
+       buffer = buffer2;
+       buffer2 = NULL;
+       w = *xif;
+       h = *yif;
+   }
 
 #ifndef _WINDOWS
    pixmap = DataToPixmap (buffer, w, h, 100, colrs);

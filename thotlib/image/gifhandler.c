@@ -1310,7 +1310,7 @@ ThotBitmap         *mask1;
    Pixmap              pixmap;
    int                 i;
    ThotColorStruct     colrs[256];
-   unsigned char      *buffer;
+   unsigned char      *buffer, *buffer2;
    int                 ncolors, cpp;
 
    Gif89.transparent = -1;
@@ -1319,6 +1319,16 @@ ThotBitmap         *mask1;
    Gif89.disposal = 0;
 
    buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
+
+   if (((*xif != 0) && (*yif != 0)) && ((w != *xif) || (h != *yif))) {   
+
+       buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
+       free(buffer);
+       buffer = buffer2;
+       buffer2 = NULL;
+       w = *xif;
+       h = *yif;
+   }
 
    if (buffer == NULL)
       return ThotBitmapNone;
@@ -1338,6 +1348,7 @@ ThotBitmap         *mask1;
 	*mask1 = MakeMask (TtDisplay, buffer, w, h, i);
 #endif /* _WINDOWS */
      }
+
    pixmap = DataToPixmap (buffer, w, h, ncolors, colrs);
 
    free (buffer);

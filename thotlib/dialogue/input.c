@@ -446,9 +446,9 @@ int                 command;
    generic character handling function. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void MSCharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPARAM lParam)
+void WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPARAM lParam)
 #else  /* !__STDC__ */
-void MSCharTranslation (hWnd, frame, msg, wParam, lParam)
+void WIN_CharTranslation (hWnd, frame, msg, wParam, lParam)
 HWND   hWnd; 
 int    frame; 
 UINT   msg; 
@@ -463,23 +463,23 @@ LPARAM lParam;
    if ((msg != WM_KEYDOWN) && (msg != WM_CHAR))
       return;
 
-   if (frame < 0)
-     {
+   if (frame < 0) {
 	fprintf (stderr, "unable to get frame of window %X\n", hWnd);
 	return;
-     }
+   }
    if (GetKeyState (VK_SHIFT))
       keyboard_mask |= THOT_MOD_SHIFT;
+
    if (GetKeyState (VK_CONTROL))
       keyboard_mask |= THOT_MOD_CTRL;
+
    if (GetKeyState (VK_MENU))
       keyboard_mask |= THOT_MOD_ALT;
 
-   if (msg == WM_CHAR)
-     {
+   if (msg == WM_CHAR) {
 	string[0] = (char) wParam;
 	len = 1;
-     }
+   }
 
    ThotInput (frame, &string[0], len, keyboard_mask, wParam);
 }
@@ -821,7 +821,6 @@ int                 key;
    InitTranslations
    intializes the keybord encoding.
   ----------------------------------------------------------------------*/
-/* ***  RAMZI  ***  RAMZI  *** */
 #ifdef __STDC__
 ThotTranslations      InitTranslations (char *appliname)
 #else  /* __STDC__ */
@@ -1106,4 +1105,3 @@ char               *appliname;
 	return table;
      }				/*else */
 }				/*InitTranslation */
-/* ***  RAMZI  ***  RAMZI  *** */

@@ -331,8 +331,8 @@ int                *height;
    if (pAb->AbVolume == 0 || picture == NULL)
      {
 	font = pBox->BxFont;
-	*width = CharacterWidth (109, font);	/*'m' */
-	*height = FontHeight (font);
+	*width = 0 ; /*CharacterWidth (109, font);	'm' */
+	*height = 0 ; /* FontHeight (font);*/
      }
    else
      {

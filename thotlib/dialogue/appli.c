@@ -56,6 +56,10 @@ static XmString     null_string;
 #ifdef _WINDOWS
 #include "wininc.h"
 
+#define _MAX_PATH   500
+#define _MAX_FNAME  100
+#define _MAX_EXT     10
+
 #define MAX_MENUS 5
 #define ToolBar_AutoSize(hwnd) \
     (void)SendMessage((hwnd), TB_AUTOSIZE, 0, 0L)
@@ -260,10 +264,19 @@ void               *ev;
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
-   MSChangeTaille : function called when a view is resized under    
+   WIN_ChangeTaille : function called when a view is resized under    
    MS-Windows.                                                   
   ----------------------------------------------------------------------*/
-void                MSChangeTaille (int frame, int width, int height, int top_delta, int bottom_delta)
+#ifdef __STDC__
+void                WIN_ChangeTaille (int frame, int width, int height, int top_delta, int bottom_delta)
+#else  /* !__STDC__ */
+void                WIN_ChangeTaille (frame, width, height, top_delta, bottom_delta)
+int frame; 
+int width; 
+int height; 
+int top_delta; 
+int bottom_delta;
+#endif /* __STDC__ */
 {
    int                 n, dx, dy, view;
    Document            doc;
@@ -380,9 +393,9 @@ int                *info;
    Demande de scroll vertical.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MSChangeVScroll (int frame, int reason, int value)
+void                WIN_ChangeVScroll (int frame, int reason, int value)
 #else  /* __STDC__ */
-void                MSChangeVScroll (frame, reason, value)
+void                WIN_ChangeVScroll (frame, reason, value)
 int                 frame;
 int                 reason;
 int                 value;
@@ -1114,6 +1127,7 @@ LPARAM      lParam;
                                               WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_BORDER | 
                                               WS_VSCROLL, 0, 0, 0, 0,
                                               hwnd, (HMENU) 1, hInstance, NULL) ;
+
                  ShowWindow (hwndClient, SW_SHOWNORMAL);
                  UpdateWindow (hwndClient);
                  return 0 ;
@@ -1243,21 +1257,21 @@ LPARAM lParam;
                /* Ignore if notification window is absent. */
                /* if (hwndNotify != NULL)
 		    MoveWindow (hwndNotify, 0, 0, cx, cy, TRUE) ; */
-               MSChangeTaille (frame, cx, cy, 0, 0) ;
+               WIN_ChangeTaille (frame, cx, cy, 0, 0) ;
 
 	       WIN_ReleaseDeviceContext ();
                return 0 ;
 	  }
 
 	  case WM_VSCROLL:
-	       MSChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
+	       WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
 	       WIN_ReleaseDeviceContext ();
 	       return (0);
 
 	  case WM_KEYDOWN:
 	  case WM_CHAR:
 	       TtaAbortShowDialogue ();
-	       MSCharTranslation (FrRef[frame], frame, mMsg, wParam, lParam);
+	       WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam);
 	       return 0;
 
 	  case WM_LBUTTONDOWN:

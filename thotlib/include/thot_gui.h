@@ -34,6 +34,9 @@
  ****************************************************************/
 
 #include <windows.h>
+#include <commdlg.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 /*
  * The current HDC : the current Device context in use.
