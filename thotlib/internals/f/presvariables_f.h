@@ -22,6 +22,7 @@ extern ThotBool NewVariable ( int varNum,
                               PtrSSchema pSS,
                               PtrPSchema pSchP,
                               PtrAbstractBox pAb,
+                              PtrAttribute pAttr,
                               PtrDocument pDoc );
 
 #else /* __STDC__ */
@@ -42,6 +43,7 @@ extern ThotBool NewVariable (/* int varNum,
                                 PtrSSchema pSS,
                                 PtrPSchema pSchP,
                                 PtrAbstractBox pAb,
+				PtrAttribute pAttr,
                                 PtrDocument pDoc */);
 
 #endif /* __STDC__ */

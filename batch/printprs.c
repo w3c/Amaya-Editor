@@ -1507,15 +1507,17 @@ int                 main (int argc, char **argv)
 				   WriteCounterStyle (pVa1->ViStyle);
 				   break;
 				case VarAttrValue:
+				  if (pVa1->ViAttr == 0)
+				    printf (" AttributeValue");
 				   printf (" VALUE(");
 				   wrnomattr (pVa1->ViAttr);
 				   WriteCounterStyle (pVa1->ViStyle);
 				   break;
 				case VarDate:
-				   printf (" VarDate");
+				   printf (" Date");
 				   break;
 				case VarFDate:
-				   printf (" VarFDate");
+				   printf (" FDate");
 				   break;
 				case VarDirName:
 				   printf (" DirName");
@@ -1527,7 +1529,7 @@ int                 main (int argc, char **argv)
 				   printf (" ElemName");
 				   break;
 				case VarAttrName:
-				   printf (" VarAttrName");
+				   printf (" AttributeName");
 				   break;
 				case VarPageNumber:
 				   printf (" VALUE(PageNumber(");

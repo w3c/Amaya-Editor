@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -28,7 +28,6 @@
 #include "content_f.h"
 #include "presvariables_f.h"
 
-
 /*----------------------------------------------------------------------
    MakeAliasTypeCount cree un alias temporaire qui va servir a faire 
    une recherche multiple sur les elements du compteur     
@@ -36,18 +35,8 @@
    du compteur.  On cree l'alias  MAX_RULES_SSCHEMA + 1 pour les 
    elements add du compteur.                               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static int          MakeAliasTypeCount (Counter * pCounter, CounterOp op, PtrSSchema pSchStr)
-
-#else  /* __STDC__ */
-static int          MakeAliasTypeCount (pCounter, op, pSchStr)
-Counter            *pCounter;
-CounterOp           op;
-PtrSSchema          pSchStr;
-
-#endif /* __STDC__ */
-
+static int MakeAliasTypeCount (Counter * pCounter, CounterOp op,
+			       PtrSSchema pSchStr)
 {
    SRule              *NewAlias;
    int                 i;
@@ -90,24 +79,12 @@ PtrSSchema          pSchStr;
       return MAX_RULES_SSCHEMA + 2;
 }
 
-
 /*----------------------------------------------------------------------
    GetCounterValEl renvoie la valeur numerique de set ou d'increment 
    associee a l'element pEl.                               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static int          GetCounterValEl (Counter * pCounter, PtrElement pEl, CounterOp op, PtrSSchema pSchStr)
-
-#else  /* __STDC__ */
-static int          GetCounterValEl (pCounter, pEl, op, pSchStr)
-Counter            *pCounter;
-PtrElement          pEl;
-CounterOp           op;
-PtrSSchema          pSchStr;
-
-#endif /* __STDC__ */
-
+static int GetCounterValEl (Counter * pCounter, PtrElement pEl, CounterOp op,
+			    PtrSSchema pSchStr)
 {
    int                 i;
 
@@ -122,22 +99,11 @@ PtrSSchema          pSchStr;
    return 0;			/* par defaut... */
 }
 
-
 /*----------------------------------------------------------------------
    InitCounterByAttribute                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     InitCounterByAttribute (int *valinit, Counter * pCo, PtrElement pElNum, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-static ThotBool     InitCounterByAttribute (valinit, pCo, pElNum, pSS)
-int                *valinit;
-Counter            *pCo;
-PtrElement          pElNum;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
+static ThotBool InitCounterByAttribute (int *valinit, Counter * pCo,
+					PtrElement pElNum, PtrSSchema pSS)
 {
    ThotBool            result, stop;
    PtrElement          pEl;
@@ -179,23 +145,13 @@ PtrSSchema          pSS;
    return result;
 }
 
-
 /*----------------------------------------------------------------------
   CondAttrOK
   return TRUE if the attribute condition in counter item pCountItem is
   satisfied for element pEl.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     CondAttrOK (CntrItem * pCountItem, PtrElement pEl, PtrSSchema pSS)
-
-#else  /* __STDC__ */
-static ThotBool     CondAttrOK (pCountItem, pEl, pSS)
-CntrItem            *pCountItem;
-PtrElement          pEl;
-PtrSSchema          pSS;
-
-#endif /* __STDC__ */
-
+static ThotBool CondAttrOK (CntrItem * pCountItem, PtrElement pEl,
+			    PtrSSchema pSS)
 {
    ThotBool            result, stop;
    PtrAttribute        pAttr;
@@ -223,25 +179,14 @@ PtrSSchema          pSS;
    return result;
 }
 
-
 /*----------------------------------------------------------------------
   GetCounterItem
   return the rank of the item of counter pCounter which applies an operation
   cntrOp to element pEl.
   return -1 if not found.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int      GetCounterItem (Counter * pCounter, CounterOp cntrOp, PtrSSchema pSS, PtrElement pEl)
-
-#else  /* __STDC__ */
-static int      GetCounterItem (pCounter, cntrOp, pSS, pEl)
-Counter            *pCounter;
-CounterOp	    cntrOp;
-PtrSSchema          pSS;
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
+static int GetCounterItem (Counter * pCounter, CounterOp cntrOp,
+			   PtrSSchema pSS, PtrElement pEl)
 {
    int		i;
 
@@ -253,7 +198,6 @@ PtrElement          pEl;
    return (-1);
 }
 
-
 /*----------------------------------------------------------------------
    CounterValMinMax
    retourne la valeur minimale ou maximale (selon que Maximum est faux ou vrai)
@@ -261,21 +205,8 @@ PtrElement          pEl;
    qui s'applique au schema de structure pSS) pour l'element pElNum.
    view indique la vue concernee (uniquement pour les compteurs de page).
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int                 CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int view, ThotBool Maximum)
-
-#else  /* __STDC__ */
-int                 CounterValMinMax (counterNum, pSS, pSchP, pElNum, view, Maximum)
-int                 counterNum;
-PtrSSchema          pSS;
-PtrPSchema          pSchP;
-PtrElement          pElNum;
-int                 view;
-ThotBool            Maximum;
-
-#endif /* __STDC__ */
-
+int CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
+		      PtrElement pElNum, int view, ThotBool Maximum)
 {
    int                 value, valueinitattr, i;
    int                 TypeIncr, TypeSet, TypeRank;
@@ -513,7 +444,6 @@ ThotBool            Maximum;
    return value;
 }
 
-
 /*----------------------------------------------------------------------
    CounterVal retourne la valeur du compteur de numero counterNum (defini
    dans le schema de presentation  pointe' par pSchP, qui  
@@ -522,17 +452,8 @@ ThotBool            Maximum;
    view indique la view concernee (uniquement pour les       
    compteurs de page).                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int view)
-#else  /* __STDC__ */
-int                 CounterVal (counterNum, pSS, pSchP, pElNum, view)
-int                 counterNum;
-PtrSSchema          pSS;
-PtrPSchema          pSchP;
-PtrElement          pElNum;
-int                 view;
-#endif /* __STDC__ */
-
+int CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP,
+		PtrElement pElNum, int view)
 {
    int                 i, value, valueinitattr, level, Nincr, incrVal;
    int                 TypeIncr, TypeSet, TypeRank, TypeRLevel;
@@ -923,13 +844,7 @@ int                 view;
    pave de presentation dont le contenu peut etre modifie' 
    par l'utilisateur.                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            PresAbsBoxUserEditable (PtrAbstractBox pAb)
-#else  /* __STDC__ */
-ThotBool            PresAbsBoxUserEditable (pAb)
-PtrAbstractBox      pAb;
-
-#endif /* __STDC__ */
+ThotBool PresAbsBoxUserEditable (PtrAbstractBox pAb)
 {
    ThotBool            result;
    PresentationBox    *pBo;
@@ -961,32 +876,17 @@ PtrAbstractBox      pAb;
    return result;
 }
 
-
 /*----------------------------------------------------------------------
-   NewVariable met dans le pave pAb le texte correspondant a la  
-   variable de numero varNum definie dans le schema de       
-   presentation pSchP (et qui correspond au schema de      
-   structure pSS). pDoc pointe sur le descripteur du       
-   document pour lequel on travaille. Si le pave avait     
-   deja un contenu et que ce contenu ne change pas la      
-   fonction retourne 'faux'. S'il y a un isNew contenu,  
-   elle retourne 'vrai'.                                   
+   NewVariable met dans le pave pAb le texte correspondant a la
+   variable de numero varNum definie dans le schema de presentation pSchP
+   (et qui correspond au schema de structure pSS).
+   Si pAttr n'est pas nul, c'est pour cet attribut qu'on calcule la variable.
+   pDoc pointe sur le descripteur du document pour lequel on travaille.
+   Si le pave avait deja un contenu et que ce contenu ne change pas la      
+   fonction retourne 'faux'. S'il y a un nouveau contenu, elle retourne 'vrai'.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
-				 PtrAbstractBox pAb, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-ThotBool            NewVariable (varNum, pSS, pSchP, pAb, pDoc)
-int                 varNum;
-PtrSSchema          pSS;
-PtrPSchema          pSchP;
-PtrAbstractBox      pAb;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
+		      PtrAbstractBox pAb, PtrAttribute pAttr, PtrDocument pDoc)
 {
    int                 f, l;
    int                 i;
@@ -994,7 +894,7 @@ PtrDocument         pDoc;
    long               *pt;
    struct tm          *ptm;
    PtrTextBuffer       isOld, isNew;
-   PtrAttribute        pAttr;
+   PtrAttribute        pA;
    ThotBool            found;
    ThotBool            equal;
    PresVariable       *pPr1;
@@ -1012,7 +912,7 @@ PtrDocument         pDoc;
    /* de la variable */
    GetConstantBuffer (pAb);
    pAb->AbVolume = 0;
-   pAttr = NULL;
+   pA = NULL;
    /* remplit le buffer avec le contenu defini par la variable */
    pPr1 = &pSchP->PsVariable[varNum - 1];
    for (f = 1; f <= pPr1->PvNItems; f++)
@@ -1032,59 +932,72 @@ PtrDocument         pDoc;
 	    
 	  case VarAttrValue:
 	    /* valeur d'un attribut */
-	    /* cherche si l'element auquel se rapporte le pave (ou l'un de */
-	    /* ses ascendants) possede cet attribut */
-	    pEl = pAb->AbElement;
 	    found = FALSE;
-	    while (!found && pEl != NULL)
+	    if (pVa1->ViAttr == 0)
+	      /* Content: AttributeValue */
 	      {
-		pAttr = pEl->ElFirstAttr;	/* premier attribut */
-		while (!found && pAttr != NULL)
-		  if (pAttr->AeAttrNum == pVa1->ViAttr &&
-		      !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
+		if (pAttr)
+		  {
+		    pA = pAttr;
 		    found = TRUE;
-		  else
-		    pAttr = pAttr->AeNext;
-		if (!found)
-		  /* passe a l'element ascendant */
-		  pEl = pEl->ElParent;
+		  }
+	      }
+	    else
+	      {
+		/* cherche si l'element auquel se rapporte le pave (ou l'un */
+		/* de ses ascendants) possede cet attribut */
+		pEl = pAb->AbElement;
+		while (!found && pEl != NULL)
+		  {
+		    pA = pEl->ElFirstAttr;	/* premier attribut */
+		    while (!found && pA != NULL)
+		      if (pA->AeAttrNum == pVa1->ViAttr &&
+			  !ustrcmp (pA->AeAttrSSchema->SsName, pSS->SsName))
+			found = TRUE;
+		      else
+			pA = pA->AeNext;
+		    if (!found)
+		      /* passe a l'element ascendant */
+		      pEl = pEl->ElParent;
+		  }
 	      }
 	    if (found)
 	      /* l'element possede l'attribut */
 	      {
-		switch (pAttr->AeAttrType)
+		switch (pA->AeAttrType)
 		  {
 		  case AtNumAttr:
 		    /* traduit l'entier en ASCII selon le style voulu */
-		    GetCounterValue (pAttr->AeAttrValue, pVa1->ViStyle, number, &l);
+		    GetCounterValue (pA->AeAttrValue, pVa1->ViStyle, number, &l);
 		    CopyStringToText (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    pAb->AbCreatorAttr = pAttr;
+		    pAb->AbCreatorAttr = pA;
 		    break;
 		  case AtTextAttr:
-		    if (pAttr->AeAttrText != NULL)
+		    if (pA->AeAttrText != NULL)
 		      {
-			CopyTextToText (pAttr->AeAttrText,
+			CopyTextToText (pA->AeAttrText,
 					pAb->AbText, &l);
 			pAb->AbVolume += l;
 		      }
-		    pAb->AbCreatorAttr = pAttr;
+		    pAb->AbCreatorAttr = pA;
 		    break;
 		  case AtReferenceAttr:
 		    CopyStringToText ("REF", pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    break;
 		  case AtEnumAttr:
-		    pAttr1 = &pSS->SsAttribute[pVa1->ViAttr - 1];
-		    CopyStringToText (pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1],
+		    pAttr1 = &pSS->SsAttribute[pA->AeAttrNum - 1];
+		    CopyStringToText (pAttr1->AttrEnumValue[pA->AeAttrValue-1],
 				      pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    pAb->AbCreatorAttr = pAttr;
+		    pAb->AbCreatorAttr = pA;
 		    break;
 		  }
 		/* end case AttrType */
 	      }
 	    break;
+
 	  case VarCounter:
 	    /* valeur d'un compteur */
 	    pCo1 = &pSchP->PsCounter[pVa1->ViCounter - 1];
@@ -1123,12 +1036,12 @@ PtrDocument         pDoc;
 	    CopyStringToText (number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
+
 	  case VarDate:
 	    /* date en anglais */
 	    pt = &tod;
 	    *pt = time (NULL);
 	    ptm = localtime (pt);
-	    
 	    GetCounterValue (ptm->tm_year, CntArabic, number, &l);
 	    CopyStringToText (number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
@@ -1143,6 +1056,7 @@ PtrDocument         pDoc;
 	    CopyStringToText (number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
+
 	  case VarFDate:
 	    /* date en francais */
 	    pt = &tod;
@@ -1162,16 +1076,19 @@ PtrDocument         pDoc;
 	    CopyStringToText (number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
+
 	  case VarDocName:
 	    /* Name du document */
 	    CopyStringToText (pDoc->DocDName, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
+
 	  case VarDirName:
 	    /* Name du document */
 	    CopyStringToText (pDoc->DocDirectory, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
+
 	  case VarElemName:
 	    /* Name de l'element */
 	    pEl = pAb->AbElement;
@@ -1179,10 +1096,13 @@ PtrDocument         pDoc;
 			      SrName, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
+
 	  case VarAttrName:
-	    /* Name de l'attribut */
-	    /* non implemente' */
+	    /* Nom de l'attribut */
+	    CopyStringToText (pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName, pAb->AbText, &l);
+	    pAb->AbVolume += l;
 	    break;
+
 	  case VarPageNumber:
 	    /* numero de la marque de page precedente dans la */
 	    /* view ViView */
@@ -1207,6 +1127,7 @@ PtrDocument         pDoc;
 	    CopyStringToText (number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
+
 	  default:
 	    break;
 	  }

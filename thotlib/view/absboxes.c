@@ -471,9 +471,6 @@ void  AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head)
 ThotBool            IsBreakable (PtrAbstractBox pAb, PtrDocument pDoc)
 {
    ThotBool            unbreakable;
-   int                 index;
-   PtrPSchema          pSchP;
-   PtrSSchema          pSchS;
 
    unbreakable = FALSE;
    /* boucle sur les paves englobants */
@@ -491,10 +488,7 @@ ThotBool            IsBreakable (PtrAbstractBox pAb, PtrDocument pDoc)
 	  }
 	/* regarde dans le schema de presentation du pave s'il est secable */
 	if (!unbreakable)
-	  {
-	     SearchPresSchema (pAb->AbElement, &pSchP, &index, &pSchS, pDoc);
-	     unbreakable = pAb->AbBuildAll;
-	  }
+	   unbreakable = pAb->AbBuildAll;
 	/* passe a l'englobant */
 	pAb = pAb->AbEnclosing;
      }
@@ -1038,9 +1032,13 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin,
   PtrElement          pElAscent, pEl1;
   PtrElement          pAsc[MaxAsc];
   int                 NumAsc, i, volsupp, frame, h;
+  PtrSSchema          pSchS;
+  PtrPSchema          pSchP;
+  PtrPRule            pPRule;
+  PtrAttribute        pAttr;
   PtrAbstractBox      pAbbDestroyed, pAbbRemain, pAbbLastEmptyCr,
                       pAbbFirstEmptyCr, pAbbReDisp, pAbbRoot, pPrevious;
-  ThotBool            complete;
+  ThotBool            complete, appl;
 
   pAbbLastEmptyCr = NULL;
   pAbbRoot = NULL;
@@ -1214,16 +1212,19 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin,
 		i = NumAsc;
 		do
 		  {
-		    pEl1 = pAsc[i - 1];
-		    if (pAsc[i - 1]->ElAbstractBox[view - 1]->AbBuildAll)
-		      /* cet element a la regle Gather */
-		      /* cree le pave avec toute sa descendance, si */
-		      /* ce n'est pas encore fait */
-		      {
-			pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, view,
-						    TRUE, TRUE, &complete);
-			i = 1;
-		      }
+		    pPRule = GlobalSearchRulepEl (pAsc[i - 1], pDoc, &pSchP,
+                      &pSchS, 0, NULL, pDoc->DocView[view - 1].DvPSchemaView,
+                      PtGather, FnAny, FALSE, TRUE, &pAttr);
+		    if (pPRule)
+		      if (BoolRule (pPRule, pAsc[i - 1], view, &appl))
+		        /* cet element a la regle Gather: Yes */
+		        /* cree le pave avec toute sa descendance, si */
+		        /* ce n'est pas encore fait */
+		        {
+			  pPrevious = AbsBoxesCreate (pAsc[i - 1], pDoc, view,
+						      TRUE, TRUE, &complete);
+			  i = 1;
+		        }
 		    i--;
 		  }
 		while (i != 0);

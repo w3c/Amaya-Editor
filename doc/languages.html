@@ -16,7 +16,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of April 16, 2001</h4>
+<h4>Version of May 21, 2001</h4>
 
 <p>© 1996-2001 INRIA</p>
 <hr />
@@ -3072,8 +3072,16 @@ English, while <tt>FDATE</tt> returns the date in french.</p>
 <p>Two other functions, <tt>DocName</tt> and <tt>DirName</tt>, return the
 document name and the directory where the document is stored.</p>
 
-<p>Function <tt>ElemName</tt> returns the type of the element which created
+<p>Function <tt>ElemName</tt> returns the name of the element which created
 the presentation box whose contents are the variable.</p>
+
+<p>Function <tt>AttributeName</tt> returns the name of the attribute which
+created the presentation box whose contents are the variable. The
+presentation box must be created by an attribute.</p>
+
+<p>Function <tt>AttributeValue</tt> returns the value of the attribute which
+created the presentation box whose contents are the variable. The
+presentation box must be created by an attribute.</p>
 
 <p>Another function simply returns the value of a presentation constant. For
 any constant declared in the <tt>CONST</tt> section, it is sufficient to give
@@ -3117,7 +3125,7 @@ taken by the counter in the whole document, not the value for the element
 concerned by the function.</p>
 <pre>     Function     = 'DATE' / 'FDATE' /
                     'DocName' / 'DirName' /
-                    'ElemName' / 'AttributeName' /
+                    'ElemName' / 'AttributeName' / 'AttributeValue' /
                      ConstID / ConstType ConstValue /
                      AttrID /
                     'VALUE' '(' PageAttrCtr ','
@@ -5503,8 +5511,7 @@ parentheses. The content inside the parentheses has the same syntax as a <a
 href="#sectc426">variable declaration</a>.</p>
 <pre>               'Content' ':' VarConst
      VarConst = ConstID / ConstType ConstValue /
-                VarID / '(' FunctionSeq ')' .
-</pre>
+                VarID / '(' FunctionSeq ')' .</pre>
 
 <p>A presentation box can have only one <tt>Content</tt> rule, which means
 that the content of a presentation box cannot vary from view to view.
@@ -7854,7 +7861,7 @@ VarID           = NAME .
 FunctionSeq     = Function &lt; Function &gt; .
 Function        = 'DATE' / 'FDATE' /
                   'DocName' / 'DirName' /
-                  'ElemName' / 'AttributeName' /
+                  'ElemName' / 'AttributeName' / 'AttributeValue' /
                   ConstID / ConstType ConstValue /
                   AttrID /
                   'VALUE' '(' PageAttrCtr ','

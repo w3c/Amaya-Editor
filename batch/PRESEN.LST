@@ -70,7 +70,7 @@ number
    36	FunctList =	  Function < Function > .
    37	Function =	  'DATE' / 'FDATE' /
 			  'DocName' / 'DirName' /
-			  'ElemName' / 'AttributeName' /
+			  'ElemName' / 'AttributeName' / 'AttributeValue' /
 			  'VALUE' '(' CounterAttrPage ',' CounterStyle ')' /
 			  ConstType ConstValue /
 			  ConstName / AttrName .
@@ -407,182 +407,183 @@ code  key-word      numbers of rules using the key-word
 1133  DirName            37
 1134  ElemName           37
 1135  AttributeName      37
-1136  VALUE              37
-1137  PageNumber         38
-1138  ARABIC             39
-1139  UROMAN             39
-1140  LROMAN             39
-1141  UPPERCASE          39
-1142  LOWERCASE          39
-1143  FORWARD            41
-1144  BEGIN               8  47  49
-1145  IN                 44 106 137 149
-1146  Otherwise          45
-1147  IF                 48
-1148  VertRef            51
-1149  HorizRef           51
-1150  Height             51 100
-1151  Width              51 100
-1152  VertPos            51
-1153  HorizPos           51
-1154  VertOverflow       51
-1155  HorizOverflow      51
-1156  Hyphenate          51
-1157  LineSpacing        51
-1158  LineBreak          52
-1159  PageBreak          52
-1160  InLine             52
-1161  Size               52
-1162  Visibility         52
-1163  Font               52
-1164  Underline          52
-1165  Thickness          52
-1166  Style              52
-1167  Weight             52
-1168  Indent             52
-1169  Adjust             52
-1170  NoBreak1           52
-1171  NoBreak2           52
-1172  Content            52
-1173  Gather             52
-1174  Line               53
-1175  NoLine             53
-1176  Included           53
-1177  Column             53
-1178  Copy               53
-1179  Depth              53
-1180  LineStyle          54
-1181  LineWeight         54
-1182  FillPattern        54
-1183  Background         54
-1184  Foreground         54  84
-1185  ShowBox            54
-1186  BackgroundPicture  54
-1187  PictureMode        54
-1188  MarginTop          55
-1189  MarginRight        55
-1190  MarginBottom       55
-1191  MarginLeft         55
-1192  PaddingTop         55
-1193  PaddingRight       55
-1194  PaddingBottom      55
-1195  PaddingLeft        55
-1196  BorderTopWidth     55
-1197  BorderRightWidth   55
-1198  BorderBottomWidth  55
-1199  BorderLeftWidth    55
-1200  BorderTopColor     55
-1201  BorderRightColor   55
-1202  BorderBottomColor  55
-1203  BorderLeftColor    55
-1204  BorderTopStyle     55
-1205  BorderRightStyle   55
-1206  BorderBottomStyle  55
-1207  BorderLeftStyle    55
-1208  Auto               81
-1209  Thin               83  68
-1210  Medium             83
-1211  Thick              83  68
-1212  Transparent        84  78
-1213  None               85
-1214  Hidden             85
-1215  Dotted             85  77
-1216  Dashed             85  77
-1217  Solid              85  77
-1218  Double             85
-1219  Groove             85
-1220  Ridge              85
-1221  Inset              85
-1222  Outset             85
-1223  Enclosing          86  97  89
-1224  Creator            86  97  89
-1225  NormalSize         80
-1226  Scale              80
-1227  RepeatXY           80
-1228  RepeatX            80
-1229  RepeatY            80
-1230  nil                59  60
-1231  UserSpecified      59  60  58
-1232  Refering           92  94
-1233  First              96 148
-1234  Second             96
-1235  Enclosed           97  89
-1236  Previous           97  89
-1237  Next               97
-1238  Refered            97
-1239  Referred           97 148
-1240  Root               97 148
-1241  NOT                98 147
-1242  AnyElem            99
-1243  AnyBox             99
-1244  ElemWithAttr       99
-1245  Left               93 121
-1246  VMiddle            93 121
-1247  VRef               93
-1248  Right              93 121
-1249  Top                91
-1250  HMiddle            91
-1251  HRef               91
-1252  Bottom             91
-1253  Min                58  58 110 123
-1254  CM                106
-1255  MM                106
-1256  PT                106  64 123 123
-1257  PC                106
-1258  PX                106
-1259  EM                106
-1260  EX                106
-1261  GrandFather        89
-1262  Max               110 123
-1263  Yes                61
-1264  No                 61
-1265  LeftWithDots      121
-1266  Justify           121
-1267  Roman              69
-1268  Italics            69
-1269  Oblique            69
-1270  Bold               69  70
-1271  BoldItalics        69
-1272  BoldOblique        69
-1273  Normal             70
-1274  NoUnderline        67
-1275  Underlined         67
-1276  Overlined          67
-1277  CrossedOut         67
-1278  GREATER           137
-1279  LESS              137
-1280  EQUAL             137
-1281  Repeated           74
-1282  AND                50
-1283  Target            147
-1284  Last              148
-1285  FirstRef          148
-1286  LastRef           148
-1287  ExternalRef       148
-1288  InternalRef       148
-1289  CopyRef           148
-1290  AnyAttributes     148
-1291  FirstAttr         148
-1292  LastAttr          148
-1293  UserPage          148
-1294  StartPage         148
-1295  ComputedPage      148
-1296  Empty             148
-1297  Immediately       148
-1298  Within            148
-1299  MaxRangeVal        40
-1300  MinRangeVal        40
-1301  Even              150
-1302  Odd               150
-1303  One               150
-1304  Create            146
-1305  CreateBefore      146
-1306  CreateAfter       146
-1307  CreateLast        146
-1308  CreateFirst       146
-1309  CreateWith        146
-1310  CreateEnclosing   146
-1311  To                159
+1136  AttributeValue     37
+1137  VALUE              37
+1138  PageNumber         38
+1139  ARABIC             39
+1140  UROMAN             39
+1141  LROMAN             39
+1142  UPPERCASE          39
+1143  LOWERCASE          39
+1144  FORWARD            41
+1145  BEGIN               8  47  49
+1146  IN                 44 106 137 149
+1147  Otherwise          45
+1148  IF                 48
+1149  VertRef            51
+1150  HorizRef           51
+1151  Height             51 100
+1152  Width              51 100
+1153  VertPos            51
+1154  HorizPos           51
+1155  VertOverflow       51
+1156  HorizOverflow      51
+1157  Hyphenate          51
+1158  LineSpacing        51
+1159  LineBreak          52
+1160  PageBreak          52
+1161  InLine             52
+1162  Size               52
+1163  Visibility         52
+1164  Font               52
+1165  Underline          52
+1166  Thickness          52
+1167  Style              52
+1168  Weight             52
+1169  Indent             52
+1170  Adjust             52
+1171  NoBreak1           52
+1172  NoBreak2           52
+1173  Content            52
+1174  Gather             52
+1175  Line               53
+1176  NoLine             53
+1177  Included           53
+1178  Column             53
+1179  Copy               53
+1180  Depth              53
+1181  LineStyle          54
+1182  LineWeight         54
+1183  FillPattern        54
+1184  Background         54
+1185  Foreground         54  84
+1186  ShowBox            54
+1187  BackgroundPicture  54
+1188  PictureMode        54
+1189  MarginTop          55
+1190  MarginRight        55
+1191  MarginBottom       55
+1192  MarginLeft         55
+1193  PaddingTop         55
+1194  PaddingRight       55
+1195  PaddingBottom      55
+1196  PaddingLeft        55
+1197  BorderTopWidth     55
+1198  BorderRightWidth   55
+1199  BorderBottomWidth  55
+1200  BorderLeftWidth    55
+1201  BorderTopColor     55
+1202  BorderRightColor   55
+1203  BorderBottomColor  55
+1204  BorderLeftColor    55
+1205  BorderTopStyle     55
+1206  BorderRightStyle   55
+1207  BorderBottomStyle  55
+1208  BorderLeftStyle    55
+1209  Auto               81
+1210  Thin               83  68
+1211  Medium             83
+1212  Thick              83  68
+1213  Transparent        84  78
+1214  None               85
+1215  Hidden             85
+1216  Dotted             85  77
+1217  Dashed             85  77
+1218  Solid              85  77
+1219  Double             85
+1220  Groove             85
+1221  Ridge              85
+1222  Inset              85
+1223  Outset             85
+1224  Enclosing          86  97  89
+1225  Creator            86  97  89
+1226  NormalSize         80
+1227  Scale              80
+1228  RepeatXY           80
+1229  RepeatX            80
+1230  RepeatY            80
+1231  nil                59  60
+1232  UserSpecified      59  60  58
+1233  Refering           92  94
+1234  First              96 148
+1235  Second             96
+1236  Enclosed           97  89
+1237  Previous           97  89
+1238  Next               97
+1239  Refered            97
+1240  Referred           97 148
+1241  Root               97 148
+1242  NOT                98 147
+1243  AnyElem            99
+1244  AnyBox             99
+1245  ElemWithAttr       99
+1246  Left               93 121
+1247  VMiddle            93 121
+1248  VRef               93
+1249  Right              93 121
+1250  Top                91
+1251  HMiddle            91
+1252  HRef               91
+1253  Bottom             91
+1254  Min                58  58 110 123
+1255  CM                106
+1256  MM                106
+1257  PT                106  64 123 123
+1258  PC                106
+1259  PX                106
+1260  EM                106
+1261  EX                106
+1262  GrandFather        89
+1263  Max               110 123
+1264  Yes                61
+1265  No                 61
+1266  LeftWithDots      121
+1267  Justify           121
+1268  Roman              69
+1269  Italics            69
+1270  Oblique            69
+1271  Bold               69  70
+1272  BoldItalics        69
+1273  BoldOblique        69
+1274  Normal             70
+1275  NoUnderline        67
+1276  Underlined         67
+1277  Overlined          67
+1278  CrossedOut         67
+1279  GREATER           137
+1280  LESS              137
+1281  EQUAL             137
+1282  Repeated           74
+1283  AND                50
+1284  Target            147
+1285  Last              148
+1286  FirstRef          148
+1287  LastRef           148
+1288  ExternalRef       148
+1289  InternalRef       148
+1290  CopyRef           148
+1291  AnyAttributes     148
+1292  FirstAttr         148
+1293  LastAttr          148
+1294  UserPage          148
+1295  StartPage         148
+1296  ComputedPage      148
+1297  Empty             148
+1298  Immediately       148
+1299  Within            148
+1300  MaxRangeVal        40
+1301  MinRangeVal        40
+1302  Even              150
+1303  Odd               150
+1304  One               150
+1305  Create            146
+1306  CreateBefore      146
+1307  CreateAfter       146
+1308  CreateLast        146
+1309  CreateFirst       146
+1310  CreateWith        146
+1311  CreateEnclosing   146
+1312  To                159
 
 
 

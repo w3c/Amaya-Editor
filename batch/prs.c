@@ -2008,10 +2008,9 @@ static void         LayoutRule (FunctionType layoutFonct, indLine wi)
 	CurRule->PrPresBoxName[0] = EOS;
 	/* verifie que cette regle n'est pas deja presente pour cette */
 	/* vue  uniquement pour layoutFonct = FnLine ou FnPage ou FnColumn */
-	if (layoutFonct == FnLine || layoutFonct == FnPage
-	    || layoutFonct == FnColumn
-	    || layoutFonct == FnSubColumn
-	    || layoutFonct == FnNoLine)
+	if (layoutFonct == FnLine || layoutFonct == FnPage ||
+	    layoutFonct == FnColumn || layoutFonct == FnSubColumn ||
+	    layoutFonct == FnNoLine)
 	  {
 	     pPRule = FirstRule;
 	     while (pPRule != CurRule)
@@ -2485,6 +2484,13 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
 	NewVarListItem (pPresVar, wi);
 	pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrName;
+	break;
+      case KWD_AttributeValue:
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	NewVarListItem (pPresVar, wi);
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrValue;
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntArabic;
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViAttr = 0;
 	break;
       case KWD_VALUE:
 	break;
@@ -4187,27 +4193,10 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	  /* c'est un nom d'attribut dans une variable */
 	  {
 	  pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	  if (pPresVar->PvNItems > 0)
-	     /* ce n'est pas le premier element de la variable */
-	     /* si le 1er element n'est pas du texte, on n'accepte pas */
-	     /* le nouvel element */
-	     if (pPresVar->PvItem[0].ViType == VarText)
-	        if (pPSchema->PsConstant[pPresVar->PvItem[0].ViConstant - 1].PdType != CharString)
-		   CompilerMessage (wi, PRS, FATAL,
-				    MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW,
-				    inputLine, LineNum);
-	  if (pPresVar->PvNItems >= MAX_PRES_VAR_ITEM)
-	     /* variable trop longue */
-	     CompilerMessage (wi, PRS, FATAL,
-			      MAX_FUNCTIONS_IN_A_VARIABLE_OVERFLOW, inputLine, 
-			      LineNum);
-	  else
-	     {
-	     pPresVar->PvItem[pPresVar->PvNItems].ViType = VarAttrValue;
-	     pPresVar->PvItem[pPresVar->PvNItems].ViStyle = CntArabic;
-	     pPresVar->PvItem[pPresVar->PvNItems].ViAttr = i;
-	     pPresVar->PvNItems++;
-	     }
+	  NewVarListItem (pPresVar, wi);
+	  pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrValue;
+	  pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntArabic;
+	  pPresVar->PvItem[pPresVar->PvNItems - 1].ViAttr = i;
 	  }
        else if (prevRule == RULE_Attr)
 	  /* c'est un nom d'attribut auquel on va associer des regles de */
@@ -4594,6 +4583,8 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 			  || CurRule->PrPresFunction == FnCreateAfter)
 			 {
 			 /* on est dans une regle de creation */
+/******@@@ si la regle de creation n'est pas appelee par un attribut, verifie
+que la boite creee ne contient pas AttrName ou AttrValue @@@@*****/
 			 /* teste si on a deja cette regle de creation dans */
 			 /* la chaine de regles courante */
 			 pPRule = FirstRule;
@@ -4656,7 +4647,6 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 		 default:
 		   break;
 		 }
-	  /* le cas AttrName a ete deplace' plus haut (cas 19:) */
 	  }
        break;
 

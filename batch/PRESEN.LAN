@@ -64,7 +64,7 @@ VarName =	  NAME .
 FunctList =	  Function < Function > .
 Function =	  'DATE' / 'FDATE' /
 		  'DocName' / 'DirName' /
-		  'ElemName' / 'AttributeName' /
+		  'ElemName' / 'AttributeName' / 'AttributeValue' /
 		  'VALUE' '(' CounterAttrPage ',' CounterStyle ')' /
 		  ConstType ConstValue /
 		  ConstName / AttrName .

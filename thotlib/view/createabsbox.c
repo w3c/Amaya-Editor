@@ -1411,13 +1411,13 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 	   /* chaine le pave cree */
 	   switch (funct)
 	     {
+
 	     case FnCreateFirst:
 	       pAb->AbSelected = FALSE;
 	       /* saute les paves de presentation deja crees */
 	       /* avec la regle CreateBefore */
 	       while (pAbb1->AbPresentationBox)
 		 pAbb1 = pAbb1->AbNext;
-
 	       pAb->AbEnclosing = pAbb1;
 	       pAb->AbReadOnly = pAbb1->AbReadOnly;
 	       if (pAb->AbEnclosing->AbFirstEnclosed == NULL)
@@ -1439,9 +1439,10 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		       {
 			 /* c'est un pave de presentation de l'element ou */
 			 /* un saut de page de debut d'element */
-			 if (pAbb1->AbTypeNum == pAb->AbTypeNum
-			     && pAbb1->AbPresentationBox
-			     && pAbb1->AbPSchema == pSchP
+			 if (pAbb1->AbPresentationBox &&
+			     pAbb1->AbTypeNum == pAb->AbTypeNum &&
+			     pAbb1->AbPSchema == pSchP &&
+			     (pAttr == NULL || pAttr == pAbb1->AbCreatorAttr)
 			     && !pAbb1->AbDead)
 			   /* c'est le meme que celui qu'on veut creer */
 			   {
@@ -1461,7 +1462,6 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		       /* ni un saut de page de debut d'element */
 		       stop = TRUE;
 		   while (!stop);
-		   
 		   if (pAbbCreated != NULL)
 		     {
 		     if (pAbb1->AbElement == pEl
@@ -1492,13 +1492,13 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		     }
 		 }
 	       break;
+
 	     case FnCreateLast:
 	       pAb->AbSelected = FALSE;
 	       /* saute les paves de presentation deja crees */
 	       /* avec la regle CreateBefore */
 	       while (pAbb1->AbPresentationBox)
 		 pAbb1 = pAbb1->AbNext;
-
 	       pAb->AbEnclosing = pAbb1;
 	       pAb->AbReadOnly = pAbb1->AbReadOnly;
 	       if (pAb->AbEnclosing->AbFirstEnclosed == NULL)
@@ -1513,6 +1513,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		     if (pAbb1->AbPresentationBox == pAb->AbPresentationBox
 			 && pAbb1->AbTypeNum == pAb->AbTypeNum
 			 && pAbb1->AbPSchema == pSchP
+			 && (pAttr == NULL || pAttr == pAbb1->AbCreatorAttr)
 			 && !pAbb1->AbDead)
 		       /* ce pave de presentation existe deja */
 		       {
@@ -1520,14 +1521,13 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 			 stop = TRUE;
 		       }
 		     else if (pAbb1->AbNext == NULL ||
-			      AttrIsAfter (pAbb1->AbNext->AbCreatorAttr, pAttr))
+			      AttrIsAfter (pAbb1->AbNext->AbCreatorAttr,pAttr))
 		       /* le nouveau pave attache a un attribut doit s'inserer
 			  avant ceux d'un attribut suivant */
 		       stop = TRUE;
 		     else
 		       pAbb1 = pAbb1->AbNext;
 		   while (!stop);
-
 		   /* chaine le nouveau pave apres le dernier pave */
 		   /* fils du pave createur */
 		   if (pAbbCreated != NULL)
@@ -1538,6 +1538,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		     }
 		 }
 	       break;
+
 	     case FnCreateBefore:
 	       /* saute les paves de presentation deja crees */
 	       /* avec la regle CreateBefore */
@@ -1546,6 +1547,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		 if (pAbb1->AbTypeNum == pAb->AbTypeNum
 		     && pAbb1->AbPresentationBox == pAb->AbPresentationBox
 		     && pAbb1->AbPSchema == pSchP
+		     && (pAttr == NULL || pAttr == pAbb1->AbCreatorAttr)
 		     && !pAbb1->AbDead)
 		   /* ce pave de presentation existe deja */
 		   {
@@ -1560,7 +1562,6 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		 else
 		   pAbb1 = pAbb1->AbNext;
 	       while (!stop);
-
 	       if (pAbbCreated != NULL)
 		 {
 		   pAb->AbReadOnly = pAbb1->AbReadOnly;
@@ -1580,6 +1581,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		     pEl->ElAbstractBox[viewIndex] = pAb;
 		 }
 	       break;
+
 	     case FnCreateAfter:
 	     case FnCreateWith:
 	       stop = FALSE;
@@ -1592,6 +1594,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 			  && pAbb1->AbNext->AbTypeNum == pAb->AbTypeNum
 			  && pAbb1->AbNext->AbPresentationBox == pAb->AbPresentationBox
 			  && pAbb1->AbNext->AbPSchema == pSchP
+			  && (pAttr == NULL || pAttr == pAbb1->AbCreatorAttr)
 			  && !pAbb1->AbNext->AbDead)
 		   /* ce pave de presentation existe deja */
 		   {
@@ -1605,7 +1608,6 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		 else
 		   pAbb1 = pAbb1->AbNext;
 	       while (!stop);
-
 	       if (pAbbCreated != NULL)
 		 {
 		   pAb->AbReadOnly = pAbb1->AbReadOnly;
@@ -1617,6 +1619,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		     pAb->AbNext->AbPrevious = pAb;
 		 }
 	       break;
+
 	     case FnCreateEnclosing:
 	       if (pAbb1->AbEnclosing != NULL &&
 		   pAbb1->AbEnclosing->AbPresentationBox &&
@@ -1624,7 +1627,6 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		 /* l'element a deja un pave de presentation englobant. */
 		 /* on refuse d'en creer un autre */
 		 pAbbCreated = NULL;
-
 	       if (pAbbCreated != NULL)
 		 {
 		   pAb->AbReadOnly = pAbb1->AbReadOnly;
@@ -1649,7 +1651,6 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		       else
 			 pAbb1 = pAbb1->AbNext;
 		     }
-
 		   /* traite le dernier pave' de l'element */
 		   pAb->AbNext = pAbb1->AbNext;
 		   pAbb1->AbNext = NULL;
@@ -1768,7 +1769,8 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		 case FreeContent:
 		   break;
 		 case ContVariable:
-		   ok = NewVariable (pBox->PbContVariable, pSS, pSchP, pAb, pDoc);
+		   ok = NewVariable (pBox->PbContVariable, pSS, pSchP, pAb,
+				     pAttr, pDoc);
 		   break;
 		 case ContConst:
 		   ConstantCopy (pBox->PbContConstant, pSchP, pAb);

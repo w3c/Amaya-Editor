@@ -7,6 +7,10 @@
 #ifdef __STDC__
 
 extern int AttrValue ( PtrAttribute pAttr );
+extern ThotBool BoolRule ( PtrPRule pPRule,
+			   PtrElement pEl,
+			   DocViewNumber view,
+			   ThotBool * ok );
 extern int IntegerRule ( PtrPRule pPRule,
                          PtrElement pEl,
                          DocViewNumber view,
@@ -49,6 +53,10 @@ extern void RedispAbsBox ( PtrAbstractBox pAb,
 #else /* __STDC__ */
 
 extern int AttrValue (/* PtrAttribute pAttr */);
+extern ThotBool BoolRule (/* PtrPRule pPRule,
+			     PtrElement pEl,
+			     DocViewNumber view,
+			     ThotBool * ok */);
 extern int IntegerRule (/* PtrPRule pPRule,
                            PtrElement pEl,
                            DocViewNumber view,

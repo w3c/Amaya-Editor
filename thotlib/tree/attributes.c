@@ -299,7 +299,7 @@ static void RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum,
 	/* c'est bien un pave du type cherche' */
 	/* recalcule la valeur de la variable de presentation */
 	if (NewVariable (pPSchema->PsPresentBox[boxNum - 1].PbContVariable,
-			 pAttr->AeAttrSSchema, pPSchema, pAbsBox, pDoc))
+			 pAttr->AeAttrSSchema, pPSchema, pAbsBox, pAttr, pDoc))
 	  {
 	    /* la variable de presentation a change' de valeur */
 	    pAbsBox->AbChange = TRUE;

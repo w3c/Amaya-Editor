@@ -469,8 +469,8 @@ static BAlignment   AlignRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber vi
    		par pEl.						
    		Au result, ok indique si l'evaluation a pu etre faite.	
   ----------------------------------------------------------------------*/
-static ThotBool BoolRule (PtrPRule pPRule, PtrElement pEl,
-			  DocViewNumber view, ThotBool * ok)
+ThotBool BoolRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
+		   ThotBool * ok)
 {
    PtrAbstractBox      pAbb;
    ThotBool            val;
@@ -2669,76 +2669,77 @@ static PtrPRule     GetRuleCopy (PtrPRule pPRule)
 }
 
 /*----------------------------------------------------------------------
-   	ApplyCopy applique une regle de copie.				
+  ApplyCopy applique une regle de copie.				
    		  Procedure appelee aussi dans modif.c			
   ----------------------------------------------------------------------*/
 void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
 		ThotBool withDescCopy)
 {
-   PtrElement          pE, pElSv;
-   PtrAbstractBox      pAbbCur;
-   int                 view, i;
-   ThotBool            found;
-   PtrPSchema          pSchP;
-   PtrSSchema          pSchS;
-   PtrTextBuffer       pBuffPrec;
-   int                 boxType;
-   Name                boxName;
-   DocumentIdentifier  IDoc;
-   PtrDocument         pDocRef;
-   PtrElement          pEl1;
-   PtrAbstractBox      pAbb1;
-   PresentationBox    *pBo1;
-   PtrCopyDescr        pDC;
-   PtrPRule            pPRule1;
-   PtrAttribute        pAttr;
-   ThotBool            Ref;
+  PtrElement          pE, pElSv;
+  PtrAbstractBox      pAbbCur;
+  int                 view, i;
+  ThotBool            found;
+  PtrPSchema          pSchP;
+  PtrSSchema          pSchS;
+  PtrTextBuffer       pBuffPrec;
+  int                 boxType;
+  Name                boxName;
+  DocumentIdentifier  IDoc;
+  PtrDocument         pDocRef;
+  PtrElement          pEl1;
+  PtrAbstractBox      pAbb1;
+  PresentationBox    *pBo1;
+  PtrCopyDescr        pDC;
+  PtrPRule            pPRule1;
+  PtrAttribute        pAttr;
+  ThotBool            Ref;
 
-   pEl1 = pAb->AbElement;
-   pE = NULL;
-   Ref = FALSE;
-   if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct == CsReference)
-     {
-	/* la regle Copy s'applique a un pave' d'un element reference */
-	Ref = TRUE;
-	/* cherche l'element qui est reference' */
-	pE = ReferredElement (pEl1->ElReference, &IDoc, &pDocRef);
-     }
-   else if (pAb->AbPresentationBox)
-      if (pAb->AbCreatorAttr != NULL)
-	 if (pAb->AbCreatorAttr->AeAttrType == AtReferenceAttr)
-	    /* la regle Copy s'applique a un pave' de presentation */
-	    /* cree' par un attribut reference */
-	   {
-	      Ref = TRUE;
-	      /* cherche l'element qui est reference' par l'attribut */
-	      pE = ReferredElement (pAb->AbCreatorAttr->AeAttrReference, &IDoc, &pDocRef);
-	   }
-   if (Ref)
-     {
-	/* c'est une copie par reference */
+  pEl1 = pAb->AbElement;
+  pE = NULL;
+  Ref = FALSE;
+  if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct == CsReference)
+    {
+      /* la regle Copy s'applique a un pave' d'un element reference */
+      Ref = TRUE;
+      /* cherche l'element qui est reference' */
+      pE = ReferredElement (pEl1->ElReference, &IDoc, &pDocRef);
+    }
+  else if (pAb->AbPresentationBox)
+    if (pAb->AbCreatorAttr != NULL)
+      if (pAb->AbCreatorAttr->AeAttrType == AtReferenceAttr)
+	/* la regle Copy s'applique a un pave' de presentation */
+	/* cree' par un attribut reference */
+	{
+	  Ref = TRUE;
+	  /* cherche l'element qui est reference' par l'attribut */
+	  pE = ReferredElement (pAb->AbCreatorAttr->AeAttrReference,
+				&IDoc, &pDocRef);
+	}
+  if (Ref)
+    {
+      /* c'est une copie par reference */
 	if (pE != NULL)
 	  {
-	   /* l'element qui est reference' existe, il est pointe' par pE */
-	   if (pPRule->PrElement)
+	    /* l'element qui est reference' existe, il est pointe' par pE */
+	    if (pPRule->PrElement)
 	      /* il faut copier le contenu d'un element structure' contenu */
 	      /* dans l'element reference'. On cherche cet element */
 	      pE = SearchElInSubTree (pE, pPRule->PrPresBox[0], pEl1->ElStructSchema, pPRule->PrPresBoxName);
-	   else
+	    else
 	      /* il faut copier une boite de presentation */
 	      /* prend le schema de presentation qui s'applique a la reference */
-	     {
+	      {
 		SearchPresSchema (pAb->AbElement, &pSchP, &i, &pSchS, pDoc);
 		if (pPRule->PrNPresBoxes == 0)
-		   /* la boite de presentation a copier est definie par son nom */
+		  /* la boite de presentation a copier est definie par son nom */
 		  {
-		     boxType = 0;
-		     ustrncpy (boxName, pPRule->PrPresBoxName, MAX_NAME_LENGTH);
-		     /* nom de la boite a cherche */
+		    boxType = 0;
+		    ustrncpy (boxName, pPRule->PrPresBoxName, MAX_NAME_LENGTH);
+		    /* nom de la boite a cherche */
 		  }
 		else
-		   /* la boite de presentation est definie par son numero de type */
-		   boxType = pPRule->PrPresBox[0];
+		  /* la boite de presentation est definie par son numero de type */
+		  boxType = pPRule->PrPresBox[0];
 		/* numero de type de la boite */
 		/* cherche dans toutes les vues une boite du type de celle a */
 		/* copier parmi les paves de cet element et de ses descendants */
@@ -2746,153 +2747,153 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
 		found = FALSE;
 		do
 		  {
-		     view++;
-		     /* premier pave de l'element dans cette vue */
-		     pAbbCur = pE->ElAbstractBox[view - 1];
-		     if (pAbbCur != NULL)
-			do
-			  {
-			     found = FindAbsBox (boxType, pSchP, boxName, &pAbbCur);
-			     if (!found)
-			       {
-				  pAbbCur = pAbbCur->AbNext;
-				  if (pAbbCur != NULL)
-				     if (pAbbCur->AbElement != pE)
-					pAbbCur = NULL;
-			       }
-			  }
-			while (!found && pAbbCur != NULL);
+		    view++;
+		    /* premier pave de l'element dans cette vue */
+		    pAbbCur = pE->ElAbstractBox[view - 1];
+		    if (pAbbCur != NULL)
+		      do
+			{
+			  found = FindAbsBox (boxType, pSchP, boxName, &pAbbCur);
+			  if (!found)
+			    {
+			      pAbbCur = pAbbCur->AbNext;
+			      if (pAbbCur != NULL)
+				if (pAbbCur->AbElement != pE)
+				  pAbbCur = NULL;
+			    }
+			}
+		      while (!found && pAbbCur != NULL);
 		  }
 		while (!found && view < MAX_VIEW_DOC);
 		if (found)
 		   /* on a trouve' le pave a copier, on le copie */
 		  {
-		     pAbb1 = pAb;
-		     pAbb1->AbLeafType = LtText;
-		     pAbb1->AbVolume = pAbbCur->AbVolume;
-		     if (pAbbCur->AbText != NULL)
-			*pAbb1->AbText = *pAbbCur->AbText;
-		     pAbb1->AbLanguage = pAbbCur->AbLanguage;
+		    pAbb1 = pAb;
+		    pAbb1->AbLeafType = LtText;
+		    pAbb1->AbVolume = pAbbCur->AbVolume;
+		    if (pAbbCur->AbText != NULL)
+		      *pAbb1->AbText = *pAbbCur->AbText;
+		    pAbb1->AbLanguage = pAbbCur->AbLanguage;
 		     pAbb1->AbCanBeModified = FALSE;
 		  }
 		else
-		   /* on n'a pas trouve le pave a copier */
-		if (!IsASavedElement (pE))
-		   /* on ne fait rien si l'element reference' est dans le buffer */
-		   /* de Couper-Coller */
-		   /* on cherche dans le sous-arbre abstrait de l'element */
-		   /* reference' un element qui cree la boite a copier */
-		  {
-		     /*pElSrce = pE; */
-		     found = SearchElCrPresBoxCopy (&boxType, &pSchP, &pSchS, boxName, &pE);
-		     if (found)
+		  /* on n'a pas trouve le pave a copier */
+		  if (!IsASavedElement (pE))
+		    /* on ne fait rien si l'element reference' est dans le buffer */
+		    /* de Couper-Coller */
+		    /* on cherche dans le sous-arbre abstrait de l'element */
+		    /* reference' un element qui cree la boite a copier */
+		    {
+		      /*pElSrce = pE; */
+		      found = SearchElCrPresBoxCopy (&boxType, &pSchP, &pSchS, boxName, &pE);
+		      if (found)
 			/* on a trouve' l'element pE qui cree la boite a copier */
-		       {
+			{
 			  pBo1 = &pSchP->PsPresentBox[boxType - 1];
 			  if (pBo1->PbContent == ContVariable)
-			     /* on fait comme si le pave appartenait a l'element */
-			     /* a copier */
+			    /* on fait comme si le pave appartenait a l'element */
+			    /* a copier */
 			    {
-			       pElSv = pAb->AbElement;
-			       pAb->AbElement = pE;
-			       found = NewVariable (pBo1->PbContVariable, pSchS, pSchP,
-						    pAb, pDoc);
-			       /* on retablit le pointeur correct */
-			       pAb->AbElement = pElSv;
+			      pElSv = pAb->AbElement;
+			      pAb->AbElement = pE;
+			      found = NewVariable (pBo1->PbContVariable, pSchS,
+						   pSchP, pAb, NULL, pDoc);
+			      /* on retablit le pointeur correct */
+			      pAb->AbElement = pElSv;
 			    }
 			  if (pBo1->PbContent == FreeContent)
-			     /* le contenu de la boite de presentation a copier */
-			     /* est lui-meme defini par une regle FnCopy */
+			    /* le contenu de la boite de presentation a copier */
+			    /* est lui-meme defini par une regle FnCopy */
 			    {
-			       /* on cherche cette regle FnCopy parmi les regles de */
-			       /* presentation de la boite de presentation a copier */
-			       pPRule1 = GetRuleCopy (pBo1->PbFirstPRule);
-			       if (pPRule1 != NULL)
-				  /* on a trouve' la regle FnCopy. On l'applique en */
-				  /* faisant comme si le pave appartenait a l'element */
-				  /* qui cree la boite de presentation a copier */
-				 {
-				    pElSv = pAb->AbElement;
-				    pAb->AbElement = pE;
-				    ApplyCopy (pDoc, pPRule1, pAb, TRUE);
-				    pAb->AbElement = pElSv;
-				    pE = NULL;
-				 }
+			      /* on cherche cette regle FnCopy parmi les regles de */
+			      /* presentation de la boite de presentation a copier */
+			      pPRule1 = GetRuleCopy (pBo1->PbFirstPRule);
+			      if (pPRule1 != NULL)
+				/* on a trouve' la regle FnCopy. On l'applique en */
+				/* faisant comme si le pave appartenait a l'element */
+				/* qui cree la boite de presentation a copier */
+				{
+				  pElSv = pAb->AbElement;
+				  pAb->AbElement = pE;
+				  ApplyCopy (pDoc, pPRule1, pAb, TRUE);
+				  pAb->AbElement = pElSv;
+				  pE = NULL;
+				}
 			    }
-		       }
-		  }
-	     }
+			}
+		    }
+	      }
 	  }
-     }
-   else
-      /* ce n'est pas une copie par reference */
-   if (pPRule->PrElement)
-     {
+    }
+  else
+    /* ce n'est pas une copie par reference */
+    if (pPRule->PrElement)
+      {
 	/*cherche d'abord l'element a copier a l'interieur de l'element copieur */
 	pE = SearchElInSubTree (pAb->AbElement, pPRule->PrPresBox[0], pEl1->ElStructSchema, pPRule->PrPresBoxName);
-
+	
 	if (pE == NULL)
-	   /* on n'a pas trouve' l'element a copier */
-	   if (pEl1->ElTypeNumber == PageBreak + 1)
-	      if (pEl1->ElPageType == PgBegin)
-		 /* on travaille pour une marque de page qui est engendree par */
-		 /* le debut d'un element. On cherche dans cet element */
-		 pE = SearchElInSubTree (pEl1->ElParent, pPRule->PrPresBox[0], pEl1->ElStructSchema, pPRule->PrPresBoxName);
+	  /* on n'a pas trouve' l'element a copier */
+	  if (pEl1->ElTypeNumber == PageBreak + 1)
+	    if (pEl1->ElPageType == PgBegin)
+	      /* on travaille pour une marque de page qui est engendree par */
+	      /* le debut d'un element. On cherche dans cet element */
+	      pE = SearchElInSubTree (pEl1->ElParent, pPRule->PrPresBox[0], pEl1->ElStructSchema, pPRule->PrPresBoxName);
 	/* si on n'a pas trouve', on cherche en arriere l'element a copier */
 	if (pE == NULL)
-	   if (pPRule->PrNPresBoxes > 0)
-	      /* la boite a copier est definie par son numero de type */
-	      pE = BackSearchTypedElem (pAb->AbElement, pPRule->PrPresBox[0], pEl1->ElStructSchema);
-/*        else */
+	  if (pPRule->PrNPresBoxes > 0)
+	    /* la boite a copier est definie par son numero de type */
+	    pE = BackSearchTypedElem (pAb->AbElement, pPRule->PrPresBox[0], pEl1->ElStructSchema);
+	/*        else */
 	/* la boite a copier est definie par son nom */
 	/* non implemente' */
-     }
+      }
    if (pPRule->PrElement && pE != NULL)
-      /* il faut copier l'element structure' pointe' par pE */
+     /* il faut copier l'element structure' pointe' par pE */
      {
-	pAbb1 = pAb;
-	/* initialise le pave */
-	pAbb1->AbLeafType = LtText;
-	pAbb1->AbCanBeModified = FALSE;
-	pAbb1->AbVolume = 0;
-	pBuffPrec = NULL;
-	/* pas de buffer precedent */
-	/* si l'element a copier est lui-meme une reference qui copie un */
-	/* autre element, c'est cet autre element qu'on copie */
-	pPRule1 = NULL;
-	if (pE->ElStructSchema->SsRule[pE->ElTypeNumber - 1].SrConstruct == CsReference)
-	  {
-	    pPRule1 = GlobalSearchRulepEl (pE, pDoc, &pSchP, &pSchS, 0, NULL,
-					   1, PtFunction, FnAny, FALSE, FALSE,
-					   &pAttr);
-	    pPRule1 = GetRuleCopy (pPRule1);
-	  }
-	if (pPRule1 == NULL)
-	  /* copie simplement toutes les feuilles de texte de pE */
-	  CopyLeaves (pE, &pAb, &pBuffPrec);
-	else
-	  /* applique la regle de copie transitive */
-	  {
-	    pElSv = pAb->AbElement;
-	    pAb->AbElement = pE;
-	    ApplyCopy (pDoc, pPRule1, pAb, FALSE);
-	    pAb->AbElement = pElSv;
-	  }
-
-	if (withDescCopy)
-	  {
-	     /* ajoute a l'element copie' un descripteur d'element copie' */
-	     GetDescCopy (&pDC);
-	     pDC->CdCopiedAb = pAb;
-	     pDC->CdCopiedElem = pE;
-	     pDC->CdCopyRule = pPRule;
-	     pDC->CdNext = pE->ElCopyDescr;
-	     pDC->CdPrevious = NULL;
-	     if (pDC->CdNext != NULL)
-		pDC->CdNext->CdPrevious = pDC;
-	     pE->ElCopyDescr = pDC;
-	     pAbb1->AbCopyDescr = pDC;
-	  }
+       pAbb1 = pAb;
+       /* initialise le pave */
+       pAbb1->AbLeafType = LtText;
+       pAbb1->AbCanBeModified = FALSE;
+       pAbb1->AbVolume = 0;
+       pBuffPrec = NULL;
+       /* pas de buffer precedent */
+       /* si l'element a copier est lui-meme une reference qui copie un */
+       /* autre element, c'est cet autre element qu'on copie */
+       pPRule1 = NULL;
+       if (pE->ElStructSchema->SsRule[pE->ElTypeNumber - 1].SrConstruct == CsReference)
+	 {
+	   pPRule1 = GlobalSearchRulepEl (pE, pDoc, &pSchP, &pSchS, 0, NULL,
+					  1, PtFunction, FnAny, FALSE, FALSE,
+					  &pAttr);
+	   pPRule1 = GetRuleCopy (pPRule1);
+	 }
+       if (pPRule1 == NULL)
+	 /* copie simplement toutes les feuilles de texte de pE */
+	 CopyLeaves (pE, &pAb, &pBuffPrec);
+       else
+	 /* applique la regle de copie transitive */
+	 {
+	   pElSv = pAb->AbElement;
+	   pAb->AbElement = pE;
+	   ApplyCopy (pDoc, pPRule1, pAb, FALSE);
+	   pAb->AbElement = pElSv;
+	 }
+       
+       if (withDescCopy)
+	 {
+	   /* ajoute a l'element copie' un descripteur d'element copie' */
+	   GetDescCopy (&pDC);
+	   pDC->CdCopiedAb = pAb;
+	   pDC->CdCopiedElem = pE;
+	   pDC->CdCopyRule = pPRule;
+	   pDC->CdNext = pE->ElCopyDescr;
+	   pDC->CdPrevious = NULL;
+	   if (pDC->CdNext != NULL)
+	     pDC->CdNext->CdPrevious = pDC;
+	   pE->ElCopyDescr = pDC;
+	   pAbb1->AbCopyDescr = pDC;
+	 }
      }
 }
 

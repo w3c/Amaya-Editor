@@ -2403,36 +2403,37 @@ static void ComputeContent (int boxType, int nv, PtrDocument pDoc,
 			    PtrSSchema pSS, PtrPSchema pSchP,
 			    PtrElement pElBegin, ThotBool redisp)
 {
-   PtrAbstractBox      pAb;
-   int                 frame, h;
-   PtrAbstractBox      pAbbox1;
+  PtrAbstractBox      pAb;
+  int                 frame, h;
+  PtrAbstractBox      pAbbox1;
 
-   FindFirstAbsBox (pElBegin, nv);
-   pAb = pAbbBegin[nv - 1];
-   while (pAb != NULL)
-     {
-	pAbbox1 = pAb;
-	if (pAbbox1->AbPresentationBox
-	    && pAbbox1->AbTypeNum == boxType
-	    && pAbbox1->AbPSchema == pSchP)
-	   /* fait reafficher le pave de presentation si le contenu a */
-	   /* change' */
-	   if (NewVariable (pSchP->PsPresentBox[boxType - 1].PbContVariable, pSS, pSchP, pAb, pDoc))
-	      /* et si le pave a deja ete traite' par le mediateur */
-	      if (!pAb->AbNew)
-		{
-		   pAbbox1->AbChange = TRUE;
-		   frame = pDoc->DocViewFrame[nv - 1];
-		   h = PageHeight;
-		   ChangeConcreteImage (frame, &h, pAb);
-		   /* on ne reaffiche pas si on est en train de calculer les */
-		   /* pages */
-		   if (PageHeight == 0 && redisp)
-		      DisplayFrame (frame);
-		   /* cherche le pave de presentation suivant de ce type */
-		}
-	pAb = AbsBoxFromElOrPres (pAb, TRUE, boxType, pSchP, NULL);
-     }
+  FindFirstAbsBox (pElBegin, nv);
+  pAb = pAbbBegin[nv - 1];
+  while (pAb != NULL)
+    {
+      pAbbox1 = pAb;
+      if (pAbbox1->AbPresentationBox &&
+	  pAbbox1->AbTypeNum == boxType &&
+	  pAbbox1->AbPSchema == pSchP)
+	/* fait reafficher le pave de presentation si le contenu a */
+	/* change' */
+	if (NewVariable (pSchP->PsPresentBox[boxType - 1].PbContVariable,
+			 pSS, pSchP, pAb, NULL, pDoc))
+	  /* et si le pave a deja ete traite' par le mediateur */
+	  if (!pAb->AbNew)
+	    {
+	      pAbbox1->AbChange = TRUE;
+	      frame = pDoc->DocViewFrame[nv - 1];
+	      h = PageHeight;
+	      ChangeConcreteImage (frame, &h, pAb);
+	      /* on ne reaffiche pas si on est en train de calculer les */
+	      /* pages */
+	      if (PageHeight == 0 && redisp)
+		DisplayFrame (frame);
+	      /* cherche le pave de presentation suivant de ce type */
+	    }
+      pAb = AbsBoxFromElOrPres (pAb, TRUE, boxType, pSchP, NULL);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3711,25 +3712,30 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			}
 		      if (pAb != NULL)
 			do
-			  /* pas de cas special pour les marques de page dans V4 */
 			  if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
 			    {
-			    /* c'est un pave marque de page,passe au pave voisin */
+			    /* c'est un pave marque de page, on passe au pave
+			       voisin */
 			    if (func == FnCreateBefore || func == FnCreateLast)
 			      pAb = pAb->AbPrevious;
 			    else
 			      pAb = pAb->AbNext;
 			    }
-			  else if (!pAb->AbPresentationBox || pAb->AbElement != pEl)
+			  else if (!pAb->AbPresentationBox ||
+				   pAb->AbElement != pEl)
 			    /* ce n'est pas un pave' marque de saut de page */
-			    /* ce n'est pas un pave de presentation ou ce pave */
-			    /* n'appartient pas a l'element */
+			    /* ce n'est pas un pave de presentation ou ce */
+			    /* pave n'appartient pas a l'element */
 			    pAb = NULL;
-			  else if (pAb->AbTypeNum == pR->PrPresBox[0] && pAb->AbPSchema == pSchP)
+			  else if (pAb->AbTypeNum == pR->PrPresBox[0] &&
+				   pAb->AbPSchema == pSchP &&
+				   pAb->AbCreatorAttr == pAttr)
 			    /* c'est un pave de presentation de l'element */
-				/* ce pave a la type cherche', on a trouve' */
+			    /* ce pave a la type cherche', et il est cre'e' */
+			    /* par l'attribut. On a trouve' */
 			    found = TRUE;
-			  else if (func == FnCreateBefore || func == FnCreateLast)
+			  else if (func == FnCreateBefore ||
+				   func == FnCreateLast)
 			    /* passe au pave voisin */
 			    pAb = pAb->AbPrevious;
 			  else
@@ -3744,8 +3750,8 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			    /* on reaffichera au moins ce pave */
 			    SetDeadAbsBox (pAb);
 			    /* tue le pave */
-			    /* change les regles des autres paves qui se referent */
-			    /* au pave detruit */
+			    /* change les regles des autres paves qui se */
+			    /* referent au pave detruit */
 			    ApplyRefAbsBoxSupp (pAb, &pPR, pDoc);
 			    pReaff = Enclosing (pReaff, pPR);
 			  }
