@@ -21,8 +21,8 @@ extern char GiveTextParams ( PtrTextBuffer *pBuffer,
                              int *nSpaces,
                              char dir,
                              char bidi,
-                             int * em,
-                             char Precscript );
+                             int *em,
+                             char prevscript );
 extern void GiveSymbolSize ( PtrAbstractBox pAb,
                              int *width,
                              int *height );
@@ -94,8 +94,8 @@ extern char GiveTextParams (/* PtrTextBuffer *pBuffer,
                                int *nSpaces,
                                char dir,
                                char bidi,
-                               int * em,
-                               char Precscript */);
+                               int *em,
+                               char prevscript */);
 extern void GiveSymbolSize (/* PtrAbstractBox pAb,
                                int *width,
                                int *height */);

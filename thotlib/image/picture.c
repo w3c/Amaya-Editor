@@ -1076,16 +1076,16 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
     {
       /* give origins in the concrete image */
 #ifdef _GL
-      x = box->BxXOrg - box->BxLMargin - pFrame->FrXOrg;
-      y = box->BxYOrg - box->BxTMargin - pFrame->FrYOrg;
+      x = box->BxXOrg /*- box->BxLMargin*/ - pFrame->FrXOrg;
+      y = box->BxYOrg /*- box->BxTMargin*/ - pFrame->FrYOrg;
       clipWidth  = pFrame->FrClipXEnd; 
       clipHeight = pFrame->FrClipYEnd; 
       if (pAb &&
 	  !TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
 			     pAb->AbElement->ElStructSchema))
 	{
-	  x = + box->BxLMargin;
-	  y = + box->BxTMargin;
+	  x += box->BxLMargin;
+	  y += box->BxTMargin;
 	}
       if (picPresent == FillFrame || picPresent == XRepeat)
 	{
@@ -2076,6 +2076,8 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
   return (epic);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
 {
 #ifdef _GL
@@ -2292,23 +2294,19 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    xBox = w;
 	  if(box->BxH != 0)
 	    yBox = h;
-      imageDesc->PicWArea = w;
-      imageDesc->PicHArea = h;
-      width = imageDesc->PicWidth;
-      height = imageDesc->PicHeight;	      
-      if (Ratio_Calculate (pAb, &w, &h,
-			   width, height))
-	{
-	  if (imageDesc->PicWArea == 0)
-	    ChangeWidth (box,
-			 box, NULL,
-			 w + left + right, 0, frame);		  
-	  if (imageDesc->PicHArea == 0)
-	    ChangeHeight (box,
-			  box, NULL,
-			  h + top + bottom + top + bottom, frame);
-	}
-
+	  imageDesc->PicWArea = w;
+	  imageDesc->PicHArea = h;
+	  width = imageDesc->PicWidth;
+	  height = imageDesc->PicHeight;	      
+	  if (Ratio_Calculate (pAb, &w, &h, width, height))
+	    {
+	      if (imageDesc->PicWArea == 0)
+		ChangeWidth (box, box, NULL,
+			     w + left + right, 0, frame);		  
+	      if (imageDesc->PicHArea == 0)
+		ChangeHeight (box, box, NULL,
+			      h + top + bottom + top + bottom, frame);
+	    }
 	}
       if (w == 0 || h == 0)
 	{
@@ -2321,7 +2319,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  imageDesc->PicWArea = w;
 	  imageDesc->PicHArea = h;
 	}
-      
+
+      if (pAb->AbLeafType == LtCompound)
+	{
+	  /* it's a background image */
+	  xBox = 0;
+	  yBox = 0;
+	}
       if (pres != ReScale || Printing)
 	{
 	  imageDesc->PicXArea = xBox;
@@ -2502,7 +2506,14 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       if (h == 0)
 	h = hBox;
       ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
-    }  
+    }
+
+  if (pAb->AbLeafType == LtCompound)
+    {
+      /* it's a background image */
+      xBox = 0;
+      yBox = 0;
+    }
   if (pres != ReScale || Printing)
     {
       imageDesc->PicXArea = xBox;
@@ -2520,8 +2531,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   /* Gif and Png handles transparency 
      so picture format is RGBA, 
      all others are RGB*/
-  if (typeImage != GIF_FORMAT 
-      && typeImage != PNG_FORMAT)
+  if (typeImage != GIF_FORMAT && typeImage != PNG_FORMAT)
     imageDesc->RGBA = FALSE;
   else
     imageDesc->RGBA = TRUE;
@@ -2845,31 +2855,25 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		      /*if only one info interpolate 
 			the other with a correct ratio*/
 		      if (xBox == 0)
-			  xBox = im->rgb_width;
-
+			xBox = im->rgb_width;
 		      if (yBox == 0)
-			  yBox = im->rgb_height;
+			yBox = im->rgb_height;
 		    }
 		  else
 		    {
 		      if (wBox == 0)
-			  wBox = im->rgb_width;
-		      
+			wBox = im->rgb_width;
 		      if (hBox == 0)
-			  hBox = im->rgb_height;
-		      
+			hBox = im->rgb_height;
 		      /*if only one info interpolate 
 			the other with a correct ratio*/
 		      if (xBox == 0)
-			  xBox = im->rgb_width;
-
+			xBox = im->rgb_width;
 		      if (yBox == 0)
 			  yBox = im->rgb_height;
 		    }
 
-		  gdk_imlib_render(im,
-				   (gint)xBox,
-				   (gint)yBox);
+		  gdk_imlib_render(im, (gint) xBox, (gint) yBox);
 		  drw = (GdkPixmap *) gdk_imlib_move_image (im);
 		  imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
 
@@ -2882,16 +2886,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      imageDesc->PicHeight = height;
 	      imageDesc->PicWArea = w;
 	      imageDesc->PicHArea = h;
-	      if (Ratio_Calculate (pAb, &w, &h,
-				   width, height))
+	      if (Ratio_Calculate (pAb, &w, &h, width, height))
 		{
 		  if (imageDesc->PicWArea != w)
-		    ChangeWidth (box,
-				 box, NULL,
-				 (w + left + right) - box->BxW, 0, frame);		  
+		    ChangeWidth (box, box, NULL,
+				 (w + left + right) - box->BxW, 0, frame);
 		  if (imageDesc->PicHArea != h)
-		    ChangeHeight (box,
-				  box, NULL,
+		    ChangeHeight (box, box, NULL,
 				  (h + top + bottom + top + bottom) - box->BxH, frame);
 #ifndef _GL
 		  DefClip (frame, box->BxXOrg, box->BxYOrg,
@@ -2951,12 +2952,17 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      w = wBox;
 	  if (h == 0)
 	    h = hBox;
-
 	  ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
-
 	}
     }
-  if (pres != ReScale || Printing)
+
+  if (pAb->AbLeafType == LtCompound)
+    {
+      /* it's a background image */
+      xBox = 0;
+      yBox = 0;
+    }
+   if (pres != ReScale || Printing)
     {
       imageDesc->PicXArea = xBox;
       imageDesc->PicYArea = yBox;
