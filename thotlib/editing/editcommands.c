@@ -545,6 +545,7 @@ boolean             del;
    boolean             notified;
 
    *pAb = NULL;
+   notified = FALSE;
    /* verifie la validite du debut de la selection */
    if (*frame > 0)
      {
