@@ -39,7 +39,7 @@ extern XmlEntity *pMathEntityTable;
    Return TRUE if character is listed as a largeop in the MathML 2.0
    Operator dictionary (appendix F.5)
   ----------------------------------------------------------------------*/
-static ThotBool IsLargeOp (CHAR_T character)
+static ThotBool IsLargeOp (CHAR_T character, char script)
 {
   /****** to be completed *****/
 #ifdef _I18N_
@@ -59,7 +59,7 @@ static ThotBool IsLargeOp (CHAR_T character)
    Return TRUE if character is listed as a stretchy operator in the MathML 2.0
    Operator dictionary (appendix F.5)
   ----------------------------------------------------------------------*/
-static ThotBool IsStretchy (CHAR_T character)
+static ThotBool IsStretchy (CHAR_T character, char script)
 {
   /****** to be completed *****/
   if ((
@@ -2067,7 +2067,7 @@ void      CheckFenceLargeOp (Element el, Document doc)
 		   if (val == MathML_ATTR_IntDisplaystyle_VAL_true)
 		     /* an ancestor has an attribute IntDisplaystyle = true */
 		     /* Look at the symbol */
-		     largeop = IsLargeOp (text[0]);
+		     largeop = IsLargeOp (text[0], script);
 		 }
 	     }
 	   ctxt = TtaGetSpecificStyleContext (doc);
@@ -2094,7 +2094,7 @@ void      CheckFenceLargeOp (Element el, Document doc)
 	     /* the MO element is a child of a MROW element */
 	     /* Is it a stretchable symbol? */
 	      {
-	      if (IsStretchy (text[0]))
+		if (IsStretchy (text[0], script))
 		/* it's a stretchable parenthesis or equivalent */
 		{
 		/* remove the content of the MO element */
