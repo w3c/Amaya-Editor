@@ -835,8 +835,6 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l,
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
 
-   l--;
-   h--;
    xm = x + l / 2;
    xf = x + l;
    ym = y + h / 2;
@@ -2081,8 +2079,6 @@ void DrawSlash (int frame, int thick, int style, int x, int y, int l,
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
 
-   l--;
-   h--;
    xf = x + l;
    yf = y + h;
    x = x;

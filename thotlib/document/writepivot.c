@@ -474,6 +474,9 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
       TtaWriteByte (pivFile, (char) C_PIV_PRESENT);
       /* ecrit le numero de vue */
       PutShort (pivFile, pPRule->PrViewNum);
+      /* ecrit la specificite et l'importance */
+      PutShort (pivFile, pPRule->PrSpecificity);
+      PutBoolean (pivFile, pPRule->PrImportant);
       /* ecrit le numero de la boite de presentation concernee */
       PutShort (pivFile, 0);
       /* ecrit le type de la regle */

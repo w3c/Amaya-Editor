@@ -1266,11 +1266,11 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
   BoxEdge             ref, def;
   RefKind             refKind;
   Level               rel;
-  int                 pictureType, val, view, box;
+  int                 pictureType, val, view, box, specificity;
   int                 PicXArea, PicYArea, PicWArea, PicHArea;
   int                 red, green, blue, refIdent;
   char                ch;
-  ThotBool            absolute, sign, just, immed, notRel, distAttr;
+  ThotBool            absolute, sign, just, immed, notRel, distAttr, important;
   ThotBool            dimpos;
 
   pres = (PictureScaling) 0;
@@ -1288,6 +1288,9 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
   unit = UnRelative;
   /* lit le numero de vue */
   TtaReadShort (pivFile, &view);
+  /* lit la specificite et l'importance */
+  TtaReadShort (pivFile, &specificity);
+  important = ReadBoolean (pivFile);
   /* lit le numero de la boite de presentation concernee par la regle */
   TtaReadShort (pivFile, &box);
   /* lit le type de la regle */
@@ -1609,6 +1612,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
       /* initialise d'abord la nouvelle regle */
       pPRule->PrPresMode = PresImmediate;
       pPRule->PrSpecifAttr = 0;
+      pPRule->PrSpecificity = specificity;
+      pPRule->PrImportant = important;
       pPRule->PrSpecifAttrSSchema = NULL;
       pAttr = NULL;
       pPRule->PrViewNum = view;
