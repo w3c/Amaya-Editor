@@ -3731,6 +3731,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 {
   DisplayMode         dispMode;
   char               *p = NULL;
+  char               *valueStart;
   int                 lg;
   unsigned int        i;
   ThotBool            found;
@@ -3773,8 +3774,56 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 		  /* try to parse the value associated with this property */
 		  if (CSSProperties[i].parsing_function != NULL)
 		    {
-		      p = CSSProperties[i].parsing_function (element, tsch, ctxt,
-							     p, css, isHTML);
+		      valueStart = p;
+		      p = CSSProperties[i].parsing_function (element, tsch,
+							 ctxt, p, css, isHTML);
+		      if (!element && isHTML)
+			{
+			  if  (ctxt->type == HTML_EL_Input)
+			    /* it's a generic rule for the HTML element input.
+			       Generate a Thot Pres rule for each kind of
+			       input element */
+			    {
+			      ctxt->type = HTML_EL_Text_Input;
+			      p = CSSProperties[i].parsing_function (element,
+					  tsch, ctxt, valueStart, css, isHTML);
+			      ctxt->type = HTML_EL_Password_Input;
+			      p = CSSProperties[i].parsing_function (element,
+					  tsch, ctxt, valueStart, css, isHTML);
+			      ctxt->type = HTML_EL_File_Input;
+			      p = CSSProperties[i].parsing_function (element,
+					  tsch, ctxt, valueStart, css, isHTML);
+			      ctxt->type = HTML_EL_Checkbox_Input;
+			      p = CSSProperties[i].parsing_function (element,
+					  tsch, ctxt, valueStart, css, isHTML);
+			      ctxt->type = HTML_EL_Radio_Input;
+			      p = CSSProperties[i].parsing_function (element,
+					  tsch, ctxt, valueStart, css, isHTML);
+			      ctxt->type = HTML_EL_Submit_Input;
+			      p = CSSProperties[i].parsing_function (element,
+					  tsch, ctxt, valueStart, css, isHTML);
+			      ctxt->type = HTML_EL_Reset_Input;
+			      p = CSSProperties[i].parsing_function (element,
+					  tsch, ctxt, valueStart, css, isHTML);
+			      ctxt->type = HTML_EL_Button_Input;
+			      p = CSSProperties[i].parsing_function (element,
+					  tsch, ctxt, valueStart, css, isHTML);
+			      ctxt->type = HTML_EL_Input;
+			    }
+			  else if (ctxt->type == HTML_EL_ruby)
+			    /* it's a generic rule for the HTML element ruby.
+			       Generate a Thot Pres rule for each kind of
+			       ruby element. */
+			    {
+			      ctxt->type = HTML_EL_simple_ruby;
+			      p = CSSProperties[i].parsing_function (element,
+					  tsch, ctxt, valueStart, css, isHTML);
+			      ctxt->type = HTML_EL_complex_ruby;
+			      p = CSSProperties[i].parsing_function (element,
+					  tsch, ctxt, valueStart, css, isHTML);
+			      ctxt->type = HTML_EL_ruby;
+			    }
+			}
 		      /* update index and skip the ";" separator if present */
 		      cssRule = p;
 		    }

@@ -1048,15 +1048,44 @@ static void UpdateClass (Document doc)
   char               *schName;
   int                 len, base, i;
   Language            lang;
-  ThotBool            found, empty, insertNewLine;
+  ThotBool            found, empty, insertNewLine, ok;
 
   elType = TtaGetElementType (ClassReference);
   GIType (CurrentClass, &selType, doc);
   if (selType.ElTypeNum != elType.ElTypeNum && selType.ElTypeNum != 0)
     {
-      /* it's an invalid element type */
-      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TYPE), NULL);
-      return;
+      ok = FALSE;
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	{
+	  if (selType.ElTypeNum == HTML_EL_Input)
+	    /* the user has chosen element imput */
+	    {
+	      if (elType.ElTypeNum == HTML_EL_Text_Input ||
+		  elType.ElTypeNum == HTML_EL_Password_Input ||
+		  elType.ElTypeNum == HTML_EL_File_Input ||
+		  elType.ElTypeNum == HTML_EL_Checkbox_Input ||
+		  elType.ElTypeNum == HTML_EL_Radio_Input ||
+		  elType.ElTypeNum == HTML_EL_Submit_Input ||
+		  elType.ElTypeNum == HTML_EL_Reset_Input ||
+		  elType.ElTypeNum == HTML_EL_Button_Input)
+		/* the selected element is a variant of the imput element. */
+		ok = TRUE;
+	    }
+	  else if (selType.ElTypeNum == HTML_EL_ruby)
+	    /* the user has chosen element ruby */
+	    {
+	      if (elType.ElTypeNum == HTML_EL_simple_ruby ||
+		  elType.ElTypeNum == HTML_EL_complex_ruby)
+	        /* the selected element is a variant of the ruby element. */
+		ok = TRUE;
+	    }
+	}
+      if (!ok)
+        /* it's an invalid element type */
+	{
+	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TYPE), NULL);
+	  return;
+	}
     }
 
   /* locate the style element in the document head */
