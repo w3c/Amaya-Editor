@@ -181,9 +181,8 @@ typedef struct Classamaya_APIHtml {
 #define amaya_APIHtml_HTML_ATTR_Cell_valign_VAL_Cell_bottom 3
 #define amaya_APIHtml_HTML_ATTR_Cell_width 99
 #define amaya_APIHtml_HTML_ATTR_Cell_height 100
-#define amaya_APIHtml_HTML_ATTR_Word_wrap 101
-#define amaya_APIHtml_HTML_ATTR_Word_wrap_VAL_Wrap 1
-#define amaya_APIHtml_HTML_ATTR_Word_wrap_VAL_No_wrap 2
+#define amaya_APIHtml_HTML_ATTR_No_wrap 101
+#define amaya_APIHtml_HTML_ATTR_No_wrap_VAL_no_wrap 1
 #define amaya_APIHtml_HTML_ATTR_Ref_IMG 102
 #define amaya_APIHtml_HTML_ATTR_shape 103
 #define amaya_APIHtml_HTML_ATTR_shape_VAL_rectangle 1

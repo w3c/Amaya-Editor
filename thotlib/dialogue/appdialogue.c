@@ -34,7 +34,8 @@
 #include "libmsg.h"
 #include "LiteClue.h"
 
-#define MAX_ARGS 20
+#define MAX_ARGS	20
+#define MAX_USER_ACTION	100
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -205,6 +206,9 @@ int                 number;
 
    /* Il faut ajouter les actions internes liees a la structure */
    number += MAX_INTERNAL_CMD;
+   /* as well as space for new User's defined actions */
+   number += MAX_USER_ACTION;
+
    MaxMenuAction = number;
    MenuActionList = (Action_Ctl *) TtaGetMemory (number * sizeof (Action_Ctl));
    /* initialisation des equilalents clavier et validation de l'action */
@@ -214,6 +218,12 @@ int                 number;
 	for (i = 0; i < MAX_FRAME; i++)
 	   MenuActionList[FreeMenuAction].ActionActive[i] = TRUE;
      }
+   for (i = FreeMenuAction;i < MaxMenuAction;i++) {
+	MenuActionList[i].ActionName = "";
+	MenuActionList[i].Call_Action = NULL;
+	MenuActionList[i].User_Action = NULL;
+	MenuActionList[i].ActionEquiv = NULL;
+   }
 
    /* Initialisation des actions internes obligatoires */
    MenuActionList[0].ActionName = CST_InsertChar;	/* action InsertChar() */
@@ -343,23 +353,23 @@ Proc                procedure;
 }
 
 /*----------------------------------------------------------------------
-   TteAddUserAction add dynamically an user action in the table of the
+   TteAddUserMenuAction add dynamically an user action in the table of the
    user interface actions. This may override or complete an existing
    built-in action, or override a previously defined user action.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddUserAction (char *actionName, UserProc procedure,
+int                TteAddUserMenuAction (char *actionName, UserProc procedure,
                                       void *arg)
 
 #else  /* __STDC__ */
-void                TteAddUserAction (actionName, procedure, arg)
+int                TteAddUserMenuAction (actionName, procedure, arg)
 char               *actionName;
 UserProc            procedure;
 void               *arg;
 
 #endif /* __STDC__ */
 {
-   /* char               *ptr; */
+   char               *ptr;
    int                 lg;
    int                 i;
 
@@ -367,30 +377,31 @@ void               *arg;
     * We need a name !
     */
    if (actionName == NULL)
-      return;
+      return(-1);
    lg = strlen (actionName);
-   if (lg == 0) return;
+   if (lg == 0) return(-1);
 
    /*
-    * Search in the menu actions table for a predefined action for this name
+    * Search in the menu actions table for a predefined action with this name
     */
    for (i = 0;i < FreeMenuAction;i++) {
        if (!strcmp(MenuActionList[i].ActionName, actionName)) {
            /*
 	    * This action already exists, register the user procedure.
 	    */
-           MenuActionList[FreeMenuAction].User_Action = procedure;
-           MenuActionList[FreeMenuAction].User_Arg = arg;
-	   return;
+           MenuActionList[i].User_Action = procedure;
+           MenuActionList[i].User_Arg = arg;
+	   return(0);
        }
    }
+   if (procedure == NULL) return(-1);
 
    /*
     * This action is not registered, try to allocate a new one.
-    *
+    */
    if (FreeMenuAction < MaxMenuAction && lg != 0)
      {
-	* Dup' the action name string *
+	/* Dup' the action name string */
 	ptr = TtaGetMemory (lg + 1);
 	strcpy (ptr, actionName);
 	MenuActionList[FreeMenuAction].ActionName = ptr;
@@ -398,12 +409,13 @@ void               *arg;
 	MenuActionList[FreeMenuAction].User_Action = procedure;
 	MenuActionList[FreeMenuAction].User_Arg = arg;
 	MenuActionList[FreeMenuAction].ActionEquiv = NULL;
-	* desactivate this action for all frames *
+	/* desactivate this action for all frames */
 	for (i = 0; i < MAX_FRAME; i++)
 	   MenuActionList[FreeMenuAction].ActionActive[i] = FALSE;
 	FreeMenuAction++;
+	return(1);
      }
-    */
+   return(-1);
 }
 
 

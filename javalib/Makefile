@@ -12,7 +12,7 @@ KAFFEH=../$(MACHINE)/bin/kaffeh
 
 APICLASSES=Application Document Tree Content Attribute Reference \
         Language Presentation View Selection Interface Registry \
-	Dialog LibMsg
+	Dialog LibMsg AppAction
         
 CLASSES=Element SSchema Document ElementType Attribute \
         AttributeType PRule Extra Language IntPtr

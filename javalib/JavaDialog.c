@@ -49,11 +49,15 @@ static char           JavaThread[300] = "";
 
 static int            JavaDialogueInitialized = 0;
 
+#define IS_SPACE(p) ((*(p) == ' ') || (*(p) == '\t'))
+#define MAX_ARGS	30
+
 /*----------------------------------------------------------------------
    LaunchJavaApplet
 
    Start a Java applet.
   ----------------------------------------------------------------------*/
+
 #ifdef __STDC__
 int                LaunchJavaApplet (char *appletclass, int doc, char *args)
 #else
@@ -66,9 +70,13 @@ char *args;
     char name[100];
     char directory[MAX_PATH];
     char arg_list[MAX_PATH];
+    char *args_list[MAX_ARGS];
     char *ptr;
+    int  i,j;
     jword res;
-    struct Hjava_lang_String* str;
+    struct Hjava_lang_String* jname;
+    struct Hjava_lang_String** cur_arg;
+    HArrayOfObject* jargs;
 
     TtaExtractName(appletclass, directory, name);
 
@@ -87,11 +95,57 @@ char *args;
     }
 
     /*
+     * Parse the args string to build the String table.
+     */
+    if (args != NULL) {
+        /* Copy the initial args onto a clean buffer */
+        strncpy(arg_list, args, sizeof(arg_list) -1);
+
+	/* clean up the args_list tab */
+	for (i = 0;i < MAX_ARGS;i++) args_list[i] = NULL;
+
+	/* Split the buffer into the arg list */
+	ptr = &arg_list[0];
+	while (IS_SPACE(ptr)) ptr++;
+	args_list[0] = ptr;
+	i = 0;
+	if (*ptr != '\0')
+	    for (; (i < MAX_ARGS);ptr++) {
+		if (*ptr == '\0') {
+		    i++;
+		    break;
+		}
+		if (IS_SPACE(ptr)) {
+		    *ptr = 0;
+		    i++;
+		    ptr++;
+		    while (IS_SPACE(ptr)) ptr++;
+		    if (*ptr == '\0') break;
+		    args_list[i] = ptr;
+		}
+	    }
+
+	/*
+	 * allocate the array of String container and
+	 * fill it with Java strings build from the parsing
+	 */
+	if (i > 0) {
+	    jargs = (HArrayOfObject*) AllocObjectArray(i , "Ljava/lang/String;");
+	    cur_arg = (Hjava_lang_String**) (unhand(jargs));
+            for (j = 0;j < i;j++)
+	        cur_arg[j] = makeJavaString(args_list[j], strlen(args_list[j]));
+	} else
+	    jargs = NULL;
+    } else
+        jargs = NULL;
+
+    /*
      * Ask for a new thread handling the job.
      */
-    str = makeJavaString(name, strlen(name));
-    res = do_execute_java_class_method("thotlib.userThreadPool", "LaunchJavaApplet",
-              "(Ljava/lang/String;I)I", str, doc);
+    jname = makeJavaString(name, strlen(name));
+    res = do_execute_java_class_method("thotlib.userThreadPool",
+	      "LaunchJavaApplet", "(Ljava/lang/String;I[Ljava/lang/String;)I",
+	      jname, doc, jargs);
 
     return(res);
 }
@@ -114,6 +168,7 @@ char *appletname;
         do_execute_java_class_method("thotlib.userThreadPool",
 				     "Kill", "(I)V", thread_no);
     }
+    return(0);
 }
 
 /*----------------------------------------------------------------------
@@ -134,6 +189,7 @@ char *appletname;
         do_execute_java_class_method("thotlib.userThreadPool",
 				     "Resume", "(I)V", thread_no);
     }
+    return(0);
 }
 
 /*----------------------------------------------------------------------
@@ -154,6 +210,7 @@ char *appletname;
         do_execute_java_class_method("thotlib.userThreadPool",
 				     "Suspend", "(I)V", thread_no);
     }
+    return(0);
 }
 
 /*----------------------------------------------------------------------

@@ -37,6 +37,7 @@ typedef struct Classthotlib_APIPresentation {
 #define thotlib_APIPresentation_PRHyphenate 23
 #define thotlib_APIPresentation_PRNoBreak1 24
 #define thotlib_APIPresentation_PRNoBreak2 25
+#define thotlib_APIPresentation_PRShowBox 26
 #define thotlib_APIPresentation_StyleRoman 1
 #define thotlib_APIPresentation_StyleBold 2
 #define thotlib_APIPresentation_StyleItalics 3

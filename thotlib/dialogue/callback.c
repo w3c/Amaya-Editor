@@ -40,6 +40,8 @@
    CallAction looks for the concerned action in event list.
    It returns TRUE if the event action takes place of the editor action
    else it returns FALSE.
+   If an User action has been defined, it is executed first, if the
+   result is zero, the built-in action is also triggered.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      CallAction (NotifyEvent * notifyEvent, APPevent event, boolean pre, int type, Element element, PtrSSchema schStruct)
@@ -58,10 +60,19 @@ PtrSSchema          schStruct;
    PtrEventsSet        eventsSet;
    boolean             status;
    Proc                procEvent;
+   UserProc            userProcEvent;
+   void               *userProcArg;
    Func                funcEvent;
+   UserProc            userFuncEvent;
+   void               *userFuncArg;
+   int                 userResult;
 
    procEvent = NULL;
+   userProcEvent = NULL;
+   userProcArg = NULL;
    funcEvent = NULL;
+   userFuncEvent = NULL;
+   userFuncArg = NULL;
 
    /* See all actions linked with this event in different event lists */
    while (schStruct != NULL && procEvent == NULL && funcEvent == NULL)
@@ -75,10 +86,15 @@ PtrSSchema          schStruct;
 	       {
 		  if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
 		    {
-		       if (pre)
+		       if (pre) {
 			  funcEvent = (Func) pActEvent->AEvAction->ActAction;
-		       else
+			  userFuncEvent = pActEvent->AEvAction->ActUser;
+			  userFuncArg = pActEvent->AEvAction->ActArg;
+		       } else {
 			  procEvent = pActEvent->AEvAction->ActAction;
+			  userProcEvent = pActEvent->AEvAction->ActUser;
+			  userProcArg = pActEvent->AEvAction->ActArg;
+		       }
 		       pActEvent = NULL;	/* end of research */
 		    }
 		  else
@@ -119,10 +135,15 @@ PtrSSchema          schStruct;
 	       {
 		  if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
 		    {
-		       if (pre)
+		       if (pre) {
 			  funcEvent = (Func) pActEvent->AEvAction->ActAction;
-		       else
+			  userFuncEvent = pActEvent->AEvAction->ActUser;
+			  userFuncArg = pActEvent->AEvAction->ActArg;
+		       } else {
 			  procEvent = pActEvent->AEvAction->ActAction;
+			  userProcEvent = pActEvent->AEvAction->ActUser;
+			  userProcArg = pActEvent->AEvAction->ActArg;
+		       }
 		       pActEvent = NULL;	/* end of research */
 		    }
 		  else
@@ -132,12 +153,26 @@ PtrSSchema          schStruct;
      }
 
    status = FALSE;
-   if (funcEvent != NULL || procEvent != NULL)
+   if ((funcEvent != NULL) || (procEvent != NULL) ||
+       (userProcEvent != NULL) || (userFuncEvent != NULL))
      {
-	if (funcEvent != NULL)
-	   status = (*funcEvent) (notifyEvent);
-	else
-	   (*procEvent) (notifyEvent);
+	if ((funcEvent != NULL) || (userFuncEvent != NULL)) {
+	   if (userFuncEvent != NULL) {
+	       userResult = (*userFuncEvent) (userFuncArg, notifyEvent);
+	       if (userResult == 0) 
+	           status = TRUE;
+	       else
+		   status = (*funcEvent) (notifyEvent);
+	   } else
+	       status = (*funcEvent) (notifyEvent);
+	} else {
+	   if (userProcEvent != NULL) {
+	       userResult = (*userProcEvent) (userProcArg, notifyEvent);
+	       if (userResult != 0) 
+		   (*procEvent) (notifyEvent);
+	   } else
+	       (*procEvent) (notifyEvent);
+	}
      }
    return status;
 }

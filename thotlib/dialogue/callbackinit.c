@@ -39,9 +39,9 @@
    FetchAction finds and returns an action with the name actionName 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrAction    FetchAction (char *actionName)
+PtrAction    FetchAction (char *actionName)
 #else  /* __STDC__ */
-static PtrAction    FetchAction (actionName)
+PtrAction    FetchAction (actionName)
 char               *actionName;
 
 #endif /* __STDC__ */
@@ -92,6 +92,8 @@ Proc                doIt;
 	newAction = (PtrAction) TtaGetMemory (sizeof (APP_action));
 	newAction->ActName = actionName;
 	newAction->ActAction = doIt;
+	newAction->ActUser = NULL;
+	newAction->ActArg = NULL;
 	newAction->ActPre = FALSE;
 	newAction->ActEvent = TteNull;
 	newAction->ActNext = NULL;
@@ -101,6 +103,46 @@ Proc                doIt;
 	   /* First message inserted here */
 	   ActionList = newAction;
      }
+}
+
+/*----------------------------------------------------------------------
+   TteAddUserAction add dynamically an user action in the list of the
+   built-ins actions. This may override or complete an existing
+   built-in action, or override a previously defined user action.
+   We don't support adding a new action currently !!!
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                TteAddUserAction (char *actionName, UserProc procedure,
+                                      void *arg)
+
+#else  /* __STDC__ */
+int                TteAddUserAction (actionName, procedure, arg)
+char               *actionName;
+UserProc            procedure;
+void               *arg;
+
+#endif /* __STDC__ */
+{
+   PtrAction           action;
+   int                 lg;
+
+   /*
+    * We need a name !
+    */
+   if (actionName == NULL)
+      return(-1);
+   lg = strlen (actionName);
+   if (lg == 0) return(-1);
+
+   /*
+    * Search in the actions list for a predefined action with this name
+    */
+   action = FetchAction (actionName);
+   if (action == NULL) return(-1);
+
+   action->ActUser = procedure;
+   action->ActArg = arg;
+   return(0);
 }
 
 

@@ -256,10 +256,10 @@ Document            document;
 
 #endif
 {
-#ifndef AMAYA_JAVA
    if (FilesLoading[document] != 0)
      {
        FilesLoading[document]--;
+#ifndef AMAYA_JAVA
        if (FilesLoading[document] == 0)
 	 /* The last object associated to the document has been loaded */
 	 {
@@ -274,8 +274,8 @@ Document            document;
 	     }
 	   DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
 	 }
-     }
 #endif
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -291,7 +291,9 @@ Document            doc;
 {
 #ifndef AMAYA_JAVA
   DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
+#endif
   FilesLoading[document] = 1;
+#ifndef AMAYA_JAVA
   if (TtaGetViewFrame (document, 1) != 0)
     /* this document is displayed */
     TtaChangeButton (document, 1, 1, stopR);
@@ -309,9 +311,7 @@ Document            doc;
 
 #endif
 {
-#ifndef AMAYA_JAVA
     FilesLoading[document]++;
-#endif
 }
 
 /*----------------------------------------------------------------------
@@ -926,7 +926,6 @@ View                view;
    if (FilesLoading[newdoc]) {
        return;
    }
-   FilesLoading[newdoc]++;
 #endif 
 
    tempfile[0] = EOS;
@@ -951,11 +950,7 @@ View                view;
 	FetchAndDisplayImages (res, AMAYA_NOCACHE);
 	TtaResetCursor (0, 0);
      }
-#ifdef AMAYA_JAVA
-   FilesLoading[newdoc]--;
-#else
    ResetStop(newdoc);
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -1308,7 +1303,6 @@ DoubleClickEvent    DC_event;
              /* Check against concurrent loading on the same frame */
 	     if (FilesLoading[newdoc])
 	       return(0);
-             FilesLoading[newdoc]++;
 #endif /* AMAYA_JAVA */
 
 	     /* this document is currently in load */
@@ -1348,11 +1342,7 @@ DoubleClickEvent    DC_event;
 		  if (res == 0)
 		    {
 		      /* cannot load the document */
-#ifdef AMAYA_JAVA
-		      FilesLoading[newdoc]--;
-#else
 		      ResetStop(newdoc);
-#endif /* AMAYA_JAVA */
 		      return (res);
 		    }
 		  else if (newdoc != res)
@@ -1377,11 +1367,7 @@ DoubleClickEvent    DC_event;
 		   }
 		 W3Loading = 0;	/* loading is complete now */
 	       }
-#ifdef AMAYA_JAVA
-             FilesLoading[newdoc]--;
-#else
 	     ResetStop(newdoc);
-#endif /* AMAYA_JAVA */
 	  }
      }
    return (newdoc);

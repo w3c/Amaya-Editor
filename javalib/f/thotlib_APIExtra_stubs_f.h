@@ -20,6 +20,9 @@ extern jint thotlib_Extra_JavaStartApplet ( struct Hthotlib_Extra* none,
                                             jint doc,
                                             HArrayOfObject* args );
 extern void thotlib_Extra_JavaXFlush ( struct Hthotlib_Extra* none );
+extern void thotlib_Extra_JavaRegisterAction ( struct Hthotlib_Extra* none,
+                                               struct Hjava_lang_Object* handler,
+                                               struct Hjava_lang_String* actionName );
 extern void register_thotlib_Extra_stubs ( void );
 
 #else /* __STDC__ */
@@ -38,6 +41,9 @@ extern jint thotlib_Extra_JavaStartApplet (/* struct Hthotlib_Extra* none,
                                               jint doc,
                                               HArrayOfObject* args */);
 extern void thotlib_Extra_JavaXFlush (/* struct Hthotlib_Extra* none */);
+extern void thotlib_Extra_JavaRegisterAction (/* struct Hthotlib_Extra* none,
+                                                 struct Hjava_lang_Object* handler,
+                                                 struct Hjava_lang_String* actionName */);
 extern void register_thotlib_Extra_stubs (/* void */);
 
 #endif /* __STDC__ */

@@ -10,6 +10,9 @@ extern void TteInitMenus ( char *name,
                            int number );
 extern void TteAddMenuAction ( char *actionName,
                                Proc procedure );
+extern int TteAddUserMenuAction ( char *actionName,
+                                  UserProc procedure,
+                                  void *arg );
 extern void TteZeroMenu ( WindowType windowtype,
                           char *schemaName );
 extern void TteAddMenu ( WindowType windowtype,
@@ -106,6 +109,9 @@ extern void TteInitMenus (/* char *name,
                              int number */);
 extern void TteAddMenuAction (/* char *actionName,
                                  Proc procedure */);
+extern int TteAddUserMenuAction (/* char *actionName,
+                                    UserProc procedure,
+                                    void *arg */);
 extern void TteZeroMenu (/* WindowType windowtype,
                             char *schemaName */);
 extern void TteAddMenu (/* WindowType windowtype,

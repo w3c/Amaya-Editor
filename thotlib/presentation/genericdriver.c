@@ -1321,7 +1321,6 @@ PresentationValue   v;
    int elType = 0;
    int attrType = 0;
    int presBox = 0;
-   PtrPRule pRule;
 
    doc = ctxt->doc;
    pSS = (PtrSSchema) TtaGetDocumentSSchema (doc);
@@ -1515,6 +1514,7 @@ PresentationValue   v;
       return (-1);
 
    ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, FALSE);
+   return(0);
 }
 
 /*----------------------------------------------------------------------

@@ -15,12 +15,12 @@ typedef struct Classthotlib_Extra {
 } Classthotlib_Extra;
 HandleTo(thotlib_Extra);
 
-extern void thotlib_Extra_TtaRemoveSchemaExtension(struct Hthotlib_Extra*, jint, jint);
 extern void thotlib_Extra_Java2CCallback(struct Hthotlib_Extra*, struct Hjava_lang_Object*, jlong);
 extern void thotlib_Extra_JavaPollLoop(struct Hthotlib_Extra*);
 extern void thotlib_Extra_JavaStopPoll(struct Hthotlib_Extra*);
 extern void thotlib_Extra_JavaXFlush(struct Hthotlib_Extra*);
 extern jint thotlib_Extra_JavaStartApplet(struct Hthotlib_Extra*, struct Hjava_lang_String*, struct Hjava_lang_String*, jint, HArrayOfObject*);
+extern void thotlib_Extra_JavaRegisterAction(struct Hthotlib_Extra*, struct Hjava_lang_Object*, struct Hjava_lang_String*);
 
 #ifdef __cplusplus
 }

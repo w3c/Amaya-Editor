@@ -37,6 +37,8 @@ typedef struct _APP_action
 {
   char               *ActName;	/* Name of the action */
   Proc                ActAction;/* The action to be executed */
+  UserProc            ActUser;  /* Any specific action defined by the user */
+  void               *ActArg;   /* and the associated argument */
   boolean             ActPre;	/* Previous event implies function */
   APPevent            ActEvent;	/* What NotifyEvent context to generate */
   PtrAction           ActNext;	/* Next action in the list */
@@ -79,12 +81,13 @@ extern void         TteZeroMenu (WindowType windowtype, char *schemaName);
 extern void         TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon);
 extern void         TteInitMenus (char *name, int number);
 extern void         TteAddMenuAction (char *actionName, Proc procedure);
-extern void         TteAddUserAction (char *actionName, UserProc procedure, void *arg);
+extern int          TteAddUserMenuAction (char *actionName, UserProc procedure, void *arg);
 extern void         TteAddMenu (WindowType windowtype, char *schemaName, int view, int menuID, int itemsNumber, char *menuName);
 extern void         TteAddSubMenu (WindowType windowtype, char *schemaName, int menuID, int itemID, int itemsNumber);
 extern void         TteAddMenuItem (WindowType windowtype, char *schemaName, int menuID, int subMenuID, int itemID, char *actionName, char itemType);
 
 extern void         TteAddAction (char *actionName, Proc doIt);
+extern int          TteAddUserAction (char *actionName, UserProc procedure, void *arg);
 extern void         TteAddActionEvent (PtrEventsSet eventsList, int typeId, APPevent event, boolean pre, char *actionName);
 extern PtrEventsSet TteNewEventsSet (int structureId, char *name);
 extern void         TtcStandardPresentation (Document document, View view);

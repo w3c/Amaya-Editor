@@ -674,9 +674,9 @@ NotifyAttribute    *event;
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_LinkColor)
       HTMLSetAlinkColor (event->document, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_VisitedLinkColor)
-      HTMLSetAactiveColor (event->document, value);
-   else if (event->attributeType.AttrTypeNum == HTML_ATTR_ActiveLinkColor)
       HTMLSetAvisitedColor (event->document, value);
+   else if (event->attributeType.AttrTypeNum == HTML_ATTR_ActiveLinkColor)
+      HTMLSetAactiveColor (event->document, value);
 }
 
 
@@ -700,9 +700,9 @@ NotifyAttribute    *event;
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_LinkColor)
       HTMLResetAlinkColor (event->document);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_VisitedLinkColor)
-      HTMLResetAactiveColor (event->document);
-   else if (event->attributeType.AttrTypeNum == HTML_ATTR_ActiveLinkColor)
       HTMLResetAvisitedColor (event->document);
+   else if (event->attributeType.AttrTypeNum == HTML_ATTR_ActiveLinkColor)
+      HTMLResetAactiveColor (event->document);
    return FALSE;		/* let Thot perform normal operation */
 }
 

@@ -6,8 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern PtrAction FetchAction ( char *actionName );
 extern void TteAddAction ( char *actionName,
                            Proc doIt );
+extern int TteAddUserAction ( char *actionName,
+                              UserProc procedure,
+                              void *arg );
 extern PtrEventsSet TteNewEventsSet ( int structureId,
                                       char *name );
 extern void TteAddActionEvent ( PtrEventsSet eventsList,
@@ -18,8 +22,12 @@ extern void TteAddActionEvent ( PtrEventsSet eventsList,
 
 #else /* __STDC__ */
 
+extern PtrAction FetchAction (/* char *actionName */);
 extern void TteAddAction (/* char *actionName,
                              Proc doIt */);
+extern int TteAddUserAction (/* char *actionName,
+                                UserProc procedure,
+                                void *arg */);
 extern PtrEventsSet TteNewEventsSet (/* int structureId,
                                         char *name */);
 extern void TteAddActionEvent (/* PtrEventsSet eventsList,

@@ -179,6 +179,7 @@ PresentationValue   v;
       return (-1);
 
    ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, FALSE);
+   return(0);
 }
 
 /*----------------------------------------------------------------------

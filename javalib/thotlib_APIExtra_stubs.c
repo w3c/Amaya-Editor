@@ -5,6 +5,7 @@
  */
 
 #include <native.h>
+#include "appaction.h"
 #include "JavaTypes.h"
 #include "thotlib_Extra.h"
 
@@ -98,6 +99,158 @@ thotlib_Extra_JavaXFlush(struct Hthotlib_Extra* none)
 }
 
 /*
+ * The User Action' registering stuff.
+ */
+
+static int
+thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
+{
+    jword res;
+
+    JavaThotlibRelease();
+    if ((arg == NULL) || (event == NULL)) return(0);
+    switch(event->event) {
+	case TteAttrMenu:
+	case TteAttrCreate:
+	case TteAttrModify:
+	case TteAttrRead:
+	case TteAttrSave:
+	case TteAttrExport:
+	case TteAttrDelete: {
+	    NotifyAttribute *ev = (NotifyAttribute *) event;
+	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+		     "callbackAttribute", "(IIJJJ)I", NULL, FALSE,
+		     ev->event, ev->document, ev->element,
+		     ev->attribute, ev->attributeType);
+	    break;
+	}
+	case TteElemMenu:
+	case TteElemNew:
+	case TteElemRead:
+	case TteElemSave:
+	case TteElemExport:
+	case TteElemDelete:
+	case TteElemSelect:
+	case TteElemExtendSelect:
+	case TteElemActivate:
+	case TteElemInclude:
+	case TteElemCopy:
+	case TteElemChange:
+	case TteElemMove: {
+	    NotifyElement *ev = (NotifyElement *) event;
+	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+		     "callbackElement", "(IIJJI)I", NULL, FALSE,
+		     ev->event, ev->document, ev->element,
+		     ev->elementType, ev->position);
+	    break;
+	}
+	case TteElemPaste:
+	case TteElemGraphModify: {
+	    NotifyOnValue *ev = (NotifyOnValue *) event;
+	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+		     "callbackValue", "(IIJJI)I", NULL, FALSE,
+		     ev->event, ev->document, ev->element,
+		     ev->target, ev->value);
+	    break;
+	}
+	case TteElemSetReference:
+	case TteElemTextModify: {
+	    NotifyOnTarget *ev = (NotifyOnTarget *) event;
+	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+		     "callbackTarget", "(IIJJI)I", NULL, FALSE,
+		     ev->event, ev->document, ev->element,
+		     ev->target, ev->targetdocument);
+	    break;
+	}
+	case TteElemTransform: {
+	    NotifyOnElementType *ev = (NotifyOnElementType *) event;
+	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+		     "callbackElementType", "(IIJJI)I", NULL, FALSE,
+		     ev->event, ev->document, ev->element,
+		     ev->elementType, ev->targetElementType);
+	    break;
+	}
+	case TtePRuleCreate:
+	case TtePRuleModify:
+	case TtePRuleDelete: {
+	    NotifyPresentation *ev = (NotifyPresentation *) event;
+	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+		     "callbackPresentation", "(IIJJI)I", NULL, FALSE,
+		     ev->event, ev->document, ev->element,
+		     ev->pRule, ev->pRuleType);
+	    break;
+	}
+	case TteDocOpen:
+	case TteDocCreate:
+	case TteDocClose:
+	case TteDocSave:
+	case TteDocExport:
+	case TteViewOpen:
+	case TteViewClose: {
+	    NotifyDialog *ev = (NotifyDialog *) event;
+	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+		     "callbackDialog", "(III)I", NULL, FALSE,
+		     ev->event, ev->document, ev->view);
+	    break;
+	}
+	case TteViewScroll:
+	case TteViewResize: {
+	    NotifyWindow *ev = (NotifyWindow *) event;
+	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+		     "callbackWindow", "(IIIII)I", NULL, FALSE,
+		     ev->event, ev->document, ev->view,
+		     ev->verticalValue, ev->horizontalValue);
+	    break;
+	}
+	case TteInit:
+	case TteExit: {
+	    NotifyEvent *ev = (NotifyEvent *) event;
+	    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+		     "callbackNotify", "(I)I", NULL, FALSE,
+		     ev->event);
+	    break;
+	}
+	case TteNull:
+	    res = 0;
+	    break;
+    }
+    JavaThotlibLock();
+    return((int) res);
+}
+
+static int
+thotlib_Extra_JavaActionMenuCallback(void *arg, int doc, int view)
+{
+    jword res;
+
+    JavaThotlibRelease();
+    res = do_execute_java_method(NULL, (Hjava_lang_Object*) arg,
+		     "callbackMenu", "(II)I", NULL, FALSE, doc, view);
+    JavaThotlibLock();
+    return((int) res);
+}
+
+
+void
+thotlib_Extra_JavaRegisterAction(struct Hthotlib_Extra* none,
+                                 struct Hjava_lang_Object* handler,
+				 struct Hjava_lang_String* actionName)
+{
+    char actionname[300];
+
+    if ((handler == NULL) || (actionName == NULL)) return;
+    javaString2CString(actionName, actionname, sizeof(actionname));
+
+    JavaThotlibLock();
+    if (TteAddUserAction (actionname, thotlib_Extra_JavaActionEventCallback,
+                          (void *) handler))
+    
+        TteAddUserMenuAction (actionname, thotlib_Extra_JavaActionMenuCallback,
+                      (void *) handler);
+    JavaThotlibRelease();
+}
+
+/*
  * Java to C function Ttaxxx stub.
 xxx
 thotlib_Extra_Ttaxxx(struct Hthotlib_Extra* none, xxx)
@@ -122,6 +275,8 @@ void register_thotlib_Extra_stubs(void)
 	                thotlib_Extra_JavaXFlush);
 	addNativeMethod("thotlib_Extra_JavaStartApplet",
 	                thotlib_Extra_JavaStartApplet);
+	addNativeMethod("thotlib_Extra_JavaRegisterAction",
+	                thotlib_Extra_JavaRegisterAction);
 /*
 	addNativeMethod("thotlib_Extra_Ttaxxx", thotlib_Extra_Ttaxxx);
  */

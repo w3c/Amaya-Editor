@@ -27,11 +27,6 @@ extern void JavaHandleOneEvent ( ThotEvent *ev );
 extern int JavaFetchEvent ( ThotEvent *ev );
 extern int OldJavaFetchEvent ( ThotEvent *ev );
 extern boolean JavaFetchAvailableEvent ( ThotEvent *ev );
-extern int LaunchJavaApplet ( char *appletclass,
-                              int doc,
-                              char *args );
-extern int ListJavaUserThreads ( char *list,
-                                 int len );
 extern void InitJava ( void );
 extern void CloseJava ( void );
 extern void InitJavaEventLoop ( ThotAppContext app_ctx );
@@ -64,11 +59,6 @@ extern void JavaHandleOneEvent (/* ThotEvent *ev */);
 extern int JavaFetchEvent (/* ThotEvent *ev */);
 extern int OldJavaFetchEvent (/* ThotEvent *ev */);
 extern boolean JavaFetchAvailableEvent (/* ThotEvent *ev */);
-extern int LaunchJavaApplet (/* char *appletclass,
-                                int doc,
-                                char *args */);
-extern int ListJavaUserThreads (/* char *list,
-                                   int len */);
 extern void InitJava (/* void */);
 extern void CloseJava (/* void */);
 extern void InitJavaEventLoop (/* ThotAppContext app_ctx */);
