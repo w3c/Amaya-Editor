@@ -532,8 +532,8 @@ RULES
 	CreateWith (VerticalLine);
 	Width: 2 cm UserSpecified;
 	Height: * . Width;
-	HorizPos: VMiddle = Enclosing . Left + 1 cm  UserSpecified;
-	VertPos:  HMiddle = Enclosing . Top + 1 cm  UserSpecified;
+	HorizPos: VMiddle = Enclosing . Left UserSpecified;
+	VertPos:  HMiddle = Enclosing . Top UserSpecified;
 	IN Structure_view BEGIN
 	        if within use_
 	            Visibility: 0;
@@ -553,8 +553,8 @@ RULES
 	CreateWith (VerticalLine);
 	Width: 2.5 cm UserSpecified;
 	Height: 1.5 cm UserSpecified;
-	HorizPos: VMiddle = Enclosing . Left + 1.3 cm  UserSpecified;
-	VertPos:  HMiddle = Enclosing . Top + 0.8 cm  UserSpecified;
+	HorizPos: VMiddle = Enclosing . Left UserSpecified;
+	VertPos:  HMiddle = Enclosing . Top UserSpecified;
 	IN Structure_view BEGIN
 	        if within use_
 	            Visibility: 0;
@@ -627,7 +627,7 @@ RULES
 	CreateWith (VerticalLine);
 	Width: Enclosed . Width;
    	HorizPos: Left = Enclosing . Left Userspecified;
-   	VertPos:  HRef = Enclosing . Top + 0.9 Userspecified;
+   	VertPos:  HRef = Enclosing . Top Userspecified;
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
 	        if within use_
