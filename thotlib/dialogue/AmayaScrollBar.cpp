@@ -74,6 +74,7 @@ AmayaScrollBar::~AmayaScrollBar()
 void AmayaScrollBar::OnSetFocus( wxFocusEvent & event )
 {
   wxLogDebug( _T("AmayaScrollBar::OnSetFocus") );
+  TtaRedirectFocus();
   // do not skip this event because we want stop focus
   //event.Skip();
 }
@@ -89,7 +90,7 @@ void AmayaScrollBar::OnKillFocus( wxFocusEvent & event )
 {
   wxLogDebug( _T("AmayaScrollBar::OnKillFocus") );
   // do not skip this event because we want stop focus
-  //event.Skip();
+  event.Skip();
 }
 
 /*
