@@ -1714,7 +1714,8 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
 
       if (!xptr || *xptr == EOS)
 	{
-	  TtaSetStatus (doc, 1, "Error: there's no valid XPointer in the annotated document", NULL);
+	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_NO_ANNOT_MOVE),
+			NULL);
 	  return;
 	}
 
@@ -1726,7 +1727,9 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
 	  i = strlen (DocumentURLs[source_doc]);
 	  if (strncmp (DocumentURLs[source_doc], xptr, i) || xptr[i] != '#')
 	    {
-	      TtaSetStatus (doc, 1, "Error: cannot move the XPointer to a different document", NULL);
+	      TtaSetStatus (doc, 1, 
+			    TtaGetMessage (AMAYA, AM_NO_ANNOT_MOVE_OTHER),
+			    NULL);
 	      return;
 	    }
 	  else
