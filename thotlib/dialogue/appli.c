@@ -1493,7 +1493,10 @@ void TtaRaiseView (Document document, View view)
 	  gdk_window_show (gtk_widget_get_parent_window(GTK_WIDGET(w)));
 #endif /* _GTK */
 #else  /* _WINDOWS */
-	SetForegroundWindow (FrMainRef [idwindow]);
+	{
+		OpenIcon (FrMainRef[idwindow]);
+	SetForegroundWindow (FrMainRef[idwindow]);
+	}
 #endif /* _WINDOWS */
      }
 }
