@@ -9,7 +9,7 @@
 <PRE>
 <EM>Thot V2.0</EM></PRE>
 <PRE>
-Date: Draft, December 27, 1996</PRE>
+Date: Draft, February 11, 1997</PRE>
 
 <H1>The Thot Tool Kit API</H1>
 <ADDRESS>Vincent QUINT, Ir&egrave;ne VATTON</ADDRESS>
@@ -122,26 +122,26 @@ documents.</P>
 administration of the tool kit by the application.
 <LI>Group <EM>interface</EM> (section <A HREF="#secta7">7</A>) allows the
 application program to modify and extend the Thot editor.
-<LI>Group <EM>document</EM> (section <A HREF="#secta8">8</A>) allows the
+<LI>Group <EM>document</EM> (section <A HREF="#secta10">10</A>) allows the
 application to manage schemas and whole documents.
-<LI>Group <EM>tree</EM> (section <A HREF="#secta9">9</A>) handles the
+<LI>Group <EM>tree</EM> (section <A HREF="#secta11">11</A>) handles the
 hierarchical logical structure of documents.
-<LI>Group <EM>contents</EM> (section <A HREF="#secta10">10</A>) allows the
+<LI>Group <EM>contents</EM> (section <A HREF="#secta12">12</A>) allows the
 application to manipulate the contents of the leaves of the structure.
-<LI>Group <EM>attribute</EM> (section <A HREF="#secta11">11</A>) concerns
+<LI>Group <EM>attribute</EM> (section <A HREF="#secta13">13</A>) concerns
 logical attributes.
-<LI>Group <EM>reference</EM> (section <A HREF="#secta12">12</A>) contains
+<LI>Group <EM>reference</EM> (section <A HREF="#secta14">14</A>) contains
 functions for manipulating non hierarchical relationships (hypertext links).
-<LI>Group <EM>language</EM> (section <A HREF="#secta13">13</A>) concerns
+<LI>Group <EM>language</EM> (section <A HREF="#secta15">15</A>) concerns
 natural languages used in text contents.
-<LI>Group <EM>presentation</EM> (section <A HREF="#secta14">14</A>) handles
+<LI>Group <EM>presentation</EM> (section <A HREF="#secta16">16</A>) handles
 specific presentation.
-<LI>Group <EM>view</EM> (section <A HREF="#secta15">15</A>) handles views.
-<LI>Group <EM>selection</EM> (section <A HREF="#secta16">16</A>) contains the
+<LI>Group <EM>view</EM> (section <A HREF="#secta17">17</A>) handles views.
+<LI>Group <EM>selection</EM> (section <A HREF="#secta18">18</A>) contains the
 functions that handle the selection.
-<LI>Group <EM>message</EM> (section <A HREF="#secta17">17</A>) allows the
+<LI>Group <EM>message</EM> (section <A HREF="#secta8">8</A>) allows the
 application program to display messages intended to the user.
-<LI>Group <EM>dialogue</EM> (section <A HREF="#secta18">18</A>) allows the
+<LI>Group <EM>dialogue</EM> (section <A HREF="#secta9">9</A>) allows the
 application program to manage menus and forms intended to the user.
 </UL>
 
@@ -163,7 +163,7 @@ document, according to different criteria.
 <H3><A NAME="sectb22">2.2</A> Libraries</H3>
 
 <P>The Thot editing tool kit is accessed through an API that is defined in
-sections <A HREF="#secta6">6</A> to <A HREF="#secta18">18</A>. The tool kit
+sections <A HREF="#secta6">6</A> to <A HREF="#secta9">9</A>. The tool kit
 takes the form of two libraries for editing documents. Each library is suited
 to a different type of application and an application uses only one of the two
 editing libraries: the second library includes the  first one.</P>
@@ -179,7 +179,7 @@ structure and contents of documents without direct manipulation by a user.</P>
 
 <P>The last five groups of functions (those handling views, selections, and
 user interface to the editor) are not part of that library. Sections <A
-HREF="#secta15">15</A> to <A HREF="#secta18">18</A> of that document do not
+HREF="#secta17">17</A> to <A HREF="#secta9">9</A> of that document do not
 concern that library.</P>
 
 <H4><A NAME="sectc222">2.2.2</A> Thot Editor library</H4>
@@ -389,7 +389,7 @@ file, on Windows platforms the native Registry is used.</P>
 <HR>
 
 <DL>
-<DT>Parameters:</DT>
+<DT>Parameter:</DT>
 
 <DD><EM>applicationName</EM>: name of the application.
 </DL>
@@ -446,7 +446,7 @@ module that calls them.</P>
 <HR>
 
 <DL>
-<DT>Parameters:</DT>
+<DT>Parameter:</DT>
 
 <DD><EM>size</EM>: size in bytes (like using malloc) of the desired allocated
 buffer.
@@ -475,7 +475,7 @@ buffer.
 <HR>
 
 <DL>
-<DT>Parameters:</DT>
+<DT>Parameter:</DT>
 
 <DD><EM>buffer</EM>: the address of the buffer.
 </DL>
@@ -500,7 +500,7 @@ not.</P>
 <HR>
 
 <DL>
-<DT>Parameter:</DT>
+<DT>Parameters:</DT>
 
 <DD><EM>on</EM>: 1 if error messages must be printed, 0 if not.
 </DL>
@@ -681,12 +681,12 @@ application window (see function TtaOpenMainWindow).</P>
 
 <HR>
 
-<P>Pixmap TtaCreatePixmapLogo(char 8data)</P>
+<P>Pixmap TtaCreatePixmapLogo(char *data)</P>
 
 <HR>
 
 <DL>
-<DT>Parameters:</DT>
+<DT>Parameter:</DT>
 
 <DD><EM>data</EM>: data of the XPM file.
 </DL>
@@ -1079,7 +1079,891 @@ documents.</P>
 
 </DL>
 
-<H2><A NAME="secta8">8</A> <A NAME="L822">Documents and schemas</A></H2>
+<H2><A NAME="secta8">8</A> <A NAME="L8857">Messages</A></H2>
+
+<P>The functions described in this section require that file
+<EM>message.h</EM> be included in the modules that call them.</P>
+
+<P>The following functions are available in both the Thot Editor library and
+the ThotKernel library. They allow an application program to manage messages
+and dialogue text, as Thot tool kits do. Text of dialogue boxes and error
+messages is defined out of the application code and is dynamically loaded when
+the application is executed. This method allows application to adapt its
+interface to the current user (English text for English user, French text for
+French user, etc.). Each message is numbered, code referencing the message by
+its number and an external file associating this number with its corresponding
+text. An environment variable is used to reach the correct file that contains
+text of messages at the execution time. If this file is not reachable, a
+warning message is sent to the standard output, but the execution is not
+automatically stopped. Nevertheless, the Thot Editor library stops execution
+when its text file is not reachable because it cannot work without.</P>
+
+<P>We give an example of an application that needs four messages. The
+applicationMSG.h file is used to address correct message in source code and
+the en-applicationTXT gives the English version of messages text:</P>
+
+<TABLE BORDER=0>
+  <TR>
+
+<TD width=50%>
+
+<P>#define APP_start              0</P>
+
+<P>#define APP_abort             1</P>
+
+<P>#define APP_no_file          2 </P>
+
+<P>#define APP_complete      3</P>
+
+<P>#define APP_MSG_MAX 4</P>
+
+<P>applicationMSG.h</P>
+
+<TD width=50%>
+
+<P>0   Application</P>
+
+<P>1   Application aborted</P>
+
+<P>2   Unreachable file %s</P>
+
+<P>3   End of application</P>
+
+<P> </P>
+
+<P>en-applicationTXT</P>
+
+  </TR>
+</TABLE>
+
+<P> </P>
+
+<P>The application has to load the rigth message table:</P>
+
+<PRE>
+errorTable = TtaGetMessageTable("applicationTXT", APP_MSG_MAX);
+</PRE>
+
+<P>and displays the third error message using one of available display
+function (for example the TtaDisplayMessage function and TtaGetMessage):</P>
+
+<PRE>
+TtaDisplayMessage(FATAL, TtaGetMessage(errorTable, APP_no_file), filename);
+</PRE>
+
+<H3><A NAME="sectb81">8.1</A> Constructors</H3>
+
+<H4><A NAME="sectc811">8.1.1</A> TtaGetMessageTable</H4>
+
+<P>Loads text of application messages in a dynamically allocated table and
+returns the identifcation of this messages table. The <TT>msgFile</TT> is the
+generic name of the message file to be loaded. The <TT>msgNumber</TT>
+parameter denotes the number of messages to be read in the file.The full name
+of the loaded file is  <TT>$THOTDIR/config/$LANG-msgFile</TT>, where
+<TT>$THOTDIR</TT> represents the root path of Thot hierarchy and
+<TT>$LANG</TT> represents the current language (for example <TT>en</TT>).
+<TT>$THOTDIR</TT> is computed by the Thot toolkit and <TT>$LANG</TT> can be
+set in the user registry <TT>thot.ini</TT>.</P>
+
+<HR>
+
+<P>int TtaGetMessageTable(char *msgFile, int msgNumber)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>msgFile</EM>: the generic name of the message file.
+<P>msgNumber: the number of messages.</P>
+
+</DL>
+
+<DL>
+<DT>Return value:</DT>
+
+<DD>The messages table identifier or -1 if the table is not allocated and
+loaded.
+</DL>
+
+<H3><A NAME="sectb82">8.2</A> Accessors</H3>
+
+<H4><A NAME="sectc821">8.2.1</A> TtaGetMessage</H4>
+
+<P>Returns the text of the corresponding message.</P>
+
+<HR>
+
+<P>char *TtaGetMessage(int msgTableID, int msgIndex)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>msgTableID</EM>: identifier of the messages table.
+<P><EM>msgIndex</EM>: index of the message.</P>
+
+</DL>
+
+<DL>
+<DT>Return value:</DT>
+
+<DD>Text of the message (an empty text if the table or the message is not
+found).
+</DL>
+
+<H4><A NAME="sectc822">8.2.2</A> TtaDisplaySimpleMessage</H4>
+
+<P>Displays the text of a simple message. This message is often displayed in
+the message area of the main application window ¾ if it exists ¾ or directed
+to the standard output for batch applications.</P>
+
+<P>The msgType parameter defines the importance of the message:</P>
+
+<UL>
+<LI>INFO: the message is displayed in the message area of the main application
+window just as an information.
+<LI>OVERHEAD: the message replaces the previous message in the message area of
+the main application window.
+<LI>FATAL: the message stops the application with an  error code.
+<LI>CONFIRM: the message pops a message box to display the message within and
+waits for until the end user confirms the message has been read.
+</UL>
+
+<HR>
+
+<P>void TtaDisplaySimpleMessage(int msgType, int msgTableID, int msgIndex)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD>
+<P><EM>msgType</EM>: the message type (INFO,  OVERHEAD, FATAL, CONFIRM).</P>
+
+<P><EM>msgTableID</EM>: identifier of the messages table (LIB for the standard
+Thot messages).</P>
+
+<P><EM>msgIndex</EM>: index of the message.</P>
+
+</DL>
+
+<H4><A NAME="sectc823">8.2.3</A> TtaDisplayMessage</H4>
+
+<P>Displays a message mixing static text (the text of the message) with a
+variable number of parameters. The static text plays the role of a format
+(like the prinf format) and may include necessary format commandes for each
+parameter: a %s for a string, a %d for an integer. Number and type of variable
+parameters depend on format commands included in the message text.</P>
+
+<P>.</P>
+
+<HR>
+
+<P>void TtaDisplayMessage(int msgType, msgTableID, int msgIndex, ...)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD>
+<P><EM>msgType</EM>: the message type (INFO,  OVERHEAD, FATAL, CONFIRM).</P>
+
+<P><EM>msgTableID</EM>: identifier of the messages table (LIB for the standard
+Thot messages).</P>
+
+<P><EM>msgIndex</EM>: index of the message.</P>
+
+<P><EM>...</EM>: variable parameters.</P>
+
+</DL>
+
+<H2><A NAME="secta9">9</A> <A NAME="L9217">Dialogue</A></H2>
+
+<P>The Thot editing tool kit provides dialogue functions. There are high level
+functions that hide most of the complex aspects of OSF/Motif and thus allows
+an application to use OSF/Motif very easily and dynamically (all dialogue
+entities such as menus, buttons, forms, etc. can be created and modified at
+any time). As these dialogue functions are already used internally by the
+editing tool kit, another reason for an application to use it, is to present
+the user with a homogeneous and consistent look and feel for the whole
+application.</P>
+
+<P>The functions described in this section require that file
+<EM>dialogue.h</EM> be included in the module that calls them. They are
+available only in the Thot Editor library.</P>
+
+<P>Each dialogue element is identified by a unique reference. This reference
+is associated to the dialogue element at the creation time and will be used
+all along the time it exists to perform any action on it (intialization,
+display, undisplay and destruction).</P>
+
+<P>The application receives dialogue callbacks from created and displayed
+dialogue elements through predefined specific callback procedures. The
+application can define several callback procedures (at least one) and each
+callback procedure can manage callbacks from several dialogue elements. Each
+callback identifies the concerned element dialogue and allows the procedure to
+switch on the correct management.</P>
+
+<H3><A NAME="sectb91">9.1</A> Constructors</H3>
+
+<H4><A NAME="sectc911">9.1.1</A> TtaSetCallback</H4>
+
+<P>This function defines a callback procedure for a set of dialogue elements
+(menus. forms, etc.). The function returns the current base value of concerned
+dialogue elements and reserves the set of references contained between "base"
+and "base+set-1". Each element can be created now after. </P>
+
+<P>When user acts on these dialogue elements, the callback procedure is called
+with three parameters:</P>
+
+<UL>
+<LI>the reference of the concerned dialogue element,
+<LI>the type of the returned value (INTEGER_DATA or STRING_DATA) depending of
+the dialogue element type (menu, form, text-form, etc.),
+<LI>the returned data.
+</UL>
+
+<HR>
+
+<P>int TtaSetCallback (void (*callbakProcedure) (), int set)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>callbakProcedure</EM>: the callback procedure to be called This
+function has to be previously declared like that:
+void Proc (int reference, int typeData, char *data)
+<P><EM>set</EM>: the number of concerned dialogue elements.</P>
+
+</DL>
+
+<DL>
+<DT>Return value:</DT>
+
+<DD>the base of dialogue element references.
+</DL>
+
+<H4><A NAME="sectc912">9.1.2</A> TtaNewForm</H4>
+
+<P>This function creates a form element attached to the ThotWidget parent.
+When the parent ThotWidget is distroyed, the ThotWidget that realizes this
+form is automatically destroyed. Usually the parent is the document view frame
+returned by the API function <TT>TtaGetViewFrame (document, view) </TT>and the
+form has to be destroyed before closing the document view.</P>
+
+<P>As seen in the example below, the fonction automatically generates two
+buttons on the bottom of the form:</P>
+
+<UL>
+<LI>a "confirm" button
+<LI>and a "cancel/done" button.
+</UL>
+
+<P>The parameter dbutton controls the choice of the "cancel/done" button. Two
+values are available: D_CANCEL or D_DONE.</P>
+<IMG SRC="form.gif" ALT="Image form.gif">
+<HR>
+
+<P>void TtaNewForm (int ref, ThotWidget parent, char *title, boolean
+horizontal, int packet, char button, int dbutton)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>ref</EM>: the unique reference attached to the dialogue element.
+<P><EM>parent</EM>: the ThotWidget parent (usually TtaGetViewFrame (document,
+view)).</P>
+
+<P><EM>title</EM> the title or NULL.</P>
+
+<P><EM>horizontal</EM> is TRUE if dialogue elements included into the form are
+arranged horizontally.</P>
+
+<P><EM>packet</EM> number of dialogue elements in the same line if arranged
+horizontally or in the same column is arranged vertically.</P>
+
+<P><EM>button</EM> the mouse button used to select the element dialogue:</P>
+
+<UL>
+<LI>'L' for left button,
+<LI>'M' for middle button,
+<LI>'R' for right button.
+</UL>
+
+<P><EM>dbutton</EM> the type of "cancel/done" button: D_CANCEL or D_DONE.</P>
+
+</DL>
+
+<H4><A NAME="sectc913">9.1.3</A> <A NAME="L34518">TtaNewSheet</A></H4>
+
+<P>This function creates a sheet element attached to the ThotWidget parent.
+When the parent ThotWidget is distroyed, the ThotWidget that 
+<P>realizes this sheet is automatically destroyed. Usually the parent is the
+document view frame returned by the API function <TT>TtaGetViewFrame
+(document, view) </TT>and the sheet has to be destroyed before closing the
+document view.</P>
+</P>
+
+<P>A sheet is similar to a form element, but only the "cancel/done" button is
+automatically generated and other extra buttons are explicitly declared. The
+parameter dbutton controls the choice of the "cancel/done" button. Two values
+are available: D_CANCEL or D_DONE. In the example below, four extra buttons
+had been declared: "Skip and next", "Skip (+dic)", "Replace and next" and
+"Replace (+dic)".</P>
+<IMG SRC="sheet.gif" ALT="Image sheet.gif">
+<HR>
+
+<P>void TtaNewSheet (int ref, ThotWidget parent, char *title, int number, char
+*text, boolean horizontal, int packet, char button, int dbutton)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>ref</EM>: the unique reference attached to the dialogue element.
+<P><EM>parent</EM>: the ThotWidget parent (usually TtaGetViewFrame (document,
+view)).</P>
+
+<P><EM>title</EM> the title or NULL.</P>
+
+<P><EM>number</EM>: number of extra buttons declared in the sheet.</P>
+
+<P><EM>text</EM>: the list of strings declaring extra buttons ("A\0B\0" for
+two extra buttons A and B).</P>
+
+<P><EM>horizontal</EM> is TRUE if dialogue elements included into the form are
+arranged horizontally.</P>
+
+<P><EM>packet</EM> number of dialogue elements in the same line if arranged
+horizontally or in the same column is arranged vertically.</P>
+
+<P><EM>button</EM> the mouse button used to select the element dialogue:</P>
+
+<UL>
+<LI>'L' for left button,
+<LI>'M' for middle button,
+<LI>'R' for right button.
+</UL>
+
+<P><EM>dbutton</EM> the type of "cancel/done" button: D_CANCEL or D_DONE.</P>
+
+</DL>
+
+<H4><A NAME="sectc914">9.1.4</A> TtaNewDialogSheet</H4>
+
+<P>This function creates a dialog sheet element attached to the ThotWidget
+parent. When the parent ThotWidget is distroyed, the ThotWidget that 
+<P>realizes this sheet is automatically destroyed. Usually the parent is the
+document view frame returned by the API function <TT>TtaGetViewFrame
+(document, view) </TT>and the sheet has to be destroyed before closing the
+document view.</P>
+</P>
+
+<P>A dialog sheet is similar to a sheet element, but no "cancel/done" button
+is automatically generated.</P>
+
+<HR>
+
+<P>void TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int
+number, char *text, boolean horizontal, int packet, char button)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>ref</EM>: the unique reference attached to the dialogue element.
+<P><EM>parent</EM>: the ThotWidget parent (usually TtaGetViewFrame (document,
+view)).</P>
+
+<P><EM>title</EM> the title or NULL.</P>
+
+<P><EM>number</EM>: number of extra buttons declared in the sheet.</P>
+
+<P><EM>text</EM>: the list of strings declaring extra buttons ("A\0B\0" for
+two extra buttons "A" and "B").</P>
+
+<P><EM>horizontal</EM> is TRUE if dialogue elements included into the form are
+arranged horizontally.</P>
+
+<P><EM>packet</EM> number of dialogue elements in the same line if arranged
+horizontally or in the same column is arranged vertically.</P>
+
+<P><EM>button</EM> the mouse button used to select the element dialogue:</P>
+
+<UL>
+<LI>'L' for left button,
+<LI>'M' for middle button,
+<LI>'R' for right button.
+</UL>
+
+</DL>
+
+<H4><A NAME="sectc915">9.1.5</A> TtaNewSubmenu</H4>
+
+<P>This function creates a submenu element attached to a menu entry or a form
+(form, sheet or dialog sheet). In a form, a submenu is displayed as a radio
+menu (see the menu "Paper Format" in the example presented in <A
+HREF="#sectc913">9.1.3</A>). Only one entry of this menu can be selected at
+the same time.</P>
+
+<P>Each entry is typed:</P>
+
+<UL>
+<LI>a simple button,
+<LI>a link towards a form,
+<LI>a link towards a submenu,
+<LI>toggle button,
+<LI>a separator.
+</UL>
+
+<HR>
+
+<P>void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title, int
+number, char *text, char *equiv, boolean react)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>ref</EM>: the unique reference attached to the dialogue element.
+<P><EM>ref_parent</EM>: the reference of parent element (a menu or a
+form).</P>
+
+<P><EM>entry</EM>: the entry index (0 to n) in the parent menu which the
+submenu is attached to. For a submenu attached to  a form this paramameter is
+not treated.</P>
+
+<P><EM>title</EM> the title or NULL.</P>
+
+<P><EM>number</EM>: number of entries declared in the submenu.</P>
+
+<P><EM>text</EM>: the list of strings declaring entries. Each entry starts
+with a special character that fixes the entry function:</P>
+
+<UL>
+<LI>'B' the entry is a simple button,
+<LI>'F' the entry calls a form,
+<LI>'M' the entry calls a submenu,
+<LI>'T' the entry is a toggle.
+<LI>'S" the entry is a separator (the entry string is limited to this
+character).
+</UL>
+
+<P>For example the text value "TA\0B" declares a toggle entry "A" and a button
+entry "B".</P>
+
+<P><EM>equiv</EM>: the list of strings declaring shortcuts attached to each
+entry. This parameter can be NULL if no shortcut is declared.</P>
+
+<P><EM>react</EM>: TRUE if the application wants to be informed as soon as the
+user selects in this submenu in a form. FALSE if the application prefers to
+wait for the confirmation of the form to receive the selected value.</P>
+
+</DL>
+
+<H4><A NAME="sectc916">9.1.6</A> TtaNewIconMenu</H4>
+
+<P>This function creates a submenu element attached to a menu entry or a form
+(form, sheet or dialog sheet). This submenu is composed of icons. Only one
+entry of this menu can be selected at the same time. This menu is always
+reactive.</P>
+
+<HR>
+
+<P>void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title, int
+number, Pixmap * icons, boolean horizontal)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>ref</EM>: the unique reference attached to the dialogue element.
+<P><EM>ref_parent</EM>: the reference of parent element (a menu or a
+form).</P>
+
+<P><EM>entry</EM>: the entry index (0 to n) in the parent menu which the
+submenu is attached to. For a submenu attached to  a form this paramameter is
+not treated.</P>
+
+<P><EM>title</EM> the title or NULL.</P>
+
+<P><EM>number</EM>: number of entries declared in the menu.</P>
+
+<P><EM>icons</EM>: the list of pixmaps.</P>
+
+<P><EM>horizontal</EM> is TRUE if entries are arranged horizontally.</P>
+
+</DL>
+
+<H4><A NAME="sectc917">9.1.7</A> TtaNewToggleMenu</H4>
+
+<P>This function creates a toggle menu element attached to a  form (form,
+sheet or dialog sheet). This menu is displayed as a toggle menu (see the menu
+"Options" in the example presented in <A HREF="#sectc913">9.1.3</A>). Only or
+more entries of this menu can be selected at the same time.</P>
+
+<P>Each entry is typed:</P>
+
+<UL>
+<LI>a toggle,
+<LI>a separator.
+</UL>
+
+<HR>
+
+<P>void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
+char *text, char *equiv, boolean react)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>ref</EM>: the unique reference attached to the dialogue element.
+<P><EM>ref_parent</EM>: the reference of parent element (a form).</P>
+
+<P><EM>title</EM> the title or NULL.</P>
+
+<P><EM>number</EM>: number of entries declared in the menu.</P>
+
+<P><EM>text</EM>: the list of strings declaring entries. Each entry starts
+with a special character that fixes the entry function:</P>
+
+<UL>
+<LI>'B' or 'T' the entry is a simple button,
+<LI>'S" the entry is a separator (the entry string is limited to this
+character).
+</UL>
+
+<P>For example the text value "TA\0S\0BC" declares an entry "A", a separator
+and an entry "C".</P>
+
+<P><EM>equiv</EM>: the list of strings declaring shortcuts attached to each
+entry. This parameter can be NULL if no shortcut is declared.</P>
+
+<P><EM>react</EM>: TRUE if the application wants to be informed as soon as the
+user selects in this submenu in a form. FALSE if the application prefers to
+wait for the confirmation of the form to receive the selected value.</P>
+
+</DL>
+
+<H4><A NAME="sectc918">9.1.8</A> TtaNewSelector</H4>
+
+<P>This function creates a selector element attached to a  form (form, sheet
+or dialog sheet).</P>
+
+<P>The selector can be displayed with or without a text input zone (controled
+by the parameter <TT>withText</TT>) that allows user to choose a predefined
+string into the selector or to insert directly  a free text. The selector can
+be displayed with or without a label (controled by the parameter
+<TT>label</TT>) that allow user to select this fixed.</P>
+
+<P>In the previous example presented in <A HREF="#sectc913">9.1.3</A>, a
+selector is displayed with the title "Spell checking ...", a text zone and the
+label "W3C".</P>
+
+<HR>
+
+<P>void TtaNewSelector (int ref, int ref_parent, char *title, int number, char
+*text, int height, char *label, boolean withText, boolean react)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>ref</EM>: the unique reference attached to the dialogue element.
+<P><EM>ref_parent</EM>: the reference of parent element (a form).</P>
+
+<P><EM>title</EM> the title or NULL.</P>
+
+<P><EM>number</EM>: number of entries declared in the submenu.</P>
+
+<P><EM>text</EM>: the list of strings declaring entries. For example the text
+value "A\0B\0C" declares an entrries "A", "B" and "C".</P>
+
+<P><EM>height</EM>: the height of the selector (number of entries
+displayed).</P>
+
+<P><EM>label</EM>: the label string of the extra entry or NULL.</P>
+
+<P><EM>withText</EM>: TRUE if the application wants to display a text zone at
+the selector bottom.</P>
+
+<P><EM>react</EM>: TRUE if the application wants to be informed as soon as the
+user selects in this selector. FALSE if the application prefers to wait for
+the confirmation of the form to receive the selected value.</P>
+
+</DL>
+
+<H4><A NAME="sectc919">9.1.9</A> TtaNewLabel</H4>
+
+<P>This function creates a label element attached to a  form (form, sheet or
+dialog sheet). In the previous example presented in <A
+HREF="#sectc913">9.1.3</A>, there is a label element "Language: English".</P>
+
+<HR>
+
+<P>void TtaNewLabel (int ref, int ref_parent, char *text)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>ref</EM>: the unique reference attached to the dialogue element.
+<P><EM>ref_parent</EM>: the reference of parent element (a form).</P>
+
+<P><EM>text</EM>: the text of the label.</P>
+
+</DL>
+
+<H4><A NAME="sectc9110">9.1.10</A> TtaNewTextForm</H4>
+
+<P>This function creates a text input zone attached to a  form (form, sheet or
+dialog sheet). In the previous example presented in <A
+HREF="#sectc913">9.1.3</A>, there is a text input zone without title.</P>
+
+<HR>
+
+<P>TtaNewTextForm (int ref, int ref_parent, char *title, int width, int
+height, boolean react)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>ref</EM>: the unique reference attached to the dialogue element.
+<P><EM>ref_parent</EM>: the reference of parent element (a form).</P>
+
+<P><EM>title</EM> the title or NULL.</P>
+
+<P><EM>width</EM>: number of charaters displayed.</P>
+
+<P><EM>height</EM>: tnumber of lines displayed.</P>
+
+<P><EM>react</EM>: TRUE if the application wants to be informed as soon as the
+user inserts characters. FALSE if the application prefers to wait for the
+confirmation of the form to receive the final string.</P>
+
+</DL>
+
+<H4><A NAME="sectc9111">9.1.11</A> TtaNewNumberForm</H4>
+
+<P>This function creates an input zone for integer values attached to a  form
+(form, sheet or dialog sheet). In the previous example presented in <A
+HREF="#sectc913">9.1.3</A>, there is an input zone for integer values (from 1
+to 10) displayed with the title "Number of proposals".</P>
+
+<HR>
+
+<P>void TtaNewNumberForm (int ref, int ref_parent, char *title, int min, int
+max, boolean react)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>ref</EM>: the unique reference attached to the dialogue element.
+<P><EM>ref_parent</EM>: the reference of parent element (a form).</P>
+
+<P><EM>title</EM> the title or NULL.</P>
+
+<P><EM>min</EM>: the minimum integer value.</P>
+
+<P><EM>max</EM>: the maximum integer value.</P>
+
+<P><EM>react</EM>: TRUE if the application wants to be informed as soon as the
+user inserts characters. FALSE if the application prefers to wait for the
+confirmation of the form to receive the final string.</P>
+
+</DL>
+
+<H4><A NAME="sectc9112">9.1.12</A> TtaDestroyDialogue</H4>
+
+<P>This function destroys an existing dialogue element.</P>
+
+<HR>
+
+<P>void TtaDestroyDialogue (int ref)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD>
+<P><EM>ref</EM>: the unique reference attached to the dialogue element.</P>
+
+</DL>
+
+<H4><A NAME="sectc9113">9.1.13</A> TtaListDirectory</H4>
+
+<P>Creates one or two selectors that allow end-user to select a directory
+and/or a file included within the current specified directory. This function
+supposes that the application had first created a form where selectors have to
+be inserted. The application is able to create either only the directory
+selector or only the file selector. A suffix can be specified if the
+application wants to filter a specific class of files. It is the
+responsibility of the application to receive and handle the selectors
+callback.</P>
+
+<HR>
+
+<P>void TtaListDirectory(char *aDirectory, int formRef, char *dirTitle, int
+dirRef, char *suffix, char *fileTitle, int fileRef)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>aDirectory</EM>: the current designated directory.
+<P><EM>formRef</EM>: the form identification.</P>
+
+<P><EM>dirTitle</EM>: the title of the directory selector.</P>
+
+<P><EM>dirRef</EM>: the directory selector identification or -1 if this
+selector is not desired.</P>
+
+<P><EM>suffix</EM>: the suffix used for filtering files (for example
+".PIV")</P>
+
+<P><EM>fileTitle</EM>: the title of the file selector.</P>
+
+<P><EM>fileRef</EM>: the file selector identification or -1 if this selector
+is not desired.</P>
+
+</DL>
+
+<H4><A NAME="sectc9114">9.1.14</A> TtaIsSuffixFileIn</H4>
+
+<P>Returns True if the specified directory contains files with the specified
+suffix.</P>
+
+<HR>
+
+<P>boolean TtaIsSuffixFileIn(char *aDirectory, char *suffix)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD><EM>aDirectory</EM>: the current designated directory.
+<P><EM>suffix</EM>: the suffix used for filtering files (for example
+".PIV")</P>
+
+</DL>
+
+<DL>
+<DT>Return value:</DT>
+
+<DD>True or False.
+</DL>
+
+<H3><A NAME="sectb92">9.2</A> Modificators</H3>
+
+<H4><A NAME="sectc921">9.2.1</A> TtaSetMenuForm</H4>
+
+<P>Selects an entry in a radio menu (submenu) of a form.</P>
+
+<HR>
+
+<P>void TtaSetMenuForm (int ref, int entry)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD>
+<P><EM>ref</EM>: the unique reference attached to the dialogue element.</P>
+
+<P><EM>entry</EM>: the selected entry (0 to n).</P>
+
+</DL>
+
+<H4><A NAME="sectc922">9.2.2</A> TtaSetToggleMenu</H4>
+
+<P>Changes the status of a toggle entry of a menu (submenu or toggle menu) in
+a form.</P>
+
+<HR>
+
+<P>void TtaSetToggleMenu (int ref, int value, boolean on)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD>
+<P><EM>ref</EM>: the unique reference attached to the dialogue element.</P>
+
+<P><EM>entry</EM>: the selected entry (0 to n).</P>
+
+<P><EM>on</EM>: fixes the status of the toggle; TRUE if the toggle is
+selected.</P>
+
+</DL>
+
+<H4><A NAME="sectc923">9.2.3</A> TtaShowDialogue</H4>
+
+<P>This function displays an existing dialogue (form, sheet, dialog
+sheet).</P>
+
+<HR>
+
+<P>void TtaShowDialogue (int ref, boolean remanent)</P>
+
+<HR>
+
+<DL>
+<DT>Parameters:</DT>
+
+<DD>
+<P><EM>ref</EM>: the unique reference attached to the dialogue element.</P>
+
+<P><EM>remanent</EM>: TRUE if the dialogue element is not automatically
+unmapped.</P>
+
+</DL>
+
+<H4><A NAME="sectc924">9.2.4</A> TtaUnmapDialogue</H4>
+
+<P>This function undisplays an existing dialogue (form, sheet, dialog
+sheet).</P>
+
+<HR>
+
+<P>void TtaUnmapDialogue (int ref)</P>
+
+<HR>
+
+<DL>
+<DT>Parameter:</DT>
+
+<DD>
+<P><EM>ref</EM>: the unique reference attached to the dialogue element.</P>
+
+</DL>
+
+<H2><A NAME="secta10">10</A> <A NAME="L822">Documents and schemas</A></H2>
 
 <P>The functions described in this section require that file
 <EM>document.h</EM> be included in the module that calls them.</P>
@@ -1165,7 +2049,7 @@ document, the access mode is set to read/write, but it can be changed at any
 time by the function TtaSetDocumentAccessMode.
 <P>An application program can more precisely control the operations that the
 user is allowed to perform, by associating an access mode with each element in
-a document. This is explained in section <A HREF="#secta9">9</A>.</P>
+a document. This is explained in section <A HREF="#secta11">11</A>.</P>
 
 </DL>
 
@@ -1208,9 +2092,9 @@ schema extensions can be associated to the main structure schema of that
 document.
 </DL>
 
-<H3><A NAME="sectb81">8.1</A> Constructors</H3>
+<H3><A NAME="sectb101">10.1</A> Constructors</H3>
 
-<H4><A NAME="sectc811">8.1.1</A> TtaNewDocument</H4>
+<H4><A NAME="sectc1011">10.1.1</A> TtaNewDocument</H4>
 
 <P>Creates the internal representation of a new document according to a given
 structure schema. No file is created immediately, but the backup files (.BAK
@@ -1241,7 +2125,7 @@ TtaSetDocumentPath).</P>
 created.
 </DL>
 
-<H4><A NAME="sectc812">8.1.2</A> TtaOpenDocument</H4>
+<H4><A NAME="sectc1012">10.1.2</A> TtaOpenDocument</H4>
 
 <P>Opens an existing document for subsequent operations.</P>
 
@@ -1273,7 +2157,7 @@ parameter (see TtaSetDocumentPath).
 <DD>the opened document, or 0 if the document cannot be open.
 </DL>
 
-<H4><A NAME="sectc813">8.1.3</A> TtaSaveDocument</H4>
+<H4><A NAME="sectc1013">10.1.3</A> TtaSaveDocument</H4>
 
 <P>Saves a document into a file in Thot format (.PIV). The document is not
 closed by the function and can still be accessed by the application
@@ -1299,7 +2183,7 @@ removed by the function TtaRemoveDocument.</P>
 
 </DL>
 
-<H4><A NAME="sectc814">8.1.4</A> TtaExportDocument</H4>
+<H4><A NAME="sectc1014">10.1.4</A> TtaExportDocument</H4>
 
 <P>Saves a document into a file in a particular format. The output format is
 specified by a translation schema. The document is not closed by the function
@@ -1325,7 +2209,7 @@ TtaSetSchemaPath.</P>
 
 </DL>
 
-<H4><A NAME="sectc815">8.1.5</A> TtaCloseDocument</H4>
+<H4><A NAME="sectc1015">10.1.5</A> TtaCloseDocument</H4>
 
 <P>Closes a document that is no longer needed and releases all ressources
 allocated to the document. This function does not save the document.</P>
@@ -1342,7 +2226,7 @@ allocated to the document. This function does not save the document.</P>
 <DD><EM>document</EM>: the document to be closed.
 </DL>
 
-<H4><A NAME="sectc816">8.1.6</A> TtaRemoveDocument</H4>
+<H4><A NAME="sectc1016">10.1.6</A> TtaRemoveDocument</H4>
 
 <P>Closes a document, releases all ressources allocated to that document,
 removes all files related to the document and updates all links connecting the
@@ -1360,7 +2244,7 @@ removed document with other documents.</P>
 <DD><EM>document</EM>: the document to be removed.
 </DL>
 
-<H4><A NAME="sectc817">8.1.7</A> TtaSetDocumentPath</H4>
+<H4><A NAME="sectc1017">10.1.7</A> TtaSetDocumentPath</H4>
 
 <P>Sets a new list of document directories. This list replaces the existing
 one. It is used for searching a document when it is open either by the user or
@@ -1380,7 +2264,7 @@ list is used when a new document is created (see TtaNewDocument).</P>
 the character ':'.
 </DL>
 
-<H4><A NAME="sectc818">8.1.8</A> TtaAppendDocumentPath</H4>
+<H4><A NAME="sectc1018">10.1.8</A> TtaAppendDocumentPath</H4>
 
 <P>Appends a new directory in the list of document directories. The function
 controls that the parameter is the name of an existing directory and sets an
@@ -1399,7 +2283,7 @@ directories yet, the function has no effect.</P>
 <DD><EM>aDirectory</EM>: the new directory name.
 </DL>
 
-<H4><A NAME="sectc819">8.1.9</A> TtaSetSchemaPath</H4>
+<H4><A NAME="sectc1019">10.1.9</A> TtaSetSchemaPath</H4>
 
 <P>Sets a new list of schema directories. This list replaces the existing one.
 It is used for searching schemas.</P>
@@ -1417,9 +2301,9 @@ It is used for searching schemas.</P>
 the character ':'.
 </DL>
 
-<H3><A NAME="sectb82">8.2</A> Modificators</H3>
+<H3><A NAME="sectb102">10.2</A> Modificators</H3>
 
-<H4><A NAME="sectc821">8.2.1</A> TtaNewNature</H4>
+<H4><A NAME="sectc1021">10.2.1</A> TtaNewNature</H4>
 
 <P>Adds a new nature in a structure schema and returns the structure schema of
 the new nature. If the nature already exists in that structure schema, the
@@ -1453,7 +2337,7 @@ presentationName is ignored.</P>
 not been loaded.
 </DL>
 
-<H4><A NAME="sectc822">8.2.2</A> TtaNewSchemaExtension</H4>
+<H4><A NAME="sectc1022">10.2.2</A> TtaNewSchemaExtension</H4>
 
 <P>Loads a structure schema extension and associates it with a given
 document.</P>
@@ -1483,7 +2367,7 @@ presentation schema is associated.</P>
 <DD>the extension schema, NULL if the extension schema has not been loaded.
 </DL>
 
-<H4><A NAME="sectc823">8.2.3</A> TtaRemoveSchemaExtension</H4>
+<H4><A NAME="sectc1023">10.2.3</A> TtaRemoveSchemaExtension</H4>
 
 <P>Removes a structure schema extension from a given document. Removes also
 from the document all attributes and elements defined in that structure schema
@@ -1512,7 +2396,7 @@ extension.</P>
 
 </DL>
 
-<H4><A NAME="sectc824">8.2.4</A> TtaSetPSchema</H4>
+<H4><A NAME="sectc1024">10.2.4</A> TtaSetPSchema</H4>
 
 <P>Sets or changes the main presentation schema of a document. The document
 must be open, but no view must be open for that document.</P>
@@ -1532,7 +2416,7 @@ with the document.</P>
 
 </DL>
 
-<H4><A NAME="sectc825">8.2.5</A> TtaSetDocumentDirectory</H4>
+<H4><A NAME="sectc1025">10.2.5</A> TtaSetDocumentDirectory</H4>
 
 <P>Sets the directory to which the document will be saved when calling
 TtaSaveDocument.</P>
@@ -1551,7 +2435,7 @@ TtaSaveDocument.</P>
 
 </DL>
 
-<H4><A NAME="sectc826">8.2.6</A> TtaSetDocumentName</H4>
+<H4><A NAME="sectc1026">10.2.6</A> TtaSetDocumentName</H4>
 
 <P>Sets or changes the name of a document. The document must be loaded.</P>
 
@@ -1572,7 +2456,7 @@ The name must not exceed 31 characters.</P>
 
 </DL>
 
-<H4><A NAME="sectc827">8.2.7</A> TtaSetDocumentAccessMode</H4>
+<H4><A NAME="sectc1027">10.2.7</A> TtaSetDocumentAccessMode</H4>
 
 <P>Sets the access mode for a document.</P>
 
@@ -1590,7 +2474,7 @@ The name must not exceed 31 characters.</P>
 
 </DL>
 
-<H4><A NAME="sectc828">8.2.8</A> TtaSetDocumentBackUpInterval</H4>
+<H4><A NAME="sectc1028">10.2.8</A> TtaSetDocumentBackUpInterval</H4>
 
 <P>Sets the backup interval for a document.</P>
 
@@ -1610,7 +2494,7 @@ the document into a .BAK file.</P>
 
 </DL>
 
-<H4><A NAME="sectc829">8.2.9</A> TtaSetNotificationMode</H4>
+<H4><A NAME="sectc1029">10.2.9</A> TtaSetNotificationMode</H4>
 
 <P>Sets the ECF notification mode for a document.</P>
 
@@ -1630,7 +2514,7 @@ subtrees must be notified.</P>
 
 </DL>
 
-<H4><A NAME="sectc8210">8.2.10</A> TtaSetDocumentModified</H4>
+<H4><A NAME="sectc10210">10.2.10</A> TtaSetDocumentModified</H4>
 
 <P>Notifies the tool kit that a document has been modified by the application.
 As a consequence, the user will be asked to save the document when closing
@@ -1648,7 +2532,7 @@ it.</P>
 <DD><EM>document</EM>: the document.
 </DL>
 
-<H4><A NAME="sectc8211">8.2.11</A> TtaSetDocumentUnmodified</H4>
+<H4><A NAME="sectc10211">10.2.11</A> TtaSetDocumentUnmodified</H4>
 
 <P>Notifies the tool kit that a document must be considered as not modified.
 As a consequence, if no further modification is made to that document, the
@@ -1668,9 +2552,9 @@ user will not be asked to save the document when closing it.</P>
 
 </DL>
 
-<H3><A NAME="sectb83">8.3</A> Accessors</H3>
+<H3><A NAME="sectb103">10.3</A> Accessors</H3>
 
-<H4><A NAME="sectc831">8.3.1</A> TtaGetSchemaExtension</H4>
+<H4><A NAME="sectc1031">10.3.1</A> TtaGetSchemaExtension</H4>
 
 <P>Returns the extension structure schema associated with the given
 document.</P>
@@ -1692,7 +2576,7 @@ is asked.</P>
 
 </DL>
 
-<H4><A NAME="sectc832">8.3.2</A> TtaGetDocumentName</H4>
+<H4><A NAME="sectc1032">10.3.2</A> TtaGetDocumentName</H4>
 
 <P>Returns the name of a document.</P>
 
@@ -1716,7 +2600,7 @@ is asked.</P>
 <DD>name of that document.
 </DL>
 
-<H4><A NAME="sectc833">8.3.3</A> TtaGetDocumentFromName</H4>
+<H4><A NAME="sectc1033">10.3.3</A> TtaGetDocumentFromName</H4>
 
 <P>Returns the document having a given name.</P>
 
@@ -1740,7 +2624,7 @@ is asked.</P>
 <DD>the document having that name.
 </DL>
 
-<H4><A NAME="sectc834">8.3.4</A> TtaGetDocumentSSchema</H4>
+<H4><A NAME="sectc1034">10.3.4</A> TtaGetDocumentSSchema</H4>
 
 <P>Returns the main structure schema of a document.</P>
 
@@ -1762,7 +2646,7 @@ is asked.</P>
 <DD>the structure schema of that document.
 </DL>
 
-<H4><A NAME="sectc835">8.3.5</A> TtaGetSSchemaName</H4>
+<H4><A NAME="sectc1035">10.3.5</A> TtaGetSSchemaName</H4>
 
 <P>Returns the name of a structure schema.</P>
 
@@ -1784,7 +2668,7 @@ is asked.</P>
 <DD>name of that structure schema.
 </DL>
 
-<H4><A NAME="sectc836">8.3.6</A> TtaGetPSchemaName</H4>
+<H4><A NAME="sectc1036">10.3.6</A> TtaGetPSchemaName</H4>
 
 <P>Returns the name of the presentation schema currently associated with a
 given structure schema.</P>
@@ -1807,7 +2691,7 @@ given structure schema.</P>
 <DD>name of the associated presentation schema.
 </DL>
 
-<H4><A NAME="sectc837">8.3.7</A> TtaGetDocumentDirectory</H4>
+<H4><A NAME="sectc1037">10.3.7</A> TtaGetDocumentDirectory</H4>
 
 <P>Returns the directory to which the document is supposed to be saved.</P>
 
@@ -1836,7 +2720,7 @@ bufferLength)</P>
 <DD><EM>buffer</EM>: the document directory.
 </DL>
 
-<H4><A NAME="sectc838">8.3.8</A> TtaGetSSchema</H4>
+<H4><A NAME="sectc1038">10.3.8</A> TtaGetSSchema</H4>
 
 <P>Returns a structure schema whose name is known and that is used in a given
 document.</P>
@@ -1862,7 +2746,7 @@ document.</P>
 not loaded or not used by the document.
 </DL>
 
-<H4><A NAME="sectc839">8.3.9</A> TtaSameSSchemas</H4>
+<H4><A NAME="sectc1039">10.3.9</A> TtaSameSSchemas</H4>
 
 <P>Compares two structure schemas.</P>
 
@@ -1886,7 +2770,7 @@ not loaded or not used by the document.
 <DD>0 if both schemas are different, 1 if they are identical.
 </DL>
 
-<H4><A NAME="sectc8310">8.3.10</A> TtaGiveSchemasOfDocument</H4>
+<H4><A NAME="sectc10310">10.3.10</A> TtaGiveSchemasOfDocument</H4>
 
 <P>Returns the names of the main structure schema and presentation schema
 associated with a given document. The document does not need to be open and
@@ -1918,7 +2802,7 @@ the schemas are not loaded by this function.</P>
 
 </DL>
 
-<H4><A NAME="sectc8311">8.3.11</A> TtaNextSchemaExtension</H4>
+<H4><A NAME="sectc10311">10.3.11</A> TtaNextSchemaExtension</H4>
 
 <P>Returns a structure schema extension associated with a given document.</P>
 
@@ -1945,7 +2829,7 @@ extension of the document if parameter extension is NULL. NULL if there is no
 more schema extension.
 </DL>
 
-<H4><A NAME="sectc8312">8.3.12</A> TtaNextNature</H4>
+<H4><A NAME="sectc10312">10.3.12</A> TtaNextNature</H4>
 
 <P>Returns the structure schema of a nature used in a given document.</P>
 
@@ -1972,7 +2856,7 @@ schema of the first nature of the document if parameter nature was NULL when
 calling. NULL if there is no more nature for the document.
 </DL>
 
-<H4><A NAME="sectc8313">8.3.13</A> TtaIsDocumentModified</H4>
+<H4><A NAME="sectc10313">10.3.13</A> TtaIsDocumentModified</H4>
 
 <P>Indicates whether a document has been modified by the user or not.
 Modifications made by the application program are not considered, except when
@@ -1997,7 +2881,7 @@ explicitly notified by TtaSetDocumentModified.</P>
 loaded or created, 0 if it has not been modified.
 </DL>
 
-<H4><A NAME="sectc8314">8.3.14</A> TtaGetDocumentBackUpInterval</H4>
+<H4><A NAME="sectc10314">10.3.14</A> TtaGetDocumentBackUpInterval</H4>
 
 <P>Returns the backup interval for a document.</P>
 
@@ -2021,7 +2905,7 @@ positive integer : number of typed characters which trigger an autamatic save
 of the document into a .BAK file.
 </DL>
 
-<H4><A NAME="sectc8315">8.3.15</A> TtaGetDocumentAccessMode</H4>
+<H4><A NAME="sectc10315">10.3.15</A> TtaGetDocumentAccessMode</H4>
 
 <P>Returns the access mode for a document.</P>
 
@@ -2043,7 +2927,7 @@ of the document into a .BAK file.
 <DD>0 if access mode is read only, 1 if access mode is read-write.
 </DL>
 
-<H4><A NAME="sectc8316">8.3.16</A> TtaGetNotificationMode</H4>
+<H4><A NAME="sectc10316">10.3.16</A> TtaGetNotificationMode</H4>
 
 <P>Returns the ECF notification mode for a document.</P>
 
@@ -2067,7 +2951,7 @@ of the document into a .BAK file.
 
 </DL>
 
-<H4><A NAME="sectc8317">8.3.17</A> TtaGetDocumentPath</H4>
+<H4><A NAME="sectc10317">10.3.17</A> TtaGetDocumentPath</H4>
 
 <P>Returns the current list of the directories used when a document is open
 (see TtaOpenDocument).</P>
@@ -2093,7 +2977,7 @@ of the document into a .BAK file.
 the character ':'.
 </DL>
 
-<H4><A NAME="sectc8318">8.3.18</A> TtaGetSchemaPath</H4>
+<H4><A NAME="sectc10318">10.3.18</A> TtaGetSchemaPath</H4>
 
 <P>Returns the current list of directories used for accessing schemas.</P>
 
@@ -2118,7 +3002,7 @@ the character ':'.
 the character ':'.
 </DL>
 
-<H4><A NAME="sectc8319">8.3.19</A> TtaGetDocumentOfSavedElements</H4>
+<H4><A NAME="sectc10319">10.3.19</A> TtaGetDocumentOfSavedElements</H4>
 
 <P>Returns the document for which the last Copy or Cut command has been
 issued.</P>
@@ -2142,7 +3026,7 @@ issued.</P>
 the clipboard is empty.
 </DL>
 
-<H2><A NAME="secta9">9</A> <A NAME="L2176">Tree structures</A></H2>
+<H2><A NAME="secta11">11</A> <A NAME="L2176">Tree structures</A></H2>
 
 <P>The largest group of functions in the editing tool kit handles the tree
 structures that represent the logical organization of a document.</P>
@@ -2176,12 +3060,12 @@ even elements that are not stated optional in their structure schema can be
 omitted. The checking mode apply to the operations made by the application
 program, but also to the editing commands issued by the end-user, when using
 ThotEditor. The function TtaSetCheckingMode (see section <A
-HREF="#sectc928">9.2.8</A>) changes checking mode.</P>
+HREF="#sectc1128">11.2.8</A>) changes checking mode.</P>
 
 <P>For building a correct tree, the programmer must follow the structure
 schema. He or she can also consider existing Thot documents as examples. For
 that purpose, the function TtaListAbstractTree (see section <A
-HREF="#sectc951">9.5.1</A>) can produce a human-readable form of an abstract
+HREF="#sectc1151">11.5.1</A>) can produce a human-readable form of an abstract
 tree.</P>
 
 </DL>
@@ -2243,9 +3127,9 @@ tool kit.</P>
 
 </DL>
 
-<H3><A NAME="sectb91">9.1</A> Constructors</H3>
+<H3><A NAME="sectb111">11.1</A> Constructors</H3>
 
-<H4><A NAME="sectc911">9.1.1</A> TtaNewElement</H4>
+<H4><A NAME="sectc1111">11.1.1</A> TtaNewElement</H4>
 
 <P>Creates a new element of a given type.</P>
 
@@ -2269,7 +3153,7 @@ tool kit.</P>
 <DD>the created element.
 </DL>
 
-<H4><A NAME="sectc912">9.1.2</A> TtaNewTree</H4>
+<H4><A NAME="sectc1112">11.1.2</A> TtaNewTree</H4>
 
 <P>Creates a new element of a given type and all its descendants, according to
 the structure schema.</P>
@@ -2299,7 +3183,7 @@ the value of the label is undefined.</P>
 <DD>the root element of the created tree.
 </DL>
 
-<H4><A NAME="sectc913">9.1.3</A> TtaCopyTree</H4>
+<H4><A NAME="sectc1113">11.1.3</A> TtaCopyTree</H4>
 
 <P>Creates a copy of a tree.</P>
 
@@ -2331,7 +3215,7 @@ tree.</P>
 <DD>the root element of the created tree.
 </DL>
 
-<H4><A NAME="sectc914">9.1.4</A> TtaCreateDescent</H4>
+<H4><A NAME="sectc1114">11.1.4</A> TtaCreateDescent</H4>
 
 <P>Creates a new element of a given type and inserts it in the tree as a
 descendant of a given element. All elements of the descent required by the
@@ -2362,7 +3246,7 @@ descendant.</P>
 element is empty.
 </DL>
 
-<H4><A NAME="sectc915">9.1.5</A> TtaCreateDescentWithContent</H4>
+<H4><A NAME="sectc1115">11.1.5</A> TtaCreateDescentWithContent</H4>
 
 <P>Creates a new element of a given type and inserts it in the tree as a
 descendant of a given element. All elements of the descent required by the
@@ -2394,7 +3278,7 @@ descendant.</P>
 not NULL, the minimum content of that element has been created.
 </DL>
 
-<H4><A NAME="sectc916">9.1.6</A> TtaDeleteTree</H4>
+<H4><A NAME="sectc1116">11.1.6</A> TtaDeleteTree</H4>
 
 <P>Deletes a tree (or a single element) and frees it. All references that
 points at any element of that tree are cancelled. The deleted element must not
@@ -2414,7 +3298,7 @@ be used later.</P>
 
 </DL>
 
-<H4><A NAME="sectc917">9.1.7</A> TtaAttachNewTree</H4>
+<H4><A NAME="sectc1117">11.1.7</A> TtaAttachNewTree</H4>
 
 <P>Attaches an entire tree (main tree or associated tree) to a document.</P>
 
@@ -2433,9 +3317,9 @@ main tree or associated tree according to the document structure schema.
 
 </DL>
 
-<H3><A NAME="sectb92">9.2</A> Modificators</H3>
+<H3><A NAME="sectb112">11.2</A> Modificators</H3>
 
-<H4><A NAME="sectc921">9.2.1</A> TtaInsertSibling</H4>
+<H4><A NAME="sectc1121">11.2.1</A> TtaInsertSibling</H4>
 
 <P>Inserts an element in a tree, as an immediate sibling of a given element.
 The element to be inserted must not yet be part of a document. You can call
@@ -2463,13 +3347,13 @@ sibling, if False, inserts newElement as next sibling of sibling.</P>
 
 </DL>
 
-<H4><A NAME="sectc922">9.2.2</A> TtaInsertFirstChild</H4>
+<H4><A NAME="sectc1122">11.2.2</A> TtaInsertFirstChild</H4>
 
 <P>Inserts an element in a tree, as the first child of a given element. The
 element to be inserted must not yet be part of a document. This function can
 also be used for attaching an option to a choice. You can call
 <TT>TtaCanInsertFirstChild</TT> before to check whether that insertion is
-allowed or not (see section <A HREF="#sectc9330">9.3.30</A>).</P>
+allowed or not (see section <A HREF="#sectc11330">11.3.30</A>).</P>
 
 <HR>
 
@@ -2496,7 +3380,7 @@ document)</P>
 
 </DL>
 
-<H4><A NAME="sectc923">9.2.3</A> TtaCreateElement</H4>
+<H4><A NAME="sectc1123">11.2.3</A> TtaCreateElement</H4>
 
 <P>Creates an element of a given type and insert it at the current position
 within a given document. The current position is defined by the current
@@ -2520,7 +3404,7 @@ provided the  structure schema allows it.</P>
 
 </DL>
 
-<H4><A NAME="sectc924">9.2.4</A> TtaInsertElement</H4>
+<H4><A NAME="sectc1124">11.2.4</A> TtaInsertElement</H4>
 
 <P>Creates an element of a given type and insert it at the current position
 within a given document. The current position is defined by the current
@@ -2544,7 +3428,7 @@ changed.</P>
 
 </DL>
 
-<H4><A NAME="sectc925">9.2.5</A> TtaRemoveTree</H4>
+<H4><A NAME="sectc1125">11.2.5</A> TtaRemoveTree</H4>
 
 <P>Removes a tree (or a single element) from its tree, without freeing it.</P>
 
@@ -2562,7 +3446,7 @@ changed.</P>
 
 </DL>
 
-<H4><A NAME="sectc926">9.2.6</A> TtaSetAccessRight</H4>
+<H4><A NAME="sectc1126">11.2.6</A> TtaSetAccessRight</H4>
 
 <P>Sets the access rights for a given element. Access rights apply only during
 the current editing session; they are not saved with the document. They must
@@ -2586,7 +3470,7 @@ Inherited).</P>
 
 </DL>
 
-<H4><A NAME="sectc927">9.2.7</A> TtaHolophrastElement</H4>
+<H4><A NAME="sectc1127">11.2.7</A> TtaHolophrastElement</H4>
 
 <P>Changes the holophrasting status of a given element.</P>
 
@@ -2608,7 +3492,7 @@ False: if the element is holphrasted, it gets expanded.</P>
 
 </DL>
 
-<H4><A NAME="sectc928">9.2.8</A> <A NAME="L2778">TtaSetCheckingMode</A></H4>
+<H4><A NAME="sectc1128">11.2.8</A> <A NAME="L2778">TtaSetCheckingMode</A></H4>
 
 <P>Changes checking mode.</P>
 
@@ -2625,9 +3509,9 @@ False: if the element is holphrasted, it gets expanded.</P>
 checked.
 </DL>
 
-<H3><A NAME="sectb93">9.3</A> Accessors</H3>
+<H3><A NAME="sectb113">11.3</A> Accessors</H3>
 
-<H4><A NAME="sectc931">9.3.1</A> TtaGetMainRoot</H4>
+<H4><A NAME="sectc1131">11.3.1</A> TtaGetMainRoot</H4>
 
 <P>Returns the root element of the main abstract tree representing a
 document.</P>
@@ -2650,7 +3534,7 @@ document.</P>
 <DD>the root element of the main abstract tree.
 </DL>
 
-<H4><A NAME="sectc932">9.3.2</A> TtaNextAssociatedRoot</H4>
+<H4><A NAME="sectc1132">11.3.2</A> TtaNextAssociatedRoot</H4>
 
 <P>Returns the root element of the associated tree that follows the tree to
 which a given element belongs.</P>
@@ -2679,7 +3563,7 @@ returned.</P>
 is no next associated tree for the document.
 </DL>
 
-<H4><A NAME="sectc933">9.3.3</A> TtaGetFirstChild</H4>
+<H4><A NAME="sectc1133">11.3.3</A> TtaGetFirstChild</H4>
 
 <P>Returns the first child element of a given element.</P>
 
@@ -2701,7 +3585,7 @@ is no next associated tree for the document.
 <DD>the first child element of parent; NULL if parent has no child.
 </DL>
 
-<H4><A NAME="sectc934">9.3.4</A> TtaGetLastChild</H4>
+<H4><A NAME="sectc1134">11.3.4</A> TtaGetLastChild</H4>
 
 <P>Returns the last child element of a given element.</P>
 
@@ -2723,7 +3607,7 @@ is no next associated tree for the document.
 <DD>the last child element of parent; NULL if parent has no child.
 </DL>
 
-<H4><A NAME="sectc935">9.3.5</A> TtaPreviousSibling</H4>
+<H4><A NAME="sectc1135">11.3.5</A> TtaPreviousSibling</H4>
 
 <P>Returns the previous sibling element of a given element.</P>
 
@@ -2746,7 +3630,7 @@ is no next associated tree for the document.
 previous sibling.
 </DL>
 
-<H4><A NAME="sectc936">9.3.6</A> TtaNextSibling</H4>
+<H4><A NAME="sectc1136">11.3.6</A> TtaNextSibling</H4>
 
 <P>Returns the next sibling element of a given element.</P>
 
@@ -2769,7 +3653,7 @@ previous sibling.
 sibling.
 </DL>
 
-<H4><A NAME="sectc937">9.3.7</A> TtaGetSuccessor</H4>
+<H4><A NAME="sectc1137">11.3.7</A> TtaGetSuccessor</H4>
 
 <P>Returns the element that follows a given element at the same level or at
 the first upper level where there is a following element.</P>
@@ -2792,7 +3676,7 @@ the first upper level where there is a following element.</P>
 <DD>the successor, or NULL if there is no successor.
 </DL>
 
-<H4><A NAME="sectc938">9.3.8</A> TtaGetPredecessor</H4>
+<H4><A NAME="sectc1138">11.3.8</A> TtaGetPredecessor</H4>
 
 <P>Returns the element that precedes a given element at the same level or at
 the first upper level where there is a preceding element.</P>
@@ -2815,7 +3699,7 @@ the first upper level where there is a preceding element.</P>
 <DD>the predecessor, or NULL if there is no predecessor.
 </DL>
 
-<H4><A NAME="sectc939">9.3.9</A> TtaGetParent</H4>
+<H4><A NAME="sectc1139">11.3.9</A> TtaGetParent</H4>
 
 <P>Returns the parent element (i.e. first ancestor) of a given element.</P>
 
@@ -2837,7 +3721,7 @@ the first upper level where there is a preceding element.</P>
 <DD>the parent element, or NULL if there is no parent (root).
 </DL>
 
-<H4><A NAME="sectc9310">9.3.10</A> TtaGetCommonAncestor</H4>
+<H4><A NAME="sectc11310">11.3.10</A> TtaGetCommonAncestor</H4>
 
 <P>Returns the common ancestor element of two given elements.</P>
 
@@ -2861,7 +3745,7 @@ the first upper level where there is a preceding element.</P>
 <DD>the common ancestor, or NULL if there is no common ancestor.
 </DL>
 
-<H4><A NAME="sectc9311">9.3.11</A> TtaGetTypedAncestor</H4>
+<H4><A NAME="sectc11311">11.3.11</A> TtaGetTypedAncestor</H4>
 
 <P>Returns the first ancestor of a given type for a given element.</P>
 
@@ -2885,7 +3769,7 @@ the first upper level where there is a preceding element.</P>
 <DD>the ancestor, or NULL if there is no ancestor of that type.
 </DL>
 
-<H4><A NAME="sectc9312">9.3.12</A> TtaGetElementType</H4>
+<H4><A NAME="sectc11312">11.3.12</A> TtaGetElementType</H4>
 
 <P>Returns the type of a given element.</P>
 
@@ -2907,7 +3791,7 @@ the first upper level where there is a preceding element.</P>
 <DD>type of the element.
 </DL>
 
-<H4><A NAME="sectc9313">9.3.13</A> TtaGetElementTypeName</H4>
+<H4><A NAME="sectc11313">11.3.13</A> TtaGetElementTypeName</H4>
 
 <P>Returns the name of an element type.</P>
 
@@ -2929,7 +3813,7 @@ the first upper level where there is a preceding element.</P>
 <DD>name of that type.
 </DL>
 
-<H4><A NAME="sectc9314">9.3.14</A> TtaGiveTypeFromName</H4>
+<H4><A NAME="sectc11314">11.3.14</A> TtaGiveTypeFromName</H4>
 
 <P>Gives an element type whose name is known (the structure schema that
 defines that type must be loaded). That type is searched in a given structure
@@ -2958,7 +3842,7 @@ schema.</P>
 = 0 if the type is not found.
 </DL>
 
-<H4><A NAME="sectc9315">9.3.15</A> TtaSameTypes</H4>
+<H4><A NAME="sectc11315">11.3.15</A> TtaSameTypes</H4>
 
 <P>Compares two element types.</P>
 
@@ -2982,7 +3866,7 @@ schema.</P>
 <DD>0 if both types are different, 1 if they are identical.
 </DL>
 
-<H4><A NAME="sectc9316">9.3.16</A> TtaGetElementLabel</H4>
+<H4><A NAME="sectc11316">11.3.16</A> TtaGetElementLabel</H4>
 
 <P>Returns the label of a given element.</P>
 
@@ -3004,7 +3888,7 @@ schema.</P>
 <DD>label of the element.
 </DL>
 
-<H4><A NAME="sectc9317">9.3.17</A> TtaIsConstant</H4>
+<H4><A NAME="sectc11317">11.3.17</A> TtaIsConstant</H4>
 
 <P>Indicates whether an element type is a constant.</P>
 
@@ -3026,7 +3910,7 @@ schema.</P>
 <DD>1 = the type is a constant, 0 = the type is not a constant.
 </DL>
 
-<H4><A NAME="sectc9318">9.3.18</A> TtaIsLeaf</H4>
+<H4><A NAME="sectc11318">11.3.18</A> TtaIsLeaf</H4>
 
 <P>Indicates whether an element type is a leaf.</P>
 
@@ -3048,7 +3932,7 @@ schema.</P>
 <DD>1 if the type is a leaf, 0 if the type is not a leaf.
 </DL>
 
-<H4><A NAME="sectc9319">9.3.19</A> TtaGetConstructOfType</H4>
+<H4><A NAME="sectc11319">11.3.19</A> TtaGetConstructOfType</H4>
 
 <P>Returns the construct of an element type.</P>
 
@@ -3070,7 +3954,7 @@ schema.</P>
 <DD>the construct that defines the structure of that element type.
 </DL>
 
-<H4><A NAME="sectc9320">9.3.20</A> TtaGetConstruct</H4>
+<H4><A NAME="sectc11320">11.3.20</A> TtaGetConstruct</H4>
 
 <P>Returns the construct of an element.</P>
 
@@ -3092,7 +3976,7 @@ schema.</P>
 <DD>the construct that defines the structure of that element.
 </DL>
 
-<H4><A NAME="sectc9321">9.3.21</A> TtaGetAccessRight</H4>
+<H4><A NAME="sectc11321">11.3.21</A> TtaGetAccessRight</H4>
 
 <P>Returns the access rights for a given element.</P>
 
@@ -3114,7 +3998,7 @@ schema.</P>
 <DD>access right for that element (ReadOnly, ReadWrite, Hidden, Inherited).
 </DL>
 
-<H4><A NAME="sectc9322">9.3.22</A> TtaIsHolophrasted</H4>
+<H4><A NAME="sectc11322">11.3.22</A> TtaIsHolophrasted</H4>
 
 <P>Tests whether a given element is holphrasted or not.</P>
 
@@ -3136,7 +4020,7 @@ schema.</P>
 <DD>1 if the element is holphrasted, 0 if not.
 </DL>
 
-<H4><A NAME="sectc9323">9.3.23</A> TtaIsReadOnly</H4>
+<H4><A NAME="sectc11323">11.3.23</A> TtaIsReadOnly</H4>
 
 <P>Tests whether a given element is protected against user modifications
 (ReadOnly).</P>
@@ -3159,7 +4043,7 @@ schema.</P>
 <DD>1 if the element is protected, 0 if not.
 </DL>
 
-<H4><A NAME="sectc9324">9.3.24</A> TtaIsHidden</H4>
+<H4><A NAME="sectc11324">11.3.24</A> TtaIsHidden</H4>
 
 <P>Tests whether a given element is hidden to the user (Hidden).</P>
 
@@ -3181,7 +4065,7 @@ schema.</P>
 <DD>1 if the element is hidden, 0 if not.
 </DL>
 
-<H4><A NAME="sectc9325">9.3.25</A> TtaIsInAnInclusion</H4>
+<H4><A NAME="sectc11325">11.3.25</A> TtaIsInAnInclusion</H4>
 
 <P>Tests whether a given element is (in) an included element. An included
 element is a "live" copy of another element.</P>
@@ -3204,7 +4088,7 @@ element is a "live" copy of another element.</P>
 <DD>1 if the element is included, 0 if not.
 </DL>
 
-<H4><A NAME="sectc9326">9.3.26</A> TtaIsAncestor</H4>
+<H4><A NAME="sectc11326">11.3.26</A> TtaIsAncestor</H4>
 
 <P>Tests if an element is an ancestor of another element.</P>
 
@@ -3228,7 +4112,7 @@ element is a "live" copy of another element.</P>
 <DD>1 if ancestor in an ancestor of element, 0 if not.
 </DL>
 
-<H4><A NAME="sectc9327">9.3.27</A> TtaIsBefore</H4>
+<H4><A NAME="sectc11327">11.3.27</A> TtaIsBefore</H4>
 
 <P>Tests if an element precedes another element in the preorder traversal of
 the tree.</P>
@@ -3253,7 +4137,7 @@ the tree.</P>
 <DD>1 if the first element precedes the second element, 0 if not.
 </DL>
 
-<H4><A NAME="sectc9328">9.3.28</A> TtaIsFirstPairedElement</H4>
+<H4><A NAME="sectc11328">11.3.28</A> TtaIsFirstPairedElement</H4>
 
 <P>Indicates if a given paired element is the first or the second of the
 pair.</P>
@@ -3276,7 +4160,7 @@ pair.</P>
 <DD>1 if it is the first element of the pair, 0 if it is the second.
 </DL>
 
-<H4><A NAME="sectc9329">9.3.29</A> TtaCanInsertSibling</H4>
+<H4><A NAME="sectc11329">11.3.29</A> TtaCanInsertSibling</H4>
 
 <P>Checks whether an element of a given type can be inserted in an abstract
 tree as an immediate sibling of an existing element.</P>
@@ -3310,7 +4194,7 @@ If False, checks if insertion is allowed after element "sibling".</P>
 does not allow that insertion.
 </DL>
 
-<H4><A NAME="sectc9330">9.3.30</A> <A
+<H4><A NAME="sectc11330">11.3.30</A> <A
 NAME="L32256">TtaCanInsertFirstChild</A></H4>
 
 <P>Checks whether an element of a given type can be inserted in an abstract
@@ -3340,7 +4224,7 @@ Document document)</P>
 does not allow that insertion.
 </DL>
 
-<H4><A NAME="sectc9331">9.3.31</A> TtaGetDocument</H4>
+<H4><A NAME="sectc11331">11.3.31</A> TtaGetDocument</H4>
 
 <P>Returns the document containing a given element</P>
 
@@ -3363,7 +4247,7 @@ does not allow that insertion.
 to any document.
 </DL>
 
-<H4><A NAME="sectc9332">9.3.32</A> TtaNextCopiedElement</H4>
+<H4><A NAME="sectc11332">11.3.32</A> TtaNextCopiedElement</H4>
 
 <P>Returns one of the elements that have been copied into the ``clipboard'' by
 the last Copy or Cut command. (This function is available only in the
@@ -3389,7 +4273,7 @@ element of the clipboard if the next one is asked.
 next element in the clipboard or if the clipboard is empty.
 </DL>
 
-<H4><A NAME="sectc9333">9.3.33</A> TtaGetCopiedDocument</H4>
+<H4><A NAME="sectc11333">11.3.33</A> TtaGetCopiedDocument</H4>
 
 <P>Returns the document from which the current content of the clipboard has
 been copied or cut. (This function is available only in the ThotEditor
@@ -3414,9 +4298,9 @@ library).</P>
 copied or cut; 0 if the clipboard is empty.
 </DL>
 
-<H3><A NAME="sectb94">9.4</A> Locators</H3>
+<H3><A NAME="sectb114">11.4</A> Locators</H3>
 
-<H4><A NAME="sectc941">9.4.1</A> TtaSearchTypedElement</H4>
+<H4><A NAME="sectc1141">11.4.1</A> TtaSearchTypedElement</H4>
 
 <P>Returns the first element of a given type. Searching can be done in a tree
 or starting from a given element towards the beginning or the end of the
@@ -3450,7 +4334,7 @@ SearchBackward).</P>
 <DD>the element found, or NULL if no element has been found.
 </DL>
 
-<H4><A NAME="sectc942">9.4.2</A> TtaSearchElementByLabel</H4>
+<H4><A NAME="sectc1142">11.4.2</A> TtaSearchElementByLabel</H4>
 
 <P>Searches the element that has a given label. The search is done in a given
 tree.</P>
@@ -3476,7 +4360,7 @@ search is done.</P>
 <DD>the element found, or NULL if no element has been found.
 </DL>
 
-<H4><A NAME="sectc943">9.4.3</A> TtaSearchEmptyElement</H4>
+<H4><A NAME="sectc1143">11.4.3</A> TtaSearchEmptyElement</H4>
 
 <P>Searches the next empty element. An empty element is either a compound
 element without child or a leaf without content. Searching can be done in a
@@ -3505,7 +4389,7 @@ SearchBackward).</P>
 <DD>the element found, or NULL if not found.
 </DL>
 
-<H4><A NAME="sectc944">9.4.4</A> TtaSearchOtherPairedElement</H4>
+<H4><A NAME="sectc1144">11.4.4</A> TtaSearchOtherPairedElement</H4>
 
 <P>Returns the element that is part of the same pair as a given element.</P>
 
@@ -3527,7 +4411,7 @@ SearchBackward).</P>
 <DD>the paired element.
 </DL>
 
-<H4><A NAME="sectc945">9.4.5</A> TtaSearchNoPageBreak</H4>
+<H4><A NAME="sectc1145">11.4.5</A> TtaSearchNoPageBreak</H4>
 
 <P>Returns the first sibling element that is not a page break.</P>
 
@@ -3552,9 +4436,10 @@ skipping the previous ones.</P>
 <DD>the first sibling element, or NULL if there are only page breaks.
 </DL>
 
-<H3><A NAME="sectb95">9.5</A> Help</H3>
+<H3><A NAME="sectb115">11.5</A> Help</H3>
 
-<H4><A NAME="sectc951">9.5.1</A> <A NAME="L4054">TtaListAbstractTree</A></H4>
+<H4><A NAME="sectc1151">11.5.1</A> <A
+NAME="L4054">TtaListAbstractTree</A></H4>
 
 <P>Produces in a file a human-readable form of an abstract tree.</P>
 
@@ -3573,14 +4458,14 @@ list. This file must be open when calling the function.</P>
 
 </DL>
 
-<H2><A NAME="secta10">10</A> <A NAME="L4085">Contents</A></H2>
+<H2><A NAME="secta12">12</A> <A NAME="L4085">Contents</A></H2>
 
 <P>The functions described in this section require that file
 <EM>content.h</EM> be included in the module that calls them.</P>
 
-<H3><A NAME="sectb101">10.1</A> Modificators</H3>
+<H3><A NAME="sectb121">12.1</A> Modificators</H3>
 
-<H4><A NAME="sectc1011">10.1.1</A> TtaSetTextContent</H4>
+<H4><A NAME="sectc1211">12.1.1</A> TtaSetTextContent</H4>
 
 <P>Changes the content of a Text basic element. The full content (if any) is
 deleted and replaced by the new one. This function can also be used for
@@ -3600,13 +4485,13 @@ Document document)</P>
 <P><EM>content</EM>: new content for that element.</P>
 
 <P><EM>language</EM>: language of that Text element (see section <A
-HREF="#secta13">13</A>).</P>
+HREF="#secta15">15</A>).</P>
 
 <P><EM>document</EM>: the document containing that element.</P>
 
 </DL>
 
-<H4><A NAME="sectc1012">10.1.2</A> TtaAppendTextContent</H4>
+<H4><A NAME="sectc1212">12.1.2</A> TtaAppendTextContent</H4>
 
 <P>Appends a character string at the end of a Text basic element.</P>
 
@@ -3627,7 +4512,7 @@ document)</P>
 
 </DL>
 
-<H4><A NAME="sectc1013">10.1.3</A> TtaInsertTextContent</H4>
+<H4><A NAME="sectc1213">12.1.3</A> TtaInsertTextContent</H4>
 
 <P>Inserts a character string in a text basic element.</P>
 
@@ -3651,7 +4536,7 @@ inserted. 0 for inserting before the first character.</P>
 
 </DL>
 
-<H4><A NAME="sectc1014">10.1.4</A> TtaDeleteTextContent</H4>
+<H4><A NAME="sectc1214">12.1.4</A> TtaDeleteTextContent</H4>
 
 <P>Deletes a character string in a text basic element.</P>
 
@@ -3674,7 +4559,7 @@ Document document)</P>
 
 </DL>
 
-<H4><A NAME="sectc1015">10.1.5</A> TtaSplitText</H4>
+<H4><A NAME="sectc1215">12.1.5</A> TtaSplitText</H4>
 
 <P>Divides a text element into two elements.</P>
 
@@ -3696,7 +4581,7 @@ cut.</P>
 
 </DL>
 
-<H4><A NAME="sectc1016">10.1.6</A> TtaMergeText</H4>
+<H4><A NAME="sectc1216">12.1.6</A> TtaMergeText</H4>
 
 <P>Merges two text elements.</P>
 
@@ -3728,7 +4613,7 @@ Document document;
 <DD>True if successful..
 </DL>
 
-<H4><A NAME="sectc1017">10.1.7</A> TtaSetGraphicsShape</H4>
+<H4><A NAME="sectc1217">12.1.7</A> TtaSetGraphicsShape</H4>
 
 <P>Changes the shape of a Graphics or Symbol basic element.</P>
 
@@ -3750,7 +4635,7 @@ element of type Graphics or Symbol.
 
 </DL>
 
-<H4><A NAME="sectc1018">10.1.8</A> TtaAddPointInPolyline</H4>
+<H4><A NAME="sectc1218">12.1.8</A> TtaAddPointInPolyline</H4>
 
 <P>Adds a new point in a Polyline basic element.</P>
 
@@ -3780,7 +4665,7 @@ corner of the box. x and y must be positive or null.</P>
 
 </DL>
 
-<H4><A NAME="sectc1019">10.1.9</A> TtaDeletePointInPolyline</H4>
+<H4><A NAME="sectc1219">12.1.9</A> TtaDeletePointInPolyline</H4>
 
 <P>Deletes a point in a Polyline basic element.</P>
 
@@ -3804,7 +4689,7 @@ positive.</P>
 
 </DL>
 
-<H4><A NAME="sectc10110">10.1.10</A> TtaModifyPointInPolyline</H4>
+<H4><A NAME="sectc12110">12.1.10</A> TtaModifyPointInPolyline</H4>
 
 <P>Changes the coordinates of a point in a Polyline basic element.</P>
 
@@ -3834,7 +4719,7 @@ corner of the enclosing rectangle. x and y must be positive or null.</P>
 
 </DL>
 
-<H4><A NAME="sectc10111">10.1.11</A> TtaChangeLimitOfPolyline</H4>
+<H4><A NAME="sectc12111">12.1.11</A> TtaChangeLimitOfPolyline</H4>
 
 <P>Changes the coordinates of the lower left corner of the box containing a
 Polyline basic element.</P>
@@ -3862,7 +4747,7 @@ must contain all points of the polyline.</P>
 
 </DL>
 
-<H4><A NAME="sectc10112">10.1.12</A> TtaCopyPage</H4>
+<H4><A NAME="sectc12112">12.1.12</A> TtaCopyPage</H4>
 
 <P>Copies the page element source into the page element destination. Both page
 elements must be in an abstract tree.</P>
@@ -3881,9 +4766,9 @@ elements must be in an abstract tree.</P>
 
 </DL>
 
-<H3><A NAME="sectb102">10.2</A> Accessors</H3>
+<H3><A NAME="sectb122">12.2</A> Accessors</H3>
 
-<H4><A NAME="sectc1021">10.2.1</A> TtaGetPictureType</H4>
+<H4><A NAME="sectc1221">12.2.1</A> TtaGetPictureType</H4>
 
 <P>Returns the type of Picture element. The type is one of the following
 values: xbm_type, eps_type, xpm_type, gif_type, jpeg_type, png_type,
@@ -3908,7 +4793,7 @@ element.
 <DD>The type of the element.
 </DL>
 
-<H4><A NAME="sectc1022">10.2.2</A> TtaGetTextLength</H4>
+<H4><A NAME="sectc1222">12.2.2</A> TtaGetTextLength</H4>
 
 <P>Returns the length of a Text basic element.</P>
 
@@ -3932,7 +4817,7 @@ element of type Text.
 element. The null character terminating a C string is not counted.
 </DL>
 
-<H4><A NAME="sectc1023">10.2.3</A> TtaGiveTextContent</H4>
+<H4><A NAME="sectc1223">12.2.3</A> TtaGiveTextContent</H4>
 
 <P>Returns the content of a Text basic element.</P>
 
@@ -3963,11 +4848,11 @@ null character).
 null character terminating the string.</P>
 
 <P><EM>language</EM>: language of the text (see section <A
-HREF="#secta13">13</A>).</P>
+HREF="#secta15">15</A>).</P>
 
 </DL>
 
-<H4><A NAME="sectc1024">10.2.4</A> TtaGiveSubString</H4>
+<H4><A NAME="sectc1224">12.2.4</A> TtaGiveSubString</H4>
 
 <P>Returns a substring from a Text basic element.</P>
 
@@ -4000,7 +4885,7 @@ positive.</P>
 <DD><EM>buffer</EM>: (the buffer contains the substring).
 </DL>
 
-<H4><A NAME="sectc1025">10.2.5</A> TtaGetGraphicsShape</H4>
+<H4><A NAME="sectc1225">12.2.5</A> TtaGetGraphicsShape</H4>
 
 <P>Returns the content of a Graphics or Symbol basic element.</P>
 
@@ -4024,7 +4909,7 @@ element of type Graphics or Symbol.
 symbol contained in the element.
 </DL>
 
-<H4><A NAME="sectc1026">10.2.6</A> TtaGetPolylineLength</H4>
+<H4><A NAME="sectc1226">12.2.6</A> TtaGetPolylineLength</H4>
 
 <P>Returns the number of points in a Polyline basic element.</P>
 
@@ -4041,7 +4926,7 @@ symbol contained in the element.
 element of type Polyline.
 </DL>
 
-<H4><A NAME="sectc1027">10.2.7</A> TtaGivePolylinePoint</H4>
+<H4><A NAME="sectc1227">12.2.7</A> TtaGivePolylinePoint</H4>
 
 <P>Returns the coordinates of a point in a Polyline basic element.</P>
 
@@ -4073,7 +4958,7 @@ values.</P>
 corner of the enclosing rectangle.
 </DL>
 
-<H4><A NAME="sectc1028">10.2.8</A> TtaGetPageNumber</H4>
+<H4><A NAME="sectc1228">12.2.8</A> TtaGetPageNumber</H4>
 
 <P>Returns the page number of a Page basic element.</P>
 
@@ -4095,7 +4980,7 @@ corner of the enclosing rectangle.
 <DD>page number of that page element.
 </DL>
 
-<H4><A NAME="sectc1029">10.2.9</A> TtaGetPageView</H4>
+<H4><A NAME="sectc1229">12.2.9</A> TtaGetPageView</H4>
 
 <P>Returns the view corresponding to a Page basic element.</P>
 
@@ -4117,7 +5002,7 @@ corner of the enclosing rectangle.
 <DD>view of that page.
 </DL>
 
-<H2><A NAME="secta11">11</A> <A NAME="L4874">Logical attributes</A></H2>
+<H2><A NAME="secta13">13</A> <A NAME="L4874">Logical attributes</A></H2>
 
 <P>The functions described in this section require that file
 <EM>attribute.h</EM> be included in the module that calls them.</P>
@@ -4137,9 +5022,9 @@ attached (function TtaAttachAttribute) to an element which is itself part of
 an abstract tree of a document, before any other action can be performed on
 that attribute.</P>
 
-<H3><A NAME="sectb111">11.1</A> Constructors</H3>
+<H3><A NAME="sectb131">13.1</A> Constructors</H3>
 
-<H4><A NAME="sectc1111">11.1.1</A> TtaNewAttribute</H4>
+<H4><A NAME="sectc1311">13.1.1</A> TtaNewAttribute</H4>
 
 <P>Creates an attribute that will be attached to an element.</P>
 
@@ -4161,7 +5046,7 @@ that attribute.</P>
 <DD>the attribute that has been created.
 </DL>
 
-<H4><A NAME="sectc1112">11.1.2</A> TtaAttachAttribute</H4>
+<H4><A NAME="sectc1312">13.1.2</A> TtaAttachAttribute</H4>
 
 <P>Attaches an attribute to an element.</P>
 
@@ -4182,7 +5067,7 @@ document)</P>
 
 </DL>
 
-<H4><A NAME="sectc1113">11.1.3</A> TtaRemoveAttribute</H4>
+<H4><A NAME="sectc1313">13.1.3</A> TtaRemoveAttribute</H4>
 
 <P>Removes an attribute from an element and release that attribute.</P>
 
@@ -4203,9 +5088,9 @@ document)</P>
 
 </DL>
 
-<H3><A NAME="sectb112">11.2</A> Modificators</H3>
+<H3><A NAME="sectb132">13.2</A> Modificators</H3>
 
-<H4><A NAME="sectc1121">11.2.1</A> TtaSetAttributeValue</H4>
+<H4><A NAME="sectc1321">13.2.1</A> TtaSetAttributeValue</H4>
 
 <P>Changes the value of an attribute of type integer or enumerate.</P>
 
@@ -4230,7 +5115,7 @@ element is NULL.</P>
 
 </DL>
 
-<H4><A NAME="sectc1122">11.2.2</A> TtaSetAttributeText</H4>
+<H4><A NAME="sectc1322">13.2.2</A> TtaSetAttributeText</H4>
 
 <P>Changes the value of an attribute of type text.</P>
 
@@ -4256,9 +5141,9 @@ element is NULL.</P>
 
 </DL>
 
-<H3><A NAME="sectb113">11.3</A> Accessors</H3>
+<H3><A NAME="sectb133">13.3</A> Accessors</H3>
 
-<H4><A NAME="sectc1131">11.3.1</A> TtaNextAttribute</H4>
+<H4><A NAME="sectc1331">13.3.1</A> TtaNextAttribute</H4>
 
 <P>Returns the first attribute associated with a given element (if attribute
 is NULL) or the attribute that follows a given attribute of a given
@@ -4286,7 +5171,7 @@ attribute is asked.</P>
 attribute of the element.
 </DL>
 
-<H4><A NAME="sectc1132">11.3.2</A> TtaGetAttribute</H4>
+<H4><A NAME="sectc1332">13.3.2</A> TtaGetAttribute</H4>
 
 <P>Returns an attribute of a given type associated with a given element.</P>
 
@@ -4316,7 +5201,7 @@ accepted only when an attribute "Language" is searched.</P>
 attribute.
 </DL>
 
-<H4><A NAME="sectc1133">11.3.3</A> TtaGiveAttributeType</H4>
+<H4><A NAME="sectc1333">13.3.3</A> TtaGiveAttributeType</H4>
 
 <P>Returns the type of a given attribute.</P>
 
@@ -4342,7 +5227,7 @@ Text, 3 = Reference</P>
 
 </DL>
 
-<H4><A NAME="sectc1134">11.3.4</A> TtaGiveAttributeTypeFromName</H4>
+<H4><A NAME="sectc1334">13.3.4</A> TtaGiveAttributeTypeFromName</H4>
 
 <P>Retrieves the type of an attribute from its name.</P>
 
@@ -4370,7 +5255,7 @@ Text, 3 = Reference</P>
 
 </DL>
 
-<H4><A NAME="sectc1135">11.3.5</A> TtaGetAttributeName</H4>
+<H4><A NAME="sectc1335">13.3.5</A> TtaGetAttributeName</H4>
 
 <P>Returns the name of an attribute type.</P>
 
@@ -4392,7 +5277,7 @@ Text, 3 = Reference</P>
 <DD>name of that type.
 </DL>
 
-<H4><A NAME="sectc1136">11.3.6</A> TtaSameAttributeTypes</H4>
+<H4><A NAME="sectc1336">13.3.6</A> TtaSameAttributeTypes</H4>
 
 <P>Compares two attribute types.</P>
 
@@ -4416,7 +5301,7 @@ Text, 3 = Reference</P>
 <DD>0 if both types are different, 1 if they are identical.
 </DL>
 
-<H4><A NAME="sectc1137">11.3.7</A> TtaGetAttributeValue</H4>
+<H4><A NAME="sectc1337">13.3.7</A> TtaGetAttributeValue</H4>
 
 <P>Returns the value of a given attribute of type integer or enumerate.</P>
 
@@ -4438,7 +5323,7 @@ Text, 3 = Reference</P>
 <DD>Value of that attribute.
 </DL>
 
-<H4><A NAME="sectc1138">11.3.8</A> TtaGetTextAttributeLength</H4>
+<H4><A NAME="sectc1338">13.3.8</A> TtaGetTextAttributeLength</H4>
 
 <P>Returns the length of a given attribute of type text.</P>
 
@@ -4460,7 +5345,7 @@ Text, 3 = Reference</P>
 <DD>length of the character string contained in the attribute.
 </DL>
 
-<H4><A NAME="sectc1139">11.3.9</A> TtaGiveTextAttributeValue</H4>
+<H4><A NAME="sectc1339">13.3.9</A> TtaGiveTextAttributeValue</H4>
 
 <P>Returns the value of a given attribute of type text.</P>
 
@@ -4490,9 +5375,9 @@ attribute.</P>
 
 </DL>
 
-<H3><A NAME="sectb114">11.4</A> Locators</H3>
+<H3><A NAME="sectb134">13.4</A> Locators</H3>
 
-<H4><A NAME="sectc1141">11.4.1</A> TtaSearchAttribute</H4>
+<H4><A NAME="sectc1341">13.4.1</A> TtaSearchAttribute</H4>
 
 <P>Searches the next element that has a given attribute. Searching can be done
 in a subtree or starting from a given element towards the beginning or the end
@@ -4527,14 +5412,14 @@ SearchBackward).</P>
 
 </DL>
 
-<H2><A NAME="secta12">12</A> <A NAME="L5513">References and links</A></H2>
+<H2><A NAME="secta14">14</A> <A NAME="L5513">References and links</A></H2>
 
 <P>The functions described in this section require that file
 <EM>reference.h</EM> be included in the module that calls them.</P>
 
-<H3><A NAME="sectb121">12.1</A> Modificators</H3>
+<H3><A NAME="sectb141">14.1</A> Modificators</H3>
 
-<H4><A NAME="sectc1211">12.1.1</A> TtaSetReference</H4>
+<H4><A NAME="sectc1411">14.1.1</A> TtaSetReference</H4>
 
 <P>Changes (or sets) the target of a reference element. The reference element
 must be part of an abstract tree.</P>
@@ -4558,7 +5443,7 @@ Document targetDocument)</P>
 
 </DL>
 
-<H4><A NAME="sectc1212">12.1.2</A> TtaNewInclusion</H4>
+<H4><A NAME="sectc1412">14.1.2</A> TtaNewInclusion</H4>
 
 <P>Creates an inclusion of a given element.</P>
 
@@ -4586,7 +5471,7 @@ included.</P>
 <DD>the created inclusion.
 </DL>
 
-<H4><A NAME="sectc1213">12.1.3</A> TtaCopyReference</H4>
+<H4><A NAME="sectc1413">14.1.3</A> TtaCopyReference</H4>
 
 <P>Copies a reference element into another reference element. Both reference
 elements must be in an abstract tree.</P>
@@ -4605,7 +5490,7 @@ elements must be in an abstract tree.</P>
 
 </DL>
 
-<H4><A NAME="sectc1214">12.1.4</A> TtaSetAttributeReference</H4>
+<H4><A NAME="sectc1414">14.1.4</A> TtaSetAttributeReference</H4>
 
 <P>Changes the value of an attribute of type reference</P>
 
@@ -4630,7 +5515,7 @@ Document document, Element target, Document targetDocument)</P>
 
 </DL>
 
-<H4><A NAME="sectc1215">12.1.5</A> TtaCopyAttributeReference</H4>
+<H4><A NAME="sectc1415">14.1.5</A> TtaCopyAttributeReference</H4>
 
 <P>Copies the reference attribute source into the reference attribute
 attribute. Both attributes must be attached to an element in an abstract
@@ -4653,9 +5538,9 @@ Attribute source)</P>
 
 </DL>
 
-<H3><A NAME="sectb122">12.2</A> Accessors</H3>
+<H3><A NAME="sectb142">14.2</A> Accessors</H3>
 
-<H4><A NAME="sectc1221">12.2.1</A> TtaGiveReferredElement</H4>
+<H4><A NAME="sectc1421">14.2.1</A> TtaGiveReferredElement</H4>
 
 <P>Returns the element referred by a given reference element.</P>
 
@@ -4687,7 +5572,7 @@ element is in the same document as the reference element.</P>
 
 </DL>
 
-<H4><A NAME="sectc1222">12.2.2</A> TtaIsElementTypeReference</H4>
+<H4><A NAME="sectc1422">14.2.2</A> TtaIsElementTypeReference</H4>
 
 <P>Indicates whether an element type is a reference.</P>
 
@@ -4709,7 +5594,7 @@ element is in the same document as the reference element.</P>
 <DD>1 = the type is a reference, 0 = the type is not a reference.
 </DL>
 
-<H4><A NAME="sectc1223">12.2.3</A> TtaSameReferences</H4>
+<H4><A NAME="sectc1423">14.2.3</A> TtaSameReferences</H4>
 
 <P>Compares two reference elements.</P>
 
@@ -4733,7 +5618,7 @@ element is in the same document as the reference element.</P>
 <DD>0 if both references are different, 1 if they are identical.
 </DL>
 
-<H4><A NAME="sectc1224">12.2.4</A> TtaGiveReferenceAttributeValue</H4>
+<H4><A NAME="sectc1424">14.2.4</A> TtaGiveReferenceAttributeValue</H4>
 
 <P>Returns the value of a given attribute of type reference</P>
 
@@ -4765,7 +5650,7 @@ element is in the same document as the attribute.</P>
 
 </DL>
 
-<H4><A NAME="sectc1225">12.2.5</A> TtaIsElementReferred</H4>
+<H4><A NAME="sectc1425">14.2.5</A> TtaIsElementReferred</H4>
 
 <P>Tells whether a given element is the target of a reference or not.</P>
 
@@ -4787,7 +5672,7 @@ element is in the same document as the attribute.</P>
 <DD>1 if the element is referred by another element or an attribute, 0 if not.
 </DL>
 
-<H4><A NAME="sectc1226">12.2.6</A> TtaSameReferenceAttributes</H4>
+<H4><A NAME="sectc1426">14.2.6</A> TtaSameReferenceAttributes</H4>
 
 <P>Compares two reference attributes.</P>
 
@@ -4812,9 +5697,9 @@ attribute2)</P>
 <DD>0 if both references are different, 1 if they are identical.
 </DL>
 
-<H3><A NAME="sectb123">12.3</A> Locators</H3>
+<H3><A NAME="sectb143">14.3</A> Locators</H3>
 
-<H4><A NAME="sectc1231">12.3.1</A> TtaNextLoadedReference</H4>
+<H4><A NAME="sectc1431">14.3.1</A> TtaNextLoadedReference</H4>
 
 <P>Searches a reference that has a given element as a target and that belongs
 to a document currently loaded.</P>
@@ -4862,7 +5747,7 @@ belongs. Zero if no reference has been found.</P>
 
 </DL>
 
-<H4><A NAME="sectc1232">12.3.2</A> TtaNextUnloadedReferringDocument</H4>
+<H4><A NAME="sectc1432">14.3.2</A> TtaNextUnloadedReferringDocument</H4>
 
 <P>Returns the name of a document that is not currently loaded and that
 contains references to a given target element.</P>
@@ -4893,7 +5778,7 @@ string if the first referring document is searched.</P>
 if no referring document has been found.
 </DL>
 
-<H4><A NAME="sectc1233">12.3.3</A> TtaSearchReferenceElement</H4>
+<H4><A NAME="sectc1433">14.3.3</A> TtaSearchReferenceElement</H4>
 
 <P>Searches the next reference element. Searching can be done in a subtree or
 starting from a given element towards the beginning or the end of the abstract
@@ -4921,7 +5806,7 @@ SearchBackward).</P>
 <DD>the element found, or NULL if not found.
 </DL>
 
-<H2><A NAME="secta13">13</A> <A NAME="L6125">Languages</A></H2>
+<H2><A NAME="secta15">15</A> <A NAME="L6125">Languages</A></H2>
 
 <P>Group language contains the functions for managing natural languages. These
 functions require that file <EM>language.h</EM> be included in the module that
@@ -4930,7 +5815,7 @@ calls them.</P>
 <P>Thot needs to know in which language each basic text element is written,
 for instance for hyphenating words or for checking the spelling. Therefore, an
 attribute called Language is defined by default in each structure schema and
-it can be associated with any element (see section <A HREF="#secta11">11</A>).
+it can be associated with any element (see section <A HREF="#secta13">13</A>).
 A text element inherits the language specified by it first ancestor having a
 Language attribute, unless it carries its own Language attribute.</P>
 
@@ -4958,9 +5843,9 @@ may be associated to a language, such as a dictionary (for typographic
 checking). A typographic language is identified by an identifier of type
 <EM>Language</EM>.</P>
 
-<H3><A NAME="sectb131">13.1</A> Constructors</H3>
+<H3><A NAME="sectb151">15.1</A> Constructors</H3>
 
-<H4><A NAME="sectc1311">13.1.1</A> TtaNewLanguage</H4>
+<H4><A NAME="sectc1511">15.1.1</A> TtaNewLanguage</H4>
 
 <P>Declares a new language, its alphabet and optionally the names of the
 principal and secondary dictionaries. All languages used in a Thot document
@@ -5001,7 +5886,7 @@ language:</P>
 <DD>identifier of the new language or 0 if the language cannot be added.
 </DL>
 
-<H4><A NAME="sectc1312">13.1.2</A> TtaLoadLanguageDictionaries</H4>
+<H4><A NAME="sectc1512">15.1.2</A> TtaLoadLanguageDictionaries</H4>
 
 <P>Loads the dictionary associated with a language, if it is not loaded yet
 and registers that a dictionary associated with this language has been
@@ -5029,7 +5914,7 @@ loaded.</P>
 
 </DL>
 
-<H4><A NAME="sectc1313">13.1.3</A> TtaUnLoadLanguageDictionaries</H4>
+<H4><A NAME="sectc1513">15.1.3</A> TtaUnLoadLanguageDictionaries</H4>
 
 <P>Unloads dictionaries associated with a given language.</P>
 
@@ -5045,7 +5930,7 @@ loaded.</P>
 <DD><EM>languageId</EM>: identifier of the language.
 </DL>
 
-<H4><A NAME="sectc1314">13.1.4</A> TtaLoadTypoDictionaries</H4>
+<H4><A NAME="sectc1514">15.1.4</A> TtaLoadTypoDictionaries</H4>
 
 <P>Loads the dictionary associated with a typographic language, if it is not
 loaded yet and registers that a dictionary associated with this typographic
@@ -5073,7 +5958,7 @@ language has been loaded.</P>
 
 </DL>
 
-<H4><A NAME="sectc1315">13.1.5</A> TtaUnLoadTypoDictionaries</H4>
+<H4><A NAME="sectc1515">15.1.5</A> TtaUnLoadTypoDictionaries</H4>
 
 <P>Unloads dictionaries associated with a given typographic language.</P>
 
@@ -5089,9 +5974,9 @@ language has been loaded.</P>
 <DD><EM>languageId</EM>: identifier of the concerned typographic language.
 </DL>
 
-<H3><A NAME="sectb132">13.2</A> Accessors</H3>
+<H3><A NAME="sectb152">15.2</A> Accessors</H3>
 
-<H4><A NAME="sectc1321">13.2.1</A> TtaGetLanguageIdFromName</H4>
+<H4><A NAME="sectc1521">15.2.1</A> TtaGetLanguageIdFromName</H4>
 
 <P>Returns the identifier of a language that matches a language name. If this
 language name is unknown, returns the identifier of a typographic language
@@ -5117,7 +6002,7 @@ language.
 language is unknown.
 </DL>
 
-<H4><A NAME="sectc1322">13.2.2</A> TtaGetDefaultLanguage</H4>
+<H4><A NAME="sectc1522">15.2.2</A> TtaGetDefaultLanguage</H4>
 
 <P>Returns the identifier of the default language.</P>
 
@@ -5133,7 +6018,7 @@ language is unknown.
 <DD>identifier of the default language.
 </DL>
 
-<H4><A NAME="sectc1323">13.2.3</A> TtaGetLanguageIdFromAlphabet</H4>
+<H4><A NAME="sectc1523">15.2.3</A> TtaGetLanguageIdFromAlphabet</H4>
 
 <P>Returns the identifier of the first language that uses a given
 alphabet.</P>
@@ -5157,7 +6042,7 @@ greek).
 <DD>identifier of that language or 0 if the language is unknown.
 </DL>
 
-<H4><A NAME="sectc1324">13.2.4</A> TtaGetAlphabet</H4>
+<H4><A NAME="sectc1524">15.2.4</A> TtaGetAlphabet</H4>
 
 <P>Returns the alphabet associated with a given language.</P>
 
@@ -5179,7 +6064,7 @@ greek).
 <DD>a character that identifies the alphabet (`L' = latin, `G' = greek).
 </DL>
 
-<H4><A NAME="sectc1325">13.2.5</A> TtaGetLanguageName</H4>
+<H4><A NAME="sectc1525">15.2.5</A> TtaGetLanguageName</H4>
 
 <P>Returns the name of a given language.</P>
 
@@ -5201,7 +6086,7 @@ greek).
 <DD>the name of the language.
 </DL>
 
-<H4><A NAME="sectc1326">13.2.6</A> TtaGetPrincipalDictionary</H4>
+<H4><A NAME="sectc1526">15.2.6</A> TtaGetPrincipalDictionary</H4>
 
 <P>Returns a pointer to the principal dictionary associated to a language.</P>
 
@@ -5218,7 +6103,7 @@ greek).
 language.
 </DL>
 
-<H4><A NAME="sectc1327">13.2.7</A> TtaGetSecondaryDictionary</H4>
+<H4><A NAME="sectc1527">15.2.7</A> TtaGetSecondaryDictionary</H4>
 
 <P>Returns a pointer to the secondary dictionary associated to a language.</P>
 
@@ -5235,7 +6120,7 @@ language.
 language.
 </DL>
 
-<H4><A NAME="sectc1328">13.2.8</A> TtaGetPrincipalTypoDictionary</H4>
+<H4><A NAME="sectc1528">15.2.8</A> TtaGetPrincipalTypoDictionary</H4>
 
 <P>Returns a pointer to the principal dictionary associated to a typographic
 language.</P>
@@ -5253,7 +6138,7 @@ language.</P>
 typographic language.
 </DL>
 
-<H4><A NAME="sectc1329">13.2.9</A> TtaGetSecondaryTypoDictionary</H4>
+<H4><A NAME="sectc1529">15.2.9</A> TtaGetSecondaryTypoDictionary</H4>
 
 <P>Returns a pointer to the secondary dictionary associated to a typographic
 language.</P>
@@ -5271,7 +6156,7 @@ language.</P>
 typographic language.
 </DL>
 
-<H4><A NAME="sectc13210">13.2.10</A> TtaGetNumberOfLanguages</H4>
+<H4><A NAME="sectc15210">15.2.10</A> TtaGetNumberOfLanguages</H4>
 
 <P>Returns the current number of languages known by Thot.</P>
 
@@ -5287,7 +6172,7 @@ typographic language.
 <DD>the current number of languages.
 </DL>
 
-<H2><A NAME="secta14">14</A> <A NAME="L6504">Specific presentation</A></H2>
+<H2><A NAME="secta16">16</A> <A NAME="L6504">Specific presentation</A></H2>
 
 <P>The functions described in this section require that file
 <EM>presentation.h</EM> be included in the module that calls them.</P>
@@ -5298,9 +6183,9 @@ TtaAttachPRule) to an element which is itself part of an abstract tree of a
 document, before any other action can be performed on that specific
 presentation rule.</P>
 
-<H3><A NAME="sectb141">14.1</A> Constructors</H3>
+<H3><A NAME="sectb161">16.1</A> Constructors</H3>
 
-<H4><A NAME="sectc1411">14.1.1</A> TtaNewPRule</H4>
+<H4><A NAME="sectc1611">16.1.1</A> TtaNewPRule</H4>
 
 <P>Creates a new presentation rule of a given type for a given view of a given
 document.</P>
@@ -5330,7 +6215,7 @@ PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate.
 <DD>new presentation rule.
 </DL>
 
-<H4><A NAME="sectc1412">14.1.2</A> TtaNewPRuleForNamedView</H4>
+<H4><A NAME="sectc1612">16.1.2</A> TtaNewPRuleForNamedView</H4>
 
 <P>Creates a new presentation rule of a given type for a given view of a given
 document. The view is identified by its name.</P>
@@ -5362,7 +6247,7 @@ open).</P>
 <DD>new presentation rule.
 </DL>
 
-<H4><A NAME="sectc1413">14.1.3</A> TtaCopyPRule</H4>
+<H4><A NAME="sectc1613">16.1.3</A> TtaCopyPRule</H4>
 
 <P>Creates a new presentation rule and initializes it with a copy of an
 existing presentation rule.</P>
@@ -5385,7 +6270,7 @@ existing presentation rule.</P>
 <DD>new presentation rule.
 </DL>
 
-<H4><A NAME="sectc1414">14.1.4</A> TtaAttachPRule</H4>
+<H4><A NAME="sectc1614">16.1.4</A> TtaAttachPRule</H4>
 
 <P>Attaches a presentation rule to an element.</P>
 
@@ -5413,7 +6298,7 @@ attached.
 
 </DL>
 
-<H4><A NAME="sectc1415">14.1.5</A> TtaRemovePRule</H4>
+<H4><A NAME="sectc1615">16.1.5</A> TtaRemovePRule</H4>
 
 <P>Removes a presentation rule from an element and release that rule.</P>
 
@@ -5434,9 +6319,9 @@ associated.
 
 </DL>
 
-<H3><A NAME="sectb142">14.2</A> Modificators</H3>
+<H3><A NAME="sectb162">16.2</A> Modificators</H3>
 
-<H4><A NAME="sectc1421">14.2.1</A> TtaSetPRuleValue</H4>
+<H4><A NAME="sectc1621">16.2.1</A> TtaSetPRuleValue</H4>
 
 <P>Changes the value of a presentation rule. The presentation rule must be
 attached to an element that is part of a document.</P>
@@ -5501,7 +6386,7 @@ thot.color.</P>
 
 </DL>
 
-<H4><A NAME="sectc1422">14.2.2</A> TtaChangeBoxSize</H4>
+<H4><A NAME="sectc1622">16.2.2</A> TtaChangeBoxSize</H4>
 
 <P>Changes the height and width of the box corresponding to an element in a
 given view.</P>
@@ -5530,7 +6415,7 @@ zero).</P>
 
 </DL>
 
-<H4><A NAME="sectc1423">14.2.3</A> TtaChangeBoxPosition</H4>
+<H4><A NAME="sectc1623">16.2.3</A> TtaChangeBoxPosition</H4>
 
 <P>Moves the box of an element in a given view.</P>
 
@@ -5558,9 +6443,9 @@ zero).</P>
 
 </DL>
 
-<H3><A NAME="sectb143">14.3</A> Accessors</H3>
+<H3><A NAME="sectb163">16.3</A> Accessors</H3>
 
-<H4><A NAME="sectc1431">14.3.1</A> TtaGiveBoxSize</H4>
+<H4><A NAME="sectc1631">16.3.1</A> TtaGiveBoxSize</H4>
 
 <P>Returns the height and width of the box corresponding to an element in a
 given view.</P>
@@ -5592,7 +6477,7 @@ unit, int *width, int *height)</P>
 
 </DL>
 
-<H4><A NAME="sectc1432">14.3.2</A> TtaGiveBoxPosition</H4>
+<H4><A NAME="sectc1632">16.3.2</A> TtaGiveBoxPosition</H4>
 
 <P>Returns the x and y coordinates of the box corresponding to an element in a
 given view. The returned coordinates indicate the distance in points between
@@ -5628,7 +6513,7 @@ edge of the box, in units.</P>
 
 </DL>
 
-<H4><A NAME="sectc1433">14.3.3</A> TtaNextPRule</H4>
+<H4><A NAME="sectc1633">16.3.3</A> TtaNextPRule</H4>
 
 <P>Returns the first presentation rule associated with a given element (if
 pRule is NULL) or the presentation rule that follows a given rule of a given
@@ -5656,7 +6541,7 @@ rule is asked.</P>
 rule of the element.
 </DL>
 
-<H4><A NAME="sectc1434">14.3.4</A> TtaGetPRule</H4>
+<H4><A NAME="sectc1634">16.3.4</A> TtaGetPRule</H4>
 
 <P>Returns a presentation rule of a given type associated with a given
 element.</P>
@@ -5685,7 +6570,7 @@ PRFillPattern, PRBackground, PRForeground, PRHyphenate.</P>
 type of presentation rule.
 </DL>
 
-<H4><A NAME="sectc1435">14.3.5</A> TtaGetPRuleType</H4>
+<H4><A NAME="sectc1635">16.3.5</A> TtaGetPRuleType</H4>
 
 <P>Returns the type of a presentation rule.</P>
 
@@ -5710,7 +6595,7 @@ PRJustify, PRLineStyle, PRLineWeight, PRFillPattern, PRBackground,
 PRForeground, PRHyphenate.
 </DL>
 
-<H4><A NAME="sectc1436">14.3.6</A> TtaGetPRuleValue</H4>
+<H4><A NAME="sectc1636">16.3.6</A> TtaGetPRuleValue</H4>
 
 <P>Returns the value of a presentation rule.</P>
 
@@ -5767,7 +6652,7 @@ thot.color.</P>
 
 </DL>
 
-<H4><A NAME="sectc1437">14.3.7</A> TtaSamePRules</H4>
+<H4><A NAME="sectc1637">16.3.7</A> TtaSamePRules</H4>
 
 <P>Compares two presentation rules associated with the same element or with
 different elements.</P>
@@ -5792,15 +6677,15 @@ different elements.</P>
 <DD>0 if both rules are different, 1 if they are identical.
 </DL>
 
-<H2><A NAME="secta15">15</A> <A NAME="L7272">Views</A></H2>
+<H2><A NAME="secta17">17</A> <A NAME="L7272">Views</A></H2>
 
 <P>The functions described in this section require that file <EM>view.h</EM>
 be included in the module that calls them. They are available only in the Thot
 Editor library.</P>
 
-<H3><A NAME="sectb151">15.1</A> Constructors</H3>
+<H3><A NAME="sectb171">17.1</A> Constructors</H3>
 
-<H4><A NAME="sectc1511">15.1.1</A> TtaOpenMainView</H4>
+<H4><A NAME="sectc1711">17.1.1</A> TtaOpenMainView</H4>
 
 <P>Opens the main view of a document. This document must have a PSchema (see
 TtaSetPSchema).</P>
@@ -5829,7 +6714,7 @@ of the window that will display the view.</P>
 <DD>the view opened or 0 if the view cannot be opened.
 </DL>
 
-<H4><A NAME="sectc1512">15.1.2</A> TtaOpenView</H4>
+<H4><A NAME="sectc1712">17.1.2</A> TtaOpenView</H4>
 
 <P>Opens a view for a document. This document must have a PSchema (see
 TtaSetPSchema).</P>
@@ -5861,7 +6746,7 @@ of the window that will display the view.</P>
 <DD>the view opened or 0 if the view cannot be opened.
 </DL>
 
-<H4><A NAME="sectc1513">15.1.3</A> TtaOpenSubView</H4>
+<H4><A NAME="sectc1713">17.1.3</A> TtaOpenSubView</H4>
 
 <P>Opens a view that shows only a subtree. This document must have a PSchema
 (see TtaSetPSchema).</P>
@@ -5897,7 +6782,7 @@ int h, Element subtree)</P>
 <DD>the view opened or 0 if the view cannot be opened.
 </DL>
 
-<H4><A NAME="sectc1514">15.1.4</A> TtaChangeViewTitle</H4>
+<H4><A NAME="sectc1714">17.1.4</A> TtaChangeViewTitle</H4>
 
 <P>Changes the title of a view.</P>
 
@@ -5917,7 +6802,7 @@ int h, Element subtree)</P>
 
 </DL>
 
-<H4><A NAME="sectc1515">15.1.5</A> TtaCloseView</H4>
+<H4><A NAME="sectc1715">17.1.5</A> TtaCloseView</H4>
 
 <P>Closes a view.</P>
 
@@ -5935,9 +6820,9 @@ int h, Element subtree)</P>
 
 </DL>
 
-<H3><A NAME="sectb152">15.2</A> Modificators</H3>
+<H3><A NAME="sectb172">17.2</A> Modificators</H3>
 
-<H4><A NAME="sectc1521">15.2.1</A> TtaSetSensibility</H4>
+<H4><A NAME="sectc1721">17.2.1</A> TtaSetSensibility</H4>
 
 <P>Changes the current sensibility used to display a given view of a given
 document.</P>
@@ -5958,7 +6843,7 @@ document.</P>
 
 </DL>
 
-<H4><A NAME="sectc1522">15.2.2</A> TtaSetZoom</H4>
+<H4><A NAME="sectc1722">17.2.2</A> TtaSetZoom</H4>
 
 <P>Changes the current zoom used to display a given view of a given
 document.</P>
@@ -5979,7 +6864,7 @@ document.</P>
 
 </DL>
 
-<H4><A NAME="sectc1523">15.2.3</A> TtaShowElement</H4>
+<H4><A NAME="sectc1723">17.2.3</A> TtaShowElement</H4>
 
 <P>Shows a given element in a given view of a given document.</P>
 
@@ -6006,7 +6891,7 @@ position is the desired y coordinate of the top of the element.</P>
 
 </DL>
 
-<H4><A NAME="sectc1524">15.2.4</A> TtaRaiseView</H4>
+<H4><A NAME="sectc1724">17.2.4</A> TtaRaiseView</H4>
 
 <P>Maps and raises a given view of a given document.</P>
 
@@ -6025,7 +6910,7 @@ Cannot be 0.
 
 </DL>
 
-<H4><A NAME="sectc1525">15.2.5</A> TtaSetDisplayMode</H4>
+<H4><A NAME="sectc1725">17.2.5</A> TtaSetDisplayMode</H4>
 
 <P>Changes display mode for a document. Three display modes are available
 (DisplayImmediately, DeferredDisplay and NoComputedDisplay). In the immediate
@@ -6056,9 +6941,9 @@ created, it is initially in the immediate mode.</P>
 
 </DL>
 
-<H3><A NAME="sectb153">15.3</A> Accessors</H3>
+<H3><A NAME="sectb173">17.3</A> Accessors</H3>
 
-<H4><A NAME="sectc1531">15.3.1</A> TtaGetSensibility</H4>
+<H4><A NAME="sectc1731">17.3.1</A> TtaGetSensibility</H4>
 
 <P>Reads the current sensibility used to display a given view of a given
 document.</P>
@@ -6083,7 +6968,7 @@ document.</P>
 <DD>current value of the sensibility.
 </DL>
 
-<H4><A NAME="sectc1532">15.3.2</A> TtaGetZoom</H4>
+<H4><A NAME="sectc1732">17.3.2</A> TtaGetZoom</H4>
 
 <P>Reads the current zoom used to display a given view of a given
 document.</P>
@@ -6114,7 +6999,7 @@ View view;
 <DD>current value of the zoom.
 </DL>
 
-<H4><A NAME="sectc1533">15.3.3</A> TtaGetDisplayMode</H4>
+<H4><A NAME="sectc1733">17.3.3</A> TtaGetDisplayMode</H4>
 
 <P>Returns the current display mode for a document.</P>
 
@@ -6136,7 +7021,7 @@ View view;
 <DD>current display mode for that document.
 </DL>
 
-<H4><A NAME="sectc1534">15.3.4</A> TtaIsPSchemaValid</H4>
+<H4><A NAME="sectc1734">17.3.4</A> TtaIsPSchemaValid</H4>
 
 <P>Checks if a presentation schema can be applied to a document of a given
 class. No document is needed and the schemas are not loaded by this
@@ -6163,7 +7048,7 @@ checked.</P>
 <DD>1 if the presentation schema can be applied, 0 if it can not.
 </DL>
 
-<H4><A NAME="sectc1535">15.3.5</A> TtaGiveViewsToOpen</H4>
+<H4><A NAME="sectc1735">17.3.5</A> TtaGiveViewsToOpen</H4>
 
 <P>Returns the names of the views that can be opened for a document.</P>
 
@@ -6191,7 +7076,7 @@ open.</P>
 
 </DL>
 
-<H4><A NAME="sectc1536">15.3.6</A> TtaGetViewName</H4>
+<H4><A NAME="sectc1736">17.3.6</A> TtaGetViewName</H4>
 
 <P>Returns the name of an open view.</P>
 
@@ -6215,7 +7100,7 @@ open.</P>
 <DD>Name of the view. The buffer must be provided by the caller.
 </DL>
 
-<H4><A NAME="sectc1537">15.3.7</A> TtaGetViewFromName</H4>
+<H4><A NAME="sectc1737">17.3.7</A> TtaGetViewFromName</H4>
 
 <P>Returns the identifier of a view of a given document from its name.</P>
 
@@ -6239,7 +7124,7 @@ open.</P>
 <DD>the view. 0 if no view of that name is currently open for the document.
 </DL>
 
-<H4><A NAME="sectc1538">15.3.8</A> TtaGiveActiveView</H4>
+<H4><A NAME="sectc1738">17.3.8</A> TtaGiveActiveView</H4>
 
 <P>Returns the active view and the document to which that view belongs. The
 active view is the one that receives the characters typed by the user.</P>
@@ -6264,7 +7149,7 @@ active view is the one that receives the characters typed by the user.</P>
 
 </DL>
 
-<H4><A NAME="sectc1539">15.3.9</A> TtaIsViewOpened</H4>
+<H4><A NAME="sectc1739">17.3.9</A> TtaIsViewOpened</H4>
 
 <P>Indicates whether a view is opened.</P>
 
@@ -6288,9 +7173,9 @@ active view is the one that receives the characters typed by the user.</P>
 <DD> True if the view is already opened.
 </DL>
 
-<H3><A NAME="sectb154">15.4</A> Help</H3>
+<H3><A NAME="sectb174">17.4</A> Help</H3>
 
-<H4><A NAME="sectc1541">15.4.1</A> TtaListView</H4>
+<H4><A NAME="sectc1741">17.4.1</A> TtaListView</H4>
 
 <P>Produces in a file a human-readable form of the current picture of the
 document view.</P>
@@ -6312,7 +7197,7 @@ list. This file must be open when calling the function.</P>
 
 </DL>
 
-<H2><A NAME="secta16">16</A> <A NAME="L7975">Selection</A></H2>
+<H2><A NAME="secta18">18</A> <A NAME="L7975">Selection</A></H2>
 
 <P>The functions described in this section require that file
 <EM>selection.h</EM> be included in the module that calls them. They are
@@ -6326,9 +7211,9 @@ sense that they can change any part of a document independently of the current
 selection; but, when necessary, they can also have access to the current user
 selection, by using the following functions.</P>
 
-<H3><A NAME="sectb161">16.1</A> Constructors</H3>
+<H3><A NAME="sectb181">18.1</A> Constructors</H3>
 
-<H4><A NAME="sectc1611">16.1.1</A> TtaSelectElement</H4>
+<H4><A NAME="sectc1811">18.1.1</A> TtaSelectElement</H4>
 
 <P>Selects a single element. This element is highlighted in all views where it
 can be displayed. If it cannot be displayed in any existing view, a new view
@@ -6349,10 +7234,11 @@ the selection in the document.</P>
 
 </DL>
 
-<H4><A NAME="sectc1612">16.1.2</A> TtaSelectString</H4>
+<H4><A NAME="sectc1812">18.1.2</A> TtaSelectString</H4>
 
-<P>Selects a substring within a Text basic element. This substring is
-highlighted in all views where it can be displayed.</P>
+<P>Selects a substring or places the insertion caret within a Text basic
+element. This substring is highlighted in all views where it can be
+displayed.</P>
 
 <HR>
 
@@ -6368,15 +7254,16 @@ firstCharacter, int lastCharacter)</P>
 <P><EM>textElement</EM>: the Text element containing the string to be
 selected.</P>
 
-<P><EM>firstCharacter</EM>: position within the texte element of the first
+<P><EM>firstCharacter</EM>: position within the text element of the first
 character to be selected.</P>
 
-<P><EM>lastCharacter</EM>: position within the texte element of the last
-character to be selected.</P>
+<P><EM>lastCharacter</EM>: position within the text element of the last
+character to be selected, 0 if a caret is to be placed before the position of
+the character of rank firstCharacter.</P>
 
 </DL>
 
-<H4><A NAME="sectc1613">16.1.3</A> TtaExtendSelection</H4>
+<H4><A NAME="sectc1813">18.1.3</A> TtaExtendSelection</H4>
 
 <P>Extends the current selection to a given element.</P>
 
@@ -6398,7 +7285,7 @@ to be selected. 0 if the whole element must be selected.</P>
 
 </DL>
 
-<H4><A NAME="sectc1614">16.1.4</A> TtaSelectInterval</H4>
+<H4><A NAME="sectc1814">18.1.4</A> TtaSelectInterval</H4>
 
 <P>If a pair of paired elements is selected, select also all elements between
 the two paired elements. Nothing is done if the current selection is not a
@@ -6411,7 +7298,7 @@ pair.</P>
 <HR>
 
 <DL>
-<DT>Parameters:</DT>
+<DT>Parameter:</DT>
 
 <DD>No parameter
 </DL>
@@ -6422,7 +7309,7 @@ pair.</P>
 <DD>No return value
 </DL>
 
-<H4><A NAME="sectc1615">16.1.5</A> TtaUnselect</H4>
+<H4><A NAME="sectc1815">18.1.5</A> TtaUnselect</H4>
 
 <P>Turns the selection off for a document.</P>
 
@@ -6433,7 +7320,7 @@ pair.</P>
 <HR>
 
 <DL>
-<DT>Parameters:</DT>
+<DT>Parameter:</DT>
 
 <DD><EM>document</EM>: the document for which the selection must be turned off
 </DL>
@@ -6444,7 +7331,7 @@ pair.</P>
 <DD>No return value
 </DL>
 
-<H4><A NAME="sectc1616">16.1.6</A> TtaSetSelectionMode</H4>
+<H4><A NAME="sectc1816">18.1.6</A> TtaSetSelectionMode</H4>
 
 <P>Change selection mode. If withMenu = False functions TtaSelectElement,
 TtaSelectString, TtaExtendSelection and TtaUnselect do not update the menus
@@ -6458,7 +7345,7 @@ mode is withMenu = True.</P>
 <HR>
 
 <DL>
-<DT>Parameters:</DT>
+<DT>Parameter:</DT>
 
 <DD><EM>withMenu</EM>: the new selection mode.
 </DL>
@@ -6469,9 +7356,9 @@ mode is withMenu = True.</P>
 <DD>No return value
 </DL>
 
-<H3><A NAME="sectb162">16.2</A> Accessors</H3>
+<H3><A NAME="sectb182">18.2</A> Accessors</H3>
 
-<H4><A NAME="sectc1621">16.2.1</A> TtaIsDocumentSelected</H4>
+<H4><A NAME="sectc1821">18.2.1</A> TtaIsDocumentSelected</H4>
 
 <P>Indicates whether a document is selected.</P>
 
@@ -6488,16 +7375,18 @@ mode is withMenu = True.</P>
 </DL>
 
 <DL>
-<DT>Return values:</DT>
+<DT>Return value:</DT>
 
 <DD>True if the current selection concerns this document.
 </DL>
 
-<H4><A NAME="sectc1622">16.2.2</A> TtaGiveFirstSelectedElement</H4>
+<H4><A NAME="sectc1822">18.2.2</A> TtaGiveFirstSelectedElement</H4>
 
 <P>Returns the first element in the current selection in a given document. If
 this element is a Text element and if only a substring is selected, return
-also the rank of the first and last characters in the selection.</P>
+also the rank of the first and last characters in the selection. If the
+current selection is an insert caret, the first character follows the last
+one. </P>
 
 <HR>
 
@@ -6513,7 +7402,7 @@ also the rank of the first and last characters in the selection.</P>
 </DL>
 
 <DL>
-<DT>Return values:</DT>
+<DT>Return parameters:</DT>
 
 <DD><EM>selectedElement</EM>: the first selected element, NULL if no element
 is selected in the document.
@@ -6527,7 +7416,7 @@ if the</P>
 
 </DL>
 
-<H4><A NAME="sectc1623">16.2.3</A> TtaGiveNextSelectedElement</H4>
+<H4><A NAME="sectc1823">18.2.3</A> TtaGiveNextSelectedElement</H4>
 
 <P>Returns the element that follows a given element in the current selection
 in a given document. If this element is a Text element and if only a substring
@@ -6564,290 +7453,6 @@ if the</P>
 
 </DL>
 
-<H2><A NAME="secta17">17</A> <A NAME="L8857">Messages</A></H2>
-
-<P>The functions described in this section require that file
-<EM>message.h</EM> be included in the modules that call them.</P>
-
-<P>The following functions are available in both the Thot Editor library and
-the ThotKernel library. They allow an application program to manage messages
-and dialogue text, as Thot tool kits do. Text of dialogue boxes and error
-messages is defined out of the application code and is dynamically loaded when
-the application is executed. This method allows application to adapt its
-interface to the current user (English text for English user, French text for
-French user, etc.). Each message is numbered, code referencing the message by
-its number and an external file associating this number with its corresponding
-text. An environment variable is used to reach the correct file that contains
-text of messages at the execution time. If this file is not reachable, a
-warning message is sent to the standard output, but the execution is not
-automatically stopped. Nevertheless, the Thot Editor library stops execution
-when its text file is not reachable because it cannot work without.</P>
-
-<P>We give an example of an application that needs four messages. The
-applicationMSG.h file is used to address correct message in source code and
-the en-applicationTXT gives the English version of messages text:</P>
-
-<TABLE BORDER=0>
-  <TR>
-
-<TD width=50%>
-
-<P>#define APP_start              0</P>
-
-<P>#define APP_abort             1</P>
-
-<P>#define APP_no_file          2 </P>
-
-<P>#define APP_complete      3</P>
-
-<P>#define APP_MSG_MAX 4</P>
-
-<P>applicationMSG.h</P>
-
-<TD width=50%>
-
-<P>0   Application</P>
-
-<P>1   Application aborted</P>
-
-<P>2   Unreachable file %s</P>
-
-<P>3   End of application</P>
-
-<P> </P>
-
-<P>en-applicationTXT</P>
-
-  </TR>
-</TABLE>
-
-<P> </P>
-
-<P>The application has to load the rigth message table:</P>
-
-<PRE>
-errorTable = TtaGetMessageTable("applicationTXT", APP_MSG_MAX);
-</PRE>
-
-<P>and displays the third error message using one of available display
-function (for example the TtaDisplayMessage function and TtaGetMessage):</P>
-
-<PRE>
-TtaDisplayMessage(FATAL, TtaGetMessage(errorTable, APP_no_file), filename);
-</PRE>
-
-<H3><A NAME="sectb171">17.1</A> Constructors</H3>
-
-<H4><A NAME="sectc1711">17.1.1</A> TtaGetMessageTable</H4>
-
-<P>Loads text of application messages in a dynamically allocated table and
-returns the identifcation of this messages table. The <TT>msgFile</TT> is the
-generic name of the message file to be loaded. The <TT>msgNumber</TT>
-parameter denotes the number of messages to be read in the file.The full name
-of the loaded file is  <TT>$THOTDIR/config/$LANG-msgFile</TT>, where
-<TT>$THOTDIR</TT> represents the root path of Thot hierarchy and
-<TT>$LANG</TT> represents the current language (for example <TT>en</TT>).
-<TT>$THOTDIR</TT> is computed by the Thot toolkit and <TT>$LANG</TT> can be
-set in the user registry <TT>thot.ini</TT>.</P>
-
-<HR>
-
-<P>int TtaGetMessageTable(char *msgFile, int msgNumber)</P>
-
-<HR>
-
-<DL>
-<DT>Parameters:</DT>
-
-<DD><EM>msgFile</EM>: the generic name of the message file.
-<P>msgNumber: the number of messages.</P>
-
-</DL>
-
-<DL>
-<DT>Return value:</DT>
-
-<DD>The messages table identifier or -1 if the table is not allocated and
-loaded.
-</DL>
-
-<H3><A NAME="sectb172">17.2</A> Accessors</H3>
-
-<H4><A NAME="sectc1721">17.2.1</A> TtaGetMessage</H4>
-
-<P>Returns the text of the corresponding message.</P>
-
-<HR>
-
-<P>char *TtaGetMessage(int msgTableID, int msgIndex)</P>
-
-<HR>
-
-<DL>
-<DT>Parameters:</DT>
-
-<DD><EM>msgTableID</EM>: identifier of the messages table.
-<P><EM>msgIndex</EM>: index of the message.</P>
-
-</DL>
-
-<DL>
-<DT>Return value:</DT>
-
-<DD>Text of the message (an empty text if the table or the message is not
-found).
-</DL>
-
-<H4><A NAME="sectc1722">17.2.2</A> TtaDisplaySimpleMessage</H4>
-
-<P>Displays the text of a simple message. This message is often displayed in
-the message area of the main application window ¾ if it exists ¾ or directed
-to the standard output for batch applications.</P>
-
-<P>The msgType parameter defines the importance of the message:</P>
-
-<UL>
-<LI>INFO: the message is displayed in the message area of the main application
-window just as an information.
-<LI>OVERHEAD: the message replaces the previous message in the message area of
-the main application window.
-<LI>FATAL: the message stops the application with an  error code.
-<LI>CONFIRM: the message pops a message box to display the message within and
-waits for until the end user confirms the message has been read.
-</UL>
-
-<HR>
-
-<P>void TtaDisplaySimpleMessage(int msgType, int msgTableID, int msgIndex)</P>
-
-<HR>
-
-<DL>
-<DT>Parameters:</DT>
-
-<DD>
-<P><EM>msgType</EM>: the message type (INFO,  OVERHEAD, FATAL, CONFIRM).</P>
-
-<P><EM>msgTableID</EM>: identifier of the messages table (LIB for the standard
-Thot messages).</P>
-
-<P><EM>msgIndex</EM>: index of the message.</P>
-
-</DL>
-
-<H4><A NAME="sectc1723">17.2.3</A> TtaDisplayMessage</H4>
-
-<P>Displays a message mixing static text (the text of the message) with a
-variable number of parameters. The static text plays the role of a format
-(like the prinf format) and may include necessary format commandes for each
-parameter: a %s for a string, a %d for an integer. Number and type of variable
-parameters depend on format commands included in the message text.</P>
-
-<P>.</P>
-
-<HR>
-
-<P>void TtaDisplayMessage(int msgType, msgTableID, int msgIndex, ...)</P>
-
-<HR>
-
-<DL>
-<DT>Parameters:</DT>
-
-<DD>
-<P><EM>msgType</EM>: the message type (INFO,  OVERHEAD, FATAL, CONFIRM).</P>
-
-<P><EM>msgTableID</EM>: identifier of the messages table (LIB for the standard
-Thot messages).</P>
-
-<P><EM>msgIndex</EM>: index of the message.</P>
-
-<P><EM>...</EM>: variable parameters.</P>
-
-</DL>
-
-<H2><A NAME="secta18">18</A> <A NAME="L9217">Dialogue</A></H2>
-
-<P>The Thot editing tool kit provides dialogue functions. There are high level
-functions that hide most of the complex aspects of OSF/Motif and thus allows
-an application to use OSF/Motif very easily and dynamically (all dialogue
-entities such as menus, buttons, forms, etc. can be created and modified at
-any time). As these dialogue functions are already used internally by the
-editing tool kit, another reason for an application to use it, is to present
-the user with a homogeneous and consistent look and feel for the whole
-application.</P>
-
-<P>The functions described in this section require that file
-<EM>dialogue.h</EM> be included in the module that calls them. They are
-available only in the Thot Editor library.</P>
-
-<H3><A NAME="sectb181">18.1</A> Constructors</H3>
-
-<H4><A NAME="sectc1811">18.1.1</A> TtaListDirectory</H4>
-
-<P>Creates one or two selectors that allow end-user to select a directory
-and/or a file included within the current specified directory. This function
-supposes that the application had first created a form where selectors have to
-be inserted. The application is able to create either only the directory
-selector or only the file selector. A suffix can be specified if the
-application wants to filter a specific class of files. It is the
-responsibility of the application to receive and handle the selectors
-callback.</P>
-
-<HR>
-
-<P>void TtaListDirectory(char *aDirectory, int formRef, char *dirTitle, int
-dirRef, char *suffix, char *fileTitle, int fileRef)</P>
-
-<HR>
-
-<DL>
-<DT>Parameters:</DT>
-
-<DD><EM>aDirectory</EM>: the current designated directory.
-<P><EM>formRef</EM>: the form identification.</P>
-
-<P><EM>dirTitle</EM>: the title of the directory selector.</P>
-
-<P><EM>dirRef</EM>: the directory selector identification or -1 if this
-selector is not desired.</P>
-
-<P><EM>suffix</EM>: the suffix used for filtering files (for example
-".PIV")</P>
-
-<P><EM>fileTitle</EM>: the title of the file selector.</P>
-
-<P><EM>fileRef</EM>: the file selector identification or -1 if this selector
-is not desired.</P>
-
-</DL>
-
-<H4><A NAME="sectc1812">18.1.2</A> TtaIsSuffixFileIn</H4>
-
-<P>Returns True if the specified directory contains files with the specified
-suffix.</P>
-
-<HR>
-
-<P>boolean TtaIsSuffixFileIn(char *aDirectory, char *suffix)</P>
-
-<HR>
-
-<DL>
-<DT>Parameters:</DT>
-
-<DD><EM>aDirectory</EM>: the current designated directory.
-<P><EM>suffix</EM>: the suffix used for filtering files (for example
-".PIV")</P>
-
-</DL>
-
-<DL>
-<DT>Return value:</DT>
-
-<DD>True or False.
-</DL>
-
 <H2><A NAME="secta19">19</A> Printing</H2>
 
 <P>The procedures described in this section are for printing Thot documents.
@@ -6876,7 +7481,7 @@ schema are given in the <I>.conf </I>file).</P>
 <HR>
 
 <DL>
-<DT>Paramters :</DT>
+<DT>Paramters:</DT>
 
 <DD><EM>document </EM>: the document to be printed.
 <P><EM>viewNames </EM>: the names of the views to be printed, seprated by a
@@ -6885,8 +7490,6 @@ blank character.</P>
 </DL>
 
 <H3><A NAME="sectb192">19.2</A> Modificators</H3>
-
-<P> </P>
 
 <H4><A NAME="sectc1921">19.2.1</A> TtaSetPrintExportProc</H4>
 
@@ -6908,7 +7511,7 @@ export was succesful. The export function have the following prototype :</P>
 <HR>
 
 <DL>
-<DT>Param&egrave;tres :</DT>
+<DT>Parameter:</DT>
 
 <DD><EM>exportProc</EM>: the export procedure or NULL to restore the standard
 export.
@@ -6961,7 +7564,7 @@ of their values.</P>
 <HR>
 
 <DL>
-<DT>Param&egrave;tres :</DT>
+<DT>Parameters:</DT>
 
 <DD><EM>parameter </EM>: A print parameter.
 <P><I>value</I> : The new value of the parameter.</P>
@@ -6982,9 +7585,119 @@ option.</P>
 <HR>
 
 <DL>
-<DT>Param&egrave;tres :</DT>
+<DT>Parameter:</DT>
 
 <DD><EM>command </EM>: The printing command.
+</DL>
+
+<H4><A NAME="sectc1924">19.2.4</A> TtaSetPsFile</H4>
+
+<P>This procedure modifies the current path used by the editor when saving a
+PostScript file.</P>
+
+<HR>
+
+<P>void TtaSetPsFile (char *path)</P>
+
+<HR>
+
+<DL>
+<DT>Parameter :</DT>
+
+<DD><EM>path</EM>: The PostScript file path.
+</DL>
+
+<H3><A NAME="sectb193">19.3</A> Accessors</H3>
+
+<H4><A NAME="sectc1931">19.3.1</A> TtaGetPrintParameter</H4>
+
+<P>Thit procedure returns a print paramenter value. Modifiable parameters
+belongs to PrintParameter type. The different parameters are listed below,
+with the range of their values.</P>
+
+<P> </P>
+
+<DL><I>
+<DT>PrintParameter</DT>
+
+<DD>Range</I>
+<DT>PP_FirstPage</DT>
+
+<DD>0 to 999
+<DT>PP_LastPage</DT>
+
+<DD>0 to 999
+<DT>PP_Scale</DT>
+
+<DD>10 to 300
+<DT>PP_NumberCopies</DT>
+
+<DD>1 to 100
+<DT>PP_ManualFeed</DT>
+
+<DD>PP_ON or PP_OFF
+<DT>PP_PagesPerSheet</DT>
+
+<DD>1, 2 or 4
+<DT>PP_PaperSize</DT>
+
+<DD>PP_A4 or PP_US
+<DT>PP_Destination</DT>
+
+<DD>PP_PRINTER or PP_PS
+</DL>
+
+<P> </P>
+
+<HR>
+
+<P>int TtaGetPrintParameter (PrintParameter parameter) </P>
+
+<HR>
+
+<DL>
+<DT>Parameter:</DT>
+
+<DD><EM>parameter </EM>: A print parameter.
+</DL>
+
+<DL>
+<DT>Return value:</DT>
+
+<DD>The current value of the parameter.
+</DL>
+
+<H4><A NAME="sectc1932">19.3.2</A> TtaGetPrintCommand</H4>
+
+<P>This procedure returns the current printing command.</P>
+
+<HR>
+
+<P>void TtaGetPrintCommand (char *command)</P>
+
+<HR>
+
+<DL>
+<DT>Return parameter:</DT>
+
+<DD><EM>command </EM>: The current printing command.
+</DL>
+
+<H4><A NAME="sectc1933">19.3.3</A> TtaGetPsFile</H4>
+
+<P>This procedure returns the current path used by the editor when saving a
+PostScript file.</P>
+
+<HR>
+
+<P>void TtaGetPsFile (char *path)</P>
+
+<HR>
+
+<DL>
+<DT>Return parameter:</DT>
+
+<DD><EM>path</EM>: The current PostScript file path.
 </DL>
 
 </BODY>

@@ -48,7 +48,7 @@ extern void         TtaRedrawMenuEntry (int ref, int entry, char *fontname, Pixe
 extern void         TtaDestroyDialogue (int ref);
 extern void         TtaNewForm (int ref, ThotWidget parent, char *title, boolean horizontal, int packet, char button, int dbutton);
 extern void         TtaNewSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int packet, char button, int dbutton);
-void                TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int packet, char button, int dbutton);
+void                TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int packet, char button);
 extern void         TtaChangeFormTitle (int ref, char *title);
 extern void         TtaAttachForm (int ref);
 extern void         TtaDetachForm (int ref);
@@ -82,7 +82,7 @@ extern void         TtaRedrawMenuEntry ( /* int ref, int entry, char *fontname, 
 extern void         TtaDestroyDialogue ( /* int ref */ );
 extern void         TtaNewForm (int ref, ThotWidget parent, char *title, boolean horizontal, int packet, char button, int dbutton);
 extern void         TtaNewSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int packet, char button, int dbutton);
-void                TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int packet, char button, int dbutton);
+void                TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int packet, char button);
 extern void         TtaChangeFormTitle ( /* int ref, char *title */ );
 extern void         TtaAttachForm ( /* int ref */ );
 extern void         TtaDetachForm ( /* int ref */ );

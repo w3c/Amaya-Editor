@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void InitPrintParameters ( PtrDocument pDoc );
+extern void InitPrintParameters ( Document document );
 extern void TtcPrint ( Document document,
                        View view );
 extern void TtaPrint ( Document document,
@@ -23,7 +23,7 @@ extern void TtcPrintSetup ( Document document,
 
 #else /* __STDC__ */
 
-extern void InitPrintParameters (/* PtrDocument pDoc */);
+extern void InitPrintParameters (/* Document document */);
 extern void TtcPrint (/* Document document,
                          View view */);
 extern void TtaPrint (/* Document document,

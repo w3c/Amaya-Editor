@@ -132,7 +132,7 @@ char               *applicationName;
       ThotLocalActions[i] = NULL;
 
    DocAutoSave = NULL;
-   pDocPrint = NULL;
+   PrintingDoc = 0;
    /* Initializes the table of translation schemas loaded */
    InitTranslationSchemasTable ();
    /* Read the environment variables concerning the directories */

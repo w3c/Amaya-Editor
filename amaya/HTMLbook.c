@@ -25,13 +25,11 @@
 #define PRINT_MAX_REF	   6
 
 /* Thot printer variables */
-extern boolean          PaperPrint;
-extern boolean          ManualFeed;
-extern boolean          NewPaperPrint;
-extern char             PSdir[MAX_PATH];
-extern char             PageSize[];
-extern char             pPrinter[MAX_PATH];
-
+static int              PaperPrint;
+static int              ManualFeed;
+static int              PageSize;
+static char             PSdir[MAX_PATH];
+static char             pPrinter[MAX_PATH];
 static Document		docPrint;
 static boolean		numberLinks;
 static boolean		withToC;
@@ -140,13 +138,24 @@ char               *data;
 	  /* confirms the paper print option */
 	  /* the other options are not taken into account without this
 	     confirmation */
-	  PaperPrint = NewPaperPrint;
+	  TtaSetPrintParameter (PP_Destination, PaperPrint);
+	  TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
+	  TtaSetPrintParameter (PP_PaperSize, PageSize);
+	  TtaSetPrintCommand (pPrinter);
+	  TtaSetPsFile (PSdir);
 	  if (numberLinks)
 	    SetInternalLinks (docPrint);		
 	  if (withToC)
 	    TtaPrint (docPrint, "Formatted_view Table_of_contents");
 	  else
 	    TtaPrint (docPrint, "Formatted_view");
+	  break;
+	case 0:
+	  PaperPrint = TtaGetPrintParameter (PP_Destination);
+	  ManualFeed = TtaGetPrintParameter (PP_ManualFeed);
+	  PageSize = TtaGetPrintParameter (PP_PaperSize);	  
+	  TtaGetPrintCommand (pPrinter);
+	  TtaGetPsFile (PSdir);
 	  break;
 	default:
 	  break;
@@ -157,7 +166,10 @@ char               *data;
 	{
 	case 0:
 	  /* Manual feed option */
-	  ManualFeed = !ManualFeed;
+	  if (ManualFeed == PP_ON)
+	    ManualFeed = PP_OFF;
+	  else
+	    ManualFeed = PP_ON;
 	  break;
 	case 1:
 	  /* Toc option */
@@ -175,10 +187,10 @@ char               *data;
       switch (val)
 	{
 	case 0:
-	  strcpy (PageSize, "A4");
+	  PageSize = PP_A4;
 	  break;
 	case 1:
-	  strcpy (PageSize, "US");
+	  PageSize = PP_US;
 	  break;
 	}
       break;
@@ -187,16 +199,16 @@ char               *data;
       switch (val)
 	{
 	case 0:
-	  if (!NewPaperPrint)
+	  if (PaperPrint == PP_PS)
 	    {
-	      NewPaperPrint = TRUE;
+	      PaperPrint = PP_PRINTER;
 	      TtaSetTextForm (basePrint+NumZonePrinterName, pPrinter);
 	    }
 	  break;
 	case 1:
-	  if (NewPaperPrint)
+	  if (PaperPrint == PP_PRINTER)
 	    {
-	      NewPaperPrint = FALSE;
+	      PaperPrint = PP_PS;
 	      TtaSetTextForm (basePrint+NumZonePrinterName, PSdir);
 	    }
 	  break;
@@ -204,7 +216,7 @@ char               *data;
       break;
     case NumZonePrinterName:
       if (data[0] != '\0')
-	if (NewPaperPrint)
+	if (PaperPrint == PP_PRINTER)
 	  /* text capture zone for the printer name */
 	  strncpy (pPrinter, data, MAX_PATH);
 	else
@@ -234,17 +246,14 @@ void                InitPrint ()
      strcpy (pPrinter, "");
    else
      strcpy (pPrinter, ptr);
-   /* read default tmpdir variable */
-   ptr = TtaGetEnvString ("TMPDIR");
-   if (ptr == NULL)
-     strcpy (PSdir, TempFileDirectory);
-   else
-     strcpy (pPrinter, ptr);
 
-   strcpy (PageSize,"A4");
-   PaperPrint = TRUE;
-   NewPaperPrint = TRUE;
-   ManualFeed = FALSE;
+   PageSize = PP_A4;
+   PaperPrint = PP_PRINTER;
+   ManualFeed = PP_OFF;
+   TtaSetPrintParameter (PP_Destination, PaperPrint);
+   TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
+   TtaSetPrintParameter (PP_PaperSize, PageSize);
+   TtaSetPrintCommand (pPrinter);
    numberLinks = FALSE;
    withToC = FALSE;
 }
@@ -260,13 +269,39 @@ View                view;
 
 #endif
 {
-   int                 i;
-   char                bufMenu[MAX_LENGTH];
+   char             bufMenu[MAX_LENGTH];
+   char            *ptr, suffix[MAX_LENGTH];
+   int              i, lg;
 
    /* Print form */
    if (docPrint != document)
-     docPrint = document;
-   /*InitPrintParameters (pDoc);*/
+     {
+       /* initialize print parameters */
+       docPrint = document;
+
+       /* read default tmpdir variable */
+       if (ptr != NULL && TtaCheckDirectory (ptr))
+	 {
+	   strcpy(PSdir,ptr);
+	   lg = strlen(PSdir);
+	   if (PSdir[lg - 1] == DIR_SEP)
+	     PSdir[--lg] = '\0';
+	 }
+       else
+	 {
+#ifdef _WINDOWS
+	   strcpy (PSdir,"C:\\TEMP");
+#else  /* !_WINDOWS */
+	   strcpy (PSdir,"/tmp");
+#endif /* !_WINDOWS */
+	   lg = strlen (PSdir);
+	 }
+       strcpy (bufMenu, TtaGetDocumentName (document));
+       ExtractSuffix (bufMenu, suffix);
+       sprintf (&PSdir[lg], "/%s.ps", bufMenu);
+       TtaSetPsFile (PSdir);
+     }
+
    TtaNewSheet (basePrint+NumFormPrint, TtaGetViewFrame (document, view), 
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
 	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_CANCEL);
@@ -278,7 +313,7 @@ View                view;
    sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_NUMBERED_LINKS));
    TtaNewToggleMenu (basePrint+NumMenuOptions, basePrint+NumFormPrint,
 		TtaGetMessage (LIB, TMSG_OPTIONS), 3, bufMenu, NULL, FALSE);
-   if (ManualFeed)
+   if (ManualFeed == PP_ON)
       TtaSetToggleMenu (basePrint+NumMenuOptions, 0, TRUE);
    if (withToC)
       TtaSetToggleMenu (basePrint+NumMenuOptions, 1, TRUE);
@@ -292,7 +327,7 @@ View                view;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
    TtaNewSubmenu (basePrint+NumMenuPaperFormat, basePrint+NumFormPrint, 0,
 	     TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, FALSE);
-   if (!strcmp (PageSize, "US"))
+   if (PageSize == PP_US)
       TtaSetMenuForm (basePrint+NumMenuPaperFormat, 1);
    else
       TtaSetMenuForm (basePrint+NumMenuPaperFormat, 0);
@@ -308,8 +343,7 @@ View                view;
    TtaNewTextForm (basePrint+NumZonePrinterName, basePrint+NumFormPrint, NULL, 30, 1, FALSE);
 
    /* initialization of the PaperPrint selector */
-   NewPaperPrint = PaperPrint;
-   if (PaperPrint)
+   if (PaperPrint == PP_PRINTER)
      {
 	TtaSetMenuForm (basePrint+NumMenuSupport, 0);
 	TtaSetTextForm (basePrint+NumZonePrinterName, pPrinter);

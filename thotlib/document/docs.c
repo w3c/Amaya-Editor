@@ -541,8 +541,8 @@ PtrDocument        *pDoc;
 	     FreeDocument (LoadedDocument[d]);
 	     LoadedDocument[d] = NULL;
              /* annuler le pointeur sur le doc a imprimer */
-             if(pDocPrint==(*pDoc))
-               pDocPrint=NULL;
+             if(PrintingDoc == d)
+               PrintingDoc = 0;
 	     *pDoc = NULL;
 	  }
      }

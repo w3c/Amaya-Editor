@@ -4895,7 +4895,6 @@ int                 cattype;
    int                 n;
    int                 index;
    int                 count;
-   int                 res;
    struct Cat_Context* catalogue;
    struct E_List*      adbloc;
 
@@ -5321,10 +5320,10 @@ int                 dbutton;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int package, char button, int dbutton)
+void                TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int package, char button)
 
 #else  /* __STDC__ */
-void                TtaNewDialogSheet (ref, parent, title, number, text, horizontal, package, button, dbutton)
+void                TtaNewDialogSheet (ref, parent, title, number, text, horizontal, package, button)
 int                 ref;
 ThotWidget          parent;
 char               *title;
@@ -5333,11 +5332,10 @@ char               *text;
 boolean             horizontal;
 int                 package;
 char                button;
-int                 dbutton;
 
 #endif /* __STDC__ */
 {
-   NewSheet (ref, parent, title, number - 1, text, horizontal, package, button, dbutton, CAT_DIALOG);
+   NewSheet (ref, parent, title, number - 1, text, horizontal, package, button, D_DONE, CAT_DIALOG);
 }
 
 

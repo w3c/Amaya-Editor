@@ -237,27 +237,33 @@ char               *viewsToPrint;
    initializes the printing parameters.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        InitPrintParameters (PtrDocument pDoc)
+void        InitPrintParameters (Document document)
 #else  /* __STDC__ */
-void        InitPrintParameters (pDoc)
-PtrDocument pDoc;
+void        InitPrintParameters (document)
+Document document;
 #endif /* __STDC__ */
 {
+   PtrDocument pDoc;
    char               *ptr;
    int                 lg;
 
+   if (document == 0)
+     pDoc = 0;
+   else
+     pDoc = LoadedDocument[document - 1];
+
    if (ThotLocalActions[T_rprint] == NULL)
      {
-       /* Connecte les actions liees au traitement du print */
+       /* Connect printing actions */
        TteConnectAction (T_rprint, (Proc) CallbackPrintmenu);
-       /* read DEFAULTPRINTER shell variable */
+       /* read DEFAULTPRINTER variable */
        ptr = TtaGetEnvString ("THOTPRINT");
        if (ptr == NULL)
 	 strcpy (pPrinter, "");
        else
 	 strcpy (pPrinter, ptr);
        PSdir[0] = '\0';
-       pDocPrint = NULL;
+       PrintingDoc = 0;
        defPaperPrint = TRUE;
        defManualFeed = FALSE;
        defFirstPage = 0;
@@ -269,10 +275,10 @@ PtrDocument pDoc;
        defPaginate = TRUE;
      }
 
-   if (pDoc != pDocPrint)
+   if (document != PrintingDoc || document == 0)
      {
        /* we are changing the current printed document */
-       pDocPrint = pDoc;
+       PrintingDoc = document;
        PaperPrint = defPaperPrint;
        ManualFeed = defManualFeed;
        FirstPage = defFirstPage;
@@ -285,30 +291,33 @@ PtrDocument pDoc;
          strcpy(PageSize,"A4");
        else
          strcpy(PageSize,"US");
-       if (pDocPrint->DocDirectory[0] == DIR_SEP)
-	 sprintf (PSdir, "%s/%s.ps", pDocPrint->DocDirectory, pDocPrint->DocDName);
-       else
-         {
-           ptr = NULL;
-           ptr = TtaGetEnvString ("TMPDIR");
-           if (ptr != NULL && TtaCheckDirectory(ptr))
-             {
-             strcpy(PSdir,ptr);
-             lg = strlen(PSdir);
-             if (PSdir[lg - 1] == DIR_SEP)
-               PSdir[--lg] = '\0';
-             }
-           else
-             {
+       if (pDoc != NULL)
+	 {
+	   if (pDoc->DocDirectory[0] == DIR_SEP)
+	     sprintf (PSdir, "%s/%s.ps", pDoc->DocDirectory, pDoc->DocDName);
+	   else
+	     {
+	       ptr = NULL;
+	       ptr = TtaGetEnvString ("TMPDIR");
+	       if (ptr != NULL && TtaCheckDirectory (ptr))
+		 {
+		   strcpy(PSdir,ptr);
+		   lg = strlen(PSdir);
+		   if (PSdir[lg - 1] == DIR_SEP)
+		     PSdir[--lg] = '\0';
+		 }
+	       else
+		 {
 #ifdef _WINDOWS
-               strcpy (PSdir,"C:\\TEMP");
+		   strcpy (PSdir,"C:\\TEMP");
 #else  /* !_WINDOWS */
-               strcpy (PSdir,"/tmp");
+		   strcpy (PSdir,"/tmp");
 #endif /* !_WINDOWS */
-               lg = strlen (PSdir);
-             }
-	   sprintf (&PSdir[lg], "/%s.ps", pDocPrint->DocDName);
-         }
+		   lg = strlen (PSdir);
+		 }
+	       sprintf (&PSdir[lg], "/%s.ps", pDoc->DocDName);
+	     }
+	 }
      }
 }
 
@@ -493,133 +502,201 @@ PrintParameter parameter;
 int value;
 #endif /*__STDC__ */
 {
+   if (ThotLocalActions[T_rprint] == NULL)
+     /* force the initialization of printing parameters */
+     InitPrintParameters (0);
+
    switch (parameter)
      {
      case PP_FirstPage:
        if (value <0 || value >999)
           TtaError(ERR_invalid_parameter);
        else
-        { 
-          defFirstPage = value;
-          FirstPage = value;
-        }
+	 FirstPage = value;
        break;
      case PP_LastPage:
        if (value <0 || value >999)
-          TtaError(ERR_invalid_parameter);
+	 TtaError(ERR_invalid_parameter);
        else
-        {
-          defLastPage = value;
-          LastPage = value;
-        }
+	 LastPage = value;
        break;
      case PP_Scale:
        if (value <0 || value >999)
-          TtaError(ERR_invalid_parameter);
+	 TtaError(ERR_invalid_parameter);
        else
-        {
-          defReduction = value;
-          Reduction = value;
-        }
+	 Reduction = value;
        break;
      case PP_NumberCopies:
        if (value <0 || value >999)
-          TtaError(ERR_invalid_parameter);
+	 TtaError(ERR_invalid_parameter);
        else
-        {
-          defNbCopies = value;
-          NbCopies = value;
-        }
+	 NbCopies = value;
        break;
      case PP_Paginate:
-       if (value != PP_ON || value!= PP_OFF )
-          TtaError(ERR_invalid_parameter);
+       if (value == PP_ON)
+	 Paginate = TRUE;
+       else if (value == PP_OFF)
+	 Paginate = FALSE;
        else
-        {
-          if(value == PP_ON)
-            {
-              defPaginate = TRUE;
-              Paginate = TRUE;
-            }
-          else
-            {
-              defPaginate = FALSE;
-              Paginate = FALSE;
-            }
-        }
+	 TtaError(ERR_invalid_parameter);
        break;
-      case PP_ManualFeed:
-       if (value != PP_ON || value!= PP_OFF )
-          TtaError(ERR_invalid_parameter);
+     case PP_ManualFeed:
+       if(value == PP_ON)
+	 ManualFeed = TRUE;
+       else if (value == PP_OFF)
+	 ManualFeed = FALSE;
        else
-        {
-          if(value == PP_ON)
-            {
-              defManualFeed = TRUE;
-              ManualFeed = TRUE;
-            }
-          else
-            {
-              defManualFeed = FALSE;
-              ManualFeed = FALSE;
-            }
-        }
+	 TtaError(ERR_invalid_parameter);
        break;
      case PP_PagesPerSheet:
        if (value != 1 || value != 2 || value != 4)
-          TtaError(ERR_invalid_parameter);
+	 TtaError(ERR_invalid_parameter);
        else
-        {
-          defPagesPerSheet = value;
-          PagesPerSheet = value;
-        }
+	 PagesPerSheet = value;
        break;
      case PP_PaperSize:
-       if (value != PP_A4 || value!= PP_US )
-          TtaError(ERR_invalid_parameter);
+       if (value == PP_A4)
+	 strcpy (PageSize, "A4");
+       else if (value == PP_US)
+	 strcpy (PageSize, "US");
        else
-        {
-          defPageSize = value;
-          if(value == PP_A4)
-	    strcpy (PageSize, "A4");
-          else
-	    strcpy (PageSize, "US");
-        }
+	 TtaError(ERR_invalid_parameter);
        break;
      case PP_Destination:
-       if (value != PP_PRINTER || value!= PP_PS)
-          TtaError(ERR_invalid_parameter);
+       if (value == PP_PRINTER)
+	 PaperPrint = TRUE;
+       else if (value == PP_PS)
+	 PaperPrint = FALSE;
        else
-        {
-          if(value == PP_PRINTER)
-            {
-              defPaperPrint = TRUE;
-              PaperPrint = TRUE;
-            }
-          else
-            {
-              defPaperPrint = FALSE;
-              PaperPrint = FALSE;
-            }
-        }
+	 TtaError(ERR_invalid_parameter);
        break;
       default:
        TtaError(ERR_invalid_parameter);
      }
-  }
+}
+
+
 /*----------------------------------------------------------------------
-  TtaSetPrintCommand
-  sets the print command.
+  TtaGetPrintParameter: returns a print parameter
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetPrintCommand(char *command)
+int TtaGetPrintParameter (PrintParameter parameter)
+#else /* __STDC__ */
+int TtaGetPrintParameter (parameter)
+PrintParameter parameter;
+int value;
+#endif /*__STDC__ */
+{
+  switch (parameter)
+    {
+    case PP_FirstPage:
+      return (FirstPage);
+      break;
+    case PP_LastPage:
+      return (LastPage);
+      break;
+    case PP_Scale:
+      return (Reduction);
+      break;
+    case PP_NumberCopies:
+      return (NbCopies);
+      break;
+    case PP_Paginate:
+      if (Paginate)
+	return (PP_ON);
+      else
+	return (PP_ON);
+      break;
+    case PP_ManualFeed:
+      if (ManualFeed)
+	return (PP_ON);
+      else
+	return (PP_ON);
+      break;
+    case PP_PagesPerSheet:
+      return (PagesPerSheet);
+      break;
+    case PP_PaperSize:
+      if (!strcmp (PageSize, "A4"))
+	return (PP_A4);
+      else
+	return (PP_US);
+      break;
+    case PP_Destination:
+      if (PaperPrint)
+	return (PP_ON);
+      else
+	return (PP_ON);
+      break;
+    default:
+      TtaError(ERR_invalid_parameter);
+      return (0);
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  TtaSetPrintCommand sets the print command.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetPrintCommand (char *command)
 #else  /* __STDC__ */
-void                TtaSetPrintCommand(/*char *command*/)
+void                TtaSetPrintCommand (/*char *command*/)
 char *command;
 #endif /* __STDC__ */
 {
   strcpy (pPrinter, command);
 }
+
+
+/*----------------------------------------------------------------------
+  TtaGetPrintCommand returns the print command.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaGetPrintCommand (char *command)
+#else  /* __STDC__ */
+void                TtaGetPrintCommand (/*char *command*/)
+char *command;
+#endif /* __STDC__ */
+{
+  if (command == NULL)
+    TtaError(ERR_invalid_parameter);
+  else
+    strcpy (command, pPrinter);
+}
+
+
+/*----------------------------------------------------------------------
+  TtaSetPrintCommand sets the path of ps file.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetPsFile (char *path)
+#else  /* __STDC__ */
+void                TtaSetPsFile (/*char *path*/)
+char *command;
+#endif /* __STDC__ */
+{
+  strcpy (PSdir, path);
+}
+
+
+/*----------------------------------------------------------------------
+  TtaGetPsFile returns the path of ps file.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaGetPsFile (char *path)
+#else  /* __STDC__ */
+void                TtaGetPsFile (/*char *path*/)
+char *path;
+#endif /* __STDC__ */
+{
+  if (path == NULL)
+    TtaError(ERR_invalid_parameter);
+  else
+    strcpy (path, PSdir);
+}
+
+
 /*----------------------------------------------------------------------
   CallbackPrintmenu
   callback associated to the PrintSetup form 
@@ -634,8 +711,13 @@ char               *txt;
 
 #endif /* __STDC__ */
 {
-  if (pDocPrint != NULL)
-    if (pDocPrint->DocSSchema != NULL)
+  PtrDocument         pDoc;
+
+  if (PrintingDoc != 0)
+    {
+      pDoc = LoadedDocument[PrintingDoc - 1];
+
+    if (pDoc->DocSSchema != NULL)
       /* the document to be printed still exists */
       switch (ref)
 	{
@@ -715,6 +797,7 @@ char               *txt;
 	    (*ThotLocalActions[T_rextprint])(ref, val, txt);
 	  break;
 	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -731,14 +814,16 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   PtrDocument         pDoc;
-   int                 i;
-   char                bufMenu[MAX_TXT_LEN];
+   PtrDocument      pDoc;
+   int              i;
+   char             bufMenu[MAX_TXT_LEN];
 
-   pDoc = LoadedDocument[document - 1];
+   if (document == 0)
+     return;
 
    /* Print form */
-   InitPrintParameters (pDoc);
+   pDoc = LoadedDocument[document - 1];
+   InitPrintParameters (document);
    TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), 
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
 	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_CANCEL);

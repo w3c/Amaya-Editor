@@ -14,7 +14,7 @@ THOT_EXPORT boolean      PaperPrint;
 THOT_EXPORT boolean      ManualFeed;
 THOT_EXPORT boolean      NewPaperPrint;
 THOT_EXPORT char         pPrinter[MAX_PATH];
-THOT_EXPORT PtrDocument  pDocPrint;
+THOT_EXPORT Document     PrintingDoc;
 THOT_EXPORT char         PageSize[MAX_NAME_LENGTH];
 THOT_EXPORT int	    FirstPage;
 THOT_EXPORT int	    LastPage;

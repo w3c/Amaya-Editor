@@ -249,7 +249,7 @@ View                view;
 
    docPrint = document;
    pDoc = LoadedDocument[document - 1];
-   InitPrintParameters (pDoc);
+   InitPrintParameters (document);
    NewFirstPage = FirstPage;
    NewLastPage = LastPage;
    NewNbCopies = NbCopies;
@@ -293,19 +293,19 @@ View                view;
    /* deuxieme colonne */
 
    /* zone de saisie derniere page */
-   TtaNewNumberForm(NumZoneLastPage, NumFormPrint,
-                   TtaGetMessage(LIB, TMSG_LAST_PAGE), 0, 999, FALSE);
-   TtaSetNumberForm(NumZoneLastPage, LastPage);
+   TtaNewNumberForm (NumZoneLastPage, NumFormPrint,
+		     TtaGetMessage (LIB, TMSG_LAST_PAGE), 0, 999, FALSE);
+   TtaSetNumberForm (NumZoneLastPage, LastPage);
 
    /* zone de saisie des vues a imprimer */
-   ComposePrintMenu(pDoc,BufMenu,&NbPrintViews);
-   TtaNewToggleMenu(NumMenuViewsToPrint,
-		    NumFormPrint,
-		    TtaGetMessage(LIB, TMSG_VIEWS_TO_PRINT),
-		    NbPrintViews,BufMenu,NULL,TRUE);
-   for(i=0;i<NbPrintViews;i++)
-     if(LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdOpen)
-       TtaSetToggleMenu(NumMenuViewsToPrint,i,1);
+   ComposePrintMenu (pDoc, BufMenu, &NbPrintViews);
+   TtaNewToggleMenu (NumMenuViewsToPrint,
+		     NumFormPrint,
+		     TtaGetMessage(LIB, TMSG_VIEWS_TO_PRINT),
+		     NbPrintViews,BufMenu,NULL,TRUE);
+   for (i=0; i<NbPrintViews; i++)
+     if (LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdOpen)
+       TtaSetToggleMenu (NumMenuViewsToPrint, i, 1);
 
    /* label vide */
    TtaNewLabel(NumEmptyLabel1,NumFormPrint," ");
@@ -313,29 +313,29 @@ View                view;
    /* troisieme colonne */
 
    /* zone de saisie du taux d'agrandissement/reduction */
-   TtaNewNumberForm(NumZoneReduction, NumFormPrint,
-                   TtaGetMessage(LIB, TMSG_REDUCTION), 10, 300, FALSE);
-   TtaSetNumberForm(NumZoneReduction, Reduction);
+   TtaNewNumberForm (NumZoneReduction, NumFormPrint,
+		     TtaGetMessage(LIB, TMSG_REDUCTION), 10, 300, FALSE);
+   TtaSetNumberForm (NumZoneReduction, Reduction);
 
    /* sous-menu nombre de pages par feuille */
    i = 0;
-   sprintf(&BufMenu[i],"%s%s","B", TtaGetMessage(LIB, TMSG_1_PAGE_SHEET));
+   sprintf (&BufMenu[i],"%s%s","B", TtaGetMessage (LIB, TMSG_1_PAGE_SHEET));
    i += strlen(&BufMenu[i]) + 1;
-   sprintf(&BufMenu[i],"%s%s","B", TtaGetMessage(LIB, TMSG_2_PAGE_SHEET));
+   sprintf (&BufMenu[i],"%s%s","B", TtaGetMessage (LIB, TMSG_2_PAGE_SHEET));
    i += strlen(&BufMenu[i]) + 1;
-   sprintf(&BufMenu[i],"%s%s","B", TtaGetMessage(LIB, TMSG_4_PAGE_SHEET));
-   TtaNewSubmenu(NumMenuNbPagesPerSheet, NumFormPrint, 0,
-		 TtaGetMessage(LIB, TMSG_NB_PAGE_SHEET), 
+   sprintf (&BufMenu[i],"%s%s","B", TtaGetMessage (LIB, TMSG_4_PAGE_SHEET));
+   TtaNewSubmenu (NumMenuNbPagesPerSheet, NumFormPrint, 0,
+		 TtaGetMessage (LIB, TMSG_NB_PAGE_SHEET), 
 		 3, BufMenu, NULL, False);
    if (PagesPerSheet == 1)
-     TtaSetMenuForm(NumMenuNbPagesPerSheet, 0);
+     TtaSetMenuForm (NumMenuNbPagesPerSheet, 0);
    else if (PagesPerSheet == 2)
-     TtaSetMenuForm(NumMenuNbPagesPerSheet, 1);
+     TtaSetMenuForm (NumMenuNbPagesPerSheet, 1);
    else
-     TtaSetMenuForm(NumMenuNbPagesPerSheet, 2);
+     TtaSetMenuForm (NumMenuNbPagesPerSheet, 2);
 
    /* label vide */
-   TtaNewLabel(NumEmptyLabel2,NumFormPrint," ");
+   TtaNewLabel (NumEmptyLabel2,NumFormPrint," ");
 
    /* quatrieme colonne */
  

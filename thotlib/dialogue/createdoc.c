@@ -311,7 +311,7 @@ View                view;
    strcpy (BufMenu, TtaGetMessage (LIB, TMSG_RENAME));
    i = strlen (BufMenu) + 1;
    strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-   TtaNewDialogSheet (NumFormConfirm,  0, NULL, 2, BufMenu, FALSE, 1, 'L', D_DONE);
+   TtaNewDialogSheet (NumFormConfirm,  0, NULL, 2, BufMenu, FALSE, 1, 'L');
 
 /* affichage du formulaire Creer document */
    TtaSetDialoguePosition ();

@@ -411,7 +411,7 @@ PtrDocument         pDoc;
 	      strcpy (BufMenu, TtaGetMessage (LIB, TMSG_SAVE_AS));
 	      i = strlen (BufMenu) + 1;
 	      strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-	      TtaNewDialogSheet (NumFormConfirm,  0, NULL, 2, BufMenu, FALSE, 1, 'L', D_CANCEL);
+	      TtaNewDialogSheet (NumFormConfirm,  0, NULL, 2, BufMenu, FALSE, 1, 'L');
 
 	      /* affiche le formulaire */
 	      TtaShowDialogue (NumFormSaveAs, FALSE);

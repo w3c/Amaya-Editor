@@ -38,15 +38,25 @@ typedef int PrintParameter;
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-extern void TtaPrint(Document document, char *viewName);
+extern void TtaPrint (Document document,
+		      char *viewName);
 extern void TtaSetPrintExportFunc (Func exportFunc);
-extern void TtaSetPrintParameter (PrintParameter parameter, int value);
+extern void TtaSetPrintParameter (PrintParameter parameter,
+				  int value);
+extern int TtaGetPrintParameter (PrintParameter parameter);
 extern void TtaSetPrintCommand (char *command);
+extern void TtaGetPrintCommand (char *command);
+extern void TtaSetPsFile (char *path);
+extern void TtaGetPsFile (char *path);
 #else /* __STDC__ */
 extern void TtaPrint(/*Document document, char *viewName*/);
 extern void TtaSetPrintExportFunc (/*Func exportFunc*/);
 extern void TtaSetPrintParameter (/*PrintParameter parameter, int value*/);
+extern void TtaGetPrintParameter (/*PrintParameter parameter*/);
 extern void TtaSetPrintCommand (/*char *command*/);
+extern void TtaGetPrintCommand (/*char *command*/);
+extern void TtaSetPsFile (/*char *path*/);
+extern void TtaGetPsFile (/*char *path*/);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 
