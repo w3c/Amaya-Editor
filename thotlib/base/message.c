@@ -401,7 +401,7 @@ void TtaDisplayMessage (int msgType, char *fmt,...)
 	 } 
        /* Display the final message */
        pBuffer[i] = EOS;
-       if (msgType == CONFIRM)
+       if (msgType == CONFIRM || msgType == FATAL)
 	 DisplayConfirmMessage (pBuffer);
        else
 	 DisplayMessage (pBuffer, msgType);
@@ -423,6 +423,6 @@ void TtaDisplaySimpleMessage (int msgType, int origin, int number)
   else if (msgType == CONFIRM)
     MessageBox (NULL, ptr, "Error", MB_OK);
 #else  /* _WINGUI */
-   TtaDisplayMessage (msgType, ptr);
+   TtaDisplayMessage (msgType, ptr);   
 #endif /* _WINGUI */
 }

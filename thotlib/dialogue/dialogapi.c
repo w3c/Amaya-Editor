@@ -764,6 +764,13 @@ void DisplayConfirmMessage (char *text)
    gtk_widget_show_all (msgbox);
    gdk_window_raise (msgbox->window);
 #endif /* _GTK */
+#ifdef _WX
+   wxMessageDialog messagedialog( NULL,
+				  TtaConvMessageToWX(text), 
+				  TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_LIB_CONFIRM)),
+				  (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+   messagedialog.ShowModal();
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -787,58 +794,53 @@ void DisplayMessage (char *text, int msgType)
       /* take current messages */
       strncpy (buff, gtk_entry_get_text (GTK_ENTRY(FrameTable[0].WdStatus)), 500);
       n = strlen (buff);
-      if (msgType == INFO)
+      /* is it necessary to suppress one or more messages ? */
+      if (n + lg + 1 >= 500)
 	{
-	  /* is it necessary to suppress one or more messages ? */
-	  if (n + lg + 1 >= 500)
+	  /* suppress messages */
+	  /* kill until we have 50 free characters */
+	  while (n + lg + 1 >= 450)
 	    {
-	      /* suppress messages */
-	      /* kill until we have 50 free characters */
-	      while (n + lg + 1 >= 450)
+	      /* search next New Line */
+	      pointer = strchr (buff, '\n');
+	      if (pointer == NULL)
+		n = 0;
+	      else
 		{
-		  /* search next New Line */
-		  pointer = strchr (buff, '\n');
-		  if (pointer == NULL)
-		    n = 0;
-		  else
-		    {
-		      strcpy (buff, &pointer[1]);
-		      n = strlen (buff);
-		    }
+		  strcpy (buff, &pointer[1]);
+		  n = strlen (buff);
 		}
-	      /* add message */
-	      if (n > 0)
-		strcpy (&buff[n++], "\n");
-	      strncpy (&buff[n], text, 500 - n);
-	      lg += n;
-	      /* copy text */
-	      if (gtk_text_get_length (GTK_TEXT (FrameTable[0].WdStatus))>0)
-		gtk_editable_delete_text( GTK_EDITABLE (FrameTable[0].WdStatus), 0, -1);
-	      gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, buff, -1);
 	    }
-	  else
-	    {
-	      /* enough space, just add new message at the end */
-	      strcpy (buff, "\n");
-	      strcat (buff, text);
-	      gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, buff, -1);
-	      lg += n;
-	    }
-	  /* select the message end to force scroll down */
-	  gtk_editable_select_region(GTK_EDITABLE(FrameTable[0].WdStatus), 0, -1);
-	}
-      else if (msgType == OVERHEAD)
-	{
-	  /* search last New Line */
-	  while (buff[n] != EOL && n >= 0)
-	    n--;
-	  /* replace last message by the new one */
+	  /* add message */
+	  if (n > 0)
+	    strcpy (&buff[n++], "\n");
+	  strncpy (&buff[n], text, 500 - n);
+	  lg += n;
+	  /* copy text */
 	  if (gtk_text_get_length (GTK_TEXT (FrameTable[0].WdStatus))>0)
 	    gtk_editable_delete_text( GTK_EDITABLE (FrameTable[0].WdStatus), 0, -1);
-	  gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, text, -1);
+	  gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, buff, -1);
 	}
+      else
+	{
+	  /* enough space, just add new message at the end */
+	  strcpy (buff, "\n");
+	  strcat (buff, text);
+	  gtk_text_insert (GTK_TEXT (FrameTable[0].WdStatus), NULL, NULL, NULL, buff, -1);
+	  lg += n;
+	}
+      /* select the message end to force scroll down */
+      gtk_editable_select_region(GTK_EDITABLE(FrameTable[0].WdStatus), 0, -1);
     }
 #endif /* _GTK */
+
+#ifdef _WX
+  wxMessageDialog messagedialog( NULL,
+				 TtaConvMessageToWX(text), 
+				 _T("Info"),
+				 (long) wxOK | wxICON_INFORMATION | wxSTAY_ON_TOP);
+  messagedialog.ShowModal();
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
