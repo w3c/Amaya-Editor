@@ -1565,7 +1565,7 @@ void CreateGraphicElement (int entry)
   Document	    doc;
   Element	    first, SvgRoot, newEl, sibling, selEl;
   Element           child, parent, elem, foreignObj, altText, leaf;
-  ElementType       elType, selType, newType, childType, parentType;
+  ElementType       elType, selType, newType, childType;
   AttributeType     attrType, attrTypeHTML;
   Attribute         attr, inheritedAttr;
   SSchema	    docSchema, SvgSchema;
@@ -1577,7 +1577,6 @@ void CreateGraphicElement (int entry)
   int	            oldStructureChecking;
   int               docModified;
   ThotBool	    found, newGraph = FALSE;
-  Construct         constOfType;
 
   doc = TtaGetSelectedDocument ();
   if (doc == 0)
@@ -1617,15 +1616,7 @@ void CreateGraphicElement (int entry)
 	  if (strcmp (TtaGetSSchemaName (selType.ElSSchema), "HTML"))
 	    {
 	      /* It's not an HTML element. Is it an XML one ? */
-	      if (selType.ElTypeNum == 1)
-		{
-		  parent = TtaGetParent (first);
-		  parentType = TtaGetElementType (parent);
-		  constOfType = TtaGetConstructOfType (parentType);
-		}
-	      else
-		constOfType = TtaGetConstructOfType (selType);
-	      if (constOfType != ConstructAny)
+	      if (!TtaIsXmlSSchema (selType.ElSSchema))
 		{
 		  /* It's not an XML element */
 		  TtaCancelLastRegisteredSequence (doc);
