@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations</title>
-  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -75,7 +76,7 @@ lui sont présentées dans une nouvelle fenêtre.</p>
 <p style="text-align: center"><img src="../images/annotationicon.png"
 alt="annotation icon (= pencil)" /></p>
 
-<p>Une annotation possède plusieurs propriétés&nbsp;:</p>
+<p>Une annotation possède plusieurs propriétés :</p>
 <ul>
   <li>Point de stockage: dans le système de fichiers de l'utilisateur ou sur
     un serveur d'annotations</li>
@@ -131,13 +132,8 @@ alt="Annotations menu" /></p>
 
 <h3 id="Configurat">Menu de configuration pour les annotations</h3>
 
-<p>Ce menu est appelé à partir de l'entrée <strong>Configuration</strong>. La
-figure suivante montre la version Windows de ce menu. La version Unix a une
-interface utilisateur légèrement différente mais offre les mêmes
-fonctionnalités.</p>
-
-<p style="text-align: center"><img src="../images/configurebox.png"
-alt="configuration dialog box" /></p>
+<p>Ce menu est appelé à partir de l'entrée
+<strong>Edition&gt;Préférences</strong>.</p>
 
 <p></p>
 <dl>

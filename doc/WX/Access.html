@@ -3,7 +3,8 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Accessibility in Amaya</title>
   <style type="text/css">
@@ -28,20 +29,136 @@
 </table>
 
 <div id="page_body">
-<h1>Accessibility in Amaya</h1>
+<h2>Accessibility in Amaya</h2>
 
-<p>The following topics are covered in this section:</p>
+<p>The Amaya user population is extremely diverse. In addition to speaking a
+variety of languages and operating on several platforms, the population
+contains users with visual, aural, and motor disabilities.</p>
+
+<p>Because Amaya is an Open Source project, it is important to produce
+documents that are accessible to all members of the user base. Amaya provides
+a number of accessibility features to assist you with achieving this goal.</p>
+
+<h3>About Amaya&rsquo;s Accessibility Features</h3>
+
+<p>Accessibility for people with disabilities is being improved with each
+release. Currently, you can perform most Amaya functions without using a
+mouse, and carry out most editing functions (except entering text) without
+using the keyboard.</p>
+
+<p>Accessibility features in the current version include the ability to:</p>
 <ul>
-  <li><a
-    href="accessibility_in_amaya/accessibility_in_amaya.html">Accessibility
-    in Amaya</a></li>
-  <li><a
-    href="accessibility_in_amaya/about_amayas_accessibility_features.html">About
-    Amaya's Accessibility Features</a></li>
-  <li><a
-    href="accessibility_in_amaya/about_producing_accessible_content.html">About
-    Producing Accessible Content</a></li>
+  <li>Navigate and edit in Alternate, Link, Structure, and Table of Contents
+    views of a document, which are all synchronized with the default
+    Formatted view. See <span class="Link0"><a
+    href="../html/viewing/working_with_document_views.html">Working with
+    Document Views</a></span>.
+    <p></p>
+  </li>
+  <li>Edit in the Source view, and manually synchronize it with other views.
+    For more information, see <span class="Link0"><a
+    href="../html/viewing/working_with_document_views.html">Working with
+    Document Views</a></span>.
+    <p></p>
+  </li>
+  <li>Dynamically add, remove, and edit multiple style sheets, including a
+    user style sheet. See <span class="Link0"><a
+    href="../html/style_sheets/working_with_styles.html">Working with Style
+    Sheets</a></span>.
+    <p></p>
+  </li>
+  <li>Assign access keys for form fields, areas, or links. See <span
+    class="Link0"><a href="../html/browsing/about_access_keys.html">About
+    Access Keys</a></span>.
+    <p></p>
+  </li>
+  <li>Use keyboard shortcuts for menu options, links, and form controls. See
+    <a
+    href="../html/selecting/selecting_with_keyboard_and_mouse.html">Selecting
+    from the Keyboard</a> and <span class="Link0"><a
+    href="../html/configuring_amaya/configuring_amaya.html">About Keyboard
+    Shortcuts</a></span>.</li>
 </ul>
+
+<h3>About Producing Accessible Content</h3>
+
+<p>You can use Amaya to produce content that conforms to the W3C's Web
+Content Accessibility Guidelines. Some <span class="Link0"><a
+href="../html/accessibility_in_amaya/about_amayas_accessibility_features.html">accessibility
+features</a></span> are already built in. For example, you cannot add an
+image until you specify the alternative text because of the requirement for
+an <code>alt</code> attribute for images and imagemap areas.</p>
+
+<p>Amaya also automatically produces valid W3C-compliant markup. However, you
+control other features, such as appropriate long descriptions and captioning,
+through the <strong>Attributes</strong> menu (Formatted view) or
+<strong>Structure</strong> menu (Structure view).</p>
+
+<p>The Amaya Help currently describes how to use some HTML elements. As
+additional documentation is written, it will include information on ensuring
+accessibility for any pages that you produce.</p>
+
+<p>The most thorough guidelines are the W3C's Web Content Accessibility
+Guidelines. The W3C's Web Accessibility Initiative also publishes the
+following quick tips for making accessible Web sites:</p>
+<ul>
+  <li><strong>Images &amp; animations</strong>. Use the <code>alt</code>
+    attribute to describe the function of each visual. For more information,
+    see <span class="Link0">Working with Graphics</span>.
+    <p></p>
+  </li>
+  <li><strong>Image maps</strong>. Use client-side MAP and text for hotspots.
+    For more information, see <span class="Link0">Working with Image
+    Maps</span>.
+    <p></p>
+  </li>
+  <li><strong>Multimedia</strong>. Provide captioning and transcripts of
+    audio, and descriptions of video.
+    <p></p>
+  </li>
+  <li><strong>Hypertext links</strong>. Use text that makes sense when read
+    out of context. For example, avoid using "click here" as the link text.
+    <p></p>
+  </li>
+  <li><strong>Page organization</strong>. Use headings, lists, and a
+    consistent structure. Use CSS for layout and style where possible. For
+    more information, see <span class="Link0"><a
+    href="../html/style_sheets/working_with_styles.html">Working with Style
+    Sheets</a></span>.
+    <p></p>
+  </li>
+  <li><strong>Graphs and charts</strong>. Summarize the data or use the <span
+    class="Link0"><span style="font-family: courier">longdesc</span>
+    attribute</span>. For more information, see <span class="Link0"><a
+    href="../html/using_graphics/working_with_graphics.html">Working with
+    Graphics</a></span>.
+    <p></p>
+  </li>
+  <li><strong>Scripts, applets, and plug-ins</strong>. Provide alternative
+    content in case active features are inaccessible or unsupported.
+    <p></p>
+  </li>
+  <li><strong>Tables</strong>. Use tables to make line-by-line reading
+    sensible and to summarize data. For more information, see <span
+    class="Link0"><a
+    href="../html/editing_tables/working_with_tables.html">Working with
+    Tables</a></span>.
+    <p></p>
+  </li>
+  <li><strong>Frames</strong>. Display pages without frames, using
+    <code>NOFRAMES</code> and meaningful titles.
+    <p></p>
+  </li>
+  <li><strong>Check your work</strong>. Validate your documents prior to
+    <span class="Link0"><a
+    href="../html/saving_and_publishing_documents/saving_and_publishing_documents.html">publishing</a></span>.
+    You can use the W3C tools, checklist, and guidelines at:
+    <p><span class="Link0"><a
+    href="http://www.w3.org/TR/WAI-WEBCONTENT">http://www.w3.org/TR/WAI-WEBCONTENT.</a></span></p>
+  </li>
+</ul>
+
+<p></p>
 </div>
 </body>
 </html>
