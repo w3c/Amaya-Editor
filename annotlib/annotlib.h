@@ -16,6 +16,9 @@
 
 /* app generated files */
 #include "HTML.h"
+#include "MathML.h"
+#include "GraphML.h"
+#include "XLink.h"
 #include "Annot.h"
 
 /* Amaya modules */

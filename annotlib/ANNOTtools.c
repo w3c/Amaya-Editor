@@ -21,7 +21,7 @@
 #include "fileaccess.h"
 #include "annotlib.h"
 #include "AHTURLTools_f.h"
-#include "HTML.h"
+#include "fetchXMLname_f.h"
 
 #ifdef _WINDOWS
 #define TMPDIR "TMP"
@@ -294,9 +294,6 @@ ThotBool AnnotFilter_showServer (List *list, CHAR_T *url)
   AnnotFilterData *filter;
   CHAR_T server[MAX_LENGTH];
 
-  if (!url)
-    return TRUE;
-
   /* we first normalize the url name to get the server */
   GetServerName (url, server);
 
@@ -324,7 +321,7 @@ ThotBool AnnotFilter_showAuthor (List *list, CHAR_T *author, CHAR_T *url)
   CHAR_T *tmp;
   ThotBool result;
 
-  if (!author || !url)
+  if (!author)
     return TRUE;
 
   /* we first normalize the url name to get the server */
@@ -867,27 +864,27 @@ Element SearchAnnotation (doc, annotDoc)
   Element     elCour;
   STRING ancName = NULL;
 
-  elCour = SearchElementInDoc (doc, HTML_EL_BODY);
-  elType = TtaGetElementType (elCour);
-  elType.ElTypeNum = HTML_EL_Anchor;
+  elType.ElSSchema = TtaGetSSchema (TEXT("XLink"), doc);
+  if (!elType.ElSSchema)
+    /* there are no XLink annotations in this document! */
+    return NULL;
+  elType.ElTypeNum = XLink_EL_XLink;
 
-  /* @@@ need to add a filter to use HTML_ATTR_IsAnnotation */
-  /* Searches the first anchor */
-  elCour = TtaSearchTypedElement (elType, SearchForward, elCour);
-
-  /* Searchs the anchor that points to the annotDoc */
+  /* Search the anchor that points to the annotDoc */
+  elCour = TtaSearchTypedElement (elType, SearchInTree, 
+				  TtaGetMainRoot (doc));
   while (elCour != NULL) 
   {
-    ancName = SearchAttributeInEl (doc, elCour, HTML_ATTR_NAME, TEXT("HTML"));
+    ancName = SearchAttributeInEl (doc, elCour, HTML_ATTR_ID, TEXT("HTML"));
     if (ancName) 
       {
 	if (!ustrcmp (ancName, annotDoc))
 	  break;
 	TtaFreeMemory (ancName);
       }
+    /* @@ JK: do we need to get the succesor? */
     elCour = TtaGetSuccessor (elCour);
     elCour = TtaSearchTypedElement (elType, SearchForward, elCour);
-    ancName = SearchAttributeInEl (doc, elCour, HTML_ATTR_NAME, TEXT("HTML"));
   }
 
   if (ancName)
@@ -928,8 +925,8 @@ ThotBool ReplaceLinkToAnnotation (doc, oldAnnotURL, newAnnotURL)
     }
 
   elType = TtaGetElementType (anchor);
-  attrType.AttrSSchema =  elType.ElSSchema;
-  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+  attrType.AttrSSchema = GetXLinkSSchema (doc);
+  attrType.AttrTypeNum = XLink_ATTR_href_;
   attr = TtaGetAttribute (anchor, attrType);
   if (!attr)
     return FALSE;
@@ -1137,7 +1134,7 @@ CHAR_T *server;
   CHAR_T      *dir;
   CHAR_T      *file;
 
-  if (IsFilePath (url))
+  if (!url || IsFilePath (url))
       ustrcpy (server, TEXT("localhost"));
   else
     {

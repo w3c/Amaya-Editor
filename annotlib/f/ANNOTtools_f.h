@@ -15,7 +15,7 @@ extern void List_delObject ( List **list,
 extern int List_count ( List *list );
 extern int AnnotList_localCount ( List *annot_list );
 extern void AnnotFilter_add ( AnnotMetaDataList *annotMeta,
-			      SelType type,
+                              SelType type,
                               void *object,
                               AnnotMeta *annot );
 extern ThotBool AnnotFilter_delete ( List **list,
@@ -80,7 +80,7 @@ extern void List_delObject (/* List **list,
 extern int List_count (/* List *list */);
 extern int AnnotList_localCount (/* List *annot_list */);
 extern void AnnotFilter_add (/* AnnotMetaDataList *annotMeta,
-				SelType type,
+                                SelType type,
                                 void *object,
                                 AnnotMeta *annot */);
 extern ThotBool AnnotFilter_delete (/* List **list,

@@ -22,6 +22,8 @@
 #include "XPointer.h"
 #include "XPointer_f.h"
 #include "XPointerparse_f.h"
+#include "XLinkedit_f.h"
+#include "fetchXMLname_f.h"
 
 /*-----------------------------------------------------------------------
   LINK_CreateAName
@@ -156,9 +158,7 @@ char *index_file;
 
 /*-----------------------------------------------------------------------
   LINK_AddLinkToSource
-   Ajoute un lien de type annotation dans un document donne vers le
-   document de nom annotName. Le lien est cree juste avant l'element
-   target
+  Adds to a source document, an annotation link pointing to the annotation.
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -169,7 +169,7 @@ Document source_doc;
 AnnotMeta *annot;
 #endif /* __STDC__*/
 {
-  ElementType   elType;
+  ElementType   elType, firstElType;
   Element       el, first, anchor;
   AttributeType attrType;
   Attribute     attr;
@@ -177,6 +177,7 @@ AnnotMeta *annot;
   CHAR_T       *tmp;
   CHAR_T       server[MAX_LENGTH];
   int          c1, cN;
+  SSchema      XLinkSchema;
 
   annot_user = GetAnnotUser ();
   
@@ -194,16 +195,24 @@ AnnotMeta *annot;
   else
     first  = TtaSearchElementByLabel(annot->labf, TtaGetMainRoot (source_doc));
 
-  /* create the anchor element */
-  elType = TtaGetElementType (first);
-  elType.ElTypeNum = HTML_EL_Anchor;
+  if (!first)
+    /* @@ JK: signal an error, orphan annotation */
+    return;
+  
+  
+  /* create the anotation element */
+  XLinkSchema = GetXLinkSSchema (source_doc);
+  elType.ElSSchema = XLinkSchema;
+  elType.ElTypeNum = XLink_EL_XLink;
   anchor = TtaNewElement (source_doc, elType);
-
+  
   /*
   ** insert the anchor 
   */
 
-  /* is the user trying to annotate an anchor? */
+  firstElType = TtaGetElementType (first);
+
+  /* is the user trying to annotate an annotation? */
   el = TtaGetTypedAncestor (first, elType);
   if (el)
     {
@@ -211,7 +220,39 @@ AnnotMeta *annot;
 	in the struct tree */
       TtaInsertSibling (anchor, el, TRUE, source_doc);
     }
-  else
+  else if (!ustrcmp (TtaGetSSchemaName (firstElType.ElSSchema), 
+		     TEXT("MathML")))
+    {
+      /* An annotation on a MathMl structure. We backtrace the tree
+	 until we find the Math root element and add the annotation after
+	 it */
+      el = first;
+      while (el)
+	{
+	  elType = TtaGetElementType (el);
+	  if (elType.ElTypeNum == MathML_EL_MathML)
+	    break;
+	  el = TtaGetParent (el);
+	}
+      TtaInsertSibling (anchor, el, FALSE, source_doc);
+    }
+  else if (!ustrcmp (TtaGetSSchemaName (firstElType.ElSSchema), 
+		     TEXT("GraphML")))
+    {
+      /* An annotation on a MathMl structure. We backtrace the tree
+	 until we find the Math root element and add the annotation after
+	 it */
+      el = first;
+      while (el)
+	{
+	  elType = TtaGetElementType (el);
+	  if (elType.ElTypeNum == GraphML_EL_GraphML)
+	    break;
+	  el = TtaGetParent (el);
+	}
+      TtaInsertSibling (anchor, el, FALSE, source_doc);
+    }
+    else
     {
       if (c1 == 0)
 	{
@@ -237,35 +278,39 @@ AnnotMeta *annot;
 	}
     }
 
-  /* add the annotation attribute */
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = HTML_ATTR_IsAnnotation;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (anchor, attr, source_doc);  
+  /* add the Xlink attribute */
+  SetXLinkTypeSimple (anchor, source_doc, FALSE);
+
+  /*
+  ** add the other attributes
+  */
+
+  attrType.AttrSSchema = XLinkSchema;
 
   /* add the annotation icon */
   if (ustrcasecmp (annot->author, "tim"))
-    attrType.AttrTypeNum = HTML_ATTR_AnnotationIcon1;
+    attrType.AttrTypeNum = XLink_ATTR_AnnotIcon1;
   else
     /* @@ aha, it's Tim */
-    attrType.AttrTypeNum = HTML_ATTR_AnnotationIcon2;
+    attrType.AttrTypeNum = XLink_ATTR_AnnotIcon2;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (anchor, attr, source_doc);  
 
   /* add an HREF attribute pointing to the annotation */
-  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+  attrType.AttrTypeNum =  XLink_ATTR_href_;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (anchor, attr, source_doc);
   TtaSetAttributeText (attr, annot->body_url, anchor, source_doc);
   
-  /* add a NAME attribute so that the annotation doc can point
+  /* add a ID attribute so that the annotation doc can point
      back to the source of the annotation link */
-  attrType.AttrTypeNum = HTML_ATTR_NAME;
+  attrType.AttrSSchema = GetXHTMLSSchema (source_doc);
+  attrType.AttrTypeNum = HTML_ATTR_ID;
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (anchor, attr, source_doc);
   /* set the anchor's name */
   TtaSetAttributeText (attr, annot->name, anchor, source_doc);
-  TtaUnselect (source_doc);
+  /* @@ JK: maybe add a role so that we know the annotation type */
 
   /* add the annotation to the filter list */
   AnnotFilter_add (&AnnotMetaData[source_doc], BY_TYPE, annot->type, annot);

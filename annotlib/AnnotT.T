@@ -11,6 +11,7 @@ RULES
 
    Annot : BEGIN
      Use HTMLTX for HTML;
+     Use XLinkT for XLink;
    END;
 
    Description : BEGIN

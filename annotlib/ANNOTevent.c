@@ -601,7 +601,8 @@ void ANNOT_Create (doc, view)
   AnnotMeta  *annot;
 
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
-  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+    /* only HTML documents can be annotated */
     return;
 
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
@@ -751,25 +752,23 @@ Document doc;
 View view;
 #endif /* __STDC__*/
 {
-  ElementType elType;
-
   REMOTELOAD_context *ctx;
   int res;
   CHAR_T *rdf_file;
   CHAR_T *url;
   ThotBool free_url;
+  AnnotMeta *annot;
+  Document source_doc;
 
-  elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  /* @@ JK: while the post item isn't desactivated on the main window,
+     forbid annotations from elsewhere */
+  if (ustrcmp (TtaGetSSchemaName (TtaGetDocumentSSchema (doc)), TEXT("Annot")))
+    return;
+
   if (!annotPostServer 
       || *annotPostServer == EOS)
     return;
-  /*
-    tests for saying we only want post an annotation doc...
-  if (|| DocumentTypes[doc] != 10
-      || DocumentTypes[doc] != 11)
-    return;
-  */
-
+  
   /* create the RDF container */
   rdf_file = ANNOT_PreparePostBody (doc);
   if (!rdf_file)
@@ -790,16 +789,25 @@ View view;
   /* compute the URL */
   if (IsW3Path (DocumentURLs[doc]))
     {
+      /* find the annotation metadata that corresponds to this annotation */
+      source_doc = DocumentMeta[doc]->source_doc;
+      annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
+				     DocumentURLs[doc], AM_BODY_URL);
+
+      if (!annot)
+	/* @@ JK: give some error message */
+	return;
+
       /* we're saving a modification to an existing annotation */
       url = TtaGetMemory (ustrlen (annotPostServer)
 			  + sizeof (TEXT("?replace_source="))
-			  + ustrlen (DocumentURLs[doc])
+			  + ustrlen (annot->annot_url)
 			  + sizeof (TEXT("&rdftype="))
 			  + sizeof (ANNOTATION_PROP)
 			  + 1);
       usprintf (url,"%s?replace_source=%s&rdftype=%s",
 		annotPostServer,
-		DocumentURLs[doc],
+		annot->annot_url,
 		ANNOTATION_PROP);
       free_url = TRUE;
     }
@@ -878,29 +886,27 @@ Element el;
 
 #endif
 {
-  ElementType elType;
+  ElementType      elType;
   AttributeType    attrType;
   Attribute	   attr;
   int              length;
   CHAR_T          *annot_url;
 
+  /* reset the last selected annotation ptr */
+  last_selected_annotation = NULL;
+
+  /* is it an annotation link? */
+  elType = TtaGetElementType (el);
+  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("XLink"))
+      || (elType.ElTypeNum != XLink_EL_XLink))
+    return;
+
   /* memorize the last selected annotation */
   last_selected_annotation = el;
 
-  /* is it a link? */
-  elType = TtaGetElementType (el);
-  if (elType.ElTypeNum != HTML_EL_Anchor)
-    return;
-
-  /* is it an annotation link? */
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = HTML_ATTR_IsAnnotation;
-  attr = TtaGetAttribute (el, attrType);
-  if (!attr)
-    return;
-
   /* get the URL of the annotation body */
-  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = XLink_ATTR_href_;
   attr = TtaGetAttribute (el, attrType);
   if (!attr)
     return;
@@ -1246,20 +1252,15 @@ void ANNOT_Delete (document, view)
 
       annotEl = last_selected_annotation;
 
-      /* is it a link? */
-      elType = TtaGetElementType (annotEl);
-      if (elType.ElTypeNum != HTML_EL_Anchor)
-	return;
-      
       /* is it an annotation link? */
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_IsAnnotation;
-      attr = TtaGetAttribute (annotEl, attrType);
-      if (!attr)
+      elType = TtaGetElementType (annotEl);
+      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("XLink"))
+	  || (elType.ElTypeNum != XLink_EL_XLink))
 	return;
       
       /* get the annotation URL */
-      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = XLink_ATTR_href_;
       attr = TtaGetAttribute (annotEl, attrType);
       if (!attr)
 	return;
@@ -1323,12 +1324,12 @@ void ANNOT_Delete (document, view)
 	{
 	  /* compute the form_data */
 	  form_data = TtaGetMemory  (sizeof (TEXT("delete_source="))
-				     + ustrlen (annot_url)
+				     + ustrlen (annot->annot_url)
 				     + sizeof (TEXT("&rdftype="))
 				     + sizeof (ANNOTATION_PROP)
 				     + 1);
 	  usprintf (form_data,
-		    "delete_source=%s&rdftype=%s", annot_url, ANNOTATION_PROP);
+		    "delete_source=%s&rdftype=%s", annot->annot_url, ANNOTATION_PROP);
 	  /* launch the request */
 	  res = GetObjectWWW (doc,
 			      annot_server,

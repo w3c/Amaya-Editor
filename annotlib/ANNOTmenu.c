@@ -351,19 +351,25 @@ ThotBool show;
 
 #endif /* __STDC__ */
 {
-  List *list_item;
-  AnnotFilterData *filter;
-  CHAR_T *annot_url;
-  AnnotMeta *annot;
-  int length;
-  ThotBool annot_show;
+  List               *list_item;
+  AnnotFilterData    *filter;
+  CHAR_T             *annot_url;
+  AnnotMeta          *annot;
+  int                 length;
+  ThotBool            annot_show;
+  SSchema             XLinkSchema;
 
-  ElementType elType;
-  Element     el;
+  ElementType         elType;
+  Element             el;
   Attribute           attr;
   AttributeType       attrType;
 
   if (AnnotSelItem[0] == WC_EOS)
+    return;
+
+  XLinkSchema = TtaGetSSchema (TEXT("XLink"), doc);
+  if (!XLinkSchema)
+    /* there are no xlinks in this document */
     return;
 
   /* change the filter metadata first */
@@ -408,20 +414,15 @@ ThotBool show;
   TtaSetDisplayMode (doc, NoComputedDisplay);
   /* initialize */
   el = TtaGetMainRoot (doc);
-  elType = TtaGetElementType (el);
+  elType.ElSSchema = XLinkSchema;
+  elType.ElTypeNum = XLink_EL_XLink;
+  attrType.AttrSSchema = XLinkSchema;
 
-  attrType.AttrSSchema = elType.ElSSchema;
-  elType.ElTypeNum = HTML_EL_Anchor;
+  /* search and change */
   while ((el = TtaSearchTypedElement (elType, SearchForward, el)))
     {
-      attrType.AttrTypeNum = HTML_ATTR_IsAnnotation;
-      attr = TtaGetAttribute (el, attrType);
-      if (!attr)
-	/* it's not an annotation link */
-	continue;
-
       /* get the HREF (we will use it to search in the filters */
-      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+      attrType.AttrTypeNum = XLink_ATTR_href_;
       attr = TtaGetAttribute (el, attrType);
       if (!attr)
 	/* this looks like an error! */
@@ -454,7 +455,7 @@ ThotBool show;
 	  break;
 	}
 
-      attrType.AttrTypeNum = HTML_ATTR_AnnotationHide;
+      attrType.AttrTypeNum = XLink_ATTR_AnnotIsHidden;
       attr = TtaGetAttribute (el, attrType);
       if (annot_show)
 	{
@@ -533,6 +534,12 @@ ThotBool show;
   Element     el;
   Attribute           attr;
   AttributeType       attrType;
+  SSchema             XLinkSchema;
+
+  XLinkSchema = TtaGetSSchema (TEXT("XLink"), document);
+  if (!XLinkSchema)
+    /* there are no xlinks in this document */
+    return;
 
   /* change the selectors */
   ChangeAllAnnotVisibility (document, BY_AUTHOR, show);
@@ -556,19 +563,14 @@ ThotBool show;
 
   /* initialize */
   el = TtaGetMainRoot (document);
-  elType = TtaGetElementType (el);
+  elType.ElTypeNum = XLink_EL_XLink;
+  elType.ElSSchema = XLinkSchema;
+  attrType.AttrSSchema = XLinkSchema;
+  attrType.AttrTypeNum = XLink_ATTR_AnnotIsHidden;
 
-  attrType.AttrSSchema = elType.ElSSchema;
-  elType.ElTypeNum = HTML_EL_Anchor;
-
+  /* search and change */
   while ((el = TtaSearchTypedElement (elType, SearchForward, el)))
     {
-      attrType.AttrTypeNum = HTML_ATTR_IsAnnotation;
-      attr = TtaGetAttribute (el, attrType);
-      if (!attr)
-	/* it's not an annotation link */
-	continue;
-      attrType.AttrTypeNum = HTML_ATTR_AnnotationHide;
       attr = TtaGetAttribute (el, attrType);
       if (show)
 	{
