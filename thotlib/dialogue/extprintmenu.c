@@ -202,6 +202,7 @@ char               *txt;
       NbCopies = NewNbCopies;
       Reduction = NewReduction;
       PagesPerSheet = NewPagesPerSheet;
+      okprint = FALSE;
       for (i=0;i<NbPrintViews;i++)
 	{ 
 	  if( LesVuesImprimables[EntreesMenuVuesAImprimer[i]-1].VdOpen )

@@ -318,7 +318,6 @@ char               *viewNames;
 #else  /* WWW_MSWINDOWS */
    mktemp (tmpDocName);
 #endif /* !WWW_MSWINDOWS */
-  
    if (pProcExportPrintDoc !=NULL)
      /* a export procedure is defined */
      ok = (*pProcExportPrintDoc)(document, tmpDocName, tmpDirName);
@@ -346,6 +345,9 @@ char               *viewNames;
      orientation = 1;
    else
      orientation = 0;
+
+   /* restores the presentation scheme */
+   strcpy (pDocPrint->DocSSchema->SsDefaultPSchema, savePres);
 
    /* make an automatic backup */
    if (ok)
