@@ -212,6 +212,8 @@ indexlib/f/indtable_f.h \
 schemas/Makefile \
 schemas/exc_matrix.h \
 schemas/exc_tableau.h \
+schemas/Math.h \
+schemas/Rapport.h \
 schemas/Arbre2.S \
 schemas/Draw2.S \
 schemas/Draw3.S \
