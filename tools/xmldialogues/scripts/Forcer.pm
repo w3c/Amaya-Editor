@@ -29,7 +29,7 @@ my $control_field = "";
 my $string_into_what_label = undef;
 my $string_into_control = 0; #used in sub init_the_base as a boolean
 
-
+ 
 
 my %oldlabel = () ; #used to store the old labels and the translates.
 

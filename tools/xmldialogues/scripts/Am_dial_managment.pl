@@ -102,6 +102,7 @@ use Dial_tool_box qw ( 	&add_label
 use Forcer 			qw ( 	&forcer );
 
 use Configfile qw ( &load_parameters );
+use Iso qw ( &return_code_in_ISO_639);
 
 #launch		
 
@@ -114,7 +115,9 @@ sub menu {
 						"Amaya dialogues (menus with xx-amayadialogue files)",	#1	
 						"Amaya general messages ( with xx-amayamsg files)",		#2
 						"Thot library dialogues ( with xx-libdialogue files)",	#3
-						"Spell checker dialogues ( with xx-corrdialogue files)");#4
+						"Spell checker dialogues ( with xx-corrdialogue files)",	#4
+						"Or just product the preformated file for a translation"	#5
+					);
 	my $count = 0;
 	my $choice = 0;
 
@@ -139,6 +142,10 @@ sub menu {
 		
 		if ( $choice == 1 || $choice == 2 || $choice == 3 || $choice == 4) {
 			menu1 ( $choice );
+		}
+		elsif ($choice == 5) {
+			my $lang = Iso::return_code_in_ISO_639 ();
+			
 		}
 		
 	}
@@ -205,9 +212,8 @@ do { # to continue to treat the same type of dialogue
 	}
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 2) { #Adding/Updating a language	
-		print "\tWhat language do you want to treat? (in two letters like the standard ISO-638-1988 i.e.: en or fr)\n";
-		$lang = <STDIN>;
-		chomp $lang;
+		$lang = Iso::return_code_in_ISO_639 () ;
+		
 		do {
 		 	print "\tAre files in the normal repertory for Amaya (0)or (for \"new\")the \"IN\" repertory (1)?\n",
 					"\tOur choice [0] : ";
@@ -307,6 +313,10 @@ sub verify {
 		return $_ ;
 }
 
-#-------------------------------------------------------------------------------
- 
 #----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+
+
+1;
+__END__
+this a product by Emmanuel huck done for the W3C during a training period in april-june 2000

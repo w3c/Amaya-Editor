@@ -84,7 +84,7 @@ use Read_text qw ( &init_text );
 sub import_a_language {
 	$language_code = shift;
 	$end_label = shift;
-	 my $comment_at_the_begining = shift;
+	 my $comment_at_the_begining = shift; 
 	if (shift) {
 		$debug = 1;
 	}

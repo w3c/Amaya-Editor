@@ -62,7 +62,7 @@ sub init_label {
 					&& defined ( $comment_for_begining_of_h_file) 
 					&& $line eq $comment_for_begining_of_h_file ) {
 						$continue = 0 ;
-				}		
+				}		 
 			} 
 #	the first line in witch we are interested can be (but not necessary)read	now
 			if ( $continue) {
