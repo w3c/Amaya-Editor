@@ -96,15 +96,17 @@ static CharsetCode CharsetCodeTable[] =
     {"", UNDEFINED_CHARSET}
 };
 
-#if defined(_I18N_) && !defined(_WINDOWS)
+#if defined(_I18N_)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-wchar_t towlower(wchar_t wc)
+wchar_t Ttowlower(wchar_t wc)
 {
   if (wc < 128) return tolower(wc);
   else return wc;
 }
+#endif /* _I18N_ */
 
+#if defined(_I18N_) && !defined(_WINDOWS)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 wchar_t *wcstok(wchar_t *s, const wchar_t *delim, wchar_t **last)
@@ -181,8 +183,8 @@ int ustrcasecmp (const CHAR_T *str1, const CHAR_T *str2)
 
   while (str1[i] != EOS && str2[i] != EOS)
     {
-      ch1 = towlower(str1[i]);
-      ch2 = towlower(str2[i]);
+      ch1 = Ttowlower(str1[i]);
+      ch2 = Ttowlower(str2[i]);
       if (ch1 != ch2)
 	return (ch1 - ch2);
       i++;
@@ -301,8 +303,8 @@ int ustrncasecmp (const CHAR_T *str1, const CHAR_T *str2,
 	{
 	  if (str1[ndx] < 255 && str2[ndx] < 255)
 	    {
-	      c1 = towlower (str1[ndx]);
-	      c2 = towlower (str2[ndx]);
+	      c1 = Ttowlower (str1[ndx]);
+	      c2 = Ttowlower (str2[ndx]);
 	      if (c1 != c2)
 		return c1 - c2;
 	    }
