@@ -227,8 +227,7 @@ PtrAttribute AttachAttrByExceptNum (int ExceptNum, PtrElement pEl,
 	     /* a priori, pas d'element reference' */
 	     if (pAttr->AeAttrReference != NULL)
 		if (pAttr->AeAttrReference->RdReferred != NULL)
-		   if (!pAttr->AeAttrReference->RdReferred->ReExternalRef)
-		      pOldReferredEl = pAttr->AeAttrReference->RdReferred->ReReferredElem;
+		  pOldReferredEl = pAttr->AeAttrReference->RdReferred->ReReferredElem;
 	     if (pOldReferredEl != pReferredEl)
 	       {
 		  /* l'attribut ne designe pas le bon element */
@@ -274,7 +273,6 @@ PtrAttribute AttachAttrByExceptNum (int ExceptNum, PtrElement pEl,
 	     pRef->RdElement = pEl;
 	     pRef->RdAttribute = pAttr;
 	     pRef->RdTypeRef = RefFollow;
-	     pRef->RdInternalRef = TRUE;
 	     /* fait pointer la reference sur l'element */
 	     SetAttrReference (pAttr, pReferredEl);
 	  }
@@ -884,7 +882,6 @@ PtrAttribute AddAttrToElem (PtrElement pEl, PtrAttribute pNewAttr,
       pRef->RdAttribute = pAttr;
       pRef->RdReferred = pNewAttr->AeAttrReference->RdReferred;
       pRef->RdTypeRef = pNewAttr->AeAttrReference->RdTypeRef;
-      pRef->RdInternalRef = pNewAttr->AeAttrReference->RdInternalRef;
       /* chaine la reference du nouvel attribut apres celle de */
       /* pNewAttr. */
       if (pEl)

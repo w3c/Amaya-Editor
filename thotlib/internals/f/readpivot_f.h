@@ -6,14 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
 extern ThotBool OpenDocument ( char *docName,
                                PtrDocument pDoc,
-                               ThotBool loadIncludedDoc,
-                               ThotBool skeleton,
-                               PtrSSchema pSS,
-                               ThotBool withAppEvent,
-                               ThotBool removeExclusions );
+                               ThotBool withEvent );
 extern void DeleteAllTrees ( PtrDocument pDoc );
 extern void LabelStringToInt ( LabelString string,
                                int *number );
@@ -63,22 +58,13 @@ extern void ReadPivotHeader ( BinFile file,
                               char *tag );
 extern void LoadDocumentPiv ( BinFile file,
                               PtrDocument pDoc,
-                              ThotBool loadExternalDoc,
-                              ThotBool skeleton,
-                              PtrSSchema pLoadedSS,
-                              ThotBool withEvent,
-                              ThotBool removeExclusions );
+                              ThotBool withEvent );
 
 #else /* __STDC__ */
 
-extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
 extern ThotBool OpenDocument ( char *docName,
                                  PtrDocument pDoc,
-                                 ThotBool loadIncludedDoc,
-                                 ThotBool skeleton,
-                                 PtrSSchema pSS,
-                                 ThotBool withAppEvent,
-                                 ThotBool removeExclusions );
+                                 ThotBool withEvent );
 extern void DeleteAllTrees ( PtrDocument pDoc );
 extern void LabelStringToInt ( LabelString string,
                                  int *number );
@@ -128,11 +114,7 @@ extern void ReadPivotHeader ( BinFile file,
                                 char *tag );
 extern void LoadDocumentPiv ( BinFile file,
                                 PtrDocument pDoc,
-                                ThotBool loadExternalDoc,
-                                ThotBool skeleton,
-                                PtrSSchema pLoadedSS,
-                                ThotBool withEvent,
-                                ThotBool removeExclusions );
+                                ThotBool withEvent );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -652,8 +652,7 @@ static void ChangeReferences (PtrElement pElem, PtrDocument * docsel)
 		     /* reference',  on lui en affecte un */
 		    {
 		       pElem->ElReferredDescr = NewReferredElDescr (*docsel);
-		       if (!pElem->ElReferredDescr->ReExternalRef)
-			  pElem->ElReferredDescr->ReReferredElem = pElem;
+		       pElem->ElReferredDescr->ReReferredElem = pElem;
 		    }
 		  /* lie le descripteur de reference et le descripteur */
 		  /* d'element reference' de l'element traite' */

@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern unsigned char TtaGetCharFromWC ( wchar_t wc,
                                         CHARSET encoding );
 extern wchar_t TtaConvertJisToWC ( unsigned char b1,
@@ -43,6 +44,7 @@ extern CHAR_T *TtaConvertByteToCHAR ( unsigned char *src,
                                       CHARSET encoding );
 
 #else /* __STDC__ */
+
 extern unsigned char TtaGetCharFromWC ( wchar_t wc,
                                           CHARSET encoding );
 extern wchar_t TtaConvertJisToWC ( unsigned char b1,

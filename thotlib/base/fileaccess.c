@@ -505,75 +505,6 @@ ThotBool TtaWriteInteger (BinFile file, int lval)
 
 
 /*----------------------------------------------------------------------
-   TtaWriteDocIdent writes a document identifier.
-  ----------------------------------------------------------------------*/
-void TtaWriteDocIdent (BinFile file, DocumentIdentifier Ident)
-{
-   int                 j;
-
-   j = 1;
-   while (j < MAX_DOC_IDENT_LEN && Ident[j - 1] != EOS)
-     {
-       TtaWriteByte (file, Ident[j - 1]);
-       j++;
-     }
-   /* termine le nom par un octet nul */
-   TtaWriteByte (file, EOS);
-}
-
-/*----------------------------------------------------------------------
-   TtaReadDocIdent  
-  ----------------------------------------------------------------------*/
-void TtaReadDocIdent (BinFile file, DocumentIdentifier *Ident)
-{
-   int j = 0;
-   
-   do
-   if (!TtaReadByte (file, (unsigned char *)&((*Ident)[j++])))
-     (*Ident)[j - 1] = EOS;
-   while (!(j >= MAX_DOC_IDENT_LEN || (*Ident)[j - 1] == EOS)) ;
-}
-
-/*----------------------------------------------------------------------
-   CopyDocIdent
-  ----------------------------------------------------------------------*/
-void CopyDocIdent (DocumentIdentifier *Dest, DocumentIdentifier Source)
-{
-   strncpy (*Dest, Source, MAX_DOC_IDENT_LEN);
-}
-
-/*----------------------------------------------------------------------
-   SameDocIdent
-  ----------------------------------------------------------------------*/
-ThotBool SameDocIdent (DocumentIdentifier Ident1, DocumentIdentifier Ident2)
-{
-   ThotBool            ret;
-
-   ret = (strcmp (Ident1, Ident2) == 0);
-   return ret;
-}
-
-/*----------------------------------------------------------------------
-   ClearDocIdent     
-  ----------------------------------------------------------------------*/
-void ClearDocIdent (DocumentIdentifier *Ident)
-{
-   (*Ident)[0] = EOS;
-}
-
-/*----------------------------------------------------------------------
-   DocIdentIsNull   
-  ----------------------------------------------------------------------*/
-ThotBool DocIdentIsNull (DocumentIdentifier Ident)
-{
-   ThotBool            ret;
-
-   ret = (Ident[0] == EOS);
-   return ret;
-}
-
-
-/*----------------------------------------------------------------------
    TtaExtractName: extracts the directory and the file name.       
    aDirectory and aName must be arrays of characters       
    which sizes are sufficient to contain the path and      
@@ -838,25 +769,6 @@ void FindCompleteName (char *fileName, char *extension,
     }
   /* on termine la chaine */
   *length = i + j + k + h;
-}
-
-
-/*----------------------------------------------------------------------
-   GetDocIdent  
-  ----------------------------------------------------------------------*/
-void GetDocIdent (DocumentIdentifier* Ident, char *docName)
-{
-   strncpy (*Ident, docName, MAX_DOC_IDENT_LEN);
-   *Ident[MAX_DOC_IDENT_LEN - 1] = EOS;
-}
-
-/*----------------------------------------------------------------------
-   GetDocName                                                      
-  ----------------------------------------------------------------------*/
-void GetDocName (DocumentIdentifier Ident, char *docName)
-{
-   strncpy (docName, Ident, MAX_NAME_LENGTH);
-   docName[MAX_NAME_LENGTH - 1] = EOS;
 }
 
 

@@ -296,10 +296,10 @@ static void TransRef (PtrElement pElem, PtrElement pRoot, PtrDocument pDoc)
 		     /* A descriptor is affected to it */
 		    {
 		       pElem->ElReferredDescr = NewReferredElDescr (pDoc);
-		       if (!pElem->ElReferredDescr->ReExternalRef)
-			  pElem->ElReferredDescr->ReReferredElem = pElem;
+		       pElem->ElReferredDescr->ReReferredElem = pElem;
 		    }
-		  strncpy (pElem->ElReferredDescr->ReReferredLabel, pElem->ElLabel, MAX_LABEL_LEN);
+		  strncpy (pElem->ElReferredDescr->ReReferredLabel,
+			   pElem->ElLabel, MAX_LABEL_LEN);
 		  /* bind the reference descriptor and the referenced element 
 		     descriptor of the treated element */
 		  pPR1 = pRef;

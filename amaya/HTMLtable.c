@@ -181,7 +181,7 @@ int SetRowExt (Element cell, int span, Document doc, ThotBool inMath)
 		     TtaAttachAttribute (cell, attr, doc);
 		 }
 	       if (attr)
-		 TtaSetAttributeReference (attr, cell, doc, spannedrow, doc);
+		 TtaSetAttributeReference (attr, cell, doc, spannedrow);
 	       if (span != THOT_MAXINT)
 	         overflow = span;
 	     }
@@ -205,8 +205,6 @@ int SetColExt (Element cell, int span, Document doc, ThotBool inMath,
   AttributeType       attrType, refColType;
   Attribute           attr, refColAttr;
   int                 i, overflow;
-  char                name[50];
-  Document            refdoc;
 
   overflow = 0;
   elType = TtaGetElementType (cell);
@@ -244,8 +242,7 @@ int SetColExt (Element cell, int span, Document doc, ThotBool inMath,
 	  refColAttr = TtaGetAttribute (cell, refColType);
 	  if (refColAttr)
 	    {
-	      TtaGiveReferenceAttributeValue (refColAttr, &colHead, name,
-					      &refdoc);
+	      TtaGiveReferenceAttributeValue (refColAttr, &colHead);
 	      if (colHead)
 		{
 		  nextColHead = colHead;
@@ -263,7 +260,7 @@ int SetColExt (Element cell, int span, Document doc, ThotBool inMath,
 		    overflow = span - i;
 		  if (deletingLastCol && span == 0)
 		    colHead = prevColHead;
-		  TtaSetAttributeReference (attr, cell, doc, colHead, doc);
+		  TtaSetAttributeReference (attr, cell, doc, colHead);
 		}
 	    }
 	}
@@ -283,8 +280,6 @@ Element GetCellFromColumnHead (Element row, Element colhead, ThotBool inMath)
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr;
-   char                name[50];
-   Document            refdoc;
 
    cell = NULL;
    /* if it's not a row, return immediately with NULL */
@@ -306,8 +301,7 @@ Element GetCellFromColumnHead (Element row, Element colhead, ThotBool inMath)
 	   attr = TtaGetAttribute (cell, attrType);
 	   if (attr != NULL)
 	     {
-	       TtaGiveReferenceAttributeValue (attr, &currentcolhead, name,
-					       &refdoc);
+	       TtaGiveReferenceAttributeValue (attr, &currentcolhead);
 	       if (currentcolhead == colhead)
 		 found = TRUE;
 	     }
@@ -446,7 +440,7 @@ static void LinkCellToColumnHead (Element cell, Element colhead,
 	TtaAttachAttribute (cell, attr, doc);
     }
   if (attr)
-    TtaSetAttributeReference (attr, cell, doc, colhead, doc);
+    TtaSetAttributeReference (attr, cell, doc, colhead);
 }
 
 /*----------------------------------------------------------------------
@@ -1657,7 +1651,7 @@ static Element SpanningCellForRow (Element row, Element colhead,
 			TtaAttachAttribute (cell, attr, doc);
 		    }
 		  if (attr)
-		    TtaSetAttributeReference (attr, cell, doc, lastRow, doc);
+		    TtaSetAttributeReference (attr, cell, doc, lastRow);
 		}
 	      /* we have finished updating */
 	      }
@@ -1698,7 +1692,6 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
   AttributeType       attrTypeCspan, attrTypeRspan, attrTypeRefC;
   Attribute           attr;
   DisplayMode         dispMode;
-  char                ptr[100];
   int                 span, i, col;
   ThotBool            before, inMath;
 
@@ -1751,7 +1744,7 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
 	  attr = TtaGetAttribute (cell, attrTypeRefC);
 	  if (attr)
 	    {
-	      TtaGiveReferenceAttributeValue (attr, &colhead, ptr, &i);
+	      TtaGiveReferenceAttributeValue (attr, &colhead);
 	      if (colhead)
 		/* the column head is found */
 		{
@@ -1814,7 +1807,7 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
       attr = TtaGetAttribute (cell, attrTypeRefC);
       if (attr != NULL)
 	{
-	  TtaGiveReferenceAttributeValue (attr, &colhead, ptr, &i);
+	  TtaGiveReferenceAttributeValue (attr, &colhead);
 	  if (colhead)
 	    {
 	      /*if this cell has an attribute colspan, skip some column heads*/
@@ -2660,8 +2653,6 @@ void NextCellInColumn (Element* cell, Element* row, Element colHead,
   Attribute           attr;
   AttributeType       attrType;
   int                 rowType;
-  Document            refDoc;
-  char                name[50];
   ThotBool            inMath;
 
   nextCell = NULL;
@@ -2794,7 +2785,7 @@ void NextCellInColumn (Element* cell, Element* row, Element colHead,
 		attrType.AttrTypeNum = HTML_ATTR_RowExt;
 	      attr = TtaGetAttribute (nextCell, attrType);
 	      if (attr)
-		TtaGiveReferenceAttributeValue (attr, row, name, &refDoc);
+		TtaGiveReferenceAttributeValue (attr, row);
 	    }
 	}
     }
@@ -3153,8 +3144,6 @@ int GetActualColspan (Element cell, ThotBool inMath)
   Attribute          attr;
   AttributeType      attrType;
   int                span;
-  char               name[50];
-  Document           refdoc;
 
   elType = TtaGetElementType (cell);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -3164,7 +3153,7 @@ int GetActualColspan (Element cell, ThotBool inMath)
     attrType.AttrTypeNum = HTML_ATTR_Ref_column;
   attr = TtaGetAttribute (cell, attrType);
   if (attr)
-    TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
+    TtaGiveReferenceAttributeValue (attr, &colhead);
   span = 1;
   while (colhead)
     {
@@ -3190,8 +3179,6 @@ void ChangeColspan (Element cell, int oldspan, int* newspan, Document doc)
   ElementType         tableType;
   AttributeType       attrType, rowspanType, colspanType;
   Attribute           attr, attrRowspan;
-  Document            refDoc;
-  char                name[50];
   int                 ncol, nrow, i, j, rowspan, curColspan, curRowspan,
                       updatedColspan, newRowspan, newColspan;
   ThotBool            inMath;
@@ -3238,7 +3225,7 @@ void ChangeColspan (Element cell, int oldspan, int* newspan, Document doc)
   /* get the column of the cell */
   attr = TtaGetAttribute (cell, attrType);
   if (attr)
-    TtaGiveReferenceAttributeValue (attr, &colHead, name, &refDoc);
+    TtaGiveReferenceAttributeValue (attr, &colHead);
   else
     return;
 
@@ -3570,8 +3557,6 @@ void ChangeRowspan (Element cell, int oldspan, int* newspan, Document doc)
   ElementType         tableType;
   AttributeType       attrType, colspanType, rowspanType;
   Attribute           attr, attrColspan;
-  Document            refDoc;
-  char                name[50];
   int                 i, nrows, ncol, colspan, curColspan, curRowspan,
                       updatedRowspan, newRowspan, newColspan;
   ThotBool            inMath, before = FALSE;
@@ -3618,7 +3603,7 @@ void ChangeRowspan (Element cell, int oldspan, int* newspan, Document doc)
   /* get the column of the cell */
   attr = TtaGetAttribute (cell, attrType);
   if (attr)
-    TtaGiveReferenceAttributeValue (attr, &colHead, name, &refDoc);
+    TtaGiveReferenceAttributeValue (attr, &colHead);
   else
     return;
 

@@ -287,39 +287,26 @@ static void PutReference (BinFile pivFile, PtrReference pRef)
    if (pRef->RdElement != NULL)
       expansion = pRef->RdElement->ElSource == pRef;
    PutReferenceType (pivFile, pRef->RdTypeRef, expansion);
-   PutBoolean (pivFile, pRef->RdInternalRef);
    if (pRef->RdReferred == NULL)
       /* la reference ne designe rien, on ecrit un label nul */
       PutLabel (pivFile, labelNul);
    else
      {
 	pRefD = pRef->RdReferred;
-	if (pRefD->ReExternalRef)
-	   /* la reference designe un objet dans un autre document */
-	   /* ecrit le label de l'objet designe' */
-	  {
-	     PutLabel (pivFile, pRefD->ReReferredLabel);
-	     /* ecrit l'identificateur du document auquel appartient l'objet */
-	     /* designe' */
-	     TtaWriteDocIdent (pivFile, pRefD->ReExtDocument);
-	  }
+	/* l'objet designe' est dans le meme document */
+	if (pRefD->ReReferredElem == NULL)
+	  /* pas d'element reference' */
+	  label[0] = EOS;
 	else
-	   /* l'objet designe' est dans le meme document */
-	  {
-	     if (pRefD->ReReferredElem == NULL)
-		/* pas d'element reference' */
-		label[0] = EOS;
-	     else
-		/* cherche si l'element reference' */
-		/* est dans le buffer (a la suite d'un Couper). */
-	     if (IsASavedElement (pRefD->ReReferredElem))
-		label[0] = EOS;
-	     else
-		/* label: label de l'element designe' */
-		strncpy (label, pRefD->ReReferredElem->ElLabel, MAX_LABEL_LEN);
-	     /* ecrit le label de l'objet designe' */
-	     PutLabel (pivFile, label);
-	  }
+	  /* cherche si l'element reference' */
+	  /* est dans le buffer (a la suite d'un Couper). */
+	  if (IsASavedElement (pRefD->ReReferredElem))
+	    label[0] = EOS;
+	  else
+	    /* label: label de l'element designe' */
+	    strncpy (label, pRefD->ReReferredElem->ElLabel, MAX_LABEL_LEN);
+	/* ecrit le label de l'objet designe' */
+	PutLabel (pivFile, label);
      }
 }
 
@@ -333,8 +320,6 @@ void PutAttribut (BinFile pivFile, PtrAttribute pAttr, PtrDocument pDoc)
    ThotBool            stop;
    int                 n, i;
    PtrElement          pEl;
-   DocumentIdentifier  docIdent;
-   PtrDocument         pDocRef;
    PtrTextBuffer       pBuf;
 
    attrOK = TRUE;
@@ -352,7 +337,7 @@ void PutAttribut (BinFile pivFile, PtrAttribute pAttr, PtrDocument pDoc)
 	 attrOK = FALSE;
       else
 	{
-	   pEl = ReferredElement (pAttr->AeAttrReference, &docIdent, &pDocRef);
+	   pEl = ReferredElement (pAttr->AeAttrReference);
 	   if (pEl == NULL)
 	      attrOK = FALSE;
 	   else if (IsASavedElement (pEl))
@@ -846,9 +831,8 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
     }
   /* ecrit la marque "Element-reference'" si l'element est */
   /* effectivement reference' */
-  if (pEl1->ElReferredDescr != NULL)
-    if (pEl1->ElReferredDescr->ReFirstReference != NULL ||
-	pEl1->ElReferredDescr->ReExtDocRef != NULL)
+  if (pEl1->ElReferredDescr)
+    if (pEl1->ElReferredDescr->ReFirstReference)
       /* l'element est effectivement reference' */
       TtaWriteByte (pivFile, (char) C_PIV_REFERRED);
   /* ecrit le label de l'element */

@@ -419,7 +419,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 	    else
 	      TtaInsertFirstChild (&el, parent, doc);
 	  }
-	TtaSetAttributeReference (attr, el, doc, image, doc);
+	TtaSetAttributeReference (attr, el, doc, image);
 
 	/* Update AREAs attribute */
 	el = TtaGetFirstChild (el);
@@ -442,7 +442,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 			    attr = TtaNewAttribute (attrType);
 			    TtaAttachAttribute (el, attr, doc);
 			 }
-		       TtaSetAttributeReference (attr, el, doc, image, doc);
+		       TtaSetAttributeReference (attr, el, doc, image);
 		       /* do we need to initialize the polyline limits */
 		       if (oldWidth == -1 && oldHeight == -1)
 			 {

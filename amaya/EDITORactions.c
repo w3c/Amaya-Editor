@@ -2297,8 +2297,6 @@ void CellVertExtend (Document doc, View view)
   Attribute     attr;
   AttributeType attrType;
   int           span, nextSpan, newSpan, i;
-  char          name[50];
-  Document      refdoc;
   ThotBool      inMath;
 
   cell = GetEnclosingCell (doc);
@@ -2318,7 +2316,7 @@ void CellVertExtend (Document doc, View view)
       if (attr)
 	/* the cell has an attribute Ref_column */
 	{
-	  TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
+	  TtaGiveReferenceAttributeValue (attr, &colhead);
 	  if (colhead)
 	    {
 	      /* get the rowspan of the cell */
@@ -2428,8 +2426,6 @@ void CellHorizExtend (Document doc, View view)
   Attribute     attr, colspanAttr;
   AttributeType attrType, colspanType;
   int           span, nextSpan, newSpan, i;
-  char          name[50];
-  Document      refdoc;
   ThotBool      inMath;
 
   cell = GetEnclosingCell (doc);
@@ -2467,7 +2463,7 @@ void CellHorizExtend (Document doc, View view)
       if (attr)
 	/* the cell has an attribute Ref_column */
 	{
-	  TtaGiveReferenceAttributeValue (attr, &colhead, name, &refdoc);
+	  TtaGiveReferenceAttributeValue (attr, &colhead);
 	  if (colhead)
 	    {
 	      /* if spanning is 0 (infinite), stop */
@@ -2762,8 +2758,6 @@ static void CreateColumn (Document doc, View view, ThotBool before)
   Attribute           attr;
   AttributeType       attrType;
   DisplayMode         dispMode;
-  Document            refDoc;
-  char                name[50];
   ThotBool            inMath;
 
   /* get the enclosing cell */
@@ -2783,7 +2777,7 @@ static void CreateColumn (Document doc, View view, ThotBool before)
 	    attrType.AttrTypeNum = HTML_ATTR_ColExt;
 	  attr = TtaGetAttribute (cell, attrType);
 	  if (attr)
-	    TtaGiveReferenceAttributeValue (attr, &col, name, &refDoc);
+	    TtaGiveReferenceAttributeValue (attr, &col);
 	}
       if (col == NULL)
 	col = TtaGetColumn (cell);

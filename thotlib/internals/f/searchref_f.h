@@ -6,38 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern PtrReference NextReferenceToEl ( PtrElement pEl,
-                                        PtrDocument pDoc,
-                                        ThotBool processNotLoaded,
-                                        PtrReference pPrevRef,
-                                        PtrDocument * pDocRef,
-                                        PtrExternalDoc * pExtDoc,
-                                        ThotBool nextExtDoc );
-extern void FindReference ( PtrReference * pPrevRef,
-                            PtrDocument * pDocPrevRef,
-                            PtrElement * pReferredEl,
-                            PtrDocument * pDocReferredEl,
-                            PtrExternalDoc * pExtDoc,
-                            ThotBool nextExtDoc );
 extern void FindReferredEl ( void );
 extern void CheckReferences ( PtrElement pRoot,
                               PtrDocument pDoc );
 
 #else /* __STDC__ */
 
-extern PtrReference NextReferenceToEl ( PtrElement pEl,
-                                          PtrDocument pDoc,
-                                          ThotBool processNotLoaded,
-                                          PtrReference pPrevRef,
-                                          PtrDocument * pDocRef,
-                                          PtrExternalDoc * pExtDoc,
-                                          ThotBool nextExtDoc );
-extern void FindReference ( PtrReference * pPrevRef,
-                              PtrDocument * pDocPrevRef,
-                              PtrElement * pReferredEl,
-                              PtrDocument * pDocReferredEl,
-                              PtrExternalDoc * pExtDoc,
-                              ThotBool nextExtDoc );
 extern void FindReferredEl ( void );
 extern void CheckReferences ( PtrElement pRoot,
                                 PtrDocument pDoc );

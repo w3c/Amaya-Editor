@@ -197,10 +197,8 @@ Document TtaOpenDocument (char *documentName, int accessMode)
 	  if (lg > 4)
 	    if (strcmp (&(pDoc->DocDName[lg - 4]), ".PIV") == 0)
 	      pDoc->DocDName[lg - 4] = EOS;
-	  GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
 	  strncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
-	  ok = OpenDocument (pDoc->DocDName, pDoc, TRUE, FALSE, NULL,
-			     FALSE, TRUE);
+	  ok = OpenDocument (pDoc->DocDName, pDoc, TRUE);
 	  if (!ok)
 	    /* acces failure to an objectpivot */
 	    {

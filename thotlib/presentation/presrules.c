@@ -1540,9 +1540,6 @@ static PtrAbstractBox SearchAbsBoxRef (ThotBool notType, int numAbType,
 	  if (pAttr && pAttr->AeAttrType == AtReferenceAttr &&
 	      pAttr->AeAttrReference &&
 	      pAttr->AeAttrReference->RdReferred &&
-	      /* les references externes ne sont pas utilisees */
-	      /* dans les positionnements et les dimensionnements */
-	      !pAttr->AeAttrReference->RdReferred->ReExternalRef &&
 	      pAttr->AeAttrReference->RdReferred->ReReferredElem != NULL)
 	    pAb = pAttr->AeAttrReference->RdReferred->ReReferredElem->ElAbstractBox[view - 1];
 	  pAbbMain = NULL;
@@ -1641,7 +1638,6 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
   int                 lg, i;
   PtrTextBuffer       pBu1;
   PtrReference        pPR1;
-  PtrReferredDescr    pDe1;
   
   if (pEl->ElHolophrast)
     {
@@ -1724,42 +1720,13 @@ void FillContent (PtrElement pEl, PtrAbstractBox pAb, PtrDocument pDoc)
 	  if (pEl->ElReference != NULL)
 	    {
 	      pPR1 = pEl->ElReference;
-	      if (pPR1->RdInternalRef)
-		{
-		  if (pPR1->RdReferred &&
-		     !pPR1->RdReferred->ReExternalRef &&
-		      !IsASavedElement (pPR1->RdReferred->ReReferredElem))
-		    /* l'element reference' n'est pas dans le */
-		    /* buffer des elements coupe's */
-		    pBu1->BuContent[lg - 1] = TEXT('*');
-		  lg++;
-		  pBu1->BuContent[lg - 1] = TEXT(']');
-		}
-	      else
-		{
-		  if (pPR1->RdReferred &&
-		      pPR1->RdReferred->ReExternalRef)
-		    /* copie le nom du document reference' */
-		    {
-		      i = 1;
-		      pDe1 = pPR1->RdReferred;
-		      while (pDe1->ReExtDocument[i - 1] != EOS)
-			{
-			  pBu1->BuContent[lg - 1] = pDe1->ReExtDocument[i - 1];
-			  lg++;
-			  i++;
-			}
-		      lg--;
-		    }
-		  lg++;
-		  if (!pPR1->RdInternalRef)
-		    {
-		      pBu1->BuContent[0] = TEXT('<');
-		      pBu1->BuContent[lg - 1] = TEXT('>');
-		    }
-		  else
-		    pBu1->BuContent[lg - 1] = TEXT(']');
-		}
+	      if (pPR1->RdReferred &&
+		  !IsASavedElement (pPR1->RdReferred->ReReferredElem))
+		/* l'element reference' n'est pas dans le */
+		/* buffer des elements coupe's */
+		pBu1->BuContent[lg - 1] = TEXT('*');
+	      lg++;
+	      pBu1->BuContent[lg - 1] = TEXT(']');
 	    }
 	  pBu1->BuContent[lg] = EOS;
 	  /* fin de la chaine de car. */
@@ -2870,8 +2837,6 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
   PtrTextBuffer       pBuffPrec;
   int                 boxType;
   Name                boxName;
-  DocumentIdentifier  IDoc;
-  PtrDocument         pDocRef;
   PtrElement          pEl1;
   PtrAbstractBox      pAbb1;
   PtrPresentationBox  pPBox;
@@ -2888,7 +2853,7 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
       /* la regle Copy s'applique a un pave' d'un element reference */
       Ref = TRUE;
       /* cherche l'element qui est reference' */
-      pE = ReferredElement (pEl1->ElReference, &IDoc, &pDocRef);
+      pE = ReferredElement (pEl1->ElReference);
     }
   else if (pAb->AbPresentationBox)
     if (pAb->AbCreatorAttr != NULL)
@@ -2898,8 +2863,7 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
 	{
 	  Ref = TRUE;
 	  /* cherche l'element qui est reference' par l'attribut */
-	  pE = ReferredElement (pAb->AbCreatorAttr->AeAttrReference,
-				&IDoc, &pDocRef);
+	  pE = ReferredElement (pAb->AbCreatorAttr->AeAttrReference);
 	}
   if (Ref)
     {

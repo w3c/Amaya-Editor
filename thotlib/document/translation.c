@@ -1338,8 +1338,8 @@ static ThotBool     EmptyElement (PtrElement pEl)
    pAttr s'il est different de NULL. Retourne vrai si la condition est
    satisfaite, faux sinon.                                         
   ----------------------------------------------------------------------*/
-static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
-				     PtrAttribute pAttr, Document doc)
+static ThotBool ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
+				 PtrAttribute pAttr, Document doc)
 {
    PtrAttribute        pAttrEl;
    PtrSSchema          pSS, pRefSS;
@@ -1348,8 +1348,6 @@ static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
    PtrPRule            pPRule;
    TranslCondition    *Cond;
    PtrReference        pRef;
-   DocumentIdentifier  docIdent;
-   PtrDocument         pExtDoc;
    int                 i, nCond;
    ThotBool            ret, possibleRef, typeOK, stop;
 
@@ -1385,7 +1383,7 @@ static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 	     /* c'est peut-etre une inclusion */
 	     pRef = pEl->ElSource;
 	 if (pRef != NULL)
-	   pElem = ReferredElement (pRef, &docIdent, &pExtDoc);
+	   pElem = ReferredElement (pRef);
 	 }
        if (pElem == NULL)
 	 ret = FALSE;
@@ -1555,18 +1553,14 @@ static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 		                                 AttrType == AtReferenceAttr)
 		 /* c'est un attribut reference */
 		 pRef = pAttr->AeAttrReference;
-	       else
+	       else  if (pElem->ElTerminal && pElem->ElLeafType == LtReference)
 		 /* l'element est-il une reference ? */
-		 if (pElem->ElTerminal && pElem->ElLeafType == LtReference)
-		   pRef = pElem->ElReference;
-		 else
-		   /* c'est peut-etre une inclusion */
-		   pRef = pElem->ElSource;
-	       if (pRef != NULL)
-		 if (pRef->RdReferred != NULL)
-		   if (pRef->RdReferred != NULL)
-		     if (pRef->RdReferred->ReExternalRef)
-		       ret = TRUE;
+		 pRef = pElem->ElReference;
+	       else
+		 /* c'est peut-etre une inclusion */
+		 pRef = pElem->ElSource;
+	       if (pRef && pRef->RdReferred)
+		 ret = TRUE;
 	       break;
 
 	     case TcondFirstWithin:
@@ -2500,8 +2494,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
   PtrReference        pRef;
   PtrTtAttribute      attrTrans;
   PtrAttribute        pA;
-  DocumentIdentifier  docIdent;
-  PtrDocument         pExtDoc, pDoc;
+  PtrDocument         pDoc;
   PtrTextBuffer       pBuf;
   unsigned char       number[20];
   CHAR_T              c;
@@ -2555,7 +2548,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 	   }
 	 if (pRef != NULL)
 	   {
-	     pRefEl = ReferredElement (pRef, &docIdent, &pExtDoc);
+	     pRefEl = ReferredElement (pRef);
 	     if (pRefEl == NULL)
 	       /* la reference ne designe rien */
 	       i = 0;
@@ -2718,10 +2711,9 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 {
   PtrElement          pElGet, pRefEl;
   Document            docGet;
-  PtrDocument         pExtDoc, pDoc;
+  PtrDocument         pDoc;
   PtrSSchema          pSS;
   Name                n;
-  DocumentIdentifier  docIdent;
   PtrAttribute        pA = NULL;
   PtrTextBuffer       pBuf;
   TtAttribute        *attrTrans;
@@ -2736,9 +2728,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
   char                secondaryFileName[MAX_PATH];
   char               *nameBuffer;
   char                fname[MAX_PATH];
-  char                fullName[MAX_PATH];   /* nom d'un fichier a inclure */
   char                currentFileName[MAX_PATH]; /* nom du fichier principal*/
-  PathBuffer          directoryName;
   FILE               *newFile;
   ThotBool            found, possibleRef, encode, entityName;
 
@@ -3039,44 +3029,24 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  else
 	    /* c'est peut-etre une inclusion */
 	    pRef = pEl->ElSource;
-	  if (pRef != NULL)
+	  if (pRef)
 	    {
-	      pRefEl = ReferredElement (pRef, &docIdent, &pExtDoc);
+	      pRefEl = ReferredElement (pRef);
 	      nameBuffer = NULL;
 	      if (pTRule->TrObject == ToReferredDocumentName)
 		{
-		  if (pRefEl != NULL && docIdent[0] == EOS)
+		  if (pRefEl)
 		    /* reference interne. On sort le nom du document lui-meme */
 		    nameBuffer = pDoc->DocDName;
-		  else if (docIdent[0] != EOS)
-		    /* on sort le nom du document reference' */
-		    nameBuffer = docIdent;
 		}
 	      else if (pTRule->TrObject == ToReferredDocumentDir)
 		{
-		  if (pRefEl != NULL && docIdent[0] == EOS)
+		  if (pRefEl)
 		    /* reference interne. On sort le directory du document
 		       lui-meme */
 		    nameBuffer = pDoc->DocDirectory;
-		  else if (docIdent[0] != EOS)
-		    {
-		      /* on sort le directory du document reference' */
-		      if (pExtDoc)
-			/* le document reference' est charge' */
-			nameBuffer = pExtDoc->DocDirectory;
-		      else
-			/* le document reference' n'est pas charge' */
-			{
-			  strncpy (directoryName, DocumentPath, MAX_PATH);
-			  MakeCompleteName (docIdent, "PIV", directoryName,
-					    fullName, &i);
-			  if (fullName[0] != EOS)
-			    /* on a trouve' le fichier */
-			    nameBuffer = directoryName;
-			}
-		    }
 		}
-	      if (nameBuffer != NULL)
+	      if (nameBuffer)
 		while (*nameBuffer != EOS)
 		  {
 		    PutChar ((wchar_t) (*nameBuffer), fnum, NULL, doc,
@@ -3100,7 +3070,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	    pRef = pEl->ElSource;
 	  if (pRef != NULL)
 	    {
-	      pRefEl = ReferredElement (pRef, &docIdent, &pExtDoc);
+	      pRefEl = ReferredElement (pRef);
 	      if (pRefEl != NULL)
 		/* la reference designe l'element pRefEl */
 		/* On le prend s'il a le type voulu */
@@ -3127,17 +3097,11 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		    SearchDescent (&pRefEl, pTRule->TrObjectNum, pSS,
 				   pTRule->TrObjectNature);
 		}
-	      if (pRefEl != NULL)
+	      if (pRefEl)
 		{
 		  /* traduit l'element reference', meme s'il a deja ete traduit */
-		  if (docIdent[0] == EOS)
-		    /* reference interne */
-		    TranslateTree (pRefEl, doc, *transChar, *lineBreak, TRUE,
-				   recordLineNb);
-		  else if (pExtDoc)
-		    /* reference externe a un document charge' */
-		    TranslateTree (pRefEl, IdentDocument (pExtDoc),
-				   *transChar, *lineBreak, TRUE, recordLineNb);
+		  TranslateTree (pRefEl, doc, *transChar, *lineBreak, TRUE,
+				 recordLineNb);
 		}
 	    }
 	  break;
@@ -3179,17 +3143,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		pRef = pEl->ElSource;
 	      if (pRef != NULL)
 		{
-		  pElGet = ReferredElement (pRef, &docIdent, &pExtDoc);
-		  if (pElGet == NULL && docIdent[0] != EOS &&
-		      /* reference a un document externe non charge' */
-		      pRef && pRef->RdReferred &&
-		      pRef->RdReferred->ReExternalRef)
-		    {
-		      i = 0;
-		      while (pRef->RdReferred->ReReferredLabel[i] != EOS)
-			PutChar ((wchar_t) (pRef->RdReferred->ReReferredLabel[i++]),
-				 fnum, NULL, doc, *lineBreak, TRUE, FALSE);
-		    }
+		  pElGet = ReferredElement (pRef);
 		}
 	    }
 
@@ -3400,7 +3354,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  if (pRef == NULL)
 	    pElGet = NULL;
 	  else
-	    pElGet = ReferredElement (pEl->ElReference, &docIdent, &pExtDoc);
+	    pElGet = ReferredElement (pEl->ElReference);
 	  if (pElGet)
 	    /* il y a bien un element designe'. On le prend s'il */
 	    /* a le type voulu */
@@ -3425,9 +3379,6 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		/* Il n'a pas le type voulu, on cherche dans */
 		/* le sous arbre de l'element designe' */
 		SearchDescent (&pElGet, pTRule->TrElemType, pSS, pTRule->TrElemNature);
-	      if (docIdent[0] != EOS && pExtDoc)
-		/* reference externe a un document charge' */
-		docGet = IdentDocument (pExtDoc);
 	    }
 	  break;
 	default:

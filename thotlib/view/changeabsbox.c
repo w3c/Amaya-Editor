@@ -2213,27 +2213,24 @@ void RedispAllReferences (PtrAbstractBox pAb, PtrDocument pDoc)
    PtrElement          pEl;
    PtrReference        pRef;
    int                 level;
-   PtrExternalDoc      pDocExt;
-   PtrDocument         pDocRef;
 
    pEl = pAb->AbElement;
    /* traite l'element qui a cree' ce pave et les elements englobants */
    /* sur 3 niveaux */
    level = 0;
-   pDocExt = NULL;
    pRef = NULL;
    while (pEl != NULL && level < 3)
      {
-	pRef = NextReferenceToEl (pEl, pDoc, FALSE, pRef, &pDocRef, &pDocExt, TRUE);
+	pRef = NextReferenceToEl (pEl, pDoc, pRef);
 	if (pRef != NULL)
 	   /* cet element est reference' par au moins un autre element */
 	   /* parcourt la chaine des elements qui le referencent */
 	   while (pRef != NULL)
 	      /* reaffiche les paves de la reference qui copient le pave */
 	     {
-		RedispRef (pRef, pAb, pDocRef);
+		RedispRef (pRef, pAb, pDoc);
 		/* passe a la reference suivante */
-		pRef = NextReferenceToEl (pEl, pDoc, FALSE, pRef, &pDocRef, &pDocExt, TRUE);
+		pRef = NextReferenceToEl (pEl, pDoc, pRef);
 		/* passe au niveau superieur */
 	     }
 	pEl = pEl->ElParent;
@@ -2818,23 +2815,17 @@ void TransmitCounterVal (PtrElement pEl, PtrDocument pDoc, Name nameAttr,
 {
    PtrElement          pElIncluded;
    PtrReference        pRef;
-   PtrDocument         pDocIncluded;
-   DocumentIdentifier  IdentDocIncluded;
 
    /* verifie d'abord qu'il s'agit bien d'une inclusion de document */
-   {
-      if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsReference)
-	 pRef = pEl->ElReference;
-      else
-	 pRef = pEl->ElSource;
-      /* accede au document inclus (a sa racine) */
-      pElIncluded = ReferredElement (pRef, &IdentDocIncluded, &pDocIncluded);
-
-      /* Transmet au document inclus, en externe */
-      AttachCounterValue (pEl, pElIncluded, pDocIncluded, nameAttr, counter, pSchP, pSchS);
-      /* Transmet au document inclus, semi expanse */
-      AttachCounterValue (pEl, pEl, pDoc, nameAttr, counter, pSchP, pSchS);
-   }
+   if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsReference)
+     pRef = pEl->ElReference;
+   else
+     pRef = pEl->ElSource;
+   pElIncluded = ReferredElement (pRef);
+   /* Transmet au document inclus, en externe */
+   AttachCounterValue (pEl, pElIncluded, pDoc, nameAttr, counter, pSchP, pSchS);
+   /* Transmet au document inclus, semi expanse */
+   AttachCounterValue (pEl, pEl, pDoc, nameAttr, counter, pSchP, pSchS);
 }
 
 /*----------------------------------------------------------------------

@@ -171,105 +171,6 @@ void CreateComparAttrTable (PtrAttribute pAttr, PtrDocument pDoc,
     }
 }
 
-/*----------------------------------------------------------------------
-  TransmitElementContent
-
-  Takes the contents of element pEl and make it the value of the
-  attribute named attrName for all documents included in document
-  pDoc by the rule inclRule from the pSS structure schema.
-  ----------------------------------------------------------------------*/
-void TransmitElementContent (PtrElement pEl, PtrDocument pDoc,
-			     char *attrName, int inclRule, PtrSSchema pSS)
-{
-  PtrReferredDescr    pReferredD;
-  PtrReference        pRef;
-  PtrElement          pIncludedEl;
-  PtrDocument         pIncludedDoc;
-  PtrAttribute        pAttr;
-  DocumentIdentifier  IncludedDocIdent;
-  int                 att;
-  PtrTtAttribute         AttrDef;
-  PtrElement          pChild;
-  ThotBool            found;
-  int                 len;
-
-  /* Search all documents of the type in question included in document pDoc */
-  pReferredD = pDoc->DocReferredEl;
-  /* skip the first descriptor (it's a fake descriptor) */
-  if (pReferredD != NULL)
-    pReferredD = pReferredD->ReNext;
-  /* scan all referred element descriptors */
-  while (pReferredD != NULL)
-    {
-      if (pReferredD->ReExternalRef)
-	/* this referred element is in another document */
-	{
-	  pRef = pReferredD->ReFirstReference;
-	  /* scan all references to that external element */
-	  while (pRef != NULL)
-	    {
-	      /* consider only inclusion references */
-	      if (pRef->RdTypeRef == RefInclusion)
-		{
-		  /* get the root of the included document */
-		  pIncludedEl = ReferredElement (pRef, &IncludedDocIdent,
-						 &pIncludedDoc);
-		  if (pIncludedEl != NULL)
-		    {
-		     /* the included document is loaded. Search the */
-		     /* attribute in its structure schema */
-		     att = 0;
-		     found = FALSE;
-		     while (att < pIncludedEl->ElStructSchema->SsNAttributes &&
-			    !found)
-		       {
-			 AttrDef = pIncludedEl->ElStructSchema->SsAttribute->TtAttr[att++];
-			 if (AttrDef->AttrType == AtTextAttr)
-			   /* that's a text attribute */
-			   if (AttrDef->AttrOrigName != NULL &&
-			       strcmp (AttrDef->AttrOrigName, attrName) == 0)
-			     /* that's the rigth attribute */
-			     found = TRUE;
-		       }
-		     if (found)
-		       {
-			 GetAttribute (&pAttr);
-			 pAttr->AeAttrSSchema = pIncludedEl->ElStructSchema;
-			 pAttr->AeAttrNum = att;
-			 pAttr->AeAttrType = AtTextAttr;
-			 GetTextBuffer (&pAttr->AeAttrText);
-			 /* copy the contents of element pEl into */
-			 /* the attribute */
-			 pChild = pEl;
-			 /* first, get the first text leaf of pEl */
-			 found = FALSE;
-			 while (pChild != NULL && !found)
-			   if (pChild->ElTerminal)
-			     {
-			       if (pChild->ElLeafType == LtText)
-				 found = TRUE;
-			     }
-			   else
-			     pChild = pChild->ElFirstChild;
-			 if (found)
-			   {
-			     /* copy the contents of that leaf */
-			     CopyTextToText ((PtrTextBuffer) pChild->ElText->BuContent,
-					     pAttr->AeAttrText, &len);
-			     /* associate the attribute with the */
-			     /* of the included document */
-			     AttachAttrWithValue (pIncludedEl, pIncludedDoc, pAttr, TRUE);
-			   }
-			 DeleteAttribute (NULL, pAttr);
-		       }
-		    }
-		}
-	      pRef = pRef->RdNext;
-	    }
-	}
-      pReferredD = pReferredD->ReNext;
-    }
-}
 
 /*----------------------------------------------------------------------
   ApplyTransmitRules
@@ -278,15 +179,12 @@ void TransmitElementContent (PtrElement pEl, PtrDocument pDoc,
   includes an external document, apply all Transmit rules that
   assign a value to attributes of the included document.
   ----------------------------------------------------------------------*/
-void                ApplyTransmitRules (PtrElement pEl, PtrDocument pDoc)
+void ApplyTransmitRules (PtrElement pEl, PtrDocument pDoc)
 {
   PtrPSchema          pPSch;
   PtrSSchema          pSS;
-  TransmitElem       *pTransR;
   int                 entry;
   int                 rule;
-  int                 srcNumType;
-  PtrElement          pSrcEl;
   int                 counter;
   Counter            *pCounter;
 
@@ -296,35 +194,6 @@ void                ApplyTransmitRules (PtrElement pEl, PtrDocument pDoc)
 	/* it's an inclusion of an external document */
 	/* search the presentation schema that applies to the element */
 	SearchPresSchema (pEl, &pPSch, &entry, &pSS, pDoc);
-	/* does this schema contain a Transmit rule that transmits the */
-	/* contents of some element to documents of the type of the */
-	/* included document ? */
-	/* scans all Transmit rule in the schema */
-	for (rule = 0; rule < pPSch->PsNTransmElems; rule++)
-	  {
-	    /* pTransR: pointer to a Transmit rule */
-	    pTransR = &(pPSch->PsTransmElem[rule]);
-	    if (pTransR->TeTargetDoc == entry)
-	      /* this Transmit rule acts on a document of the type of */
-	      /* the included document */
-	      {
-		/* what element type does transmit its contents? */
-		for (srcNumType = 0; srcNumType < pSS->SsNRules &&
-		       pPSch->PsElemTransmit->Num[srcNumType] != rule + 1; srcNumType++);
-		if (pPSch->PsElemTransmit->Num[srcNumType] == rule + 1)
-		  {
-		    /* elements of type srcNumType+1 transmit their */
-		    /* content to the documents of interest */
-		    /* Search an element of that type in the document */
-		    pSrcEl = FwdSearchTypedElem (pDoc->DocDocElement,
-						 srcNumType + 1, pSS, NULL);
-		    if (pSrcEl != NULL)
-		      /* apply the Transmit rule to the element found */
-		      TransmitElementContent (pSrcEl, pDoc,
-			    pTransR->TeTargetAttr, pTransR->TeTargetDoc, pSS);
-		  }
-	      }
-	  }
 	/* does the presentation schema contain counters that transmit */
 	/* their value to some attribute in the included document? */
 	/* scan all counters defined in the presentation schema */

@@ -21,10 +21,9 @@
    element: the reference element to be set.
    document: the document containing the reference element.
    target : the target element (NULL for resetting the reference).
-   targetDocument: the document containing the target element.
   ----------------------------------------------------------------------*/
 extern void TtaSetReference (Element element, Document document,
-			     Element target, Document targetDocument);
+			     Element target);
 
 /*----------------------------------------------------------------------
    TtaNewInclusion
@@ -33,12 +32,11 @@ extern void TtaSetReference (Element element, Document document,
    Parameters:
    document: the document for which the inclusion is created.
    target: the element to be included.
-   targetDocument: the document containing the element to be included.
+
    Return value:
    the created inclusion.
   ----------------------------------------------------------------------*/
-extern Element TtaNewInclusion (Document document, Element target,
-				Document targetDocument);
+extern Element TtaNewInclusion (Document document, Element target);
 
 /*----------------------------------------------------------------------
    TtaCopyReference
@@ -62,11 +60,9 @@ extern void TtaCopyReference (Element element, Element source, Document document
    element: the element with which the attribute is associated.
    document: the document containing the attribute.
    target: the target element (NULL for resetting the reference).
-   targetDocument: the document containing the target element.
   ----------------------------------------------------------------------*/
 extern void TtaSetAttributeReference (Attribute attribute, Element element,
-				      Document document, Element target,
-				      Document targetDocument);
+				      Document document, Element target);
 
 /*----------------------------------------------------------------------
    TtaCopyAttributeReference
@@ -118,17 +114,8 @@ extern void TtaUpdateInclusionElements (Document document, ThotBool loadExternal
    Return parameters:
    target: the referred element, or NULL if that element is not
    accessible (empty reference or referred document not open).
-   targetDocumentName: name of the document containing the referred element;
-   empty string if the referred element is in the same document as the
-   reference element.
-   targetDocument: the document containing the referred element;
-   0 if the document containing the referred element is not loaded or
-   if the referred element is in the same document as the reference
-   element.
   ----------------------------------------------------------------------*/
-extern void TtaGiveReferredElement (Element element, /*OUT*/ Element * target,
-				    /*OUT*/ char *targetDocumentName,
-				    /*OUT*/ Document * targetDocument);
+extern void TtaGiveReferredElement (Element element, /*OUT*/ Element * target);
 
 /*----------------------------------------------------------------------
    TtaIsElementTypeReference
@@ -157,26 +144,15 @@ extern int TtaSameReferences (Element element1, Element element2);
    TtaGiveReferenceAttributeValue
 
    Returns the value of a given attribute of type reference
-
    Parameter:
    attribute: the attribute of interest.
-
    Return parameters:
    target: the element referred by the attribute, or NULL
    if that element is not accessible (empty reference or referred
    document not loaded)
-   targetDocumentName: name of the document containing the referred element;
-   empty string if the referred element is in the same document as the
-   attribute.
-   targetDocument: the document containing the referred element;
-   0 if the document containing the referred element is not loaded or
-   if the referred element is in the same document as the attribute.
-
   ----------------------------------------------------------------------*/
 extern void TtaGiveReferenceAttributeValue (Attribute attribute,
-					    /*OUT*/ Element *target,
-					    /*OUT*/ char *targetDocumentName,
-					    /*OUT*/ Document * targetDocument);
+					    /*OUT*/ Element *target);
 
 /*----------------------------------------------------------------------
    TtaIsElementReferred
@@ -224,15 +200,12 @@ extern int TtaSameReferenceAttributes (Attribute attribute1, Attribute attribute
    belongs to a document currently loaded.
    Parameters:
    target: the target element.
-   targetDocument: the document to which the target element belongs.
    referenceElement: previous element found by the function; NULL if the first
    reference is searched. (Both referenceElement and referenceAttribute
    must be NULL if the first reference is searched.)
    referenceAttribute: previous reference attribute found; NULL if the first
    reference is searched or if the previous reference found by the
    function was an element.
-   referenceDocument: document to which the previous reference found belongs;
-   Zero if the first reference is searched.
    Return parameters:
    referenceAttribute: the reference attribute found. NULL if the reference
    found is an element or if no reference is found.
@@ -240,31 +213,10 @@ extern int TtaSameReferenceAttributes (Attribute attribute1, Attribute attribute
    element is a reference element, else it is the element with which the
    reference attribute found is associated. If both referenceAttribute
    and referenceElement are NULL, then no reference has been found.
-   referenceDocument: the document to which the reference found belongs.
-   Zero if no reference has been found.
   ----------------------------------------------------------------------*/
-extern void TtaNextLoadedReference (Element target, Document targetDocument,
+extern void TtaNextLoadedReference (Element target,
 				    /*OUT*/ Element *referenceElement,
-				    /*OUT*/ Attribute *referenceAttribute,
-				    /*OUT*/ Document * referenceDocument);
-
-/*----------------------------------------------------------------------
-   TtaNextUnloadedReferringDocument
-
-   Returns the name of a document that is not currently loaded and that contains
-   references to a given target element.
-   Parameters:
-   target: the target element.
-   targetDocument: the document to which the target element belongs.
-   referringDocumentName: name of the previous document found. PcEmpty string
-   if the first referring document is searched.
-   Return parameter:
-   referringDocumentName: name of the document found. PcEmpty string if no
-   referring document has been found.
-  ----------------------------------------------------------------------*/
-extern void TtaNextUnloadedReferringDocument (Element target,
-					      Document targetDocument,
-					      /*OUT*/ char *referringDocumentName);
+				    /*OUT*/ Attribute *referenceAttribute);
 
 /*----------------------------------------------------------------------
    TtaSearchReferenceElement

@@ -431,10 +431,6 @@ static void wrRef (PtrReference pRef, FILE *fileDescriptor)
   PtrReferredDescr pDe1;
   Name             N;
 
-  if (pRef->RdInternalRef)
-    fprintf (fileDescriptor, " internal ");
-  else
-    fprintf (fileDescriptor, " external ");
   switch (pRef->RdTypeRef)
     {
     case RefFollow:
@@ -452,13 +448,7 @@ static void wrRef (PtrReference pRef, FILE *fileDescriptor)
   else
     {
       pDe1 = pRef->RdReferred;
-      if (pDe1->ReExternalRef)
-	{
-	  fprintf (fileDescriptor, "%s(", pDe1->ReReferredLabel);
-	  GetDocName (pDe1->ReExtDocument, N);
-	  fprintf (fileDescriptor, "%s)", N);
-	}
-      else if (pDe1->ReReferredElem == NULL)
+      if (pDe1->ReReferredElem == NULL)
 	fprintf (fileDescriptor, "ReReferredElem=NULL, ReReferredLabel=%s",
 		 pDe1->ReReferredLabel);
       else

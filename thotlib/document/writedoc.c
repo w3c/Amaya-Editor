@@ -125,8 +125,6 @@ void TtaSaveDocument (Document document, char *documentName)
 		  /* Puts the new name into the document descriptor */
 		  strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		  strncpy (pDoc->DocIdent, documentName, MAX_DOC_IDENT_LEN);
-		  pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 #ifndef NODISPLAY
 		  /* changes the title of frames */
 		  ChangeDocumentName (pDoc, documentName); 
@@ -290,30 +288,30 @@ ThotBool StoreDocument (PtrDocument pDoc, PathBuffer docName,
 
 		  if (!sameFile)
 		    {
-		       if (strcmp (dirName, oldDir) != 0 && strcmp (docName, pDoc->DocDName) == 0)
-			  /* changement de directory sans changement de nom */
+		      if (strcmp (dirName, oldDir) != 0 &&
+			  strcmp (docName, pDoc->DocDName) == 0)
+			/* changement de directory sans changement de nom */
+			if (move)
+			  {
+			    /* detruire l'ancien fichier PIV */
+			    FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf, &i);
+			    TtaFileUnlink (buf);
+			  }
+
+		      if (strcmp (docName, pDoc->DocDName) != 0)
+			{
+			  /* il y a effectivement changement de nom */
 			  if (move)
 			    {
-			       /* detruire l'ancien fichier PIV */
-			       FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf, &i);
-			       TtaFileUnlink (buf);
+			      /* il s'agit d'un changement de nom du document */
+			      /* detruit l'ancien fichier .PIV */
+			      FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf, &i);
+			      TtaFileUnlink (buf);
 			    }
-
-		       if (strcmp (docName, pDoc->DocDName) != 0)
-			 {
-			    /* il y a effectivement changement de nom */
-			    if (move)
-			      {
-				 /* il s'agit d'un changement de nom du document */
-				 /* detruit l'ancien fichier .PIV */
-				 FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf, &i);
-				 TtaFileUnlink (buf);
-			      }
-			 }
-		       strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
-		       strncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
-		       strncpy (pDoc->DocDirectory, dirName, MAX_PATH);
-		       ChangeDocumentName (pDoc, docName);
+			}
+		      strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+		      strncpy (pDoc->DocDirectory, dirName, MAX_PATH);
+		      ChangeDocumentName (pDoc, docName);
 		    }
 	       }
 	     notifyDoc.event = TteDocSave;
@@ -330,13 +328,14 @@ ThotBool StoreDocument (PtrDocument pDoc, PathBuffer docName,
    info utilisateur
    Rend false si l'ecriture n'a pu se faire.                             
   ----------------------------------------------------------------------*/
-static ThotBool     interactiveSave (PtrDocument pDoc)
+static ThotBool interactiveSave (PtrDocument pDoc)
 {
   ThotBool            status;
   
   status = FALSE;
   if (pDoc->DocSSchema)
-    status = StoreDocument (pDoc, SaveFileName, SaveDirectoryName,SaveDocWithCopy, SaveDocWithMove);
+    status = StoreDocument (pDoc, SaveFileName, SaveDirectoryName,
+			    SaveDocWithCopy, SaveDocWithMove);
   
   if (status)
     SetDocumentModified (pDoc, FALSE, 0);

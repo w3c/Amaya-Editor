@@ -6,13 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern PtrReference NextReferenceToEl ( PtrElement pEl,
-                                        PtrDocument pDoc,
-                                        ThotBool processNotLoaded,
-                                        PtrReference pPrevRef,
-                                        PtrDocument *pDocRef,
-                                        PtrExternalDoc *pExtDoc,
-                                        ThotBool nextExtDoc );
 extern ThotBool GetCurrentSelection ( PtrDocument *pDoc,
                                       PtrElement *firstEl,
                                       PtrElement *lastEl,
@@ -49,13 +42,6 @@ extern int main ( int argc,
 
 #else /* __STDC__ */
 
-extern PtrReference NextReferenceToEl ( PtrElement pEl,
-                                          PtrDocument pDoc,
-                                          ThotBool processNotLoaded,
-                                          PtrReference pPrevRef,
-                                          PtrDocument *pDocRef,
-                                          PtrExternalDoc *pExtDoc,
-                                          ThotBool nextExtDoc );
 extern ThotBool GetCurrentSelection ( PtrDocument *pDoc,
                                         PtrElement *firstEl,
                                         PtrElement *lastEl,

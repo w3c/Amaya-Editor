@@ -20,9 +20,6 @@
 #include "typeprs.h"
 #include "language.h"
 
-/* document internal identifier: unique identifier for the storage system */
-typedef char DocumentIdentifier[MAX_DOC_IDENT_LEN];
-
 /* document external identifier: document name for the user */
 typedef char ADocumentName[MAX_NAME_LENGTH];
 
@@ -31,7 +28,6 @@ typedef struct _ElementDescr *PtrElement;
 typedef struct _ReferredElemDescriptor *PtrReferredDescr;
 typedef struct _ReferenceDescriptor *PtrReference;
 typedef struct _AttributeBlock *PtrAttribute;
-typedef struct _ExternalDoc *PtrExternalDoc;
 /* Pointer on an image abstract box */
 typedef struct _AbstractBox *PtrAbstractBox;
 typedef struct _CopyDescriptor *PtrCopyDescr;
@@ -43,13 +39,6 @@ typedef enum
   RefInclusion
 } ReferenceType;
 
-/* descriptor of an external document containing one or more references to a
-given element */
-typedef struct _ExternalDoc
-{
-  PtrExternalDoc	EdNext;
-  DocumentIdentifier	EdDocIdent;
-} ExternalDoc;
 
 /* Descriptor representing an element copied by a Copy presentation rule
    applied to a referenced element */
@@ -76,31 +65,10 @@ typedef struct _ReferredElemDescriptor
   PtrReferredDescr RePrevious;		/* previous descriptor in the string */
   PtrReferredDescr ReNext;		/* next descriptor in the string */
   PtrReference	   ReFirstReference;	/* The first reference to this elem. */
-  PtrExternalDoc   ReExtDocRef;		/* beginning of the string of document
-					   descriptors containing references to
-					   the element */
   LabelString	   ReReferredLabel;	/* label of the referenced element,
 					   useful only if ReExternalRef */
-  ThotBool         ReExternalRef;	/* the referenced element is in another
-					   document */
-  union
-  {
-    struct	   /* ReExternalRef = False */
-    {
-      PtrElement   _ReReferredElem_;	/* the element that is referenced */
-    } s0;
-    struct	   /* ReExternalRef = True */
-    {
-      DocumentIdentifier  _ReExtDocument_; /* identifier of the document
-				containing the referenced element. This element
-				is identified within its document by
-				ReReferredLabel. */
-    } s1;
-  } u;
+  PtrElement       ReReferredElem;	/* the element that is referenced */
 } ReferredElemDescriptor;
-
-#define ReReferredElem u.s0._ReReferredElem_
-#define ReExtDocument u.s1._ReExtDocument_
 
 /* a reference attached to a reference element or a reference attribute */
 typedef struct _ReferenceDescriptor
@@ -113,9 +81,6 @@ typedef struct _ReferenceDescriptor
   PtrAttribute	    RdAttribute;   /* corresponding attribute or NULL if
 				      not a reference by attribute */
   ReferenceType     RdTypeRef;	   /* reference type */
-  ThotBool          RdInternalRef; /* the reference and the designated
-				      element are in the same document if true,
-				      in different documents if false */
 } ReferenceDescriptor;
 
 typedef struct _HandlePSchema *PtrHandlePSchema;
@@ -848,8 +813,6 @@ typedef struct _DocumentDescr
   PtrAbstractBox  DocViewModifiedAb[MAX_VIEW_DOC]; /* pointer on the abstract
 				     box to redisplay for the view */
   ADocumentName	  DocDName;	  /* document name for the user */
-  DocumentIdentifier DocIdent;	  /* unique document id for the storage
-				     system */
   PathBuffer      DocDirectory;	  /* directory of the document */
   PathBuffer	  DocSchemasPath; /* path of the document schemas */
   ThotBool	  DocNotifyAll;	  /* Thot must indicate to the application the

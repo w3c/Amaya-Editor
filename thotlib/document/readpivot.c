@@ -154,25 +154,6 @@ static void PivotError (BinFile file, char *code)
 }
 
 /*----------------------------------------------------------------------
-   GetPtrDocument cherche si le document d'identificateur docIdent est	
-   	charge'.							
-   Retourne un pointeur sur son contexte, ou NULL s'il	
-   n'est pas charge'.                                      
-  ----------------------------------------------------------------------*/
-PtrDocument GetPtrDocument (DocumentIdentifier docIdent)
-{
-   int                 doc;
-   PtrDocument         pDoc;
-
-   pDoc = NULL;
-   for (doc = 0; doc < MAX_DOCUMENTS; doc++)
-      if (LoadedDocument[doc] != NULL)
-	 if (SameDocIdent (LoadedDocument[doc]->DocIdent, docIdent))
-	    pDoc = LoadedDocument[doc];
-   return pDoc;
-}
-
-/*----------------------------------------------------------------------
    	FreeUnusedReferredElemDesc					
   ----------------------------------------------------------------------*/
 static void FreeUnusedReferredElemDesc (PtrDocument pDoc)
@@ -185,8 +166,7 @@ static void FreeUnusedReferredElemDesc (PtrDocument pDoc)
     {
       /* (Le premier descripteur de la chaine est bidon) */
       pRefD = pRefD->ReNext;
-      if (pRefD && !pRefD->ReExternalRef &&
-	  pRefD->ReExtDocRef == NULL &&
+      if (pRefD &&
 	  pRefD->ReFirstReference == NULL)
 	{
 	  if (pRefD->ReReferredElem)
@@ -205,17 +185,11 @@ static void FreeUnusedReferredElemDesc (PtrDocument pDoc)
 
 /*----------------------------------------------------------------------
    OpenDocument ouvre le fichier document de nom docName et le charge  
-   dans pDoc. loadIncludedDoc indique s'il faut charger ou 
-   non les documents externes dont des parties sont        
-   incluses dans le document a` ouvrir. Retourne faux si   
-   le document n'a pas pu etre charge'. Charge le          
-   squelette si skeleton est TRUE. Ne pas charger de       
-   schema de structure et utiliser pSS si pSS <> NULL.     
+   dans pDoc.
+   Retourne faux si le document n'a pas pu etre charge'.
   ----------------------------------------------------------------------*/
-ThotBool OpenDocument (char *docName, PtrDocument pDoc, ThotBool loadIncludedDoc,
-		       ThotBool skeleton, PtrSSchema pSS, ThotBool withAppEvent,
-		       ThotBool removeExclusions)
-{  
+ThotBool OpenDocument (char *docName, PtrDocument pDoc, ThotBool withEvent)
+{
    FILE               *pivotFile;
    PathBuffer          directoryName;
    char                text[MAX_TXT_LEN];
@@ -225,61 +199,42 @@ ThotBool OpenDocument (char *docName, PtrDocument pDoc, ThotBool loadIncludedDoc
    ret = FALSE;
    if (pDoc != NULL)
      {
-	if (!DocIdentIsNull (pDoc->DocIdent))
-	   /* l'identificateur du document est connu, on accede au document
-	      par cet identificateur */
-	  {
-	     /* on n'a pas d'autre outil de stockage des documents que le SGF
-		UNIX */
-	     /* On confond identificateur et nom de document */
-	     strncpy (pDoc->DocDName, pDoc->DocIdent, MAX_NAME_LENGTH);
-	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-	  }
-	else
-	   /* le document n'a pas d'identificateur, on l'accede par son nom */
-	  {
-	     strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
-	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-	     /* on n'a pas d'autre outil de stockage des documents que le SGF
-		UNIX */
-	     /* On confond identificateur et nom de document */
-	     strncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
-	     pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
-	  }
-	if (pDoc->DocDName[0] > SPACE)
-	   /* nom de document non vide */
-	  {
-	     /* compose le nom du fichier a ouvrir avec le nom du directory */
-	     /* des documents... */
-	     if (pDoc->DocDirectory[0] == EOS)
-		strncpy (directoryName, DocumentPath, MAX_PATH);
-	     else
-		strncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
-	     MakeCompleteName (pDoc->DocDName, "PIV", directoryName,
-			       text, &i);
-	     /* ouvre le fichier 'PIV' */
-	     pivotFile = TtaReadOpen (text);
-	     if (pivotFile != 0)
-		/* le fichier existe */
-		/* internalise le fichier pivot sans charger les documents */
-		/* externes qui contiennent des elements inclus. */
-	       {
-		  /* le document appartient au directory courant */
-		  strncpy (pDoc->DocDirectory, directoryName, MAX_PATH);
-		  LoadDocumentPiv (pivotFile, pDoc, loadIncludedDoc, skeleton,
-				   pSS, withAppEvent, removeExclusions);
-		  TtaReadClose (pivotFile);
-		  if (pDoc->DocDocElement != NULL)
-		     /* le document lu n'est pas vide */
-		    {
-		       /* le nom de fichier devient le nom du document */
-		       ret = TRUE;
-		       /* libere les descripteurs d'element reference'
-			  inutilise's */
-		       FreeUnusedReferredElemDesc (pDoc);
-		    }
-	       }
-	  }
+       strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+       pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+
+       if (pDoc->DocDName[0] > SPACE)
+	 /* nom de document non vide */
+	 {
+	   /* compose le nom du fichier a ouvrir avec le nom du directory */
+	   /* des documents... */
+	   if (pDoc->DocDirectory[0] == EOS)
+	     strncpy (directoryName, DocumentPath, MAX_PATH);
+	   else
+	     strncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
+	   MakeCompleteName (pDoc->DocDName, "PIV", directoryName,
+			     text, &i);
+	   /* ouvre le fichier 'PIV' */
+	   pivotFile = TtaReadOpen (text);
+	   if (pivotFile != 0)
+	     /* le fichier existe */
+	     /* internalise le fichier pivot sans charger les documents */
+	     /* externes qui contiennent des elements inclus. */
+	     {
+	       /* le document appartient au directory courant */
+	       strncpy (pDoc->DocDirectory, directoryName, MAX_PATH);
+	       LoadDocumentPiv (pivotFile, pDoc, withEvent);
+	       TtaReadClose (pivotFile);
+	       if (pDoc->DocDocElement != NULL)
+		 /* le document lu n'est pas vide */
+		 {
+		   /* le nom de fichier devient le nom du document */
+		   ret = TRUE;
+		   /* libere les descripteurs d'element reference'
+		      inutilise's */
+		   FreeUnusedReferredElemDesc (pDoc);
+		 }
+	     }
+	 }
      }
    return ret;
 }
@@ -564,19 +519,14 @@ void LabelStringToInt (LabelString string, int *number)
 /*----------------------------------------------------------------------
    ReadReference lit une reference dans le fichier file et retourne
    le type de la reference lue (refType), le label de l'element 
-   reference' (label), un booleen indiquant si la reference	
-   est interne ou externe (refExt) et, dans le cas d'une	
-   reference externe, le nom (docIdent) du document contenant	
-   l'element reference'. 					
+   reference' (label)
   ----------------------------------------------------------------------*/
 static void ReadReference (ReferenceType *refType, LabelString label,
-			   ThotBool *refExt, DocumentIdentifier *docIdent,
 			   BinFile file)
 {
    int  j;
    char c;
 
-   ClearDocIdent (docIdent);
    /* lit un octet */
    if (!TtaReadByte (file, (unsigned char *)&c))
      {
@@ -600,20 +550,15 @@ static void ReadReference (ReferenceType *refType, LabelString label,
 	  {
 	     /* l'octet lu represente le type de la reference */
 	     switch (c)
-		   {
-		      case MOldRefInterne:
-			 *refExt = FALSE;
-			 *refType = RefFollow;
-			 break;
-		      case MOldRefExterne:
-			 *refExt = TRUE;
-			 *refType = RefFollow;
-			 break;
-		      case MOldRefInclusion:
-			 *refType = RefInclusion;
-			 *refExt = TRUE;
-			 break;
-		   }
+	       {
+	       case MOldRefInterne:
+	       case MOldRefExterne:
+		 *refType = RefFollow;
+		 break;
+	       case MOldRefInclusion:
+		 *refType = RefInclusion;
+		 break;
+	       }
 	     /* lit le type de label */
 	     if (!TtaReadByte (file, (unsigned char *)&c))
 	       {
@@ -622,16 +567,12 @@ static void ReadReference (ReferenceType *refType, LabelString label,
 	       }
 	     /* lit la valeur du label */
 	     ReadLabel (c, label, file);
-	     if (*refExt && label[0] != EOS)
-		/* lit le nom du document contenant l'element reference' */
-		TtaReadDocIdent (file, docIdent);
 	  }
 	else
 	   /* on interprete comme dans la version 1 */
 	   /* c'est une reference renvoi interne */
 	  {
 	     *refType = RefFollow;
-	     *refExt = FALSE;	/* il n'y a qu'un label court, sans tag */
 	     /* l'octet lu est l'octet de poids fort du label */
 	     j = 256 * ((int) c);	/* lit le 2eme octet du label */
 	     if (!TtaReadByte (file, (unsigned char *)&c))
@@ -661,8 +602,6 @@ static void ReadReference (ReferenceType *refType, LabelString label,
 	    *refType = RefInclusion;
 	    break;
 	  }
-	/* lit l'indicateur reference  interne/externe */
-	*refExt = !ReadBoolean (file);
 	/* lit le type de label */
 	if (!TtaReadByte (file, (unsigned char *)&c))
 	  {
@@ -671,10 +610,6 @@ static void ReadReference (ReferenceType *refType, LabelString label,
 	  }
 	/* lit la valeur du label */
 	ReadLabel (c, label, file);
-	if (*refExt && label[0] != EOS)
-	  /* lit l'identificateur du document contenant l'element reference' */
-	  TtaReadDocIdent (file, docIdent);
-
      }
 }
 
@@ -682,16 +617,10 @@ static void ReadReference (ReferenceType *refType, LabelString label,
 /*----------------------------------------------------------------------
    GetElRefer cherche s'il existe un descripteur de reference	
    designant l'element de label label dans le document de	
-   docIdent. Si docIdent est un identificateur vide,	
-   		l'element designe'					
-   est interne au document en cours de lecture, dont le    
-   contexte est pointe' par pDoc. Si le descripteur        
-   n'existe pas, il est cree' et chaine'.                  
    La fonction rend un pointeur sur le descripteur trouve' 
    ou cree'.                                               
   ----------------------------------------------------------------------*/
-static PtrReferredDescr GetElRefer (LabelString label,
-				    DocumentIdentifier docIdent, PtrDocument pDoc)
+static PtrReferredDescr GetElRefer (LabelString label, PtrDocument pDoc)
 {
    PtrReferredDescr    pRefD;
    int                 i;
@@ -705,21 +634,14 @@ static PtrReferredDescr GetElRefer (LabelString label,
      {
 	pRefD = pRefD->ReNext;
 	if (pRefD == NULL)
-	   /* fin de la chaine */
-	   stop = TRUE;
+	  /* fin de la chaine */
+	  stop = TRUE;
 	else if (strcmp (pRefD->ReReferredLabel, label) == 0)
-	   /* le label correspond */
-	  {
-	   if (DocIdentIsNull (docIdent) && !pRefD->ReExternalRef)
-	      /* on cherche une reference interne et c'en est une */
-	      stop = TRUE;	/* trouve' */
-	   else if (!DocIdentIsNull (docIdent) && pRefD->ReExternalRef)
-	      /* on cherche une reference externe et c'en est une */
-	      if (SameDocIdent (docIdent, pRefD->ReExtDocument))
-		 stop = TRUE;
-	  }
+	  /* le label correspond */
+	  stop = TRUE;
      }
    while (!stop);
+
    if (pRefD == NULL)
       /* on n'a pas trouve' le descripteur */
       /* on cree et chaine un nouveau descripteur */
@@ -727,15 +649,9 @@ static PtrReferredDescr GetElRefer (LabelString label,
 	pRefD = NewReferredElDescr (pDoc);
 	/* on initialise le descripteur de reference cree'. */
 	strncpy (pRefD->ReReferredLabel, label, MAX_LABEL_LEN);
-	pRefD->ReExternalRef = !DocIdentIsNull (docIdent);
-	if (pRefD->ReExternalRef)
-	   CopyDocIdent (&pRefD->ReExtDocument, docIdent);
-	else
-	  {
-	     LabelStringToInt (label, &i);
-	     if (i > GetCurrentLabel (pDoc))
-		SetCurrentLabel (pDoc, i);
-	  }
+	LabelStringToInt (label, &i);
+	if (i > GetCurrentLabel (pDoc))
+	  SetCurrentLabel (pDoc, i);
      }
    return pRefD;
 }
@@ -745,13 +661,10 @@ static PtrReferredDescr GetElRefer (LabelString label,
    CreateReference chaine le descripteur de reference pointe' par  
    pRef appartenant au document dont le contexte est       
    pointe' par pDoc et initialise ce descripteur pour      
-   qu'il designe l'element de label label appartenant au   
-   document docIdent. Si docIdent est un identificateur	
-   vide, il s'agit du document pDoc.			
+   qu'il designe l'element de label label.  
   ----------------------------------------------------------------------*/
 static void CreateReference (PtrReference RefPtr, ReferenceType TRef,
-			     LabelString lab, ThotBool RExt,
-			     DocumentIdentifier I, PtrDocument pDoc)
+			     LabelString lab, PtrDocument pDoc)
 {
    PtrReferredDescr    r;
    PtrReference        pRf;
@@ -760,7 +673,7 @@ static void CreateReference (PtrReference RefPtr, ReferenceType TRef,
    if (lab[0] != EOS)
       /* cherche le descripteur d'element reference' correspondant */
      {
-	r = GetElRefer (lab, I, pDoc);
+	r = GetElRefer (lab, pDoc);
 	pPR1 = RefPtr;
 	/* met le descripteur de reference a la fin de la chaine des */
 	/* descripteur de reference du document */
@@ -780,7 +693,6 @@ static void CreateReference (PtrReference RefPtr, ReferenceType TRef,
 	pPR1->RdNext = NULL;	/* remplit le descripteur de reference */
 	pPR1->RdReferred = r;
 	pPR1->RdTypeRef = TRef;
-	pPR1->RdInternalRef = !RExt;
      }
 }
 
@@ -1025,7 +937,6 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
 		       PtrDocument pDoc, ThotBool create,
 		       PtrAttribute *pReadAttr,
 		       PtrAttribute *pAttr)
-
 {
    PtrSSchema          pSchAttr;
    int                 n;
@@ -1033,8 +944,6 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
    int                 val;
    ThotBool            signe;
    ReferenceType       refType;
-   ThotBool            refExt;
-   DocumentIdentifier  I;
    LabelString         label;
    PtrTextBuffer       pBT, pPremBuff;
    char                c;
@@ -1079,7 +988,7 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
 	 signe = ReadSign (pivFile);
 	 break;
        case AtReferenceAttr:
-	 ReadReference (&refType, label, &refExt, &I, pivFile);
+	 ReadReference (&refType, label, pivFile);
 	 break;
        case AtTextAttr:
 	 if (!create)
@@ -1179,8 +1088,7 @@ void ReadAttributePiv (BinFile pivFile, PtrElement pEl,
 	       pRef->RdElement = pEl;
 	       pRef->RdAttribute = pA;
 	       /* lie la reference a l'objet qu'elle designe */
-	       CreateReference (pA->AeAttrReference, refType, label, refExt,
-				I, pDoc);
+	       CreateReference (pA->AeAttrReference, refType, label, pDoc);
 	       break;
 	     case AtTextAttr:
 	       pA->AeAttrText = pPremBuff;
@@ -1959,7 +1867,6 @@ PtrElement ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc,
   PtrReferredDescr    pRefD;
   PtrSRule            pSRule;
 static  LabelString         label;
-  DocumentIdentifier  docIdent;
   BasicType           leafType;
   PageType            pageType;
   ReferenceType       refType;
@@ -1971,7 +1878,7 @@ static  LabelString         label;
   char                c;
   CHAR_T              ctext;
   ThotBool            create, inclusion, modif, b1, b2;
-  ThotBool            refExt, found, withReferences, sign, newSubPath;
+  ThotBool            found, withReferences, sign, newSubPath;
   
   pSRule = NULL;
   pEl = NULL;
@@ -2117,13 +2024,12 @@ static  LabelString         label;
 	/* oui, lit la reference */
 	{
 	  inclusion = TRUE;
-	  ReadReference (&refType, label, &refExt, &docIdent, pivFile);
+	  ReadReference (&refType, label, pivFile);
 	  if (create)
 	    {
 	      GetReference (&pEl->ElSource);
 	      pEl->ElSource->RdElement = pEl;
-	      CreateReference (pEl->ElSource, refType, label, refExt,
-			       docIdent, pDoc);
+	      CreateReference (pEl->ElSource, refType, label, pDoc);
 	      pEl->ElIsCopy = TRUE;
 	    }
 	  if (!TtaReadByte (pivFile, (unsigned char *)tag))
@@ -2173,8 +2079,7 @@ static  LabelString         label;
 	    if (pDoc->DocPivotVersion < 3 || withReferences)
 	      /* on associe a l'element un descripteur d'element reference' */
 	      {
-		ClearDocIdent (&docIdent);
-		pEl->ElReferredDescr = GetElRefer (label, docIdent, pDoc);
+		pEl->ElReferredDescr = GetElRefer (label, pDoc);
 		if (pEl->ElReferredDescr->ReReferredElem != NULL)
 		  /* on a deja lu dans ce document un element */
 		  /* portant ce label, erreur */
@@ -2238,10 +2143,9 @@ static  LabelString         label;
 	      else
 		/* traitement des references : on lit la reference */
 		{
-		  ReadReference (&refType, label, &refExt, &docIdent, pivFile);
+		  ReadReference (&refType, label, pivFile);
 		  if (create)
-		    CreateReference (pEl->ElReference, refType, label, refExt,
-				     docIdent, pDoc);
+		    CreateReference (pEl->ElReference, refType, label, pDoc);
 		  if (!TtaReadByte (pivFile, (unsigned char *)tag))
 		    PivotError (pivFile, "Reference 1");
 		}
@@ -3301,17 +3205,9 @@ void ReadPivotHeader (BinFile file, PtrDocument pDoc, char *tag)
    qui se trouve sous la forme pivot dans le fichier file. 
    Le fichier doit etre ouvert et positionne' au debut.    
    Il n'est pas ferme' par LoadDocumentPiv.                
-   pDoc est le pointeur sur le descripteur de document du  
-   document a` charger.                                    
-   Si loadExternalDoc est vrai, on charge temporairement les
-   documents externes reference's pour pouvoir copier les  
-   elements inclus. Les documents externes ainsi charge's  
-   sont decharge's au retour. Si skeleton est vrai, le     
-   document est charge sous forme squelette.               
+   pDoc est le pointeur sur le descripteur de document du document a` charger.
   ----------------------------------------------------------------------*/
-void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
-		      ThotBool skeleton, PtrSSchema pLoadedSS,
-		      ThotBool withEvent, ThotBool removeExclusions)
+void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool withEvent)
 {
    PtrElement          s, p, d;
    PtrSSchema          pSS, pNat;
@@ -3339,7 +3235,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
      PivotError (file, "PivotError: Class");
    if (!error)
      /* lit les noms des schemas de structure et de presentation */
-     ReadSchemaNamesPiv (file, pDoc, &tag, pLoadedSS, NULL);
+     ReadSchemaNamesPiv (file, pDoc, &tag, NULL, NULL);
    if (withEvent && pDoc->DocSSchema != NULL && !error)
      {
        notifyDoc.event = TteDocOpen;
@@ -3362,18 +3258,6 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 	   if (pPSchema != NULL)
 	     for (i = 0; i < pPSchema->PsNViews; i++)
 	       ok = ok || pPSchema->PsExportView[i];
-	   if (ok)
-	     {
-	       /* une vue THOT_EXPORT est prevue */
-	       if (skeleton)
-		 {
-		   pDoc->DocExportStructure = TRUE;
-		   /* Un document charge' sous sa forme export n'est pas */
-		   /* modifiable */
-		   pDoc->DocReadOnly = TRUE;
-		   createPages = TRUE;
-		 }
-	     }
 	 }
        pDoc->DocLabels = NULL;
        /* lit le fichier .PIV */
@@ -3435,8 +3319,6 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 			 }
 		     }
 		   /* traite les elements exclus */
-		   if (removeExclusions)
-		     RemoveExcludedElem (&p, pDoc);
 		   /* accouple les paires */
 		   AssociatePairs (p);
 		   pDoc->DocDocElement = d;
@@ -3471,7 +3353,7 @@ void LoadDocumentPiv (BinFile file, PtrDocument pDoc, ThotBool loadExternalDoc,
 	     SetLabel (pDoc->DocDocElement, pDoc);
 	   
 	   /* Update the inclusions values */
-	   UpdateInclusionElements (pDoc, loadExternalDoc, removeExclusions);
+	   UpdateInclusionElements (pDoc);
 	   
 	   pDoc->DocDocElement->ElAccess = ReadWrite;
 	   if (withEvent && pDoc->DocSSchema != NULL && !error)

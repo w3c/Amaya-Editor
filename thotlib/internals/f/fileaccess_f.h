@@ -38,16 +38,6 @@ extern ThotBool TtaWriteShort ( BinFile file,
                                 int sval );
 extern ThotBool TtaWriteInteger ( BinFile file,
                                   int lval );
-extern void TtaWriteDocIdent ( BinFile file,
-                               DocumentIdentifier Ident );
-extern void TtaReadDocIdent ( BinFile file,
-                              DocumentIdentifier *Ident );
-extern void CopyDocIdent ( DocumentIdentifier *Dest,
-                           DocumentIdentifier Source );
-extern ThotBool SameDocIdent ( DocumentIdentifier Ident1,
-                               DocumentIdentifier Ident2 );
-extern void ClearDocIdent ( DocumentIdentifier *Ident );
-extern ThotBool DocIdentIsNull ( DocumentIdentifier Ident );
 extern void TtaExtractName ( char *text,
                              char *aDirectory,
                              char *aName );
@@ -63,10 +53,6 @@ extern void FindCompleteName ( char *fileName,
                                PathBuffer directory,
                                PathBuffer completeName,
                                int *length );
-extern void GetDocIdent ( DocumentIdentifier* Ident,
-                          char *docName );
-extern void GetDocName ( DocumentIdentifier Ident,
-                         char *docName );
 extern int FileWriteAccess ( char *fileName );
 extern void GetCounterValue ( int number,
                               CounterStyle style,
@@ -109,16 +95,6 @@ extern ThotBool TtaWriteShort ( BinFile file,
                                   int sval );
 extern ThotBool TtaWriteInteger ( BinFile file,
                                     int lval );
-extern void TtaWriteDocIdent ( BinFile file,
-                                 DocumentIdentifier Ident );
-extern void TtaReadDocIdent ( BinFile file,
-                                DocumentIdentifier *Ident );
-extern void CopyDocIdent ( DocumentIdentifier *Dest,
-                             DocumentIdentifier Source );
-extern ThotBool SameDocIdent ( DocumentIdentifier Ident1,
-                                 DocumentIdentifier Ident2 );
-extern void ClearDocIdent ( DocumentIdentifier *Ident );
-extern ThotBool DocIdentIsNull ( DocumentIdentifier Ident );
 extern void TtaExtractName ( char *text,
                                char *aDirectory,
                                char *aName );
@@ -134,10 +110,6 @@ extern void FindCompleteName ( char *fileName,
                                  PathBuffer directory,
                                  PathBuffer completeName,
                                  int *length );
-extern void GetDocIdent ( DocumentIdentifier* Ident,
-                            char *docName );
-extern void GetDocName ( DocumentIdentifier Ident,
-                           char *docName );
 extern int FileWriteAccess ( char *fileName );
 extern void GetCounterValue ( int number,
                                 CounterStyle style,

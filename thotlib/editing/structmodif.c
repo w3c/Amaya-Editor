@@ -172,12 +172,6 @@ static void CopyLeaf (PtrCopyDescr pCopyD, ThotBool redisplay)
 void RedisplayCopies (PtrElement pEl, PtrDocument pDoc, ThotBool redisplay)
 {
    PtrReference        pRef;
-   PtrPSchema          pSchP;
-   PtrSSchema          pSchS;
-   PtrDocument         pRefDoc;
-   PtrExternalDoc      pExtDoc;
-   TransmitElem       *pTrans;
-   int                 rule;
 
    if (pEl != NULL)
       /* remonte jusqu'a la racine de l'arbre abstrait auquel appartient
@@ -194,35 +188,16 @@ void RedisplayCopies (PtrElement pEl, PtrDocument pDoc, ThotBool redisplay)
 		/* cherche toutes les references a cet element qui se trouvent
 		   dans un document charge' */
 		pRef = NULL;
-		pRefDoc = NULL;
-		pExtDoc = NULL;
 		do
 		  {
-		     pRef = NextReferenceToEl (pEl, pDoc, FALSE, pRef,
-					       &pRefDoc, &pExtDoc, TRUE);
-		     if (pRef != NULL)
-			/* on a trouve' une reference */
-			if (pRef->RdTypeRef == RefInclusion)
-			   /* c'est une inclusion */
-			   if (pRef->RdElement != NULL)
-			      if (pRef->RdElement->ElSource != NULL)
-				 UpdateIncludedElement (pRef->RdElement,
-							pRefDoc);
+		     pRef = NextReferenceToEl (pEl, pDoc, pRef);
+		     if (pRef  && pRef->RdTypeRef == RefInclusion)
+		       /* c'est une inclusion */
+		       if (pRef->RdElement && pRef->RdElement->ElSource)
+			 UpdateIncludedElement (pRef->RdElement, pDoc);
 		  }
 		while (pRef != NULL);
 	     }
-	   /* traite les regles Transmit de ce type d'element */
-	   /* cherche d'abord le schema de presentation pour l'element */
-	   SearchPresSchema (pEl, &pSchP, &rule, &pSchS, pDoc);
-	   if (pSchP != NULL)
-	      if (pSchP->PsElemTransmit->Num[rule - 1] > 0)
-		 /* il y a une regle Transmit pour ce type d'element */
-		{
-		   /* applique la regle Transmit */
-		   pTrans = &(pSchP->PsTransmElem[pSchP->PsElemTransmit->Num[rule - 1] - 1]);
-		   TransmitElementContent (pEl, pDoc, pTrans->TeTargetAttr,
-					   pTrans->TeTargetDoc, pSchS);
-		}
 	   /* passe a l'element ascendant */
 	   pEl = pEl->ElParent;
 	}
@@ -233,7 +208,7 @@ void RedisplayCopies (PtrElement pEl, PtrDocument pDoc, ThotBool redisplay)
    IsANewElement   retourne vrai si l'element pointe' par pEl est  
    l'un des nouveaux elements crees                                
   ----------------------------------------------------------------------*/
-ThotBool            IsANewElement (PtrElement pEl)
+ThotBool IsANewElement (PtrElement pEl)
 {
    int                 i;
    ThotBool            ret;
@@ -357,8 +332,6 @@ void RedisplayEmptyReferences (PtrElement pEl, PtrDocument *pDoc,
 {
    PtrReference        pRef;
    PtrElement          pElRef, pChild;
-   PtrDocument         pRefDoc;
-   PtrExternalDoc      pExtDoc;
    PtrAbstractBox      pAb;
    PtrAttribute        pAttr, pPrevAttr;
    int                 view, frame, h;
@@ -368,15 +341,13 @@ void RedisplayEmptyReferences (PtrElement pEl, PtrDocument *pDoc,
      /* cet element est reference' */
      {
        pRef = NULL;
-       pExtDoc = NULL;
-       pRef = NextReferenceToEl (pEl, *pDoc, FALSE, pRef, &pRefDoc, &pExtDoc,
-				 TRUE);
+       pRef = NextReferenceToEl (pEl, *pDoc, pRef);
        /* parcourt la chaine des elements qui le referencent */
-       while (pRef != NULL)
+       while (pRef)
 	 {
 	   pElRef = pRef->RdElement;
 	   /* un element qui reference */
-	   if (pElRef != NULL && pRefDoc == DocumentOfElement (pElRef))
+	   if (pElRef)
 	     {
 	     if (pRef->RdAttribute != NULL)
 	       /* reference par attribut */
@@ -444,7 +415,7 @@ void RedisplayEmptyReferences (PtrElement pEl, PtrDocument *pDoc,
 			   pAb->AbVolume = 3;
 			   /* reaffiche le pave */
 			   pAb->AbChange = TRUE;
-			   frame = pRefDoc->DocViewFrame[view];
+			   frame = (*pDoc)->DocViewFrame[view];
 			   h = 0;
 			   /* on ignore la hauteur de page */
 			   ChangeConcreteImage (frame, &h,
@@ -453,12 +424,11 @@ void RedisplayEmptyReferences (PtrElement pEl, PtrDocument *pDoc,
 			     DisplayFrame (frame);
 			 }
 		     }
-		 RedisplayCopies (pElRef, pRefDoc, redisplay);
+		 RedisplayCopies (pElRef, *pDoc, redisplay);
 	       }
 	     }
 	   /* reference suivante */
-	   pRef = NextReferenceToEl (pEl, *pDoc, FALSE, pRef, &pRefDoc,
-				     &pExtDoc, TRUE);
+	   pRef = NextReferenceToEl (pEl, *pDoc, pRef);
 	 }
      }
    /* traite les fils de l'element */

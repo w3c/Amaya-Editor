@@ -72,7 +72,6 @@ static ThotBool      UpperLower = TRUE;
 /* find and replace strings */
 static ThotBool      WithReplace;
 /* pointer to the external document containing the current reference */
-static PtrExternalDoc pExtCurrDoc;
 static ThotBool      AutoReplace;
 static ThotBool      StartSearch;
 static ThotBool      ReplaceDone;
@@ -945,7 +944,6 @@ void SearchLoadResources (void)
 	CurrRef = NULL;
 	CurrRefDoc = NULL;
 	CurrRefElem = NULL;
-	pExtCurrDoc = NULL;
 	GetSearchContext (&SearchingD);
 	pSearchedString[0] = EOS;
 	SStringLen = 0;

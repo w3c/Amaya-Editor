@@ -502,34 +502,6 @@ static void usage (char *processName)
 }
 
 /*----------------------------------------------------------------------
-   NextReferenceToEl                                               
-  ----------------------------------------------------------------------*/
-PtrReference NextReferenceToEl (PtrElement pEl, PtrDocument pDoc,
-				ThotBool processNotLoaded, PtrReference pPrevRef,
-				PtrDocument *pDocRef, PtrExternalDoc *pExtDoc,
-				ThotBool nextExtDoc)
-{
-   PtrReference        pRef;
-
-   if (pPrevRef != NULL)
-      pRef = pPrevRef->RdNext;
-   else
-      /* premier appel de la fonction */
-     {
-	*pExtDoc = NULL;
-	pRef = NULL;
-	if (pEl != NULL)
-	   if (pEl->ElReferredDescr != NULL)
-	     {
-		pRef = pEl->ElReferredDescr->ReFirstReference;
-		*pDocRef = pDoc;
-	     }
-     }
-   /* on ne cherche pas dans les documents externes */
-   return pRef;
-}
-
-/*----------------------------------------------------------------------
    GetCurrentSelection                                             
   ----------------------------------------------------------------------*/
 ThotBool GetCurrentSelection (PtrDocument *pDoc, PtrElement *firstEl,
@@ -2215,48 +2187,6 @@ void TtaError (int errorCode)
 }
 
 
-/*----------------------------------------------------------------------
-   LoadReferedDocuments    charge tous les documents reference's   
-   par le document pointe' par pDoc.			
-  ----------------------------------------------------------------------*/
-static void LoadReferedDocuments (PtrDocument pDoc)
-{
-  PtrReferredDescr    pRefD;
-  PtrDocument         pDocRef;
-  int                 doc;
-  ThotBool            found;
-
-  pRefD = pDoc->DocReferredEl;
-  if (pRefD != NULL)
-    pRefD = pRefD->ReNext;
-  /* cherche tous les descripteurs d'elements reference's externes */
-  while (pRefD != NULL)
-    {
-      if (pRefD->ReExternalRef)
-	/* c'est un descripteur d'element reference' externe */
-	{
-	  /* le document contenant cet element externe est-il charge'? */
-	  found = FALSE;
-	  for (doc = 0; doc < MAX_DOCUMENTS && !found; doc++)
-	    if (LoadedDocument[doc] != NULL)
-	      if (SameDocIdent (LoadedDocument[doc]->DocIdent, pRefD->ReExtDocument))
-		found = TRUE;
-	  if (!found)
-	    /* le document reference' n'est pas charge', on le charge */
-	    {
-	      doc = 0;
-	      CreateDocument (&pDocRef, &doc);
-	      if (pDocRef != NULL)
-		{
-		  CopyDocIdent (&pDocRef->DocIdent, pRefD->ReExtDocument);
-		  OpenDocument ("", pDocRef, TRUE, FALSE, NULL, FALSE, FALSE);
-		}
-	    }
-	}
-      pRefD = pRefD->ReNext;
-    }
-}
-
 #ifdef _GTK
 /*----------------------------------------------------------------------
   Callback that cancel printing
@@ -2859,7 +2789,7 @@ int main (int argc, char **argv)
       else
 	sprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, DocumentDir);
       
-      if (!OpenDocument (name, TheDoc, TRUE, FALSE, NULL, FALSE, FALSE))
+      if (!OpenDocument (name, TheDoc, FALSE))
 	TheDoc = NULL;
     }
   if (TheDoc != NULL)
@@ -2869,9 +2799,6 @@ int main (int argc, char **argv)
       for (i = 0; i < cssCounter; i++)
 	LoadStyleSheet (CSSName[i], 1, NULL, NULL, CSS_ALL,
 			CSSOrigin[i] == 'u');
-      
-      /* load all referred document before printing */
-      LoadReferedDocuments (TheDoc);
       
       if (TypeHasException (ExcNoPaginate, TheDoc->DocSSchema->SsRootElem,
 			    TheDoc->DocSSchema))

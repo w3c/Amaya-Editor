@@ -50,10 +50,6 @@ int                 NbFree_DescRef;
 int                 NbUsed_DescRef;
 PtrReferredDescr    PtFree_DescRef;
 
-int                 NbFree_ExternalDoc;
-int                 NbUsed_ExternalDoc;
-PtrExternalDoc      PtFree_ExternalDoc;
-
 int                 NbFree_DescCopy;
 int                 NbUsed_DescCopy;
 PtrCopyDescr        PtFree_DescCopy;
@@ -334,14 +330,6 @@ void                FreeAll ()
     }
   NbFree_DescRef = 0;
     
-  while (PtFree_ExternalDoc != NULL)
-    {
-      ptr = (void *)PtFree_ExternalDoc;
-      PtFree_ExternalDoc = PtFree_ExternalDoc->EdNext;
-      TtaFreeMemory (ptr);
-    }
-  NbFree_ExternalDoc = 0;
-    
   while (PtFree_DescCopy != NULL)
     {
       ptr = (void *)PtFree_DescCopy;
@@ -539,10 +527,6 @@ void InitEditorMemory ()
    NbFree_DescCopy = 0;
    NbUsed_DescCopy = 0;
    PtFree_DescCopy = NULL;
-
-   NbFree_ExternalDoc = 0;
-   NbUsed_ExternalDoc = 0;
-   PtFree_ExternalDoc = NULL;
 
    NbFree_Reference = 0;
    NbUsed_Reference = 0;
@@ -858,11 +842,9 @@ void GetReferredDescr (PtrReferredDescr * pDR)
      {
        memset (pNewDR, 0, sizeof (ReferredElemDescriptor));
        pNewDR->ReFirstReference = NULL;
-       pNewDR->ReExtDocRef = NULL;
        pNewDR->RePrevious = NULL;
        pNewDR->ReNext = NULL;
        pNewDR->ReReferredLabel[0] = EOS;
-       pNewDR->ReExternalRef = FALSE;
        pNewDR->ReReferredElem = NULL;
        NbUsed_DescRef++;
      }
@@ -917,41 +899,6 @@ void FreeDescCopy (PtrCopyDescr pDC)
   NbUsed_DescCopy--;
 }
 
-/*----------------------------------------------------------------------
-   GetExternalDoc alloue un descripteur de document externe.       
-  ----------------------------------------------------------------------*/
-void GetExternalDoc (PtrExternalDoc * pDE)
-{
-   PtrExternalDoc      pNewDE;
-
-
-   if (PtFree_ExternalDoc == NULL)
-      pNewDE = (PtrExternalDoc) TtaGetMemory (sizeof (ExternalDoc));
-   else
-     {
-	pNewDE = PtFree_ExternalDoc;
-	PtFree_ExternalDoc = pNewDE->EdNext;
-	NbFree_ExternalDoc--;
-     }
-   *pDE = pNewDE;
-   if (pNewDE)
-     {
-       memset (pNewDE, 0, sizeof (ExternalDoc));
-       pNewDE->EdNext = NULL;
-       ClearDocIdent (&pNewDE->EdDocIdent);
-       NbUsed_ExternalDoc++;
-     }
-}
-
-/*----------------------------------------------------------------------
-   FreeExternalDoc libere un descripteur de document externe.      
-  ----------------------------------------------------------------------*/
-void FreeExternalDoc (PtrExternalDoc pDE)
-{
-
-  TtaFreeMemory (pDE);
-  NbUsed_ExternalDoc--;
-}
 
 /*----------------------------------------------------------------------
    GetReference alloue une reference.                              
@@ -979,7 +926,6 @@ void GetReference (PtrReference * pRef)
        pNewRef->RdElement = NULL;
        pNewRef->RdAttribute = NULL;
        pNewRef->RdTypeRef = RefFollow;
-       pNewRef->RdInternalRef = TRUE;
      }
 }
 

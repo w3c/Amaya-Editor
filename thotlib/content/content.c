@@ -402,8 +402,7 @@ ThotBool MergeTextElements (PtrElement pEl, PtrElement *pFreeEl, PtrDocument pDo
 		    /* element sur le premier */
 		    {
 		      pEl1->ElReferredDescr = pEl2->ElReferredDescr;
-		      if (!pEl1->ElReferredDescr->ReExternalRef)
-			pEl1->ElReferredDescr->ReReferredElem = pEl;
+		      pEl1->ElReferredDescr->ReReferredElem = pEl;
 		      pEl2->ElReferredDescr = NULL;
 		    }
 		  else

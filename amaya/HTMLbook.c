@@ -343,7 +343,7 @@ void SetInternalLinks (Document document)
 		  if (target != NULL)
 		    /* set the Thot link */
 		    TtaSetAttributeReference (IntLinkAttr, link, document,
-					      target, document);
+					      target);
 		}
 	      else
 		/* it's an external link */

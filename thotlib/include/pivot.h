@@ -14,7 +14,6 @@
 
 #ifndef __CEXTRACT__
 
-extern Document     TtaAllocateDocument (char *documentName, char *documentIdentifier, char *documentSchemasPath);
 extern void         TtaWritePivotHeader (BinFile pivotFile, Document document);
 extern void         TtaReadPivotHeader (BinFile pivotFile, Document document, char *nextChar);
 extern void         TtaWriteLanguageTable (BinFile pivotFile, Document document);

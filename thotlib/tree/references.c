@@ -21,7 +21,6 @@
 #include "typecorr.h"
 #include "appstruct.h"
 
-
 /*#define THOT_EXPORT*/
 #define THOT_EXPORT extern	/* to avoid redefinitions */
 #include "edit_tv.h"
@@ -38,15 +37,43 @@
 #include "schemas_f.h"
 
 
-#define MAX_EXT_DOC 10
 
+/*----------------------------------------------------------------------
+   NextReferenceToEl retourne la prochaine reference qui designe	
+   l'element pEl.                                             
+   - pDoc est le document auquel appartient pEl.              
+   - processNotLoaded indique si on prend en compte les 	
+   documents referencant non charge's (TRUE) ou si au    	
+   contraire on les ignore (FALSE).                      	
+   - pPrevRef contient la reference courante a l'appel.    	
+   Si pPrevRef est NULL et *pExtDoc est NULL, la fonction   
+   retourne la premiere reference a` l'element pEl, sinon 	
+   elle retourne la reference qui suit celle qui est     	
+   pointee par pPrevRef.                                 	
+  ----------------------------------------------------------------------*/
+PtrReference  NextReferenceToEl (PtrElement pEl, PtrDocument pDoc,
+				 PtrReference pPrevRef)
+{
+   PtrReference        pRef;
+
+   if (pPrevRef)
+      pRef = pPrevRef->RdNext;
+   else
+     {
+       pRef = NULL;
+       /* premier appel de la fonction */
+       if (pEl && pEl->ElReferredDescr)
+	 pRef = pEl->ElReferredDescr->ReFirstReference;
+     }
+   return pRef;
+}
 
 /*----------------------------------------------------------------------
    SearchElemLabel    cherche dans tout le sous arbre de pEl	
    l'element portant un label donne'.                              
    Retourne un pointeur sur cet element ou NULL si pas trouve'.    
   ----------------------------------------------------------------------*/
-static PtrElement   SearchElemLabel (PtrElement pEl, LabelString label)
+static PtrElement SearchElemLabel (PtrElement pEl, LabelString label)
 {
    PtrElement          result, pChild;
 
@@ -72,229 +99,22 @@ static PtrElement   SearchElemLabel (PtrElement pEl, LabelString label)
    ReferredElement retourne un pointeur sur l'element qui est reference' 
    par la reference pRef. Retourne NULL si l'element       
    reference' n'est pas accessible.                        
-   Si l'element reference' est dans un autre document,     
-   retourne dans docIdent l'identificateur du document qui	
-   contient l'element reference' et dans pDoc un pointeur  
-   sur le contexte du document si ce document est charge'  
-   (NULL si le document n'est pas charge').                
-   Si l'element reference' est dans le meme document,      
-   retourne dans docIdent une chaine vide et dans ce cas   
-   pDoc est NULL.                                          
   ----------------------------------------------------------------------*/
-PtrElement ReferredElement (PtrReference pRef, DocumentIdentifier *docIdent,
-			    PtrDocument *pDoc)
+PtrElement ReferredElement (PtrReference pRef)
 {
    PtrElement          pEl;
-   PtrElement          pE;
-   PtrElement          pElRef;
    PtrReferredDescr    pRefD;
-   PtrReferredDescr    pRefD1;
-   PtrAttribute        pAttrRef;
-   PtrDocument         pDocRef;
-   ThotBool            found;
-   ThotBool            modif;
 
    pEl = NULL;
-   modif = FALSE;
-   ClearDocIdent (docIdent);
-   *pDoc = NULL;
-   if (pRef != NULL)
-      if (pRef->RdReferred != NULL)
-	{
-	   pRefD1 = pRef->RdReferred;
-	   if (!pRefD1->ReExternalRef)
-	      /* l'element reference' est dans le meme document */
-	      pEl = pRefD1->ReReferredElem;
-	   else
-	      /* l'element reference' est dans un autre document */
-	      /* on retourne le nom du document externe */
-	     {
-		CopyDocIdent (docIdent, pRefD1->ReExtDocument);
-		/* le document est-il charge'? */
-		*pDoc = GetPtrDocument (pRefD1->ReExtDocument);
-		if (*pDoc != NULL)
-		   /* le document est charge' */
-		   /* cherche dans ce document le descripteur d'element */
-		   /* reference' */
-		  {
-		     pRefD = (*pDoc)->DocReferredEl;
-		     /* saute le premier descripteur (bidon) */
-		     if (pRefD != NULL)
-			pRefD = pRefD->ReNext;
-		     found = FALSE;
-		     while (pRefD != NULL && !found)
-		       {
-			  if (!pRefD->ReExternalRef)
-			     if (pRefD->ReReferredElem != NULL)
-				if (strcmp (pRefD->ReReferredElem->ElLabel, pRefD1->ReReferredLabel) == 0)
-				   found = TRUE;
-			  if (!found)
-			     pRefD = pRefD->ReNext;
-		       }
-		     if (found)
-			/* pEl: l'element reference' */
-			pEl = pRefD->ReReferredElem;
-		     else
-			/* essaie de retrouver l'element reference' en le cherchant */
-			/* dans les arbres abstraits du document reference' */
-		       {
-			  if (pRef->RdAttribute == NULL)
-			     /* c'est un attribut reference */
-			    {
-			       pElRef = pRef->RdElement;
-			       pAttrRef = NULL;
-			    }
-			  else
-			     /* c'est un element reference */
-			    {
-			       pElRef = NULL;
-			       pAttrRef = pRef->RdAttribute;
-			    }
-			  pE = NULL;
-			  /* on cherche d'abord dans l'arbre principal du document */
-			  if ((*pDoc)->DocDocElement != NULL)
-			     pE = SearchElemLabel ((*pDoc)->DocDocElement, pRefD1->ReReferredLabel);
-			  if (pE != NULL)
-			     /* on a trouve' l'element reference'. On recree le lien */
-			    {
-			       pDocRef = DocumentOfElement (pRef->RdElement);
-			       if (pDocRef != NULL)
-				  modif = pDocRef->DocModified;
-			       if (!SetReference (pElRef, pAttrRef, pE, pDocRef, *pDoc,
-						  TRUE, FALSE))
-				  pE = NULL;
-			       else
-				  pEl = pE;
-			       if (pDocRef != NULL)
-				  pDocRef->DocModified = modif;
-			    }
-			  if (pE == NULL)
-			     /* l'element reference' n'existe pas dans le document */
-			     /* reference', on annule cette reference. */
-			    {
-			     if (pElRef != NULL)
-				CancelReference (pElRef, *pDoc);
-			     else
-				DeleteReference (pRef);
-			    }
-		       }
-		  }
-	     }
-	}
+   if (pRef && pRef->RdReferred)
+     {
+       pRefD = pRef->RdReferred;
+       /* l'element reference' est dans le meme document */
+       pEl = pRefD->ReReferredElem;
+     }
    return pEl;
 }
 
-/*----------------------------------------------------------------------
-   SearchExternalReferenceToElem cherche un document qui contient des references a`  
-   l'element pEl et, dans ce document, s'il est charge',	
-   cherche la premiere reference qui pointe sur pEl.       	
-   - pDocEl est le document auquel appartient pEl.         	
-   - processNotLoaded indique si on prend en compte les    	
-   documents referencant non charge's (TRUE) ou si au    	
-   contraire on les ignore (FALSE).                      	
-   - pDocRef contient au retour un pointeur sur le         	
-   contexte du document auquel appartient la reference   	
-   trouvee. Seulement si la valeur de retour n'est pas   	
-   NULL.                                                 	
-   - pExtDoc est le document externe precedemment traite' (si	
-   nextExtDoc est TRUE) ou celui qu'on veut traiter   	
-   (si nextExtDoc est FALSE). pExtDoc doit etre NULL si	
-   nextExtDoc est TRUE et qu'on n'a pas encore traite'	
-   de references externes.                               	
-   - nextExtDoc indique si on passe au document         	
-   referencant suivant celui decrit par pExtDoc (TRUE) ou si 	
-   on traite le document decrit par pExtDoc (FALSE).         	
-   Retourne un pointeur sur la premiere reference trouvee  	
-   dans le document externe et pExtDoc designe alors ce        	
-   document externe.                                       	
-   Si la valeur de retour est NULL et                      	
-   si pExtDoc est NULL : on n'a rien trouve'.               	
-   si pExtDoc n'est pas NULL : il y a des references a`     	
-   l'element pEl dans le document designe' par pExtDoc 	
-   mais ce document n'est pas charge' (cela ne se  	
-   produit que si processNotLoaded est TRUE).      	
-  ----------------------------------------------------------------------*/
-PtrReference SearchExternalReferenceToElem (PtrElement pEl, PtrDocument pDocEl,
-					    ThotBool processNotLoaded,
-					    PtrDocument *pDocRef,
-					    PtrExternalDoc *pExtDoc, ThotBool nextExtDoc)
-{
-   PtrDocument         pDoc;
-   PtrReferredDescr    pRefD;
-   PtrReference        pRef;
-   ThotBool            found;
-
-   if (*pExtDoc == NULL)
-      /* on n'a pas encore cherche' dans un autre document que celui qui */
-      /* contient l'element pEl. On va chercher dans le premier document */
-      /* externe qui contient des references a l'element pEl. */
-     {
-	if (pEl != NULL)
-	   if (pEl->ElReferredDescr != NULL)
-	      *pExtDoc = pEl->ElReferredDescr->ReExtDocRef;
-     }
-   else if (nextExtDoc)
-      /* on prend le document referencant suivant */
-      *pExtDoc = (*pExtDoc)->EdNext;
-   if (*pExtDoc == NULL)
-      /* il n'y a pas de document suivant qui contienne des references a */
-      /* notre element. Il n'y a donc pas de reference suivante */
-     {
-	pRef = NULL;
-	*pDocRef = NULL;
-     }
-   else
-      /* il y a des references a notre element dans le document decrit par pExtDoc */
-     {
-	/* ce document est-il charge' ? */
-	pDoc = GetPtrDocument ((*pExtDoc)->EdDocIdent);
-	if (pDoc == NULL)
-	   /* le document referencant n'est pas charge' */
-	  {
-	     if (processNotLoaded)
-		/* on a trouve' */
-	       {
-		  pRef = NULL;
-		  *pDocRef = NULL;
-	       }
-	     else
-		/* On ignore les documents non charge', on cherche le document */
-		/* referencant suivant */
-		pRef = SearchExternalReferenceToElem (pEl, pDocEl, processNotLoaded, pDocRef, pExtDoc, TRUE);
-	  }
-	else
-	   /* Le document referencant est charge'. */
-	  {
-	     /* On cherche pour ce document le descripteur d'element reference' */
-	     /* qui represente l'element pointe' par pEl */
-	     pRefD = pDoc->DocReferredEl;
-	     /* saute le premier descripteur (bidon) */
-	     if (pRefD != NULL)
-		pRefD = pRefD->ReNext;
-	     found = FALSE;
-	     while (pRefD != NULL && !found)
-	       {
-		  if (pRefD->ReExternalRef)
-		     if (strcmp (pRefD->ReReferredLabel, pEl->ElLabel) == 0)
-			if (SameDocIdent (pRefD->ReExtDocument, pDocEl->DocIdent))
-			   found = TRUE;
-		  if (!found)
-		     pRefD = pRefD->ReNext;
-	       }
-	     if (found)
-	       {
-		  *pDocRef = pDoc;
-		  pRef = pRefD->ReFirstReference;
-	       }
-	     else
-	       {
-		  *pDocRef = NULL;
-		  pRef = NULL;
-	       }
-	  }
-     }
-   return pRef;
-}
 
 /*----------------------------------------------------------------------
   LinkReferredElDescr links the descriptor at the first position 
@@ -343,21 +163,11 @@ void UnlinkReferredElDescr (PtrReferredDescr pRefD)
   ----------------------------------------------------------------------*/
 void DeleteReferredElDescr (PtrReferredDescr pRefD)
 {
-  PtrExternalDoc      pExtDoc, pNextExtDoc;
-
   if (pRefD)
     /* Le premier descripteur de la chaine des descripteurs du document */
     /* est bidon. */
     {
       UnlinkReferredElDescr (pRefD);
-      pExtDoc = pRefD->ReExtDocRef;
-      /* libere les descripteurs de documents referencant */
-      while (pExtDoc)
-	{
-	  pNextExtDoc = pExtDoc->EdNext;
-	  FreeExternalDoc (pExtDoc);
-	  pExtDoc = pNextExtDoc;
-	}
       /* libere le descripteur d'element reference' */
       FreeReferredDescr (pRefD);
     }
@@ -410,10 +220,7 @@ void DeleteReference (PtrReference pRef)
 	  if (pRef->RdReferred)
 	    {
 	      pRef->RdReferred->ReFirstReference = NULL;
-	      if (pRef->RdReferred->ReExternalRef)
-		DeleteReferredElDescr (pRef->RdReferred);
-	      else
-		DeleteAllReferences (pRef->RdReferred->ReReferredElem);
+	      DeleteAllReferences (pRef->RdReferred->ReReferredElem);
 	    }
 	}
       else if (pRef->RdReferred)
@@ -426,7 +233,6 @@ void DeleteReference (PtrReference pRef)
   pRef->RdPrevious = NULL;
   pRef->RdNext = NULL;
   pRef->RdReferred = NULL;
-  pRef->RdInternalRef = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -566,7 +372,6 @@ void CopyReference (PtrReference pCopyRef, PtrReference pSourceRef, PtrElement *
    pCopyRef->RdReferred = pSourceRef->RdReferred;
    pCopyRef->RdElement = *pEl;
    pCopyRef->RdTypeRef = pSourceRef->RdTypeRef;
-   pCopyRef->RdInternalRef = pSourceRef->RdInternalRef;
 
    if (pCopyRef->RdReferred != NULL)
       if (pCopyRef->RdReferred != pRefD)
@@ -587,8 +392,6 @@ void CopyReference (PtrReference pCopyRef, PtrReference pSourceRef, PtrElement *
    references qui sont dans l'arbre copie'.                
    Dans tous les cas, coupe le lien d'inclusion de tous    
    les elements inclus du sous-arbre de pTarget.           
-   Toutes les references externes contenues dans le        
-   sous-arbre sont e'galement annule'es.                   
   ----------------------------------------------------------------------*/
 void TransferReferences (PtrElement pTarget, PtrDocument pDoc, PtrElement pEl,
 			 PtrDocument pSourceDoc)
@@ -620,7 +423,6 @@ void TransferReferences (PtrElement pTarget, PtrDocument pDoc, PtrElement pEl,
 		     /* on lui en affecte un */
 		    {
 		       pTarget->ElReferredDescr = NewReferredElDescr (pDoc);
-		       pTarget->ElReferredDescr->ReExternalRef = FALSE;
 		       pTarget->ElReferredDescr->ReReferredElem = pTarget;
 		    }
 		  /* lie le descripteur de reference et le descripteur */
@@ -669,55 +471,6 @@ void TransferReferences (PtrElement pTarget, PtrDocument pDoc, PtrElement pEl,
 }
 
 /*----------------------------------------------------------------------
-   	AddDocOfExternalRef   ajoute le document dont l'identificateur est	
-   	docIdent a la liste des documents contenant des references	
-   	externes a l'element pEl qui appartient au document pDoc2.	
-  ----------------------------------------------------------------------*/
-void AddDocOfExternalRef (PtrElement pEl, DocumentIdentifier docIdent, PtrDocument pDoc2)
-{
-   ThotBool            found;
-   PtrExternalDoc      pExtDoc;
-
-   if (pEl != NULL)
-      if (pEl->ElReferredDescr != NULL)
-	 if (strcmp (pDoc2->DocIdent, docIdent) != 0)
-	   {
-	    if (pEl->ElReferredDescr->ReExtDocRef == NULL)
-	       /* cet element n'est encore reference' par aucun document externe, */
-	       /* on lui acquiert un premier descripteur de document externe      */
-	      {
-		 GetExternalDoc (&pExtDoc);
-		 pEl->ElReferredDescr->ReExtDocRef = pExtDoc;
-		 if (pExtDoc != NULL)
-		    CopyDocIdent (&(pExtDoc->EdDocIdent), docIdent);
-	      }
-	    else
-	       /* cherche si le document qui reference l'element est deja dans */
-	       /* la liste des documents externes qui referencent l'element    */
-	      {
-		 pExtDoc = pEl->ElReferredDescr->ReExtDocRef;
-		 found = FALSE;
-		 do
-		    if (SameDocIdent (pExtDoc->EdDocIdent, docIdent))
-		       found = TRUE;
-		    else if (pExtDoc->EdNext != NULL)
-		       pExtDoc = pExtDoc->EdNext;
-		 while (!found && pExtDoc->EdNext != NULL) ;
-		 if (!found)
-		    found = SameDocIdent (pExtDoc->EdDocIdent, docIdent);
-		 if (!found)
-		    /* ajoute un descripteur de document externe qui reference */
-		    /* l'element */
-		   {
-		      GetExternalDoc (&pExtDoc->EdNext);
-		      if (pExtDoc->EdNext != NULL)
-			 CopyDocIdent (&(pExtDoc->EdNext->EdDocIdent), docIdent);
-		   }
-	      }
-	   }
-}
-
-/*----------------------------------------------------------------------
    	SetReference cherche parmi les elements ascendants de l'element	
    	pTargetEl un element du type des elements pointes par l'element	
    	reference pRefEl ou par l'attribut reference pRefAttr (des deux	
@@ -739,9 +492,8 @@ ThotBool SetReference (PtrElement pRefEl, PtrAttribute pRefAttr,
    PtrElement          pEl, pAsc;
    PtrSSchema          pSS;
    int                 typeNum;
-   ThotBool            ret, stop;
+   ThotBool            ret;
    PtrReference        pRef;
-   PtrReferredDescr    pRefD;
    NotifyOnTarget      notifyEl;
 
    ret = FALSE;
@@ -835,7 +587,6 @@ ThotBool SetReference (PtrElement pRefEl, PtrAttribute pRefAttr,
 		  if (pDoc == pTargetDoc)
 		     /* reference et element reference' dans le meme document */
 		    {
-		       pRef->RdInternalRef = TRUE;
 		       /* on ajoute la nouvelle reference en tete de la chaine des */
 		       /* references a cet element */
 		       pRef->RdNext = pEl->ElReferredDescr->ReFirstReference;
@@ -844,55 +595,7 @@ ThotBool SetReference (PtrElement pRefEl, PtrAttribute pRefAttr,
 		       pRef->RdReferred = pEl->ElReferredDescr;
 		       pRef->RdReferred->ReFirstReference = pRef;
 		    }
-		  else
-		     /* reference et element reference' dans des */
-		     /* documents differents */
-		    {
-		       pRef->RdInternalRef = FALSE;
-		       AddDocOfExternalRef (pEl, pDoc->DocIdent, pTargetDoc);
-		       /* cet element reference' est-il deja represente' comme */
-		       /*element reference' externe dans le document qui reference */
-		       pRefD = pDoc->DocReferredEl->ReNext;
-		       stop = FALSE;
-		       do
-			 {
-			    if (pRefD == NULL)
-			       stop = TRUE;
-			    else if (pRefD->ReExternalRef)
-			       if (strcmp (pRefD->ReReferredLabel, pEl->ElLabel) == 0)
-				  if (SameDocIdent (pRefD->ReExtDocument,
-						    pTargetDoc->DocIdent))
-				     stop = TRUE;
-			    if (!stop)
-			       pRefD = pRefD->ReNext;
-			 }
-		       while (!stop);
-		       if (pRefD == NULL)
-			  /* l'element reference' n'est pas encore represente'. */
-			  /* on lui ajoute un descripteur dans le document de la */
-			  /* reference */
-			 {
-			    pRefD = NewReferredElDescr (pDoc);
-			    pRefD->ReExternalRef = TRUE;
-			    strncpy (pRefD->ReReferredLabel, pEl->ElLabel, MAX_LABEL_LEN);
-			    CopyDocIdent (&(pRefD->ReExtDocument), pTargetDoc->DocIdent);
-			 }
-		       /* on ajoute la nouvelle reference en tete de la chaine */
-		       /* des references a cet element */
-		       pRef->RdNext = pRefD->ReFirstReference;
-		       if (pRef->RdNext != NULL)
-			  pRef->RdNext->RdPrevious = pRef;
-		       pRef->RdReferred = pRefD;
-		       pRef->RdReferred->ReFirstReference = pRef;
-		    }
-		  if (pRefEl != NULL)
-		     if (pRefEl->ElStructSchema->SsRule->SrElem[pRefEl->ElTypeNumber - 1]->
-			 SrRefImportedDoc)
-			/* c'est un renvoi a un document importe' */
-		       {
-			  pRef->RdTypeRef = RefInclusion;
-			  pRef->RdInternalRef = FALSE;
-		       }
+
 		  ret = TRUE;
 		  if (withAppEvent && pRefEl != NULL)
 		     /* on n'envoie un evenement que si ce n'est ni une */
@@ -913,31 +616,18 @@ ThotBool SetReference (PtrElement pRefEl, PtrAttribute pRefAttr,
 }
 
 /*----------------------------------------------------------------------
-UpdateInclusionElements		Up to date the value of inclusions that 
-belong to the document pointed by pDoc. If loadExternalDoc is TRUE, the
-inclusions whose the sources belong to another document, are up to date
-too. In this case, the others documents are opened temporarely. If 
-removeExclusions is TRUE, the exclusions are removed from the documents
-opened temporarely.
+  UpdateInclusionElements
+  Up to date the value of inclusions that belong to the document
+  pointed by pDoc.
+  If removeExclusions is TRUE, the exclusions are removed from the documents
+  opened temporarely.
   ----------------------------------------------------------------------*/
-void UpdateInclusionElements (PtrDocument pDoc, ThotBool loadExternalDoc,
-			      ThotBool removeExclusions)
+void UpdateInclusionElements (PtrDocument pDoc)
 {
-  PtrDocument           pSourceDoc;
-  PtrDocument           pExternalDoc[MAX_EXT_DOC];
   PtrElement            pSource;
   PtrReference          pRef;
   PtrReferredDescr      pRefD;
-  PtrSRule              pSRule;
-  DocumentIdentifier    docIdent;
-  ThotBool              ok = FALSE;
-  Document              doc, newdoc;
-  int                   d, extDocNum;
-  NotifyOnTarget	 notifyEl;
-
-  /* nettoie la table des documents externes charge's */
-  for (extDocNum = 0; extDocNum < MAX_EXT_DOC; extDocNum++)
-    pExternalDoc[extDocNum] = NULL;
+  Document              doc;
 
   /* parcourt la chaine des descripteurs d'elements references */
   /* du document, pour traiter toutes les references */
@@ -957,103 +647,7 @@ void UpdateInclusionElements (PtrDocument pDoc, ThotBool loadExternalDoc,
 	      /* c'est bien une inclusion avec expansion, */
 	      /* on copie l'arbre abstrait de l'element inclus */
 	      {
-		pSource = ReferredElement (pRef, &docIdent, &pSourceDoc);
-		
-		/* Ici il faut faire beaucoup d'attention car le target 
-		   de l'inclusion ou source peut etre dans le meme document
-		   ou dans un document externe. */
-		notifyEl.event = TteElemFetchInclude;
-		notifyEl.target = (Element) pSource;
-		if (docIdent[0] == EOS)
-		  notifyEl.targetdocument = doc;
-		else if (pSourceDoc != NULL)
-		  notifyEl.targetdocument = IdentDocument (pSourceDoc);
-		else
-		  notifyEl.targetdocument = 0;
-		notifyEl.element = (Element) pRef->RdElement;
-		notifyEl.document = doc;
-		/* Ici c'est possible que notifyEl.target ou notifyEl.targetdocument
-		   soient egaux a NULL. Par exemple, quand la cible ou source d'une
-		   inclusion n'est pas dans le meme document que l'inclusion. */
-		
-		if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		  /* l'application accepte le traitement */ 
-		  {
-		    if (loadExternalDoc)
-		      /* l'element inclus est-il accessible ? */
-		      {
-			if (pSource == NULL &&
-			    !DocIdentIsNull (docIdent) &&
-			    pSourceDoc == NULL)
-			  /* il y a bien un objet a inclure qui */
-			  /* appartient au document docIdent et ce */
-			  /* document n'est pas charge'. */
-			  /* On le charge. Cherche une entree libre */
-			  /* dans la table des documents externes */
-			  /* charge's. */
-			  {
-			    extDocNum = 0;
-			    while (pExternalDoc[extDocNum] != NULL &&
-				   extDocNum < MAX_EXT_DOC - 1)
-			      extDocNum++;
-			    if (pExternalDoc[extDocNum] == NULL)
-			      /* on a trouve' une entree libre, on */
-			      /* charge  le document externe */
-			      {
-				newdoc = 0;
-				CreateDocument (&pExternalDoc[extDocNum], &newdoc);
-				if (pExternalDoc[extDocNum] != NULL)
-				  {
-				    CopyDocIdent (&pExternalDoc[extDocNum]->DocIdent,
-						  docIdent);
-				    ok = OpenDocument (NULL,
-						       pExternalDoc[extDocNum],
-						       FALSE,
-						       FALSE,
-						       NULL,
-						       FALSE,
-						       removeExclusions);
-				  }
-				if (pExternalDoc[extDocNum] != NULL)
-				  {
-				    CopyDocIdent (&pExternalDoc[extDocNum]->DocIdent,
-						  docIdent);
-				    if (!ok)
-				      {
-					/* echec a l'ouverture du document */
-					FreeDocument (pExternalDoc[extDocNum]);
-					pExternalDoc[extDocNum] = NULL;
-				      }
-				  }
-			      }
-			  }
-			pSRule = pRef->RdElement->ElStructSchema->SsRule->SrElem[pRef->RdElement->ElTypeNumber - 1];
-		      }
-		    /* inclusion d'un document externe */
-		    CopyIncludedElem (pRef->RdElement, pDoc);
-		    
-		    /* Envoyer le message post de TteElemFetchInclude */
-		    pSource = ReferredElement (pRef, &docIdent, &pSourceDoc);
-		    
-		    notifyEl.event = TteElemFetchInclude;
-		    notifyEl.target = (Element) pSource;
-		    if (docIdent[0] == EOS)
-		      notifyEl.targetdocument = (Document) IdentDocument (pDoc);
-		    else if (pSourceDoc != NULL)
-		      notifyEl.targetdocument = (Document) IdentDocument (pSourceDoc);
-		    else
-		      notifyEl.targetdocument = 0;
-		    notifyEl.element = (Element) pRef->RdElement;
-		    notifyEl.document = doc;
-		    
-		    /* Ici notifyEl.target et notifyEl.targetdocument
-		       sont differents de NULL si loadExternalDoc == TRUE.
-		       Dans le cas ou la cible (source) d'une
-		       inclusion n'est pas dans le meme document que l'inclusion,
-		       le document externe a ete ouvert temporairement. */
-		    
-		    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-		  } 
+		pSource = ReferredElement (pRef);
 	      }
 	  pRef = pRef->RdNext;
 	  /* passe a la reference suivante */
@@ -1061,26 +655,5 @@ void UpdateInclusionElements (PtrDocument pDoc, ThotBool loadExternalDoc,
       pRefD = pRefD->ReNext;
       /* passe au descripteur d'element reference' suivant */
     }
-
-  /* on decharge les documents externes qui ont ete charge's */
-  /* pour copier des elements inclus */
-  if (loadExternalDoc)
-    for (extDocNum = 0; extDocNum < MAX_EXT_DOC; extDocNum++)
-      if (pExternalDoc[extDocNum] && pExternalDoc[extDocNum] != pDoc)
-	{
-	  DeleteAllTrees (pExternalDoc[extDocNum]);
-	  FreeDocumentSchemas (pExternalDoc[extDocNum]);
-	  /* cherche le document dans la table */
-	  /* des documents */
-	  d = 0;
-	  while (LoadedDocument[d] != pExternalDoc[extDocNum] &&
-		 d < MAX_DOCUMENTS - 1)
-	    d++;
-	  /* libere l'entree de la table des documents */
-	  if (LoadedDocument[d] == pExternalDoc[extDocNum])
-	    LoadedDocument[d] = NULL;
-	  /* libere tout le document */
-	  FreeDocument (pExternalDoc[extDocNum]);
-	}
 }
 

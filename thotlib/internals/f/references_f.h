@@ -6,15 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern PtrElement ReferredElement ( PtrReference pRef,
-                                    DocumentIdentifier *docIdent,
-                                    PtrDocument *pDoc );
-extern PtrReference SearchExternalReferenceToElem ( PtrElement pEl,
-                                                    PtrDocument pDocEl,
-                                                    ThotBool processNotLoaded,
-                                                    PtrDocument *pDocRef,
-                                                    PtrExternalDoc *pExtDoc,
-                                                    ThotBool nextExtDoc );
+extern PtrReference NextReferenceToEl ( PtrElement pEl,
+                                        PtrDocument pDoc,
+                                        PtrReference pPrevRef );
+extern PtrElement ReferredElement ( PtrReference pRef );
 extern void LinkReferredElDescr ( PtrReferredDescr pRefD,
                                   PtrDocument pDoc );
 extern PtrReferredDescr NewReferredElDescr ( PtrDocument pDoc );
@@ -31,9 +26,6 @@ extern void TransferReferences ( PtrElement pTarget,
                                  PtrDocument pDoc,
                                  PtrElement pEl,
                                  PtrDocument pSourceDoc );
-extern void AddDocOfExternalRef ( PtrElement pEl,
-                                  DocumentIdentifier docIdent,
-                                  PtrDocument pDoc2 );
 extern ThotBool SetReference ( PtrElement pRefEl,
                                PtrAttribute pRefAttr,
                                PtrElement pTargetEl,
@@ -41,21 +33,14 @@ extern ThotBool SetReference ( PtrElement pRefEl,
                                PtrDocument pTargetDoc,
                                ThotBool ancestor,
                                ThotBool withAppEvent );
-extern void UpdateInclusionElements ( PtrDocument pDoc,
-                                      ThotBool loadExternalDoc,
-                                      ThotBool removeExclusions );
+extern void UpdateInclusionElements ( PtrDocument pDoc );
 
 #else /* __STDC__ */
 
-extern PtrElement ReferredElement ( PtrReference pRef,
-                                      DocumentIdentifier *docIdent,
-                                      PtrDocument *pDoc );
-extern PtrReference SearchExternalReferenceToElem ( PtrElement pEl,
-                                                      PtrDocument pDocEl,
-                                                      ThotBool processNotLoaded,
-                                                      PtrDocument *pDocRef,
-                                                      PtrExternalDoc *pExtDoc,
-                                                      ThotBool nextExtDoc );
+extern PtrReference NextReferenceToEl ( PtrElement pEl,
+                                          PtrDocument pDoc,
+                                          PtrReference pPrevRef );
+extern PtrElement ReferredElement ( PtrReference pRef );
 extern void LinkReferredElDescr ( PtrReferredDescr pRefD,
                                     PtrDocument pDoc );
 extern PtrReferredDescr NewReferredElDescr ( PtrDocument pDoc );
@@ -72,9 +57,6 @@ extern void TransferReferences ( PtrElement pTarget,
                                    PtrDocument pDoc,
                                    PtrElement pEl,
                                    PtrDocument pSourceDoc );
-extern void AddDocOfExternalRef ( PtrElement pEl,
-                                    DocumentIdentifier docIdent,
-                                    PtrDocument pDoc2 );
 extern ThotBool SetReference ( PtrElement pRefEl,
                                  PtrAttribute pRefAttr,
                                  PtrElement pTargetEl,
@@ -82,9 +64,7 @@ extern ThotBool SetReference ( PtrElement pRefEl,
                                  PtrDocument pTargetDoc,
                                  ThotBool ancestor,
                                  ThotBool withAppEvent );
-extern void UpdateInclusionElements ( PtrDocument pDoc,
-                                        ThotBool loadExternalDoc,
-                                        ThotBool removeExclusions );
+extern void UpdateInclusionElements ( PtrDocument pDoc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

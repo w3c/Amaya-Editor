@@ -162,8 +162,6 @@ Document TtaInitDocument (char *structureSchema, char *documentName,
 		  /* The document is named */
 		  strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		  /* one get an identifier to the document */
-		  GetDocIdent (&pDoc->DocIdent, documentName); 
 		  /* keep the actual schema path in the document context */
 		  strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
 		  /* initializes the directory of the document */
@@ -334,8 +332,6 @@ void NewDocument (PtrDocument *pDoc, char *SSchemaName, char *docName,
 			      fileNameBuffer, &i);
 	    strncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
 	    (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-	    strncpy ((*pDoc)->DocIdent, docNameBuffer, MAX_DOC_IDENT_LEN);
-	    (*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	    /* le document appartient au directory courant */
 	    strncpy ((*pDoc)->DocDirectory, directoryBuffer, MAX_PATH);
 	    /* conserve le path actuel des schemas dans le contexte du
@@ -493,45 +489,37 @@ void UpdateIncludedElement (PtrElement pEl, PtrDocument pDoc)
 /*----------------------------------------------------------------------
    UpdateAllInclusions updates all inclusion elements of a document
   ----------------------------------------------------------------------*/
-void         UpdateAllInclusions (PtrDocument pDoc)
+void UpdateAllInclusions (PtrDocument pDoc)
 {
   PtrReference        pRef;
   PtrReferredDescr    pRefD;
-  PtrDocument         pRefDoc;
-  PtrExternalDoc      pExtDoc;
   ThotBool            updated = FALSE;
 
   /* check all reference descriptors */
   pRefD = pDoc->DocReferredEl;
-  if (pRefD != NULL)
+  if (pRefD)
     /* skip the first empty descriptor */
     pRefD = pRefD->ReNext;
   while (pRefD)
     /* referred element are within the document */
     {
-      if (!pRefD->ReExternalRef)
+      pRef = NULL;
+      /* look for referred elements from external documents */
+      do
 	{
-	  pRefDoc = NULL;
-	  pRef = NULL;
-	  pExtDoc = NULL;
-	  /* look for referred elements from external documents */
-	  do
-	    {
-	      pRef = NextReferenceToEl (pRefD->ReReferredElem, pDoc,
-					FALSE, pRef, &pRefDoc, &pExtDoc, TRUE);
-	      if (pRef && pRef->RdTypeRef == RefInclusion &&
-		  pRef->RdElement && pRef->RdElement->ElSource &&
+	  pRef = NextReferenceToEl (pRefD->ReReferredElem, pDoc, pRef);
+	  if (pRef && pRef->RdTypeRef == RefInclusion &&
+	      pRef->RdElement && pRef->RdElement->ElSource)
 		/* inclusion with expansion */
-		  pRefDoc != pDoc)
-		{
-		  /* located in another document: switch off the selection */
-		  /* get a new copy */
-		  updated = TRUE;
-		  UpdateIncludedElement (pRef->RdElement, pRefDoc);
-		}
+	    {
+	      /* located in another document: switch off the selection */
+	      /* get a new copy */
+	      updated = TRUE;
+	      UpdateIncludedElement (pRef->RdElement, pDoc);
 	    }
-	  while (pRef != NULL);
 	}
+      while (pRef);
+
       /* next descriptor */
       if (pRefD != NULL)
 	pRefD = pRefD->ReNext;

@@ -50,8 +50,6 @@ ThotBool DeleteMap (NotifyElement * event)
    ElementType	       elType;
    AttributeType       attrType;
    Attribute           attr;
-   char               *url;
-   int                 length;
 
    /* Search the refered image */
    elType = TtaGetElementType (event->element);
@@ -62,10 +60,7 @@ ThotBool DeleteMap (NotifyElement * event)
    if (attr != NULL)
      {
        /* Search the IMAGE element associated with the MAP */
-       length = MAX_LENGTH;
-       url = (char *)TtaGetMemory (MAX_LENGTH);
-       TtaGiveReferenceAttributeValue (attr, &image, url, &length);
-       TtaFreeMemory (url);
+       TtaGiveReferenceAttributeValue (attr, &image);
 
        /* remove the attribute USEMAP of the image */
        attrType.AttrTypeNum = HTML_ATTR_USEMAP;
@@ -498,7 +493,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	     attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
 	     attrRefimg = TtaNewAttribute (attrType);
 	     TtaAttachAttribute (map, attrRefimg, doc);
-	     TtaSetAttributeReference (attrRefimg, map, doc, image, doc);
+	     TtaSetAttributeReference (attrRefimg, map, doc, image);
 	  }
 	TtaFreeMemory (url);
      }
@@ -529,10 +524,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	    if (attr != NULL)
 	      {
 		/* Search the IMAGE element associated with the MAP */
-		length = MAX_LENGTH;
-		url = (char *)TtaGetMemory (MAX_LENGTH);
-		TtaGiveReferenceAttributeValue (attr, &image, url, &length);
-		TtaFreeMemory (url);
+		TtaGiveReferenceAttributeValue (attr, &image);
 	      }
 	  }
      }
@@ -584,7 +576,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	     attrType.AttrTypeNum = HTML_ATTR_AreaRef_IMG;
 	     attrRef = TtaNewAttribute (attrType);
 	     TtaAttachAttribute (el, attrRef, doc);
-	     TtaSetAttributeReference (attrRef, el, doc, image, doc);
+	     TtaSetAttributeReference (attrRef, el, doc, image);
 	     TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_polygon,
 				   el, doc);
 	     TtaGiveBoxSize (image, doc, 1, UnPixel, &w, &h);

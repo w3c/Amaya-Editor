@@ -951,7 +951,6 @@ static void CopyAttributes (PtrElement pEl1, PtrElement pEl2,
 		      pPr->RdAttribute = pAttr2;
 		      pPr->RdReferred = pAttr1->AeAttrReference->RdReferred;
 		      pPr->RdTypeRef = pAttr1->AeAttrReference->RdTypeRef;
-		      pPr->RdInternalRef = pAttr1->AeAttrReference->RdInternalRef;
 		      if (pPr->RdReferred != NULL)
 			/* puts the new reference at the head of the link */
 			{
@@ -2140,9 +2139,8 @@ void InsertElemInChoice (PtrElement pEl, PtrElement *pNew, PtrDocument pDoc,
 	     element */
 	  pEl->ElReferredDescr = (*pNew)->ElReferredDescr;
 	  (*pNew)->ElReferredDescr = NULL;
-	  if (!pEl->ElReferredDescr->ReExternalRef)
-	    if (pEl->ElReferredDescr->ReReferredElem == *pNew)
-	      pEl->ElReferredDescr->ReReferredElem = pEl;
+	  if (pEl->ElReferredDescr->ReReferredElem == *pNew)
+	    pEl->ElReferredDescr->ReReferredElem = pEl;
 	}
       /* adds the attributes of pNew to those of pEl */
       if (pEl->ElFirstAttr == NULL)
@@ -3433,8 +3431,6 @@ void CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
    PtrReference        pRef;
    PtrElement          pSource, pS2, pC1, pC2, pE;
    PtrPathSeg          pPa, pNextPa;
-   DocumentIdentifier  docIdent;
-   PtrDocument         pDocSource;
    ThotBool            done;
 
    /* copy's not done yet */
@@ -3468,137 +3464,131 @@ void CopyIncludedElem (PtrElement pEl, PtrDocument pDoc)
        /* reference to the source element */
        pRef = pEl->ElSource;
        /* searches the element which must be copied: pSource */
-       pSource = ReferredElement (pRef, &docIdent, &pDocSource);
+       pSource = ReferredElement (pRef);
        /* pSource points to the element to be copied, so let's do it */
-       if (pSource != NULL)
+       if (pSource)
 	 {
-	   if (DocIdentIsNull (docIdent))
-	     /* pSource is inside the same document */
-	     pDocSource = pDoc;
-	   if (pDocSource != NULL)
-	     /* the document containing pSource is loaded, so let's
-		copy it's content */
-	     {
-	       /* we copy the attributes */
-	       CopyAttributes (pSource, pEl, pDocSource, pDoc, TRUE, TRUE);
-	       /* we copy the specific presentation rules */
-	       CopyPresRules (pSource, pEl);
-	       if (pEl->ElTerminal)
-		 switch (pSource->ElLeafType)
+	   /* the document containing pSource is loaded, so let's
+	      copy it's content */
+	   /* we copy the attributes */
+	   CopyAttributes (pSource, pEl, pDoc, pDoc, TRUE, TRUE);
+	   /* we copy the specific presentation rules */
+	   CopyPresRules (pSource, pEl);
+	   if (pEl->ElTerminal)
+	     switch (pSource->ElLeafType)
+	       {
+	       case LtText:
+	       case LtPicture:
+	       case LtPolyLine:
+		 if (pSource->ElLeafType == LtText)
+		   pEl->ElLanguage = pSource->ElLanguage;
+		 /* we copy the content of a text or of an image */
+		 if (pSource->ElLeafType == LtPolyLine)
 		   {
-		   case LtText:
-		   case LtPicture:
-		   case LtPolyLine:
-		     if (pSource->ElLeafType == LtText)
-		       pEl->ElLanguage = pSource->ElLanguage;
-		     /* we copy the content of a text or of an image */
-		     if (pSource->ElLeafType == LtPolyLine)
+		     if (pEl->ElLeafType == LtPolyLine &&
+			 pEl->ElPolyLineBuffer != NULL)
 		       {
-			 if (pEl->ElLeafType == LtPolyLine &&
-			     pEl->ElPolyLineBuffer != NULL)
-			   {
-			     ClearText (pEl->ElPolyLineBuffer);
-			     FreeTextBuffer (pEl->ElPolyLineBuffer);
-			   }
-			 pEl->ElLeafType = LtPolyLine;
-			 pEl->ElPolyLineBuffer = CopyText (pSource->ElPolyLineBuffer, pEl);
-			 pEl->ElNPoints = pSource->ElNPoints;
-			 pEl->ElPolyLineType = pSource->ElPolyLineType;
-			 pEl->ElVolume = pEl->ElNPoints;
+			 ClearText (pEl->ElPolyLineBuffer);
+			 FreeTextBuffer (pEl->ElPolyLineBuffer);
 		       }
-		     else
-		       {
-			 pEl->ElText = CopyText (pSource->ElText, pEl);
-			 pEl->ElTextLength = pSource->ElTextLength;
-			 pEl->ElVolume = pEl->ElTextLength;
-		       }
-		     /* adds the element's volume to that of its ancestors */
-		     if (pEl->ElVolume != 0)
-		       {
-			 pE = pEl->ElParent;
-			 while (pE != NULL)
-			   {
-			     pE->ElVolume = pE->ElVolume + pEl->ElVolume;
-			     pE = pE->ElParent;
-			   }
-		       }
-		     break;
-		   case LtPath:
-		     pPa = pEl->ElFirstPathSeg;
-		     while (pPa)
-		       {
-			 pNextPa = pPa->PaNext;
-			 FreePathSeg (pPa);
-			 pPa = pNextPa;
-		       }
-		     pEl->ElLeafType = LtPath;
-		     pEl->ElFirstPathSeg = CopyPath(pSource->ElFirstPathSeg);
-		     pEl->ElVolume = pSource->ElVolume;
-		     break;
-		   case LtSymbol:
-		   case LtGraphics:
-		     pEl->ElGraph = pSource->ElGraph;
-		     pEl->ElWideChar = pSource->ElWideChar;
-		     break;
-		   case LtPageColBreak:
-		     break;
-		   case LtReference:
-		     if (pSource->ElReference != NULL)
-		       {
-			 if (pEl->ElReference == NULL)
-			   GetReference (&pEl->ElReference);
-			 CopyReference (pEl->ElReference, pSource->ElReference,
-					&pEl);
-		       }
-		     break;
-		   default:
-		     break;
+		     pEl->ElLeafType = LtPolyLine;
+		     pEl->ElPolyLineBuffer = CopyText (pSource->ElPolyLineBuffer, pEl);
+		     pEl->ElNPoints = pSource->ElNPoints;
+		     pEl->ElPolyLineType = pSource->ElPolyLineType;
+		     pEl->ElVolume = pEl->ElNPoints;
 		   }
-	       else if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->
-			                            SrConstruct == CsChoice &&
-			(pEl->ElTypeNumber != pSource->ElTypeNumber ||
-			 strcmp (pEl->ElStructSchema->SsName,
-				  pSource->ElStructSchema->SsName)))
+		 else
+		   {
+		     pEl->ElText = CopyText (pSource->ElText, pEl);
+		     pEl->ElTextLength = pSource->ElTextLength;
+		     pEl->ElVolume = pEl->ElTextLength;
+		   }
+		 /* adds the element's volume to that of its ancestors */
+		 if (pEl->ElVolume != 0)
+		   {
+		     pE = pEl->ElParent;
+		     while (pE != NULL)
+		       {
+			 pE->ElVolume = pE->ElVolume + pEl->ElVolume;
+			 pE = pE->ElParent;
+		       }
+		   }
+		 break;
+	       case LtPath:
+		 pPa = pEl->ElFirstPathSeg;
+		 while (pPa)
+		   {
+		     pNextPa = pPa->PaNext;
+		     FreePathSeg (pPa);
+		     pPa = pNextPa;
+		   }
+		 pEl->ElLeafType = LtPath;
+		 pEl->ElFirstPathSeg = CopyPath(pSource->ElFirstPathSeg);
+		 pEl->ElVolume = pSource->ElVolume;
+		 break;
+	       case LtSymbol:
+	       case LtGraphics:
+		 pEl->ElGraph = pSource->ElGraph;
+		 pEl->ElWideChar = pSource->ElWideChar;
+		 break;
+	       case LtPageColBreak:
+		 break;
+	       case LtReference:
+		 if (pSource->ElReference != NULL)
+		   {
+		     if (pEl->ElReference == NULL)
+		       GetReference (&pEl->ElReference);
+		     CopyReference (pEl->ElReference, pSource->ElReference,
+				    &pEl);
+		   }
+		 break;
+	       default:
+		 break;
+	       }
+	   else if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->
+		    SrConstruct == CsChoice &&
+		    (pEl->ElTypeNumber != pSource->ElTypeNumber ||
+		     strcmp (pEl->ElStructSchema->SsName,
+			     pSource->ElStructSchema->SsName)))
+	     {
+	       pC1 = CopyTree (pSource, pDoc, pEl->ElStructSchema,
+			       pDoc, pEl, TRUE, TRUE, FALSE, TRUE, TRUE);
+	       if (pC1 != NULL)
 		 {
-		   pC1 = CopyTree (pSource, pDocSource, pEl->ElStructSchema,
-				   pDoc, pEl, TRUE, TRUE, FALSE, TRUE, TRUE);
-		   if (pC1 != NULL)
-		     {
-		       pC1->ElReferredDescr = NULL;
-		       InsertElemInChoice (pEl, &pC1, pDoc, FALSE);
-		     }
+		   pC1->ElReferredDescr = NULL;
+		   InsertElemInChoice (pEl, &pC1, pDoc, FALSE);
 		 }
-	       else if (pSource->ElFirstChild == NULL)
-		 pEl->ElFirstChild = NULL;
-	       else
+	     }
+	   else if (pSource->ElFirstChild == NULL)
+	     pEl->ElFirstChild = NULL;
+	   else
+	     {
+	       pS2 = pSource->ElFirstChild;
+	       pC1 = NULL;
+	       do
 		 {
-		   pS2 = pSource->ElFirstChild;
-		   pC1 = NULL;
-		   do
+		   pC2 = CopyTree (pS2, pDoc, pEl->ElStructSchema,
+				   pDoc, pEl, TRUE, TRUE, FALSE, TRUE,
+				   TRUE);
+		   if (pC2 != NULL)
 		     {
-		       pC2 = CopyTree (pS2, pDocSource, pEl->ElStructSchema,
-				       pDoc, pEl, TRUE, TRUE, FALSE, TRUE,
-				       TRUE);
-		       if (pC2 != NULL)
-			 {
-			   if (pC1 == NULL)
-			     InsertFirstChild (pEl, pC2);
-			   else
-			     InsertElementAfter (pC1, pC2);
-			   pC1 = pC2;
-			 }
-		       pS2 = pS2->ElNext;
+		       if (pC1 == NULL)
+			 InsertFirstChild (pEl, pC2);
+		       else
+			 InsertElementAfter (pC1, pC2);
+		       pC1 = pC2;
 		     }
-		   while (pS2 != NULL);
+		   pS2 = pS2->ElNext;
 		 }
+	       while (pS2 != NULL);
 	     }
 	 }
        /* updates the internal references to the copied part */
-       TransferReferences (pEl, pDoc, pEl, pDocSource);
-       
+       TransferReferences (pEl, pDoc, pEl, pDoc);
+	   
        /* assigns new labels to the elements of the copy */
        ChangeLabels (pEl, pDoc);
-       
+	   
        /* protects the included subtree against any user
 	  modification */
        ProtectElement (pEl);

@@ -859,8 +859,6 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
   PtrPSchema          pSchP = NULL;
   PtrElement          pElSibling, pAsc, pElem, pRoot;
   PtrReference        pRef;
-  DocumentIdentifier  IDocExt;
-  PtrDocument         pDocExt;
   PtrAttribute        pA;
   unsigned char       attrVal[MAX_TXT_LEN];
   int                 valcompt, valmaxi, valmini;
@@ -893,7 +891,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 	      /* c'est peut-etre une inclusion */
 	      pRef = pEl->ElSource;
 	  if (pRef != NULL)
-	    pElem = ReferredElement (pRef, &IDocExt, &pDocExt);
+	    pElem = ReferredElement (pRef);
 	}
       valcompt = 0;
       if (pElem == NULL)
@@ -997,10 +995,8 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 	      pRef = pElem->ElSource;
 	    if (pRef == NULL)
 	      found = FALSE;
-	    else if (pCond->CoCondition == PcInternalRef)
-	      found = pRef->RdInternalRef;
 	    else
-	      found = !pRef->RdInternalRef;
+	      found = TRUE;
 	    break;
 
 	  case PcCopyRef:

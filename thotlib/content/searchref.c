@@ -59,73 +59,7 @@
 #include "searchref_f.h"
 
 #define MAX_ITEM_MENU_REF 10
-
-/*----------------------------------------------------------------------
-   NextReferenceToEl retourne la prochaine reference qui designe	
-   l'element pEl.                                             
-   - pDoc est le document auquel appartient pEl.              
-   - processNotLoaded indique si on prend en compte les 	
-   documents referencant non charge's (TRUE) ou si au    	
-   contraire on les ignore (FALSE).                      	
-   - pPrevRef contient la reference courante a l'appel.    	
-   Si pPrevRef est NULL et *pExtDoc est NULL, la fonction   
-   retourne la premiere reference a` l'element pEl, sinon 	
-   elle retourne la reference qui suit celle qui est     	
-   pointee par pPrevRef.                                 	
-   - pDocRef contient au retour un pointeur sur le         	
-   contexte du document auquel appartient la reference   	
-   retournee. Seulement si la valeur de retour n'est pas 	
-   NULL.                                                 	
-   - pExtDoc est le document externe precedemment traite' (si 
-   nextExtDoc est TRUE) ou celui qu'on veut traiter   	
-   (si nextExtDoc est FALSE). pExtDoc doit etre NULL si     
-   nextExtDoc est TRUE et qu'on n'a pas encore traite'	
-   de references externes.                               	
-   Au retour, pExtDoc vaut NULL si la reference retournee   
-   appartient au meme document que l'element pEl; sinon  	
-   pExtDoc est le document externe auquel appartient la     
-   reference trouvee. pExtDoc ne doit pas etre modifie'     
-   entre les appels successifs de la fonction.           	
-   - nextExtDoc indique si on passe au document         	
-   referencant suivant celui decrit par pExtDoc (TRUE) ou si
-   on traite le document decrit par pExtDoc (FALSE).        
-   Retourne un pointeur sur la premiere reference trouvee. 	
-   Si la valeur de retour est NULL et                      	
-   si pExtDoc est NULL : on n'a rien trouve'.              
-   si pExtDoc n'est pas NULL : il y a des references a`    
-   l'element pEl dans le document designe' par pExtDoc
-   mais ce document n'est pas charge' (cela ne se  	
-   produit que si processNotLoaded est TRUE).       	
-  ----------------------------------------------------------------------*/
-PtrReference  NextReferenceToEl (PtrElement pEl, PtrDocument pDoc,
-				 ThotBool processNotLoaded,
-				 PtrReference pPrevRef, PtrDocument * pDocRef,
-				 PtrExternalDoc * pExtDoc, ThotBool nextExtDoc)
-{
-   PtrReference        pRef;
-
-   if (pPrevRef != NULL)
-      pRef = pPrevRef->RdNext;
-   else
-     {
-	pRef = NULL;
-	if (*pExtDoc == NULL)
-	   /* premier appel de la fonction */
-	   if (pEl != NULL)
-	      if (pEl->ElReferredDescr != NULL)
-		{
-		   pRef = pEl->ElReferredDescr->ReFirstReference;
-		   *pDocRef = pDoc;
-		}
-     }
-   if (pRef == NULL)
-      /* c'etait la derniere reference dans ce document, cherche dans */
-      /* un autre document la 1ere reference au meme element */
-      pRef = SearchExternalReferenceToElem (pEl, pDoc, processNotLoaded,
-					    pDocRef, pExtDoc, nextExtDoc);
-   return pRef;
-}
-
+#ifdef IV
 /*----------------------------------------------------------------------
    FindReference cherche une reference a` l'element selectionne'.       
    A l'appel:                                                   
@@ -134,130 +68,105 @@ PtrReference  NextReferenceToEl (PtrElement pEl, PtrDocument pDoc,
    cas, pExtDoc doit aussi etre NULL).                   
    - pReferredEl: l'element dont on cherche les references,
    NULL si on cherche la premiere reference.             
-   - pDocReferredEl: le document auquel appartient         
+   - pDoc: le document auquel appartient         
    l'element dont on cherche les references, NULL si on  
    cherche la premiere reference.                        
-   - pExtDoc: pointeur sur le descripteur de document      
-   externe contenant la reference pPrevRef, NULL si on   
-   cherche la premiere reference.                        
-   - nextExtDoc indique si on cherche une reference        
-   dans le document externe decrit par pExtDoc           
-   (FALSE) ou dans le document externe suivant.          
    Au retour:                                                   
    - pPrevRef: pointeur sur la reference trouvee ou NULL   
    si on n'a pas trouve' de reference.                   
-   - pDocPrevRef: document auquel appartient la            
-   reference trouvee.                                    
    - pReferredEl: l'element dont on cherche les references.
-   - pDocReferredEl: le document auquel appartient         
-   l'element dont on cherche les references.             
-   - pExtDoc: document externe dans lequel on a trouve'    
-   une reference. Peut etre non NULL meme si pPrevRef    
-   est NULL, dans le cas ou ce document externe n'est    
-   pas charge':                                          
-   Si pPrevRef est NULL et                                 
-   si pExtDoc est NULL : on n'a rien trouve'.          
-   si pExtDoc n'est pas NULL : il y a des              
-   references dans le document designe' par        
-   pExtDoc, mais ce document n'est pas charge'     
   ----------------------------------------------------------------------*/
-void FindReference (PtrReference * pPrevRef, PtrDocument * pDocPrevRef,
-		    PtrElement * pReferredEl, PtrDocument * pDocReferredEl,
-		    PtrExternalDoc * pExtDoc, ThotBool nextExtDoc)
+void FindReference (PtrReference *pPrevRef, PtrDocument pDoc,
+		    PtrElement *pReferredEl)
 {
-   PtrElement          firstSel;
-   PtrElement          lastSel;
-   PtrElement          pEl;
-   PtrDocument         pSelDoc;
-   int                 firstChar;
-   int                 lastChar;
-   PtrElement          pAncest;
-   ThotBool            ok;
-   ThotBool            found;
+  PtrElement          firstSel;
+  PtrElement          lastSel;
+  PtrElement          pEl;
+  PtrDocument         pSelDoc;
+  PtrElement          pAncest;
+  int                 firstChar;
+  int                 lastChar;
+  ThotBool            ok;
+  ThotBool            found;
 
-   ok = TRUE;
-   if (*pPrevRef != NULL || *pExtDoc != NULL)
-      /* on a deja une reference courante */
-      *pPrevRef = NextReferenceToEl (*pReferredEl, *pDocReferredEl, TRUE,
-			       *pPrevRef, pDocPrevRef, pExtDoc, nextExtDoc);
-   else
-      /* pas de reference courante */
-     {
-	/* prend la selection courante */
-	ok = GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
-				  &lastChar);
-	if (ok)
-	   /* cherche le premier element reference' qui englobe la */
-	   /* selection courante */
-	  {
-	     pEl = firstSel;
-	     found = FALSE;
-	     do
-	       {
-		  if (pEl->ElReferredDescr != NULL)
-		     /* l'element a un descripteur d'element reference' */
-		     if (pEl->ElReferredDescr->ReFirstReference != NULL ||
-			 pEl->ElReferredDescr->ReExtDocRef != NULL)
-			/* l'element est effectivement reference' */
-			found = TRUE;
-		  if (!found)
-		     /* l'element n'est pas reference', on passe au pere */
-		     pEl = pEl->ElParent;
-	       }
-	     while (!found && pEl != NULL);
-	     if (found)
-		/* on a trouve' un ascendant reference' */
-	       {
-		  /* conserve un pointeur sur l'element dont on cherche les */
-		  /* references ainsi que sur son document */
-		  *pReferredEl = pEl;
-		  *pDocReferredEl = pSelDoc;
-		  /* cherche la premiere reference a cet element */
-		  *pPrevRef = NextReferenceToEl (*pReferredEl, *pDocReferredEl,
-			 TRUE, *pPrevRef, pDocPrevRef, pExtDoc, nextExtDoc);
-	       }
-	  }
-     }
-   if (*pPrevRef != NULL)
-      /* on a trouve' une reference */
-     {
-	ok = TRUE;
-	/* on ignore les references qui sont a l'interieur d'une inclusion */
-	if ((*pPrevRef)->RdElement != NULL)
-	  {
-	     pAncest = (*pPrevRef)->RdElement->ElParent;
-	     while (pAncest->ElParent != NULL && pAncest->ElSource == NULL)
-		pAncest = pAncest->ElParent;
-	     if (pAncest->ElSource != NULL)
-		/* on est dans une inclusion */
-		ok = FALSE;
-	  }
-	/* on ignore les references dans les partie cachees */
-	if (ok)
-	   if (ElementIsHidden ((*pPrevRef)->RdElement))
-	      /* on est dans une partie cachee */
-	      ok = FALSE;
-	/* on ignore les references qui sont dans le tampon de Copier-Couper */
-	if (ok)
-	   if (IsASavedElement ((*pPrevRef)->RdElement))
-	      ok = FALSE;
-	if (!ok)
-	   /* cherche la reference suivante au meme element */
-	   FindReference (pPrevRef, pDocPrevRef, pReferredEl, pDocReferredEl,
-			  pExtDoc, TRUE);
-	else
-	   /* selectionne la reference trouvee */
-	   SelectElementWithEvent (*pDocPrevRef, (*pPrevRef)->RdElement, FALSE, FALSE);
-     }
+  ok = TRUE;
+  if (*pPrevRef)
+    /* on a deja une reference courante */
+    *pPrevRef = NextReferenceToEl (*pReferredEl, pDoc, *pPrevRef);
+  else
+    /* pas de reference courante */
+    {
+      /* prend la selection courante */
+      ok = GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
+				&lastChar);
+      if (ok)
+	/* cherche le premier element reference' qui englobe la */
+	/* selection courante */
+	{
+	  pEl = firstSel;
+	  found = FALSE;
+	  do
+	    {
+	      if (pEl->ElReferredDescr &&
+		  /* l'element a un descripteur d'element reference' */
+		  pEl->ElReferredDescr->ReFirstReference)
+		/* l'element est effectivement reference' */
+		found = TRUE;
+	      if (!found)
+		/* l'element n'est pas reference', on passe au pere */
+		pEl = pEl->ElParent;
+	    }
+	  while (!found && pEl);
+	  if (found)
+	    /* on a trouve' un ascendant reference' */
+	    {
+	      /* conserve un pointeur sur l'element dont on cherche les */
+	      /* references ainsi que sur son document */
+	      *pReferredEl = pEl;
+	      /* cherche la premiere reference a cet element */
+	      *pPrevRef = NextReferenceToEl (*pReferredEl, pDoc, *pPrevRef);
+	    }
+	}
+    }
+  if (*pPrevRef != NULL)
+    /* on a trouve' une reference */
+    {
+      ok = TRUE;
+      /* on ignore les references qui sont a l'interieur d'une inclusion */
+      if ((*pPrevRef)->RdElement != NULL)
+	{
+	  pAncest = (*pPrevRef)->RdElement->ElParent;
+	  while (pAncest->ElParent != NULL && pAncest->ElSource == NULL)
+	    pAncest = pAncest->ElParent;
+	  if (pAncest->ElSource != NULL)
+	    /* on est dans une inclusion */
+	    ok = FALSE;
+	}
+      /* on ignore les references dans les partie cachees */
+      if (ok)
+	if (ElementIsHidden ((*pPrevRef)->RdElement))
+	  /* on est dans une partie cachee */
+	  ok = FALSE;
+      /* on ignore les references qui sont dans le tampon de Copier-Couper */
+      if (ok)
+	if (IsASavedElement ((*pPrevRef)->RdElement))
+	  ok = FALSE;
+      if (!ok)
+	/* cherche la reference suivante au meme element */
+	FindReference (pPrevRef, pDoc, pReferredEl);
+      else
+	/* selectionne la reference trouvee */
+	SelectElementWithEvent (pDoc, (*pPrevRef)->RdElement, FALSE, FALSE);
+    }
 }
-
+#endif
 
 /*----------------------------------------------------------------------
    FindReferredEl cherche l'element qui est reference' par la         
    reference selectionnee ou par un attribut reference du  
    premier element selectionne'.                           
   ----------------------------------------------------------------------*/
-void                FindReferredEl ()
+void FindReferredEl ()
 {
    PtrElement          firstSel;
    PtrElement          lastSel;
@@ -267,7 +176,6 @@ void                FindReferredEl ()
    PtrElement          pEl;
    PtrAttribute        pAttr;
    PtrReference        pRef;
-   DocumentIdentifier  docIdent;
    int                 nMenuItems;
    char                menuBuf[MAX_TXT_LEN];
    int                 menuBufLen;
@@ -278,7 +186,6 @@ void                FindReferredEl ()
      {
 	pEl = NULL;
 	pRef = NULL;
-	ClearDocIdent (&docIdent);
 	nMenuItems = 0;
 	menuBufLen = 0;
 	if (firstSel->ElTerminal && firstSel->ElLeafType == LtReference)
@@ -322,48 +229,9 @@ void                FindReferredEl ()
 	   pRef = NULL;
 	else if (nMenuItems == 1)
 	   pRef = pRefTable[0];
-#ifdef IV
-	else
-	  {
-	    BuildReferenceMenu (menuBuf, nMenuItems, &chosenItem);
-	    pRef = pRefTable[chosenItem];
-	  }
-	if (pRef != NULL)
-	   /* c'est bien une reference qui est selectionnee */
-	  {
-	     /* l'element reference' est pointe' par pEl */
-	     pEl = ReferredElement (pRef, &docIdent, &pDoc);
-	     if (pEl == NULL &&
-		/* il n'y a pas d'element reference' */
-		 !DocIdentIsNull (docIdent) && pDoc == NULL)
-	       /* l'element reference' est dans un autre document qui */
-	       /* n'est pas charge' */
-	       /* on proposera ce nom comme nom par defaut lorsque */
-	       /* l'utilisateur demandera a ouvrir un document */
-	       {
-		 LoadDocument (&pDoc, docIdent);
-		 if (pDoc != NULL)
-		   {
-		     /* annule la selection */
-		     TtaClearViewSelections ();
-		     /* le chargement du document a reussi */
-		     pEl = ReferredElement (pRef, &docIdent, &pDoc);
-		     /* s'il s'agit d'une inclusion de */
-		     /* document, applique les regles Transmit */
-		     ApplyTransmitRules (pRef->RdElement, pSelDoc);
-		   }
-	       }
-	     else if (IsASavedElement (pEl))
-	       /* l'element reference est-il dans le buffer de sauvegarde ? */
-	       pEl = NULL;
-	  }
-#endif /* IV */
 
-	if (pEl != NULL)
+	if (pEl)
 	  {
-	     if (!DocIdentIsNull (docIdent))
-		/* l'element reference' est dans un autre document */
-		pSelDoc = GetPtrDocument (docIdent);
 	     SelectElementWithEvent (pSelDoc, pEl, TRUE, TRUE);
 	     /* dans le cas ou c'est un element d'une paire de marques, on */
 	     /* selectionne l'intervalle compris entre ces marques. */
@@ -377,18 +245,17 @@ void                FindReferredEl ()
    pRoot dans le document pDoc. Verifie la coherence des elements	
    reference's et des references presents dans ce sous-arbre.      
   ----------------------------------------------------------------------*/
-void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
+void CheckReferences (PtrElement pRoot, PtrDocument pDoc)
 {
    PtrElement          pEl, pElRef, pSource;
    PtrReference        pRef, pNextRef;
    PtrAttribute        pAttr, pNextAttr;
-   PtrDocument         pDocRef, pNextDocRef;
-   ThotBool            delAttr;
-   PtrExternalDoc      pExtDoc;
    PtrElement          pElemRef;
-   int                 l;
    LabelString         oldLabel;
    PtrReference        pRefClipboard;
+   PtrDocument         pDocRef;
+   int                 l;
+   ThotBool            delAttr;
 
    /* on se souvient du label de l'original */
    strncpy (oldLabel, pRoot->ElLabel, MAX_LABEL_LEN);
@@ -401,54 +268,32 @@ void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
    if (pRoot->ElReferredDescr != NULL)
       /* l'original de l'element colle' est reference' */
      {
-	if (pRoot->ElReferredDescr->ReExternalRef)
-	   pSource = NULL;
-	else
-	   /* l'element original */
-	   pSource = pRoot->ElReferredDescr->ReReferredElem;
+       /* l'element original */
+       pSource = pRoot->ElReferredDescr->ReReferredElem;
+       pRoot->ElReferredDescr = NULL;
+       /* l'element colle' n'est pas reference', il prend le label de son
+	  element original (celui qui est dans le tampon Couper-Copier)
+	  si la commande precedente etait Couper et s'il ne change pas de
+	  document. Dans les autres cas (commande precedente Copier ou
+	  changement de document), il prend un nouveau label. */
 
-	pExtDoc = NULL;
-	pRoot->ElReferredDescr = NULL;
-	/* l'element colle' n'est pas reference', il prend le label de son
-	   element original (celui qui est dans le tampon Couper-Copier)
-	   si la commande precedente etait Couper et s'il ne change pas de
-	   document. Dans les autres cas (commande precedente Copier ou
-	   changement de document), il prend un nouveau label. */
+       /* alloue a l'element un descripteur d'element reference' */
+       pRoot->ElReferredDescr = NewReferredElDescr (pDoc);
+       pRoot->ElReferredDescr->ReReferredElem = pRoot;
+       if (!ChangeLabel && pSource != NULL && pDoc == DocOfSavedElements)
+	 /* l'element prend le meme label que l'element original */
+	 strncpy (pRoot->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
 
-	/* alloue a l'element un descripteur d'element reference' */
-	pRoot->ElReferredDescr = NewReferredElDescr (pDoc);
-	pRoot->ElReferredDescr->ReExternalRef = FALSE;
-	pRoot->ElReferredDescr->ReReferredElem = pRoot;
-	if (!ChangeLabel && pSource != NULL && pDoc == DocOfSavedElements)
-	   /* l'element prend le meme label que l'element original */
-	   strncpy (pRoot->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
-	if (!ChangeLabel && pSource != NULL)
-	  {
-	    /* l'element prend les memes descripteurs de documents */
-	    /* externes referencants que l'element original */
-	    pExtDoc = pSource->ElReferredDescr->ReExtDocRef;
-	    while (pExtDoc != NULL)
-	      {
-		/* on ne considere pas le document lui-meme comme externe... */
-		if (!SameDocIdent (pExtDoc->EdDocIdent, pDoc->DocIdent))
-		  AddDocOfExternalRef (pRoot, pExtDoc->EdDocIdent, pDoc);
-		pExtDoc = pExtDoc->EdNext;
-	      }
-	  }
-
-	/* on cherche toutes les references a l'element original et on les */
-	/* fait pointer sur l'element colle'. */
-	/* cherche d'abord la premiere reference */
-	pRef = NextReferenceToEl (pSource, DocOfSavedElements, FALSE, NULL,
-				  &pDocRef, &pExtDoc, TRUE);
-	/* a priori la reference suivante sera dans le meme document */
-	pNextDocRef = pDocRef;
-	while (pRef != NULL)
+       /* on cherche toutes les references a l'element original et on les */
+       /* fait pointer sur l'element colle'. */
+       /* cherche d'abord la premiere reference */
+       pDocRef = DocOfSavedElements;
+       pRef = NextReferenceToEl (pSource, DocOfSavedElements, NULL);
+       while (pRef)
 	  {
 	     /* cherche la reference suivante a l'original avant de modifier */
 	     /* la reference courante */
-	     pNextRef = NextReferenceToEl (pSource, DocOfSavedElements, FALSE,
-					   pRef, &pNextDocRef, &pExtDoc, TRUE);
+	     pNextRef = NextReferenceToEl (pSource, DocOfSavedElements, pRef);
 	     /* traite la reference courante */
 	     /* si elle est dans le tampon, on n'y touche pas : sa copie dans
 	        le document ou on colle a deja ete traitee ou sera traitee
@@ -458,7 +303,7 @@ void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
 	       {
 		  if (IsWithinANewElement (pRef->RdElement))
 		     pDocRef = pDoc;
-		  if (pRef->RdAttribute != NULL)
+		  if (pRef->RdAttribute)
 		     pElemRef = NULL;
 		  else
 		     pElemRef = pRef->RdElement;
@@ -466,7 +311,7 @@ void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
 				pDoc, FALSE, FALSE);
 	       }
 	     pRef = pNextRef;	/* passe a la reference suivante */
-	     pDocRef = pNextDocRef;
+	     pDocRef = DocOfSavedElements;
 	  }
      }
    /* Traite les attributs de type reference porte's par l'element */
@@ -484,9 +329,8 @@ void                CheckReferences (PtrElement pRoot, PtrDocument pDoc)
 	     if (pAttr->AeAttrReference != NULL)
 		 if (pAttr->AeAttrReference->RdReferred != NULL)
 		   {
-		     if (!pAttr->AeAttrReference->RdReferred->ReExternalRef)
-		       pElRef = pAttr->AeAttrReference->RdReferred->ReReferredElem;
-			/* si l'element reference' est aussi colle', */
+		     pElRef = pAttr->AeAttrReference->RdReferred->ReReferredElem;
+		     /* si l'element reference' est aussi colle', */
 		     /* on ne fait rien: ce cas est traite' plus haut */
 		     if (pElRef != NULL)
 		       if (!IsASavedElement (pElRef))

@@ -210,26 +210,6 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 	k = EXTRA_GRAPH;
       else
 	k = 0;
-#ifdef IV
-      x1 = pBox->BxClipX + pFrame->FrXOrg;
-      x2 = x1;
-      if (xstart == -1 && xstop == -1)
-	x2 += pBox->BxClipW;
-      else
-	{
-	  x1 += xstart;
-	  x2 += xstop;
-	}
-      y1 = pBox->BxClipY + pFrame->FrYOrg;
-      y2 = y1;
-      if (ystart == -1 && ystop == -1)
-	y2 += pBox->BxClipH;
-      else
-	{
-	  y1 += ystart;
-	  y2 += ystop;
-	}
-#else /*  _GL */      
       x1 = pBox->BxXOrg;
       x2 = x1;
       if (xstart == -1 && xstop == -1)
@@ -256,7 +236,6 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 	  y1 += ystart;
 	  y2 += ystop;
 	}
-#endif /* _GL */
 #ifdef CLIP_TRACE
 printf ("ClipBoxRegion x1=%d y1=%d x2=%d y2=%d\n", x1, y1, x2, y2);
 #endif /* CLIP_TRACE */
@@ -318,17 +297,10 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
 	caret = 2;
       else
 	caret = 0;
-#ifdef IV
-      x1 = pBox->BxClipX + pFrame->FrXOrg;
-      x2 = x1 + pBox->BxClipW;
-      y1 = pBox->BxClipY + pFrame->FrYOrg;
-      y2 = y1 + pBox->BxClipH;
-#else /*  _GL */      
       x1 = pBox->BxXOrg;
       x2 = x1 + pBox->BxWidth;
       y1 = pBox->BxYOrg;
       y2 = y1 + pBox->BxHeight;
-#endif /* _GL */
       if (dx >= 0)
 	x2 += dx; /* the box will be moved to the right */
       else
