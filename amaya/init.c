@@ -827,7 +827,7 @@ static void	SetFormReadWrite (Element el, Document doc)
    SetDocumentReadOnly
    Set the whole document in ReadOnly mode except input elements
   ----------------------------------------------------------------------*/
-static void	SetDocumentReadOnly (Document doc)
+static void SetDocumentReadOnly (Document doc)
 {
    ElementType  elType;
    Element      el, elForm;
@@ -3748,7 +3748,7 @@ void Reload_callback (int doc, int status, char *urlName,
   char              *tempfile;
   char              *documentname;
   char              *form_data;
-  char              *initial_url;
+  char              *initial_url, *ptr;
   ClickEvent         method;
   Document           res = 0;
   Element            el;
@@ -3826,18 +3826,25 @@ void Reload_callback (int doc, int status, char *urlName,
   /* check parsing errors */
   CheckParsingErrors (newdoc);
 
-
+  if (DocumentTypes[newdoc] == docCSS)
+    {
+      /* reapply the CSS to relative documents */
+      ptr = GetLocalPath (newdoc, DocumentURLs[newdoc]);
+      UpdateStyleSheet (DocumentURLs[newdoc], ptr);
+      TtaFreeMemory (ptr);
+    }
 #ifdef DAV
    /* MKP: if document has been loaded, we are       * 
     * able to discovery if the document is locked.   *
     * do a lock discovery, set LockIndicator button  */
-   if (W3Loading == 0 && res>0) 
+   if (W3Loading == 0 && res> 0) 
     {
       DAVLockDiscovery (newdoc);
       DAVSetLockIndicator(newdoc);
     }
 #endif  /* DAV */
 
+   DocStatusUpdate (newdoc, FALSE);
   TtaFreeMemory (pathname);
   TtaFreeMemory (documentname);
   if (form_data)
