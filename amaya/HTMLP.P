@@ -1199,12 +1199,14 @@ BOXES
 	END;
 
  ATTR_HREF_LINKS_VIEW: BEGIN
+#ifdef PAGE
+	Content: Text ': ';
+#else
 	Content: Text ' href=';
+#endif
 	Visibility: 0;
 	IN Links_view BEGIN
-#ifdef PAGE
-		Style: ATTR_Style_Links_view;
-#else
+#ifndef PAGE
 		Foreground: ATTR_Color;
 #endif
 		Visibility: 5;
