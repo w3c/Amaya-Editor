@@ -69,7 +69,7 @@ void        XmlAttributeComplete (Attribute attr, Element el, Document doc)
    CreateXmlAttribute
    create an attribute of type attrType for the element el.
   ----------------------------------------------------------------------*/
-void        CreateXmlAttribute (Element       el,
+void  CreateXmlAttribute (Element       el,
 				AttributeType attrType,
 				char*         text,
 				ThotBool      isInvalid,
@@ -78,25 +78,6 @@ void        CreateXmlAttribute (Element       el,
 				Element      *lastAttrElement)
      
 {
-}
-
-/*----------------------------------------------------------------------
-   CreateXmlLinePRule
-   Create a generic 'Line' presentation rule for each element that
-   has at least one Text child
-  ----------------------------------------------------------------------*/
-void        CreateXmlLinePRule (Element elText, Document doc)
-  
-{
-   ElementType  parentType;
-   Element      parent;
-
-   parent = TtaGetParent (elText);
-   if (parent != NULL)
-     {
-       parentType = TtaGetElementType (parent);
-       TtaSetXmlTypeInLine (parentType, doc);
-     }
 }
 
 /*----------------------------------------------------------------------

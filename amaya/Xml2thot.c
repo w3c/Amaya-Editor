@@ -1979,6 +1979,25 @@ static ThotBool  IsLeadingSpaceUseless ()
 }
 
 /*----------------------------------------------------------------------
+   CreateXmlLinePRule
+   Create a generic 'Line' presentation rule for each element that
+   has at least one Text child
+  ----------------------------------------------------------------------*/
+void  CreateXmlLinePRule (Element elText, Document doc)
+  
+{
+   ElementType  parentType;
+   Element      parent;
+
+   parent = TtaGetParent (elText);
+   if (parent != NULL)
+     {
+       parentType = TtaGetElementType (parent);
+       TtaSetXmlTypeInLine (parentType, doc);
+     }
+}
+
+/*----------------------------------------------------------------------
    PutInXmlElement
   ----------------------------------------------------------------------*/
 void PutInXmlElement (char *data, int length)
@@ -2132,13 +2151,16 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 				       Element element, ThotBool stdText)
 {
   unsigned char *buffer;
+#ifndef _I18N_
   unsigned char *ptr;
   wchar_t        wcharRead;
-  unsigned char *entityName;
+  int            tmplen;
   unsigned char  tmpbuf[10];
+#endif /* _I18N_ */
+  unsigned char *entityName;
   int            nbBytesRead = 0;
   int            i = 0, j = 0;
-  int            tmplen, max;
+  int            max;
   int            k, l, m;
   int            entityValue;	
   ThotBool       found, end;
