@@ -8,39 +8,78 @@
 
 
 1;#Latin1 (West European)
+<<<<<<< fonts.gl
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueTypearialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+=======
 1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetypetimesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
 2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
 3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+>>>>>>> 1.7
 
 
 2;#Latin2 (East European)
+<<<<<<< fonts.gl
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+=======
 1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
 2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
 3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+>>>>>>> 1.7
 
 
 3;#Latin3 (South European)
+<<<<<<< fonts.gl
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+
+=======
 1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
 2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
 3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+>>>>>>> 1.7
 
 
 4;#Latin4 (North European)
+<<<<<<< fonts.gl
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+
+=======
 1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
 2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
 3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+>>>>>>> 1.7
 
 
 5;#Cyrillic
+<<<<<<< fonts.gl
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+
+=======
 1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
 2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
 3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+>>>>>>> 1.7
 
 
 6;#Arabic
+<<<<<<< fonts.gl
+<<<<<<< fonts.gl
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+=======
+1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
+2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
+3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+>>>>>>> 1.7
+=======
 1;1=/usr/local/share/fonts/arab/arabweb.ttf;2=/usr/local/share/fonts/arab/arabweb.ttf/;3=/usr/local/share/fonts/arab/arabweb.ttf;
 2;1=/usr/local/share/fonts/arab/arabweb.ttf;2=/usr/local/share/fonts/arab/arabweb.ttf;3=/usr/local/share/fonts/arab/arabweb.ttf;
 3;1=/usr/local/share/fonts/arab/arabweb.ttf;2=/usr/local/share/fonts/arab/arabweb.ttf;3=/usr/local/share/fonts/arab/arabweb.ttf;
+>>>>>>> 1.8
 
 
 7;#Greek
@@ -58,21 +97,41 @@
 
 
 8;#Hebrew
+<<<<<<< fonts.gl
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+=======
 1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
 2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
 3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+>>>>>>> 1.7
 
 
+<<<<<<< fonts.gl
+
+9;#Latin5 (Turkish)
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+=======
 9;#Latin9 (Turkish)
 1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
 2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
 3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+>>>>>>> 1.7
 
 
 10;#Latin6 (Nordic)
+<<<<<<< fonts.gl
+1;1=/usr/X11R6/lib/X11/fonts/TrueType/arial.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/arialbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/ariali.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/TrueType/times.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/TrueType/cour.ttf;2=/usr/X11R6/lib/X11/fonts/TrueType/courbd.ttf;3=/usr/X11R6/lib/X11/fonts/TrueType/couri.ttf;
+=======
 1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
 2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
 3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+>>>>>>> 1.7
 
 
 20;#Symbols (...)

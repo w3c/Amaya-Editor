@@ -1716,6 +1716,34 @@ void *TtaNewTransformTranslate (float x, float y, ThotBool viewbox)
    pPa->YScale = y;
    return (pPa);
 }
+/*----------------------------------------------------------------------
+   TtaNewTransformAnimTranslate
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformAnimTranslate (float x, float y)   
+{
+   PtrTransform pPa;
+
+   pPa = TtaNewTransform ();
+   pPa->TransType = PtElAnimTranslate;
+   pPa->XScale = x;
+   pPa->YScale = y;
+   return (pPa);
+}
+/*----------------------------------------------------------------------
+   TtaNewTransformAnimRotate
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformAnimRotate (float angle, float x_scale, 
+			     float y_scale)				   
+{
+   PtrTransform pPa;
+
+   pPa = TtaNewTransform ();
+   pPa->TransType = PtElAnimRotate;
+   pPa->Angle = angle;
+   pPa->XRotate = x_scale;
+   pPa->YRotate = y_scale;
+   return (pPa);
+}
 
 /*----------------------------------------------------------------------
    TtaNewTransformRotate
@@ -2374,6 +2402,14 @@ void TtaAppendPathSegToAnim (void *anim, PathSegment segment, Document doc)
      }
 #endif /* _GL */
 }
+
+/*----------------------------------------------------------------------
+   TtaAddAnimPath
+  ----------------------------------------------------------------------*/
+void TtaAddAnimPath (void *info, void *anim)
+{    
+  ((Animated_Element *) anim)->from = info;
+}
 /*----------------------------------------------------------------------
    TtaSetAnimTypetoMotion
   ----------------------------------------------------------------------*/
@@ -2414,24 +2450,6 @@ void TtaSetAnimTypetoSet (void *anim)
   ((Animated_Element *) anim)->AnimType = Set;
 }
 
-void ComputePathLength (void *info)
-{
-#ifdef _GL
-  AnimPath *path;
-
-  path = (AnimPath *) info;
-#endif /* _GL */
-}
-/*----------------------------------------------------------------------
-   TtaAddAnimPath
-  ----------------------------------------------------------------------*/
-void TtaAddAnimPath (void *info, void *anim)
-{    
-#ifdef _GL
-  ComputePathLength (info);
-#endif /* _GL */
-  ((Animated_Element *) anim)->from = info;
-}
 /*----------------------------------------------------------------------
    TtaSetAnimReplace : If anim replace the precedent transformation
    concering this attribute

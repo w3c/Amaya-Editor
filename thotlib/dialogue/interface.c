@@ -1441,6 +1441,10 @@ void TtaMainLoop ()
 #endif /* _WINDOWS */
       TtaHandleOneEvent (&ev);
 #ifdef _GL
+#ifdef _GTK
+      while (gtk_events_pending ()) 
+	gtk_main_iteration ();
+#endif /* _GTK */
       /* buffer swapping, when needed*/
       GL_DrawAll ();
 #endif/*  _GL */

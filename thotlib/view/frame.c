@@ -511,16 +511,16 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
 		      if (pAb->AbElement->ElSystemOrigin)
 			{
 			  is_transformed = TRUE;
-			DisplayBoxTransformation (pAb->AbElement->ElTransform, 
+			  DisplayBoxTransformation (pAb->AbElement->ElTransform, 
 						  pFrame->FrXOrg, pFrame->FrYOrg);
 			}
 		      /* Normal transformation*/
 		      if (pAb->AbElement->ElTransform)
 			{
 			  is_transformed = TRUE;
-			DisplayTransformation (pAb->AbElement->ElTransform, 
-					       pBox->BxWidth, 
-					       pBox->BxHeight);
+			  DisplayTransformation (pAb->AbElement->ElTransform, 
+						 pBox->BxWidth, 
+						 pBox->BxHeight);
 			}
 		      if (pAb->AbElement->ElSystemOrigin)
 			{ 
@@ -644,6 +644,9 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
       *higherx += pFrame->FrXOrg;
       *y += pFrame->FrYOrg;
     }
+  /*Make sure the transformation stack is empty*/
+  glLoadIdentity ();
+
 #endif /* _GL */
 }
 /*--------------------------------------------------------

@@ -91,6 +91,10 @@ extern void QuadraticSplit ( float a1,
                              ThotPoint **points,
                              int *npoints,
                              int *maxpoints );
+extern ThotPoint *BuildPolygonForPath ( PtrPathSeg pPa,
+                                        int frame,
+                                        int* npoints,
+                                        int **subpathStart );
 extern PtrAbstractBox GetClickedAbsBox ( int frame,
                                          int xRef,
                                          int yRef );
@@ -216,6 +220,10 @@ extern void QuadraticSplit (/* float a1,
                                ThotPoint **points,
                                int *npoints,
                                int *maxpoints */);
+extern ThotPoint *BuildPolygonForPath (/* PtrPathSeg pPa,
+                                          int frame,
+                                          int* npoints,
+                                          int **subpathStart */);
 extern PtrAbstractBox GetClickedAbsBox (/* int frame,
                                            int xRef,
                                            int yRef */);

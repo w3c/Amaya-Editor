@@ -93,6 +93,8 @@ void GL_DrawUnicodeChar (CHAR_T const c,
 			 void *GL_font, int fg);
 
 /* GL specific */
+ThotBool glhard ();
+ThotBool GL_NotInFeedbackMode ();
 void GL_Swap (int frame);
 void SetGlPipelineState ();
 void GLResize (int width, int height, int x, int y);

@@ -504,8 +504,12 @@ void GL_TextureMap (void *ImagePt,
   
   Image = ImagePt;  
   GL_SetPicForeground (); 
-  glBindTexture (GL_TEXTURE_2D, 
-		 Image->TextureBind);
+
+  if (GL_NotInFeedbackMode ())
+    {
+      glBindTexture (GL_TEXTURE_2D, 
+		     Image->TextureBind);
+    }
   glEnable (GL_TEXTURE_2D);
   /* Not sure of the vertex order 
      (not the faster one, I think) */
@@ -647,8 +651,10 @@ void FreeAllPicCacheFromFrame (int frame)
 #ifdef _GL
   Pic_Cache *Cache = PicCache;
   Pic_Cache *Before;
-  
+
+#ifdef _NOSHARELIST
   return ;
+#else /* _NOSHARELIST */
 
  Before = NULL;  
  while (Cache)
@@ -679,6 +685,7 @@ void FreeAllPicCacheFromFrame (int frame)
 	 Cache = Cache->next;
        }     
    }
+#endif /* _NOSHARELIST */
 #endif /* _GL */
 }
 /*----------------------------------------------------------------------
@@ -2121,9 +2128,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   pres = DefaultPres;
   GetPictureFileName (imageDesc->PicFileName, fileName);
 
+#ifdef _NOSHARELIST
  /* For the Sync Image*/
  if (frame != ActiveFrame)
      GL_prepare (frame); 
+#endif /* _NOSHARELIST */
  typeImage = LookupInPicCache (imageDesc, frame); 
  if (typeImage)
    {  
@@ -2408,9 +2417,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   /*frame or ActiveFrame*/
   AddInPicCache (imageDesc, frame); 
 
+#ifdef _NOSHARELIST
   /* For the Sync Image*/
   if (frame != ActiveFrame)
     GL_prepare (ActiveFrame); 
+#endif /* _NOSHARELIST */
 }
 
 void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rgba)

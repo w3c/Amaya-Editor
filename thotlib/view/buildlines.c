@@ -3467,7 +3467,6 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	/* n'est pas encore placee dans l'image concrete   */
 	if (ReadyToDisplay && !pBox->BxXToCompute && !pBox->BxYToCompute)
 	  {
-#ifndef _GL
 	     if (pBox->BxWidth > l)
 		l = pBox->BxWidth;
 	     l += pBox->BxXOrg;
@@ -3475,15 +3474,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	       DefClip (frame, pBox->BxXOrg, h, l, pBox->BxYOrg + height);
 	     else
 	       DefClip (frame, pBox->BxXOrg, h, l, pBox->BxYOrg + pBox->BxHeight);
-#else /* _GL */
-	     if (pBox->BxClipW > l)
-		l = pBox->BxClipW;
-	     l += pBox->BxClipX;
-	     if (height > pBox->BxClipH)
-	       DefRegion (frame, pBox->BxClipX, h, l, pBox->BxClipY + height);
-	     else
-	       DefRegion (frame, pBox->BxClipX, h, l, pBox->BxClipY + pBox->BxClipH);
-#endif /*_GL*/
+
 	  }
 
 	/* Faut-il reevaluer les marques de selection ? */

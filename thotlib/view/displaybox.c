@@ -2561,14 +2561,14 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 		 (mbox->BxType == BoGhost || mbox->BxType == BoFloatGhost));
 	    }
 	}
-    }     
+    }
 #ifdef _GL 
   /*does box need to be recomputed 
     in a new display list*/
   if (FrameTable[frame].FrView == 1)
     {
 
-      box->VisibleModification = TRUE;
+      /* box->VisibleModification = TRUE; */
 
       if (pAb->AbLeafType == LtPolyLine ||
 	  pAb->AbLeafType == LtGraphics ||

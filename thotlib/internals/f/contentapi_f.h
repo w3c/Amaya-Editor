@@ -161,14 +161,16 @@ extern void *TtaNewAnimPath ( Document doc );
 extern void TtaAppendPathSegToAnim ( void *anim,
                                      PathSegment segment,
                                      Document doc );
+extern void ComputePathLength ( void *info );
+extern void TtaAddAnimPath ( void *info,
+                             void *anim );
 extern void TtaSetAnimTypetoMotion ( void *anim );
 extern void TtaSetAnimTypetoTransform ( void *anim );
 extern void TtaSetAnimTypetoAnimate ( void *anim );
 extern void TtaSetAnimTypetoColor ( void *anim );
 extern void TtaSetAnimTypetoSet ( void *anim );
-extern void ComputePathLength ( void *info );
-extern void TtaAddAnimPath ( void *info,
-                             void *anim );
+extern void TtaSetAnimReplace ( void *anim,
+                                ThotBool is_replace );
 extern void TtaAddAnimFrom ( void *info,
                              void *anim );
 extern void TtaAddAnimFreeze ( void *anim );
@@ -366,14 +368,16 @@ extern void *TtaNewAnimPath (/* Document doc */);
 extern void TtaAppendPathSegToAnim (/* void *anim,
                                        PathSegment segment,
                                        Document doc */);
+extern void ComputePathLength (/* void *info */);
+extern void TtaAddAnimPath (/* void *info,
+                               void *anim */);
 extern void TtaSetAnimTypetoMotion (/* void *anim */);
 extern void TtaSetAnimTypetoTransform (/* void *anim */);
 extern void TtaSetAnimTypetoAnimate (/* void *anim */);
 extern void TtaSetAnimTypetoColor (/* void *anim */);
 extern void TtaSetAnimTypetoSet (/* void *anim */);
-extern void ComputePathLength (/* void *info */);
-extern void TtaAddAnimPath (/* void *info,
-                               void *anim */);
+extern void TtaSetAnimReplace (/* void *anim,
+                                  ThotBool is_replace */);
 extern void TtaAddAnimFrom (/* void *info,
                                void *anim */);
 extern void TtaAddAnimFreeze (/* void *anim */);

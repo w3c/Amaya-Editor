@@ -711,8 +711,14 @@ gboolean ExposeCallbackGTK (ThotWidget widget,
     return TRUE;
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return TRUE; 
-  if (GL_prepare (frame))
-      GL_Swap (frame);
+
+  if (glhard ())
+    {
+      DefRegion (frame, x, y, width+x, y+height);
+      RedrawFrameBottom (frame, 0, NULL);
+    }
+  else
+    GL_Swap (frame);
   return TRUE;
 }
 /*----------------------------------------------------------------------
@@ -754,9 +760,8 @@ gboolean FrameResizedGTK (GtkWidget *widget,
  		   width, height);	
 	FrameRedraw (frame, width, height);
 	GL_Swap (frame);
-	FrameTable[frame].DblBuffNeedSwap = TRUE;
-
-	gl_synchronize ();
+	/* FrameTable[frame].DblBuffNeedSwap = TRUE; */
+	/* gl_synchronize (); */
       }
   return TRUE;
 }

@@ -86,6 +86,33 @@ static GL_font* FontAlreadyLoaded (const char *font_filename,
 	}
 	return NULL;
 }
+/*----------------------------------------------------------
+  GetFirstFont  : Get anyway a font, 
+  best is according to size
+------------------------------------------------------------*/
+void  *GetFirstFont (int size)
+{
+  int i;
+
+  i = 0;
+  while (i < 1023)
+    {
+      if (FontTab[i].ref)
+	if (size == FontTab[i].size)
+	  {
+	    return FontTab[i].font;
+	  }
+      i++;
+    }
+  i = 0;
+  while (i < 1023)
+    {
+      if (FontTab[i].ref)
+	return FontTab[i].font;
+      i++;
+    }
+  return NULL;
+}
 /*---------------------------- 
   FontCache : Add font in cache
 ------------------------------*/
@@ -989,14 +1016,16 @@ int UnicodeFontRender (void *gl_font,
     }
   glEnable (GL_TEXTURE_2D);
   
-  
-  glGenTextures (1, &(FontBind));
-  glBindTexture (GL_TEXTURE_2D, 
-		 FontBind);
-  
-  GL_TextureInit (data,
-		  Width,
-		  Height);
+  if (GL_NotInFeedbackMode ())
+    {
+      glGenTextures (1, &(FontBind));
+      glBindTexture (GL_TEXTURE_2D, 
+		     FontBind);
+    
+      GL_TextureInit (data,
+		      Width,
+		      Height);
+    }
   if (data)
     TtaFreeMemory (data);
   
@@ -1008,7 +1037,7 @@ int UnicodeFontRender (void *gl_font,
 		 Width, 
 		 Height);
   
-  
+  if (GL_NotInFeedbackMode ())
    glDeleteTextures (1, &(FontBind));
 
   /* If there is no cache we must free

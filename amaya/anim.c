@@ -3092,12 +3092,6 @@ void ShowSourceOfTimeline (Document document, View view)
      }
 #endif /* _SVGANIM */
 }
-
-
-
-
-
-
 /*----------------------------------------------------------------------
   Image_collapse_on_click
   A Callback : handles a click on + or - to expand/collapse groups 

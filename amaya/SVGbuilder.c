@@ -2982,9 +2982,9 @@ void *ParsePathDataAttribute (Attribute attr, Element el, Document doc, ThotBool
       TtaFreeMemory (text);
       }
    if (IsDrawn)
-     return anim_seg;
+     return NULL;
    else 
-     return NULL;  
+     return anim_seg;
 }
 /*----------------------------------------------------------------------
    ParseIntAttrbute : 

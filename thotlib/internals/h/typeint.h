@@ -341,8 +341,9 @@ typedef struct _AnimPath
 {
   PtrPathSeg      FirstPathSeg; /*linked list of segment defining the path*/
   float           length;       /* total length */  
-  ThotPath        *Path;        /*The Path*/
+  ThotPoint       *Path;        /*The Path*/
   float           *Proportion;  /*per segment % of total length*/
+  int             npoints;
  } AnimPath;
 
 
@@ -371,6 +372,8 @@ typedef enum
 {
   PtElScale,
   PtElTranslate,
+  PtElAnimTranslate,
+  PtElAnimRotate,
   PtElviewboxScale,
   PtElviewboxTranslate,
   PtElBoxTranslate,
@@ -387,6 +390,7 @@ typedef struct _Transform
 {
   PtrTransform      Next;
   TransformType     TransType;
+  ThotBool          Enabled;
   union
   {
     struct /* Scale, Translate*/

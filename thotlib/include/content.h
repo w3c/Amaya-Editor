@@ -381,6 +381,9 @@ extern void TtaNoPlay (int frame);
    Copy a Linked List of transform into another struct
   ----------------------------------------------------------------------*/
 void *TtaCopyTransform (void *pPa);
+void *TtaNewTransformAnimTranslate (float x, float y);
+void *TtaNewTransformAnimRotate (float angle, float x_scale, 
+				 float y_scale);
 /*----------------------------------------------------------------------
    TtaAnim
   ----------------------------------------------------------------------*/

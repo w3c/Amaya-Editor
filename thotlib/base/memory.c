@@ -230,18 +230,39 @@ void *TtaNewAnimation ()
   anim_info->Fill = Otherfill;
   return anim_info;
 }
+/*----------------------------------------------------------------------
+   TtaFreeMotionPath
+  ----------------------------------------------------------------------*/
+static void TtaFreeMotionPath (void *from)
+{
+  PtrPathSeg  pPa, pPaNext;
+  AnimPath    *pop_path = (AnimPath *) from;
 
+  TtaFreeMemory (pop_path->Proportion);
+  TtaFreeMemory (pop_path->Path);
+  pPa = pop_path->FirstPathSeg;
+  do
+    {
+      pPaNext = pPa->PaNext;
+      FreePathSeg (pPa);
+      pPa = pPaNext;
+    }
+  while (pPa);
+} 
 /*----------------------------------------------------------------------
    TtaFreeAnimation
   ----------------------------------------------------------------------*/
 void TtaFreeAnimation (void *void_a_list)
 {  
-  Animated_Element *a_list = (Animated_Element *)void_a_list;
+  Animated_Element *a_list = (Animated_Element *) void_a_list;
   if (a_list == NULL)
     /* empty list */
-    return;
+    return;  
   TtaFreeAnimation (a_list->next);
-  TtaFreeMemory (a_list->from);
+  if (a_list->AnimType == Motion && a_list->to)
+    TtaFreeMotionPath (a_list->from);
+  else
+    TtaFreeMemory (a_list->from);  
   TtaFreeMemory (a_list->to);
   TtaFreeMemory (a_list->AttrName);
   TtaFreeMemory (a_list);

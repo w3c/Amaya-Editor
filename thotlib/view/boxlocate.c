@@ -1309,7 +1309,7 @@ static PtrBox  GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int frame,
    subpath, subpathStart is a table of integers: each of them is the rank
    of the first point of each subpath in the list of points returned.
   ----------------------------------------------------------------------*/
-static ThotPoint *BuildPolygonForPath (PtrPathSeg pPa, int frame,
+ThotPoint *BuildPolygonForPath (PtrPathSeg pPa, int frame,
 				       int* npoints, int **subpathStart)
 {
   float               x1, y1, cx1, cy1, x2, y2, cx2, cy2;

@@ -138,8 +138,8 @@ static HGLRC GL_Context[50];
 
 /* Animation Smoothness*/
 #define FPS 25 /*Frame Per Second*/
-#define INTERVAL 0.030 /*1/FPS*/ /* 1/25 */
-#define FRAME_TIME 30 /*(INTERVAL*1000) */
+#define INTERVAL 0.0005 /*1/FPS*/ /* 1/25 */
+#define FRAME_TIME 5 /*(INTERVAL*1000) */
 /* milliseconds */
 
 
@@ -1696,8 +1696,14 @@ static void getboundingbox (GLint size, GLfloat *buffer, int frame,
 /*   if (*yorig > 0) */
 /*     *yorig += 1; */
 }
-
-
+/*---------------------------------------------------
+  GL_NotInFeedbackMode : if all openGL operation are
+  permitted or not.		    
+  ----------------------------------------------------*/
+ThotBool GL_NotInFeedbackMode ()
+{
+  return NotFeedBackMode;
+}
 /*---------------------------------------------------
   ComputeBoundingBox :
   Modify Bounding Box according to opengl feedback mechanism
@@ -1765,8 +1771,8 @@ void GL_Swap (int frame)
 {
   if (frame < MAX_FRAME)
     {
-      gl_synchronize (); 
-      /* glFinish (); */
+      /* gl_synchronize ();  */
+      glFinish ();
       /* glFlush (); */      
       glDisable (GL_SCISSOR_TEST);
 #ifdef _WINDOWS
@@ -1774,10 +1780,12 @@ void GL_Swap (int frame)
 	SwapBuffers (GL_Windows[frame]);
 #else
       if (FrameTable[frame].WdFrame)
-	gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
+	{
+	  gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
+	}
 #endif /*_WINDOWS*/
-      glEnable (GL_SCISSOR_TEST);
-    }  
+      glEnable (GL_SCISSOR_TEST); 
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1968,9 +1976,12 @@ static AnimTime ComputeAmayaCurrentTime (int frame)
       if (FrameTable[frame].BeginTime == 0)
 	{
 	  FrameTable[frame].BeginTime = current_time;
+	  current_time += 0.001;
 	  FrameTable[frame].LastTime = 0.0;
 	}
       current_time -= FrameTable[frame].BeginTime; 
+      if (current_time - FrameTable[frame].LastTime < INTERVAL)
+	 current_time = -1;
     }
   else
     current_time = FrameTable[frame].LastTime; 
@@ -1981,20 +1992,24 @@ static AnimTime ComputeAmayaCurrentTime (int frame)
   ----------------------------------------------------------------------*/
 ThotBool GL_DrawAll ()
 {  
-  int frame;
-  AnimTime current_time; 
+  int             frame;
+  AnimTime        current_time; 
   static ThotBool frame_animating = FALSE;  
-  
+#ifdef _FPS_DEBUG
+  static double   lastime;
+  char    out[2048];
+  CHAR_T  outw[2048];
+  int i;
+#endif /* _FPS_DEBUG */
+
   if (!FrameUpdating )
     {
-#ifdef _GTK
-      gl_synchronize ();
-      while (gtk_events_pending ())
-	gtk_main_iteration ();	
-#endif /* _GTK */
       FrameUpdating = TRUE;     
       if (!frame_animating)
 	{	
+	 while (gtk_events_pending ())
+	   gtk_main_iteration ();
+	  
 	  frame_animating = TRUE; 
 	  for (frame = 0 ; frame < MAX_FRAME; frame++)
 	    {
@@ -2005,9 +2020,14 @@ ThotBool GL_DrawAll ()
 		      FrameTable[frame].Anim_play)
 		    {	
 		      current_time = ComputeAmayaCurrentTime (frame);  
-		      if (Animate_boxes (frame, current_time))
-			TtaPause (frame);
-		      FrameTable[frame].LastTime = current_time;
+		      if (current_time != -1)
+			{
+			  if (Animate_boxes (frame, current_time))
+			    TtaPause (frame);
+			  FrameTable[frame].LastTime = current_time;
+			}
+		      else
+			current_time = FrameTable[frame].LastTime;
 		    }
 #endif /* _GL */		    
 		  if (FrameTable[frame].DblBuffNeedSwap)
@@ -2016,11 +2036,44 @@ ThotBool GL_DrawAll ()
 			  != NoComputedDisplay)
 			{
 			  if (GL_prepare (frame))
-			    {			      			      
-			      RedrawFrameBottom (frame, 0, NULL);
+			    {	
+#ifdef _FPS_DEBUG
+			      lastime = current_time - lastime;
+			      if (lastime != 0)
+				{
+				  sprintf (out, " t: %2.3f <=> %2.0f fps", 
+					   current_time, 
+					   (double) 1 / lastime);
+
+				  i = 0;
+				  while (i < strlen(out))
+				    {
+				      outw[i] = TtaGetWCFromChar (out[i], 
+								  ISO_8859_1);
+				      i++;
+				    }
+				}
+			      DefRegion (frame, 0, 0, 10, 10);		      			      			      
+#endif /* _FPS_DEBUG */
+			      
+			      RedrawFrameBottom (frame, 0, NULL); 
+#ifdef _FPS_DEBUG
+			      if (lastime != 0)
+				{
+				  GL_SetFillOpacity (500);
+				  GL_SetPicForeground ();
+				  UnicodeFontRender (GetFirstFont (12), 
+						     outw, 
+						     10.0f, 10.0f,
+						     strlen (out));
+				  GL_SetFillOpacity (1000);
+				  lastime = current_time;
+				}
+#endif /* _FPS_DEBUG */
+
 			      GL_Swap (frame);  
-			      /* All transformation resetted*/   
-			      /*glLoadIdentity (); */
+			      /* All transformation are resetted */   
+			      glLoadIdentity (); 
 			      FrameTable[frame].DblBuffNeedSwap = FALSE;
 			    }
 			  GL_Err ();
@@ -2318,7 +2371,7 @@ void gl_synchronize ()
   ------------------------------------*/
 void GLResize (int width, int height, int x, int y)
 {
-  gl_synchronize();
+  /* gl_synchronize(); */
   glViewport (0, 0, width, height);
   glMatrixMode (GL_PROJECTION);      
   glLoadIdentity (); 
@@ -2350,11 +2403,11 @@ void gl_window_resize (int frame, int width, int height)
   widget = FrameTable[frame].WdFrame;
 
   gtk_widget_queue_resize  (widget->parent->parent);
-  while (gtk_events_pending ()) 
-    gtk_main_iteration ();
 
-  gdk_gl_wait_gdk (); 
-  gdk_gl_wait_gl (); 
+  FrameTable[frame].DblBuffNeedSwap = TRUE;
+
+/*   gdk_gl_wait_gdk ();  */
+/*   gdk_gl_wait_gl ( ); */
 
   return;
 #endif /*_GTK*/
@@ -2372,7 +2425,13 @@ void gl_window_resize (int frame, int width, int height)
 	GL_realize (frame);	 
       }
 #endif /*_GTK*/
-
+}
+/*-----------------------------------
+  glhard : if a 3d card is involved.
+------------------------------------*/
+ThotBool glhard()
+{
+  return (!Software_Mode);
 }
 /*-----------------------------------
   glMatroxBUG : expose without a drawing 

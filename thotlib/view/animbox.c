@@ -54,6 +54,7 @@
 #include "frame_f.h"
 #include "contentapi_f.h"
 #include "font_f.h"
+#include "boxlocate_f.h"
 
 #ifdef _GL
 #include "glwindowdisplay.h"
@@ -67,6 +68,25 @@ static int Clipx, Clipy, ClipxMax, ClipyMax;
 #define Min(number, min) (number = ( (number < 0) ? min : ((number < min) ? number : min)) )
 #define Max(number, max) (number = ( (number < 0) ? max : ((number > max) ? number : max)) )
 
+/*----------------------------------------------------------------------
+  GetTransformation : Get A transformation by its type in the linked list 
+  of transformatin applied on a element 
+  ----------------------------------------------------------------------*/
+static PtrTransform GetTransformation (PtrTransform Trans, 
+				       TransformType _trans_type)
+{
+  ThotBool not_found;
+
+  not_found = TRUE;
+  while (not_found && Trans)
+    {
+      if (Trans->TransType != _trans_type)
+	Trans = Trans->Next;
+      else
+	not_found = FALSE;      
+    }
+  return Trans;   
+}
 /*----------------------------------------------------------------------
   Define Minimum to be sure to get real clip.
   ----------------------------------------------------------------------*/
@@ -116,7 +136,7 @@ static void UpdateClipping (PtrAbstractBox pAb)
   interpolate_double_value : Compute a the value corresponding to a time
   using the "regle de trois" ("rule of tree")
   ----------------------------------------------------------------------*/
-static double interpolate_double_value (int from, int to, 
+static double interpolate_double_value (float from, float to, 
 					AnimTime current_time,
 					AnimTime duration)
 {
@@ -170,14 +190,34 @@ static void ApplyOpacityToAllBoxes (PtrAbstractBox pAb, int result)
   ----------------------------------------------------------------------*/
 static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
 {
- PtrBox pBox;
+  PtrBox        pBox;
+  PtrElement    El;
+  PtrTransform  Trans;
+  int           doc, view;
 
   while (pAb != NULL)
     {   
       pBox = pAb->AbBox;
       pBox->VisibleModification = TRUE;
-      pBox->BxXOrg = result;
-      ApplyXToAllBoxes (pAb->AbFirstEnclosed, result);
+      if (pAb->AbElement->ElSystemOrigin)
+	{
+	  El = pAb->AbElement;
+	  if (El->ElTransform)
+	    Trans = GetTransformation (El->ElTransform, 
+				       PtElTranslate); 	  
+	  if (Trans == NULL)
+	    {
+	      Trans = TtaNewTransformTranslate (result, 0, FALSE);
+	      FrameToView (Animated_Frame, &doc, &view);
+	      TtaReplaceTransform ((Element) El, Trans, doc); 
+	    }  
+	  Trans->XScale = result;
+	}
+      else
+	{
+	  pBox->BxXOrg = result;
+	  ApplyXToAllBoxes (pAb->AbFirstEnclosed, result);
+	}
       pAb = pAb->AbNext;
     }
 }
@@ -186,21 +226,41 @@ static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
   ----------------------------------------------------------------------*/
 static void ApplyYToAllBoxes (PtrAbstractBox pAb, float result)
 {
-  PtrBox pBox;
+  PtrBox        pBox;
+  PtrElement    El;
+  PtrTransform  Trans;
+  int           doc, view;
 
   while (pAb != NULL)
     {   
       pBox = pAb->AbBox;
-      if (pAb->AbLeafType == LtText)
-	result -= BoxFontBase (pBox->BxFont);
       pBox->VisibleModification = TRUE;
-      pBox->BxYOrg = result;
-      ApplyYToAllBoxes (pAb->AbFirstEnclosed, result);
+      if (pAb->AbElement->ElSystemOrigin)
+	{
+	  El = pAb->AbElement;
+	  if (El->ElTransform)
+	    Trans = GetTransformation (El->ElTransform, 
+				       PtElTranslate); 	  
+	  if (Trans == NULL)
+	    {
+	      Trans = TtaNewTransformTranslate (0, result, FALSE);
+	      FrameToView (Animated_Frame, &doc, &view);
+	      TtaReplaceTransform ((Element) El, Trans, doc); 
+	    }  
+	  Trans->YScale = result;
+	}
+      else
+	{
+	  if (pAb->AbLeafType == LtText)
+	    result -= BoxFontBase (pBox->BxFont);
+	  pBox->BxYOrg = result;
+	  ApplyYToAllBoxes (pAb->AbFirstEnclosed, result);
+	}
       pAb = pAb->AbNext;
     }
 }
 /*----------------------------------------------------------------------
-   : Recursivly apply the property
+  ApplyWidthToAllBoxes : Recursivly apply the property
   ----------------------------------------------------------------------*/
 static void ApplyWidthToAllBoxes (PtrAbstractBox pAb, float result)
 {
@@ -213,7 +273,7 @@ static void ApplyWidthToAllBoxes (PtrAbstractBox pAb, float result)
     }
 }
 /*----------------------------------------------------------------------
-   : Recursivly apply the property
+  ApplyHeightToAllBoxes : Recursivly apply the property
   ----------------------------------------------------------------------*/
 static void ApplyHeightToAllBoxes (PtrAbstractBox pAb, float result)
 {
@@ -393,24 +453,6 @@ else if (strcasecmp (animated->AttrName, "height") == 0)
     {
       animate_box_color (El, animated, current_time);    
     }
-}
-/*----------------------------------------------------------------------
-  
-  ----------------------------------------------------------------------*/
-static PtrTransform GetTransformation (PtrTransform Trans, 
-				       TransformType _trans_type)
-{
-  ThotBool not_found;
-
-  not_found = TRUE;
-  while (not_found && Trans)
-    {
-      if (Trans->TransType != _trans_type)
-	Trans = Trans->Next;
-      else
-	not_found = FALSE;      
-    }
-  return Trans;   
 }
 /*----------------------------------------------------------------------
   animate_box_transformation : animate the scale, translate, skew, rotate...
@@ -641,6 +683,57 @@ static void animate_box_transformation (PtrElement El,
       break;
     }  
 }
+
+
+#define ALLOC_POINTS    300
+
+/*----------------------------------------------------------------------
+  populate_path_proportion : interpolate proportion of each point over
+  total path length
+
+ PtrPathSeg      FirstPathSeg; linked list of segment defining the path
+  float           length;      total length 
+  ThotPath        *Path;       The Path
+  float           *Proportion; per segment % of total length
+
+  ----------------------------------------------------------------------*/
+static void populate_path_proportion (Animated_Element *animated)
+{
+  int        i, npoints = 0;
+  int        x,y;
+  float      totallength;
+  int        *subpathStart = NULL;
+  ThotPoint  *points;
+  AnimPath   *pop_path;
+  float      *proportion;
+
+  pop_path = (AnimPath *) animated->from;
+
+  points = (ThotPoint *) TtaGetMemory (ALLOC_POINTS * sizeof(ThotPoint));
+  points = BuildPolygonForPath (((PtrPathSeg) (pop_path->FirstPathSeg)), 
+				Animated_Frame,
+				&npoints, 
+				&subpathStart);
+  proportion = (float *) TtaGetMemory (npoints * sizeof(float));
+  totallength = 0;
+  proportion[0] = 0;
+  for (i = 1; i < npoints; i++)
+    {
+      x = points[i].x - points[i-1].x;
+      y = points[i].y - points[i-1].y;
+
+      totallength +=  sqrt ((double) x*x + y*y);
+      proportion[i] = totallength;
+    }
+  for (i = 1; i < npoints; i++)
+    {
+      proportion[i] = proportion[i] / totallength;
+    }
+  pop_path->Proportion = proportion;
+  pop_path->length = totallength;
+  pop_path->npoints = npoints;
+  pop_path->Path = points;
+}
 /*----------------------------------------------------------------------
   animate_box_motion : Animate the position of a box using a path
   ----------------------------------------------------------------------*/
@@ -648,68 +741,101 @@ static void animate_box_motion (PtrElement El,
 			       Animated_Element *animated,
 			       AnimTime current_time)
 {
-  /*AnimPath \ {path, pts_prop}*/
-  /*Get path->height = path length*/
-    /* Get prop_point = pos_point/lenght for each point*/
-  /*interpolate prop upon time*/
-  /* get propx1 < prop > propx2 in pts_prop array*/
+  AnimPath         *pop_path;
+  float            *proportion;
+  float            result;
+  float            x,y,x1,y1,x2,y2;
+  int              doc, view,i;
+  PtrAbstractBox   pAb = NULL;
 
-  /*
-    pts_prop = (pts_prop - pts_prop1) / (pts_prop2 - pts_prop1);
-    x = x1 + (pts_prop*(x2 -x1));
-    y = y1 + (pts_prop*(y2 -y1));
-    applyX
-    applyY
-  */
+  if (animated->to == NULL)
+    {
+      populate_path_proportion (animated);
+      animated->to = TtaGetMemory (sizeof (ThotBool));
+      *((ThotBool *) animated->to) = TRUE;
+    }
+  pop_path = (AnimPath *) animated->from;
+  proportion = pop_path->Proportion;
+  result = (float) interpolate_double_value (0, 
+					     1,
+					     current_time,
+					     animated->duration); 
+  i = 0;
+  while (result > proportion[i] && 
+	 i < (pop_path->npoints - 1) )
+    {
+      i++;
+    }
+  if (i > 0)
+    {
+      x2 = pop_path->Path[i].x;
+      y2 = pop_path->Path[i].y;      
+      x1 = pop_path->Path[i-1].x;
+      y1 = pop_path->Path[i-1].y;            
+      result = (result - proportion[i-1]) / (proportion[i] - proportion[i-1]);      
+      x = x1 + (result*(x2 -x1));
+      y = y1 + (result*(y2 -y1));
+      FrameToView (Animated_Frame, &doc, &view);
+      pAb = El->ElAbstractBox[view - 1];
+      if (pAb)
+	if (pAb->AbFirstEnclosed)
+	  {	    
+	    UpdateClipping (pAb->AbFirstEnclosed);	    
+	    ApplyXToAllBoxes (pAb->AbFirstEnclosed, (float) x);
+	    ApplyYToAllBoxes (pAb->AbFirstEnclosed, (float) y);	   
+	  }
+      /*calculate normals to the path and rotate accordingly*/      
+      /*TtaNewTransformAnimRotate (angle, x_scale, y_scale); */
+    }      
 }
+
+#define ANIMATING 1
+#define WILL_BE_ANIMATING 2
+#define NOT_ANIMATING 3
+
 /*----------------------------------------------------------------------
   is_animated_now : Compute if animation appply for this box upon time
   ----------------------------------------------------------------------*/
-static ThotBool is_animated_now (Animated_Element *animated, AnimTime *current_time)
+static int is_animated_now (Animated_Element *animated, AnimTime *current_time)
 {
   if (*current_time >= animated->start)
     {
       if (*current_time <= (animated->start + animated->duration)) 
 	{
 	  *current_time = *current_time - animated->start;
-	  return TRUE;
+
+	}
+      else if (animated->repeatCount > 1 && 
+	       ((float)animated->repeatCount) > ((float)(*current_time/animated->duration)))
+	*current_time = fmod (*current_time, animated->duration);
+      else if (animated->repeatCount == -1)
+	{
+	  *current_time = fmod (*current_time, animated->duration);
 	}
       else
 	{
-	  if (animated->repeatCount > 1)
+	  switch (animated->Fill)
 	    {
-	      if (((float)animated->repeatCount) > ((float)(*current_time/animated->duration)))
-		*current_time = fmod (*current_time, animated->duration);
-	      return TRUE;
-	    }
-	  if (animated->repeatCount == -1)
-	    {
-	      *current_time = fmod (*current_time, animated->duration);
-	      return TRUE;
-	    }
-
-	  else
-	    {
-	      switch (animated->Fill)
-		{
-		case Freeze:
-		  *current_time = (AnimTime) animated->duration;
-		  break;
-		case Otherfill:
-		  *current_time = (AnimTime) 0;
-		  break;
-		default:
-		  *current_time = (AnimTime) 0;
-		  break;
-		}
-	      if (animated->action_time != *current_time)
-		return TRUE;
-	      else
-		return FALSE;
-	    }
+	    case Freeze:
+	      *current_time = (AnimTime) animated->duration;
+	      break;
+	    case Otherfill:
+	      *current_time = (AnimTime) 0;
+	      break;
+	    default:
+	      *current_time = (AnimTime) 0;
+	      break;
+	    }	   
 	}
     }
-  return FALSE;
+  else
+    return WILL_BE_ANIMATING;
+ 
+  /* Detect diffences between last action played and now*/
+  if (animated->action_time != *current_time)
+    return ANIMATING;
+  else
+    return NOT_ANIMATING;
 }
 /*----------------------------------------------------------------------
   animate_box : animate a a box using all animation that apply on him
@@ -719,6 +845,7 @@ static ThotBool animate_box (PtrElement El, AnimTime current_time)
   Animated_Element *animated = NULL;
   AnimTime          rel_time;
   ThotBool          isnotfinished;
+  int               animating_state;
 
   isnotfinished = FALSE;
   if (El)
@@ -728,7 +855,10 @@ static ThotBool animate_box (PtrElement El, AnimTime current_time)
 	while (animated)
 	  {
 	    rel_time = current_time;
-	    if (is_animated_now(animated, &rel_time))
+            animating_state = is_animated_now (animated, &rel_time);
+if (animating_state == WILL_BE_ANIMATING)
+     isnotfinished = TRUE;
+	    if (animating_state == ANIMATING)
 	      {
 		switch (animated->AnimType)
 		  {
@@ -743,7 +873,7 @@ static ThotBool animate_box (PtrElement El, AnimTime current_time)
 		    break;
 		  
 		  case Motion:
-		    if (animated->from && animated->to)
+		    if (animated->from)
 		      animate_box_motion (El, animated, rel_time);
 		    break;
 		  

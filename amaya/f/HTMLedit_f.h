@@ -43,6 +43,7 @@ extern void CreateRemoveIDAttribute ( char *elName,
                                       ThotBool createID,
                                       ThotBool inSelection );
 extern void ElementCreated ( NotifyElement *event );
+extern ThotBool ElementWillBeDeleted ( NotifyElement *event );
 extern void ElementDeleted ( NotifyElement *event );
 extern void RegisterURLSavedElements ( Document doc );
 extern void ChangeURI ( Element el,
@@ -164,6 +165,7 @@ extern void CreateRemoveIDAttribute (/* char *elName,
                                         ThotBool createID,
                                         ThotBool inSelection */);
 extern void ElementCreated (/* NotifyElement *event */);
+extern ThotBool ElementWillBeDeleted (/* NotifyElement *event */);
 extern void ElementDeleted (/* NotifyElement *event */);
 extern void RegisterURLSavedElements (/* Document doc */);
 extern void ChangeURI (/* Element el,
