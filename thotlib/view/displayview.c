@@ -140,7 +140,7 @@ PtrDocument         pDoc;
   ThotBool          rootAbWillBeFree;
 
   displayMode = documentDisplayMode[IdentDocument (pDoc) - 1];
-  if (displayMode == NoComputedDisplay || displayMode == SuspendDisplay)
+  if (displayMode == NoComputedDisplay)
     return;
 
   /* dans les vues des elements associes du document */
