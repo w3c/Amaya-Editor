@@ -189,10 +189,10 @@ libwww_config : force
 	@(if [ ! -d $(LIBWWW) ] ; then \
 		$(MKDIR) $(LIBWWW) ; \
           fi)
-	@(localdir=`pwd` ; libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; \
+	@(localdir=`pwd` ; libwwwdir="$$localdir/../../$(LIBWWW)" ; \
 	  cd $(LIBWWW) ; unset LANG; \
 	  if [ ! -f Makefile -o ! -f wwwconf.h ] ; then \
-	  	../$$libwwwdir/configure \
+	  	$$libwwwdir/configure \
 			--disable-shared \
 			--with-zlib="$$localdir/libz.a"; \
 		$(ECHO) "libwww is configured" ; \
