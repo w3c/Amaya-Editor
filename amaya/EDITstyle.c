@@ -1019,6 +1019,7 @@ void HTMLSetBackgroundImage (Document doc, Element el, int repeat,
 	  ptr = TtaGetMemory (len + strlen (txt));
 	  TtaGiveTextAttributeValue (attr, ptr, &len);
 	  strcat (ptr, txt);
+	  TtaRegisterAttributeReplace (attr, el, doc);
 	  TtaSetAttributeText (attr, ptr, el, doc);
 	  TtaFreeMemory (ptr);
 	}
@@ -1028,6 +1029,7 @@ void HTMLSetBackgroundImage (Document doc, Element el, int repeat,
 	  attr = TtaNewAttribute (attrType);
 	  TtaAttachAttribute (el, attr, doc);
 	  TtaSetAttributeText (attr, txt, el, doc);
+	  TtaRegisterAttributeCreate (attr, el, doc);
 	}
     }
 }
