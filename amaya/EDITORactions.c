@@ -471,7 +471,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   UpdateDoctypeMenu (doc);
   
   /* the document should be saved */
-  TtaSetDocumentModified (doc);
+  TtaSetDocumentUnmodified (doc);
 }
 
 /*--------------------------------------------------------------------------
