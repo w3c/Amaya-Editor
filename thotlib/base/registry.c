@@ -1551,6 +1551,8 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	if (app_home[0] == EOS)
 	{
 	  /* win95: apphome is  thotdir\users\username */
+	  sprintf (app_home, "%s\\%s", execname, WIN_USERS_HOME_DIR);
+	  TtaMakeDirectory (app_home);
 	  sprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);
 	  TtaMakeDirectory (app_home);
 	}
