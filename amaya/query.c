@@ -2413,20 +2413,30 @@ void               *context_tcbf;
    /* we are not expecting to receive any input from the server */
    me->outputfile = (char *) NULL; 
 
+#ifdef _WINDOWS
+   /* libwww's HTParse function doesn't take into account the drive name;
+   so we sidestep it */
+   fileURL = NULL;
+   StrAllocCopy (fileURL, "file:");
+   StrAllocCat (fileURL, fileName);
+#else
    fileURL = HTParse (fileName, "file:/", PARSE_ALL);
+#endif /* _WINDOWS */
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (fileURL);
    HT_FREE (fileURL);
 
    /* Set the Content-Type of the file we are uploading */
    HTAnchor_setFormat ((HTParentAnchor *) me->anchor,
 		       AHTGuessAtom_for (me->urlName, contentType));
-   HTAnchor_setLength ((HTParentAnchor *) me->anchor, me->block_size);
 
+   /* associate the anchor to the request */
    HTRequest_setEntityAnchor (me->request, me->anchor);
+
+   /* define other request characteristics */
 #ifdef _WINDOWS
    HTRequest_setPreemptive (me->request, YES);
 #else
-   HTRequest_setPreemptive (me->request, YES);
+   HTRequest_setPreemptive (me->request, NO);
 #endif /* _WINDOWS */
 
    if (mode & AMAYA_NOCACHE)
