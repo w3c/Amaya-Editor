@@ -1,9 +1,6 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   refext.c : primitives de gestion des fichiers de references externes
-   Major changes:
+   Management of external references files.
+
  */
 
 #include "thot_sys.h"
@@ -25,39 +22,38 @@
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LabelIntToString convertit l'entier num en un Label correct     | */
+/* |    LabelIntToString converts integer num into a Thot label		| */
 /* ---------------------------------------------------------------------- */
 
 
 #ifdef __STDC__
-void                LabelIntToString (int num, LabelString strn)
+void                LabelIntToString (int num, LabelString strng)
 
 #else  /* __STDC__ */
-void                LabelIntToString (num, strn)
+void                LabelIntToString (num, strng)
 int                 num;
-LabelString         strn;
+LabelString         strng;
 
 #endif /* __STDC__ */
 
 {
-   sprintf (strn, "L%d", num);
+   sprintf (strng, "L%d", num);
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |     rdLabel lit depuis le fichier fich, dans la variable lab, un    | */
-/* |             label dont le type est defini par la marque c.          | */
+/* |     rdLabel reads a label from a file				| */
+/* |		The label type is specified by labelType.		| */
 /* ---------------------------------------------------------------------- */
 
-
 #ifdef __STDC__
-void                rdLabel (char c, LabelString lab, BinFile fich)
+void                rdLabel (char labelType, LabelString label, BinFile file)
 
 #else  /* __STDC__ */
-void                rdLabel (c, lab, fich)
-char                c;
-LabelString         lab;
-BinFile             fich;
+void                rdLabel (labelType, label, file)
+char                labelType;
+LabelString         label;
+BinFile             file;
 
 #endif /* __STDC__ */
 
@@ -65,31 +61,32 @@ BinFile             fich;
    int                 j, k;
 
    /* lit la valeur du label selon le type de label */
-   switch (c)
+   switch (labelType)
 	 {
 	    case C_PIV_SHORT_LABEL:
-	       if (BIOreadShort (fich, &j))
-		  LabelIntToString (j, lab);
+	       if (BIOreadShort (file, &j))
+		  LabelIntToString (j, label);
 	       else
-		  lab[0] = '\0';
+		  /* error */
+		  label[0] = '\0';
 	       break;
 	    case C_PIV_LONG_LABEL:
 	       j = 0;
-	       if (BIOreadShort (fich, &j))
-		  if (BIOreadShort (fich, &k))
-		     j = j * 65536 + k;		/* lit la fin du label */
-	       LabelIntToString (j, lab);
+	       if (BIOreadShort (file, &j))
+		  if (BIOreadShort (file, &k))
+		     j = j * 65536 + k;
+	       LabelIntToString (j, label);
 	       break;
 	    case C_PIV_LABEL:
 	       j = 0;
 	       do
-		 {
-		    /* on tronque le label s'il est trop long (mais on lit quand meme) */
+		  {
+		    BIOreadByte (file, &label[j]);
+		    /* drop last bytes if the label is too long */
 		    if (j < MAX_LABEL_LEN)
-		       j++;
-		    BIOreadByte (fich, &lab[j - 1]);
-		 }
-	       while (lab[j - 1] != '\0');
+			j++;
+		  }
+	       while (label[j - 1] != '\0');
 	       break;
 	    default:
 	       PivotFormatError ("S");
@@ -99,210 +96,212 @@ BinFile             fich;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ChargeExt lit le fichier de references externes .EXT fich et    | */
-/* |            charge son contenu pour le document pDocu, si pDocu     | */
-/* |            n'est pas NULL. Si pDocu        est NULL, met le contenu du     | */
+/* |    ChargeExt lit le fichier de references externes.EXT et		| */
+/* |            charge son contenu pour le document pDoc, si pDoc	| */
+/* |            n'est pas NULL. Si pDoc est NULL, met le contenu du	| */
 /* |            fichier dans une chaine de descripteurs d'elements      | */
-/* |            reference's dont l'ancre est Ancre.                     | */
-/* |            Si LabelSeul est vrai, ne carge que les labels, et pas  | */
-/* |            les noms des documents externes.                        | */
+/* |            reference's dont l'ancre est Anchor.			| */
+/* |            Si labelsOnly est vrai, ne charge que les labels,	| */
+/* |            et pas les noms des documents externes.			| */
 /* ---------------------------------------------------------------------- */
 
-
 #ifdef __STDC__
-void                ChargeExt (BinFile fich, PtrDocument pDocu, PtrReferredDescr * Ancre, boolean LabelSeul)
+void                ChargeExt (BinFile file, PtrDocument pDoc, PtrReferredDescr * Anchor, boolean labelsOnly)
 
 #else  /* __STDC__ */
-void                ChargeExt (fich, pDocu, Ancre, LabelSeul)
-BinFile             fich;
-PtrDocument         pDocu;
-PtrReferredDescr   *Ancre;
-boolean             LabelSeul;
+void                ChargeExt (file, pDoc, Anchor, labelsOnly)
+BinFile             file;
+PtrDocument         pDoc;
+PtrReferredDescr   *Anchor;
+boolean             labelsOnly;
 
 #endif /* __STDC__ */
 
 {
+   PtrReferredDescr    pRefD, pPrevRefD;
+   PtrExternalDoc      pExtDoc, pNewExtDoc;
+   LabelString         label;
+   DocumentIdentifier  docIdent;
+   boolean             stop, error;
    char                c;
-   PtrReferredDescr    pDR, pDRPrec;
-   PtrExternalDoc       pDE, NpDE;
-   LabelString         lab;
-   DocumentIdentifier     NDoc;
-   boolean             stop;
-   boolean             error;
 
    error = FALSE;
    /* lit la 1ere marque de label */
-   if (!BIOreadByte (fich, &c))
+   if (!BIOreadByte (file, &c))
       error = TRUE;
-   pDRPrec = NULL;
-   if (pDocu == NULL)
-      *Ancre = NULL;
+   pPrevRefD = NULL;
+   if (pDoc == NULL)
+      *Anchor = NULL;
    while (!error)
-
      {
-	rdLabel (c, lab, fich);	/* lit la valeur du label */
-	if (pDocu == NULL)
+	rdLabel (c, label, file);
+	if (pDoc == NULL)
 	  {
 	     /* acquiert un descripteur d'element reference' */
-	     GetDescReference (&pDR);
+	     GetDescReference (&pRefD);
 	     /* met le label lu dans le descripteur */
-	     strncpy (pDR->ReReferredLabel, lab, MAX_LABEL_LEN);
+	     strncpy (pRefD->ReReferredLabel, label, MAX_LABEL_LEN);
 	     /* chaine le descripteur */
-	     if (pDRPrec == NULL)
+	     if (pPrevRefD == NULL)
 		/* premier descripteur de la chaine */
-		*Ancre = pDR;
+		*Anchor = pRefD;
 	     else
 		/* chaine au precedent */
-		pDRPrec->ReNext = pDR;
-	     pDR->RePrevious = pDRPrec;
-	     pDR->ReNext = NULL;
-	     pDRPrec = pDR;
+		pPrevRefD->ReNext = pRefD;
+	     pRefD->RePrevious = pPrevRefD;
+	     pRefD->ReNext = NULL;
+	     pPrevRefD = pRefD;
 	  }
 	else
 	  {
 	     /*cherche le descripteur d'element reference' portant ce label */
-	     pDR = pDocu->DocReferredEl;
-	     if (pDR != NULL)
+	     pRefD = pDoc->DocReferredEl;
+	     if (pRefD != NULL)
 		/* saute le premier descripteur bidon */
-		pDR = pDR->ReNext;
+		pRefD = pRefD->ReNext;
 	     /* parcourt la chaine des descripteurs d'element reference' */
 	     stop = FALSE;
 	     do
 	       {
-		  if (pDR == NULL)
+		  if (pRefD == NULL)
 		     stop = TRUE;	/* dernier descripteur du document */
-		  else if (!pDR->ReExternalRef)
-		     if (pDR->ReReferredElem != NULL)
-			if (strcmp (pDR->ReReferredElem->ElLabel, lab) == 0)
-			   stop = TRUE;		/* trouve' */
+		  else if (!pRefD->ReExternalRef)
+		     if (pRefD->ReReferredElem != NULL)
+			if (strcmp (pRefD->ReReferredElem->ElLabel, label) == 0)
+			   /* trouve' */
+			   stop = TRUE;
 		  if (!stop)
 		     /* passe au descripteur suivant */
-		     pDR = pDR->ReNext;
+		     pRefD = pRefD->ReNext;
 	       }
-	     while (!(stop));
+	     while (!stop);
 #ifdef TRACE
-	     if (pDR == NULL)
-		printf ("L\'element portant le label %s est absent\n", lab);
+	     if (pRefD == NULL)
+		printf ("Element with label %s not found\n", label);
 #endif
 	  }
 	/* lit la liste des documents qui referencent l'element portant */
 	/* ce label */
 	/* lit la 1ere marque de nom de document */
-	if (!BIOreadByte (fich, &c))
+	if (!BIOreadByte (file, &c))
 	   error = TRUE;
 	if (c != (char) C_PIV_DOCNAME || error)
 	  {
-	     PivotFormatError ("T");	/* ce n'est pas une marque de nom */
+	     /* ce n'est pas une marque de nom */
+	     PivotFormatError ("T");
 	     error = TRUE;
 	  }
 	while (c == (char) C_PIV_DOCNAME && !error)
 	   /* lit l'identificateur du document referencant */
 	  {
-	     BIOreadIdentDoc (fich, &NDoc);
-	     if (pDR != NULL && !error && !LabelSeul)
+	     BIOreadIdentDoc (file, &docIdent);
+	     if (pRefD != NULL && !error && !labelsOnly)
 		/* cree et chaine un descripteur d'element referencant */
 	       {
-		  GetDocExterne (&NpDE);
-		  CopyIdentDoc (&NpDE->EdDocIdent, NDoc);
-		  if (pDR->ReExtDocRef == NULL)
+		  GetDocExterne (&pNewExtDoc);
+		  CopyIdentDoc (&pNewExtDoc->EdDocIdent, docIdent);
+		  if (pRefD->ReExtDocRef == NULL)
 		     /* premier descripteur de document referencant */
-		     pDR->ReExtDocRef = NpDE;
+		     pRefD->ReExtDocRef = pNewExtDoc;
 		  else
 		     /* chaine le nouveau descripteur a la fin de la chaine */
 		    {
-		       pDE = pDR->ReExtDocRef;
-		       while (pDE->EdNext != NULL)
-			  pDE = pDE->EdNext;
-		       pDE->EdNext = NpDE;
+		       pExtDoc = pRefD->ReExtDocRef;
+		       while (pExtDoc->EdNext != NULL)
+			  pExtDoc = pExtDoc->EdNext;
+		       pExtDoc->EdNext = pNewExtDoc;
 		    }
 	       }
 	     /* lit l'octet qui suit le nom */
-	     if (!BIOreadByte (fich, &c))
+	     if (!BIOreadByte (file, &c))
 		error = TRUE;
 	  }
      }
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ChargeRef lit le fichier de mise a` jour des references         | */
-/* |            sortantes .REF fich et met le contenu du fichier dans   | */
-/* |            une chaine de descripteurs dont l'ancre est Ancre.      | */
+/* |    ChargeRef lit le fichier de mise a` jour des references		| */
+/* |            sortantes .REF et met le contenu du fichier dans	| */
+/* |            une chaine de descripteurs dont l'ancre est Anchor.	| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ChargeRef (BinFile fich, PtrChangedReferredEl * Ancre)
+void                ChargeRef (BinFile file, PtrChangedReferredEl * Anchor)
 
 #else  /* __STDC__ */
-void                ChargeRef (fich, Ancre)
-BinFile             fich;
-PtrChangedReferredEl     *Ancre;
+void                ChargeRef (file, Anchor)
+BinFile             file;
+PtrChangedReferredEl     *Anchor;
 
 #endif /* __STDC__ */
 
 {
-   PtrChangedReferredEl      Chng, ChngPrec;
+   PtrChangedReferredEl      pChnRef, pPrevChnRef;
    char                c;
    boolean             error;
-   LabelString         lab;
+   LabelString         label;
 
    error = FALSE;
-   *Ancre = NULL;
-   ChngPrec = NULL;
-   /* lit le premier caractere */
-   if (!BIOreadByte (fich, &c))
+   *Anchor = NULL;
+   pPrevChnRef = NULL;
+   /* read first character in file */
+   if (!BIOreadByte (file, &c))
       error = TRUE;
    while (!error)
 
      {
-	rdLabel (c, lab, fich);	/* lit l'ancien label */
+	/* read old label */
+	rdLabel (c, label, file);
 	/* acquiert un nouveau descripteur */
-	GetElemRefChng (&Chng);
+	GetElemRefChng (&pChnRef);
 	/* le chaine en queue */
-	Chng->CrNext = NULL;
-	if (ChngPrec == NULL)
-	   *Ancre = Chng;
+	pChnRef->CrNext = NULL;
+	if (pPrevChnRef == NULL)
+	   *Anchor = pChnRef;
 	else
-	   ChngPrec->CrNext = Chng;
-	ChngPrec = Chng;
+	   pPrevChnRef->CrNext = pChnRef;
+	pPrevChnRef = pChnRef;
 	/* lit l'ancien label */
-	strncpy (Chng->CrOldLabel, lab, MAX_LABEL_LEN);
+	strncpy (pChnRef->CrOldLabel, label, MAX_LABEL_LEN);
 	/* lit le nouveau label */
-	if (!BIOreadByte (fich, &c))
+	if (!BIOreadByte (file, &c))
 	   error = TRUE;
-	rdLabel (c, lab, fich);
+	rdLabel (c, label, file);
 	if (!error)
 	  {
-	     strncpy (Chng->CrNewLabel, lab, MAX_LABEL_LEN);
+	     strncpy (pChnRef->CrNewLabel, label, MAX_LABEL_LEN);
 	     /* lit le nom de l'ancien document */
 	     /* lit la marque de nom de document */
-	     if (!BIOreadByte (fich, &c))
+	     if (!BIOreadByte (file, &c))
 		error = TRUE;
 	     if (c != (char) C_PIV_DOCNAME)
 	       {
-		  PivotFormatError ("T");	/* ce n'est pas une marque de nom */
+		  /* a name was expected */
+		  PivotFormatError ("T");
 		  error = TRUE;
 	       }
 	     else
-		/* lit le nom */
+		/* read the name */
 	       {
-		  BIOreadIdentDoc (fich, &Chng->CrOldDocument);
+		  BIOreadIdentDoc (file, &pChnRef->CrOldDocument);
 		  /* lit le nom du nouveau document */
 		  if (!error)
 		     /* lit la marque de nom de document */
-		     if (!BIOreadByte (fich, &c))
+		     if (!BIOreadByte (file, &c))
 			error = TRUE;
 		  if (c != (char) C_PIV_DOCNAME)
 		    {
-		       PivotFormatError ("T");	/* ce n'est pas une marque de nom */
+		       /* a name was expected */
+		       PivotFormatError ("T");
 		       error = TRUE;
 		    }
 		  else
 		     /* lit le nom */
 		    {
-		       BIOreadIdentDoc (fich, &Chng->CrNewDocument);
+		       BIOreadIdentDoc (file, &pChnRef->CrNewDocument);
 		       /* lit l'octet qui suit le nom */
 		       if (!error)
-			  if (!BIOreadByte (fich, &c))
+			  if (!BIOreadByte (file, &c))
 			     error = TRUE;
 		    }
 	       }
@@ -313,80 +312,80 @@ PtrChangedReferredEl     *Ancre;
 /* ---------------------------------------------------------------------- */
 /* |    MiseAJourRef execute les demandes de mise a` jour de references | */
 /* |            contenues dans la chaine de descripteurs dont l'ancre   | */
-/* |            est Ancre et qui concernent le document pDoc.           | */
+/* |            est Anchor et qui concernent le document pDoc.          | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                MiseAJourRef (PtrChangedReferredEl Ancre, PtrDocument pDoc)
+void                MiseAJourRef (PtrChangedReferredEl Anchor, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-void                MiseAJourRef (Ancre, pDoc)
-PtrChangedReferredEl      Ancre;
+void                MiseAJourRef (Anchor, pDoc)
+PtrChangedReferredEl      Anchor;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrChangedReferredEl      Chng, ChngSuiv;
-   PtrReferredDescr    pDR;
+   PtrChangedReferredEl      pChnRef, pNextChnRef;
+   PtrReferredDescr    pRefD;
    PtrReference        pRef, pRefSuiv;
-   boolean             trouve;
+   boolean             found;
 
-   Chng = Ancre;
+   pChnRef = Anchor;
    /* parcourt la chaine des descripteurs */
-   while (Chng != NULL)
+   while (pChnRef != NULL)
      {
 	/* saute le premier descripteur d'element reference', bidon */
-	pDR = pDoc->DocReferredEl;
-	if (pDR != NULL)
-	   pDR = pDR->ReNext;
-	if (Chng->CrOldLabel[0] == '\0')
+	pRefD = pDoc->DocReferredEl;
+	if (pRefD != NULL)
+	   pRefD = pRefD->ReNext;
+	if (pChnRef->CrOldLabel[0] == '\0')
 	   /* c'est un changement de nom d'un document reference' */
 	  {
 	     /* cherche tous les descripteurs qui representent des elements */
 	     /* reference's appartenant a ce document et change le nom de */
 	     /* document qui y figure */
-	     while (pDR != NULL)
+	     while (pRefD != NULL)
 	       {
-		  if (pDR->ReExternalRef)
+		  if (pRefD->ReExternalRef)
 		     /* c'est un descripteur d'element reference' externe */
-		     if (MemeIdentDoc (pDR->ReExtDocument, Chng->CrOldDocument))
+		     if (MemeIdentDoc (pRefD->ReExtDocument, pChnRef->CrOldDocument))
 			/* l'element reference' appartient au document qui a */
 			/* change' de nom, on change le nom dans le */
 			/* descripteur */
-			CopyIdentDoc (&pDR->ReExtDocument, Chng->CrNewDocument);
+			CopyIdentDoc (&pRefD->ReExtDocument, pChnRef->CrNewDocument);
 		  /* passe au descripteur d'element reference' suivant */
-		  pDR = pDR->ReNext;
+		  pRefD = pRefD->ReNext;
 	       }
 	  }
 	else
 	   /* c'est un element qui a ete detruit ou a change' de document */
 	  {
 	     /* Cherche le representant de l'ancien element */
-	     trouve = FALSE;
-	     while (pDR != NULL && !trouve)
+	     found = FALSE;
+	     while (pRefD != NULL && !found)
 	       {
-		  if (pDR->ReExternalRef)
-		     if (strcmp (pDR->ReReferredLabel, Chng->CrOldLabel) == 0)
-			if (MemeIdentDoc (pDR->ReExtDocument, Chng->CrOldDocument))
-			   trouve = TRUE;
-		  if (!trouve)
-		     pDR = pDR->ReNext;
+		  if (pRefD->ReExternalRef)
+		     if (strcmp (pRefD->ReReferredLabel, pChnRef->CrOldLabel) == 0)
+			if (MemeIdentDoc (pRefD->ReExtDocument, pChnRef->CrOldDocument))
+			   found = TRUE;
+		  if (!found)
+		     pRefD = pRefD->ReNext;
 	       }
-	     if (trouve)
+	     if (found)
 		/* modifie le descripteur d'element reference' externe */
 	       {
-		  if (Chng->CrNewLabel[0] != '\0')
+		  if (pChnRef->CrNewLabel[0] != '\0')
 		     /* l'element reference' a change' de document */
 		    {
-		       strncpy (pDR->ReReferredLabel, Chng->CrNewLabel, MAX_LABEL_LEN);
-		       CopyIdentDoc (&pDR->ReExtDocument, Chng->CrNewDocument);
+		       strncpy (pRefD->ReReferredLabel, pChnRef->CrNewLabel, MAX_LABEL_LEN);
+		       CopyIdentDoc (&pRefD->ReExtDocument, pChnRef->CrNewDocument);
 		    }
 		  else
 		     /* l'element reference' a ete detruit */
 		    {
 		       /* annule les references qui designaient cet element */
-		       pRef = pDR->ReFirstReference;
+		       pRef = pRefD->ReFirstReference;
 		       while (pRef != NULL)
 			 {
 			    pRefSuiv = pRef->RdNext;
@@ -398,10 +397,9 @@ PtrDocument         pDoc;
 	       }
 	  }
 	/* libere le descripteur qui a ete traite' */
-	ChngSuiv = Chng->CrNext;
-	FreeElemRefChng (Chng);
+	pNextChnRef = pChnRef->CrNext;
+	FreeElemRefChng (pChnRef);
 	/* passe au descripteur suivant */
-	Chng = ChngSuiv;
+	pChnRef = pNextChnRef;
      }
 }
-/* End of module refext */
