@@ -1738,8 +1738,16 @@ static char *ParseCSSWhiteSpace (Element element, PSchema tsch,
      cssRule = SkipWord (cssRule);
    else if (!strncasecmp (cssRule, "pre", 3))
      cssRule = SkipWord (cssRule);
+   else if (!strncasecmp (cssRule, "nowrap", 6))
+     cssRule = SkipWord (cssRule);
+   else if (!strncasecmp (cssRule, "pre-wrap", 8))
+     cssRule = SkipWord (cssRule);
+   else if (!strncasecmp (cssRule, "pre-line", 8))
+     cssRule = SkipWord (cssRule);
+   else if (!strncasecmp (cssRule, "inherit", 7))
+     cssRule = SkipWord (cssRule);
    else
-     return (cssRule);
+     cssRule = SkipValue ("Invalid white-space value", cssRule);
    return (cssRule);
 }
 
