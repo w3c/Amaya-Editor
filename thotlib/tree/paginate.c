@@ -1182,7 +1182,7 @@ static PtrElement  PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc,
   /* bas de page de hauteur variable (notes de bas de page par exemple) */
   SetPage (&pPage, frame, &origCutAbsBox, &needBreak, pDoc, schView, nbView,
 	   rootEl);
-  if (pPage != NULL)
+  if (pPage)
     {
       /* on a insere' au moins une marque de page dans l'arbre abstrait */
       /* On verifie que la page n'est pas trop haute (il peut y avoir des */
@@ -1480,7 +1480,7 @@ void PaginateView (PtrDocument pDoc, int view)
   ThotBool            sel;
 #endif /* PAGINEETIMPRIME */
   PtrPSchema          pSchPage;
-  int                 b;
+  int                 b, saveHeight;
   int                 schView;
   int                 v, clipOrg;
   int                 frame, volume, volprec, iview;
@@ -1633,7 +1633,7 @@ void PaginateView (PtrDocument pDoc, int view)
 	    /* no page found */
 	    shorter = TRUE;
 	}
-      /* complete the image still a new page could be generated */
+      /* complete the image till a new page could be generated */
       /* or the end of the document is reached */
       somthingAdded = FALSE;
       while (shorter && rootAbsBox->AbTruncatedTail)
@@ -1660,10 +1660,12 @@ void PaginateView (PtrDocument pDoc, int view)
 	  /* nothing to add */
 	  volume = 0;
 	  /* call ChangeConcreteImage to know if we have enough volume */
-	  RealPageHeight = PageHeight;
+	  saveHeight = RealPageHeight;
 	  if (pDoc->DocViewModifiedAb[iview] != NULL)
 	    {
 	      shorter = ChangeConcreteImage (frame, &RealPageHeight, pDoc->DocViewModifiedAb[iview]);
+	      if (!shorter)
+		RealPageHeight = saveHeight;
 	      pDoc->DocViewModifiedAb[iview] = NULL;
 	    }
 	}

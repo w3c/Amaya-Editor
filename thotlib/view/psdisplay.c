@@ -357,7 +357,12 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	}
     }
   else if (bl > 0)
-    NbWhiteSp += bl;
+    {
+      /* store previous spaces */
+      NbWhiteSp += bl;
+      if (fg >= 0)
+	Transcode (fout, encoding, ' ');
+    }
    
   /* Is an hyphen needed ? */
   if (hyphen && fg >= 0)
@@ -378,6 +383,7 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	    fprintf (fout, ") %d %d %d %d j\n", NbWhiteSp, boxWidth, X, -Y);
 	}
       SameBox = 0;
+      NbWhiteSp = 0;
     }
   return (width);
 }

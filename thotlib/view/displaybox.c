@@ -1175,7 +1175,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	  charleft -= buffleft;
 	  if (charleft > 0)
 	    {
-	      bl = 0;
 	      /* Skip to next buffer */
 	      if (adbuff->BuNext == NULL)
 		charleft = 0;
