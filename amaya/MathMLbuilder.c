@@ -3283,7 +3283,7 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
 	      /* the leftPadding of a cell is the same as the right padding
 		 of the previous cell */
 	      leftVal = rightVal;
-	      leftValUnit = rightValUnit;
+	      leftValUnit = rightValUnit = valUnit;
 	      if (!nextCell)
 		/* it's the last cell in the row. It must not have any
 		   padding on the right */
