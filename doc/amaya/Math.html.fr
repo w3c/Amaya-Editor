@@ -45,15 +45,15 @@ constructions mathématiques.</p>
 <p>Pour créer une expression mathématique dans un document, il suffit de <a
 href="Selecting.html#Selecting">déplacer le point d'insertion</a>  à l'endroit
 où vous voulez insérer l'expression, puis de cliquer sur le bouton
-<strong>Math</strong>  (le bouton le plus à droite de la barre des boutons) ou
-de sélectionner l'entrée  <strong>Math</strong> du menu
+<strong>Math</strong>  (le bouton  à droite de la barre des boutons) ou de
+sélectionner l'entrée  <strong>Math</strong> du menu
 <strong>Eléments</strong>. Le bouton <strong>Math</strong> affiche une palette
 qui reste à l'écran jusqu´à ce que vous cliquiez sur le bouton "terminer".
-L'article <strong>Math</strong> du menu <strong>Eléments</strong> affiche un
-menu. Choisissez l'outil qui vous est le plus commode. Les deux vous
+L'entrée <strong>Math</strong> du menu <strong>Eléments</strong> affiche un
+menu. Choisissez l'outil  qui vous est le plus commode. Les deux vous
 permettent de sélectionner la construction mathématique à insérer.</p>
 
-<p>Dans la palette  Math (ou le menu), le premier article vous permet de créer
+<p>Dans la palette  Math (ou le menu), le premier item vous permet de créer
 une nouvelle formule lorsque le point d'insertion est dans un élément HTML   (
 mais le point d'insertion ne devrait pas être à l'intérieur d'un élément
 MathML).</p>
@@ -65,11 +65,11 @@ Nombre  (<code>mn</code>), Opérateur (<code>mo</code>). Vous pouvez également
 utiliser ces commandes pour changer le type d'un élément  seul ou d'une
 séquence d'éléments.</p>
 
-<p>Ces articles du menu  <strong>Math</strong> sont suivis par l'article
-Caractère (<code>mchar</code>). Cette commande vous permet d'entrer un
-caractère qui n'est pas disponible sur le clavier. Elle affiche une boîte de
-dialogue dans laquelle vous devez entrer le nom du caractère (par exemple
-<em>alpha </em> pour le caractère grec &alpha;).</p>
+<p>Ces items  du menu  <strong>Math</strong> sont suivis par l'item  Caractère
+(<code>mchar</code>). Cette commande vous permet d'entrer un caractère qui
+n'est pas disponible sur le clavier. Elle affiche une boîte de dialogue dans
+laquelle vous devez entrer le nom du caractère (par exemple <em>alpha </em>
+pour le caractère grec &alpha;).</p>
 
 <p>Les élements suivants du menu  <strong>Math</strong> (ou de la palette)
 vous permettent de créer de nouvelles constructions à l'intérieur d'une
@@ -175,7 +175,8 @@ disponibles sont:</p>
     xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
-        <mo>-</mo>
+        <none/>
+        <mi></mi>
       </munder>
     </math>
   </li>
@@ -240,7 +241,7 @@ disponibles sont:</p>
   </li>
 </ul>
 
-<p>Le dernier article de la palette  <strong>Math</strong> (<math
+<p>Le dernier item  de la palette  <strong>Math</strong> (<math
 xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>&alpha;&beta;&gamma;</mi>
 </math>
@@ -249,10 +250,10 @@ symboles mathématiques et des caractères grecs.</p>
 
 <h4><a name="Entering">Entrer des constructions à partir du clavier.</a></h4>
 
-<p>Vous n' êtes pas obligé d'utiliser le menu ou la palette  pour créer et
+<p>Vous n'êtes pas obligé d'utiliser le menu ou la palette  pour créer et
 éditer des expressions mathématiques. Vous pouvez entrer des constructions
 mathématiques directement à partir du clavier étant donné que chaque article
-du menu <strong>Math</strong> a un équivalent sur le clavier ( tous les
+du menu <strong>Math</strong> a un équivalent sur le clavier (tous les
 raccourcis sont énumérés dans le menu). Ceci vous permet de taper plus vite.
 Si vous voulez taper encore plus vite, vous pouvez aussi utiliser les touches
 de direction du  clavier pour  faire passer  le point d'insertion d'une
@@ -278,7 +279,7 @@ analyse cette chaîne et engendre automatiquement des éléments <code>mo</code>
 </p>
 
 <p>il suffit de taper cette séquence de 6 caractères: <code>x=2a+b</code>
-(n'oubliez pas de cliquer d'abord sur l'article Math du menu
+(n'oubliez pas de cliquer d'abord sur l'entrée  Math du menu
 <strong>Math</strong>  si vous n'êtes pas dans une expression mathématique),
 et vous obtiendrez la structure suivante (vous pouvez vérifier dans le  <a
 href="#Math_Struc">vue Math_Structure </a>):</p>
@@ -304,9 +305,9 @@ expression, il suffit de sélectionner l'expression et d'entrer la nouvelle
 expression avec la palette, le menu <strong>Math</strong> ou le <a
 href="#Entering">clavier</a>. Vous pouvez également utiliser la commande
 <strong>Transformer </strong>du menu  <strong>Edition</strong>. Sélectionnez
-l'expression que vous voulez transformer et la
-commande<strong>Transformer</strong> affichera un menu avec tous les
-changements possibles.</p>
+l'expression que vous voulez transformer et la commande<strong>
+Transformer</strong> affichera un menu avec tous les changements
+possibles.</p>
 
 <h3><a name="Math_Struc">Vue Math_Structure</a></h3>
 
@@ -385,18 +386,18 @@ représentée par:</p>
 <pre><code>&lt;mfrac xml:link="simple" href="http://www.w3.org/"&gt;...&lt;/mfrac&gt;</code></pre>
 
 <p>(Vous pouvez trouver cela seulement dans la vue structure. Ce n'est pas
-couremment indiqué dans la vue liens).  Pour créer un tel lien, il suffit de
-sélectionner une expression (la fraction dans la démonstration  ci-dessus par
-exemple), de cliquer sur le bouton Lien ( ou de sélectionner le "créer lien"
-du menu Liens), et de cliquer sur la cible désirée. Si la cible est une
+actuellement  indiqué dans la vue liens).  Pour créer un tel lien, il suffit
+de sélectionner une expression (la fraction dans la démonstration  ci-dessus
+par exemple), de cliquer sur le bouton Lien ( ou de sélectionner le "créer
+lien" du menu Liens), et de cliquer sur la cible désirée. Si la cible est une
 expression dans une formule, vous devez d'abord transformer cette expression
 en cible. Il suffit de sélectionner l'expression ainsi que le "créer cible" du
 menu Liens. Ceci crée un attribut <code>id</code> pour l'expression cible.</p>
 
 <h3><a name="Current">Limites  courantes</a></h3>
 
-<p>Amaya implémente seulement les <em>Etiquettes de Présentation</em> à partir
-du MathML 2.0, et non  le  <em>Balisage du Contenu</em>. Tous les éléments de
+<p>Amaya implémente seulement les <em>Balises de Présentation</em> à partir du
+MathML 2.0, et non  le  <em>Balisage du Contenu</em>. Tous les éléments de
 présentation et les attributs sont utilisables, mais seulement quelques
 attributs sont restitués dans la vue formatée. (<code>fontsize</code>,
 <code>fontweight</code>, <code>fontstyle</code>, <code>fontfamily</code>,
