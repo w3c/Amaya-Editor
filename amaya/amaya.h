@@ -240,6 +240,7 @@ typedef struct _LoadedImageDesc
 LoadedImageDesc;
 
 THOT_EXPORT LoadedImageDesc *ImageURLs;
+THOT_EXPORT LoadedImageDesc *ImageLocal;
 
 #define EOS     '\0'
 #define EOL     '\n'

@@ -979,6 +979,20 @@ DBG(fprintf(stderr, "     AddLocalImage %s\n", tempname);)
 	     }
 	   TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
 	 }
+
+       /*****************************************************************
+	*								*
+	*   Mark modified all images loaded for this document		*
+	*								*
+	*****************************************************************/
+       pImage = ImageURLs;
+       while (pImage != NULL) {
+          if ((pImage->status == IMAGE_LOADED) &&
+	      (pImage->document == SavingDocument))
+	      pImage->status = IMAGE_MODIFIED;
+	  pImage = pImage->nextImage;
+       }
+
      }
    else
      {

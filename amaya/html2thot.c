@@ -18,20 +18,28 @@
 /* Without this option, it creates a function StartHTMLParser that parses */
 /* a HTML file and creates the internal representation of a Thot document. */
 
-#define HANDLE_COMPRESSED_FILES
-
 /* Amaya includes  */
 #ifdef STANDALONE
+
+/*
+ * Includes for STANDALONE version
+ */
+#include <stdio.h>
 #include "HTML.h"
-#else
+#define THOT_EXPORT
+#include "amaya.h"
+
+#else /* !STANDALONE */
+
+#define HANDLE_COMPRESSED_FILES
+
 #define THOT_EXPORT extern
 #include "amaya.h"
-#endif
 #include "css.h"
+
 #ifdef HANDLE_COMPRESSED_FILES
 #include "zlib.h"
 #endif
-
 
 #include "css_f.h"
 #include "html2thot_f.h"
@@ -39,6 +47,7 @@
 #include "HTMLedit_f.h"
 #include "HTMLstyle_f.h"
 #include "HTMLtable_f.h"
+#endif /* STANDALONE */
 
 
 typedef unsigned char entityName[10];
@@ -2222,12 +2231,10 @@ Element             el;
 		    TtaFreeMemory (name1);
 		 }
 	       break;
-#endif
 	    case HTML_EL_Table:
 	       CheckTable (el, theDocument);
 	       break;
 
-#ifndef STANDALONE
 	    case HTML_EL_TITLE:
 	       /* show the TITLE in the main window */
 	       UpdateTitle (el, theDocument);
@@ -3511,6 +3518,7 @@ char                c;
 		  TtaSetGraphicsShape (child, shape, theDocument);
 	       }
 	  }
+#ifndef STANDALONE
 	/* Some HTML attributes are equivalent to a CSS property:      */
 	/*      background     ->                   background         */
 	/*      bgcolor        ->                   background         */
@@ -3526,6 +3534,7 @@ char                c;
 	else if (!strcmp (AttributeMappingTable[lastAttrEntry].htmlAttribute, "TEXT") ||
 		 !strcmp (AttributeMappingTable[lastAttrEntry].htmlAttribute, "COLOR"))
 	   HTMLSetForegroundColor (theDocument, lastElement, inputBuffer);
+#endif /* !STANDALONE */
      }
    InitBuffer ();
 }
@@ -4401,10 +4410,12 @@ char               *HTMLbuf;
 			    trans = NULL;
 			    if (ParsingCSS)
 			      {
+#ifndef STANDALONE
 				 charRead = CSSparser (GetNextInputChar, theDocument);
 				 /* when returning from the CSS parser, a '<' has been
 				    read by the CSS parser and the following character,
 				    which is in charRead */
+#endif /* !STANDALONE */
 				 currentState = 1;
 				 ParsingCSS = FALSE;
 			      }
@@ -5626,7 +5637,9 @@ char               *pathURL;
 #endif /* STANDALONE */
 	/* the Thot document has been successfully created */
 	{
+#ifndef STANDALONE
 	   docURL = pathURL;
+#endif /* STANDALONE */
 	   /* do not allow the user to edit the document while parsing */
 	   /**** TtaSetDocumentAccessMode(theDocument, 0);  ****/
 	   /* do not check the Thot abstract tree against the structure */
