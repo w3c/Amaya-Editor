@@ -244,7 +244,7 @@ void  ProcessTerminateRequest (HTRequest *request, HTResponse *response,
   else if (me->reqStatus == HT_ERR)
     {
       /* there was an error */
-      if (AmayaIsAlive && me->terminate_cbf)
+      if (AmayaIsAlive () && me->terminate_cbf)
 	(*me->terminate_cbf) (me->docid, -2, me->urlName, me->outputfile,
 			      &(me->http_headers), me->context_tcbf);
       
@@ -797,7 +797,7 @@ void AMAYA_SetTimer (HTTimer *libwww_timer)
   HTList *cur, *last;
   AmayaTimer *me;
 
-  if (!AmayaIsAlive 
+  if (!AmayaIsAlive () 
       || libwww_timer == NULL
       || libwww_timer->expires == 0)
     return;
