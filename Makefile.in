@@ -159,7 +159,7 @@ schemas : rebuild bin/str
 #
 # Rules to rebuild the libWWW package
 #
-libwww :
+libwww : libwww/wwwconf.h
 	@(if [ ! -d $(THOTDIR)/../$(LIBWWW) ] ; \
 	  then \
 	      cd $(THOTDIR)/.. ; cvs update -d $(LIBWWW) ; \

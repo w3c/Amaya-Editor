@@ -35,12 +35,12 @@ RULES
 	if HtmlDTD = Frameset
 	   BEGIN
 	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"\12';
-	   Create '   "http://www.w3.org/TR/REC-html40/frameset.dtd">\12';
+	   Create '                      "http://www.w3.org/TR/REC-html40/frameset.dtd">\12';
 	   END;
         if not HtmlDTD = Frameset
 	   BEGIN
 	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"\12';
-	   Create '   "http://www.w3.org/TR/REC-html40/loose.dtd">\12';
+	   Create '                      "http://www.w3.org/TR/REC-html40/loose.dtd">\12';
 	   END;
 	Create '<html';
 #endif
@@ -53,7 +53,9 @@ RULES
 	Create '<head' Before;
 	Create Attributes Before;
 	Create '>\12' Before;
-	Create '</head>\12' After;
+	Indent +2 Before;
+	Indent -2 After;
+	Create '</head>\12\12' After;
 	END;
 
  Document_URL:
@@ -125,7 +127,9 @@ RULES
 	Create '>';
 	NoLineBreak;
 	NoTranslation;
-	Create '\12</style>\12' After;
+	Indent -2;
+	Indent +2 After;
+	Create '</style>\12' After;
 	END;
 
  SCRIPT: BEGIN
@@ -140,7 +144,9 @@ RULES
 	Create '>\12';
 	NoLineBreak;
 	NoTranslation;
-	Create '\12</script>\12' After;
+	Indent -2;
+	Indent +2 After;
+	Create '</script>\12' After;
 	END;
 
  META: BEGIN
@@ -185,7 +191,7 @@ RULES
 	END;
 
  H1:	BEGIN
-	if not within Preformatted Create '\12';
+	if not within Preformatted and not first Create '\12';
 	Create '<h1';
 	Create Attributes;
 	Create '>';
@@ -194,7 +200,7 @@ RULES
 	END;
 
  H2:	BEGIN
-	if not within Preformatted Create '\12';
+	if not within Preformatted and not first Create '\12';
 	Create '<h2';
 	Create Attributes;
 	Create '>';
@@ -203,7 +209,7 @@ RULES
 	END;
 
  H3:	BEGIN
-	if not within Preformatted Create '\12';
+	if not within Preformatted and not first Create '\12';
 	Create '<h3';
 	Create Attributes;
 	Create '>';
@@ -212,7 +218,7 @@ RULES
 	END;
 
  H4:	BEGIN
-	if not within Preformatted Create '\12';
+	if not within Preformatted and not first Create '\12';
 	Create '<h4';
 	Create Attributes;
 	Create '>';
@@ -221,7 +227,7 @@ RULES
 	END;
 
  H5:	BEGIN
-	if not within Preformatted Create '\12';
+	if not within Preformatted and not first Create '\12';
 	Create '<h5';
 	Create Attributes;
 	Create '>';
@@ -230,7 +236,7 @@ RULES
 	END;
 
  H6:	BEGIN
-	if not within Preformatted Create '\12';
+	if not within Preformatted and not first Create '\12';
 	Create '<h6';
 	Create Attributes;
 	Create '>';
@@ -498,16 +504,16 @@ RULES
 #endif
 
  Paragraph: BEGIN
-	Create '\12<p';
+	if not within List_Item and not within Definition and not first
+		Create '\12';
+	Create '<p';
 	Create Attributes;
 	Create '>';
-	Create '</p>' After;
-	Create '\12' After;
+	Create '</p>\12' After;
 	END;
 
  Pseudo_paragraph: BEGIN
-	Create '\12';
-	Create '\12' After;
+	if not last Create '\12' After;
 	END;
 
  TEXT_UNIT: BEGIN
@@ -519,6 +525,8 @@ RULES
 	Create '<dl';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2 After;
 	Create '</dl>\12' After;
 	END;
 
@@ -530,16 +538,22 @@ RULES
 	END;
 
  Definition: BEGIN
+	Indent +2;
 	Create '<dd';
 	Create Attributes;
 	Create '>';
+	Indent +2;
+	Indent -2 After;
 	Create '</dd>\12' After;
+	Indent -2 After;
 	END;
 
  Unnumbered_List: BEGIN
 	Create '<ul';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2 After;
 	Create '</ul>\12' After;
 	END;
 
@@ -547,6 +561,8 @@ RULES
 	Create '<ol';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2 After;
 	Create '</ol>\12' After;
 	END;
 
@@ -554,13 +570,17 @@ RULES
 	Create '<address';
 	Create Attributes;
 	Create '>\12';
-	Create '</address>\12' After;
+	Indent +2;
+	Indent -2 After;
+	Create '\12</address>\12' After;
 	END;
 
  Menu:	BEGIN
 	Create '<menu';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2 After;
 	Create '</menu>\12' After;
 	END;
 
@@ -568,6 +588,8 @@ RULES
 	Create '<dir';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2 After;
 	Create '</dir>\12' After;
 	END;
 
@@ -575,6 +597,8 @@ RULES
 	Create '<li';
 	Create Attributes;
 	Create '>';
+	Indent +2;
+	Indent -2 After;
 	Create '</li>\12' After;
 	END;
 
@@ -599,9 +623,11 @@ RULES
 	END;
 
  Form: BEGIN
-	Create '<form';
+	Create '\12<form';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2 After;
 	Create '</form>\12' After;
 	END;
 
@@ -609,6 +635,8 @@ RULES
 	Create '\12<select';
 	Create Attributes;
 	Create '>';
+	Indent +2;
+	Indent -2 After;
 	Create '\12</select>\12' After;
 	END;
 
@@ -623,7 +651,9 @@ RULES
 	Create '\12<optgroup';
 	Create Attributes;
 	Create '>';
-	Create '</optgroup>' After;
+	Indent +2;
+	Indent -2 After;
+	Create '\12</optgroup>' After;
 	END;
 
  Text_Area: BEGIN
@@ -763,9 +793,11 @@ RULES
 	END;
 
  Block_Quote: BEGIN
-	Create '<blockquote';
+	Create '\12<blockquote';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2 After;
 	Create '</blockquote>\12' After;
 	END;
 
@@ -797,7 +829,9 @@ RULES
 	Create '<map';
 	Create Attributes;
 	Create '>\12';
-	Create '</map>\12' after;
+	Indent +2;
+	Indent -2 After;
+	Create '</map>\12' After;
 	END;
 
  AREA:
@@ -819,6 +853,8 @@ RULES
 	Create '\12<table';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2 after;
 	Create '</table>\12' after;
 	END;
 
@@ -835,6 +871,8 @@ RULES
 	Create '<colgroup';
 	Create Attributes;
 	Create '>';
+	Indent +2;
+	Indent -2 after;
 	Create '</caption>\12' after;
 	END;
 
@@ -843,7 +881,7 @@ RULES
 	Create '<col';
 	Create Attributes;
 	Create '>';
-	Create '</caption>\12' after;
+	Create '</col>\12' after;
 	END;
 
  Table_head:
@@ -854,6 +892,8 @@ RULES
 	Create '<thead';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2 after;
 	Create '</thead>\12' after;
 	END;
 
@@ -862,13 +902,18 @@ RULES
 	Create '<tfoot';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2 after;
 	Create '</tfoot>\12' after;
 	END;
+
  tbody:
 	BEGIN
 	Create '<tbody';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2 after;
 	Create '</tbody>\12' after;
 	END;
 
@@ -880,6 +925,8 @@ RULES
 	Create '<tr';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2 after;
 	Create '</tr>\12' after;
 	END;
 
@@ -888,6 +935,8 @@ RULES
 	Create '<td';
 	Create Attributes;
 	Create '>';
+	Indent +2;
+	Indent -2 after;
 	Create '</td>\12' after;
 	END;
 
@@ -896,6 +945,8 @@ RULES
 	Create '<th';
 	Create Attributes;
 	Create '>';
+	Indent +2;
+	Indent -2 after;
 	Create '</th>\12' after;
 	END;
 
@@ -945,7 +996,7 @@ RULES
 
  Comment\240: BEGIN
 	NoLineBreak;
- 	Create '\12<!--';
+ 	Create '<!--';
 	NoTranslation;
 	Create '-->\12' after;
 	END;
@@ -990,6 +1041,8 @@ RULES
 	Create '<iframe';
 	Create Attributes;
 	Create '>\12';
+	Indent +2;
+	Indent -2;
 	Create '</iframe>\12' After;	
 	END;
 

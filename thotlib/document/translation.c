@@ -235,7 +235,11 @@ boolean             lineBreak;
 		     if (OutputFile[fileNum].OfIndent >= MAX_BUFFER_LEN)
 			indent = MAX_BUFFER_LEN - 1;
 		     else
+		        {
 			indent = OutputFile[fileNum].OfIndent;
+		        if (indent < 0)
+			   indent = 0;
+			}
 		     for (j = 0; j < indent; j++)
 			OutputFile[fileNum].OfBuffer[j] = ' ';
 		     OutputFile[fileNum].OfBufferLen = indent;
@@ -272,6 +276,8 @@ boolean             lineBreak;
 				  indent = pTSch->TsLineLength - 10;
 			       else
 				  indent = OutputFile[fileNum].OfIndent;
+			       if (indent < 0)
+				  indent = 0;
 			       for (j = 0; j < indent; j++)
 				  OutputFile[fileNum].OfBuffer[j] = ' ';
 			       i -= indent;
@@ -2962,10 +2968,14 @@ boolean            *removeEl;
 		    fileNum = GetSecondaryFile (secondaryFileName, pDoc, TRUE);
 		 }
 	       if (fileNum >= 0)
+		  {
 	          if (pTRule->TrRelativeIndent)
 		     OutputFile[fileNum].OfIndent += pTRule->TrIndentVal;
 	          else
 		     OutputFile[fileNum].OfIndent = pTRule->TrIndentVal;
+		  if (OutputFile[fileNum].OfIndent < 0)
+		     OutputFile[fileNum].OfIndent = 0;
+		  }
 	       break;
 
 	    case TGet:
