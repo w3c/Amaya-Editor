@@ -1,12 +1,6 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   schtrad.c :
-   Chargement et Liberation
-   des schemas de structure et de traduction
-   V. Quint     Janvier 1988
-   IV : Mai 92   adaptation Tool Kit
+   Chargement et liberation des schemas de structure et de traduction
  */
 
 #include "thot_sys.h"
@@ -25,296 +19,293 @@
 #include "schemas_f.h"
 #include "schtrad_f.h"
 
-typedef struct _UneTraduc
+typedef struct _ATranslation
   {
-     PtrSSchema        TradPtrSchS;	/* pointeur sur le schema de struct. */
-     PtrTSchema        TradPtrSchT;	/* pointeur sur le schema de trad. */
-     Name                 TradNomSchT;	/* nom du schema de traduction */
+     PtrSSchema        pStructSchema;	/* pointeur sur le schema de struct. */
+     PtrTSchema        pTransSchema;	/* pointeur sur le schema de trad. */
+     Name              TransSchemaName;	/* nom du schema de traduction */
   }
-UneTraduc;
+ATranslation;
 
-#define NbMaxSchT 16		/* nombre max de schemas de traduction charges
+#define MAX_TSCHEMAS 16		/* nombre max de schemas de traduction charges
 				   en meme temps */
 
 /* table des schemas de traduction charges */
-static UneTraduc    TabSchTrad[NbMaxSchT];
+static ATranslation    LoadedTSchema[MAX_TSCHEMAS];
 
 /* ---------------------------------------------------------------------- */
-/* |    InitTableSchTrad initialise la table des schemas de traduction  | */
-/* |            charges.                                                | */
+/* |    InitTranslationSchemasTable initialise la table des schemas de	| */
+/* |            traduction charges.					| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                InitTableSchTrad ()
+void                InitTranslationSchemasTable ()
 
 #else  /* __STDC__ */
-void                InitTableSchTrad ()
+void                InitTranslationSchemasTable ()
 #endif				/* __STDC__ */
 
 {
    int                 i;
 
-   for (i = 0; i < NbMaxSchT; i++)
+   for (i = 0; i < MAX_TSCHEMAS; i++)
      {
-	TabSchTrad[i].TradPtrSchS = NULL;
-	TabSchTrad[i].TradPtrSchT = NULL;
-	TabSchTrad[i].TradNomSchT[0] = '\0';
+	LoadedTSchema[i].pStructSchema = NULL;
+	LoadedTSchema[i].pTransSchema = NULL;
+	LoadedTSchema[i].TransSchemaName[0] = '\0';
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ClearTableSchTrad libere tous les schemas de traduction         | */
-/* |            pointe's par la table des schemas de traduction         | */
+/* |    ClearTranslationSchemasTable libere tous les schemas de         | */
+/* |    traduction pointe's par la table des schemas de traduction      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ClearTableSchTrad ()
+void                ClearTranslationSchemasTable ()
 
 #else  /* __STDC__ */
-void                ClearTableSchTrad ()
+void                ClearTranslationSchemasTable ()
 #endif				/* __STDC__ */
 
 {
    int                 i;
 
-   for (i = 0; i < NbMaxSchT; i++)
+   for (i = 0; i < MAX_TSCHEMAS; i++)
      {
-	if (TabSchTrad[i].TradPtrSchT != NULL)
+	if (LoadedTSchema[i].pTransSchema != NULL)
 	  {
-	     FreeTranslationSchema (TabSchTrad[i].TradPtrSchT, TabSchTrad[i].TradPtrSchS);
-	     TabSchTrad[i].TradPtrSchT = NULL;
+	     FreeTranslationSchema (LoadedTSchema[i].pTransSchema,
+				    LoadedTSchema[i].pStructSchema);
+	     LoadedTSchema[i].pTransSchema = NULL;
 	  }
-	TabSchTrad[i].TradPtrSchS = NULL;
-	TabSchTrad[i].TradNomSchT[0] = '\0';
+	LoadedTSchema[i].pStructSchema = NULL;
+	LoadedTSchema[i].TransSchemaName[0] = '\0';
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LdSchTrad charge un schema de traduction.                       | */
+/* |    LoadTranslationSchema charge un schema de traduction.           | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-PtrTSchema        LdSchTrad (Name fname, PtrSSchema SS)
+PtrTSchema        LoadTranslationSchema (Name schName, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-PtrTSchema        LdSchTrad (fname, SS)
-Name                 fname;
-PtrSSchema        SS;
-
-#endif /* __STDC__ */
-
-{
-   int                 i;
-   PtrTSchema        pSchT;
-   boolean             found;
-
-   pSchT = NULL;
-   /* cherche dans la table si le schema est deja charge */
-   i = 0;
-   found = FALSE;
-   do
-     {
-	if (TabSchTrad[i].TradPtrSchT != NULL)
-	   found = (strcmp (fname, TabSchTrad[i].TradNomSchT) == 0);
-	if (!found)
-	   i++;
-     }
-   while (!found && i < NbMaxSchT);
-   if (found)
-      /* ce schema est dans la table des schemas charges */
-      pSchT = TabSchTrad[i].TradPtrSchT;
-   else
-      /* c'est un nouveau schema, il faut le charger */
-     {
-	/* cherche d'abord une entree libre dans la table */
-	i = 0;
-	while (TabSchTrad[i].TradPtrSchS != NULL && i < NbMaxSchT)
-	   i++;
-	if (TabSchTrad[i].TradPtrSchS == NULL && i < NbMaxSchT)
-	   /* on a trouve une entree libre */
-	  {
-	     /* on charge le schema de traduction */
-	     pSchT = ReadTranslationSchema (fname, SS);
-	     if (pSchT != NULL)
-		/* met le nouveau schema dans la table des schemas charges */
-	       {
-		  TabSchTrad[i].TradPtrSchS = SS;
-		  TabSchTrad[i].TradPtrSchT = pSchT;
-		  strcpy (TabSchTrad[i].TradNomSchT, fname);
-	       }
-	  }
-     }
-   return (pSchT);
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    ChercheUse cherche une regle USE dans la suite de blocs de      | */
-/* |            regles pBloc. Si une regle USE pour la nature de nom    | */
-/* |            fname est trouvee dans ce bloc, on met dans fname le    | */
-/* |            nom du schema de traduction a` utiliser.                | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-static boolean      ChercheUse (PtrTRuleBlock pBloc, Name fname)
-
-#else  /* __STDC__ */
-static boolean      ChercheUse (pBloc, fname)
-PtrTRuleBlock       pBloc;
-Name                 fname;
-
-#endif /* __STDC__ */
-
-{
-   PtrTRule        pRegle;
-   boolean             UseTrouve;
-   PtrTRule        pRe1;
-
-   UseTrouve = FALSE;
-   if (pBloc != NULL)
-      do
-	{
-	   pRegle = pBloc->TbFirstTRule;
-	   if (pRegle != NULL)
-	      do
-		{
-		   pRe1 = pRegle;
-		   if (pRe1->TrType == TUse)
-		      /* c'est une regle USE */
-		      if (strcmp (fname, pRe1->TrNature) == 0)
-			{
-			   UseTrouve = TRUE;
-			   strncpy (fname, pRe1->TrTranslSchemaName, MAX_NAME_LENGTH);
-			}
-		   pRegle = pRe1->TrNextTRule;
-		}
-	      while (!(pRegle == NULL || UseTrouve));
-	   pBloc = pBloc->TbNextBlock;
-	}
-      while (!(pBloc == NULL || UseTrouve));
-
-   return UseTrouve;
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    rdNomTrad       trouve le nom du schema de traduction a`        | */
-/* |            utiliser pour le schema de structure de nom fname.      | */
-/* |            Au retour, rend dans fname le nom du schema de          | */
-/* |            traduction.                                             | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-static void         rdNomTrad (Name fname)
-
-#else  /* __STDC__ */
-static void         rdNomTrad (fname)
-Name                 fname;
-
-#endif /* __STDC__ */
-
-{
-   int                 i;
-   boolean             trouve, natureok;
-   PtrSSchema        pSc1;
-   SRule              *pRe1;
-
-   trouve = FALSE;
-   /* cherche d'abord si le schema de traduction du document contient */
-   /* une regle USE pour cette nature */
-   /* le schema de traduction du document est le premier de la table */
-   if (TabSchTrad[0].TradPtrSchT != NULL)
-      /* cherche la nature dans le schema de structure du document */
-     {
-	i = 0;
-	natureok = FALSE;
-	pSc1 = TabSchTrad[0].TradPtrSchS;
-	do
-	  {
-	     i++;
-	     pRe1 = &pSc1->SsRule[i - 1];
-	     if (pRe1->SrConstruct == CsNatureSchema)
-		natureok = strcmp (fname, pRe1->SrName) == 0;
-	  }
-	while (!(i >= pSc1->SsNRules || natureok));
-	if (natureok)
-	   /* on a trouve la nature, on cherche une regle USE parmi les */
-	   /* regles de traduction de l'element nature */
-	   trouve = ChercheUse (TabSchTrad[0].TradPtrSchT->TsElemTRule[i - 1],
-				fname);
-	if (!trouve)
-	   /* on cherche une regle USE parmi les regles de traduction de */
-	   /* l'element racine du document */
-	   trouve = ChercheUse (TabSchTrad[0].TradPtrSchT->
-	     TsElemTRule[TabSchTrad[0].TradPtrSchS->SsRootElem - 1], fname);
-     }
-   if (!trouve)
-     {
-	/* on n'a pas trouve' de regle USE pour cette nature */
-	TtaDisplayMessage (INFO, TtaGetMessage(LIB, EL_NOT_TRANSLATED), fname);
-	fname[0] = '\0';
-     }
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    SchemaTrad retourne le schema de traduction a` appliquer aux    | */
-/* |            elements appartenant au schema de structure pSS.        | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-PtrTSchema        SchemaTrad (PtrSSchema pSS)
-
-#else  /* __STDC__ */
-PtrTSchema        SchemaTrad (pSS)
+PtrTSchema        LoadTranslationSchema (schName, pSS)
+Name              schName;
 PtrSSchema        pSS;
 
 #endif /* __STDC__ */
 
 {
+   PtrTSchema          pTSch;
    int                 i;
-   PtrTSchema        schema;
-   Name                 nomSch;
    boolean             found;
 
-   schema = NULL;
+   pTSch = NULL;
+   /* cherche dans la table si le schema est deja charge */
+   i = 0;
+   found = FALSE;
+   do
+     {
+	if (LoadedTSchema[i].pTransSchema != NULL)
+	   found = (strcmp (schName, LoadedTSchema[i].TransSchemaName) == 0);
+	if (!found)
+	   i++;
+     }
+   while (!found && i < MAX_TSCHEMAS);
+   if (found)
+      /* ce schema est dans la table des schemas charges */
+      pTSch = LoadedTSchema[i].pTransSchema;
+   else
+      /* c'est un nouveau schema, il faut le charger */
+     {
+	/* cherche d'abord une entree libre dans la table */
+	i = 0;
+	while (LoadedTSchema[i].pStructSchema != NULL && i < MAX_TSCHEMAS)
+	   i++;
+	if (LoadedTSchema[i].pStructSchema == NULL && i < MAX_TSCHEMAS)
+	   /* on a trouve une entree libre */
+	  {
+	     /* on charge le schema de traduction */
+	     pTSch = ReadTranslationSchema (schName, pSS);
+	     if (pTSch != NULL)
+		/* met le nouveau schema dans la table des schemas charges */
+	       {
+		  LoadedTSchema[i].pStructSchema = pSS;
+		  LoadedTSchema[i].pTransSchema = pTSch;
+		  strcpy (LoadedTSchema[i].TransSchemaName, schName);
+	       }
+	  }
+     }
+   return (pTSch);
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    GetUSErule cherche une regle USE dans la suite de blocs de      | */
+/* |            regles pBlock. Si une regle USE pour la nature de nom   | */
+/* |            schName est trouvee dans ce bloc, on met dans schName	| */
+/* |            le nom du schema de traduction a` utiliser.		| */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static boolean      GetUSErule (PtrTRuleBlock pBlock, Name schName)
+
+#else  /* __STDC__ */
+static boolean      GetUSErule (pBlock, schName)
+PtrTRuleBlock       pBlock;
+Name                schName;
+
+#endif /* __STDC__ */
+
+{
+   PtrTRule        pTRule;
+   boolean         found;
+
+   found = FALSE;
+   if (pBlock != NULL)
+      do
+	{
+	   pTRule = pBlock->TbFirstTRule;
+	   if (pTRule != NULL)
+	      do
+		{
+		   if (pTRule->TrType == TUse)
+		      /* c'est une regle USE */
+		      if (strcmp (schName, pTRule->TrNature) == 0)
+			{
+			   found = TRUE;
+			   strncpy (schName, pTRule->TrTranslSchemaName,
+				    MAX_NAME_LENGTH);
+			}
+		   pTRule = pTRule->TrNextTRule;
+		}
+	      while (pTRule != NULL && !found);
+	   pBlock = pBlock->TbNextBlock;
+	}
+      while (pBlock != NULL && !found);
+   return found;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    GetTransSchName       trouve le nom du schema de traduction a`	| */
+/* |            utiliser pour le schema de structure de nom schName.    | */
+/* |            Au retour, rend dans schName le nom du schema de        | */
+/* |            traduction.                                             | */
+/* ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+static void         GetTransSchName (Name schName)
+
+#else  /* __STDC__ */
+static void         GetTransSchName (schName)
+Name                 schName;
+
+#endif /* __STDC__ */
+
+{
+   int                 i;
+   boolean             found, natureOK;
+   PtrSSchema          pSS;
+   SRule              *pSRule;
+
+   found = FALSE;
+   /* cherche d'abord si le schema de traduction du document contient */
+   /* une regle USE pour cette nature */
+   /* le schema de traduction du document est le premier de la table */
+   if (LoadedTSchema[0].pTransSchema != NULL)
+      /* cherche la nature dans le schema de structure du document */
+     {
+	natureOK = FALSE;
+	pSS = LoadedTSchema[0].pStructSchema;
+	i = 0;
+	do
+	  {
+	     pSRule = &pSS->SsRule[i++];
+	     if (pSRule->SrConstruct == CsNatureSchema)
+		natureOK = strcmp (schName, pSRule->SrName) == 0;
+	  }
+	while (i < pSS->SsNRules && !natureOK);
+	if (natureOK)
+	   /* on a trouve la nature, on cherche une regle USE parmi les */
+	   /* regles de traduction de l'element nature */
+	   found = GetUSErule (LoadedTSchema[0].pTransSchema->TsElemTRule[i - 1],
+				schName);
+	if (!found)
+	   /* on cherche une regle USE parmi les regles de traduction de */
+	   /* l'element racine du document */
+	   found = GetUSErule (LoadedTSchema[0].pTransSchema->
+	     TsElemTRule[LoadedTSchema[0].pStructSchema->SsRootElem - 1],
+				schName);
+     }
+   if (!found)
+     {
+	/* on n'a pas trouve' de regle USE pour cette nature */
+	TtaDisplayMessage (INFO, TtaGetMessage(LIB, EL_NOT_TRANSLATED),
+			   schName);
+	schName[0] = '\0';
+     }
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* |    GetTranslationSchema retourne le schema de traduction a`	| */
+/* |	appliquer aux elements appartenant au schema de structure pSS.	| */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+PtrTSchema        GetTranslationSchema (PtrSSchema pSS)
+
+#else  /* __STDC__ */
+PtrTSchema        GetTranslationSchema (pSS)
+PtrSSchema        pSS;
+
+#endif /* __STDC__ */
+
+{
+   PtrTSchema          pTSchema;
+   Name                schemaName;
+   int                 i;
+   boolean             found;
+
+   pTSchema = NULL;
    found = FALSE;
    i = 0;
    do
      {
-	if (TabSchTrad[i].TradPtrSchS != NULL)
-	   found = (TabSchTrad[i].TradPtrSchS->SsCode == pSS->SsCode);
+	if (LoadedTSchema[i].pStructSchema != NULL)
+	   found = (LoadedTSchema[i].pStructSchema->SsCode == pSS->SsCode);
 	if (!found)
 	   i++;
      }
-   while (!found && i < NbMaxSchT);
+   while (!found && i < MAX_TSCHEMAS);
    if (found)
-      schema = TabSchTrad[i].TradPtrSchT;
+      pTSchema = LoadedTSchema[i].pTransSchema;
    else
      {
-	strcpy (nomSch, pSS->SsName);
-	rdNomTrad (nomSch);
-	if (nomSch[0] != '\0')
-	   /* cree un nouveau schema de traduction et le */
-	   /* charge depuis le fichier */
-	   schema = LdSchTrad (nomSch, pSS);
+	strcpy (schemaName, pSS->SsName);
+	GetTransSchName (schemaName);
+	if (schemaName[0] != '\0')
+	   /* cree un nouveau schema de traduction et le charge */
+	   pTSchema = LoadTranslationSchema (schemaName, pSS);
 	else
-	   /* indique dans la table qu'il n'y a pas de schema de traduction pour */
-	   /* ce schema de structure */
+	   /* indique dans la table qu'il n'y a pas de schema de traduction */
+	   /* pour ce schema de structure */
 	  {
 	     /* cherche d'abord une entree libre dans la table */
 	     i = 0;
-	     while (TabSchTrad[i].TradPtrSchS != NULL && i < NbMaxSchT)
+	     while (LoadedTSchema[i].pStructSchema != NULL && i < MAX_TSCHEMAS)
 		i++;
-	     if (TabSchTrad[i].TradPtrSchS == NULL && i < NbMaxSchT)
+	     if (LoadedTSchema[i].pStructSchema == NULL && i < MAX_TSCHEMAS)
 		/* on a trouve une entree libre */
 	       {
-		  TabSchTrad[i].TradPtrSchS = pSS;
-		  TabSchTrad[i].TradPtrSchT = NULL;
-		  TabSchTrad[i].TradNomSchT[0] = '\0';
+		  LoadedTSchema[i].pStructSchema = pSS;
+		  LoadedTSchema[i].pTransSchema = NULL;
+		  LoadedTSchema[i].TransSchemaName[0] = '\0';
 	       }
 	  }
      }
-   return schema;
+   return pTSchema;
 }
-
-/* End Of Module schtrad */

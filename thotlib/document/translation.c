@@ -173,7 +173,7 @@ boolean             lineBreak;
 	/* on cherche le schema de traduction du document pour acceder aux */
 	/* parametres definissant la longueur de ligne et le caractere de */
 	/* fin de ligne */
-	pTSch = SchemaTrad (pDoc->DocSSchema);
+	pTSch = GetTranslationSchema (pDoc->DocSSchema);
 	if (pTSch != NULL)
 	  {
 	     fileDesc = OutputFile[fileNum].OfFileDesc;
@@ -351,7 +351,7 @@ PtrDocument         pDoc;
    if (!(pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol ||
 	 pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtPlyLine)
        || !transChar)
-      pTSch = SchemaTrad (pEl->ElStructSchema);
+      pTSch = GetTranslationSchema (pEl->ElStructSchema);
    else
       /* En examinant les elements englobants, on cherche un schema de */
       /* traduction qui contienne des regles pour ce type de feuille */
@@ -367,7 +367,7 @@ PtrDocument         pDoc;
 	       {
 		  pSS = pAncestor->ElStructSchema;
 		  /* schema de traduction de cette structure */
-		  pTSch = SchemaTrad (pSS);
+		  pTSch = GetTranslationSchema (pSS);
 		  if (pTSch != NULL)
 		     switch (pEl->ElLeafType)
 			   {
@@ -1686,7 +1686,7 @@ PtrDocument         pDoc;
       /* l'application ne laisse pas l'editeur ecrire l'attribut */
       return;
    /* cherche le premier bloc de regles correspondant a l'attribut */
-   pTSchAttr = SchemaTrad (pAttr->AeAttrSSchema);
+   pTSchAttr = GetTranslationSchema (pAttr->AeAttrSSchema);
    pBlock = NULL;
    if (pTSchAttr != NULL)
      {
@@ -1806,7 +1806,7 @@ PtrDocument         pDoc;
    /* parcourt les attributs de l'element */
    while (pAttr != NULL)
      {
-	pTSch = SchemaTrad (pAttr->AeAttrSSchema);
+	pTSch = GetTranslationSchema (pAttr->AeAttrSSchema);
 	if (pTSch != NULL)
 	   if (pTSch->TsAttrTRule[pAttr->AeAttrNum - 1].AtrElemType == 0)
 	      /* les regles de traduction de l'attribut s'appliquent a */
@@ -1830,7 +1830,7 @@ PtrDocument         pDoc;
      }
    /* produit la traduction des attributs des elements ascendants qui */
    /* s'appliquent aux elements du type de notre element */
-   pTSch = SchemaTrad (pEl->ElStructSchema);
+   pTSch = GetTranslationSchema (pEl->ElStructSchema);
    if (pTSch != NULL)
       if (pTSch->TsInheritAttr[pEl->ElTypeNumber - 1])
 	 /* il y a effectivement heritage d'attribut pour ce type d'element */
@@ -1907,7 +1907,7 @@ PtrDocument         pDoc;
 #define MAX_PRULE_TABLE 50
    PtrPRule        PRuleTable[MAX_PRULE_TABLE];
 
-   pTSch = SchemaTrad (pEl->ElStructSchema);
+   pTSch = GetTranslationSchema (pEl->ElStructSchema);
    if (pTSch == NULL)
       return;
    /* 1ere regle de presentation specifique de l'element */
@@ -3046,7 +3046,7 @@ boolean             enforce;
    if (!pEl->ElTransContent || enforce)
      {
 	/* cherche le schema de traduction qui s'applique a l'element */
-	pTSch = SchemaTrad (pEl->ElStructSchema);
+	pTSch = GetTranslationSchema (pEl->ElStructSchema);
 	if (pTSch == NULL)
 	   return;
 	removeEl = FALSE;
@@ -3091,7 +3091,7 @@ boolean             enforce;
 		   while (!found && i < pParentSS->SsNRules);
 		   if (found)
 		     {
-			pTS = SchemaTrad (pEl->ElParent->ElStructSchema);
+			pTS = GetTranslationSchema (pEl->ElParent->ElStructSchema);
 			if (pTS != NULL)
 			   if (pTS->TsElemTRule[i - 1] != NULL)
 			      /* il y a des regles de traduction pour la nature, on */
@@ -3315,7 +3315,7 @@ char               *TSchemaName;
 	     fileDirectory[i] = '\0';
 	  }
 	/* charge le schema de traduction du document */
-	if (!LdSchTrad (TSchemaName, pDoc->DocSSchema) != 0)
+	if (!LoadTranslationSchema (TSchemaName, pDoc->DocSSchema) != 0)
 	   /* echec au chargement du schema de traduction */
 	   fclose (outputFile);
 	else
@@ -3349,7 +3349,7 @@ char               *TSchemaName;
 	     FlushOutputFiles (pDoc);
 	  }
      }
-   ClearTableSchTrad ();
+   ClearTranslationSchemasTable ();
    fflush (stdout);
    fflush (stderr);
 }

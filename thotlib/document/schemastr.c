@@ -1,16 +1,8 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/* ======================================================================= */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
-/* |                                                                    | */
-/* |                    Chargement et Liberation                        | */
-/* |    des schemas de structure sans schemas de presentation           | */
-/* |                                                                    | */
-/* |                    V. Quint        Juin 1984                       | */
-/* |                                                                    | */
-/* ======================================================================= */
+/* 
+	Chargement et liberation des schemas de structure sans schemas
+	de presentation
+ */
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -33,73 +25,73 @@ void                InitNatures ()
 }
 
 /* ---------------------------------------------------------------------- */
-/* | LoadNatureSchema    Charge la nature definie dans la regle r du schema de   | */
-/* | structure pointe par PSchStr.                                      | */
+/* | LoadNatureSchema    Charge la nature definie dans la regle r	| */
+/* | du schema de structure pointe par pSS.				| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                LoadNatureSchema (PtrSSchema PSchStr, Name NomSchPrs, int r)
+void                LoadNatureSchema (PtrSSchema pSS, Name PSchName, int rule)
 
 #else  /* __STDC__ */
-void                LoadNatureSchema (PSchStr, NomSchPrs, r)
-PtrSSchema        PSchStr;
-Name                 NomSchPrs;
-int         r;
+void                LoadNatureSchema (pSS, PSchName, rule)
+PtrSSchema          pSS;
+Name                PSchName;
+int         rule;
 
 #endif /* __STDC__ */
 
 {
-   Name                 fname;
-   PtrSSchema        PtrStrNat;
+   PtrSSchema        pNatureSS;
+   Name              schName;
 
    /* utilise le nom de la nature comme nom de fichier. */
-   /* copie le nom de nature dans fname */
-   strncpy (fname, PSchStr->SsRule[r - 1].SrOrigNat, MAX_NAME_LENGTH);
+   /* copie le nom de nature dans schName */
+   strncpy (schName, pSS->SsRule[rule - 1].SrOrigNat, MAX_NAME_LENGTH);
    /* cree un schema de structure et le charge depuis le fichier */
-   GetSchStruct (&PtrStrNat);
-   if (!ReadStructureSchema (fname, PtrStrNat))
+   GetSchStruct (&pNatureSS);
+   if (!ReadStructureSchema (schName, pNatureSS))
       /* echec */
      {
-	FreeSchStruc (PtrStrNat);
-	PSchStr->SsRule[r - 1].SrSSchemaNat = NULL;
+	FreeSchStruc (pNatureSS);
+	pSS->SsRule[rule - 1].SrSSchemaNat = NULL;
      }
    else
       /* chargement du schema de structure reussi */
-   if (PtrStrNat->SsExtension)
+   if (pNatureSS->SsExtension)
       /* c'est une extension de schema, on abandonne */
      {
-	FreeSchStruc (PtrStrNat);
-	PtrStrNat = NULL;
-	PSchStr->SsRule[r - 1].SrSSchemaNat = NULL;
+	FreeSchStruc (pNatureSS);
+	pNatureSS = NULL;
+	pSS->SsRule[rule - 1].SrSSchemaNat = NULL;
      }
    else
      {
 	/* traduit le schema de structure dans la langue de l'utilisateur */
-	ConfigTranslateSSchema (PtrStrNat);
-	PSchStr->SsRule[r - 1].SrSSchemaNat = PtrStrNat;
+	ConfigTranslateSSchema (pNatureSS);
+	pSS->SsRule[rule - 1].SrSSchemaNat = pNatureSS;
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ajouteregle     ajoute une nouvelle regle a la fin de la table  | */
+/* |    AppendSRule     ajoute une nouvelle regle a la fin de la table  | */
 /* |                    des regles                                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         ajouteregle (int * ret, PtrSSchema pSS)
+static void         AppendSRule (int * ret, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-static void         ajouteregle (ret, pSS)
-int        *ret;
-PtrSSchema        pSS;
+static void         AppendSRule (ret, pSS)
+int                 *ret;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
 {
    if (pSS->SsNRules >= MAX_RULES_SSCHEMA)
      {
+	/* Table de regles saturee */
 	TtaDisplaySimpleMessage (FATAL, LIB, LIB_RULES_TABLE_FULL);
 	*ret = 0;
-	/* Table de regles saturee */
      }
    else
       /* ajoute une entree a la table */
@@ -113,28 +105,28 @@ PtrSSchema        pSS;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    CreateNature   retourne le numero de la regle definissant le type | */
-/* |    de nom NomSchStr dans le schema de structure pointe par pSS.    | */
+/* |    CreateNature retourne le numero de la regle definissant le type | */
+/* |    de nom SSchName dans le schema de structure pointe par pSS.     | */
 /* |    S'il n'existe pas de type de ce nom, ajoute une regle de type   | */
-/* |    CsNatureSchema au schema de structure et charge le schema de         | */
-/* |    structure de nom NomSchStr; retourne le numero de la regle      | */
+/* |    CsNatureSchema au schema de structure et charge le schema de    | */
+/* |    structure de nom SSchName; retourne le numero de la regle       | */
 /* |    creee ou 0 si echec creation.                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int         CreateNature (Name NomSchStr, Name NomSchPrs, PtrSSchema pSS)
+int         CreateNature (Name SSchName, Name PSchName, PtrSSchema pSS)
 
 #else  /* __STDC__ */
-int         CreateNature (NomSchStr, NomSchPrs, pSS)
-Name                 NomSchStr;
-Name                 NomSchPrs;
-PtrSSchema        pSS;
+int         CreateNature (SSchName, PSchName, pSS)
+Name                SSchName;
+Name                PSchName;
+PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
 {
-   int         ret;
-   boolean             found;
-   SRule              *pRule;
+   SRule            *pRule;
+   int              ret;
+   boolean          found;
 
    /* schema de structure du document */
    /* cherche si le type existe deja dans le schema de structure */
@@ -142,41 +134,40 @@ PtrSSchema        pSS;
    ret = 0;
    do
      {
-	ret++;
-	pRule = &pSS->SsRule[ret - 1];
+	pRule = &pSS->SsRule[ret++];
 	if (pRule->SrConstruct == CsNatureSchema)
-	   if (strcmp (pRule->SrOrigNat, NomSchStr) == 0)
+	   if (strcmp (pRule->SrOrigNat, SSchName) == 0)
 	      found = TRUE;
      }
-   while (!(found || ret >= pSS->SsNRules));
+   while (!found && ret < pSS->SsNRules);
    if (!found)
       /* il n'existe pas, cherche une entree libre dans la table des */
       /* regles */
      {
 	if (pSS->SsFirstDynNature == 0)
 	   /* pas encore de nature chargee dynamiquement */
-	   ajouteregle (&ret, pSS);
+	   AppendSRule (&ret, pSS);
 	/* ajoute une regle a la fin de la table */
 	else
 	   /* il y a deja des natures dynamiques */
 	   /* cherche s'il y en a une libre */
 	  {
 	     ret = pSS->SsFirstDynNature;
-	     while (ret <= pSS->SsNRules && pSS->SsRule[ret - 1].SrSSchemaNat != NULL
-		)
+	     while (ret <= pSS->SsNRules &&
+		    pSS->SsRule[ret - 1].SrSSchemaNat != NULL)
 		ret++;
 	     if (ret > pSS->SsNRules)
 		/* pas de regle libre, on ajoute une regle a la fin de la */
 		/* table */
-		ajouteregle (&ret, pSS);
+		AppendSRule (&ret, pSS);
 	  }
 	if (ret > 0)
 	   /* il y a une entree libre (celle de rang ret) */
 	   /* remplit la regle nature */
 	  {
 	     pRule = &pSS->SsRule[ret - 1];
-	     strncpy (pRule->SrOrigNat, NomSchStr, MAX_NAME_LENGTH);
-	     strncpy (pRule->SrName, NomSchStr, MAX_NAME_LENGTH);
+	     strncpy (pRule->SrOrigNat, SSchName, MAX_NAME_LENGTH);
+	     strncpy (pRule->SrName, SSchName, MAX_NAME_LENGTH);
 	     pRule->SrAssocElem = FALSE;
 	     pRule->SrNDefAttrs = 0;
 	     pRule->SrConstruct = CsNatureSchema;
@@ -192,7 +183,7 @@ PtrSSchema        pSS;
 	      /* charge les schemas de structure et de presentation */
 	      /* de la nouvelle nature */
 	     {
-		LoadNatureSchema (pSS, NomSchPrs, ret);
+		LoadNatureSchema (pSS, PSchName, ret);
 		if (pRule->SrSSchemaNat == NULL)
 		   ret = 0;
 		/* echec chargement */
@@ -203,33 +194,33 @@ PtrSSchema        pSS;
 
 /* ---------------------------------------------------------------------- */
 /* | LoadSchemas  charge en memoire, pour le document pointe par pDocu, | */
-/* | le schema de structure de nom NomSchStr.                           | */
-/* | Si pSCharge n'est pas NULL, on ne charge rien                      | */
+/* | le schema de structure de nom SSchName.                            | */
+/* | Si pLoadedSS n'est pas NULL, on ne charge rien                     | */
 /* | Extension indique s'il s'agit d'une extension de schema ou d'un    | */
 /* | schema de structure complet.                                       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                LoadSchemas (Name NomSchStr, Name NomSchPrs, PtrSSchema * pSS, PtrSSchema pSCharge, boolean Extension)
+void                LoadSchemas (Name SSchName, Name PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, boolean Extension)
 
 #else  /* __STDC__ */
-void                LoadSchemas (NomSchStr, NomSchPrs, pSS, pSCharge, Extension)
-Name                 NomSchStr;
-Name                 NomSchPrs;
-PtrSSchema       *pSS;
-PtrSSchema        pSCharge;
+void                LoadSchemas (SSchName, PSchName, pSS, pLoadedSS, Extension)
+Name                SSchName;
+Name                PSchName;
+PtrSSchema         *pSS;
+PtrSSchema          pLoadedSS;
 boolean             Extension;
 
 #endif /* __STDC__ */
 
 {
-   Name                 fname;
+   Name                 schName;
 
-   strncpy (fname, NomSchStr, MAX_NAME_LENGTH);
+   strncpy (schName, SSchName, MAX_NAME_LENGTH);
    /* cree le schema de structure et charge le fichier dedans */
-   if (pSCharge == NULL)
+   if (pLoadedSS == NULL)
      {
 	GetSchStruct (pSS);
-	if (!ReadStructureSchema (fname, *pSS))
+	if (!ReadStructureSchema (schName, *pSS))
 	  {
 	     FreeSchStruc (*pSS);
 	     *pSS = NULL;
@@ -250,39 +241,40 @@ boolean             Extension;
 
 /* ---------------------------------------------------------------------- */
 /* | LoadExtension charge en memoire, pour le document pDoc, le schema  | */
-/* |     d'extension de nom NomSchStr.                                  | */
+/* |     d'extension de nom SSchName.                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrSSchema        LoadExtension (Name NomSchStr, Name NomSchPrs, PtrDocument pDoc)
+PtrSSchema        LoadExtension (Name SSchName, Name PSchName, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-PtrSSchema        LoadExtension (NomSchStr, NomSchPrs, pDoc)
-Name                 NomSchStr;
-Name                 NomSchPrs;
-PtrDocument         pDoc;
+PtrSSchema        LoadExtension (SSchName, PSchName, pDoc)
+Name              SSchName;
+Name              PSchName;
+PtrDocument       pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrSSchema        pExtens, pExtensPrec;
+   PtrSSchema        pExtens, pPrevExtens;
 
    pExtens = NULL;
    if (pDoc->DocSSchema != NULL)
      {
 	/* charge le schema d'extension demande' */
-	LoadSchemas (NomSchStr, NomSchPrs, &pExtens, NULL, TRUE);
+	LoadSchemas (SSchName, PSchName, &pExtens, NULL, TRUE);
 	if (pExtens != NULL)
 	  {
-	     if (NomSchPrs[0] != '\0')
-		strncpy (pExtens->SsDefaultPSchema, NomSchPrs, MAX_NAME_LENGTH - 1);
+	     if (PSchName[0] != '\0')
+		strncpy (pExtens->SsDefaultPSchema, PSchName,
+			 MAX_NAME_LENGTH - 1);
 	     /* cherche le dernier schema d'extension du document */
-	     pExtensPrec = pDoc->DocSSchema;
-	     while (pExtensPrec->SsNextExtens != NULL)
-		pExtensPrec = pExtensPrec->SsNextExtens;
+	     pPrevExtens = pDoc->DocSSchema;
+	     while (pPrevExtens->SsNextExtens != NULL)
+		pPrevExtens = pPrevExtens->SsNextExtens;
 	     /* ajoute le nouveau schema d'extension a la fin de la */
 	     /* chaine des schemas d'extension du document */
-	     pExtens->SsPrevExtens = pExtensPrec;
-	     pExtensPrec->SsNextExtens = pExtens;
+	     pExtens->SsPrevExtens = pPrevExtens;
+	     pPrevExtens->SsNextExtens = pExtens;
 	     pExtens->SsNextExtens = NULL;
 	  }
      }
@@ -291,34 +283,34 @@ PtrDocument         pDoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    LibRegleNat     cherche dans le schema de structure pointe' par | */
-/* |    pSchStr les regles de nature qui font reference au schema       | */
-/* |    pointe par pSS.                                                 | */
+/* |    FreeNatureRules cherche dans le schema de structure pointe' par | */
+/* |    pSS les regles de nature qui font reference au schema pointe'	| */
+/* |    par pNatureSS.                                                  | */
 /* |    S'il y en a, retourne Vrai, annule ces regles et traite de meme | */
 /* |    les autres natures. S'il n'y en a pas, retourne Faux.           | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      LibRegleNat (PtrSSchema pSchStr, PtrSSchema pSS)
+static boolean      FreeNatureRules (PtrSSchema pSS, PtrSSchema pNatureSS)
 #else  /* __STDC__ */
-static boolean      LibRegleNat (pSchStr, pSS)
-PtrSSchema        pSchStr;
+static boolean      FreeNatureRules (pSS, pNatureSS)
 PtrSSchema        pSS;
+PtrSSchema        pNatureSS;
 
 #endif /* __STDC__ */
 {
-   int                 r;
    SRule              *pRule;
+   int                 rule;
    boolean             ret;
 
    ret = FALSE;
-   if (pSchStr != NULL)
+   if (pSS != NULL)
       /* parcourt les regles de ce schemas */
-      for (r = 0; r < pSchStr->SsNRules; r++)
+      for (rule = 0; rule < pSS->SsNRules; rule++)
 	{
-	   pRule = &pSchStr->SsRule[r];
+	   pRule = &pSS->SsRule[rule];
 	   if (pRule->SrConstruct == CsNatureSchema)
 	      /* c'est une regle de nature */
-	      if (pRule->SrSSchemaNat == pSS)
+	      if (pRule->SrSSchemaNat == pNatureSS)
 		 /* elle fait reference a la nature supprimee */
 		{
 		   ret = TRUE;
@@ -330,38 +322,38 @@ PtrSSchema        pSS;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeNature       Si le schema de structure pointe' par pSPere    | */
-/* |    contient une regle de nature pour le schema pointe' par pSS,    | */
-/* |    retourne Vrai et libere le schema de structure pointe par pSS   | */
-/* |    et son schema de presentation.                                  | */
+/* |    FreeNature  Si le schema de structure pointe' par pSS contient  | */
+/* |    une regle de nature pour le schema pointe' par pNatureSS,       | */
+/* |    retourne Vrai et libere le schema de structure pointe par	| */
+/* |	pNatureSS et son schema de presentation.			| */
 /* |    Retourne faux sinon.                                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             FreeNature (PtrSSchema pSPere, PtrSSchema pSS)
+boolean             FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS)
 
 #else  /* __STDC__ */
-boolean             FreeNature (pSPere, pSS)
-PtrSSchema        pSPere;
-PtrSSchema        pSS;
+boolean             FreeNature (pSS, pNatureSS)
+PtrSSchema          pSS;
+PtrSSchema          pNatureSS;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ret;
+   boolean          ret;
 
    ret = FALSE;
    /* Cherche tous les schemas de structure qui utilisaient cette nature */
-   if (LibRegleNat (pSPere, pSS))
+   if (FreeNatureRules (pSS, pNatureSS))
      {
 	ret = TRUE;
-	FreeSchStruc (pSS);
+	FreeSchStruc (pNatureSS);
      }
    return ret;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    FreeDocumentSchemas      libere tous les schemas de structure et de      | */
+/* |    FreeDocumentSchemas libere tous les schemas de structure et de  | */
 /* |    presentation utilises par le document dont le descripteur est   | */
 /* |    pointe par pDoc.                                                | */
 /* |    Pour les schemas de presentation, la liberation n'est effective | */
@@ -375,21 +367,16 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   PtrSSchema        pSc1, pSSuiv;
+   PtrSSchema        pSS, pNextSS;
 
-   pSc1 = pDoc->DocSSchema;
+   pSS = pDoc->DocSSchema;
    /* libere le schema de structure du document et ses extensions */
-   while (pSc1 != NULL)
+   while (pSS != NULL)
      {
-	pSSuiv = pSc1->SsNextExtens;
-	/* libere les schemas de nature pointes par les regles de structure */
-      /***for (i = 0; i < pSc1->SsNRules; i++)
-	{
-	  pRule = &pSc1->SsRule[i];
-	}***/
+	pNextSS = pSS->SsNextExtens;
 	/* libere le schemas de structure */
-	FreeSchStruc (pSc1);
-	pSc1 = pSSuiv;
+	FreeSchStruc (pSS);
+	pSS = pNextSS;
      }
    pDoc->DocSSchema = NULL;
 }
