@@ -999,10 +999,10 @@ boolean             SaufRep;
 
 
 #ifdef __STDC__
-void         TuePresVoisin (PtrAbstractBox pVoisin, boolean Avant, PtrDocument pDoc, PtrAbstractBox * PavR, PtrAbstractBox * PavReaff, int *volsupp, PtrAbstractBox pPav, boolean SaufCreeAvec)
+static void         TuePresVoisin (PtrAbstractBox pVoisin, boolean Avant, PtrDocument pDoc, PtrAbstractBox * PavR, PtrAbstractBox * PavReaff, int *volsupp, PtrAbstractBox pPav, boolean SaufCreeAvec)
 
 #else  /* __STDC__ */
-void         TuePresVoisin (pVoisin, Avant, pDoc, PavR, PavReaff, volsupp, pPav, SaufCreeAvec)
+static void         TuePresVoisin (pVoisin, Avant, pDoc, PavR, PavReaff, volsupp, pPav, SaufCreeAvec)
 PtrAbstractBox             pVoisin;
 boolean             Avant;
 PtrDocument         pDoc;
