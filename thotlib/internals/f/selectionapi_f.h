@@ -9,6 +9,8 @@
 extern boolean TtaIsDocumentSelected ( Document document );
 extern void TtaSelectElement ( Document document,
                                Element selectedElement );
+extern void TtaSelectView ( Document document,
+                            View view );
 extern void TtaSelectString ( Document document,
                               Element textElement,
                               int firstCharacter,
@@ -37,6 +39,8 @@ extern void TtaGiveLastSelectedElement ( Document document,
 extern boolean TtaIsDocumentSelected (/* Document document */);
 extern void TtaSelectElement (/* Document document,
                                  Element selectedElement */);
+extern void TtaSelectView (/* Document document,
+                              View view */);
 extern void TtaSelectString (/* Document document,
                                 Element textElement,
                                 int firstCharacter,

@@ -14,7 +14,7 @@
  */
 
 /*----------------------------------------------------------------------
-  This module have to implement Amaya plug-in functions.
+  This module implements Amaya plug-in API functions.
   ----------------------------------------------------------------------*/
 
 #include <stdio.h>
@@ -50,12 +50,12 @@
 #include "picture_tv.h"
 #include "frame_tv.h"
 
-#define DC_FALSE    0 
-#define DC_TRUE     1
+#define DC_FALSE     0 
+#define DC_TRUE      1
 
-#define AMAYA_SYNC  1
-#define AMAYA_ASYNC 4
-#define AMAYA_IASYNC	8	/*0x001000 */
+#define AMAYA_SYNC   1
+#define AMAYA_ASYNC  4
+#define AMAYA_IASYNC 8	/*0x001000 */
 
 extern ThotAppContext   app_cont;
 extern PluginInfo*      pluginTable [100];
@@ -258,7 +258,7 @@ const char* url;
     fseek (fptr, offset, SEEK_SET);
      
     while (!feof (fptr)) { 
-	  /* What quantity of data yhe plug-in is ready to accept (ready_to_read)? */
+	  /* What quantity of data the plug-in is ready to accept (ready_to_read)? */
 	  ready_to_read = (*(pluginTable [currentExtraHandler]->pluginFunctionsTable->writeready)) (pluginInstance, stream);
 
 	  buffer = (char*) malloc (ready_to_read);
@@ -434,7 +434,6 @@ int          status;
 										      FALSE, 
 										      &stype); 
        Ap_Normal ((NPP) (instance), stream, file); 
-/*(*(pluginTable [currentExtraHandler]->pluginFunctionsTable->asfile)) ((NPP)(instance), stream, url);*/
     }
 #endif /* AMAYA_JAVA */
 }
@@ -697,32 +696,32 @@ NPBool      file;
     printf ("***** Ap_PostURL *****\n");
 #   endif
     if (file) { /* Posting data from a file */
-              int         count;
-              char*       bufToPost ;
-              char*       fileToPost;
-              FILE*       fPtr;
-              struct stat sBuff ;
-
-              if (!strncasecmp (buf, "file://", 7))
-                 fileToPost = &buf[7];
-              else
-                 fileToPost = buf;
-
-              stat (fileToPost, &sBuff) ;
-
-              if ((fPtr = fopen (fileToPost, "rb")) == NULL) {
-                 printf ("error: file %s does not exist\n", fileToPost);
-                 return NPERR_FILE_NOT_FOUND;
-	      } else {
-                    count = fread (bufToPost, sizeof (char), sBuff.st_size, fPtr);
-                    if (count != sBuff.st_size) {
-                       printf ("error occured while reading file: %s\n", fileToPost);
-                       return NPERR_GENERIC_ERROR;
-		    }
-                    GetObjectWWW (1, url, bufToPost, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0) ;
-	      }
+       int         count;
+       char*       bufToPost ;
+       char*       fileToPost;
+       FILE*       fPtr;
+       struct stat sBuff ;
+       
+       if (!strncasecmp (buf, "file://", 7))
+	  fileToPost = &buf[7];
+       else
+	   fileToPost = buf;
+       
+       stat (fileToPost, &sBuff) ;
+       
+       if ((fPtr = fopen (fileToPost, "rb")) == NULL) {
+	  printf ("error: file %s does not exist\n", fileToPost);
+	  return NPERR_FILE_NOT_FOUND;
+       } else {
+	     count = fread (bufToPost, sizeof (char), sBuff.st_size, fPtr);
+	     if (count != sBuff.st_size) {
+		printf ("error occured while reading file: %s\n", fileToPost);
+		return NPERR_GENERIC_ERROR;
+	     }
+	     GetObjectWWW (1, url, bufToPost, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0) ;
+       }
     } else      /* Posting data from memory */
-           GetObjectWWW (1, url, buf, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0) ;
+	 GetObjectWWW (1, url, buf, NULL, AMAYA_ASYNC, NULL, NULL, NULL, NULL, 0) ;
     
    return NPERR_NO_ERROR;
 }
@@ -1085,11 +1084,11 @@ int       type;
     NPStream*   stream;
     NPWindow*   pwindow;
     char        widthText[10], heightText[10];
-    char*       argn[6], *argv[6];
+    char*       argn[7], *argv[7];
     char*       url;
     uint16      stype;
     int         ret;
-    int16       argc  = 6; /* to parametrize */
+    int16       argc  = 7; /* to parametrize */
     /* int16       argc  = 3; */ /* to parametrize */
     struct stat sbuf;
      
@@ -1100,20 +1099,26 @@ int       type;
     argn[0] = "SRC";
     argn[1] = "WIDTH";
     argn[2] = "HEIGHT";
-    
+    argn[3] = "LOOP";
+    argn[4] = "PERIOD";
+    argn[5] = "DATAINIT";
+    argn[6] = "DATASOURCE";
+
+    /*
     argn[3] = "CONTROLS";
     argn[4] = "AUTOSTART";
     argn[5] = "STATUSBAR";
-    
+    */
     sprintf (widthText, "%d", imageDesc->PicWArea);
     sprintf (heightText, "%d", imageDesc->PicHArea);
     argv[0] = imageDesc->PicFileName;
     argv[1] = widthText;
     argv[2] = heightText;
     
-    argv[3] = "TRUE";
-    argv[4] = "TRUE";
-    argv[5] = "TRUE";
+    argv[3] = "true";
+    argv[4] = "2";
+    argv[5] = "http://www.dvcorp.com/webxpresso/stinit.txt";
+    argv[6] = "http://www.dvcorp.com/webxpresso/KO.txt";
     
     currentExtraHandler  = imageDesc->PicType - InlineHandlers;
 

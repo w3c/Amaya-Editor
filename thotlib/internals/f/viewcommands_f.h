@@ -19,6 +19,8 @@ extern void ImportDocument ( Name SSchemaName,
                              PathBuffer directory,
                              Name fileName );
 extern void CloseAllViewsDoc ( PtrDocument pDoc );
+extern void TtcChangePresentation ( Document document,
+                                    View view );
 
 #else /* __STDC__ */
 
@@ -35,6 +37,8 @@ extern void ImportDocument (/* Name SSchemaName,
                                PathBuffer directory,
                                Name fileName */);
 extern void CloseAllViewsDoc (/* PtrDocument pDoc */);
+extern void TtcChangePresentation (/* Document document,
+                                      View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

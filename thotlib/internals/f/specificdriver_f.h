@@ -125,6 +125,12 @@ extern int SpecificSetPictureMode ( PresentationTarget t,
 extern int SpecificGetPictureMode ( PresentationTarget t,
                                     PresentationContext c,
                                     PresentationValue *v );
+extern int SpecificSetBgImage ( PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue v );
+extern int SpecificGetBgImage ( PresentationTarget t,
+                                PresentationContext c,
+                                PresentationValue * v );
 extern void ApplyAllSpecificContext ( Document doc,
                                       SpecificTarget target,
                                       SpecificContextApplyHandler handler,
@@ -255,6 +261,12 @@ extern int SpecificSetPictureMode (/* PresentationTarget t,
 extern int SpecificGetPictureMode (/* PresentationTarget t,
                                       PresentationContext c,
                                       PresentationValue *v */);
+extern int SpecificSetBgImage (/* PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue v */);
+extern int SpecificGetBgImage (/* PresentationTarget t,
+                                  PresentationContext c,
+                                  PresentationValue * v */);
 extern void ApplyAllSpecificContext (/* Document doc,
                                         SpecificTarget target,
                                         SpecificContextApplyHandler handler,

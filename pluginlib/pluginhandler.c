@@ -114,7 +114,9 @@ int       yif;
        XtSetArg (arg[n], XmNy, yif ); n++;
        XtSetValues ((Widget) (imageDesc->wid), arg, n);
        XtManageChild ((Widget) (imageDesc->wid));
-       Ap_CreatePluginInstance (imageDesc, TtDisplay);
+       /* IMPORTANT: We have to add a support for NP_FULL plug-ins */
+       /* Ap_CreatePluginInstance (imageDesc, TtDisplay, NP_FULL); */
+       Ap_CreatePluginInstance (imageDesc, TtDisplay, NP_EMBED);
        imageDesc->mapped  = TRUE;
        imageDesc->created = TRUE;
     } else {

@@ -16,8 +16,8 @@
 
 /*
  *
- * Author: N. Layaida (INRIA)
- *
+ * Authors: N. Layaida (INRIA)
+ *          R. Guetari (W3C/INRIA) Windows 95/NT routines
  */
  
 #include "thot_sys.h"
@@ -265,59 +265,51 @@ ThotColorStruct     colrs[256];
    GifScreen.Background = buf[5];
    GifScreen.AspectRatio = buf[6];
 
-   if (BitSet (buf[4], LOCALCOLORMAP))
-     {				/* Global Colormap */
+   if (BitSet (buf[4], LOCALCOLORMAP)) { /* Global Colormap */
 	if (ReadColorMap (fd, GifScreen.BitPixel, GifScreen.ColorMap))
 	   return (NULL);
-	for (i = 0; i < GifScreen.BitPixel; i++)
-	  {
+	for (i = 0; i < GifScreen.BitPixel; i++) {
+#           ifdef _WINDOWS
+	    colrs[i] = RGB (GifScreen.ColorMap[0][i], GifScreen.ColorMap[1][i], GifScreen.ColorMap[2][i]);
+#           else  /* _WINDOWS */
+	    colrs[i].red = GifScreen.ColorMap[0][i] * scale;
+	    colrs[i].green = GifScreen.ColorMap[1][i] * scale;
+	    colrs[i].blue = GifScreen.ColorMap[2][i] * scale;
+	    colrs[i].pixel = i;
+	    colrs[i].flags = DoRed | DoGreen | DoBlue;
+#           endif /* !_WINDOWS */
+	}
 
-#ifdef _WINDOWS
-	     colrs[i] = RGB (GifScreen.ColorMap[0][i],
-			     GifScreen.ColorMap[1][i],
-			     GifScreen.ColorMap[2][i]);
-#else  /* _WINDOWS */
-	     colrs[i].red = GifScreen.ColorMap[0][i] * scale;
-	     colrs[i].green = GifScreen.ColorMap[1][i] * scale;
-	     colrs[i].blue = GifScreen.ColorMap[2][i] * scale;
-	     colrs[i].pixel = i;
-	     colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* !_WINDOWS */
-	  }
-	for (i = GifScreen.BitPixel; i < MAXCOLORMAPSIZE; i++)
-	  {
-#ifdef _WINDOWS
-	     colrs[i] = RGB (0, 0, 0);
-#else  /* _WINDOWS */
-	     colrs[i].red = 0;
-	     colrs[i].green = 0;
-	     colrs[i].blue = 0;
-	     colrs[i].pixel = i;
-	     colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* !_WINDOWS */
-	  }
+	for (i = GifScreen.BitPixel; i < MAXCOLORMAPSIZE; i++) {
+#           ifdef _WINDOWS
+	    colrs[i] = RGB (0, 0, 0);
+#           else  /* _WINDOWS */
+	    colrs[i].red = 0;
+	    colrs[i].green = 0;
+	    colrs[i].blue = 0;
+	    colrs[i].pixel = i;
+	    colrs[i].flags = DoRed | DoGreen | DoBlue;
+#           endif /* !_WINDOWS */
+	}
 
      }
 
-   for (;;)
-     {
-	if (!ReadOK (fd, &c, 1))
-	   return (NULL);
+   for (;;) {
+       if (!ReadOK (fd, &c, 1))
+	  return (NULL);
 
-	if (c == ';')
-	  {			/* GIF terminator */
-	     if (imageCount < imageNumber)
-		return (NULL);
-	     break;
-	  }
+       if (c == ';') { /* GIF terminator */
+	  if (imageCount < imageNumber)
+	     return (NULL);
+	  break;
+       }
 
-	if (c == '!')
-	  {			/* Extension */
-	     if (!ReadOK (fd, &c, 1))
-		return (NULL);
-	     DoExtension (fd, c);
-	     continue;
-	  }
+       if (c == '!') { /* Extension */
+	  if (!ReadOK (fd, &c, 1))
+	     return (NULL);
+	  DoExtension (fd, c);
+	  continue;
+       }
 
 	if (c != ',')
 	   continue;
@@ -333,93 +325,79 @@ ThotColorStruct     colrs[256];
 
 	*w = LM_to_uint (buf[4], buf[5]);
 	*h = LM_to_uint (buf[6], buf[7]);
-	if (!useGlobalColormap)
-	  {
-	     if (ReadColorMap (fd, bitPixel, localColorMap))
-		return (NULL);
-	     for (i = 0; i < bitPixel; i++)
-	       {
-
-#ifdef _WINDOWS
-		  colrs[i] = RGB (
-				    localColorMap[0][i],
-				    localColorMap[1][i],
-				    localColorMap[2][i]);
-#else  /* _WINDOWS */
-		  colrs[i].red = localColorMap[0][i] * scale;
-		  colrs[i].green = localColorMap[1][i] * scale;
-		  colrs[i].blue = localColorMap[2][i] * scale;
-		  colrs[i].pixel = i;
-		  colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* _WINDOWS */
-	       }
-	     for (i = bitPixel; i < MAXCOLORMAPSIZE; i++)
-	       {
-#ifdef _WINDOWS
-		  colrs[i] = RGB (0, 0, 0);
-#else  /* _WINDOWS */
-		  colrs[i].red = 0;
-		  colrs[i].green = 0;
-		  colrs[i].blue = 0;
-		  colrs[i].pixel = i;
-		  colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* _WINDOWS */
-	       }
-	     data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
-				  LM_to_uint (buf[6], buf[7]), localColorMap,
-		     BitSet (buf[8], INTERLACE), imageCount != imageNumber);
-	     return (data);	/* anticipating the exit to prevent gif video */
-	  }
-	else
-	  {
-	     data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
-			    LM_to_uint (buf[6], buf[7]), GifScreen.ColorMap,
-		     BitSet (buf[8], INTERLACE), imageCount != imageNumber);
-	     return (data);	/* anticipating the exit to prevent gif video */
-	  }
-
-     }
+	if (!useGlobalColormap) {
+	   if (ReadColorMap (fd, bitPixel, localColorMap))
+	      return (NULL);
+	   for (i = 0; i < bitPixel; i++) {
+#              ifdef _WINDOWS
+	       colrs[i] = RGB (localColorMap[0][i], localColorMap[1][i], localColorMap[2][i]);
+#              else  /* _WINDOWS */
+	       colrs[i].red = localColorMap[0][i] * scale;
+	       colrs[i].green = localColorMap[1][i] * scale;
+	       colrs[i].blue = localColorMap[2][i] * scale;
+	       colrs[i].pixel = i;
+	       colrs[i].flags = DoRed | DoGreen | DoBlue;
+#              endif /* _WINDOWS */
+	   }
+	   for (i = bitPixel; i < MAXCOLORMAPSIZE; i++) {
+#              ifdef _WINDOWS
+	       colrs[i] = RGB (0, 0, 0);
+#              else  /* _WINDOWS */
+	       colrs[i].red = 0;
+	       colrs[i].green = 0;
+	       colrs[i].blue = 0;
+	       colrs[i].pixel = i;
+	       colrs[i].flags = DoRed | DoGreen | DoBlue;
+#              endif /* _WINDOWS */
+	   }
+	   data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
+				LM_to_uint (buf[6], buf[7]), localColorMap,
+		                BitSet (buf[8], INTERLACE), imageCount != imageNumber);
+	   return (data);	/* anticipating the exit to prevent gif video */
+	} else {
+	       data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
+			            LM_to_uint (buf[6], buf[7]), GifScreen.ColorMap,
+		                    BitSet (buf[8], INTERLACE), imageCount != imageNumber);
+	       return (data);	/* anticipating the exit to prevent gif video */
+	}
+	
+   }
    return (data);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ReadColorMap (FILE * fd, int number, unsigned char buffer[3][MAXCOLORMAPSIZE])
-
+int                 ReadColorMap (FILE* fd, int number, unsigned char buffer[3][MAXCOLORMAPSIZE])
 #else  /* __STDC__ */
 int                 ReadColorMap (fd, number, buffer)
 FILE               *fd;
 int                 number;
 unsigned char       buffer[3][MAXCOLORMAPSIZE];
-
 #endif /* __STDC__ */
-
 {
    int                 i;
    unsigned char       rgb[3];
 
-   for (i = 0; i < number; ++i)
-     {
-	if (!ReadOK (fd, rgb, sizeof (rgb)))
-	  {
-#if 0
-	     fprintf (stderr, "bad colormap\n");
-#endif
-	     return (TRUE);
-	  }
+   for (i = 0; i < number; ++i) {
+       if (!ReadOK (fd, rgb, sizeof (rgb))) {
+#         if 0
+	  fprintf (stderr, "bad colormap\n");
+#         endif
+	  return (TRUE);
+       }
 
-	buffer[CM_RED][i] = rgb[0];
-	buffer[CM_GREEN][i] = rgb[1];
-	buffer[CM_BLUE][i] = rgb[2];
-     }
+       buffer[CM_RED][i]   = rgb[0];
+       buffer[CM_GREEN][i] = rgb[1];
+       buffer[CM_BLUE][i]   = rgb[2];
+   }
    return FALSE;
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 DoExtension (FILE * fd, int label)
+int                 DoExtension (FILE* fd, int label)
 #else  /* __STDC__ */
 int                 DoExtension (fd, label)
 FILE               *fd;
@@ -429,17 +407,16 @@ int                 label;
 {
    char                buf[256];
 
-   switch (label)
-	 {
-	    case 0x01:		/* Plain Text Extension */
+   switch (label) {
+	  case 0x01:		/* Plain Text Extension */
 	       break;
-	    case 0xff:		/* Application Extension */
+          case 0xff:		/* Application Extension */
 	       break;
-	    case 0xfe:		/* Comment Extension */
+	  case 0xfe:		/* Comment Extension */
 	       while (GetDataBlock (fd, (unsigned char *) buf) != 0)
 		  ;
 	       return FALSE;
-	    case 0xf9:		/* Graphic Control Extension */
+	  case 0xf9:		/* Graphic Control Extension */
 	       (void) GetDataBlock (fd, (unsigned char *) buf);
 	       Gif89.disposal = (buf[0] >> 2) & 0x7;
 	       Gif89.inputFlag = (buf[0] >> 1) & 0x1;
@@ -450,10 +427,10 @@ int                 label;
 	       while (GetDataBlock (fd, (unsigned char *) buf) != 0)
 		  ;
 	       return FALSE;
-	    default:
+	  default:
 	       sprintf (buf, "UNKNOWN (0x%02x)", label);
 	       break;
-	 }
+   }
 
    while (GetDataBlock (fd, (unsigned char *) buf) != 0)
       ;
@@ -463,23 +440,19 @@ int                 label;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 GetDataBlock (FILE * fd, unsigned char *buf)
-
+int                 GetDataBlock (FILE* fd, unsigned char *buf)
 #else  /* __STDC__ */
 int                 GetDataBlock (fd, buf)
 FILE               *fd;
 unsigned char      *buf;
-
 #endif /* __STDC__ */
-
 {
    unsigned char       count;
 
-   if (!ReadOK (fd, &count, 1))
-     {
-	fprintf (stderr, "error in getting DataBlock size\n");
-	return -1;
-     }
+   if (!ReadOK (fd, &count, 1)) {
+      fprintf (stderr, "error in getting DataBlock size\n");
+      return -1;
+   }
 
    ZeroDataBlock = (count == 0);
    if ((count != 0) && (!ReadOK (fd, buf, count)))
@@ -497,41 +470,38 @@ int                 GetCode (fd, code_size, flag)
 FILE               *fd;
 int                 code_size;
 int                 flag;
-
 #endif /* __STDC__ */
 {
    static unsigned char buf[280];
-   static int          curbit, lastbit, done, last_byte;
-   int                 i, j, ret;
-   unsigned char       count;
+   static int           curbit, lastbit, done, last_byte;
+   int                  i, j, ret;
+   unsigned char        count;
 
-   if (flag)
-     {
-	curbit = 0;
-	lastbit = 0;
-	done = FALSE;
-	last_byte = 2;
-	return 0;
-     }
+   if (flag) {
+      curbit = 0;
+      lastbit = 0;
+      done = FALSE;
+      last_byte = 2;
+      return 0;
+   }
 
-   if ((curbit + code_size) >= lastbit)
-     {
-	if (done)
-	   return -1;
-	buf[0] = buf[last_byte - 2];
-	buf[1] = buf[last_byte - 1];
+   if ((curbit + code_size) >= lastbit) {
+      if (done)
+	 return -1;
+      buf[0] = buf[last_byte - 2];
+      buf[1] = buf[last_byte - 1];
+      
+      if ((count = GetDataBlock (fd, &buf[2])) == 0)
+	 done = TRUE;
 
-	if ((count = GetDataBlock (fd, &buf[2])) == 0)
-	   done = TRUE;
-
-	last_byte = 2 + count;
-	curbit = (curbit - lastbit) + 16;
-	lastbit = (2 + count) * 8;
-     }
+      last_byte = 2 + count;
+      curbit = (curbit - lastbit) + 16;
+      lastbit = (2 + count) * 8;
+   }
 
    ret = 0;
    for (i = curbit, j = 0; j < code_size; ++i, ++j)
-      ret |= ((buf[i >> 3] & (1 << (i % 8))) != 0) << j;
+       ret |= ((buf[i >> 3] & (1 << (i % 8))) != 0) << j;
 
    curbit += code_size;
 
@@ -554,110 +524,93 @@ int                 input_code_size;
    int                 code, incode;
    register int        i;
 
-   if (flag)
-     {
-	set_code_size = input_code_size;
-	code_size = set_code_size + 1;
-	clear_code = 1 << set_code_size;
-	end_code = clear_code + 1;
-	max_code_size = 2 * clear_code;
-	max_code = clear_code + 2;
+   if (flag) {
+      set_code_size = input_code_size;
+      code_size = set_code_size + 1;
+      clear_code = 1 << set_code_size;
+      end_code = clear_code + 1;
+      max_code_size = 2 * clear_code;
+      max_code = clear_code + 2;
 
-	GetCode (fd, 0, TRUE);
+      GetCode (fd, 0, TRUE);
+      
+      fresh = TRUE;
 
-	fresh = TRUE;
+      for (i = 0; i < clear_code; ++i) {
+	  table[0][i] = 0;
+	  table[1][i] = i;
+      }
+      for (; i < (1 << MAX_LWZ_BITS); ++i)
+	  table[0][i] = table[1][0] = 0;
 
-	for (i = 0; i < clear_code; ++i)
-	  {
-	     table[0][i] = 0;
-	     table[1][i] = i;
-	  }
-	for (; i < (1 << MAX_LWZ_BITS); ++i)
-	   table[0][i] = table[1][0] = 0;
-
-	sp = stack;
-
-	return 0;
-     }
-   else if (fresh)
-     {
+      sp = stack;
+      
+      return 0;
+   }
+   else if (fresh) {
 	fresh = FALSE;
-	do
-	  {
-	     firstcode = oldcode =
-		GetCode (fd, code_size, FALSE);
-	  }
-	while (firstcode == clear_code);
+	do {
+	   firstcode = oldcode = GetCode (fd, code_size, FALSE);
+	} while (firstcode == clear_code);
 	return firstcode;
-     }
+   }
 
    if (sp > stack)
       return *--sp;
 
-   while ((code = GetCode (fd, code_size, FALSE)) >= 0)
-     {
-	if (code == clear_code)
-	  {
-	     for (i = 0; i < clear_code; ++i)
-	       {
-		  table[0][i] = 0;
-		  table[1][i] = i;
-	       }
-	     for (; i < (1 << MAX_LWZ_BITS); ++i)
+   while ((code = GetCode (fd, code_size, FALSE)) >= 0) {
+	 if (code == clear_code) {
+	    for (i = 0; i < clear_code; ++i) {
+		table[0][i] = 0;
+		table[1][i] = i;
+	    }
+	    for (; i < (1 << MAX_LWZ_BITS); ++i)
 		table[0][i] = table[1][i] = 0;
 	     code_size = set_code_size + 1;
 	     max_code_size = 2 * clear_code;
 	     max_code = clear_code + 2;
 	     sp = stack;
-	     firstcode = oldcode =
-		GetCode (fd, code_size, FALSE);
+	     firstcode = oldcode = GetCode (fd, code_size, FALSE);
 	     return firstcode;
-	  }
-	else if (code == end_code)
-	  {
-	     int                 count;
-	     unsigned char       buf[260];
+	 } else if (code == end_code) {
+	        int                 count;
+		unsigned char       buf[260];
 
-	     if (ZeroDataBlock)
+		if (ZeroDataBlock)
+		   return -2;
+		while ((count = GetDataBlock (fd, buf)) > 0)
+		      ;
 		return -2;
-	     while ((count = GetDataBlock (fd, buf)) > 0)
-		;
-	     return -2;
-	  }
+	 }
 
 	incode = code;
-	if (code >= max_code)
-	  {
-	     *sp++ = firstcode;
-	     code = oldcode;
-	  }
+	if (code >= max_code) {
+	   *sp++ = firstcode;
+	   code = oldcode;
+	}
 
-	while (code >= clear_code)
-	  {
-	     if ((sp - stack) >= ((1 << (MAX_LWZ_BITS)) * 2))
-		return -2;	/* stop a code dump */
-	     *sp++ = table[1][code];
-	     if (code == table[0][code])
-		return (code);
-	     code = table[0][code];
-	  }
+	while (code >= clear_code) {
+	      if ((sp - stack) >= ((1 << (MAX_LWZ_BITS)) * 2))
+		 return -2;	/* stop a code dump */
+	      *sp++ = table[1][code];
+	      if (code == table[0][code])
+		 return (code);
+	      code = table[0][code];
+	}
 	*sp++ = firstcode = table[1][code];
-	if ((code = max_code) < (1 << MAX_LWZ_BITS))
-	  {
-	     table[0][code] = oldcode;
-	     table[1][code] = firstcode;
-	     ++max_code;
-	     if ((max_code >= max_code_size) &&
-		 (max_code_size < (1 << MAX_LWZ_BITS)))
-	       {
-		  max_code_size *= 2;
-		  ++code_size;
-	       }
-	  }
+	if ((code = max_code) < (1 << MAX_LWZ_BITS)) {
+	   table[0][code] = oldcode;
+	   table[1][code] = firstcode;
+	   ++max_code;
+	   if ((max_code >= max_code_size) && (max_code_size < (1 << MAX_LWZ_BITS))) {
+	      max_code_size *= 2;
+	      ++code_size;
+	   }
+	}
 	oldcode = incode;
 	if (sp > stack)
 	   return *--sp;
-     }
+   }
    return code;
 }
 
@@ -717,47 +670,46 @@ unsigned long       ul;
     * returns the width of a bit PicMask.
     */
    while (!(ul & 1))
-      ul >>= 1;
-   switch (ul)
-	 {
-	    case 0x00:
+         ul >>= 1;
+   switch (ul) {
+	  case 0x00:
 	       return (0);
-	    case 0x01:
+          case 0x01:
 	       return (1);
-	    case 0x03:
+	  case 0x03:
 	       return (2);
-	    case 0x07:
+	  case 0x07:
 	       return (3);
-	    case 0x0F:
+	  case 0x0F:
 	       return (4);
-	    case 0x1F:
+	  case 0x1F:
 	       return (5);
-	    case 0x3F:
+	  case 0x3F:
 	       return (6);
-	    case 0x7F:
+	  case 0x7F:
 	       return (7);
-	    case 0xFF:
+	  case 0xFF:
 	       return (8);
-	    case 0x01FF:
+	  case 0x01FF:
 	       return (1 + 8);
-	    case 0x03FF:
+	  case 0x03FF:
 	       return (2 + 8);
-	    case 0x07FF:
+	  case 0x07FF:
 	       return (3 + 8);
-	    case 0x0FFF:
+	  case 0x0FFF:
 	       return (4 + 8);
-	    case 0x1FFF:
+	  case 0x1FFF:
 	       return (5 + 8);
-	    case 0x3FFF:
+	  case 0x3FFF:
 	       return (6 + 8);
-	    case 0x7FFF:
+	  case 0x7FFF:
 	       return (7 + 8);
-	    case 0xFFFF:
+	  case 0xFFFF:
 	       return (8 + 8);
-	    default:
+	  default:
 	       fprintf (stderr, "nbbits : invalid PicMask\n");
 	       return (8);
-	 }
+   }
 }
 
 /*
@@ -774,6 +726,9 @@ int                 bg;
 
 #endif /* __STDC__ */
 {
+#  ifdef _WINDOWS
+   BITMAP              bmp;
+#  endif /* _WINDOWS */
    XImage             *newmask;
    ThotGC              tmp_gc;
    unsigned char      *iptr;
@@ -784,28 +739,25 @@ int                 bg;
    unsigned char      *data_ptr, *max_data;
    int                 diff, count, width, height;
 
-   width = w;
+   width  = w;
    height = h;
 
-#ifndef _WINDOWS
-   newmask = XCreateImage (TtDisplay, theVisual, 1, ZPixmap, 0, 0,
-			   width, height, 8, 0);
+#  ifndef _WINDOWS
+   newmask = XCreateImage (TtDisplay, theVisual, 1, ZPixmap, 0, 0, width, height, 8, 0);
    bpl = newmask->bytes_per_line;
    newmask->data = (char *) malloc (bpl * height);
    data = newmask->data;
-   iptr = pixelindex;
+   iptr = pixelindex; 
 
    diff = width & 7;
 
    width >>= 3;
 
    if (newmask->bitmap_bit_order == MSBFirst)
-      for (y = 0; y < height; y++)
-	{
-	   data_ptr = data;
-	   max_data = data_ptr + width;
-	   while (data_ptr < max_data)
-	     {
+      for (y = 0; y < height; y++) {
+	  data_ptr = data;
+	  max_data = data_ptr + width;
+	  while (data_ptr < max_data) {
 		value = 0;
 		value = (value << 1) | (*(iptr++) != bg);
 		value = (value << 1) | (*(iptr++) != bg);
@@ -816,76 +768,76 @@ int                 bg;
 		value = (value << 1) | (*(iptr++) != bg);
 		value = (value << 1) | (*(iptr++) != bg);
 		*(data_ptr++) = value;
-	     }
-	   if (diff)
-	     {
-		value = 0;
-		for (count = 0; count < diff; count++)
-		  {
-		     if (*(iptr++) != bg)
-			value |= (0x80 >> count);
-		  }
-		*(data_ptr++) = value;
-	     }
-	   data += bpl;
-	}
-   else
-     {
-	for (y = 0; y < height; y++)
-	  {
-	     data_ptr = data;
-	     max_data = data_ptr + width;
-	     while (data_ptr < max_data)
-	       {
-		  value = 0;
-		  iptr += 8;
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  value = (value << 1) | (*(--iptr) != bg);
-		  iptr += 8;
-		  *(data_ptr++) = value;
-	       }
-	     if (diff)
-	       {
-		  value = 0;
-		  for (count = 0; count < diff; count++)
-		    {
-		       if (*(iptr++) != bg)
-			  value |= (1 << count);
-		    }
-		  *(data_ptr++) = value;
-	       }
-	     data += bpl;
 	  }
-     }
+	  if (diff) {
+	     value = 0;
+	     for (count = 0; count < diff; count++)
+		 if (*(iptr++) != bg)
+		    value |= (0x80 >> count);
+	     *(data_ptr++) = value;
+	  }
+	  data += bpl;
+      }
+   else {
+	for (y = 0; y < height; y++) {
+	    data_ptr = data;
+	    max_data = data_ptr + width;
+	    while (data_ptr < max_data) {
+		  value = 0;
+		  iptr += 8;
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  value = (value << 1) | (*(--iptr) != bg);
+		  iptr += 8;
+		  *(data_ptr++) = value;
+	    }
+	    if (diff) {
+	       value = 0;
+	       for (count = 0; count < diff; count++)
+		   if (*(iptr++) != bg)
+		      value |= (1 << count);
+
+	       *(data_ptr++) = value;
+	    }
+	    data += bpl;
+	}
+   }
 
    PicMask = XCreatePixmap (TtDisplay, TtRootWindow, w, h, 1);
 
-   if ((PicMask == (Pixmap) None) || (newmask == NULL))
-     {
-	if (newmask != NULL)
-	  {
-	     XDestroyImage (newmask);
-	  }
-	if (PicMask != (Pixmap) None)
-	  {
-	     XFreePixmap (TtDisplay, PicMask);
-	  }
+   if ((PicMask == (Pixmap) None) || (newmask == NULL)) {
+      if (newmask != NULL)
+	 XDestroyImage (newmask);
+
+      if (PicMask != (Pixmap) None)
+	 XFreePixmap (TtDisplay, PicMask);
+
 	PicMask = None;
-     }
-   else
-     {
-	tmp_gc = XCreateGC (TtDisplay, PicMask, 0, NULL);
-	XPutImage (TtDisplay, PicMask, tmp_gc, newmask, 0, 0, 0, 0, w, h);
-	XDestroyImage (newmask);
-	XFreeGC (TtDisplay, tmp_gc);
-     }
-#endif /* _WINDOWS */
+   } else {
+	  tmp_gc = XCreateGC (TtDisplay, PicMask, 0, NULL);
+	  XPutImage (TtDisplay, PicMask, tmp_gc, newmask, 0, 0, 0, 0, w, h);
+	  XDestroyImage (newmask);
+	  XFreeGC (TtDisplay, tmp_gc);
+   }
+#  else  /* _WINDOWS */
+   bmp.bmType       = 0;
+   bmp.bmWidth      = width;
+   bmp.bmHeight     = height;
+   bmp.bmWidthBytes = 2;
+   bmp.bmPlanes     = 1;
+   bmp.bmBitsPixel  = 1;
+   bmp.bmBits       = NULL;
+   newmask->bitmap  = CreateBitmapIndirect (&bmp);
+   newmask->width   = width;
+   newmask->height  = height;
+   newmask->depth   = 1;
+   PicMask          = (char*) newmask->bitmap ;
+#  endif /* _WINDOWS */
    return (PicMask);
 
 }
@@ -895,7 +847,7 @@ int                 bg;
   Make an image of appropriate depth for display from image data.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-XImage             *MakeImage (Display * dsp, unsigned char *data, int width, int height, int depth,
+XImage             *MakeImage (Display* dsp, unsigned char *data, int width, int height, int depth,
 			       ThotColorStruct * colrs)
 #else  /* __STDC__ */
 XImage             *MakeImage (dsp, data, width, height, depth, colrs)
@@ -918,7 +870,7 @@ ThotColorStruct    *colrs;
    unsigned long       c;
    int                 rshift, gshift, bshift;
 
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    switch (depth)
 	 {
 	    case 6:
@@ -1065,7 +1017,8 @@ ThotColorStruct    *colrs;
 	       fprintf (stderr, "Don't know how to format image for display of depth %d\n", depth);
 	       return (None);
 	 }
-#endif /* _WINDOWS */
+#  else  /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    return (newimage);
 }
@@ -1088,9 +1041,6 @@ ThotColorStruct     colrs[256];
 
 #endif /* __STDC__ */
 {
-#ifdef _WINDOWS
-   return (NULL);
-#else  /* _WINDOWS */
    int                 i, size;
    int                 delta, not_right_col, not_last_row;
    Pixmap              Img;
@@ -1110,143 +1060,132 @@ ThotColorStruct     colrs[256];
 
    Mapping = (int *) TtaGetMemory (num_colors * sizeof (int));
 
-#ifndef _WINDOWS
-   for (i = 0; i < num_colors; i++)
-     {
+   for (i = 0; i < num_colors; i++) {
+#       ifndef _WINDOWS
 	tmpcolr.red = colrs[i].red;
 	tmpcolr.green = colrs[i].green;
 	tmpcolr.blue = colrs[i].blue;
 	tmpcolr.pixel = 0;
 	tmpcolr.flags = DoRed | DoGreen | DoBlue;
-	if ((THOT_vInfo.class == THOT_TrueColor) ||
-	    (THOT_vInfo.class == THOT_DirectColor))
+#       else /* !_WINDOWS */
+        tmpcolr = colrs[i];
+#       endif /* _WINDOWS */ 
+#       ifndef _WINDOWS
+	if ((THOT_vInfo.class == THOT_TrueColor) || (THOT_vInfo.class == THOT_DirectColor))
 	   Mapping[i] = i;
-	else if (need_to_dither == TRUE)
-	  {
+	else if (need_to_dither == TRUE) {
 	     Mapping[i] = ((tmpcolr.red >> 5) * 11 +
 			   (tmpcolr.green >> 5) * 16 +
 			   (tmpcolr.blue >> 5) * 5) / (65504 / 64);
-	  }
-	else
-	  {
-	     FindOutColor (TtDisplay, TtCmap, &tmpcolr);
-	     Mapping[i] = tmpcolr.pixel;
-	  }
-     }
-#endif /* _WINDOWS */
+	} else {
+	       FindOutColor (TtDisplay, TtCmap, &tmpcolr);
+	       Mapping[i] = tmpcolr.pixel;
+	}
+#       endif /* _WINDOWS */
+   }
 
    /*
     * Special case:  For 2 color non-black&white images, instead
     * of 2 dither patterns, we will always drop them to be
     * black on white.
     */
-   if ((need_to_dither == TRUE) && (num_colors == 2))
-     {
-	if (Mapping[0] < Mapping[1])
-	  {
-	     Mapping[0] = 0;
-	     Mapping[1] = 64;
-	  }
-	else
-	  {
+   if ((need_to_dither == TRUE) && (num_colors == 2)) {
+      if (Mapping[0] < Mapping[1]) {
+	 Mapping[0] = 0;
+	 Mapping[1] = 64;
+      } else {
 	     Mapping[0] = 64;
 	     Mapping[1] = 0;
-	  }
-     }
+      }
+   }
 
    size = width * height;
    if (size == 0)
       tmpdata = NULL;
    else
-      tmpdata = (unsigned char *) TtaGetMemory (size);
-   if (tmpdata == NULL)
-     {
-	tmpimage = None;
-	Img = (Pixmap) None;
-     }
-   else
-     {
-	ptr = image_data;
-	ptr2 = tmpdata;
+       tmpdata = (unsigned char *) TtaGetMemory (size);
 
-	if (need_to_dither == TRUE)
-	  {
+   if (tmpdata == NULL) {
+      tmpimage = None;
+      Img = (Pixmap) None;
+   } else {
+	  ptr = image_data;
+	  ptr2 = tmpdata;
+
+	  if (need_to_dither == TRUE) {
 	     int                 cx, cy;
 
-	     for (ptr2 = tmpdata, ptr = image_data;
-		  ptr2 < tmpdata + (size - 1); ptr2++, ptr++)
-	       {
-		  *ptr2 = Mapping[(int) *ptr];
-	       }
+	     for (ptr2 = tmpdata, ptr = image_data; ptr2 < tmpdata + (size - 1); ptr2++, ptr++)
+		 *ptr2 = Mapping[(int) *ptr];
 
 	     ptr2 = tmpdata;
-	     for (cy = 0; cy < height; cy++)
-	       {
-		  for (cx = 0; cx < width; cx++)
-		    {
-		       /* Assume high numbers are really negative. */
-		       if (*ptr2 > 128)
-			  *ptr2 = 0;
-		       else if (*ptr2 > 64)
+	     for (cy = 0; cy < height; cy++) {
+		 for (cx = 0; cx < width; cx++) {
+		     /* Assume high numbers are really negative. */
+		     if (*ptr2 > 128)
+			*ptr2 = 0;
+		     else if (*ptr2 > 64)
 			  *ptr2 = 64;
 
-		       /* Traditional Floyd-Steinberg */
-		       if (*ptr2 < 32)
-			 {
-			    delta = *ptr2;
-			    *ptr2 = Black_Color;
-			 }
-		       else
-			 {
+		     /* Traditional Floyd-Steinberg */
+		     if (*ptr2 < 32) {
+			delta = *ptr2;
+			*ptr2 = Black_Color;
+		     } else {
 			    delta = *ptr2 - 64;
 			    *ptr2 = White_Color;
-			 }
-		       if ((not_right_col = (cx < (width - 1))))
-			  *(ptr2 + 1) += delta * 7 >> 4;
+		     }
+		     if ((not_right_col = (cx < (width - 1))))
+			*(ptr2 + 1) += delta * 7 >> 4;
 
-		       if ((not_last_row = (cy < (height - 1))))
-			  (*(ptr2 + width)) += delta * 5 >> 4;
+		     if ((not_last_row = (cy < (height - 1))))
+			(*(ptr2 + width)) += delta * 5 >> 4;
 
-		       if (not_right_col && not_last_row)
-			  (*(ptr2 + width + 1)) += delta >> 4;
+		     if (not_right_col && not_last_row)
+			(*(ptr2 + width + 1)) += delta >> 4;
 
-		       if (cx && not_last_row)
-			  (*(ptr2 + width - 1)) += delta * 3 >> 4;
-		       ptr2++;
-		    }
-	       }
+		     if (cx && not_last_row)
+			(*(ptr2 + width - 1)) += delta * 3 >> 4;
+		     ptr2++;
+		 }
+	     }
+	  } else {
+	         for (i = 0; i < size; i++) {
+		     *ptr2++ = (unsigned char) Mapping[(int) *ptr];
+		     ptr++;
+		 }
 	  }
-	else
-	  {
-	     for (i = 0; i < size; i++)
-	       {
-		  *ptr2++ = (unsigned char) Mapping[(int) *ptr];
-		  ptr++;
-	       }
-	  }
-	tmpimage = MakeImage (TtDisplay, tmpdata, width, height, TtWDepth, colrs);
-	TtaFreeMemory (tmpdata);
-	Img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
-     }
+#         ifndef _WINDOWS
+	  tmpimage = MakeImage (TtDisplay, tmpdata, width, height, TtWDepth, colrs);
+	  TtaFreeMemory (tmpdata);
+	  Img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
+#         else  /* _WINDOWS */
+#         endif /* _WINDOWS */
+   }
 
-   if ((tmpimage == None) || (Img == (Pixmap) None))
-     {
-	if (tmpimage != None)
-	   XDestroyImage (tmpimage);
-	if (Img != (Pixmap) None)
-	   XFreePixmap (TtDisplay, Img);
-	Img = None;
-     }
-   else
-     {
-	XPutImage (TtDisplay, Img, TtGraphicGC, tmpimage, 0, 0, 0, 0, width, height);
-	XDestroyImage (tmpimage);
-     }
+   if ((tmpimage == None) || (Img == (Pixmap) None)) {
+      if (tmpimage != None)
+#        ifndef _WINDOWS
+	 XDestroyImage (tmpimage);
+#        else  /* _WINDOWS */
+#        endif /* _WINDOWS */
+      if (Img != (Pixmap) None)
+#        ifndef _WINDOWS
+	 XFreePixmap (TtDisplay, Img);
+#        else  /* _WINDOWS */
+#        endif /* _WINDOWS */
+      Img = None;
+   } else {
+#         ifndef _WINDOWS
+	  XPutImage (TtDisplay, Img, TtGraphicGC, tmpimage, 0, 0, 0, 0, width, height);
+	  XDestroyImage (tmpimage);
+#         else  /* _WINDOWS */
+#         endif /* _WINDOWS */
+   }
 
-   TtaFreeMemory ((char *) Mapping);
+   TtaFreeMemory ((char*) Mapping);
 
    return (Img);
-#endif /* _WINDOWS */
 }
 
 
@@ -1495,7 +1434,9 @@ unsigned long       BackGroundPixel;
 		      (colrs[*pt].red) >> 8,
 		      (colrs[*pt].green) >> 8,
 		      (colrs[*pt].blue) >> 8);
-#endif /* _WINDOWS */
+#            else /* _WINDOWS */
+             fprintf ((FILE *) fd, "%02x%02x%02x", GetRValue (colrs[*pt]), GetGValue (colrs[*pt]), GetBValue (colrs[*pt]));
+#            endif /* _WINDOWS */
 
 	     pt++;
 	  }

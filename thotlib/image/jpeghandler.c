@@ -17,7 +17,7 @@
 /*
  *
  * Author: N. Layaida (INRIA)
- *
+ *         R. Guetari (W3C/INRIA) Windows 95/NT routines
  */
  
 #include "thot_gui.h"
@@ -43,31 +43,42 @@
 
 struct my_error_mgr
   {
-     struct jpeg_error_mgr pub;	/* "public" fields */
-     jmp_buf             setjmp_buffer;		/* for return to caller */
+     struct jpeg_error_mgr pub;	           /* "public" fields */
+     jmp_buf               setjmp_buffer;  /* for return to caller */
   };
 
 typedef struct my_error_mgr *my_error_ptr;
 
-static void
-                    my_error_exit (j_common_ptr cinfo)
+#ifdef __STDC__
+static void my_error_exit (j_common_ptr cinfo)
+#else  /* !__STDC__ */
+static void my_error_exit (j_common_ptr cinfo)
+#endif /* __STDC__ */
 {
-   my_error_ptr        myerr = (my_error_ptr) cinfo->err;
+    my_error_ptr        myerr = (my_error_ptr) cinfo->err;
 
-#if 0
-   fprintf (stderr, "Error reading JPEG image: ");
-   (*cinfo->err->output_message) (cinfo);
-#endif
-   longjmp (myerr->setjmp_buffer, 1);
+#   if 0
+    fprintf (stderr, "Error reading JPEG image: ");
+    (*cinfo->err->output_message) (cinfo);
+#   endif
+    longjmp (myerr->setjmp_buffer, 1);
 }
 
 struct jpeg_decompress_struct cinfo;
-struct my_error_mgr jerr;
+struct my_error_mgr           jerr;
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-unsigned char      *ReadJPEG (FILE * infile, int *width, int *height, ThotColorStruct colrs[256])
+#ifdef __STDC__
+unsigned char      *ReadJPEG (FILE* infile, int* width, int* height, ThotColorStruct colrs[256])
+#else  /* !__STDC__ */
+unsigned char      *ReadJPEG (infile, width, height, colrs[256])
+FILE*           infile; 
+int*            width; 
+int*            height; 
+ThotColorStruct colrs[256];
+#endif /* __STDC__ */
 {
    unsigned char      *retBuffer = 0;	/* Output image buffer */
    unsigned char      *r;
@@ -89,9 +100,7 @@ unsigned char      *ReadJPEG (FILE * infile, int *width, int *height, ThotColorS
 	fclose (infile);
 
 	if (retBuffer)
-	  {
-	     TtaFreeMemory (retBuffer);
-	  }
+	   TtaFreeMemory (retBuffer);
 	return 0;
      }
 
@@ -116,7 +125,7 @@ unsigned char      *ReadJPEG (FILE * infile, int *width, int *height, ThotColorS
 
    jpeg_start_decompress (&cinfo);
 
-   if (!(retBuffer = (unsigned char *) TtaGetMemory (cinfo.output_width
+   if (!(retBuffer = (unsigned char*) TtaGetMemory (cinfo.output_width
 			  * cinfo.output_height * cinfo.output_components)))
      {
 	jpeg_destroy_decompress (&cinfo);
@@ -139,29 +148,34 @@ unsigned char      *ReadJPEG (FILE * infile, int *width, int *height, ThotColorS
 
    /* Initialize our colormap until a clear policy for the 32-bit screen */
 
-#ifndef _WINDOWS
    if (cinfo.out_color_components == 3)
      {
 	for (i = 0; i < cinfo.actual_number_of_colors; i++)
 	  {
+#            ifndef _WINDOWS
 	     colrs[i].red = cinfo.colormap[0][i] << 8;
 	     colrs[i].green = cinfo.colormap[1][i] << 8;
 	     colrs[i].blue = cinfo.colormap[2][i] << 8;
 	     colrs[i].pixel = i;
 	     colrs[i].flags = DoRed | DoGreen | DoBlue;
+#            else  /* _WINDOWS */
+             colrs[i] = RGB (cinfo.colormap[0][i], cinfo.colormap[1][i], cinfo.colormap[2][i]);
+#            endif /* _WINDOWS */
 	  }
      }
    else
      {
 	for (i = 0; i < cinfo.actual_number_of_colors; i++)
 	  {
-	     colrs[i].red = colrs[i].green =
-		colrs[i].blue = cinfo.colormap[0][i] << 8;
+#            ifndef _WINDOWS
+	     colrs[i].red = colrs[i].green = colrs[i].blue = cinfo.colormap[0][i] << 8;
 	     colrs[i].pixel = i;
 	     colrs[i].flags = DoRed | DoGreen | DoBlue;
+#            else  /* _WINDOWS */
+             colrs[i] = RGB (cinfo.colormap[0][i], cinfo.colormap[0][i], cinfo.colormap[0][i]);
+#            endif /* _WINDOWS */
 	  }
      }
-#endif /* _WINDOWS */
 
 
    (void) jpeg_finish_decompress (&cinfo);
@@ -174,8 +188,7 @@ unsigned char      *ReadJPEG (FILE * infile, int *width, int *height, ThotColorS
    ReadJpegToData  Just open the file and pass it to the ReadJpeg     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned char      *ReadJpegToData (char *datafile, int *w, int *h, ThotColorStruct colrs[256])
-
+unsigned char      *ReadJpegToData (char* datafile, int* w, int* h, ThotColorStruct colrs[256])
 #else  /* __STDC__ */
 unsigned char      *ReadJpegToData (datafile, w, h, colrs)
 char               *datafile;
@@ -258,9 +271,7 @@ ThotBitmap         *mask1;
       h = *yif;
     }
   
-#ifndef _WINDOWS
   pixmap = DataToPixmap (buffer, w, h, 100, colrs);
-#endif /* _WINDOWS */
   
   free (buffer);  
   if (pixmap == None)
@@ -393,11 +404,13 @@ unsigned long       BackGroundPixel;
 	  {
 
 
-#ifndef _WINDOWS
+#            ifndef _WINDOWS
 	     fprintf ((FILE *) fd, "%02x%02x%02x",
 		      (colrs[*pt].red) >> 8,
 		      (colrs[*pt].green) >> 8,
 		      (colrs[*pt].blue) >> 8);
+#            else  /* _WINDOWS */
+             fprintf ((FILE *) fd, "%02x%02x%02x", GetRValue (colrs[*pt]), GetGValue (colrs[*pt]), GetBValue (colrs[*pt]));
 #endif /* _WINDOWS */
 	     pt++;
 	  }

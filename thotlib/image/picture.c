@@ -18,7 +18,7 @@
  * Picture Handling
  * Authors: I. Vatton (INRIA)
  *          N. Layaida (INRIA) - New picture formats
- *          R. Guetari (INRIA) - Plugins and Windows
+ *          R. Guetari (INRIA) - Plugins and Windows routines
  *
  * Last modification: Jan 09 1997
  */

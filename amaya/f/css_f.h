@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CSSClassChanged ( NotifyAttribute * event );
 extern void PrintCSS ( CSSInfoPtr css,
                        FILE * output );
 extern int DumpCSSToFile ( Document doc,
@@ -78,7 +77,6 @@ extern void CloseCSS ( void );
 
 #else /* __STDC__ */
 
-extern void CSSClassChanged (/* NotifyAttribute * event */);
 extern void PrintCSS (/* CSSInfoPtr css,
                          FILE * output */);
 extern int DumpCSSToFile (/* Document doc,

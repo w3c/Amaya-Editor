@@ -66,7 +66,7 @@ extern void GifPrint ( char *fn,
                        int PicYArea,
                        int PicWArea,
                        int PicHArea,
-                       int fd,
+                       int filedesc,
                        unsigned long BackGroundPixel );
 extern boolean IsGifFormat ( char *datafile );
 
@@ -132,7 +132,7 @@ extern void GifPrint (/* char *fn,
                          int PicYArea,
                          int PicWArea,
                          int PicHArea,
-                         int fd,
+                         int filedesc,
                          unsigned long BackGroundPixel */);
 extern boolean IsGifFormat (/* char *datafile */);
 

@@ -89,7 +89,7 @@ extern void TtaSetPRuleValue (/* Element element,
                                  int value,
                                  Document document */);
 extern void TtaSetPRuleView (/* PRule pRule,
-                              int view */);
+                                int view */);
 extern void TtaChangeBoxSize (/* Element element,
                                  Document document,
                                  View view,

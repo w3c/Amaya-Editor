@@ -62,7 +62,8 @@ extern void Ap_InitializePluginTable ( int indexHandler );
 extern int Ap_InitializePlugin ( char* path,
                                  int indexHandler );
 extern void Ap_CreatePluginInstance ( PictInfo *imageDesc,
-                                      Display *display );
+                                      Display *display,
+                                      int type );
 
 #else /* __STDC__ */
 
@@ -122,7 +123,8 @@ extern void Ap_InitializePluginTable (/* int indexHandler */);
 extern int Ap_InitializePlugin (/* char* path,
                                    int indexHandler */);
 extern void Ap_CreatePluginInstance (/* PictInfo *imageDesc,
-                                        Display *display */);
+                                        Display *display,
+                                        int type */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
