@@ -495,4 +495,87 @@ void MImodified(event)
   SetFontslantAttr (event->element, event->document);
 }
 
+/*----------------------------------------------------------------------
+   SetAddspaceAttr
+   The content of a MO element has been modified.
+   Change attribute addspace accordingly.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetAddspaceAttr (Element el, Document doc)
+#else /* __STDC__*/
+void SetAddspaceAttr (el, doc)
+  Element	el;
+  Document	doc;
+#endif /* __STDC__*/
+{
+  Element	textEl;
+  ElementType	elType;
+  AttributeType	attrType;
+  Attribute	attr;
+  int		len, val;
+#define BUFLEN 10
+  unsigned char	text[BUFLEN];
+  Language	lang;
+  char		alphabet;
+
+  textEl = TtaGetFirstChild (el);
+  if (textEl != NULL)
+     {
+     /* search the addspace attribute */
+     elType = TtaGetElementType (el);
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_addspace;
+     attr = TtaGetAttribute (el, attrType);
+     if (attr == NULL)
+	{
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, doc);
+	}
+     val = MathML_ATTR_addspace_VAL_nospace;
+     len = TtaGetTextLength (textEl);
+     if (len > 0 && len < BUFLEN)
+	{
+	len = BUFLEN;
+	TtaGiveTextContent (textEl, text, &len, &lang);
+	alphabet = TtaGetAlphabet (lang);
+	if (len == 1)
+	   if (alphabet == 'L')
+	     {
+	     if (text[0] == '+' ||
+	         text[0] == '-' ||
+	         text[0] == '&' ||
+	         text[0] == '*' ||
+	         text[0] == '<' ||
+	         text[0] == '=' ||
+	         text[0] == '>' ||
+	         text[0] == '^')
+	         val = MathML_ATTR_addspace_VAL_both;
+	     else if (text[0] == ',' ||
+		      text[0] == ';')
+	         val = MathML_ATTR_addspace_VAL_spaceafter;
+	     }
+	   else if (alphabet == 'G')
+	     if ((int)text[0] == 177)	/* PlusMinus */
+		val = MathML_ATTR_addspace_VAL_both;
+	/**** to be completed *****/
+	}
+     TtaSetAttributeValue (attr, val, el, doc);
+     }
+}
+
+/*----------------------------------------------------------------------
+   MOmodified
+   The content of a MO element has been modified.
+   Change attribute addspace accordingly.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MOmodified (NotifyOnTarget *event)
+#else /* __STDC__*/
+void MOmodified(event)
+     NotifyOnTarget *event;
+#endif /* __STDC__*/
+{
+  SetAddspaceAttr (event->element, event->document);
+}
+
 #endif /* MATHML */

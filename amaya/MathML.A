@@ -5,4 +5,7 @@ ELEMENTS
    MI:
 	ElemTextModify.Post -> MImodified;
 
+   MO:
+	ElemTextModify.Post -> MOmodified;
+
 END

@@ -47,6 +47,9 @@
 #include "HTMLedit_f.h"
 #include "HTMLstyle_f.h"
 #include "HTMLtable_f.h"
+#ifdef MATHML
+#include "Mathedit_f.h"
+#endif
 #endif /* STANDALONE */
 
 typedef unsigned char entityName[10];
@@ -213,11 +216,11 @@ MathEntity;
 
 MathEntity        MathEntityTable[] =
 {
-   {"ApplyFunction", 32, 'L'},
-   {"InvisibleTimes", 129, 'L'},	/** thin space, should be 0,0 **/
+   {"ApplyFunction", 129, 'L'},
+   {"InvisibleTimes", 129, 'L'},	/** thin space, should be 0 **/
    {"PlusMinus", 177, 'G'},
    {"RightArrow", 174, 'G'},
-   {"af", 129, 'L'},	/** thin space, should be 0,0 **/
+   {"af", 129, 'L'},	/** thin space, should be 0 **/
    {"dd", 100, 'L'},
    {"delta", 100, 'G'},
    {"ee", 101, 'L'},
@@ -2681,6 +2684,9 @@ Element                 el;
      {
      case MathML_EL_MI:
 	SetFontslantAttr (el, theDocument);
+	break;
+     case MathML_EL_MO:
+	SetAddspaceAttr (el, theDocument);
 	break;
      case MathML_EL_MROOT:
 	/* end of a Root. Create a RootBase and an Index */

@@ -70,7 +70,8 @@ STRUCT
 			END;
 		  MN = BEGIN TEXT; END;
 		  MI (ATTR fontslant = plain, italic) = BEGIN TEXT; END;
-		  MO = BEGIN TEXT; END;
+		  MO (ATTR addspace = nospace, spacebefore, spaceafter, both) =
+			BEGIN TEXT; END;
 		  MS = BEGIN TEXT; END;
 		  END;
 
@@ -87,4 +88,6 @@ EXCEPT
    Subscript:	  Hidden;
    Superscript:	  Hidden;
    Block_exp:	  Hidden;
+
+   addspace:	  Invisible;
 END

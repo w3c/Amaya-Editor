@@ -278,9 +278,11 @@ BOXES
 	Visibility: 0;
 	IN Math_Structure_view BEGIN
 		VertPos: Top = Creator . Top;
+		HorizPos: Left = Creator . Left;
 		Height: Creator . Height;
 		Width: 1.1;
 		LineWeight: 2 pt;
+		LineStyle: Solid;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -309,6 +311,15 @@ BOXES
 	Depth: Enclosing + 1;
 	Background: Creator =;
 	Foreground: Creator =;
+	IN Math_Structure_view
+		Visibility: 0;
+	END;
+
+ MOspace: BEGIN
+	Content: text ' ';
+	Width : 0.3;
+	VertPos: HRef = Previous . HRef;
+	HorizPos: Left = Previous . Right;
 	IN Math_Structure_view
 		Visibility: 0;
 	END;
@@ -827,8 +838,23 @@ ATTRIBUTES
 
   fontslant = plain:
 	Style: roman;
-
   fontslant = italic:
 	Style: Italics;
 
+  addspace = nospace:
+	HorizPos: Left = Previous . Right;
+  addspace = spacebefore:
+	HorizPos: Left = Previous . Right + 0.3;
+  addspace = spaceafter:
+	BEGIN
+	HorizPos: Left = Previous . Right;
+{***	Width: Enclosed . Width + 0.3;
+****}	CreateAfter(MOspace);
+	END;
+  addspace = both:
+	BEGIN
+	HorizPos: Left = Previous . Right + 0.3;
+{***	Width: Enclosed . Width + 0.3;
+****}	CreateAfter(MOspace);	
+	END;
 END

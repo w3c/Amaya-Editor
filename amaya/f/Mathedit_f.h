@@ -6,39 +6,17 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Element SplitTextInMathML (Document doc,
-				  Element el,
-				  int index);
-
-extern void CallbackMaths (int ref,
-			   int typedata,
-			   char *data);
-
-extern void CreateMaths (Document doc,
-			 View view);
-
-extern void AddMathButton (Document doc,
-			   View view);
-
-extern void InitMathML ();
+extern void SetFontslantAttr ( Element el, 
+			       Document doc );
+extern void SetAddspaceAttr ( Element el, 
+			      Document doc );
 
 #else /* __STDC__ */
 
-extern Element SplitTextInMathML (/* Document doc,
-				     Element el,
-				     int index */);
-
-extern void CallbackMaths (/* int ref,
-			      int typedata,
-			      char *data) */;
-
-extern void CreateMaths (/* Document doc,
-			    View view */);
-
-extern void AddMathButton (/* Document doc,
-			      View view */);
-
-extern void InitMathML ();
+extern void SetFontslantAttr (/* Element el,
+                                 Document doc */);
+extern void SetAddspaceAttr (/* Element el,
+                                Document doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
