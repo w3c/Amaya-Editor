@@ -7398,6 +7398,7 @@ void InitStringForCombobox ()
 
   /* remove the previous list */
   TtaFreeMemory (URL_list);
+  URL_list_keep = TRUE;
   urlstring = (char *) TtaGetMemory (MAX_LENGTH);
   /* open the file list_url.dat into APP_HOME directory */
   app_home = TtaGetEnvString ("APP_HOME");

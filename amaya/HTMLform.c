@@ -82,26 +82,25 @@ void RestoreDocumentStatus (NotifyOnTarget *event)
   ----------------------------------------------------------------------*/
 static void AddToBuffer (char *orig)
 {
-   void               *status;
-   int                 lg;
+  void               *status;
+  int                 lg;
 
-   lg = strlen (orig) + 1;
-   if ((int)strlen (buffer) + lg > lgbuffer)
-     {
-	/* it is necessary to extend the buffer */
-	if (lg < PARAM_INCREMENT)
-	   lg = PARAM_INCREMENT;
-	status = TtaRealloc (buffer, sizeof (char) * (lgbuffer + lg));
-
-	if (status != NULL)
-	  {
-	     buffer = status;
-	     lgbuffer += lg;
-	     strcat (buffer, orig);
-	  }
-     }
-   else
-      strcat (buffer, orig);
+  lg = strlen (orig) + 1;
+  if ((int)strlen (buffer) + lg > lgbuffer)
+    {
+      /* it is necessary to extend the buffer */
+      if (lg < PARAM_INCREMENT)
+	lg = PARAM_INCREMENT;
+      status = TtaRealloc (buffer, sizeof (char) * (lgbuffer + lg));      
+      if (status != NULL)
+	{
+	  buffer = status;
+	  lgbuffer += lg;
+	  strcat (buffer, orig);
+	}
+    }
+  else
+    strcat (buffer, orig);
 }
 
 /*----------------------------------------------------------------------
@@ -145,72 +144,80 @@ static void AddToBufferWithEOS (char *orig)
   AddElement
   add a string into the query buffer				
   ----------------------------------------------------------------------*/
-static void AddElement (unsigned char *element)
+static void AddElement (unsigned char *element, CHARSET charset)
 {
-   char                tmp[4];
-   char                tmp2[2];
+#ifdef _I18N_
+  CHAR_T           wc;
+#endif /* _I18N_ */
+  char            tmp[4];
+  char            tmp2[2];
 
-   strcpy (tmp, "%");
-   strcpy (tmp2, "a");
-
-   if (buffer == NULL)
-     {
-	buffer = TtaGetMemory (PARAM_INCREMENT);
-	lgbuffer = PARAM_INCREMENT;
-	buffer[0] = EOS;
-     }
-   while (*element)
-     {
-	/* for valid standard ASCII chars */
-	if (*element >= 0x20 && *element <= 0x7e)
-	  {
-	     /* verify whether the char must be escaped, according to  the
-	      URL BNF document */
-	     switch (*element)
-		   {
-		      case ';':
-		      case '/':
-		      case '#':
-		      case '?':
-		      case ':':
-		      case '+':
-		      case '&':
-                      case '>':
-                      case '<':
-		      case '=':
-		      case '%':
-		      case '@':
-			 EscapeChar (&tmp[1], *element);
-			 AddToBuffer (tmp);
-			 break;
-
-		      case SPACE:
-			 tmp2[0] = '+';
-			 AddToBuffer (tmp2);
-			 break;
-
-		      default:
-			 tmp2[0] = *element;
-			 AddToBuffer (tmp2);
-			 break;
-		   }
-	  }
-	/* for all other characters */
-	else 
-	  if (*element == '\n')
+  strcpy (tmp, "%");
+  strcpy (tmp2, "a");
+  if (buffer == NULL)
+    {
+      buffer = TtaGetMemory (PARAM_INCREMENT);
+      lgbuffer = PARAM_INCREMENT;
+      buffer[0] = EOS;
+    }
+  while (*element)
+    {
+      /* for valid standard ASCII chars */
+      if (*element >= 0x20 && *element <= 0x7e)
+	{
+	  /* verify whether the char must be escaped, according to  the
+	     URL BNF document */
+	  switch (*element)
 	    {
-	      EscapeChar (&tmp[1], __CR__);
-	      AddToBuffer (&tmp[0]);
-	      EscapeChar (&tmp[1], EOL);
-	      AddToBuffer (&tmp[0]);
-	    }
-	  else
-	    {
+	    case ';':
+	    case '/':
+	    case '#':
+	    case '?':
+	    case ':':
+	    case '+':
+	    case '&':
+	    case '>':
+	    case '<':
+	    case '=':
+	    case '%':
+	    case '@':
 	      EscapeChar (&tmp[1], *element);
 	      AddToBuffer (tmp);
+	      break;
+	    case SPACE:
+	      tmp2[0] = '+';
+	      AddToBuffer (tmp2);
+	      break;
+	    default:
+#ifdef _I18N_
+	      if (charset != UTF_8)
+		{
+		  TtaMBstringToWC (&element, &wc);
+		  tmp2[0] = TtaGetCharFromWC (wc, charset);
+		  element--; /* it will be incremented after */
+		}
+	      else
+#endif /* _I18N_ */
+		tmp2[0] = *element;
+	      AddToBuffer (tmp2);
+	      break;
 	    }
-	element++;
-     }
+	}
+      /* for all other characters */
+      else if (*element == '\n')
+	  {
+	    EscapeChar (&tmp[1], __CR__);
+	    AddToBuffer (&tmp[0]);
+	    EscapeChar (&tmp[1], EOL);
+	    AddToBuffer (&tmp[0]);
+	  }
+	else
+	  {
+	    EscapeChar (&tmp[1], *element);
+	    AddToBuffer (tmp);
+	  }
+      element++;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -248,12 +255,12 @@ static void TrimSpaces (char *string)
   AddNameValue
   add a name=value pair, and a trailling & into the query buffer	
   ----------------------------------------------------------------------*/
-static void AddNameValue (char *name, char *value)
+static void AddNameValue (char *name, char *value, CHARSET charset)
 {
-   AddElement (name);
+   AddElement (name, charset);
    AddToBuffer ("=");
    if (value)
-      AddElement (value);
+      AddElement (value, charset);
    AddToBuffer ("&");
 }
 
@@ -266,11 +273,13 @@ static void SubmitOption (Element option, char *name, Document doc)
   Element             elText;
   Attribute           attr;
   AttributeType       attrType;
+  CHARSET             charset;
+  Language            lang;
   int                 length;
   char             *value;
-  Language            lang;
 
   /* check if element is selected */
+  charset = TtaGetDocumentCharset (doc);
   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   attrType.AttrTypeNum = HTML_ATTR_Selected;
   attr = TtaGetAttribute (option, attrType);
@@ -301,7 +310,7 @@ static void SubmitOption (Element option, char *name, Document doc)
       TrimSpaces (name);
       TrimSpaces (value);
       /* save the name/value pair of the element */
-      AddNameValue (name, value);
+      AddNameValue (name, value, charset);
       if (value)
          TtaFreeMemory (value);
       }
@@ -485,6 +494,7 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
   Language            lang;
   /* we initialiwe dispMode so that gcc feels happy */
   DisplayMode         dispMode = DisplayImmediately;
+  CHARSET             charset;
   char                name[MAX_LENGTH];
   char               *value = NULL;
   char               *text;
@@ -505,6 +515,7 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 	TtaSetDisplayMode (doc, DeferredDisplay);
     }
   
+  charset = TtaGetDocumentCharset (doc);
   lang = TtaGetDefaultLanguage ();      
   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   attrType.AttrTypeNum = HTML_ATTR_NAME;
@@ -545,13 +556,13 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 			  length = TtaGetTextAttributeLength (attrS) + 1;
 			  value = TtaGetMemory (length);
 			  TtaGiveTextAttributeValue (attrS, value, &length);
-			  AddNameValue (name, value);
+			  AddNameValue (name, value, charset);
 			  TtaFreeMemory (value);
 			  value = NULL;
 			}
 		      else
 			/* give a default checkbox value (On) */
-			AddNameValue (name, "on");
+			AddNameValue (name, "on", charset);
 		    }
 		}
 	      else if (mode == HTML_EL_Reset_Input)
@@ -595,7 +606,7 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 			  length = TtaGetTextAttributeLength (attrS) + 1;
 			  value = TtaGetMemory (length);
 			  TtaGiveTextAttributeValue (attrS, value, &length);
-			  AddNameValue (name, value);
+			  AddNameValue (name, value, charset);
 			  TtaFreeMemory (value);
 			  value = NULL;
 			}
@@ -633,14 +644,14 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 		  /* save the NAME attribute of the element el */
 		  length = MAX_LENGTH - 1;
 		  TtaGiveTextAttributeValue (attr, name, &length);
-		  AddElement (name);
+		  AddElement (name, charset);
 		  AddToBuffer ("=");
 		  while (elForm)
 		    {
 		      length = TtaGetTextLength (elForm) + 1;
 		      text = TtaGetMemory (length);
 		      TtaGiveTextContent (elForm, text, &length, &lang);
-		      AddElement (text);
+		      AddElement (text, charset);
 		      TtaFreeMemory (text);
 		      elForm = TtaSearchTypedElementInTree (elType, SearchForward, el, elForm);
 		    }
@@ -691,7 +702,7 @@ static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 		      length = TtaGetTextAttributeLength (def) + 1;
 		      value = TtaGetMemory (length);
 		      TtaGiveTextAttributeValue (def, value, &length);
-		      AddNameValue (name, value);
+		      AddNameValue (name, value, charset);
 		      TtaFreeMemory (value);
 		      value = NULL;
 		    }
@@ -730,27 +741,31 @@ static void DoSubmit (Document doc, int method, char *action)
   CHARSET             charset;
   int                 buffer_size;
   int                 i;
-  char               *urlName;
+  char               *urlName, *ptr;
 
   /* clear the selection */
   if (TtaGetSelectedDocument () == doc)
     TtaUnselect (doc);
 
-  /* remove any trailing & */
   if (buffer)
     buffer_size = strlen (buffer);
   else
+    buffer_size = 0;
+  if (buffer_size)
     {
-      buffer_size = 0;
-      buffer = "";
+      if (buffer[buffer_size - 1] == '&')
+	{
+	  /* remove any trailing & */
+	  buffer[buffer_size - 1] = EOS;
+	  buffer_size--;
+	}
+      ptr = buffer;
     }
-  if (buffer_size != 0  && (buffer[buffer_size - 1] == '&'))
-    {
-      buffer[buffer_size - 1] = EOS;
-      buffer_size--;
-    }
+  else
+    ptr = "";
 
 #ifdef _I18N_
+  /* the URI is already in UTF-8: GetAmayaDoc won't reencode it */
   charset = UTF_8;
 #else /* _I18N_ */
   charset = TtaGetDocumentCharset (doc);
@@ -758,29 +773,26 @@ static void DoSubmit (Document doc, int method, char *action)
   switch (method)
     {
     case -9999:	/* index attribute, not yet supported by Amaya */
+      ptr = TtaStrdup (buffer);
       for (i = 0; i < buffer_size; i++)
-	switch (buffer[i])
-	  {
-	  case '&':
-	  case '=':
-	    buffer[i] = '+';
-	    break;
-	  default:
-	    break;
-	  }
-      break;		/* case INDEX */
+	{
+	  if (ptr[i] == '&'|| ptr[i] == '=')
+	    ptr[i] = '+';
+	}
+      TtaFreeMemory (ptr);
+      break;
     case HTML_ATTR_METHOD_VAL_Get_:
       urlName = TtaGetMemory (strlen (action) + buffer_size + 2);
-      if (urlName != NULL)
+      if (urlName)
 	{
 	  strcpy (urlName, action);
-	  GetAmayaDoc (urlName, buffer, doc, doc, CE_FORM_GET, TRUE,
+	  GetAmayaDoc (urlName, ptr, doc, doc, CE_FORM_GET, TRUE,
 		       NULL, NULL, charset);
 	  TtaFreeMemory (urlName);
 	}
       break;
     case HTML_ATTR_METHOD_VAL_Post_:
-      GetAmayaDoc (action, buffer, doc, doc, CE_FORM_POST, TRUE,
+      GetAmayaDoc (action, ptr, doc, doc, CE_FORM_POST, TRUE,
 		   NULL, NULL, charset);
       break;
     default:
@@ -797,206 +809,202 @@ static void DoSubmit (Document doc, int method, char *action)
   ----------------------------------------------------------------------*/
 void SubmitForm (Document doc, Element element)
 {
-   Element             elForm;
-   ElementType         elType;
-   Attribute           attr;
-   AttributeType       attrType;
-   char               *action, *name, *value, *info;
-   int                 i, length, button_type;
-   int                 method;
-   ThotBool	       found, withinForm;
+  Element             elForm;
+  ElementType         elType;
+  Attribute           attr;
+  AttributeType       attrType;
+  CHARSET             charset;
+  char               *action, *name, *value, *info;
+  int                 i, length, button_type;
+  int                 method;
+  ThotBool	       found, withinForm;
 
-   buffer = NULL;
-   action = NULL;
+  buffer = NULL;
+  action = NULL;
+  /* find out the characteristics of the button which was pressed */
+  found = FALSE;
+  while (!found && element)
+    {
+      elType = TtaGetElementType (element);
+      if (elType.ElTypeNum == HTML_EL_Reset_Input ||
+	  elType.ElTypeNum == HTML_EL_Submit_Input ||
+	  elType.ElTypeNum == HTML_EL_BUTTON_ ||
+	  elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+	found = TRUE;
+      else
+	element = TtaGetParent (element);
+    }
+  if (!found)
+    return;
 
-   /* find out the characteristics of the button which was pressed */
-   found = FALSE;
-   while (!found && element)
-     {
-        elType = TtaGetElementType (element);
-	if (elType.ElTypeNum == HTML_EL_Reset_Input ||
-	    elType.ElTypeNum == HTML_EL_Submit_Input ||
-	    elType.ElTypeNum == HTML_EL_BUTTON_ ||
-	    elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-	   found = TRUE;
-	else
-	   element = TtaGetParent (element);
-     }
-   if (!found)
-     return;
-
-   button_type = 0;
-   attrType.AttrSSchema = elType.ElSSchema;
-   switch (elType.ElTypeNum)
-     {
-     case HTML_EL_Reset_Input:
-       button_type = HTML_EL_Reset_Input;
-       break;
-       
-     case HTML_EL_BUTTON_:
-       attrType.AttrTypeNum = HTML_ATTR_Button_type;
-       attr = TtaGetAttribute (element, attrType);
-       if (!attr)
-	 /* default value of attribute type is submit */
-	 button_type = HTML_EL_Submit_Input;
-       else
-	 {
-	   i = TtaGetAttributeValue (attr);
-	   if (i == HTML_ATTR_Button_type_VAL_submit)
-	     button_type = HTML_EL_Submit_Input;
-	   else if (i == HTML_ATTR_Button_type_VAL_reset)
-	     button_type = HTML_EL_Reset_Input;
-	 }
-       break;
-       
-     case HTML_EL_Submit_Input:
-       button_type = HTML_EL_Submit_Input;
-       break;
-       
-     case HTML_EL_PICTURE_UNIT:
-       button_type = HTML_EL_Submit_Input;
-       /* get the button's name, if it exists */
-       attrType.AttrTypeNum = HTML_ATTR_NAME;
-       attr = TtaGetAttribute (element, attrType);
-       if (attr != NULL)
-	 {
-	   length = TtaGetTextAttributeLength (attr);
-	   name = TtaGetMemory (length + 3);
-	   TtaGiveTextAttributeValue (attr, name, &length);
-	   strcat (name, ". ");
-	   length ++;
-	   /* get the x and y coordinates */
-	   info = GetActiveImageInfo (doc, element);
-	   if (info != NULL) 
-	     {
-	       /* create the x name-value pair */
-	       name [length] = 'x';
-	       for (i = 0; info[i] != ','; i++);
-	       info[i] = EOS;
-	       /* skip the ? char */
-	       value = &info[1];
-	       AddNameValue (name, value);
-	       /* create the y name-value pair */
-	       name [length] = 'y';
-	       value = &info[i+1];
-	       AddNameValue (name, value);
-	       TtaFreeMemory (info);
-	     }
-	   if (name)
-	     TtaFreeMemory (name);
-	 }
-       break;
-     }
-   
-   if (button_type == 0)
-	return;
-
-   if (elType.ElTypeNum == HTML_EL_Submit_Input ||
-       (elType.ElTypeNum == HTML_EL_BUTTON_ &&
-	button_type == HTML_EL_Submit_Input))
+  charset = TtaGetDocumentCharset (doc);
+  button_type = 0;
+  attrType.AttrSSchema = elType.ElSSchema;
+  switch (elType.ElTypeNum)
+    {
+    case HTML_EL_Reset_Input:
+      button_type = HTML_EL_Reset_Input;
+      break;
+    case HTML_EL_BUTTON_:
+      attrType.AttrTypeNum = HTML_ATTR_Button_type;
+      attr = TtaGetAttribute (element, attrType);
+      if (!attr)
+	/* default value of attribute type is submit */
+	button_type = HTML_EL_Submit_Input;
+      else
 	{
-	    /* get the button's value and name, if they exist */
-	    attrType.AttrTypeNum = HTML_ATTR_NAME;
-	    attr = TtaGetAttribute (element, attrType);
-	    if (attr != NULL)
-	      {
-		value = NULL;
-		length = TtaGetTextAttributeLength (attr);
-		name = TtaGetMemory (length + 1);
-		TtaGiveTextAttributeValue (attr, name, &length);
-		attrType.AttrTypeNum = HTML_ATTR_Value_;
-		attr = TtaGetAttribute (element, attrType);
-		if (attr != NULL)
-		  {
-		  length = TtaGetTextAttributeLength (attr);
-		  value = TtaGetMemory (length + 1);
-		  TtaGiveTextAttributeValue (attr, value, &length);
-		  AddNameValue (name, value);
-		  }
-		if (name)
-		  {
-		  TtaFreeMemory (name);
-		  if (value)
-		    TtaFreeMemory (value);
-		  }
-	      }
+	  i = TtaGetAttributeValue (attr);
+	  if (i == HTML_ATTR_Button_type_VAL_submit)
+	    button_type = HTML_EL_Submit_Input;
+	  else if (i == HTML_ATTR_Button_type_VAL_reset)
+	    button_type = HTML_EL_Reset_Input;
 	}
+      break;
+    case HTML_EL_Submit_Input:
+      button_type = HTML_EL_Submit_Input;
+      break;
+    case HTML_EL_PICTURE_UNIT:
+      button_type = HTML_EL_Submit_Input;
+      /* get the button's name, if it exists */
+      attrType.AttrTypeNum = HTML_ATTR_NAME;
+      attr = TtaGetAttribute (element, attrType);
+      if (attr != NULL)
+	{
+	  length = TtaGetTextAttributeLength (attr);
+	  name = TtaGetMemory (length + 3);
+	  TtaGiveTextAttributeValue (attr, name, &length);
+	  strcat (name, ". ");
+	  length ++;
+	  /* get the x and y coordinates */
+	  info = GetActiveImageInfo (doc, element);
+	  if (info != NULL) 
+	    {
+	      /* create the x name-value pair */
+	      name [length] = 'x';
+	      for (i = 0; info[i] != ','; i++);
+	      info[i] = EOS;
+	      /* skip the ? char */
+	      value = &info[1];
+	      AddNameValue (name, value, charset);
+	      /* create the y name-value pair */
+	      name [length] = 'y';
+	      value = &info[i+1];
+	      AddNameValue (name, value, charset);
+	      TtaFreeMemory (info);
+	     }
+	  if (name)
+	    TtaFreeMemory (name);
+	}
+      break;
+    }
+  
+  if (button_type == 0)
+    return;
 
-   /* find the parent form node */
-   elType.ElTypeNum = HTML_EL_Form;
-   elForm = TtaGetTypedAncestor (element, elType);
-   withinForm = (elForm != NULL);
-   if (!withinForm)
-     {
-       /* could not find an ancestor form -> check a previous one */
-       elForm = TtaSearchTypedElement (elType, SearchBackward, element);
-       if (!elForm)
-	 {
-	   /* could not find a form before that element */
-	   TtaFreeMemory (buffer);
-	   return;
-	 }
-     }
+  if (elType.ElTypeNum == HTML_EL_Submit_Input ||
+      (elType.ElTypeNum == HTML_EL_BUTTON_ &&
+       button_type == HTML_EL_Submit_Input))
+    {
+      /* get the button's value and name, if they exist */
+      attrType.AttrTypeNum = HTML_ATTR_NAME;
+      attr = TtaGetAttribute (element, attrType);
+      if (attr != NULL)
+	{
+	  value = NULL;
+	  length = TtaGetTextAttributeLength (attr);
+	  name = TtaGetMemory (length + 1);
+	  TtaGiveTextAttributeValue (attr, name, &length);
+	  attrType.AttrTypeNum = HTML_ATTR_Value_;
+	  attr = TtaGetAttribute (element, attrType);
+	  if (attr != NULL)
+	    {
+	      length = TtaGetTextAttributeLength (attr);
+	      value = TtaGetMemory (length + 1);
+	      TtaGiveTextAttributeValue (attr, value, &length);
+	      AddNameValue (name, value, charset);
+	    }
+	  if (name)
+	    {
+	      TtaFreeMemory (name);
+	      if (value)
+		TtaFreeMemory (value);
+	    }
+	}
+    }
+
+  /* find the parent form node */
+  elType.ElTypeNum = HTML_EL_Form;
+  elForm = TtaGetTypedAncestor (element, elType);
+  withinForm = (elForm != NULL);
+  if (!withinForm)
+    {
+      /* could not find an ancestor form -> check a previous one */
+      elForm = TtaSearchTypedElement (elType, SearchBackward, element);
+      if (!elForm)
+	{
+	  /* could not find a form before that element */
+	  TtaFreeMemory (buffer);
+	  return;
+	}
+    }
 
 #ifdef FORM_DEBUG
-{
+  {
   /* dump the abstract tree */
  FILE               *fp2;
  fp2 = fopen ("/tmp/FormTree.dbg", "w");
  TtaListAbstractTree(elForm, fp2);
    fclose (fp2);
-}
+  }
 #endif
 
-   /* get the  ACTION attribute value */
-   if (button_type == HTML_EL_Submit_Input)
-     {
-	attrType.AttrTypeNum = HTML_ATTR_Script_URL;
-	attr = TtaGetAttribute (elForm, attrType);
-	if (attr != NULL)
-	  {
-	    length = TtaGetTextAttributeLength (attr);
-	    if (length)
-	      {
-		action = TtaGetMemory (length + 1);
-		TtaGiveTextAttributeValue (attr, action, &length);
-	      }
-	  }
-	else
-	  action = NULL;
+  /* get the  ACTION attribute value */
+  if (button_type == HTML_EL_Submit_Input)
+    {
+      attrType.AttrTypeNum = HTML_ATTR_Script_URL;
+      attr = TtaGetAttribute (elForm, attrType);
+      if (attr != NULL)
+	{
+	  length = TtaGetTextAttributeLength (attr);
+	  if (length)
+	    {
+	      action = TtaGetMemory (length + 1);
+	      TtaGiveTextAttributeValue (attr, action, &length);
+	    }
+	}
+      else
+	action = NULL;
 
-	/* get the  METHOD attribute value */
-	attrType.AttrTypeNum = HTML_ATTR_METHOD;
-	attr = TtaGetAttribute (elForm, attrType);
-	if (attr == NULL)
-	  method = HTML_ATTR_METHOD_VAL_Get_;
-	else
-	  method = TtaGetAttributeValue (attr);
-     }
-   else
-     method = HTML_ATTR_METHOD_VAL_Get_;
+      /* get the  METHOD attribute value */
+      attrType.AttrTypeNum = HTML_ATTR_METHOD;
+      attr = TtaGetAttribute (elForm, attrType);
+      if (attr == NULL)
+	method = HTML_ATTR_METHOD_VAL_Get_;
+      else
+	method = TtaGetAttributeValue (attr);
+    }
+  else
+    method = HTML_ATTR_METHOD_VAL_Get_;
 
-   /* search the subtree for the form elements */
-   element  = TtaGetFirstChild(elForm);
-
-   /* process the form */
-   if (button_type == HTML_EL_Submit_Input)
-     {
-       if (action)
-	 {
-	   ParseForm (doc, elForm, element, button_type);
-	   DoSubmit (doc, method, action);
-	 }
-       else
-	 InitConfirm3L (doc, 1, "No action", NULL, NULL, NO);
-     }
-   else
-     ParseForm (doc, elForm, element, button_type);
+  /* search the subtree for the form elements */
+  element  = TtaGetFirstChild(elForm);
+  /* process the form */
+  if (button_type == HTML_EL_Submit_Input)
+    {
+      if (action)
+	{
+	  ParseForm (doc, elForm, element, button_type);
+	  DoSubmit (doc, method, action);
+	}
+      else
+	InitConfirm3L (doc, 1, "No action", NULL, NULL, NO);
+    }
+  else
+    ParseForm (doc, elForm, element, button_type);
    
-   if (action)
-     TtaFreeMemory (action);
-   if (buffer && buffer [0] != 0)
-     TtaFreeMemory (buffer);
+  if (action)
+    TtaFreeMemory (action);
+  TtaFreeMemory (buffer);
 }
 
 
