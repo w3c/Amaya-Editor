@@ -2034,43 +2034,56 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		      /* check if the relative box is not already dead */
 		      if (pDimAb->DimUnit == UnAuto)
 			{
-			  if (pAb->AbFloat == 'N' && pAb->AbDisplay == 'B')
+			  if (pAb->AbFloat != 'N'||
+			      pBox->BxType == BoFloatGhost ||
+			      pAb->AbNotInLine ||
+			      pAb->AbDisplay == 'I')
 			    {
-			      /* inherit from the parent box */
-			      pDimAb->DimAbRef = pAb->AbEnclosing;
-			      pDimAb->DimValue = 0;		  
-			      pBox->BxContentWidth = FALSE;
+			      /* inherit from the content */
+			      pDimAb->DimAbRef = NULL;
+			      pDimAb->DimValue = -1;		  
+			      pBox->BxContentWidth = TRUE;
 			    }
-			  else if (pAb->AbFloat != 'N'||
-				   pBox->BxType == BoFloatGhost ||
-				   pAb->AbNotInLine ||
-				   pAb->AbDisplay == 'I' ||
-				   /* if the parent inherits from contents */
-				   (!pParentAb->AbWidthChange &&
-				    pParentAb->AbWidth.DimUnit == UnAuto &&
-				    pParentAb->AbWidth.DimAbRef != pParentAb->AbEnclosing &&
-				    pParentAb->AbWidth.DimValue == -1))
+			  /* if the parent inherits from contents */
+			  else if (!pParentAb->AbWidthChange &&
+			       //pParentAb->AbWidth.DimUnit == UnAuto &&
+				   pParentAb->AbBox->BxType != BoCell &&
+				   pParentAb->AbWidth.DimAbRef == NULL &&
+				   pParentAb->AbWidth.DimValue == -1)
 			    {
 			      /* inherit from contents */
 			      pDimAb->DimAbRef = NULL;
 			      pDimAb->DimValue = -1;		  
 			      pBox->BxContentWidth = TRUE;
 			    }
+#ifdef IV
+			  else if (pAb->AbDisplay == 'B')
+			    {
+			      /* inherit from the parent box */
+			      pDimAb->DimAbRef = pAb->AbEnclosing;
+			      pDimAb->DimValue = 0;		  
+			      pBox->BxContentWidth = FALSE;
+			    }
+#endif
 			  else if (pParentAb->AbWidthChange &&
 				   pParentAb->AbWidth.DimUnit == UnAuto)
 			    {
-/* when the parent rule changes check upper levels */
+			      /* the parent rule changes check upper levels */
 			      PtrAbstractBox parent;
 			      parent = pParentAb->AbEnclosing;
 			      while (parent && parent->AbWidthChange &&
 				     parent->AbWidth.DimUnit == UnAuto)
 				parent = parent->AbEnclosing;
-			      if (parent->AbFloat == 'N' && parent->AbDisplay == 'B')
+
+			      if (parent->AbBox &&
+				  parent->AbBox->BxType != BoCell &&
+				  parent->AbWidth.DimAbRef == NULL &&
+				  parent->AbWidth.DimValue == -1)
 				{
-				  /* inherit from the parent box */
-				  pDimAb->DimAbRef = pAb->AbEnclosing;
-				  pDimAb->DimValue = 0;		  
-				  pBox->BxContentWidth = FALSE;
+				  /* inherit from contents */
+				  pDimAb->DimAbRef = NULL;
+				  pDimAb->DimValue = -1;		  
+				  pBox->BxContentWidth = TRUE;
 				}
 			      else
 				{
@@ -2103,8 +2116,9 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			{
 			  if (pBox->BxType != BoCell)
 			    {
-			      if (pDimAb->DimUnit != UnAuto)
+			      //if (pDimAb->DimUnit != UnAuto)
 				{
+				  /* skip parents which depend on content */
 				  while (pParentAb &&
 					 !pParentAb->AbWidth.DimIsPosition &&
 					 pParentAb->AbWidth.DimValue < 0 &&

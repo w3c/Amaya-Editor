@@ -214,11 +214,11 @@ static char *CSSCheckEndValue (char *cssRule, char *endvalue, char *msg)
 {
   char        c = EOS;
   if (*endvalue != EOS && *endvalue != SPACE && *endvalue != '/' &&
-      *endvalue != ';' && *endvalue != EOL && *endvalue != TAB &&
+      *endvalue != ';' && *endvalue != '}' && *endvalue != EOL && *endvalue != TAB &&
       *endvalue !=  __CR__)
     {
       while (*endvalue != EOS && *endvalue != SPACE && *endvalue != '/' &&
-	     *endvalue != ';' && *endvalue != EOL && *endvalue != TAB &&
+	     *endvalue != ';' && *endvalue != '}' && *endvalue != EOL && *endvalue != TAB &&
 	     *endvalue !=  __CR__)
 	endvalue++;
       /* close the string here */
@@ -242,7 +242,7 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
 #endif
 
   deb = ptr;
-  while (*ptr != EOS && *ptr != ';' && *ptr != '}')
+  while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != '}')
     {
       if (*ptr == '"' && (ptr == deb || ptr[-1] != '\\'))
 	{
@@ -301,7 +301,7 @@ static char *SkipValue (char *msg, char *ptr)
   char        c;
 
   deb = ptr;
-  while (*ptr != EOS && *ptr != ';' && *ptr != '}')
+  while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != '}')
     {
       if (*ptr == '"' && (ptr == deb || ptr[-1] != '\\'))
 	{
@@ -456,7 +456,7 @@ char *ParseClampedUnit (char *cssRule, PresentationValue *pval)
 
   p = cssRule;
   cssRule = ParseNumber (cssRule, pval);
-  if (*cssRule != EOS && *cssRule != SPACE && *cssRule != ';')
+  if (*cssRule != EOS && *cssRule != SPACE && *cssRule != ';' && *cssRule != '}')
     {
       cssRule++;
       pval->typed_data.unit = UNIT_REL;
@@ -867,7 +867,7 @@ static char *ParseCSSBorderWidth (Element element, PSchema tsch,
   /* First parse Border-Top */
   ptrR = ParseCSSBorderTopWidth (element, tsch, context, ptrT, css, isHTML);
   ptrR = SkipBlanksAndComments (ptrR);
-  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
+  if (*ptrR == ';' || *ptrR == '}' || *ptrR == EOS || *ptrR == ',')
     {
       skippedNL = NewLineSkipped;
       cssRule = ptrR;
@@ -883,7 +883,7 @@ static char *ParseCSSBorderWidth (Element element, PSchema tsch,
       /* parse Border-Right */
       ptrB = ParseCSSBorderRightWidth (element, tsch, context, ptrR, css, isHTML);
       ptrB = SkipBlanksAndComments (ptrB);
-      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
+      if (*ptrB == ';' || *ptrB == '}' || *ptrB == EOS || *ptrB == ',')
 	{
 	  skippedNL = NewLineSkipped;
 	  cssRule = ptrB;
@@ -898,7 +898,7 @@ static char *ParseCSSBorderWidth (Element element, PSchema tsch,
 	  /* parse Border-Bottom */
 	  ptrL = ParseCSSBorderBottomWidth (element, tsch, context, ptrB, css, isHTML);
 	  ptrL = SkipBlanksAndComments (ptrL);
-	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
+	  if (*ptrL == ';' || *ptrL == '}' || *ptrL == EOS || *ptrL == ',')
 	    {
 	      cssRule = ptrL;
 	      /* apply the Border-Right to Border-Left */
@@ -1045,7 +1045,7 @@ static char *ParseCSSBorderColor (Element element, PSchema tsch,
   /* First parse Border-Top */
   ptrR = ParseCSSBorderColorTop (element, tsch, context, ptrT, css, isHTML);
   ptrR = SkipBlanksAndComments (ptrR);
-  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
+  if (*ptrR == ';' || *ptrR == '}' || *ptrR == EOS || *ptrR == ',')
     {
       skippedNL = NewLineSkipped;
       cssRule = ptrR;
@@ -1061,7 +1061,7 @@ static char *ParseCSSBorderColor (Element element, PSchema tsch,
       /* parse Border-Right */
       ptrB = ParseCSSBorderColorRight (element, tsch, context, ptrR, css, isHTML);
       ptrB = SkipBlanksAndComments (ptrB);
-      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
+      if (*ptrB == ';' || *ptrB == '}' || *ptrB == EOS || *ptrB == ',')
 	{
 	  skippedNL = NewLineSkipped;
 	  cssRule = ptrB;
@@ -1078,7 +1078,7 @@ static char *ParseCSSBorderColor (Element element, PSchema tsch,
 	  ptrL = ParseCSSBorderColorBottom (element, tsch, context, ptrB, css, isHTML);
 	  NewLineSkipped = skippedNL;
 	  ptrL = SkipBlanksAndComments (ptrL);
-	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
+	  if (*ptrL == ';' || *ptrL == '}' || *ptrL == EOS || *ptrL == ',')
 	    {
 	      cssRule = ptrL;
 	      /* apply the Border-Right to Border-Left */
@@ -1197,7 +1197,7 @@ static char *ParseCSSBorderStyle (Element element, PSchema tsch,
   /* First parse Border-Top */
   ptrR = ParseCSSBorderStyleTop (element, tsch, context, ptrT, css, isHTML);
   ptrR = SkipBlanksAndComments (ptrR);
-  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
+  if (*ptrR == ';' || *ptrR == '}' || *ptrR == EOS || *ptrR == ',')
     {
       skippedNL = NewLineSkipped;
       cssRule = ptrR;
@@ -1213,7 +1213,7 @@ static char *ParseCSSBorderStyle (Element element, PSchema tsch,
       /* parse Border-Right */
       ptrB = ParseCSSBorderStyleRight (element, tsch, context, ptrR, css, isHTML);
       ptrB = SkipBlanksAndComments (ptrB);
-      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
+      if (*ptrB == ';' || *ptrR == '}' || *ptrB == EOS || *ptrB == ',')
 	{
 	  skippedNL = NewLineSkipped;
 	  cssRule = ptrB;
@@ -1228,7 +1228,7 @@ static char *ParseCSSBorderStyle (Element element, PSchema tsch,
 	  /* parse Border-Bottom */
 	  ptrL = ParseCSSBorderStyleBottom (element, tsch, context, ptrB, css, isHTML);
 	  ptrL = SkipBlanksAndComments (ptrL);
-	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
+	  if (*ptrL == ';' || *ptrR == '}' || *ptrL == EOS || *ptrL == ',')
 	    {
 	      cssRule = ptrL;
 	      /* apply the Border-Right to Border-Left */
@@ -1254,7 +1254,7 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
   char           *ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
-  while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
+  while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
       cssRule = ParseCSSBorderStyleTop (element, tsch, context, cssRule, css, isHTML);
@@ -1284,7 +1284,7 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
   char           *ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
-  while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
+  while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
       cssRule = ParseCSSBorderStyleLeft (element, tsch, context, cssRule, css, isHTML);
@@ -1314,7 +1314,7 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
   char           *ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
-  while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
+  while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
       cssRule = ParseCSSBorderStyleBottom (element, tsch, context, cssRule, css, isHTML);
@@ -1341,7 +1341,7 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
   char            *ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
-  while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
+  while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
       cssRule = ParseCSSBorderStyleRight (element, tsch, context, cssRule, css, isHTML);
@@ -1375,7 +1375,7 @@ static char *ParseCSSBorder (Element element, PSchema tsch,
   /* First parse Border-Top */
   ptrR = ParseCSSBorderTop (element, tsch, context, ptrT, css, isHTML);
   ptrR = SkipBlanksAndComments (ptrR);
-  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
+  if (*ptrR == ';' || *ptrR == '}' || *ptrR == EOS || *ptrR == ',')
     {
       skippedNL = NewLineSkipped;
       cssRule = ptrR;
@@ -1846,7 +1846,7 @@ static char *ParseCSSListStyle (Element element, PSchema tsch,
   int   skippedNL;
 
   cssRule = SkipBlanksAndComments (cssRule);
-  while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
+  while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
 	  skippedNL = NewLineSkipped;
       /* perhaps a list-style-image */
@@ -2620,7 +2620,7 @@ static char *ParseACSSFontFamily (Element element, PSchema tsch,
       else
          cssRule = SkipWord (cssRule);
       while (p == cssRule &&
-	     *cssRule != ','  && *cssRule != ';' && *cssRule != EOS)
+	     *cssRule != ','  && *cssRule != ';'  && *cssRule != '}' && *cssRule != EOS)
 	{
 	  cssRule++;
 	  p = cssRule;
@@ -2664,7 +2664,7 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
 {
   cssRule = ParseACSSFontFamily (element, tsch, context, cssRule, css, isHTML);
   /* skip extra values */
-  while (cssRule && *cssRule != ';' && *cssRule != EOS)
+  while (cssRule && *cssRule != ';' && *cssRule != '}' && *cssRule != EOS)
     cssRule++;
   return (cssRule);
 }
@@ -2967,7 +2967,7 @@ static char *ParseCSSFont (Element element, PSchema tsch,
     {
       ptr = NULL;
       p = cssRule;
-      while (*cssRule != ';' && *cssRule != EOS && p == cssRule)
+      while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && p == cssRule)
 	{
 	  found = FALSE;
 	  /* style, variant, weight can appear in any order */
@@ -3018,9 +3018,9 @@ static char *ParseCSSFont (Element element, PSchema tsch,
       if (!weight)
 	 ParseACSSFontWeight (element, tsch, context, "normal", css, isHTML);
       /* now parse the font size and the font family */
-      if (*cssRule != ';' && *cssRule != EOS)
+      if (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS)
 	cssRule = ParseACSSFontSize (element, tsch, context, cssRule, css, isHTML, FALSE);
-      if (*cssRule != ';' && *cssRule != EOS)
+      if (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS)
 	cssRule = ParseACSSFontFamily (element, tsch, context, cssRule, css, isHTML);
       if (ptr == cssRule)
 	{
@@ -3029,7 +3029,7 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 	}
     }
   cssRule = SkipBlanksAndComments (cssRule);
-  if (*cssRule != ';' && *cssRule != EOS)
+  if (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS)
     {
       cssRule = SkipValue ("Invalid font value", cssRule);
       cssRule = CheckImportantRule (cssRule, context);
@@ -3398,7 +3398,7 @@ static char *ParseCSSMargin (Element element, PSchema tsch,
   /* First parse Margin-Top */
   ptrR = ParseACSSMarginTop (element, tsch, context, ptrT, css, isHTML);
   ptrR = SkipBlanksAndComments (ptrR);
-  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
+  if (*ptrR == ';' || *ptrR == '}' || *ptrR == EOS || *ptrR == ',')
     {
       skippedNL = NewLineSkipped;
       cssRule = ptrR;
@@ -3414,7 +3414,7 @@ static char *ParseCSSMargin (Element element, PSchema tsch,
       /* parse Margin-Right */
       ptrB = ParseACSSMarginRight (element, tsch, context, ptrR, css, isHTML);
       ptrB = SkipBlanksAndComments (ptrB);
-      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
+      if (*ptrB == ';' || *ptrB == '}' || *ptrB == EOS || *ptrB == ',')
 	{
 	  skippedNL = NewLineSkipped;
 	  cssRule = ptrB;
@@ -3429,7 +3429,7 @@ static char *ParseCSSMargin (Element element, PSchema tsch,
 	  /* parse Margin-Bottom */
 	  ptrL = ParseACSSMarginBottom (element, tsch, context, ptrB, css, isHTML);
 	  ptrL = SkipBlanksAndComments (ptrL);
-	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
+	  if (*ptrL == ';' || *ptrL == '}' || *ptrL == EOS || *ptrL == ',')
 	    {
 	      cssRule = ptrL;
 	      /* apply the Margin-Right to Margin-Left */
@@ -4305,7 +4305,7 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
   int   skippedNL;
 
   cssRule = SkipBlanksAndComments (cssRule);
-  while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
+  while (*cssRule != ';' && *cssRule != '}' && *cssRule != EOS && *cssRule != ',')
     {
       /* perhaps a Background Image */
       if (!strncasecmp (cssRule, "url", 3) || !strncasecmp (cssRule, "none", 4))

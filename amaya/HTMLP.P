@@ -2617,6 +2617,7 @@ RULES
 	END;
 
  Object: BEGIN
+	Width: auto {Enclosing . Width};
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	if within HEAD
@@ -2639,7 +2640,7 @@ RULES
 	END;
 
  Object_Content: BEGIN
-	Width: Enclosing . Width;
+	Width: auto {Enclosing . Width};
 	Height: Enclosing . Height;
 	VertPos: Top = Enclosing . Top;
 	HorizPos: Left = Enclosing . Left;
@@ -2792,7 +2793,7 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: auto{Enclosing . Width};
-	Display: Block;
+	{Display: Block;}
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: H4Margin;
 	MarginBottom: H4Margin;
@@ -2842,7 +2843,7 @@ RULES
 	CreateWith(VerticalLine);
 	MarginLeft: LIST_INDENT;
 	Width: auto{Enclosing . Width};
-	Display: Block;
+	{Display: Block;}
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view BEGIN
 		MarginLeft: 0;
@@ -2862,7 +2863,7 @@ RULES
 	   ListStyleType: Square;
 	LineBreak: No;
 	Width: auto{Enclosing . Width};
-	Display: Block;
+	{Display: Block;}
 	VertPos: Top = Previous not MAP . Bottom;
 	PaddingLeft: LIST_INDENT;
 	if not within Definition and not within List_Item BEGIN
@@ -2889,7 +2890,7 @@ RULES
 	ListStyleType: Decimal;
 	LineBreak: No;
 	Width: auto{Enclosing . Width};
-	Display: Block;
+	{Display: Block;}
 	VertPos: Top = Previous not MAP . Bottom;
 	PaddingLeft: LIST_INDENT;
 	if not within Definition and not within List_Item BEGIN
@@ -3067,7 +3068,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: auto{Enclosing . Width};
-	Display: Block;
+	{Display: Block;}
 	VertPos: Top = Previous not MAP . Bottom;
 	Gather: Yes;
 	MarginTop: H4Margin;
@@ -3244,7 +3245,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: auto{Enclosing . Width};
-	Display: Block;
+	{Display: Block;}
 	VertPos: Top = Previous not MAP . Bottom + 0.6;
 	MarginTop: H4Margin;
 	MarginBottom: H4Margin;
@@ -4523,7 +4524,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: auto{Enclosing . Width};
-	Display: Block;
+	{Display: Block;}
 	VertPos: Top = Previous not MAP . Bottom + 0.4;
 	Adjust: VMiddle;
 	IN Structure_view BEGIN

@@ -295,7 +295,8 @@ unsigned long TtaGetFileSize (char *filename)
 ThotBool TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
 {
 #ifdef _WX
-  return wxCopyFile(TtaConvMessageToWX(sourceFileName), TtaConvMessageToWX(targetFileName), TRUE);
+  return wxCopyFile(TtaConvMessageToWX(sourceFileName),
+		    TtaConvMessageToWX(targetFileName), TRUE);
 #else /* _WX */
   FILE               *targetf, *sourcef;
   int                 size;

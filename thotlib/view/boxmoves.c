@@ -1931,15 +1931,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  toMove = TRUE;
 	  if (pCurrentAb->AbEnclosing && pCurrentAb->AbEnclosing->AbBox)
 	    {
-	      if (pCurrentAb->AbFloat == 'R' || pBox->BxType != BoFloatGhost)
-		{
-		  toMove = pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatGhost;
-		  /* toMove should set to false if floating left */
-		}
-	      else
-		toMove = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
-			  pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock &&
-			  pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatBlock);
+	      toMove = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
+			pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock &&
+			pCurrentAb->AbEnclosing->AbBox->BxType != BoFloatBlock);
 	    }
 	  
 	  /* check positionning constraints */
@@ -3413,7 +3407,8 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
       movingChild = FALSE;
       /* nothing is moved */
       toMove = FALSE;
-      
+if (pAb->AbFloat == 'R')
+  printf ("Pack right float\n");
       /*
        * The left edge of the lefter enclosed box must be stuck
        * to the inside left edge and the inside width is delimited
