@@ -183,7 +183,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 		      /* there is another linked CSS style sheet before */
 		      oldcss = CSSList;
 		      /* search if that previous CSS context */
-		      while (oldcss != NULL)
+		      while (oldcss)
 			{
 			  if (oldcss != css && oldcss->documents[doc] &&
 			      oldcss->category == CSS_EXTERNAL_STYLE)
@@ -191,9 +191,9 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 			      /* check if it includes a presentation schema
 				 for that structure */
 			      pInfo = oldcss->infos;
-			      while (pInfo != NULL && pInfo->PiDoc != doc)
+			      while (pInfo && pInfo->PiDoc != doc)
 				pInfo = pInfo->PiNext;
-			      if (pInfo != NULL && pInfo->PiLink == prevLink)
+			      if (pInfo && pInfo->PiLink == prevLink)
 				{
 				  pIS = pInfo->PiSchemas;
 				  while (pIS && pIS->PiSSchema != sSchema)
@@ -240,7 +240,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 			{
 			  /* there is another linked CSS style sheet after */
 			  oldcss = CSSList;
-			  while (oldcss != NULL)
+			  while (oldcss)
 			    {
 			      if (oldcss != css && oldcss->documents[doc] &&
 				  oldcss->category == CSS_EXTERNAL_STYLE)
@@ -279,7 +279,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 	      /* look for CSS_USER_STYLE or CSS_DOCUMENT_STYLE */
 	      /* there is another linked CSS style sheet after */
 	      oldcss = CSSList;
-	      while (!found && oldcss != NULL)
+	      while (!found && oldcss)
 		{
 		  if (oldcss != css && oldcss->documents[doc])
 		    if (oldcss->category == CSS_USER_STYLE)
@@ -361,7 +361,7 @@ CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
   int                 i;
 
   css = TtaGetMemory (sizeof (CSSInfo));
-  if (css != NULL)
+  if (css)
     {
       css->doc = doc;
       css->url = TtaStrdup (url);
@@ -455,7 +455,7 @@ void UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled,
 	  prevInfo = pInfo;
 	  pInfo = pInfo->PiNext;
 	}
-      if (pInfo != NULL)
+      if (pInfo)
 	{
 	  if (removed)
 	    {
@@ -490,7 +490,7 @@ void UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled,
 	css->enabled[doc] = FALSE;
       /* look at if this css is alway used */
       used = (css->doc != 0);
-      i = 0;
+      i = 1;
       while (!used && i < DocumentTableLength)
 	{
 	  used = css->documents[i];
@@ -526,13 +526,15 @@ void RemoveDocCSSs (Document doc)
   CSSInfoPtr          css, next;
  
   css = CSSList;
-  while (css != NULL)
+  while (css)
     {
       next = css->NextCSS;
       if (css->doc == doc)
 	{
 	  /* the document displays the CSS file itself */
 	  css->doc = 0;
+	  css->documents[doc] = FALSE;
+	  css->enabled[doc] = FALSE;
 	  UnlinkCSS (css, doc, TRUE, TRUE);
 	}
       else if (css->documents[doc])
@@ -558,7 +560,7 @@ void  RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
 
   css = CSSList;
   found = FALSE;
-  while (css != NULL && !found)
+  while (css && !found)
     {
       if (url && ((css->url && !strcmp (url, css->url)) ||
 		  (css->localName && !strcmp (url, css->localName))))
@@ -692,7 +694,7 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 
       /* store the element which links the CSS */
       pInfo = oldcss->infos;
-      while (pInfo != NULL && pInfo->PiDoc != doc)
+      while (pInfo && pInfo->PiDoc != doc)
 	/* next info context */
 	pInfo = pInfo->PiNext;
       if (pInfo == NULL)
