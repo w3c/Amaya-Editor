@@ -1916,7 +1916,7 @@ void SwitchIconAnim (Document doc, View view, ThotBool state)
    ShowTimeLineWindow
    displays the Timeline window of a document
   ----------------------------------------------------------------------*/
-static void ShowTimeLineWindow (Document document, View view)
+void ShowTimeLineWindow (Document document, View view)
 {
 #ifdef _SVGANIM
 /*      	- already created -> show it
