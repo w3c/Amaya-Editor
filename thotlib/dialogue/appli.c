@@ -30,9 +30,6 @@
 
 
 #ifdef _GL
-#ifdef _GTK
-#include <gtkgl/gtkglarea.h>
-#endif /*_GTK*/
 #include <GL/gl.h>
 #include "glwindowdisplay.h"
 #endif /*_GL*/
@@ -53,8 +50,7 @@
 static Time         T1, T2, T3;
 static XmString     null_string;
 #else /* _GTK */
-
-
+#include <gtkgl/gtkglarea.h>
 static gchar *null_string;
 #endif /*_GTK*/
 #endif /* _WINDOWS */
@@ -627,7 +623,7 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
   int                 y;
   int                 width;
   int                 height;
-  
+
   if (event->count > 0)
     return TRUE;
   frame = (int )data;
@@ -635,16 +631,21 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
   y = event->area.y;
   width = event->area.width;
   height = event->area.height;  
-  if ((width <= 0) || (height <= 0))
+  if ((width <= 0) || (height <= 0) && !(frame > 0 && frame <= MAX_FRAME))
     return TRUE;
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return TRUE; 
-  if (frame > 0 && frame <= MAX_FRAME 
-      && gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-    {
-      gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
-    }
-  return TRUE;
+  GL_ActivateDrawing ();
+  DefRegion (frame, 
+	     x, y+FrameTable[frame].FrTopMargin, 
+	     width+x, y+height+FrameTable[frame].FrTopMargin);
+  GL_DrawAll (widget, frame);
+
+  /*
+  if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
+    gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
+  */  
+return TRUE;
 }
 /*----------------------------------------------------------------------
    FrameResizedGTK When user resize window

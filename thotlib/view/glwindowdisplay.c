@@ -1495,7 +1495,7 @@ void SetGlPipelineState ()
 	       (char *)glGetString(GL_RENDERER));
       /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */   
 #endif /*_PCLDEBUG*/
-      glClearColor (1, 1, 1, 0);
+      glClearColor (1, 0, 0, 0.5);
       /* no fog*/
       glDisable (GL_FOG);
       /* No lights */
@@ -1536,7 +1536,6 @@ void SetGlPipelineState ()
       glPixelStorei (GL_UNPACK_ALIGNMENT, 1); 
       /* Needs to clear buffer after allocating it before drawing*/
       glClear (GL_COLOR_BUFFER_BIT);
-
       /*(needed for gradients)*/
       /*glShadeModel (GL_SMOOTH);*/
       /* no gradients for now => */
@@ -1605,7 +1604,7 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Total
 void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 			  int width, int height)
 {
-
+  GL_ActivateDrawing ();
   DefRegion (frame, 
 	     xd, yd+FrameTable[frame].FrTopMargin, 
 	     width+xd, yd+height+FrameTable[frame].FrTopMargin);
