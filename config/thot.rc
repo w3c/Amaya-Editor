@@ -14,4 +14,5 @@ HTTP_PROXY=
 # ex: NO_PROXY=harpo.marx.edu)
 NO_PROXY=
 ENABLE_PIPELINING=
-ENABLE_CACHE=
+ENABLE_CACHE=No
+CACHE_DIR=/home/tuvalu/kahan/.amaya/

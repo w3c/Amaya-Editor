@@ -161,28 +161,30 @@
 160 Buch zusammenfügen
 161 Logdatei anzeigen
 162 **Options
-163 Puffer löschen
-164 **Appearance options...
-165 **Browsing/Editing options...
-166 **Networking options...
-167 **Save the options
-168 Info
-169 ** About Amaya at W3C
-170 Verknüpfungen folgen/Dokumente öffnen
-171 Auswählen
-172 Suchen
-173 Ansichten
-174 Einfügen von Elementen
-175 Verknüpfungen bearbeiten
-176 Umformatieren
-177 Tabellen
-178 Formeln
-179 Aktive Grafikbereiche
-180 Formate/Stylesheets
-181 Attribute
-182 Rechtschreibung
-183 Speichern/Publizieren
-184 Drucken
-185 Abschnittsnummern
-186 Buch zusammenfügen
-187 Konfiguration
+163 **General...
+164 **Publishing...
+165 **Cache...
+166 **Proxy...
+167 **Colors...
+168 **Geometry...
+169 **Save the options
+170 Info
+171 ** About Amaya at W3C
+172 Verknüpfungen folgen/Dokumente öffnen
+173 Auswählen
+174 Suchen
+175 Ansichten
+176 Einfügen von Elementen
+177 Verknüpfungen bearbeiten
+178 Umformatieren
+179 Tabellen
+180 Formeln
+181 Aktive Grafikbereiche
+182 Formate/Stylesheets
+183 Attribute
+184 Rechtschreibung
+185 Speichern/Publizieren
+186 Drucken
+187 Abschnittsnummern
+188 Buch zusammenfügen
+189 Konfiguration
