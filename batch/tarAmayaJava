@@ -14,6 +14,9 @@ TAR="tar cvbfh 200"
 COMPRESS="gzip -9"
 
 cd $THOTDIR
+rm solaris2 LINUX-ELF
+ln -s solaris-java solaris2
+ln -s LINUX-ELF-java LINUX-ELF
 
 cd ..
 

@@ -102,6 +102,7 @@ amaya/f/p2css_f.h \
 amaya/f/query_f.h \
 amaya/f/trans_f.h \
 amaya/f/transparse_f.h \
+amaya/greek.sgml \
 amaya/html2thot.c \
 amaya/init.c \
 amaya/p2css.c \
