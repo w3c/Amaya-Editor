@@ -68,6 +68,7 @@
 #include "dialogapi_f.h"
 #include "dictionary_f.h"
 #include "displayview_f.h"
+#include "editcommands_f.h"
 #include "font_f.h"
 #include "inites_f.h"
 
@@ -2990,10 +2991,16 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
 			 gpointer data)
 {   
   if (sel_data->length < 0)
-    return;
+    {
+      PasteXClipboard (NULL, 0);
+      return;
+    }
   if (sel_data->type != GDK_SELECTION_TYPE_STRING &&
       sel_data->target != GDK_SELECTION_TYPE_STRING)
-    return;
+    {
+      PasteXClipboard (NULL, 0);
+      return;
+    }
   /* if ClipboardLength is not zero, the last Xbuffer comes from Thot */
   if (Xbuffer && ClipboardLength == 0)
     {
@@ -3006,8 +3013,7 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
       Xbuffer = (unsigned char*)TtaGetMemory ((sel_data->length + 1) * sizeof (unsigned char));
       strcpy ((char *)Xbuffer, (char *)sel_data->data);
     }
-  /* IV: remove this change because it breaks down copy/paste within Amaya */
-  /*gtk_claim_selection();*/
+  PasteXClipboard (Xbuffer, strlen((char *)Xbuffer));
   return;
 } 
 
@@ -3683,7 +3689,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     "grab-focus",
 			     GTK_SIGNAL_FUNC(get_targets),
 			     NULL);
-	   /*Then when the app that own the selection responds we store it*/
+	   /* Then when the app that own the selection responds we store it*/
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area), 
 			     "selection_received", 
 			     GTK_SIGNAL_FUNC (selection_received), 

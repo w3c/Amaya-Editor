@@ -16,6 +16,8 @@ extern void ClearClipboard ( PtrTextBuffer clipboard );
 extern void InsertChar ( int frame,
                          CHAR_T c,
                          int keyboard );
+extern void PasteXClipboard ( unsigned char *src,
+                              int nbytes );
 extern void TtcInsertChar ( Document doc,
                             View view,
                             CHAR_T c );
@@ -49,6 +51,8 @@ extern void ClearClipboard (/* PtrTextBuffer clipboard */);
 extern void InsertChar (/* int frame,
                            CHAR_T c,
                            int keyboard */);
+extern void PasteXClipboard (/* unsigned char *src,
+                                int nbytes */);
 extern void TtcInsertChar (/* Document doc,
                               View view,
                               CHAR_T c */);

@@ -41,6 +41,10 @@ static Language     ClipboardLanguage = 0;
 /* X Clipboard */
 static struct _TextBuffer XClipboard;
 
+#ifdef _GTK
+static ThotBool     ClipboardToPaste = FALSE;
+#endif /* _GTK */
+
 /* text element where the last insertion is done */
 /*
  * SG: already declared in boxes_tv.h
@@ -3398,12 +3402,11 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
     }
 }
 
-
 /*----------------------------------------------------------------------
    PasteXCliboard reads nbytes from the buffer and calls Paste_X as
    many times as necessary with the characters read.     
   ----------------------------------------------------------------------*/
-static void PasteXClipboard (unsigned char *src, int nbytes)
+void PasteXClipboard (unsigned char *src, int nbytes)
 {
   PtrTextBuffer       clipboard;
   PtrAbstractBox      pAb;
@@ -3415,6 +3418,18 @@ static void PasteXClipboard (unsigned char *src, int nbytes)
   int                 i, j;
   int                 frame, lg;
   ThotBool            lock = TRUE;
+
+#ifdef _GTK
+  if (src == NULL)
+    {
+      ClipboardToPaste = FALSE;
+      return;
+    }
+  if (ClipboardToPaste)
+    ClipboardToPaste = FALSE;
+  else
+    return;
+#endif /* _GTK */
 
   /* check the current selection */
   if (!GetCurrentSelection (&pDoc, &pEl, &pEl, &i, &i))
@@ -4004,8 +4019,7 @@ void TtcPasteFromClipboard (Document doc, View view)
      TtaSetDisplayMode (doc, DeferredDisplay);
 
 #ifdef _GTK
-   if (Xbuffer)
-     PasteXClipboard (Xbuffer, strlen((char *)Xbuffer)); 
+   ClipboardToPaste = TRUE;
 #endif /* _GTK */
    
 #ifdef _MOTIF
