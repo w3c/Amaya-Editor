@@ -30,6 +30,7 @@
 #include "libmsg.h"
 #include "message.h"
 #include "fileaccess.h"
+/*#define DEBUG_MEMORY 1*/
 
 #undef  THOT_EXPORT
 #define THOT_EXPORT
@@ -612,9 +613,13 @@ PtrTextBuffer       pBT;
    /* insere le buffer en tete de la chaine des libres */
    if (pBT != NULL)
      {
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pBT);
+#else
 	pBT->BuNext = PtFree_TextBuff;
 	PtFree_TextBuff = pBT;
 	NbFree_TextBuff++;
+#endif
 	NbUsed_TextBuff--;
      }
 }
@@ -691,9 +696,13 @@ PtrElement          pEl;
        pEl->ElText = NULL;
      }
    pEl->ElStructSchema = NULL;
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pEl);
+#else
    pEl->ElNext = PtFree_Element;
    PtFree_Element = pEl;
    NbFree_Element++;
+#endif
    NbUsed_Element--;
 }
 
@@ -745,9 +754,13 @@ PtrAttribute        pAttr;
 #endif /* __STDC__ */
 {
 
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pAttr);
+#else
    pAttr->AeNext = PtFree_Attr;
    PtFree_Attr = pAttr;
    NbFree_Attr++;
+#endif
    NbUsed_Attr--;
 }
 
@@ -800,9 +813,13 @@ PtrReferredDescr    pDR;
 {
   if (pDR != NULL)
     {
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pDR);
+#else
       pDR->ReNext = PtFree_DescRef;
       PtFree_DescRef = pDR;
       NbFree_DescRef++;
+#endif
       NbUsed_DescRef--;
     }
 }
@@ -854,9 +871,13 @@ PtrCopyDescr        pDC;
 #endif /* __STDC__ */
 
 {
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pDC);
+#else
    pDC->CdNext = PtFree_DescCopy;
    PtFree_DescCopy = pDC;
    NbFree_DescCopy++;
+#endif
    NbUsed_DescCopy--;
 }
 
@@ -904,9 +925,13 @@ PtrExternalDoc      pDE;
 
 {
 
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pDE);
+#else
    pDE->EdNext = PtFree_ExternalDoc;
    PtFree_ExternalDoc = pDE;
    NbFree_ExternalDoc++;
+#endif
    NbUsed_ExternalDoc--;
 }
 
@@ -961,9 +986,13 @@ PtrReference        pRef;
 
 {
 
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pRef);
+#else
    pRef->RdNext = PtFree_Reference;
    PtFree_Reference = pRef;
    NbFree_Reference++;
+#endif
    NbUsed_Reference--;
 }
 
@@ -1010,9 +1039,13 @@ PtrOutReference     pRS;
 #endif /* __STDC__ */
 
 {
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pRS);
+#else
    pRS->OrNext = PtFree_OutputRef;
    PtFree_OutputRef = pRS;
    NbFree_OutputRef++;
+#endif
    NbUsed_OutputRef--;
 }
 
@@ -1062,9 +1095,13 @@ PtrChangedReferredEl pER;
 #endif /* __STDC__ */
 
 {
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pER);
+#else
    pER->CrNext = PtFree_ElemRefChng;
    PtFree_ElemRefChng = pER;
    NbFree_ElemRefChng++;
+#endif
    NbUsed_ElemRefChng--;
 }
 
@@ -1113,9 +1150,13 @@ PtrEnteringReferences pRE;
 #endif /* __STDC__ */
 
 {
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pRE);
+#else
    pRE->ErNext = PtFree_InputRef;
    PtFree_InputRef = pRE;
    NbFree_InputRef++;
+#endif
    NbUsed_InputRef--;
 }
 
@@ -1161,10 +1202,14 @@ PtrReferenceChange  pFRC;
 #endif /* __STDC__ */
 
 {
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pFRC);
+#else
    pFRC->RcFirstChange = NULL;
    pFRC->RcNext = PtFree_UpdateRefFile;
    PtFree_UpdateRefFile = pFRC;
    NbFree_UpdateRefFile++;
+#endif
    NbUsed_UpdateRefFile--;
 }
 
@@ -1207,6 +1252,9 @@ PtrAbstractBox      pAb;
 #endif /* __STDC__ */
 {
 
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pAb);
+#else
    pAb->AbElement = NULL;
    pAb->AbEnclosing = NULL;
    pAb->AbPrevious = NULL;
@@ -1216,6 +1264,7 @@ PtrAbstractBox      pAb;
    pAb->AbNext = PtFree_AbsBox;
    PtFree_AbsBox = pAb;
    NbFree_AbsBox++;
+#endif
    NbUsed_AbsBox--;
 }
 
@@ -1288,9 +1337,13 @@ PtrDocument         pDoc;
    pDoc->DocChangedReferredEl = NULL;
    pDoc->DocLabels = NULL;
 
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pDoc);
+#else
    pDoc->DocNext = PtFree_Document;
    PtFree_Document = pDoc;
    NbFree_Document++;
+#endif
    NbUsed_Document--;
 }
 
@@ -1400,9 +1453,13 @@ PtrPSchema          pSP;
       pSP->PsInheritedAttr[i] = NULL;
     }
   
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pSP);
+#else
    pSP->PsNext = PtFree_SchPres;
    PtFree_SchPres = pSP;
    NbFree_SchPres++;
+#endif
    NbUsed_SchPres--;
 }
 
@@ -1451,11 +1508,15 @@ PtrHandlePSchema    pHSP;
 #endif /* __STDC__ */
 
 {
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pHSP);
+#else
    pHSP->HdPrevPSchema = NULL;
    pHSP->HdPSchema = NULL;
    pHSP->HdNextPSchema = PtFree_HandleSchPres;
    PtFree_HandleSchPres = pHSP;
    NbFree_HandleSchPres++;
+#endif
    NbUsed_HandleSchPres--;
 }
 
@@ -1576,9 +1637,13 @@ PtrExtensBlock      pBE;
 #endif /* __STDC__ */
 
 {
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pBE);
+#else
    pBE->EbNextBlock = PtFree_ExtenBlock;
    PtFree_ExtenBlock = pBE;
    NbFree_ExtenBlock++;
+#endif
    NbUsed_ExtenBlock--;
 }
 
@@ -1646,10 +1711,13 @@ PtrSSchema          pSS;
    pSS->SsNExtensRules = 0;
    pSS->SsExtensBlock = NULL;
    pSS->SsFirstPSchemaExtens = NULL;
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pSS);
+#else
    pSS->SsNextExtens = PtFree_SchStruct;
-
    PtFree_SchStruct = pSS;
    NbFree_SchStruct++;
+#endif
    NbUsed_SchStruct--;
 }
 
@@ -1706,9 +1774,13 @@ PtrPRule            pRP;
 	FreePresentRuleCond (pCond);
 	pCond = nextCond;
      }
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pRP);
+#else
    pRP->PrNextPRule = PtFree_PresRule;
    PtFree_PresRule = pRP;
    NbFree_PresRule++;
+#endif
    NbUsed_PresRule--;
 }
 
@@ -1757,9 +1829,13 @@ PtrCondition        pCond;
 #endif /* __STDC__ */
 
 {
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pCond);
+#else
    pCond->CoNextCondition = PtFree_CondPresRule;
    PtFree_CondPresRule = pCond;
    NbFree_CondPresRule++;
+#endif
    NbUsed_CondPresRule--;
 }
 
@@ -1807,9 +1883,13 @@ PtrDelayedPRule     pRR;
 #endif /* __STDC__ */
 
 {
+#ifdef DEBUG_MEMORY
+       TtaFreeMemory (pRR);
+#else
    pRR->DpNext = PtFree_DelayR;
    PtFree_DelayR = pRR;
    NbFree_DelayR++;
+#endif
    NbUsed_DelayR--;
 }
 
@@ -1903,11 +1983,19 @@ PtrPosRelations    *pBlock;
 #endif /* __STDC__ */
 
 {
+  PtrPosRelations    pNextBlock;
+
+  pNextBlock = (*pBlock)->PosRNext;
+#ifdef DEBUG_MEMORY
+  TtaFreeMemory (*pBlock);
+#else
    /* Insere le bloc en tete de la chaine des libres */
    (*pBlock)->PosRNext = PtFree_PosB;
    PtFree_PosB = *pBlock;
    NbFree_PosB++;
+#endif
    NbUsed_PosB--;
+   *pBlock = pNextBlock;
 }
 
 /*----------------------------------------------------------------------
@@ -1958,14 +2046,20 @@ void                FreeDimBlock (PtrDimRelations * pBlock)
 void                FreeDimBlock (pBlock)
 PtrDimRelations    *pBlock;
 #endif /* __STDC__ */
-
 {
+  PtrDimRelations    pNextBlock;
 
+  pNextBlock = (*pBlock)->DimRNext;
+#ifdef DEBUG_MEMORY
+  TtaFreeMemory (*pBlock);
+#else
    /* Insere le bloc en tete de la chaine des libres */
    (*pBlock)->DimRNext = PtFree_BDim;
    PtFree_BDim = *pBlock;
    NbFree_BDim++;
+#endif
    NbUsed_BDim--;
+   *pBlock = pNextBlock;
 }
 
 /*----------------------------------------------------------------------
@@ -2037,10 +2131,6 @@ PtrBox              pBox;
    /* On retire l'indicateur de fin de bloc */
    pBox->BxEndOfBloc = 0;
    pBox->BxType = BoComplete;
-   pBox->BxNexChild = PtFree_Box;
-   PtFree_Box = pBox;
-   NbFree_Box++;
-   NbUsed_Box--;
    /* On libere les differents blocs attaches a la boite */
    pPosRel = pBox->BxPosRelations;
    while (pPosRel != NULL)
@@ -2065,6 +2155,14 @@ PtrBox              pBox;
 	FreeDimBlock (&pDimRel);
 	pDimRel = nedim;
      }
+#ifdef DEBUG_MEMORY
+   TtaFreeMemory (pBox);
+#else
+   pBox->BxNexChild = PtFree_Box;
+   PtFree_Box = pBox;
+   NbFree_Box++;
+#endif
+   NbUsed_Box--;
    return NextBox;
 }
 
@@ -2129,11 +2227,15 @@ PtrLine             pLine;
 
 {
 
+#ifdef DEBUG_MEMORY
+   TtaFreeMemory (pLine);
+#else
    /* Insere le contexte de ligne en tete de la chaine des libres */
    pLine->LiNext = PtFree_Line;
    PtFree_Line = pLine;
    PtFree_Line->LiPrevious = NULL;
    NbFree_Line++;
+#endif
    NbUsed_Line--;
 }
 
@@ -2185,7 +2287,7 @@ PtrSearchContext   *pSearch;
   if (pSearch != NULL)
     if (*pSearch != NULL)
       {
-	free (*pSearch);
+	TtaFreeMemory (*pSearch);
 	*pSearch = NULL;
       }
 }
@@ -2208,15 +2310,15 @@ PtrDict             pDict;
 
    pString = pDict->DictString;
    if (pString != NULL)
-      free (pString);
+     TtaFreeMemory (pString);
 
    pWord = pDict->DictWords;
    if (pWord != NULL)
-      free (pWord);
+     TtaFreeMemory (pWord);
 
    pCommon = pDict->DictCommon;
    if (pCommon != NULL)
-      free (pCommon);
+     TtaFreeMemory (pCommon);
 
    /* maj du contexte du dictionnaire : chaine et mots */
    pDict->DictNbChars = 0;
@@ -2239,7 +2341,7 @@ unsigned int        n;
 #endif /* __STDC__ */
 {
    if (n > 0)
-      return ((char *) malloc ((size_t) n));
+      return ((char *) TtaGetMemory ((size_t) n));
    return (NULL);
 }
 

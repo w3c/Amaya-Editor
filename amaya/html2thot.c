@@ -8407,6 +8407,22 @@ boolean	            PlainText;
    boolean             beginning = TRUE;
 
    theDocument = doc;
+   FirstElemToBeChecked = NULL;
+   LastElemToBeChecked = NULL;
+   lastElement = NULL;
+   lastElementClosed = FALSE;
+   lastElemEntry = 0;
+   lastAttribute = NULL;
+   lastAttrElement = NULL;
+   lastAttrEntry = NULL;
+   IgnoreAttr = FALSE;
+   CommentText = NULL;
+   UnknownTag = FALSE;
+   ReadingHREF = FALSE;
+   MergeText = FALSE;
+   LgEntityName = 0;
+   EntityTableEntry = 0;
+   CharRank = 0;
    infile = fopen (htmlFileName, "r");
    if (infile != 0)
      {

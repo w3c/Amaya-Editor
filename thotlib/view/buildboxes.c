@@ -1799,13 +1799,13 @@ int                 frame;
 	       {
 		 /* libere les boites generees pour la mise en lignes */
 		 pPieceBox = pCurrentBox->BxNexChild;
+		 pCurrentBox->BxNexChild = NULL;
 		 while (pPieceBox != NULL)
 		   pPieceBox = FreeBox (pPieceBox);
 	       }
 
 	     pChildAb = pAb->AbFirstEnclosed;
 	     pAb->AbNew = toRemake;
-
 	     if (toRemake)
 	       {
 		  /* Faut-il restaurer les regles d'une boite elastique */

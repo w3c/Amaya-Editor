@@ -2765,7 +2765,7 @@ boolean            remove;
     }
   /* tente de fusionner les elements voisins et reaffiche les paves */
   /* modifie's et la selection */
-  if (pSelDoc != NULL)
+  if (pSelDoc != NULL && pSelDoc == pDoc)
     MergeAndSelect (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
 }
 

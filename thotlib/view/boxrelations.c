@@ -2051,6 +2051,7 @@ boolean             horizRef;
    found = 0;
    i = 0;
    pPreviousPosRel = NULL;
+   pOrginBox->BxMoved = NULL;
    pPosRel = pOrginBox->BxPosRelations;
    precpos = NULL;
    loop = TRUE;
@@ -2512,9 +2513,9 @@ boolean             horizRef;
 		pCurrentAb = pCurrentAb->AbFirstEnclosed;
 	     else
 		pCurrentAb = pCurrentAb->AbNext;
-	  }			/*while */
+	  }
      }
-}				/* ClearPosRelation */
+}
 
 /*----------------------------------------------------------------------
    ClearAxisRelation recherche la boite dont depend l'axe de reference

@@ -2503,7 +2503,7 @@ char               *data;
 	      myFirstSelect = elFound;
 	      myLastSelect = NULL;
 	    }
-			
+	  TtaSetDocumentModified (TransDoc);
 	  TtaSetDisplayMode (TransDoc, DisplayImmediately);
 	  TtaSelectElement (TransDoc, myFirstSelect);
 	  if (myLastSelect != NULL && TtaIsBefore (myFirstSelect, myLastSelect))

@@ -2165,7 +2165,7 @@ Element             element;
    elementType.ElTypeNum = 0;
    if (element == NULL)
 	TtaError (ERR_invalid_parameter);
-   else
+   else if (((PtrElement) element)->ElStructSchema != NULL)
      {
 	elementType.ElSSchema = (SSchema) ((PtrElement) element)->ElStructSchema;
 	elementType.ElTypeNum = ((PtrElement) element)->ElTypeNumber;

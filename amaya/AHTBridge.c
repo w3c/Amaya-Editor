@@ -233,8 +233,9 @@ XtInputId          *id;
        if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
 	 {
 	   /* free the memory allocated for async requests */
-	   AHTReqContext_delete (me);
+	   /* IV: invert two following lines */
 	   AHTPrintPendingRequestStatus (me->docid, YES);
+	   AHTReqContext_delete (me);
 	 } 
 
        else if (me->reqStatus == HT_END &&

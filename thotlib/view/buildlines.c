@@ -1829,7 +1829,7 @@ boolean            *changeSelectEnd;
    ViewSelection      *pViewSel;
 
    pFrame = &ViewFrameTable[frame - 1];
-   if (pBox != NULL)
+   if (pBox != NULL && pBox->BxAbstractBox != NULL)
      {
 	pAb = pBox->BxAbstractBox;
 	if (pAb != NULL && pAb->AbLeafType == LtText)

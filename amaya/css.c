@@ -694,7 +694,7 @@ Document            doc;
 #endif
 {
   ElementType         elType;
-  Element             el, contenu;
+  Element             el, child, next;
   Attribute           at;
   AttributeType       atType;
   PRuleInfoPtr        list, rpi;
@@ -705,13 +705,25 @@ Document            doc;
   modified = TtaIsDocumentModified (doc);
   /*
    * First search the Styles subtree in the HTML structure and
-   * destroy it.
+   * destroy its children.
    */
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   elType.ElTypeNum = HTML_EL_Styles;
   el = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot (doc));
   if (el != NULL)
-    TtaDeleteTree (el, doc);
+    {
+      child = TtaGetFirstChild (el);
+      while (child)
+	{
+	  next = child;
+	  TtaNextSibling (&next);
+	  TtaDeleteTree (child, doc);
+	  child = next;
+	}
+    }
+  else
+    /* create the corresponding Styles header in the document structure */
+    el = CreateWWWElement (doc, HTML_EL_Styles);
   
   /*
    * extract presentation rules from the Generic Presentation schema */
@@ -726,10 +738,6 @@ Document            doc;
   list = PSchema2RPI (doc, css);
   if (list == NULL)
     return;
-  /*
-   * create the corresponding Styles header in the document structure.
-   */
-  el = CreateWWWElement (doc, HTML_EL_Styles);
   rpi = list;
   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
   while (rpi != NULL)
@@ -738,9 +746,9 @@ Document            doc;
       el = CreateNewWWWElement (doc, HTML_EL_StyleRule);
       
       /* attach a text child containing the CSS value */
-      contenu = TtaNewElement (doc, elType);
-      TtaInsertFirstChild (&contenu, el, doc);
-      TtaSetTextContent (contenu, rpi->css_rule, TtaGetDefaultLanguage (), doc);
+      child = TtaNewElement (doc, elType);
+      TtaInsertFirstChild (&child, el, doc);
+      TtaSetTextContent (child, rpi->css_rule, TtaGetDefaultLanguage (), doc);
       
       /* attach the Selector attribute and set it content */
       atType.AttrSSchema = TtaGetDocumentSSchema (doc);
