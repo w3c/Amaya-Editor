@@ -2476,7 +2476,7 @@ LPARAM lParam;
                             OpenFileName.lpstrFile         = (LPSTR) szFileName; 
                             OpenFileName.nMaxFile          = 256; 
                             OpenFileName.lpstrInitialDir   = NULL; 
-                            OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
+                            OpenFileName.lpstrTitle        = TEXT ("Select"); 
                             OpenFileName.nFileOffset       = 0; 
                             OpenFileName.nFileExtension    = 0; 
                             OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
@@ -2489,9 +2489,11 @@ LPARAM lParam;
 
                             SetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen);
                             if (urlToOpen[0] != 0)
+							{
                                ThotCallback (baseDoc + urlName, STRING_DATA, urlToOpen);
-                            EndDialog (hwnDlg, ID_CONFIRM);
-                            ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING)1);
+                               EndDialog (hwnDlg, ID_CONFIRM);
+                               ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING)1);
+							}
 							break;
 
 				       case IDCANCEL:
