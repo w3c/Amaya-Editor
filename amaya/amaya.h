@@ -150,6 +150,14 @@ typedef enum _ClickEvent {
 #define AMAYA_LOAD_CSS   0
 #define AMAYA_USE_PRECONDITIONS 0
 #endif /* ! AMAYA_JAVA */
+
+/*
+ * Flags to indicate the action to take when the network options
+ * are modified
+ */
+#define AMAYA_CACHE_RESTART 1
+#define AMAYA_PROXY_RESTART 2
+
 /*
  * Flags to indicate the status of the network requests associated
  * to a document.

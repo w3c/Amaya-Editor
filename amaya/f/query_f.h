@@ -46,7 +46,7 @@ extern void StopAllRequests ( int docid );
 extern boolean AmayaIsAlive ( void );
 extern boolean CanDoStop ( void );
 extern void CanDoStop_set ( boolean value );
-
+extern void libwww_updateNetworkConf ( int status );
 #else /* __STDC__ */
 
 extern AHTDocId_Status *GetDocIdStatus (/* int docid,
@@ -89,6 +89,7 @@ extern void StopAllRequests (/* int docid */);
 extern boolean AmayaIsAlive (/* void */);
 extern boolean CanDoStop (/* void */);
 extern void CanDoStop_set (/* boolean value */);
+extern void libwww_updateNetworkConf ( int status );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

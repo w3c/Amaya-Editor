@@ -25,9 +25,10 @@
 #define AMAYA_LOST_UPDATE
 
 #define CACHE_DIR_NAME DIR_STR"libwww-cache"
-#define DEFAULT_CACHE_SIZE 5
+#define DEFAULT_CACHE_SIZE 10
+#define DEFAULT_MAX_CACHE_ENTRY_SIZE 3
 #define DEFAULT_MAX_SOCKET 64 
-#define DEFAULT_DNS_TIMEOUT 60
+#define DEFAULT_DNS_TIMEOUT 1800L
 #define DEFAULT_PERSIST_TIMEOUT 60L
 #define DEFAULT_NET_EVENT_TIMEOUT 60000
 
@@ -825,18 +826,30 @@ int                 status;
       /*
       ** reset the Amaya and libwww request status 
       */
-      /* clear the errors */
-      HTError_deleteAll (HTRequest_error (request));
-      HTRequest_setError (request, NULL);
-      /* clear the authentication credentials */
-      HTRequest_deleteCredentialsAll (request);
-      /* the method has to be GET in order to download the source file */
+
+      /* start with a new, clean request structure */
+      HTRequest_delete (me->request);
+      me->request = HTRequest_new ();
+      /* clean the associated file structure) */
+      HTRequest_setOutputStream (me->request, NULL);
+      /* Initialize the other members of the structure */
       HTRequest_setMethod (me->request, METHOD_GET);
+      HTRequest_setOutputFormat (me->request, WWW_SOURCE);
+      HTRequest_setContext (me->request, me);
+      HTRequest_setPreemptive (me->request, NO);
+      /*
+      ** Make sure that the first request is flushed immediately and not
+      ** buffered in the output buffer
+      */
+      if (me->mode & AMAYA_FLUSH_REQUEST)
+	HTRequest_setFlush(me->request, YES);
+
       /* turn off preconditions */
       HTRequest_setPreconditions(me->request, HT_NO_MATCH);
       me->reqStatus = HT_NEW; 
       /* make the request */      
-      status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
+      status = HTPutDocumentAnchor (HTAnchor_parent (me->source), 
+				    me->dest, me->request);
       /* stop here */
       return HT_ERROR;
     }
@@ -889,20 +902,30 @@ static int check_handler (HTRequest * request, HTResponse * response,
     }
   else if ( (abs(status)/100) != 2) 
     {
-      /* it's a new ressource, so we start a new PUT request with a 
-	 "if-none-match *" precondition */
-      /* clear the errors */
-      HTError_deleteAll (HTRequest_error (request));
-      HTRequest_setError (request, NULL);
-      /* clear the authentication credentials */
-      HTRequest_deleteCredentialsAll (request);
-      /* the method has to be GET in order to download the source file */
+      /* start with a new, clean request structure */
+      HTRequest_delete (me->request);
+      me->request = HTRequest_new ();
+      /* clean the associated file structure) */
+      HTRequest_setOutputStream (me->request, NULL);
+      /* Initialize the other members of the structure */
       HTRequest_setMethod (me->request, METHOD_GET);
+      HTRequest_setOutputFormat (me->request, WWW_SOURCE);
+      HTRequest_setContext (me->request, me);
+      HTRequest_setPreemptive (me->request, NO);
+      /*
+      ** Make sure that the first request is flushed immediately and not
+      ** buffered in the output buffer
+      */
+      if (me->mode & AMAYA_FLUSH_REQUEST)
+	HTRequest_setFlush(me->request, YES);
+
+      /* turn on the special preconditions, to avoid having this
+	 ressource appear before we do the PUT */
       HTRequest_setPreconditions(me->request, HT_DONT_MATCH_ANY);
       me->reqStatus = HT_NEW;
       status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
       return HT_ERROR; /* stop here */
-    } 
+    }
   else 
     {
       if (prompt)
@@ -914,17 +937,28 @@ static int check_handler (HTRequest * request, HTResponse * response,
       if (force_put)
 	{
 	  /* Start a new PUT request without preconditions */
-	  /* clear the errors */
-	  HTError_deleteAll (HTRequest_error (request));
-	  HTRequest_setError (request, NULL);
-	  /* clear the authentication credentials */
-	  HTRequest_deleteCredentialsAll (request);
-	  /* the method has to be GET in order to download the source file */
+
+	  /* get a new, clean request structure */
+	  HTRequest_delete (me->request);
+	  me->request = HTRequest_new ();
+	  /* clean the associated file structure) */
+	  HTRequest_setOutputStream (me->request, NULL);
+	  /* Initialize the other members of the structure */
 	  HTRequest_setMethod (me->request, METHOD_GET);
-	  /* Start a new PUT request without preconditions */
+	  HTRequest_setOutputFormat (me->request, WWW_SOURCE);
+	  HTRequest_setContext (me->request, me);
+	  HTRequest_setPreemptive (me->request, NO);
+	  /*
+	  ** Make sure that the first request is flushed immediately and not
+	  ** buffered in the output buffer
+	  */
+	  if (me->mode & AMAYA_FLUSH_REQUEST)
+	    HTRequest_setFlush(me->request, YES);
+	  /* remove the preconditions */
 	  HTRequest_setPreconditions(me->request, HT_NO_MATCH);
 	  me->reqStatus = HT_NEW; 
-	  status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
+	  status = HTPutDocumentAnchor (HTAnchor_parent (me->source), 
+					me->dest, me->request);
 	  return HT_ERROR; /* stop here */
 	} 
       else
@@ -1050,9 +1084,8 @@ int                 status;
    /* copy the content_type */
    if (!me->content_type)
      {
-       /* @@ should get this info from response */
-       if (request->anchor && request->anchor->content_type)
-	 content_type = request->anchor->content_type->name;
+       if (response && HTResponse_format (response))
+	 content_type = HTAtom_name (HTResponse_format (response));
        else
 	 content_type = "www/unknown";
 
@@ -1223,6 +1256,9 @@ HTList             *c;
 
    /* Define here the equivalences between MIME types and file extensions for
     the types that Amaya can display */
+
+   /* Initialize suffix bindings for local files */
+   HTBind_init();
 
    /* Register the default set of file suffix bindings */
    HTFileInit ();
@@ -1559,7 +1595,7 @@ View view;
     {
       /* @@@ we couldn't open the directory ... we need some msg */
       perror (dirname);
-      exit;
+      return;
     }
   
   while ((d = readdir (dp)) != NULL)
@@ -1619,6 +1655,7 @@ static void Cacheinit ()
   char *cache_dir = NULL;
   char *cache_lockfile;
   int cache_size;
+  int cache_entry_size;
   boolean cache_enabled;
   boolean cache_locked;
 
@@ -1658,6 +1695,10 @@ static void Cacheinit ()
   else
     cache_size = DEFAULT_CACHE_SIZE;
 
+  /* get the max cached file size (or use a default one) */
+  if (!TtaGetEnvInt ("MAX_CACHE_ENTRY_SIZE", &cache_entry_size))
+    cache_entry_size = DEFAULT_MAX_CACHE_ENTRY_SIZE;
+
   if (cache_enabled) 
     {
       /* how to remove the lock? force remove it? */
@@ -1685,6 +1726,7 @@ static void Cacheinit ()
 	  /* initialize the cache if there's no other amaya
 	     instance running */
 	  HTCacheInit (cache_dir, cache_size);
+	  HTCacheMode_setMaxCacheEntrySize (cache_entry_size);
 	  HTCacheMode_setExpires (HT_EXPIRES_AUTO);
 	  if (set_cachelock (cache_lockfile) == -1)
 	    /* couldn't open the .lock file, so, we close the cache to
@@ -1935,7 +1977,7 @@ void                QueryInit ()
    HTTimer_registerDeleteTimerCallback ((void *) AMAYA_DeleteTimer);
 #endif /* !_WINDOWS */
    
-   WWW_TraceFlag = CACHE_TRACE;
+   WWW_TraceFlag = 0;
 #ifdef DEBUG_LIBWWW
   /* forwards error messages to our own function */
    WWW_TraceFlag = THD_TRACE;
@@ -2936,6 +2978,35 @@ boolean value;
 #endif /* _STDC_ */
 {
   CanDoStop_flag = value;
+}
+
+#ifdef __STDC__
+void libwww_updateNetworkConf (int status)
+#else
+void libwww_updateNetworkConf (status)
+int status;
+#endif /*__STDC__*/
+{
+  /* @@@ the docid parameter isn't used... clean it up */
+  int docid = 1;
+
+  /* first, stop all current requests, as the network
+   may make some changes */
+  StopAllRequests (docid);
+
+  if (status & AMAYA_PROXY_RESTART)
+    {
+      HTProxy_deleteAll ();
+      ProxyInit ();
+    }
+
+  if (status & AMAYA_CACHE_RESTART)
+    {
+      clear_cachelock ();
+      HTCacheTerminate ();
+      HTCacheMode_setEnabled (NO);
+      CacheInit ();
+    }
 }
 
 #endif /* AMAYA_JAVA */
