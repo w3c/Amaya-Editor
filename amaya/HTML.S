@@ -884,10 +884,10 @@ EXCEPT
 	Definitions:	Hidden;
         XMLPI:	        ReturnCreateNL, NoReplicate;
 	Comment\240:	ReturnCreateNL, NoReplicate;
-	Comment_line:	Hidden, NoSpellCheck;
-	PI_line:	Hidden, NoSpellCheck;
+	Comment_line:	Hidden;
+	PI_line:	Hidden;
 	DOCTYPE:	NoCut;
-	DOCTYPE_line:	Hidden, NoSpellCheck, NoCut;
+	DOCTYPE_line:	Hidden, NoCut;
         CDATA_line:     Hidden;
 	GRAPHICS:	NoMove, NoResize;
 	TEXT:		NoMove, NoResize;

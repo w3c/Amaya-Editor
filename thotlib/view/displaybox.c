@@ -350,15 +350,6 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 
 	  switch (pBox->BxAbstractBox->AbShape)
 	    {
-	    case 'r':
-	      DrawRadical (frame, i, xd, yd, width, height, font, fg);
-	      break;
-	    case 'i':
-	      if (useStix)
-		DrawStixIntegral (frame, i, xd, yd, width, height, 0, font, fg);
-	      else
-		DrawIntegral (frame, i, xd, yd, width, height, 0, font, fg);
-	      break;
 	    case 'c':
 	      if (useStix)
 		DrawStixIntegral (frame, i, xd, yd, width, height, 1, font, fg);
@@ -371,42 +362,50 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	      else
 		DrawIntegral (frame, i, xd, yd, width, height, 2, font, fg);
 	      break;
+	    case 'h':
+	      DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, fg);
+	      break;
+	    case 'i':
+	      if (useStix)
+		DrawStixIntegral (frame, i, xd, yd, width, height, 0, font, fg);
+	      else
+		DrawIntegral (frame, i, xd, yd, width, height, 0, font, fg);
+	      break;
+	    case 'o':
+	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 0, fg);
+	      break;
+	    case 'r':
+	      DrawRadical (frame, i, xd, yd, width, height, font, fg);
+	      break;
+	    case 'u':
+	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 1, fg);
+	      break;
+	    case 'v':
+	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);
+	      break;
+	    case 'D':
+	      DrawDoubleVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);
+	      break;
+	    case 'I':
+	      DrawIntersection (frame, xd, yd, width, height, font, fg);
+	      break;
+	    case 'L':
+	      DrawArrow (frame, i, 5, xd, yd, width, height, 180, fg);
+	      break;
+	    case 'P':
+	      DrawPi (frame, xd, yd, width, height, font, fg);
+	      break;
+	    case 'R':
+	      DrawArrow (frame, i, 5, xd, yd, width, height, 0, fg);
+	      break;
 	    case 'S':
 	      if (useStix)
 		DrawStixSigma (frame, xd, yd, width, height, font, fg);
 	      else
 		DrawSigma (frame, xd, yd, width, height, font, fg);
 	      break;
-	    case 'P':
-	      DrawPi (frame, xd, yd, width, height, font, fg);
-	      break;
-	    case 'I':
-	      DrawIntersection (frame, xd, yd, width, height, font, fg);
-	      break;
 	    case 'U':
 	      DrawUnion (frame, xd, yd, width, height, font, fg);
-	      break;
-	    case 'o':
-	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 0, fg);
-	      break;
-	    case 'u':
-	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 1, fg);
-	      break;
-	    case 'h':
-	      DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, fg);
-	      break;
-	    case 'v':
-	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1,
-				fg);
-	      break;
-	    case 'R':
-	      DrawArrow (frame, i, 5, xd, yd, width, height, 0, fg);
-	      break;
-	    case '^':
-	      DrawArrow (frame, i, 5, xd, yd, width, height, 90, fg);
-	      break;
-	    case 'L':
-	      DrawArrow (frame, i, 5, xd, yd, width, height, 180, fg);
 	      break;
 	    case 'V':
 	      DrawArrow (frame, i, 5, xd, yd, width, height, 270, fg);
@@ -416,6 +415,9 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 		DrawStixParenthesis (frame, i, xd, yd, width, height, 0, font, fg);
 	      else
 		DrawParenthesis (frame, i, xd, yd, width, height, 0, font, fg);
+	      break;
+	    case '^':
+	      DrawArrow (frame, i, 5, xd, yd, width, height, 90, fg);
 	      break;
 	    case ')':
 	      if (useStix)
@@ -461,9 +463,6 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	      break;
 	    case '|':
 	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);
-	      break;
-	    case 'D':
-	      DrawDoubleVerticalLine (frame, i, 5, xd, yd, width, height, 1, fg);
 	      break;
 	    case '?':
 	    case UNDISPLAYED_UNICODE:

@@ -440,10 +440,10 @@ STRUCT
 EXCEPT
 
    MathML:		NoMove, NoResize;
-   XMLcomment_line:	Hidden, NoSpellCheck;
-   XMLPI_line:  	Hidden, NoSpellCheck;
+   XMLcomment_line:	Hidden;
+   XMLPI_line:  	Hidden;
    DOCTYPE:		NoCut;
-   DOCTYPE_line:  	Hidden, NoSpellCheck, NoCut;
+   DOCTYPE_line:  	Hidden, NoCut;
    CDATA_line:          Hidden;
    XMLPI:	        ReturnCreateNL, NoReplicate;
    XMLcomment:	        ReturnCreateNL, NoReplicate;	

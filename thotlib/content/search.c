@@ -563,10 +563,10 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		  /* inclusion */
 		  pAncest = pEl;
 		  while (pAncest->ElParent && pAncest->ElSource == NULL &&
-		  !TypeHasException (ExcHidden, pAncest->ElTypeNumber, pAncest->ElStructSchema))
+		  !TypeHasException (ExcNoSpellCheck, pAncest->ElTypeNumber, pAncest->ElStructSchema))
 		    pAncest = pAncest->ElParent;
 		  if (pAncest->ElSource == NULL &&
-		      !TypeHasException (ExcHidden, pAncest->ElTypeNumber, pAncest->ElStructSchema))
+		      !TypeHasException (ExcNoSpellCheck, pAncest->ElTypeNumber, pAncest->ElStructSchema))
 		    /* on n'est pas dans une inclusion */
 		    {
 		      ichar = 1;
@@ -609,10 +609,10 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 		  /* inclusion */
 		  pAncest = pEl;
 		  while (pAncest->ElParent && pAncest->ElSource == NULL &&
-			 !TypeHasException (ExcHidden, pAncest->ElTypeNumber, pAncest->ElStructSchema))
+			 !TypeHasException (ExcNoSpellCheck, pAncest->ElTypeNumber, pAncest->ElStructSchema))
 		    pAncest = pAncest->ElParent;
 		  if (pAncest->ElSource == NULL &&
-		      !TypeHasException (ExcHidden, pAncest->ElTypeNumber, pAncest->ElStructSchema))
+		      !TypeHasException (ExcNoSpellCheck, pAncest->ElTypeNumber, pAncest->ElStructSchema))
 		    /* on n'est pas dans une inclusion */
 		    {
 		      pBuf = pEl->ElText;

@@ -2504,9 +2504,9 @@ EXCEPT
    TEXT:                NoMove, NoResize;
    Unknown_namespace:   NoCreate;
    DOCTYPE:             NoCut;
-   DOCTYPE_line:        Hidden, NoSpellCheck, NoCut;
-   XMLcomment_line:     Hidden, NoSpellCheck;
-   XMLPI_line:          Hidden, NoSpellCheck;
+   DOCTYPE_line:        Hidden, NoCut;
+   XMLcomment_line:     Hidden;
+   XMLPI_line:          Hidden;
    CDATA_line:          Hidden;
    XMLPI:	        ReturnCreateNL, NoReplicate;
    XMLcomment:	        ReturnCreateNL, NoReplicate;
