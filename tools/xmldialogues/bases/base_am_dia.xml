@@ -2238,6 +2238,9 @@
 <label define="BBookmarkFile">
         <message xml:lang="en">Bookmark File</message>
 </label>
+<label define="BEditTopics">
+        <message xml:lang="en">Edit Topics</message>
+</label>
 <label define="BViewBookmarks">
         <message xml:lang="en">View Bookmarks</message>
 </label>

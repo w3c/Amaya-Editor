@@ -25,6 +25,10 @@
 #include "ANNOTmenu_f.h"
 #endif /* ANNOTATIONS */
 
+#ifdef BOOKMARKS
+#include "BMevent_f.h"
+#endif /* BOOKMARKS */
+
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
@@ -2859,7 +2863,29 @@ void CustomQuery (Document document, View view)
 void BookmarkFile (Document document, View view)
 {
 #ifdef BOOKMARKS
-  BM_Create (document, view);
+  BM_CreateBM (document, view);
+#endif /* BOOKMARKS */
+}
+
+/*----------------------------------------------------------------------
+   EditTopics
+   Edit Bookmark Topics
+  ----------------------------------------------------------------------*/
+void EditTopics (Document document, View view)
+{
+#ifdef BOOKMARKS
+  BM_CreateTopic (document, view);
+#endif /* BOOKMARKS */
+}
+
+/*----------------------------------------------------------------------
+   ViewBookmarks
+   Opens the Amaya bookmarks window
+  ----------------------------------------------------------------------*/
+void ViewBookmarks (Document document, View view)
+{
+#ifdef BOOKMARKS
+  BM_ViewBookmarks (document, view);
 #endif /* BOOKMARKS */
 }
 

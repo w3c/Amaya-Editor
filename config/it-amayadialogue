@@ -233,38 +233,39 @@
 231 Filtro locale...
 232 Configurazione...
 233 **Bookmark File
-234 **View Bookmarks
-235 Lock resource...
-236 Unlock resource...
-237 Informazioni per il lock...
-238 Copia delle informazioni per il lock...
-239 Lock?
-240 Preferenze...
-241 Informazioni su Amaya
-242 Informazioni su Amaya al W3C
-243 Indice
-244 Navigazione
-245 Viste
-246 Selezione
-247 Documento
-248 Creazione elementi
-249 Attributi
-250 Caratteri
-251 Ristrutturazione
-252 Collegamenti
-253 Tabelle
-254 Zone attive
-255 Matematica
-256 Graphics
-257 Supporto XML
-258 Fogli di stile
-259 Ricerca
-260 Controllo ortografico
-261 Pubblicazione
-262 Stampa
-263 Numerazione
-264 Creare un libro
-265 Annotazioni
-266 Configurazione di Amaya
-267 Scelte rapide
-268 Accessibilità in Amaya
+234 **Edit Topics
+235 **View Bookmarks
+236 Lock resource...
+237 Unlock resource...
+238 Informazioni per il lock...
+239 Copia delle informazioni per il lock...
+240 Lock?
+241 Preferenze...
+242 Informazioni su Amaya
+243 Informazioni su Amaya al W3C
+244 Indice
+245 Navigazione
+246 Viste
+247 Selezione
+248 Documento
+249 Creazione elementi
+250 Attributi
+251 Caratteri
+252 Ristrutturazione
+253 Collegamenti
+254 Tabelle
+255 Zone attive
+256 Matematica
+257 Graphics
+258 Supporto XML
+259 Fogli di stile
+260 Ricerca
+261 Controllo ortografico
+262 Pubblicazione
+263 Stampa
+264 Numerazione
+265 Creare un libro
+266 Annotazioni
+267 Configurazione di Amaya
+268 Scelte rapide
+269 Accessibilità in Amaya

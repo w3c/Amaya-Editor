@@ -443,7 +443,8 @@ typedef enum
   docSVG,
   docMath,
   docXml,
-  docLibrary
+  docLibrary,
+  docBookmark
 } DocumentType;
 
 

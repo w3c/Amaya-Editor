@@ -292,7 +292,8 @@ MENUS
 	view:1 Annotations_ button:BConfigAnnotations -> ConfigAnnot;
 
 	view:1 Bookmarks_ button:BBookmarkFile -> BookmarkFile;
-	view:1 Bookmarks_ button:BViewBookmarks -> ConfigAnnot;
+	view:1 Bookmarks_ button:BEditTopics -> EditTopics;
+	view:1 Bookmarks_ button:BViewBookmarks -> ViewBookmarks;
 
 	view:1 Cooperation_ button:BLock -> LockDocument;
 	view:1 Cooperation_ button:BUnlock -> UnlockDocument;

@@ -219,6 +219,8 @@ extern void CustomQuery ( Document document,
                           View view );
 extern void BookmarkFile ( Document document,
                            View view );
+extern void EditTopics ( Document document,
+                         View view );
 extern void LockDocument ( Document document,
                            View view );
 extern void UnlockDocument ( Document document,
@@ -447,6 +449,8 @@ extern void CustomQuery (/* Document document,
                             View view */);
 extern void BookmarkFile (/* Document document,
                              View view */);
+extern void EditTopics (/* Document document,
+                           View view */);
 extern void LockDocument (/* Document document,
                              View view */);
 extern void UnlockDocument (/* Document document,

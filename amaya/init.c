@@ -2409,6 +2409,10 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
      doc = TtaInitDocument ("TextFile", docname, requested_doc);
    else if (docType == docAnnot)
      doc = TtaInitDocument ("Annot", docname, requested_doc);
+#ifdef BOOKMARKS
+   else if (docType == docBookmark)
+     doc = TtaInitDocument ("Topics", docname, requested_doc);
+#endif /* BOOKMARKS */
    else if (docType == docSVG)
      doc = TtaInitDocument ("SVG", docname, requested_doc);
    else if (docType == docMath)
@@ -2432,6 +2436,10 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   TtaSetPSchema (doc, "TextFileP");
        else if (docType == docAnnot)
 	   TtaSetPSchema (doc, "AnnotP");
+#ifdef BOOKMARKS
+       else if (docType == docBookmark)
+	   TtaSetPSchema (doc, "TopicsP");
+#endif /* BOOKMARKS */
        else if (docType == docSVG)
 	   TtaSetPSchema (doc, "SVGP");
        else if (docType == docMath)
@@ -2798,7 +2806,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 		DocumentTypes[doc] != docText)
 	 /* we need to update menus and buttons */
 	 reinitialized = TRUE;
-       else if (docType == docMath || docType == docAnnot ||
+       else if (docType == docMath || docType == docAnnot || docType == docBookmark ||
 	        docType == docXml || docType == docSource)
 	 reinitialized = TRUE;
      }
