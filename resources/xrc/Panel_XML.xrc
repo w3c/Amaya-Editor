@@ -62,7 +62,7 @@
                                     <object class="sizeritem">
                                       <object class="wxListBox" name="wxID_LIST_XML">
                                         <content/>
-                                        <size>100,100</size>
+                                        <size>-1,100</size>
                                         <tooltip>*Select*</tooltip>
                                       </object>
                                       <option>1</option>
