@@ -333,23 +333,11 @@ static void Init_tmapping_animated_struct(tmapping_animated * m)
 #ifdef _SVG
 static void Init_timeline_struct(int k) 
 {
-  int i,j;
-
   // reset all the structure fields
   memset(&dt[k], 0, sizeof(TTimeline));
 
   // then only set the none zero fields
   dt[k].vertical_pos = ct_top_bar;
-
-  // SG : do not loop on this because the fields are allready set to zero
-  /*
-  for (j=0; j<MAX_ANIMATED_ELTS; j++) 
-    {
-      Init_tmapping_animated_struct (&dt[k].mapping_animated[j]);
-      for (i=0; i<MAX_ANIMATIONS; i++)
-	Init_tmapping_animations_struct (&dt[k].mapping_animated[j].mapping_animations[i]);
-    }
-  */
 }
 #endif /* _SVG */
 

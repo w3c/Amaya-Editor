@@ -1879,7 +1879,6 @@ void DoTableCreation (Document document)
   Element             el, new_, caption, cell, row;
   AttributeType       attrType;
   Attribute           attr;
-  char                stylebuff[50];
   int                 firstChar, i;
 
   /* get the new Table element */
@@ -1905,12 +1904,20 @@ void DoTableCreation (Document document)
 	  /* remove the Border attribute */
 	  if (attr != NULL)
 	    TtaRemoveAttribute (el, attr, document);
+#ifdef IV
+      char stylebuff[50];
+      ThotBool loadcss;
 	  /* generate a border style */
 	  attrType.AttrTypeNum = HTML_ATTR_Style_;
 	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (el, attr, document);
 	  sprintf (stylebuff, "border: solid %dpx", TBorder);
 	  TtaSetAttributeText (attr, stylebuff, el, document);	       
+	  //TtaAttachAttribute (el, attr, document);
+      /* check if we have to load CSS */
+      TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
+      if (loadcss)
+	ParseHTMLSpecificStyle (el, stylebuff, document, 200, FALSE);
+#endif /* IV */
 	}
       else if (attr && TBorder == 0)
 	/* the table has a Border attribute but the user don't want
