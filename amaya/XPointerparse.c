@@ -43,13 +43,13 @@
   Symbol table  (move this back to XPointerparse.c)
 ***************************************************/
 /* values for pre-initializing the symbol tables */
-static struct entry keywords[][2] = {
-  "id", FID,
-  "range-to", FRANGE_TO,
-  "string-range", FSTRING_RANGE,
-  "start-point", FSTARTP,
-  "end-point", FENDP,
-  "", 0
+static struct entry keywords[] = {
+  {"id", FID},
+  {"range-to", FRANGE_TO},
+  {"string-range", FSTRING_RANGE},
+  {"start-point", FSTARTP},
+  {"end-point", FENDP},
+  {"", 0}
 };
 
 static symTableCtx symtable;
@@ -632,7 +632,7 @@ static void InitSymtable (parserContextPtr ctx)
   struct entry *p;
 
   /* init the symbol table */
-  for (p = keywords; p->token; p++)
+  for (p = (struct entry *) keywords; p->token; p++)
     InsertSymbol (ctx, p->lexptr, p->token);
 }
 
