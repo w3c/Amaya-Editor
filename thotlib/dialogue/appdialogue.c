@@ -3889,15 +3889,20 @@ void TtaSetMenuOff (Document document, View view, int menuID)
 	      gtk_widget_set_sensitive (GTK_WIDGET(w), FALSE);
 #endif /* _GTK */
 #ifdef _WX
-	      wxMenuBar * p_menu_bar = ((AmayaFrame *)FrameTable[frame].WdFrame)->GetMenuBar();
-	      menu_id = 0;
-	      while (menu_id < p_menu_bar->GetMenuCount() &&
-		     p_menu_bar->GetMenu(menu_id) != w)
-		menu_id++;
-	      if (menu_id < p_menu_bar->GetMenuCount())
-		p_menu_bar->EnableTop (menu_id, FALSE);
-	      else
-		wxASSERT_MSG( FALSE, _T("Didnt find menu to enable") );
+	      /* the frame must be active when enable/disable menu items 
+	       * Active frame <=> Menu's frame is the current one on the parent window */
+	      if (((AmayaFrame *)FrameTable[frame].WdFrame)->IsActive())
+		{
+		  wxMenuBar * p_menu_bar = ((AmayaFrame *)FrameTable[frame].WdFrame)->GetMenuBar();
+		  menu_id = 0;
+		  while (menu_id < p_menu_bar->GetMenuCount() &&
+			 p_menu_bar->GetMenu(menu_id) != w)
+		    menu_id++;
+		  if (menu_id < p_menu_bar->GetMenuCount())
+		    p_menu_bar->EnableTop (menu_id, FALSE);
+		  else
+		    wxASSERT_MSG( FALSE, _T("Didnt find menu to enable") );
+		}
 #endif /* _WX */
 	    }
 	}
@@ -3953,15 +3958,20 @@ void TtaSetMenuOn (Document document, View view, int menuID)
 	     gtk_widget_set_sensitive (GTK_WIDGET(w), TRUE);
 #endif /* _GTK */
 #ifdef _WX
-	     wxMenuBar * p_menu_bar = ((AmayaFrame *)FrameTable[frame].WdFrame)->GetMenuBar();
-	     menu_id = 0;
-	     while (menu_id < p_menu_bar->GetMenuCount() &&
-		    p_menu_bar->GetMenu(menu_id) != w)
-	       menu_id++;
-	     if (menu_id < p_menu_bar->GetMenuCount())
-	       p_menu_bar->EnableTop (menu_id, TRUE);
-	     else
-	       wxASSERT_MSG( FALSE, _T("Didnt find menu to enable") );
+	     /* the frame must be active when enable/disable menu items 
+	      * Active frame <=> Menu's frame is the current one on the parent window */
+	     if (((AmayaFrame *)FrameTable[frame].WdFrame)->IsActive())
+	       {
+		 wxMenuBar * p_menu_bar = ((AmayaFrame *)FrameTable[frame].WdFrame)->GetMenuBar();
+		 menu_id = 0;
+		 while (menu_id < p_menu_bar->GetMenuCount() &&
+			p_menu_bar->GetMenu(menu_id) != w)
+		   menu_id++;
+		 if (menu_id < p_menu_bar->GetMenuCount())
+		   p_menu_bar->EnableTop (menu_id, TRUE);
+		 else
+		   wxASSERT_MSG( FALSE, _T("Didnt find menu to enable") );
+	       }
 #endif /* _WX */
 	    }  	  
 	} 
