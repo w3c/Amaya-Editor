@@ -1992,8 +1992,11 @@ void GoToHome (Document doc, View view)
   ----------------------------------------------------------------------*/
 void UpdateDoctypeMenu (Document doc)
 {
-  DocumentType  docType;
-  
+  DocumentType    docType;
+  SSchema         nature;
+  char           *ptr;
+  ThotBool	  useMathML;
+ 
   docType = DocumentTypes[doc];
 
   if (docType == docText || docType == docCSS ||
@@ -2012,28 +2015,44 @@ void UpdateDoctypeMenu (Document doc)
   TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
   TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
   TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
+  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlPlusMath);
   TtaSetItemOff (doc, 1, File, BDoctypeMathML);
   TtaSetItemOff (doc, 1, File, BDoctypeSVG);
 
-  /* Is it a compound document ? */
+  /* look for the MathML nature used in the document */
+  nature = NULL;
+  useMathML = FALSE;
+  do
+    {
+      TtaNextNature (doc, &nature);
+      if (nature && !useMathML)
+	{
+	  ptr = TtaGetSSchemaName (nature);
+	  if (!strcmp (ptr, "MathML"))
+	    useMathML = TRUE;
+	}
+    }
+  while (nature);
 
   switch (TtaGetDocumentProfile (doc))
     {
     case L_Other:
       if (docType == docHTML)
 	{
-	   if (DocumentMeta[doc]->xmlformat)
-	     {
-	       TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
-	       TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
-	       TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
-	       TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
-	     }
-	   else
-	     {
-	       TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
-	       TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
-	     }
+	  if (useMathML)
+	    TtaSetItemOn (doc, 1, File, BDoctypeXhtmlPlusMath);
+	  else if (DocumentMeta[doc]->xmlformat)
+	    {
+	      TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
+	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
+	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
+	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+	    }
+	  else
+	    {
+	      TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
+	      TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
+	    }
 	}
       else if (docType == docMath)
 	TtaSetItemOn (doc, 1, File, BDoctypeMathML);
@@ -2041,9 +2060,14 @@ void UpdateDoctypeMenu (Document doc)
 	TtaSetItemOn (doc, 1, File, BDoctypeSVG);
       break;
     case L_Xhtml11:
-      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
-      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
-      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+      if (useMathML)
+	TtaSetItemOn (doc, 1, File, BDoctypeXhtmlPlusMath);
+      else
+	{
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+	}
       break;
     case L_Basic:
       TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
@@ -3327,9 +3351,6 @@ static Document LoadDocument (Document doc, char *pathname,
 	  TtaSetTextZone (newdoc, 1, 1, s);
 	  TtaFreeMemory (s);
 	}
-   
-      /* Update the Doctype menu */
-      UpdateDoctypeMenu (newdoc);
 
       tempdir = TtaGetMemory (MAX_LENGTH);
       TtaExtractName (tempdocument, tempdir, documentname);
@@ -3359,6 +3380,9 @@ static Document LoadDocument (Document doc, char *pathname,
 		     pathname, plainText);
       
       TtaFreeMemory (tempdir);
+   
+      /* Update the Doctype menu */
+      UpdateDoctypeMenu (newdoc);
 
       /* Set the document read-only when needed */
       if (ReadOnlyDocument[newdoc])

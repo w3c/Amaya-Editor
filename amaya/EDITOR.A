@@ -57,6 +57,7 @@ MENUS
 	view:1 File.Doctype1 button:BDoctypeHtmlTransitional -> CreateDoctypeHtmlTransitional;
 	view:1 File.Doctype1 button:BDoctypeHtmlStrict -> CreateDoctypeHtmlStrict;
 	view:1 File.Doctype1 Separator;
+	view:1 File.Doctype1 button:BDoctypeXhtmlPlusMath -> CreateDoctypeHtml11;
 	view:1 File.Doctype1 button:BDoctypeMathML -> CreateDoctypeMathML;
 	view:1 File.Doctype1 button:BDoctypeSVG -> CreateDoctypeSVG;
 	view:1 File button:BDocInfo -> DocumentInfo;

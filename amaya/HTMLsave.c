@@ -27,6 +27,7 @@
 #include "XML.h"
 
 #include "HTMLhistory_f.h"
+#include "EDITORactions_f.h"
 #include "css_f.h"
 #ifdef ANNOTATIONS
 #include "Annot.h"
@@ -860,10 +861,10 @@ void SetNamespacesAndDTD (Document doc)
    char                 Charset[MAX_CHARSET_LEN];
    char		        buffer[300];
    ThotBool		useMathML, useSVG, useHTML, useXML;
+   int                  oldStructureChecking;
 #ifdef OLD_EXPORT
    ThotBool		useFrames;
 #endif /* OLD_EXPORT */
-   int                  oldStructureChecking;
 
 #ifdef ANNOTATIONS
    if (DocumentTypes[doc] == docAnnot)
@@ -1068,7 +1069,12 @@ void SetNamespacesAndDTD (Document doc)
 	 {
 	   TtaDeleteTree (doctype, doc);
 	   TtaSetDocumentProfile (doc, L_Other);
-	 }
+	   if (useMathML && 
+	       (strcmp (s, "HTML") == 0) &&
+	       DocumentMeta[doc]->xmlformat)
+	     /* Create a XHTML + MathML doctype */
+	     CreateDoctype (doc, L_Xhtml11);
+   	 }
      }
    
    if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docAnnot)

@@ -323,6 +323,10 @@
 	<message xml:lang="en">Change/Create doctype HTML Strict</message>
 	<message xml:lang="fr">Changer/Créer doctype HTML Strict</message>
 </label>
+<label define="BDoctypeXhtmlPlusMath">
+	<message xml:lang="en">Change/Create doctype XHTML + MathML</message>
+	<message xml:lang="fr">Changer/Créer doctype XHTML + MathML</message>
+</label>
 <label define="BDoctypeMathML">
 	<message xml:lang="en">Change/Create doctype MathML</message>
 	<message xml:lang="fr">Changer/Créer doctype MathML</message>

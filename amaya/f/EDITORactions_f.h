@@ -20,6 +20,8 @@ extern void NewSVG ( Document document,
                      View view );
 extern void NewCss ( Document document,
                      View view );
+extern void CreateDoctype ( Document doc,
+                            int profile );
 extern void InitializeNewDoc ( char *url,
                                int docType,
                                Document doc,
@@ -222,6 +224,8 @@ extern void NewSVG (/* Document document,
                        View view */);
 extern void NewCss (/* Document document,
                        View view */);
+extern void CreateDoctype (/* Document doc,
+                              int profile */);
 extern void InitializeNewDoc (/* char *url,
                                  int docType,
                                  Document doc,

@@ -105,11 +105,14 @@ void NewCss (Document document, View view)
   CreateDoctype
   Create a doctype declaration
   --------------------------------------------------------------------------*/
-static void CreateDoctype (Document doc, int profile)
+void CreateDoctype (Document doc, int profile)
 {
   ElementType     elType, lineType;
   Element         docEl, doctype, doctypeLine, text, child;
   Language        language;
+  char           *ptr;
+  SSchema         nature;
+  ThotBool	  useMathML;
 
   /* Check the Thot abstract tree against the structure schema. */
   TtaSetStructureChecking (0, doc);
@@ -135,6 +138,23 @@ static void CreateDoctype (Document doc, int profile)
       elType.ElTypeNum = MathML_EL_DOCTYPE;
       lineType.ElTypeNum = MathML_EL_DOCTYPE_line;
     }
+  
+  if (profile == L_Xhtml11)
+    {
+      /* look for the MathML nature used in the document */
+      nature = NULL;
+      do
+	{
+	  TtaNextNature (doc, &nature);
+	  if (nature && !useMathML)
+	    {
+	      ptr = TtaGetSSchemaName (nature);
+	      if (!strcmp (ptr, "MathML"))
+		useMathML = TRUE;
+	    }
+	}
+      while (nature);
+    }
 
   doctype = TtaNewElement (doc, elType);
   TtaInsertFirstChild (&doctype, docEl, doc);
@@ -155,8 +175,10 @@ static void CreateDoctype (Document doc, int profile)
 	TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"", language, doc);
       else if (profile == L_Strict && !DocumentMeta[doc]->xmlformat)
 	TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD HTML 4.01//EN\"", language, doc);
-      else if (profile == L_Xhtml11)
+      else if (profile == L_Xhtml11 && !useMathML)
 	TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"", language, doc);
+      else if (profile == L_Xhtml11 && useMathML)
+	TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN\"", language, doc);
       else if (profile == L_Transitional && DocumentMeta[doc]->xmlformat)
 	TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"", language, doc);
       else if (profile == L_Transitional && !DocumentMeta[doc]->xmlformat)
@@ -178,21 +200,23 @@ static void CreateDoctype (Document doc, int profile)
     {
       TtaInsertFirstChild (&text, doctypeLine, doc);
       if (profile == L_Basic)
-	TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\"", language, doc);
+	TtaSetTextContent (text, "      \"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\"", language, doc);
       else if (profile == L_Strict && DocumentMeta[doc]->xmlformat)
-	TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"", language, doc);
+	TtaSetTextContent (text, "      \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"", language, doc);
       else if (profile == L_Strict && !DocumentMeta[doc]->xmlformat)
-	TtaSetTextContent (text, "\"http://www.w3.org/TR/html4/strict.dtd\"", language, doc);
-      else if (profile == L_Xhtml11)
-	TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\"", language, doc);
+	TtaSetTextContent (text, "      \"http://www.w3.org/TR/html4/strict.dtd\"", language, doc);
+      else if (profile == L_Xhtml11 && !useMathML)
+	TtaSetTextContent (text, "      \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\"", language, doc);
+      else if (profile == L_Xhtml11 && useMathML)
+	TtaSetTextContent (text, "      \"http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd\"", language, doc);
       else if (profile == L_Transitional && DocumentMeta[doc]->xmlformat)
-	TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"", language, doc);
+	TtaSetTextContent (text, "      \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"", language, doc);
       else if (profile == L_Transitional && !DocumentMeta[doc]->xmlformat)
-	TtaSetTextContent (text, "\"http://www.w3.org/TR/html4/loose.dtd\"", language, doc);
+	TtaSetTextContent (text, "      \"http://www.w3.org/TR/html4/loose.dtd\"", language, doc);
       else if (profile == L_MathML)
-	TtaSetTextContent (text, "\"http://www.w3.org/TR/MathML2/dtd/mathml2.dtd\"", language, doc);
+	TtaSetTextContent (text, "      \"http://www.w3.org/TR/MathML2/dtd/mathml2.dtd\"", language, doc);
       else if (profile == L_SVG)
-	TtaSetTextContent (text, "\"http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd\"", language, doc);
+	TtaSetTextContent (text, "      \"http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd\"", language, doc);
     }
   TtaSetStructureChecking (1, doc);
 
