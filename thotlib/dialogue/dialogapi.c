@@ -173,6 +173,7 @@ LRESULT CALLBACK TxtZoneWndProc (HWND, UINT, WPARAM, LPARAM);
 static int          nAmayaShow;
 /* following variables are declared as extern in frame_tv.h */
 HINSTANCE           hInstance = 0;
+
 HBITMAP             WIN_LastBitmap = 0;
 
 typedef struct WIN_Form
@@ -491,12 +492,69 @@ BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int 
   int        argc;
   char**   argv;
   
+
+#ifdef _DEBUG
+   /* Get all memory leak in the debug window after using
+   debug and closing the application*/
+    #define _CRTDBG_MAP_ALLOC
+    #include <stdlib.h>
+    #include <crtdbg.h>
+
+
+	int flag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG); 
+
+	flag |= _CRTDBG_ALLOC_MEM_DF  | _CRTDBG_LEAK_CHECK_DF; 
+	_CrtSetDbgFlag(flag); 
+
+/*Launch the app in debug mode, follow a strict scenario, then exit.
+in the debug output you'll see memory leak dump, and where they were allocated
+Relaunch the app,  break near the beginning
+then use quickwatch (clc right button on text canvas)
+then enter _crtBreakAlloc and click "recalculate"
+Instead of the "-1" result, enter the number in the brace
+C:\Amaya\thotlib\image\gifhandler.c(1520) : {40493} normal block at 0x01F95C18, 57760 bytes long.
+here, you'll enter 40493
+Follow the same scenario as before, and the app will break at the right allocation that 
+had never been FREED !!
+http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vsdebug/html/vxconsettingbreakpointonmemoryallocationnumber.asp
+*/
+
+
+    /* When the count reaches zero !!!
+	http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vclib/html/_crt__crtsetreportmode.asp
+
+	_CrtSetReportMode (_CRT_WARN, _CRTDBG_MODE_DEBUG | _CRTDBG_MODE_WNDW );
+	_CrtSetReportMode (_CRT_ERROR, _CRTDBG_MODE_DEBUG | _CRTDBG_MODE_WNDW );
+	_CrtSetReportMode (_CRT_ASSERT, _CRTDBG_MODE_DEBUG | _CRTDBG_MODE_WNDW );
+    */
+	/* Opens a Console for debugging purpose*/
+	/*InitConsoleDebug();   */
+
+
+/*	MS Visual Conditional Breakpoints
+Set a breakpoint (F9) 
+Now, edit breakpoint ( Alt -F9 ) 
+Select the breakpoint you just created, and hit the "Condition" tab 
+set a condit ion for the breakpoint .
+*/
+
+   currentFrame = -1;
+   hInstance = hInst;
+   nAmayaShow = nShow;
+   argc = makeArgcArgv (hInst, &argv, lpCommand);
+   main (argc, argv);
+   /* Close the debugging console*/
+   /*ExitConsoleDebug ();*/
+	return (TRUE);
+#else /*_DEBUG*/   
+
   currentFrame = -1;
   hInstance = hInst;
   nAmayaShow = nShow;
   argc = makeArgcArgv (hInst, &argv, lpCommand);
   main (argc, argv);
   return (TRUE);
+#endif /*_DEBUG*/
 }
 
 /*----------------------------------------------------------------------
@@ -8048,7 +8106,7 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 	} 
     }
 #ifdef _WINDOWS
-  if (catalogue->Cat_Type == CAT_POPUP || catalogue->Cat_Type == CAT_POPUP)
+  if (catalogue->Cat_Type == CAT_POPUP)
     {
       GetCursorPos (&curPoint);
       if (!TrackPopupMenu (w,  TPM_LEFTALIGN, curPoint.x, curPoint.y, 0,
