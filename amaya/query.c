@@ -2577,6 +2577,12 @@ void               *context_tcbf;
    HTParentAnchor     *dest_anc_parent;
    char               *tmp;
    int                 UsePreconditions;
+   boolean             lost_update_check = TRUE;
+
+   /* should we protect the PUT against lost updates? */
+   tmp = (char *) TtaGetEnvString ("ENABLE_LOST_UPDATE_CHECK");
+   if (tmp && *tmp && strcasecmp (tmp, "yes" ))
+     lost_update_check = FALSE;
 
    UsePreconditions = mode & AMAYA_USE_PRECONDITIONS;
 
@@ -2701,18 +2707,26 @@ void               *context_tcbf;
      HTRequest_setFlush(me->request, YES);
    
    /* Should we use preconditions? */
-   if (UsePreconditions) 
-     etag = HTAnchor_etag (HTAnchor_parent (me->dest));
-
-   if (etag) 
+   if (lost_update_check)
      {
-       HTRequest_setPreconditions(me->request, HT_MATCH_THIS);
+       if (UsePreconditions) 
+	 etag = HTAnchor_etag (HTAnchor_parent (me->dest));
+       
+       if (etag) 
+	 {
+	   HTRequest_setPreconditions(me->request, HT_MATCH_THIS);
+	 }
+       else
+	 {
+	   HTRequest_setPreconditions(me->request, HT_NO_MATCH);
+	   HTRequest_addAfter(me->request, check_handler, NULL, NULL, HT_ALL,
+			      HT_FILTER_MIDDLE, YES);
+	 }
      }
    else
      {
+       /* don't use preconditions */
        HTRequest_setPreconditions(me->request, HT_NO_MATCH);
-       HTRequest_addAfter(me->request, check_handler, NULL, NULL, HT_ALL,
-			  HT_FILTER_MIDDLE, YES);
      }
    
    /* don't use the cache while saving a document */
@@ -2729,7 +2743,7 @@ void               *context_tcbf;
 		 me->status_urlName);
 
    /* make the request */
-   if (!UsePreconditions || !etag)
+   if (lost_update_check && (!UsePreconditions || !etag))
      status = HTHeadAnchor (me->dest, me->request);
    else
      status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
