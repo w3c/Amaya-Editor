@@ -365,18 +365,18 @@ static FontScript **FontConfigLoad ()
 
   appHome = TtaGetEnvString ("APP_HOME");
 #ifndef _GL
-#ifdef _WINGUI
+#ifdef _WINDOWS
   strcpy (word, "fonts.win");  
-#else /*_WINGUI*/
+#else /* _WINDOWS */
   strcpy (word, "fonts.unix");  
-#endif /*_WINGUI*/
-#else /*_GL*/
-#ifdef _WINGUI
+#endif /* _WINDOWS */
+#else /* _GL */
+#ifdef _WINDOWS
   strcpy (word, "fonts.gl.win");  
-#else /*_WINGUI*/
+#else /* _WINDOWS */
   strcpy (word, "fonts.gl");  
-#endif /*_WINGUI*/  
-#endif /*_GL*/
+#endif /* _WINDOWS */  
+#endif /* _GL */
 
   strcpy (fname, appHome);
   strcat (fname, DIR_STR);
