@@ -169,7 +169,7 @@ void               RemoteLoad_callback (int doc, int status,
 void               RemoteLoad_callback (doc, status, urlName,
 					outputfile, content_type, 
 					context)
-int newdoc;
+int doc;
 int status;
 STRING urlName;
 STRING outputfile;
@@ -270,8 +270,8 @@ View view;
 #ifdef __STDC__
 void ANNOT_Create (Document doc, View view)
 #else /* __STDC__*/
-void ANNOT_Create (document, view)
-     Document document;
+void ANNOT_Create (doc, view)
+     Document doc;
      View view;
 #endif /* __STDC__*/
 {

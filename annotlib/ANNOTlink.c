@@ -82,7 +82,7 @@ static void AddAnnotationIndexFile (char *source_url, char *index_file)
 #else
 static void AddAnnotationIndexFile (source_url, index_file)
 char *source_url;
-char *index_file
+char *index_file;
 #endif /* __STDC__ */
 {
   char *annot_dir;
@@ -115,7 +115,6 @@ void LINK_New (Document source_doc, Document annot_doc, STRING labf, int c1, STR
 void LINK_New (source_doc, annot_doc, labf, c1, labl, cN)
 Document source_doc; 
 Document annot_doc; 
-STRING annotFile;
 STRING labf;
 int c1;
 STRING labl;
@@ -270,8 +269,9 @@ void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cN)
 #ifdef __STDC__
 void LINK_LoadAnnotations (Document doc, char *annotIndex)
 #else /* __STDC__*/
-void LINK_LoadAnnotations (doc)
+void LINK_LoadAnnotations (doc, annotIndex)
      Document doc;
+     char *annotIndex;
 #endif /* __STDC__*/
 {
   View    view;
