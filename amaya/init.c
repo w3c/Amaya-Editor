@@ -6634,20 +6634,23 @@ void HelpAmaya (Document document, View view)
    View                structView, altView, tocView;
    FILE               *list;
 
-   /* get the root element */
+  /* get the root element */
    strcpy (localname, TempFileDirectory);
-   strcat (localname, "/tree.debug");
+   strcat (localname, DIR_STR);
+   strcat (localname, "tree.debug");
    list = fopen (localname, "w");
    el = TtaGetMainRoot (document);
    TtaListAbstractTree (el, list);
    fclose (list);
    strcpy (localname, TempFileDirectory);
-   strcat (localname, "/view.debug");
+   strcat (localname, DIR_STR);
+   strcat (localname, "view.debug");
    list = fopen (localname, "w");
    TtaListView (document, view, list);
    fclose (list);
    strcpy (localname, TempFileDirectory);
-   strcat (localname, "/boxes.debug");
+   strcat (localname, DIR_STR);
+   strcat (localname, "boxes.debug");
    list = fopen (localname, "w");
    TtaListBoxes (document, view, list);
    fclose (list);
@@ -6655,12 +6658,14 @@ void HelpAmaya (Document document, View view)
    if (structView != 0 && TtaIsViewOpen (document, structView))
      {
        strcpy (localname, TempFileDirectory);
-       strcat (localname, "/structview.debug");
+       strcat (localname, DIR_STR);
+	   strcat (localname, "structview.debug");
        list = fopen (localname, "w");
        TtaListView (document, structView, list);
        fclose (list);
        strcpy (localname, TempFileDirectory);
-       strcat (localname, "/structboxes.debug");
+       strcat (localname, DIR_STR);
+	   strcat (localname, "structboxes.debug");
        list = fopen (localname, "w");
        TtaListBoxes (document, structView, list);
        fclose (list);
@@ -6669,12 +6674,14 @@ void HelpAmaya (Document document, View view)
    if (altView != 0 && TtaIsViewOpen (document, altView))
      {
        strcpy (localname, TempFileDirectory);
-       strcat (localname, "/altview.debug");
+       strcat (localname, DIR_STR);
+	   strcat (localname, "altview.debug");
        list = fopen (localname, "w");
        TtaListView (document, altView, list);
        fclose (list);
        strcpy (localname, TempFileDirectory);
-       strcat (localname, "/altboxes.debug");
+       strcat (localname, DIR_STR);
+	   strcat (localname, "altboxes.debug");
        list = fopen (localname, "w");
        TtaListBoxes (document, altView, list);
        fclose (list);
@@ -6683,19 +6690,22 @@ void HelpAmaya (Document document, View view)
    if (tocView != 0 && TtaIsViewOpen (document, tocView))
      {
        strcpy (localname, TempFileDirectory);
-       strcat (localname, "/tocview.debug");
+       strcat (localname, DIR_STR);
+	   strcat (localname, "tocview.debug");
        list = fopen (localname, "w");
        TtaListView (document, tocView, list);
        fclose (list);
        strcpy (localname, TempFileDirectory);
-       strcat (localname, "/tocboxes.debug");
+       strcat (localname, DIR_STR);
+	   strcat (localname, "tocboxes.debug");
        list = fopen (localname, "w");
        TtaListBoxes (document, tocView, list);
        fclose (list);
      }
    /* list now CSS rules */
    strcpy (localname, TempFileDirectory);
-   strcat (localname, "/style.debug");
+   strcat (localname, DIR_STR);
+   strcat (localname, "style.debug");
    list = fopen (localname, "w");
    TtaListStyleSchemas (document, list);
    fclose (list);
