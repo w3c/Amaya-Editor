@@ -420,6 +420,20 @@ static ThotBool  GiveAttrWidth (PtrAbstractBox pAb, int zoom,
 	else
 	  pAttr = pAttr->AeNext;
     }
+  if (!pAb->AbWidth.DimIsPosition &&
+      pAb->AbWidth.DimUnit == UnPercent)
+    {
+      found = TRUE;
+      *width = 0;
+      *percent = pAb->AbWidth.DimValue;
+    }
+  else if (!pAb->AbWidth.DimIsPosition &&
+	  pAb->AbWidth.DimValue > 0)
+    {
+      found = TRUE;
+      *width = PixelValue (pAb->AbWidth.DimValue, pAb->AbWidth.DimUnit, NULL, zoom);
+      *percent = 0;
+    }
   return (found);
 }
 
@@ -827,7 +841,8 @@ printf ("Width[%d]=%d\n", cRef, box->BxWidth);
 		    {
 		      /* use the max instead of the min + delta */
 		      delta = delta + box->BxMinWidth - box->BxMaxWidth;
-			n--;
+		      colWidth[cRef] = box->BxMaxWidth;
+		      n--;
 		    }
 		}
 	    }
