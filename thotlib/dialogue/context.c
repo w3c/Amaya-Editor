@@ -526,6 +526,7 @@ void InitDocContexts ()
     }
   PackBoxRoot = NULL;		/* Don't check enclosing for current boxes */
   DifferedPackBlocks = NULL;	/* Don't differ enclosing for current boxes */
+  PackRows = TRUE;              /* Pack row elements */
   BoxCreating = FALSE;		/* No interractive creation yet */
   AnyWidthUpdate = FALSE;	/* No current width change */
   InitializeOtherThings ();

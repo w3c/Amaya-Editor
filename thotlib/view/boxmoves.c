@@ -938,9 +938,9 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 }
 
 
-
-void CoordinateSystemUpdate (PtrAbstractBox pAb, int frame, 
-			     int x, int y)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void CoordinateSystemUpdate (PtrAbstractBox pAb, int frame, int x, int y)
 {  
 #ifdef _GL 
   int    doc, view;
@@ -969,18 +969,14 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
   ThotBool            notEmpty;
   ThotBool            toHorizPack;
 
-  if (pBox != NULL && (delta != 0 || pBox->BxXToCompute))
+  if (pBox && (delta != 0 || pBox->BxXToCompute))
     {
-      /* enregistre la hierarchie des boites dont le */
-      /* traitement de l'englobement doit etre differe  */
+      /* register the previous hierarchy of boxes to be packed later */
       pParentBox = PackBoxRoot;
-      if (pBox->BxAbstractBox->AbEnclosing != NULL)
-	PackBoxRoot = pBox /*->BxAbstractBox->AbEnclosing->AbBox*/ ;
-      
-      /* Si PackBoxRoot est une boite mere de la boite   */
-      /* pFromBoxedemment designee on garde l'ancienne boite */
-      if (IsParentBox (PackBoxRoot, pParentBox))
-	PackBoxRoot = pParentBox;
+      if (pBox->BxAbstractBox->AbEnclosing &&
+	  !IsParentBox (pBox, pParentBox))
+	/* change the hierarchy */
+	PackBoxRoot = pBox;
 
       if (pBox->BxType == BoSplit ||
 	  pBox->BxType == BoMulScript)
@@ -1131,7 +1127,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 		RecordEnclosing (pBox, TRUE);
 	    }
 	}
-      /* restaure */
+      /* restore */
       PackBoxRoot = pParentBox;
     }
 }
@@ -1153,16 +1149,13 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 
   if (pBox && (delta || pBox->BxYToCompute))
     {
-      /* enregistre la hierarchie des boites dont le */
-      /* traitement de l'englobement doit etre differe  */
+      /* register the previous hierarchy of boxes to be packed later */
       pParentBox = PackBoxRoot;
-      if (pBox->BxAbstractBox->AbEnclosing)
-	PackBoxRoot = pBox /*->BxAbstractBox->AbEnclosing->AbBox*/ ;
-	
-      /* Si PackBoxRoot est une boite mere de la boite   */
-      /* pFromBoxedemment designee on garde l'ancienne boite */
-      if (IsParentBox (PackBoxRoot, pParentBox))
-	PackBoxRoot = pParentBox;
+      if (pBox->BxAbstractBox->AbEnclosing &&
+	  !IsParentBox (pBox, pParentBox))
+	/* change the hierarchy */
+	PackBoxRoot = pBox;
+
       if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	{
 	  /* the box is split in lines, move all pieces */
@@ -1313,7 +1306,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 		RecordEnclosing (pBox, FALSE);
 	    }
 	}
-      /* restaure */
+      /* restore */
       PackBoxRoot = pParentBox;
     }
 }
@@ -2264,9 +2257,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	       * if pSourceBox is a child and the inclusion is not performed
 	       * by another sibling box, we need to propagate the change
 	       */
-	      if ((Propagate == ToAll || externalRef)
-		  && !IsSiblingBox (pBox, pFromBox)
-		  && !IsSiblingBox (pBox, pSourceBox))
+	      if ((Propagate == ToAll || externalRef) &&
+		  !IsSiblingBox (pBox, pFromBox) &&
+		  !IsSiblingBox (pBox, pSourceBox))
 		{
 		  /* Within a block of line */
 		  if (pAb->AbBox != pSourceBox &&
@@ -2309,7 +2302,9 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		  /* retore the value if necessary */
 		  Propagate = ToSiblings;
 		}
-	      else if (pCurrentAb->AbFloat == 'N')
+	      else if (pCurrentAb->AbFloat == 'N' &&
+		       !IsSiblingBox (pBox, pFromBox) &&
+		       !IsSiblingBox (pBox, pSourceBox))
 		RecordEnclosing (pAb->AbBox, TRUE);
 	    }
 
@@ -2818,7 +2813,9 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			HeightPack (pAb, pSourceBox, frame);
 		    }
 		}
-	      else if (pCurrentAb->AbFloat == 'N')
+	      else if (pCurrentAb->AbFloat == 'N' &&
+		       !IsSiblingBox (pBox, pFromBox) &&
+		       !IsSiblingBox (pBox, pSourceBox))
 		RecordEnclosing (pAb->AbBox, FALSE);
 	    }
 	  else if (pBox->BxType == BoCell &&
@@ -3428,6 +3425,8 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
   if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock || pBox->BxType == BoCell)
     /* don't pack a block or a cell but transmit to enclosing box */
     WidthPack (pAb->AbEnclosing, pSourceBox, frame);
+  else if (!PackRows && pBox->BxType == BoRow)
+    return;
   else if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost ||
 	   pBox->BxType == BoColumn)
     /* don't pack a column head or a ghost element */

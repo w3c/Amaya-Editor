@@ -776,6 +776,9 @@ printf ("Maximum Widths ...\n");
       if (width - pBox->BxW)
 	/* we will have to recheck scrollbars */
 	AnyWidthUpdate = TRUE;
+      if (width != pBox->BxW)
+	/* don't pack rows with each cell */
+	PackRows = FALSE;
       ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, 0, 0, frame);
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
@@ -808,6 +811,9 @@ printf ("Minimum Widths ...\n");
       if (width - pBox->BxW)
 	/* we will have to recheck scrollbars */
 	AnyWidthUpdate = TRUE;
+      if (width != pBox->BxW)
+	/* don't pack rows with each cell */
+	PackRows = FALSE;
       ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, 0, 0, frame);
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
@@ -839,6 +845,9 @@ printf ("Specific Widths ...\n");
 	AnyWidthUpdate = TRUE;
       /* the table width is constrained by the enclosing box */
       table->AbWidth.DimAbRef = table->AbEnclosing;
+      if (width != pBox->BxW)
+	/* don't pack rows with each cell */
+	PackRows = FALSE;
       ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, 0, 0, frame);
       /* get the space available for stretchable columns */      
       delta = width - sum - sumPercent;
@@ -851,7 +860,7 @@ printf ("Specific Widths ...\n");
 	    }
 	  else
 	    addExtra = FALSE;
-	  if (max == 0 || max < delta)
+	  if (max == 0 || max <= delta)
 	    {
 	      /* extend the maximum of each stretchable column */
 	      useMax = TRUE;
@@ -919,17 +928,40 @@ printf ("Specific Widths ...\n");
 	    }
     }
 
+  pTabRel = pBox->BxRows;
+  if (pTabRel && pTabRel->TaRTable[0]->AbEnclosing)
+    {
+      /* update rows */
+      if (!PackRows)
+	{
+	  /* pack all rows */
+	  PackRows = TRUE;
+	  RecordEnclosing (pTabRel->TaRTable[0]->AbEnclosing->AbBox, FALSE);
+	  while (pTabRel)
+	    {
+	      for (i = 0; i < MAX_RELAT_DIM &&
+		     pTabRel->TaRTable[i] != NULL &&
+		     pTabRel->TaRTable[i]->AbBox != NULL;  i++)
+		WidthPack (pTabRel->TaRTable[i], pTabRel->TaRTable[i]->AbBox, frame);
+	      pTabRel = pTabRel->TaRNext;
+	    }
+	  
+	}
+    }
+  else
+    {
+      /* pack all rows */
+      PackRows = TRUE;
+      RecordEnclosing (table->AbBox, FALSE);
+    }
+
+
   /* recheck auto and % margins */
   CheckMBP (table, table->AbBox, frame, TRUE);
   table->AbBox->BxCycles = 0;
 #ifdef TAB_DEBUG
 printf("End CheckTableWidths (%s) = %d\n", table->AbElement->ElLabel, table->AbBox->BxWidth);
 #endif
-  if (table->AbBox->BxRows && table->AbBox->BxRows->TaRTable[0]->AbEnclosing)
-    RecordEnclosing (table->AbBox->BxRows->TaRTable[0]->AbEnclosing->AbBox, FALSE);
-  else
-    RecordEnclosing (table->AbBox, FALSE);
-
   TtaFreeMemory (colBox);
   TtaFreeMemory (colWidth);
   TtaFreeMemory (colPercent);

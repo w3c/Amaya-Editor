@@ -17,6 +17,7 @@ THOT_EXPORT ThotBool 	TextInserting;	/* Text is currently inserted */
 THOT_EXPORT ThotBool	BoxCreating;	/* Boxes are currently created */
 THOT_EXPORT PtrBox 	PackBoxRoot;	/* Root box to repack */
 THOT_EXPORT PtrDimRelations DifferedPackBlocks;/* Differed packing */
+THOT_EXPORT ThotBool    PackRows;       /* Pack ROW elements when it's TRUE */
 THOT_EXPORT ThotBool    AnyWidthUpdate;
 
 

@@ -2817,7 +2817,8 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
   PtrDimRelations     pPreviousDimRel;
   ThotBool            toCreate;
 
-  if (horizRef && (pBox->BxType == BoCell || pBox->BxType == BoTable))
+  if (horizRef && (pBox->BxType == BoCell || pBox->BxType == BoTable ||
+		   pBox->BxType == BoRow))
     /* width of these elements are computed in tableH.c */
     return;
   /* Look for an empty entry */
