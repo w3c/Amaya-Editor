@@ -6,10 +6,27 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern RDFResourceP ANNOT_FindRDFResource( List**, char*, ThotBool );
-extern RDFStatementP ANNOT_FindRDFStatement( List*, RDFPropertyP );
-extern CHAR_T *ANNOT_GetLabel( List**, RDFResourceP );
-extern void ANNOT_ReadSchema (Document, char* );
+extern RDFResourceP ANNOT_FindRDFResource ( List** listP,
+                                            char* name,
+                                            ThotBool create );
+extern RDFStatementP ANNOT_FindRDFStatement ( List* list,
+                                              RDFPropertyP p );
+extern char *ANNOT_GetLabel ( List **listP,
+                              RDFResourceP r );
+extern void ANNOT_ReadSchema ( Document doc,
+                               char *namespace_URI );
+
+#else /* __STDC__ */
+
+extern RDFResourceP ANNOT_FindRDFResource (/* List** listP,
+                                              char* name,
+                                              ThotBool create */);
+extern RDFStatementP ANNOT_FindRDFStatement (/* List* list,
+                                                RDFPropertyP p */);
+extern char *ANNOT_GetLabel (/* List **listP,
+                                RDFResourceP r */);
+extern void ANNOT_ReadSchema (/* Document doc,
+                                 char *namespace_URI */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

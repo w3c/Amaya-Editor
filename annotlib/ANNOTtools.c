@@ -147,14 +147,15 @@ int AnnotList_localCount (List *annot_list)
    Adds a new element to the beginning of a linked
    list if it doesn't exist in the list.
    ------------------------------------------------------------*/
-void AnnotFilter_add (List **me, void *object)
+void AnnotFilter_add (List **me, CHAR_T *object, AnnotMeta *annot)
 {
   List *new;
   AnnotFilterData *filter;
 
-  if (!object)
+  if (!object || !annot)
     return;
 
+  /* object already in the filter */
   if (*me && AnnotFilter_search (*me, object))
     return;
 
@@ -162,6 +163,7 @@ void AnnotFilter_add (List **me, void *object)
   filter = TtaGetMemory (sizeof (AnnotFilterData));
   filter->object = TtaStrdup (object);
   filter->show = TRUE;
+  filter->annot = annot;
 
   /* and now add it to the list */
   new = (List *) malloc (sizeof (List));
@@ -171,6 +173,50 @@ void AnnotFilter_add (List **me, void *object)
   else
       new->next = *me;
   *me = new;
+}
+
+/*------------------------------------------------------------
+   AnnotFilter_delete
+   Deletes an annotation from a filter list.
+   Returns TRUE if something was deleted, FALSE otherwise
+   ------------------------------------------------------------*/
+ThotBool AnnotFilter_delete (List **list, AnnotMeta *annot)
+{
+  ThotBool result;
+
+  List *list_item, *prev;
+  AnnotFilterData *filter;
+
+  list_item = *list;
+  prev = NULL;
+  while (list_item)
+    {
+      filter = (AnnotFilterData *) list_item->object;
+      if (filter->annot == annot)
+	  break;
+      list_item = list_item->next;
+      prev = list_item;
+    }
+
+  if (list_item)
+    {
+      result = TRUE;
+
+      /* fix the pointers */
+      if (prev == NULL)
+	*list = list_item->next;
+      else
+	prev->next = list_item->next;
+      
+      /* free allocated memory */
+      TtaFreeMemory (filter->object);
+      TtaFreeMemory (filter);
+      TtaFreeMemory (list_item);
+    }
+  else
+    result = FALSE;
+
+  return (result);
 }
 
 /*------------------------------------------------------------
@@ -432,6 +478,7 @@ void AnnotFilter_free (List *annot_list)
   while (list_ptr)
     {
       filter = (AnnotFilterData *) list_ptr->object;
+      
       TtaFreeMemory (filter->object);
       TtaFreeMemory (filter);
       next = list_ptr->next;

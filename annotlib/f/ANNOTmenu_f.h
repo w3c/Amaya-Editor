@@ -11,7 +11,7 @@ extern void CustomQueryMenuInit ( Document document,
 extern void AnnotFilter ( Document document,
                           View view );
 extern RDFResourceP AnnotTypes ( Document document,
-				 View view );
+                                 View view );
 
 #else /* __STDC__ */
 
@@ -19,8 +19,8 @@ extern void CustomQueryMenuInit (/* Document document,
                                     View view */);
 extern void AnnotFilter (/* Document document,
                             View view */);
-extern CHAR_T *AnnotTypes (/* Document document,
-                              View view */);
+extern RDFResourceP AnnotTypes (/* Document document,
+                                   View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -71,7 +71,8 @@ typedef struct _RDFResource
 
 /* the info we're interested in in an annotation */
 typedef struct _AnnotMeta {
-  int     annotNum;
+  ThotBool is_visible; /* if set, this annotation is not shown
+			 on the filters */
   CHAR_T *annot_url; /* url of the annotation node */
   CHAR_T *source_url; /* document that was annotated */
   /* the internal Amaya Xpath */
@@ -121,8 +122,9 @@ AnnotFileType;
 #include "rdf2annot_f.h"
 
 typedef struct _AnnotFilter {
-  char *object;
+  CHAR_T *object;
   ThotBool show;
+  AnnotMeta *annot;
 } AnnotFilterData;
 
 /* linked list of all annotations related to a document */
@@ -133,6 +135,9 @@ typedef struct _AnnotMetaDataList {
   List *authors;
   List *types;
   List *servers;
+  ThotBool local_annot_loaded; /* if set to true, means we have tried to
+				  load the local annotations related to this
+				  document */
 } AnnotMetaDataList;
 
 AnnotMetaDataList AnnotMetaData[DocumentTableLength];
@@ -162,3 +167,8 @@ typedef struct _RDFStatement
 #include "ANNOTschemas_f.h"
 
 #endif /* ANNOTATIONS_H */
+
+
+
+
+

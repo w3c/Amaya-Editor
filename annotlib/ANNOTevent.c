@@ -62,6 +62,7 @@ typedef struct _DELETE_context {
   CHAR_T *output_file;
   Element annotEl;
   ThotBool annot_is_remote;
+  AnnotMeta *annot;
 } DELETE_context;
 
 /*-----------------------------------------------------------------------
@@ -403,8 +404,10 @@ Document doc;
 	    CloseDocument (i, 1);
 	}
     }
-  /* free the memory */
+  /* free the allocated memory */
   LINK_DelMetaFromMemory (doc);
+  /* reset the state */
+  AnnotMetaData[doc].local_annot_loaded = FALSE;
 }
 
 
@@ -459,7 +462,7 @@ void *context;
      return;
 
    if (status == HT_OK)
-     LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex);
+     LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex, TRUE);
 
    TtaFreeMemory (ctx->remoteAnnotIndex);
    TtaFreeMemory (ctx);
@@ -514,12 +517,14 @@ View view;
   if (!annotServers || AnnotList_search (annotServers, TEXT("localhost")))
     {
       annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[doc]);
-      LINK_LoadAnnotationIndex (doc, annotIndex);
+      LINK_LoadAnnotationIndex (doc, annotIndex, TRUE);
       TtaFreeMemory (annotIndex);
+      AnnotMetaData[doc].local_annot_loaded = TRUE;
     }
+
   /* 
-   * load the remote annotation index
-   *  @@ this should be in fact a for each annot in AnnotServers
+   * Query each annotation server for annotations related to this 
+   * document
    */
   if (annotServers) 
     {
@@ -591,7 +596,6 @@ void ANNOT_Create (doc, view)
 {
   ElementType elType;
   Element     first, last;
-  CHAR_T     *labf, *labl;
   int         c1, cl, i;
   Document    doc_annot;
   AnnotMeta  *annot;
@@ -610,29 +614,12 @@ void ANNOT_Create (doc, view)
   if ((doc_annot = ANNOT_NewDocument (doc)) == 0)
     return;
 
-  /* Link the source document to the annotation */
-  labf = TtaWCSdup (TtaGetElementLabel (first));
-  labl = TtaWCSdup (TtaGetElementLabel (last));
-  annot = LINK_CreateMeta (doc, doc_annot, labf, c1, labl, cl);
-  TtaFreeMemory (labf);
-  TtaFreeMemory (labl);
+  annot = LINK_CreateMeta (doc, doc_annot);
 
   ANNOT_InitDocumentStructure (doc, doc_annot, annot);
 
   LINK_AddLinkToSource (doc, annot);
   LINK_SaveLink (doc);
-
-#if 0
-  /* @@@ this should be added later on, when saving the annot document */
-  /* create the annotation anchor */
-
-  /* Saves the selection data */
-  strcpy (tabRefAnnot[doc_annot].labf, TtaGetElementLabel (first));
-  tabRefAnnot[doc_annot].c1 = c1;
-  strcpy (tabRefAnnot[doc_annot].labl, TtaGetElementLabel (last));
-  tabRefAnnot[doc_annot].cN = cN;
-  tabRefAnnot[doc_annot].docName = TtaWCSdup (TtaGetDocumentName (doc_annot));
-#endif
 }
 
 /*-----------------------------------------------------------------------
@@ -685,7 +672,7 @@ void *context;
 	   List_rem (AnnotMetaDataList[source_doc], annot);
 	   Annot_free (annot);
 	 }
-       LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex);
+       LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex, TRUE);
        ANNOT_LoadAnnotation (source_doc, doc);
 #endif /*0*/
        
@@ -1074,6 +1061,7 @@ void *context;
    CHAR_T  *annot_url;
    CHAR_T  *output_file;
    Element  annotEl;
+   AnnotMeta *annot;
    ThotBool annot_is_remote;
 
    /* restore REMOTELOAD contextext's */  
@@ -1088,12 +1076,19 @@ void *context;
    annotEl = ctx->annotEl;
    annot_is_remote = ctx->annot_is_remote;
    output_file = ctx->output_file;
+   annot = ctx->annot;
 
    if (status == HT_OK)
      {
        /* remove the annotation link in the source document */
        LINK_RemoveLinkFromSource (source_doc, annotEl);
-       /* remove the annotation from the list and update it */
+       /* remove the annotation from the filters */
+       AnnotFilter_delete (&(AnnotMetaData[source_doc].authors), annot);
+       AnnotFilter_delete (&(AnnotMetaData[source_doc].types), annot);
+       AnnotFilter_delete (&(AnnotMetaData[source_doc].servers), annot);
+       
+       /* remove the annotation from the document's annotation list and 
+	  update it */
        AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
 			   annot_url, FALSE);
 
@@ -1142,6 +1137,7 @@ void ANNOT_Delete (document, view)
   Document         source_doc, annot_doc;
   ElementType      elType;
   Element          annotEl;
+  AnnotMeta       *annot;
   AttributeType    attrType;
   Attribute	   attr;
   CHAR_T          *annot_url;
@@ -1151,7 +1147,6 @@ void ANNOT_Delete (document, view)
   List            *list_ptr;
   int              i;
   int              res;
-  AnnotMeta       *annot;
   ThotBool         annot_is_remote;
   DELETE_context *ctx;
 
@@ -1257,6 +1252,10 @@ void ANNOT_Delete (document, view)
 	  annot_is_remote = TRUE;
 	  annot_doc = IsDocumentLoaded (annot_url, NULL);
 	}
+
+      /* find the annotation metadata that corresponds to this annotation */
+      annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
+				     annot_url, AM_BODY_URL);
     }
 
   ctx = (DELETE_context *) TtaGetMemory (sizeof (DELETE_context));
@@ -1264,7 +1263,9 @@ void ANNOT_Delete (document, view)
   ctx->annot_doc = annot_doc;
   ctx->annot_url = annot_url;
   ctx->annotEl = annotEl;
+  ctx->annot = annot;
   ctx->annot_is_remote = annot_is_remote;
+
   if (annot_is_remote)
     /* make some space to store any output file that the server would send */
     ctx->output_file = TtaGetMemory (MAX_LENGTH + 1);

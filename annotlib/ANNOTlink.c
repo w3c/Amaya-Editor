@@ -268,7 +268,7 @@ AnnotMeta *annot;
   TtaUnselect (source_doc);
 
   /* add the annotation to the filter list */
-  AnnotFilter_add (&(AnnotMetaData[source_doc].types), annot->type);
+  AnnotFilter_add (&(AnnotMetaData[source_doc].types), annot->type, annot);
   if (annot->annot_url)
     tmp = annot->annot_url;
   else
@@ -278,14 +278,14 @@ AnnotMeta *annot;
     { /* @@ when creating a new annot, we don't yet know the URL;
          perhaps we should use the POST server name here? */
       GetServerName (tmp, server);
-      AnnotFilter_add (&(AnnotMetaData[source_doc].servers), server);
+      AnnotFilter_add (&(AnnotMetaData[source_doc].servers), server, annot);
     }
   else
     server[0] = WC_EOS;
 
   tmp = TtaGetMemory (ustrlen (annot->author) + ustrlen (server) + 4);
   usprintf (tmp, "%s@%s", annot->author, server);
-  AnnotFilter_add (&(AnnotMetaData[source_doc].authors), tmp);
+  AnnotFilter_add (&(AnnotMetaData[source_doc].authors), tmp, annot);
   TtaFreeMemory (tmp);
 }
 
@@ -427,26 +427,36 @@ void LINK_DeleteLink (source_doc)
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-AnnotMeta* LINK_CreateMeta (Document source_doc, Document annot_doc, CHAR_T *labf, int c1, CHAR_T *labl, int cl)
+AnnotMeta* LINK_CreateMeta (Document source_doc, Document annot_doc)
 #else /* __STDC__*/
-AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
-     Document source_doc;
-     Document annot_doc;
-     CHAR_T *  labf;
-     int      c1;
-     CHAR_T *  labl;
-     int      cl;
+AnnotMeta* LINK_CreateMeta (source_doc, annot_doc)
+Document source_doc;
+Document annot_doc;
 #endif /* __STDC__*/
 {
   AnnotMeta   *annot;
   CHAR_T      *annot_user;
-
+  
   /*
   **  Make a new annotation entry, add it to annotlist, and initialize it.
   */
   annot =  AnnotMeta_new ();
-  List_add (&(AnnotMetaData[source_doc].annotations), (void *) annot);
+  if (!IsW3Path (DocumentURLs[annot_doc]) && 
+      (!AnnotMetaData[source_doc].annotations 
+       && !AnnotMetaData[source_doc].local_annot_loaded))
+    {
+      CHAR_T *annotIndex;
 
+      /* download the local annotations, if they do exist, but mark them
+	 invisible */
+      annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[source_doc]);
+      LINK_LoadAnnotationIndex (source_doc, annotIndex, FALSE);
+      TtaFreeMemory (annotIndex);
+      AnnotMetaData[source_doc].local_annot_loaded = TRUE;
+    }
+
+  List_add (&(AnnotMetaData[source_doc].annotations), (void *) annot);
+  
   if (IsW3Path (DocumentURLs[source_doc])
       || IsFilePath(DocumentURLs[source_doc]))
     annot->source_url = TtaStrdup (DocumentURLs[source_doc]);
@@ -455,11 +465,6 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
       annot->source_url = TtaAllocString (strlen (DocumentURLs[source_doc])+7);
       sprintf (annot->source_url, "file://%s", DocumentURLs[source_doc]);
     }
-
-  ustrcpy (annot->labf, labf);
-  annot->c1 = c1;
-  ustrcpy (annot->labl, labl);
-  annot->cl = cl;
 
   /* get the current date... cdate = mdate at this stage */
   annot->cdate = StrdupDate ();
@@ -512,18 +517,20 @@ void LINK_DelMetaFromMemory (Document doc)
 }
 
 /*-----------------------------------------------------------------------
-   LINK_LoadAnnotationIndex (doc, char *annotIndex)
+   LINK_LoadAnnotationIndex
    -----------------------------------------------------------------------
    Searches for an annotation index related to the document. If it exists,
-   it parses it and then displays all of its annotations
+   it parses it and then, if the variable mark_visible is set true, adds
+   links to them from the source document.
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_LoadAnnotationIndex (Document doc, CHAR_T *annotIndex)
+void LINK_LoadAnnotationIndex (Document doc, CHAR_T *annotIndex, ThotBool mark_visible)
 #else /* __STDC__*/
-void LINK_LoadAnnotationIndex (doc, annotIndex)
+void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
      Document doc;
      CHAR_T *annotIndex;
+     ThotBool mark_visible;
 #endif /* __STDC__*/
 {
   View    view;
@@ -543,7 +550,6 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
     return;
 
   /* Insert the annotations in the body */
-  /* @@@ possible memory bug */
   view = TtaGetViewFromName (doc, "Formatted_view");
   body = SearchElementInDoc (doc, HTML_EL_BODY);
   
@@ -563,20 +569,31 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
 #endif
 	{
 	  /* don't add an annotation if it's already on the list */
-	  /* @@ later, Ralph will add code to delete the old one */
+	  /* @@ JK: later, Ralph will add code to delete the old one.
+	   We should remove the old annotations and preserve the newer
+	   ones. Take into account that an anotation window may be open
+	   and that we'll have to close it without saving... or just update
+	   the metadata... */
+	  
 	  old_annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations,
 					     annot->annot_url, AM_ANNOT_URL);
 	  if (!old_annot)
 	    {
-	      /* create the reverse link name */
-	      LINK_CreateAName (annot);
-	      LINK_AddLinkToSource (doc, annot);
+	      if (mark_visible)
+		{
+		  /* create the reverse link name */
+		  LINK_CreateAName (annot);
+		  LINK_AddLinkToSource (doc, annot);
+		  annot->is_visible = TRUE;
+		}
+	      else
+		annot->is_visible = FALSE;
 	      List_add (&AnnotMetaData[doc].annotations, (void*) annot);
 	    }
 	  else
 	    Annot_free (annot);
 	}
-      List_delFirst (&list_ptr);
+       List_delFirst (&list_ptr);
     }
 }
 
