@@ -139,6 +139,11 @@ Thot/config/tr-transdialogue \
 Thot/config/tr-corrdialogue \
 Thot/config/thot.ini \
 Thot/config/thot.rc \
+Thot/cpp/winnt/*.bat \
+Thot/cpp/winnt/*.sed \
+Thot/cpp/winnt/*.c \
+Thot/cpp/winnt/*.h \
+Thot/cpp/winnt/*.mak \
 Thot/dicopar/*.ptn \
 Thot/dicopar/alphabet \
 Thot/dicopar/clavier \
@@ -211,6 +216,7 @@ Thot/batch/writeapp.c \
 Thot/batch/writeprs.c \
 Thot/batch/writestr.c \
 Thot/batch/writetra.c \
+Thot/batch/winthotcompilers.c \
 Thot/batch/f/app_f.h \
 Thot/batch/f/grammar_f.h \
 Thot/batch/f/parser_f.h \

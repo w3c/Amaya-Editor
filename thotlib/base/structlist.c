@@ -1523,6 +1523,8 @@ FILE               *fileDescriptor;
 			    fprintf (fileDescriptor, "COLUMN");
 			 else if (pBox->BxType == BoRow)
 			    fprintf (fileDescriptor, "ROW");
+			 else if (pBox->BxType == BoCell)
+			    fprintf (fileDescriptor, "CELL");
 			 else
 			    fprintf (fileDescriptor, "COMP");
 			 if (pAb->AbInLine || pBox->BxType == BoTable ||

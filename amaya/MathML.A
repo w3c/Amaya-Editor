@@ -25,10 +25,20 @@ ELEMENTS
 	ElemTextModify.Post -> MathStringModified;
    MTD:
 	BEGIN
-	ElemNew.Post -> NewMatrixCell;
-        ElemDelete.Pre -> DeleteMatrixCell;
-        ElemDelete.Post -> MatrixCellDeleted;
+	ElemNew.Post -> CellCreated;
+	ElemPaste.Post -> CellPasted;
+	ElemDelete.Pre -> DeleteCell;
+	ElemDelete.Post -> CellDeleted;
 	END;
+   MTR:
+	BEGIN
+	ElemNew.Post -> RowCreated;
+	ElemPaste.Post -> RowPasted;
+	ElemDelete.Pre -> DeleteRow;
+	ElemDelete.Post -> RowDeleted;
+	END;
+   MTABLE:
+	ElemNew.Post -> TableCreated;
    TEXT_UNIT:
 	ElemNew.Post -> NewMathString;
 

@@ -177,8 +177,9 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
   DisplayMode       displayMode;
+  PtrAbstractBox    pAb;
   int               i, h, frame;
-  boolean           modifiedAbWillBeFree, rootAbWillBeFree;
+  boolean           rootAbWillBeFree;
 
   displayMode = documentDisplayMode[IdentDocument (pDoc) - 1];
   if (displayMode == NoComputedDisplay || displayMode == SuspendDisplay)
@@ -191,12 +192,11 @@ PtrDocument         pDoc;
 	/* on ne s'occupe pas de la hauteur de page */
 	h = 0;
 	frame = pDoc->DocAssocFrame[i];
-	ChangeConcreteImage (frame, &h, pDoc->DocAssocModifiedAb[i]);
+	pAb = pDoc->DocAssocModifiedAb[i];
+	pDoc->DocAssocModifiedAb[i] = NULL;
+	ChangeConcreteImage (frame, &h, pAb);
 	/* libere les paves morts */
-	modifiedAbWillBeFree = pDoc->DocAssocModifiedAb[i]->AbDead;
-	FreeDeadAbstractBoxes (pDoc->DocAssocModifiedAb[i], frame);
-	if (modifiedAbWillBeFree)
-	  pDoc->DocAssocModifiedAb[i] = NULL;
+	FreeDeadAbstractBoxes (pAb, frame);
       }
 
   /* dans les vues de l'arbre principal du document */
@@ -207,15 +207,14 @@ PtrDocument         pDoc;
 	/* on ne s'occupe pas de la hauteur de page */
 	h = 0;
 	frame = pDoc->DocViewFrame[i];
-	ChangeConcreteImage (frame, &h, pDoc->DocViewModifiedAb[i]);
+	pAb = pDoc->DocViewModifiedAb[i];
+	pDoc->DocViewModifiedAb[i] = NULL;
+	ChangeConcreteImage (frame, &h, pAb);
 	/* libere les paves morts */
-	modifiedAbWillBeFree = pDoc->DocViewModifiedAb[i]->AbDead;
 	rootAbWillBeFree = pDoc->DocViewRootAb[i]->AbDead;
-	FreeDeadAbstractBoxes (pDoc->DocViewModifiedAb[i], frame);
-	if (modifiedAbWillBeFree)
-	  pDoc->DocViewModifiedAb[i] = NULL;
 	if (rootAbWillBeFree)
 	  pDoc->DocViewRootAb[i] = NULL;
+	FreeDeadAbstractBoxes (pAb, frame);
       }
 }
 

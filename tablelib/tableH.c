@@ -687,6 +687,9 @@ printf("<<<<<<<<<<<<<<<%d\n", table->AbBox->BxWidth);
       /* how many columns can be modified and what is current values */
       realMin += pBox->BxMinWidth;
       realMax += pBox->BxMaxWidth;
+      if (colPercent[cRef] != 0 &&
+	  (colPercent[cRef] * 100 / width) < pBox->BxMinWidth)
+	colPercent[cRef] = 0;
       if (colPercent[cRef] != 0)
 	sumPercent += colPercent[cRef];
       else if (colWidth[cRef] != 0)
@@ -747,22 +750,13 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
     delta = 0;
   if (sumPercent + delta > 100 && sumPercent > 0)
     {
-      /* reduce each colPercent */
-      val = sumPercent + delta - 100;
-      n = 0;
-      for (cRef = 0; cRef < cNumber; cRef++)
-	if (colPercent[cRef] != 0)
-	  n++;
-      delta = (val + n - 1) / n;
+      /* remove each colPercent */
       sumPercent = 0;
       for (cRef = 0; cRef < cNumber; cRef++)
-	if (colPercent[cRef] != 0)
-	  {
-	    colPercent[cRef] -= delta;
-	    sumPercent += colPercent[cRef];
-	  }
+	colPercent[cRef] = 0;
     }
-  sumPercent = sumPercent * width / 100;
+  else
+    sumPercent = sumPercent * width / 100;
   min = min + sum + sumPercent;
   max = max + sum + sumPercent;
   var = var + sumPercent;
@@ -1313,6 +1307,14 @@ int             frame;
 			{
 			  if (GiveAttrWidth (cell, &cellWidth, &percent))
 			    {
+			      /*percent += delta / table->AbBox.BxWidth;*/
+			      if (percent > colPercent[cRef] && span == 1)
+				colPercent[cRef] = percent;
+			    }
+
+			  /* change the cell width rule if needed */
+			  if (span == 1 && cell->AbWidth.DimAbRef != colBox[cRef])
+			    {
 			      /* there is a column width attribute */
 			      if (cell->AbPrevious != NULL &&
 				  cell->AbPrevious->AbPresentationBox)
@@ -1320,28 +1322,11 @@ int             frame;
 				delta = cell->AbPrevious->AbWidth.DimValue;
 			      else
 				delta = 0;
-			      if (cellWidth > 0)
-				{
-				  cellWidth += delta;
-				  if (cellWidth > colWidth[cRef] && span == 1)
-				    colWidth[cRef] = cellWidth;
-				}
-			      else
-				{
-				  /*percent += delta / table->AbBox.BxWidth;*/
-				  if (percent > colPercent[cRef] && span == 1)
-				    colPercent[cRef] = percent;
-				}
-
-			      /* change the cell width rule if needed */
-			      if (span == 1 && cell->AbWidth.DimAbRef != colBox[cRef])
-				{
-				  cell->AbWidth.DimAbRef = colBox[cRef];
-				  cell->AbWidth.DimValue = -delta;
-				  cell->AbWidth.DimUnit = UnPixel;
-				  cell->AbWidth.DimSameDimension = TRUE;
-				  ComputeDimRelation (cell, frame, TRUE);
-				}
+			      cell->AbWidth.DimAbRef = colBox[cRef];
+			      cell->AbWidth.DimValue = -delta;
+			      cell->AbWidth.DimUnit = UnPixel;
+			      cell->AbWidth.DimSameDimension = TRUE;
+			      ComputeDimRelation (cell, frame, TRUE);
 			    }
 
 			  /* process elements in this cell */
@@ -1405,7 +1390,10 @@ int             frame;
 			    {
 			      colSpan_MinWidth[spanNumber] = min;
 			      colSpan_MaxWidth[spanNumber] = max;
-			      colSpan_Width[spanNumber] = cellWidth;
+			      if (cellWidth >= min)
+				colSpan_Width[spanNumber] = cellWidth;
+			      else
+				colSpan_Width[spanNumber] = 0;
 			      colSpan_Percent[spanNumber] = percent;
 			      colSpan_First[spanNumber] = cRef;
 			      colSpan_Last[spanNumber] = cRef + span - 1;
@@ -1428,6 +1416,14 @@ int             frame;
 				colMinWidth[cRef] = min + delta;
 			      if (colMaxWidth[cRef] < max + delta)
 				colMaxWidth[cRef] = max + delta;
+			      if (cellWidth >= colMinWidth[cRef])
+				{
+				  if (cellWidth > colWidth[cRef])
+				    colWidth[cRef] = cellWidth;
+				}
+			      else
+				/* we need to apply the min rule */
+				colWidth[cRef] = 0;
 			    }
 			}
 		      /* next column */
@@ -1765,7 +1761,8 @@ int              frame;
       (col != NULL || span > 1))
     {
       /* the table exists, compute the column width */
-      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
+      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately ||
+	  documentDisplayMode[FrameTable[frame].FrDoc - 1] == DeferredDisplay)
 	ComputeColWidth (col, table, frame);
       else
 	SaveColUpdate (col, table, frame);

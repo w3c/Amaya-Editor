@@ -224,7 +224,6 @@ THOT_EXPORT boolean      SelectionInB;
 THOT_EXPORT boolean      SelectionInTT;
 THOT_EXPORT boolean      SelectionInBIG;
 THOT_EXPORT boolean      SelectionInSMALL;
-
 typedef enum
 {
   docHTML,

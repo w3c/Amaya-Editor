@@ -116,6 +116,8 @@ MENUS
         Types.Math button:BParentheses -> CreateMROW;
         Types.Math button:BMultiscripts -> CreateMMULTISCRIPTS;
         Types.Math button:BMatrix -> CreateMTABLE;
+	Types.Math Separator;
+	Types.Math button:BDeleteMColumn -> DeleteMColumn;
 
 	Types button:BNoScript -> CreateNOSCRIPT;
 

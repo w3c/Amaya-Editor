@@ -36,8 +36,8 @@ extern void SetVertStretchAttr ( Element el,
                                  Document doc,
                                  int base,
                                  Element* selEl );
-extern void LinkMathCellsWithColumnHeads ( Element elMTABLE,
-                                           Document doc );
+extern void CheckMTable ( Element elMTABLE,
+			  Document doc );
 extern void SetFontstyleAttr ( Element el,
                                Document doc );
 extern void SetAddspaceAttr ( Element el,
@@ -91,8 +91,8 @@ extern void SetVertStretchAttr (/* Element el,
                                    Document doc,
                                    int base,
                                    Element* selEl */);
-extern void LinkMathCellsWithColumnHeads (/* Element elMTABLE,
-                                             Document doc */);
+extern void CheckMTable (/* Element elMTABLE,
+			    Document doc */);
 extern void SetFontstyleAttr (/* Element el,
                                  Document doc */);
 extern void SetAddspaceAttr (/* Element el,

@@ -52,9 +52,10 @@ static boolean	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
 static Element	CurrentMatrixColumn = NULL;
 
+#include "HTMLtable_f.h"
+#include "MathMLbuilder_f.h"
 #include "html2thot_f.h"
 #include "trans_f.h"
-#include "MathMLbuilder_f.h"
 #ifdef _WINDOWS
 #include "windialogapi_f.h"
 #define iconMath 21 
@@ -357,12 +358,12 @@ int                 construct;
 {
   Document           doc;
   Element            sibling, last, el, row, fence, symbol, child, leaf,
-		     placeholderEl, parent;
+		     placeholderEl, parent, new;
   ElementType        newType, elType, symbType;
   SSchema            docSchema, mathSchema;
   int                c1, c2, i, j, len;
   boolean	     before, ParBlock, surround, insertSibling,
-		     selectFirstChild;
+		     selectFirstChild, displayTableForm;
 
       doc = TtaGetSelectedDocument ();
       TtaGiveLastSelectedElement (doc, &last, &c2, &j);
@@ -611,6 +612,35 @@ int                 construct;
 	  newType.ElTypeNum = MathML_EL_MMULTISCRIPTS;
 	  break;
 	case 13:
+	  displayTableForm = TtaIsSelectionEmpty ();
+	  if (displayTableForm)
+	    {
+	      NumberRows = 2;
+	      NumberCols = 2;
+#  ifdef _WINDOWS
+#  else  /* !_WINDOWS */
+	      TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (doc, 1),
+			  TtaGetMessage (1, BMatrix), TRUE, 1, 'L', D_CANCEL);
+	      TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
+				TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
+	      TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm,
+				TtaGetMessage (AMAYA, AM_ROWS), 1, 200, TRUE);
+	      TtaSetNumberForm (BaseDialog + TableCols, NumberCols);
+	      TtaSetNumberForm (BaseDialog + TableRows, NumberRows);
+	      TtaSetDialoguePosition ();
+	      TtaShowDialogue (BaseDialog + TableForm, FALSE);
+	      /* wait for an answer */
+	      TtaWaitShowDialogue ();
+	      if (!UserAnswer)
+		return;
+#  endif /* !_WINDOWS */
+	    }
+	  else
+	    {
+	      NumberRows = 0;
+	      NumberCols = 0;
+	    }
+
 	  newType.ElTypeNum = MathML_EL_MTABLE;
 	  selectFirstChild = FALSE;	/* select the second component */
 	  break;
@@ -622,7 +652,6 @@ int                 construct;
 	  TtaUnselect (doc);
 
           el = TtaNewTree (doc, newType, "");
-
 	  /* do not check the Thot abstract tree against the structure */
 	  /* schema while changing the structure */
 	  TtaSetStructureChecking (0, doc);
@@ -697,6 +726,35 @@ int                 construct;
 	    }
 	  
 	  CreateParentMROW (el, doc);
+
+	  if (newType.ElTypeNum == MathML_EL_MTABLE &&
+	      (NumberRows > 1 || NumberCols > 1))
+	    {
+	      /* create the required number of columns and rows in the table */
+	      if (NumberCols > 1)
+		{
+		  elType.ElTypeNum = MathML_EL_MTD;
+		  child = TtaSearchTypedElement (elType, SearchInTree, el);
+		  while (NumberCols > 1)
+		    {
+		      new = TtaNewTree (doc, elType, "");
+		      TtaInsertSibling (new, child, FALSE, doc);
+		      NumberCols--;
+		    }
+		}
+	      if (NumberRows > 1)
+		{
+		  elType.ElTypeNum = MathML_EL_MTR;
+		  row = TtaSearchTypedElement (elType, SearchInTree, el);
+		  while (NumberRows > 1)
+		    {
+		      new = TtaNewTree (doc, elType, "");
+		      TtaInsertSibling (new, row, FALSE, doc);
+		      NumberRows--;
+		    }
+		}
+	      CheckAllRows (el, doc);
+	    }
 
 	  /* if the new element is a child of a FencedExpression element,
 	     create the associated FencedSeparator elements */
@@ -1735,31 +1793,6 @@ void NewMathString(event)
 }
 
 /*----------------------------------------------------------------------
- NewMatrixCell
- An new cell (MTD) has been created in a matrix (MTABLE).
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void NewMatrixCell (NotifyElement *event)
-#else /* __STDC__*/
-void NewMatrixCell (event)
-     NotifyElement *event;
-#endif /* __STDC__*/
-{
-   ElementType	elType;
-   Element	table;
-   DisplayMode	dispMode;
-
-   dispMode = TtaGetDisplayMode (event->document);
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (event->document, DeferredDisplay);
-   elType = TtaGetElementType (event->element);
-   elType.ElTypeNum = MathML_EL_MTABLE;
-   table = TtaGetTypedAncestor (event->element, elType);
-   LinkMathCellsWithColumnHeads (table, event->document);
-   TtaSetDisplayMode (event->document, dispMode);
-}
-
-/*----------------------------------------------------------------------
  MathElementPasted
  An element has been pasted in a MathML structure.
  Create placeholders before and after the pasted elements if necessary.
@@ -1775,13 +1808,6 @@ void MathElementPasted(event)
    ElementType	elType;
 
    elType = TtaGetElementType (event->element);
-   if (elType.ElTypeNum == MathML_EL_MTD)
-      /* it's a cell in a matrix */
-      {
-      NewMatrixCell (event);
-      return;
-      }
-
    TtaSetStructureChecking (0, event->document);
 
    /* if the new element is a child of a FencedExpression element,
@@ -1836,151 +1862,53 @@ boolean MathElementWillBeDeleted(event)
 
 
 /*----------------------------------------------------------------------
-   GetMatrixCellFromColumnHead
- 
-   returns the cell that corresponds to the MColumn_head element colhead
-   in a given matrix row.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      GetMatrixCellFromColumnHead (Element row, Element colhead)
-#else
-static Element      GetMatrixCellFromColumnHead (row, colhead)
-Element             row;
-Element             colhead;
-#endif
+void                DeleteMColumn (Document document, View view)
+#else  /* __STDC__ */
+void                DeleteMColumn (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
 {
-   Element             cell, currentcolhead;
-   boolean             found;
+   Element             el, cell;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr;
+   Document            refDoc;
    char                name[50];
-   Document            refdoc;
- 
-   cell = TtaGetFirstChild (row);
-   found = FALSE;
-   while (cell != NULL && !found)
+   int                 firstchar, lastchar;
+
+   /* get the first selected element */
+   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
+   if (el != NULL)
      {
-        elType = TtaGetElementType (cell);
-        if (elType.ElTypeNum == MathML_EL_MTD)
-          {
-             attrType.AttrSSchema = elType.ElSSchema;
-             attrType.AttrTypeNum = MathML_ATTR_MRef_column;
-             attr = TtaGetAttribute (cell, attrType);
-             if (attr != NULL)
-               {
-                  TtaGiveReferenceAttributeValue (attr, &currentcolhead, name, &refdoc);
-                  if (currentcolhead == colhead)
-                     found = TRUE;
-               }
-          }
-        if (!found)
-           TtaNextSibling (&cell);
-     }
-   return cell;
-}
-
-/*----------------------------------------------------------------------
-   DeleteMatrixCell
-   A MTD element will be deleted
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean             DeleteMatrixCell (NotifyElement * event)
-#else
-boolean             DeleteMatrixCell (event)
-NotifyElement      *event;
-#endif
-{
-  ElementType	elType;
-  AttributeType	attrType;
-  Attribute	attr;
-  Document	refDoc;
-  char		name[50];
-
-  /* remember the column head corresponding to the cell that will be deleted */
-  elType = TtaGetElementType (event->element);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = MathML_ATTR_MRef_column;
-  attr = TtaGetAttribute (event->element, attrType);
-  if (attr != NULL)
-    TtaGiveReferenceAttributeValue (attr, &CurrentMatrixColumn, name, &refDoc);
-  else
-    CurrentMatrixColumn = NULL;
-  /* let Thot perform normal operation */
-  return FALSE;
-}
-
-
-/*----------------------------------------------------------------------
-   MatrixCellDeleted
-   A MTD element has been deleted
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                MatrixCellDeleted (NotifyElement * event)
-#else
-void                MatrixCellDeleted (event)
-NotifyElement      *event;
-#endif
-{
-   ElementType	elType;
-   Element	table, firstrow, row, cell;
-   SSchema	MathMLSSchema;
-   DisplayMode	dispMode;
-   boolean	empty;
-
-   /* is the corresponding column empty? */
-   empty = FALSE;
-   MathMLSSchema = GetMathMLSSchema (event->document);
-   elType.ElSSchema = MathMLSSchema;
-   elType.ElTypeNum = MathML_EL_MTABLE;
-   table = TtaGetTypedAncestor (event->element, elType);
-   elType.ElTypeNum = MathML_EL_MTR;
-   firstrow = TtaSearchTypedElement (elType, SearchForward, table);
-   if (CurrentMatrixColumn && firstrow)
-      {
-      empty = TRUE;
-      row = firstrow;
-      while (row && empty)
-	{
-	elType = TtaGetElementType (row);
-	if (elType.ElTypeNum == MathML_EL_MTR &&
-	    TtaSameSSchemas (elType.ElSSchema, MathMLSSchema))
-	   {
-           cell = GetMatrixCellFromColumnHead (row, CurrentMatrixColumn);
-	   if (cell && TtaGetVolume (cell) != 0)
-	      empty = FALSE;
-	   }
-	TtaNextSibling (&row);
-	}
-      }
-   if (!empty)
-      LinkMathCellsWithColumnHeads (table, event->document);
-   else
-      /* the column is empty. Delete all cells for that column */
-      {
-      dispMode = TtaGetDisplayMode (event->document);
-      if (dispMode == DisplayImmediately)
-         TtaSetDisplayMode (event->document, DeferredDisplay);
-      row = firstrow;
-      while (row)
+       elType = TtaGetElementType (el);
+       if (elType.ElSSchema == GetMathMLSSchema (document))
 	 {
-	 elType = TtaGetElementType (row);
-	 if (elType.ElTypeNum == MathML_EL_MTR &&
-	     TtaSameSSchemas (elType.ElSSchema, MathMLSSchema))
-	    {
-	    cell = GetMatrixCellFromColumnHead (row, CurrentMatrixColumn);
-	    if (cell)
-	       TtaDeleteTree (cell, event->document);
-	    }
-	 TtaNextSibling (&row);
-         }
-      /* Delete the column head */
-      TtaDeleteTree (CurrentMatrixColumn, event->document);
-      CurrentMatrixColumn = NULL;
-      TtaSetDisplayMode (event->document, dispMode);
-      }
+	   if (elType.ElTypeNum != MathML_EL_MTD)
+	     {
+	       elType.ElTypeNum = MathML_EL_MTD;
+	       cell = TtaGetTypedAncestor (el, elType);
+	     }
+	   else
+	     cell = el;
+	   if (cell != NULL)
+	     {
+	       attrType.AttrSSchema = elType.ElSSchema;
+	       /* get current column */
+	       attrType.AttrTypeNum = MathML_ATTR_MRef_column;
+	       attr = TtaGetAttribute (cell, attrType);
+	       if (attr != NULL)
+		 {
+		   TtaGiveReferenceAttributeValue (attr, &el, name, &refDoc);
+		   RemoveColumn (el, document, FALSE, TRUE);
+		 }
+	     }
+	 }
+     }
 }
-
 
 /*----------------------------------------------------------------------
  MathElementDeleted

@@ -89,85 +89,86 @@
 88 Term in Klammern (mf)
 89 Term mit Indices links/rechts oben/unten (mmultiscripts)
 90 **Matrix (mtable)
-91 NOSCRIPT
-92 Objekt
-93 OBJECT
-94 Parameter (PARAM)
-95 Absatz (P)
-96 Vorformatierter Text (PRE)
-97 Tabelle 
-98 TABLE...
-99 Überschrift (CAPTION)
-100 Kopfzeile (THEAD)
-101 Tabellenblock (TBODY)
-102 Fußzeile (TFOOT)
-103 Zeile (TR)
-104 Zelle (TD)
-105 Kopfzelle (TH)
-106 **Delete column
-107 Markierung als Verknüfung definieren...
-108 Markierung als Verknüpfungsziel definieren
-109 Verknüpfungsziel ändern...
-110 Verknüpfungsziel löschen
-111 Symbolleiste
-112 Dokumentadresse und -titel 
-113 Aktive Grafikbereiche markieren
-114 **Show Targets
-115 **Zoom In
-116 **Zoom Out
-117 Strukturfenster
-118 Textbrowserfenster
-119 Verknüpfungsfenster
-120 Inhaltsverzeichnisfenster
-121 Zeichen...
-122 Farben...
-123 Ausrichtung...
-124 Hintergrundbild...
-125 Format in Stylesheet übernehmen...
-126 Klasse anwenden...
-127 Stylesheets bearbeiten
-128 logische Formate
-129 Betont (EM)
-130 Hervorgehoben (STRONG)
-131 Zitat (CITE)
-132 Definition (DFN)
-133 Programmtext (CODE)
-134 Variablenwert (VAR)
-135 Beispiel (SAMP)
-136 Tastatureingabe (KBD)
-137 ** (ABBR)
-138 ** (ACRONYM)
-139 ** (INS)
-140 ** (DEL)
-141 direkte Zeichenformate
-142 kursiv (I)
-143 fett (B)
-144 Schreibmaschinenschrift (TT)
-145 größer (BIG)
-146 kleiner (SMALL)
-147 tiefgestellt (SUB)
-148 hochgestellt (SUP)
-149 ** (Q)
-150 ** (BDO)
-151 Abschnittsnummern
-152 Buch zusammenfügen
-153 **Purge cache
-154 Info
-155 Verknüpfungen folgen/Dokumente öffnen
-156 Auswählen
-157 Suchen
-158 Ansichten
-159 Einfügen von Elementen
-160 Verknüpfungen bearbeiten
-161 Umformatieren
-162 Tabellen
-163 Formeln
-164 Aktive Grafikbereiche
-165 Formate/Stylesheets
-166 Attribute
-167 Rechtschreibung
-168 Speichern/Publizieren
-169 Drucken
-170 Abschnittsnummern
-171 Buch zusammenfügen
-172 Konfiguration
+91 **Delete matrix column
+92 NOSCRIPT
+93 Objekt
+94 OBJECT
+95 Parameter (PARAM)
+96 Absatz (P)
+97 Vorformatierter Text (PRE)
+98 Tabelle 
+99 TABLE
+100 Überschrift (CAPTION)
+101 Kopfzeile (THEAD)
+102 Tabellenblock (TBODY)
+103 Fußzeile (TFOOT)
+104 Zeile (TR)
+105 Zelle (TD)
+106 Kopfzelle (TH)
+107 **Delete table column
+108 Markierung als Verknüfung definieren...
+109 Markierung als Verknüpfungsziel definieren
+110 Verknüpfungsziel ändern...
+111 Verknüpfungsziel löschen
+112 Symbolleiste
+113 Dokumentadresse und -titel 
+114 Aktive Grafikbereiche markieren
+115 **Show Targets
+116 **Zoom In
+117 **Zoom Out
+118 Strukturfenster
+119 Textbrowserfenster
+120 Verknüpfungsfenster
+121 Inhaltsverzeichnisfenster
+122 Zeichen...
+123 Farben...
+124 Ausrichtung...
+125 Hintergrundbild...
+126 Format in Stylesheet übernehmen...
+127 Klasse anwenden...
+128 Stylesheets bearbeiten
+129 logische Formate
+130 Betont (EM)
+131 Hervorgehoben (STRONG)
+132 Zitat (CITE)
+133 Definition (DFN)
+134 Programmtext (CODE)
+135 Variablenwert (VAR)
+136 Beispiel (SAMP)
+137 Tastatureingabe (KBD)
+138 ** (ABBR)
+139 ** (ACRONYM)
+140 ** (INS)
+141 ** (DEL)
+142 direkte Zeichenformate
+143 kursiv (I)
+144 fett (B)
+145 Schreibmaschinenschrift (TT)
+146 größer (BIG)
+147 kleiner (SMALL)
+148 tiefgestellt (SUB)
+149 hochgestellt (SUP)
+150 ** (Q)
+151 ** (BDO)
+152 Abschnittsnummern
+153 Buch zusammenfügen
+154 **Purge cache
+155 Info
+156 Verknüpfungen folgen/Dokumente öffnen
+157 Auswählen
+158 Suchen
+159 Ansichten
+160 Einfügen von Elementen
+161 Verknüpfungen bearbeiten
+162 Umformatieren
+163 Tabellen
+164 Formeln
+165 Aktive Grafikbereiche
+166 Formate/Stylesheets
+167 Attribute
+168 Rechtschreibung
+169 Speichern/Publizieren
+170 Drucken
+171 Abschnittsnummern
+172 Buch zusammenfügen
+173 Konfiguration

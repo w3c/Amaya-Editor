@@ -89,85 +89,86 @@
 88 Parenth\350ses (mf)
 89 Multiscripts (mmultiscripts)
 90 Matrice (mtable)
-91 NOSCRIPT
-92 Objet
-93 OBJECT
-94 Param\350tre (PARAM)
-95 Paragraphe (P)
-96 Pr\351format\351 (PRE)
-97 Table
-98 TABLE...
-99 L\351gende (CAPTION)
-100 T\352ti\350re (THEAD)
-101 Corps (TBODY)
-102 Pied (TFOOT)
-103 Ligne (TR)
-104 Cellule (TD)
-105 Cellule de t\352te (TH)
-106 D\351 colonne
-107 Cr\351er lien...
-108 Cr\351er cible
-109 Changer lien...
-110 D\351truire ancre
-111 Montrer boutons
-112 Montrer adresse et titre
-113 Montrer les zones actives
-114 Montrer les cibles
-115 Grossir
-116 R\351duire
-117 Montrer la structure
-118 Montrer la vue altern\351e
-119 Montrer les liens
-120 Montrer la table des mati\350res
-121 Style de caract\350res...
-122 Couleurs...
-123 Format...
-124 Image de fond...
-125 Cr\351er une r\350gle...
-126 Appliquer une classe...
-127 Feuilles de style
-128 Types information
-129 Emphase
-130 Strong
-131 Cite
-132 D\351finition
-133 Code
-134 Variable
-135 Sample
-136 Keyboard
-137 Abr\351viation
-138 Acronyme
-139 Insertion
-140 Suppression
-141 El\351ments caract\350res
-142 Italique
-143 Gras
-144 T\351l\351type
-145 Gros
-146 Petit
-147 Indice
-148 Exposant
-149 Citation (Q)
-150 BiDi (BDO)
-151 Num\351roter les sections
-152 Construire un livre
-153 Nettoyer le cache
-154 A propos de Amaya
-155 Naviguation
-156 S\351lection
-157 Chercher
-158 Vues
-159 Cr\351ation
-160 Liens
-161 Transformer
-162 Tables
-163 Math
-164 Zones actives
-165 Feuilles de style
-166 Attributs
-167 Corriger
-168 Publier
-169 Imprimer
-170 Num\351roter
-171 Construire un livre
-172 Configurer Amaya
+91 D\351truire colonne de matrice
+92 NOSCRIPT
+93 Objet
+94 OBJECT
+95 Param\350tre (PARAM)
+96 Paragraphe (P)
+97 Pr\351format\351 (PRE)
+98 Table
+99 TABLE
+100 L\351gende (CAPTION)
+101 T\352ti\350re (THEAD)
+102 Corps (TBODY)
+103 Pied (TFOOT)
+104 Ligne (TR)
+105 Cellule (TD)
+106 Cellule de t\352te (TH)
+107 D\351truire colonne de table
+108 Cr\351er lien...
+109 Cr\351er cible
+110 Changer lien...
+111 D\351truire ancre
+112 Montrer boutons
+113 Montrer adresse et titre
+114 Montrer les zones actives
+115 Montrer les cibles
+116 Grossir
+117 R\351duire
+118 Montrer la structure
+119 Montrer la vue altern\351e
+120 Montrer les liens
+121 Montrer la table des mati\350res
+122 Style de caract\350res...
+123 Couleurs...
+124 Format...
+125 Image de fond...
+126 Cr\351er une r\350gle...
+127 Appliquer une classe...
+128 Feuilles de style
+129 Types information
+130 Emphase
+131 Strong
+132 Cite
+133 D\351finition
+134 Code
+135 Variable
+136 Sample
+137 Keyboard
+138 Abr\351viation
+139 Acronyme
+140 Insertion
+141 Suppression
+142 El\351ments caract\350res
+143 Italique
+144 Gras
+145 T\351l\351type
+146 Gros
+147 Petit
+148 Indice
+149 Exposant
+150 Citation (Q)
+151 BiDi (BDO)
+152 Num\351roter les sections
+153 Construire un livre
+154 Nettoyer le cache
+155 A propos de Amaya
+156 Naviguation
+157 S\351lection
+158 Chercher
+159 Vues
+160 Cr\351ation
+161 Liens
+162 Transformer
+163 Tables
+164 Math
+165 Zones actives
+166 Feuilles de style
+167 Attributs
+168 Corriger
+169 Publier
+170 Imprimer
+171 Num\351roter
+172 Construire un livre
+173 Configurer Amaya

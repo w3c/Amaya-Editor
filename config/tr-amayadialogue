@@ -89,85 +89,86 @@
 88 Parantezler (mf)
 89 Multiscripts (mmultiscripts)
 90 Matris (mtable)
-91 NOSCRIPT
-92 Nesne
-93 OBJECT
-94 Parametre (PARAM)
-95 Paragraf (P)
-96 Preformatted (PRE)
-97 Tablo
-98 TABLE
-99 Altyazý (CAPTION)
-100 THEAD
-101 TBODY
-102 TFOOT
-103 Sýra (TR)
-104 Veri hücresi (TD)
-105 Baþlýk hücresi (TH)
-106 **Delete column
-107 Baðlantý yarat...
-108 Hedef yarat
-109 Baðlantý yarat...
-110 <A> tanýmý sil
-111 Tuþlarý göster
-112 Adres ve baþlýðý göster
-113 Yakýnlaþtýr
-114 **Show Targets
-115 Uzaklaþtýr
-116 Harita alanlarýný göster
-117 Yapýyý göster
-118 Alternatif gösterim
-119 Baðlantýlarý göster
-120 Ýçindekileri göster
-121 Karakter tarzý...
-122 Renkler...
-123 Biçim...
-124 Arkaplan görüntüsü...
-125 Kural yarat...
-126 \'class\' uygula...
-127 Tarzý tanýmlarý
-128 Bilgi türü
-129 Vurgu
-130 Kuvvetli
-131 Cite
-132 Taným
-133 Kod
-134 Deðiþken
-135 Örnek
-136 Tuþtakýmý
-137 **Abbreviation
-138 **Acronym
-139 **Insertion
-140 **Deletion
-141 Karakter birimi
-142 Ýtalik
-143 Kalýn
-144 Teletype
-145 Büyük
-146 Küçük
-147 Alt
-148 Üst
-149 **Quotation
-150 **BDO
-151 Bölüm numaralandýrmasý
-152 Kitap yap
-153 **Purge cache
-154 Amaya hakkýnda
-155 Tarama
-156 Seçme
-157 Arama
-158 Görünümler
-159 Birim yaratma
-160 Baðlantýlar
-161 Yeniden yapýlandýrma
-162 Tablolar
-163 Matematik
-164 Görüntü haritalarý
-165 Tarz tanýmlarý
-166 Özellikler
-167 Yazým hatalarý aranýyor
-168 Sayfa yerleþtirme
-169 Bastýrma
-170 Numaralandýrmasý
-171 Kitap oluþturma
-172 Amaya yapýlandýrmasý
+91 **Delete matris column
+92 NOSCRIPT
+93 Nesne
+94 OBJECT
+95 Parametre (PARAM)
+96 Paragraf (P)
+97 Preformatted (PRE)
+98 Tablo
+99 TABLE
+100 Altyazý (CAPTION)
+101 THEAD
+102 TBODY
+103 TFOOT
+104 Sýra (TR)
+105 Veri hücresi (TD)
+106 Baþlýk hücresi (TH)
+107 **Delete table column
+108 Baðlantý yarat...
+109 Hedef yarat
+110 Baðlantý yarat...
+111 <A> tanýmý sil
+112 Tuþlarý göster
+113 Adres ve baþlýðý göster
+114 Yakýnlaþtýr
+115 **Show Targets
+116 Uzaklaþtýr
+117 Harita alanlarýný göster
+118 Yapýyý göster
+119 Alternatif gösterim
+120 Baðlantýlarý göster
+121 Ýçindekileri göster
+122 Karakter tarzý...
+123 Renkler...
+124 Biçim...
+125 Arkaplan görüntüsü...
+126 Kural yarat...
+127 \'class\' uygula...
+128 Tarzý tanýmlarý
+129 Bilgi türü
+130 Vurgu
+131 Kuvvetli
+132 Cite
+133 Taným
+134 Kod
+135 Deðiþken
+136 Örnek
+137 Tuþtakýmý
+138 **Abbreviation
+139 **Acronym
+140 **Insertion
+141 **Deletion
+142 Karakter birimi
+143 Ýtalik
+144 Kalýn
+145 Teletype
+146 Büyük
+147 Küçük
+148 Alt
+149 Üst
+150 **Quotation
+151 **BDO
+152 Bölüm numaralandýrmasý
+153 Kitap yap
+154 **Purge cache
+155 Amaya hakkýnda
+156 Tarama
+157 Seçme
+158 Arama
+159 Görünümler
+160 Birim yaratma
+161 Baðlantýlar
+162 Yeniden yapýlandýrma
+163 Tablolar
+164 Matematik
+165 Görüntü haritalarý
+166 Tarz tanýmlarý
+167 Özellikler
+168 Yazým hatalarý aranýyor
+169 Sayfa yerleþtirme
+170 Bastýrma
+171 Numaralandýrmasý
+172 Kitap oluþturma
+173 Amaya yapýlandýrmasý

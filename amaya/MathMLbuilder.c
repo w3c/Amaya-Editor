@@ -310,6 +310,8 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
 
 #define MaxMsgLength 200
 
+#include "HTMLtable_f.h"
+
 /*----------------------------------------------------------------------
    GetMathMLSSchema returns the MathML Thot schema for document doc.
   ----------------------------------------------------------------------*/
@@ -1314,134 +1316,6 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
     }
 }
 
-/*----------------------------------------------------------------------
-   LinkMathCellsWithColumnHeads
-
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void LinkMathCellsWithColumnHeads (Element elMTABLE, Document doc)
-#else /* __STDC__*/
-void LinkMathCellsWithColumnHeads (elMTABLE, doc)
-  Element	elMTABLE;
-  Document	doc;
-#endif /* __STDC__*/
-{
-  ElementType	elType;
-  Element	firstColHead, head, prevHead, nextHead, row, cell, prevCell,
-		MTableHead, MTableBody;
-  SSchema	MathMLSSchema;
-  AttributeType	attrType;
-  Attribute	attr;
-  int		nCol, nCell, nHead;
-
-  MathMLSSchema = GetMathMLSSchema (doc);
-  MTableHead = TtaGetFirstChild (elMTABLE);
-  MTableBody = MTableHead;
-  TtaNextSibling (&MTableBody);
-  firstColHead = TtaGetFirstChild (MTableHead);
-
-  /* first, create a MColumn_head for each column in the table and
-     count columns */
-  row = TtaGetFirstChild (MTableBody);
-  nCol = 0;
-  while (row)
-    {
-    elType = TtaGetElementType (row);
-    if (elType.ElTypeNum == MathML_EL_MTR &&
-	TtaSameSSchemas (elType.ElSSchema, MathMLSSchema))
-      {
-      head = firstColHead;
-      prevHead = NULL;
-      cell = TtaGetFirstChild (row);
-      nCell = 0;
-      while (cell)
-	{
-	elType = TtaGetElementType (cell);
-	if (elType.ElTypeNum == MathML_EL_MTD &&
-	    TtaSameSSchemas (elType.ElSSchema, MathMLSSchema))
-	   {
-	   if (!head)
-	      {
-	      elType.ElTypeNum = MathML_EL_MColumn_head;
-	      head = TtaNewTree (doc, elType, "");
-	      TtaInsertSibling (head, prevHead, FALSE, doc);
-	      }
-	   nCell++;
-	   prevHead = head;
-	   TtaNextSibling (&head);
-	   }
-	TtaNextSibling (&cell);
-	}
-      if (nCell > nCol)
-         nCol = nCell;
-      }
-    TtaNextSibling (&row);
-    }
-
-  /* delete the last MColumn_heads if there are more MColumn_heads than
-     columns */
-  head = firstColHead;
-  nHead = 0;
-  while (head)
-    {
-    nHead++;
-    nextHead = head;
-    TtaNextSibling (&nextHead);
-    if (nHead > nCol)
-       TtaDeleteTree (head, doc);
-    head = nextHead;
-    }
-
-  /* relate each cell with the corresponding MColumn_head and create
-     additional cells in incomplete rows */
-  attrType.AttrSSchema = MathMLSSchema;
-  attrType.AttrTypeNum = MathML_ATTR_MRef_column;
-  row = TtaGetFirstChild (MTableBody);
-  while (row)
-    {
-    elType = TtaGetElementType (row);
-    if (elType.ElTypeNum == MathML_EL_MTR &&
-	TtaSameSSchemas (elType.ElSSchema, MathMLSSchema))
-      {
-      head = firstColHead;
-      prevCell = NULL;
-      cell = TtaGetFirstChild (row);
-      while (head)
-	{
-	if (cell)
-	   elType = TtaGetElementType (cell);
-	while (cell &&
-	       (elType.ElTypeNum != MathML_EL_MTD ||
-	        !TtaSameSSchemas (elType.ElSSchema, MathMLSSchema)))
-	   {
-	   TtaNextSibling (&cell);
-	   if (cell)
-	      elType = TtaGetElementType (cell);
-	   }
-	if (!cell)
-	   {
-	   elType.ElTypeNum = MathML_EL_MTD;
-	   cell = TtaNewTree (doc, elType, "");
-	   if (prevCell)
-	      TtaInsertSibling (cell, prevCell, FALSE, doc);
-	   else
-	      TtaInsertFirstChild (&cell, row, doc);
-	   }
-	attr = TtaGetAttribute (cell, attrType);
-	if (!attr)
-	   {
-	   attr = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (cell, attr, doc);
-	   }
-	TtaSetAttributeReference (attr, cell, doc, head, doc);
-	prevCell = cell;
-	TtaNextSibling (&cell);
-	TtaNextSibling (&head);
-	}
-      }
-    TtaNextSibling (&row);
-    }
-}
 
 /*----------------------------------------------------------------------
    CheckMTable
@@ -1451,9 +1325,9 @@ void LinkMathCellsWithColumnHeads (elMTABLE, doc)
    in the MathML S schema.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void CheckMTable (Element elMTABLE, Document doc)
+void CheckMTable (Element elMTABLE, Document doc)
 #else /* __STDC__*/
-static void CheckMTable (elMTABLE, doc)
+void CheckMTable (elMTABLE, doc)
   Element	elMTABLE;
   Document	doc;
 #endif /* __STDC__*/
@@ -1564,8 +1438,9 @@ static void CheckMTable (elMTABLE, doc)
       }
     row = nextRow;
     }
-  LinkMathCellsWithColumnHeads (elMTABLE, doc);
+  CheckAllRows (elMTABLE, doc);
 }
+
 
 /*----------------------------------------------------------------------
    SetFontstyleAttr

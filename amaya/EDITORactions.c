@@ -820,7 +820,7 @@ View                view;
 #  ifdef _WINDOWS
 #  else  /* !_WINDOWS */
 	   TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (document, 1),
-			      TtaGetMessage (1, BTable), TRUE, 1, 'L', D_CANCEL);
+		       TtaGetMessage (1, BTable), TRUE, 1, 'L', D_CANCEL);
 	   TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
 			     TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
 	   TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm,
@@ -851,7 +851,8 @@ View                view;
 
        /* get the new Table element */
        TtaGiveFirstSelectedElement (document, &el, &firstChar, &i);
-       el = TtaGetTypedAncestor (el, elType);
+       if (el != NULL)
+	 el = TtaGetTypedAncestor (el, elType);
        if (el != NULL)
 	 {
 	   /* if the Table has no Border attribute, create one */
@@ -869,8 +870,14 @@ View                view;
 	     TtaRemoveAttribute (el, attr, document);
 	   if (NumberCols > 1)
 	     {
-	       elType.ElTypeNum = HTML_EL_Data_cell;
+	       elType.ElTypeNum = HTML_EL_Table_cell;
 	       cell = TtaSearchTypedElement (elType, SearchInTree, el);
+	       if (cell == NULL)
+		 {
+		   /* no table cell found, it must be a data cell */
+		   elType.ElTypeNum = HTML_EL_Data_cell;
+		   cell = TtaSearchTypedElement (elType, SearchInTree, el);
+		 }
 	       while (NumberCols > 1)
 		 {
 		   new = TtaNewTree (document, elType, "");
@@ -1065,6 +1072,47 @@ View                view;
 
 #endif /* __STDC__ */
 {
+  Element             el, cell;
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute           attr;
+  Document            refDoc;
+  SSchema	      HTMLSSchema;
+  char                name[50];
+  int                 firstchar, lastchar;
+
+  /* get the first selected element */
+  TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
+  if (el != NULL)
+    {
+      elType = TtaGetElementType (el);
+      HTMLSSchema = TtaGetSSchema ("HTML", document);
+      if (elType.ElSSchema != HTMLSSchema || elType.ElTypeNum != HTML_EL_Data_cell)
+	{
+	  elType.ElSSchema = TtaGetSSchema ("HTML", document);
+	  elType.ElTypeNum = HTML_EL_Data_cell;
+	  cell = TtaGetTypedAncestor (el, elType);
+	  if (cell == NULL)
+	    {
+	      elType.ElTypeNum = HTML_EL_Heading_cell;
+	      cell = TtaGetTypedAncestor (el, elType);
+	    }
+	}
+      else
+	cell = el;
+      if (cell != NULL)
+	{
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  /* get current column */
+	  attrType.AttrTypeNum = HTML_ATTR_Ref_column;
+	  attr = TtaGetAttribute (cell, attrType);
+	  if (attr != NULL)
+	    {
+	      TtaGiveReferenceAttributeValue (attr, &el, name, &refDoc);
+	      RemoveColumn (el, document, FALSE, FALSE);
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

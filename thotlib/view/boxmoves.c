@@ -2205,8 +2205,8 @@ int                 frame;
 		    /* plus de deux fois (sinon on boucle).      */
 		      else if (pAb->AbBox->BxCycles <= 1)
 			{
-			  if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema) &&
-			      ThotLocalActions[T_checkcolumn] && !pAb->AbPresentationBox)
+			  if (pAb->AbBox->BxType == BoCell &&
+			      ThotLocalActions[T_checkcolumn])
 			    (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
 			  else
 			    WidthPack (pAb, pSourceBox, frame);
@@ -2257,7 +2257,7 @@ int                 frame;
 {
   PtrBox              pNextBox;
   PtrLine             pLine;
-  PtrAbstractBox      pAb;
+  PtrAbstractBox      pAb, pCell;
   PtrAbstractBox      pCurrentAb;
   PtrPosRelations     pPosRel;
   PtrDimRelations     pDimRel;
@@ -2661,13 +2661,18 @@ int                 frame;
 		     if (pAb->AbInLine)
 		       /* Inclusion dans un bloc de ligne */
 		       EncloseInLine (pBox, frame, pAb);
+		     /*else if (pBox->BxType == BoTable &&
+			      (pCell = GetParentCell (pBox)) &&
+			      ThotLocalActions[T_checkcolumn])
+		       (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);*/
+
 		     /* Si l'englobement n'est pas prevu en fin de traitement */
 		     else if (pAb->AbBox != PackBoxRoot &&
 			      !IsParentBox (pAb->AbBox, PackBoxRoot) /*&&
 			      pAb->AbBox != pFromBox*/)
 		       /* differe le traitement de l'englobement   */
 		       /* quand la mise a jour a une origine externe  */
-		       if (Propagate != ToAll && !TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
+		       if (Propagate != ToAll && pAb->AbBox->BxType != BoCell)
 			 RecordEnclosing (pAb->AbBox, FALSE);
 		     /* l'englobement d'une boite ne peut etre traite */
 		     /* plus de deux fois (sinon on boucle).      */
@@ -3144,8 +3149,7 @@ int                 frame;
    /* n'est pas deja en train de traiter l'englobement de cette boite  */
    pBox = pAb->AbBox;
    pDimAb = &pAb->AbWidth;
-   if (pBox->BxType == BoBlock ||
-       TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
+   if (pBox->BxType == BoBlock || pBox->BxType == BoCell)
      /* don't pack a block or a cell but transmit to enclosing box */
      WidthPack (pAb->AbEnclosing, pSourceBox, frame);
    else if (pBox->BxType == BoGhost)

@@ -137,7 +137,7 @@ PtrBox              pBox;
        pAb = pBox->BxAbstractBox->AbEnclosing;
        while (pAb != NULL && !found)
 	 {
-	   if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
+	   if (pAb->AbBox != NULL && pAb->AbBox->BxType == BoCell)
 	     found = TRUE;
 	   else
 	     pAb = pAb->AbEnclosing;
@@ -1409,6 +1409,15 @@ int                *carIndex;
 		       pCurrentBox->BxMaxWidth = 0;
 		       pCurrentBox->BxMinWidth = 0;
 		     }
+		   else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS))
+		     {
+		       tableType = BoCell;
+		       pCurrentBox->BxType = tableType;
+		       pCurrentBox->BxTable = NULL;
+		       pCurrentBox->BxRows = NULL;
+		       pCurrentBox->BxMaxWidth = 0;
+		       pCurrentBox->BxMinWidth = 0;
+		     }
 
 		    /* Si le pave est mis en ligne et secable -> la boite est eclatee */
 		    if (inLines && pAb->AbAcceptLineBreak && pAb->AbFirstEnclosed != NULL)
@@ -1494,8 +1503,7 @@ int                *carIndex;
 	  (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
 	else if (tableType == BoRow && ThotLocalActions[T_checktable])
 	  (*ThotLocalActions[T_checktable]) (NULL, NULL, pAb, frame);
-	else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS) &&
-		 ThotLocalActions[T_checkcolumn] && !pAb->AbPresentationBox)
+	else if (tableType == BoCell && ThotLocalActions[T_checkcolumn])
 	  (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
      }
    return (pCurrentBox);
@@ -2032,9 +2040,6 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   int                 width, height;
-   int                 nSpaces;
-   int                 i, charDelta, adjustDelta;
    PtrLine             pLine;
    PtrAbstractBox      pCurrentAb, pCell, pBlock;
    PtrBox              pNextBox;
@@ -2047,8 +2052,11 @@ int                 frame;
    ViewFrame          *pFrame;
    AbDimension        *pDimAb;
    AbPosition         *pPosAb;
+   int                 width, height;
+   int                 nSpaces;
+   int                 i, charDelta, adjustDelta;
    boolean             condition;
-   boolean             result;
+   boolean             result, isCell;
    boolean             orgXComplete;
    boolean             orgYComplete;
 
@@ -2307,6 +2315,7 @@ int                 frame;
 	ClearDimRelation (pBox, TRUE, frame);
 	ClearDimRelation (pBox, FALSE, frame);
 	pCell = GetParentCell (pCurrentBox);
+	isCell = pAb->AbBox->BxType == BoCell;
 	RemoveBoxes (pAb, FALSE, frame);
 
 	/* Mise a jour de la liste des boites terminales */
@@ -2322,8 +2331,7 @@ int                 frame;
 	   pCurrentBox->BxNext = pNextBox;
 
 	/* Check table consistency */
-	if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema) &&
-	    ThotLocalActions[T_checkcolumn] && !pAb->AbPresentationBox)
+	if (isCell && ThotLocalActions[T_checkcolumn])
 	  (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
 	/* check enclosing cell */
 	else if (pCell != NULL && ThotLocalActions[T_checkcolumn] &&
@@ -2637,8 +2645,7 @@ int                 frame;
 	     /* Check table consistency */
 	     if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
 	       (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
-	     else if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema) &&
-		      ThotLocalActions[T_checkcolumn] && !pAb->AbPresentationBox)
+	     else if (pCurrentBox->BxType == BoCell && ThotLocalActions[T_checkcolumn])
 	       (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
 	     /* check enclosing cell */
 	     pCell = GetParentCell (pCurrentBox);

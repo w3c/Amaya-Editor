@@ -274,7 +274,7 @@ boolean            *isPageBreakChanged;
   if (!pAb->AbDead && pAb->AbBox != NULL) {
      /* verifie les limites de la boite du pave */
      pBox = pAb->AbBox;
-     isCell = (table != NULL && TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema));
+     isCell = (table != NULL && pBox->BxType == BoCell);
 
      if (isCell && ThotLocalActions[T_firstcolumn])
         /* page break can be inserted only in the first column */

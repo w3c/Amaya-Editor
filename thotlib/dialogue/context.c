@@ -277,8 +277,8 @@ unsigned short     *blue;
 
 
 /*----------------------------------------------------------------------
- *      FindColor looks for the named color ressource.
- *         The result is the closest color found the Thot color table.
+ * FindColor looks for the named color ressource.
+ * The result is the closest color found the Thot color table.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      FindColor (int disp, char *name, char *colorplace, char *defaultcolor, ThotColor *colorpixel)
@@ -299,7 +299,7 @@ ThotColor* colorpixel;
    unsigned short      blue;
 
    value = (char*) TtaGetEnvString (colorplace);
-   /* faut-il prendre la valeur par defaut ? */
+   /* do you need to take the default color? */
    if (value == NULL && defaultcolor != NULL)
        value = defaultcolor;
 

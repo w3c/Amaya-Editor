@@ -275,7 +275,6 @@ void                TtaAddElementToSelection (Document document, Element element
 void                TtaAddElementToSelection (document, element)
 Document            document;
 Element             element;
-
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
@@ -346,26 +345,18 @@ void                TtaSelectInterval ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaUnselect (Document document)
-
 #else  /* __STDC__ */
 void                TtaUnselect (document)
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
-   else
-      /* Parameter document is correct */
-   if (SelectedDocument == LoadedDocument[document - 1])
-      CancelSelection ();
+     TtaError (ERR_invalid_document_parameter);
+   /* Parameter document is correct */
+   else if (SelectedDocument == LoadedDocument[document - 1])
+     CancelSelection ();
 }
 
 
@@ -405,6 +396,10 @@ void                TtaIsSelectionEmpty ()
 {
   if (SelectedDocument == NULL)
     return (FALSE);
+  else if (SelPosition != TRUE &&
+	   FirstSelectedElement == LastSelectedElement &&
+	   FirstSelectedElement->ElVolume == 0)
+    return (TRUE);
   else
     return (SelPosition);
 }
@@ -449,13 +444,9 @@ int                *lastCharacter;
    *lastCharacter = 0;
    /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
       /* Parameter document is correct */
      {
@@ -519,13 +510,9 @@ int                *lastCharacter;
    *lastCharacter = 0;
    /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
       /* Parameter document is correct */
      {
@@ -590,13 +577,9 @@ int                *lastCharacter;
    *lastCharacter = 0;
    /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
       /* Parameter document is correct */
      {
