@@ -108,6 +108,12 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
     }
 }
 
+#ifdef _WINDOWS
+#define DrawStixIntegral(A,B,C,D,E,F,G,H) DrawIntegral(A,B,C,D,E,F,G,H) 
+#define DrawStixBrace(A,B,C,D,E,F,G,H) DrawBrace(A,B,C,D,E,F,G,H)
+#define DrawStixParenthesis(A,B,C,D,E,F,G,H) DrawParenthesis(A,B,C,D,E,F,G,H)
+#define DrawStixPointyBracket(A,B,C,D,E,F,G,H) DrawPointyBracket(A,B,C,D,E,F,G,H)
+#endif /*_WINDOWS*/
 
 /*----------------------------------------------------------------------
   DisplaySymbol displays a mathematical symbols box enclosed in
