@@ -238,6 +238,9 @@ void         FreeDocColors ()
    TtaFreeMemory (ExtRGB_Table);
    TtaFreeMemory (ExtColor);
    TtaFreeMemory (ExtCount_Table);
+   ExtRGB_Table = NULL;
+   ExtColor = NULL;
+   ExtCount_Table = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -400,7 +403,7 @@ int              TtaGetThotColor (num)
 int              num;
 #endif /* __STDC__ */
 {
-  if (num < NColors + NbExtColors && num >= 0)
+  if (num < NColors + NbExtColors && num >= NColors)
     {
       num -= NColors;
       if (ExtCount_Table[num] == 1)

@@ -974,11 +974,12 @@ PtrPRule          **chain;
       /* shortcut : rules are sorted by type and view number and
 	 Functions rules are sorted by number */
       if (cur->PrType > pres ||
-	  (cur->PrType == pres && cur->PrViewNum > (unsigned int)1) ||
-	  (cur->PrType == pres && pres == PtFunction && cur->PrPresFunction > (int)extra))
+	  (cur->PrType == pres && cur->PrViewNum > 1) ||
+	  (cur->PrType == pres && pres == PtFunction &&
+	   cur->PrPresFunction >  (FunctionType) extra))
 	  cur = NULL;
-      else if (pres != PtFunction ||
-	       (pres == PtFunction && cur->PrPresFunction != (int)extra))
+      else if (cur->PrType != pres ||
+	       (pres == PtFunction && cur->PrPresFunction !=  (FunctionType) extra))
 	/* check for extra specification in case of function rule */
 	{
 	  *chain = &(cur->PrNextPRule);
@@ -2138,10 +2139,12 @@ Document            doc;
     {
       do
 	{
-	  rule = NULL;
-	  TtaNextPRule (el, &rule);
-	  if (rule)
-	    TtaRemovePRule (el, rule, doc);
+	  rule = (PRule) ((PtrElement) el)->ElFirstPRule;
+	  while (rule)
+	    {
+	      TtaRemovePRule (el, rule, doc);
+	      TtaNextPRule (el, &rule);
+	    }
 	}
       while (rule != NULL);
     }

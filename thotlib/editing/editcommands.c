@@ -841,25 +841,27 @@ int                *nChars;
 	else
 	   sourceLength = pBuffer->BuLength - sourceInd + 1;
 	targetlength = THOT_MAX_CHAR - targetInd;
-
-	if (sourceLength <= targetlength)
+	if (target)
 	  {
-	     /* end of source buffer */
-	     CopyString (pBuffer->BuContent, target, sourceLength, font, &sourceInd, &targetInd, width, nSpaces, nChars);
-	     if (pBuffer == pEndBuffer)
-		pBuffer = NULL;
-	     else
-		pBuffer = pBuffer->BuNext;
-	     sourceInd = 1;
-	  }
-	else
-	  {
-	     /* end of target buffer */
-	     CopyString (pBuffer->BuContent, target, targetlength, font, &sourceInd, &targetInd, width, nSpaces, nChars);
-	     (*pTargetBuffer)->BuLength = FULL_BUFFER;
-	     (*pTargetBuffer)->BuContent[THOT_MAX_CHAR - 1] = EOS;
-	     *pTargetBuffer = GetNewBuffer (*pTargetBuffer, frame);
-	     targetInd = 1;
+	    if (sourceLength <= targetlength)
+	      {
+		/* end of source buffer */
+		CopyString (pBuffer->BuContent, target, sourceLength, font, &sourceInd, &targetInd, width, nSpaces, nChars);
+		if (pBuffer == pEndBuffer)
+		  pBuffer = NULL;
+		else
+		  pBuffer = pBuffer->BuNext;
+		sourceInd = 1;
+	      }
+	    else
+	      {
+		/* end of target buffer */
+		CopyString (pBuffer->BuContent, target, targetlength, font, &sourceInd, &targetInd, width, nSpaces, nChars);
+		(*pTargetBuffer)->BuLength = FULL_BUFFER;
+		(*pTargetBuffer)->BuContent[THOT_MAX_CHAR - 1] = EOS;
+		*pTargetBuffer = GetNewBuffer (*pTargetBuffer, frame);
+		targetInd = 1;
+	      }
 	  }
      }
 

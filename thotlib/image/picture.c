@@ -2152,6 +2152,8 @@ PictInfo           *imageDesc;
        if (imageDesc->PicColors != NULL)
 	 for (i = 0; i < imageDesc->PicNbColors; i++)
 	   TtaFreeThotColor (imageDesc->PicColors[i]);
+       TtaFreeMemory (imageDesc->PicColors);
+       imageDesc->PicColors = NULL;
      }
 
      if ((imageDesc->PicType >= InlineHandlers) && (PictureHandlerTable[imageDesc->PicType].FreePicture != NULL))
