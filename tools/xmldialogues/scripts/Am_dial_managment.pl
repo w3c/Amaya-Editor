@@ -159,6 +159,10 @@ sub menu1 {
 				&& $_ !~ /^non/i					
 		);
 		if ( /^o/i || /^oui/i ) {
+			if (-r $OUT_PUT_directory . $base_name { $index{ $last_choice} }) {	# To avoid problems.
+				rename ($OUT_PUT_directory . $base_name { $index{ $last_choice} },
+						$OUT_PUT_directory . $base_name { $index{ $last_choice}} . "old" );
+			}
 			Initialisation::create_base ( $head_dir{ $index{ $last_choice} }, 
 													$head_name{ $index{ $last_choice} },
 													$OUT_PUT_directory, 
