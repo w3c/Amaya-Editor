@@ -1146,12 +1146,20 @@ Document            document;
 	 {
 	   /* Get the URL itself */
 	   TtaGiveTextAttributeValue (HrefAttr, url, &length);
-	   /* Normalize the URL */
 	   pathname = TtaAllocString (MAX_LENGTH);
 	   documentname = TtaAllocString (MAX_LENGTH);
-	   NormalizeURL (url, document, pathname, documentname, NULL);
+	   if (url[0] == '#')
+	     {
+	       ustrcpy (pathname, DocumentURLs[document]);
+	       ustrcat (pathname, url);
+	     }
+	   else
+	       /* Normalize the URL */
+	       NormalizeURL (url, document, pathname, documentname, NULL);
+
 	   /* Display the URL in the status line */
 	   TtaSetStatus (document, 1, pathname, NULL);
+	   
 	   TtaFreeMemory (pathname);
 	   TtaFreeMemory (documentname);
 	   TtaFreeMemory (url);
