@@ -544,9 +544,9 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Spell checking"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "",ID_SKIPNEXT,238,89,76,15
-    PUSHBUTTON      "",ID_SKIPDIC,238,106,76,15
-    PUSHBUTTON      "",ID_REPLACENEXT,238,124,76,15
+    DEFPUSHBUTTON   "",ID_SKIPNEXT,238,92,76,16
+    PUSHBUTTON      "",ID_SKIPDIC,238,110,76,15
+    PUSHBUTTON      "",ID_REPLACENEXT,238,126,76,15
     PUSHBUTTON      "",ID_REPLACEDIC,238,142,76,15
     PUSHBUTTON      "",ID_DONE,238,158,76,16
     GROUPBOX        "",IDC_CHECKGROUP,8,113,112,61,WS_GROUP
@@ -1933,7 +1933,7 @@ BEGIN
         BLOCK "040c04b0"
         BEGIN
             VALUE "Comments", "\0"
-            VALUE "CompanyName", "W3C INRIA""è\0"
+            VALUE "CompanyName", "W3C INRIA\0"
             VALUE "FileDescription", "libwww\0"
             VALUE "FileVersion", "1, 0, 0, 1\0"
             VALUE "InternalName", "libwww\0"
