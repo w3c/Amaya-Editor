@@ -577,7 +577,7 @@ static oneLine      StartTagEndingElem[] =
    "form closes form p p* hr h1 h2 h3 h4 h5 h6 dl ul ol menu dir address pre listing xmp head",
    "head closes p p*",
    "title closes p p*",
-   "body closes head style link title p p*",
+   "body closes head style script title p p*",
    "li closes p p* h1 h2 h3 h4 h5 h6 dl address pre listing xmp head",
    "hr closes p p* head",
    "h1 closes p p* head",
@@ -727,7 +727,7 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
 
    {HTML_ATTR_shape, TEXT("rect"), HTML_ATTR_shape_VAL_rectangle},
    {HTML_ATTR_shape, TEXT("circle"), HTML_ATTR_shape_VAL_circle},
-   {HTML_ATTR_shape, TEXT("ploy"), HTML_ATTR_shape_VAL_polygon},
+   {HTML_ATTR_shape, TEXT("poly"), HTML_ATTR_shape_VAL_polygon},
 
    {HTML_ATTR_valuetype, TEXT("data"), HTML_ATTR_valuetype_VAL_data_},
    {HTML_ATTR_valuetype, TEXT("ref"), HTML_ATTR_valuetype_VAL_ref},
@@ -6155,12 +6155,9 @@ ThotBool *done;
 		   TtaRemoveTree (elem, doc);
 		   TtaInsertFirstChild (&elem, copy, doc);
 		   elType = TtaGetElementType (charEl);
+		   /* do it only once for an Anchor */
 		   if (elType.ElTypeNum == HTML_EL_Anchor)
-		     /* do it only once for an Anchor */
-		     {
 		     *done = TRUE;
-		     next = NULL;
-		     }
 		 }
 	       prev = elem;
 	     }
