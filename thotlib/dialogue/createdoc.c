@@ -39,14 +39,15 @@ static char         DirectoryDocToCreate[MAX_PATH] = "";
 #include "applicationapi_f.h"
 
 /*----------------------------------------------------------------------
-   CallbackConfirmMenu met a jour le formulaire de confirm.                    
+   CallbackConfirmMenu
+   updates the confirmation menu.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackConfirmMenu (int ref, int typedata, char *data)
+void                CallbackConfirmMenu (int ref, int typeData, char *data)
 #else  /* __STDC__ */
-void                CallbackConfirmMenu (ref, typedata, data)
+void                CallbackConfirmMenu (ref, typeData, data)
 int                 ref;
-int                 typedata;
+int                 typeData;
 char               *data;
 
 #endif /* __STDC__ */
@@ -83,14 +84,15 @@ char               *data;
 
 
 /*----------------------------------------------------------------------
-   CallbackNewDocMenu met a jour le formulaire de createdoc.                
+   CallbackNewDocMenu
+   updates the createdoc menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackNewDocMenu (int ref, int typedata, char *data)
+void                CallbackNewDocMenu (int ref, int typeData, char *data)
 #else  /* __STDC__ */
-void                CallbackNewDocMenu (ref, typedata, data)
+void                CallbackNewDocMenu (ref, typeData, data)
 int                 ref;
-int                 typedata;
+int                 typeData;
 char               *data;
 
 #endif /* __STDC__ */
@@ -194,7 +196,8 @@ char               *data;
 
 
 /*----------------------------------------------------------------------
-   TtcCreateDocument initialise le changement de createdoc.           
+   TtcCreateDocument
+   starts the changing of createdoc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcCreateDocument (Document document, View view)
@@ -286,3 +289,15 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (NumFormCreateDoc, FALSE);
 }
+
+
+
+
+
+
+
+
+
+
+
+

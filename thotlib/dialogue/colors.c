@@ -39,7 +39,8 @@ static ThotGC       GCkey;
 #include "inites_f.h"
 
 /*----------------------------------------------------------------------
-   FinPalette termine l'affichage de la palette.                   
+   ThotSelectPalette
+   Shows the current selection.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ThotSelectPalette (int bground, int fground)
@@ -137,13 +138,14 @@ int                 fground;
 
 
 /*----------------------------------------------------------------------
-   FinPalette termine l'affichage de la palette.                   
+   EndPalette
+   Ends the display of the palette.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         FinPalette (ThotWidget w, int index, caddr_t call_d)
+static void         EndPalette (ThotWidget w, int index, caddr_t call_d)
 
 #else  /* __STDC__ */
-static void         FinPalette (w, index, call_d)
+static void         EndPalette (w, index, call_d)
 ThotWidget          w;
 int                 index;
 caddr_t             call_d;
@@ -157,7 +159,8 @@ caddr_t             call_d;
 
 
 /*----------------------------------------------------------------------
-   KillPalette detruit la palette.                                 
+   KillPalette
+   kills the palette.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         KillPalette (ThotWidget w, int index, caddr_t call_d)
@@ -176,7 +179,8 @@ caddr_t             call_d;
 
 
 /*----------------------------------------------------------------------
-   ColorsExpose reaffiche un clavier des couleurs.                 
+   ColorsExpose
+   redisplays a color keyboard.
   ----------------------------------------------------------------------*/
 static void         ColorsExpose ()
 {
@@ -249,7 +253,8 @@ static void         ColorsExpose ()
 
 
 /*----------------------------------------------------------------------
-   ColorsPress traite un clic dans la palette des couleurs.        
+   ColorsPress
+   handles a click on the color palette
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ColorsPress (int button, int x, int y)
@@ -314,7 +319,8 @@ int                 y;
 
 #ifdef WWW_XWINDOWS
 /*----------------------------------------------------------------------
-   ColorsEvent traite les Evenements X sur la palette.             
+   ColorsEvent
+   handles the X events of the palette.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ColorsEvent (XEvent * event)
@@ -336,7 +342,8 @@ XEvent             *event;
 
 
 /*----------------------------------------------------------------------
-   ThotCreatePalette cree la palette de couleurs.                      
+   ThotCreatePalette
+   creates the color palette.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ThotCreatePalette (int x, int y)
@@ -542,7 +549,7 @@ int                 y;
    n++;
    w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_DONE), args, n);
    XtManageChild (w);
-   XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) FinPalette, NULL);
+   XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) EndPalette, NULL);
 
    /* Definit le bouton d'annulation comme bouton par defaut */
    n = 0;
@@ -570,11 +577,11 @@ int                 y;
 
 
 /*----------------------------------------------------------------------
-   TtcChangeColors L'utilisateur demande a modifier les            
-   couleurs (presentation specifique) pour la vue          
-   Vue du document pDoc (si Assoc = FALSE) ou les elements 
-   associes de numero Vue (si Assoc = Vrai)                
-   Initialise et active le formulaire correspondant.       
+   TtcChangeColors
+   the user wants to modify the colors (specific presentation) for the
+   view "view" of document pDoc (if Assoc = FALSE) or the elements associated
+   of number "view" (if Assoc = TRUE).
+   Initializes and activates the corresponding menu.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcChangeColors (Document document, View view)
