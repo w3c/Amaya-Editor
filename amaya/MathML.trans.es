@@ -1,0 +1,351 @@
+i! file MathML.trans : structure transformation for MathML
+! see HTML.trans for a description of Trans language
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+! WARNING : transformations do NOT work with Multiscript elements
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!!! mrow transformations
+
+!surround an element with a mrow
+surrounding row: *;
+        {
+        * > mrow:*;
+        }
+
+!surround a sequence of elements with a mrow
+surrounding row: *,*+;
+        {
+        * > mrow:*;
+        }
+
+! remove a mrow level
+remove row: mrow{*+};
+        {
+        * > :*;
+        }
+
+!!! mstyle transformations
+
+!surround an element with a mstyle
+surrounding mstyle: *;
+        {
+        * > mstyle:*;
+        }
+
+!surround a sequence of elements with a mstyle
+surrounding mstyle: *,*+;
+        {
+        * > mstyle:*;
+        }
+
+! remove a mstyle level
+remove mstyle: mstyle{*+};
+        {
+        * > :*;
+        }
+
+!!! Root Transformations
+
+!surround an element with a root
+surrounding root : *;
+	{
+	* > mroot:*;
+	* > mroot:none % ;
+	}
+
+!surround a sequence of elements with a root
+surrounding root: *+,last:*;
+        {
+        * > mroot.mrow:*;
+	last > mroot.mrow:*;
+	last > mroot:none % ;
+        }
+
+!remove a root
+remove root: mroot{base:*,? index:*};
+        {
+        base > :*;
+	index / ;
+        }
+
+
+!!! Square Root Transformations
+
+!surround an element with a square root
+surrounding square root: *;
+        {
+        * > msqrt:*;
+        }
+
+
+!surround a sequence of elements with a square root
+surrounding square root: *,*+;
+        {
+        * > msqrt.mrow:*;
+        }
+
+!remove a square root
+remove square root: msqrt{*};
+        {
+        * > :*;
+        }
+
+!transform a square root into a root
+root with index: msqrt{*};
+	{
+	* > mroot:*;
+	* > mroot:none %;
+	}
+
+!transform a square root into a menclose
+menclose: msqrt{*};
+	{
+	* > menclose:*;
+	}
+
+!!! menclose Transformations
+
+!surround an element with a menclose
+surrounding menclose: *;
+        {
+        * > menclose:*;
+        }
+
+
+!surround a sequence of elements with a menclose
+surrounding menclose: *,*+;
+        {
+        * > menclose:*;
+        }
+
+!remove a menclose
+remove menclose: menclose{*};
+        {
+        * > :*;
+        }
+
+!transform a menclose into a square root
+square root: menclose{*};
+	{
+	* > msqrt:*;
+	}
+
+!!! Fraction transformations
+
+!transform 2 elements into a fraction
+fraction: (num:*,den:*) | mrow{num:*,den:*};
+        {
+        num > mfrac:*;
+        den > mfrac:*;
+        }
+
+!transform an  element into a numerator
+numerator: *;
+        {
+        * > mfrac:*;
+        * > mfrac:none %;
+        }
+
+!transform an sequence of elements into a numerator
+numerator: ?*+,last:*;
+        {
+        * > mfrac.mrow:*;
+	last > mfrac.mrow:*;
+        last > mfrac:none %;
+        }
+
+!transform an element into a denominator
+denominator: *;
+        {
+        * > mfrac:none %;
+        * > mfrac:*;
+        }
+
+!transform an sequence of elements into a denominator
+denominator: first:*,?*+;
+        {
+        first > mfrac:none %;
+	first > mfrac.mrow:*;
+        * > mfrac.mrow:*;
+        }
+
+!remove a fraction
+remove fraction: mfrac{?(num:*),?(den:*)};
+        {
+        num > :*;
+        den > :*;
+        }
+
+
+!!! Sub and Sup Transformations
+
+!surroud an element with a subsup
+add sub and sup:*;
+	{
+	* > msubsup:*;
+	* > msubsup:none%;
+	* > msubsup:none;
+	}
+
+!removes a subsup
+remove subsup: msubsup{base:*,?sub:*,?sup:*};
+	{
+	base > :*;
+	sub /;
+	sup /;
+	}
+
+!removes a superscript
+remove superscript: msubsup{base:*,?sub:*,?sup:*};
+	{
+	msubsup > msub;
+	sup /;
+	}
+
+!removes a subscript
+remove subscript: msubsup{base:*,?sub:*,?sup:*};
+	{
+	msubsup > msup;
+	sub /;
+	}
+
+!surroud element with a sub
+add subscript:*;
+	{
+	* > msub:*;
+	* > msub:none %;
+	}
+
+!removes a subscript
+remove subscript: msub{base:*,?sub:*};
+	{
+	base > :*;
+	sub /;
+	}
+
+!surroud an element with a sup
+add superscript:*;
+	{
+	* > msup:*;
+	* > msup:none %;
+	}
+
+!removes a superscript
+remove superscript: msup{base:*,?sup:*};
+	{
+	base > :*;
+	sup /;
+	}
+
+!change msub into msup
+superscript:msub;
+	{
+	msub > msup;
+	}
+
+!change msup into msub
+subscript:msup;
+	{
+	msup > msub;
+	}
+
+!change msub or msup into msubsup
+subsup:msub{base:*,sub:*} | msup{base:*,sup:*};
+	{
+	base > msubsup:*;
+	sup > msubsup:none %;
+	sup > msubsup:*;
+	sub > msubsup:*;
+	sub > msubsup:none;
+	}
+
+!change msubsup into munderover
+change into munderover: msubsup{base:*,sub:*,sup:*};
+  {
+  base > munderover:*;
+  sub > munderover:*;
+  sup > munderover:*;
+  }
+
+!!! Under and Over transformations
+
+!surroud an element with a underover
+add under and over:*;
+	{
+	* > munderover:*;
+	* > munderover:none %;
+	* > munderover:none;
+	}
+
+! remove an underover
+remove under and over:munderover{base:*,?under:*,?over:*};
+	{
+	base > :*;
+	under /;
+	over /;
+	}
+ 
+!surroud an element with a over
+add over:*;
+	{
+	* > mover:*;
+	* > mover:none %;
+	}
+
+! remove an over
+remove under and over:mover{base:*,?over:*};
+	{
+	base > :*;
+	over /;
+	}
+ 
+!surroud an element with a under
+add under:*;
+	{
+	* > munder:*;
+	* > munder:none;
+	}
+
+! remove an under
+remove under:munder{base:*,?under:*};
+	{
+	base > :*;
+	under /;
+	}
+
+!change munderover into msubsup
+change into msubsup: munderover{base:*,under:*,over:*};
+  {
+  base > msubsup:*;
+  under > msubsup:*;
+  over > msubsup:*;
+  }
+ 
+!!! Parenthesis Transformations
+
+!surround an element with parentheses
+parenthesize:*;
+        {
+        * > mrow:mo."(";
+        * > mrow:*;
+        * > mrow:mo.")";
+        }
+
+!surround a sequence of elements with parentheses
+!group: first:*,?*+, last:* ;
+!        {
+!        first > mrow:mo."(";
+!        first > mrow:*;
+!        * > mrow:*;
+!        last > mrow:*;
+!        last > mrow:mo.")";
+!        }
+
+!remove parenthesis
+remove parenthesis: mrow{mf,?*+,mf};
+	{
+	mf /;
+	* > :*;
+	}
+

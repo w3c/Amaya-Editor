@@ -48,7 +48,6 @@ ELEMENTS
 	BEGIN
 	ElemPaste.Post -> ColumnPasted;
 	ElemDelete.Pre -> DeleteColumn;
-	ElemDelete.Post -> ColumnDeleted;
 	END;
    MTR:
 	BEGIN
@@ -58,7 +57,10 @@ ELEMENTS
 	ElemDelete.Post -> RowDeleted;
 	END;
    MTABLE:
+	BEGIN
 	ElemNew.Post -> TableCreated;
+	ElemPaste.Post -> TablePasted;
+	END;
 
    XMLPI:
 	BEGIN

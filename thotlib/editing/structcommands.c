@@ -494,7 +494,10 @@ ThotBool SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl,
    else
       notifyEl.position = 0;
    cancel = CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
-   if (pDoc->DocNotifyAll && !cancel)
+   if (pDoc->DocNotifyAll && !cancel &&
+       !TypeHasException (ExcIsTable,
+			  pEl->ElTypeNumber,
+			  pEl->ElStructSchema))
       /* le document demande un evenement pour chaque element du sous-arbre */
       if (!pEl->ElTerminal)
 	{
@@ -726,7 +729,7 @@ static void RegSSchemaDescent (PtrElement pEl)
 static void SaveElement (PtrElement pEl, PtrElement pParent, int doc)
 {
   PtrPasteElem        pPasteEl, pNewPasteEl;
-  PtrElement          pAncest;
+  PtrElement          pAncest, pCell;
   int                 level, i;
 
   pNewPasteEl = (PtrPasteElem) TtaGetMemory (sizeof (PasteElemDescr));
@@ -774,8 +777,24 @@ static void SaveElement (PtrElement pEl, PtrElement pParent, int doc)
       if (CopyCellFunction &&
 	  TypeHasException (ExcIsCell, pEl->ElTypeNumber,
 			    pEl->ElStructSchema) &&
-	  (TableRowsSaved || WholeColumnSaved))
+	  WholeColumnSaved)
 	(*(Proc3)CopyCellFunction) ((void*)pEl, (void*)doc, (void*)TableRowsSaved);
+      else if (CopyCellFunction &&
+	  TypeHasException (ExcIsRow, pEl->ElTypeNumber,
+			    pEl->ElStructSchema) &&
+	  TableRowsSaved)
+	{
+	  pCell = pEl->ElFirstChild;
+	  while (pCell)
+	    {
+	      if (TypeHasException (ExcIsCell, pCell->ElTypeNumber,
+				    pCell->ElStructSchema))
+	      /* notify the application for each enclosed cell */
+	      (*(Proc3)CopyCellFunction) ((void*)pCell, (void*)doc,
+					  (void*)TableRowsSaved);
+	      pCell = pCell->ElNext;
+	    }
+	}
 
       pNewPasteEl->PeNext = NULL;
       pEl->ElNext = NULL;

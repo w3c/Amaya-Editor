@@ -76,7 +76,10 @@ ELEMENTS
 	ElemTextModify.Post -> TitleModified;
 
    Table:
+	BEGIN
 	ElemNew.Post -> TableCreated;
+	ElemPaste.Post -> TablePasted;
+	END;
 
    Table_body:
 	ElemDelete.Post -> TablebodyDeleted;
@@ -85,23 +88,18 @@ ELEMENTS
 	BEGIN
 	ElemPaste.Post -> ColumnPasted;
 	ElemDelete.Pre -> DeleteColumn;
-	ElemDelete.Post -> ColumnDeleted;
 	END;
 
    Data_cell:
 	BEGIN
 	ElemNew.Post -> CellCreated;
 	ElemPaste.Post -> CellPasted;
-	{ElemDelete.Pre -> DeleteCell;
-	ElemDelete.Post -> CellDeleted;}
 	END;
 
    Heading_cell:
 	BEGIN
 	ElemNew.Post -> CellCreated;
 	ElemPaste.Post -> CellPasted;
-	{ElemDelete.Pre -> DeleteCell;
-	ElemDelete.Post -> CellDeleted;}
 	END;
 
    Table_row:

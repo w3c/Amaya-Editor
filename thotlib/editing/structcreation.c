@@ -121,8 +121,12 @@ void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
   notifyEl.position = origDoc;
   notifyEl.info = info; /* not sent by undo */
   CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-  if (pDoc->DocNotifyAll)
+  if (pDoc->DocNotifyAll &&
+      !TypeHasException (ExcIsTable,
+			 pEl->ElTypeNumber,
+			 pEl->ElStructSchema))
     /* the document needs an event for each element in the subtree */
+
     if (pEl->ElStructSchema != NULL)
       /* the element has not been deleted by the callback */
       if (!pEl->ElTerminal)

@@ -24,7 +24,7 @@
 
 static Element      CurrentRow = NULL;
 static Element      CurrentColumn = NULL;
-static Element      CurrentCell;
+static Element      CurrentCell = NULL;
 static int          PreviousColSpan;
 static int          PreviousRowSpan;
 static ThotBool     NewTable = FALSE;
@@ -1637,7 +1637,7 @@ void CellPasted (NotifyElement * event)
    Document            doc;
    ThotBool            inMath;
 
-  if (event->info != 4 && event->info != 3)
+   if (event->info == 0)
     return;
    cell = event->element;
    doc = event->document;
@@ -1660,7 +1660,11 @@ void CellPasted (NotifyElement * event)
        inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
        LinkCellToColumnHead (cell, CurrentColumn, doc, inMath);
      }
-   HandleColAndRowAlignAttributes (row, doc);
+   else if (event->info == 1)
+     /* undoing/redoing. Link the cell with ColumnHead elements, but do not
+	generate empty cells in other rows */
+     NewCell (cell, doc, FALSE, FALSE);
+    HandleColAndRowAlignAttributes (row, doc);
    /* Check attribute NAME or ID in order to make sure that its value */
    /* is unique in the document */
    MakeUniqueName (cell, doc);
@@ -2023,18 +2027,48 @@ ThotBool DeleteColumn (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
-  ColumnDeleted                                             
-  ----------------------------------------------------------------------*/
-void ColumnDeleted (NotifyElement * event)
-{
-}
-
-/*----------------------------------------------------------------------
   ColumnPasted                                             
   ----------------------------------------------------------------------*/
 void ColumnPasted (NotifyElement * event)
 {
   CurrentColumn = event->element;
+}
+
+
+/*----------------------------------------------------------------------
+  TablePasted                                             
+  ----------------------------------------------------------------------*/
+void TablePasted (NotifyElement * event)
+{
+  /* associate each cell with a column */
+  CheckAllRows (event->element, event->document, FALSE, FALSE);
+}
+
+/*----------------------------------------------------------------------
+  TableCreated                                            
+  ----------------------------------------------------------------------*/
+void TableCreated (NotifyElement * event)
+{
+   Element             table;
+   Document            doc;
+   ElementType         elType;
+   AttributeType       attrType;
+   Attribute           attr;
+
+   table = event->element;
+   doc = event->document;
+   elType = TtaGetElementType (table);
+   attrType.AttrSSchema = elType.ElSSchema;
+   attrType.AttrTypeNum = HTML_ATTR_Border;
+   attr = TtaGetAttribute (table, attrType);
+   if (attr == NULL)
+     {
+	attr = TtaNewAttribute (attrType);
+	if (attr != NULL)
+	   TtaAttachAttribute (table, attr, doc);
+     }
+   TtaSetAttributeValue (attr, 1, table, doc);
+   NewTable = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -2095,34 +2129,6 @@ void CopyCell (Element cell, Document doc, ThotBool inRow)
 	TtaRemoveAttribute (cell, attr, doc);
     }
 }
-
-/*----------------------------------------------------------------------
-  TableCreated                                            
-  ----------------------------------------------------------------------*/
-void TableCreated (NotifyElement * event)
-{
-   Element             table;
-   Document            doc;
-   ElementType         elType;
-   AttributeType       attrType;
-   Attribute           attr;
-
-   table = event->element;
-   doc = event->document;
-   elType = TtaGetElementType (table);
-   attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = HTML_ATTR_Border;
-   attr = TtaGetAttribute (table, attrType);
-   if (attr == NULL)
-     {
-	attr = TtaNewAttribute (attrType);
-	if (attr != NULL)
-	   TtaAttachAttribute (table, attr, doc);
-     }
-   TtaSetAttributeValue (attr, 1, table, doc);
-   NewTable = TRUE;
-}
-
 
 /*----------------------------------------------------------------------
    TablebodyDeleted                                             
@@ -2240,6 +2246,7 @@ void RowPasted (NotifyElement * event)
     }
   else
     {
+      /* only if we're not pasting a whole table */
       /* link each cell to the appropriate column head and add empty cells
          if the pasted row is too short */
       rowspanType.AttrSSchema = elType.ElSSchema;
@@ -2296,6 +2303,7 @@ void RowPasted (NotifyElement * event)
 	      if (cell)
 		{
 		  LinkCellToColumnHead (cell, colhead, doc, inMath);
+#ifdef VQ
 		  /* remove the rowspan attribute, except if we are undoing
 		     an operation */
 		  if (event->info != 1)
@@ -2309,6 +2317,7 @@ void RowPasted (NotifyElement * event)
 		      if (attr)
 			TtaRemoveAttribute (cell, attr, doc);
 		    }
+#endif VQ
 		  if (span > 1 || span == 0)
 		    SetColExt (cell, span, doc, inMath);
 		}

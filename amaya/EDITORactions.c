@@ -1604,30 +1604,34 @@ void CreateTable (Document document, View view)
 		 }
 	     }
 
-	   if (NumberCols > 1)
+	   elType.ElTypeNum = HTML_EL_Table_cell;
+	   cell = TtaSearchTypedElement (elType, SearchInTree, el);
+	   elType.ElTypeNum = HTML_EL_Data_cell;
+	   if (cell == NULL)
+	     /* look for a data cell */
+	     cell = TtaSearchTypedElement (elType, SearchInTree, el);
+	   else
 	     {
-	       elType.ElTypeNum = HTML_EL_Table_cell;
-	       cell = TtaSearchTypedElement (elType, SearchInTree, el);
-	       if (cell == NULL)
-		 {
-		   /* no table cell found, it must be a data cell */
-		   elType.ElTypeNum = HTML_EL_Data_cell;
-		   cell = TtaSearchTypedElement (elType, SearchInTree, el);
-		 } 
-	       while (NumberCols > 1)
-		 {
-		   new_ = TtaNewTree (document, elType, "");
-		   TtaInsertSibling (new_, cell, FALSE, document);
-		   NumberCols--;
-		 }
-	     } 
+	       /* replace the cell element by a data cell */
+	       new_ = TtaNewTree (document, elType, "");
+	       TtaInsertSibling (new_, cell, FALSE, document);
+	       TtaRemoveTree (cell, document);
+	       cell = new_;
+	     }
+	   while (NumberCols > 1)
+	     {
+	       new_ = TtaNewTree (document, elType, "");
+	       TtaInsertSibling (new_, cell, FALSE, document);
+	       NumberCols--;
+	     }
+
 	   if (NumberRows > 1)
 	     {
 	       elType.ElTypeNum = HTML_EL_Table_row;
 	       row = TtaSearchTypedElement (elType, SearchInTree, el);
 	       while (NumberRows > 1)
 		 {
-		   new_ = TtaNewTree (document, elType, "");
+		   new_ = TtaNewElement (document, elType);
 		   TtaInsertSibling (new_, row, FALSE, document);
 		   NumberRows--;
 		 }
