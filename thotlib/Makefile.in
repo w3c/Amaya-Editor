@@ -44,25 +44,9 @@ clean :
 	$(RM) libThotKernel.a libThotEditor.a
 	(for dir in $(OBJDIRS) ; do $(RM) -r $$dir/*.o ; done)
 
-install : all
-	@(for dir in $(SUBDIRS) ; \
-	  do if test -d $$dir ; then cd $$dir ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install ; \
-	  cd .. ; fi ;done )
-	@(if test ! -d $(libdir) ; then $(MKDIR) $(libdir) ; fi)
-	$(INSTALL_DATA) libThotKernel.a $(libdir)
-	$(INSTALL_DATA) libThotEditor.a $(libdir)
-	@(if test ! -d $(bindir) ; then $(MKDIR) $(bindir) ; fi)
-	$(INSTALL_BIN) ../bin/print $(bindir)
+install :
 
 uninstall:
-	@(for dir in $(SUBDIRS) ; \
-	  do if test -d $$dir ; then cd $$dir ; \
-	  $(MAKE) uninstall ; \
-	  cd .. ; fi ;done )
-	$(RM) -f $(bindir)/print
-	$(RM) -f $(libdir)/libThotKernel.a
-	$(RM) -f $(libdir)/libThotEditor.a
 
 directories :
 	@(for dir in $(OBJDIRS) ; \

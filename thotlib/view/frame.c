@@ -401,7 +401,8 @@ int                 scroll;
 				      (x >= pFrame->FrXOrg) &&
 				      (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
 				  UnmapImage ((PictInfo *)pBox->BxPictInfo);
-				else
+				else if (((PictInfo *)pBox->BxPictInfo)->PicPixmap >= PLUGIN_FORMAT)
+				  /* redisplay plugins */
 				  DisplayBox (pBox, frame);
 			      }
 			    else if (y >= frameymin
@@ -811,6 +812,9 @@ int                 scroll;
 				 (x >= pFrame->FrXOrg) &&
 				 (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
 			     UnmapImage ((PictInfo *)pBox->BxPictInfo);
+			   else if (((PictInfo *)pBox->BxPictInfo)->PicPixmap >= PLUGIN_FORMAT)
+			     /* redisplay plugins */
+			     DisplayBox (pBox, frame);
 			 }
 		       /* Skip to next box */
 		       pBox = pBox->BxNext;

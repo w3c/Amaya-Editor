@@ -192,6 +192,7 @@ PRINTTYP_OBJ = \
 printtyp : ../thotlib/libThotKernel.a ../bin ../bin/printtyp
 	
 
+
 ../bin/printtyp : $(PRINTTYP_OBJ) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(PRINTTYP_OBJ) $(LIBS)
 	@$(ECHO) "====>" printtyp is done
@@ -201,12 +202,13 @@ clean :
 	$(RM) -f *.o dns_daemon
 
 install : all
-	@(if test ! -d $(bindir) ; then $(MKDIR) $(bindir) ; fi)
-	@(for i in $(COMPILERS) ; do \
-	  $(INSTALL_BIN) $$i $(bindir) ; done)
 	@(if test ! -d $(datadir) ; then $(MKDIR) $(datadir) ; fi)
 	@(if test ! -d $(datadir)/thot ; then $(MKDIR) $(datadir)/thot ; fi)
 	@(if test ! -d $(datadir)/thot/batch ; then $(MKDIR) $(datadir)/thot/batch ; fi)
+	@(if test ! -d $(datadir)/thot/applis ; then $(MKDIR) $(datadir)/thot/applis ; fi)
+	@(if test ! -d $(datadir)/thot/applis/bin ; then $(MKDIR) $(datadir)/thot/applis/bin ; fi)
+	@(for i in $(COMPILERS) ; do \
+	  $(INSTALL_BIN) $$i $(datadir)/thot/applis/bin ; done)
 	(for i in $(LANGUAGES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/batch/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(datadir)/thot/batch ; \
@@ -214,7 +216,7 @@ install : all
 
 uninstall :
 	(for i in $(COMPILERS) ; do \
-	  $(RM) $(bindir)/$$i ; done)
+	  $(RM) $(datadir)/thot/applis/bin/$$i ; done)
 	$(RM) -rf $(datadir)/thot/batch
 
 include .depends

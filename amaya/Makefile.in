@@ -279,15 +279,16 @@ html2piv: ../bin/html2piv
 
 install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL) \
 	   $(AMAYA_LIBWWW_INSTALL)
-	@(if test ! -d $(bindir) ; then $(MKDIR) $(bindir) ; fi)
-	$(INSTALL_BIN) ../bin/amaya $(bindir)
-	$(INSTALL_BIN) ../bin/print $(bindir)
 	@(if test ! -d $(datadir) ; then $(MKDIR) $(datadir) ; fi)
 	@(if test ! -d $(datadir)/thot ; then $(MKDIR) $(datadir)/thot ; fi)
 	@(if test ! -d $(datadir)/thot/amaya ; then $(MKDIR) $(datadir)/thot/amaya ; fi)
 	@(if test ! -d $(datadir)/thot/config ; then $(MKDIR) $(datadir)/thot/config ; fi)
 	@(if test ! -d $(datadir)/thot/fonts ; then $(MKDIR) $(datadir)/thot/fonts ; fi)
 	@(if test ! -d $(datadir)/thot/dicopar ; then $(MKDIR) $(datadir)/thot/dicopar ; fi)
+	@(if test ! -d $(datadir)/thot/applis ; then $(MKDIR) $(datadir)/thot/applis ; fi)
+	@(if test ! -d $(datadir)/thot/applis/bin ; then $(MKDIR) $(datadir)/thot/applis/bin ; fi)
+	$(INSTALL_BIN) ../bin/amaya $(datadir)/thot/applis/bin
+	$(INSTALL_BIN) ../bin/print $(datadir)/thot/applis/bin
 	(for i in $(AMAYAFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/amaya/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(datadir)/thot/amaya ; \
@@ -307,8 +308,7 @@ install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL) \
 
 uninstall : $(AMAYA_JAVA_UNINSTALL) $(AMAYA_PLUGIN_UNINSTALL) \
 	   $(AMAYA_LIBWWW_UNINSTALL)
-	$(RM) -f $(bindir)/amaya
-	$(RM) -rf $(datadir)/thot/amaya
+	$(RM) -rf $(datadir)/thot
 
 CEXTRACT= ../bin/cextract
 
