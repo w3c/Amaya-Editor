@@ -1904,6 +1904,9 @@ void ConfirmError (Document document, View view, char *label,
    CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view),
 			       extrabutton, confirmbutton, label);
 #endif /* _WINGUI */
+#ifdef _WX
+  CreateInitConfirmDlgWX (TtaGetViewFrame (document, view), NULL, label);
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -2733,6 +2736,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        TtaSetPageId (doc, page_id);
 #endif /* _WX */
        
+#ifndef _WX
        /* get the geometry of the main view */
        if (docType == docAnnot)
 	 tmp = "Annot_Formatted_view";
@@ -2773,6 +2777,25 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	  view of other documents */
        x = x + (doc - 1) * 10;
        y = y + (doc - 1) * 10;
+#endif /* _WX */
+
+#ifdef _WX
+       /* get the geometry of the main window
+	    + x, y
+	    + width, height
+	    + view1, view2 (view2 to open)
+	    + splitratio ( view1_height / view2_height )
+       */
+       /* TODO */
+
+       /*
+	 int x, y, w, h;
+	 View view1, view2;
+	 float ratio;
+	 TtaGetWindowGeometry( &x, &y, &w, &h, &ratio, &view1, &view2 );
+       */
+#endif /* _WX */
+
        /* open the main view */
        if (docType == docLog ||
 	   (docType == docLibrary && method == CE_RELATIVE))
@@ -4664,10 +4687,23 @@ ThotBool ViewToClose (NotifyDialog *event)
 
    view = event->view;
    document = event->document;
+
    structView = TtaGetViewFromName (document, "Structure_view");
+   if ( structView )
+     SaveGeometryOnExit( document, "Structure_view" );   /* Save the current view geometry */
    altView = TtaGetViewFromName (document, "Alternate_view");
+   if ( altView )
+     SaveGeometryOnExit( document, "Alternate_view" );   /* Save the current view geometry */
    linksView = TtaGetViewFromName (document, "Links_view");
+   if ( linksView )
+     SaveGeometryOnExit( document, "Links_view" );   /* Save the current view geometry */
    tocView = TtaGetViewFromName (document, "Table_of_contents");
+   if ( tocView )
+     SaveGeometryOnExit( document, "Table_of_contents" );   /* Save the current view geometry */
+
+   if ( !structView && !altView && !linksView && !tocView )
+     SaveGeometryOnExit( document, NULL ); /* Save geometry of every view */
+
    if (view != 1)
      /* let Thot perform normal operation */
      return FALSE;
@@ -7645,11 +7681,13 @@ void CheckAmayaClosed ()
   ----------------------------------------------------------------------*/
 void CloseDocument (Document doc, View view)
 {
+   /* Save the current windows geometry */
+   SaveGeometryOnExit( doc, NULL);
+
   if (DocumentURLs[doc])
     TtcCloseDocument (doc, view);
   if (!W3Loading)
     CheckAmayaClosed ();
-
 }
 
 /*----------------------------------------------------------------------
@@ -7658,7 +7696,6 @@ void AmayaClose (Document document, View view)
 {
    int          i;
    ThotBool     documentClosed;
-   ThotBool     saveGeometry = FALSE;
 
    /* invalid current loading */
    W3Loading = 0;
@@ -7666,9 +7703,8 @@ void AmayaClose (Document document, View view)
    documentClosed = TRUE;
 
    /* Save the current windows geometry */
-   TtaGetEnvBoolean ("SAVE_GEOMETRY", &saveGeometry);
-   if (saveGeometry)
-     SetGeometryConf ();
+   SaveGeometryOnExit( document, NULL );
+
    /* free each loaded document */
    for (i = 1; i < DocumentTableLength; i++)
       if (DocumentURLs[i] != NULL)
@@ -8051,4 +8087,17 @@ void InitAutoSave ()
       TtaReadClose (file);
     }
   TtaFreeMemory (urlstring);
+}
+
+/*----------------------------------------------------------------------
+  SaveGeometryOnExit
+  save the current document geometry only if "Save geometry on exit" is enable
+  ----------------------------------------------------------------------*/
+void SaveGeometryOnExit( int document, const char * view_name )
+{
+  ThotBool saveGeometry = FALSE;
+  TtaGetEnvBoolean ("SAVE_GEOMETRY", &saveGeometry);
+  if (saveGeometry)
+    /* Save the current windows geometry */
+    SetGeometryConf ( document, view_name );
 }

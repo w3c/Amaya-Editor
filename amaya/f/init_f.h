@@ -173,6 +173,8 @@ extern void AddDocInSaveList ( char *name,
                                char *initial_url,
                                int doctype );
 extern void InitAutoSave ( void );
+extern void SaveGeometryOnExit ( int document,
+                                 const char * view_name );
 
 #else /* __STDC__ */
 
@@ -343,6 +345,8 @@ extern void AddDocInSaveList ( char *name,
                                  char *initial_url,
                                  int doctype );
 extern void InitAutoSave ( void );
+extern void SaveGeometryOnExit ( int document,
+                                   const char * view_name );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -21,7 +21,8 @@ extern void BrowseConfMenu ( Document document,
                              View view );
 extern void ColorConfMenu ( Document document,
                             View view );
-extern void SetGeometryConf ( void );
+extern void SetGeometryConf ( int document,
+                              const char * view_name );
 extern void GeometryConfMenu ( Document document,
                                View view );
 extern void LanNegConfMenu ( Document document,
@@ -51,7 +52,8 @@ extern void BrowseConfMenu ( Document document,
                                View view );
 extern void ColorConfMenu ( Document document,
                               View view );
-extern void SetGeometryConf ( void );
+extern void SetGeometryConf ( int document,
+                                const char * view_name );
 extern void GeometryConfMenu ( Document document,
                                  View view );
 extern void LanNegConfMenu ( Document document,

@@ -3542,7 +3542,7 @@ static void RestoreDefEnvGeom (char *env_var, Document doc)
   Gets the current geometry for a view and saves it in the registry
   using the format "x y w h"
   ----------------------------------------------------------------------*/
-static void SetEnvGeom (char *view_name, Document doc)
+static void SetEnvGeom ( const char *view_name, Document doc )
 {
   int view;
   int x, y, w, h;
@@ -3553,13 +3553,13 @@ static void SetEnvGeom (char *view_name, Document doc)
     /* takes the current size and position of the main view */
     view = 1;
   else
-    view = TtaGetViewFromName (doc, view_name);
+    view = TtaGetViewFromName (doc, (char *)view_name);
   if (view != 0 && TtaIsViewOpen (doc, view))
     {
       /* get current geometry */
       TtaGetViewXYWH (doc, view, &x, &y, &w, &h);
       sprintf (s, "%d %d %d %d", x, y, w, h);
-      TtaSetEnvString (view_name, s, TRUE);
+      TtaSetEnvString ((char *)view_name, s, TRUE);
     }
 }
 
@@ -3600,32 +3600,40 @@ static void RestoreDefaultGeometryConf (void)
 /*----------------------------------------------------------------------
   SetEnvCurrentGeometry stores the current doc geometry in the registry
   ----------------------------------------------------------------------*/
-static void SetEnvCurrentGeometry ()
+static void SetEnvCurrentGeometry ( int document, const char * view_name )
 {
   int  source, i;
+  i = document;
 
   /* only do the processing if the document exists */
-  for (i = 1; i < DocumentTableLength; i++)
+  if (i)
     if (DocumentURLs[i] != NULL &&
 	DocumentTypes[i] != docSource &&
 	DocumentTypes[i] != docLog && 
 	DocumentTypes[i] != docLibrary )
       {
-	if (DocumentTypes[i] == docAnnot)
-	  SetEnvGeom ("Annot_Formatted_view", i);
+	if ( !view_name )
+	  {
+	    if (DocumentTypes[i] == docAnnot)
+	      SetEnvGeom ("Annot_Formatted_view", i);
+	    else
+	      if (DocumentTypes[i] == docBookmark)
+		SetEnvGeom ("Topics_Formatted_view", i);
+	      else
+		{
+		  SetEnvGeom ("Formatted_view", i);
+		  SetEnvGeom ("Structure_view", i);
+		  SetEnvGeom ("Alternate_view", i);
+		  SetEnvGeom ("Links_view", i);
+		  SetEnvGeom ("Table_of_contents", i);
+		  source = DocumentSource[i];
+		  if (source)
+		    SetEnvGeom ("Source_view", source);
+		}
+	  }
 	else
-	  if (DocumentTypes[i] == docBookmark)
-	    SetEnvGeom ("Topics_Formatted_view", i);
-	  else
-	    {
-	      SetEnvGeom ("Formatted_view", i);
-	      SetEnvGeom ("Structure_view", i);
-	      SetEnvGeom ("Alternate_view", i);
-	      SetEnvGeom ("Links_view", i);
-	      SetEnvGeom ("Table_of_contents", i);
-	      source = DocumentSource[i];
-	      if (source)
-		SetEnvGeom ("Source_view", source);
+	  {
+	    SetEnvGeom ( view_name, i );
 	  }
       }
 }
@@ -3634,10 +3642,10 @@ static void SetEnvCurrentGeometry ()
   SetGeometryConf
   Updates the registry Geometry values and redraws the windows
   ----------------------------------------------------------------------*/
-void SetGeometryConf (void)
+void SetGeometryConf ( int document, const char * view_name )
 {
   /* read the current values and save them into the registry */
-  SetEnvCurrentGeometry ();
+  SetEnvCurrentGeometry ( document, view_name );
 
   /* save the options */
   TtaSaveAppRegistry ();
@@ -3673,7 +3681,7 @@ LRESULT CALLBACK WIN_GeometryDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	{
 	  /* action buttons */
 	case ID_APPLY:
-	  SetGeometryConf ();
+	  SetGeometryConf ( GeometryDoc, NULL );
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
@@ -3722,7 +3730,7 @@ static void GeometryCallbackDialog (int ref, int typedata, char *data)
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
-	      SetGeometryConf ();
+	      SetGeometryConf ( GeometryDoc, NULL );
 	      break;
 	    case 2:
 	      RestoreDefaultGeometryConf ();
@@ -3778,12 +3786,12 @@ void         GeometryConfMenu (Document document, View view)
   TtaShowDialogue (GeometryBase + GeometryMenu, TRUE);
 #else /* !_WINGUI */
   if (GeometryHwnd)
-	 /* menu already active. We'll destroy it in order to have
-	  a menu that points to the current document */
-	 EndDialog (GeometryHwnd, ID_DONE);
+    /* menu already active. We'll destroy it in order to have
+       a menu that points to the current document */
+    EndDialog (GeometryHwnd, ID_DONE);
   GeometryDoc = document;
-      DialogBox (hInstance, MAKEINTRESOURCE (GEOMETRYMENU), NULL,
-		 (DLGPROC) WIN_GeometryDlgProc);
+  DialogBox (hInstance, MAKEINTRESOURCE (GEOMETRYMENU), NULL,
+	     (DLGPROC) WIN_GeometryDlgProc);
 #endif /* !_WINGUI */
 }
 
