@@ -67,6 +67,9 @@ extern void ParseTransformAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
                                       ThotBool delete );
+extern void ParsePathDataAttribute ( Attribute attr,
+                                     Element el,
+                                     Document doc );
 extern void GraphMLAttributeComplete ( Attribute attr,
                                        Element el,
                                        Document doc );
@@ -134,6 +137,9 @@ extern void ParseTransformAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,
                                         ThotBool delete */);
+extern void ParsePathDataAttribute (/* Attribute attr,
+                                       Element el,
+                                       Document doc */);
 extern void GraphMLAttributeComplete (/* Attribute attr,
                                          Element el,
                                          Document doc */);

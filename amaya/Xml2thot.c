@@ -91,7 +91,10 @@ typedef struct _XMLparserContext
     
     Proc	   EntityCreated;	/* action to be called when an entity
 					   has been parsed */
-    Proc	   CheckSurrounding;    /* action to be called to insert an
+    Proc	   CheckContext;        /* action to be called to verify if an
+					   element is allowed in the current
+					   structural context */
+    Proc	   CheckInsert;         /* action to be called to insert an
 					   element in the abstract tree */
     Proc	   ElementComplete;	/* action to be called when an element
 					   has been generated completely */
@@ -220,13 +223,17 @@ static  int         SUBTREE_ROOT_LEN = 20;
 #ifdef __STDC__
 static void   StartOfXmlStartElement (CHAR_T *GIname);
 static void   DisableExpatParser ();
-static void   XhtmlCheckSurrounding (Element *el, Element parent, Document doc, ThotBool *inserted);
-static void   XmlCheckSurrounding (Element *el, Element parent, Document doc, ThotBool *inserted);
+static void   XhtmlCheckInsert (Element *el, Element parent, Document doc, ThotBool *inserted);
+static void   XmlCheckInsert (Element *el, Element parent, Document doc, ThotBool *inserted);
+static void   XhtmlCheckContext (STRING elName, ElementType elType, ThotBool *isAllowed);
+static void   XmlCheckContext (STRING elName, ElementType elType, ThotBool *isAllowed);
 #else
 static void   StartOfXmlStartElement (GIname);
 static void   DisableExpatParser ();
-static void   XhtmlCheckSurrounding (el, parent, doc, inserted);
-static void   XmlCheckSurrounding (el, parent, doc, inserted);
+static void   XhtmlCheckInsert (el, parent, doc, inserted);
+static void   XmlCheckInsert (el, parent, doc, inserted);
+static void   XhtmlCheckContext (elName, elType, isAllowed);
+static void   XmlCheckContext (elName, elType, isAllowed);
 #endif
 
 /*----------------------------------------------------------------------
@@ -335,7 +342,8 @@ static void    InitXmlParserContexts ()
    ctxt->MapAttributeValue = (Proc) MapHTMLAttributeValue;
    ctxt->MapEntity = (Proc) XhtmlMapEntity;
    ctxt->EntityCreated = (Proc) XhtmlEntityCreated;
-   ctxt->CheckSurrounding = (Proc) XhtmlCheckSurrounding;
+   ctxt->CheckContext = (Proc) XhtmlCheckContext;
+   ctxt->CheckInsert = (Proc) XhtmlCheckInsert;
    ctxt->ElementComplete = (Proc) XhtmlElementComplete;
    ctxt->AttributeComplete = NULL;
    ctxt->GetDTDName = NULL;
@@ -367,7 +375,8 @@ static void    InitXmlParserContexts ()
    ctxt->MapAttributeValue = (Proc) MapMathMLAttributeValue;
    ctxt->MapEntity = (Proc) MapMathMLEntityWithExpat;
    ctxt->EntityCreated = (Proc) MathMLEntityCreatedWithExpat;
-   ctxt->CheckSurrounding = (Proc) XmlCheckSurrounding;
+   ctxt->CheckContext = (Proc) XmlCheckContext;
+   ctxt->CheckInsert = (Proc) XmlCheckInsert;
    ctxt->ElementComplete = (Proc) MathMLElementComplete;
    ctxt->AttributeComplete = (Proc) MathMLAttributeComplete;
    ctxt->GetDTDName = (Proc) MathMLGetDTDName;
@@ -399,7 +408,8 @@ static void    InitXmlParserContexts ()
    ctxt->MapAttributeValue = (Proc) MapGraphMLAttributeValue;
    ctxt->MapEntity = (Proc) MapGraphMLEntityWithExpat;
    ctxt->EntityCreated = (Proc) GraphMLEntityCreatedWithExpat;
-   ctxt->CheckSurrounding = (Proc) XmlCheckSurrounding;
+   ctxt->CheckContext = (Proc) XmlCheckContext;
+   ctxt->CheckInsert = (Proc) XmlCheckInsert;
    ctxt->ElementComplete = (Proc) GraphMLElementComplete;
    ctxt->AttributeComplete = (Proc) GraphMLAttributeComplete;
    ctxt->GetDTDName = (Proc) GraphMLGetDTDName;
@@ -431,7 +441,8 @@ static void    InitXmlParserContexts ()
    ctxt->MapAttributeValue = (Proc) MapXLinkAttributeValue;
    ctxt->MapEntity = NULL;
    ctxt->EntityCreated = NULL;
-   ctxt->CheckSurrounding = (Proc) XmlCheckSurrounding;
+   ctxt->CheckContext = (Proc) XmlCheckContext;
+   ctxt->CheckInsert = (Proc) XmlCheckInsert;
    ctxt->ElementComplete = NULL;
    ctxt->AttributeComplete = (Proc) XLinkAttributeComplete;
    ctxt->GetDTDName = NULL;
@@ -835,15 +846,15 @@ ElementType       elType;
 }
 
 /*----------------------------------------------------------------------
-   XmlCheckSurrounding
+   XmlCheckInsert
    Inserts a Pseudo_paragraph element in the abstract tree if el 
    is a math within a XHTML element 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void  XmlCheckSurrounding (Element *el, Element parent,
-				  Document doc, ThotBool *inserted)
+static void  XmlCheckInsert (Element *el, Element parent,
+			     Document doc, ThotBool *inserted)
 #else
-static void  XmlCheckSurrounding (el, parent, doc, inserted)
+static void  XmlCheckInsert (el, parent, doc, inserted)
 Element     *el;
 Element      parent;
 Document     doc;
@@ -851,7 +862,7 @@ ThotBool    *inserted;
 
 #endif
 {
-   ElementType  newElType, elType;
+   ElementType  newElType, elType, prevType;
    Element      newEl, ancestor, prev, prevprev;
    
    if (parent == NULL)
@@ -867,8 +878,11 @@ ThotBool    *inserted;
 	 return;
 
        while (ancestor != NULL &&
-	      IsXMLElementInline (ancestor))
-	 ancestor = TtaGetParent (ancestor);
+	      IsXMLElementInline (elType))
+	 {
+	   ancestor = TtaGetParent (ancestor);
+	   elType = TtaGetElementType (ancestor);
+	 }
        
        if (ancestor != NULL)
 	 {
@@ -898,7 +912,8 @@ ThotBool    *inserted;
 		     TtaPreviousSibling (&prev);
 		     while (prev != NULL)
 		       {
-			 if (IsXMLElementInline (prev))
+			 prevType = TtaGetElementType (prev);
+			 if (IsXMLElementInline (prevType))
 			   {
 			     prevprev = prev;  TtaPreviousSibling (&prevprev);
 			     TtaRemoveTree (prev, doc);
@@ -916,7 +931,7 @@ ThotBool    *inserted;
 }
 
 /*----------------------------------------------------------------------
-   XhtmlCheckSurrounding
+   XhtmlCheckInsert
    Inserts an element Pseudo_paragraph in the abstract tree of
    the Thot document if el is a leaf and is not allowed to be
    a child of element parent.
@@ -926,10 +941,10 @@ ThotBool    *inserted;
    Return TRUE if element *el has been inserted in the tree.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void  XhtmlCheckSurrounding (Element *el, Element  parent,
-				    Document doc, ThotBool *inserted)
+static void  XhtmlCheckInsert (Element *el, Element  parent,
+			       Document doc, ThotBool *inserted)
 #else
-static void  XhtmlCheckSurrounding (el, parent, doc, inserted)
+static void  XhtmlCheckInsert(el, parent, doc, inserted)
 Element     *el;
 Element      parent;
 Document     doc;
@@ -937,7 +952,7 @@ ThotBool    *inserted;
 
 #endif
 {
-   ElementType   parentType, newElType, elType;
+   ElementType   parentType, newElType, elType, prevType, ancestorType;
    Element       newEl, ancestor, prev, prevprev;
 
    if (parent == NULL)
@@ -951,57 +966,63 @@ ThotBool    *inserted;
        elType.ElTypeNum == HTML_EL_Input ||
        elType.ElTypeNum == HTML_EL_Text_Area)
      {
-	/* the element to be inserted is a character string */
-	/* Search the ancestor that is not a character level element */
-	ancestor = parent;
-	while (ancestor != NULL &&
-	       IsXMLElementInline (ancestor))
-	       ancestor = TtaGetParent (ancestor);
-
-	if (ancestor != NULL)
-	  {
-	    elType = TtaGetElementType (ancestor);
-	    if (XhtmlCannotContainText (elType) &&
-		!XmlWithinStack (HTML_EL_Option_Menu, DocumentSSchema))
-	      {
-		/* Element ancestor cannot contain text directly. Create a */
-		/* Pseudo_paragraph element as the parent of the text element */
-		newElType.ElSSchema = DocumentSSchema;
-		newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-		newEl = TtaNewElement (doc, newElType);
-		XmlSetElemLineNumber (newEl);
-		/* insert the new Pseudo_paragraph element */
-		InsertXmlElement (&newEl);
-		if (newEl != NULL)
-		  {
-		    /* insert the Text element in the tree */
-		    TtaInsertFirstChild (el, newEl, doc);
-		    BlockInCharLevelElem (newEl);
-		    *inserted = TRUE;
-		    
-		    /* if previous siblings of the new Pseudo_paragraph element
-		       are character level elements, move them within the new
-		       Pseudo_paragraph element */
-		    prev = newEl;
-		    TtaPreviousSibling (&prev);
-		    while (prev != NULL)
-		      {
-			if (!IsXMLElementInline (prev))
-			  prev = NULL;
-			else
-			  {
-			    prevprev = prev;  TtaPreviousSibling (&prevprev);
-			    TtaRemoveTree (prev, doc);
-			    TtaInsertFirstChild (&prev, newEl, doc);
-			    prev = prevprev;
-			  }
-		      }
-		  }
-     	      }
-	  }
+       /* the element to be inserted is a character string */
+       /* Search the ancestor that is not a character level element */
+       ancestor = parent;
+       ancestorType = TtaGetElementType (ancestor);
+       while (ancestor != NULL &&
+	      IsXMLElementInline (ancestorType))
+	 {
+	   ancestor = TtaGetParent (ancestor);
+	   ancestorType = TtaGetElementType (ancestor);
+	 }
+       
+       if (ancestor != NULL)
+	 {
+	   elType = TtaGetElementType (ancestor);
+	   if (XhtmlCannotContainText (elType) &&
+	       !XmlWithinStack (HTML_EL_Option_Menu, DocumentSSchema))
+	     {
+	       /* Element ancestor cannot contain text directly. Create a */
+	       /* Pseudo_paragraph element as the parent of the text element */
+	       newElType.ElSSchema = DocumentSSchema;
+	       newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+	       newEl = TtaNewElement (doc, newElType);
+	       XmlSetElemLineNumber (newEl);
+	       /* insert the new Pseudo_paragraph element */
+	       InsertXmlElement (&newEl);
+	       if (newEl != NULL)
+		 {
+		   /* insert the Text element in the tree */
+		   TtaInsertFirstChild (el, newEl, doc);
+		   BlockInCharLevelElem (newEl);
+		   *inserted = TRUE;
+		   
+		   /* if previous siblings of the new Pseudo_paragraph element
+		      are character level elements, move them within the new
+		      Pseudo_paragraph element */
+		   prev = newEl;
+		   TtaPreviousSibling (&prev);
+		   while (prev != NULL)
+		     {
+		       prevType = TtaGetElementType (prev);
+		       if (!IsXMLElementInline (prevType))
+			 prev = NULL;
+		       else
+			 {
+			   prevprev = prev; 
+			   TtaPreviousSibling (&prevprev);
+			   TtaRemoveTree (prev, doc);
+			   TtaInsertFirstChild (&prev, newEl, doc);
+			   prev = prevprev;
+			 }
+		     }
+		 }
+	     }
+	 }
      }
    else
-     if (!IsXMLElementInline (*el))
+     if (!IsXMLElementInline (elType))
        /* it is not a character level element */
        /* don't insert it as a child of a Pseudo_paragraph, but as a sibling */
        {
@@ -1016,7 +1037,7 @@ ThotBool    *inserted;
    if (!*inserted)
      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
          (elType.ElTypeNum != HTML_EL_Inserted_Text &&
-	  IsXMLElementInline (*el)))
+	  IsXMLElementInline (TtaGetElementType (*el))))
        {
          /* it is a character level element */
 	 parentType = TtaGetElementType (parent);
@@ -1063,7 +1084,7 @@ Element  *el;
 	    parent = NULL;
 	  else
 	    parent = TtaGetParent (XMLcontext.lastElement);
-	  (*(currentParserCtxt->CheckSurrounding))
+	  (*(currentParserCtxt->CheckInsert))
 	    (el, parent, XMLcontext.doc, &inserted);
 	  if (!inserted)
 	    {
@@ -1079,7 +1100,7 @@ Element  *el;
 	}
       else
 	{
-	  (*(currentParserCtxt->CheckSurrounding))
+	  (*(currentParserCtxt->CheckInsert))
 	    (el, XMLcontext.lastElement, XMLcontext.doc, &inserted);
 	  if (!inserted)
 	    TtaInsertFirstChild (el, XMLcontext.lastElement, XMLcontext.doc);
@@ -1420,32 +1441,58 @@ USTRING          mappedName;
 /*--------------------  StartElement  (start)  ---------------------*/
 
 /*----------------------------------------------------------------------
-   XhtmlContextOK 
-   Returns TRUE if the element at position entry in the mapping table
-   is allowed to occur in the current structural context.
+   XmlCheckContext
+   Verifies if the element elName is allowed to occur in the current
+   structural context.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     XhtmlContextOK (STRING elName)
+static void   XmlCheckContext (STRING elName,
+			       ElementType elType,
+			       ThotBool *isAllowed)
 #else
-static ThotBool     XhtmlContextOK (elName)
-STRING    elName;
+static void   XmlCheckContext (elName, elType, isAllowed)
+STRING        elName;
+ElementType   elType;
+ThotBool     *isAllowed;
 
 #endif
 {
-   ThotBool      ok;
+  *isAllowed = TRUE;
+  return;
+}
 
+/*----------------------------------------------------------------------
+   XhtmlCheckContext
+   Verifies if the XHTML element elName is allowed to occur 
+   in the current structural context.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void   XhtmlCheckContext (STRING elName,
+				 ElementType elType,
+				 ThotBool *isAllowed)
+#else
+static void   XhtmlCheckContext (elName, elType, isAllowed)
+STRING        elName;
+ElementType   elType;
+ThotBool     *isAllowed;
+
+#endif
+{
    if (stackLevel <= 1 || nameElementStack[stackLevel - 1] == NULL)
-     return TRUE;
+     {
+       *isAllowed = TRUE;
+       return;
+     }
    else
      {
-       ok = TRUE;
+       *isAllowed = TRUE;
        /* only TH and TD elements are allowed as children of a TR element */
        if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("tr")))
 	 if (ustrcmp (elName, TEXT("th")) &&
 	     ustrcmp (elName, TEXT("td")))
-	   ok = FALSE;
+	   *isAllowed = FALSE;
 
-       if (ok &&
+       if (*isAllowed &&
 	   !ustrcmp (nameElementStack[stackLevel - 1], TEXT("table")))
 	 /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
 	 /* allowed as children of a TABLE element */
@@ -1466,11 +1513,11 @@ STRING    elName;
 		   StartOfXmlStartElement (TEXT("tr"));
 		 }
 	       else
-		 ok = FALSE;
+		 *isAllowed = FALSE;
 	     }
 	 }
 
-       if (ok)
+       if (*isAllowed)
 	 /* CAPTION, THEAD, TFOOT, TBODY, COLGROUP are allowed only as
 	    children of a TABLE element */
 	 if (ustrcmp (elName, TEXT("caption"))  == 0 ||
@@ -1479,16 +1526,16 @@ STRING    elName;
 	     ustrcmp (elName, TEXT("tbody"))    == 0 ||
 	     ustrcmp (elName, TEXT("colgroup")) == 0)
 	     if (ustrcmp (nameElementStack[stackLevel - 1], TEXT("table")) != 0)
-	         ok = FALSE;
+		 *isAllowed = FALSE;
 
-       if (ok)
+       if (*isAllowed)
 	 {
-	 /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
-	 if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("thead")) ||
-	     !ustrcmp (nameElementStack[stackLevel - 1], TEXT("tfoot")) ||
-	     !ustrcmp (nameElementStack[stackLevel - 1], TEXT("tbody")))
-	   {
-	     if (ustrcmp (elName, TEXT("tr")))
+	   /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
+	   if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("thead")) ||
+	       !ustrcmp (nameElementStack[stackLevel - 1], TEXT("tfoot")) ||
+	       !ustrcmp (nameElementStack[stackLevel - 1], TEXT("tbody")))
+	     {
+	       if (ustrcmp (elName, TEXT("tr")))
 	         if (!ustrcmp (elName, TEXT("td")) ||
 		     !ustrcmp (elName, TEXT("th")))
 		   /* Table cell within a thead, tfoot or tbody without a tr. */
@@ -1498,29 +1545,37 @@ STRING    elName;
 		     StartOfXmlStartElement (TEXT("tr"));
 		   }
 		 else
-		   ok = FALSE;
-	   }
+		   *isAllowed = FALSE;
+	     }
 	 }
 
-       if (ok &&
+       if (*isAllowed)
+	 {
+	   /* Block elements are not allowed within an anchor */
+	   if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("a")) &&
+	       (!IsXMLElementInline (elType)))
+	       *isAllowed = FALSE;
+	 }
+       
+       if (*isAllowed &&
 	   ustrcmp (elName, TEXT("body")) == 0 &&
 	   XmlWithinStack (HTML_EL_BODY, DocumentSSchema))
 	 /* refuse BODY within BODY */
-	 ok = FALSE;
-
-       if (ok)
+	 *isAllowed = FALSE;
+       
+       if (*isAllowed)
 	 /* refuse HEAD within HEAD */
 	 if (ustrcmp (elName, TEXT("head")) == 0)
 	   if (XmlWithinStack (HTML_EL_HEAD, DocumentSSchema))
-	     ok = FALSE;
+	     *isAllowed = FALSE;
 
-       if (ok)
+       if (*isAllowed)
 	 /* refuse STYLE within STYLE */
 	 if (ustrcmp (elName, TEXT("style")) == 0)
 	   if (XmlWithinStack (HTML_EL_STYLE_, DocumentSSchema))
-	     ok = FALSE;
-
-       return ok;
+	     *isAllowed = FALSE;
+       
+       return;
      }
 }
 
@@ -1530,10 +1585,10 @@ STRING    elName;
    Create the corresponding Thot element according to the mapping table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void   StartOfXmlStartElement (CHAR_T* GIname)
+static void       StartOfXmlStartElement (CHAR_T* GIname)
 #else
-static void   StartOfXmlStartElement (GIname)
-CHAR_T*             GIname;
+static void       StartOfXmlStartElement (GIname)
+CHAR_T*           GIname;
 
 #endif
 {
@@ -1543,6 +1598,7 @@ CHAR_T*             GIname;
   STRING          mappedName = NULL;
   ThotBool        elInStack = FALSE;
   ThotBool        highEnoughLevel = TRUE;
+  ThotBool        isAllowed = TRUE;
 
   UnknownTag = FALSE;
 
@@ -1595,11 +1651,11 @@ CHAR_T*             GIname;
   else
     ustrcpy (currentElementName, mappedName);
   
-  /* element found in the corresponding DTD */
-  if (currentParserCtxt != NULL &&
-      (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0) &&
-      (!XhtmlContextOK (mappedName)))
-    /* Xhtml element not allowed in the current structural context */
+  /* Element found in the corresponding DTD */
+  if (currentParserCtxt != NULL)
+    (*(currentParserCtxt->CheckContext))(mappedName, elType, &isAllowed);
+  if (!isAllowed)
+    /* Element not allowed in the current structural context */
     {
       usprintf (msgBuffer,
 		TEXT("The XML element %s is not allowed here"), GIname);
@@ -1820,7 +1876,7 @@ static ThotBool  IsLeadingSpaceUseless ()
 #endif  /* __STDC__ */
 
 {
-   ElementType     elType;
+   ElementType     elType, lastElType, ancestorType;
    STRING          elSchemaName;
    Element         parent, ancestor, prev;
    ThotBool        removeLeadingSpaces;
@@ -1834,7 +1890,8 @@ static ThotBool  IsLeadingSpaceUseless ()
 	 parent = XMLcontext.lastElement;
        elType = TtaGetElementType (parent);
        elSchemaName = TtaGetSSchemaName (elType.ElSSchema);
-       if (IsXMLElementInline (XMLcontext.lastElement) &&
+       lastElType = TtaGetElementType (XMLcontext.lastElement);
+       if (IsXMLElementInline (lastElType) &&
 	   ((ustrcmp (TEXT("HTML"), elSchemaName) != 0) ||
 	   ((ustrcmp (TEXT("HTML"), elSchemaName) == 0) &&
 	    (elType.ElTypeNum != HTML_EL_Option_Menu) &&
@@ -1863,13 +1920,17 @@ static ThotBool  IsLeadingSpaceUseless ()
 	   elType.ElTypeNum != HTML_EL_OptGroup))
 	 {
 	   ancestor = parent;
+	   ancestorType = TtaGetElementType (ancestor);
 	   while (removeLeadingSpaces &&
-		  IsXMLElementInline (ancestor))
+		  IsXMLElementInline (ancestorType))
 	     {
 	       prev = ancestor;
 	       TtaPreviousSibling (&prev);
 	       if (prev == NULL)
-		 ancestor = TtaGetParent (ancestor);
+		 {
+		   ancestor = TtaGetParent (ancestor);
+		   ancestorType = TtaGetElementType (ancestor);
+		 }
 	       else
 		 removeLeadingSpaces = FALSE;
 	     }
@@ -2025,25 +2086,25 @@ STRING      data;
    Create an attribute of type attrType for the element el.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         XhtmlCreateAttr (Element       el,
-				     AttributeType attrType,
-				     CHAR_T*       text,
-				     ThotBool      invalid,
-				     Document      doc)
+static void     XhtmlCreateAttr (Element       el,
+				 AttributeType attrType,
+				 CHAR_T*       text,
+				 ThotBool      invalid,
+				 Document      doc)
 #else
-static void         XhtmlCreateAttr (el, attrType, text, invalid, doc)
-Element        el;
-AttributeType  attrType;
-CHAR_T*        text;
-ThotBool       invalid;
-Document       doc;
+static void     XhtmlCreateAttr (el, attrType, text, invalid, doc)
+Element         el;
+AttributeType   attrType;
+CHAR_T*         text;
+ThotBool        invalid;
+Document        doc;
 
 #endif
 {
-  int          attrKind;
-  int          length;
-  CHAR_T*      buffer;
-  Attribute    attr, oldAttr;
+  int           attrKind;
+  int           length;
+  CHAR_T*       buffer;
+  Attribute     attr, oldAttr;
 
   if (attrType.AttrTypeNum != 0)
     {
@@ -2216,9 +2277,9 @@ static void     XmlEndOfAttrName (CHAR_T  *attrName,
 				  Document doc)
 #else
 static void     XmlEndOfAttrName (attrName, el, doc)
-CHAR_T     *attrName;
-Element     el;
-Document    doc;
+CHAR_T         *attrName;
+Element         el;
+Document        doc;
 
 #endif
 {
@@ -2265,17 +2326,17 @@ Document    doc;
    Create the corresponding Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void      EndOfAttributeName (CHAR_T *attrName)
+static void    EndOfAttributeName (CHAR_T *attrName)
 #else
-static void      EndOfAttributeName (attrName)
-CHAR_T         *attrName;
+static void    EndOfAttributeName (attrName)
+CHAR_T        *attrName;
 
 #endif
 {
-   CHAR_T         *buffer;
-   CHAR_T         *bufName;
-   CHAR_T         *ptr;
-   CHAR_T          msgBuffer[MaxMsgLength];
+   CHAR_T     *buffer;
+   CHAR_T     *bufName;
+   CHAR_T     *ptr;
+   CHAR_T      msgBuffer[MaxMsgLength];
 
    currentAttribute = NULL;
    lastMappedAttr = NULL;
@@ -2349,16 +2410,16 @@ CHAR_T         *attrName;
    Put the string ChrString in the leaf of current element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      XhtmlPutInContent (STRING ChrString)
+static Element    XhtmlPutInContent (STRING ChrString)
 #else
-static Element      XhtmlPutInContent (ChrString)
-STRING              ChrString;
+static Element    XhtmlPutInContent (ChrString)
+STRING            ChrString;
 
 #endif
 {
-   Element             el, child;
-   ElementType         elType;
-   int                 length;
+   Element        el, child;
+   ElementType    elType;
+   int            length;
 
    el = NULL;
    if (XMLcontext.lastElement != NULL)

@@ -289,19 +289,17 @@ Document          doc;
    Thot type is an inline character or not
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool          IsXMLElementInline (Element el)
+ThotBool         IsXMLElementInline (ElementType elType)
 #else
-ThotBool          IsXMLElementInline (el)
-Element           el;
+ThotBool         IsXMLElementInline (elType)
+ElementType      el;
 #endif
 {
-  ElementType         elType;
-  int                 i;
-  ThotBool            ret = FALSE;
-  STRING              name;
-  ElemMapping        *ptr;
+  int            i;
+  ThotBool       ret = FALSE;
+  STRING         name;
+  ElemMapping   *ptr;
 
-  elType = TtaGetElementType (el);
   if (elType.ElTypeNum > 0)
     {
       i = 0;
