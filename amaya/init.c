@@ -1515,6 +1515,15 @@ View                view;
        structView = TtaOpenView (document, "Structure_view", x, y, w, h);
        TtcSwitchButtonBar (document, structView);
        TtcSwitchCommands (document, structView);
+       if (HelpDocuments[document]) {
+	   TtaSetItemOff (document, structView, Edit_, BCut);
+	   TtaSetItemOff (document, structView, Edit_, BPaste);
+	   TtaSetItemOff (document, structView, Edit_, BClear);
+	   TtaSetItemOff (document, structView, Edit_, BSpellCheck);
+	   TtaSetMenuOff (document, structView, StructTypes);
+	   TtaSetMenuOff (document, structView, Types);
+	   TtaSetMenuOff (document, structView, Attributes_);
+       }
      }
 #ifdef MATHML
    mathView = TtaGetViewFromName (document, "Math_Structure_view");
@@ -2047,7 +2056,10 @@ void               *ctx_cbf;
 		   /* help document has to be in read-only mode */
 		   TtcSwitchCommands (newdoc, 1);
 		   HelpDocuments[newdoc] = TRUE;
-		   TtaSetMenuOff (newdoc, 1, Edit_);
+		   TtaSetItemOff (newdoc, 1, Edit_, BCut);
+		   TtaSetItemOff (newdoc, 1, Edit_, BPaste);
+		   TtaSetItemOff (newdoc, 1, Edit_, BClear);
+		   TtaSetItemOff (newdoc, 1, Edit_, BSpellCheck);
 		   TtaSetMenuOff (newdoc, 1, Types);
 		   TtaSetMenuOff (newdoc, 1, Links);
 		   TtaSetMenuOff (newdoc, 1, Style);
