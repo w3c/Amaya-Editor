@@ -27,6 +27,8 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
 OUTDIR=.\..
@@ -102,7 +104,6 @@ CLEAN :
 	-@erase "$(INTDIR)\fileaccess.obj"
 	-@erase "$(INTDIR)\font.obj"
 	-@erase "$(INTDIR)\frame.obj"
-	-@erase "$(INTDIR)\genericdriver.obj"
 	-@erase "$(INTDIR)\geom.obj"
 	-@erase "$(INTDIR)\gifhandler.obj"
 	-@erase "$(INTDIR)\hyphen.obj"
@@ -130,7 +131,6 @@ CLEAN :
 	-@erase "$(INTDIR)\platform.obj"
 	-@erase "$(INTDIR)\pnghandler.obj"
 	-@erase "$(INTDIR)\presentationapi.obj"
-	-@erase "$(INTDIR)\presentdriver.obj"
 	-@erase "$(INTDIR)\presentmenu.obj"
 	-@erase "$(INTDIR)\presrules.obj"
 	-@erase "$(INTDIR)\presvariables.obj"
@@ -157,7 +157,6 @@ CLEAN :
 	-@erase "$(INTDIR)\searchmenustr.obj"
 	-@erase "$(INTDIR)\searchref.obj"
 	-@erase "$(INTDIR)\selectionapi.obj"
-	-@erase "$(INTDIR)\specificdriver.obj"
 	-@erase "$(INTDIR)\spellchecker.obj"
 	-@erase "$(INTDIR)\structchange.obj"
 	-@erase "$(INTDIR)\structcommands.obj"
@@ -167,6 +166,7 @@ CLEAN :
 	-@erase "$(INTDIR)\structmodif.obj"
 	-@erase "$(INTDIR)\structschema.obj"
 	-@erase "$(INTDIR)\structselect.obj"
+	-@erase "$(INTDIR)\style.obj"
 	-@erase "$(INTDIR)\textcommands.obj"
 	-@erase "$(INTDIR)\thotmodule.obj"
 	-@erase "$(INTDIR)\thotmsg.obj"
@@ -204,7 +204,6 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
@@ -214,37 +213,6 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I\
  /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -303,7 +271,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\fileaccess.obj" \
 	"$(INTDIR)\font.obj" \
 	"$(INTDIR)\frame.obj" \
-	"$(INTDIR)\genericdriver.obj" \
 	"$(INTDIR)\geom.obj" \
 	"$(INTDIR)\gifhandler.obj" \
 	"$(INTDIR)\hyphen.obj" \
@@ -331,7 +298,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\platform.obj" \
 	"$(INTDIR)\pnghandler.obj" \
 	"$(INTDIR)\presentationapi.obj" \
-	"$(INTDIR)\presentdriver.obj" \
 	"$(INTDIR)\presentmenu.obj" \
 	"$(INTDIR)\presrules.obj" \
 	"$(INTDIR)\presvariables.obj" \
@@ -358,7 +324,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\searchmenustr.obj" \
 	"$(INTDIR)\searchref.obj" \
 	"$(INTDIR)\selectionapi.obj" \
-	"$(INTDIR)\specificdriver.obj" \
 	"$(INTDIR)\spellchecker.obj" \
 	"$(INTDIR)\structchange.obj" \
 	"$(INTDIR)\structcommands.obj" \
@@ -368,6 +333,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\structmodif.obj" \
 	"$(INTDIR)\structschema.obj" \
 	"$(INTDIR)\structselect.obj" \
+	"$(INTDIR)\style.obj" \
 	"$(INTDIR)\textcommands.obj" \
 	"$(INTDIR)\thotmodule.obj" \
 	"$(INTDIR)\thotmsg.obj" \
@@ -479,7 +445,6 @@ CLEAN :
 	-@erase "$(INTDIR)\fileaccess.obj"
 	-@erase "$(INTDIR)\font.obj"
 	-@erase "$(INTDIR)\frame.obj"
-	-@erase "$(INTDIR)\genericdriver.obj"
 	-@erase "$(INTDIR)\geom.obj"
 	-@erase "$(INTDIR)\gifhandler.obj"
 	-@erase "$(INTDIR)\hyphen.obj"
@@ -507,7 +472,6 @@ CLEAN :
 	-@erase "$(INTDIR)\platform.obj"
 	-@erase "$(INTDIR)\pnghandler.obj"
 	-@erase "$(INTDIR)\presentationapi.obj"
-	-@erase "$(INTDIR)\presentdriver.obj"
 	-@erase "$(INTDIR)\presentmenu.obj"
 	-@erase "$(INTDIR)\presrules.obj"
 	-@erase "$(INTDIR)\presvariables.obj"
@@ -534,7 +498,6 @@ CLEAN :
 	-@erase "$(INTDIR)\searchmenustr.obj"
 	-@erase "$(INTDIR)\searchref.obj"
 	-@erase "$(INTDIR)\selectionapi.obj"
-	-@erase "$(INTDIR)\specificdriver.obj"
 	-@erase "$(INTDIR)\spellchecker.obj"
 	-@erase "$(INTDIR)\structchange.obj"
 	-@erase "$(INTDIR)\structcommands.obj"
@@ -544,6 +507,7 @@ CLEAN :
 	-@erase "$(INTDIR)\structmodif.obj"
 	-@erase "$(INTDIR)\structschema.obj"
 	-@erase "$(INTDIR)\structselect.obj"
+	-@erase "$(INTDIR)\style.obj"
 	-@erase "$(INTDIR)\textcommands.obj"
 	-@erase "$(INTDIR)\thotmodule.obj"
 	-@erase "$(INTDIR)\thotmsg.obj"
@@ -581,7 +545,6 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
  "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I\
  "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I\
@@ -591,37 +554,6 @@ CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I\
  /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libThotEditor.bsc" 
 BSC32_SBRS= \
@@ -680,7 +612,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\fileaccess.obj" \
 	"$(INTDIR)\font.obj" \
 	"$(INTDIR)\frame.obj" \
-	"$(INTDIR)\genericdriver.obj" \
 	"$(INTDIR)\geom.obj" \
 	"$(INTDIR)\gifhandler.obj" \
 	"$(INTDIR)\hyphen.obj" \
@@ -708,7 +639,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\platform.obj" \
 	"$(INTDIR)\pnghandler.obj" \
 	"$(INTDIR)\presentationapi.obj" \
-	"$(INTDIR)\presentdriver.obj" \
 	"$(INTDIR)\presentmenu.obj" \
 	"$(INTDIR)\presrules.obj" \
 	"$(INTDIR)\presvariables.obj" \
@@ -735,7 +665,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\searchmenustr.obj" \
 	"$(INTDIR)\searchref.obj" \
 	"$(INTDIR)\selectionapi.obj" \
-	"$(INTDIR)\specificdriver.obj" \
 	"$(INTDIR)\spellchecker.obj" \
 	"$(INTDIR)\structchange.obj" \
 	"$(INTDIR)\structcommands.obj" \
@@ -745,6 +674,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\structmodif.obj" \
 	"$(INTDIR)\structschema.obj" \
 	"$(INTDIR)\structselect.obj" \
+	"$(INTDIR)\style.obj" \
 	"$(INTDIR)\textcommands.obj" \
 	"$(INTDIR)\thotmodule.obj" \
 	"$(INTDIR)\thotmsg.obj" \
@@ -782,6 +712,36 @@ LIB32_OBJS= \
 <<
 
 !ENDIF 
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
 
 
 !IF "$(CFG)" == "libThotEditor - Win32 Release" || "$(CFG)" ==\
@@ -6948,111 +6908,6 @@ DEP_CPP_FRAME=\
 
 !ENDIF 
 
-SOURCE=..\..\thotlib\presentation\genericdriver.c
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-DEP_CPP_GENER=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\genericdriver.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\presentdriver.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presentdriver_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_GENER=\
-	"..\..\thotlib\include\HTVMSUtils.h"\
-	
-
-"$(INTDIR)\genericdriver.obj" : $(SOURCE) $(DEP_CPP_GENER) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-DEP_CPP_GENER=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\genericdriver.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\presentdriver.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presentdriver_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
-
-"$(INTDIR)\genericdriver.obj" : $(SOURCE) $(DEP_CPP_GENER) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
 SOURCE=..\..\thotlib\dialogue\geom.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
@@ -10021,24 +9876,23 @@ DEP_CPP_PRESE=\
 
 !ENDIF 
 
-SOURCE=..\..\thotlib\presentation\presentdriver.c
+SOURCE=..\..\thotlib\dialogue\presentmenu.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
 
 DEP_CPP_PRESEN=\
 	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
 	"..\..\thotlib\include\appstruct.h"\
 	"..\..\thotlib\include\attribute.h"\
+	"..\..\thotlib\include\dialog.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
+	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
 	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\presentdriver.h"\
 	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
 	"..\..\thotlib\include\simx.h"\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_gui.h"\
@@ -10047,10 +9901,47 @@ DEP_CPP_PRESEN=\
 	"..\..\thotlib\include\typebase.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\include\wininclude.h"\
+	"..\..\thotlib\internals\f\actions_f.h"\
+	"..\..\thotlib\internals\f\attributes_f.h"\
+	"..\..\thotlib\internals\f\boxselection_f.h"\
+	"..\..\thotlib\internals\f\changeabsbox_f.h"\
+	"..\..\thotlib\internals\f\changepresent_f.h"\
+	"..\..\thotlib\internals\f\config_f.h"\
+	"..\..\thotlib\internals\f\createabsbox_f.h"\
+	"..\..\thotlib\internals\f\exceptions_f.h"\
+	"..\..\thotlib\internals\f\font_f.h"\
+	"..\..\thotlib\internals\f\inites_f.h"\
+	"..\..\thotlib\internals\f\presrules_f.h"\
+	"..\..\thotlib\internals\f\structcreation_f.h"\
+	"..\..\thotlib\internals\f\structmodif_f.h"\
+	"..\..\thotlib\internals\f\structselect_f.h"\
+	"..\..\thotlib\internals\f\tree_f.h"\
+	"..\..\thotlib\internals\f\undo_f.h"\
+	"..\..\thotlib\internals\f\units_f.h"\
+	"..\..\thotlib\internals\f\unstructchange_f.h"\
+	"..\..\thotlib\internals\f\viewcommands_f.h"\
+	"..\..\thotlib\internals\h\appdialogue.h"\
+	"..\..\thotlib\internals\h\constint.h"\
+	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constmenu.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
+	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\frame.h"\
+	"..\..\thotlib\internals\h\thotkey.h"\
+	"..\..\thotlib\internals\h\typecorr.h"\
+	"..\..\thotlib\internals\h\typeint.h"\
+	"..\..\thotlib\internals\h\typemedia.h"\
 	"..\..\thotlib\internals\h\typeprs.h"\
 	"..\..\thotlib\internals\h\typestr.h"\
+	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\var\appdialogue_tv.h"\
+	"..\..\thotlib\internals\var\boxes_tv.h"\
+	"..\..\thotlib\internals\var\edit_tv.h"\
+	"..\..\thotlib\internals\var\frame_tv.h"\
+	"..\..\thotlib\internals\var\page_tv.h"\
+	"..\..\thotlib\internals\var\select_tv.h"\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
@@ -10058,7 +9949,7 @@ NODEP_CPP_PRESEN=\
 	"..\..\thotlib\include\HTVMSUtils.h"\
 	
 
-"$(INTDIR)\presentdriver.obj" : $(SOURCE) $(DEP_CPP_PRESEN) "$(INTDIR)"
+"$(INTDIR)\presentmenu.obj" : $(SOURCE) $(DEP_CPP_PRESEN) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10066,119 +9957,6 @@ NODEP_CPP_PRESEN=\
 
 DEP_CPP_PRESEN=\
 	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\presentdriver.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	
-
-"$(INTDIR)\presentdriver.obj" : $(SOURCE) $(DEP_CPP_PRESEN) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\thotlib\dialogue\presentmenu.c
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-DEP_CPP_PRESENT=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\dialog.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\include\wininclude.h"\
-	"..\..\thotlib\internals\f\actions_f.h"\
-	"..\..\thotlib\internals\f\attributes_f.h"\
-	"..\..\thotlib\internals\f\boxselection_f.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\config_f.h"\
-	"..\..\thotlib\internals\f\createabsbox_f.h"\
-	"..\..\thotlib\internals\f\exceptions_f.h"\
-	"..\..\thotlib\internals\f\font_f.h"\
-	"..\..\thotlib\internals\f\inites_f.h"\
-	"..\..\thotlib\internals\f\presrules_f.h"\
-	"..\..\thotlib\internals\f\structcreation_f.h"\
-	"..\..\thotlib\internals\f\structmodif_f.h"\
-	"..\..\thotlib\internals\f\structselect_f.h"\
-	"..\..\thotlib\internals\f\tree_f.h"\
-	"..\..\thotlib\internals\f\undo_f.h"\
-	"..\..\thotlib\internals\f\units_f.h"\
-	"..\..\thotlib\internals\f\unstructchange_f.h"\
-	"..\..\thotlib\internals\f\viewcommands_f.h"\
-	"..\..\thotlib\internals\h\appdialogue.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constmenu.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\frame.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\appdialogue_tv.h"\
-	"..\..\thotlib\internals\var\boxes_tv.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	"..\..\thotlib\internals\var\frame_tv.h"\
-	"..\..\thotlib\internals\var\page_tv.h"\
-	"..\..\thotlib\internals\var\select_tv.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_PRESENT=\
-	"..\..\thotlib\include\HTVMSUtils.h"\
-	
-
-"$(INTDIR)\presentmenu.obj" : $(SOURCE) $(DEP_CPP_PRESENT) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-DEP_CPP_PRESENT=\
-	"..\..\thotlib\include\appaction.h"\
 	"..\..\thotlib\include\appstruct.h"\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\dialog.h"\
@@ -10241,7 +10019,7 @@ DEP_CPP_PRESENT=\
 	"..\..\thotlib\internals\var\select_tv.h"\
 	
 
-"$(INTDIR)\presentmenu.obj" : $(SOURCE) $(DEP_CPP_PRESENT) "$(INTDIR)"
+"$(INTDIR)\presentmenu.obj" : $(SOURCE) $(DEP_CPP_PRESEN) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -13129,115 +12907,6 @@ DEP_CPP_SELEC=\
 
 !ENDIF 
 
-SOURCE=..\..\thotlib\presentation\specificdriver.c
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-DEP_CPP_SPECI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\presentdriver.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\specificdriver.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presentationapi_f.h"\
-	"..\..\thotlib\internals\f\presentdriver_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_SPECI=\
-	"..\..\thotlib\include\HTVMSUtils.h"\
-	
-
-"$(INTDIR)\specificdriver.obj" : $(SOURCE) $(DEP_CPP_SPECI) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-DEP_CPP_SPECI=\
-	"..\..\thotlib\include\appaction.h"\
-	"..\..\thotlib\include\application.h"\
-	"..\..\thotlib\include\appstruct.h"\
-	"..\..\thotlib\include\attribute.h"\
-	"..\..\thotlib\include\document.h"\
-	"..\..\thotlib\include\fileaccess.h"\
-	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\language.h"\
-	"..\..\thotlib\include\libmsg.h"\
-	"..\..\thotlib\include\message.h"\
-	"..\..\thotlib\include\presentation.h"\
-	"..\..\thotlib\include\presentdriver.h"\
-	"..\..\thotlib\include\pschema.h"\
-	"..\..\thotlib\include\registry.h"\
-	"..\..\thotlib\include\simx.h"\
-	"..\..\thotlib\include\specificdriver.h"\
-	"..\..\thotlib\include\sysdep.h"\
-	"..\..\thotlib\include\thot_gui.h"\
-	"..\..\thotlib\include\thot_sys.h"\
-	"..\..\thotlib\include\tree.h"\
-	"..\..\thotlib\include\typebase.h"\
-	"..\..\thotlib\include\ustring.h"\
-	"..\..\thotlib\include\view.h"\
-	"..\..\thotlib\internals\f\changeabsbox_f.h"\
-	"..\..\thotlib\internals\f\changepresent_f.h"\
-	"..\..\thotlib\internals\f\memory_f.h"\
-	"..\..\thotlib\internals\f\presentationapi_f.h"\
-	"..\..\thotlib\internals\f\presentdriver_f.h"\
-	"..\..\thotlib\internals\h\constint.h"\
-	"..\..\thotlib\internals\h\constmedia.h"\
-	"..\..\thotlib\internals\h\constprs.h"\
-	"..\..\thotlib\internals\h\conststr.h"\
-	"..\..\thotlib\internals\h\consttra.h"\
-	"..\..\thotlib\internals\h\thotkey.h"\
-	"..\..\thotlib\internals\h\typecorr.h"\
-	"..\..\thotlib\internals\h\typeint.h"\
-	"..\..\thotlib\internals\h\typemedia.h"\
-	"..\..\thotlib\internals\h\typeprs.h"\
-	"..\..\thotlib\internals\h\typestr.h"\
-	"..\..\thotlib\internals\h\typetra.h"\
-	"..\..\thotlib\internals\var\edit_tv.h"\
-	
-
-"$(INTDIR)\specificdriver.obj" : $(SOURCE) $(DEP_CPP_SPECI) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
 SOURCE=..\..\thotlib\editing\spellchecker.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
@@ -14565,6 +14234,111 @@ DEP_CPP_STRUCTSE=\
 
 !ENDIF 
 
+SOURCE=..\..\thotlib\presentation\style.c
+
+!IF  "$(CFG)" == "libThotEditor - Win32 Release"
+
+DEP_CPP_STYLE=\
+	"..\..\thotlib\include\appaction.h"\
+	"..\..\thotlib\include\application.h"\
+	"..\..\thotlib\include\appstruct.h"\
+	"..\..\thotlib\include\attribute.h"\
+	"..\..\thotlib\include\document.h"\
+	"..\..\thotlib\include\fileaccess.h"\
+	"..\..\thotlib\include\interface.h"\
+	"..\..\thotlib\include\language.h"\
+	"..\..\thotlib\include\libmsg.h"\
+	"..\..\thotlib\include\message.h"\
+	"..\..\thotlib\include\presentation.h"\
+	"..\..\thotlib\include\pschema.h"\
+	"..\..\thotlib\include\registry.h"\
+	"..\..\thotlib\include\simx.h"\
+	"..\..\thotlib\include\style.h"\
+	"..\..\thotlib\include\sysdep.h"\
+	"..\..\thotlib\include\thot_gui.h"\
+	"..\..\thotlib\include\thot_sys.h"\
+	"..\..\thotlib\include\tree.h"\
+	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\ustring.h"\
+	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\internals\f\changeabsbox_f.h"\
+	"..\..\thotlib\internals\f\changepresent_f.h"\
+	"..\..\thotlib\internals\f\memory_f.h"\
+	"..\..\thotlib\internals\f\style_f.h"\
+	"..\..\thotlib\internals\h\constint.h"\
+	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constprs.h"\
+	"..\..\thotlib\internals\h\conststr.h"\
+	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\thotkey.h"\
+	"..\..\thotlib\internals\h\typecorr.h"\
+	"..\..\thotlib\internals\h\typeint.h"\
+	"..\..\thotlib\internals\h\typemedia.h"\
+	"..\..\thotlib\internals\h\typeprs.h"\
+	"..\..\thotlib\internals\h\typestr.h"\
+	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\var\edit_tv.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_STYLE=\
+	"..\..\thotlib\include\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\style.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
+
+DEP_CPP_STYLE=\
+	"..\..\thotlib\include\appaction.h"\
+	"..\..\thotlib\include\application.h"\
+	"..\..\thotlib\include\appstruct.h"\
+	"..\..\thotlib\include\attribute.h"\
+	"..\..\thotlib\include\document.h"\
+	"..\..\thotlib\include\fileaccess.h"\
+	"..\..\thotlib\include\interface.h"\
+	"..\..\thotlib\include\language.h"\
+	"..\..\thotlib\include\libmsg.h"\
+	"..\..\thotlib\include\message.h"\
+	"..\..\thotlib\include\presentation.h"\
+	"..\..\thotlib\include\pschema.h"\
+	"..\..\thotlib\include\registry.h"\
+	"..\..\thotlib\include\simx.h"\
+	"..\..\thotlib\include\style.h"\
+	"..\..\thotlib\include\sysdep.h"\
+	"..\..\thotlib\include\thot_gui.h"\
+	"..\..\thotlib\include\thot_sys.h"\
+	"..\..\thotlib\include\tree.h"\
+	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\ustring.h"\
+	"..\..\thotlib\include\view.h"\
+	"..\..\thotlib\internals\f\changeabsbox_f.h"\
+	"..\..\thotlib\internals\f\changepresent_f.h"\
+	"..\..\thotlib\internals\f\memory_f.h"\
+	"..\..\thotlib\internals\f\style_f.h"\
+	"..\..\thotlib\internals\h\constint.h"\
+	"..\..\thotlib\internals\h\constmedia.h"\
+	"..\..\thotlib\internals\h\constprs.h"\
+	"..\..\thotlib\internals\h\conststr.h"\
+	"..\..\thotlib\internals\h\consttra.h"\
+	"..\..\thotlib\internals\h\thotkey.h"\
+	"..\..\thotlib\internals\h\typecorr.h"\
+	"..\..\thotlib\internals\h\typeint.h"\
+	"..\..\thotlib\internals\h\typemedia.h"\
+	"..\..\thotlib\internals\h\typeprs.h"\
+	"..\..\thotlib\internals\h\typestr.h"\
+	"..\..\thotlib\internals\h\typetra.h"\
+	"..\..\thotlib\internals\var\edit_tv.h"\
+	
+
+"$(INTDIR)\style.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
 SOURCE=..\..\thotlib\editing\textcommands.c
 
 !IF  "$(CFG)" == "libThotEditor - Win32 Release"
@@ -15403,9 +15177,6 @@ DEP_CPP_TREEA=\
 !ENDIF 
 
 SOURCE=..\..\thotlib\unicode\uaccess.c
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
 DEP_CPP_UACCE=\
 	"..\..\thotlib\include\uaccess.h"\
 	"..\..\thotlib\include\ustring.h"\
@@ -15414,19 +15185,6 @@ DEP_CPP_UACCE=\
 "$(INTDIR)\uaccess.obj" : $(SOURCE) $(DEP_CPP_UACCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-DEP_CPP_UACCE=\
-	"..\..\thotlib\include\uaccess.h"\
-	"..\..\thotlib\include\ustring.h"\
-	
-
-"$(INTDIR)\uaccess.obj" : $(SOURCE) $(DEP_CPP_UACCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
 
 SOURCE=..\..\thotlib\unicode\uconvert.c
 

@@ -25,6 +25,10 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+MTL=midl.exe
+RSC=rc.exe
+
 !IF  "$(CFG)" == "amaya - Win32 Release"
 
 OUTDIR=.\bin
@@ -71,14 +75,14 @@ CLEAN :
 	-@erase "$(INTDIR)\HTMLimage.obj"
 	-@erase "$(INTDIR)\HTMLpresentation.obj"
 	-@erase "$(INTDIR)\HTMLsave.obj"
-	-@erase "$(INTDIR)\HTMLstyle.obj"
 	-@erase "$(INTDIR)\HTMLtable.obj"
 	-@erase "$(INTDIR)\init.obj"
 	-@erase "$(INTDIR)\Mathedit.obj"
 	-@erase "$(INTDIR)\MathMLAPP.obj"
 	-@erase "$(INTDIR)\MathMLbuilder.obj"
-	-@erase "$(INTDIR)\p2css.obj"
+	-@erase "$(INTDIR)\MENUconf.obj"
 	-@erase "$(INTDIR)\query.obj"
+	-@erase "$(INTDIR)\styleparser.obj"
 	-@erase "$(INTDIR)\tableH.obj"
 	-@erase "$(INTDIR)\TextFileAPP.obj"
 	-@erase "$(INTDIR)\trans.obj"
@@ -95,7 +99,6 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
  "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I\
@@ -105,40 +108,7 @@ CPP_PROJ=/nologo /ML /W3 /GX /O2 /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-MTL=midl.exe
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o NUL /win32 
-RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "NDEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -171,14 +141,14 @@ LINK32_OBJS= \
 	"$(INTDIR)\HTMLimage.obj" \
 	"$(INTDIR)\HTMLpresentation.obj" \
 	"$(INTDIR)\HTMLsave.obj" \
-	"$(INTDIR)\HTMLstyle.obj" \
 	"$(INTDIR)\HTMLtable.obj" \
 	"$(INTDIR)\init.obj" \
 	"$(INTDIR)\Mathedit.obj" \
 	"$(INTDIR)\MathMLAPP.obj" \
 	"$(INTDIR)\MathMLbuilder.obj" \
-	"$(INTDIR)\p2css.obj" \
+	"$(INTDIR)\MENUconf.obj" \
 	"$(INTDIR)\query.obj" \
+	"$(INTDIR)\styleparser.obj" \
 	"$(INTDIR)\tableH.obj" \
 	"$(INTDIR)\TextFileAPP.obj" \
 	"$(INTDIR)\trans.obj" \
@@ -241,14 +211,14 @@ CLEAN :
 	-@erase "$(INTDIR)\HTMLimage.obj"
 	-@erase "$(INTDIR)\HTMLpresentation.obj"
 	-@erase "$(INTDIR)\HTMLsave.obj"
-	-@erase "$(INTDIR)\HTMLstyle.obj"
 	-@erase "$(INTDIR)\HTMLtable.obj"
 	-@erase "$(INTDIR)\init.obj"
 	-@erase "$(INTDIR)\Mathedit.obj"
 	-@erase "$(INTDIR)\MathMLAPP.obj"
 	-@erase "$(INTDIR)\MathMLbuilder.obj"
-	-@erase "$(INTDIR)\p2css.obj"
+	-@erase "$(INTDIR)\MENUconf.obj"
 	-@erase "$(INTDIR)\query.obj"
+	-@erase "$(INTDIR)\styleparser.obj"
 	-@erase "$(INTDIR)\tableH.obj"
 	-@erase "$(INTDIR)\TextFileAPP.obj"
 	-@erase "$(INTDIR)\trans.obj"
@@ -268,7 +238,6 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /Gm /GX /Zi /Od /I "..\thotlib\internals\h" /I\
  "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I\
  "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I\
@@ -278,40 +247,7 @@ CPP_PROJ=/nologo /MLd /W3 /Gm /GX /Zi /Od /I "..\thotlib\internals\h" /I\
  /FD /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-MTL=midl.exe
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o NUL /win32 
-RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "_DEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc" 
@@ -345,14 +281,14 @@ LINK32_OBJS= \
 	"$(INTDIR)\HTMLimage.obj" \
 	"$(INTDIR)\HTMLpresentation.obj" \
 	"$(INTDIR)\HTMLsave.obj" \
-	"$(INTDIR)\HTMLstyle.obj" \
 	"$(INTDIR)\HTMLtable.obj" \
 	"$(INTDIR)\init.obj" \
 	"$(INTDIR)\Mathedit.obj" \
 	"$(INTDIR)\MathMLAPP.obj" \
 	"$(INTDIR)\MathMLbuilder.obj" \
-	"$(INTDIR)\p2css.obj" \
+	"$(INTDIR)\MENUconf.obj" \
 	"$(INTDIR)\query.obj" \
+	"$(INTDIR)\styleparser.obj" \
 	"$(INTDIR)\tableH.obj" \
 	"$(INTDIR)\TextFileAPP.obj" \
 	"$(INTDIR)\trans.obj" \
@@ -370,6 +306,36 @@ LINK32_OBJS= \
 <<
 
 !ENDIF 
+
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
 
 
 !IF "$(CFG)" == "amaya - Win32 Release" || "$(CFG)" == "amaya - Win32 Debug"
@@ -2585,9 +2551,9 @@ DEP_CPP_CSS_C=\
 	"..\amaya\css.h"\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\css_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\query_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
@@ -2601,19 +2567,17 @@ DEP_CPP_CSS_C=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -2770,9 +2734,9 @@ DEP_CPP_CSS_C=\
 	"..\amaya\css.h"\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\css_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\query_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\libwww.h"\
 	"..\thotlib\include\appaction.h"\
@@ -2784,19 +2748,17 @@ DEP_CPP_CSS_C=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -2959,8 +2921,8 @@ DEP_CPP_EDITI=\
 	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\htmlpresentation_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\init_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
 	"..\amaya\libwww.h"\
@@ -2973,19 +2935,17 @@ DEP_CPP_EDITI=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -3148,8 +3108,8 @@ DEP_CPP_EDITI=\
 	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\htmlpresentation_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\init_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libwww.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
@@ -3160,19 +3120,17 @@ DEP_CPP_EDITI=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -3334,10 +3292,10 @@ DEP_CPP_EDITO=\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmledit_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\query_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
 	"..\amaya\libwww.h"\
@@ -3350,19 +3308,17 @@ DEP_CPP_EDITO=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -3523,10 +3479,10 @@ DEP_CPP_EDITO=\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmledit_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\htmltable_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\query_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libwww.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
@@ -3537,19 +3493,17 @@ DEP_CPP_EDITO=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -3782,7 +3736,7 @@ DEP_CPP_EDITS=\
 	"..\amaya\f\css_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlpresentation_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
@@ -3796,19 +3750,17 @@ DEP_CPP_EDITS=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -3967,7 +3919,7 @@ DEP_CPP_EDITS=\
 	"..\amaya\f\css_f.h"\
 	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlpresentation_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\libwww.h"\
 	"..\thotlib\include\appaction.h"\
@@ -3979,19 +3931,17 @@ DEP_CPP_EDITS=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -4155,8 +4105,8 @@ DEP_CPP_HTML2=\
 	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\htmltable_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\xmlparser_f.h"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
@@ -4171,19 +4121,17 @@ DEP_CPP_HTML2=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -4345,8 +4293,8 @@ DEP_CPP_HTML2=\
 	"..\amaya\f\htmlactions_f.h"\
 	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\htmltable_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\xmlparser_f.h"\
 	"..\amaya\libwww.h"\
 	"..\amaya\parser.h"\
@@ -4359,19 +4307,17 @@ DEP_CPP_HTML2=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -4536,9 +4482,9 @@ DEP_CPP_HTMLA=\
 	"..\amaya\f\htmlform_f.h"\
 	"..\amaya\f\htmlhistory_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\query_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\trans_f.h"\
 	"..\amaya\f\xmlparser_f.h"\
 	"..\amaya\libilu.h"\
@@ -4553,19 +4499,17 @@ DEP_CPP_HTMLA=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -4730,9 +4674,9 @@ DEP_CPP_HTMLA=\
 	"..\amaya\f\htmlform_f.h"\
 	"..\amaya\f\htmlhistory_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\query_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\trans_f.h"\
 	"..\amaya\f\xmlparser_f.h"\
 	"..\amaya\libwww.h"\
@@ -4745,19 +4689,17 @@ DEP_CPP_HTMLA=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -5352,9 +5294,9 @@ DEP_CPP_HTMLE=\
 	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\htmlpresentation_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\mathmlbuilder_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
 	"..\amaya\libwww.h"\
@@ -5367,19 +5309,17 @@ DEP_CPP_HTMLE=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -5543,9 +5483,9 @@ DEP_CPP_HTMLE=\
 	"..\amaya\f\htmledit_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\htmlpresentation_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\mathmlbuilder_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libwww.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
@@ -5556,19 +5496,17 @@ DEP_CPP_HTMLE=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -6800,9 +6738,8 @@ DEP_CPP_HTMLP=\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
 	"..\amaya\f\editstyle_f.h"\
-	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
 	"..\amaya\libwww.h"\
@@ -6815,19 +6752,17 @@ DEP_CPP_HTMLP=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -6983,9 +6918,8 @@ DEP_CPP_HTMLP=\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
 	"..\amaya\f\editstyle_f.h"\
-	"..\amaya\f\html2thot_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libwww.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
@@ -6996,19 +6930,17 @@ DEP_CPP_HTMLP=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -7169,9 +7101,9 @@ DEP_CPP_HTMLS=\
 	"..\amaya\f\htmlbook_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\htmlsave_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\query_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
 	"..\amaya\libwww.h"\
@@ -7184,19 +7116,17 @@ DEP_CPP_HTMLS=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -7357,9 +7287,9 @@ DEP_CPP_HTMLS=\
 	"..\amaya\f\htmlbook_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\htmlsave_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\query_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libwww.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
@@ -7370,19 +7300,17 @@ DEP_CPP_HTMLS=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -7398,379 +7326,6 @@ DEP_CPP_HTMLS=\
 	
 
 "$(INTDIR)\HTMLsave.obj" : $(SOURCE) $(DEP_CPP_HTMLS) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\amaya\HTMLstyle.c
-
-!IF  "$(CFG)" == "amaya - Win32 Release"
-
-DEP_CPP_HTMLST=\
-	"..\..\libwww\library\src\htaabrow.h"\
-	"..\..\libwww\library\src\htaautil.h"\
-	"..\..\libwww\library\src\htaccess.h"\
-	"..\..\libwww\library\src\htalert.h"\
-	"..\..\libwww\library\src\htanchor.h"\
-	"..\..\libwww\library\src\htancman.h"\
-	"..\..\libwww\library\src\htansi.h"\
-	"..\..\libwww\library\src\htarray.h"\
-	"..\..\libwww\library\src\htassoc.h"\
-	"..\..\libwww\library\src\htatom.h"\
-	"..\..\libwww\library\src\htbind.h"\
-	"..\..\libwww\library\src\htbinit.h"\
-	"..\..\libwww\library\src\htbound.h"\
-	"..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\libwww\library\src\htcache.h"\
-	"..\..\libwww\library\src\htchannl.h"\
-	"..\..\libwww\library\src\htchunk.h"\
-	"..\..\libwww\library\src\htconlen.h"\
-	"..\..\libwww\library\src\htdescpt.h"\
-	"..\..\libwww\library\src\htdialog.h"\
-	"..\..\libwww\library\src\htdir.h"\
-	"..\..\libwww\library\src\htdns.h"\
-	"..\..\libwww\library\src\hterror.h"\
-	"..\..\libwww\library\src\htescape.h"\
-	"..\..\libwww\library\src\htevent.h"\
-	"..\..\libwww\library\src\htevtlst.h"\
-	"..\..\libwww\library\src\htfile.h"\
-	"..\..\libwww\library\src\htfilter.h"\
-	"..\..\libwww\library\src\htformat.h"\
-	"..\..\libwww\library\src\htftp.h"\
-	"..\..\libwww\library\src\htftpdir.h"\
-	"..\..\libwww\library\src\htfwrite.h"\
-	"..\..\libwww\library\src\htgopher.h"\
-	"..\..\libwww\library\src\htguess.h"\
-	"..\..\libwww\library\src\htheader.h"\
-	"..\..\libwww\library\src\hthinit.h"\
-	"..\..\libwww\library\src\hthist.h"\
-	"..\..\libwww\library\src\hthome.h"\
-	"..\..\libwww\library\src\hthost.h"\
-	"..\..\libwww\library\src\hthstman.h"\
-	"..\..\libwww\library\src\hticons.h"\
-	"..\..\libwww\library\src\htinet.h"\
-	"..\..\libwww\library\src\htinit.h"\
-	"..\..\libwww\library\src\htiostream.h"\
-	"..\..\libwww\library\src\htlib.h"\
-	"..\..\libwww\library\src\htlink.h"\
-	"..\..\libwww\library\src\htlist.h"\
-	"..\..\libwww\library\src\htlocal.h"\
-	"..\..\libwww\library\src\htlog.h"\
-	"..\..\libwww\library\src\htmemlog.h"\
-	"..\..\libwww\library\src\htmemory.h"\
-	"..\..\libwww\library\src\htmerge.h"\
-	"..\..\libwww\library\src\htmethod.h"\
-	"..\..\libwww\library\src\htmime.h"\
-	"..\..\libwww\library\src\htmimerq.h"\
-	"..\..\libwww\library\src\htmimimp.h"\
-	"..\..\libwww\library\src\htmimprs.h"\
-	"..\..\libwww\library\src\html.h"\
-	"..\..\libwww\library\src\htmlgen.h"\
-	"..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\libwww\library\src\htmulpar.h"\
-	"..\..\libwww\library\src\htmulti.h"\
-	"..\..\libwww\library\src\htndir.h"\
-	"..\..\libwww\library\src\htnet.h"\
-	"..\..\libwww\library\src\htnetman.h"\
-	"..\..\libwww\library\src\htnews.h"\
-	"..\..\libwww\library\src\htnewsls.h"\
-	"..\..\libwww\library\src\htnewsrq.h"\
-	"..\..\libwww\library\src\htparse.h"\
-	"..\..\libwww\library\src\htpep.h"\
-	"..\..\libwww\library\src\htplain.h"\
-	"..\..\libwww\library\src\htprofil.h"\
-	"..\..\libwww\library\src\htprot.h"\
-	"..\..\libwww\library\src\htproxy.h"\
-	"..\..\libwww\library\src\htreader.h"\
-	"..\..\libwww\library\src\htreq.h"\
-	"..\..\libwww\library\src\htreqman.h"\
-	"..\..\libwww\library\src\htresponse.h"\
-	"..\..\libwww\library\src\htrules.h"\
-	"..\..\libwww\library\src\htschunk.h"\
-	"..\..\libwww\library\src\htsocket.h"\
-	"..\..\libwww\library\src\htstream.h"\
-	"..\..\libwww\library\src\htstring.h"\
-	"..\..\libwww\library\src\htstruct.h"\
-	"..\..\libwww\library\src\httchunk.h"\
-	"..\..\libwww\library\src\httcp.h"\
-	"..\..\libwww\library\src\httee.h"\
-	"..\..\libwww\library\src\httelnet.h"\
-	"..\..\libwww\library\src\httexgen.h"\
-	"..\..\libwww\library\src\httimer.h"\
-	"..\..\libwww\library\src\http.h"\
-	"..\..\libwww\library\src\httpgen.h"\
-	"..\..\libwww\library\src\httpreq.h"\
-	"..\..\libwww\library\src\httpres.h"\
-	"..\..\libwww\library\src\httpserv.h"\
-	"..\..\libwww\library\src\httputil.h"\
-	"..\..\libwww\library\src\httrans.h"\
-	"..\..\libwww\library\src\htuser.h"\
-	"..\..\libwww\library\src\htutils.h"\
-	"..\..\libwww\library\src\htutree.h"\
-	"..\..\libwww\library\src\htuu.h"\
-	"..\..\libwww\library\src\HTWAIS.h"\
-	"..\..\libwww\library\src\htwriter.h"\
-	"..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\libwww\library\src\htxparse.h"\
-	"..\..\libwww\library\src\htzip.h"\
-	"..\..\libwww\library\src\sgml.h"\
-	"..\..\libwww\library\src\windows\config.h"\
-	"..\..\libwww\library\src\wwwapp.h"\
-	"..\..\libwww\library\src\wwwcache.h"\
-	"..\..\libwww\library\src\wwwcore.h"\
-	"..\..\libwww\library\src\wwwdir.h"\
-	"..\..\libwww\library\src\wwwfile.h"\
-	"..\..\libwww\library\src\wwwftp.h"\
-	"..\..\libwww\library\src\wwwgophe.h"\
-	"..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\libwww\library\src\wwwinit.h"\
-	"..\..\libwww\library\src\wwwlib.h"\
-	"..\..\libwww\library\src\wwwmime.h"\
-	"..\..\libwww\library\src\wwwnews.h"\
-	"..\..\libwww\library\src\wwwstream.h"\
-	"..\..\libwww\library\src\wwwsys.h"\
-	"..\..\libwww\library\src\wwwtelnt.h"\
-	"..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\libwww\library\src\wwwutil.h"\
-	"..\..\libwww\library\src\WWWWAIS.h"\
-	"..\..\libwww\library\src\wwwzip.h"\
-	"..\amaya\amaya.h"\
-	"..\amaya\amayamsg.h"\
-	"..\amaya\css.h"\
-	"..\amaya\f\ahturltools_f.h"\
-	"..\amaya\f\css_f.h"\
-	"..\amaya\f\html2thot_f.h"\
-	"..\amaya\f\htmlimage_f.h"\
-	"..\amaya\f\htmlpresentation_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
-	"..\amaya\f\uicss_f.h"\
-	"..\amaya\htmlstylecolor.h"\
-	"..\amaya\libilu.h"\
-	"..\amaya\libjava.h"\
-	"..\amaya\libwww.h"\
-	"..\thotlib\include\appaction.h"\
-	"..\thotlib\include\application.h"\
-	"..\thotlib\include\appstruct.h"\
-	"..\thotlib\include\attribute.h"\
-	"..\thotlib\include\browser.h"\
-	"..\thotlib\include\content.h"\
-	"..\thotlib\include\dialog.h"\
-	"..\thotlib\include\document.h"\
-	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
-	"..\thotlib\include\interface.h"\
-	"..\thotlib\include\language.h"\
-	"..\thotlib\include\libmsg.h"\
-	"..\thotlib\include\message.h"\
-	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
-	"..\thotlib\include\pschema.h"\
-	"..\thotlib\include\reference.h"\
-	"..\thotlib\include\registry.h"\
-	"..\thotlib\include\selection.h"\
-	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
-	"..\thotlib\include\sysdep.h"\
-	"..\thotlib\include\thot_gui.h"\
-	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\tree.h"\
-	"..\thotlib\include\typebase.h"\
-	"..\thotlib\include\undo.h"\
-	"..\thotlib\include\ustring.h"\
-	"..\thotlib\include\view.h"\
-	".\amaya\editor.h"\
-	".\amaya\html.h"\
-	".\amaya\textfile.h"\
-	{$(INCLUDE)}"sys\stat.h"\
-	{$(INCLUDE)}"sys\types.h"\
-	
-NODEP_CPP_HTMLST=\
-	"..\..\libwww\library\src\HTVMSUtils.h"\
-	"..\thotlib\include\HTVMSUtils.h"\
-	
-
-"$(INTDIR)\HTMLstyle.obj" : $(SOURCE) $(DEP_CPP_HTMLST) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
-
-DEP_CPP_HTMLST=\
-	"..\..\libwww\library\src\htaabrow.h"\
-	"..\..\libwww\library\src\htaautil.h"\
-	"..\..\libwww\library\src\htaccess.h"\
-	"..\..\libwww\library\src\htalert.h"\
-	"..\..\libwww\library\src\htanchor.h"\
-	"..\..\libwww\library\src\htancman.h"\
-	"..\..\libwww\library\src\htansi.h"\
-	"..\..\libwww\library\src\htarray.h"\
-	"..\..\libwww\library\src\htassoc.h"\
-	"..\..\libwww\library\src\htatom.h"\
-	"..\..\libwww\library\src\htbind.h"\
-	"..\..\libwww\library\src\htbinit.h"\
-	"..\..\libwww\library\src\htbound.h"\
-	"..\..\libwww\library\src\htbufwrt.h"\
-	"..\..\libwww\library\src\htcache.h"\
-	"..\..\libwww\library\src\htchannl.h"\
-	"..\..\libwww\library\src\htchunk.h"\
-	"..\..\libwww\library\src\htconlen.h"\
-	"..\..\libwww\library\src\htdescpt.h"\
-	"..\..\libwww\library\src\htdialog.h"\
-	"..\..\libwww\library\src\htdir.h"\
-	"..\..\libwww\library\src\htdns.h"\
-	"..\..\libwww\library\src\hterror.h"\
-	"..\..\libwww\library\src\htescape.h"\
-	"..\..\libwww\library\src\htevent.h"\
-	"..\..\libwww\library\src\htevtlst.h"\
-	"..\..\libwww\library\src\htfile.h"\
-	"..\..\libwww\library\src\htfilter.h"\
-	"..\..\libwww\library\src\htformat.h"\
-	"..\..\libwww\library\src\htftp.h"\
-	"..\..\libwww\library\src\htftpdir.h"\
-	"..\..\libwww\library\src\htfwrite.h"\
-	"..\..\libwww\library\src\htgopher.h"\
-	"..\..\libwww\library\src\htguess.h"\
-	"..\..\libwww\library\src\htheader.h"\
-	"..\..\libwww\library\src\hthinit.h"\
-	"..\..\libwww\library\src\hthist.h"\
-	"..\..\libwww\library\src\hthome.h"\
-	"..\..\libwww\library\src\hthost.h"\
-	"..\..\libwww\library\src\hthstman.h"\
-	"..\..\libwww\library\src\hticons.h"\
-	"..\..\libwww\library\src\htinet.h"\
-	"..\..\libwww\library\src\htinit.h"\
-	"..\..\libwww\library\src\htiostream.h"\
-	"..\..\libwww\library\src\htlib.h"\
-	"..\..\libwww\library\src\htlink.h"\
-	"..\..\libwww\library\src\htlist.h"\
-	"..\..\libwww\library\src\htlocal.h"\
-	"..\..\libwww\library\src\htlog.h"\
-	"..\..\libwww\library\src\htmemlog.h"\
-	"..\..\libwww\library\src\htmemory.h"\
-	"..\..\libwww\library\src\htmerge.h"\
-	"..\..\libwww\library\src\htmethod.h"\
-	"..\..\libwww\library\src\htmime.h"\
-	"..\..\libwww\library\src\htmimerq.h"\
-	"..\..\libwww\library\src\htmimimp.h"\
-	"..\..\libwww\library\src\htmimprs.h"\
-	"..\..\libwww\library\src\html.h"\
-	"..\..\libwww\library\src\htmlgen.h"\
-	"..\..\libwww\library\src\htmlpdtd.h"\
-	"..\..\libwww\library\src\htmulpar.h"\
-	"..\..\libwww\library\src\htmulti.h"\
-	"..\..\libwww\library\src\htndir.h"\
-	"..\..\libwww\library\src\htnet.h"\
-	"..\..\libwww\library\src\htnetman.h"\
-	"..\..\libwww\library\src\htnews.h"\
-	"..\..\libwww\library\src\htnewsls.h"\
-	"..\..\libwww\library\src\htnewsrq.h"\
-	"..\..\libwww\library\src\htparse.h"\
-	"..\..\libwww\library\src\htpep.h"\
-	"..\..\libwww\library\src\htplain.h"\
-	"..\..\libwww\library\src\htprofil.h"\
-	"..\..\libwww\library\src\htprot.h"\
-	"..\..\libwww\library\src\htproxy.h"\
-	"..\..\libwww\library\src\htreader.h"\
-	"..\..\libwww\library\src\htreq.h"\
-	"..\..\libwww\library\src\htreqman.h"\
-	"..\..\libwww\library\src\htresponse.h"\
-	"..\..\libwww\library\src\htrules.h"\
-	"..\..\libwww\library\src\htschunk.h"\
-	"..\..\libwww\library\src\htsocket.h"\
-	"..\..\libwww\library\src\htstream.h"\
-	"..\..\libwww\library\src\htstring.h"\
-	"..\..\libwww\library\src\htstruct.h"\
-	"..\..\libwww\library\src\httchunk.h"\
-	"..\..\libwww\library\src\httcp.h"\
-	"..\..\libwww\library\src\httee.h"\
-	"..\..\libwww\library\src\httelnet.h"\
-	"..\..\libwww\library\src\httexgen.h"\
-	"..\..\libwww\library\src\httimer.h"\
-	"..\..\libwww\library\src\http.h"\
-	"..\..\libwww\library\src\httpgen.h"\
-	"..\..\libwww\library\src\httpreq.h"\
-	"..\..\libwww\library\src\httpres.h"\
-	"..\..\libwww\library\src\httpserv.h"\
-	"..\..\libwww\library\src\httputil.h"\
-	"..\..\libwww\library\src\httrans.h"\
-	"..\..\libwww\library\src\htuser.h"\
-	"..\..\libwww\library\src\htutils.h"\
-	"..\..\libwww\library\src\htutree.h"\
-	"..\..\libwww\library\src\htuu.h"\
-	"..\..\libwww\library\src\htwriter.h"\
-	"..\..\libwww\library\src\htwwwstr.h"\
-	"..\..\libwww\library\src\htxparse.h"\
-	"..\..\libwww\library\src\htzip.h"\
-	"..\..\libwww\library\src\sgml.h"\
-	"..\..\libwww\library\src\wwwapp.h"\
-	"..\..\libwww\library\src\wwwcache.h"\
-	"..\..\libwww\library\src\wwwcore.h"\
-	"..\..\libwww\library\src\wwwdir.h"\
-	"..\..\libwww\library\src\wwwfile.h"\
-	"..\..\libwww\library\src\wwwftp.h"\
-	"..\..\libwww\library\src\wwwgophe.h"\
-	"..\..\libwww\library\src\wwwhtml.h"\
-	"..\..\libwww\library\src\wwwhttp.h"\
-	"..\..\libwww\library\src\wwwinit.h"\
-	"..\..\libwww\library\src\wwwlib.h"\
-	"..\..\libwww\library\src\wwwmime.h"\
-	"..\..\libwww\library\src\wwwnews.h"\
-	"..\..\libwww\library\src\wwwstream.h"\
-	"..\..\libwww\library\src\wwwsys.h"\
-	"..\..\libwww\library\src\wwwtelnt.h"\
-	"..\..\libwww\library\src\wwwtrans.h"\
-	"..\..\libwww\library\src\wwwutil.h"\
-	"..\..\libwww\library\src\wwwzip.h"\
-	"..\amaya\amaya.h"\
-	"..\amaya\amayamsg.h"\
-	"..\amaya\css.h"\
-	"..\amaya\f\ahturltools_f.h"\
-	"..\amaya\f\css_f.h"\
-	"..\amaya\f\html2thot_f.h"\
-	"..\amaya\f\htmlimage_f.h"\
-	"..\amaya\f\htmlpresentation_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
-	"..\amaya\f\uicss_f.h"\
-	"..\amaya\htmlstylecolor.h"\
-	"..\amaya\libwww.h"\
-	"..\thotlib\include\appaction.h"\
-	"..\thotlib\include\application.h"\
-	"..\thotlib\include\appstruct.h"\
-	"..\thotlib\include\attribute.h"\
-	"..\thotlib\include\browser.h"\
-	"..\thotlib\include\content.h"\
-	"..\thotlib\include\dialog.h"\
-	"..\thotlib\include\document.h"\
-	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
-	"..\thotlib\include\interface.h"\
-	"..\thotlib\include\language.h"\
-	"..\thotlib\include\libmsg.h"\
-	"..\thotlib\include\message.h"\
-	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
-	"..\thotlib\include\pschema.h"\
-	"..\thotlib\include\reference.h"\
-	"..\thotlib\include\registry.h"\
-	"..\thotlib\include\selection.h"\
-	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
-	"..\thotlib\include\sysdep.h"\
-	"..\thotlib\include\thot_gui.h"\
-	"..\thotlib\include\thot_sys.h"\
-	"..\thotlib\include\tree.h"\
-	"..\thotlib\include\typebase.h"\
-	"..\thotlib\include\undo.h"\
-	"..\thotlib\include\ustring.h"\
-	"..\thotlib\include\view.h"\
-	".\amaya\editor.h"\
-	".\amaya\html.h"\
-	".\amaya\textfile.h"\
-	
-
-"$(INTDIR)\HTMLstyle.obj" : $(SOURCE) $(DEP_CPP_HTMLST) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -8278,11 +7833,11 @@ DEP_CPP_INIT_=\
 	"..\amaya\f\htmlhistory_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\htmlsave_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\javaamaya_f.h"\
 	"..\amaya\f\mathedit_f.h"\
 	"..\amaya\f\query_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\trans_f.h"\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\libilu.h"\
@@ -8298,20 +7853,18 @@ DEP_CPP_INIT_=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\plugin.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -8517,10 +8070,10 @@ DEP_CPP_INIT_=\
 	"..\amaya\f\htmlhistory_f.h"\
 	"..\amaya\f\htmlimage_f.h"\
 	"..\amaya\f\htmlsave_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\init_f.h"\
 	"..\amaya\f\mathedit_f.h"\
 	"..\amaya\f\query_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\f\trans_f.h"\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\libwww.h"\
@@ -8534,19 +8087,17 @@ DEP_CPP_INIT_=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -8721,19 +8272,17 @@ DEP_CPP_MATHE=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -8921,19 +8470,17 @@ DEP_CPP_MATHE=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -9379,11 +8926,11 @@ DEP_CPP_MATHML=\
 
 !ENDIF 
 
-SOURCE=..\amaya\p2css.c
+SOURCE=..\amaya\MENUconf.c
 
 !IF  "$(CFG)" == "amaya - Win32 Release"
 
-DEP_CPP_P2CSS=\
+DEP_CPP_MENUC=\
 	"..\..\libwww\library\src\htaabrow.h"\
 	"..\..\libwww\library\src\htaautil.h"\
 	"..\..\libwww\library\src\htaccess.h"\
@@ -9514,15 +9061,10 @@ DEP_CPP_P2CSS=\
 	"..\..\libwww\library\src\wwwzip.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
-	"..\amaya\css.h"\
-	"..\amaya\f\ahturltools_f.h"\
-	"..\amaya\f\html2thot_f.h"\
-	"..\amaya\f\htmlimage_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
-	"..\amaya\f\p2css_f.h"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
 	"..\amaya\libwww.h"\
+	"..\amaya\menuconf.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -9532,19 +9074,16 @@ DEP_CPP_P2CSS=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -9559,18 +9098,18 @@ DEP_CPP_P2CSS=\
 	{$(INCLUDE)}"sys\stat.h"\
 	{$(INCLUDE)}"sys\types.h"\
 	
-NODEP_CPP_P2CSS=\
+NODEP_CPP_MENUC=\
 	"..\..\libwww\library\src\HTVMSUtils.h"\
 	"..\thotlib\include\HTVMSUtils.h"\
 	
 
-"$(INTDIR)\p2css.obj" : $(SOURCE) $(DEP_CPP_P2CSS) "$(INTDIR)"
+"$(INTDIR)\MENUconf.obj" : $(SOURCE) $(DEP_CPP_MENUC) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
 !ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
 
-DEP_CPP_P2CSS=\
+DEP_CPP_MENUC=\
 	"..\..\libwww\library\src\htaabrow.h"\
 	"..\..\libwww\library\src\htaautil.h"\
 	"..\..\libwww\library\src\htaccess.h"\
@@ -9698,13 +9237,8 @@ DEP_CPP_P2CSS=\
 	"..\..\libwww\library\src\wwwzip.h"\
 	"..\amaya\amaya.h"\
 	"..\amaya\amayamsg.h"\
-	"..\amaya\css.h"\
-	"..\amaya\f\ahturltools_f.h"\
-	"..\amaya\f\html2thot_f.h"\
-	"..\amaya\f\htmlimage_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
-	"..\amaya\f\p2css_f.h"\
 	"..\amaya\libwww.h"\
+	"..\amaya\menuconf.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
 	"..\thotlib\include\appstruct.h"\
@@ -9714,19 +9248,16 @@ DEP_CPP_P2CSS=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -9740,7 +9271,7 @@ DEP_CPP_P2CSS=\
 	".\amaya\textfile.h"\
 	
 
-"$(INTDIR)\p2css.obj" : $(SOURCE) $(DEP_CPP_P2CSS) "$(INTDIR)"
+"$(INTDIR)\MENUconf.obj" : $(SOURCE) $(DEP_CPP_MENUC) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -10102,6 +9633,375 @@ DEP_CPP_QUERY=\
 	
 
 "$(INTDIR)\query.obj" : $(SOURCE) $(DEP_CPP_QUERY) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\amaya\styleparser.c
+
+!IF  "$(CFG)" == "amaya - Win32 Release"
+
+DEP_CPP_STYLE=\
+	"..\..\libwww\library\src\htaabrow.h"\
+	"..\..\libwww\library\src\htaautil.h"\
+	"..\..\libwww\library\src\htaccess.h"\
+	"..\..\libwww\library\src\htalert.h"\
+	"..\..\libwww\library\src\htanchor.h"\
+	"..\..\libwww\library\src\htancman.h"\
+	"..\..\libwww\library\src\htansi.h"\
+	"..\..\libwww\library\src\htarray.h"\
+	"..\..\libwww\library\src\htassoc.h"\
+	"..\..\libwww\library\src\htatom.h"\
+	"..\..\libwww\library\src\htbind.h"\
+	"..\..\libwww\library\src\htbinit.h"\
+	"..\..\libwww\library\src\htbound.h"\
+	"..\..\libwww\library\src\htbufwrt.h"\
+	"..\..\libwww\library\src\htcache.h"\
+	"..\..\libwww\library\src\htchannl.h"\
+	"..\..\libwww\library\src\htchunk.h"\
+	"..\..\libwww\library\src\htconlen.h"\
+	"..\..\libwww\library\src\htdescpt.h"\
+	"..\..\libwww\library\src\htdialog.h"\
+	"..\..\libwww\library\src\htdir.h"\
+	"..\..\libwww\library\src\htdns.h"\
+	"..\..\libwww\library\src\hterror.h"\
+	"..\..\libwww\library\src\htescape.h"\
+	"..\..\libwww\library\src\htevent.h"\
+	"..\..\libwww\library\src\htevtlst.h"\
+	"..\..\libwww\library\src\htfile.h"\
+	"..\..\libwww\library\src\htfilter.h"\
+	"..\..\libwww\library\src\htformat.h"\
+	"..\..\libwww\library\src\htftp.h"\
+	"..\..\libwww\library\src\htftpdir.h"\
+	"..\..\libwww\library\src\htfwrite.h"\
+	"..\..\libwww\library\src\htgopher.h"\
+	"..\..\libwww\library\src\htguess.h"\
+	"..\..\libwww\library\src\htheader.h"\
+	"..\..\libwww\library\src\hthinit.h"\
+	"..\..\libwww\library\src\hthist.h"\
+	"..\..\libwww\library\src\hthome.h"\
+	"..\..\libwww\library\src\hthost.h"\
+	"..\..\libwww\library\src\hthstman.h"\
+	"..\..\libwww\library\src\hticons.h"\
+	"..\..\libwww\library\src\htinet.h"\
+	"..\..\libwww\library\src\htinit.h"\
+	"..\..\libwww\library\src\htiostream.h"\
+	"..\..\libwww\library\src\htlib.h"\
+	"..\..\libwww\library\src\htlink.h"\
+	"..\..\libwww\library\src\htlist.h"\
+	"..\..\libwww\library\src\htlocal.h"\
+	"..\..\libwww\library\src\htlog.h"\
+	"..\..\libwww\library\src\htmemlog.h"\
+	"..\..\libwww\library\src\htmemory.h"\
+	"..\..\libwww\library\src\htmerge.h"\
+	"..\..\libwww\library\src\htmethod.h"\
+	"..\..\libwww\library\src\htmime.h"\
+	"..\..\libwww\library\src\htmimerq.h"\
+	"..\..\libwww\library\src\htmimimp.h"\
+	"..\..\libwww\library\src\htmimprs.h"\
+	"..\..\libwww\library\src\html.h"\
+	"..\..\libwww\library\src\htmlgen.h"\
+	"..\..\libwww\library\src\htmlpdtd.h"\
+	"..\..\libwww\library\src\htmulpar.h"\
+	"..\..\libwww\library\src\htmulti.h"\
+	"..\..\libwww\library\src\htndir.h"\
+	"..\..\libwww\library\src\htnet.h"\
+	"..\..\libwww\library\src\htnetman.h"\
+	"..\..\libwww\library\src\htnews.h"\
+	"..\..\libwww\library\src\htnewsls.h"\
+	"..\..\libwww\library\src\htnewsrq.h"\
+	"..\..\libwww\library\src\htparse.h"\
+	"..\..\libwww\library\src\htpep.h"\
+	"..\..\libwww\library\src\htplain.h"\
+	"..\..\libwww\library\src\htprofil.h"\
+	"..\..\libwww\library\src\htprot.h"\
+	"..\..\libwww\library\src\htproxy.h"\
+	"..\..\libwww\library\src\htreader.h"\
+	"..\..\libwww\library\src\htreq.h"\
+	"..\..\libwww\library\src\htreqman.h"\
+	"..\..\libwww\library\src\htresponse.h"\
+	"..\..\libwww\library\src\htrules.h"\
+	"..\..\libwww\library\src\htschunk.h"\
+	"..\..\libwww\library\src\htsocket.h"\
+	"..\..\libwww\library\src\htstream.h"\
+	"..\..\libwww\library\src\htstring.h"\
+	"..\..\libwww\library\src\htstruct.h"\
+	"..\..\libwww\library\src\httchunk.h"\
+	"..\..\libwww\library\src\httcp.h"\
+	"..\..\libwww\library\src\httee.h"\
+	"..\..\libwww\library\src\httelnet.h"\
+	"..\..\libwww\library\src\httexgen.h"\
+	"..\..\libwww\library\src\httimer.h"\
+	"..\..\libwww\library\src\http.h"\
+	"..\..\libwww\library\src\httpgen.h"\
+	"..\..\libwww\library\src\httpreq.h"\
+	"..\..\libwww\library\src\httpres.h"\
+	"..\..\libwww\library\src\httpserv.h"\
+	"..\..\libwww\library\src\httputil.h"\
+	"..\..\libwww\library\src\httrans.h"\
+	"..\..\libwww\library\src\htuser.h"\
+	"..\..\libwww\library\src\htutils.h"\
+	"..\..\libwww\library\src\htutree.h"\
+	"..\..\libwww\library\src\htuu.h"\
+	"..\..\libwww\library\src\HTWAIS.h"\
+	"..\..\libwww\library\src\htwriter.h"\
+	"..\..\libwww\library\src\htwwwstr.h"\
+	"..\..\libwww\library\src\htxparse.h"\
+	"..\..\libwww\library\src\htzip.h"\
+	"..\..\libwww\library\src\sgml.h"\
+	"..\..\libwww\library\src\windows\config.h"\
+	"..\..\libwww\library\src\wwwapp.h"\
+	"..\..\libwww\library\src\wwwcache.h"\
+	"..\..\libwww\library\src\wwwcore.h"\
+	"..\..\libwww\library\src\wwwdir.h"\
+	"..\..\libwww\library\src\wwwfile.h"\
+	"..\..\libwww\library\src\wwwftp.h"\
+	"..\..\libwww\library\src\wwwgophe.h"\
+	"..\..\libwww\library\src\wwwhtml.h"\
+	"..\..\libwww\library\src\wwwhttp.h"\
+	"..\..\libwww\library\src\wwwinit.h"\
+	"..\..\libwww\library\src\wwwlib.h"\
+	"..\..\libwww\library\src\wwwmime.h"\
+	"..\..\libwww\library\src\wwwnews.h"\
+	"..\..\libwww\library\src\wwwstream.h"\
+	"..\..\libwww\library\src\wwwsys.h"\
+	"..\..\libwww\library\src\wwwtelnt.h"\
+	"..\..\libwww\library\src\wwwtrans.h"\
+	"..\..\libwww\library\src\wwwutil.h"\
+	"..\..\libwww\library\src\WWWWAIS.h"\
+	"..\..\libwww\library\src\wwwzip.h"\
+	"..\amaya\amaya.h"\
+	"..\amaya\amayamsg.h"\
+	"..\amaya\css.h"\
+	"..\amaya\f\ahturltools_f.h"\
+	"..\amaya\f\css_f.h"\
+	"..\amaya\f\html2thot_f.h"\
+	"..\amaya\f\htmlimage_f.h"\
+	"..\amaya\f\htmlpresentation_f.h"\
+	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\uicss_f.h"\
+	"..\amaya\htmlstylecolor.h"\
+	"..\amaya\libilu.h"\
+	"..\amaya\libjava.h"\
+	"..\amaya\libwww.h"\
+	"..\thotlib\include\appaction.h"\
+	"..\thotlib\include\application.h"\
+	"..\thotlib\include\appstruct.h"\
+	"..\thotlib\include\attribute.h"\
+	"..\thotlib\include\browser.h"\
+	"..\thotlib\include\content.h"\
+	"..\thotlib\include\dialog.h"\
+	"..\thotlib\include\document.h"\
+	"..\thotlib\include\fileaccess.h"\
+	"..\thotlib\include\interface.h"\
+	"..\thotlib\include\language.h"\
+	"..\thotlib\include\libmsg.h"\
+	"..\thotlib\include\message.h"\
+	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\pschema.h"\
+	"..\thotlib\include\reference.h"\
+	"..\thotlib\include\registry.h"\
+	"..\thotlib\include\selection.h"\
+	"..\thotlib\include\simx.h"\
+	"..\thotlib\include\style.h"\
+	"..\thotlib\include\sysdep.h"\
+	"..\thotlib\include\thot_gui.h"\
+	"..\thotlib\include\thot_sys.h"\
+	"..\thotlib\include\tree.h"\
+	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\undo.h"\
+	"..\thotlib\include\ustring.h"\
+	"..\thotlib\include\view.h"\
+	".\amaya\editor.h"\
+	".\amaya\html.h"\
+	".\amaya\textfile.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_STYLE=\
+	"..\..\libwww\library\src\HTVMSUtils.h"\
+	"..\thotlib\include\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\styleparser.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
+
+DEP_CPP_STYLE=\
+	"..\..\libwww\library\src\htaabrow.h"\
+	"..\..\libwww\library\src\htaautil.h"\
+	"..\..\libwww\library\src\htaccess.h"\
+	"..\..\libwww\library\src\htalert.h"\
+	"..\..\libwww\library\src\htanchor.h"\
+	"..\..\libwww\library\src\htancman.h"\
+	"..\..\libwww\library\src\htansi.h"\
+	"..\..\libwww\library\src\htarray.h"\
+	"..\..\libwww\library\src\htassoc.h"\
+	"..\..\libwww\library\src\htatom.h"\
+	"..\..\libwww\library\src\htbind.h"\
+	"..\..\libwww\library\src\htbinit.h"\
+	"..\..\libwww\library\src\htbound.h"\
+	"..\..\libwww\library\src\htbufwrt.h"\
+	"..\..\libwww\library\src\htcache.h"\
+	"..\..\libwww\library\src\htchannl.h"\
+	"..\..\libwww\library\src\htchunk.h"\
+	"..\..\libwww\library\src\htconlen.h"\
+	"..\..\libwww\library\src\htdescpt.h"\
+	"..\..\libwww\library\src\htdialog.h"\
+	"..\..\libwww\library\src\htdir.h"\
+	"..\..\libwww\library\src\htdns.h"\
+	"..\..\libwww\library\src\hterror.h"\
+	"..\..\libwww\library\src\htescape.h"\
+	"..\..\libwww\library\src\htevent.h"\
+	"..\..\libwww\library\src\htevtlst.h"\
+	"..\..\libwww\library\src\htfile.h"\
+	"..\..\libwww\library\src\htfilter.h"\
+	"..\..\libwww\library\src\htformat.h"\
+	"..\..\libwww\library\src\htftp.h"\
+	"..\..\libwww\library\src\htftpdir.h"\
+	"..\..\libwww\library\src\htfwrite.h"\
+	"..\..\libwww\library\src\htgopher.h"\
+	"..\..\libwww\library\src\htguess.h"\
+	"..\..\libwww\library\src\htheader.h"\
+	"..\..\libwww\library\src\hthinit.h"\
+	"..\..\libwww\library\src\hthist.h"\
+	"..\..\libwww\library\src\hthome.h"\
+	"..\..\libwww\library\src\hthost.h"\
+	"..\..\libwww\library\src\hthstman.h"\
+	"..\..\libwww\library\src\hticons.h"\
+	"..\..\libwww\library\src\htinet.h"\
+	"..\..\libwww\library\src\htinit.h"\
+	"..\..\libwww\library\src\htiostream.h"\
+	"..\..\libwww\library\src\htlib.h"\
+	"..\..\libwww\library\src\htlink.h"\
+	"..\..\libwww\library\src\htlist.h"\
+	"..\..\libwww\library\src\htlocal.h"\
+	"..\..\libwww\library\src\htlog.h"\
+	"..\..\libwww\library\src\htmemlog.h"\
+	"..\..\libwww\library\src\htmemory.h"\
+	"..\..\libwww\library\src\htmerge.h"\
+	"..\..\libwww\library\src\htmethod.h"\
+	"..\..\libwww\library\src\htmime.h"\
+	"..\..\libwww\library\src\htmimerq.h"\
+	"..\..\libwww\library\src\htmimimp.h"\
+	"..\..\libwww\library\src\htmimprs.h"\
+	"..\..\libwww\library\src\html.h"\
+	"..\..\libwww\library\src\htmlgen.h"\
+	"..\..\libwww\library\src\htmlpdtd.h"\
+	"..\..\libwww\library\src\htmulpar.h"\
+	"..\..\libwww\library\src\htmulti.h"\
+	"..\..\libwww\library\src\htndir.h"\
+	"..\..\libwww\library\src\htnet.h"\
+	"..\..\libwww\library\src\htnetman.h"\
+	"..\..\libwww\library\src\htnews.h"\
+	"..\..\libwww\library\src\htnewsls.h"\
+	"..\..\libwww\library\src\htnewsrq.h"\
+	"..\..\libwww\library\src\htparse.h"\
+	"..\..\libwww\library\src\htpep.h"\
+	"..\..\libwww\library\src\htplain.h"\
+	"..\..\libwww\library\src\htprofil.h"\
+	"..\..\libwww\library\src\htprot.h"\
+	"..\..\libwww\library\src\htproxy.h"\
+	"..\..\libwww\library\src\htreader.h"\
+	"..\..\libwww\library\src\htreq.h"\
+	"..\..\libwww\library\src\htreqman.h"\
+	"..\..\libwww\library\src\htresponse.h"\
+	"..\..\libwww\library\src\htrules.h"\
+	"..\..\libwww\library\src\htschunk.h"\
+	"..\..\libwww\library\src\htsocket.h"\
+	"..\..\libwww\library\src\htstream.h"\
+	"..\..\libwww\library\src\htstring.h"\
+	"..\..\libwww\library\src\htstruct.h"\
+	"..\..\libwww\library\src\httchunk.h"\
+	"..\..\libwww\library\src\httcp.h"\
+	"..\..\libwww\library\src\httee.h"\
+	"..\..\libwww\library\src\httelnet.h"\
+	"..\..\libwww\library\src\httexgen.h"\
+	"..\..\libwww\library\src\httimer.h"\
+	"..\..\libwww\library\src\http.h"\
+	"..\..\libwww\library\src\httpgen.h"\
+	"..\..\libwww\library\src\httpreq.h"\
+	"..\..\libwww\library\src\httpres.h"\
+	"..\..\libwww\library\src\httpserv.h"\
+	"..\..\libwww\library\src\httputil.h"\
+	"..\..\libwww\library\src\httrans.h"\
+	"..\..\libwww\library\src\htuser.h"\
+	"..\..\libwww\library\src\htutils.h"\
+	"..\..\libwww\library\src\htutree.h"\
+	"..\..\libwww\library\src\htuu.h"\
+	"..\..\libwww\library\src\htwriter.h"\
+	"..\..\libwww\library\src\htwwwstr.h"\
+	"..\..\libwww\library\src\htxparse.h"\
+	"..\..\libwww\library\src\htzip.h"\
+	"..\..\libwww\library\src\sgml.h"\
+	"..\..\libwww\library\src\wwwapp.h"\
+	"..\..\libwww\library\src\wwwcache.h"\
+	"..\..\libwww\library\src\wwwcore.h"\
+	"..\..\libwww\library\src\wwwdir.h"\
+	"..\..\libwww\library\src\wwwfile.h"\
+	"..\..\libwww\library\src\wwwftp.h"\
+	"..\..\libwww\library\src\wwwgophe.h"\
+	"..\..\libwww\library\src\wwwhtml.h"\
+	"..\..\libwww\library\src\wwwhttp.h"\
+	"..\..\libwww\library\src\wwwinit.h"\
+	"..\..\libwww\library\src\wwwlib.h"\
+	"..\..\libwww\library\src\wwwmime.h"\
+	"..\..\libwww\library\src\wwwnews.h"\
+	"..\..\libwww\library\src\wwwstream.h"\
+	"..\..\libwww\library\src\wwwsys.h"\
+	"..\..\libwww\library\src\wwwtelnt.h"\
+	"..\..\libwww\library\src\wwwtrans.h"\
+	"..\..\libwww\library\src\wwwutil.h"\
+	"..\..\libwww\library\src\wwwzip.h"\
+	"..\amaya\amaya.h"\
+	"..\amaya\amayamsg.h"\
+	"..\amaya\css.h"\
+	"..\amaya\f\ahturltools_f.h"\
+	"..\amaya\f\css_f.h"\
+	"..\amaya\f\html2thot_f.h"\
+	"..\amaya\f\htmlimage_f.h"\
+	"..\amaya\f\htmlpresentation_f.h"\
+	"..\amaya\f\styleparser_f.h"\
+	"..\amaya\f\uicss_f.h"\
+	"..\amaya\htmlstylecolor.h"\
+	"..\amaya\libwww.h"\
+	"..\thotlib\include\appaction.h"\
+	"..\thotlib\include\application.h"\
+	"..\thotlib\include\appstruct.h"\
+	"..\thotlib\include\attribute.h"\
+	"..\thotlib\include\browser.h"\
+	"..\thotlib\include\content.h"\
+	"..\thotlib\include\dialog.h"\
+	"..\thotlib\include\document.h"\
+	"..\thotlib\include\fileaccess.h"\
+	"..\thotlib\include\interface.h"\
+	"..\thotlib\include\language.h"\
+	"..\thotlib\include\libmsg.h"\
+	"..\thotlib\include\message.h"\
+	"..\thotlib\include\presentation.h"\
+	"..\thotlib\include\pschema.h"\
+	"..\thotlib\include\reference.h"\
+	"..\thotlib\include\registry.h"\
+	"..\thotlib\include\selection.h"\
+	"..\thotlib\include\simx.h"\
+	"..\thotlib\include\style.h"\
+	"..\thotlib\include\sysdep.h"\
+	"..\thotlib\include\thot_gui.h"\
+	"..\thotlib\include\thot_sys.h"\
+	"..\thotlib\include\tree.h"\
+	"..\thotlib\include\typebase.h"\
+	"..\thotlib\include\undo.h"\
+	"..\thotlib\include\ustring.h"\
+	"..\thotlib\include\view.h"\
+	".\amaya\editor.h"\
+	".\amaya\html.h"\
+	".\amaya\textfile.h"\
+	
+
+"$(INTDIR)\styleparser.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
@@ -11146,7 +11046,7 @@ DEP_CPP_UICSS=\
 	"..\amaya\css.h"\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\css_f.h"\
-	"..\amaya\f\query_f.h"\
+	"..\amaya\f\init_f.h"\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
@@ -11160,19 +11060,17 @@ DEP_CPP_UICSS=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -11330,7 +11228,7 @@ DEP_CPP_UICSS=\
 	"..\amaya\css.h"\
 	"..\amaya\f\ahturltools_f.h"\
 	"..\amaya\f\css_f.h"\
-	"..\amaya\f\query_f.h"\
+	"..\amaya\f\init_f.h"\
 	"..\amaya\f\uicss_f.h"\
 	"..\amaya\libwww.h"\
 	"..\thotlib\include\appaction.h"\
@@ -11342,19 +11240,17 @@ DEP_CPP_UICSS=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -11876,8 +11772,8 @@ DEP_CPP_XMLPA=\
 	"..\amaya\css.h"\
 	"..\amaya\f\GraphMLbuilder_f.h"\
 	"..\amaya\f\html2thot_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\mathmlbuilder_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libilu.h"\
 	"..\amaya\libjava.h"\
 	"..\amaya\libwww.h"\
@@ -11890,19 +11786,17 @@ DEP_CPP_XMLPA=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\
@@ -12058,8 +11952,8 @@ DEP_CPP_XMLPA=\
 	"..\amaya\amayamsg.h"\
 	"..\amaya\css.h"\
 	"..\amaya\f\html2thot_f.h"\
-	"..\amaya\f\htmlstyle_f.h"\
 	"..\amaya\f\mathmlbuilder_f.h"\
+	"..\amaya\f\styleparser_f.h"\
 	"..\amaya\libwww.h"\
 	"..\thotlib\include\appaction.h"\
 	"..\thotlib\include\application.h"\
@@ -12070,19 +11964,17 @@ DEP_CPP_XMLPA=\
 	"..\thotlib\include\dialog.h"\
 	"..\thotlib\include\document.h"\
 	"..\thotlib\include\fileaccess.h"\
-	"..\thotlib\include\genericdriver.h"\
 	"..\thotlib\include\interface.h"\
 	"..\thotlib\include\language.h"\
 	"..\thotlib\include\libmsg.h"\
 	"..\thotlib\include\message.h"\
 	"..\thotlib\include\presentation.h"\
-	"..\thotlib\include\presentdriver.h"\
 	"..\thotlib\include\pschema.h"\
 	"..\thotlib\include\reference.h"\
 	"..\thotlib\include\registry.h"\
 	"..\thotlib\include\selection.h"\
 	"..\thotlib\include\simx.h"\
-	"..\thotlib\include\specificdriver.h"\
+	"..\thotlib\include\style.h"\
 	"..\thotlib\include\sysdep.h"\
 	"..\thotlib\include\thot_gui.h"\
 	"..\thotlib\include\thot_sys.h"\

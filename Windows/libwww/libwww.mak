@@ -25,6 +25,8 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+
 !IF  "$(CFG)" == "libwww - Win32 Release"
 
 OUTDIR=.\..
@@ -39,11 +41,15 @@ ALL : "$(OUTDIR)\libwww.lib"
 
 !ELSE 
 
-ALL : "$(OUTDIR)\libwww.lib"
+ALL : "zlib - Win32 Release" "$(OUTDIR)\libwww.lib"
 
 !ENDIF 
 
+!IF "$(RECURSE)" == "1" 
+CLEAN :"zlib - Win32 ReleaseCLEAN" 
+!ELSE 
 CLEAN :
+!ENDIF 
 	-@erase "$(INTDIR)\HTAABrow.obj"
 	-@erase "$(INTDIR)\HTAAUtil.obj"
 	-@erase "$(INTDIR)\HTAccess.obj"
@@ -149,6 +155,7 @@ CLEAN :
 	-@erase "$(INTDIR)\HTWSRC.obj"
 	-@erase "$(INTDIR)\HTWWWStr.obj"
 	-@erase "$(INTDIR)\HTXParse.obj"
+	-@erase "$(INTDIR)\HTZip.obj"
 	-@erase "$(INTDIR)\md5.obj"
 	-@erase "$(INTDIR)\SGML.obj"
 	-@erase "$(INTDIR)\vc50.idb"
@@ -160,43 +167,11 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\Library\src" /D "NDEBUG"\
  /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /Fp"$(INTDIR)\libwww.pch" /YX\
  /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 CPP_OBJS=.\Release/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libwww.bsc" 
 BSC32_SBRS= \
@@ -309,8 +284,10 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTWSRC.obj" \
 	"$(INTDIR)\HTWWWStr.obj" \
 	"$(INTDIR)\HTXParse.obj" \
+	"$(INTDIR)\HTZip.obj" \
 	"$(INTDIR)\md5.obj" \
-	"$(INTDIR)\SGML.obj"
+	"$(INTDIR)\SGML.obj" \
+	"$(OUTDIR)\zlib.lib"
 
 "$(OUTDIR)\libwww.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -331,11 +308,15 @@ ALL : "$(OUTDIR)\libwww.lib"
 
 !ELSE 
 
-ALL : "$(OUTDIR)\libwww.lib"
+ALL : "zlib - Win32 Debug" "$(OUTDIR)\libwww.lib"
 
 !ENDIF 
 
+!IF "$(RECURSE)" == "1" 
+CLEAN :"zlib - Win32 DebugCLEAN" 
+!ELSE 
 CLEAN :
+!ENDIF 
 	-@erase "$(INTDIR)\HTAABrow.obj"
 	-@erase "$(INTDIR)\HTAAUtil.obj"
 	-@erase "$(INTDIR)\HTAccess.obj"
@@ -441,6 +422,7 @@ CLEAN :
 	-@erase "$(INTDIR)\HTWSRC.obj"
 	-@erase "$(INTDIR)\HTWWWStr.obj"
 	-@erase "$(INTDIR)\HTXParse.obj"
+	-@erase "$(INTDIR)\HTZip.obj"
 	-@erase "$(INTDIR)\md5.obj"
 	-@erase "$(INTDIR)\SGML.obj"
 	-@erase "$(INTDIR)\vc50.idb"
@@ -452,43 +434,12 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
-CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\Library\src" /D\
- "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /Fp"$(INTDIR)\libwww.pch"\
- /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\..\libwww\Library\src" /I\
+ "..\..\libpng\zlib" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /D\
+ "HT_ZLIB" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD\
+ /c 
 CPP_OBJS=.\Debug/
 CPP_SBRS=.
-
-.c{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_OBJS)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(CPP_SBRS)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\libwww.bsc" 
 BSC32_SBRS= \
@@ -601,8 +552,10 @@ LIB32_OBJS= \
 	"$(INTDIR)\HTWSRC.obj" \
 	"$(INTDIR)\HTWWWStr.obj" \
 	"$(INTDIR)\HTXParse.obj" \
+	"$(INTDIR)\HTZip.obj" \
 	"$(INTDIR)\md5.obj" \
-	"$(INTDIR)\SGML.obj"
+	"$(INTDIR)\SGML.obj" \
+	"$(OUTDIR)\zlib.lib"
 
 "$(OUTDIR)\libwww.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -611,8 +564,67 @@ LIB32_OBJS= \
 
 !ENDIF 
 
+.c{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_OBJS)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(CPP_SBRS)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 
 !IF "$(CFG)" == "libwww - Win32 Release" || "$(CFG)" == "libwww - Win32 Debug"
+
+!IF  "$(CFG)" == "libwww - Win32 Release"
+
+"zlib - Win32 Release" : 
+   cd "..\zlib"
+   $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Release" 
+   cd "..\libwww"
+
+"zlib - Win32 ReleaseCLEAN" : 
+   cd "..\zlib"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\zlib.mak CFG="zlib - Win32 Release"\
+ RECURSE=1 
+   cd "..\libwww"
+
+!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
+
+"zlib - Win32 Debug" : 
+   cd "..\zlib"
+   $(MAKE) /$(MAKEFLAGS) /F .\zlib.mak CFG="zlib - Win32 Debug" 
+   cd "..\libwww"
+
+"zlib - Win32 DebugCLEAN" : 
+   cd "..\zlib"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\zlib.mak CFG="zlib - Win32 Debug" RECURSE=1\
+ 
+   cd "..\libwww"
+
+!ENDIF 
+
 SOURCE=..\..\..\libwww\Library\src\HTAABrow.c
 
 !IF  "$(CFG)" == "libwww - Win32 Release"
@@ -5386,9 +5398,14 @@ DEP_CPP_HTINI=\
 NODEP_CPP_HTINI=\
 	"..\..\..\libwww\library\src\HTVMSUtils.h"\
 	
+CPP_SWITCHES=/nologo /ML /W3 /GX /O2 /I "..\..\..\libwww\Library\src" /D\
+ "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /Fp"$(INTDIR)\libwww.pch"\
+ /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 "$(INTDIR)\HTInit.obj" : $(SOURCE) $(DEP_CPP_HTINI) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
+	$(CPP) @<<
+  $(CPP_SWITCHES) $(SOURCE)
+<<
 
 
 !ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
@@ -5511,9 +5528,15 @@ DEP_CPP_HTINI=\
 	"..\..\..\libwww\library\src\wwwutil.h"\
 	"..\..\..\libwww\library\src\wwwzip.h"\
 	
+CPP_SWITCHES=/nologo /MLd /W3 /GX /Z7 /Od /I "..\..\libpng\zlib" /I\
+ "..\..\..\..\libwww\Library\src" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D\
+ "WWW_WIN_ASYNC" /D "HT_ZLIB" /Fp"$(INTDIR)\libwww.pch" /YX /Fo"$(INTDIR)\\"\
+ /Fd"$(INTDIR)\\" /FD /c 
 
 "$(INTDIR)\HTInit.obj" : $(SOURCE) $(DEP_CPP_HTINI) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
+	$(CPP) @<<
+  $(CPP_SWITCHES) $(SOURCE)
+<<
 
 
 !ENDIF 
@@ -11825,6 +11848,125 @@ DEP_CPP_HTXPA=\
 	
 
 "$(INTDIR)\HTXParse.obj" : $(SOURCE) $(DEP_CPP_HTXPA) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ENDIF 
+
+SOURCE=..\..\..\libwww\Library\src\HTZip.c
+
+!IF  "$(CFG)" == "libwww - Win32 Release"
+
+DEP_CPP_HTZIP=\
+	"..\..\..\libwww\library\src\htalert.h"\
+	"..\..\..\libwww\library\src\htanchor.h"\
+	"..\..\..\libwww\library\src\htarray.h"\
+	"..\..\..\libwww\library\src\htassoc.h"\
+	"..\..\..\libwww\library\src\htatom.h"\
+	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htchannl.h"\
+	"..\..\..\libwww\library\src\htchunk.h"\
+	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hterror.h"\
+	"..\..\..\libwww\library\src\htescape.h"\
+	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfwrite.h"\
+	"..\..\..\libwww\library\src\hthost.h"\
+	"..\..\..\libwww\library\src\hthstman.h"\
+	"..\..\..\libwww\library\src\htinet.h"\
+	"..\..\..\libwww\library\src\htiostream.h"\
+	"..\..\..\libwww\library\src\htlib.h"\
+	"..\..\..\libwww\library\src\htlink.h"\
+	"..\..\..\libwww\library\src\htlist.h"\
+	"..\..\..\libwww\library\src\htmemlog.h"\
+	"..\..\..\libwww\library\src\htmemory.h"\
+	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htparse.h"\
+	"..\..\..\libwww\library\src\htprot.h"\
+	"..\..\..\libwww\library\src\htreq.h"\
+	"..\..\..\libwww\library\src\htresponse.h"\
+	"..\..\..\libwww\library\src\htstream.h"\
+	"..\..\..\libwww\library\src\htstring.h"\
+	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\httimer.h"\
+	"..\..\..\libwww\library\src\httrans.h"\
+	"..\..\..\libwww\library\src\htuser.h"\
+	"..\..\..\libwww\library\src\htutils.h"\
+	"..\..\..\libwww\library\src\htutree.h"\
+	"..\..\..\libwww\library\src\htuu.h"\
+	"..\..\..\libwww\library\src\htwwwstr.h"\
+	"..\..\..\libwww\library\src\htzip.h"\
+	"..\..\..\libwww\library\src\windows\config.h"\
+	"..\..\..\libwww\library\src\wwwcore.h"\
+	"..\..\..\libwww\library\src\wwwsys.h"\
+	"..\..\..\libwww\library\src\wwwutil.h"\
+	"..\..\..\libwww\library\src\zconf.h"\
+	"..\..\..\libwww\library\src\zlib.h"\
+	{$(INCLUDE)}"sys\stat.h"\
+	{$(INCLUDE)}"sys\types.h"\
+	
+NODEP_CPP_HTZIP=\
+	"..\..\..\libwww\library\src\HTVMSUtils.h"\
+	
+
+"$(INTDIR)\HTZip.obj" : $(SOURCE) $(DEP_CPP_HTZIP) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+!ELSEIF  "$(CFG)" == "libwww - Win32 Debug"
+
+DEP_CPP_HTZIP=\
+	"..\..\..\libwww\library\src\htalert.h"\
+	"..\..\..\libwww\library\src\htanchor.h"\
+	"..\..\..\libwww\library\src\htarray.h"\
+	"..\..\..\libwww\library\src\htassoc.h"\
+	"..\..\..\libwww\library\src\htatom.h"\
+	"..\..\..\libwww\library\src\htbind.h"\
+	"..\..\..\libwww\library\src\htchannl.h"\
+	"..\..\..\libwww\library\src\htchunk.h"\
+	"..\..\..\libwww\library\src\htdns.h"\
+	"..\..\..\libwww\library\src\hterror.h"\
+	"..\..\..\libwww\library\src\htescape.h"\
+	"..\..\..\libwww\library\src\htevent.h"\
+	"..\..\..\libwww\library\src\htformat.h"\
+	"..\..\..\libwww\library\src\htfwrite.h"\
+	"..\..\..\libwww\library\src\hthost.h"\
+	"..\..\..\libwww\library\src\hthstman.h"\
+	"..\..\..\libwww\library\src\htinet.h"\
+	"..\..\..\libwww\library\src\htiostream.h"\
+	"..\..\..\libwww\library\src\htlib.h"\
+	"..\..\..\libwww\library\src\htlink.h"\
+	"..\..\..\libwww\library\src\htlist.h"\
+	"..\..\..\libwww\library\src\htmemlog.h"\
+	"..\..\..\libwww\library\src\htmemory.h"\
+	"..\..\..\libwww\library\src\htmethod.h"\
+	"..\..\..\libwww\library\src\htnet.h"\
+	"..\..\..\libwww\library\src\htparse.h"\
+	"..\..\..\libwww\library\src\htprot.h"\
+	"..\..\..\libwww\library\src\htreq.h"\
+	"..\..\..\libwww\library\src\htresponse.h"\
+	"..\..\..\libwww\library\src\htstream.h"\
+	"..\..\..\libwww\library\src\htstring.h"\
+	"..\..\..\libwww\library\src\htstruct.h"\
+	"..\..\..\libwww\library\src\httimer.h"\
+	"..\..\..\libwww\library\src\httrans.h"\
+	"..\..\..\libwww\library\src\htuser.h"\
+	"..\..\..\libwww\library\src\htutils.h"\
+	"..\..\..\libwww\library\src\htutree.h"\
+	"..\..\..\libwww\library\src\htuu.h"\
+	"..\..\..\libwww\library\src\htwwwstr.h"\
+	"..\..\..\libwww\library\src\htzip.h"\
+	"..\..\..\libwww\library\src\windows\config.h"\
+	"..\..\..\libwww\library\src\wwwcore.h"\
+	"..\..\..\libwww\library\src\wwwsys.h"\
+	"..\..\..\libwww\library\src\wwwutil.h"\
+	"..\..\..\libwww\library\src\zconf.h"\
+	"..\..\..\libwww\library\src\zlib.h"\
+	
+
+"$(INTDIR)\HTZip.obj" : $(SOURCE) $(DEP_CPP_HTZIP) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
