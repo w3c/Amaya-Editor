@@ -279,9 +279,9 @@ View                view;
    method = DocHistory[doc][prev].method;
 
    /* is it the same form_data? */
-   if (!form_data && ! DocumentMeta[doc]->form_data)
+   if (!form_data && (!DocumentMeta[doc]  || !DocumentMeta[doc]->form_data))
      same_form_data = TRUE;
-   else if (form_data && DocumentMeta[doc]->form_data 
+   else if (form_data && DocumentMeta[doc] && DocumentMeta[doc]->form_data 
 	    && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
      same_form_data = TRUE;
    else
@@ -332,7 +332,7 @@ View                view;
    ctx->doc = doc;
 
     /* is it the current document ? */     
-   if (!strcmp (url, DocumentURLs[doc]) && same_form_data)
+   if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
      {
        /* it's just a move in the same document */
        if (hist)
@@ -427,9 +427,9 @@ View                view;
       return;
 
    /* is the form_data the same? */
-   if (!form_data && ! DocumentMeta[doc]->form_data)
+   if (!form_data && (!DocumentMeta[doc] || !DocumentMeta[doc]->form_data))
      same_form_data = TRUE;
-   else if (form_data && DocumentMeta[doc]->form_data 
+   else if (form_data && DocumentMeta[doc] && DocumentMeta[doc]->form_data 
 	    && (!strcmp (form_data, DocumentMeta[doc]->form_data)))
      same_form_data = TRUE;
    else
@@ -475,7 +475,7 @@ View                view;
    ctx->doc = doc;
 
    /* is it the current document ? */
-   if (!strcmp (url, DocumentURLs[doc]) && same_form_data)
+   if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
      /* it's just a move in the same document */
      GotoNextHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
    else 
