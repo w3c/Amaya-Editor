@@ -717,7 +717,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 		doitH = !PRuleMessagePre (pEl, pRuleH, dx, pDoc, isNewH);
 	      else
 		doitH = TRUE;
-	      if (doitH || isNewH)
+	      if (doitH /*|| isNewH*/)
 		{
 		  /* store the new value in the specific rule */
 		  if (isDimH)
@@ -891,7 +891,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 		 doitV = !PRuleMessagePre (pEl, pRuleV, dy, pDoc, isNewV);
 	       else
 		 doitV = TRUE;
-	       if (doitV || isNewV)
+	       if (doitV /*|| isNewV*/)
 		 {
 		   /* store the new value in the specific rule */
 		   if (isDimV)
