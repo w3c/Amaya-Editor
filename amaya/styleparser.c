@@ -3995,6 +3995,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       while (*selector != EOS && *selector != ',' &&
              *selector != '.' && *selector != ':' &&
              *selector != '#' && *selector != '[' &&
+             *selector != '*' && *selector != '>' &&
 	     !TtaIsBlank (selector))
             *cur++ = *selector++;
       *cur++ = EOS; /* close the first string  in sel[] */
@@ -4014,7 +4015,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       /* now names[0] points to the beginning of the parsed item
 	 and cur to the next chain to be parsed */
       while (*selector == '.' || *selector == ':' ||
-	     *selector == '#' || *selector == '[')
+	     *selector == '#' || *selector == '[' ||
+	     *selector == '*' || *selector == '>')
       {
 	/* point to the following word in sel[] */
 	deb = cur;
@@ -4148,6 +4150,18 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      }
 	    else
 	      selector++;
+	  }
+	else
+	  {
+	    /* not supported selector */
+	    while (*selector != EOS && *selector != ',' &&
+		   *selector != '.' && *selector != ':' &&
+		   !TtaIsBlank (selector))
+	      *cur++ = *selector++;
+	    /* close the word */
+	    *cur++ = EOS;
+	    CSSParseError ("Not supported selector", deb);
+	    DoApply = FALSE;	    
 	  }
       }
 
