@@ -7,7 +7,7 @@
 AMAYAVERSION=1.4a
 THOTDIR=/tahiti/diffusion/Thot
 DEST=/tahiti/thottape
-PLATFORMS="solaris2 solaris2.6 LINUX-ELF RS6000 SGI osf1"
+PLATFORMS="solaris2 LINUX-ELF RS6000 SGI osf1"
 #PLATFORMS="osf1"
 #PLATFORMS="RS6000"
 
@@ -15,7 +15,7 @@ PLATFORMS="solaris2 solaris2.6 LINUX-ELF RS6000 SGI osf1"
 #DEST=$HOME
 #PLATFORMS="osf1"
 
-TAR="tar cvbfh 200"
+TAR="tar cvzfh "
 COMPRESS="gzip -9"
 
 cd $THOTDIR
@@ -25,7 +25,7 @@ cd ..
 
 for MACH in $PLATFORMS
 do
-   $TAR - \
+ $TAR $DEST/amaya-$MACH-$AMAYAVERSION.tar.gz \
    Thot/README.amaya \
    Thot/config/XKeysymDB \
    Thot/config/thot.ini \
@@ -109,7 +109,94 @@ do
    Thot/amaya/MathML.trans \
    Thot/fonts/Families.list \
    Thot/fonts/fonts.dir \
-   Thot/fonts/icones* \
-   | $COMPRESS  > $DEST/amaya-$MACH-$AMAYAVERSION.tar.gz
+   Thot/fonts/icones*
 done
 
+#sepecific tar for solaris2.6
+tar cvzf $DEST/amaya-solaris2.6-$AMAYAVERSION.tar.gz  \
+   Thot/README.amaya \
+   Thot/config/XKeysymDB \
+   Thot/config/thot.ini \
+   Thot/config/amaya.keyboard \
+   Thot/config/thot.rc \
+   Thot/config/amaya.kb \
+   Thot/config/en-amayadialogue \
+   Thot/config/en-amayamsg \
+   Thot/config/en-libdialogue \
+   Thot/config/en-transdialogue \
+   Thot/config/en-corrdialogue \
+   Thot/config/fr-amayadialogue \
+   Thot/config/fr-amayamsg \
+   Thot/config/fr-libdialogue \
+   Thot/config/fr-transdialogue \
+   Thot/config/fr-corrdialogue \
+   Thot/config/de-amayadialogue \
+   Thot/config/de-amayamsg \
+   Thot/config/de-libdialogue \
+   Thot/config/de-transdialogue \
+   Thot/config/de-corrdialogue \
+   Thot/config/tr-amayadialogue \
+   Thot/config/tr-amayamsg \
+   Thot/config/tr-libdialogue \
+   Thot/config/tr-transdialogue \
+   Thot/config/tr-corrdialogue \
+   Thot/dicopar/*.ptn \
+   Thot/dicopar/alphabet \
+   Thot/dicopar/clavier \
+   Thot/doc/amaya/Creating.html \
+   Thot/doc/amaya/MakeBook.html \
+   Thot/doc/amaya/StyleSheets.html \
+   Thot/doc/amaya/Manual.html \
+   Thot/doc/amaya/Tables.html \
+   Thot/doc/amaya/AmayaArchi.html \
+   Thot/doc/amaya/Math.html \
+   Thot/doc/amaya/Registry.html \
+   Thot/doc/amaya/Transform.html \
+   Thot/doc/amaya/Attributes.html \
+   Thot/doc/amaya/Views.html \
+   Thot/doc/amaya/Publishing.html \
+   Thot/doc/amaya/Put.html \
+   Thot/doc/amaya/ImageMaps.html \
+   Thot/doc/amaya/Numbering.html \
+   Thot/doc/amaya/Searching.html \
+   Thot/doc/amaya/Selecting.html \
+   Thot/doc/amaya/Browsing.html \
+   Thot/doc/amaya/CSS.html \
+   Thot/doc/amaya/Plugins.html \
+   Thot/doc/amaya/Keyboard.html \
+   Thot/doc/amaya/Printing.html \
+   Thot/doc/amaya/Changing.html \
+   Thot/doc/amaya/Configure.html \
+   Thot/doc/amaya/Links.html \
+   Thot/doc/amaya/Put.html \
+   Thot/doc/amaya/SpellChecking.html \
+   Thot/doc/Icons/*.gif \
+   Thot/Icons/WWW/activity_48x48 \
+   Thot/Icons/WWW/guide48x \
+   Thot/Icons/WWW/new_red \
+   Thot/Icons/WWW/relnotes48x \
+   Thot/Icons/WWW/w3c_home \
+   Thot/solaris2.6/libXm.so.3 \
+   Thot/solaris2.6/libXm.so \
+   Thot/solaris2.6/bin/amaya \
+   Thot/solaris2.6/bin/print \
+   Thot/batch/MachineType \
+   Thot/amaya/COPYRIGHT* \
+   Thot/amaya/AmayaPage.html \
+   Thot/amaya/HTML.STR \
+   Thot/amaya/HTML.conf \
+   Thot/amaya/HTML.trans \
+   Thot/amaya/*.en \
+   Thot/amaya/*.fr \
+   Thot/amaya/HTML*.PRS \
+   Thot/amaya/HTML*.TRA \
+   Thot/amaya/*.en \
+   Thot/amaya/*.fr \
+   Thot/amaya/*.gif \
+   Thot/amaya/MathML.STR \
+   Thot/amaya/MathML*.PRS \
+   Thot/amaya/MathML*.TRA \
+   Thot/amaya/MathML.trans \
+   Thot/fonts/Families.list \
+   Thot/fonts/fonts.dir \
+   Thot/fonts/icones*

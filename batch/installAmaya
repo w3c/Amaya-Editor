@@ -77,7 +77,6 @@ mkdir $DIR
    cp -p Thot/Icons/WWW/new_red $DIR/Icons/WWW/
    cp -p Thot/Icons/WWW/relnotes48x $DIR/Icons/WWW/
    cp -p Thot/Icons/WWW/w3c_home $DIR/Icons/WWW/
-
 for MACH in $PLATFORMS
 do
  mkdir $DIR/$MACH
@@ -85,6 +84,9 @@ do
    cp -p Thot/$MACH/bin/amaya $DIR/$MACH/bin/
    cp -p Thot/$MACH/bin/print $DIR/$MACH/bin/
 done
+#specific to solaris2.6
+   cp -p Thot/solaris2.6/libXm.so.3 $DIR/solaris2.6/
+   ln -s libXm.so.3 $DIR/solaris2.6/libXm.so
 
 DIR=/mnt/amaya/$AMAYAVERSION
 PLATFORMS="solaris2 SGI RS6000 LINUX-ELF"
