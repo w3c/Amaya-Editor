@@ -622,63 +622,8 @@ static void FrameRedraw (int frame, Dimension width, Dimension height)
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
-
-#ifdef _GTK
 #ifdef _GL
-/*----------------------------------------------------------------------
-  DrawGL:
-  ----------------------------------------------------------------------*/
-gboolean GL_DrawCallback (ThotWidget widget, GdkEventExpose *event, 
-			  gpointer data)
-{
-  DefClip ((int ) data, -1, -1, -1, -1);
-  GL_DrawAll ((int ) data);
-  return TRUE;
-}
-
-/*----------------------------------------------------------------------
-  GL_Destroy: Close Opengl pipeline
-  ----------------------------------------------------------------------*/
-gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event, 
-		      gpointer data)
-{
-  int      frame;
- 
-  frame = (int) data;
-  FreeAllPicCacheFromFrame (frame);
-  return TRUE;
-}
-
-/*----------------------------------------------------------------------
-  GL_Init: Opengl pipeline state initialization
-  ----------------------------------------------------------------------*/
-gboolean GL_Init (ThotWidget widget, GdkEventExpose *event, gpointer data)
-{
-  while (!gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-    ;
-  SetGlPipelineState ();
-  return TRUE;   
-}
-
-#ifndef _NOSHARELIST
 static int Shared_Context=-1;
-/*----------------------------------------------------------------------
-  GetSharedContext : get the name of the frame used as shared context
-  ----------------------------------------------------------------------*/
-int GetSharedContext ()
-{
-  return Shared_Context;
-}
-
-/*----------------------------------------------------------------------
-  SetSharedContext : set the name of the frame used as shared context
-  ----------------------------------------------------------------------*/
-void SetSharedContext (int frame)
-{
-  Shared_Context = frame;
-}
-#endif /*_NOSHARELIST*/
-
 /*----------------------------------------------------------------------
   GL_DestroyFrame: Close Opengl pipeline
   ----------------------------------------------------------------------*/
@@ -718,6 +663,7 @@ void  GL_DestroyFrame (int frame)
 #endif /* _WINDOWS */
 }
 
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
   GL_Win32ContextInit : Turn a win32 windows into an opengl drawing canvas, 
   setting up pxel format,
@@ -799,6 +745,63 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
   ActiveFrame = frame;
   ReleaseDC (hwndClient, GL_Windows[frame]);
 }
+#endif /* _WINDOWS */
+#endif /* _GL */
+
+#ifdef _GTK
+#ifdef _GL
+/*----------------------------------------------------------------------
+  DrawGL:
+  ----------------------------------------------------------------------*/
+gboolean GL_DrawCallback (ThotWidget widget, GdkEventExpose *event, 
+			  gpointer data)
+{
+  DefClip ((int ) data, -1, -1, -1, -1);
+  GL_DrawAll ((int ) data);
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  GL_Destroy: Close Opengl pipeline
+  ----------------------------------------------------------------------*/
+gboolean  GL_Destroy (ThotWidget widget, GdkEventExpose *event, 
+		      gpointer data)
+{
+  int      frame;
+ 
+  frame = (int) data;
+  FreeAllPicCacheFromFrame (frame);
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  GL_Init: Opengl pipeline state initialization
+  ----------------------------------------------------------------------*/
+gboolean GL_Init (ThotWidget widget, GdkEventExpose *event, gpointer data)
+{
+  while (!gtk_gl_area_make_current (GTK_GL_AREA(widget)))
+    ;
+  SetGlPipelineState ();
+  return TRUE;   
+}
+
+#ifndef _NOSHARELIST
+/*----------------------------------------------------------------------
+  GetSharedContext : get the name of the frame used as shared context
+  ----------------------------------------------------------------------*/
+int GetSharedContext ()
+{
+  return Shared_Context;
+}
+
+/*----------------------------------------------------------------------
+  SetSharedContext : set the name of the frame used as shared context
+  ----------------------------------------------------------------------*/
+void SetSharedContext (int frame)
+{
+  Shared_Context = frame;
+}
+#endif /*_NOSHARELIST*/
 #endif /* _GL */
 
 static ThotBool  FrameResizedGTKInProgress = FALSE;
