@@ -1615,10 +1615,10 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  status = GetKeyState (VK_CONTROL);
 	  if (HIBYTE (status))
 	    /* changes the box position */
-	    ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
+	    ApplyDirectTranslate (frame, ClickX, ClickY);
 	  /* This is the beginning of a selection */
 	  else
-	    LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 2);
+	    LocateSelectionInView (frame, ClickX, ClickY, 2);
 	  fBlocking = TRUE;
 	  moved = FALSE;
 	}
@@ -1640,9 +1640,10 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	AutoScroll = FALSE;
       return 0;
 
-    case WM_LBUTTONDBLCLK:/* left double click handling */
+    case WM_LBUTTONDBLCLK:
+      /* left double click handling */
       ReturnOption = -1;
-      /* memorise la position de la souris */
+      /* get the mouse position */
       ClickFrame = frame;
       ClickX     = LOWORD (lParam);
       ClickY     = HIWORD (lParam);
@@ -1661,12 +1662,11 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       if (HIBYTE (status))
 	{
 	  /* changes the box size */
-	  /* ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam)); */
 	  ApplyDirectResize (frame, ClickX, ClickY);
 	  /* memorize the click position */
 	}
       else
-	LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 5);
+	LocateSelectionInView (frame, ClickX, ClickY, 5);
       return 0;
 
     case WM_RBUTTONDOWN:
@@ -1686,7 +1686,12 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  /* memorize the click position */
 	}
       else
-	LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 6);
+	LocateSelectionInView (frame, ClickX, ClickY, 6);
+      return 0;
+
+    case WM_MBUTTONDBLCLK:
+    case WM_RBUTTONDBLCLK:
+      /* left double click handling */
       return 0;
 
     case WM_MOUSEMOVE:
@@ -1696,8 +1701,8 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       Y_Pos = HIWORD (lParam);
       if (wParam & MK_LBUTTON)
 	{
-	  if (((oldXPos <= X_Pos - 1) || (oldXPos >= X_Pos + 1)) ||  
-	      ((oldYPos <= Y_Pos - 1) || (oldYPos >= Y_Pos + 1)))
+	  if ((oldXPos <= X_Pos - 1 || oldXPos >= X_Pos + 1) ||  
+	      (oldYPos <= Y_Pos - 1 || oldYPos >= Y_Pos + 1))
 	    {
 	      LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
 	      moved = TRUE;
@@ -1740,184 +1745,230 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   ----------------------------------------------------------------------*/
 void FrameCallback (int frame, void *evnt)
 {
-   ThotEvent           event;
-   ThotEvent          *ev = (ThotEvent *) evnt;
-   Document            document;
-   View                view;
-   int                 comm, dx, dy, sel, h;
+  ThotEvent           event;
+  ThotEvent          *ev = (ThotEvent *) evnt;
+  Document            document;
+  View                view;
+  int                 comm, dx, dy, sel, h;
 
-   /* ne pas traiter si le document est en mode NoComputedDisplay */
-   if (FrameTable[frame].FrDoc == 0 ||
-       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+  /* ne pas traiter si le document est en mode NoComputedDisplay */
+  if (FrameTable[frame].FrDoc == 0 ||
+      documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    return;
+  /*_______> S'il n'y a pas d'evenement associe */
+  else if (ev == NULL)
+    return;
+  /*_______> Si une designation de pave est attendue*/
+  else if (ClickIsDone == 1 &&
+	   (ev->type == ButtonPress || ev->type == KeyPress))
+    {
+      ClickIsDone = 0;
+      ClickFrame = frame;
+      ClickX = ev->xbutton.x;
+      ClickY = ev->xbutton.y;
       return;
-   /*_______> S'il n'y a pas d'evenement associe */
-   else if (ev == NULL)
-      return;
-   /*_______> Si une designation de pave est attendue*/
-   else if (ClickIsDone == 1 &&
-	    (ev->type == ButtonPress || ev->type == KeyPress))
-     {
-	ClickIsDone = 0;
-	ClickFrame = frame;
-	ClickX = ev->xbutton.x;
-	ClickY = ev->xbutton.y;
-	return;
-     }
+    }
 
-   /* S'il y a un TtaWaitShowDialogue en cours on n'autorise pas de changer */
-   /* la selection courante. */
-   if (TtaTestWaitShowDialogue ()
-       && (ev->type != ButtonPress || (ev->xbutton.state & THOT_KEY_ControlMask) == 0))
-      return;
+  /* S'il y a un TtaWaitShowDialogue en cours on n'autorise pas de changer */
+  /* la selection courante. */
+  if (TtaTestWaitShowDialogue ()
+      && (ev->type != ButtonPress || (ev->xbutton.state & THOT_KEY_ControlMask) == 0))
+    return;
+  
+  switch (ev->type)
+    {
+    case ButtonPress:
+      /*_____________________________________________________*/
+      /* Termine l'insertion courante s'il y en a une */
+      CloseInsertion ();
+      switch (ev->xbutton.button)
+	{
+	case Button1:
+	  /* ==========LEFT BUTTON========== */
+	  /* Est-ce que la touche modifieur de geometrie est active ? */
+	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
+	    {
+	      /* moving a box */
+	      ApplyDirectTranslate (frame, ev->xbutton.x, ev->xbutton.y);
+	      T1 = 0;
+	    }
+	  else if ((ev->xbutton.state & THOT_KEY_ShiftMask) != 0)
+	    {
+	      /* a selection extension */
+	      TtaAbortShowDialogue ();
+	      LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 0);
+	      FrameToView (frame, &document, &view);
+	      TtcCopyToClipboard (document, view);
+	      T1 = 0;
+	    }
+	  else if (T1 + (Time) DoubleClickDelay > ev->xbutton.time)
+	    {
+	      /* double click */
+	      TtaAbortShowDialogue ();
+	      TtaFetchOneEvent (&event);
+	      while (event.type != ButtonRelease)
+		{
+		  TtaHandleOneEvent (&event);
+		  TtaFetchOneEvent (&event);
+		}
 
-   switch (ev->type)
-     {
-     case ButtonPress:
-       /*_____________________________________________________*/
-       switch (ev->xbutton.button)
-	 {
-	 case Button1:
-	   /* ==========LEFT BUTTON========== */
-	   /* Termine l'insertion courante s'il y en a une */
-	   CloseInsertion ();
-	   
-	   /* Est-ce que la touche modifieur de geometrie est active ? */
-	   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
-	     /* moving a box */
-	     ApplyDirectTranslate (frame, ev->xbutton.x, ev->xbutton.y);
-	   else if ((ev->xbutton.state & THOT_KEY_ShiftMask) != 0)
-	     {
-	       /* a selection extension */
-	       TtaAbortShowDialogue ();
-	       LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 0);
-	       FrameToView (frame, &document, &view);
-	       TtcCopyToClipboard (document, view);
-	     }
-	   else if (T1 + (Time) DoubleClickDelay > ev->xbutton.time)
-	     {
-	       /* double click */
-	       TtaAbortShowDialogue ();
-	       TtaFetchOneEvent (&event);
-	       while (event.type != ButtonRelease)
-		 {
-		   TtaHandleOneEvent (&event);
-		   TtaFetchOneEvent (&event);
-		 }
-
-	       /* register the cursor position */
-	       if (ClickFrame == frame
-		   && (ClickX - ev->xbutton.x < 3 || ClickX - ev->xbutton.x > 3)
-		   && (ClickY - ev->xbutton.y < 3 || ClickY - ev->xbutton.y > 3))
-		 /* it's really a double click */
-		 sel = 3;
-	       else
-		 sel = 2;
-	       ClickFrame = frame;
-	       ClickX = ev->xbutton.x;
-	       ClickY = ev->xbutton.y;
-	       LocateSelectionInView (frame, ClickX, ClickY, sel);
-	     }
-	   else
-	     {
-	       /* a simple selection */
-	       T1 = ev->xbutton.time;
-	       ClickFrame = frame;
-	       ClickX = ev->xbutton.x;
-	       ClickY = ev->xbutton.y;
-	       LocateSelectionInView (frame, ClickX, ClickY, 2);
+	      /* register the cursor position */
+	      if (ClickFrame == frame &&
+		  (ClickX-ev->xbutton.x < 3 || ClickX-ev->xbutton.x > 3) &&
+		  (ClickY-ev->xbutton.y < 3 || ClickY-ev->xbutton.y > 3))
+		/* it's really a double click */
+		sel = 3;
+	      else
+		sel = 2;
+	      ClickFrame = frame;
+	      ClickX = ev->xbutton.x;
+	      ClickY = ev->xbutton.y;
+	      LocateSelectionInView (frame, ClickX, ClickY, sel);
+	    }
+	  else
+	    {
+	      /* a simple selection */
+	      T1 = ev->xbutton.time;
+	      ClickFrame = frame;
+	      ClickX = ev->xbutton.x;
+	      ClickY = ev->xbutton.y;
+	      LocateSelectionInView (frame, ClickX, ClickY, 2);
+	      /* is it a drag or a simple selection? */
+	      comm = 0;	/* il n'y a pas de drag */
+	      TtaFetchOneEvent (&event);
+	      FrameToView (frame, &document, &view);
+	      h = FrameTable[frame].FrHeight;
+	      while (event.type != ButtonRelease &&
+		     event.type != ButtonPress)
+		{
+		  if (event.type == MotionNotify ||
+		      (event.type != ConfigureNotify &&
+		       event.type != MapNotify &&
+		       event.type != UnmapNotify &&
+		       event.type != DestroyNotify &&
+		       /*event.type != NoExpose && */
+		       (event.xmotion.y > h || event.xmotion.y < 0)))
+		    {
+		      dx = event.xmotion.x - ClickX;
+		      dy = event.xmotion.y - ClickY;
+		      if (dx > 1 || dx < -1 || dy > 1 || dy < -1 ||
+			  event.xmotion.y > h || event.xmotion.y < 0)
+			{
+			  LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
+			  comm = 1;	/* il y a un drag */
+			  if (event.xmotion.y > h)
+			    TtcLineDown (document, view);
+			  else if (event.xmotion.y < 0)
+			    TtcLineUp (document, view);
+			}
+		    }
+		  TtaHandleOneEvent (&event);
+		  TtaFetchOrWaitEvent (&event);
+		}
+	      TtaHandleOneEvent (&event);
 	       
-	       /* Regarde s'il s'agit d'un drag ou d'une simple marque d'insertion */
-	       comm = 0;	/* il n'y a pas de drag */
-	       TtaFetchOneEvent (&event);
-	       FrameToView (frame, &document, &view);
-	       h = FrameTable[frame].FrHeight;
-	       while (event.type != ButtonRelease && event.type != ButtonPress)
-		 {
-		   if (event.type == MotionNotify ||
-		       (event.type != ConfigureNotify &&
-			event.type != MapNotify &&
-			event.type != UnmapNotify &&
-			event.type != DestroyNotify &&
-			/*event.type != NoExpose && */
-			(event.xmotion.y > h || event.xmotion.y < 0)))
-		     {
-		       dx = event.xmotion.x - ClickX;
-		       dy = event.xmotion.y - ClickY;
-		       if (dx > 1 || dx < -1 || dy > 1 || dy < -1 ||
-			   event.xmotion.y > h || event.xmotion.y < 0)
-			 {
-			   LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
-			   comm = 1;	/* il y a un drag */
-			   if (event.xmotion.y > h)
-			     TtcLineDown (document, view);
-			   else if (event.xmotion.y < 0)
-			     TtcLineUp (document, view);
-			 }
-		     }
-		   TtaHandleOneEvent (&event);
-		   TtaFetchOrWaitEvent (&event);
-		 }
-	       TtaHandleOneEvent (&event);
-	       
-	       /* S'il y a un drag on termine la selection */
-	       FrameToView (frame, &document, &view);
-	       if (comm == 1)
-	         LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 0);
-	       else if (comm == 0)
-		  /* click event */
-                 LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 4);
+	      /* S'il y a un drag on termine la selection */
+	      FrameToView (frame, &document, &view);
+	      if (comm == 1)
+		LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 0);
+	      else if (comm == 0)
+		/* click event */
+		LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 4);
+	      
+	      if (comm != 0)
+		TtcCopyToClipboard (document, view);
+	    }
+	  break;
+	case Button2:
+	  /* ==========MIDDLE BUTTON========== */
+	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
+	    {
+	      /* resizing a box */
+	      ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
+	      T1 = 0;
+	    }
+	  else
+	    {
+	      if (T1 + (Time) DoubleClickDelay > ev->xbutton.time)
+		{
+		  /* double click */
+		  TtaFetchOneEvent (&event);
+		  while (event.type != ButtonRelease)
+		    {
+		      TtaHandleOneEvent (&event);
+		      TtaFetchOneEvent (&event);
+		    }
+		  /* register the cursor position */
+		  if (ClickFrame == frame &&
+		      (ClickX - ev->xbutton.x < 3 ||
+		       ClickX - ev->xbutton.x > 3) &&
+		      (ClickY - ev->xbutton.y < 3 ||
+		       ClickY-ev->xbutton.y > 3))
+		    /* ignore double clicks */
+		    return;
+		}
+	      /* handle a simple selection */
+	      T1 = ev->xbutton.time;
+	      ClickFrame = frame;
+	      ClickX = ev->xbutton.x;
+	      ClickY = ev->xbutton.y;
+	      LocateSelectionInView (frame, ClickX, ClickY, 5);
+	    }
+	  break;
+	case Button3:
+	  /* ==========RIGHT BUTTON========== */
+	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
+	    {
+	      /* resize a box */
+	      ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
+	      T1 = 0;
+	    }
+	  else
+	    {
+	      if (T1 + (Time) DoubleClickDelay > ev->xbutton.time)
+		{
+		  /* double click */
+		  TtaFetchOneEvent (&event);
+		  while (event.type != ButtonRelease)
+		    {
+		      TtaHandleOneEvent (&event);
+		      TtaFetchOneEvent (&event);
+		    }
+		  /* register the cursor position */
+		  if (ClickFrame == frame &&
+		      (ClickX - ev->xbutton.x < 3 ||
+		       ClickX - ev->xbutton.x > 3) &&
+		      (ClickY - ev->xbutton.y < 3 ||
+		       ClickY-ev->xbutton.y > 3))
+		    /* ignore double clicks */
+		    return;
+		}
+	      /* handle a simple selection */
+	      T1 = ev->xbutton.time;
+	      ClickFrame = frame;
+	      ClickX = ev->xbutton.x;
+	      ClickY = ev->xbutton.y;
+	      LocateSelectionInView (frame, ClickX, ClickY, 6);
+	    }
+	default:
+	  break;
+	}
+      break;
 
-	       if (comm != 0)
-		 TtcCopyToClipboard (document, view);
-	     }
-	   break;
-	 case Button2:
-	   /* ==========MIDDLE BUTTON========== */
-	   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
-	     {
-	       /* close the current insertion */
-	       CloseInsertion ();
-	       /* resizing a box */
-	       ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
-	     }
-	   else
-	     LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 5);
-	   break;
-	 case Button3:
-	   /* ==========RIGHT BUTTON========== */
-	   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
-	     {
-	       /* close the current insertion */
-	       CloseInsertion ();
-	       /* resize a box */
-	       ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
-	     }
-	   else
-	     LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 6);
-	 default:
-	   break;
-	 }
-       break;
-
-     case KeyPress:
-       T1 = 0;
-       TtaAbortShowDialogue ();
+    case KeyPress:
+      T1 = 0;
+      TtaAbortShowDialogue ();
 #ifndef _GTK
-       CharTranslation ((ThotKeyEvent *)ev);
+      CharTranslation ((ThotKeyEvent *)ev);
 #endif /* _GTK */
-       break;
-
-     case EnterNotify:
-       T1 = 0;
-       break;
-
-     case LeaveNotify:
-       T1 = 0;
-       break;
-
-     default:
-       break;
-     }
+      break;
+    case EnterNotify:
+    case LeaveNotify:
+      T1 = 0;
+      break;
+    default:
+      break;
+    }
 }
 #endif /* _WINDOWS */
 
