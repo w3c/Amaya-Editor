@@ -26,8 +26,10 @@
 #define ImageFilter     5
 #define FormImage	6
 #define RepeatImage	7
-#define IMAGE_MAX_REF	8
+#define FormBackground	8
+#define IMAGE_MAX_REF	9
 
+static Document     BgDocument;
 static int          BaseImage;
 static int          RepeatValue;
 static char         DirectoryImage[MAX_LENGTH];
@@ -57,15 +59,20 @@ char               *data;
 
 #endif /* __STDC__ */
 {
-  int               val;
-  char              tempfile[MAX_LENGTH];
-  char              tempname[MAX_LENGTH];
-  boolean           change;
+  ElementType	     elType;
+  Element            el, elStyle;
+  Element            first, last;
+  char               tempfile[MAX_LENGTH];
+  char               tempname[MAX_LENGTH];
+  int                i, c1;
+  int                val;
+  boolean            change;
 
   val = (int) data;
   switch (ref - BaseImage)
     {
     case FormImage:
+    case FormBackground:
       /* *********Load URL or local image********* */
       if (val == 2)
 	{
@@ -77,15 +84,82 @@ char               *data;
 	/* Parse */
 	{
 	  /* reinitialize directories and document lists */
-	  TtaListDirectory (DirectoryImage, BaseImage + FormImage,
+	  TtaListDirectory (DirectoryImage, ref,
 			    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
 			    ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
 	}
       else
 	{
-	  TtaDestroyDialogue (BaseImage + FormImage);
 	  if (val == 0)
-	    LastURLImage[0] = EOS;
+	    {
+	      LastURLImage[0] = EOS;
+	      TtaDestroyDialogue (ref);
+	      BgDocument = 0;
+	    }
+	  else if (ref == BaseImage + FormBackground && BgDocument != 0)
+	    {
+	      /* get the first and last selected element */
+	      TtaGiveFirstSelectedElement (BgDocument, &first, &c1, &i);
+	      if (first == NULL)
+		{
+		  /* set the pRule on the root element */
+		  el =  TtaGetMainRoot (BgDocument);
+		  elType.ElSSchema = TtaGetDocumentSSchema (BgDocument);
+		  elType.ElTypeNum = HTML_EL_BODY;
+		  /* set the style on body element */
+		  elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
+		  last = el;
+		}
+	      else
+		{
+		  elStyle = el = first;
+		  elType = TtaGetElementType (el);
+		  if (elType.ElTypeNum == HTML_EL_BODY)
+		    {
+		      /* move the pRule on the root element */
+		      el =  TtaGetMainRoot (BgDocument);
+		      last = el;
+		    }
+		  else if (elType.ElTypeNum == HTML_EL_HEAD)
+		    {
+		      /* set the style on body element */
+		      elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
+		      last = el;
+		    }
+		  else
+		    {
+		      /* TODO:  TtaGiveLastSelectedElement (BgDocument, &last, &i, &cN); */
+		      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+			  elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+			el = TtaGetParent (el);
+		      /* if the PRule is on a Pseudo-Paragraph, move it to the enclosing
+			 element */
+		      elType = TtaGetElementType (el);
+		      if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+			el = TtaGetParent (el);
+		      elStyle = el;
+		      last = el;
+		    }
+		}
+
+	      if (LastURLImage[0] == EOS)
+		HTMLResetBackgroundImage (BgDocument, el);
+	      else
+		{
+		  if (RepeatValue == 0)
+		    i = DRIVERP_REPEAT;
+		  else if (RepeatValue == 1)
+		    i = DRIVERP_HREPEAT;
+		  else if (RepeatValue == 2)
+		    i = DRIVERP_VREPEAT;
+		  else
+		    i = DRIVERP_SCALE;
+		  HTMLSetBackgroundImage (BgDocument, el, i, LastURLImage);
+		}
+	      SetStyleAttribute (BgDocument, elStyle);
+	    }
+	  else
+	    TtaDestroyDialogue (ref);
 	}
       break;
     case RepeatImage:
@@ -136,6 +210,9 @@ char               *data;
 	}
       TtaSetTextForm (BaseImage + ImageURL, DirectoryImage);
       TtaListDirectory (DirectoryImage, BaseImage + FormImage,
+			TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
+			ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+      TtaListDirectory (DirectoryImage, BaseImage + FormBackground,
 			TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
 			ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
       ImageName[0] = EOS;
@@ -240,55 +317,8 @@ void ChangeBackgroundImage (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   ElementType	       elType;
-   Element             el, elStyle;
-   Element             first, last;
    char                s[MAX_LENGTH];
-   int                 i, c1;
-
-   /* get the first and last selected element */
-   TtaGiveFirstSelectedElement (document, &first, &c1, &i);
-   if (first == NULL)
-     {
-       /* set the pRule on the root element */
-       el =  TtaGetMainRoot (document);
-       elType.ElSSchema = TtaGetDocumentSSchema (document);
-       elType.ElTypeNum = HTML_EL_BODY;
-       /* set the style on body element */
-       elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
-       last = el;
-     }
-   else
-     {
-       elStyle = el = first;
-       elType = TtaGetElementType (el);
-       if (elType.ElTypeNum == HTML_EL_BODY)
-	 {
-	   /* move the pRule on the root element */
-	   el =  TtaGetMainRoot (document);
-	   last = el;
-	 }
-       else if (elType.ElTypeNum == HTML_EL_HEAD)
-	 {
-	   /* set the style on body element */
-	   elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
-	   last = el;
-	 }
-       else
-	 {
-	   /* TODO:  TtaGiveLastSelectedElement (document, &last, &i, &cN); */
-	   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
-	       elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-	     el = TtaGetParent (el);
-	   /* if the PRule is on a Pseudo-Paragraph, move it to the enclosing
-	      element */
-	   elType = TtaGetElementType (el);
-	   if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-	     el = TtaGetParent (el);
-	   elStyle = el;
-	   last = el;
-	 }
-     }
+   int                 i;
 
    /* there is a selection */
    /* Dialogue form for open URL or local */
@@ -299,12 +329,12 @@ void ChangeBackgroundImage (document, view)
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
 
-   TtaNewSheet (BaseImage + FormImage, TtaGetViewFrame (document, view),  TtaGetMessage (AMAYA, AM_OPEN_URL),
+   TtaNewSheet (BaseImage + FormBackground, TtaGetViewFrame (document, view),  TtaGetMessage (AMAYA, AM_OPEN_URL),
 		3, s, TRUE, 2, 'L', D_CANCEL);
-   TtaNewTextForm (BaseImage + ImageURL, BaseImage + FormImage,
+   TtaNewTextForm (BaseImage + ImageURL, BaseImage + FormBackground,
 		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
-   TtaNewLabel (BaseImage + ImageLabel, BaseImage + FormImage, " ");
-   TtaListDirectory (DirectoryImage, BaseImage + FormImage,
+   TtaNewLabel (BaseImage + ImageLabel, BaseImage + FormBackground, " ");
+   TtaListDirectory (DirectoryImage, BaseImage + FormBackground,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseImage + ImageDir, ImgFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
@@ -318,7 +348,7 @@ void ChangeBackgroundImage (document, view)
 	TtaSetTextForm (BaseImage + ImageURL, s);
      }
 
-   TtaNewTextForm (BaseImage + ImageFilter, BaseImage + FormImage,
+   TtaNewTextForm (BaseImage + ImageFilter, BaseImage + FormBackground,
 		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
    TtaSetTextForm (BaseImage + ImageFilter, ImgFilter);
    /* selector for repeat mode */
@@ -330,29 +360,13 @@ void ChangeBackgroundImage (document, view)
    sprintf (&s[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_REPEAT_Y));
    i += strlen (&s[i]) + 1;
    sprintf (&s[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_NO_REPEAT));
-   TtaNewSubmenu (BaseImage + RepeatImage, BaseImage + FormImage, 0,
+   TtaNewSubmenu (BaseImage + RepeatImage, BaseImage + FormBackground, 0,
 		  TtaGetMessage (AMAYA, AM_REPEAT_MODE), 4, s, NULL, FALSE);
    TtaSetMenuForm (BaseImage + RepeatImage, RepeatValue);
-
+   /* save the document concerned */
+   BgDocument = document;
    TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseImage + FormImage, FALSE);
-   TtaWaitShowDialogue ();
-
-   if (LastURLImage[0] == EOS)
-     HTMLResetBackgroundImage (document, el);
-   else
-     {
-       if (RepeatValue == 0)
-	 i = DRIVERP_REPEAT;
-       else if (RepeatValue == 1)
-	 i = DRIVERP_HREPEAT;
-       else if (RepeatValue == 2)
-	 i = DRIVERP_VREPEAT;
-       else
-	 i = DRIVERP_SCALE;
-       HTMLSetBackgroundImage (document, el, i, LastURLImage);
-     }
-   SetStyleAttribute (document, elStyle);
+   TtaShowDialogue (BaseImage + FormBackground, TRUE);
 }
 
 
