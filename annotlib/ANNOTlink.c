@@ -20,6 +20,7 @@
 #include "ANNOTlink_f.h"
 #include "ANNOTschemas_f.h"
 #include "ANNOTevent_f.h"
+#include "ANNOTfiles_f.h"
 #include "ANNOTtools_f.h"
 #include "AHTrdf2annot_f.h"
 
@@ -735,9 +736,23 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 #ifdef ANNOT_ON_ANNOT
 	  if (annot->isReplyTo)
 	    {
-	      List_add (&AnnotThread[doc].annotations, (void *) annot);
-	      /* show it */
-	      /* @@ Hard coded for the moment, sigh */
+	      AnnotThreadList *thread;
+
+	      thread = AnnotThread_searchRoot (annot->rootOfThread);
+	      if (!thread)
+		{
+		  /* add the root of thread (used by load index later on) */
+		  AnnotThread[doc].rootOfThread = 
+		    TtaStrdup (annot->rootOfThread);
+		  AnnotThread[doc].references = 1;
+		  thread = &AnnotThread[doc];
+		}
+	      List_add (&(thread->annotations), (void *) annot);
+	      if (!AnnotMetaData[doc].thread)
+		AnnotMetaData[doc].thread = thread;
+	      annot->thread = thread;
+	      /* sigh, hard coded for the moment */
+	      /* add and show the thread item */
 	      ANNOT_AddThreadItem (2, annot);
 	    }
 	  else

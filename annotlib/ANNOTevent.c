@@ -630,6 +630,16 @@ void ANNOT_AutoLoad (Document doc, View view)
   if (annotRAutoLoad)
     mode |= AM_LOAD_REMOTE;
 
+#ifdef ANNOT_ON_ANNOT
+  /* @@ JK: if doc is of type annot, search for an annotation for its
+     url. If we found one and it is of type inreplyto, then init the
+     DocumentMetaData.thread for this annotation to point to the source
+     of the thread */
+  if (DocumentTypes[doc] == docAnnot && AnnotMetaData[doc].thread == NULL
+      && doc > 2)
+    AnnotMetaData[doc].thread = &AnnotThread[2];
+#endif /* ANNOT_ON_ANNOT */
+
   if (mode == 0)
     return;
 
@@ -642,6 +652,16 @@ void ANNOT_AutoLoad (Document doc, View view)
   -----------------------------------------------------------------------*/
 void ANNOT_Load (Document doc, View view)
 {
+#ifdef ANNOT_ON_ANNOT
+  /* @@ JK: if doc is of type annot, search for an annotation for its
+     url. If we found one and it is of type inreplyto, then init the
+     DocumentMetaData.thread for this annotation to point to the source
+     of the thread */
+  if (DocumentTypes[doc] == docAnnot && AnnotMetaData[doc].thread == NULL
+      && doc > 2)
+    AnnotMetaData[doc].thread = &AnnotThread[2];
+#endif /* ANNOT_ON_ANNOT */
+
   ANNOT_Load2 (doc, view, AM_LOAD_LOCAL | AM_LOAD_REMOTE);
 }
 
@@ -715,7 +735,7 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
     }
   
   /* create the document that will store the annotation */
-  if ((doc_annot = ANNOT_NewDocument (doc)) == 0)
+  if ((doc_annot = ANNOT_NewDocument (doc, mode)) == 0)
     {
       TtaFreeMemory (xptr);
       return;

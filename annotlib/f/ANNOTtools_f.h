@@ -49,6 +49,7 @@ extern AnnotMeta *AnnotList_searchAnnot ( List *list,
 extern ThotBool AnnotList_delAnnot ( List **list,
                                      char *url,
                                      ThotBool useAnnotUrl );
+extern AnnotThreadList *AnnotThread_searchRoot ( char *root );
 extern AnnotMeta *AnnotMeta_new ( void );
 extern void AnnotFilter_free ( List *annot_list,
                                ThotBool (*del_function)(void *) );
@@ -132,6 +133,7 @@ extern AnnotMeta *AnnotList_searchAnnot (/* List *list,
 extern ThotBool AnnotList_delAnnot (/* List **list,
                                        char *url,
                                        ThotBool useAnnotUrl */);
+extern AnnotThreadList *AnnotThread_searchRoot (/* char *root */);
 extern AnnotMeta *AnnotMeta_new (/* void */);
 extern void AnnotFilter_free (/* List *annot_list,
                                  ThotBool (*del_function)(void *) */);

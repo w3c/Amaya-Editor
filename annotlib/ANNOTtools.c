@@ -700,6 +700,26 @@ ThotBool AnnotList_delAnnot (List **list, char *url, ThotBool useAnnotUrl)
   return (found);
 }
 
+/*------------------------------------------------------------
+   AnnotList_searchAnnot
+   Returns the thread that corresponds to the root URL.
+   ------------------------------------------------------------*/
+AnnotThreadList *AnnotThread_searchRoot (char *root)
+{
+  int i;
+
+  for (i = 0; i < DocumentTableLength; i++)
+    {
+      if (!AnnotThread[i].rootOfThread)
+	continue;
+      
+      if (!strcmp (AnnotThread[i].rootOfThread, root))
+	break;
+    }
+
+  return (i == DocumentTableLength) ? NULL : &AnnotThread[i];
+}
+
 /* ------------------------------------------------------------
    AnnotMeta_new
    Creates a new annotation metadata element

@@ -7,7 +7,8 @@
 #ifdef __STDC__
 
 extern void ANNOT_SetPath ( Document document );
-extern Document ANNOT_NewDocument ( Document doc );
+extern Document ANNOT_NewDocument ( Document doc,
+                                    AnnotMode mode );
 extern AnnotMeta *GetMetaData ( Document doc,
                                 Document doc_annot );
 extern void ANNOT_LoadAnnotation ( Document doc,
@@ -32,7 +33,8 @@ extern ThotBool ANNOT_LocalSave ( Document doc_annot,
 #else /* __STDC__ */
 
 extern void ANNOT_SetPath (/* Document document */);
-extern Document ANNOT_NewDocument (/* Document doc */);
+extern Document ANNOT_NewDocument (/* Document doc,
+                                      AnnotMode mode */);
 extern AnnotMeta *GetMetaData (/* Document doc,
                                   Document doc_annot */);
 extern void ANNOT_LoadAnnotation (/* Document doc,

@@ -54,19 +54,14 @@ void ANNOT_SetPath (document)
   Creates an annotation file for the current document. Returns the number
   of the created document or 0 in case of failure
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-Document ANNOT_NewDocument (Document doc)
-#else /* __STDC__*/
-Document ANNOT_NewDocument (doc)
-     Document doc;
-#endif /* __STDC__*/
+Document ANNOT_NewDocument (Document doc, AnnotMode mode)
 {
   Document annotDoc;
   char     *annot_dir;
   char     *fname;
   char     *docname;
   char     *tmpname;
+  char     *tmp;
 
   /* Create a new annotation document */
   annot_dir = GetAnnotDir ();
@@ -77,7 +72,12 @@ Document ANNOT_NewDocument (doc)
   TtaFreeMemory (tmpname);
 
   /* "annot is the title of the window */
-  annotDoc = InitDocView (0, "annotation", docAnnot, 0, FALSE);
+  if (mode & ANNOT_isReplyTo)
+    tmp = "reply to annotation";
+  else
+    tmp = "annotation";
+
+  annotDoc = InitDocView (0, tmp, docAnnot, 0, FALSE);
 
   if (annotDoc == 0) 
     {
@@ -86,11 +86,6 @@ Document ANNOT_NewDocument (doc)
     }
   else
     {
-#if 0
-      TtaSetDocumentName (annotDoc, "Annotation";
-      TtaSetDocumentDirectory (annotDoc, annot_dir);
-#endif
-
       /* intialize the (amaya) metadata related to a document */
       if (DocumentURLs[annotDoc])
 	TtaFreeMemory (DocumentURLs[annotDoc]);
