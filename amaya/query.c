@@ -397,7 +397,12 @@ void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context
   if (tmp_char && *tmp_char)
     {
       /* make a copy of the full location_header, for computing the base url */
-      me->http_headers.full_content_location = TtaStrdup (tmp_char);
+      if (HTURL_isAbsolute (tmp_char))
+	me->http_headers.full_content_location = TtaStrdup (tmp_char);
+      else
+	me->http_headers.full_content_location = AmayaParseUrl (me->urlName, tmp_char, 
+								AMAYA_PARSE_ALL);
+      tmp_char = me->http_headers.full_content_location;
       /* only include the filename. We suppose we have either a 
        relative or an absolute URL and that everything after the last
       slash is the doc name + ext */
