@@ -487,9 +487,9 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
      pFrame->FrClipYEnd = ymax;
    }
 #else /*_GL*/
-	 BeginPaint (w, &ps);
-	 FrameTable[frame].DblBuffNeedSwap = TRUE;
-     EndPaint (w, &ps);
+   BeginPaint (w, &ps);
+   FrameTable[frame].DblBuffNeedSwap = TRUE;
+   EndPaint (w, &ps);
 #endif /*_GL*/
  }
 }
@@ -732,14 +732,17 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 
   /* width = widget->allocation.width; */
   /*   height = widget->allocation.height; */
-
-  FrameTable[frame].FrWidth = width;
-  FrameTable[frame].FrHeight = height;
-  
   if ((width <= 0) || 
       (height <= 0))
     return TRUE;
 
+  if ((width == FrameTable[frame].FrWidth) && 
+      (height == FrameTable[frame].FrHeight))
+    return TRUE;
+
+  FrameTable[frame].FrWidth = width;
+  FrameTable[frame].FrHeight = height;
+  
   if (widget)
     if (GL_prepare (frame))
       {
