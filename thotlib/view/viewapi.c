@@ -742,6 +742,7 @@ View TtaGetViewFromName (Document document, char *viewName)
   ----------------------------------------------------------------------*/
 int TtaGetWindowId( Document document )
 {
+  int window_id = -1;
 #ifdef _WX  
   PtrDocument pDoc;
   
@@ -755,11 +756,10 @@ int TtaGetWindowId( Document document )
        pDoc = LoadedDocument[document - 1];
        
        /* return the corresponding window id */
-       return pDoc->DocWindowId;
+       window_id = pDoc->DocWindowId;
      }
-#else
-   return -1;
 #endif /* _WX */
+  return window_id;
 }
 
 /*----------------------------------------------------------------------
@@ -805,6 +805,7 @@ void TtaSetWindowId( Document document, int window_id )
   ----------------------------------------------------------------------*/
 int TtaGetPageId( Document document )
 {
+  int page_id = -1;
 #ifdef _WX  
   PtrDocument pDoc;
   
@@ -818,11 +819,10 @@ int TtaGetPageId( Document document )
        pDoc = LoadedDocument[document - 1];
        
        /* return the corresponding page id */
-       return pDoc->DocPageId;
+       page_id = pDoc->DocPageId;
      }
-#else
-   return -1;
 #endif /* _WX */
+  return page_id;
 }
 
 /*----------------------------------------------------------------------
