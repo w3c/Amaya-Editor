@@ -577,8 +577,10 @@
 #define IDC_ALTMESSAGE                  1412
 #define IDC_GPOLYLINE                   1413
 #define IDC_NUMROWS                     1413
+#define IDC_OVERLINE                    1413
 #define IDC_GALPHA2                     1414
 #define IDC_BORDER                      1414
+#define IDC_RICHEDIT1                   1414
 #define IDC_GGROUP                      1415
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
@@ -616,7 +618,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        419
 #define _APS_NEXT_COMMAND_VALUE         40048
-#define _APS_NEXT_CONTROL_VALUE         1413
+#define _APS_NEXT_CONTROL_VALUE         1415
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

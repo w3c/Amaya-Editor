@@ -116,7 +116,7 @@ BEGIN
     DEFPUSHBUTTON   "Apply",ID_APPLY,48,163,50,14
     PUSHBUTTON      "Done",ID_DONE,108,163,50,14
     GROUPBOX        "Font family",-1,7,6,64,58,WS_GROUP
-    CONTROL         "Times",IDC_TIMES,"Button",BS_AUTORADIOBUTTON,12,15,43,
+    CONTROL         "Times",IDC_TIMES,"Button",BS_AUTORADIOBUTTON,12,14,43,
                     11
     CONTROL         "Helvetica",IDC_HELVETICA,"Button",BS_AUTORADIOBUTTON,12,
                     25,46,11
@@ -138,15 +138,17 @@ BEGIN
                     BS_AUTORADIOBUTTON,13,132,55,13
     CONTROL         "Default",IDC_DEFAULTSTYLE,"Button",BS_AUTORADIOBUTTON,
                     13,144,49,12
-    GROUPBOX        "Underline",-1,76,6,58,55,WS_GROUP
-    CONTROL         "Normal",IDC_NORMAL,"Button",BS_AUTORADIOBUTTON,84,15,47,
+    GROUPBOX        "Underline",-1,75,6,60,72,WS_GROUP
+    CONTROL         "Normal",IDC_NORMAL,"Button",BS_AUTORADIOBUTTON,82,15,47,
                     10
-    CONTROL         "Underline",IDC_UNDERLINE,"Button",BS_AUTORADIOBUTTON,84,
-                    26,49,10
-    CONTROL         "Cross out",IDC_CROSSOUT,"Button",BS_AUTORADIOBUTTON,84,
-                    38,47,9
+    CONTROL         "Underline",IDC_UNDERLINE,"Button",BS_AUTORADIOBUTTON,82,
+                    27,49,10
+    CONTROL         "Overline",IDC_OVERLINE,"Button",BS_AUTORADIOBUTTON,82,
+                    39,47,11
+    CONTROL         "Cross out",IDC_CROSSOUT,"Button",BS_AUTORADIOBUTTON,82,
+                    52,47,9
     CONTROL         "Default",IDC_DEFAULTUNDERLINE,"Button",
-                    BS_AUTORADIOBUTTON,84,48,49,11
+                    BS_AUTORADIOBUTTON,82,65,49,11
     GROUPBOX        "Body size (pt)",-1,140,6,55,153,WS_GROUP
     CONTROL         "6 pt",IDC_06PT,"Button",BS_AUTORADIOBUTTON,151,14,45,13
     CONTROL         "10 pt",IDC_10PT,"Button",BS_AUTORADIOBUTTON,151,36,46,
@@ -183,7 +185,7 @@ END
 
 FORMATDIALOG DIALOG DISCARDABLE  100, 100, 184, 215
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Dialog"
+CAPTION "Format ..."
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "Apply",ID_APPLY,35,193,50,14
@@ -538,6 +540,11 @@ BEGIN
         BOTTOMMARGIN, 67
     END
 
+    CHARACTERSDIALOG, DIALOG
+    BEGIN
+        VERTGUIDE, 82
+    END
+
     INITCONFIRMDIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -779,7 +786,7 @@ MATHDIALOG DIALOGEX 400, 0, 55, 178
 STYLE DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CLIENTEDGE
 CAPTION "Math"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "Done",ID_DONE,11,158,35,16
     CONTROL         183,IDC_MATH,"Static",SS_BITMAP | SS_NOTIFY,4,6,23,21,

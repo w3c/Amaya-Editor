@@ -892,6 +892,18 @@ View                view;
 # endif /* _WINDOWS */
 }
 
+#ifdef _WINDOWS
+#ifdef __STDC__
+void SwitchIconMath (Document doc, View view, boolean state)
+#else  /* __STDC__ */
+void SwitchIconMath (state)
+boolean state;
+#endif /* __STDC__ */
+{
+   WIN_TtaChangeButton (doc, view, 24, iconMath, state);
+}
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
   CreateMath
   ----------------------------------------------------------------------*/

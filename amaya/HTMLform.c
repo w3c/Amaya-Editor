@@ -990,7 +990,7 @@ Element             element;
    
    if (action)
      TtaFreeMemory (action);
-   if (buffer)
+   if (buffer && buffer [0] != 0)
      TtaFreeMemory (buffer);
 }
 

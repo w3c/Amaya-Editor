@@ -29,6 +29,9 @@
 #include "HTMLstyle_f.h"
 #include "UIcss_f.h"
 
+#ifdef _WINDOWS
+extern char* WIN_Home;
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    AddCSS                                 
@@ -461,7 +464,8 @@ Document            doc;
     {
       /* Load User preferences */
 #     ifdef _WINDOWS
-      home = NULL;
+      home = (char*) TtaGetMemory (strlen (WIN_Home) + 1);
+      strcpy (home, WIN_Home);
 #     else  /* !_WINDOWS */
       home = TtaGetEnvString ("HOME");
 #     endif /* _WINDOWS */
@@ -469,7 +473,11 @@ Document            doc;
       tempfile[0] = EOS;
       /* try to load the user preferences */
       if (home)
+#   ifdef _WINDOWS
+	sprintf (tempfile, "%s%s%s.css", home, DIR_STR, HTAppName);
+#   else  /* !_WINDOWS */
 	sprintf (tempfile, "%s%s.%s.css", home, DIR_STR, HTAppName);
+#   endif /* _WINDOWS */
 
       if (tempfile[0] == EOS || !TtaFileExist (tempfile))
 	{

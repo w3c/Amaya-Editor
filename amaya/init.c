@@ -139,11 +139,11 @@ static Pixmap       iconJava;
 #define inconSave      4
 #define iconPrint      5
 #define iconFind       6
-#define inconI         7
-#define inconB         8
+#define iconI         7
+#define iconB         8
 #define iconT          9
 #define iconCSS       10
-#define inconImage    11
+#define iconImage    11
 #define iconH1        12
 #define iconH2        13
 #define iconH3        14
@@ -709,8 +709,20 @@ Document            doc;
      {
        /* the document is in ReadWrite mode */
 #ifdef _WINDOWS 
-       /* WIN_TtaChangeButton (document, 1, 5, iconBrowser, TRUE); */
-       WIN_TtaChangeButton (document, 1, 5, iconBrowser, TBSTATE_HIDDEN);
+       WIN_TtaSwitchButton (document, 1, 5, iconEditor, TB_INDETERMINATE, TRUE);
+       WIN_TtaChangeButton (document, 1, 11, iconI, FALSE);
+       WIN_TtaChangeButton (document, 1, 12, iconB, FALSE);
+       WIN_TtaChangeButton (document, 1, 13, iconT, FALSE);
+       WIN_TtaChangeButton (document, 1, 15, iconImage, FALSE);
+       WIN_TtaChangeButton (document, 1, 16, iconH1, FALSE);
+       WIN_TtaChangeButton (document, 1, 17, iconH2, FALSE);
+       WIN_TtaChangeButton (document, 1, 18, iconH3, FALSE);
+       WIN_TtaChangeButton (document, 1, 19, iconBullet, FALSE);
+       WIN_TtaChangeButton (document, 1, 20, iconNum, FALSE);
+       WIN_TtaChangeButton (document, 1, 21, iconDL, FALSE);
+       WIN_TtaChangeButton (document, 1, 22, iconLink, FALSE);
+       WIN_TtaChangeButton (document, 1, 23, iconTable, FALSE);
+       SwitchIconMath (document, 1, FALSE);
 #else  /* _WINDOWS */
        TtaChangeButton (document, 1, 5, iconBrowser);
 #endif /* _WINDOWS */
@@ -806,7 +818,20 @@ Document            doc;
      {
        /* the document is in ReadWrite mode */
 #ifdef _WINDOWS 
-       WIN_TtaChangeButton (document, 1, 5, iconEditor, TRUE);
+       WIN_TtaSwitchButton (document, 1, 5, iconEditor, TB_INDETERMINATE, FALSE);
+       WIN_TtaChangeButton (document, 1, 11, iconI, TRUE);
+       WIN_TtaChangeButton (document, 1, 12, iconB, TRUE);
+       WIN_TtaChangeButton (document, 1, 13, iconT, TRUE);
+       WIN_TtaChangeButton (document, 1, 15, iconImage, TRUE);
+       WIN_TtaChangeButton (document, 1, 16, iconH1, TRUE);
+       WIN_TtaChangeButton (document, 1, 17, iconH2, TRUE);
+       WIN_TtaChangeButton (document, 1, 18, iconH3, TRUE);
+       WIN_TtaChangeButton (document, 1, 19, iconBullet, TRUE);
+       WIN_TtaChangeButton (document, 1, 20, iconNum, TRUE);
+       WIN_TtaChangeButton (document, 1, 21, iconDL, TRUE);
+       WIN_TtaChangeButton (document, 1, 22, iconLink, TRUE);
+       WIN_TtaChangeButton (document, 1, 23, iconTable, TRUE);
+       SwitchIconMath (document, 1, TRUE);
 #else  /* _WINDOWS */
        TtaChangeButton (document, 1, 5, iconEditor);
 #endif /* _WINDOWS */
@@ -1490,12 +1515,12 @@ boolean             logFile;
 	     WIN_TtaAddButton (doc, 1, iconFind, TtcSearchText,	TtaGetMessage (AMAYA, AM_BUTTON_SEARCH), TBSTYLE_BUTTON, TBSTATE_ENABLED);
 	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTYLE_SEP, TBSTATE_ENABLED);  /* SEPARATOR */
 
-	     IButton =  WIN_TtaAddButton (doc, 1, inconI, SetCharEmphasis, TtaGetMessage (AMAYA, AM_BUTTON_ITALICS), TBSTYLE_CHECK, TBSTATE_ENABLED);
-	     BButton =  WIN_TtaAddButton (doc, 1, inconB, SetCharStrong, TtaGetMessage (AMAYA, AM_BUTTON_BOLD), TBSTYLE_CHECK, TBSTATE_ENABLED);
+	     IButton =  WIN_TtaAddButton (doc, 1, iconI, SetCharEmphasis, TtaGetMessage (AMAYA, AM_BUTTON_ITALICS), TBSTYLE_CHECK, TBSTATE_ENABLED);
+	     BButton =  WIN_TtaAddButton (doc, 1, iconB, SetCharStrong, TtaGetMessage (AMAYA, AM_BUTTON_BOLD), TBSTYLE_CHECK, TBSTATE_ENABLED);
 	     TTButton = WIN_TtaAddButton (doc, 1, iconT, SetCharCode, TtaGetMessage (AMAYA, AM_BUTTON_CODE), TBSTYLE_CHECK, TBSTATE_ENABLED);
 	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTYLE_SEP, TBSTATE_ENABLED);  /* SEPARATOR */
 
-	     WIN_TtaAddButton (doc, 1, inconImage, CreateImage, TtaGetMessage (AMAYA, AM_BUTTON_IMG), TBSTYLE_BUTTON, TBSTATE_ENABLED);
+	     WIN_TtaAddButton (doc, 1, iconImage, CreateImage, TtaGetMessage (AMAYA, AM_BUTTON_IMG), TBSTYLE_BUTTON, TBSTATE_ENABLED);
 	     WIN_TtaAddButton (doc, 1, iconH1, CreateHeading1, TtaGetMessage (AMAYA, AM_BUTTON_H1), TBSTYLE_BUTTON, TBSTATE_ENABLED);
 	     WIN_TtaAddButton (doc, 1, iconH2, CreateHeading2, TtaGetMessage (AMAYA, AM_BUTTON_H2), TBSTYLE_BUTTON, TBSTATE_ENABLED);
 	     WIN_TtaAddButton (doc, 1, iconH3, CreateHeading3, TtaGetMessage (AMAYA, AM_BUTTON_H3), TBSTYLE_BUTTON, TBSTATE_ENABLED);

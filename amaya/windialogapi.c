@@ -36,7 +36,7 @@
 #       define MAX_WORD_LEN 30
 #endif /* MAX_WORD_LEN */
 
-#define APPFILENAMEFILTER    "HTML Files (*.html)\0*.htm*\0All files (*.*)\0*.*\0"
+#define APPFILENAMEFILTER    "HTML Files (*.htm[l])\0*.htm*\0XML Files (*.xml)\0*.xml\0All files (*.*)\0*.*\0"
 #define APPIMAGENAMEFILTER   "Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
 #define APPALLFILESFILTER    "All files (*.*)\0*.*\0"
 #define MAX_BUFF 4096
@@ -1315,8 +1315,8 @@ LPARAM lParam;
                             break;
 
                        case IDCANCEL:
-                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (char*) 0);
 					 	    EndDialog (hwnDlg, IDCANCEL);
+                            ThotCallback (baseDlg + tabForm, INTEGER_DATA, (char*) 0);
                             break;
 				}
                 break;
@@ -2582,7 +2582,9 @@ LPARAM lParam;
                                 break;
                        case 1:  CheckRadioButton (hwnDlg, IDC_NORMAL, IDC_DEFAULTUNDERLINE, IDC_UNDERLINE);
                                 break;
-                       case 2:  CheckRadioButton (hwnDlg, IDC_NORMAL, IDC_DEFAULTUNDERLINE, IDC_CROSSOUT);
+                       case 2:  CheckRadioButton (hwnDlg, IDC_NORMAL, IDC_DEFAULTUNDERLINE, IDC_OVERLINE);
+                                break;
+                       case 3:  CheckRadioButton (hwnDlg, IDC_NORMAL, IDC_DEFAULTUNDERLINE, IDC_CROSSOUT);
                                 break;
                        default: CheckRadioButton (hwnDlg, IDC_NORMAL, IDC_DEFAULTUNDERLINE, IDC_DEFAULTUNDERLINE);
                                 break;
@@ -2683,12 +2685,16 @@ LPARAM lParam;
 						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (char*) 1);
 							break;
 
-					   case IDC_CROSSOUT:
+					   case IDC_OVERLINE:
 						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (char*) 2);
 							break;
 
-					   case IDC_DEFAULTUNDERLINE:
+					   case IDC_CROSSOUT:
 						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (char*) 3);
+							break;
+
+					   case IDC_DEFAULTUNDERLINE:
+						    ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (char*) 4);
 							break;
 
 					   case IDC_06PT:
@@ -3096,6 +3102,7 @@ LPARAM lParam;
 
 		               case IDCANCEL:
 			                EndDialog (hwnDlg, IDCANCEL);
+				            ThotCallback (currentRef, INTEGER_DATA, (char*) 0);
 				            break;
 				}
 				break;
