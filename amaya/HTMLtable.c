@@ -476,6 +476,67 @@ static Element AddEmptyCellInRow (Element row, Element colhead,
 }
 
 /*----------------------------------------------------------------------
+  CreateCellsInRowGroup
+  ----------------------------------------------------------------------*/
+static void CreateCellsInRowGroup (Element group, Element prevCol,
+				   Element nextCol, Element colhead,
+				   Document doc, ThotBool inMath,
+				   ThotBool last)
+{
+  Element          row, child;
+  ElementType      elType;
+  int              rowspan;
+  ThotBool         span;
+
+  row = TtaGetFirstChild (group);
+  /* skip the first elements that are now rows */
+  if (row)
+    elType = TtaGetElementType (row);
+  while (row && elType.ElTypeNum != HTML_EL_Table_row)
+    {
+      TtaNextSibling (&row);
+      if (row)
+	elType = TtaGetElementType (row);
+    }
+  /* process all rows in this group */
+  while (row)
+    {
+      span = FALSE;
+      rowspan = 1;
+      /* get the sibling cell */
+      if (last)
+	child = TtaGetLastChild (row);
+      else
+	/* look for the previous cell */
+	child = GetCloseCell (row, prevCol, doc, TRUE, TRUE, inMath,
+			      &span, &rowspan, FALSE);
+      if (child)
+	{
+	  if (!span)
+	    /* add a new cell after */
+	    AddEmptyCellInRow (row, colhead, child, FALSE, doc,
+			       inMath, FALSE, TRUE);
+	}
+      else
+	{
+	  /* look for the next cell */
+	  child = GetCloseCell (row, nextCol, doc, FALSE, TRUE, inMath,
+				&span, &rowspan, FALSE);
+	  /* add before */
+	  AddEmptyCellInRow (row, colhead, child, TRUE, doc, inMath,
+			     FALSE, TRUE);
+	}
+      if (rowspan == 0)
+	rowspan = THOT_MAXINT;
+      while (rowspan >= 1 && row)
+	{
+	  row = GetSiblingRow (row, FALSE, inMath);
+	  rowspan--;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
   NewColumnHead creates a new Column_head and returns it.   
   If generateEmptyCells == TRUE, create an additional empty cell in all
   rows, except the row indicated.
@@ -615,58 +676,8 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 		      /* this block is a thead or tfoot element */
 		      group = block;
 		      if (group != groupdone)
-			{
-			  currentrow = TtaGetFirstChild (group);
-			  /* skip the first elements that are now rows */
-			  if (currentrow)
-			    elType = TtaGetElementType (currentrow);
-			  while (currentrow &&
-				 elType.ElTypeNum != HTML_EL_Table_row)
-			    {
-			      TtaNextSibling (&currentrow);
-			      if (currentrow)
-				elType = TtaGetElementType (currentrow);
-			    }
-			  /* process all rows in this group */
-			  while (currentrow)
-			    {
-			      rowspan = 1;
-			      /* get the sibling cell */
-			      if (last)
-				child = TtaGetLastChild (currentrow);
-			      else
-				/* look for the previous cell */
-				child = GetCloseCell (currentrow,
-						      prevCol, doc, TRUE,
-						      TRUE, inMath,
-						      &span, &rowspan, FALSE);
-			      if (child)
-				{
-				  if (!span)
-				    /* add a new cell after */
-				    AddEmptyCellInRow (currentrow, colhead,
-				       child, FALSE, doc, inMath, FALSE, TRUE);
-				}
-			      else
-				{
-				  /* look for the next cell */
-				  child = GetCloseCell (currentrow, nextCol,
-						     doc, FALSE, TRUE, inMath,
-						     &span, &rowspan, FALSE);
-				  /* add before */
-				  AddEmptyCellInRow (currentrow, colhead,
-					child, TRUE, doc, inMath, FALSE, TRUE);
-				}
-			      if (rowspan == 0)
-				rowspan = THOT_MAXINT;
-			      while (rowspan >= 1 && currentrow)
-				{
-				  currentrow = GetSiblingRow (currentrow,
-							      FALSE, inMath);
-				  rowspan--;
-				}
-			    }
-			}
+			CreateCellsInRowGroup (group, prevCol, nextCol,
+					       colhead, doc, inMath, last);
 		      else if (last)
 			block = NULL;
 		    }
@@ -679,51 +690,8 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 		      while (group != NULL)
 			{
 			  if (group != groupdone)
-			    {
-			      currentrow = TtaGetFirstChild (group);
-			      /* skip the first elements that are now rows */
-			      if (currentrow)
-				elType = TtaGetElementType (currentrow);
-			      while (currentrow &&
-				     elType.ElTypeNum != HTML_EL_Table_row)
-				{
-				  TtaNextSibling (&currentrow);
-				  if (currentrow)
-				    elType = TtaGetElementType (currentrow);
-				}
-			      /* process all rows in this group */
-			      while (currentrow)
-				{
-				  rowspan = 1;
-				  /* get the sibling cell */
-				  if (last)
-				    child = TtaGetLastChild (currentrow);
-				  else
-				    /* look for the previous cell */
-				    child = GetCloseCell (currentrow, prevCol,
-						       doc, TRUE, TRUE, inMath,
-						       &span, &rowspan, FALSE);
-				  if (child)
-				    {
-				      if (!span)
-					/* add a new cell after */
-					AddEmptyCellInRow (currentrow, colhead, child,
-							   FALSE, doc, inMath, FALSE, TRUE);
-				    }
-				  else
-				    {
-				      /* look for the next cell */
-				      child = GetCloseCell (currentrow, 
-					       nextCol, doc, FALSE, TRUE,
-					       inMath, &span, &rowspan, FALSE);
-				      /* add before */
-				      AddEmptyCellInRow (currentrow, colhead, child,
-							 TRUE, doc, inMath, FALSE, TRUE);
-				    }
-				  currentrow = GetSiblingRow (currentrow, FALSE, inMath);
-				}
-			    }
-			    
+			    CreateCellsInRowGroup (group, prevCol, nextCol,
+						   colhead, doc, inMath, last);
 			  if (last)
 			    {
 			      group = NULL;
@@ -748,7 +716,6 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
     }
   return colhead;
 }
-
 
 /*----------------------------------------------------------------------
   RemoveColumn remove the current colhead if it's empty.
@@ -1835,9 +1802,14 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
 			colhead = lastColhead;
 		    }
 		}
-	      /* if there are some cells spanning from above rows, skip them */
-	      do
-		{
+	      /* if it's the creation of a new column, create the new
+                 column here. Otherwise take the existing cells into
+	         account */
+	      if (!generateColumn)
+	        /* if there are some cells spanning from above rows,
+		   skip them */
+	        do
+		  {
 		  chead = colhead;
 		  TtaNextSibling (&chead);
 		  if (chead)
@@ -1866,8 +1838,8 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
 			    }
 			}
 		    }
-		}
-	      while (pcell);
+		  }
+	        while (pcell);
 	    }
 	}
     }
@@ -2393,8 +2365,121 @@ void TableCreated (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
+  CopyRow:
+  A table row of has been copied. Generate empty cells where appropriate
+  in the new copy.
+  This function is called only by command Copy, not by command Cut.
+  ----------------------------------------------------------------------*/
+void CopyRow (Element copyRow, Element origRow, Document doc)
+{
+  Element       prevCopyCell, copyCell, origCell, colhead, table;
+  ElementType   elType, cellType;
+  Attribute     attr;
+  AttributeType attrType;
+  int           colspan;
+  ThotBool      inMath;
+
+  elType = TtaGetElementType (origRow);
+  inMath = TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("MathML", doc));
+  attrType.AttrSSchema = elType.ElSSchema;
+  if (inMath)
+    {
+      elType.ElTypeNum = MathML_EL_MTABLE;
+      attrType.AttrTypeNum = MathML_ATTR_columnspan;
+    }
+  else
+    {
+      elType.ElTypeNum = HTML_EL_Table;
+      attrType.AttrTypeNum = HTML_ATTR_colspan_;
+    }
+  /* get the table to which the original row belongs */
+  table = TtaGetTypedAncestor (origRow, elType);
+  /* get the first column head of this table */
+  if (inMath)
+    elType.ElTypeNum = MathML_EL_MColumn_head;
+  else
+    elType.ElTypeNum = HTML_EL_Column_head;
+  colhead = TtaSearchTypedElement (elType, SearchInTree, table);
+  /* get prepared for the generation of empty cells */
+  cellType.ElSSchema = elType.ElSSchema;
+  if (inMath)
+    cellType.ElTypeNum = MathML_EL_MTD;
+  else
+    cellType.ElTypeNum = HTML_EL_Data_cell;
+
+  /* check all column heads of the original table */
+  prevCopyCell = NULL;
+  while (colhead)
+    {
+      colspan = 1;
+      /* is there a cell linked to that column head in the original row? */
+      origCell = GetCellFromColumnHead (origRow, colhead, inMath);
+      if (!origCell)
+	/* no cell at that position in the original table */
+	{
+	  /* create an empty cell at the same position in the copy */
+	  copyCell = TtaNewTree (doc, cellType, "");
+	  if (copyCell)
+	    {
+	      if (prevCopyCell)
+		TtaInsertSibling (copyCell, prevCopyCell, FALSE, doc);
+	      else
+		TtaInsertFirstChild (&copyCell, copyRow, doc);
+	      prevCopyCell = copyCell;
+	    }
+	}
+      else
+	/* there is a cell at that position in the original row */
+	{
+	  if (prevCopyCell)
+	    /* we have already processed some cells in the copy row.
+	       skip one */
+	    prevCopyCell = GetSiblingCell (prevCopyCell, FALSE, inMath);
+	  else
+	    /* we have not processed any cell in the copy row yet */
+	    {
+	      /* get the first cell in the copy row */
+	      prevCopyCell = TtaGetFirstChild (copyRow);
+	      if (prevCopyCell)
+		elType = TtaGetElementType (prevCopyCell);
+	      /* skip any other element until we reach the first cell */
+	      while (prevCopyCell &&
+		     (elType.ElSSchema != cellType.ElSSchema ||
+		      (inMath && elType.ElTypeNum != MathML_EL_MTD) ||
+		      (!inMath && (elType.ElTypeNum != HTML_EL_Data_cell &&
+				   elType.ElTypeNum != HTML_EL_Heading_cell))))
+		{
+		  TtaNextSibling (&prevCopyCell);
+		  if (prevCopyCell)
+		    elType = TtaGetElementType (prevCopyCell);
+		}
+	    }
+	  /* get the value of the colspan attribute for the current cell */
+	  attr = TtaGetAttribute (origCell, attrType);
+	  if (attr)
+	    /* there is a colspan attribute */
+	    {
+	      colspan = TtaGetAttributeValue (attr);
+	      if (colspan < 0)
+		colspan = 1;
+	    }
+	}
+      if (colspan == 0)
+	/* this cell spans all the rest of the row. Stop */
+	colhead = NULL;
+      else
+	/* skip a number of column heads equal to the spanning of the cell */
+	while (colspan >= 1 && colhead)
+	  {
+	    TtaNextSibling (&colhead);
+	    colspan--;
+	  }
+    }
+}
+
+/*----------------------------------------------------------------------
   CopyCell:
-  a cell of a row or of a column will be copied
+  a cell of a row or of a column has been copied.
   ----------------------------------------------------------------------*/
 void CopyCell (Element cell, Document doc, ThotBool inRow)
 {

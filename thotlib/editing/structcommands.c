@@ -74,6 +74,7 @@ static Func         TransformIntoFunction = NULL;
 /* copy & cut callback procedure */
 static Proc         CopyAndCutFunction = NULL;
 static Proc3        CopyCellFunction = NULL;
+static Proc3        CopyRowFunction = NULL;
 
 #define M_EQUIV 1
 #define M_RESDYN 2
@@ -745,7 +746,8 @@ static void RegSSchemaDescent (PtrElement pEl)
    liste des elements a copier.                    
    pParent est le pere de l'element original	
   ----------------------------------------------------------------------*/
-static void SaveElement (PtrElement pEl, PtrElement pParent, int doc)
+static void SaveElement (PtrElement pEl, PtrElement pParent, int doc,
+			 PtrElement origEl)
 {
   PtrPasteElem        pPasteEl, pNewPasteEl;
   PtrElement          pAncest, pCell;
@@ -814,6 +816,13 @@ static void SaveElement (PtrElement pEl, PtrElement pParent, int doc)
 	      pCell = pCell->ElNext;
 	    }
 	}
+      if (CopyRowFunction &&
+	  origEl &&  /* don't notify for a Cut command */
+	  TypeHasException (ExcIsRow, pEl->ElTypeNumber,
+			    pEl->ElStructSchema) &&
+	  TableRowsSaved)
+	/* notify the application for the copied row */
+	(*(Proc3)CopyRowFunction) ((void*)pEl, (void*) origEl, (void*)doc);
 
       pNewPasteEl->PeNext = NULL;
       pEl->ElNext = NULL;
@@ -947,7 +956,7 @@ void CopyCommand ()
 		      /* remove the last part */
 		      DeleteElement (&pE, pSelDoc);
 		    }
-		  SaveElement (pCopy, pEl->ElParent, doc);
+		  SaveElement (pCopy, pEl->ElParent, doc, pEl);
 		  /* met l'attribut langue sur la copie s'il n'y
 		     est pas deja */
 		  if (GetTypedAttrForElem (pCopy, 1, NULL) == NULL)
@@ -1638,7 +1647,7 @@ void CutCommand (ThotBool save)
 				  ChangeLabel = FALSE;
 				  /* met l'element courant dans la
 				     chaine des elements sauvegarde's */
-				  SaveElement (pE, pParentEl, doc);
+				  SaveElement (pE, pParentEl, doc, NULL);
 				}
 			      if (pS == NULL)
 				pSave = pE;
@@ -1946,6 +1955,16 @@ void TtaSetCopyAndCutFunction (Proc procedure)
 void TtaSetCopyCellFunction (Proc3 procedure)
 {
   CopyCellFunction = procedure;
+}
+
+/*----------------------------------------------------------------------
+  TtaSetCopyRowFunction registers the function to be called when
+  a row of a table is copied:
+  void procedure (Element copy, Element orig, Docucment doc)
+  ----------------------------------------------------------------------*/
+void TtaSetCopyRowFunction (Proc3 procedure)
+{
+  CopyRowFunction = procedure;
 }
 
 /*----------------------------------------------------------------------

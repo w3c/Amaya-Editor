@@ -47,6 +47,9 @@ extern void TableCreated ( NotifyElement * event );
 extern void CopyCell ( Element cell,
                        Document doc,
                        ThotBool inRow );
+extern void CopyRow ( Element copy,
+		      Element orig,
+                      Document doc );
 extern void TablebodyDeleted ( NotifyElement * event );
 extern void RowCreated ( NotifyElement *event );
 extern void RowPasted ( NotifyElement * event );
@@ -115,6 +118,9 @@ extern ThotBool DeleteColumn ( NotifyElement * event );
 extern void ColumnPasted ( NotifyElement * event );
 extern void TablePasted ( NotifyElement * event );
 extern void TableCreated ( NotifyElement * event );
+extern void CopyRow ( Element copy,
+		      Element orig,
+                      Document doc );
 extern void CopyCell ( Element cell,
                          Document doc,
                          ThotBool inRow );
