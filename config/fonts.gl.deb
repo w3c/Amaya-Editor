@@ -38,7 +38,7 @@
 
 
 6;#Arabic
-1;1=/usr/local/share/fonts/arab/Arabweb.ttf;2=/usr/local/share/fonts/arab/Arabweb.ttf/;3=/usr/local/share/fonts/arab/Arabweb.ttf;
+1;1=/usr/local/share/fonts/arab/Arabweb.ttf;2=/usr/local/share/fonts/arab/Arabweb.ttf;3=/usr/local/share/fonts/arab/Arabweb.ttf;
 2;1=/usr/local/share/fonts/arab/Arabweb.ttf;2=/usr/local/share/fonts/arab/Arabweb.ttf;3=/usr/local/share/fonts/arab/Arabweb.ttf;
 3;1=/usr/local/share/fonts/arab/Arabweb.ttf;2=/usr/local/share/fonts/arab/Arabweb.ttf;3=/usr/local/share/fonts/arab/Arabweb.ttf;
 
@@ -47,6 +47,7 @@
 1;1=/usr/local/share/fonts/truetype/Times_New_Roman.ttf;2=/usr/local/share/fonts/truetype/Times_New_Roman_Bold.ttf;3=/usr/local/share/fonts/truetype/Times_New_Roman_Italic.ttf;
 2;1=/usr/local/share/fonts/truetype/Times_New_Roman.ttf;2=/usr/local/share/fonts/truetype/Times_New_Roman_Bold.ttf;3=/usr/local/share/fonts/truetype/Times_New_Roman_Italic.ttf;
 3;1=/usr/local/share/fonts/truetype/Times_New_Roman.ttf;2=/usr/local/share/fonts/truetype/Times_New_Roman_Bold.ttf;3=/usr/local/share/fonts/truetype/Times_New_Roman_Italic.ttf;
+
 
 8;#Hebrew
 1;1=/usr/local/share/fonts/truetype/Times_New_Roman.ttf;2=/usr/local/share/fonts/truetype/Times_New_Roman_Bold.ttf;3=/usr/local/share/fonts/truetype/Times_New_Roman_Italic.ttf;
@@ -78,6 +79,15 @@
 
 
 0;#Unicode (.or ... JAPANESe)
-1;1=/usr/local/share/fonts/japanese/msmincho.ttf;2=/usr/local/share/fonts/japanese/msmincho.ttf;3=/usr/local/share/fonts/japanese/msmincho.ttf;
-2;1=/usr/local/share/fonts/japanese/msmincho.ttf;2=/usr/local/share/fonts/japanese/msmincho.ttf;3=/usr/local/share/fonts/japanese/msmincho.ttf;
-3;1=/usr/local/share/fonts/japanese/msmincho.ttf;2=/usr/local/share/fonts/japanese/msmincho.ttf;3=/usr/local/share/fonts/japanese/msmincho.ttf;
+1;1=/usr/local/share/fonts/japanese/msminch.ttc;2=/usr/local/share/fonts/japanese/msminch.ttc;3=/usr/local/share/fonts/japanese/msminch.ttc;
+2;1=/usr/local/share/fonts/japanese/msminch.ttc;2=/usr/local/share/fonts/japanese/msminch.ttc;3=/usr/local/share/fonts/japanese/msminch.ttc;
+3;1=/usr/local/share/fonts/japanese/msminch.ttc;2=/usr/local/share/fonts/japanese/msminch.ttc;3=/usr/local/share/fonts/japanese/msminch.ttc;
+
+
+
+
+
+
+
+
+
