@@ -1685,12 +1685,12 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 		CurrentAttr = att;
 		/* restore the toggle state */
 #ifndef _WINDOWS 
-#ifndef _GTK
+		/*#ifndef _GTK*/
 		if (ActiveAttr[item] == 0)
 		  TtaSetToggleMenu (refmenu, item, FALSE);
 		else
 		  TtaSetToggleMenu (refmenu, item, TRUE);
-#endif
+		/*#endif*/
 		/* display the form */
 		TtaShowDialogue (NumMenuAttr, TRUE);
 #else /* _WINDOWS */

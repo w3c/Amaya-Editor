@@ -1134,7 +1134,7 @@ static void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t c
 		/* Desactive la procedure de Callback */
 		if (catalogue->Cat_React)
 		{		
-		  gtk_signal_disconnect_by_func(GTK_OBJECT(wtext), GTK_SIGNAL_FUNC(CallValueSet), catalogue); 
+		  RemoveSignalGTK (wtext, "changed"); 
 		}
 		gtk_entry_set_text (GTK_ENTRY (wtext), text);
 		val = strlen (text);
@@ -1142,7 +1142,7 @@ static void CallValueSet (ThotWidget w, struct Cat_Context *catalogue, caddr_t c
 		
 		/* Reactive la procedure de Callback */
 		if (catalogue->Cat_React)
-		  gtk_signal_connect (GTK_OBJECT(wtext), "changed", GTK_SIGNAL_FUNC(CallValueSet), catalogue);
+		  ConnectSignalGTK (wtext, "changed", GTK_SIGNAL_FUNC(CallValueSet), (gpointer)catalogue);
 #endif /* !_GTK */
 	      }
 
@@ -1393,7 +1393,7 @@ static void CallListGTK (ThotWidget w, struct Cat_Context *catalogue)
 	   TtaFreeMemory (text);
 	}
 #else /* _GTK */
-   char              *text = NULL;
+   gchar              *text = NULL;
    ThotWidget         tmpw;
 
    /*   printf("Call List\n");*/
@@ -1417,8 +1417,8 @@ static void CallListGTK (ThotWidget w, struct Cat_Context *catalogue)
 	      /* just get the selected text and assigne it to the text zone data */
 	      if(GTK_LIST(tmpw)->selection)
 		{
-		  gtk_label_get(GTK_LABEL(gtk_object_get_data(GTK_OBJECT(GTK_LIST(tmpw)->selection->data), "ListElementLabel")),&text);
-		  tmpw = GTK_WIDGET (gtk_object_get_data (GTK_OBJECT (tmpw), "EntryZone"));
+		  gtk_label_get(GTK_LABEL(gtk_object_get_data(GTK_OBJECT(GTK_LIST(tmpw)->selection->data), "ListElementLabel")), &text);
+		  tmpw = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT (tmpw), "EntryZone"));
 		  gtk_entry_set_text (GTK_ENTRY (tmpw), text);
 		}	      
 	    }
@@ -2085,7 +2085,7 @@ void DisplayConfirmMessage (char *text)
    w = gtk_button_new_with_label (TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    gtk_widget_show (GTK_WIDGET(w));
    gtk_box_pack_start (GTK_BOX (row), w, FALSE, FALSE, 0);
-   gtk_signal_connect (GTK_OBJECT (w), "clicked", GTK_SIGNAL_FUNC (ConfirmMessage), msgbox);
+   ConnectSignalGTK (w, "clicked", GTK_SIGNAL_FUNC(ConfirmMessage), (gpointer)msgbox);
 
 
    gtk_widget_show_all (msgbox);
@@ -2384,8 +2384,8 @@ static int DestContenuMenu (struct Cat_Context *catalogue)
 	     w = XtParent (catalogue->Cat_Widget);
 	     XtDestroyWidget (catalogue->Cat_Widget);
 #else /* _GTK */
-	     w = catalogue->Cat_Widget->parent;
-	     /*	     gtk_widget_destroy (catalogue->Cat_Widget);*/
+	     w = GTK_WIDGET(catalogue->Cat_Widget)->parent;
+	     gtk_widget_destroy (catalogue->Cat_Widget);
 #endif /* !_GTK */
 #else  /* _WINDOWS */
 	     w = GetParent (catalogue->Cat_Widget);
@@ -2420,11 +2420,11 @@ static int DestContenuMenu (struct Cat_Context *catalogue)
 		     XtDestroyWidget (adbloc->E_ThotWidget[ent]);
 #else /* _GTK */
 		     if (w == 0 && ent != 0)
-		       w = adbloc->E_ThotWidget[ent]->parent;
+		       w = GTK_WIDGET(adbloc->E_ThotWidget[ent])->parent;
 
 		     /* Libere les widgets */
 		     gtk_widget_hide (GTK_WIDGET(adbloc->E_ThotWidget[ent]));
-		     /*		     gtk_widget_destroy (GTK_WIDGET(adbloc->E_ThotWidget[ent]));*/
+		     gtk_widget_destroy (GTK_WIDGET(adbloc->E_ThotWidget[ent]));
 
 #endif /* !_GTK */
 #endif /* _WINDOWS */
@@ -2497,7 +2497,9 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifndef _GTK
    Arg                 args[MAX_ARGS];
    XmString            title_string;
-#endif /* _GTK */
+#else /* _GTK */
+   ThotWidget          tmpw;
+#endif /* !_GTK */
 #endif
 
 #ifdef _WINDOWS
@@ -2549,11 +2551,15 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	   menu = (ThotMenu) - 1;	/* pas de pull-down */
 	else if (!rebuilded)
 	  {
-#if defined(_WINDOWS) || defined(_GTK)
+#ifdef _WINDOWS
 	     menu = parent;
-#else  /* _WINDOWS  && _GTK*/
+#else  /* !_WINDOWS */
+#ifndef _GTK
 	     menu = XmCreatePulldownMenu (XtParent (parent), "Dialogue", args, n);
-#endif /* _WINDOWS  && _GTK*/
+#else /* _GTK */
+	     menu = gtk_menu_new ();
+#endif /* !_GTK */
+#endif /* _WINDOWS */
 	  }
 	else
 	  menu = (ThotMenu) catalogue->Cat_Widget;
@@ -2576,8 +2582,8 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifndef _WINDOWS
 #ifdef _GTK 
                 gtk_widget_show (parent);
-                gtk_signal_connect (GTK_OBJECT (parent), "activate",
-                                    GTK_SIGNAL_FUNC (CallMenuGTK), catalogue);
+                ConnectSignalGTK (parent, "activate",
+				  GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
 #else /* _GTK */
 		XtManageChild (parent);
 		XtAddCallback (parent, XmNcascadingCallback, (XtCallbackProc) CallMenu, catalogue);
@@ -2738,9 +2744,9 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifdef _GTK
                          w = gtk_menu_item_new_with_label (&text[index + 1]);
                          gtk_widget_show (w);
-                         gtk_menu_append (GTK_MENU (parent), w);
-                         gtk_signal_connect(GTK_OBJECT (w), "activate",
-					    GTK_SIGNAL_FUNC (CallMenuGTK), catalogue);
+                         gtk_menu_append (GTK_MENU (menu), w);
+                         ConnectSignalGTK (w, "activate",
+					   GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
                          adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
 			 w = XmCreatePushButton (menu, &text[index + 1], args, n);
@@ -2770,13 +2776,18 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			 /* WIN_AddFrameCatalogue (parent, catalogue); */
 #else  /* _WINDOWS */
 #ifdef _GTK
+			 /* tmpw = gtk_check_button_new_with_label (&text[index + 1]);
+			    gtk_widget_show (tmpw);*/
 			 w = gtk_check_menu_item_new_with_label (&text[index + 1]);
 			 gtk_widget_show (w);
-			 gtk_menu_append (GTK_MENU (parent),w);
+			 /* gtk_container_add (GTK_CONTAINER (w), tmpw);*/
+			 /*			 gtk_container_set_border_width (GTK_CONTAINER (w), -2);*/
+			 /*			 gtk_object_set_data (GTK_OBJECT (w), "check_button", (gpointer)tmpw);*/
+			 gtk_menu_append (GTK_MENU (menu),w);
 			 gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (w), FALSE);
 			 gtk_check_menu_item_set_show_toggle (GTK_CHECK_MENU_ITEM (w), TRUE);
-			 gtk_signal_connect (GTK_OBJECT (w), "toggled",
-					     GTK_SIGNAL_FUNC (CallMenuGTK), catalogue);
+			 ConnectSignalGTK (w, "toggled",
+					   GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
 			 adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
 			 XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
@@ -2811,7 +2822,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifdef _GTK
 			 w =  gtk_menu_item_new_with_label (&text[index + 1]);
 			 gtk_widget_show (w);
-			 gtk_menu_append (GTK_MENU (parent),w);
+			 gtk_menu_append (GTK_MENU (menu),w);
 			 adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
 			 w = XmCreateCascadeButton (menu, &text[index + 1], args, n);
@@ -2832,7 +2843,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #else  /* _WINDOWS */
 #ifdef _GTK
 			 w = gtk_menu_item_new_with_label ( &text[index + 1]);
-			 gtk_menu_append (GTK_MENU (parent),w);
+			 gtk_menu_append (GTK_MENU (menu),w);
 			 gtk_widget_show (w);
 			 /*			 gtk_signal_connect (GTK_OBJECT (w), "activate",
 						 GTK_SIGNAL_FUNC (CallMenuGTK), catalogue);*/
@@ -2855,7 +2866,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 #ifdef _GTK
                          w = gtk_menu_item_new ();
                          gtk_widget_show (w);
-                         gtk_menu_append (GTK_MENU (parent),w); 
+                         gtk_menu_append (GTK_MENU (menu),w); 
 			 adbloc->E_ThotWidget[ent] = w;		 
 #else /* _GTK */
 			 XtSetArg (args[n], XmNseparatorType, XmSINGLE_DASHED_LINE);
@@ -2897,7 +2908,9 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 	    XtSetValues (parent, args, n);
 	    XtManageChild (parent);
 #else /* _GTK */
-	    gtk_widget_show (parent);
+	    gtk_menu_item_set_submenu (GTK_MENU_ITEM (parent), menu);
+	    gtk_object_set_data (GTK_OBJECT(menu), "MenuItem", (gpointer)parent);
+	    gtk_widget_show_all (parent);
 #endif /* _GTK */
 #endif /* _WINDOWS */
 	  }
@@ -4014,7 +4027,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  gtk_container_add (GTK_CONTAINER(w), tmpw);
 		  gtk_object_set_data (GTK_OBJECT(w), "Label", (gpointer)tmpw);
 		  gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(w), FALSE, FALSE, 0);
-		  gtk_signal_connect (GTK_OBJECT(w), "toggled", GTK_SIGNAL_FUNC(CallRadio), catalogue);
+		  ConnectSignalGTK (w, "toggled", GTK_SIGNAL_FUNC(CallRadio), (gpointer)catalogue);
 		  /* add this element to the radio group */
 		  GSListTmp = gtk_radio_button_group (GTK_RADIO_BUTTON (w));
 		  adbloc->E_ThotWidget[ent] = w;
@@ -4116,6 +4129,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #else
 		      /* assign the submenu to the menu bar*/
 		      gtk_menu_item_set_submenu (GTK_MENU_ITEM (w), menu);
+		      gtk_widget_show_all (w);
 #endif /* _GTK */
 #endif /* !_WINDOWS */
 		      adbloc->E_Free[ent] = 'N';
@@ -4293,8 +4307,8 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      w->style->font=DefaultFont;
 		      gtk_widget_show (w);
 		      gtk_menu_append (GTK_MENU (menu),w);
-		      gtk_signal_connect(GTK_OBJECT (w), "activate",
-					 GTK_SIGNAL_FUNC (CallMenuGTK),(gpointer)catalogue);
+		      ConnectSignalGTK (w, "activate",
+					GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
 		      adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
 		      w = XmCreatePushButton (menu, &text[index + 1], args, n);
@@ -4322,14 +4336,17 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #else  /* _WINDOWS */
 #ifdef _GTK
 		      /* create a check menu */
-		      w = gtk_check_menu_item_new_with_label (&text[index + 1]);
-		      w->style = gtk_style_copy (w->style);
-		      w->style->font=DefaultFont;
-		      gtk_widget_show (w);
-		      gtk_menu_append (GTK_MENU (menu),w);
-		      gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM(w), FALSE);
-		      gtk_signal_connect(GTK_OBJECT (w), "toggled",
-					 GTK_SIGNAL_FUNC (CallMenuGTK),(gpointer) catalogue);
+		      /*			 tmpw = gtk_check_button_new_with_label (&text[index + 1]);*/
+		      /*			 gtk_widget_show (tmpw);*/
+			 w = gtk_check_menu_item_new_with_label (&text[index + 1]);
+			 gtk_widget_show (w);
+			 /*			 gtk_container_add (GTK_CONTAINER (w), tmpw);*/
+			 /*			 gtk_container_set_border_width (GTK_CONTAINER (w), -2);*/
+			 /*			 gtk_object_set_data (GTK_OBJECT (w), "check_button", (gpointer)tmpw);*/
+		      gtk_menu_append (GTK_MENU (menu), w);
+		      gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (w), FALSE);
+		      ConnectSignalGTK (w, "toggled",
+					GTK_SIGNAL_FUNC (CallMenuGTK), (gpointer)catalogue);
 		      adbloc->E_ThotWidget[ent] = w;
 		      
 #else /* _GTK */
@@ -4836,7 +4853,7 @@ void TtaNewToggleMenu (int ref, int ref_parent, char *title, int number,
 			   w = gtk_check_button_new_with_label (&text[index + 1]);
 			   gtk_widget_show (GTK_WIDGET(w));
 			   gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(w), FALSE, FALSE, 0);
-			   gtk_signal_connect (GTK_OBJECT(w), "toggled", GTK_SIGNAL_FUNC(CallToggle), catalogue);
+			   ConnectSignalGTK (w, "activate", GTK_SIGNAL_FUNC(CallToggle), (gpointer)catalogue);
 #endif /* !_GTK */
 			   adbloc->E_ThotWidget[ent] = w;
 			 }
@@ -4971,7 +4988,7 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 	     visible = FALSE;
 	     XtManageChild (catalogue->Cat_Widget);
 	  }
-#else /* _GTK */
+#else /* _GTK */	
 	else if (GTK_WIDGET_VISIBLE (catalogue->Cat_Widget))
 	   visible = TRUE;
 	else
@@ -5010,12 +5027,6 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 			  XtRemoveCallback (w, XmNarmCallback, (XtCallbackProc) CallToggle, catalogue);
 			else
 			  XtRemoveCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
-#else /* _GTK */
-			/* retire les callbacks */
-			if (catalogue->Cat_Type == CAT_TMENU)
-			  gtk_signal_disconnect_by_func(GTK_OBJECT(w), GTK_SIGNAL_FUNC(CallToggle), catalogue);
-			else
-			  gtk_signal_disconnect_by_func (GTK_OBJECT(w), GTK_SIGNAL_FUNC(CallMenuGTK), catalogue);
 #endif /* !_GTK */
 			if (on)
 			  /* Bouton allume */
@@ -5026,10 +5037,20 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 			    n++;
 			    XtSetValues (w, args, n);
 #else /* _GTK */
+			    
 			    if (catalogue->Cat_Type == CAT_TMENU)
-			      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), TRUE);
+			      {			   
+				RemoveSignalGTK (w, "toggled"); 
+				gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), TRUE);
+				ConnectSignalGTK (w, "toggled", GTK_SIGNAL_FUNC(CallToggle), (gpointer)catalogue);
+			      }
 			    else
-			      gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM(w), TRUE);
+			      if (!GTK_CHECK_MENU_ITEM(w)->active)
+				{
+				  RemoveSignalGTK (w, "toggled");
+				  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM(w), TRUE);
+				  ConnectSignalGTK (w, "toggled", GTK_SIGNAL_FUNC(CallMenuGTK), (gpointer)catalogue);
+				}		    
 #endif /* !_GTK */
 			  }
 			else
@@ -5041,10 +5062,20 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 			    n++;
 			    XtSetValues (w, args, n);
 #else /* _GTK */
+			    
 			    if (catalogue->Cat_Type == CAT_TMENU)
-			      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), FALSE);
+			      {
+				RemoveSignalGTK (w, "toggled"); 
+				gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), FALSE);
+				ConnectSignalGTK (w, "toggled", GTK_SIGNAL_FUNC(CallToggle), (gpointer)catalogue);
+			      }
 			    else
-			      gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM(w), FALSE);
+			      if (GTK_CHECK_MENU_ITEM(w)->active)
+				{
+				  RemoveSignalGTK (w, "toggled");
+				  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM(w), FALSE);
+				  ConnectSignalGTK (w, "toggled", GTK_SIGNAL_FUNC(CallMenuGTK), (gpointer)catalogue);
+				}			    
 #endif /* !_GTK */
 			  }
 #ifndef _GTK
@@ -5053,12 +5084,6 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 			  XtAddCallback (w, XmNarmCallback, (XtCallbackProc) CallToggle, catalogue);
 			else
 			  XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
-#else /* _GTK */
-			/* retablit les callbacks */
-			if (catalogue->Cat_Type == CAT_TMENU)
-			  gtk_signal_connect (GTK_OBJECT(w), "toggled", GTK_SIGNAL_FUNC(CallToggle), catalogue);
-			else
-			  gtk_signal_connect (GTK_OBJECT(w), "toggled", GTK_SIGNAL_FUNC(CallMenuGTK), catalogue);
 #endif /* !_GTK */
 			 }
 		    adbloc->E_Free[i] = 'N';		/* La valeur est la valeur initiale */
@@ -5075,8 +5100,8 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 	if (!visible)
 	  XtUnmanageChild (catalogue->Cat_Widget);
 #else /* _GTK */
-	if (!visible)
-	  gtk_widget_hide (catalogue->Cat_Widget);
+		if (!visible)
+		gtk_widget_hide (catalogue->Cat_Widget);
 #endif /* !_GTK */
      }
 #endif /* _WINDOWS */
@@ -5289,21 +5314,21 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 		    || catalogue->Cat_Type == CAT_MENU)
 		  {
 #ifndef _GTK
-		     XtRemoveCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
-		     if (activate)
-			XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
+		    XtRemoveCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
+		    if (activate)
+		      XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
 #else /* _GTK */
-		     /*		     gtk_signal_disconnect_by_func(GTK_OBJECT(w),
+		    /*		     gtk_signal_disconnect_by_func(GTK_OBJECT(w),
 				     GTK_SIGNAL_FUNC(CallMenu),
 						   catalogue);
 		     */
-		     
-		     if (activate)
-		       gtk_signal_connect (GTK_OBJECT (w),
-					   "activate",
-					   GTK_SIGNAL_FUNC(CallMenuGTK),
-					   catalogue);
-		     /*		     else
+		    
+		    if (activate)
+		      ConnectSignalGTK (w,
+					"activate",
+					GTK_SIGNAL_FUNC(CallMenuGTK),
+					(gpointer)catalogue);
+		    /*		     else
 		       gtk_signal_disconnect_by_func(GTK_OBJECT(w),
 						     GTK_SIGNAL_FUNC(CallMenuGTK),
 						     catalogue);
@@ -5314,15 +5339,15 @@ void TtaRedrawMenuEntry (int ref, int entry, char *fontname,
 		   /*CAT_FMENU et CAT_TMENU */
 #ifndef _GTK
 		  if (activate)
-		  {
-		     XtSetArg (args[n], XmNsensitive, TRUE);
-		     n++;
+		    {
+		      XtSetArg (args[n], XmNsensitive, TRUE);
+		      n++;
 		  }
-		else
-		  {
-		     XtSetArg (args[n], XmNsensitive, FALSE);
-		     n++;
-		  }
+		  else
+		    {
+		      XtSetArg (args[n], XmNsensitive, FALSE);
+		      n++;
+		    }
 #else /* _GTK */	  
 		if (activate)
 		  {
@@ -5888,7 +5913,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	  gtk_window_set_title (GTK_WINDOW (form), title);
 	}
 	gtk_container_set_border_width (GTK_CONTAINER(form), 5);
-	gtk_signal_connect (GTK_OBJECT (form), "destroy_event", GTK_SIGNAL_FUNC(formKill), catalogue);
+	ConnectSignalGTK (form, "destroy_event", GTK_SIGNAL_FUNC(formKill), (gpointer)catalogue);
       	/*gtk_signal_connect (GTK_OBJECT (form), "expose_event", GTK_SIGNAL_FUNC(CallSheet), catalogue);*/
 	/* On initialise les fonts (le style)*/
 	/*A FAIRE*/
@@ -6056,9 +6081,9 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	     w = gtk_button_new_with_label(TtaGetMessage(LIB, TMSG_LIB_CONFIRM));
 	     gtk_widget_show(GTK_WIDGET(w));
 	     gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-	     gtk_signal_connect (GTK_OBJECT (w), "clicked",
-				 GTK_SIGNAL_FUNC(CallSheet),
-				 catalogue);
+	     ConnectSignalGTK (w, "clicked",
+			       GTK_SIGNAL_FUNC(CallSheet),
+			       (gpointer)catalogue);
 	     GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 	     gtk_widget_grab_default(GTK_WIDGET(w));
 	     adbloc->E_ThotWidget[1] = w;
@@ -6090,9 +6115,9 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 		       w = gtk_button_new_with_label(&text[index]);
 		       gtk_widget_show (GTK_WIDGET(w));
 		       gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-		       gtk_signal_connect (GTK_OBJECT (w), "clicked",
-					   GTK_SIGNAL_FUNC(CallSheet),
-					   catalogue);
+		       ConnectSignalGTK (w, "clicked",
+					 GTK_SIGNAL_FUNC(CallSheet),
+					 (gpointer)catalogue);
 		       GTK_WIDGET_SET_FLAGS (GTK_WIDGET(w), GTK_CAN_DEFAULT);
 #endif /* !_GTK */
 		       adbloc->E_ThotWidget[ent] = w;
@@ -6153,7 +6178,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	}
 
 	gtk_widget_show (GTK_WIDGET (w));
-	gtk_signal_connect (GTK_OBJECT (w), "clicked", GTK_SIGNAL_FUNC(CallSheet), catalogue);
+	ConnectSignalGTK (w, "clicked", GTK_SIGNAL_FUNC(CallSheet), (gpointer)catalogue);
  
 #endif /* !_GTK */
 	/* Range le bouton dans le 1er bloc de widgets */
@@ -6836,7 +6861,7 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 				 (gpointer)tmpw);
 	     gtk_container_add(GTK_CONTAINER(w),GTK_WIDGET(tmpw));
 	     gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
-	     gtk_signal_connect (GTK_OBJECT (w), "clicked", GTK_SIGNAL_FUNC (CallLabel), catalogue);
+	     ConnectSignalGTK (w, "clicked", GTK_SIGNAL_FUNC (CallLabel), (gpointer)catalogue);
 	     catalogue->Cat_SelectLabel = w;
 #endif /* !_GTK */
 	  }
@@ -6948,7 +6973,7 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	    gtk_object_set_data (GTK_OBJECT(w), "GList", (gpointer)g_list_length(item));
 	    gtk_widget_show_all (tmpw);
 	    if (react)
-	      gtk_signal_connect (GTK_OBJECT(w), "selection_changed", GTK_SIGNAL_FUNC(CallListGTK), catalogue);
+	      ConnectSignalGTK (w, "selection_changed", GTK_SIGNAL_FUNC(CallListGTK), (gpointer)catalogue);
 	  }
 	else
 	  {
@@ -6967,7 +6992,7 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	    gtk_object_set_data (GTK_OBJECT(w), "GList", (gpointer)g_list_length(item));
 	    gtk_widget_show_all (tmpw);
 	    /* on connecte le changement de selection pour mettre a jour la zone text */
-	    gtk_signal_connect (GTK_OBJECT(w), "selection_changed", GTK_SIGNAL_FUNC(CallListGTK), catalogue);
+	    ConnectSignalGTK (w, "selection_changed", GTK_SIGNAL_FUNC(CallListGTK), (gpointer)catalogue);
 	    
 	    tmpw = gtk_entry_new ();
 	    gtk_widget_show (tmpw);
@@ -6975,7 +7000,7 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 	    gtk_box_pack_start (GTK_BOX(row), tmpw, TRUE, TRUE, 0);
 	    gtk_object_set_data (GTK_OBJECT(w), "EntryZone", (gpointer)tmpw);
 	    if (react)
-	      gtk_signal_connect (GTK_OBJECT(tmpw), "changed", GTK_SIGNAL_FUNC(CallTextChangeGTK), catalogue);
+	      ConnectSignalGTK (tmpw, "changed", GTK_SIGNAL_FUNC(CallTextChangeGTK), (gpointer)catalogue);
 	  }
 #endif /* !_GTK */
 
@@ -7124,10 +7149,10 @@ void TtaSetSelector (int ref, int entry, char *text)
 	    wt = GTK_WIDGET (gtk_object_get_data (GTK_OBJECT(select), "EntryZone"));
 	    /* Si le selecteur est reactif */
 	    if (catalogue->Cat_React)
-	      gtk_signal_disconnect_by_func(GTK_OBJECT(wt), GTK_SIGNAL_FUNC(CallTextChangeGTK), catalogue);
+	      RemoveSignalGTK (wt, "changed");  
 	  }
 	else if (catalogue->Cat_React)
-	  gtk_signal_disconnect_by_func(GTK_OBJECT(select), GTK_SIGNAL_FUNC(CallListGTK), catalogue);
+	  RemoveSignalGTK (select, "selection_changed");  
 #endif /* !_GTK */
 	if (entry >= 0 && entry < catalogue->Cat_ListLength)
 	  {
@@ -7167,7 +7192,10 @@ void TtaSetSelector (int ref, int entry, char *text)
 	       {
 		 gtk_list_unselect_all (GTK_LIST(select));
 	       }
-	     gtk_entry_set_text (GTK_ENTRY (wt), text);
+	     if (!text)
+	       gtk_entry_set_text (GTK_ENTRY (wt), "");
+	     else
+	       gtk_entry_set_text (GTK_ENTRY (wt), text);
 #endif /* !_GTK */
 	  }
 
@@ -7183,9 +7211,9 @@ void TtaSetSelector (int ref, int entry, char *text)
 			     (XtCallbackProc) CallTextChange, catalogue);
 #else /* _GTK */
 	   if (catalogue->Cat_SelectList)
-	     gtk_signal_connect(GTK_OBJECT(select),"selection_changed", GTK_SIGNAL_FUNC(CallListGTK), catalogue);
+	     ConnectSignalGTK (select,"selection_changed", GTK_SIGNAL_FUNC(CallListGTK), (gpointer)catalogue);
 	   else
-	     gtk_signal_connect(GTK_OBJECT(wt),"changed", GTK_SIGNAL_FUNC(CallTextChangeGTK), catalogue);
+	     ConnectSignalGTK (wt,"changed", GTK_SIGNAL_FUNC(CallTextChangeGTK), (gpointer)catalogue);
 #endif /* !_GTK */
 	  }
      }
@@ -7509,7 +7537,7 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 	     /* if the widget is reactive */
 	     if (react)
 	       {
-		 gtk_signal_connect (GTK_OBJECT(w), "changed", GTK_SIGNAL_FUNC(CallTextChangeGTK), catalogue);
+		 ConnectSignalGTK (w, "changed", GTK_SIGNAL_FUNC(CallTextChangeGTK), (gpointer)catalogue);
 	       }
 #endif /* !_GTK */
 	     catalogue->Cat_Ref = ref;
@@ -7584,12 +7612,12 @@ void TtaSetTextForm (int ref, char *text)
 #else /* _GTK */
         if (catalogue->Cat_React)
 	{
-	  gtk_signal_disconnect_by_func(GTK_OBJECT(w), GTK_SIGNAL_FUNC(CallTextChangeGTK), catalogue);
+	  RemoveSignalGTK (w, "changed");  
 	}
 	gtk_entry_set_text (GTK_ENTRY (w), text);
 	gtk_editable_select_region(GTK_EDITABLE(w), 0, -1);
         if (catalogue->Cat_React)
-	  gtk_signal_connect (GTK_OBJECT(w), "changed", GTK_SIGNAL_FUNC(CallTextChangeGTK), catalogue);
+	  ConnectSignalGTK (GTK_OBJECT(w), "changed", GTK_SIGNAL_FUNC(CallTextChangeGTK), (gpointer)catalogue);
 #endif /* !_GTK */
      }
 }
@@ -7828,7 +7856,7 @@ void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 	     gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
 	     gtk_entry_set_text (GTK_ENTRY (w), bounds);
 	     if (catalogue->Cat_React)
-	       gtk_signal_connect (GTK_OBJECT(w), "changed", GTK_SIGNAL_FUNC(CallValueSet), catalogue);
+	       ConnectSignalGTK (w, "changed", GTK_SIGNAL_FUNC(CallValueSet), (gpointer)catalogue);
 	     
 #endif /* !_GTK */
 	     catalogue->Cat_Entries->E_ThotWidget[1] = w;
@@ -7886,7 +7914,7 @@ void TtaSetNumberForm (int ref, int val)
 #else /* _GTK */
 	/* Desactive la procedure de Callback */
 	if (catalogue->Cat_React)
-	  gtk_signal_disconnect_by_func(GTK_OBJECT(wtext), GTK_SIGNAL_FUNC(CallValueSet), catalogue); 
+	  RemoveSignalGTK (wtext, "changed");  
 	sprintf (text, "%d", val);
 	gtk_entry_set_text (GTK_ENTRY (wtext), text);
 	lg = strlen (text);
@@ -7894,7 +7922,7 @@ void TtaSetNumberForm (int ref, int val)
 
 	/* Reactive la procedure de Callback */
 	if (catalogue->Cat_React)
-	  gtk_signal_connect (GTK_OBJECT(wtext), "changed", GTK_SIGNAL_FUNC(CallValueSet), catalogue);
+	  ConnectSignalGTK (wtext, "changed", GTK_SIGNAL_FUNC(CallValueSet), (gpointer)catalogue);
 #endif /* !_GTK */
      }
 }

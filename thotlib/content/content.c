@@ -518,9 +518,10 @@ PtrTextBuffer CopyText (PtrTextBuffer pBuf, PtrElement pEl)
 PtrPathSeg CopyPath (PtrPathSeg firstPathEl)
 {
    PtrPathSeg    pSourcePa, pPrevPa, pPa, first;
-
+   
    pSourcePa = firstPathEl;
    first = NULL;
+   pPrevPa = NULL;
    while (pSourcePa)
      {
        GetPathSeg (&pPa);

@@ -119,3 +119,8 @@ gboolean LeaveCallbackGTK (GtkWidget *widget,
 gboolean EnterCallbackGTK (GtkWidget *widget,
 			   GdkEventCrossing *event,
 			   gpointer user_data);
+void ConnectSignalGTK (ThotWidget w, gchar *signal_name, GtkFunction callback, gpointer data);
+
+
+void RemoveSignalGTK (ThotWidget w, gchar *signal_name);
+

@@ -1280,6 +1280,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
   pictureType = 0;
   just = FALSE;
   sign = FALSE;
+  immed = FALSE;
+  dimpos = FALSE;
   absolute = FALSE;
   align = (BAlignment) 0;
   TypeRP = (PRuleType) 0;
@@ -1904,6 +1906,7 @@ static  LabelString         label;
   
   pSRule = NULL;
   pEl = NULL;
+  pPaPrev = NULL;
   withReferences = FALSE;
   create = FALSE;
   if (*tag != C_PIV_TYPE && *tag != C_PIV_NATURE)

@@ -76,6 +76,7 @@ Pixmap TtaCreatePixmapLogo (char **d)
    ThotIcon            icon;
    ThotBitmap          mask;
 
+   pixmap = 0;
    if (d != NULL)
      {
        pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window, &mask ,

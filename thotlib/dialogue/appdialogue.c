@@ -1398,10 +1398,10 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      gtk_toolbar_append_widget (GTK_TOOLBAR (FrameTable[frame].Button[0]), 
 						 row, info ,"private");
 		      /* Connecte the clicked acton to the button */
-		      gtk_signal_connect (GTK_OBJECT (row),
-					  "clicked",
-					  GTK_SIGNAL_FUNC (APP_ButtonCallback),
-					  (gpointer)frame);
+		      ConnectSignalGTK (row,
+					"clicked",
+					GTK_SIGNAL_FUNC(APP_ButtonCallback),
+					(gpointer)frame);
 		      gtk_object_set_data (GTK_OBJECT(row), "Icon", (gpointer)w);
 		      gtk_widget_show (row);
 		      FrameTable[frame].Call_Button[i] = (Proc) procedure;
@@ -2030,27 +2030,34 @@ int TtaAddTextZone (Document document, View view, char *label,
 	      w->style->font=DefaultFont;
 	      gtk_box_pack_start (GTK_BOX(row), w, TRUE, TRUE, 0);
  	      FrameTable[frame].Text_Zone[i] = w;
-	      gtk_signal_connect_after (GTK_OBJECT (w), "key_press_event",
-					GTK_SIGNAL_FUNC (CharTranslationGTK), (gpointer) frame);
+	      ConnectSignalGTK (w,
+				"key_press_event",
+				GTK_SIGNAL_FUNC(CharTranslationGTK),
+				(gpointer)frame);
 	      gtk_object_set_data (GTK_OBJECT(w), "Active", (gpointer)FALSE);
-	      gtk_signal_connect (GTK_OBJECT (w), "focus_in_event",
-				  GTK_SIGNAL_FUNC (FocusInCallbackGTK),
-				  (gpointer)frame);
-	      gtk_signal_connect (GTK_OBJECT (w), "focus_out_event",
-				  GTK_SIGNAL_FUNC (FocusOutCallbackGTK),
-				  (gpointer)frame);
-
-	      gtk_signal_connect (GTK_OBJECT (w), "enter-notify-event",
-				  GTK_SIGNAL_FUNC (EnterCallbackGTK),
-				  (gpointer)frame);
-	      gtk_signal_connect (GTK_OBJECT (w), "leave-notify-event",
-				  GTK_SIGNAL_FUNC (LeaveCallbackGTK),
-				  (gpointer)frame);
-	      
+	      ConnectSignalGTK (w,
+				"focus_in_event",
+				GTK_SIGNAL_FUNC(FocusInCallbackGTK),
+				(gpointer)frame);
+	      ConnectSignalGTK (w,
+				"focus_out_event",
+				GTK_SIGNAL_FUNC(FocusOutCallbackGTK),
+				(gpointer)frame);
+	      ConnectSignalGTK (w,
+				"enter-notify-event",
+				GTK_SIGNAL_FUNC(EnterCallbackGTK),
+				(gpointer)frame);
+	      ConnectSignalGTK (w,
+				"leave-notify-event",
+				GTK_SIGNAL_FUNC(LeaveCallbackGTK),
+				(gpointer)frame);
 	      if (procedure != NULL)
 		{
 		  /* execute APP_TextCallbackGTK when pressing enter */
-		  gtk_signal_connect (GTK_OBJECT(w), "activate", GTK_SIGNAL_FUNC(APP_TextCallbackGTK), frame);
+		  ConnectSignalGTK (w,
+				    "activate",
+				    GTK_SIGNAL_FUNC(APP_TextCallbackGTK),
+				    (gpointer)frame);
 		  FrameTable[frame].Call_Text[i] = (Proc) procedure;
 		}
 	      gtk_widget_show_all (row->parent->parent->parent);
@@ -2271,6 +2278,28 @@ void TtcSwitchCommands (Document document, View view)
 void DrawingInput (int *w, int frame, int *infos)
 {
 }
+
+#ifdef _GTK
+/*-----------------------------------------------------------------------
+  Function used by GTK version to attach the callback function to the
+  good event and to attache the signal connect ID to the widget in order
+  to disconnect it further.
+-------------------------------------------------------------------------*/
+void ConnectSignalGTK (ThotWidget w, gchar *signal_name, GtkFunction callback, gpointer data)
+{
+  guint id;
+  id = gtk_signal_connect (GTK_OBJECT(w), signal_name, GTK_SIGNAL_FUNC(callback), data);
+  gtk_object_set_data (GTK_OBJECT (w), signal_name, (gpointer)id);
+}
+
+void RemoveSignalGTK (ThotWidget w, gchar *signal_name)
+{
+  guint id;
+  id = (guint)gtk_object_get_data (GTK_OBJECT (w), signal_name);
+  gtk_signal_disconnect (GTK_OBJECT (w), id); 
+}
+#endif
+
 
 /*----------------------------------------------------------------------
   Callback function appellée par une frame lorsque celle-ci recoit un
@@ -2633,8 +2662,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
 	   gtk_widget_set_uposition(GTK_WIDGET(Main_Wd), X, Y);
 	   gtk_widget_set_usize (GTK_WIDGET(Main_Wd), dx+4, dy+4);
-	   gtk_signal_connect (GTK_OBJECT (Main_Wd), "delete_event",
-			       GTK_SIGNAL_FUNC (KillFrameGTK), (gpointer) frame);
+	   ConnectSignalGTK (Main_Wd,
+			     "delete_event",
+			     GTK_SIGNAL_FUNC(KillFrameGTK),
+			     (gpointer)frame);
 	   /* Create the vbox which contain all the elements of the view */
 	   vbox1 = gtk_vbox_new (FALSE, 0);
 	   gtk_widget_show (vbox1);
@@ -2765,9 +2796,12 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		     GTK_WIDGET_SET_FLAGS (menu_item, GTK_SENSITIVE);
 		     if (ptrmenu->MenuHelp == TRUE) gtk_menu_item_right_justify(GTK_MENU_ITEM(menu_item));
 		     gtk_container_add(GTK_CONTAINER (menu_bar), menu_item);
+		     w = menu_item;
+#if 0
 		     w = gtk_menu_new ();
 		     gtk_menu_item_set_submenu (GTK_MENU_ITEM (menu_item), w);
 		     gtk_object_set_data (GTK_OBJECT(w), "MenuItem", (gpointer)menu_item);
+#endif
 #else /* _GTK */
 		     w = XmCreateCascadeButton (menu_bar, TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
 		     XtManageChild (w);
@@ -2887,12 +2921,18 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 				  | GDK_EXPOSURE_MASK
 				  | GDK_FOCUS_CHANGE_MASK
 				  );
-	   gtk_signal_connect (GTK_OBJECT (drawing_area), "button_press_event",
-			       GTK_SIGNAL_FUNC (FrameCallbackGTK), (gpointer) frame);
-	   gtk_signal_connect (GTK_OBJECT (drawing_area), "motion_notify_event",
-			       GTK_SIGNAL_FUNC (FrameCallbackGTK), (gpointer) frame);
-	   gtk_signal_connect (GTK_OBJECT (drawing_area), "button_release_event",
-			       GTK_SIGNAL_FUNC (FrameCallbackGTK), (gpointer) frame);
+	   ConnectSignalGTK (drawing_area,
+			     "button_press_event",
+			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
+			     (gpointer)frame);
+	   ConnectSignalGTK (drawing_area,
+			     "motion_notify_event",
+			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
+			     (gpointer)frame);
+	   ConnectSignalGTK (drawing_area,
+			     "button_release_event",
+			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
+			     (gpointer)frame);
 
 	   /* To notice if the drawing area has mouse in or not */
 	   gtk_object_set_data (GTK_OBJECT(drawing_area), "MouseIn", (gpointer)TRUE);
@@ -2916,19 +2956,24 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   */
  	   /* the key press event is intercepted by the main frame and not by the drawing area.
               the result is analised into the callback */
-	   gtk_signal_connect_after (GTK_OBJECT (Main_Wd), "key_press_event",
-				     GTK_SIGNAL_FUNC (CharTranslationGTK), (gpointer) frame);
-
-	   gtk_signal_connect (GTK_OBJECT (drawing_area), "expose_event",
-			       GTK_SIGNAL_FUNC (ExposeCB), (gpointer) frame);
-	   gtk_signal_connect (GTK_OBJECT(drawing_area), "configure_event",
-			       GTK_SIGNAL_FUNC (FrameResized), (gpointer) frame);
-
+	   ConnectSignalGTK (Main_Wd,
+			     "key_press_event",
+			     GTK_SIGNAL_FUNC(CharTranslationGTK),
+			     (gpointer)frame);
+	   ConnectSignalGTK (drawing_area,
+			     "expose_event",
+			     GTK_SIGNAL_FUNC(ExposeCB),
+			     (gpointer)frame);
+	   ConnectSignalGTK (drawing_area,
+			     "configure_event",
+			     GTK_SIGNAL_FUNC(FrameResized),
+			     (gpointer)frame);
 	   /* Put the scrollbars */
 	   tmpw = gtk_adjustment_new (0, 0, dy, 13, dy-13, dy);
-	   gtk_signal_connect (GTK_OBJECT (tmpw),
-			       "value_changed",
-			       GTK_SIGNAL_FUNC (FrameVScrolled), (gpointer)frame);
+	   ConnectSignalGTK (tmpw,
+			     "value_changed",
+			     GTK_SIGNAL_FUNC(FrameVScrolled),
+			     (gpointer)frame);
       	   vscrl = gtk_vscrollbar_new (tmpw);
 	   gtk_widget_show (vscrl);
 	   gtk_object_set_data (GTK_OBJECT(vscrl), "Adjustment", (gpointer)tmpw);
@@ -2937,9 +2982,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
 
 	   tmpw = gtk_adjustment_new (0, 0, dx, 13, dx-13, dx);
-	   gtk_signal_connect (GTK_OBJECT (tmpw),
-			       "value_changed",
-			       GTK_SIGNAL_FUNC (FrameHScrolled), (gpointer)frame);
+	   ConnectSignalGTK (tmpw,
+			     "value_changed",
+			     GTK_SIGNAL_FUNC(FrameHScrolled),
+			     (gpointer)frame);
       	   hscrl = gtk_hscrollbar_new (tmpw);
 	   gtk_widget_show (hscrl);
 	   gtk_object_set_data (GTK_OBJECT(hscrl), "Adjustment", (gpointer)tmpw);
@@ -3740,7 +3786,8 @@ void TtaSetMenuOff (Document document, View view, int menuID)
 	       TtaSetPulldownOff (ref, w);
 #else /* _GTK */
 	       /* get the linked menu item in order to set sensitive or not the menu */
-	       TtaSetPulldownOff (ref, GTK_MENU_ITEM (gtk_object_get_data (GTK_OBJECT(w),"MenuItem")));
+	       /*	       TtaSetPulldownOff (ref, GTK_MENU_ITEM (gtk_object_get_data (GTK_OBJECT(w),"MenuItem")));*/
+	       TtaSetPulldownOff (ref, w);
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 	       
@@ -3824,7 +3871,8 @@ void TtaSetMenuOn (Document document, View view, int menuID)
              TtaSetPulldownOn (ref, w);
 #else /* _GTK */
 	     /* get the linked menu item in order to set sensitive or not the menu */
-	     TtaSetPulldownOn (ref, GTK_MENU_ITEM (gtk_object_get_data (GTK_OBJECT(w),"MenuItem")));
+	     /*	     TtaSetPulldownOn (ref, GTK_MENU_ITEM (gtk_object_get_data (GTK_OBJECT(w),"MenuItem")));*/
+             TtaSetPulldownOn (ref, w);
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 

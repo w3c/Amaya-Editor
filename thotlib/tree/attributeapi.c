@@ -63,7 +63,7 @@ static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
   PtrAttribute        pAttr, pA;
   PtrReference        pRef;
   ThotBool            found;
-  ThotBool            MandatoryAttrOK;
+  ThotBool            MandatoryAttrOK = FALSE;
   NotifyAttribute     notifyAttr;
   int                 i, att;
 
