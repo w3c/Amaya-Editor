@@ -529,7 +529,7 @@ PtrDocument         pDoc;
 	  {
 	     menuID = FrameTable[frame].MenuSelect;
 	     menu = FindMenu (frame, menuID, &ptrmenu) - 1;
-	     ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
+	     ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
 	     if (NbItemSel == 0)
 	       {
 		  /* le menu Selection contient au moins un item */
@@ -553,7 +553,7 @@ PtrDocument         pDoc;
 	  {
 	     menuID = FrameTable[frame].MenuSelect;
 	     menu = FindMenu (frame, menuID, &ptrmenu) - 1;
-	     ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
+	     ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
 	     if (NbItemSel == 0)
 	       {
 		  /* le menu Selection contient au moins un item */

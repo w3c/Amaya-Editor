@@ -186,13 +186,12 @@
 #define NumMenuAttrName		181
 #define MAX_LocalMenu		190
 
-/* References des catalogues variables du dialogue de l'application	*/
-/* (menu * MAX_FRAME + fenetre + MAX_LocalMenu	*/
+/* Number of references reserved by Thot       				*/
+/* MAX_ITEM >= MAX_FRAME for X-Windows applications			*/
+/* MAX_ITEM >= MAX_FRAME+MAX_MENU for Windows applications   		*/
 #define MAX_MENU		30
-#define MAX_ITEM		30
-/* 1eres references produites par l'application				*/
-/* MAX_MENU doit etre superieur a MAX_FRAME				*/
-#define MAX_ThotMenu	((MAX_MENU + 1) * MAX_ITEM * MAX_FRAME) + MAX_LocalMenu
+#define MAX_ITEM		40
+#define MAX_ThotMenu	((MAX_MENU + 1) * MAX_MENU * MAX_ITEM) + MAX_LocalMenu
 
 #define MAX_ENTRIES 20
 #define LgMaxMenu 20

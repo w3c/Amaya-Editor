@@ -761,7 +761,7 @@ PtrDocument         pDoc;
 	  {
 	     menuID = FrameTable[frame].MenuAttr;
 	     menu = FindMenu (frame, menuID, &pMenu) - 1;
-	     ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
+	     ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
 	     if (pDoc != SelectedDocument || nbItemAttr == 0)
 	       {
 		  /* le menu Attributs contient au moins un attribut */
@@ -794,7 +794,7 @@ PtrDocument         pDoc;
 	  {
 	     menuID = FrameTable[frame].MenuAttr;
 	     menu = FindMenu (frame, menuID, &pMenu) - 1;
-	     ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
+	     ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
 	     if (pDoc != SelectedDocument || nbItemAttr == 0)
 	       {
 		  /* le menu Attributs contient au moins un attribut */

@@ -891,7 +891,7 @@ int                 frame;
 	equiv[j++] = '\0';
 	item++;
      }
-   sref = ((entry + 1) * MAX_MENU * MAX_FRAME) + ref;
+   sref = ((entry + 1) * MAX_MENU * MAX_ITEM) + ref;
    /* Creation du Pulldown avec ou sans equiv */
    if (withEquiv)
       TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, string, equiv, FALSE);
@@ -996,7 +996,7 @@ int                 frame;
 	  {
 	     if (ptritem[item].ItemType == 'M')
 	       {
-		  if (action != 0 && item < MAX_ITEM)
+		  if (action != 0 && item < MAX_MENU)
 		     /* creation du sous-menu */
 		     BuildSubMenu (ptritem[item].SubMenu, ref, item, frame);
 	       }
@@ -1102,7 +1102,7 @@ Pixmap              icon;
 	     FrameTable[0].ActifMenus[i] = TRUE;
 	     BuildPopdown (ptrmenu, ref, FrameTable[0].WdMenus[i], 0);
 	     ptrmenu = ptrmenu->NextMenu;
-	     ref += MAX_FRAME;
+	     ref += MAX_ITEM;
 	     i++;
 	  }
 
@@ -1841,7 +1841,7 @@ char               *text;
 #  ifndef _WINDOWS
    XFlush (TtDisplay);
 #  endif /* _WINDOWS */
-}				/*TtaSetTextZone */
+}
 
 
 /*----------------------------------------------------------------------
@@ -2247,7 +2247,7 @@ int                 doc;
 		    }
 
 		  ptrmenu = ptrmenu->NextMenu;
-		  ref += MAX_FRAME;
+		  ref += MAX_ITEM;
 		  i++;
 	       }
 
@@ -2615,7 +2615,7 @@ int                 frame;
 		    }
 	       }
 	     ptrmenu = ptrmenu->NextMenu;
-	     ref += MAX_FRAME;
+	     ref += MAX_ITEM;
 	     i++;
 	  }
 
@@ -2853,7 +2853,7 @@ int                 menuID;
 	     if (w != 0)
 	       {
 		  FrameTable[frame].ActifMenus[menu] = FALSE;
-		  ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
+		  ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
 		  /* Desactive */
 		  TtaSetPulldownOff (ref, w);
 
@@ -2933,7 +2933,7 @@ int                 menuID;
 	     if (w != 0)
 	       {
 		  FrameTable[frame].ActifMenus[menu] = TRUE;
-		  ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
+		  ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
 		  /* Desactive */
 		  TtaSetPulldownOn (ref, w);
 
@@ -2999,9 +2999,9 @@ int                 itemID;
    if (menu >= 0 && item >= 0)
      {
 	/* on a trouve */
-	ref = ((menu - 1) * MAX_FRAME) + frame + MAX_LocalMenu;
+	ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
 	if (submenu != 0)
-	   ref += submenu * MAX_MENU * MAX_FRAME;
+	   ref += submenu * MAX_MENU * MAX_ITEM;
 	TtaSetToggleMenu (ref, item, on);
      }
 }
@@ -3049,9 +3049,9 @@ int                 itemID;
 	   /* desactive l'action pour la fenetre */
 	   MenuActionList[action].ActionActive[frame] = FALSE;
 	   /* desactive l'entree de menu */
-	   ref = ((menu - 1) * MAX_FRAME) + frame + MAX_LocalMenu;
+	   ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
 	   if (submenu != 0)
-	      ref += submenu * MAX_MENU * MAX_FRAME;
+	      ref += submenu * MAX_MENU * MAX_ITEM;
 	   if (TtWDepth > 1)
 	      TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	   else
@@ -3103,9 +3103,9 @@ int                 itemID;
 	   /* reactive l'action pour la fenetre */
 	   MenuActionList[action].ActionActive[frame] = TRUE;
 	   /* reactive l'entree de menu */
-	   ref = ((menu - 1) * MAX_FRAME) + frame + MAX_LocalMenu;
+	   ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
 	   if (submenu != 0)
-	      ref += submenu * MAX_MENU * MAX_FRAME;
+	      ref += submenu * MAX_MENU * MAX_ITEM;
 	   TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
 	}
 }				/*TtaSetActionOn */
@@ -3398,7 +3398,7 @@ char               *data;
 		  break;
 
 	       default:
-		  if (ref >= NumMenuAttrName && ref <= NumMenuAttrName + MAX_FRAME)
+		  if (ref >= NumMenuAttrName && ref <= NumMenuAttrName + MAX_ITEM)
 		     /* retour du menu des attributs */
 		    {
 		       TtaSetDialoguePosition ();
@@ -3414,10 +3414,10 @@ char               *data;
      {
 /*** Action attachee au retour du dialoque de l'application ***/
 	/* Calcule les indices menu, item et frame */
-	/* ref = (((item+1) * MAX_MENU + menu) * MAX_FRAME) + frame + MAX_LocalMenu */
+	/* ref = (((item+1) * MAX_MENU + menu) * MAX_ITEM) + frame + MAX_LocalMenu */
 	j = ref - MAX_LocalMenu;
-	i = j / MAX_FRAME;
-	frame = j - (i * MAX_FRAME);	/* reste de la division */
+	i = j / MAX_ITEM;
+	frame = j - (i * MAX_ITEM);	/* reste de la division */
 	item = i / MAX_MENU;
 	menu = i - (item * MAX_MENU);	/* reste de la division */
 	if (frame == 0)
