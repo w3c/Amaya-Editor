@@ -2211,16 +2211,16 @@ static Document LoadDocument (Document doc, char *pathname,
 	  docType = thotType;
 	  unknown = FALSE;
 	}
-      else if (parsingLevel != L_Other || IsHTMLName (pathname))
-	{
-	  /* it seems to be an HTML document */
-	  docType = docHTML;
-	  parsingLevel = L_Transitional;
-	  unknown = FALSE;
-	}
      else if (IsCSSName (pathname))
 	{
 	  docType = docCSS;
+	  parsingLevel = L_Other;
+	  unknown = FALSE;
+	}
+     else if (IsTextName (pathname))
+	{
+	  docType = docText;
+	  parsingLevel = L_Other;
 	  unknown = FALSE;
 	}
       else if (IsImageName (pathname))
@@ -2230,6 +2230,13 @@ static Document LoadDocument (Document doc, char *pathname,
 	  docType = docImage;
 	  unknown = FALSE;
 	  parsingLevel = L_Transitional;
+	}
+      else if (parsingLevel != L_Other || IsHTMLName (pathname))
+	{
+	  /* it seems to be an HTML document */
+	  docType = docHTML;
+	  parsingLevel = L_Transitional;
+	  unknown = FALSE;
 	}
       }
    else
@@ -2424,6 +2431,9 @@ static Document LoadDocument (Document doc, char *pathname,
 	      docType = docLog;
 	      newdoc = doc;
 	    }
+	  else if (docType != DocumentTypes[doc])
+	    /* replace the current document by a new one */
+	    newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
 	  else
 	    /* document already initialized */
 	    newdoc = doc;
@@ -2606,7 +2616,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	    DocumentMeta[newdoc]->xmlformat = TRUE;
 	  if (!strncmp (profile, "XHTML-basic", 10))
 	    ParsingLevel[newdoc] = L_Basic;
-	  else if (!strncmp (profile, "XHTML-strict", 10))
+	  else if (!strncmp (profile, "XHTML-1.1", 10))
 	    ParsingLevel[newdoc] = L_Strict;
 	  else
 	    ParsingLevel[newdoc] = L_Transitional;
@@ -3482,6 +3492,8 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
      docType = docSVG;
    else if (IsCSSName (documentname))
      docType = docCSS;
+   else if (IsTextName (documentname))
+     docType = docText;
 #ifdef XML_GEN
    else if (IsXMLName (documentname))
      docType = docXml;
@@ -4593,7 +4605,8 @@ void                CallbackDialogue (int ref, int typedata, char *data)
   tempdoc is the name of the saved file.
   Return the new recovered document
   ----------------------------------------------------------------------*/
-static int       RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname, DocumentType docType)
+static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
+			       DocumentType docType)
 {
   AHTHeaders          http_headers;
   char                content_type[MAX_LENGTH];

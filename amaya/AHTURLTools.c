@@ -601,7 +601,7 @@ ThotBool IsTextName (const char *path)
   IsHTTPPath                                     
   returns TRUE if path is in fact an http URL.
   ----------------------------------------------------------------------*/
-ThotBool             IsHTTPPath (const char *path)
+ThotBool IsHTTPPath (const char *path)
 {
    if (!path)
       return FALSE;
