@@ -883,13 +883,37 @@ NotifyElement      *event;
 Element             el;
 #endif
 {
-Element             nextEl;
+  Element             nextEl, child;
+  ElementType         elType;
+  SSchema             HTMLschema;
 
   nextEl = TtaGetFirstChild (el);
+  HTMLschema = TtaGetSSchema (TEXT("HTML"), event->document);
+  elType.ElSSchema = HTMLschema;
   while (nextEl != NULL)
     {
       event->element = nextEl;
       ElementPasted (event);
+
+      /* manage included links and anchors */
+      elType.ElTypeNum = HTML_EL_Anchor;
+      child = TtaSearchTypedElement (elType, SearchInTree, nextEl);
+      while (child)
+	{
+	  event->element = child;
+	  ElementPasted (event);
+	  child = TtaSearchTypedElementInTree (elType, SearchForward, nextEl, child);
+	}
+
+      /* manage included links and anchors */
+      elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+      child = TtaSearchTypedElement (elType, SearchInTree, nextEl);
+      while (child)
+	{
+	  event->element = child;
+	  ElementPasted (event);
+	  child = TtaSearchTypedElementInTree (elType, SearchForward, nextEl, child);
+	}
       TtaNextSibling (&nextEl);
     }
 }
