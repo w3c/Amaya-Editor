@@ -148,8 +148,6 @@ THOT_EXPORT char         Answer_name[NAME_LENGTH];
 THOT_EXPORT char         Answer_password[NAME_LENGTH];
 THOT_EXPORT char         Display_password[NAME_LENGTH];
 THOT_EXPORT char         ScanFilter[NAME_LENGTH]; /* to scan directories    */
-THOT_EXPORT int          Lg_password;
-THOT_EXPORT int          BaseDialog;
 THOT_EXPORT char        *LastURLName;	/* last URL requested               */
 THOT_EXPORT char        *DirectoryName;	/* local path of the document       */
 THOT_EXPORT char        *DocumentName;	/* document name                    */
@@ -158,21 +156,25 @@ THOT_EXPORT char        *SaveName;	/* saving name of the document      */
 THOT_EXPORT char        *ObjectName;	/* document name                    */
 THOT_EXPORT char        *SaveImgsURL;	/* where to save remote Images      */
 THOT_EXPORT char        *TargetName;
+THOT_EXPORT char        *SavingFile;	/* complete path or URL of the document */
+THOT_EXPORT int          Lg_password;
+THOT_EXPORT int          BaseDialog;
+THOT_EXPORT int          ReturnOption;
+THOT_EXPORT Document     CurrentDocument;
+THOT_EXPORT Document     SavingDocument;
+THOT_EXPORT Document     SavingObject;
+THOT_EXPORT Document     AttrHREFdocument;
+THOT_EXPORT Document     DocBook;
+THOT_EXPORT Document     IncludedDocument;
+THOT_EXPORT Element      AttrHREFelement;
+THOT_EXPORT char        *AttrHREFvalue;
+THOT_EXPORT Document     SelectionDoc;
 THOT_EXPORT boolean	 SaveAsHTML;
 THOT_EXPORT boolean	 SaveAsText;
 THOT_EXPORT boolean      CopyImages;	/* should we copy images in Save As */
 THOT_EXPORT boolean      UpdateURLs;	/* should we update URLs in Save As */
 THOT_EXPORT boolean      UserAnswer;
-THOT_EXPORT int          ReturnOption;
 THOT_EXPORT boolean      InNewWindow;
-THOT_EXPORT Document     CurrentDocument;
-THOT_EXPORT Document     SavingDocument;
-THOT_EXPORT Document     SavingObject;
-THOT_EXPORT char        *SavingFile;	/* complete path or URL of the document */
-THOT_EXPORT Document     AttrHREFdocument;
-THOT_EXPORT Element      AttrHREFelement;
-THOT_EXPORT char        *AttrHREFvalue;
-THOT_EXPORT Document     SelectionDoc;
 THOT_EXPORT boolean      SelectionInPRE;
 THOT_EXPORT boolean      SelectionInComment;
 THOT_EXPORT boolean      SelectionInEM;

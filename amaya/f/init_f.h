@@ -13,11 +13,12 @@ extern void ExtractParameters ( char *aName,
                                 char *parameters );
 extern void ExtractSuffix ( char *aName,
                             char *aSuffix );
-extern void ResetStop ( Document document );
 extern void SetArrowButton ( Document document,
                              boolean back,
                              boolean on );
+extern void ResetStop ( Document document );
 extern void ActiveTransfer ( Document document );
+extern void ActiveMakeBook ( Document document );
 extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,
                            View view );
@@ -106,11 +107,12 @@ extern void ExtractParameters (/* char *aName,
                                   char *parameters */);
 extern void ExtractSuffix (/* char *aName,
                               char *aSuffix */);
-extern void ResetStop (/* Document document */);
 extern void SetArrowButton (/* Document document,
                                boolean back,
                                boolean on */);
+extern void ResetStop (/* Document document */);
 extern void ActiveTransfer (/* Document document */);
+extern void ActiveMakeBook (/* Document document */);
 extern void UpdateTransfer (/* Document document */);
 extern void StopTransfer (/* Document document,
                              View view */);

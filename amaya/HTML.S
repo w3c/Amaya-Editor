@@ -360,6 +360,7 @@ EXCEPT
 	Definition_Item: Hidden;
 	Comment_line:	Hidden;
 	GRAPHICS:	NoMove, NoResize;
+	TEXT:		NoMove, NoResize;
 	PICTURE:	MoveResize;
 	Invalid_element: NoCreate;
 	Pseudo_paragraph:	ParagraphBreak, Hidden;

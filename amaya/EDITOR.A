@@ -174,7 +174,7 @@ MENUS
 	view:1 Help_ button:BHelpPublishing -> HelpPublishing;
 	view:1 Help_ button:BHelpPrinting -> HelpPrinting;
 	view:1 Help_ button:BHelpMakeBook -> HelpMakeBook;
-
+	view:1 Help_ button:BHelpConfigure -> HelpConfigure;
 	END;
 
 END

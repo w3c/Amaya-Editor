@@ -1026,110 +1026,109 @@ Document            doc;
 
 #endif
 {
-   char                tempfile[MAX_LENGTH];
-   char                tempname[MAX_LENGTH];
-   char                tempURL[MAX_LENGTH];
-   struct stat         buf;
-   char               *buffer = NULL;
-   FILE               *res;
-   int                 len;
-   int                 local = FALSE;
-   int                 toparse;
-   PSchema             pSchema, prev;
-   CSSInfoPtr          css;
+  struct stat         buf;
+  FILE               *res;
+  PSchema             pSchema, prev;
+  CSSInfoPtr          css;
+  char                tempfile[MAX_LENGTH];
+  char                tempname[MAX_LENGTH];
+  char                tempURL[MAX_LENGTH];
+  char               *buffer = NULL;
+  int                 len;
+  int                 local = FALSE;
+  int                 toparse;
 
-   /* load the CSS */
-   tempfile[0] = EOS;
-   NormalizeURL (URL, doc, tempURL, tempname);
+  if (TtaGetViewFrame (doc, 1) != 0)
+    {
+      /* this document is displayed -> load the CSS */
+      tempfile[0] = EOS;
+      NormalizeURL (URL, doc, tempURL, tempname);
+      
+      if (IsW3Path (tempURL))
+	{
+	  /* check against double inclusion */
+	  css = SearchCSS (doc, CSS_EXTERNAL_STYLE, tempURL);
+	  if (css != NULL)
+	    return;
+	  
+	  toparse = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO, NULL);
+	  if (toparse)
+	    {
+	      fprintf (stderr, "LoadHTMLStyleSheet \"%s\" failed\n", URL);
+	      return;
+	    }
+	}
+      else
+	{
+	  local = TRUE;
+	  strcpy (tempfile, URL);
+	}
+      if (tempfile[0] == EOS)
+	{
+	  fprintf (stderr, "LoadHTMLStyleSheet \"%s\" failed\n", URL);
+	  return;
+	}
+      /* load the resulting file in memory */
+      res = fopen (tempfile, "r");
+      if (res == NULL)
+	{
+	  fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : cannot open file\n", URL);
+	  if (!local)
+	    TtaFileUnlink (tempfile);
+	  return;
+	}
+      if (fstat (fileno (res), &buf))
+	{
+	  fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : cannot stat file\n", URL);
+	  fclose (res);
+	  if (!local)
+	    TtaFileUnlink (tempfile);
+	  return;
+	}
+      buffer = (char *) TtaGetMemory (buf.st_size + 1000);
+      if (buffer == NULL)
+	{
+	  fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : out of mem\n", URL);
+	  fclose (res);
+	  if (!local)
+	    TtaFileUnlink (tempfile);
+	  return;
+	}
+      len = fread (buffer, buf.st_size, 1, res);
+      if (len != 1)
+	{
+	  fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : read failed\n", URL);
+	  fclose (res);
+	  if (!local)
+	    TtaFileUnlink (tempfile);
+	  TtaFreeMemory (buffer);
+	  return;
+	}
+      buffer[buf.st_size] = 0;
+      fclose (res);
+      if (!local)
+	TtaFileUnlink (tempfile);
 
-   if (IsW3Path (tempURL))
-     {
-	/* check against double inclusion */
-	css = SearchCSS (doc, CSS_EXTERNAL_STYLE, tempURL);
-	if (css != NULL)
-	   return;
-
-	toparse = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO, NULL);
-	if (toparse)
-	  {
-	     fprintf (stderr, "LoadHTMLStyleSheet \"%s\" failed\n", URL);
-	     return;
-	  }
-     }
-   else
-     {
-	local = TRUE;
-	strcpy (tempfile, URL);
-     }
-   if (tempfile[0] == EOS)
-     {
-	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" failed\n", URL);
-	return;
-     }
-   /*
-    * load the resulting file in memory.
-    */
-
-   res = fopen (tempfile, "r");
-   if (res == NULL)
-     {
-	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : cannot open file\n", URL);
-	if (!local)
-	   TtaFileUnlink (tempfile);
-	return;
-     }
-   if (fstat (fileno (res), &buf))
-     {
-	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : cannot stat file\n", URL);
-	fclose (res);
-	if (!local)
-	   TtaFileUnlink (tempfile);
-	return;
-     }
-   buffer = (char *) TtaGetMemory (buf.st_size + 1000);
-   if (buffer == NULL)
-     {
-	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : out of mem\n", URL);
-	fclose (res);
-	if (!local)
-	   TtaFileUnlink (tempfile);
-	return;
-     }
-   len = fread (buffer, buf.st_size, 1, res);
-   if (len != 1)
-     {
-	fprintf (stderr, "LoadHTMLStyleSheet \"%s\" : read failed\n", URL);
-	fclose (res);
-	if (!local)
-	   TtaFileUnlink (tempfile);
-	TtaFreeMemory (buffer);
-	return;
-     }
-   buffer[buf.st_size] = 0;
-   fclose (res);
-   if (!local)
-      TtaFileUnlink (tempfile);
-
-   /*
-    * allocate a new Presentation structure, parse the whole thing
-    * and free the buffer.
-    */
-   pSchema = TtaNewPSchema ();
-   prev = TtaGetFirstPSchema (doc, NULL);
-   TtaAddPSchema (pSchema, prev, TRUE, doc, NULL);
-   css = NewCSS ();
-   css->tempfile = TtaStrdup (tempfile);
-   css->name = "External Style";
-   css->category = CSS_EXTERNAL_STYLE;
-   css->pschema = pSchema;
-   css->documents[doc] = TRUE;
-   css->url = TtaStrdup (URL);
-   css->css_rule = TtaStrdup (buffer);
-   css->state = CSS_STATE_Unmodified;
-   AddCSS (css);
-   ParseHTMLStyleSheet (buffer, doc, css);
-   TtaFreeMemory (buffer);
-
+      /*
+       * allocate a new Presentation structure, parse the whole thing
+       * and free the buffer.
+       */
+      pSchema = TtaNewPSchema ();
+      prev = TtaGetFirstPSchema (doc, NULL);
+      TtaAddPSchema (pSchema, prev, TRUE, doc, NULL);
+      css = NewCSS ();
+      css->tempfile = TtaStrdup (tempfile);
+      css->name = "External Style";
+      css->category = CSS_EXTERNAL_STYLE;
+      css->pschema = pSchema;
+      css->documents[doc] = TRUE;
+      css->url = TtaStrdup (URL);
+      css->css_rule = TtaStrdup (buffer);
+      css->state = CSS_STATE_Unmodified;
+      AddCSS (css);
+      ParseHTMLStyleSheet (buffer, doc, css);
+      TtaFreeMemory (buffer);
+    }
 }
 
 /*----------------------------------------------------------------------

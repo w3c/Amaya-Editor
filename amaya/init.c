@@ -88,7 +88,8 @@ static char        *Manual[] = {
 "Attributes.html",
 "Publishing.html",
 "Printing.html",
-"MakeBook.html"
+"MakeBook.html",
+"Configure.html"
 };
 
 #ifndef _WINDOWS
@@ -394,42 +395,6 @@ char               *aSuffix;
 }
 
 /*----------------------------------------------------------------------
-   ResetStop resets the stop button state                             
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ResetStop (Document document)
-#else
-void                ResetStop (document)
-Document            document;
-#endif
-{
-   if (FilesLoading[document] != 0)
-     {
-       FilesLoading[document]--;
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
-       if (FilesLoading[document] == 0)
-	 /* The last object associated to the document has been loaded */
-	 {
-	   if (TtaGetViewFrame (document, 1) != 0) 
-	     /* this document is displayed */
-	     {
-	       if(!(DocNetworkStatus[document] & AMAYA_NET_ERROR) &&
-		  (DocNetworkStatus[document] & AMAYA_NET_ACTIVE))
-		 /* if there was no error message, display the LOADED message */
-		 TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-#        ifdef _WINDOWS
-         WIN_TtaChangeButton (document, 1, 1, stopN, FALSE);
-#        else  /* !_WINDOWS */
-	       TtaChangeButton (document, 1, 1, stopN);
-#        endif /* _WINDOWS */
-	     }
-	   DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
-	 }
-#endif
-     }
-}
-
-/*----------------------------------------------------------------------
   SetArrowButton
   Change the appearance of the Back (if back == TRUE) or Forward button
   for a given document.
@@ -443,52 +408,95 @@ boolean		    back;
 boolean		    on;
 #endif
 {
-   int		index;
-#  ifdef _WINDOWS
-   BYTE state;
-   int  picture;
-#  else /* !_WINDOWS */
-   Pixmap	picture;
-#  endif /* _WINDOWS */
+  int		index;
+#ifdef _WINDOWS
+  BYTE state;
+  int  picture;
+#else /* !_WINDOWS */
+  Pixmap	picture;
+#endif /* _WINDOWS */
 
-   if (back) {
+  if (back)
+    {
       index = 2;
-#     ifdef _WINDOWS 
-      if (on) {
-         state   = TRUE;
-		 picture = iconBack; 
-      } else {
-          state = FALSE;
-		  picture = iconBackNo;
-	  }
-#     else  /* !_WINDOWS */
+#ifdef _WINDOWS 
       if (on)
-         picture = iconBack;
+	{
+	  state   = TRUE;
+	  picture = iconBack; 
+	}
       else
-          picture = iconBackNo;
-#     endif /* _WINDOWS */
-   } else {
-        index = 3;
-#       ifdef _WINDOWS
-        if (on) {
-           state = TRUE;
-		   picture = iconForward;
-        } else {
-            state = FALSE;
-			picture = iconForwardNo;
-		}
-#       else /* !_WINDOWS */
-        if (on)
-           picture = iconForward;
-        else
-            picture = iconForwardNo;
-#       endif /* _WINDOWS */
-   }
-#  ifdef _WINDOWS
-   WIN_TtaChangeButton (document, 1, index, picture, state);
-#  else  /* !_WINDOWS */
-   TtaChangeButton (document, 1, index, picture);
-#  endif /* _WINDOWS */
+	{
+          state = FALSE;
+	  picture = iconBackNo;
+	}
+#else  /* !_WINDOWS */
+      if (on)
+	picture = iconBack;
+      else
+	picture = iconBackNo;
+#endif /* _WINDOWS */
+    }
+  else
+    {
+      index = 3;
+#ifdef _WINDOWS
+      if (on)
+	{
+	  state = TRUE;
+	  picture = iconForward;
+        }
+      else
+	{
+	  state = FALSE;
+	  picture = iconForwardNo;
+	}
+#else /* !_WINDOWS */
+      if (on)
+	picture = iconForward;
+      else
+	picture = iconForwardNo;
+#endif /* _WINDOWS */
+    }
+#ifdef _WINDOWS
+  WIN_TtaChangeButton (document, 1, index, picture, state);
+#else  /* !_WINDOWS */
+  TtaChangeButton (document, 1, index, picture);
+#endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+   ResetStop resets the stop button state                             
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ResetStop (Document document)
+#else
+void                ResetStop (document)
+Document            document;
+#endif
+{
+  if (FilesLoading[document] != 0)
+    FilesLoading[document]--;
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
+  if (FilesLoading[document] == 0)
+    /* The last object associated to the document has been loaded */
+    {
+      if (TtaGetViewFrame (document, 1) != 0) 
+	/* this document is displayed */
+	{
+	  if(!(DocNetworkStatus[document] & AMAYA_NET_ERROR) &&
+	     (DocNetworkStatus[document] & AMAYA_NET_ACTIVE))
+	    /* if there was no error message, display the LOADED message */
+	    TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+#ifdef _WINDOWS
+	  WIN_TtaChangeButton (document, 1, 1, stopN, FALSE);
+#else  /* !_WINDOWS */
+	  TtaChangeButton (document, 1, 1, stopN);
+#endif /* _WINDOWS */
+	}
+      DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
+    }
+#endif
 }
 
 /*----------------------------------------------------------------------
@@ -499,7 +507,6 @@ void                ActiveTransfer (Document document)
 #else
 void                ActiveTransfer (document)
 Document            doc;
-
 #endif
 {
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
@@ -509,12 +516,33 @@ Document            doc;
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
   if (TtaGetViewFrame (document, 1) != 0)
     /* this document is displayed */
-#    ifdef _WINDOWS 
-     WIN_TtaChangeButton (document, 1, 1 , stopR, TRUE);
-#    else  /* _WINDOWS */
-     TtaChangeButton (document, 1, 1, stopR);
-#    endif /* _WINDOWS */
+#ifdef _WINDOWS 
+    WIN_TtaChangeButton (document, 1, 1 , stopR, TRUE);
+#else  /* _WINDOWS */
+    TtaChangeButton (document, 1, 1, stopR);
+#endif /* _WINDOWS */
 #endif
+}
+
+/*----------------------------------------------------------------------
+   ActiveTransfer initialize the current transfer                     
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ActiveMakeBook (Document document)
+#else
+void                ActiveMakeBook (document)
+Document            doc;
+#endif
+{
+  DocBook = document;
+  IncludedDocument = 0;
+  if (TtaGetViewFrame (document, 1) != 0)
+    /* this document is displayed */
+#ifdef _WINDOWS 
+    WIN_TtaChangeButton (document, 1, 1 , stopR, TRUE);
+#else  /* _WINDOWS */
+    TtaChangeButton (document, 1, 1, stopR);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -528,7 +556,7 @@ Document            doc;
 
 #endif
 {
-    FilesLoading[document]++;
+  FilesLoading[document]++;
 }
 
 /*----------------------------------------------------------------------
@@ -543,36 +571,41 @@ View                view;
 
 #endif
 {
-#if defined(AMAYA_JAVA)
-  if (FilesLoading[document] != 0)
+  if (document == 0)
+    return;
+  else if (document == DocBook)
     {
+      /* Make Book function stopped */
+      DocBook = 0;
+      /* stop transfer of the sub-document */
       StopRequest (document);
+      StopRequest (IncludedDocument);
+      FilesLoading[document] = 0;
+      DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
     }
+#if defined(AMAYA_JAVA)
+  else if (FilesLoading[document] != 0)
+    StopRequest (document);
 #else 
 #if defined(AMAYA_ILU)
-  if (FilesLoading[document] != 0)
+  else if (FilesLoading[document] != 0)
     {
       StopRequest (document);
       FilesLoading[document] = 0;
     }
 #else
+  else if (DocNetworkStatus[document] & AMAYA_NET_ACTIVE)
+    {
+      if (TtaGetViewFrame (document, 1) != 0)
 #ifndef _WINDOWS
-  if (DocNetworkStatus[document] & AMAYA_NET_ACTIVE)
-    {
-      TtaChangeButton (document, 1, 1, stopN);
-      StopRequest (document);
-      FilesLoading[document] = 0;
-      DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
-    }
+	TtaChangeButton (document, 1, 1, stopN);
 #else
-  if (DocNetworkStatus[document] & AMAYA_NET_ACTIVE)
-    {
-      WIN_TtaChangeButton (document, 1, 1, stopN, FALSE);
+	WIN_TtaChangeButton (document, 1, 1, stopN, FALSE);
+#endif /* !_WINDOWS */
       StopRequest (document);
       FilesLoading[document] = 0;
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
     }
-#endif /* !_WINDOWS */
 #endif /* !AMAYA_ILU */
 #endif /* !AMAYA_JAVA */
 }
@@ -2447,15 +2480,12 @@ NotifyEvent        *event;
    if (s)
       strcpy (TempFileDirectory, s);
    else
-
 #  ifdef _WINDOWS
-   if (!TtaFileExist ("C:\\TEMP"))
-      mkdir ("C:\\TEMP");
-
+     if (!TtaFileExist ("C:\\TEMP"))
+        mkdir ("C:\\TEMP");
    strcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
 #  else  /* !_WINDOWS */
      strcpy (TempFileDirectory, "/tmp");
-
    strcat (TempFileDirectory, "/.amaya");
 #  endif /* _WINDOWS */
 
@@ -2467,8 +2497,7 @@ NotifyEvent        *event;
        i = mkdir (TempFileDirectory, S_IRWXU);
        if (i != 0 && errno != EEXIST)
 #  endif /* !_WINDOWS */
-	 {
- 
+	 { 
 	   fprintf (stderr, "cannot create %s\n", TempFileDirectory);
 	   exit (1);
 	 }
@@ -2525,7 +2554,6 @@ NotifyEvent        *event;
 
    /* initialize parser mapping table and HTLib */
    InitMapping ();
-
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
    QueryInit ();
 #endif
@@ -2533,7 +2561,6 @@ NotifyEvent        *event;
    AMAYA = TtaGetMessageTable ("amayamsg", AMAYA_MSG_MAX);
    /* allocate callbacks for amaya */
    BaseDialog = TtaSetCallback (CallbackDialogue, MAX_REF);
-
    /* init the Picture context */
    InitImage ();
    /* init the Picture context */
@@ -2546,6 +2573,7 @@ NotifyEvent        *event;
    InitAutomaton ();
 
    CurrentDocument = 0;
+   DocBook = 0;
    InNewWindow = FALSE;
    if (appArgc % 2 == 0)
       /* The last argument in the command line is the document to be opened */
@@ -2565,8 +2593,7 @@ NotifyEvent        *event;
 	LastURLName[0] = EOS;
        strcat (LastURLName, AMAYA_PAGE);
        CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-       /* Amaya-page in read-only */
-       TtaSetDocumentAccessMode (1, 0);
+       /* Amaya-page in read-only TtaSetDocumentAccessMode (1, 0); */
      }
    else if (IsW3Path (s))
      {
@@ -2961,6 +2988,20 @@ void HelpMakeBook (document, view)
 #endif /* __STDC__*/
 {
   DisplayHelp (14);
+}
+
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void HelpConfigure (Document document, View view)
+#else /* __STDC__*/
+void HelpConfigure (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+  DisplayHelp (15);
 }
 
 

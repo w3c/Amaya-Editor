@@ -24,7 +24,15 @@
 #define NumZonePrinterName 5
 #define PRINT_MAX_REF	   6
 
-/* Thot printer variables */
+/* structure to register sub-documents in MakeBook function*/
+typedef struct _SubDoc
+  {
+     struct _SubDoc  *SDnext;
+     Element          SDel;
+     char            *SDname;
+  }SubDoc;
+
+static struct _SubDoc  *SubDocs;
 static int              PaperPrint;
 static int              ManualFeed;
 static int              PageSize;
@@ -35,20 +43,11 @@ static boolean		numberLinks;
 static boolean		withToC;
 static int              basePrint;
 
-/* structure to register sub-documents */
-typedef struct _SubDoc
-  {
-     struct _SubDoc  *SDnext;
-     Element          SDel;
-     char            *SDname;
-  }SubDoc;
-static struct _SubDoc  *SubDocs = NULL;
-static Document		docBook = 0;
-
 #include "init_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLbook_f.h"
 #include "HTMLedit_f.h"
+#include "HTMLhistory_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -153,20 +152,21 @@ Document                document;
 #endif
 {
   Element	        root, el, div;
-  Element		link, target;
+  Element		link, target, sibling;
   ElementType		elType;
   Attribute		HrefAttr, IntLinkAttr;
   Attribute             attr, ExtLinkAttr;
   AttributeType	        attrType;
-  char		       *text, *ptr, *url;
+  char		       *text, *ptr, *url, number[10];
   char                  value[MAX_LENGTH];
-  int			length, i;
-  int                   status;
+  int			length, i, volume;
+  int                   status, position;
   boolean               split;
 
   /* Remember the current status of the document */
   status = TtaIsDocumentModified (document);
   root = TtaGetMainRoot (document);
+  volume = TtaGetElementVolume (root);
   elType = TtaGetElementType (root);
   elType.ElTypeNum = HTML_EL_BODY;
   el = TtaSearchTypedElement (elType, SearchForward, root);
@@ -177,6 +177,25 @@ Document                document;
   link = el;
   while (link != NULL)
     {
+      /* display the progression of the work */
+      el = link;
+      position = 0;
+      while (el != NULL)
+	{
+	  sibling = el;
+	  do
+	    {
+	      /* add volume of each previous element */
+	      TtaPreviousSibling (&sibling);
+	      if (sibling != NULL)
+		position += TtaGetElementVolume (sibling);
+	    }
+	  while (sibling != NULL);
+	  el = TtaGetParent (el);
+	}
+      sprintf (number, "%d", position*100/volume);
+      TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_UPDATED_LINK), number);
+      TtaHandlePendingEvents ();
       link = TtaSearchTypedElement (elType, SearchForward, link);
       if (link != NULL)
 	/* an anchor has been found */
@@ -205,7 +224,7 @@ Document                document;
 	      TtaGiveTextAttributeValue (HrefAttr, text, &length);
 
 	      /* does an external link become an internal link ? */
-	      if (document == docBook && SubDocs != NULL)
+	      if (document == DocBook && SubDocs != NULL)
 		{
 		  ptr = strrchr (text, '#');
 		  url = text;
@@ -817,7 +836,7 @@ Document            document;
    AttributeType	attrType;
    int			length;
    char			*text, *ptr, *url;
-   Document		includedDocument, newdoc;
+   Document		newdoc;
 
    attrType.AttrSSchema = TtaGetDocumentSSchema (document);
    attrType.AttrTypeNum = HTML_ATTR_REL;
@@ -866,19 +885,20 @@ Document            document;
 	     /* this link designate an external document */
 	     {
 	       /* create a new document and loads the target document */
-	       includedDocument = TtaNewDocument ("HTML", "tmp");
+	       IncludedDocument = TtaNewDocument ("HTML", "tmp");
 	       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);
-	       newdoc = GetHTMLDocument (url, NULL, includedDocument,
+	       newdoc = GetHTMLDocument (url, NULL, IncludedDocument,
 					 document, CE_MAKEBOOK, FALSE);
 	       if (newdoc != 0 && newdoc != document)
 		 {
 		   /* it's not the document itself */
 		   /* copy the target document at the position of the link */
 		   MoveDocumentBody (&next, document, newdoc, ptr, url,
-				     newdoc == includedDocument);
+				     newdoc == IncludedDocument);
 		 }
-	       FreeDocumentResource (includedDocument);
-	       TtaCloseDocument (includedDocument);
+	       FreeDocumentResource (IncludedDocument);
+	       TtaCloseDocument (IncludedDocument);
+	       IncludedDocument = 0;
 	     }
 	     
 	   TtaFreeMemory (text);
@@ -905,9 +925,10 @@ View                view;
    Element	    root, body, el;
    ElementType	    elType;
 
-   docBook = document;
    /* stops all current transfers on this document */
-   StopTransfer (docBook, 1);
+   StopTransfer (document, 1);
+   /* simulate a transfert in the main document */
+   ActiveMakeBook (document);
    root = TtaGetMainRoot (document);
    elType = TtaGetElementType (root);
    elType.ElTypeNum = HTML_EL_BODY;
@@ -918,9 +939,9 @@ View                view;
    WinMakeBookFlag = TRUE;
 #endif /* _WINDOWS */
    el = body;
-   while (el != NULL)
+   while (el != NULL && DocBook == document)
       el = GetIncludedDocuments (el, document);
-   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+   ResetStop (document);
    /* update internal links */
    SetInternalLinks (document);
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)	&& defined (_WINDOWS)
@@ -929,5 +950,6 @@ View                view;
 #endif /* _WINDOWS */
    /* remove registered  sub-documents */
    FreeSubDocTable ();
-   docBook = 0;
+   DocBook = 0;
+   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 }
