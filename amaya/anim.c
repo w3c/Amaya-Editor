@@ -2979,7 +2979,7 @@ void ShowSourceOfTimeline (Document document, View view)
 	   TtaSetDocumentCharset (sourceDoc, charset, FALSE);
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
 	 StartParser (sourceDoc, tempdocument, documentname, tempdir,
-		      tempdocument, TRUE);
+		      tempdocument, TRUE, FALSE);
 	 SetWindowTitle (document, sourceDoc, 0);
 	 
 	 TtcSwitchButtonBar (sourceDoc, 1); 

@@ -611,7 +611,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype)
       /* Reparse the document to remove the errors */
       if (error)
 	{
-	  RestartParser (doc, tempdoc, tempdir, documentname);
+	  RestartParser (doc, tempdoc, tempdir, documentname, FALSE);
 	  TtaSetDocumentModified (doc);
 	  Synchronize (doc, view);
 	}

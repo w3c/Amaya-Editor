@@ -2440,12 +2440,39 @@ void UpdateDoctypeMenu (Document doc, ThotBool withDocType)
 	  /* allow to change the DocType:
 	     A confirmation will be requested if some attribues
 	     or elements may be lost */
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
-	  TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
-	  TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
+	  if (TtaGetDocumentProfile(doc) == L_Xhtml11)
+	    TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
+	  else
+	    TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
+
+	  if (TtaGetDocumentProfile(doc) == L_Transitional &&
+	      DocumentMeta[doc]->xmlformat == TRUE)
+	    TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
+	  else
+	    TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
+
+	  if (TtaGetDocumentProfile(doc) == L_Strict &&
+	      DocumentMeta[doc]->xmlformat == TRUE)
+	    TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
+	  else
+	    TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
+
+	  if (TtaGetDocumentProfile(doc) == L_Basic)
+	    TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
+	  else
+	    TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+
+	  if (TtaGetDocumentProfile(doc) == L_Transitional &&
+	      DocumentMeta[doc]->xmlformat != TRUE)
+	    TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
+	  else
+	    TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
+
+	  if (TtaGetDocumentProfile(doc) == L_Strict &&
+	      DocumentMeta[doc]->xmlformat != TRUE)
+	    TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
+	  else
+	    TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
 	}
       else
 	{
@@ -3273,7 +3300,7 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
     {
       plaintext = (DocumentTypes[doc] == docCSS ||
 		   DocumentTypes[doc] == docText);
-      StartParser (doc, localFile, documentname, s, localFile, plaintext);
+      StartParser (doc, localFile, documentname, s, localFile, plaintext, FALSE);
     }
   /* then request to save as XHTML */
   if (asHTML)
@@ -4007,7 +4034,7 @@ static Document LoadDocument (Document doc, char *pathname,
 			pathname, xmlDec, withDoctype, FALSE);
       else
 	StartParser (newdoc, localdoc, documentname, tempdir,
-		     pathname, plainText);
+		     pathname, plainText, FALSE);
       
       TtaFreeMemory (tempdir);
    
@@ -4479,7 +4506,7 @@ void ShowSource (Document document, View view)
 	   TtaSetDocumentCharset (sourceDoc, charset, FALSE);
 	 DocNetworkStatus[sourceDoc] = AMAYA_NET_INACTIVE;
 	 StartParser (sourceDoc, localFile, documentname, tempdir,
-		      localFile, TRUE);
+		      localFile, TRUE, FALSE);
 	 SetWindowTitle (document, sourceDoc, 0);
 	 /* Set the document read-only when needed */
 	 if (ReadOnlyDocument[document])

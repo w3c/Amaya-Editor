@@ -862,7 +862,7 @@ void SynchronizeAppliedStyle (NotifyElement *event)
 	if (TtaFileExist (fileName))
 	  TtaFileUnlink (fileName);
 	GenerateStyleListFileForElem (el, doc, fileName);
-	StartParser (i, fileName, "STYLE.LST", dirName, "STYLE.LST", TRUE);
+	StartParser (i, fileName, "STYLE.LST", dirName, "STYLE.LST", TRUE, FALSE);
         /* set the STYLE.LST document in read-only mode */
         TtaSetDocumentAccessMode (i, 0);
 	return;

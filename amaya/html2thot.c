@@ -6715,7 +6715,7 @@ void ParseExternalHTMLDoc (Document doc, FILE * infile,
   ------------------------------------------------------------------------------*/
 void StartParser (Document doc, char *fileName,
 		  char *documentName, char* documentDirectory,
-		  char *pathURL, ThotBool plainText)
+		  char *pathURL, ThotBool plainText, ThotBool external_doc)
 {
   DisplayMode     dispMode;
   CHARSET         charset;
@@ -6873,7 +6873,8 @@ void StartParser (Document doc, char *fileName,
 		}
 	      isHTML = TRUE;
 	    }
-	  LoadUserStyleSheet (doc);
+	  if (!external_doc )
+	    LoadUserStyleSheet (doc);
 #ifdef ANNOTATIONS
 	  if (DocumentTypes[doc] == docAnnot)
 	    rootElement = ANNOT_GetHTMLRoot (doc, FALSE); 
@@ -6942,9 +6943,12 @@ void StartParser (Document doc, char *fileName,
       if (!plainText)
 	OpenTemplateDocument (doc);
 
+      if (!external_doc)
       TtaSetDisplayMode (doc, dispMode);
+
       /* check the Thot abstract tree against the structure schema. */
       TtaSetStructureChecking (1, doc);
+
       DocumentSSchema = NULL;
     }
 

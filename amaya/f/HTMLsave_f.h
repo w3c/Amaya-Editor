@@ -29,7 +29,8 @@ extern ThotBool ParseWithNewDoctype ( Document doc,
 extern void RestartParser ( Document doc,
                             char *localFile,
                             char *tempdir,
-                            char *documentname );
+                            char *documentname,
+                            ThotBool show_errors );
 extern void RedisplaySourceFile ( Document doc );
 extern Document GetDocFromSource ( Document sourceDoc );
 extern void Synchronize ( Document doc,
@@ -70,7 +71,8 @@ extern ThotBool ParseWithNewDoctype ( Document doc,
 extern void RestartParser ( Document doc,
                               char *localFile,
                               char *tempdir,
-                              char *documentname );
+                              char *documentname,
+                              ThotBool show_errors );
 extern void RedisplaySourceFile ( Document doc );
 extern Document GetDocFromSource ( Document sourceDoc );
 extern void Synchronize ( Document doc,

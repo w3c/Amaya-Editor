@@ -1141,7 +1141,7 @@ ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
     StartXmlParser (ext_doc, localFile, documentname, tempdir,
 		    localFile, xmlDec, withDoctype, TRUE);
   else
-    StartParser (ext_doc, localFile, documentname, tempdir, localFile, FALSE);
+    StartParser (ext_doc, localFile, documentname, tempdir, localFile, FALSE, TRUE);
   
   /* Check parsing errors */
   if (ErrFile)
@@ -1177,7 +1177,7 @@ ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
    RestartParser
   ----------------------------------------------------------------------*/
 void RestartParser (Document doc, char *localFile,
-		    char *tempdir, char *documentname)
+		    char *tempdir, char *documentname, ThotBool show_errors)
 {
   CHARSET       charset, doc_charset;
   DocumentType  thotType;
@@ -1259,7 +1259,7 @@ void RestartParser (Document doc, char *localFile,
     StartXmlParser (doc, localFile, documentname, tempdir,
 		    localFile, xmlDec, withDoctype, FALSE);
   else
-    StartParser (doc, localFile, documentname, tempdir, localFile, FALSE);
+    StartParser (doc, localFile, documentname, tempdir, localFile, FALSE, FALSE);
 
   /* Activate the section numbering */
   if (DocumentTypes[doc] == docHTML && SNumbering[doc])
@@ -1280,8 +1280,8 @@ void RestartParser (Document doc, char *localFile,
 #endif /* _GL */
 
   /* check parsing errors */
-  /* A parametrer si on reparse apres un chgt de doctype */
-  CheckParsingErrors (doc);
+  if (show_errors)
+    CheckParsingErrors (doc);
 }
 
 /*----------------------------------------------------------------------
@@ -1311,7 +1311,7 @@ void RedisplaySourceFile (Document doc)
 	TtaExtractName (localFile, tempdir, documentname);
 	/* parse and display the new version of the source code */
 	StartParser (DocumentSource[doc], localFile, documentname, tempdir,
-		     localFile, TRUE);
+		     localFile, TRUE, FALSE);
 	/* Clear the document history because the document is reparsed */
 	TtaClearUndoHistory (DocumentSource[doc]);
 	TtaSetDocumentUnmodified (DocumentSource[doc]);
@@ -1971,7 +1971,7 @@ void Synchronize (Document doc, View view)
        else
 	 {
 	   TtaExtractName (tempdoc, tempdir, docname);
-	   RestartParser (doc, tempdoc, tempdir, docname);
+	   RestartParser (doc, tempdoc, tempdir, docname, TRUE);
 	}
      }
    else if (DocumentTypes[doc] == docSource)
@@ -1985,7 +1985,7 @@ void Synchronize (Document doc, View view)
 	   tempdoc = GetLocalPath (xmlDoc, DocumentURLs[xmlDoc]);
 	   TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
 	   TtaExtractName (tempdoc, tempdir, docname);
-	   RestartParser (xmlDoc, tempdoc, tempdir, docname);
+	   RestartParser (xmlDoc, tempdoc, tempdir, docname, TRUE);
 	   /* the other document is now different from the original file. It can
 	      be saved */
 	   TtaSetDocumentModified (otherDoc);
@@ -2008,7 +2008,7 @@ void Synchronize (Document doc, View view)
 	   TtaExtractName (tempdoc, tempdir, docname);
 #ifdef IV
 	   /* These lines update the text coloration but brake undo */
-	   StartParser (doc, tempdoc, docname, tempdir, tempdoc, TRUE);
+	   StartParser (doc, tempdoc, docname, tempdir, tempdoc, TRUE, FALSE);
 	   /* restore the current selection */
 	   GotoLine (doc, line, index, TRUE);
 	   /* Clear the document history because the document is reparsed */
@@ -2222,7 +2222,7 @@ void SaveDocument (Document doc, View view)
 
   if (TextFormat && DocumentTypes[doc] == docSource)
     {
-      StartParser (doc, localFile, documentname, tempdir, localFile, TRUE);
+      StartParser (doc, localFile, documentname, tempdir, localFile, TRUE, FALSE);
       /* restore the current selection */
       GotoLine (doc, line, index, TRUE);
       /* Clear the document history because the document is reparsed */
@@ -2246,7 +2246,7 @@ void SaveDocument (Document doc, View view)
        {
 	/* It's a source document. Reparse the corresponding HTML document */
 	 TtaExtractName (localFile, tempdir, documentname);
-	 RestartParser (xmlDoc, localFile, tempdir, documentname);
+	 RestartParser (xmlDoc, localFile, tempdir, documentname, TRUE);
 	 TtaSetDocumentUnmodified (xmlDoc);
 	 /* Synchronize selections */
 	 event.document = doc;
@@ -3506,7 +3506,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	   {
 	     /* It's a source document. Reparse the corresponding HTML document */
 	     TtaExtractName (documentFile, tempdir, documentname);
-	     RestartParser (xmlDoc, documentFile, tempdir, documentname);
+	     RestartParser (xmlDoc, documentFile, tempdir, documentname, TRUE);
 	     TtaSetDocumentUnmodified (xmlDoc);
 	     /* Synchronize selections */
 	     event.document = doc;

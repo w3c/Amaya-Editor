@@ -71,7 +71,8 @@ extern void StartParser ( Document doc,
                           char *documentName,
                           char* documentDirectory,
                           char *pathURL,
-                          ThotBool plainText );
+                          ThotBool plainText,
+                          ThotBool external_doc );
 
 #else /* __STDC__ */
 
@@ -140,7 +141,8 @@ extern void StartParser ( Document doc,
                             char *documentName,
                             char* documentDirectory,
                             char *pathURL,
-                            ThotBool plainText );
+                            ThotBool plainText,
+                            ThotBool external_doc );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
