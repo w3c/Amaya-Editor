@@ -1451,6 +1451,7 @@ void GL_DrawAll (ThotWidget widget, int frame)
 	     RedrawFrameBottom (frame, 0, NULL);
 	     glFinish ();
 	     gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
+	     saveBuffer (200, 400);
 	     if (GL_Err())
 	       g_print ("Bad drawing\n"); 
 	     GL_Drawing = FALSE;
@@ -1487,14 +1488,16 @@ void GL_DrawAll (ThotWidget widget, int frame)
 	}
 #endif /*_GTK*/ 
 }
+#define _PCLDEBUG
 void SetGlPipelineState ()
 {
-  if (strncmp ("Mesa", (char *)glGetString(GL_RENDERER), 4) == 0
-      || strncmp ("Microsoft", (char *)glGetString(GL_RENDERER), 8) == 0
-      || strncmp ("Sgi", (char *)glGetString(GL_RENDERER), 3) == 0)
-    Software_Mode = TRUE;
-  else
+ 
     Software_Mode = FALSE;
+    if (strncmp ("Mesa", (char *)glGetString (GL_RENDERER), 4) == 0
+	|| strncmp ("Microsoft", (char *)glGetString (GL_RENDERER), 8) == 0
+	|| strncmp ("Sgi", (char *)glGetString (GL_RENDERER), 3) == 0)
+      if (strncmp ("Mesa DRI", (char *)glGetString (GL_RENDERER), 8) != 0)
+	Software_Mode = TRUE;
 #ifdef _PCLDEBUG
   g_print ("\n%s", (Software_Mode)?"    Soft":"     Hard");
   /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
@@ -1654,7 +1657,14 @@ void GLResize (int width, int height, int x, int y)
   glLoadIdentity (); 
 }
 
-
+void glMatroxBUG (int frame, int x, int y, int width, int height)
+{
+  if (!Software_Mode)
+    {
+      DefRegion (frame, x, y, width+x, y+height);
+      RedrawFrameBottom (frame, 0, NULL);
+    }
+}
 /*****************************************************/
 /* TESTING */
 

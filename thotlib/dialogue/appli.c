@@ -627,8 +627,10 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
   int                 width;
   int                 height;
 
-  if (event->count > 0)
-    return TRUE;
+  /*
+    if (event->count > 0)
+      return TRUE;
+  */
   frame = (int )data;
   x = event->area.x;
   y = event->area.y;
@@ -638,8 +640,12 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
     return TRUE;
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return TRUE; 
-  gtk_gl_area_swapbuffers (GTK_GL_AREA (widget));
-return TRUE;
+  if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
+    {      
+      glMatroxBUG (frame, x, y, width, height);
+      gtk_gl_area_swapbuffers (GTK_GL_AREA (widget));
+    }
+  return TRUE;
 }
 /*----------------------------------------------------------------------
    FrameResizedGTK When user resize window
@@ -693,7 +699,7 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
   while (gtk_events_pending ()) 
      gtk_main_iteration ();
   UpdateScrollbars (frame);
-  return TRUE;  
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------

@@ -70,6 +70,9 @@ ThotBool GL_prepare (ThotWidget *widget);
 void GL_realize ();
 
 #ifdef _GTK
+
+void glMatroxBUG (int frame, int x, int y, int width, int height);
+
 gboolean GL_DrawCallback (ThotWidget widget, 
 			  GdkEventExpose *event, 
 			  gpointer data);
