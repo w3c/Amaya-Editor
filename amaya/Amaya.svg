@@ -302,8 +302,7 @@
     <desc></desc>
     <title></title>
     <metadata></metadata>
-    <image x="600" id="backgroundImage" xlink:href="fakeamaya.png">
-      <desc>Leading the Web to its full potential</desc>
+    <image x="600" id="backgroundImage" xlink:href="amaya.png">      <desc>Leading the Web to its full potential</desc>
     </image>
   </g>
 </svg>

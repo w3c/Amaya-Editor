@@ -173,7 +173,7 @@ HTStream           *AHTMemConv_new (HTRequest * request)
 
    reqcont = (AHTReqContext *) HTRequest_context (request);
 
-   if (reqcont->error_stream)
+   if (reqcont && reqcont->error_stream)
      {
 	HT_FREE (reqcont->error_stream);
 	reqcont->error_stream = NULL;
