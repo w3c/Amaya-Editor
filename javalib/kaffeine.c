@@ -34,11 +34,13 @@
 
 #include "debug_stubs_f.h"
 
-/*****
+/*
+#ifdef WITH_ILU
 #define DEBUG_SELECT
 #define DEBUG_SELECT_CHANNELS
 #define DEBUG_TIMING
- *****/
+#endif
+ */
 
 /* DEBUG_KAFFE    will print lot of debug messages                      */
 /* DEBUG_SELECT   will print debug messages on Select and Poll use      */
@@ -249,7 +251,11 @@ rerun_select:
 		 * No time-out at all enforce 25 msec...
 		 */
 		tm.tv_sec = 0;
+#ifdef DEBUG_SELECT_CHANNELS
+		tm.tv_usec = 250000;
+#else
 		tm.tv_usec = 25000;
+#endif
 		use_extra_timer = 0;
 	    }
 	} else {
@@ -290,6 +296,7 @@ rerun_select:
      * Merge the file descriptors with clients one, if any.
      */
     createChannelMasks(&n, readfds, writefds);
+    if (n < nb) while (1);
 
 
 #ifdef DEBUG_SELECT_CHANNELS
@@ -313,12 +320,7 @@ rerun_select:
      * Do the select on the merged channels descriptors and timeouts.
      */
     NbJavaSelect++;
-    if (((DoJavaSelectPoll) && (BreakJavaSelectPoll)) ||
-        (timeout != NULL))
-       res = select(n, readfds, writefds, exceptfds, &tm);
-    else {
-       res = select(n, readfds, writefds, exceptfds, NULL);
-    }
+    res = select(n, readfds, writefds, exceptfds, &tm);
 
     /*
      * Update the timeout return, if any ...
