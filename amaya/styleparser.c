@@ -4463,8 +4463,10 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      if (attrType.AttrSSchema == NULL)
 		/* cannot apply these CSS rules */
 		DoApply = FALSE;
-	      else
+	      else if (elType.ElSSchema)
 		ctxt->schema = elType.ElSSchema;
+	      else
+		ctxt->schema = attrType.AttrSSchema;
 	    }
 	  /* check the attribute type */
 	  if (!strcmp (schemaName, "HTML"))
