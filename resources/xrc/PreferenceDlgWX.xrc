@@ -3,13 +3,13 @@
   <object class="wxDialog" name="PreferenceDlgWX">
     <title>PreferenceDlgWX</title>
     <centered>1</centered>
-    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxNO_3D</style>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxRESIZE_BORDER|wxNO_3D|wxTAB_TRAVERSAL|wxCLIP_CHILDREN</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
         <object class="wxNotebook" name="wxID_NOTEBOOK">
           <object class="notebookpage">
-            <label>GENERAL</label>
+            <label>Configuration generale</label>
             <object class="wxPanel" name="wxID_PAGE_GENERAL">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -29,6 +29,7 @@
                     <object class="sizeritem">
                       <object class="wxComboBox" name="wxID_COMBOBOX_HOMEPAGE">
                         <content/>
+                        <focused>1</focused>
                       </object>
                       <option>1</option>
                       <flag>wxALL|wxEXPAND</flag>
@@ -141,36 +142,49 @@
                           <object class="wxCheckBox" name="wxID_CHECK_CCLINE">
                             <label>Activer le coller ligne a ligne</label>
                           </object>
+                          <option>1</option>
+                          <flag>wxALL|wxEXPAND</flag>
                         </object>
                         <object class="sizeritem">
                           <object class="wxCheckBox" name="wxID_CHECK_BACKUP">
                             <label>Produire des fichiers de sauvegarde</label>
                           </object>
+                          <option>1</option>
+                          <flag>wxEXPAND</flag>
                         </object>
                         <object class="sizeritem">
                           <object class="wxCheckBox" name="wxID_CHECK_SAVEGEO">
                             <label>Sauver la geometrie en quittant</label>
                           </object>
+                          <option>1</option>
                         </object>
                         <object class="sizeritem">
                           <object class="wxCheckBox" name="wxID_CHECK_SHOWBUTTONS">
                             <label>Montrer boutons</label>
                           </object>
+                          <option>1</option>
+                          <flag>wxALL|wxEXPAND</flag>
                         </object>
                         <object class="sizeritem">
                           <object class="wxCheckBox" name="wxID_CHECK_SHOWADDR">
                             <label>Montrer adresse</label>
                           </object>
+                          <option>1</option>
+                          <flag>wxALL|wxEXPAND</flag>
                         </object>
                         <object class="sizeritem">
                           <object class="wxCheckBox" name="wxID_CHECK_SHOWTARGETS">
                             <label>Montrer les cibles</label>
                           </object>
+                          <option>1</option>
+                          <flag>wxALL|wxEXPAND</flag>
                         </object>
                         <object class="sizeritem">
                           <object class="wxCheckBox" name="wxID_CHECK_NBSECTIONS">
                             <label>Numeroter les sections</label>
                           </object>
+                          <option>1</option>
+                          <flag>wxALL|wxEXPAND</flag>
                         </object>
                       </object>
                       <option>1</option>
@@ -198,12 +212,13 @@
                   <border>10</border>
                 </object>
               </object>
-              <style></style>
+              <style>wxTAB_TRAVERSAL</style>
+              <focused>1</focused>
             </object>
             <selected>1</selected>
           </object>
           <object class="notebookpage">
-            <label>BROWSE</label>
+            <label>Configuration de navigation</label>
             <object class="wxPanel" name="wxID_PAGE_BROWSE">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -213,6 +228,7 @@
                     <object class="sizeritem">
                       <object class="wxCheckBox" name="wxID_CHECK_LOADIMG">
                         <label>Charger les images (img)</label>
+                        <focused>1</focused>
                       </object>
                     </object>
                     <object class="sizeritem">
@@ -276,11 +292,12 @@
                   <border>10</border>
                 </object>
               </object>
+              <style>wxTAB_TRAVERSAL</style>
+              <focused>1</focused>
             </object>
           </object>
-          <usenotebooksizer>1</usenotebooksizer>
           <object class="notebookpage">
-            <label>PUBLISH</label>
+            <label>Configuration de la publication</label>
             <object class="wxPanel" name="wxID_PAGE_PUBLISH">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -304,6 +321,7 @@
                           <item>iso-8859-1</item>
                           <item>utf-8</item>
                         </content>
+                        <focused>1</focused>
                       </object>
                     </object>
                   </object>
@@ -330,7 +348,6 @@
                       </object>
                     </object>
                   </object>
-                  <option>0</option>
                   <flag>wxALL|wxEXPAND</flag>
                   <border>10</border>
                 </object>
@@ -379,10 +396,11 @@
                   <border>10</border>
                 </object>
               </object>
+              <focused>1</focused>
             </object>
           </object>
           <object class="notebookpage">
-            <label>CACHE</label>
+            <label>Configuration du cache</label>
             <object class="wxPanel" name="wxID_PAGE_CACHE">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -392,6 +410,7 @@
                     <object class="sizeritem">
                       <object class="wxCheckBox" name="wxID_CHECK_ENABLECACHE">
                         <label>Activer le cache</label>
+                        <focused>1</focused>
                       </object>
                     </object>
                     <object class="sizeritem">
@@ -509,10 +528,11 @@
                   <border>10</border>
                 </object>
               </object>
+              <focused>1</focused>
             </object>
           </object>
           <object class="notebookpage">
-            <label>PROXY</label>
+            <label>Configuration du proxy</label>
             <object class="wxPanel" name="wxID_PAGE_PROXY">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -527,7 +547,9 @@
                       <flag>wxALL|wxEXPAND</flag>
                     </object>
                     <object class="sizeritem">
-                      <object class="wxTextCtrl" name="wxID_VALUE_PROXYHTTP"/>
+                      <object class="wxTextCtrl" name="wxID_VALUE_PROXYHTTP">
+                        <focused>1</focused>
+                      </object>
                       <option>0</option>
                       <flag>wxALL|wxEXPAND</flag>
                     </object>
@@ -577,10 +599,11 @@
                   <border>10</border>
                 </object>
               </object>
+              <focused>1</focused>
             </object>
           </object>
           <object class="notebookpage">
-            <label>COLOR</label>
+            <label>Configuration des couleurs</label>
             <object class="wxPanel" name="wxID_PAGE_COLOR">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
@@ -603,6 +626,7 @@
                           <item>Red</item>
                         </content>
                         <style>wxCB_READONLY</style>
+                        <focused>1</focused>
                       </object>
                       <flag>wxEXPAND</flag>
                     </object>
@@ -701,9 +725,51 @@
                   <border>10</border>
                 </object>
               </object>
+              <focused>1</focused>
             </object>
           </object>
+          <object class="notebookpage">
+            <label>Configuration de la geometrie</label>
+            <object class="wxPanel" name="wxID_PAGE_GEOMETRY">
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxStaticText" name="wxID_LABEL_GEOMCHG">
+                    <label>Ces changements seront effectifs lors de l ouverture d une fenetre</label>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxButton" name="wxID_BUTTON_GEOMSAVE">
+                        <label>Sauver la geometrie courante</label>
+                        <focused>1</focused>
+                      </object>
+                    </object>
+                    <object class="spacer">
+                      <size>20,0</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxButton" name="wxID_BUTTON_GEOMRESTOR">
+                        <label>Restaurer la geometrie default</label>
+                      </object>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+              </object>
+              <focused>1</focused>
+            </object>
+          </object>
+          <size>750,350</size>
           <style>wxNB_LEFT</style>
+          <focused>1</focused>
         </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
@@ -744,5 +810,6 @@
         <border>5</border>
       </object>
     </object>
+    <focused>1</focused>
   </object>
 </resource>

@@ -23,6 +23,9 @@
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
+
+  EVT_NOTEBOOK_PAGE_CHANGED( XRCID("wxID_NOTEBOOK"), PreferenceDlgWX::OnPageChanged )
+
   EVT_BUTTON(     XRCID("wxID_OK"),           PreferenceDlgWX::OnOk )
   EVT_BUTTON(     XRCID("wxID_DEFAULT"),      PreferenceDlgWX::OnDefault )
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       PreferenceDlgWX::OnCancel )
@@ -43,6 +46,10 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_TEXT( XRCID("wxID_COMBO_SELCOLOR"),        PreferenceDlgWX::OnColorTextChanged )
   EVT_TEXT( XRCID("wxID_COMBO_BACKCOLOR"),       PreferenceDlgWX::OnColorTextChanged )
   EVT_TEXT( XRCID("wxID_COMBO_TEXTCOLOR"),       PreferenceDlgWX::OnColorTextChanged )
+
+  // Geometry tab callbacks
+  EVT_BUTTON( XRCID("wxID_BUTTON_GEOMSAVE"),    PreferenceDlgWX::OnGeomSave )
+  EVT_BUTTON( XRCID("wxID_BUTTON_GEOMRESTOR"),  PreferenceDlgWX::OnGeomRestor )
   
 END_EVENT_TABLE()
 
@@ -76,6 +83,7 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupLabelDialog_Cache();
   SetupLabelDialog_Proxy();
   SetupLabelDialog_Color();
+  SetupLabelDialog_Geometry();
 
   XRCCTRL(*this, "wxID_OK",      wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_APPLY_BUTTON)));
   XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL)) );
@@ -129,6 +137,35 @@ int PreferenceDlgWX::GetPagePosFromXMLID( const wxString & xml_id )
     return page_id;
   else
     return -1;
+}
+
+void PreferenceDlgWX::OnPageChanged( wxNotebookEvent& event )
+{
+  wxLogDebug( _T("PreferenceDlgWX::OnPageChanged : old=%d, new=%d"),
+              event.GetOldSelection(),
+              event.GetSelection() );
+
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  wxPanel * p_new_page = (wxPanel *)p_notebook->GetPage(event.GetSelection());
+  wxPanel * p_old_page = (wxPanel *)p_notebook->GetPage(event.GetOldSelection());
+
+  int page_id_geom = wxXmlResource::GetXRCID(_T("wxID_PAGE_GEOMETRY"));
+
+  if ( p_old_page->GetId() == page_id_geom )
+    {
+      // the old page was Geometry => restore the bottom buttons (ok, default)
+      XRCCTRL(*this, "wxID_OK",      wxButton)->Show();
+      XRCCTRL(*this, "wxID_DEFAULT", wxButton)->Show();
+    }
+
+  if ( p_new_page->GetId() == page_id_geom )
+    {
+      // the new page is Geometry => hide the bottom buttons (ok, default)
+      XRCCTRL(*this, "wxID_OK",      wxButton)->Hide();
+      XRCCTRL(*this, "wxID_DEFAULT", wxButton)->Hide();
+    }
+
+  event.Skip();
 }
 
 /************************************************************************/
@@ -772,6 +809,56 @@ void PreferenceDlgWX::OnColorTextChanged( wxCommandEvent& event )
   event.Skip();
 }
 
+/************************************************************************/
+/* Geometry tab                                                         */
+/************************************************************************/
+
+/*----------------------------------------------------------------------
+  SetupLabelDialog_Geometry init labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupLabelDialog_Geometry()
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Geometry") );
+
+  // Setup notebook tab names :
+  
+  int page_id;
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_GEOMETRY") );
+  if (page_id >= 0)
+    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GEOMETRY_MENU)) );
+
+  
+  XRCCTRL(*this, "wxID_LABEL_GEOMCHG",     wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GEOMETRY_CHANGE)) );
+  XRCCTRL(*this, "wxID_BUTTON_GEOMSAVE",   wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SAVE_GEOMETRY)) );
+  XRCCTRL(*this, "wxID_BUTTON_GEOMRESTOR", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_RESTORE_GEOMETRY)) );
+  
+}
+
+/*----------------------------------------------------------------------
+  OnGeomSave is called when the user click on the save geom button
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnGeomSave( wxCommandEvent& event )
+{
+  wxLogDebug( _T("PreferenceDlgWX::OnGeomSave") );
+  ThotCallback (GetPrefGeometryBase() + GeometryMenu, INTEGER_DATA, (char*) 1);
+}
+
+/*----------------------------------------------------------------------
+  OnGeomSave is called when the user click on the geom restor button
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnGeomRestor( wxCommandEvent& event )
+{
+  wxLogDebug( _T("PreferenceDlgWX::OnGeomRestor") );
+  ThotCallback (GetPrefGeometryBase() + GeometryMenu, INTEGER_DATA, (char*) 2);
+}
+
 /*----------------------------------------------------------------------
   OnOk called when the user validates his selection
   params:
@@ -850,6 +937,9 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
       ThotCallback (GetPrefColorBase() + ColorMenu, INTEGER_DATA, (char*) 2);
       SetupDialog_Color( GetProp_Color() );
     }
+  else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_GEOMETRY")) )
+    {
+    }
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 2);
 }
@@ -867,6 +957,7 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
   ThotCallback (GetPrefCacheBase() + CacheMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefProxyBase() + ProxyMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefColorBase() + ColorMenu, INTEGER_DATA, (char*) 0);
+  ThotCallback (GetPrefGeometryBase() + GeometryMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 

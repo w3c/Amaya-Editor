@@ -6,9 +6,9 @@
 //-----------------------------------------------------------------------------
 // Headers
 //-----------------------------------------------------------------------------
+#include "wx/notebook.h"
 #include "AmayaDialog.h"
 #include "MENUconf.h"
-
 //-----------------------------------------------------------------------------
 // Class definition: HRefDlgWX
 //-----------------------------------------------------------------------------
@@ -62,11 +62,17 @@ private:
   void OnColorChanged( wxCommandEvent& event );
   void OnColorTextChanged( wxCommandEvent& event );
 
+  // "Geometryr" tab
+  void SetupLabelDialog_Geometry();
+  void OnGeomSave( wxCommandEvent& event );
+  void OnGeomRestor( wxCommandEvent& event );
+
   int GetPagePosFromXMLID( const wxString & xml_id );
 
   void OnOk( wxCommandEvent& event );
   void OnCancel( wxCommandEvent& event );
   void OnDefault( wxCommandEvent& event );
+  void OnPageChanged( wxNotebookEvent& event );
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()

@@ -5268,6 +5268,9 @@ void PreferenceMenu (Document document, View view)
   /* ---> Color Tab */   
   GetColorConf (); /* load and display the current values */
 
+  /* ---> Geometry Tab */   
+  GeometryDoc = document;
+
   ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
 					     TtaGetViewFrame (document, view),
 					     URL_list );
