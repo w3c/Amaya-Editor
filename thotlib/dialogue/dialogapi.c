@@ -1265,7 +1265,9 @@ void                MyWarningHandler ()
    app_context: contient au retour l'identification du contexte d'application.
    display:  contient au retour l'identification de l'e'cran.
   ----------------------------------------------------------------------*/
-#ifdef WWW_XWINDOWS
+#ifdef _WINDOWS
+void                TtaInitDialogueWindows (char *server, char *txtOK, char *txtRAZ, char *txtDone)
+#else  /* _WINDOWS */
 #ifdef __STDC__
 void                TtaInitDialogue (char *server, char *txtOK, char *txtRAZ, char *txtDone, XtAppContext * app_context, Display ** Dp)
 
@@ -1279,8 +1281,6 @@ XtAppContext       *app_context;
 Display           **Dp;
 
 #endif /* __STDC__ */
-#else  /* WWW_XWINDOWS */
-void                TtaInitDialogueWindows (char *server, char *txtOK, char *txtRAZ, char *txtDone)
 #endif				/* !WWW_XWINDOWS */
 {
    int                 n;

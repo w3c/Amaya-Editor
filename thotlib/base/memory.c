@@ -358,28 +358,31 @@ PtrTextBuffer      *pBT;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer       pBu1;
+   PtrTextBuffer       pBuf;
 
    if (PtFree_TextBuff == NULL)
      {
 	/* pas de buffer dans la chaine des libres, acquiert un nouveau buffer */
-	*pBT = (PtrTextBuffer) TtaGetMemory (sizeof (TextBuffer));
+	pBuf = (PtrTextBuffer) TtaGetMemory (sizeof (TextBuffer));
      }
    else
      {
 	/* recupere un buffer en tete de la chaine des libres */
-	*pBT = PtFree_TextBuff;
-	PtFree_TextBuff = (*pBT)->BuNext;
+	pBuf = PtFree_TextBuff;
+	PtFree_TextBuff = pBuf->BuNext;
 	NbFree_TextBuff--;
      }
    NbUsed_TextBuff++;
    /* initialise le buffer */
-   pBu1 = *pBT;
-   memset (pBu1, 0, sizeof (TextBuffer));
-   pBu1->BuNext = NULL;
-   pBu1->BuPrevious = NULL;
-   pBu1->BuLength = 0;
-   pBu1->BuContent[0] = '\0';
+   *pBT = pBuf;
+   if (pBuf)
+     {
+       memset (pBuf, 0, sizeof (TextBuffer));
+       pBuf->BuNext = NULL;
+       pBuf->BuPrevious = NULL;
+       pBuf->BuLength = 0;
+       pBuf->BuContent[0] = '\0';
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -416,43 +419,46 @@ PtrElement         *pEl;
 #endif /* __STDC__ */
 {
    int                 i;
-   PtrElement          pEl1;
+   PtrElement          pNewEl;
 
 
    if (PtFree_Element == NULL)
-      *pEl = (PtrElement) TtaGetMemory (sizeof (ElementDescr));
+      pNewEl = (PtrElement) TtaGetMemory (sizeof (ElementDescr));
    else
      {
-	*pEl = PtFree_Element;
-	PtFree_Element = (*pEl)->ElNext;
+	pNewEl = PtFree_Element;
+	PtFree_Element = pNewEl->ElNext;
 	NbFree_Element--;
      }
    NbUsed_Element++;
-   pEl1 = *pEl;
-   memset (pEl1, 0, sizeof (ElementDescr));
-   pEl1->ElStructSchema = NULL;
-   pEl1->ElTypeNumber = 0;
-   pEl1->ElAssocNum = 0;
-   pEl1->ElFirstAttr = NULL;
-   pEl1->ElVolume = 0;
-   pEl1->ElCopyDescr = NULL;
-   pEl1->ElFirstPRule = NULL;
-   pEl1->ElComment = NULL;
-   for (i = 1; i <= MAX_VIEW_DOC; i++)
-      pEl1->ElAbstractBox[i - 1] = NULL;
-   pEl1->ElParent = NULL;
-   pEl1->ElPrevious = NULL;
-   pEl1->ElNext = NULL;
-   pEl1->ElReferredDescr = NULL;
-   pEl1->ElIsCopy = FALSE;
-   pEl1->ElSource = NULL;
-   pEl1->ElHolophrast = FALSE;
-   pEl1->ElAccess = AccessInherited;
-   pEl1->ElTransContent = FALSE;
-   pEl1->ElTransAttr = FALSE;
-   pEl1->ElTransPres = FALSE;
-   pEl1->ElTerminal = FALSE;
-   pEl1->ElFirstChild = NULL;
+   *pEl = pNewEl;
+   if (pNewEl)
+     {
+       memset (pNewEl, 0, sizeof (ElementDescr));
+       pNewEl->ElStructSchema = NULL;
+       pNewEl->ElTypeNumber = 0;
+       pNewEl->ElAssocNum = 0;
+       pNewEl->ElFirstAttr = NULL;
+       pNewEl->ElVolume = 0;
+       pNewEl->ElCopyDescr = NULL;
+       pNewEl->ElFirstPRule = NULL;
+       pNewEl->ElComment = NULL;
+       for (i = 1; i <= MAX_VIEW_DOC; i++)
+	 pNewEl->ElAbstractBox[i - 1] = NULL;
+       pNewEl->ElParent = NULL;
+       pNewEl->ElPrevious = NULL;
+       pNewEl->ElNext = NULL;
+       pNewEl->ElReferredDescr = NULL;
+       pNewEl->ElIsCopy = FALSE;
+       pNewEl->ElSource = NULL;
+       pNewEl->ElHolophrast = FALSE;
+       pNewEl->ElAccess = AccessInherited;
+       pNewEl->ElTransContent = FALSE;
+       pNewEl->ElTransAttr = FALSE;
+       pNewEl->ElTransPres = FALSE;
+       pNewEl->ElTerminal = FALSE;
+       pNewEl->ElFirstChild = NULL;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -484,26 +490,29 @@ PtrAttribute       *pAttr;
 
 #endif /* __STDC__ */
 {
-   PtrAttribute        pAt1;
+   PtrAttribute        pNewAttr;
 
 
    if (PtFree_Attr == NULL)
-      *pAttr = (PtrAttribute) TtaGetMemory (sizeof (TtAttribute));
+      pNewAttr = (PtrAttribute) TtaGetMemory (sizeof (TtAttribute));
    else
      {
-	*pAttr = PtFree_Attr;
-	PtFree_Attr = (*pAttr)->AeNext;
+	pNewAttr = PtFree_Attr;
+	PtFree_Attr = pNewAttr->AeNext;
 	NbFree_Attr--;
      }
    NbUsed_Attr++;
-   pAt1 = *pAttr;
-   memset (pAt1, 0, sizeof (TtAttribute));
-   pAt1->AeNext = NULL;
-   pAt1->AeAttrSSchema = NULL;
-   pAt1->AeAttrNum = 0;
-   pAt1->AeAttrType = AtEnumAttr;
-   pAt1->AeAttrValue = 0;
-   pAt1->AeDefAttr = FALSE;
+   *pAttr = pNewAttr;
+   if (pNewAttr)
+     {
+       memset (pNewAttr, 0, sizeof (TtAttribute));
+       pNewAttr->AeNext = NULL;
+       pNewAttr->AeAttrSSchema = NULL;
+       pNewAttr->AeAttrNum = 0;
+       pNewAttr->AeAttrType = AtEnumAttr;
+       pNewAttr->AeAttrValue = 0;
+       pNewAttr->AeDefAttr = FALSE;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -527,51 +536,47 @@ PtrAttribute        pAttr;
 /*----------------------------------------------------------------------
    GetReferredDescr alloue un descripteur de reference.            
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetReferredDescr (PtrReferredDescr * pDR)
-
 #else  /* __STDC__ */
 void                GetReferredDescr (pDR)
 PtrReferredDescr   *pDR;
-
 #endif /* __STDC__ */
 
 {
-   PtrReferredDescr    pDe1;
-
+   PtrReferredDescr    pNewDR;
 
    if (PtFree_DescRef == NULL)
-      *pDR = (PtrReferredDescr) TtaGetMemory (sizeof (ReferredElemDescriptor));
+      pNewDR = (PtrReferredDescr) TtaGetMemory (sizeof (ReferredElemDescriptor));
    else
      {
-	*pDR = PtFree_DescRef;
-	PtFree_DescRef = (*pDR)->ReNext;
+	pNewDR = PtFree_DescRef;
+	PtFree_DescRef = pNewDR->ReNext;
 	NbFree_DescRef--;
      }
    NbUsed_DescRef++;
-   pDe1 = *pDR;
-   memset (pDe1, 0, sizeof (ReferredElemDescriptor));
-   pDe1->ReFirstReference = NULL;
-   pDe1->ReExtDocRef = NULL;
-   pDe1->RePrevious = NULL;
-   pDe1->ReNext = NULL;
-   pDe1->ReReferredLabel[0] = '\0';
-   pDe1->ReExternalRef = FALSE;
-   pDe1->ReReferredElem = NULL;
+   *pDR = pNewDR;
+   if (pNewDR)
+     {
+       memset (pNewDR, 0, sizeof (ReferredElemDescriptor));
+       pNewDR->ReFirstReference = NULL;
+       pNewDR->ReExtDocRef = NULL;
+       pNewDR->RePrevious = NULL;
+       pNewDR->ReNext = NULL;
+       pNewDR->ReReferredLabel[0] = '\0';
+       pNewDR->ReExternalRef = FALSE;
+       pNewDR->ReReferredElem = NULL;
+     }
 }
 
 /*----------------------------------------------------------------------
    FreeReferredDescr libere un descripteur de reference.           
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeReferredDescr (PtrReferredDescr pDR)
-
 #else  /* __STDC__ */
 void                FreeReferredDescr (pDR)
 PtrReferredDescr    pDR;
-
 #endif /* __STDC__ */
 
 {
@@ -585,41 +590,40 @@ PtrReferredDescr    pDR;
 /*----------------------------------------------------------------------
    GetDescCopy alloue un descripteur de copie.                     
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetDescCopy (PtrCopyDescr * pDC)
-
 #else  /* __STDC__ */
 void                GetDescCopy (pDC)
 PtrCopyDescr       *pDC;
-
 #endif /* __STDC__ */
 
 {
-   PtrCopyDescr        pDe1;
+   PtrCopyDescr        pNewDC;
 
    if (PtFree_DescCopy == NULL)
-      *pDC = (PtrCopyDescr) TtaGetMemory (sizeof (CopyDescriptor));
+      pNewDC = (PtrCopyDescr) TtaGetMemory (sizeof (CopyDescriptor));
    else
      {
-	*pDC = PtFree_DescCopy;
-	PtFree_DescCopy = (*pDC)->CdNext;
+	pNewDC = PtFree_DescCopy;
+	PtFree_DescCopy = pNewDC->CdNext;
 	NbFree_DescCopy--;
      }
    NbUsed_DescCopy++;
-   pDe1 = *pDC;
-   memset (pDe1, 0, sizeof (CopyDescriptor));
-   pDe1->CdCopiedAb = NULL;
-   pDe1->CdCopiedElem = NULL;
-   pDe1->CdCopyRule = NULL;
-   pDe1->CdPrevious = NULL;
-   pDe1->CdNext = NULL;
+   *pDC = pNewDC;
+   if (pNewDC)
+     {
+       memset (pNewDC, 0, sizeof (CopyDescriptor));
+       pNewDC->CdCopiedAb = NULL;
+       pNewDC->CdCopiedElem = NULL;
+       pNewDC->CdCopyRule = NULL;
+       pNewDC->CdPrevious = NULL;
+       pNewDC->CdNext = NULL;
+     }
 }
 
 /*----------------------------------------------------------------------
    FreeDescCopy libere un descripteur de copie.                    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                FreeDescCopy (PtrCopyDescr pDC)
 
@@ -639,33 +643,33 @@ PtrCopyDescr        pDC;
 /*----------------------------------------------------------------------
    GetExternalDoc alloue un descripteur de document externe.       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetExternalDoc (PtrExternalDoc * pDE)
-
 #else  /* __STDC__ */
 void                GetExternalDoc (pDE)
 PtrExternalDoc     *pDE;
-
 #endif /* __STDC__ */
 
 {
-   PtrExternalDoc      pDo1;
+   PtrExternalDoc      pNewDE;
 
 
    if (PtFree_ExternalDoc == NULL)
-      *pDE = (PtrExternalDoc) TtaGetMemory (sizeof (ExternalDoc));
+      pNewDE = (PtrExternalDoc) TtaGetMemory (sizeof (ExternalDoc));
    else
      {
-	*pDE = PtFree_ExternalDoc;
-	PtFree_ExternalDoc = (*pDE)->EdNext;
+	pNewDE = PtFree_ExternalDoc;
+	PtFree_ExternalDoc = pNewDE->EdNext;
 	NbFree_ExternalDoc--;
      }
    NbUsed_ExternalDoc++;
-   pDo1 = *pDE;
-   memset (pDo1, 0, sizeof (ExternalDoc));
-   pDo1->EdNext = NULL;
-   ClearDocIdent (&pDo1->EdDocIdent);
+   *pDE = pNewDE;
+   if (pNewDE)
+     {
+       memset (pNewDE, 0, sizeof (ExternalDoc));
+       pNewDE->EdNext = NULL;
+       ClearDocIdent (&pNewDE->EdDocIdent);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -692,37 +696,37 @@ PtrExternalDoc      pDE;
 /*----------------------------------------------------------------------
    GetReference alloue une reference.                              
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                GetReference (PtrReference * pRef)
-
 #else  /* __STDC__ */
 void                GetReference (pRef)
 PtrReference       *pRef;
-
 #endif /* __STDC__ */
 
 {
-   PtrReference        pPR1;
+   PtrReference        pNewRef;
 
    if (PtFree_Reference == NULL)
-      *pRef = (PtrReference) TtaGetMemory (sizeof (ReferenceDescriptor));
+      pNewRef = (PtrReference) TtaGetMemory (sizeof (ReferenceDescriptor));
    else
      {
-	*pRef = PtFree_Reference;
-	PtFree_Reference = (*pRef)->RdNext;
+	pNewRef = PtFree_Reference;
+	PtFree_Reference = pNewRef->RdNext;
 	NbFree_Reference--;
      }
    NbUsed_Reference++;
-   pPR1 = *pRef;
-   memset (pPR1, 0, sizeof (ReferenceDescriptor));
-   pPR1->RdNext = NULL;
-   pPR1->RdPrevious = NULL;
-   pPR1->RdReferred = NULL;
-   pPR1->RdElement = NULL;
-   pPR1->RdAttribute = NULL;
-   pPR1->RdTypeRef = RefFollow;
-   pPR1->RdInternalRef = TRUE;
+   *pRef = pNewRef;
+   if (pNewRef)
+     {
+       memset (pNewRef, 0, sizeof (ReferenceDescriptor));
+       pNewRef->RdNext = NULL;
+       pNewRef->RdPrevious = NULL;
+       pNewRef->RdReferred = NULL;
+       pNewRef->RdElement = NULL;
+       pNewRef->RdAttribute = NULL;
+       pNewRef->RdTypeRef = RefFollow;
+       pNewRef->RdInternalRef = TRUE;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -983,17 +987,20 @@ PtrAbstractBox     *pAb;
      }
    NbUsed_AbsBox++;
    *pAb = pNewAb;
-   memset (pNewAb, 0, sizeof (AbstractBox));
-   pNewAb->AbElement = NULL;
-   pNewAb->AbEnclosing = NULL;
-   pNewAb->AbPrevious = NULL;
-   pNewAb->AbNext = NULL;
-   pNewAb->AbFirstEnclosed = NULL;
-   pNewAb->AbVolume = 0;
-   pNewAb->AbNextRepeated = NULL;
-   pNewAb->AbPreviousRepeated = NULL;
-   pNewAb->AbCopyDescr = NULL;
-   pNewAb->AbCreatorAttr = NULL;
+   if (pNewAb)
+     {
+       memset (pNewAb, 0, sizeof (AbstractBox));
+       pNewAb->AbElement = NULL;
+       pNewAb->AbEnclosing = NULL;
+       pNewAb->AbPrevious = NULL;
+       pNewAb->AbNext = NULL;
+       pNewAb->AbFirstEnclosed = NULL;
+       pNewAb->AbVolume = 0;
+       pNewAb->AbNextRepeated = NULL;
+       pNewAb->AbPreviousRepeated = NULL;
+       pNewAb->AbCopyDescr = NULL;
+       pNewAb->AbCreatorAttr = NULL;
+     }
 }
 
 /*----------------------------------------------------------------------

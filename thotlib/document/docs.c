@@ -887,6 +887,7 @@ boolean             move;
    int                 i;
    boolean             sameFile, status, ok;
 
+   CloseInsertion ();
    notifyDoc.event = TteDocSave;
    notifyDoc.document = (Document) IdentDocument (pDoc);
    notifyDoc.view = 0;
@@ -1090,7 +1091,6 @@ boolean             ask;
    - mode = 3 : fichier de sauvegarde urgente (.SAV)       
    - mode = 4 : sauve sans demander de nom.                
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             WriteDocument (PtrDocument pDoc, int mode)
 

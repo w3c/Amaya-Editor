@@ -28,12 +28,13 @@
 #define EXPORT extern
 #include "boxes_tv.h"
 
+#include "absboxes_f.h"
 #include "appli_f.h"
+#include "boxselection_f.h"
+#include "frame_f.h"
+#include "structselect_f.h"
 #include "textcommands_f.h"
 #include "windowdisplay_f.h"
-#include "absboxes_f.h"
-#include "boxselection_f.h"
-#include "structselect_f.h"
 
 
 /*----------------------------------------------------------------------

@@ -82,20 +82,13 @@ static const SockOps ExceptBits = FD_OOB;
   -------------------------------------------------------------------*/
 
 #ifdef __STDC__
-XtInputCallbackProc AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
+void *AHTCallback_bridge (caddr_t cd, int *s, XtInputId * id)
 #else
-XtInputCallbackProc AHTCallback_bridge (cd, s, id)
+void *AHTCallback_bridge (cd, s, id)
 caddr_t             cd;
 int                *s;
 XtInputId          *id;
 #endif /* __STDC__ */
-/** JK: 26/Dec/96: Took out this code as Cextract has problems to
-generate a prototype when there are 2 imbricated ifdefs. ***/
-#ifdef 0
-/* Windows prototype */
-/* some winproc someday? */
-LONG                AHTCallback_bridge (caddr_t cd, int *s)
-#endif				/* !WWW_XWINDOWS */
 {
    int                 status;  /* the status result of the libwwww call */
    HTRequest          *rqp = NULL;

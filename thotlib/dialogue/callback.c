@@ -202,6 +202,7 @@ boolean             pre;
 	    case TteElemRead:
 	    case TteElemInclude:
 	    case TteElemMenu:
+	    case TteElemTransform:
 	       if (pre)
 		 {
 		    elType = ((NotifyElement *) notifyEvent)->elementType.ElTypeNum;

@@ -943,17 +943,19 @@ View                view;
   ----------------------------------------------------------------------*/
 void                CloseTextInsertion ()
 {
+   PtrAttribute        pAttr;
+   PtrElement          pEl;
+   PtrBox              pBox;
+   PtrBox              pSelBox;
    PtrTextBuffer       pBuffer;
    PtrTextBuffer       pbuff;
+   ViewFrame          *pFrame;
+   ViewSelection      *pViewSel;
+   ViewSelection      *pViewSelEnd;
    int                 nChars;
    int                 i, j;
-   PtrBox              pBox;
-   int                 frame;
-   ViewFrame          *pFrame;
    int                 ind;
-   ViewSelection      *pViewSel;
-   PtrBox              pSelBox;
-   ViewSelection      *pViewSelEnd;
+   int                 frame;
 
 #ifdef WWW_XWINDOWS
    ThotEvent              event;
@@ -1091,7 +1093,24 @@ void                CloseTextInsertion ()
 		  /* Nouvelle position de reference du curseur */
 		  ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 	       }
-	  }			/*if TextInserting */
+
+	     if (LastInsertElText != NULL)
+	       {
+		 /* Notify the end of text insertion */
+		 pEl = LastInsertElText;
+		 LastInsertElText = NULL;
+		 APPtextModify (pEl, frame, FALSE);
+	       }
+	     else if (LastInsertAttr != NULL)
+	       {
+		 /* Notify the end of attribute change */
+		 pAttr = LastInsertAttr;
+		 pEl = LastInsertAttrElem;
+		 LastInsertAttr = NULL;
+		 LastInsertAttrElem = NULL;
+		 APPattrModify (pAttr, pEl, frame, FALSE);
+	       }
+	  }
      }
 
    /* elimine systematiquement les exposes en attente */
@@ -1123,30 +1142,6 @@ int                 frame;
 #endif /* __STDC__ */
 {
    PtrBox              pBox;
-   PtrAttribute        pAttr;
-   PtrElement          pEl;
-
-   if (LastInsertElText != NULL)
-     {
-	/* Est-ce que la selection a quitte l'e'le'ment */
-	if (pAb->AbElement != LastInsertElText)
-	  {
-	     /* signale la fin d'insertion de texte */
-	     pEl = LastInsertElText;
-	     LastInsertElText = NULL;
-	     APPtextModify (pEl, frame, FALSE);
-	  }
-     }
-   else if (LastInsertAttr != NULL)
-      if (pAb->AbCreatorAttr != LastInsertAttr)
-	{
-	   /* signale la fin de mise a jour de l'attribut */
-	   pAttr = LastInsertAttr;
-	   pEl = LastInsertAttrElem;
-	   LastInsertAttr = NULL;
-	   LastInsertAttrElem = NULL;
-	   APPattrModify (pAttr, pEl, frame, FALSE);
-	}
 
    if (LastInsertParagraph != NULL)
       if (LastInsertParagraph->AbElement != LastInsertElement
