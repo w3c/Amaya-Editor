@@ -2999,8 +2999,8 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
 	  Xbuffer = (unsigned char*)TtaGetMemory ((sel_data->length + 1) * sizeof (unsigned char));
 	  strncpy ((char *)Xbuffer, (char *)sel_data->data, sel_data->length);
 	  Xbuffer[sel_data->length] = EOS;
-	  PasteXClipboard (Xbuffer, strlen((char *)Xbuffer));
 	}
+      PasteXClipboard (Xbuffer, strlen((char *)Xbuffer));
     }
 } 
 
