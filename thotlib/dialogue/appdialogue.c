@@ -3727,6 +3727,7 @@ int                 itemID;
 
 #endif /* __STDC__ */
 {
+   PtrDocument         pDoc;
    int                 frame;
    int                 ref;
    int                 menu, submenu;
@@ -3745,7 +3746,6 @@ int                 itemID;
       return;
    else if ((FrameTable[frame].WdFrame) == 0)
       return;
-
    /* Recherche les bons indices de menu, sous-menu et item */
    FindItemMenu (frame, menuID, itemID, &menu, &submenu, &item, &action);
    if (action > 0)
@@ -3758,8 +3758,23 @@ int                 itemID;
 	   ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
 	   if (submenu != 0)
 	      ref += submenu * MAX_MENU * MAX_ITEM;
+
+	   pDoc = LoadedDocument [document - 1];
+	   if (ref == FrameTable[frame].MenuRedo &&
+	       item == FrameTable[frame].EntryRedo &&
+	       (pDoc->DocReadOnly || pDoc->DocNbUndone == 0))
+	     return;
+	   else if (ref == FrameTable[frame].MenuUndo &&
+	       item == FrameTable[frame].EntryUndo &&
+	       (pDoc->DocReadOnly || pDoc->DocNbEditsInHistory == 0))
+	     return;
+	   else if (ref == FrameTable[frame].MenuPaste &&
+	       item == FrameTable[frame].EntryPaste &&
+	       (pDoc->DocReadOnly ||
+		(FirstSavedElement == NULL && ClipboardThot.BuLength == 0)))
+	     return;
 #ifdef _WINDOWS
-       hMenu = GetMenu (TtaGetViewFrame (document, view));
+	   hMenu = GetMenu (TtaGetViewFrame (document, view));
 	   EnableMenuItem (hMenu, ref + item, MF_ENABLED);
 #else  /* !_WINDOWS */
 	   TtaRedrawMenuEntry (ref, item, NULL, -1, 1);
