@@ -665,6 +665,8 @@ View                view;
    according to the SSchemas used in the document.
    Set the HtmlDTD attribute to Frameset if the document uses Frames.
    Create a META element to specify Content-Type and Charset.
+   Set the content of the Charset attribute (on the root element)
+   according to the encoding used in the document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void         SetNamespacesAndDTD (Document doc)
@@ -677,11 +679,13 @@ Document     doc;
    Element		root, el, head, meta, lastmeta, lastel;
    ElementType		elType;
    AttributeType	attrType;
-   Attribute		attr;
+   Attribute		attr, charsetAttr;
    Language             lang;
    int                  length;
    STRING               text;
    CHAR_T               ISOlatin;
+#define MAX_CHARSET_LEN 50
+   CHAR_T               Charset[MAX_CHARSET_LEN];
    CHAR_T		buffer[200];
    ThotBool		useMathML, useGraphML, useFrames;
 
@@ -702,7 +706,7 @@ Document     doc;
    else if (useMathML || useGraphML)
       {
       /* prepare the value of attribute Namespaces */
-      buffer[0] = '\0';
+      buffer[0] = EOS;
       if (useMathML)
 	 {
 	 ustrcat (buffer, TEXT("\n      xmlns:m=\"http://www.w3.org/1998/Math/MathML/\""));
@@ -745,6 +749,16 @@ Document     doc;
       TtaSetAttributeValue (attr, HTML_ATTR_HtmlDTD_VAL_Transitional, root,
 			    doc);
 
+   /* get the charset defined by the Charset attribute of the root element*/
+   attrType.AttrTypeNum = HTML_ATTR_Charset;
+   charsetAttr = TtaGetAttribute (root, attrType);
+   Charset[0] = EOS;
+   if (charsetAttr)
+      {
+      length = MAX_CHARSET_LEN - 2;
+      TtaGiveTextAttributeValue (charsetAttr, Charset, &length);
+      }
+
    /* Create (or update) a META element to specify Content-type and Charset */
    /* Get the HEAD element first */
    el = TtaGetFirstChild (root);
@@ -760,49 +774,60 @@ Document     doc;
       }
    if (head)
       {
-      /* if there a Language attribute on the root element */
-      attrType.AttrTypeNum = HTML_ATTR_Langue;
-      attr = TtaGetAttribute (root, attrType);
-      if (attr != NULL)
-	 /* there is a language attribute on the root */
-	 /* is it the defaut attribute set by Thot or the real one */
-	 {
-         attrType.AttrTypeNum = HTML_ATTR_RealLang;
-         if (!TtaGetAttribute (root, attrType))
-	   /* not the real one. look further */
-	    attr = NULL;
-	 }
-      if (attr == NULL)
-	 /* no Language specified for the root. Look for the body element */
-	 {
-         attrType.AttrTypeNum = HTML_ATTR_Langue;
-	 el = head;
-         TtaNextSibling (&el);
-	 while (el && !attr)
-	    {
-            elType = TtaGetElementType (el);
-	    if (elType.ElSSchema == attrType.AttrSSchema &&
-	        elType.ElTypeNum == HTML_EL_BODY)
-	      /* it's the BODY element. Is there a language attribute on it */
+      if (Charset[0] == EOS)
+	/* no Charset attribute on the root element */
+	{
+        /* is there a Language attribute on the root element? */
+        attrType.AttrTypeNum = HTML_ATTR_Langue;
+        attr = TtaGetAttribute (root, attrType);
+        if (attr)
+	   /* there is a language attribute on the root */
+	   /* is it the defaut attribute set by Thot or the real one */
+	   {
+           attrType.AttrTypeNum = HTML_ATTR_RealLang;
+           if (!TtaGetAttribute (root, attrType))
+	     /* not the real one. look further */
+	      attr = NULL;
+	   }
+        if (!attr)
+	   /* no Language specified on the root. Look for the body element */
+	   {
+           attrType.AttrTypeNum = HTML_ATTR_Langue;
+	   el = head;
+           TtaNextSibling (&el);
+	   while (el && !attr)
+	     {
+             elType = TtaGetElementType (el);
+	     if (elType.ElSSchema == attrType.AttrSSchema &&
+	         elType.ElTypeNum == HTML_EL_BODY)
+	       /* it's the BODY element. Is there a language attribute on it */
 	       {
 	       attr = TtaGetAttribute (el, attrType);
 	       el = NULL;
 	       }
-	    else
+	     else
 	       TtaNextSibling (&el);
-	    }
-	 }
-      ISOlatin = TEXT(' ');
-      if (attr)
-	 /* there is a Language attribute on the root or body element */
-	 {
-         length = TtaGetTextAttributeLength (attr);
-	 text = TtaAllocString (length + 1);
-         TtaGiveTextAttributeValue (attr, text, &length);
-	 lang = TtaGetLanguageIdFromName (text);
-         TtaFreeMemory (text);
-	 ISOlatin = TtaGetAlphabet (lang);
-	 }
+	     }
+	   }
+        if (attr)
+	   /* there is a Language attribute on the root or body element */
+	   {
+	   length = TtaGetTextAttributeLength (attr);
+	   text = TtaAllocString (length + 1);
+	   TtaGiveTextAttributeValue (attr, text, &length);
+	   lang = TtaGetLanguageIdFromName (text);
+	   TtaFreeMemory (text);
+	   ISOlatin = TtaGetAlphabet (lang);
+	   if (ISOlatin == TEXT('L'))
+	     ustrcpy (Charset, TEXT("iso-8859-1"));
+	   else if (ISOlatin == TEXT('2'))
+	     ustrcpy (Charset, TEXT("iso-8859-2"));
+	   else if (ISOlatin == TEXT('9'))
+	     ustrcpy (Charset, TEXT("iso-8859-9"));
+	   else
+	     Charset[0] = EOS;
+	   }
+	}
       el = TtaGetFirstChild (head);
       meta = NULL;
       lastmeta = NULL;
@@ -851,15 +876,24 @@ Document     doc;
 	 attr = TtaNewAttribute (attrType);
 	 TtaAttachAttribute (meta, attr, doc);
 	 }
-      if (ISOlatin == TEXT('L'))
-         TtaSetAttributeText (attr, TEXT("text/html; charset=ISO-8859-1"), meta,doc);
-      else if (ISOlatin == TEXT('2'))
-         TtaSetAttributeText (attr, TEXT("text/html; charset=ISO-8859-2"), meta,doc);
-      else if (ISOlatin == TEXT('9'))
-         TtaSetAttributeText (attr, TEXT("text/html; charset=ISO-8859-9"), meta,doc);
+      if (Charset[0] == EOS)
+	 TtaSetAttributeText (attr, TEXT("text/html"), meta, doc);
       else
-         TtaSetAttributeText (attr, TEXT("text/html"), meta, doc);
+	 {
+	 ustrcpy (buffer, TEXT("text/html; charset="));
+	 ustrcat (buffer, Charset);
+	 TtaSetAttributeText (attr, buffer, meta, doc);
+	 }
       } 
+   if (!charsetAttr)
+     if (Charset[0] != EOS)
+	/* create a Charset attribute on the root element */
+	{
+	attrType.AttrTypeNum = HTML_ATTR_Charset;
+	charsetAttr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (root, charsetAttr, doc);
+	TtaSetAttributeText (charsetAttr, Charset, root, doc);	
+	}
 }
 
 /*----------------------------------------------------------------------

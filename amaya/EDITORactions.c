@@ -126,6 +126,11 @@ ThotBool            isHTML;
     {
       LoadUserStyleSheet (doc);
 
+      /* attach an attribute PrintURL to the document root */
+      attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (root, attr, doc);
+
       /* create a default title if there is no content in the TITLE element */
       elType.ElTypeNum = HTML_EL_TITLE;
       title = TtaSearchTypedElement (elType, SearchInTree, root);
@@ -194,10 +199,14 @@ ThotBool            isHTML;
 	UpdateContextSensitiveMenus (SelectionDoc);
       SelectionDoc = doc;
       UpdateContextSensitiveMenus (doc);
-      attrType.AttrTypeNum = HTML_ATTR_PrintURL;
     }
   else
     {
+      /* attach the default attribute PrintURL to the document root */
+      attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (root, attr, doc);
+
       /* insert the Document_URL element */
       el = TtaGetFirstChild (root);
       if (el == NULL)
@@ -219,12 +228,7 @@ ThotBool            isHTML;
       /* set the initial selection */
       TtaSelectElement (doc, el);
       SelectionDoc = doc;
-      attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
     }
-
-  /* default ATTR_PrintURL */
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (root, attr, doc);
 }
 
 /*----------------------------------------------------------------------

@@ -2030,23 +2030,23 @@ CHAR_T* documentname;
 }
 
 /*----------------------------------------------------------------------
-  LoadHTMLDocument parses of the new document and stores its path (or
+  LoadHTMLDocument parses the new document and stores its path (or
   URL) into the document table.
   For a local loading, the parameter tempfile must be an empty string.
   For a remote loading, the parameter tempfile gives the file name that
   contains the current copy of the remote file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     LoadHTMLDocument (Document doc, CHAR_T* pathname, CHAR_T* form_data, int method, CHAR_T* tempfile, CHAR_T* documentname, CHAR_T* content_type, ThotBool history)
+static Document     LoadHTMLDocument (Document doc, CHAR_T* pathname, CHAR_T* form_data, int method, CHAR_T* tempfile, CHAR_T* documentname, AHTHeaders *http_headers, ThotBool history)
 #else
-static Document     LoadHTMLDocument (doc, pathname, form_data, method, tempfile, documentname, content_type, history)
+static Document     LoadHTMLDocument (doc, pathname, form_data, method, tempfile, documentname, http_headers, history)
 Document            doc;
 CHAR_T*             pathname;
 CHAR_T*             form_data;
 int                 method;
 CHAR_T*             tempfile;
 CHAR_T*             documentname;
-CHAR_T*             content_type;
+AHTHeaders*         http_headers
 ThotBool            history;
 #endif
 {
@@ -2056,15 +2056,22 @@ ThotBool            history;
   CHAR_T*             tempdocument;
   CHAR_T*             tempdir;
   CHAR_T*             s;
+  CHAR_T*             content_type;
+  CHAR_T*             charset;
   int                 i, j;
   ThotBool            otherFile;
   ThotBool            plainText;
   ThotBool            XHTMLdoc;
+  Element             root;
+  Attribute           attr;
+  AttributeType       attrType;
 
   docType = docHTML;
   otherFile = TRUE;
   XHTMLdoc = FALSE;
   tempdir = tempdocument = NULL;
+  content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
+
   if (content_type == NULL || content_type[0] == EOS)
     /* no content type */
     {
@@ -2399,6 +2406,25 @@ ThotBool            history;
       StartParser (newdoc, tempdocument, documentname, tempdir, pathname, plainText);
       TtaFreeMemory (tempdir);
 
+      /* If it's an HTML document, save the charset into the Charset attribute */
+      charset = HTTP_headers (http_headers, AM_HTTP_CHARSET);
+      if (charset)
+         if (DocumentTypes[newdoc] == docHTMLRO ||
+	     DocumentTypes[newdoc] == docHTML)
+	    {
+	    root = TtaGetMainRoot (newdoc);
+	    attrType.AttrSSchema = TtaGetDocumentSSchema (newdoc);
+	    attrType.AttrTypeNum = HTML_ATTR_Charset;
+	    attr = TtaGetAttribute (root, attrType);
+	    if (!attr)
+	       /* the root element does not have a Charset attribute.
+		  Create one */
+	       {
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (root, attr, newdoc);
+	       }
+	    TtaSetAttributeText (attr, charset, root, newdoc);
+	    }
       /* Set the document read-only when needed */
       if (DocumentTypes[newdoc] == docHTMLRO
 	  || DocumentTypes[newdoc] == docImageRO
@@ -2461,7 +2487,6 @@ void *context;
   CHAR_T* tempfile;
   CHAR_T* documentname;
   CHAR_T* form_data;
-  CHAR_T* content_type;
   ClickEvent method;
   Document res;
   Element el;
@@ -2484,9 +2509,8 @@ void *context;
      {
        TtaSetCursorWatch (0, 0);
        /* do we need to control the last slash here? */
-       content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
        res = LoadHTMLDocument (newdoc, pathname, form_data, method, tempfile, 
-			       documentname, content_type, FALSE);
+			       documentname, http_headers, FALSE);
 	W3Loading = 0;		/* loading is complete now */
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
@@ -3151,13 +3175,13 @@ void*     context;
    Document            doc;
    Document            baseDoc;
    Document            res;
-   CHAR_T*              tempfile;
-   CHAR_T*              target;
+   CHAR_T*             tempfile;
+   CHAR_T*             target;
    CHAR_T*             pathname;
    CHAR_T*             documentname;
    CHAR_T*             form_data;
    ClickEvent          method;
-   CHAR_T*              tempdocument;
+   CHAR_T*             tempdocument;
    CHAR_T*             s;
    int                 i;
    ThotBool	       history;
@@ -3167,7 +3191,6 @@ void*     context;
    GETHTMLDocument_context *ctx;
    TTcbf              *cbf;
    void               *ctx_cbf;
-   CHAR_T* content_type;
 
    /* restore GETHTMLDocument's context */  
    ctx = (GETHTMLDocument_context *) context;
@@ -3210,10 +3233,9 @@ void*     context;
 	     NormalizeURL (pathname, 0, tempdocument, documentname, NULL);
 
 	   /* do we need to control the last slash here? */
-	   content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
 	   res = LoadHTMLDocument (newdoc, pathname, form_data, method,
 				   tempfile, documentname,
-				   content_type, history);
+				   http_headers, history);
 	   W3Loading = 0;		/* loading is complete now */
 	   if (res == 0)
 	     {

@@ -16,7 +16,14 @@ RULES
 #ifdef XML
 	Use MathMLT for MathML;
 	Use GraphMLT for GraphML;
-	Create '<?xml version="1.0" ?>\12';
+	Create '<?xml version="1.0"';
+	if Charset
+	   BEGIN
+	   Create ' encoding="';
+	   Create Charset;
+	   Create '"';
+	   END;
+	Create '?>\12';
 	if not Namespaces and HtmlDTD = Frameset
 	   BEGIN
 	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"\12';

@@ -7423,10 +7423,17 @@ ThotBool            plainText;
 		DocumentSSchema = TtaGetDocumentSSchema (doc);
 		isHTML = FALSE;
 	      }
+	    rootElement = TtaGetMainRoot (doc);
 	    
-	    /* default ATTR_PrintURL */
+	    /* add the default attribute PrintURL */
 	    attrType.AttrSSchema = DocumentSSchema;
 	    attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
+	    attr = TtaGetAttribute (rootElement, attrType);
+	    if (attr == 0)
+	      {
+		attr = TtaNewAttribute (attrType);
+		TtaAttachAttribute (rootElement, attr, doc);
+	      }
 	  }
 	else
 	  {
@@ -7443,13 +7450,19 @@ ThotBool            plainText;
 		isHTML = TRUE;
 	      }
 	    LoadUserStyleSheet (doc);
-	    /* default ATTR_PrintURL */
+	    rootElement = TtaGetMainRoot (doc);
+	    /* add the default attribute PrintURL */
 	    attrType.AttrSSchema = DocumentSSchema;
 	    attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+	    attr = TtaGetAttribute (rootElement, attrType);
+	    if (!attr)
+	      {
+		attr = TtaNewAttribute (attrType);
+		TtaAttachAttribute (rootElement, attr, doc);
+	      }
 	  }
 	
 	TtaSetDisplayMode (doc, NoComputedDisplay);
-	/* add the default attribute HTML_ATTR_PrintURL */
 #ifdef ANNOTATIONS
 	if (DocumentTypes[doc] == docAnnot
 	    || DocumentTypes[doc] == docAnnotRO)
@@ -7457,7 +7470,6 @@ ThotBool            plainText;
 	    ElementType elType;
 
 	    /* we search the start of HTML document in the annotation struct */
-	    rootElement = TtaGetMainRoot (doc);
 	    elType = TtaGetElementType (rootElement);
 	    elType.ElTypeNum = Annot_EL_Body;
 	    el = TtaSearchTypedElement (elType, SearchInTree, rootElement);
@@ -7465,13 +7477,6 @@ ThotBool            plainText;
 	  }
 	else
 #endif /* ANNOTATIONS */
-	  rootElement = TtaGetMainRoot (doc);
-	attr = TtaGetAttribute (rootElement, attrType);
-	if (attr == 0)
-	  {
-	    attr = TtaNewAttribute (attrType);
-	    TtaAttachAttribute (rootElement, attr, doc);
-	  }
 	
 	/* delete all element except the root element */
 	el = TtaGetFirstChild (rootElement);
