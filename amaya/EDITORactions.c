@@ -798,7 +798,7 @@ void CreateBreak (Document document, View view)
      {
        /* move the selection */
        parent = el;
-       while (el != NULL && !TtaIsLeaf ( TtaGetElementType (el)))
+       while (el != NULL && !TtaIsLeaf (TtaGetElementType (el)))
 	 {
 	   parent = el;
 	   el = TtaGetFirstChild (parent);
@@ -1645,36 +1645,57 @@ void CreateTable (Document document, View view)
 
 /*----------------------------------------------------------------------
   CreateCaption
+  If the selection is a position anywhere within a table, create an empty
+  caption element in this table and set the selection in this new caption.
+  If the caption element already exists, just select it.
   ----------------------------------------------------------------------*/
 void CreateCaption (Document document, View view)
 {
    ElementType         elType;
-   Element             el;
+   Element             el, caption;
    int                 i, j;
 
    TtaGiveFirstSelectedElement (document, &el, &i, &j);
-   if (el != NULL)
+   if (el)
+     /* there is a current selection */
      {
        elType = TtaGetElementType (el);
        if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	 /* the selected element is an HTML element */
 	 {
-	   /* it's an HTML element */
+	   caption = NULL;
+	   /* is the selection within a table */
 	   if (elType.ElTypeNum != HTML_EL_Table && TtaIsSelectionEmpty ())
 	     {
-	       /* move the selection to the enclosing table */
+	       /* get the enclosing table element */
 	       elType.ElTypeNum = HTML_EL_Table;
 	       el = TtaGetTypedAncestor (el, elType);
 	       if (el == NULL)
+		 /* we are not in a table. Stop */
 		 return;
 	       else
 		 {
-		   el = TtaGetFirstChild (el);
-		   TtaSelectElement (document, el);
+		   /* is there already a caption element in this table? */
+		   elType.ElTypeNum = HTML_EL_CAPTION;
+		   caption =  TtaSearchTypedElement (elType, SearchInTree, el);
+		   if (caption)
+		     /* there is a caption. Put the selection in it */
+		     TtaSelectElement (document, TtaGetFirstLeaf (caption));
+		   else
+		     /* no caption yet. Select the first child of the table
+			tp create a caption element there */
+		     {
+		       el = TtaGetFirstChild (el);
+		       TtaSelectElement (document, el);
+		     }
 		 }
 	     }
-	   /* create the Caption */
-	   elType.ElTypeNum = HTML_EL_CAPTION;
-	   TtaCreateElement (elType, document);
+	   if (!caption)
+	     /* no caption yet. Create one */
+	     {
+	       elType.ElTypeNum = HTML_EL_CAPTION;
+	       TtaCreateElement (elType, document);
+	     }
 	 }
      }
 }
