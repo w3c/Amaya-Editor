@@ -15,7 +15,12 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.2  2002-05-31 18:01:09  kirschpi
+ ** Revision 1.3  2002-06-05 16:46:52  kirschpi
+ ** Adding to the registry a DAVResource list, a list of resources
+ ** (specially collections), where we should do a Lock discovery.
+ ** Manuele
+ **
+ ** Revision 1.2  2002/05/31 18:01:09  kirschpi
  ** Functions to give to user some informations about active locks
  ** (a basic awareness support) when the user load or exit a document.
  **
@@ -72,6 +77,7 @@
 #define DAV_BAD_REQUEST -400
 #define DAV_METHOD_NOT_ALLOWED -405
 
+
 /*
  * Thot "Env" strings
  */ 
@@ -82,6 +88,7 @@
 #define DAV_AWARENESS   "DAV_AWARENESS"         /* if the user wants some awareness information */
 #define DAV_AWARENESS_EXIT   "DAV_AWARENESS_ONEXIT"     /* if the user wants information about */
                                                         /* his/her locks, when leaving a page */
+#define DAV_URLS        "DAV_URLS"              /* URLs of the resources normally used by the user */ 
 
 
 /*
@@ -94,7 +101,7 @@ char DAVUserURL[LINE_MAX];                      /* user's reference */
 BOOL DAVAwareness;                              /* if user wants general awareness info */
 BOOL DAVAwarenessExit;                          /* if user wants awareness information */
                                                 /* about his/her locks, when exiting a resource */  
-
+char DAVResources[LINE_MAX];                    /* list of user's WebDAV resources */
 
 /*
  * Full qualified host.domain name 
