@@ -506,7 +506,6 @@ static PtrElement BackSearch2AttrInSubtree (PtrElement pEl, int val,
 					    PtrSSchema pSS, PtrSSchema pSS2)
 {
   PtrElement          pRet, pChild;
-  PtrAttribute        pAttr;
 
   pRet = NULL;
   if (AttrFound (pEl, val, textVal, attNum, pSS) ||
