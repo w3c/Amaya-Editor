@@ -2308,18 +2308,13 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	}
 
       /* Dimensionnement de la boite par le contenu ? */
-      if (pAb->AbLeafType == LtPicture)
-	ClipAndBoxUpdate (pAb, pCurrentBox, width, height, 0, 0, 0, 0, frame);
-      else
-	{
-	  ChangeDefaultWidth (pCurrentBox, pCurrentBox, width, 0, frame);
-	  /* Il est possible que le changement de largeur de la boite modifie */
-	  /* indirectement (parce que la boite contient un bloc de ligne) la  */
-	  /* hauteur du contenu de la boite.                                  */
-	  if (enclosedWidth && enclosedHeight && pAb->AbLeafType == LtCompound)
-	    GiveEnclosureSize (pAb, frame, &width, &height);
-	  ChangeDefaultHeight (pCurrentBox, pCurrentBox, height, frame);
-	}
+      ChangeDefaultWidth (pCurrentBox, pCurrentBox, width, 0, frame);
+      /* Il est possible que le changement de largeur de la boite modifie */
+      /* indirectement (parce que la boite contient un bloc de ligne) la  */
+      /* hauteur du contenu de la boite.                                  */
+      if (enclosedWidth && enclosedHeight && pAb->AbLeafType == LtCompound)
+	GiveEnclosureSize (pAb, frame, &width, &height);
+      ChangeDefaultHeight (pCurrentBox, pCurrentBox, height, frame);
       /* recheck auto and % margins */
       CheckMBP (pAb, pCurrentBox, frame, TRUE);
       
