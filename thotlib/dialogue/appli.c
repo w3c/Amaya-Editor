@@ -102,7 +102,6 @@ static HWND      hwndHead   ;
 static char*     txtZoneLabel;
 static BOOL      paletteRealized = FALSE;
 
-static HRGN      hrgn;
 static char      URL_txt [500];
 static char      doc_title [500];
 
@@ -112,6 +111,7 @@ static int       oldYPos;
 int         cyToolBar ;
 int         CommandToString [MAX_BUTTON];
 char        szTbStrings [4096];
+/* HRGN        hrgn; */
 
 boolean viewClosed = FALSE;
 #ifdef AMAYA_TOOLTIPS
@@ -2123,9 +2123,9 @@ int                 raz;
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 #   else  /* _WINDOWS */ 
     WIN_GetDeviceContext (frame);
-    hrgn = CreateRectRgn (clipx + FrameTable[frame].FrLeftMargin, clipy + FrameTable[frame].FrTopMargin, 
-                          clipx + FrameTable[frame].FrLeftMargin + clipwidth, clipy + FrameTable[frame].FrTopMargin + clipheight);
-    SelectClipRgn(TtDisplay, hrgn); 
+    clipRgn = CreateRectRgn (clipx + FrameTable[frame].FrLeftMargin, clipy + FrameTable[frame].FrTopMargin, 
+                             clipx + FrameTable[frame].FrLeftMargin + clipwidth, clipy + FrameTable[frame].FrTopMargin + clipheight);
+    SelectClipRgn(TtDisplay, clipRgn); 
 #   endif /* _WINDOWS */
 	if (raz > 0)
 #      ifdef _WINDOWS 
