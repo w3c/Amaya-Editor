@@ -192,7 +192,7 @@ void GetGLContext ()
 
   LastLineWidth = -1.;
 
-  GL_SetTransText (TRUE);
+ /*  GL_SetTransText (TRUE); */
 }
 
 

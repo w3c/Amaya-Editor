@@ -376,7 +376,9 @@ static void OpacityAndTransformNext (PtrAbstractBox pAb, int plane, int frame,
 				     ThotBool activate_opacity)
 {
 #ifdef _GL
-  if (pAb->AbElement && pAb->AbDepth == plane)
+  if (pAb->AbElement && 
+      pAb->AbDepth == plane &&
+      pAb->AbBox)
     {
       if (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
 			    pAb->AbElement->ElStructSchema) && 
@@ -420,7 +422,8 @@ static void OriginSystemExit (PtrAbstractBox pAb, ViewFrame  *pFrame,
 
   pBox = pAb->AbBox;
   if (pAb->AbElement->ElSystemOrigin && 
-      plane == pAb->AbDepth)
+      plane == pAb->AbDepth &&
+      pAb->AbBox)
     {
       DisplayTransformationExit ();
       if (pBox && 
@@ -1585,8 +1588,8 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	    {
 	      /* box in the current plane */
 	      pBox = pAb->AbBox;
-	      if (pAb->AbElement && pAb->AbDepth == plane 
-		  && NotGroupOpacityDisplayed)
+	      if (pAb->AbElement &&
+		  NotGroupOpacityDisplayed)
 		{ 
 		  if (FormattedFrame)
 		    {
