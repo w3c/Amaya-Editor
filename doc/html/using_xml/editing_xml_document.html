@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.0, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.1, see http://www.w3.org/Amaya/" />
   <title>Editing XML documents</title>
   <style type="text/css">
   </style>
@@ -28,16 +27,22 @@
 <div id="page_body">
 <h1>Editing XML documents</h1>
 
-<p>The support of generic XML documents in Amaya is still experimental and no
-dedicated edition interface is available in this version. That's why we set
-the <strong>read-only</strong> flag of the <strong>Formatted view</strong>
-when displaying these documents. To modify these documents, you'll need to
-directly edit the source of the document (e.g., using Amaya's <strong>Source
-View</strong> in conjonction with the <strong>Resynchronize</strong>
-command). If you toggle the mode of the document and edit it directly on the
-<strong>Formatted view</strong>, we advise you to save the document under
-another name using the <strong>Save As</strong> command rather than . The
-Save support is not yet stable.</p>
+<p>The edition of generic XML documents in Amaya is still experimental. For
+the supported samples (XHTML, SVG, MathML), the edition follows the same
+rules as for the corresponding document type. For the other elements, only
+the <strong>Return</strong> command is available in this version&nbsp;:</p>
+<ul>
+  <li>If the selection is within an element, Amaya cuts the selected element
+    and creates a new element with the same type next to it.</li>
+  <li>If a whole non-empty element is selected, Amaya creates a new element
+    with the same type next to the selected element.</li>
+  <li>If a whole empty element is selected, Amaya creates a sibling with the
+    same type for the parent of the selected element.</li>
+</ul>
+
+<p>You can also edit your XML documents in the <strong>Source View</strong>
+and use the <strong>Resynchronize</strong> command. Your modifications are
+then reported in the <strong>Formatted view.</strong></p>
 </div>
 </body>
 </html>
