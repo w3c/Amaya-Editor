@@ -22,7 +22,24 @@ public:
 		      ,wxWindowID     id             = -1
 		      ,const wxPoint& pos            = wxDefaultPosition
 		      ,const wxSize&  size           = wxDefaultSize
-		      ,long style                    = wxMINIMIZE_BOX | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxSTAY_ON_TOP | wxFRAME_NO_TASKBAR | wxFRAME_TOOL_WINDOW | wxRESIZE_BORDER | wxRESIZE_BOX
+		      ,long style                    = 
+		      wxMINIMIZE_BOX |
+		      wxSYSTEM_MENU |
+		      wxCAPTION |
+		      wxCLOSE_BOX | 
+		      wxSTAY_ON_TOP |
+#if 0
+		      // this flag is usefull on GTK but the wxFrame must be a child of a top window.
+		      // for the moment, the wxFrame is not a child of the top window but a AmayaSubPanel (wxPanel) child.
+		      wxFRAME_FLOAT_ON_PARENT |
+#endif /* 0 */ 
+		      wxFRAME_NO_TASKBAR |
+#ifdef _WINDOWS
+		      // on GTK this flag should do nothing but there is a strange bug when it is activated.
+		      wxFRAME_TOOL_WINDOW |
+#endif /* _WINDOWS */
+		      wxRESIZE_BORDER |
+		      wxRESIZE_BOX
 		      );
   virtual ~AmayaFloatingPanel();
 
