@@ -225,6 +225,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"frameborder", "", 'A', HTML_ATTR_frameborder, L_TransitionalValue},
 
    {"headers", "", 'A', HTML_ATTR_headers, L_BasicValue},
+   {"height", "image", 'A', HTML_ATTR_Height_, L_BasicValue},
    {"height", "img", 'A', HTML_ATTR_Height_, L_BasicValue},
    {"height", "object", 'A', HTML_ATTR_Height_, L_BasicValue},
    {"height", "", 'A', HTML_ATTR_Height_, L_TransitionalValue},
@@ -355,7 +356,7 @@ AttributeMapping XHTMLAttributeMappingTable[] =
    {"width", "embed", 'A', HTML_ATTR_Width__, L_TransitionalValue},
    {"width", "hr", 'A', HTML_ATTR_Width__, L_TransitionalValue},
    {"width", "iframe", 'A', HTML_ATTR_Width__, L_TransitionalValue},
-   {"width", "image", 'A', HTML_ATTR_Width__, L_TransitionalValue},
+   {"width", "image", 'A', HTML_ATTR_Width__, L_BasicValue},
    {"width", "img", 'A', HTML_ATTR_Width__, L_BasicValue},
    {"width", "object", 'A', HTML_ATTR_Width__, L_BasicValue},
    {"width", "pre", 'A', HTML_ATTR_Width__, L_TransitionalValue},

@@ -100,7 +100,7 @@ SSchema GetXLinkSSchema (Document doc)
    GetTextSSchema returns the TextFile Thot schema for document doc.
    (this is not XML, but its useful to have this function here).
   ----------------------------------------------------------------------*/
-SSchema         GetTextSSchema (Document doc)
+SSchema GetTextSSchema (Document doc)
 
 {
   SSchema	XLinkSSchema;
@@ -181,20 +181,19 @@ void MapXMLElementType (int XMLtype, char *XMLname, ElementType *elType,
 {
   ElemMapping        *ptr;
   char                c;
-  int                 i;
+  int                 i, profile;
 
   /* Initialize variables */
   *mappedName = NULL;
   *checkProfile = TRUE;
   elType->ElTypeNum = 0;
-
+  profile = TtaGetDocumentProfile (doc);
   /* Select the right table */
   if (XMLtype == XHTML_TYPE)
     ptr = XHTMLElemMappingTable;
   else if (XMLtype == MATH_TYPE)
     {
-      if (TtaGetDocumentProfile(doc) == L_Basic &&
-	  DocumentTypes[doc] == docHTML)
+      if (profile == L_Basic && DocumentTypes[doc] == docHTML)
 	{
 	  /* Maths are not allowed in this document */
 	  ptr = NULL;
@@ -205,8 +204,7 @@ void MapXMLElementType (int XMLtype, char *XMLname, ElementType *elType,
     }
   else if (XMLtype == SVG_TYPE)
     {
-      if (TtaGetDocumentProfile(doc) == L_Basic &&
-	  DocumentTypes[doc] == docHTML)
+      if (profile == L_Basic && DocumentTypes[doc] == docHTML)
 	{
 	  /* Graphics are not allowed in this document */
 	  ptr = NULL;
@@ -238,8 +236,7 @@ void MapXMLElementType (int XMLtype, char *XMLname, ElementType *elType,
 	else if (ptr != XHTMLElemMappingTable && strcmp (ptr[i].XMLname, XMLname))
 	  /* it's not the tag */
 	  i++;
-	else if (TtaGetDocumentProfile(doc) != L_Other &&
-		 !(ptr[i].Level & TtaGetDocumentProfile(doc)))
+	else if (profile != L_Other && !(ptr[i].Level & profile))
 	  {
 	    /* this tag is not valid in the document profile */
 	    *checkProfile = FALSE;
@@ -267,7 +264,7 @@ char *GetXMLElementName (ElementType elType, Document doc)
 {
   ElemMapping  *ptr;
   char         *name;
-  int           i;
+  int           i, profile;
   ThotBool      invalid = FALSE;
 
   if (elType.ElTypeNum > 0)
@@ -284,14 +281,14 @@ char *GetXMLElementName (ElementType elType, Document doc)
       else
 	ptr = NULL;
 
+      profile = TtaGetDocumentProfile (doc);
       if (ptr)
 	do
 	  {
 	    if (ptr[i].ThotType == elType.ElTypeNum)
 	      {
 		if (doc == 0 || 
-		    TtaGetDocumentProfile(doc) == L_Other ||
-		    (ptr[i].Level & TtaGetDocumentProfile(doc)))
+		    profile == L_Other || (ptr[i].Level & profile))
 		  return ptr[i].XMLname;
 		else
 		  invalid = TRUE;
@@ -394,7 +391,7 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
 {
   AttributeMapping   *ptr;
   char                c;
-  int                 i;
+  int                 i, profile;
 
   /* Initialization */
   *checkProfile = TRUE;
@@ -427,6 +424,8 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
     c = tolower (attrName[0]);
   else
     c = attrName[0];
+
+  profile = TtaGetDocumentProfile (doc);
   /* look for the first concerned entry in the table */
   while (ptr[i].XMLattribute[0] < c &&  ptr[i].XMLattribute[0] != EOS)
     i++;
@@ -442,8 +441,7 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
 	   (ptr[i].XMLelement[0] != EOS &&
 	    strcmp (ptr[i].XMLelement, elementName))))
 	i++;
-      else if (TtaGetDocumentProfile(doc) != L_Other &&
-	       !(ptr[i].Level & TtaGetDocumentProfile(doc)))
+      else if (profile != L_Other && !(ptr[i].Level & profile))
 	{
 	  *checkProfile = FALSE;
 	  i++;
@@ -468,7 +466,7 @@ char *GetXMLAttributeName (AttributeType attrType, ElementType elType,
 {
   AttributeMapping   *ptr;
   char               *name, *tag;
-  int                 i;
+  int                 i, profile;
   ThotBool            invalid = FALSE;
 
   if (attrType.AttrTypeNum > 0)
@@ -491,6 +489,7 @@ char *GetXMLAttributeName (AttributeType attrType, ElementType elType,
       else
 	ptr = XHTMLAttributeMappingTable;
       
+      profile = TtaGetDocumentProfile (doc);
       if (ptr)
 	do
 	  {
@@ -499,8 +498,8 @@ char *GetXMLAttributeName (AttributeType attrType, ElementType elType,
 		 !strcmp (ptr[i].XMLelement, tag)))
 	      {
 		if (doc != 0 &&
-		    TtaGetDocumentProfile(doc) != L_Other &&
-		    !(ptr[i].Level & TtaGetDocumentProfile(doc)))
+		    profile != L_Other &&
+		    !(ptr[i].Level & profile))
 		  invalid = TRUE;
 		else
 		  return ptr[i].XMLattribute;
