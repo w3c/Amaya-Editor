@@ -1266,7 +1266,7 @@ void StopTransfer (Document document, View view)
     }
 }
 
-static void CompleteUrl(char **url)
+static int  CompleteUrl(char **url)
 {
     char *s;
 
@@ -1289,8 +1289,12 @@ static void CompleteUrl(char **url)
 	  strcpy (s, "http://");
 	  strcat (s, *url);
 	  *url = s;
+	  return 1;
       }
+      else
+	  return 0;
   }
+  return 0;
 }
 
 
@@ -4284,9 +4288,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	 {
 	   TtaDestroyDialogue (BaseDialog + OpenForm);
 	   TtaDestroyDialogue (BaseDialog + FileBrowserForm);
+	   
 	   if (LastURLName[0] != EOS)
 	     {
-	       CompleteUrl(&LastURLName); 
 	       TtaSetStatus (CurrentDocument, 1,
 			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
 			   DocumentName);
@@ -4304,6 +4308,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	     }
 	   else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
 	     {
+		 
 	       /* load a local file */
 	       strcpy (tempfile, DirectoryName);
 	       strcat (tempfile, DIR_STR);
@@ -4346,9 +4351,6 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		   GetHTMLDocument (DocumentName, NULL, CurrentDocument,
 				    CurrentDocument, Loading_method, TRUE,
 				    NULL, NULL);
-	      /*  TtaSetStatus (CurrentDocument, 1, */
-/* 			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD), */
-/* 			   DocumentName); */
 	   }
 	      else if (DirectoryName[0] != EOS)
 	     TtaSetStatus (CurrentDocument, 1,
@@ -4389,6 +4391,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 
      case URLName:
        RemoveNewLines (data);
+       CompleteUrl(&data); 
        if (IsW3Path (data))
 	 {
 	   /* save the URL name */
