@@ -9,6 +9,7 @@
 #endif
 #define CONST
 
+#include "ustring.h"
 #include "appstruct.h"
 #include "appaction.h"
 #include "memory.h"
@@ -185,18 +186,6 @@ org_w3c_thotlib_Extra_JavaActionEventCallback(void *arg, NotifyEvent *event)
 		     CPtr2JavaLong(ev->element),
 		     CPtr2JavaLong(ev->target),
 		     ev->targetdocument).i;
-	    break;
-	}
-	case TteElemTransform: {
-	    NotifyOnElementType *ev = (NotifyOnElementType *) event;
-	    res = do_execute_java_method((Hjava_lang_Object*) arg,
-		     "callbackElementType", "(IIJJIJI)I", NULL, FALSE,
-		     ev->event, ev->document,
-		     CPtr2JavaLong(ev->element),
-		     CPtr2JavaLong(ev->elementType.ElSSchema),
-		     ev->elementType.ElTypeNum,
-		     CPtr2JavaLong(ev->targetElementType.ElSSchema),
-		     ev->targetElementType.ElTypeNum).i;
 	    break;
 	}
 	case TtePRuleCreate:
