@@ -1602,6 +1602,7 @@
 <label define="AM_XML_NOT_WELL_FORMED">
 	<message xml:lang="en">This document is incomplete, don't save it - See Views/Show parsing errors</message>
 	<message xml:lang="fr">Ce document est incomplet, ne le sauvez pas  - voir Vues/Montrer les erreurs</message>
+	<message xml:lang="de">Unvollständiges Dokument, bitte nicht speichern! - Siehe Ansicht/Parsefehler anzeigen</message>
 </label>
 <label define="AM_XML_PROFILE">
 	<message xml:lang="en">In the current Amaya profile:</message>
@@ -1627,10 +1628,12 @@
 <label define="AM_UNDEFINED_ENCODING">
 	<message xml:lang="en">This document has no encoding declaration</message>
 	<message xml:lang="fr">Aucun codage n'est déclaré pour ce document</message>
+	<message xml:lang="de">Dieses Dokument enthält keine Kodierungsdeklaration</message>
 </label>
 <label define="AM_UNDEFINED_ENCODING_CONFIRM">
 	<message xml:lang="en">There is no encoding, set it to ISO_8859_1 ?</message>
 	<message xml:lang="fr">Codage non défini. Acceptez-vous de déclarer de l'ISO_8859_1 ?</message>
+	<message xml:lang="de">Keine Kodierung vorhanden, ISO_8859_1 verwenden?</message>
 </label>
 <label define="AM_NOT_AVAILABLE">
 	<message xml:lang="en">Not available</message>

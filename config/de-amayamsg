@@ -209,12 +209,12 @@
 207 Hochformat
 208 Querformat
 209 FTP zulassen (noch in der Erprobung)
-210 **This document is incomplete, don't save it - See Views/Show parsing errors
+210 Unvollständiges Dokument, bitte nicht speichern! - Siehe Ansicht/Parsefehler anzeigen
 211 Im gegenwärtigen Amaya Profil:
 212 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
 213 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt. Wenn Sie es editieren, verlieren Sie unter Umständen Informationen
-214 **This document has no encoding declaration
-215 **There is no encoding, set it to ISO_8859_1 ?
+214 Dieses Dokument enthält keine Kodierungsdeklaration
+215 Keine Kodierung vorhanden, ISO_8859_1 verwenden?
 216 Nicht verfügbar
 217 Browsen
 218 Datei-Browser
