@@ -71,7 +71,7 @@ static int          NoTextChild[] =
 static XML_Parser  parser = NULL;
 
 /* global data used by the HTML parser */
-static ParserData  XMLcontext = {0, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
+static ParserData  XMLcontext = {0, UTF_8, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
 
 /* a parser context. It describes the specific actions to be executed
 when parsing an XML document fragment according to a given DTD */
@@ -3059,8 +3059,7 @@ int              length;
    int            nbBytesRead = 0;
    int            i, j;
    Language       lang;
-   int            code;
-   CHAR_T         fallback[5];
+   char           fallback[5];
    ElementType    elType;
    Element        elLeaf;
 
@@ -3077,9 +3076,9 @@ int              length;
      {
        srcbuf = (unsigned char *) &data[i];
        nbBytesRead = TtaGetNextWideCharFromMultibyteString (&wcharRead,
-							    &srcbuf,
-							    UTF_8);
+							    &srcbuf, UTF_8);
        i += nbBytesRead;
+
        if (wcharRead < 0x100)
 	 {
 	   /* It's an 8bits character */
@@ -3097,8 +3096,7 @@ int              length;
 	       buffer[0] = WC_EOS;
 	     }
 	   /* Try to find a fallback character */
-	   code = (int) wcharRead;
-	   GetFallbackCharacter (code, fallback, &lang);
+	   GetFallbackCharacter ((int) wcharRead, fallback, &lang);
 	   if (fallback[0] == '?')
 	     {
 	       /* The character is not found in the fallback table */
@@ -3110,7 +3108,7 @@ int              length;
 	       InsertXmlElement (&elLeaf);
 	       XMLcontext.lastElement = elLeaf;
 	       XMLcontext.lastElementClosed = TRUE;
-	       /* Put the symbol '?' character into the new symbol leaf */
+	       /* Put the symbol '?' into the new symbol leaf */
 	       TtaSetGraphicsShape (elLeaf, fallback[0], XMLcontext.doc);
 	       /* Changes the wide char code associated with that symbol */
 	       TtaSetSymbolCode (elLeaf, wcharRead, XMLcontext.doc);
@@ -3648,6 +3646,9 @@ XML_Encoding    *info
   printf ("\n Hndl_UnknownEncoding");
   printf ("\n   name : %s", name);
 #endif /* EXPAT_PARSER_DEBUG */
+  XMLUnknownEncoding = TRUE;
+  XmlParseError (errorEncoding,
+		 TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), -1);
   return 1;
 }
 
@@ -3785,9 +3786,12 @@ CHARSET  charset;
   if (charset == UNDEFINED_CHARSET)
     /* Defalut encoding for XML documents */
     parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
-  else if (charset == UTF_8 || charset == UTF_16 || charset == US_ASCII)
+  else if (charset == UTF_8 || charset == UTF_16)
     /* These encoding are automatically recognized by Expat */
     parser = XML_ParserCreateNS (NULL, NS_SEP);
+  else if (charset == US_ASCII)
+    /* US-ASCII may has been set for us-ascii or ascii*/
+    parser = XML_ParserCreateNS ("US-ASCII", NS_SEP);
   else if (charset == ISO_8859_1)
     /* ISO_8859_1 may has been set for a HTML document with no encoding */
     /* In this case, the default encoding is ISO_8859_1, not UTF-8 */
@@ -4314,18 +4318,24 @@ ThotBool  *xmlDoctype;
 	     }
 
 	   /* Virtual DOCTYPE Declaration */
-	   tmpLineRead = XML_GetCurrentLineNumber (parser);
-	   if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
-	     XmlParseError (errorNotWellFormed,
-			    (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-	   *xmlDoctype = TRUE;
-	   extraLineRead = XML_GetCurrentLineNumber (parser) - tmpLineRead;
+	   if (!XMLNotWellFormed)
+	     {
+	       tmpLineRead = XML_GetCurrentLineNumber (parser);
+	       if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
+		 XmlParseError (errorNotWellFormed,
+				(CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+	       *xmlDoctype = TRUE;
+	       extraLineRead = XML_GetCurrentLineNumber (parser) - tmpLineRead;
+	     }
 	 }
 
        /* Standard EXPAT processing */
-       if (!XML_Parse (parser, &bufferRead[i], res, endOfFile))
-	 XmlParseError (errorNotWellFormed,
-			(CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+       if (!XMLNotWellFormed)
+	 {
+	   if (!XML_Parse (parser, &bufferRead[i], res, endOfFile))
+	     XmlParseError (errorNotWellFormed,
+			    (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+	 }
      }
    
    if (ErrFile)
