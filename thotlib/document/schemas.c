@@ -457,9 +457,8 @@ ThotBool LoadPresentationSchema (char *schemaName, PtrSSchema pSS,
       }
    if (pPSchema)
      {
-     if (pSS->SsDefaultPSchema)
-       TtaFreeMemory (pSS->SsDefaultPSchema);
-     pSS->SsDefaultPSchema = TtaStrdup (schemaName);
+     if (pSS->SsDefaultPSchema == NULL)
+       pSS->SsDefaultPSchema = TtaStrdup (schemaName);
      /* associate the presentation schema with the structure schema
         for this document */
      if (!pPfS)
