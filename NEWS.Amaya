@@ -7,6 +7,8 @@ have been introduced in Amaya and Thot since version 1.4 of Amaya.
  
 Extensions 2.3:
 ---------------
+
+* As many search tools generate invalid forms, they are now suported in Amaya.
  
 Fixed bugs 2.3:
 ---------------
@@ -14,9 +16,15 @@ Fixed bugs 2.3:
 * User Interface:
   - when the backspace deleted a string, the final position of the cursor
     was wrong.
+  - the Delete command on an empty paragraph didn't do anything. It was also
+    impossible to merge two paragraphs with the Delete command.
+  - when the selection was moved down with the arrow key, it was shifted one
+    position to the right.
 
 * HTML:
-  - the <input type=image> was not well supported
+  - the <input type=image> was not well supported.
+
+
 
 
 =============================================================

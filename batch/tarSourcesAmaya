@@ -155,6 +155,7 @@ Amaya/batch/PRESEN.GRM \
 Amaya/batch/STRUCT.GRM \
 Amaya/batch/TRANS.GRM \
 Amaya/batch/MachineType \
+Amaya/batch/*.rc \
 Amaya/batch/app.c \
 Amaya/batch/grammar.c \
 Amaya/batch/parser.c \
