@@ -2048,16 +2048,18 @@ ThotBool  GlobalMathAttrInMenu (NotifyAttribute * event)
 static ThotBool MathMoveForward ()
 {
   Document      doc;
-  Element       el, nextEl, leaf;
+  Element       el, nextEl, leaf, ancestor, sibling;
   ElementType   elType;
   int           firstChar, lastChar, len;
   NotifyElement event;
-  ThotBool      done;
-  
+  ThotBool      done, found;
+
   done = FALSE;
   doc = TtaGetSelectedDocument ();
   TtaGiveLastSelectedElement (doc, &el, &firstChar, &lastChar); 
   elType = TtaGetElementType (el);
+  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+    return (FALSE);
   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
     /* the caret is in a character string */
     {
@@ -2071,13 +2073,46 @@ static ThotBool MathMoveForward ()
 	    TtaSelectString (doc, el, firstChar + 1, firstChar);
 	  else
 	    TtaSelectString (doc, el, lastChar + 1, lastChar);
-	done = TRUE;
+	  done = TRUE;
 	}
     }
   if (!done)
     {
       /* get the following element in the tree structure */
       nextEl = TtaGetSuccessor (el);
+      /* are we in a mroot? */
+      elType.ElTypeNum = MathML_EL_MROOT;
+      ancestor = TtaGetTypedAncestor (el, elType);
+      if (ancestor)
+	/* we are in a mroot. Are we at the end of the Index or RootBase? */
+	{
+	  found = FALSE;
+	  do
+	    {
+	      sibling = el;
+	      TtaNextSibling (&sibling);
+	      if (!sibling)
+		{
+		  el = TtaGetParent (el);
+		  elType = TtaGetElementType (el);
+		  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML")&&
+		      (elType.ElTypeNum == MathML_EL_Index ||
+		       elType.ElTypeNum == MathML_EL_RootBase))
+		    found = TRUE;
+		}
+	    }
+	  while (!sibling && !found && el);
+	  if (found)
+	    {
+	      if (elType.ElTypeNum == MathML_EL_Index)
+		{
+		  nextEl = el;
+		  TtaPreviousSibling (&nextEl);
+		}
+	      else
+		nextEl = TtaGetSuccessor (ancestor);
+	    }
+	}
       if (nextEl)
 	{
 	  elType = TtaGetElementType (nextEl);
@@ -2103,24 +2138,24 @@ static ThotBool MathMoveForward ()
 		}
 	      if (nextEl)
 		{
+		  elType = TtaGetElementType (nextEl);
+		  /* if it's a mroot, move to the Index, not the RootBase */
+		  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML")&&
+		      elType.ElTypeNum == MathML_EL_MROOT)
+		    nextEl = TtaGetLastChild (nextEl);
 		  /* get the first leaf in that element */
 		  leaf = TtaGetFirstLeaf (nextEl);
 		  if (leaf)
 		    {
 		      elType = TtaGetElementType (leaf);
-		      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),
-				    "MathML"))
-			/* that leaf is still in the MathML namespace */
-			{
-			  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-			    /* put the caret before the first character in the
-			       string */
-			    TtaSelectString (doc, leaf, 1, 0);
-			  else
-			    /* select the whole leaf */
-			    TtaSelectElement (doc, leaf);
-			  done = TRUE;
-			}
+		      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+			/* put the caret before the first character in the
+			   string */
+			TtaSelectString (doc, leaf, 1, 0);
+		      else
+			/* select the whole leaf */
+			TtaSelectElement (doc, leaf);
+		      done = TRUE;
 		    }
 		}
 	    }
@@ -2141,16 +2176,18 @@ static ThotBool MathMoveForward ()
 static ThotBool MathMoveBackward ()
 {
   Document    doc;
-  Element     el, prevEl, leaf;
+  Element     el, prevEl, leaf, ancestor, sibling;
   ElementType elType;
   int         firstChar, lastChar, len;
   NotifyElement event;
-  ThotBool    done;
-  
+  ThotBool    done, found;
+
   done = FALSE;  
   doc = TtaGetSelectedDocument ();
   TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar); 
   elType = TtaGetElementType (el);
+  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+    return (FALSE);
   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
     /* the caret is in a text string */
     {
@@ -2158,14 +2195,48 @@ static ThotBool MathMoveBackward ()
 	/* the caret is not at the beginning of the string. Move it to
 	   the previous character in the string */
 	{
-	TtaSelectString (doc, el, firstChar - 1, firstChar - 2);
-	done = TRUE;
+	  TtaSelectString (doc, el, firstChar - 1, firstChar - 2);
+	  done = TRUE;
 	}
     }
   if (!done)
     {
       /* get the previous element in the tree structure */
       prevEl = TtaGetPredecessor (el);
+      /* are we in a mroot? */
+      elType.ElTypeNum = MathML_EL_MROOT;
+      ancestor = TtaGetTypedAncestor (el, elType);
+      if (ancestor)
+	/* we are in a mroot. Are we at the beginning of the Index or
+	   RootBase? */
+	{
+	  found = FALSE;
+	  do
+	    {
+	      sibling = el;
+	      TtaPreviousSibling (&sibling);
+	      if (!sibling)
+		{
+		  el = TtaGetParent (el);
+		  elType = TtaGetElementType (el);
+		  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML")&&
+		      (elType.ElTypeNum == MathML_EL_Index ||
+		       elType.ElTypeNum == MathML_EL_RootBase))
+		    found = TRUE;
+		}
+	    }
+	  while (!sibling && !found && el);
+	  if (found)
+	    {
+	      if (elType.ElTypeNum == MathML_EL_RootBase)
+		{
+		  prevEl = el;
+		  TtaNextSibling (&prevEl);
+		}
+	      else
+		prevEl = TtaGetPredecessor (ancestor);
+	    }
+	}
       if (prevEl)
 	{
 	  elType = TtaGetElementType (prevEl);
@@ -2181,33 +2252,32 @@ static ThotBool MathMoveBackward ()
 	    }
 	  else
 	    {
-	      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),
-			    "MathML") &&
+	      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") &&
 		  elType.ElTypeNum == MathML_EL_MTable_head)
 		/* don't select within hidden element MTable_head. Skip it */
 		prevEl = TtaGetPredecessor (prevEl);
 	      if (prevEl)
 		{
+		  elType = TtaGetElementType (prevEl);
+		  /* if it's a mroot, move to the RootBase, not the Index */
+		  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),"MathML")&&
+		      elType.ElTypeNum == MathML_EL_MROOT)
+		    prevEl = TtaGetFirstChild (prevEl);
 		  /* get the last leaf in that element */
 		  leaf = TtaGetLastLeaf (prevEl);
 		  if (leaf)
 		    {
 		      elType = TtaGetElementType (leaf);
-		      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema),
-				    "MathML"))
-			/* that leaf is still in the MathML namespace */
+		      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+			/* put the caret at the end of the string */
 			{
-			  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-			    /* put the caret at the end of the string */
-			    {
-			      len = TtaGetElementVolume (leaf);
-			      TtaSelectString (doc, leaf, len + 1, len);
-			    }
-			  else
-			    /* select the whole leaf */
-			    TtaSelectElement (doc, leaf);
-			  done = TRUE;
+			  len = TtaGetElementVolume (leaf);
+			  TtaSelectString (doc, leaf, len + 1, len);
 			}
+		      else
+			/* select the whole leaf */
+			TtaSelectElement (doc, leaf);
+		      done = TRUE;
 		    }
 		}
 	    }
