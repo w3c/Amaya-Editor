@@ -467,10 +467,6 @@ SOURCE=..\..\thotlib\presentation\pschemaapi.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\dialogue\quit.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\document\readpivot.c
 # End Source File
 # Begin Source File
@@ -656,10 +652,6 @@ SOURCE=..\..\thotlib\document\writedoc.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\document\writepivot.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\thotlib\image\xbmhandler.c
 # End Source File
 # Begin Source File
 

@@ -358,10 +358,6 @@ SOURCE=..\..\thotlib\unicode\ustring.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\image\xbmhandler.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\image\xpmhandler.c
 # End Source File
 # End Target

@@ -115,7 +115,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\davlib" /I "..\..\freetype-2.1.0\include" /I "..\freetype-2.1.0\objs" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "NDEBUG" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "DAV" /D "WIN32" /D "_WINDOWS_" /D "_GL" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\freetype-2.1.0\include" /I "..\..\..\libwww\modules\expat\lib" /I ".\..\libwww\modules\expat\lib" /I "..\freetype-2.1.0\objs" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "NDEBUG" /D "EXPAT_PARSER" /D "_WINDOWS" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "_STIX" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "DAV" /D "_GL" /D "WIN32" /D "_WINGUI" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL" 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "NDEBUG" 
 BSC32=bscmake.exe
@@ -123,7 +123,7 @@ BSC32_FLAGS=/nologo /o"$(OUTDIR)\amaya.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib .\..\freetype-2.0.1\objs\freetype.lib comctl32.lib wsock32.lib user32.lib gdi32.lib advapi32.lib comdlg32.lib shell32.lib winspool.lib opengl32.lib glu32.lib ..\freetype-2.1.0\objs\freetype.lib /nologo /subsystem:windows /incremental:no /pdb:"$(OUTDIR)\amaya.pdb" /machine:I386 /nodefaultlib:"libcd.lib" /out:"$(OUTDIR)\amaya.exe" 
+LINK32_FLAGS=..\freetype-2.1.0\objs\freetype.lib comctl32.lib wsock32.lib user32.lib gdi32.lib advapi32.lib comdlg32.lib shell32.lib winspool.lib opengl32.lib glu32.lib /nologo /subsystem:windows /incremental:no /pdb:"$(OUTDIR)\amaya.pdb" /machine:I386 /nodefaultlib:"libcmt" /out:"$(OUTDIR)\amaya.exe" 
 LINK32_OBJS= \
 	"$(INTDIR)\AHTBridge.obj" \
 	"$(INTDIR)\AHTFWrite.obj" \
@@ -182,7 +182,6 @@ LINK32_OBJS= \
 	".\libThotEditor.lib" \
 	".\libwww.lib" \
 	".\libraptor.lib" \
-	"$(OUTDIR)\thotprinter.lib" \
 	".\libjpeg.lib" \
 	".\libpng.lib" \
 	".\annotlib.lib" \
@@ -336,7 +335,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP_PROJ=/nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\freetype-2.1.0\include" /I "..\..\..\libwww\modules\expat\lib" /I ".\..\libwww\modules\expat\lib" /I "..\freetype-2.1.0\objs" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "EXPAT_PARSER" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "DAV" /D "_GL" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
+CPP_PROJ=/nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\freetype-2.1.0\include" /I "..\..\..\libwww\modules\expat\lib" /I ".\..\libwww\modules\expat\lib" /I "..\freetype-2.1.0\objs" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "_DEBUG" /D "EXPAT_PARSER" /D "_WINDOWS" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "_STIX" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "DAV" /D "_GL" /D "WIN32" /D "_WINGUI" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL" 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\amaya.res" /d "_DEBUG" 
 BSC32=bscmake.exe
@@ -402,7 +401,7 @@ BSC32_SBRS= \
 <<
 
 LINK32=link.exe
-LINK32_FLAGS=..\freetype-2.1.0\objs\freetype.lib comctl32.lib wsock32.lib user32.lib gdi32.lib advapi32.lib comdlg32.lib shell32.lib winspool.lib opengl32.lib glu32.lib /nologo /subsystem:windows /incremental:yes /pdb:"$(OUTDIR)\amaya.pdb" /debug /machine:I386 /nodefaultlib:"libcd.lib" /out:"$(OUTDIR)\amaya.exe" /pdbtype:sept 
+LINK32_FLAGS=..\freetype-2.1.0\objs\freetype.lib comctl32.lib wsock32.lib user32.lib gdi32.lib advapi32.lib comdlg32.lib shell32.lib winspool.lib opengl32.lib glu32.lib /nologo /subsystem:windows /incremental:yes /pdb:"$(OUTDIR)\amaya.pdb" /debug /machine:I386 /nodefaultlib:"libcmtd" /out:"$(OUTDIR)\amaya.exe" /pdbtype:sept 
 LINK32_OBJS= \
 	"$(INTDIR)\AHTBridge.obj" \
 	"$(INTDIR)\AHTFWrite.obj" \

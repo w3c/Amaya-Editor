@@ -25,6 +25,9 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=cl.exe
+RSC=rc.exe
+
 !IF  "$(CFG)" == "printlib - Win32 Release"
 
 OUTDIR=.\..
@@ -84,7 +87,6 @@ CLEAN :
 	-@erase "$(INTDIR)\presrules.obj"
 	-@erase "$(INTDIR)\presvariables.obj"
 	-@erase "$(INTDIR)\pschemaapi.obj"
-	-@erase "$(INTDIR)\quit.obj"
 	-@erase "$(INTDIR)\readpivot.obj"
 	-@erase "$(INTDIR)\readprs.obj"
 	-@erase "$(INTDIR)\readstr.obj"
@@ -103,7 +105,6 @@ CLEAN :
 	-@erase "$(INTDIR)\ustring.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\windowdisplay.obj"
-	-@erase "$(INTDIR)\xbmhandler.obj"
 	-@erase "$(INTDIR)\xpmhandler.obj"
 	-@erase "$(OUTDIR)\printlib.lib"
 
@@ -113,40 +114,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "NDEBUG" /D "__STDC_HEADERS" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /Fp"$(INTDIR)\printlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\printlib.bsc" 
 BSC32_SBRS= \
@@ -201,7 +169,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\presrules.obj" \
 	"$(INTDIR)\presvariables.obj" \
 	"$(INTDIR)\pschemaapi.obj" \
-	"$(INTDIR)\quit.obj" \
 	"$(INTDIR)\readpivot.obj" \
 	"$(INTDIR)\readprs.obj" \
 	"$(INTDIR)\readstr.obj" \
@@ -219,7 +186,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\units.obj" \
 	"$(INTDIR)\ustring.obj" \
 	"$(INTDIR)\windowdisplay.obj" \
-	"$(INTDIR)\xbmhandler.obj" \
 	"$(INTDIR)\xpmhandler.obj"
 
 "$(OUTDIR)\printlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
@@ -286,7 +252,6 @@ CLEAN :
 	-@erase "$(INTDIR)\presrules.obj"
 	-@erase "$(INTDIR)\presvariables.obj"
 	-@erase "$(INTDIR)\pschemaapi.obj"
-	-@erase "$(INTDIR)\quit.obj"
 	-@erase "$(INTDIR)\readpivot.obj"
 	-@erase "$(INTDIR)\readprs.obj"
 	-@erase "$(INTDIR)\readstr.obj"
@@ -306,7 +271,6 @@ CLEAN :
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(INTDIR)\windowdisplay.obj"
-	-@erase "$(INTDIR)\xbmhandler.obj"
 	-@erase "$(INTDIR)\xpmhandler.obj"
 	-@erase "$(OUTDIR)\printlib.lib"
 
@@ -316,40 +280,7 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=cl.exe
 CPP_PROJ=/nologo /MLd /W3 /GX /ZI /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "_DEBUG" /D "_WINDOWS_DLL" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "WIN32" /D "_WINDOWS" /D "_WINGUI" /Fp"$(INTDIR)\printlib.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-RSC=rc.exe
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\printlib.bsc" 
 BSC32_SBRS= \
@@ -404,7 +335,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\presrules.obj" \
 	"$(INTDIR)\presvariables.obj" \
 	"$(INTDIR)\pschemaapi.obj" \
-	"$(INTDIR)\quit.obj" \
 	"$(INTDIR)\readpivot.obj" \
 	"$(INTDIR)\readprs.obj" \
 	"$(INTDIR)\readstr.obj" \
@@ -422,7 +352,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\units.obj" \
 	"$(INTDIR)\ustring.obj" \
 	"$(INTDIR)\windowdisplay.obj" \
-	"$(INTDIR)\xbmhandler.obj" \
 	"$(INTDIR)\xpmhandler.obj"
 
 "$(OUTDIR)\printlib.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
@@ -431,6 +360,36 @@ LIB32_OBJS= \
 <<
 
 !ENDIF 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
@@ -725,12 +684,6 @@ SOURCE=..\..\thotlib\presentation\pschemaapi.c
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\thotlib\dialogue\quit.c
-
-"$(INTDIR)\quit.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
 SOURCE=..\..\thotlib\document\readpivot.c
 
 "$(INTDIR)\readpivot.obj" : $(SOURCE) "$(INTDIR)"
@@ -830,12 +783,6 @@ SOURCE=..\..\thotlib\unicode\ustring.c
 SOURCE=..\..\thotlib\view\windowdisplay.c
 
 "$(INTDIR)\windowdisplay.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-SOURCE=..\..\thotlib\image\xbmhandler.c
-
-"$(INTDIR)\xbmhandler.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

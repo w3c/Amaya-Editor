@@ -166,7 +166,6 @@ CLEAN :
 	-@erase "$(INTDIR)\word.obj"
 	-@erase "$(INTDIR)\writedoc.obj"
 	-@erase "$(INTDIR)\writepivot.obj"
-	-@erase "$(INTDIR)\xbmhandler.obj"
 	-@erase "$(INTDIR)\xpmhandler.obj"
 	-@erase "$(OUTDIR)\libThotEditor.lib"
 
@@ -211,6 +210,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\changepresent.obj" \
 	"$(INTDIR)\checkaccess.obj" \
 	"$(INTDIR)\checkermenu.obj" \
+	"$(INTDIR)\closedoc.obj" \
 	"$(INTDIR)\colors.obj" \
 	"$(INTDIR)\config.obj" \
 	"$(INTDIR)\content.obj" \
@@ -308,9 +308,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\word.obj" \
 	"$(INTDIR)\writedoc.obj" \
 	"$(INTDIR)\writepivot.obj" \
-	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj" \
-	"$(INTDIR)\closedoc.obj"
+	"$(INTDIR)\xpmhandler.obj"
 
 "$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -580,8 +578,6 @@ CLEAN :
 	-@erase "$(INTDIR)\writedoc.sbr"
 	-@erase "$(INTDIR)\writepivot.obj"
 	-@erase "$(INTDIR)\writepivot.sbr"
-	-@erase "$(INTDIR)\xbmhandler.obj"
-	-@erase "$(INTDIR)\xbmhandler.sbr"
 	-@erase "$(INTDIR)\xpmhandler.obj"
 	-@erase "$(INTDIR)\xpmhandler.sbr"
 	-@erase "$(OUTDIR)\libThotEditor.bsc"
@@ -624,6 +620,7 @@ BSC32_SBRS= \
 	"$(INTDIR)\changepresent.sbr" \
 	"$(INTDIR)\checkaccess.sbr" \
 	"$(INTDIR)\checkermenu.sbr" \
+	"$(INTDIR)\closedoc.sbr" \
 	"$(INTDIR)\colors.sbr" \
 	"$(INTDIR)\config.sbr" \
 	"$(INTDIR)\content.sbr" \
@@ -721,9 +718,7 @@ BSC32_SBRS= \
 	"$(INTDIR)\word.sbr" \
 	"$(INTDIR)\writedoc.sbr" \
 	"$(INTDIR)\writepivot.sbr" \
-	"$(INTDIR)\xbmhandler.sbr" \
-	"$(INTDIR)\xpmhandler.sbr" \
-	"$(INTDIR)\closedoc.sbr"
+	"$(INTDIR)\xpmhandler.sbr"
 
 "$(OUTDIR)\libThotEditor.bsc" : "$(OUTDIR)" $(BSC32_SBRS)
     $(BSC32) @<<
@@ -760,6 +755,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\changepresent.obj" \
 	"$(INTDIR)\checkaccess.obj" \
 	"$(INTDIR)\checkermenu.obj" \
+	"$(INTDIR)\closedoc.obj" \
 	"$(INTDIR)\colors.obj" \
 	"$(INTDIR)\config.obj" \
 	"$(INTDIR)\content.obj" \
@@ -857,9 +853,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\word.obj" \
 	"$(INTDIR)\writedoc.obj" \
 	"$(INTDIR)\writepivot.obj" \
-	"$(INTDIR)\xbmhandler.obj" \
-	"$(INTDIR)\xpmhandler.obj" \
-	"$(INTDIR)\closedoc.obj"
+	"$(INTDIR)\xpmhandler.obj"
 
 "$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -3154,24 +3148,6 @@ SOURCE=..\..\thotlib\document\writepivot.c
 
 
 "$(INTDIR)\writepivot.obj"	"$(INTDIR)\writepivot.sbr" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\thotlib\image\xbmhandler.c
-
-!IF  "$(CFG)" == "libThotEditor - Win32 Release"
-
-
-"$(INTDIR)\xbmhandler.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "libThotEditor - Win32 Debug"
-
-
-"$(INTDIR)\xbmhandler.obj"	"$(INTDIR)\xbmhandler.sbr" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
