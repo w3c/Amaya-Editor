@@ -354,8 +354,8 @@ int CharacterWidth (unsigned char c, PtrFont font)
 	  else if (TtPatchedFont[i] == 24)
 	    l = 4;
 	}
-    }
 #endif /* _WINDOWS */
+    }
    return l;
 }
 
