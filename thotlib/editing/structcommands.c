@@ -2427,7 +2427,8 @@ boolean             Before;
   PtrDocument         pSelDoc;
   NotifyElement       notifyEl;
   NotifyOnElementType notifyElType;
-  int                 firstChar, lastChar, NSiblings, ancestorRule, rule;
+  int                 firstChar, lastChar, NSiblings, ancestorRule,
+		      rule, prevrule, prevprevrule;
   boolean             InsertionPoint, ok, createAfter, splitElem, elConst;
   boolean             empty, selHead, selTail, done;
 
@@ -2620,6 +2621,7 @@ boolean             Before;
 	       une telle liste ou un tel agregat */
 	    {
 	      rule = typeNum;
+	      prevrule = 0;  prevprevrule = 0;
 	      while (rule > 0 && !ok)
 		{
 		  /* on cherche d'abord une regle CsList */
@@ -2636,7 +2638,15 @@ boolean             Before;
 						 &splitElem, &pSplitEl, &pElSplit, createAfter,
 						 ancestorRule, pSS, pSelDoc);
 		      if (!ok && ancestorRule > 0)
-			rule = ancestorRule;
+			if (ancestorRule == prevrule ||
+			    ancestorRule == prevprevrule)
+			   rule = 0;
+			else
+			   {
+			   prevprevrule = prevrule;
+			   prevrule = rule;
+			   rule = ancestorRule;
+			   }
 		    }
 		}
 	    }
