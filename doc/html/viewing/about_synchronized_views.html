@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.2" />
+  <meta name="GENERATOR" content="amaya 6.0, see http://www.w3.org/Amaya/" />
   <title>About Synchronized Views</title>
-  <style type="text/css"></style>
+  <style type="text/css">
+  </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -18,10 +18,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p> <a href="closing_a_view.html" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a>
-		<a href="../Views.html" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		</p>
+      <td><p><a href="closing_a_view.html" accesskey="p"><img alt="previous"
+        src="../../images/left.gif" /></a> <a href="../Views.html"
+        accesskey="t"><img alt="top" src="../../images/up.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -39,10 +38,17 @@ are displayed only in the active view. When you select a button bar or menu
 command or click in another location, Amaya updates the other views to
 display your changes.</p>
 
+<p>Selection and editing commands act always in the document tree. When you
+select two elements in a view, the selection is extended to the minimum
+sub-tree that includes these two elements, even if some elements are not
+displayed in that view. Commands applied to that selection (delete by
+example) acts on the whole selection.</p>
+
 <p>The Source view is not automatically synchronized. After making a series
-of edits in the Source view, you must choose File &gt; Synchronize to update
-the other views of the document. Conversely, when you make changes in any
-other view, choose File &gt; Synchronize to update the Source view.</p>
+of edits in the Source view, you must choose File&nbsp;&gt;&nbsp;Synchronize
+to update the other views of the document. Conversely, when you make changes
+in any other view, choose File&nbsp;&gt;&nbsp;Synchronize to update the
+Source view.</p>
 
 <p>When you synchronize a document, Amaya will re-validate it. If you
 introduced markup errors in the source view, Amaya will recover as well as it
@@ -62,6 +68,5 @@ reflect the state of the document at the time it is saved.</p>
   <li><a href="closing_a_view.html">Closing a View</a></li>
 </ul>
 </div>
-
 </body>
 </html>

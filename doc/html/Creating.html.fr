@@ -104,7 +104,7 @@ href="Tables.html.fr#Editing">cellules de table</a> par exemple.</p>
 
 <p>Quand la sélection se trouve à la fin d'un &lt;pre&gt;, la touche Enter
 crée une nouvelle ligne du &lt;pre&gt;. Pour créer un paragraphe après le
-&lt;pre&gt;, il faut sélectionner le &lt;pre&gt;  en utilisant la touche Esc
+&lt;pre&gt;, il faut sélectionner le &lt;pre&gt; en utilisant la touche Esc
 (Unix) ou F2 (Windows) puis Enter.</p>
 
 <p>Le plus souvent, le nouvel élément créé est simplement un paragraphe, quel
@@ -185,6 +185,22 @@ paragraphe et tapez du texte, les caractères sont insérés dans l'ancre ou de
 la chaîne stylée. Si vous voulez saisir du simple texte avant cet élément, il
 vous suffit de presser la touche "Enter" pour sortir de l'élément et de
 taper.</p>
+
+<h4>Sortir d'un &lt;pre&gt; ou d'une table</h4>
+
+<p>Quand la curseur se trouve à la fin d'un élément &lt;pre&gt;, la touche
+"Enter" crée une nouvelle ligne dans le &lt;pre&gt;. Pour créer un autre
+élément, un paragraphe, après le &lt;pre&gt;, vous pouvez utiliser le menu
+Types et sélectionner le type désiré.</p>
+
+<p>Un autre moyen d'obtenir ce résultat est de sélectionner le &lt;pre&gt; en
+entier avec la touche "Esc" (Unix) ou "F2" (Windows) et de presser la touche
+"Enter". Un nouveau paragraphe après le &lt;pre&gt; sera créé.</p>
+
+<p>Ceci marche aussi pour une table&nbsp;: il faut sélectionner la table
+entière et presser la touche "Enter" pour créer un nouveau paragraphe après
+une table. Vous pouvez aussi sortir de la table par une série de plusieurs
+"Enter" successifs.</p>
 
 <h4 id="edit-dl">Editer les listes de définitions (dl/dt/dd)</h4>
 
