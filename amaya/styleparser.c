@@ -4568,6 +4568,8 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		    specificity += 100;
 		    if (names[0] && !strcmp (names[0], "*"))
 		      names[0] = NULL;
+		    /* a "id" attribute must match */
+		    attrmatch[0] = Txtmatch;
 		  }
 	      }
 	  }

@@ -319,7 +319,7 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool Debut, ThotBool C
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void ComputeViewSelMarks (ViewSelection * marque)
+void ComputeViewSelMarks (ViewSelection * marque, int frame)
 {
 }
 

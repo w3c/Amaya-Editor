@@ -46,7 +46,7 @@
 /*----------------------------------------------------------------------
   GetNextBox returns the box assiated to the next in live abstract box.
   ----------------------------------------------------------------------*/
-PtrBox GetNextBox (PtrAbstractBox pAb)
+PtrBox GetNextBox (PtrAbstractBox pAb, int frame)
 {
    PtrAbstractBox      pNextAb;
    ThotBool            loop;
@@ -73,7 +73,8 @@ PtrBox GetNextBox (PtrAbstractBox pAb)
 		}
 	      else
 		 loop = FALSE;
-	   else if (pNextAb->AbDead)
+	   else if (pNextAb->AbDead ||
+		    pNextAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
 	      pNextAb = pNextAb->AbNext;
 	   else if (pNextAb->AbBox == NULL)
 	      pNextAb = pNextAb->AbNext;
@@ -118,7 +119,7 @@ PtrBox GetNextBox (PtrAbstractBox pAb)
    GetPreviousBox rend l'adresse de la boite associee au pave vivant 
    qui precede pAb.                                        
   ----------------------------------------------------------------------*/
-static PtrBox GetPreviousBox (PtrAbstractBox pAb)
+static PtrBox GetPreviousBox (PtrAbstractBox pAb, int frame)
 {
    PtrAbstractBox      pNextAb;
    ThotBool            loop;
@@ -139,7 +140,8 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb)
 	   }
 	 else
 	    loop = FALSE;
-      else if (pNextAb->AbDead)
+      else if (pNextAb->AbDead ||
+	       pNextAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
 	 pNextAb = pNextAb->AbPrevious;
       else if (pNextAb->AbBox == NULL)
 	 pNextAb = pNextAb->AbPrevious;
@@ -252,7 +254,7 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	  /* get the next child */
 	  pBoxInLine = pBox->BxNexChild;
 	else
-	  pBoxInLine = GetNextBox (pBox->BxAbstractBox);
+	  pBoxInLine = GetNextBox (pBox->BxAbstractBox, frame);
       }
     while (max < 200 && pBoxInLine && pBox != pLine->LiLastBox &&
 	   pBox != pLine->LiLastPiece);
@@ -453,7 +455,7 @@ static void Align (PtrBox pParentBox, PtrLine pLine, int frame,
 	  /* get the next child */
 	  pBoxInLine = pBox->BxNexChild;
 	else
-	  pBoxInLine = GetNextBox (pBox->BxAbstractBox);
+	  pBoxInLine = GetNextBox (pBox->BxAbstractBox, frame);
       }
     while (max < 200 && pBoxInLine && pBox != pLine->LiLastBox &&
 	   pBox != pLine->LiLastPiece);
@@ -1887,7 +1889,8 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   pNextBox = pLine->LiFirstBox;
   /* evaluate the temporary height of the line */
   if (pNextBox && pNextBox->BxAbstractBox && pNextBox->BxWidth &&
-      pNextBox->BxAbstractBox->AbFloat == 'N')
+      pNextBox->BxAbstractBox->AbFloat == 'N' &&
+       pNextBox->BxType != BoFloatGhost)
     pLine->LiHeight = pNextBox->BxHeight;
   InitLine (pLine, pBlock, indent, *floatL, *floatR, pNextBox,
 	    top, bottom, left, right, xAbs, yAbs);
@@ -1934,7 +1937,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	      else
 		{
 		/* the whole box can be inserted in the line */
-		pNextBox = GetNextBox (pBox->BxAbstractBox);
+		pNextBox = GetNextBox (pBox->BxAbstractBox,frame);
 		if (pNextBox == NULL)
 		  {
 		    *full = FALSE;
@@ -1999,7 +2002,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	    {
 	      /* skip over this floating box */
 	      lastbox = pNextBox;
-	      pNextBox = GetNextBox (lastbox->BxAbstractBox);
+	      pNextBox = GetNextBox (lastbox->BxAbstractBox, frame);
 	      if (pNextBox &&
 		  (pNextBox->BxType == BoSplit ||
 		   pNextBox->BxType == BoMulScript))
@@ -2053,7 +2056,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	    }
 	  else
 	    /* skip over the box */
-	    pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+	    pNextBox = GetNextBox (pNextBox->BxAbstractBox, frame);
 	}
       else
 	{
@@ -2118,7 +2121,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		/* get the next child */
 		pNextBox = pNextBox->BxNexChild;
 	      else
-		pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+		pNextBox = GetNextBox (pNextBox->BxAbstractBox, frame);
 
 	      if (!pBox->BxAbstractBox->AbElement->ElTerminal &&
 		  (pNextBox == NULL ||
@@ -2201,7 +2204,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		    pBox = lastbox->BxNexChild;
 		  else
 		    {
-		      lastbox = GetNextBox (lastbox->BxAbstractBox);
+		      lastbox = GetNextBox (lastbox->BxAbstractBox, frame);
 		      if (lastbox == NULL)
 			still = FALSE;
 		      else if (!lastbox->BxAbstractBox->AbNotInLine &&
@@ -2238,7 +2241,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	    {
 	      /* cut before that box */
 	      toCut = FALSE;
-	      pBox = GetPreviousBox (pNextBox->BxAbstractBox);
+	      pBox = GetPreviousBox (pNextBox->BxAbstractBox, frame);
 	    }
 	  else if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
 	      pNextBox->BxAbstractBox->AbAcceptLineBreak &&
@@ -2261,7 +2264,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		    }
 		}
 	      else
-		pBox = GetPreviousBox (pNextBox->BxAbstractBox);
+		pBox = GetPreviousBox (pNextBox->BxAbstractBox, frame);
 	      toCut = FALSE;
 	    }
 
@@ -2276,7 +2279,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		      pNextBox->BxPrevious)
 		    pNextBox = pNextBox->BxPrevious;
 		  else
-		    pNextBox = GetPreviousBox (pNextBox->BxAbstractBox);
+		    pNextBox = GetPreviousBox (pNextBox->BxAbstractBox, frame);
 		}
 	      
 	      /* if we are working on the first box, we won't try again */
@@ -2342,7 +2345,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		  else
 		    {
 		      /* break before the last box */
-		      pBox = GetPreviousBox (lastbox->BxAbstractBox);
+		      pBox = GetPreviousBox (lastbox->BxAbstractBox, frame);
 		      /*pBox = lastbox->BxPrevious;*/
 		      if (pBox == NULL)
 			pBox = lastbox;
@@ -2398,7 +2401,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		pNextBox = pNextBox->BxNexChild;
 	      else
 		{
-		  pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+		  pNextBox = GetNextBox (pNextBox->BxAbstractBox, frame);
 		  if (pNextBox == NULL)
 		    still = FALSE;
 		}
@@ -2418,7 +2421,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   
       /* teste s'il reste des boites a mettre en ligne */
       if ((pBox->BxAbstractBox->AbLeafType != LtText || pBox->BxNexChild == NULL) &&
-	  GetNextBox (pBox->BxAbstractBox) == NULL)
+	  GetNextBox (pBox->BxAbstractBox, frame) == NULL)
 	*full = FALSE;
 
       /* coupe les blancs en fin de ligne pleine */
@@ -3114,7 +3117,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  if (pBoxToBreak && pBoxToBreak->BxNexChild)
 	    pBoxToBreak = pBoxToBreak->BxNexChild;
 	  else
-	    pNextBox = GetNextBox (pChildAb);
+	    pNextBox = GetNextBox (pChildAb, frame);
 	  
 	  if (pNextBox == NULL)
 	    /* nothing else */
@@ -3273,7 +3276,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		  /* get the next child */
 		  pNextBox = pNextBox->BxNexChild;
 		else
-		  pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+		  pNextBox = GetNextBox (pNextBox->BxAbstractBox, frame);
 	      while (pNextBox &&
 		     pNextBox->BxAbstractBox->AbFloat == 'N' &&
 		     pNextBox->BxAbstractBox->AbNotInLine &&
@@ -3368,7 +3371,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	    /* get the next child */
 	    pNextBox = pNextBox->BxNexChild;
 	  else
-	    pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+	    pNextBox = GetNextBox (pNextBox->BxAbstractBox, frame);
 	while (pNextBox && pNextBox->BxAbstractBox->AbNotInLine);
       if (pNextBox)
 	{
@@ -3395,7 +3398,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		    /* get the next child */
 		    pNextBox = pLine->LiLastBox->BxNexChild;
 		  else
-		    pNextBox = GetNextBox (pLine->LiLastBox->BxAbstractBox);
+		    pNextBox = GetNextBox (pLine->LiLastBox->BxAbstractBox, frame);
 		}
 	      if (full)
 		{
@@ -3504,7 +3507,7 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
 	      /* get the next child */
 	      box = box->BxNexChild;
 	    else
-	      box = GetNextBox (box->BxAbstractBox);
+	      box = GetNextBox (box->BxAbstractBox, frame);
 	    if (box->BxType == BoSplit || box->BxType == BoMulScript)
 	      box = box->BxNexChild;
 	    if (box &&
@@ -3539,7 +3542,7 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
 	 /* get the next child */
 	 pBox = pBox->BxNexChild;
        else
-	 pBox = GetNextBox (pBox->BxAbstractBox);
+	 pBox = GetNextBox (pBox->BxAbstractBox, frame);
 	if (pBox && pBox->BxNexChild &&
 	    (pBox->BxType == BoSplit || pBox->BxType == BoMulScript))
 	  pBox = pBox->BxNexChild;
@@ -3671,7 +3674,7 @@ static void CompressLine (PtrLine pLine, int xDelta, int frame, int spaceDelta)
 	 /* get the next child */
 	 pBox = box->BxNexChild;
        else
-	 pBox = GetNextBox (box->BxAbstractBox);
+	 pBox = GetNextBox (box->BxAbstractBox, frame);
      }
    while (pBox && box != pLine->LiLastBox && box != pLine->LiLastPiece);
    ReadyToDisplay = status;
@@ -3733,7 +3736,7 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
 	    /* get the next child */
 	    box = box->BxNexChild;
 	  else
-	    box = GetNextBox (box->BxAbstractBox);
+	    box = GetNextBox (box->BxAbstractBox, frame);
 	}
       while (box)
 	{
@@ -3743,7 +3746,7 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
 	    /* get the next child */
 	    box = box->BxNexChild;
 	  else
-	    box = GetNextBox (box->BxAbstractBox);
+	    box = GetNextBox (box->BxAbstractBox, frame);
 	}
     }
 }
@@ -3864,7 +3867,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	  {
 	     /* Si la selection a encore un sens */
 	     if (pSelBegin->VsBox->BxAbstractBox)
-		ComputeViewSelMarks (pSelBegin);
+		ComputeViewSelMarks (pSelBegin, frame);
 
 	     pSelEnd = &pFrame->FrSelectionEnd;
 	     if (changeSelectEnd && pSelEnd->VsBox)
@@ -3882,7 +3885,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 			 pSelEnd->VsNSpaces = pSelBegin->VsNSpaces;
 		       }
 		     else
-		       ComputeViewSelMarks (pSelEnd);
+		       ComputeViewSelMarks (pSelEnd, frame);
 		     
 		     /* Recherche la position limite du caractere */
 		     pSelBox = pSelEnd->VsBox;
@@ -4167,7 +4170,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 	}
       else
 	{
-	  pLine = SearchLine (pBox);
+	  pLine = SearchLine (pBox, frame);
 	  if (pLine)
 	    {
 	      pNextLine = pLine->LiNext;
@@ -4217,7 +4220,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 		      if (descent < i)
 			descent = i;
 		      /* next box */
-		      pPieceBox = GetNextBox (box->BxAbstractBox);
+		      pPieceBox = GetNextBox (box->BxAbstractBox, frame);
 		    }
 		  while (pPieceBox && box != pLine->LiLastBox &&
 			 box != pLine->LiLastPiece);
@@ -4262,7 +4265,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 			  
 			  if (box != pBox)
 			    YMove (box, NULL, i, frame);
-			  pPieceBox = GetNextBox (box->BxAbstractBox);
+			  pPieceBox = GetNextBox (box->BxAbstractBox, frame);
 			}
 		      while (pPieceBox && box != pLine->LiLastBox &&
 			     box != pLine->LiLastPiece);
@@ -4325,7 +4328,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 			    box = NULL;
 			  else
 			    /* skip floating boxes */
-			    box = GetNextBox (box->BxAbstractBox);
+			    box = GetNextBox (box->BxAbstractBox, frame);
 			}
 		    }
 		  if (h)
@@ -4347,7 +4350,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 				  else
 				    box = pPieceBox;
 				  YMove (box, NULL, h, frame);
-				  pPieceBox = GetNextBox (box->BxAbstractBox);
+				  pPieceBox = GetNextBox (box->BxAbstractBox, frame);
 				}
 			      while (pPieceBox && box != pNextLine->LiLastBox &&
 				     box != pNextLine->LiLastPiece);

@@ -2438,7 +2438,7 @@ PtrAbstractBox SearchEnclosingType (PtrAbstractBox pAb, BoxType type1,
 /*----------------------------------------------------------------------
   SearchLine looks for the line that includes the box pBox.
   ----------------------------------------------------------------------*/
-PtrLine SearchLine (PtrBox pBox)
+PtrLine SearchLine (PtrBox pBox, int frame)
 {
    PtrLine             pLine;
    PtrBox              pBoxPiece;
@@ -2524,7 +2524,7 @@ PtrLine SearchLine (PtrBox pBox)
 			   pBoxPiece->BxNexChild)
 		    pBoxInLine = pBoxPiece->BxNexChild;
 		  else
-		     pBoxInLine = GetNextBox (pBoxInLine->BxAbstractBox);
+		     pBoxInLine = GetNextBox (pBoxInLine->BxAbstractBox, frame);
 		 }
 	       while (pBoxPiece != pLine->LiLastBox
 		      && pBoxPiece != pLine->LiLastPiece
@@ -2643,7 +2643,7 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
 	 /* Faut-il mettre a jour le bloc de ligne englobant ? */
 	 if (Propagate == ToAll)
 	   {
-	     pLine = SearchLine (pBox->BxNexChild);
+	     pLine = SearchLine (pBox->BxNexChild, frame);
 	     RecomputeLines (pAb->AbEnclosing, pLine, pBox, frame);
 	   }
        }
@@ -4224,7 +4224,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      if (!pAb->AbHorizEnclosing && pBox->BxNChars > 0)
 		{
 		  pPosAb = &pAb->AbVertPos;
-		  pLine = SearchLine (pBox);
+		  pLine = SearchLine (pBox, frame);
 		  if (pLine)
 		    {
 		      if (pPosAb->PosUnit == UnPercent)
@@ -4723,7 +4723,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 				   pBox->BxType == BoMulScript)
 				 while (pBox->BxNexChild)
 				   pBox = pBox->BxNexChild;
-			       pLine = SearchLine (pBox);
+			       pLine = SearchLine (pBox, frame);
 			     }
 			   else
 			     pLine = NULL;
@@ -4738,7 +4738,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 			   if ((pBox->BxType == BoSplit || pBox->BxType == BoMulScript) &&
 			       pBox->BxNexChild)
 			     pBox = pBox->BxNexChild;
-			   pLine = SearchLine (pBox);
+			   pLine = SearchLine (pBox, frame);
 			 }
 		       else
 			 pLine = NULL;
@@ -4973,7 +4973,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 				   pBox->BxType == BoMulScript)
 				  while (pBox->BxNexChild)
 				     pBox = pBox->BxNexChild;
-			       pLine = SearchLine (pBox);
+			       pLine = SearchLine (pBox, frame);
 			    }
 		       }
 		     else
@@ -4982,7 +4982,7 @@ ThotBool ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 			  pBox = pAb->AbBox;
 			  if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 			     pBox = pBox->BxNexChild;
-			  pLine = SearchLine (pBox);
+			  pLine = SearchLine (pBox, frame);
 		       }
 		    }
 	       }

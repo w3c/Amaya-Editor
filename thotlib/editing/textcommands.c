@@ -566,8 +566,8 @@ static void MovingCommands (int code, Document doc, View view,
 		      if (ibox)
 			{
 			  /* check if boxes are within the same line */
-			  pLine = SearchLine (pBox);
-			  if (pLine && pLine == SearchLine (ibox))
+			  pLine = SearchLine (pBox, frame);
+			  if (pLine && pLine == SearchLine (ibox, frame))
 			    {
 			      /* moving to the beginning of the current box */
 			      y = pBox->BxYOrg + (pBox->BxHeight / 2);
@@ -699,8 +699,8 @@ static void MovingCommands (int code, Document doc, View view,
 		      if (ibox)
 			{
 			  /* check if boxes are within the same line */
-			  pLine = SearchLine (pBox);
-			  if (pLine && pLine == SearchLine (ibox))
+			  pLine = SearchLine (pBox, frame);
+			  if (pLine && pLine == SearchLine (ibox, frame))
 			    {
 			      /* moving to the end of the current box */
 			      y = pBox->BxYOrg + (pBox->BxHeight / 2);

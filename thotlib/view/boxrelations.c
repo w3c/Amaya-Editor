@@ -1958,7 +1958,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				  
 				  if (inLine && pDimAb->DimSameDimension)
 				    {
-				      pLine = SearchLine (pBox);
+				      pLine = SearchLine (pBox, frame);
 				      if (pLine)
 					val = pLine->LiXMax;
 				    }

@@ -1481,7 +1481,8 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
    GetLeafBox returns the leaf box located at the position x+xDelta
    y+yDelta from pSourceBox box.
   ----------------------------------------------------------------------*/
-PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDelta, int yDelta)
+PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y,
+		   int xDelta, int yDelta)
 {
   int                 i;
   PtrBox              pBox, pLimitBox;
@@ -1545,7 +1546,7 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDelta, int
 	      IsParentBox (pSourceBox, pBox))
 	    {
 	      /* compute the height to be moved */
-	      pLine = SearchLine (pBox);
+	      pLine = SearchLine (pBox, frame);
 	      if (pLine != NULL)
 		h = pLine->LiHeight / 2;
 	      else

@@ -578,7 +578,7 @@ void ShowBox (int frame, PtrBox pBox, int position, int percent)
 	     pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
 	 }
        /* manage the line instead of the box itself */
-       pLine = SearchLine (pBox);
+       pLine = SearchLine (pBox, frame);
        if (pLine)
 	 {
 	   pBlock = pBox->BxAbstractBox;

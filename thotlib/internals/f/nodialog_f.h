@@ -101,7 +101,8 @@ extern void SelectElement ( PtrDocument pDoc,
                             PtrElement pEl,
                             ThotBool Debut,
                             ThotBool Controle );
-extern void ComputeViewSelMarks ( ViewSelection * marque );
+extern void ComputeViewSelMarks ( ViewSelection * marque,
+                                  int frame );
 extern void HighlightSelection ( ThotBool DebVisible,
                                  ThotBool clearOldSel );
 extern void CancelSelection ( void );
@@ -241,7 +242,8 @@ extern void SelectElement ( PtrDocument pDoc,
                               PtrElement pEl,
                               ThotBool Debut,
                               ThotBool Controle );
-extern void ComputeViewSelMarks ( ViewSelection * marque );
+extern void ComputeViewSelMarks ( ViewSelection * marque,
+                                    int frame );
 extern void HighlightSelection ( ThotBool DebVisible,
                                    ThotBool clearOldSel );
 extern void CancelSelection ( void );

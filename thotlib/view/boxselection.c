@@ -466,7 +466,7 @@ PtrTextBuffer DeleteBuffer (PtrTextBuffer pBuffer, int frame)
   position within the box (VsXPos) and the line which includes the 
   character (VsLine).
   ----------------------------------------------------------------------*/
-void ComputeViewSelMarks (ViewSelection *selMark)
+void ComputeViewSelMarks (ViewSelection *selMark, int frame)
 {
   PtrTextBuffer       pBuffer;
   PtrBox              pBox;
@@ -535,7 +535,7 @@ void ComputeViewSelMarks (ViewSelection *selMark)
       selMark->VsXPos = x + l + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       selMark->VsNSpaces = spaces;
     }
-  selMark->VsLine = SearchLine (selMark->VsBox);
+  selMark->VsLine = SearchLine (selMark->VsBox, frame);
 }
 
 /*----------------------------------------------------------------------
@@ -575,7 +575,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 	  pBox = pAb->AbBox;
 	  GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
 	  rtl = (pBox->BxScript == 'A' || pBox->BxScript == 'H');
-	  adline = SearchLine (pBox);
+	  adline = SearchLine (pBox, frame);
 	  graphSel = (pAb->AbLeafType == LtPolyLine ||
 		      pAb->AbLeafType == LtPath ||
 		      pAb->AbLeafType == LtGraphics);
@@ -682,7 +682,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		  /* update the first selection mark */
 		  pViewSel->VsBox = pBox;
 		  pViewSel->VsIndBox = firstChar;
-		  ComputeViewSelMarks (pViewSel);
+		  ComputeViewSelMarks (pViewSel, frame);
 		}
 	      if (endSelection)
 		{
@@ -703,7 +703,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		      /* startSelection and endSelection differ */
 		      pViewSelEnd->VsBox = pBox;
 		      pViewSelEnd->VsIndBox = lastChar;
-		      ComputeViewSelMarks (pViewSelEnd);
+		      ComputeViewSelMarks (pViewSelEnd, frame);
 		    }
 		  
 		  /* update the width of the selection */

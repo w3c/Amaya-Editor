@@ -2405,7 +2405,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		      if (pBox == pViewSel->VsBox)
 			pLine = pViewSel->VsLine;
 		      else
-			pLine = SearchLine (pBox);
+			pLine = SearchLine (pBox, frame);
 		      if (pCurrentAb->AbMBPChange || l || r)
 			UpdateLineBlock (pAb, pLine, pBox, diff, 0, frame);
 		      else
@@ -2858,7 +2858,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 				  pBox->BxType == BoFloatGhost)
 				{
 				  /* inherit from the line height */
-				  pLine = SearchLine (box);
+				  pLine = SearchLine (box, frame);
 				  if (pLine == NULL)
 				    /* no line available */
 				    val = box->BxHeight;
@@ -3162,7 +3162,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	    {
 	    pBox->BxXOrg += delta;
 	    if (pBox->BxType == BoMulScript &&
-		(pCurrentAb->AbNotInLine || !SearchLine (pBox)))
+		(pCurrentAb->AbNotInLine || !SearchLine (pBox, frame)))
 	      {
 		/* move script boxes too */
 		box = pBox->BxNexChild;
@@ -3418,7 +3418,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	    {
 	      pBox->BxYOrg += delta;
 	      if (pBox->BxType == BoMulScript &&
-		  (pCurrentAb->AbNotInLine || !SearchLine (pBox)))
+		  (pCurrentAb->AbNotInLine || !SearchLine (pBox, frame)))
 		{
 		  /* move script boxes too */
 		  box = pBox->BxNexChild;
