@@ -78,7 +78,9 @@ static int           TtaKeyboardMapInstalled = 0;
 #ifdef _WINDOWS
 static unsigned char previous_keysym;
 #else  /* !_WINDOWS */
+#ifndef _GTK
 static KeySym        previous_keysym;
+#endif /* !_GTK */
 static KeySym        previous_value = 0;
 static unsigned int  previous_state = 0;
 #endif /* !_WINDOWS */
@@ -141,6 +143,7 @@ typedef struct multi_key
 Multi_Key;
 
 #ifndef _WINDOWS
+#ifndef _GTK
 /*
  * tab containing the xtended multi-key sequences.
  * It's a one dimentionnal array of multi-key sequences
@@ -369,8 +372,10 @@ static Multi_Key    emk_tab[] =
 };
 
 #define ExtNB_MK (int)((sizeof(emk_tab) / sizeof(Multi_Key)))
+#endif /* !_GTK */
 #endif /* !_WINDOWS */
 
+#ifndef _GTK
 /*
  * tab containing the multi-key sequences.
  * It's a one dimentionnal array of multi-key sequences
@@ -510,6 +515,7 @@ static Multi_Key    mk_tab[] =
 };
 
 #define NB_MK (int)((sizeof(mk_tab) / sizeof(Multi_Key)))
+#endif /* !_GTK */
 
 #ifndef _WINDOWS
 #ifndef _GTK
