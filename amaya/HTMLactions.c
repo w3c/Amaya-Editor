@@ -325,7 +325,7 @@ static void SetFontOrPhraseOnText (Document document, Element elem,
 static void SetFontOrPhraseOnElement (Document document, Element elem,
 				      int elemtype, ThotBool remove)
 {
-   Element             child, next;
+   Element             child, new, next;
    ElementType         elType;
 
    child = TtaGetFirstChild (elem);
@@ -333,6 +333,22 @@ static void SetFontOrPhraseOnElement (Document document, Element elem,
      /* empty element. Create a text element in it */
      {
      elType = TtaGetElementType (elem);
+     if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+       /* it's an HTML element */
+       if (elType.ElTypeNum == HTML_EL_Element ||
+	   elType.ElTypeNum == HTML_EL_Block ||
+	   elType.ElTypeNum == HTML_EL_Form_Element)
+	 /* This is a choice element that has to be transformed into
+	    one of it's options. Replace it by a Pseudo_paragraph */
+	 {
+	   elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+	   new = TtaNewElement (document, elType);
+	   TtaInsertSibling (new, elem, TRUE, document);
+	   TtaRegisterElementCreate (new, document);
+	   TtaRegisterElementDelete (elem, document);
+	   TtaDeleteTree (elem, document);
+	   elem = new;
+	 }
      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
      if (TtaCanInsertFirstChild(elType, elem, document))
 	{
@@ -2443,7 +2459,6 @@ void SetCharFontOrPhrase (int document, int elemtype)
      }
 
    /* process all selected elements */
-   elem = NULL;
    while (selectedEl != NULL)
      {
 	/* get the element to be processed after the current element: the */
@@ -2465,7 +2480,6 @@ void SetCharFontOrPhrase (int document, int elemtype)
 		/* leaves of that element */
 		SetFontOrPhraseOnElement ((Document) document, selectedEl,
 					  elemtype, remove);
-		elem = selectedEl;
 		toset = FALSE;
 	      }
 	    else if (selType.ElTypeNum == HTML_EL_TEXT_UNIT)
@@ -2484,14 +2498,11 @@ void SetCharFontOrPhrase (int document, int elemtype)
 		  /* If it is already within such an element, nothing to do */
 		  done = (elFont != NULL);
 		if (!done)
-		  {
-		    /* process the text leaf */
-		    elem = selectedEl;
-		    if (remove)
-		      ResetFontOrPhraseOnText (document, elem, elemtype);
-		    else
-		      SetFontOrPhraseOnText (document, elem, elemtype);
-		  }
+		  /* process the text leaf */
+		  if (remove)
+		    ResetFontOrPhraseOnText (document, selectedEl, elemtype);
+		  else
+		    SetFontOrPhraseOnText (document, selectedEl, elemtype);
 	      }
 	  }
 	/* next selected element */
