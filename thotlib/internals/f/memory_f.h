@@ -57,7 +57,8 @@ extern void FreeExternalBlock ( PtrExtensBlock pBE );
 extern void GetSchStruct ( PtrSSchema * pSS );
 extern void FreeSchStruc ( PtrSSchema pSS );
 extern void GetPresentRule ( PtrPRule * pRP );
-extern void FreePresentRule ( PtrPRule pRP );
+extern void FreePresentRule ( PtrPRule pRP,
+                              PtrSSchema pSS );
 extern void GetPresentRuleCond ( PtrCondition * pCond );
 extern void FreePresentRuleCond ( PtrCondition pCond );
 extern void GetDifferedRule ( PtrDelayedPRule * pRR );
@@ -132,7 +133,8 @@ extern void FreeExternalBlock (/* PtrExtensBlock pBE */);
 extern void GetSchStruct (/* PtrSSchema * pSS */);
 extern void FreeSchStruc (/* PtrSSchema pSS */);
 extern void GetPresentRule (/* PtrPRule * pRP */);
-extern void FreePresentRule (/* PtrPRule pRP */);
+extern void FreePresentRule (/* PtrPRule pRP,
+                                PtrSSchema pSS */);
 extern void GetPresentRuleCond (/* PtrCondition * pCond */);
 extern void FreePresentRuleCond (/* PtrCondition pCond */);
 extern void GetDifferedRule (/* PtrDelayedPRule * pRR */);

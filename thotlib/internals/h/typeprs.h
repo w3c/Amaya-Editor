@@ -358,7 +358,7 @@ typedef struct _Condition
       int       _CoTypeAncestor_;  /* type of the ancestor */	
       ThotBool  _CoImmediate_;	   /* Immediately */
       ArithRel  _CoAncestorRel_;
-      Name      _CoAncestorName_;  /* Ancestor type name, if defined in
+      char     *_CoAncestorName_;  /* Ancestor type name, if defined in
 				      another schema */
       Name      _CoSSchemaName_;   /* name of the schema where the ancestor is
 				      defined if CoTypeAncestor == 0 */
@@ -380,7 +380,7 @@ typedef struct _Condition
 	} s0;
 	struct        /* text attribute */
 	{
-	  Name      _CoAttrTextValue_; /* the value that satisfies the condition */
+	  char     *_CoAttrTextValue_; /* the value that satisfies the condition */
 	  CondMatch _CoTextMatch_;     /* matching condition: substring, word, ... */
 	} s1;
       } u;
@@ -675,7 +675,7 @@ typedef struct _AttributePres
     } s1;
     struct        /* text attribute */
     {
-      Name  	  _ApString_;	/* the value triggering the application of the
+      char  	  *_ApString_;	/* the value triggering the application of the
 				   presentation rules */
       PtrPRule    _ApTextFirstPRule_; /* first rule in the string of rules
 					 to apply for this value */

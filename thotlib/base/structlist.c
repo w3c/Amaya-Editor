@@ -2942,7 +2942,8 @@ static void wrCondition (PtrCondition pCond, FILE *fileDescriptor)
 		 }
 	       if (pCond->CoTypeAncestor == 0)
 		 {
-		    fprintf (fileDescriptor, pCond->CoAncestorName);
+		   if (pCond->CoAncestorName)
+		     fprintf (fileDescriptor, pCond->CoAncestorName);
 		    fprintf (fileDescriptor, "(");
 		    fprintf (fileDescriptor, pCond->CoSSchemaName);
 		    fprintf (fileDescriptor, ")");
@@ -2982,7 +2983,8 @@ static void wrCondition (PtrCondition pCond, FILE *fileDescriptor)
 			 fprintf (fileDescriptor, " ~=");
 		       else
 			 fprintf (fileDescriptor, " =");
-		       fprintf (fileDescriptor, " %s", pCond->CoAttrTextValue);
+		       if (pCond->CoAttrTextValue)
+			 fprintf (fileDescriptor, " %s", pCond->CoAttrTextValue);
 		     }
 		   else
 		     fprintf (fileDescriptor, " = %d", pCond->CoAttrValue);
@@ -3683,7 +3685,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 					 wrnomregle (pRP1->ApElemType, fileDescriptor);
 					 fprintf (fileDescriptor, ")");
 				       }
-				     if (pRP1->ApString[0] != '\0')
+				     if (pRP1->ApString && *pRP1->ApString != EOS)
 				       {
 					 fprintf (fileDescriptor, "=\'");
 					 wrtext (pRP1->ApString, fileDescriptor);

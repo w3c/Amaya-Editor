@@ -291,7 +291,7 @@ void ReleaseSSchemasForSavedElements ()
    FreePRuleList
    libere la liste de regles de presentation dont l'ancre est firstPRule.
   ----------------------------------------------------------------------*/
-static void FreePRuleList (PtrPRule *firstPRule)
+static void FreePRuleList (PtrPRule *firstPRule, PtrSSchema pSS)
 {
    PtrPRule            pPRule, pNextPRule;
 
@@ -299,7 +299,7 @@ static void FreePRuleList (PtrPRule *firstPRule)
    while (pPRule != NULL)
       {
       pNextPRule = pPRule->PrNextPRule;
-      FreePresentRule (pPRule);
+      FreePresentRule (pPRule, pSS);
       pPRule = pNextPRule;
       }
    *firstPRule = NULL;
@@ -339,10 +339,10 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
   if (force)
     {
       /* libere les regles de presentation par defaut */
-      FreePRuleList (&pPSchema->PsFirstDefaultPRule);
+      FreePRuleList (&pPSchema->PsFirstDefaultPRule, pSS);
       /* libere les regles de presentation des boites de presentation */
       for (i = 0; i < pPSchema->PsNPresentBoxes; i++)
-	FreePRuleList (&pPSchema->PsPresentBox->PresBox[i]->PbFirstPRule);
+	FreePRuleList (&pPSchema->PsPresentBox->PresBox[i]->PbFirstPRule, pSS);
       /* libere les regles de presentation des attributs */
       for (i = 0; i < pSS->SsNAttributes; i++)
 	{
@@ -353,18 +353,18 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
 		{
 		case AtNumAttr:
 		  for (j = 0; j < pAttrPres->ApNCases; j++)
-		    FreePRuleList (&pAttrPres->ApCase[j].CaFirstPRule);
+		    FreePRuleList (&pAttrPres->ApCase[j].CaFirstPRule, pSS);
 		  break;
 		case AtTextAttr:
-		  FreePRuleList (&pAttrPres->ApTextFirstPRule);
+		  FreePRuleList (&pAttrPres->ApTextFirstPRule, pSS);
 		  break;
 		case AtReferenceAttr:
-		  FreePRuleList (&pAttrPres->ApRefFirstPRule);
+		  FreePRuleList (&pAttrPres->ApRefFirstPRule, pSS);
 		  break;
 		case AtEnumAttr:
 		  for (j = 0;
 		       j <= pSS->SsAttribute->TtAttr[i]->AttrNEnumValues; j++)
-		    FreePRuleList (&pAttrPres->ApEnumFirstPRule[j]);
+		    FreePRuleList (&pAttrPres->ApEnumFirstPRule[j], pSS);
 		  break;
 		default:
 		  break;
@@ -375,7 +375,7 @@ static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
 
       /* libere les regles de presentation des types */
       for (i = 0; i < pSS->SsNRules; i++)
-	FreePRuleList (&pPSchema->PsElemPRule->ElemPres[i]);
+	FreePRuleList (&pPSchema->PsElemPRule->ElemPres[i], pSS);
       /* libere les descripteurs de vues hotes */
       for (i = 0; i < MAX_VIEW; i++)
 	{
@@ -1697,7 +1697,7 @@ static void      LinkNewPRule (PtrPRule pRule, PtrPRule *anchor)
    InsertXmlAttrRules
    Add the presentation rules associated to the new attribute
   ----------------------------------------------------------------------*/
-static void      InsertXmlAttrRules (PtrPSchema pPS, int nAtRules)
+static void InsertXmlAttrRules (PtrPSchema pPS, int nAtRules)
 {
   AttributePres *pAtPres;
   PtrPRule       pRule;
@@ -1707,7 +1707,7 @@ static void      InsertXmlAttrRules (PtrPSchema pPS, int nAtRules)
   /* Create the new AttrPres and attach it to the attribute */
   pAtPres->ApElemType = 0;
   pAtPres->ApNextAttrPres = NULL;
-  pAtPres->ApString[0] = EOS;
+  pAtPres->ApString = NULL;
 
   pPS->PsAttrPRule->AttrPres[nAtRules] = pAtPres;
   pPS->PsNAttrPRule->Num[nAtRules] +=1;

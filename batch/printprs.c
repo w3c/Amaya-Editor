@@ -177,24 +177,27 @@ static void         wrrepere (BoxEdge r)
 /*----------------------------------------------------------------------
    wrnom ecrit au terminal le nom n.                               
   ----------------------------------------------------------------------*/
-static void         wrnom (Name n)
+static void wrnom (char *n)
 {
    int                 i;
 
-   i = 1;
-   while (n[i - 1] != '\0')
+   if (n)
      {
-	if (n[i - 1] < ' ' || n[i - 1] > '~')
-	   /* caractere non imprimable, ecrit son code */
-	  {
-	     printf ("\\%o", (unsigned char) n[i - 1]);
-	  }
-	else
-	  {
-	     /* caractere imprimable, ecrit le  caractere */
-	     putchar (n[i - 1]);
-	  }
-	i++;
+       i = 1;
+       while (n[i - 1] != '\0')
+	 {
+	   if (n[i - 1] < ' ' || n[i - 1] > '~')
+	     /* caractere non imprimable, ecrit son code */
+	     {
+	       printf ("\\%o", (unsigned char) n[i - 1]);
+	     }
+	   else
+	     {
+	       /* caractere imprimable, ecrit le  caractere */
+	       putchar (n[i - 1]);
+	     }
+	   i++;
+	 }
      }
 }
 

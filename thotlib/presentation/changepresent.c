@@ -703,7 +703,7 @@ static void RemoveSpecifPres (PtrElement pEl, PtrDocument pDoc,
 		notifyPres.pRule = NULL;
 		notifyPres.pRuleType = NumTypePRuleAPI (pPRule);
 		/* libere la regle */
-		FreePresentRule (pPRule);
+		FreePresentRule (pPRule, pEl->ElStructSchema);
 		CallEventType ((NotifyEvent *) & notifyPres, FALSE);
 	     }
 	   /* passe a la regle suivante */
@@ -1196,7 +1196,7 @@ void    TtaRemovePRule (Element element, PRule pRule, Document document)
 	      RedisplayDefaultPresentation (document, (PtrElement) element,
 			pPres->PrType, pPres->PrPresFunction,pPres->PrViewNum);
 #endif
-	   FreePresentRule (pPres);
+	   FreePresentRule (pPres, ((PtrElement) element)->ElStructSchema);
 	 }
      }
 }

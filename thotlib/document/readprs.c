@@ -1041,242 +1041,245 @@ AttrComparType      ReadAttrCompar (BinFile file)
 static void ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule,
 		        PtrSSchema pSS)
 {
-   PtrPRule            pPR;
-   PtrCondition        pCond;
-   PresCondition       typeCond;
-   DimensionRule      *pDim;
-   int                 i;
+  PtrPRule            pPR;
+  PtrCondition        pCond;
+  PresCondition       typeCond;
+  DimensionRule      *pDim;
+  Name                name;
+  int                 i;
 
-   if (*pPRule != NULL && !error)
-      /* pointeur sur la premiere regle qui va etre lue */
-     {
-	*pPRule = *pNextPRule;
-	/* lecture de la suite de regles */
-	do
-	  {
-	     pPR = *pNextPRule;
-	     /* acquiert un buffer pour la regle suivante */
-	     GetPresentRule (pNextPRule);
-	     (*pNextPRule)->PrCond = NULL;
-	     /* lit une regle */
-	     pPR->PrType = ReadrdTypeRegle (file);
-	     pPR->PrNextPRule = ReadPRulePtr (file, pNextPRule);
-	     pPR->PrCond = NULL;
-	     typeCond = ReadPresCondition (file);
-	     while (typeCond != PcNoCondition && !error)
-	       {
-		  GetPresentRuleCond (&pCond);
-		  pCond->CoNextCondition = pPR->PrCond;
-		  pPR->PrCond = pCond;
-		  pCond->CoCondition = typeCond;
-		  TtaReadBool (file, &pCond->CoNotNegative);
-		  TtaReadBool (file, &pCond->CoTarget);
-		  switch (typeCond)
+  if (*pPRule != NULL && !error)
+    /* pointeur sur la premiere regle qui va etre lue */
+    {
+      *pPRule = *pNextPRule;
+      /* lecture de la suite de regles */
+      do
+	{
+	  pPR = *pNextPRule;
+	  /* acquiert un buffer pour la regle suivante */
+	  GetPresentRule (pNextPRule);
+	  (*pNextPRule)->PrCond = NULL;
+	  /* lit une regle */
+	  pPR->PrType = ReadrdTypeRegle (file);
+	  pPR->PrNextPRule = ReadPRulePtr (file, pNextPRule);
+	  pPR->PrCond = NULL;
+	  typeCond = ReadPresCondition (file);
+	  while (typeCond != PcNoCondition && !error)
+	    {
+	      GetPresentRuleCond (&pCond);
+	      pCond->CoNextCondition = pPR->PrCond;
+	      pPR->PrCond = pCond;
+	      pCond->CoCondition = typeCond;
+	      TtaReadBool (file, &pCond->CoNotNegative);
+	      TtaReadBool (file, &pCond->CoTarget);
+	      switch (typeCond)
+		{
+		case PcEven:
+		case PcOdd:
+		case PcOne:
+		  TtaReadShort (file, &pCond->CoCounter);
+		  break;
+		case PcInterval:
+		  TtaReadShort (file, &pCond->CoCounter);
+		  TtaReadSignedShort (file, &pCond->CoMinCounter);
+		  TtaReadSignedShort (file, &pCond->CoMaxCounter);
+		  pCond->CoValCounter = ReadCounterValue (file);
+		  break;
+		case PcWithin:
+		  TtaReadBool (file, &pCond->CoImmediate);
+		  TtaReadShort (file, &pCond->CoRelation);
+		  pCond->CoAncestorRel = ReadArithRel (file);
+		  TtaReadSignedShort (file, &pCond->CoTypeAncestor);
+		  if (pCond->CoTypeAncestor == 0)
+		    {
+		      TtaReadName (file, name);
+		      pCond->CoAncestorName = TtaStrdup (name);
+		      TtaReadName (file, pCond->CoSSchemaName);
+		    }
+		  else
+		    {
+		      pCond->CoAncestorName = NULL;
+		      pCond->CoSSchemaName[0] = EOS;
+		    }
+		  break;
+		case PcElemType:
+		  TtaReadSignedShort (file, &pCond->CoTypeElem);
+		  break;
+		case PcAttribute:
+		case PcInheritAttribute:
+		  TtaReadSignedShort (file, &pCond->CoTypeAttr);
+		  TtaReadBool (file, &pCond->CoTestAttrValue);
+		  if (pCond->CoTestAttrValue)
+		    {
+		      if (pSS->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
 			{
-			   case PcEven:
-			   case PcOdd:
-			   case PcOne:
-			      TtaReadShort (file, &pCond->CoCounter);
-			      break;
-			   case PcInterval:
-			      TtaReadShort (file, &pCond->CoCounter);
-			      TtaReadSignedShort (file, &pCond->CoMinCounter);
-			      TtaReadSignedShort (file, &pCond->CoMaxCounter);
-			      pCond->CoValCounter = ReadCounterValue (file);
-			      break;
-			   case PcWithin:
-			      TtaReadBool (file, &pCond->CoImmediate);
-			      TtaReadShort (file, &pCond->CoRelation);
-			      pCond->CoAncestorRel = ReadArithRel (file);
-			      TtaReadSignedShort (file, &pCond->CoTypeAncestor);
-			      if (pCond->CoTypeAncestor == 0)
-				{
-				   TtaReadName (file, pCond->CoAncestorName);
-				   TtaReadName (file, pCond->CoSSchemaName);
-				}
-			      else
-				{
-				   pCond->CoAncestorName[0] = EOS;
-				   pCond->CoSSchemaName[0] = EOS;
-				}
-			      break;
-			   case PcElemType:
-			      TtaReadSignedShort (file, &pCond->CoTypeElem);
-			      break;
-			   case PcAttribute:
-			   case PcInheritAttribute:
-			      TtaReadSignedShort (file, &pCond->CoTypeAttr);
-			      TtaReadBool (file, &pCond->CoTestAttrValue);
-			      if (pCond->CoTestAttrValue)
-				{
-				  if (pSS->SsAttribute->TtAttr[pCond->CoTypeAttr]->AttrType == AtTextAttr)
-				    {
-				      TtaReadName (file, pCond->CoAttrTextValue);
-				      pCond->CoTextMatch = CoMatch;
-				    }
-				  else
-				    TtaReadSignedShort (file,
-							&pCond->CoAttrValue);
-				} 
-			      break;
-			   default:
-			      break; 
+			  TtaReadName (file, name);
+			  pCond->CoAttrTextValue = TtaStrdup (name);
+			  pCond->CoTextMatch = CoMatch;
 			}
-		  typeCond = ReadPresCondition (file);
-	       }
-	     TtaReadShort (file, &pPR->PrViewNum);
-	     TtaReadBool (file, &pPR->PrDuplicate);
-	     pPR->PrPresMode = ReadPresMode (file);
-	     if (!error)
-		switch (pPR->PrPresMode)
+		      else
+			TtaReadSignedShort (file,
+					    &pCond->CoAttrValue);
+		    } 
+		  break;
+		default:
+		  break; 
+		}
+	      typeCond = ReadPresCondition (file);
+	    }
+	  TtaReadShort (file, &pPR->PrViewNum);
+	  TtaReadBool (file, &pPR->PrDuplicate);
+	  pPR->PrPresMode = ReadPresMode (file);
+	  if (!error)
+	    switch (pPR->PrPresMode)
+	      {
+	      case PresInherit:
+		pPR->PrInheritMode = ReadInheritMode (file);
+		TtaReadBool (file, &pPR->PrInhPercent);
+		TtaReadBool (file, &pPR->PrInhAttr);
+		TtaReadSignedShort (file, &pPR->PrInhDelta);
+		TtaReadBool (file, &pPR->PrMinMaxAttr);
+		TtaReadSignedShort (file, &pPR->PrInhMinOrMax);
+		pPR->PrInhUnit = rdUnit (file);
+		break;
+	      case PresFunction:
+		pPR->PrPresBoxRepeat = FALSE;
+		pPR->PrPresFunction = ReadFunctionType (file, &pPR->PrPresBoxRepeat);
+		if (pPR->PrPresFunction != FnLine
+		    && pPR->PrPresFunction != FnNoLine
+		    && pPR->PrPresFunction != FnShowBox
+		    && pPR->PrPresFunction != FnNotInLine)
+		  {
+		    TtaReadBool (file, &pPR->PrExternal);
+		    TtaReadBool (file, &pPR->PrElement);
+		    error = !TtaReadShort (file, &pPR->PrNPresBoxes);
+		    if (!error)
 		      {
-			 case PresInherit:
-			    pPR->PrInheritMode = ReadInheritMode (file);
-			    TtaReadBool (file, &pPR->PrInhPercent);
-			    TtaReadBool (file, &pPR->PrInhAttr);
-			    TtaReadSignedShort (file, &pPR->PrInhDelta);
-			    TtaReadBool (file, &pPR->PrMinMaxAttr);
-			    TtaReadSignedShort (file, &pPR->PrInhMinOrMax);
-			    pPR->PrInhUnit = rdUnit (file);
-			    break;
-			 case PresFunction:
-			    pPR->PrPresBoxRepeat = FALSE;
-			    pPR->PrPresFunction = ReadFunctionType (file, &pPR->PrPresBoxRepeat);
-			    if (pPR->PrPresFunction != FnLine
-				&& pPR->PrPresFunction != FnNoLine
-				&& pPR->PrPresFunction != FnShowBox
-				&& pPR->PrPresFunction != FnNotInLine)
-			      {
-				 TtaReadBool (file, &pPR->PrExternal);
-				 TtaReadBool (file, &pPR->PrElement);
-				 error = !TtaReadShort (file, &pPR->PrNPresBoxes);
-				 if (!error)
-				   {
-				    if (pPR->PrNPresBoxes == 0)
-				       TtaReadName (file, pPR->PrPresBoxName);
-				    else
-				      {
-					 for (i = 0; i < pPR->PrNPresBoxes; i++)
-					    TtaReadShort (file, &pPR->PrPresBox[i]);
-					 pPR->PrPresBoxName[0] = EOS;
-				      }
-				   }
-			      }
-			    break;
-			 case PresImmediate:
-			    switch (pPR->PrType)
-				  {
-				     case PtFunction:
-				     case PtVisibility:
-				     case PtDepth:
-				     case PtFillPattern:
-				     case PtOpacity:
-				     case PtFillOpacity:
-				     case PtStrokeOpacity:
-				     case PtBackground:
-				     case PtForeground:
-                                     case PtBorderTopColor:
-                                     case PtBorderRightColor:
-                                     case PtBorderBottomColor:
-			             case PtBorderLeftColor:
-					TtaReadBool (file, &pPR->PrAttrValue);
-					TtaReadSignedShort (file, &pPR->PrIntValue);
-					break;
-				     case PtFont:
-				     case PtStyle:
-				     case PtWeight:
-				     case PtUnderline:
-				     case PtThickness:
-				     case PtDirection:
-				     case PtUnicodeBidi:
-				     case PtLineStyle:
-				     case PtFloat:
-				     case PtClear:
-				     case PtDisplay:
-				     case PtBorderTopStyle:
-			             case PtBorderRightStyle:
-			             case PtBorderBottomStyle:
-			             case PtBorderLeftStyle:
-					if (!TtaReadByte (file, &pPR->PrChrValue))
-					   error = True;
-					break;
-				     case PtBreak1:
-				     case PtBreak2:
-				     case PtIndent:
-				     case PtSize:
-				     case PtLineSpacing:
-				     case PtLineWeight:
-				     case PtMarginTop:
-				     case PtMarginRight:
-				     case PtMarginBottom:
-				     case PtMarginLeft:
-				     case PtPaddingTop:
-				     case PtPaddingRight:
-				     case PtPaddingBottom:
-				     case PtPaddingLeft:
-				     case PtBorderTopWidth:
-				     case PtBorderRightWidth:
-				     case PtBorderBottomWidth:
-				     case PtBorderLeftWidth:
-				     case PtXRadius:
-				     case PtYRadius:
-					pPR->PrMinUnit = rdUnit (file);
-					TtaReadBool (file, &pPR->PrMinAttr);
-					TtaReadSignedShort (file, &pPR->PrMinValue);
-					break;
-				     case PtVertRef:
-				     case PtHorizRef:
-				     case PtVertPos:
-				     case PtHorizPos:
-					ReadPosRule (file, &pPR->PrPosRule);
-					break;
-				     case PtHeight:
-				     case PtWidth:
-					pDim = &pPR->PrDimRule;
-					TtaReadBool (file, &pDim->DrPosition);
-					if (pDim->DrPosition)
-					  {
-					    ReadPosRule (file, &pDim->DrPosRule);
-					    /* this rule cannot be overwritten */
-					    pPR->PrImportant = TRUE;
-					  }
-					else
-					  {
-					     TtaReadBool (file, &pDim->DrAbsolute);
-					     TtaReadBool (file, &pDim->DrSameDimens);
-					     pDim->DrUnit = rdUnit (file);
-					     TtaReadBool (file, &pDim->DrAttr);
-					     TtaReadBool (file, &pDim->DrMin);
-					     TtaReadBool (file, &pDim->DrUserSpecified);
-					     TtaReadSignedShort (file, &pDim->DrValue);
-					     pDim->DrRelation = ReadLevel (file);
-					     TtaReadBool (file, &pDim->DrNotRelat);
-					     pDim->DrRefKind = ReadRefKind (file);
-					     TtaReadShort (file, &pDim->DrRefIdent);
-					  }
-					break;
-				     case PtAdjust:
-					pPR->PrAdjust = ReadAlignment (file);
-					break;
-				     case PtHyphenate:
-				     case PtVertOverflow:
-				     case PtHorizOverflow:
-				     case PtGather:
-				     case PtPageBreak:
-				     case PtLineBreak:
-					TtaReadBool (file, &pPR->PrBoolValue);
-					break;
-				     default:
-					break;
-				  }
-			    /* passe a la regle suivante */
-			    break;
+			if (pPR->PrNPresBoxes == 0)
+			  TtaReadName (file, pPR->PrPresBoxName);
+			else
+			  {
+			    for (i = 0; i < pPR->PrNPresBoxes; i++)
+			      TtaReadShort (file, &pPR->PrPresBox[i]);
+			    pPR->PrPresBoxName[0] = EOS;
+			  }
 		      }
-	     if (pPR->PrNextPRule != NULL)
-		pPR->PrNextPRule = *pNextPRule;
-	  }
-	while (pPR->PrNextPRule != NULL && !error);
-     }
+		  }
+		break;
+	      case PresImmediate:
+		switch (pPR->PrType)
+		  {
+		  case PtFunction:
+		  case PtVisibility:
+		  case PtDepth:
+		  case PtFillPattern:
+		  case PtOpacity:
+		  case PtFillOpacity:
+		  case PtStrokeOpacity:
+		  case PtBackground:
+		  case PtForeground:
+		  case PtBorderTopColor:
+		  case PtBorderRightColor:
+		  case PtBorderBottomColor:
+		  case PtBorderLeftColor:
+		    TtaReadBool (file, &pPR->PrAttrValue);
+		    TtaReadSignedShort (file, &pPR->PrIntValue);
+		    break;
+		  case PtFont:
+		  case PtStyle:
+		  case PtWeight:
+		  case PtUnderline:
+		  case PtThickness:
+		  case PtDirection:
+		  case PtUnicodeBidi:
+		  case PtLineStyle:
+		  case PtFloat:
+		  case PtClear:
+		  case PtDisplay:
+		  case PtBorderTopStyle:
+		  case PtBorderRightStyle:
+		  case PtBorderBottomStyle:
+		  case PtBorderLeftStyle:
+		    if (!TtaReadByte (file, &pPR->PrChrValue))
+		      error = True;
+		    break;
+		  case PtBreak1:
+		  case PtBreak2:
+		  case PtIndent:
+		  case PtSize:
+		  case PtLineSpacing:
+		  case PtLineWeight:
+		  case PtMarginTop:
+		  case PtMarginRight:
+		  case PtMarginBottom:
+		  case PtMarginLeft:
+		  case PtPaddingTop:
+		  case PtPaddingRight:
+		  case PtPaddingBottom:
+		  case PtPaddingLeft:
+		  case PtBorderTopWidth:
+		  case PtBorderRightWidth:
+		  case PtBorderBottomWidth:
+		  case PtBorderLeftWidth:
+		  case PtXRadius:
+		  case PtYRadius:
+		    pPR->PrMinUnit = rdUnit (file);
+		    TtaReadBool (file, &pPR->PrMinAttr);
+		    TtaReadSignedShort (file, &pPR->PrMinValue);
+		    break;
+		  case PtVertRef:
+		  case PtHorizRef:
+		  case PtVertPos:
+		  case PtHorizPos:
+		    ReadPosRule (file, &pPR->PrPosRule);
+		    break;
+		  case PtHeight:
+		  case PtWidth:
+		    pDim = &pPR->PrDimRule;
+		    TtaReadBool (file, &pDim->DrPosition);
+		    if (pDim->DrPosition)
+		      {
+			ReadPosRule (file, &pDim->DrPosRule);
+			/* this rule cannot be overwritten */
+			pPR->PrImportant = TRUE;
+		      }
+		    else
+		      {
+			TtaReadBool (file, &pDim->DrAbsolute);
+			TtaReadBool (file, &pDim->DrSameDimens);
+			pDim->DrUnit = rdUnit (file);
+			TtaReadBool (file, &pDim->DrAttr);
+			TtaReadBool (file, &pDim->DrMin);
+			TtaReadBool (file, &pDim->DrUserSpecified);
+			TtaReadSignedShort (file, &pDim->DrValue);
+			pDim->DrRelation = ReadLevel (file);
+			TtaReadBool (file, &pDim->DrNotRelat);
+			pDim->DrRefKind = ReadRefKind (file);
+			TtaReadShort (file, &pDim->DrRefIdent);
+		      }
+		    break;
+		  case PtAdjust:
+		    pPR->PrAdjust = ReadAlignment (file);
+		    break;
+		  case PtHyphenate:
+		  case PtVertOverflow:
+		  case PtHorizOverflow:
+		  case PtGather:
+		  case PtPageBreak:
+		  case PtLineBreak:
+		    TtaReadBool (file, &pPR->PrBoolValue);
+		    break;
+		  default:
+		    break;
+		  }
+		/* passe a la regle suivante */
+		break;
+	      }
+	  if (pPR->PrNextPRule != NULL)
+	    pPR->PrNextPRule = *pNextPRule;
+	}
+      while (pPR->PrNextPRule != NULL && !error);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1304,6 +1307,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
   NumAttrCase*        pCase;
   PathBuffer          dirBuffer;
   BinFile             file;
+  Name                name;
   char                buf[MAX_TXT_LEN];
   int                 InitialNElems, i, j, k, l;
   PtrHostView         pHostView, prevHostView;
@@ -1391,7 +1395,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
       if (!ret || pPSch->PsStructCode != pSS->SsCode)
 	{
 	  FreeSchPres (pPSch, pSS);
-	  FreePresentRule (pNextPRule);
+	  FreePresentRule (pNextPRule, pSS);
 	  pNextPRule = NULL;
 	  pPSch = NULL;
 	}
@@ -1590,7 +1594,8 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 								  &pNextPRule);
 			  break;
 			case AtTextAttr:
-			  TtaReadName (file, pAttrP->ApString);
+			  TtaReadName (file, name);
+			  pAttrP->ApString = TtaStrdup (name);
 			  pAttrP->ApTextFirstPRule = ReadPRulePtr (file,
 								  &pNextPRule);
 			  pAttrP->ApMatch = CoMatch;
@@ -1744,7 +1749,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 		TtaReadShort (file, &pPSch->PsTransmElem[i].TeTargetDoc);
 		TtaReadName (file, pPSch->PsTransmElem[i].TeTargetAttr);
 	      }
-	  FreePresentRule (pNextPRule);
+	  FreePresentRule (pNextPRule, pSS);
 	}
       /* ferme le fichier */
       TtaReadClose (file);

@@ -458,7 +458,7 @@ static void RemoveElementPRule (PtrElement el, PRuleType type, unsigned int extr
     ApplyASpecificStyleRule (cur, el, LoadedDocument[doc -1], TRUE);
 
     /* Free the PRule */
-    FreePresentRule(cur);
+    FreePresentRule(cur, el->ElStructSchema);
     return;
 }
 
@@ -714,7 +714,7 @@ static void PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
        cond->CoTypeAncestor = type;
        cond->CoImmediate = FALSE;
        cond->CoAncestorRel = CondGreater;
-       cond->CoAncestorName[0] = EOS;
+       cond->CoAncestorName = NULL;
        cond->CoSSchemaName[0] = EOS;
      }
    AddCond (&rule->PrCond, cond);
@@ -724,8 +724,8 @@ static void PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
   PresRuleAddAttrCond : add a Attr condition to a presentation rule.
   ----------------------------------------------------------------------*/
 static void PresRuleAddAttrCond (PtrPRule rule, int type, int level,
-				 char* value, CondMatch match)
-{
+				 char* value, CondMatch match){
+
    PtrCondition        cond = NULL;
 
    GetPresentRuleCond (&cond);
@@ -745,11 +745,11 @@ static void PresRuleAddAttrCond (PtrPRule rule, int type, int level,
    cond->CoTestAttrValue = (value != NULL);
    if (value)
      {
-       strncpy (cond->CoAttrTextValue, value, MAX_NAME_LENGTH);
+       cond->CoAttrTextValue = TtaStrdup (value);
        cond->CoTextMatch = match;
      }
    else
-     cond->CoAttrTextValue[0] = EOS;
+     cond->CoAttrTextValue = NULL;
    AddCond (&rule->PrCond, cond);
 }
 
@@ -848,11 +848,12 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 		}
 	      break;
 	    case AtTextAttr:
-	      if (attrVal &&
+	      if (attrVal && attrs->ApString &&
 		  !strcmp (attrs->ApString, attrVal) &&
 		  attrs->ApMatch == match)
 		ppRule = &(attrs->ApTextFirstPRule);
-	      else if (!attrVal && attrs->ApString[0] == EOS)
+	      else if (attrVal == NULL && 
+		       (attrs->ApString == NULL || attrs->ApString[0] == EOS))
 		ppRule = &(attrs->ApTextFirstPRule);
 	      break;
 	    case AtReferenceAttr:
@@ -944,9 +945,9 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	case AtTextAttr:
 	  new->ApMatch = match;
 	  if (attrVal)
-	    strcpy (new->ApString, attrVal);
+	    new->ApString = TtaStrdup (attrVal);
 	  else
-	    new->ApString[0] = EOS;
+	    new->ApString = NULL;
 	  new->ApTextFirstPRule = NULL;
 	  return (&(new->ApTextFirstPRule));
 	  break;
@@ -1074,7 +1075,8 @@ static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
 		   cond->CoTestAttrValue != (ctxt->attrText != NULL) ||
 		   (cond->CoTestAttrValue &&
 		    (cond->CoTextMatch != ctxt->attrMatch[i] ||
-		    strcasecmp (cond->CoAttrTextValue, ctxt->attrText[i])))))
+		    (cond->CoAttrTextValue &&
+		     strcasecmp (cond->CoAttrTextValue, ctxt->attrText[i]))))))
 	     cond = cond->CoNextCondition;
 	   if (cond == NULL)
 	     /* conditions are different */
@@ -1274,7 +1276,7 @@ static void PresRuleRemove (PtrPSchema tsch, GenericContext ctxt,
       pSS = (PtrSSchema) ctxt->schema;
       ApplyAGenericStyleRule (doc, pSS, elType, attrType, presBox, cur, TRUE);
       /* Free the PRule */
-      FreePresentRule(cur);
+      FreePresentRule(cur, pSS);
     }
 }
 

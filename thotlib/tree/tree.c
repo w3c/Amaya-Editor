@@ -2762,7 +2762,7 @@ void DeleteAttribute (PtrElement pEl, PtrAttribute pAttr)
 		     pEl->ElFirstPRule = pPRnext;
 		  else
 		     pPRprev->PrNextPRule = pPRnext;
-		  FreePresentRule (pPR);
+		  FreePresentRule (pPR, pEl->ElStructSchema);
 		  pPR = pPRnext;
 	       }
 	     else
@@ -2933,7 +2933,7 @@ void DeleteElement (PtrElement *pEl, PtrDocument pDoc)
       while (pRule != NULL)
 	{
 	  pNextRule = pRule->PrNextPRule;
-	  FreePresentRule (pRule);
+	  FreePresentRule (pRule, pEl1->ElStructSchema);
 	  pRule = pNextRule;
 	}
       /* frees all the references to the element */

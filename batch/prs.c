@@ -269,7 +269,7 @@ static void         Initialize ()
 			      LineNum);
 	   Conditions = NULL;
 	   InclusionRefName = False;
-	   CopyType[0] = '\0';
+	   CopyType[0] = EOS;
 	   BeginCopyType = 0;
 	   FirstInPair = False;
 	   SecondInPair = False;
@@ -288,7 +288,7 @@ static void         CopyName (Name n, indLine wi, indLine wl)
    else
      {
 	strncpy (n, &inputLine[wi - 1], MAX_NAME_LENGTH);
-	n[wl] = '\0';
+	n[wl] = EOS;
      }
 }
 
@@ -321,13 +321,13 @@ static void         CheckConditions (indLine wi)
 static void         ConditionEnd ()
 {
    InWithinCond = False;
-   if (CopyType[0] != '\0')
+   if (CopyType[0] != EOS)
       /* on n'a pas encore traite' le nom de type suppose' externe */
       /* ce nom de type est donc erronne' */
      {
 	CompilerMessage (BeginCopyType, PRS, FATAL, UNDECLARED_IDENTIFIER,
 			 inputLine, LineNum);
-	CopyType[0] = '\0';
+	CopyType[0] = EOS;
 	BeginCopyType = 0;
      }
 }
@@ -870,7 +870,7 @@ static AttributePres *NewAttrPRule (int att)
 	    }
 	  break;
 	case AtTextAttr:
-	  pPRuleA->ApString[0] = '\0';
+	  pPRuleA->ApString = NULL;
 	  pPRuleA->ApTextFirstPRule = NULL;
 	  break;
 	case AtReferenceAttr:
@@ -921,11 +921,11 @@ static void         GenerateRPresAttribute (indLine wi)
       pPRuleA = pPSchema->PsAttrPRule->AttrPres[CurAttrNum - 1];
       for (l = pPSchema->PsNAttrPRule->Num[CurAttrNum - 1]; --l > 0;
 	   pPRuleA = pPRuleA->ApNextAttrPres)
-	if (CurTextEqual[0] == '\0')
+	if (CurTextEqual[0] == EOS)
 	  if (pPRuleA->ApElemType == CurElemHeritAttr)
 	    break;
       /* si on n'a pas touve, on alloue un paquet suivant */
-      if (pPRuleA->ApElemType != CurElemHeritAttr || CurTextEqual[0] != '\0')
+      if (pPRuleA->ApElemType != CurElemHeritAttr || CurTextEqual[0] != EOS)
 	{
 	  pPRuleA->ApNextAttrPres = NewAttrPRule (CurAttrNum);
 	  pPRuleA = pPRuleA->ApNextAttrPres;
@@ -993,8 +993,8 @@ static void         GenerateRPresAttribute (indLine wi)
       break;
 
     case AtTextAttr:
-      strcpy (pPRuleA->ApString, CurTextEqual);
-      CurTextEqual[0] = '\0';
+      pPRuleA->ApString = TtaStrdup (CurTextEqual);
+      CurTextEqual[0] = EOS;
       pPRuleA->ApTextFirstPRule = NextRule;
       FirstRule = NextRule;
       break;
@@ -1152,11 +1152,11 @@ static void DuplicateAttrCondRule (PtrPRule pRule)
 		  found = TRUE;
 		else
 		  {
-		  if (!pCond->CoTestAttrValue && pPRuleAttr->ApString[0] == EOS)
+		  if (!pCond->CoTestAttrValue &&
+		      (pPRuleAttr->ApString == NULL || pPRuleAttr->ApString[0] == EOS))
 		    found = TRUE;
-		  else
-		    if (!strcmp(pPRuleAttr->ApString, pCond->CoAttrTextValue))
-		      found = TRUE;
+		  else if (!strcmp(pPRuleAttr->ApString, pCond->CoAttrTextValue))
+		    found = TRUE;
 		  }
 	      }
 	    if (!found)
@@ -1193,9 +1193,9 @@ static void DuplicateAttrCondRule (PtrPRule pRule)
 	  break;
         case AtTextAttr:
 	  if (pCond->CoTestAttrValue)
-	    strcpy(pPRuleAttr->ApString, pCond->CoAttrTextValue);
+	    pPRuleAttr->ApString = TtaStrdup (pCond->CoAttrTextValue);
 	  else
-	    pPRuleAttr->ApString[0] = EOS;
+	    pPRuleAttr->ApString = NULL;
 	  PtrPtrPRule = &pPRuleAttr->ApTextFirstPRule;
 	  break;
         case AtReferenceAttr:
@@ -1239,12 +1239,12 @@ static void DuplicateAttrCondRule (PtrPRule pRule)
 	  pCond2->CoTestAttrValue = TRUE;
 	  break;
         case AtTextAttr:
-	  if (CurAttrPRule->ApString[0] == EOS)
+	  if (CurAttrPRule->ApString == NULL || CurAttrPRule->ApString[0] == EOS)
 	    pCond2->CoTestAttrValue = FALSE;
 	  else
 	    {
 	      pCond2->CoTestAttrValue = TRUE;
-	      strcpy (pCond->CoAttrTextValue, CurAttrPRule->ApString);
+	      pCond->CoAttrTextValue = TtaStrdup (CurAttrPRule->ApString);
 	    }
 	  break;
         case AtReferenceAttr:
@@ -1421,13 +1421,13 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 	 if (CurRule->PrType == PtFunction &&
 	     CurRule->PrPresFunction == FnCopy)
 	   /* fin d'une regle Copy */
-	   if (CopyType[0] != '\0')
+	   if (CopyType[0] != EOS)
 	     /* on n'a pas encore traite' le nom de type a copier */
 	     /* ce nom de type est donc erronne' */
 	     {
 	       CompilerMessage (BeginCopyType, PRS, FATAL,
 				UNDECLARED_IDENTIFIER, inputLine, LineNum);
-	       CopyType[0] = '\0';
+	       CopyType[0] = EOS;
 	       BeginCopyType = 0;
 	     }
        break;
@@ -1465,6 +1465,7 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
            else
 	     {
 	       Conditions->CoTestAttrValue = TRUE;
+	       Conditions->CoAttrTextValue = NULL;
 	       AttrValSign = 1;
 	     }
 	 }
@@ -2547,22 +2548,24 @@ static ThotBool      SameConditions (PtrCondition pCond1, PtrCondition pCond2)
 		{
 		  if (curCond1->CoTypeAttr != curCond2->CoTypeAttr)
 		    sameRules = False;
-		  else
-		    if (curCond1->CoTestAttrValue !=
-			curCond2->CoTestAttrValue)
-		      sameRules = False;
-		    else if (curCond1->CoTestAttrValue)
-		      {
-			if (pSSchema->SsAttribute->TtAttr[curCond1->CoTypeAttr - 1]->AttrType == AtTextAttr)
-			  {
-			    if (strcmp (curCond1->CoAttrTextValue,
-					curCond2->CoAttrTextValue))
-			      sameRules = False;
-			  }
-			else
-			  if (curCond1->CoAttrValue != curCond2->CoAttrValue)
+		  else if (curCond1->CoTestAttrValue != curCond2->CoTestAttrValue)
+		    sameRules = False;
+		  else if (curCond1->CoTestAttrValue)
+		    {
+		      if (pSSchema->SsAttribute->TtAttr[curCond1->CoTypeAttr - 1]->AttrType == AtTextAttr)
+			{
+			  if ((curCond1->CoAttrTextValue && !curCond2->CoAttrTextValue) ||
+			      (curCond2->CoAttrTextValue && !curCond1->CoAttrTextValue))
 			    sameRules = False;
-		      }
+			  else if (curCond1->CoAttrTextValue &&
+				   curCond2->CoAttrTextValue &&
+				   strcmp (curCond1->CoAttrTextValue,
+					   curCond2->CoAttrTextValue))
+			    sameRules = False;
+			}
+		      else if (curCond1->CoAttrValue != curCond2->CoAttrValue)
+			sameRules = False;
+		    }
 		}
 	      else if (curCond1->CoCondition == PcWithin)
 		{
@@ -2574,10 +2577,15 @@ static ThotBool      SameConditions (PtrCondition pCond1, PtrCondition pCond2)
 		    sameRules = False;
 		  else if (curCond1->CoAncestorRel != curCond2->CoAncestorRel)
 		    sameRules = False;
+		  else if ((curCond1->CoAncestorName && !curCond2->CoAncestorName) ||
+			   (curCond2->CoAncestorName && !curCond1->CoAncestorName))
+		    sameRules = False;
 		  else if (strcmp (curCond1->CoAncestorName,
 				   curCond2->CoAncestorName) != 0)
 		    sameRules = False;
-		  else if (strcmp (curCond1->CoSSchemaName,
+		  else if (curCond1->CoAncestorName &&
+			   curCond2->CoAncestorName &&
+			   strcmp (curCond1->CoSSchemaName,
 				   curCond2->CoSSchemaName) != 0)
 		    sameRules = False;
 		}
@@ -3815,8 +3823,8 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	Conditions->CoAncestorRel = CondGreater;
 	Conditions->CoRelation = 0;
 	Conditions->CoTypeAncestor = 0;
-	Conditions->CoAncestorName[0] = '\0';
-	Conditions->CoSSchemaName[0] = '\0';
+	Conditions->CoAncestorName = NULL;
+	Conditions->CoSSchemaName[0] = EOS;
 	InWithinCond = True;
 	break;
       case KWD_Inherited:
@@ -4285,8 +4293,8 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 		   /* on suppose que c'est un nom de boite de presentation
 		      definie dans un autre schema de presentation (pour
 		      la presentation des references externes) */
-		   if ((RuleDef && pSSchema->SsRule->SrElem[CurType - 1]->SrRefTypeNat[0] == '\0') ||
-		       (AttributeDef && pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrTypeRefNature[0] == '\0'))
+		   if ((RuleDef && pSSchema->SsRule->SrElem[CurType - 1]->SrRefTypeNat[0] == EOS) ||
+		       (AttributeDef && pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrTypeRefNature[0] == EOS))
 		      /* la regle ne s'applique pas a` une reference externe */
 		      CompilerMessage (BeginCopyType, PRS, FATAL,
 				       AUTHORIZED_ONLY_FOR_EXT_REFS,
@@ -4327,7 +4335,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 		CurRule->PrExternal = True;
 		}
 	     /* marque que ce nom externe est traite' */
-	     CopyType[0] = '\0';
+	     CopyType[0] = EOS;
 	     BeginCopyType = 0;
 	     }
 	  }
@@ -4730,7 +4738,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	  /* - infini */
 	  CurAttrUpperBound = MAX_INT_ATTR_VAL + 1;
 	  /* + infini */
-	  CurTextEqual[0] = '\0';
+	  CurTextEqual[0] = EOS;
 	  /* string vide */
 	  }
        else if (prevRule == RULE_CountFunction)
@@ -5589,7 +5597,7 @@ static void ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
 	 pPresConst = &pPSchema->PsConstant[pPSchema->PsNConstants - 1];
 	 for (i = 0; i < wl - 1; i++)
 	   pPresConst->PdString[i] = inputLine[wi + i - 1];
-	 pPresConst->PdString[wl - 1] = '\0';
+	 pPresConst->PdString[wl - 1] = EOS;
        }
    else if (gCode == RULE_TextEqual)
      /* TextEqual c'est une valeur d'attribut */
@@ -5605,16 +5613,11 @@ static void ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
 	     CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
 			      LineNum);
 	   else
-	     {
-	       for (i = 0; i < wl - 1; i++)
-		 Conditions->CoAttrTextValue[i] = inputLine[wi + i - 1];
-	       Conditions->CoAttrTextValue[wl - 1] = '\0';
-	     }
+	     Conditions->CoAttrTextValue = TtaStrdup (inputLine);
 	 }
        else
 	 {
-	   if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType !=
-	       AtTextAttr)
+	   if (pSSchema->SsAttribute->TtAttr[CurAttrNum - 1]->AttrType != AtTextAttr)
 	     /* ce n'est pas un attribut a valeur textuelle */
 	     CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine,
 			      LineNum);
@@ -5622,7 +5625,7 @@ static void ProcessString (SyntacticCode gCode, indLine wl, indLine wi)
 	     {
 	       for (i = 0; i < wl - 1; i++)
 		 CurTextEqual[i] = inputLine[wi + i - 1];
-	       CurTextEqual[wl - 1] = '\0';
+	       CurTextEqual[wl - 1] = EOS;
 	     }
 	 }
      }
@@ -6792,7 +6795,7 @@ int main (int argc, char **argv)
 #endif /* _WINDOWS */
 	 } 
        strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
-       srceFileName[MAX_NAME_LENGTH - 1] = '\0';
+       srceFileName[MAX_NAME_LENGTH - 1] = EOS;
        param++;
        strcpy (fname, srceFileName);
        /* check if the name contains a suffix */
@@ -6814,7 +6817,7 @@ int main (int argc, char **argv)
        else
 	 {
 	   /* it's the valid suffix, cut the srcFileName here */
-	   ptr[0] = '\0';
+	   ptr[0] = EOS;
 	   nb -= 2; /* length without the suffix */
 	 } 
        /* add the suffix .SCH in srceFileName */
@@ -6885,7 +6888,7 @@ int main (int argc, char **argv)
            if (param == argc)
 	     /* the output name is equal to the input name */
 	     /*suppress the suffix ".SCH" */
-	     srceFileName[nb] = '\0';
+	     srceFileName[nb] = EOS;
            else
 	     /* read the output name */
 	     strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
@@ -6907,7 +6910,7 @@ int main (int argc, char **argv)
 		 }
 	       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
 	       /* marque la fin reelle de la ligne */
-	       inputLine[i - 1] = '\0';
+	       inputLine[i - 1] = EOS;
 	       if (i >= LINE_LENGTH) /* ligne trop longue */
 		 CompilerMessage (1, PRS, FATAL, MAX_LINE_SIZE_OVERFLOW, inputLine, LineNum);
 	       else if (inputLine[0] == '#')

@@ -1187,6 +1187,11 @@ void FreeSchPres (PtrPSchema pSP, PtrSSchema pSS)
 	    {
 	      /* free all allocated blocks */
 	      pNextAP = pAP->ApNextAttrPres;
+	      if (pSS->SsAttribute->TtAttr[i]->AttrType == AtTextAttr)
+		{
+		  TtaFreeMemory (pAP->ApString);
+		  pAP->ApString = NULL;
+		}
 	      FreeAttributePres (pAP);
 	      pAP = pNextAP;
 	    }
@@ -1558,16 +1563,23 @@ void GetPresentRule (PtrPRule * pRP)
 /*----------------------------------------------------------------------
    FreePresentRule libere une regle de presentation.               
   ----------------------------------------------------------------------*/
-void FreePresentRule (PtrPRule pRP)
+void FreePresentRule (PtrPRule pRP, PtrSSchema pSS)
 {
    PtrCondition        pCond, nextCond;
 
    pCond = pRP->PrCond;
-   while (pCond != NULL)
+   while (pCond)
      {
-	nextCond = pCond->CoNextCondition;
-	FreePresentRuleCond (pCond);
-	pCond = nextCond;
+       nextCond = pCond->CoNextCondition;
+       if ((pCond->CoCondition == PcAttribute ||
+	    pCond->CoCondition == PcInheritAttribute) &&
+	   pSS &&
+	   pSS->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
+	 TtaFreeMemory (pCond->CoAttrTextValue);
+       else if (pCond->CoCondition == PcWithin)
+	 TtaFreeMemory (pCond->CoAncestorName);
+       FreePresentRuleCond (pCond);
+       pCond = nextCond;
      }
    TtaFreeMemory (pRP);
    NbUsed_PresRule--;

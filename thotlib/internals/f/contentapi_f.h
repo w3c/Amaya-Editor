@@ -150,8 +150,6 @@ extern void TtaReplaceTransform ( Element element,
 extern void TtaAddTransform ( Element element,
                               void *transform,
                               Document document );
-extern void TtaResetXBoxTransform ( Element element,
-                                    Document document );
 extern void TtaInsertTransform ( Element element,
                                  void *transform,
                                  Document document );
@@ -160,8 +158,8 @@ extern void TtaSetElCoordinateSystem ( Element element );
 extern void TtaFreeAnimation ( void *void_a_list );
 extern void TtaAppendAnim ( Element element,
                             void *anim );
-extern void *TtaCopyAnim ( void *void_src );
 extern void *TtaNewAnimInfo ( void );
+extern void *TtaCopyAnim ( void *void_src );
 extern void TtaSetAnimTypetoMotion ( void *anim );
 extern void TtaSetAnimTypetoTransform ( void *anim );
 extern void TtaSetAnimTypetoAnimate ( void *anim );
@@ -169,6 +167,10 @@ extern void TtaSetAnimTypetoColor ( void *anim );
 extern void TtaSetAnimTypetoSet ( void *anim );
 extern void TtaAddAnimFrom ( void *info,
                              void *anim );
+extern void TtaAddAnimFreeze ( void *anim );
+extern void TtaAddAnimRemove ( void *anim );
+extern void TtaAddAnimRepeatCount ( int repeat,
+                                    void *anim );
 extern void TtaAddAnimTo ( void *info,
                            void *anim );
 extern void TtaAddAnimAttrName ( void *info,
@@ -349,8 +351,6 @@ extern void TtaReplaceTransform (/* Element element,
 extern void TtaAddTransform (/* Element element,
                                 void *transform,
                                 Document document */);
-extern void TtaResetXBoxTransform (/* Element element,
-                                      Document document */);
 extern void TtaInsertTransform (/* Element element,
                                    void *transform,
                                    Document document */);
@@ -359,8 +359,8 @@ extern void TtaSetElCoordinateSystem (/* Element element */);
 extern void TtaFreeAnimation (/* void *void_a_list */);
 extern void TtaAppendAnim (/* Element element,
                               void *anim */);
-extern void *TtaCopyAnim (/* void *void_src */);
 extern void *TtaNewAnimInfo (/* void */);
+extern void *TtaCopyAnim (/* void *void_src */);
 extern void TtaSetAnimTypetoMotion (/* void *anim */);
 extern void TtaSetAnimTypetoTransform (/* void *anim */);
 extern void TtaSetAnimTypetoAnimate (/* void *anim */);
@@ -368,6 +368,10 @@ extern void TtaSetAnimTypetoColor (/* void *anim */);
 extern void TtaSetAnimTypetoSet (/* void *anim */);
 extern void TtaAddAnimFrom (/* void *info,
                                void *anim */);
+extern void TtaAddAnimFreeze (/* void *anim */);
+extern void TtaAddAnimRemove (/* void *anim */);
+extern void TtaAddAnimRepeatCount (/* int repeat,
+                                      void *anim */);
 extern void TtaAddAnimTo (/* void *info,
                              void *anim */);
 extern void TtaAddAnimAttrName (/* void *info,

@@ -1100,7 +1100,9 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 				 !strcmp (pAsc->ElStructSchema->SsName,
 					  pSS->SsName));
 		      else
-			equal = (!strcmp (pCond->CoAncestorName,
+			equal = (pCond->CoAncestorName &&
+				 pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName &&
+				 !strcmp (pCond->CoAncestorName,
 					  pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName) &&
 				 !strcmp (pCond->CoSSchemaName,
 					  pAsc->ElStructSchema->SsName));
@@ -1121,7 +1123,8 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 			equal = (pAsc->ElTypeNumber == pCond->CoTypeAncestor &&
 				 !strcmp (pAsc->ElStructSchema->SsName, pSS->SsName));
 		      else
-			equal = (!strcmp (pCond->CoAncestorName,
+			equal = (pCond->CoAncestorName &&
+				 !strcmp (pCond->CoAncestorName,
 					  pAsc->ElStructSchema->SsRule->SrElem[pAsc->ElTypeNumber - 1]->SrName) &&
 				 !strcmp (pCond->CoSSchemaName,
 					  pAsc->ElStructSchema->SsName)); 
@@ -1173,7 +1176,8 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 			      /* it's a text attribute. Compare strings */
 			      {
 				if (!pA->AeAttrText)
-				  found = (pCond->CoAttrTextValue[0] == EOS);
+				  found = (pCond->CoAttrTextValue == NULL ||
+					   pCond->CoAttrTextValue[0] == EOS);
 				else
 				  {
 				    CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
@@ -1244,7 +1248,8 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 			  /* it's a text attribute. Compare strings */
 			  {
 			    if (!pA->AeAttrText)
-			      found = (pCond->CoAttrTextValue[0] == EOS);
+			      found = (pCond->CoAttrTextValue ||
+				       pCond->CoAttrTextValue[0] == EOS);
 			    else
 			      {
 				CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
@@ -1303,13 +1308,14 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 			      /* it's a text attribute. Compare strings */
 			      {
 				if (!pA->AeAttrText)
-				  found = (pCond->CoAttrTextValue[0] == EOS);
+				  found = (pCond->CoAttrTextValue ||
+					   pCond->CoAttrTextValue[0] == EOS);
 				else
 				  {
 				    CopyBuffer2MBs (pA->AeAttrText, 0, attrVal,
 						    MAX_TXT_LEN);
 				    found = !strcmp (pCond->CoAttrTextValue,
-							   attrVal);
+						     attrVal);
 				  }
 			      }
 			    else
@@ -2101,7 +2107,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
       if (pAPRule->ApElemType == 0 || pAPRule->ApElemType == pEl->ElTypeNumber)
 	{
 	  if (pAttr->AeAttrType == AtTextAttr &&
-	      pAPRule->ApString[0] != EOS)
+	      pAPRule->ApString && pAPRule->ApString[0] != EOS)
 	    {
 	      if (attrValue)
 		{

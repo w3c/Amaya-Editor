@@ -61,7 +61,8 @@
   document pDoc. On envoie le message APP correspondant a		
   l'application et on retourne la reponse de l'application.	
   ----------------------------------------------------------------------*/
-ThotBool PRuleMessagePre (PtrElement pEl, PtrPRule pPRule, int newvalue, PtrDocument pDoc, ThotBool isNew)
+ThotBool PRuleMessagePre (PtrElement pEl, PtrPRule pPRule, int newvalue,
+			  PtrDocument pDoc, ThotBool isNew)
 {
    NotifyPresentation  notifyPres;
    PtrPRule            pR, pRPrec;
@@ -101,7 +102,7 @@ ThotBool PRuleMessagePre (PtrElement pEl, PtrPRule pPRule, int newvalue, PtrDocu
 		   else
 		      pRPrec->PrNextPRule = pPRule->PrNextPRule;
 		   /* libere la regle */
-		   FreePresentRule (pPRule);
+		   FreePresentRule (pPRule, pEl->ElStructSchema);
 		   pR = NULL;
 		}
 	}

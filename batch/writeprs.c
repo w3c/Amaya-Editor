@@ -50,14 +50,19 @@ static void WriteSignedShort (int n)
 /*----------------------------------------------------------------------
    WriteName							
   ----------------------------------------------------------------------*/
-static void WriteName (Name n)
+static void WriteName (char *n)
 {
-   int                 i;
+  int                 i;
 
-   i = 0;
-   do
-      TtaWriteByte (outfile, n[i++]);
-   while (n[i - 1] != '\0');
+  if (n == NULL)
+    TtaWriteByte (outfile, EOS);
+  else
+    {
+      i = 0;
+      do
+	TtaWriteByte (outfile, n[i++]);
+      while (n[i - 1] != EOS);
+    }
 }
 
 
@@ -67,7 +72,7 @@ static void WriteName (Name n)
 static void WriteRulePtr (PtrPRule p)
 {
    if (p == NULL)
-      TtaWriteByte (outfile, '\0');
+      TtaWriteByte (outfile, EOS);
    else
       TtaWriteByte (outfile, '\1');
 }
@@ -81,7 +86,7 @@ static void WriteBoolean (ThotBool b)
    if (b)
       TtaWriteByte (outfile, '\1');
    else
-      TtaWriteByte (outfile, '\0');
+      TtaWriteByte (outfile, EOS);
 }
 
 /*----------------------------------------------------------------------
@@ -964,7 +969,7 @@ void                WritePRules (PtrPRule pPRule, PtrSSchema pSS)
 			 WriteBoolean (pCond->CoTestAttrValue);
 			 if (pCond->CoTestAttrValue)
 			   {
-			     if (pSS->SsAttribute->TtAttr[pCond->CoTypeAttr]->AttrType == AtTextAttr)
+			     if (pSS->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
 			       WriteName (pCond->CoAttrTextValue);
 			     else
 			       WriteSignedShort (pCond->CoAttrValue);
@@ -1246,7 +1251,7 @@ ThotBool WritePresentationSchema (Name fileName, PtrPSchema pPSch, PtrSSchema pS
 	j = 0;
 	do
 	   TtaWriteByte (outfile, pConst->PdString[j++]);
-	while (pConst->PdString[j - 1] != '\0');
+	while (pConst->PdString[j - 1] != EOS);
      }
 
    /* ecrit les variables de presentation */
