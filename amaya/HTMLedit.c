@@ -366,7 +366,8 @@ STRING              targetName;
 
    /* is it a link to a CSS file? */
    if (tempURL[0] != EOS)
-       if (elType.ElTypeNum == HTML_EL_LINK && IsCSSName (targetURL))
+       if (elType.ElTypeNum == HTML_EL_LINK &&
+	   (LinkAsCSS || IsCSSName (targetURL)))
 	 {
 	   LoadStyleSheet (targetURL, doc, element, NULL);
 	   attrType.AttrTypeNum = HTML_ATTR_REL;

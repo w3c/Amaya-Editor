@@ -82,9 +82,8 @@ STRING              otherPath;
 /*----------------------------------------------------------------------
    LoadRemoteStyleSheet loads a remote style sheet into a file.
    Return FALSE if it's a local file and TRUE otherwise.
-   When the returned value is TRUE, the parameter completeURL contains
-   the normalized url and the parameter localfile the path of the local
-   copy of the file.
+   When returning, the parameter completeURL contains the normalized url
+   and the parameter localfile the path of the local copy of the file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool        LoadRemoteStyleSheet (STRING url, Document doc, Element el, void *css, STRING completeURL, STRING localfile)

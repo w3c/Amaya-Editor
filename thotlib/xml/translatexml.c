@@ -108,7 +108,7 @@ STRING XmlName;
   STRING        theName;
   TYPETABLE     index;
   ThotBool      found;
-  int           n;
+  int           n = 0;
 
   /* chooses the name to be inserted */
   if (XmlName[0] == EOS)

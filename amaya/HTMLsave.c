@@ -1399,6 +1399,7 @@ View                view;
   CHAR_T              localFile[MAX_LENGTH];
   CHAR_T              documentname[MAX_LENGTH];
   CHAR_T              tempdir[MAX_LENGTH];
+  STRING              ptr;
   int                 i, res;
   Document	      htmlDoc;
   ThotBool            ok, newLineNumbers;
@@ -1530,7 +1531,12 @@ View                view;
 	   newLineNumbers = TRUE;
 	   }
 	else
-	   ok = TtaExportDocument (doc, tempname, TEXT("TextFileT"));
+	  {
+	    ok = TtaExportDocument (doc, tempname, TEXT("TextFileT"));
+	    ptr = GetLocalPath (doc, tempname);
+	    TtaFileCopy (tempname, ptr);
+	    TtaFreeMemory (ptr);
+	  }
       else
 	{
 	  SetNamespacesAndDTD (doc);

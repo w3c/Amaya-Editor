@@ -4433,6 +4433,7 @@ NotifyEvent        *event;
    SelectionInBIG = FALSE;
    SelectionInSMALL = FALSE;
    HTMLErrorsFound = FALSE;
+   LinkAsCSS = FALSE; /* we're not linking an external CSS */
 
    /* initialize icons */
 #ifndef _WINDOWS

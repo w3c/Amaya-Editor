@@ -28,16 +28,17 @@ Extensions 2.2:
   mini-browser. Amaya menus and buttons are displayed according to the
   current profile.
 
-* A new option in the Preferences/Publishing menu allows to declare a set
-  of domains where a PUT may be redirected, and thus avoid having a popup
-  asking a user to confirm each redirection.
-
 * A mechanism of templates 
 
-* It's now possible to define a shortcut to follow a link or activate a
-  form element (menu, submit, reset): the name of the function is DoAction.
-
-* A new entry LinkTarget allows one to link the latest created target.
+* User Interface:
+  - A new option in the Preferences/Publishing menu allows to declare a set
+    of domains where a PUT may be redirected, and thus avoid having a popup
+    asking a user to confirm each redirection.
+  - It's now possible to define a shortcut to follow a link or activate a
+    form element (menu, submit, reset): the name of the function is DoAction
+    and the default shortcut is Alt Return.
+  - A new command "Link previous target" allows one to create a link to the
+    latest created target.
 
 Fixed bugs 2.2:
 ---------------
@@ -59,6 +60,9 @@ Fixed bugs 2.2:
 * SGML entites and spaces weren't being handled correctly when
   saving a document or when browsing a URL. 
 
+* Hexadecimal entity references were not recognized by the HTML and XML
+  parsers.
+
 * Relative URLs beginning with a "../../ " path were being simplifed into
   "../"
 
@@ -67,8 +71,8 @@ Fixed bugs 2.2:
   well. If the user opened the document, the File menu was broken. If the
   user cancelled the form the application wasn't closed.
 
-* Hexadecimal entity references were not recognized by the HTML and XML
-  parsers.
+* When printing parentheses were that are part of mathematical expressions
+  are misplaced on the page.
 
 * Amaya could get stuck when creating an anchor.
 

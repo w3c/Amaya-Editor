@@ -1150,14 +1150,6 @@ Document       doc;
 	  if (TtaFileExist (htmlErrFile))
 	    TtaFileUnlink (htmlErrFile);
 	}
-      else if (DocumentTypes[doc] == docImage ||
-	       DocumentTypes[doc] == docImageRO) 
-	{
-	  /* remove the HTML container for the local images */
-	  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
-	  TtaFileUnlink (tempdocument); 
-	  TtaFreeMemory (tempdocument);
-	}
 
       if (DocumentTypes[doc] == docImage)
 	DocumentTypes[doc] = docHTML;

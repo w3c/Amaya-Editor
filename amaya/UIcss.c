@@ -40,9 +40,8 @@ static Document    CSSdocument;
 /*----------------------------------------------------------------------
    LoadRemoteStyleSheet loads a remote style sheet into a file.
    Return FALSE if it's a local file and TRUE otherwise.
-   When the returned value is TRUE, the parameter completeURL contains
-   the normalized url and the parameter localfile the path of the local
-   copy of the file.
+   When returning, the parameter completeURL contains the normalized url
+   and the parameter localfile the path of the local copy of the file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool        LoadRemoteStyleSheet (STRING url, Document doc, Element el, CSSInfoPtr css, STRING completeURL, STRING localfile)
@@ -56,52 +55,156 @@ CSSInfoPtr      css;
 {
   CSSInfoPtr          oldcss;
   CHAR_T              tempname[MAX_LENGTH];
-  STRING              tempdocument;
+  STRING              tempdocument = NULL;
   int                 toparse;
+  ThotBool            local = FALSE;
   ThotBool            import = (css != NULL);
 
-      /* this document is displayed -> load the CSS */
-      localfile[0] = EOS;
-      if (import && css->url)
-	NormalizeURL (url, 0, completeURL, tempname, css->url);
-      else if (import && css->localName)
-	NormalizeURL (url, 0, completeURL, tempname, css->localName);
-      else
-        NormalizeURL (url, doc, completeURL, tempname, NULL);
+  /* this document is displayed -> load the CSS */
+  localfile[0] = EOS;
+  if (import && css->url)
+    NormalizeURL (url, 0, completeURL, tempname, css->url);
+  else if (import && css->localName)
+    NormalizeURL (url, 0, completeURL, tempname, css->localName);
+  else
+    NormalizeURL (url, doc, completeURL, tempname, NULL);
       
-      if (IsW3Path (completeURL))
+  if (IsW3Path (completeURL))
+    {
+      /* check against double inclusion */
+      oldcss = SearchCSS (0, completeURL);
+      if (oldcss != NULL)
+	ustrcpy (localfile, oldcss->localName);
+      else
 	{
-	  /* check against double inclusion */
-	  oldcss = SearchCSS (0, completeURL);
-	  if (oldcss != NULL)
-	    ustrcpy (localfile, oldcss->localName);
+	  /* the document is not loaded yet */
+	  /* changed this to doc */
+#ifndef AMAYA_JAVA
+	  toparse = GetObjectWWW (doc, completeURL, NULL, localfile, AMAYA_SYNC | AMAYA_LOAD_CSS, NULL, NULL, NULL, NULL, NO, NULL);
+#else
+	  toparse = GetObjectWWW (doc, completeURL, NULL, localfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO, NULL);
+#endif /* ! AMAYA_JAVA */
+	  if (toparse || localfile[0] == EOS || !TtaFileExist (localfile))
+	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), completeURL);
 	  else
 	    {
-	      /* the document is not loaded yet */
-	      /* changed this to doc */
-#ifndef AMAYA_JAVA
-	      toparse = GetObjectWWW (doc, completeURL, NULL, localfile, AMAYA_SYNC | AMAYA_LOAD_CSS, NULL, NULL, NULL, NULL, NO, NULL);
+	      /* store a copy of the remote CSS in .amaya/0 */
+	      /* allocate and initialize tempdocument */
+	      tempdocument = GetLocalPath (0, completeURL);
+	      TtaFileUnlink (tempdocument);
+	      /* now we can rename the local name of a remote document */
+	      urename (localfile, tempdocument);
+	      ustrcpy (localfile, tempdocument);
+	      TtaFreeMemory (tempdocument);
+	    }
+	}
+      local = TRUE;
+    }
+  else
+    {
+      /* store a copy of the local CSS in .amaya/0 */
+      tempdocument = GetLocalPath (0, completeURL);
+      local = FALSE;
+      ustrcpy (localfile, tempdocument);
+      TtaFileCopy (completeURL, localfile);
+      TtaFreeMemory (tempdocument);
+    }
+  return (local);
+}
+
+
+/*----------------------------------------------------------------------
+   LoadUserStyleSheet : Load the user Style Sheet found in it's    
+   home directory or the default one in THOTDIR.           
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                LoadUserStyleSheet (Document doc)
 #else
-	toparse = GetObjectWWW (doc, completeURL, NULL, localfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO, NULL);
-#endif /* ! AMAYA_JAVA */
-	      if (toparse || localfile[0] == EOS || !TtaFileExist (localfile))
-		TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), completeURL);
+void                LoadUserStyleSheet (doc)
+Document            doc;
+#endif
+{
+  CSSInfoPtr          css;
+  struct stat         buf;
+  FILE               *res;
+  STRING              buffer, ptr;
+  int                 len;
+
+  /* look for the User preferences */
+  if (!UserCSS || !TtaFileExist (UserCSS))
+    return;
+
+  buffer = NULL;
+  ptr = UserCSS;
+  css = CSSList;
+  while (css != NULL)
+    {
+      if (css->category == CSS_USER_STYLE)
+	break;
+      else
+	css = css->NextCSS;
+    }
+
+  if (css == NULL)
+    {
+      /* store a copy of the local CSS in .amaya/0 */
+      ptr = GetLocalPath (0, UserCSS);
+      TtaFileCopy (UserCSS, ptr);
+      /* allocate a new Presentation structure */ 
+      css = AddCSS (0, doc, CSS_USER_STYLE, UserCSS, ptr);
+      TtaFreeMemory (ptr);
+      ptr = css->localName;
+    }
+  else if (!css->documents[doc])
+    {
+      /* we have to apply user preferences to this document */
+      ptr = css->localName;
+      css->documents[doc] = TRUE;
+      css->enabled[doc] = TRUE;
+    }
+
+  if (ptr[0] != EOS  && TtaFileExist (ptr))
+    {
+      /* read User preferences */
+      res = fopen (ptr, "r");
+      if (res != NULL)
+	{
+#     ifdef _WINDOWS
+	  if (fstat (_fileno (res), &buf))
+#     else  /* !_WINDOWS */
+	  if (fstat (fileno (res), &buf))
+#     endif /* !_WINDOWS */
+	    fclose (res);
+	  else
+	    {
+	      buffer = TtaAllocString (buf.st_size + 1000);
+	      if (buffer == NULL)
+		fclose (res);
 	      else
 		{
-		  /* we have to rename the temporary file */
-		  /* allocate and initialize tempdocument */
-		  tempdocument = GetLocalPath (0, completeURL);
-		  TtaFileUnlink (tempdocument);
-		  /* now we can rename the local name of a remote document */
-		  urename (localfile, tempdocument);
-		  ustrcpy (localfile, tempdocument);
-		  TtaFreeMemory (tempdocument);
+		  len = fread (buffer, buf.st_size, 1, res);
+		  if (len != 1)
+		    {
+		      TtaFreeMemory (buffer);
+		      buffer = NULL;
+		      fclose (res);
+		    }
+		  else
+		    {
+		      buffer[buf.st_size] = 0;
+		      fclose (res);
+		    }
 		}
 	    }
-	  return TRUE;
 	}
-      else
-	return FALSE;
+
+      /* parse the whole thing and free the buffer */
+      if (buffer != NULL)
+	{
+	  ReadCSSRules (doc, css, buffer, FALSE);
+	  TtaFreeMemory (buffer);
+	}
+    }
 }
 
 
@@ -135,11 +238,11 @@ STRING              printdir;
     {
       while (css != NULL)
 	{
-	  if (css->documents[doc])
+	  if (css->enabled[doc])
 	    if ( css->category == CSS_DOCUMENT_STYLE)
 	      /* there is an internal style in the document */
 	      length += ustrlen (printdir) + 5;
-	    else
+	    else if (css->category == CSS_EXTERNAL_STYLE)
 	      /* that external CSS file concerns the document */
 	      length += ustrlen (css->localName) + 1;
 	  css = css->NextCSS;
@@ -153,8 +256,8 @@ STRING              printdir;
 	  css = CSSList;
 	  while (css != NULL)
 	    {
-	      if (css->documents[doc] &&
-		  css->category != CSS_DOCUMENT_STYLE)
+	      if (css->enabled[doc] &&
+		  css->category == CSS_EXTERNAL_STYLE)
 		{
 		  /* add that file name to the list */
 		  ustrcpy (&ptr[length], css->localName);
@@ -425,7 +528,9 @@ View                view;
 #endif
 {
   /* add a new link to a CSS file */
+  LinkAsCSS = TRUE;
   CreateLinkInHead (doc, 1);
+  LinkAsCSS = FALSE;
 }
 
 /*----------------------------------------------------------------------

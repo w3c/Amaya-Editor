@@ -90,7 +90,10 @@ CONST STRING        filename;
 
 #endif /* __STDC__ */
 {
-   return (uunlink (filename));
+  if (filename)
+    return (uunlink (filename));
+else
+  return 0;
 }
 
 /*----------------------------------------------------------------------

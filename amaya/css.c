@@ -342,9 +342,14 @@ STRING          localName;
 
       /* that CSS is only used by the document docRef */
       for (i = 0; i < DocumentTableLength; i++)
-	css->documents[i] = FALSE;
+	{
+	  css->documents[i] = FALSE;
+	  css->enabled[i] = FALSE;
+	  css->media[i] = CSS_ALL;
+	}
       /* store information about this docRef */
       css->documents[docRef] = TRUE;
+      css->enabled[docRef] = TRUE;
       css->infos = NULL;
       css->NextCSS = NULL;
 
@@ -393,7 +398,7 @@ STRING               url;
 
 
 /*----------------------------------------------------------------------
-   UnlinkCSS the CSS is no longer applied to this document and iff the
+   UnlinkCSS the CSS is no longer applied to this document and if the
    parameter removed is TRUE, the link is cut.
    If this CSS is no longer used the context and attached information
    are freed.
@@ -420,6 +425,8 @@ ThotBool        removed;
       /* look for the specific P descriptors in the css */
       pInfo = css->infos;
       prevInfo = NULL;
+      if (removed)
+	css->documents[doc] = FALSE;
       while (pInfo != NULL && pInfo->PiDoc != doc)
 	{
 	  prevInfo = pInfo;
@@ -434,28 +441,30 @@ ThotBool        removed;
 		css->infos = pInfo->PiNext;
 	      else
 		prevInfo->PiNext = pInfo->PiNext;
-	      css->documents[doc] = FALSE;
 	    }
-	  /* disapply the CSS */
-	  while (pInfo->PiSchemas != NULL)
-	    {
-	      pIS = pInfo->PiSchemas;
-	      if (pIS->PiPSchema)
-		{
-		  TtaUnlinkPSchema (pIS->PiPSchema, pInfo->PiDoc, pIS->PiSSchema);
-		  TtaCleanStylePresentation (NULL, pIS->PiPSchema, pInfo->PiDoc);
-		  /* remove presentation schemas */
-		  TtaRemovePSchema (pIS->PiPSchema, pInfo->PiDoc, pIS->PiSSchema);
-		  pInfo->PiSchemas = pIS->PiSNext;
-		  if (removed)
-		    TtaFreeMemory (pIS);
-		}
-	    }
+	  if (css->enabled[doc])
+	    /* disapply the CSS */
+	    while (pInfo->PiSchemas != NULL)
+	      {
+		pIS = pInfo->PiSchemas;
+		if (pIS->PiPSchema)
+		  {
+		    TtaUnlinkPSchema (pIS->PiPSchema, pInfo->PiDoc, pIS->PiSSchema);
+		    TtaCleanStylePresentation (NULL, pIS->PiPSchema, pInfo->PiDoc);
+		    /* remove presentation schemas */
+		    TtaRemovePSchema (pIS->PiPSchema, pInfo->PiDoc, pIS->PiSSchema);
+		    pInfo->PiSchemas = pIS->PiSNext;
+		    if (removed)
+		      TtaFreeMemory (pIS);
+		  }
+	      }
 	  /* free the document context */
 	  if (removed)
 	    TtaFreeMemory (pInfo);
 	}
 
+      /* the CSS is no longer applied */
+      css->enabled[doc] = FALSE;
       /* look at if this css is alway used */
       used = (css->doc != 0);
       i = 0;
@@ -467,7 +476,8 @@ ThotBool        removed;
       if (!used)
 	{
 	  /* remove the local copy */
-	  TtaFileUnlink (css->localName);
+	  if (!TtaIsPrinting ())
+	    TtaFileUnlink (css->localName);
 	  TtaFreeMemory (css->localName);
 	  TtaFreeMemory (css->url);
 	  if (CSSList == css)
@@ -508,10 +518,7 @@ Document            doc;
 	  UnlinkCSS (css, doc, TRUE);
 	}
       else if (css->documents[doc])
-	{
-	  css->documents[doc] = FALSE;
-	  UnlinkCSS (css, doc, TRUE);
-	}
+	UnlinkCSS (css, doc, TRUE);
       /* look at the next CSS context */
       css = next;
     }
@@ -549,11 +556,7 @@ ThotBool        removed;
     }
 
   if (css != NULL)
-    {
-      if (removed)
-	css->documents[doc] = FALSE;
-      UnlinkCSS (css, doc, removed);
-    }
+    UnlinkCSS (css, doc, removed);
 }
 
 
@@ -623,17 +626,11 @@ CSSInfoPtr          css;
   CHAR_T              tempURL[MAX_LENGTH];
   STRING              buffer = NULL;
   int                 len;
-  int                 local = FALSE;
   ThotBool            import = (css != NULL);
 
   if (TtaGetViewFrame (doc, 1) != 0 || TtaIsPrinting ())
     {
-      if (!LoadRemoteStyleSheet (url, doc, el, css, tempURL, tempfile))
-	{
-	  local = TRUE;
-	  ustrcpy (tempfile, tempURL);
-	}
-
+      LoadRemoteStyleSheet (url, doc, el, css, tempURL, tempfile);
       oldcss = SearchCSS (0, tempURL);
       if (oldcss == NULL || oldcss->category != CSS_EXTERNAL_STYLE)
 	{
@@ -644,7 +641,10 @@ CSSInfoPtr          css;
 	  oldcss = css;
 	}
       else
-	oldcss->documents[doc] = TRUE;
+	{
+	  oldcss->documents[doc] = TRUE;
+	  oldcss->enabled[doc] = TRUE;
+	}
 
       if (tempfile[0] == EOS)
 	return;
@@ -706,99 +706,6 @@ CSSInfoPtr          css;
 	  fclose (res);
 
 	  ReadCSSRules (doc, oldcss, buffer, FALSE);
-	  TtaFreeMemory (buffer);
-	}
-    }
-}
-
-
-/*----------------------------------------------------------------------
-   LoadUserStyleSheet : Load the user Style Sheet found in it's    
-   home directory or the default one in THOTDIR.           
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                LoadUserStyleSheet (Document doc)
-#else
-void                LoadUserStyleSheet (doc)
-Document            doc;
-#endif
-{
-  CSSInfoPtr          css;
-  struct stat         buf;
-  FILE               *res;
-  STRING              buffer, ptr;
-  int                 len;
-
-  /* look for the User preferences */
-  if (!UserCSS)
-    return;
-
-  buffer = NULL;
-  ptr = UserCSS;
-  css = CSSList;
-  while (css != NULL)
-    {
-      if (css->category == CSS_USER_STYLE)
-	break;
-      else
-	css = css->NextCSS;
-    }
-
-  if (css == NULL)
-    {
-      /* allocate a new Presentation structure */ 
-      if (TtaFileExist (UserCSS))
-	{
-	  css = AddCSS (0, doc, CSS_USER_STYLE, NULL, UserCSS);
-	  css->documents[doc] = TRUE;
-	}
-    }
-  else if (!css->documents[doc])
-    {
-      /* we have to apply user preferences to this document */
-      ptr = css->localName;
-      css->documents[doc] = TRUE;
-    }
-
-  if (ptr[0] != EOS  && TtaFileExist (ptr))
-    {
-      /* read User preferences */
-      res = fopen (ptr, "r");
-      if (res != NULL)
-	{
-#     ifdef _WINDOWS
-	  if (fstat (_fileno (res), &buf))
-#     else  /* !_WINDOWS */
-	  if (fstat (fileno (res), &buf))
-#     endif /* !_WINDOWS */
-	    fclose (res);
-	  else
-	    {
-	      buffer = TtaAllocString (buf.st_size + 1000);
-	      if (buffer == NULL)
-		fclose (res);
-	      else
-		{
-		  len = fread (buffer, buf.st_size, 1, res);
-		  if (len != 1)
-		    {
-		      TtaFreeMemory (buffer);
-		      buffer = NULL;
-		      fclose (res);
-		    }
-		  else
-		    {
-		      buffer[buf.st_size] = 0;
-		      fclose (res);
-		    }
-		}
-	    }
-	}
-
-      /* parse the whole thing and free the buffer */
-      if (buffer != NULL)
-	{
-	  ReadCSSRules (doc, css, buffer, FALSE);
 	  TtaFreeMemory (buffer);
 	}
     }

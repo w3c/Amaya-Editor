@@ -25,7 +25,6 @@ extern void LoadStyleSheet ( STRING url,
                              Document doc,
                              Element el,
                              CSSInfoPtr css );
-extern void LoadUserStyleSheet ( Document doc );
 
 #else /* __STDC__ */
 
@@ -48,7 +47,6 @@ extern void LoadStyleSheet (/* STRING url,
                                Document doc,
                                Element el,
                                CSSInfoPtr css */);
-extern void LoadUserStyleSheet (/* Document doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
