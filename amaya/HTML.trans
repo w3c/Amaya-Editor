@@ -2,7 +2,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! This file can be edited during an Amaya session. It will be 
 ! dynamically parsed when the transformation tool is required by
-! the editor. So new transformations can be added during editing.
+! the editor. So new transformations can be added while editing.
 !
 ! Syntax of the transformation language for Amaya
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -11,13 +11,13 @@
 !
 ! This file can be edited during an Amaya session. It will be 
 ! dynamically parsed when the transformation tool is required by
-! the editor. So new transformations can be added during editing.
+! the editor. So new transformations can be added while editing.
 !
 ! A tranformation rule has three parts : 
 !     - a name terminated by a colon ":"
 !     - a source pattern terminated by a semi-colon ";"
 !     - and a list of rules between braces "{" "}", each one
-!     -     terminated by a semi-colon ";"
+!           terminated by a semi-colon ";"
 !
 ! The name will appear in the transform menu.
 !
@@ -53,8 +53,6 @@
 
 !between lists
 !!!!!!!!!!!!!!
-
-
 
 Definition list:*{(LI{(P|list:*{(li2:LI)+})+})+};
 	{
