@@ -5670,9 +5670,9 @@ CHARSET        *charset;
 		      found = FALSE;
 		      endOfFile = TRUE;
 		      /* check the current DOCTYPE */
-		      if (!strncasecmp (&FileBuffer[i], "html PUBLIC ", 12))
+		      if (!strncasecmp (&FileBuffer[i], "html PUBLIC", 11))
 			{
-			  i += 12;
+			  i += 11;
 			  /* by default all HTML tags are accepted */
 			  *parsingLevel = L_Transitional;
 			  end = strstr (&FileBuffer[i], ">");
