@@ -1818,15 +1818,18 @@ void         SimplifyUrl (char **url)
     }
   else if (**url != DIR_SEP 
 	   && **url != '~'
+#ifdef _WINDOWS
+	   && (*url)[1] != ':'
+#endif /* _WINDOWS */
 	   && !IsW3Path(*url) 
            /* && TtaFileExist (*url) == 0) */
-	   && (strlen (*url) + 7) < MAX_LENGTH)
+	   && (strlen (*url) + 8) < MAX_LENGTH)
    {
       /*  In case of a user typed url without protocol specification
        and filepath like url (the ~ or / url beginning), 
        we add the http:// (more conveniant when you often type urls)
        so that you can now enter w3.org directly  */	
-      newptr = TtaGetMemory (strlen (path) + 7);
+      newptr = TtaGetMemory (strlen (path) + 8);
       *newptr = EOS;
       strcat (newptr, "http://");
       strcat (newptr, *url);
