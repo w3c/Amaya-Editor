@@ -107,7 +107,7 @@ extern void ChangeAttrOnRoot ( Document document,
                                int attrNum );
 extern void ShowMapAreas ( Document document,
                            View view );
-extern void MakeIDMenu ( Document document,
+extern void MakeIDMenu ( Document doc,
                          View view );
 extern void HelpAmaya ( Document document,
                         View view );
@@ -268,7 +268,7 @@ extern void ChangeAttrOnRoot (/* Document document,
                                  int attrNum */);
 extern void ShowMapAreas (/* Document document,
                              View view */);
-extern void MakeIDMenu (/* Document document,
+extern void MakeIDMenu (/* Document doc,
                            View view */);
 extern void HelpAmaya (/* Document document,
                           View view */);
