@@ -1737,8 +1737,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   DWORD               dwStatusBarStyles;
 
   frame = GetMainFrameNumber (hwnd);
-  if (frame != -1)
-    ActiveFrame = frame;
   GetWindowRect (hwnd, &rect);
   switch (mMsg)
   {
@@ -1805,7 +1803,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
       ydelta = - (HIWORD (wParam));
       VerticalScroll (frame, ydelta, 1);
     }
-    ActiveFrame = frame;
     return 0L;
 #endif /*WM_MOUSEWHEEL*/
 
@@ -1821,6 +1818,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     hwndTextEdit = GetFocus ();
     if (frame != -1)
       {
+      ActiveFrame = frame;
       APP_TextCallback (hwndTextEdit, frame, NULL);
       SetFocus (FrRef [frame]);
 	}
@@ -1968,7 +1966,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   /* do not handle events if the Document is in NoComputedDisplay mode. */
   if (frame != -1)
     {
-      ActiveFrame = frame;
+      /*ActiveFrame = frame;*/
       FrameToView (frame, &document, &view);
       if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
 	return (DefWindowProc (hwnd, mMsg, wParam, lParam));
