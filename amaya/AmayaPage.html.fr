@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Welcome to Amaya</title>
+  <title>Amaya - Bienvenue</title>
   <style type="text/css">
  body {font-family: helvetica, arial, sans-serif; color: black; background-color: #C0C0C0}
  h1 {font-size: 200%; font-weight: bold; font-style: italic; color: #488B9B;
@@ -22,73 +22,44 @@
 </head>
 
 <body xml:lang="fr" lang="fr">
-<p align="center"><svg xmlns="http://www.w3.org/2000/svg" width="466"
-height="349">
+<p align="center">
+<svg xmlns="http://www.w3.org/2000/svg" width="466" height="349">
   <image id="backgroundImage" x="0" y="0" width="466" height="349"
          xlink:href="amaya.png">
     <desc>Leading the Web to its full potential</desc>
   </image>
-  <g id="cubes" style="stroke: none;">
-    <g style="fill: #0192BF;">
-      <polygon points="200,113  205,118  205,133  200,128"/>
-      <polygon points="201,112  216,112  221,117  206,117"/>
-      <polygon points="206,118  221,118  221,133  206,133"/>
-    </g>
-    <g style="fill: #2B9FC3;">
-      <polygon points="230,113  235,118  235,133  230,128"/>
-      <polygon points="231,112  246,112  251,117  236,117"/>
-      <polygon points="236,118  251,118  251,133  236,133"/>
-    </g>
-    <g style="fill: #53AAC5;">
-      <polygon points="260,113  265,118  265,133  260,128"/>
-      <polygon points="261,112  276,112  281,117  266,117"/>
-      <polygon points="266,118  281,118  281,133  266,133"/>
-    </g>
-    <g style="fill: #7AB4C6;">
-      <polygon points="290,113  295,118  295,133  290,128"/>
-      <polygon points="291,112  306,112  311,117  296,117"/>
-      <polygon points="296,118  311,118  311,133  296,133"/>
-    </g>
-    <g style="fill: #A3C0C9;">
-      <polygon points="320,113  325,118  325,133  320,128"/>
-      <polygon points="321,112  336,112  341,117  326,117"/>
-      <polygon points="326,118  341,118  341,133  326,133"/>
-    </g>
-    <g style="fill: #A3C0C9;">
-      <polygon points="350,113  355,118  355,133  350,128"/>
-      <polygon points="351,112  366,112  371,117  356,117"/>
-      <polygon points="356,118  371,118  371,133  356,133"/>
-    </g>
-    <g style="fill: #A3C0C9;">
-      <polygon points="380,113  385,118  385,133  380,128"/>
-      <polygon points="381,112  396,112  401,117  386,117"/>
-      <polygon points="386,118  401,118  401,133  386,133"/>
-    </g>
-    <g style="fill: #EC1608;">
-      <polygon points="410,113  415,118  415,133  410,128"/>
-      <polygon points="411,112  426,112  431,117  416,117"/>
-      <polygon points="416,118  431,118  431,133  416,133"/>
-    </g>
-    <g style="fill: #E2372C;">
-      <polygon points="410,143  415,148  415,163  410,158"/>
-      <polygon points="411,142  426,142  431,147  416,147"/>
-      <polygon points="416,148  431,148  431,163  416,163"/>
-    </g>
-    <g style="fill: #DAAFAC;">
-      <polygon points="350,173  355,178  355,193  350,188"/>
-      <polygon points="351,172  366,172  371,177  356,177"/>
-      <polygon points="356,178  371,178  371,193  356,193"/>
-    </g>
-    <g style="fill: #DF8984;">
-      <polygon points="380,173  385,178  385,193  380,188"/>
-      <polygon points="381,172  396,172  401,177  386,177"/>
-      <polygon points="386,178  401,178  401,193  386,193"/>
-    </g>
-    <g style="fill: #DC5B53;">
-      <polygon points="410,173  415,178  415,193  410,188"/>
-      <polygon points="411,172  426,172  431,177  416,177"/>
-      <polygon points="416,178  431,178  431,193  416,193"/>
-    </g>
+  <defs>
+    <symbol id="cube">
+      <polygon points="0,1  5,6  5,21  0,16"/>
+      <polygon points="1,0  16,0  21,5  6,5"/>
+      <rect x="6" y="6" width="15" height="15"/>
+    </symbol>
+  </defs>
+  <g id="cubes">
+    <use x="200" y="112" xlink:href="#cube" style="fill: #0192BF">
+    </use>
+    <use x="230" y="112" xlink:href="#cube" style="fill: #2B9FC3">
+    </use>
+    <use x="260" y="112" xlink:href="#cube" style="fill: #53AAC5">
+    </use>
+    <use x="290" y="112" xlink:href="#cube" style="fill: #7AB4C6">
+    </use>
+    <use x="320" y="112" xlink:href="#cube" style="fill: #A3C0C9">
+    </use>
+    <use x="350" y="112" xlink:href="#cube" style="fill: #A3C0C9">
+    </use>
+    <use x="380" y="112" xlink:href="#cube" style="fill: #A3C0C9">
+    </use>
+    <use x="410" y="112" xlink:href="#cube" style="fill: #EC1608">
+    </use>
+    <use x="410" y="142" xlink:href="#cube" style="fill: #E2372C">
+    </use>
+    <use x="350" y="172" xlink:href="#cube" style="fill: #DAAFAC">
+    </use>
+    <use x="380" y="172" xlink:href="#cube" style="fill: #DF8984">
+    </use>
+    <use x="410" y="172" xlink:href="#cube" style="fill: #DC5B53">
+    </use>
   </g>
   <text id="logo" x="304" y="162"
   style="font: 24pt helvetica; font-weight: bold; fill: #488B9B;">AMAYA
@@ -98,22 +69,26 @@ height="349">
   </text>
   <g id="polygonMask" style="stroke: none;">
     <polygon style="fill: #0192BF;" points="30,60  30,230  108,208"/>
-    <foreignObject y="156px" x="51px">
-      encoding="" encoding="" 
-      <math xmlns="http://www.w3.org/1998/Math/MathML" style="color: #FFFFFF">
-        <mfrac>
-          <mn>1</mn>
-          <msqrt>
-            <mrow>
-              <msup>
-                <mi>x</mi>
-                <mn>2</mn>
-              </msup>
-              <mo>+</mo>
-              <mn>1</mn>
-            </mrow>
-          </msqrt>
-        </mfrac>
+    <foreignObject y="156px" x="35px">
+      <math xmlns="http://www.w3.org/1998/Math/MathML"
+      style="color: #FFFFFF; font-family: times">
+        <mrow>
+          <mi>y</mi>
+          <mo>=</mo>
+          <mfrac>
+            <mn>1</mn>
+            <msqrt>
+              <mrow>
+                <msup>
+                  <mi>x</mi>
+                  <mn>2</mn>
+                </msup>
+                <mo>+</mo>
+                <mn>1</mn>
+              </mrow>
+            </msqrt>
+          </mfrac>
+        </mrow>
       </math>
     </foreignObject>
     <polygon style="fill: #9EA4A6;" points="30,60  108,208  125,155"/>
@@ -129,7 +104,7 @@ height="349">
 <p><strong>Amaya</strong> est un client Web qui sert à la fois de navigateur
 et d'outil d'édition. Il a été conçu par le <a
 href="http://www.w3.org/">W3C</a> avec pour but essentiel la démonstration des
-nouvelles technologies dans un environnement WYSIWYG. La version courante
+nouvelles technologies Web dans un environnement WYSIWYG. La version courante
 supporte les recommendations HTML, XHTML, MathML, SVG, CSS, et  HTTP.</p>
 </div>
 
@@ -138,36 +113,36 @@ supporte les recommendations HTML, XHTML, MathML, SVG, CSS, et  HTTP.</p>
 <div>
 <h3>Caractéristiques principales</h3>
 
-<p>Avec Amaya, vous pouvez manipuler des pages Web contenant des boîtes de
-dialogues, des tables et les caractéristiques les plus avancées de HTML. Vous
+<p>Avec Amaya, vous pouvez manipuler des pages Web contenant des formulaires,
+des tables et les caractéristiques les plus avancées de HTML. Vous
 pouvez créer et éditer des <a href="../doc/amaya/Math.html.fr">expressions
 mathématiques</a> complexes et des <a
 href="../doc/amaya/SVG.html.fr">graphiques SVG</a> dans les pages Web. Vous
-pouvez styler vos documents en utilisant les cascades de feuilles de style.
-Vous pouvez publier des documents HTML et XHTML sur un serveur local ou
-distant à travers HTTP.</p>
+pouvez styler vos documents en utilisant les cascades de feuilles de style
+(CSS). Vous pouvez publier des documents HTML et XHTML sur un serveur local
+ou distant à travers HTTP.</p>
 
 <p>La navigation et l'édition sont intimement intégrées. Vous pouvez naviguer
-et éditer des pages Web en même temps. Pour faire une édition de façon très
-aisée, un simple clic dans Amaya changera seulement le point d'insertion et
-permettra de rentrer le texte; pour suivre un lien, vous devez double cliquer.
+et éditer des pages Web en même temps. Pour rendre l'édition plus
+aisée, un simple clic dans Amaya change seulement le point d'insertion et
+permet de rentrer le texte; pour suivre un lien, vous devez double-cliquer.
 Ce comportement peut être modifié ainsi que de nombreuses caractéristiques en
 utilisant le menu Spécial/Préférences.</p>
 
 <p>Amaya inclut une application <a
 href="../doc/amaya/Annotations.html.fr"><img src="annot.gif"
 alt="Icone d'annotation" />d'annotations collaboratives</a> basée sur les
-technologies du W3C (RDF,, XLink et XPointer). Les annotations sont des
-commentaires, notes, remarques externes qui peuvent être attachées à n'importe
-quel document Web ou partie sélectionnée de ce document. Les annotations sont
-stockées soit dans la machine locale, soit dans des serveurs d'annotation. La
-création d'annotations sur un document ne modifie pas le document
-lui-même.</p>
+technologies du W3C (RDF, XLink et XPointer). Les annotations sont des
+commentaires, notes, remarques externes qui peuvent être attachées à un
+document Web complet ou à n'importe quelle partie sélectionnée d'un document.
+Les annotations sont stockées soit sur la machine locale, soit dans des
+serveurs d'annotation. La création d'annotations sur un document ne modifie
+pas le document lui-même.</p>
 
 <p>Une vue source montre le balisage courant produit par Amaya. En utilisant
 cette vue en parallèle avec la vue principale, vous pouvez travailler sur la
-page présentée et sur le code source. Amaya fournit une caractéristique
-Défaire/Refaire à multi-niveaux et multi-documents.</p>
+page présentée et sur le code source. Amaya fournit une commande
+Défaire/Refaire multi-niveaux et multi-documents.</p>
 </div>
 
 <div>
@@ -175,10 +150,10 @@ Défaire/Refaire à multi-niveaux et multi-documents.</p>
 
 <p>Un manuel d'utilisation est disponible en ligne. Vous pouvez y accéder avec
 le menu Aide, qui affiche chaque section séparément. Vous pouvez également
-l'imprimer: il suffit de suivre le lien <a
+l'imprimer&nbsp;: il suffit de suivre le lien <a
 href="../doc/amaya/Manual.html.fr">Manuel en ligne</a>. Vous obtiendrez la
 page de garde. Construisez ensuite le livre entier à l'aide de l'entrée
-"construire un livre" du menu Spécial et imprimez le résultat</p>
+"Construire un livre" du menu Spécial et imprimez le résultat</p>
 </div>
 
 <div>
