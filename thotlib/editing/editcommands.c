@@ -2657,9 +2657,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
   int                 visib, zoom;
   int                 ind;
   int                 previousChars;
-#ifdef _I18N_
   char                script;
-#endif /* _I18N_ */
   ThotBool            beginOfBox;
   ThotBool            toDelete;
   ThotBool            toSplit;
@@ -3053,7 +3051,6 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			    spacesDelta = 0;
 			  toSplit = FALSE;
 			  toDelete = FALSE;
-#ifdef _I18N_
 			  script = TtaGetCharacterScript (c);
 #ifdef IV /* not enough stable */
 			  if  (script != ' ' && script != 'D' &&
@@ -3136,7 +3133,6 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      toSplit = TRUE;
 			    }
 #endif /* IV */
-#endif /* _I18N_ */
 			  
 			  /* Si la selection debutait sur une boite de presentation */
 			  /* il faut deplacer la selection sur le premier caractere */
@@ -3449,12 +3445,8 @@ void PasteXClipboard (unsigned char *src, int nbytes)
   lg = 0;
   if (src)
     {
-#ifdef _I18N_
       /* What is the encoding used by external applications ??? */
       buffer = TtaConvertByteToCHAR (src, TtaGetDefaultCharset ());
-#else /* _I18N_ */
-      buffer = src;
-#endif /* _I18N_ */
       doc = IdentDocument (pDoc);
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)
@@ -3493,9 +3485,6 @@ void PasteXClipboard (unsigned char *src, int nbytes)
 	  i++;
 	}
 
-#ifdef _I18N_
-      TtaFreeMemory (buffer);
-#endif /* _I18N_ */
       /* Paste the last X clipboard buffer */
       if (j > 0)
 	{

@@ -275,7 +275,6 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	{
 	  /* other encodings */
 	  nb_bytes2write = 1;
-#ifdef _I18N_
 	  mbc[0] = TtaGetCharFromWC ((wchar_t) c, pDoc->DocCharset);
 	  if (mbc[0] == EOS && c != EOS)
 	    {
@@ -299,9 +298,6 @@ static void ExportChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	      nb_bytes2write = strlen ((char *)mbc);
 	      mbc[nb_bytes2write++] = ';';
 	    }
-#else  /* _I18N_ */
-	  mbc[0] = (unsigned char) c;
-#endif /* _I18N_ */
 	}
     }
   else

@@ -560,10 +560,8 @@ PtrPathSeg CopyPath (PtrPathSeg firstPathEl)
 ThotBool StringAndTextEqual (char *text, PtrTextBuffer pBuf)
 {
   unsigned char      *ptr;
-#ifdef _I18N_
   wchar_t             wc;
   int                 i;
-#endif /* _I18N_ */
   int                 l, length;
   ThotBool            equal;
 
@@ -585,7 +583,6 @@ ThotBool StringAndTextEqual (char *text, PtrTextBuffer pBuf)
 	    {
 	      if (pBuf->BuLength > 0)
 		{
-#ifdef _I18N_
 		  l = 0;
 		  i = 0;
 		  while (equal && l < length && i < pBuf->BuLength)
@@ -595,20 +592,6 @@ ThotBool StringAndTextEqual (char *text, PtrTextBuffer pBuf)
 		      i++;
 		    }
 		  length -= l;
-#else /* _I18N_ */
-		  if (pBuf->BuLength > length)
-		    equal = FALSE;
-		  else
-		    {
-		      if (pBuf->BuLength < length)
-			l = pBuf->BuLength;
-		      else
-			l = length;
-		      equal = (ustrncmp (ptr, pBuf->BuContent, l) == 0);
-		      ptr += l;
-		      length -= l;
-		    }
-#endif /* _I18N_ */
 		}
 	      pBuf = pBuf->BuNext;
 	    }
@@ -746,7 +729,6 @@ int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int max)
   /* continue while there is still text */
   while (max > 0 && pBuf && src && src[0] != EOS)
     {
-#ifdef _I18N_
       l = 0;
       while (pos < FULL_BUFFER && max > l && src[0] != EOS)
 	{
@@ -756,21 +738,6 @@ int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int max)
 	}
       if (src[0] == EOS)
 	max = 0;
-#else /* _I18N_ */
-      /* length of copied text in that buffer */
-      l = FULL_BUFFER - pos;
-      if (max < l)
-	l = max;
-      if (l > 0)
-	{
-	  strncpy (&pBuf->BuContent[pos], src, l);
-	  pos += l;
-	  length += l;
-	  src += l;
-	}
-      else
-	l = 0;
-#endif /* _I18N_ */
       pBuf->BuLength = pos;
       pBuf->BuContent[pos] = EOS;
       max -= l;
@@ -801,16 +768,13 @@ int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int max)
   ----------------------------------------------------------------------*/
 int CopyBuffer2MBs (PtrTextBuffer pBuf, int pos, unsigned char *des, int max)
 {
-#ifdef _I18N_
   unsigned char       s[10], *ptr;
-#endif /* _I18N_ */
   int                 l, length;
 
   length = 0;
   /* continue while there is still text */
   while (max > 0 && pBuf)
     {
-#ifdef _I18N_
       l = 0;
       while (pos < pBuf->BuLength && max > 0)
 	{
@@ -825,20 +789,7 @@ int CopyBuffer2MBs (PtrTextBuffer pBuf, int pos, unsigned char *des, int max)
 	    }
 	  max -= l;
 	}
-#else /* _I18N_ */
-      /* length of copied text in that buffer */
-      l = pBuf->BuLength - pos;
-      if (max < l)
-	l = max;
-      if (l > 0)
-	{
-	  strncpy (&des[length], &pBuf->BuContent[pos], l);
-	  length += l;
-	}
-      else
-	l = 0;
-      max -= l;
-#endif /* _I18N_ */
+
       if (max > 0)
 	{
 	  /* move to the new buffer */
@@ -1084,11 +1035,9 @@ int TtaGetTextLength (Element element)
 {
   PtrElement          pEl;
   int                 length;
-#ifdef _I18N_
   PtrTextBuffer       pBuf;
   unsigned char       c[10], *ptr;
   int                 i, l;
-#endif /* _I18N_ */
 
   UserErrorCode = 0;
   length = 0;
@@ -1102,7 +1051,6 @@ int TtaGetTextLength (Element element)
   else
     {
       length = pEl->ElTextLength;
-#ifdef _I18N_
       pBuf = pEl->ElText;
       l = 0;
       while (pBuf != NULL && length > 0)
@@ -1119,7 +1067,6 @@ int TtaGetTextLength (Element element)
 	  pBuf = pBuf->BuNext;
 	}
       length = l;
-#endif /* _I18N_ */
     }
   return length;
 }
@@ -1164,22 +1111,12 @@ void TtaGiveTextContent (Element element, unsigned char *buffer, int *length,
       ptr = buffer;
       while (pBuf != NULL && len < (*length) - 1)
 	{
-#ifdef _I18N_
 	  l = 0;
 	  while (l < pBuf->BuLength && len < *length)
 	    {
 	      len += TtaWCToMBstring (pBuf->BuContent[l], &ptr);
 	      l++;
 	    }
-#else /* _I18N_ */
-	  if ((*length) < len + pBuf->BuLength + 1)
-	    l = (*length) - len;
-	  else
-	    l = pBuf->BuLength + 1;
-	  ustrncpy (ptr, pBuf->BuContent, l);
-	  ptr = ptr + (l - 1);
-	  len = len + (l - 1);
-#endif /* _I18N_ */
 	  pBuf = pBuf->BuNext;
 	}
       *length = len;

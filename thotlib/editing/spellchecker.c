@@ -1200,16 +1200,11 @@ static ThotBool IgnoreWord (unsigned char *word)
 void NextSpellingError (unsigned char *word, PtrDict docDict)
 {
   Language            language;
-#ifdef _I18N_
   CHAR_T              s[MAX_WORD_LEN];
   int                 j;
-#else /* _I18N_ */
-  CHAR_T             *s;
-#endif /* _I18N */
   int                 i;
   ThotBool            ok, novalid;
 
-#ifdef _I18N_
   /* get the CHAR_T string */
   j = 0;
   while (word[j] != EOS)
@@ -1218,9 +1213,6 @@ void NextSpellingError (unsigned char *word, PtrDict docDict)
       j++;
     }
   s[j] = EOS;
-#else /* _I18N_ */
-  s = word;
-#endif /* _I18N */
   i = 1;
   do
     {
@@ -1240,7 +1232,6 @@ void NextSpellingError (unsigned char *word, PtrDict docDict)
 					ChkrElement->ElParent->ElStructSchema));
 	}
 
-#ifdef _I18N_
       /* get back the Iso string */
       j = 0;
       while (s[j] != 0)
@@ -1249,7 +1240,6 @@ void NextSpellingError (unsigned char *word, PtrDict docDict)
 	  j++;
 	}
       word[j] = EOS;
-#endif /* _I18N */
       
       if (ok)
 	{

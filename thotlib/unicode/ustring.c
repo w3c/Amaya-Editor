@@ -97,7 +97,6 @@ static CharsetCode CharsetCodeTable[] =
     {"", UNDEFINED_CHARSET}
 };
 
-#if defined(_I18N_)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 wchar_t Ttowlower(wchar_t wc)
@@ -105,9 +104,8 @@ wchar_t Ttowlower(wchar_t wc)
   if (wc < 128) return tolower(wc);
   else return wc;
 }
-#endif /* _I18N_ */
 
-#if defined(_I18N_) && !defined(_WINDOWS) && !defined(_AIX)
+#if !defined(_WINDOWS) && !defined(_AIX)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 wchar_t *wcstok(wchar_t *s, const wchar_t *delim, wchar_t **last)
@@ -166,7 +164,7 @@ wchar_t *wcstok(wchar_t *s, const wchar_t *delim, wchar_t **last)
     }
   /* NOTREACHED */
 }
-#endif /* _I18N_ && !_WINDOWS */
+#endif /* !_WINDOWS && !_AIX*/
 
 
 /*-------------------------------------------------------------
@@ -174,7 +172,6 @@ wchar_t *wcstok(wchar_t *s, const wchar_t *delim, wchar_t **last)
   -------------------------------------------------------------*/
 int ustrcasecmp (const CHAR_T *str1, const CHAR_T *str2)
 {
-#ifdef _I18N_
 #ifdef _WINDOWS
   /* Compatibility of _wcsicmp: WIN NT WIN 9x */
   return (int) _wcsicmp ((wchar_t*)str1, (wchar_t*)str2);
@@ -192,9 +189,6 @@ int ustrcasecmp (const CHAR_T *str1, const CHAR_T *str2)
     }
   return (str1[i] - str2[i]);
 #endif /* _WINDOWS */
-#else  /* _I18N_ */
-  return (unsigned int) strcasecmp ((char*)str1, (char*)str2);
-#endif /* _I18N_ */
 }
 
 
@@ -205,12 +199,8 @@ int ustrcasecmp (const CHAR_T *str1, const CHAR_T *str2)
   -------------------------------------------------------------*/
 CHAR_T *ustrcat (CHAR_T *dest, const CHAR_T *src)
 {
-#ifdef _I18N_
   /* Compatibility of wcscat: ANSI, WIN NT and WIN 9x */
   return (CHAR_T*) wcscat ((wchar_t*)dest, (wchar_t*)src);
-#else  /* _I18N_ */
-  return (CHAR_T*) strcat ((char*)dest, (char*)src);
-#endif /* _I18N_ */
 }
 
 
@@ -219,12 +209,8 @@ CHAR_T *ustrcat (CHAR_T *dest, const CHAR_T *src)
   -------------------------------------------------------------*/
 CHAR_T *ustrchr (const CHAR_T *src, CHAR_T c)
 {
-#ifdef _I18N_
   /* Compatibility of wcschr: ANSI, WIN NT and WIN 9x */
   return ((CHAR_T*) wcschr ((wchar_t*)src, (wint_t)c));
-#else  /* _I18N_ */
-  return ((CHAR_T*) strchr ((char*)src, (int)c));
-#endif /* _I18N_ */
 }
 
 
@@ -233,12 +219,8 @@ CHAR_T *ustrchr (const CHAR_T *src, CHAR_T c)
   -------------------------------------------------------------*/
 int ustrcmp (const CHAR_T *str1, const CHAR_T *str2)
 {
-#ifdef _I18N_
   /* Compatibility of wcscmp: ANSI, WIN NT and WIN 9x */
   return wcscmp ((wchar_t*)str1, (wchar_t*)str2);
-#else  /* _I18N_ */
-  return strcmp ((char*)str1, (char*)str2);
-#endif /* _I18N_ */
 }
 
 
@@ -249,12 +231,8 @@ int ustrcmp (const CHAR_T *str1, const CHAR_T *str2)
   -------------------------------------------------------------*/
 CHAR_T *ustrcpy (CHAR_T *dest, const CHAR_T *src)
 {
-#ifdef _I18N_
   /* Compatibility of wcscpy: ANSI, WIN NT and WIN 9x */
   return (CHAR_T*) wcscpy ((wchar_t *)dest, (wchar_t *)src);
-#else  /* _I18N_ */
-  return (CHAR_T*) strcpy ((char *)dest, (char *)src);
-#endif /* _I18N_ */
 }
 
 
@@ -263,12 +241,8 @@ CHAR_T *ustrcpy (CHAR_T *dest, const CHAR_T *src)
   -------------------------------------------------------------*/
 size_t ustrlen (const CHAR_T *str)
 {
-#ifdef _I18N_
   /* Compatibility of wcslen: ANSI, WIN NT and WIN 9x */
   return wcslen ((wchar_t*)str);
-#else  /* _I18N_ */
-  return (size_t) strlen ((char*)str);
-#endif /* _I18N_ */
 }
 
 
@@ -279,7 +253,6 @@ size_t ustrlen (const CHAR_T *str)
 int ustrncasecmp (const CHAR_T *str1, const CHAR_T *str2,
 		  unsigned int count)
 {
-#ifdef _I18N_
 #ifdef _WINDOWS
   /* Compatibility of _wcsnicmp: WIN NT and WIN 9x */
   return _wcsnicmp ((wchar_t *)str1, (wchar_t *)str2, (size_t)count);
@@ -315,13 +288,6 @@ int ustrncasecmp (const CHAR_T *str1, const CHAR_T *str2,
     }
   return 0;
 #endif /* _WINDOWS */
-#else  /* _I18N_ */
-#ifdef _WINDOWS
-  return (unsigned int) _strnicmp ((char*)str1, (char*)str2, (size_t)count);
-#else  /* _WINDOWS */
-  return (unsigned int) strncasecmp ((char*)str1, (char*)str2, (size_t)count);
-#endif /* _WINDOWS */
-#endif /* _I18N_ */
 }
 
 
@@ -330,12 +296,8 @@ int ustrncasecmp (const CHAR_T *str1, const CHAR_T *str2,
   -------------------------------------------------------------*/
 CHAR_T *ustrncat (CHAR_T *dest, const CHAR_T *src, unsigned int count)
 {
-#ifdef _I18N_ 
   /* Compatibility of wcsncat: ANSI, WIN NT and WIN 9x */
   return (CHAR_T*) wcsncat (dest, src, (size_t)count);
-#else  /* _I18N_ */
-  return (CHAR_T*) strncat ((char*)dest, (char*)src, (size_t)count);
-#endif /* _I18N_ */
 }
 
 
@@ -344,12 +306,8 @@ CHAR_T *ustrncat (CHAR_T *dest, const CHAR_T *src, unsigned int count)
   -------------------------------------------------------------*/
 CHAR_T *ustrncmp (const CHAR_T *str1, const CHAR_T *str2, unsigned int count)
 {
-#ifdef _I18N_ 
   /* Compatibility of wcsncmp: ANSI, WIN NT and WIN 9x */
   return (CHAR_T*) wcsncmp ((wchar_t*)str1, (wchar_t*)str2, (size_t)count);
-#else  /* _I18N_ */
-  return (CHAR_T*) strncmp ((char*)str1, (char*)str2, (size_t)count);
-#endif /* _I18N_ */
 }
 
 
@@ -358,12 +316,8 @@ CHAR_T *ustrncmp (const CHAR_T *str1, const CHAR_T *str2, unsigned int count)
   -------------------------------------------------------------*/
 CHAR_T *ustrncpy (CHAR_T *dest, const CHAR_T *src, unsigned int count)
 {
-#ifdef _I18N_ 
   /* Compatibility of wcsncpy: ANSI, WIN NT and WIN 9x */
   return (CHAR_T*) wcsncpy ((wchar_t*)dest, (wchar_t*)src, (size_t)count);
-#else  /* _I18N_ */
-  return (CHAR_T*) strncpy ((char*)dest, (char*)src, (size_t)count);
-#endif /* _I18N_ */
 }
 
 
@@ -372,12 +326,8 @@ CHAR_T *ustrncpy (CHAR_T *dest, const CHAR_T *src, unsigned int count)
   -------------------------------------------------------------*/
 CHAR_T *ustrrchr (const CHAR_T *str, CHAR_T c)
 {
-#ifdef _I18N_
   /* Compatibility of wcsrchr: ANSI, WIN NT and WIN 9x */
   return (CHAR_T*) (wcsrchr ((wchar_t*)str, (wchar_t)c));
-#else  /* _I18N_ */
-  return (CHAR_T*) strrchr ((char*)str, (char)c);
-#endif /* _I18N_ */
 }
 
 
@@ -386,16 +336,12 @@ CHAR_T *ustrrchr (const CHAR_T *str, CHAR_T c)
   -------------------------------------------------------------*/
 CHAR_T *ustrtok (CHAR_T *str, const CHAR_T *delemiter)
 {
-#ifdef _I18N_ 
   /* Compatibility of wcstok: ANSI, WIN NT and WIN 9x */
 #if defined(_WINDOWS) || defined(_AIX)
   return (CHAR_T*) wcstok ((wchar_t*)str, (wchar_t*)delemiter);
 #else  /* defined(_WINDOWS) || defined(_AIX) */
   return (CHAR_T*) wcstok ((wchar_t*)str, (wchar_t*)delemiter, NULL);
 #endif /* defined(_WINDOWS) || defined(_AIX) */
-#else  /* _I18N_ */
-  return (CHAR_T*) strtok ((char*)str, (char*)delemiter);
-#endif /* _I18N_ */
 }
 
 
@@ -404,12 +350,8 @@ CHAR_T *ustrtok (CHAR_T *str, const CHAR_T *delemiter)
   -------------------------------------------------------------*/
 CHAR_T *ustrstr (const CHAR_T *str, const CHAR_T *strCharSet)
 {
-#ifdef _I18N_
   /* Compatibility of wcsstr: ANSI, WIN NT and WIN 9x */
   return (CHAR_T*) wcsstr ((wchar_t*)str, (wchar_t*)strCharSet);
-#else  /* _I18N_ */
-  return (CHAR_T*) strstr ((char*)str, (char*)strCharSet);
-#endif /* _I18N_ */
 }
 
 

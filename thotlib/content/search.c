@@ -706,11 +706,7 @@ Element TtaSearchText (Document document, Element element, ThotBool forward,
      {
        pfirstEl = (PtrElement) element;
        plastEl = NULL;
-#ifdef _I18N_
        ptr = (CHAR_T *)TtaConvertByteToWC ((unsigned char *)text, encoding);
-#else /* _I18N_ */
-       ptr = text;
-#endif /* _I18N_ */
        found = SearchText (pDoc, &pfirstEl, &firstChar, &plastEl,
 			   &lastChar, forward, TRUE, ptr, ustrlen (ptr));
        if (ptr)

@@ -676,26 +676,6 @@ dnl Check for additionnal packages
 dnl use AC_CONFIG_SUBDIRS to launch configure in the subdir
 dnl
 
-AC_ARG_WITH(i18n,            [  --without-i18n          disable internationalization support ])
-dnl
-dnl I18N support disabled by default
-dnl
-
-if test "$with_i18n" = "" ; then
-  if test "$enable_i18n" = "no" ; then
-    with_i18n="no"
-  else
-    with_i18n="yes"
-  fi
-
-fi  
-if test "$with_i18n" = "yes" ; then
-   I18N_OPTIONS=-D_I18N_
-else
-   with_i18n="no"
-   I18N_OPTIONS=""
-fi
-
 if test "$with_gl" = "yes" ; then
   	AC_MSG_CHECKING([OpenGL])
 	for ac_dir in               		\
@@ -1200,10 +1180,10 @@ dnl
 dnl The options for each library or binary
 dnl
 
-THOT_OPTIONS="$OS_OPTIONS $I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
-AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
+THOT_OPTIONS="$OS_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
+AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
-AMAYA_ANNOT_OPTIONS="$OS_OPTIONS $AMAYA_ANNOT_OPTIONS $I18N_OPTIONS"
+AMAYA_ANNOT_OPTIONS="$OS_OPTIONS $AMAYA_ANNOT_OPTIONS"
 
 IMGLIBS="-ljpeg -lpng -lz"
 EXTRA_LIBS=
@@ -1402,9 +1382,7 @@ if test "$build_amaya" = "yes" ; then
     if test "$with_generic_xml" = "yes" ; then
 	echo Amaya configured with generic XML suppport
     fi
-    if test "$with_i18n" = "yes" ; then
-	echo Amaya configured with internationalization suppport
-    fi 
+    echo Amaya configured with internationalization suppport
     if test "$with_gl" = "yes" ; then
 	echo Amaya configured with OpenGL Canvas Rendering \(experimental\)
     fi

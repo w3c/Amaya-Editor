@@ -1245,10 +1245,8 @@ Attribute TtaGetAttribute (Element element, AttributeType attributeType)
 int TtaGetTextAttributeLength (Attribute attribute)
 {
    int                 length;
-#ifdef _I18N_
   unsigned char       c[10], *ptr;
   int                 i;
-#endif /* _I18N_ */
    PtrTextBuffer       pBuf;
 
    UserErrorCode = 0;
@@ -1262,7 +1260,6 @@ int TtaGetTextAttributeLength (Attribute attribute)
        pBuf = ((PtrAttribute) attribute)->AeAttrText;
        while (pBuf != NULL)
 	 {
-#ifdef _I18N_
 	  i = 0;
 	  while (i < pBuf->BuLength)
 	    {
@@ -1270,9 +1267,6 @@ int TtaGetTextAttributeLength (Attribute attribute)
 	      length += TtaWCToMBstring (pBuf->BuContent[i], &ptr);
 	      i++;
 	    }
-#else /* _I18N_ */
-	   length += pBuf->BuLength;
-#endif /* _I18N_ */
 	   pBuf = pBuf->BuNext;
 	 }
      }

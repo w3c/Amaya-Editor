@@ -204,12 +204,7 @@ typedef ThotBool BOOL;
 
 #endif /* #if defined(_UNIX) || defined(_MOTIF) || defined(_GTK) */
 
-#ifdef _I18N_
 #define ___TEXT___(str) L##str
-#else  /* !_I18N_ */
-#define ___TEXT___(str) str
-#endif /* _I18N_ */
-
 #ifndef TEXT
 #define TEXT(str) ___TEXT___(str)
 #endif  /* TEXT */

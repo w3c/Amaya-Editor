@@ -317,10 +317,8 @@ static void WrText (PtrTextBuffer pBT, int ind, int length, FILE *fileDescriptor
 {
   PtrTextBuffer       b;
   int                 i, l;
-#ifdef _I18N_
   unsigned char       mbc[50];
   int                 n;
-#endif /* _I18N_ */
 
   l = 0;
   b = pBT;
@@ -330,7 +328,6 @@ static void WrText (PtrTextBuffer pBT, int ind, int length, FILE *fileDescriptor
     {
       while (i < b->BuLength && b->BuContent[i] != EOS && l < length)
 	{
-#ifdef _I18N_
 	  if (b->BuContent[i] > 255)
 	    {
 	      /* display the value */
@@ -346,9 +343,6 @@ static void WrText (PtrTextBuffer pBT, int ind, int length, FILE *fileDescriptor
 	    }
 	  else
 	    putc (b->BuContent[i], fileDescriptor);
-#else /* _I18N_ */
-	  putc (b->BuContent[i], fileDescriptor);
-#endif /* _I18N_ */
 	  i++;
 	  l++;
 	}

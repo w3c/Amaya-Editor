@@ -53,14 +53,9 @@ typedef enum {
    KSC_5601
 } CHARSET;
 
-#ifdef _I18N_
 #include <wchar.h>
 typedef wchar_t  CHAR_T;
 typedef wchar_t *STRING;
-#else  /* _I18N_ */
-typedef unsigned char   CHAR_T;
-typedef unsigned char  *STRING;
-#endif /* _I18N_ */
 
 /*----------------------------------------------------------------------
   TtaGetCharset gives the charset 

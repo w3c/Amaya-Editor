@@ -1434,11 +1434,9 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  rule->PrChrValue = 'C';
 	  break;
 #ifdef _WINGUI
-#ifdef _I18N_
 	case FontOther:
 	  rule->PrChrValue = -1;
 	  break;
-#endif /* _I18N_ */
 #endif /* _WINGUI */
 	}
       break;
@@ -2049,11 +2047,9 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 	  value = FontCourier;
 	  break;
 #ifdef _WINGUI
-#ifdef _I18N_
 	case -1:
 	  value = FontOther;
 	  break;
-#endif /* _I18N_ */
 #endif /* _WINGUI */
 	}
       break;

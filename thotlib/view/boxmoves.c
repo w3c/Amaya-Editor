@@ -2980,12 +2980,11 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	{
 	  i = 0;
 	  font = pBox->BxFont;
-#ifdef _I18N_
 	  i = GetMathFontWidth (pBox->BxFont,
 				pCurrentAb->AbShape,
 				font->FontSize,
 				pBox->BxH);
-#endif /* _I18N_ */
+
 	  switch (pCurrentAb->AbShape)
 	    {
 	    case 'd':	/* double integral */

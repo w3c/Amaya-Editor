@@ -80,7 +80,6 @@ ThotBool TtaRead4Byte (BinFile file, unsigned char bval[4])
   ----------------------------------------------------------------------*/
 ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval)
 {
-#ifdef _I18N_
   int           nbBytesToRead, i;
   unsigned char car;
   wchar_t       res;
@@ -140,9 +139,6 @@ ThotBool TtaReadWideChar (BinFile file, CHAR_T *bval)
   else 
     *bval = '?';    
   return (TRUE);
-#else  /* _I18N_ */
-  return TtaReadByte (file, bval);
-#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -462,7 +458,6 @@ ThotBool TtaWrite4Byte (BinFile file, unsigned char bval[4])
   ----------------------------------------------------------------------*/
 ThotBool TtaWriteWideChar (BinFile file, CHAR_T val)
 {
-#ifdef _I18N_
    unsigned char mbc[MAX_BYTES + 1], *ptr;
    int           nbBytes;
 
@@ -474,11 +469,6 @@ ThotBool TtaWriteWideChar (BinFile file, CHAR_T val)
    if (fwrite ((char *) mbc, sizeof (char), nbBytes, file) == 0)
       return FALSE;
    return TRUE;
-#else  /* !_I18N_ */
-   if (fwrite ((char *) &val, sizeof (char), 1, file) == 0)
-      return FALSE;
-   return TRUE;
-#endif /* !_I18N_ */
 }
 
 /*----------------------------------------------------------------------

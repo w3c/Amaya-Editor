@@ -1303,7 +1303,6 @@ unsigned char *TtaConvertMbsToByte (unsigned char *src, CHARSET encoding)
 CHAR_T *TtaConvertMbsToCHAR (unsigned char *src)
 {
   CHAR_T          *dest = NULL;
-#ifdef _I18N_
   unsigned char   *ptr;
   int              i, l;
 
@@ -1321,9 +1320,6 @@ CHAR_T *TtaConvertMbsToCHAR (unsigned char *src)
 	}
       dest[i] = 0;
     }
-#else /* _I18N_ */
-  dest = TtaStrdup (src);
-#endif /* _I18N_ */
   return dest;
 }
 
@@ -1334,11 +1330,7 @@ CHAR_T *TtaConvertMbsToCHAR (unsigned char *src)
   -------------------------------------------------------------*/
 unsigned char *TtaConvertCHARToByte (CHAR_T *src, CHARSET encoding)
 {
-#ifdef _I18N_
   return TtaConvertWCToByte (src, encoding);
-#else /* _I18N_ */
-  return TtaStrdup (src);
-#endif /* _I18N */
 }
 
 
@@ -1349,9 +1341,5 @@ unsigned char *TtaConvertCHARToByte (CHAR_T *src, CHARSET encoding)
   -------------------------------------------------------------*/
 CHAR_T *TtaConvertByteToCHAR (unsigned char *src, CHARSET encoding)
 {
-#ifdef _I18N_
   return TtaConvertByteToWC (src, encoding);
-#else /* _I18N_ */
-  return TtaStrdup (src);
-#endif /* _I18N */
 }

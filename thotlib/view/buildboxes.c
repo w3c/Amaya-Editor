@@ -363,14 +363,12 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		     char dir, char bidi, int *em, char prevscript)
 {
   char                script,sc;
-#ifdef _I18N_
   char                newscript, embed = '*';
   int                 oldind = 0;
   int                 oldpos = 0;
   int                 oldspaces = 0;
   int                 oldwidth = 0;
   PtrTextBuffer       oldbuff = NULL;
-#endif /* _I18N_ */
   CHAR_T              car;
   int                 pos, max;
   int                 charWidth;
@@ -403,7 +401,6 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 	  *ind = 0;
 	}
       car = (*pBuffer)->BuContent[*ind];
-#ifdef _I18N_
       if (bidi != 'O')
 	{
 	  /* the text must be analysed and may be split */
@@ -618,7 +615,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 	      return script;
 	    }
 	}
-#endif /* _I18N_ */
+
       if (car == SPACE)
 	{
 	  (*nSpaces)++;	/* a space */
@@ -677,7 +674,6 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
   box = pAb->AbBox;
   font = box->BxFont;
   hfont = BoxFontHeight (font);
-#ifdef _I18N_
   GetMathFontFromChar (pAb->AbShape, font, (void **) &pfont,
 		       font->FontSize);
   if (pfont)
@@ -685,7 +681,7 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
       GiveStixSize (pfont, pAb, width, height, font->FontSize);
       return;      
     }
-#endif /* _I18N_ */
+
   if (pAb->AbVolume == 0)
     {
       /* empty Symbol */
