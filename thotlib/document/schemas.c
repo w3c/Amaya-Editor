@@ -589,6 +589,8 @@ void SetElSchemasExtens (PtrElement pEl, PtrDocSchemasDescr pPfS)
 	      pChild = pChild->ElNext;
 	    }
 	}
+      else if (pEl->ElLeafType == LtPicture)
+	pEl->ElFirstSchDescr = pPfS;
     }
 }
 
