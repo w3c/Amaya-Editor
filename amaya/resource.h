@@ -653,7 +653,10 @@
 #define IDC_ANNOTPOSTSERVER             1516
 #define IDC_TANNOTAUTOLOAD              1518
 #define IDC_ANNOTAUTOLOAD               1519
+#define IDC_ANNOTLAUTOLOAD              1519
+#define IDC_ANNOTRAUTOLOAD              1520
 #define ID_ANNOTSHOW                    1521
+#define IDC_ANNOTRAUTOLOADRST           1521
 #define ID_ANNOTHIDE                    1522
 #define ID_ANNOTSHOWALL                 1523
 #define ID_ANNOTHIDEALL                 1524

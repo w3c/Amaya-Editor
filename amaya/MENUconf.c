@@ -276,11 +276,9 @@ static AM_WIN_MenuText WIN_AnnotMenuText[] =
 	{IDC_TANNOTUSER, AM_ANNOT_USER},
 	{IDC_TANNOTPOSTSERVER, AM_ANNOT_POST_SERVER},
 	{IDC_TANNOTSERVERS, AM_ANNOT_SERVERS},
-	{IDC_ANNOTAUTOLOAD, AM_ANNOT_AUTOLOAD},
-	/*
+	{IDC_ANNOTLAUTOLOAD, AM_ANNOT_LAUTOLOAD},
 	{IDC_ANNOTRAUTOLOAD, AM_ANNOT_RAUTOLOAD},
 	{IDC_ANNOTRAUTOLOADRST, AM_ANNOT_RAUTOLOAD_RST},
-	 */
 	{0, 0}
 };
 #endif /* _WINDOWS */
@@ -4272,14 +4270,12 @@ HWND hwnDlg;
   SetDlgItemText (hwnDlg, IDC_ANNOTUSER, AnnotUser);
   SetDlgItemText (hwnDlg, IDC_ANNOTPOSTSERVER, AnnotPostServer);
   SetDlgItemText (hwnDlg, IDC_ANNOTSERVERS, AnnotServers);
-  CheckDlgButton (hwnDlg, IDC_ANNOTAUTOLOAD, (AnnotLAutoLoad) 
+  CheckDlgButton (hwnDlg, IDC_ANNOTLAUTOLOAD, (AnnotLAutoLoad) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-#if 0
   CheckDlgButton (hwnDlg, IDC_ANNOTRAUTOLOAD, (AnnotRAutoLoad) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_ANNOTRAUTOLOADRST, (AnnotRAutoLoadRst) 
 		  ? BST_CHECKED : BST_UNCHECKED);
-#endif
 }
 #else /* WINDOWS */
 /*----------------------------------------------------------------------
@@ -4356,19 +4352,17 @@ LPARAM lParam;
 	}
       switch (LOWORD (wParam))
 	{
-	  /* switch buttons */
-	case IDC_ANNOTAUTOLOAD:
+	  /* toggle buttons */
+	case IDC_ANNOTLAUTOLOAD:
 	  AnnotLAutoLoad = !AnnotLAutoLoad;
 	  break;
-#if 0
 	case IDC_ANNOTRAUTOLOAD:
 	  AnnotRAutoLoad = !AnnotRAutoLoad;
 	  break;
-
 	case IDC_ANNOTRAUTOLOADRST:
 	  AnnotRAutoLoadRst = !AnnotRAutoLoadRst;
 	  break;
-#endif
+
 	  /* action buttons */
 	case ID_APPLY:
 	  SetAnnotConf ();	  
