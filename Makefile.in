@@ -198,6 +198,11 @@ libwww_config :
 			@WITHDAV@ \
 			--with-zlib; \
 		$(ECHO) "libwww is configured" ; \
+		$(ECHO) "patching wwwconf.h because appkit.h do not compile on macos, and it seems that appkit.h is not used in amaya" ; \
+		$(CP) wwwconf.h wwwconf.h.orig ; \
+		$(SED) "s/\(\#define HAVE_APPKIT_APPKIT_H 1\)/\/* \1 *\//" \
+			wwwconf.h.orig > wwwconf.h ; \
+                $(ECHO) "wwwconf.h patched !" ; \
 	  fi)
 
 libwww_make_module_md5 \
@@ -286,6 +291,11 @@ libraptor_config: @MAKERAPTOR@ force
 			$$raptordir/configure \
 			--without-shared \
 			--with-expat ; \
+		$(ECHO) "patching libraptor/libtool because -flat_namespace option is missing and do not compile on macosx" ; \
+		$(CP) libtool libtool.orig ; \
+		$(SED) "s/\(allow_undefined_flag=\"-undefined suppress\)/\1 -flat_namespace/" \
+			libtool.orig > libtool ; \
+		$(ECHO) "libraptor/libtool patched !" ; \
 		$(ECHO) "libraptor is configured" ; \
 	  fi)
 
