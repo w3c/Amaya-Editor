@@ -37,11 +37,13 @@ extern void TteOpenMainWindow ( char *name,
                                 Pixmap logo,
                                 Pixmap icon );
 extern void InitClue ( ThotWidget toplevel );
+#ifndef _WINDOWS 
 extern int TtaAddButton ( Document document,
                           View view,
                           Pixmap picture,
                           void (*procedure) (),
                           char *info );
+#endif /* _WINDOWS */
 extern void TtaSwitchButton ( Document document,
                               View view,
                               int index );
