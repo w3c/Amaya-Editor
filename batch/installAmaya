@@ -1,6 +1,6 @@
 #!/bin/sh
 cd ../..
-AMAYAVERSION=0.95a
+AMAYAVERSION=0.95b
 THOTDIR=/tahiti/diffusion/opera
 echo "Intallation version " $AMAYAVERSION
 DIR=/usr/local/applis/amaya/$AMAYAVERSION
@@ -21,9 +21,7 @@ mkdir $DIR
    cp -p Thot/config/fr-libdialogue $DIR/config/
    cp -p Thot/config/fr-transdialogue $DIR/config/
    cp -p Thot/config/fr-corrdialogue $DIR/config/
- mkdir $DIR/dicopar
-   cp -p Thot/dicopar/*.ptn $DIR/dicopar/
-   cp -p Thot/dicopar/alphabet $DIR/dicopar/
+ ln -s ../../thot/Current/dicopar $DIR/dicopar
  mkdir $DIR/amaya
    cp -p Thot/amaya/COPYRIGHT $DIR/amaya/
    cp -p Thot/amaya/COPYRIGHT.html $DIR/amaya/
@@ -34,10 +32,7 @@ mkdir $DIR
    cp -p Thot/amaya/HTML.fr $DIR/amaya/
    cp -p Thot/amaya/HTML*.PRS $DIR/amaya/
    cp -p Thot/amaya/HTML*.TRA $DIR/amaya/
- mkdir $DIR/fonts
-   cp -p Thot/fonts/Families.list $DIR/fonts/
-   cp -p Thot/fonts/fonts.dir $DIR/fonts/
-   cp -p Thot/fonts/icones* $DIR/fonts/
+ ln -s ../../thot/Current/fonts $DIR/fonts
 
 for MACH in $PLATFORMS
 do
