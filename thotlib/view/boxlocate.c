@@ -1049,8 +1049,6 @@ int                 yDelta;
 		  yDelta = -h;
 		  found = FALSE;
 		}
-	      else if (yDelta != 0)
-		*y += yDelta;
 	    }
 	  else if (IsParentBox (pSourceBox, pBox))
 	    {

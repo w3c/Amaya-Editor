@@ -609,7 +609,7 @@ printf("<<<check cell_height=%d over %d rows_height=%d\n", height, rowSpans[i], 
 #ifdef __STDC__
 static void     CheckTableSize (PtrAbstractBox table, int cNumber, PtrAbstractBox *colBox, int *colWidth, int *colPercent,  int frame, boolean force)
 #else
-static void     CheckTableSize (table, cNumber, colBox, colWidth, colpercent, frame, force)
+static void     CheckTableSize (table, cNumber, colBox, colWidth, colPercent, frame, force)
 PtrAbstractBox  table;
 int             cNumber;
 PtrAbstractBox *colBox;
@@ -1294,7 +1294,7 @@ int             frame;
 					}
 				    }
 				}
-			      else if (pAttr->AeAttrNum == attrHSpan &&
+			      if (pAttr->AeAttrNum == attrHSpan &&
 				       pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
 				{
 				  foundH = TRUE;

@@ -102,7 +102,10 @@ boolean             ToCreate;
 	ustrcpy (dictname, "dictionary");
     }
   else
-    path[0] = EOS;
+    {
+      path[0] = EOS;
+      ustrcpy (dictname, "dictionary");
+    }
 
   if (path[0] == EOS ||  !TtaCheckDirectory (path))
     ustrcpy (path, TtaGetEnvString ("APP_HOME"));

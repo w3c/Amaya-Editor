@@ -472,7 +472,12 @@ CSSInfoPtr          css;
     {
       /* this document is displayed -> load the CSS */
       tempfile[0] = EOS;
-      NormalizeURL (url, doc, tempURL, tempname, NULL);
+      if (import && css->url)
+	NormalizeURL (url, 0, tempURL, tempname, css->url);
+      else if (import && css->localName)
+	NormalizeURL (url, 0, tempURL, tempname, css->localName);
+      else
+        NormalizeURL (url, doc, tempURL, tempname, NULL);
       
       if (IsW3Path (tempURL))
 	{
