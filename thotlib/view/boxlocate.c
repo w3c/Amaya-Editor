@@ -936,13 +936,13 @@ int                *pointselect;
    y+yDelta from pSourceBox box.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int x, int y, int xDelta, int yDelta)
+PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDelta, int yDelta)
 #else  /* __STDC__ */
 PtrBox         GetLeafBox (pSourceBox, frame, x, y, xDelta, yDelta)
 PtrBox              pSourceBox;
 int                 frame;
-int                 x;
-int                 y;
+int                 *x;
+int                 *y;
 int                 xDelta;
 int                 yDelta;
 #endif /* __STDC__ */
@@ -962,13 +962,13 @@ int                 yDelta;
       /* locate the last box in the line */
       if (xDelta > 0)
 	{
-	  pLimitBox = GetClickedLeafBox (frame, max, y);
+	  pLimitBox = GetClickedLeafBox (frame, max, *y);
 	  if (pLimitBox == NULL)
 	    pLimitBox = pSourceBox;
 	}
       else if (xDelta < 0)
 	{
-	  pLimitBox = GetClickedLeafBox (frame, 0, y);
+	  pLimitBox = GetClickedLeafBox (frame, 0, *y);
 	  if (pLimitBox == NULL)
 	    pLimitBox = pSourceBox;
 	}
@@ -980,10 +980,10 @@ int                 yDelta;
       while (pBox == pSourceBox && i < 200 && found)
 	{
 	  i++;
-	  x += xDelta;
-	  y += yDelta;
+	  *x += xDelta;
+	  *y += yDelta;
 	  /* Take the leaf box here */
-	  pBox = GetClickedLeafBox (frame, x, y);
+	  pBox = GetClickedLeafBox (frame, *x, *y);
 	  if (pBox == NULL)
 	    pBox = pSourceBox;
 	  if (pBox == pSourceBox || pBox->BxAbstractBox->AbBox == pSourceBox)
@@ -997,8 +997,8 @@ int                 yDelta;
 	      if (xDelta > 0 && pLimitBox == pBox)
 		{
 		  /* move one line down */
-		  x = 0;
-		  y = pBox->BxYOrg + pBox->BxHeight;
+		  *x = 0;
+		  *y = pBox->BxYOrg + pBox->BxHeight;
 		  xDelta = 0;
 		  yDelta = h;
 		  found = FALSE;
@@ -1006,8 +1006,8 @@ int                 yDelta;
 	      else if (xDelta < 0 && pLimitBox == pBox)
 		{
 		  /* move one line up */
-		  x = max;
-		  y = pBox->BxYOrg;
+		  *x = max;
+		  *y = pBox->BxYOrg;
 		  xDelta = 0;
 		  yDelta = -h;
 		  found = FALSE;
@@ -1018,7 +1018,7 @@ int                 yDelta;
 	      if (xDelta > 0)
 		{
 		  /* move to the end of the box */
-		  y = pSourceBox->BxYOrg + pSourceBox->BxHeight;
+		  *y = pSourceBox->BxYOrg + pSourceBox->BxHeight;
 		  xDelta = 0;
 		  yDelta = 0;
 		  found = FALSE;
@@ -1026,7 +1026,7 @@ int                 yDelta;
 	      else if (xDelta < 0)
 		{
 		  /* move to the beginning of the box */
-		  y = pSourceBox->BxYOrg;
+		  *y = pSourceBox->BxYOrg;
 		  xDelta = 0;
 		  yDelta = 0;
 		  found = FALSE;
@@ -1036,14 +1036,14 @@ int                 yDelta;
 	    {
 	      /* the box doesn't match, skip over */
 	      if (xDelta > 0)
-		x = pBox->BxXOrg + pBox->BxWidth;
+		*x = pBox->BxXOrg + pBox->BxWidth;
 	      else if (xDelta < 0)
-		x = pBox->BxXOrg;
+		*x = pBox->BxXOrg;
 	      
 	      if (yDelta > 0)
-		y = pBox->BxYOrg + pBox->BxHeight;
+		*y = pBox->BxYOrg + pBox->BxHeight;
 	      else if (yDelta < 0)
-		y = pBox->BxYOrg;
+		*y = pBox->BxYOrg;
 	      pBox = pSourceBox;
 	    }
 	}

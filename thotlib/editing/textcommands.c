@@ -172,7 +172,7 @@ int                 yDelta;
 	  && !pLastBox->BxAbstractBox->AbCanBeModified)
       pLastBox = pLastBox->BxNext;
 
-   pBox = GetLeafBox (pLastBox, frame, x, y, xDelta, yDelta);
+   pBox = GetLeafBox (pLastBox, frame, &x, &y, xDelta, yDelta);
    nChars = 0;
    if (pBox != NULL)
      {

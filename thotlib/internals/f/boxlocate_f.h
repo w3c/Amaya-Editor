@@ -26,8 +26,8 @@ extern PtrBox GetEnclosingClickedBox ( PtrAbstractBox pAb,
                                        int *pointselect );
 extern PtrBox GetLeafBox (PtrBox pSourceBox,
 			  int frame,
-			  int x,
-			  int y,
+			  int *x,
+			  int *y,
 			  int xDelta,
 			  int yDelta);
 extern PtrAbstractBox SearchNextAbsBox ( PtrAbstractBox pAb );
@@ -79,8 +79,8 @@ extern PtrBox GetEnclosingClickedBox (/* PtrAbstractBox pAb,
                                          int *pointselect */);
 extern PtrBox GetLeafBox (PtrBox pSourceBox,
 			  int frame,
-			  int x,
-			  int y,
+			  int *x,
+			  int *y,
 			  int xDelta,
 			  int yDelta);
 extern PtrAbstractBox SearchNextAbsBox (/* PtrAbstractBox pAb */);

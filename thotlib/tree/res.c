@@ -674,9 +674,9 @@ boolean isSource;
   renvoie vrai si elem est une instance de tree
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean RestCompatible(ElementType elType, TypeTree tree)
+static boolean RestCompatible (ElementType elType, TypeTree tree)
 #else  /* __STDC__ */
-static boolean RestCompatible(elType, tree)
+static boolean RestCompatible (elType, tree)
 ElementType elType;
 TypeTree tree;
 #endif  /* __STDC__ */
@@ -1063,8 +1063,10 @@ int typeNum;
 {
   ElementType elType;
   Restruct restCour;
+  Restruct pListRestruct;
   int i;
   SourcePrint sourcePrint;
+  boolean result;
 
 #ifdef DEBUG
   char msgbuf[100];
@@ -1072,6 +1074,7 @@ int typeNum;
   printf("\n**********\n");
 #endif
 
+  result = FALSE;
   /* if source elements have changed : init matching context */
   if (elemFirst != RContext->COldElems[0] ||
       elemLast  != RContext->COldElems[(RContext->CNbOldElems) - 1])
@@ -1080,57 +1083,75 @@ int typeNum;
   elType.ElTypeNum = typeNum;
   elType.ElSSchema = strSch;
     
+  /* allocation et calcul de l'empreinte destination */
   restCour = RestNewRestruct(elType);
 #ifdef DEBUG
   strcpy (msgbuf,  TtaGetElementTypeName(restCour->RDestType));
   printf("Destin : %s  -  %s\n",msgbuf,restCour->RDestPrint);  
   strcpy (msgbuf,  TtaGetElementTypeName(TtaGetElementType(elemFirst)));
 #endif
-  for (i=0; restCour->RRelation == NONE && i < RContext->CNbPrintMethod; i++)
+  pListRestruct = RContext->CListRestruct;
+  if (pListRestruct != NULL)
+    while (pListRestruct->RNext != NULL)
+      pListRestruct = pListRestruct->RNext;
+
+#ifdef DEBUG
+  strcpy (msgbuf,  TtaGetElementTypeName(elType));
+  printf("Source : %s\n", msgbuf);
+#endif
+  /* boucle sur les methodes tant qu'on n'a pas trouve de solution */
+  for (i=0; /*restCour->RRelation == NONE &&*/ i < RContext->CNbPrintMethod; i++)
     {
+      restCour = RestNewRestruct(elType);
+      /* instancie et calcule l'empreinte source */
       sourcePrint = RestGetSourcePrint (RContext->CPrintMethod[i]);
       if (sourcePrint != NULL)
 	{
 	  restCour->RSrcPrint = sourcePrint;
 #ifdef DEBUG
-	  printf("Source : %s  -  %s\n", msgbuf, restCour->RSrcPrint->SPrint);
+	  printf("Source : %s\n",  restCour->RSrcPrint->SPrint);
 #endif
+	  /* compare les empreintes */
 	  RestMatchPrints (restCour);
 	}
-    }
 
-  if (restCour->RRelation != NONE)
-    {
-      restCour->RNext = RContext->CListRestruct;
-      RContext->CListRestruct = restCour;
+      if (restCour->RRelation != NONE)
+	{ /* un couplage a ete trouve */
+	  if (pListRestruct != NULL)
+	    pListRestruct->RNext = restCour;
+	  else
+	    RContext->CListRestruct = restCour;
+	  pListRestruct = restCour;
+	  result = TRUE;
 #ifdef DEBUG
-      switch (restCour->RRelation)
-	{
-	case EQUIVALENCE:
-	  strcpy (msgbuf, "Equiv");
-	  break;
-	case FACTOR:
-	  strcpy (msgbuf, "Facteur");
-	  break;
-	case CLUSTER:
-	  strcpy (msgbuf, "Massif");
-	  break;
-	default: 
-	  break;
-	}
-      printf("%s - ", msgbuf);
-      printf("methode : %c \n", restCour->RSrcPrint->SPrintMethod + 48);	
+	  switch (restCour->RRelation)
+	    {
+	    case EQUIVALENCE:
+	      strcpy (msgbuf, "Equiv");
+	      break;
+	    case FACTOR:
+	      strcpy (msgbuf, "Facteur");
+	      break;
+	    case CLUSTER:
+	      strcpy (msgbuf, "Massif");
+	      break;
+	    default: 
+	      break;
+	    }
+	  printf("%s - ", msgbuf);
+	  printf("methode : %c \n", restCour->RSrcPrint->SPrintMethod + 48); 
+	  
 #endif /* DEBUG */
-      return TRUE;
-    }
-  else
-    {
+	}
+      else
+	{
 #ifdef DEBUG
-      printf ("Echec\n");
+	  printf ("Echec\n");
 #endif
-      TtaFreeMemory (restCour);
-      return FALSE;
+	  TtaFreeMemory (restCour);
+	}
     }
+  return result; 
 }
 
 /*----------------------------------------------------------------------  
@@ -1156,12 +1177,13 @@ SSchema dstSch;
   destType.ElSSchema = dstSch;
   if (RContext->CNbOldElems != 1 || elem != RContext->COldElems[0])
     {
+      /* l'instance source a change : regenere et recompare les empreintes */
       RestInitMatch (elem, elem);
       found = !RestMatchElements (elem, elem, dstSch, dstTypeNum);
     }
-  
-  if (!found)
+  else
     {
+      /* recherche dans les couplages existants */
       RestCour = RContext->CListRestruct;
       while (!found && RestCour != NULL)
 	{
@@ -1172,6 +1194,7 @@ SSchema dstSch;
     }
 
   if (found)
+    /* applique la transformation */
     return RestChangeOnPlace (doc, RestCour);
   else
     return FALSE;

@@ -356,7 +356,8 @@ Document doc;
 		  }
 	      }
 	    else
-	      if (nStack[i]->TPrintSymb == '[')
+	      if (nStack[i]->TPrintSymb != '{' &&
+		  nStack[i]->TPrintSymb != '(' )
 		{
 		  /* constructeur liste (autre ??) on cree un nouvel elt */
 		  elNew = TtaNewElement (doc, elType);

@@ -105,19 +105,22 @@ int IDst;
    PSrc = resctx->RSrcPrint->SPrint;
    PDst = resctx->RDestPrint;
    result = NONE;
-   if (TtaSameSSchemas (RContext->CSrcSchema, (resctx->RDestType).ElSSchema) &&
+   /* si l'un des deux symboles (source ou dest) est @, recherche s'ils */
+   /* correspondent au meme type d'element */
+   if ((PSrc[ISrc] == '@' || PDst[IDst] == '@') &&
+       TtaSameSSchemas (RContext->CSrcSchema, (resctx->RDestType).ElSSchema) &&
        resctx->RSrcPrint->SNodes[ISrc] != NULL &&
        resctx->RDestNodes[IDst] != NULL &&
-       resctx->RSrcPrint->SNodes[ISrc]->TypeNum == resctx->RDestNodes[IDst]->TypeNum &&
-       (resctx->RSrcPrint->SPrint[ISrc] == '@' ||
-	resctx->RDestPrint[IDst] == '@'))
-       result = IDENTITE;
+       resctx->RSrcPrint->SNodes[ISrc]->TypeNum == resctx->RDestNodes[IDst]->TypeNum )
+     result = IDENTITE;
+
    if (result == NONE)
      {
        CSrc = PSrc[ISrc];
        CDst = PDst[IDst];
        if (CDst != CSrc)
-	 {
+	 { /* les sources  texte, graphique, symbole, reference, image */
+	   /* sont compatibles avec la destination unite */
 	   if (CDst == 'U' && 
 	       (CSrc == 'T' || CSrc == 'G' || CSrc == 'S' || CSrc == 'R' || CSrc == 'P'))
 	     result = EQUIVALENCE;
@@ -300,7 +303,7 @@ Restruct resctx;
   while ((i <= LgU) && (j <= LgV))
     {
      rel = RestMatchSymb (resctx, i - 1, j - 1);
-     if (rel !=NONE) /*== EQUIVALENCE)*/
+     if (rel != NONE) /*== EQUIVALENCE)*/
         {
           if (V[j] == ClusterStack[TopMS].Inverse)
             if (ClusterStack[TopMS].Compteur == 0)    /*180794 */
