@@ -195,6 +195,7 @@ typedef struct _GETHTMLDocument_context {
   Document baseDoc;
   boolean ok;
   boolean history;
+  boolean local_link;
   char *target;
   char *documentname;
   char *tempdocument;
@@ -1715,6 +1716,7 @@ void *context;
    int                 i;
    boolean	       history;
    boolean             ok;
+   boolean             local_link;
    GETHTMLDocument_context *ctx;
    char               *sourceDocUrl;
    Element             anchor;
@@ -1738,7 +1740,8 @@ void *context;
    anchor = ctx->anchor;
    cbf = ctx->cbf;
    ctx_cbf = ctx->ctx_cbf;
-   
+   local_link = ctx->local_link;
+
    pathname = TtaGetMemory (MAX_LENGTH + 1);
    strncpy (pathname, urlName, MAX_LENGTH);
    pathname[MAX_LENGTH] = EOS;
@@ -1746,7 +1749,7 @@ void *context;
    strncpy (tempfile, outputfile, MAX_LENGTH);
    tempfile[MAX_LENGTH] = EOS;
    
-   if (ok)
+   if (ok && !local_link)
      {
        /* memorize the initial newdoc value in doc because LoadHTMLDocument */
        /* will open a new document if newdoc is a modified document */
@@ -1920,7 +1923,23 @@ void               *ctx_cbf;
      /* it's just a move in the same document */
      /* record the current position in the history */
      AddDocHistory (newdoc, DocumentURLs[newdoc]);
-   
+
+   if (ok)
+     {
+       /* Create the context for the callback */
+       ctx = TtaGetMemory (sizeof (GETHTMLDocument_context));
+       ctx->doc = doc;
+       ctx->baseDoc = baseDoc;
+       ctx->ok = ok;
+       ctx->history = history;
+       ctx->target = target;
+       ctx->documentname = documentname;
+       ctx->tempdocument = tempdocument;
+       ctx->cbf = cbf;
+       ctx->ctx_cbf = ctx_cbf;
+       ctx->local_link = 0;
+     }
+
    if (ok && newdoc == 0)
      {
        /* document not loaded yet */
@@ -2001,17 +2020,6 @@ void               *ctx_cbf;
 #else
 	       mode = AMAYA_ASYNC | AMAYA_ASYNC_SAFE_STOP;
 #endif /* AMAYA_JAVA */
-	       /* Create the context for the callback */
-	       ctx = TtaGetMemory (sizeof (GETHTMLDocument_context));
-	       ctx->doc = doc;
-	       ctx->baseDoc = baseDoc;
-	       ctx->ok = ok;
-	       ctx->history = history;
-	       ctx->target = target;
-	       ctx->documentname = documentname;
-	       ctx->tempdocument = tempdocument;
-	       ctx->cbf = cbf;
-	       ctx->ctx_cbf = ctx_cbf;
 	       if (IsW3Path (pathname))
 		 {
 		   if (CE_event == CE_FORM_POST)
@@ -2073,8 +2081,20 @@ void               *ctx_cbf;
 	       }
 	     }
 	 }
-     } 
-   else if ((ok && newdoc != 0) || ok == FALSE)
+     }
+   else if (ok && newdoc != 0)
+     /* following a local link */
+     {
+       TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+       ctx->local_link = 1;
+       GetHTMLDocument_callback (newdoc, 0,
+				 pathname,
+				 tempfile, 
+				 NULL,
+				 (void *) ctx);
+       TtaHandlePendingEvents ();
+     }
+   else if (ok == FALSE)
      /* if the document isn't loaded off the web (because of an error, or
 	because it was already loaded), we invoke the callback function */
      {
