@@ -131,6 +131,8 @@ int Magic64[256] =    /* for 4 levels of red and blue */
 
 };
 
+static png_color      Std_color_cube[128];
+
 char* typecouleur[] = {"grayscale", "undefined type", "RGB",
 		       "colormap", "grayscale+alpha",
 		       "undefined type", "RGB+alpha"};
@@ -346,9 +348,9 @@ int *bg;
       if (/* we have our own palette */)
       {
          /* An array of colors to which the image should be dithered */
-         png_color std_color_cube[MAX_SCREEN_COLORS];
+         png_color Std_color_cube[MAX_SCREEN_COLORS];
 
-         png_set_dither(png_ptr, std_color_cube, MAX_SCREEN_COLORS,
+         png_set_dither(png_ptr, Std_color_cube, MAX_SCREEN_COLORS,
             MAX_SCREEN_COLORS, NULL, 0);
       }
       /* This reduces the image to the palette supplied in the file */
@@ -465,7 +467,6 @@ int *bg;
   png_info      *info_ptr = NULL;
   png_byte      *png_pixels = NULL;
   png_byte     **row_pointers = NULL;
-  png_color      std_color_cube[256];
   unsigned char *pixels = NULL;
   double         gamma_correction;
   unsigned int   bytesPerExpandedLine;
@@ -568,23 +569,6 @@ int *bg;
 
     passes = png_set_interlace_handling (png_ptr);
     
-
-    /* fills standard color cube */ 
-    /* should be done once at the  beginning ! */
-    /* clearly writing my thesis makes me a bit lazy :) Nabil */
-
-    
-    for (i=0;i<127;i++)
-      {
-	std_color_cube[i].red   = ((i & 0x3) * 65535/3) >> 8;
-	std_color_cube[i].green = (((i >> 2) & 0x7) * 65535/7) >> 8;
-	std_color_cube[i].blue  = (((i >> 5) & 0x3) * 65535/3) >> 8;
-      }
-
-    std_color_cube[127].red   = 255;
-    std_color_cube[127].green = 255;
-    std_color_cube[127].blue  = 255;
-    
     /*   if (info_ptr->color_type & PNG_COLOR_MASK_COLOR) {*/
     if (info_ptr->valid & PNG_INFO_PLTE)
       {
@@ -648,14 +632,10 @@ int *bg;
       {
 	*ncolors = 128; 
 	for (i=0; i < *ncolors ; i++) {
-#ifdef _WINDOWS 
-	  colrs[i].red   = std_color_cube[i].red;
-	  colrs[i].green = std_color_cube[i].green;
-	  colrs[i].blue  = std_color_cube[i].blue;
-#else  /* !_WINDOWS */
-	  colrs[i].red   = std_color_cube[i].red << 8;
-	  colrs[i].green = std_color_cube[i].green << 8;
-	  colrs[i].blue  = std_color_cube[i].blue << 8;
+	  colrs[i].red   = Std_color_cube[i].red;
+	  colrs[i].green = Std_color_cube[i].green;
+	  colrs[i].blue  = Std_color_cube[i].blue;
+#ifndef _WINDOWS
 	  colrs[i].pixel = i;
 #ifndef _GTK
 	  colrs[i].flags = DoRed|DoGreen|DoBlue;
@@ -842,6 +822,36 @@ int *bg;
 #endif /* IV */
 }
 
+/*----------------------------------------------------------------------
+  InitPngColors
+  ----------------------------------------------------------------------*/
+void InitPngColors ()
+{
+  int       i;
+
+  /* fills standard color cube */ 
+#ifdef _WINDOWS
+  for (i=0; i<127; i++)
+    {
+      Std_color_cube[i].red   = ((i & 0x3) * 65535/3) >> 8;
+      Std_color_cube[i].green = (((i >> 2) & 0x7) * 65535/7) >> 8;
+      Std_color_cube[i].blue  = (((i >> 5) & 0x3) * 65535/3) >> 8;
+    }
+  Std_color_cube[127].red   = 255 >> 8;
+  Std_color_cube[127].green = 255 >> 8;
+  Std_color_cube[127].blue  = 255 >> 8;
+#else  /* !_WINDOWS */
+  for (i=0; i<127; i++)
+    {
+      Std_color_cube[i].red   = ((i & 0x3) * 65535/3);
+      Std_color_cube[i].green = (((i >> 2) & 0x7) * 65535/7);
+      Std_color_cube[i].blue  = (((i >> 5) & 0x3) * 65535/3);
+    }
+  Std_color_cube[127].red   = 255;
+  Std_color_cube[127].green = 255;
+  Std_color_cube[127].blue  = 255;
+#endif  /* !_WINDOWS */
+}
 
 /*----------------------------------------------------------------------
    	ReadPngToData decompresses and return the main picture info     

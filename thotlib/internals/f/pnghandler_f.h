@@ -13,6 +13,7 @@ extern unsigned char *ReadPng ( FILE* infile,
                                 int* cpp,
                                 ThotColorStruct colrs[256],
                                 int* bg );
+extern void InitPngColors ( void );
 extern unsigned char* ReadPngToData ( STRING datafile,
                                       int* w,
                                       int* h,
@@ -54,6 +55,7 @@ extern unsigned char *ReadPng (/* FILE* infile,
                                   int* cpp,
                                   ThotColorStruct colrs[256],
                                   int* bg */);
+extern void InitPngColors (/* void */);
 extern unsigned char* ReadPngToData (/* STRING datafile,
                                         int* w,
                                         int* h,

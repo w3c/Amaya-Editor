@@ -10,8 +10,7 @@
  *                   MS-Windows (incomplete).
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari (W3C/INROA) Unicode and Windows version
- *          D. Veillard (W3C/INRIA) - Windows 95/NT routines
+ *          R. Guetari (W3C/INROA) Unicode
  *
  */
 

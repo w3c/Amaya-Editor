@@ -1258,7 +1258,7 @@ ThotBool            printing;
    PictureIdType[HandlersCounter] = GIF_FORMAT;
    PictureMenuType[HandlersCounter] = GIF_FORMAT;
    HandlersCounter++;
-
+   InitPngColors ();
    strncpy (PictureHandlerTable[HandlersCounter].GUI_Name, PngName, MAX_FORMAT_NAMELENGHT);
    PictureHandlerTable[HandlersCounter].Produce_Picture = PngCreate;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = PngPrint;
@@ -1825,7 +1825,7 @@ PictInfo           *imageDesc;
   w = 0;
   h = 0;
   Bgcolor = ColorPixel (pAb->AbBackground);
-  
+
 #ifdef _WINDOWS
 #ifndef _WIN_PRINT
   if (TtDisplay == 0)

@@ -1026,6 +1026,10 @@ Element          el;
 
       if (dw > 0 || dh > 0)
 	{
+	  if (dw < 0)
+	    dw = 0;
+	  if (dh < 0)
+	    dh = 0;
 	  /* manage included polylines */
 	  child = TtaGetFirstChild (graphRoot);
 	  while (child)
@@ -1073,10 +1077,10 @@ NotifyElement *event;
  A presentation rule is going to be changed by Thot.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GraphicsChanged (NotifyPresentation *event)
+void                GraphicsChanged (NotifyOnValue *event)
 #else /* __STDC__*/
 void                GraphicsChanged (event)
-NotifyPresentation *event;
+NotifyOnValue *event;
 #endif /* __STDC__*/
 {
   if (InCreation)
