@@ -824,22 +824,27 @@ Document            doc;
 {
   Attribute           attr;
   AttributeType       attrType;
-  Element             el, parent, child, title;
+  Element             el, parent, child, title, head, line, prev;
   ElementType         elType, selType;
-  CHAR_T              stylestring[1000];
+#define STYLE_LEN 1000
+  CHAR_T              stylestring[STYLE_LEN];
+#define BU_LEN 100
+  STRING              text;
   STRING              a_class;
-  int                 len, base;
-  ThotBool            found;
+  int                 len, base, i;
+  Language            lang;
+  ThotBool            found, empty, insertNewLine;
 
-  /* check whether it's the element type or a class name */
-  ustrcpy (stylestring, _NEWLINE_);
+  /* check whether it's an element type or a class name */
   elType = TtaGetElementType (ClassReference);
   GIType (CurrentClass, &selType, doc);
   /* create a string containing the new CSS definition. */
+  ustrcpy (stylestring, _EMPTYSTR_);
   if (selType.ElTypeNum == 0)
+    /* it's not an element type */
     {
       if (CurrentClass[0] != '.' && CurrentClass[0] != '#')
-	/* it's an invalid class name */
+	/* it's an invalid class name, insert a dot */
 	ustrcat (stylestring, TEXT("."));
     }
   else if (selType.ElTypeNum != elType.ElTypeNum)
@@ -851,7 +856,7 @@ Document            doc;
   ustrcat (stylestring, CurrentClass);
   ustrcat (stylestring, TEXT(" { "));
   base = ustrlen (stylestring);
-  len = 1000 - base - 4;
+  len = STYLE_LEN - base - 4;
   GetHTMLStyleString (ClassReference, doc, &stylestring[base], &len);
   ustrcat (stylestring, TEXT("}"));
   
@@ -898,25 +903,27 @@ Document            doc;
 	}
       TtaSetDocumentModified (doc);
     }
+
   /* remove the Style attribute */
   RemoveElementStyle (ClassReference, doc, FALSE);
-  /* generate or update the style element */
+
+  /* generate or update the style element in the document head */
   parent = TtaGetMainRoot (doc);
   elType = TtaGetElementType (parent);
   elType.ElTypeNum = HTML_EL_HEAD;
+  head = TtaSearchTypedElement (elType, SearchForward, parent);
+  el = head;
+  elType.ElTypeNum = HTML_EL_STYLE_;
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = HTML_ATTR_Notation;
-  el = TtaSearchTypedElement (elType, SearchForward, parent);
   found = FALSE;
   while (!found && el)
     {
       /* is there any style element? */
-      elType.ElTypeNum = HTML_EL_STYLE_;
-      parent = el;
-      el = TtaSearchTypedElementInTree (elType, SearchForward, parent, el);
+      el = TtaSearchTypedElementInTree (elType, SearchForward, head, el);
       if (el)
 	{
-	  /* is it a text/css one? */
+	  /* does this style element have an attribute type="text/css" ? */
 	  attr = TtaGetAttribute (el, attrType);
 	  if (attr)
 	    {
@@ -927,20 +934,20 @@ Document            doc;
 	      TtaFreeMemory (a_class);
 	    }
 	}
-      
     }
 
-  if (!found)
+  insertNewLine = FALSE;
+  if (!found && head)
     {
       /* the STYLE element doesn't exist we create it now */
       el = TtaNewTree (doc, elType, _EMPTYSTR_);
       /* insert the new style element after the title if it exists */
       elType.ElTypeNum = HTML_EL_TITLE;
-      title = TtaSearchTypedElement (elType, SearchForward, parent);
+      title = TtaSearchTypedElementInTree (elType, SearchForward, head, head);
       if (title != NULL)
 	TtaInsertSibling (el, title, FALSE, doc);
       else
-	TtaInsertFirstChild (&el, parent, doc);
+	TtaInsertFirstChild (&el, head, doc);
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
       TtaSetAttributeText (attr, TEXT("text/css"), el, doc);
@@ -949,7 +956,7 @@ Document            doc;
   child = TtaGetLastChild (el);
   if (child == NULL)
     {
-      /* there is not TEXT element within the STYLE we create it now */
+      /* there is no TEXT element within the STYLE element. We create it now */
       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
       child = TtaNewTree (doc, elType, _EMPTYSTR_);
       TtaInsertFirstChild (&child, el, doc);
@@ -957,21 +964,98 @@ Document            doc;
       el = child;
       found = FALSE;
     }
+  else
+    {
+    elType = TtaGetElementType (child);
+    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+      /* if the last child of the STYLE element is an empty text leaf,
+	 skip it */
+      {
+	len = TtaGetTextLength (child) + 1;
+	text = TtaAllocString (len);
+	TtaGiveTextContent (child, text, &len, &lang);
+	empty = TRUE;
+	insertNewLine = TRUE;
+	for (i = len - 1; i >= 0 && empty; i--)
+	  {
+	  empty = text[i] <= SPACE;
+          if ((int) text[i] == EOL || (int) text[i] == __CR__)
+	     insertNewLine = FALSE;
+	  }
+	TtaFreeMemory (text);
+	if (empty)
+	  {
+	    prev = child;
+	    TtaPreviousSibling (&prev);
+	    if (prev)
+	      {
+		child = prev;
+	        elType = TtaGetElementType (child);
+	      }
+	  }
+      }
+    if (elType.ElTypeNum != HTML_EL_TEXT_UNIT)
+      if (elType.ElTypeNum != HTML_EL_Comment_)
+	 /* the last child of the STYLE element is neither a text leaf nor
+	    a comment. Don't do anything */
+	 child = NULL;
+      else
+	 /* the last child of the STYLE element is a comment */
+	 /* insert the new style rule within the Comment_line */
+	 {
+	 line = TtaGetLastChild (child);
+	 if (line)
+	   /* there is already a Comment_line */
+	   {
+           child = TtaGetLastChild (line);
+	   len = TtaGetTextLength (child) + 1;
+	   text = TtaAllocString (len);
+	   TtaGiveTextContent (child, text, &len, &lang);
+	   empty = TRUE;
+	   insertNewLine = TRUE;
+	   for (i = len - 1; i >= 0 && empty; i--)
+	     {
+	       empty = text[i] <= SPACE;
+               if ((int) text[i] == EOL || (int) text[i] == __CR__)
+	         insertNewLine = FALSE;
+	     }
+	   TtaFreeMemory (text);
+	   }
+	 else
+	   /* create a Comment_line within the Comment */
+	   {
+	   elType.ElTypeNum = HTML_EL_Comment_line;
+           line = TtaNewTree (doc, elType, _EMPTYSTR_);
+           TtaInsertFirstChild (&line, child, doc);
+	   child = TtaGetLastChild (line);
+	   insertNewLine = FALSE;
+	   /* remember the element to register in the undo queue */
+           found = FALSE;
+	   el = line;
+	   }
+         }
+    }
 
-  if (found)
-    /* Register the previous value of the STYLE element in the Undo queue */
-    TtaRegisterElementReplace (child, doc);
-
-  /* update the STYLE element */
-  len = TtaGetTextLength (child);
-  TtaInsertTextContent (child, len, stylestring, doc);
+  if (child)
+    {
+    if (found)
+      /* Register the previous value of the STYLE element in the Undo queue */
+      TtaRegisterElementReplace (child, doc);
+    /* update the STYLE element */
+    len = TtaGetTextLength (child);
+    if (insertNewLine)
+      {
+       TtaInsertTextContent (child, len, _NEWLINE_, doc);
+       len += ustrlen (_NEWLINE_);
+      }
+    TtaInsertTextContent (child, len, stylestring, doc);
+    /* parse and apply this new CSS to the current document */
+    ReadCSSRules (doc, NULL, stylestring, TRUE);
+    }
 
   if (!found)
     /* Register the created STYLE or child element in the Undo queue */
     TtaRegisterElementCreate (el, doc);
-
-  /* parse and apply this new CSS to the current document */
-  ReadCSSRules (doc, NULL, stylestring, TRUE);
 
   TtaCloseUndoSequence (doc);
 }

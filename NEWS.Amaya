@@ -22,8 +22,15 @@ Fixed bugs 2.5:
 ---------------
 
 * CSS:
-  - Amaya didn't well remove specific Background colors.
-  - When a link to a CSS was pasted the CSS style sheet wasn't applied.
+  - Amaya didn't remove correctly Background colors.
+  - When generating CSS rules with Style->Create_rule, element and
+    attribute names were printed in uppercase.
+  - When a link to a CSS style sheet was pasted, that style sheet
+    wasn't applied.
+  - Error in the CSS parser: parsing was stopped at the first colon in
+    an @media section.
+  - Amaya failed to create new style rules when existing style rules were
+    emmbedded in a comment within the style element.
 
 =============================================================
 2.4
