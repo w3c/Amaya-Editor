@@ -360,6 +360,7 @@ EXCEPT
    class:		CssClass;
    { attributes for internal use }
    Invalid_attribute:	Invisible;
+   EntityName:	        Invisible; 
    Ghost_restruct:	Invisible;
    IntPlaceholder:   	Invisible;
    IntFontstyle:	Invisible;
