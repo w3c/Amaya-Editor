@@ -23,7 +23,7 @@ ElemMapping;
 
 typedef struct _AttributeMapping
   {		/* mapping of a XML attribute */
-     char	XMLattribute[16];	/* name of XML attribute */
+     char	XMLattribute[24];	/* name of XML attribute */
      typeName	XMLelement;		/* name of XML element type */
      char	AttrOrContent;		/* info about the corresponding Thot
 					   thing: 'A'=Attribute, 'C'=Content

@@ -29,19 +29,19 @@ extern void MathMLEntityCreated ( USTRING entityValue,
                                   STRING entityName,
                                   Document doc );
 extern ThotBool ElementNeedsPlaceholder ( Element el );
-extern void SetSingleHorizStretchAttr ( Element el,
-                                        Document doc,
-                                        Element* selEl );
-extern void SetVertStretchAttr ( Element el,
-                                 Document doc,
-                                 int base,
-                                 Element* selEl );
+extern void SetSingleIntHorizStretchAttr ( Element el,
+                                           Document doc,
+                                           Element* selEl );
+extern void SetIntVertStretchAttr ( Element el,
+                                    Document doc,
+                                    int base,
+                                    Element* selEl );
 extern void CheckMTable ( Element elMTABLE,
                           Document doc );
 extern void SetFontstyleAttr ( Element el,
                                Document doc );
-extern void SetAddspaceAttr ( Element el,
-                              Document doc );
+extern void SetIntAddSpaceAttr ( Element el,
+                                 Document doc );
 extern void ChangeTypeOfElement ( Element elem,
                                   Document doc,
                                   int newTypeNum );
@@ -85,10 +85,10 @@ extern void MathMLEntityCreated (/* USTRING entityValue,
                                     STRING entityName,
                                     Document doc */);
 extern ThotBool ElementNeedsPlaceholder (/* Element el */);
-extern void SetSingleHorizStretchAttr (/* Element el,
-                                          Document doc,
-                                          Element* selEl */);
-extern void SetVertStretchAttr (/* Element el,
+extern void SetSingleIntHorizStretchAttr (/* Element el,
+                                             Document doc,
+                                             Element* selEl */);
+extern void SetIntVertStretchAttr (/* Element el,
                                    Document doc,
                                    int base,
                                    Element* selEl */);
@@ -96,7 +96,7 @@ extern void CheckMTable (/* Element elMTABLE,
                             Document doc */);
 extern void SetFontstyleAttr (/* Element el,
                                  Document doc */);
-extern void SetAddspaceAttr (/* Element el,
+extern void SetIntAddSpaceAttr (/* Element el,
                                 Document doc */);
 extern void ChangeTypeOfElement (/* Element elem,
                                     Document doc,

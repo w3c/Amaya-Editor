@@ -689,9 +689,95 @@ ATTRIBUTES
 	create 'accent="false"';
 	end;
 
-   entity:
+   width\240:
 	begin
-	notranslation;	{ do not translate & into &amp; }
+	create SAN;
+	create 'width="';
+	create width\240;
+	create '"';
+	end;
+
+   height\240:
+	begin
+	create SAN;
+	create 'height="';
+	create height\240;
+	create '"';
+	end;
+
+   depth\240:
+	begin
+	create SAN;
+	create 'depth="';
+	create depth\240;
+	create '"';
+	end;
+
+   lquote:
+	begin
+	create SAN;
+	create 'lquote="';
+	create lquote;
+	create '"';
+	end;
+
+   rquote:
+	begin
+	create SAN;
+	create 'rquote="';
+	create rquote;
+	create '"';
+	end;
+
+   linethickness:
+	begin
+	create SAN;
+	create 'linethickness="';
+	create linethickness;
+	create '"';
+	end;
+
+   scriptlevel:
+	begin
+	create SAN;
+	create 'scriptlevel="';
+	create scriptlevel;
+	create '"';
+	end;
+
+   displaystyle = true:
+	begin
+	create SAN;
+	create 'displaystyle="true"';
+	end;
+   displaystyle = false:
+	begin
+	create SAN;
+	create 'displaystyle="false"';
+	end;
+
+   scriptsizemultiplier:
+	begin
+	create SAN;
+	create 'scriptsizemultiplier="';
+	create scriptsizemultiplier;
+	create '"';
+	end;
+
+   scriptminsize:
+	begin
+	create SAN;
+	create 'scriptminsize="';
+	create scriptminsize;
+	create '"';
+	end;
+
+   background\240:
+	begin
+	create SAN;
+	create 'background="';
+	create background\240;
+	create '"';
 	end;
 
    open:
@@ -716,6 +802,193 @@ ATTRIBUTES
 	create 'separators="';
 	create separators;
 	create '"';
+	end;
+
+   subscriptshift:
+	begin
+	create SAN;
+	create 'subscriptshift="';
+	create subscriptshift;
+	create '"';
+	end;
+
+   superscriptshift:
+	begin
+	create SAN;
+	create 'superscriptshift="';
+	create superscriptshift;
+	create '"';
+	end;
+
+   accentunder = true:
+	begin
+	create SAN;
+	create 'accentunder="true"';
+	end;
+   accentunder = false:
+	begin
+	create SAN;
+	create 'accentunder="false"';
+	end;
+
+   align:
+	begin
+	create SAN;
+	create 'align="';
+	create align;
+	create '"';
+	end;
+
+   rowalign:
+	begin
+	create SAN;
+	create 'rowalign="';
+	create rowalign;
+	create '"';
+	end;
+
+   columnalign:
+	begin
+	create SAN;
+	create 'columnalign="';
+	create columnalign;
+	create '"';
+	end;
+
+   groupalign:
+	begin
+	create SAN;
+	create 'groupalign="';
+	create groupalign;
+	create '"';
+	end;
+
+   alignmentscope:
+	begin
+	create SAN;
+	create 'alignmentscope="';
+	create alignmentscope;
+	create '"';
+	end;
+
+   rowspacing:
+	begin
+	create SAN;
+	create 'rowspacing="';
+	create rowspacing;
+	create '"';
+	end;
+
+   columnspacing:
+	begin
+	create SAN;
+	create 'columnspacing="';
+	create columnspacing;
+	create '"';
+	end;
+
+   rowlines:
+	begin
+	create SAN;
+	create 'rowlines="';
+	create rowlines;
+	create '"';
+	end;
+
+   columnlines:
+	begin
+	create SAN;
+	create 'columnlines="';
+	create columnlines;
+	create '"';
+	end;
+
+   frame = none:
+	begin
+	create SAN;
+	create 'frame="none"';
+	end;
+   frame = solid\240:
+	begin
+	create SAN;
+	create 'frame="solid"';
+	end;
+   frame = dashed\240:
+	begin
+	create SAN;
+	create 'frame="dashed"';
+	end;
+
+   framespacing:
+	begin
+	create SAN;
+	create 'framespacing="';
+	create framespacing;
+	create '"';
+	end;
+
+   equalrows:
+	begin
+	create SAN;
+	create 'equalrows="';
+	create equalrows;
+	create '"';
+	end;
+
+   equalcolumns:
+	begin
+	create SAN;
+	create 'equalcolumns="';
+	create equalcolumns;
+	create '"';
+	end;
+
+   rowspan\240:
+	begin
+	create SAN;
+	create 'rowspan="';
+	create rowspan\240;
+	create '"';
+	end;
+
+   columnspan:
+	begin
+	create SAN;
+	create 'columnspan="';
+	create columnspan;
+	create '"';
+	end;
+
+   edge = left\240:
+	begin
+	create SAN;
+	create 'edge="left"';
+	end;
+   edge = right\240:
+	begin
+	create SAN;
+	create 'edge="right"';
+	end;
+
+   actiontype:
+	begin
+	create SAN;
+	create 'actiontype="';
+	create actiontype;
+	create '"';
+	end;
+
+   selection:
+	begin
+	create SAN;
+	create 'selection="';
+	create selection;
+	create '"';
+	end;
+
+   IntEntity:
+	begin
+	notranslation;	{ do not translate & into &amp; }
 	end;
 
 #include "Text_SGML.inc"

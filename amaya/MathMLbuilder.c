@@ -286,30 +286,62 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {"ZZGHOST", "", 'A', MathML_ATTR_Ghost_restruct},
 
    {"accent", "", 'A', MathML_ATTR_accent},
+   {"accentunder", "", 'A', MathML_ATTR_accentunder},
+   {"actiontype", "", 'A', MathML_ATTR_actiontype},
+   {"align", "", 'A', MathML_ATTR_align},
+   {"alignmentscope", "", 'A', MathML_ATTR_alignmentscope},
+   {"background", "", 'A', MathML_ATTR_background_},
    {"class", "", 'A', MathML_ATTR_class},
-   {"close", "mfenced", 'A', MathML_ATTR_close},
+   {"close", "", 'A', MathML_ATTR_close},
+   {"columnalign", "", 'A', MathML_ATTR_columnalign},
+   {"columnlines", "", 'A', MathML_ATTR_columnlines},
+   {"columnspacing", "", 'A', MathML_ATTR_columnspacing},
+   {"columnspan", "", 'A', MathML_ATTR_columnspan},
    {"color", "", 'A', MathML_ATTR_color},
+   {"depth", "", 'A', MathML_ATTR_depth_},
+   {"displaystyle", "", 'A', MathML_ATTR_displaystyle},
+   {"edge", "", 'A', MathML_ATTR_edge},
+   {"equalcolumns", "", 'A', MathML_ATTR_equalcolumns},
+   {"equalrows", "", 'A', MathML_ATTR_equalrows},
    {"fence", "", 'A', MathML_ATTR_fence},
    {"fontfamily", "", 'A', MathML_ATTR_fontfamily},
    {"fontstyle", "", 'A', MathML_ATTR_fontstyle},
    {"fontsize", "", 'A', MathML_ATTR_fontsize},
    {"fontweight", "", 'A', MathML_ATTR_fontweight},
    {"form", "", 'A', MathML_ATTR_form},
+   {"frame", "", 'A', MathML_ATTR_frame},
+   {"framespacing", "", 'A', MathML_ATTR_framespacing},
+   {"groupalign", "", 'A', MathML_ATTR_groupalign},
+   {"height", "", 'A', MathML_ATTR_height_},
    {"id", "", 'A', MathML_ATTR_id},
    {"largeop", "", 'A', MathML_ATTR_largeop},
+   {"linethickness", "", 'A', MathML_ATTR_linethickness},
    {"link", "", 'A', MathML_ATTR_link},
+   {"lquote", "", 'A', MathML_ATTR_lquote},
    {"lspace", "", 'A', MathML_ATTR_lspace},
    {"maxsize", "", 'A', MathML_ATTR_maxsize},
    {"minsize", "", 'A', MathML_ATTR_minsize},
    {"movablelimits", "", 'A', MathML_ATTR_movablelimits},
-   {"open", "mfenced", 'A', MathML_ATTR_open},
+   {"open", "", 'A', MathML_ATTR_open},
    {"other", "", 'A', MathML_ATTR_other},
+   {"rowalign", "", 'A', MathML_ATTR_rowalign},
+   {"rowlines", "", 'A', MathML_ATTR_rowlines},
+   {"rowspacing", "", 'A', MathML_ATTR_rowspacing},
+   {"rowspan", "", 'A', MathML_ATTR_rowspan_},
+   {"rquote", "", 'A', MathML_ATTR_rquote},
    {"rspace", "", 'A', MathML_ATTR_rspace},
+   {"scriptlevel", "", 'A', MathML_ATTR_scriptlevel},
+   {"scriptminsize", "", 'A', MathML_ATTR_scriptminsize},
+   {"scriptsizemultiplier", "", 'A', MathML_ATTR_scriptsizemultiplier},
+   {"selection", "", 'A', MathML_ATTR_selection},
    {"separator", "", 'A', MathML_ATTR_separator},
-   {"separators", "mfenced", 'A', MathML_ATTR_separators},
+   {"separators", "", 'A', MathML_ATTR_separators},
    {"stretchy", "", 'A', MathML_ATTR_stretchy},
    {"style", "", 'A', MathML_ATTR_style_},
+   {"subscriptshift", "", 'A', MathML_ATTR_subscriptshift},
+   {"superscriptshift", "", 'A', MathML_ATTR_superscriptshift},
    {"symmetric", "", 'A', MathML_ATTR_symmetric},
+   {"width", "", 'A', MathML_ATTR_width_},
 
    {"", "", EOS, 0}		/* Last entry. Mandatory */
 };
@@ -320,6 +352,15 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
 {
    {MathML_ATTR_accent, "true", MathML_ATTR_accent_VAL_true},
    {MathML_ATTR_accent, "false", MathML_ATTR_accent_VAL_false},
+
+   {MathML_ATTR_accentunder, "true", MathML_ATTR_accentunder_VAL_true},
+   {MathML_ATTR_accentunder, "false", MathML_ATTR_accentunder_VAL_false},
+
+   {MathML_ATTR_displaystyle, "true", MathML_ATTR_displaystyle_VAL_true},
+   {MathML_ATTR_displaystyle, "false", MathML_ATTR_displaystyle_VAL_false},
+
+   {MathML_ATTR_edge, "left", MathML_ATTR_edge_VAL_left_},
+   {MathML_ATTR_edge, "right", MathML_ATTR_edge_VAL_right_},
 
    {MathML_ATTR_fence, "true", MathML_ATTR_fence_VAL_true},
    {MathML_ATTR_fence, "false", MathML_ATTR_fence_VAL_false},
@@ -333,6 +374,10 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
    {MathML_ATTR_form, "prefix", MathML_ATTR_form_VAL_prefix},
    {MathML_ATTR_form, "infix", MathML_ATTR_form_VAL_infix},
    {MathML_ATTR_form, "postfix", MathML_ATTR_form_VAL_postfix},
+
+   {MathML_ATTR_frame, "none", MathML_ATTR_frame_VAL_none},
+   {MathML_ATTR_frame, "solid", MathML_ATTR_frame_VAL_solid_},
+   {MathML_ATTR_frame, "dashed", MathML_ATTR_frame_VAL_dashed_},
 
    {MathML_ATTR_largeop, "true", MathML_ATTR_largeop_VAL_true},
    {MathML_ATTR_largeop, "false", MathML_ATTR_largeop_VAL_false},
@@ -605,10 +650,10 @@ Document doc;
 	lang = TtaGetLanguageIdFromAlphabet('L');
 	TtaSetTextContent (elText, buffer, lang, doc);
 	attrType.AttrSSchema = GetMathMLSSchema (doc);
-	attrType.AttrTypeNum = MathML_ATTR_entity;
+	attrType.AttrTypeNum = MathML_ATTR_IntEntity;
         attr = TtaNewAttribute (attrType);
         TtaAttachAttribute (elText, attr, doc);
-	TtaSetAttributeValue (attr, MathML_ATTR_entity_VAL_yes_, elText, doc);
+	TtaSetAttributeValue (attr, MathML_ATTR_IntEntity_VAL_yes_, elText, doc);
 	}
 }
 
@@ -787,10 +832,10 @@ static void	CreatePlaceholders (el, doc)
 	    constr = TtaNewElement (doc, elType);
 	    TtaInsertSibling (constr, sibling, TRUE, doc);
 	    attrType.AttrSSchema = elType.ElSSchema;
-	    attrType.AttrTypeNum = MathML_ATTR_placeholder;
+	    attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
 	    attr = TtaNewAttribute (attrType);
 	    TtaAttachAttribute (constr, attr, doc);
-	    TtaSetAttributeValue (attr, MathML_ATTR_placeholder_VAL_yes_, constr, doc);
+	    TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_, constr, doc);
 	    }
 	 create = TRUE;
 	 }
@@ -824,10 +869,10 @@ static void	CreatePlaceholders (el, doc)
 	   constr = TtaNewElement (doc, elType);
 	   TtaInsertSibling (constr, prev, FALSE, doc);
 	   attrType.AttrSSchema = elType.ElSSchema;
-	   attrType.AttrTypeNum = MathML_ATTR_placeholder;
+	   attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
 	   attr = TtaNewAttribute (attrType);
 	   TtaAttachAttribute (constr, attr, doc);
-	   TtaSetAttributeValue (attr, MathML_ATTR_placeholder_VAL_yes_, constr, doc);
+	   TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_, constr, doc);
 	   } 
       }
 }
@@ -941,15 +986,15 @@ static void	CheckMathSubExpressions (el, type1, type2, type3, doc)
 
 
 /*----------------------------------------------------------------------
-   SetSingleHorizStretchAttr
+   SetSingleIntHorizStretchAttr
 
-   Put a horizstretch attribute on element el if it contains only
+   Put a IntHorizStretch attribute on element el if it contains only
    a MO element that is a stretchable symbol.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void SetSingleHorizStretchAttr (Element el, Document doc, Element* selEl)
+void SetSingleIntHorizStretchAttr (Element el, Document doc, Element* selEl)
 #else /* __STDC__*/
-void SetSingleHorizStretchAttr (el, doc, selEl)
+void SetSingleIntHorizStretchAttr (el, doc, selEl)
   Element	el;
   Document	doc;
   Element*	selEl;
@@ -995,12 +1040,12 @@ void SetSingleHorizStretchAttr (el, doc, selEl)
 			/* horizontal arrow */
 			{
 			c = EOS;
-			/* attach a horizstretch attribute */
+			/* attach a IntHorizStretch attribute */
 			attrType.AttrSSchema = elType.ElSSchema;
-			attrType.AttrTypeNum = MathML_ATTR_horizstretch;
+			attrType.AttrTypeNum = MathML_ATTR_IntHorizStretch;
 			attr = TtaNewAttribute (attrType);
 			TtaAttachAttribute (el, attr, doc);
-			TtaSetAttributeValue (attr, MathML_ATTR_horizstretch_VAL_yes_, el, doc);
+			TtaSetAttributeValue (attr, MathML_ATTR_IntHorizStretch_VAL_yes_, el, doc);
 			/* replace the TEXT element by a Thot SYMBOL element */
 			elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
 			symbolEl = TtaNewElement (doc, elType);
@@ -1024,15 +1069,15 @@ void SetSingleHorizStretchAttr (el, doc, selEl)
 }
 
 /*----------------------------------------------------------------------
-   SetHorizStretchAttr
+   SetIntHorizStretchAttr
 
-   Put a horizstretch attribute on all children of element el which
+   Put a IntHorizStretch attribute on all children of element el which
    contain only a MO element that is a stretchable symbol.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void SetHorizStretchAttr (Element el, Document doc)
+static void SetIntHorizStretchAttr (Element el, Document doc)
 #else /* __STDC__*/
-static void SetHorizStretchAttr (el, doc)
+static void SetIntHorizStretchAttr (el, doc)
   Element	el;
   Document	doc;
 #endif /* __STDC__*/
@@ -1044,23 +1089,23 @@ static void SetHorizStretchAttr (el, doc)
   child = TtaGetFirstChild (el);
   while (child != NULL)
      {
-     SetSingleHorizStretchAttr (child, doc, NULL);
+     SetSingleIntHorizStretchAttr (child, doc, NULL);
      TtaNextSibling (&child);
      }
 }
 
 /*----------------------------------------------------------------------
-   SetVertStretchAttr
+   SetIntVertStretchAttr
 
-   Put a vertstretch attribute on element el if its base element
+   Put a IntVertStretch attribute on element el if its base element
    (Base for a MSUBSUP, MSUP or MSUB; UnderOverBase for a MUNDEROVER,
    a MUNDER of a MOVER) contains only a MO element that is a vertically
    stretchable symbol.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void SetVertStretchAttr (Element el, Document doc, int base, Element* selEl)
+void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 #else /* __STDC__*/
-void SetVertStretchAttr (el, doc, base, selEl)
+void SetIntVertStretchAttr (el, doc, base, selEl)
   Element	el;
   Document	doc;
   int		base;
@@ -1145,12 +1190,12 @@ void SetVertStretchAttr (el, doc, base, selEl)
 		       if ((int)text[0] == 242)
 			 /* Integral */
 			 {
-			 /* attach a vertstretch attribute */
+			 /* attach a IntVertStretch attribute */
 			 attrType.AttrSSchema = elType.ElSSchema;
-			 attrType.AttrTypeNum = MathML_ATTR_vertstretch;
+			 attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
 			 attr = TtaNewAttribute (attrType);
 			 TtaAttachAttribute (el, attr, doc);
-			 TtaSetAttributeValue (attr, MathML_ATTR_vertstretch_VAL_yes_, el, doc);
+			 TtaSetAttributeValue (attr, MathML_ATTR_IntVertStretch_VAL_yes_, el, doc);
 			 /* replace the TEXT element by a Thot SYMBOL element*/
 			 elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
 			 symbolEl = TtaNewElement (doc, elType);
@@ -1169,15 +1214,15 @@ void SetVertStretchAttr (el, doc, base, selEl)
 }
 
 /*----------------------------------------------------------------------
-   SetPlaceholderAttr
+   SetIntPlaceholderAttr
 
-   Put a placeholder attribute on all Construct elements in the
+   Put a IntPlaceholder attribute on all Construct elements in the
    subtree of root el.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void SetPlaceholderAttr (Element el, Document doc)
+static void SetIntPlaceholderAttr (Element el, Document doc)
 #else /* __STDC__*/
-static void SetPlaceholderAttr (el, doc)
+static void SetIntPlaceholderAttr (el, doc)
   Element	el;
   Document	doc;
 #endif /* __STDC__*/
@@ -1194,17 +1239,17 @@ static void SetPlaceholderAttr (el, doc)
       elType.ElSSchema == GetMathMLSSchema (doc))
      {
      attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = MathML_ATTR_placeholder;
+     attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
      attr = TtaNewAttribute (attrType);
      TtaAttachAttribute (el, attr, doc);
-     TtaSetAttributeValue (attr, MathML_ATTR_placeholder_VAL_yes_, el, doc);
+     TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_, el, doc);
      }
   else
      {
      child = TtaGetFirstChild (el);
      while (child != NULL)
         {
-        SetPlaceholderAttr (child, doc);
+        SetIntPlaceholderAttr (child, doc);
         TtaNextSibling (&child);
         }
      }
@@ -1274,11 +1319,11 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
 	      /* create a first and a last PostscriptPair as placeholders */
 	      pair = TtaNewTree (doc, elTypePair, "");
 	      TtaInsertFirstChild (&pair, group, doc);
-	      SetPlaceholderAttr (pair, doc);
+	      SetIntPlaceholderAttr (pair, doc);
 	      prevPair = pair;
 	      pair = TtaNewTree (doc, elTypePair, "");
 	      TtaInsertSibling (pair, prevPair, FALSE, doc);
-	      SetPlaceholderAttr (pair, doc);
+	      SetIntPlaceholderAttr (pair, doc);
 	      prevScript = NULL;
 	    }
 	  if (prevScript == NULL)
@@ -1311,7 +1356,7 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
 	  /* insert the current element as a child of the new MSuperscript or
 	     MSubscript element */
 	  TtaInsertFirstChild (&elem, script, doc);
-	  SetPlaceholderAttr (elem, doc);
+	  SetIntPlaceholderAttr (elem, doc);
 	}
 
       CreatePlaceholders (elem, doc);
@@ -1332,7 +1377,7 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
 		  elTypeGroup.ElTypeNum = MathML_EL_PostscriptPairs;
 		  group = TtaNewTree (doc, elTypeGroup, "");
 		  TtaInsertSibling (group, elem, TRUE, doc);
-		  SetPlaceholderAttr (group, doc);
+		  SetIntPlaceholderAttr (group, doc);
 		}
 	      /* the following elements will be interpreted as sub- superscripts
 		 in PrescriptPair elements, wich will be children of this
@@ -1343,11 +1388,11 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
 	      /* create a first and a last PostscriptPair as placeholders */
 	      pair = TtaNewTree (doc, elTypePair, "");
 	      TtaInsertFirstChild (&pair, group, doc);
-	      SetPlaceholderAttr (pair, doc);
+	      SetIntPlaceholderAttr (pair, doc);
 	      prevPair = pair;
 	      pair = TtaNewTree (doc, elTypePair, "");
 	      TtaInsertSibling (pair, prevPair, FALSE, doc);
-	      SetPlaceholderAttr (pair, doc);
+	      SetIntPlaceholderAttr (pair, doc);
 	      prevScript = NULL;
 	      TtaNextSibling (&elem);
 	    }
@@ -1363,7 +1408,7 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
       if (group == NULL)
 	group = base;
       TtaInsertSibling (elem, group, TRUE, doc);
-      SetPlaceholderAttr (elem, doc);
+      SetIntPlaceholderAttr (elem, doc);
     }
 }
 
@@ -1556,14 +1601,14 @@ void SetFontstyleAttr (el, doc)
 }
 
 /*----------------------------------------------------------------------
-   SetAddspaceAttr
+   SetIntAddSpaceAttr
    The content of a MO element has been created or modified.
-   Create or change attribute addspace for that element accordingly.
+   Create or change attribute IntAddSpace for that element accordingly.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void SetAddspaceAttr (Element el, Document doc)
+void SetIntAddSpaceAttr (Element el, Document doc)
 #else /* __STDC__*/
-void SetAddspaceAttr (el, doc)
+void SetIntAddSpaceAttr (el, doc)
   Element	el;
   Document	doc;
 #endif /* __STDC__*/
@@ -1581,17 +1626,17 @@ void SetAddspaceAttr (el, doc)
   textEl = TtaGetFirstChild (el);
   if (textEl != NULL)
      {
-     /* search the addspace attribute */
+     /* search the IntAddSpace attribute */
      elType = TtaGetElementType (el);
      attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = MathML_ATTR_addspace;
+     attrType.AttrTypeNum = MathML_ATTR_IntAddSpace;
      attr = TtaGetAttribute (el, attrType);
      if (attr == NULL)
 	{
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (el, attr, doc);
 	}
-     val = MathML_ATTR_addspace_VAL_nospace;
+     val = MathML_ATTR_IntAddSpace_VAL_nospace;
      len = TtaGetTextLength (textEl);
      if (len > 0 && len < BUFLEN)
 	{
@@ -1609,16 +1654,16 @@ void SetAddspaceAttr (el, doc)
 		TtaPreviousSibling (&previous);
 		if (previous == NULL)
 		   /* no previous sibling => unary operator */
-		   val = MathML_ATTR_addspace_VAL_nospace;
+		   val = MathML_ATTR_IntAddSpace_VAL_nospace;
 		else
 		   {
 		   elType = TtaGetElementType (previous);
 		   if (elType.ElTypeNum == MathML_EL_MO)
 		      /* after an operator => unary operator */
-		      val = MathML_ATTR_addspace_VAL_nospace;
+		      val = MathML_ATTR_IntAddSpace_VAL_nospace;
 		   else
 		      /* binary operator */
-		      val = MathML_ATTR_addspace_VAL_both;
+		      val = MathML_ATTR_IntAddSpace_VAL_both;
 		   }
 		}
 	     else if (text[0] == '+' ||
@@ -1629,10 +1674,10 @@ void SetAddspaceAttr (el, doc)
 	         text[0] == '>' ||
 	         text[0] == '^')
 		 /* binary operator */
-	         val = MathML_ATTR_addspace_VAL_both;
+	         val = MathML_ATTR_IntAddSpace_VAL_both;
 	     else if (text[0] == ',' ||
 		      text[0] == ';')
-	         val = MathML_ATTR_addspace_VAL_spaceafter;
+	         val = MathML_ATTR_IntAddSpace_VAL_spaceafter;
 	     }
 	   else if (alphabet == 'G')
 	     /* Symbol character set */
@@ -1649,7 +1694,7 @@ void SetAddspaceAttr (el, doc)
 		 ((int)text[0] >= 199 && (int)text[0] <= 209) || /*  */
 		 (int)text[0] == 217 || /* and */
 		 (int)text[0] == 218 )  /* or */
-		val = MathML_ATTR_addspace_VAL_both;
+		val = MathML_ATTR_IntAddSpace_VAL_both;
 	}
      TtaSetAttributeValue (attr, val, el, doc);
      }
@@ -1743,12 +1788,12 @@ Document		doc;
 		      TtaDeleteTree (content, doc);
 		      /* change the MO element into a MF element */
 		      ChangeTypeOfElement (el, doc, MathML_EL_MF);
-		      /* attach a vertstretch attribute to the MF element */
+		      /* attach a IntVertStretch attribute to the MF element */
 		      attrType.AttrSSchema = elType.ElSSchema;
-		      attrType.AttrTypeNum = MathML_ATTR_vertstretch;
+		      attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
 		      attr = TtaNewAttribute (attrType);
 		      TtaAttachAttribute (el, attr, doc);
-		      TtaSetAttributeValue (attr, MathML_ATTR_vertstretch_VAL_yes_, el, doc);
+		      TtaSetAttributeValue (attr, MathML_ATTR_IntVertStretch_VAL_yes_, el, doc);
 		      /* create a new content for the MF element */
 		      if (text[0] == '|')
 			 {
@@ -1924,7 +1969,7 @@ Document	doc;
         elType.ElTypeNum = MathML_EL_Construct;
 	child = TtaNewElement (doc, elType);
 	TtaInsertFirstChild (&child, fencedExpression, doc);
-	SetPlaceholderAttr (child, doc);
+	SetIntPlaceholderAttr (child, doc);
 	}
       else
 	{
@@ -2032,10 +2077,10 @@ Document	doc;
 	child = TtaNewElement (doc, elType);
 	TtaInsertFirstChild (&child, new, doc);
 	attrType.AttrSSchema = elType.ElSSchema;
-	attrType.AttrTypeNum = MathML_ATTR_placeholder;
+	attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (child, attr, doc);
-	TtaSetAttributeValue (attr, MathML_ATTR_placeholder_VAL_yes_, child, doc);
+	TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_, child, doc);
 	}
      }
    else
@@ -2049,8 +2094,8 @@ Document	doc;
 	  SetFontstyleAttr (el, doc);
 	  break;
        case MathML_EL_MO:
-	  SetAddspaceAttr (el, doc);
-	  SetVertStretchAttr (el, doc, 0, NULL);
+	  SetIntAddSpaceAttr (el, doc);
+	  SetIntVertStretchAttr (el, doc, 0, NULL);
 	  break;
        case MathML_EL_MROOT:
 	  /* end of a Root. Create a RootBase and an Index */
@@ -2073,41 +2118,41 @@ Document	doc;
 	  /* end of a MSUBSUP. Create Base, Subscript, and Superscript */
 	  CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Subscript,
 				   MathML_EL_Superscript, doc);
-	  SetVertStretchAttr (el, doc, MathML_EL_Base, NULL);
+	  SetIntVertStretchAttr (el, doc, MathML_EL_Base, NULL);
 	  break;
        case MathML_EL_MSUB:
 	  /* end of a MSUB. Create Base and Subscript */
 	  CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Subscript,
 				   0, doc);
-	  SetVertStretchAttr (el, doc, MathML_EL_Base, NULL);
+	  SetIntVertStretchAttr (el, doc, MathML_EL_Base, NULL);
 	  break;
        case MathML_EL_MSUP:
 	  /* end of a MSUP. Create Base and Superscript */
 	  CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Superscript,
 				   0, doc);
-	  SetVertStretchAttr (el, doc, MathML_EL_Base, NULL);
+	  SetIntVertStretchAttr (el, doc, MathML_EL_Base, NULL);
 	  break;
        case MathML_EL_MUNDEROVER:
 	  /* end of a MUNDEROVER. Create UnderOverBase, Underscript, and
 	     Overscript */
 	  CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
 			  MathML_EL_Underscript, MathML_EL_Overscript, doc);
-	  SetHorizStretchAttr (el, doc);
-	  SetVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
+	  SetIntHorizStretchAttr (el, doc);
+	  SetIntVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
 	  break;
        case MathML_EL_MUNDER:
 	  /* end of a MUNDER. Create UnderOverBase, and Underscript */
 	  CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
 				   MathML_EL_Underscript, 0, doc);
-	  SetHorizStretchAttr (el, doc);
-	  SetVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
+	  SetIntHorizStretchAttr (el, doc);
+	  SetIntVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
 	  break;
        case MathML_EL_MOVER:
 	  /* end of a MOVER. Create UnderOverBase, and Overscript */
 	  CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
 				   MathML_EL_Overscript, 0, doc);
-	  SetHorizStretchAttr (el, doc);
-	  SetVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
+	  SetIntHorizStretchAttr (el, doc);
+	  SetIntVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
 	  break;
        case MathML_EL_MMULTISCRIPTS:
 	  /* end of a MMULTISCRIPTS. Create all elements defined in the

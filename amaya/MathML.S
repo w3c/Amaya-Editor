@@ -1,6 +1,6 @@
 	{ Thot Structure Schema for MathML
 
-	  I. Vatton		 June 1997	}
+	  I. Vatton, V. Quint		 June 1997 }
 
 
 STRUCTURE MathML;
@@ -11,16 +11,16 @@ ATTR
 
    { att-globalatts }
    class = TEXT;
-   style\240 = TEXT;
+   style\240 = TEXT;	{ style }
    id = TEXT;
    other = TEXT;
 
    { xml:link }
    link = simple, extended, locator, group, document;
 
-   { generic attributes for Amaya and XML }
-   Invalid_attribute = TEXT;
-   Ghost_restruct = TEXT;
+   { generic attributes for internal use }
+   Invalid_attribute = TEXT;	{ to store an unknown attribute }
+   Ghost_restruct = TEXT;	{ to help structure transformation }
 
 CONST
    C_Empty = ' ';
@@ -33,7 +33,7 @@ STRUCT
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
    { Presentation: all presentation constructs }
-   Construct (ATTR placeholder = yes_) = CASE OF
+   Construct (ATTR IntPlaceholder = yes_) = CASE OF
 
       { ptoken }
       MTEXT
@@ -43,7 +43,7 @@ STRUCT
 		IntFontstyle = IntNormal, IntItalic;	{ for internal use }
 		fontfamily = TEXT;
 		color = TEXT;
-		entity = yes_)				{ for internal use }
+		IntEntity = yes_)			{ for internal use }
 	  = TEXT;
 
       MI
@@ -58,7 +58,6 @@ STRUCT
 
       MO
 	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
-		IntFontstyle;
 		form = prefix, infix, postfix;
 		fence = true, false;
 		separator = true, false;
@@ -71,103 +70,177 @@ STRUCT
 		largeop = true, false;
 		movablelimits = true, false;
 		accent = true, false;
-		vertstretch = yes_;
-		addspace = nospace, spacebefore, spaceafter, both)
+		IntFontstyle;				{ for internal use }
+		IntVertStretch = yes_;			{ for internal use }
+		IntAddSpace = nospace, spacebefore, spaceafter, both)
 	  = TEXT;
 
       MS
 	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
+		lquote = TEXT;
+		rquote = TEXT; 
 		IntFontstyle)
 	  = TEXT;
 
       { petoken}
-      MSPACE = CONSTANT C_Empty;
+      MSPACE
+	  (ATTR width\240 = TEXT;
+	        height\240 = TEXT;
+	        depth\240 = TEXT)
+	  = CONSTANT C_Empty;
 
       { plschema }
       { pgenschema }
-      MROW = LIST OF (Construct);
-      MFRAC = BEGIN
-	      Numerator = Construct;
-	      Denominator = Construct;
-	      END;
-      MSQRT = BEGIN
-	      RootBase;
-	      END;
-      MROOT = BEGIN
-	      RootBase = Construct;
-	      Index = Construct;
-	      END;
+      MROW
+	  = LIST OF (Construct);
+
+      MFRAC
+	  (ATTR linethickness = TEXT)
+	  = BEGIN
+	    Numerator = Construct;
+	    Denominator = Construct;
+	    END	;
+
+      MSQRT
+	  = BEGIN
+	    RootBase;
+	    END;
+
+      MROOT
+	  = BEGIN
+	    RootBase = Construct;
+	    Index = Construct;
+	    END;
+
       MSTYLE
 	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;
-		IntFontstyle;
 		form; fence; separator; lspace; rspace; stretchy; symmetric;
-		maxsize; minsize; largeop; movablelimits; accent)
+		maxsize; minsize; largeop; movablelimits; accent;
+		lquote; rquote; linethickness;
+		scriptlevel = TEXT;
+		scriptsizemultiplier = TEXT;
+		scriptminsize = TEXT;
+		background\240 = TEXT;
+{****	In the current version, Thot only allows 25 attributes to be declared
+	for an element type. So, the following attributes can't be declared.
+		open = TEXT;
+		close = TEXT;
+		separators = TEXT;
+		subscriptshift = TEXT;
+		superscriptshift = TEXT;
+		accentunder = true, false;
+		align = TEXT;
+		rowalign = TEXT;
+		columnalign = TEXT;
+		groupalign = TEXT;
+		alignmentscope = TEXT;
+		rowspacing = TEXT;
+		columnspacing = TEXT;
+		rowlines = TEXT; 
+		columnlines = TEXT;
+		frame = none, solid\240, dashed\240;
+		framespacing = TEXT;
+		equalrows = TEXT;
+		equalcolumns = TEXT;
+		displaystyle = true, false;
+		rowspan = TEXT;
+		columnspan = TEXT;
+		edge = left\240, right\240;
+		actiontype = TEXT;
+	        selection = TEXT;
+*****}		IntFontstyle)				{ for internal use }
 	  = LIST OF (Construct);
 
-      MERROR = LIST OF (Construct);
+      MERROR
+	  = LIST OF (Construct);
 
       MPADDED
-	  (ATTR lspace)
+	  (ATTR width\240; height\240; depth\240;
+		lspace)
 	  = LIST OF (Construct);
 
-      MPHANTOM = LIST OF (Construct);
+      MPHANTOM
+	  = LIST OF (Construct);
 
       MFENCED
 	  (ATTR open = TEXT;
-		close = TEXT;
-		separators = TEXT;
-		vertstretch)
+	        close = TEXT;
+	        separators = TEXT;
+		IntVertStretch)			{ for internal use }
 	  = BEGIN
-	    OpeningFence = SYMBOL with vertstretch = yes_;
+	    OpeningFence = SYMBOL with IntVertStretch = yes_;
 	    FencedExpression = LIST OF (Construct) + (FencedSeparator);
-	    ClosingFence = SYMBOL with vertstretch = yes_;
+	    ClosingFence = SYMBOL with IntVertStretch = yes_;
 	    END;
 
       { MF is for internal use. Exported as MO }
       MF
-	  (ATTR fence; vertstretch)
-	  = TEXT with vertstretch = yes_;
+	  (ATTR fence;
+		IntVertStretch)			{ for internal use }
+	  = TEXT with IntVertStretch = yes_;
 
       { pscrschema }
       MSUB
-	  (ATTR vertstretch)
+	  (ATTR subscriptshift = TEXT; 
+		IntVertStretch)			{ for internal use }
 	  = BEGIN
 	    Base;
 	    Subscript;
 	    END;
+
       MSUP
-	  (ATTR vertstretch)
+	  (ATTR superscriptshift = TEXT;
+		IntVertStretch)			{ for internal use }
 	  = BEGIN
 	    Base;
 	    Superscript;
 	    END;
+
       MSUBSUP
-	  (ATTR vertstretch)
+	  (ATTR subscriptshift;
+		superscriptshift;
+		IntVertStretch)			{ for internal use }
 	  = BEGIN
 	    Base = Construct;
 	    Subscript = Construct;
 	    Superscript = Construct;
 	    END;
+
       MUNDER
-	  (ATTR accent; vertstretch)
+	  (ATTR accentunder = true, false; 
+		IntVertStretch)			{ for internal use }
 	  = BEGIN
-	    UnderOverBase (ATTR horizstretch = yes_) = Construct;
-	    Underscript (ATTR horizstretch) = Construct;
+	    UnderOverBase
+		(ATTR IntHorizStretch = yes_)	{ for internal use }
+		= Construct;
+	    Underscript
+		(ATTR IntHorizStretch)		{ for internal use }
+		= Construct;
 	    END;
+
       MOVER
-	  (ATTR accent; vertstretch)
+	  (ATTR accent;
+		IntVertStretch)			{ for internal use }
 	  = BEGIN
 	    UnderOverBase;
-	    Overscript (ATTR horizstretch) = Construct;
+	    Overscript
+		(ATTR IntHorizStretch)		{ for internal use }
+		= Construct;
 	    END;
+
       MUNDEROVER
-	  (ATTR vertstretch)
+	  (ATTR accent;
+		accentunder;
+		IntVertStretch)			{ for internal use }
 	  = BEGIN
 	    UnderOverBase;
 	    Underscript;
 	    Overscript;
 	    END;
+
       MMULTISCRIPTS
+	  (ATTR subscriptshift;
+		superscriptshift)
 	  = BEGIN
 	    MultiscriptBase =  Construct;
 	    PostscriptPairs = LIST OF (PostscriptPair =
@@ -185,13 +258,30 @@ STRUCT
 
       { ptabschema }
       MTABLE
+	  (ATTR align = TEXT;
+		rowalign = TEXT;
+		columnalign = TEXT;
+		groupalign = TEXT;
+		alignmentscope = TEXT;
+		rowspacing = TEXT;
+		columnspacing = TEXT;
+		rowlines = TEXT	; 
+		columnlines = TEXT; 
+		frame = none, solid\240, dashed\240;
+		framespacing = TEXT;
+		equalrows = TEXT;
+		equalcolumns = TEXT;
+		displaystyle = true, false;
+	    )
 	  = BEGIN
 	    MTable_head = LIST OF (MColumn_head = CONSTANT MC_Head);
-	    MTable_body = LIST OF (MTR = LIST OF (MTD));
+	    MTable_body = LIST OF (MTR); 
 	    END;
 
       { pactions }
       MACTION
+	  (ATTR actiontype = TEXT;
+	        selection = TEXT)
 	  = LIST OF (Construct);
 
       { sep: provision for content tags }
@@ -199,15 +289,31 @@ STRUCT
 
       END;	 { End of Construct definition }
 
+   MTR
+	  (ATTR rowalign;
+		columnalign;
+		groupalign;
+	    )
+	  = LIST OF (MTD);
    MTD
-	  (ATTR MRef_column = REFERENCE(MColumn_head))
+	  (ATTR rowalign;
+		columnalign;
+		groupalign;
+		rowspan\240 = TEXT;
+		columnspan = TEXT;
+		MRef_column = REFERENCE(MColumn_head))	{ for internal use }
 	  = BEGIN
 	    CellWrapper = Construct;
 	    END + (MALIGNGROUP, MALIGNMARK);
 
    { peschema }
-   MALIGNGROUP =  CONSTANT C_Empty;
-   MALIGNMARK =   CONSTANT C_Empty;
+   MALIGNMARK
+	  (ATTR edge = left\240, right\240)
+	  = CONSTANT C_Empty;
+
+   MALIGNGROUP
+	  (ATTR groupalign) 
+	  = CONSTANT C_Empty;
 
    { FencedSeparator is for internal use only. It contains a separator
      in a mfenced expression, according to the separator attribute }
@@ -249,16 +355,17 @@ EXCEPT
    FencedSeparator:	Hidden, NoCut, NoCreate;
    C_Empty:		Hidden, NoSelect;
 
-   Invalid_attribute:	Invisible;
-   Ghost_restruct:	Invisible;
-   placeholder:   	Invisible;
-   IntFontstyle:	Invisible;
-   addspace:	  	Invisible;
-   entity:	  	Invisible;
-   horizstretch:  	Invisible;
-   vertstretch:	  	Invisible;
-   MRef_column:		ColRef, Invisible;
    id:			CssId;
    class:		CssClass;
+   { attributes for internal use }
+   Invalid_attribute:	Invisible;
+   Ghost_restruct:	Invisible;
+   IntPlaceholder:   	Invisible;
+   IntFontstyle:	Invisible;
+   IntAddSpace:	  	Invisible;
+   IntEntity:	  	Invisible;
+   IntHorizStretch:  	Invisible;
+   IntVertStretch:  	Invisible;
+   MRef_column:		ColRef, Invisible;
 
 END

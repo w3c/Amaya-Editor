@@ -168,7 +168,7 @@ AttributeType	attrType;
      if (elType.ElTypeNum == MathML_EL_Construct)
 	{
         attrType.AttrSSchema = elType.ElSSchema;
-        attrType.AttrTypeNum = MathML_ATTR_placeholder;
+        attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
 	attr = TtaGetAttribute (*el, attrType);
 	if (attr != NULL)
 	   /* this element is a placeholder. Delete it */
@@ -243,10 +243,10 @@ ThotBool		createConstruct, oldStructureChecking;
 	   /* resume structure checking */
 	   TtaSetStructureChecking (oldStructureChecking, doc);
            attrType.AttrSSchema = elType.ElSSchema;
-           attrType.AttrTypeNum = MathML_ATTR_placeholder;
+           attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
            attr = TtaNewAttribute (attrType);
            TtaAttachAttribute (placeholderEl, attr, doc);
-           TtaSetAttributeValue (attr, MathML_ATTR_placeholder_VAL_yes_,
+           TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_,
 				 placeholderEl, doc);
 	   if (record)
 	      TtaRegisterElementCreate (placeholderEl, doc);
@@ -753,7 +753,7 @@ int                 construct;
 		  if (elType.ElTypeNum == MathML_EL_Construct)
 		    {
 		    TtaInsertFirstChild (&el, sibling, doc);
-		    RemoveAttr (el, doc, MathML_ATTR_placeholder);
+		    RemoveAttr (el, doc, MathML_ATTR_IntPlaceholder);
 		    }
 		  else
 		    TtaInsertSibling (el, sibling, before, doc);
@@ -764,7 +764,7 @@ int                 construct;
 	    {
 	      /* replace the Construct element */
 	      TtaInsertFirstChild (&el, sibling, doc);
-	      RemoveAttr (el, doc, MathML_ATTR_placeholder);
+	      RemoveAttr (el, doc, MathML_ATTR_IntPlaceholder);
 	      TtaRegisterElementCreate (el, doc);
 	    }
 	  else
@@ -1256,7 +1256,7 @@ static void CheckMROW (el, doc)
 	else
 	   {
 	   attrType.AttrSSchema = elType.ElSSchema;
-	   attrType.AttrTypeNum = MathML_ATTR_placeholder;
+	   attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
 	   attr = TtaGetAttribute (child, attrType);
 	   if (attr == NULL)
 	      /* this is not a placeholder */
@@ -1358,19 +1358,19 @@ static void MathSetAttributes (el, doc, selEl)
      }
   if (elType.ElTypeNum == MathML_EL_MO)
      {
-     SetAddspaceAttr (el, doc);
+     SetIntAddSpaceAttr (el, doc);
      parent = TtaGetParent (el);
      if (parent != NULL)
 	{
 	parentType = TtaGetElementType (parent);
 	if (parentType.ElTypeNum != MathML_EL_Base &&
 	    parentType.ElTypeNum != MathML_EL_UnderOverBase)
-	   SetVertStretchAttr (el, doc, 0, selEl);
+	   SetIntVertStretchAttr (el, doc, 0, selEl);
 	else
 	   {
 	   grandParent = TtaGetParent (parent);
 	   if (grandParent != NULL)
-	      SetVertStretchAttr (grandParent, doc, parentType.ElTypeNum, selEl);
+	      SetIntVertStretchAttr (grandParent, doc, parentType.ElTypeNum, selEl);
 	   }
 	}
      }
@@ -1379,7 +1379,7 @@ static void MathSetAttributes (el, doc, selEl)
        on operators, except if it's a mstyle element. */
      if (elType.ElTypeNum == MathML_EL_MSTYLE)
      {
-     RemoveAttr (el, doc, MathML_ATTR_addspace);
+     RemoveAttr (el, doc, MathML_ATTR_IntAddSpace);
      RemoveAttr (el, doc, MathML_ATTR_form);
      RemoveAttr (el, doc, MathML_ATTR_fence);
      RemoveAttr (el, doc, MathML_ATTR_separator);
@@ -1837,7 +1837,7 @@ static void ParseMathString (theText, theElem, doc)
 	    if (elType.ElTypeNum == MathML_EL_UnderOverBase ||
 		elType.ElTypeNum == MathML_EL_Underscript ||
 		elType.ElTypeNum == MathML_EL_Overscript)
-	       SetSingleHorizStretchAttr (parent, doc, &newSelEl);
+	       SetSingleIntHorizStretchAttr (parent, doc, &newSelEl);
 	    }
 	  }
        }

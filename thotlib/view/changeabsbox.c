@@ -42,6 +42,7 @@
 #include "content_f.h"
 #include "createabsbox_f.h"
 #include "createpages_f.h"
+#include "exceptions_f.h"
 #include "frame_f.h"
 #include "memory_f.h"
 #include "presrules_f.h"
@@ -4365,6 +4366,7 @@ PtrAttribute        pAttrComp;
 
 	     for (view = 1; view <= MAX_VIEW_DOC; view++)
 	       {
+		  pR = firstOfType;
 		  /* verifie d'abord si la vue existe */
 		  if (AssocView (pEl))
 		     /* element associe */
@@ -4708,10 +4710,9 @@ PtrAttribute        pAttrComp;
 			    else
 			       pDoc->DocViewModifiedAb[view - 1] =
 				  Enclosing (pReaff, pDoc->DocViewModifiedAb[view - 1]);
-			    /* fin de la boucle sur les vues */
 			 }
 		    }
-	       }
+	       } /* fin de la boucle sur les vues */
 
 	     /* passe a la premiere regle de presentation suivante d'un
 		type different sauf s'il s'agit d'une regle conditionnelle */
