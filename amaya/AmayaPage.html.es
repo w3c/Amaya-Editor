@@ -6,6 +6,7 @@
       "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Bienvenido a Amaya</title>
   <style type="text/css">
  body {font-family: helvetica, arial, sans-serif; color: black; background-color: #C0C0C0}
@@ -112,7 +113,7 @@
       </text>
     </g>
     <text id="version" x="360px" y="320"
-          style="font: bold 16px italic; fill: #0192BF;">Versión 8.1
+          style="font: bold 16px italic; fill: #0192BF;">Versión 8.1b
     </text>
     <g id="polygonMask" style="stroke: none;">
       <polygon style="fill: #0192BF;" points="0,0 0,170 78,148"
