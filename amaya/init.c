@@ -1476,9 +1476,9 @@ static ThotBool  CompleteUrl(char **url)
 
   if (**url != DIR_SEP 
       && **url != '~'
-#ifdef _WINGUI
+#ifdef _WINDOWS
       && (*(url))[1] != ':'
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
       && !IsW3Path (*url) 
       && !IsFilePath (*url)
       && (strlen (*url) + 8) < MAX_LENGTH)
