@@ -143,6 +143,34 @@ PtrDict             PtFree_Dict;
 
 
 /*----------------------------------------------------------------------
+   TtaAllocString
+
+   Allocates dynamically a string buffer of a specific size
+
+   Parameters:
+   size: size in bytes (like using malloc) of the desired allocated
+   buffer.
+
+   Return value:
+   the address of the allocated buffer.
+
+   See also:
+   TtaGetMemory and TtaFreeMemory.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+STRING             TtaAllocString (unsigned int n)
+#else  /* __STDC__ */
+STRING             TtaAllocString (n)
+unsigned int       n;
+#endif /* __STDC__ */
+{
+  if (n == 0)
+    n++;
+
+  return ((STRING) malloc ((size_t) n * sizeof (CHAR_T)));
+}
+
+/*----------------------------------------------------------------------
    TtaGetMemory
 
    Allocates dynamically a buffer of a specific size
@@ -172,13 +200,12 @@ unsigned int        n;
 
   if (!res)
 #ifdef _WINDOWS
-    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_ENOUGH_MEMORY), "Amaya: fatal error", MB_ICONERROR);
+    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_ENOUGH_MEMORY),_AmayaFatalErrorMSG_, MB_ICONERROR);
 #else  /* _WINDOWS */
   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
 #endif /* _WINDOWS */
   return (res);
 }
-
 
 /*----------------------------------------------------------------------
    TtaFreeMemory
@@ -433,7 +460,7 @@ STRING              str;
 
    if (str == NULL)
       return (NULL);
-   res = (STRING) TtaGetMemory (ustrlen (str) + 1);
+   res = TtaAllocString (ustrlen (str) + 1);
    if (res == NULL)
       return (res);
    ustrcpy (res, str);
@@ -2357,7 +2384,7 @@ unsigned int        n;
 #endif /* __STDC__ */
 {
    if (n > 0)
-      return ((STRING) TtaGetMemory ((size_t) n));
+      return (TtaGetMemory ((size_t) n));
    return (NULL);
 }
 
