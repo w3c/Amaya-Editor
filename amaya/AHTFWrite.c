@@ -78,18 +78,26 @@ char                c;
    int                 status;
    AHTReqContext      *reqcont;
 
+   if (me->fp == NULL) {
 #ifdef DEBUG_LIBWWW
-   if (me->fp == NULL)
-       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
+     fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
 #endif
+     return HT_ERROR;
+   }
 
-   reqcont = (AHTReqContext *) HTRequest_context (me->request);
+   /* Don't write anything if the output is stdout (used for publishing */
+   if (me->fp == stdout) 
+     return HT_OK;
+
    status = (fputc (c, me->fp) == EOF) ? HT_ERROR : HT_OK;
 
    if (status == HT_OK)
       status = AHTFWriter_flush (me);
+
+   reqcont = (AHTReqContext *) HTRequest_context (me->request);
    if (reqcont && reqcont->incremental_cbf)
       (*reqcont->incremental_cbf) (reqcont, &c, 1, status);
+
    return status;
 }
 
@@ -104,20 +112,29 @@ HTStream           *me;
 const char         *s;
 #endif /* __STDC__ */
 {
-   int                 status = 0;
+   int                 status = HT_OK;
    AHTReqContext      *reqcont;
 
-#ifdef DEBUG_LIBWWW
-   if (me->fp == NULL)
-       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
-#endif
 
-   reqcont = (AHTReqContext *) HTRequest_context (me->request);
+   if (me->fp == NULL) {
+#ifdef DEBUG_LIBWWW
+     fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
+#endif
+     return HT_ERROR;
+   }
+
+
+   /* Don't write anything if the output is stdout (used for publishing */
+   if (me->fp == stdout) 
+     return HT_OK;
+
    if (*s)
      {
 	status = (fputs (s, me->fp) == EOF) ? HT_ERROR : HT_OK;
 	if (status == HT_OK)
 	   status = AHTFWriter_flush (me);
+
+	reqcont = (AHTReqContext *) HTRequest_context (me->request);
  
 	if (reqcont && reqcont->incremental_cbf)
 	  (*reqcont->incremental_cbf) (reqcont, s, strlen (s), status);
@@ -146,16 +163,22 @@ int                 l;
    int                 status;
    AHTReqContext      *reqcont;
 
+   if (me->fp == NULL) {
 #ifdef DEBUG_LIBWWW
-   if (me->fp == NULL)
-       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
+     fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
 #endif
+     return HT_ERROR;
+   }
 
-   reqcont = (AHTReqContext *) HTRequest_context (me->request);
+   /* Don't write anything if the output is stdout (used for publishing */
+   if (me->fp == stdout) 
+     return HT_OK;
 
    status = (fwrite (s, 1, l, me->fp) != l) ? HT_ERROR : HT_OK;
    if (l > 1 && status == HT_OK)
       (void) AHTFWriter_flush (me);
+
+   reqcont = (AHTReqContext *) HTRequest_context (me->request);
 
    if (reqcont && reqcont->incremental_cbf)
       (*reqcont->incremental_cbf) (reqcont, s, l, status);
@@ -173,10 +196,17 @@ static int         AHTFWriter_flush (me)
 HTStream           *me
 #endif				/* __STDC__ */
 {
+
+   if (me->fp == NULL) {
 #ifdef DEBUG_LIBWWW
-   if (me->fp == NULL)
-       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
+     fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_new\n");
 #endif
+     return HT_ERROR;
+   }
+
+   /* Don't write anything if the output is stdout (used for publishing */
+   if (me->fp == stdout) 
+     return HT_OK;
 
    return (fflush (me->fp) == EOF) ? HT_ERROR : HT_OK;
 }
@@ -224,24 +254,20 @@ HTList             *e;
 
 #endif /* __STDC__ */
 {
-#ifdef DEBUG_LIBWWW
-   if (me->fp == NULL)
-       fprintf (stderr, "ERROR:fp is NULL in AHTFWriter_abort\n");
-#endif
 
-   if (STREAM_TRACE)
-      HTTrace ("FileWriter.. ABORTING...\n");
-   if (me)
-     {
-	if (me->leave_open != YES)
-	   fclose (me->fp);
-	if (me->remove_on_close)
-	   REMOVE (me->filename);
-	HT_FREE (me->end_command);
-	HT_FREE (me->filename);
-	HT_FREE (me);
-     }
-   return HT_ERROR;
+  if (STREAM_TRACE)
+    HTTrace ("FileWriter.. ABORTING...\n");
+  if (me)
+    {
+      if (me->leave_open != YES)
+	fclose (me->fp);
+      if (me->remove_on_close)
+	REMOVE (me->filename);
+      HT_FREE (me->end_command);
+      HT_FREE (me->filename);
+      HT_FREE (me);
+    }
+  return HT_ERROR;
 }
 
 /*      AHTFWriter class stream
