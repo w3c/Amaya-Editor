@@ -3,7 +3,7 @@
 <html>
 <head>
   <title>Compiling Amaya on Windows</title>
-  <meta name="GENERATOR" content="amaya V2.2">
+  <meta name="GENERATOR" content="amaya V2.2a">
 </head>
 
 <body lang="en">
@@ -74,7 +74,9 @@ file.</p>
     <p>LibThotEditor\LibThotEditor.mak</p>
   </li>
   <li>amaya.mak</li>
-  <li>amaya.mkf</li>
+  <li>amaya.dsp</li>
+  <li>amaya.dsw</li>
+  <li>amaya\amaya.mkf</li>
 </ul>
 
 <h2>Building Amaya using *.mak files:</h2>
@@ -94,14 +96,15 @@ file.</p>
 <h2>Building Amaya using *.dsp files:</h2>
 <ol>
   <li>Load the Compilers project
-    (<code>Amaya\Windows\Compilers\Compilers.dsp</code>).</li>
-  <li>Update the follwing dependencies (Menu Project/Dependencies):
+    (<code>Amaya\Windows\Compilers\Compilers.dsw</code>).
+    <p>This will load the other projects related to Compilers workspace:</p>
     <ul>
-      <li>Compilers depends on: LibThotKernel, app, prs, str and tra.</li>
-      <li>app depends on LibThotKernel and cpp</li>
-      <li>prs depends on LibThotKernel and cpp</li>
-      <li>str depends on LibThotKernel and cpp</li>
-      <li>tra depends on LibThotKernel and cpp</li>
+      <li>LibThotKernel,</li>
+      <li>cpp,</li>
+      <li>app,</li>
+      <li>prs,</li>
+      <li>str,</li>
+      <li>tra.</li>
     </ul>
   </li>
   <li>Execute Compilers program, you will have a Window with a menu "File".
@@ -110,15 +113,17 @@ file.</p>
   <li>Choose "File/Build", this will execute amaya compilers and generate
     files needed to build Amaya.</li>
   <li>Close your Compilers workspace and load
-    <code>Amaya\Windows\amaya.dsp.</code></li>
-  <li>Update the following dependencies (Menu Project/Dependencies):
+    <code>Amaya\Windows\amaya.dsw.</code>
+    <p>This will load the other projects related top Amaya workspace:</p>
     <ul>
-      <li>amaya depends on libThotEditor, libwww and thotprinter.</li>
-      <li>libpng depends on zlib.</li>
-      <li>libThotEditor depends on libjpeg and libpng.</li>
-      <li>libwww depends on zlib.</li>
-      <li>printlib depends on libjpeg, libpng and libThotTable.</li>
-      <li>thotprinter depends on printlib.</li>
+      <li>libjpeg,</li>
+      <li>libpng,</li>
+      <li>zlib,</li>
+      <li>libThotEditor,</li>
+      <li>libThotTable,</li>
+      <li>printlib,</li>
+      <li>thotprinter,</li>
+      <li>libwww.</li>
     </ul>
   </li>
   <li>Build Amaya.</li>
