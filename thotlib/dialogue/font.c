@@ -818,7 +818,8 @@ CHAR_T                r_nameX[100];
 	    ustrcat (r_nameX, TEXT("-"));
 	    ustrcat (r_nameX, TEXT("1"));
 	}
-	else if ((CHAR_T) TOLOWER (alphabet) == TEXT('e'))
+	else if ((CHAR_T) TOLOWER (alphabet) == TEXT('e')
+		 || alphabet == TEXT('2'))
 	{
 	    ustrcat (r_nameX, TEXT("iso8859"));
 	    ustrcat (r_nameX, TEXT("-"));
