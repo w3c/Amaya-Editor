@@ -1567,7 +1567,7 @@ void     MoveCaret (PtrDocument pDoc, PtrElement pEl, int firstChar)
    and ending at position lastChar in the text element pEl.
    If pEl is a polyline, the vertex of rank firstChar is selected.
   ----------------------------------------------------------------------*/
-void   SelectString (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar)
+void SelectString (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar)
 {
    ThotBool            string;
 
@@ -1590,7 +1590,7 @@ void   SelectString (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastCh
    last child is selected instead, depending on parameter begin, except
    when check is FALSE.
   ----------------------------------------------------------------------*/
-void                SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool check)
+void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool check)
 {
    PtrElement          pAncest, pE;
    ThotBool            bool, stop, elVisible;
@@ -1726,20 +1726,19 @@ void                SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool be
 	       }
 	  }
 
-	if (FirstSelectedElement != NULL)
-	   if (FirstSelectedElement->ElTerminal)
-	     {
-		/* if a symbol is selected, display the symbol palette */
-/******		if (FirstSelectedElement->ElLeafType == LtSymbol)
-		   TtaSetCurrentKeyboard (0);
-******/
-		/* if a graphic shape is selected, display the graphic palette */
-		if (FirstSelectedElement->ElLeafType == LtGraphics)
-		   TtaSetCurrentKeyboard (1);
-		/* if a polyline is selected, display the graphic palette */
-		else if (FirstSelectedElement->ElLeafType == LtPolyLine)
-		   TtaSetCurrentKeyboard (1);
-	     }
+	if (FirstSelectedElement != NULL && FirstSelectedElement->ElTerminal)
+	  {
+	    /* if a symbol is selected, display the symbol palette */
+	    /****** if (FirstSelectedElement->ElLeafType == LtSymbol)
+		      TtaSetCurrentKeyboard (0);
+	    ******/
+	    /* if a graphic shape is selected, display the graphic palette */
+	    if (FirstSelectedElement->ElLeafType == LtGraphics)
+	      TtaSetCurrentKeyboard (1);
+	    /* if a polyline is selected, display the graphic palette */
+	    else if (FirstSelectedElement->ElLeafType == LtPolyLine)
+	      TtaSetCurrentKeyboard (1);
+	  }
 	/* update all the menus that depend on the current selection */
 	if (SelectionUpdatesMenus)
 	  {
@@ -2256,28 +2255,28 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
   result = FALSE;
   if (doubleClick && pAb != NULL)
     {
-      pEl1 = pAb->AbElement;
-      if (pEl1 != NULL)
+      pEl = pAb->AbElement;
+      if (pEl != NULL)
 	{
 	  /* send event TteElemActivate.Pre to the application */
 	  notifyEl.event = TteElemActivate;
 	  notifyEl.document = doc;
-	  notifyEl.element = (Element) pEl1;
-	  notifyEl.elementType.ElTypeNum = pEl1->ElTypeNumber;
-	  notifyEl.elementType.ElSSchema = (SSchema) (pEl1->ElStructSchema);
+	  notifyEl.element = (Element) pEl;
+	  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+	  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	  notifyEl.position = 0;
 	  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	    /* the application asks Thot to do nothing */
 	    return TRUE;
-	  if (pEl1->ElHolophrast)
+	  if (pEl->ElHolophrast)
 	    {
 	      /* avoid to rebuild menus. It will be done by */
 	      /* SelectElement */
 	      SelectedDocument = NULL;
 	      /* switch off the previous selection */
 	      CancelSelection ();
-	      DeHolophrast (pEl1, pDoc);
-	      SelectElementWithEvent (pDoc, pEl1, TRUE, FALSE);
+	      DeHolophrast (pEl, pDoc);
+	      SelectElementWithEvent (pDoc, pEl, TRUE, FALSE);
 	      return result;
 	    }
 	}
@@ -2350,6 +2349,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	      pAttr = pEl->ElFirstAttr;
 	      /* scan all attributes of current element */
 	      while (pAttr != NULL && !doubleClickRef)
+		{
 		if (pAttr->AeAttrType == AtReferenceAttr &&
 		    AttrHasException (ExcActiveRef, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 		  /* a reference attribute has been found */
@@ -2363,6 +2363,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 		else
 		  /* next attribute of same element */
 		  pAttr = pAttr->AeNext;
+		}
 	      if (!doubleClickRef)
 		/* higher level ancestor */
 		pEl = pEl->ElParent;
@@ -2371,9 +2372,9 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	}
     }
 
-  if (pAb != NULL &&
-      pAb->AbElement->ElTerminal &&
-      (pAb->AbElement->ElLeafType == LtPairedElem || pAb->AbElement->ElLeafType == LtReference) &&
+  if (pAb && pAb->AbElement->ElTerminal &&
+      (pAb->AbElement->ElLeafType == LtPairedElem ||
+       pAb->AbElement->ElLeafType == LtReference) &&
       /* it's a reference element or a paired element */
       (!pAb->AbPresentationBox || !pAb->AbCanBeModified))
     /* it's not the presentation box of an attribute value */
@@ -2387,123 +2388,124 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
     }
   if (!update)
     FrameWithNoUpdate = frame;
+
   if (extension || !update)
-    /* extension of current selection */
-    if (DocSelectedAttr != NULL)
-      /* the current selection is within a presentation box that displays */
-      /* an attribute value */
-      {
-	if (DocSelectedAttr == pDoc && AbsBoxSelectedAttr == pAb)
-	  /* extension is allowed only if it's within the same box */
-	  {
-	    if (rank == 0)
-	      {
-		FirstSelectedCharInAttr = 1;
-		LastSelectedCharInAttr = pAb->AbVolume;
-	      }
-	    else if (rank <= InitSelectedCharInAttr)
-	      {
-		FirstSelectedCharInAttr = rank;
-		LastSelectedCharInAttr = InitSelectedCharInAttr;
-	      }
-	    else
-	      {
-		FirstSelectedCharInAttr = InitSelectedCharInAttr;
-		LastSelectedCharInAttr = rank;
-	      }
-	    if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)
-	      SelectStringInAttr (pDoc, pAb, FirstSelectedCharInAttr,
-				  LastSelectedCharInAttr, TRUE);
-	  }
-      }
-    else
-      {
-	if (pDoc != SelectedDocument ||
-	    (assoc && numassoc != FirstSelectedElement->ElAssocNum))
-	  /* extension to a different tree is not allowed */
-	  {
-	    TtaDisplaySimpleMessage (INFO, LIB, TMSG_CHANGING_DOC_IMP);
-	    error = TRUE;
-	  }
-	else
-	  {
-	    /* same document, but is it the same tree? */
-	    if (FirstSelectedElement != NULL)
-	      /* search an enclosing abstract box that belongs to the */
-	      /* same associated tree as the first selected element */
-	      {
-		stop = FALSE;
-		do
-		  if (pAb == NULL)
-		    stop = TRUE;
-		  else if (FirstSelectedElement->ElAssocNum == pAb->AbElement->ElAssocNum)
-		    stop = TRUE;
-		  else
-		    pAb = pAb->AbEnclosing;
-		while (!stop);
-	      }
-	    if (pAb == NULL)
+    {
+      /* extension of current selection */
+      if (DocSelectedAttr != NULL)
+	/* the current selection is within a presentation box that displays */
+	/* an attribute value */
+	{
+	  if (DocSelectedAttr == pDoc && AbsBoxSelectedAttr == pAb)
+	    /* extension is allowed only if it's within the same box */
+	    {
+	      if (rank == 0)
+		{
+		  FirstSelectedCharInAttr = 1;
+		  LastSelectedCharInAttr = pAb->AbVolume;
+		}
+	      else if (rank <= InitSelectedCharInAttr)
+		{
+		  FirstSelectedCharInAttr = rank;
+		  LastSelectedCharInAttr = InitSelectedCharInAttr;
+		}
+	      else
+		{
+		  FirstSelectedCharInAttr = InitSelectedCharInAttr;
+		  LastSelectedCharInAttr = rank;
+		}
+	      if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)
+		SelectStringInAttr (pDoc, pAb, FirstSelectedCharInAttr,
+				    LastSelectedCharInAttr, TRUE);
+	    }
+	}
+      else
+	{
+	  if (pDoc != SelectedDocument ||
+	      (assoc && numassoc != FirstSelectedElement->ElAssocNum))
+	    /* extension to a different tree is not allowed */
+	    {
+	      TtaDisplaySimpleMessage (INFO, LIB, TMSG_CHANGING_DOC_IMP);
 	      error = TRUE;
-	    else
-	      {
-		fixed = update;
-		begin = extension;
-		pEl = pAb->AbElement;
-		if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
-		  /* the element to be selected is a constant */
-		  /* select it entirely */
-		  rank = 0;
-		/* If the element to be selected is hidden or cannot be */
-		/* selected, get the first ancestor that can be selected*/
-		if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber,
-				      pEl->ElStructSchema) ||
-		    (HiddenType (pEl) &&
-		     !ElementHasAction(pEl, TteElemExtendSelect, TRUE)))
-		  {
-		    stop = FALSE;
-		    /* select the entire element */
+	    }
+	  else
+	    {
+	      /* same document, but is it the same tree? */
+	      if (FirstSelectedElement != NULL)
+		/* search an enclosing abstract box that belongs to the */
+		/* same associated tree as the first selected element */
+		{
+		  stop = FALSE;
+		  do
+		    if (pAb == NULL)
+		      stop = TRUE;
+		    else if (FirstSelectedElement->ElAssocNum == pAb->AbElement->ElAssocNum)
+		      stop = TRUE;
+		    else
+		      pAb = pAb->AbEnclosing;
+		  while (!stop);
+		}
+	      if (pAb == NULL)
+		error = TRUE;
+	      else
+		{
+		  fixed = update;
+		  begin = extension;
+		  pEl = pAb->AbElement;
+		  if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
+		    /* the element to be selected is a constant */
+		    /* select it entirely */
 		    rank = 0;
-		    while (!stop)
-		      if (pEl->ElParent == NULL)
+		  /* If the element to be selected is hidden or cannot be */
+		  /* selected, get the first ancestor that can be selected*/
+		  if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber, pEl->ElStructSchema) ||
+		      (HiddenType (pEl) &&
+		       !ElementHasAction(pEl, TteElemExtendSelect, TRUE)) ||
+		      TypeHasException (ExcSelectParent, pEl->ElTypeNumber, pEl->ElStructSchema))
+		    {
+		      stop = FALSE;
+		      /* select the entire element */
+		      rank = 0;
+		      while (!stop)
+			if (pEl->ElParent == NULL)
 				/* root of a tree. Select it */
-			stop = TRUE;
-		      else
-			{
-			  pEl = pEl->ElParent;
-			  if (!TypeHasException (ExcNoSelect,
-						 pEl->ElTypeNumber,
-						 pEl->ElStructSchema) &&
-			      (!HiddenType (pEl) ||
-			       ElementHasAction(pEl, TteElemExtendSelect, TRUE)))
-			    stop = TRUE;
-			}
-		  }
-		/* send event TteElemExtendSelect.Pre to the application*/
-		notifyEl.event = TteElemExtendSelect;
-		notifyEl.document = doc;
-		notifyEl.element = (Element) pEl;
-		notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-		notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-		notifyEl.position = 0;
-		result = CallEventType ((NotifyEvent *) &notifyEl, TRUE);
-		if (!result)
-		  /* application accepts selection */
-		  {
-		    /* do select */
-		    ExtendSelection (pEl, rank, fixed, begin, drag);
-		    /* send event TteElemExtendSelect.Pre to the */
-		    /* application */
-		    notifyEl.event = TteElemExtendSelect;
-		    notifyEl.document = doc;
-		    notifyEl.element = (Element) pEl;
-		    notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-		    notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-		    notifyEl.position = 0;
-		    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-		  }
-	      }
-	  }
-}
+			  stop = TRUE;
+			else
+			  {
+			    pEl = pEl->ElParent;
+			    if (!TypeHasException (ExcNoSelect, pEl->ElTypeNumber, pEl->ElStructSchema) &&
+				(!HiddenType (pEl) ||
+				 ElementHasAction(pEl, TteElemExtendSelect, TRUE)))
+			      stop = TRUE;
+			  }
+		    }
+		  /* send event TteElemExtendSelect.Pre to the application*/
+		  notifyEl.event = TteElemExtendSelect;
+		  notifyEl.document = doc;
+		  notifyEl.element = (Element) pEl;
+		  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+		  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+		  notifyEl.position = 0;
+		  result = CallEventType ((NotifyEvent *) &notifyEl, TRUE);
+		  if (!result)
+		    /* application accepts selection */
+		    {
+		      /* do select */
+		      ExtendSelection (pEl, rank, fixed, begin, drag);
+		      /* send event TteElemExtendSelect.Pre to the */
+		      /* application */
+		      notifyEl.event = TteElemExtendSelect;
+		      notifyEl.document = doc;
+		      notifyEl.element = (Element) pEl;
+		      notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+		      notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+		      notifyEl.position = 0;
+		      CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		    }
+		}
+	    }
+	}
+    }
    else
      {
        /* new selection */
@@ -2515,9 +2517,9 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 		pAb->AbElement == FirstSelectedElement)
 	 /* user has double-clicked on the same element */
 	 {
-	   pEl1 = FirstSelectedElement;
-	   if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct == CsReference ||
-	       pEl1->ElSource != NULL)
+	   pEl = FirstSelectedElement;
+	   if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsReference ||
+	       pEl->ElSource != NULL)
 	     /* this element is a reference or an inclusion */
 	     doubleClickRef = TRUE;
 	 }
@@ -2527,9 +2529,9 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	   /* send an event TteElemActivate.Pre to the application */
 	   notifyEl.event = TteElemActivate;
 	   notifyEl.document = doc;
-	   notifyEl.element = (Element) pEl1;
-	   notifyEl.elementType.ElTypeNum = pEl1->ElTypeNumber;
-	   notifyEl.elementType.ElSSchema = (SSchema) (pEl1->ElStructSchema);
+	   notifyEl.element = (Element) pEl;
+	   notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+	   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	   notifyEl.position = 0;
 	   CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	 }
@@ -2549,7 +2551,8 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	   /* However, if the element is hidden, but has specified a */
 	   /* callback for event Select, it is selected */
 	   if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber, pEl->ElStructSchema) ||
-	       (HiddenType (pEl) && !ElementHasAction(pEl, TteElemSelect, TRUE)))
+	       (HiddenType (pEl) && !ElementHasAction(pEl, TteElemSelect, TRUE)) ||
+	       TypeHasException (ExcSelectParent, pEl->ElTypeNumber, pEl->ElStructSchema))
 	     {
 	       /* select element entirely */
 	       rank = 0;
@@ -2561,9 +2564,9 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 		 else
 		   {
 		     pEl = pEl->ElParent;
-		     if (!TypeHasException (ExcNoSelect,pEl->ElTypeNumber, pEl->ElStructSchema)  &&
+		     if (!TypeHasException (ExcNoSelect, pEl->ElTypeNumber, pEl->ElStructSchema)  &&
 			 (!HiddenType (pEl) ||
-			  ElementHasAction(pEl, TteElemSelect, TRUE)))
+			  ElementHasAction (pEl, TteElemSelect, TRUE)))
 		       stop = TRUE;
 		   }
 	     }
@@ -2586,28 +2589,26 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	     SelectElementWithEvent (pDoc, pEl, TRUE, FALSE);
 	 }
      }
+
   if (!doubleClick)
     {
       FrameWithNoUpdate = 0;
       if (!error)
 	/* If all the contents of a text leaf is selected, then the leaf */
 	/* itself is considered as selected */
-	if (LastSelectedElement != NULL)
-	  if (LastSelectedElement == FirstSelectedElement)
-	    {
-	      pEl1 = FirstSelectedElement;
-	      if (pEl1->ElTerminal && pEl1->ElLeafType == LtText)
-		if (pEl1->ElTextLength < LastSelectedChar &&
-		    FirstSelectedChar <= 1)
-		  {
-		    LastSelectedChar = 0;
-		    FirstSelectedChar = 0;
-		  }
-	    }
-      if (FirstSelectedElement != NULL)
-	if (FirstSelectedElement->ElAssocNum != 0)
-	  /* reset enclosing abstract boxes for associated elements */
-	  EnclosingAssocAbsBox (FirstSelectedElement);
+	if (LastSelectedElement && LastSelectedElement == FirstSelectedElement)
+	  {
+	    pEl = FirstSelectedElement;
+	    if (pEl->ElTerminal && pEl->ElLeafType == LtText &&
+		pEl->ElTextLength < LastSelectedChar && FirstSelectedChar <= 1)
+	      {
+		LastSelectedChar = 0;
+		FirstSelectedChar = 0;
+	      }
+	  }
+      if (FirstSelectedElement && FirstSelectedElement->ElAssocNum != 0)
+	/* reset enclosing abstract boxes for associated elements */
+	EnclosingAssocAbsBox (FirstSelectedElement);
     }
   return result;
 }
@@ -2616,7 +2617,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
    PrepareSelectionMenu
    Search elements to be put in the Select menu.
   ----------------------------------------------------------------------*/
-void                PrepareSelectionMenu ()
+void PrepareSelectionMenu ()
 {
    PtrElement          pEl1;
    PtrElement          pEl2;

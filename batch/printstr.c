@@ -403,6 +403,9 @@ int                 Num;
 	    case ExcNoSelect:
 	       printf ("NoSelect");
 	       break;
+	    case ExcSelectParent:
+	       printf ("SelectParent");
+	       break;
 	    case ExcMoveResize:
 	       printf ("MoveResize");
 	       break;

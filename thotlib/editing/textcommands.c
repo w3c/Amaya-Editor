@@ -203,7 +203,7 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
        /* try to select down to the bottom of the current displayed frame */
        do
 	 {
-	   /* scroll as long as the bootom of the view is not reached */
+	   /* scroll as long as the bottom of the view is not reached */
 	   org = pLastBox->BxYOrg;
 	   TtcLineDown (doc, view);
 	   /* update the new position */
@@ -407,7 +407,8 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   if (pBox != NULL)
 	     {
 	     done = FALSE;
-	     if (!ustrcmp(pBox->BxAbstractBox->AbElement->ElStructSchema->SsName, TEXT("MathML")))
+	     pEl = pBox->BxAbstractBox->AbElement;
+	     if (!strcmp(pEl->ElStructSchema->SsName, "MathML"))
 	       if (MathMoveBackwardCursorFunction != NULL)
 		 done = MathMoveBackwardCursorFunction ();
 	     if (!done)
@@ -487,7 +488,8 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   if (pBox != NULL)
 	     {
 	     done = FALSE;
-	     if (!ustrcmp(pBox->BxAbstractBox->AbElement->ElStructSchema->SsName, TEXT("MathML")))
+	     pEl = pBox->BxAbstractBox->AbElement;
+	     if (!strcmp(pEl->ElStructSchema->SsName, "MathML"))
 	       if (MathMoveForwardCursorFunction != NULL)
 		 done = MathMoveForwardCursorFunction ();
 	     if (!done)
@@ -499,6 +501,11 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 		   if (!extendSel && pViewSelEnd->VsBox &&
 		       pViewSelEnd->VsBox->BxType == BoGhost)
 		     x = pBox->BxNChars;
+		   else if ( pBox->BxAbstractBox &&
+			     pBox->BxAbstractBox->AbLeafType == LtCompound)
+		     x = pBox->BxNChars;
+		   else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsConstant)
+		     x =  pBox->BxNChars;
 		   else
 		     x = pViewSelEnd->VsIndBox + pBox->BxIndChar;
 		 }

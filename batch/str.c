@@ -1802,7 +1802,9 @@ SyntRuleNum         pr;
 	 break;
        case KWD_NoSelect:
 	 ExceptionNum (ExcNoSelect, True, False, False, wi);
-	 /* end case c */
+	 break;
+       case KWD_SelectParent:
+	 ExceptionNum (ExcSelectParent, True, False, False, wi);
 	 break;
        case KWD_NoSpellCheck:
 	 ExceptionNum (ExcNoSpellCheck, True, False, False, wi);

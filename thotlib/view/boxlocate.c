@@ -1028,7 +1028,7 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
    GetLeafBox returns the leaf box located at the position x+xDelta
    y+yDelta from pSourceBox box.
   ----------------------------------------------------------------------*/
-PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDelta, int yDelta)
+PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDelta, int yDelta)
 {
   int                 i;
   PtrBox              pBox, pLimitBox;
@@ -1080,7 +1080,11 @@ PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDe
 			     pBox->BxAbstractBox->AbElement->ElTypeNumber,
 			     pBox->BxAbstractBox->AbElement->ElStructSchema) &&
 		   pBox->BxAbstractBox->AbEnclosing)
-	    pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+	    {
+	      /* let the algorithm work if we obtain the same box */
+	      if (pBox != pSourceBox)
+		pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
+	    }
 	  if (pBox == pSourceBox || pBox->BxAbstractBox->AbBox == pSourceBox ||
 	      IsParentBox (pSourceBox, pBox))
 	    {
@@ -1120,39 +1124,6 @@ PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDe
 		  found = FALSE;
 		}
 	    }
-#ifdef IV
-	  else if (IsParentBox (pSourceBox, pBox))
-	    {
-	      if (xDelta > 0)
-		{
-		  /* move to the end of the box */
-		  *y = pSourceBox->BxYOrg + pSourceBox->BxHeight;
-		  xDelta = 0;
-		  yDelta = 0;
-		  found = FALSE;
-		}
-	      else if (xDelta < 0)
-		{
-		  /* move to the beginning of the box */
-		  *y = pSourceBox->BxYOrg;
-		  xDelta = 0;
-		  yDelta = 0;
-		  found = FALSE;
-		}
-	      else
-		{
-		  /* avoid to loop on the last box */
-		  if (*y != lastY || lastBox != pBox)
-		    {
-		      lastY = *y;
-		      lastBox = pBox;
-		      /* continue the search */
-		      *y = pBox->BxYOrg + yDelta;
-		      found = FALSE;
-		    }
-		}
-	    }
-#endif
 	  else if (pBox->BxAbstractBox->AbLeafType != LtText &&
 		   pBox->BxNChars != 0)
 	    {
