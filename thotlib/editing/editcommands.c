@@ -1305,71 +1305,6 @@ CHAR_T                c;
      }
 }
 
-/*----------------------------------------------------------------------
-   TtcDeletePreviousChar                                           
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtcDeletePreviousChar (Document document, View view)
-#else  /* __STDC__ */
-void                TtcDeletePreviousChar (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
-{
-   ViewSelection      *pViewSel;
-   int                 frame;
-   ThotBool            delPrev, moveAfter;
-
-   if (document != 0)
-     {
-	frame = GetWindowNumber (document, view);
-	delPrev = (StructSelectionMode || ViewFrameTable[frame - 1].FrSelectOnePosition);
-	pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
-	if (delPrev)
-	  /* remove the current empty element even if there is an insert point */
-	  delPrev = (pViewSel->VsBox != NULL && pViewSel->VsBox->BxAbstractBox->AbVolume != 0);
-	else
-	  /* remove the previous char if the selection is at the end of the text */
-	  delPrev = (pViewSel->VsBox != NULL &&
-		     pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText &&
-		     pViewSel->VsIndBox >= pViewSel->VsBox->BxNChars);
-
-	if (delPrev)
-	  {
-	    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
-	    if (pViewSel->VsBox != NULL &&
-		pViewSel->VsBox->BxAbstractBox != NULL &&
-		!pViewSel->VsBox->BxAbstractBox->AbReadOnly)
-	      InsertChar (frame, 127, -1);
-	  }
-	else
-	  {
-	    /* delete the current selection instead of the previous char */
-	    CloseInsertion ();
-	    /* by default doen't change the selection after the delete */
-	    moveAfter = FALSE;
-	    if (pViewSel->VsBox != NULL)
-	      {
-		moveAfter = (pViewSel->VsBox->BxAbstractBox->AbLeafType != LtText ||
-			     pViewSel->VsBox->BxAbstractBox->AbVolume == 0);
-		if (MenuActionList[CMD_DeleteSelection].User_Action != NULL)
-		  {
-		    if (((*MenuActionList[CMD_DeleteSelection].User_Action)
-			 (MenuActionList[CMD_DeleteSelection].User_Arg, document, view)) &&
-			(MenuActionList[CMD_DeleteSelection].Call_Action != NULL))
-		      (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
-		  }
-		else if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
-		  (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
-	      }
-	    if (moveAfter)
-	      TtcPreviousChar (document, view);
-	  }
-
-     }
-}
-
 
 /*----------------------------------------------------------------------
    Termine l'insertion de caracteres dans une boite de texte       
@@ -2343,7 +2278,7 @@ int                 editType;
      {
 	/* recupere la fenetre active pour la selection */
 	frame = ActiveFrame;
-/*-- recherche le pave concerne --*/
+        /*-- recherche le pave concerne --*/
 	if (frame <= 0)
 	  {
 	     TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_BEFORE);
@@ -2378,7 +2313,7 @@ int                 editType;
 
 	pFrame = &ViewFrameTable[frame - 1];
 	pViewSel = &pFrame->FrSelectionBegin;
-	if (pBox && editType == TEXT_DEL)
+	if (pBox && editType == TEXT_SUP)
 	  {
 	    /* don't remove the selection if it is at the end of the text */
 	    if (pAb->AbLeafType == LtText &&
@@ -2482,7 +2417,7 @@ int                 editType;
 	       {
 		 /* take in account another box */
 		 if (ThotLocalActions[T_deletenextchar] != NULL &&
-		     (editType == TEXT_CUT || editType == TEXT_DEL))
+		     (editType == TEXT_CUT || editType == TEXT_DEL || editType == TEXT_SUP))
 		   {
 		     (*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, FALSE);
 		     return;
@@ -2501,9 +2436,10 @@ int                 editType;
 		      || pAb->AbLeafType == LtPageColBreak	/* c'est une marque de page */
 		      || !pAb->AbCanBeModified)		/* il n'est pas modifiable */
 		     pAb = NULL;
-		  else if ((editType == TEXT_CUT || editType == TEXT_DEL || editType == TEXT_COPY)
-		     && (pAb->AbVolume == 0 || pAb->AbLeafType == LtGraphics
-			 || pAb->AbLeafType == LtPicture))
+		  else if ((editType == TEXT_CUT || editType == TEXT_DEL ||
+			    editType == TEXT_SUP || editType == TEXT_COPY) &&
+			   (pAb->AbVolume == 0 || pAb->AbLeafType == LtGraphics ||
+			    pAb->AbLeafType == LtPicture))
 		     /* coupe ou copie un pave vide ou graphique ou une image */
 		     pAb = NULL;
 		  else if ((editType == TEXT_CUT || editType == TEXT_COPY) && pAb->AbLeafType == LtPolyLine)
@@ -2515,7 +2451,7 @@ int                 editType;
 	if (pAb == NULL)
 	  {
 	     /* Le traitement concerne l'application */
-	     if (editType == TEXT_DEL && !FromKeyboard)
+	     if ((editType == TEXT_DEL || editType == TEXT_SUP) && !FromKeyboard)
 		CutCommand (FALSE);	/* Couper sans sauver */
 	     else if (editType == TEXT_CUT || editType == TEXT_COPY)
 	       {
@@ -2532,7 +2468,8 @@ int                 editType;
 	     /* check enclosing cell */
 	     pCell = GetParentCell (pBox);
 
-	    if (editType == TEXT_DEL && pAb->AbLeafType == LtPolyLine)
+	    if ((editType == TEXT_DEL ||editType == TEXT_SUP) &&
+		pAb->AbLeafType == LtPolyLine)
 	      {
 		if (pViewSel->VsIndBox != 0)
 		  {
@@ -2654,7 +2591,7 @@ int                 editType;
 		    else
 		      RemoveSelection (charsDelta, spacesDelta, x, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
 		  }
-		else if (editType == TEXT_DEL && !FromKeyboard)
+		else if ((editType == TEXT_DEL || editType == TEXT_SUP) && !FromKeyboard)
 		  if (pAb->AbVolume == 0 ||
 		      pViewSel->VsIndBox + pViewSel->VsBox->BxIndChar == pAb->AbVolume)
 		    {
@@ -2773,7 +2710,8 @@ int                 editType;
 
 	     /* signale la nouvelle selection courante */
 	     if ((editType == TEXT_CUT || editType == TEXT_PASTE ||
-		 editType == TEXT_X_PASTE || editType == TEXT_DEL) &&
+		  editType == TEXT_X_PASTE || editType == TEXT_DEL ||
+		  editType == TEXT_SUP) &&
 		 pViewSel->VsBox != NULL)
 	       {
 		  pViewSelEnd = &pFrame->FrSelectionEnd;
@@ -3597,6 +3535,62 @@ View                view;
    }
 #  endif /* _WINDOWS */
    ContentEditing (TEXT_CUT);
+}
+
+/*----------------------------------------------------------------------
+   TtcDeletePreviousChar                                           
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtcDeletePreviousChar (Document document, View view)
+#else  /* __STDC__ */
+void                TtcDeletePreviousChar (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   ViewSelection      *pViewSel;
+   int                 frame;
+   ThotBool            delPrev, moveAfter;
+
+   if (document != 0)
+     {
+	frame = GetWindowNumber (document, view);
+	delPrev = (StructSelectionMode || ViewFrameTable[frame - 1].FrSelectOnePosition);
+	pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+	if (delPrev)
+	  /* remove the current empty element even if there is an insert point */
+	  delPrev = (pViewSel->VsBox != NULL && pViewSel->VsBox->BxAbstractBox->AbVolume != 0);
+	else
+	  /* remove the previous char if the selection is at the end of the text */
+	  delPrev = (pViewSel->VsBox != NULL &&
+		     pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText &&
+		     pViewSel->VsIndBox >= pViewSel->VsBox->BxNChars);
+
+	if (delPrev)
+	  {
+	    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+	    if (pViewSel->VsBox != NULL &&
+		pViewSel->VsBox->BxAbstractBox != NULL &&
+		!pViewSel->VsBox->BxAbstractBox->AbReadOnly)
+	      InsertChar (frame, 127, -1);
+	  }
+	else
+	  {
+	    /* delete the current selection instead of the previous char */
+	    CloseInsertion ();
+	    /* by default doen't change the selection after the delete */
+	    moveAfter = FALSE;
+	    if (pViewSel->VsBox != NULL)
+	      {
+		moveAfter = (pViewSel->VsBox->BxAbstractBox->AbLeafType != LtText ||
+			     pViewSel->VsBox->BxAbstractBox->AbVolume == 0);
+		ContentEditing (TEXT_SUP);
+	      }
+	    if (moveAfter)
+	      TtcPreviousChar (document, view);
+	  }
+     }
 }
 
 

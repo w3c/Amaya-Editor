@@ -67,5 +67,6 @@
 #define TEXT_COPY 8
 #define TEXT_DEL 9
 #define TEXT_X_PASTE 10
+#define TEXT_SUP 11
 
 #endif /* _THOTLIB_CONSTMEDIA_H_ */
