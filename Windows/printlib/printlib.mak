@@ -39,12 +39,12 @@ ALL : "$(OUTDIR)\printlib.lib"
 
 !ELSE 
 
-ALL : "libpng - Win32 Release" "libjpeg - Win32 Release" "$(OUTDIR)\printlib.lib"
+ALL : "libThotTable - Win32 Release" "libpng - Win32 Release" "libjpeg - Win32 Release" "$(OUTDIR)\printlib.lib"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN" 
+CLEAN :"libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN" "libThotTable - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -251,12 +251,12 @@ ALL : "$(OUTDIR)\printlib.lib"
 
 !ELSE 
 
-ALL : "libpng - Win32 Debug" "libjpeg - Win32 Debug" "$(OUTDIR)\printlib.lib"
+ALL : "libThotTable - Win32 Debug" "libpng - Win32 Debug" "libjpeg - Win32 Debug" "$(OUTDIR)\printlib.lib"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN" 
+CLEAN :"libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN" "libThotTable - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -511,6 +511,32 @@ LIB32_OBJS= \
 "libpng - Win32 DebugCLEAN" : 
    cd "..\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Debug" RECURSE=1 CLEAN 
+   cd "..\printlib"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "printlib - Win32 Release"
+
+"libThotTable - Win32 Release" : 
+   cd "..\libThotTable"
+   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" 
+   cd "..\printlib"
+
+"libThotTable - Win32 ReleaseCLEAN" : 
+   cd "..\libThotTable"
+   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" RECURSE=1 CLEAN 
+   cd "..\printlib"
+
+!ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
+
+"libThotTable - Win32 Debug" : 
+   cd "..\libThotTable"
+   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" 
+   cd "..\printlib"
+
+"libThotTable - Win32 DebugCLEAN" : 
+   cd "..\libThotTable"
+   $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\printlib"
 
 !ENDIF 
