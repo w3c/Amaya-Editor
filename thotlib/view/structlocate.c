@@ -108,7 +108,7 @@ int                *pointselect;
 		 pBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
 						&pointIndex);
 		 pCurrentBox = GetEnclosingClickedBox (pSelBox->BxAbstractBox,
-						  x, x, y, frame, &pointIndex);
+						x, x, y, frame, &pointIndex);
 		 if (pCurrentBox == NULL && pBox != NULL)
 		   {
 		     pSelBox = pBox;

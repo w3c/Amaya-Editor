@@ -372,7 +372,6 @@ static ThotBool     InPolyline (PtrAbstractBox pAb, int x, int y, int frame)
   ----------------------------------------------------------------------*/
 static ThotBool     WithinPath (PtrAbstractBox pAb, int x, int y, int frame)
 {
-   PtrTextBuffer       buff, pLastBuffer;
    int                 cross;
    int                 i;
    int                 prevX, prevY;
@@ -977,10 +976,15 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	  {
 	    pBox = IsOnShape (pAb, lowerX, y, pointselect);
 	    if (pBox != NULL)
+	      /* the point is on the outline */
 	      return (pBox);
-	    /* the point doesn't belong box segments */
-	    if (InShape (pAb, lowerX, y))
-	      return (pAb->AbBox);
+	    /* the point is not on the outline */
+	    if (pAb->AbFillPattern > 0 && pAb->AbBackground >= 0)
+	      /* the box is filled. Is the point within the shape? */
+	      if (InShape (pAb, lowerX, y))
+		return (pAb->AbBox);
+	      else
+		return (NULL);
 	    else
 	      return (pBox);
 	  }
@@ -989,22 +993,25 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	    /* the polyline contains at least one segment */
 	    pBox = GetPolylinePoint (pAb, lowerX, y, frame, pointselect);
 	    if (pBox != NULL)
+	      /* the point doesn't belong to a segment */
 	      return (pBox);
-	    /* the point doesn't belong to a segment */
-	    if ((pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's') &&
-		/* it's a closed shape. Is the point within the line? */
+	    if (pAb->AbFillPattern > 0 && pAb->AbBackground >= 0 &&
+		/* the shape is filled. Is the point within the shape? */
 		InPolyline (pAb, lowerX, y, frame))
 	      return (pAb->AbBox);
 	    else
 	      return (pBox);
 	  }
 	else if (pAb->AbLeafType == LtPath && pAb->AbFirstPathSeg)
+	  /* it's a non-empty path */
 	  {
 	    pBox = GetPointInPath (pAb, lowerX, y, frame, pointselect);
 	    if (pBox != NULL)
+	      /* the point is on the outline */
 	      return (pBox);
 	    /* the point is not on the path. Is it within the path ? */
-	    if (WithinPath (pAb, lowerX, y, frame))
+	    if (pAb->AbFillPattern > 0 && pAb->AbBackground >= 0 &&
+		WithinPath (pAb, lowerX, y, frame))
 	      return (pAb->AbBox);
 	    else
 	      return (pBox);

@@ -48,16 +48,17 @@
    GetClickedBox recherche recursivement le pave qui englobe le point 
    designe' par x,y.                                       
    La fonction regarde toute l'arborescence des paves      
-   pour trouver le premier pave de plus petite profondeur  
+   pour trouver le dernier pave de plus petite profondeur  
    couvrant le point designe.                              
    Si un pave et son fils repondent a la condition, c'est  
    le pave fils qui l'emporte.                             
   ----------------------------------------------------------------------*/
-void   GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x, int y, int *pointselect)
+void   GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame,
+		      int x, int y, int *pointselect)
 {
    PtrAbstractBox      pAb;
    PtrBox              pSelBox, pBox;
-   PtrBox              pCurrentBox;
+   PtrBox              graphicBox;
    int                 dist;
    int                 pointIndex;
    ViewFrame          *pFrame;
@@ -78,17 +79,18 @@ void   GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x,
        while (pBox != NULL)
 	 {
 	   pAb = pBox->BxAbstractBox;
-	   pointIndex = 0;
 	   if (pAb->AbVisibility >= pFrame->FrVisibility)
 	     {
+	       pointIndex = 0;
+	       graphicBox = NULL;
 	       if (pAb->AbPresentationBox ||
 		   pAb->AbLeafType == LtGraphics ||
 		   pAb->AbLeafType == LtPolyLine ||
 		   pAb->AbLeafType == LtPath)
 		 {
-		   pCurrentBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
-							 &pointIndex);
-		   if (pCurrentBox == NULL)
+		   graphicBox = GetEnclosingClickedBox (pAb, x, x, y, frame,
+							&pointIndex);
+		   if (graphicBox == NULL)
 		     d = dist + 1;
 		   else
 		     d = 0;
@@ -122,16 +124,10 @@ void   GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x,
 		 d = dist + 1;
 	       
 	       /* Prend l'element le plus proche */
-	       if (d < dist)
-		 {
-		   dist = d;
-		   pSelBox = pBox;
-		   /* the selected reference point */
-		   *pointselect = pointIndex;
-		 }
-	       else if (d == dist &&
-			(pSelBox == NULL ||
-			 pSelBox->BxAbstractBox->AbDepth >= pBox->BxAbstractBox->AbDepth))
+	       if (d < dist ||
+		   (d == dist &&
+		    (pSelBox == NULL ||
+		     pSelBox->BxAbstractBox->AbDepth >= pBox->BxAbstractBox->AbDepth)))
 		 {
 		   dist = d;
 		   pSelBox = pBox;
