@@ -50,10 +50,8 @@ extern void Annot_RaiseSourceDoc_callback ( int doc,
                                             void * context );
 extern ThotBool Annot_RaiseSourceDoc ( NotifyElement *event );
 extern ThotBool Annot_Types ( NotifyElement *event );
-extern void ANNOT_Delete ( Document document,
+extern void ANNOT_Delete ( Document doc,
                            View view );
-extern void ANNOT_Save ( Document docAnnot,
-                         View viewAnnot );
 
 #else /* __STDC__ */
 
@@ -101,10 +99,8 @@ extern void Annot_RaiseSourceDoc_callback (/* int doc,
                                               void * context */);
 extern ThotBool Annot_RaiseSourceDoc (/* NotifyElement *event */);
 extern ThotBool Annot_Types (/* NotifyElement *event */);
-extern void ANNOT_Delete (/* Document document,
+extern void ANNOT_Delete (/* Document doc,
                              View view */);
-extern void ANNOT_Save (/* Document docAnnot,
-                           View viewAnnot */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

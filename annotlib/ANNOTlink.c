@@ -24,6 +24,39 @@
 #include "XPointerparse_f.h"
 
 /*-----------------------------------------------------------------------
+  LINK_CreateAName
+  Creates an anchor name for the reverse link from the annotation to
+  the document
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static void LINK_CreateAName (AnnotMeta *annot)
+#else /* __STDC__*/
+static void LINK_CreateAName (annot)
+AnnotMeta *annot;
+
+#endif /* __STDC__ */
+{
+  char *ptr;
+
+  /* memorize the anchor of the reverse link target */
+  annot->name = TtaGetMemory (strlen (ANNOT_ANAME) + strlen (annot->author)
+			      + (annot->body_url 
+				 ? strlen (annot->body_url) : 0)
+			      + 20);
+  sprintf (annot->name, "%s_%s_%s", ANNOT_ANAME, annot->author,
+	   annot->body_url ? annot->body_url : "");
+  /* and remove all the ? links so that it all becomes a link, and not a target */
+  ptr = annot->name;
+  while (*ptr)
+    {
+      if (*ptr == '?')
+	*ptr = '_';
+      ptr++;
+    }
+}
+
+/*-----------------------------------------------------------------------
    LINK_GetAnnotationIndexFile 
    searches an entry in the main annot index file 
    -----------------------------------------------------------------------*/
@@ -119,6 +152,77 @@ char *index_file;
     }
   TtaFreeMemory (annot_main_index_file);
 }
+
+/*-----------------------------------------------------------------------
+  DelAnnotationIndexFile 
+  Delentes an entry from the main annot index file
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void DelAnnotationIndexFile (char *source_url, char *index_file)
+#else
+static void DelAnnotationIndexFile (source_url, index_file)
+char *source_url;
+char *index_file;
+#endif /* __STDC__ */
+{
+  CHAR_T str[80];
+  CHAR_T *annot_dir;
+  CHAR_T *main_index;
+  CHAR_T *main_index_file_old;
+  CHAR_T *main_index_file_new;
+  int len;
+  FILE *fp_old;
+  FILE *fp_new;
+  
+  annot_dir = GetAnnotDir ();
+  main_index = GetAnnotMainIndex ();
+  main_index_file_old = TtaGetMemory (ustrlen (annot_dir) 
+					+ ustrlen (main_index)
+					+ 10);
+
+  main_index_file_new = TtaGetMemory (ustrlen (annot_dir) 
+				      + ustrlen (main_index)
+				      + 14);
+  usprintf (main_index_file_old, 
+	    TEXT("%s%c%s"), 
+	    annot_dir, 
+	    DIR_SEP, 
+	    main_index);
+
+  usprintf (main_index_file_new, 
+	    TEXT("%s%c%s.tmp"), 
+	    annot_dir, 
+	    DIR_SEP, 
+	    main_index);
+
+  if (!(fp_new = fopen (main_index_file_new, "w")))
+    return;
+
+  if (!(fp_old = fopen (main_index_file_old, "r")))
+    {
+      fclose (fp_new);
+      return;
+    }
+
+  len = ustrlen (source_url);
+  while (fgets (str, sizeof (str), fp_old))
+    {
+      if (ustrncmp (source_url, str, len))
+	fputs (str, fp_new);
+    }
+  fclose (fp_new);
+  fclose (fp_old);
+
+  /* rename the main index file */
+  TtaFileUnlink (main_index_file_old);
+  rename (main_index_file_new, main_index_file_old);
+  /* remove the index file */
+  TtaFileUnlink (index_file);
+
+  TtaFreeMemory (main_index_file_old);
+  TtaFreeMemory (main_index_file_new);
+}
+
 
 /*-----------------------------------------------------------------------
   LINK_AddLinkToSource
@@ -260,72 +364,19 @@ AnnotMeta *annot;
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_RemoveLinkFromSource (Document source_doc, AnnotMeta *annot)
+void LINK_RemoveLinkFromSource (Document source_doc, Element el)
 #else /* __STDC__*/
 void LINK_RemoveLinkFromSource (source_doc, annot)
      Document source_doc;
      AnnotMeta *annot;
 #endif /* __STDC__*/
 {
-  ElementType   elType;
-  Element       anchor, elCour, elSuiv;
-  AttributeType attrTypeAnnot, attrTypeName;
-  Attribute     attrAnnot, attrName;
-  int           lg;
-  ThotBool       removeAnnot;
-
-  CHAR_T *annotName = "xx";	/* @@ */
-  CHAR_T *textName =  TtaGetMemory (200);
-
-  elCour = SearchElementInDoc (source_doc, HTML_EL_BODY);
-  elType.ElSSchema          = 
-  attrTypeAnnot.AttrSSchema = 
-  attrTypeName.AttrSSchema  = TtaGetSSchema ("HTML", source_doc);
-  elType.ElTypeNum = HTML_EL_Anchor;
-  attrTypeAnnot.AttrTypeNum = HTML_ATTR_IsAnnotation;
-  attrTypeName.AttrTypeNum = HTML_ATTR_NAME;
-
-  removeAnnot = FALSE;
-  anchor = TtaSearchTypedElement (elType, SearchForward, elCour);
-  while (elCour && anchor && !removeAnnot)
-  {
-    /* Searches for an element of type anchor */
-    if (anchor)
-    {
-      attrAnnot = TtaGetAttribute (anchor, attrTypeAnnot);
-      attrName = TtaGetAttribute (anchor, attrTypeName);
-      if (attrAnnot)
-      {
-        TtaGiveTextAttributeValue (attrName, textName, &lg);
-        removeAnnot = !strcmp (textName, annotName);
-	/* Suppress the annotation */
-	if (attrAnnot && removeAnnot)
-	  {
-	    TtaRemoveTree (anchor, source_doc);
-	    /* @and unlink the file, update the index ... */
-	    break;
-	  }
-      }
-      /* point to the next element */
-      elCour = elSuiv = anchor;
-      TtaNextSibling (&elSuiv);
-      while ((elSuiv == NULL) && (elCour != NULL))
-      {
-        elCour = elSuiv = TtaGetParent (elCour);
-        TtaNextSibling (&elSuiv);
-      }
-      elCour = elSuiv;
-    }
-    else
-      elCour = anchor;
-    anchor = TtaSearchTypedElement (elType, SearchForward, elCour);
-  }
+  TtaRemoveTree (el, source_doc);
 }
 
 
 /*-----------------------------------------------------------------------
-   Procedure LINK_SaveLink (source_doc, annot_doc, labf, c1, labl, cN)
-  -----------------------------------------------------------------------
+   LINK_SaveLink
    Writes the metadata describing an annotation file and its source
    link to an index file. This metadata consists of the
    name of the annotation file, the selected elements on the document
@@ -354,6 +405,34 @@ void LINK_SaveLink (source_doc)
   /* write the update annotation list */
   AnnotList_writeIndex (indexName, annot_list);
   TtaFreeMemory (indexName);
+  return;
+}
+
+/*-----------------------------------------------------------------------
+   LINK_DeleteLink
+  -----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void LINK_DeleteLink (Document source_doc)
+#else /* __STDC__*/
+void LINK_DeleteLink (source_doc)
+     Document source_doc;
+#endif /* __STDC__*/
+{
+  char   *indexName;
+  List   *annot_list;
+
+  /* get the annotation index */
+  indexName = LINK_GetAnnotationIndexFile (DocumentURLs[source_doc]);
+  if (!indexName)
+    return;
+
+  DelAnnotationIndexFile (DocumentURLs[source_doc], indexName);
+  annot_list = AnnotMetaData[source_doc].annotations;  
+  /* write the update annotation list */
+  AnnotList_writeIndex (indexName, annot_list);
+  TtaFreeMemory (indexName);
+
   return;
 }
 
@@ -410,15 +489,9 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
   annot->author = TtaStrdup (annot_user);
   annot->content_type = TtaStrdup ("text/html");
   annot->body_url = TtaStrdup (DocumentURLs[annot_doc]);
-
-  /* memorize the anchor of the reverse link target */
-  annot->name = TtaGetMemory (strlen (ANNOT_ANAME) + strlen (annot_user)
-			      + (annot->body_url 
-				 ? strlen (annot->body_url) : 0)
-			      + 20);
-  sprintf (annot->name, "%s_%s_%s", ANNOT_ANAME, annot_user,
-	   annot->body_url ? annot->body_url : "");
-
+  
+  /* create the reverse link name */
+  LINK_CreateAName (annot);
   return annot;
 }
 
@@ -499,6 +572,8 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
 					     annot->annot_url, TRUE);
 	  if (!old_annot)
 	    {
+	      /* create the reverse link name */
+	      LINK_CreateAName (annot);
 	      LINK_AddLinkToSource (doc, annot);
 	      List_add (&AnnotMetaData[doc].annotations, (void*) annot);
 	    }

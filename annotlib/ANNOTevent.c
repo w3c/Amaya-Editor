@@ -982,141 +982,93 @@ NotifyElement *event;
   return (TRUE);
 }
 
-/***************************************2************
- I've not yet used/cleaning the following legacy functions 
-***************************************************/
-
 /*----------------------------------------------------------------------
+  ANNOT_Delete 
+  Erases one annotation
  -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void ANNOT_Delete (Document document, View view)
+void ANNOT_Delete (Document doc, View view)
 #else /* __STDC__*/
 void ANNOT_Delete (document, view)
-     Document document;
+     Document doc;
      View view;
 #endif /* __STDC__*/
 {
-  ElementType elType;
-  Element     first, last;
-  CHAR_T      *annotName, *fileName;
-  int         i;
+  Document         source_doc, annot_doc;
+  AnnotMeta       *annot;
+  ElementType      elType;
+  Element          annotEl, last;
+  AttributeType    attrType;
+  Attribute	   attr;
+  CHAR_T          *annotName, *fileName;
+  CHAR_T          *annot_url;
+  int              i;
+  ThotBool         annotIsOpen;
 
-  printf ("(ANNOT_Delete) DEBUT\n");
+  /* maybe detect if the user just clicked on the annotation */
+  /* e.g, if the annot_doc is not open */
+  /* get the annotation URL */
 
-  /* On verifie si le fragment est en ecriture */
-#if 0
-  if (!IsDocWritable (document))
-    return;
-#endif
-
-  /* Récupère le premier et le dernier élément sélectionné */
-  TtaGiveFirstSelectedElement (document, &first, &i, &i);
-  TtaGiveLastSelectedElement (document, &last, &i, &i);
-
-  /* On verifie si la zone selectionnee est valide */
-  if ((first == NULL) || (first != last))
-    return;
-
-  /* On verifie que l'on a bien affaire a un lien d'annotation */
-  elType = TtaGetElementType (first);
-  if ((elType.ElTypeNum != HTML_EL_Anchor) || (!IsAnnotationLink (document, first)))
-    return;
-
-  /* Suppression de l'annotation */
-  annotName = SearchAttributeInEl (document, first, HTML_ATTR_HREF_, 
-				   TEXT("HTML"));
-  /* @@ BUG annotName is not freed */
-  TtaRemoveTree (first, document);
-  LINK_RemoveLink (document, annotName);
-  fileName = TtaGetMemory (100);
-  sprintf (fileName, "%s%c%s.PIV", annotDir, DIR_SEP, annotName);
-  TtaFileUnlink (fileName);
-
-#if 0
-  /* Notification de la suppression de l'annotation */
-  ANNOT_NotifyLocalUsers (document, annotName);
-  ANNOT_NotifyToRemoteSites (document, annotName);
-#endif
-
-  printf ("(ANNOT_Delete) FINn");
-}
-
-/*-----------------------------------------------------------------------
-   Procedure ANNOT_Save (docAnnot, viewAnnot)
-  -----------------------------------------------------------------------
-  -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void ANNOT_Save (Document docAnnot, View viewAnnot)
-#else /* __STDC__*/
-void ANNOT_Save (docAnnot, viewAnnot)
-     Document docAnnot;
-     View viewAnnot;
-#endif /* __STDC__*/
-{
-
-  Document document;
-  CHAR_T *  annotName;
-
-  document = AnnotationTargetDocument (docAnnot);
-  annotName = TtaGetDocumentName (docAnnot);
-
-  /* Sauvegarde du document d'annotation */
-  TtaSaveDocument (docAnnot, annotName);
-  TtaSetDocumentUnmodified (docAnnot);
-
-  /* Si le lien d'annotation n'existe pas encore => affichage + notification */
-  if (!SearchAnnotation (document, annotName))
-  {
-    /* Creation d'un nouveau lien d'annotation */
-    printf ("1\n");
-    /* Gestion du cas ou une annotation a ete creee sur un document non sauvegarde */
-    if (TtaIsDocumentModified (document))
+  if (DocumentTypes[doc] == docAnnot)
     {
-printf ("2\n");
-#if 0
-      SetCallbackProc (ALLIANCE_BASE + ANNOT_NOTIF_SHEET_REF,
-                       ANNOT_SaveProcedure);
-#endif
-
-printf ("3\n");
-#if 0
-      TtaNewSheet (ALLIANCE_BASE + ANNOT_NOTIF_SHEET_REF,
-                   TtaGetViewFrame (docAnnot, viewAnnot),
-                   NULL,
-                   1,
-                   TtaGetMessage (AllianceMsgTabId,
-                                  ALL_AnnotNotif),
-                   TRUE,
-                   1,
-                   'L',
-                   D_CANCEL);
-#endif
-printf ("4\n");
-#if 0
-      TtaNewLabel (ALLIANCE_BASE + ANNOT_NOTIF_LABEL_SHEET,
-                   ALLIANCE_BASE + ANNOT_NOTIF_SHEET_REF,
-                   TtaGetMessage (AllianceMsgTabId,
-                                  ALL_AnnotNotifLabel));
-#endif
-printf ("5\n");
-#if 0
-      TtaShowDialogue (ALLIANCE_BASE + ANNOT_NOTIF_SHEET_REF,
-                       FALSE);
-#endif
-printf ("6\n");
-#if 0
-      TtaWaitShowDialogue ();
-#endif
-printf ("7\n");
+      annot_doc = doc;
+      annotIsOpen = TRUE;      
+      source_doc = DocumentMeta[doc]->source_doc;
+      annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
+				     DocumentURLs[source_doc], TRUE);
+      source_doc = 1;
     }
-printf ("8\n");
-  }
+  else
+    {
+      annotIsOpen = FALSE;
+      
+      /* verify if the user has selected an annotation link */
+      if (!TtaIsDocumentSelected (doc))
+	return;
+
+      /* get the selected elemetn */
+      TtaGiveFirstSelectedElement (doc, &annotEl, &i, &i);
+      TtaGiveLastSelectedElement (doc, &last, &i, &i);
+      
+      /* Is the selected zone valid */
+      if ((annotEl == NULL) || (annotEl != last))
+	return;
+
+      /* is it a link? */
+      elType = TtaGetElementType (annotEl);
+      if (elType.ElTypeNum != HTML_EL_Anchor)
+	return;
+
+      /* is it an annotation link? */
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_IsAnnotation;
+      attr = TtaGetAttribute (annotEl, attrType);
+      if (!attr)
+	return;
+      
+      /* get the annotation URL */
+      i = TtaGetTextAttributeLength (attr);
+      i++;
+      annot_url = TtaGetMemory (i);
+      TtaGiveTextAttributeValue (attr, annot_url, &i);
+
+      /* get the annotation metadata */
+      annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
+				     DocumentURLs[source_doc], TRUE);
+    }
+
+  /* close all the open annotation windows if they are open */
+  if (annotIsOpen)
+    {
+      TtaSetDocumentUnmodified (annot_doc);
+      /* we should add all the views */
+      TtaCloseView (annot_doc, 1);
+    }
+  /* remove the annotation link in the source document */
+  LINK_RemoveLinkFromSource (source_doc, annotEl);
+  /* remove the annotation from the list and update it */
 }
-
-
-
 
 
 

@@ -100,6 +100,7 @@ void List_delObject (List **list, char *object)
   if (item)
     {
       *list = item->next;
+      free (item->object);
       free (item);
     }
 }
@@ -310,6 +311,59 @@ AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, ThotBool useAnnotUrl)
   return (found) ? annot : NULL;
 }
 
+/*------------------------------------------------------------
+   AnnotList_searchAnnot
+   Returns the annot item that points to the same url
+   ------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool AnnotList_delAnnot (List *list, CHAR_T *url, ThotBool useAnnotUrl)
+#else
+ThotBool AnnotList_delAnnot (list, url, userAnnotUrl)
+List *list;
+CHAR_T *url;
+ThotBool useAnnotUrl;
+
+#endif /* __STDC__ */
+{
+  List *item, *prev;
+  AnnotMeta *annot;
+  ThotBool found = FALSE;
+  CHAR_T *ptr;
+
+  prev = NULL;
+  item = list;
+  while (item)
+    {
+      annot = (AnnotMeta *) item->object;
+      /* @@ this crashes... why? */
+      if (useAnnotUrl)
+	ptr = annot->annot_url;
+      else
+	ptr = annot->body_url;
+
+      if (ptr && !ustrcasecmp (ptr, url))
+	{
+	  found = TRUE;
+	  break;
+	}
+      prev = item;
+      item = item->next;
+    }
+
+  if (found)
+    {
+      /* update the pointers */
+      if (prev)
+	prev->next = item->next;
+      else
+	list = item->next;
+      /* delete the annotation */
+      Annot_free (annot);
+    }
+
+  return (found);
+}
+
 /* ------------------------------------------------------------
    AnnotMeta_new
    Creates a new annotation metadata element
@@ -463,7 +517,7 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
       annot = (AnnotMeta *) annot_ptr->object;
      
       /* only save the local annotations */
-      if (IsFilePath (annot->body_url))
+      if (!IsW3Path (annot->body_url))
 	{
 	  fprintf (fp, 
 		   "<r:Description about=\"%s\">\n",
