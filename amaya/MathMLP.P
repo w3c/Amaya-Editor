@@ -2179,10 +2179,10 @@ BOXES
  BeveledBar:	{ fraction bar, beveled style }
 	BEGIN
 	LineWeight: 1 pt;
-	Height: Enclosing . Height - 0.2;
+	Height: Enclosing . Height - 0.4;
         Width: 0.6 ;
 	HorizPos: Left = Numerator . Right - 0.1;
-	VertPos: Top = Enclosing . Top + 0.1;
+	VertPos: Top = Enclosing . Top + 0.2;
 	Content: Graphics '/';	{ diagonal bar }
 	LineStyle: Solid;
 	Background: Creator =;
@@ -2380,7 +2380,7 @@ RULES
 	CreateBefore(MENCLOSE_S);
 	CreateWith(VerticalLine);
         HorizRef: Enclosed . HRef;
-	VertPos: HRef = Previous . HRef;
+	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	BorderTopWidth: 1 pt;
 	BorderLeftWidth: 1 pt;
 	BorderTopStyle: Solid;
@@ -2457,6 +2457,7 @@ RULES
 	CreateWith(VerticalLine);
 	CreateFirst (Bar);
 	HorizRef: Enclosed Bar . Bottom + 0.1;
+	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -2472,6 +2473,7 @@ RULES
 	CreateWith(VerticalLine);
 	CreateFirst (BeveledBar);
 	HorizRef: Enclosed Numerator . HRef + 0.2;
+	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
 	Gather: Yes;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -2486,7 +2488,7 @@ RULES
         if Immediately within BeveledMFRAC
 	   BEGIN
 	   HorizRef: Enclosed . HRef;
-	   VertPos: Top = Enclosing . Top;
+	   VertPos: nil;
 	   HorizPos: Left = Enclosing . Left;
 	   END;
         if Immediately within MFRAC
