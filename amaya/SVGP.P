@@ -306,6 +306,14 @@ RULES
 		END;	        
 	END;
 
+   C_Empty:
+        BEGIN
+	Width: 0;
+	Height: 0;
+	Visibility: 0;
+	FillPattern: nopattern;
+	END;
+
    SVG:
 	BEGIN
 	CreateBefore(ElementName);
@@ -481,6 +489,15 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
+	IN Alternate_view
+		Visibility: 0;
+	END;
+
+   SVG_Image: BEGIN
+	LineBreak: No;
+	PageBreak: No;
+	IN Structure_view
+		Visibility: 0;
 	IN Alternate_view
 		Visibility: 0;
 	END;
@@ -768,7 +785,175 @@ RULES
 		END;	
 	END;
 
+   textPath:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   altGlyph:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   altGlyphDef:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   altGlyphItem:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   glyphRef:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   marker:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   color_profile:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   linearGradient:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   radialGradient:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   stop:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   pattern:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
    clipPath:
+	BEGIN
+	CreateBefore (ElementName);
+	CreateWith (VerticalLine);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	END;
+
+   mask:
 	BEGIN
 	CreateBefore (ElementName);
 	CreateWith (VerticalLine);
@@ -849,34 +1034,6 @@ RULES
 	END;
 
    animateMotion:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: TAG_Font;
-		END;
-	END;
-
-   linearGradient:
-	BEGIN
-	CreateBefore (ElementName);
-	CreateWith (VerticalLine);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Visibility: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: TAG_Font;
-		END;
-	END;
-
-   stop:
 	BEGIN
 	CreateBefore (ElementName);
 	CreateWith (VerticalLine);
@@ -980,6 +1137,18 @@ RULES
 		Width: Enclosed . Width;
 		Height: Enclosed . Height;
 		END;		
+	END;
+
+  Timeline_cross:
+	BEGIN
+   	HorizPos: Left = Enclosing . Left Userspecified;
+   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
+	Width: Enclosed . Width;
+        Height: Enclosed . Height;
+	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
+		Visibility: 0;
 	END;
 
   DOCTYPE:
@@ -1164,28 +1333,6 @@ RULES
 		Visibility: 0;
 	END;
 
-   SVG_Image: BEGIN
-	LineBreak: No;
-	PageBreak: No;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
-
-  Timeline_cross:
-	BEGIN
-   	HorizPos: Left = Enclosing . Left Userspecified;
-   	VertPos:  HRef = Enclosing . Top + 10 pt Userspecified;
-	Width: Enclosed . Width;
-    Height: Enclosed . Height;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
 ATTRIBUTES
 
   Language:
@@ -1208,24 +1355,25 @@ ATTRIBUTES
         CreateBefore(AttrValue);
         END;
 
-  class:
-        BEGIN
-        CreateBefore(AttrName);
-        CreateBefore(AttrValue);
-        END;
- 
-  style_:
-        BEGIN
-        CreateBefore(AttrName);
-        CreateBefore(AttrValue);
-        END;
- 
   xml_space = xml_space_default:
 	CreateBefore (ATTR_xml_space_default);
-
   xml_space = xml_space_preserve:
 	CreateBefore (ATTR_xml_space_preserve);
 
+  Unknown_attribute:
+	BEGIN
+	if TEXT_UNIT
+	   CreateBefore(UnknownAttrValue);
+	if PICTURE_UNIT
+	   CreateBefore(UnknownAttrValue);
+	if Unknown_namespace
+	   CreateAfter(UnknownAttrValue);
+	if Unknown_namespace and LastAttr
+	   CreateAfter(Unknown_End);
+	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Unknown_namespace
+  	   CreateBefore(UnknownAttrValue);
+	END;
+ 
   Highlight:
 	BEGIN
         if TEXT_UNIT
@@ -1252,25 +1400,25 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-  externalResourcesRequired:
-	CreateBefore (AttrNameAndValue);
-
   baseProfile:
 	CreateBefore (AttrNameAndValue);
 
+  externalResourcesRequired:
+	CreateBefore (AttrNameAndValue);
+
+  class:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
+ 
+  style_:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
+ 
   fill:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  opacity_:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  stroke_opacity:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
@@ -1289,6 +1437,18 @@ ATTRIBUTES
 	END;
 
   stroke_width:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  stroke_opacity:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  opacity_:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
@@ -1686,13 +1846,157 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
+  rotate:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
   baseline_shift:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	END;
 
+  startOffset:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  textLength:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  lengthAdjust:
+	CreateBefore(AttrNameAndValue);
+
+  method:
+	CreateBefore(AttrNameAndValue);
+
+  spacing:
+	CreateBefore(AttrNameAndValue);
+
+  glyphRef_:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  format:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  refX:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  refY:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  markerUnits:
+	CreateBefore(AttrNameAndValue);
+
+  markerWidth:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  markerHeight:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  orient:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  local:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  name:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  rendering_intent:
+	CreateBefore(AttrNameAndValue);
+
+  stop_color:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  stop_opacity:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  gradientUnits:
+	CreateBefore(AttrNameAndValue);
+
+  gradientTransform:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  spreadMethod:
+	CreateBefore(AttrNameAndValue);
+
+  fx:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  fy:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  offset:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
+  patternUnits:
+	CreateBefore(AttrNameAndValue);
+
+  patternTransform:
+	BEGIN
+	CreateBefore (AttrName);
+	CreateBefore (AttrValue);
+	END;
+
   clipPathUnits:
+	CreateBefore(AttrNameAndValue);
+
+  maskUnits:
+	CreateBefore(AttrNameAndValue);
+
+  maskContentUnits:
 	CreateBefore(AttrNameAndValue);
 
   target_:
@@ -1836,31 +2140,7 @@ ATTRIBUTES
 	CreateBefore (AttrValue);
 	END;
 
-  rotate:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
   origin:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  stop_color:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  gradientUnits:
-	BEGIN
-	CreateBefore (AttrName);
-	CreateBefore (AttrValue);
-	END;
-
-  offset:
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
@@ -1869,18 +2149,4 @@ ATTRIBUTES
   type_:
 	CreateBefore(AttrNameAndValue);
 
-  Unknown_attribute:
-	BEGIN
-	if TEXT_UNIT
-	   CreateBefore(UnknownAttrValue);
-	if PICTURE_UNIT
-	   CreateBefore(UnknownAttrValue);
-	if Unknown_namespace
-	   CreateAfter(UnknownAttrValue);
-	if Unknown_namespace and LastAttr
-	   CreateAfter(Unknown_End);
-	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Unknown_namespace
-  	   CreateBefore(UnknownAttrValue);
-	END;
- 
 END

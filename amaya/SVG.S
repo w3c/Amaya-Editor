@@ -9,9 +9,7 @@ ATTR
 
    { global attributes for all SVG elements }
    id = text;
-   class = text;
    PseudoClass = Text;
-   style_ = text;
    xml_space = xml_space_default, xml_space_preserve;
    { xml_base = Text; }
 	
@@ -23,6 +21,10 @@ ATTR
    Namespace = text;        { for children of element foreignObject }
    IntEmptyShape = yes_, no_;
 
+CONST
+
+   C_Empty = ' ';
+
 STRUCT
 
 { Document Structure }
@@ -33,9 +35,14 @@ STRUCT
 	      systemLanguage = text;
 	      baseProfile = text;
 	      externalResourcesRequired = false, true;
+              class = text;
+              style_ = text;
 	      fill = text;
+	      fill_opacity =  text; 
 	      stroke = text;
 	      stroke_width = text;
+	      stroke_opacity = text; 
+	      opacity_ = text; 
 	      font_family = text;
 	      font_size = text;
 	      font_style = normal_, italic, oblique_, inherit;
@@ -52,7 +59,6 @@ STRUCT
               y = text; 
 	      width_ = text;
 	      height_ = text;
-	      opacity_ = text; 
 	      RealLang = Yes_;
 	      Charset = text)
         = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, CDATA,
@@ -60,8 +66,9 @@ STRUCT
 
    g
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
-	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
+	      externalResourcesRequired;
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
 	      opacity_; 
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
@@ -71,6 +78,7 @@ STRUCT
    defs
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
+	      class; style_;
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
@@ -78,12 +86,17 @@ STRUCT
 	      { graphicsElementEvents })
         = LIST OF (GraphicsElement);
 
-   desc = TEXT;
+   desc
+	(ATTR  class; style_)
+	= TEXT;
 	
-   title = TEXT;
+   title
+	(ATTR  class; style_)
+	= TEXT;
 	
    symbol_  { not in SVG Tiny }
 	(ATTR externalResourcesRequired;
+	      class; style_;
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
@@ -92,11 +105,13 @@ STRUCT
 	      { graphicsElementEvents })
         = LIST OF (GraphicsElement);
 
-   use_  { not in SVG Tiny }
+   use_
         (ATTR xlink_href = text;
 	      requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
-	      opacity_; fill; stroke; stroke_width;
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
+	      opacity_;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      transform;
@@ -105,10 +120,10 @@ STRUCT
 	      y;
               width_;
               height_)
-        = AGGREGATE
+        = LIST OF (CASE OF
               desc; title; metadata;
-	      LIST OF (Anim);
-	      END;
+	      animate; set_; animateMotion; animateColor; animateTransform;
+	      END);
 	
 { Images }
 
@@ -116,24 +131,26 @@ STRUCT
 	(ATTR xlink_href;
 	      requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      transform;
+	      class; style_;
 	      opacity_; 
+	      transform;
 	      x; 
 	      y;
               width_;
               height_)		
-        = AGGREGATE
-              desc; ? title; ? metadata;
-	      LIST OF (Anim);
+        = LIST OF (CASE OF
+              desc; title; metadata;
+	      animate; set_; animateMotion; animateColor; animateTransform;
               PICTURE;
               SVG_Image = SVG;
-	      END;
+	      END);
 
 { Conditional Processing }
 
    switch
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
+	      class; style_;
 	      { PresentationAttributes-All }
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
@@ -141,8 +158,12 @@ STRUCT
 	      transform;
 	      { graphicsElementEvents })
 	= LIST OF (CASE OF
-		      GraphicsElement; foreignObject;
-	              END);
+	      desc; title; metadata;
+	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
+	      use_; image; Timeline_cross; SVG; g; switch; a; foreignObject;
+	      script_; style__; symbol_; clipPath;
+	      animate; set_; animateMotion; animateColor; animateTransform;
+	      END);
 
 { Styling }
 
@@ -157,222 +178,355 @@ STRUCT
    path
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      opacity_; 
-	      fill_opacity=text; 
-	      stroke_opacity=text; 
-	      fill; stroke; stroke_width;
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
+	      opacity_;
               transform;
 	      d = text;
 	      pathLength = text)
-        = AGGREGATE
-	      desc; title; metadata;
-	      LIST OF (Anim);
+        = LIST OF (CASE OF
+              desc; title; metadata;
+	      animate; set_; animateMotion; animateColor; animateTransform;
 	      GRAPHICS;
-	      END;
+	      END);
 	
 { Basic Shapes }
 
    rect
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
+	      opacity_;
 	      transform;
 	      x;
               y;
               width_;
               height_;
-	      opacity_; fill_opacity; stroke_opacity;
 	      rx = text;
 	      ry = text)
-        = AGGREGATE
-	      desc; title; metadata;
-	      LIST OF (Anim);
+        = LIST OF (CASE OF
+              desc; title; metadata;
+	      animate; set_; animateMotion; animateColor; animateTransform;
 	      GRAPHICS;
-	      END;
+	      END);
 	
    circle
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
+	      opacity_;
 	      transform;
 	      cx = text;
 	      cy = text;
-              r = text;
-	      opacity_; fill_opacity; stroke_opacity)
-        = AGGREGATE
-	      desc; title; metadata;
-	      LIST OF (Anim);
+              r = text)
+        = LIST OF (CASE OF
+              desc; title; metadata;
+	      animate; set_; animateMotion; animateColor; animateTransform;
 	      GRAPHICS;
-	      END;
+	      END);
 	
    ellipse
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
+	      opacity_;
 	      transform;
 	      cx;
 	      cy;
 	      rx;
-	      ry;
-	      opacity_; fill_opacity; stroke_opacity)
-        = AGGREGATE
-	      desc; title; metadata;
-	      LIST OF (Anim);
+	      ry)
+        = LIST OF (CASE OF
+              desc; title; metadata;
+	      animate; set_; animateMotion; animateColor; animateTransform;
 	      GRAPHICS;
-	      END;
+	      END);
 	
    line_
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
+	      opacity_;
 	      transform;
 	      x1 = text;
 	      y1 = text;
               x2 = text;
-	      y2 = text;
-	      opacity_; fill_opacity; stroke_opacity)
-        = AGGREGATE
-	      desc; title; metadata;
-	      LIST OF (Anim);
+	      y2 = text)
+        = LIST OF (CASE OF
+              desc; title; metadata;
+	      animate; set_; animateMotion; animateColor; animateTransform;
 	      GRAPHICS;
-	      END;
+	      END);
 	
    polyline
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
+	      opacity_;
 	      transform;
-              points = text;
-	      opacity_; fill_opacity; stroke_opacity)
-        = AGGREGATE
-	      desc; title; metadata;
-	      LIST OF (Anim);
+              points = text)
+        = LIST OF (CASE OF
+              desc; title; metadata;
+	      animate; set_; animateMotion; animateColor; animateTransform;
 	      GRAPHICS;
-	      END;
-	
+	      END);
+
    polygon
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
+	      opacity_;
 	      transform;
-              points;
-	      opacity_; fill_opacity; stroke_opacity)
-        = AGGREGATE
-	      desc; title; metadata;
-	      LIST OF (Anim);
+              points)
+        = LIST OF (CASE OF
+              desc; title; metadata;
+	      animate; set_; animateMotion; animateColor; animateTransform;
 	      GRAPHICS;
-	      END;
+	      END);
 
 { Text }
 	
    text_
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      opacity_;
 	      transform;
 	      writing_mode = lr_tb, rl_tb, tb_rl, lr, rl, tb, inherit;
 	      x;
 	      y;
 	      dx = text;
 	      dy = text;
-	      opacity_)
+	      rotate = text)
         = LIST OF (CASE OF
-		   tspan;	{ must be the first option, to allow the Return key
-				  to create tspan elements }
+		   tspan;	{ must be the first option, to allow the Return
+				  key to create tspan elements }
 		   TEXT; desc; title; metadata;
-	           tref; a;
+	           tref; textPath; altGlyph; a;
 	           animate; set_; animateMotion; animateColor; animateTransform;
 		   END);
 
    tspan  { not in SVG Tiny }
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      baseline_shift = text;
+	      opacity_;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      writing_mode;
 	      x;
               y;
 	      dx;
 	      dy;
-	      opacity_)
+	      rotate)
 	= LIST OF (SpanElement = CASE OF
 		      TEXT;
 		      desc; title; metadata;
-		      tspan; tref;
+		      tspan; tref; altGlyph;
 		      a;
 		      animate; set_; animateColor;
 		      END);
-   tref
+	
+   tref  { not in SVG Tiny }
 	(ATTR xlink_href;
 	      requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
-	      fill; stroke; stroke_width;
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      baseline_shift;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
 	      writing_mode;
+	      opacity_;
 	      x;
               y;
 	      dx;
 	      dy;
-	      opacity_)
+	      rotate)
 	= LIST OF (CASE OF
 		   desc; title; metadata;
 	           animate; set_; animateColor;
 		   END);
 
-   { textPath }
-   { altGlyph }
-   { altGlyphDef }
-   { altGlyphItem }
-   { glyphRef }
+   textPath  { not in SVG Tiny } {@@@@@}
+	(ATTR xlink_href;
+	      requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      baseline_shift;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      writing_mode;
+	      opacity_;
+	      startOffset = text; {@@@@@}
+	      textLength = text; {@@@@@}
+	      lengthAdjust = spacing_, spacingAndGlyphs;  {@@@@@}
+	      method = align, stretch;  {@@@@@}
+	      spacing = auto, exact) {@@@@@}
+	= LIST OF (CASE OF
+		   TEXT;
+		   desc; title; metadata;
+		   tspan; tref; altGlyph; a;
+	           animate; set_; animateColor;
+		   END);
+
+   altGlyph  { not in SVG Tiny } {@@@@@}
+	(ATTR xlink_href;
+	      glyphRef_ = text;  {@@@@@}
+	      format = text; {@@@@@}
+	      requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired; 
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      baseline_shift;
+	      opacity_;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      writing_mode;
+	      x;
+              y;
+	      dx;
+	      dy;
+	      rotate)
+	= TEXT;
+
+   altGlyphDef  { not in SVG Tiny } {@@@@@}
+	= BEGIN
+	  CASE OF
+	      LIST OF (glyphRef);
+	      LIST OF (altGlyphItem);
+	      END;
+	  END;
+
+   altGlyphItem  { not in SVG Tiny } {@@@@@}
+	= LIST OF (glyphRef);
+	
+   glyphRef { not in SVG Tiny } {@@@@@}
+	(ATTR xlink_href;
+	      class; style_;
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      glyphRef_;
+	      format;
+	      x;
+              y;
+	      dx;
+	      dy)
+	= CONSTANT C_Empty;
 
 { Marker Symbols }
 
-   { marker }
-
+   marker  { not in SVG Tiny, not in SVG Basic } {@@@@@}
+	(ATTR externalResourcesRequired; 
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
+	      opacity_; 
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      viewBox;
+	      preserveAspectRatio;
+	      refX = text;  {@@@@@}
+	      refY = text;  {@@@@@}
+	      markerUnits = strokeWidth, userSpaceOnUse; {@@@@@}
+	      markerWidth = text;  {@@@@@}
+	      markerHeight = text;  {@@@@@}
+	      orient = text) {@@@@@}
+        = LIST OF (GraphicsElement);
+	
 { Color }
 
-   { color-profile }
+   color_profile  { not in SVG Tiny }  {@@@@@}
+	(ATTR xlink_href;
+	      local = text; {@@@@@}
+	      name = text; {@@@@@}
+	      rendering_intent = auto, perceptual, relative_colorimetric,
+	                         saturation, absolute_colorimetric) {@@@@@}
+	= LIST OF
+	    (CASE OF
+	      desc; title; metadata;
+	     END);
 
 { Gradients and Patterns }
 
-   linearGradient
-	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
+   linearGradient  { not in SVG Tiny }  {@@@@@}
+	(ATTR xlink_href;
 	      externalResourcesRequired;
-	      x1; y1; x2; y2;	      
-	      gradientTransform = text;
-	      gradientUnits = text;
-              xlink_href;)
-	= AGGREGATE
+	      class; style_;
+	      stop_color = text;  {@@@@@}
+	      stop_opacity = text; {@@@@@}
+	      gradientUnits = userSpaceOnUse, objectBoundingBox; {@@@@@}
+	      gradientTransform = text; {@@@@@}
+	      x1; y1; x2; y2;      
+              spreadMethod = pad, reflect, repeat) {@@@@@}
+	= LIST OF
+	    (CASE OF
 	      desc; title; metadata;
-	LIST OF (Anim);
-	      GRAPHICS;
-	  END;
+	      stop; animate; set_; animateTransform;
+	     END);
 
-   stop
-         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+   radialGradient  { not in SVG Tiny }  {@@@@@}
+	(ATTR xlink_href;
 	      externalResourcesRequired;
-	      offset = text;
-	      style = text;
-	      stop_color = text;)
-	 = AGGREGATE
+	      class; style_;
+	      stop_color; stop_opacity;
+	      gradientUnits;
+	      gradientTransform;
+	      cx; cy; r;
+	      fx = text;  {@@@@@}
+	      fy = text;  {@@@@@}
+	      spreadMethod)
+	= LIST OF
+	    (CASE OF
 	      desc; title; metadata;
-	  END;
+	      stop; animate; set_; animateTransform;
+	     END);	
+
+   stop  { not in SVG Tiny }  {@@@@@}
+	(ATTR 
+	      class; style_;	      
+	      stop_color; stop_opacity;
+	      offset = text)  {@@@@@}
+	= LIST OF
+	     (CASE OF
+		animate; set_; animateColor;
+	      END);
 	
-
-   { radialGradient }
-   { pattern }
+   pattern  { not in SVG Tiny }  {@@@@@}
+	(ATTR xlink_href;
+	      requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired;
+	      class; style_;
+	      fill; fill_opacity; stroke; stroke_width; stroke_opacity;
+	      opacity_; 
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      viewBox;
+	      preserveAspectRatio;
+	      patternUnits = userSpaceOnUse, objectBoundingBox; {@@@@@}
+	      patternContentUnits = userSpaceOnUse, objectBoundingBox; {@@@@@}
+	      patternTransform = text; {@@@@@}
+	      x;
+              y;
+              width_;
+              height_)
+        = LIST OF (GraphicsElement);
 
 { Clipping, Masking and Compositing }
 
-   clipPath
+   clipPath  { not in SVG Tiny }
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
+	      class; style_;
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
@@ -388,7 +542,20 @@ STRUCT
 	       END);
 	  END;
 
-   { mask }
+   mask  { not in SVG Tiny }  {@@@@@}
+        (ATTR requiredFeatures; requiredExtensions; systemLanguage;
+	      externalResourcesRequired;
+	      class; style_;
+	      fill; stroke; stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      direction_; text_anchor; text_decoration; unicode_bidi;
+	      maskUnits = userSpaceOnUse, objectBoundingBox; {@@@@@}
+	      maskContentUnits = userSpaceOnUse, objectBoundingBox; {@@@@@}
+	      x;
+              y;
+              width_;
+              height_)	      
+        = LIST OF (GraphicsElement);
 
 { Filter Effects }
 
@@ -428,6 +595,7 @@ STRUCT
         (ATTR xlink_href;
 	      requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
+	      class; style_;
 	      fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
@@ -506,7 +674,7 @@ STRUCT
               additive; accumulate; {animAdditionAttrs}
 	      path_ = text;
               keyPoints = text;
-              rotate = text;
+              rotate;
               origin = text;)
 	= AGGREGATE
 	      desc; title; metadata; ? mpath;
@@ -551,8 +719,6 @@ STRUCT
 	      desc; title; metadata;
 	  END;
 
-   Anim = CASE OF animate; set_; animateMotion; animateColor; animateTransform;
-	  END;
 { Fonts }
 
    { font }
@@ -577,6 +743,7 @@ STRUCT
    foreignObject  { not in SVG Tiny }
         (ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired; 
+	      class; style_;
 	      opacity_; fill_opacity; stroke_opacity; fill; stroke; stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
 	      direction_; text_anchor; text_decoration; unicode_bidi;
@@ -605,11 +772,12 @@ STRUCT
 	= CASE OF
 	      desc; title; metadata; defs;
 	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
-	      use_; image; Timeline_cross; SVG; g; switch; a;
-	      script_; style__; symbol_; clipPath; Anim;
+	      use_; image; SVG; g; switch; a; altGlyphDef;
+	      script_; style__; symbol_; marker; clipPath; mask;
+	      linearGradient; radialGradient; pattern;
 	      animate; set_; animateMotion; animateColor; animateTransform;
-	      linearGradient; stop; 
-	      XLink;
+	      color_profile;
+	      Timeline_cross; 
 	      END;
 
    DOCTYPE = LIST OF (DOCTYPE_line = TEXT);	

@@ -15,7 +15,7 @@
 
 #define MAX_NAME_LENGTH 32	/* maximum name length */	
 #define MAX_INT_ATTR_VAL 32000	/* maximum value of a numerical attribute */
-#define MAX_OPTION_CASE 32	/* maximum number of options in a choice */
+#define MAX_OPTION_CASE 40	/* maximum number of options in a choice */
 #define MAX_COMP_AGG 28		/* maximum number of components in an
 				   aggregate */
 #define MAX_DEFAULT_ATTR 10	/* maximum number of default attributes in a

@@ -160,6 +160,10 @@ RULES
 		END;
 	END;
 
+   SVG_Image: BEGIN
+	Remove;
+	END;
+
    switch:
 	BEGIN
 	if immediately within use_
@@ -386,17 +390,277 @@ RULES
 		END;
 	END;
 
+   textPath:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'textPath';
+	indent +10;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -10;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'textPath>\14' after;
+		END;
+	END;
+
+   altGlyph:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'altGlyph';
+	indent +10;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -10;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'altGlyph>\14' after;
+		END;
+	END;
+
+   altGlyphDef:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'altGlyphDef';
+	indent +13;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -13;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'altGlyphDef>\14' after;
+		END;
+	END;
+
+   altGlyphItem:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'altGlyphItem';
+	indent +14;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -14;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'altGlyphItem>\14' after;
+		END;
+	END;
+
+   glyphRef:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'glyphRef';
+	indent +10;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -10;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'glyphRef>\14' after;
+		END;
+	END;
+
+   marker:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'marker';
+	indent +8;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -8;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'marker>\14' after;
+		END;
+	END;
+
+   color_profile:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'color-profile';
+	indent +15;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -15;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'color-profile>\14' after;
+		END;
+	END;
+
+   linearGradient:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'linearGradient';
+	indent +16;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -16;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'linearGradient>\14' after;
+		END;
+	END;
+
+    radialGradient:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'radialGradient';
+	indent +16;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -16;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'radialGradient>\14' after;
+		END;
+	END;
+
+    stop:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'stop';
+	indent +6;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -6;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'stop>\4' after;
+		END;
+	END;
+
+   pattern:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'pattern';
+	indent +9;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -9;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'pattern>\14' after;
+		END;
+	END;
+
    clipPath:
 	BEGIN
+	if immediately within use_
+           Ignore;
 	create SOT;
 	create 'clipPath';
 	indent +10;
 	create attributes;
-	create CloseTagNL;
-	indent -8;
-	indent -2 after;
-	create SCT after;
-	create 'clipPath>\12' after;
+	if empty
+		create CloseEmptyTagNL;
+	indent -10;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'clipPath>\12' after;
+		END;
+	END;
+
+   mask:
+	BEGIN
+	if immediately within use_
+           Ignore;
+	create SOT;
+	create 'mask';
+	indent +6;
+	create attributes;
+	if empty
+		create CloseEmptyTagNL;
+        indent -6;
+	if not empty
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'mask>\14' after;
+		END;
 	END;
 
    a:
@@ -526,48 +790,6 @@ RULES
 		END;	
 	END;
 
-    linearGradient:
-	BEGIN
-	if immediately within use_
-           Ignore;
-	create SOT;
-	create 'linearGradient';
-	indent +16;
-	create attributes;
-	if empty
-		create CloseEmptyTagNL;
-        indent -16;
-	if not empty
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'linearGradient>\14' after;
-		END;
-	END;
-
-    stop:
-	BEGIN
-	if immediately within use_
-           Ignore;
-	create SOT;
-	create 'stop';
-	indent +6;
-	create attributes;
-	if empty
-		create CloseEmptyTagNL;
-        indent -6;
-	if not empty
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'stop>\4' after;
-		END;
-	END;
-
    animateTransform:
 	BEGIN
 	create SOT;
@@ -613,6 +835,11 @@ RULES
 	indent -2 after;
 	create SCT after;
 	create 'foreignObject>\12' after;
+	END;
+
+   Timeline_cross:
+	BEGIN
+	Remove;
 	END;
 
    DOCTYPE: BEGIN
@@ -683,19 +910,10 @@ RULES
    PICTURE_UNIT:
 	Remove;
 
-   SVG_Image: BEGIN
-	Remove;
-	END;
-
-   Timeline_cross:
-	BEGIN
-	Remove;
-	END;
-
 
 ATTRIBUTES
 
- Language:
+   Language:
 	begin
 	if not TEXT_UNIT and not SVG
 	    begin
@@ -719,22 +937,6 @@ ATTRIBUTES
         create DoubleQuote;
         end;
  
-   class:
-        begin
-        create SAN;
-        create 'class="';
-        create class;
-        create DoubleQuote;
-        end;
- 
-   style_:
-        begin
-        create SAN;
-        create 'style="';
-        create style_;
-        create DoubleQuote;
-        end;
- 
    xml_space = xml_space_default:
 	BEGIN
 	create SAN;
@@ -746,13 +948,19 @@ ATTRIBUTES
 	create 'xml:space="preserve"';
 	END;
 
+   Unknown_attribute:
+	BEGIN
+	create SUA;
+	Create Unknown_attribute;
+	END;	
+
    Namespace:
 	begin
-	{
+	{*****
         create 'xmlns="';
         create Namespace;
         create DoubleQuote;
-        }
+        *****}
 	end;
 
    requiredFeatures:
@@ -779,6 +987,14 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
+   baseProfile:
+	BEGIN
+	create SAN;
+	create 'baseProfile="';
+	create baseProfile;
+	create DoubleQuote;
+	END;
+
    externalResourcesRequired = false:
 	BEGIN
 	create SAN;
@@ -790,19 +1006,35 @@ ATTRIBUTES
 	create 'externalResourcesRequired="true"';
 	END;
 
-   baseProfile:
-	BEGIN
-	create SAN;
-	create 'baseProfile="';
-	create baseProfile;
-	create DoubleQuote;
-	END;
-
+   class:
+        begin
+        create SAN;
+        create 'class="';
+        create class;
+        create DoubleQuote;
+        end;
+ 
+   style_:
+        begin
+        create SAN;
+        create 'style="';
+        create style_;
+        create DoubleQuote;
+        end;
+ 
    fill:
 	BEGIN
 	create SAN;
 	create 'fill="';
 	create fill;
+	create DoubleQuote;
+	END;
+
+   fill_opacity:
+	BEGIN
+	create SAN;
+	create 'fill-opacity="';
+	create fill_opacity;
 	create DoubleQuote;
 	END;
 
@@ -819,6 +1051,22 @@ ATTRIBUTES
 	create SAN;
 	create 'stroke-width="';
 	create stroke_width;
+	create DoubleQuote;
+	END;
+
+   stroke_opacity:
+	BEGIN
+	create SAN;
+	create 'stroke-opacity="';
+	create stroke_opacity;
+	create DoubleQuote;
+	END;
+
+   opacity_:
+	BEGIN
+	create SAN;
+	create 'opacity="';
+	create opacity_;
 	create DoubleQuote;
 	END;
 
@@ -1012,19 +1260,19 @@ ATTRIBUTES
 	create 'unicode-bidi="inherit"';
 	END;
 
-   version:
-	BEGIN
-	create SAN;
-	create 'version="';
-	create version;
-	create DoubleQuote;
-	END;
-
    viewBox:
 	BEGIN
 	create SAN;
 	create 'viewBox="';
 	create viewBox;
+	create DoubleQuote;
+	END;
+
+   version:
+	BEGIN
+	create SAN;
+	create 'version="';
+	create version;
 	create DoubleQuote;
 	END;
 
@@ -1064,51 +1312,11 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 	
-   opacity_:
-	BEGIN
-	create SAN;
-	create 'opacity="';
-	create opacity_;
-	create DoubleQuote;
-	END;
-
-   stroke_opacity:
-	BEGIN
-	create SAN;
-	create 'stroke-opacity="';
-	create stroke_opacity;
-	create DoubleQuote;
-	END;
-
-   fill_opacity:
-	BEGIN
-	create SAN;
-	create 'fill-opacity="';
-	create fill_opacity;
-	create DoubleQuote;
-	END;
-
-   stop_color:
-	BEGIN
-	create SAN;
-	create 'stop-color="';
-	create stop_color;
-	create DoubleQuote;
-	END;
-
    gradientUnits:
 	BEGIN
 	create SAN;
 	create 'gradientUnits="';
 	create gradientUnits;
-	create DoubleQuote;
-	END;
-
-   offset:
-	BEGIN
-	create SAN;
-	create 'offset="';
-	create offset;
 	create DoubleQuote;
 	END;
 
@@ -1307,6 +1515,14 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
+  rotate:
+	BEGIN
+	create SAN;
+	create 'rotate="';
+	create rotate;
+	create DoubleQuote;
+	END;
+
    baseline_shift:
 	BEGIN
 	create SAN;
@@ -1315,16 +1531,300 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
+   startOffset:
+	BEGIN
+	create SAN;
+	create 'startOffset="';
+	create startOffset;
+	create DoubleQuote;
+	END;
+
+   textLength:
+	BEGIN
+	create SAN;
+	create 'textLength="';
+	create textLength;
+	create DoubleQuote;
+	END;
+
+   lengthAdjust = spacing_:
+	BEGIN
+	create SAN;
+	create 'lengthAdjust="spacing"';
+	END;
+   lengthAdjust = spacingAndGlyphs:
+	BEGIN
+	create SAN;
+	create 'lengthAdjust="spacingAndGlyphs"';
+	END;
+
+   method = align:
+	BEGIN
+	create SAN;
+	create 'method="align"';
+	END;
+   method = stretch:
+	BEGIN
+	create SAN;
+	create 'method="stretch"';
+	END;
+
+   spacing = auto:
+	BEGIN
+	create SAN;
+	create 'spacing="auto"';
+	END;
+   spacing = exact:
+	BEGIN
+	create SAN;
+	create 'spacing="exact"';
+	END;
+
+   glyphRef_:
+	BEGIN
+	create SAN;
+	create 'glyphRef="';
+	create glyphRef_;
+	create DoubleQuote;
+	END;
+
+   format:
+	BEGIN
+	create SAN;
+	create 'format="';
+	create format;
+	create DoubleQuote;
+	END;
+
+   refX:
+	BEGIN
+	create SAN;
+	create 'refX="';
+	create refX;
+	create DoubleQuote;
+	END;
+
+   refY:
+	BEGIN
+	create SAN;
+	create 'refY="';
+	create refY;
+	create DoubleQuote;
+	END;
+
+   markerUnits = strokeWidth:
+	BEGIN
+	create SAN;
+	create 'markerUnits="strokeWidth"';
+	END;
+   markerUnits = userSpaceOnUse:
+	BEGIN
+	create SAN;
+	create 'markerUnits="userSpaceOnUse"';
+	END;
+
+   markerWidth:
+	BEGIN
+	create SAN;
+	create 'markerWidth="';
+	create markerWidth;
+	create DoubleQuote;
+	END;
+
+   markerHeight:
+	BEGIN
+	create SAN;
+	create 'markerHeight="';
+	create markerHeight;
+	create DoubleQuote;
+	END;
+
+   orient:
+	BEGIN
+	create SAN;
+	create 'orient="';
+	create orient;
+	create DoubleQuote;
+	END;
+
+   local:
+	BEGIN
+	create SAN;
+	create 'local="';
+	create local;
+	create DoubleQuote;
+	END;
+
+   name:
+	BEGIN
+	create SAN;
+	create 'name="';
+	create name;
+	create DoubleQuote;
+	END;
+
+   rendering_intent = auto:
+	BEGIN
+	create SAN;
+	create 'rendering-intent="auto"';
+	END;
+   rendering_intent = perceptual:
+	BEGIN
+	create SAN;
+	create 'rendering-intent="perceptual"';
+	END;
+   rendering_intent = relative_colorimetric:
+	BEGIN
+	create SAN;
+	create 'rendering-intent="relative-colorimetric"';
+	END;
+   rendering_intent = saturation:
+	BEGIN
+	create SAN;
+	create 'rendering-intent="saturation"';
+	END;
+   rendering_intent = absolute_colorimetric:
+	BEGIN
+	create SAN;
+	create 'rendering-intent="absolute-colorimetric"';
+	END;
+
+   stop_color:
+	BEGIN
+	create SAN;
+	create 'stop-color="';
+	create stop_color;
+	create DoubleQuote;
+	END;
+
+   stop_opacity:
+	BEGIN
+	create SAN;
+	create 'stop-opacity="';
+	create stop_opacity;
+	create DoubleQuote;
+	END;
+
+   gradientUnits = userSpaceOnUse:
+	BEGIN
+	create SAN;
+	create 'gradientUnits="userSpaceOnUse"';
+	END;
+   gradientUnits = objectBoundingBox:
+	BEGIN
+	create SAN;
+	create 'gradientUnits="objectBoundingBox"';
+	END;
+
+   gradientTransform:
+	BEGIN
+	create SAN;
+	create 'gradientTransform="';
+	create gradientTransform;
+	create DoubleQuote;
+	END;
+
+   spreadMethod = pad:
+	BEGIN
+	create SAN;
+	create 'spreadMethod="pad"';
+	END;
+   spreadMethod = reflect:
+	BEGIN
+	create SAN;
+	create 'spreadMethod="reflect"';
+	END;
+   spreadMethod = repeat:
+	BEGIN
+	create SAN;
+	create 'spreadMethod="repeat"';
+	END;
+
+   fx:
+	BEGIN
+	create SAN;
+	create 'fx="';
+	create fx;
+	create DoubleQuote;
+	END;
+
+   fy:
+	BEGIN
+	create SAN;
+	create 'fy="';
+	create fy;
+	create DoubleQuote;
+	END;
+
+   offset:
+	BEGIN
+	create SAN;
+	create 'offset="';
+	create offset;
+	create DoubleQuote;
+	END;
+
+   patternUnits = userSpaceOnUse:
+	BEGIN
+	create SAN;
+	create 'patternUnits="userSpaceOnUse"';
+	END;
+   patternUnits = objectBoundingBox:
+	BEGIN
+	create SAN;
+	create 'patternUnits="objectBoundingBox"';
+	END;
+
+   patternContentUnits = userSpaceOnUse:
+	BEGIN
+	create SAN;
+	create 'patternContentUnits="userSpaceOnUse"';
+	END;
+   patternContentUnits = objectBoundingBox:
+	BEGIN
+	create SAN;
+	create 'patternContentUnits="objectBoundingBox"';
+	END;
+
+   patternTransform:
+	BEGIN
+	create SAN;
+	create 'patternTransform="';
+	create patternTransform;
+	create DoubleQuote;
+	END;
+
    clipPathUnits = userSpaceOnUse:
 	BEGIN
 	create SAN;
 	create 'clipPathUnits="userSpaceOnUse"';
 	END;
-
    clipPathUnits = objectBoundingBox:
 	BEGIN
 	create SAN;
 	create 'clipPathUnits="objectBoundingBox"';
+	END;
+
+   maskUnits = userSpaceOnUse:
+	BEGIN
+	create SAN;
+	create 'maskUnits="userSpaceOnUse"';
+	END;
+   maskUnits = objectBoundingBox:
+	BEGIN
+	create SAN;
+	create 'maskUnits="objectBoundingBox"';
+	END;
+
+   maskContentUnits = userSpaceOnUse:
+	BEGIN
+	create SAN;
+	create 'maskContentUnits="userSpaceOnUse"';
+	END;
+   maskContentUnits = objectBoundingBox:
+	BEGIN
+	create SAN;
+	create 'maskContentUnits="objectBoundingBox"';
 	END;
 
    target_:
@@ -1565,14 +2065,6 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-  rotate:
-	BEGIN
-	create SAN;
-	create 'rotate="';
-	create rotate;
-	create DoubleQuote;
-	END;
-
   origin:
 	BEGIN
 	create SAN;
@@ -1606,12 +2098,6 @@ ATTRIBUTES
 	create SAN;
 	create 'type="skewY"';
 	END;
-
-   Unknown_attribute:
-	BEGIN
-	create SUA;
-	Create Unknown_attribute;
-	END;	
 
 TextTRANSLATE
 	BEGIN

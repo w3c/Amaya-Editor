@@ -7,8 +7,10 @@ translation
 
 TEXT_UNIT: \240
 GRAPHICS_UNIT: \240
+SYMBOL_UNIT: \240
 PICTURE_UNIT: \240
 
+C_Empty: \240
 SVG: svg
 symbol_: symbol
 use_: use
@@ -16,20 +18,27 @@ style__: style
 line_: line
 text_: text
 SpanElement: \240
+color_profile: color-profile
 script_: script
 set_: set
 Anim: \240
 DOCTYPE: doctype
+DOCTYPE_line: \240
 XMLcomment: comment
+XMLcomment_line: \240
 XMLPI: pi
+XMLPI_line: \240
 CDATA: cdata
 
 Language: xml:lang
-style_: style
 xml_space: xml:space
 xml_space_default: default
 xml_space_preserve: preserve
+style_: style
+fill_opacity: fill-opacity
 stroke_width: stroke-width
+stroke_opacity: stroke-opacity
+opacity_: opacity
 font_family: font-family
 font_size: font-size
 font_style: font-style
@@ -59,17 +68,20 @@ embed_: embed
 bidi_override: bidi-override
 width_: width
 height_: height
-opacity_: opacity
 xlink_href: xlink:href
 title_: title
-fill_opacity: fill-opacity
-stroke_opacity: stroke-opacity
 writing_mode: writing-mode
 lr_tb: lr-tb
 rl_tb: rl-tb
 tb_rl: tb-rl
 baseline_shift: baseline-shift
+spacing_: spacing
+glyphRef_: glyphRef
+rendering_intent: rendering-intent
+relative_colorimetric: relative-colorimetric
+absolute_colorimetric: absolute-colorimetric
 stop_color: stop-color
+stop_opacity: stop-opacity
 target_: target
 attributeName_: attributeName
 begin_: begin
