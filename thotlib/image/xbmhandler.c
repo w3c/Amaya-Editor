@@ -13,7 +13,7 @@
 #include "font_f.h"
 
 /* ---------------------------------------------------------------------- */
-/* |    XbmCreate lit et retourne le bitmap lu dans le fichier  | */
+/* |    XbmCreate lit et retourne le bitmap lu dans le fichier          | */
 /* |            fn. Met a` jour xif, yif, wif, hif.                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
@@ -62,7 +62,7 @@ Drawable           *mask1;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    XbmPrint convertit un bitmap en PostScript.             | */
+/* |    XbmPrint convertit un bitmap en PostScript.                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned int BackGroundPixel)
@@ -186,7 +186,7 @@ unsigned int        BackGroundPixel;
 
 	nbb = (wim + 7) / 8;
 	if (ImageByteOrder (TtDisplay) == LSBFirst)
-	   Little_X_Big_Endian((unsigned char *) Im->data, (long) (Im->bytes_per_line * him));
+	   LittleXBigEndian((unsigned char *) Im->data, (long) (Im->bytes_per_line * him));
 	for (j = 0, pt1 = Im->data; j < him; j++, pt1 += Im->bytes_per_line)
 	  {
 	     for (i = 0, pt = pt1; i < nbb; i++)
@@ -201,7 +201,7 @@ unsigned int        BackGroundPixel;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    IsXbmFormat teste si un fichier contient un bitmap X11.      | */
+/* |    IsXbmFormat teste si un fichier contient un bitmap X11.         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             IsXbmFormat (char *fn)

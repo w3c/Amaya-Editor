@@ -19,6 +19,7 @@
 #define MAX_FORMAT_NAMELENGHT  32       
 #define NULLIMAGEDRVR          255
 #define NOERROR                1
+#define MAX_PICT_SIZE          32768
 
 #define XbmName  "Bitmap (.xbm)"
 #define EpsName  "EPSF (.eps)" 
@@ -29,10 +30,10 @@
 
 typedef struct 
 {
-  int            PicType;
   int PicXArea,  PicYArea;
   int PicWArea,  PicHArea;
   PictureScaling PicPresent;
+  int            PicType;
   char          *PicFileName; 
   Pixmap         PicPixmap;
   Pixmap         PicMask;

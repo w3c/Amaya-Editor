@@ -318,7 +318,7 @@ PtrBox            pBox;
 
    /* sous-menu des types d'image du formulaire Picture */
    Indx = 0;
-   GetImageDriversList (&imageTypeCount, BufTypeImage);
+   GetPictHandlersList (&imageTypeCount, BufTypeImage);
    /* ajoute un 'B' au debut de chaque entree du menu construit */
    Source = &BufTypeImage[0];
    for (i = 1; i <= imageTypeCount; i++)
@@ -371,8 +371,8 @@ PtrBox            pBox;
    if (redisplayPicture)
      {
 	strcpy (nom, NomImage);
-	*typim = GetImageType (IndexTypeImage);
-	*pres = GetImagePresentation (IndexPresImage);
+	*typim = GetPictureType (IndexTypeImage);
+	*pres = (PictureScaling) (IndexPresImage);
 	image = (PictInfo *) pBox->BxPictInfo;
 	strcpy (image->PicFileName, nom);
 	image->PicPresent = *pres;
