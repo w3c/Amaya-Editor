@@ -823,6 +823,7 @@ void DisplayMessage (char *text, int msgType)
 				 TtaConvMessageToWX(text), 
 				 _T("Info"),
 				 (long) wxOK | wxICON_INFORMATION | wxSTAY_ON_TOP);
+  messagedialog.CenterOnScreen();
   messagedialog.ShowModal();
 #endif /* _WX */
 }
