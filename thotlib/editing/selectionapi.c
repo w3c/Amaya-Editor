@@ -31,13 +31,14 @@
 /*----------------------------------------------------------------------
    TtaIsDocumentSelected answers TRUE if the document is selected.  
   ----------------------------------------------------------------------*/
-ThotBool            TtaIsDocumentSelected (Document document)
+ThotBool TtaIsDocumentSelected (Document document)
 {
    PtrDocument         docsel;
    PtrElement          firstSelection, lastSelection;
    int                 firstChar, lastChar;
 
-   if (!GetCurrentSelection (&docsel, &firstSelection, &lastSelection, &firstChar, &lastChar))
+   if (!GetCurrentSelection (&docsel, &firstSelection, &lastSelection,
+			     &firstChar, &lastChar))
       return (FALSE);
    else if (LoadedDocument[document - 1] != docsel)
       return (FALSE);
@@ -57,7 +58,7 @@ ThotBool            TtaIsDocumentSelected (Document document)
    selectedElement: the element to be selected. NULL for cancelling the
    selection in the document.
   ----------------------------------------------------------------------*/
-void   TtaSelectElement (Document document, Element selectedElement)
+void TtaSelectElement (Document document, Element selectedElement)
 {
    DisplayMode         dispMode;
 
@@ -77,7 +78,8 @@ void   TtaSelectElement (Document document, Element selectedElement)
 	   /* Abort the selection */
 	 (*ThotLocalActions[T_resetsel]) (LoadedDocument[document - 1]);
 	 else
-	   SelectElement (LoadedDocument[document - 1], (PtrElement) selectedElement, TRUE, FALSE);
+	   SelectElement (LoadedDocument[document - 1],
+			  (PtrElement) selectedElement, TRUE, FALSE);
        else
 	 NewSelection (document, selectedElement, 0, 0);
      }
@@ -86,7 +88,7 @@ void   TtaSelectElement (Document document, Element selectedElement)
 /*----------------------------------------------------------------------
    TtaSelectView posts the selected view in the document
   ----------------------------------------------------------------------*/
-void                TtaSelectView (Document document, View view)
+void TtaSelectView (Document document, View view)
 {
   PtrDocument       pDoc;
   int               oldView;
@@ -100,7 +102,7 @@ void                TtaSelectView (Document document, View view)
 /*----------------------------------------------------------------------
    TtaGetSelectedDocument returns the current selected document
   ----------------------------------------------------------------------*/
-Document   TtaGetSelectedDocument ()
+Document TtaGetSelectedDocument ()
 {
   PtrDocument       pDoc;
   int               oldView;
@@ -284,7 +286,7 @@ void TtaAddElementToSelection (Document document, Element element)
    Return value:
    No return value
   ----------------------------------------------------------------------*/
-void                TtaSelectInterval ()
+void TtaSelectInterval ()
 {
    SelectPairInterval ();
 }
@@ -299,7 +301,7 @@ void                TtaSelectInterval ()
    Return value:
    No return value
   ----------------------------------------------------------------------*/
-void                TtaUnselect (Document document)
+void TtaUnselect (Document document)
 {
    if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
@@ -321,7 +323,7 @@ void                TtaUnselect (Document document)
    Parameter:
    withMenu: the new selection mode.
   ----------------------------------------------------------------------*/
-void                TtaSetSelectionMode (ThotBool withMenu)
+void TtaSetSelectionMode (ThotBool withMenu)
 {
    SelectionUpdatesMenus = withMenu;
 }
@@ -332,16 +334,18 @@ void                TtaSetSelectionMode (ThotBool withMenu)
    Returns TRUE if there is a current selection and this selection is
    empty (a caret).
   ----------------------------------------------------------------------*/
-ThotBool            TtaIsSelectionEmpty ()
+ThotBool TtaIsSelectionEmpty ()
 {
-  if (SelectedDocument == NULL)
+  if (SelectedDocument == NULL && DocSelectedAttr == NULL)
     return (FALSE);
-  else if (SelPosition != TRUE &&
+  else if (SelPosition)
+    return (TRUE);
+  else if (FirstSelectedElement &&
 	   FirstSelectedElement == LastSelectedElement &&
 	   FirstSelectedElement->ElVolume == 0)
     return (TRUE);
   else
-    return (SelPosition);
+    return (FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -361,8 +365,8 @@ ThotBool            TtaIsSelectionEmpty ()
   0 if the whole element is in the selection, or firstCharacter - 1 for
   a position.
   ----------------------------------------------------------------------*/
-void  TtaGiveFirstSelectedElement (Document document, Element *selectedElement,
-				   int *firstCharacter, int *lastCharacter)
+void TtaGiveFirstSelectedElement (Document document, Element *selectedElement,
+				  int *firstCharacter, int *lastCharacter)
 {
   PtrDocument         pDoc;
   PtrElement          firstSelection, lastSelection;
@@ -474,7 +478,7 @@ void TtaGiveNextSelectedElement (Document document, Element *selectedElement,
    Return parameters:
    element: the next element in the selection order. NULL if not found.
   ----------------------------------------------------------------------*/
-void  TtaGiveNextElement (Document document, Element *element, Element last)
+void TtaGiveNextElement (Document document, Element *element, Element last)
 {
    PtrElement          pEl;
 

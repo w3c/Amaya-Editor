@@ -1941,7 +1941,6 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 	      /* need to update the current selection */
 	      pViewSel->VsBox = pAb->AbBox;
 	      pViewSel->VsIndBox += pBox->BxFirstChar;
-	      
 	      *changeSelectBegin = TRUE;
 	    }
 	  if (pViewSelEnd->VsBox == pBox)
@@ -3009,16 +3008,15 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 		     
 		     /* Recherche la position limite du caractere */
 		     pSelBox = pSelEnd->VsBox;
-		     if (pSelBox->BxNChars == 0 && pSelBox->BxType == BoComplete)
+		     if ((pSelBox->BxNChars == 0 ||  pSelEnd->VsIndBox == 0) &&
+			 pSelBox->BxType == BoComplete)
 		       pSelEnd->VsXPos += pSelBox->BxW;
 		     else if (pSelBegin->VsIndBox >= pSelBox->BxNChars)
 		       /* select the end of the box */
 		       pSelEnd->VsXPos += 2;
 		     else if (SelPosition)
 		       pSelEnd->VsXPos += 2;
-		     else if (pSelEnd->VsIndBox >= pSelBox->BxNChars)
-		       pSelEnd->VsXPos += 2;
-		     else
+		     else if (pSelEnd->VsIndBox < pSelBox->BxNChars)
 		       {
 			 c = (pSelEnd->VsBuffer->BuContent[pSelEnd->VsIndBuf]);
 			 if (c == SPACE && pSelBox->BxSpaceWidth != 0)

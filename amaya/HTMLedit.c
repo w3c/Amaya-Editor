@@ -886,7 +886,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	el = SearchAnchor (doc, first, &attr, TRUE);
       else
 	el = NULL;
-      if (el != NULL)
+      if (el)
 	/* add an attribute on this anchor */
 	anchor = el;
       else
@@ -942,7 +942,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	  
 	  if (noAnchor)
 	    {
-	      if (createLink || el != NULL)
+	      if (createLink || el)
 		{
 		elType = TtaGetElementType (first);
 		if (first == last && firstChar == 0 && lastChar == 0 &&
@@ -1019,6 +1019,9 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	  /* if its a text leaf which is partly selected, split it */
 	  if (lastChar >= 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 	    {
+	      if (lastChar < firstChar && first == last)
+		/* it's a caret */
+		lastChar = firstChar;
 	      lg = TtaGetElementVolume (last);
 	      if (lastChar < lg)
 		/* split the last text */
@@ -1082,8 +1085,20 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	    {
 	      /* split the first selected text element */
 	      el = first;
-	      TtaRegisterElementReplace (first, doc);
-	      TtaSplitText (first, firstChar, doc);
+	      lg = TtaGetElementVolume (first);
+	      if (firstChar > lg)
+		{
+		  /* insert an empty box */
+		  child = TtaNewTree (doc, elType, "");
+		  TtaInsertSibling (child, first, FALSE, doc);
+		  lastChar = 0;
+		}
+	      else
+		{
+		  /* split the first string */
+		  TtaRegisterElementReplace (first, doc);
+		  TtaSplitText (first, firstChar, doc);
+		}
 	      TtaNextSibling (&first);
 	      TtaRegisterElementCreate (first, doc);
 	      if (last == el)
@@ -1204,7 +1219,14 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
   TtaSetDocumentModified (doc);
   /* ask Thot to display changes made in the document */
   TtaSetDisplayMode (doc, dispMode);
-  TtaSelectElement (doc, anchor);
+  if (TtaGetElementVolume (anchor))
+    TtaSelectElement (doc, anchor);
+  else
+    {
+      /* prepare a possible insertion of text */
+      child = TtaGetLastChild (anchor);
+      TtaSelectString (doc, child, 1, 0);
+    }
   if (createLink )
     {
       if (UseLastTarget)
@@ -1256,38 +1278,38 @@ void MakeUniqueName (Element el, Document doc)
   attrType.AttrSSchema = elType.ElSSchema;
   checkID = FALSE;
   if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-    /* it's an element from the XHTML namespace */
-    if (elType.ElTypeNum == HTML_EL_Anchor ||
-	elType.ElTypeNum == HTML_EL_MAP)
-      /* it's an anchor or a map. Look for a NAME attribute */
-      {
-	attrType.AttrTypeNum = HTML_ATTR_NAME;
-	attr = TtaGetAttribute (el, attrType);
-	if (attr != 0)
-	  /* the element has a NAME attribute. Check it and then check
-	     if there is an ID too */
-	  checkID = TRUE;
-	else
-	  /* no NAME. Look for an ID */
-	  attrType.AttrTypeNum = HTML_ATTR_ID;
-      }
-    else
-      /* Look for an ID attribute */
-      attrType.AttrTypeNum = HTML_ATTR_ID;
-  else
-    if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML"))
-      /* it's an element from the MathML namespace, look for the
-         id attribute from the same namespace */
-      attrType.AttrTypeNum = MathML_ATTR_id;
-    else
-#ifdef _SVG
-      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG"))
-	/* it's an element from the SVG namespace, look for the
-	   id attribute from the same namespace */
-	attrType.AttrTypeNum = SVG_ATTR_id;
+    {
+      /* it's an element from the XHTML namespace */
+      if (elType.ElTypeNum == HTML_EL_Anchor ||
+	  elType.ElTypeNum == HTML_EL_MAP)
+	/* it's an anchor or a map. Look for a NAME attribute */
+	{
+	  attrType.AttrTypeNum = HTML_ATTR_NAME;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr != 0)
+	    /* the element has a NAME attribute. Check it and then check
+	       if there is an ID too */
+	    checkID = TRUE;
+	  else
+	    /* no NAME. Look for an ID */
+	    attrType.AttrTypeNum = HTML_ATTR_ID;
+	}
       else
+	/* Look for an ID attribute */
+	attrType.AttrTypeNum = HTML_ATTR_ID;
+    }
+  else if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+    /* it's an element from the MathML namespace, look for the
+       id attribute from the same namespace */
+    attrType.AttrTypeNum = MathML_ATTR_id;
+#ifdef _SVG
+  else if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+    /* it's an element from the SVG namespace, look for the
+       id attribute from the same namespace */
+    attrType.AttrTypeNum = SVG_ATTR_id;
 #endif
-	attrType.AttrTypeNum = 0;
+  else
+    attrType.AttrTypeNum = 0;
   
   if (attrType.AttrTypeNum != 0)
     {
@@ -1298,7 +1320,7 @@ void MakeUniqueName (Element el, Document doc)
 	  length = TtaGetTextAttributeLength (attr) + 10;
 	  value = TtaGetMemory (length);
 	  change = FALSE;
-	  if (value != NULL)
+	  if (value)
 	    {
 	      TtaGiveTextAttributeValue (attr, value, &length);
 	      i = 0;
@@ -1385,7 +1407,8 @@ static Element    GetNextNode (Element curr)
   Search for a typed element and stops when it finds it or if the
   search reaches the last element.
   ----------------------------------------------------------------------*/
-static Element    SearchTypedElementForward (ElementType elType_search, Element curr, Element last)
+static Element SearchTypedElementForward (ElementType elType_search,
+					  Element curr, Element last)
 {
   ElementType elType;
   Element el;
