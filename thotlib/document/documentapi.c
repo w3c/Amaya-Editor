@@ -1,7 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -13,8 +9,8 @@
 #include "appdialogue.h"
 
 #ifdef NODISPLAY
-/*** pour la bibliotheque ThotKernel, on definit les variables FirstSelectedElement
-     et LastSelectedElement, qui sont utilisees a la fin de la procedure MergeTextElements  ***/
+/*** For the ThotKernel, one define variables FirstSelectedElement and
+     LastSelectedElement, used at the end of the function MergeTextElements  ***/
 #undef EXPORT
 #define EXPORT
 #include "select.var"
@@ -53,14 +49,6 @@ extern int          UserErrorCode;
 static Name          nameBuffer;
 
 #ifdef __STDC__
-extern int          RemoveFile (char *);
-
-#else  /* __STDC__ */
-extern int          RemoveFile ();
-
-#endif /* __STDC__ */
-
-#ifdef __STDC__
 void                TraiteExceptionCreation (PtrElement pEl, PtrDocument pDoc)
 
 #else  /* __STDC__ */
@@ -70,7 +58,7 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-        /* si creation d'une table */
+        /* If table creation */
     if (ThotLocalActions[T_createtable]!= NULL)
        (*ThotLocalActions[T_createtable])(pEl, pDoc);
 }
@@ -111,20 +99,19 @@ char               *documentName;
    int                 i;
 
    UserErrorCode = 0;
-   /* a priori ca va se passer mal */
    document = 0;
    pDoc = NULL;
    if (documentName[0] == '\0')
-      /* l'utilisateur n'a pas fourni de nom */
+      /* No name provided by the user */
      {
 	TtaError (ERR_document_name);
      }
    else
      {
-	/* initialise un contexte de document */
+	/* initializes a document context */
 	CreateDocument (&pDoc);
 	if (pDoc == NULL)
-	   /* plus de contexte de document libre */
+	   /* No free context document */
 	  {
 	     TtaError (ERR_too_many_documents);
 	  }
@@ -135,8 +122,8 @@ char               *documentName;
 	     pDoc->DocSSchema->SsExtension = FALSE;
 	     if (!RdSchStruct (structureSchema, pDoc->DocSSchema) ||
 		 pDoc->DocSSchema->SsExtension)
-		/* echec a la lecture du schema de structure ou chargement */
-		/* d'une extension de schema */
+		/* failure while reading the structure schema or while loading
+                   a schema extension */
 	       {
 		  FreeSStruct (pDoc->DocSSchema);
 		  pDoc->DocSSchema = NULL;
@@ -145,17 +132,16 @@ char               *documentName;
 	       }
 	     else
 	       {
-		  /* le schema de structure est charge' */
-		  /* on traduit le schema de structure dans la langue de */
-		  /* l'utilisateur */
+		  /* The structure schema is loaded */
+		  /* The structure schema is translated into the user language */
 		  ConfigTranslateSSchema (pDoc->DocSSchema);
 #ifndef NODISPLAY
 		  InitSchAppli (pDoc->DocSSchema);
 #endif
-		  /* on cree la representation interne d'un document vide. */
+		  /* One create the internal representation of an empty document */
 		  pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
 		    pDoc->DocSSchema, pDoc, 0, TRUE, TRUE, TRUE, TRUE);
-		  /* supprime les elements exclus (au sens SGML) */
+		  /* suppress excluded elements (SGML meaning) */
 		  RemoveExcludedElem (&pDoc->DocRootElement);
 		  if (pDoc->DocRootElement == NULL)
 		    {
@@ -166,29 +152,28 @@ char               *documentName;
 		    {
 		       pDoc->DocRootElement->ElAccess = AccessReadWrite;
 #ifndef NODISPLAY
-		       /* cree les attributs requis de tout l'arbre cree' */
+		       /* Create required attributes by the whole created tree */
 		       AttachMandatoryAttributes (pDoc->DocRootElement, pDoc);
 #endif
-		       /* traitement des exceptions */
+		       /* dealing with exceptions */
 		       TraiteExceptionCreation (pDoc->DocRootElement, pDoc);
-		       /* on met un attribut Langue sur la racine */
+		       /* An attribut Language is stored in the root */
 		       CheckLanguageAttr (pDoc, pDoc->DocRootElement);
-		       /* on donne son nom au document */
+		       /* The document is named */
 		       strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
-		       /* on acquiert in identificateur pour le document */
+		       /* one get an identifier to the document */
 		       GetDocIdent (&pDoc->DocIdent, documentName);
-		       /* conserve le path actuel des schemas dans le contexte */
-		       /* du document */
+		       /* keep the actual schema path in the document context */
 		       strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
-		       /* initialise le directory du document */
+		       /* initializes the directory of the document */
 		       strncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
-		       /* si c'est un path, retient seulement le 1er directory */
+		       /* if path, keep only the first directory */
 		       i = 1;
 		       while (pDoc->DocDirectory[i - 1] != '\0' &&
 		       pDoc->DocDirectory[i - 1] != PATH_SEP && i < MAX_PATH)
 			  i++;
 		       pDoc->DocDirectory[i - 1] = '\0';
-		       /* document en lecture-ecriture */
+		       /* Read-Write document */
 		       pDoc->DocReadOnly = FALSE;
 		       document = IdentDocument (pDoc);
 		    }
@@ -232,12 +217,11 @@ int                 accessMode;
    boolean             ok;
 
    UserErrorCode = 0;
-   /* a priori, on va pas y arriver */
    document = 0;
-   /* initialise un contexte de document */
+   /* initializes the document context */
    CreateDocument (&pDoc);
    if (pDoc == NULL)
-      /* trop de documents deja ouverts */
+      /* too many opened documents */
      {
 	TtaError (ERR_too_many_documents);
      }
@@ -249,7 +233,7 @@ int                 accessMode;
 	else
 	  {
 	     strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
-	     /* supprime le suffixe .PIV s'il est present */
+	     /* suppresses the .PIV suffix if found */
 	     if (lg > 4)
 		if (strcmp (&(pDoc->DocDName[lg - 4]), ".PIV") == 0)
 		   pDoc->DocDName[lg - 4] = '\0';
@@ -257,14 +241,14 @@ int                 accessMode;
 	     strncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
 	     ok = OpenDocument (pDoc->DocDName, pDoc, TRUE, FALSE, NULL, FALSE);
 	     if (!ok)
-		/* echec d'acces a l'objet pivot */
+		/* acces failure to an objectpivot */
 	       {
 		  LibDocument (&pDoc);
 		  TtaError (ERR_cannot_open_pivot_file);
 	       }
 	     else
 	       {
-		  /* conserve le path actuel des schemas dans le contexte du doc. */
+		  /* keep the actual schema path into the document context */
 		  strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
 		  document = IdentDocument (pDoc);
 		  pDoc->DocReadOnly = (accessMode == 0);
@@ -306,12 +290,12 @@ char               *documentName;
 
 {
    PtrDocument         pDoc;
-   BinFile             fichpivot;
+   BinFile             pivotFile;
    char                path[250];
    int                 i;
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -321,7 +305,7 @@ char               *documentName;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	pDoc = LoadedDocument[document - 1];
 	if (pDoc->DocReadOnly)
@@ -330,39 +314,36 @@ char               *documentName;
 	  }
 	else
 	  {
-	     /* compose le nom de fichier */
+	     /* Arrange the file name */
 	     DoFileName (documentName, "PIV", pDoc->DocDirectory, path, &i);
-	     fichpivot = BIOwriteOpen (path);
-	     if (fichpivot == 0)
+	     pivotFile = BIOwriteOpen (path);
+	     if (pivotFile == 0)
 	       {
 		  TtaError (ERR_cannot_open_pivot_file);
 	       }
 	     else
 	       {
-		  /* ecrit le document dans ce fichier sous la forme pivot */
-		  SauveDoc (fichpivot, pDoc);
-		  BIOwriteClose (fichpivot);
-		  /* modifie les fichiers .EXT des documents nouvellement */
-		  /* reference's ou qui ne sont plus reference's par */
-		  /* notre document */
+		  /* writing the document in the file in the pivot format */
+		  SauveDoc (pivotFile, pDoc);
+		  BIOwriteClose (pivotFile);
+		  /* modifies files .EXT of new referenced documents or file which
+                     are no more referenced bu the document */
 		  UpdateExt (pDoc);
-		  /* modifie les fichiers .REF des documents qui */
-		  /* referencent des elements qui ne sont plus dans notre */
-		  /* document et met a jour le fichier .EXT de notre */
-		  /* document */
+		  /* modifies files .REF of documents that reference elements which are
+                     no more in the document and updates the .EXT file relating to the document*/
 		  UpdateRef (pDoc);
 		  if (strcmp (documentName, pDoc->DocDName) != 0)
-		     /* on a sauve' le document avec un nouveau nom */
+		     /* The document is saved under a new name */
 		    {
-		       /* l'application veut creer une copie du document. */
-		       /* on fait apparaitre le document copie dans les */
-		       /* fichiers .EXT des documents reference's */
+		       /* The application wants to create a copy of the document */
+		       /* The document copy will be in the .EXT files relating to the 
+                          referenced documents */
 		       ChangeNomExt (pDoc, documentName, TRUE);
-		       /* met le nouveau nom dans le descripteur du document */
+		       /* Puts the new name into the document descriptor */
 		       strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 		       strncpy (pDoc->DocIdent, documentName, MAX_DOC_IDENT_LEN);
 #ifndef NODISPLAY
-		       /* change le titre des frames */
+		       /* changes the title of frames */
 		       changenomdoc (pDoc, documentName);
 #endif
 		    }
@@ -401,7 +382,7 @@ char               *TSchemaName;
 
 {
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -411,7 +392,7 @@ char               *TSchemaName;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	ExportDocument (LoadedDocument[document - 1], fileName, TSchemaName);
      }
@@ -445,7 +426,7 @@ Document            document;
 #endif
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -455,19 +436,19 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 #ifndef NODISPLAY
-	/* on ferme toutes les vues ouvertes du document */
+	/* Closing all opened views relating to the document */
 	pDoc = LoadedDocument[document - 1];
-	/* on ferme d'abord les vues de l'arbre principal */
+	/* First, one close the views of the main tree */
 	for (nv = 1; nv <= MAX_VIEW_DOC; nv++)
 	   if (pDoc->DocView[nv - 1].DvPSchemaView != 0)
 	     {
 		DetruitFenetre (pDoc->DocViewFrame[nv - 1]);
 		detruit (pDoc, nv, FALSE, FALSE);
 	     }
-	/* on ferme ensuite les frames des elements associes */
+	/* Then one close frames of associated elements */
 	for (numassoc = 1; numassoc <= MAX_ASSOC_DOC; numassoc++)
 	   if (pDoc->DocAssocFrame[numassoc - 1] != 0)
 	     {
@@ -509,10 +490,10 @@ Document            document;
    PtrDocument         pDoc;
    int                 i;
    PathBuffer          DirectoryOrig;
-   char                texte[MAX_TXT_LEN];
+   char                text[MAX_TXT_LEN];
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -522,56 +503,53 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	pDoc = LoadedDocument[document - 1];
-	/* Note d'abord dans le contexte du document tous les liens de */
-	/* reference externe */
-	/* traite l'arbre principal du document */
+	/* Keep all external referenced links into the document context */
+	/* dealing with the main tree of the document */
 	RegisterExternalRef (pDoc->DocRootElement, pDoc, FALSE);
 	RegisterDeletedReferredElem (pDoc->DocRootElement, pDoc);
-	/* traite les arbres d'elements associes */
+	/* dealing with the trees os associated elements */
 	for (i = 1; i <= MAX_ASSOC_DOC; i++)
 	   if (pDoc->DocAssocRoot[i - 1] != NULL)
 	     {
 		RegisterExternalRef (pDoc->DocAssocRoot[i - 1], pDoc, FALSE);
 		RegisterDeletedReferredElem (pDoc->DocAssocRoot[i - 1], pDoc);
 	     }
-	/* traite les parametres */
+	/* treats the parameters */
 	for (i = 1; i <= MAX_PARAM_DOC; i++)
 	   if (pDoc->DocParameters[i - 1] != NULL)
 	     {
 		RegisterExternalRef (pDoc->DocParameters[i - 1], pDoc, FALSE);
 		RegisterDeletedReferredElem (pDoc->DocParameters[i - 1], pDoc);
 	     }
-	/* modifie les fichiers .EXT des documents qui etaient */
-	/* reference's par le document detruit */
+	/* modifies files .EXT of documents referenced by destroyed documents */
 	UpdateExt (pDoc);
-	/* modifie les fichiers .REF des documents qui referencent des */
-	/* elements du document detruit */
+	/* modifies files .REF of documents referencing inexisting documents */
 	UpdateRef (pDoc);
-	/* detruit les fichiers .PIV, .EXT, .REF et .BAK du document */
+	/* destroys files .PIV, .EXT, .REF et .BAK of the document */
 	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-	DoFileName (pDoc->DocDName, "PIV", DirectoryOrig, texte, &i);
-	RemoveFile (texte);
+	DoFileName (pDoc->DocDName, "PIV", DirectoryOrig, text, &i);
+	RemoveFile (text);
 	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-	DoFileName (pDoc->DocDName, "EXT", DirectoryOrig, texte, &i);
-	RemoveFile (texte);
+	DoFileName (pDoc->DocDName, "EXT", DirectoryOrig, text, &i);
+	RemoveFile (text);
 	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-	DoFileName (pDoc->DocDName, "REF", DirectoryOrig, texte, &i);
-	RemoveFile (texte);
+	DoFileName (pDoc->DocDName, "REF", DirectoryOrig, text, &i);
+	RemoveFile (text);
 	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-	DoFileName (pDoc->DocDName, "BAK", DirectoryOrig, texte, &i);
+	DoFileName (pDoc->DocDName, "BAK", DirectoryOrig, text, &i);
 #ifndef NODISPLAY
-	/* on ferme toutes les vues ouvertes du document */
-	/* on ferme d'abord les vues de l'arbre principal */
+	/* All the opened views relating to the document are closed */
+	/* First, one close the main tree views */
 	for (nv = 1; nv <= MAX_VIEW_DOC; nv++)
 	   if (pDoc->DocView[nv - 1].DvPSchemaView != 0)
 	     {
 		DetruitFenetre (pDoc->DocViewFrame[nv - 1]);
 		detruit (pDoc, nv, FALSE, FALSE);
 	     }
-	/* on ferme ensuite les frames des elements associes */
+	/* Then, we close the associated elements views */
 	for (numassoc = 1; numassoc <= MAX_ASSOC_DOC; numassoc++)
 	   if (pDoc->DocAssocFrame[numassoc - 1] != 0)
 	     {
@@ -698,16 +676,15 @@ PathBuffer          path;
         j = 0;
         while (path[i] != PATH_SEP && path[i] != '\0' && i <= MAX_PATH)
           {
-             /* on decoupe la liste en directories individuels */
+             /* The list is cutted up into single directories */
              single_directory[j] = path[i];
              i++;
              j++;
           }
-        /* on ajoute une fin de chaine */
         single_directory[j] = '\0';
  
         OK = TtaCheckDirectory (single_directory);
-        /* on essaie avec un autre directory en sautant le PATH_SEP */
+        /* We try with another directory by ignoring PATH_SEP */
         if (path[i] == PATH_SEP)
            i++;
      }
@@ -737,12 +714,11 @@ char               *directory;
    int                 i;
    char               *ptr;
 
-   /* Regarde si ce directory est deja dans la liste */
+   /* Verify if this directory is already in the list  */
    ptr = strstr (DocumentPath, directory);
    i = strlen (directory);
    while (ptr != NULL && ptr[i] != PATH_SEP && ptr[i] != '\0')
      {
-	/* on a trouve une sous-chaine */
 	ptr = strstr (ptr, PATH_STR);
 	if (ptr != NULL)
 	   ptr = strstr (ptr, directory);
@@ -859,7 +835,7 @@ char               *presentationName;
 #endif /* __STDC__ */
 
 {
-   int         regleNature;
+   int               natureRule;
    PtrSSchema        natureSchema;
 
    UserErrorCode = 0;
@@ -870,14 +846,14 @@ char               *presentationName;
      }
    else
      {
-	regleNature = CreeNature (natureName, presentationName,
+	natureRule = CreeNature (natureName, presentationName,
 				  (PtrSSchema) schema);
-	if (regleNature == 0)
+	if (natureRule == 0)
 	  {
 	     TtaError (ERR_invalid_parameter);
 	  }
 	else
-	   natureSchema = ((PtrSSchema) schema)->SsRule[regleNature - 1].SrSSchemaNat;
+	   natureSchema = ((PtrSSchema) schema)->SsRule[natureRule - 1].SrSSchemaNat;
      }
    return ((SSchema) natureSchema);
 }
@@ -916,7 +892,7 @@ char               *presentationName;
    PtrSSchema        extension;
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    extension = NULL;
    if (document < 1 || document > MAX_DOCUMENTS)
      {
@@ -927,7 +903,7 @@ char               *presentationName;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	extension = LoadExtension (extensionName, presentationName,
 				   LoadedDocument[document - 1]);
@@ -946,15 +922,15 @@ static void         RemoveExtensionFromTree (PtrElement * pEl, Document document
 static void         RemoveExtensionFromTree (pEl, document, pSSExt, removedElements, removedAttributes)
 PtrElement         *pEl;
 Document            document;
-PtrSSchema        pSSExt;
+PtrSSchema          pSSExt;
 int                *removedElements;
 int                *removedAttributes;
 
 #endif /* __STDC__ */
 
 {
-   PtrDocument         pDoc;
-   PtrElement          child, nextChild;
+   PtrDocument          pDoc;
+   PtrElement           child, nextChild;
    PtrAttribute         attribute, nextAttribute;
 
    if (*pEl != NULL)
@@ -1039,14 +1015,14 @@ int                *removedAttributes;
 #endif /* __STDC__ */
 
 {
-   PtrSSchema        curExtension, previousSSchema;
+   PtrSSchema          curExtension, previousSSchema;
    PtrElement          root;
    PtrDocument         pDoc;
    boolean             found;
    int                 assoc;
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -1056,10 +1032,10 @@ int                *removedAttributes;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	pDoc = LoadedDocument[document - 1];
-	/* cherche l'extension a retirer */
+	/* Looks for the extension to suppress */
 	previousSSchema = pDoc->DocSSchema;
 	curExtension = previousSSchema->SsNextExtens;
 	found = FALSE;
@@ -1128,14 +1104,14 @@ char               *presentationName;
    PtrDocument         pDoc;
 
 #ifndef NODISPLAY
-   int                 Vue;
+   int                 view;
    int                 Assoc;
    boolean             ok;
 
 #endif
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -1145,7 +1121,7 @@ char               *presentationName;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	pDoc = LoadedDocument[document - 1];
 #ifdef NODISPLAY
@@ -1153,10 +1129,10 @@ char               *presentationName;
 	   strncpy (pDoc->DocSSchema->SsDefaultPSchema, presentationName,
 		    MAX_NAME_LENGTH - 1);
 #else
-	/* verifie qu'aucune vue n'est ouverte */
+	/* verifies that there is no opened views */
 	ok = TRUE;
-	for (Vue = 1; Vue <= MAX_VIEW_DOC && ok; Vue++)
-	   if (pDoc->DocView[Vue - 1].DvPSchemaView != 0)
+	for (view = 1; view <= MAX_VIEW_DOC && ok; view++)
+	   if (pDoc->DocView[view - 1].DvPSchemaView != 0)
 	      ok = FALSE;
 	if (ok)
 	   for (Assoc = 1; Assoc <= MAX_ASSOC_DOC && ok; Assoc++)
@@ -1167,23 +1143,22 @@ char               *presentationName;
 	     TtaError (ERR_there_are_open_views);
 	  }
 	else
-	   /* aucune vue n'est ouverte */
+	   /* There is no opened views */
 	  {
 	     if (pDoc->DocSSchema->SsPSchema != NULL)
-		/* il y a deja un schema de presentation */
+		/* a presentation schema already exist. One release it */
 	       {
-		  /* on le libere */
 		  SupprSchPrs (pDoc->DocSSchema->SsPSchema, pDoc->DocSSchema);
 		  pDoc->DocSSchema->SsPSchema = NULL;
 	       }
-	     /* charge le schema de presentation */
+	     /* Load the presentation schema */
 	     if (pDoc->DocSSchema->SsExtension)
-		/*pour eviter que RdSchPres recharge le schema de structure */
+		/* to avoid that RdSchPres reloades the structure schema */
 		pDoc->DocSSchema->SsRootElem = 1;
 	     pDoc->DocSSchema->SsPSchema = LdSchPres (presentationName,
 							 pDoc->DocSSchema);
 	     if (pDoc->DocSSchema->SsPSchema == NULL)
-		/* echec chargement schema */
+		/* Failure while loading schema */
 	       {
 		  TtaError (ERR_cannot_load_pschema);
 	       }
@@ -1216,7 +1191,7 @@ char               *directory;
 
 {
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -1226,7 +1201,7 @@ char               *directory;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	if (strlen (directory) >= MAX_PATH)
 	   TtaError (ERR_buffer_too_small);
@@ -1261,7 +1236,7 @@ char               *documentName;
 
 {
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -1271,7 +1246,7 @@ char               *documentName;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	if (strlen (documentName) >= MAX_NAME_LENGTH)
 	   TtaError (ERR_buffer_too_small);
@@ -1311,7 +1286,7 @@ int                 accessMode;
 
 {
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -1321,7 +1296,7 @@ int                 accessMode;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	LoadedDocument[document - 1]->DocReadOnly = (accessMode == 0);
 #ifndef NODISPLAY
@@ -1357,7 +1332,7 @@ int                 interval;
 
 {
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -1367,7 +1342,7 @@ int                 interval;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
    if (interval < 0)
      {
 	TtaError (ERR_invalid_parameter);
@@ -1400,7 +1375,7 @@ int                 notificationMode;
 
 {
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -1410,7 +1385,7 @@ int                 notificationMode;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
       LoadedDocument[document - 1]->DocNotifyAll = (notificationMode != 0);
 }
 
@@ -1437,7 +1412,7 @@ Document            document;
 
 {
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -1447,7 +1422,7 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
       LoadedDocument[document - 1]->DocModified = TRUE;
 }
 
@@ -1475,7 +1450,7 @@ Document            document;
 
 {
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -1485,7 +1460,7 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
       LoadedDocument[document - 1]->DocModified = FALSE;
 }
 
@@ -1514,7 +1489,7 @@ Document            document;
 {
    UserErrorCode = 0;
    nameBuffer[0] = '\0';
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -1524,7 +1499,7 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	strcpy (nameBuffer, LoadedDocument[document - 1]->DocDName);
      }
@@ -1604,7 +1579,7 @@ int                 bufferLength;
 {
    UserErrorCode = 0;
    nameBuffer[0] = '\0';
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -1614,7 +1589,7 @@ int                 bufferLength;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	if (strlen (LoadedDocument[document - 1]->DocDirectory) >= bufferLength)
 	   TtaError (ERR_buffer_too_small);
@@ -1648,7 +1623,7 @@ Document            document;
    SSchema             schema;
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    schema = NULL;
    if (document < 1 || document > MAX_DOCUMENTS)
      {
@@ -1659,7 +1634,7 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	schema = (SSchema) LoadedDocument[document - 1]->DocSSchema;
      }
@@ -1739,17 +1714,15 @@ SSchema             schema;
    return nameBuffer;
 }
 
-	/*
-	   ChSchStruct cherche recursivement parmi les schemas de nature et
-	   d'extension utilise's par pSS, celui qui porte le nom name
-	   et retourne un pointeur sur ce schema ou NULL si pas trouve'.
-	 */
+/* ChSchStruct recursively searches the schema which name is "name" within
+   nature schema and extension schema used by pSS. It returns a pointer
+   which references this schema or NULL if not found. */
 #ifdef __STDC__
 static SSchema      ChSchStruct (PtrSSchema pSS, char *name)
 
 #else  /* __STDC__ */
 static SSchema      ChSchStruct (pSS, name)
-PtrSSchema        pSS;
+PtrSSchema          pSS;
 char               *name;
 
 #endif /* __STDC__ */
@@ -1761,16 +1734,15 @@ char               *name;
    retour = NULL;
    if (pSS != NULL)
       if (strcmp (name, pSS->SsName) == 0)
-	 /* c'est le schema lui-meme */
+	 /* The schema itself */
 	 retour = (SSchema) pSS;
       else
 	{
-	   /* cherche les regles nature du schema */
+	   /* Looks for the nature rule of the schema */
 	   for (nRegle = MAX_BASIC_TYPE - 1; retour == NULL && nRegle < pSS->SsNRules; nRegle++)
 	      if (pSS->SsRule[nRegle].SrConstruct == CsNatureSchema)
-		 /* une nature, cherche dans son schema de structure */
 		 retour = ChSchStruct (pSS->SsRule[nRegle].SrSSchemaNat, name);
-	   /* si on n'a pas trouve', on cherche dans les extensions du schema */
+	   /* If not found, one search into the extension schema */
 	   if (retour == NULL)
 	      retour = ChSchStruct (pSS->SsNextExtens, name);
 	}
@@ -1813,7 +1785,7 @@ Document            document;
 	TtaError (ERR_invalid_parameter);
      }
    else
-      /* verifie le parametre document */
+      /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -1823,8 +1795,8 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
-      /* on cherche a partir du schema principal du document */
+      /* parameter document is correct */
+      /* One search from the main schema of the document o*/
       schema = ChSchStruct (LoadedDocument[document - 1]->DocSSchema, name);
    return schema;
 }
@@ -1902,82 +1874,80 @@ char               *presentationName;
 {
    PathBuffer          DirBuffer;
    BinFile             file;
-   char                texte[MAX_TXT_LEN];
+   char                text[MAX_TXT_LEN];
    int                 i;
    boolean             error;
-   char                carlu;
+   char                charGotten;
    LabelString         lab;
    int                 currentVersion = 0;
 
    UserErrorCode = 0;
    structureName[0] = '\0';
    presentationName[0] = '\0';
-   /* compose le nom du fichier a ouvrir avec le nom du directory */
-   /* des documents... */
+   /* Arrange the name of the file to be opened with the documents directory name */
    strncpy (DirBuffer, DocumentPath, MAX_PATH);
-   BuildFileName (documentName, "PIV", DirBuffer, texte, &i);
-   /* teste si le fichier existe */
-   file = BIOreadOpen (texte);
+   BuildFileName (documentName, "PIV", DirBuffer, text, &i);
+   /* Verify if the file exists */
+   file = BIOreadOpen (text);
    if (file == 0)
-      /* fichier document inaccessible */
+      /* document file inaccessible */
      {
 	TtaError (ERR_cannot_open_pivot_file);
      }
    else
-      /* lit le debut du fichier document */
+      /* Read the begenning of the document file */
      {
 	error = FALSE;
-	/* lit le numero de version s'il est present */
-	if (!BIOreadByte (file, &carlu))
+	/* Gets the version number if it exists */
+	if (!BIOreadByte (file, &charGotten))
 	   error = TRUE;
-	if (carlu == (char) C_PIV_VERSION)
+	if (charGotten == (char) C_PIV_VERSION)
 	  {
-	     if (!BIOreadByte (file, &carlu))
+	     if (!BIOreadByte (file, &charGotten))
 		error = TRUE;
-	     if (!BIOreadByte (file, &carlu))
+	     if (!BIOreadByte (file, &charGotten))
 		error = TRUE;
 	     else
-		currentVersion = (int) carlu;
-	     if (!BIOreadByte (file, &carlu))
+		currentVersion = (int) charGotten;
+	     if (!BIOreadByte (file, &charGotten))
 		error = TRUE;
 	  }
-	/* lit le label max. du document s'il est present */
-	if (!error && (carlu == (char) C_PIV_SHORT_LABEL || carlu == (char) C_PIV_LONG_LABEL ||
-		       carlu == (char) C_PIV_LABEL))
+	/* Gets the label max. of the document if it is present */
+	if (!error && (charGotten == (char) C_PIV_SHORT_LABEL || charGotten == (char) C_PIV_LONG_LABEL ||
+		       charGotten == (char) C_PIV_LABEL))
 	  {
-	     rdLabel (carlu, lab, file);
-	     if (!BIOreadByte (file, &carlu))
+	     rdLabel (charGotten, lab, file);
+	     if (!BIOreadByte (file, &charGotten))
 		error = TRUE;
 	  }
 
 	if (currentVersion >= 4)
 	  {
-	     /* lit la table des langues utilisees par le document */
-	     while (carlu == (char) C_PIV_LANG && !error)
+	     /* Gets the table of laguages used by the document */
+	     while (charGotten == (char) C_PIV_LANG && !error)
 	       {
 		  do
-		     if (!BIOreadByte (file, &carlu))
+		     if (!BIOreadByte (file, &charGotten))
 			error = TRUE;
-		  while (!(error || carlu == '\0')) ;
-		  if (carlu != '\0')
+		  while (!(error || charGotten == '\0')) ;
+		  if (charGotten != '\0')
 		     error = TRUE;
 		  else
-		     /* lit l'octet suivant le nom de langue */
-		  if (!BIOreadByte (file, &carlu))
+		     /* Gets the byte following the language name */
+		  if (!BIOreadByte (file, &charGotten))
 		     error = TRUE;
 	       }
 	  }
 
-	/* lit le commentaire du document s'il est present */
-	if (!error && (carlu == (char) C_PIV_COMMENT || carlu == (char) C_PIV_OLD_COMMENT))
+	/* Gets the comment of the document if it exists */
+	if (!error && (charGotten == (char) C_PIV_COMMENT || charGotten == (char) C_PIV_OLD_COMMENT))
 	  {
-	     /* lit l'octet suivant le commentaire */
-	     if (!BIOreadByte (file, &carlu))
+	     /* Get the byte following the comment */
+	     if (!BIOreadByte (file, &charGotten))
 		error = TRUE;
 	  }
-	/* Lit le nom du schema de structure */
-	/* qui est en tete du fichier pivot */
-	if (!error && carlu != (char) C_PIV_NATURE)
+	/* Gets the name of the schema structure which is at the begenning of the pivot file*/
+	if (!error && charGotten != (char) C_PIV_NATURE)
 	   error = TRUE;
 	if (!error)
 	  {
@@ -1991,12 +1961,12 @@ char               *presentationName;
 	     else
 	       {
 		  if (currentVersion >= 4)
-		     /* Lit le code du schema de structure */
+		     /* Gets the code of the structure schema */
 		     if (!BIOreadShort (file, &i))
 			error = TRUE;
 		  if (!error)
 		    {
-		       /* Lit le nom du schema de presentation associe' */
+		       /* Gets the name of the associated presentation schema */
 		       i = 0;
 		       do
 			  if (!BIOreadByte (file, &presentationName[i++]))
@@ -2039,7 +2009,7 @@ SSchema            *extension;
    PtrSSchema        nextExtension;
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    nextExtension = NULL;
    if (document < 1 || document > MAX_DOCUMENTS)
      {
@@ -2050,12 +2020,12 @@ SSchema            *extension;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	if (*extension == NULL)
 	   nextExtension = LoadedDocument[document - 1]->DocSSchema->SsNextExtens;
 	else if (!(((PtrSSchema) (*extension))->SsExtension))
-	   /* ce n'est pas un schema d'extension */
+	   /* It is not the extension schema */
 	  {
 	     TtaError (ERR_invalid_parameter);
 	  }
@@ -2099,7 +2069,7 @@ SSchema            *nature;
    boolean             found;
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    nextNature = NULL;
    if (document < 1 || document > MAX_DOCUMENTS)
      {
@@ -2110,24 +2080,23 @@ SSchema            *nature;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
      {
 	pDoc = LoadedDocument[document - 1];
 	if (*nature == NULL)
-	   /* premiere demande, construit la table des natures du document */
+	   /* First apply, build the table of the natures of the document */
 	  {
 	     BuildDocNatureTable (pDoc);
 	     if (pDoc->DocNNatures > 1)
-		/* on retournera la premiere entree de la table */
+		/* The first entry of the table will be returned */
 		n = 1;
 	     else
-		/* table des natures vide */
+		/* table of natures is empty */
 		n = 0;
 	  }
 	else
-	   /* la table a deja ete construite */
+	   /* The table is already builded. One looks for the current entry of the table */
 	  {
-	     /* on cherche l'entree courante dans la table */
 	     n = 1;
 	     found = FALSE;
 	     while ((n < pDoc->DocNNatures) && !found)
@@ -2141,7 +2110,7 @@ SSchema            *nature;
 	  }
 	if (n > 0)
 	  {
-	     /* on saute les extensions de schemas */
+	     /* Extension schemas are ignored */
 	     found = FALSE;
 	     while ((n < pDoc->DocNNatures) && !found)
 		if (!pDoc->DocNatureSSchema[n]->SsExtension)
@@ -2184,7 +2153,7 @@ Document            document;
    int                 modified;
 
    UserErrorCode = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    modified = 0;
    if (document < 1 || document > MAX_DOCUMENTS)
      {
@@ -2195,7 +2164,7 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
    if (LoadedDocument[document - 1]->DocModified)
       modified = 1;
    return modified;
@@ -2227,7 +2196,7 @@ Document            document;
 
    UserErrorCode = 0;
    result = 1;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -2237,7 +2206,7 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
    if (LoadedDocument[document - 1]->DocReadOnly)
       result = 0;
    else
@@ -2274,7 +2243,7 @@ Document            document;
 
    UserErrorCode = 0;
    result = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -2284,7 +2253,7 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
       result = LoadedDocument[document - 1]->DocBackUpInterval;
    return result;
 }
@@ -2317,7 +2286,7 @@ Document            document;
 
    UserErrorCode = 0;
    result = 0;
-   /* verifie le parametre document */
+   /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -2327,7 +2296,7 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
+      /* parameter document is correct */
    if (LoadedDocument[document - 1]->DocNotifyAll)
       result = 1;
    else
@@ -2437,7 +2406,7 @@ Document            TtaGetDocumentOfSavedElements ()
 #endif
 
 /*
-   DocToPtr retourne le PtrDocument correspondant a un Document
+   DocToPtr returns the PtrDocument corresponding to a given document
  */
 
 #ifdef __STDC__
