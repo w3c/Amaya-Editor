@@ -480,7 +480,7 @@ int                 fg;
   int                 l_end;	/* end of the line       */
   FILE               *fout;
 
-  if (y < 0 || thick <= 0 || fg < 0)
+  if (y < 0 || fg < 0)
     return;
   y += FrameTable[frame].FrTopMargin;
   
