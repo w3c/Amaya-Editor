@@ -1263,6 +1263,7 @@ DoubleClickEvent    DC_event;
 	newdoc = (Document) None;
      }
 
+   res = newdoc;
    if (newdoc == (Document) None)
      {
 	/* document not loaded yet */
