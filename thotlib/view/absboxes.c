@@ -43,8 +43,7 @@
 #include "views_f.h"
 
 
-#define MaxAsc 30
-/* static CHAR_T       text[MAX_TXT_LEN]; */
+#define MaxAsc 100
 
 
 /*----------------------------------------------------------------------

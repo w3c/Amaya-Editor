@@ -1132,6 +1132,8 @@ ThotBool            visible;
    int                 view, frame, firstChar, lastChar;
    ThotBool            selBegin, selEnd, active, unique, assoc, stop;
 
+   if (pRootAb == NULL)
+     return;
    view = pRootAb->AbDocView;
    if (AssocView (pRootAb->AbElement))
       /* it's an associated tree that is displayed in its own view */
