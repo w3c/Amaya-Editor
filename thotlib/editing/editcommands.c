@@ -841,8 +841,8 @@ int                *nChars;
 	else
 	   sourceLength = pBuffer->BuLength - sourceInd + 1;
 	targetlength = THOT_MAX_CHAR - targetInd;
-	if (target)
-	  {
+/******	if (target)
+                 {                ******/
 	    if (sourceLength <= targetlength)
 	      {
 		/* end of source buffer */
@@ -862,7 +862,7 @@ int                *nChars;
 		*pTargetBuffer = GetNewBuffer (*pTargetBuffer, frame);
 		targetInd = 1;
 	      }
-	  }
+/******	  }      ********/
      }
 
    if (*pTargetBuffer != NULL)

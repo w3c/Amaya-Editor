@@ -109,11 +109,11 @@ boolean             inMath;
   ElementType         elType;
 
   col = colhead;
+  elType = TtaGetElementType (col);
   child = GetCellFromColumnHead (row, colhead, inMath);
-  while (child == NULL)
+  while (!child && col)
     {
       /* no cell related to this column in this row */
-      elType = TtaGetElementType (col);
       if (before)
 	col = TtaSearchTypedElement (elType, SearchForward, col);
       else
