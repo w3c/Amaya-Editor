@@ -398,7 +398,12 @@ Definition list: P{STRONG|B},(DL{DD+}|p2:P+);
 
 Remove Div: (DIV{*+})+;
 	{
-	*>:*;
+        * > :*;
+	}
+
+Remove P level: P{IMG};
+	{
+        IMG > :*;
 	}
 
 Remove BlockQuote: (BLOCKQUOTE{*+})+;

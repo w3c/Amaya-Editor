@@ -445,7 +445,6 @@ char               *text;
 	  TtaFreeMemory (value);
 	  /* set the element content */
 	  TtaSetTextContent (el, pathimage, SPACE, doc);
-	  /*DisplayImage (doc, el, pathimage);*/
 	}
       else
 	{
@@ -471,11 +470,13 @@ NotifyElement      *event;
 
 #endif /* __STDC__ */
 {
-   AttributeType       attrType;
-   Attribute           attrSRC;
-   Element             elSRC, el;
-   char               *text;
-   Document            doc;
+  AttributeType      attrType;
+  Attribute          attr;
+  Element            elSRC, el;
+  Document           doc;
+  char              *text;
+  char               pathimage[MAX_LENGTH];
+  char               imagename[MAX_LENGTH];
 
    /* Select an image name */
    el = event->element;
@@ -493,13 +494,25 @@ NotifyElement      *event;
    elSRC = TtaGetParent (el);
    if (elSRC != NULL)
       elSRC = el;
-   attrSRC = TtaGetAttribute (elSRC, attrType);
-   if (attrSRC == 0)
+   attr = TtaGetAttribute (elSRC, attrType);
+   if (attr == 0)
      {
-	attrSRC = TtaNewAttribute (attrType);
-	TtaAttachAttribute (elSRC, attrSRC, doc);
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (elSRC, attr, doc);
      }
-   ComputeSRCattribute (elSRC, doc, 0, attrSRC, text);
+   ComputeSRCattribute (elSRC, doc, 0, attr, text);
+   /* add the ALT attribute */
+   attrType.AttrTypeNum = HTML_ATTR_ALT;
+   attr = TtaGetAttribute (elSRC, attrType);
+   if (attr == 0)
+     {
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (elSRC, attr, doc);
+     }
+   /* copy image name in ALT attribute */
+   TtaExtractName (text, pathimage, imagename);
+   TtaSetAttributeText (attr, imagename, elSRC, doc);
+
 }
 
 
