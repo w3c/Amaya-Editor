@@ -2271,7 +2271,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  /***CheckDefaultPositions(pAb, frame);***/
 	  pAb->AbChange = FALSE;
 	  /* check enclosing cell */
-	  pCell = GetParentCell (pCurrentBox);
+	  pCell = GetParentCell (pBox);
 	  if (pCell != NULL && ThotLocalActions[T_checkcolumn])
 	    {
 	      Propagate = ToChildren;
