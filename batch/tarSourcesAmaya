@@ -159,7 +159,7 @@ Amaya/davlib/*.c \
 Amaya/davlib/f/*.h \
 Amaya/davlib/h/*.h \
 Amaya/davlib/tree/*.c \
-Amaya/davlib/tre/h/*.h \
+Amaya/davlib/tree/h/*.h \
 Amaya/doc/html/*.html* \
 Amaya/doc/html/*/*.html* \
 Amaya/doc/html/*.css \
@@ -311,7 +311,6 @@ Amaya/WindowsGL/LibThotEditor/*.dsp \
 Amaya/WindowsGL/LibThotKernel/*.dsp \
 Amaya/WindowsGL/app/*.dsp \
 Amaya/WindowsGL/cpp/*.dsp \
-Amaya/WindowsGL/davlib/*.dsp \
 Amaya/WindowsGL/libThotTable/*.dsp \
 Amaya/WindowsGL/libjpeg/*.dsp \
 Amaya/WindowsGL/libpng/*.dsp \
@@ -381,9 +380,10 @@ libwww/config/install-sh \
 libwww/config/ltmain.sh \
 libwww/config/ltconfig \
 libwww/config/makedefs.pl \
+libwww/config/makeindx.pl \
 libwww/config/makexprt.pl \
+libwww/config/missing \
 libwww/config/mkinstalldirs \
 libwww/config/winConfigure.pl \
-libwww/config/missing \
  | $COMPRESS  > $DEST/amaya-src-$AMAYAVERSION.tgz
 
